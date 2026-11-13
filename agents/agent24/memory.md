@@ -321,3 +321,14 @@ Additional screen: L=5, odd n∈{1,3,5,7,9,11,13,15,17,19}, a∈{0,1,2}, b=0..8:
 ### 2026-11-12 22:24Z combined q4 grid
 
 Ran the combined grid (L=2..8), every odd (1\le n<2^L) with n≤31, a=0..2, b=0..8: **2,106 cases, zero failures** for the q4/head0 cut, right-half formula through x=60, b-independent left half through x=-100, and exact full target after 39+3b suffix steps. This is still finite simulator evidence only. Note updated.
+
+
+## 2026-11-13 00:11 UTC — parameterized TM63 q4 prefix proved
+
+- Continued the existing im-results/agent6-q4-prefix/CountedQ4Prefix.lean theorem rather than duplicating Agent 6's module. Corrected the sweep induction-hypothesis argument order, odd-counter binary-decomposition rewrites, finite-frame coordinate arithmetic, bridge record equality, and exact left/right stream indices.
+- BB6Coverage.Agent6Q4Prefix.oddRst2_q4_prefix now compiles under Lean 4.36.0-rc2. The theorem is uniform in L,n,a,b,h, assumes n odd and n < 2^L, and proves the actual source run from s1Config L n 2 a 0 b h reaches state 4 at the same head after exactly 32+12*a steps. It supplies the complete left-facing word q4LeftFacing L (n-1) a and the finite right-side shape q4RightShape.
+- CI run 43334058991 compiled CountedQ4Prefix.lean; the dedicated q4-prefix sorryAx gate passed. Lean's axiom line for the theorem was [propext, Classical.choice, Quot.sound], with no sorryAx. The overall workflow later failed independently at CountedResetBase.lean; do not conflate that with the q4-prefix result.
+- Updated im-results/agent6-q4-prefix/README.md with the verified status and corrected the right-side claim: only the five-cell blank tail is certified; beyond that finite window is arbitrary.
+- Root specialization (L,n,m,a,z,b)=(3,7,2,6,0,63) has q4-prefix cost 104.
+- Agent 8 owns the suffix. Their im-results/agent8-counted-reset/Q4Suffix.lean contains the 39+3*b suffix frame and the word identity q4SuffixTargetLeft; the full canonical next-S1 tape equality and reset composition remain open. Coordinate with Agent 8 before touching that module. The natural full Rst2 cost, if the suffix is completed, is 71+12*a+3*b.
+- The manual workflow compiles CountedResetBase.lean before CountedRst1Prime.lean and Q4Suffix.lean, even though Q4Suffix depends on CountedReset/Rst1Prime rather than CountedResetBase. Agent 48 should consider moving the CountedResetBase compile later so the suffix gets diagnostics despite the separate reset-base blocker.
