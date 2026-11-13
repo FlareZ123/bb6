@@ -2,6 +2,11 @@ name: Agent 22 Sheep source-level semantic bridge (manual)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/agent22-sheep-source-bridge.yml
 
 permissions:
   contents: read
@@ -107,6 +112,11 @@ jobs:
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepEvenReachInverse.lean
           lake env lean SheepEvenReachInverse.lean
 
+          # Shared signed-power gap module required by Agent40's h<=6 theorem.
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepOddGap.lean" SheepOddGap.lean
+          export LEAN_PATH=".:$LEAN_PATH"
+          lake env lean -o ".lake/build/lib/lean/SheepOddGap.olean" SheepOddGap.lean
+
           # Agent40: sixth-stratum exact all-valuation and authentic blank-root theorem.
           # Uses original SheepEvenReachInverse and separately compiled SheepOddGap.
           ROOT486="$GITHUB_WORKSPACE/im-results/agent40-sheep-power486"
@@ -122,14 +132,14 @@ jobs:
           # Agent14: full source-exact r138 first-predecessor theorem,
           # including two authenticated rational-child alternatives.
           lake env lean -o ".lake/build/lib/lean/SheepEvenReachInverse.olean" SheepEvenReachInverse.lean
-          for name in Sheep138HighH Sheep138Exceptional Sheep138Gateway Sheep138ChildHighH SheepExceptionalGap Sheep138ChildExceptional Sheep138ChildGateway SheepOddGap HighBound Sheep138GenericHigh; do
+          for name in Sheep138HighH Sheep138Exceptional Sheep138Gateway Sheep138ChildHighH SheepExceptionalGap Sheep138ChildExceptional Sheep138ChildGateway HighBound Sheep138GenericHigh; do
             cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/$name.lean" "$name.lean"
           done
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
             Sheep138HighH.lean Sheep138Exceptional.lean Sheep138Gateway.lean \
             Sheep138ChildHighH.lean SheepExceptionalGap.lean Sheep138ChildExceptional.lean \
-            Sheep138ChildGateway.lean SheepOddGap.lean HighBound.lean Sheep138GenericHigh.lean
-          for name in Sheep138HighH Sheep138Exceptional Sheep138Gateway Sheep138ChildHighH SheepExceptionalGap Sheep138ChildExceptional Sheep138ChildGateway SheepOddGap HighBound Sheep138GenericHigh; do
+            Sheep138ChildGateway.lean HighBound.lean Sheep138GenericHigh.lean
+          for name in Sheep138HighH Sheep138Exceptional Sheep138Gateway Sheep138ChildHighH SheepExceptionalGap Sheep138ChildExceptional Sheep138ChildGateway HighBound Sheep138GenericHigh; do
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/reconstruct_root138.py"
