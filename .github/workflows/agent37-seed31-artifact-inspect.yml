@@ -18,7 +18,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: d-root-seed31-audit
-          run-id: 43383130552
+          run-id: 43385887598
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: /tmp/audit
       - name: Write concise diagnostics to a repository note
@@ -26,7 +26,7 @@ jobs:
         run: |
           set -euo pipefail
           echo "## D-root Seed31 audit artifact" >> "$GITHUB_STEP_SUMMARY"
-          echo "Source run: 43383130552" >> "$GITHUB_STEP_SUMMARY"
+          echo "Source run: 43385887598" >> "$GITHUB_STEP_SUMMARY"
           for f in /tmp/audit/*; do
             echo "### $(basename "$f")" >> "$GITHUB_STEP_SUMMARY"
             if [[ "$f" == *seed31-probe.txt ]]; then
@@ -41,7 +41,7 @@ jobs:
           {
             echo "# D-root Seed31 audit diagnostic"
             echo
-            echo "Source workflow run: 43383130552"
+            echo "Source workflow run: 43385887598"
             echo
             echo "## Error and axiom markers"
             grep -nE 'error:|unknown constant|application type mismatch|Rejected forbidden|sorryAx|native_decide' /tmp/audit/lean-audit.log | tail -n 80 || true
@@ -51,10 +51,10 @@ jobs:
             echo
             echo "## Seed31 probe output"
             cat /tmp/audit/seed31-probe.txt 2>/dev/null || true
-          } > im-results/agent37-d-timing-cocycle/CI-43383130552-diagnostic.md
+          } > im-results/agent37-d-timing-cocycle/CI-43385887598-diagnostic.md
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add im-results/agent37-d-timing-cocycle/CI-43383130552-diagnostic.md
+          git add im-results/agent37-d-timing-cocycle/CI-43385887598-diagnostic.md
           git commit -m "Agent 37: capture Seed31 audit failure diagnostic"
           git pull --rebase origin main
           git push origin HEAD:main
