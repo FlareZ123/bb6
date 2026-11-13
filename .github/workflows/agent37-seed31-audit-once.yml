@@ -1,5 +1,6 @@
 name: One-shot D-root Seed31 source audit
 on:
+# One-shot trigger: only changes to this workflow file on main invoke the reusable source audit.
   push:
     branches:
       - main
