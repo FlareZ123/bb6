@@ -1331,4 +1331,22 @@ theorem rst1PrimeAfterBridge30_eq_s1Successor
 #print axioms rst1PrimeAfterBridge30_eq_s1Successor
 
 
+/-- The complete ten-phase Rst1' macro, with its closed primitive
+step count and canonical S1 successor. -/
+theorem rst1Prime_counted_macro
+    (L a b : Nat) (h : Int) :
+    run tm2 (97+12*(L+a)+3*b) (s1Config L 0 1 a 0 b h) =
+      some (s1Config (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) 0
+        (h+5+3*(b:Int))) := by
+  have hsteps :
+      97+12*(L+a)+3*b =
+        9*a+3+8+3*(3*L+5)+20+3*(L+1)+9+3*(a+1)+6+3*b+30 := by
+    omega
+  rw [hsteps]
+  rw [rst1Prime_bridge30_after_finalRightSweep]
+  rw [rst1PrimeAfterBridge30_eq_s1Successor]
+
+#print axioms rst1Prime_counted_macro
+
+
 end BB6Coverage.Agent8Rst1PrimeTail
