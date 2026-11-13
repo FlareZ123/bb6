@@ -102,3 +102,35 @@ I independently reran the modular subset DP for every 14≤n≤10000: it returns
 where each pair is (n, minimum number of adjacent gaps 1 or 2). I then reran the BigInt full-wall scan for all six candidates with the corrected +3 carry. The results are unchanged: no exact carry hit, and the state sets become empty at m=82, 1442, 586, 5824, 6154, and 13730 respectively. Once the state set is empty at m₀, no terminal cost m≥m₀ can work, because restricting any candidate subset to positions below m₀ would already have to satisfy the impossible low-m₀-bit condition.
 
 Thus the exact finite computation still excludes the shifted wall for all 14≤n≤10000, conditional on the source modular reduction (whose root identity is kernel-checked). The +2 error affected the exact-hit diagnostic but not the final finite exclusion; the corrected +3 computation independently confirms no hits. This remains a finite computational result, not an unbounded P1 exclusion.
+
+## 6. Arbitrary restart roots after a high-depth edge
+
+The same telescoping calculation is not limited to the original root. Let a restart state be (b₀,d₀,m₀), let L be the remaining relative cost to the wall, and put c=m₀+n. The source mass invariant at the restart is
+
+    b₀+d₀+2c+13 = 14P,   P=2^n.
+
+For each subsequent inverse edge with relative start s_j and cost e_j=t_j+1, the unchanged-source inverse equations give
+
+    (d_j−1)+14P = 2^{e_j}(d_{j+1}−1) + 2(s_j+c+3).
+
+Multiplying by 2^{s_j} and summing telescopes. With S=∑2^{s_j} and T=∑s_j2^{s_j},
+
+    d₀−1 + 14P·S = 2^L(d−1) + 2((c+3)S+T).
+
+At the shifted wall in absolute cost m₀+L,
+
+    b+4L+4c+20 = 12P,
+
+and the endpoint mass equation gives d=2P+2L+2c+7. Substitution and division by two yield Agent 50's restart identity:
+
+    P(7S−2^L) = 2^L(L+c+3) + (c+3)S + T − (d₀−1)/2.
+
+Since L=∑e_j and s_{j+1}=s_j+e_j, the same telescoping of powers gives
+
+    N := 7S−2^L = −1 + ∑_j(8−2^{e_j})2^{s_j}.
+
+For a restart immediately after a depth-≥3 edge, the defect bound recorded in HighDepthRestartPotential.md gives F'≥P/4−6, with F'=2P−d'−5. Hence d'≤7P/4+1≤2P−1 for P≥8. Because d₀ is odd, (d₀−1)/2≤P−1. The positive part
+R=2^L(L+c+3)+(c+3)S+T
+is strictly positive, so P·N=R−(d₀−1)/2>−P. It is an integer multiple of P, hence N≥0.
+
+The last-shallow-edge argument in §3 therefore applies after every such high-depth restart: the suffix must contain a shallow edge, the last edge whose cost differs from 3 must be shallow, and every edge after it has cost exactly 3. This is a paper derivation from the exact source recurrence and the existing defect bound. The general restart identity and the resulting suffix theorem have not yet been added as Lean theorems; formalizing them is a high-value next step.
