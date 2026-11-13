@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - .github/workflows/agent22-sheep-source-bridge.yml
+      - im-results/agent40-sheep-power486/SheepPower486Raw.lean
 
 permissions:
   contents: read
@@ -110,7 +111,7 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/SheepEvenSourceAlgebra.olean" SheepEvenSourceAlgebra.lean
           cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepEvenReachInverse.lean" SheepEvenReachInverse.lean
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepEvenReachInverse.lean
-          lake env lean SheepEvenReachInverse.lean
+          lake env lean -o ".lake/build/lib/lean/SheepEvenReachInverse.olean" SheepEvenReachInverse.lean
 
           # Shared signed-power gap module required by Agent40's h<=6 theorem.
           cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepOddGap.lean" SheepOddGap.lean
@@ -127,11 +128,12 @@ jobs:
           for name in SheepPower486Core SheepPower486Rows SheepPower486All SheepPower486RootGate SheepPower486High SheepPower486Target SheepPower486Special SheepPower486NoSource; do
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
-          lake env lean SheepPower486Source.lean
+          lake env lean -o ".lake/build/lib/lean/SheepPower486Source.olean" SheepPower486Source.lean
+          cp "$ROOT486/SheepPower486Raw.lean" SheepPower486Raw.lean
+          lake env lean -o ".lake/build/lib/lean/SheepPower486Raw.olean" SheepPower486Raw.lean
 
           # Agent14: full source-exact r138 first-predecessor theorem,
           # including two authenticated rational-child alternatives.
-          lake env lean -o ".lake/build/lib/lean/SheepEvenReachInverse.olean" SheepEvenReachInverse.lean
           for name in Sheep138HighH Sheep138Exceptional Sheep138Gateway Sheep138ChildHighH SheepExceptionalGap Sheep138ChildExceptional Sheep138ChildGateway HighBound Sheep138GenericHigh; do
             cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/$name.lean" "$name.lean"
           done
