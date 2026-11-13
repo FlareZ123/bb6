@@ -15,9 +15,9 @@ theorem x266_second_parent :
     if_neg (by decide : (115:Nat)≠0),
     if_neg (by decide : ¬ 2*115≤31),
     if_neg (by decide : (31:Nat)%2≠0)]
-  refine Or.inl ⟨by norm_num, 2, ?_, ?_⟩
-  · norm_num
-  · norm_num
+  refine Or.inl ⟨by decide, 2, ?_, ?_⟩
+  · decide
+  · decide
 
 #print axioms x266_second_parent
 end BB6.Agent3Y3X256Counterexample
