@@ -315,6 +315,16 @@ jobs:
             exit 1
           fi
 
+          # Agent 24's m=0,n=2 even suffix/drain is independent of
+          # the M1-odd root extension and uses the already compiled generic endpoint.
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0EvenQ4Suffix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
+          lean -o M0EvenQ4Suffix.olean M0EvenQ4Suffix.lean 2>&1 | tee /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-q4-suffix-axioms.log; then
+            echo '::error::sorryAx found in m=0,n=2 even q4 suffix/count composition'
+            exit 1
+          fi
+
           # Agent 24's M1-odd q4 suffix and root extension depend on the
           # generic Q4 endpoint, S1 counted drain, and M0/M2 root composition.
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M1OddQ4Suffix.lean" /tmp/a42-terminal/
