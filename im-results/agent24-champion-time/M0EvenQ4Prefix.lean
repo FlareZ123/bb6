@@ -1,3 +1,11 @@
+import CountedReset
+import ChampionRootBridge
+import S1Encoder
+import CountedQ4Prefix
+import Q4Suffix
+import M0EvenQ4Bridge
+import Lean.Elab.Tactic.Omega
+
 /-!
 # Source-level m=0,n=2 even q4 reset prefix
 
@@ -6,13 +14,6 @@ After a 3a-cell counted left sweep, a fixed 39-step bridge and a
 source stage after the m=1,n=3 odd reset.
 -/
 
-import CountedReset
-import ChampionRootBridge
-import S1Encoder
-import CountedQ4Prefix
-import Q4Suffix
-import M0EvenQ4Bridge
-import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent24M0EvenQ4Prefix
 
