@@ -39,6 +39,11 @@ jobs:
           cp im-results/agent42-champion-terminal/TerminalEncoderBridge.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a42-terminal/
           python3 -c "import base64,io,lzma,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('/tmp/a42-terminal',filter='data')"
+          # Re-apply live carry modules after archive extraction so stale
+          # bundled copies cannot shadow the repository sources.
+          cp im-results/agent24-champion-time/CountedCarryBridges.lean /tmp/a42-terminal/
+          cp im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean /tmp/a42-terminal/
+          cp im-results/agent42-carry-left-output/FrameCellLemmas.lean /tmp/a42-terminal/
           python3 -c "import base64,lzma,pathlib; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'); pathlib.Path('/tmp/a42-terminal/TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(p.read_text())))"
           echo "12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7  /tmp/a42-terminal/TerminalFinish.lean" | sha256sum -c -
           echo "1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff  /tmp/a42-terminal/TerminalLeft.lean" | sha256sum -c -
