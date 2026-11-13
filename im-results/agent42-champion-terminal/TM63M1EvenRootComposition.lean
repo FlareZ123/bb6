@@ -86,10 +86,10 @@ theorem tm63_attainable_after_m1_even_q4
       run tm2 tm63AfterM1EvenSteps
         (s1Config 3 5 0 tm63AfterM1EvenA 0 tm63AfterM1EvenB
           tm63AfterM1EvenHead) =
-        some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h))
+        some (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h))
     (hfinal :
       run tm2 (resetPrefixCost 1 1 tm63FinalA tm63FinalB)
-        (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) =
+        (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) =
         some (s0Config (markerWord 0 ++ d0 ++ binDec tm63Length2 0 ++ lh)
           (tm63FinalA+tm63FinalB+resetDelta 1)
           (2^tm63FinalB-1) 0 (h+5+3*tm63FinalB))) :
@@ -114,7 +114,7 @@ theorem tm63_attainable_after_m1_even_q4
   have hstageFull :
       run tm2 tm63SuffixSteps
         (s1Config 3 6 1 71 0 (2^63-1) 223) =
-        some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) := by
+        some (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) := by
     rw [tm63SuffixSteps_split_m1_even,run_add,hfirst']
     exact hstage
   exact tm63_attainable_at_proposedChampionScore h hstageFull hfinal
