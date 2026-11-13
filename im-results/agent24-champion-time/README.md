@@ -203,7 +203,7 @@ The q4 decomposition is the source-level route for the marker-2, odd-inner-count
 
 **Suffix.** `im-results/agent8-counted-reset/Q4Suffix.lean` proves the proposed `39+3*b` frame decomposition: ten entry moves, a counted scan of `b` three-one blocks, and a 29-move local tail. Its source theorem is part of the current manual-only champion-root workflow, but no successful source-closure audit of the current revision is recorded.
 
-**Full endpoint composition.** `im-results/agent24-champion-time/Q4RightEndpoint.lean` now contains the right and left infinite-stream endpoint lemmas, the source-run wrappers, `q4_suffix_run_target_of_prefix`, and `oddRst2_q4_counted_source`. The latter proposes the uniform theorem
+**Full endpoint composition.** `im-results/agent24-champion-time/Q4RightEndpoint.lean` now contains the right and left infinite-stream endpoint lemmas, the source-run wrappers, `q4_suffix_run_target_of_prefix`, and `oddRst2_q4_counted_source`, plus the explicit root specialization `tm2_q4_root_source`. The generic theorem proposes the uniform theorem
 
 ```lean
 run tm2 (71+12*a+3*b) (s1Config L n 2 a 0 b h) =
