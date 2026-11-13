@@ -30,10 +30,10 @@ theorem raw_halts_iff_nonexcluded_power :
     refine ⟨j,hj,?_,?_,hr⟩
     · intro hp
       have he : (2^j)%2=0 := by
-        cases j with
-        | zero => omega
-        | succ k => simp [Nat.pow_succ]
-      obtain ⟨n,p⟩ := (SheepEven.blank_even_reach_iff he).mp hr
+        have hj' : j=(j-1)+1 := by omega
+        rw [hj', Nat.pow_succ]
+        simp
+      obtain ⟨n,p⟩ := (SheepEven.blank_even_reach_iff he).mpr hr
       exact (BB6.Agent22.SectionExclusionBridge.excluded_power_unreachable j hp)
         (BB6.Agent16.SheepEvenSource.even_steps_to_reach p)
     · intro hs
