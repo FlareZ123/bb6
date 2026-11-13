@@ -383,6 +383,15 @@ jobs:
             exit 1
           fi
 
+          # Agent 48's final m=1,n=1 arbitrary-counter Rst1 source prefix.
+          cp "$GITHUB_WORKSPACE/im-results/agent48-final-rst1/M1OneQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-one-q4-prefix-axioms.log
+          lean -o M1OneQ4Prefix.olean M1OneQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m1-one-q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-one-q4-prefix-axioms.log; then
+            echo '::error::sorryAx found in final m=1,n=1 arbitrary-counter q4 reset prefix'
+            exit 1
+          fi
+
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M1OddQ4Suffix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-odd-q4-suffix-axioms.log
           lean -o M1OddQ4Suffix.olean M1OddQ4Suffix.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-q4-suffix-axioms.log
