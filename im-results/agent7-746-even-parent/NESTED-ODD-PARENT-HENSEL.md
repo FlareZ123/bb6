@@ -74,6 +74,19 @@ Let \(z_0\) be as above and put \(G_0=2z_0+5=Q/9\). Then
 \gamma_0=\lim_{r\to\infty}\frac{G_0(n(r))}{2^{n(r)}}=\frac{28}{9}.
 \]
 
+For the uniform density theorem, take the initial edge
+\[
+(t_1,\sigma_1)=(4,9),\qquad
+R_1=\frac{(28/9)2^9}{3^5}=\frac{14336}{2187}\in(6,8),
+\qquad
+\gamma_1=\frac{1397}{4374}.
+\]
+Here \(e_1=Q/3^7\) is odd because \(3^8\mid Q\). The first parent has \(k_1=n-5\) and
+\[
+G_1=2^6e_1-16\cdot2^{n-5}-2(n-5)-5.
+\]
+Since \(3\mid e_1\) and \(n-5\equiv0\pmod3\), we have \(3\mid G_1\) for every \(r\). Thus \(G_1/3\) is the initial scaled-cylinder Hensel function. The explicit seven-edge witness below uses a different first choice, \((7,14)\), to give a concrete deeper cylinder.
+
 Suppose at stage \(i\) we have a target \(z_{i-1}\), with
 \[
 G_{i-1}=2z_{i-1}+5,\qquad
@@ -127,12 +140,11 @@ Both possible gap sizes are strictly smaller than \(w\): the first inequality is
 \]
 for \(k=t+1\). Hence one of \(k=1,\ldots,5\) works, proving \(t\le4\).
 
-For the initial layer we use \((t_1,\sigma_1)=(7,14)\), which is compatible with the base \(Q/3^8\) cylinder. At every later layer we may choose \(t_i\le4\). Therefore the seeded-cylinder exponent satisfies
+For the density theorem, the initial layer is \((t_1,\sigma_1)=(4,9)\), and \(G_1/3\) is already an isometry on the full progression. At every later layer we may choose \(t_i\le4\). Since \(E_1=7\) and \(E_{i+1}=E_i+t_{i+1}+1\), the seeded-cylinder exponent is
 \[
-M_d=\sum_{i=1}^d t_i+d-5
-\le 7+4(d-1)+d-5=5d-2.
+M_d=E_d-7=\sum_{i=2}^d(t_i+1)\le5(d-1).
 \]
-In particular, the construction gives a uniform explicit density lower bound \(3^{-(5d-2)}\) for every fixed depth \(d\), not merely an unspecified positive density.
+In particular, the construction gives the uniform explicit density lower bound \(3^{-5(d-1)}\) for every fixed depth \(d\), not merely an unspecified positive density.
 
 ## Hensel input and band-compatible iteration
 
