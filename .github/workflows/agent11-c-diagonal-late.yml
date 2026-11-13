@@ -405,6 +405,8 @@ jobs:
           # normalization's u=1 boundary case.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0SmallBoundaryZero.lean .
           lean -o M0SmallBoundaryZero.olean M0SmallBoundaryZero.lean 2>&1 | tee M0SmallBoundaryZero.log
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX32.lean .
+          lean -o EvenOddThreeX32.olean EvenOddThreeX32.lean 2>&1 | tee EvenOddThreeX32.log
           if grep -q sorryAx M0SmallBoundaryZero.log; then
             echo "REJECTED: low-boundary source proof contains sorryAx"
             exit 1
