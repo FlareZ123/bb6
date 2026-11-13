@@ -202,3 +202,32 @@ This is the strongest t1=4 branch currently checked: eight edges on
 density \(3^{-10}\), denser than the earlier t1=7 eight-edge cylinder
 \(3^{-14}\). It is still an intermediate inverse-cone result, not a
 blank-root reachability proof.
+
+
+## 7. Ninth edge on the dense t=4 cylinder
+
+Agent 7 extends the eight-edge cylinder \(r\equiv1618\pmod{3^{10}}\)
+by choosing
+\[
+(t_9,\sigma_9)=(0,14),\qquad
+R_9=9177507040/1162261467\approx7.89625.
+\]
+On the three lifts \(r=1618+a3^{10}\), \(a=0,1,2\), the next numerator
+satisfies \(G_8\bmod3=(1,2,0)\). The unique final digit is a=2, giving
+\[
+\boxed{r\equiv119716\pmod{3^{11}}},
+\]
+a nine-edge cylinder of density \(3^{-11}\).
+
+At its least representative \(r=119716\), \(n=1570914239\), modular
+evaluation gives
+\[
+v_3(Q)=9,\qquad
+(v_3(G_1),\ldots,v_3(G_8))=(1,1,2,4,3,1,2,2).
+\]
+The nine band limits are those listed in Section 6 together with
+\(9177507040/1162261467\); all are strictly in (6,8). Coefficient bit
+lengths through X8 peak at3432, and \(2^{\sigma_i}/3^{E_i}<1\), so the
+uniform \(2^{-54}\) error bound for n≥7000 is conservative. Agent 44
+independently checked the final lift, valuations, limits, and coefficient
+sizes. This is still inverse-cone progress, not a root connection.
