@@ -201,8 +201,22 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
       have hpres : T1 x = T x :=
         carryLeftSweep_preserves_at (4*k+1) (3*k) T hmatch hs hb x
           (by omega) (by omega)
-      simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hpres,
-        carryLeftOutputBit,hthreshold,hfar]
+      have hT2 : T2 x = T x := by
+        change (if carryAD12Area (x-(h'-2)) then
+          (shiftConfig (h'-2) (embed carryAD12Final)).tape x
+          else Tbridge x) = T x
+        rw [if_neg hADArea]
+        change (if carryBridgeArea3 (x-h') then
+          (shiftConfig h' (embed carryBridgeFinal3)).tape x
+          else T1 x) = T x
+        rw [if_neg hbridgeArea]
+        exact hpres
+      have hleft : x < -3*((4*k+1:Nat):Int)-2 := by
+        rw [hthreshold]
+        exact hfar
+      have htarget : carryLeftOutputBit (4*k+1) T x = T x := by
+        simp [carryLeftOutputBit, hleft]
+      exact hT2.trans htarget.symm
     · by_cases hspecial : x = h'-5
       · subst x
         have hpres : T1 (h'-5) = T (h'-5) :=
@@ -222,13 +236,18 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
           omega
         have hADArea : carryAD12Area ((h'-5)-(h'-2)) = false := by
           simp [carryAD12Area]
-          omega
         have hT1 : T1 (h'-5) = true := by
           rw [hpres,hmark]
         have hT2 : T2 (h'-5) = true := by
           simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hT1]
+        have hnot : ¬ (h'-5 < -3*((4*k+1:Nat):Int)-2) := by
+          rw [hthreshold]
+          omega
+        have hle : h'-5 ≤ -3*((4*k+1:Nat):Int) := by
+          rw [hthreshold']
+          omega
         have htarget : carryLeftOutputBit (4*k+1) T (h'-5) = true := by
-          simp [carryLeftOutputBit,hthreshold,hthreshold'] <;> omega
+          simp [carryLeftOutputBit,hnot,hle]
         exact hT2.trans htarget.symm
       · by_cases hbridge4 : x = h'-4
         · subst x
@@ -237,14 +256,29 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
             omega
           have hADArea : carryAD12Area ((h'-4)-(h'-2)) = false := by
             simp [carryAD12Area]
-            omega
           have hbridgeCell : (embed carryBridgeFinal3).tape (-4) = true :=
             bridge3FinalCell_left (-4) (Or.inl rfl)
           have hcoord : (h'-4)-h' = -4 := by omega
+          have hTbridge : Tbridge (h'-4) = true := by
+            change (if carryBridgeArea3 ((h'-4)-h') then
+              (shiftConfig h' (embed carryBridgeFinal3)).tape (h'-4)
+              else T1 (h'-4)) = true
+            rw [if_pos hbridgeArea]
+            simpa [shiftConfig,hcoord] using hbridgeCell
           have hT2 : T2 (h'-4) = true := by
-            simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hbridgeCell,hcoord]
+            change (if carryAD12Area ((h'-4)-(h'-2)) then
+              (shiftConfig (h'-2) (embed carryAD12Final)).tape (h'-4)
+              else Tbridge (h'-4)) = true
+            rw [if_neg hADArea]
+            exact hTbridge
+          have hnot : ¬ (h'-4 < -3*((4*k+1:Nat):Int)-2) := by
+            rw [hthreshold]
+            omega
+          have hle : h'-4 ≤ -3*((4*k+1:Nat):Int) := by
+            rw [hthreshold']
+            omega
           have htarget : carryLeftOutputBit (4*k+1) T (h'-4) = true := by
-            simp [carryLeftOutputBit,hthreshold,hthreshold'] <;> omega
+            simp [carryLeftOutputBit,hnot,hle]
           exact hT2.trans htarget.symm
         · by_cases hbridge3 : x = h'-3
           · subst x
@@ -253,14 +287,29 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
               omega
             have hADArea : carryAD12Area ((h'-3)-(h'-2)) = false := by
               simp [carryAD12Area]
-              omega
             have hbridgeCell : (embed carryBridgeFinal3).tape (-3) = true :=
               bridge3FinalCell_left (-3) (Or.inr rfl)
             have hcoord : (h'-3)-h' = -3 := by omega
+            have hTbridge : Tbridge (h'-3) = true := by
+              change (if carryBridgeArea3 ((h'-3)-h') then
+                (shiftConfig h' (embed carryBridgeFinal3)).tape (h'-3)
+                else T1 (h'-3)) = true
+              rw [if_pos hbridgeArea]
+              simpa [shiftConfig,hcoord] using hbridgeCell
             have hT2 : T2 (h'-3) = true := by
-              simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hbridgeCell,hcoord]
+              change (if carryAD12Area ((h'-3)-(h'-2)) then
+                (shiftConfig (h'-2) (embed carryAD12Final)).tape (h'-3)
+                else Tbridge (h'-3)) = true
+              rw [if_neg hADArea]
+              exact hTbridge
+            have hnot : ¬ (h'-3 < -3*((4*k+1:Nat):Int)-2) := by
+              rw [hthreshold]
+              omega
+            have hle : h'-3 ≤ -3*((4*k+1:Nat):Int) := by
+              rw [hthreshold']
+              omega
             have htarget : carryLeftOutputBit (4*k+1) T (h'-3) = true := by
-              simp [carryLeftOutputBit,hthreshold,hthreshold'] <;> omega
+              simp [carryLeftOutputBit,hnot,hle]
             exact hT2.trans htarget.symm
           · have hlo : h'-2 ≤ x := by omega
             have hhi : x ≤ h'+9 := by
@@ -312,7 +361,6 @@ theorem carryLongPrefix_r1_full (k : Nat) (T : Int → Bool)
         hrunGen.symm
       _ = some ⟨4,7,Tleft⟩ := hrunLeft
   cases hconf
-  exact ⟨Tgen,hrunGen,h1,h2,h3,h4,h5,h6,hout,hleft⟩
 
 #print axioms carryLongPrefix_r1_left
 
