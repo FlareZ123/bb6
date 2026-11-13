@@ -114,6 +114,81 @@ theorem root_low43_119_to_109_physical
     exact ⟨e,he,by omega⟩
   exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
 
+/-- The next prepared low-even r=4k instance is the exact
+    J(109,66) -> J(11,282) return (N=33,k=38). Both C/0 visits
+    in this 6027-step source segment have blank right neighbours. -/
+theorem root_loweven4k_109_to_11_max :
+    runWithMax 6027 (junc 109 0 66) =
+      some (junc 11 0 282, -209, 76) := by
+  decide
+
+theorem root_loweven4k_109_to_11_no_fatal :
+    runNoFatal 6027 (junc 109 0 66) =
+      some (junc 11 0 282) := by
+  decide
+
+/-- Compose low43 and low-even 4k: J(119,35) -> J(11,282) in
+    9631 steps, with displacement -237 and maximum +48. -/
+theorem root_low43_119_to_11_max :
+    runWithMax 9631 (junc 119 0 35) =
+      some (junc 11 0 282, -237, 48) := by
+  have h1 := root_low43_119_to_109_max
+  have h2 := root_loweven4k_109_to_11_max
+  have ht : 3604 + 6027 = 9631 := by omega
+  rw [← ht, runWithMax_add, h1]
+  simp [h2, Int.max_def]
+
+theorem root_low43_119_to_11_no_fatal :
+    runNoFatal 9631 (junc 119 0 35) =
+      some (junc 11 0 282) := by
+  have h1 := root_low43_119_to_109_no_fatal
+  have h2 := root_loweven4k_109_to_11_no_fatal
+  have ht : 3604 + 6027 = 9631 := by omega
+  simpa [ht] using
+    runNoFatal_compose 3604 6027 (junc 119 0 35)
+      (junc 109 0 66) (junc 11 0 282) h1 h2
+
+theorem root_low43_119_to_11_prefix_no_fatal (t : Nat)
+    (ht : t ≤ 9631) :
+    ∃ p, run t (junc 119 0 35) = some p ∧ fatalCZero p = false :=
+  runNoFatal_prefix 9631 t (junc 119 0 35) (junc 11 0 282)
+    root_low43_119_to_11_no_fatal ht
+
+/-- Physical lift of the composed 9631-step prepared branch, including
+    its all-prefix head maximum. -/
+theorem root_low43_119_to_11_physical
+    (c : Config) (hrep : Represents (junc 119 0 35) c) :
+    ∃ d : Config,
+      run target429 9631 c = some d ∧
+      Represents (junc 11 0 282) d ∧
+      d.head = c.head - 237 ∧
+      (∀ t : Nat, t ≤ 9631 →
+        ∃ e : Config,
+          run target429 t c = some e ∧
+          e.head ≤ c.head + 48) := by
+  let zStart : Zipper := junc 119 0 35
+  have hmax :
+      runWithMax 9631 zStart =
+        some (junc 11 0 282, -237, 48) := by
+    simpa [zStart] using root_low43_119_to_11_max
+  have hdelta :
+      runWithDelta 9631 zStart = some (junc 11 0 282, -237) := by
+    simpa [hmax] using runWithMax_toDelta 9631 zStart
+  obtain ⟨d,hrun,hrepD,hhead⟩ :=
+    source_runWithDelta_rep 9631 zStart c hrep
+      (junc 11 0 282) (-237) hdelta
+  have hprefix :
+      ∀ t : Nat, t ≤ 9631 →
+        ∃ e : Config,
+          run target429 t c = some e ∧
+          e.head ≤ c.head + 48 := by
+    intro t ht
+    obtain ⟨e,he,hh⟩ :=
+      physical_source_max_prefix_bound 9631 t zStart c hrep
+        (junc 11 0 282, -237, 48) hmax ht
+    exact ⟨e,he,by omega⟩
+  exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
+
 #print axioms root_low43_119_entry_max
 #print axioms root_low43_119_entry_no_fatal
 #print axioms root_low43_119_continuation_max
@@ -122,5 +197,11 @@ theorem root_low43_119_to_109_physical
 #print axioms root_low43_119_to_109_no_fatal
 #print axioms root_low43_119_to_109_prefix_no_fatal
 #print axioms root_low43_119_to_109_physical
+#print axioms root_low43_119_to_11_max
+#print axioms root_low43_119_to_11_no_fatal
+#print axioms root_low43_119_to_11_prefix_no_fatal
+#print axioms root_low43_119_to_11_physical
+#print axioms root_loweven4k_109_to_11_max
+#print axioms root_loweven4k_109_to_11_no_fatal
 
 end BB429Low43RootNext
