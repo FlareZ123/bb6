@@ -1,4 +1,4 @@
-name: Agent 7 U/Q parent-band source certificate (manual)
+name: Agent 7 U/Q parent-band and n=887 cone source certificate (manual)
 
 on:
   workflow_dispatch:
@@ -24,7 +24,7 @@ jobs:
             sleep 10
           done
           exit 1
-      - name: Compile exact source ResetParent and U/Q band certificate
+      - name: Compile original-source reset-parent dependencies and U/Q selector cone
         run: |
           set -eu
           a="im-results/agent7-cascade-odd-fibers"
@@ -32,8 +32,9 @@ jobs:
           f="im-results/agent7-cascade-forward"
           c="im-results/agent44-746-fanin"
           r="im-results/agent44-746-rank"
+          d="im-results/agent7-fatal-density"
           e="im-results/agent7-746-even-parent"
-          export LEAN_PATH="$a:$b:$f:$c:$r:$e"
+          export LEAN_PATH="$a:$b:$f:$c:$r:$d:$e"
           lean --version
           for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
             lean -o "$a/$m.olean" "$a/$m.lean"
@@ -46,10 +47,18 @@ jobs:
           for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
-          for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete; do
+          for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ManyShield FastShield ParentsFast ClosedCertFast; do
             lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          for m in SignedRayPeriod RayDepthHensel RayDepthResidue; do
+            lean -o "$d/$m.olean" "$d/$m.lean"
           done
           lean -o "$e/UParentBandEnvelope.olean" "$e/UParentBandEnvelope.lean"
           lean -o "$e/UScaleParameter.olean" "$e/UScaleParameter.lean"
-          echo "PASS: source ResetParent odd-parent alternatives are filtered by the uniform U/Q dyadic envelope"
-          echo "AXIOM AUDIT: see all #print axioms reports above"
+          for m in QDepthDefs QDepthLift QDepthBase QDepthSelectorBase QDepthSelector QDepth887 QDepthHensel UParentBandBase UParentOddSelector UParentResetFilter UParentBand887 UParentCone887; do
+            lean -o "$e/$m.olean" "$e/$m.lean"
+          done
+          echo "PASS: Q divisibility selects one depth residue at every precision"
+          echo "PASS: n=887 U-odd-parent exponents reduce to t=2 or t=4"
+          echo "PASS: exact source ResetParent closure excludes the complete 31-state U-parent cone"
+          echo "AXIOM AUDIT: see the Q selector #print axioms reports above"
