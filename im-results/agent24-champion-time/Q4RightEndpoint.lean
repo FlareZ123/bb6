@@ -582,4 +582,16 @@ theorem oddRst2_q4_counted_source
 #print axioms q4_suffix_run_target_of_prefix
 #print axioms oddRst2_q4_counted_source
 
+
+
+/-- Authentic TM63 root instance of the complete q4 source transition. -/
+theorem tm2_q4_root_source :
+    run tm2 332 (s1Config 3 7 2 6 0 63 29) =
+      some (s1Config 3 6 1 71 (2^63-1) 0 223) := by
+  simpa using
+    (oddRst2_q4_counted_source 3 7 6 63 29
+      (by norm_num) (by norm_num))
+
+#print axioms tm2_q4_root_source
+
 end BB6Coverage.Agent24Q4Endpoint
