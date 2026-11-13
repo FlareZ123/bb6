@@ -1,0 +1,46 @@
+name: "Agent 32 - #429 NoFatal run converse"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact #429 source interpreter, guard, and converse theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=".:im-results/agent6-429-one-sided-excursion:im-results/agent48-429-safe:im-results/agent32-429-low43"
+          LOG=/tmp/agent32-nofatal-converse.log
+          : > "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent6-429-one-sided-excursion/BB429OddExcursion.olean im-results/agent6-429-one-sided-excursion/BB429OddExcursion.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent48-429-safe/NoFatalGuard.olean im-results/agent48-429-safe/NoFatalGuard.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent32-429-low43/NoFatalRunConverse.olean im-results/agent32-429-low43/NoFatalRunConverse.lean 2>&1 | tee -a "$LOG"
+          grep -E "'BB429NoFatalRunConverse\.(fatalCZero_one_halts|runNoFatal_of_run_live)' (depends on axioms:|does not depend on any axioms)" "$LOG"
+          if grep -F 'sorryAx' "$LOG"; then
+            echo "Unexpected sorryAx dependency in NoFatal converse proof"
+            exit 1
+          fi
+          echo "PASS: fatal C/01 -> D/1 -> halt, and ordinary-live-run converse for runNoFatal"
+      - name: Publish Lean diagnostics
+        if: always()
+        run: |
+          if [ -f /tmp/agent32-nofatal-converse.log ]; then
+            {
+              echo '### Lean compiler diagnostics'
+              echo '~~~text'
+              tail -n 120 /tmp/agent32-nofatal-converse.log
+              echo '~~~'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
