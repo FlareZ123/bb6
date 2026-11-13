@@ -62,7 +62,7 @@ theorem qIndexCoefficient_mod_three (j : Nat) (hj : j%2=0) :
   have hpInt : ((2:Int)^(j+4))%3=1 := by
     exact_mod_cast hpNat
   dsimp [qIndexCoefficient]
-  rw [Int.add_emod,Int.mul_emod,hpInt]
+  rw [Int.mul_emod,Int.add_emod,hpInt]
   norm_num
 
 /-- One index digit has the exact Q shift congruence.  The coefficient
