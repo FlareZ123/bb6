@@ -1,7 +1,6 @@
 import CountedReset
 import CountedQ4Prefix
 import Q4Suffix
-import Q4RightEndpoint
 import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent48CountedInc0
@@ -11,7 +10,6 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
-open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent8CountedReset
 
 /-- The even n=6, m=1 branch reaches a q4 suffix after 44+12a moves.
