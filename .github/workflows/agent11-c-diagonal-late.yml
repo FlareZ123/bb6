@@ -132,6 +132,9 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean -o JointResidual.olean JointResidual.lean
+          # Agent3 complete original-source parent fan for even/even targets.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/EvenEvenParentFan.lean .
+          lean -o EvenEvenParentFan.olean EvenEvenParentFan.lean
           # Convert the exact rooted stopping criteria to executable
           # parameter predicates through Agent11's original-source
           # fixed-target backward reachability oracle.
