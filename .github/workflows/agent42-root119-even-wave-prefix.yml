@@ -23,8 +23,9 @@ jobs:
           A=im-results/agent42-root119-guard
           S=im-results/agent12-root119-shuttle
           R=im-results/agent12-root119-reach
-          mkdir -p "$R"
-          export LEAN_PATH="$A:$S:$R"
+          B=im-results/agent12-root119-left-corridor
+          mkdir -p "$R" "$B"
+          export LEAN_PATH="$A:$S:$R:$B"
           python "$R/audit_window_closure.py" > "$R/audit_window_closure.json"
           grep -q '"forward_reachable_count": 342' "$R/audit_window_closure.json"
           grep -q '"reverse_preimage_closure_count": 12' "$R/audit_window_closure.json"
@@ -63,6 +64,11 @@ jobs:
           lean -o "$A/Root119CPhaseReturn.olean" "$A/Root119CPhaseReturn.lean" 2>&1 | tee "$A/Root119CPhaseReturn.log"
           if grep -q 'sorryAx' "$A/Root119CPhaseReturn.log"; then
             echo "::error::sorryAx found in C-phase D1 return theorems"
+            exit 1
+          fi
+          lean -o "$B/Root119PrefixCPhaseEdge.olean" "$B/Root119PrefixCPhaseEdge.lean" 2>&1 | tee "$B/Root119PrefixCPhaseEdge.log"
+          if grep -q 'sorryAx' "$B/Root119PrefixCPhaseEdge.log"; then
+            echo "::error::sorryAx found in even/odd-even prefix-to-C-phase compositions"
             exit 1
           fi
           lean -o "$A/Root119TwoWaveRootPrefix.olean" "$A/Root119TwoWaveRootPrefix.lean" 2>&1 | tee "$A/Root119TwoWaveRootPrefix.log"
