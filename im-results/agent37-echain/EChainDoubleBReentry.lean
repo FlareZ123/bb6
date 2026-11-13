@@ -283,7 +283,7 @@ theorem reset_double_B_to_A_source_reentry (d k h t Q : Nat)
       BB6.Agent31PacketSource.packet (1+4*3^d*h) 0
         (3*d+(2*Q+6-3*d)) BB6.Agent35K4Shapes.marker := by
     rw [BB6.Agent2PacketP2Reset.e_two_reset,hprefix,hm]
-    congr 1
+    congr 1 <;> omega
   have hresetObs : ObsEq
       (CryptidBoundary.run (BB6.Agent2PacketP2Reset.eTwoTime k Q)
         (BB6.Agent31PacketSource.packet (3*k+4) Q 2
