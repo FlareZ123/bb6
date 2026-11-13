@@ -247,3 +247,9 @@ B^2-9=(B+3)(B-3),\qquad
 t^2A(A-3)-9(1+t)=(B+3)(t(A-3)-3).
 \]
 For the present parameters \(A=2^{a_r}\ge8\) and \(t=2^s\ge2\), so all displayed natural subtractions are nonnegative. This certificate directly supplies the divisibility step in (1) and is a good starting point for a kernel-checked formalization.
+
+The only small generic divisibility helper needed after (1) is
+\[
+2^m\mid 3x\quad\Longrightarrow\quad2^m\mid x.
+\]
+It can be proved in core Lean by induction on \(m\): the successor case first obtains \(2\mid3x\), uses \(\omega\) to deduce \(2\mid x\), writes \(x=2y\), cancels the leading factor two, and applies the induction hypothesis to \(3y\). The final contradiction can reuse CancellationTopStrip's \(Nat.not_dvd_of_pos_of_lt\) pattern.
