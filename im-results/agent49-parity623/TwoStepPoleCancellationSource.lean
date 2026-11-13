@@ -62,12 +62,11 @@ theorem first_step (m : Nat) (hm : m % 2 = 0) :
     simpa [hthird, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using
       drainB_tight m (39 * x + 2) (2 * x + 5)
   have h0 : x ≠ 0 := by omega
-  have h1 : ¬(40 * x % 2 = 1 ∧ x ≥ 40 * x + 5) := by
-    simp [hxeven]
+  have h1 : ¬(40 * x % 2 = 1 ∧ x ≥ 40 * x + 5) := by omega
   have h2 : ¬(40 * x % 2 = 0 ∧ x ≥ 40 * x + 3) := by omega
   have heven : x % 2 ≠ 1 := by omega
   have h4 : x ≠ 40 * x + 2 := by omega
-  have h5 : 40 * x % 2 ≠ 1 := by simp [hxeven]
+  have h5 : 40 * x % 2 ≠ 1 := by omega
   change highLevelNext (.D x (40 * x)) =
     some (.D (39 * x + m + 2) (3 * x + 3))
   simp only [highLevelNext, if_neg h0, if_neg h1, if_neg h2,
@@ -106,7 +105,7 @@ theorem second_step (m : Nat) (hm : m % 2 = 0) :
   have hblock : 3 * x + 6 = tightB (m + 2) := by
     dsimp [x, xFamily]
     simp [tightB]
-    ring
+    omega
   have hstep := far_left_odd_tight
     (39 * x + m + 2) (3 * x + 3) (m + 2) hdodd hfar hblock
   have hfirst :
@@ -131,7 +130,7 @@ theorem two_step_zero_gap :
   · have h := second_step m hm
     have hgap : 36 * x + 2 * m - 4 = 4 * (9 * x + 23) := by
       dsimp [m]
-      ring
+      omega
     simpa [x, a, b, d, m, hgap] using h
 
 end BB6.Agent49TwoStepPoleCancellation
