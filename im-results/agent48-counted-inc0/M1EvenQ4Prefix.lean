@@ -8,6 +8,7 @@ open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
+open BB6Coverage.Agent8Q4Suffix
 
 /-- The even n=6, m=1 branch reaches a q4 suffix after 44+12a moves.
 The local bridge is shifted four cells to the right relative to the
@@ -502,7 +503,7 @@ private theorem m1EvenQ4First4Frame_eq (T : Int → Bool) (h : Int)
     frameAt T h m1EvenQ4First4Inside m1EvenQ4First4End =
       ⟨4,h+4,T⟩ := by
   apply m1EvenConfigExt
-  · simp [frameAt,frame,shiftConfig,m1EvenQ4First4End]
+  · simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4End]
   · simp [frameAt,frame,shiftConfig,m1EvenQ4First4End]
   · funext x
     by_cases hin : m1EvenQ4First4Inside (x-h) = true
@@ -526,9 +527,9 @@ private theorem m1EvenQ4First4Frame_eq (T : Int → Bool) (h : Int)
         · have hv := h0 4 (by omega)
           have hc : h+(4:Int)=x := by omega
           simpa [hc] using hv
-      simp [frameAt,frame,shiftConfig,m1EvenQ4First4Inside,
+      simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4Inside,
         m1EvenQ4First4End,hin,htrue]
-    · simp [frameAt,frame,shiftConfig,m1EvenQ4First4Inside,
+    · simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4Inside,
         m1EvenQ4First4End,hin]
 
 /-- Four state-4-on-one moves are already consumed at the m=1,n=6 cut. -/
