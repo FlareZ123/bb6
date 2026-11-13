@@ -71,14 +71,8 @@ theorem q4First10_at (T : Int → Bool) (h : Int)
   · simpa [q4First10Start] using h56.1
   · simpa [q4First10Start] using h56.2
   · simpa [q4First10Start] using h79 0 (by omega)
-  · have hh := h79 1 (by omega)
-    have heq : h+7+(1:Int) = h+8 := by omega
-    rw [heq] at hh
-    exact hh
-  · have hh := h79 2 (by omega)
-    have heq : h+7+(2:Int) = h+9 := by omega
-    rw [heq] at hh
-    exact hh
+  · simpa [Int.add_assoc] using h79 1 (by omega)
+  · simpa [Int.add_assoc] using h79 2 (by omega)
 
 /-- After the first ten moves, the five-cell q4 output is fixed. -/
 theorem q4First10_cells (T : Int → Bool) (h : Int) :
@@ -88,15 +82,20 @@ theorem q4First10_cells (T : Int → Bool) (h : Int) :
     (frameAt T h q4First10Inside q4First10End).tape (h+8) = false ∧
     (frameAt T h q4First10Inside q4First10End).tape (h+9) = true := by
   have h5 : (frameAt T h q4First10Inside q4First10End).tape (h+5) = true := by
-    simp [frameAt_tape,q4First10Inside,q4First10End]
+    have heq : (h+5)-h = 5 := by omega
+    simp [frameAt_tape,q4First10Inside,q4First10End,heq]
   have h6 : (frameAt T h q4First10Inside q4First10End).tape (h+6) = true := by
-    simp [frameAt_tape,q4First10Inside,q4First10End]
+    have heq : (h+6)-h = 6 := by omega
+    simp [frameAt_tape,q4First10Inside,q4First10End,heq]
   have h7 : (frameAt T h q4First10Inside q4First10End).tape (h+7) = false := by
-    simp [frameAt_tape,q4First10Inside,q4First10End]
+    have heq : (h+7)-h = 7 := by omega
+    simp [frameAt_tape,q4First10Inside,q4First10End,heq]
   have h8 : (frameAt T h q4First10Inside q4First10End).tape (h+8) = false := by
-    simp [frameAt_tape,q4First10Inside,q4First10End]
+    have heq : (h+8)-h = 8 := by omega
+    simp [frameAt_tape,q4First10Inside,q4First10End,heq]
   have h9 : (frameAt T h q4First10Inside q4First10End).tape (h+9) = true := by
-    simp [frameAt_tape,q4First10Inside,q4First10End]
+    have heq : (h+9)-h = 9 := by omega
+    simp [frameAt_tape,q4First10Inside,q4First10End,heq]
   exact ⟨h5,h6,h7,h8,h9⟩
 
 private theorem q4First10_preserves_after (T : Int → Bool) (h y : Int)
@@ -233,7 +232,7 @@ theorem d0Sweep_block (n : Nat) (T : Int → Bool) (h : Int)
       · have hpos : 0 < i := by omega
         let j : Nat := i-1
         have hij : i = j+1 := by dsimp [j]; omega
-        subst i
+        rw [hij]
         have hsub := ih (afterD1Block T h) (h+3) j (by omega)
         have e0 : h+3+3*(j:Int) = h+3*((j+1:Int)) := by omega
         have e1 : h+3+3*(j:Int)+1 = h+3*((j+1:Int))+1 := by omega
