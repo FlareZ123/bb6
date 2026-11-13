@@ -52,7 +52,7 @@ theorem resetBase_input_inside (L m : Nat) (hL : 0 < L) (hm : m < 3)
       s1Config_left_cell_zero, s1Config_right_cell_zero,
       resetBase_input_leftStream L 0 hL,
       s1PhysicalRight, s0PhysicalRight, s0RightFacing,
-      markerWord, d0, d1pow, sideBit]
+      markerWord, d0, d1, d1pow, sideBit]
   · have hbound : -8 ≤ x ∧ x ≤ 14 := by
       simpa [resetBaseInside] using hin
     have hcases : x = (-8:Int) ∨ x = (-7:Int) ∨ x = (-6:Int) ∨ x = (-5:Int) ∨ x = (-4:Int) ∨ x = (-3:Int) ∨ x = (-2:Int) ∨ x = (-1:Int) ∨ x = (0:Int) ∨ x = (1:Int) ∨ x = (2:Int) ∨ x = (3:Int) ∨ x = (4:Int) ∨ x = (5:Int) ∨ x = (6:Int) ∨ x = (7:Int) ∨ x = (8:Int) ∨ x = (9:Int) ∨ x = (10:Int) ∨ x = (11:Int) ∨ x = (12:Int) ∨ x = (13:Int) ∨ x = (14:Int) := by omega
@@ -62,7 +62,7 @@ theorem resetBase_input_inside (L m : Nat) (hL : 0 < L) (hm : m < 3)
       s1Config_left_cell_zero, s1Config_right_cell_zero,
       resetBase_input_leftStream L 1 hL,
       s1PhysicalRight, s0PhysicalRight, s0RightFacing,
-      markerWord, d0, d1pow, sideBit]
+      markerWord, d0, d1, d1pow, sideBit]
   · have hbound : -8 ≤ x ∧ x ≤ 14 := by
       simpa [resetBaseInside] using hin
     have hcases : x = (-8:Int) ∨ x = (-7:Int) ∨ x = (-6:Int) ∨ x = (-5:Int) ∨ x = (-4:Int) ∨ x = (-3:Int) ∨ x = (-2:Int) ∨ x = (-1:Int) ∨ x = (0:Int) ∨ x = (1:Int) ∨ x = (2:Int) ∨ x = (3:Int) ∨ x = (4:Int) ∨ x = (5:Int) ∨ x = (6:Int) ∨ x = (7:Int) ∨ x = (8:Int) ∨ x = (9:Int) ∨ x = (10:Int) ∨ x = (11:Int) ∨ x = (12:Int) ∨ x = (13:Int) ∨ x = (14:Int) := by omega
@@ -72,7 +72,7 @@ theorem resetBase_input_inside (L m : Nat) (hL : 0 < L) (hm : m < 3)
       s1Config_left_cell_zero, s1Config_right_cell_zero,
       resetBase_input_leftStream L 2 hL,
       s1PhysicalRight, s0PhysicalRight, s0RightFacing,
-      markerWord, d0, d1pow, sideBit]
+      markerWord, d0, d1, d1pow, sideBit]
 
 /-- The finite output frame agrees cellwise with the proposed successor S1
 tape on its entire touched interval. -/
