@@ -502,6 +502,114 @@ private theorem s3_high_parameter_no_blank_second (t time : Nat) :
   rw [hx,hkv] at hrun
   exact hrun
 
+/-- The second strict s3 image family has an exact parameter-only
+    pullback: one residue for j modulo 512 and one affine residue for m
+    modulo 16384. -/
+private theorem s3_pullback_forces_m_ge7 (j m u v : Nat)
+    (hj : j=319+512*u)
+    (hk : (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v) :
+    7≤m := by
+  have hstop : (574+1024*v)+j+3*m+5 =
+      (2:Nat)^(2*m+2)*(j+3) := by
+    rw [← hk]
+    exact Nat.sub_add_cancel (high_score_nonnegative j m)
+  rw [hj] at hstop
+  by_contra hm
+  have hmle : m≤6 := by omega
+  rcases (show m=0 ∨ m=1 ∨ m=2 ∨ m=3 ∨ m=4 ∨ m=5 ∨ m=6 by omega)
+    with h0|h1|h2|h3|h4|h5|h6
+  all_goals subst m
+  all_goals simp at hstop
+  all_goals omega
+
+/-- Exact equivalence between the second strict image-family pullback
+    and its single affine high-stop congruence cylinder. -/
+theorem s3_image_pullback_iff_congruence (j m : Nat) :
+    (∃ u v, j=319+512*u ∧
+      (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v ∧
+      (u+v)%16=(15+4*u)%16) ↔
+    j%512=319 ∧ (3*m+7*j+14025)%16384=0 := by
+  constructor
+  · rintro ⟨u,v,hj,hk,hsector⟩
+    have hm7 := s3_pullback_forces_m_ge7 j m u v hj hk
+    have hstop : (574+1024*v)+j+3*m+5 =
+        (2:Nat)^(2*m+2)*(j+3) := by
+      rw [← hk]
+      exact Nat.sub_add_cancel (high_score_nonnegative j m)
+    have hpow : 16384 ∣ (2:Nat)^(2*m+2) := by
+      have hp : (2:Nat)^14 ∣ (2:Nat)^(2*m+2) :=
+        Nat.pow_dvd_pow 2 (by omega)
+      simpa only [show (2:Nat)^14=16384 by decide] using hp
+    have hprod : 16384 ∣ (2:Nat)^(2*m+2)*(j+3) := by
+      obtain ⟨q,hq⟩ := hpow
+      refine ⟨q*(j+3),?_⟩
+      rw [hq]
+      ac_rfl
+    have hmod : ((574+1024*v)+j+3*m+5)%16384=0 := by
+      rw [hstop]
+      exact Nat.mod_eq_zero_of_dvd hprod
+    have hjmod : j%512=319 := by
+      rw [hj]
+      omega
+    have htarget : (3*m+7*j+14025)%16384=0 := by
+      rw [hj]
+      omega
+    exact ⟨hjmod,htarget⟩
+  · rintro ⟨hjmod,hcong⟩
+    let u : Nat := j/512
+    have hj : j=319+512*u := by
+      dsimp [u]
+      have hd := Nat.mod_add_div j 512
+      rw [hjmod] at hd
+      omega
+    have hm512 : m%512=42 := by
+      rw [hj] at hcong
+      omega
+    have hm42 : 42≤m := by omega
+    have hm7 : 7≤m := by omega
+    let k : Nat := (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)
+    have hstop : k+j+3*m+5=(2:Nat)^(2*m+2)*(j+3) := by
+      dsimp [k]
+      exact Nat.sub_add_cancel (high_score_nonnegative j m)
+    have hpow : 16384 ∣ (2:Nat)^(2*m+2) := by
+      have hp : (2:Nat)^14 ∣ (2:Nat)^(2*m+2) :=
+        Nat.pow_dvd_pow 2 (by omega)
+      simpa only [show (2:Nat)^14=16384 by decide] using hp
+    have hprod : 16384 ∣ (2:Nat)^(2*m+2)*(j+3) := by
+      obtain ⟨q,hq⟩ := hpow
+      refine ⟨q*(j+3),?_⟩
+      rw [hq]
+      ac_rfl
+    have hmodStop : (k+j+3*m+5)%16384=0 := by
+      rw [hstop]
+      exact Nat.mod_eq_zero_of_dvd hprod
+    have hmodK : k%16384=(15934+3072*u)%16384 := by
+      rw [hj] at hmodStop
+      omega
+    have hdiv : 1024 ∣ 16384 := by decide
+    have hkmod1024 : k%1024=574 := by
+      calc
+        k%1024 = (k%16384)%1024 :=
+          (Nat.mod_mod_of_dvd k hdiv).symm
+        _ = ((15934+3072*u)%16384)%1024 := by rw [hmodK]
+        _ = (15934+3072*u)%1024 :=
+          Nat.mod_mod_of_dvd (15934+3072*u) hdiv
+        _ = 574 := by omega
+    let v : Nat := k/1024
+    have hdecomp : k%1024+1024*(k/1024)=k :=
+      Nat.mod_add_div k 1024
+    have hk : k=574+1024*v := by
+      dsimp [v]
+      omega
+    have hv16 : v%16=(15+3*u)%16 := by
+      rw [hk] at hmodK
+      omega
+    have hsector : (u+v)%16=(15+4*u)%16 := by omega
+    have hk' :
+        (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v := by
+      simpa [k] using hk
+    exact ⟨u,v,hj,hk',hsector⟩
+
 /-- Add the two disjoint high-stop progressions to the late-fast
     exact C58 predicate. -/
 def highAllowedBoth (j m : Nat) : Prop :=
@@ -516,6 +624,22 @@ def highAllowedAllS3 (j m : Nat) : Prop :=
   ¬(∃ u v, j=319+512*u ∧
     (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v ∧
     (u+v)%16=(15+4*u)%16)
+
+/-- The same predicate in the exact parameter-only congruence form. -/
+theorem highAllowedAllS3_iff_congruence (j m : Nat) :
+    highAllowedAllS3 j m ↔
+      lateFastHighAllowed j m ∧
+      ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0) := by
+  unfold highAllowedAllS3
+  constructor
+  · rintro ⟨hbase,hnot⟩
+    refine ⟨hbase,?_⟩
+    intro hcong
+    exact hnot ((s3_image_pullback_iff_congruence j m).2 hcong)
+  · rintro ⟨hbase,hnot⟩
+    refine ⟨hbase,?_⟩
+    intro hfamily
+    exact hnot ((s3_image_pullback_iff_congruence j m).1 hfamily)
 
 /-- Exact Machine C blank-halting iff after excluding every high-stop
     target in the second strict sixth/seventh image family, not only
