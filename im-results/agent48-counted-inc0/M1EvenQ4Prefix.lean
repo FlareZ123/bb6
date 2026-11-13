@@ -58,7 +58,7 @@ private theorem m1EvenSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
   have hside := sideBit_d1pow_append a (3*a+1+k)
     (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) (by omega)
   rw [hleft] at hcell
-  simp only [List.append_assoc] at hcell
+  simp only [List.append_assoc] at hcell hside
   rw [hside] at hcell
   exact hcell
 
@@ -138,7 +138,8 @@ theorem m1EvenQ4Bridge_input_match (a b : Nat) (h : Int) :
           (s1Config 3 6 1 0 0 b h).tape h (h+2) (by omega)
         have hsrc : (s1Config 3 6 1 0 0 b h).tape (h+2) = true := by
           have hc := s1Config_right_cell 3 6 1 0 0 b h 1
-          simpa [s1PhysicalRight_source, sideBit] using hc
+          have hcoord : h+1+1 = h+2 := by omega
+          simpa [hcoord,s1PhysicalRight_source, sideBit] using hc
         have hcoord :
             h - ((1 : Nat) : Int) + 3 = h+2 := by omega
         rw [hcoord, hpres]
@@ -156,7 +157,8 @@ theorem m1EvenQ4Bridge_input_match (a b : Nat) (h : Int) :
           (s1Config 3 6 1 0 0 b h).tape h (h+3) (by omega)
         have hsrc : (s1Config 3 6 1 0 0 b h).tape (h+3) = true := by
           have hc := s1Config_right_cell 3 6 1 0 0 b h 2
-          simpa [s1PhysicalRight_source, sideBit] using hc
+          have hcoord : h+1+2 = h+3 := by omega
+          simpa [hcoord,s1PhysicalRight_source, sideBit] using hc
         have hcoord :
             h - ((1 : Nat) : Int) + 4 = h+3 := by omega
         rw [hcoord, hpres]
@@ -198,6 +200,7 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
     have hcell := s1Config_left_cell 3 6 1 a 0 b h i
     have hside : sideBit (s1LeftFacing 3 6 1 a 0) i = true := by
       rw [hleftFacing]
+      simp only [List.append_assoc]
       by_cases hi3 : i < 3*a
       · have hiLen : i < (d1pow a).length := by
           simpa [d1pow_length] using hi3
