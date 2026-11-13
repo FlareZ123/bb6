@@ -602,3 +602,121 @@ theorem m1Even_reset_prefix_frame (a b : Nat) (h : Int) :
   simp only [Option.bind_some]
   exact htail
 
+
+
+private theorem binDec_three_five :
+    binDec 3 5 = d0 ++ d1 ++ d0 := by
+  have h1 : binDec 3 5 = d0 ++ binDec 2 2 := by
+    simpa using binDec_odd 2 2 (by norm_num)
+  have h2 : binDec 2 2 = d1 ++ binDec 1 1 := by
+    simpa using binDec_even 1 1 (by norm_num)
+  have h3 : binDec 1 1 = d0 ++ binDec 0 0 := by
+    simpa using binDec_odd 0 0 (by norm_num)
+  simp [h1,h2,h3,binDec_zero]
+
+def m1EvenQ4LeftFacing (a : Nat) : List Bool :=
+  [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec 3 5 ++ lh
+
+private theorem sideBit_binDec36_eq_binDec35_after5 (j : Nat) (hj : 5 ≤ j) :
+    sideBit (d1 ++ d0 ++ d0 ++ lh) j =
+      sideBit (d0 ++ d1 ++ d0 ++ lh) j := by
+  by_cases hj5 : j = 5
+  · subst j
+    norm_num [sideBit,d1,d0]
+  · have hj6 : 6 ≤ j := by omega
+    have hs :
+        sideBit (d1 ++ d0 ++ d0 ++ lh) j =
+          sideBit (d0 ++ lh) (j-6) := by
+      simpa [List.append_assoc,d1,d0] using
+        sideBit_append_after (d1 ++ d0) (d0 ++ lh) j
+          (by simpa [d1,d0] using hj6)
+    have ht :
+        sideBit (d0 ++ d1 ++ d0 ++ lh) j =
+          sideBit (d0 ++ lh) (j-6) := by
+      simpa [List.append_assoc,d1,d0] using
+        sideBit_append_after (d0 ++ d1) (d0 ++ lh) j
+          (by simpa [d1,d0] using hj6)
+    rw [hs,ht]
+
+private theorem m1EvenQ4LeftFacingTail (a i : Nat)
+    (hi : 3*a+11 ≤ i) :
+    sideBit (s1LeftFacing 3 6 1 a 0) i =
+      sideBit (m1EvenQ4LeftFacing a) i := by
+  have hsrc :
+      s1LeftFacing 3 6 1 a 0 =
+        (d1pow a ++ markerWord 1 ++ d0) ++
+          (d1 ++ d0 ++ d0 ++ lh) := by
+    simp [s1LeftFacing,binDec_zero,binDec_three_six,List.append_assoc]
+  have htgt :
+      m1EvenQ4LeftFacing a =
+        ([true] ++ d1pow a ++ markerWord 0 ++ d0) ++
+          (d0 ++ d1 ++ d0 ++ lh) := by
+    simp [m1EvenQ4LeftFacing,binDec_three_five,List.append_assoc]
+  have hs := sideBit_append_after (d1pow a ++ markerWord 1 ++ d0)
+    (d1 ++ d0 ++ d0 ++ lh) i (by
+      simp [d1pow_length,markerWord,d0]
+      omega)
+  have ht := sideBit_append_after ([true] ++ d1pow a ++ markerWord 0 ++ d0)
+    (d0 ++ d1 ++ d0 ++ lh) i (by
+      simp [d1pow_length,markerWord,d0]
+      omega)
+  rw [hsrc,htgt,hs,ht]
+  apply sideBit_binDec36_eq_binDec35_after5
+  simp [d1pow_length,markerWord,d0] at hi ⊢
+  omega
+
+private theorem m1EvenQ4LeftFacingPrefixTrue (a i : Nat)
+    (hi : i ≤ 3*a) :
+    sideBit (m1EvenQ4LeftFacing a) i = true := by
+  have hlist :
+      m1EvenQ4LeftFacing a =
+        [true] ++ (d1pow a ++
+          (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh)) := by
+    simp [m1EvenQ4LeftFacing,List.append_assoc]
+  by_cases hi0 : i = 0
+  · subst i
+    simp [hlist,sideBit]
+  · have hpos : 1 ≤ i := by omega
+    rw [hlist]
+    rw [sideBit_append_after [true]
+      (d1pow a ++ (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh)) i
+      (by simp; omega)]
+    have hrest := sideBit_append_left (d1pow a)
+      (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh) (i-1) (by
+        have hi' : i-1 < 3*a := by omega
+        simpa [d1pow_length] using hi')
+    rw [hrest]
+    exact sideBit_d1pow_true a (i-1) (by omega)
+
+private theorem m1EvenQ4LeftFacingBoundaryBit (a k : Nat)
+    (hk1 : 1 ≤ k) (hk9 : k ≤ 9) :
+    sideBit (m1EvenQ4LeftFacing a) (3*a+1+k) =
+      decide (-(k:Int) ∈ m1EvenQ4BridgeEnd.marked) := by
+  have hlist :
+      m1EvenQ4LeftFacing a =
+        ([true] ++ d1pow a) ++
+          (markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh) := by
+    simp [m1EvenQ4LeftFacing,binDec_three_five,List.append_assoc]
+  rw [hlist]
+  rw [sideBit_append_after ([true] ++ d1pow a)
+    (markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh)
+    (3*a+1+k) (by simp [d1pow_length]; omega)]
+  interval_cases k <;>
+    norm_num [m1EvenQ4BridgeEnd,markerWord,d0,d1,lh,sideBit]
+
+private theorem m1EvenQ4CutTape_eq_source_left
+    (a b : Nat) (h : Int) (i : Nat) (hi : 3*a+11 ≤ i) :
+    m1EvenQ4CutTape a b h (h-(i:Int)) =
+      sideBit (s1LeftFacing 3 6 1 a 0) i := by
+  let T := (s1Config 3 6 1 a 0 b h).tape
+  have hout : m1EvenQ4Inside
+      ((h-(i:Int))-(h-((3*a+1 : Nat) : Int))) = false := by
+    simp [m1EvenQ4Inside]
+    omega
+  have hcut := m1EvenQ4CutTape_eq_swept a b h
+    (h-(i:Int)) hout
+  have hpres := sweptLeft_preserves_left (3*a+1) T h
+    (h-(i:Int)) (by omega)
+  have hcell := s1Config_left_cell 3 6 1 a 0 b h i
+  simpa [T] using hcut.trans (hpres.trans hcell)
+
