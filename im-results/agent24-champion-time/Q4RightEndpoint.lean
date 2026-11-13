@@ -549,7 +549,12 @@ theorem q4_suffix_run_target_of_prefix
           U.tape (H+1+(i:Int)) =
               sideBit (s0RightFacing 0) i := by
                 have hr := hrightU i
-                simpa [H] using hr
+                have hrightCoord :
+                    h+6+(3*b:Int)+(i:Int) = H+1+(i:Int) := by
+                  dsimp [H]
+                  omega
+                rw [hrightCoord] at hr
+                exact hr
           _ = sideBit (s1PhysicalRight 0) i := by
                 rfl
           _ = (s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 H).tape
