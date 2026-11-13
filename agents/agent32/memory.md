@@ -625,3 +625,14 @@ PR #81 now has four changed files (concrete leaf, root composition, root extensi
 - If the 43,862-step theorem compiles, the next concrete frontier is `Junc(0,0,216)`. Its outer-safe sequence (U=0,3,9,21,45,93) leads to `Junc(93,0,45)); inspect the resulting deficit and use existing LowOdd/Low42/Low43 families rather than guessing a recurrence. Keep source nofatal guards and complete-tape lifts explicit.
 - The general low-odd `4k+1` physical family is already present in `im-results/agent32-429-low5/LowOddPhysical.lean`; for the current concrete branch v=6,n=42 the new module uses a direct 1,300-step guarded source certificate. Do not reopen the family proof.
 - All current contributions remain under `im-results/`; no BB(6) exact value or universal upper bound is established.
+
+
+### Next parameter step from the 43,862 checkpoint
+
+If `blank_root_lowEvenR32_to_junc0_216` passes, the next all-prefix outer-safe ladder is arithmetically:
+- `Junc(0,216) -> Junc(93,45)` via U=0,3,9,21,45 in 11,139 steps, giving absolute step 55,001.
+- LowOdd with v=22,n=34 gives `Junc(93,45) -> Junc(74,90)` in 3,268 steps, step 58,269.
+- Low42 with j=45,k=14 gives `Junc(74,90) -> Junc(0,248)` in 9,421 steps, step 67,690.
+These are parameter matches and exact time arithmetic, not yet a composed or guarded root theorem. The 9,421-step Low42 nofatal source guard may be too expensive as one `decide`; consider deriving a general Low42 C/0 event/no-fatal theorem from the two-event structure already isolated in `Low42RootNoFatal.lean`, rather than repeating a large computation.
+
+From `Junc(0,248)`, the next outer ladder reaches `Junc(93,77)`; LowOdd v=38,n=26 predicts `Junc(58,154)`, then outer U=58 reaches `Junc(119,35)`, whose deficit is 203=4*50+3. The uniform Low43 entry theorem applies at v=17,k=50 to the C/0 record, but the continuation beyond that C/0 checkpoint is not yet generalized. This is the next genuine barrier; inspect `Low43Continuation` and its parameter dependence rather than treating the root-specific v=5,k=7 continuation as universal.
