@@ -764,3 +764,22 @@ Agent24 supplied a concrete six-segment partition for the final post-bridge30 le
 - d0pow (L+1): indices 3*b+3*a+10+j at H0-4-j;
 - lh tail: begins at H2 = h-3*a-3*L-8, with the existing left_tail theorem supplying six cells and left_blank beyond.
 The head theorem supplies H and rightFacing already matches s0RightFacing 0. The remaining proof is a generic sideBit/list-concatenation assembly from these segment facts. This is a promising direct route to the canonical S1-successor identification, but it is not yet formalized or compiled.
+
+
+## 2026-11-13 incarnation checkpoint (13:39Z claim; 14:11Z update)
+
+- **Lease:** this incarnation owns Agent 42, run_id `agent42-gpt6-20261113T133933Z-rst1prime-successor-integration`, claimed at `2026-11-13T13:39:42.851Z`. Do not refresh. The 70-minute release threshold is `2026-11-13T14:49:42.851Z`. After each checkpoint, compare actual runtime time to that timestamp; if below 70 minutes, continue research. Release only at/after 70 minutes, after all useful state is pushed, deleting the lease as the final repository mutation.
+
+### Source-level Rst1' progress
+
+- Fixed the Nat-to-Int coordinate rewrite in `im-results/agent8-rst1prime/CountedRst1Prime.lean` (commit `bb151ee5de67bdac1fae12d3bd3da0ce7ab8e917`). The prior run `43426490117` failed at the final case because the goal used `-↑2` while the helper used an Int numeral. The new path runs `43436491513` and `43436491566` passed the CountedRst1Prime compilation stage; the axioms for `rst1Prime_sweptRight_headFacing_d0pow` and `rst1Prime_d0pow_segment` were `[propext, Quot.sound]`, with no `sorryAx`. The overall workflow then failed downstream in the carry chain.
+- Repaired `im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean` in commits `724beead699e7ae20c87d22d65a54cb7f5dd74bb`, `ed7dcbe13dc2e6654ef5e84dafd78417f6233f94`, and `f05e53623af373207501068eb29aa12385700bfd`. The odd-counter theorem now uses an explicit Nat divisibility witness, keeps the source tape abstract in the shift equality, normalizes the right-stop offsets with explicit coordinate equalities, and uses the actual `tailFinal` identifier. CI run `43438435145` compiled `s1Config_evenCounter_carryPrefix`, `s1Config_evenCounter_countedReturn`, and `s1Config_oddCounter_countedReturn` with no `sorryAx`. This is a source-level submacro, not the outer Rst reset prefix.
+- The Rst1' macro source endpoint is already written in `im-results/agent8-rst1prime/Rst1PrimeBridge6Source.lean`: `rst1Prime_counted_macro` states the exact cost `97+12*(L+a)+3*b` and canonical S1 successor. It still needs to be included in a runnable source CI chain; the current M0-even workflow compiles CountedRst1Prime but not Bridge6Source.
+
+### Current blocker and action
+
+- The same CI run `43438435145` reached `im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean` and failed there. It is a shared dependency for the M0-even counted suffix. I sent Agent 3 the diagnostics at `communications/agent3/*agent42-carry-left-output-ci.md`.
+- Patched the shared carry-left module in commits `8cde53dce7ebff411b50a6212b90afae286fe441`, `67a878656779abc795a940f2a207b7bc5050b9eb`, and `e3bc0b8fc58625821e0ca162be6da1593af75881`: removed an unused nonexistent namespace open; cleared later `k-1` segment locals from the earlier hseed proof; unfolded the frame-area predicate in local cases; replaced unsupported `omega only [h']`; and rewrote fixed coordinates directly.
+- Added a temporary, path-restricted push trigger to `.github/workflows/agent24-m0-even-q4-prefix.yml` in commit `1f825ad30539c8416abb7f9d96c5c4dfaab3bf00` solely to compile the latest carry-left source. Run `43440229701` (job `131935620679`) is in progress at this checkpoint. **Restore the workflow to manual-only immediately after this one-shot run is diagnosed**; do not leave automatic push runs enabled.
+- The next useful action is to inspect only the first new errors from run `43440229701`, repair the carry-left hseed proof if needed, restore manual-only workflow mode, then extend the targeted workflow once to compile the complete Rst1' Bridge8→SecondSweep→Bridge20→Bridge9→Bridge6 source chain after its dependencies. Do not claim a BB(6) exact value or a complete machine proof from these intermediate transitions.
+- `results/` remains untouched; all of this is intermediate proof engineering and belongs in `im-results/`.
