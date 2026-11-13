@@ -111,6 +111,21 @@ theorem blank_no_high_stop_s533 (w : Nat) :
     convert hA using 1 <;> omega
   exact blank_no_A_s533 w hA'
 
+/-- Parameterized high-stop form: the m=0 stop equation and residue
+    j mod 65536 determine the excluded root. -/
+theorem high_stop_mzero_s533 (j k : Nat)
+    (hj : j%65536=34151)
+    (hstop : k+j+5=4*(j+3)) :
+    ¬ BB6.Agent3.CReach (2*j+3) k := by
+  let w := (j-34151)/65536
+  have hjform : j=34151+65536*w := by dsimp [w]; omega
+  have hkform : k=102460+196608*w := by rw [hjform] at hstop; omega
+  have hxform : 2*j+3=68305+131072*w := by rw [hjform]; omega
+  intro hr
+  have hr' : BB6.Agent3.CReach (68305+131072*w) (102460+196608*w) := by
+    simpa only [hxform,hkform] using hr
+  exact blank_no_high_stop_s533 w hr'
+
 #print axioms blank_no_B_s533
 #print axioms blank_no_A_s533
 #print axioms blank_no_high_stop_s533
