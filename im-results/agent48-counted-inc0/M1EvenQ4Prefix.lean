@@ -4,6 +4,7 @@ import Q4Suffix
 import Q4RightEndpoint
 import Lean.Elab.Tactic.Omega
 
+/- Source-audit marker for the one-shot Agent42 workflow run. -/
 namespace BB6Coverage.Agent48CountedInc0
 
 open BB6Coverage
