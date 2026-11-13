@@ -116,14 +116,14 @@ The base case is \(256>167\); the induction step multiplies the left side by \(1
 
 Write \(n=3^{2r-1}\). By definition, \(2^{d_r}>n\). In fact,
 \[
-2^{d_r}\ge n+3.
+2^{d_r}\ge n+5.
 \tag{5}
 \]
 The difference \(2^{d_r}-n\) is a positive odd integer. If it were \(1\), then \(n+1=2^{d_r}\). But for the odd exponent \(m=2r-1\ge3\),
 \[
 3^m+1=(3+1)(3^{m-1}-3^{m-2}+\cdots-3+1),
 \]
-where the second factor is odd and greater than \(1\). Thus \(3^m+1\) is not a power of two, proving (5).
+where the second factor is odd and greater than \(1\), so \(3^m+1\) is not a power of two. If the difference were \(3\), then \(2^{d_r}=3^m+3\) would be divisible by three, also impossible. Since the gap is positive odd and cannot be 1 or 3, it is at least 5, proving (5).
 
 For a Lean-friendly version of this factorization, define \(H_0=1\) and
 \[
@@ -173,9 +173,9 @@ Here \((2r-1)^2\ge2r+1\) for \(r\ge2\). Hence
 \[
 \frac zM<(2u-3)2^{-2rs}<2^{1-s}=\frac2{2^s}.
 \]
-On the other hand, (6) and \(n+1\le2^s-2\) give
+On the other hand, (6) and \(n+1\le2^s-4\) give
 \[
-\frac RM=\frac{nT_s}{2^s}<1-\frac2{2^s}.
+\frac RM=\frac{nT_s}{2^s}<1-\frac4{2^s}.
 \]
 Thus \((z+R)/M<1\).
 
@@ -188,9 +188,9 @@ Here \(M=2^{a+s}\). Put \(m=a-(2r-2)s\). The upper-band hypothesis says \(m\ge d
 \]
 By (4), this is less than \(2^{-m}\), and hence less than \(2/2^m\). Meanwhile,
 \[
-\frac RM=\frac{nT_s}{2^m}<1-\frac2{2^m}
+\frac RM=\frac{nT_s}{2^m}<1-\frac4{2^m}
 \]
-by (7) and \(n+1\le2^m-2\). Thus again \((z+R)/M<1\).
+by (7) and \(n+1\le2^m-4\). Thus again \((z+R)/M<1\).
 
 Both cases contradict (2). Therefore \(D\nmid N\), proving the theorem.
 
