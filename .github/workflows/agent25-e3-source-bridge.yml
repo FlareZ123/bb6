@@ -1,0 +1,102 @@
+name: Agent 25 E3 source-section bridge (reuse D-root stage 1)
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Run containing the successful d-root-stage1 artifact
+        required: true
+        default: "43402524711"
+        type: string
+      source_ref:
+        description: Exact source snapshot used by the D-root stage-1 audit
+        required: true
+        default: "2da159d86fa86d813bdfbc54e38e3ec9c75b6e69"
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent25-e3-source-bridge.yml"
+      - "im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean"
+permissions:
+  contents: read
+  actions: read
+env:
+  LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent2-packet-shift:im-results/agent37-d-timing-cocycle:im-results/agent36-cryptid-trace
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 27
+    steps:
+      - name: Checkout exact D-root stage-1 source snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || '2da159d86fa86d813bdfbc54e38e3ec9c75b6e69' }}
+          path: source
+      - name: Checkout current bridge submission
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: proof
+      - name: Restore original D sources
+        working-directory: source
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent35-d-regular-certificate/restore_sources.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
+          python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
+          python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download successful D-root stage-1 objects
+        uses: actions/download-artifact@v4
+        with:
+          name: d-root-stage1
+          run-id: ${{ inputs.source_run_id || '43402524711' }}
+          github-token: ${{ github.token }}
+          path: prior-artifact
+      - name: Restore stage-1 objects and current E3 source files
+        run: |
+          set -euo pipefail
+          cp prior-artifact/lean-audit.log source/lean-audit.log
+          tar -xzf prior-artifact/lean-stage.tar.gz -C source
+          mkdir -p source/im-results/agent36-cryptid-trace
+          cp proof/im-results/agent32-cryptid-padding/CodeImplicitNil.lean source/im-results/agent32-cryptid-padding/CodeImplicitNil.lean
+          cp proof/im-results/agent35-cryptid-code/ABridgeTwo.lean source/im-results/agent35-cryptid-code/ABridgeTwo.lean
+          cp proof/im-results/agent36-cryptid-trace/EZeroZTwo.lean source/im-results/agent36-cryptid-trace/EZeroZTwo.lean
+          cp proof/im-results/agent36-cryptid-trace/EZeroZTwoFollow.lean source/im-results/agent36-cryptid-trace/EZeroZTwoFollow.lean
+          cp proof/im-results/agent36-cryptid-trace/EZeroZTwoA.lean source/im-results/agent36-cryptid-trace/EZeroZTwoA.lean
+          cp proof/im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean source/im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean
+      - name: Compile E-zero/A-code dependencies and the physical bridge
+        working-directory: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          exec > >(tee -a lean-audit.log) 2>&1
+          lean --version
+          P=im-results/agent32-cryptid-padding
+          C=im-results/agent35-cryptid-code
+          G=im-results/agent36-cryptid-trace
+          A=im-results/agent25-cryptid-doublezero
+          lean -DmaxRecDepth=8192 -o "$P/CodeImplicitNil.olean" "$P/CodeImplicitNil.lean"
+          lean -DmaxRecDepth=8192 -o "$C/ABridgeTwo.olean" "$C/ABridgeTwo.lean"
+          lean -DmaxRecDepth=8192 -o "$G/EZeroZTwo.olean" "$G/EZeroZTwo.lean"
+          lean -DmaxRecDepth=8192 -o "$G/EZeroZTwoFollow.olean" "$G/EZeroZTwoFollow.lean"
+          lean -DmaxRecDepth=8192 -o "$G/EZeroZTwoA.olean" "$G/EZeroZTwoA.lean"
+          lean -DmaxRecDepth=55000 -o "$A/E3SourceRejoin.olean" "$A/E3SourceRejoin.lean"
+          if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
+            echo "Rejected forbidden axiom dependency" >&2
+            exit 1
+          fi
+      - name: Preserve E3 source-bridge kernel audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent25-e3-source-bridge
+          path: |
+            source/lean-audit.log
+            source/im-results/agent25-cryptid-doublezero/E3SourceRejoin.olean
+          if-no-files-found: warn
