@@ -316,14 +316,11 @@ jobs:
             /tmp/a42-terminal/q4-endpoint-axioms.log
             /tmp/a42-terminal/m0-odd-q4-bridges-axioms.log
             /tmp/a42-terminal/m0-odd-q4-prefix-axioms.log
-            /tmp/a42-terminal/m0-odd-q4-bridges-axioms.log
-            /tmp/a42-terminal/m0-odd-q4-prefix-axioms.log
             /tmp/a42-terminal/s1-counted-drain-axioms.log
             /tmp/a42-terminal/root-q4-drain-axioms.log
             /tmp/a42-terminal/champion-root-q4-drain-axioms.log
             /tmp/a42-terminal/root-q4-attainable-axioms.log
             /tmp/a42-terminal/m1-even-root-composition-axioms.log
-            /tmp/a42-terminal/m0-m2-root-composition-axioms.log
             /tmp/a42-terminal/m0-m2-root-composition-axioms.log
             /tmp/a42-terminal/counted-reset-base-axioms.log
           if-no-files-found: ignore
