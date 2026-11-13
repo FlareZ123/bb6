@@ -173,16 +173,12 @@ jobs:
           # The mixed even/odd four inverse is also used by the generalized y=3 boundary below.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/EvenOddFourExact.lean .
           lean -o EvenOddFourExact.olean EvenOddFourExact.lean
-          # The x=2 mod 16 draft currently has independent Lean errors. Skip it
-          # only on this isolated validation branch so the new two-parent modules
-          # below can be checked; the main manual workflow still compiles it.
-          if [ "$GITHUB_REF_NAME" != "agent11-y3-s229-s533-validation" ]; then
-            cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean .
-            lean -o EvenOddThreeX2Mod16.olean EvenOddThreeX2Mod16.lean 2>&1 | tee EvenOddThreeX2Mod16.log
-            if grep -q sorryAx EvenOddThreeX2Mod16.log; then
-              echo "REJECTED: x=2 mod 16 y=3 boundary proof contains sorryAx"
-              exit 1
-            fi
+          # Source-check the x=2 mod 16 y=3 boundary after the core-tactic repair.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean .
+          lean -o EvenOddThreeX2Mod16.olean EvenOddThreeX2Mod16.lean 2>&1 | tee EvenOddThreeX2Mod16.log
+          if grep -q sorryAx EvenOddThreeX2Mod16.log; then
+            echo "REJECTED: x=2 mod 16 y=3 boundary proof contains sorryAx"
+            exit 1
           fi
           # Reproduce the x=10 mod 256 second-parent counterexample.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX256Counterexample.lean .
