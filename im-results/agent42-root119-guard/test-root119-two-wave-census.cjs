@@ -44,6 +44,7 @@ const twoWavePairs = {};
 const twoWaveIntervals = [];
 const otherIntervals = [];
 const twoWaveShieldAudit = { inputs: 0, outputs: 0 };
+const zeroLeftEvenShieldAudit = { inputs: 0, outputs: 0 };
 const twoWaveIncomingAudit = {};
 
 /** @param {number} h */
@@ -341,6 +342,12 @@ for (let time = 0; time < LIMIT; time++) {
         const r = previousBZero.cphase.r;
         cphaseRuns[r] = (cphaseRuns[r] || 0) + 1;
       } else if (validZeroLeftEven) {
+        assert.equal(previousBZero.noLeft4, true,
+          'Zero-left even-run input does not satisfy the 1100 exclusion');
+        assert.equal(noLeft4, true,
+          'Zero-left even-run return did not preserve the 1100 exclusion');
+        zeroLeftEvenShieldAudit.inputs++;
+        zeroLeftEvenShieldAudit.outputs++;
         assert.equal(time, previousBZero.zeroLeftEven.returnTime,
           'Zero-left even-run return time disagrees with raw machine');
         assert.equal(head, previousBZero.zeroLeftEven.returnHead,
@@ -438,6 +445,7 @@ assert.deepEqual(cphaseRuns, { 2: 1, 3: 15_176, 4: 21 });
 assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), bZeros - 1);
 assert.equal(cphaseShieldInputs, counts.cphaseD1);
 assert.equal(cphaseShieldOutputs, counts.cphaseD1);
+assert.deepEqual(zeroLeftEvenShieldAudit, { inputs: 18, outputs: 18 });
 assert.deepEqual(Object.keys(twoWavePairs).sort(), [
   '176,73', '184,194', '32,109', '32,17', '32,2', '40,15', '40,46', '96,1',
 ]);
@@ -463,6 +471,7 @@ const report = {
   firstReturnClasses: counts,
   cphaseD1RunLengths: cphaseRuns,
   cphaseD1ShieldAudit: { inputShielded: cphaseShieldInputs, outputShielded: cphaseShieldOutputs },
+  zeroLeftEvenShieldAudit,
   residualMacroParameters: residualParameters,
   prefixShieldAudit,
   prefixLeftSixAudit,
