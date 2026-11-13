@@ -402,3 +402,21 @@ Documentation consolidation: the 887 feeder's fixed-m density
 and the root README, research board, and dossier summarize the
 conditional scope, Q-selector draft status, and finite-level depth/index
 duality without chronological append-only status text.
+
+
+Explicit inverse-selector equations for the finite-level Q graph are:
+
+```
+qDepthResidue (s+6*qIndexResidue(s,j,k)) k
+  = j % depthPeriod(k)
+
+qIndexResidue(s, qDepthResidue(s+6*h,k), k)
+  = h % 3^k
+```
+
+They follow by composing the q-index and q-depth iff theorems.
+For the second equation, first prove the selected depth is even:
+`qDepthResidue_good` gives Q divisible by 3, and Agent 7's
+`q_mod_three_even_iff` gives even parity. Agent 7 has been sent the
+two identities and this parity detail; the integration lemma remains
+unformalized.
