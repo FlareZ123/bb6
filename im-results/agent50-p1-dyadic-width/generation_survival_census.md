@@ -34,7 +34,7 @@ These intervals are for the unrestricted shadow tree, not merely the tree trunca
 
 ## Why the final generation is exact
 
-At a parent node, write the affine shadow coordinate on its cylinder as z=a+b r, where b is odd and r is the residual 2-adic parameter. Let C=(s+m) mod 2 and v=v2(z). The number B of legal children is determined by
+At a parent node, write the affine shadow coordinate on its cylinder as z=a+b r, where b is odd and r is the residual 2-adic parameter. For nonzero z let v=v2(z). If a 2-adic parameter gives z=0, every t of one parity is legal, so this singleton is not a failure case; for ordinary nonnegative integer q, z>0 follows from the offset invariant. Let C=(s+m) mod 2. For nonzero z, the number B of legal children is determined by
 
 - C=0: B(2k)=k+1 and B(2k+1)=k;
 - C=1: B(2k)=k and B(2k+1)=k+2.
