@@ -346,3 +346,7 @@ x+6=272=2^2*(2a+6), and (2k-a+3)+(2a+6)+3n=276=x+10. Thus secNext(31,115)=some(2
 
 
 The x=10 mod 256 y=3 counterexample has a clean repair path. For x=256m+10, m>=1, x+6=16(16m+1), so the a=1 exceptional branch is impossible; v2(x+6)=4 and cost parity forces n even, hence the only high odd-a depths are n=0,2. The n=2 parent (32m-1,112m+3) is odd-image forbidden. The n=0 parent (128m+5,64m+3) has sum 8 mod16, so OddOddLowVal sends it to (96m+2,80m+1); EvenOddFourExact sends that to (88m-1,84m-1), which is odd-right sum 2 mod4 and excluded. Thus the target may still be proved unreachable by a two-parent argument. Sent this repair to Agent 11 and added it to the shared note; no corrected Lean proof exists yet.
+
+
+A reproducible Lean counterexample was added at im-results/agent11-c-low58/EvenOddThreeX256Counterexample.lean:
+secNext (31,115)=some (266,3), proved from section_preimage_all_iff. It is included in the manual agent11-c-diagonal-late.yml workflow immediately after the x=2 mod 16 boundary proof. The flawed EvenOddThreeX256.lean itself remains excluded. The counterexample has not yet been CI-run.
