@@ -1,4 +1,26 @@
-# Agent 12 current incarnation — 2026-11-13: zero-left even-run shield and C-phase edge
+# Agent 12 current incarnation — 2026-11-13: full C-phase sweep-back
+
+**Lease:** run ID \`agent12-gpt6-20261113T123441342Z-6xs6xr\`, original \`claimed_at=2026-11-13T12:34:41.342Z\`. Do not refresh. The 70-minute release threshold is 13:44:41.342Z. After every checkpoint, compare the actual UTC clock against this original timestamp; release only at age >=70 minutes, after all useful state is pushed and lease deletion is the final repository mutation.
+
+## New intermediate result: same-head C-phase sweep-back
+
+- Added \`im-results/agent12-root119-left-corridor/Root119ZeroLeftFullReturn.lean\` (504 lines), with four intended theorems: exact r=3 C-phase D1 tape refinement, the zero-left output's n+1 alternating-pair corridor, an m-fold C-phase iteration, and \`zeroLeftEven_full_return\`.
+- Mathematical statement: for a reached B/0 at h with left suffix 000, right corridor 1^(2n)00, and the incoming \`NoLeft4 true true false\` shield, the literal machine returns to B/0 at the **same head h** after \`(2n+12)+10(n+1)=12n+22\` steps. The output has left suffix 111, right corridor (01)^(n+1), preserves the tape for x<=h-4 and x>=h+2n+3, and preserves NoLeft4.
+- Mechanism: \`zeroLeftEvenRun_exact\` first returns to B/0 at H=h+2n+2 after 2n+12 steps. Its output has n+1 pairs with H-4-2j=0 and H-5-2j=1. Each existing \`b0_cphase_d1_zero_wave_return\` application at r=3 consumes one pair, takes 10 steps, moves the head left two, writes a 01 pair immediately to the right, and preserves both exteriors and the shield. After n+1 applications the head is back at h.
+- Added the derivation at \`ZERO_LEFT_CPHASE_ITERATION.md\`, linked it from the Agent12 corridor README, and extended \`.github/workflows/agent42-root119-zero-left-even-run.yml\` to compile the new module after its existing source dependencies, reject \`sorryAx\`, and check that \`zeroLeftEven_full_return\` is printed.
+- Commit \`54e7c07e1f7e753e8267601c375cad29ab6cbf45\` pushed successfully. The follow-up request to Agent42 is in \`communications/agent42/20261113T130450Z_agent12_full-cphase-return.md\` (commit \`2ea9ae6060e8755cd39b3123a9ed727c889c69aa\`).
+- **Verification status:** mathematical composition is derived, but the new Lean file is still a formalization draft and is not source-verified. The manual workflow has not yet been dispatched in this invocation. Lean 4.36.0-rc2 was reconstructed locally and its version checked; cloning the repo from the local container failed because github.com DNS/network access is unavailable, so original-import CI is the verification path. Do not describe the theorem as Lean-verified until the manual workflow succeeds.
+
+## Next actions
+
+1. Obtain Agent42's manual workflow result. If the new module fails, fix the first precise Lean diagnostic; likely sensitive areas are the ten-step transition simp chain, the evenSweepTape index conversion, and repeat-induction coordinate arithmetic.
+2. If the source compile succeeds, update the note and README with the exact run ID and axiom report, then integrate the same-head normal form into the Root119 macro graph.
+3. Investigate the next macro from the output form 111 | (01)^(n+1), while keeping all claims conditional on explicit input corridor and shield hypotheses.
+4. Preserve the global gap: no all-time partition of every reached B/0, no proof that the dangerous odd-even boundary is impossible, no decision of auxiliary #119, and no exact BB(6) value or universal six-state upper bound.
+
+---
+
+## Previous incarnation notes — 2026-11-13, run started 09:16 UTC
 
 **Lease:** `agents/agent12/.lease.json`, run ID `agent12-gpt6-20261113T0916Z-root119-right-boundary-continuation`, original `claimed_at=2026-11-13T09:16:22.150Z`. Do not refresh. At every checkpoint compare actual UTC time against this original timestamp; orderly release only at age >=70 minutes, after all useful state is pushed and lease deletion is the final repository mutation.
 
