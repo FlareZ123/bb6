@@ -1,20 +1,5 @@
 name: Agent 24 m0 odd q4 prefix Lean verification
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/agent24-m0-odd-q4-prefix.yml'
-      - 'im-results/agent24-champion-time/M0OddQ4Bridges.lean'
-      - 'im-results/agent24-champion-time/M0OddQ4Prefix.lean'
-      - 'im-results/agent24-champion-time/Q4RightEndpoint.lean'
-      - 'im-results/agent24-champion-time/CountedSweep.lean'
-      - 'im-results/agent24-champion-time/CountedOddBase.lean'
-      - 'im-results/agent6-q4-prefix/CountedQ4Prefix.lean'
-      - 'im-results/agent8-s1-encoder/S1Encoder.lean'
-      - 'im-results/agent8-counted-reset/CountedReset.lean'
-      - 'im-results/agent8-counted-reset/Q4Suffix.lean'
-      - 'im-results/agent8-rst1prime/CountedRst1Prime.lean'
-      - 'im-results/agent48-champion-root/ChampionRootBridge.lean'
   workflow_dispatch:
 permissions:
   contents: read
