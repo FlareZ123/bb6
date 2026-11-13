@@ -160,14 +160,15 @@ After \(d\) parent edges the final class has modulus
 \]
 It contains infinitely many natural \(r\). Each of the finitely many band ratios is strictly inside \((6,8)\), so all corresponding integer band conditions hold once \(r\) is sufficiently large. This proves the stated arbitrary-finite-depth result and its positive density for each fixed depth.
 
-## Explicit four-edge specialization
+## Explicit five-edge specialization
 
-The following choices give four successive bands:
+The following choices give five successive bands:
 \[
 (t_1,\sigma_1)=(7,14),\quad
 (t_2,\sigma_2)=(1,9),\quad
 (t_3,\sigma_3)=(0,9),\quad
-(t_4,\sigma_4)=(2,13).
+(t_4,\sigma_4)=(2,13),\quad
+(t_5,\sigma_5)=(1,13).
 \]
 Their limiting band ratios are
 \[
@@ -176,14 +177,15 @@ i&R_i\\\hline
 1&458752/59049\approx7.7690054\\
 2&3560896/531441\approx6.7004540\\
 3&11481056/1594323\approx7.2012108\\
-4&326640896/43046721\approx7.5880552
+4&326640896/43046721\approx7.5880552\\
+5&2471264192/387420489\approx6.3787648
 \end{array}
 \]
 and are all strictly between 6 and 8.
 
 Exact modular evaluation gives the compatible class
 \[
-\boxed{r\equiv15754\pmod{19683}.}
+\boxed{r\equiv74803\pmod{177147}.}
 \]
 On this class the successive target numerators satisfy
 \[
@@ -191,11 +193,12 @@ v_3(Q)=10,\qquad
 v_3(G_1)=2,\qquad
 v_3(G_2)=1,\qquad
 v_3(G_3)\ge4,\qquad
-3\mid G_4.
+v_3(G_4)=2,\qquad
+3\mid G_5.
 \]
-The inequality \(v_3(G_3)\ge4\), rather than exact valuation 3, is intentional: \(t_4=2\) only needs \(27\mid G_3\). The extra factor of 3 is precisely what allows the selected next-digit lift to make \(3\mid G_4\). The class has density \(1/19683\) in \(r\). The four dyadic bands hold for every sufficiently large member of the class.
+The inequality \(v_3(G_3)\ge4\), rather than exact valuation 3, is intentional: \(t_4=2\) only needs \(27\mid G_3\). The extra factor of 3 is allowed because the odd ResetParent arm requires only an odd quotient. The five-edge class has density \(1/177147\) in \(r\), and is a subcylinder of the four-edge prefix \(r\equiv15754\pmod{19683}\). All five dyadic bands hold for every sufficiently large member of the class.
 
-The exact modular residues can be reproduced with the accompanying NestedOddParentHenselCheck.mjs. This finite calculation checks the displayed specialization; the induction above is the unbounded mathematical argument.
+The exact modular residues are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). This finite calculation checks the displayed specialization; the band-compatible induction above is the arbitrary-depth mathematical argument.
 
 ## Scope and next formalization
 
