@@ -138,6 +138,17 @@ jobs:
           fi
           : > /tmp/a42-terminal/q4-suffix-axioms.log
           lean -o Q4Suffix.olean Q4Suffix.lean 2>&1 | tee /tmp/a42-terminal/q4-suffix-axioms.log
+
+          # Agent 24's M1-odd source prefix is independent of M1-even and
+          # can be audited before the M1-even branch's current compile blocker.
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M1OddQ4Prefix.lean" /tmp/a42-terminal/
+          python3 "$GITHUB_WORKSPACE/im-results/agent24-champion-time/m1_odd_q4_replay.py"
+          : > /tmp/a42-terminal/m1-odd-q4-prefix-axioms.log
+          lean -o M1OddQ4Prefix.olean M1OddQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-q4-prefix-axioms.log; then
+            echo '::error::sorryAx found in m=1,n=3 odd q4 reset prefix'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-even-q4-prefix-axioms.log
           lean -o M1EvenQ4Prefix.olean M1EvenQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m1-even-q4-prefix-axioms.log
@@ -286,17 +297,8 @@ jobs:
             exit 1
           fi
 
-          # Agent 24's m=1,n=3 odd reset continuation, including its
-          # independent literal-table replay and source-level composition.
-          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M1OddQ4Prefix.lean" /tmp/a42-terminal/
-          python3 "$GITHUB_WORKSPACE/im-results/agent24-champion-time/m1_odd_q4_replay.py"
-          : > /tmp/a42-terminal/m1-odd-q4-prefix-axioms.log
-          lean -o M1OddQ4Prefix.olean M1OddQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-q4-prefix-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-q4-prefix-axioms.log; then
-            echo '::error::sorryAx found in m=1,n=3 odd q4 reset prefix'
-            exit 1
-          fi
-
+          # Agent 24's M1-odd q4 suffix and root extension depend on the
+          # generic Q4 endpoint, S1 counted drain, and M0/M2 root composition.
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M1OddQ4Suffix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-odd-q4-suffix-axioms.log
           lean -o M1OddQ4Suffix.olean M1OddQ4Suffix.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-q4-suffix-axioms.log
