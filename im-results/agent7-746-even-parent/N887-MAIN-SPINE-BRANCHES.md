@@ -61,7 +61,26 @@ The exact valuations among these are:
 
 Thus only 17 of the 145 t=1 branches can continue through a second-tier odd-parent gate. The nested Hensel selectors classify the next valuations, but exact source-band tests are still required to identify the actual parent edges.
 
-## 5. What is now structurally reduced
+## 5. Parallel direct-odd-parent gate from the t=1 state
+
+For each t=1 branch at depth j, let p=2^(n−2). Its odd predecessor is
+
+`z0(n,j) = (56p − n − 15 − 4·2^(j+1)(2n+3))/9`.
+
+The exact numerator controlling odd parents of z0 is
+
+`U_n(j) := 9(2z0(n,j)+5) = 112p − 2n + 15 − 2^(j+4)(2n+3)`.
+
+This is a second arm, distinct from the `T_n(j)=9(2z1+5)` gate on z1, the even parent of z0. For n=887, among the 145 t=1 spine depths, exact ResetParent enumeration finds:
+
+- t'=2 odd parents of z0 at exactly j=162,324,486,648,810 (j≡0 mod162), with v₃(U)=5 and odd-band scale k=883=n−4;
+- an additional t'=4 odd parent at j=486, where v₃(U)=7 and the odd-band scale is k=882=n−5.
+
+No other direct odd parent of z0 occurs among these 145 states. Thus the t=1 branch has two parallel second-tier gates: T on the z1 arm and U on the z0 arm. The five U-gated depths are separate from the 17 T-gated depths; they must both be included in a complete closure proof.
+
+U_n(j) is another affine-exponential numerator in j, so it should admit a Hensel depth selector of the same type as `depthResidue` and `twoTierDepthResidue`. The observed classes are consistent with `3^5|U` at j≡0 mod162 and the `3^7` refinement at j≡486 mod1458. A general selector proof and the source-band implications remain to be formalized.
+
+## 6. What is now structurally reduced
 
 The n=887 main-spine odd-parent set is no longer an opaque list of 162 edges: it is the union of three Hensel depth classes, with their exact dyadic scales. The second-tier t=1 branches are likewise restricted to one further depth class. This gives a compact arithmetic description of the top two levels of the 1,319-state cone.
 
