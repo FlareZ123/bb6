@@ -167,6 +167,9 @@ jobs:
           lean -o LowOneModFour.olean LowOneModFour.lean
           lean -o LowInverseOne.olean LowInverseOne.lean
           lean -o HighSumTwo.olean HighSumTwo.lean
+          # The mixed even/odd four inverse is also used by the generalized y=3 boundary below.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/EvenOddFourExact.lean .
+          lean -o EvenOddFourExact.olean EvenOddFourExact.lean
           # New exact x=2 mod 16 y=3 inverse boundary for the u=5 branch.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean .
           lean -o EvenOddThreeX2Mod16.olean EvenOddThreeX2Mod16.lean 2>&1 | tee EvenOddThreeX2Mod16.log
@@ -179,6 +182,13 @@ jobs:
           lean -o EvenOddThreeX256Counterexample.olean EvenOddThreeX256Counterexample.lean 2>&1 | tee EvenOddThreeX256Counterexample.log
           if grep -q sorryAx EvenOddThreeX256Counterexample.log; then
             echo "REJECTED: x=10 mod 256 counterexample contains sorryAx"
+            exit 1
+          fi
+          # General two-parent y=3 boundary slice and downstream inverse chain.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX128W.lean .
+          lean -o EvenOddThreeX128W.olean EvenOddThreeX128W.lean 2>&1 | tee EvenOddThreeX128W.log
+          if grep -q sorryAx EvenOddThreeX128W.log; then
+            echo "REJECTED: generalized x=128*w+10 boundary proof contains sorryAx"
             exit 1
           fi
           lean -o HighInverseSumOne.olean HighInverseSumOne.lean
@@ -320,8 +330,6 @@ jobs:
           lean -o M0OddRayDeep.olean M0OddRayDeep.lean 2>&1 | tee M0OddRayDeep.log
           # Original source exact even/odd valuation-two parent equivalence,
           # and a reusable four-inverse high m=0 normalization.
-          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/EvenOddFourExact.lean .
-          lean -o EvenOddFourExact.olean EvenOddFourExact.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0FourRoot,M0OddRayValTwo}.lean .
           lean -o M0FourRoot.olean M0FourRoot.lean 2>&1 | tee M0FourRoot.log
           lean -o M0OddRayValTwo.olean M0OddRayValTwo.lean 2>&1 | tee M0OddRayValTwo.log
