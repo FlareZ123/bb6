@@ -66,6 +66,8 @@ For initial unary counter zero, Agent 8's existing valuation-pattern identity an
 
 The module exposes `s1Config_counted_drain`, `s1Config_counted_drain_pattern`, and `s1Config_counted_drain_closed`. This is a composition of the source-level one-step S1 theorem with Agent 8's generic S0 drain theorem; it does not independently re-prove the repeated-run semantics or the v₂ carry-pattern identity.
 
+A named corollary, `s1Config_counted_decrement_inc0`, now states the parity-complete one-step theorem directly at `CountedReset.inc0Cost z c`; the generic drain uses this exact interface instead of reconstructing the odd-factorization witness locally. It has a dedicated `#print axioms` entry. This is an API-strengthening corollary, not a new machine simulation, and it remains uncompiled in the complete source workflow.
+
 The same local interface harness used for the parity theorem type-checks the new whole-drain composition with the source S1 decrement theorem and CountedReset interfaces represented by axioms. The actual repository source workflow has been extended to compile and `sorryAx`-audit `S1CountedDrain.lean` immediately after `S1CountedInc0.lean`. Neither new source module has yet passed the complete repository workflow.
 
 
