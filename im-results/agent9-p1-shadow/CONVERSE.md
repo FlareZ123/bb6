@@ -20,7 +20,7 @@ For the two feeders, $L\in\{N+8,N+9\}$. A simple uniform sufficient condition is
 > $L+M\le N+M+9=K+2M+12\le3K+4\le2^K.$
 > The feeder corollaries therefore apply whenever $q\ge\lceil (2M+7)/16\rceil$. The direct width hypothesis is stronger and allows larger finite windows at fixed $q$. This is a finite-word converse, not a bound uniform over unbounded $M$ at fixed $q$.
 
-The formal candidate is [ShadowGraphConverse.lean](./ShadowGraphConverse.lean), with feeder corollaries `l0_bounded_shadow_word_has_source` and `l1_bounded_shadow_word_has_source`.
+The formal candidate is [ShadowGraphConverse.lean](./ShadowGraphConverse.lean), with exact-width feeder corollaries `l0_bounded_shadow_word_has_source_of_width` and `l1_bounded_shadow_word_has_source_of_width`, plus simple linear-budget wrappers `l0_bounded_shadow_word_has_source` and `l1_bounded_shadow_word_has_source`.
 
 ## Proof architecture
 
