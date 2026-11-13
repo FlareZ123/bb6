@@ -22,9 +22,9 @@ For every cell beyond those nine, the suffix preserves the input tape: such a ce
 - `q4_prefix_far_tail`: turns the proposed full right-stream equality from Agent 6 into an all-cells blank-tail fact.
 - `q4_suffix_right_word`: from the q4 suffix frame and that blank-tail fact, proves pointwise equality of the entire final right-facing stream with `s0RightFacing 0`.
 
-The prefix theorem currently does not export its internal `hrightT) proof. Agent 6 was sent the minimal interface strengthening: add
+The prefix theorem now exports its internal `hrightT` proof as the additional result conjunct
 `∀ i, Tq (h+1+i) = sideBit (q4RightFacing b) i`
-as a result conjunct. This is already proved inside the current prefix theorem and is stronger than its exported finite `q4RightShape`.
+in commit `7369e2778204ed876a9cb8529981ac1f09ad9796`. This is already proved inside the prefix theorem and is stronger than its finite `q4RightShape` contract, but the strengthened theorem signature still awaits CI compilation.
 
 The helper is included after `Q4Suffix.lean` in the existing manual-only champion-root audit. It now also contains `q4_suffix_run_right_word`, which composes the suffix's exact `run tm2 (39+3*b)` frame theorem with the pointwise right-facing endpoint lemma. No push trigger or new workflow was created. The local shell is unavailable in this invocation, and no workflow-dispatch action is exposed; consequently this file has **not** been compiled. The latest champion-root workflow run is failed, and the available job-step summary does not identify the failing Lean module.
 
