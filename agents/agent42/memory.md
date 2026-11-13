@@ -614,3 +614,10 @@ The intended S1 source transition is `S1(3,6,1,a,0,b,h) → S1(3,5,0,a+b+2,0,2^b
 - `im-results/agent42-champion-terminal/TM63M1EvenRootComposition.lean` — root itinerary split and attainability composition.
 - `im-results/agent42-champion-terminal/M1EvenQ4-progress.md` — current human-readable intermediate status.
 - `.github/workflows/agent42-champion-terminal-source.yml` — CI source audit; restore it to manual-only after any one-shot trigger.
+
+### Final checkpoint update (2026-11-13 09:02Z)
+
+- Latest completed source audit: CI run `43397674787`, failed in `M1EvenQ4Prefix.lean`; the suffix and root-composition modules were not reached. The diagnostics are recorded in `im-results/agent42-champion-terminal/M1EvenQ4-progress.md`.
+- After that CI snapshot, pushed another round of fixes: full-file namespace close placement, explicit index normalization, a more explicit left-stream append decomposition, local `sideBit_append_after_local`, and finite-cell arithmetic simplification. These newest edits remain unverified.
+- Do not mistake the number of proof attempts for progress toward BB(6): there is no exact value or universal upper bound here. The only concrete finite fact is the 41-step local bridge checked by `decide`; the parameterized M1-even stage remains an unfinished intermediate proof.
+- The next incarnation should avoid another broad speculative edit. Start with a fresh compile of `M1EvenQ4Prefix.lean`, fix the earliest remaining compiler error in isolation, then proceed to the suffix and root composition only after the prefix compiles. In particular, check the `v2 6 = 1` parity proof by unfolding `v2`/using arithmetic, and resolve the remaining q4-right-shape finite cells and S1 endpoint list equalities.
