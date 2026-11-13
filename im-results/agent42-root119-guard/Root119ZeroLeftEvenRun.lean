@@ -37,8 +37,14 @@ theorem zeroLeftPrefix_run (b : Conf)
   change t (h-2) = false at h2
   change t (h-3) = false at h3
   subst q
-  simp (disch := omega) [shuttleRun, next, setBit,
-    zeroLeftPrefixTape, h0, h1, h2, h3]
+  have h10 : h-1 ≠ h := by omega
+  have h20 : h-2 ≠ h := by omega
+  have h30 : h-3 ≠ h := by omega
+  have h21 : h-2 ≠ h-1 := by omega
+  have h31 : h-3 ≠ h-1 := by omega
+  have h32 : h-3 ≠ h-2 := by omega
+  simp [shuttleRun, next, setBit, zeroLeftPrefixTape,
+    h0, h1, h2, h3, h10, h20, h30, h21, h31, h32]
 
 /-- Exact output tape after the even D/F sweep and its D0/E0/A0 return. -/
 def evenSweepB0Tape (n : Nat) (t : Int → Bool) (h : Int) : Int → Bool :=
