@@ -85,12 +85,12 @@ theorem odd_block_exit_terminal_factorization
         5^t*m*(2^(v+1)+3) + 2^v*(2*v-1) + 3 := by
   rcases odd_block_exit_terminal_identity t m k ht hm hmOdd hterm with
     ⟨q, v, hq, hblock, hExitEven, hidentity⟩
+  have hP : 1 ≤ 5^t*m := by
+    have hp : 0 < 5^t*m :=
+      Nat.mul_pos (Nat.pow_pos (by decide)) hm
+    omega
   have hsource : 2^v*(2*q+3) = 5^t*m+1 := by
     have hfactor := oddTower_factor q v
-    have hP : 1 ≤ 5^t*m := by
-      have hp : 0 < 5^t*m :=
-        Nat.mul_pos (Nat.pow_pos (by decide)) hm
-      omega
     rw [← hq] at hfactor
     have hshift : (5^t*m-1)+2 = 5^t*m+1 := by omega
     rw [hshift] at hfactor
