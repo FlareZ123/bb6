@@ -98,7 +98,9 @@ If \(3\nmid B\), then \(G(u)\bmod3\) is an affine function of u with unit slope 
 \iff u\bmod3^k=\eta_k.
 \]
 Moreover G is a 3-adic isometry: if \(u_1-u_2\) has exact valuation k, the displayed shift law gives
-\(v_3(G(u_1)-G(u_2))=k\). This scaled form is the appropriate abstraction for an R numerator restricted to one exact-Q lift; it does not require \(G(0)\) itself to vanish modulo three, because the first digit is selected rather than fixed to zero.
+\(v_3(G(u_1)-G(u_2))=k\). Since \(G(u)\bmod3\) has unit slope, the
+same digit recursion solves \(G(u)=y\) uniquely for every \(y\in\mathbb Z_3\);
+thus G is an isometric bijection. This scaled form is the appropriate abstraction for an R numerator restricted to one exact-Q lift; it does not require \(G(0)\) itself to vanish modulo three, because the first digit is selected rather than fixed to zero.
 
 ## 3. Instantiations already present in the repository
 
