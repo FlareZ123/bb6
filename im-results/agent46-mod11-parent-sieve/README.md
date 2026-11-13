@@ -114,7 +114,11 @@ The existing all-\(r\) filters in CancellationMod5, CancellationMod7Joint, and C
 - \(E_7\): \(u\bmod3=1\) and \(u\bmod7\) is not the single allowed residue determined by \(r\bmod3\), density \(2/7\);
 - \(E_{13}\): \(u\bmod12=9\) and \(u\bmod13\) is not the single allowed residue determined by \(r\bmod6\), density \(1/13\).
 
-Their union has density \(46/91\). The new set
+Their union has density \(46/91\): the intersection \(E_5\cap E_7\) has density \(2/35\), so \(E_5\cup E_7\) has density
+\[
+\frac15+\frac27-\frac2{35}=\frac37.
+\]
+The set \(E_{13}\) is disjoint from both: \(u\equiv9\pmod{12}\) forces \(u\equiv0\pmod3\), and its five residues modulo \(60\) are not among the four \(E_5\) residues. Thus the old union has density \(3/7+1/13=46/91\). The new set
 \[
 E_{11}(r):\quad u\bmod10=2,\quad u\bmod11\ne w_r
 \]
