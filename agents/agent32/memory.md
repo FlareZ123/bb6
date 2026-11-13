@@ -922,3 +922,6 @@ The standard J(94,173) and shifted J(93,173) traces agree through step 31,154, b
 
 
 The parity-shifted J(93,173) simulation now has a self-contained Node reproducer at `im-results/agent32-429-low43/simulate_parity_shifted_junc93.js`. It asserts the 31,154-step C/0 snapshot, the three-cell tail difference versus J(94,173), first divergence at -188 / step 31,528, all 16 Junc checkpoints, and the corrected sums: 425+102,656=103,081 from C/0; 134,235 from J(93,173); 145,374 including the 11,139 outer ladder from J(0,344). The dossier is `im-results/agent32-429-low43/parity-shifted-junc93-173.md`. All remain computational, not formal, evidence.
+
+
+The three parity-path partial returns are now reduced further in `parity-shifted-junc93-173.md`: `J(15,172,1)` and `J(135,60,1)` first reach `midApos(14,172,1)` and `midApos(134,60,1)` via `juncPos_to_midA_delta` (350 and 126 steps), leaving 1,201 and 1,609 steps in the unresolved w=1/u>1 family. `J(78,120,2)` reaches `midApos(77,120,2)` in 246 steps; existing `midApos_w2_exit_delta` takes another 494 to an A/0 boundary, leaving 1,489 steps to J(0,0,408). Agent 6 was sent this refined decomposition. The existing `midApos_to_junc0_of_base` only handles u=1, so w=1/u>1 is the principal missing lemma.
