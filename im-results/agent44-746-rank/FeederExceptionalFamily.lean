@@ -4,7 +4,7 @@ set_option maxHeartbeats 0
 
 namespace CascadeFeederExceptional
 open CascadeFeederSix CascadeSweep CascadeResetInverse
-open CascadeUniformFatal CascadeFirstFork CascadeAncestry
+open CascadeUniformFatal CascadeManyShield CascadeFirstFork CascadeAncestry
 
 /-- The two 1458-adic t=1 feeder exceptions 1085 and 1372 are also
     blank-root unreachable. Their exact inverse chain has one extra
@@ -411,10 +411,10 @@ theorem fatal_even_parent_formula_1085_1372 (n : Nat)
     (hn : n%1458=1085 ∨ n%1458=1372) :
     evenPre n (n+4)=16*2^(n-2)-3*n-7 := by
   have hpow : 2^n=4*2^(n-2) := by
-    have he : n=(n-2)+2 := by omega
-    rw [he,Nat.pow_add]
-    simp only [show 2^2=4 by decide]
-    omega
+    calc
+      2^n = 2^((n-2)+2) := by congr 1; omega
+      _ = 2^(n-2)*2^2 := by rw [Nat.pow_add]
+      _ = 4*2^(n-2) := by norm_num; ring
   dsimp [evenPre]
   rw [hpow]
   omega
