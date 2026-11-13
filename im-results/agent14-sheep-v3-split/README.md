@@ -12,7 +12,7 @@ For `0 ≤ s ≤ 16`, fix `r` with `1≤r≤63` and `3∤r`, and consider every 
 n = 3^s * (r + 63*k),    j = 17496*n,    target = 2^j.
 ```
 
-The [complete-period certificate](./stratum_certificate.py) finds a set `R_s` of residues `r` with **no incoming authentic even-return edge** into `target` for every `k`. The [five-phase refinement](./phase_refine.py) additionally excludes phases of otherwise surviving rows. A new [finite inverse-chain certificate](./inverse_chain.py) follows every exact source branch for several of the remaining powers, discharging four whole further progressions and five selected nine-phase progressions. Each excluded power satisfies `¬ EvenReach 10 (2^j)` at every time.
+The [complete-period certificate](./stratum_certificate.py) finds a set `R_s` of residues `r` with **no incoming authentic even-return edge** into `target` for every `k`. The [five-phase refinement](./phase_refine.py) additionally excludes phases of otherwise surviving rows. A new [finite inverse-chain certificate](./inverse_chain.py) follows every exact source branch for several of the remaining powers, discharging four whole further progressions and seven selected nine-phase progressions. Each excluded power satisfies `¬ EvenReach 10 (2^j)` at every time.
 
 | Valuation s | Unsplit closed r /42 | Phase-refined closed (r,t) /210 |
 | ---: | ---: | ---: |
@@ -40,9 +40,9 @@ The certified progressions are disjoint: each has an exact 3-adic valuation `v3(
 17-stratum five-phase predecessor-free density:
     9597932614/13559717115
 Extra finite inverse-chain closures at s=0:
-    4/63 + 25/(9*63) = 61/567
+    4/63 + 35/(9*63) = 71/567
 Combined:
-    11056738159/13559717115 = 81.54106804167%.
+    1613698087/1937102445 = 83.30473647200%.
 ```
 
 The original unsplit single-root sieve gives `1849545554/2711943423 = 68.20000514443%`; its complete five-phase refinement gives `70.78269061663%`. The deeper inverse-chain theorem supplies another `10.758377425%` of disjoint progressions. This is a density of predecessor-free **exponent indices in this sparse subsequence**. It is not an estimate of the probability that the original machine halts. The unclassified high-valuation tail `v3(n)≥17` has natural density `3^(-17)≈7.74e-9`; classes left open within the first 17 strata can still have large unknown inverse cones. The result gives a rigorous **lower bound** on predecessor-free density; it does not establish the full exact density.
@@ -147,19 +147,21 @@ For `j=17496*(r+63*k)` and each `r` in `{1,8,22,43,50}`, the exact 3-adic checks
 
 Four classes `r∈{1,22,43,50}` have no alternative root branch and are therefore blank-even unreachable for all k. The class `r=8` also admits root branch X and must be treated separately.
 
-For `r∈{8,17,35,44,62}`, subdivide `k=t+9m`. The [inverse-chain script](./inverse_chain.py) proves that precisely these five phases for each r force hidden h=0 into X and exhaust all possible generic/exceptional sources:
+For `r∈{8,17,26,35,44,53,62}`, subdivide `k=t+9m`. The [inverse-chain script](./inverse_chain.py) proves that precisely these five phases for each r force hidden h=0 into X and exhaust all possible generic/exceptional sources:
 
 ```
 r=8:  t in {0,1,3,4,7}
 r=17: t in {0,3,5,6,8}
+r=26: t in {1,2,4,5,8}
 r=35: t in {0,1,4,6,7}
 r=44: t in {0,2,3,5,6}
+r=53: t in {1,2,5,7,8}
 r=62: t in {1,3,4,6,7}
 ```
 
-The condition h=0 is maintained throughout each phase progression because `2^(17496*63*9)≡1 mod3^11`; each remaining generic `a` is checked for a complete multiplicative period. In these selected phases X has **no incoming even edge**. The Z branch for r8 was already closed by the finite chain, so all 25 listed `(r,t)` progressions give unconditional root exclusions.
+The condition h=0 is maintained throughout each phase progression because `2^(17496*63*9)≡1 mod3^11`; each remaining generic `a` is checked for a complete multiplicative period. In these selected phases X has **no incoming even edge**. For the newly added r=26 and r=53 rows, the all-k root census has only the `(h,a)=(8,2)` branch X (no Z branch); the listed five phases exhaust every possible incoming edge to X, including the exceptional cofactor-three case via `x_no_special_any_depth`. The Z branch for r8 was already closed by the finite chain, so all 35 listed `(r,t)` progressions give unconditional root exclusions.
 
-The four full r-progressions contribute `4/63` to the density among n. The 25 classes with period `9*63` contribute `25/(9*63)`, disjoint from the prior 17-stratum first-level certificate. The remaining r=29 Z corridor and r=26,53 higher-3-adic X branches are **open**. The r=29 corridor and **seven further h=8 root families** have since been shown to have [genuinely admissible mixed inverse paths of arbitrary prescribed depth](../agent14-sheep-r29-hensel-corridor/README.md), despite every target exponent having the same fixed 3-adic valuation. This explicit Hensel-lifting theorem explains the difficulty of uniform finite-depth leaf closure and sharpens the next source-sensitive research question. Synthetic affine ancestors still give no blank-root reachability by themselves.
+The four full r-progressions contribute `4/63` to the density among n. The 35 classes with period `9*63` contribute `35/(9*63)`, disjoint from the prior 17-stratum first-level certificate. The r=29 Z corridor remains unclosed; the r=26 and r=53 higher-3-adic X branches are now closed for five of nine k phases each, while their remaining phases are not classified by this method. The r=29 corridor and **seven further h=8 root families** have [genuinely admissible mixed inverse paths of arbitrary prescribed depth](../agent14-sheep-r29-hensel-corridor/README.md), despite every target exponent having the same fixed 3-adic valuation. The new phase exclusions are complementary to the Hensel-depth cylinders: they remove additional root classes without claiming that the synthetic affine ancestors are blank-reachable.
 
 All finite generic low-a checks use the *exact* original inverse equation and complete modulo periods. The script also checks every requisite h=0 valuation at a modulus high enough for each affine denominator and verifies the high-a/exceptional bounds. A formal Lean import of these new chain assertions remains pending.
 
@@ -171,7 +173,7 @@ Run `python stratum_certificate.py`, `python phase_refine.py`, and `python inver
 [30,30,12,30,30,30,12,12,30,12,25,25,10,20,20,20,8].
 ```
 
-The refined 17-element count vector, each entry out of 210 possibilities, is `[150,150,132,150,150,150,132,132,150,132,125,125,110,100,100,100,88]`. The five-phase rational density is checked against a fixed fraction in `phase_refine.py`, and the independent-chain new 61/567 contribution is obtained from four full residue classes and 25 nine-phase classes.
+The refined 17-element count vector, each entry out of 210 possibilities, is `[150,150,132,150,150,150,132,132,150,132,125,125,110,100,100,100,88]`. The five-phase rational density is checked against a fixed fraction in `phase_refine.py`, and the independent-chain new 71/567 contribution is obtained from four full residue classes and 35 nine-phase classes.
 
 The necessary remaining task for fully source-integrated formal certification is an original-machine Lean theorem incorporating the LTE bound, all complete modular finite residue checks, the existing high-`a` odd gap and the exceptional-source exclusion. The [pinned original-machine Sheep bridge](../agent16-sheep-even-return/README.md) and [even-edge inverse splitter](../agent14-sheep-even-inverse/SheepEvenSourceAlgebra.lean) already exist. Separately, a global invariant resolving genuine reachability of **all** powers from the blank seed is still needed to decide this machine and ultimately BB(6).
 
