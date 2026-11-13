@@ -31,7 +31,7 @@ This is a density of excluded parameter values in one m=0 high-stop ray, not a p
 
 ## Source-parent structure
 
-Define the odd-s residual target
+The exact high-stop predecessor equations first reduce (2j+3,k) to (17+64t,28+96t); mzero_first_two_reach then reduces that configuration to the odd-s residual target
 
 A_s = (130+208s, 94+152s).
 

@@ -21,7 +21,7 @@ The four families correspond to the odd parameter t=(j-7)/32 in the disjoint cyl
 
 ## Proof architecture
 
-The source theorem mzero_first_two_reach maps each high-stop root target to A_s=(130+208s,94+152s), where t=2s+1 and j=7+32t. For odd s, source parent extraction proves that reachability of A_s forces reachability of L_s=(222+360s,46+76s) or B_s=(54+90s,127+211s).
+The exact high-stop predecessor equations first reduce each root target (2j+3,k) to (17+64t,28+96t). The source theorem mzero_first_two_reach then reduces that configuration to A_s=(130+208s,94+152s), where t=2s+1 and j=7+32t. For odd s, source parent extraction proves that reachability of A_s forces reachability of L_s=(222+360s,46+76s) or B_s=(54+90s,127+211s).
 
 For even-even targets (x,y) with x>0, y≥6, x,y even, x+y=8S, S>2, and S%4≠0, the source theorem even_even_sumzero_parent proves that every source parent is either the direct parent (x+y-2,(y-2)/2) or the depth-one even-a bounce parent (2S-2,(x+2y-2S-8)/2). The proof derives this from the complete original-source section_preimage_all_iff grammar. It excludes the zero-left branch by the non-power-of-two condition, the one-left and odd-left branches by parity, and deeper even-left bounce branches because they force 4|S.
 
