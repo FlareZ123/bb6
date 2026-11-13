@@ -601,7 +601,7 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
           cases hstep2
           have hno := parentCone_path_left_preserves_noBF hp2 hdisp2
             (by simp [parentConeNoBF])
-          exact hno.1 hdB
+          exact False.elim (hno.1 hdB)
       rw [next_B_one b (by simpa [hbShape]) hbBit] at hstep2
       cases hstep2
       obtain ⟨v,hstep3,hvpos,hp3,hdisp3⟩ :=
