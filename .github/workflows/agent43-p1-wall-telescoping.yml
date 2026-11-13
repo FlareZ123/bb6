@@ -1,0 +1,45 @@
+name: Agent43 P1 source wall telescoping theorem (targeted)
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'im-results/agent43-p1-high-cost-reset-count/WallTelescopingSource.lean'
+      - '.github/workflows/agent43-p1-wall-telescoping.yml'
+permissions:
+  contents: read
+jobs:
+  source-wall:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged-source CountCone dependency chain and wall theorem
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43"
+          lean --version
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "$MAP/$m.olean" "$MAP/$m.lean"
+          done
+          lean -o "$INV/P1FiniteInverse.olean" "$INV/P1FiniteInverse.lean"
+          for m in MassInverse OddConeMass P1InverseLog InverseIff UpperTail; do
+            lean -o "$P1/$m.olean" "$P1/$m.lean"
+          done
+          for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount DefectTransport; do
+            lean -o "$AG28/$m.olean" "$AG28/$m.lean"
+          done
+          lean -o "$AG43/CountedLastResetDraft.olean" "$AG43/CountedLastResetDraft.lean"
+          lean -o "$AG43/LastResetStrengthSource.olean" "$AG43/LastResetStrengthSource.lean"
+          lean -o "$AG43/CountedWallStrongGateSource.olean" "$AG43/CountedWallStrongGateSource.lean"
+          lean "$AG43/WallTelescopingSource.lean"
