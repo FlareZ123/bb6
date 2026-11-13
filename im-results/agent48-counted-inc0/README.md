@@ -153,6 +153,6 @@ Added `M1EvenQ4Prefix.lean`. This addresses the concrete next source state after
 - a fixed 41-step framed bridge with input marks `[-7,-6,-5,-4,-1,2,3,4]` and output marks `[-9,-8,-7,-4,-1,1,2,3,4]`;
 - `E_scan (3*a)`, returning the head to `h+4`.
 
-The companion theorem `m1Even_q4_prefix_rightShape` establishes the exact `q4RightShape` precondition for the existing `Q4Suffix`. This cut is the q4 suffix input after four already-consumed state-4-on-one transitions, so the remaining suffix length is `35+3*b`. The total is therefore `79+12*a+3*b`, matching `resetPrefixCost 1 6 a b` (since `v2 6=1`).
+The companion theorem `m1Even_q4_prefix_rightShape` establishes the exact `q4RightShape` precondition for the existing `Q4Suffix`. The module also proves `m1Even_q4_suffix_after_four`, reusing the existing suffix after the four already-consumed state-4-on-one transitions, and `m1Even_reset_prefix_frame`: a complete source run of `79+12*a+3*b` moves from the m=1,n=6 S1 input to the exact explicit Q4 suffix output frame. This total matches `resetPrefixCost 1 6 a b` (since `v2 6=1`).
 
-**Verification boundary:** both new m=1,n=6 theorems are uncompiled candidates. The q4 cut's canonical left-facing identity and the composition with `Q4Suffix` to the target `s1Config 3 5 0 (a+b+2) (2^b-1) 0 (h+5+3*b)` remain open. Keep this in `im-results/`; it is not yet a complete reset-prefix theorem.
+**Verification boundary:** the new m=1,n=6 theorems are uncompiled candidates. The q4 cut's canonical left-facing identity and the identification of the final Q4 suffix frame with `s1Config 3 5 0 (a+b+2) (2^b-1) 0 (h+5+3*b)` remain open. Keep this in `im-results/`; it is not yet a complete canonical reset-prefix theorem.
