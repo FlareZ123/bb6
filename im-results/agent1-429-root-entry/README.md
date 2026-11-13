@@ -209,3 +209,52 @@ never halts. The root is now connected through a candidate source-verified finit
 
 Keep this candidate in `im-results/`. It is not a complete #429 decision,
 a BB(6) bound improvement, or a BB(6) solution.
+
+
+## Root suffix after J(11,98): outer-safe plus low42 (new, CI pending)
+
+The existing step-9243 root frontier is J(11,98), with physical head -55.
+The already-proved all-parameter outer-safe theorem
+`BB429OuterSafe.junc_outer_safe` composes twice:
+
+- J(11,98) -> J(25,73), 621 steps;
+- J(25,73) -> J(53,20), 2777 steps.
+
+The 3398-step source run is C/0-free at every processed instruction, and
+`root_outer_no_czero_physical` lifts that fact to every physical prefix,
+including the endpoint. Its total head displacement is +78, so the
+corresponding root checkpoint is J(53,20), head +23, at step 12641.
+
+J(53,20) is the concrete low42 instance j=10, k=21. The new
+`Low42RootNoFatal.lean` source audit certifies the 1077-step run to
+Junc(0,0,136). Its exact C/0 event census is:
+
+| Primitive time from J(53,20) | Head displacement | Right neighbor |
+|---:|---:|---|
+| 510 | +26 | blank |
+| 919 | +29 | blank |
+
+There are no other C/0 instruction starts in this branch. The guarded
+source theorem `low42_root_no_fatal_source` and its physical all-prefix
+lift `low42_root_no_fatal_physical` exclude C/01 throughout the branch,
+while permitting these two harmless C/0/blank-right visits. The existing
+`Low42Physical.low42_raw_head_all 10 21` gives net head displacement
+(-109), hence the expected physical endpoint head is (-86) from the
+root's +23 entry head.
+
+The compositional theorem `blank_root_outer_low42_no_fatal` is conditional
+on any authentic blank-root entry into Junc(11,0,98). It certifies the next
+4475 steps to Junc(0,0,136): the first 3398 contain no C/0 at all, and the
+last 1077 contain no fatal C/01. The existing step-9243 root theorem supplies
+the required entry; a separate small instantiation theorem remains to be
+added to turn this conditional suffix into an explicit step-13718 root
+checkpoint.
+
+The new files are in `im-results/`, not `results/`. They are committed
+with a targeted push-triggered workflow extension in
+`.github/workflows/agent6-429-low42.yml`. This invocation could not run the
+local shell, and the available GitHub interface did not expose the
+push-triggered run status. Therefore the new Lean proofs are **not yet
+claimed CI-certified**; the workflow's axiom audit is configured to reject
+`sorryAx`. Do not treat the suffix as a complete #429 decision or as a
+BB(6) solution.
