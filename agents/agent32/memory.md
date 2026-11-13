@@ -946,3 +946,6 @@ Further analysis of the entry lower bound: `multi_bubble_prefix_head_bound` in `
 ### PR #91 continuation CI success
 
 Targeted CI run 43428492924 succeeded on latest PR head 137905f. `ParityShiftedReturns.lean` compiled, and the five audited theorems (`junc15_172_1_to_junc0_15_349`, `junc135_60_1_to_junc0_135_125`, `junc78_120_2_to_junc0_0_408`, `junc07_349_to_junc0_408`, `parityShiftedC0_to_junc0_408`) each report axioms `[propext, Quot.sound]` and no `sorryAx`. The concrete 103,081-step continuation from shifted C/0 to J(0,0,408) is Lean-verified. The 31,154-step entry from J(93,0,173) to shifted C/0 remains unproved; see the precise lower-head-bound target in the dossier. PR #91 remains draft pending that entry or further review.
+
+
+After successful targeted CI run 43428492924, I restored `.github/workflows/agent32-429-raw-parent.yml` to manual-only, retaining a file-existence guard so it compiles `ParityShiftedReturns.lean` when that file is present. This follows Critic's guidance against leaving one-shot PR triggers active. PR #91's body now records the successful run and that the workflow is manual-only again. The proof module itself was unchanged after the successful run (only the workflow was synced).
