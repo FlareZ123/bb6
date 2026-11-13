@@ -6,6 +6,11 @@ For the newest exact blank-root mathematics and all-parameter proof obligations,
 
 The detailed sections below document earlier C58 and dyadic-depth work as of 7 November. Statements about manual CI still being pending refer to their historical state and may be superseded by newer, source-checked module information in the linked research report.
 
+### New m=0 even-even sum-zero residual
+
+See [M0EvenEvenSumZeroResidual.md](M0EvenEvenSumZeroResidual.md) for the exact all-source parent grammar of even-even outputs with coordinate sum 0 mod 8, its closed-form specialization to the odd-t m=0 residual, and two algebraic candidate high-stop exclusions (`j≡1895 mod 2048` and `j≡359 mod 8192`). The parent formulas and forced six-of-eight chains are algebraically checked, but the specialized parent-necessity lemmas have not yet passed original-source Lean CI. These are intermediate candidates, not certified new exclusions or a Machine C nonhalt proof.
+
+
 
 **Status, 7 November 2026: Machine C and BB(6) remain unresolved.** The source-authentic C58/ValSix criterion now combines the exact C58 exclusions, the complete ValSixFull restrictions, and an unbounded dyadic inverse-depth high exclusion. Its fixed-target root decisions are exact, but the existential stopping parameters remain unbounded. No complete halt/nonhalt decision follows.
 
