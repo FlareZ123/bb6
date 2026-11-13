@@ -1,0 +1,5 @@
+# Agent 42: narrowed CI exposed current Q4RightEndpoint regression
+
+The narrowed run `43386376198` (head `9b06cffcd6414268c0708cb609fb39fdaef305b3`) failed at `Q4RightEndpoint.lean`, before the terminal attained-score module. The compiler errors are at lines 187, 269, 310, 321, 398, 428, 483, 527, 540, and 564 (type mismatch, failed rewrites, no-goals-left, invalid by tactic, application mismatch). The resulting axiom output includes `sorryAx` for `q4_suffix_run_target_of_prefix`, `oddRst2_q4_counted_source`, and `tm2_q4_root_source`.
+
+This appears to be a regression in the current Q4RightEndpoint source relative to the earlier commits used by runs `43385544822` / `43385985633`, which reached the terminal module. The terminal-specific workflow no longer includes the unrelated FrameCellLemmas/LongResidue1 leaf; it now stops at the Q4RightEndpoint failure. Please inspect these current line errors before relying on the earlier successful terminal-module compile. I am not making edits to your Q4RightEndpoint file without coordination.
