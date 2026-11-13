@@ -472,3 +472,132 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
             rw [hsrc,hblank]
           exact hcut.trans htarget
 
+
+
+def m1EvenQ4First4Inside (x : Int) : Bool := decide (0 ≤ x ∧ x ≤ 4)
+
+def m1EvenQ4First4Start : FConfig := ⟨4,0,[0,1,2,3,4]⟩
+def m1EvenQ4First4End : FConfig := ⟨4,4,[0,1,2,3,4]⟩
+
+theorem m1EvenQ4First4_exact :
+    fRun tm2 4 m1EvenQ4First4Start = some m1EvenQ4First4End := by
+  decide
+
+theorem m1EvenQ4First4_heads :
+    (List.range 4).all (fun k =>
+      match fRun tm2 k m1EvenQ4First4Start with
+      | none => true
+      | some f => m1EvenQ4First4Inside f.head) = true := by
+  decide
+
+private theorem m1EvenConfigExt {c d : Config}
+    (hs : c.state = d.state) (hh : c.head = d.head)
+    (ht : c.tape = d.tape) : c = d := by
+  cases c
+  cases d
+  simp_all
+
+private theorem m1EvenQ4First4Frame_eq (T : Int → Bool) (h : Int)
+    (h0 : ∀ i, i < 5 → T (h+(i:Int)) = true) :
+    frameAt T h m1EvenQ4First4Inside m1EvenQ4First4End =
+      ⟨4,h+4,T⟩ := by
+  apply m1EvenConfigExt
+  · simp [frameAt,frame,shiftConfig,m1EvenQ4First4End]
+  · simp [frameAt,frame,shiftConfig,m1EvenQ4First4End]
+  · funext x
+    by_cases hin : m1EvenQ4First4Inside (x-h) = true
+    · have hb : 0 ≤ x-h ∧ x-h ≤ 4 := by
+        simpa [m1EvenQ4First4Inside] using hin
+      have htrue : T x = true := by
+        have hcases : x-h=0 ∨ x-h=1 ∨ x-h=2 ∨ x-h=3 ∨ x-h=4 := by omega
+        rcases hcases with h0x | h1x | h2x | h3x | h4x
+        · have hv := h0 0 (by omega)
+          have hc : h+(0:Int)=x := by omega
+          simpa [hc] using hv
+        · have hv := h0 1 (by omega)
+          have hc : h+(1:Int)=x := by omega
+          simpa [hc] using hv
+        · have hv := h0 2 (by omega)
+          have hc : h+(2:Int)=x := by omega
+          simpa [hc] using hv
+        · have hv := h0 3 (by omega)
+          have hc : h+(3:Int)=x := by omega
+          simpa [hc] using hv
+        · have hv := h0 4 (by omega)
+          have hc : h+(4:Int)=x := by omega
+          simpa [hc] using hv
+      simp [frameAt,frame,shiftConfig,m1EvenQ4First4Inside,
+        m1EvenQ4First4End,hin,htrue]
+    · simp [frameAt,frame,shiftConfig,m1EvenQ4First4Inside,
+        m1EvenQ4First4End,hin]
+
+/-- Four state-4-on-one moves are already consumed at the m=1,n=6 cut. -/
+theorem m1EvenQ4First4_at (T : Int → Bool) (h : Int)
+    (h0 : ∀ i, i < 5 → T (h+(i:Int)) = true) :
+    run tm2 4 ⟨4,h,T⟩ = some ⟨4,h+4,T⟩ := by
+  have hmatch : ∀ x, m1EvenQ4First4Inside x = true →
+      T (h+x) = decide (x ∈ m1EvenQ4First4Start.marked) := by
+    intro x hx
+    have hb : 0 ≤ x ∧ x ≤ 4 := by
+      simpa [m1EvenQ4First4Inside] using hx
+    have htrue : T (h+x) = true := by
+      have hcases : x=0 ∨ x=1 ∨ x=2 ∨ x=3 ∨ x=4 := by omega
+      rcases hcases with h0x | h1x | h2x | h3x | h4x
+      · subst x; exact h0 0 (by omega)
+      · subst x; exact h0 1 (by omega)
+      · subst x; exact h0 2 (by omega)
+      · subst x; exact h0 3 (by omega)
+      · subst x; exact h0 4 (by omega)
+    have hmem : decide (x ∈ m1EvenQ4First4Start.marked) = true := by
+      have hcases : x=0 ∨ x=1 ∨ x=2 ∨ x=3 ∨ x=4 := by omega
+      rcases hcases with h0x | h1x | h2x | h3x | h4x
+      · subst x; simp [m1EvenQ4First4Start]
+      · subst x; simp [m1EvenQ4First4Start]
+      · subst x; simp [m1EvenQ4First4Start]
+      · subst x; simp [m1EvenQ4First4Start]
+      · subst x; simp [m1EvenQ4First4Start]
+    exact htrue.trans hmem.symm
+  have hbridge := bridgeAt T h m1EvenQ4First4Inside
+    m1EvenQ4First4Start m1EvenQ4First4End 4 rfl
+    m1EvenQ4First4_exact m1EvenQ4First4_heads hmatch
+  have hframe := m1EvenQ4First4Frame_eq T h h0
+  rw [hframe] at hbridge
+  exact hbridge
+
+/-- Reuse the established Q4 suffix after the four guard moves already
+performed by the m=1,n=6 even prefix. -/
+theorem m1Even_q4_suffix_after_four (T : Int → Bool) (h : Int) (b : Nat)
+    (hshape : q4RightShape T h b) :
+    run tm2 (35+3*b) ⟨4,h+4,T⟩ =
+      some (frameAt
+        (d0Sweep b
+          (frameAt T h q4First10Inside q4First10End).tape (h+10))
+        (h+10+3*b) q4TailInside q4TailEnd) := by
+  have hwhole := q4_suffix_frame T h b hshape
+  have hfirst := m1EvenQ4First4_at T h hshape.1
+  have hnum : 39+3*b = 4+(35+3*b) := by omega
+  rw [hnum,run_append,hfirst] at hwhole
+  simp only [Option.bind_some] at hwhole
+  exact hwhole
+
+/-- The complete m=1,n=6 even reset-prefix source run, ending at the
+same explicit Q4 suffix frame used by the existing suffix theorem.
+The canonical S1 identification of this frame is a separate left-tail
+identity and is intentionally not claimed here. -/
+theorem m1Even_reset_prefix_frame (a b : Nat) (h : Int) :
+    run tm2 (79+12*a+3*b)
+      ⟨3,h,(s1Config 3 6 1 a 0 b h).tape⟩ =
+      some (frameAt
+        (d0Sweep b
+          (frameAt (m1EvenQ4CutTape a b h) h
+            q4First10Inside q4First10End).tape (h+10))
+        (h+10+3*b) q4TailInside q4TailEnd) := by
+  have hprefix := m1Even_q4_prefix_run a b h
+  have hshape := m1Even_q4_prefix_rightShape a b h
+  have htail := m1Even_q4_suffix_after_four
+    (m1EvenQ4CutTape a b h) h b hshape
+  have hnum : 79+12*a+3*b = (44+12*a)+(35+3*b) := by omega
+  rw [hnum,run_append,hprefix]
+  simp only [Option.bind_some]
+  exact htail
+
