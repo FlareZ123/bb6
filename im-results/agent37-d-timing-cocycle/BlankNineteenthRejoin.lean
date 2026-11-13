@@ -27,7 +27,7 @@ theorem terminal9780_certificate :
     · dsimp [seed19]
       omega
     · simp [seed19]
-  rw [BB6.Agent2Fast64.fastRun_correct 9780 seed19 hcanon]
+  rw [BB6.DRegularFast.fastRun_correct 9780 seed19 hcanon]
   decide
 
 theorem terminal9780_exact :
