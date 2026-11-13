@@ -33,6 +33,10 @@ function valuationMod3(x, limit) {
   return v;
 }
 
+function bitLength(x) {
+  return (x < 0n ? -x : x).toString(2).length;
+}
+
 function evaluate(r, modulus) {
   const n = 887n + 13122n * r;
   let E = 2n;
@@ -50,7 +54,13 @@ function evaluate(r, modulus) {
     v3G: valuationMod3(X, 28) - 2,
   }];
   let B = -(2n + 2n ** (j + 5n));
+  let C = 15n - 3n * 2n ** (j + 4n);
   const bMods = [String(mod(B, 3n))];
+  const coefficientBits = [{
+    i: 0,
+    B: bitLength(B),
+    C: bitLength(C),
+  }];
 
   for (let i = 0; i < ts.length; i++) {
     const t = ts[i];
@@ -64,6 +74,12 @@ function evaluate(r, modulus) {
       modulus
     );
     B = 4n * (2n ** t) * B - 2n * 3n ** E;
+    C = 4n * (2n ** t) * C - (2n * t - 2n * sigma + 5n) * 3n ** E;
+    coefficientBits.push({
+      i: i + 1,
+      B: bitLength(B),
+      C: bitLength(C),
+    });
     Xs.push(X);
     Es.push(E);
     rows.push({
@@ -76,7 +92,7 @@ function evaluate(r, modulus) {
     });
     bMods.push(String(mod(B, 3n)));
   }
-  return { n, rows, bMods, Xs, Es };
+  return { n, rows, bMods, coefficientBits, Xs, Es };
 }
 
 function quotientMod3(value, exponent) {
@@ -146,6 +162,7 @@ console.log(JSON.stringify({
   nAtRepresentative: String(base.n),
   valuationsAtRepresentative: base.rows,
   B_i_mod3: base.bMods,
+  coefficientBitLengths: base.coefficientBits,
   sixBandLimits: bandRows,
   seventhBandLimit: seventh,
   nextDigitChecks: cylinderChecks,
