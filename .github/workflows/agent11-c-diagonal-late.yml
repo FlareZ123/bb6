@@ -2,6 +2,9 @@ name: Agent 11 C58/late-depth diagonal original-root criterion (manual)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - agent11-y3-s229-s533-validation
 
 permissions:
   contents: read
