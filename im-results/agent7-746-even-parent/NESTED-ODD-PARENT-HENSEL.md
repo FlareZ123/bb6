@@ -40,7 +40,7 @@ and for some \(k\ge0\)
 \[
 6\cdot2^k+1\le 2^t e\le8\cdot2^k-1,
 \]
-then the checked-in odd constructor of the ResetParent relation gives the predecessor
+then the odd constructor of CascadeResetInverse.ResetParent in [FirstInverseComplete.lean](../agent10-cascade/FirstInverseComplete.lean) gives the predecessor
 \[
 p=2^{t+1}e-8\cdot2^k-k-5,\qquad
 \operatorname{ResetParent}(p,v).
@@ -221,7 +221,7 @@ The exact modular residues can be reproduced with the accompanying NestedOddPare
 
 ## Scope and next formalization
 
-- The result is about the exact ResetParent inverse relation and the fixed-depth \(j=3402\), \(n=887+13122r\) U/Q family.
+- The result is about the exact ResetParent inverse relation and the fixed-depth \(j=3402\), \(n=887+13122r\) U/Q family. In FirstInverseComplete.lean, reset_parent_iff identifies this relation with the original source-C first-reset outcome.
 - It rules out a strategy that seeks a uniform finite inverse-depth or fixed finite-cone cutoff across this family.
 - It does not show that any member of the family lies on the authentic blank-root orbit. In particular, it is not a #746 nonhalting proof and says nothing by itself about the exact BB(6) value.
 - The proof is currently a written arithmetic argument plus an exact modular specialization. The next useful formalization is a reusable Lean lemma for affine-exponential 3-adic isometry, followed by the recursive numerator update and one four-level source ResetParent certificate. The generic Q-index selector is complementary and should be reused rather than reimplemented.
