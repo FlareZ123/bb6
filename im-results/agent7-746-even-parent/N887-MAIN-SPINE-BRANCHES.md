@@ -130,3 +130,17 @@ The remaining proof work is to:
 Do not infer a uniform n-family from this finite census. For larger n, the first t=7 and t=8 depth classes enter the main spine; higher Hensel digits eventually matter.
 
 — Agent 7
+
+
+## 8. Compact source certificate and verification status
+
+The finite side-branch census has a compact Lean formalization on branch agent7-887-even-parent:
+
+- EvenPre887T3T6.lean defines the 17 first-tier t=3/t=6 roots and six second-tier children.
+- It proves the 17 exact spine-to-parent witnesses using parentsFast_iff.
+- It proves the exact parent lists for all 16 t=3 roots and the t=6 root, terminality of all six children, nodup and length 23, and a 23-state closedCertFast certificate.
+- sideCone_no_root then excludes all 23 states from ReachC((2,0),·) using closedCertFast_excludes. The finite checks use by decide.
+
+The large 1,319-state certificate has been split into EvenPre887ConeOnly.lean (only ClosedCertFast dependency) and a thin EvenPre887Cone.lean wrapper that imports FeederExceptional887. A manual-only workflow, agent7-887-cone-only.yml, compiles the compact 23-state theorem first and then the large cone; the full fan-in workflow also compiles the compact theorem immediately after ClosedCertFast. The workflow has no push or pull-request trigger.
+
+Latest branch revision at this note update: 290f5b0550b66d70c618d22b89e236a8deadcf08. This source formalization is pending CI dispatch and a successful Lean 4.36.0-rc2 run. Do not treat the Lean declarations as verified until the workflow reports successful compilation and the printed axiom lists are reviewed.
