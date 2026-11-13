@@ -14,6 +14,21 @@ open BB429Low43Delta BB429Low43Physical BB429Low43Continuation
 open BB429PhysicalBridge BB429DeltaPhysicalBridge BB429Low43RootPhysical
 open BB429PhysicalNoFatalConverse
 
+/-- Every A-state configuration has a defined next transition in the
+    original six-state table. -/
+private theorem physical_A_live (c : Config) (hs : c.state.val = 0) :
+    rawStep target429 c ≠ none := by
+  have hstate : c.state = (⟨0, by decide⟩ : Fin 6) := Fin.ext hs
+  have hA0 : target429 (⟨0, by decide⟩, false) ≠ none := by decide
+  have hA1 : target429 (⟨0, by decide⟩, true) ≠ none := by decide
+  cases hbit : c.tape c.head
+  · have hread : readSlot c = (⟨0, by decide⟩, false) := by
+      simp [readSlot, hstate, hbit]
+    simpa [rawStep, hread] using hA0
+  · have hread : readSlot c = (⟨0, by decide⟩, true) := by
+      simp [readSlot, hstate, hbit]
+    simpa [rawStep, hread] using hA1
+
 /-- The exact 44-step entry from J(381,3) into the v=1,k=189
     low43 C/0 zipper. Both the endpoint displacement and the maximum
     head coordinate are attained at +8. -/
@@ -89,13 +104,13 @@ theorem root_low43_381_to_387_physical
     Fin.ext hstateVal
   have hfree : ¬ physicalC01 d := by
     simp [physicalC01, hstateVal]
-  have hlive : rawStep target429 d ≠ none := by
-    cases hbit : d.tape d.head <;>
-      simp [rawStep, readSlot, hstate, hbit, target429]
+  have hlive : rawStep target429 d ≠ none :=
+    physical_A_live d hstateVal
   have hprefixSafe :=
     physical_run_prefix_c01_free 7382 c d hrun hfree hlive
   exact ⟨d, hrun, hrepD, hhead, hprefixMax, hprefixSafe⟩
 
+#print axioms physical_A_live
 #print axioms root_low43_381_entry_max
 #print axioms root_low43_C0_1_189_max
 #print axioms root_low43_381_to_387_max
