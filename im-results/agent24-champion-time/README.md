@@ -237,3 +237,19 @@ These declarations are in Q4RightEndpoint.lean and have explicit #print axioms c
 The generic endpoint remains useful as a branch-independent interface for the next reset branches. The next root-connected input after Agent 42's m=1,n=6 drain is the m=0,n=5 state with left parameter 2^63+72 and unary parameter 2^(2^63-1)-1. The unresolved work is the source-level reset prefix from this m=0,n=5 state, not another m=1,n=6 proof.
 
 All statements above are intermediate proof candidates until the current Q4 source closure passes the manual Lean audit with no sorryAx. Keep them in im-results; they do not establish halting or the exact BB(6) value.
+
+
+## m=0,n=5 odd reset prefix: proved source transition
+
+M0OddQ4Bridges.lean and M0OddQ4Prefix.lean now formalize the m=0,n=5 branch for every a>0 and b≥0.
+
+- The source prefix reaches the q4 cut in 24+12*a steps: a 9*a-step counted left sweep, a fixed 27-step finite bridge, and a 3*(a-1)-step right scan.
+- The finite bridge is checked by decide from ⟨3,0,[-4,-1,2,3]⟩ to ⟨4,3,[2,1,-1,-4,-5,-6,3]⟩; the head trace is confined to [-6,3].
+- The quantified cut-tape proofs establish the exact left-facing source word, right-facing q4 word, q4 shape, and blank right exterior.
+- The generic q4 suffix endpoint then gives the exact reset target:
+  s1Config 3 4 2 (a+b+1) (2^b-1) 0 (h+5+3*b).
+- Total prefix cost: resetPrefixCost 0 5 a b = 63+12*a+3*b.
+
+The main theorem is BB6Coverage.Agent24M0OddQ4Prefix.m0Odd_reset_prefix_to_s1. The targeted workflow .github/workflows/agent24-m0-odd-q4-prefix.yml compiled the complete dependency closure, both new modules, and their #print axioms checks under Lean 4.36.0-rc2. Runs 43402728285 and 43402788011 succeeded; the workflow rejects any sorryAx in the new modules. This also recompiled the repaired Q4RightEndpoint.lean, whose generic suffix endpoint theorems report only the standard propext, Classical.choice, and Quot.sound axioms.
+
+This is a rigorous source-level reset-prefix transition, not a halting proof, a certified BB(6) score, or a universal upper bound. The next useful step is to instantiate it at the root-connected m=1,n=6 drain endpoint and establish the subsequent m=2,n=4 continuation; keep the result in im-results/ until integrated into a complete root-to-halt proof.
