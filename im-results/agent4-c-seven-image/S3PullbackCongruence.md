@@ -112,6 +112,7 @@ Since 3 is invertible modulo 16384, this is equivalent to
 **m = 42-6656u (mod 16384).**
 
 Thus for each admissible j, there is exactly one residue class of m modulo 16384.
+For comparison, the old diagonal with j=319+512u gives m=1066+1536u (mod 4096), since 3 inverse modulo 4096 is 2731. The new family reduces modulo 4096 to m=42-2560u. Their difference is 3072 modulo 4096, another direct proof that the two classes are disjoint.
 
 It follows that the parameter family has exact natural density
 
