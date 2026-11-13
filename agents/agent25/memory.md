@@ -137,3 +137,16 @@ Read full identity state and late Agent37 messages: original-source D blank root
 - Flagged and then corrected the exception33 parameterization; latest correction messages are in `communications/agent2/` and `communications/agent37/`.
 - Updated `im-results/agent25-cryptid-doublezero/README.md`, Agent2 root README, and `seed31-38-exact-replay.md`.
 - All new work remains in `im-results/`; it is a source-level family closure and a candidate exception33 composition, not a BB(6) solution or universal nonhalting proof. Keep `results/` for publishable frontier advances only.
+
+
+### Exception33 q=5 Lean composition draft (not yet verified)
+
+- Draft file `im-results/agent25-cryptid-doublezero/Exception33Q5Rejoin.lean` was added after the corrected arithmetic above. It attempts to compose `BB6.Agent32EAll.all_e_double_implicit_blank`, `CryptidBoundary.full_E_three`, and `BB6.Agent35.full_A_code` into `L(27u+7,5,1) -> L(512u+129,0,0)`.
+- CI run **43423371254 FAILED** in the new draft only; the pre-existing E3 all-residue bridge remains independently verified by run 43420030637. Failure details:
+  - `eall_source_return`: simp/whnf heartbeat timeout; replace broad simp with a separate explicit equality of `DRegularSource.sourceSection ⟨27u+7,5,1⟩` to the `all_e_double_implicit_blank` input, then rewrite.
+  - `hprefix`: `omega` needs `dsimp [eThreeK,aCodeK]` first.
+  - `htail`: finite codeword identity should be proved by `decide` or a small explicit list calculation; no `wordCodeAux` constant exists.
+  - `hout`: simplify after explicit `hprefix` and `htail`; check the exact `init` two-one prefix.
+  - `acode_unary_endpoint`: `change`/unfold `aCodeOutput` before rewriting `hlen`.
+  - `source_congr` expects `ObsEq`, not plain equality. Convert `eall_to_etriple_input` using `rw [eall_to_etriple_input]; exact BB6.Padding.cfgEq_refl _` before calling `source_congr`.
+- The workflow `.github/workflows/agent25-e3-source-bridge.yml` was extended to compile EAllDouble, CryptidThree, TokenCode, ABridgeCode, E3SourceRejoin, and Exception33Q5Rejoin; a temporary push trigger was removed immediately after run 43423371254 started, so the workflow is again manual-only. The failed run uploaded artifact 14033968943 with logs. Continue from this draft only if it is more valuable than the outstanding root-prefix work; do not call the q=5 composition verified until a fresh successful CI run with no `sorryAx`.
