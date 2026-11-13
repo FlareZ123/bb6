@@ -35,3 +35,4 @@ jobs:
           grep -q 'zeroLeftEvenRun_exact.*depends on axioms' "$A/Root119ZeroLeftEvenRun.log"
           grep -q 'zeroLeftEvenRun_returns_Bzero.*depends on axioms' "$A/Root119ZeroLeftEvenRun.log"
           node "$A/test-root119-zero-left-even-run.cjs"
+          node "$A/test-root119-two-wave-census.cjs"
