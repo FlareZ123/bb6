@@ -20,7 +20,11 @@ X_r=2^{v_r}(2q_r+3)=2^{a_r-1}P_r(A_r).
 \]
 These are the shifted counters \(d+2\) of the synthetic cancellation feeders already constructed in im-results/agent20-needle-coprime/CancellationTerminalConstructive.lean. Their terminal exponent satisfies \(K_r+1=2ra_r\).
 
-For a possible immediate predecessor of \(d_r=X_r-2\) with valuation \(u=v_r+s\), the exact inverse equation requires
+For a possible immediate predecessor with valuation \(u=v_r+s\), the exact inverse equation is
+\[
+X_r=(2^{u+1}+3)q'+3\cdot2^u+u+3
+\]
+for some \(q'\in\mathbb N\). Multiplying by two shows that this requires
 \[
 D_{r,s}:=2^{a_r+s}+3
 \quad\mid\quad
@@ -164,7 +168,7 @@ Both cases contradict (2). Therefore \(D\nmid N\), proving the theorem.
 | 5 | 29,527 | 18–3,688 | 29,544–33,214 | 3,671 |
 | 6 | 265,723 | 22–26,570 | 265,744–292,292 | 26,549 |
 
-The endpoints and counts above follow directly from the theorem; an independent exact-integer spot check for \(r=2,\ldots,6\) found no divisibility exceptions.
+The endpoints and counts above follow directly from the theorem.
 
 ## Research significance and limits
 
