@@ -56,11 +56,29 @@ theorem sectionResult_marker_two (k a b : Nat) :
   rw [sectionResult_marker]
   omega
 
+private theorem nat_le_two_pow (b : Nat) : b ≤ 2^b := by
+  induction b with
+  | zero => simp
+  | succ b ih =>
+      have hp : 0 < 2^b := Nat.pow_pos (by decide)
+      calc
+        b+1 ≤ 2^b+1 := Nat.succ_le_succ ih
+        _ ≤ 2^b+2^b := by omega
+        _ = 2^(b+1) := by simp [Nat.pow_succ, Nat.mul_two]
+
 /-- Shifting the remaining outer counter by one changes only its 2-adic
-valuation contribution to a proposed reset-stage cost. -/
+valuation contribution to a proposed reset-stage cost. The lower bound
+ensures the Nat subtraction by 9*b is not truncated. -/
 theorem proposedIncrementCost_shift (m n a b : Nat) :
     proposedIncrementCost m (n+1) a b + 12*v2 n =
       proposedIncrementCost m n a b + 12*v2 (n+1) := by
+  have hb : b ≤ 2^b := nat_le_two_pow b
+  have hbase :
+      9*b ≤ 6*4^b + 42*2^b + 15 + 4*m + 12*a := by omega
+  have hleft :
+      9*b ≤ 6*4^b + 42*2^b + 15 + 4*m + 12*(a+v2 (n+1)) := by omega
+  have hright :
+      9*b ≤ 6*4^b + 42*2^b + 15 + 4*m + 12*(a+v2 n) := by omega
   unfold proposedIncrementCost
   omega
 
