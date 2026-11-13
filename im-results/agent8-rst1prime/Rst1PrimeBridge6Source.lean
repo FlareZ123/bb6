@@ -217,4 +217,298 @@ theorem rst1Prime_bridge6_after_rightSweep
 #print axioms rst1Prime_bridge6_window_after_rightSweep
 #print axioms rst1Prime_bridge6_after_rightSweep
 
+/-- Bridge6's output leaves the first three cells of the final right
+counter as `1,0,0` at h+6,h+7,h+8. -/
+theorem rst1PrimeAfterBridge6_local_right
+    (L a b : Nat) (h : Int) :
+    (rst1PrimeAfterBridge6 L a b h).tape (h+6) = true ∧
+    (rst1PrimeAfterBridge6 L a b h).tape (h+7) = false ∧
+    (rst1PrimeAfterBridge6 L a b h).tape (h+8) = false := by
+  let H6 : Int := (h-((3*a+1:Int))+3)+3*((a+1):Int)
+  have hH6 : H6 = h+5 := by
+    dsimp [H6]
+    omega
+  constructor
+  · change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
+      inside6 bridge6End).tape (h+6) = true
+    rw [hH6]
+    rw [frameAt_tape]
+    simp [inside6,inWindow,bridge6End]
+  constructor
+  · change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
+      inside6 bridge6End).tape (h+7) = false
+    rw [hH6]
+    rw [frameAt_tape]
+    simp [inside6,inWindow,bridge6End]
+  · change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
+      inside6 bridge6End).tape (h+8) = false
+    rw [hH6]
+    rw [frameAt_tape]
+    simp [inside6,inWindow,bridge6End]
+
+/-- Beyond bridge6's window and the fourth sweep's endpoint, the tape
+again agrees with the original S1 right-facing source. -/
+theorem rst1PrimeAfterBridge6_eq_source_right
+    (L a b : Nat) (h x : Int) (hx : h+9 ≤ x) :
+    (rst1PrimeAfterBridge6 L a b h).tape x =
+      (s1Config L 0 1 a 0 b h).tape x := by
+  let Hs : Int := h-((3*a+1:Int))+3
+  let H6 : Int := Hs+3*((a+1):Int)
+  change
+    (frameAt
+      (sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs)
+      H6 inside6 bridge6End).tape x =
+      (s1Config L 0 1 a 0 b h).tape x
+  have hout6 : inside6 (x-H6) = false := by
+    simp [inside6,inWindow]
+    dsimp [Hs,H6]
+    omega
+  rw [frameAt_tape]
+  simp only [hout6]
+  have hafterA :
+      sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs x =
+        (rst1PrimeAfterBridge9 L a b h).tape x := by
+    apply rst1Prime_sweptRight_preserves_after
+    dsimp [Hs,H6]
+    omega
+  rw [hafterA]
+  exact rst1PrimeAfterBridge9_eq_source_right L a b h x (by omega)
+
+/-- The S0 right-facing suffix has ones exactly on its d1-power tail. -/
+theorem rst1Prime_s0RightFacing_tail_true
+    (b i : Nat) (hi : 6 ≤ i) (hend : i < 3*b+9) :
+    sideBit (s0RightFacing b) i = true := by
+  change sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) i = true
+  rw [sideBit_append_right _ _ _ (by simp; omega)]
+  have hidx : i-6 < 3*(b+1) := by omega
+  exact sideBit_d1pow_true (b+1) (i-6) hidx
+
+/-- Cells beyond the complete S0 right-facing source word are blank. -/
+theorem rst1Prime_s0RightFacing_tail_false
+    (b i : Nat) (hi : 3*b+9 ≤ i) :
+    sideBit (s0RightFacing b) i = false := by
+  change sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) i = false
+  apply sideBit_ge_length
+  simp [d1pow_length]
+  omega
+
+/-- The post-bridge6 tape has the original source bit at every position
+in the final d1-power suffix. -/
+theorem rst1PrimeAfterBridge6_source_bit_true
+    (L a b : Nat) (h : Int) (i : Nat)
+    (hi : 8 ≤ i) (hend : i < 3*b+9) :
+    (rst1PrimeAfterBridge6 L a b h).tape (h+1+(i:Int)) = true := by
+  have heq := rst1PrimeAfterBridge6_eq_source_right L a b h
+    (h+1+(i:Int)) (by omega)
+  rw [heq]
+  have hcell := s1Config_right_cell L 0 1 a 0 b h i
+  rw [hcell]
+  simpa [s1PhysicalRight,s0PhysicalRight] using
+    rst1Prime_s0RightFacing_tail_true b i (by omega) hend
+
+/-- The post-bridge6 tape is blank beyond the original S0 right-facing
+source word. -/
+theorem rst1PrimeAfterBridge6_source_bit_false
+    (L a b : Nat) (h : Int) (i : Nat)
+    (hi : 3*b+9 ≤ i) :
+    (rst1PrimeAfterBridge6 L a b h).tape (h+1+(i:Int)) = false := by
+  have heq := rst1PrimeAfterBridge6_eq_source_right L a b h
+    (h+1+(i:Int)) (by omega)
+  rw [heq]
+  have hcell := s1Config_right_cell L 0 1 a 0 b h i
+  rw [hcell]
+  simpa [s1PhysicalRight,s0PhysicalRight] using
+    rst1Prime_s0RightFacing_tail_false b i hi
+
+/-- The final b three-one blocks are still present after bridge6. -/
+theorem rst1Prime_rightSweep_preconditions_after_bridge6
+    (L a b : Nat) (h : Int) :
+    rightOnes (rst1PrimeAfterBridge6 L a b h).tape (h+9) b := by
+  intro i hi
+  have h0 := rst1PrimeAfterBridge6_source_bit_true L a b h
+    (8+3*i) (by omega) (by omega)
+  have h1 := rst1PrimeAfterBridge6_source_bit_true L a b h
+    (9+3*i) (by omega) (by omega)
+  have h2 := rst1PrimeAfterBridge6_source_bit_true L a b h
+    (10+3*i) (by omega) (by omega)
+  have e0 : h+9+3*(i:Int) = h+1+((8+3*i:Int)) := by omega
+  have e1 : h+9+3*(i:Int)+1 = h+1+((9+3*i:Int)) := by omega
+  have e2 : h+9+3*(i:Int)+2 = h+1+((10+3*i:Int)) := by omega
+  rw [e0,e1,e2]
+  exact ⟨h0,h1,h2⟩
+
+/-- Full configuration after draining the final b right-counter blocks. -/
+def rst1PrimeAfterRightSweepB
+    (L a b : Nat) (h : Int) : Config :=
+  ⟨3,(h+9)+3*(b:Int),
+    sweptRight b (rst1PrimeAfterBridge6 L a b h).tape (h+9)⟩
+
+/-- Compose the final b-block right sweep with the source-connected
+bridge6 prefix. -/
+theorem rst1Prime_rightSweep_after_bridge6_run
+    (L a b : Nat) (h : Int) :
+    run tm2
+      (9*a+3+8+3*(3*L+5)+20+3*(L+1)+9+3*(a+1)+6+3*b)
+      (s1Config L 0 1 a 0 b h) =
+      some (rst1PrimeAfterRightSweepB L a b h) := by
+  rw [run_add,rst1Prime_bridge6_after_rightSweep]
+  simp only [Option.bind_some]
+  have hhead :
+      ((h-((3*a+1:Int))+3)+3*((a+1):Int))+bridge6End.head = h+9 := by
+    simp [bridge6End]
+    omega
+  simpa [rst1PrimeAfterBridge6,frameAt,bridge6End,hhead] using
+    counted_right_sweep b (rst1PrimeAfterBridge6 L a b h).tape (h+9)
+      (rst1Prime_rightSweep_preconditions_after_bridge6 L a b h)
+
+/-- The bridge30 input window after the final right sweep has marked
+offsets exactly -3 and 0. -/
+theorem rst1Prime_bridge30_window_after_finalRightSweep
+    (L a b : Nat) (h : Int) :
+    ∀ x, inside30 x = true →
+      (rst1PrimeAfterRightSweepB L a b h).tape
+        (h+9+3*(b:Int)+x) =
+        decide (x ∈ bridge30Start.marked) := by
+  intro x hx
+  have hxw : -3 ≤ x ∧ x ≤ 5 := by
+    simpa [inside30,inWindow] using hx
+  have hcases :
+      x=(-3:Int) ∨ x=(-2:Int) ∨ x=(-1:Int) ∨ x=0 ∨
+      x=1 ∨ x=2 ∨ x=3 ∨ x=4 ∨ x=5 := by omega
+  change
+    sweptRight b (rst1PrimeAfterBridge6 L a b h).tape (h+9)
+      (h+9+3*(b:Int)+x) =
+      decide (x ∈ bridge30Start.marked)
+  rcases hcases with hneg3 | hneg2 | hneg1 | hzero | hone | htwo |
+      hthree | hfour | hf ive
+  · subst x
+    by_cases hb : b=0
+    · subst b
+      have hcell := (rst1PrimeAfterBridge6_local_right L a 0 h).1
+      have hcoord : h+9+3*(0:Int)+(-3:Int) = h+6 := by omega
+      rw [hcoord]
+      simpa [bridge30Start,sweptRight] using hcell
+    · obtain ⟨n,rfl⟩ := Nat.exists_eq_succ_of_ne_zero hb
+      have hpre := rst1Prime_rightSweep_preconditions_after_bridge6 L a (n+1) h
+      have hfirst := (hpre n (by omega)).1
+      have hlast := rst1Prime_sweptRight_lastBlock n
+        (rst1PrimeAfterBridge6 L a (n+1) h).tape (h+9)
+      have hcoord :
+          h+9+3*((n+1):Int)+(-3:Int) = h+9+3*(n:Int) := by omega
+      rw [hcoord,hlast.1,hfirst]
+      simp [bridge30Start]
+  · subst x
+    by_cases hb : b=0
+    · subst b
+      have hcell := (rst1PrimeAfterBridge6_local_right L a 0 h).2.1
+      have hcoord : h+9+3*(0:Int)+(-2:Int) = h+7 := by omega
+      rw [hcoord]
+      simpa [bridge30Start,sweptRight] using hcell
+    · obtain ⟨n,rfl⟩ := Nat.exists_eq_succ_of_ne_zero hb
+      have hlast := rst1Prime_sweptRight_lastBlock n
+        (rst1PrimeAfterBridge6 L a (n+1) h).tape (h+9)
+      have hcoord :
+          h+9+3*((n+1):Int)+(-2:Int) = h+9+3*(n:Int)+1 := by omega
+      rw [hcoord]
+      simpa [bridge30Start] using hlast.2.1
+  · subst x
+    by_cases hb : b=0
+    · subst b
+      have hcell := (rst1PrimeAfterBridge6_local_right L a 0 h).2.2
+      have hcoord : h+9+3*(0:Int)+(-1:Int) = h+8 := by omega
+      rw [hcoord]
+      simpa [bridge30Start,sweptRight] using hcell
+    · obtain ⟨n,rfl⟩ := Nat.exists_eq_succ_of_ne_zero hb
+      have hlast := rst1Prime_sweptRight_lastBlock n
+        (rst1PrimeAfterBridge6 L a (n+1) h).tape (h+9)
+      have hcoord :
+          h+9+3*((n+1):Int)+(-1:Int) = h+9+3*(n:Int)+2 := by omega
+      rw [hcoord]
+      simpa [bridge30Start] using hlast.2.2
+  · subst x
+    have hafter := rst1Prime_sweptRight_preserves_after
+      b (rst1PrimeAfterBridge6 L a b h).tape (h+9) (h+9+3*(b:Int)) (by omega)
+    rw [hafter]
+    have hsource := rst1PrimeAfterBridge6_source_bit_true L a b h
+      (8+3*b) (by omega) (by omega)
+    have hcoord : h+9+3*(b:Int) = h+1+((8+3*b:Int)) := by omega
+    rw [hcoord]
+    simpa [bridge30Start] using hsource
+  · subst x
+    have hafter := rst1Prime_sweptRight_preserves_after
+      b (rst1PrimeAfterBridge6 L a b h).tape (h+9)
+      (h+9+3*(b:Int)+1) (by omega)
+    rw [hafter]
+    have hsource := rst1PrimeAfterBridge6_source_bit_false L a b h
+      (9+3*b) (by omega)
+    have hcoord : h+9+3*(b:Int)+1 = h+1+((9+3*b:Int)) := by omega
+    rw [hcoord]
+    simpa [bridge30Start] using hsource
+  · subst x
+    have hafter := rst1Prime_sweptRight_preserves_after
+      b (rst1PrimeAfterBridge6 L a b h).tape (h+9)
+      (h+9+3*(b:Int)+2) (by omega)
+    rw [hafter]
+    have hsource := rst1PrimeAfterBridge6_source_bit_false L a b h
+      (10+3*b) (by omega)
+    have hcoord : h+9+3*(b:Int)+2 = h+1+((10+3*b:Int)) := by omega
+    rw [hcoord]
+    simpa [bridge30Start] using hsource
+  · subst x
+    have hafter := rst1Prime_sweptRight_preserves_after
+      b (rst1PrimeAfterBridge6 L a b h).tape (h+9)
+      (h+9+3*(b:Int)+3) (by omega)
+    rw [hafter]
+    have hsource := rst1PrimeAfterBridge6_source_bit_false L a b h
+      (11+3*b) (by omega)
+    have hcoord : h+9+3*(b:Int)+3 = h+1+((11+3*b:Int)) := by omega
+    rw [hcoord]
+    simpa [bridge30Start] using hsource
+  · subst x
+    have hafter := rst1Prime_sweptRight_preserves_after
+      b (rst1PrimeAfterBridge6 L a b h).tape (h+9)
+      (h+9+3*(b:Int)+4) (by omega)
+    rw [hafter]
+    have hsource := rst1PrimeAfterBridge6_source_bit_false L a b h
+      (12+3*b) (by omega)
+    have hcoord : h+9+3*(b:Int)+4 = h+1+((12+3*b:Int)) := by omega
+    rw [hcoord]
+    simpa [bridge30Start] using hsource
+  · subst x
+    have hafter := rst1Prime_sweptRight_preserves_after
+      b (rst1PrimeAfterBridge6 L a b h).tape (h+9)
+      (h+9+3*(b:Int)+5) (by omega)
+    rw [hafter]
+    have hsource := rst1PrimeAfterBridge6_source_bit_false L a b h
+      (13+3*b) (by omega)
+    have hcoord : h+9+3*(b:Int)+5 = h+1+((13+3*b:Int)) := by omega
+    rw [hcoord]
+    simpa [bridge30Start] using hsource
+
+/-- Full configuration after the final 30-step bridge. -/
+def rst1PrimeAfterBridge30
+    (L a b : Nat) (h : Int) : Config :=
+  frameAt (rst1PrimeAfterRightSweepB L a b h).tape
+    (h+9+3*(b:Int)) inside30 bridge30End
+
+/-- Compose the final b-block sweep with the exact bridge30. -/
+theorem rst1Prime_bridge30_after_finalRightSweep
+    (L a b : Nat) (h : Int) :
+    run tm2
+      (9*a+3+8+3*(3*L+5)+20+3*(L+1)+9+3*(a+1)+6+3*b+30)
+      (s1Config L 0 1 a 0 b h) =
+      some (rst1PrimeAfterBridge30 L a b h) := by
+  rw [run_add,rst1Prime_rightSweep_after_bridge6_run]
+  simp only [Option.bind_some]
+  exact bridge30_at (rst1PrimeAfterRightSweepB L a b h).tape
+    (h+9+3*(b:Int))
+    (rst1Prime_bridge30_window_after_finalRightSweep L a b h)
+
+#print axioms rst1PrimeAfterBridge6_eq_source_right
+#print axioms rst1Prime_rightSweep_preconditions_after_bridge6
+#print axioms rst1Prime_rightSweep_after_bridge6_run
+#print axioms rst1Prime_bridge30_window_after_finalRightSweep
+#print axioms rst1Prime_bridge30_after_finalRightSweep
+
+
 end BB6Coverage.Agent8Rst1PrimeTail
