@@ -1,4 +1,5 @@
 import M0EvenEvenSumZeroS31W1
+import M0EvenEvenSumZeroS31W13Q275
 import OddOddLowVal
 import OddSevenSliver
 import Lean.Elab.Tactic.Omega
@@ -235,4 +236,32 @@ theorem high_stop_mzero_s31_w13_q403 (j k : Nat)
   exact hAfalse hA'
 
 #print axioms high_stop_mzero_s31_w13_q403
+
+/-- Unified two-cylinder statement: with q=128*g+19, the direct L-parent
+    closes when g=2 mod 4 or g=3 mod 16. -/
+theorem high_stop_mzero_s31_w13_q128g19 (g j k : Nat)
+    (hg : g%4=2 ∨ g%16=3)
+    (hj : j=651239+4194304*g)
+    (hstop : k+j+5=4*(j+3)) :
+    ¬ BB6.Agent3.CReach (2*j+3) k := by
+  rcases hg with hg2 | hg3
+  · let d := (g-2)/4
+    have hgform : g=4*d+2 := by dsimp [d]; omega
+    have hjform : j=9039847+16777216*d := by
+      rw [hj,hgform]
+      dsimp [d]
+      omega
+    have hjmod : j%16777216=9039847 := by rw [hjform]; omega
+    exact BB6.Agent11M0SumZeroS31W13Q275.high_stop_mzero_s31_w13_q275
+      j k hjmod hstop
+  · let e := (g-3)/16
+    have heform : g=16*e+3 := by dsimp [e]; omega
+    have hjform : j=13234151+67108864*e := by
+      rw [hj,heform]
+      dsimp [e]
+      omega
+    have hjmod : j%67108864=13234151 := by rw [hjform]; omega
+    exact high_stop_mzero_s31_w13_q403 j k hjmod hstop
+
+#print axioms high_stop_mzero_s31_w13_q128g19
 end BB6.Agent11M0SumZeroS31W13Q403
