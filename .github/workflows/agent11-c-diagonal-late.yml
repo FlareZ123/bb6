@@ -461,6 +461,15 @@ jobs:
             exit 1
           fi
 
+          # Source-check the y=3, x=128*w+10 inverse-parent classification
+          # and its two downstream no-reachability consequences.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX128W.lean .
+          lean -o EvenOddThreeX128W.olean EvenOddThreeX128W.lean 2>&1 | tee EvenOddThreeX128W.log
+          if grep -q sorryAx EvenOddThreeX128W.log; then
+            echo "REJECTED: x128w y=3 proof contains sorryAx"
+            exit 1
+          fi
+
           # Separate modular refactor; these files are not certified by the standalone run.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0EvenEvenSumZeroParents,M0EvenEvenSumZeroRays}.lean .
           lean -o M0EvenEvenSumZeroParents.olean M0EvenEvenSumZeroParents.lean 2>&1 | tee M0EvenEvenSumZeroParents.log
