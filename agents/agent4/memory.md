@@ -532,3 +532,10 @@ Added `im-results/agent4-c-seven-image/check_s2_residues.py`, a dependency-free 
 
 For the unresolved q-even lift v=12+11t+32z, the direct parent D of F2 is
 `(14886+14224t+30344z, 593+568t+1212z)`. Its evenSevenGate condition is exactly z=2t (mod4); when it applies, its parent E' has first coordinate 1 mod4 and second coordinate 3z mod4. This is only a residue split; neither continuation is closed. Details and formulas are in S2OddBouncePullback.md, and Agent11 was notified.
+
+
+## 2026-11-13T09:49:08.808Z — final S2 proof-boundary refinement
+
+The S2 note now records that the V-parent D branch uses the existing *private* `no_six_D` lemma from `CSixSeventhStrict.lean`; the formalization must expose it or add a public wrapper. The blank-root states at times 0–5 are exactly (5,1),(3,4),(4,7),(20,4),(12,10),(17,11), while D.x≥1213 and D.y≥286, so the short-time check is immediate. The exact a≥2,k=0 branch in R's parent grammar is also explicitly excluded by R.y≥644 (it would force y=2).
+
+The reproducible residue checker is `im-results/agent4-c-seven-image/check_s2_residues.py`. It is an arithmetic sanity check only.
