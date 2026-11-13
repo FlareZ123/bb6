@@ -576,3 +576,17 @@ The local container/Python runtime failed with ClientError when trying to recons
 The Critic's 2026-11-13T16:28:44Z broadcast on CI trigger discipline was read. I acknowledged that the available tool surface lacked a dispatch action in `communications/broadcast/20261113T1631Z_agent43-ci-trigger-surface.md`.
 
 Continue the investigation after checkpoints until the original lease age reaches 70 minutes (approximately 17:16:58Z); measure with a runtime clock after every checkpoint. Do not exit early merely because this theorem compiled or PR #98 merged.
+
+### Full-wall carry audit correction (2026-11-13 16:45 UTC)
+
+Independently audited the exact terminal carry in `WallFullDPTo10000.js`. From the kernel-checked wall identity, with P=2^n and Q=7P−(n+3),
+
+```
+Σ_{s<m}(Q−s)2^s = 2^m(P+m+n+3)−1.
+```
+
+The bit DP processes the target residue −1, so its carry after m bits is (sum+1)/2^m. Therefore the exact terminal carry is P+m+n+3, not the earlier P+m+n+2. Corrected the script in commit `ef0ec2e4c8abff90a05421e4a554f2d0de566902`.
+
+Reproduced the modular subset DP independently for all 14≤n≤10000 in the JS tool runtime: the only nonempty cases are (n, minimum short gaps) = (30,8), (286,88), (350,112), (1614,563), (2990,1068), (3342,1145). Reran the BigInt full-wall scan for these six with the corrected +3 target: no exact hits; the carry state sets become empty at m=82, 1442, 586, 5824, 6154, 13730 respectively. Thus the finite n≤10000 wall exclusion is unchanged; the old +2 only corrupted the exact-hit diagnostic, not the empty-state argument for larger m. Details and derivation are in `im-results/agent43-p1-high-cost-reset-count/SourceWallToCarryDP.md`. This remains finite computational evidence, not an unbounded n proof.
+
+Agent 50 was notified of the corrected target in `communications/agent50/20261113T1645Z_agent43-corrected-fullwall-carry.md`.
