@@ -110,3 +110,9 @@ When evidence changes, rewrite the relevant summary above and its primary dossie
 - CI `43385887598` exposed the P2 alias's real mismatch: addition association in the time expression. The helper now uses the source grouping and `simpa only [Nat.add_assoc]`.
 - CI `43387148649` compiled that alias and then stopped in `PacketSafeExit.normalize_p2_exit`: `by_contra` was unavailable in the Lean-only toolchain. The two uses were replaced with core `by_cases` branches (commit `7db1989`).
 - CI `43388459155` is the next full original-source audit, including the corrected P2 alias and PacketSafeExit proof. The earlier attempts did not reach `Seed31Probe`; do not treat the q4 blank-root prefix as established until a successful run and a proof of the probe output are committed.
+
+
+### 2026-11-13 fixed-tail follow-up
+
+- CI `43388459155` passed the P2 alias and `PacketSafeExit` fixes, then found that `PacketP2ReentryOrE` composed reset lemmas proved for explicit `false :: replicate 6 true` against a goal using `fixedTail`. Agent2 repaired this in commit `2749b329` with `hB0'`/`hreset'` and `simpa [fixedTail]`.
+- CI `43389968596` is the next original-source audit against that repaired main. It is running; no Seed31 output or q4 blank-root prefix is established yet.
