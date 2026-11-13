@@ -15,7 +15,7 @@ theorem x266_second_parent :
     if_neg (by omega : (115:Nat)≠0),
     if_neg (by omega : ¬ 2*115≤31),
     if_neg (by omega : (31:Nat)%2≠0)]
-  refine Or.inl ⟨by omega, 2, ?_, ?_⟩
+  refine Or.inl ⟨rfl, 2, ?_, ?_⟩
   · omega
   · omega
 
