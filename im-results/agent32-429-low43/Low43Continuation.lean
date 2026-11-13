@@ -18,19 +18,19 @@ open BB429W4HeadMax BB429W4HeadPrefix
 theorem root_low43_C0_to_junc_max :
     runWithMax 438
       (z 2 (true::false::true::true::
-        (ones 26 ++ tens 14 ++ ones 6)) false []) =
+        (ones 26 ++ (tens 14 ++ ones 6))) false []) =
       some (junc 23 0 18, -20, 1) := by
   decide
 
 theorem root_low43_C0_to_junc :
     runWithDelta 438
       (z 2 (true::false::true::true::
-        (ones 26 ++ tens 14 ++ ones 6)) false []) =
+        (ones 26 ++ (tens 14 ++ ones 6))) false []) =
       some (junc 23 0 18, -20) := by
   simpa [root_low43_C0_to_junc_max] using
     ((runWithMax_toDelta 438
       (z 2 (true::false::true::true::
-        (ones 26 ++ tens 14 ++ ones 6)) false [])).symm)
+        (ones 26 ++ (tens 14 ++ ones 6))) false [])).symm)
 
 /-- The next exact root-relevant prepared return, from J(23,18) to
     J(11,62), including the complete prefix maximum. -/
@@ -45,11 +45,11 @@ theorem root_low43_junc23_to_junc11_max :
 theorem root_low43_C0_to_junc11_max :
     runWithMax 1347
       (z 2 (true::false::true::true::
-        (ones 26 ++ tens 14 ++ ones 6)) false []) =
+        (ones 26 ++ (tens 14 ++ ones 6))) false []) =
       some (junc 11 0 62, -57, 8) := by
   have h1 : runWithMax 438
       (z 2 (true::false::true::true::
-        (ones 26 ++ tens 14 ++ ones 6)) false []) =
+        (ones 26 ++ (tens 14 ++ ones 6))) false []) =
       some (junc 23 0 18, -20, 1) :=
     root_low43_C0_to_junc_max
   have h2 : runWithMax 909 (junc 23 0 18) =
@@ -62,12 +62,12 @@ theorem root_low43_C0_to_junc11_max :
 theorem root_low43_C0_to_junc11 :
     runWithDelta 1347
       (z 2 (true::false::true::true::
-        (ones 26 ++ tens 14 ++ ones 6)) false []) =
+        (ones 26 ++ (tens 14 ++ ones 6))) false []) =
       some (junc 11 0 62, -57) := by
   simpa [root_low43_C0_to_junc11_max] using
     ((runWithMax_toDelta 1347
       (z 2 (true::false::true::true::
-        (ones 26 ++ tens 14 ++ ones 6)) false [])).symm)
+        (ones 26 ++ (tens 14 ++ ones 6))) false [])).symm)
 
 
 /-- A concrete prepared low-even return on the simulated root route:
