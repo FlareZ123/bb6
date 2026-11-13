@@ -88,8 +88,9 @@ The proof is based on the exact transition C/01 -> D/1 -> halt. A fatal visit ca
 A stronger physical counterpart is now added:
 - `PhysicalNoFatalConverse.lean` proves directly from the physical #429 table that C/01 takes one step to D/1 and D/1 has no next step. Consequently, any successful physical run ending at a live, non-C/01 configuration is C/01-free at every primitive prefix. This argument does not use zipper representation.
 - `Low42PhysicalNoFatal.lean` applies that machine-level converse to `Low42Physical.low42_raw_head_all`. For every (j,k), the canonical physical low42 run from `jTape (j+2*k+1) (2*j)` to its represented Junc(0,0,4j+4k+12) endpoint is C/01-free at every prefix.
+- `PhysicalNoFatalConverse.physical_run_prefix_c01_free_of_c0_blank_right` also covers a physical C/0 endpoint with scanned zero and blank immediate right cell. It is reusable for the endpoint of a low43 C/0 record.
 
-This closes the all-prefix physical safety gap for the canonical low42 run. `Low42PhysicalNoFatalAnyHead.low42_raw_head_any_c01_free` now transports the result to every physical configuration representing the matching Junc input, preserving the exact head displacement and all-prefix C/01 exclusion via `JuncCanonical` and `RootShift`. Composition with the outer-safe physical return-map segments remains follow-on work. All three physical declarations are pending Lean CI.
+This closes the all-prefix physical safety gap for the canonical low42 run. `Low42PhysicalNoFatalAnyHead.low42_raw_head_any_c01_free` transports the result to every physical configuration representing the matching Junc input, preserving exact head displacement and all-prefix C/01 exclusion via `JuncCanonical` and `RootShift`. `Junc0ReturnMap28.junc0_return_map_28` now composes that arbitrary-head macro with six outer-safe physical segments to prove the uniform finite +28 map. These physical declarations are pending integrated Lean CI.
 
 ## Junc(0,w) return-map exploration
 
