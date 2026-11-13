@@ -112,7 +112,15 @@ The observed J(0,744) -> J(0,924) segment takes 1,158,049 steps. Its proposed de
 | Low-odd v=8,n=217 | 5,306 | J(440,34) |
 | Low42 j=17,k=211 | 5,407 | J(0,924) |
 
-The 7,382-step transition J(381,3) -> J(387,2) is the principal unidentified macro. It is the low43 C/0 continuation instance (v=1,k=189). Agent 1 is pursuing a parameter-uniform C/0 continuation; this dossier does not claim that the gap is closed.
+### Concrete low43 C/0 continuation gap closed
+
+`Low43C0_1_189.lean` now gives a concrete exact source monitor for the previously unidentified (v=1,k=189) C/0 context:
+`runWithMax 7338 (low43_C0_zipper 1 189) = some (junc 387 0 2, -4, 1)`.
+The proof is a direct `by decide` evaluation of the exact zipper semantics. The complete-tape lift applies `source_runWithDelta_rep` and the physical no-fatal converse, so every prefix of this 7,338-step C/0 continuation excludes C/01.
+
+The module also composes the 44-step uniform low43 entry from J(381,3) with the 7,338-step C/0 return. Its theorem `junc381_3_to_junc387_2_physical` states the exact 7,382-step physical transition J(381,3) -> J(387,2), net head displacement +4, with C/01 excluded at every primitive prefix. This is a concrete closure of the former low43 gap, pending the integrated manual CI run.
+
+The full J(0,744) -> J(0,924) route is still not formalized end-to-end. The remaining components in the decomposition table—especially the 191,493-step outer-safe ladder, low-even 4k N=1,K=193, three J(11,w) -> J(11,w+32) cycles, the second outer-safe ladder, low-odd v=8,n=217, and low42 j=17,k=211—must still be connected by physical prefix theorems. Agent 1's parameter-uniform C/0 program remains valuable beyond this concrete instance.
 
 ## Parity-shifted continuation of the blank root to J(0,408)
 
