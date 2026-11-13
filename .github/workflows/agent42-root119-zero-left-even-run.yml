@@ -17,7 +17,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile source dependencies, exact return, and shield transport
+      - name: Compile source dependencies, exact return, shield transport, and C-phase macro edge
         run: |
           set -euo pipefail
           A=im-results/agent42-root119-guard
@@ -25,9 +25,19 @@ jobs:
           T=im-results/agent12-root119-left-corridor
           export LEAN_PATH="$A:$S:$T"
           lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
+          lean -o "$A/Root119CGate.olean" "$A/Root119CGate.lean"
+          lean -o "$A/Root119BShift.olean" "$A/Root119BShift.lean"
+          lean -o "$A/Root119BShield.olean" "$A/Root119BShield.lean"
+          lean -o "$A/Root119BRegular.olean" "$A/Root119BRegular.lean"
           lean -o "$S/Root119ShuttleSupport.olean" "$S/Root119ShuttleSupport.lean"
           lean -o "$S/Root119EvenSweep.olean" "$S/Root119EvenSweep.lean"
           lean -o "$S/Root119EvenExtra.olean" "$S/Root119EvenExtra.lean"
+          lean -o "$A/Root119CPhaseReturn.olean" "$A/Root119CPhaseReturn.lean" 2>&1 | tee "$A/Root119CPhaseReturn.log"
+          if grep -q 'sorryAx' "$A/Root119CPhaseReturn.log"; then
+            echo "::error::sorryAx found in C-phase D1 source theorem"
+            exit 1
+          fi
+          grep -q 'b0_cphase_d1_zero_wave_return.*depends on axioms' "$A/Root119CPhaseReturn.log"
           lean -o "$A/Root119ZeroLeftEvenRun.olean" "$A/Root119ZeroLeftEvenRun.lean" 2>&1 | tee "$A/Root119ZeroLeftEvenRun.log"
           if grep -q 'sorryAx' "$A/Root119ZeroLeftEvenRun.log"; then
             echo "::error::sorryAx found in zero-left even-run return proof"
@@ -35,12 +45,18 @@ jobs:
           fi
           grep -q 'zeroLeftEvenRun_exact.*depends on axioms' "$A/Root119ZeroLeftEvenRun.log"
           grep -q 'zeroLeftEvenRun_returns_Bzero.*depends on axioms' "$A/Root119ZeroLeftEvenRun.log"
-          lean "$T/Root119ZeroLeftShield.lean" 2>&1 | tee "$T/Root119ZeroLeftShield.log"
+          lean -o "$T/Root119ZeroLeftShield.olean" "$T/Root119ZeroLeftShield.lean" 2>&1 | tee "$T/Root119ZeroLeftShield.log"
           if grep -q 'sorryAx' "$T/Root119ZeroLeftShield.log"; then
             echo "::error::sorryAx found in zero-left shield transport proof"
             exit 1
           fi
           grep -q 'zeroLeftEvenOutTape_preserves_NoLeft1100.*depends on axioms' "$T/Root119ZeroLeftShield.log"
           grep -q 'zeroLeftEvenRun_exact_with_NoLeft1100.*depends on axioms' "$T/Root119ZeroLeftShield.log"
+          lean -o "$T/Root119ZeroLeftCPhaseEdge.olean" "$T/Root119ZeroLeftCPhaseEdge.lean" 2>&1 | tee "$T/Root119ZeroLeftCPhaseEdge.log"
+          if grep -q 'sorryAx' "$T/Root119ZeroLeftCPhaseEdge.log"; then
+            echo "::error::sorryAx found in zero-left to C-phase macro edge"
+            exit 1
+          fi
+          grep -q 'zeroLeftEvenRun_then_cphaseD1.*depends on axioms' "$T/Root119ZeroLeftCPhaseEdge.log"
           node "$A/test-root119-zero-left-even-run.cjs"
           node "$A/test-root119-two-wave-census.cjs"
