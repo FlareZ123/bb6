@@ -51,13 +51,22 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
     simpa using h
   have ho2 : b.tape (b.h+2*(n:Int)+2) = true := by
     have h := hright 1 (by omega)
-    simpa using h
+    change b.tape (b.h+2*(n:Int)+1+(1:Int)) = true at h
+    have hidx : b.h+2*(n:Int)+1+(1:Int) = b.h+2*(n:Int)+2 := by omega
+    rw [hidx] at h
+    exact h
   have hz2 : b.tape (b.h+2*(n:Int)+3) = false := by
     have h := hright 2 (by omega)
-    simpa using h
+    change b.tape (b.h+2*(n:Int)+1+(2:Int)) = false at h
+    have hidx : b.h+2*(n:Int)+1+(2:Int) = b.h+2*(n:Int)+3 := by omega
+    rw [hidx] at h
+    exact h
   have ho3 : b.tape (b.h+2*(n:Int)+4) = true := by
     have h := hright 3 (by omega)
-    simpa using h
+    change b.tape (b.h+2*(n:Int)+1+(3:Int)) = true at h
+    have hidx : b.h+2*(n:Int)+1+(3:Int) = b.h+2*(n:Int)+4 := by omega
+    rw [hidx] at h
+    exact h
 
   let bout : Conf := immB2 n (n+2) b
   have hmacro := imm_two_wave_concrete n b hb hl1 hl2 hl3 hl4
@@ -192,7 +201,7 @@ theorem imm_two_wave_pump_iter (k n : Nat) (b : Conf)
   | zero =>
       intro n b hb hr hshield hleft hones hright
       refine ⟨b, ?_, hr, hb, hshield, ?_, ?_, ?_, hleft, ?_⟩
-      · simp [twoWavePumpCost]
+      · rfl
       · simp
       · intro x hx
         rfl
