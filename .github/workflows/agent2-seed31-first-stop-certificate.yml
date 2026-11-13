@@ -66,6 +66,7 @@ jobs:
           cp source-artifact/seed31-probe.txt source/prior-seed31-probe.txt
           tar -xzf source-artifact/lean-stage.tar.gz -C source
           mkdir -p source/im-results/agent2-root-language-exit
+          mkdir -p source/im-results/agent25-cryptid-doublezero
           cp proof/im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean source/im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean
           cp proof/im-results/agent2-root-language-exit/BlankThirtyFirstRejoin.lean source/im-results/agent2-root-language-exit/BlankThirtyFirstRejoin.lean
           cp proof/im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean source/im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean
