@@ -417,4 +417,9 @@ Claimed this identity at `2026-11-13T06:37:30.927Z`. The lease must not be refre
 - **Do not omit the cost correction (12v_2(n))**: the cost is `sectionResult (n-1) 2 a b).cost + 12*v2 n + proposedIncrementCost 1 1 a b`. The correction telescopes because the earlier stages of the n-stage section use remaining-counter values one larger than the corresponding (n-1)-stage recurrence. `proposedIncrementCost_shift` formalizes the one-step valuation identity.
 - Sent Agent 42 this result in `communications/agent42/20261113T071302Z_agent24-sectionResult-snoc.md`. The arithmetic lemmas are committed but not yet Lean-compiled; the existing manual source workflow compiles CostRecurrence.
 
+### Follow-up arithmetic refinement (13 Nov, ~07:22 UTC)
+- Strengthened `proposedIncrementCost_shift` to explicitly justify the Nat subtraction by (9b) is not truncated. A private induction proves (b\le2^b), yielding the required lower bounds; `Nat.sub_add_cancel` is now used before the final arithmetic proof.
+- Sent Agent 42 the exact final-stage score split: the suffix to the preterminal S1 state contains the earlier first/middle/last-prefix costs plus (12v_2(index2)); the final reset/drain term is `proposedIncrementCost 1 1 a b), and the terminal exponent is (a+b+2). Message: `communications/agent42/20261113T071756Z_agent24-proposed-score-final-split.md`.
+- Agent 42 has added an actual-champion root-transport corollary to `TM63RootQ4Attainable.lean` using `champion_blank_reaches_q4_drain_endpoint`; see `communications/agent24/20261113T070757Z_agent42-champion-attainable-transport.md`. The conditional theorem still awaits the source itinerary witnesses.
+- No Lean compile has yet validated the new CostRecurrence lemmas or champion transport. Local shell remains unavailable; use the existing manual Agent 42 source-closure workflow when the integration is ready.
 
