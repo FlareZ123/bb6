@@ -1,4 +1,5 @@
 import TM63RootQ4Drain
+import ChampionRootQ4Drain
 import CostRecurrence
 import S1ChampionCountedReset
 import Lean.Elab.Tactic.Omega
@@ -20,6 +21,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent48CountedInc0
+open BB6Coverage.Agent24ChampionTime
 open BB6Coverage.Agent42TerminalJoin
 open BB6ChampionArithmetic
 
@@ -86,9 +88,45 @@ theorem rootQ4Drain_attained_prefix_length :
     rootQ4DrainMoves = 6*4^63 + 42*2^63 + 27487 :=
   rootQ4DrainMoves_closed
 
+/--
+Actual-champion form of the conditional attained-score theorem.  The six
+extra root transitions are made explicit via Agent 24's run-level transport,
+so the score is written as (champion primitive moves) + 1 for the final
+undefined query, rather than hiding the offset in the generic adapter.
+-/
+theorem champion_attainable_after_root_q4_drain_to_terminal_reset
+    (suffixSteps L a b : Nat) (h : Int)
+    (ha : 0 < a)
+    (hstage :
+      run tm2 suffixSteps
+        (s1Config 3 6 1 71 0 (2^63-1) 223) =
+        some (s1Config L 0 1 a 0 b h))
+    (hfinal :
+      run tm2 (resetPrefixCost 1 1 a b)
+        (s1Config L 0 1 a 0 b h) =
+        some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
+          (a+b+resetDelta 1) (2^b-1) 0 h)) :
+    Attainable
+      (championRootQ4DrainMoves + suffixSteps +
+        proposedIncrementCost 1 1 a b +
+        terminalMoves L (a+b+resetDelta 1) + 1) := by
+  have htm2 := tm2_attainable_after_root_q4_drain_to_terminal_reset
+    suffixSteps L a b h ha hstage hfinal
+  have hscore :
+      rootQ4DrainMoves + suffixSteps +
+          proposedIncrementCost 1 1 a b +
+          terminalMoves L (a+b+resetDelta 1) + 7 =
+        championRootQ4DrainMoves + suffixSteps +
+          proposedIncrementCost 1 1 a b +
+          terminalMoves L (a+b+resetDelta 1) + 1 := by
+    simp [championRootQ4DrainMoves]
+    omega
+  exact hscore ▸ htm2
+
 #print axioms tm2_attainable_after_root_q4_drain_to_terminal_reset
 #print axioms rootQ4Drain_matches_first_reset_cost
 #print axioms first_section_cost_decomposition
 #print axioms rootQ4Drain_attained_prefix_length
+#print axioms champion_attainable_after_root_q4_drain_to_terminal_reset
 
 end BB6Coverage.Agent42RootAttainable
