@@ -79,6 +79,8 @@ theorem proposedIncrementCost_shift (m n a b : Nat) :
       9*b ≤ 6*4^b + 42*2^b + 15 + 4*m + 12*(a+v2 (n+1)) := by omega
   have hright :
       9*b ≤ 6*4^b + 42*2^b + 15 + 4*m + 12*(a+v2 n) := by omega
+  have hleft' := Nat.sub_add_cancel hleft
+  have hright' := Nat.sub_add_cancel hright
   unfold proposedIncrementCost
   omega
 
