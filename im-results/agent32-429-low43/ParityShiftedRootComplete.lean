@@ -283,7 +283,6 @@ theorem blank_root_to_junc0_408 :
   · simpa [htime] using hcombined.2
 
 #print axioms junc0_344_to_junc93_173_delta
-#print axioms shift_represents
 #print axioms junc0_344_to_junc0_408_physical
 #print axioms blank_root_to_junc0_408
 
