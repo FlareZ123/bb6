@@ -29,6 +29,27 @@ open BB6ChampionArithmetic
 read window actually visited by the bridge. -/
 def m1OneQ4Inside (x : Int) : Bool := decide (-7 ≤ x ∧ x ≤ 4)
 
+theorem m1OneQ4Bridge_heads :
+    (List.range 29).all (fun k =>
+      match fRun tm2 k m1OddQ4BridgeStart with
+      | none => true
+      | some z => m1OneQ4Inside z.head = true) = true := by
+  decide
+
+private theorem m1One_sideBit_false_after_length
+    (xs : List Bool) (i : Nat) (hi : xs.length ≤ i) :
+    sideBit xs i = false := by
+  induction xs generalizing i with
+  | nil => simp [sideBit]
+  | cons a xs ih =>
+      cases i with
+      | zero => simp at hi
+      | succ i =>
+          have hi' : xs.length ≤ i := by
+            simp only [List.length_cons] at hi
+            omega
+          simpa [sideBit] using ih i hi'
+
 private theorem m1One_binDec_one (L : Nat) (hL : 0 < L) :
     binDec L 1 = d0 ++ d1pow (L-1) := by
   have hL' : L = (L-1)+1 := by omega
@@ -515,7 +536,7 @@ theorem m1One_q4_prefix_rightShape
             simp [s0RightFacing,d1pow_length]
             omega
           have hblank : sideBit (s0RightFacing b) (9+3*b+i) = false :=
-            sideBit_false_after_length_local (s0RightFacing b)
+            m1One_sideBit_false_after_length (s0RightFacing b)
               (9+3*b+i) (by omega)
           have htarget : T (h+10+(3*b:Int)+(i:Int)) = false := by
             rw [hsrc,hblank]
@@ -537,7 +558,7 @@ theorem m1One_q4_prefix_far_tail
     simp [s0RightFacing,d1pow_length]
     omega
   have hblank : sideBit (s0RightFacing b) i = false :=
-    sideBit_false_after_length_local (s0RightFacing b) i (by omega)
+    m1One_sideBit_false_after_length (s0RightFacing b) i (by omega)
   calc
     m1OneQ4CutTape L a b h (h+1+(i:Int)) =
         (s1Config L 1 1 a 0 b h).tape (h+1+(i:Int)) := hcut
@@ -575,16 +596,34 @@ private theorem m1OneQ4LeftFacingBridgeBit
     (L a k : Nat) (hL : 0 < L) (hk : 1 ≤ k ∧ k ≤ 7) :
     sideBit (m1OneQ4LeftFacing L a) (3*a+1+k) =
       decide ((-(k:Int)) ∈ m1OddQ4BridgeEnd.marked) := by
+  have hleft :
+      m1OneQ4LeftFacing L a =
+        ([true] ++ d1pow a) ++
+          (markerWord 0 ++ d0 ++ d1pow L ++ lh) := by
+    simp [m1OneQ4LeftFacing,List.append_assoc]
+  have hlen : ([true] ++ d1pow a).length = 3*a+1 := by
+    simp [d1pow_length]
+  rw [hleft]
+  rw [sideBit_append_right ([true] ++ d1pow a)
+    (markerWord 0 ++ d0 ++ d1pow L ++ lh) (3*a+1+k) (by rw [hlen]; omega)]
   have h0 := sideBit_d1pow_true L 0 (by omega)
   have h1 := sideBit_d1pow_true L 1 (by omega)
   have h2 := sideBit_d1pow_true L 2 (by omega)
+  have ht0 : sideBit (d1pow L ++ lh) 0 = true := by
+    rw [sideBit_append_left (d1pow L) lh 0 (by simp [d1pow_length]; omega)]
+    exact h0
+  have ht1 : sideBit (d1pow L ++ lh) 1 = true := by
+    rw [sideBit_append_left (d1pow L) lh 1 (by simp [d1pow_length]; omega)]
+    exact h1
+  have ht2 : sideBit (d1pow L ++ lh) 2 = true := by
+    rw [sideBit_append_left (d1pow L) lh 2 (by simp [d1pow_length]; omega)]
+    exact h2
   have hkCases : k = 1 ∨ k = 2 ∨ k = 3 ∨ k = 4 ∨
       k = 5 ∨ k = 6 ∨ k = 7 := by omega
   rcases hkCases with h1k | h2k | h3k | h4k | h5k | h6k | h7k
   all_goals subst k
   all_goals
-    simp [m1OneQ4LeftFacing, markerWord, d0, sideBit,
-      m1OddQ4BridgeEnd, h0, h1, h2]
+    simp [markerWord,d0,sideBit,m1OddQ4BridgeEnd,ht0,ht1,ht2]
 
 /-- Exact left-facing tape identity at the Q4 cut. -/
 theorem m1One_q4_prefix_leftFacing
@@ -599,10 +638,6 @@ theorem m1One_q4_prefix_leftFacing
   · have htarget : sideBit (m1OneQ4LeftFacing L a) i = true := by
       have hprefix :
           sideBit ([true] ++ d1pow a) i = true := by
-        have hlen : i < ([true] ++ d1pow a).length := by
-          simp [d1pow_length]
-          omega
-        rw [sideBit_append_left [true] (d1pow a) i (by simp; omega)]
         cases i with
         | zero => simp [sideBit]
         | succ j =>
@@ -644,7 +679,17 @@ theorem m1One_q4_prefix_leftFacing
         simp [m1OddQ4BridgeEnd]
       have htarget : sideBit (m1OneQ4LeftFacing L a) i = false := by
         subst i
-        simp [m1OneQ4LeftFacing,markerWord,sideBit]
+        have hleft :
+            m1OneQ4LeftFacing L a =
+              ([true] ++ d1pow a) ++
+                (markerWord 0 ++ d0 ++ d1pow L ++ lh) := by
+          simp [m1OneQ4LeftFacing,List.append_assoc]
+        have hlen : ([true] ++ d1pow a).length = 3*a+1 := by
+          simp [d1pow_length]
+        rw [hleft]
+        rw [sideBit_append_right ([true] ++ d1pow a)
+          (markerWord 0 ++ d0 ++ d1pow L ++ lh) (3*a+1) (by rw [hlen])]
+        simp [markerWord,sideBit]
       simpa [r,N,hieq] using (hcut.trans hmark).trans htarget.symm
     · have hsmall : i ≤ 3*a+8 := by omega
       let k : Nat := i-(3*a+1)
