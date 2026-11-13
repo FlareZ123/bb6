@@ -11,6 +11,7 @@ namespace BB429LowEvenR32RootExtension
 
 open BB6Coverage BB6Bubble BB429OddExcursion BB429FinishScanEDelta
 open BB429PhysicalBridge BB429OuterSafe BB429W4CZeroSafe BB429NoFatalGuard
+open BB429JuncHeadExcursion
 open BB429LowEvenR32 BB429LowEvenR32RootChain
 
 /-- The actual C/01 halting gateway is absent from this configuration. -/
