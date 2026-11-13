@@ -140,14 +140,14 @@ The finite geometric sum satisfies
 \[
 T_s<1+\frac1{2^s-1}.
 \]
-By (5), \(2^s\ge n+3\), so \(n/(2^s-1)<1\). Therefore
+By (5), \(2^s\ge n+5\), so \(n/(2^s-1)<1\). Therefore
 \[
-nT_s<n+1<2^s.
+nT_s<n+1\le2^s-4.
 \tag{6}
 \]
 The same bound applies with any exponent \(m\ge d_r\) in place of \(s\):
 \[
-nT_s<n+1<2^m.
+nT_s<n+1\le2^m-4.
 \tag{7}
 \]
 
