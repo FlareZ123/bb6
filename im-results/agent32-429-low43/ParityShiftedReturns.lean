@@ -8,6 +8,7 @@ set_option maxRecDepth 65536
 namespace BB429ParityShiftedReturns
 
 open BB6Coverage
+open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta
 open BB429FinishScanEDelta
 open BB429W4HeadMax
 open BB429JuncHeadExcursion
@@ -58,7 +59,7 @@ theorem junc15_172_1_to_junc0_15_349 :
   have h₁ := juncPos_to_midA_delta 14 172 1 (by omega)
   have h₂ := midApos_14_172_1_to_junc0
   have h := compose_runWithDelta h₁ h₂
-  norm_num at h
+  simpa using h
   exact h
 
 /-- Exact return J(135,60,1) -> J(0,135,125), split at MidApos. -/
@@ -68,7 +69,7 @@ theorem junc135_60_1_to_junc0_135_125 :
   have h₁ := juncPos_to_midA_delta 134 60 1 (by omega)
   have h₂ := midApos_134_60_1_to_junc0
   have h := compose_runWithDelta h₁ h₂
-  norm_num at h
+  simpa using h
   exact h
 
 /-- Exact return J(78,120,2) -> J(0,0,408), split at the w=2 MidA exit. -/
@@ -80,7 +81,7 @@ theorem junc78_120_2_to_junc0_0_408 :
   have h₃ := midApos_77_120_2_A0_suffix
   have h₁₂ := compose_runWithDelta h₁ h₂
   have h := compose_runWithDelta h₁₂ h₃
-  norm_num at h
+  simpa using h
   exact h
 
 /-- Full source-level 102,656-step continuation from J(0,7,349) to J(0,0,408). -/
@@ -141,7 +142,7 @@ theorem junc07_349_to_junc0_408 :
   have chain13 := compose_runWithDelta chain12 step13
   have chain14 := compose_runWithDelta chain13 step14
   have chain15 := compose_runWithDelta chain14 step15
-  norm_num [juncNormalizeTime, juncPosFullTime] at chain15
+  simp [juncNormalizeTime, juncPosFullTime] at chain15
   exact chain15
 
 /-- Complete source-level continuation from the shifted C/0 zipper to J(0,0,408). -/
@@ -149,7 +150,7 @@ theorem parityShiftedC0_to_junc0_408 :
     runWithDelta 103081 parityShiftedC0 =
       some (junc 0 0 408, -397) := by
   have h := compose_runWithDelta parityShiftedC0_to_junc07 junc07_349_to_junc0_408
-  norm_num at h
+  simpa using h
   exact h
 
 #print axioms parityShiftedC0_to_junc07
