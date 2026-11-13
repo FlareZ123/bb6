@@ -21,6 +21,8 @@ open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent24M1OddSuffix
 open BB6Coverage.Agent42M0M2RootComposition
+open BB6Coverage.Agent42M1EvenRootComposition
+open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent42RootAttainable
 open BB6ChampionArithmetic
 
@@ -99,8 +101,25 @@ theorem tm63_blank_reaches_after_m1_odd :
       tm63AfterM2EvenA tm63AfterM2EvenB tm63AfterM2EvenHead
       tm63_after_m1_odd_positivity
 
-/-- The remaining champion itinerary may now be started directly from
-S1(3,2,0,...), rather than from S1(3,3,1,...). -/
+/-- The cost of the source-connected blank-root prefix through M1-odd,
+followed by the residual itinerary to the final reset input, is exactly the
+published suffix cost. -/
+theorem tm63AfterM1OddTotalSteps_eq_root_suffix :
+    tm63AfterM1OddMoves + tm63AfterM1OddSteps =
+      rootQ4DrainMoves + tm63SuffixSteps := by
+  calc
+    tm63AfterM1OddMoves + tm63AfterM1OddSteps =
+        tm63AfterM2EvenMoves + tm63AfterM2EvenSteps := by
+      rw [tm63AfterM1OddMoves, tm63AfterM2EvenSteps_split_m1_odd]
+      omega
+    _ = rootQ4DrainMoves + tm63SuffixSteps := by
+      unfold tm63AfterM2EvenMoves
+      rw [Nat.add_assoc, ← tm63AfterM1EvenSteps_split_m0_m2,
+        Nat.add_assoc, ← tm63SuffixSteps_split_m1_even]
+
+/-- The final (1,1) reset displaces the head by 5+3b.  With that
+source-correct endpoint, the root-connected run through M1-odd composes
+directly with the generic terminal adapter. -/
 theorem tm63_attainable_after_m1_odd_q4
     (h : Int)
     (hstage :
@@ -114,23 +133,32 @@ theorem tm63_attainable_after_m1_odd_q4
         some (s0Config (markerWord 0 ++ d0 ++
           binDec tm63Length2 0 ++ lh)
           (tm63FinalA+tm63FinalB+resetDelta 1)
-          (2^tm63FinalB-1) 0 h)) :
+          (2^tm63FinalB-1) 0 (h+5+3*tm63FinalB))) :
     Attainable proposedChampionScore := by
-  have hstageAfterM2 :
-      run tm63AfterM2EvenSteps
-        (s1Config 3 3 1 tm63AfterM2EvenA 0 tm63AfterM2EvenB
-          tm63AfterM2EvenHead) =
+  have hblank :
+      run tm2 (tm63AfterM1OddMoves + tm63AfterM1OddSteps) blank =
         some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) := by
-    rw [tm63AfterM2EvenSteps_split_m1_odd,run_add]
-    rw [m1Odd_q4_counted_increment_source_symbolic
-      tm63AfterM2EvenA tm63AfterM2EvenB tm63AfterM2EvenHead
-      tm63_after_m1_odd_positivity]
+    rw [run_add,tm63_blank_reaches_after_m1_odd]
     simp only [Option.bind_some]
-    simpa only [tm63AfterM1OddA,tm63AfterM1OddB,tm63AfterM1OddHead] using hstage
-  exact tm63_attainable_after_m2_even_q4 h hstageAfterM2 hfinal
+    exact hstage
+  have hatt := champion_attainable_after_s1_countedRst012_m1n1
+    (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h)
+    (tm63AfterM1OddMoves + tm63AfterM1OddSteps)
+    tm63Length2 tm63FinalA tm63FinalB (h+5+3*tm63FinalB)
+    tm63FinalA_pos hblank hfinal
+  have hscore :
+      tm63AfterM1OddMoves + tm63AfterM1OddSteps +
+        proposedIncrementCost 1 1 tm63FinalA tm63FinalB +
+        terminalMoves tm63Length2
+          (tm63FinalA+tm63FinalB+resetDelta 1) + 7 =
+        proposedChampionScore := by
+    rw [tm63AfterM1OddTotalSteps_eq_root_suffix,
+      ← tm63_root_score_decomposition]
+  exact hscore ▸ hatt
 
 #print axioms tm63AfterM2EvenSteps_split_m1_odd
 #print axioms tm63_blank_reaches_after_m1_odd
+#print axioms tm63AfterM1OddTotalSteps_eq_root_suffix
 #print axioms tm63_attainable_after_m1_odd_q4
 
 end BB6Coverage.Agent24M1OddRootComposition
