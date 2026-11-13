@@ -55,6 +55,21 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/CanonicalRayCocycleSource.lean" Agent49CanonicalRayCocycleSource.lean
           lake env lean -o .lake/build/lib/lean/Agent49CanonicalRayCocycleSource.olean Agent49CanonicalRayCocycleSource.lean
+      - name: Compile exact original-source B-drain iteration cocycle
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent22-623-root-ray-20k/ExactDrainCocycleSource.lean" Agent22ExactDrainCocycleSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent22ExactDrainCocycleSource.olean Agent22ExactDrainCocycleSource.lean
+      - name: Compile exact canonical gap-scale algebra
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent22-623-root-ray-20k/GapScaleExactArithmetic.lean" Agent22GapScaleExactArithmetic.lean
+          lake env lean -o .lake/build/lib/lean/Agent22GapScaleExactArithmetic.olean Agent22GapScaleExactArithmetic.lean
+      - name: Prove source-exact quadratic Lyapunov gain on all four canonical rays
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/GapScaleResidualSource.lean" Agent49GapScaleResidualSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49GapScaleResidualSource.olean Agent49GapScaleResidualSource.lean
       - name: Prove finite affine predecessor envelopes
         working-directory: /tmp/cryptids
         run: |
