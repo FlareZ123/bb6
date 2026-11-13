@@ -56,7 +56,7 @@ The exact first-stop signature, unconditional first-stop corollary, t30 residue 
 
 ### Next discriminating work
 
-1. Complete the original-source episode 17–30 audit and produce the pinned `d-root-seed31-audit` artifact. Without this, the Seed31 arithmetic is not connected to the authentic blank root.
+1. Complete the original-source episode 17–30 audit and produce the pinned `d-root-seed31-audit` artifact. The existing reusable workflow now has durable manual stages `2b16` (sixteenth reentry checkpoint) and `2b17` (seventeenth continuation plus E7 escape); resume from `d-root-stage2a` through those checkpoints rather than rerunning the combined legacy `2b`. Without the full 17–30 audit, the Seed31 arithmetic is not connected to the authentic blank root.
 2. Run the updated certificate workflow. First settle the exact t30 residue and 12,267-step q=8 first-stop theorem; then compile the q=8 E/A source return and q=1 physical two-blank bridge.
 3. If those checks pass, source-certify the exception 33 q=5 E/E/A return and the subsequent q=6/q=9 E/B and q=7 E/A returns. At exception 38, explicitly prove the trailing-blank ObsEq transport for `oppairs(6) ++ [false]` before extending the DRegular trace.
 4. Continue toward an inductive physical blank-root invariant or find the first genuinely reachable uncovered successor. A finite sequence of prepared-section reentries is not an all-time nonhalting decision.
