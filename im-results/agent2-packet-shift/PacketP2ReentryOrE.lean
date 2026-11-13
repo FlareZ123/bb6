@@ -79,11 +79,16 @@ theorem p2_packet_reentry_or_E (c : Packet) (ha : c.a ≥ 4)
           packet (3*k+2) 0 d.p fixedTail := by
         simp [packet,word,hk,hB.2]
       have hB0 := BB6.Agent2BoundaryBZero.b_zero_source k d.p
+      have hB0' :
+          run (12*k*k+49*k+40)
+            (packet (3*k+2) 0 d.p fixedTail) =
+            regularSection (8*k+9+d.p) 1 5 := by
+        simpa [fixedTail] using hB0
       have hfinal :
           run (T0+(12*k*k+49*k+40))
             (packet c.a c.q c.p fixedTail) =
             regularSection (8*k+9+d.p) 1 5 := by
-        rw [run_add,h0,hshape,hB0]
+        rw [run_add,h0,hshape,hB0']
       exact Or.inl ⟨T0+(12*k*k+49*k+40),
         8*k+9+d.p,1,5,hfinal⟩
     · exact Or.inr ⟨T0,d,rfl,h0,hE.1,hE.2⟩
@@ -111,12 +116,18 @@ theorem p2_packet_reentry_or_reset (c : Packet) (ha : c.a ≥ 4)
         packet (3*k+4) d.q 2 fixedTail := by
       simp [hk,hpE]
     have hreset := BB6.Agent2PacketP2Reset.e_two_reset k d.q
+    have hreset' :
+        run (BB6.Agent2PacketP2Reset.eTwoTime k d.q)
+          (packet (3*k+4) d.q 2 fixedTail) =
+          packet (8*k+5) 0 (2*d.q+6)
+            BB6.Agent2PacketP2Reset.marker := by
+      simpa [fixedTail] using hreset
     have hfinal :
         run (T0+BB6.Agent2PacketP2Reset.eTwoTime k d.q)
           (packet c.a c.q c.p fixedTail) =
           packet (8*k+5) 0 (2*d.q+6)
             BB6.Agent2PacketP2Reset.marker := by
-      rw [run_add,h0,hshape,hreset]
+      rw [run_add,h0,hshape,hreset']
     exact Or.inr ⟨T0+BB6.Agent2PacketP2Reset.eTwoTime k d.q,
       k,d.q,hfinal⟩
 
