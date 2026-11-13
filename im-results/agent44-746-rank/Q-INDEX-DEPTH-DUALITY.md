@@ -32,11 +32,11 @@ theorem qNumerators_agree (n j : Nat) :
   rfl
 
 theorem qIndexDepth_duality (s j k h : Nat)
-    (hs : s=4 \\u2228 s=5) (hj : j%2=0) :
-    h%3^k = CascadeQStateIndexHensel.qIndexResidue s j k \\u2194
+    (hs : s=4 ∨ s=5) (hj : j%2=0) :
+    h%3^k = CascadeQStateIndexHensel.qIndexResidue s j k ↔
       j%CascadeRayDepthHensel.depthPeriod k =
         CascadeQDepthHensel.qDepthResidue (s+6*h) k := by
-  have hn : (s+6*h)%6=4 \\u2228 (s+6*h)%6=5 := by
+  have hn : (s+6*h)%6=4 ∨ (s+6*h)%6=5 := by
     rcases hs with hs|hs <;> omega
   have hi := CascadeQStateIndexHensel.qIndexResidue_iff s j k h hs hj
   have hd := CascadeQDepthHensel.qDepthResidue_iff (s+6*h) k j hn
@@ -45,8 +45,8 @@ theorem qIndexDepth_duality (s j k h : Nat)
         CascadeQDepthHensel.qNumerator (s+6*h) j :=
     qNumerators_agree (s+6*h) j
   have hi' :
-      (3:Int)^(k+1) \\mid
-          CascadeQDepthHensel.qNumerator (s+6*h) j \\u2194
+      (3:Int)^(k+1) ∣
+          CascadeQDepthHensel.qNumerator (s+6*h) j ↔
         h%3^k = CascadeQStateIndexHensel.qIndexResidue s j k := by
     simpa only [hsame] using hi
   exact hi'.symm.trans hd
