@@ -30,10 +30,10 @@ The helper is included after `Q4Suffix.lean` in the existing manual-only champio
 
 ## Remaining proof obligations
 
-1. Export the full prefix right-stream invariant and compile this helper under Lean 4.36.0-rc2.
+1. Compile the strengthened prefix theorem and this helper under Lean 4.36.0-rc2.
 2. Prove the corresponding left-facing endpoint equality. The expected word is
    `d0pow b ++ d1pow 2 ++ (q4LeftFacing L (n-1) a).drop 1`,
-   matching the source target's left-facing S1 encoding.
+   matching the source target's left-facing S1 encoding. The coordinate split is now explicit: for `i<3*b`, the queried cell is `x_i=h+5+3*b-i`; when `x_i≥h+10`, write `x_i-(h+10)=3*j+r` and use `d0Sweep_block` (the residue `r=2` is equivalent to `i%3=2`); when `x_i<h+10`, only offsets `h+6` through `h+9` remain and the first-ten frame gives `1,0,0,1`. The next six cells are `h+5` through `h`, all marked, and for `i≥3*b+6` the tape is unchanged at `h-1-j`, so the prefix left-stream equality supplies the remaining tail. The helper lemmas `q4Endpoint_d0pow_length`, `q4Endpoint_sideBit_d0pow_mod`, and `q4Endpoint_sideBit_drop_one` are now in the Lean module to support this proof.
 3. Combine both half-tape equalities with the frame's state/head fields to identify the complete output with
    `s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 (h+5+3*b)`.
 4. Compose the exact prefix and suffix runs. Until these obligations are kernel-checked, the proposed `71+12*a+3*b` Rst2 cost remains conditional.
