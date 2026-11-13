@@ -142,3 +142,11 @@ The [exact cumulative-cost identity](wall_cost_telescoping.md) is a distinct sou
 \]
 
 with \(S=\sum_j2^{s_j}\), \(T=\sum_js_j2^{s_j}\), and cumulative costs \(s_j\). This is an all-count, all-cost necessary condition, not a wall exclusion or a BB(6) result. It is source-level and must not be conflated with the abstract shadow statistics above.
+
+
+## Source-wall modular reductions and finite low-index exclusion (13 November 2026)
+
+The [wall modular obstruction](wall_modular_obstruction.md) extracts the exact congruence
+`sum_{s in A}(n+3+s)2^s = 1 (mod 2^n)` from the cumulative-cost wall identity and proves the necessary restriction `n = 2 or 14 (mod 16)`, independently of depth caps. It also records an unproved unrestricted six-shallow subset lemma and an exact carry DP scan through n=10000; the scan is evidence, not an unbounded theorem.
+
+The [finite low-index wall DP](small_index_wall_dp.md), with executable [JavaScript](small_index_wall_dp.js), exhaustively excludes the full arithmetic wall identity for every n=14,...,82 and arbitrary inverse depths. The modular prefix DP leaves only n=30; a second exact carry DP eliminates n=30 for all terminal costs. This is a finite exact computational result, not yet Lean-kernel checked. If integrated with Agent43's n>=83 source lift, it closes the finite low-index gap for the six-shallow lower bound. It does not exclude wall paths for n>=83 and does not decide P1 or BB(6).
