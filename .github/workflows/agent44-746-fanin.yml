@@ -48,6 +48,8 @@ jobs:
           done
           e="im-results/agent7-746-even-parent"
           export LEAN_PATH="$LEAN_PATH:$e"
+          lean -o "$e/EvenPre887T3T6.olean" "$e/EvenPre887T3T6.lean"
+          echo "PASS: 23-state source-certified t=3/t=6 side cone excludes all 17 first-tier roots"
           lean -o "$e/EvenPre887ConeOnly.olean" "$e/EvenPre887ConeOnly.lean"
           echo "PASS: exact source ResetParent closure excludes the n=887 even fatal predecessor"
           for m in UniformFatalParent UniformFatalMod9 UniformRootGate UniqueEvenBand SecondEven FirstFork FirstForkExactTwo FirstForkOddT2 FirstForkModulo54 FirstForkAt81 FirstFork162 FirstForkT3 FirstForkThree FirstForkOddT45 FirstForkOddValuation FirstForkExactThree FirstForkRootThree FirstForkFatalThree FirstForkSix FirstForkSixResidues FirstForkOddValuationSix FirstForkExactFour FirstForkRootFour FirstForkFourDistinct FirstForkFourResidues FatalValuationPower FatalValuationUnbounded FatalValuationBeyond; do
