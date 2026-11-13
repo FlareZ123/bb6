@@ -36,6 +36,13 @@ theorem inverseAt_left_ge_two (b d t k c : Nat)
           omega
         · simp at hi
 
+private theorem self_add_one_le_two_pow (n : Nat) : n+1≤2^n := by
+  induction n with
+  | zero => norm_num
+  | succ n ih =>
+      rw [Nat.pow_succ]
+      omega
+
 private theorem three_mul_le_two_pow (k : Nat) (hk : 4 ≤ k) :
     3*k ≤ 2^k := by
   have aux : ∀ n : Nat, 4 ≤ n → 3*n ≤ 2^n := by
@@ -319,13 +326,18 @@ theorem shadow_reach_lifts_to_odd_cone
 theorem l0_bounded_shadow_word_has_source
     (q M u m z : Nat)
     (hN : 2*M+16≤16*q)
-    (hu : u+4*q+3=7*2^(16*q)) (hu1 : 1≤u) (hu4 : 4≤u)
+    (hu : u+4*q+3=7*2^(16*q))
     (hgraph : ShadowReach (16*q+8) (12*q+4) m z)
     (hm : m≤M) :
     ∃ b d alpha,
       OddCone (4*u-4) (4*u+9) b d m ∧
       12≤b ∧ b%4=0 ∧ d%2=1 ∧ 28≤alpha ∧ alpha<56*2^m ∧
       2^m*(b+4*(16*q+8+m-z))=alpha*2^(16*q) := by
+  have hu4 : 4≤u := by
+    have hpow := self_add_one_le_two_pow (16*q)
+    have hmul := Nat.mul_le_mul_left 7 hpow
+    omega
+  have hu1 : 1≤u := by omega
   obtain ⟨hmass,hcoord,_,_⟩ :=
     two_feeder_root_arithmetic q u (2^(16*q)) hu hu1
   have h := shadow_reach_lifts_to_odd_cone
@@ -340,14 +352,27 @@ theorem l0_bounded_shadow_word_has_source
 theorem l1_bounded_shadow_word_has_source
     (q M u m z : Nat)
     (hN : 2*M+16≤16*q)
-    (hu : u+4*q+3=7*2^(16*q)) (hu1 : 1≤u) (hu4 : 4≤u)
-    (huOdd : u%2=1)
+    (hu : u+4*q+3=7*2^(16*q))
     (hgraph : ShadowReach (16*q+9) (10*q+4) m z)
     (hm : m≤M) :
     ∃ b d alpha,
       OddCone (6*u-2) (2*u+5) b d m ∧
       12≤b ∧ b%4=0 ∧ d%2=1 ∧ 28≤alpha ∧ alpha<56*2^m ∧
       2^m*(b+4*(16*q+9+m-z))=alpha*2^(16*q) := by
+  have hu4 : 4≤u := by
+    have hpow := self_add_one_le_two_pow (16*q)
+    have hmul := Nat.mul_le_mul_left 7 hpow
+    omega
+  have hu1 : 1≤u := by omega
+  have huOdd : u%2=1 := by
+    have hexp : 16*q=(16*q-1)+1 := by omega
+    have hpowEven : (2^(16*q))%2=0 := by
+      rw [hexp,Nat.pow_succ]
+      simp [Nat.mul_mod]
+    have heven : (u+4*q+3)%2=0 := by
+      rw [hu]
+      simp [Nat.mul_mod,hpowEven]
+    omega
   obtain ⟨_,_,hmass,hcoord⟩ :=
     two_feeder_root_arithmetic q u (2^(16*q)) hu hu1
   have h := shadow_reach_lifts_to_odd_cone
