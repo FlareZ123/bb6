@@ -26,6 +26,20 @@ def frameAt (T : Int → Bool) (h : Int) (inside : Int → Bool)
     (c : FConfig) : Config :=
   shiftConfig h (frame inside (centerTape T h) (embed c))
 
+theorem config_ext {c d : Config}
+    (hs : c.state = d.state)
+    (hh : c.head = d.head)
+    (ht : c.tape = d.tape) : c = d := by
+  cases c with
+  | mk cs ch ct =>
+    cases d with
+    | mk ds dh dt =>
+      simp only at hs hh ht
+      cases hs
+      cases hh
+      cases ht
+      rfl
+
 @[simp] theorem frameAt_state (T : Int → Bool) (h : Int)
     (inside : Int → Bool) (c : FConfig) :
     (frameAt T h inside c).state = c.state := by
@@ -40,7 +54,8 @@ def frameAt (T : Int → Bool) (h : Int) (inside : Int → Bool)
     (inside : Int → Bool) (c : FConfig) (x : Int) :
     (frameAt T h inside c).tape x =
       (if inside (x-h) then decide (x-h ∈ c.marked) else T x) := by
-  simp [frameAt, frame, shiftConfig, centerTape, embed]
+  have hcoord : h + (x-h) = x := by omega
+  simp [frameAt, frame, shiftConfig, centerTape, embed, hcoord]
 
 /-- Lift finite trace head bounds to the original infinite-tape semantics. -/
 theorem finiteHeads (inside : Int → Bool) (c : FConfig) (n : Nat)
@@ -99,24 +114,26 @@ theorem bridgeAt (T : Int → Bool) (h : Int) (inside : Int → Bool)
     | mk s ch marks =>
       have hch : ch = 0 := hc
       subst ch
-      apply Config.ext
+      apply config_ext
       · rfl
       · rfl
       · funext x
+        have hcoord : h + (x-h) = x := by omega
         by_cases hx : inside x = true
-        · simp [frame, embed, centerTape, hx, hmatch x hx]
-        · simp [frame, embed, centerTape, hx]
+        · simp [frame, embed, centerTape, hx, hmatch x hx, hcoord]
+        · simp [frame, embed, centerTape, hx, hcoord]
   have hrun := finiteBridgeFrame inside (centerTape T h) c d n hexact hcheck
   rw [hframe] at hrun
   have hshift :
       shiftConfig h
         ({state := c.state, head := 0, tape := centerTape T h} : Config)
         = ⟨c.state,h,T⟩ := by
-    apply Config.ext
+    apply config_ext
     · rfl
     · simp [shiftConfig]
     · funext x
-      simp [shiftConfig, centerTape]
+      have hcoord : h + (x-h) = x := by omega
+      simp [shiftConfig, centerTape, hcoord]
   rw [← hshift, shift_run, hrun]
   rfl
 
