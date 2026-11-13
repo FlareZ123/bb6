@@ -153,3 +153,20 @@ The concrete low-even return has direct `runNoFatal` and `runWithMax` certificat
 The next arithmetic candidate is the outer-safe ladder U=11,25,53 from J(11,282) to J(109,95), followed by low43 parameters v=47,k=30. These steps are not included in the current theorem.
 
 **Validation remains pending:** PR #83 is draft and the extended manual-only workflow has not yet been run. None of the new declarations should be described as kernel-validated until CI compiles the module and the fail-closed `sorryAx` audit passes. This is still a prepared-Junc result, not a blank-root composition or all-time nonhalting proof.
+
+
+## Extended prepared chain through the second low43 entrance
+
+The same candidate module now packages the next outer-safe and low43 stages:
+
+| Segment | Steps | Endpoint | Head displacement | Prefix maximum |
+| --- | ---: | --- | ---: | ---: |
+| J(11,282) outer-safe ladder U=11,25,53 | 15,191 | J(109,95) | +187 | +187 |
+| J(109,95) low43 entry, v=47,k=30 | 9,704 | C/0 frontier | +100 | +100 |
+| v=47,k=30 C/0 continuation | 1,480 | J(69,186) | -188 | +1 |
+| Outer ladder + low43 | 26,375 | J(69,186) | +99 | +288 |
+| Full prepared chain from J(119,35) | 36,006 | J(69,186) | -138 | +51 |
+
+Each concrete source segment has `runNoFatal` and `runWithMax` certificates in the candidate file; the compositions expose all guarded prefixes and lift to physical tapes represented by J(119,35). The new endpoint has deficit `2*69-186=-48`. A next arithmetic candidate is the outer-safe U=69 step to J(141,45), followed by low-odd parameters v=22,n=58; these steps are not included in the current theorem.
+
+**Validation remains pending:** all new declarations in `Low43RootNext.lean` are still draft candidates until the manual-only workflow compiles the module and its fail-closed `sorryAx` audit passes. The 36,006-step result is a prepared-Junc chain only; it is not yet connected to the blank-root run.
