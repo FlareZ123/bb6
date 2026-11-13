@@ -49,7 +49,7 @@ At exception 38, EZeroZTwoFollow returns a physical configuration with prefix 1^
 
 ## Next decisive work
 
-1. Add a Lean exact first-stop theorem to Seed31FirstStopCertificate.lean: certify 12,267 steps, a mod 59049 = 39637, q=8, b=1, then discharge the first-stop bound.
+1. A candidate Lean exact first-stop theorem has now been appended to Seed31FirstStopCertificate.lean: it uses decide to certify 12,267 steps, a mod 59049 = 39637, q=8, b=1, then discharges the first-stop bound. It remains uncompiled pending the existing certificate workflow.
 2. Compose exception 31 with EFirstAPacket + AOne boundary and lift the result through BlankThirtiethRejoin.blank_thirtieth_reentry.
 3. Assemble and audit the exception 32–37 source returns. For exception 38, explicitly prove the trailing-zero ObsEq into the canonical DRegularSource.sourceSection before continuing.
 4. Update the conditional q=4/#41 lookahead: it is not the actual first-stop branch for this computed seed31.
