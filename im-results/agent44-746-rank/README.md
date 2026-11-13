@@ -109,8 +109,20 @@ source-CI-verified; do not treat the Lean proof draft as a checked-in
 source theorem until the selective workflow compiles it.
 
 Agent 7's complementary Q-depth selector characterizes the same
-divisibility locus in the j-coordinate. Combining the two iff results
-gives a finite-level perfect matching between h mod 3^k and the even
-j residues mod 2*3^k; the inverse-selector lemma remains to be
-formalized. This is a promising 3-adic graph description of the
-t=1 parent candidates, not a blank-root exclusion.
+divisibility locus in the j-coordinate. The expected finite-level
+inverse identities are
+
+```
+qDepthResidue(s+6*qIndexResidue(s,j,k),k)
+  = j mod depthPeriod(k)
+
+qIndexResidue(s,qDepthResidue(s+6*h,k),k)
+  = h mod 3^k.
+```
+
+They follow by composing the two iff theorems. In the second identity,
+the selected depth must first be shown even; this follows from
+qDepthResidue_good and Agent 7's base Q parity criterion. The joint
+inverse-selector proof remains to be formalized. This is a promising
+3-adic graph description of the t=1 parent candidates, not a
+blank-root exclusion.
