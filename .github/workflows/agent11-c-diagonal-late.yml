@@ -380,3 +380,10 @@ jobs:
             echo "REJECTED: incomplete m=0 sum-zero source proof"
             exit 1
           fi
+
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeDiagonalM0SumZeroFull.lean .
+          lean -o CThreeDiagonalM0SumZeroFull.olean CThreeDiagonalM0SumZeroFull.lean 2>&1 | tee CThreeDiagonalM0SumZeroFull.log
+          if grep -q sorryAx CThreeDiagonalM0SumZeroFull.log; then
+            echo "REJECTED: incomplete m=0 sum-zero exact criterion"
+            exit 1
+          fi
