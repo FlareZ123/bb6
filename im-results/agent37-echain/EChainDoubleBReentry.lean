@@ -1,7 +1,5 @@
 import Lean.Elab.Tactic.Omega
 import EChainDoubleBExit
-import EChainBEExit
-import BlankTwentyThirdRejoin
 import DObsSourceCandidate
 import P2MarkerA
 
@@ -26,6 +24,30 @@ def endpointTwo (n : Nat) : CryptidBoundary.Cfg :=
   ⟨[],false,
     List.replicate n true ++
       [false,true,false,true,false,true,false,true,false],5⟩
+
+
+private theorem regularSection_sourceSection (a q b : Nat) (ha : 2 ≤ a) :
+    BB6.Agent2BoundaryBZero.regularSection a q b =
+      DRegularSource.sourceSection ⟨a,q,b⟩ := by
+  simp only [BB6.Agent2BoundaryBZero.regularSection,
+    DRegularSource.sourceSection, CryptidBoundary.init]
+  have hrepAdd (m n : Nat) :
+      List.replicate (m+n) true =
+        List.replicate m true ++ List.replicate n true := by
+    induction m with
+    | zero => simp
+    | succ m ih =>
+      rw [show Nat.succ m + n = (m+n)+1 by omega]
+      rw [List.replicate_succ]
+      rw [ih]
+      rw [← List.cons_append]
+      rw [← List.replicate_succ]
+  have hrep : List.replicate a true =
+      [true,true] ++ List.replicate (a-2) true := by
+    rw [show a = 2+(a-2) by omega, hrepAdd]
+    simp
+  rw [hrep]
+  simp [List.append_assoc]
 
 /-- A regular endpoint together with a unary-prefix lower bound. -/
 def regularEndpointFloor (c : CryptidBoundary.Cfg) (floor : Nat) : Prop :=
@@ -103,7 +125,7 @@ theorem regularEndpointFloor_sourceSection
       simp [endpointZero,BB6.Agent2BoundaryBZero.regularSection,
         CryptidBoundary.oppairs,hrep,List.append_assoc]
     have hsec :=
-      BB6.Agent2TwentyThirdRoot.regularSection_sourceSection
+      regularSection_sourceSection
         (n+1) 2 2 (by omega)
     rw [h0,heq,hsec]
     exact BB6.Padding.cfgEq_refl _
