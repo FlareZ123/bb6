@@ -1,4 +1,4 @@
-name: D-root Seed31 source audit retry
+name: D-root Seed31 source audit retry after fixedTail normalization
 on:
   push:
     branches:
