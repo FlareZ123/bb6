@@ -67,6 +67,24 @@ def seed9 : Option S := some ⟨9,0,0⟩
 def seed15 : Option S := some ⟨15,0,0⟩
 def seed39 : Option S := some ⟨39,0,0⟩
 
+/-- Concrete canonical seed returned by the P2-reset B→B→A source bridge. -/
+def seed24972 : Option S := some ⟨24972,2,2⟩
+
+/-- In the source-derived arithmetic L-section model, this seed reaches its
+    first E/A exit after 5,648 regular transitions, at q=4,b=1 and
+    a ≡ 26,479 (mod 59,049). This is not a claim that the original TM halts. -/
+theorem seed24972_exception :
+  (run 5648 seed24972).any
+    (fun s => s.a%59049 == 26479 && s.q == 4 && s.b == 1) = true := by decide
+
+theorem seed24972_exit : run 5649 seed24972 = none := by decide
+
+theorem seed24972_prior (i : Nat) (hi : i ≤ 5648) :
+    run i seed24972 ≠ none := by
+  apply no_early_exit seed24972 5648 _ i hi
+  intro hn
+  simpa [hn] using seed24972_exception
+
 /-- Each certificate names the first regular-language exit in the
     source-derived arithmetic section model. None means OUTSIDE this model,
     and does NOT mean the original Turing machine halts. -/
@@ -113,4 +131,7 @@ theorem seed39_prior (i : Nat) (hi : i ≤ 7611) : run i seed39 ≠ none := by
 #print axioms seed9_prior
 #print axioms seed15_prior
 #print axioms seed39_prior
+#print axioms seed24972_exception
+#print axioms seed24972_exit
+#print axioms seed24972_prior
 end BB6.DRootL
