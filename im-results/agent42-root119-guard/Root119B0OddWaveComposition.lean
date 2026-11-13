@@ -28,7 +28,7 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
     (∃ f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
       f.h = c.h+1 ∧
       c = (⟨.B,f.h-1,oddWaveTape 0 f.tape f.h⟩ : Conf)) ∨
-    (∃ m f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
+    (∃ (m : Nat) f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
       f.h = c.h+2*(m:Int)+3 ∧
       c = (⟨.B,f.h-3-2*(m:Int),
         setBit (fbMany m
@@ -60,7 +60,8 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
     cases f with
     | mk q h t => simp_all
   have hrunInput : run (2*k+3) (⟨.F,f.h,f.tape⟩ : Conf) = some c := by
-    simpa [hfConfig] using hrunFC
+    rw [← hfConfig]
+    exact hrunFC
 
   have hdispEC : c.h = e.h-((2*k+1:Nat):Int) := by
     rw [hposE,hposF]
@@ -100,7 +101,7 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
   by_cases hk1 : k=1
   · have hrunInputShort : run 5 (⟨.F,f.h,f.tape⟩ : Conf) = some c := by
       simpa [hk1] using hrunInput
-    have hret := odd_f1_to_b 0 f.tape f.h hFbit hones hzero2
+    have hret := odd_f1_to_b 0 f.tape f.h hFbit hones (by simpa using hzero2)
     have hhead : f.h-1=c.h := by rw [hposF]; omega
     have hret' :
         run 5 (⟨.F,f.h,f.tape⟩ : Conf) =
@@ -190,12 +191,12 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
       simpa [hidx] using hfinalB
 
     have hret := odd_f1_retreat_to_b0 0 m f.tape f.h
-      hFbit hones hzero2 hleft hfbM hfinalFM hfinalBM
+      hFbit hones (by simpa using hzero2) hleft hfbM hfinalFM hfinalBM
     have hhead : f.h-3-2*(m:Int)=c.h := by
       rw [hposF]
       dsimp [m]
       omega
-    have hlen : 4*0+2*m+7=2*k+3 := by
+    have hlen : 2*m+7=2*k+3 := by
       dsimp [m]
       omega
     have hret' :
