@@ -13,9 +13,9 @@ L(59049*m + 44494, 4, 1)
 = L(9*t + 7, 4, 1),  t = 6561*m + 4943,  t ≡ 2 (mod 27).
 ```
 
-Equivalently write the larger q=4 cylinder as
-`L(243*u+25,4,1)`, where the EERootBEA subfamily has
-`u=243*m+183`.
+Equivalently, the EERootBEA q=4 subcylinder is
+`L(243*u+25,4,1)`, with the narrower parameterization
+`u=243*m+183`. This is not the entire q=4 exceptional family.
 
 ## Exhaustive one-step preimage calculation
 
@@ -65,8 +65,8 @@ must still be proved from the original blank configuration with
 From `BlankThirtiethRejoin.lean`:
 
 - `packet30.a=24*t30+21`, so `k30=8*t30+6`;
-- `packet30.p=16), so `r30=5`;
-- `wordInc(aWords 0 5)=29), hence `aUnary k30 0 5 = 8*k30+69).
+- `packet30.p=16`, so `r30=5`;
+- `wordInc(aWords 0 5)=29`, hence `aUnary k30 0 5 = 8*k30+69).
 
 Therefore the pure-unary seed31 is exactly
 
@@ -85,7 +85,7 @@ L(64*t+117, 0, 0)
 ```
 
 The divisibilities and branch conditions follow from `t≡22 (mod27)`.
-The fourth transition depends on `t mod81), which is not supplied by
+The fourth transition depends on `t mod81`, which is not supplied by
 `terminal2613_certificate`; do not extrapolate the trajectory from the
 mod-27 fact alone. The `Seed31Probe` is intended to compute the exact
 first exit from the full integer seed.
