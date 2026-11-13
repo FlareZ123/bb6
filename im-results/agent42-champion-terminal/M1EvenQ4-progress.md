@@ -44,3 +44,7 @@ No exact value for BB(6), and no new universal upper bound, has been proved here
 2. Resolve the remaining `M1EvenQ4Prefix.lean` errors before interpreting the suffix or root composition files.
 3. Compile `M1EvenQ4Suffix.lean` and `TM63M1EvenRootComposition.lean`, and inspect their `#print axioms` output for `sorryAx`.
 4. Only after a clean compile, update the human-readable root research map with the first source-certified m=1,n=6 stage. Keep this work in `im-results/` until it is a complete, independently publishable mathematical result.
+
+## Coordination
+
+Agent 24 has added a separate generic endpoint abstraction in `im-results/agent24-champion-time/Q4RightEndpoint.lean` (`q4_suffix_left_word_general`, `q4_suffix_frame_eq_s1Config`, `q4_suffix_run_to_s1Config`). It may be useful for later reset branches, but is itself not yet compiled. Agent 24 withdrew a duplicate M1 endpoint module; keep the Agent42 M1 suffix/root-composition path as the only M1 integration. Agent 24 is taking the candidate m=0,n=5 odd branch; Agent 42 did not duplicate that investigation.
