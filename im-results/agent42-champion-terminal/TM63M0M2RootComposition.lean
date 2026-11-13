@@ -27,38 +27,67 @@ open BB6Coverage.Agent42M1EvenRootComposition
 open BB6Coverage.Agent42RootAttainable
 open BB6ChampionArithmetic
 
-/-- State parameters after the root-connected m=1,n=6 increment. -/
+private theorem tm63NextRight_eq (b : Nat) :
+    nextRight b = 2^b-1 := by
+  rfl
+
+private theorem tm63NextExponent_zero_eq (a b : Nat) :
+    nextExponent 0 a b = a+b+1 := by
+  rfl
+
+private theorem tm63NextExponent_two_eq (a b : Nat) :
+    nextExponent 2 a b = a+b+2 := by
+  rfl
+
+/-- Split the first two stages without evaluating the enormous right
+counter: all exponent growth remains symbolic through nextRight. -/
+private theorem tm63SectionResult_split_first_two (a b : Nat) :
+    (sectionResult 5 0 a b).cost =
+      proposedIncrementCost 0 5 a b +
+      proposedIncrementCost 2 4 (nextExponent 0 a b) (nextRight b) +
+      (sectionResult 3 1
+        (nextExponent 2 (nextExponent 0 a b) (nextRight b))
+        (nextRight (nextRight b))).cost := by
+  simp [sectionResult,nextMarker,nextExponent]
+  omega
+
+/-- Readable aliases for the successive S1 endpoints.  Proof statements
+below keep the nextRight expressions symbolic rather than unfolding them. -/
 def tm63AfterM0OddA : Nat :=
-  tm63AfterM1EvenA + tm63AfterM1EvenB + 1
+  nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB
 
 def tm63AfterM0OddB : Nat :=
-  2^tm63AfterM1EvenB - 1
+  nextRight tm63AfterM1EvenB
 
 def tm63AfterM0OddHead : Int :=
   tm63AfterM1EvenHead + 5 + 3*tm63AfterM1EvenB
 
-/-- State parameters after the root-connected m=0,n=5 increment. -/
 def tm63AfterM2EvenA : Nat :=
-  tm63AfterM0OddA + tm63AfterM0OddB + 2
+  nextExponent 2 tm63AfterM0OddA tm63AfterM0OddB
 
 def tm63AfterM2EvenB : Nat :=
-  2^tm63AfterM0OddB - 1
+  nextRight tm63AfterM0OddB
 
 def tm63AfterM2EvenHead : Int :=
   tm63AfterM0OddHead + 5 + 3*tm63AfterM0OddB
 
 /-- Exact symbolic length of the blank-root prefix through the three
-source-proved counted increments. -/
+source-proved counted increments.  Parentheses preserve the root+M1 prefix
+as the first compositional block. -/
 def tm63AfterM2EvenMoves : Nat :=
-  rootQ4DrainMoves +
-    (proposedIncrementCost 1 6 71 (2^63-1) +
-      (proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-        proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB))
+  (rootQ4DrainMoves + proposedIncrementCost 1 6 71 (2^63-1)) +
+    (proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
+      proposedIncrementCost 2 4
+        (nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB)
+        (nextRight tm63AfterM1EvenB))
 
-/-- The first five-stage residual itinerary after M1-even splits at its
-first two reset stages, leaving the exact residual after M2-even. -/
+/-- Exact symbolic residual after the proved M0-odd and M2-even stages. -/
 def tm63AfterM2EvenSteps : Nat :=
-  (sectionResult 3 1 tm63AfterM2EvenA tm63AfterM2EvenB).cost +
+  (sectionResult 3 1
+    (nextExponent 2
+      (nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB)
+      (nextRight tm63AfterM1EvenB))
+    (nextRight (nextRight tm63AfterM1EvenB))).cost +
     resetCost 3 tm63FirstSection.exponent tm63FirstSection.right +
     tm63MiddleSection.cost +
     resetCost tm63Length1 tm63MiddleSection.exponent tm63MiddleSection.right +
@@ -70,8 +99,8 @@ private theorem tm63_after_m0_positivity :
   omega
 
 private theorem tm63_after_m2_positivity :
-    0 < tm63AfterM0OddA := by
-  dsimp [tm63AfterM0OddA,tm63AfterM1EvenA,tm63AfterM1EvenB]
+    0 < nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB := by
+  rw [tm63NextExponent_zero_eq]
   omega
 
 /-- The m=0,n=5 prefix followed by the all-ones drain is exactly its
@@ -81,98 +110,80 @@ theorem m0Odd_counted_increment_from_after_m1 :
       (proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB)
       (s1Config 3 5 0 tm63AfterM1EvenA 0 tm63AfterM1EvenB
         tm63AfterM1EvenHead) =
-      some (s1Config 3 4 2 tm63AfterM0OddA 0 tm63AfterM0OddB
-        tm63AfterM0OddHead) := by
+      some (s1Config 3 4 2
+        (nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB) 0
+        (nextRight tm63AfterM1EvenB)
+        (tm63AfterM1EvenHead+5+3*tm63AfterM1EvenB)) := by
   have hp := m0Odd_reset_prefix_to_s1
     tm63AfterM1EvenA tm63AfterM1EvenB tm63AfterM1EvenHead
     tm63_after_m0_positivity
   have hbound := resetDrainBound
     tm63AfterM1EvenA tm63AfterM1EvenB 0 tm63_after_m0_positivity
   have hrun := s1Config_reset_prefix_then_counted_drain
-    3 4 2 tm63AfterM0OddA tm63AfterM1EvenB tm63AfterM0OddHead
+    3 4 2
+    (tm63AfterM1EvenA+tm63AfterM1EvenB+1)
+    tm63AfterM1EvenB
+    (tm63AfterM1EvenHead+5+3*tm63AfterM1EvenB)
     (s1Config 3 5 0 tm63AfterM1EvenA 0 tm63AfterM1EvenB
       tm63AfterM1EvenHead)
     (resetPrefixCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB)
     hp (by simpa [resetDelta] using hbound)
-  simpa [proposedIncrementCost_decomp,tm63AfterM0OddA,
-    tm63AfterM0OddB,tm63AfterM0OddHead] using hrun
+  simpa only [proposedIncrementCost_decomp,
+    tm63NextExponent_zero_eq,tm63NextRight_eq] using hrun
 
 /-- The two remaining source-proved increments after the M1-even endpoint
 compose to the M1,n=3 state following the M2-even counted drain. -/
 theorem m0_m2_counted_chain_from_after_m1 :
     run tm2
       (proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-       proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB)
+       proposedIncrementCost 2 4
+        (nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB)
+        (nextRight tm63AfterM1EvenB))
       (s1Config 3 5 0 tm63AfterM1EvenA 0 tm63AfterM1EvenB
         tm63AfterM1EvenHead) =
-      some (s1Config 3 3 1 tm63AfterM2EvenA 0 tm63AfterM2EvenB
-        tm63AfterM2EvenHead) := by
+      some (s1Config 3 3 1
+        (nextExponent 2
+          (nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB)
+          (nextRight tm63AfterM1EvenB)) 0
+        (nextRight (nextRight tm63AfterM1EvenB))
+        (tm63AfterM1EvenHead+5+3*tm63AfterM1EvenB+
+          5+3*(nextRight tm63AfterM1EvenB))) := by
   rw [run_add,m0Odd_counted_increment_from_after_m1]
   simp only [Option.bind_some]
-  simpa [tm63AfterM2EvenA,tm63AfterM2EvenB,tm63AfterM2EvenHead] using
-    m2Even_q4_counted_increment_source
-      tm63AfterM0OddA tm63AfterM0OddB tm63AfterM0OddHead
-      tm63_after_m2_positivity
+  have hm2 := m2Even_q4_counted_increment_source
+    (nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB)
+    (nextRight tm63AfterM1EvenB)
+    (tm63AfterM1EvenHead+5+3*tm63AfterM1EvenB)
+    tm63_after_m2_positivity
+  simpa only [tm63NextExponent_two_eq,tm63NextRight_eq] using hm2
 
 /-- Authentic blank-root run through the root q4/drain endpoint and the
 three successive counted increments (1,6), (0,5), (2,4). -/
 theorem tm63_blank_reaches_after_m2_even :
     run tm2 tm63AfterM2EvenMoves blank =
-      some (s1Config 3 3 1 tm63AfterM2EvenA 0 tm63AfterM2EvenB
-        tm63AfterM2EvenHead) := by
-  have hm1 := m1Even_q4_counted_increment_source
-    71 (2^63-1) 223 (by decide)
-  have hafterM1 :
-      run tm2
-        (proposedIncrementCost 1 6 71 (2^63-1) +
-         (proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-          proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB))
-        (s1Config 3 6 1 71 0 (2^63-1) 223) =
-        some (s1Config 3 3 1 tm63AfterM2EvenA 0 tm63AfterM2EvenB
-          tm63AfterM2EvenHead) := by
-    rw [run_add,hm1]
-    simp only [Option.bind_some]
-    exact m0_m2_counted_chain_from_after_m1
+      some (s1Config 3 3 1
+        (nextExponent 2
+          (nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB)
+          (nextRight tm63AfterM1EvenB)) 0
+        (nextRight (nextRight tm63AfterM1EvenB))
+        (tm63AfterM1EvenHead+5+3*tm63AfterM1EvenB+
+          5+3*(nextRight tm63AfterM1EvenB))) := by
   unfold tm63AfterM2EvenMoves
-  rw [run_add,tm2_blank_reaches_q4_drain_endpoint]
+  rw [run_add,tm63_blank_reaches_after_m1_even]
   simp only [Option.bind_some]
-  exact hafterM1
+  exact m0_m2_counted_chain_from_after_m1
 
-/-- The arithmetic residual after M1-even splits into the proved M0-odd
-and M2-even increments plus the residual beginning at S1(3,3,1,...). -/
+/-- The first five-stage residual itinerary after M1-even splits at its
+first two reset stages, leaving the exact residual after M2-even. -/
 theorem tm63AfterM1EvenSteps_split_m0_m2 :
     tm63AfterM1EvenSteps =
       proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-      proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB +
+      proposedIncrementCost 2 4
+        (nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB)
+        (nextRight tm63AfterM1EvenB) +
       tm63AfterM2EvenSteps := by
-  have h0 :
-      (sectionResult 5 0 tm63AfterM1EvenA tm63AfterM1EvenB).cost =
-        proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-          (sectionResult 4 2 tm63AfterM0OddA tm63AfterM0OddB).cost := by
-    simp [sectionResult,nextMarker,nextExponent,nextRight,
-      tm63AfterM0OddA,tm63AfterM0OddB]
-  have h1 :
-      (sectionResult 4 2 tm63AfterM0OddA tm63AfterM0OddB).cost =
-        proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB +
-          (sectionResult 3 1 tm63AfterM2EvenA tm63AfterM2EvenB).cost := by
-    simp [sectionResult,nextMarker,nextExponent,nextRight,
-      tm63AfterM2EvenA,tm63AfterM2EvenB]
-  have hsection :
-      (sectionResult 5 0 tm63AfterM1EvenA tm63AfterM1EvenB).cost =
-        proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-          proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB +
-          (sectionResult 3 1 tm63AfterM2EvenA tm63AfterM2EvenB).cost := by
-    calc
-      _ = proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-            (sectionResult 4 2 tm63AfterM0OddA tm63AfterM0OddB).cost := h0
-      _ = proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-            (proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB +
-              (sectionResult 3 1 tm63AfterM2EvenA tm63AfterM2EvenB).cost) := by
-                rw [h1]
-      _ = proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-            proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB +
-              (sectionResult 3 1 tm63AfterM2EvenA tm63AfterM2EvenB).cost := by
-                omega
+  have hsection := tm63SectionResult_split_first_two
+    tm63AfterM1EvenA tm63AfterM1EvenB
   unfold tm63AfterM1EvenSteps tm63AfterM2EvenSteps
   rw [hsection]
   omega
@@ -184,8 +195,13 @@ theorem tm63_attainable_after_m2_even_q4
     (h : Int)
     (hstage :
       run tm2 tm63AfterM2EvenSteps
-        (s1Config 3 3 1 tm63AfterM2EvenA 0 tm63AfterM2EvenB
-          tm63AfterM2EvenHead) =
+        (s1Config 3 3 1
+          (nextExponent 2
+            (nextExponent 0 tm63AfterM1EvenA tm63AfterM1EvenB)
+            (nextRight tm63AfterM1EvenB)) 0
+          (nextRight (nextRight tm63AfterM1EvenB))
+          (tm63AfterM1EvenHead+5+3*tm63AfterM1EvenB+
+            5+3*(nextRight tm63AfterM1EvenB))) =
         some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h))
     (hfinal :
       run tm2 (resetPrefixCost 1 1 tm63FinalA tm63FinalB)
