@@ -305,6 +305,139 @@ theorem reset_double_B_to_A_source_reentry (d k h t Q : Nat)
   exact ⟨BB6.Agent2PacketP2Reset.eTwoTime k Q+Ttail,
     a,q,b,hcombined,hcanon⟩
 
+
+private theorem endpointZero_sourceSection (n : Nat) :
+    ObsEq endpointZero
+      (DRegularSource.sourceSection ⟨n+1,2,2⟩) := by
+  have hrep : List.replicate (n+1) true =
+      List.replicate n true ++ [true] := by
+    induction n with
+    | zero => rfl
+    | succ n ih =>
+      simp [List.replicate_succ,ih,List.append_assoc]
+  have heq : endpointZero n =
+      BB6.Agent2BoundaryBZero.regularSection (n+1) 2 2 := by
+    simp [endpointZero,BB6.Agent2BoundaryBZero.regularSection,
+      CryptidBoundary.oppairs,hrep,List.append_assoc]
+  have hsec := regularSection_sourceSection (n+1) 2 2 (by omega)
+  rw [heq,hsec]
+  exact BB6.Padding.cfgEq_refl _
+
+/-- Concrete source path from the nonempty P2 reset cylinder to
+    L(24972,2,2): P2 reset, one E-chain step, B, B, then A. -/
+def concreteResetTime : Nat :=
+  BB6.Agent2PacketP2Reset.eTwoTime 61 0 +
+    BB6.Agent37EChain.chainTime 1 41 0 +
+    bTwiceTime 48 +
+    BB6.Agent35MarkerA.aTime0 3117 0 3
+
+theorem concrete_reset_double_B_to_A_source_reentry :
+    ObsEq
+      (CryptidBoundary.run concreteResetTime
+        (BB6.Agent31PacketSource.packet 187 0 2
+          (false::List.replicate 6 true)))
+      (DRegularSource.sourceSection ⟨24972,2,2⟩) := by
+  have hm : BB6.Agent2PacketP2Reset.marker =
+      BB6.Agent35K4Shapes.marker := by decide
+  have hresetRaw :
+      CryptidBoundary.run (BB6.Agent2PacketP2Reset.eTwoTime 61 0)
+        (BB6.Agent31PacketSource.packet 187 0 2
+          (false::List.replicate 6 true)) =
+      BB6.Agent31PacketSource.packet 493 0 6
+        BB6.Agent35K4Shapes.marker := by
+    have h := BB6.Agent2PacketP2Reset.e_two_reset 61 0
+    simpa [BB6.Agent2PacketP2Reset.eTwoTime,hm] using h
+  have hchainRaw :
+      CryptidBoundary.run (BB6.Agent37EChain.chainTime 1 41 0)
+        (BB6.Agent31PacketSource.packet 493 0 6
+          BB6.Agent35K4Shapes.marker) =
+      BB6.Agent31PacketSource.packet 1313 2 3
+        BB6.Agent35K4Shapes.marker := by
+    have h := BB6.Agent37EChain.chain_return 1 41 0 3
+      BB6.Agent35K4Shapes.marker (by omega)
+    simpa [BB6.Agent37EChain.chainTime] using h
+  have hBRaw :
+      CryptidBoundary.run (bTwiceTime 48)
+        (BB6.Agent31PacketSource.packet 1313 2 3
+          BB6.Agent35K4Shapes.marker) =
+      BB6.Agent31PacketSource.packet 9354 0 9
+        BB6.Agent35K4Shapes.marker := by
+    have h := BB6.Agent37EChainDoubleBExit.b_twice 48 0 3
+      BB6.Agent35K4Shapes.marker
+    simpa [bTwiceTime] using h
+  have hn :
+      2*((4*3117+3)+CryptidA.wordInc
+        (BB6.Agent35MarkerA.code 0 3))+5 = 24971 := by decide
+  have hARaw :
+      CryptidBoundary.run (BB6.Agent35MarkerA.aTime0 3117 0 3)
+        (BB6.Agent31PacketSource.packet 9354 0 9
+          BB6.Agent35K4Shapes.marker) = endpointZero 24971 := by
+    have h := BB6.Agent35MarkerA.close_zero 3117 0 3
+    simpa [endpointZero,hn] using h
+  have hreset : ObsEq
+      (CryptidBoundary.run (BB6.Agent2PacketP2Reset.eTwoTime 61 0)
+        (BB6.Agent31PacketSource.packet 187 0 2
+          (false::List.replicate 6 true)))
+      (BB6.Agent31PacketSource.packet 493 0 6
+        BB6.Agent35K4Shapes.marker) := by
+    rw [hresetRaw]
+    exact BB6.Padding.cfgEq_refl _
+  have hchain : ObsEq
+      (CryptidBoundary.run (BB6.Agent37EChain.chainTime 1 41 0)
+        (BB6.Agent31PacketSource.packet 493 0 6
+          BB6.Agent35K4Shapes.marker))
+      (BB6.Agent31PacketSource.packet 1313 2 3
+        BB6.Agent35K4Shapes.marker) := by
+    rw [hchainRaw]
+    exact BB6.Padding.cfgEq_refl _
+  have hB : ObsEq
+      (CryptidBoundary.run (bTwiceTime 48)
+        (BB6.Agent31PacketSource.packet 1313 2 3
+          BB6.Agent35K4Shapes.marker))
+      (BB6.Agent31PacketSource.packet 9354 0 9
+        BB6.Agent35K4Shapes.marker) := by
+    rw [hBRaw]
+    exact BB6.Padding.cfgEq_refl _
+  have hA : ObsEq
+      (CryptidBoundary.run (BB6.Agent35MarkerA.aTime0 3117 0 3)
+        (BB6.Agent31PacketSource.packet 9354 0 9
+          BB6.Agent35K4Shapes.marker))
+      (DRegularSource.sourceSection ⟨24972,2,2⟩) := by
+    rw [hARaw]
+    exact endpointZero_sourceSection 24971
+  have h12 := BB6.BoundaryPadding.source_chain
+    (BB6.Agent2PacketP2Reset.eTwoTime 61 0)
+    (BB6.Agent37EChain.chainTime 1 41 0)
+    (BB6.Agent31PacketSource.packet 187 0 2
+      (false::List.replicate 6 true))
+    (BB6.Agent31PacketSource.packet 493 0 6
+      BB6.Agent35K4Shapes.marker)
+    (BB6.Agent31PacketSource.packet 1313 2 3
+      BB6.Agent35K4Shapes.marker)
+    hreset hchain
+  have h123 := BB6.BoundaryPadding.source_chain
+    (BB6.Agent2PacketP2Reset.eTwoTime 61 0 +
+      BB6.Agent37EChain.chainTime 1 41 0)
+    (bTwiceTime 48)
+    (BB6.Agent31PacketSource.packet 187 0 2
+      (false::List.replicate 6 true))
+    (BB6.Agent31PacketSource.packet 1313 2 3
+      BB6.Agent35K4Shapes.marker)
+    (BB6.Agent31PacketSource.packet 9354 0 9
+      BB6.Agent35K4Shapes.marker)
+    h12 hB
+  have h1234 := BB6.BoundaryPadding.source_chain
+    (BB6.Agent2PacketP2Reset.eTwoTime 61 0 +
+      BB6.Agent37EChain.chainTime 1 41 0 + bTwiceTime 48)
+    (BB6.Agent35MarkerA.aTime0 3117 0 3)
+    (BB6.Agent31PacketSource.packet 187 0 2
+      (false::List.replicate 6 true))
+    (BB6.Agent31PacketSource.packet 9354 0 9
+      BB6.Agent35K4Shapes.marker)
+    (DRegularSource.sourceSection ⟨24972,2,2⟩)
+    h123 hA
+  simpa [concreteResetTime,Nat.add_assoc] using h1234
+
 #print axioms all_A_marker_returns_floor
 #print axioms regularEndpointFloor_sourceSection
 #print axioms double_B_to_A_source_reentry
