@@ -559,9 +559,9 @@ theorem s1Config_evenCounter_countedReturn
     rw [hhead]
     congr 1
     funext x
-    change cfg.tape (h + (x-h)) = cfg.tape x
-    have hcoord : h+(x-h)=x := by omega
-    rw [hcoord]
+    dsimp [P]
+    congr 1
+    omega
   let Tpost : Int → Bool :=
     fun x => (frame even_tailArea (evenOpenFinalSweepTape b P)
       (embed even_tailFinal)).tape (x-h)
@@ -716,11 +716,13 @@ theorem s1Config_oddCounter_countedReturn
     change (⟨(3 : Fin 6),0+h,fun x => P (x-h)⟩ : Config) = cfg
     have hhead : (0:Int)+h=h := by omega
     rw [hhead]
+    change (⟨(3 : Fin 6),h,fun x => P (x-h)⟩ : Config) =
+      ⟨(3 : Fin 6),h,cfg.tape⟩
     congr 1
     funext x
-    dsimp [P]
-    congr 1
-    omega
+    change cfg.tape (h+(x-h)) = cfg.tape x
+    have hcoord : h+(x-h)=x := by omega
+    rw [hcoord]
   have hone : ∀ i : Nat, i<3*(b+1) → P (7+(i:Int))=true := by
     intro i hi
     have hv := s1Config_right_unary_one L n m a z b h i hi
