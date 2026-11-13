@@ -182,7 +182,7 @@ def m1EvenQ4CutTape (a b : Nat) (h : Int) : Int → Bool :=
 44+12a primitive moves from S1 reach state 4 at head h+4.
 The q4 suffix can then be entered after four already-consumed
 state-4-on-one moves. -/
-theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) (ha : 3 ≤ a) :
+theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
     run tm2 (44+12*a)
       ⟨3,h,(s1Config 3 6 1 a 0 b h).tape⟩ =
       some ⟨4,h+4,m1EvenQ4CutTape a b h⟩ := by
@@ -244,17 +244,41 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) (ha : 3 ≤ a) :
         frameAt_tape_outside T1 hN m1EvenQ4Inside
           m1EvenQ4BridgeEnd x hout
     have hT1 : T1 x = true := by
-      let j : Nat := 3*a-4-i
-      have hj : j+1 < N := by
-        dsimp [j,N,x,hN] at *
-        omega
-      have hblock := sweptLeft_block N j T h hj
-      have hcoord : x = h-(j:Int) := by
-        dsimp [x,j,N,hN]
-        omega
-      change sweptLeft N T h x = true
-      rw [hcoord]
-      exact hblock
+      by_cases hx : x ≤ h
+      · let j : Nat := 3*a-4-i
+        have hj : j+1 < N := by
+          dsimp [j,N,x,hN] at *
+          omega
+        have hblock := sweptLeft_block N j T h hj
+        have hcoord : x = h-(j:Int) := by
+          dsimp [x,j,N,hN]
+          omega
+        change sweptLeft N T h x = true
+        rw [hcoord]
+        exact hblock
+      · by_cases hx1 : x = h+1
+        · subst x
+          simpa [T1,N] using sweptLeft_plus1 (3*a) T h
+        · have hx2 : h+2 ≤ x := by omega
+          have hx23 : x = h+2 ∨ x = h+3 := by
+            dsimp [x,N,hN] at *
+            omega
+          have hpres := sweptLeft_preserves_right N T h x (by omega)
+          rcases hx23 with hx2' | hx3'
+          · rw [hx2'] at hpres ⊢
+            change sweptLeft N T h (h+2) = true
+            have hsrc : T (h+2) = true := by
+              have hcoord : h+1+1 = h+2 := by omega
+              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+                s1Config_right_cell 3 6 1 a 0 b h 1
+            rw [hpres,hsrc]
+          · rw [hx3'] at hpres ⊢
+            change sweptLeft N T h (h+3) = true
+            have hsrc : T (h+3) = true := by
+              have hcoord : h+1+2 = h+3 := by omega
+              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+                s1Config_right_cell 3 6 1 a 0 b h 2
+            rw [hpres,hsrc]
     simpa [x,T2] using hframe.trans hT1
   have hScan := E_scan T2 (hN+5) (3*a) hlinear
   have hhead : hN+5+(3*a:Int) = h+4 := by
@@ -601,7 +625,7 @@ theorem m1Even_q4_suffix_after_four (T : Int → Bool) (h : Int) (b : Nat)
 same explicit Q4 suffix frame used by the existing suffix theorem.
 The canonical S1 identification of this frame is a separate left-tail
 identity and is intentionally not claimed here. -/
-theorem m1Even_reset_prefix_frame (a b : Nat) (h : Int) (ha : 3 ≤ a) :
+theorem m1Even_reset_prefix_frame (a b : Nat) (h : Int) :
     run tm2 (79+12*a+3*b)
       ⟨3,h,(s1Config 3 6 1 a 0 b h).tape⟩ =
       some (frameAt
@@ -609,7 +633,7 @@ theorem m1Even_reset_prefix_frame (a b : Nat) (h : Int) (ha : 3 ≤ a) :
           (frameAt (m1EvenQ4CutTape a b h) h
             q4First10Inside q4First10End).tape (h+10))
         (h+10+3*b) q4TailInside q4TailEnd) := by
-  have hprefix := m1Even_q4_prefix_run a b h ha
+  have hprefix := m1Even_q4_prefix_run a b h
   have hshape := m1Even_q4_prefix_rightShape a b h
   have htail := m1Even_q4_suffix_after_four
     (m1EvenQ4CutTape a b h) h b hshape
@@ -881,7 +905,7 @@ theorem m1Even_resetPrefixCost_eq (a b : Nat) :
 
 
 
-theorem m1Even_reset_prefix_frame_cost (a b : Nat) (h : Int) (ha : 3 ≤ a) :
+theorem m1Even_reset_prefix_frame_cost (a b : Nat) (h : Int) :
     run tm2 (resetPrefixCost 1 6 a b)
       ⟨3,h,(s1Config 3 6 1 a 0 b h).tape⟩ =
       some (frameAt
@@ -890,5 +914,5 @@ theorem m1Even_reset_prefix_frame_cost (a b : Nat) (h : Int) (ha : 3 ≤ a) :
             q4First10Inside q4First10End).tape (h+10))
         (h+10+3*b) q4TailInside q4TailEnd) := by
   rw [m1Even_resetPrefixCost_eq]
-  exact m1Even_reset_prefix_frame a b h ha
+  exact m1Even_reset_prefix_frame a b h
 
