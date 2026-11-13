@@ -74,6 +74,30 @@ unique 3-adic zero. On a deeper base cylinder where \(3^a\mid F\)
 uniformly, the same argument after normalization gives the corresponding
 isometry for \(F/3^a\).
 
+
+## Scaled-cylinder version for nested layers
+
+The same argument applies after a previously selected 3-adic cylinder. Let
+\[
+F(n)=A2^{n+c}+Bn+C,\qquad
+n(u)=n_0+6\cdot3^a u,
+\]
+where \(a\ge0\), and suppose \(3^{a+1}\mid F(n(u))\) for every natural u. Define
+\[
+G(u)=F(n(u))/3^{a+1}.
+\]
+For \(r\in\{0,1,2\}\), shifting \(u\) by \(r3^k\) shifts both n and the exponent by \(6r3^{a+k}\). The exponential difference is divisible by \(3^{a+k+2}\), and the linear difference is \(2Br3^{a+k+1}\). After normalization,
+\[
+\boxed{G(u+r3^k)\equiv G(u)+2Br3^k\pmod{3^{k+1}}.}
+\]
+If \(3\nmid B\), then \(G(u)\bmod3\) is an affine function of u with unit slope \(2B\), so there is exactly one root digit modulo three. The same unique-digit induction continues at every precision. There is a compatible sequence \(\eta_k\) such that
+\[
+3^{a+k+1}\mid F(n_0+6\cdot3^a u)
+\iff u\bmod3^k=\eta_k.
+\]
+Moreover G is a 3-adic isometry: if \(u_1-u_2\) has exact valuation k, the displayed shift law gives
+\(v_3(G(u_1)-G(u_2))=k\). This scaled form is the appropriate abstraction for an R numerator restricted to one exact-Q lift; it does not require \(G(0)\) itself to vanish modulo three, because the first digit is selected rather than fixed to zero.
+
 ## 3. Instantiations already present in the repository
 
 ### Q numerator
