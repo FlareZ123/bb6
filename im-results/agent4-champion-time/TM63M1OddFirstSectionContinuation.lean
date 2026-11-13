@@ -138,18 +138,18 @@ theorem tm63_blank_reaches_after_first_section :
       (tm63AfterM1OddMoves +
         (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).cost)
       blank =
-      some (s1Config 3 0 (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).marker
-        (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).exponent 0
-        (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).right
-        (tm63AfterM1OddHead+10+3*tm63AfterM1OddB+
-          3*(nextRight tm63AfterM1OddB))) := by
+      some (s1Config 3 0 1 tm63FirstSection.exponent 0
+        tm63FirstSection.right tm63AfterFirstSectionHead) := by
+  have hparams := tm63_first_section_endpoint_params
   rw [run_add,tm63_blank_reaches_after_m1_odd]
   simp only [Option.bind_some]
-  exact sectionResult_2_0_source
+  have hsource := sectionResult_2_0_source
     tm63AfterM1OddA tm63AfterM1OddB tm63AfterM1OddHead
     (by
       dsimp [tm63AfterM1OddA,nextExponent]
       omega)
+  simpa [tm63AfterFirstSectionHead,hparams.1,hparams.2.1,hparams.2.2]
+    using hsource
 
 /-- The remaining first-reset/middle/last-pre itinerary after the first
 seven-increment section. -/
@@ -158,6 +158,21 @@ def tm63AfterFirstSectionSteps : Nat :=
   tm63MiddleSection.cost +
   resetCost tm63Length1 tm63MiddleSection.exponent tm63MiddleSection.right +
   tm63LastPreSection.cost + 12*v2 tm63Index2
+
+/-- The two symbolic increments after M1-odd are exactly the last two
+increments of the original first section. -/
+theorem tm63_first_section_endpoint_params :
+    (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).marker =
+      tm63FirstSection.marker ∧
+    (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).exponent =
+      tm63FirstSection.exponent ∧
+    (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).right =
+      tm63FirstSection.right := by
+  rfl
+
+def tm63AfterFirstSectionHead : Int :=
+  tm63AfterM1OddHead+10+3*tm63AfterM1OddB+
+    3*(nextRight tm63AfterM1OddB)
 
 theorem tm63AfterM1OddSteps_split_first_section :
     tm63AfterM1OddSteps =
@@ -171,11 +186,8 @@ theorem tm63_attainable_after_first_section_q4
     (h : Int)
     (hstage :
       run tm63AfterFirstSectionSteps
-        (s1Config 3 0 (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).marker
-          (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).exponent 0
-          (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).right
-          (tm63AfterM1OddHead+10+3*tm63AfterM1OddB+
-            3*(nextRight tm63AfterM1OddB))) =
+        (s1Config 3 0 1 tm63FirstSection.exponent 0
+          tm63FirstSection.right tm63AfterFirstSectionHead) =
         some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h))
     (hfinal :
       run tm2 (resetPrefixCost 1 1 tm63FinalA tm63FinalB)
@@ -185,6 +197,7 @@ theorem tm63_attainable_after_first_section_q4
           (tm63FinalA+tm63FinalB+resetDelta 1)
           (2^tm63FinalB-1) 0 h)) :
     Attainable proposedChampionScore := by
+  have hparams := tm63_first_section_endpoint_params
   have hstageAfterM1Odd :
       run tm63AfterM1OddSteps
         (s1Config 3 2 0 tm63AfterM1OddA 0 tm63AfterM1OddB
@@ -193,7 +206,8 @@ theorem tm63_attainable_after_first_section_q4
     rw [tm63AfterM1OddSteps_split_first_section,run_add,
       sectionResult_2_0_source]
     simp only [Option.bind_some]
-    exact hstage
+    simpa [tm63AfterFirstSectionHead,hparams.1,hparams.2.1,hparams.2.2]
+      using hstage
   exact tm63_attainable_after_m1_odd_q4 h hstageAfterM1Odd hfinal
 
 #print axioms m2Odd_q4_counted_increment_source
