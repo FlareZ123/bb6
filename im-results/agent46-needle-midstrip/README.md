@@ -210,6 +210,8 @@ The endpoints and counts follow directly from the theorem.
 
 This is an all-\(r\) arithmetic exclusion for a contiguous band of inverse valuations. It is distinct from the existing all-\(r\) high-valuation strip in im-results/agent20-needle-coprime/CancellationTopStrip.lean and the mod-20 exclusion in im-results/agent20-needle-coprime/CancellationMod5.lean. It can be combined with those results and with finite prime-witness sieves to reduce cancellation-feeder parent searches.
 
+The threshold is sharp for this particular quotient-size argument: if \(s<d_r\), then \(2^s\le n\) and the low-case term \(R/M=nT_s/2^s\) is already greater than one; similarly, if the complementary exponent \(m=a_r-(2r-2)s<d_r\), then \(2^m\le n\) and \(R/M=nT_s/2^m>1\). Improving either endpoint requires a different cancellation argument, not merely a sharper estimate of the same geometric sum.
+
 It does **not** exclude the remaining valuations, prove that any cancellation feeder is unreachable from the true blank start, prove Space Needle nonhalting, or determine BB(6). The result belongs in im-results/, not results/.
 
 ## Formalization target
