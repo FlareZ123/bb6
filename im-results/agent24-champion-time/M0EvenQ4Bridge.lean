@@ -1,3 +1,8 @@
+import CountedReset
+import ChampionRootBridge
+import S1Encoder
+import Lean.Elab.Tactic.Omega
+
 /-!
 # m=0,n=2 even q4 bridge
 
@@ -6,10 +11,6 @@ after the counted left sweep of 3a cells and is parameterized by the
 source left/right counters through the input-frame theorem below.
 -/
 
-import CountedReset
-import ChampionRootBridge
-import S1Encoder
-import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent24M0EvenQ4Bridge
 
