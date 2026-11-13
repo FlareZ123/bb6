@@ -126,10 +126,10 @@ theorem tm63_attainable_after_m1_odd_q4
       run tm63AfterM1OddSteps
         (s1Config 3 2 0 tm63AfterM1OddA 0 tm63AfterM1OddB
           tm63AfterM1OddHead) =
-        some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h))
+        some (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h))
     (hfinal :
       run tm2 (resetPrefixCost 1 1 tm63FinalA tm63FinalB)
-        (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) =
+        (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) =
         some (s0Config (markerWord 0 ++ d0 ++
           binDec tm63Length2 0 ++ lh)
           (tm63FinalA+tm63FinalB+resetDelta 1)
@@ -137,12 +137,12 @@ theorem tm63_attainable_after_m1_odd_q4
     Attainable proposedChampionScore := by
   have hblank :
       run tm2 (tm63AfterM1OddMoves + tm63AfterM1OddSteps) blank =
-        some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) := by
+        some (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) := by
     rw [run_add,tm63_blank_reaches_after_m1_odd]
     simp only [Option.bind_some]
     exact hstage
   have hatt := champion_attainable_after_s1_countedRst012_m1n1
-    (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h)
+    (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h)
     (tm63AfterM1OddMoves + tm63AfterM1OddSteps)
     tm63Length2 tm63FinalA tm63FinalB (h+5+3*tm63FinalB)
     tm63FinalA_pos hblank hfinal
