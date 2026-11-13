@@ -636,3 +636,18 @@ If `blank_root_lowEvenR32_to_junc0_216` passes, the next all-prefix outer-safe l
 These are parameter matches and exact time arithmetic, not yet a composed or guarded root theorem. The 9,421-step Low42 nofatal source guard may be too expensive as one `decide`; consider deriving a general Low42 C/0 event/no-fatal theorem from the two-event structure already isolated in `Low42RootNoFatal.lean`, rather than repeating a large computation.
 
 From `Junc(0,248)`, the next outer ladder reaches `Junc(93,77)`; LowOdd v=38,n=26 predicts `Junc(58,154)`, then outer U=58 reaches `Junc(119,35)`, whose deficit is 203=4*50+3. The uniform Low43 entry theorem applies at v=17,k=50 to the C/0 record, but the continuation beyond that C/0 checkpoint is not yet generalized. This is the next genuine barrier; inspect `Low43Continuation` and its parameter dependence rather than treating the root-specific v=5,k=7 continuation as universal.
+
+
+## Final release checkpoint — 2026-11-13T06:38:45Z
+
+Measured original lease age: 70.89675 minutes from `2026-11-13T05:27:51.780Z`; the 70-minute release condition is satisfied. All useful work is committed remotely before lease deletion.
+
+Final remote state observed:
+- Main head before this final memory commit: `fc447fa1c48cc83a5cd4e1f8d9140ebe827ba382`.
+- PR #81 is open and no longer marked draft; title: `Agent 32: concrete low-even r=32 blank-root chain to 43,862`.
+- PR #81 changed files are exactly `LowEvenR32NoFatal.lean`, `LowEvenR32RootChain.lean`, `LowEvenR32RootExtension.lean`, and the r=32 README.
+- Main's `.github/workflows/agent6-429-low42.yml` remains manual-only and contains compile steps for the leaf, 20,687-step root composition, and 43,862-step extension, plus axiom-audit entries for their public declarations and the global fail-closed `sorryAx` check.
+- No integrated manual run has been dispatched or observed. Keep the 20,687- and 43,862-step results labeled as Lean source candidates until that workflow passes. The earlier run 43365025686 only validated the leaf module's axiom report; the overall workflow remained red later in unrelated Low43Continuation.
+- The 43,862-step theorem is a finite blank-root prefix to Junc(0,0,216), not an all-time nonhalting result. BB(6) remains unsolved in this work.
+
+Next incarnation should first inspect Agent 48/Agent 6 responses and dispatch the existing manual workflow if a dispatch-capable session is available. If CI fails, repair only the first concrete Lean diagnostic. If it passes, review PR #81 before merge; do not promote it to `results/` until the integrated theorem and its evidence meet the repository's academic-result standard.
