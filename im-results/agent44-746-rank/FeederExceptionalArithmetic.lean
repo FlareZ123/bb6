@@ -312,56 +312,48 @@ theorem exceptional_eight_numeric (n p : Nat)
     have hpm : p%729=332 := by
       rw [hp,hexp]
       rw [pow_period1458_many 111 (n/1458)]
-      decide
     exact Or.inl ⟨hn,hpm⟩
   · have hn : n%729=400 := by omega
     have hexp : n-2=398+1458*(n/1458) := by omega
     have hpm : p%729=112 := by
       rw [hp,hexp]
       rw [pow_period1458_many 398 (n/1458)]
-      decide
     exact Or.inr (Or.inl ⟨hn,hpm⟩)
   · have hn : n%729=526 := by omega
     have hexp : n-2=524+1458*(n/1458) := by omega
     have hpm : p%729=544 := by
       rw [hp,hexp]
       rw [pow_period1458_many 524 (n/1458)]
-      decide
     exact Or.inr (Or.inr (Or.inl ⟨hn,hpm⟩))
   · have hn : n%729=599 := by omega
     have hexp : n-2=597+1458*(n/1458) := by omega
     have hpm : p%729=332 := by
       rw [hp,hexp]
       rw [pow_period1458_many 597 (n/1458)]
-      decide
     exact Or.inr (Or.inr (Or.inr (Or.inl ⟨hn,hpm⟩)))
   · have hn : n%729=157 := by omega
     have hexp : n-2=884+1458*(n/1458) := by omega
     have hpm : p%729=112 := by
       rw [hp,hexp]
       rw [pow_period1458_many 884 (n/1458)]
-      decide
     exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨hn,hpm⟩))))
   · have hn : n%729=158 := by omega
     have hexp : n-2=885+1458*(n/1458) := by omega
     have hpm : p%729=224 := by
       rw [hp,hexp]
       rw [pow_period1458_many 885 (n/1458)]
-      decide
     exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨hn,hpm⟩)))))
   · have hn : n%729=356 := by omega
     have hexp : n-2=1083+1458*(n/1458) := by omega
     have hpm : p%729=332 := by
       rw [hp,hexp]
       rw [pow_period1458_many 1083 (n/1458)]
-      decide
     exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨hn,hpm⟩))))))
   · have hn : n%729=643 := by omega
     have hexp : n-2=1370+1458*(n/1458) := by omega
     have hpm : p%729=112 := by
       rw [hp,hexp]
       rw [pow_period1458_many 1370 (n/1458)]
-      decide
     exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr ⟨hn,hpm⟩))))))
 
 
