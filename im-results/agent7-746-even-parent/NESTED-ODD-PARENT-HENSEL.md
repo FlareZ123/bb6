@@ -100,11 +100,35 @@ Consequently
 \]
 Thus every stage again has a positive finite leading ratio.
 
-For any fixed \(\gamma>0\), there are infinitely many pairs \((t,\sigma)\), \(t\ge0\), with
+A stronger finite bound is available: for every \(\gamma>0\), some \(t\in\{0,1,2,3,4\}\) and integer \(\sigma\) satisfy
 \[
 6<\gamma\,2^\sigma/3^{t+1}<8.
 \]
-Indeed, taking base-two logarithms reduces this to the density modulo one of \((t+1)\log_2 3-\log_2\gamma\); the target interval has width \(\log_2(8/6)=\log_2(4/3)>0\). Since \(\log_2 3\) is irrational, the rotation is dense. This supplies a band choice at every finite stage.
+Put \(\alpha=\log_2 3\) and \(w=2-\alpha=\log_2(4/3)\). The elementary inequalities
+\[
+\frac32<\alpha<\frac85
+\]
+follow from \(8<9\) and \(3^5=243<256=2^8\). The five fractional parts of \(k\alpha\), \(k=1,\ldots,5\), are ordered as
+\[
+2\alpha-3<4\alpha-6<\alpha-1<3\alpha-4<5\alpha-7<1.
+\]
+Their consecutive circular gaps are
+\[
+2\alpha-3,\quad5-3\alpha,\quad2\alpha-3,\quad
+2\alpha-3,\quad5-3\alpha.
+\]
+Both possible gap sizes are strictly smaller than \(w\): the first inequality is equivalent to \(3\alpha<5\), and the second to \(3<2\alpha\). Thus the five-point set has maximum gap \(<w\), so every translated open interval of length \(w\) contains one of its points. But the condition on \(\sigma\), after taking base-two logarithms, is exactly an interval of length
+\[
+3-\log_2 6=\log_2(4/3)=w
+\]
+for \(k=t+1\). Hence one of \(k=1,\ldots,5\) works, proving \(t\le4\).
+
+For the initial layer we use \((t_1,\sigma_1)=(7,14)\), which is compatible with the base \(Q/3^8\) cylinder. At every later layer we may choose \(t_i\le4\). Therefore the seeded-cylinder exponent satisfies
+\[
+M_d=\sum_{i=1}^d t_i+d-5
+\le 7+4(d-1)+d-5=5d-2.
+\]
+In particular, the construction gives a uniform explicit density lower bound \(3^{-(5d-2)}\) for every fixed depth \(d\), not merely an unspecified positive density.
 
 ## Hensel input and band-compatible iteration
 
