@@ -355,7 +355,10 @@ I extended `im-results/agent24-champion-time/Q4RightEndpoint.lean` through the c
 - `q4_suffix_left_word`: the suffix's complete left-facing stream is `d0pow b ++ d1pow 2 ++ (q4LeftFacing L n a).drop 1`;
 - `q4_suffix_run_left_word`: the left endpoint attached to the exact `39+3*b` original-source suffix run;
 - `q4_suffix_run_target_of_prefix`: composes Agent 6's prefix and Agent 8's suffix, identifying the entire infinite-tape endpoint with `s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 (h+5+3*b)`;
-- `oddRst2_q4_counted_source`: the resulting uniform source-run candidate at cost `71+12*a+3*b`.
+- `oddRst2_q4_counted_source`: the resulting uniform source-run candidate at cost `71+12*a+3*b`;
+- `tm2_q4_root_source`: the authentic root specialization, explicitly stating the 332-step source transition.
+
+The total-cost proof uses `BB6Coverage.Agent8CountedReset.run_add` (not `run_append`). The q4 suffix's final right-coordinate conversion is written with an explicit `omega` equality to avoid relying on commutativity normalization.
 
 The left endpoint proof splits the output stream into three regions. For the nearest `3*b` cells, `d0Sweep_block` gives the periodic `001` word; the four boundary cells from the first-ten frame are `1,0,0,1` and complete the same periodic alignment. The next six cells from `h+5` down to `h` are all marked, giving `d1pow 2`. At indices `i≥3*b+6`, the queried cell is `h-1-j`, untouched by both suffix frames and the scan, so Agent 6's left-stream equality supplies the q4-prefix tail with its head bit dropped. Agent 8's `q4SuffixTargetLeft` word identity then gives the canonical S1 left stream.
 
