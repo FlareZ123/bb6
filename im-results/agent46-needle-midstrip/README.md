@@ -22,7 +22,7 @@ These are the shifted counters \(d+2\) of the synthetic cancellation feeders alr
 
 Define
 \[
-c_r:=2+\left\lfloor\log_2(3^{2r-1})\right\rfloor.
+d_r:=1+\left\lfloor\log_2(3^{2r-1})\right\rfloor.
 \]
 For a possible immediate predecessor with valuation \(u=v_r+s\), the exact inverse equation is
 \[
@@ -37,20 +37,19 @@ N_{r,s}:=A_rP_r(A_r)+3-2(v_r+s).
 
 **Theorem.** For every \(r\ge2\), no such predecessor exists whenever
 \[
-\boxed{\quad c_r\le s,\qquad (2r-2)s\le a_r-c_r.\quad}
+\boxed{\quad d_r\le s,\qquad (2r-2)s\le a_r-d_r.\quad}
 \]
 Equivalently, the entire integer interval
 \[
-v_r+c_r\ \le u\le\
-v_r+\left\lfloor\frac{a_r-c_r}{2r-2}\right\rfloor
+v_r+d_r\ \le u\le\
+v_r+\left\lfloor\frac{a_r-d_r}{2r-2}\right\rfloor
 \]
 is excluded from the inverse-parent valuation set.
 
-This interval is nonempty for every \(r\ge2\). We have \(3^{2r-1}<2^{4r-3}\), by induction from \(27<32\), hence \(c_r\le4r-2\). Also \(9^r\ge16r^2\) for \(r\ge2\), by induction from \(81\ge64\), so \(a_r\ge8r^2+5/2\). Consequently
+The interval is nonempty for every \(r\ge2\). First, \(3^{2r-1}<2^{4r-3}\), by induction from \(27<32\), so \(d_r\le4r-3\). Second, \(9^r\ge16r^2\) for \(r\ge2\), by induction from \(81\ge64\), so \(a_r\ge8r^2+5/2\). Hence
 \[
-a_r\ge(2r-1)(4r-2)\ge(2r-1)c_r,
+a_r\ge(2r-1)(4r-3)\ge(2r-1)d_r.
 \]
-which is exactly the nonemptiness condition.
 
 ## Proof
 
@@ -104,17 +103,47 @@ M\mid z+R.
 \]
 We prove \(0<z+R<M\), contradicting (2).
 
-We use the elementary inequalities, valid for \(r\ge2\),
+We need two elementary bounds. For \(r\ge2\),
 \[
-2u-3=3^{2r}+2s\le3^{2r}+2a=2\cdot3^{2r}+5<2^{4r}
+16^r>2\cdot9^r+5.
 \tag{3}
 \]
-whenever \(s\le a\), and
+The base case is \(256>167\); the induction step multiplies the left side by \(16\) and the leading term on the right by \(9\). Also \(9^r\ge8r+1\), so \(a\ge4r+3\). In particular, whenever \(s\le a\),
 \[
-1+2\cdot3^{2r-1}<2^{c_r}.
+2u-3=3^{2r}+2s\le3^{2r}+2a=2\cdot9^r+5<2^{4r}<2^a.
 \tag{4}
 \]
-For (3), \(a\ge4r+3\), so \(2^a\ge2^{4r+3}=8\cdot16^r>2\cdot9^r+5\), and in particular \(2^{4r}>2\cdot9^r+5\). For (4), write \(m=\lfloor\log_2(3^{2r-1})\rfloor\); then \(3^{2r-1}<2^{m+1}\), so \(1+2\cdot3^{2r-1}<2^{m+2}=2^{c_r}\).
+
+Write \(n=3^{2r-1}\). By definition, \(2^{d_r}>n\). In fact,
+\[
+2^{d_r}\ge n+3.
+\tag{5}
+\]
+The difference \(2^{d_r}-n\) is a positive odd integer. If it were \(1\), then \(n+1=2^{d_r}\). But for the odd exponent \(m=2r-1\ge3\),
+\[
+3^m+1=(3+1)(3^{m-1}-3^{m-2}+\cdots-3+1),
+\]
+where the second factor is odd and greater than \(1\). Thus \(3^m+1\) is not a power of two, proving (5).
+
+For any \(s\ge d_r\), put
+\[
+T_s:=\frac{S}{2^{(2r-1)s}}
+=\sum_{j=0}^{2r-1}2^{-js}.
+\]
+The finite geometric sum satisfies
+\[
+T_s<1+\frac1{2^s-1}.
+\]
+By (5), \(2^s\ge n+3\), so \(n/(2^s-1)<1\). Therefore
+\[
+nT_s<n+1<2^s.
+\tag{6}
+\]
+The same bound applies with any exponent \(m\ge d_r\) in place of \(s\):
+\[
+nT_s<n+1<2^m.
+\tag{7}
+\]
 
 We split according to which exponent defines \(M\).
 
@@ -125,69 +154,49 @@ Here \(M=2^{2rs}\), and \(s\le a\). Since \(D>M\),
 \frac zM=\frac{Q}{DM}<\frac{Q}{M^2}
 <\frac{2u-3}{2^{2rs}}.
 \]
-The lower bound \(s\ge c_r\) gives \(2^{s-1}>3^{2r-1}\), so
-\[
-\frac RM<3^{2r-1}2^{1-s}<1.
-\]
-More precisely,
-\[
-1-\frac RM>
-1-\frac{3^{2r-1}}{2^{s-1}}
-\ge\frac1{2^{s-1}}.
-\tag{5}
-\]
-We claim
-\[
-2u-3<2^{(2r-1)s+1}.
-\tag{6}
-\]
-Indeed \(s\le a\), so \(2u-3=3^{2r}+2s\le2\cdot3^{2r}+5\). On the other hand,
+By (4), this is less than \(2^{4r-2rs}\). More importantly, using \(2^s>n\),
 \[
 2^{(2r-1)s+1}
-=2^{(2r-1)(s-1)+2r}
->3^{(2r-1)^2}2^{2r}
-\ge3^{2r+1}2^{2r}
->2\cdot3^{2r}+5.
+=2(2^s)^{2r-1}
+>2n^{2r-1}
+=2\cdot3^{(2r-1)^2}
+>2\cdot3^{2r}+5
+\ge2u-3.
 \]
-Here \((2r-1)^2\ge2r+1\) for \(r\ge2\). Thus (6) holds, and
+Here \((2r-1)^2\ge2r+1\) for \(r\ge2\). Hence
 \[
-\frac zM<
-(2u-3)2^{-2rs}
-<2^{1-s}
-=\frac1{2^{s-1}}.
+\frac zM<(2u-3)2^{-2rs}<2^{1-s}=\frac2{2^s}.
 \]
-Combining this with (5) gives \((z+R)/M<1\).
+On the other hand, (6) gives
+\[
+\frac RM=\frac{nT_s}{2^s}<1-\frac2{2^s}.
+\]
+Thus \((z+R)/M<1\).
 
 ### Case 2: \((2r-1)s\ge a\)
 
-Here \(M=2^{a+s}\). The upper-band hypothesis implies \(s\le a\), so (3) applies. Using \(D>M\) and \(S<2^{(2r-1)s+1}\),
+Here \(M=2^{a+s}\). Put \(m=a-(2r-2)s\). The upper-band hypothesis says \(m\ge d_r\), and \(s\le a\). Since \(D>M\),
 \[
-\begin{aligned}
-\frac{z+R}{M}
-&<\frac{Q}{M^2}+\frac RM\\
-&<(2u-3)2^{(2r-2)s-2a}
-  +3^{2r-1}2^{(2r-2)s+1-a}\\
-&=2^{(2r-2)s-a}
-  \left((2u-3)2^{-a}+2\cdot3^{2r-1}\right).
-\end{aligned}
+\frac zM=\frac{Q}{DM}<\frac{Q}{M^2}
+<(2u-3)2^{-a-m}.
 \]
-By (3) and \(a\ge4r+3\), \((2u-3)2^{-a}<1\). By (4), the bracket is strictly less than \(2^{c_r}\). Finally,
+By (4), this is less than \(2^{-m}\), and hence less than \(2/2^m\). Meanwhile,
 \[
-(2r-2)s\le a-c_r
+\frac RM=\frac{nT_s}{2^m}<1-\frac2{2^m}
 \]
-makes the leading factor at most \(2^{-c_r}\). Thus again \((z+R)/M<1\).
+by (7). Thus again \((z+R)/M<1\).
 
 Both cases contradict (2). Therefore \(D\nmid N\), proving the theorem.
 
 ## Concrete intervals
 
-| \(r\) | \(a_r\) | \(c_r\) | Excluded \(s\) | Excluded parent valuations \(u=v_r+s\) | Count |
+| \(r\) | \(a_r\) | \(d_r\) | Excluded \(s\) | Excluded parent valuations \(u=v_r+s\) | Count |
 |---:|---:|---:|---:|---:|---:|
-| 2 | 43 | 6 | 6–18 | 48–60 | 13 |
-| 3 | 367 | 9 | 9–89 | 375–455 | 81 |
-| 4 | 3,283 | 13 | 13–545 | 3,295–3,827 | 533 |
-| 5 | 29,527 | 16 | 16–3,688 | 29,542–33,214 | 3,673 |
-| 6 | 265,723 | 19 | 19–26,570 | 265,741–292,292 | 26,552 |
+| 2 | 43 | 5 | 5–19 | 47–61 | 15 |
+| 3 | 367 | 8 | 8–89 | 374–455 | 82 |
+| 4 | 3,283 | 12 | 12–545 | 3,294–3,827 | 534 |
+| 5 | 29,527 | 15 | 15–3,689 | 29,541–33,215 | 3,675 |
+| 6 | 265,723 | 18 | 18–26,570 | 265,740–292,292 | 26,553 |
 
 The endpoints and counts follow directly from the theorem.
 
