@@ -497,8 +497,16 @@ theorem q4_suffix_run_target_of_prefix
   let H : Int := h+5+(3*b:Int)
   let U := frameAt T2 g q4TailInside q4TailEnd
   have htail := q4_prefix_far_tail b Tq h hright
-  have hrightU := q4_suffix_right_word Tq h b hshape htail
-  have hleftU := q4_suffix_left_word Tq h b L (n-1) a hleft
+  have hrightU :
+      ∀ i : Nat, U.tape (h+6+(3*b:Int)+(i:Int)) =
+        sideBit (s0RightFacing 0) i := by
+    simpa [U,T1,T2,g] using
+      q4_suffix_right_word Tq h b hshape htail
+  have hleftU :
+      ∀ i : Nat, U.tape (h+5+(3*b:Int)-(i:Int)) =
+        sideBit (s1LeftFacing L (n-1) 1 (a+b+2) (2^b-1)) i := by
+    simpa [U,T1,T2,g] using
+      q4_suffix_left_word Tq h b L (n-1) a hleft
   have hsuffix : run tm2 (39+3*b) ⟨4,h,Tq⟩ = some U := by
     simpa [U,T1,T2,g] using q4_suffix_frame Tq h b hshape
   have htarget : U =
