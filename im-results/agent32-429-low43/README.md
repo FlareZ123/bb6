@@ -122,7 +122,7 @@ The result closes one prepared low-J (deficit (4k+3)) entrance and a concrete fi
 
 ### Parity-shifted J(93,173) branch (simulation and draft proof candidate)
 
-The proposed `(86,3)` low43 match was off by one. The corrected parameter audit, alternate C/0 tape, and full 134,235-step observed path to J(0,408) are documented in [parity-shifted-junc93-173.md](parity-shifted-junc93-173.md). Draft PR #91 adds source-level Lean proof candidates for the 425-step C/0 return, all three partial Junc returns, and the complete 103,081-step continuation from the shifted C/0 zipper to J(0,408). The manual raw-parent workflow has not yet been run, and the 31,154-step entry from J(93,0,173) to the shifted C/0 zipper remains open.
+The proposed `(86,3)` low43 match was off by one. The corrected parameter audit, alternate C/0 tape, and full 134,235-step observed path to J(0,408) are documented in [parity-shifted-junc93-173.md](parity-shifted-junc93-173.md). Draft PR #91 adds source-level Lean proof candidates for the 425-step C/0 return, all three partial Junc returns, and the complete 103,081-step continuation from the shifted C/0 zipper to J(0,408). Targeted CI run 43428492924 passed: the five composed continuation theorems report only [propext, Quot.sound], with no sorryAx. The 31,154-step entry from J(93,0,173) to the shifted C/0 zipper remains open.
 
 The raw-table checkpoint sequence has a self-contained Node reproducer at [simulate_parity_shifted_junc93.js](simulate_parity_shifted_junc93.js); it asserts the tail difference, checkpoint states, and corrected 102,656/103,081/134,235 totals.
 
