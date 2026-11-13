@@ -5,7 +5,9 @@ on:
   pull_request:
     paths:
       - 'im-results/agent48-429-safe/NoFatalGuard.lean'
+      - 'im-results/agent48-429-safe/RootNoFatalPrefix.lean'
       - 'im-results/agent6-429-one-sided-excursion/BB429OddExcursion.lean'
+      - 'im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.lean'
       - '.github/workflows/agent48-429-no-fatal-guard.yml'
 
 jobs:
@@ -18,18 +20,23 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile original zipper and no-fatal interface
+      - name: Compile original zipper, no-fatal interface, and blank-root certificate
         run: |
           set -euo pipefail
-          export LEAN_PATH=".:im-results/agent6-429-one-sided-excursion"
+          export LEAN_PATH=".:im-results/agent6-429-one-sided-excursion:im-results/agent48-429-safe"
           mkdir -p im-results/agent6-429-one-sided-excursion im-results/agent48-429-safe
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent6-429-one-sided-excursion/BB429OddExcursion.olean im-results/agent6-429-one-sided-excursion/BB429OddExcursion.lean 2>&1 | tee /tmp/agent48-nofatal.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.olean im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.lean 2>&1 | tee -a /tmp/agent48-nofatal.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent48-429-safe/NoFatalGuard.olean im-results/agent48-429-safe/NoFatalGuard.lean 2>&1 | tee -a /tmp/agent48-nofatal.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent48-429-safe/RootNoFatalPrefix.olean im-results/agent48-429-safe/RootNoFatalPrefix.lean 2>&1 | tee -a /tmp/agent48-nofatal.log
           grep -F "'BB429NoFatalGuard.runNoFatal_to_run' depends on axioms:" /tmp/agent48-nofatal.log
           grep -F "'BB429NoFatalGuard.runNoFatal_prefix' depends on axioms:" /tmp/agent48-nofatal.log
           grep -F "'BB429NoFatalGuard.runNoFatal_add' depends on axioms:" /tmp/agent48-nofatal.log
           grep -F "'BB429NoFatalGuard.runNoFatal_compose' depends on axioms:" /tmp/agent48-nofatal.log
+          grep -F "'BB429RootNoFatalPrefix.root_prefix_no_fatal_source' depends on axioms:" /tmp/agent48-nofatal.log
+          grep -F "'BB429RootNoFatalPrefix.root_prefix_all_prefixes_nonfatal' depends on axioms:" /tmp/agent48-nofatal.log
+          grep -F "'BB429RootNoFatalPrefix.root_czero_event_trace' depends on axioms:" /tmp/agent48-nofatal.log
           if grep -F 'sorryAx' /tmp/agent48-nofatal.log; then
-            echo 'Unexpected sorryAx dependency in no-fatal guard'
+            echo 'Unexpected sorryAx dependency in no-fatal guard or root certificate'
             exit 1
           fi
