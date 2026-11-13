@@ -170,3 +170,10 @@ odd-parent exponents are unbounded. This is derived from Agent 7's exact
 R identity and first-digit classification, but the new scaled selector
 and band theorem are not yet Lean-verified and do not establish blank-root
 reachability.
+
+
+The independent modular reproducer NestedCascadeCheck.mjs checks Agent 7's
+five-edge residue \(r=74803\pmod{177147}\), its five band-limit fractions,
+and the immediate sixth \((t,\sigma)=(0,13)\) band limit. This is a
+representative-level arithmetic check plus a cylinder-period argument,
+not a Lean certificate.
