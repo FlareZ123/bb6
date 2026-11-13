@@ -45,12 +45,12 @@ Thus, within the \(u\equiv35\pmod{60}\) cylinder, only one of the sixty-one resi
 
 ## Proof
 
-For every \(r\ge1\), \(9^r\equiv9\pmod{120}\) when \(r\) is odd and \(9^r\equiv81\pmod{120}\) when \(r\) is even, since \(9^2\equiv81\pmod{120}\) and \(9^3\equiv9\pmod{120}\). Thus
+For every \(r\ge1\), \(9^r\equiv9\pmod{120}\) when \(r\) is odd and \(9^r\equiv81\pmod{120}\) when \(r\) is even, since \(9^2\equiv81\pmod{120}\) and \(9^3\equiv9\pmod{120}\), so the powers alternate from exponent one onward. Thus
 \[
 a_r\equiv7\pmod{60}\quad(r\text{ odd}),\qquad
 a_r\equiv43\pmod{60}\quad(r\text{ even}).
 \]
-As \(2^{30}\equiv-1\pmod{61}\), this yields
+Since \(2^6\equiv3\pmod{61}\), we have \(2^{30}\equiv3^5=243\equiv-1\pmod{61}\). This yields
 \[
 A_r=2^{a_r}\equiv6\pmod{61}\quad(r\text{ odd}),\qquad
 A_r\equiv43\pmod{61}\quad(r\text{ even}).
