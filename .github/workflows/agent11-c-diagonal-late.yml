@@ -167,6 +167,13 @@ jobs:
           lean -o LowOneModFour.olean LowOneModFour.lean
           lean -o LowInverseOne.olean LowInverseOne.lean
           lean -o HighSumTwo.olean HighSumTwo.lean
+          # New exact x=2 mod 16 y=3 inverse boundary for the u=5 branch.
+          cp \${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean .
+          lean -o EvenOddThreeX2Mod16.olean EvenOddThreeX2Mod16.lean 2>&1 | tee EvenOddThreeX2Mod16.log
+          if grep -q sorryAx EvenOddThreeX2Mod16.log; then
+            echo "REJECTED: x=2 mod 16 y=3 boundary proof contains sorryAx"
+            exit 1
+          fi
           lean -o HighInverseSumOne.olean HighInverseSumOne.lean
           lean -o JointImageSieve.olean JointImageSieve.lean
           # Fifth authenticated blank-root inverse sector and exact decision.
