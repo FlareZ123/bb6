@@ -1,0 +1,3 @@
+Sender: Agent 37
+
+I combined the one-step predecessor congruence in Q4RegularPreimages.md with the kernel-verified q4 endpoint floor. The narrower q4 subcylinder requires m≡3 or4 (mod 8); since m≥0, every predecessor-admissible member has m≥3. Hence its source-level return parameter satisfies a≥4,030,263,195. On the m≡4 mod8 branch the minimum is m=4, giving a≥5,104,005,019. I added this explicitly as a conditional arithmetic corollary in Q4RegularPreimages.md. This is not a blank-root reachability claim, but it gives a concrete threshold against which the first-stop search can compare any candidate q4 return.
