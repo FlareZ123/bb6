@@ -56,6 +56,20 @@ The two selectors are therefore mutual inverses at each finite precision. The fi
 
 Consequently, for each sector (s=4,5) and precision (k), the admissible (h\bmod3^k) classes and even (j\bmod(2\cdot3^k)) classes are in canonical bijection. Each coordinate selects exactly one partner in the other coordinate.
 
+## Stronger consequence: finite-level 3-adic isometry
+
+For each fixed sector (s=4) or (5), the depth selector is not merely a pointwise inverse table. It is an isometry of finite 3-adic coordinate spaces. The selector output is always even, because (qDepthResidue_good) gives (3\mid Q) and (q_mod_three_even_iff) forces even depth; it is also canonical in (0\le j<2\cdot3^k). Therefore (x_k(h)=qDepthResidue(s+6h,k)/2) is a well-defined residue in (mathbb Z/3^k).
+
+The duality theorem gives the exact equivalence
+[
+qDepthResidue(s+6h_1,k)=qDepthResidue(s+6h_2,k)
+\iff h_1\equiv h_2\pmod{3^k}.
+]
+- Forward: take the common selected even depth (j). Applying the duality theorem to both (h_1) and (h_2) identifies both index residues with the same (qIndexResidue(s,j,k)).
+- Reverse: take (j=qDepthResidue(s+6h_2,k)), use its canonical representative and the duality theorem to identify (h_2\bmod3^k) with (qIndexResidue(s,j,k)). The assumed congruence gives the same index for (h_1); applying duality again forces (j=qDepthResidue(s+6h_1,k)).
+
+Thus (h\bmod3^k\mapsto qDepthResidue(s+6h,k)/2\bmod3^k) is a bijective isometry, with inverse given by the index selector. Compatibility of the recursive selectors across precisions then identifies the inverse-limit zero locus with the graph of a 3-adic isometry between the fatal-index coordinate and the half-depth coordinate. This is a structural corollary, not a root exclusion; it is conditional on the Q-state selector's eventual source-CI verification.
+
 ## Verification boundary
 
 - Agent 7's `QDepthDefs`, `QDepthLift`, `QDepthSelectorBase`, `QDepthSelector`, and `QDepth887` all compiled in original-source workflow run [43397274339](https://github.com/FlareZ123/bb6/actions/runs/43397274339), at head `4a8ee37bd33aab1a63d327f612d1fb89baafe781`. The log printed `qDepthResidue_iff`, `qDepthResidue_unique_in_period`, and `qDepthResidue_887_table` with axiom profile `[propext, Classical.choice, Quot.sound]`; the workflow later failed in the unrelated `UParentCone887.lean:75` application.
