@@ -177,7 +177,7 @@ and its depth-one bounce parent is
 \[
 (29004+129384w,\;44261+197452w).
 \]
-Both have odd right coordinate and sum \(1\pmod4\). Formalize the exact generic-parent and odd-image steps before claiming this family.
+Both have odd right coordinate and sum \(1\pmod4\). The complete B_s/A_s/high-stop source-exact exclusion is now drafted in M0EvenEvenSumZeroS229.lean: it applies blank_no_sumzero_target, excludes both parents with blank_no_odd_sum_one, excludes L_s with blank_no_L_s_mod8_five, and pulls back through the first two m=0 inverse edges. It is in the manual workflow but has not yet been run.
 
 ### Candidate 6: s=1024w+533
 
@@ -220,7 +220,7 @@ which is odd-right with sum \(1\pmod4\). This family also awaits source formaliz
 
 The general odd-valuation theorem still needs a parametric Lean proof: define the recursive predecessor iterator, prove its closed form by induction, and establish the gate lemma by splitting \(r-n=1\), \(r-n=2\), or \(r-n\ge3\). The \(u=1\) y=0/y=2 fibre is now drafted in M0SmallBoundaryZero.lean, and the \(u=5,r\equiv3\pmod4\) terminal fibre is drafted in EvenOddThreeX2Mod16.lean. The explicit s=293 source proof and exact-criterion integration, plus the s=32w+31 B-parent reduction, are also drafted. All five drafts are in the manual agent11-c-diagonal-late.yml workflow but remain unverified until that workflow succeeds with no sorryAx.
 
-The even-valuation candidates \(s=1024w+229\) and \(s=1024w+533\) have been independently checked algebraically: their finite six-gate chains and terminal parent branches are consistent, and the existing L_s theorem plus the generic even-even parent theorem should complete them. They are not yet Lean-proven. The residual \(u=5,r\equiv1\pmod4\) y=3 parent fan, the remaining even-valuation cases, and the \(S\equiv0\pmod4\) parent branches remain open. This is a stronger parameterized reduction, not a decision of Machine C or BB(6).
+The even-valuation candidate \(s=1024w+229\) now has a complete Lean draft in M0EvenEvenSumZeroS229.lean and is included in the manual workflow, but has not yet been CI-checked. Candidate \(s=1024w+533\) remains an algebraic derivation: its finite gate chain and terminal parent branches are consistent, but it still needs source formalization. The residual \(u=5,r\equiv1\pmod4\) y=3 parent fan, the remaining even-valuation cases, and the \(S\equiv0\pmod4\) parent branches remain open. This is a stronger parameterized reduction, not a decision of Machine C or BB(6).
 
 
 ## Supplemental u=5 slices: \(M\equiv0\pmod8\) or \(M\equiv24\pmod{64}\)
