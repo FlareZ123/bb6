@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - 'im-results/agent10-cascade/RayIndexHensel.lean'
-      - 'im-results/agent10-cascade/RayTwoTierIndexHensel.lean'
       - 'im-results/agent10-cascade/RayTwoTierSelector.lean'
       - 'im-results/agent10-cascade/RayTwoTierNoTwo.lean'
       - 'im-results/agent10-cascade/RayTwoTierPacket.lean'
@@ -96,7 +95,6 @@ jobs:
           lean -o "$g/RayDepthHensel.olean" "$g/RayDepthHensel.lean"
           lean -o "$g/RayDepthResidue.olean" "$g/RayDepthResidue.lean"
           lean -o "$b/RayIndexHensel.olean" "$b/RayIndexHensel.lean"
-          lean -o "$b/RayTwoTierIndexHensel.olean" "$b/RayTwoTierIndexHensel.lean"
           lean -o "$g/RayResidues.olean" "$g/RayResidues.lean"
           lean -o "$g/RayNonFork.olean" "$g/RayNonFork.lean"
           lean -o "$g/SixPacketRoot.olean" "$g/SixPacketRoot.lean"
