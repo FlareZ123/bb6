@@ -1,6 +1,8 @@
 # Low-J deficit (4k+3): physical C/0 record entry and root-specific continuation
 
-**Status:** intermediate source-composition candidate pending the manual original-source CI workflow. The uniform C/0 entry theorem and the corrected concrete continuation are kept in `im-results/`; no BB(6) decision or blank-root all-time invariant is claimed.
+**Status (2026-11-13):** the uniform physical C/0 entry theorem in `Low43Physical.lean` now compiles in Lean 4.36.0-rc2 with no `sorryAx` (CI run [43356966503](https://github.com/FlareZ123/bb6/actions/runs/43356966503), axiom list `[propext, Classical.choice, Quot.sound]`). The overall workflow failed later in `Low43RootPhysical.lean`, which still has application-type mismatches, unsolved representation goals, and unknown tactics. Its root-specific physical theorems are therefore **not verified**; their printed `sorryAx` is compiler-error recovery. The source continuation in `Low43Continuation.lean` compiled earlier with no `sorryAx`. All material remains intermediate; no BB(6) decision or blank-root all-time invariant is claimed.
+
+The focused workflow is `.github/workflows/agent32-429-low43-validation.yml`. It deliberately excludes unrelated low-odd modules. Run 43356966503 compiled `stage43_represented` and `low43_C0_record` successfully before reaching the root-lift errors.
 
 ## Exact uniform entry theorem
 
@@ -37,7 +39,7 @@ The root's simulated J(21,11) checkpoint corresponds to (v=5,k=7). The low43 ent
 | J(21,11) to J(23,18), including C/0 entry | 650 | -4 | +17 | `junc 23 0 18` |
 | J(21,11) to J(11,62), including C/0 entry | 1559 | -41 | +24 | `junc 11 0 62` |
 
-The 438- and 909-step zipper monitors are concrete finite Lean proofs by `decide` against the imported #429 action/zipper definitions; the 1347-step C/0 monitor is composed with `runWithMax_add`. A local Lean 4.36.0-rc2 harness reproduced the definitions and the two finite proofs without `sorryAx`. The physical lifts in `Low43RootPhysical.lean` transport these monitors through the complete tape representation and retain all-prefix head bounds.
+The 438- and 909-step zipper monitors are concrete finite Lean proofs by `decide` against the imported #429 action/zipper definitions; the 1347-step C/0 monitor is composed with `runWithMax_add`. A local Lean 4.36.0-rc2 harness reproduced the definitions and the two finite proofs without `sorryAx`. The intended physical lifts are in `Low43RootPhysical.lean`, but that file currently fails the focused CI compile; do not treat its monitor-transport or all-prefix head-bound declarations as verified.
 
 **Correction of the previous candidate:** the earlier 119-step claim to `junc 0 9 25` was false. In this source, `tens 14` has 28 bits because `tens (n+1) = true :: false :: tens n`; it is not a 14-bit word. The exact 119-step execution ends in C with displacement (-59), not at `junc 0 9 25). The subsequent 45-step route to `junc 12 0 22` and the old `root_low43_branch_to_junc12` theorem have therefore been removed. The corrected route is to J(23,18), then J(11,62).
 
