@@ -174,6 +174,8 @@ theorem blank_thirty_first_prefix
       firstExceptionFromSeed31.1 seed31 firstExceptionFromSeed31.2
       seed31_canon hfirst.1 hroot⟩
 
+#eval t30 % 81
+
 #print axioms firstStopAux_sound
 #print axioms firstStopBlocks_sound
 #print axioms seed31_canon
