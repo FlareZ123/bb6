@@ -104,8 +104,12 @@ def tape_bit(c: Config, x: int) -> bool:
     return x in c.ones
 
 
-def stream(c: Config, offsets) -> tuple[bool, ...]:
-    return tuple(tape_bit(c, x) for x in offsets)
+def left_stream(c: Config, length: int) -> tuple[bool, ...]:
+    return tuple(tape_bit(c, c.head - i) for i in range(length))
+
+
+def right_stream(c: Config, length: int) -> tuple[bool, ...]:
+    return tuple(tape_bit(c, c.head + 1 + i) for i in range(length))
 
 
 def q4_left_facing(a: int):
@@ -146,8 +150,8 @@ def check_small_parameters(max_a: int = 4, max_b: int = 4) -> int:
             prefix = 56 + 12 * a
             run(source, prefix)
             assert (source.state, source.head) == (4, 0)
-            assert stream(source, range(0, len(q4_left_facing(a)))) == q4_left_facing(a)
-            assert stream(source, range(1, 1 + len(q4_right_facing(b)))) == q4_right_facing(b)
+            assert left_stream(source, len(q4_left_facing(a))) == q4_left_facing(a)
+            assert right_stream(source, len(q4_right_facing(b))) == q4_right_facing(b)
 
             # Continue from the q4 cut through its 39+3*b suffix and drain.
             run(source, 39 + 3 * b)
