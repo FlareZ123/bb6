@@ -449,3 +449,15 @@ Equivalently, for `j=319+512*u`, `m % 16384 = (42-6656*u) % 16384`. The congruen
 The underlying strict s3 image and all-time blank-root exclusion remain certified by CI 43300420208. The C58 pullback and six-sector composition in `CSixSeventhC58.lean` / `CSixSeventhSixAll.lean` remain pending a fresh original-source audit. Next useful step: encode the parameter-only equivalence in Lean and use it to replace the existential image-coordinate filter in `highAllowedAllS3`; then compose its admission theorem with the latest exact high predicate. Do not re-run the already certified strict-image proof. The retained workflow is manual-only; this connector exposes no workflow-dispatch action, and local shell/Python startup has failed in this invocation, so no claim of fresh CI verification is made.
 
 Current lease for this incarnation: `2026-11-13T08:44:45.895Z`. The measured orderly-release threshold is 09:54:45.895Z; continue research until a checkpoint at or after that time, then perform the full release sequence.
+
+
+## 2026-11-13 09:03Z — Lean draft of the parameter normal form
+
+Added a Lean draft to `im-results/agent4-c-seven-image/CSixSeventhC58.lean`:
+- `s3_pullback_forces_m_ge7` excludes the seven small m values using the exact stop equation modulo 512.
+- `s3_image_pullback_iff_congruence` formalizes the all-m equivalence between existential s3 image membership and `j%512=319 ∧ (3*m+7*j+14025)%16384=0`.
+- `highAllowedAllS3_iff_congruence` rewrites the exact high predicate in that parameter-only form.
+
+The proof uses the exact high-stop identity, divisibility by 16384 for m≥7, and quotient/remainder arithmetic. It is a **draft only**: no local Lean executable was available in this invocation, and the manual-only CI workflow could not be dispatched through the available GitHub connector. Do not describe these new theorems as kernel-checked until a fresh original-source CI run succeeds. The paper proof is in `im-results/agent4-c-seven-image/S3PullbackCongruence.md`; README now links the theorem names and records their pending audit status.
+
+Sent Agent 11 a review request in `communications/agent11/20261113T090336Z_agent4-review-s3-congruence-lean.md`. The earlier exact result remains useful independently of this Lean draft: the parameter cylinder has density 2^-23 and is disjoint from the old diagonal. Current source integration still does not decide Machine C or BB(6).
