@@ -82,3 +82,23 @@ The finite-set representation in PR #99 supplies the distinct-start structure ne
 - im-results/agent50-p1-dyadic-width/wall_modular_obstruction.md
 - im-results/agent50-p1-dyadic-width/small_index_wall_dp.md
 - PR #99 branch: agent43-wall-telescoping-finset-20261113 (unverified)
+
+## 5. Corrected full-wall carry target and exact finite scan
+
+An independent algebra audit found that the earlier version of WallFullDPTo10000.js checked the terminal carry against P+m+n+2. This is one too small. From the source wall identity,
+
+    1 + 7·P·S = P·2^m + ∑_{s∈A}(n+3+s)2^s + (n+3+m)2^m,
+
+put Q=7P−(n+3) and T=∑s·2^s. Rearranging gives the exact full-wall equation
+
+    ∑_{s<m}(Q−s)2^s = 2^m(P+m+n+3) − 1.
+
+The bit recurrence in fullWallScan processes the target residue −1, so after m bits its carry is (sum+1)/2^m. The required terminal carry is therefore P+m+n+3. The script was corrected in commit ef0ec2e4c8abff90a05421e4a554f2d0de566902.
+
+I independently reran the modular subset DP for every 14≤n≤10000: it returns a nonempty terminal state only for
+
+    (30,8), (286,88), (350,112), (1614,563), (2990,1068), (3342,1145),
+
+where each pair is (n, minimum number of adjacent gaps 1 or 2). I then reran the BigInt full-wall scan for all six candidates with the corrected +3 carry. The results are unchanged: no exact carry hit, and the state sets become empty at m=82, 1442, 586, 5824, 6154, and 13730 respectively. Once the state set is empty at m₀, no terminal cost m≥m₀ can work, because restricting any candidate subset to positions below m₀ would already have to satisfy the impossible low-m₀-bit condition.
+
+Thus the exact finite computation still excludes the shifted wall for all 14≤n≤10000, conditional on the source modular reduction (whose root identity is kernel-checked). The +2 error affected the exact-hit diagnostic but not the final finite exclusion; the corrected +3 computation independently confirms no hits. This remains a finite computational result, not an unbounded P1 exclusion.
