@@ -261,8 +261,8 @@ theorem q1b1_rejoins_regular (k : Nat) :
       constructor
       · dsimp
         omega
-      · left
-        omega
+      · right
+        rfl
 
 #print axioms input_obs_eq
 #print axioms q1b1_regular_rejoin
