@@ -76,6 +76,7 @@ function simulate(initial, steps, { watch = [], recordJuncFrom = 0 } = {}) {
   const visits = [];
   const juncs = [];
   let c0 = null;
+  let c0Tape = null;
 
   for (let t = 0; t <= steps; t++) {
     minHead = Math.min(minHead, head);
@@ -91,6 +92,7 @@ function simulate(initial, steps, { watch = [], recordJuncFrom = 0 } = {}) {
         { length: head - minCell },
         (_, i) => read(tape, head - 1 - i)
       );
+      c0Tape = new Map(tape);
       c0 = {
         t, state, head, current: read(tape, head),
         right: read(tape, head + 1), minHead, maxHead,
@@ -110,7 +112,7 @@ function simulate(initial, steps, { watch = [], recordJuncFrom = 0 } = {}) {
     head += move;
     state = nextState;
   }
-  return { state, head, tape, minHead, maxHead, trace, visits, juncs, c0 };
+  return { state, head, tape, minHead, maxHead, trace, visits, juncs, c0, c0Tape };
 }
 
 const shifted = simulate(makeJunc(93, 0, 173), 134235, {
@@ -125,11 +127,11 @@ const standard = simulate(makeJunc(94, 0, 173), 31154, {
 // 31,154 primitive transitions never visit any of them.
 assert.deepEqual(shifted.trace.slice(0, 31155), standard.trace);
 assert.deepEqual(
-  [...shifted.tape.keys()].filter(x => !standard.tape.has(x)).sort((a,b)=>a-b),
+  [...shifted.c0Tape.keys()].filter(x => !standard.tape.has(x)).sort((a,b)=>a-b),
   [-188]
 );
 assert.deepEqual(
-  [...standard.tape.keys()].filter(x => !shifted.tape.has(x)).sort((a,b)=>a-b),
+  [...standard.tape.keys()].filter(x => !shifted.c0Tape.has(x)).sort((a,b)=>a-b),
   [-194, -193]
 );
 assert.deepEqual(shifted.c0 && {
