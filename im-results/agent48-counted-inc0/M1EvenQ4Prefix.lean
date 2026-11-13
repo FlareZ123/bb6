@@ -740,7 +740,7 @@ private theorem m1EvenQ4LeftFacingTail (a i : Nat)
   rw [hlenS,hlenT]
   apply sideBit_binDec36_eq_binDec35_after5
   simp [d1pow_length,markerWord,d0] at hi ⊢
-  omega
+  all_goals omega
 
 private theorem m1EvenQ4LeftFacingPrefixTrue (a i : Nat)
     (hi : i ≤ 3*a) :
