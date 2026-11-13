@@ -3,7 +3,7 @@
 This module isolates the infinite-context part of embedding the finite
 `CountedResetBase` traces into the original-source S1 tape encoding.
 
-For `L>0), the input and output left-facing streams have the exact forms
+For `L>0`, the input and output left-facing streams have the exact forms
 
 - input: `(markerWord m ++ d0) ++ (d0 ++ (d1pow (L-1) ++ lh))`;
 - output: `(d1pow (resetDelta m) ++ markerWord ((m+2)%3) ++ d0) ++ (d1 ++ (d1pow (L-1) ++ lh))`.

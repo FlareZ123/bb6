@@ -136,32 +136,31 @@ theorem resetBase_leftThirdCell (L : Nat) (hL : 0 < L) :
       sideBit (s1LeftFacing L 0 1 2 0 0) 14 := by
   rw [resetBase_input_leftStream L 2 hL]
   rw [resetBase_output_leftStream L 2 hL]
+  simp [resetDelta]
   let s := d1pow (L-1) ++ lh
-  have hp : (markerWord 2 ++ d0).length = 7 := by decide
-  have hq : (d1pow 2 ++ markerWord 1 ++ d0).length = 12 := by decide
+  let p := markerWord 2 ++ d0
+  let q := d1pow 2 ++ markerWord 1 ++ d0
+  change sideBit (p ++ (d0 ++ s)) 9 =
+    sideBit (q ++ (d1 ++ s)) 14
+  have hp : p.length = 7 := by simp [p, markerWord, d0]
+  have hq : q.length = 12 := by simp [q, markerWord, d1pow, d1, d0]
   calc
-    sideBit ((markerWord 2 ++ d0) ++ (d0 ++ s)) 9 =
-        sideBit (d0 ++ s) (9-(markerWord 2 ++ d0).length) :=
-      sideBit_append_ge (markerWord 2 ++ d0) (d0 ++ s) 9 (by decide)
+    sideBit (p ++ (d0 ++ s)) 9 =
+        sideBit (d0 ++ s) (9-p.length) :=
+      sideBit_append_ge p (d0 ++ s) 9 (by omega)
     _ = sideBit d0 2 := by
-      rw [hp]
-      simpa using sideBit_append_lt d0 s 2 (by decide)
+      have hidx : 9-p.length = 2 := by omega
+      rw [hidx]
+      exact sideBit_append_lt d0 s 2 (by decide)
     _ = true := by decide
     _ = sideBit d1 2 := by decide
     _ = sideBit (d1 ++ s) 2 := by
       symm
       exact sideBit_append_lt d1 s 2 (by decide)
-    _ = sideBit (d1pow 2 ++ markerWord 1 ++ d0 ++ (d1 ++ s)) 14 := by
-      have hidx : 14 - (d1pow 2 ++ markerWord 1 ++ d0).length = 2 := by
-        rw [hq]
-        decide
-      calc
-        sideBit (d1 ++ s) 2 =
-            sideBit (d1 ++ s)
-              (14-(d1pow 2 ++ markerWord 1 ++ d0).length) := by rw [hidx]
-        _ = sideBit (d1pow 2 ++ markerWord 1 ++ d0 ++ (d1 ++ s)) 14 :=
-          (sideBit_append_ge
-            (d1pow 2 ++ markerWord 1 ++ d0) (d1 ++ s) 14 (by decide)).symm
+    _ = sideBit (q ++ (d1 ++ s)) 14 := by
+      have hidx : 14-q.length = 2 := by omega
+      simpa [hidx] using
+        (sideBit_append_ge q (d1 ++ s) 14 (by omega)).symm
 
 /-- The two S1 tapes in the n=1, a=b=0 reset base agree everywhere
 outside the finite frame touched by the corresponding base trace.  This
@@ -209,7 +208,7 @@ theorem resetBase_s1_outside (L m : Nat) (hL : 0 < L) (hm : m < 3)
         have hxlo : x < -8 := by omega
         have hi9 : 9 ≤ i := by omega
         by_cases hiEq : i = 9
-        · subst i
+        · rw [hiEq]
           exact resetBase_leftThirdCell L hL
         · have hi10 : 10 ≤ i := by omega
           have hp : (markerWord 2 ++ d0).length = 7 := by decide
@@ -257,11 +256,9 @@ theorem resetBase_s1_outside (L m : Nat) (hL : 0 < L) (hm : m < 3)
       simp [s1PhysicalRight, s0PhysicalRight, s0RightFacing, d1pow, d1]
     have hiLen : (s1PhysicalRight 0).length ≤ i := by
       rw [hlen]
-      dsimp [i]
       omega
     have hjLen : (s1PhysicalRight 0).length ≤ j := by
       rw [hlen]
-      dsimp [j]
       omega
     calc
       (s1Config L 1 m 0 0 0 0).tape x =
