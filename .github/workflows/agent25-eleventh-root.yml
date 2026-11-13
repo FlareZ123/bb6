@@ -44,14 +44,14 @@ env:
   LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent2-packet-shift:im-results/agent37-d-timing-cocycle
 jobs:
   audit:
-    name: Compile D-root checkpoint ${{ inputs.stage } (separate run)
+    name: Compile D-root checkpoint ${{ inputs.stage }} (separate run)
     runs-on: ubuntu-latest
     timeout-minutes: 27
     steps:
       - name: Checkout exact source snapshot
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.source_ref }
+          ref: ${{ inputs.source_ref }}
           path: source
       - name: Restore pinned original D sources and DRegular proof
         working-directory: source
@@ -68,15 +68,15 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Download previous checkpoint
-        if: ${{ inputs.stage != '1' }
+        if: ${{ inputs.stage != '1' }}
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.previous_artifact }
-          run-id: ${{ inputs.source_run_id }
-          github-token: ${{ github.token }
+          name: ${{ inputs.previous_artifact }}
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
           path: prior-artifact
       - name: Restore compiled Lean objects and audit
-        if: ${{ inputs.stage != '1' }
+        if: ${{ inputs.stage != '1' }}
         run: |
           cp prior-artifact/lean-audit.log source/lean-audit.log
           tar -xzf prior-artifact/lean-stage.tar.gz -C source
@@ -84,7 +84,7 @@ jobs:
         working-directory: source
         shell: bash
         env:
-          STAGE: ${{ inputs.stage }
+          STAGE: ${{ inputs.stage }}
         run: |
           set -euo pipefail
           exec > >(tee -a lean-audit.log) 2>&1
@@ -217,16 +217,16 @@ jobs:
           fi
           find im-results -type f -name '*.olean' -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
       - name: Preserve intermediate checkpoint
-        if: ${{ always() && inputs.stage != '5' }
+        if: ${{ always() && inputs.stage != '5' }}
         uses: actions/upload-artifact@v4
         with:
-          name: d-root-stage${{ inputs.stage }
+          name: d-root-stage${{ inputs.stage }}
           path: |
             source/lean-stage.tar.gz
             source/lean-audit.log
           if-no-files-found: warn
       - name: Preserve final Seed31 audit
-        if: ${{ always() && inputs.stage == '5' }
+        if: ${{ always() && inputs.stage == '5' }}
         uses: actions/upload-artifact@v4
         with:
           name: d-root-seed31-audit
