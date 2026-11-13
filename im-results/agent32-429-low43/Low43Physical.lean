@@ -436,7 +436,7 @@ theorem low43_C0_record (v k : Nat) :
     omega
   have htime : B+(8*v+16)=4*v*v+18*v+22 := by
     dsimp [B]
-    rw [hsq]
+    rw [Nat.mul_assoc,hsq]
     simp [Nat.mul_add,Nat.add_mul]
     omega
   have htotal' : run target429 (4*v*v+18*v+22) c0=some cC := by
