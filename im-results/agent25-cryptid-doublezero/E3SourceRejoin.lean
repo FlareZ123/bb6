@@ -235,7 +235,12 @@ theorem q1b1_rejoins_regular (k : Nat) :
         omega
       · right
         rfl
-    · simpa [sourceStartK, sourceStart] using q1b1_regular_rejoin t
+    · have hstart : sourceStartK (3*t) = sourceStart t := by
+        have hnum : 3*(3*t)+4 = 9*t+4 := by omega
+        simp [sourceStartK, sourceStart, hnum]
+      change ObsEq (run (duration t) (sourceStartK (3*t))) (sourceEnd t)
+      rw [hstart]
+      exact q1b1_regular_rejoin t
   · by_cases h1 : k % 3 = 1
     · let t := (k-1) / 3
       have hk : k = 3*t+1 := by omega
