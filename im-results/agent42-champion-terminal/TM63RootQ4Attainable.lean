@@ -68,8 +68,7 @@ theorem rootQ4Drain_matches_first_reset_cost :
     rootQ4DrainMoves = 27959 + proposedIncrementCost 2 7 6 63 := by
   have hv : v2 7 = 0 := by decide
   have hp : 804 ≤ 6*4^63 + 42*2^63 := by decide
-  simp [rootQ4DrainMoves, q4DrainMoves, proposedIncrementCost, hv]
-  omega
+  simp [rootQ4DrainMoves, q4DrainMoves, proposedIncrementCost, hv] <;> omega
 
 /-- The arithmetic Rsts1 recursion starts with precisely the q4/drain
 stage: its first update is (n,m,a,b)=(7,2,6,63) to
