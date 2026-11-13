@@ -51,9 +51,9 @@ def tm63AfterM2EvenHead : Int :=
 source-proved counted increments. -/
 def tm63AfterM2EvenMoves : Nat :=
   rootQ4DrainMoves +
-    proposedIncrementCost 1 6 71 (2^63-1) +
-    proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-    proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB
+    (proposedIncrementCost 1 6 71 (2^63-1) +
+      (proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
+        proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB))
 
 /-- The first five-stage residual itinerary after M1-even splits at its
 first two reset stages, leaving the exact residual after M2-even. -/
@@ -125,8 +125,8 @@ theorem tm63_blank_reaches_after_m2_even :
   have hafterM1 :
       run tm2
         (proposedIncrementCost 1 6 71 (2^63-1) +
-         proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
-         proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB)
+         (proposedIncrementCost 0 5 tm63AfterM1EvenA tm63AfterM1EvenB +
+          proposedIncrementCost 2 4 tm63AfterM0OddA tm63AfterM0OddB))
         (s1Config 3 6 1 71 0 (2^63-1) 223) =
         some (s1Config 3 3 1 tm63AfterM2EvenA 0 tm63AfterM2EvenB
           tm63AfterM2EvenHead) := by
