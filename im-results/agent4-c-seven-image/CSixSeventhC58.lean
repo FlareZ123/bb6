@@ -758,6 +758,8 @@ theorem s3_second_parameter_family_removed (t : Nat) :
   intro h
   exact h.2.2 ⟨by rfl,by omega⟩
 
+#print axioms s3_image_pullback_iff_congruence
+#print axioms highAllowedAllS3_iff_congruence
 #print axioms prior_c58_admits_six_seven_diagonal
 #print axioms prior_c58_admits_concrete_infinite_family
 #print axioms prior_latefast_admits_six_seven_diagonal
