@@ -20,13 +20,13 @@ The direct affine parent of R is
 
 Consider the subfamily
 
-**v = 42-93u (mod 128).** (S2)
+**v+93u = 42 (mod 128).** (S2)
 
 This implies u+v = 2 (mod 4). Equivalently, put u+v=2+4t; then (S2) is exactly
 
 **v = 28+11t (mod 32).**
 
-Indeed, multiplying the latter congruence by four and using 4t=u+v-2 gives 7v=38-11u (mod 128); the inverse of 7 modulo 128 is 55, giving v=42-93u (mod 128).
+Indeed, multiplying the latter congruence by four and using 4t=u+v-2 gives 7v=38-11u (mod 128); the inverse of 7 modulo 128 is 55, giving v+93u=42 (mod 128).
 
 ## Exact two-parent structure of R
 
@@ -125,19 +125,19 @@ The high-stop equation is k+j+3m+5=2^(2m+2)(j+3). For image membership, j=319+51
 The exact pullback of (S2) is
 
 **j = 319 (mod 512),**
-**3m-185j+102921 = 0 (mod 131072).** (S2-pullback)
+**3m+102921 = 185j (mod 131072).** (S2-pullback)
 
-Forward direction: the same small-m residue check used for the other strict families forces m≥7; reducing the stop equation modulo 512 then gives m=42 (mod 512), hence m≥42 and 131072 divides 2^(2m+2). From v=42-93u (mod 128),
+Forward direction: the same small-m residue check used for the other strict families forces m≥7; reducing the stop equation modulo 512 then gives m=42 (mod 512), hence m≥42 and 131072 divides 2^(2m+2). From v+93u=42 (mod 128),
 
-k = 574+1024v = 43582-95232u (mod 131072).
+k+95232u = 43582 (mod 131072), since k=574+1024v and v+93u=42 (mod 128).
 
-Substitute j=319+512u into the stop equation modulo 131072 to obtain 3m-185j+102921=0.
+Substitute j=319+512u into the stop equation modulo 131072 to obtain 3m+102921=185j.
 
 Conversely, suppose the two congruences in (S2-pullback) hold. Reducing the second modulo 512 gives m=42 (mod 512), so 131072 divides the power term. The stop equation then gives
 
-k = -j-3m-5 = 43582-95232u (mod 131072),
+k+j+3m+5 = 0 (mod 131072), and therefore k+95232u = 43582 (mod 131072),
 
-where u=(j-319)/512. Therefore k=574 (mod 1024), so k=574+1024v for a natural v, and the stronger congruence gives v=42-93u (mod 128). This recovers (S2).
+where u=(j-319)/512. Therefore k=574 (mod 1024), so k=574+1024v for a natural v, and the stronger congruence gives v+93u=42 (mod 128). This recovers (S2).
 
 For each j-class modulo 512, the second congruence fixes one m-class modulo 131072 because 3 is invertible modulo 131072. Thus the exact parameter-lattice density is
 
