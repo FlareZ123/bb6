@@ -59,10 +59,12 @@ jobs:
           lean -o ChampionModular.olean ChampionModular.lean
           lean -o CostRecurrence.olean CostRecurrence.lean
           lean -o CountPattern.olean CountPattern.lean
+          : > rst1-prime-axioms.log
           lean -o CountedReset.olean CountedReset.lean
-          lean -o CountedRst1Prime.olean CountedRst1Prime.lean
-          lean -o Q4Suffix.olean Q4Suffix.lean
           lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean
+          lean -o CountedRst1Prime.olean CountedRst1Prime.lean 2>&1 | tee rst1-prime-axioms.log
+          if grep -q 'sorryAx' rst1-prime-axioms.log; then echo '::error::sorryAx in CountedRst1Prime'; exit 1; fi
+          lean -o Q4Suffix.olean Q4Suffix.lean
           lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
           : > m0-odd-q4-axioms.log
           if ! lean -o M0OddQ4Bridges.olean M0OddQ4Bridges.lean > m0-odd-q4-axioms.log 2>&1; then
