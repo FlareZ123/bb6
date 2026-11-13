@@ -177,7 +177,7 @@ theorem carryLeftOutputBit_s1Decrement
     intro i
     have hcell := s1Config_left_cell L n m (len+1+r) ((2*q+1)*2^r) b h i
     rw [hsrcList] at hcell
-    simpa [P] using hcell
+    simpa [P, Int.sub_eq_add_neg] using hcell
   intro x hx
   let i : Nat := (-x).toNat
   have hi : (i:Int) = -x := by
