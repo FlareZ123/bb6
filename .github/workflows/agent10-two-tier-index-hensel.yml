@@ -31,4 +31,11 @@ jobs:
           lean -o "$g/SignedRayPeriod.olean" "$g/SignedRayPeriod.lean"
           lean -o "$g/RayDepthHensel.olean" "$g/RayDepthHensel.lean"
           lean -o "$g/RayDepthResidue.olean" "$g/RayDepthResidue.lean"
-          lean -o "$b/RayTwoTierIndexHensel.olean" "$b/RayTwoTierIndexHensel.lean"
+          if lean -o "$b/RayTwoTierIndexHensel.olean" "$b/RayTwoTierIndexHensel.lean" > /tmp/two-tier-lean.log 2>&1; then
+            cat /tmp/two-tier-lean.log
+          else
+            cat /tmp/two-tier-lean.log
+            echo "### Two-tier Lean compilation failure" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 100 /tmp/two-tier-lean.log >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
