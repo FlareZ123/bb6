@@ -97,10 +97,13 @@ theorem even_even_sumzero_parent (a k x y S : Nat)
               · have hn3 : 3≤n := by omega
                 have hdivA : 2∣a := Nat.dvd_of_mod_eq_zero haeven
                 rcases hdivA with ⟨b,hb⟩
-                have hn' : n=3+(n-3) := by omega
                 have hpow : 2^n=8*2^(n-3) := by
-                  rw [hn',Nat.pow_add]
-                  rfl
+                  calc
+                    2^n = 2^(3+(n-3)) := by
+                      congr 1
+                      omega
+                    _ = 2^3*2^(n-3) := by rw [Nat.pow_add]
+                    _ = 8*2^(n-3) := by rfl
                 have hfactor : 2*(a-1)+6=4*(b+1) := by
                   rw [hb]
                   omega
@@ -115,7 +118,7 @@ theorem even_even_sumzero_parent (a k x y S : Nat)
                 have hSdiv : S=4*q := by omega
                 have hSzero : S%4=0 := by rw [hSdiv]; simp
                 exact (hS4 hSzero).elim
-            have hpow1 : 2^n=2 := by rw [hn1]; rfl
+            have hpow1 : 2^n=2 := by rw [hn1]
             have hxy' : x+y=2*(2*(a-1)+6) := by
               simpa [hpow1] using hxy
             have haEq : a=2*S-2 := by omega
@@ -406,17 +409,17 @@ theorem blank_no_A_t59 (v : Nat) :
     ¬ BB6.Agent3.CReach (6162+6656*v) (4502+4864*v) := by
   have hL : ¬ BB6.Agent3.CReach
       (222+360*(32*v+29)) (46+76*(32*v+29)) := by
-    have hx : 222+360*(32*v+29)=10662+11520*v := by simp [Nat.mul_add, Nat.mul_assoc]
-    have hy : 46+76*(32*v+29)=2250+2432*v := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hx : 222+360*(32*v+29)=10662+11520*v := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
+    have hy : 46+76*(32*v+29)=2250+2432*v := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
     simpa only [hx,hy] using blank_no_L_t59 v
   have hB : ¬ BB6.Agent3.CReach
       (54+90*(32*v+29)) (127+211*(32*v+29)) := by
-    have hx : 54+90*(32*v+29)=2664+2880*v := by simp [Nat.mul_add, Nat.mul_assoc]
-    have hy : 127+211*(32*v+29)=6246+6752*v := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hx : 54+90*(32*v+29)=2664+2880*v := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
+    have hy : 127+211*(32*v+29)=6246+6752*v := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
     simpa only [hx,hy] using blank_no_B_t59 v
   have hA := blank_no_A_from_two_parents (32*v+29) (by omega) hL hB
-  have hx : 130+208*(32*v+29)=6162+6656*v := by simp [Nat.mul_add, Nat.mul_assoc]
-  have hy : 94+152*(32*v+29)=4502+4864*v := by simp [Nat.mul_add, Nat.mul_assoc]
+  have hx : 130+208*(32*v+29)=6162+6656*v := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
+  have hy : 94+152*(32*v+29)=4502+4864*v := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
   simpa only [hx,hy] using hA
 where
   blank_no_A_from_two_parents (s : Nat) (hs : s%2=1)
@@ -441,17 +444,17 @@ theorem blank_no_A_t11 (w : Nat) :
     ¬ BB6.Agent3.CReach (1170+26624*w) (854+19456*w) := by
   have hL : ¬ BB6.Agent3.CReach
       (222+360*(128*w+5)) (46+76*(128*w+5)) := by
-    have hx : 222+360*(128*w+5)=2022+46080*w := by simp [Nat.mul_add, Nat.mul_assoc]
-    have hy : 46+76*(128*w+5)=426+9728*w := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hx : 222+360*(128*w+5)=2022+46080*w := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
+    have hy : 46+76*(128*w+5)=426+9728*w := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
     simpa only [hx,hy] using blank_no_L_t11 w
   have hB : ¬ BB6.Agent3.CReach
       (54+90*(128*w+5)) (127+211*(128*w+5)) := by
-    have hx : 54+90*(128*w+5)=504+11520*w := by simp [Nat.mul_add, Nat.mul_assoc]
-    have hy : 127+211*(128*w+5)=1182+27008*w := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hx : 54+90*(128*w+5)=504+11520*w := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
+    have hy : 127+211*(128*w+5)=1182+27008*w := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
     simpa only [hx,hy] using blank_no_B_t11 w
   have hA := blank_no_A_from_two_parents (128*w+5) (by omega) hL hB
-  have hx : 130+208*(128*w+5)=1170+26624*w := by simp [Nat.mul_add, Nat.mul_assoc]
-  have hy : 94+152*(128*w+5)=854+19456*w := by simp [Nat.mul_add, Nat.mul_assoc]
+  have hx : 130+208*(128*w+5)=1170+26624*w := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
+  have hy : 94+152*(128*w+5)=854+19456*w := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
   simpa only [hx,hy] using hA
 where
   blank_no_A_from_two_parents (s : Nat) (hs : s%2=1)
@@ -477,12 +480,12 @@ theorem blank_no_high_m0_j1895 (v : Nat) :
   intro hr
   have hroot : BB6.Agent3.CReach
       (17+64*(64*v+59)) (28+96*(64*v+59)) := by
-    have hx : 2*(1895+2048*v)+3=17+64*(64*v+59) := by simp [Nat.mul_add, Nat.mul_assoc]
-    have hy : 5692+6144*v=28+96*(64*v+59) := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hx : 2*(1895+2048*v)+3=17+64*(64*v+59) := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
+    have hy : 5692+6144*v=28+96*(64*v+59) := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
     simpa only [hx,hy] using hr
   have hA := mzero_first_two_reach (64*v+59) hroot
-  have hx : 26+104*(64*v+59)=6162+6656*v := by simp [Nat.mul_add, Nat.mul_assoc]
-  have hy : 18+76*(64*v+59)=4502+4864*v := by simp [Nat.mul_add, Nat.mul_assoc]
+  have hx : 26+104*(64*v+59)=6162+6656*v := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
+  have hy : 18+76*(64*v+59)=4502+4864*v := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
   have hA' : BB6.Agent3.CReach (6162+6656*v) (4502+4864*v) := by
     simpa only [hx,hy] using hA
   exact blank_no_A_t59 v hA'
@@ -494,12 +497,12 @@ theorem blank_no_high_m0_j359 (w : Nat) :
   intro hr
   have hroot : BB6.Agent3.CReach
       (17+64*(256*w+11)) (28+96*(256*w+11)) := by
-    have hx : 2*(359+8192*w)+3=17+64*(256*w+11) := by simp [Nat.mul_add, Nat.mul_assoc]
-    have hy : 1084+24576*w=28+96*(256*w+11) := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hx : 2*(359+8192*w)+3=17+64*(256*w+11) := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
+    have hy : 1084+24576*w=28+96*(256*w+11) := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
     simpa only [hx,hy] using hr
   have hA := mzero_first_two_reach (256*w+11) hroot
-  have hx : 26+104*(256*w+11)=1170+26624*w := by simp [Nat.mul_add, Nat.mul_assoc]
-  have hy : 18+76*(256*w+11)=854+19456*w := by simp [Nat.mul_add, Nat.mul_assoc]
+  have hx : 26+104*(256*w+11)=1170+26624*w := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
+  have hy : 18+76*(256*w+11)=854+19456*w := by simp [Nat.mul_add, ← Nat.mul_assoc] <;> omega
   have hA' : BB6.Agent3.CReach (1170+26624*w) (854+19456*w) := by
     simpa only [hx,hy] using hA
   exact blank_no_A_t11 w hA'
