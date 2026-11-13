@@ -2,26 +2,6 @@ name: Agent 44 #746 unbounded reset-parent fan-in (manual)
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - agent7-887-even-parent
-    paths:
-      - 'im-results/agent7-746-even-parent/**'
-      - 'im-results/agent44-746-rank/**'
-      - 'im-results/agent10-cascade/ParentsFast.lean'
-      - 'im-results/agent10-cascade/ClosedCertFast.lean'
-      - '.github/workflows/agent44-746-fanin.yml'
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - 'im-results/agent44-746-rank/FeederExceptionalStep.lean'
-      - 'im-results/agent44-746-rank/FeederExceptionalArithmetic.lean'
-      - 'im-results/agent44-746-rank/FeederExceptionalFamily.lean'
-      - 'im-results/agent44-746-rank/FeederExceptional887.lean'
-      - 'im-results/agent44-746-rank/FeederSixStep.lean'
-      - 'im-results/agent44-746-rank/FeederSixArithmetic.lean'
-      - 'im-results/agent44-746-rank/FeederSixFamily.lean'
-      - '.github/workflows/agent44-746-fanin.yml'
 permissions:
   contents: read
 
