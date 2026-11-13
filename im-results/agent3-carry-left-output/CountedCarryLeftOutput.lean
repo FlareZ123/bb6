@@ -139,7 +139,7 @@ theorem carryLongPrefix_r0_left (k : Nat) (T : Int → Bool)
     by_cases hfar : x < -3*(4*(k:Int))-2
     · have harea : carryBridgeArea0 (x-h') = false := by
         have hrel : x-h' < -2 := by
-          rw [hthreshold] at hfar
+          rw [← hthreshold] at hfar
           omega
         simp [carryBridgeArea0]
         omega
@@ -147,8 +147,10 @@ theorem carryLongPrefix_r0_left (k : Nat) (T : Int → Bool)
         (by omega) (by omega)
       have hframe : T2 x = T1 x := by
         simp [T2,frame,shiftConfig,harea]
-      rw [hframe,hpres]
-      simp [carryLeftOutputBit,hfar]
+      calc
+        T2 x = T1 x := hframe
+        _ = T x := by simpa [T1] using hpres
+        _ = carryLeftOutputBit (4*k) T x := by simp [carryLeftOutputBit,hfar]
     · have hrelLower : -2 ≤ x-h' := by
         rw [hthreshold] at hfar
         omega
@@ -171,22 +173,28 @@ theorem carryLongPrefix_r0_left (k : Nat) (T : Int → Bool)
           rw [hxEq, hmatch (h'+(-2)) hareaIn]
           exact hbit
         have hlt : ¬ x < -3*(4*(k:Int))-2 := by
-          rw [hxEq,hthreshold]
+          rw [hxEq,← hthreshold]
           omega
         have hle : x ≤ -3*(4*(k:Int)) := by
           rw [hxEq,hthreshold]
           omega
         have htarget : carryLeftOutputBit (4*k) T x = true := by
           simp [carryLeftOutputBit,hlt,hle]
-        rw [hframe,hpres,hmark,htarget]
+        calc
+          T2 x = T1 x := hframe
+          _ = T x := by simpa [T1] using hpres
+          _ = true := hmark
+          _ = carryLeftOutputBit (4*k) T x := by rw [htarget]
       · have hrel : -1 ≤ x-h' := by omega
         have hframe : T2 x =
             (if x ≤ h' then true else decide (x % 3 = 1)) := by
           simpa [T2] using
             bridge0FrameOutput T1 h' x hmod ⟨hrel, by omega⟩
+        have hnot : ¬ x < h'-2 := by
+          simpa [← hthreshold] using hfar
         have htarget : carryLeftOutputBit (4*k) T x =
             (if x ≤ h' then true else decide (x % 3 = 1)) := by
-          simp [carryLeftOutputBit, ← hthreshold, hfar]
+          simp [carryLeftOutputBit, ← hthreshold, hnot]
         exact hframe.trans htarget.symm
   have htotal := carryFinishWithLeftPattern (4*k)
     (3*(4*(3*k))) 12 nR ⟨3,0,T⟩ ⟨3,h',T1⟩ T T2 (10+h')
