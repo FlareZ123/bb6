@@ -1,6 +1,7 @@
 name: Agent 10 ray-depth odd-fork source check (manual)
 on:
-  workflow_dispatch:permissions:
+  workflow_dispatch:
+permissions:
   contents: read
 jobs:
   verify-ray-fork:
