@@ -207,6 +207,29 @@ jobs:
             echo '::error::sorryAx found in counted suffix output theorem dependencies'
             exit 1
           fi
+          # Agent 4's source-level first two Rst1' sweeps and bridge8 composition.
+          cp "$GITHUB_WORKSPACE/im-results/agent4-rst1prime/Rst1PrimeFirstSweep.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/rst1-prime-first-sweep-axioms.log
+          lean -o Rst1PrimeFirstSweep.olean Rst1PrimeFirstSweep.lean 2>&1 | tee /tmp/a42-terminal/rst1-prime-first-sweep-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/rst1-prime-first-sweep-axioms.log; then
+            echo '::error::sorryAx found in Rst1Prime first sweep'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent4-rst1prime/Rst1PrimeBridge8Source.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/rst1-prime-bridge8-source-axioms.log
+          lean -o Rst1PrimeBridge8Source.olean Rst1PrimeBridge8Source.lean 2>&1 | tee /tmp/a42-terminal/rst1-prime-bridge8-source-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/rst1-prime-bridge8-source-axioms.log; then
+            echo '::error::sorryAx found in Rst1Prime bridge8 source composition'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent4-rst1prime/Rst1PrimeSecondSweep.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/rst1-prime-second-sweep-axioms.log
+          lean -o Rst1PrimeSecondSweep.olean Rst1PrimeSecondSweep.lean 2>&1 | tee /tmp/a42-terminal/rst1-prime-second-sweep-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/rst1-prime-second-sweep-axioms.log; then
+            echo '::error::sorryAx found in Rst1Prime second sweep'
+            exit 1
+          fi
+
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/S1CarryOutputBridge.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/s1-carry-output-bridge-axioms.log
           lean -o S1CarryOutputBridge.olean S1CarryOutputBridge.lean 2>&1 | tee /tmp/a42-terminal/s1-carry-output-bridge-axioms.log
@@ -345,29 +368,6 @@ jobs:
             echo '::error::sorryAx found in first-section root continuation'
             exit 1
           fi
-          # Agent 4's source-level first two Rst1' sweeps and bridge8 composition.
-          cp "$GITHUB_WORKSPACE/im-results/agent4-rst1prime/Rst1PrimeFirstSweep.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/rst1-prime-first-sweep-axioms.log
-          lean -o Rst1PrimeFirstSweep.olean Rst1PrimeFirstSweep.lean 2>&1 | tee /tmp/a42-terminal/rst1-prime-first-sweep-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/rst1-prime-first-sweep-axioms.log; then
-            echo '::error::sorryAx found in Rst1Prime first sweep'
-            exit 1
-          fi
-          cp "$GITHUB_WORKSPACE/im-results/agent4-rst1prime/Rst1PrimeBridge8Source.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/rst1-prime-bridge8-source-axioms.log
-          lean -o Rst1PrimeBridge8Source.olean Rst1PrimeBridge8Source.lean 2>&1 | tee /tmp/a42-terminal/rst1-prime-bridge8-source-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/rst1-prime-bridge8-source-axioms.log; then
-            echo '::error::sorryAx found in Rst1Prime bridge8 source composition'
-            exit 1
-          fi
-          cp "$GITHUB_WORKSPACE/im-results/agent4-rst1prime/Rst1PrimeSecondSweep.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/rst1-prime-second-sweep-axioms.log
-          lean -o Rst1PrimeSecondSweep.olean Rst1PrimeSecondSweep.lean 2>&1 | tee /tmp/a42-terminal/rst1-prime-second-sweep-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/rst1-prime-second-sweep-axioms.log; then
-            echo '::error::sorryAx found in Rst1Prime second sweep'
-            exit 1
-          fi
-
           # This independent base-frame leaf is intentionally last: it is not an
           # import of the root/q4/drain/terminal chain, so its failure must not
           # hide diagnostics from the more decisive source-composition modules.
