@@ -68,7 +68,7 @@ theorem reset_double_B_to_A (d k h t Q : Nat)
       (packet (3*k+4) Q 2 (false::List.replicate 6 true)) =
       packet (1+4*3^d*h) 0 (3*d+(2*Q+6-3*d)) BB6.Agent35K4Shapes.marker := by
     rw [e_two_reset,hprefix,hm]
-    congr 1
+    congr 1 <;> omega
   exact prepend _ _ (eTwoTime k Q) hreset
     (chain_double_B_to_A d h t 0 (2*Q+6-3*d) hh hd ha)
 
