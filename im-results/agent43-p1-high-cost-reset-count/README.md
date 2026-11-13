@@ -1,6 +1,6 @@
 # P1: counted inverse-history energy, walls and one-shallow obstructions
 
-**Research synthesis, 12 November 2026.** These are mathematical restrictions on P1's inverse histories. The one-, two-, three-, and four-shallow exclusions are now verified for legal **unchanged-source `inverseAt` transitions** for every critical index n≥14 and arbitrarily long depth-two blocks. Consequently, any legal depth-0/1/2 inverse trace reaching the exact shifted wall has at least five shallow edges. The five-shallow original-source lift now proves at least six shallow edges for n≥83 (PR #62, CI 43299542235). These are source-word exclusions, not an unrestricted blank-root decision or BB(6) solution. Agent50's all-count reset-density theorem remains the strongest general quantitative result.
+**Research synthesis, 12 November 2026.** These are mathematical restrictions on P1's inverse histories. The one-, two-, three-, and four-shallow exclusions are now verified for legal **unchanged-source `inverseAt` transitions** for every critical index n≥14 and arbitrarily long depth-two blocks. Consequently, any legal depth-0/1/2 inverse trace reaching the exact shifted wall has at least five shallow edges. The five-shallow original-source lift now proves at least six shallow edges for n≥83 (PR #62, CI 43299542235). These are source-word exclusions, not an unrestricted blank-root decision or BB(6) solution. Agent50's all-count reset-density theorem remains the strongest general quantitative result. Separately, an exact two-stage carry computation now excludes the entire shifted wall for 14<=n<=10000 across all inverse depths; see [WallFullDPTo10000.md](WallFullDPTo10000.md). This is computational evidence conditional on the telescoping identity, not yet a Lean-kernel/source-certified theorem.
 
 ## Strongest genuine original-source deductions
 
@@ -182,7 +182,15 @@ The source connection is now certified in [PR #62](https://github.com/FlareZ123/
 A reproducible [two-shallow scalar-model scan](two_shallow_model_scan.py), independently run for every n=14..4000, tested 6,708 integral scalar transitions through words of form `2^s(0|1)2^u(0|1)2^r` and encountered no exact-wall hit. This is bounded numerical evidence, not an all-n theorem or an original-source audit. The all-n two-shallow theorem closes that exact two-shallow grammar, including the formerly open n14..47 sector. The three-shallow equation and its authentic original-source lift are certified at every n>=14. The four-shallow source trace is now excluded for every n>=14, so any low-depth trace reaching the wall must have at least five shallow edges. The six-shallow source theorem now applies for n>=83. Five-shallow traces remain source-unresolved for 14<=n<=82; six-or-more shallow histories for n>=83 and unrestricted high-depth excursions also remain open. The true blank-origin path, exceptional exits and any global six-state maximum certificate remain unresolved. Broader proof history and superseded paper variants are preserved in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
 
 
-## Next finite extension: n=14..82 six-shallow exclusion
+## New finite all-depth shifted-wall obstruction: 14<=n<=10000 (computational)
+
+[WallFullDPTo10000.md](WallFullDPTo10000.md) records a stronger finite computation than the five-shallow table plan below. The modular carry scan in [Agent50's wall modular note](../agent50-p1-dyadic-width/wall_modular_obstruction.md) leaves only six indices in 14<=n<=10000: 30, 286, 350, 1614, 2990, 3342. A second exact BigInt carry DP checks the full wall equation for each survivor; all six state sets become empty, respectively at m=82, 1442, 586, 5824, 6154, and 13730. There are no exact target-carry hits.
+
+This excludes the shifted wall for every 14<=n<=10000 with no inverse-depth restriction, **conditional on the source telescoping identity** in Agent50's [wall_cost_telescoping.md](../agent50-p1-dyadic-width/wall_cost_telescoping.md). The combined scan is reproducible in [WallFullDPTo10000.js](WallFullDPTo10000.js).
+
+**Status and scope:** this is exact finite computation, not a Lean-kernel proof or a source-connected formal theorem. It does not cover n>10000, prove P1 nonhalting, or determine BB(6). It supersedes the five-shallow finite table as the strongest *computational* low-index evidence, but the formal source theorem still has its existing hypotheses and must not be silently upgraded. Preserve PR #70 and the older table work until a source-connected Lean proof of the stronger carry argument exists.
+
+## Historical finite five-shallow bridge plan (superseded computationally; formal proof still open)
 
 The remaining low-index gap is now precisely the five-shallow source case for
 14<=n<=82. A finite bridge can reuse the first four overflow predicates
