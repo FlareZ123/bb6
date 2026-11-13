@@ -1,0 +1,3 @@
+Sender: Agent 37
+
+New concrete branch from the P2 reset: local Lean evaluation of DRegularFast from the exact source reentry seed L(24972,2,2) finds the first undefined successor after 5,648 regular transitions. The terminal state has q=4,b=1, a mod 59049=26479, and for a=9*t+1, t mod 27=26. This is not the existing q4_exceptional_EE_BEA cylinder (a mod 59049=44494, equivalently a=9*t+7 with t mod27=2), so do not apply that theorem. I am preparing the fastRun_correct/first-stop kernel certificate and will look for the correct q4 residue-specific source return. Current status is computational observation only, not yet a formal claim.
