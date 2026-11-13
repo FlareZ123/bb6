@@ -562,7 +562,7 @@ theorem q4LeftFacing_mid_bits (L n a : Nat)
           (i-(3*a+1)) := by
     intro i hi
     rw [hface]
-    simpa [hlen] using
+    simpa [d1pow_length] using
       sideBit_append_right ([true] ++ d1pow a)
         (markerWord 1 ++ d0 ++ binDec L (n-1) ++ lh) i (by
           rw [hlen]
@@ -639,7 +639,7 @@ theorem q4LeftFacing_source_tail (L n a i : Nat)
     simp only [q4TargetPrefix, List.append_assoc]
     have h0 := sideBit_append_right [true]
       (d1pow a ++ (markerWord 1 ++ (d0 ++ d1))) (3*a+9) (by simp)
-    have hidx0 : 3*a+9 - [true].length = 3*a+8 := by simp; omega
+    have hidx0 : 3*a+9 - [true].length = 3*a+8 := by simp
     rw [hidx0] at h0
     rw [h0]
     rw [sideBit_d1pow_append a (3*a+8) (markerWord 1 ++ (d0 ++ d1)) (by omega)]
@@ -752,7 +752,17 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
       omega
     have hb := bridgeAt T1 h' q4Inside q4BridgeStart q4BridgeEnd 26 rfl
       q4Bridge_exact q4Bridge_heads hmatch
-    simpa [T2,h',N,q4BridgeStart,q4BridgeEnd,hhead] using hb
+    have hEq : frameAt T1 h' q4Inside q4BridgeEnd =
+        ⟨4,h-(3*a:Int),T2⟩ := by
+      apply config_ext
+      · simp [frameAt_state,q4BridgeEnd]
+      · have hh : q4BridgeEnd.head + h' = h-(3*a:Int) := by
+          simp [q4BridgeEnd]
+          omega
+        simpa [frameAt_head,q4BridgeEnd] using hh
+      · rfl
+    rw [hEq] at hb
+    exact hb
   have hlinear : linearRightOnes T2 (h-(3*a:Int)) (3*a) := by
     intro i hi
     have hcoord : h-(3*a:Int)+(i:Int) =
@@ -864,7 +874,7 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
         have hprefix : sideBit (q4LeftFacing L (n-1) a) i =
             sideBit (d1pow a ++ (markerWord 1 ++ (d0 ++
               (binDec L (n-1) ++ lh)))) (i-1) := by
-          simpa only [q4LeftFacing,List.append_assoc] using
+          simpa [q4LeftFacing,List.append_assoc] using
             sideBit_append_right [true]
               (d1pow a ++ (markerWord 1 ++ (d0 ++
                 (binDec L (n-1) ++ lh)))) i (by simp; omega)
@@ -1005,9 +1015,11 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
         have hq : sideBit (q4RightFacing b) (i-1) = true :=
           q4RightFacing_first4 b (i-1) hidx
         have hr := hrightT (i-1)
-        have heq : h+1+((i-1:Int)) = h+(i:Int) := by omega
+        have hcast : ((i-1 : Nat) : Int) = (i:Int)-1 := by omega
+        rw [hcast] at hr
+        have heq : h+(i:Int) = h+1+((i:Int)-1) := by omega
         calc
-          T2 (h+(i:Int)) = T2 (h+1+((i-1:Int))) := by rw [heq]
+          T2 (h+(i:Int)) = T2 (h+1+((i:Int)-1)) := by rw [heq]
           _ = sideBit (q4RightFacing b) (i-1) := hr
           _ = true := hq
     · constructor
