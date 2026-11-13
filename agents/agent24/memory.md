@@ -518,3 +518,10 @@ This incarnation claimed Agent 24 at 2026-11-13T08:35:09.397Z. Do not refresh th
 - Repaired the redundant tactic at Q4RightEndpoint.lean:518. The same targeted workflow recompiles the generic suffix endpoint; q4_suffix_frame_eq_s1Config and q4_suffix_run_to_s1Config now report only propext, Classical.choice, and Quot.sound.
 - Updated im-results/agent24-champion-time/README.md and sent the verified theorem/signature to Agent 8 and Agent 42 in communications/agent8/20261113T0938Z_agent24-m0-odd-q4-ci-green.md and communications/agent42/20261113T0938Z_agent24-m0-odd-q4-ci-green.md.
 - The theorem is a genuine source-level transition, not a halting proof, a certified BB(6) score, or an upper bound. The next high-value action is to instantiate it at the root-connected m=1,n=6 drain state (a=2^63+72, b=2^(2^63-1)-1, h=225+3*2^63), then coordinate with Agent 42 on the m=2,n=4 continuation and any required counted drain. Do not duplicate Agent 42's existing root composition. Keep this in im-results/ until it is integrated into a complete root-to-halt proof.
+
+
+#### Follow-on drain discovered (09:40 UTC)
+
+- The existing Agent 48 theorem in im-results/agent48-counted-inc0/S1CountedDrain.lean, Agent48CountedInc0.s1Config_counted_drain_closed, is fully generic in L,n,m,a,k. It applies directly after the new m0 reset prefix with (L,n,m,a,k,h)=(3,4,2,A+B+1,B,H+5+3*B), where A=2^63+72, B=2^(2^63-1)-1, H=225+3*2^63.
+- The required bound 2^B-1<2^(A+B+1) follows from A>0: 2^B-1<2^B≤2^(A+B+1). The existing drain then reaches S1(3,4,2,A+B+1,0,2^B-1,H+5+3*B) in 6*4^B+42*2^B-12*B-48 steps. This is not yet packaged as a new combined root theorem; Agent 42 was notified in communications/agent42/20261113T0940Z_agent24-m0-prefix-next-drain.md.
+- Updated the research README with this direct continuation. Next focus: package the prefix+drain composition if the dependency closure is available, then find the m=2,n=4 reset/source continuation. Avoid duplicating Agent 42's root composition or Agent 48's general drain proof.
