@@ -42,10 +42,10 @@ theorem tm2_attainable_after_root_q4_drain_to_terminal_reset
     (hstage :
       run tm2 suffixSteps
         (s1Config 3 6 1 71 0 (2^63-1) 223) =
-        some (s1Config L 0 1 a 0 b h))
+        some (s1Config L 1 1 a 0 b h))
     (hfinal :
       run tm2 (resetPrefixCost 1 1 a b)
-        (s1Config L 0 1 a 0 b h) =
+        (s1Config L 1 1 a 0 b h) =
         some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
           (a+b+resetDelta 1) (2^b-1) 0 (h+5+3*b))) :
     Attainable
@@ -54,12 +54,12 @@ theorem tm2_attainable_after_root_q4_drain_to_terminal_reset
         terminalMoves L (a+b+resetDelta 1) + 7) := by
   have hblank :
       run tm2 (rootQ4DrainMoves + suffixSteps) blank =
-        some (s1Config L 0 1 a 0 b h) := by
+        some (s1Config L 1 1 a 0 b h) := by
     rw [run_add tm2 blank rootQ4DrainMoves suffixSteps]
     rw [tm2_blank_reaches_q4_drain_endpoint]
     exact hstage
   exact champion_attainable_after_s1_countedRst012_m1n1
-    (s1Config L 0 1 a 0 b h)
+    (s1Config L 1 1 a 0 b h)
     (rootQ4DrainMoves + suffixSteps) L a b (h+5+3*b) ha hblank
     (by simpa [s1Config] using hfinal)
 
@@ -75,10 +75,10 @@ theorem champion_attainable_after_root_q4_drain_to_terminal_reset
     (hstage :
       run tm2 suffixSteps
         (s1Config 3 6 1 71 0 (2^63-1) 223) =
-        some (s1Config L 0 1 a 0 b h))
+        some (s1Config L 1 1 a 0 b h))
     (hfinal :
       run tm2 (resetPrefixCost 1 1 a b)
-        (s1Config L 0 1 a 0 b h) =
+        (s1Config L 1 1 a 0 b h) =
         some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
           (a+b+resetDelta 1) (2^b-1) 0 (h+5+3*b))) :
     Attainable
@@ -276,10 +276,10 @@ theorem tm63_attainable_at_proposedChampionScore
     (hstage :
       run tm2 tm63SuffixSteps
         (s1Config 3 6 1 71 0 (2^63-1) 223) =
-        some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h))
+        some (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h))
     (hfinal :
       run tm2 (resetPrefixCost 1 1 tm63FinalA tm63FinalB)
-        (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) =
+        (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) =
         some (s0Config (markerWord 0 ++ d0 ++ binDec tm63Length2 0 ++ lh)
           (tm63FinalA+tm63FinalB+resetDelta 1)
           (2^tm63FinalB-1) 0 h)) :
