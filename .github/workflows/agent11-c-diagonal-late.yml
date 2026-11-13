@@ -132,6 +132,16 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean -o JointResidual.olean JointResidual.lean
+
+          # Source-check the full even/even parent fan, retaining all odd
+          # bounce depths rather than assuming S mod 4 is nonzero.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/EvenEvenParentFan.lean .
+          lean -o EvenEvenParentFan.olean EvenEvenParentFan.lean 2>&1 | tee EvenEvenParentFan.log
+          if grep -q sorryAx EvenEvenParentFan.log; then
+            echo "REJECTED: even/even parent fan contains sorryAx"
+            exit 1
+          fi
+
           # Convert the exact rooted stopping criteria to executable
           # parameter predicates through Agent11's original-source
           # fixed-target backward reachability oracle.
