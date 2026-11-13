@@ -418,6 +418,14 @@ jobs:
             exit 1
           fi
 
+          # Source-check the complete even-valuation s=1024*w+229 high-stop exclusion.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS229.lean .
+          lean -o M0EvenEvenSumZeroS229.olean M0EvenEvenSumZeroS229.lean 2>&1 | tee M0EvenEvenSumZeroS229.log
+          if grep -q sorryAx M0EvenEvenSumZeroS229.log; then
+            echo "REJECTED: s=229 high-stop proof contains sorryAx"
+            exit 1
+          fi
+
           # Source-check the B_s parent reduction for s=32*w+31.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31.lean .
           lean -o M0EvenEvenSumZeroS31.olean M0EvenEvenSumZeroS31.lean 2>&1 | tee M0EvenEvenSumZeroS31.log
