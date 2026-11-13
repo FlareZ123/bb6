@@ -39,19 +39,44 @@ The local windows are parameter-independent in the raw simulator. The finite `fR
 
 ## Current proof status
 
-- The itinerary and cost identity are computationally discovered; they are not yet a theorem about all parameters.
-- `CountedRst1Prime.lean` contains `finiteHeads`, `finiteBridgeFrame`, `bridgeAt`, and the five finite bridge traces.
-- The main missing obligations are the counted-sweep preconditions, the five source-level window-agreement lemmas, and the final equality of the post-bridge tape with the target S1 encoding.
-- The new module is wired into `.github/workflows/agent48-champion-root.yml`, which remains manual-only. Do not restore push triggers; Critic's CI policy is to dispatch expensive source audits manually.
-- No `sorry` is intended. The module has not yet been compiled in CI in this invocation.
+The source-connected ten-phase chain is now formalized through the final
+bridge30 endpoint in two intermediate modules:
+
+- `CountedRst1Prime.lean` contains the finite bridge traces, generic
+  frame-lifting machinery, source sweep preservation lemmas, exact
+  three-cell right-sweep block behavior, and the head-facing `d0pow`
+  segment composition. The latest shared edits are being repaired against
+  targeted Lean CI by Agents 24 and 42; the most recent reported run
+  `43426490117` failed, so these lemmas are **not yet certified green**.
+- `Rst1PrimeBridge6Source.lean` extends the source-connected prefix through
+  bridge9 with the bridge6 source-tail identification, final b-block sweep,
+  exact bridge30 input window, bridge30 run, final head/right-facing word,
+  preservation of the left tail, three d0-counter segment proofs, marker2
+  and d1 cells, the full left-facing target word, and the candidate exact
+  equality `rst1PrimeAfterBridge30_eq_s1Successor`.
+- The intended endpoint is exactly
+  `s1Config (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) 0 (h+5+3*b)`.
+  The endpoint proof is a source-level Lean proof attempt, but has not yet
+  been compiled. Do not report the universal ten-phase theorem as proved
+  until the full module and all dependencies pass kernel verification.
+- The manual champion-root workflow remains manual-only. Do not restore
+  push triggers or create per-commit workflow fan-out.
 
 ## Next steps
 
-1. Obtain a manual Lean CI run and repair any elaboration errors in the bridge framework.
-2. Prove the closed-form cell behavior of `sweptLeft` and `sweptRight` needed to establish the phase boundaries.
-3. Derive the initial S1 left/right cell facts and prove the five bridge-window matches and all five counted-sweep preconditions.
-4. Prove the final tape equality to the target S1 configuration, then compose the phase runs with `run_append` and the exact cost arithmetic.
-5. Coordinate with Agent 46, who previously selected the Rst1' reset-core edge, to avoid duplicated proof work.
+1. Obtain the exact post-`4e21fa6` CountedRst1Prime diagnostics from
+   Agent 24/42, repair the shared sweep/segment lemmas without overwriting
+   concurrent changes, and get that dependency green.
+2. Run the existing targeted Rst1' workflow on the current
+   `Rst1PrimeBridge6Source.lean`; fix concrete Lean diagnostics in the
+   bridge6/bridge30 composition, left-facing segmentation, and final
+   `Config` equality.
+3. Once the endpoint equality is kernel-verified, compose the counted runs
+   from the earlier Bridge9 source module through bridge30, then prove the
+   ten-phase total cost `97+12*(L+a)+3*b`.
+4. Coordinate with Agents 24, 42, and 46 for root integration. Keep this
+   result in `im-results/` until the complete rooted argument and novelty
+   review justify promotion.
 ## 2026-11-13: universal ten-phase reconstruction
 
 The ten-phase itinerary has now been replayed against the literal 12-entry
