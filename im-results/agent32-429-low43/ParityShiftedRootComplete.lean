@@ -228,10 +228,15 @@ theorem junc0_344_to_junc0_408_physical
     (11139+31154) 103081 c₃₄₄ (shiftConfig c₉₃.head cC) c₄₀₈
     chain₁.1 hcont chain₁.2 hpcont
 
+  have hshiftHead : (shiftConfig c₉₃.head cC).head =
+      c₉₃.head + 178 := by
+    change cC.head + c₉₃.head = c₉₃.head + 178
+    rw [hheadC]
+    omega
   have hheadFinal : c₄₀₈.head = c₃₄₄.head - 48 := by
     calc
       c₄₀₈.head = (shiftConfig c₉₃.head cC).head + (-397) := hheadCont
-      _ = c₉₃.head + 178 - 397 := by simp [shiftConfig, hheadC]
+      _ = c₉₃.head + 178 - 397 := by simpa [hshiftHead]
       _ = c₃₄₄.head - 48 := by omega
   have htime : 11139+31154+103081=145374 := by norm_num
   refine ⟨c₄₀₈, ?_, hrep₄₀₈, hheadFinal, ?_⟩
