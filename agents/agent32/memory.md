@@ -558,3 +558,39 @@ The latest proof candidate commit at checkpoint is `0dd952bfe1a8ac403dcbd5c3fdd5
 - Next incarnation: fix the exact Lean errors above, run the focused workflow to a clean pass, and audit all parameterized declarations for absence of `sorryAx`. Then review the algebraic closed form and coordinate with Agent 1 to compose the genuine root prefix into `Junc(45,0,58)`.
 - The concrete r=32 result is a prepared-source segment only until that root prefix is physically composed. No all-time nonhalting proof, exact #429 decision, BB(6) value, or universal six-state upper bound has been established.
 - All work remains in `im-results/`; `results/` was not changed.
+
+
+## 2026-11-13T05:27Z–06:08Z incarnation: separate r=32/4k validation and compose the authentic root prefix
+
+Claimed Agent 32 at `2026-11-13T05:27:51.780Z` (run ID `agent32-gpt6-20261113T052751780Z-429-loweven-r32-root-integration`). Do not refresh the lease. The 70-minute orderly-release threshold is `2026-11-13T06:37:51.780Z`; after every checkpoint, compare this original timestamp with the actual runtime clock. Continue until that threshold is measured.
+
+### Concrete low-even r=32 PR separation
+
+- Split the previously coupled PR #81 so it contains only the concrete `LowEvenR32NoFatal.lean`, its README, and its manual-only workflow. The parameterized 4k candidate and dossier were moved to a separate draft PR #82 (`agent32/loweven-4k-independent-20261113`); it now has only the candidate source and README. PR #81 no longer imports or compiles `LowEven4kDelta`, `Low3Delta`, or its directory.
+- Added main-branch manual-only workflows `.github/workflows/agent32-loweven-r32.yml` and `.github/workflows/agent32-loweven-4k.yml`. The former compiles the concrete r=32 chain; the latter has a separate dependency closure for the 4k candidate. Both are `workflow_dispatch` only and retain fail-closed `sorryAx` checks. Neither has a pull_request/push trigger.
+- Read run [43365025686](https://github.com/FlareZ123/bb6/actions/runs/43365025686) via the failed job's targeted log. It compiled the entire `LowEvenR32NoFatal.lean` module and printed axiom reports for its public declarations (only standard `propext`, `Quot.sound`, and `Classical.choice` where physical lifts are involved; no `sorryAx` in that module). The overall workflow was **red later** in unrelated `Low43Continuation.lean`, where projection/equality goals remained unsolved and recovery declarations reported `sorryAx`. Do not describe 43365025686 as a green workflow.
+- Updated PR #81 body and README to state this distinction. Its isolated manual r=32 workflow has not yet been dispatched. PR #82's parameterized candidate remains explicitly unverified and separate.
+
+### Authentic blank-root composition candidate
+
+- Agent 1 added `im-results/agent1-429-root-entry/RootJunc136To45.lean` on main. Its `BB429RootJunc136To45.blank_root_no_fatal_to_junc45` theorem gives a genuine blank-root path through step 16,280 to represented `Junc(45,0,58)`, with C/01 excluded at every physical prefix.
+- Merged current main into PR #81's branch using a proper two-parent merge commit (no conflicting changed paths). The branch now contains the root bridge and current shared dependencies.
+- Added `im-results/agent32-429-loweven-r32/LowEvenR32RootChain.lean`. Its candidate theorem `BB429LowEvenR32RootChain.blank_root_lowEvenR32_to_junc11_146` composes Agent 1's 16,280-step blank-root bridge with `BB429LowEvenR32.blank_root_lowEvenR32_no_fatal` and states:
+  - blank root at step 13,718 represented by `rootJunc136`;
+  - blank root at step 16,280 represented by `rootJunc45 = lowEvenStart = Junc(45,0,58)`;
+  - blank root at step 20,687 represented by `lowEvenEnd = Junc(11,0,146)`;
+  - C/01 excluded at every physical prefix through step 20,687;
+  - preserves Agent 1's 2,562-step regular frontier bound and the r=32 leaf's -81 head displacement.
+- This is a Lean **source candidate only**, not yet compiled. Agent 48 is extending the manual-only `.github/workflows/agent6-429-low42.yml` (which already compiles Agent 1's bridge) to add `im-results/agent32-429-loweven-r32`, compile `LowEvenR32NoFatal` then `LowEvenR32RootChain`, and audit the declarations. Coordination messages are in `communications/agent6/`, `communications/agent1/`, and `communications/agent48/` with timestamps 0552–0607Z.
+- The available GitHub connector in this invocation has workflow-run inspection/log retrieval but no workflow-dispatch action; local Python/container execution also returned tool errors. Do not keep retrying those unavailable paths or claim manual CI. Agent 48/6 were informed; use the exact manual workflow once a dispatch-capable invocation can run it.
+
+### Next mathematical frontier (plan, not yet proved)
+
+The new 20,687-step root endpoint `Junc(11,0,146)` admits a promising source-certified continuation:
+1. Two `BB429OuterSafe.junc_outer_safe` returns (U=11 then U=25) take 3,398 steps and reach `Junc(53,0,68)`, C/0-free on every physical prefix.
+2. This is the all-parameter Low42 input with `j=34,k=9`; `Low42Physical.low42_raw_head_all 34 9` predicts `Junc(0,0,184)` in 5,613 steps. A concrete `runNoFatal 5613 (junc 53 0 68)`/physical lift is not yet formalized. If it succeeds, the blank-root prefix would extend to step 29,698.
+3. Five further outer-safe returns from `Junc(0,0,184)` (U=0,3,9,21,45) reach `Junc(93,0,13)` in 10,773 steps, giving step 40,471.
+4. Existing `LowOddPhysical.lowOdd_raw_head` (all parameters) applies at v=6,n=42: `Junc(93,0,13) -> Junc(90,0,26)` in 1,300 steps. Then Low42 j=13,k=38 gives `Junc(90,0,26) -> Junc(0,0,216)` in 1,725 steps; a concrete C/01 guard and physical lift still need to be established. These are promising next finite root extensions, not current results.
+5. The subsequent parameter map may expose a recurring low-deficit sequence; inspect the existing Low43/LowOdd/Low42 formalizations and exact root reachability before assuming a cycle or all-time invariant.
+
+Relevant files: `im-results/agent32-429-loweven-r32/LowEvenR32RootChain.lean`, `im-results/agent1-429-root-entry/RootJunc136To45.lean`, `im-results/agent1-429-root-entry/RootOuterLow42NoFatal.lean`, `im-results/agent6-429-low42/Low42Physical.lean`, `im-results/agent32-429-low5/LowOddPhysical.lean`, `im-results/agent30-429-positive-safe/OuterSafe.lean`. Keep all intermediate candidates in `im-results/`; no exact BB(6) value or universal six-state upper bound is established.
