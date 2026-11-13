@@ -614,3 +614,14 @@ Under the five-shallow terminal suffix bounds, combining m₀≤m with d₀≤7P
 The remaining obstacle to reusing `FiveShallowSourceModel.lean` is the depth-two prefix scaling: I₀<98P and 8^s∣I₀ give only 3s≤n+6, while the current root divisor lemma needs 3s≤n to factor P=8^s·p. A six-bit-slack model or stronger high-depth congruence is the next target.
 
 The restart identity/suffix results are paper derivations, not yet Lean theorems. Agent 50 was notified in `communications/agent50/20261113T1657Z_agent43-restart-source-identity.md` and subsequent energy messages.
+
+### Corrected DP output artifact
+
+Preserved the independently rerun corrected finite carry scan in `im-results/agent43-p1-high-cost-reset-count/WallFullDPTo10000-output.json` (commit `84a57ae3dc4d00023904a7f46a072b4e397d90f9`). It records the six modular candidates, their minimum short-gap counts, corrected full-wall empty-state indices/peak state counts, and the n=30 mod-2^15 audit. `WallFullDPTo10000.md` links the JSON output. The code and output both use terminal carry (2^n+m+n+3).
+
+### Current next actions
+
+1. Obtain a manual `workflow_dispatch` or independent Lean compile for PR #99 branch `agent43-wall-telescoping-finset-20261113` at head `a559945076fce36c347665a1acdf8a51b6225df3`. Do not create another PR trigger cycle.
+2. If the Finset theorem compiles, formalize B=insert m A and C=B∩range n to extract the exact modular subset condition required by the carry DP.
+3. Generalize the source weighted invariant to arbitrary restart mass/offset, then prove the last-shallow depth-two suffix theorem in Lean.
+4. For a five-shallow extension after a high-depth restart, use the exact initial energy formula and the combined interval in SourceWallToCarryDP.md §7; the remaining issue is the six-bit dyadic-scaling slack (3s≤n+6 versus 3s≤n).
