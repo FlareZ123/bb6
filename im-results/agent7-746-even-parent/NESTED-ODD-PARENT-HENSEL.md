@@ -196,7 +196,7 @@ v_3(G_3)=5,\qquad
 v_3(G_4)=2,\qquad
 3\mid G_5.
 \]
-The inequality \(v_3(G_3)=5\), rather than exact valuation 3, is intentional: \(t_4=2\) only needs \(27\mid G_3\). The extra factor of 3 is allowed because the odd ResetParent arm requires only an odd quotient. The five-edge class has density \(1/177147\) in \(r\), and is a subcylinder of the four-edge prefix \(r\equiv15754\pmod{19683}\). The modular check is performed at the representative; the scaled shift law shows these valuations persist throughout the full class: a shift by \(3^{11}\) changes \(Q,G_1,G_2,G_3,G_4,G_5\) by multiples of \(3^{19},3^9,3^7,3^6,3^3,3\), respectively.
+The valuation \(v_3(G_3)=5\) exceeds the threshold 3 required by \(t_4=2\), which only needs \(27\mid G_3\). The quotient \(G_3/27\) still has extra factors of 3, but it remains odd; this is allowed because the odd ResetParent arm requires only an odd quotient. The five-edge class has density \(1/177147\) in \(r\), and is a subcylinder of the four-edge prefix \(r\equiv15754\pmod{19683}\). The modular check is performed at the representative; the scaled shift law shows these valuations persist throughout the full class: a shift by \(3^{11}\) changes \(Q,G_1,G_2,G_3,G_4,G_5\) by multiples of \(3^{19},3^9,3^7,3^6,3^3,3\), respectively.
 
 The five limiting band ratios all lie in \((6.2,7.9)\), and each factor \(2^{\sigma_i}/3^{t_i+1}\) is below \(2^{10}\). The coefficient recurrence gives the following bit lengths for the linear and constant coefficients \((B_i,C_i)\) of \(Q=X_0,X_1,\ldots,X_4\):
 \[
