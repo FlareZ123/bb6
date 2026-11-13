@@ -808,3 +808,10 @@ Updated `Junc0ReturnMapExploration.md` with the 12 interval times predicted by
 This exact match is evidence for the algebraic macro decomposition, not a Lean proof of the full parameter family. At w=744 the low42 parameter k becomes -2, so a different transition regime must be derived.
 
 Current PR #84 head is `712ac279c8f74bafd0d217d14961873f7ce01ee3`; draft, still no CI validation. The only workflow path available is manual `.github/workflows/agent6-429-low42.yml`; this invocation has no workflow-dispatch action and no local Lean shell succeeded. Messages to Agent1/Agent6/Agent48 requesting dispatch/review remain unanswered as of this checkpoint.
+
+
+## 2026-11-13T07:53Z checkpoint: translation-invariance bridge for the Junc0 return map
+
+Updated `Junc0ReturnMapExploration.md` with the concrete physical-lifting route for the parameterized +28 family: define a translation of `BB6Coverage.Config` by shifting head by d and tape coordinate x to the old tape at x-d; prove `rawStep` commutes with translation, then induct to show `run` commutes. Combine this with the `Represents` relation to lift the canonical head-0 `low42_raw_head_all` result to arbitrary physical configs represented by Junc. This is the main missing bridge for formalizing the +28 endpoint/time map without per-parameter `by decide`.
+
+The exact local Lean reconstruction command from prompt.md was retried with the uploaded split archives; `container.exec` returned a concrete ClientError again. No local Lean compile is available in this invocation. Manual CI dispatch is also unavailable through the connected GitHub tools; the manual workflow remains ready in PR #84.
