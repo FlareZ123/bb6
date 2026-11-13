@@ -368,8 +368,10 @@ theorem rst1Prime_binDec_reset (L a : Nat) :
         rw [Nat.pow_succ]
         omega
       have hpos : 0 < 2^a := Nat.pow_pos (by decide)
-      have hlarge : 2^a+1 ≤ 2^(L+a+2) := by
+      have hdouble_le : 2*2^a ≤ 2^(L+a+2) := by
         rw [← hdouble]
+        exact hpow
+      have hlarge : 2^a+1 ≤ 2^(L+a+2) := by
         omega
       have hbound : R < 2^(L+a+2) := by
         dsimp [R]
@@ -383,7 +385,7 @@ theorem rst1Prime_binDec_reset (L a : Nat) :
         dsimp [R]
         rw [hpowN,hdouble]
         omega
-      rw [hlen,harg,binDec_odd (L+a+2) R hbound]
+      rw [harg,hlen,binDec_odd (L+a+2) R hbound]
       rw [ih]
       simp [d0pow]
 
