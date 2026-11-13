@@ -379,6 +379,15 @@ jobs:
             exit 1
           fi
 
+          # Audit the exact y=0/y=2 source fibres needed for the odd-v2
+          # normalization's u=1 boundary case.
+          cp \${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0SmallBoundaryZero.lean .
+          lean -o M0SmallBoundaryZero.olean M0SmallBoundaryZero.lean 2>&1 | tee M0SmallBoundaryZero.log
+          if grep -q sorryAx M0SmallBoundaryZero.log; then
+            echo "REJECTED: low-boundary source proof contains sorryAx"
+            exit 1
+          fi
+
           # Separate modular refactor; these files are not certified by the standalone run.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0EvenEvenSumZeroParents,M0EvenEvenSumZeroRays}.lean .
           lean -o M0EvenEvenSumZeroParents.olean M0EvenEvenSumZeroParents.lean 2>&1 | tee M0EvenEvenSumZeroParents.log
