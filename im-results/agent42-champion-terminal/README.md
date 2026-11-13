@@ -97,3 +97,14 @@ The decisive remaining integration is the full source-connected Coq itinerary
 `init → Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H`
 
 with exact primitive costs, ending at the actual `m=1,n=1` pre-drain endpoint consumed by `S1ChampionCountedReset`. In particular, do not confuse the first q4/drain stage (which decrements the current outer index from 7 to 6) with the final terminal reset. The generic Rst0/Rst1/Rst2 prefix, Rst1' counted core, and subsequent reset composition remain separate obligations; coordinate with Agents 8, 24, 46, and 48 rather than re-proving their owned branches.
+
+
+## Single root-connected attained-score composition interface (13 November 2026)
+
+Added `TM63RootQ4Attainable.lean` with theorem `tm2_attainable_after_root_q4_drain_to_terminal_reset`. It composes the exact blank-root q4/drain run with the existing `champion_attainable_after_s1_countedRst012_m1n1` terminal adapter. Given (i) an exact original-source continuation from the q4/drain endpoint `s1Config 3 6 1 71 0 (2^63-1) 223` to the final `s1Config L 0 1 a 0 b h`, and (ii) the final (m,n)=(1,1) reset-prefix run to the S0 terminal pre-drain configuration, it proves
+
+`Attainable (rootQ4DrainMoves + suffixSteps + proposedIncrementCost 1 1 a b + terminalMoves L (a+b+resetDelta 1) + 7)`.
+
+This is a genuine compositional theorem, but it is deliberately conditional: the middle Coq itinerary and the final source reset prefix are still not supplied. It therefore does **not** establish a concrete attained score or a new BB(6) lower bound. The existing manual-only source workflow now compiles this composition after both prerequisite modules and applies the same transitive `sorryAx` gate. No CI run has been dispatched from this invocation.
+
+The remaining proof target is now explicit and narrow at the interface: prove the original-table continuation from the q4/drain endpoint through the remaining `Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H` stages to the final m=1,n=1 reset input, then prove the final reset-prefix run. Do not substitute the first q4/drain endpoint for that terminal input.
