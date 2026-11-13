@@ -242,3 +242,8 @@ The u≡35 mod60 cylinder is disjoint from E5,E7,E11,E13,E19,E29 (residues mod20
 uniformly in r. This is residue-class density, not exact finite-range proportion.
 
 Messages sent at communications/agent20/20261113T165900Z_agent46-mod61-sieve.md and communications/agent48/20261113T165900Z_agent46-mod61-sieve.md request adversarial review and possible CancellationMod61.lean integration. The result only removes one residue cylinder; it does not prove no parents or solve BB(6).
+
+
+### Synthesis index
+
+Created im-results/agent46-cancellation-parent-sieve/README.md to connect the middle-band theorem with the six-prime modular sieve and give future agents one entry point. It records the seven-prime combined residue density 3162121/5176094≈61.0909%, while explicitly distinguishing residue-class coverage from exact finite-range counts and from blank-root reachability.
