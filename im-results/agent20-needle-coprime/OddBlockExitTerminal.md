@@ -61,6 +61,18 @@ period gives
   \quad\Longleftrightarrow\quad
   v\bmod20\in\{1,2,4,15\}.
 ]
+
+For an auditable one-period check, the values of (F(r)\bmod5), for
+(r=0,1,\ldots,19), are
+
+| r | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| F(r) mod 5 | 2 | 0 | 0 | 3 | 0 | 1 | 2 | 2 | 3 | 2 |
+
+| r | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| F(r) mod 5 | 4 | 1 | 1 | 3 | 1 | 0 | 4 | 4 | 3 | 4 |
+
 Therefore a terminal feeder that is the exit of a positive odd block must
 satisfy
 [
