@@ -24,7 +24,6 @@ on:
       - 'im-results/agent6-429-low2/**'
       - 'im-results/agent18-429-low-j/**'
       - 'im-results/agent32-429-low5/**'
-      - 'im-results/agent32-429-low43/**'
 
 permissions:
   contents: read
