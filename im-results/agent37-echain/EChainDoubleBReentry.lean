@@ -252,6 +252,58 @@ theorem chain_double_B_to_A_source_reentry
   exact ⟨BB6.Agent37EChain.chainTime d h q+Ttail,a,q',b,
     hcombined,hcanon⟩
 
+
+/-- The P2 reset cylinder, arbitrary-depth E chain, two B packets, and
+    marker-A closure now return directly to a canonical DRegular section. -/
+theorem reset_double_B_to_A_source_reentry (d k h t Q : Nat)
+    (hh : 1 ≤ h) (hd : 1 ≤ d)
+    (hk : 2*k+1=3^d*h)
+    (ha : 1+4*8^d*h=27*t+17)
+    (hQ : 3*d ≤ 2*Q+6) :
+    ∃ (T a q b : Nat),
+      ObsEq
+        (CryptidBoundary.run T
+          (BB6.Agent31PacketSource.packet (3*k+4) Q 2
+            (false::List.replicate 6 true)))
+        (DRegularSource.sourceSection ⟨a,q,b⟩) ∧
+      DRegular.Canon ⟨a,q,b⟩ := by
+  have hp : 2*Q+6=3*d+(2*Q+6-3*d) := by omega
+  have hprefix : 8*k+5=1+4*3^d*h := by
+    calc
+      8*k+5=4*(2*k+1)+1 := by omega
+      _ = 4*(3^d*h)+1 := by rw [hk]
+      _ = 1+4*3^d*h := by ac_rfl
+  have hm : BB6.Agent2PacketP2Reset.marker =
+      BB6.Agent35K4Shapes.marker := by decide
+  have hreset :
+      CryptidBoundary.run (BB6.Agent2PacketP2Reset.eTwoTime k Q)
+        (BB6.Agent31PacketSource.packet (3*k+4) Q 2
+          (false::List.replicate 6 true)) =
+      BB6.Agent31PacketSource.packet (1+4*3^d*h) 0
+        (3*d+(2*Q+6-3*d)) BB6.Agent35K4Shapes.marker := by
+    rw [BB6.Agent2PacketP2Reset.e_two_reset,hprefix,hp,hm]
+  have hresetObs : ObsEq
+      (CryptidBoundary.run (BB6.Agent2PacketP2Reset.eTwoTime k Q)
+        (BB6.Agent31PacketSource.packet (3*k+4) Q 2
+          (false::List.replicate 6 true)))
+      (BB6.Agent31PacketSource.packet (1+4*3^d*h) 0
+        (3*d+(2*Q+6-3*d)) BB6.Agent35K4Shapes.marker) := by
+    rw [hreset]
+    exact BB6.Padding.cfgEq_refl _
+  obtain ⟨Ttail,a,q,b,htail,hcanon⟩ :=
+    chain_double_B_to_A_source_reentry d h t 0
+      (2*Q+6-3*d) hh hd ha
+  have hcombined := BB6.BoundaryPadding.source_chain
+    (BB6.Agent2PacketP2Reset.eTwoTime k Q) Ttail
+    (BB6.Agent31PacketSource.packet (3*k+4) Q 2
+      (false::List.replicate 6 true))
+    (BB6.Agent31PacketSource.packet (1+4*3^d*h) 0
+      (3*d+(2*Q+6-3*d)) BB6.Agent35K4Shapes.marker)
+    (DRegularSource.sourceSection ⟨a,q,b⟩)
+    hresetObs htail
+  exact ⟨BB6.Agent2PacketP2Reset.eTwoTime k Q+Ttail,
+    a,q,b,hcombined,hcanon⟩
+
 #print axioms all_A_marker_returns_floor
 #print axioms regularEndpointFloor_sourceSection
 #print axioms double_B_to_A_source_reentry
