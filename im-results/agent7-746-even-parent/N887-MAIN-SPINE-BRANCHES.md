@@ -65,6 +65,12 @@ g₃(j)=2e−2^886−888.
 
 The exact parent enumeration finds no ResetParent of any of these five g₃ states. There is a useful boundary case at j=420: a further power-of-three divisibility candidate exists, but its odd-band quotient lies in a dyadic gap and therefore is not a source parent.
 
+This nested numerator is already covered by Agent 7's translated Hensel tower; do not build a duplicate selector. For general n in the surviving sectors, if Z=signedZ(n,j), h₃=16(Z/81)−2^n−n−2 and C=2^(n+1)+2n−1, then
+81(2h₃+5)=32Z−81C.
+With c_n=38C mod 81 and offset_n=81c_n, this gives
+81(2h₃+5) ≡ 32(Z−offset_n) (mod 3^8).
+Since 32 is a unit modulo every power of 3, the existing translatedDepthResidue selector for Z−offset_n is exactly the selector for the nested odd-parent valuations of h₃. At n=887, its precision-3^5 class is j≡96 (mod 162), giving the five t'=0 parents above; its precision-3^6 class is j≡420 (mod 486), but the t'=1 odd-band test fails; its precision-3^7 class is j≡1392 (mod 1458), and its precision-3^8 class is j≡4308 (mod 4374), both outside the n=887 spine. See ../agent7-fatal-density/TranslatedDepthResidue.lean and ../agent10-cascade/TThreeHighGateResidue.md for the source-checked translated tower and the high-q specialization.
+
 The t=6 root at j=474 has exactly one further parent, an even parent at scale k=882=n−5. That parent is itself parent-free. The t=6 root has no odd parent.
 
 Thus the t=3 side subtrees have maximum depth two, with five one-edge odd continuations; the t=6 side subtree has one one-edge even continuation. The corrected side-branch census is still a finite n=887 statement, not a uniform theorem for all n≡887 (mod 13122).
