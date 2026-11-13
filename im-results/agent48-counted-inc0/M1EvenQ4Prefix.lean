@@ -268,13 +268,15 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
           · rw [hx2'] at hpres ⊢
             change sweptLeft N T h (h+2) = true
             have hsrc : T (h+2) = true := by
-              simpa [T,s1PhysicalRight_source,sideBit] using
+              have hcoord : h+1+1 = h+2 := by omega
+              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
                 s1Config_right_cell 3 6 1 a 0 b h 1
             rw [hpres,hsrc]
           · rw [hx3'] at hpres ⊢
             change sweptLeft N T h (h+3) = true
             have hsrc : T (h+3) = true := by
-              simpa [T,s1PhysicalRight_source,sideBit] using
+              have hcoord : h+1+2 = h+3 := by omega
+              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
                 s1Config_right_cell 3 6 1 a 0 b h 2
             rw [hpres,hsrc]
     simpa [x,T2] using hframe.trans hT1
