@@ -1,12 +1,13 @@
-// Independent modular check of Agent 7's five-edge branch and
-// the immediate sixth t=0 parent. All arithmetic is exact BigInt.
+// Independent modular check of Agent 7's nested odd-parent branch.
+// All arithmetic is exact BigInt and modular exponentiation.
 
 const j = 3402n;
 const r0 = 74803n;
 const branchModulus = 3n ** 11n;
+const nextModulus = 3n ** 12n;
 const M = 3n ** 28n;
-const ts = [7n, 1n, 0n, 2n, 1n];
-const sigmas = [14n, 9n, 9n, 13n, 13n];
+const ts = [7n, 1n, 0n, 2n, 1n, 0n];
+const sigmas = [14n, 9n, 9n, 13n, 13n, 13n];
 
 function powMod(a, e, m) {
   let x = a % m;
@@ -40,6 +41,8 @@ function evaluate(r, modulus) {
       - powMod(2n, j + 4n, modulus) * (2n * n + 3n),
     modulus
   );
+  const Xs = [X];
+  const Es = [E];
   const rows = [{
     i: 0,
     E: "2",
@@ -61,6 +64,8 @@ function evaluate(r, modulus) {
       modulus
     );
     B = 4n * (2n ** t) * B - 2n * 3n ** E;
+    Xs.push(X);
+    Es.push(E);
     rows.push({
       i: i + 1,
       t: String(t),
@@ -71,7 +76,11 @@ function evaluate(r, modulus) {
     });
     bMods.push(String(mod(B, 3n)));
   }
-  return { n, rows, bMods, X5: X, E5: E };
+  return { n, rows, bMods, Xs, Es };
+}
+
+function quotientMod3(value, exponent) {
+  return mod(value / (3n ** exponent), 3n);
 }
 
 function gcd(a, b) {
@@ -107,31 +116,37 @@ for (let i = 0; i < ts.length; i++) {
   gammaD = nextD;
 }
 
-// Sixth edge: t=0, sigma=13.
-const [r6n, r6d] = reduce(gammaN * 2n ** 13n, gammaD * 3n);
-const sixth = {
+// Seventh edge: t=0, sigma=14, after the sixth (t=0, sigma=13) edge.
+const [r7n, r7d] = reduce(gammaN * 2n ** 14n, gammaD * 3n);
+const seventh = {
   t: 0,
-  sigma: 13,
-  ratio: String(r6n) + "/" + String(r6d),
-  inside: 6n * r6d < r6n && r6n < 8n * r6d,
-  decimal: Number(r6n) / Number(r6d),
+  sigma: 14,
+  ratio: String(r7n) + "/" + String(r7d),
+  inside: 6n * r7d < r7n && r7n < 8n * r7d,
+  decimal: Number(r7n) / Number(r7d),
 };
 
-// Check the representative and the next member of its residue cylinder.
-// E5=18 and B5 is a unit, so the scaled shift law fixes G5 mod 3
-// when r changes by 3^11 (n changes by 6*3^18).
 const base = evaluate(r0, M);
-const next = evaluate(r0 + branchModulus, M);
-const G5mod3 = (X) => mod(X / (3n ** 18n), 3n);
+const cylinderChecks = [];
+for (let a = 0n; a < 3n; a++) {
+  const r = r0 + branchModulus * a;
+  const ev = evaluate(r, M);
+  cylinderChecks.push({
+    nextDigit: String(a),
+    r: String(r),
+    G5mod3: String(quotientMod3(ev.Xs[5], ev.Es[5])),
+    G6mod3: String(quotientMod3(ev.Xs[6], ev.Es[6])),
+  });
+}
 
 console.log(JSON.stringify({
   r0: String(r0),
-  branchModulus: String(branchModulus),
-  n: String(base.n),
+  fiveEdgeCylinderModulus: String(branchModulus),
+  sevenEdgeCylinderModulus: String(nextModulus),
+  nAtRepresentative: String(base.n),
   valuationsAtRepresentative: base.rows,
   B_i_mod3: base.bMods,
-  fiveBandLimits: bandRows,
-  sixthBandLimit: sixth,
-  G5mod3AtR0: String(G5mod3(base.X5)),
-  G5mod3AtNextCylinderPoint: String(G5mod3(next.X5)),
+  sixBandLimits: bandRows,
+  seventhBandLimit: seventh,
+  nextDigitChecks: cylinderChecks,
 }, null, 2));
