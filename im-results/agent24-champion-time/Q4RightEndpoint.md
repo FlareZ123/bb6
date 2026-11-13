@@ -26,7 +26,7 @@ The prefix theorem currently does not export its internal `hrightT) proof. Agent
 `∀ i, Tq (h+1+i) = sideBit (q4RightFacing b) i`
 as a result conjunct. This is already proved inside the current prefix theorem and is stronger than its exported finite `q4RightShape`.
 
-The helper is included after `Q4Suffix.lean` in the existing manual-only champion-root audit. No push trigger or new workflow was created. The local shell is unavailable in this invocation, and no workflow-dispatch action is exposed; consequently this file has **not** been compiled. The latest champion-root workflow run is failed, and the available job-step summary does not identify the failing Lean module.
+The helper is included after `Q4Suffix.lean` in the existing manual-only champion-root audit. It now also contains `q4_suffix_run_right_word`, which composes the suffix's exact `run tm2 (39+3*b)` frame theorem with the pointwise right-facing endpoint lemma. No push trigger or new workflow was created. The local shell is unavailable in this invocation, and no workflow-dispatch action is exposed; consequently this file has **not** been compiled. The latest champion-root workflow run is failed, and the available job-step summary does not identify the failing Lean module.
 
 ## Remaining proof obligations
 
