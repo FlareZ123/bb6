@@ -222,7 +222,7 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
         have hout : m0EvenQ4Inside
             (h-(h-((3*a : Nat) : Int))) = false := by
           change decide (-9 ≤ _ ∧ _ ≤ 3) = false
-    exact decide_eq_false_iff_not.mpr hnot
+          exact decide_eq_false_iff_not.mpr hnot
         have hcut := m0EvenQ4CutTape_eq_swept a b h h hout
         have hhead : sweptLeft (3*a) T h h = true := by
           have hs := sweptLeft_head (3*a-2) T h
@@ -238,7 +238,7 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
       have hout : m0EvenQ4Inside
           ((h+1)-(h-((3*a : Nat) : Int))) = false := by
         change decide (-9 ≤ _ ∧ _ ≤ 3) = false
-    exact decide_eq_false_iff_not.mpr hnot
+        exact decide_eq_false_iff_not.mpr hnot
       have hcut := m0EvenQ4CutTape_eq_swept a b h (h+1) hout
       have hplus : sweptLeft (3*a) T h (h+1) = true := by
         have hN : 3*a-1+1 = 3*a := by omega
