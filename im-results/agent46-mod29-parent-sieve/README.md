@@ -24,14 +24,17 @@ Let \(\bar A_r\in\mathbb Z/29\mathbb Z\) be
 27 & r\equiv2\pmod3.
 \end{cases}
 \]
-The three values \(\bar A_r^2-9\) are respectively \(26,19,24\), all invertible modulo \(29\). Define
+The three values \(\bar A_r^2-9\) are respectively \(26,19,24\), with inverses \(19,26,23\). Thus the geometric-sum formula gives the following division-free residues:
 \[
-\bar P_r:=
-(\bar A_r-3)(\bar A_r^{2r}-9^r)(\bar A_r^2-9)^{-1}
-\pmod{29},
-\qquad
-w_r:=15(\bar A_r\bar P_r+3)\pmod{29}.
+\bar P_r\equiv
+\begin{cases}
+8(6^r-9^r) & r\equiv0\pmod3,\\
+2(28^r-9^r) & r\equiv1\pmod3,\\
+4^r-9^r & r\equiv2\pmod3
+\end{cases}
+\pmod{29}.
 \]
+Define \(w_r:=15(\bar A_r\bar P_r+3)\pmod{29}\).
 
 **Modulo-twenty-nine theorem.** For every \(r\ge1\), if
 \[
