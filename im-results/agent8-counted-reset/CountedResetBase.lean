@@ -75,7 +75,7 @@ theorem resetBase_exact (m : Nat) (hm : m < 3) :
 cost at n=1, a=b=0. -/
 theorem resetBase_cost_eq (m : Nat) :
     63 + 4*m = resetPrefixCost m 1 0 0 := by
-  have hv : BB6Coverage.BB6ChampionArithmetic.v2 1 = 0 := by decide
+  have hv : BB6ChampionArithmetic.v2 1 = 0 := by decide
   simp [resetPrefixCost,hv]
 
 /-- In the b=0 base cases the source head advances exactly five cells. -/
