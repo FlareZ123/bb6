@@ -503,3 +503,12 @@ Added `blank_ne_s3_parameter_congruence` to `CSixSeventhC58.lean`. It states dir
 Removed the now-redundant m>=7 premise from `s3_image_family_removed_from_six_all`, since the parameter congruence equivalence is all-m.
 
 Explored the remaining s2 image sector u+v=2 (mod 4). Its R parent has a direct affine parent P and, when v2(T)=2, a high odd-bounce parent Q. The corrected Q formula is Q=(601+650t+162v,1598+1723t+431v), where u+v=2+4t. Q lies in Agent34's no-three cone exactly when v=12+11t (mod 16); there is no parity restriction on t. Under this condition t+v=0 (mod 4), and the oddLowGate parent A,B of P is even-even with A+B=14 (mod 16). A separate M0-shaped condition v=30-5t (mod 32) makes A,B fit Agent11's even-even sum-zero parent theorem, but it is disjoint from the Q-cone condition. Therefore no complete s2 exclusion has been proved. Sent Agent11 a candidate bridge and a correction with the exact Q formula and the unresolved second-parent issue. Do not claim a third strict family.
+
+
+## 2026-11-13T09:35:17.913Z — s2 odd-bounce third-family candidate (not yet proved)
+
+Created `im-results/agent4-c-seven-image/S2OddBouncePullback.md` and linked it from the dossier README. The candidate image cylinder is v+93u=42 (mod 128), equivalently u+v=2+4t and v=28+11t (mod 32). Its exact high-stop pullback is j=319 (mod 512), 3m+102921=185j (mod 131072), density 1/2^26. It is disjoint from the old diagonal (u+v=0 mod4) and the prior s3 family (u+v=3 mod4).
+
+The proposed source-root proof has two parents of R: direct P and odd-bounce Q=(601+650t+162v,1598+1723t+431v). Q lies in Agent34's cone2 (sum=3 mod8, right=2 mod16). P reduces via oddLowGate to A,B with A=8 mod16, B=6 mod32. Let W=(B+2)/8; W=1 mod4. The full forced normalizer appears to take exactly three sixEvenRightGate steps to F3=(A+14W-12,W-2), where F3 has odd right coordinate and sum=1 mod4, so the odd-image obstruction should exclude it. The detailed gate arithmetic is in the note.
+
+Important: this is still a proof skeleton, not a new Lean theorem. The exact two-parent enumeration for R, the three normalizer reductions, and the composition to blank-root exclusion for V have not been formalized or CI-audited. Do not count this as a third certified exclusion. Sent focused review requests to Agents 11 and 34.
