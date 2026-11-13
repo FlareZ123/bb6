@@ -183,6 +183,54 @@ theorem blank_thirty_first_prefix
       firstExceptionFromSeed31.1 seed31 firstExceptionFromSeed31.2
       seed31_canon hfirst.1 hroot⟩
 
+/-- Exact BigInt/fast-block probe signature: the first exit is q=8, not
+    the conditional q=4 cylinder. This computation is kernel-reduced by decide. -/
+theorem firstExceptionFromSeed31_signature :
+    firstExceptionFromSeed31.1 = 12267 ∧
+      firstExceptionFromSeed31.2.a % 59049 = 39637 ∧
+      firstExceptionFromSeed31.2.q = 8 ∧
+      firstExceptionFromSeed31.2.b = 1 := by
+  decide
+
+/-- The exact signature discharges the finite search bound. -/
+theorem firstExceptionFromSeed31_bound :
+    firstExceptionFromSeed31.1 < 1024000 := by
+  rw [firstExceptionFromSeed31_signature.1]
+  norm_num
+
+/-- Unconditional first-stop statement at the exact 12,267-step index. -/
+theorem firstExceptionFromSeed31_sound_actual :
+    DRegular.run 12267 seed31 = some firstExceptionFromSeed31.2 ∧
+      DRegular.next firstExceptionFromSeed31.2 = none := by
+  have h := firstExceptionFromSeed31_sound firstExceptionFromSeed31_bound
+  rw [firstExceptionFromSeed31_signature.1] at h
+  exact h
+
+/-- The first exceptional state has the E/A source shape L(9*t+10,8,1),
+    with t congruent to 2 modulo 27. -/
+theorem firstExceptionFromSeed31_shape :
+    ∃ t,
+      firstExceptionFromSeed31.2.a = 9*t+10 ∧
+      t % 27 = 2 ∧
+      firstExceptionFromSeed31.2.q = 8 ∧
+      firstExceptionFromSeed31.2.b = 1 := by
+  have hsig := firstExceptionFromSeed31_signature
+  have ha := hsig.2.1
+  have hq := hsig.2.2.1
+  have hb := hsig.2.2.2
+  have hmod9 : firstExceptionFromSeed31.2.a % 9 = 1 := by omega
+  have hmod243 : firstExceptionFromSeed31.2.a % 243 = 28 := by omega
+  let t := (firstExceptionFromSeed31.2.a - 10) / 9
+  refine ⟨t, ?_, ?_, hq, hb⟩
+  · dsimp [t]
+    omega
+  · dsimp [t]
+    omega
+
+#print axioms firstExceptionFromSeed31_signature
+#print axioms firstExceptionFromSeed31_sound_actual
+#print axioms firstExceptionFromSeed31_shape
+
 #eval t30 % 81
 
 #print axioms firstStopAux_sound
