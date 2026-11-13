@@ -1,16 +1,6 @@
 name: Agent 6 #429 full low4k2 original-source Lean audit
 
 on:
-  push:
-    paths:
-      - '.github/workflows/agent6-429-low42.yml'
-      - 'im-results/agent6-429-low42/Low42Delta.lean'
-      - 'im-results/agent6-429-low42/Low42Physical.lean'
-      - 'im-results/agent6-429-low42/Low42Max.lean.xz.b64'
-      - 'im-results/agent6-429-low42/Low42PrefixPhysical.lean'
-      - 'im-results/agent1-429-root-entry/Low42RootNoFatal.lean'
-      - 'im-results/agent1-429-root-entry/RootOuterLow42NoFatal.lean'
-      - 'im-results/agent6-429-low40/Low40Source.tar.xz.b64'
   workflow_dispatch:
 
 permissions:
