@@ -18,7 +18,7 @@ def seed27 : DRegular.L := BB6.Agent2TwentySixthRoot.seed27
 
 /-- Exact endpoint after 1,684 regular sections from the twenty-sixth reentry. -/
 def terminal1684 : DRegular.L :=
-  (BB6.Agent2Fast64.fastRun 1684 seed27).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 1684 seed27).getD ⟨9,0,0⟩
 
 def t27 : Nat := (terminal1684.a-7)/9
 
@@ -32,7 +32,7 @@ theorem terminal1684_certificate :
       omega
     · right
       rfl
-  rw [BB6.Agent2Fast64.fastRun_correct 1684 seed27 hcanon]
+  rw [BB6.DRegularFast.fastRun_correct 1684 seed27 hcanon]
   decide
 
 theorem terminal1684_exact :
