@@ -171,3 +171,58 @@ d'=2P-F'-5\le\frac{7P}{4}+1\le2P-1
 for \(P\ge8\). Consequently, from the child of **every** high-depth edge, any subsequent source path to the wall must contain a shallow edge, and after its last shallow edge it must be a pure depth-two run.
 
 This recovers the high-depth restart/sign principle from an exact source telescoping identity. It still does not bound how many shallow edges may be needed after a high-depth edge.
+
+
+## Two-sided pinning by the last shallow edge
+
+The weighted identity gives a lower bound as well as the previous upper bound. Let \(s_*\) be the cost immediately before the last shallow edge, of depth \(\tau\), and let \(K\) be the total number of shallow edges. Every earlier high-depth edge ends at a distinct cost strictly below \(s_*\), and its negative contribution has magnitude
+\[
+(2^{e_j}-8)2^{s_j}=2^{s_j+e_j}-8\cdot2^{s_j}<2^{s_j+e_j}.
+\]
+The sum of these magnitudes is therefore less than \(2^{s_*}\). The final shallow edge contributes \(6\cdot2^{s_*}\) if \(\tau=0\), or \(4\cdot2^{s_*}\) if \(\tau=1\); all earlier shallow contributions are nonnegative. Hence
+\[
+N\ge
+\begin{cases}
+5\cdot2^{s_*},&\tau=0,\\
+3\cdot2^{s_*},&\tau=1.
+\end{cases}
+\]
+Together with the upper bounds on shallow contributions and \(m=s_*+\tau+1+3r\), this pins the normalized wall quantity:
+\[
+\boxed{
+\frac52\,8^{-r}\le\frac{N}{2^m}
+<6(1-2^{-K})8^{-r}
+\quad(\tau=0),
+}
+\]
+\[
+\boxed{
+\frac34\,8^{-r}\le\frac{N}{2^m}
+<
+\left(\frac52-\frac32\,2^{-(K-1)}\right)8^{-r}
+\quad(\tau=1).
+}
+\]
+Finally, from (1), using \(S<2^m\) and \(T<m2^m\),
+\[
+\frac{m+n+3}{P}
+<
+\frac{N}{2^m}
+<
+\frac{2(m+n+3)}{P}.
+\]
+Combining the two displays gives the two-sided product constraints
+\[
+\boxed{
+\frac54P<8^r(m+n+3)<6(1-2^{-K})P
+\quad(\tau=0),
+}
+\]
+\[
+\boxed{
+\frac38P<8^r(m+n+3)<
+\left(\frac52-\frac32\,2^{-(K-1)}\right)P
+\quad(\tau=1).
+}
+\]
+These bounds are independent of how many high-depth edges occur in the prefix. They sharply locate the product of the terminal depth-two run and the total wall cost, but they still do not by themselves rule out a path.
