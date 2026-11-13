@@ -58,7 +58,7 @@ private theorem m1EvenSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
   have hside := sideBit_d1pow_append a (3*a+1+k)
     (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) (by omega)
   rw [hleft] at hcell
-  rw [List.append_assoc] at hcell
+  simp only [List.append_assoc] at hcell
   rw [hside] at hcell
   exact hcell
 
@@ -138,7 +138,7 @@ theorem m1EvenQ4Bridge_input_match (a b : Nat) (h : Int) :
           (s1Config 3 6 1 0 0 b h).tape h (h+2) (by omega)
         have hsrc : (s1Config 3 6 1 0 0 b h).tape (h+2) = true := by
           have hc := s1Config_right_cell 3 6 1 0 0 b h 1
-          simpa [s0RightFacing] using hc
+          simpa [s1PhysicalRight_source, sideBit] using hc
         have hcoord :
             h - ((1 : Nat) : Int) + 3 = h+2 := by omega
         rw [hcoord, hpres]
@@ -156,7 +156,7 @@ theorem m1EvenQ4Bridge_input_match (a b : Nat) (h : Int) :
           (s1Config 3 6 1 0 0 b h).tape h (h+3) (by omega)
         have hsrc : (s1Config 3 6 1 0 0 b h).tape (h+3) = true := by
           have hc := s1Config_right_cell 3 6 1 0 0 b h 2
-          simpa [s0RightFacing] using hc
+          simpa [s1PhysicalRight_source, sideBit] using hc
         have hcoord :
             h - ((1 : Nat) : Int) + 4 = h+3 := by omega
         rw [hcoord, hpres]
@@ -213,7 +213,7 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
     simpa [T] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 6 1 a 0 b h 0
-    simpa [T,s0RightFacing] using hc
+    simpa [T,s1PhysicalRight_source,sideBit] using hc
   have hSweep := counted_left_sweep N T h hOn hright
   have hmatch := m1EvenQ4Bridge_input_match a b h
   have hBridge := bridgeAt T1 hN m1EvenQ4Inside
@@ -242,11 +242,12 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
         have hcoord : x = h-(j:Int) := by
           dsimp [x,j,N,hN]
           omega
-        rw [hcoord] at hblock
+        change sweptLeft N T h x = true
+        rw [hcoord]
         exact hblock
       · by_cases hx1 : x = h+1
         · subst x
-          simpa [N] using sweptLeft_plus1 (3*a) T h
+          simpa [T1,N] using sweptLeft_plus1 (3*a) T h
         · have hx2 : h+2 ≤ x := by omega
           have hpres := sweptLeft_preserves_right N T h x hx2
           have hx23 : x = h+2 ∨ x = h+3 := by
@@ -255,12 +256,12 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
           rcases hx23 with hx2' | hx3'
           · rw [hx2'] at hpres
             have hsrc : T (h+2) = true := by
-              simpa [T,s0RightFacing] using
+              simpa [T,s1PhysicalRight_source,sideBit] using
                 s1Config_right_cell 3 6 1 a 0 b h 1
             simpa [hsrc] using hpres
           · rw [hx3'] at hpres
             have hsrc : T (h+3) = true := by
-              simpa [T,s0RightFacing] using
+              simpa [T,s1PhysicalRight_source,sideBit] using
                 s1Config_right_cell 3 6 1 a 0 b h 2
             simpa [hsrc] using hpres
     simpa [x,T2] using hframe.trans hT1
@@ -340,8 +341,8 @@ private theorem m1EvenQ4CutTape_eq_source_right
 The q4 guard is the five-cell block at h..h+4; the b-counter and its
 blank terminator are untouched to the right of the bridge frame. -/
 theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
-    q4RightShape (m1EvenQ4CutTape a b h) h b := by
-  unfold q4RightShape
+    BB6Coverage.Agent8Q4Suffix.q4RightShape (m1EvenQ4CutTape a b h) h b := by
+  unfold BB6Coverage.Agent8Q4Suffix.q4RightShape
   let T := (s1Config 3 6 1 a 0 b h).tape
   constructor
   · intro i hi
