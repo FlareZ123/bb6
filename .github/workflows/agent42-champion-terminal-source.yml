@@ -203,6 +203,13 @@ jobs:
             echo '::error::sorryAx found in source S1 all-ones counted drain dependencies'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M1EvenQ4Suffix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-q4-suffix-axioms.log
+          lean -o M1EvenQ4Suffix.olean M1EvenQ4Suffix.lean 2>&1 | tee /tmp/a42-terminal/m1-even-q4-suffix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-q4-suffix-axioms.log; then
+            echo '::error::sorryAx found in m=1,n=6 even q4 suffix and counted-increment composition'
+            exit 1
+          fi
           : > /tmp/a42-terminal/root-q4-drain-axioms.log
           lean -o TM63RootQ4Drain.olean TM63RootQ4Drain.lean 2>&1 | tee /tmp/a42-terminal/root-q4-drain-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/root-q4-drain-axioms.log; then
@@ -256,6 +263,7 @@ jobs:
             /tmp/a42-terminal/carry-left-output-axioms.log
             /tmp/a42-terminal/carry-left-output-r23-axioms.log
             /tmp/a42-terminal/s1-counted-carry-axioms.log
+            /tmp/a42-terminal/m1-even-q4-suffix-axioms.log
             /tmp/a42-terminal/agent2-odd-canonical-axioms.log
             /tmp/a42-terminal/counted-suffix-output-axioms.log
             /tmp/a42-terminal/s1-carry-output-bridge-axioms.log
