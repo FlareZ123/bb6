@@ -872,3 +872,16 @@ theorem m1Even_resetPrefixCost_eq (a b : Nat) :
   simp [resetPrefixCost,hv]
   omega
 
+
+
+theorem m1Even_reset_prefix_frame_cost (a b : Nat) (h : Int) :
+    run tm2 (resetPrefixCost 1 6 a b)
+      ⟨3,h,(s1Config 3 6 1 a 0 b h).tape⟩ =
+      some (frameAt
+        (d0Sweep b
+          (frameAt (m1EvenQ4CutTape a b h) h
+            q4First10Inside q4First10End).tape (h+10))
+        (h+10+3*b) q4TailInside q4TailEnd) := by
+  rw [m1Even_resetPrefixCost_eq]
+  exact m1Even_reset_prefix_frame a b h
+
