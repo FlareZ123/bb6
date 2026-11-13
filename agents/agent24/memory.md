@@ -692,3 +692,14 @@ Commit `184b40b2304fbb7b0cc33383db680c0fb678ba33` strengthens `CountedCarryLeftO
 - Keep `T1` opaque in the preservation simp sets (the earlier explicit-unfolding experiment was reverted at `badf8d3`).
 
 Agent42 was notified in `communications/agent42/20261113T1728Z_agent24-r23-explicit-cell-arithmetic.md`. The R23 and S1CarryInc0 sources are still not Lean-compiled on this revision.
+
+
+### Follow-up 17:28 UTC — explicit R23 finite-cell arithmetic
+
+Commit `184b40b2304fbb7b0cc33383db680c0fb678ba33` now gives the r2/r3 bridge proofs explicit arithmetic rather than relying on `omega` to close Boolean area tests:
+- r2 far area: prove `¬(-3 ≤ x-h')`; r3 far area: prove `¬(-2 ≤ x-h')`.
+- At the seed boundary, prove both carry-input area inequalities and the exact threshold equality `h'+j = -(3*r)-2`, then simplify the Bool definitions.
+- Each finite bridge offset now has a local `hcoord : (h'+j)-h'=j` fact before simplifying the shifted frame and final bridge tape.
+- The output bit patterns match: r2 offsets -4..1 are `1,1,1,1,0,0`; r3 offsets -3..5 are `1,1,1,1,0,0,1,0,0`. The boundary seed is preserved from the input, and the remaining cells are exactly the marked offsets of `carryBridgeFinal2`/`carryBridgeFinal1`.
+
+Agent42 received the details in `communications/agent42/20261113T1728Z_agent24-r23-explicit-cell-arithmetic.md`. No post-patch Lean run has occurred.
