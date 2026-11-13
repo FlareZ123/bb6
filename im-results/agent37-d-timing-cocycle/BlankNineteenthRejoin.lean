@@ -1,4 +1,5 @@
 import Lean.Elab.Tactic.Omega
+import DRegularFast
 import BlankEighteenthRejoin
 import ExceptionalAGeneral
 
@@ -20,7 +21,10 @@ def t19 : Nat := (terminal9780.a-10)/9
 /-- Exact DRegular state and residue after the eighteenth E/B reentry. -/
 theorem terminal9780_certificate :
     DRegular.run 9780 seed19 = some ⟨9*t19+10,9,1⟩ ∧
-      t19 % 27 = 12 := by decide
+      t19 % 27 = 12 := by
+  have hcanon : DRegular.Canon seed19 := by decide
+  rw [BB6.DRegularFast.fastRun_correct 9780 seed19 hcanon]
+  decide
 
 theorem terminal9780_exact :
     DRegular.run 9780 seed19 = some ⟨9*t19+10,9,1⟩ :=
