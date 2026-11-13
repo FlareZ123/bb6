@@ -146,29 +146,45 @@ Composing this with `qIndexResidue_iff` at (t+2) gives the unique index cylinder
 
 ## Explicit positive-density t=7 arm in the fixed-depth 887 family
 
-Agent 7's fixed-depth family has (n=887+13122r), (j=3402), and its exact lift table gives
-[
+Agent 7's fixed-depth family has \(n=887+13122r\), \(j=3402\), and its exact lift table gives
+\[
 3^{10}\mid Q_{3402}(n)\iff r\equiv4\pmod9.
-]
-For this entire residue class put (d=Q/3^{10}), (k=n-7), and (x=2^7d). Since (Q) is odd, (d) is odd. The normalized band argument has the limit
-[
-rac{x}{2^k}
+\]
+For this entire residue class put \(d=Q/3^{10}\), \(k=n-7\), and \(x=2^7d\). Since \(Q\) is odd, \(d\) is odd. The normalized band argument has the limit
+\[
+\frac{x}{2^k}
 =\frac{2^{14}}{3^{10}}\frac{Q}{2^n}
 \longrightarrow \frac{28\cdot2^{14}}{3^{10}}
 =\frac{458752}{59049},
-]
+\]
 and the exact integer comparisons
-[
+\[
 6\cdot59049=354294<458752<472392=8\cdot59049
-]
-put the limit strictly inside the odd-parent band. Hence for all sufficiently large (r\equiv4\pmod9), the t=7 quotient (x=2^7d) satisfies
-[
-6\cdot2^{n-7}+1\le x\le8\cdot2^{n-7}-1,
-]
-and the exact parent formula (h=2x-8\cdot2^{n-7}-(n-7)-5) gives a t=7 `ResetParent` predecessor of the Q-defined state. This is a natural-density (1/9) subfamily in the parameter (r), stronger than merely infinitely many examples. Within it, exact maximal valuation (v_3(Q)=10) occurs on the two lifts (r\equiv13,22\pmod{27}) (density (2/27)); the third lift (r\equiv4\pmod{27}) has higher valuation but still admits the t=7 parent.
+\]
+put the limit strictly inside the odd-parent band.
 
-This is a mathematical asymptotic consequence of the exact 3-adic lift law and the dyadic limit. It remains intermediate: the full source-coordinate chain and the Q-state Lean selector have not both passed original-source CI, and it is not a blank-root exclusion.
+In fact an explicit bound removes the asymptotic qualifier. Write
+\[
+\frac{Q}{2^n}
+=28-\frac{2n-15+2^{3406}(2n+3)}{2^n}.
+\]
+For every \(n\ge3420\), one has
+\[
+4n+6<104458\cdot2^{n-3420},
+\]
+by the base case \(13686<104458\) at \(n=3420\) and induction (the right side doubles while the left increases by four). Since
+\[
+2n-15+2^{3406}(2n+3)<2^{3406}(4n+6),
+\]
+it follows that
+\[
+2^{14}(2n-15+2^{3406}(2n+3))<104458\cdot2^n,
+\]
+where \(104458=28\cdot2^{14}-6\cdot3^{10}\). This proves \(x/2^k>6\); the upper bound \(x/2^k<8\) follows from \(Q/2^n<28\) and \(458752<8\cdot59049\). Thus the exact integer band holds for every \(n\ge3420\).
 
+Since the least natural \(r\equiv4\pmod9\) is \(r=4\), all members of this residue class in the family already have \(n\ge53375\). Every such \(r\) therefore yields the t=7 \`ResetParent\` predecessor, not only sufficiently large ones. This is a natural-density \(1/9\) subfamily in the parameter \(r\), stronger than merely infinitely many examples. Within it, exact maximal valuation \(v_3(Q)=10\) occurs on the two lifts \(r\equiv13,22\pmod{27}\) (density \(2/27\)); the third lift \(r\equiv4\pmod{27}\) has higher valuation but still admits the t=7 parent.
+
+This is a mathematical consequence of the exact 3-adic lift law and dyadic inequalities. It remains intermediate: the full source-coordinate chain and the Q-state Lean selector have not both passed original-source CI, and it is not a blank-root exclusion.
 ## Verification boundary
 
 - Agent 7's `QDepthDefs`, `QDepthLift`, `QDepthSelectorBase`, `QDepthSelector`, and `QDepth887` all compiled in original-source workflow run [43397274339](https://github.com/FlareZ123/bb6/actions/runs/43397274339), at head `4a8ee37bd33aab1a63d327f612d1fb89baafe781`. The log printed `qDepthResidue_iff`, `qDepthResidue_unique_in_period`, and `qDepthResidue_887_table` with axiom profile `[propext, Classical.choice, Quot.sound]`; the workflow later failed in the unrelated `UParentCone887.lean:75` application.
