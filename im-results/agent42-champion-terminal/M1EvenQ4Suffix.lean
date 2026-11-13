@@ -317,30 +317,6 @@ theorem q4_suffix_left_word_of_stream
         _ = BB6Coverage.Agent6Q4Prefix.sideBit
               (d0pow b ++ d1pow 2 ++ tail) i := hside.symm
 
-/-- The q4 suffix can be entered after the four E-on-one moves already
-consumed by the m=1,n=6 prefix. -/
-theorem q4_suffix_after_four (T : Int → Bool) (h : Int) (b : Nat)
-    (hshape : BB6Coverage.Agent8Q4Suffix.q4RightShape T h b) :
-    run tm2 (35+3*b) ⟨4,h+4,T⟩ =
-      some (frameAt
-        (d0Sweep b
-          (frameAt T h q4First10Inside q4First10End).tape
-          (h+10))
-        (h+10+(3*b:Int)) q4TailInside q4TailEnd) := by
-  let T1 := (frameAt T h q4First10Inside q4First10End).tape
-  let T2 := d0Sweep b T1 (h+10)
-  let g : Int := h+10+(3*b:Int)
-  let U := frameAt T2 g q4TailInside q4TailEnd
-  have hlinear : linearRightOnes T h 4 := by
-    intro i hi
-    exact hshape.1 i (by omega)
-  have hfirst := E_scan T h 4 hlinear
-  have hwhole := q4_suffix_frame T h b hshape
-  have hnum : 39+3*b = 4+(35+3*b) := by omega
-  rw [hnum,run_add tm2 ⟨4,h,T⟩ 4 (35+3*b)] at hwhole
-  rw [hfirst] at hwhole
-  simpa [U,T1,T2,g] using hwhole
-
 /-- The source cut retains the infinite blank right ray required by the
 q4 suffix's complete right-facing endpoint theorem. -/
 theorem m1Even_q4_prefix_far_tail (a b : Nat) (h : Int) :
@@ -373,11 +349,11 @@ theorem m1Even_q4_prefix_far_tail (a b : Nat) (h : Int) :
       (s1PhysicalRight b) i (by omega)
   exact hcut.trans (hpres.trans (hsrc.trans hblank))
 
-/-- The complete q4 suffix after the m=1,n=6 prefix reaches the exact
-marker-0 S1 state with exponent a+b+2 and right counter 2^b-1. -/
-theorem m1Even_q4_suffix_source (a b : Nat) (h : Int) :
-    run tm2 (35+3*b)
-      ⟨4,h+4,m1EvenQ4CutTape a b h⟩ =
+/-- Identify Agent 48's complete reset-prefix frame with the exact
+marker-0 S1 successor. -/
+theorem m1Even_q4_reset_prefix_source (a b : Nat) (h : Int) :
+    run tm2 (resetPrefixCost 1 6 a b)
+      (s1Config 3 6 1 a 0 b h) =
       some (s1Config 3 5 0 (a+b+2) (2^b-1) 0
         (h+5+3*b)) := by
   let T := m1EvenQ4CutTape a b h
@@ -391,10 +367,9 @@ theorem m1Even_q4_suffix_source (a b : Nat) (h : Int) :
       BB6Coverage.Agent8Q4Suffix.q4RightShape] using hshape6
   have hleft := m1Even_q4_prefix_leftFacing a b h
   have htail := m1Even_q4_prefix_far_tail a b h
-  have hrun := q4_suffix_after_four T h b hshape8
   have hleftU :
       ∀ i : Nat, U.tape (h+5+(3*b:Int)-(i:Int)) =
-        BB6Coverage.Agent6Q4Prefix.sideBit
+        sideBit
           (d0pow b ++ d1pow 2 ++ (m1EvenQ4LeftFacing a).drop 1) i := by
     simpa [U,T1,T2,g] using
       q4_suffix_left_word_of_stream T h b (m1EvenQ4LeftFacing a) hleft
@@ -403,9 +378,7 @@ theorem m1Even_q4_suffix_source (a b : Nat) (h : Int) :
         sideBit (s0RightFacing 0) i := by
     simpa [U,T1,T2,g] using
       q4_suffix_right_word T h b hshape8 htail
-  have hsuffix :
-      run tm2 (35+3*b) ⟨4,h+4,T⟩ = some U := by
-    simpa [U,T1,T2,g] using hrun
+  have hframe := m1Even_reset_prefix_frame a b h
   let H : Int := h+5+(3*b:Int)
   have htarget : U =
       s1Config 3 5 0 (a+b+2) (2^b-1) 0 H := by
@@ -426,10 +399,10 @@ theorem m1Even_q4_suffix_source (a b : Nat) (h : Int) :
           calc
             U.tape (H-(i:Int)) =
                 U.tape (h+5+(3*b:Int)-(i:Int)) := by simp [H]
-            _ = BB6Coverage.Agent6Q4Prefix.sideBit
+            _ = sideBit
                   (d0pow b ++ d1pow 2 ++ (m1EvenQ4LeftFacing a).drop 1) i :=
               hleftU i
-            _ = BB6Coverage.Agent6Q4Prefix.sideBit
+            _ = sideBit
                   (s1LeftFacing 3 5 0 (a+b+2) (2^b-1)) i := by
               rw [← m1EvenQ4SuffixTargetLeft a b]
             _ = (s1Config 3 5 0 (a+b+2) (2^b-1) 0 H).tape
@@ -457,7 +430,7 @@ theorem m1Even_q4_suffix_source (a b : Nat) (h : Int) :
                 (H+1+(i:Int)) := by
                 exact (s1Config_right_cell
                   3 5 0 (a+b+2) (2^b-1) 0 H i).symm
-  rw [hsuffix,htarget]
+  rw [m1Even_resetPrefixCost_eq,hframe,htarget]
 
 /-- The complete m=1,n=6 reset prefix, before its counted all-ones drain. -/
 theorem m1Even_q4_reset_prefix_source (a b : Nat) (h : Int) :
