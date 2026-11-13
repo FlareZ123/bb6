@@ -110,7 +110,6 @@ theorem blank_no_y3_xmod16_two (x : Nat)
   cases time with
   | zero =>
       simp [BB6.Agent8Section.run] at h
-      omega
   | succ t =>
       cases hp : BB6.Agent8Section.run secNext t (some (5,1)) with
       | none =>
