@@ -50,4 +50,4 @@ On the right, the proof already establishes the exact stream equality for every 
 ## Research scope
 
 For the authentic root parameters `(L,n,m,a,z,b)=(3,7,2,6,0,63)`, the q4 prefix takes 104 primitive transitions. This is only the first segment of the marker-2 Rst2 route. The suffix must still be proved to return the complete tape to
-`s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 (h+5+3*b)`; the proposed total `71+12*a+3*b) remains conditional until the suffix endpoint and run composition are kernel-checked. No exact BB(6) score or universal six-state upper bound follows from this prefix alone.
+`s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 (h+5+3*b)`; the proposed total `71+12*a+3*b` remains conditional until the suffix endpoint and run composition are kernel-checked. No exact BB(6) score or universal six-state upper bound follows from this prefix alone.
