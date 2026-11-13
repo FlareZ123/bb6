@@ -311,3 +311,61 @@ added. **No CI run has yet compiled these three new Lean modules.** They remain
 intermediate proof candidates, not certified results. The next mathematical
 source stage is `S1(3,2,0,...)`, i.e. marker (m=0,n=2), followed by
 (m=2,n=1). No exact BB(6) value or universal upper bound follows yet.
+
+
+## 2026-11-13: m=0,n=2 even reset prefix and counted increment (intermediate)
+
+The next source state after the m=1,n=3 odd stage is
+`S1(3,2,0,a,0,b,h)`. A new parameterized q4 route has been derived for
+all (a>0,b\ge0):
+
+- After the (3a)-cell counted left sweep (9a primitive moves), the
+  fixed 39-step bridge is
+  `⟨3,0,[-7,-6,-5,-4,-1,2,3]⟩ -> ⟨4,3,[-9,-8,-7,-4,-1,1,2,3]⟩`,
+  with its read-head trace confined to the local frame ([-9,2]).
+- An E-scan of (3(a-1)) cells reaches state 4 at the original head.
+  The q4 cut is therefore reached after (36+12a) moves.
+- Its left-facing word is
+  `[true] ++ d1pow (a-1) ++ markerWord 2 ++ d0 ++ binDec 3 1 ++ lh`,
+  and the right side satisfies the generic `q4RightShape` for b.
+- The generic q4 suffix contributes (39+3b) more moves, so the exact
+  reset-prefix cost is
+  (75+12a+3b=resetPrefixCost(0,2,a,b)), ending at
+  `S1(3,1,2,a+b+1,2^b-1,0,h+5+3*b)`.
+- The existing exact counted drain then yields the complete counted
+  increment to `S1(3,1,2,a+b+1,0,2^b-1,h+5+3*b)`. Its closed drain
+  cost is (6\cdot4^b+42\cdot2^b-12b-48), so the full increment cost
+  is `proposedIncrementCost 0 2 a b`.
+
+The new source modules are:
+
+- `M0EvenQ4Bridge.lean`: exact finite bridge, head confinement, and
+  the parameterized post-sweep input-frame match.
+- `M0EvenQ4Prefix.lean`: counted sweep/bridge/scan composition, q4
+  right-shape and complete left-facing stream, suffix-left identity,
+  and `resetPrefixCost 0 2` arithmetic.
+- `M0EvenQ4Suffix.lean`: generic q4 endpoint plus the counted drain.
+- `TM63M0EvenRootComposition.lean`: extends the symbolic blank-root
+  chain through five increments
+  ((1,6),(0,5),(2,4),(1,3),(0,2)); the residual itinerary now starts
+  at `sectionResult 1 2), i.e. the ((2,1)) reset.
+- `m0_even_n2_replay.py`: independent literal-table replay.
+
+The replay passed 48 bridge-decomposition, q4-cut, and full reset-prefix
+cases ((1\le a\le8,0\le b\le5)), plus 25 complete counted-increment
+cases ((1\le a\le5,0\le b\le4)). It compares complete finite
+marked-cell sets, not fingerprints. These are reproducible computational
+checks, not quantified proofs.
+
+The existing manual-only
+`.github/workflows/agent42-champion-terminal-source.yml` now compiles
+the M0-even bridge and prefix before the upstream M1-even compile step, so
+this independent source branch can be checked even if that earlier branch
+still fails. The M0-even suffix is scheduled after the generic q4 endpoint
+and counted-drain dependencies; its root composition follows the M1-odd
+root composition. The workflow remains manual-only, with no push/PR
+trigger. **No CI run has yet compiled the new M0-even modules.** The
+root-connected theorem is therefore still a proof candidate conditional
+on those Lean checks and on the remaining ((2,1)) itinerary and final
+halting source proof. No exact BB(6) value or universal upper bound is
+claimed.
