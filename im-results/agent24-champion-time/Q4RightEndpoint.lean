@@ -556,6 +556,23 @@ theorem q4_suffix_frame_eq_s1Config
         _ = (s1Config L n m a z 0 H).tape (H+1+(i:Int)) :=
           (s1Config_right_cell L n m a z 0 H i).symm
 
+
+/-- The generic full-tape q4 suffix run to a canonical S1 target. -/
+theorem q4_suffix_run_to_s1Config
+    (T : Int → Bool) (h : Int) (b L n m a z : Nat)
+    (sourceLeft : List Bool)
+    (hshape : q4RightShape T h b)
+    (htail : ∀ i : Nat, 9+3*b ≤ i → T (h+1+(i:Int)) = false)
+    (hleft : ∀ i : Nat, T (h-(i:Int)) = sideBit sourceLeft i)
+    (happend : s1LeftFacing L n m a z =
+      d0pow b ++ d1pow 2 ++ sourceLeft.drop 1) :
+    run BB6Coverage.Agent48Champion.tm2 (39+3*b) ⟨4,h,T⟩ =
+      some (s1Config L n m a z 0 (h+5+(3*b:Int))) := by
+  rw [q4_suffix_frame T h b hshape]
+  rw [q4_suffix_frame_eq_s1Config
+    T h b L n m a z sourceLeft hshape htail hleft happend]
+
+
 /-- Source-run version of the complete left-facing q4 suffix endpoint. -/
 theorem q4_suffix_run_left_word (T : Int → Bool) (h : Int) (b L n a : Nat)
     (hshape : q4RightShape T h b)
@@ -681,6 +698,7 @@ theorem oddRst2_q4_counted_source
 #print axioms q4_suffix_left_word
 #print axioms q4_suffix_left_word_general
 #print axioms q4_suffix_frame_eq_s1Config
+#print axioms q4_suffix_run_to_s1Config
 #print axioms q4_suffix_run_left_word
 #print axioms q4_suffix_run_target_of_prefix
 #print axioms oddRst2_q4_counted_source
