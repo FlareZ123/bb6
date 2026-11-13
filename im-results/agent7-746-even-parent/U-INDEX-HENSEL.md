@@ -17,7 +17,7 @@ L=13122=2\cdot3^8,\qquad n(r)=887+Lr,\qquad
 F(r)=Q_{3402}(n(r))/3^8.
 \]
 
-The base divisibility \(3^8\mid Q_{3402}(887)\) is already certified by the exact QDepth887.qDepthResidue_887_table / qDepthResidue_iff chain: its precision-7 selector is \(j=3402\bmod4374\).
+The base divisibility \(3^8\mid Q_{3402}(887)\) is confirmed by the exact modular census in UIndexHenselCensus.mjs. The branch also contains a Lean qDepthResidue_887_table / qDepthResidue_iff proof asserting the same precision-7 selector \(j=3402\bmod4374\), but its original-source CI has not yet passed; do not count that module as source-verified.
 
 ## 2. A 3-adic isometry in the family parameter
 
