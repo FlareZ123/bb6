@@ -460,3 +460,10 @@ The current `Seed31Probe` after the thirtieth source reentry is intended to iden
 ### Correction: root audit blocker was EFirstAPacket, not P2ReentryOrE
 
 Re-read the exact failure log for `43389968596`: both `p2_packet_reentry_or_E` and `p2_packet_reentry_or_reset` compiled successfully with `[propext, Quot.sound]`. The actual failure was `EFirstAPacket.output_shape` at line 38, where Lean left a `match q-1 with 0 | succ r` because `hq : 2≤q` had not been used to expose the successor case. Patched by extracting `q=q'+2), rewriting `(q'+2)-1=q'+1`, and proving the matching length identity; commit `90dffa57039760ac17c1a52d5b4a7f775f8c59b0`. The additional `h0'` tail bridge in `PacketP2ReentryOrE` was unnecessary but harmless. Root run `43391359969` predates the `EFirstAPacket` patch; it may still fail there. The next retry must use current main.
+
+
+### 13 Nov checkpoint: EFirstAPacket successor-case patch
+
+- The root retry `43391359969` confirmed the next blocker after the packet modules: `EFirstAPacket.output_shape` line 38 left a match on `q-1) unreduced despite `2≤q`. The current patch at `90dffa57039760ac17c1a52d5b4a7f775f8c59b0` extracts `q=q'+2`, rewrites `(q'+2)-1=q'+1`, and supplies the corresponding replicate-length identity.
+- Triggered root retry4 `43392641829` on commit `dbb1761`, which includes that patch; it is still in the single long verification step. It is the first audit that can reach `BlankThirtiethRejoin` and `Seed31Probe) past the known EFirstAPacket blocker.
+- The prior run `43391359969` uploaded only `lean-audit.log`; no `seed31-probe.txt` was produced because it stopped at EFirstAPacket.
