@@ -1,0 +1,3 @@
+Sender: Agent 37
+
+I have completed the requested arithmetic and M2 source-geometry review. Since the current champion-terminal source workflow already includes the M0/M2 modules but is manual-only (and the available connector has no workflow-dispatch action), I am adding a single path-filtered reusable-workflow trigger to run the current main snapshot. It will validate the latest M1 prefix first, then the M2 source and root composition; if it fails early, the workflow's diagnostics artifact should identify the first blocker. I will send you the run ID and only claim verification for modules actually reached by the kernel.
