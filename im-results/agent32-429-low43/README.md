@@ -1,6 +1,6 @@
 # #429 low-J, low-even and blank-root prefix research
 
-**Status: intermediate research.** The strongest current candidate is a 314,966-step physical blank-root prefix ending at J(0,408), obtained by extending the 169,592-step root prefix through a parity-shifted low43 return. The integrated original-source Lean workflow has not yet passed. This dossier establishes neither that #429 runs forever nor any exact or upper bound for BB(6).
+**Status: intermediate research.** The strongest current candidate is a 1,514,038-step physical blank-root prefix ending at J(0,744), obtained by extending the 169,592-step root prefix through a parity-shifted low43 return and twelve proved +28 returns. The integrated original-source Lean workflow has not yet passed. This dossier establishes neither that #429 runs forever nor any exact or upper bound for BB(6).
 
 ## Strongest root-prefix candidate
 
@@ -133,9 +133,31 @@ The 103,081-step continuation is `ParityShiftedReturns.parityShiftedC0_to_junc0_
 
 The final theorem `blank_root_to_junc0_408` composes this 145,374-step segment with `blank_root_lowEvenR32_to_junc0_344`. Its intended statement is an exact 314,966-step run from the authentic blank A-root to a complete physical representation of J(0,408), with C/01 excluded at every primitive prefix. The final head is -48 relative to the J(0,344) checkpoint head.
 
-**Validation status:** the individual continuation has passed targeted CI; the parity-shifted entry has been locally preflighted by its author but has not yet passed the integrated workflow; the 169,592-step root prefix and this new composition also await a successful integrated run. The manual-only workflow `.github/workflows/agent6-429-low42.yml` now compiles the updated lower-head-bound dependencies, both parity-shifted components, and the integrated root theorem, then audits their axiom reports. No integrated CI success is claimed.
+**Validation status:** the individual continuation has passed targeted CI; the parity-shifted entry has been locally preflighted by its author but has not yet passed the integrated workflow; the 169,592-step root prefix and this new composition also await a successful integrated run. The manual-only workflow `.github/workflows/agent6-429-low42.yml` now compiles the updated lower-head-bound dependencies, both parity-shifted components, the 314,966-step root composition, the +28 map, and the 1,514,038-step root chain, then audits their axiom reports. No integrated CI success is claimed.
 
-The immediate next extension is to compose the already-developed J(0,w) -> J(0,w+28) physical map twelve times, taking this root checkpoint from J(0,408) to J(0,744). The subsequent J(0,744) -> J(0,924) interval still contains the unresolved 7,382-step transition J(381,3) -> J(387,2).
+## Twelve +28 returns: blank root to J(0,744)
+
+`Junc0ReturnMap28RootChain.lean` applies the physical `J(0,w) -> J(0,w+28)` theorem twelve times, using r=12,19,26,33,40,47,54,61,68,75,82,89. The exact segment costs are:
+
+| r | Junc input | Steps | Junc output |
+|---:|---:|---:|---:|
+| 12 | J(0,408) | 51,079 | J(0,436) |
+| 19 | J(0,436) | 54,733 | J(0,464) |
+| 26 | J(0,464) | 59,955 | J(0,492) |
+| 33 | J(0,492) | 66,745 | J(0,520) |
+| 40 | J(0,520) | 75,103 | J(0,548) |
+| 47 | J(0,548) | 85,029 | J(0,576) |
+| 54 | J(0,576) | 96,523 | J(0,604) |
+| 61 | J(0,604) | 109,585 | J(0,632) |
+| 68 | J(0,632) | 124,215 | J(0,660) |
+| 75 | J(0,660) | 140,413 | J(0,688) |
+| 82 | J(0,688) | 158,179 | J(0,716) |
+| 89 | J(0,716) | 177,513 | J(0,744) |
+| **Total** | **J(0,408)** | **1,199,072** | **J(0,744)** |
+
+The new theorem `junc0_408_to_junc0_744_physical` preserves the complete-tape representation and excludes C/01 at every primitive prefix. Composing it with `blank_root_to_junc0_408` yields `blank_root_to_junc0_744`: a candidate 1,514,038-step successful physical run from the authentic blank A-root to J(0,744), with C/01 excluded at every prefix.
+
+This moves the next unresolved interval to the observed J(0,744) -> J(0,924) trajectory. Its proposed decomposition still contains the unidentified 7,382-step transition J(381,3) -> J(387,2).
 
 ## Validation and limits
 
