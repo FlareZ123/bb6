@@ -138,20 +138,29 @@ jobs:
           fi
           : > /tmp/a42-terminal/q4-suffix-axioms.log
           lean -o Q4Suffix.olean Q4Suffix.lean 2>&1 | tee /tmp/a42-terminal/q4-suffix-axioms.log
-
-          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/m1-even-q4-prefix-axioms.log
-          lean -o M1EvenQ4Prefix.olean M1EvenQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m1-even-q4-prefix-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-q4-prefix-axioms.log; then
-            echo '::error::sorryAx found in m=1,n=6 even q4 prefix candidate'
-            exit 1
-          fi
           : > /tmp/a42-terminal/q4-endpoint-axioms.log
           lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean 2>&1 | tee /tmp/a42-terminal/q4-endpoint-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/q4-endpoint-axioms.log; then
             echo '::error::sorryAx found in q4 full endpoint theorem dependencies'
             exit 1
           fi
+          # Agent 24's source-level (m,n)=(0,2) even q4 prefix.
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0EvenQ4Bridge.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-q4-bridge-axioms.log
+          lean -o M0EvenQ4Bridge.olean M0EvenQ4Bridge.lean 2>&1 | tee /tmp/a42-terminal/m0-even-q4-bridge-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-q4-bridge-axioms.log; then
+            echo '::error::sorryAx found in finite m=0,n=2 even q4 bridge'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0EvenQ4Prefix.lean" /tmp/a42-terminal/
+          python3 "$GITHUB_WORKSPACE/im-results/agent24-champion-time/m0_even_n2_replay.py"
+          : > /tmp/a42-terminal/m0-even-q4-prefix-axioms.log
+          lean -o M0EvenQ4Prefix.olean M0EvenQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m0-even-q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-q4-prefix-axioms.log; then
+            echo '::error::sorryAx found in source m=0,n=2 even q4 prefix'
+            exit 1
+          fi
+
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0OddQ4Bridges.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m0-odd-q4-bridges-axioms.log
           lean -o M0OddQ4Bridges.olean M0OddQ4Bridges.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-q4-bridges-axioms.log
@@ -224,6 +233,21 @@ jobs:
           lean -o S1CountedDrain.olean S1CountedDrain.lean 2>&1 | tee /tmp/a42-terminal/s1-counted-drain-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/s1-counted-drain-axioms.log; then
             echo '::error::sorryAx found in source S1 all-ones counted drain dependencies'
+            exit 1
+          fi
+          # The M0-even q4 suffix is independent of the M1-even prefix.
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0EvenQ4Suffix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
+          lean -o M0EvenQ4Suffix.olean M0EvenQ4Suffix.lean 2>&1 | tee /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-q4-suffix-axioms.log; then
+            echo '::error::sorryAx found in source m=0,n=2 even q4 suffix and counted increment'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-q4-prefix-axioms.log
+          lean -o M1EvenQ4Prefix.olean M1EvenQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m1-even-q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-q4-prefix-axioms.log; then
+            echo '::error::sorryAx found in m=1,n=6 even q4 prefix candidate'
             exit 1
           fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M2EvenQ4Prefix.lean" /tmp/a42-terminal/
@@ -362,6 +386,9 @@ jobs:
             /tmp/a42-terminal/m0-m2-root-composition-axioms.log
             /tmp/a42-terminal/m1-odd-q4-suffix-axioms.log
             /tmp/a42-terminal/m1-odd-root-composition-axioms.log
+            /tmp/a42-terminal/m0-even-q4-bridge-axioms.log
+            /tmp/a42-terminal/m0-even-q4-prefix-axioms.log
+            /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
             /tmp/a42-terminal/counted-reset-base-axioms.log
           if-no-files-found: ignore
           retention-days: 3
