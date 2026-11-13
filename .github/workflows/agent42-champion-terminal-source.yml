@@ -107,6 +107,12 @@ jobs:
             echo '::error::sorryAx found in carry boundary trace theorem dependencies'
             exit 1
           fi
+          : > /tmp/a42-terminal/frame-cell-lemmas-axioms.log
+          lean -o FrameCellLemmas.olean FrameCellLemmas.lean 2>&1 | tee /tmp/a42-terminal/frame-cell-lemmas-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/frame-cell-lemmas-axioms.log; then
+            echo '::error::sorryAx found in carry frame-cell lemmas'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedCarryPrefix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/carry-prefix-axioms.log
           lean -o CountedCarryPrefix.olean CountedCarryPrefix.lean 2>&1 | tee /tmp/a42-terminal/carry-prefix-axioms.log
@@ -119,6 +125,13 @@ jobs:
           lean -o CountedCarryPrefixGeneral.olean CountedCarryPrefixGeneral.lean 2>&1 | tee /tmp/a42-terminal/carry-prefix-general-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/carry-prefix-general-axioms.log; then
             echo '::error::sorryAx found in counted carry residue bridge dependencies'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/LongResidue1.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/long-residue1-axioms.log
+          lean -o LongResidue1.olean LongResidue1.lean 2>&1 | tee /tmp/a42-terminal/long-residue1-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/long-residue1-axioms.log; then
+            echo '::error::sorryAx found in long-residue1 carry output theorem dependencies'
             exit 1
           fi
           lean -o ChampionModular.olean ChampionModular.lean
@@ -385,8 +398,10 @@ jobs:
           name: lean-diagnostics-${{ github.run_id }}
           path: |
             /tmp/a42-terminal/carry-boundary-axioms.log
+            /tmp/a42-terminal/frame-cell-lemmas-axioms.log
             /tmp/a42-terminal/carry-prefix-axioms.log
             /tmp/a42-terminal/carry-prefix-general-axioms.log
+            /tmp/a42-terminal/long-residue1-axioms.log
             /tmp/a42-terminal/carry-left-output-axioms.log
             /tmp/a42-terminal/carry-left-output-r23-axioms.log
             /tmp/a42-terminal/s1-counted-carry-axioms.log
