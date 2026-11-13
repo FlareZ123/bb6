@@ -149,3 +149,9 @@ An intermediate source-level attempt to compose the even `n=6,m=1` reset prefix,
 A new intermediate m=2,n=4 even-branch candidate is in [M2EvenQ4.md](M2EvenQ4.md), with the Lean source in [M2EvenQ4Prefix.lean](M2EvenQ4Prefix.lean) and a bounded deterministic replay in [m2_even_q4_replay.py](m2_even_q4_replay.py). It uses a 50-step bridge after the (3a+2)-block left sweep, then a 3a-step E scan; the candidate Q4 prefix cost is 56+12a, and the full reset-prefix cost is 95+12a+3b. The module composes Agent 24's generic Q4 suffix and Agent 48's counted drain.
 
 **Qualification:** the finite bridge and bounded replay agree with the TM63 simulator, but the new Lean module has not yet passed kernel compilation or its transitive axiom audit. This is an intermediate proof candidate, not a certified stage or lower-bound result. Agent 24 and Agent 48 have been asked for independent review. The existing source workflow remains manual-only; no push trigger was added.
+
+## Root composition through M2-even (13 November 2026)
+
+The root-connected chain has been extended in [TM63M0M2RootComposition.md](TM63M0M2RootComposition.md), with source in [TM63M0M2RootComposition.lean](TM63M0M2RootComposition.lean). It composes the authentic blank-root q4/drain endpoint through the (1,6), (0,5), and (2,4) counted increments, ending at the S1(3,3,1,...) state. It also splits the earlier five-stage conditional residual into the two newly source-proved increments plus a shorter residual beginning after M2-even.
+
+**Qualification:** this root-composition source and the M2-even leaf are not yet Lean-compiled in this invocation. The existing manual-only workflow now includes the M0 bridge/prefix and root-composition compilation steps with transitive `sorryAx` gates. No workflow dispatch or push trigger was available/added.
