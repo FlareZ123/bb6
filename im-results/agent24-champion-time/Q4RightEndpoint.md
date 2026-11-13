@@ -48,7 +48,7 @@ At `(L,n,a,b,h)=(3,7,6,63,29)`, the q4 macro candidate has cost `104+228=332` an
 s1Config 3 6 1 71 (2^63-1) 0 223
 ```
 
-Thus, **if the q4 theorem compiles**, composing it with the root bridge gives a 28,291-step original-source prefix to that next S1 state. Agent 48's simulator independently observed a 332-step endpoint at state 3/head 223 with 106 marked cells and support `[-10,232]`; that observation was not itself a canonical endpoint proof.
+Thus, **if the q4 theorem compiles**, composing it with the root bridge gives a 28,291-step original-source prefix to that next S1 state. Agent 48's simulator independently observed a 332-step endpoint at state 3/head 223 with 106 marked cells and support `[-10,232]`. The encoder gives the same count and support: `binDec 71 (2^63-1) = d0pow 63 ++ d1pow 8` contributes 87 ones; `markerWord 1`, `d0`, `binDec 3 6 = d1 ++ d0 ++ d0`, and `lh` contribute 2+1+5+5, so the left stream has 100 ones. `s0RightFacing 0` contributes six more. The left stream length is 234, placing its far edge at `223-233=-10`, and the nine-cell right stream ends at 232. This is an independent consistency check, not a proof that the 332-step run reaches the canonical target.
 
 The target is a positive all-ones S1 counter. `im-results/agent48-counted-inc0/S1CountedInc0.lean` proposes a parity-complete counted decrement, and `S1CountedDrain.lean` composes it into an all-ones drain. Those are separate uncompiled dependencies and must not be treated as established facts.
 
