@@ -5,6 +5,33 @@ set_option maxHeartbeats 0
 namespace CascadeRayTwoTierDepth
 open CascadeRayDepthResidue CascadeRayDepthHensel CascadeRayPeriod
 
+private theorem twoTierDepthPeriod_pos (k : Nat) : 0 < depthPeriod k := by
+  change 0 < 2*3^k
+  exact Nat.mul_pos (by decide) (Nat.pow_pos (by decide))
+
+private theorem twoTierDepthPeriod_next (k : Nat) :
+    depthPeriod (k+1) = 3*depthPeriod k := by
+  calc
+    depthPeriod (k+1) = 2*(3^k*3) := by simp [depthPeriod, Nat.pow_succ]
+    _ = 3*(2*3^k) := by ac_rfl
+
+private theorem twoTier_dvd_sub {d x y : Int}
+    (h1 : d ∣ x) (h2 : d ∣ x-y) : d ∣ y := by
+  rcases h1 with ⟨a,ha⟩
+  rcases h2 with ⟨b,hb⟩
+  refine ⟨a-b,?_⟩
+  rw [ha] at hb
+  rw [Int.mul_sub]
+  omega
+
+private theorem twoTier_dvd_add {d x y : Int}
+    (h1 : d ∣ y) (h2 : d ∣ x-y) : d ∣ x := by
+  rcases h1 with ⟨a,ha⟩
+  rcases h2 with ⟨b,hb⟩
+  refine ⟨b+a,?_⟩
+  rw [Int.mul_add]
+  omega
+
 /-- The second-tier predecessor-state numerator, as opposed to the
     odd-band numerator. -/
 def twoTierDepthNumerator (n j : Nat) : Int :=
@@ -27,7 +54,7 @@ private theorem twoTier_mod_three_even_iff (n j : Nat)
   have hmod : twoTierDepthNumerator n j%3 = signedZ n j%3 := by
     dsimp [twoTierDepthNumerator]
     simp [Int.sub_emod,Int.mul_emod]
-  rw [Int.dvd_iff_emod_eq_zero,hmod,Int.dvd_iff_emod_eq_zero]
+  rw [Int.dvd_iff_emod_eq_zero,hmod]
   exact signedZ_mod_three_even_iff n j hn
 
 private theorem twoTierDepthCoeff_unit (n b k : Nat)
@@ -35,7 +62,7 @@ private theorem twoTierDepthCoeff_unit (n b k : Nat)
     (16*(2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k)%3≠0 := by
   have h := rayCoeff_unit n b k hn
   have h16 : (16:Int)%3=1 := by decide
-  simpa [Int.mul_emod,h16] using h
+  simpa [Int.mul_emod,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm,h16] using h
 
 private theorem twoTierDepth_lift_criterion (n b k t : Nat)
     (ht : t<3)
@@ -68,8 +95,9 @@ private theorem twoTierDepth_lift_criterion (n b k t : Nat)
         (twoTierDepthNumerator n b-m*(a*t)) =
           16*(signedZ n (b+t*depthPeriod k)-
             (signedZ n b-m*(c*t))) := by
-    dsimp [twoTierDepthNumerator,a,c]
+    dsimp [twoTierDepthNumerator]
     rw [Int.mul_sub,Int.mul_sub]
+    rw [show a=16*c by rfl]
     have hprod : 16*(m*(c*t))=m*(16*c*t) := by ac_rfl
     rw [hprod]
     omega
@@ -86,9 +114,9 @@ private theorem twoTierDepth_lift_criterion (n b k t : Nat)
         (3:Int)^(k+2)∣twoTierDepthNumerator n b-m*(a*t) := by
     constructor
     · intro h
-      exact dvd_sub h hTdiv
+      exact twoTier_dvd_sub h hTdiv
     · intro h
-      exact dvd_add h hTdiv
+      exact twoTier_dvd_add h hTdiv
   have hquot : m*(twoTierDepthNumerator n b/m)=twoTierDepthNumerator n b :=
     Int.mul_ediv_cancel_of_dvd hbase
   have hfactor :
@@ -97,9 +125,14 @@ private theorem twoTierDepth_lift_criterion (n b k t : Nat)
     calc
       _ = m*(twoTierDepthNumerator n b/m)-m*(a*t) := by rw [hquot]
       _ = m*(twoTierDepthNumerator n b/m-a*t) := by rw [Int.mul_sub]
-  have hcomm : (3:Int)*m=m*3 := Int.mul_comm _ _
-  rw [hdiviff,hfactor,hM,hcomm]
-  exact Int.mul_dvd_mul_iff_left hmne
+  rw [hdiviff,hfactor,hM]
+  rw [Int.mul_comm m (twoTierDepthNumerator n b/m-a*t)]
+  have hcoeff : a*t =
+      (16*(2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k)*t := by
+    dsimp [a,c]
+    ac_rfl
+  rw [←hcoeff]
+  exact Int.mul_dvd_mul_iff_right hmne
 
 theorem twoTierDepthResidue_lt (n k : Nat) :
     twoTierDepthResidue n k < depthPeriod k := by
@@ -115,7 +148,7 @@ theorem twoTierDepthResidue_lt (n k : Nat) :
       have hd : d<3 := henselDigit_lt q a
       have hmul := Nat.mul_le_mul_right (depthPeriod k)
         (show d≤2 by omega)
-      have hnext := depthPeriod_next k
+      have hnext := twoTierDepthPeriod_next k
       have hdef : twoTierDepthResidue n (k+1)=b+d*depthPeriod k := rfl
       rw [hdef,hnext]
       omega
@@ -134,50 +167,43 @@ private theorem twoTierDepthResidue_good (n k : Nat)
       let q : Int := twoTierDepthNumerator n b/(3:Int)^(k+1)
       let d := henselDigit q a
       have ha : a%3≠0 := by
-        simpa [a,c] using twoTierDepthCoeff_unit n b k hn
+        simpa [a,c,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using
+          twoTierDepthCoeff_unit n b k hn
       have hd : d<3 := henselDigit_lt q a
       have hdiv : (3:Int)∣q-a*d := by
         simpa [d] using henselDigit_divides q a ha
       have hbase : (3:Int)^(k+1)∣twoTierDepthNumerator n b := ih
       have hlift := (twoTierDepth_lift_criterion n b k d hd hbase).mpr
-        (by simpa [q,a,c] using hdiv)
-      simpa [twoTierDepthResidue,b,a,c,q,d] using hlift
+        (by simpa [q,a,c,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using hdiv)
+      have hpow : k+2 = k+1+1 := by omega
+      simpa [twoTierDepthResidue,b,a,c,q,d,hpow,
+        Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using hlift
 
 private theorem twoTier_period_dvd_iff (n j k m : Nat) :
     ((3:Int)^(k+1)∣twoTierDepthNumerator n (j+m*depthPeriod k)) ↔
     ((3:Int)^(k+1)∣twoTierDepthNumerator n j) := by
   have hs := signedZ_period_mul n j k m
-  have hsdvd :
-      (3:Int)^(k+1)∣
-        signedZ n (j+m*depthPeriod k)-signedZ n j := by
+  have hsdvd : (3:Int)^(k+1)∣
+      signedZ n (j+m*depthPeriod k)-signedZ n j := by
     apply Int.dvd_iff_emod_eq_zero.mpr
     exact (Int.emod_eq_emod_iff_emod_sub_eq_zero).1 hs
   have hTdiff :
-      twoTierDepthNumerator n (j+m*depthPeriod k)-
-        twoTierDepthNumerator n j =
-          16*(signedZ n (j+m*depthPeriod k)-signedZ n j) := by
+      twoTierDepthNumerator n (j+m*depthPeriod k)-twoTierDepthNumerator n j =
+        16*(signedZ n (j+m*depthPeriod k)-signedZ n j) := by
     dsimp [twoTierDepthNumerator]
+    rw [Int.mul_sub]
     omega
-  have hTdiv :
-      (3:Int)^(k+1)∣
-        twoTierDepthNumerator n (j+m*depthPeriod k)-
-          twoTierDepthNumerator n j := by
+  have hTdiv : (3:Int)^(k+1)∣
+      twoTierDepthNumerator n (j+m*depthPeriod k)-twoTierDepthNumerator n j := by
     rcases hsdvd with ⟨z,hz⟩
     refine ⟨16*z,?_⟩
     rw [hTdiff,hz]
     ac_rfl
   constructor
   · intro h
-    exact dvd_sub h hTdiv
+    exact twoTier_dvd_sub h hTdiv
   · intro h
-    exact dvd_add h hTdiv
-
-private theorem twoTier_period_dvd_iff (n j k m : Nat) :
-    ((3:Int)^(k+1)∣twoTierDepthNumerator n (j+m*depthPeriod k)) ↔
-    ((3:Int)^(k+1)∣twoTierDepthNumerator n j) := by
-  simp only [Int.dvd_iff_emod_eq_zero, twoTierDepthNumerator,
-    Int.sub_emod, Int.mul_emod]
-  rw [signedZ_period_mul]
+    exact twoTier_dvd_add h hTdiv
 
 private theorem twoTier_period_mod_dvd_iff (n j k : Nat) :
     ((3:Int)^(k+1)∣twoTierDepthNumerator n j) ↔
@@ -201,17 +227,21 @@ private theorem twoTier_small_digit_unique (n k : Nat)
   let a : Int := 16*c
   let q : Int := twoTierDepthNumerator n b/(3:Int)^(k+1)
   have ha : a%3≠0 := by
-    simpa [a,c] using twoTierDepthCoeff_unit n b k hn
+    simpa [a,c,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using
+      twoTierDepthCoeff_unit n b k hn
   have hbase := twoTierDepthResidue_good n k hn
   have hc := twoTierDepth_lift_criterion n b k t ht hbase
   constructor
   · intro hh
-    have hd : (3:Int)∣q-a*t := hc.mp hh
-    exact henselDigit_div q a ha t ht hd
+    have hd : (3:Int)∣q-a*t := by
+      simpa [q,a,c,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using hc.mp hh
+    have heq : t=henselDigit q a := henselDigit_div q a ha t ht hd
+    simpa [q,a,c,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using heq
   · intro ht'
     subst t
     apply hc.mpr
-    exact henselDigit_divides q a ha
+    simpa [q,a,c,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using
+      (henselDigit_divides q a ha)
 
 /-- At every ternary precision, the second-tier predecessor-state
     numerator has exactly one depth residue class. -/
@@ -230,7 +260,7 @@ theorem twoTierDepthResidue_iff (n k j : Nat)
       let d := henselDigit
         (twoTierDepthNumerator n b/(3:Int)^(k+1))
         (16*(2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k)
-      have hstep : pn=3*p := depthPeriod_next k
+      have hstep : pn=3*p := twoTierDepthPeriod_next k
       have hdiv : (3:Int)^(k+1)∣(3:Int)^(k+2) := by
         refine ⟨3,?_⟩
         rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
@@ -247,9 +277,9 @@ theorem twoTierDepthResidue_iff (n k j : Nat)
               rw [hw,hv]
               ac_rfl
         have hb : (j%pn)%p=b := (ih (j%pn)).mp hlo
-        have hp : 0<p := depthPeriod_pos k
+        have hp : 0<p := twoTierDepthPeriod_pos k
         have hjlt : j%pn<3*p := by
-          have h := Nat.mod_lt j (depthPeriod_pos (k+1))
+          have h := Nat.mod_lt j (twoTierDepthPeriod_pos (k+1))
           simpa only [pn,hstep] using h
         have ht : (j%pn)/p<3 := by
           apply (Nat.div_lt_iff_lt_mul hp).mpr

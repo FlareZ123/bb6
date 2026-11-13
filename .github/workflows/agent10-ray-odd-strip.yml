@@ -95,6 +95,7 @@ jobs:
           lean -o "$g/SignedRayPeriod.olean" "$g/SignedRayPeriod.lean"
           lean -o "$g/RayDepthHensel.olean" "$g/RayDepthHensel.lean"
           lean -o "$g/RayDepthResidue.olean" "$g/RayDepthResidue.lean"
+          lean -o "$b/RayTwoTierDepthHensel.olean" "$b/RayTwoTierDepthHensel.lean"
           lean -o "$b/RayIndexHensel.olean" "$b/RayIndexHensel.lean"
           lean -o "$g/RayResidues.olean" "$g/RayResidues.lean"
           lean -o "$g/RayNonFork.olean" "$g/RayNonFork.lean"
