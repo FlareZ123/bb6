@@ -1,4 +1,5 @@
 import Q4RightEndpoint
+import TerminalCount
 import M1EvenQ4Prefix
 import S1CountedDrain
 import Lean.Elab.Tactic.Omega
