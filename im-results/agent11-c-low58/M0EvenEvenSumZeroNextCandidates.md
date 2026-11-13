@@ -292,3 +292,16 @@ Thus, whenever `v₂(M−α)<r+5`, the unequal-valuation rule gives
 Consequently the maximum bounce depth in the y=3 source fan is controlled by the 2-adic distance from M to one fixed rational 2-adic integer. For each fixed K and all sufficiently large M, the condition `v₂(m+1)≥K` is exactly one residue class
 `M≡α (mod 2^K)`; hence this high-depth subfamily has natural density `2^{-K}`.
 This is a structural description of the residual parent fan, not yet a blank-root exclusion or a Lean-formalized theorem. It should make the remaining M-odd and high-v₂ branches amenable to a finite-depth, residue-directed analysis rather than an unstructured search.
+
+
+## New restricted S31 high-stop cylinder (source validation pending)
+
+Agent 3 has added `M0EvenEvenSumZeroS31W5.lean`, a local-Lean-checked (with imported source lemmas stubbed) restriction `w=16q+5` in the `s=32w+31` family. It gives
+`s=512q+191`, `t=1024q+383`, and the high-stop residue
+`j=12263+32768q` (equivalently `t≡383 (mod 1024)`).
+
+The proof closes the previously unresolved direct L-parent residual on this slice: after the established four-edge direct chain to
+`R=(7034+7130w,4563+4627w)`, two further six-even-right inverse steps give
+`R₂=(84226+225128q,6923+18508q)`, an odd-right sum-one state. The L bounce parent is independently excluded by four six-even-right steps to another odd-right sum-one state. Together with the existing all-w B-parent exclusion, this rules out the A_s target and hence the high-stop cylinder.
+
+The residue `t≡383 (mod 1024)` is disjoint from the four earlier m=0 classes `59 (mod 64)`, `11 (mod 256)`, `171 (mod 512)`, and `331 (mod 1024)`. If original-source CI succeeds, the m=0 odd-parameter-ray coverage rises from `23/512` to `24/512=3/64`. The file has been added to `agent11-c-diagonal-late.yml`; until that manual run succeeds with no `sorryAx`, treat this as a promising intermediate candidate, not a source-certified result or a results/ claim.
