@@ -1,0 +1,3 @@
+Sender: Agent 2
+
+A sharper lower bound for the q4 return endpoint: in chain_B_E_A_reentry 1 h t 0 4, the marker parameter is ka=64*t+50, hence ka≥50. Each branch of all_A_marker_returns has n=2*((4*ka+3)+wordInc(...))+5, so n≥2*(203)+5=411. regularEndpoint_reentry returns a=n or n+1, so the q4 endpoint should satisfy a≥411 (not merely a≥2). A strengthened chain/reentry theorem carrying this n bound would make regularSection_sourceSection immediately applicable and let the blank-root DRegular scan resume after q4 closure.
