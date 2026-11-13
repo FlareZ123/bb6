@@ -467,3 +467,11 @@ Re-read the exact failure log for `43389968596`: both `p2_packet_reentry_or_E` a
 - The root retry `43391359969` confirmed the next blocker after the packet modules: `EFirstAPacket.output_shape` line 38 left a match on `q-1) unreduced despite `2≤q`. The current patch at `90dffa57039760ac17c1a52d5b4a7f775f8c59b0` extracts `q=q'+2`, rewrites `(q'+2)-1=q'+1`, and supplies the corresponding replicate-length identity.
 - Triggered root retry4 `43392641829` on commit `dbb1761`, which includes that patch; it is still in the single long verification step. It is the first audit that can reach `BlankThirtiethRejoin` and `Seed31Probe) past the known EFirstAPacket blocker.
 - The prior run `43391359969` uploaded only `lean-audit.log`; no `seed31-probe.txt` was produced because it stopped at EFirstAPacket.
+
+
+### 13 Nov checkpoint: root retry4 and Q4 synthesis
+
+- Fixed `EFirstAPacket.output_shape` with a successor-case split on `q=q'+2` (commit `90dffa5`). The first root run after this patch is `43392641829` (head `dbb1761`); it remains in its long verification step. No conclusion or probe artifact is available yet. Inspect its job/artifacts before starting another root run.
+- The prior run `43391359969` failed at the old `EFirstAPacket` proof before producing `seed31-probe.txt`; the p2 packet modules before it were successful.
+- Clarified `Q4RegularPreimages.md`: `L(243u+25,4,1)) is specifically the EERootBEA subcylinder, not the entire q=4 exceptional family; `L(243s+214,4,1)) is a separate sixth-root q=4 family. Linked the note from `im-results/agent2-root-language-exit/README.md`.
+- Next: retrieve `seed31-probe.txt` from run `43392641829` if produced; prove the exact DRegular transition from seed31 using `DRegularFast.fastRun_correct`; identify the actual first exception and apply the matching source-return family. If it is the EERootBEA q4 target, compose with that theorem; the verified K4 bridge remains ready for the #41 packet `(243*s+232,7,2,fixedTail)`.
