@@ -155,7 +155,7 @@ theorem blank_no_y3_x128w (w : Nat) (hw : 1≤w)
             · have hS0 : BB6.Agent3.CReach (43*w-3) ((85*w-7)/2) := by
                 apply (BB6.Agent3.oddodd_lowval_blank_reach_iff
                   (44*w-1) (42*w-1) (by omega) (by omega)
-                  (by omega) (by omega) (by omega) (by omega)).mp
+                  (by omega) (by omega) (by omega)).mp
                 exact hR0
               rcases hS0 with ⟨time2,h2⟩
               cases time2 with
