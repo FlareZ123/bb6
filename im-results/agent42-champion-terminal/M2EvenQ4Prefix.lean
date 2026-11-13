@@ -646,8 +646,9 @@ theorem m2Even_q4_prefix_data (a b : Nat) (h : Int)
 theorem m2EvenQ4SuffixTargetLeft (a b : Nat) :
     s1LeftFacing 3 3 1 (a+b+2) (2^b-1) =
       d0pow b ++ d1pow 2 ++ (m2EvenQ4LeftFacing a).drop 1 := by
-  simpa [m2EvenQ4LeftFacing,m2EvenQ4LeftSuffix,q4LeftFacing,
-    List.append_assoc] using q4SuffixTargetLeft 3 3 a b
+  simpa [m2EvenQ4LeftFacing,m2EvenQ4LeftSuffix,
+    BB6Coverage.Agent8Q4Suffix.q4LeftFacing,List.append_assoc] using
+      q4SuffixTargetLeft 3 3 a b
 
 /-- The generic q4 suffix plus this even prefix gives the exact
 source-level Rst2 prefix to the canonical m=1,n=3 S1 intermediate. -/
