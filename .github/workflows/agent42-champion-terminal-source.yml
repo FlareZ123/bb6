@@ -18,6 +18,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/a42-terminal
+          python3 -c "import base64,io,lzma,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('/tmp/a42-terminal',filter='data')"
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a42-terminal/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a42-terminal/
           cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a42-terminal/
@@ -38,7 +39,6 @@ jobs:
           cp im-results/agent42-champion-terminal/TerminalAfterPrefix.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalEncoderBridge.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a42-terminal/
-          python3 -c "import base64,io,lzma,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('/tmp/a42-terminal',filter='data')"
           # Re-apply live carry modules after archive extraction so stale
           # bundled copies cannot shadow the repository sources.
           cp im-results/agent24-champion-time/CountedCarryBridges.lean /tmp/a42-terminal/
