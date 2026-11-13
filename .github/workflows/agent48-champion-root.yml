@@ -30,6 +30,7 @@ jobs:
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a48-root/
           cp im-results/agent8-counted-reset/CountedResetBase.lean /tmp/a48-root/
           cp im-results/agent8-counted-reset/CountedResetOddBase.lean /tmp/a48-root/
+          cp im-results/agent48-counted-inc0/ResetOddCanonical.lean /tmp/a48-root/
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-root/
           cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a48-root/
           cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a48-root/
@@ -118,6 +119,13 @@ jobs:
           lean -o CountedResetOddBase.olean CountedResetOddBase.lean 2>&1 | tee /tmp/a48-root/reset-odd-base-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/reset-odd-base-axioms.log; then
             echo "::error::sorryAx found in odd reset-base embedding dependencies"
+            exit 1
+          fi
+          : > /tmp/a48-root/reset-odd-canonical-axioms.log
+          lean -o ResetOddCanonical.olean ResetOddCanonical.lean 2>&1 | tee /tmp/a48-root/reset-odd-canonical-axioms.log
+          grep -F "'BB6Coverage.Agent48CountedInc0.resetBase_odd_canonical' depends on axioms:" /tmp/a48-root/reset-odd-canonical-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/reset-odd-canonical-axioms.log; then
+            echo "::error::sorryAx found in canonical odd reset-base output theorem"
             exit 1
           fi
           : > /tmp/a48-root/s0-uniform-bridge-axioms.log
