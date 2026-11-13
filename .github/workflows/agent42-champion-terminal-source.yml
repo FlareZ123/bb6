@@ -143,6 +143,20 @@ jobs:
             echo '::error::sorryAx found in q4 full endpoint theorem dependencies'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0OddQ4Bridges.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-odd-q4-bridges-axioms.log
+          lean -o M0OddQ4Bridges.olean M0OddQ4Bridges.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-q4-bridges-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-q4-bridges-axioms.log; then
+            echo '::error::sorryAx found in source M0 odd q4 bridge dependencies'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0OddQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-odd-q4-prefix-axioms.log
+          lean -o M0OddQ4Prefix.olean M0OddQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-q4-prefix-axioms.log; then
+            echo '::error::sorryAx found in source M0 odd q4 prefix theorem'
+            exit 1
+          fi
           if grep -q 'sorryAx' /tmp/a42-terminal/q4-suffix-axioms.log; then
             echo '::error::sorryAx found in q4 suffix theorem dependencies'
             exit 1
@@ -256,6 +270,13 @@ jobs:
             echo '::error::sorryAx found in first-increment root composition'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63M0M2RootComposition.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-m2-root-composition-axioms.log
+          lean -o TM63M0M2RootComposition.olean TM63M0M2RootComposition.lean 2>&1 | tee /tmp/a42-terminal/m0-m2-root-composition-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-m2-root-composition-axioms.log; then
+            echo '::error::sorryAx found in M0/M2 root composition theorem'
+            exit 1
+          fi
           # This independent base-frame leaf is intentionally last: it is not an
           # import of the root/q4/drain/terminal chain, so its failure must not
           # hide diagnostics from the more decisive source-composition modules.
@@ -293,11 +314,14 @@ jobs:
             /tmp/a42-terminal/q4-prefix-axioms.log
             /tmp/a42-terminal/q4-suffix-axioms.log
             /tmp/a42-terminal/q4-endpoint-axioms.log
+            /tmp/a42-terminal/m0-odd-q4-bridges-axioms.log
+            /tmp/a42-terminal/m0-odd-q4-prefix-axioms.log
             /tmp/a42-terminal/s1-counted-drain-axioms.log
             /tmp/a42-terminal/root-q4-drain-axioms.log
             /tmp/a42-terminal/champion-root-q4-drain-axioms.log
             /tmp/a42-terminal/root-q4-attainable-axioms.log
             /tmp/a42-terminal/m1-even-root-composition-axioms.log
+            /tmp/a42-terminal/m0-m2-root-composition-axioms.log
             /tmp/a42-terminal/counted-reset-base-axioms.log
           if-no-files-found: ignore
           retention-days: 3
