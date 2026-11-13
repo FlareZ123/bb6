@@ -23,7 +23,7 @@ theorem terminal9780_certificate :
     DRegular.run 9780 seed19 = some ⟨9*t19+10,9,1⟩ ∧
       t19 % 27 = 12 := by
   have hcanon : DRegular.Canon seed19 := by decide
-  rw [BB6.DRegularFast.fastRun_correct 9780 seed19 hcanon]
+  rw [BB6.Agent2Fast64.fastRun_correct 9780 seed19 hcanon]
   decide
 
 theorem terminal9780_exact :
