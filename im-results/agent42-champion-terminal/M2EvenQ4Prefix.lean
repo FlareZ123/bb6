@@ -646,38 +646,8 @@ theorem m2Even_q4_prefix_data (a b : Nat) (h : Int)
 theorem m2EvenQ4SuffixTargetLeft (a b : Nat) :
     s1LeftFacing 3 3 1 (a+b+2) (2^b-1) =
       d0pow b ++ d1pow 2 ++ (m2EvenQ4LeftFacing a).drop 1 := by
-  have hq : 0 < 2^(a+1) := Nat.pow_pos (by decide)
-  have hbin0 := binDec_sub_one_carryPrefix (a+1) 0 b (by omega)
-  have hbin :
-      binDec (a+b+2) (2^b-1) =
-        d0pow b ++ d1pow (a+2) := by
-    have hstep :
-        binDec ((a+1)+1+b) (((2*0+1)*2^b)-1) =
-          d0pow b ++ d1 ++ binDec (a+1) 0 := hbin0
-    have hzero : binDec (a+1) 0 = d1pow (a+1) := binDec_zero _
-    have hpow : d1 ++ d1pow (a+1) = d1pow (a+2) := by
-      simp [d1pow]
-    have hlen : a+b+2 = (a+1)+1+b := by omega
-    have hval : 2^b-1 = ((2*0+1)*2^b)-1 := by simp
-    rw [hlen,hval]
-    exact hstep.trans (by rw [hzero,hpow])
-  have hdrop :
-      (m2EvenQ4LeftFacing a).drop 1 =
-        d1pow a ++ m2EvenQ4LeftSuffix := by
-    simp [m2EvenQ4LeftFacing,m2EvenQ4LeftSuffix,List.drop,
-      List.append_assoc]
-  have hpow : d1pow 2 ++ d1pow a = d1pow (a+2) := by
-    simp [d1pow,Nat.add_assoc,List.append_assoc]
-  calc
-    s1LeftFacing 3 3 1 (a+b+2) (2^b-1) =
-        binDec (a+b+2) (2^b-1) ++
-          (markerWord 1 ++ (d0 ++ (binDec 3 3 ++ lh))) := rfl
-    _ = (d0pow b ++ d1pow (a+2)) ++
-          (markerWord 1 ++ (d0 ++ (binDec 3 3 ++ lh))) := by rw [hbin]
-    _ = d0pow b ++ d1pow 2 ++ (m2EvenQ4LeftFacing a).drop 1 := by
-      rw [hdrop]
-      simp only [List.append_assoc]
-      rw [hpow]
+  simpa [m2EvenQ4LeftFacing,m2EvenQ4LeftSuffix,q4LeftFacing,
+    List.append_assoc] using q4SuffixTargetLeft 3 3 a b
 
 /-- The generic q4 suffix plus this even prefix gives the exact
 source-level Rst2 prefix to the canonical m=1,n=3 S1 intermediate. -/
