@@ -151,16 +151,9 @@ theorem blank_halts_iff_six_both_s3 :
       have hnot :
           ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0) := by
         rintro ⟨hjmod,hcong⟩
-        obtain ⟨u,v,hj,hk,hsector⟩ :=
-          (BB6.Agent4SevenC58.s3_image_pullback_iff_congruence j m).2
-            ⟨hjmod,hcong⟩
         obtain ⟨time,hrun⟩ := hreach
-        have hblank :=
-          BB6.Agent4Seven.blank_ne_six_seven_band_s3 u v time hsector
-        have hx : 2*j+3=641+1024*u := by omega
-        apply hblank
-        rw [hx,hk] at hrun
-        exact hrun
+        exact BB6.Agent4SevenC58.blank_ne_s3_parameter_congruence j m time
+          hjmod hcong (by simpa [k] using hrun)
       exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
   · rintro (hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩)
     · exact Or.inl hlow
