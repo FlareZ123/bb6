@@ -76,10 +76,10 @@ function bitLength(x) {
 // First digit: G2 mod 3 for r=0,1,2.
 const firstDigit = [];
 for (let r = 0n; r < 3n; r++) {
-  const ev = evaluateXs(r, 3n ** 9n, 3);
+  const ev = evaluateXs(r, 3n ** 9n, 2);
   firstDigit.push({
     r: String(r),
-    G2mod3: String(quotientMod(ev.Xs[3], ev.Es[3], 3n)),
+    G2mod3: String(quotientMod(ev.Xs[2], ev.Es[2], 3n)),
   });
 }
 
