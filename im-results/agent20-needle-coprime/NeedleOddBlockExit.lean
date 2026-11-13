@@ -33,12 +33,12 @@ theorem odd_block_exit_terminal_identity
   rcases
       (highLevelNext_iff_oddTower (5^t*m-1) (haltTower k)).mp hterm with
     ⟨q, v, hq, _⟩
+  have hP : 1 ≤ 5^t*m := by
+    have hp : 0 < 5^t*m :=
+      Nat.mul_pos (Nat.pow_pos (by decide)) hm
+    omega
   have hsource : 2^v*(2*q+3) = 5^t*m+1 := by
     have hfactor := oddTower_factor q v
-    have hP : 1 ≤ 5^t*m := by
-      have hp : 0 < 5^t*m :=
-        Nat.mul_pos (Nat.pow_pos (by decide)) hm
-      omega
     rw [← hq] at hfactor
     have hshift : (5^t*m-1)+2 = 5^t*m+1 := by omega
     rw [hshift] at hfactor
@@ -69,10 +69,6 @@ theorem odd_block_exit_terminal_identity
     nlinarith [hmul', hpowv]
   exact ⟨q, v, hq, hblock, hExitEven, hfinal⟩
 
-/--
-The odd-block-exit terminal identity forces the valuation-dependent
-right-hand residue to be a unit modulo five.
--/
 /-- Rewriting the terminal-exit identity exposes an exact divisor:
 the odd-block scale and the terminal feeder denominator both divide the
 terminal-power defect. -/
@@ -221,6 +217,10 @@ private theorem terminal_mod20_table (k v : Nat)
   interval_cases hk : k%4 <;> interval_cases hv : v%20 <;>
     norm_num [hk, hv] at h' <;> norm_num [hk, hv]
 
+/--
+The odd-block-exit terminal identity forces the valuation-dependent
+right-hand residue to be a unit modulo five.
+-/
 theorem odd_block_exit_terminal_nonzero_mod_five
     (t m k : Nat) (ht : 0 < t) (hm : 0 < m) (hmOdd : m % 2 = 1)
     (hterm :
