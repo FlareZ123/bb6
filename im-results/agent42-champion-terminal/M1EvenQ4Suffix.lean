@@ -18,7 +18,6 @@ namespace BB6Coverage.Agent42M1EvenSuffix
 open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
-open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8Rst1Prime
