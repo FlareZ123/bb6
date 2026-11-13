@@ -108,4 +108,60 @@ theorem tm2_blank_reaches_m1Even_s1 :
 #print axioms tm63_root_m1Even_prefix_cost
 #print axioms tm2_blank_reaches_m1Even_s1
 
+
+/-- The all-ones counter produced by the m=1,n=6 reset stage fits in
+the enlarged binary field of length 2^63+72. -/
+theorem tm63_m1Even_counter_bound :
+    2^(2^63-1)-1 < 2^(2^63+72) := by
+  have hexp : 2^63-1 < 2^63+72 := by omega
+  have hpow : 2^(2^63-1) < 2^(2^63+72) :=
+    Nat.pow_lt_pow_right (show 1 < (2:Nat) by decide) hexp
+  omega
+
+/-- Prefix length through the canonical m=1,n=6 S1 endpoint. -/
+def tm63RootM1EvenPrefixMoves : Nat :=
+  rootQ4DrainMoves + resetPrefixCost 1 6 71 (2^63-1)
+
+/-- Exact source cost of draining the next all-ones counter. -/
+def tm63M1EvenDrainMoves : Nat :=
+  6*4^(2^63-1) + 42*2^(2^63-1) -
+    12*(2^63-1) - 48
+
+/-- Exact combined primitive-step count through the m=1,n=6 stage and
+its following all-ones S1 drain. -/
+theorem tm63_root_m1Even_drain_cost :
+    tm63RootM1EvenPrefixMoves + tm63M1EvenDrainMoves =
+      6*4^63 + 6*4^(2^63-1) +
+        33*2^63 + 42*2^(2^63-1) + 28379 := by
+  rw [tm63_root_m1Even_prefix_cost]
+  dsimp [tm63RootM1EvenPrefixMoves,tm63M1EvenDrainMoves]
+  omega
+
+/-- The root-connected source prefix now includes the next counted
+all-ones drain, ending with the large counter transferred to the unary
+right side.  This is still only a nonhalting prefix theorem. -/
+theorem tm2_blank_reaches_m1Even_drained :
+    run tm2 (tm63RootM1EvenPrefixMoves + tm63M1EvenDrainMoves) blank =
+      some (s1Config 3 5 0 (2^63+72) 0
+        (2^(2^63-1)-1) (225+3*(2^63:Int))) := by
+  have hA : 71+(2^63-1)+2 = 2^63+72 := by omega
+  have hH :
+      223+5+(3*(2^63-1):Int) = 225+3*(2^63:Int) := by omega
+  have hroot :
+      run tm2 tm63RootM1EvenPrefixMoves blank =
+        some (s1Config 3 5 0 (2^63+72)
+          (2^(2^63-1)-1) 0 (225+3*(2^63:Int))) := by
+    simpa [tm63RootM1EvenPrefixMoves,hA,hH] using
+      tm2_blank_reaches_m1Even_s1
+  have hdrain := s1Config_counted_drain_closed
+    3 5 0 (2^63+72) (2^63-1) (225+3*(2^63:Int))
+    tm63_m1Even_counter_bound
+  rw [run_add tm2 blank tm63RootM1EvenPrefixMoves tm63M1EvenDrainMoves]
+  rw [hroot]
+  simpa [tm63M1EvenDrainMoves] using hdrain
+
+#print axioms tm63_m1Even_counter_bound
+#print axioms tm63_root_m1Even_drain_cost
+#print axioms tm2_blank_reaches_m1Even_drained
+
 end BB6Coverage.Agent24M1EvenEndpoint
