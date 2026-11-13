@@ -121,7 +121,7 @@ theorem sectionResult_2_0_source
     (a b : Nat) (h : Int) (ha : 0<a) :
     run tm2 (sectionResult 2 0 a b).cost
       (s1Config 3 2 0 a 0 b h) =
-      some (s1Config 3 (sectionResult 2 0 a b).marker
+      some (s1Config 3 0 (sectionResult 2 0 a b).marker
         (sectionResult 2 0 a b).exponent 0
         (sectionResult 2 0 a b).right
         (h+10+3*b+3*(nextRight b))) := by
@@ -138,7 +138,7 @@ theorem tm63_blank_reaches_after_first_section :
       (tm63AfterM1OddMoves +
         (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).cost)
       blank =
-      some (s1Config 3 (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).marker
+      some (s1Config 3 0 (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).marker
         (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).exponent 0
         (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).right
         (tm63AfterM1OddHead+10+3*tm63AfterM1OddB+
@@ -171,7 +171,7 @@ theorem tm63_attainable_after_first_section_q4
     (h : Int)
     (hstage :
       run tm63AfterFirstSectionSteps
-        (s1Config 3 (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).marker
+        (s1Config 3 0 (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).marker
           (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).exponent 0
           (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).right
           (tm63AfterM1OddHead+10+3*tm63AfterM1OddB+
