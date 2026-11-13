@@ -113,7 +113,36 @@ theorem physical_run_prefix_c01_free_of_c0_blank_right
     physicalC0_blank_right_live d hs hcur hright
   exact physical_run_prefix_c01_free n c d hrun hfree hlive
 
+/-- Exact composition law for the original physical #429 interpreter. -/
+theorem physical_run_add (n t : Nat) (c : Config) :
+    run target429 (n+t) c =
+      (run target429 n c).bind (run target429 t) := by
+  induction t with
+  | zero => simp [BB6Coverage.run]
+  | succ t ih =>
+      calc
+        run target429 (n+(t+1)) c =
+            (run target429 (n+t) c).bind (rawStep target429) := by
+              simp [BB6Coverage.run, Nat.add_succ]
+        _ = ((run target429 n c).bind (run target429 t)).bind
+              (rawStep target429) := by rw [ih]
+        _ = (run target429 n c).bind
+              (fun d => (run target429 t d).bind (rawStep target429)) := by
+                simp [Option.bind_assoc]
+        _ = (run target429 n c).bind (run target429 (t+1)) := by rfl
+
+/-- Compose two exact physical run segments from their intermediate endpoint. -/
+theorem physical_run_add_of_endpoint
+    (n m : Nat) (c c1 c2 : Config)
+    (h1 : run target429 n c = some c1)
+    (h2 : run target429 m c1 = some c2) :
+    run target429 (n+m) c = some c2 := by
+  rw [physical_run_add, h1]
+  exact h2
+
 #print axioms physicalC01_one_halts
+#print axioms physical_run_add
+#print axioms physical_run_add_of_endpoint
 #print axioms physicalC0_blank_right_live
 #print axioms physical_run_prefix_c01_free
 #print axioms physical_run_prefix_c01_free_of_c0_blank_right
