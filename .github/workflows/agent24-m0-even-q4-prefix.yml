@@ -1,39 +1,5 @@
 name: Agent 24 m0 even q4 prefix Lean verification
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/agent24-m0-even-q4-prefix.yml'
-      - 'im-results/agent24-champion-time/M0EvenQ4Bridge.lean'
-      - 'im-results/agent24-champion-time/M0EvenQ4Prefix.lean'
-      - 'im-results/agent24-champion-time/M0EvenQ4Suffix.lean'
-      - 'im-results/agent24-champion-time/CountedOddUnary.lean'
-      - 'im-results/agent24-champion-time/CountedOneZeroUnary.lean'
-      - 'im-results/agent24-champion-time/CountedCarryBridges.lean'
-      - 'im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean'
-      - 'im-results/agent42-carry-left-output/FrameCellLemmas.lean'
-      - 'im-results/agent24-champion-time/CountedCarryPrefix.lean'
-      - 'im-results/agent24-champion-time/CountedCarryPrefixGeneral.lean'
-      - 'im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean'
-      - 'im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean'
-      - 'im-results/agent24-champion-time/CountedCarryLeftOutputR23.lean'
-      - 'im-results/agent42-carry-left-output/LongResidue1.lean'
-      - 'im-results/agent24-champion-time/CountedSuffixOutput.lean'
-      - 'im-results/agent24-champion-time/S1CarryOutputBridge.lean'
-      - 'im-results/agent24-champion-time/S1CarryInc0.lean'
-      - 'im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean'
-      - 'im-results/agent48-counted-inc0/S1CountedInc0.lean'
-      - 'im-results/agent48-counted-inc0/S1CountedDrain.lean'
-      - 'im-results/agent24-champion-time/m0_even_n2_replay.py'
-      - 'im-results/agent24-champion-time/Q4RightEndpoint.lean'
-      - 'im-results/agent24-champion-time/CountedSweep.lean'
-      - 'im-results/agent24-champion-time/CountedOddBase.lean'
-      - 'im-results/agent6-q4-prefix/CountedQ4Prefix.lean'
-      - 'im-results/agent8-s1-encoder/S1Encoder.lean'
-      - 'im-results/agent8-counted-reset/CountedReset.lean'
-      - 'im-results/agent8-counted-reset/Q4Suffix.lean'
-      - 'im-results/agent8-rst1prime/CountedRst1Prime.lean'
-      - 'im-results/agent48-champion-root/ChampionRootBridge.lean'
   workflow_dispatch:
 permissions:
   contents: read
