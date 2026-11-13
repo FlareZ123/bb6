@@ -82,6 +82,174 @@ theorem first_section_cost_decomposition :
         (sectionResult 6 1 71 (2^63-1)).cost := by
   simp [sectionResult, nextMarker, nextExponent, nextRight]
 
+/-- Exact arithmetic itinerary parameters, matching the three
+`sectionResult` stages in `proposedTM63Moves`. -/
+def tm63FirstSection : SectionResult := sectionResult 7 2 6 63
+
+def tm63FirstRest : SectionResult := sectionResult 6 1 71 (2^63-1)
+
+def tm63Length1 : Nat := 3 + tm63FirstSection.exponent + 2
+
+def tm63Index1 : Nat := resetIndex 3 tm63FirstSection.exponent
+
+def tm63MiddleSection : SectionResult :=
+  sectionResult tm63Index1 2 tm63FirstSection.right (nextRight tm63FirstSection.right)
+
+def tm63Length2 : Nat := tm63Length1 + tm63MiddleSection.exponent + 2
+
+def tm63Index2 : Nat := resetIndex tm63Length1 tm63MiddleSection.exponent
+
+def tm63LastSection : SectionResult :=
+  sectionResult tm63Index2 2 tm63MiddleSection.right (nextRight tm63MiddleSection.right)
+
+def tm63LastPreSection : SectionResult :=
+  sectionResult (tm63Index2-1) 2 tm63MiddleSection.right (nextRight tm63MiddleSection.right)
+
+def tm63FinalA : Nat := tm63LastPreSection.exponent
+
+def tm63FinalB : Nat := tm63LastPreSection.right
+
+/-- Remaining proposed primitive cost after the already source-connected
+first q4/drain stage, but before the final (m,n)=(1,1) counted reset.  The
+`12*v2 index2` correction is essential in Agent 24's snoc cost identity. -/
+def tm63SuffixSteps : Nat :=
+  tm63FirstRest.cost +
+    resetCost 3 tm63FirstSection.exponent tm63FirstSection.right +
+    tm63MiddleSection.cost +
+    resetCost tm63Length1 tm63MiddleSection.exponent tm63MiddleSection.right +
+    tm63LastPreSection.cost + 12*v2 tm63Index2
+
+/-- Positivity of the all-ones successor parameter. -/
+theorem nextRight_pos (b : Nat) (hb : 0 < b) : 0 < nextRight b := by
+  cases b with
+  | zero => omega
+  | succ b =>
+      unfold nextRight
+      have hp : 0 < 2^b := Nat.pow_pos (by decide)
+      simp only [Nat.pow_succ]
+      omega
+
+theorem sectionResult_exponent_pos (n m a b : Nat) (ha : 0 < a) :
+    0 < (sectionResult n m a b).exponent := by
+  induction n generalizing m a b with
+  | zero =>
+      simpa [sectionResult] using ha
+  | succ n ih =>
+      simp only [sectionResult]
+      have ha' : 0 < nextExponent m a b := by
+        unfold nextExponent
+        omega
+      exact ih (nextMarker m) (nextExponent m a b) (nextRight b) ha'
+
+theorem sectionResult_right_pos (n m a b : Nat) (hb : 0 < b) :
+    0 < (sectionResult n m a b).right := by
+  induction n generalizing m a b with
+  | zero =>
+      simpa [sectionResult] using hb
+  | succ n ih =>
+      simp only [sectionResult]
+      exact ih (nextMarker m) (nextExponent m a b) (nextRight b)
+        (nextRight_pos b hb)
+
+/-- The actual second reset index is 2 mod 3, as established by the
+symbolic parity argument in Agent 24's CostRecurrence. -/
+theorem tm63_second_index_two : tm63Index2 % 3 = 2 := by
+  simpa [tm63Index2, tm63Length1, tm63MiddleSection, tm63Index1, tm63FirstSection]
+    using second_reset_index_two
+
+/-- The final proposed reset starts at marker 1 and is exactly the
+(m,n)=(1,1) reset consumed by the terminal adapter. -/
+theorem tm63_last_stage_m1 :
+    tm63LastSection.marker = 0 ∧
+    tm63LastSection.exponent = tm63FinalA + tm63FinalB + 2 ∧
+    tm63LastSection.right = 2^tm63FinalB - 1 ∧
+    tm63LastSection.cost =
+      tm63LastPreSection.cost + 12*v2 tm63Index2 +
+        proposedIncrementCost 1 1 tm63FinalA tm63FinalB := by
+  have h := sectionResult_last_stage_m1 tm63Index2
+    tm63MiddleSection.right (nextRight tm63MiddleSection.right)
+    tm63_second_index_two
+  simpa [tm63LastSection, tm63LastPreSection, tm63FinalA, tm63FinalB] using h
+
+theorem tm63FinalA_pos : 0 < tm63FinalA := by
+  have hfirstRight : 0 < tm63FirstSection.right := by
+    exact sectionResult_right_pos 7 2 6 63 (by decide)
+  have hmiddleInputRight : 0 < nextRight tm63FirstSection.right := by
+    exact nextRight_pos tm63FirstSection.right hfirstRight
+  have hmiddleRight : 0 < tm63MiddleSection.right := by
+    exact sectionResult_right_pos tm63Index1 2 tm63FirstSection.right
+      (nextRight tm63FirstSection.right) hmiddleInputRight
+  have hfinal := sectionResult_exponent_pos (tm63Index2-1) 2
+    tm63MiddleSection.right (nextRight tm63MiddleSection.right) hmiddleRight
+  simpa [tm63FinalA, tm63LastPreSection] using hfinal
+
+/-- Exact arithmetic decomposition of the published candidate score into
+the root/q4/drain prefix, the remaining itinerary, the final counted reset,
+and the terminal tail.  This is an arithmetic identity only; the source-run
+premises are supplied separately by the attained-score theorem below. -/
+theorem tm63_root_score_decomposition :
+    proposedChampionScore =
+      rootQ4DrainMoves + tm63SuffixSteps +
+        proposedIncrementCost 1 1 tm63FinalA tm63FinalB +
+        terminalMoves tm63Length2 (tm63FinalA+tm63FinalB+resetDelta 1) + 7 := by
+  rcases tm63_last_stage_m1 with ⟨hmarker, hexp, hright, hcost⟩
+  unfold proposedChampionScore proposedTM63Moves
+  dsimp [tm63FirstSection, tm63Length1, tm63Index1, tm63MiddleSection,
+    tm63Length2, tm63Index2, tm63LastSection, tm63SuffixSteps,
+    tm63FirstRest, tm63LastPreSection, tm63FinalA, tm63FinalB]
+  rw [first_section_cost_decomposition]
+  rw [hcost]
+  rw [hexp]
+  rw [rootQ4Drain_matches_first_reset_cost]
+  simp [terminalCost, terminalMoves, resetDelta] <;> omega
+
+/-- Same decomposition in the actual champion move convention: six root
+relabeling moves are explicit, and the final undefined query contributes +1. -/
+theorem tm63_champion_score_decomposition :
+    proposedChampionScore =
+      championRootQ4DrainMoves + tm63SuffixSteps +
+        proposedIncrementCost 1 1 tm63FinalA tm63FinalB +
+        terminalMoves tm63Length2 (tm63FinalA+tm63FinalB+resetDelta 1) + 1 := by
+  have h := tm63_root_score_decomposition
+  have hoffset :
+      rootQ4DrainMoves + tm63SuffixSteps +
+          proposedIncrementCost 1 1 tm63FinalA tm63FinalB +
+          terminalMoves tm63Length2 (tm63FinalA+tm63FinalB+resetDelta 1) + 7 =
+        championRootQ4DrainMoves + tm63SuffixSteps +
+          proposedIncrementCost 1 1 tm63FinalA tm63FinalB +
+          terminalMoves tm63Length2 (tm63FinalA+tm63FinalB+resetDelta 1) + 1 := by
+    simp [championRootQ4DrainMoves]
+    omega
+  exact h.trans hoffset
+
+/--
+Fully specialized conditional theorem at the exact published candidate
+score.  The only missing inputs are the original-table continuation from
+the q4/drain endpoint through the remaining Coq itinerary to the final
+m=1,n=1 reset input, and the final reset-prefix run itself.
+-/
+theorem tm63_attainable_at_proposedChampionScore
+    (h : Int)
+    (hstage :
+      run tm2 tm63SuffixSteps
+        (s1Config 3 6 1 71 0 (2^63-1) 223) =
+        some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h))
+    (hfinal :
+      run tm2 (resetPrefixCost 1 1 tm63FinalA tm63FinalB)
+        (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) =
+        some (s0Config (markerWord 0 ++ d0 ++ binDec tm63Length2 0 ++ lh)
+          (tm63FinalA+tm63FinalB+resetDelta 1)
+          (2^tm63FinalB-1) 0 h)) :
+    Attainable proposedChampionScore := by
+  have hscore := champion_attainable_after_root_q4_drain_to_terminal_reset
+    tm63SuffixSteps tm63Length2 tm63FinalA tm63FinalB h
+    tm63FinalA_pos hstage hfinal
+  exact tm63_champion_score_decomposition.symm ▸ hscore
+
+#print axioms tm63_attainable_at_proposedChampionScore
+#print axioms tm63_root_score_decomposition
+#print axioms tm63_champion_score_decomposition
+
 /-- The root component already has a closed exact cost, independent of the
 unknown middle itinerary. -/
 theorem rootQ4Drain_attained_prefix_length :
