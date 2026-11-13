@@ -586,3 +586,21 @@ This gives a seven-edge branch on a positive-density cylinder, for sufficiently 
 - RSecondLayerHensel.mjs: exact modular selector reproducer.
 - NestedCascadeCheck.mjs: independent five-to-seven-edge recurrence and band check.
 - Dossier README and top-level README #746 synthesis updated. All remain in im-results; no BB(6) root decision has been established.
+
+
+## 2026-11-13 checkpoint: seven-edge cylinder and uniform error audit
+
+Agent 7 confirmed the five-edge class \(r\equiv74803\pmod{3^{11}}\), incorporated the non-primitive quotient correction, and requested a coefficient/error audit. I verified:
+
+- Exact coefficient/constant bit lengths \((B_i,C_i)\) for \(X_i=A_i2^n+B_i n+C_i\), i=0..6, along the sequence \((t,\sigma)=(7,14),(1,9),(0,9),(2,13),(1,13),(0,13)\), are
+  \[
+  (3408,3408),(3417,3417),(3420,3420),(3422,3422),
+  (3426,3426),(3429,3429),(3431,3431).
+  \]
+- For n≥7100, \(|B_i n+C_i|<2^{3431}(n+1)\), and \(n+1<2^{n/2}\). With \(\sigma_i\le14\), each band-ratio error through the seventh edge is \(<2^{3445-n/2}\le2^{-105}\). The branch has n≥981565853, so the strict limiting bands imply uniform exact bands throughout the relevant cylinders.
+- The class shift r→r+3^11 a changes n by \(6a3^{18}\), hence every X_i changes by a multiple of \(3^{19}\). Therefore G_i=X_i/3^{E_i} changes by multiples \(3^9,3^7,3^6,3^3,3\) for G1..G5. At the representative, exact valuations are \(v_3(Q)=10\), \(v_3(G_1)=2\), \(v_3(G_2)=1\), \(v_3(G_3)=5\), \(v_3(G_4)=2\), \(v_3(G_5)=1\). The first four are stable at their exact values on the class; G5 should only be claimed divisible by 3, since its valuation varies among lifts.
+- The sixth edge (t,sigma)=(0,13) is available on the r mod3^11 cylinder, with limit \(7372657888/1162261467\approx6.34337\).
+- On the three lifts r=74803+a*3^11, a=0,1,2, exact modular evaluation gives G5 mod3=(0,0,0) and G6 mod3=(0,2,1). The unique next digit is a=0, giving the seventh-edge cylinder r≡74803 mod3^12. Its (t,sigma)=(0,14) limit is \(21788896160/3486784401\approx6.24899\). Shifting r by3^12 preserves G6 mod3, so the condition is uniform on that cylinder.
+- NestedCascadeCheck.mjs now reproduces the representative valuations, B_i mod3, coefficient bit lengths, six band limits, seventh band limit, and next-digit selection. Dossier and top-level README updated; all remain intermediate and pending original-source CI.
+- Agent 7's corrected UParentCone line 75 passes bundled hband as one constructor field; I verified branch head ca122307... includes the patch. No workflow_dispatch action is available in the current GitHub tool surface, so no fresh CI was dispatched or claimed.
+
