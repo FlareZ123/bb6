@@ -635,25 +635,13 @@ def highAllowedBoth (j m : Nat) : Prop :=
     exact high-stop counter, is excluded by the latest C58 predicate. -/
 def highAllowedAllS3 (j m : Nat) : Prop :=
   lateFastHighAllowed j m ∧
-  ¬(∃ u v, j=319+512*u ∧
-    (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v ∧
-    (u+v)%16=(15+4*u)%16)
+  ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0)
 
 /-- The same predicate in the exact parameter-only congruence form. -/
 theorem highAllowedAllS3_iff_congruence (j m : Nat) :
     highAllowedAllS3 j m ↔
       lateFastHighAllowed j m ∧
-      ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0) := by
-  unfold highAllowedAllS3
-  constructor
-  · rintro ⟨hbase,hnot⟩
-    refine ⟨hbase,?_⟩
-    intro hcong
-    exact hnot ((s3_image_pullback_iff_congruence j m).2 hcong)
-  · rintro ⟨hbase,hnot⟩
-    refine ⟨hbase,?_⟩
-    intro hfamily
-    exact hnot ((s3_image_pullback_iff_congruence j m).1 hfamily)
+      ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0) := Iff.rfl
 
 /-- Exact Machine C blank-halting iff after excluding every high-stop
     target in the second strict sixth/seventh image family, not only
@@ -674,9 +662,10 @@ theorem blank_halts_iff_c58_late_fast_all_s3 :
       have hreach : BB6.Agent3.CReach (2*j+3) k :=
         (BB6.Agent3ValSix.valSixMixedRootDecision_iff (2*j+3) k).mp hroot
       have hnot :
-          ¬(∃ u v, j=319+512*u ∧ k=574+1024*v ∧
-            (u+v)%16=(15+4*u)%16) := by
-        rintro ⟨u,v,hj,hk,hsector⟩
+          ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0) := by
+        rintro ⟨hjmod,hcong⟩
+        obtain ⟨u,v,hj,hk,hsector⟩ :=
+          (s3_image_pullback_iff_congruence j m).2 ⟨hjmod,hcong⟩
         obtain ⟨time,hrun⟩ := hreach
         have hblank :=
           BB6.Agent4Seven.blank_ne_six_seven_band_s3 u v time hsector
@@ -696,7 +685,10 @@ theorem s3_parameter_family_removed_from_all (t : Nat) :
   intro h
   obtain ⟨v,hkv,hv16⟩ := s3_high_target t
   have hsector : (1+v)%16=(15+4*1)%16 := by omega
-  exact h.2 ⟨1,v,by decide,hkv,hsector⟩
+  have hcong :=
+    (s3_image_pullback_iff_congruence 831 (9770+16384*t)).1
+      ⟨1,v,by decide,hkv,hsector⟩
+  exact h.2 hcong
 
 /-- The second explicit progression is removed by the full image-family
     predicate as well as by the two-parameter shorthand. -/
@@ -705,7 +697,10 @@ theorem s3_second_parameter_family_removed_from_all (t : Nat) :
   intro h
   obtain ⟨v,hkv,hv16⟩ := s3_high_target_second t
   have hsector : (3+v)%16=(15+4*3)%16 := by omega
-  exact h.2 ⟨3,v,by decide,hkv,hsector⟩
+  have hcong :=
+    (s3_image_pullback_iff_congruence 1855 (12842+16384*t)).1
+      ⟨3,v,by decide,hkv,hsector⟩
+  exact h.2 hcong
 
 /-- Exact Machine C blank-halting iff after adding both independent
     Agent 4 six/seven source-image exclusions to the latest late-fast
