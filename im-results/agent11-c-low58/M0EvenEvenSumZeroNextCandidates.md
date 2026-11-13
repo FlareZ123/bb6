@@ -1,6 +1,6 @@
 # m=0 even-even sum-zero: odd-valuation normalization and residual candidates
 
-**Status:** The first theorem below has a complete paper-level derivation from the source-certified parent and inverse lemmas in M0EvenEvenSumZero.lean, but its **general induction has not yet been Lean-formalized or CI-checked**. The explicit s=2048w+293 instance now has a Lean draft in M0EvenEvenSumZeroS293.lean, its exact-criterion integration is drafted in CThreeDiagonalM0SumZeroS293Full.lean; the u=1 low-boundary lemmas are drafted in M0SmallBoundaryZero.lean; and the x=2 mod 16 y=3 boundary is drafted in EvenOddThreeX2Mod16.lean; and the s=32w+31 B-parent reduction is drafted in M0EvenEvenSumZeroS31.lean. All five files were added to the existing manual agent11-c-diagonal-late.yml workflow, which has not yet been run on these commits. Nothing here is in results/. Candidates 5 and 6 remain algebraic drafts. Do not report any of these extensions as source-certified until the original-source workflow passes with no sorryAx.
+**Status:** The first theorem below has a complete paper-level derivation from the source-certified parent and inverse lemmas in M0EvenEvenSumZero.lean, but its **general induction has not yet been Lean-formalized or CI-checked**. The explicit s=2048w+293 instance now has a Lean draft in M0EvenEvenSumZeroS293.lean, its exact-criterion integration is drafted in CThreeDiagonalM0SumZeroS293Full.lean; the u=1 low-boundary lemmas are drafted in M0SmallBoundaryZero.lean; and the x=2 mod 16 y=3 boundary is drafted in EvenOddThreeX2Mod16.lean; and the s=32w+31 B-parent reduction is drafted in M0EvenEvenSumZeroS31.lean. All five previously listed source drafts were added to the existing manual agent11-c-diagonal-late.yml workflow, which has not yet been run on these commits. A further x=10 mod 256 y=3 boundary draft is now in EvenOddThreeX256.lean, but is not yet included in that workflow or CI-checked. Nothing here is in results/. Candidates 5 and 6 remain algebraic drafts. Do not report any of these extensions as source-certified until the original-source workflow passes with no sorryAx.
 
 ## General odd-valuation branch
 
@@ -221,3 +221,23 @@ which is odd-right with sum \(1\pmod4\). This family also awaits source formaliz
 The general odd-valuation theorem still needs a parametric Lean proof: define the recursive predecessor iterator, prove its closed form by induction, and establish the gate lemma by splitting \(r-n=1\), \(r-n=2\), or \(r-n\ge3\). The \(u=1\) y=0/y=2 fibre is now drafted in M0SmallBoundaryZero.lean, and the \(u=5,r\equiv3\pmod4\) terminal fibre is drafted in EvenOddThreeX2Mod16.lean. The explicit s=293 source proof and exact-criterion integration, plus the s=32w+31 B-parent reduction, are also drafted. All five drafts are in the manual agent11-c-diagonal-late.yml workflow but remain unverified until that workflow succeeds with no sorryAx.
 
 The even-valuation candidates \(s=1024w+229\) and \(s=1024w+533\) have been independently checked algebraically: their finite six-gate chains and terminal parent branches are consistent, and the existing L_s theorem plus the generic even-even parent theorem should complete them. They are not yet Lean-proven. The residual \(u=5,r\equiv1\pmod4\) y=3 parent fan, the remaining even-valuation cases, and the \(S\equiv0\pmod4\) parent branches remain open. This is a stronger parameterized reduction, not a decision of Machine C or BB(6).
+
+
+## Supplemental u=5 slice: r=201 mod 6720
+
+The remaining \(u=5,\ r\equiv1\pmod4\) sequence has \(r=201+420M\). Its subfamily \(M=16v\), equivalently \(r=201+6720v\), can be excluded by a finite chain of existing exact source inverses. In this case
+\[
+m=\frac{x-10}{16}=32(s-1)-105M=16t,
+\qquad t=2(s-1)-105v\ge1,
+\]
+so the terminal y=3 state is \((256t+10,3)\). The lower bound follows from \(2^r\ge r\) and \(5\cdot2^r=129+211s\): substituting \(r=201+6720v\) gives \(211s\ge876+33600v\ge211(53v+3)\), hence \(s\ge53v+3\) and \(t\ge v+4\).
+
+The exact y=3 source parents of \((256t+10,3)\) are
+\[
+P_0=(128t+5,64t+3),\qquad P_2=(32t-1,112t+3).
+\]
+Indeed \(x+6=16(16t+1)\) has 2-adic valuation exactly four and its odd factor exceeds one, so the a=1 bounce branch is impossible; cost parity forces the a≥3 bounce depth to be even, leaving only depths 0 and 2. The draft source theorem is y3_x256_parents in EvenOddThreeX256.lean.
+
+The second parent has odd right coordinate and sum \(144t+2\equiv2\pmod4\), so blank_no_odd_sum_two excludes it. The first parent has sum \(192t+8\equiv8\pmod{16}\); oddodd_val3_blank_reach_iff forces its unique parent \((96t+2,80t+1)\). This is an even/odd state with \(x+y+1=176t+4\equiv4\pmod8\), so evenodd_four_blank_reach_iff forces \((88t-1,84t-1)\), whose sum is \(172t-2\equiv2\pmod4\) and is again excluded by blank_no_odd_sum_two. Thus the y=3 terminal is unreachable for every \(r=201+6720v\).
+
+This is an infinite subfamily of the previously open u=5 branch. The Lean module is a draft only: it has not been added to the original-source workflow or CI-checked. The other \(r=201+420M\) cases remain open; in particular this does not close the full x=10 mod 16 parent fan.
