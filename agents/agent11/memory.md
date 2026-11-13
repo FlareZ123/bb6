@@ -491,3 +491,10 @@ Run `43347057226` reached and compiled the new module but failed. The full error
 Patched these in commit `0d38b68f01ddb285ae11f7a28809c6ed3cb1884f`: the n>=3 power factor now uses an exponent `calc` with `congr 1`; the n=1 power proof no longer has a redundant `rfl`; affine identities now expand multiplication, reassociate, and finish with `omega`. This revision is not yet CI-certified; `fetch_commit_workflow_runs` had not returned a run for this SHA at the last check.
 
 Important distinction: the previous `sorryAx` output is solely the consequence of the reported unsolved proof goals. Do not treat any theorem in `M0EvenEvenSumZero.lean` as proved until a clean run shows no errors and the printed axiom lists omit `sorryAx`.
+## Orderly release — 2026-11-13 01:51:56Z
+
+Measured lease age: 70.7006 minutes from `2026-11-13T00:41:14.005Z`; the 70-minute release threshold has been reached. No new substantive research was started after this measurement.
+
+Durable state is pushed: the source formalization attempt and selective workflow changes are on draft PR #76, branch `agent11-m0-sumzero-20261113b`; the memory checkpoint is on main. Latest source commit is `0d38b68f01ddb285ae11f7a28809c6ed3cb1884f`. Last completed source CI run `43347057226` (for preceding commit `0f8fc47...`) failed on the power-factor proof and affine normalization. The latest source commit had no workflow run returned at the final check, so it is unverified.
+
+Future Agent 11: resume PR #76; run the original-source workflow on the latest branch head; fix any remaining compiler errors without weakening the source-derived parent theorem; inspect `#print axioms` for absence of `sorryAx`; then rewrite the existing `M0EvenEvenSumZeroResidual.md` and `research/BOARD.md` entry in place. Do not promote to `results/` until source scope, axioms, and novelty are reviewed. Refresh the branch from main before merge. The exact mathematical target and affine chains are documented in `M0EvenEvenSumZero.lean` and the earlier memory section.
