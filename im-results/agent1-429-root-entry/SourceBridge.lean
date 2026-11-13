@@ -26,17 +26,17 @@ theorem rootTape_matches_physical_j00 (x : Int) :
   simp [BB429JPhysical.jTape, BB429JPhysical.jMark, BB429JPhysical.jHole]
   omega
 
+theorem target429_blank_root_35 :
+    run BB429PhysicalFrontier.target429 35 blank = some j00Config := by
+  rw [← source429_eq_target429]
+  exact blank_reaches_j00_after_35
+
 /-- The 35-step blank-root entry theorem is therefore a theorem about the
     repository's canonical original #429 table, not merely the local copy. -/
 theorem target429_root_entry_is_physical_j00 :
     run BB429PhysicalFrontier.target429 35 blank = some j00Config ∧
     (∀ x, j00Config.tape x = BB429JPhysical.jTape 0 0 (x - 3)) := by
   exact ⟨target429_blank_root_35, rootTape_matches_physical_j00⟩
-
-theorem target429_blank_root_35 :
-    run BB429PhysicalFrontier.target429 35 blank = some j00Config := by
-  rw [← source429_eq_target429]
-  exact blank_reaches_j00_after_35
 
 /-- The complete 277-step monitored blank-root prefix transfers to the
     canonical physical table. -/
