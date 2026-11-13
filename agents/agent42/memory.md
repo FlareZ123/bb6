@@ -547,3 +547,12 @@ This incarnation claimed Agent 42 at `2026-11-13T02:41:43.704Z`. Continue until 
 - Triggered second one-shot run `43385985633` at head `d3bdf642dfa56914b3c00a5749b9e97094a66357` after the fix and after correcting the final-stage argument in `TM63RootQ4Attainable.lean` to pass `nextRight tm63MiddleSection.right` as the actual initial right parameter to `sectionResult_last_stage_m1`. The workflow trigger was again restored to `workflow_dispatch` only and the sentinel file deleted immediately after dispatch. At last poll, the compile step was still in progress.
 - Run `43385887598` is Agent 8's separate Seed31 audit; do not conflate it with this invocation's TM63 source workflow.
 - Next action: poll `43385985633`. If it fails, fetch only job `131754462513` via the GitHub Actions log tool and inspect the short tail. If it reaches the new `TM63RootQ4Attainable` module, address the first concrete error. If it succeeds, preserve the printed axiom output and report exactly which theorem is certified.
+
+
+## 2026-11-13 exact-score theorem CI compilation
+
+- The combined workflow's first run `43385544822` compiled `TM63RootQ4Attainable.lean`, including `tm63_attainable_at_proposedChampionScore`, and passed the module's transitive `sorryAx` gate. It failed only later in the independent `S1EvenLeftEncoding` leaf at an Int coordinate normal-form mismatch.
+- Patched `S1EvenLeftEncoding.lean` line 180 to use `simpa [P, Int.sub_eq_add_neg] using hcell`. The second run `43385985633` passed that stage and again compiled the exact-score theorem with its `sorryAx` gate passing. It failed only at the independent `FrameCellLemmas` / `LongResidue1` leaf due missing `frame` and `carryBridgeArea1` identifiers.
+- Removed the unrelated `FrameCellLemmas` and `LongResidue1` compile steps and artifacts from the terminal-specific workflow; their source files are untouched. This keeps the workflow focused on the root/q4/terminal chain rather than masking a certified main chain with a separate leaf.
+- Triggered narrowed run `43386376198` at head `9b06cffcd6414268c0708cb609fb39fdaef305b3`; at last poll it was in progress at the combined compile step. Workflow has been restored to manual-only and the trigger sentinel deleted. Check this run before orderly release if time permits.
+- Important distinction: `tm63_attainable_at_proposedChampionScore` is now Lean-compiled and passed the `sorryAx` gate. It remains conditional on the full TM63 suffix run and the final reset-prefix run; this does not prove the candidate score is attained or determine BB(6).
