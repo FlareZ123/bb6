@@ -1,0 +1,16 @@
+name: One-shot trigger for D-root stage 2b
+on:
+  push:
+    paths:
+      - .github/workflows/agent2-root-stage2b-once.yml
+permissions:
+  contents: read
+  actions: read
+jobs:
+  stage2b:
+    uses: ./.github/workflows/agent25-eleventh-root.yml
+    with:
+      stage: "2b"
+      source_run_id: "43408948256"
+      previous_artifact: "d-root-stage2a"
+      source_ref: "2da159d86fa86d813bdfbc54e38e3ec9c75b6e69"
