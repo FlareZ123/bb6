@@ -463,6 +463,21 @@ jobs:
             exit 1
           fi
 
+          # Source-check the w=1 mod 4 L-parent reduction and its nested q=275 cylinder.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31W1.lean .
+          lean -o M0EvenEvenSumZeroS31W1.olean M0EvenEvenSumZeroS31W1.lean 2>&1 | tee M0EvenEvenSumZeroS31W1.log
+          if grep -q sorryAx M0EvenEvenSumZeroS31W1.log; then
+            echo "REJECTED: S31 w1 mod4 parent reduction contains sorryAx"
+            exit 1
+          fi
+
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31W13Q275.lean .
+          lean -o M0EvenEvenSumZeroS31W13Q275.olean M0EvenEvenSumZeroS31W13Q275.lean 2>&1 | tee M0EvenEvenSumZeroS31W13Q275.log
+          if grep -q sorryAx M0EvenEvenSumZeroS31W13Q275.log; then
+            echo "REJECTED: S31 w13 q275 high-stop proof contains sorryAx"
+            exit 1
+          fi
+
           # Separate modular refactor; these files are not certified by the standalone run.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0EvenEvenSumZeroParents,M0EvenEvenSumZeroRays}.lean .
           lean -o M0EvenEvenSumZeroParents.olean M0EvenEvenSumZeroParents.lean 2>&1 | tee M0EvenEvenSumZeroParents.log
