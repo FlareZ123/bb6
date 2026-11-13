@@ -28,14 +28,13 @@ Claimed Agent 7 at `2026-11-13T00:17:19.728Z` (`agent7-gpt6-20261113T001719728Z-
 
 ## Current CI and next actions
 
-- The first full branch run failed before the new modules on three upstream compile blockers, all now patched on main and `agent7-887-even-parent`:
-  1. Eight redundant `decide` tactics after `pow_period1458_many` in `FeederExceptionalArithmetic.lean` (“No goals to be solved”).
-  2. Unqualified `ReachC` in `ClosedCertFast.lean`, which auto-bound and introduced `sorryAx`; changed to `CascadeSweep.ReachC`.
-  3. `fatal` was unqualified in `FeederExceptionalFamily.lean`; opened `CascadeManyShield`. Its `2^n=4*2^(n-2)` proof was also rewritten as a `calc` using `Nat.pow_add`, `norm_num`, and `ring` rather than asking `omega` to commute products.
-- Latest branch run: `43343918473`; source-audit job `131618557275` was in progress at the last check (2026-11-13 01:18 UTC). Inspect the job steps; if it fails, read only the failed job's tail and fix the first actual error.
-- The branch workflow now compiles `ParentsFast`, `ClosedCertFast`, `EvenParent887.lean`, and `EvenPre887Cone.lean`; its push trigger is restricted to `agent7-887-even-parent` and relevant paths.
-- If the source audit passes, open/merge a PR for `agent7-887-even-parent`, preserving the finite cone certificate in `im-results/`. Then write a concise README describing the fixed-target result and its limitation: it proves n=887 only, not all (n\equiv887\pmod{13122}).
-- If `EvenParent887.lean` fails, correct it and rerun. Its odd-arm output equation must be oriented as `hd.symm`.
+- At release, the branch `agent7-887-even-parent` was pushed through head `a9e2350c9b6d7fa799e50b3d97d8e9ed110b66d0`; main was at `9a8a375c1d24b32b31a3a5030a5e8373bbb442b1`.
+- Latest branch run `43343918473`, job `131618557275`, was still `in_progress` at 2026-11-13 01:27:40 UTC. No green CI result is claimed. The next incarnation should inspect this run first; if it fails, retrieve only the failed job's logs and fix the first actual error.
+- The branch contains `EvenParent887.lean` and the 1,319-state `EvenPre887Cone.lean` certificate. The finite-cone count (1,319 states, 1,318 edges, 181 leaves, depth 876, scale range 878–886) is generator output only until `closedCertFast` compiles and the theorem is checked.
+- The branch workflow compiles `ParentsFast`, `ClosedCertFast`, then the two Agent 7 modules. The push trigger is restricted to `agent7-887-even-parent` and relevant paths.
+- Three upstream source-audit blockers were patched on main and the branch: eight redundant `decide` tactics in `FeederExceptionalArithmetic.lean`; unqualified `ReachC` in `ClosedCertFast.lean` (now `CascadeSweep.ReachC`); and unqualified `fatal` plus a faulty power-arithmetic proof in `FeederExceptionalFamily.lean` (now opens `CascadeManyShield` and uses a `calc`/ring proof).
+- If CI passes, open/merge a PR for `agent7-887-even-parent` and write a concise README. The intended fixed-target theorem is `fatal887_root_unreachable`; it proves n=887 only, not all (n\equiv887\pmod{13122}).
+- If `EvenParent887.lean` fails, fix it; its odd-arm output equation is oriented as `hd.symm`. If `EvenPre887Cone.lean` fails, first check the exact source-parent enumeration and the `ClosedCertFast` bridge.
 - Continue with the main same-scale z3-chain and higher-valuation side branches only after the fixed n=887 certificate is green; coordinate with Agent 10 rather than rebuilding its selector.
-- Do not move this fixed-target certificate to `results/` unless it becomes part of a genuinely general, publishable theorem. Do not claim BB(6) or the whole 887 residue family is solved.
+- Keep this fixed-target certificate in `im-results/`; do not claim BB(6) or the whole 887 residue family is solved.
 
