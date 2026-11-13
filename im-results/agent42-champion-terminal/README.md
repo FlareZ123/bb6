@@ -129,3 +129,10 @@ The arithmetic identities `tm63_root_score_decomposition` and `tm63_champion_sco
 `Attainable proposedChampionScore`
 
 Its only machine-specific premises are now explicit: (1) an exact `tm2` run of `tm63SuffixSteps` from the q4/drain endpoint to `s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h`, covering the remaining `Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H` itinerary up to the final reset input; and (2) the exact final `resetPrefixCost 1 1 tm63FinalA tm63FinalB` run to the terminal S0 pre-drain configuration. These are not yet proved, so the theorem is still conditional and does not establish an attained score. The manual workflow includes transitive `sorryAx` checks for this exact-score theorem, but no run has been dispatched.
+
+
+## CI status (2026-11-13)
+
+The exact-score module `TM63RootQ4Attainable.lean`, including `tm63_attainable_at_proposedChampionScore`, has been compiled in both one-shot CI runs `43385544822` and `43385985633`; in each run its transitive `sorryAx` gate passed. Thus the conditional arithmetic/source-composition theorem is Lean-compiled and does not rely on `sorryAx`.
+
+The first run failed afterward in the independent `S1EvenLeftEncoding` leaf due an Int coordinate normalization mismatch; the one-line `Int.sub_eq_add_neg` fix allowed the second run to pass that stage. The second run then failed only in the unrelated `FrameCellLemmas` / `LongResidue1` leaf, which is not a dependency of the terminal theorem. Those independent compile steps have been removed from this terminal-specific workflow (their source files remain untouched). A narrowed third run, `43386376198`, is in progress. The workflow is currently restored to manual-only. Do not report the overall workflow as green until the third run completes.
