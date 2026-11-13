@@ -104,3 +104,17 @@ Consequently, the third partial return decomposes as:
 - A0(77,120) -> J(0,0,408): 1,489 steps, -403.
 
 The total is 2,229 steps and displacement -159. The concrete 1,489-step suffix is proved by `decide` in draft PR #91; the general odd-u law is still an empirical conjecture.
+
+
+## Remaining entry obligation: transfer the 31,154-step low43 record
+
+The only unproved link before the source-level continuation in PR #91 is `J(93,0,173) -> parityShiftedC0` in 31,154 steps. The adjacent standard low43 theorem uses `J(94,0,173)=jTape 94 173`; the shifted input is `jTape 93 173`.
+
+The two initial tapes differ only at absolute cells (-188,-193,-194). Raw simulation shows that both traces have identical state/head history through step 31,154, with head range ([-176,178]), so none of those cells is read or written. At step 31,154 the standard endpoint is the existing low43 C/0 zipper; the shifted endpoint is exactly the alternate left word recorded above. The first divergence is only at step 31,528, when the head first visits (-188).
+
+A formal transfer should therefore:
+1. prove a lower head bound (mathrm{head}ge -176) for every prefix of the standard `low43_C0_record 86 3` run (the existing record already supplies the upper bound);
+2. prove the generic deterministic-run invariance lemma for tapes differing only strictly left of that bound;
+3. transport the standard endpoint tape to `parityShiftedC0` by the three untouched-cell edits.
+
+The structural decomposition suggests the lower bound is (-2v-4) during the final stage43 left sweep (for v=86 this is -176), while the preceding multi-bubble prefix stays nonnegative. This is the next formal target. Once established, compose the 31,154-step entry with PR #91's 103,081-step continuation to obtain the complete 134,235-step source-level route from J(93,0,173) to J(0,0,408).
