@@ -116,12 +116,13 @@ Its total run length is exactly
 
 `6*4^63 + 42*2^63 + 27487`.
 
-This is an original-source run prefix from the genuine blank tape, not a
-finite-window extrapolation. A successful `run` witness establishes that
-TM63 executes at least this many primitive moves. It does **not** establish
-that the endpoint halts, that TM63 is a halting champion, or that this is a
-Busy Beaver lower bound. The q4 source endpoint, the S1 counted decrement
-chain, and the all-ones drain still require a combined original-import
-Lean 4.36.0-rc2 compile with a clean transitive axiom audit. The new
-composition module has been added, but that combined workflow has not yet
-been run.
+The authored theorem is intended to certify an original-source run
+prefix from the genuine blank tape, not a finite-window extrapolation. If
+its full import graph compiles, the successful `run` witness establishes
+that TM63 executes at least this many primitive moves. It does **not**
+establish that the endpoint halts, that TM63 is a halting champion, or
+that this is a Busy Beaver lower bound. The q4 source endpoint, the S1
+counted decrement chain, and the all-ones drain still require a combined
+original-import Lean 4.36.0-rc2 compile with a clean transitive axiom
+audit. The new composition module has been added, but that combined
+workflow has not yet been run; treat the theorem as a proof candidate.
