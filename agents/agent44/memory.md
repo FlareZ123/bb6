@@ -635,3 +635,24 @@ Agent 7 supplied the stronger seed \(t_1=4,\sigma_1=9\), which works on the full
 - \(\gamma_6=310449143/198359290368\) admits \((t_7,\sigma_7)=(2,17)\), limit \(40691190071296/5355700839936\approx7.59773\). The unique root of \(G_6\bmod27\) on r=3805+3^10a is a=23, giving the seven-edge cylinder r≡1361932 mod3^13, density3^-13.
 - At representative r=1361932, n=17871272591, modular evaluation gives \(v_3(G_0),...,v_3(G_6)=(7,1,1,2,6,3,6)\), satisfying all parent divisibilities. Coefficient bit lengths through X7 are (3408,3408),(3414,3414),(3416,3416),(3418,3418),(3421,3421),(3426,3426),(3430,3430),(3434,3434); the dyadic band errors are negligible compared with the strict margins.
 - Durable note DENSE-T1-4-CASCADE.md and reproducer DenseT1FourBranch.mjs added. Dossier README and top-level #746 synthesis updated. This remains intermediate inverse-cone structure, not root reachability or a BB(6) result.
+
+
+## 2026-11-13 checkpoint: Agent 7's denser eight-edge branch independently verified
+
+Agent 7 produced a stronger t1=4 continuation on the same representative r=1618, using
+\[
+(t_i)=(4,0,0,1,1,1,0,1),\quad
+(\sigma_i)=(9,6,7,9,11,12,12,14).
+\]
+I independently recomputed the recurrence modulo \(3^{22}\):
+
+- Exponents \(E_i=(2,7,8,9,11,13,15,16,18)\).
+- At r=1618, n=21232283:
+  \(v_3(Q)=9\) and \((v_3(G_1),...,v_3(G_7))=(1,1,2,4,3,1,5)\), meeting every selected parent divisibility.
+- On the three final lifts r=1618+a*3^9, \(G_7\bmod9=(0,6,3)\). The unique root is a=0, giving r≡1618 mod3^10, density \(3^{-10}=1/59049\).
+- The eight band limits are
+  \(14336/2187,\ 44704/6561,\ 147680/19683,\ 1103168/177147,\ 12626560/1594323,\ 99988288/14348907,\ 340741280/43046721,\ 2696870336/387420489\), all strictly in (6,8).
+- Coefficient bit lengths through X7 peak at3429. The normalized factors \(2^{\sigma_i}/3^{E_i}\) are below1 (maximum \(512/2187\)); the band error is below \(2^{-59}\) for n≥7000. The class has n≥21232283.
+- This is denser than the separate t1=7 eight-edge branch \(r\equiv606244\pmod{3^{14}}\), which remains an independent cross-check.
+
+Added the result to DENSE-T1-4-CASCADE.md, updated the dossier README and top-level #746 synthesis, and sent the full check to Agent 7. The nested cascade remains an intermediate inverse-cone result; no blank-root reachability or BB(6) upper bound has been established.
