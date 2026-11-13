@@ -19,7 +19,8 @@ theorem b_twice (t q p : Nat) (ys : List Bool) :
   have hb1 := b_packet (9*t+5) (q+1) p ys
   have h1 : 27*t+17=3*(9*t+5)+2 := by omega
   have h2 : 8*(9*t+5)+10=3*(24*t+16)+2 := by omega
-  rw [h1, hb1, h2]
+  have hq : q+2=q+1+1 := by omega
+  rw [h1, hq, hb1, h2]
   have hb2 := b_packet (24*t+16) q (p+3) ys
   have h3 : 8*(24*t+16)+10=3*(64*t+45)+3 := by omega
   rw [hb2, h3]
@@ -65,7 +66,9 @@ theorem reset_double_B_to_A (d k h t Q : Nat)
   have hreset : run (eTwoTime k Q)
       (packet (3*k+4) Q 2 (false::List.replicate 6 true)) =
       packet (1+4*3^d*h) 0 (3*d+(2*Q+6-3*d)) BB6.Agent35K4Shapes.marker := by
-    rw [e_two_reset,hprefix,hp,hm]
+    rw [e_two_reset,hprefix,hm]
+    congr 1
+    exact hp
   exact prepend _ _ (eTwoTime k Q) hreset
     (chain_double_B_to_A d h t 0 (2*Q+6-3*d) hh hd ha)
 
