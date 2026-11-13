@@ -85,7 +85,7 @@ Here \(e_1=Q/3^7\) is odd because \(3^8\mid Q\). The first parent has \(k_1=n-5\
 \[
 G_1=2^6e_1-16\cdot2^{n-5}-2(n-5)-5.
 \]
-Since \(3\mid e_1\) and \(n-5\equiv0\pmod3\), we have \(3\mid G_1\) for every \(r\). Thus \(G_1/3\) is the initial scaled-cylinder Hensel function. The explicit seven-edge witness below uses a different first choice, \((7,14)\), to give a concrete deeper cylinder.
+Since \(3\mid e_1\), while \(k_1=n-5\) is both even and divisible by 3, we have \(2^{k_1}\equiv1\pmod3\) and \(3\mid G_1\) for every \(r\). Thus \(G_1/3\) is the initial scaled-cylinder Hensel function. The explicit seven-edge witness below uses a different first choice, \((7,14)\), to give a concrete deeper cylinder.
 
 Suppose at stage \(i\) we have a target \(z_{i-1}\), with
 \[
@@ -155,7 +155,7 @@ For this U/Q specialization, initially
 Q(n)=28\cdot2^n+B_0n+C_0,\qquad
 B_0=-2-2^{3407}\equiv2\pmod3.
 \]
-The exact modular base check gives \(3^8\mid Q(887)\), and \(13122=6\cdot3^7=2\cdot3^8\). The common power-period identity, already kernel-proved as ThreeAdic.power_period in [ThreeAdicLifting.lean](../agent1-429-threeadic/ThreeAdicLifting.lean), gives the scaled-cylinder shift law. Thus \(Q/3^8\) is a 3-adic isometry in the progression parameter. For the density construction's first edge, \(t_1=4,\sigma_1=9\), so \(e_1=Q/3^7\) is odd and \(G_1=2^6e_1-16\cdot2^{n-5}-2(n-5)-5\). Since \(3\mid e_1\) and \(n-5\equiv0\pmod3\), \(3\mid G_1\) on the whole progression. As \(E_1=7\), \(G_1/3=X_1/3^8\) is the initial scaled-cylinder isometry.
+The exact modular base check gives \(3^8\mid Q(887)\), and \(13122=6\cdot3^7=2\cdot3^8\). The common power-period identity, already kernel-proved as ThreeAdic.power_period in [ThreeAdicLifting.lean](../agent1-429-threeadic/ThreeAdicLifting.lean), gives the scaled-cylinder shift law. Thus \(Q/3^8\) is a 3-adic isometry in the progression parameter. For the density construction's first edge, \(t_1=4,\sigma_1=9\), so \(e_1=Q/3^7\) is odd and \(G_1=2^6e_1-16\cdot2^{n-5}-2(n-5)-5\). Since \(3\mid e_1\) and \(k_1=n-5\) is both even and divisible by 3, \(2^{k_1}\equiv1\pmod3\) and \(3\mid G_1\) on the whole progression. As \(E_1=7\), \(G_1/3=X_1/3^8\) is the initial scaled-cylinder isometry.
 
 At the first odd-parent stage, \(E_1=t_1+3\) and
 \[
