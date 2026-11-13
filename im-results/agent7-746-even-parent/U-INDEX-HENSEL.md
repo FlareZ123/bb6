@@ -1,0 +1,109 @@
+# Fixed-depth U-index Hensel selector
+
+**Status: new exact arithmetic reduction; Lean formalization and original-source CI remain pending.** This note concerns one specific first-tier U/Q ray depth, \(j=3402\), across the family \(n=887+13122r\). It is not a blank-root exclusion or a BB(6) decision.
+
+## 1. The exact numerator
+
+The source-connected Q numerator from QDepthDefs.lean is
+
+\[
+Q_j(n)=28\cdot2^n-2n+15-2^{j+4}(2n+3).
+\]
+
+On the even spine, the corresponding candidate state is \(z=(Q_j(n)/9-5)/2\), whenever the quotient is integral. The first-tier U branch uses \(j\equiv0\pmod6\); fix \(j=3402\), and put
+
+\[
+L=13122=2\cdot3^8,\qquad n(r)=887+Lr,\qquad
+F(r)=Q_{3402}(n(r))/3^8.
+\]
+
+The base divisibility \(3^8\mid Q_{3402}(887)\) is already certified by the exact QDepth887.qDepthResidue_887_table / qDepthResidue_iff chain: its precision-7 selector is \(j=3402\bmod4374\).
+
+## 2. A 3-adic isometry in the family parameter
+
+For every \(m\ge0\),
+
+\[
+3^{m+1}\mid 2^{2\cdot3^m}-1.
+\]
+
+An elementary induction proves this: the base \(m=0\) is \(3\mid 4-1\); if \(A=2^{2\cdot3^m}\equiv1\pmod{3^{m+1}}\), then
+\(A^3-1=(A-1)(A^2+A+1)\), and \(3\mid A^2+A+1\). In particular, \(3^9\mid2^L-1\), so
+
+\[
+Q_{3402}(887+Lr)\equiv Q_{3402}(887)\pmod{3^8}
+\]
+
+for every \(r\). Thus \(F(r)\) is an integer for every natural \(r\).
+
+For any \(r,s\ge0\) and \(a\in\{0,1,2\}\), direct subtraction gives
+
+\[
+\begin{aligned}
+Q_{3402}(n(r+a3^s))-Q_{3402}(n(r))
+={}&28\cdot2^{n(r)}(2^{L a3^s}-1)\\
+&-4(1+2^{3406})\,a\,3^{8+s}.
+\end{aligned}
+\]
+
+The first term is divisible by \(3^{9+s}\), by the preceding power lemma with \(m=8+s\). Since \(3406\) is even, \(2^{3406}\equiv1\pmod3\), and hence
+\(-4(1+2^{3406})\equiv1\pmod3\). Dividing by \(3^8\) yields the exact lift law
+
+\[
+\boxed{F(r+a3^s)\equiv F(r)+a3^s\pmod{3^{s+1}}.}
+\]
+
+Consequently, among the three lifts \(r,r+3^s,r+2\cdot3^s\) of any residue modulo \(3^s\), exactly one makes \(F\) divisible by \(3^{s+1}\). Starting with the unique class modulo \(1\), there is therefore a unique compatible residue
+
+\[
+\rho_s\pmod{3^s}
+\quad\text{such that}\quad
+3^{8+s}\mid Q_{3402}(887+13122r)
+\iff r\equiv\rho_s\pmod{3^s}.
+\]
+
+This also proves that \(F:\mathbb Z_3\to\mathbb Z_3\) is a 3-adic isometry: if \(r-r'\) has exact 3-adic valuation \(s\), then so does \(F(r)-F(r')\). In particular, the valuation of this fixed-depth numerator is unbounded as \(r\) varies; every exact valuation \(v_3(Q)=8+s\) occurs on infinitely many natural \(r\).
+
+## 3. Exact initial selector residues
+
+The following residues were computed by exact modular arithmetic; the lift law proves that each listed class is the unique class at its precision.
+
+| \(s\) | Condition | Unique \(r\bmod 3^s\) |
+|---:|---|---:|
+| 0 | \(3^8\mid Q\) | 0 mod 1 |
+| 1 | \(3^9\mid Q\) | 1 mod 3 |
+| 2 | \(3^{10}\mid Q\) | 4 mod 9 |
+| 3 | \(3^{11}\mid Q\) | 4 mod 27 |
+| 4 | \(3^{12}\mid Q\) | 4 mod 81 |
+| 5 | \(3^{13}\mid Q\) | 85 mod 243 |
+| 6 | \(3^{14}\mid Q\) | 328 mod 729 |
+| 7 | \(3^{15}\mid Q\) | 328 mod 2187 |
+| 8 | \(3^{16}\mid Q\) | 2515 mod 6561 |
+| 9 | \(3^{17}\mid Q\) | 15637 mod 19683 |
+| 10 | \(3^{18}\mid Q\) | 35320 mod 59049 |
+| 11 | \(3^{19}\mid Q\) | 94369 mod 177147 |
+
+For example:
+- \(r=13\) gives \(n=171473\) and \(v_3(Q)=10\), so the maximal odd-parent exponent of \(z\) is \(t=7\);
+- \(r=4\) gives \(n=53375\) and \(v_3(Q)=12\), so the maximal exponent is \(t=9\);
+- \(r=1057\) gives \(n=13870841\) and \(v_3(Q)=14\), so the maximal exponent is \(t=11\).
+
+In all three cases the maximal odd-parent quotient \(2^t(Q/3^{t+3})\) lies in its required dyadic image band. These are concrete valid high-valuation branches, not merely divisibility candidates.
+
+## 4. Exact reverse-cone experiments
+
+The accompanying UIndexHenselCensus.mjs implements the two exact ResetParent arms from FirstInverseComplete.lean and the same finite predecessor enumeration as ParentsFast.lean. It reproduces the following reverse cones rooted at the candidate \(z=(Q/9-5)/2\):
+
+| \(r\) | \(n\) | \(v_3(Q)\) | maximal \(t\) | nodes | edges | max depth | root 2 present? |
+|---:|---:|---:|---:|---:|---:|---:|---|
+| 4 | 53375 | 12 | 9 | 21 | 20 | 6 | no |
+| 13 | 171473 | 10 | 7 | 17 | 16 | 6 | no |
+| 1057 | 13870841 | 14 | 11 | 19 | 18 | 6 | no |
+
+These are exact-integer computational observations only. They are not Lean closedCertFast certificates and do not establish a uniform cone bound. The changing cone sizes and unbounded 3-adic valuation show why the fixed n=887 31-state cone cannot be generalized by simply reusing its finite list.
+
+## 5. Research consequence
+
+The n=887 selector eliminates every \(t\ge5\) first-tier U parent only because its selected depth \(3402\) lies beyond the n=887 spine. Along \(n=887+13122r\), the same depth eventually lies on the spine, and the family-parameter Hensel root produces valid \(t=7,9,11,\ldots\) branches. A proof of global #746 root exclusion must therefore handle this unbounded 3-adic branch, not just the n=887 cone.
+
+The new useful coordinate is the 3-adic root \(\rho\) of \(F(r)\). The next mathematical target is to combine its exact lift law with the dyadic scale window and the inverse-parent formulas, and determine whether the resulting branch cones admit a uniform symbolic closure. Keep this work in im-results until the source proof and root-connected scope are established.
