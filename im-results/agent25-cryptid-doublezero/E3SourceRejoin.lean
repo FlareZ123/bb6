@@ -34,10 +34,10 @@ theorem input_obs_eq (t : Nat) :
   have hstart : sourceStart t = init xs := by
     simp [sourceStart, xs, DRegularSource.sourceSection,
       CryptidBoundary.init, CryptidBoundary.oppairs]
-    omega
   have hprepared : preparedStart t = init (xs ++ [false,false]) := by
     simp [preparedStart, xs, BB6.Agent36EZeroZTwoFollow.input,
       CryptidBoundary.init, CryptidBoundary.pairs, List.append_assoc]
+    omega
   rw [hstart, hprepared]
   exact hpad
 
@@ -131,18 +131,22 @@ private theorem b_output_obs_eq (t : Nat) :
       DRegularSource.sourceSection ⟨64*t+37,3,0⟩ = init xs := by
     simp [DRegularSource.sourceSection, xs, CryptidBoundary.init,
       CryptidBoundary.oppairs, hlen]
+  have hrep : [true,true] ++ List.replicate (64*t+35) true =
+      List.replicate (64*t+37) true := by
+    have hsum : 64*t+35+2 = 64*t+37 := by omega
+    simpa [hsum] using two_ones_append (64*t+35)
+  have htail : xs ++ [false] =
+      List.replicate (64*t+35) true ++
+        (CryptidBoundary.oppairs 3 ++ [false]) := by
+    simp [xs, List.append_assoc]
   have hout : init (xs ++ [false]) = bOutput t := by
-    change ⟨[],false,
-      [true,true] ++ xs ++ [false],5⟩ = bOutput t
-    rw [show [true,true] ++ List.replicate (64*t+35) true =
-      List.replicate (64*t+37) true by
-        simpa using two_ones_append (64*t+35)]
-    simp [bOutput, xs, BB6.Agent36EZeroZTwoFollow.tail7,
-      CryptidBoundary.oppairs, List.append_assoc]
+    change ⟨[],false,[true,true] ++ xs ++ [false],5⟩ = bOutput t
+    rw [htail, ← List.append_assoc, hrep]
+    simp [bOutput, BB6.Agent36EZeroZTwoFollow.tail7,
+      CryptidBoundary.oppairs]
   have hforward :
       ObsEq (DRegularSource.sourceSection ⟨64*t+37,3,0⟩) (bOutput t) := by
-    rw [htarget, hout]
-    exact hpad
+    simpa [htarget, ← hout] using hpad
   exact BB6.Padding.cfgEq_symm hforward
 
 /-- The E-return's one trailing zero is only the first blank beyond (01)^6. -/
@@ -158,18 +162,22 @@ private theorem e_output_obs_eq (t : Nat) :
       DRegularSource.sourceSection ⟨64*t+49,6,0⟩ = init xs := by
     simp [DRegularSource.sourceSection, xs, CryptidBoundary.init,
       CryptidBoundary.oppairs, hlen]
+  have hrep : [true,true] ++ List.replicate (64*t+47) true =
+      List.replicate (64*t+49) true := by
+    have hsum : 64*t+47+2 = 64*t+49 := by omega
+    simpa [hsum] using two_ones_append (64*t+47)
+  have htail : xs ++ [false] =
+      List.replicate (64*t+47) true ++
+        (CryptidBoundary.oppairs 6 ++ [false]) := by
+    simp [xs, List.append_assoc]
   have hout : init (xs ++ [false]) = eOutput t := by
-    change ⟨[],false,
-      [true,true] ++ xs ++ [false],5⟩ = eOutput t
-    rw [show [true,true] ++ List.replicate (64*t+47) true =
-      List.replicate (64*t+49) true by
-        simpa using two_ones_append (64*t+47)]
-    simp [eOutput, xs, BB6.Agent36EZeroZTwoFollow.tail13,
-      CryptidBoundary.oppairs, List.append_assoc]
+    change ⟨[],false,[true,true] ++ xs ++ [false],5⟩ = eOutput t
+    rw [htail, ← List.append_assoc, hrep]
+    simp [eOutput, BB6.Agent36EZeroZTwoFollow.tail13,
+      CryptidBoundary.oppairs]
   have hforward :
       ObsEq (DRegularSource.sourceSection ⟨64*t+49,6,0⟩) (eOutput t) := by
-    rw [htarget, hout]
-    exact hpad
+    simpa [htarget, ← hout] using hpad
   exact BB6.Padding.cfgEq_symm hforward
 
 theorem q1b1_regular_rejoin_B (t : Nat) :
