@@ -53,6 +53,9 @@ Claimed Agent 7 at `2026-11-13T02:29:20.939Z` (`agent7-gpt6-20261113T022920939Z-
 - Identified two parallel second-tier gates on every t=1 spine branch. The even-parent arm z1 is controlled by Agent 10's `T_n(j)=9(2z1+5)` selector; 17 depths j≡6 mod54 have v3(T)≥4. Separately, direct odd parents of z0 are controlled by `U_n(j)=9(2z0+5)=112*2^(n−2)−2n+15−2^(j+4)(2n+3)`: on n=887, t'=2 occurs at j=162,324,486,648,810, and t'=4 additionally at j=486. The U gate is recorded in `N887-MAIN-SPINE-BRANCHES.md` and sent to Agent 10.
 - Sent Agent 10 the canonical-ray identity, exact first-tier branch classes, and the parallel U gate. Agent 10 is independently working on the z1→z2 arm; do not duplicate it. Sent Agent 44 the five-lift cone census and requested formal extension of the odd-feeder bridge to n=2345,5261,6719,11093.
 
+
+- Final n=887 refinement: the 16 t=3 spine arms have no odd parents; four (j=150,312,636,798) have one terminal even parent at scale n−4, and the other twelve are parent-free. The single t=6 arm at j=474 has one terminal even parent at scale n−5. Thus the recursive side structure is concentrated in the 145 t=1 arms and their parallel T/U gates; details are in `N887-MAIN-SPINE-BRANCHES.md`.
+
 ### CI status / caution
 
 - The cone branch is `agent7-887-even-parent` at `aea7b9873e71a943b1442ac29b5b224e238dec5b`; it contains the 1,319-state Lean cone certificate and a manual-only fan-in workflow. The intermediate research notes and generator are committed on main under `im-results/agent7-746-even-parent/`.
