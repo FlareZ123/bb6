@@ -46,14 +46,17 @@ theorem zeroLeftPrefix_run (b : Conf)
   have hidx2 : h-1-1 = h-2 := by omega
   have hidx3 : h-2-1 = h-3 := by omega
   have hidx4 : h-3+1 = h-2 := by omega
-  have hidx5 : h-3+1+1 = h-1 := by omega
+  have hidx5 : h-2+1 = h-1 := by omega
+  have hidx6 : h-2+1-1 = h-2 := by omega
+  have hidx7 : h-2+1-1+1 = h-1 := by omega
+  have hidx8 : h-2+1-1+1+1 = h := by omega
   have h3' : t (h-2-1) = false := by rw [hidx3]; exact h3
   have h30' : h-2-1 ≠ h := by omega
   have h31' : h-2-1 ≠ h-1 := by omega
   have h32' : h-2-1 ≠ h-2 := by omega
   simp [shuttleRun, next, setBit, zeroLeftPrefixTape,
     h0, h1, h2, h3, h3', h10, h20, h30, h21, h31, h32,
-    h30', h31', h32', hidx2, hidx3, hidx4, hidx5]
+    h30', h31', h32', hidx2, hidx3, hidx4, hidx5, hidx6, hidx7, hidx8]
 
 /-- Exact output tape after the even D/F sweep and its D0/E0/A0 return. -/
 def evenSweepB0Tape (n : Nat) (t : Int → Bool) (h : Int) : Int → Bool :=
