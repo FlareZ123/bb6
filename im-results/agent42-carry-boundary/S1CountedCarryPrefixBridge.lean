@@ -559,7 +559,7 @@ theorem s1Config_evenCounter_countedReturn
     rw [hhead]
     congr 1
     funext x
-    dsimp [P]
+    change cfg.tape (h + (x-h)) = cfg.tape x
     congr 1
     omega
   let Tpost : Int → Bool :=
@@ -682,11 +682,10 @@ theorem s1Config_oddCounter_countedReturn
     cases r with
     | zero => rfl
     | succ r =>
-      have hdivPow : 2 ∣ 2^(Nat.succ r) := by
-        simp [Nat.pow_succ,Nat.mul_comm]
       have hdiv : 2 ∣ z := by
-        rw [hfactor]
-        exact dvd_mul_of_dvd_right hdivPow (2*q+1)
+        rw [hfactor, Nat.pow_succ]
+        refine ⟨(2*q+1)*2^r, ?_⟩
+        simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
       have heven : z%2=0 := Nat.mod_eq_zero_of_dvd hdiv
       omega
   have hfactor' : z=2*q+1 := by simpa [hr] using hfactor
@@ -731,11 +730,27 @@ theorem s1Config_oddCounter_countedReturn
     simpa [P,cfg,even_rightStop,Int.add_assoc] using hv
   have hzero1 : P (11+3*(b:Int))=false := by
     have hv := s1Config_right_zero_after_counter L n m a z b h 1
-    simpa [P,cfg,even_rightStop,Int.add_assoc] using hv
+    have hcoord : (10:Int)+(3*(b:Int)+1) = 11+3*(b:Int) := by omega
+    rw [hcoord] at hv
+    simpa [P,cfg] using hv
   have hzero2 : P (12+3*(b:Int))=false := by
     have hv := s1Config_right_zero_after_counter L n m a z b h 2
-    simpa [P,cfg,even_rightStop,Int.add_assoc] using hv
-  have hrun := counted_odd_counter P b hone hzero0 hzero1 hzero2
+    have hcoord : (10:Int)+(3*(b:Int)+2) = 12+3*(b:Int) := by omega
+    rw [hcoord] at hv
+    simpa [P,cfg] using hv
+  have hstop0 : rightStop b = 10+3*(b:Int) := by
+    unfold rightStop
+    omega
+  have hstop1 : rightStop b+1 = 11+3*(b:Int) := by
+    unfold rightStop
+    omega
+  have hstop2 : rightStop b+2 = 12+3*(b:Int) := by
+    unfold rightStop
+    omega
+  have hzero0' : P (rightStop b)=false := by simpa [hstop0] using hzero0
+  have hzero1' : P (rightStop b+1)=false := by simpa [hstop1] using hzero1
+  have hzero2' : P (rightStop b+2)=false := by simpa [hstop2] using hzero2
+  have hrun := counted_odd_counter P b hone hzero0' hzero1' hzero2'
   let Tpost : Int → Bool := (oddCounterOutput b P).tape ∘ fun x => x-h
   have hshift := shift_run h tm2 (oddCounterInput P) (48+12*b)
   rw [hrun] at hshift
@@ -743,7 +758,7 @@ theorem s1Config_oddCounter_countedReturn
   rw [hstart] at hshift
   have hrunAbs : run tm2 (48+12*b) cfg =
       some ⟨(3 : Fin 6),h,Tpost⟩ := by
-    simpa [shiftConfig,Tpost,oddCounterOutput,frame,embed,odd_tailFinal] using hshift
+    simpa [shiftConfig,Tpost,oddCounterOutput,frame,embed,tailFinal] using hshift
   refine ⟨q,len,Tpost,hfactor',ha',hq,?_⟩
   simpa [cfg] using hrunAbs
 
