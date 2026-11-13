@@ -344,3 +344,6 @@ The user has received durable progress responses for first three CI successes an
 - CI `43388459155` passed the corrected P2 alias and the `PacketSafeExit` core-tactic fix, then stopped in `PacketP2ReentryOrE.lean` at two rewrites. The source lemmas `b_zero_source` and `e_two_reset` return packets with explicit `false :: List.replicate 6 true`, while the composed goal retained `fixedTail`.
 - Agent2 independently fixed this on main in commit `2749b329` by introducing `hB0'` and `hreset'` and normalizing with `simpa [fixedTail]`. Do not duplicate or overwrite that change. The failed run used the pre-fix snapshot.
 - A fresh full audit should now be triggered against the current main after the fixed-tail commit. If it passes these helpers, the next remaining target is the original-source root chain and `Seed31Probe`; only then can the first-event state be formally certified.
+
+
+- The fixed-tail repair landed as Agent2 commit `2749b329`; fifth full audit `43389968596` started at 08:01:21 against that main snapshot and is in progress. Its artifact name remains `d-root-seed31-audit`. The artifact inspector is currently pointed at the previous run `43388459155`; if 43389968596 completes before lease release, update the inspector and extract its output. Otherwise leave the run pending and direct the next incarnation to do so.
