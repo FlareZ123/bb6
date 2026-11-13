@@ -1,0 +1,91 @@
+name: Agent 24 m0 even q4 prefix Lean verification
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent24-m0-even-q4-prefix.yml'
+      - 'im-results/agent24-champion-time/M0EvenQ4Bridge.lean'
+      - 'im-results/agent24-champion-time/M0EvenQ4Prefix.lean'
+      - 'im-results/agent24-champion-time/m0_even_n2_replay.py'
+      - 'im-results/agent24-champion-time/Q4RightEndpoint.lean'
+      - 'im-results/agent24-champion-time/CountedSweep.lean'
+      - 'im-results/agent24-champion-time/CountedOddBase.lean'
+      - 'im-results/agent6-q4-prefix/CountedQ4Prefix.lean'
+      - 'im-results/agent8-s1-encoder/S1Encoder.lean'
+      - 'im-results/agent8-counted-reset/CountedReset.lean'
+      - 'im-results/agent8-counted-reset/Q4Suffix.lean'
+      - 'im-results/agent8-rst1prime/CountedRst1Prime.lean'
+      - 'im-results/agent48-champion-root/ChampionRootBridge.lean'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Stage exact source dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a24-m0-even
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a24-m0-even/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a24-m0-even/
+          base64 --decode im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64 | gzip --decompress > /tmp/a24-m0-even/UniformTM63.lean
+          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,ChampionModular,CostRecurrence,CountPattern,Q4RightEndpoint}.lean /tmp/a24-m0-even/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a24-m0-even/
+          cp im-results/agent8-counted-reset/{CountedReset,Q4Suffix}.lean /tmp/a24-m0-even/
+          cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a24-m0-even/
+          cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a24-m0-even/
+          cp im-results/agent24-champion-time/{M0EvenQ4Bridge,M0EvenQ4Prefix}.lean /tmp/a24-m0-even/
+      - name: Replay and compile m0 even q4 bridge/prefix
+        run: |
+          set -euo pipefail
+          cd /tmp/a24-m0-even
+          export LEAN_PATH=.
+          lean --version
+          python3 "$GITHUB_WORKSPACE/im-results/agent24-champion-time/m0_even_n2_replay.py"
+          lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          lean -o UniformTM63.olean UniformTM63.lean
+          lean -o CountedSweep.olean CountedSweep.lean
+          lean -o CountedOddBase.olean CountedOddBase.lean
+          lean -o S1Encoder.olean S1Encoder.lean
+          lean -o ChampionModular.olean ChampionModular.lean
+          lean -o CostRecurrence.olean CostRecurrence.lean
+          lean -o CountPattern.olean CountPattern.lean
+          lean -o CountedReset.olean CountedReset.lean
+          lean -o CountedRst1Prime.olean CountedRst1Prime.lean
+          lean -o Q4Suffix.olean Q4Suffix.lean
+          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean
+          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
+          : > m0-even-q4-axioms.log
+          if ! lean -o M0EvenQ4Bridge.olean M0EvenQ4Bridge.lean > m0-even-q4-axioms.log 2>&1; then
+            echo '## M0EvenQ4Bridge compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 m0-even-q4-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat m0-even-q4-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' m0-even-q4-axioms.log; then
+            echo '::error::sorryAx found in m0 even finite bridge proofs'
+            exit 1
+          fi
+          if ! lean -o M0EvenQ4Prefix.olean M0EvenQ4Prefix.lean >> m0-even-q4-axioms.log 2>&1; then
+            echo '## M0EvenQ4Prefix compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 160 m0-even-q4-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat m0-even-q4-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' m0-even-q4-axioms.log; then
+            echo '::error::sorryAx found in m0 even q4 prefix proof'
+            exit 1
+          fi
+          echo '## m=0,n=2 even q4 prefix Lean verification' >> "$GITHUB_STEP_SUMMARY"
+          echo 'The finite bridge and source-level prefix compile under Lean 4.36.0-rc2 without sorryAx.' >> "$GITHUB_STEP_SUMMARY"
