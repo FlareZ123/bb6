@@ -244,41 +244,17 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) (ha : 3 ≤ a) :
         frameAt_tape_outside T1 hN m1EvenQ4Inside
           m1EvenQ4BridgeEnd x hout
     have hT1 : T1 x = true := by
-      by_cases hx : x ≤ h
-      · let j : Nat := 3*a-4-i
-        have hj : j+1 < N := by
-          dsimp [j,N,x,hN] at *
-          omega
-        have hblock := sweptLeft_block N j T h hj
-        have hcoord : x = h-(j:Int) := by
-          dsimp [x,j,N,hN]
-          omega
-        change sweptLeft N T h x = true
-        rw [hcoord]
-        exact hblock
-      · by_cases hx1 : x = h+1
-        · subst x
-          simpa [T1,N] using sweptLeft_plus1 (3*a) T h
-        · have hx2 : h+2 ≤ x := by omega
-          have hpres := sweptLeft_preserves_right N T h x hx2
-          have hx23 : x = h+2 ∨ x = h+3 := by
-            dsimp [x,N,hN] at *
-            omega
-          rcases hx23 with hx2' | hx3'
-          · rw [hx2'] at hpres ⊢
-            change sweptLeft N T h (h+2) = true
-            have hsrc : T (h+2) = true := by
-              have hcoord : h+1+1 = h+2 := by omega
-              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
-                s1Config_right_cell 3 6 1 a 0 b h 1
-            rw [hpres,hsrc]
-          · rw [hx3'] at hpres ⊢
-            change sweptLeft N T h (h+3) = true
-            have hsrc : T (h+3) = true := by
-              have hcoord : h+1+2 = h+3 := by omega
-              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
-                s1Config_right_cell 3 6 1 a 0 b h 2
-            rw [hpres,hsrc]
+      let j : Nat := 3*a-4-i
+      have hj : j+1 < N := by
+        dsimp [j,N,x,hN] at *
+        omega
+      have hblock := sweptLeft_block N j T h hj
+      have hcoord : x = h-(j:Int) := by
+        dsimp [x,j,N,hN]
+        omega
+      change sweptLeft N T h x = true
+      rw [hcoord]
+      exact hblock
     simpa [x,T2] using hframe.trans hT1
   have hScan := E_scan T2 (hN+5) (3*a) hlinear
   have hhead : hN+5+(3*a:Int) = h+4 := by
