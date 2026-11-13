@@ -541,6 +541,31 @@ theorem m1Odd_q4_prefix_rightShape (a b : Nat) (h : Int) :
 
 
 
+/-- The cut preserves the entire blank suffix after the finite right-facing
+unary counter, not merely the five-cell q4 guard. -/
+theorem m1Odd_q4_prefix_far_tail (a b : Nat) (h : Int) :
+    ∀ i : Nat, 9+3*b ≤ i →
+      m1OddQ4CutTape a b h (h+1+(i:Int)) = false := by
+  intro i hi
+  have hcut := m1OddQ4CutTape_eq_source_right a b h
+    (h+1+(i:Int)) (by omega)
+  have hsrc :
+      (s1Config 3 3 1 a 0 b h).tape (h+1+(i:Int)) =
+        sideBit (s0RightFacing b) i := by
+    simpa [s1PhysicalRight_source,sideBit] using
+      s1Config_right_cell 3 3 1 a 0 b h i
+  have hlen : (s0RightFacing b).length = 9+3*b := by
+    simp [s0RightFacing,d1pow_length]
+    omega
+  have hblank : sideBit (s0RightFacing b) i = false :=
+    sideBit_false_after_length_local (s0RightFacing b) i (by omega)
+  calc
+    m1OddQ4CutTape a b h (h+1+(i:Int)) =
+        (s1Config 3 3 1 a 0 b h).tape (h+1+(i:Int)) := hcut
+    _ = sideBit (s0RightFacing b) i := hsrc
+    _ = false := hblank
+
+
 def m1OddQ4LeftFacing (a : Nat) : List Bool :=
   [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec 3 2 ++ lh
 
