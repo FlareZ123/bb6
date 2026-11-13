@@ -58,7 +58,9 @@ theorem evenSweepTape_left (n : Nat) (t : Int → Bool) (h x : Int)
       rw [htail]
       have h1 : x ≠ h := by omega
       have h2 : x ≠ h+1 := by omega
-      simp [setBit,h1,h2]
+      change (if x = h+1 then false else
+        (if x = h then true else t x)) = t x
+      simp [h1,h2]
 
 theorem evenSweepB0Tape_head (n : Nat) (t : Int → Bool) (h : Int)
     (hz : t (h+2*(n:Int)+1) = false) :
@@ -140,9 +142,11 @@ theorem zeroLeftEvenOutTape_head (n : Nat) (t : Int → Bool) (h : Int)
       (h+2*(n:Int)+2) (by omega)
     have hne : h+2*(n:Int)+2 ≠ h := by omega
     simp [setBit,hp,hne,hz]
-  simpa [zeroLeftEvenOutTape,hidx] using
-    evenSweepB0Tape_head n (setBit (zeroLeftPrefixTape t h) h false)
-      (h+1) hf
+  change evenSweepB0Tape n (setBit (zeroLeftPrefixTape t h) h false)
+    (h+1) (h+2*(n:Int)+2) = false
+  rw [← hidx]
+  exact evenSweepB0Tape_head n (setBit (zeroLeftPrefixTape t h) h false)
+    (h+1) hf
 
 /-- Every B/0 with three zero cells to its left and a right corridor
     1^(2n)00 has an exact source-machine return after 2n+12 steps.
