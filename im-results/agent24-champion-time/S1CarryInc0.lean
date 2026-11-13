@@ -376,7 +376,7 @@ theorem s1Config_counted_decrement_allPositive
       carryPrefix_anyPositive (4*k) T (by omega) hm
     obtain ⟨Tleft,hrunLeft,gleft⟩ :=
       BB6Coverage.Agent3CarryLeftOutput.carryLongPrefix_r0_left
-        k T hm
+        k T hm (by omega)
     have hconf : (⟨4,7,Tgen⟩ : Config) = ⟨4,7,Tleft⟩ := by
       apply Option.some.inj
       calc
