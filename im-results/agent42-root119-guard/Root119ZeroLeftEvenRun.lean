@@ -6,13 +6,13 @@ namespace BB6Root119
     are zero. It ends at F/1 on the original B head. -/
 def zeroLeftPrefixTape (t : Int → Bool) (h : Int) : Int → Bool :=
   setBit (setBit (setBit (setBit t h true) (h-1) true) (h-2) false)
-    (h-3) true
+    (h-2-1) true
 
 theorem zeroLeftPrefixTape_head (t : Int → Bool) (h : Int) :
     zeroLeftPrefixTape t h h = true := by
   have h1 : h ≠ h-1 := by omega
   have h2 : h ≠ h-2 := by omega
-  have h3 : h ≠ h-3 := by omega
+  have h3 : h ≠ h-2-1 := by omega
   simp [zeroLeftPrefixTape, setBit, h1, h2, h3]
 
 theorem zeroLeftPrefixTape_right (t : Int → Bool) (h x : Int)
@@ -20,7 +20,7 @@ theorem zeroLeftPrefixTape_right (t : Int → Bool) (h x : Int)
   have h0 : x ≠ h := by omega
   have h1 : x ≠ h-1 := by omega
   have h2 : x ≠ h-2 := by omega
-  have h3 : x ≠ h-3 := by omega
+  have h3 : x ≠ h-2-1 := by omega
   simp [zeroLeftPrefixTape, setBit, h0, h1, h2, h3]
 
 theorem zeroLeftPrefix_run (b : Conf)
@@ -45,8 +45,13 @@ theorem zeroLeftPrefix_run (b : Conf)
   have h32 : h-3 ≠ h-2 := by omega
   have hidx2 : h-1-1 = h-2 := by omega
   have hidx3 : h-2-1 = h-3 := by omega
+  have h3' : t (h-2-1) = false := by rw [hidx3]; exact h3
+  have h30' : h-2-1 ≠ h := by omega
+  have h31' : h-2-1 ≠ h-1 := by omega
+  have h32' : h-2-1 ≠ h-2 := by omega
   simp [shuttleRun, next, setBit, zeroLeftPrefixTape,
-    h0, h1, h2, h3, h10, h20, h30, h21, h31, h32, hidx2, hidx3]
+    h0, h1, h2, h3, h3', h10, h20, h30, h21, h31, h32,
+    h30', h31', h32', hidx2, hidx3]
 
 /-- Exact output tape after the even D/F sweep and its D0/E0/A0 return. -/
 def evenSweepB0Tape (n : Nat) (t : Int → Bool) (h : Int) : Int → Bool :=
@@ -266,7 +271,7 @@ theorem zeroLeftEvenOutTape_left (n : Nat) (t : Int → Bool) (h x : Int)
     have h1 : x ≠ h := by omega
     have h2 : x ≠ h-1 := by omega
     have h3 : x ≠ h-2 := by omega
-    have h4 : x ≠ h-3 := by omega
+    have h4 : x ≠ h-2-1 := by omega
     simp [fTape,setBit,zeroLeftPrefixTape,h1,h2,h3,h4]
   change setBit (setBit (evenSweepTape n fTape (h+1))
     (h+1+2*(n:Int)-1) true) (h+1+2*(n:Int)) true x = t x
@@ -291,7 +296,7 @@ theorem zeroLeftEvenOutTape_right (n : Nat) (t : Int → Bool) (h x : Int)
     have h1 : x ≠ h := by omega
     have h2 : x ≠ h-1 := by omega
     have h3 : x ≠ h-2 := by omega
-    have h4 : x ≠ h-3 := by omega
+    have h4 : x ≠ h-2-1 := by omega
     simp [fTape,setBit,zeroLeftPrefixTape,h1,h2,h3,h4]
   change setBit (setBit (evenSweepTape n fTape (h+1))
     (h+1+2*(n:Int)-1) true) (h+1+2*(n:Int)) true x = t x
