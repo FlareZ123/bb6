@@ -129,7 +129,44 @@ There are infinitely many exponents \(t\) admitting such an \(s\). Indeed, the i
 
 This is a mathematical consequence of the displayed formulas and the standard irrational-rotation density theorem, not a Lean theorem or a blank-root exclusion. It proves that no uniform finite cutoff on the odd exponent \(t\) can close this U branch.
 
-## 6. Research consequence
+## 6. Exact next-layer numerator and a mod-3 continuation rule
+
+For an odd parent arm of exponent \(t\) and dyadic offset \(\sigma\), let
+\[
+d=Q/3^{t+3},\quad x=2^t d,\quad k=n+t-\sigma,\quad
+h=2x-8\cdot2^k-k-5.
+\]
+Then \(h\) is the actual predecessor of \(z\) whenever \(x\) is in its odd image band. Direct substitution gives
+\[
+3^{t+3}(2h+5)=R_{t,\sigma}(n)=A\,2^{n+t-\sigma+4}+Bn+C,
+\]
+where
+\[
+A=7\cdot2^\sigma-3^{t+3},\qquad
+B=-(2^{t+3}+2^{j+t+7}+2\cdot3^{t+3}),
+\]
+\[
+C=15\cdot2^{t+2}-3\cdot2^{j+t+6}
+-3^{t+3}(2t-2\sigma+5).
+\]
+For even \(j\), \(B\) is a 3-adic unit: the first two powers of 2 differ in exponent by \(j+4\), which is even, so they agree modulo 3 and their sum is nonzero. Thus, once a base divisibility is known, this next-layer numerator has the same one-digit Hensel mechanism along the index progression. It is a natural input to the nested index-selector work; it is not yet formalized here.
+
+There is also an exact first-digit test requiring no large-integer computation. Modulo 3,
+\[
+2h+5\equiv 2^{t+2}d-(2^k+2k+2)\pmod3.
+\]
+For \(k\bmod6=0,1\), the second term is 0, so neither exact-Q lift (where \(d\bmod3\in\{1,2\}\)) can make \(3\mid2h+5\). For \(k\bmod6=2,3,4,5\), the second term is a nonzero residue, so exactly one of the two exact-Q lifts has \(3\mid2h+5\). The two lifts give \(d\bmod3=1\) and \(2\), because the Q Hensel digit is a unit.
+
+| \(t\) | \(\sigma\) | \(k\bmod6=5+t-\sigma\) | exact-Q lifts | lift with \(3\mid2h+5\) |
+|---:|---:|---:|---|---|
+| 7 | 14 | 4 | \(r=13,22\bmod27\) | \(r=13\) |
+| 9 | 17 | 3 | \(r=4,166\bmod243\) | \(r=4\) |
+| 11 | 20 | 2 | \(r=1057,1786\bmod2187\) | \(r=1786\) |
+| 14 | 25 | 0 | \(r=15637,55003\bmod59049\) | neither |
+
+This is only the first digit of the next-layer selector; it does not decide whether the continuing lift has valuation 2, 3, or more. It does, however, prune one of the two exact-Q branches immediately and explains the observed \(v_3(2h+5)\) values in the census.
+
+## 7. Research consequence
 
 The n=887 selector eliminates every \(t\ge5\) first-tier U parent only because its selected depth \(3402\) lies beyond the n=887 spine. Along \(n=887+13122r\), the same depth eventually lies on the spine, and the family-parameter Hensel root produces valid \(t=7,9,11,\ldots\) branches. A proof of global #746 root exclusion must therefore handle this unbounded 3-adic branch, not just the n=887 cone.
 
