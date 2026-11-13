@@ -3,6 +3,7 @@ import CountedQ4Prefix
 import Q4Suffix
 import Lean.Elab.Tactic.Omega
 
+/- Temporary audit marker; no declarations are changed by this comment. -/
 namespace BB6Coverage.Agent48CountedInc0
 
 open BB6Coverage
