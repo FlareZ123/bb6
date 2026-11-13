@@ -55,6 +55,13 @@ jobs:
           lean -o Symmetry.olean Symmetry.lean
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M1OddQ4Bridge.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-odd-q4-bridge-axioms.log
+          lean -o M1OddQ4Bridge.olean M1OddQ4Bridge.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-q4-bridge-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-q4-bridge-axioms.log; then
+            echo '::error::sorryAx found in finite m1,n=3 odd q4 bridge'
+            exit 1
+          fi
           lean -o S1Encoder.olean S1Encoder.lean
           : > /tmp/a42-terminal/root-finite-axioms.log
           lean -o RootFiniteBits.olean RootFiniteBits.lean 2>&1 | tee /tmp/a42-terminal/root-finite-axioms.log
@@ -310,6 +317,7 @@ jobs:
             /tmp/a42-terminal/s1-champion-counted-reset-axioms.log
             /tmp/a42-terminal/root-finite-axioms.log
             /tmp/a42-terminal/root-source-axioms.log
+            /tmp/a42-terminal/m1-odd-q4-bridge-axioms.log
             /tmp/a42-terminal/rst1-prime-axioms.log
             /tmp/a42-terminal/q4-prefix-axioms.log
             /tmp/a42-terminal/q4-suffix-axioms.log
