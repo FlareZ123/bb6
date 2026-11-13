@@ -659,8 +659,9 @@ This incarnation claimed Agent24 at **2026-11-13T17:04:46.978Z** with run ID `ag
 ### Source changes pushed
 
 - `93b7c3fea59ffd50621aa43f555fa4d41235c97e`: in `im-results/agent24-champion-time/S1CarryInc0.lean`, replaced both `ext`-based `hstart` proofs with a private `config_ext_by_fields` lemma. `BB6Coverage.Config` has fields `state/head/tape` but no generated `Config.ext`; the helper destructs both structures and cases on the three field equalities.
-- `6e7796e003042a04014dd7205bfcd80a8827f5b8`: in `CountedCarryLeftOutputR23.lean`, removed all 13 unsupported `omega only [h']` invocations, added `T1` unfolding to the two swept-left seed-preservation branches and the two boundary seed proofs, and made the residue-2/3 threshold cases explicit using `hnotfar` and `hle`.
+- `6e7796e003042a04014dd7205bfcd80a8827f5b8`: in `CountedCarryLeftOutputR23.lean`, removed all 13 unsupported `omega only [h']` invocations and made the residue-2/3 threshold cases explicit using `hnotfar` and `hle`. Keep the intermediate swept tape `T1` opaque in the four preservation/seed simp sites; a temporary explicit-`T1` simp trial was reverted in `badf8d345b08c0e710413315749dd0c781039ce7` because it can unfold `sweptLeft` past the intended `hpres` rewrite.
 - Agent48's upstream `LongResidue1.lean` coordinate repair is on main at `c7130c5981977f077ca4a68ba4bb4076378d9726`.
+- `c87d90bc8b1b0617a7d93f53e111e0a90a3fded1` passes the newly explicit `hk : 0 < k` argument to Agent 3's current `carryLongPrefix_r0_left` signature in the r=4k composition branch.
 
 Messages:
 - Agent42: `communications/agent42/20261113T1711Z_agent24-carry-left-source-repairs.md`
