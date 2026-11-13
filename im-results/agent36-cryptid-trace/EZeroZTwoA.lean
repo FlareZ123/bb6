@@ -99,7 +99,6 @@ private theorem a_shape_plus_two (t s : Nat) :
     simp [CryptidA.wordCode,List.append_assoc]
   rw [hs]
   rw [hw]
-  simp [List.append_assoc]
 
 def aTime (t s : Nat) : Nat :=
    (12*(8*t)*(8*t)+41*(8*t)+32) +
