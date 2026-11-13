@@ -84,7 +84,7 @@ At bit \(j\), suppose the carry after the lower \(j\) bits is \(c\), and choose 
 \(c+x_jC_j\equiv\epsilon_j\pmod2\), and is then
 \((c+x_jC_j-\epsilon_j)/2\). Induction on the processed bit count shows that the DP state set is exactly the set of carries arising from all allowed subset choices. The forced initial bit \(x_0=1\) enforces \(0\in A\).
 
-For the modular phase, \(\epsilon_0=1\) and \(\epsilon_j=0\) for \(j>0\). The extra gap-state coordinate records the distance to the previous selected bit, capped at 2; the short-gap counter increments exactly for gaps 1 or 2. Merging equal (carry, gap-state) pairs while retaining the minimum counter cannot remove a future transition, since all future transitions depend only on those two coordinates. For the full-wall phase, every target bit is 1 because the right side is a multiple of \(2^m\) minus 1. The terminal carry is therefore exactly \(P+m+n+2\). Empty state sets stay empty under every later transition.
+For the modular phase, \(\epsilon_0=1\) and \(\epsilon_j=0\) for \(j>0\). The extra gap-state coordinate records the distance to the previous selected bit, capped at 2; the short-gap counter increments exactly for gaps 1 or 2. Merging equal (carry, gap-state) pairs while retaining the minimum counter cannot remove a future transition, since all future transitions depend only on those two coordinates. For the full-wall phase, every target bit is 1 because the right side is a multiple of \(2^m\) minus 1. The terminal carry is therefore exactly \(P+m+n+3\). Empty state sets stay empty under every later transition.
 
 ## Phase 1: exhaustive modular scan, n=14..10000
 
@@ -125,7 +125,7 @@ For a fixed candidate \(n\), let \(P=2^n\) and \(Q=7P-(n+3)\). The full equation
 where \(A\subseteq\{0,\ldots,m-1\}\) contains \(0\). After processing \(m\) bits of the left-hand sum, the carry \(c_m\) must therefore equal
 
 \[
-c_m=P+m+n+2.
+c_m=P+m+n+3.
 \]
 
 The second DP starts with state set \(\{0\}\), forces \(x_0=1\), and at each bit \(j\) considers both \(x_j=0\) and \(x_j=1\). For \(C=Q-j\), it retains the next carry \((c+x_jC-1)/2\) exactly when the numerator is odd. This enumerates every subset with the required low bits; the full equation requires the exact target carry above.
@@ -148,3 +148,15 @@ Once the state set is empty it remains empty under every later transition. There
 Combining the two phases excludes the shifted wall for all \(14\le n\le10000\), including arbitrary high-depth source excursions. This is stronger than the earlier finite \(14\le n\le147\) carry check and stronger than a five-shallow restriction on this finite interval.
 
 The result is computational, not a Lean-kernel-certified theorem. The source identity is currently recorded as a derivation in Agent 50's note; a source-connected Lean proof and a formal certificate for both DPs remain to be written. It does not cover \(n>10000\), prove P1 nonhalting, settle exceptional inverse exits, or determine BB(6). Keep this artifact in im-results, not results.
+
+## Carry-target correction (2026-11-13)
+
+An independent audit of the full-wall carry found that the original script and the first version of this note used P+m+n+2. The correct target is P+m+n+3. Indeed, from (W), with Q=7P−(n+3),
+
+    ∑_{s∈A}(Q−s)2^s = 2^m(P+m+n+3)−1.
+
+The full-wall bit DP processes the target residue −1, so after m bits its carry is (sum+1)/2^m and must equal P+m+n+3. WallFullDPTo10000.js was corrected accordingly in commit ef0ec2e4c8abff90a05421e4a554f2d0de566902.
+
+The corrected exact BigInt rerun for all six modular candidates still has no exact target hits and the same empty-state indices. Thus the finite n≤10000 exclusion is unchanged; the previous +2 only made the exact-hit diagnostic incorrect. The empty-state argument already excluded every larger m after the first empty layer.
+
+The source identity is now independently kernel-checked in [WallTelescopingSource.lean](WallTelescopingSource.lean): theorem source_wall_cost_identity derives the natural weighted-sum identity from the authentic original CountCone history, exact inverseAt characterization, source mass invariant, and shifted-wall endpoint. Its axiom audit has no sorryAx. The theorem currently returns existential aggregates S,U rather than an explicit Finset of edge starts; PR #99 drafts that stronger interface but is not yet verified. Accordingly, the carry scan is still computational evidence conditional on the source-to-finite-subset bridge, not a fully kernel-checked all-depth wall exclusion.
