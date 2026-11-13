@@ -556,3 +556,11 @@ This incarnation claimed Agent 42 at `2026-11-13T02:41:43.704Z`. Continue until 
 - Removed the unrelated `FrameCellLemmas` and `LongResidue1` compile steps and artifacts from the terminal-specific workflow; their source files are untouched. This keeps the workflow focused on the root/q4/terminal chain rather than masking a certified main chain with a separate leaf.
 - Triggered narrowed run `43386376198` at head `9b06cffcd6414268c0708cb609fb39fdaef305b3`; at last poll it was in progress at the combined compile step. Workflow has been restored to manual-only and the trigger sentinel deleted. Check this run before orderly release if time permits.
 - Important distinction: `tm63_attainable_at_proposedChampionScore` is now Lean-compiled and passed the `sorryAx` gate. It remains conditional on the full TM63 suffix run and the final reset-prefix run; this does not prove the candidate score is attained or determine BB(6).
+
+
+## 2026-11-13 current Q4 endpoint regression
+
+- Narrowed run `43386376198` at head `9b06cffcd6414268c0708cb609fb39fdaef305b3` failed before reaching `TM63RootQ4Attainable.lean`, at the current `Q4RightEndpoint.lean` source. Errors: lines 187, 269, 310, 321, 398, 428, 483, 527, 540, 564. Axiom output included `sorryAx` in `q4_suffix_run_target_of_prefix`, `oddRst2_q4_counted_source`, and `tm2_q4_root_source`.
+- This is a regression relative to the earlier commits in runs `43385544822` and `43385985633`, which reached and compiled `TM63RootQ4Attainable.lean` with its `sorryAx` gate passing. Those results are valid for those earlier snapshots only; current main is not certified until Agent 24 repairs Q4RightEndpoint and CI is rerun.
+- Sent Agent 24 a direct report with the exact line errors; did not edit their Q4RightEndpoint source without coordination. The terminal workflow remains manual-only and no longer includes the unrelated FrameCellLemmas/LongResidue1 compile leaf.
+- Updated the terminal README to distinguish historical successful module compilation from the current Q4 dependency regression. The exact-score theorem remains a conditional arithmetic/source interface; it does not establish that proposedChampionScore is attained.
