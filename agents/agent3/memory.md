@@ -269,3 +269,51 @@ Initial exact two-parent root gate A/0001 ∨ C/1001 in `im-results/agent3-429-p
 ### 2026-11-09 08:45Z latest E1-sweep source closure
 
 Further original-source module `im-results/agent3-429-e-guard/BB429EGuard.lean` theorem `two_E1_then_E0_no_A_corridor`: for *any physical starting tape* and any k≥0, an exact E/1, E/1, E/0 three-step left-moving source chain cannot enter the A/0 fatal corridor `0(01)^(k+1)001`. Both E1 steps write1, forcing A right+3 marked1, whereas all nonempty corridors require that cell0. This is a new, all-natural-k exact local obstruction; combined with the earlier genuine E right+1 invariant ruling out E0→A0001 (k0), an original-root fatal corridor cannot occur at the exit of an E1 sweep of length ≥2. **CI 42588094742 SUCCESS**, job 129062692158, only `[propext, Quot.sound]`, no sorryAx, SHA-pinned official Lean. Update recorded in E guard README (commit 508b18dff37f01df9c3d3faea14b0b460f6b490a). Still open: E0 after D0 or a single E1, and B1 predecessor of A/0001; source grammar boundary must be all-time exhaustive for genuine blank origin. DO NOT promote this local obstruction to globally decided #429.
+
+
+## 2026-11-13 invocation checkpoint: odd-valuation B-parent and y=3 boundaries
+
+Current incarnation claimed Agent 3 at 2026-11-13T07:47:19Z. Keep the original lease timestamp; do not refresh it. At every subsequent checkpoint, compare real system time to that timestamp and release only at 70 minutes.
+
+### Main mathematical development
+
+Working in im-results/agent11-c-low58/M0EvenEvenSumZeroNextCandidates.md, derived a general paper-level exclusion for
+\[
+B_s=(54+90s,127+211s),\quad s\equiv5\pmod8.
+\]
+Writing \(q=(s-5)/8\), \(129+211s=2^r u\) with \(r\) odd and \(u\equiv1\pmod4\), the six-even-right parent iteration has closed form
+\[
+T^n(B_s)=\bigl(312+512s-2^{r-n+1}u-4n,\;2^{r-n}u-2\bigr).
+\]
+The source gate holds for \(u\ge5\) while \(n<r\). The terminal branches now established on paper are:
+- \(u\ge7\): terminal right counter \(u-2\ge5\), odd, and the terminal coordinate sum is \(1\pmod4\), so the odd-image theorem excludes it.
+- \(u=1\): use only the gates with \(r-n\ge3\), reaching \((312+512s-4r,2)\); the exact low boundary fibre (now drafted in M0SmallBoundaryZero.lean) shows this target has no blank origin.
+- \(u=5,\ r\equiv3\pmod4\): terminal is \((x,3)\), \(x=302+512s-4r\equiv2\pmod{16}\); the new source theorem blank_no_y3_xmod16_two (drafted in EvenOddThreeX2Mod16.lean) forces its unique parent \((x/2,(x+2)/4)\), which is odd-right with sum \(2\pmod4\), hence excluded by blank_no_odd_sum_two.
+
+The remaining \(u=5,\ r\equiv1\pmod4\) sequence is infinite but zero-density. It satisfies \(r\equiv201\pmod{420}\), \(s=(5\cdot2^r-129)/211\), and has terminal \(x\equiv10\pmod{16},y=3\). Its exact y=3 source fan has only \(a\ge3\) odd parents; \(3\mid x+6\) eliminates the exceptional \(a=1\) branch, and cost parity forces even bounce depth \(n=2m\). The parent formula is
+\[
+a=(x+6)/2^{2m+1}-3,\qquad k=(x-a+1-6m)/2.
+\]
+This even-depth fan remains open. Do not claim the full odd-valuation theorem as Lean-certified or complete.
+
+The whole odd-valuation family has parameter density \(1/24\) among \(s\); its tail \(d=v_2(148+211q)\ge6\) beyond the existing d=0,2,4 cylinders has density \(1/1536\). The first nested cylinders are \(s=293\bmod2048\), \(4901\bmod8192\), \(23333\bmod32768\), \(97061\bmod131072\), etc. This is density in the parameter sieve only, not a fraction of machines or runs.
+
+### Additional source drafts
+
+- im-results/agent11-c-low58/M0EvenEvenSumZeroS293.lean: source proof for \(s=2048w+293\), using the existing L-parent exclusion and the new B-parent odd-valuation chain.
+- im-results/agent11-c-low58/CThreeDiagonalM0SumZeroS293Full.lean: exact-criterion integration for the explicit s=293 cylinder; it removes that cylinder from highAllowed.
+- im-results/agent11-c-low58/M0SmallBoundaryZero.lean: exact y=0/y=2 predecessor fibres needed for the u=1 terminal.
+- im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean: exact source parent classification for \(x\equiv2\pmod{16},y=3\), plus blank-origin exclusion.
+- im-results/agent11-c-low58/M0EvenEvenSumZeroS31.lean: for \(s=32w+31\), proves \(B_s=(2844+2880w,6668+6752w)\) unreachable. Its direct parent is in the even/odd-four sector and has a unique odd-right parent with sum 2 mod 4; its bounce parent has odd right and sum 1 mod 4. This only removes the B-parent for the corresponding A_s target; the L_s parent remains open.
+
+All five files are included in the manual .github/workflows/agent11-c-diagonal-late.yml workflow, but no successful workflow run has been observed. A workflow edit initially escaped the workspace variable; this was corrected throughout the file. The manual workflow still needs to be triggered and its failures inspected through the GitHub Actions MCP if available. Do not call any of these Lean drafts kernel-verified until that happens.
+
+### Communications and next work
+
+Sent Agent 11 targeted messages about:
+- the infinite u=5 boundary and its x=2 mod 8 y=3 terminal;
+- the x=2 mod 16 unique-parent theorem closing half of u=5;
+- the mod-3 elimination of the a=1 parent in the remaining u=5 branch;
+- the s=32w+31 B-parent reduction.
+
+Relevant collective context: communications/broadcast/20261112T234507Z_agent11-even-even-sumzero-parent-grammar.md and im-results/agent11-c-low58/M0EvenEvenSumZeroResidual.md. The main unresolved issue remains the S%4=0 even-even sum-zero parent fan (including the s≡7 mod8 side) and the residual u=5 x≡10 mod16 y=3 fan. Preserve the current note as the coherent dossier; avoid creating duplicate candidate summaries. results/ remains unchanged because these are intermediate/unverified contributions.
