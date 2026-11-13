@@ -57,28 +57,28 @@ theorem low43_C0_to_sourceScanE_delta (v k : Nat) :
     have h := BB429SourceE1Return.ones_add (4*v+8) 1
     have ha : (4*v+8)+1 = 4*v+9 := by omega
     rw [ha] at h
-    simpa [ones] using h
+    simpa [ones] using h.symm
   have hleft :
-      [true,true] ++ ones (4*v+6) ++ tens (2*k) ++ ones 6 =
-        ones (4*v+9) ++ pairs01 (2*k) ++ ones 5 := by
+      [true,true] ++ (ones (4*v+6) ++ (tens (2*k) ++ ones 6)) =
+        ones (4*v+9) ++ (pairs01 (2*k) ++ ones 5) := by
     calc
-      [true,true] ++ ones (4*v+6) ++ tens (2*k) ++ ones 6 =
-          ones (4*v+8) ++ (tens (2*k) ++ ones 6) := by
+      [true,true] ++ (ones (4*v+6) ++ (tens (2*k) ++ ones 6)) =
+          ([true,true] ++ ones (4*v+6)) ++ (tens (2*k) ++ ones 6) := by
+            rw [← List.append_assoc]
+      _ = ones (4*v+8) ++ (tens (2*k) ++ ones 6) := by
             rw [hprefix]
-            simp [List.append_assoc]
       _ = ones (4*v+8) ++ (true :: (pairs01 (2*k) ++ ones 5)) := by
             rw [tens_even_tail]
       _ = (ones (4*v+8) ++ [true]) ++
             (pairs01 (2*k) ++ ones 5) := by
-            simp [List.append_assoc]
-      _ = ones (4*v+9) ++ pairs01 (2*k) ++ ones 5 := by
+            rw [← List.append_assoc]
+      _ = ones (4*v+9) ++ (pairs01 (2*k) ++ ones 5) := by
             rw [hone]
-            rfl
   have hfirst' :
       runWithDelta 6 (low43_C0_zipper v k) =
         some (z 4 (ones (4*v+9) ++ (pairs01 (2*k) ++ ones 5))
           true [true,false,true], -2) := by
-    simpa only [hleft, List.append_assoc] using hfirst
+    simpa only [hleft] using hfirst
   have hSweep :=
     BB429W4JuncGeneral.E1_sweep_prefix_delta
       (4*v+9) (pairs01 (2*k) ++ ones 5) [true,false,true]
@@ -86,7 +86,7 @@ theorem low43_C0_to_sourceScanE_delta (v k : Nat) :
     have h := BB429SourceE1Return.ones_add (4*v+9) 1
     have ha : (4*v+9)+1 = 4*v+10 := by omega
     rw [ha] at h
-    simpa [ones] using h
+    simpa [ones] using h.symm
   have h2 : ones 6 ++ ones (4*v+4) = ones (4*v+10) := by
     have h := BB429SourceE1Return.ones_add 6 (4*v+4)
     have ha : 6+(4*v+4) = 4*v+10 := by omega
@@ -102,7 +102,7 @@ theorem low43_C0_to_sourceScanE_delta (v k : Nat) :
           (ones (4*v+9) ++ [true]) ++ [false,true] := by
             simp [List.append_assoc]
       _ = ones (4*v+10) ++ [false,true] := by rw [h1]
-      _ = (ones 6 ++ ones (4*v+4)) ++ [false,true] := by rw [h2]
+      _ = (ones 6 ++ ones (4*v+4)) ++ [false,true] := by rw [← h2]
       _ = ones 6 ++ ones (4*v+4) ++ [false,true] := by
             rw [List.append_assoc]
   have hcfg :
