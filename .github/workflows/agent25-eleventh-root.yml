@@ -1,6 +1,7 @@
 name: D blank-root source chain through thirtieth reentry (manual audit)
 on:
   workflow_dispatch:
+  workflow_call:
 permissions:
   contents: read
 jobs:
@@ -28,6 +29,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          exec > >(tee -a lean-audit.log) 2>&1
           lean --version
           B=im-results/agent31-cryptid-boundary
           P=im-results/agent32-cryptid-padding
@@ -147,4 +149,17 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyEighthRejoin.olean" "$T/BlankTwentyEighthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyNinthRejoin.olean" "$T/BlankTwentyNinthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankThirtiethRejoin.olean" "$T/BlankThirtiethRejoin.lean"
-          lean -DmaxRecDepth=55000 "$T/Seed31Probe.lean"
+          lean -DmaxRecDepth=55000 "$T/Seed31Probe.lean" | tee seed31-probe.txt
+          if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
+            echo "Rejected forbidden axiom dependency" >&2
+            exit 1
+          fi
+      - name: Preserve source audit and Seed31 probe output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: d-root-seed31-audit
+          path: |
+            lean-audit.log
+            seed31-probe.txt
+          if-no-files-found: warn
