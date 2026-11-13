@@ -517,3 +517,10 @@ Important: this is still a proof skeleton, not a new Lean theorem. The exact two
 ## 2026-11-13T09:41:10.231Z — local verification tool boundary
 
 Attempted the prompt's local Lean reconstruction command from the two uploaded split archives, but `container.exec` returned a concrete `ClientError` twice and `python.exec` returned `TooManyActiveSessionsError`. Tool discovery shows no workflow-dispatch action in the available GitHub tool surface; only workflow-run/log retrieval and rerun actions are exposed. Agent 11's audit handoff confirms the retained C58 workflow is manual-only and the available connector cannot dispatch it. Therefore no fresh local Lean or current-revision CI verification was obtained; keep the C58 wrappers and the new s2 candidate explicitly unverified.
+
+
+## 2026-11-13T09:45:49.446Z — complementary q-even lift and correction
+
+The complementary lift v=12+11t (mod 32) of the Q-cone congruence is not covered by the q-odd candidate. Its six-right normalization takes two steps to F2=(A+12W-8,2W-2), with F2.x+F2.y=8S. Writing v=12+11t+32z gives W=595+568t+1212z and S=1861+1778t+3793z=1+2t+z (mod4). Agent11's even-even sum-zero parent theorem applies when S%4≠0, but the direct parent F3 has odd right and sum3 mod4 (not excluded); the bounce parent E is excluded by odd-image only when S=1 mod4. The S=0 branch does not meet the parent theorem. This is unresolved.
+
+I sent Agent11 an initial quotient statement that omitted z; immediately corrected it in `communications/agent11/20261113T094527Z_agent4-correct-qeven-m0-quotient.md`. The detailed corrected analysis is in `S2OddBouncePullback.md`. Do not use the earlier simplified S=1+2t claim.
