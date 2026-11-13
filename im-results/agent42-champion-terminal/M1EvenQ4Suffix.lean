@@ -18,6 +18,7 @@ namespace BB6Coverage.Agent42M1EvenSuffix
 open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
+open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8Rst1Prime
@@ -78,7 +79,7 @@ with its consumed head cell removed, after its d0 and six-one prefixes. -/
 theorem q4_suffix_left_word_of_stream
     (T : Int → Bool) (h : Int) (b : Nat) (Q : List Bool)
     (hleft : ∀ i : Nat, T (h-(i:Int)) =
-      BB6Coverage.Agent6Q4Prefix.sideBit Q i) :
+      sideBit Q i) :
     ∀ i : Nat,
       (frameAt
         (d0Sweep b
@@ -112,12 +113,12 @@ theorem q4_suffix_left_word_of_stream
   · have hside :
         BB6Coverage.Agent6Q4Prefix.sideBit
             (d0pow b ++ d1pow 2 ++ tail) i =
-          BB6Coverage.Agent6Q4Prefix.sideBit (d0pow b) i := by
+          sideBit (d0pow b) i := by
       rw [List.append_assoc]
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_left
         (d0pow b) (d1pow 2 ++ tail) i (by rw [hlen0]; omega)]
     have hcell : T2 x =
-        BB6Coverage.Agent6Q4Prefix.sideBit (d0pow b) i := by
+        sideBit (d0pow b) i := by
       have hperiod : T2 x = decide (i % 3 = 2) := by
         by_cases hscan : h+10 ≤ x
         · let d : Nat := 3*b-5-i
@@ -236,7 +237,7 @@ theorem q4_suffix_left_word_of_stream
       exact hperiod.trans (sideBit_d0pow_mod b i hi0).symm
     calc
       U.tape x = T2 x := hU
-      _ = BB6Coverage.Agent6Q4Prefix.sideBit (d0pow b) i := hcell
+      _ = sideBit (d0pow b) i := hcell
       _ = BB6Coverage.Agent6Q4Prefix.sideBit
             (d0pow b ++ d1pow 2 ++ tail) i := hside.symm
   · by_cases hi1 : i < 3*b+6
@@ -274,7 +275,7 @@ theorem q4_suffix_left_word_of_stream
       have hside :
           BB6Coverage.Agent6Q4Prefix.sideBit
             (d0pow b ++ d1pow 2 ++ tail) i =
-          BB6Coverage.Agent6Q4Prefix.sideBit tail j := by
+          sideBit tail j := by
         rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
           (d0pow b) (d1pow 2 ++ tail) i (by rw [hlen0]; omega)]
         rw [hlen0]
@@ -285,7 +286,7 @@ theorem q4_suffix_left_word_of_stream
           dsimp [j]
           omega
         rw [hidx]
-      have hcell : T2 x = BB6Coverage.Agent6Q4Prefix.sideBit tail j := by
+      have hcell : T2 x = sideBit tail j := by
         have hbefore : T2 x = T1 x := by
           dsimp [T2]
           exact d0Sweep_before b T1 (h+10) x (by dsimp [x]; omega)
@@ -301,18 +302,18 @@ theorem q4_suffix_left_word_of_stream
           dsimp [x,j]
           omega
         have hprefix : T x =
-            BB6Coverage.Agent6Q4Prefix.sideBit Q (j+1) := by
+            sideBit Q (j+1) := by
           rw [hxcoord]
           exact hleft (j+1)
         have hdrop := sideBit_drop_one Q j
         calc
           T2 x = T1 x := hbefore
           _ = T x := hfirst
-          _ = BB6Coverage.Agent6Q4Prefix.sideBit Q (j+1) := hprefix
-          _ = BB6Coverage.Agent6Q4Prefix.sideBit tail j := hdrop.symm
+          _ = sideBit Q (j+1) := hprefix
+          _ = sideBit tail j := hdrop.symm
       calc
         U.tape x = T2 x := hU
-        _ = BB6Coverage.Agent6Q4Prefix.sideBit tail j := hcell
+        _ = sideBit tail j := hcell
         _ = BB6Coverage.Agent6Q4Prefix.sideBit
               (d0pow b ++ d1pow 2 ++ tail) i := hside.symm
 
@@ -360,14 +361,14 @@ theorem m1Even_q4_prefix_far_tail (a b : Nat) (h : Int) :
   have hpres : sweptLeft N T h x = T x := by
     exact sweptLeft_preserves_right N T h x (by dsimp [x]; omega)
   have hsrc : T x =
-      BB6Coverage.Agent6Q4Prefix.sideBit (s1PhysicalRight b) i := by
+      sideBit (s1PhysicalRight b) i := by
     have hcell := s1Config_right_cell 3 6 1 a 0 b h i
     simpa [T,x] using hcell
   have hlen : (s1PhysicalRight b).length = 9+3*b := by
     simp [s1PhysicalRight,s0PhysicalRight,d1pow_length]
     omega
   have hblank :
-      BB6Coverage.Agent6Q4Prefix.sideBit (s1PhysicalRight b) i = false :=
+      sideBit (s1PhysicalRight b) i = false :=
     BB6Coverage.Agent6Q4Prefix.sideBit_ge_length
       (s1PhysicalRight b) i (by omega)
   exact hcut.trans (hpres.trans (hsrc.trans hblank))
@@ -399,7 +400,7 @@ theorem m1Even_q4_suffix_source (a b : Nat) (h : Int) :
       q4_suffix_left_word_of_stream T h b (m1EvenQ4LeftFacing a) hleft
   have hrightU :
       ∀ i : Nat, U.tape (h+6+(3*b:Int)+(i:Int)) =
-        BB6Coverage.Agent6Q4Prefix.sideBit (s0RightFacing 0) i := by
+        sideBit (s0RightFacing 0) i := by
     simpa [U,T1,T2,g] using
       q4_suffix_right_word T h b hshape8 htail
   have hsuffix :
@@ -442,7 +443,7 @@ theorem m1Even_q4_suffix_source (a b : Nat) (h : Int) :
         rw [hcoord]
         calc
           U.tape (H+1+(i:Int)) =
-              BB6Coverage.Agent6Q4Prefix.sideBit (s0RightFacing 0) i := by
+              sideBit (s0RightFacing 0) i := by
                 have hr := hrightU i
                 have hrightCoord :
                     h+6+(3*b:Int)+(i:Int) = H+1+(i:Int) := by
@@ -450,7 +451,7 @@ theorem m1Even_q4_suffix_source (a b : Nat) (h : Int) :
                   omega
                 rw [hrightCoord] at hr
                 exact hr
-          _ = BB6Coverage.Agent6Q4Prefix.sideBit (s1PhysicalRight 0) i := by
+          _ = sideBit (s1PhysicalRight 0) i := by
                 rfl
           _ = (s1Config 3 5 0 (a+b+2) (2^b-1) 0 H).tape
                 (H+1+(i:Int)) := by
