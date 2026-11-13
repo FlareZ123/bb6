@@ -231,6 +231,10 @@ theorem firstExceptionFromSeed31_shape :
 #print axioms firstExceptionFromSeed31_sound_actual
 #print axioms firstExceptionFromSeed31_shape
 
+/-- The full 3-adic residue of the thirtieth return parameter. -/
+theorem t30_mod81_exact : t30 % 81 = 22 := by
+  decide
+
 #eval t30 % 81
 
 #print axioms firstStopAux_sound
