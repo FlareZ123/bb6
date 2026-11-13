@@ -1,6 +1,6 @@
 # Seed31–38: exact DRegular replay and the actual first exception
 
-**Status:** intermediate computational result; not a Lean-certified root theorem. This note corrects the conditional q=4 first-stop hypothesis. It does not establish BB(6), nor by itself establish an original-machine blank-root theorem.
+**Status:** intermediate computational result; not a Lean-certified root theorem. This note corrects the conditional q=4 first-stop hypothesis for the submitted seed31 definition. Important dependency: the repository's D-root dossier still labels the episode 17–30 original-source continuation as pending CI, so the computed seed31 and every downstream result here remain conditional on that submitted root-rejoin chain. This does not establish BB(6) or an authenticated original-machine blank-root extension.
 
 ## Seed31 is not the q=4 cylinder
 
