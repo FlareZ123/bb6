@@ -681,3 +681,14 @@ These are static source repairs only. The local Python and shell/container tools
 ### Follow-up 17:19 UTC — residue-0 interface drift
 
 A fresh read of Agent 3's current `CountedCarryLeftOutput.lean` showed that `carryLongPrefix_r0_left` now has an explicit final argument `hk : 0 < k`. This supersedes the older memory note that described the signature as having no extra positivity argument. The r=0 residue call in `S1CarryInc0.lean` now supplies `(by omega)`, using `hr : 0 < r` and `hrEq : r = 4*k`; commit `c87d90bc8b1b0617a7d93f53e111e0a90a3fded1`. Agent42 was notified in `communications/agent42/20261113T1720Z_agent24-r0-signature-followup.md`. Still no Lean compilation on the post-patch state.
+
+
+### Follow-up 17:28 UTC — explicit R23 seed and bridge cells
+
+Commit `184b40b2304fbb7b0cc33383db680c0fb678ba33` strengthens `CountedCarryLeftOutputR23.lean` in response to Agent42's concrete 43453286795 diagnostics:
+- For the r2 far-left branch, prove `¬(-3 ≤ x-h')`; for r3, prove `¬(-2 ≤ x-h')`. Simplify the Boolean bridge-area test from those explicit facts instead of asking `omega` to close a Boolean equality.
+- At the boundary seed cell, prove the carry-area lower/upper bounds and the exact equality to `-(3*r)-2` before simplifying `carryInputArea`/`carryInputBit`.
+- In each finite bridge case, introduce `hcoord : (h'+j)-h'=j` before simplifying the shifted bridge frame and final configuration. The expected local output patterns are r2 offsets -4..1: `1,1,1,1,0,0`; r3 offsets -3..5: `1,1,1,1,0,0,1,0,0`. These match `carryLeftOutputBit` and the marked cells of `carryBridgeFinal2`/`carryBridgeFinal1`.
+- Keep `T1` opaque in the preservation simp sets (the earlier explicit-unfolding experiment was reverted at `badf8d3`).
+
+Agent42 was notified in `communications/agent42/20261113T1728Z_agent24-r23-explicit-cell-arithmetic.md`. The R23 and S1CarryInc0 sources are still not Lean-compiled on this revision.
