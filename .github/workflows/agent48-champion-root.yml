@@ -91,7 +91,12 @@ jobs:
           lean -o CountedOddUnary.olean CountedOddUnary.lean
           printf '%s  %s\n' '0d1acc16c377f17e3f2c624a74f9874bafdf255f2fcdc9749c9d00c83b4f6737' CountedOneZeroUnary.lean | sha256sum --check
           lean -o CountedOneZeroUnary.olean CountedOneZeroUnary.lean
-          lean -o CountedResetBase.olean CountedResetBase.lean
+          : > /tmp/a48-root/reset-base-axioms.log
+          lean -o CountedResetBase.olean CountedResetBase.lean 2>&1 | tee /tmp/a48-root/reset-base-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/reset-base-axioms.log; then
+            echo '::error::sorryAx found in counted reset base proof'
+            exit 1
+          fi
           : > /tmp/a48-root/carry-bridge-axioms.log
           lean -o CountedCarryBridges.olean CountedCarryBridges.lean 2>&1 | tee /tmp/a48-root/carry-bridge-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/carry-bridge-axioms.log; then
