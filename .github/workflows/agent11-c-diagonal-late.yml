@@ -370,3 +370,13 @@ jobs:
             echo "REJECTED: latest six-sector s3 integration contains sorryAx"
             exit 1
           fi
+
+          # Agent 11: source-parent necessity and two m=0 sum-zero ray closures.
+          # These are compiled only in this manual milestone workflow.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0EvenEvenSumZeroParents,M0EvenEvenSumZeroRays}.lean .
+          lean -o M0EvenEvenSumZeroParents.olean M0EvenEvenSumZeroParents.lean 2>&1 | tee M0EvenEvenSumZeroParents.log
+          lean -o M0EvenEvenSumZeroRays.olean M0EvenEvenSumZeroRays.lean 2>&1 | tee M0EvenEvenSumZeroRays.log
+          if grep -E -q sorryAx M0EvenEvenSumZeroParents.log M0EvenEvenSumZeroRays.log; then
+            echo "REJECTED: incomplete m=0 sum-zero source proof"
+            exit 1
+          fi
