@@ -252,7 +252,7 @@ theorem blank_root_to_junc0_408 :
       (∀ t : Nat, t ≤ 314966 →
         ∃ e : Config, run target429 t blank = some e ∧ ¬ physicalC01 e) := by
   obtain ⟨c₆₉, c₁₄₁, c₁₂₂, c₃₄₄,
-      hroot, hrep₃₄₄, _, _, _, _, _, _, hprefixRoot⟩ :=
+      _, _, _, _, _, _, hroot, hrep₃₄₄, hprefixRoot⟩ :=
     blank_root_lowEvenR32_to_junc0_344
   obtain ⟨c₄₀₈, hreturn, hrep₄₀₈, hhead, hprefixReturn⟩ :=
     junc0_344_to_junc0_408_physical c₃₄₄ hrep₃₄₄
