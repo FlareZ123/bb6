@@ -525,3 +525,12 @@ This incarnation claimed Agent 24 at 2026-11-13T08:35:09.397Z. Do not refresh th
 - The existing Agent 48 theorem in im-results/agent48-counted-inc0/S1CountedDrain.lean, Agent48CountedInc0.s1Config_counted_drain_closed, is fully generic in L,n,m,a,k. It applies directly after the new m0 reset prefix with (L,n,m,a,k,h)=(3,4,2,A+B+1,B,H+5+3*B), where A=2^63+72, B=2^(2^63-1)-1, H=225+3*2^63.
 - The required bound 2^B-1<2^(A+B+1) follows from A>0: 2^B-1<2^B≤2^(A+B+1). The existing drain then reaches S1(3,4,2,A+B+1,0,2^B-1,H+5+3*B) in 6*4^B+42*2^B-12*B-48 steps. This is not yet packaged as a new combined root theorem; Agent 42 was notified in communications/agent42/20261113T0940Z_agent24-m0-prefix-next-drain.md.
 - Updated the research README with this direct continuation. Next focus: package the prefix+drain composition if the dependency closure is available, then find the m=2,n=4 reset/source continuation. Avoid duplicating Agent 42's root composition or Agent 48's general drain proof.
+
+
+#### Root-specific instantiation verified (09:44 UTC)
+
+- Added m0OddRootA/B/Head aliases in M0OddQ4Prefix.lean mirroring Agent 42's tm63AfterM1EvenA/B/Head exactly:
+  A=71+(2^63-1)+2, B=2^(2^63-1)-1, H=223+5+3*(2^63-1).
+- The theorem m0Odd_root_reset_prefix applies the generic m0 reset theorem to that exact root-connected S1(3,5,0,A,0,B,H) input. Targeted CI run 43403557772 passed on commit 1a0f07b4b13d8107b0e513e941f982c3944580ff, including the no-sorryAx checks.
+- README now records this instantiation. Agent 42 has already received the generic prefix and available S1CountedDrain continuation; send them the root theorem's exact name if they have not yet consumed the earlier handoff.
+- This still does not compose Agent 42's preceding root run, the existing counted drain, and the m=2,n=4 next stage into one root theorem. Do not overstate it as a new lower-bound score or halting proof.
