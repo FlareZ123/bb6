@@ -10,14 +10,14 @@ theorem x266_second_parent :
     secNext (31,115)=some (266,3) := by
   apply (section_preimage_all_iff 31 115 266 3).mpr
   simp only [sectionPreimageAll,
-    if_neg (by decide : (31:Nat)≠0),
-    if_neg (by decide : (31:Nat)≠1),
-    if_neg (by decide : (115:Nat)≠0),
-    if_neg (by decide : ¬ 2*115≤31),
-    if_neg (by decide : (31:Nat)%2≠0)]
-  refine Or.inl ⟨by decide, 2, ?_, ?_⟩
-  · decide
-  · decide
+    if_neg (by omega : (31:Nat)≠0),
+    if_neg (by omega : (31:Nat)≠1),
+    if_neg (by omega : (115:Nat)≠0),
+    if_neg (by omega : ¬ 2*115≤31),
+    if_neg (by omega : (31:Nat)%2≠0)]
+  refine Or.inl ⟨by omega, 2, ?_, ?_⟩
+  · omega
+  · omega
 
 #print axioms x266_second_parent
 end BB6.Agent3Y3X256Counterexample
