@@ -42,7 +42,19 @@ No other t gives an odd ResetParent on the n=887 main spine. In particular:
 
 The branch counts are 145+16+1=162, exactly the odd-parent edges leaving the main spine in the complete 1,319-state reverse cone census.
 
-## 4. Second-tier t=1 gate
+## 4. The t=3 and t=6 side branches are shallow
+
+Exact parent enumeration of the 16 t=3 branch roots gives:
+
+- the four depths j=150,312,636,798 have one even parent, at scale k=883=n−4;
+- the other twelve depths j=42,96,204,258,366,420,474,528,582,690,744,852 are parent-free;
+- none of the 16 t=3 roots has an odd parent, and each of the four even parents is itself parent-free.
+
+The single t=6 branch at j=474 has one even parent at scale k=882=n−5; that parent is parent-free. The t=6 root has no odd parent.
+
+Thus the t=3 and t=6 first-tier arms close after at most one further even edge. Their full side subtrees are small; the difficult recursive structure is concentrated in the t=1 arms.
+
+## 5. Second-tier t=1 gate
 
 For every one of the 145 t=1 branches, the actual even parent w of its odd predecessor satisfies the exact source identity
 
