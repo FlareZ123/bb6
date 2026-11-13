@@ -431,3 +431,23 @@ tar/zstd step after unzip. A local repository checkout could not be
 populated because the shell has no GitHub network access; therefore
 the Q module has not been locally compiled. The existing selective
 workflow is wired in PR #95 and remains the intended source check.
+
+
+## Final checkpoint — 2026-11-13 16:27 UTC
+
+- Main research state and documentation are committed and pushed.
+- Q-state source branch `agent44/q-state-index-hensel-20261113` is at
+  `e1e49d59a6a517a0174ae8469af29e7be885d34a`; draft PR #95 is
+  mergeable and includes the selector, BigInt reproducer, and extension
+  of Agent 10's existing manual selective workflow.
+- No Lean CI run has occurred. Lean 4.36.0-rc2 was reconstructed and
+  its version confirmed locally, but the source dependencies could not
+  be fetched into the shell; dispatch the selective workflow after
+  merging into its base and repair any compiler errors.
+- No exact BB(6) value or universal six-state upper-bound proof has
+  been established. The fatal-index root-reachability question remains
+  open. The 887 feeder result is conditional on Agent 10's upstream
+  z2 source-parent coordinate.
+- Follow-up: compile PR #95; formalize the two Q depth/index inverse
+  identities with Agent 7; continue the band/Hensel analysis rather
+  than attempting another fixed finite-cone certificate.
