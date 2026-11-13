@@ -85,7 +85,7 @@ Here \(e_1=Q/3^7\) is odd because \(3^8\mid Q\). The first parent has \(k_1=n-5\
 \[
 G_1=2^6e_1-16\cdot2^{n-5}-2(n-5)-5.
 \]
-Since \(3\mid e_1\), while \(k_1=n-5\) is both even and divisible by 3, we have \(2^{k_1}\equiv1\pmod3\) and \(3\mid G_1\) for every \(r\). Thus \(G_1/3\) is the initial scaled-cylinder Hensel function. The explicit seven-edge witness below uses a different first choice, \((7,14)\), to give a concrete deeper cylinder.
+Since \(3\mid e_1\), while \(k_1=n-5\) is both even and divisible by 3, we have \(2^{k_1}\equiv1\pmod3\) and \(3\mid G_1\) for every \(r\). Thus \(G_1/3\) is the initial scaled-cylinder Hensel function. The explicit nine-edge witness below extends this same first edge through eight further Hensel lifts.
 
 Suppose at stage \(i\) we have a target \(z_{i-1}\), with
 \[
@@ -293,7 +293,7 @@ Consequently every exact ratio lies in \((6.19,7.94)\), with margin greater than
 \[
 6\cdot2^{k_i}+1\le2^{t_i}e_i\le8\cdot2^{k_i}-1
 \]
-therefore hold for every \(n\ge7000\) in the class. In particular, the least representative itself gives a genuine nine-edge chain, and so does every nonnegative member of the class. The last digit also makes \(3\mid G_8\), seeding a tenth edge.
+therefore hold for every \(n\ge7000\) in the class. In particular, the least representative itself gives a genuine nine-edge chain, and so does every nonnegative member of the class. The last digit makes \(3\mid G_8\), which is the divisibility condition needed for the ninth edge.
 
 The exact modular residues, unique Hensel digits, coefficient bit lengths, and limiting ratios are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). Agent 44 independently checked an alternate eight-edge branch beginning with \((t_1,\sigma_1)=(7,14)\) modulo \(3^{28}\) in [NestedCascadeCheck.mjs](../agent44-746-rank/NestedCascadeCheck.mjs); that independent check is complementary to the denser \(t_1=4\) branch above.
 
