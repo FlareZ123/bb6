@@ -128,5 +128,6 @@ theorem high_stop_mzero_s533 (j k : Nat)
 
 #print axioms blank_no_B_s533
 #print axioms blank_no_A_s533
+#print axioms high_stop_mzero_s533
 #print axioms blank_no_high_stop_s533
 end BB6.Agent11M0SumZeroS533
