@@ -217,3 +217,6 @@ EChainDoubleBReentry.lean strengthens the A-marker endpoint theorem with an expl
 The resulting double_B_to_A_source_reentry theorem composes the two corrected B packets (suffix p→p+3→p+6) with the marker-A closure and returns a canonical DRegular source section. chain_double_B_to_A_source_reentry additionally composes any E-chain satisfying 1+4*8^d*h=27*t+17; its output is directly suitable for Agent25RootChain.extend_regular, rather than stopping at the intermediate regularEndpoint predicate.
 
 The module is added to the manual agent37-p2-k13.yml kernel audit immediately after EChainDoubleBExit. It is a submitted source-level candidate until that workflow succeeds; no BB(6) conclusion follows from this local closure alone.
+
+
+The same module also adds reset_double_B_to_A_source_reentry: it composes the existing P2 eTwo_reset theorem, the arbitrary-depth E chain, the two B packets, and the A-marker closure, returning a canonical DRegularSource section directly from the original P2 reset packet. This removes the regularEndpoint-only stopping point for the reset cylinder as well.
