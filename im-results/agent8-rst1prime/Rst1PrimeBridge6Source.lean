@@ -1047,4 +1047,122 @@ theorem rst1PrimeAfterBridge30_d0pow_L
 #print axioms rst1PrimeAfterBridge30_d0pow_L
 
 
+/-- The four-cell markerWord2 region is exactly present at the final
+head: the bridge6 frame supplies 1,1 and the fourth sweep supplies 0,1. -/
+theorem rst1PrimeAfterBridge30_markerWord2
+    (L a b : Nat) (h : Int) :
+    (rst1PrimeAfterBridge30 L a b h).tape (h+5) = true ∧
+    (rst1PrimeAfterBridge30 L a b h).tape (h+4) = true ∧
+    (rst1PrimeAfterBridge30 L a b h).tape (h+3) = false ∧
+    (rst1PrimeAfterBridge30 L a b h).tape (h+2) = true := by
+  let H0 : Int := h-((3*a+1:Int))
+  let Hs : Int := H0+3
+  let H6 : Int := Hs+3*((a+1):Int)
+  have hH6 : H6=h+5 := by dsimp [H6,Hs,H0]; omega
+  have hpre := rst1Prime_rightSweep_preconditions_after_bridge9 L a b h
+  have hblock := rst1Prime_sweptRight_block (a+1)
+    (rst1PrimeAfterBridge9 L a b h).tape Hs a (by omega)
+  have hstart : (rst1PrimeAfterBridge9 L a b h).tape
+      (Hs+3*(a:Int)) = true := (hpre a (by omega)).1
+  have heq5 := rst1PrimeAfterBridge30_eq_afterBridge6_left
+    L a b h (h+5) (by omega)
+  have heq4 := rst1PrimeAfterBridge30_eq_afterBridge6_left
+    L a b h (h+4) (by omega)
+  have heq3 := rst1PrimeAfterBridge30_eq_afterBridge6_left
+    L a b h (h+3) (by omega)
+  have heq2 := rst1PrimeAfterBridge30_eq_afterBridge6_left
+    L a b h (h+2) (by omega)
+  constructor
+  · rw [heq5,hH6]
+    change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
+      inside6 bridge6End).tape H6 = true
+    rw [frameAt_tape]
+    simp [inside6,inWindow,bridge6End]
+  constructor
+  · rw [heq4,hH6]
+    change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
+      inside6 bridge6End).tape (H6-1) = true
+    rw [frameAt_tape]
+    simp [inside6,inWindow,bridge6End]
+  constructor
+  · rw [heq3,hH6]
+    change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
+      inside6 bridge6End).tape (H6-2) = false
+    rw [frameAt_tape]
+    have hout : inside6 (-2:Int) = false := by
+      simp [inside6,inWindow]
+    simp only [hout]
+    have hcoord : H6-2 = Hs+3*(a:Int)+1 := by
+      dsimp [H6,Hs,H0]
+      omega
+    rw [hcoord]
+    exact hblock.2.1
+  · rw [heq2,hH6]
+    change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
+      inside6 bridge6End).tape (H6-3) = true
+    rw [frameAt_tape]
+    have hout : inside6 (-3:Int) = false := by
+      simp [inside6,inWindow]
+    simp only [hout]
+    have hcoord : H6-3 = Hs+3*(a:Int) := by
+      dsimp [H6,Hs,H0]
+      omega
+    rw [hcoord,hblock.1]
+    exact hstart
+
+/-- The three-cell d1 marker is all ones: bridge9 supplies the two
+left cells and the last block of the third sweep supplies the first. -/
+theorem rst1PrimeAfterBridge30_d1
+    (L a b : Nat) (h : Int) :
+    (rst1PrimeAfterBridge30 L a b h).tape
+        (h-((3*a+1:Int))-1) = true ∧
+    (rst1PrimeAfterBridge30 L a b h).tape
+        (h-((3*a+1:Int))-2) = true ∧
+    (rst1PrimeAfterBridge30 L a b h).tape
+        (h-((3*a+1:Int))-3) = true := by
+  let H0 : Int := h-((3*a+1:Int))
+  let H2 : Int := H0-2-((3*L+5:Int))
+  let H3 : Int := H2+4
+  have hpre := rst1Prime_rightSweep_preconditions_after_bridge20 L a b h
+  have hlast := rst1Prime_sweptRight_lastBlock L
+    (rst1PrimeAfterBridge20 L a b h).tape H3
+  have hfirst : (rst1PrimeAfterBridge20 L a b h).tape
+      (H3+3*(L:Int)) = true := (hpre L (by omega)).1
+  have heq1 := rst1PrimeAfterBridge30_eq_afterBridge9_left
+    L a b h (H0-1) (by dsimp [H0]; omega)
+  have heq2 := rst1PrimeAfterBridge30_eq_afterBridge9_left
+    L a b h (H0-2) (by dsimp [H0]; omega)
+  have heq3 := rst1PrimeAfterBridge30_eq_afterBridge9_left
+    L a b h (H0-3) (by dsimp [H0]; omega)
+  constructor
+  · rw [heq1]
+    change (frameAt
+      (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3)
+      H0 inside9 bridge9End).tape (H0-1) = true
+    rw [frameAt_tape]
+    simp [inside9,inWindow,bridge9End]
+  constructor
+  · rw [heq2]
+    change (frameAt
+      (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3)
+      H0 inside9 bridge9End).tape (H0-2) = true
+    rw [frameAt_tape]
+    simp [inside9,inWindow,bridge9End]
+  · rw [heq3]
+    change (frameAt
+      (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3)
+      H0 inside9 bridge9End).tape (H0-3) = true
+    rw [frameAt_tape]
+    have hout : inside9 (-3:Int) = false := by
+      simp [inside9,inWindow]
+    simp only [hout]
+    have hcoord : H0-3 = H3+3*(L:Int) := by
+      dsimp [H0,H2,H3]
+      omega
+    rw [hcoord,hlast.1,hfirst]
+
+#print axioms rst1PrimeAfterBridge30_markerWord2
+#print axioms rst1PrimeAfterBridge30_d1
+
+
 end BB6Coverage.Agent8Rst1PrimeTail
