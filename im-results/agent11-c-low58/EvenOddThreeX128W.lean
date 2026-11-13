@@ -90,7 +90,7 @@ theorem y3_x128w_parents (w a k : Nat) (hw : 1≤w)
                   refine ⟨b*c,?_⟩
                   calc
                     2^n*(2*a+6)=(8*b)*(4*c) := by rw [hb,hc]
-                    _=32*(b*c) := by ring
+                    _=32*(b*c) := by ac_rfl
                 rw [← hpow'] at hdiv
                 have hmod : (128*w+16)%32=16 := by omega
                 have hzero : (128*w+16)%32=0 :=
