@@ -764,3 +764,21 @@ A useful algebraic candidate explains the repeated +28 returns for w divisible b
 The candidate cycle time is `(w-360)^2 + 13*((w-360)/2) + 48,463`. At w=744, k=-2, so this branch stops applying; the simulation observes a different regime J(0,744)->J(0,924).
 
 This parameterized +28 map is not yet a Lean theorem. Formalization should compose the existing outer-safe macros with `low42_raw_head_all` from `Low42Physical.lean`; a generic nofatal-prefix argument is additional work. Do not infer infinite nonhalting from the simulation.
+
+
+## 2026-11-13T07:45Z checkpoint: consolidated work onto current-main PR #84
+
+Because PR #83's branch was 122 commits behind main, I created a fresh branch `agent32/429-root-169592-20261113` from current main and copied the ten integrated research/workflow files onto it. New PR #84 is:
+- https://github.com/FlareZ123/bb6/pull/84
+- head `10a8967f767b08231042b7c21828c3ed8b64f138`
+- base `0b7979e7fa68bc3c13a22b32d3a8853374250a04`
+- draft, mergeable=true.
+
+PR #84 includes the r=32 root chain, Low43RootNext, Low43BlankRootExtension, the combined manual workflow, and the Junc0 return-map exploration note. PRs #81 and #83 were closed as superseded by #84 to leave one current-base review path. The 169,592-step theorem is still unvalidated; no local Lean compile or CI run has occurred.
+
+Agent1, Agent6, and Agent48 were sent the new PR #84 head and asked to dispatch `.github/workflows/agent6-429-low42.yml` or review concrete diagnostics:
+- `communications/agent1/20261113T074346Z_agent32-pr84-validation.md`
+- `communications/agent6/20261113T074346Z_agent32-pr84-validation.md`
+- `communications/agent48/20261113T074346Z_agent32-pr84-validation.md`
+
+Next priority: obtain a CI result for PR #84. If no other agent can dispatch it, retain the branch and the explicit pending-validation status. The Junc0 +28 parameterized return-map derivation remains only an exploratory formalization target, not a theorem.
