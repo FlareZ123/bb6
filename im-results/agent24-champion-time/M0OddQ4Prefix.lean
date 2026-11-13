@@ -352,25 +352,25 @@ private theorem m0OddQ4LeftFacingTail (a i : Nat)
     simp [s1LeftFacing,binDec_zero,binDec_three_five,List.append_assoc]
   have htgt :
       m0OddQ4LeftFacing a =
-        ([true] ++ (d1pow (a-1) ++ (markerWord 2 ++ d0))) ++
+        (true :: (d1pow (a-1) ++ (markerWord 2 ++ d0))) ++
           (d1 ++ d1 ++ d0 ++ lh) := by
     simp [m0OddQ4LeftFacing,binDec_three_four,List.append_assoc]
   have hlenS : (d1pow a ++ (markerWord 0 ++ d0)).length = 3*a+5 := by
     simp [d1pow_length,markerWord,d0] <;> omega
   have hlenT :
-      ([true] ++ (d1pow (a-1) ++ (markerWord 2 ++ d0))).length = 3*a+5 := by
+      (true :: (d1pow (a-1) ++ (markerWord 2 ++ d0))).length = 3*a+5 := by
     simp [d1pow_length,markerWord,d0] <;> omega
   have hs0 := sideBit_append_after_local
     (d1pow a ++ (markerWord 0 ++ d0)) (d0 ++ d1 ++ d0 ++ lh) i
     (by rw [hlenS]; omega)
   have ht0 := sideBit_append_after_local
-    ([true] ++ (d1pow (a-1) ++ (markerWord 2 ++ d0)))
+    (true :: (d1pow (a-1) ++ (markerWord 2 ++ d0)))
     (d1 ++ d1 ++ d0 ++ lh) i (by rw [hlenT]; omega)
   have hs : sideBit ((d1pow a ++ (markerWord 0 ++ d0)) ++
       (d0 ++ d1 ++ d0 ++ lh)) i =
       sideBit (d0 ++ d1 ++ d0 ++ lh) (i-(3*a+5)) := by
     simpa [List.append_assoc,hlenS] using hs0
-  have ht : sideBit (([true] ++ (d1pow (a-1) ++ (markerWord 2 ++ d0))) ++
+  have ht : sideBit ((true :: (d1pow (a-1) ++ (markerWord 2 ++ d0))) ++
       (d1 ++ d1 ++ d0 ++ lh)) i =
       sideBit (d1 ++ d1 ++ d0 ++ lh) (i-(3*a+5)) := by
     simpa [List.append_assoc,hlenT] using ht0
@@ -465,18 +465,18 @@ theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
             decide ((2-(j:Int)) ∈ m0OddQ4Bridge27End.marked) := by
         have hlist :
             m0OddQ4LeftFacing a =
-              ([true] ++ d1pow (a-1)) ++
+              (true :: d1pow (a-1)) ++
                 (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh) := by
           simp [m0OddQ4LeftFacing,List.append_assoc]
         rw [hlist]
-        have hlenP : ([true] ++ d1pow (a-1)).length = 3*a-2 := by
+        have hlenP : (true :: d1pow (a-1)).length = 3*a-2 := by
           simp [d1pow_length] <;> omega
         have hside := sideBit_append_after_local
-          ([true] ++ d1pow (a-1))
+          (true :: d1pow (a-1))
           (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh) i
           (by rw [hlenP]; omega)
         have hside' :
-            sideBit (([true] ++ d1pow (a-1)) ++
+            sideBit ((true :: d1pow (a-1)) ++
               (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh)) i =
             sideBit (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh)
               (i-(3*a-2)) := by
@@ -556,7 +556,8 @@ theorem m0Odd_q4_prefix_rightFacing (a b : Nat) (h : Int)
     have hsrc :
         (s1Config 3 5 0 a 0 b h).tape (h+1+(i:Int)) =
           sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) i := by
-      simpa using s1Config_right_cell 3 5 0 a 0 b h i
+      simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing] using
+        s1Config_right_cell 3 5 0 a 0 b h i
     have hside :
         sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) i =
           sideBit (q4RightFacing b) i := by
@@ -635,11 +636,16 @@ theorem m0Odd_q4_prefix_rightShape (a b : Nat) (h : Int)
           have hsplit := sideBit_append_after_local
             [true,true,true,true,false,false] (d1pow (b+1)) (6+i)
             (by simp)
+          have hsplit' :
+              sideBit ([true,true,true,true,false,false] ++ d1pow (b+1))
+                  (6+i) =
+                sideBit (d1pow (b+1)) ((6+i)-6) := by
+            simpa using hsplit
           have hidx : (6+i)-6 = i := by omega
           have hones : sideBit (q4RightFacing b) (6+i) = true := by
             rw [q4RightFacing]
-            rw [hidx] at hsplit
-            exact hsplit.trans (sideBit_d1pow_true (b+1) i (by omega))
+            rw [hidx] at hsplit'
+            exact hsplit'.trans (sideBit_d1pow_true (b+1) i (by omega))
           have hcoord : h+7+(i:Int) = h+1+((6+i:Int)) := by omega
           simpa [hcoord] using hr.trans hones
         · intro i hi
