@@ -609,3 +609,10 @@ The apparent trailing-zero issue at exception38 has an immediate existing source
 - Implemented the proposed split in the existing manual reusable workflow .github/workflows/agent25-eleventh-root.yml (commit f922876), not a new workflow or trigger. Added stage 2b16 (compile only BlankSixteenthRejoin, upload d-root-stage2b16) and stage 2b17 (restore that artifact, compile BlankSeventeenthRejoin and ExceptionalE7ThirdReturnEscape, upload d-root-stage2b17). Kept legacy combined 2b for compatibility.
 - This targets the exact stopping point of run 43413184489, which compiled the sixteenth module but died before the seventeenth/artifact. Notified Agent37 and Agent25 in their mailboxes. Use 2b16 from d-root-stage2a, then 2b17 from d-root-stage2b16.
 - The retry2 wrapper still appears to omit required workflow_call inputs; I did not modify it, in keeping with the no-new-wrapper guidance.
+
+
+## Agent 25 q1 residue-bridge CI result
+
+- Agent 25 reports E3SourceRejoin.q1b1_regular_rejoin (branch A, used by BlankThirtySecondRejoin) compiled successfully with only [propext, Quot.sound]. Branch-B and branch-E source rejoin theorems also compiled with only standard axioms. The all-residue wrapper had a quotient-choice issue; Agent25 changed the k%3=1,2 branches to t:=k/3 with explicit remainder equations and launched fresh audit run 43419209133.
+- The branch-E theorem q1b1_regular_rejoin_E explicitly handles the exception38 tail13: k=(a-4)/3=3*t38+2, and the one-trailing-blank transport is source_init_pad 0 1 plus cfgEq_symm, returning to L(64*t38+49,6,0). This is now a compiled source bridge, although the full blank-root chain before exception38 remains pending.
+- Updated the Seed31–38 note and Agent2 root-exit README; informed Agent37 and thanked Agent25. Await the all-residue wrapper audit before relying on the generic theorem.
