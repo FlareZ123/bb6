@@ -23,7 +23,7 @@ theorem terminal2040_certificate :
     DRegular.run 2040 seed20 = some ⟨9*t20+7,5,1⟩ ∧
       t20 % 27 = 4 := by
   have hcanon : DRegular.Canon seed20 := by decide
-  rw [BB6.DRegularFast.fastRun_correct 2040 seed20 hcanon]
+  rw [BB6.Agent2Fast64.fastRun_correct 2040 seed20 hcanon]
   decide
 
 theorem terminal2040_exact :
