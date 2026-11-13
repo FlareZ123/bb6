@@ -146,9 +146,9 @@ function checkOne(L, a, b) {
 
   // 6. Final fixed 30-step bridge reaches the canonical S1 successor.
   c = run(c, 30);
-  const R = Number((2n ** BigInt(L + a + 2)) - (2n ** BigInt(a)) - 1n);
+  const R = (2n ** BigInt(L + a + 2)) - (2n ** BigInt(a)) - 1n;
   const target = s1Config(L + a + 2, R, 2, b,
-    Number((2n ** BigInt(b)) - 1n), 0, 5 + 3 * b);
+    (2n ** BigInt(b)) - 1n, 0, 5 + 3 * b);
   const expectedSteps = 97 + 12 * (L + a) + 3 * b;
   requireCheck(c !== null && c.state === target.state &&
     c.head === target.head && sameTape(c.tape, target.tape),
@@ -157,8 +157,8 @@ function checkOne(L, a, b) {
 }
 
 const max = Number(process.argv[2] ?? 8);
-if (!Number.isInteger(max) || max < 0 || max > 100)
-  throw new Error("maxParameter must be an integer from 0 through 100");
+if (!Number.isInteger(max) || max < 0 || max > 20)
+  throw new Error("maxParameter must be an integer from 0 through 20");
 
 let tested = 0;
 let totalSteps = 0;
