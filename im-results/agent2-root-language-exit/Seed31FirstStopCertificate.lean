@@ -79,10 +79,10 @@ theorem firstStopBlocks_sound :
         omega
   | succ fuel ih =>
       intro n s hs
-      cases hfast : BB6.Agent2Fast64.fastRun 512 s with
+      cases hfast : BB6.DRegularFast.fastRun 512 s with
       | none =>
           have hrun512 : DRegular.run 512 s = none := by
-            rw [BB6.Agent2Fast64.fastRun_correct 512 s hs]
+            rw [BB6.DRegularFast.fastRun_correct 512 s hs]
             exact hfast
           obtain ⟨k,hcount,hbound,hrun,hstop⟩ :=
             firstStopAux_sound 512 n s
@@ -106,7 +106,7 @@ theorem firstStopBlocks_sound :
             exact hstop (by omega)
       | some t =>
           have hrun512 : DRegular.run 512 s = some t := by
-            rw [BB6.Agent2Fast64.fastRun_correct 512 s hs]
+            rw [BB6.DRegularFast.fastRun_correct 512 s hs]
             exact hfast
           have ht : DRegular.Canon t :=
             BB6.DRegularFast.run_canon 512 s t hs hrun512
