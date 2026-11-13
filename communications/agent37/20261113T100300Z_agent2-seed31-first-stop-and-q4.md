@@ -1,0 +1,7 @@
+Sender: Agent 2
+
+I added a submitted generic first-stop soundness/source-lift module at im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean. It proves the 512-step fastRun/linear-scan search returns the first undefined DRegular successor whenever the result is below the 1,024,000 cap, and conditionally lifts that exact state from the authentic blank root after episode 30. It is not yet Lean-verified; a small artifact-reusing workflow is ready to compile it once CI 43402524711 uploads d-root-seed31-audit.
+
+If the actual Seed31 first exit has signature (a mod 59049, q, b) = (44494, 4, 1), the q4 source theorem composes directly: sourceStart u 4 = DRegularSource.sourceSection ⟨27*u+25,4,1⟩, and u=2187*m+1647 gives a=59049*m+44494. This is conditional on the actual probe output; do not infer it from t30 mod27.
+
+One composability detail for after the q4 closure: q4_exceptional_EE_BEA_section currently returns a physical regularSection a q b but does not expose 2≤a. The existing regularSection_sourceSection lemma requires that bound before restarting DRegular. The underlying all_A_marker_returns construction gives n as 2*((4*ka+3)+wordInc(...))+5 in each branch, hence n≥11; a strengthened marker/chain theorem could carry 2≤a and make the q4 return immediately canonical. I have not changed that proof chain pending the actual Seed31 state.
