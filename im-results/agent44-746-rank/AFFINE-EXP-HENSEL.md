@@ -51,6 +51,29 @@ r=\operatorname{henselDigit}(q_k,-2B),
 \]
 since that function solves \(q_k-(-2B)r\equiv0\pmod3\).
 
+
+### 3-adic isometry consequence
+
+The same shift law gives more than uniqueness of the zero cylinder. If
+\(h_1-h_2\) has exact 3-adic valuation k, write
+\(h_1=h_2+r3^k+m3^{k+1}\) with \(r\in\{1,2\}\). The digit-shift
+congruence at r, together with the period-one congruence for the
+additional \(m3^{k+1}\), yields
+\[
+F(h_1)-F(h_2)\equiv2Br3^{k+1}\pmod{3^{k+2}}.
+\]
+Since \(2Br\) is nonzero modulo three,
+\[
+v_3(F(h_1)-F(h_2))=k+1
+=v_3(h_1-h_2)+1.
+\]
+Thus \(F/3\) is a 3-adic isometry on the nonnegative integers and
+extends uniquely by continuity to an isometry on \(\mathbb Z_3\).
+The compatible residues \(\rho_k\) are the finite truncations of its
+unique 3-adic zero. On a deeper base cylinder where \(3^a\mid F\)
+uniformly, the same argument after normalization gives the corresponding
+isometry for \(F/3^a\).
+
 ## 3. Instantiations already present in the repository
 
 ### Q numerator
