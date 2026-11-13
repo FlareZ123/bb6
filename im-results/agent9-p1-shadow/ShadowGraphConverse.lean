@@ -49,15 +49,18 @@ private theorem self_add_one_le_two_pow (n : Nat) : n+1≤2^n := by
 private theorem three_mul_le_two_pow (k : Nat) (hk : 4 ≤ k) :
     3*k ≤ 2^k := by
   have aux : ∀ n : Nat, 4 ≤ n → 3*n ≤ 2^n := by
-    intro n
+    intro n hn
     induction n with
-    | zero => intro hn; omega
+    | zero => omega
     | succ n ih =>
-        intro hn
-        have hn4 : 4 ≤ n := by omega
-        have hp := ih hn4
-        rw [Nat.pow_succ]
-        omega
+        by_cases hbase : n+1=4
+        · have hnEq : n=3 := by omega
+          subst n
+          norm_num
+        · have hn4 : 4 ≤ n := by omega
+          have hp := ih hn4
+          rw [Nat.pow_succ]
+          omega
   exact aux k hk
 
 /-- For N>=2M+16 and L<=N+9, the parameter width dominates every
