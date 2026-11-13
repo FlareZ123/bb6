@@ -305,3 +305,13 @@ The proof closes the previously unresolved direct L-parent residual on this slic
 `R₂=(84226+225128q,6923+18508q)`, an odd-right sum-one state. The L bounce parent is independently excluded by four six-even-right steps to another odd-right sum-one state. Together with the existing all-w B-parent exclusion, this rules out the A_s target and hence the high-stop cylinder.
 
 The residue `t≡383 (mod 1024)` is disjoint from the four earlier m=0 classes `59 (mod 64)`, `11 (mod 256)`, `171 (mod 512)`, and `331 (mod 1024)`. If original-source CI succeeds, the m=0 odd-parameter-ray coverage rises from `23/512` to `24/512=3/64`. The file has been added to `agent11-c-diagonal-late.yml`; until that manual run succeeds with no `sorryAx`, treat this as a promising intermediate candidate, not a source-certified result or a results/ claim.
+
+
+The mod-7 fact and the 2-adic valuation combine into a finite parent-fan bound for every M. In `sectionPreimageAll` at `(16m+10,3)`, the zero-left, k=0, direct, and even-a branches are incompatible with y=3 (the finite small-a cases are incompatible with the large x); the remaining high-`k` a=1 bounce is the branch ruled out modulo 7. Thus every possible source parent is in the odd-a bounce branch. Its cost equation
+`2k+a+9+3n = 2^n(2a+6)+4`
+forces n even by parity. Writing `n=2j`, the section equation and `4 | (2a+6)` give
+`2^(n+2) | 16(m+1)`, hence
+`0≤j≤⌊(v₂(m+1)+2)/2⌋`.
+So the y=3 terminal has at most
+`1+⌊(v₂(M−α)+2)/2⌋`
+possible original-source parents. The exact parent count can be smaller because the cost equation may eliminate some j. Since the high-valuation condition `v₂(M−α)≥K` occupies one residue class modulo `2^K`, the parent fan has an exponentially sparse high-depth tail.
