@@ -622,43 +622,45 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
               some ⟨.D,u.h+1,setBit u.tape u.h false⟩ := by
             simp [next,huF,huOne]
           rw [hFone] at hstep3
-          cases hstep3
+          have hvEq : v = (⟨.D,u.h+1,setBit u.tape u.h false⟩ : Conf) :=
+            (Option.some.inj hstep3).symm
+          rw [hvEq] at hvpos
           omega
       have hpat := ih (c := u) (d := d) huF huZero hdB hd0 hp2 hdisp2
       by_cases hi0 : i=0
       · subst i
         have hbtape : b.tape b.h=c.tape (c.h-1) := by
           simp [hbShape,setBit,show c.h-1 ≠ c.h by omega]
-        exact ⟨hc0,hbtape.symm.trans hbBit⟩
-      · have hi' : i-1<k := by omega
+        exact ⟨by simpa using hc0,hbtape.symm.trans hbBit⟩
+      · have hiPos : 0<i := by omega
+        have hi' : i-1<k := by omega
         have hpatt := hpat (i-1) hi'
         have hupos' : u.h=c.h-2 := by omega
         have huTape (x : Int) (hx : x≤c.h-2) : u.tape x=c.tape x := by
-          calc
-            u.tape x = b.tape x := by
-              simp [setBit,show x ≠ b.h by rw [hbpos]; omega]
-            _ = c.tape x := by
-              simp [setBit,show x ≠ c.h by omega]
-        have hidx1 : u.h-2*((i-1:Int))=c.h-2*(i:Int) := by
-          rw [hupos']
+          rw [hUeq,hbShape]
+          simp [setBit,show x ≠ c.h by omega,
+            show x ≠ c.h-1 by omega]
+        have hiCast : ((i-1:Nat):Int)=(i:Int)-1 := by omega
+        have hidx1 : u.h-2*((i-1:Nat):Int)=c.h-2*(i:Int) := by
+          rw [hupos',hiCast]
           omega
-        have hidx2 : u.h-2*((i-1:Int))-1=c.h-2*(i:Int)-1 := by
-          rw [hupos']
+        have hidx2 : u.h-2*((i-1:Nat):Int)-1=c.h-2*(i:Int)-1 := by
+          rw [hupos',hiCast]
           omega
         constructor
         · calc
             c.tape (c.h-2*(i:Int)) =
-                u.tape (u.h-2*((i-1:Int))) := by
+                u.tape (u.h-2*((i-1:Nat):Int)) := by
                   rw [hidx1]
                   symm
-                  exact huTape _ (by rw [hidx1]; omega)
+                  exact huTape _ (by omega)
             _ = false := hpatt.1
         · calc
             c.tape (c.h-2*(i:Int)-1) =
-                u.tape (u.h-2*((i-1:Int))-1) := by
+                u.tape (u.h-2*((i-1:Nat):Int)-1) := by
                   rw [hidx2]
                   symm
-                  exact huTape _ (by rw [hidx2]; omega)
+                  exact huTape _ (by omega)
             _ = true := hpatt.2
 
 
