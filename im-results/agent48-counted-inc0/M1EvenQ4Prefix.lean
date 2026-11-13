@@ -733,7 +733,6 @@ private theorem m1EvenQ4LeftFacingTail (a i : Nat)
   rw [hsrc,htgt,hs,ht]
   rw [hlenS,hlenT]
   apply sideBit_binDec36_eq_binDec35_after5
-  simp [d1pow_length,markerWord,d0] at hi ⊢
   all_goals omega
 
 private theorem m1EvenQ4LeftFacingPrefixTrue (a i : Nat)
@@ -773,7 +772,7 @@ private theorem m1EvenQ4LeftFacingBoundaryBit (a k : Nat)
   rw [hlist]
   rw [sideBit_append_after_local ([true] ++ d1pow a)
     (markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh)
-    (3*a+1+k) (by simp [d1pow_length]; omega)]
+    (3*a+1+k) (by simp [d1pow_length])]
   have hkCases : k = 1 ∨ k = 2 ∨ k = 3 ∨ k = 4 ∨ k = 5 ∨
       k = 6 ∨ k = 7 ∨ k = 8 ∨ k = 9 := by omega
   rcases hkCases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9
@@ -827,7 +826,13 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
             simpa [m1EvenQ4Inside] using hin
           constructor <;> omega
         have hmark : decide (r ∈ m1EvenQ4BridgeEnd.marked) = true := by
-          have hcases : r=2 ∨ r=3 ∨ r=4 := by omega
+          have hcases : r=2 ∨ r=3 ∨ r=4 := by
+            by_cases h2 : r=2
+            · exact Or.inl h2
+            · by_cases h3 : r=3
+              · exact Or.inr (Or.inl h3)
+              · have h4 : r=4 := by omega
+                exact Or.inr (Or.inr h4)
           rcases hcases with h2 | h3 | h4
           · subst r; decide
           · subst r; decide
@@ -900,7 +905,7 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
             rw [sideBit_append_after_local ([true] ++ d1pow a)
               (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh) (3*a+1)
               (by simp [d1pow_length])]
-            simp [markerWord,sideBit]
+            simp [markerWord,d1pow_length]
           have hmark' : decide
               ((x-(h-((3*a+1 : Nat):Int))) ∈ m1EvenQ4BridgeEnd.marked) = false := by
             rw [hrel]
@@ -975,7 +980,6 @@ theorem m1Even_resetPrefixCost_eq (a b : Nat) :
     v2_of_odd 3 (by decide)
   have hv : BB6ChampionArithmetic.v2 6 = 1 := by
     rw [h6,h3]
-    omega
   simp [resetPrefixCost,hv]
   omega
 
