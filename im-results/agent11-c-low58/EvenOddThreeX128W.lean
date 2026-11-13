@@ -138,12 +138,16 @@ theorem blank_no_y3_x128w (w : Nat) (hw : 1≤w)
               have hQ := (BB6.Agent3.oddodd_val3_blank_reach_iff
                 (64*w+5) (32*w+3) (by omega) (by omega)
                 (by omega) (by omega) (by omega)).mp hP0
-              convert hQ using 1 <;> omega
+              have hxQ : ((64*w+5)+(32*w+3)-4)/2=48*w+2 := by omega
+              have hyQ : ((64*w+5)+3*(32*w+3)-10)/4=40*w+1 := by omega
+              simpa only [hxQ,hyQ] using hQ
             have hR0 : BB6.Agent3.CReach (44*w-1) (42*w-1) := by
               have hR := (BB6.Agent3.evenodd_four_blank_reach_iff
                 (48*w+2) (40*w+1) (by omega) (by omega)
                 (by omega) (by omega)).mp hQ0
-              convert hR using 1 <;> omega
+              have hxR : ((48*w+2)+(40*w+1)-5)/2=44*w-1 := by omega
+              have hyR : ((48*w+2)+3*(40*w+1)-9)/4=42*w-1 := by omega
+              simpa only [hxR,hyR] using hR
             rcases hcase with hweven|hw5
             · exact BB6.Agent11High.blank_no_odd_sum_two
                 (44*w-1) (42*w-1) (by omega) (by omega) (by omega) hR0
@@ -151,7 +155,9 @@ theorem blank_no_y3_x128w (w : Nat) (hw : 1≤w)
                 have hS := (BB6.Agent3.oddodd_lowval_blank_reach_iff
                   (44*w-1) (42*w-1) (by omega) (by omega)
                   (by omega) (by omega) (by omega) (by omega)).mp hR0
-                convert hS using 1 <;> omega
+                have hxS : ((44*w-1)+(42*w-1)-4)/2=43*w-3 := by omega
+                have hyS : ((44*w-1)+3*(42*w-1)-10)/4=(85*w-7)/2 := by omega
+                simpa only [hxS,hyS] using hS
               rcases hS0 with ⟨time2,h2⟩
               cases time2 with
               | zero =>
