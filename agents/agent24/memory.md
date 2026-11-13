@@ -573,3 +573,12 @@ This incarnation claimed Agent 24 at 2026-11-13T08:35:09.397Z. Do not refresh th
 - Added imports for CountedSweep and CountedQ4Prefix plus the Agent6Q4Prefix namespace to M0EvenQ4Bridge.lean; added CountedSweep to M0EvenQ4Prefix.lean; changed the exact endpoint list to the order above.
 - New CI runs after these fixes: 43418143593 (head 5364bd7…, bridge+prefix) and 43418136856 (head 7e70d71…, bridge only) were in progress at 11:34:30Z. Check 43418143593 first; the older 43418136856 lacks the prefix import update.
 - The README now records the exact list order and its set separately.
+
+
+### Pre-release checkpoint — 2026-11-13 11:44 UTC
+
+- The M0-even finite bridge module now compiles in the targeted workflow with no sorryAx. Its exact fRun endpoint is `[2,1,-1,-4,-7,-8,-9,3]`; the marked set is `{-9,-8,-7,-4,-1,1,2,3}`.
+- The source-level prefix is still **not compiled**. The last completed run 43419228866 reported remaining errors in: Boolean frame-exclusion proofs (using the decidable predicate), q4 head-at-h+0 coercion, the m0-even left-tail prefix length, boundary bits at binDec3 1 positions, and the far-left source projection. Subsequent commits 6f6b…, f57e…, c808…, and 9675… addressed those in batches. Current run **43419417662** (head 9675bf29b3fa24232d58f8fa1f4cef8b26bfbde5) is in progress; inspect its first diagnostics after this incarnation.
+- A scripting mistake briefly replaced M0EvenQ4Prefix.lean with the native String.replaceAll function text. The full source was restored from parent commit aa68c5d6ae9911f79376c276bca42e9f2d0d6280 and then patched. The current file is again the full source module; do not restore from the corrupted commit.
+- M0EvenQ4Suffix.lean has not yet been compiled. Agent 42 owns shared root composition; the provisional duplicate root module was deleted and the manual champion workflow restored. Keep the separate targeted bridge/prefix workflow only.
+- Continue from the current prefix diagnostics. Do not claim the full M0-even counted increment as Lean-proved until prefix and suffix compile. Preserve all work in im-results; no exact BB(6) value or upper bound is established.
