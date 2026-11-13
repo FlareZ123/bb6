@@ -34,7 +34,7 @@ private theorem binDec_three_five :
     simpa using binDec_even 1 1 (by decide)
   have h3 : binDec 1 1 = d0 ++ binDec 0 0 := by
     simpa using binDec_odd 0 0 (by decide)
-  simp [h1,h2,h3,binDec_zero]
+  simp [h1,h2,h3,binDec_zero,d1pow]
 
 private theorem m0OddSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
     (s1Config 3 5 0 a 0 b h).tape
@@ -106,6 +106,8 @@ theorem m0OddQ4Bridge_input_match (a b : Nat) (h : Int)
           h - ((3*a : Nat) : Int) + 1 =
             h - ((3*a-1 : Nat) : Int) := by omega
       rw [hcoord]
+      have hN : (3*a-1)+1 = 3*a := by omega
+      rw [hN] at hleft
       simpa [m0OddQ4Bridge27Start] using hleft
     · subst y
       have hblock := sweptLeft_block (3*a) (3*a-2)
@@ -168,8 +170,7 @@ theorem m0Odd_q4_prefix_run (a b : Nat) (h : Int)
   let N := 3*a
   let T1 := sweptLeft N T h
   let hN : Int := h-(N:Int)
-  let T2 :=
-    (frameAt T1 hN m0OddQ4Bridge27Inside m0OddQ4Bridge27End).tape
+  let T2 := m0OddQ4CutTape a b h
   have hleftFacing :
       s1LeftFacing 3 5 0 a 0 =
         d1pow a ++ markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh := by
@@ -209,13 +210,23 @@ theorem m0Odd_q4_prefix_run (a b : Nat) (h : Int)
     let x : Int := hN+3+(i:Int)
     by_cases hi0 : i = 0
     · subst i
-      have hin : m0OddQ4Bridge27Inside (x-hN) = true := by
-        simp [x,m0OddQ4Bridge27Inside]
+      have hrel : x-(h-((3*a : Nat):Int)) = 3 := by
+        dsimp [x,hN,N]
+        omega
+      have hin : m0OddQ4Bridge27Inside
+          (x-(h-((3*a : Nat):Int))) = true := by
+        change decide (-6 ≤ x-(h-((3*a : Nat):Int)) ∧
+          x-(h-((3*a : Nat):Int)) ≤ 3) = true
+        rw [hrel]
+        decide
       have hcut := m0OddQ4CutTape_eq_end_inside a b h x hin
       have hmark :
-          decide ((x-hN) ∈ m0OddQ4Bridge27End.marked) = true := by
-        simp [x,m0OddQ4Bridge27End]
-      simpa [T2,x,m0OddQ4CutTape] using hcut.trans hmark
+          decide ((x-(h-((3*a : Nat):Int))) ∈
+            m0OddQ4Bridge27End.marked) = true := by
+        rw [hrel]
+        simp [m0OddQ4Bridge27End]
+      have hval := hcut.trans hmark
+      simpa [T2,x] using hval
     · have hout : m0OddQ4Bridge27Inside (x-hN) = false := by
         simp [x,m0OddQ4Bridge27Inside]
         omega
@@ -236,7 +247,7 @@ theorem m0Odd_q4_prefix_run (a b : Nat) (h : Int)
         have hcut' := m0OddQ4CutTape_eq_swept a b h x (by
           simpa [hN,N] using hout)
         have hval := hcut'.trans hblock'
-        simpa [T2,m0OddQ4CutTape,T,N,T1,hN] using hval
+        simpa [T2] using hval
       simpa [x] using hT
   have hScan := E_scan T2 (hN+3) (3*(a-1)) hlinear
   have hhead : hN+3+(3*(a-1):Int) = h := by
@@ -321,7 +332,7 @@ private theorem sideBit_binDec35_eq_binDec34_after2 (j : Nat)
     simpa [List.append_assoc] using hs.trans ht.symm
 
 private theorem m0OddQ4LeftFacingTail (a i : Nat)
-    (hi : 3*a+7 ≤ i) :
+    (ha : 0 < a) (hi : 3*a+7 ≤ i) :
     sideBit (s1LeftFacing 3 5 0 a 0) i =
       sideBit (m0OddQ4LeftFacing a) i := by
   have hsrc :
@@ -334,13 +345,27 @@ private theorem m0OddQ4LeftFacingTail (a i : Nat)
         ([true] ++ d1pow (a-1) ++ markerWord 2 ++ d0) ++
           (d1 ++ d1 ++ d0 ++ lh) := by
     simp [m0OddQ4LeftFacing,binDec_three_four,List.append_assoc]
-  have hs := sideBit_append_after_local
+  have hlenS : (d1pow a ++ markerWord 0 ++ d0).length = 3*a+5 := by
+    simp [d1pow_length,markerWord,d0]
+    omega
+  have hlenT :
+      ([true] ++ d1pow (a-1) ++ markerWord 2 ++ d0).length = 3*a+5 := by
+    simp [d1pow_length,markerWord,d0]
+    omega
+  have hs0 := sideBit_append_after_local
     (d1pow a ++ markerWord 0 ++ d0) (d0 ++ d1 ++ d0 ++ lh) i
-    (by simp [d1pow_length,markerWord,d0]; omega)
-  have ht := sideBit_append_after_local
+    (by omega)
+  have ht0 := sideBit_append_after_local
     ([true] ++ d1pow (a-1) ++ markerWord 2 ++ d0)
-    (d1 ++ d1 ++ d0 ++ lh) i
-    (by simp [d1pow_length,markerWord,d0]; omega)
+    (d1 ++ d1 ++ d0 ++ lh) i (by omega)
+  have hs : sideBit ((d1pow a ++ markerWord 0 ++ d0) ++
+      (d0 ++ d1 ++ d0 ++ lh)) i =
+      sideBit (d0 ++ d1 ++ d0 ++ lh) (i-(3*a+5)) := by
+    simpa [hlenS] using hs0
+  have ht : sideBit (([true] ++ d1pow (a-1) ++ markerWord 2 ++ d0) ++
+      (d1 ++ d1 ++ d0 ++ lh)) i =
+      sideBit (d1 ++ d1 ++ d0 ++ lh) (i-(3*a+5)) := by
+    simpa [hlenT] using ht0
   rw [hsrc,htgt,hs,ht]
   have hj : 2 ≤ i-(3*a+5) := by omega
   exact sideBit_binDec35_eq_binDec34_after2 (i-(3*a+5)) hj
@@ -363,7 +388,7 @@ private theorem m0OddQ4CutTape_eq_source_left
 /-- Every cell of the cut's left-facing stream is now identified. -/
 theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
     (ha : 0 < a) :
-    ∀ i, m0OddQ4CutTape a b h (h-(i:Int)) =
+    ∀ i : Nat, m0OddQ4CutTape a b h (h-(i:Int)) =
       sideBit (m0OddQ4LeftFacing a) i := by
   intro i
   by_cases hprefix : i+3 ≤ 3*a
@@ -400,7 +425,7 @@ theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
       simpa [x] using hval.trans htarget.symm
   · by_cases htail : 3*a+7 ≤ i
     · have hcut := m0OddQ4CutTape_eq_source_left a b h i htail
-      exact hcut.trans (m0OddQ4LeftFacingTail a i htail)
+      exact hcut.trans (m0OddQ4LeftFacingTail a i ha htail)
     · have hbounds : 3*a-2 ≤ i ∧ i ≤ 3*a+6 := by omega
       let j : Nat := i-(3*a-2)
       have hj : j ≤ 8 := by dsimp [j]; omega
@@ -467,7 +492,7 @@ private theorem sideBit_s0RightFacing_eq_q4RightFacing
 /-- The complete right-facing word at the q4 cut is q4RightFacing b. -/
 theorem m0Odd_q4_prefix_rightFacing (a b : Nat) (h : Int)
     (ha : 0 < a) :
-    ∀ i, m0OddQ4CutTape a b h (h+1+(i:Int)) =
+    ∀ i : Nat, m0OddQ4CutTape a b h (h+1+(i:Int)) =
       sideBit (q4RightFacing b) i := by
   intro i
   by_cases hi0 : i=0
@@ -523,7 +548,7 @@ private theorem sideBit_false_after_length_local
 /-- The q4 right-shape contract follows from the exact right-facing word. -/
 theorem m0Odd_q4_prefix_rightShape (a b : Nat) (h : Int)
     (ha : 0 < a) :
-    q4RightShape (m0OddQ4CutTape a b h) h b := by
+    Agent8Q4Suffix.q4RightShape (m0OddQ4CutTape a b h) h b := by
   unfold q4RightShape
   constructor
   · intro i hi
@@ -573,7 +598,7 @@ theorem m0Odd_q4_prefix_rightShape (a b : Nat) (h : Int)
 /-- Blank right exterior needed by the generic q4 suffix endpoint. -/
 theorem m0Odd_q4_prefix_far_tail (a b : Nat) (h : Int)
     (ha : 0 < a) :
-    ∀ i, 9+3*b ≤ i →
+    ∀ i : Nat, 9+3*b ≤ i →
       m0OddQ4CutTape a b h (h+1+(i:Int)) = false := by
   intro i hi
   have hr := m0Odd_q4_prefix_rightFacing a b h ha i
@@ -596,6 +621,7 @@ theorem m0OddQ4SuffixTargetLeft (a b : Nat) (ha : 0 < a) :
       d0pow b ++ d1pow (a+1) := by
     simpa [hlen,hexp] using hbin0
   rw [hbin]
+  rw [← hexp]
   rw [d1pow_add_right (a-1) 2]
   simp [List.drop,List.append_assoc]
 
