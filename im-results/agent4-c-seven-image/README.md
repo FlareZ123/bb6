@@ -78,7 +78,7 @@ The auxiliary image coordinates can be eliminated entirely. The full second s3 f
 
 \[j\equiv319\pmod{512},\qquad 3m+7j+14025\equiv0\pmod{16384}.\]
 
-Equivalently, writing \(j=319+512u\), one has \(m\equiv42-6656u\pmod{16384}\). This forces \(m\equiv42\pmod{512}\), so every member has \(m\ge42\). The parameter cylinder has exact natural density \(2^{-23}\), and is disjoint from the earlier six/seven diagonal. The complete paper derivation, including the small-\(m\) exclusion needed for the converse, is in [S3PullbackCongruence.md](S3PullbackCongruence.md). This is an arithmetic normal form; it does not upgrade the still-pending C58 source integration.
+Equivalently, writing \(j=319+512u\), one has \(m\equiv42-6656u\pmod{16384}\). This forces \(m\equiv42\pmod{512}\), so every member has \(m\ge42\). The parameter cylinder has exact natural density \(2^{-23}\), and is disjoint from the earlier six/seven diagonal. The complete derivation, including the small-\(m\) exclusion needed for the converse, is in [S3PullbackCongruence.md](S3PullbackCongruence.md). The equivalence is now represented by Lean draft theorems `s3_image_pullback_iff_congruence` and `highAllowedAllS3_iff_congruence` in [CSixSeventhC58.lean](CSixSeventhC58.lean); those additions have not yet had a fresh original-source CI audit and do not upgrade the still-pending C58 integration.
 
 ## Pullback to the full C58 high-stop parameter family
 
