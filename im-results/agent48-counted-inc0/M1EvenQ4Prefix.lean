@@ -271,3 +271,200 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
   simpa [T,N,T1,hN,T2,m1EvenQ4CutTape,hnum] using htotal
 
 end BB6Coverage.Agent48CountedInc0
+
+
+private theorem sideBit_false_after_length_local (xs : List Bool) (i : Nat)
+    (hi : xs.length ≤ i) : sideBit xs i = false := by
+  induction xs generalizing i with
+  | nil => simp [sideBit]
+  | cons a xs ih =>
+      cases i with
+      | zero => simp at hi
+      | succ i =>
+          have hi' : xs.length ≤ i := by
+            simp only [List.length_cons] at hi
+            omega
+          simpa [sideBit] using ih i hi'
+
+private theorem m1EvenQ4CutTape_eq_swept
+    (a b : Nat) (h x : Int)
+    (hout : m1EvenQ4Inside (x-(h-((3*a+1 : Nat) : Int))) = false) :
+    m1EvenQ4CutTape a b h x =
+      sweptLeft (3*a+1) (s1Config 3 6 1 a 0 b h).tape h x := by
+  let T := (s1Config 3 6 1 a 0 b h).tape
+  let N := 3*a+1
+  let T1 := sweptLeft N T h
+  have hf := frameAt_tape_outside T1 (h-(N:Int))
+    m1EvenQ4Inside m1EvenQ4BridgeEnd x hout
+  simpa [m1EvenQ4CutTape,T,N,T1] using hf
+
+private theorem m1EvenQ4CutTape_eq_end_inside
+    (a b : Nat) (h x : Int)
+    (hin : m1EvenQ4Inside (x-(h-((3*a+1 : Nat) : Int))) = true) :
+    m1EvenQ4CutTape a b h x =
+      decide ((x-(h-((3*a+1 : Nat) : Int))) ∈ m1EvenQ4BridgeEnd.marked) := by
+  let T := (s1Config 3 6 1 a 0 b h).tape
+  let N := 3*a+1
+  let T1 := sweptLeft N T h
+  have hf := frameAt_tape_inside T1 (h-(N:Int))
+    m1EvenQ4Inside m1EvenQ4BridgeEnd x hin
+  simpa [m1EvenQ4CutTape,T,N,T1] using hf
+
+private theorem m1EvenQ4CutTape_eq_source_right
+    (a b : Nat) (h x : Int) (hx : h+5 ≤ x) :
+    m1EvenQ4CutTape a b h x =
+      (s1Config 3 6 1 a 0 b h).tape x := by
+  let T := (s1Config 3 6 1 a 0 b h).tape
+  have hout : m1EvenQ4Inside
+      (x-(h-((3*a+1 : Nat) : Int))) = false := by
+    simp [m1EvenQ4Inside]
+    omega
+  have hcut := m1EvenQ4CutTape_eq_swept a b h x hout
+  have hpres := sweptLeft_preserves_right (3*a+1) T h x (by omega)
+  simpa [T] using hcut.trans hpres
+
+/-- The explicit cut tape satisfies the right-shape contract of Q4Suffix.
+The q4 guard is the five-cell block at h..h+4; the b-counter and its
+blank terminator are untouched to the right of the bridge frame. -/
+theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
+    q4RightShape (m1EvenQ4CutTape a b h) h b := by
+  unfold q4RightShape
+  let T := (s1Config 3 6 1 a 0 b h).tape
+  constructor
+  · intro i hi
+    interval_cases i
+    · by_cases ha0 : a = 0
+      · subst a
+        have hrel : (h+0) - (h-(1:Int)) = 1 := by omega
+        have hin : m1EvenQ4Inside ((h+0)-(h-(1:Int))) = true := by
+          simp [m1EvenQ4Inside,hrel]
+        have hcut := m1EvenQ4CutTape_eq_end_inside 0 b h (h+0) hin
+        have hmark :
+            decide (((h+0)-(h-(1:Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
+          norm_num [hrel,m1EvenQ4BridgeEnd]
+        simpa [hrel] using hcut.trans hmark
+      · by_cases ha1 : a = 1
+        · subst a
+          have hrel : (h+0) - (h-(4:Int)) = 4 := by omega
+          have hin : m1EvenQ4Inside ((h+0)-(h-(4:Int))) = true := by
+            simp [m1EvenQ4Inside,hrel]
+          have hcut := m1EvenQ4CutTape_eq_end_inside 1 b h (h+0) hin
+          have hmark :
+              decide (((h+0)-(h-(4:Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
+            norm_num [hrel,m1EvenQ4BridgeEnd]
+          simpa [hrel] using hcut.trans hmark
+        · have hout : m1EvenQ4Inside
+              ((h+0)-(h-((3*a+1 : Nat) : Int))) = false := by
+            simp [m1EvenQ4Inside]
+            omega
+          have hcut := m1EvenQ4CutTape_eq_swept a b h (h+0) hout
+          have hhead : sweptLeft (3*a+1) T h h = true := by
+            have hs := sweptLeft_head (3*a+1-2) T h
+            have hN : 3*a+1 = (3*a+1-2)+2 := by omega
+            simpa [hN] using hs
+          simpa [T] using hcut.trans hhead
+    · by_cases ha0 : a = 0
+      · subst a
+        have hrel : (h+1) - (h-(1:Int)) = 2 := by omega
+        have hin : m1EvenQ4Inside ((h+1)-(h-(1:Int))) = true := by
+          simp [m1EvenQ4Inside,hrel]
+        have hcut := m1EvenQ4CutTape_eq_end_inside 0 b h (h+1) hin
+        have hmark :
+            decide (((h+1)-(h-(1:Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
+          norm_num [hrel,m1EvenQ4BridgeEnd]
+        simpa [hrel] using hcut.trans hmark
+      · have hout : m1EvenQ4Inside
+            ((h+1)-(h-((3*a+1 : Nat) : Int))) = false := by
+          simp [m1EvenQ4Inside]
+          omega
+        have hcut := m1EvenQ4CutTape_eq_swept a b h (h+1) hout
+        have hplus : sweptLeft (3*a+1) T h (h+1) = true := by
+          simpa [T] using sweptLeft_plus1 (3*a) T h
+        simpa [T] using hcut.trans hplus
+    · by_cases ha0 : a = 0
+      · subst a
+        have hrel : (h+2) - (h-(1:Int)) = 3 := by omega
+        have hin : m1EvenQ4Inside ((h+2)-(h-(1:Int))) = true := by
+          simp [m1EvenQ4Inside,hrel]
+        have hcut := m1EvenQ4CutTape_eq_end_inside 0 b h (h+2) hin
+        have hmark :
+            decide (((h+2)-(h-(1:Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
+          norm_num [hrel,m1EvenQ4BridgeEnd]
+        simpa [hrel] using hcut.trans hmark
+      · have hout : m1EvenQ4Inside
+            ((h+2)-(h-((3*a+1 : Nat) : Int))) = false := by
+          simp [m1EvenQ4Inside]
+          omega
+        have hcut := m1EvenQ4CutTape_eq_swept a b h (h+2) hout
+        have hpres := sweptLeft_preserves_right (3*a+1) T h (h+2) (by omega)
+        have hsrc : T (h+2) = true := by
+          simpa [T,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h 1
+        exact hcut.trans (hpres.trans hsrc)
+    · by_cases ha0 : a = 0
+      · subst a
+        have hrel : (h+3) - (h-(1:Int)) = 4 := by omega
+        have hin : m1EvenQ4Inside ((h+3)-(h-(1:Int))) = true := by
+          simp [m1EvenQ4Inside,hrel]
+        have hcut := m1EvenQ4CutTape_eq_end_inside 0 b h (h+3) hin
+        have hmark :
+            decide (((h+3)-(h-(1:Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
+          norm_num [hrel,m1EvenQ4BridgeEnd]
+        simpa [hrel] using hcut.trans hmark
+      · have hout : m1EvenQ4Inside
+            ((h+3)-(h-((3*a+1 : Nat) : Int))) = false := by
+          simp [m1EvenQ4Inside]
+          omega
+        have hcut := m1EvenQ4CutTape_eq_swept a b h (h+3) hout
+        have hpres := sweptLeft_preserves_right (3*a+1) T h (h+3) (by omega)
+        have hsrc : T (h+3) = true := by
+          simpa [T,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h 2
+        exact hcut.trans (hpres.trans hsrc)
+    · have hout : m1EvenQ4Inside
+          ((h+4)-(h-((3*a+1 : Nat) : Int))) = false := by
+        simp [m1EvenQ4Inside]
+        omega
+      have hcut := m1EvenQ4CutTape_eq_swept a b h (h+4) hout
+      have hpres := sweptLeft_preserves_right (3*a+1) T h (h+4) (by omega)
+      have hsrc : T (h+4) = true := by
+        simpa [T,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h 3
+      exact hcut.trans (hpres.trans hsrc)
+  · constructor
+    · have hcut := m1EvenQ4CutTape_eq_source_right a b h (h+5) (by omega)
+      have hsrc : T (h+5) = false := by
+        simpa [T,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h 4
+      simpa [T] using hcut.trans hsrc
+    · constructor
+      · have hcut := m1EvenQ4CutTape_eq_source_right a b h (h+6) (by omega)
+        have hsrc : T (h+6) = false := by
+          simpa [T,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h 5
+        simpa [T] using hcut.trans hsrc
+      · constructor
+        · intro i hi
+          have hcut := m1EvenQ4CutTape_eq_source_right a b h (h+7+(i:Int)) (by omega)
+          have hsrc : T (h+7+(i:Int)) =
+              sideBit (s0RightFacing b) (6+i) := by
+            simpa [T] using s1Config_right_cell 3 6 1 a 0 b h (6+i)
+          have hside :
+              sideBit (s0RightFacing b) (6+i) =
+                sideBit (d1pow (b+1)) i := by
+            rw [s0RightFacing]
+            exact sideBit_append_right
+              [false,true,true,true,false,false] (d1pow (b+1))
+              (6+i) (by simp)
+          have hones : sideBit (d1pow (b+1)) i = true :=
+            sideBit_d1pow_true (b+1) i (by omega)
+          simpa [hsrc,hside,hones] using hcut.trans hsrc
+        · intro i hi
+          have hcut := m1EvenQ4CutTape_eq_source_right a b h
+            (h+10+(3*b:Int)+(i:Int)) (by omega)
+          have hsrc : T (h+10+(3*b:Int)+(i:Int)) =
+              sideBit (s0RightFacing b) (9+3*b+i) := by
+            simpa [T] using s1Config_right_cell 3 6 1 a 0 b h (9+3*b+i)
+          have hlen : (s0RightFacing b).length = 9+3*b := by
+            simp [s0RightFacing,d1pow_length]
+            omega
+          have hblank : sideBit (s0RightFacing b) (9+3*b+i) = false :=
+            sideBit_false_after_length_local (s0RightFacing b)
+              (9+3*b+i) (by omega)
+          simpa [hsrc,hblank] using hcut.trans hsrc
+
