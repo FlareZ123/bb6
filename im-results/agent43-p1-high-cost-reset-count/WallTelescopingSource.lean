@@ -74,8 +74,16 @@ theorem source_weighted_sum_invariant
         _ = 2^(mp+t+1)*(c+3)+2*(mp+n+3)*2^mp+2*U := by
           rw [hrecMul]
         _ = 2^(mp+t+1)*(c+3)+2*(U+(n+3+mp)*2^mp) := by
-          conv_rhs => rw [Nat.mul_add]
-          ac_rfl
+          have hcoeff :
+              2*(mp+n+3)*2^mp = 2*((n+3+mp)*2^mp) := by ac_rfl
+          have hsum :
+              2*((n+3+mp)*2^mp)+2*U =
+                2*(U+(n+3+mp)*2^mp) := by
+            calc
+              _ = 2*U+2*((n+3+mp)*2^mp) := by ac_rfl
+              _ = 2*(U+(n+3+mp)*2^mp) :=
+                (Nat.mul_add 2 U ((n+3+mp)*2^mp)).symm
+          rw [hcoeff, hsum]
         _ = 2^(mp+t+1)*((c+4)-1)+2*(U+(n+3+mp)*2^mp) := by
           congr 1
           omega
@@ -113,8 +121,8 @@ theorem source_wall_cost_identity
       2*(1+7*2^n*S) = 2+14*2^n*S := by
         calc
           _ = 2*1+2*(7*2^n*S) := by rw [Nat.mul_add]
-          _ = 2+(2*7)*2^n*S := by congr 1 <;> ac_rfl
-          _ = 2+14*2^n*S := by norm_num
+          _ = 2+(2*7)*2^n*S := by ac_rfl
+          _ = 2+14*2^n*S := by simp
       _ = 2^m*(2*2^n+2*m+2*n+6)+2*U := hInv'
       _ = 2*(2^m*(2^n+m+n+3)+U) := by
         rw [hfactor]
