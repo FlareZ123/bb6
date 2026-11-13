@@ -53,6 +53,57 @@ The exact return is (r+2m+13) steps at (h-r-7-2m). The replay splits as **19 cas
 These instantiate the existing theorem
 `b0_c0_d1_odd_retreat_to_b0` in `Root119OddWaveRetreat.lean`. The local left pattern begins (0,1,0,1); after the B0-C0-D1 prefix, the rightward D1 shuttle has odd length (2n+1), followed by the theorem's alternating retreat of (m) pairs. The exact return is (4n+2m+8) steps at (h-6-2m). The two replay parameter pairs are ((n,m)=(17,6)) and ((369,25)), matching the former `leftSix=101010` cases.
 
+## Observed macro transition graph
+
+The replay also records the family of each interval and the family of the immediately following interval. Across the 22,982 adjacent pairs of intervals, the observed edge counts are:
+
+| Source family | Destination family | Edges |
+|---|---|---:|
+| oldWave | oldWave | 7,391 |
+| oldWave | evenPrefix | 21 |
+| oldWave | oddEvenPrefix | 19 |
+| oldWave | leftOneWave | 55 |
+| oldWave | twoWaveRoot | 8 |
+| oldWave | cphaseD0Odd | 10 |
+| oldWave | c0D1Odd | 2 |
+| oldWave | cphaseD1 | 1 |
+| cphaseD1 | cphaseD1 | 15,136 |
+| cphaseD1 | leftOneWave | 41 |
+| cphaseD1 | oldWave | 2 |
+| cphaseD1 | cphaseD0Odd | 19 |
+| leftOneWave | leftOneWave | 80 |
+| leftOneWave | oldWave | 95 |
+| leftOneWave | zeroLeftEven | 1 |
+| leftOneWave | oddEvenPrefix | 1 |
+| zeroLeftEven | cphaseD1 | 18 |
+| evenPrefix | cphaseD1 | 21 |
+| oddEvenPrefix | cphaseD1 | 22 |
+| cphaseD0Odd | zeroLeftEven | 17 |
+| cphaseD0Odd | oldWave | 10 |
+| cphaseD0Odd | oddEvenPrefix | 2 |
+| c0D1Odd | oldWave | 2 |
+| twoWaveRoot | oldWave | 8 |
+| **Total adjacent interval pairs** | | **22,982** |
+
+A second pass checked parameter relations on every observed edge; it found no violations of the following finite-run rules:
+
+- `oldWave(n) → oldWave(2)` or `oldWave(n+4)`;
+- `oldWave(n) → evenPrefix(2n+4)` or `oddEvenPrefix(2n+5)`;
+- `oldWave(n) → leftOneWave(0)`, `twoWaveRoot(n1=n+2, r)`, `cphaseD0Odd(r=1,m)`, `c0D1Odd(n+3,m)`, or `cphaseD1(r=2)`;
+- `leftOneWave(n) → leftOneWave(n+3)`, `oldWave(2)`, `zeroLeftEven(3)`, or `oddEvenPrefix(7)`;
+- `zeroLeftEven`, `evenPrefix`, and `oddEvenPrefix` each lead to `cphaseD1(r=3)`;
+- `twoWaveRoot` and `c0D1Odd` each lead to `oldWave(2)`;
+- `cphaseD0Odd(r=3,m)` leads to `zeroLeftEven(m+3)` or `oddEvenPrefix(2m+7)`; `cphaseD0Odd(r=1,m)` leads to an `oldWave`;
+- `cphaseD1(r=3)` leads to `cphaseD1(r=3 or 4)`, `leftOneWave(0)`, `oldWave(0 or 244)`, or `cphaseD0Odd(r=3)`; the other observed C-phase edges are (2\to3) and (4\to3).
+
+The observed graph is strongly connected: every family reaches `oldWave` or `cphaseD1`, and those families reach the rest. This is a promising candidate for a finite macro-state invariant. It is **not** yet a closure theorem: the edge relations were checked only on the bounded blank-root orbit, and the return theorems' local hypotheses do not by themselves constrain every untouched part of the tape.
+
+## B/0 shield audit
+
+A separate 10M replay maintained an incremental index of every tape occurrence of the forbidden word `1100` and queried it at each B/0 checkpoint. It found **0 unsafe B/0 checkpoints among 22,984**. This checks the full left-of-head region, not merely a fixed-width neighborhood.
+
+The exclusion is not a primitive-step invariant. The replay includes an F/1 configuration with immediate left triple `110`; its F/1 write can create a temporary `1100` ending at the old head. The relevant wave-return theorem must restore the suffix before the next B/0 checkpoint. The useful invariant is therefore checkpoint-level, exactly as in `Root119GlobalShield.lean`, rather than a ban on `1100` at every intermediate configuration.
+
 ## Research consequence and limits
 
 The 10M replay no longer exhibits a gap in its B/0 first-return classification. In particular, the eight two-wave-root intervals that previously followed an unclassified prefix are now preceded by a fully classified sequence in the bounded replay. The updated script therefore expects all eight to have `chainKnown` rather than `chainUnknown`.
