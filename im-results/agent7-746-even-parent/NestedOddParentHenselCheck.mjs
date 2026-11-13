@@ -1,147 +1,177 @@
-// Exact modular reproduction of the seven-edge nested odd-parent branch.
+// Exact modular reproduction of the dense seven-edge U/Q branch.
 // All exponentiation is modular BigInt; no full 2^n integer is constructed.
-const mod = (x, m) => ((x % m) + m) % m;
-function powMod(base, exp, modulus) {
-  let x = base % modulus, e = exp, out = 1n;
-  while (e > 0n) {
-    if ((e & 1n) !== 0n) out = (out * x) % modulus;
-    x = (x * x) % modulus;
-    e >>= 1n;
+const mod = (x,m) => ((x % m) + m) % m;
+function powMod(base,exp,m) {
+  let x=base%m, e=exp, out=1n;
+  while (e>0n) {
+    if ((e&1n)!==0n) out=out*x%m;
+    x=x*x%m;
+    e>>=1n;
   }
   return out;
 }
-const p3 = k => 3n ** BigInt(k);
+const p3=k=>3n**BigInt(k);
 
-function computeAt(r) {
-  const n = 887n + 13122n * r;
-  const qmod = mod(
-    28n * powMod(2n, n, p3(20))
-      - 2n * n + 15n
-      - powMod(2n, 3406n, p3(20)) * (2n * n + 3n),
-    p3(20)
+function computePrefix(r) {
+  const n=887n+13122n*r, M=p3(17);
+  const Q=mod(
+    28n*powMod(2n,n,M)-2n*n+15n
+      -powMod(2n,3406n,M)*(2n*n+3n),
+    M
   );
-  const d1 = qmod / p3(10);
-  const g1 = mod(
-    512n * d1 - 16n * powMod(2n, n - 7n, p3(10))
-      - 2n * (n - 7n) - 5n,
+  if (Q%p3(7)!==0n) return {n,Q};
+  const d1=Q/p3(7);
+  const g1=mod(
+    64n*d1-16n*powMod(2n,n-5n,p3(10))-2n*(n-5n)-5n,
     p3(10)
   );
-  const d2 = g1 / p3(2);
-  const g2 = mod(
-    8n * d2 - 16n * powMod(2n, n - 8n, p3(8))
-      - 2n * (n - 8n) - 5n,
+  const out={n,Q,g1};
+  if (g1%3n!==0n) return out;
+  const d2=g1/3n;
+  const g2=mod(
+    4n*d2-16n*powMod(2n,n-6n,p3(9))-2n*(n-6n)-5n,
+    p3(9)
+  );
+  out.g2=g2;
+  if (g2%3n!==0n) return out;
+  const d3=g2/3n;
+  const g3=mod(
+    4n*d3-16n*powMod(2n,n-7n,p3(8))-2n*(n-7n)-5n,
     p3(8)
   );
-  const d3 = g2 / 3n;
-  const g3 = mod(
-    4n * d3 - 16n * powMod(2n, n - 9n, p3(7))
-      - 2n * (n - 9n) - 5n,
-    p3(7)
+  out.g3=g3;
+  if (g3%3n!==0n || g3%9n!==0n) return out;
+  const d4=g3/9n;
+  const g4=mod(
+    8n*d4-16n*powMod(2n,n-8n,p3(6))-2n*(n-8n)-5n,
+    p3(6)
   );
-  const d4 = g3 / 27n;
-  const g4 = mod(
-    16n * d4 - 16n * powMod(2n, n - 11n, p3(4))
-      - 2n * (n - 11n) - 5n,
+  out.g4=g4;
+  if (g4%3n!==0n || g4%9n!==0n) return out;
+  const d5=g4/9n;
+  const g5=mod(
+    8n*d5-16n*powMod(2n,n-10n,p3(4))-2n*(n-10n)-5n,
     p3(4)
   );
-  const d5 = g4 / 9n;
-  const g5 = mod(
-    8n * d5 - 16n * powMod(2n, n - 12n, p3(2))
-      - 2n * (n - 12n) - 5n,
+  out.g5=g5;
+  if (g5%3n!==0n || g5%9n!==0n) return out;
+  const d6=g5/9n;
+  const g6=mod(
+    8n*d6-16n*powMod(2n,n-11n,p3(2))-2n*(n-11n)-5n,
     p3(2)
   );
-  const d6 = g5 / 3n;
-  const g6 = mod(
-    4n * d6 - 16n * powMod(2n, n - 13n, 3n)
-      - 2n * (n - 13n) - 5n,
+  out.g6=g6;
+  if (g6%3n!==0n) return out;
+  const d7=g6/3n;
+  const g7=mod(
+    4n*d7-16n*powMod(2n,n-12n,3n)-2n*(n-12n)-5n,
     3n
   );
-  return {r,n,qmod,g1,g2,g3,g4,g5,g6};
+  out.g7=g7;
+  return out;
 }
 
-const r = 74803n;
-const main = computeAt(r);
-const {n,qmod,g1,g2,g3,g4,g5,g6} = main;
-if (qmod % p3(10) !== 0n || qmod % p3(11) === 0n) {
-  throw new Error("Q does not have exact 3-adic valuation 10");
+// Lift one base-3 digit at a time. Each condition has exactly one good lift.
+let r=0n, modulus=1n;
+const liftSteps=[
+  ["G2 divisible by 3","g2",3n],
+  ["G3 divisible by 3","g3",3n],
+  ["G3 divisible by 9","g3",9n],
+  ["G4 divisible by 3","g4",3n],
+  ["G4 divisible by 9","g4",9n],
+  ["G5 divisible by 3","g5",3n],
+  ["G5 divisible by 9","g5",9n],
+  ["G6 divisible by 3","g6",3n],
+  ["G7 divisible by 3","g7",3n]
+];
+const lifts=[];
+for (const [condition,field,divisor] of liftSteps) {
+  const good=[];
+  for(let a=0n;a<3n;a++) {
+    const candidate=r+modulus*a;
+    const values=computePrefix(candidate);
+    const value=values[field];
+    if(value!==undefined && value%divisor===0n) {
+      good.push({a,candidate,value});
+    }
+  }
+  if(good.length!==1) {
+    throw new Error(`${condition}: expected one lift, found ${good.length}`);
+  }
+  r=good[0].candidate;
+  modulus*=3n;
+  lifts.push({
+    condition,
+    digit:good[0].a.toString(),
+    residue:r.toString(),
+    modulus:modulus.toString(),
+    value:good[0].value.toString()
+  });
 }
-if (g1 % 9n !== 0n || g1 % 27n === 0n) {
-  throw new Error("G1 does not have exact 3-adic valuation 2");
+if(r!==1618n || modulus!==p3(9)) {
+  throw new Error("Unexpected seven-edge Hensel cylinder");
 }
-if (g2 % 3n !== 0n || g2 % 9n === 0n) {
-  throw new Error("G2 does not have exact 3-adic valuation 1");
-}
-if (g3 % p3(5) !== 0n || g3 % p3(6) === 0n) {
-  throw new Error("G3 does not have exact 3-adic valuation 5");
-}
-if (g4 % 9n !== 0n || g4 % 27n === 0n) {
-  throw new Error("G4 does not have exact 3-adic valuation 2");
-}
-if (g5 % 3n !== 0n || g5 % 9n === 0n) {
-  throw new Error("G5 does not have exact 3-adic valuation 1");
-}
-if (g6 !== 0n) throw new Error("G6 is not divisible by 3");
+const main=computePrefix(r);
+const {n,Q,g1,g2,g3,g4,g5,g6,g7}=main;
+if(Q%p3(9)!==0n || Q%p3(10)===0n) throw new Error("Q valuation is not 9");
+if(g1%3n!==0n || g1%9n===0n) throw new Error("G1 valuation is not 1");
+if(g2%3n!==0n || g2%9n===0n) throw new Error("G2 valuation is not 1");
+if(g3%9n!==0n || g3%27n===0n) throw new Error("G3 valuation is not 2");
+if(g4%p3(4)!==0n || g4%p3(5)===0n) throw new Error("G4 valuation is not 4");
+if(g5%p3(3)!==0n || g5%p3(4)===0n) throw new Error("G5 valuation is not 3");
+if(g6%3n!==0n || g6%9n===0n) throw new Error("G6 valuation is not 1");
+if(g7%3n!==0n) throw new Error("G7 is not divisible by 3");
 
-// The three lifts of r=74803 mod 3^11 to mod 3^12.
-// Exactly the first makes G6 divisible by 3.
-const nextDigitResidues = [0n,1n,2n].map(a =>
-  computeAt(r + p3(11) * a).g6.toString()
-);
-if (nextDigitResidues.join(",") !== "0,2,1") {
-  throw new Error("Unexpected next-digit G6 residues");
-}
-
-// Coefficients X_i=A_i*2^n+B_i*n+C_i through X_6.
-// X_6 supplies the linear/constant error bound for the seventh band.
-const bitLength = x => (x < 0n ? -x : x).toString(2).length;
-const coefficientBits = [];
-let B = -2n - (1n << 3407n);
-let C = 15n - 3n * (1n << 3406n);
-coefficientBits.push({level:0,B:bitLength(B),C:bitLength(C)});
-let E = 0;
-const stages = [[7,14],[1,9],[0,9],[2,13],[1,13],[0,13]];
-for (let i=0;i<stages.length;i++) {
-  const [t,sigma] = stages[i];
-  E = i===0 ? t+3 : E+t+1;
-  B = 4n*(1n<<BigInt(t))*B - 2n*p3(E);
-  C = 4n*(1n<<BigInt(t))*C
-    - (2n*BigInt(t-sigma)+5n)*p3(E);
+// Exact coefficient bit lengths for X_i=A_i*2^n+B_i*n+C_i, i=0,...,6.
+const bitLength=x=>(x<0n?-x:x).toString(2).length;
+let B=-2n-(1n<<3407n), C=15n-3n*(1n<<3406n), E=0;
+const coefficientBits=[{level:0,B:bitLength(B),C:bitLength(C)}];
+const stages=[[4,9],[0,6],[0,7],[1,9],[1,11],[1,12]];
+for(let i=0;i<stages.length;i++) {
+  const [t,sigma]=stages[i];
+  E=i===0?t+3:E+t+1;
+  B=4n*(1n<<BigInt(t))*B-2n*p3(E);
+  C=4n*(1n<<BigInt(t))*C-(2n*BigInt(t-sigma)+5n)*p3(E);
   coefficientBits.push({level:i+1,B:bitLength(B),C:bitLength(C)});
 }
-if (coefficientBits.some(x => x.B > 3431 || x.C > 3431)) {
-  throw new Error("Unexpected coefficient bound for the seven band estimates");
+if(coefficientBits.some(x=>x.B>3427 || x.C>3427)) {
+  throw new Error("Unexpected coefficient bound");
 }
 
-const limitingRatios = [
-  [458752n,59049n],
-  [3560896n,531441n],
-  [11481056n,1594323n],
-  [326640896n,43046721n],
-  [2471264192n,387420489n],
-  [7372657888n,1162261467n],
-  [21788896160n,3486784401n]
+const limitingRatios=[
+  [14336n,2187n],
+  [44704n,6561n],
+  [147680n,19683n],
+  [1103168n,177147n],
+  [12626560n,1594323n],
+  [99988288n,14348907n],
+  [340741280n,43046721n]
 ];
-for (const [num,den] of limitingRatios) {
-  if (5n*num <= 31n*den || 10n*num >= 79n*den) {
-    throw new Error("A limiting band ratio is outside (6.2,7.9)");
+for(const [num,den] of limitingRatios) {
+  if(5n*num<=31n*den || 100n*num>=793n*den) {
+    throw new Error("A limiting band ratio is outside (6.2,7.93)");
   }
 }
-const bandParameters = [[7,14],[1,9],[0,9],[2,13],[1,13],[0,13],[0,14]];
-for (const [t,sigma] of bandParameters) {
-  if ((1n<<BigInt(sigma)) >= p3(t+1)*8192n) {
-    throw new Error("A band scaling factor is not below 2^13");
+const bandParameters=[[4,9],[0,6],[0,7],[1,9],[1,11],[1,12],[0,12]];
+for(const [t,sigma] of bandParameters) {
+  if((1n<<BigInt(sigma))>=p3(t+1)*2048n) {
+    throw new Error("A band scaling factor is not below 2^11");
   }
 }
-if (n < 7000n) throw new Error("The explicit index is below the band-bound threshold");
+if(n<7000n) throw new Error("The explicit index is below the band-bound threshold");
 
 console.log(JSON.stringify({
   r:r.toString(),
-  classModulus:"531441",
+  classModulus:modulus.toString(),
   n:n.toString(),
-  valuations:{Q:10,G1:2,G2:1,G3:5,G4:2,G5:1,G6:"divisible by 3"},
-  nextDigitResidues,
+  residues:{
+    Q:Q.toString(),G1:g1.toString(),G2:g2.toString(),G3:g3.toString(),
+    G4:g4.toString(),G5:g5.toString(),G6:g6.toString(),G7:g7.toString()
+  },
+  valuations:{Q:9,G1:1,G2:1,G3:2,G4:4,G5:3,G6:1,G7:"divisible by 3"},
+  lifts,
   exponents:bandParameters,
   coefficientBitLengths:coefficientBits,
   limitingBandRatios:limitingRatios.map(([num,den])=>({num:num.toString(),den:den.toString()})),
-  bandBound:"for n >= 7000, all seven normalized ratios differ from their limits by < 2^-55"
+  bandBound:"for n >= 7000, all seven normalized ratios differ from their limits by < 2^-62"
 },null,2));
