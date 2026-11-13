@@ -18,7 +18,7 @@ open BB6Coverage
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 
- /-- The parity-complete source decrement in the exact Inc0 cost interface
+/-- The parity-complete source decrement in the exact Inc0 cost interface
 used by the generic counted-drain theorem. -/
 theorem s1Config_counted_decrement_inc0
     (L n m a z c : Nat) (h : Int)
@@ -73,6 +73,7 @@ theorem s1Config_counted_drain_closed
   rw [drainCost_binary_closed] at hrun
   simpa using hrun
 
+#print axioms s1Config_counted_decrement_inc0
 #print axioms s1Config_counted_drain
 #print axioms s1Config_counted_drain_pattern
 #print axioms s1Config_counted_drain_closed
