@@ -69,7 +69,7 @@ theorem root_low43_C0_to_junc_physical
     simpa [zC0,low43_C0_zipper] using root_low43_C0_to_junc_max
   have hdelta :
       runWithDelta 438 zC0 = some (junc 23 0 18,-20) := by
-    simpa [hmax] using runWithMax_toDelta 438 zC0
+    simpa [hmax] using (runWithMax_toDelta 438 zC0).symm
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
     source_runWithDelta_rep 438 zC0 c hrep (junc 23 0 18) (-20) hdelta
   have hprefix :
@@ -101,7 +101,7 @@ theorem root_low43_C0_to_junc11_physical
     simpa [zC0,low43_C0_zipper] using root_low43_C0_to_junc11_max
   have hdelta :
       runWithDelta 1347 zC0 = some (junc 11 0 62,-57) := by
-    simpa [hmax] using runWithMax_toDelta 1347 zC0
+    simpa [hmax] using (runWithMax_toDelta 1347 zC0).symm
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
     source_runWithDelta_rep 1347 zC0 c hrep (junc 11 0 62) (-57) hdelta
   have hprefix :
@@ -235,7 +235,7 @@ theorem root_low_even_r96_physical
     simpa [z49] using root_low_even_r96_max
   have hdelta :
       runWithDelta 719 z49 = some (junc 11 0 98,-89) := by
-    simpa [hmax] using runWithMax_toDelta 719 z49
+    simpa [hmax] using (runWithMax_toDelta 719 z49).symm
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
     source_runWithDelta_rep 719 z49 c hrep (junc 11 0 98) (-89) hdelta
   have hprefix :
@@ -268,7 +268,7 @@ theorem root_junc11_to_junc10_physical
     simpa [z11] using root_junc11_to_junc10_max
   have hdelta :
       runWithDelta 2457 z11 = some (junc 10 0 74,-9) := by
-    simpa [hmax] using runWithMax_toDelta 2457 z11
+    simpa [hmax] using (runWithMax_toDelta 2457 z11).symm
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
     source_runWithDelta_rep 2457 z11 c hrep (junc 10 0 74) (-9) hdelta
   have hprefix :
@@ -301,7 +301,7 @@ theorem root_junc10_to_junc11_r96_physical
     simpa [z10] using root_junc10_to_junc11_r96_max
   have hdelta :
       runWithDelta 3619 z10 = some (junc 11 0 98,-17) := by
-    simpa [hmax] using runWithMax_toDelta 3619 z10
+    simpa [hmax] using (runWithMax_toDelta 3619 z10).symm
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
     source_runWithDelta_rep 3619 z10 c hrep (junc 11 0 98) (-17) hdelta
   have hprefix :
