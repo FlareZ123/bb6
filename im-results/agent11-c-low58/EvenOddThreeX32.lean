@@ -146,6 +146,5 @@ theorem y3_x32_even_t_reach_implies_q0 (t : Nat)
               (by omega) (by omega) (by omega) hP2)
 
 #print axioms y3_x32_parents
-#print axioms oddeven_sum3_blank_reach_iff
 #print axioms y3_x32_even_t_reach_implies_q0
 end BB6.Agent11Y3X32
