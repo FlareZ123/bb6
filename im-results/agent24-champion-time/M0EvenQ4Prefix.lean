@@ -399,9 +399,14 @@ private theorem m0EvenQ4LeftFacingBoundaryBit (a k : Nat) (ha : 0 < a)
           (markerWord 2 ++ d0 ++ binDec 3 1 ++ lh) := by
     simp [m0EvenQ4LeftFacing,List.append_assoc]
   rw [hlist]
+  have hlen : ([true] ++ d1pow (a-1)).length = 3*a-2 := by
+    simp [d1pow_length]
+    omega
   rw [sideBit_append_after_local ([true] ++ d1pow (a-1))
     (markerWord 2 ++ d0 ++ binDec 3 1 ++ lh)
-    (3*a+k) (by simp [d1pow_length]; omega)]
+    (3*a+k) (by rw [hlen]; omega)]
+  rw [hlen]
+  rw [show 3*a+k-(3*a-2)=k+2 by omega]
   have hkCases : k=1 ∨ k=2 ∨ k=3 ∨ k=4 ∨ k=5 ∨
       k=6 ∨ k=7 ∨ k=8 ∨ k=9 := by omega
   rcases hkCases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9
@@ -513,9 +518,14 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
                     (markerWord 2 ++ d0 ++ binDec 3 1 ++ lh) := by
               simp [m0EvenQ4LeftFacing,List.append_assoc]
             rw [hlist]
+            have hlen : ([true] ++ d1pow (a-1)).length = 3*a-2 := by
+              simp [d1pow_length]
+              omega
             rw [sideBit_append_after_local ([true] ++ d1pow (a-1))
               (markerWord 2 ++ d0 ++ binDec 3 1 ++ lh) (3*a)
-              (by simp [d1pow_length]; omega)]
+              (by rw [hlen]; omega)]
+            rw [hlen]
+            rw [show 3*a-(3*a-2)=2 by omega]
             simp [markerWord,sideBit]
           have hval : m0EvenQ4CutTape a b h x = false := hcut.trans hmark
           simpa [x] using hval.trans htarget.symm
