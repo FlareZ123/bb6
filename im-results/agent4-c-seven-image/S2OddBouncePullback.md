@@ -153,6 +153,19 @@ The family is disjoint from the older diagonal (u+v=0 mod 4) and the previous s3
 
 If the source-root composition is formalized, the combined three-family exclusion density becomes 41/2^26, leaving 215 of the 256 m-classes modulo 131072 in the common j=319,m=42 modulo 512 base cylinder outside these three exclusions.
 
+## Concrete arithmetic test vector
+
+The small instance u=4, v=54 satisfies v+93u=42 (mod 128), with t=14. It gives
+
+- R=(31167,42640);
+- P=(73805,21319);
+- Q=(18449,48994), with Q.x+Q.y=3 (mod 8) and Q.y=2 (mod 16);
+- A=47560, B=34438, W=4305;
+- F1=(81996,17218), F2=(99212,8608), F3=(107818,4303), with F3.y odd and F3.x+F3.y=1 (mod 4);
+- j=2367 and m=111658 (mod 131072), which satisfy 3m+102921=185j exactly in this representative, and K(j,m)=55870=574+1024*54 (mod 131072).
+
+This is a useful concrete test vector for the eventual Lean parent-enumeration and normalizer proofs; it is not a substitute for them.
+
 ## Formalization work still required
 
 1. Prove the exact two-parent classification of R from section_preimage_all_iff under (S2).
