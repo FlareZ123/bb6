@@ -88,9 +88,9 @@ The corrected parameterization is `a=27u+7`, equivalently `a=9t+7` with `t=3u`. 
 ```text
 L(27u+7,5,1)
   -- EAllDouble(q=4, k=9u+1) -->
-L(24u+13; 0 1^10 0 1^6)
+eAllOutput(u) = eThreeInput(u)  (exact configuration equality)
   -- E-three(s=24u+3) -->
-L(64u+33; packetThree ++ 1^7 0 1^6)
+eThreeOutput(u) ≈ aCodeInput(u)  (source ObsEq; packetThree tail)
   -- A-code(r=64u+10, wordInc=19) -->
 L(512u+129,0,0).
 ```
