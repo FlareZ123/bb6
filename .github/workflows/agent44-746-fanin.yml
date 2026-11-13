@@ -108,6 +108,8 @@ jobs:
           echo "PASS: draft seven-edge exclusion for the 1085/1372 exceptional feeder classes"
           lean -o "$r/FeederExceptional887.olean" "$r/FeederExceptional887.lean"
           echo "PASS: draft six-node exact inverse-tree exclusion for n = 887 mod 13122"
+          lean -o "$b/Z1UniqueParent887.olean" "$b/Z1UniqueParent887.lean"
+          echo "PASS: exact second-tier ResetParent uniqueness for n = 887 mod 13122"
           e="im-results/agent7-746-even-parent"
           export LEAN_PATH="$LEAN_PATH:$e"
           lean -o "$e/EvenParent887.olean" "$e/EvenParent887.lean"
