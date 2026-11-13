@@ -70,7 +70,8 @@ private theorem m0EvenQ4CutTape_eq_source_right
       x-(h-((3*a : Nat) : Int)) ≤ 3) := by omega
   have hout : m0EvenQ4Inside
       (x-(h-((3*a : Nat) : Int))) = false := by
-    simp [m0EvenQ4Inside,hnot]
+    change decide (-9 ≤ _ ∧ _ ≤ 3) = false
+    exact decide_eq_false_iff_not.mpr hnot
   have hcut := m0EvenQ4CutTape_eq_swept a b h x hout
   have hpres := sweptLeft_preserves_right (3*a) T h x (by omega)
   simpa [T] using hcut.trans hpres
@@ -220,7 +221,8 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
             h-(h-((3*a : Nat) : Int)) ≤ 3) := by omega
         have hout : m0EvenQ4Inside
             (h-(h-((3*a : Nat) : Int))) = false := by
-          simp [m0EvenQ4Inside,hnot]
+          change decide (-9 ≤ _ ∧ _ ≤ 3) = false
+    exact decide_eq_false_iff_not.mpr hnot
         have hcut := m0EvenQ4CutTape_eq_swept a b h h hout
         have hhead : sweptLeft (3*a) T h h = true := by
           have hs := sweptLeft_head (3*a-2) T h
@@ -235,7 +237,8 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
           (h+1)-(h-((3*a : Nat) : Int)) ≤ 3) := by omega
       have hout : m0EvenQ4Inside
           ((h+1)-(h-((3*a : Nat) : Int))) = false := by
-        simp [m0EvenQ4Inside,hnot]
+        change decide (-9 ≤ _ ∧ _ ≤ 3) = false
+    exact decide_eq_false_iff_not.mpr hnot
       have hcut := m0EvenQ4CutTape_eq_swept a b h (h+1) hout
       have hplus : sweptLeft (3*a) T h (h+1) = true := by
         have hN : 3*a-1+1 = 3*a := by omega
@@ -428,7 +431,8 @@ private theorem m0EvenQ4CutTape_eq_source_left
       (h-(i:Int))-(h-((3*a : Nat) : Int)) ≤ 3) := by omega
   have hout : m0EvenQ4Inside
       ((h-(i:Int))-(h-((3*a : Nat) : Int))) = false := by
-    simp [m0EvenQ4Inside,hnot]
+    change decide (-9 ≤ _ ∧ _ ≤ 3) = false
+    exact decide_eq_false_iff_not.mpr hnot
   have hcut := m0EvenQ4CutTape_eq_swept a b h (h-(i:Int)) hout
   have hpres := sweptLeft_preserves_left (3*a) T h
     (h-(i:Int)) (by omega)
@@ -604,7 +608,6 @@ theorem m0Even_resetPrefixCost_eq (a b : Nat) :
   have hv : BB6ChampionArithmetic.v2 2 = 1 := by
     simpa [hv1] using v2_of_even 2 (by omega) (by decide)
   simp [resetPrefixCost,hv]
-  omega
 
 #print axioms m0Even_q4_prefix_run
 #print axioms m0Even_q4_prefix_rightShape
