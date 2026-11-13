@@ -24,7 +24,11 @@ Define
 \[
 c_r:=2+\left\lfloor\log_2(3^{2r-1})\right\rfloor.
 \]
-For a possible immediate predecessor of \(d_r=X_r-2\) with valuation \(u=v_r+s\), the exact inverse equation requires
+For a possible immediate predecessor with valuation \(u=v_r+s\), the exact inverse equation is
+\[
+X_r=(2^{u+1}+3)q'+3\cdot2^u+u+3
+\]
+for some \(q'\in\mathbb N\). Multiplying by two shows that this requires
 \[
 D_{r,s}:=2^{a_r+s}+3
 \quad\mid\quad
