@@ -115,6 +115,7 @@ jobs:
 
           # Shared signed-power gap module required by Agent40's h<=6 theorem.
           cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepOddGap.lean" SheepOddGap.lean
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepOddGap.lean
           export LEAN_PATH=".:$LEAN_PATH"
           lake env lean -o ".lake/build/lib/lean/SheepOddGap.olean" SheepOddGap.lean
 
