@@ -102,7 +102,34 @@ The accompanying UIndexHenselCensus.mjs implements the two exact ResetParent arm
 
 These are exact-integer computational observations only. They are not Lean closedCertFast certificates and do not establish a uniform cone bound. The changing cone sizes and unbounded 3-adic valuation show why the fixed n=887 31-state cone cannot be generalized by simply reusing its finite list.
 
-## 5. Research consequence
+## 5. Infinitely many valid odd-parent arms (mathematical derivation; not Lean-certified)
+
+The isometry gives more than unbounded divisibility. For every \(t\ge5\), there is a unique class \(r_t\bmod 3^{t-5}\) with \(3^{t+3}\mid Q\). Exactly two of its three lifts modulo \(3^{t-4}\) have \(v_3(Q)=t+3\), and each such class contains arbitrarily large natural \(r\). Thus the maximal odd-parent exponent of \(z\) can be exactly any prescribed \(t\ge5\), on infinitely many indices.
+
+For such an \(r\), put \(d=Q/3^{t+3}\), \(x=2^t d\), and choose an integer \(s\) with
+\[
+\frac{81}{14}<\frac{2^s}{3^t}<\frac{54}{7}.
+\]
+Let \(k=n+t-s\). Since \(Q/2^n\to28\) as \(r\to\infty\) along the selected residue class,
+\[
+\frac{x}{2^k}
+=\frac{Q}{2^n}\frac{2^s}{3^{t+3}}
+\longrightarrow \frac{28}{27}\frac{2^s}{3^t}\in(6,8).
+\]
+For sufficiently large \(r\), the exact integer band
+\(6\cdot2^k+1\le x\le8\cdot2^k-1\) follows. Then
+\[
+h=2x-8\cdot2^k-k-5
+\]
+is positive for large \(k\), and the exact odd-arm equation gives
+\(\operatorname{ResetParent}(h,z)\). The first-tier state \(z\) itself is valid for all sufficiently large \(r\): \(Q/2^n\to28\) implies \(z/2^n\to14/9\), inside its scale-\((n-2)\) even band, and its first-tier odd-band quotient \(2(2z+5)=2Q/9\) has ratio tending to \(56/9\in(6,8)\).
+
+There are infinitely many exponents \(t\) admitting such an \(s\). Indeed, the interval for \(2^s/3^t\) has multiplicative width
+\((54/7)/(81/14)=4/3\), or logarithmic width \(\log_2(4/3)>0\). Since \(\log_2 3\) is irrational, the fractional parts of \(t\log_2 3\) are dense modulo one; infinitely many \(t\) therefore admit an integer \(s\) in this interval. Combining this with the Hensel classes proves that the fixed depth \(j=3402\) produces infinitely many genuine high-\(t\) odd-parent arms across the family \(n=887+13122r\).
+
+This is a mathematical consequence of the displayed formulas and the standard irrational-rotation density theorem, not a Lean theorem or a blank-root exclusion. It proves that no uniform finite cutoff on the odd exponent \(t\) can close this U branch.
+
+## 6. Research consequence
 
 The n=887 selector eliminates every \(t\ge5\) first-tier U parent only because its selected depth \(3402\) lies beyond the n=887 spine. Along \(n=887+13122r\), the same depth eventually lies on the spine, and the family-parameter Hensel root produces valid \(t=7,9,11,\ldots\) branches. A proof of global #746 root exclusion must therefore handle this unbounded 3-adic branch, not just the n=887 cone.
 
