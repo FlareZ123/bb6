@@ -267,5 +267,16 @@ jobs:
             /tmp/a42-terminal/s1-counted-inc0-axioms.log
             /tmp/a42-terminal/s1-counted-drain-axioms.log
             /tmp/a42-terminal/s1-champion-counted-reset-axioms.log
+            /tmp/a42-terminal/root-finite-axioms.log
+            /tmp/a42-terminal/root-source-axioms.log
+            /tmp/a42-terminal/rst1-prime-axioms.log
+            /tmp/a42-terminal/q4-prefix-axioms.log
+            /tmp/a42-terminal/q4-suffix-axioms.log
+            /tmp/a42-terminal/q4-endpoint-axioms.log
+            /tmp/a42-terminal/s1-counted-drain-axioms.log
+            /tmp/a42-terminal/root-q4-drain-axioms.log
+            /tmp/a42-terminal/champion-root-q4-drain-axioms.log
+            /tmp/a42-terminal/root-q4-attainable-axioms.log
+            /tmp/a42-terminal/counted-reset-base-axioms.log
           if-no-files-found: ignore
           retention-days: 3
