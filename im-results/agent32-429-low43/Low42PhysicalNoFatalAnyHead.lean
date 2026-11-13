@@ -28,7 +28,13 @@ theorem translatedJ_eq_shift (u w : Nat) (h : Int) :
 theorem shift_translatedJ (u w : Nat) (h k : Int) :
     shiftConfig h (translatedJ u w k) =
       translatedJ u w (k+h) := by
-  ext <;> simp [shiftConfig, translatedJ] <;> omega
+  ext
+  · rfl
+  · rfl
+  · funext x
+    simp [shiftConfig, translatedJ]
+    congr 1
+    omega
 
 /-- C/01-freedom is invariant under physical tape/head translation. -/
 theorem physicalC01_shift_free (h : Int) (c : Config)
@@ -37,9 +43,17 @@ theorem physicalC01_shift_free (h : Int) (c : Config)
   intro hf
   rcases hf with ⟨hs, hcur, hright⟩
   apply hfree
-  refine ⟨hs, ?_, ?_⟩
-  · simpa [shiftConfig] using hcur
-  · simpa [shiftConfig] using hright
+  have hcur' : c.tape c.head = false := by
+    change c.tape ((c.head+h)-h) = false at hcur
+    have hpos : (c.head+h)-h = c.head := by omega
+    rw [hpos] at hcur
+    exact hcur
+  have hright' : c.tape (c.head+1) = true := by
+    change c.tape (((c.head+h)+1)-h) = true at hright
+    have hpos : ((c.head+h)+1)-h = c.head+1 := by omega
+    rw [hpos] at hright
+    exact hright
+  exact ⟨hs, hcur', hright'⟩
 
 /-- The all-parameter low42 physical return applies to every complete
     physical configuration representing its Junc input, not just the
