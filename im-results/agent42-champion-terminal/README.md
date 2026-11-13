@@ -118,3 +118,14 @@ Agent 24 subsequently added `ChampionRootQ4Drain.lean`, proving the actual champ
 `Attainable (championRootQ4DrainMoves + suffixSteps + proposedIncrementCost 1 1 a b + terminalMoves L (a+b+resetDelta 1) + 1)`.
 
 The final `+1` is the undefined query after the successful primitive moves; the six-step root relabeling is now explicit in `championRootQ4DrainMoves`. The theorem still requires the exact TM63 continuation and final reset-prefix run, so it is not yet an unconditional attained score. The combined manual workflow now compiles both champion transport and this corollary, and uploads all new module logs on failure. It remains manual-only and undispatched.
+
+
+## Specialization to the exact proposed champion score
+
+The attained-score module now specializes the generic composition to Agent 24's complete arithmetic itinerary. It defines `tm63Length2`, `tm63Index2`, `tm63FinalA`, `tm63FinalB`, and `tm63SuffixSteps` from the existing `sectionResult` recurrence. The final stage is split using Agent 24's `sectionResult_last_stage_m1` theorem, including its essential `12 * v2 tm63Index2` cost correction; `tm63_last_pre_marker_one` verifies that the final reset input really has marker 1, and `tm63FinalA_pos` supplies the terminal adapter's positivity side condition.
+
+The arithmetic identities `tm63_root_score_decomposition` and `tm63_champion_score_decomposition` prove that the root-connected prefix + `tm63SuffixSteps` + final counted reset + terminal tail equals the published `proposedChampionScore`, with the six champion relabeling moves and final undefined query accounted for. The new theorem `tm63_attainable_at_proposedChampionScore` therefore states the exact candidate lower bound:
+
+`Attainable proposedChampionScore`
+
+Its only machine-specific premises are now explicit: (1) an exact `tm2` run of `tm63SuffixSteps` from the q4/drain endpoint to `s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h`, covering the remaining `Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H` itinerary up to the final reset input; and (2) the exact final `resetPrefixCost 1 1 tm63FinalA tm63FinalB` run to the terminal S0 pre-drain configuration. These are not yet proved, so the theorem is still conditional and does not establish an attained score. The manual workflow includes transitive `sorryAx` checks for this exact-score theorem, but no run has been dispatched.
