@@ -73,6 +73,53 @@ theorem odd_block_exit_terminal_identity
 The odd-block-exit terminal identity forces the valuation-dependent
 right-hand residue to be a unit modulo five.
 -/
+/-- Rewriting the terminal-exit identity exposes an exact divisor:
+the odd-block scale and the terminal feeder denominator both divide the
+terminal-power defect. -/
+theorem odd_block_exit_terminal_factorization
+    (t m k : Nat) (ht : 0 < t) (hm : 0 < m) (hmOdd : m % 2 = 1)
+    (hterm :
+      highLevelNext (.N (5^t*m-1)) = some (.N (haltTower k))) :
+    ∃ q v,
+      5^t*m-1 = oddTower q v ∧
+      runHigh t (some (.N (2^t*m-1))) = some (.N (5^t*m-1)) ∧
+      (5^t*m-1) % 2 = 0 ∧
+      0 < v ∧
+      2^(k+v+2) =
+        5^t*m*(2^(v+1)+3) + 2^v*(2*v-1) + 3 := by
+  rcases odd_block_exit_terminal_identity t m k ht hm hmOdd hterm with
+    ⟨q, v, hq, hblock, hExitEven, hidentity⟩
+  have hsource : 2^v*(2*q+3) = 5^t*m+1 := by
+    have hfactor := oddTower_factor q v
+    have hP : 1 ≤ 5^t*m := by
+      have hp : 0 < 5^t*m :=
+        Nat.mul_pos (Nat.pow_pos (by decide)) hm
+      omega
+    rw [← hq] at hfactor
+    have hshift : (5^t*m-1)+2 = 5^t*m+1 := by omega
+    rw [hshift] at hfactor
+    exact hfactor.symm
+  have htargetEven : (5^t*m+1) % 2 = 0 := by omega
+  have hvpos : 0 < v := by
+    by_contra hv
+    have hv0 : v = 0 := by omega
+    simp [hv0] at hsource
+    omega
+  have hlin : 2*v+4 = (2*v-1)+5 := by omega
+  have hmul :
+      2^v*(2*v+4) = 2^v*(2*v-1)+5*2^v := by
+    calc
+      _ = 2^v*((2*v-1)+5) := by rw [hlin]
+      _ = 2^v*(2*v-1)+2^v*5 := by rw [Nat.mul_add]
+      _ = 2^v*(2*v-1)+5*2^v := by rw [Nat.mul_comm]
+  have hcomm :
+      5^t*m*(2^(v+1)+3) + (2^v*(2*v-1)+5*2^v) + 3 =
+        (5^t*m*(2^(v+1)+3)+2^v*(2*v-1)+3)+5*2^v := by
+    ac_rfl
+  rw [hmul, hcomm] at hidentity
+  have hclean := Nat.add_right_cancel hidentity
+  exact ⟨q, v, hq, hblock, hExitEven, hvpos, hclean⟩
+
 private theorem odd_block_exit_terminal_mod_five_eq
     (t m k v : Nat) (ht : 0 < t)
     (hidentity :
@@ -214,6 +261,7 @@ theorem odd_block_exit_terminal_mod20
   exact ⟨q, v, hq, hblock, hExitEven, htable⟩
 
 #print axioms BB6.Agent20.NeedleOddBlockExit.odd_block_exit_terminal_mod20
+#print axioms BB6.Agent20.NeedleOddBlockExit.odd_block_exit_terminal_factorization
 
 end BB6.Agent20.NeedleOddBlockExit
 
