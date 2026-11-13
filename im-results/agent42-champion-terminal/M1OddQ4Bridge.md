@@ -51,3 +51,6 @@ Agent 24 has since supplied the full parametric prefix and suffix:
 - `im-results/agent24-champion-time/TM63M1OddRootComposition.lean`
 
 The latter imports the M0/M2 root composition and extends it through the `(1,3)` odd increment. Its source audit remains dependent on fixing the upstream `M1EvenQ4Prefix.lean` failures; the M1 odd finite bridge itself has already passed its source-audit step.
+
+
+**Decomposition distinction:** Agent 24's full parametric prefix uses a 29-step `[-9,4]` frame, absorbing three additional state-4 moves, and reports a `32+12a` pre-Q4 cost. The `28+12a` cut above is a separate alternate cut at the original head after a distinct `3a-1` E-scan; it is only bounded replay evidence. Do not conflate these two cuts or substitute one cost for the other without a formal tape/cut identity.
