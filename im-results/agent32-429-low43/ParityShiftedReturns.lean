@@ -112,20 +112,20 @@ theorem junc07_349_to_junc0_408 :
   have step9 : runWithDelta (juncNormalizeTime 39 0) (junc 39 0 307) =
       some (junc 81 0 226, 81) := by
     simpa using juncNormalize_delta 39 0 307 (by omega)
-  have step1₀ : runWithDelta (juncNormalizeTime 81 0) (junc 81 0 226) =
+  have step10 : runWithDelta (juncNormalizeTime 81 0) (junc 81 0 226) =
       some (junc 165 0 61, 165) := by
     simpa using juncNormalize_delta 81 0 226 (by omega)
-  have step1₁ : runWithDelta (juncPosFullTime 30 0) (junc 165 0 61) =
+  have step11 : runWithDelta (juncPosFullTime 30 0) (junc 165 0 61) =
       some (junc 135 60 1, -60) := by
     simpa using juncPos_iter_full_delta 30 165 0 61 (by omega) (by omega)
-  have step1₂ := junc135_60_1_to_junc0_135_125
-  have step1₃ : runWithDelta (juncNormalizeTime 0 135) (junc 0 135 125) =
+  have step12 := junc135_60_1_to_junc0_135_125
+  have step13 : runWithDelta (juncNormalizeTime 0 135) (junc 0 135 125) =
       some (junc 138 0 122, 273) := by
     simpa using juncNormalize_delta 0 135 125 (by omega)
-  have step1₄ : runWithDelta (juncPosFullTime 60 0) (junc 138 0 122) =
+  have step14 : runWithDelta (juncPosFullTime 60 0) (junc 138 0 122) =
       some (junc 78 120 2, -120) := by
     simpa using juncPos_iter_full_delta 60 138 0 122 (by omega) (by omega)
-  have step1₅ := junc78_120_2_to_junc0_0_408
+  have step15 := junc78_120_2_to_junc0_0_408
 
   have chain2 := compose_runWithDelta step1 step2
   have chain3 := compose_runWithDelta chain2 step3
