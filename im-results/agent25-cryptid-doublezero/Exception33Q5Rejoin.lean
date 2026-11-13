@@ -83,7 +83,7 @@ theorem etriple_to_acode_input (u : Nat) :
         (List.replicate 7 true ++ (false :: List.replicate 6 true)) =
       false :: CryptidA.wordCode aCodeWord := by
     simp [packetThree, aCodeWord, CryptidA.wordCode,
-      CryptidA.wordCodeAux, List.append_assoc]
+      List.append_assoc]
   have hout : eThreeOutput u = init xs := by
     simp [eThreeOutput, xs, CryptidBoundary.init,
       hprefix, htail, eThreeK, aCodeK, List.append_assoc]
