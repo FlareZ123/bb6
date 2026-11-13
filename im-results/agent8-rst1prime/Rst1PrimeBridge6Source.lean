@@ -380,7 +380,7 @@ theorem rst1Prime_bridge30_window_after_finalRightSweep
       (h+9+3*(b:Int)+x) =
       decide (x ∈ bridge30Start.marked)
   rcases hcases with hneg3 | hneg2 | hneg1 | hzero | hone | htwo |
-      hthree | hfour | hf ive
+      hthree | hfour | hfive
   · subst x
     by_cases hb : b=0
     · subst b
