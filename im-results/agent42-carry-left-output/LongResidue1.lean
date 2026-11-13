@@ -336,10 +336,10 @@ theorem carryLongPrefix_r1_shifted (k : Nat) (T : Int → Bool) (h : Int)
   let Tpre : Int → Bool := fun x => T' (x-h)
   have hshift : shiftConfig h (⟨4,7,T'⟩ : Config) =
       ⟨4,h+7,Tpre⟩ := by
-    cases (⟨4,7,T'⟩ : Config) with
-    | mk state head tape =>
-      have hh : (7:Int)+h = h+7 := by omega
-      simp [shiftConfig,Tpre,hh]
+    change (⟨4,(7:Int)+h,fun x => T' (x-h)⟩ : Config) =
+      ⟨4,h+7,Tpre⟩
+    rw [show (7:Int)+h = h+7 by omega]
+    rfl
   have hrunShift :
       run tm2 (15+12*(4*k+1)) (shiftConfig h ⟨3,0,T⟩) =
         some ⟨4,h+7,Tpre⟩ := by
@@ -349,17 +349,28 @@ theorem carryLongPrefix_r1_shifted (k : Nat) (T : Int → Bool) (h : Int)
         shift_run h tm2 ⟨3,0,T⟩ (15+12*(4*k+1))
       _ = some (shiftConfig h ⟨4,7,T'⟩) := by simp [hrun]
       _ = some ⟨4,h+7,Tpre⟩ := by rw [hshift]
+  have htranslate (x : Int) : Tpre (h+x) = T' x := by
+    change T' ((h+x)-h) = T' x
+    rw [show (h+x)-h = x by omega]
   refine ⟨Tpre,hrunShift,?_,?_,?_,?_,?_,?_,?_,?_⟩
-  · simpa [Tpre] using h1
-  · simpa [Tpre] using h2
-  · simpa [Tpre] using h3
-  · simpa [Tpre] using h4
-  · simpa [Tpre] using h5
-  · simpa [Tpre] using h6
+  · rw [htranslate 1]
+    exact h1
+  · rw [htranslate 2]
+    exact h2
+  · rw [htranslate 3]
+    exact h3
+  · rw [htranslate 4]
+    exact h4
+  · rw [htranslate 5]
+    exact h5
+  · rw [htranslate 6]
+    exact h6
   · intro x hx
-    simpa [Tpre] using hout x hx
+    rw [htranslate x]
+    exact hout x hx
   · intro x hx
-    simpa [Tpre] using hleft x hx
+    rw [htranslate x]
+    exact hleft x hx
 
 #print axioms carryLongPrefix_r1_full
 #print axioms carryLongPrefix_r1_shifted
