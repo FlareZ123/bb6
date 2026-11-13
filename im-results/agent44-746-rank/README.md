@@ -96,7 +96,8 @@ the density for fixed m is positive and is asymptotic to
 Draft [PR #95](https://github.com/FlareZ123/bb6/pull/95) adds a
 complementary core-Lean selector for
 `Q_j(n)=8*signedZ(n,j)-9*(2^(n+2)+2*n+1)`. For every even j and
-sector s in {4,5}, it aims to prove the exact characterization
+sector s in {4,5}, the draft's main theorem states and proves the
+exact characterization
 
 ```
 3^(k+1) | Q_j(s+6*h)
