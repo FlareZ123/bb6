@@ -86,6 +86,27 @@ private theorem physical_run_add (m n : Nat) (a b c : Config)
   rw [BB6Bubble.run_add', h1]
   exact h2
 
+/-- Blank-root composition of the physical outer no-C/0 certificate. -/
+theorem blank_root_outer_no_czero
+    (n : Nat) (c : Config)
+    (hentry : BB6Coverage.run target429 n blank = some c)
+    (hrep : Represents rootOuterStart c) :
+    ∃ d : Config,
+      BB6Coverage.run target429 (n + rootOuterTime) blank = some d ∧
+      Represents rootOuterEnd d ∧
+      (∀ t : Nat, t ≤ rootOuterTime →
+        ∃ e : Config,
+          BB6Coverage.run target429 (n+t) blank = some e ∧
+          ¬(e.state.val = 2 ∧ e.tape e.head = false)) := by
+  obtain ⟨d, hraw, hrepD, hprefix⟩ :=
+    root_outer_no_czero_physical c hrep
+  refine ⟨d, ?_, hrepD, ?_⟩
+  · exact physical_run_add n rootOuterTime blank c d hentry hraw
+  · intro t ht
+    obtain ⟨e, he, hgood⟩ := hprefix t ht
+    refine ⟨e, ?_, hgood⟩
+    exact physical_run_add n t blank c e hentry he
+
 /-- An authentic blank-root entry into Junc(11,0,98) has a completely
     certified 4475-step continuation to Junc(0,0,136). The first 3398
     steps contain no C/0 at all; the final 1077 steps have exactly the
@@ -116,6 +137,7 @@ theorem blank_root_outer_low42_no_fatal
 #print axioms rootOuterTime_plus_low42_eq_4475
 #print axioms root_outer_safe_source
 #print axioms root_outer_no_czero_physical
+#print axioms blank_root_outer_no_czero
 #print axioms blank_root_outer_low42_no_fatal
 
 end BB429RootOuterLow42NoFatal
