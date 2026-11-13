@@ -33,6 +33,16 @@ These are direct substitutions into $L+M\le2^{N-M-3}$, not additional CI-verifie
 
 The formal candidate is [ShadowGraphConverse.lean](./ShadowGraphConverse.lean), with exact-width feeder corollaries `l0_bounded_shadow_word_has_source_of_width` and `l1_bounded_shadow_word_has_source_of_width`, plus simple linear-budget wrappers `l0_bounded_shadow_word_has_source` and `l1_bounded_shadow_word_has_source`.
 
+### Two-way finite-cone existence equivalence
+
+The existing source-to-shadow feeder maps require $m+2\le N$. The direct width condition forces $N-m\ge7$, so this forward bound is automatic whenever $m\le M$. Combining each forward map with the new converse gives, at every cost $m\le M$ under the corresponding feeder width condition:
+
+- L0: $(\exists z,\;\mathrm{ShadowReach}(L_0,z_0,m,z))$ iff $(\exists b,d,\;\mathrm{OddCone}(b_0,d_0,b,d,m)\land b\bmod4=0)$.
+- L1: the analogous equivalence for $(L_1,z_0,b_0,d_0)$.
+
+These are **existence equivalences**, not uniqueness or a bijection theorem. They say that within the finite width window the abstract graph has no missing source-cone costs and no spurious path costs. Lean candidates are l0_shadow_path_iff_source_cone_of_width and l1_shadow_path_iff_source_cone_of_width.
+
+
 ## Proof architecture
 
 Write $w=L+m-z$. The abstract graph has the inductive invariant
