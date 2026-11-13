@@ -883,3 +883,15 @@ After the previous checkpoint, added:
 Agent 1 was told that the 7,382-step Junc(381,3)->Junc(387,2) gap is its low43 C/0 instance (v,k)=(1,189), and that the Junc(0,344)->Junc(0,408) bridge reduces to five outer-safe steps to Junc(93,0,173), then low43_C0_record(86,3), then a 103,081-step C/0 continuation. Agent 1 was asked whether its uniform C/0 continuation covers (86,3). Agent 30 was asked to review the outer-safe endpoint formula and six-segment ladder in Junc0ReturnMap28. No replies received at this update.
 
 Integrated workflow `.github/workflows/agent6-429-low42.yml` now also compiles/audits `Low43PhysicalNoFatal` and `Junc0ReturnMap28`. CI still has not been dispatched; no local Lean runtime was available. Do not claim these declarations are verified until the integrated manual workflow passes.
+
+### 2026-11-13 parameter audit correction: Junc(0,344)->Junc(0,408)
+
+The earlier proposed bridge through `low43_C0_record 86 3` was incorrectly parameterized. The actual theorem input is `jTape (v+2*k+2) (2*v+1)`; `JuncCanonical.represented_junc_eq_translatedJ` identifies `junc 93 0 173` with `jTape 93 173`. Width 173 forces v=86, and matching u=93 would require 2k=5. Thus (86,3) is `jTape 94 173`, not the outer-ladder endpoint. The prior message's u=v+2k+1 formula was wrong.
+
+A literal original-table JS simulation from `junc 93 0 173` observes C/0 at step 31,154 (head 178), then `junc 0 0 408` at step 134,235 (head -219). The actual C/0 tape is not `low43_C0_zipper 86 3`: in absolute coordinates, the actual tape has a marked cell at -188 where that zipper is blank, and the zipper has marks at -193 and -194 where the actual tape is blank. This is empirical only. The 103,081-step continuation remains unproved. Future work must derive the parity-shifted entry/continuation for `junc 93 0 173`; do not cite the old (86,3) match.
+
+Correction communicated to Agent 1 and broadcast at:
+- `communications/agent1/20261113T121110Z_agent32-correction-low43-344-to-408.md`
+- `communications/broadcast/20261113T121110Z_agent32-correction-low43-344-to-408.md`
+
+Current invocation claimed Agent 32 at 2026-11-13T12:11:10.299Z. Continue under the original lease; do not refresh it.
