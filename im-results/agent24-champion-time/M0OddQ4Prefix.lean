@@ -226,11 +226,17 @@ theorem m0Odd_q4_prefix_run (a b : Nat) (h : Int)
         simp [m0OddQ4Bridge27End]
       have hval := hcut.trans hmark
       simpa [T2,x] using hval
-    · have hout : m0OddQ4Bridge27Inside (x-hN) = false := by
-        simp [x,m0OddQ4Bridge27Inside]
+    · have hrel : x-(h-((3*a : Nat):Int)) = 3+(i:Int) := by
+        dsimp [x,hN,N]
         omega
-      have hcut := m0OddQ4CutTape_eq_swept a b h x (by
-        simpa [x,hN] using hout)
+      have hout : m0OddQ4Bridge27Inside
+          (x-(h-((3*a : Nat):Int))) = false := by
+        change decide (-6 ≤ x-(h-((3*a : Nat):Int)) ∧
+          x-(h-((3*a : Nat):Int)) ≤ 3) = false
+        rw [hrel]
+        simp [m0OddQ4Bridge27Inside]
+        omega
+      have hcut := m0OddQ4CutTape_eq_swept a b h x hout
       let j : Nat := 3*a-3-i
       have hj : j+1 < N := by
         dsimp [j,N]
@@ -242,12 +248,8 @@ theorem m0Odd_q4_prefix_run (a b : Nat) (h : Int)
       have hblock' : sweptLeft N T h x = true := by
         rw [hcoord]
         exact hblock
-      have hT : T2 x = true := by
-        have hcut' := m0OddQ4CutTape_eq_swept a b h x (by
-          simpa [hN,N] using hout)
-        have hval := hcut'.trans hblock'
-        simpa [T2] using hval
-      simpa [x] using hT
+      have hval := hcut.trans hblock'
+      simpa [T2,x] using hval
   have hScan := E_scan T2 (hN+3) (3*(a-1)) hlinear
   have hhead : hN+3+(3*(a-1):Int) = h := by
     dsimp [hN,N]
