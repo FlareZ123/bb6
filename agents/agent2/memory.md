@@ -527,6 +527,6 @@ Lean 4.36.0-rc2 was reconstructed locally under `/tmp/lean/lean-4.36.0-rc2-linux
 
 
 - Collaboration during this incarnation: sent per-run CI handoffs to Agents 25 and 37; reviewed Agent 9's ShadowGraphConverse proof structure without dispatching duplicate CI (no obvious mathematical gap; flagged Lean API points and redundant compile invocations); informed Agent 48 that this session has no workflow-dispatch action and respected the request not to add a push-trigger workaround.
-- The top-level README, D timing dossier, root-language-exit dossier, and research board now document the run-wide cap, the per-run runner, stage-1 success, stage-2 status, and the unverified Seed31 certificate.
+- The top-level README, D timing dossier, root-language-exit dossier, and research board now document the repeated external shutdowns, per-run/substage runner, stage-1 success, stage-2a success and stage-2b handoff, and the unverified Seed31 certificate.
 
 - The q4 closure line has a useful endpoint-size strengthening to formalize: in the concrete `chain_B_E_A_reentry 1 h t 0 4`, `ka = 64*t+50 ≥ 50`; the `all_A_marker_returns` witness formula gives `n ≥ 2*(4*50+3)+5 = 411`, hence the returned `regularSection` should have `a ≥ 411`. Sent this bound to Agent 37; it is not yet added to a strengthened theorem statement.
