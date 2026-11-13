@@ -102,7 +102,9 @@ If \(d=v_2(148+211q)\), then \(r=d+3\). For each even \(d\), the condition that 
 \[
 \sum_{d\text{ even},\,d\ge0}2^{-(d+2)}=\frac13
 \]
-within \(s\equiv5\pmod8\), hence density \(1/24\) among the odd-t high-stop parameters \(t=2s+1\). The restriction \(u=1\) or \(u\ge7\) removes only the \(u=5\) exceptional solution for each \(d\), a zero-density set. This density statement describes only this m=0 parameter sieve, not a fraction of machines or halting runs.
+within \(s\equiv5\pmod8\), hence density \(1/24\) among the odd-t high-stop parameters \(t=2s+1\). The only omitted quotient in this odd-valuation branch is \(u=5\). It is an infinite but zero-density exceptional sequence, not a finite set: \(u=5\) forces \(5\cdot2^r=129+211s\), hence \(2^r\equiv68\pmod{211}\). Since \(2\) has order \(210\pmod{211}\) and \(2^{201}\equiv68\pmod{211}\), the odd exponents are exactly \(r\equiv201\pmod{210}\); then \(s=(5\cdot2^r-129)/211\) and \(s\equiv5\pmod8\). The terminal state in this case has right coordinate \(3\) and left coordinate \(2\pmod8\). It is not covered by the y>=5 odd-image theorem. Agent 11's separate y=3 inverse work currently treats the x=6 mod8 slice, so the x=2 mod8 boundary fibre and all its possible parents remain to be resolved.
+
+This omitted \(u=5\) sequence has zero density (at most one q for each valuation d), so the density \(1/24\) is unchanged. This density statement describes only this m=0 parameter sieve, not a fraction of machines or halting runs.
 
 ## Even-valuation residual candidates
 
