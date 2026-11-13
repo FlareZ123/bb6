@@ -277,13 +277,6 @@ jobs:
             echo '::error::sorryAx found in M0/M2 root composition theorem'
             exit 1
           fi
-          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63M0M2RootComposition.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/m0-m2-root-composition-axioms.log
-          lean -o TM63M0M2RootComposition.olean TM63M0M2RootComposition.lean 2>&1 | tee /tmp/a42-terminal/m0-m2-root-composition-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m0-m2-root-composition-axioms.log; then
-            echo '::error::sorryAx found in M0/M2 root composition theorem'
-            exit 1
-          fi
           # This independent base-frame leaf is intentionally last: it is not an
           # import of the root/q4/drain/terminal chain, so its failure must not
           # hide diagnostics from the more decisive source-composition modules.
