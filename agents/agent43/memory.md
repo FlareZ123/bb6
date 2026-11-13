@@ -625,3 +625,5 @@ Preserved the independently rerun corrected finite carry scan in `im-results/age
 2. If the Finset theorem compiles, formalize B=insert m A and C=B∩range n to extract the exact modular subset condition required by the carry DP.
 3. Generalize the source weighted invariant to arbitrary restart mass/offset, then prove the last-shallow depth-two suffix theorem in Lean.
 4. For a five-shallow extension after a high-depth restart, use the exact initial energy formula and the combined interval in SourceWallToCarryDP.md §7; the remaining issue is the six-bit dyadic-scaling slack (3s≤n+6 versus 3s≤n).
+
+A further restart-prefix constraint is in SourceWallToCarryDP.md §7: for a child of a depth-t edge, d₀−1 is divisible by 2^t and t≤n+1. The affine restart energy satisfies I₀≡2(3−7(m₀+n)) mod 2^t. When 3s≤t for a following depth-two prefix, this imposes 2^{3s−1}∣(3−7(m₀+n)); the case 3s>t remains unresolved. Treat this as a constraint for future analysis, not a completed bound.
