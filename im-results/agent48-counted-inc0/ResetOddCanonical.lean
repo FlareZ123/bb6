@@ -310,7 +310,7 @@ theorem resetBase_odd_canonical
       (s1Config L n m 0 0 0 h) =
       some (s1Config L (n-1) ((m+2)%3) (resetDelta m) 0 0 (h+5)) := by
   have hrun := resetBase_odd_frame L n m h hm hn hbound
-  have hv : v2 n = 0 := by
+  have hv : BB6ChampionArithmetic.v2 n = 0 := by
     exact v2_of_odd n (by omega)
   have hcost : 63+4*m = resetPrefixCost m n 0 0 := by
     simp [resetPrefixCost, hv]
