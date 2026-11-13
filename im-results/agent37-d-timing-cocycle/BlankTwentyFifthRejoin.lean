@@ -19,6 +19,8 @@ def t25 : Nat := (terminal1718.a-4)/9
 theorem terminal1718_certificate :
     DRegular.run 1718 seed25 = some ⟨9*t25+4,8,1⟩ ∧
       t25 % 27 = 16 := by
+  have hcanon : DRegular.Canon seed25 := by decide
+  rw [BB6.Agent2Fast64.fastRun_correct 1718 seed25 hcanon]
   decide
 
 theorem terminal1718_exact :
