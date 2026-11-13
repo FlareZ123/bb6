@@ -586,19 +586,12 @@ private theorem m1EvenQ4First4Frame_eq (T : Int → Bool) (h : Int)
         · simp [h2x,m1EvenQ4First4End]
         · simp [h3x,m1EvenQ4First4End]
         · simp [h4x,m1EvenQ4First4End]
-      have hmem' : x-h=3 ∨ x-h=2 ∨ x-h=1 ∨ x-h=0 ∨ x-h=4 := by
-        simpa [m1EvenQ4First4End] using hmem
-      have hshift :
-          (shiftConfig h (embed m1EvenQ4First4End)).tape x = true := by
-        simp [shiftConfig,embed,m1EvenQ4First4End,hmem']
-      simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4Inside,
-        m1EvenQ4First4End,hin,htrue,hshift,hmem']
-    · have hnot : x-h < 0 ∨ 4 < x-h := by
-        simp [m1EvenQ4First4Inside] at hin
-        omega
-      have hcond : ¬ (h ≤ x ∧ x-h ≤ 4) := by omega
-      simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4Inside,
-        m1EvenQ4First4End,hin,hcond]
+      rw [frameAt_tape]
+      simp [hin,hmem,htrue]
+    · have hfalse : m1EvenQ4First4Inside (x-h) = false := by
+        cases hv : m1EvenQ4First4Inside (x-h) <;> simp_all
+      rw [frameAt_tape]
+      simp [hfalse]
 
 /-- Four state-4-on-one moves are already consumed at the m=1,n=6 cut. -/
 theorem m1EvenQ4First4_at (T : Int → Bool) (h : Int)
