@@ -49,6 +49,10 @@ private def m2EvenSourceLeftSuffix : List Bool :=
 private def m2EvenQ4LeftSuffix : List Bool :=
   markerWord 1 ++ (d0 ++ (binDec 3 3 ++ lh))
 
+/-- The left-facing q4 word at the state-E cut. -/
+def m2EvenQ4LeftFacing (a : Nat) : List Bool :=
+  [true] ++ (d1pow a ++ m2EvenQ4LeftSuffix)
+
 /-- The finite bridge sees the even-n=4 boundary, not the odd-n boundary
 used by Agent 6's 26-step m=2 bridge. -/
 def m2EvenQ4Inside (x : Int) : Bool :=
