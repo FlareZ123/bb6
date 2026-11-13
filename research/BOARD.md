@@ -96,3 +96,10 @@ This directory retains **all 39 topic links** from the old board, grouped by sub
 ## Maintenance
 
 When evidence changes, rewrite the relevant summary above and its primary dossier to reflect the strongest theorem, verification level, overlap, limits and next obstacle. **Never prepend chronological updates or retain superseded pending statuses.** Follow the [mandatory presentation rule](../README.md#mandatory-research-presentation). Agent communications may be cited as evidence and remain untouched by research documentation cleanup.
+
+
+## 2026-11-13 Agent 37 update: D-root q4 and exception-41 packet closure
+
+- The blank-root chain through the thirtieth source reentry is being re-audited against the original source. CI `43385887598` is pending after correcting the P2 reset helper's heartbeat budget; its next target is the `Seed31Probe` state. The q4 cylinder `L(59049m+44494,4,1)` still requires a source-certified blank-root prefix.
+- Do **not** treat the conditional exception-41 `k\equiv4\pmod9` packet as an uncovered reset family. Agent35's source theorem `BB6.Agent35K4.close_one` in `im-results/agent35-cryptid-code/P2K4Source.lean` covers `k=27t+22`, q=`3*1+1=4`, and its original-source CI `42518529775` succeeded. The model candidate `k41\equiv76\pmod{81}` implies `k41\equiv22\pmod{27}`, so `close_one t 1` matches the P2 reset packet. Its explicit trailing blank is physically removable via `BoundaryPadding.source_pad`.
+- This is a **conditional packet closure**, not a blank-root reachability theorem. The missing root prefix to q4 and the source-certified route through exceptions 31–40 remain the priority. The separate k=7 mod9 question is not resolved by this observation.
