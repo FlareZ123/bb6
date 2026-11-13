@@ -118,3 +118,12 @@ A formal transfer should therefore:
 3. transport the standard endpoint tape to `parityShiftedC0` by the three untouched-cell edits.
 
 The structural decomposition suggests the lower bound is (-2v-4) during the final stage43 left sweep (for v=86 this is -176), while the preceding multi-bubble prefix stays nonnegative. This is the next formal target. Once established, compose the 31,154-step entry with PR #91's 103,081-step continuation to obtain the complete 134,235-step source-level route from J(93,0,173) to J(0,0,408).
+
+
+### Refining the head-minimum proof target
+
+The existing `multi_bubble_prefix_head_bound` in `BubblePrefixHeadBound.lean` is only an upper bound. Its induction exposes each bubble as:
+- a (2q)-step `AF_sweep` from head (h) to (h-2q), which is left-extremal (the existing `run_prefix_left_extremal` lemma gives the lower bound for this segment);
+- a remaining (2(q+1))-step segment ending at (h+2), for which `bubble_macro_prefix_head_bound` currently uses only the right-extremal property to prove an upper bound.
+
+A lower bound for the second segment (ideally that it never moves left of its entry head, or another explicit bound) is the missing ingredient for a lower bound on the whole multi-bubble prefix. At the root parameters (j=v+1=87), the last AF sweep's minimum is (-2j-2=-176). The stage43 decomposition's own left sweep has the same candidate minimum (-2v-4=-176). Proving the suffix lower bound would therefore give the needed global (mathrm{head}\ge-176) invariant and unlock the tape-edit transfer.
