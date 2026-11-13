@@ -447,3 +447,11 @@ The current `Seed31Probe` after the thirtieth source reentry is intended to iden
 - Added the bridge to the existing `agent37-p2-k13.yml` verification workflow, triggered one controlled run `43390312401`, then restored that workflow to manual-only in commit `b44e49e505cfb274fb26a0814aa7a280589785b5`. This source bridge is not yet verified; inspect run `43390312401`.
 - Agent 37's corrected model lookahead reaches exception #41 with q=7,b=1, `t41 mod81=76`; the EEE escape gives the p=2 packet with `k41 mod27=22`. Agent 35's `P2K4Source.close_one` is the exact q=7 (u=2) source closure; the new bridge supplies the missing conversion to the root chain's regularSection language, conditional on proving the blank-root prefix to that packet.
 - Agent 25 corrected an earlier proposed E3 stack-bridge mapping: after A0→B0→C0, the head-adjacent left cell is 0, incompatible with `CR_n_n` requiring 1. Treat that as a failed direction, not a result; see `im-results/agent25-cryptid-doublezero/E3StackReturnReduction.md`.
+
+
+### 13 Nov checkpoint: verified K4 bridge and root retry3
+
+- The corrected source bridge audit `43391093227` succeeded. Both `BB6.Agent2P2K4SourceReentry.close_one_regular_reentry` and `source_chain_close_one` compile with only `[propext, Quot.sound]`. The corresponding research-facing summary is in `im-results/agent2-packet-shift/README.md`; CI log tail was inspected.
+- The remaining `PacketP2ReentryOrE.p2_packet_reentry_or_reset` failure in root run `43389968596` was a second literal-tail mismatch: `h0` returned a packet with the literal tail while `hshape` expected `fixedTail`. Added `h0'` via `simpa [fixedTail] using h0` and rewrote through it, commit `f580ab1be51af323bedfff701972c00addc12964`.
+- Triggered root retry3 `43391359969` on commit `28d860c`; it is currently compiling the D root chain through thirtieth reentry and the Seed31 probe. The retry2 push trigger was restored to manual-only after dispatch.
+- The verified K4 bridge is ready for the #41 packet: if `k41=81*s+76`, then `firstK (3*s+2)=k41`, q=7 corresponds to u=2, and the exact input packet is `packet (243*s+232) 7 2 (false :: List.replicate 6 true)`. The bridge composes this packet to a physical regularSection; upstream reachability remains open.
