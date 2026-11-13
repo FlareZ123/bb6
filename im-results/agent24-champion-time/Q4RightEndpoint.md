@@ -12,6 +12,7 @@
   `d0pow b ++ d1pow 2 ++ (q4LeftFacing L n a).drop 1`.
 - `q4_suffix_run_target_of_prefix`: composes the prefix and suffix runs, and identifies both infinite tape exteriors plus state/head with the next original-source `s1Config`.
 - `oddRst2_q4_counted_source`: the resulting uniform counted source theorem.
+- `tm2_q4_root_source`: the authentic root specialization, stating the 332-step transition explicitly.
 
 The proposed theorem is, for odd `n < 2^L`:
 
