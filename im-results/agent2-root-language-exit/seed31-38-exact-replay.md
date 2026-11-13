@@ -45,7 +45,7 @@ The q=8 first return at exception 31 is covered by the already-existing EFirstAP
 
 For exception 33, the proposed composition is explicit: with t=3u and q=5, EAllDouble(q-1=4) produces a suffix 1^10 0 1^6; splitting it as 111 ++ 1^7 0 1^6 feeds the E-three source theorem. Its output tail packetThree ++ 1^7 0 1^6 is false :: wordCode([false,false,true,true,false,true,true]). The A-code theorem then gives the stated unary endpoint. This composition is a proof target, not yet a kernel-checked theorem.
 
-At exception 38, EZeroZTwoFollow returns a physical configuration with prefix 1^(64*t38+49) and suffix oppairs(6) ++ [false]. Treating this as L(64*t38+49,6,0) requires the original-source trailing-blank ObsEq/padding lemma. Do not silently erase the explicit final zero or extend the DRegular trace past this point until that transport is supplied.
+At exception 38, EZeroZTwoFollow returns init(xs ++ [false]), where xs = 1^(64*t38+47) ++ oppairs(6); the canonical DRegularSource.sourceSection L(64*t38+49,6,0) is init(xs). The exact transport is already available: apply BoundaryPadding.source_init_pad 0 1 xs and reverse it with BoundaryPadding.cfgEq_symm. Thus the final explicit zero is not a substantive blocker, but the ObsEq must still be composed explicitly in the Lean source chain; do not silently erase it or treat the downstream DRegular trace as source-authenticated before that composition is kernel-checked.
 
 ## Next decisive work
 
