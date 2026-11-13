@@ -71,8 +71,7 @@ theorem sectionResult_marker_snoc (n m a b : Nat) :
       nextMarker (sectionResult n m a b).marker := by
   induction n generalizing m a b with
   | zero =>
-      simp [sectionResult, nextMarker]
-      omega
+      simp [sectionResult, nextMarker] <;> omega
   | succ n ih =>
       let m' := nextMarker m
       let a' := nextExponent m a b
@@ -90,8 +89,7 @@ theorem sectionResult_exponent_snoc (n m a b : Nat) :
         (sectionResult n m a b).right := by
   induction n generalizing m a b with
   | zero =>
-      simp [sectionResult, nextExponent]
-      omega
+      simp [sectionResult, nextExponent] <;> omega
   | succ n ih =>
       let m' := nextMarker m
       let a' := nextExponent m a b
@@ -130,8 +128,7 @@ theorem sectionResult_cost_snoc (n m a b : Nat) :
           (sectionResult n m a b).right := by
   induction n generalizing m a b with
   | zero =>
-      simp [sectionResult, proposedIncrementCost, v2]
-      omega
+      simp [sectionResult, proposedIncrementCost, v2] <;> omega
   | succ n ih =>
       let m' := nextMarker m
       let a' := nextExponent m a b
