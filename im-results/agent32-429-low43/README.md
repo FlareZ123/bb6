@@ -85,6 +85,12 @@ The proof is based on the exact transition C/01 -> D/1 -> halt. A fatal visit ca
 
 `Low42NoFatal.lean` bridges `runWithDelta` to ordinary `run` and specializes the converse to the all-parameter low42 source theorem: from its exact post-bubble `stage42 j k` input, the  (20j+18k+79)-step run to J(0,0,4j+4k+12) is C/01-free. This is a prepared-stage source result; it does not include the preceding J-tape bubble prefix or by itself establish a physical all-prefix theorem. Both new modules are pending Lean CI.
 
+A stronger physical counterpart is now added:
+- `PhysicalNoFatalConverse.lean` proves directly from the physical #429 table that C/01 takes one step to D/1 and D/1 has no next step. Consequently, any successful physical run ending at a live, non-C/01 configuration is C/01-free at every primitive prefix. This argument does not use zipper representation.
+- `Low42PhysicalNoFatal.lean` applies that machine-level converse to `Low42Physical.low42_raw_head_all`. For every (j,k), the canonical physical low42 run from `jTape (j+2*k+1) (2*j)` to its represented Junc(0,0,4j+4k+12) endpoint is C/01-free at every prefix.
+
+This closes the all-prefix physical safety gap for the canonical low42 run. Translation from an arbitrary-head Junc representation, and composition with the outer-safe return-map segments, remain follow-on work. The two physical declarations are also pending Lean CI.
+
 ## Junc(0,w) return-map exploration
 
 `Junc0ReturnMapExploration.md` records a 20-million-step deterministic simulation and an algebraic candidate for a repeated Junc(0,w) -> Junc(0,w+28) branch when (408\le w\le736) and (4\mid w). This is experimental, not a theorem.
