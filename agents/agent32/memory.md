@@ -449,3 +449,42 @@ Future incarnation:
 3. Update the low43 README with CI evidence only after success.
 4. Compose the local J(21,11)→Junc(12,0,22) branch with the existing blank-root prefix if useful, then continue from the low-2 Junc(12,22) case. The root path still has further low-deficit cases; this branch alone does not settle #429.
 5. Keep all these items in `im-results/`. Exact BB(6) and the six-state/two-symbol upper bound remain unresolved.
+
+
+## 2026-11-13T03:06Z checkpoint: low43 source continuation and physical-lift repair
+
+Current incarnation run_id `agent32-gpt6-20261113T015926Z-429-low43-root-continuation`. Original lease is `2026-11-13T01:59:26.454Z`; do not refresh it. At the checkpoint, real runtime clock was about 03:06Z (elapsed about 67 minutes); the 70-minute release threshold is **2026-11-13T03:09:26.454Z**. After every further checkpoint, read this lease and the actual clock. If elapsed is below 70 minutes, continue; at/after 70 minutes, perform orderly release as the final repository mutation.
+
+### Verified source continuation
+
+- PR #78 branch: `agent32/low43-delta-orientation-20261113`.
+- Corrected `im-results/agent32-429-low43/Low43Continuation.lean`: the library projection theorem `runWithMax_toDelta` is oriented from the projected max-run to the delta-run, so the endpoint projection uses `.symm`. Also corrected right-associative append normal forms in the low43 C0 continuation.
+- CI run [43350701536](https://github.com/FlareZ123/bb6/actions/runs/43350701536) compiled the complete source continuation before failing later in unrelated `LowOddPhysical.lean`. Its log explicitly reports:
+  - `root_low43_C0_to_junc_max` and `root_low43_junc23_to_junc11_max` do not depend on any axioms.
+  - the composed source delta theorems depend only on standard `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx`.
+- The old broad low-odd workflow was incorrectly triggering on low43 changes and failed on unrelated low-odd source. Added `.github/workflows/agent32-429-low43-validation.yml`, which compiles the low43 source and physical dependency chain only; removed low43 from the old low-odd workflow's path trigger. This is a validation-scope correction, not a mathematical result.
+
+### Physical-lift repairs and current CI
+
+`Low43Physical.lean` had genuine compile failures that were not exposed by the over-broad workflow. Repairs made on PR #78 include:
+- explicit `Lean.Elab.Tactic.Omega` import and opens for `BB429HeadDisplacement` and `BB429DeltaPhysicalBridge`;
+- fixed the `stage43_left_char` proposition syntax;
+- aligned the source displacement argument with the actual Nat-to-Int cast;
+- reduced the concrete C0 zipper's state/current fields by definitional equalities;
+- corrected physical prefix-bound inequalities to use the exact displacement hypotheses;
+- normalized the stage configuration/tape in the multi-bubble prefix;
+- replaced unavailable `ring`/Mathlib-style tactics with explicit Nat multiplication/associativity calculations.
+The latest failure [43356424943](https://github.com/FlareZ123/bb6/actions/runs/43356424943) had reached only a redundant final `omega` after `rw [← Nat.mul_assoc]` had already closed the goal; this caused “No goals to be solved” and compiler-recovery `sorryAx`. Removed that redundant tactic in commit `3050a3c0f410b148bf1c052c0d1395651cf5dc08`. The focused rerun [43356643879](https://github.com/FlareZ123/bb6/actions/runs/43356643879) was in progress at this checkpoint. **Do not claim `Low43Physical.low43_C0_record` verified until this rerun succeeds and its axiom audit has no `sorryAx`.**
+
+### No-fatal guard and next proof
+
+Agent48's standalone NoFatalGuard PR #79 has merged. Reusable module: `im-results/agent48-429-safe/NoFatalGuard.lean`; it defines `fatalCZero`, `runNoFatal`, `runNoFatal_prefix`, and composition lemmas.
+
+A direct JS simulation of the source Junc(21,11) segment gives, after 1559 moves, Junc(11,62), head -41, maximum head 24, minimum -41. Its three C/0 events are at times 212, 1074, 1305, at heads 16,20,23; each has blank right neighbour. This is **simulation evidence only**. The next valuable formal task is a Lean theorem
+`runNoFatal 1559 (junc 21 0 11) = some (junc 11 0 62)` by `decide`, then transfer every prefix to the physical tape using `BB429PhysicalBridge.source_run_rep` and a proof that `junc 21 0 11` is represented by `{state:=A, head:=0, tape:=jTape 21 11}`. Compile NoFatalGuard before the new low43 nofatal module and include `im-results/agent48-429-safe` in LEAN_PATH.
+
+### Separate low-even r=32 simulation lead
+
+A JS simulation from Junc(45,58) reaches Junc(11,146) after 4407 steps, with final head -81 and maximum head +68. The path decomposes into 3192 steps to `midApos 17 54 4`, then 346 steps to Junc(16,58,0), then an 869-step suffix. C/0 events occur at absolute times 3664 and 4069 and both have blank right neighbours. This is a promising concrete instance of Agent18's low-even (r=4k) conjecture, but it is **not Lean-proved** and must not be described as a source theorem. If pursued, first prove the concrete runWithMax/runNoFatal route, then identify a parameter-uniform macro.
+
+All low43/low-even material remains in `im-results/`. Exact #429 status and BB(6) remain unresolved; no universal six-state upper bound or exact BB(6) value has been established.
