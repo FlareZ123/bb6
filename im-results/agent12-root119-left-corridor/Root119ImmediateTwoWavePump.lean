@@ -30,6 +30,7 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
       NoLeft4 true true false bout ∧
       bout.h = b.h-4 ∧
       (∀ x : Int, x ≤ b.h-4 → bout.tape x = b.tape x) ∧
+      (∀ x : Int, b.h+2*(n:Int)+4 ≤ x → bout.tape x = b.tape x) ∧
       leftAlternating k bout ∧
       (∀ j : Nat, j < 2*n+8 →
         bout.tape (bout.h+1+(j:Int)) = true) ∧
@@ -162,7 +163,8 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
     have hmod : (j+4)%2 = j%2 := by omega
     simpa [hmod] using hv
 
-  exact ⟨bout,hrun,hreach,hB,hNoLeft,hhead,hleftTape,hleftOut,hrunRight,hrightOut⟩
+  exact ⟨bout,hrun,hreach,hB,hNoLeft,hhead,hleftTape,htail,
+    hleftOut,hrunRight,hrightOut⟩
 
 /-- Total transition cost for k iterations of the two-wave pump. -/
 def twoWavePumpCost (k n : Nat) : Nat :=
@@ -192,6 +194,7 @@ theorem imm_two_wave_pump_iter (k n : Nat) (b : Conf)
       NoLeft4 true true false bout ∧
       bout.h = b.h-4*(k:Int) ∧
       (∀ x : Int, x ≤ b.h-4*(k:Int) → bout.tape x = b.tape x) ∧
+      (∀ x : Int, b.h+2*(n:Int)+4*k+1 ≤ x → bout.tape x = b.tape x) ∧
       (∀ j : Nat, j < 2*n+8*k →
         bout.tape (bout.h+1+(j:Int)) = true) ∧
       leftAlternating 0 bout ∧
@@ -200,9 +203,11 @@ theorem imm_two_wave_pump_iter (k n : Nat) (b : Conf)
   induction k with
   | zero =>
       intro n b hb hr hshield hleft hones hright
-      refine ⟨b, ?_, hr, hb, hshield, ?_, ?_, ?_, hleft, ?_⟩
+      refine ⟨b, ?_, hr, hb, hshield, ?_, ?_, ?_, ?_, hleft, ?_⟩
       · rfl
       · simp
+      · intro x hx
+        rfl
       · intro x hx
         rfl
       · simpa using hones
@@ -210,10 +215,10 @@ theorem imm_two_wave_pump_iter (k n : Nat) (b : Conf)
   | succ k ih =>
       intro n b hb hr hshield hleft hones hright
       obtain ⟨b1,hstepRun,hreach1,hB1,hshield1,hhead1,
-          hleftStep,hleft1,hones1,hright1⟩ :=
+          hleftStep,hrightTailStep,hleft1,hones1,hright1⟩ :=
         imm_two_wave_pump_step k n b hb hr hshield hleft hones hright
       obtain ⟨bout,hiterRun,hreach,hB,hshieldOut,hheadOut,
-          hleftOut,honesOut,hleftAltOut,hrightOut⟩ :=
+          hleftOut,hrightTailOut,honesOut,hleftAltOut,hrightOut⟩ :=
         ih (n+4) b1 hB1 hreach1 hshield1 hleft1 hones1 hright1
       have hcost := twoWavePumpCost_succ k n
       have hrun : run (twoWavePumpCost (k+1) n) b = some bout := by
@@ -234,6 +239,15 @@ theorem imm_two_wave_pump_iter (k n : Nat) (b : Conf)
         calc
           bout.tape x = b1.tape x := hleftOut x hx1
           _ = b.tape x := hleftStep x (by omega)
+      have hrightTailFinal : ∀ x : Int,
+          b.h+2*(n:Int)+4*(k+1)+1 ≤ x → bout.tape x = b.tape x := by
+        intro x hx
+        have hx1 : b1.h+2*((n+4):Int)+4*k+1 ≤ x := by
+          rw [hhead1]
+          omega
+        calc
+          bout.tape x = b1.tape x := hrightTailOut x hx1
+          _ = b.tape x := hrightTailStep x (by omega)
       have honesFinal : ∀ j : Nat, j < 2*n+8*(k+1) →
           bout.tape (bout.h+1+(j:Int)) = true := by
         intro j hj
@@ -243,7 +257,7 @@ theorem imm_two_wave_pump_iter (k n : Nat) (b : Conf)
         have hpar : (n+4)+4*k = n+4*(k+1) := by omega
         simpa [hpar] using hrightOut
       exact ⟨bout,hrun,hreach,hB,hshieldOut,hhead,hleftFinal,
-        honesFinal,hleftAltOut,hrightFinal⟩
+        hrightTailFinal,honesFinal,hleftAltOut,hrightFinal⟩
 
 #print axioms BB6Root119.imm_two_wave_pump_step
 #print axioms BB6Root119.imm_two_wave_pump_iter
