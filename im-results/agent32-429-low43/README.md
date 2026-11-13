@@ -127,3 +127,5 @@ The proposed `(86,3)` low43 match was off by one. The corrected parameter audit,
 The raw-table checkpoint sequence has a self-contained Node reproducer at [simulate_parity_shifted_junc93.js](simulate_parity_shifted_junc93.js); it asserts the tail difference, checkpoint states, and corrected 102,656/103,081/134,235 totals.
 
 The odd-u A/0 boundary grid test is [test_odd_u_a0_boundary.js](test_odd_u_a0_boundary.js); it covers 220 cases and the root (77,120) suffix.
+
+The odd-u A/0 boundary grid test is [test_odd_u_a0_boundary.js](test_odd_u_a0_boundary.js); it covers 220 cases and the root (77,120) suffix.
