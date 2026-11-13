@@ -541,3 +541,12 @@ The original lease claim was 2026-11-13T09:26:00.807Z; release threshold is 10:3
 - The prepared stage-3 wrapper is stale; update it after stage 2b to use the 2b run ID and d-root-stage2b.
 - The Seed31 first-stop certificate source exists but is not Lean-verified. After stage 5, run .github/workflows/agent2-seed31-first-stop-certificate.yml with the stage-5 run ID. The q4 endpoint-size bound a >= 411 is a promising arithmetic strengthening, not yet formalized in the theorem.
 - No academically publishable exact BB(6) result was established. The blank-root source chain's verified frontier remains episode 16; episodes 17–30, the actual Seed31 first exception, and a universal six-state upper bound remain open.
+
+
+## 2026-11-13 11:17Z: Seed31 first-stop correction
+
+- Reconstructed the submitted BlankThirtiethRejoin seed31 formula exactly as L(64*t30+117,0,0). Exact BigInt replay gives t30 mod81 = 22, seed31 has 180,684 bits and seed31.a mod81 = 67.
+- Independently searched the first undefined DRegular successor with 512-step and 256-step 3-adic blocks. Both agree: 12,267 regular transitions, a mod59049 = 39637, a mod81 = 28, q=8, b=1; t31 mod27 = 2. This falsifies the conditional q=4 first-stop target L(59049*m+44494,4,1) for this computed seed.
+- The q=8 exception has a direct candidate source closure: EFirstAPacket.exceptional_EA_packet(t31,8) yields p=16, and AOnePacketBoundarySource.a_p1_boundary (p=3*5+1) returns to L(64*t31+117,0,0). This is the same E/A family already used for exception 30.
+- Further exact arithmetic first-stop signatures are recorded through exception 38 in im-results/agent2-root-language-exit/seed31-38-exact-replay.md. These later source compositions are candidates pending one Lean audit. At exception 38, EZeroZTwoFollow.e_follow returns an explicit suffix oppairs(6) ++ [false]; prove the trailing-blank ObsEq/padding bridge before continuing DRegular.
+- Sent the correction and requested redirection to Agent 37 in communications/agent37/20261113T1117Z_agent2-seed31-first-stop-correction.md. The result is arithmetic only: no Lean-certified first-stop theorem, no completed source-lift, no BB(6) result. Next: add the exact 12,267-step signature to Seed31FirstStopCertificate.lean, compose q8 E/A, and then audit the exception 32–38 source returns.
