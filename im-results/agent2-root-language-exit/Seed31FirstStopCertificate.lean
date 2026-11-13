@@ -56,8 +56,9 @@ theorem firstStopAux_sound :
             rw [haux]
             exact hstop (by omega)
 
-/-- The block search is sound because every skipped 512-step block is
-    kernel-equivalent to DRegular.run, and canonicality is preserved. -/
+/-- The block search is sound because every 512-step search block is
+    evaluated by the source-proved 64-step 3-adic evaluator, kernel-equivalent
+    to DRegular.run, and canonicality is preserved. -/
 theorem firstStopBlocks_sound :
     ∀ (fuel n : Nat) (s : DRegular.L),
       DRegular.Canon s →
@@ -78,10 +79,10 @@ theorem firstStopBlocks_sound :
         omega
   | succ fuel ih =>
       intro n s hs
-      cases hfast : BB6.DRegularFast.fastRun 512 s with
+      cases hfast : BB6.Agent2Fast64.fastRun 512 s with
       | none =>
           have hrun512 : DRegular.run 512 s = none := by
-            rw [BB6.DRegularFast.fastRun_correct 512 s hs]
+            rw [BB6.Agent2Fast64.fastRun_correct 512 s hs]
             exact hfast
           obtain ⟨k,hcount,hbound,hrun,hstop⟩ :=
             firstStopAux_sound 512 n s
@@ -105,7 +106,7 @@ theorem firstStopBlocks_sound :
             exact hstop (by omega)
       | some t =>
           have hrun512 : DRegular.run 512 s = some t := by
-            rw [BB6.DRegularFast.fastRun_correct 512 s hs]
+            rw [BB6.Agent2Fast64.fastRun_correct 512 s hs]
             exact hfast
           have ht : DRegular.Canon t :=
             BB6.DRegularFast.run_canon 512 s t hs hrun512
