@@ -42,6 +42,50 @@ In particular, folding the terminal term into the sum gives
 
 The first DP uses only this necessary modular condition. The second DP uses the full equality (W).
 
+### Derivation from the unchanged-source inverse relation
+
+The source state is the original counted inverse state \((b,d,m,z)\) of Agent 28's [OneResetCount.lean](../agent28-p1-word-automaton/OneResetCount.lean). The unchanged-source inverse characterization is [inverseAt_iff_power_mass](../agent1-p1-quarter/InverseIff.lean). For fixed \(n\), put \(P=2^n\).
+
+The source mass identity
+
+\[
+b+d+2m+2n+13=14P
+\]
+
+holds at the root and is preserved by every CountCone parent step. Indeed, if an inverse step of depth \(t\) returns \((k,c)\), its output is
+\((b',d',m')=(2k-4,c+4,m+t+1)\). The second inverseAt equation, using the source guard \(c\bmod2=1\), gives
+\(2k+c+2t+2=b+d\), which makes the mass expression unchanged.
+
+The first inverseAt equation is
+\[
+d+b/2+3=2^t(c+3).
+\]
+Combining it with the mass identity yields
+\[
+2^{t+1}(c+3)=d+14P-2(m+n+6)+5.
+\]
+With \(e=t+1\), \(s=m\), \(x=d-1\), and \(x'=d'-1=c+3\), this is exactly
+\[
+x=2^e x'-14P+2s+2n+6.
+\]
+
+For a path with successive costs \(e_j\) and cumulative starts
+\(s_0=0,\ s_{j+1}=s_j+e_j\), multiply the recurrence at step \(j\) by \(2^{s_j}\) and sum. The \(x_j\)-terms telescope, giving
+\[
+2=2^m x_k-14PS+2(n+3)S+2T,
+\]
+because the root has \(d_0=3\), hence \(x_0=2\). At the shifted wall,
+\(b+4m+4n+20=12P\), the mass identity gives
+\(d_k=2P+2m+2n+7\), hence \(x_k=2P+2m+2n+6\). Substitution and division by two gives (W). Thus (W) follows from the actual unchanged-source CountCone transitions and the shifted-wall endpoint equation; it is not a simulator extrapolation.
+
+### Why the carry recurrences are exhaustive
+
+At bit \(j\), suppose the carry after the lower \(j\) bits is \(c\), and choose the next subset bit \(x_j\in\{0,1\}\). If the required target bit is \(\epsilon_j\), the next carry exists exactly when
+\(c+x_jC_j\equiv\epsilon_j\pmod2\), and is then
+\((c+x_jC_j-\epsilon_j)/2\). Induction on the processed bit count shows that the DP state set is exactly the set of carries arising from all allowed subset choices. The forced initial bit \(x_0=1\) enforces \(0\in A\).
+
+For the modular phase, \(\epsilon_0=1\) and \(\epsilon_j=0\) for \(j>0\). The extra gap-state coordinate records the distance to the previous selected bit, capped at 2; the short-gap counter increments exactly for gaps 1 or 2. Merging equal (carry, gap-state) pairs while retaining the minimum counter cannot remove a future transition, since all future transitions depend only on those two coordinates. For the full-wall phase, every target bit is 1 because the right side is a multiple of \(2^m\) minus 1. The terminal carry is therefore exactly \(P+m+n+2\). Empty state sets stay empty under every later transition.
+
 ## Phase 1: exhaustive modular scan, n=14..10000
 
 Let \(x_s=1\) iff \(s\) belongs to the truncated cumulative-cost set \(A_n\subseteq\{0,\ldots,n-1\}\). It contains \(0\), and (M) implies
