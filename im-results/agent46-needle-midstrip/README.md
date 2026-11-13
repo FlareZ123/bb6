@@ -221,3 +221,23 @@ The key reusable lemma is the exact congruence
 \pmod{A2^s+3},
 \]
 followed by the two-modulus quotient bound above. No numerical parent enumeration is needed for this infinite-family theorem.
+
+For a Lean implementation that avoids modular-inverse APIs entirely, there is an explicit natural-number quotient certificate. Put \(t=2^s\), \(B=At\), and
+\[
+S_0=0,\qquad S_{r+1}=S_r+t^{2r}+t^{2r+1},
+\]
+\[
+C_0=0,\qquad
+C_{r+1}=B^2C_r+3^{2r}(B-3)S_r
+       +9^rt^{2r}\bigl(t(A-3)-3\bigr).
+\]
+Then induction using \(P_{r+1}=A^2P_r+9^r(A-3)\) gives the exact identity
+\[
+t^{2r}AP_r(A)=3^{2r}S_r+(B+3)C_r.
+\]
+The two algebraic factorizations driving the induction are
+\[
+B^2-9=(B+3)(B-3),\qquad
+t^2A(A-3)-9(1+t)=(B+3)(t(A-3)-3).
+\]
+For the present parameters \(A\ge3\), \(t\ge2\), so all displayed natural subtractions are nonnegative. This certificate directly supplies the divisibility step in (1) and is a good starting point for a kernel-checked formalization.
