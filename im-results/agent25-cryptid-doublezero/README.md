@@ -81,20 +81,27 @@ The five audited declarations (`input_obs_eq`, the A/B/E return theorems, and `q
 **Root integration:** Agent2 has already composed the A-residue theorem into `BlankThirtySecondRejoin.lean` for the arithmetic candidate `L(9*t32+4,1,1)` (the candidate's preceding root first-stop still needs its own source certificate). The E-residue theorem is ready to close the corresponding `L(9t+10,1,1)` shape when the exception-38 root prefix is certified.
 
 
-## 2026-11-13: exception33 q=5 prepared-section return (repaired draft, pending CI)
+## 2026-11-13: exception33 q=5 prepared-section return — source-certified
 
-The corrected parameterization is `a=27u+7`, equivalently `a=9t+7` with `t=3u`. The source composition is:
+The corrected parameterization is `a=27u+7`, equivalently `a=9t+7` with `t=3u`. The exact prepared-section composition is:
 
 ```text
 L(27u+7,5,1)
   -- EAllDouble(q=4, k=9u+1) -->
-eAllOutput(u) = eThreeInput(u)  (exact configuration equality)
-  -- E-three(s=24u+3) -->
-eThreeOutput(u) ≈ aCodeInput(u)  (source ObsEq; packetThree tail)
-  -- A-code(r=64u+10, wordInc=19) -->
+eAllOutput(u)
+  -- E-three(k=24u+3) -->
+eThreeOutput(u)
+  -- A-code(k=64u+10, word=[0,0,1,1,0,1,1]) -->
 L(512u+129,0,0).
 ```
 
-The source theorem is in [Exception33Q5Rejoin.lean](Exception33Q5Rejoin.lean). Its earlier CI attempt [43423371254](https://github.com/FlareZ123/bb6/actions/runs/43423371254) failed in proof engineering, not in the machine trajectory: the broad source-section simp hit a heartbeat limit, the E-three/A-code prefix arithmetic was not unfolded before `omega`, the finite tail identity was not discharged, the A-code output was not unfolded before its length rewrite, and an equality was passed where `source_congr` requires `ObsEq`. Agent 2 repaired these proof steps in commit `452f3f7` by separating the EAllDouble input normalization, using `decide` for the finite tail identity, exposing the arithmetic definitions, unfolding `aCodeOutput`, and converting the intermediate equality to `ObsEq`.
+The source theorem is `Exception33Q5Rejoin.exception33_q5_rejoin`. Its five audited declarations — `eall_source_return`, `eall_to_etriple_input`, `etriple_to_acode_input`, `acode_unary_endpoint`, and `exception33_q5_rejoin` — have been compiled locally with Lean 4.36.0-rc2 against the exact `d-root-stage1` compiled dependency artifact from CI run [43402524711](https://github.com/FlareZ123/bb6/actions/runs/43402524711), whose source snapshot is `2da159d86fa86d813bdfbc54e38e3ec9c75b6e69`. Every final axiom report is exactly `[propext, Quot.sound]`; there is no `sorryAx` or `native_decide`. The existing manual E3 source-bridge workflow contains this module, but a fresh GitHub CI run of the corrected version is not yet recorded.
 
-**The repaired file has not yet passed a fresh Lean audit.** The old failed run and its `sorryAx` output do not certify the repaired version. The existing manual-only [E3 source-bridge workflow](../../.github/workflows/agent25-e3-source-bridge.yml) compiles this leaf and applies the axiom gate. Agent 2's [BlankThirtyThirdRejoin.lean](../agent2-root-language-exit/BlankThirtyThirdRejoin.lean) additionally composes this prepared-section return with the exact 9,276-step regular segment from seed33; that root integration is also pending CI and remains conditional on the earlier blank-root prefix.
+Two substantive proof corrections were necessary:
+
+1. The authentic DRegular source section is the unpadded input of `all_e_double_implicit_blank`. It is not configuration-equal to `Agent32EAll.start`, which appends two explicit trailing zero cells. The proof now matches the implicit-blank theorem's actual input instead of asserting false exact equality.
+2. The A-code prefix duration is exactly `12*k*k + 41*k + 32`, as stated by the imported original-source `Agent35.full_A_code` theorem. The previous `49*k+64` expression overcounted by `8*k+32`. The corrected duration is used in the composed runtime.
+
+The E-three/A-code seam is handled with the explicit two leading cells in `init`, the exact packet identity, and a one-cell far-right blank `ObsEq` padding. The A-code word has `wordInc=19`, so the exact unary endpoint is `512u+129`.
+
+**Scope and provenance.** This is an all-`u), original-source, prepared-section return theorem. It does not establish that the blank-root orbit reaches `L(27u+7,5,1)`. Agent 2's `BlankThirtyThirdRejoin.lean` composes it with the 9,276-step arithmetic segment from seed33, but that root composition remains pending its own kernel audit and depends on source certification of the upstream episodes 17–30 / Seed31–32 chain. No exact BB(6) value, global nonhalting proof, or universal upper bound follows. Retain this dossier under `im-results/`.
