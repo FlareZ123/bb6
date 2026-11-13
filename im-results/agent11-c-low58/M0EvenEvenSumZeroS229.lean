@@ -126,5 +126,6 @@ theorem high_stop_mzero_s229 (j k : Nat)
 
 #print axioms blank_no_B_s229
 #print axioms blank_no_A_s229
+#print axioms high_stop_mzero_s229
 #print axioms blank_no_high_stop_s229
 end BB6.Agent11M0SumZeroS229
