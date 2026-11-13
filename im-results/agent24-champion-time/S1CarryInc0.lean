@@ -7,6 +7,20 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent24ChampionTime
 
+/-- Extensionality for the repository's infinite-tape configuration.
+The base structure intentionally has no generated Config.ext theorem. -/
+private theorem config_ext_by_fields (c d : Config)
+    (hstate : c.state = d.state) (hhead : c.head = d.head)
+    (htape : c.tape = d.tape) : c = d := by
+  cases c with
+  | mk cs ch ct =>
+    cases d with
+    | mk ds dh dt =>
+      cases hstate
+      cases hhead
+      cases htape
+      rfl
+
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent3CarryLeftOutput
@@ -126,12 +140,13 @@ theorem s1Config_counted_decrement_of_shifted_prefix
   rcases hprefix with
     ⟨Tpre,hrun,h1,h2,h3,h4,h5,h6,hpreserve,hleft⟩
   have hstart : shiftConfig h ⟨3,0,T⟩ = c0 := by
-    ext
-    · simp [shiftConfig,c0]
-    · simp [shiftConfig,c0]
+    apply config_ext_by_fields
+    · simp [shiftConfig,c0,s1Config]
+    · simp [shiftConfig,c0,s1Config]
     · funext x
-      simp [shiftConfig,T]
-      omega
+      change T (x-h) = c0.tape x
+      dsimp [T]
+      rw [show h + (x-h) = x by omega]
   let P : Int → Bool := fun x => Tpre (h+x)
   have hP1 : P 1 = true := by simpa [P] using h1
   have hP2 : P 2 = true := by simpa [P] using h2
@@ -201,12 +216,13 @@ theorem s1Config_counted_decrement_of_prefix
     ⟨T',hprun,h1,h2,h3,h4,h5,h6,hpreserve,hleft⟩
   let Tpre : Int → Bool := fun x => T' (x-h)
   have hstart : shiftConfig h ⟨3,0,T⟩ = c0 := by
-    ext
-    · simp [shiftConfig,c0]
-    · simp [shiftConfig,c0]
+    apply config_ext_by_fields
+    · simp [shiftConfig,c0,s1Config]
+    · simp [shiftConfig,c0,s1Config]
     · funext x
-      simp [shiftConfig,T]
-      omega
+      change T (x-h) = c0.tape x
+      dsimp [T]
+      rw [show h + (x-h) = x by omega]
   have hshift := shift_run h tm2 ⟨3,0,T⟩ (15+12*r)
   rw [hprun] at hshift
   simp only [Option.map] at hshift
