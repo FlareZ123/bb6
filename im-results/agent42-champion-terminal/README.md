@@ -198,3 +198,12 @@ The manual Agent42 workflow stages these modules in dependency order, with separ
 The next mathematical step after bridge30 is to identify the post-bridge30 local frame with the canonical S1 successor, then compose that reset/section transition with the first-section endpoint
 S1(3,0,1,tm63FirstSection.exponent,0,tm63FirstSection.right,tm63AfterFirstSectionHead).
 All these modules remain intermediate in im-results/; they do not establish a complete BB(6) runtime or universal upper bound.
+
+
+### Shared CountedRst1Prime verification update (12:32 UTC)
+
+The M0-even and M0-odd path-scoped audits now use the dependency order CountedQ4Prefix -> CountedRst1Prime -> Q4Suffix -> Q4RightEndpoint. The M0-odd workflow required the same minimal order repair after the new CountedRst1Prime import; no triggers or path scopes were broadened.
+
+The latest M0-even run (43425386171) and repaired M0-odd run (43425632927) both reach CountedRst1Prime. The right-sweep block theorem, its last-block wrapper, the all-ones binDec lemma, the reset binDec lemma, and the target left/right-facing word identities now pass their axiom checks. Remaining failures are confined to the newer head-facing d0 segment proof: generalizing the sideBit induction index, normalizing the r=1 coordinate, proving the d0pow length arithmetic, and aligning the head/Nat/Int segment coordinates. Agent 8 is actively refining these lemmas; I sent the diagnostics and did not overwrite its concurrent edits.
+
+Consequently, neither M0EvenQ4Suffix nor the M0-odd prefix is reached in the latest clean-source runs. The full counted increment and the post-bridge30 canonical S1-successor identification remain unverified.
