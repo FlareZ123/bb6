@@ -25,11 +25,30 @@ open BB6Coverage.Agent42RootAttainable
 open BB6ChampionArithmetic
 
 /-- State parameters after the newly proved m=1,n=3 odd increment. -/
+private theorem tm63NextExponent_one_eq (a b : Nat) :
+    nextExponent 1 a b = a+b+2 := by
+  rfl
+
+private theorem tm63NextExponent_two_eq (a b : Nat) :
+    nextExponent 2 a b = a+b+2 := by
+  rfl
+
+private theorem tm63NextRight_eq (b : Nat) :
+    nextRight b = 2^b-1 := by
+  rfl
+
+private theorem tm63SectionResult_split_m1_odd (a b : Nat) :
+    (sectionResult 3 1 a b).cost =
+      proposedIncrementCost 1 3 a b +
+        (sectionResult 2 0 (nextExponent 1 a b) (nextRight b)).cost := by
+  simp [sectionResult,nextMarker,nextExponent]
+  omega
+
 def tm63AfterM1OddA : Nat :=
-  tm63AfterM2EvenA + tm63AfterM2EvenB + 2
+  nextExponent 1 tm63AfterM2EvenA tm63AfterM2EvenB
 
 def tm63AfterM1OddB : Nat :=
-  2^tm63AfterM2EvenB - 1
+  nextRight tm63AfterM2EvenB
 
 def tm63AfterM1OddHead : Int :=
   tm63AfterM2EvenHead + 5 + 3*tm63AfterM2EvenB
@@ -50,8 +69,7 @@ def tm63AfterM1OddSteps : Nat :=
 
 private theorem tm63_after_m1_odd_positivity :
     0 < tm63AfterM2EvenA := by
-  dsimp [tm63AfterM2EvenA,tm63AfterM0OddA,tm63AfterM1EvenA,
-    tm63AfterM1EvenB]
+  rw [tm63AfterM2EvenA,tm63NextExponent_two_eq]
   omega
 
 /-- The arithmetic residual after M2-even splits into the proved m=1,n=3
@@ -60,15 +78,12 @@ theorem tm63AfterM2EvenSteps_split_m1_odd :
     tm63AfterM2EvenSteps =
       proposedIncrementCost 1 3 tm63AfterM2EvenA tm63AfterM2EvenB +
         tm63AfterM1OddSteps := by
-  have hsection :
-      (sectionResult 3 1 tm63AfterM2EvenA tm63AfterM2EvenB).cost =
-        proposedIncrementCost 1 3 tm63AfterM2EvenA tm63AfterM2EvenB +
-          (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).cost := by
-    simp [sectionResult,nextMarker,nextExponent,nextRight,
-      tm63AfterM1OddA,tm63AfterM1OddB]
-  unfold tm63AfterM2EvenSteps tm63AfterM1OddSteps
+  have hsection := tm63SectionResult_split_m1_odd
+    tm63AfterM2EvenA tm63AfterM2EvenB
+  simp only [tm63AfterM2EvenSteps,tm63AfterM1OddSteps,
+    tm63AfterM1OddA,tm63AfterM1OddB,
+    tm63AfterM2EvenA,tm63AfterM2EvenB]
   rw [hsection]
-  omega
 
 /-- Authentic blank-root source run through the four counted increments,
 ending at the m=1,n=3 odd reset's canonical successor. -/
@@ -79,8 +94,8 @@ theorem tm63_blank_reaches_after_m1_odd :
   unfold tm63AfterM1OddMoves
   rw [run_add,tm63_blank_reaches_after_m2_even]
   simp only [Option.bind_some]
-  simpa [tm63AfterM1OddA,tm63AfterM1OddB,tm63AfterM1OddHead] using
-    m1Odd_q4_counted_increment_source
+  simpa only [tm63AfterM1OddA,tm63AfterM1OddB,tm63AfterM1OddHead] using
+    m1Odd_q4_counted_increment_source_symbolic
       tm63AfterM2EvenA tm63AfterM2EvenB tm63AfterM2EvenHead
       tm63_after_m1_odd_positivity
 
@@ -107,11 +122,11 @@ theorem tm63_attainable_after_m1_odd_q4
           tm63AfterM2EvenHead) =
         some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) := by
     rw [tm63AfterM2EvenSteps_split_m1_odd,run_add]
-    rw [m1Odd_q4_counted_increment_source
+    rw [m1Odd_q4_counted_increment_source_symbolic
       tm63AfterM2EvenA tm63AfterM2EvenB tm63AfterM2EvenHead
       tm63_after_m1_odd_positivity]
     simp only [Option.bind_some]
-    simpa [tm63AfterM1OddA,tm63AfterM1OddB,tm63AfterM1OddHead] using hstage
+    simpa only [tm63AfterM1OddA,tm63AfterM1OddB,tm63AfterM1OddHead] using hstage
   exact tm63_attainable_after_m2_even_q4 h hstageAfterM2 hfinal
 
 #print axioms tm63AfterM2EvenSteps_split_m1_odd
