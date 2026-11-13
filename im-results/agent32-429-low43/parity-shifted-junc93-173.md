@@ -127,3 +127,15 @@ The existing `multi_bubble_prefix_head_bound` in `BubblePrefixHeadBound.lean` is
 - a remaining (2(q+1))-step segment ending at (h+2), for which `bubble_macro_prefix_head_bound` currently uses only the right-extremal property to prove an upper bound.
 
 A lower bound for the second segment (ideally that it never moves left of its entry head, or another explicit bound) is the missing ingredient for a lower bound on the whole multi-bubble prefix. At the root parameters (j=v+1=87), the last AF sweep's minimum is (-2j-2=-176). The stage43 decomposition's own left sweep has the same candidate minimum (-2v-4=-176). Proving the suffix lower bound would therefore give the needed global (mathrm{head}\ge-176) invariant and unlock the tape-edit transfer.
+
+
+## Lean validation of the continuation
+
+Draft PR #91's targeted CI run 43428492924 succeeded on head `137905f`. The workflow compiled `ParityShiftedReturns.lean` and audited the five composed theorems:
+- `junc15_172_1_to_junc0_15_349`
+- `junc135_60_1_to_junc0_135_125`
+- `junc78_120_2_to_junc0_0_408`
+- `junc07_349_to_junc0_408`
+- `parityShiftedC0_to_junc0_408`
+
+Each `#print axioms` report is `[propext, Quot.sound]`; none contains `sorryAx`. Thus the concrete 103,081-step continuation from the shifted C/0 zipper to J(0,0,408) is Lean-verified. The 31,154-step entry from J(93,0,173) to that zipper is still open, so the complete 134,235-step route is not yet proved.
