@@ -377,7 +377,7 @@ theorem m1Even_q4_reset_prefix_source (a b : Nat) (h : Int) :
         sideBit (s0RightFacing 0) i := by
     simpa [U,T1,T2,g] using
       q4_suffix_right_word T h b hshape8 htail
-  have hframe := m1Even_reset_prefix_frame a b h
+  have hframe := m1Even_reset_prefix_frame a b h ha
   have hframe' :
       run tm2 (79+12*a+3*b) (s1Config 3 6 1 a 0 b h) = some U := by
     simpa [U,T1,T2,g] using hframe
