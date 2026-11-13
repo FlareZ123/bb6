@@ -61,8 +61,8 @@ const g3 = mod(
     - 2n * (n - 9n) - 5n,
   p3(6)
 );
-if (g3 % p3(4) !== 0n) {
-  throw new Error("G3 is not divisible by 3^4");
+if (g3 % p3(5) !== 0n || g3 % p3(6) === 0n) {
+  throw new Error("G3 does not have exact 3-adic valuation 5");
 }
 const d4 = g3 / 27n;
 
@@ -138,7 +138,7 @@ const output = {
   G2mod3pow7: g2.toString(),
   v3G2: 1,
   G3mod3pow6: g3.toString(),
-  v3G3: "at least 4",
+  v3G3: 5,
   G4mod3pow3: g4.toString(),
   v3G4: 2,
   G5mod3: g5mod3.toString(),
