@@ -1,7 +1,11 @@
-name: Agent 32 #429 raw F-entry predecessor source proof (manual)
+name: Agent 32 #429 raw-parent and parity-shifted continuation source proof
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/agent32-429-raw-parent.yml'
+      - 'im-results/agent32-429-low43/ParityShiftedReturns.lean'
 
 permissions:
   contents: read
