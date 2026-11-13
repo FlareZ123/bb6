@@ -195,8 +195,6 @@ theorem junc0_return_map_28
     (46692+nLow) c d htotal hfreeD hliveD
   exact ⟨d, htotal, hrepD', by simpa [nLow] using hprefix⟩
 
-#print axioms outer_segment_physical
-#print axioms outer_ladder_physical
 #print axioms junc0_return_map_28
 
 end BB429Junc0ReturnMap28
