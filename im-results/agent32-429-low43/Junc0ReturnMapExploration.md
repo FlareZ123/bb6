@@ -58,12 +58,7 @@ The canonical low42 physical result is now paired with a machine-level safety co
 
 These are Lean proof candidates pending the integrated manual workflow. They close the all-prefix C/01 gap for the canonical low42 physical run without lifting each prefix through the zipper.
 
-The remaining arbitrary-head translation ingredients already exist:
-- `JuncCanonical.represented_junc_eq_translatedJ` identifies a physical configuration representing Junc(u,0,w) with the corresponding translated canonical J configuration;
-- `JChartTwo.translatedJ_eq_shift` identifies that canonical translation with `RootShift.shiftConfig`;
-- `RootShift.shift_run` proves that physical execution commutes with this translation.
-
-The missing wrapper is to combine these existing lemmas with `low42_raw_head_all_c01_free`, so the canonical low42 physical return can be applied to any physical configuration representing the matching Junc input. Then compose it with the outer-safe physical segments. The integrated low42 workflow currently does not compile `JuncCanonical` and its full coverage dependency chain, so that wrapper is not included yet.
+The arbitrary-head wrapper is now formalized in `Low42PhysicalNoFatalAnyHead.low42_raw_head_any_c01_free`. It uses `JuncCanonical.represented_junc_eq_translatedJ` to identify a represented Junc with its translated canonical J configuration, and `RootShift.shift_run` to transport the complete physical run and every-prefix C/01 property. The new theorem preserves the exact endpoint head displacement. The integrated low42 workflow now includes the `High2PhysicalBridge` / `JuncCanonical` / `RootShift` dependency chain. The remaining return-map step is to compose this arbitrary-head low42 physical macro with the outer-safe physical segments.
 
 The observed Junc(0,344) -> Junc(0,408) interval is 145,374 steps. It is not part of the 169,592-step blank-root theorem and remains a simulation observation, not a formal segment.
 
