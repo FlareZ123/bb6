@@ -66,6 +66,21 @@ jobs:
             echo "::error::sorryAx found in C-phase D1 return theorems"
             exit 1
           fi
+          lean -o "$A/Root119ZeroLeftEvenRun.olean" "$A/Root119ZeroLeftEvenRun.lean" 2>&1 | tee "$A/Root119ZeroLeftEvenRun.log"
+          if grep -q 'sorryAx' "$A/Root119ZeroLeftEvenRun.log"; then
+            echo "::error::sorryAx found in zero-left even-run return theorem"
+            exit 1
+          fi
+          lean -o "$B/Root119ZeroLeftShield.olean" "$B/Root119ZeroLeftShield.lean" 2>&1 | tee "$B/Root119ZeroLeftShield.log"
+          if grep -q 'sorryAx' "$B/Root119ZeroLeftShield.log"; then
+            echo "::error::sorryAx found in zero-left shield transport theorem"
+            exit 1
+          fi
+          lean -o "$B/Root119ZeroLeftCPhaseEdge.olean" "$B/Root119ZeroLeftCPhaseEdge.lean" 2>&1 | tee "$B/Root119ZeroLeftCPhaseEdge.log"
+          if grep -q 'sorryAx' "$B/Root119ZeroLeftCPhaseEdge.log"; then
+            echo "::error::sorryAx found in zero-left C-phase edge theorem"
+            exit 1
+          fi
           lean -o "$B/Root119PrefixCPhaseEdge.olean" "$B/Root119PrefixCPhaseEdge.lean" 2>&1 | tee "$B/Root119PrefixCPhaseEdge.log"
           if grep -q 'sorryAx' "$B/Root119PrefixCPhaseEdge.log"; then
             echo "::error::sorryAx found in even/odd-even prefix-to-C-phase compositions"
