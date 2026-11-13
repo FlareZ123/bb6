@@ -68,7 +68,7 @@ jobs:
           for name in SheepChain2 SheepExitWall SheepSpecialDepth SheepInteriorGate SheepR29Walls SheepXWalls; do
             cp "$ROOT/$name.lean" "$name.lean"
           done
-          /tmp/agent14-dag-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \\
+          /tmp/agent14-dag-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
             SheepChain2.lean SheepExitWall.lean SheepSpecialDepth.lean SheepInteriorGate.lean SheepR29Walls.lean SheepXWalls.lean
           export LEAN_PATH=".:$LEAN_PATH"
           for name in SheepChain2 SheepExitWall SheepSpecialDepth SheepInteriorGate SheepR29Walls SheepXWalls; do
