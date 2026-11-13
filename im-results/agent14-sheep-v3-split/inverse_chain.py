@@ -11,12 +11,14 @@ U = (16, -1771396, 282123)
 X = (11, -28292, 59049)
 FULL_Z = (1, 8, 22, 43, 50)
 FULL_EXCLUDED = (1, 22, 43, 50)
-X_ROWS = (8, 17, 35, 44, 62)
+X_ROWS = (8, 17, 26, 35, 44, 53, 62)
 X_GOOD_PHASES = {
     8: (0, 1, 3, 4, 7),
     17: (0, 3, 5, 6, 8),
+    26: (1, 2, 4, 5, 8),
     35: (0, 1, 4, 6, 7),
     44: (0, 2, 3, 5, 6),
+    53: (1, 2, 5, 7, 8),
     62: (1, 3, 4, 6, 7),
 }
 
@@ -101,6 +103,10 @@ def main():
         assert leaf == [], (r, leaf)
         print("Root Z->T->U branch terminates for all k at r=", r,
               "(U low generic rows=", count, ")")
+    # These two formerly open rows have no h=3,a=6 root branch:
+    # the all-k direct-parent census leaves only the h=8,a=2 source X.
+    assert active[26] == [(8, 2)]
+    assert active[53] == [(8, 2)]
     for r in X_ROWS:
         assert (8, 2) in active[r]
         assert set(active[r]) <= {(3, 6), (8, 2)}
