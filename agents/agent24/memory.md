@@ -328,7 +328,7 @@ Ran the combined grid (L=2..8), every odd (1\le n<2^L) with n≤31, a=0..2, b=0.
 - Continued the existing im-results/agent6-q4-prefix/CountedQ4Prefix.lean theorem rather than duplicating Agent 6's module. Corrected the sweep induction-hypothesis argument order, odd-counter binary-decomposition rewrites, finite-frame coordinate arithmetic, bridge record equality, and exact left/right stream indices.
 - BB6Coverage.Agent6Q4Prefix.oddRst2_q4_prefix now compiles under Lean 4.36.0-rc2. The theorem is uniform in L,n,a,b,h, assumes n odd and n < 2^L, and proves the actual source run from s1Config L n 2 a 0 b h reaches state 4 at the same head after exactly 32+12*a steps. It supplies the complete left-facing word q4LeftFacing L (n-1) a and the finite right-side shape q4RightShape.
 - CI run 43334058991 compiled CountedQ4Prefix.lean; the dedicated q4-prefix sorryAx gate passed. Lean's axiom line for the theorem was [propext, Classical.choice, Quot.sound], with no sorryAx. The overall workflow later failed independently at CountedResetBase.lean; do not conflate that with the q4-prefix result.
-- Updated im-results/agent6-q4-prefix/README.md with the verified status and corrected the right-side claim: only the five-cell blank tail is certified; beyond that finite window is arbitrary.
+- Updated im-results/agent6-q4-prefix/README.md with the verified status. The original CI-verified theorem exported only the finite q4RightShape guard; the 13 Nov interface patch now additionally exports the complete q4RightFacing stream, but that strengthened signature is still CI-pending.
 - Root specialization (L,n,m,a,z,b)=(3,7,2,6,0,63) has q4-prefix cost 104.
 - Agent 8 owns the suffix. Their im-results/agent8-counted-reset/Q4Suffix.lean contains the 39+3*b suffix frame and the word identity q4SuffixTargetLeft; the full canonical next-S1 tape equality and reset composition remain open. Coordinate with Agent 8 before touching that module. The natural full Rst2 cost, if the suffix is completed, is 71+12*a+3*b.
 - The manual workflow compiles CountedResetBase.lean before CountedRst1Prime.lean and Q4Suffix.lean, even though Q4Suffix depends on CountedReset/Rst1Prime rather than CountedResetBase. Agent 48 should consider moving the CountedResetBase compile later so the suffix gets diagnostics despite the separate reset-base blocker.
@@ -341,7 +341,7 @@ Ran the combined grid (L=2..8), every odd (1\le n<2^L) with n≤31, a=0..2, b=0.
 - Reordered .github/workflows/agent48-champion-root.yml so CountedRst1Prime and Q4Suffix compile before the unrelated CountedResetBase blocker. The selective path-scoped workflow remains unchanged in its triggers.
 - Q4Suffix is still not verified. The latest completed run before the last patch was 43340567517. It exposed errors in q4First10_at list membership normalization, d0Sweep_block's h+2 inequality/induction substitution, q4 suffix scan head arithmetic, and the b=1 tail cell coordinate. Commit 7d3dda975962f12331e9202a43db7dac918a7449 addresses those exact errors; inspect its new CI run before further edits.
 - q4First10_cells now uses explicit coordinate equalities; the d0Sweep induction predecessor uses rw rather than subst; q4 suffix htail cases have explicit g-3/g-2/g-1 coordinate equalities. The q4First10-preserves-after lemma and q4RightShape destructuring were also repaired.
-- Remaining work: verify the latest Q4Suffix compile; continue eliminating any residual sorryAx; then prove the suffix output tape equals s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 (h+5+3*b), using q4SuffixTargetLeft for the left-facing stream, q4TailEnd for the local right-facing cells, and an all-zero far-right tail property. The current prefix theorem's q4RightShape only certifies five trailing zeros, so its stronger far-tail property still needs to be exported/proved from the original S1 configuration.
+- Remaining work: verify the latest Q4Suffix compile; continue eliminating any residual sorryAx; then prove the suffix output tape equals s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 (h+5+3*b), using q4SuffixTargetLeft for the left-facing stream and q4TailEnd for the local right-facing cells. The 13 Nov prefix-interface patch exports the complete q4RightFacing stream and hence the far-right blank ray, but this strengthened signature and the new right-endpoint helper still await CI.
 - The full Rst2 cost 71+12*a+3*b and the resulting root state after 332 steps are conditional arithmetic predictions only until the canonical suffix composition is kernel-checked.
 
 
@@ -352,13 +352,14 @@ The q4 prefix proof in `im-results/agent6-q4-prefix/CountedQ4Prefix.lean` alread
 I added `im-results/agent24-champion-time/Q4RightEndpoint.lean`, included after `Q4Suffix.lean` in the existing manual-only `agent48-champion-root.yml`, with:
 - `q4_prefix_far_tail`: derives the infinite blank ray from Agent 6's exported stream and the length `9+3*b`;
 - `q4_suffix_right_word`: proves the q4 suffix frame's complete right-facing output is `s0RightFacing 0`, including every cell beyond the final local frame;
-- `q4_suffix_run_right_word`: connects that pointwise right endpoint to the exact `39+3*b) source run.
+- `q4_suffix_run_right_word`: connects that pointwise right endpoint to the exact `39+3*b` source run;
+- `q4_suffix_run_right_word_of_prefix`: consumes the strengthened Agent 6 right-stream conjunct directly, deriving the infinite blank ray and suffix run's complete right-facing target.
 The module also has helper lemmas for `d0pow` length, its periodic `0,0,1` bit pattern, and the one-cell drop identity. These are proof candidates only: local shell calls returned ClientError, and no workflow-dispatch tool is available. The manual audit remains unrun. The q4 left-facing endpoint is the remaining tape equality; its three-region coordinate proof is in `im-results/agent24-champion-time/Q4RightEndpoint.md` and in messages to Agent 8. Do not edit `Q4Suffix.lean` without coordination.
 
 I also repaired the concrete `CountedResetBase.lean` workflow blockers:
 - the three output marked lists are now in exact `fMove` insertion/filter order, not sorted order (sorting preserves the set but fails `FConfig` list equality);
 - a deterministic replay is preserved in `im-results/agent8-counted-reset/reset_base_check.js`;
-- `v2` is qualified as `BB6ChampionArithmetic.v2);
+- `v2` is qualified as `BB6ChampionArithmetic.v2`;
 - `CountedOneZeroUnary` is imported and `even_finite_heads` replaces the unavailable `finite_heads`;
 - the manual champion-root workflow compiles `CountedOddUnary` and `CountedOneZeroUnary` before `CountedResetBase`, and now captures the reset-base axiom output and rejects `sorryAx`.
 The exact ordered replay outputs are documented in `im-results/agent8-counted-reset/README.md`. These repairs are not CI-verified; I notified Agents 8 and 48 and asked Agent 48 to localize the failure in run 43340804651 and rerun the manual audit if possible.
