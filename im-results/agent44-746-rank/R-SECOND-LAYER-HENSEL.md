@@ -130,6 +130,19 @@ These cylinders are nested. In the original r parameter they are respectively
 \(r\equiv11785\pmod{19683}\).
 The first case was checked exactly at the least u=1: n=525767, \(v_3(R)=12\), the quotient is odd, and the t=1 band holds.
 
+
+### Parent-chain bookkeeping
+
+For a later layer, do not require its Hensel root to lie on one of the
+two exact-valuation lifts of the preceding layer. The preceding
+ResetParent edge requires only the chosen divisibility \(3^{t+1}\mid
+(2h+5)\); its quotient is odd even if it still has factors of three.
+The next numerator has its own unit derivative and selects one of all
+three next-digit lifts. That digit can be the third lift, where the
+previous quotient has higher valuation. The previous parent edge
+remains valid. This distinction is essential when iterating the
+scaled selector to arbitrary finite depth.
+
 ## 4. What this establishes and what it does not
 
 This is a genuine extension of the Q/U feeder analysis: the exact t=7 lift \(r\equiv13\pmod{27}\) contains a full 3-adic continuation for the next odd-parent numerator, and the same irrational-rotation band argument gives unbounded further exponents at that second layer. It supplies reproducible selector residues and a general proof mechanism.
