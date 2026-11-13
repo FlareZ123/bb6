@@ -58,3 +58,34 @@ physical regular return. The predecessor formula is a useful consistency
 check and narrows the final edge of the regular model, but the root prefix
 must still be proved from the original blank configuration with
 `DRegularSource` / `ObsEq`; model reachability alone is insufficient.
+
+
+## Exact initial state after the thirtieth reentry
+
+From `BlankThirtiethRejoin.lean`:
+
+- `packet30.a=24*t30+21`, so `k30=8*t30+6`;
+- `packet30.p=16), so `r30=5`;
+- `wordInc(aWords 0 5)=29), hence `aUnary k30 0 5 = 8*k30+69).
+
+Therefore the pure-unary seed31 is exactly
+
+```
+seed31 = L(64*t30+117, 0, 0),    t30 ≡ 22 (mod 27).
+```
+
+The first three DRegular transitions are consequently fixed by the known
+mod-27 residue:
+
+```
+L(64*t+117, 0, 0)
+  -> L((512*t+919)/3, 1, 5)
+  -> L((4096*t+7439)/9, 0, 0)
+  -> L((32768*t+59593)/27, 0, 0).
+```
+
+The divisibilities and branch conditions follow from `t≡22 (mod27)`.
+The fourth transition depends on `t mod81), which is not supplied by
+`terminal2613_certificate`; do not extrapolate the trajectory from the
+mod-27 fact alone. The `Seed31Probe` is intended to compute the exact
+first exit from the full integer seed.
