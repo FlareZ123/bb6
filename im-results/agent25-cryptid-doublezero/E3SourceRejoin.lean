@@ -141,7 +141,7 @@ private theorem b_output_obs_eq (t : Nat) :
     simp [xs, List.append_assoc]
   have hout : init (xs ++ [false]) = bOutput t := by
     change ⟨[],false,[true,true] ++ xs ++ [false],5⟩ = bOutput t
-    rw [htail, ← List.append_assoc, hrep]
+    rw [List.append_assoc, htail, ← List.append_assoc, hrep]
     simp [bOutput, BB6.Agent36EZeroZTwoFollow.tail7,
       CryptidBoundary.oppairs]
   have hforward :
@@ -172,7 +172,7 @@ private theorem e_output_obs_eq (t : Nat) :
     simp [xs, List.append_assoc]
   have hout : init (xs ++ [false]) = eOutput t := by
     change ⟨[],false,[true,true] ++ xs ++ [false],5⟩ = eOutput t
-    rw [htail, ← List.append_assoc, hrep]
+    rw [List.append_assoc, htail, ← List.append_assoc, hrep]
     simp [eOutput, BB6.Agent36EZeroZTwoFollow.tail13,
       CryptidBoundary.oppairs]
   have hforward :
