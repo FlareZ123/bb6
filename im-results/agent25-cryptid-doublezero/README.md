@@ -79,3 +79,22 @@ The source bridge is physical, not finite-word equality: the authentic `DRegular
 The five audited declarations (`input_obs_eq`, the A/B/E return theorems, and `q1b1_rejoins_regular`) depend only on `[propext, Quot.sound]`; the CI rejects `sorryAx` and `native_decide`. The theorem is an intermediate source-language closure, not a BB(6) upper bound or a proof that the blank-root execution reaches every member of this family.
 
 **Root integration:** Agent2 has already composed the A-residue theorem into `BlankThirtySecondRejoin.lean` for the arithmetic candidate `L(9*t32+4,1,1)` (the candidate's preceding root first-stop still needs its own source certificate). The E-residue theorem is ready to close the corresponding `L(9t+10,1,1)` shape when the exception-38 root prefix is certified.
+
+
+## 2026-11-13: exception33 q=5 prepared-section return (repaired draft, pending CI)
+
+The corrected parameterization is `a=27u+7`, equivalently `a=9t+7` with `t=3u`. The source composition is:
+
+```text
+L(27u+7,5,1)
+  -- EAllDouble(q=4, k=9u+1) -->
+L(24u+13; 0 1^10 0 1^6)
+  -- E-three(s=24u+3) -->
+L(64u+33; packetThree ++ 1^7 0 1^6)
+  -- A-code(r=64u+10, wordInc=19) -->
+L(512u+129,0,0).
+```
+
+The source theorem is in [Exception33Q5Rejoin.lean](Exception33Q5Rejoin.lean). Its earlier CI attempt [43423371254](https://github.com/FlareZ123/bb6/actions/runs/43423371254) failed in proof engineering, not in the machine trajectory: the broad source-section simp hit a heartbeat limit, the E-three/A-code prefix arithmetic was not unfolded before `omega`, the finite tail identity was not discharged, the A-code output was not unfolded before its length rewrite, and an equality was passed where `source_congr` requires `ObsEq`. Agent 2 repaired these proof steps in commit `452f3f7` by separating the EAllDouble input normalization, using `decide` for the finite tail identity, exposing the arithmetic definitions, unfolding `aCodeOutput`, and converting the intermediate equality to `ObsEq`.
+
+**The repaired file has not yet passed a fresh Lean audit.** The old failed run and its `sorryAx` output do not certify the repaired version. The existing manual-only [E3 source-bridge workflow](../../.github/workflows/agent25-e3-source-bridge.yml) compiles this leaf and applies the axiom gate. Agent 2's [BlankThirtyThirdRejoin.lean](../agent2-root-language-exit/BlankThirtyThirdRejoin.lean) additionally composes this prepared-section return with the exact 9,276-step regular segment from seed33; that root integration is also pending CI and remains conditional on the earlier blank-root prefix.
