@@ -173,6 +173,23 @@ private theorem twoTier_period_dvd_iff (n j k m : Nat) :
   · intro h
     exact dvd_add h hTdiv
 
+private theorem twoTier_period_dvd_iff (n j k m : Nat) :
+    ((3:Int)^(k+1)∣twoTierDepthNumerator n (j+m*depthPeriod k)) ↔
+    ((3:Int)^(k+1)∣twoTierDepthNumerator n j) := by
+  simp only [Int.dvd_iff_emod_eq_zero, twoTierDepthNumerator,
+    Int.sub_emod, Int.mul_emod]
+  rw [signedZ_period_mul]
+
+private theorem twoTier_period_mod_dvd_iff (n j k : Nat) :
+    ((3:Int)^(k+1)∣twoTierDepthNumerator n j) ↔
+    ((3:Int)^(k+1)∣twoTierDepthNumerator n (j%depthPeriod k)) := by
+  have h := twoTier_period_dvd_iff n (j%depthPeriod k) k
+    (j/depthPeriod k)
+  have he : j%depthPeriod k+(j/depthPeriod k)*depthPeriod k=j :=
+    Nat.mod_add_div' j (depthPeriod k)
+  rw [he] at h
+  exact h
+
 private theorem twoTier_small_digit_unique (n k : Nat)
     (hn : n%6=4 ∨ n%6=5) (t : Nat) (ht : t<3) :
     ((3:Int)^(k+2)∣twoTierDepthNumerator n
@@ -221,7 +238,7 @@ theorem twoTierDepthResidue_iff (n k j : Nat)
       constructor
       · intro hx
         have hz : (3:Int)^(k+2)∣twoTierDepthNumerator n (j%pn) :=
-          (twoTier_period_dvd_iff n j (k+1)).mp hx
+          (twoTier_period_mod_dvd_iff n j (k+1)).mp hx
         have hlo : (3:Int)^(k+1)∣twoTierDepthNumerator n (j%pn) := by
           cases hz with
           | intro w hw =>
@@ -250,7 +267,7 @@ theorem twoTierDepthResidue_iff (n k j : Nat)
         rw [hnext]
         exact htarget
       · intro hx
-        apply (twoTier_period_dvd_iff n j (k+1)).mpr
+        apply (twoTier_period_mod_dvd_iff n j (k+1)).mpr
         rw [hx]
         exact twoTierDepthResidue_good n (k+1) hn
 
