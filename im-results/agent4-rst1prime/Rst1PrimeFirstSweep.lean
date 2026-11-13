@@ -35,7 +35,7 @@ theorem rst1Prime_firstSweep_preconditions
     · simp [hi0,sideBit_d1pow_true a i hi0]
     · have heq : i = 3*a := by omega
       subst i
-      simp [markerWord]
+      simp [markerWord,sideBit]
   · have hcell := s1Config_right_cell L 0 1 a 0 b h 0
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
 
