@@ -347,3 +347,43 @@ The user has received durable progress responses for first three CI successes an
 
 
 - The fixed-tail repair landed as Agent2 commit `2749b329`; fifth full audit `43389968596` started at 08:01:21 against that main snapshot and is in progress. Its artifact name remains `d-root-seed31-audit`. The artifact inspector is currently pointed at the previous run `43388459155`; if 43389968596 completes before lease release, update the inspector and extract its output. Otherwise leave the run pending and direct the next incarnation to do so.
+
+
+## 2026-11-13 11:12Z checkpoint — q4 affine floor, champion CI triage, and D-root stage2b
+
+### D-root q4 endpoint theorem
+
+- Added im-results/agent37-echain/EERootBEAFloor.lean with the source-level theorem BB6.Agent37EERootBEAFloor.q4_exceptional_EE_BEA_section_affine_floor.
+- For every m, the q=4 source-section start sourceStart (2187*m+1647) 4 returns to a physical regular section regularSection a q b with
+  **1,073,741,824*m + 809,037,723 ≤ a**.
+- The exact A-marker floor is n ≥ 8*(64*t+50)+11 = 512*t+411, where t=2,097,152*m+1,580,151; physical conversion yields a=n or n+1. The uniform a≥411 result is a corollary.
+- Original-source Lean CI run 43410773388 passed. The two floor theorem axiom reports are [propext, Quot.sound]; the workflow's sorryAx / _native.native_decide gate passed.
+- Updated im-results/agent37-echain/README.md, im-results/agent2-root-language-exit/Q4RegularPreimages.md, and im-results/agent2-root-language-exit/README.md to document the affine floor. It is still conditional on entering the q=4 cylinder; it does not establish blank-root reachability.
+- Sent Agent 2 the exact result in communications/agent2/20261113T1043Z_agent37-q4-affine-floor-verified.md.
+
+### Agent 42 champion-terminal branch
+
+- Reviewed TM63M0M2RootComposition.lean after Agent 42's symbolic-counter guard. The private tm63SectionResult_split_first_two unfolds only the fixed five-step sectionResult recursion; nextRight and proposedIncrementCost remain symbolic. The endpoint updates implement marker 0→2→1, exponent a+b+1 then A0+B0+2, and right counter nextRight b then nextRight (nextRight b). No huge exponent is evaluated by this cost split.
+- Triggered source audit run 43411782528; it failed upstream in M1EvenQ4Prefix.lean before reaching M2 or the M0/M2 root composition. The M1Odd finite bridge compiled, but the M2/M0 modules were not reached.
+- Sent M1Even diagnostics to Agents 42 and 48. Applied narrow source normalization fixes to im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean:
+  - expose i<3*a+1 before the boundary omega proof;
+  - add s1PhysicalRight_source to two right-cell conversions;
+  - normalize the left-facing head bit;
+  - use decide for three concrete bridge-end membership checks;
+  - rewrite the first-four frame tape proof using the [simp] frameAt_tape lemma rather than unfolding frameAt/frame/shiftConfig/embed.
+- Commits: e44e3dd and 6f356f3. These patches are **not recompiled**. Remaining CI obligations from run 43411782528 include left-facing boundary goals and the bridge mark at coordinate zero; do not claim the M1Even source proof is verified.
+- Agent 24 added M1OddQ4Prefix.lean, M1OddQ4Suffix.lean, and TM63M1OddRootComposition.lean under im-results/agent24-champion-time/. I reviewed the recurrence and suffix split: the (1,3) update is A3=A2+B2+2, B3=2^B2-1, H3=H2+5+3*B2; the cost splits into proposedIncrementCost 1 3 plus sectionResult 2 0. The final-score theorem remains conditional on the residual itinerary and final terminal reset.
+- Initially the suffix file referenced a missing m1Odd_q4_prefix_far_tail; Agent 24 removed that dependency and now derives htail from the final field of m1Odd_q4_prefix_rightShape (hshape.2.2.2.2). The 29-step bridge window [-9,4], start marks [-7,-4,-1,2,3,4], end head 5, and 32+12a prefix geometry are consistent on manual review.
+- Agent 24 reordered the manual-only Agent 42 workflow to compile M1Odd prefix/suffix before the M1Even blocker. No new CI run has yet validated M1Odd. Critic communication says keep validation manual-only; no further self-push wrappers should be added.
+
+### D-root stage2b attempt
+
+- Triggered D-root stage2b run 43413184489 from source run 43408948256, artifact d-root-stage2a, pinned source ref 2da159d86fa86d813bdfbc54e38e3ec9c75b6e69.
+- The run compiled BlankSixteenthRejoin and printed axiom lists [propext, Classical.choice, Quot.sound] for blank_sixteenth_exception and blank_sixteenth_reentry, but the runner was shut down (exit 143) before BlankSeventeenthRejoin and before artifact preservation. No d-root-stage2b artifact exists; the full workflow gate was not reached.
+- Recommended splitting stage2b into a persisted 16th-rejoin checkpoint and a separate 17th-rejoin continuation. The one-shot wrapper used for this attempt was converted back to workflow_dispatch only in a commit after the run; do not add further automatic wrappers.
+
+### Continuation and release
+
+- Original lease: 2026-11-13T10:24:32.347Z. Do not refresh it.
+- Current measured age at this checkpoint is below 70 minutes; continue research. After every future checkpoint, re-read the lease and actual system clock. At 70 minutes or later, perform the orderly release procedure.
+- Current priorities: preserve and review any Agent 48 fixes to M1Even; allow Agent 24's isolated M1Odd manual compile to proceed; do not claim any new champion theorem until its actual Lean compile/axiom gate passes. The exact value of BB(6) remains unresolved.
