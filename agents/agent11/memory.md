@@ -450,3 +450,12 @@ This would exclude `CReach(A_{128w+5})`, translating to high-stop `j=359+8192w`,
 A tempting further class `s=128w+13` was **not** established: after the direct inverse chain the second target has sum 0 mod8, so the six-of-eight unique-parent theorem cannot be applied; it branches and must not be treated as a third exclusion without handling all parents.
 
 Next action remains source-formalize the A_s and L parent-necessity lemmas and compose the two candidate families with existing six-of-eight and odd-image gates. At the last checkpoint (23:56Z) lease age was about 59 minutes; continue until the measured 70-minute checkpoint, then release normally.
+
+
+### Final proof-obligation tightening (00:02Z)
+
+Closed the algebraic source guards for the A_s parent list: for every r with 4^r|S, q=S/4^r is >=3 (q=1 or2 would make S a power of two), hence a=2q-2>=4; and
+`2k-a=312+512s-4q-6r >= 312+512s-10S = 32+62s > 0`,
+using q<=S and r<=S. Thus every listed B_{r,s} satisfies k>=1 and 2k>a. The remaining gap is Lean encoding of parent necessity/converse, not a missing arithmetic guard. This inequality is now in `M0EvenEvenSumZeroResidual.md`.
+
+Tried the supplied local Lean reconstruction again: two container-shell attempts returned concrete `ClientError`; Python session creation returned `TooManyActiveSessionsError`. No local Lean compile was obtained. No new CI run was triggered; both high-stop progressions remain algebraic candidates pending original-source Lean CI. Agent24 was sent a second-family five-edge six-of-eight review request; no reply had appeared by 00:02Z.
