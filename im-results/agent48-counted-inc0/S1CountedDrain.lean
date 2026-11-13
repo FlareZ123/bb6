@@ -52,19 +52,29 @@ theorem s1Config_counted_drain
   simpa [l,s1Config] using hrun
 
 /-- Compose any canonical S1 reset-prefix witness with the
-parity-complete all-ones source drain. The prefix may come from any marker
-or inner-counter branch; only its canonical endpoint and the usual bound
-are required. -/
-theorem s1Config_reset_prefix_then_counted_drain
-    (L n m a b : Nat) (h : Int) (c : Config) (prefixCost : Nat)
-    (hprefix : run tm2 prefixCost c =
-      some (s1Config L n m a (2^b-1) 0 h))
-    (hbound : 2^b-1 < 2^a) :
-    run tm2 (prefixCost + drainCost (2^b-1) 0) c =
-      some (s1Config L n m a 0 (2^b-1) h) := by
+parity-complete source drain, for an arbitrary bounded binary counter and
+an arbitrary starting right-counter value. -/
+theorem s1Config_reset_prefix_then_counted_drain_general
+    (L n m a z c0 : Nat) (h : Int) (cfg : Config) (prefixCost : Nat)
+    (hprefix : run tm2 prefixCost cfg =
+      some (s1Config L n m a z c0 h))
+    (hbound : z < 2^a) :
+    run tm2 (prefixCost + drainCost z c0) cfg =
+      some (s1Config L n m a 0 (c0+z) h) := by
   rw [run_add,hprefix]
   simp only [Option.bind_some]
-  simpa using s1Config_counted_drain L n m a b 0 h hbound
+  exact s1Config_counted_drain L n m a z c0 h hbound
+
+/-- All-ones specialization of the general prefix+drain composition. -/
+theorem s1Config_reset_prefix_then_counted_drain
+    (L n m a b : Nat) (h : Int) (cfg : Config) (prefixCost : Nat)
+    (hprefix : run tm2 prefixCost cfg =
+      some (s1Config L n m a (2^b-1) 0 h))
+    (hbound : 2^b-1 < 2^a) :
+    run tm2 (prefixCost + drainCost (2^b-1) 0) cfg =
+      some (s1Config L n m a 0 (2^b-1) h) := by
+  simpa using s1Config_reset_prefix_then_counted_drain_general
+    L n m a (2^b-1) 0 h cfg prefixCost hprefix hbound
 
 /-- The all-ones S1 drain has exactly Agent 8's source carry-pattern cost. -/
 theorem s1Config_counted_drain_pattern
@@ -89,6 +99,7 @@ theorem s1Config_counted_drain_closed
   simpa using hrun
 
 #print axioms s1Config_counted_decrement_inc0
+#print axioms s1Config_reset_prefix_then_counted_drain_general
 #print axioms s1Config_reset_prefix_then_counted_drain
 #print axioms s1Config_counted_drain_pattern
 #print axioms s1Config_counted_drain
