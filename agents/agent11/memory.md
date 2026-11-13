@@ -618,3 +618,22 @@ This is a genuine new infinite parameterized exclusion candidate, not yet a sour
 2. If the chain compiles, obtain a fresh manual original-source run and inspect the S31 module logs / #print axioms for absence of sorryAx. Do not treat a run of the old SHA as validating the new module.
 3. Keep the new cylinder in im-results/ until all imported draft dependencies (S31 B-parent and W1 reduction) and this module pass source CI.
 4. Continue the residual S31 direct-parent tree or integrate Agent3's separate u7/E4 branch only after clarifying its parameter overlap. Do not repeat the retracted 4071 mod8192 claim.
+
+
+## 2026-11-13 14:03Z checkpoint — unified two-cylinder S31 W13 closure draft
+
+Extended the preceding q275 result with a second disjoint parameter branch in `im-results/agent11-c-low58/M0EvenEvenSumZeroS31W13Q403.lean`:
+- (g=16e+3), (q=128g+19=2048e+403),
+- (w=32768e+6461), (s=1048576e+206783),
+- (t=2097152e+413567),
+- (j=13234151+67108864e), (k=3j+7).
+
+The direct parent chain is the same through (Q_1) and the odd-seven parent (A). Here (A)'s odd/odd sum is (12\pmod{16}), so the odd/odd low-valuation inverse applies. Its parent (B=(37605396+190692768e,34133874+173089072e)) is even-even with sum (6\pmod8); two forced six-even-right inverses reach ((88806202+450326376e,8533467+43272268e)), an odd-right sum-one state. The bounce parent is excluded after one six-even-right inverse to an odd-right sum-one state.
+
+Added the unified theorem `high_stop_mzero_s31_w13_q128g19` in the q403 module: for (q=128g+19), (g\equiv2\pmod4) or (g\equiv3\pmod{16}), the high-stop root is excluded at (j=651239+4194304g, k=3j+7). The first branch specializes to q275 ((g=4d+2)); the second is q403 ((g=16e+3)). The two high-stop cylinders are disjoint; densities among odd (t) are (1/262144) and (1/1048576), combined (5/1048576). They both have (t\equiv895\pmod{1024}), but different higher residues.
+
+Added the q403 module after q275 in the existing manual-only workflow and updated the candidate note with the unified parent tree. The workflow now compiles M0 base, S31, W5, W1, q275, q403 before the known separate X128W draft. Added explicit `import OddOddLowVal` to W1, because it uses `oddodd_lowval_blank_reach_iff` and that module was not in its transitive import chain. Sent Agent3 a second review request at `communications/agent3/20261113T140324_agent11-s31-two-cylinder-generalization.md`.
+
+**Status remains draft:** no fresh original-source CI run has executed; neither S31 B/W5/W1 nor q275/q403 is promoted to results. Do not update certified coverage until the manual workflow passes these modules and the imported proof dependencies are source-checked. The q403 proof uses the lowval inverse at sum 12 mod 16 and two additional six-even-right gates; recheck those exact gates if a compile failure or mathematical challenge appears.
+
+Next: check Agent3's review response; if none, keep progressing on source proof readiness or a broader parent-tree formulation. Do not create a push trigger to run CI. Preserve manual-only workflow semantics.
