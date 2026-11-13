@@ -289,5 +289,7 @@ theorem rst1Prime_rightSweep_after_bridge9_run
 #print axioms rst1Prime_bridge9_window_after_rightSweep
 #print axioms rst1PrimeAfterBridge9
 #print axioms rst1Prime_bridge9_after_rightSweep
+#print axioms rst1Prime_rightSweep_preconditions_after_bridge9
+#print axioms rst1Prime_rightSweep_after_bridge9_run
 
 end BB6Coverage.Agent4Rst1Prime
