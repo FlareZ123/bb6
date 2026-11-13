@@ -495,3 +495,19 @@ Lease claimed at **2026-11-13T16:36:19.832Z** (run id \`agent44-gpt6-20261113T16
 3. Ask Agent 10 whether to factor the affine-exponential Hensel core into a shared module or keep the specialized T/Q proofs.
 4. Do not overstate the selector results: they characterize 3-adic divisibility and dyadic candidate bands, but do not prove root exclusion for #746 or determine BB(6).
 5. Continue the Q/U branch only where it connects to the authentic ResetParent chain; avoid duplicating Agent 7's fixed-depth lift law or Agent 10's T/z1 selector.
+
+
+## 2026-11-13 checkpoint: second-layer R selector
+
+Extended Agent 7's t=7 continuation on the exact-Q lift \(r\equiv13\pmod{27}\).
+
+- Parameterization: \(r=13+27u\), \(n=171473+354294u=171473+6\cdot3^{10}u\).
+- Exact next-layer formula from Agent 7: \(R_{7,14}(n)=3^{10}(2h+5)=A2^{n-3}+Bn+C\), with \(A=55639\), \(B=-(2^{10}+2^{3416}+2\cdot3^{10})\), \(C=15\cdot2^9-3\cdot2^{3415}+9\cdot3^{10}\). Here \(B\equiv1\pmod3\).
+- Agent 7's first-digit test gives \(3^{11}\mid R\) throughout this u-cylinder. Exact modular evaluation gives \(R(n(0)),R(n(1)),R(n(2))\equiv3^{11},0,2\cdot3^{11}\pmod{3^{12}}\), hence \(G(u)=R/3^{11}\equiv1+2u\pmod3\) and the first root is \(u\equiv1\pmod3\).
+- Applied the scaled affine-exponential Hensel lemma (now in AFFINE-EXP-HENSEL.md): \(G(u+r3^k)\equiv G(u)+2Br3^k\pmod{3^{k+1}}\). This gives a unique selector \(\eta_k\) with \(3^{11+k}\mid R\iff u\equiv\eta_k\pmod{3^k}\). Exact modular residues for k=1..15 are \(1,4,4,31,193,436,436,4810,11371,31054,149152,149152,680593,680593,10246531\).
+- For further odd-parent exponent \(\ell\), the divisibility is \(3^{\ell+11}\mid R\). With scale \(\kappa=n+\ell-\sigma'\), the normalized dyadic quotient tends to \(A2^{\sigma'-3}/3^{\ell+11}\). The band-compatible \(\ell\) have density \(\log_2(4/3)\) by irrational rotation. Thus the second-layer branch has unbounded further odd-parent exponents, with infinitely many actual parents for every band-compatible exponent.
+- Explicit band-compatible examples: \((\ell,\sigma')=(1,9),(4,14),(6,17)\), with selector classes \(u=1\bmod3\), \(u=31\bmod81\), \(u=436\bmod729\). The first case at u=1 (n=525767) was checked exactly: \(v_3(R)=12\), quotient odd, band true.
+- Added the derivation to im-results/agent44-746-rank/R-SECOND-LAYER-HENSEL.md, reproducible modular script RSecondLayerHensel.mjs, linked both from the dossier README, and updated top-level README #746 synthesis. Sent full result to Agents 7 and 10.
+- Status remains intermediate: depends on Agent 7's exact source identity and first-digit classification; the scaled selector and second-layer band theorem are not Lean-verified and do not establish blank-root reachability.
+
+Next: request Agent 7's adversarial check of the R source formula/first-digit premise; then consider formalizing the scaled-cylinder Hensel theorem once an authorized manual CI dispatch path is available. Avoid redoing the existing Q/T selectors.
