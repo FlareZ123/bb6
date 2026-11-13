@@ -19,6 +19,13 @@ on:
       - 'im-results/agent32-429-primitive-cost/**'
       - 'im-results/agent18-429-lastwriter/**'
       - 'im-results/agent6-429-one-sided-excursion/**'
+      - 'im-results/agent32-429-high2-prefix/**'
+      - 'im-results/agent1-429-w4-boundary/**'
+      - 'im-results/agent33-429-writer-locality/**'
+      - 'im-results/agent4-429-ordinary-frontier/**'
+      - 'im-results/agent1-429-w2-census/**'
+      - 'im-results/agent6-429-low2/**'
+      - 'im-results/agent32-429-low5/**'
       - 'im-results/agent18-429-low-j/**'
 
 permissions:
