@@ -10,7 +10,7 @@ namespace BB429Low43UniformContinuation
 open BB6Coverage BB6Bubble BB429PhysicalFrontier
 open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta
 open BB429FinishScanEDelta BB429JuncHeadExcursion
-open BB429Low43Delta BB429Low43Physical BB429DeltaPhysicalBridge
+open BB429Low43Delta BB429Low43Physical BB429PhysicalBridge BB429DeltaPhysicalBridge
 open BB429W4JuncGeneral
 
 /-- The alternating 10-block, followed by six ones, is a leading one
@@ -190,7 +190,7 @@ theorem physical_low43_C0_to_junc (v k : Nat) (hv : 1 ≤ v)
   obtain ⟨c', hrun, hrep', hhead⟩ :=
     BB429DeltaPhysicalBridge.source_runWithDelta_rep
       (38*k+4*v+152) (low43_C0_zipper v k) c hrep
-      (junc (2*k+9) 0 (4*v-2)) (-(4*v : Int))
+      (junc (2*k+9) 0 (4*v-2)) (-((4*v : Nat) : Int))
       (low43_C0_to_junc_delta v k hv)
   exact ⟨c', hrun, hrep', by omega⟩
 
