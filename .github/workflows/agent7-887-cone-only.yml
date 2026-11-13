@@ -49,6 +49,8 @@ jobs:
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
           lean -o "$e/EvenPre887T3T6.olean" "$e/EvenPre887T3T6.lean"
+          lean -o "$e/Z1Z2Cone887.olean" "$e/Z1Z2Cone887.lean"
+          echo "PASS: 11-state z1/z2 source cone excludes the n=887 z1 branch"
           echo "PASS: 23-state source-certified t=3/t=6 side cone excludes all 17 first-tier roots"
           lean -o "$e/EvenPre887ConeOnly.olean" "$e/EvenPre887ConeOnly.lean"
           echo "PASS: exact source ResetParent closure excludes the n=887 even fatal predecessor"
