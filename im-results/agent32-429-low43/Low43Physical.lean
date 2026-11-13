@@ -445,7 +445,6 @@ theorem low43_C0_record (v k : Nat) :
     omega
   have hmult : 4*(2*v)=8*v := by
     rw [← Nat.mul_assoc]
-    rfl
   have htime : B+(8*v+16)=4*v*v+18*v+22 := by
     dsimp [B]
     calc
@@ -458,6 +457,7 @@ theorem low43_C0_record (v k : Nat) :
         omega
       _ = 4*v*v+18*v+22 := by
         rw [← Nat.mul_assoc]
+        omega
   have htotal' : run target429 (4*v*v+18*v+22) c0=some cC := by
     simpa [htime] using htotal
   have hheadC : cC.head=2*(v:Int)+6 := by
