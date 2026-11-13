@@ -25,13 +25,13 @@ The machine-specific uniform single-decrement theorem remains an explicit premis
 - a candidate prefix cost `48+12(a+v₂(n))+15+4m+3b);
 - the proved all-ones `Incs0` drain `drainCost (2^b-1) 0`.
 
-`countedRst012_of_prefix` is the original-run composition theorem: once a counted prefix reaches the S0 intermediate with second counter `2^b-1) and right counter zero, the exact candidate total cost reaches the reset endpoint with second counter zero and right counter `2^b-1).
+`countedRst012_of_prefix` is the original-run composition theorem: once a counted prefix reaches the S0 intermediate with second counter `2^b-1` and right counter zero, the exact candidate total cost reaches the reset endpoint with second counter zero and right counter `2^b-1`.
 
 The prefix theorem and uniform single-step `Inc0` theorem remain explicit premises. This module does not claim either has been established as a source-level run theorem.
 
 ## Finite marker-specific reset bases
 
-`CountedResetBase.lean` records the exact finite source traces for the three marker cases with `a=b=0):
+`CountedResetBase.lean` records the exact finite source traces for the three marker cases with `a=b=0`:
 
 | Marker m | Steps | Final state/head | Ordered marked cells |
 |---:|---:|---|---|
@@ -41,14 +41,14 @@ The prefix theorem and uniform single-step `Inc0` theorem remain explicit premis
 
 **Ordering is semantically significant.** `FConfig` uses a list and its equality is list equality, not set equality. Sorting the marked cells preserves the represented tape but makes the `fRun` endpoint equality false. The current output frames preserve the exact insertion/filter order of `fMove`.
 
-`reset_base_check.js` independently replays the published TM63 table with the same ordered-list update rule and checks all three endpoints. This is reproducible computational evidence, not a proof. `resetBase_exact` is intended to certify the same traces by `decide`; the current fixes to its output order, `v2) qualification, and finite-head helper are committed but await the manual Lean audit.
+`reset_base_check.js` independently replays the published TM63 table with the same ordered-list update rule and checks all three endpoints. This is reproducible computational evidence, not a proof. `resetBase_exact` is intended to certify the same traces by `decide`; the current fixes to its output order, `v2` qualification, and finite-head helper are committed but await the manual Lean audit.
 
 The finite-base support changes are:
 - use `BB6ChampionArithmetic.v2` explicitly in `resetBase_cost_eq`;
 - use `even_finite_heads` from `CountedOneZeroUnary` in `resetBase_heads`;
 - compile `CountedOddUnary` and `CountedOneZeroUnary` before `CountedResetBase` in the manual champion-root workflow.
 
-These bases cover only `a=b=0). They do not prove the universal prefix with arbitrary `a,b,v₂(n)`.
+These bases cover only `a=b=0`. They do not prove the universal prefix with arbitrary `a,b,v₂(n)`.
 
 ## Reset-prefix target
 
@@ -60,7 +60,7 @@ S1(L,n,m,a,0,b,h)
 S1(L,n-1,(m+2)%3,a+b+delta(m),2^b-1,0,h+5+3*b),
 ```
 
-where `delta(0)=1` and `delta(1)=delta(2)=2). In S0 notation the target is
+where `delta(0)=1` and `delta(1)=delta(2)=2`. In S0 notation the target is
 `s0Config (markerWord ((m+2)%3) ++ d0 ++ binDec L (n-1) ++ lh)
   (a+b+delta(m)) (2^b-1) (h+5+3*b)`.
 The head displacement is **`5+3*b`**, not zero.
@@ -69,10 +69,10 @@ A direct simulator using the source TM63 table matched the full pre-drain endpoi
 
 ## TM63 q4 suffix frame
 
-`Q4Suffix.lean` isolates the q4/head-0 suffix. It provides the intended `39+3*b)-step decomposition:
+`Q4Suffix.lean` isolates the q4/head-0 suffix. It provides the intended `39+3*b`-step decomposition:
 
 - fixed 10-move entry from state 4/head 0 to state 1/head 10;
-- exact `3*b)-move scan of `b` additional three-one blocks in state sequence 1 → 5 → 3 → 1;
+- exact `3*b`-move scan of `b` additional three-one blocks in state sequence 1 → 5 → 3 → 1;
 - fixed 29-move tail framed over the local read window `[-4,4]`, with arbitrary exterior tape.
 
 The theorem `q4_suffix_frame` returns the output as a composition of `frameAt` and the counted block-scan transformation. The left exterior is unrestricted; five blank cells beyond the right unary run suffice for this run theorem. The list identity `q4SuffixTargetLeft` gives the expected canonical left word
