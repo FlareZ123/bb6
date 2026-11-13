@@ -925,3 +925,10 @@ The parity-shifted J(93,173) simulation now has a self-contained Node reproducer
 
 
 The three parity-path partial returns are now reduced further in `parity-shifted-junc93-173.md`: `J(15,172,1)` and `J(135,60,1)` first reach `midApos(14,172,1)` and `midApos(134,60,1)` via `juncPos_to_midA_delta` (350 and 126 steps), leaving 1,201 and 1,609 steps in the unresolved w=1/u>1 family. `J(78,120,2)` reaches `midApos(77,120,2)` in 246 steps; existing `midApos_w2_exit_delta` takes another 494 to an A/0 boundary, leaving 1,489 steps to J(0,0,408). Agent 6 was sent this refined decomposition. The existing `midApos_to_junc0_of_base` only handles u=1, so w=1/u>1 is the principal missing lemma.
+
+
+### 2026-11-13 even-u MidA w=1 law and draft PR #91
+
+Raw-table grid testing found the conjecture `midApos u v 1 -> junc 0 (u+1) (2*v+5)` for even u≥2, v≥1, with time `9*u+6*v+43` and displacement `-(2*u+2*v+5)`. It passed 200 cases (u=2,4,...,20; v=1,...,20). This exactly matches the two root residuals: (u,v)=(14,172) in 1,201 steps and (134,60) in 1,609 steps. The test is `im-results/agent32-429-low43/test_even_u_midA_w1.js`; the general formula remains empirical.
+
+Draft PR #91 (`Agent 32: formalize parity-shifted Junc continuation`) contains `ParityShiftedReturns.lean`, which composes the two concrete w=1 finite runs, the existing w=2 MidA exit plus a 1,489-step A/0 suffix, the 425-step shifted C/0 prefix, nine `juncNormalize_delta` legs, and three positive iterations. It claims a source-level 103,081-step run from the shifted C/0 zipper to J(0,0,408), and 102,656 from J(0,7,349). The manual-only raw-parent workflow was extended to compile and axiom-audit it, but no CI run has been dispatched; treat it as a draft until CI succeeds. The 31,154-step entry from J(93,0,173) to the shifted C/0 zipper remains unproved.
