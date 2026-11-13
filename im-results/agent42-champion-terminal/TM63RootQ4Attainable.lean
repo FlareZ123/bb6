@@ -192,6 +192,15 @@ theorem tm63_second_index_two : tm63Index2 % 3 = 2 := by
   simpa [tm63Index2, tm63Length1, tm63MiddleSection, tm63Index1, tm63FirstSection]
     using second_reset_index_two
 
+/-- The configuration immediately before the final stage has
+marker 1, matching the final reset adapter's source configuration. -/
+theorem tm63_last_pre_marker_one : tm63LastPreSection.marker = 1 := by
+  change (sectionResult (tm63Index2-1) 2 tm63MiddleSection.right
+    (nextRight tm63MiddleSection.right)).marker = 1
+  rw [sectionResult_marker]
+  have hmod := tm63_second_index_two
+  omega
+
 /-- The final proposed reset starts at marker 1 and is exactly the
 (m,n)=(1,1) reset consumed by the terminal adapter. -/
 theorem tm63_last_stage_m1 :
