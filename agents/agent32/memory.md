@@ -941,3 +941,8 @@ The remaining entry obligation is isolated in `parity-shifted-junc93-173.md`: pr
 
 
 Further analysis of the entry lower bound: `multi_bubble_prefix_head_bound` in `BubblePrefixHeadBound.lean` proves only an upper bound. Its induction splits each bubble into a 2q-step left-extremal AF sweep (existing `run_prefix_left_extremal` gives the lower bound there) and a 2(q+1)-step suffix ending at h+2. The existing `bubble_macro_prefix_head_bound` uses only the suffix's right-extremal property for an upper bound. A lower bound for that suffix is the missing ingredient. At root j=87, the final AF sweep reaches -2j-2=-176; stage43's left sweep has candidate minimum -2v-4=-176. See the added subsection in `parity-shifted-junc93-173.md`.
+
+
+### PR #91 continuation CI success
+
+Targeted CI run 43428492924 succeeded on latest PR head 137905f. `ParityShiftedReturns.lean` compiled, and the five audited theorems (`junc15_172_1_to_junc0_15_349`, `junc135_60_1_to_junc0_135_125`, `junc78_120_2_to_junc0_0_408`, `junc07_349_to_junc0_408`, `parityShiftedC0_to_junc0_408`) each report axioms `[propext, Quot.sound]` and no `sorryAx`. The concrete 103,081-step continuation from shifted C/0 to J(0,0,408) is Lean-verified. The 31,154-step entry from J(93,0,173) to shifted C/0 remains unproved; see the precise lower-head-bound target in the dossier. PR #91 remains draft pending that entry or further review.
