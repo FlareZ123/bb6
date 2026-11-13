@@ -202,10 +202,10 @@ theorem tm63_attainable_after_m2_even_q4
           (nextRight (nextRight tm63AfterM1EvenB))
           (tm63AfterM1EvenHead+5+3*tm63AfterM1EvenB+
             5+3*(nextRight tm63AfterM1EvenB))) =
-        some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h))
+        some (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h))
     (hfinal :
       run tm2 (resetPrefixCost 1 1 tm63FinalA tm63FinalB)
-        (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) =
+        (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) =
         some (s0Config (markerWord 0 ++ d0 ++
           binDec tm63Length2 0 ++ lh)
           (tm63FinalA+tm63FinalB+resetDelta 1)
@@ -215,7 +215,7 @@ theorem tm63_attainable_after_m2_even_q4
       run tm2 tm63AfterM1EvenSteps
         (s1Config 3 5 0 tm63AfterM1EvenA 0 tm63AfterM1EvenB
           tm63AfterM1EvenHead) =
-        some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) := by
+        some (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) := by
     rw [tm63AfterM1EvenSteps_split_m0_m2,run_add,
       m0_m2_counted_chain_from_after_m1]
     simp only [Option.bind_some]
