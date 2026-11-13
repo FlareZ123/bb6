@@ -21,7 +21,7 @@ pattern. This is the finite-window identity used by the long r=4k+1
 left-output seed. -/
 theorem ad12FinalFrameCell (bg : Int → Bool) (i : Int)
     (hi : 0 ≤ i ∧ i ≤ 12) :
-    (frame carryAD12Area bg (embed carryAD12Final)).tape i =
+    (BB6Coverage.Agent48Champion.frame carryAD12Area bg (embed carryAD12Final)).tape i =
       decide (i % 3 = 0) := by
   have ha : carryAD12Area i = true := by
     simp [carryAD12Area]
@@ -41,7 +41,7 @@ theorem bridge3FinalCell_left (i : Int)
 /-- The bridge3 frame therefore writes one at relative offsets -4 and -3. -/
 theorem bridge3FinalFrameCell_left (bg : Int → Bool) (i : Int)
     (hi : i = -4 ∨ i = -3) :
-    (frame carryBridgeArea3 bg (embed carryBridgeFinal3)).tape i = true := by
+    (BB6Coverage.Agent48Champion.frame carryBridgeArea3 bg (embed carryBridgeFinal3)).tape i = true := by
   have ha : carryBridgeArea3 i = true := by
     simp [carryBridgeArea3]
     rcases hi with h | h <;> omega
@@ -82,18 +82,18 @@ If the old head is 0 modulo 3, the frame writes the canonical left output
 pattern on its active interval. -/
 theorem bridge0FrameOutput (bg : Int → Bool) (h x : Int)
     (hh : h % 3 = 0) (hi : -1 ≤ x-h ∧ x-h ≤ 10) :
-    (frame (fun y => carryBridgeArea0 (y-h)) bg
-      (shiftConfig h (embed carryBridgeFinal0))).tape x =
+    (BB6Coverage.Agent48Champion.frame (fun y => carryBridgeArea0 (y-h)) bg
+      (BB6Coverage.shiftConfig h (embed carryBridgeFinal0))).tape x =
         (if x ≤ h then true else decide (x % 3 = 1)) := by
   have ha : carryBridgeArea0 (x-h) = true := by
     simp [carryBridgeArea0]
     omega
   have hf := bridge0FinalCell_pattern (x-h) hi
   have hframe :
-      (frame (fun y => carryBridgeArea0 (y-h)) bg
-        (shiftConfig h (embed carryBridgeFinal0))).tape x =
+      (BB6Coverage.Agent48Champion.frame (fun y => carryBridgeArea0 (y-h)) bg
+        (BB6Coverage.shiftConfig h (embed carryBridgeFinal0))).tape x =
           (embed carryBridgeFinal0).tape (x-h) := by
-    simp [frame, shiftConfig, ha]
+    simp [BB6Coverage.Agent48Champion.frame, BB6Coverage.shiftConfig, ha]
   rw [hframe, hf]
   by_cases hx : x ≤ h
   · have hle : x-h ≤ 0 := by omega
@@ -116,18 +116,18 @@ theorem bridge2FinalCell_pattern (i : Int) (hi : -3 ≤ i ∧ i ≤ 2) :
 /-- Shifted bridge2 frame output in absolute coordinates. -/
 theorem bridge2FrameOutput (bg : Int → Bool) (h x : Int)
     (hh : h % 3 = 2) (hi : -3 ≤ x-h ∧ x-h ≤ 2) :
-    (frame (fun y => carryBridgeArea2 (y-h)) bg
-      (shiftConfig h (embed carryBridgeFinal2))).tape x =
+    (BB6Coverage.Agent48Champion.frame (fun y => carryBridgeArea2 (y-h)) bg
+      (BB6Coverage.shiftConfig h (embed carryBridgeFinal2))).tape x =
         (if x ≤ h-2 then true else decide (x % 3 = 1)) := by
   have ha : carryBridgeArea2 (x-h) = true := by
     simp [carryBridgeArea2]
     omega
   have hf := bridge2FinalCell_pattern (x-h) hi
   have hframe :
-      (frame (fun y => carryBridgeArea2 (y-h)) bg
-        (shiftConfig h (embed carryBridgeFinal2))).tape x =
+      (BB6Coverage.Agent48Champion.frame (fun y => carryBridgeArea2 (y-h)) bg
+        (BB6Coverage.shiftConfig h (embed carryBridgeFinal2))).tape x =
           (embed carryBridgeFinal2).tape (x-h) := by
-    simp [frame, shiftConfig, ha]
+    simp [BB6Coverage.Agent48Champion.frame, BB6Coverage.shiftConfig, ha]
   rw [hframe, hf]
   by_cases hx : x ≤ h-2
   · have hle : x-h ≤ -2 := by omega
@@ -149,18 +149,18 @@ theorem bridge1FinalCell_pattern (i : Int) (hi : -2 ≤ i ∧ i ≤ 6) :
 /-- Shifted bridge1 frame output in absolute coordinates. -/
 theorem bridge1FrameOutput (bg : Int → Bool) (h x : Int)
     (hh : h % 3 = 1) (hi : -2 ≤ x-h ∧ x-h ≤ 6) :
-    (frame (fun y => carryBridgeArea1 (y-h)) bg
-      (shiftConfig h (embed carryBridgeFinal1))).tape x =
+    (BB6Coverage.Agent48Champion.frame (fun y => carryBridgeArea1 (y-h)) bg
+      (BB6Coverage.shiftConfig h (embed carryBridgeFinal1))).tape x =
         (if x ≤ h then true else decide (x % 3 = 1)) := by
   have ha : carryBridgeArea1 (x-h) = true := by
     simp [carryBridgeArea1]
     omega
   have hf := bridge1FinalCell_pattern (x-h) hi
   have hframe :
-      (frame (fun y => carryBridgeArea1 (y-h)) bg
-        (shiftConfig h (embed carryBridgeFinal1))).tape x =
+      (BB6Coverage.Agent48Champion.frame (fun y => carryBridgeArea1 (y-h)) bg
+        (BB6Coverage.shiftConfig h (embed carryBridgeFinal1))).tape x =
           (embed carryBridgeFinal1).tape (x-h) := by
-    simp [frame, shiftConfig, ha]
+    simp [BB6Coverage.Agent48Champion.frame, BB6Coverage.shiftConfig, ha]
   rw [hframe, hf]
   by_cases hx : x ≤ h
   · have hle : x-h ≤ 0 := by omega
