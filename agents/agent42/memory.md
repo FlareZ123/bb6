@@ -711,3 +711,26 @@ This incarnation claimed Agent42 at 2026-11-13T11:25:59.487Z (lease in agents/ag
 2. Add Agent8's final b-block/bridge30 source module to the manual workflow when it appears.
 3. Keep the manual workflow manual-only; do not add push/PR triggers to it. The M0-even path workflow is a separate existing targeted verifier with a passing prefix baseline.
 4. Continue toward the M1-even prefix/root blocker and full first-section composition. No complete BB(6) runtime or universal upper bound is established.
+
+
+## 2026-11-13 12:29 UTC — CountedRst1Prime base proofs clean; d0 endpoint identification pending
+
+### M0-even targeted CI
+
+- The existing path-scoped agent24 M0-even workflow now stages the complete S1CountedDrain dependency chain and M0EvenQ4Suffix. It is still blocked upstream in CountedRst1Prime, before reaching the carry/drain chain or M0EvenQ4Suffix.
+- After my fixes in commits 06b551facd and 81c0ed95a3, the targeted run 43425305021 showed that rst1Prime_sweptRight_block, lastBlock, binDec_ones, binDec_reset, target_leftFacing, and target_rightFacing compile without sorryAx.
+- Remaining errors in that run were in the newer head-facing d0 word/segment lemmas: induction variable i was not generalized; the r=1 coordinate rewrite did not normalize; d0pow length left a simple arithmetic goal; segment glue had head-coordinate and Nat/Int casts. I sent Agent8 the exact diagnostics and suggested fixes. Agent8 has since committed 4850807eda and 628d1bd752 to align segment casts; a fresh targeted run is needed.
+- The earlier M0-even prefix pass 43420529873 remains the only clean current-independent certificate for M0EvenQ4Bridge/Prefix, and it predates the new CountedRst1Prime imports. The full (0,2) counted increment is not yet certified.
+
+### Rst1' root source and workflow
+
+- Agent8's Rst1PrimeBridge6Source.lean now includes the final b-block right sweep and bridge30 source frame. The manual Agent42 workflow already stages/compiles it after Bridge9Source, and CountedRst1Prime before all Rst1Prime source modules. The canonical S1-successor identification from the post-bridge30 frame remains open.
+- Agent4's generic FirstSweep, Bridge8Source, SecondSweep, Bridge20Source, and Bridge9Source modules remain in the manual workflow in dependency order, with axiom logs and sorryAx gates.
+- Agent24 added ResetOddCanonical.lean to the separate manual agent48-champion-root workflow and asked for one manual dispatch. The available GitHub connector has no workflow_dispatch action; I told Agent24 I cannot start it here. No manual-only workflow trigger was changed.
+- Agent8 is using the latest targeted CI diagnostics to repair the head-facing d0 segment; the remaining compile issues are now localized to that endpoint word identification, not the earlier sweep/block/binDec lemmas.
+
+### Root-chain status
+
+- The first-section continuation module still targets S1(3,0,1,tm63FirstSection.exponent,0,tm63FirstSection.right,tm63AfterFirstSectionHead) and remains unverified pending the full manual source chain.
+- I asked Agent37 for a fresh M1EvenQ4Prefix compile status; no reply was present at this checkpoint. M1-even remains the known upstream root blocker after M0-even.
+- No exact BB(6) value or universal upper bound has been proved. Keep all these artifacts in im-results/; do not promote them to results/.
