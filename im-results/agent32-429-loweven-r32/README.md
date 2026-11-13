@@ -1,6 +1,6 @@
 # #429 low-even r=32: source-level no-fatal continuation
 
-**Status: concrete leaf module compiled against the original-source dependency chain; a blank-root composition candidate has now been added, and integrated manual validation remains pending.** Run [43365025686](https://github.com/FlareZ123/bb6/actions/runs/43365025686) compiled this complete module and printed axiom reports for every public declaration: only standard `propext`, `Quot.sound`, and `Classical.choice` dependencies, with no `sorryAx` in this module. The overall workflow failed later in unrelated `Low43Continuation.lean`, whose declarations did contain `sorryAx`; it was not a green workflow. The isolated manual-only gate is `.github/workflows/agent32-loweven-r32.yml`. This is one concrete prepared-J instance of the conjectural low-even (r=4k) row, not a parameter-uniform return theorem and not a decision of the authentic blank-root machine.
+**Status: concrete leaf module compiled against the original-source dependency chain; 20,687- and 43,862-step blank-root composition candidates have been added, and integrated manual validation remains pending.** Run [43365025686](https://github.com/FlareZ123/bb6/actions/runs/43365025686) compiled this complete module and printed axiom reports for every public declaration: only standard `propext`, `Quot.sound`, and `Classical.choice` dependencies, with no `sorryAx` in this module. The overall workflow failed later in unrelated `Low43Continuation.lean`, whose declarations did contain `sorryAx`; it was not a green workflow. The isolated manual-only gate is `.github/workflows/agent32-loweven-r32.yml`. This is one concrete prepared-J instance of the conjectural low-even (r=4k) row, not a parameter-uniform return theorem and not a decision of the authentic blank-root machine.
 
 ## Exact candidate
 
@@ -51,6 +51,30 @@ Agent 1's `RootJunc136To45.blank_root_no_fatal_to_junc45` composes the genuine b
 New `LowEvenR32RootChain.lean` composes that theorem with this module's 4,407-step physical no-fatal leaf. Its theorem `BB429LowEvenR32RootChain.blank_root_lowEvenR32_to_junc11_146` states that the authentic blank root reaches `Junc(11,0,146)` at step 20,687 and excludes C/01 at every primitive prefix through that endpoint. It also preserves the ordinary-bridge frontier bound and the -81 head displacement of the final leaf.
 
 **This composition is a proof candidate, not yet a CI-certified theorem.** Agent 6's manual-only `.github/workflows/agent6-429-low42.yml` now compiles the root bridge, `LowEvenR32NoFatal.lean`, and `LowEvenR32RootChain.lean` in one unchanged-original-source job, and audits all their public declarations under the global fail-closed `sorryAx` check. This integrated workflow has not yet been dispatched. The isolated r=32 leaf workflow remains useful independently.
+
+## Extended blank-root prefix to 43,862 steps
+
+`LowEvenR32RootExtension.lean` extends the 20,687-step root theorem through three further source-guarded returns and seven outer-safe Junc macros. It introduces a reusable physical lift from `runNoFatal` source certificates to arbitrary complete-tape configurations represented by the input Junc state.
+
+The exact checkpoints are:
+
+| Absolute step | Prepared Junc state | Transition just completed |
+| ---: | --- | --- |
+| 20,687 | `Junc(11,0,146)` | root + concrete r=32 leaf |
+| 24,085 | `Junc(53,0,68)` | two outer-safe returns |
+| 29,698 | `Junc(0,0,184)` | Low42, j=34, k=9 |
+| 40,837 | `Junc(93,0,13)` | five outer-safe returns |
+| 42,137 | `Junc(90,0,26)` | low-odd, v=6, n=42 |
+| 43,862 | `Junc(0,0,216)` | Low42, j=13, k=38 |
+
+The three concrete low-branch source guards are checked by `decide`:
+- `runNoFatal 5613 (junc 53 0 68) = some (junc 0 0 184)`;
+- `runNoFatal 1300 (junc 93 0 13) = some (junc 90 0 26)`;
+- `runNoFatal 1725 (junc 90 0 26) = some (junc 0 0 216)`.
+
+The physical lifts use the complete-tape `Represents` relation and the generic source-guard bridge in this file. Each outer segment is C/0-free before its endpoint and ends in state A. The composed theorem `BB429LowEvenR32RootExtension.blank_root_lowEvenR32_to_junc0_216` states the absolute checkpoints and excludes C/01 at every physical prefix through step 43,862.
+
+**This is a proof candidate, not yet CI-certified.** The manual-only `.github/workflows/agent6-429-low42.yml` now compiles this extension and audits its source, physical, and final root declarations under the fail-closed global `sorryAx` check. That integrated workflow has not yet been dispatched.
 
 ## Root connection and limits
 
