@@ -1,6 +1,7 @@
 import CountedReset
 import CountedQ4Prefix
 import Q4Suffix
+import Q4RightEndpoint
 import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent48CountedInc0
@@ -10,6 +11,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
+open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent8CountedReset
 
 /-- The even n=6, m=1 branch reaches a q4 suffix after 44+12a moves.
@@ -37,11 +39,11 @@ theorem m1EvenQ4Bridge_heads :
 private theorem binDec_three_six :
     binDec 3 6 = d1 ++ d0 ++ d0 := by
   have h1 : binDec 3 6 = d1 ++ binDec 2 3 := by
-    simpa using binDec_even 2 3 (by norm_num)
+    simpa using binDec_even 2 3 (by decide)
   have h2 : binDec 2 3 = d0 ++ binDec 1 1 := by
-    simpa using binDec_odd 1 1 (by norm_num)
+    simpa using binDec_odd 1 1 (by decide)
   have h3 : binDec 1 1 = d0 ++ binDec 0 0 := by
-    simpa using binDec_odd 0 0 (by norm_num)
+    simpa using binDec_odd 0 0 (by decide)
   simp [h1,h2,h3,binDec_zero]
 
 private theorem m1EvenSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
@@ -96,7 +98,7 @@ theorem m1EvenQ4Bridge_input_match (a b : Nat) (h : Int) :
         sideBit (markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh) (1+k) =
           decide (y ∈ m1EvenQ4BridgeStart.marked) := by
       interval_cases y <;>
-        norm_num [k, m1EvenQ4BridgeStart, markerWord, d0, d1, lh, sideBit]
+        simp [k, m1EvenQ4BridgeStart, markerWord, d0, d1, lh, sideBit]
     exact hleft.trans hbits
   · have hypos : 1 ≤ y := by omega
     interval_cases y
@@ -344,7 +346,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
         have hcut := m1EvenQ4CutTape_eq_end_inside 0 b h (h+0) hin
         have hmark :
             decide (((h+0)-(h-(1:Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
-          norm_num [hrel,m1EvenQ4BridgeEnd]
+          simp [hrel,m1EvenQ4BridgeEnd]
         simpa [hrel] using hcut.trans hmark
       · by_cases ha1 : a = 1
         · subst a
@@ -354,7 +356,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
           have hcut := m1EvenQ4CutTape_eq_end_inside 1 b h (h+0) hin
           have hmark :
               decide (((h+0)-(h-(4:Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
-            norm_num [hrel,m1EvenQ4BridgeEnd]
+            simp [hrel,m1EvenQ4BridgeEnd]
           simpa [hrel] using hcut.trans hmark
         · have hout : m1EvenQ4Inside
               ((h+0)-(h-((3*a+1 : Nat) : Int))) = false := by
@@ -374,7 +376,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
         have hcut := m1EvenQ4CutTape_eq_end_inside 0 b h (h+1) hin
         have hmark :
             decide (((h+1)-(h-(1:Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
-          norm_num [hrel,m1EvenQ4BridgeEnd]
+          simp [hrel,m1EvenQ4BridgeEnd]
         simpa [hrel] using hcut.trans hmark
       · have hout : m1EvenQ4Inside
             ((h+1)-(h-((3*a+1 : Nat) : Int))) = false := by
@@ -392,7 +394,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
         have hcut := m1EvenQ4CutTape_eq_end_inside 0 b h (h+2) hin
         have hmark :
             decide (((h+2)-(h-(1:Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
-          norm_num [hrel,m1EvenQ4BridgeEnd]
+          simp [hrel,m1EvenQ4BridgeEnd]
         simpa [hrel] using hcut.trans hmark
       · have hout : m1EvenQ4Inside
             ((h+2)-(h-((3*a+1 : Nat) : Int))) = false := by
@@ -411,7 +413,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
         have hcut := m1EvenQ4CutTape_eq_end_inside 0 b h (h+3) hin
         have hmark :
             decide (((h+3)-(h-(1:Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
-          norm_num [hrel,m1EvenQ4BridgeEnd]
+          simp [hrel,m1EvenQ4BridgeEnd]
         simpa [hrel] using hcut.trans hmark
       · have hout : m1EvenQ4Inside
             ((h+3)-(h-((3*a+1 : Nat) : Int))) = false := by
@@ -619,11 +621,11 @@ theorem m1Even_reset_prefix_frame (a b : Nat) (h : Int) :
 private theorem binDec_three_five :
     binDec 3 5 = d0 ++ d1 ++ d0 := by
   have h1 : binDec 3 5 = d0 ++ binDec 2 2 := by
-    simpa using binDec_odd 2 2 (by norm_num)
+    simpa using binDec_odd 2 2 (by decide)
   have h2 : binDec 2 2 = d1 ++ binDec 1 1 := by
-    simpa using binDec_even 1 1 (by norm_num)
+    simpa using binDec_even 1 1 (by decide)
   have h3 : binDec 1 1 = d0 ++ binDec 0 0 := by
-    simpa using binDec_odd 0 0 (by norm_num)
+    simpa using binDec_odd 0 0 (by decide)
   simp [h1,h2,h3,binDec_zero]
 
 def m1EvenQ4LeftFacing (a : Nat) : List Bool :=
@@ -634,7 +636,7 @@ private theorem sideBit_binDec36_eq_binDec35_after5 (j : Nat) (hj : 5 ≤ j) :
       sideBit (d0 ++ d1 ++ d0 ++ lh) j := by
   by_cases hj5 : j = 5
   · subst j
-    norm_num [sideBit,d1,d0]
+    simp [sideBit,d1,d0]
   · have hj6 : 6 ≤ j := by omega
     have hs :
         sideBit (d1 ++ d0 ++ d0 ++ lh) j =
@@ -714,7 +716,7 @@ private theorem m1EvenQ4LeftFacingBoundaryBit (a k : Nat)
     (markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh)
     (3*a+1+k) (by simp [d1pow_length]; omega)]
   interval_cases k <;>
-    norm_num [m1EvenQ4BridgeEnd,markerWord,d0,d1,lh,sideBit]
+    simp [m1EvenQ4BridgeEnd,markerWord,d0,d1,lh,sideBit]
 
 private theorem m1EvenQ4CutTape_eq_source_left
     (a b : Nat) (h : Int) (i : Nat) (hi : 3*a+11 ≤ i) :
@@ -762,9 +764,9 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
         have hmark : decide (r ∈ m1EvenQ4BridgeEnd.marked) = true := by
           have hcases : r=2 ∨ r=3 ∨ r=4 := by omega
           rcases hcases with h2 | h3 | h4
-          · subst r; norm_num [m1EvenQ4BridgeEnd]
-          · subst r; norm_num [m1EvenQ4BridgeEnd]
-          · subst r; norm_num [m1EvenQ4BridgeEnd]
+          · subst r; simp [m1EvenQ4BridgeEnd]
+          · subst r; simp [m1EvenQ4BridgeEnd]
+          · subst r; simp [m1EvenQ4BridgeEnd]
         have hval : m1EvenQ4CutTape a b h x = true := by
           simpa [hrel] using hcut.trans hmark
         exact hval.trans htarget.symm
@@ -786,11 +788,11 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
           dsimp [x]
           omega
         have hin : m1EvenQ4Inside 1 = true := by
-          norm_num [m1EvenQ4Inside]
+          simp [m1EvenQ4Inside]
         have hcut := m1EvenQ4CutTape_eq_end_inside a b h x
           (by simpa [hrel] using hin)
         have hmark : decide (1 ∈ m1EvenQ4BridgeEnd.marked) = true := by
-          norm_num [m1EvenQ4BridgeEnd]
+          simp [m1EvenQ4BridgeEnd]
         have hval : m1EvenQ4CutTape a b h x = true := by
           simpa [hrel] using hcut.trans hmark
         exact hval.trans htarget.symm
@@ -800,11 +802,11 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
             dsimp [x]
             omega
           have hin : m1EvenQ4Inside 0 = true := by
-            norm_num [m1EvenQ4Inside]
+            simp [m1EvenQ4Inside]
           have hcut := m1EvenQ4CutTape_eq_end_inside a b h x
             (by simpa [hrel] using hin)
           have hmark : decide (0 ∈ m1EvenQ4BridgeEnd.marked) = false := by
-            norm_num [m1EvenQ4BridgeEnd]
+            simp [m1EvenQ4BridgeEnd]
           have htarget : sideBit (m1EvenQ4LeftFacing a) i = false := by
             subst i
             have hlist :
