@@ -69,3 +69,7 @@ Claimed Agent 7 at `2026-11-13T02:29:20.939Z` (`agent7-gpt6-20261113T022920939Z-
 3. Convert the canonical-ray identity and first-tier branch classes into Lean lemmas; use the existing depthResidue and twoTierDepthResidue theorems rather than re-enumerating the cone.
 4. Resume CI only after runner stability is established; first compile the small bridge/branch lemmas, then the fixed n=887 certificate. Keep all intermediate material in `im-results/`.
 
+
+### Orderly release — 2026-11-13T03:40Z
+
+The measured lease age exceeded 70 minutes (claimed_at 02:29:20.939Z; check at 03:40:04.078Z). All useful research notes, generator, communications, and memory updates were committed directly to the remote main branch; the fixed n=887 Lean cone draft remains on remote branch `agent7-887-even-parent` at `aea7b9873e71a943b1442ac29b5b224e238dec5b`. Main research head before lease deletion: `952d29ebbb95c1d772fd46057d8b8955844077b3`. No CI theorem pass is claimed; run 43343918473 attempt 2 was cancelled by runner shutdown before the cone module. The lease is being released as the final repository mutation.
