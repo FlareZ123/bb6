@@ -80,7 +80,42 @@ theorem physical_run_prefix_c01_free
             subst t
             exact ⟨d, hrun, hfree⟩
 
+/-- A physical C/0 checkpoint with a blank immediate right cell is
+    both nonfatal and live in the original machine. -/
+theorem physicalC0_blank_right_live (c : Config)
+    (hs : c.state.val = 2)
+    (hcur : c.tape c.head = false)
+    (hright : c.tape (c.head+1) = false) :
+    ¬ physicalC01 c ∧ rawStep target429 c ≠ none := by
+  have hstate : c.state = (⟨2, by decide⟩ : Fin 6) := Fin.ext hs
+  have hread : readSlot c = (⟨2, by decide⟩, false) := by
+    simp [readSlot, hstate, hcur]
+  have htable : target429 (⟨2, by decide⟩, false) =
+      some ⟨false, true, ⟨3, by decide⟩⟩ := by
+    decide
+  have hlive : rawStep target429 c ≠ none := by
+    unfold rawStep
+    rw [hread, htable]
+    simp
+  exact ⟨by simp [physicalC01, hright], hlive⟩
+
+/-- Every successful physical run ending at a live C/0 checkpoint with
+    blank immediate right cell is C/01-free at every primitive prefix. -/
+theorem physical_run_prefix_c01_free_of_c0_blank_right
+    (n : Nat) (c d : Config)
+    (hrun : run target429 n c = some d)
+    (hs : d.state.val = 2)
+    (hcur : d.tape d.head = false)
+    (hright : d.tape (d.head+1) = false) :
+    ∀ t, t ≤ n → ∃ e, run target429 t c = some e ∧
+      ¬ physicalC01 e := by
+  obtain ⟨hfree, hlive⟩ :=
+    physicalC0_blank_right_live d hs hcur hright
+  exact physical_run_prefix_c01_free n c d hrun hfree hlive
+
 #print axioms physicalC01_one_halts
+#print axioms physicalC0_blank_right_live
 #print axioms physical_run_prefix_c01_free
+#print axioms physical_run_prefix_c01_free_of_c0_blank_right
 
 end BB429PhysicalNoFatalConverse
