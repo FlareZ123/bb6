@@ -1,5 +1,6 @@
 import CountedReset
 import ChampionRootBridge
+import TerminalCount
 import S1Encoder
 import CountedQ4Prefix
 import Q4Suffix
