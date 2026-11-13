@@ -187,7 +187,7 @@ Exact modular evaluation gives the compatible class
 \[
 \boxed{r\equiv74803\pmod{177147}.}
 \]
-On this class the successive target numerators satisfy
+Its least nonnegative representative has \(n=887+13122\cdot74803=981565853\). On this class the successive target numerators satisfy
 \[
 v_3(Q)=10,\qquad
 v_3(G_1)=2,\qquad
@@ -196,9 +196,20 @@ v_3(G_3)\ge4,\qquad
 v_3(G_4)=2,\qquad
 3\mid G_5.
 \]
-The inequality \(v_3(G_3)\ge4\), rather than exact valuation 3, is intentional: \(t_4=2\) only needs \(27\mid G_3\). The extra factor of 3 is allowed because the odd ResetParent arm requires only an odd quotient. The five-edge class has density \(1/177147\) in \(r\), and is a subcylinder of the four-edge prefix \(r\equiv15754\pmod{19683}\). All five dyadic bands hold for every sufficiently large member of the class.
+The inequality \(v_3(G_3)\ge4\), rather than exact valuation 3, is intentional: \(t_4=2\) only needs \(27\mid G_3\). The extra factor of 3 is allowed because the odd ResetParent arm requires only an odd quotient. The five-edge class has density \(1/177147\) in \(r\), and is a subcylinder of the four-edge prefix \(r\equiv15754\pmod{19683}\).
 
-The exact modular residues are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). This finite calculation checks the displayed specialization; the band-compatible induction above is the arbitrary-depth mathematical argument.
+The five limiting band ratios all lie in \((6.2,7.9)\), and each factor \(2^{\sigma_i}/3^{t_i+1}\) is below \(2^{10}\). The coefficient recurrence gives the following bit lengths for the linear and constant coefficients \((B_i,C_i)\) of \(Q=X_0,X_1,\ldots,X_4\):
+\[
+(3408,3408),\ (3417,3417),\ (3420,3420),\ (3422,3422),\ (3426,3426).
+\]
+Thus \(|B_i|,|C_i|<2^{3430}\) for every coefficient used in the five band tests. For \(n\ge7000\), \(n+1<2^{n/2}\), so the difference between each exact normalized band ratio and its limit is less than
+\[
+2^{10}\frac{2^{3430}(n+1)}{2^n}
+<2^{3440-n/2}\le2^{-60}.
+\]
+Consequently every exact ratio remains strictly between 6 and 8 with margin greater than \(0.1\). Also \(k_i=n+t_i-\sigma_i\ge n-14\), so \(0.1\cdot2^{k_i}>1\). The integer bands \(6\cdot2^{k_i}+1\le2^{t_i}e_i\le8\cdot2^{k_i}-1\) therefore hold for every \(n\ge7000\) in the class. In particular, the least representative \(r=74803\) itself gives a genuine five-edge chain, and so does every nonnegative member of the class.
+
+The exact modular residues and coefficient bit lengths are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). The calculation checks the finite specialization; the band-compatible induction above is the arbitrary-depth mathematical argument.
 
 ## Scope and next formalization
 
