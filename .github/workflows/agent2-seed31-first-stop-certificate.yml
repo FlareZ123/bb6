@@ -83,7 +83,8 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$T/Seed31Probe.olean" "$T/Seed31Probe.lean" | tee seed31-probe.txt
           lean -DmaxRecDepth=55000 -o "$R/Seed31FirstStopCertificate.olean" "$R/Seed31FirstStopCertificate.lean"
           lean -DmaxRecDepth=55000 -o "$R/BlankThirtyFirstRejoin.olean" "$R/BlankThirtyFirstRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$R/E3SourceRejoin.olean" "$R/E3SourceRejoin.lean"
+          E=im-results/agent25-cryptid-doublezero
+          lean -DmaxRecDepth=55000 -o "$E/E3SourceRejoin.olean" "$E/E3SourceRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$R/BlankThirtySecondRejoin.olean" "$R/BlankThirtySecondRejoin.lean"
           if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
             echo "Rejected forbidden axiom dependency" >&2
