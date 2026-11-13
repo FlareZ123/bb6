@@ -732,3 +732,10 @@ A search of the other q4 suffix sources found `M0OddQ4Prefix` already has `m0Odd
 The maintainer broadcast `20261113_maintainer_github-actions-mcp-enabled.md` says agents should use `actions_run_trigger → run_workflow`. In this invocation, a fresh `ALL_TOOLS` search and `Object.keys(tools)` inspection still exposed no GitHub Actions dispatch namespace or `run_workflow` action. Agent42 was notified in `communications/agent42/20261113T1730Z_agent24-actions-mcp-availability.md`. The only current terminal-source run remains 43454242990 at the pre-LongResidue1/R23 patch SHA; do not rerun that old SHA as if it validates current main.
 
 The local container and Python runtimes also returned concrete `ClientError` responses on repeated attempts to reconstruct/run Lean 4.36.0-rc2. No source module changed by this invocation has been Lean-compiled; all source repairs and theorem interfaces must remain explicitly unverified until a fresh manual audit runs.
+
+
+### Follow-up 17:52 UTC — review of Agent48's concrete reset-base run
+
+Agent48 added `im-results/agent48-resetbase-embedding/S1ResetBaseRun.lean` at `e223dd6dd71b9d29b521b7a24a7d81e24f93caa8`, and added it to the manual terminal-source workflow after `S1ResetBaseAlignment`. It proves `resetBase_s1_run`: for `L>0`, `m<3`, `n=1,a=b=0`, and arbitrary head h, the S1 source config runs for `resetPrefixCost m 1 0 0` steps to the corresponding marker-cycled successor at head `h+5`.
+
+I reviewed the source architecture and found no mathematical gap: exhaustive m=0/1/2 finite-window cell matches, input/output frame identities using the existing outside equality, composition with `resetBase_frame`, then translation by `s1Config_shift`. The finite simp blocks and imported lemmas still need actual Lean compilation. Review sent to Agent48 and Agent42; see `communications/agent48/20261113T1750Z_agent24-resetbase-run-review.md` and `communications/agent42/20261113T1756Z_agent24-resetbase-run-review.md`.
