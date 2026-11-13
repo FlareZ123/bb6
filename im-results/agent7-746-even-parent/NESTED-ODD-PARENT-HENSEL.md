@@ -160,15 +160,19 @@ After \(d\) parent edges the final class has modulus
 \]
 It contains infinitely many natural \(r\). Each of the finitely many band ratios is strictly inside \((6,8)\), so all corresponding integer band conditions hold once \(r\) is sufficiently large. This proves the stated arbitrary-finite-depth result and its positive density for each fixed depth.
 
-## Explicit five-edge specialization
+## Explicit seven-edge specialization
 
-The following choices give five successive bands:
+The following choices give seven successive bands:
 \[
-(t_1,\sigma_1)=(7,14),\quad
+\begin{aligned}
+&(t_1,\sigma_1)=(7,14),\quad
 (t_2,\sigma_2)=(1,9),\quad
-(t_3,\sigma_3)=(0,9),\quad
-(t_4,\sigma_4)=(2,13),\quad
-(t_5,\sigma_5)=(1,13).
+(t_3,\sigma_3)=(0,9),\\
+&(t_4,\sigma_4)=(2,13),\quad
+(t_5,\sigma_5)=(1,13),\quad
+(t_6,\sigma_6)=(0,13),\quad
+(t_7,\sigma_7)=(0,14).
+\end{aligned}
 \]
 Their limiting band ratios are
 \[
@@ -178,38 +182,46 @@ i&R_i\\\hline
 2&3560896/531441\approx6.7004540\\
 3&11481056/1594323\approx7.2012108\\
 4&326640896/43046721\approx7.5880552\\
-5&2471264192/387420489\approx6.3787648
+5&2471264192/387420489\approx6.3787648\\
+6&7372657888/1162261467\approx6.3433700\\
+7&21788896160/3486784401\approx6.2489940
 \end{array}
 \]
-and are all strictly between 6 and 8.
+and all lie strictly inside \((6.2,7.9)\).
 
-Exact modular evaluation gives the compatible class
+Exact modular evaluation gives the seven-edge class
 \[
-\boxed{r\equiv74803\pmod{177147}.}
+\boxed{r\equiv74803\pmod{531441}.}
 \]
-Its least nonnegative representative has \(n=887+13122\cdot74803=981565853\). On this class the successive target numerators satisfy
+Its least representative has \(n=887+13122\cdot74803=981565853\). On this class the successive target numerators satisfy
 \[
-v_3(Q)=10,\qquad
-v_3(G_1)=2,\qquad
-v_3(G_2)=1,\qquad
-v_3(G_3)=5,\qquad
-v_3(G_4)=2,\qquad
-3\mid G_5.
+v_3(Q)=10,\quad v_3(G_1)=2,\quad v_3(G_2)=1,\quad
+v_3(G_3)=5,\quad v_3(G_4)=2,\quad v_3(G_5)=1,\quad
+3\mid G_6.
 \]
-The valuation \(v_3(G_3)=5\) exceeds the threshold 3 required by \(t_4=2\), which only needs \(27\mid G_3\). The quotient \(G_3/27\) still has extra factors of 3, but it remains odd; this is allowed because the odd ResetParent arm requires only an odd quotient. The five-edge class has density \(1/177147\) in \(r\), and is a subcylinder of the four-edge prefix \(r\equiv15754\pmod{19683}\). The modular check is performed at the representative; the scaled shift law shows these valuations persist throughout the full class: a shift by \(3^{11}\) changes \(Q,G_1,G_2,G_3,G_4,G_5\) by multiples of \(3^{19},3^9,3^7,3^6,3^3,3\), respectively.
+The higher valuation \(v_3(G_3)=5\) is allowed: \(t_4=2\) only needs \(27\mid G_3\), and the quotient remains odd. The five-edge cylinder \(r\equiv74803\pmod{177147}\) already has \(3\mid G_5\), so the sixth edge with \((t_6,\sigma_6)=(0,13)\) holds throughout that cylinder. Its three lifts to modulus \(3^{12}=531441\) have
+\[
+G_6\bmod3=(0,2,1),
+\]
+respectively at \(r=74803,\ 251950,\ 429097\). Thus the first lift is the unique one making \(3\mid G_6\), and it gives the seventh edge with \((t_7,\sigma_7)=(0,14)\). The seven-edge cylinder has density \(1/531441\) in \(r\).
 
-The five limiting band ratios all lie in \((6.2,7.9)\), and each factor \(2^{\sigma_i}/3^{t_i+1}\) is below \(2^{10}\). The coefficient recurrence gives the following bit lengths for the linear and constant coefficients \((B_i,C_i)\) of \(Q=X_0,X_1,\ldots,X_4\):
+The five band tests use the linear/constant coefficients \((B_i,C_i)\) of \(Q=X_0,X_1,\ldots,X_6\), whose bit lengths are
 \[
-(3408,3408),\ (3417,3417),\ (3420,3420),\ (3422,3422),\ (3426,3426).
+(3408,3408),\ (3417,3417),\ (3420,3420),\ (3422,3422),\
+(3426,3426),\ (3429,3429),\ (3431,3431).
 \]
-Thus \(|B_i|,|C_i|<2^{3430}\) for every coefficient used in the five band tests. For \(n\ge7000\), \(n+1<2^{n/2}\), so the difference between each exact normalized band ratio and its limit is less than
+Thus \(|B_i|,|C_i|<2^{3432}\) for every coefficient used in the seven band tests. Each factor \(2^{\sigma_i}/3^{t_i+1}\) is below \(2^{13}\). For \(n\ge7000\), \(n+1<2^{n/2}\), so the difference between each exact normalized band ratio and its limit is less than
 \[
-2^{10}\frac{2^{3430}(n+1)}{2^n}
-<2^{3440-n/2}\le2^{-60}.
+2^{13}\frac{2^{3432}(n+1)}{2^n}
+<2^{3445-n/2}\le2^{-55}.
 \]
-Consequently every exact ratio remains strictly between 6 and 8 with margin greater than \(0.09\). Also \(k_i=n+t_i-\sigma_i\ge n-14\), so \(0.09\cdot2^{k_i}>1\). The integer bands \(6\cdot2^{k_i}+1\le2^{t_i}e_i\le8\cdot2^{k_i}-1\) therefore hold for every \(n\ge7000\) in the class. In particular, the least representative \(r=74803\) itself gives a genuine five-edge chain, and so does every nonnegative member of the class.
+Consequently every exact ratio lies in \((6.19,7.91)\), with margin greater than \(0.09\) from both endpoints 6 and 8. Also \(k_i=n+t_i-\sigma_i\ge n-14\), so \(0.09\cdot2^{k_i}>1\). The exact integer bands
+\[
+6\cdot2^{k_i}+1\le2^{t_i}e_i\le8\cdot2^{k_i}-1
+\]
+therefore hold for every \(n\ge7000\) in the class. In particular, the least representative itself gives a genuine seven-edge chain, and so does every nonnegative member of the class.
 
-The exact modular residues and coefficient bit lengths are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). The calculation checks the finite specialization; the band-compatible induction above is the arbitrary-depth mathematical argument.
+The exact modular residues, three next-digit values, coefficient bit lengths, and limiting ratios are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). The band-compatible induction above is the arbitrary-depth mathematical argument.
 
 ## Scope and next formalization
 
