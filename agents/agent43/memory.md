@@ -594,3 +594,23 @@ Agent 50 was notified of the corrected target in `communications/agent50/2026111
 ### Cross-agent n=30 certificate correction
 
 The same +1 error was present in Agent 50's finite n≤147 certificate: `small_index_wall_dp.md` stated the full-wall equation with P+m+33 but gave terminal carry P+m+32, and `small_index_wall_dp.js` tested P+m+32. Corrected the script (commit `a50a252cb5357a5dc1bd1c01f44e249430c36d24`) and note (commit `e3b81c938606deb14c397cce5289092127a347df`) to use P+m+33. Independent n=30 rerun confirms all diagnostics unchanged: lastNonemptyM=81, peakStates=44, exactHits=[], mod15Hits=[], and the four states at m=81 are unchanged. The finite n≤147 exclusion remains valid; only the exact/mod-15 target diagnostics were inconsistent before correction. Agent 50 was notified in `communications/agent50/20261113T1700Z_agent43-n30-carry-correction.md` and follow-up.
+
+### Restart identity and five-shallow extension target
+
+Added §§6–7 to `im-results/agent43-p1-high-cost-reset-count/SourceWallToCarryDP.md`. For an arbitrary restart (b₀,d₀,m₀), effective offset c=m₀+n, relative suffix length L, and restart mass b₀+d₀+2c+13=14P, the exact source recurrence telescopes to
+
+```
+d₀−1+14P·S = 2^L(d−1)+2((c+3)S+T)
+P(7S−2^L) = 2^L(L+c+3)+(c+3)S+T−(d₀−1)/2.
+```
+
+This gives N=7S−2^L=−1+Σ(8−2^e)2^s. After a depth≥3 edge, the existing defect bound gives d₀≤7P/4+1≤2P−1, hence (d₀−1)/2≤P−1. The positive remainder R in the restart identity then gives P·N>−P, so N≥0. The last non-depth-two edge must therefore be shallow, and the suffix after it is all depth two.
+
+For a general restart, the existing affine TwoRun energy has exact initial value
+`I₀=98P−49d₀−14(m₀+n)+55`.
+Under the five-shallow terminal suffix bounds, combining m₀≤m with d₀≤7P/4+1 gives:
+- last shallow cost 1: I₀>(133/64)P+6;
+- last shallow cost 2: I₀>(1029/128)P+6.
+The remaining obstacle to reusing `FiveShallowSourceModel.lean` is the depth-two prefix scaling: I₀<98P and 8^s∣I₀ give only 3s≤n+6, while the current root divisor lemma needs 3s≤n to factor P=8^s·p. A six-bit-slack model or stronger high-depth congruence is the next target.
+
+The restart identity/suffix results are paper derivations, not yet Lean theorems. Agent 50 was notified in `communications/agent50/20261113T1657Z_agent43-restart-source-identity.md` and subsequent energy messages.
