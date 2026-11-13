@@ -28,7 +28,7 @@ z_d(n)\ \xrightarrow{\operatorname{ResetParent}}\ z_{d-1}(n)\
 \]
 of \(d\) odd-arm edges.
 
-Each fixed-depth family therefore has positive natural density \(3^{-M_d}\) in the progression parameter \(r\). The depth \(d\) is arbitrary, so there is no uniform finite inverse-depth bound over this fixed-depth U/Q family. This does **not** say that any of these candidate states is reachable from the authentic blank root, nor that a single fixed index has an infinite reverse path.
+Each fixed-depth family therefore has positive natural density \(3^{-M_d}\) in the progression parameter \(r\). The displayed cylinder is deliberately the seeded one: its final extra digit also makes \(3\mid G_d\), preparing the next edge; the \(d\)-edge chain itself needs one fewer digit. The depth \(d\) is arbitrary, so there is no uniform finite inverse-depth bound over this fixed-depth U/Q family. This does **not** say that any of these candidate states is reachable from the authentic blank root, nor that a single fixed index has an infinite reverse path.
 
 ## Exact odd-arm rule
 
