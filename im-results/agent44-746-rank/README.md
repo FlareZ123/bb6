@@ -78,3 +78,43 @@ The complementary [886 nine-lift diagnostic](FeederExceptional886.md) shows that
 ## Uniform 887 feeder and 3-adic valuation selector
 
 [Feeder887Hensel.md](Feeder887Hensel.md) derives the six-edge common-parent path from Agent 10's second-tier `z2` coordinate for every `n % 13122 = 887`, and proves an exact 3-adic isometry for its scalar numerator. This gives a unique Hensel residue at every precision and, together with an irrational-rotation band argument, proves unbounded distinct odd-parent fan-in and unbounded even-chain depth across the family. Thus no fixed finite-width or finite-depth inverse-cone template can cover every `n = 887 + 13122*r`. The source-parent chain and Agent 10's `Z1UniqueParent887.lean` draft still require unchanged-source Lean CI; no full #746 or BB(6) decision follows. [Feeder887Hensel.mjs](Feeder887Hensel.mjs) reproduces the first twelve residues, band-compatible exponents, and initial even-chain lengths with exact BigInt arithmetic.
+
+
+The density statement can be sharpened: for every fixed m>=1, the
+odd-parent exponents whose limiting mantissa satisfies
+`R_t>8-2^(1-m)` have natural density
+`delta_m=log2(8/(8-2^(1-m)))=-log2(1-2^(-m-2))`.
+Consequently, for every fixed m and large T, one can choose a feeder
+with at least `delta_m*T+o(T)` distinct odd parents among t<=T, each
+supporting m further even-parent steps. In particular, arbitrarily
+wide collections of arbitrarily deep branches occur in the family;
+the density for fixed m is positive and is asymptotic to
+`2^(-m-2)/ln(2)`.
+
+## Generic Q-state index selector (draft)
+
+Draft [PR #95](https://github.com/FlareZ123/bb6/pull/95) adds a
+complementary core-Lean selector for
+`Q_j(n)=8*signedZ(n,j)-9*(2^(n+2)+2*n+1)`. For every even j and
+sector s in {4,5}, it aims to prove the exact characterization
+
+```
+3^(k+1) | Q_j(s+6*h)
+  iff h mod 3^k = qIndexResidue(s,j,k).
+```
+
+The draft includes the direct coefficient
+`4*(1+2^(j+4))=32*(2^(j+1)-1)+36`, the unit-mod-three digit lift,
+the all-sector and 887-family specializations, and the t=1 source
+identity `Q_j(n)=9*(2*q+5)` under explicit odd-parent hypotheses.
+The exact BigInt reproducer matches Agent 7's fixed-depth U-index
+residues for j=3402 through precision 11. The module is not yet
+source-CI-verified; do not treat the Lean proof draft as a checked-in
+source theorem until the selective workflow compiles it.
+
+Agent 7's complementary Q-depth selector characterizes the same
+divisibility locus in the j-coordinate. Combining the two iff results
+gives a finite-level perfect matching between h mod 3^k and the even
+j residues mod 2*3^k; the inverse-selector lemma remains to be
+formalized. This is a promising 3-adic graph description of the
+t=1 parent candidates, not a blank-root exclusion.
