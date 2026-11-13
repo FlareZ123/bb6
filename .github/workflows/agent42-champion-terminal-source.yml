@@ -129,13 +129,6 @@ jobs:
             echo '::error::sorryAx found in counted carry residue bridge dependencies'
             exit 1
           fi
-          cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/LongResidue1.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/long-residue1-axioms.log
-          lean -o LongResidue1.olean LongResidue1.lean 2>&1 | tee /tmp/a42-terminal/long-residue1-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/long-residue1-axioms.log; then
-            echo '::error::sorryAx found in long-residue1 carry output theorem dependencies'
-            exit 1
-          fi
           lean -o ChampionModular.olean ChampionModular.lean
           lean -o CostRecurrence.olean CostRecurrence.lean
           lean -o CountPattern.olean CountPattern.lean
@@ -415,6 +408,24 @@ jobs:
             echo '::error::sorryAx found in first-section root continuation'
             exit 1
           fi
+          # Agent 8's root-connected Rst1' reset and counted-drain composition.
+          cp "$GITHUB_WORKSPACE/im-results/agent8-rst1prime/TM63M1OddRst1PrimeContinuation.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/rst1prime-root-continuation-axioms.log
+          lean -o TM63M1OddRst1PrimeContinuation.olean TM63M1OddRst1PrimeContinuation.lean 2>&1 | tee /tmp/a42-terminal/rst1prime-root-continuation-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/rst1prime-root-continuation-axioms.log; then
+            echo '::error::sorryAx found in root-connected Rst1Prime continuation'
+            exit 1
+          fi
+
+          # This independent carry-output residue audit is deliberately after the
+          # root-critical composition modules, so its failure cannot mask them.
+          cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/LongResidue1.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/long-residue1-axioms.log
+          lean -o LongResidue1.olean LongResidue1.lean 2>&1 | tee /tmp/a42-terminal/long-residue1-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/long-residue1-axioms.log; then
+            echo '::error::sorryAx found in long-residue1 carry output theorem dependencies'
+            exit 1
+          fi
           # This independent base-frame leaf is intentionally last: it is not an
           # import of the root/q4/drain/terminal chain, so its failure must not
           # hide diagnostics from the more decisive source-composition modules.
@@ -493,6 +504,7 @@ jobs:
             /tmp/a42-terminal/m1-odd-q4-suffix-axioms.log
             /tmp/a42-terminal/m1-odd-root-composition-axioms.log
             /tmp/a42-terminal/m1-odd-first-section-continuation-axioms.log
+            /tmp/a42-terminal/rst1prime-root-continuation-axioms.log
             /tmp/a42-terminal/rst1-prime-first-sweep-axioms.log
             /tmp/a42-terminal/rst1-prime-bridge8-source-axioms.log
             /tmp/a42-terminal/rst1-prime-second-sweep-axioms.log
