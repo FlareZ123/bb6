@@ -23,7 +23,13 @@ The endpoint is
 s1Config 3 3 1 tm63AfterM2EvenA 0 tm63AfterM2EvenB tm63AfterM2EvenHead
 ```
 
-where the parameters are recursively defined in the Lean module:
+The intermediate root parameters are
+
+- `A0 = 71 + (2^63-1) + 2`;
+- `B0 = 2^(2^63-1)-1`;
+- `H0 = 223 + 5 + 3*(2^63-1)`.
+
+where the subsequent parameters are recursively defined in the Lean module:
 
 - `A1 = A0 + B0 + 1`, `B1 = 2^B0 - 1`, `H1 = H0 + 5 + 3*B0`;
 - `A2 = A1 + B1 + 2`, `B2 = 2^B1 - 1`, `H2 = H1 + 5 + 3*B1`.
