@@ -159,11 +159,10 @@ theorem blank_halts_iff_six_both_s3 :
     · exact Or.inl hlow
     · exact Or.inr ⟨j,m,hprior,hroot⟩
 
-/-- The whole s3 family is a genuine additional exclusion from the
-    latest exact high predicate, not merely a restatement of an older
-    sieve: every member is admitted before the new source-root filter. -/
+/-- The whole s3 family is excluded from the latest exact high
+    predicate by the direct parameter congruence, with no lower-bound
+    premise on m. -/
 theorem s3_image_family_removed_from_six_all (j m u v : Nat)
-    (hm7 : 7≤m)
     (hj : j=319+512*u)
     (hk : (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v)
     (hsector : (u+v)%16=(15+4*u)%16) :
