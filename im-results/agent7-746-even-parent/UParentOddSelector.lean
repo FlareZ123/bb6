@@ -15,14 +15,14 @@ theorem u_odd_parent_exact_n887
     (hform:U+2*887+2^(j+4)*1777=112*p+15)
     (hU:U=9*(2*z+5))
     (hzband:6*p-1≤z ∧ z≤8*p-3)
-    (hdodd:d%2=1)
+    (_hdodd:d%2=1)
     (hband:6*2^k+1≤2^t*d ∧ 2^t*d≤8*2^k-1)
     (hout:2*z+5=3^(t+1)*d)
-    (hscale:2*(2^t*d)=8*2^k+q+k+5) :
+    (_hscale:2*(2^t*d)=8*2^k+q+k+5) :
     (t=2 ∧ k=883 ∧ j%162=0) ∨ (t=4 ∧ k=882 ∧ j%1458=486) := by
-  have hf := u_odd_parent_exponent_filter 887 j p U z q k t d (by omega)
-    hp hform hU hzband hdodd hband hout hscale
-  rcases hf with ⟨ht0,ht1,ht3,ht5,ht6,ht8,ht10,hs2,hs4,hs7,hs9⟩
+  have hf := u_odd_parent_exponent_filter 887 j p U z k t d (by omega)
+    hp hform hU hzband hband hout
+  rcases hf with ⟨⟨ht0,ht1,ht3,ht5,ht6,ht8,ht10⟩,hs2,hs4,hs7,hs9⟩
   have hfac : U=3^(t+3)*d := by
     calc
       U=9*(2*z+5) := hU
