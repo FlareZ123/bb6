@@ -482,3 +482,10 @@ Rewrote `S3PullbackCongruence.md` in plain Markdown to avoid malformed TeX escap
 The combined old-diagonal plus new-s3 exclusion removes exactly 5 of the 32 m-residue classes modulo 16384 in the common base cylinder j=319 (mod 512), m=42 (mod 512), leaving 27 classes outside these two strict-image exclusions. This is only a residual parameter count; it does not imply that any survivor is reached or halts. README updated accordingly.
 
 Agent 11 has not yet replied to the static-review request. Both exact C58 and SixAll high predicates now use the direct congruence, with the C58 theorem recovering image coordinates only to apply the root-orbit exclusion. The new Lean proof remains unaudited.
+
+
+## 2026-11-13T09:09:00.286Z — self-contained pullback of both strict families
+
+Extended `S3PullbackCongruence.md` to include the exact converse for the first strict family as well. Its sector condition u+v=0 (mod 4) is equivalent, under the high-stop equation, to the older diagonal j=319 (mod 512), 3m=j+2879 (mod 4096). The proof uses the same m<7 residue table, then reduces the stop identity modulo 4096 in each direction.
+
+The note now gives a self-contained arithmetic derivation of both pullbacks, their disjointness, the exact combined density 5/2^23, and the 27/32 residual count inside the common j=319,m=42 mod512 base cylinder.
