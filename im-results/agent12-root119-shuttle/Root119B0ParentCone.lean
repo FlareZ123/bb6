@@ -598,12 +598,19 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
             simp [next,hbAt]
           rw [hbShape] at hstep2
           rw [hstepB0] at hstep2
-          cases hstep2
-          have hno := parentCone_path_left_preserves_noBF hp2 hdisp2
-            (by simp [parentConeNoBF])
-          exact False.elim (hno.1 hdB)
-      rw [next_B_one b (by simpa [hbShape]) hbBit] at hstep2
-      cases hstep2
+          have hUeq0 : u = (⟨.C,c.h-2,
+              setBit (setBit c.tape c.h true) (c.h-1) true⟩ : Conf) :=
+            (Option.some.inj hstep2).symm
+          have huNoBF : parentConeNoBF u.q := by
+            rw [hUeq0]
+            simp [parentConeNoBF]
+          have hno := parentCone_path_left_preserves_noBF hp2 hdisp2 huNoBF
+          have hcontr : False := hno.1 hdB
+          cases hcontr
+      have hUeq : u = (⟨.F,b.h-1,setBit b.tape b.h true⟩ : Conf) := by
+        rw [next_B_one b (by simpa [hbShape]) hbBit] at hstep2
+        exact (Option.some.inj hstep2).symm
+      have huF : u.q = .F := by rw [hUeq]; rfl
       obtain ⟨v,hstep3,hvpos,hp3,hdisp3⟩ :=
         parentCone_path_tight_first hp2 hdisp2
       have huZero : u.tape u.h=false := by
