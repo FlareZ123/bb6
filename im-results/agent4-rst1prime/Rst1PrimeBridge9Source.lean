@@ -148,6 +148,14 @@ theorem rst1Prime_bridge9_window_after_rightSweep
     have hcell := (rst1PrimeAfterBridge20_right_cells L a b h).2.2
     simpa [bridge9Start] using hcell
 
+/-- Full original-source configuration after bridge9. -/
+def rst1PrimeAfterBridge9
+    (L a b : Nat) (h : Int) : Config :=
+  frameAt
+    (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
+      (((h-((3*a+1:Int))-2)-((3*L+5:Int)))+4))
+    (h-((3*a+1:Int))) inside9 bridge9End
+
 /-- The bridge9 output exposes exactly a+1 triples of ones:
 the first a blocks are the untouched tail of the first sweptLeft run,
 and the final block is the source right separator at h+2,h+3,h+4. -/
@@ -228,8 +236,17 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge9
         dsimp [x,H0]
         omega
       rw [hcoord]
-      have hcell := s1Config_right_cell L 0 1 a 0 b h (k+1)
-      simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
+      have hkCases : k=0 ∨ k=1 ∨ k=2 := by omega
+      rcases hkCases with hk0 | hk1 | hk2
+      · subst k
+        have hcell := s1Config_right_cell L 0 1 a 0 b h 1
+        simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
+      · subst k
+        have hcell := s1Config_right_cell L 0 1 a 0 b h 2
+        simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
+      · subst k
+        have hcell := s1Config_right_cell L 0 1 a 0 b h 3
+        simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
   have h0 := hone 0 (by omega)
   have h1 := hone 1 (by omega)
   have h2 := hone 2 (by omega)
@@ -253,14 +270,6 @@ theorem rst1Prime_rightSweep_after_bridge9_run
   rw [run_add,hprefix]
   simp only [Option.bind_some]
   simpa [rst1PrimeAfterBridge9,frameAt_state,frameAt_head,bridge9End] using hrun
-
-/-- Full original-source configuration after bridge9. -/
-def rst1PrimeAfterBridge9
-    (L a b : Nat) (h : Int) : Config :=
-  frameAt
-    (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
-      (((h-((3*a+1:Int))-2)-((3*L+5:Int)))+4))
-    (h-((3*a+1:Int))) inside9 bridge9End
 
 /-- Compose the phase-5 right sweep with the exact nine-step bridge. -/
 theorem rst1Prime_bridge9_after_rightSweep
