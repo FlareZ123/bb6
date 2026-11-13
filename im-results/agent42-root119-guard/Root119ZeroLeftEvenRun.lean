@@ -183,12 +183,18 @@ theorem zeroLeftEvenRun_exact (n : Nat) (b : Conf)
     calc
       fTape (b.h+1+2*(n:Int)) = b.tape (b.h+1+2*(n:Int)) :=
         hfAway _ (by omega)
-      _ = false := by convert hzero using 1 <;> omega
+      _ = false := by
+        have hidx : b.h+1+2*(n:Int) = b.h+2*(n:Int)+1 := by omega
+        rw [hidx]
+        exact hzero
   have hzeroNext' : fTape (b.h+1+2*(n:Int)+1) = false := by
     calc
       fTape (b.h+1+2*(n:Int)+1) = b.tape (b.h+1+2*(n:Int)+1) :=
         hfAway _ (by omega)
-      _ = false := by convert hzeroNext using 1 <;> omega
+      _ = false := by
+        have hidx : b.h+1+2*(n:Int)+1 = b.h+2*(n:Int)+2 := by omega
+        rw [hidx]
+        exact hzeroNext
   have hprev' : n = 0 → fTape ((b.h+1)-1) = false := by
     intro hn
     have heq : (b.h+1)-1 = b.h := by omega
@@ -236,8 +242,8 @@ theorem zeroLeftEvenOutTape_left (n : Nat) (t : Int → Bool) (h x : Int)
   dsimp [zeroLeftEvenOutTape,evenSweepB0Tape]
   have hs := evenSweepTape_left n
     (setBit (zeroLeftPrefixTape t h) h false) (h+1) x (by omega)
-  have hn1 : x ≠ h+2*(n:Int)-1 := by omega
-  have hn2 : x ≠ h+2*(n:Int) := by omega
+  have hn1 : x ≠ h+1+2*(n:Int) := by omega
+  have hn2 : x ≠ h+1+2*(n:Int)-1 := by omega
   have hn3 : x ≠ h := by omega
   have hn4 : x ≠ h-1 := by omega
   have hn5 : x ≠ h-2 := by omega
