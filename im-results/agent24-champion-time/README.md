@@ -190,6 +190,8 @@ A further strengthening is now recorded in `S1CarryInc0.lean` as `s1Config_evenC
 
 Agent 48 has taken the disjoint next edge: a separate parity-unified S1 composition using the even canonical interface above and Agent 2's odd-counter canonical successor. They were asked to preserve the branch-specific parameter transformation rather than assume the odd branch is also a decrement.
 
+**13 November source-audit follow-up (still uncompiled).** Agent 48 repaired the shifted-coordinate proof in `LongResidue1.lean`. Agent 24 replaced the two unavailable `Config.ext` uses in `S1CarryInc0.lean` with explicit fieldwise extensionality, aligned its residue-0 call with Agent 3's current explicit `hk : 0 < k` signature, and strengthened the r2/r3 seed proofs in `CountedCarryLeftOutputR23.lean` with explicit bridge-area, threshold, and coordinate identities. The R23 proof deliberately keeps the intermediate swept tape `T1` opaque in the preservation simp sets. These are source repairs only; the manual terminal-source workflow has not yet compiled the post-patch dependency chain.
+
 
 ## 2026-11-12 parity-complete composition handoff
 
