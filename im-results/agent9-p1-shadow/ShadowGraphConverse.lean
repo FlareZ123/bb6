@@ -497,10 +497,15 @@ theorem l1_bounded_shadow_word_has_source
 theorem l0_shadow_path_iff_source_cone_of_width
     (q M u m : Nat)
     (hwidth : 16*q+8+M ≤ 2^(16*q-M-3))
-    (hu : u+4*q+3=7*2^(16*q)) (hu1 : 1≤u)
+    (hu : u+4*q+3=7*2^(16*q))
     (hm : m≤M) :
     (∃ z, ShadowReach (16*q+8) (12*q+4) m z) ↔
     (∃ b d, OddCone (4*u-4) (4*u+9) b d m ∧ b%4=0) := by
+  have hu4 : 4≤u := by
+    have hpow := self_add_one_le_two_pow (16*q)
+    have hmul := Nat.mul_le_mul_left 7 hpow
+    omega
+  have hu1 : 1≤u := by omega
   constructor
   · rintro ⟨z,hgraph⟩
     obtain ⟨b,d,alpha,hcone,_,hb4,_,_,_,_⟩ :=
@@ -519,10 +524,15 @@ theorem l0_shadow_path_iff_source_cone_of_width
 theorem l1_shadow_path_iff_source_cone_of_width
     (q M u m : Nat)
     (hwidth : 16*q+9+M ≤ 2^(16*q-M-3))
-    (hu : u+4*q+3=7*2^(16*q)) (hu1 : 1≤u)
+    (hu : u+4*q+3=7*2^(16*q))
     (hm : m≤M) :
     (∃ z, ShadowReach (16*q+9) (10*q+4) m z) ↔
     (∃ b d, OddCone (6*u-2) (2*u+5) b d m ∧ b%4=0) := by
+  have hu4 : 4≤u := by
+    have hpow := self_add_one_le_two_pow (16*q)
+    have hmul := Nat.mul_le_mul_left 7 hpow
+    omega
+  have hu1 : 1≤u := by omega
   constructor
   · rintro ⟨z,hgraph⟩
     obtain ⟨b,d,alpha,hcone,_,hb4,_,_,_,_⟩ :=
