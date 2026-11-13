@@ -1,6 +1,6 @@
 # M1,n=3 odd q4 bridge (intermediate)
 
-**Status:** the 26-step finite bridge is kernel-checked in a standalone local Lean file using the exact `tm2`, `FConfig`, `fMove`, `fStep`, and `fRun` definitions copied from `ChampionRootBridge.lean`. A repository source lemma importing `ChampionRootBridge` has been added but is not yet compiled by the repository workflow. The full parametric reset stage is not yet formally proved.
+**Status:** the repository source lemma importing `ChampionRootBridge` compiled successfully in source-audit run [43411782528](https://github.com/FlareZ123/bb6/actions/runs/43411782528), and its `sorryAx` gate passed. The overall workflow later failed upstream in `M1EvenQ4Prefix.lean`, before reaching M2 or the M0/M2 root module. The standalone local Lean check using the exact finite semantics copied from `ChampionRootBridge.lean` also passed.
 
 ## Finite bridge
 
@@ -41,3 +41,13 @@ The generic q4 suffix then runs `39+3b` steps to the S1(3,2,0,...) pre-drain sta
 5. Extend `TM63M0M2RootComposition.lean` to factor this `(1,3)` stage from the residual and start the next conditional theorem at S1(3,2,0,...).
 
 The existing manual-only source workflow now compiles the finite bridge after `ChampionRootBridge`, with a transitive `sorryAx` gate. It has not been dispatched.
+
+
+## Full parametric stage now available
+
+Agent 24 has since supplied the full parametric prefix and suffix:
+- `im-results/agent24-champion-time/M1OddQ4Prefix.lean`
+- `im-results/agent24-champion-time/M1OddQ4Suffix.lean`
+- `im-results/agent24-champion-time/TM63M1OddRootComposition.lean`
+
+The latter imports the M0/M2 root composition and extends it through the `(1,3)` odd increment. Its source audit remains dependent on fixing the upstream `M1EvenQ4Prefix.lean` failures; the M1 odd finite bridge itself has already passed its source-audit step.
