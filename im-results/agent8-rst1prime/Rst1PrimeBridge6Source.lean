@@ -1288,4 +1288,47 @@ theorem rst1PrimeAfterBridge30_leftFacing
 #print axioms rst1PrimeAfterBridge30_leftFacing
 
 
+/-- Exact source-connected S1 successor after the complete Rst1'
+macro, including both tape directions. -/
+theorem rst1PrimeAfterBridge30_eq_s1Successor
+    (L a b : Nat) (h : Int) :
+    rst1PrimeAfterBridge30 L a b h =
+      s1Config (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) 0
+        (h+5+3*(b:Int)) := by
+  apply config_ext
+  · simp [rst1PrimeAfterBridge30,frameAt_state,bridge30End,s1Config]
+  · exact rst1PrimeAfterBridge30_head L a b h
+  · funext x
+    let Hf : Int := h+5+3*(b:Int)
+    by_cases hx : x≤Hf
+    · let i : Nat := (Hf-x).toNat
+      have hnonneg : 0≤Hf-x := by omega
+      have hcast : (i:Int)=Hf-x := by
+        dsimp [i]
+        exact Int.toNat_of_nonneg hnonneg
+      have hcoord : Hf-(i:Int)=x := by
+        rw [hcast]
+        omega
+      rw [hcoord]
+      rw [s1Config_left_cell
+        (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) 0 Hf i]
+      exact rst1PrimeAfterBridge30_leftFacing L a b h i
+    · have hx' : Hf<x := by omega
+      let i : Nat := (x-Hf-1).toNat
+      have hnonneg : 0≤x-Hf-1 := by omega
+      have hcast : (i:Int)=x-Hf-1 := by
+        dsimp [i]
+        exact Int.toNat_of_nonneg hnonneg
+      have hcoord : Hf+1+(i:Int)=x := by
+        rw [hcast]
+        omega
+      rw [hcoord]
+      rw [s1Config_right_cell
+        (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) 0 Hf i]
+      simpa [s1PhysicalRight,s0PhysicalRight] using
+        rst1PrimeAfterBridge30_rightFacing L a b h i
+
+#print axioms rst1PrimeAfterBridge30_eq_s1Successor
+
+
 end BB6Coverage.Agent8Rst1PrimeTail
