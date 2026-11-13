@@ -57,12 +57,12 @@ theorem evenodd_three_parent_of_xmod16_two
     · by_cases hk1 : k=1
       · simp [sectionPreimageAll,hk0,hk1] at hp
       · simp [sectionPreimageAll,hk0,hk1] at hp
-        omega
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
       · by_cases hk1 : k=1
         · simp [sectionPreimageAll,ha0,ha1,hk0,hk1] at hp
+          omega
         · by_cases hk2 : k=2
           · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2] at hp
           · by_cases hk3 : k=3
@@ -84,6 +84,7 @@ theorem evenodd_three_parent_of_xmod16_two
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
       · by_cases hlow : 2*k≤a
         · simp [sectionPreimageAll,ha0,ha1,hk0,hlow] at hp
+          omega
         · by_cases heven : a%2=0
           · simp [sectionPreimageAll,ha0,ha1,hk0,hlow,heven] at hp
           · have haodd : a%2=1 := by omega
@@ -110,7 +111,6 @@ theorem blank_no_y3_xmod16_two (x : Nat)
   cases time with
   | zero =>
       simp [BB6.Agent8Section.run] at h
-      omega
   | succ t =>
       cases hp : BB6.Agent8Section.run secNext t (some (5,1)) with
       | none =>
