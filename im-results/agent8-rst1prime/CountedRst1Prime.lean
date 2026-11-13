@@ -459,7 +459,7 @@ theorem rst1Prime_sideBit_d0pow_pattern
         rw [d0pow]
         rw [sideBit_append_right d0 (d0pow n) i (by simp [d0]; omega)]
         have hmod : (i-3)%3 = i%3 := by omega
-        simpa [hmod] using ih (i-3) htail
+        simpa [hmod,d0] using ih (i-3) htail
 
 /-- The first n blocks of a right sweep, read from their right edge
 towards the left, form exactly d0pow n. The final scanned block is
@@ -503,8 +503,11 @@ theorem rst1Prime_sweptRight_headFacing_d0pow
     have hsideFalse : sideBit (d0pow n) k = false := by
       simpa [hside,hr1]
     rw [hsideFalse]
-    convert hblock.2.1 using 1 <;> omega
+    have hcoord1 : h+3*(j:Int)+2-(1:Int) = h+3*(j:Int)+1 := by omega
+    simpa [hcoord1] using hblock.2.1
   · rw [hcoord,hr2]
+    have hcoord2 : h+3*(j:Int)+2-(2:Int) = h+3*(j:Int) := by omega
+    rw [hcoord2]
     simpa [hside,hr2,hT] using hblock.1
 
 /-- Repeated d0 blocks can be appended on either side without changing
@@ -571,11 +574,13 @@ theorem rst1Prime_d0pow_segment
       rw [sideBit_append_right (d0pow n) d0 k hbound]
       rw [rst1Prime_d0pow_length]
     have hbd := hboundary (k-3*n) hrem
-    have hcoord : head-(k:Int) =
-        head-(3*(n:Int)+((k-3*n):Int)) := by
-      have hkcast : (k:Int) = 3*(n:Int)+((k-3*n):Int) := by omega
-      rw [hkcast]
-    rw [hcoord,hbd]
+    have hcast : ((k-3*n : Nat) : Int) =
+        (k:Int)-3*(n:Int) := by omega
+    have hcoord : 3*(n:Int)+((k-3*n : Nat) : Int) = (k:Int) := by
+      rw [hcast]
+      omega
+    rw [hcoord] at hbd
+    rw [hbd]
     exact hword.symm
 
 #print axioms rst1Prime_d0pow_length
