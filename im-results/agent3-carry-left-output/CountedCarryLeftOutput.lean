@@ -2,7 +2,6 @@ import CountedCarryPrefixGeneral
 
 namespace BB6Coverage.Agent3CarryLeftOutput
 
-open BB6Coverage.Agent24ChampionTime
 open BB6Coverage.Agent48Champion
 
 /-- The head-facing left word after an even-counter carry prefix:
@@ -129,13 +128,14 @@ theorem carryLongPrefix_r0_left (k : Nat) (T : Int → Bool)
   have hseed : ∀ x, x < 10+h' →
       T2 x = carryLeftOutputBit (4*k) T x := by
     intro x hx
+    clear hz0 hz1 hfinish hseg hseg0 nR
     by_cases hfar : x < -3*(4*(k:Int))-2
     · have ha : carryBridgeArea0 (x-h') = false := by
         simp [carryBridgeArea0,h']
         omega
       have hpres := carryLeftSweep_preserves_at (4*k) (3*k) T hmatch hs hb x
         (by omega) (by omega)
-      simp [T2,T1,frame,shiftConfig,ha,hpres,carryLeftOutputBit,hfar,h']
+      simp [T2,T1,frame,shiftConfig,carryBridgeArea0,ha,hpres,carryLeftOutputBit,hfar,h']
     · have hcases : x-h' = -2 ∨ x-h' = -1 ∨ x-h' = 0 ∨
           x-h' = 1 ∨ x-h' = 2 ∨ x-h' = 3 ∨ x-h' = 4 ∨
           x-h' = 5 ∨ x-h' = 6 ∨ x-h' = 7 ∨ x-h' = 8 ∨ x-h' = 9 := by
@@ -159,22 +159,24 @@ theorem carryLongPrefix_r0_left (k : Nat) (T : Int → Bool)
           rw [hmatch (h'+(-2)) harea]
           exact hbit
         have hleft : T2 (h'+(-2)) = true := by
-          simp [T2,T1,frame,shiftConfig,ha,hpres,hmark,h']
+          simp [T2,T1,frame,shiftConfig,carryBridgeArea0,embed,carryBridgeFinal0,ha,hpres,hmark,h']
         have hright : carryLeftOutputBit (4*k) T (h'+(-2)) = true := by
           simp [carryLeftOutputBit,h']
           omega
-        simpa [hxEq] using hleft.trans hright.symm
+        rw [hxEq]
+        exact hleft.trans hright.symm
       · have hxEq : x = h'+(-1) := by omega
         have hcase : T2 (h'+(-1)) =
             carryLeftOutputBit (4*k) T (h'+(-1)) := by
           simp [T2,frame,shiftConfig,carryBridgeArea0,embed,carryBridgeFinal0,
             carryLeftOutputBit,h'] <;> omega
-        simpa [hxEq] using hcase
+        rw [hxEq]
+        exact hcase
       · have hxEq : x = h'+0 := by omega
         have hcase : T2 (h'+0) =
             carryLeftOutputBit (4*k) T (h'+0) := by
           simp [T2,frame,shiftConfig,carryBridgeArea0,embed,carryBridgeFinal0,
-            carryLeftOutputBit,h'] <;> omega only [h']
+            carryLeftOutputBit,h'] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+1 := by omega
         have hcase : T2 (h'+1) =
