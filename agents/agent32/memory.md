@@ -842,3 +842,10 @@ Extended `Junc0ReturnMapExploration.md` with the observed 1,158,049-step J(0,744
 All segments except J(381,3)->J(387,2) match existing macro formulas; that 7,382-step transition is the main unresolved identification. Agent1 was asked to check whether their low43/root work covers it. The observed sequence and exact interval decomposition remain simulation evidence plus formula matching, not a proof.
 
 PR #84 now has head `4a0152c49f253884b96a4811ac5e22a24459dd05`; draft, not CI-validated. The central 169,592-step blank-root theorem remains the only formal candidate in this branch; all later Junc0/Junc11 return-map material is exploratory. No local Lean shell or workflow-dispatch capability was available.
+
+
+## 2026-11-13T07:55Z final pre-release checkpoint
+
+Latest PR #84 head observed: `24d52ae55bea04cfbfbc76aadcb9c0af862da416`; draft, mergeable=true. Its current branch contains the 169,592-step blank-root candidate, the outer-ladder subtraction hardening, and the exploratory Junc0/Junc11 return-map notes including the unresolved 7,382-step J(381,3)->J(387,2) segment. PR #84 is the sole active integrated review path; PRs #81 and #83 are closed as superseded.
+
+All repository work has been committed/pushed through the GitHub file operations. No Lean/CI validation has been obtained. Do not promote the candidate to `results/` until the complete manual workflow passes. The exact BB(6) value remains unsolved.
