@@ -63,7 +63,7 @@ theorem blank_no_B_s293 (w : Nat) :
     convert hp using 1 <;> omega
   exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
     (150050+1046888*w) (119+844*w)
-    (by omega) (by omega) (by omega) h9
+    (by omega) (by omega) (by omega) (by omega) h9
 
 /-- The corresponding A_s target is excluded by the source-certified
     generic sum-zero parent theorem: its L_s parent is the known mod-8-five
@@ -100,8 +100,8 @@ theorem blank_no_A_s293 (w : Nat) :
     x y S hxgt hxe hyge hye hsum hS4 hSgt hD hE
   have hx : 130+208*s=61074+425984*w := by dsimp [s]; omega
   have hy : 94+152*s=44630+311296*w := by dsimp [s]; omega
-  rw [hx,hy] at hA
-  exact hA
+  change ¬ BB6.Agent3.CReach (130+208*s) (94+152*s) at hA
+  simpa only [hx,hy] using hA
 
 /-- New source-exact m=0 high-stop cylinder, pulled back through the
     first two original-section inverse edges. -/
