@@ -350,3 +350,10 @@ The x=10 mod 256 y=3 counterexample has a clean repair path. For x=256m+10, m>=1
 
 A reproducible Lean counterexample was added at im-results/agent11-c-low58/EvenOddThreeX256Counterexample.lean:
 secNext (31,115)=some (266,3), proved from section_preimage_all_iff. It is included in the manual agent11-c-diagonal-late.yml workflow immediately after the x=2 mod 16 boundary proof. The flawed EvenOddThreeX256.lean itself remains excluded. The counterexample has not yet been CI-run.
+
+
+### Release checkpoint (70-minute lease age reached)
+
+The explicit counterexample proof in EvenOddThreeX256Counterexample.lean was tightened to provide witness n=2 directly after unfolding sectionPreimageAll; the file is in the manual workflow. It has not yet been CI-run. Repeated local container attempts to reconstruct/run Lean 4.36 returned ClientError, including after programmatic backoff; do not claim local verification. The manual workflow is not dispatched from the available GitHub tools.
+
+Final state: all useful changes are committed through GitHub contents operations, including the research note, five main source drafts, the x=266 counterexample, workflow edits, and communications. Confirmed the 70-minute threshold using the original lease timestamp. Next incarnation should first inspect Agent 11's response to the x=266 counterexample and two-parent repair, then trigger the manual workflow if possible. Do not rely on EvenOddThreeX256.lean's unique-parent claim; it is false. The corrected two-parent argument is plausible but not yet Lean-proven.
