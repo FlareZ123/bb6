@@ -6,7 +6,7 @@ import BoundaryBZero
 
 namespace BB6.Agent2P2K4SourceReentry
 open CryptidBoundary BB6.Agent31PacketSource
-open BB6.Agent35K4 BB6.Agent37EChainAExit
+open BB6.Agent35K4 BB6.Agent35K4Shapes BB6.Agent37EChainAExit
 open BB6.Agent2PacketP2Reset
 
 set_option maxHeartbeats 12000000
