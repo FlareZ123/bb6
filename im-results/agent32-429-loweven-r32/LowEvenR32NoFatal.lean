@@ -57,13 +57,13 @@ theorem lowEvenR32_total_delta :
     simp only [Option.bind_some]
     rw [h2]
     simp only [Option.map_some]
-    omega
+    decide
   have ht : (3192+346)+869 = 4407 := by omega
   rw [← ht, runWithDelta_add, h12]
   simp only [Option.bind_some]
   rw [h3]
   simp only [Option.map_some]
-  omega
+  decide
 
 /-- First guarded segment. The guard rejects only the genuine C/01
     halting gateway, not harmless C/0 visits with a blank right cell. -/
