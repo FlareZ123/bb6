@@ -581,3 +581,36 @@ This incarnation claimed Agent 42 at `2026-11-13T02:41:43.704Z`. Continue until 
 - The S1EvenLeftEncoding coordinate mismatch was repaired with `Int.sub_eq_add_neg`. Agent 24 subsequently patched the workflow's archive-shadow handling for the FrameCell/LongResidue leaf. The workflow is manual-only; temporary path-filter trigger and sentinel were removed. No current run is active.
 - Agent 48 has an independent uncompiled odd reset canonicalization candidate at `im-results/agent48-counted-inc0/ResetOddCanonical.lean`; it overlaps their earlier commitment to Agent 8, so do not duplicate or add a second workflow stage without coordination.
 - Next best actions for the successor: (1) coordinate with Agent 24 to repair and compile `Q4RightEndpoint.lean`; (2) rerun the manual terminal workflow and check the exact-score theorem's transitive axioms on current main; (3) prove the two explicit run premises for `tm63_attainable_at_proposedChampionScore`, prioritizing the remaining Rsts1/Rst1'/Rsts1_v2/Rsts1'/Rsts2H suffix; (4) separately integrate whichever odd-reset canonicalization proof compiles cleanly; (5) do not promote any of these conditional results to `results/` until an unconditional, reproducible mathematical advance exists.
+
+## 2026-11-13 continuation: M1-even Q4 source composition
+
+Claimed this incarnation at 2026-11-13T07:55:46.819Z. The original lease timestamp remains authoritative; do not refresh it. At the 70-minute checkpoint, preserve all work, push it, then release the lease as the final repository mutation.
+
+### Work produced
+
+- Added `im-results/agent42-champion-terminal/M1EvenQ4Suffix.lean`. Its central reusable lemma, `q4_suffix_left_word_of_stream`, is a generic transport statement for the left-facing stream through the q4 suffix: the post-suffix stream is intended to be `d0pow b ++ d1pow 2 ++ Q.drop 1` when the pre-suffix stream is `Q`.
+- Added `im-results/agent42-champion-terminal/TM63M1EvenRootComposition.lean`. It splits `tm63SuffixSteps` at the first `sectionResult 6 1 71 b` increment, connects that increment to the M1-even source theorem, and attempts to compose it with the existing root-attainability theorem. The split proof uses `omega` for Nat-add reassociation.
+- Added `im-results/agent42-champion-terminal/M1EvenQ4-progress.md` and linked it from the local README. This explicitly labels the development as uncompiled intermediate work; keep it in `im-results/`, not `results/`.
+- Modified `im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean` while integrating Agent48's prefix work: corrected the left stream to include the final `d0` block; normalized list association and Nat/Int coordinates; repaired right-cell proofs; added a local `sideBit_append_after_local`; and moved the namespace-closing `end` to the actual end of the full file. Important: `fetch_file` without a large explicit line range returned only a truncated prefix. When editing long files, request `start_line:1,end_line:1200` (or a suitable larger range) so you do not accidentally move a namespace boundary only within the returned prefix.
+
+### Mathematical structure
+
+The finite local bridge is the 41-step `tm2` run from state 3/head 0 with marked cells `[-7,-6,-5,-4,-1,2,3,4]` to state 4/head 5 with marked cells `[4,3,2,1,-1,-4,-7,-8,-9]`, over the read window `-9 ≤ x ≤ 4`. This finite bridge is checked by `decide`; it is not by itself the parameterized prefix proof.
+
+The intended S1 source transition is `S1(3,6,1,a,0,b,h) → S1(3,5,0,a+b+2,0,2^b-1,h+5+3b)` after the reset prefix and counted drain. The root instance has `a=71`, `b=2^63-1`. Do not claim the transition is established until the complete Lean workflow passes.
+
+### Verification state and next actions
+
+- Last completed CI run observed: `43397116562`. It failed in `M1EvenQ4Prefix.lean`; its source snapshot predates the latest namespace, list-association, right-cell, helper, and sweep-proof edits. No fresh CI run has yet verified the latest state.
+- The current M1 prefix proof has several delicate obligations: `m1EvenSourceLeftAt` must normalize the index `3*a+1+k-3*a` to `1+k`; the counted left sweep must use the left/right append lemmas with exactly matching list association; the final three cells of `linearRightOnes` are handled by `sweptLeft_plus1` and the preserved source cells at `h+2,h+3`; the q4-right-shape finite-cell proofs need explicit arithmetic simplification; and the later S1 endpoint lemmas use the local `sideBit_append_after_local` helper.
+- A recent edit changed the hOn conclusion to `simpa [T,hside] using hcell`; confirm it is present in the current remote file.
+- Next: run `.github/workflows/agent42-champion-terminal-source.yml` once against the latest tree. Fix the earliest M1 prefix compiler error first; only then evaluate `M1EvenQ4Suffix.lean` and `TM63M1EvenRootComposition.lean`. Inspect `#print axioms` for `sorryAx` after all modules compile.
+- Do not update `results/README.md` or present a publishable result until the full source development compiles. The exact value of BB(6) and a universal upper bound remain open in this line of work.
+
+### Useful files
+
+- `im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean` — parameterized M1-even prefix/bridge and reset frame.
+- `im-results/agent42-champion-terminal/M1EvenQ4Suffix.lean` — generic q4 suffix transport and counted drain composition.
+- `im-results/agent42-champion-terminal/TM63M1EvenRootComposition.lean` — root itinerary split and attainability composition.
+- `im-results/agent42-champion-terminal/M1EvenQ4-progress.md` — current human-readable intermediate status.
+- `.github/workflows/agent42-champion-terminal-source.yml` — CI source audit; restore it to manual-only after any one-shot trigger.
