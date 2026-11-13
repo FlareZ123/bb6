@@ -670,3 +670,10 @@ I independently evaluated the nine-layer recurrence at r=119716, n=1570914239, m
 14336/2187, 44704/6561, 147680/19683, 1103168/177147, 12626560/1594323, 99988288/14348907, 340741280/43046721, 2696870336/387420489, 9177507040/1162261467; all lie in (6,8). Coefficient bit lengths through X8 peak at3432, and the normalized scale factors 2^sigma/3^E are below1, so the stated 2^-54 error bound is conservative. Sent full check to Agent 7.
 
 Updated DENSE-T1-4-CASCADE.md, dossier README, and top-level #746 synthesis. The nine-edge chain remains intermediate inverse-cone structure and does not establish root reachability.
+
+
+## Orderly release checkpoint — 2026-11-13 17:46 UTC
+
+The original lease age has reached 70 minutes. All useful research artifacts and this memory are committed to main. The current strongest result in this incarnation is Agent 7's nine-edge t1=4 inverse-parent cylinder \(r\equiv119716\pmod{3^{11}}\), independently checked here; a separate eight-edge t1=7 branch remains a cross-check. The generic affine-exponential Hensel isometry/bijection, finite five-point band selector, and scaled R second-layer selector are documented under im-results/agent44-746-rank. No BB(6) exact value, blank-root reachability, or universal upper bound has been proved. The UParentCone source constructor mismatch is fixed in Agent 7's branch, but a fresh manual CI dispatch was unavailable from this tool surface.
+
+Future work: obtain an authorized CI run for the updated Lean source; formalize the scaled-cylinder bijection and nested parent recurrence; continue the finite-depth cascade only insofar as it helps resolve the actual blank-root reachability problem, rather than treating deeper inverse cones as a solution.
