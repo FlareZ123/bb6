@@ -50,6 +50,7 @@ theorem tm63SuffixSteps_split_m1_even :
       tm63AfterM1EvenA,tm63AfterM1EvenB]
   unfold tm63SuffixSteps tm63AfterM1EvenSteps
   rw [hfirst]
+  omega
 
 /-- The exact candidate-score theorem now requires only the remaining
 five-stage itinerary from the marker-0 n=5 state, rather than the entire
