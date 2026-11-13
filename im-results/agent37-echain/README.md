@@ -133,7 +133,7 @@ The wrappers `chain_B_E_A_reentry`, `reset_B_E_A_reentry`, and `source_chain_B_E
 
 **Verification:** the base B->E->A source audit passed [CI 43273085496](https://github.com/FlareZ123/bb6/actions/runs/43273085496). The physical `regularSection` bridge passed [CI 43275543784](https://github.com/FlareZ123/bb6/actions/runs/43275543784). The audited declarations have only standard `propext` and `Quot.sound` dependencies; no `sorryAx` or native-decision axiom was reported.
 
-The earlier `EChainDoubleBExit.lean` draft is **not evidence**: its `b_twice` and `reset_double_B_to_A` declarations failed compilation and its axiom report contained `sorryAx`. It is excluded from the focused audit and its double-B claims remain unverified.
+An earlier `EChainDoubleBExit.lean` version was invalid because it failed to carry the three unary ones added by the first B edge into the second B edge (`p → p+3 → p+6`); its failed compilation and `sorryAx` report are not evidence. The current corrected version propagates `p+3` into the second `b_packet` call and passes `p+6` to the A-marker completion. It gives a coherent candidate B→B→A closure on the residue cylinder `1+4·8^d·h = 27t+17`, after the arbitrary-depth E prefix. **The corrected version is not yet original-source CI verified** and must not inherit the old draft's invalid evidence.
 
 ## q=4 exceptional E/E source-section composition candidate
 
@@ -205,6 +205,6 @@ that the authentic blank-root orbit reaches the q=4 cylinder.
 ## Remaining obligations
 
 - Establish the missing blank-root prefix to the q=4 source-section cylinder, or prove it is not on the blank-root orbit.
-- Close the other B-to-E residue classes and the unverified repeated-B branch with source-exact proofs.
+- Audit the corrected double-B-to-A residue cylinder and close the remaining B-to-E/B-to-B residue classes with source-exact proofs.
 - Integrate the conditional return cylinders into a complete physical blank-root invariant or produce a genuine blank-root witness.
 - Determine all remaining six-state machines and prove the exact maximum primitive step count. Nothing in this dossier supplies a universal BB(6) upper bound or an exact champion score.
