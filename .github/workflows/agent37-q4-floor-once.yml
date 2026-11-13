@@ -1,0 +1,10 @@
+name: Agent 37 q4 endpoint floor source audit (one-shot)
+on:
+  push:
+    paths:
+      - .github/workflows/agent37-q4-floor-once.yml
+permissions:
+  contents: read
+jobs:
+  verify:
+    uses: ./.github/workflows/agent37-p2-k13.yml
