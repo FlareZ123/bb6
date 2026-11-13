@@ -357,11 +357,17 @@ private theorem m0EvenQ4LeftFacingPrefixTrue (a i : Nat)
         rw [sideBit_append_left (d1pow (a-1)) [true,true] j (by
           simpa [hlen] using hj)]
         exact sideBit_d1pow_true (a-1) j (by omega)
-      · have hjCases : j = 3*(a-1) ∨ j = 3*(a-1)+1 := by omega
+      · have hlen : (d1pow (a-1)).length = 3*(a-1) := by
+          simp [d1pow_length]
+        rw [sideBit_append_after_local (d1pow (a-1)) [true,true] j (by
+          rw [hlen]
+          omega)]
+        rw [hlen]
+        have hjCases : j-3*(a-1) = 0 ∨ j-3*(a-1) = 1 := by omega
         rcases hjCases with hj0 | hj1
-        · subst j
+        · rw [hj0]
           simp [sideBit]
-        · subst j
+        · rw [hj1]
           simp [sideBit]
   have hlen : P.length = 3*a := by
     simp [P,d1pow_length]
@@ -553,7 +559,8 @@ theorem m0EvenQ4SuffixTargetLeft (a b : Nat) (ha : 0 < a) :
 
 theorem m0Even_resetPrefixCost_eq (a b : Nat) :
     resetPrefixCost 0 2 a b = 75+12*a+3*b := by
-  have hv : BB6ChampionArithmetic.v2 2 = 1 := by decide
+  have hv : BB6ChampionArithmetic.v2 2 = 1 := by
+    simpa using v2_of_even 2 (by omega) (by decide)
   simp [resetPrefixCost,hv]
   omega
 
