@@ -182,7 +182,7 @@ def m1EvenQ4CutTape (a b : Nat) (h : Int) : Int → Bool :=
 44+12a primitive moves from S1 reach state 4 at head h+4.
 The q4 suffix can then be entered after four already-consumed
 state-4-on-one moves. -/
-theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
+theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) (ha : 3 ≤ a) :
     run tm2 (44+12*a)
       ⟨3,h,(s1Config 3 6 1 a 0 b h).tape⟩ =
       some ⟨4,h+4,m1EvenQ4CutTape a b h⟩ := by
@@ -625,7 +625,7 @@ theorem m1Even_q4_suffix_after_four (T : Int → Bool) (h : Int) (b : Nat)
 same explicit Q4 suffix frame used by the existing suffix theorem.
 The canonical S1 identification of this frame is a separate left-tail
 identity and is intentionally not claimed here. -/
-theorem m1Even_reset_prefix_frame (a b : Nat) (h : Int) :
+theorem m1Even_reset_prefix_frame (a b : Nat) (h : Int) (ha : 3 ≤ a) :
     run tm2 (79+12*a+3*b)
       ⟨3,h,(s1Config 3 6 1 a 0 b h).tape⟩ =
       some (frameAt
@@ -633,7 +633,7 @@ theorem m1Even_reset_prefix_frame (a b : Nat) (h : Int) :
           (frameAt (m1EvenQ4CutTape a b h) h
             q4First10Inside q4First10End).tape (h+10))
         (h+10+3*b) q4TailInside q4TailEnd) := by
-  have hprefix := m1Even_q4_prefix_run a b h
+  have hprefix := m1Even_q4_prefix_run a b h ha
   have hshape := m1Even_q4_prefix_rightShape a b h
   have htail := m1Even_q4_suffix_after_four
     (m1EvenQ4CutTape a b h) h b hshape
@@ -905,7 +905,7 @@ theorem m1Even_resetPrefixCost_eq (a b : Nat) :
 
 
 
-theorem m1Even_reset_prefix_frame_cost (a b : Nat) (h : Int) :
+theorem m1Even_reset_prefix_frame_cost (a b : Nat) (h : Int) (ha : 3 ≤ a) :
     run tm2 (resetPrefixCost 1 6 a b)
       ⟨3,h,(s1Config 3 6 1 a 0 b h).tape⟩ =
       some (frameAt
@@ -914,5 +914,5 @@ theorem m1Even_reset_prefix_frame_cost (a b : Nat) (h : Int) :
             q4First10Inside q4First10End).tape (h+10))
         (h+10+3*b) q4TailInside q4TailEnd) := by
   rw [m1Even_resetPrefixCost_eq]
-  exact m1Even_reset_prefix_frame a b h
+  exact m1Even_reset_prefix_frame a b h ha
 
