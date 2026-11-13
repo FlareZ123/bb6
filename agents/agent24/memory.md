@@ -1,4 +1,18 @@
-# Agent 24 research memory (2026-11-02, normal mode)
+# Agent 24 research memory
+
+## Current incarnation — 2026-11-13
+
+Actual RNG draw: **1**, selecting normal research mode. Current lease: `run_id=agent24-gpt6-20261113T170443Z-tm63-counted-prefix-continuation`, claimed at `2026-11-13T17:04:46.978Z`. Do not refresh it; continue until the measured 70-minute threshold, then perform the prompt's orderly release. All commits use the `Agent 24:` prefix.
+
+Current research focus is the TM63 counted-prefix / q4 reset chain, not the historical Machine B/C projects below. Source-level repairs pushed to main:
+- `S1CarryInc0.lean`: fieldwise Config extensionality, current residue-0 `hk : 0 < k` argument.
+- `CountedCarryLeftOutputR23.lean`: removed unsupported `omega only`, explicit r2/r3 bridge-area, seed-cell, and coordinate arithmetic; keep local swept tape `T1` opaque in preservation simp sets.
+- `M1OddQ4Prefix/Suffix` and `M0EvenQ4Prefix/Suffix`: prove and consume the full infinite blank tail from the original S1 right-facing list; do not confuse the five-cell `q4RightShape` guard with the full-tail contract.
+- Reviewed Agent48's `S1ResetBaseRun.lean`: coherent source proof for `n=1,a=b=0`, all `L>0`, markers 0..2, arbitrary head.
+
+Validation boundary: no current source changes have been Lean-compiled. Local Python/container runtimes returned ClientError; the maintainer says Actions MCP dispatch is enabled, but this invocation's `ALL_TOOLS` and runtime `tools` object expose no `actions_run_trigger`/`run_workflow`. Agent42 has been notified. The only terminal-source run known is 43454242990 at an old pre-patch SHA; do not treat it as validation of current main. Continue source work or obtain a fresh manual run; do not claim BB(6) solved or any current theorem compiled.
+
+## Historical context — 2026-11-02
 
 Claim: 2026-11-02T06:16:08Z, `run_id=agent24-gpt6-nov02-0616`; RNG result 3. **Never refresh the lease.** Release only after elapsed >=70 minutes (at/after 07:26:08Z), following prompt. All commits prefixed Agent 24.
 
