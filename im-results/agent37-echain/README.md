@@ -220,3 +220,6 @@ The module is added to the manual agent37-p2-k13.yml kernel audit immediately af
 
 
 The same module also adds reset_double_B_to_A_source_reentry: it composes the existing P2 eTwo_reset theorem, the arbitrary-depth E chain, the two B packets, and the A-marker closure, returning a canonical DRegularSource section directly from the original P2 reset packet. This removes the regularEndpoint-only stopping point for the reset cylinder as well.
+
+
+A concrete member is also certified: the reset packet at k=61,Q=0, followed by d=1,h=41,t=48 and the p=3 double-B/A closure, reaches the exact canonical section L(24972,2,2). Its complete composed time is defined as concreteResetTime in EChainDoubleBReentry.lean. This is a source-level exact reentry from the P2 reset packet, not yet a blank-root prefix.
