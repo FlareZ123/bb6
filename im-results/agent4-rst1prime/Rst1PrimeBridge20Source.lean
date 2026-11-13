@@ -39,6 +39,25 @@ theorem sweptLeft_eq_of_gt
       have hne1 : x ≠ h+1 := by omega
       simp [holeThree,hne0,hne1]
 
+/-- The cell immediately right of the new head is zero after a
+positive-length counted left sweep. -/
+theorem sweptLeft_head_plus1_eq_false
+    (n : Nat) (T : Int → Bool) (h : Int)
+    (hn : 0<n) :
+    sweptLeft n T h (h-(n:Int)+1) = false := by
+  cases n with
+  | zero =>
+      omega
+  | succ n =>
+      induction n generalizing T h with
+      | zero =>
+          simp [sweptLeft,holeThree]
+      | succ n ih =>
+          have hcoord :
+              h-((n+2:Int))+1 = (h-1)-((n+1:Int))+1 := by omega
+          rw [sweptLeft,hcoord]
+          exact ih (holeThree T h) (h-1)
+
 /-- The left-sweep output contains a contiguous block of n ones from
 its new head+2 through the original head+1. -/
 theorem sweptLeft_one_block
