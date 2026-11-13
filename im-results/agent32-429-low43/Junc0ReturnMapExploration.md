@@ -73,3 +73,16 @@ This would let researchers derive `runNoFatal` from existing generic successful 
 Substituting w=408,436,...,716 into T(w) gives interval times 51,079; 54,733; 59,955; 66,745; 75,103; 85,029; 96,523; 109,585; 124,215; 140,413; 158,179; and 177,513. Their sum is 1,199,072, exactly matching the simulated interval from J(0,408) to J(0,744). Combined with the observed 145,374-step J(0,344)->J(0,408) segment, the simulation reaches J(0,744) 1,344,446 steps after J(0,344), or step 1,514,038 relative to the candidate blank-root prefix at step 169,592. This remains a conditional extrapolation until the generic physical composition is formalized.
 
 A useful route for the physical lifting gap: `low42_raw_head_all` starts from a canonical physical config with head 0, whereas a `Represents` witness for Junc may use any absolute head coordinate. Define a tape/head translation `translate d c` by moving the head to `c.head+d` and setting the new tape at x to `c.tape (x-d)`. Prove `rawStep` commutes with this translation, then induct on n to show `run` commutes with translation. This transports the canonical low42 physical theorem to any physical config represented by the matching Junc zipper. The endpoint representation and outer-safe physical segments can then be composed without per-(j,k) `by decide` proofs.
+
+
+## Second observed return family: J(11,w) -> J(11,w+32)
+
+The 20M-step scan of the J(0,744) regime exposes a second repeated macro at J(11,w), for w=774,806,838:
+
+1. Outer-safe U=11,25,53,109 takes J(11,w) to J(221,w-408) in 63,832 steps (individual costs 621, 2,777, 11,793, 48,641).
+2. For the observed values, set N=(w-408)/2 and K=(221-N)/2. Then J(221,w-408)=J(N+2K,2N), so the generic low-even-4k endpoint formula returns J(11,4N+4K-2)=J(11,w+32).
+3. The low-even-4k time is 4N²+22N+18K+261, so the full interval time is 64,093+4N²+22N+18K.
+
+For w=774,806,838 the parameters are (N,K)=(183,19),(199,11),(215,3), and the predicted interval times are 202,417; 227,073; and 253,777. These exactly match the observed intervals J(11,774)->J(11,806)->J(11,838)->J(11,870). At w=870, N=231 and K=-5, so this low-even branch no longer applies. The observed path then goes through J(25,845), J(53,792), J(109,683), J(221,462), J(445,17), J(440,34), and returns to J(0,924).
+
+As above, the endpoint/time algebra is suggested by existing macro formulas, but the combined parameterized physical/no-fatal theorem has not been formalized. The J(381,3)->J(387,2) transition preceding J(11,774) is also not yet identified/formalized; the listed intermediate Junc states are simulation observations.
