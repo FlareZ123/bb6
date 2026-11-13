@@ -204,3 +204,6 @@ The integrated source module now continues from J(69,186) through one outer-safe
 The new theorem `blank_root_lowEvenR32_to_junc0_344` composes this with the 136,182-step blank-root prefix, yielding an exact 169,592-step run from the blank tape, physical Junc representations at steps 136,182, 155,943, 159,739, and 169,592, and C/01-freedom at every primitive prefix through step 169,592. The outer segment uses the existing uniform outer-safe physical theorem; the low-odd and low42 segments have concrete source `runNoFatal` certificates.
 
 **Validation remains pending:** the combined manual workflow now also audits this 169,592-step theorem, but has not been dispatched in this invocation. This remains a candidate until CI compiles the complete source graph and the fail-closed `sorryAx` audit passes.
+
+
+The exploratory note `Junc0ReturnMapExploration.md` records a deterministic 20M-step Junc(0,w) return scan and the algebraic candidate for a repeated +28 return when w is divisible by 4 in [408,736]. It is explicitly not a Lean theorem or an infinite nonhalting proof, but may guide a parameterized low42/outer-safe composition.
