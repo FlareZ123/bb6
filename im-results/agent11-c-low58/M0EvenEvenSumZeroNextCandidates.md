@@ -383,6 +383,77 @@ This is disjoint from the four source-certified cylinders and the separate \(t\e
 
 **Formal status:** M0EvenEvenSumZeroS31W13Q275.lean contains the full source-lemma proof draft and is wired into the existing manual-only workflow after M0EvenEvenSumZeroS31W1.lean. The S31 B_s theorem, W5 cylinder, W1 reduction, and this new module have not yet passed original-source CI. The manual workflow now runs the M0/S31 proof chain before the separate EvenOddThreeX128W.lean draft that blocked the previous run; a fresh run can therefore reach these modules before that unrelated failure. No fresh run has yet executed this reordered chain, so no source-certification claim is made here. This remains an intermediate Machine C exclusion, not a complete Machine C decision or BB(6) result.
 
+## Two-cylinder S31 direct-parent closure
+
+The q=275 cylinder is one branch of a cleaner two-cylinder statement. Put
+\[
+q=128g+19,\quad w=16q+13=2048g+317,\quad
+s=32w+31=65536g+10175,
+\]
+\[
+t=2s+1=131072g+20351,\quad
+j=7+32t=4194304g+651239,\quad k=3j+7.
+\]
+The L-parent reduction again forces \(R=(99724+114080q,64714+74032q)\), and one six-even-right inverse gives
+\[
+R_1=(3738564+24078336g,735660+4738048g),
+\]
+with \(x+y=8S\), \(S=559278+3602048g\equiv2\pmod4\).
+
+The depth-one bounce parent is
+\[
+E=(1118554+7204096g,2045660+13175168g).
+\]
+One six-even-right inverse gives
+\[
+E_1=(3164212+20379264g,1022829+6587584g),
+\]
+an odd-right sum-one state, excluding this branch.
+
+The direct parent follows the common chain
+\[
+D=(4474222+28816384g,367829+2369024g)
+\]
+\[
+\longrightarrow P=(2421023+15592704g,1394425+8980864g)
+\]
+\[
+\longrightarrow Q=(1907722+12286784g,1651072+10633824g)
+\]
+\[
+\longrightarrow Q_1=(3558792+22920608g,825535+5316912g).
+\]
+Here the arrows are respectively even/odd-four, odd/odd-val-three, and six-even-right inverses. \(Q_1\) has \(x+y+1\equiv8\pmod{16}\), so extracting its source predecessor and applying the odd-seven edge equations gives
+\[
+A=(2192161+14118760g,1508847+9717836g).
+\]
+Its odd/odd sum is \(3701008+23836596g\), congruent to \(4g\pmod{16}\). The odd/odd low-valuation inverse therefore applies whenever \(g\equiv2\pmod4\) or \(g\equiv3\pmod{16}\), yielding
+\[
+B=(1850502+11918298g,1679673+10818067g).
+\]
+
+The two parameter cases terminate differently:
+
+- If \(g=4d+2\), \(B\) has odd right coordinate and sum \(1\pmod4\), so it is excluded directly. This is the earlier \(q=512d+275\), \(j=9039847+16777216d\) cylinder.
+- If \(g=16e+3\), then
+  \[
+  B=(37605396+190692768e,34133874+173089072e).
+  \]
+  This is even-even with sum \(6\pmod8\). Two successive six-even-right inverses give
+  \[
+  (88806202+450326376e,8533467+43272268e),
+  \]
+  an odd-right sum-one state. This is the second \(q=2048e+403\), \(j=13234151+67108864e\) cylinder.
+
+Thus the shared source-parent argument proves L_s exclusion for the union \(g\equiv2\pmod4\) or \(g\equiv3\pmod{16}\). Combining with the parameter-uniform S31 B_s draft and the A_s sum-zero parent criterion gives the unified high-stop statement
+\[
+j=651239+4194304g,\qquad
+g\equiv2\pmod4\ \text{or}\ g\equiv3\pmod{16},\qquad k=3j+7.
+\]
+The two cylinders are disjoint. Their respective densities are \(1/262144\) and \(1/1048576\) among odd \(t\), for a combined \(5/1048576\). Both have \(t\equiv895\pmod{1024}\), but their higher 2-adic residues differ. Conditional on validation, adding them to the four source-certified cylinders and the separate W5 candidate gives \(3/64+5/1048576=49157/1048576\) of the odd t-ray.
+
+**Formal status:** the q=403 proof and the unified two-cylinder theorem are in M0EvenEvenSumZeroS31W13Q403.lean; the q=275 specialization is in M0EvenEvenSumZeroS31W13Q275.lean. The W1 module now explicitly imports OddOddLowVal, which supplies its low-valuation inverse. All S31 B/W5/W1/q275/q403 modules are placed before the unrelated X128W draft in the existing manual-only workflow. No fresh original-source run has executed, so none of these S31 draft dependencies is yet promoted to source-certified status.
+
 The mod-7 fact and the 2-adic valuation combine into a finite parent-fan bound for every M. In `sectionPreimageAll` at `(16m+10,3)`, the zero-left, k=0, direct, and even-a branches are incompatible with y=3 (the finite small-a cases are incompatible with the large x); the remaining high-`k` a=1 bounce is the branch ruled out modulo 7. Thus every possible source parent is in the odd-a bounce branch. Its cost equation
 `2k+a+9+3n = 2^n(2a+6)+4`
 forces n even by parity. Writing `n=2j`, the section equation and `4 | (2a+6)` give
