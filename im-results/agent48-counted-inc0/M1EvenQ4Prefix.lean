@@ -209,7 +209,8 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
           simpa [d1pow_length] using hi3
         rw [sideBit_append_left (d1pow a) R i hiLen]
         exact sideBit_d1pow_true a i hi3
-      · have hieq : i = 3*a := by omega
+      · have hiN_bound : i < 3*a+1 := by simpa [N] using hi
+        have hieq : i = 3*a := by omega
         subst i
         have hlen : (d1pow a).length = 3*a := by simp [d1pow_length]
         rw [sideBit_append_right (d1pow a) R (3*a) (by simpa [hlen])]
@@ -492,7 +493,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
           have hsrc : T (h+7+(i:Int)) =
               sideBit (s0RightFacing b) (6+i) := by
             have hcoord : h+1+(6+i:Int) = h+7+(i:Int) := by omega
-            simpa [T,hcoord] using s1Config_right_cell 3 6 1 a 0 b h (6+i)
+            simpa [T,hcoord,s1PhysicalRight_source] using s1Config_right_cell 3 6 1 a 0 b h (6+i)
           have hside :
               sideBit (s0RightFacing b) (6+i) =
                 sideBit (d1pow (b+1)) i := by
@@ -512,7 +513,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
               sideBit (s0RightFacing b) (9+3*b+i) := by
             have hcoord : h+1+((9+3*b+i:Int)) =
                 h+10+(3*b:Int)+(i:Int) := by omega
-            simpa [T,hcoord] using
+            simpa [T,hcoord,s1PhysicalRight_source] using
               s1Config_right_cell 3 6 1 a 0 b h (9+3*b+i)
           have hlen : (s0RightFacing b).length = 9+3*b := by
             simp [s0RightFacing,d1pow_length]
@@ -814,7 +815,7 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
   by_cases hi0 : i = 0
   · subst i
     have hshape := m1Even_q4_prefix_rightShape a b h
-    simpa using hshape.1 0 (by omega)
+    simpa [m1EvenQ4LeftFacing] using hshape.1 0 (by omega)
   · by_cases hsmall : i+1 < 3*a+1
     · let x : Int := h-(i:Int)
       let r : Int := (3*a+1 : Nat) - (i:Int)
@@ -835,9 +836,9 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
         have hmark : decide (r ∈ m1EvenQ4BridgeEnd.marked) = true := by
           have hcases : r=2 ∨ r=3 ∨ r=4 := by omega
           rcases hcases with h2 | h3 | h4
-          · subst r; simp [m1EvenQ4BridgeEnd]
-          · subst r; simp [m1EvenQ4BridgeEnd]
-          · subst r; simp [m1EvenQ4BridgeEnd]
+          · subst r; decide
+          · subst r; decide
+          · subst r; decide
         have hmark' : decide
             ((x-(h-((3*a+1 : Nat):Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
           rw [hrel]
