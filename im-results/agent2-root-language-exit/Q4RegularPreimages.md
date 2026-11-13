@@ -89,3 +89,22 @@ The fourth transition depends on `t mod81), which is not supplied by
 `terminal2613_certificate`; do not extrapolate the trajectory from the
 mod-27 fact alone. The `Seed31Probe` is intended to compute the exact
 first exit from the full integer seed.
+
+
+## Comparison with the distinct sixth-root q=4 subfamily
+
+The already source-composed `BlankSixthQ4Rejoin.q4_mod9_rejoin` covers
+`sourceStart (9*s+7) 4`, whose DRegular state is
+`L(243*s+214,4,1)` (equivalently `t≡23 (mod27)`). This is distinct from
+the EERootBEA target `a≡25 (mod243)`.
+
+The same one-step table gives the following immediate predecessors of this
+second q=4 subcylinder:
+
+- If `s≡4 (mod8)`, write `s=8*j+4`; predecessor is
+  `(729*j+443,5,1)`.
+- If `s≡1 (mod8)`, write `s=8*j+1`; predecessor is
+  `(729*j+172,2,4)`.
+
+These are model-level predecessor conditions only. They do not imply that
+the blank orbit reaches either q=4 subfamily.
