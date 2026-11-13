@@ -169,6 +169,20 @@ Conditioning on the common base cylinder j = 319 (mod 512), m = 42 (mod 512), th
 
 This is only a density in the (j,m) parameter lattice; it is not a fraction of halting machines or of all high-stop states.
 
+## The 32 residue classes explicitly
+
+Fix u and write j=319+512u. Every pair in either strict-family pullback has m=42+512r for some r modulo 32.
+
+The old diagonal condition becomes
+3m-(j+2879) = 512(3r-u-6),
+so it is equivalent to r=3u+2 (mod 8). This removes four of the 32 r-classes.
+
+The new s3 condition becomes
+3m+7j+14025 = 16384+512(3r+7u),
+so it is equivalent to 3r+7u=0 (mod 32), or r=19u (mod 32). This removes exactly one r-class.
+
+The two are visibly disjoint: the new class has r=3u (mod 8), whereas the old classes have r=3u+2 (mod 8). The remaining 27 r-classes are exactly the classes not covered by these two exclusions.
+
 ## Verification boundary
 
 The underlying second strict sixth/seventh image theorem and its all-time exclusion from the genuine blank-root section orbit are original-source Lean certified by CI 43300420208, with no sorryAx.
