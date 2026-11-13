@@ -132,7 +132,8 @@ theorem m0EvenQ4Bridge_input_match (a b : Nat) (h : Int) (ha : 0 < a) :
           h - ((3*a : Nat) : Int) + 1 =
             h - ((3*a-1 : Nat) : Int) := by omega
       rw [hcoord]
-      simpa [m0EvenQ4BridgeStart] using hleft
+      have hN : 3*a-1+1 = 3*a := by omega
+      simpa [m0EvenQ4BridgeStart,hN] using hleft
     · subst y
       have hblock := sweptLeft_block (3*a) (3*a-2)
         (s1Config 3 2 0 a 0 b h).tape h (by omega)
