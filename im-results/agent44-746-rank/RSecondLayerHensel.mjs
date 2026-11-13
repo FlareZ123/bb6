@@ -64,6 +64,31 @@ for (let k = 0; k < 15; k++) {
   console.log(String(k + 1) + "\t" + String(rho) + "\tmod " + String(p3(k + 1)));
 }
 
+// Exact check of the least u=1 point in the ell=1 cylinder.
+{
+  const u = 1n;
+  const n = n0 + step * u;
+  const fullR = A * (2n ** (n - 3n)) + B * n + C;
+  let quotient = fullR;
+  let valuation = 0;
+  while (quotient % 3n === 0n) {
+    quotient /= 3n;
+    valuation++;
+  }
+  const d = fullR / (3n ** 12n);
+  const x = 2n * d;
+  const kappa = n - 8n;
+  const lower = 6n * (2n ** kappa);
+  const upper = 8n * (2n ** kappa);
+  console.log({
+    firstEll1Point: true,
+    n: String(n),
+    v3R: valuation,
+    quotientOdd: d % 2n === 1n,
+    band: x > lower && x < upper,
+  });
+}
+
 // Exact rational limits for three band-compatible further exponents.
 console.log("Band-limit checks:");
 for (const [ell, offset] of [[1n, 9n], [4n, 14n], [6n, 17n]]) {
