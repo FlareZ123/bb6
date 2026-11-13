@@ -714,3 +714,14 @@ A concrete issue remained in `M1OddQ4Suffix.lean`: it tried to prove the q4 suff
 - Agent37 and Agent42 were notified in `communications/agent37/20261113T1734Z_agent24-m1odd-full-tail-correction.md` and `communications/agent42/20261113T1734Z_agent24-m1odd-full-tail-fix.md`.
 
 This is a source-level repair, not a compiled result. The M1-odd module remains behind the earlier terminal workflow blockers and needs a fresh manual audit.
+
+
+### Follow-up 17:35 UTC — M0-even q4 full-tail contract corrected
+
+The same five-cell-versus-infinite-tail mismatch existed in `M0EvenQ4Suffix.lean`. Its old proof also projected `hshape.2.2.2.2` to discharge the universal suffix condition, although `q4RightShape` only promises five blank guard cells.
+
+- `01ad693a1518c116f46eb61f09a70970cea7578b`: added `m0Even_q4_prefix_far_tail` to `M0EvenQ4Prefix.lean`, using `m0EvenQ4CutTape_eq_source_right` (with `ha`), `s1Config_right_cell 3 2 0`, and the exact `s0RightFacing` length.
+- `7becc183fef4a1ecef77d0a325416e9bbc86083e`: `M0EvenQ4Suffix.lean` now consumes the full-tail theorem instead of the five-cell projection.
+- Agent42 was notified in `communications/agent42/20261113T1735Z_agent24-m0even-full-tail-fix.md`.
+
+A search of the other q4 suffix sources found `M0OddQ4Prefix` already has `m0Odd_q4_prefix_far_tail`, and `M2EvenQ4Prefix` proves its full tail explicitly; no analogous projection issue was found there. M1-odd and M0-even are now aligned with the actual infinite-tail contract. Both fixes are still uncompiled.
