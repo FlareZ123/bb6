@@ -224,3 +224,100 @@ valuation 7. These match the exact-integer scans.
   `scan_887_family_cones.py`: original discovery and reproducible
   exact-integer samples. The algebra and 3-adic isometry above strengthen
   that exploratory note; this file is not yet a Lean source proof.
+
+
+## 4. Unbounded odd fan-in across the 887 family
+
+The isometry gives more than unbounded divisibility: combined with the
+dyadic band, it proves that the number of *distinct actual odd parents*
+of the common feeder is unbounded as the index varies.
+
+For t>=1, when `3^(t-1) | G(r)`, define
+
+```
+d_t = G(r)/3^(t-1)             (odd)
+x_t = 2^t*d_t = 2^t*G(r)/3^(t-1).
+```
+
+Since `2*h(r)+5=9*G(r)`, we have
+`2*h(r)+5 = 3^(t+1)*d_t`. Thus an odd ResetParent of exponent t
+exists exactly when `x_t` belongs to an odd dyadic band
+`[6*2^k+1, 8*2^k-1]`; its source state is
+
+```
+q_t = 2*x_t - 8*2^k - k - 5.
+```
+
+Let S be the set of t>=1 for which some integer j satisfies the strict
+limiting band window
+
+```
+6 < 463*2^(t+j) / (6561*3^(t-1)) < 8.
+```
+
+For each t in S, the scale is unique because the band width ratio is
+8/6=4/3<2. The first pairs (t,j) are
+
+```
+(2,6), (5,8), (7,9), (10,11), (12,12), (15,14),
+(17,15), (19,16), (22,18), (24,19), (27,21), (29,22), ...
+```
+
+The set S has natural density log2(4/3). Indeed, taking logarithms,
+the condition is that some integer j places
+
+```
+j + log2(463/2187) - t*log2(3/2)
+```
+
+inside the interval (log2(6), 3), whose length is log2(4/3).
+The rotation step log2(3/2) is irrational (a rational value would imply
+a nontrivial equality between powers of 2 and 3), so the fractional
+parts are equidistributed. In particular S is infinite and has positive
+density.
+
+Now fix T and choose r in the Hensel class
+`r ≡ rho_(T-1) (mod 3^(T-1))`. There are infinitely many such r.
+The isometry gives `3^(T-1) | G(r)`, so every t in S with t<=T
+has an odd quotient d_t. Along this arithmetic progression, as r tends
+to infinity,
+
+```
+G(r)/p -> 463/6561,
+x_t/p -> 463*2^t / (6561*3^(t-1)).
+```
+
+For each of the finitely many t in S∩[1,T], the defining strict
+limiting window therefore becomes the actual band condition at
+`k_t=n-2-j_t` for all sufficiently large r in the chosen Hensel
+class. Choose one r large enough for all these finitely many
+conditions simultaneously. Then every such t gives a genuine
+`ResetParent(q_t,h(r))` edge.
+
+These parent states are distinct. For fixed h,
+`x_(t+1)=2*x_t/3`, so x_t strictly decreases with t. At a band
+scale k, the corresponding parent lies in
+
+```
+4*2^k-k-3 <= q_t <= 8*2^k-k-7.
+```
+
+The parent intervals for adjacent scales are disjoint: the upper
+endpoint at scale k-1 is `4*2^k-k-6`, strictly below the lower
+endpoint `4*2^k-k-3` at scale k. Hence different scales give
+different parents; at the same scale, strict decrease of x_t gives
+different parents as well.
+
+It follows that for every T there is an index n in the subresidue for
+which h(r) has at least `|S∩[1,T]|` distinct odd ResetParent
+predecessors. Since `|S∩[1,T]| ~ log2(4/3)*T`, the odd fan-in of
+the common feeder is unbounded across the family. Conditional on the
+upstream `z2` parent theorem, these are also distinct nodes in the
+fatal candidate's reverse cone.
+
+This rules out any fixed finite-width inverse-cone certificate that is
+claimed to work uniformly over all `n=887+13122*r`. It does **not**
+rule out a parameterized proof: the Hensel selector and the irrational
+rotation together describe exactly why the finite cone width grows.
+The result remains an unformalized mathematical derivation; a Lean
+source proof of the common path and isometry is still required.
