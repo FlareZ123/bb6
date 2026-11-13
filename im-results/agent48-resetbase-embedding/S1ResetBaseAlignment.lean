@@ -275,3 +275,5 @@ theorem resetBase_s1_outside (L m : Nat) (hL : 0 < L) (hm : m < 3)
         rw [hcoordOut]
 
 end BB6Coverage.Agent48ResetBaseEmbedding
+
+#print axioms BB6Coverage.Agent48ResetBaseEmbedding.resetBase_s1_outside
