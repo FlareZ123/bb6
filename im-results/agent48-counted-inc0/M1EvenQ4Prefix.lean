@@ -1,6 +1,5 @@
 import CountedReset
 import ChampionRootBridge
-import TerminalCount
 import S1Encoder
 import CountedQ4Prefix
 import Q4Suffix
@@ -11,7 +10,6 @@ namespace BB6Coverage.Agent48CountedInc0
 open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
-open BB6.ChampionTerminal
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8CountedReset
@@ -51,14 +49,14 @@ private theorem binDec_three_six :
 private theorem m1EvenSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
     (s1Config 3 6 1 a 0 b h).tape
       (h - ((3*a+1+k : Nat) : Int)) =
-      sideBit (markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh) (1+k) := by
+      sideBit (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) (1+k) := by
   have hleft :
       s1LeftFacing 3 6 1 a 0 =
-        d1pow a ++ markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh := by
+        d1pow a ++ markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh := by
     simp [s1LeftFacing, binDec_zero, binDec_three_six, List.append_assoc]
   have hcell := s1Config_left_cell 3 6 1 a 0 b h (3*a+1+k)
   have hside := sideBit_d1pow_append a (3*a+1+k)
-    (markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh) (by omega)
+    (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) (by omega)
   rw [hleft] at hcell
   rw [List.append_assoc] at hcell
   rw [hside] at hcell
@@ -67,7 +65,7 @@ private theorem m1EvenSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
 private theorem m1EvenSweptLeftCell (a b : Nat) (h : Int) (k : Nat) :
     sweptLeft (3*a+1) (s1Config 3 6 1 a 0 b h).tape h
       (h - ((3*a+1 : Nat) : Int) - (k : Int)) =
-      sideBit (markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh) (1+k) := by
+      sideBit (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) (1+k) := by
   have hpres := sweptLeft_preserves_left (3*a+1)
     (s1Config 3 6 1 a 0 b h).tape h
     (h - ((3*a+1 : Nat) : Int) - (k : Int)) (by omega)
@@ -100,7 +98,7 @@ theorem m1EvenQ4Bridge_input_match (a b : Nat) (h : Int) :
     rw [hcoord]
     have hleft := m1EvenSweptLeftCell a b h k
     have hbits :
-        sideBit (markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh) (1+k) =
+        sideBit (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) (1+k) =
           decide (y ∈ m1EvenQ4BridgeStart.marked) := by
       have hyCases : y = -9 ∨ y = -8 ∨ y = -7 ∨ y = -6 ∨ y = -5 ∨
           y = -4 ∨ y = -3 ∨ y = -2 ∨ y = -1 ∨ y = 0 := by omega
@@ -193,7 +191,7 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
   let T2 := (frameAt T1 hN m1EvenQ4Inside m1EvenQ4BridgeEnd).tape
   have hleftFacing :
       s1LeftFacing 3 6 1 a 0 =
-        d1pow a ++ markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh := by
+        d1pow a ++ markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh := by
     simp [s1LeftFacing, binDec_zero, binDec_three_six, List.append_assoc]
   have hOn : leftOnes T h N := by
     intro i hi
@@ -204,13 +202,13 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
       · have hiLen : i < (d1pow a).length := by
           simpa [d1pow_length] using hi3
         rw [sideBit_append_left (d1pow a)
-          (markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh) i hiLen]
+          (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) i hiLen]
         exact sideBit_d1pow_true a i hi3
       · have hieq : i = 3*a := by omega
         subst i
         have hlen : (d1pow a).length = 3*a := by simp [d1pow_length]
         rw [sideBit_append_right (d1pow a)
-          (markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh) (3*a) (by simpa [hlen])]
+          (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) (3*a) (by simpa [hlen])]
         simp [markerWord, d1pow_length]
     simpa [T] using hcell
   have hright : T (h+1) = false := by
