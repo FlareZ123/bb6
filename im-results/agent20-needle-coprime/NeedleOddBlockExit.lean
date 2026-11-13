@@ -134,10 +134,10 @@ private theorem pow_two_mod_five_period_four (n : Nat) :
 
 private theorem terminal_mod20_table (k v : Nat)
     (h : 2^(k+v+2) % 5 = (2^v*(2*v+4)+3) % 5) :
-    (k%4=0 ∧ (v%20=10 ∨ v%20=16 ∨ v%20=17 ∨ v%20=19)) ∨
-    (k%4=1 ∧ (v%20=3 ∨ v%20=8 ∨ v%20=13 ∨ v%20=18)) ∨
-    (k%4=2 ∧ (v%20=5 ∨ v%20=11 ∨ v%20=12 ∨ v%20=14)) ∨
-    (k%4=3 ∧ (v%20=0 ∨ v%20=6 ∨ v%20=7 ∨ v%20=9)) := by
+    (k%4=0 ∧ (v%20=7 ∨ v%20=13 ∨ v%20=14 ∨ v%20=16)) ∨
+    (k%4=1 ∧ (v%20=5 ∨ v%20=6 ∨ v%20=8 ∨ v%20=19)) ∨
+    (k%4=2 ∧ (v%20=3 ∨ v%20=9 ∨ v%20=10 ∨ v%20=12)) ∨
+    (k%4=3 ∧ (v%20=0 ∨ v%20=11 ∨ v%20=17 ∨ v%20=18)) := by
   have hv4 : v%4 = (v%20)%4 := by omega
   have hv5 : v%5 = (v%20)%5 := by omega
   have hpowLeft :
@@ -201,10 +201,10 @@ theorem odd_block_exit_terminal_mod20
       5^t*m-1 = oddTower q v ∧
       runHigh t (some (.N (2^t*m-1))) = some (.N (5^t*m-1)) ∧
       (5^t*m-1) % 2 = 0 ∧
-      ((k%4=0 ∧ (v%20=10 ∨ v%20=16 ∨ v%20=17 ∨ v%20=19)) ∨
-       (k%4=1 ∧ (v%20=3 ∨ v%20=8 ∨ v%20=13 ∨ v%20=18)) ∨
-       (k%4=2 ∧ (v%20=5 ∨ v%20=11 ∨ v%20=12 ∨ v%20=14)) ∨
-       (k%4=3 ∧ (v%20=0 ∨ v%20=6 ∨ v%20=7 ∨ v%20=9))) := by
+      ((k%4=0 ∧ (v%20=7 ∨ v%20=13 ∨ v%20=14 ∨ v%20=16)) ∨
+       (k%4=1 ∧ (v%20=5 ∨ v%20=6 ∨ v%20=8 ∨ v%20=19)) ∨
+       (k%4=2 ∧ (v%20=3 ∨ v%20=9 ∨ v%20=10 ∨ v%20=12)) ∨
+       (k%4=3 ∧ (v%20=0 ∨ v%20=11 ∨ v%20=17 ∨ v%20=18))) := by
   rcases odd_block_exit_terminal_identity t m k ht hm hmOdd hterm with
     ⟨q, v, hq, hblock, hExitEven, hidentity⟩
   have hmod := odd_block_exit_terminal_mod_five_eq t m k v ht hidentity
