@@ -49,6 +49,24 @@ For the narrower EERootBEA parameterization `u=243*m+183`, these become:
 The formula follows by substituting the two residue classes into
 `k=(a-10)/8` or `k=(a-9)/8` respectively.
 
+## Source-level endpoint floor (kernel-verified)
+
+The companion module ../agent37-echain/EERootBEAFloor.lean proves
+that every target in this q=4 subcylinder returns to a physical regular
+section with the stronger bound
+
+**1,073,741,824*m + 809,037,723 ≤ a**.
+
+The exact derivation carries n≥8*(64*ka+50)+11 through the final
+A-marker return with ka=64*t+50 and
+t=2,097,152*m+1,580,151; the three endpoint conversions preserve the
+floor. Lean 4.36.0-rc2 original-source CI run 43410773388 passed the
+axiom gate; the theorem reports [propext, Quot.sound].
+
+This strengthens only the endpoint coordinate after a q=4 source-section
+start. It does not establish that the blank-root orbit reaches this
+subcylinder, nor does it alter the one-step predecessor conditions above.
+
 ## How to use this
 
 Once a root-chain computation identifies an actual q=4 exceptional section,

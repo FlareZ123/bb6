@@ -44,6 +44,8 @@ Once the probe output is available:
 2. Prove the exact count and state signature in Lean (including `a % 59049`, `q`, and `b`) using a kernel-checked computation, then discharge the first-stop certificate's bound premise.
 3. If and only if the actual first state is `L(59049*m+44494,4,1)`, compose the source theorem `q4_exceptional_EE_BEA_section`. Its `sourceStart u 4` is `DRegularSource.sourceSection ⟨27*u+25,4,1⟩`; setting `u=2187*m+1647` gives the target. Otherwise classify the actual state and select a source theorem that matches it.
 
+   The verified companion theorem `BB6.Agent37EERootBEAFloor.q4_exceptional_EE_BEA_section_affine_floor` additionally gives `1,073,741,824*m+809,037,723 ≤ a` at the physical regular return (CI 43410773388). This strengthens the return endpoint only; it does not relax the requirement to prove the exact first-stop state is in this q=4 cylinder.
+
 The current certificate `t30 mod 27 = 22` does not determine `t30 mod 81`. The new certificate module includes a diagnostic `#eval t30 % 81`; it is not yet run. Do not assume the q4 cylinder is reached.
 
 A complete blank-root proof still needs both:
@@ -51,5 +53,5 @@ A complete blank-root proof still needs both:
 1. A universal symbolic invariant or a machine-specific inductive argument for the full blank-origin orbit.
 2. A finite or inductive source proof showing that every exceptional family reached by that orbit either returns to the regular language or enters a separately proved terminal/nonhalting behavior.
 
-The existing q4 closure and the exception-41 `k=27t+22` subfamily are conditional local source theorems. Neither establishes blank-root reachability, closes all of `k ≡ 4 (mod 9)`, or resolves the independent `k ≡ 7 (mod 9)` family. No conclusion about all-time nonhalting or the exact BB(6) value follows from the current finite prefix.
+The existing q4 closure (now with a kernel-verified affine endpoint floor) and the exception-41 `k=27t+22` subfamily are conditional local source theorems. Neither establishes blank-root reachability, closes all of `k ≡ 4 (mod 9)`, or resolves the independent `k ≡ 7 (mod 9)` family. No conclusion about all-time nonhalting or the exact BB(6) value follows from the current finite prefix.
 
