@@ -27,6 +27,7 @@ jobs:
           cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a42-terminal/
           cp im-results/agent24-champion-time/Q4RightEndpoint.lean /tmp/a42-terminal/
           cp im-results/agent48-counted-inc0/TM63RootQ4Drain.lean /tmp/a42-terminal/
+          cp im-results/agent42-champion-terminal/TM63RootQ4Attainable.lean /tmp/a42-terminal/
           cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern}.lean /tmp/a42-terminal/
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a42-terminal/
           cp im-results/agent8-counted-reset/CountedResetBase.lean /tmp/a42-terminal/
@@ -220,6 +221,12 @@ jobs:
           lean -o S1ChampionCountedReset.olean S1ChampionCountedReset.lean 2>&1 | tee /tmp/a42-terminal/s1-champion-counted-reset-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/s1-champion-counted-reset-axioms.log; then
             echo '::error::sorryAx found in S1-specialized champion counted-reset composition'
+            exit 1
+          fi
+          : > /tmp/a42-terminal/root-q4-attainable-axioms.log
+          lean -o TM63RootQ4Attainable.olean TM63RootQ4Attainable.lean 2>&1 | tee /tmp/a42-terminal/root-q4-attainable-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/root-q4-attainable-axioms.log; then
+            echo '::error::sorryAx found in root-connected attained-score composition'
             exit 1
           fi
           # This independent base-frame leaf is intentionally last: it is not an
