@@ -119,7 +119,31 @@ theorem tm63_attainable_after_m1_even_q4
     exact hstage
   exact tm63_attainable_at_proposedChampionScore h hstageFull hfinal
 
+/-- The blank-root q4/drain endpoint followed by the first complete
+m=1,n=6 increment reaches the exact state used by the residual theorem. -/
+theorem tm63_blank_reaches_after_m1_even :
+    run tm2
+      (rootQ4DrainMoves + proposedIncrementCost 1 6 71 (2^63-1)) blank =
+      some (s1Config 3 5 0 tm63AfterM1EvenA 0
+        tm63AfterM1EvenB tm63AfterM1EvenHead) := by
+  have hroot := tm2_blank_reaches_q4_drain_endpoint
+  have hfirst := m1Even_q4_counted_increment_source
+    71 (2^63-1) 223 (by decide)
+  have hcfg :
+      s1Config 3 5 0 (71+(2^63-1)+2) 0
+        (2^(2^63-1)-1) ((223:Int)+5+(3*(2^63-1):Nat)) =
+      s1Config 3 5 0 tm63AfterM1EvenA 0
+        tm63AfterM1EvenB tm63AfterM1EvenHead := by
+    simp only [tm63AfterM1EvenA,tm63AfterM1EvenB,
+      tm63AfterM1EvenHead,tm63NextRight_eq]
+    congr 1 <;> try rfl
+    omega
+  rw [run_add,hroot]
+  simp only [Option.bind_some]
+  exact hfirst.trans (congrArg some hcfg)
+
 #print axioms tm63SuffixSteps_split_m1_even
 #print axioms tm63_attainable_after_m1_even_q4
+#print axioms tm63_blank_reaches_after_m1_even
 
 end BB6Coverage.Agent42M1EvenRootComposition
