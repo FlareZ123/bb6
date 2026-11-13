@@ -443,5 +443,6 @@ theorem concrete_reset_double_B_to_A_source_reentry :
 #print axioms double_B_to_A_source_reentry
 #print axioms chain_double_B_to_A_source_reentry
 #print axioms reset_double_B_to_A_source_reentry
+#print axioms concrete_reset_double_B_to_A_source_reentry
 
 end BB6.Agent37EChainDoubleBReentry
