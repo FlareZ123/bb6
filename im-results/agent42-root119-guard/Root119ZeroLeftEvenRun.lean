@@ -136,7 +136,8 @@ theorem zeroLeftEvenOutTape_head (n : Nat) (t : Int → Bool) (h : Int)
     rw [hidx]
     have hp := zeroLeftPrefixTape_right t h
       (h+2*(n:Int)+2) (by omega)
-    simp (disch := omega) [setBit,hp,hz]
+    have hne : h+2*(n:Int)+2 ≠ h := by omega
+    simp [setBit,hp,hne,hz]
   simpa [zeroLeftEvenOutTape] using
     evenSweepB0Tape_head n (setBit (zeroLeftPrefixTape t h) h false)
       (h+1) hf
@@ -161,11 +162,8 @@ theorem zeroLeftEvenRun_exact (n : Nat) (b : Conf)
   let d : Conf := ⟨.D,b.h+1,fTape⟩
   have hprefix : shuttleRun 8 b = some f := by
     simpa [f] using zeroLeftPrefix_run b hq h0 h1 h2 h3
-  have hFread : zeroLeftPrefixTape b.tape b.h b.h = true := by
-    have h1 : b.h ≠ b.h-1 := by omega
-    have h2 : b.h ≠ b.h-2 := by omega
-    have h3 : b.h ≠ b.h-3 := by omega
-    simp [zeroLeftPrefixTape,setBit,h1,h2,h3]
+  have hFread : zeroLeftPrefixTape b.tape b.h b.h = true :=
+    zeroLeftPrefixTape_head b.tape b.h
   have hFstep : shuttleRun 1 f = some d := by
     simp [shuttleRun,next,f,d,fTape,hFread]
   have hfAway (x : Int) (hx : b.h < x) : fTape x = b.tape x := by
@@ -183,14 +181,14 @@ theorem zeroLeftEvenRun_exact (n : Nat) (b : Conf)
       _ = true := hones j hj
   have hzero' : fTape (b.h+1+2*(n:Int)) = false := by
     calc
-      fTape (b.h+1+2*(n:Int)) = b.tape (b.h+2*(n:Int)+1) :=
+      fTape (b.h+1+2*(n:Int)) = b.tape (b.h+1+2*(n:Int)) :=
         hfAway _ (by omega)
-      _ = false := hzero
+      _ = false := by convert hzero using 1 <;> omega
   have hzeroNext' : fTape (b.h+1+2*(n:Int)+1) = false := by
     calc
-      fTape (b.h+1+2*(n:Int)+1) = b.tape (b.h+2*(n:Int)+2) :=
+      fTape (b.h+1+2*(n:Int)+1) = b.tape (b.h+1+2*(n:Int)+1) :=
         hfAway _ (by omega)
-      _ = false := hzeroNext
+      _ = false := by convert hzeroNext using 1 <;> omega
   have hprev' : n = 0 → fTape ((b.h+1)-1) = false := by
     intro hn
     have heq : (b.h+1)-1 = b.h := by omega
@@ -238,8 +236,8 @@ theorem zeroLeftEvenOutTape_left (n : Nat) (t : Int → Bool) (h x : Int)
   dsimp [zeroLeftEvenOutTape,evenSweepB0Tape]
   have hs := evenSweepTape_left n
     (setBit (zeroLeftPrefixTape t h) h false) (h+1) x (by omega)
-  have hn1 : x ≠ h+2*(n:Int) := by omega
-  have hn2 : x ≠ h+2*(n:Int)+1 := by omega
+  have hn1 : x ≠ h+2*(n:Int)-1 := by omega
+  have hn2 : x ≠ h+2*(n:Int) := by omega
   have hn3 : x ≠ h := by omega
   have hn4 : x ≠ h-1 := by omega
   have hn5 : x ≠ h-2 := by omega
@@ -252,8 +250,8 @@ theorem zeroLeftEvenOutTape_right (n : Nat) (t : Int → Bool) (h x : Int)
   dsimp [zeroLeftEvenOutTape,evenSweepB0Tape]
   have hs := evenSweepTape_right n
     (setBit (zeroLeftPrefixTape t h) h false) (h+1) x (by omega)
-  have hn1 : x ≠ h+2*(n:Int) := by omega
-  have hn2 : x ≠ h+2*(n:Int)+1 := by omega
+  have hn1 : x ≠ h+2*(n:Int)-1 := by omega
+  have hn2 : x ≠ h+2*(n:Int) := by omega
   have hn3 : x ≠ h := by omega
   have hn4 : x ≠ h-1 := by omega
   have hn5 : x ≠ h-2 := by omega
