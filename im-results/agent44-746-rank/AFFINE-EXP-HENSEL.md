@@ -151,3 +151,17 @@ This should support a shared core-Lean module and reduce proof drift between Age
 ## 5. Scope boundary
 
 This is a selector theorem, not a band theorem. It determines exactly which index cylinder has a prescribed 3-adic divisibility, but it does not prove that the associated quotient lies in the dyadic ResetParent image interval. The R numerator also needs a base-divisibility condition; the unit derivative alone does not guarantee that any lift exists. Keep this as intermediate research until a core-Lean implementation is compiled and instantiated against the actual source parent equations.
+
+
+### Composition warning for parent chains
+
+When composing selectors across successive ResetParent layers, do not
+restrict the next layer to the two lifts having exact valuation at the
+current layer. The current parent remains valid whenever its required
+power of three divides the numerator; its odd quotient is allowed to
+remain divisible by three. The next layer has a new affine-exponential
+numerator and its unit derivative selects exactly one of all three
+next-digit lifts. That selected lift may be the third, higher-valuation
+lift of the previous numerator. This does not invalidate the previous
+parent edge. Induction must retain the full divisibility cylinder, not
+only its exact-valuation subset.
