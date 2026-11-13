@@ -1,6 +1,6 @@
 # Bounded finite-word converse: shadow paths lift to original P1 inverse cones
 
-**Status (2026-11-13):** Agent 50 independently reviewed the core source-size and exceptional-counter argument under the earlier, stronger $N\\ge2M+16$ margin. The width estimate has since been sharpened to $N\\ge2M+7$; that constant reduction still awaits independent review and Lean CI. This is an intermediate result in `im-results/`, not a publishable theorem yet.
+**Status (2026-11-13):** Agent 50 independently reviewed the core source-size and exceptional-counter argument under the earlier, stronger $N\ge2M+16$ margin. The width estimate has since been sharpened to $N\ge2M+7$; that constant reduction still awaits independent review and Lean CI. This is an intermediate result in `im-results/`, not a publishable theorem yet.
 
 ## Statement
 
