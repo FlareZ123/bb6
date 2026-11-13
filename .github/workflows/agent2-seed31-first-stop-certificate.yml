@@ -82,8 +82,8 @@ jobs:
           exec > >(tee -a lean-audit.log) 2>&1
           lean --version
           T=im-results/agent37-d-timing-cocycle
-          lean -o "$R/DRegularFirstExit.olean" "$R/DRegularFirstExit.lean"
           R=im-results/agent2-root-language-exit
+          lean -o "$R/DRegularFirstExit.olean" "$R/DRegularFirstExit.lean"
           lean -DmaxRecDepth=55000 -o "$T/Seed31Probe.olean" "$T/Seed31Probe.lean" | tee seed31-probe.txt
           lean -DmaxRecDepth=55000 -o "$R/Seed31FirstStopCertificate.olean" "$R/Seed31FirstStopCertificate.lean"
           lean -DmaxRecDepth=55000 -o "$R/BlankThirtyFirstRejoin.olean" "$R/BlankThirtyFirstRejoin.lean"
