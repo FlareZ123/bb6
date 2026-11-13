@@ -864,8 +864,11 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
           omega
         have hin : m1EvenQ4Inside 1 = true := by
           simp [m1EvenQ4Inside]
-        have hcut := m1EvenQ4CutTape_eq_end_inside a b h x
-          (by simpa [hrel] using hin)
+        have hin' : m1EvenQ4Inside
+            (x-(h-((3*a+1 : Nat):Int))) = true := by
+          rw [hrel]
+          exact hin
+        have hcut := m1EvenQ4CutTape_eq_end_inside a b h x hin'
         have hmark : decide (1 ∈ m1EvenQ4BridgeEnd.marked) = true := by
           simp [m1EvenQ4BridgeEnd]
         have hmark' : decide
