@@ -14,20 +14,20 @@ set_option maxRecDepth 8192
 theorem b_twice (t q p : Nat) (ys : List Bool) :
     run (bTime (9*t+5)+bTime (24*t+16))
       (packet (27*t+17) (q+2) p ys) =
-      packet (3*(64*t+45)+3) q p ys := by
+      packet (3*(64*t+45)+3) q (p+6) ys := by
   rw [run_add]
   have hb1 := b_packet (9*t+5) (q+1) p ys
   have h1 : 27*t+17=3*(9*t+5)+2 := by omega
   have h2 : 8*(9*t+5)+10=3*(24*t+16)+2 := by omega
   rw [h1, hb1, h2]
-  have hb2 := b_packet (24*t+16) q p ys
+  have hb2 := b_packet (24*t+16) q (p+3) ys
   have h3 : 8*(24*t+16)+10=3*(64*t+45)+3 := by omega
   rw [hb2, h3]
 
 /-- Two B operations, then an unrestricted A completion, to a regular F0. -/
 theorem double_B_to_A (t q p : Nat) :
     regularEndpoint (packet (27*t+17) (q+2) p BB6.Agent35K4Shapes.marker) := by
-  obtain ⟨ta,n,htail⟩ := BB6.Agent35MarkerA.all_A_marker_returns (64*t+45) q p
+  obtain ⟨ta,n,htail⟩ := BB6.Agent35MarkerA.all_A_marker_returns (64*t+45) q (p+6)
   unfold regularEndpoint
   refine ⟨bTime (9*t+5)+bTime (24*t+16)+ta,n,?_⟩
   rw [run_add,b_twice]
