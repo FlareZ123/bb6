@@ -54,7 +54,7 @@ theorem blank_no_B_s229 (w : Nat) :
     BB6.Agent11M0SumZeroVerified.blank_no_sumzero_target
       (114512+510784*w) (1512+6752*w) (14503+64692*w)
       (by omega) (by omega) (by omega) (by omega)
-      (by omega) (by omega) hD hE
+      (by omega) (by omega) (by omega) hD hE
   exact hterminal h5
 
 /-- The corresponding A_s target is excluded by the generic source
