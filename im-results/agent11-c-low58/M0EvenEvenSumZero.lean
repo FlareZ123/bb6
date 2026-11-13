@@ -4,7 +4,7 @@ import Lean.Elab.Tactic.Omega
 
 set_option maxRecDepth 16384
 
-namespace BB6.Agent11M0SumZero
+namespace BB6.Agent11M0SumZeroVerified
 open BB6.Agent46
 
 /-- A number greater than two whose residue modulo four is nonzero
@@ -744,6 +744,208 @@ theorem high_stop_mzero_5479 (j k : Nat)
     simpa only [hxform,hkform] using hr
   exact blank_no_high_m0_j5479 w hr'
 
+
+/-- The B_s branch for s=512w+165 is forced through five
+    six-of-eight inverses to an even-even sum-zero target. -/
+theorem blank_no_B_s165 (w : Nat) :
+    ¬ BB6.Agent3.CReach (20664+92160*w) (48446+216064*w) := by
+  intro h0
+  have hp1 := (six_even_right_blank_reach_iff
+    (20664+92160*w) (48446+216064*w)
+    (by omega) (by omega) (by omega) (by omega)).mp h0
+  have h1 : BB6.Agent3.CReach
+      (69108+308224*w) (24222+108032*w) := by
+    have hx : (20664+92160*w)+(48446+216064*w)-2=69108+308224*w := by omega
+    have hy : ((48446+216064*w)-2)/2=24222+108032*w := by omega
+    simpa only [hx,hy] using hp1
+  have hp2 := (six_even_right_blank_reach_iff
+    (69108+308224*w) (24222+108032*w)
+    (by omega) (by omega) (by omega) (by omega)).mp h1
+  have h2 : BB6.Agent3.CReach
+      (93328+416256*w) (12110+54016*w) := by
+    have hx : (69108+308224*w)+(24222+108032*w)-2=93328+416256*w := by omega
+    have hy : ((24222+108032*w)-2)/2=12110+54016*w := by omega
+    simpa only [hx,hy] using hp2
+  have hp3 := (six_even_right_blank_reach_iff
+    (93328+416256*w) (12110+54016*w)
+    (by omega) (by omega) (by omega) (by omega)).mp h2
+  have h3 : BB6.Agent3.CReach
+      (105436+470272*w) (6054+27008*w) := by
+    have hx : (93328+416256*w)+(12110+54016*w)-2=105436+470272*w := by omega
+    have hy : ((12110+54016*w)-2)/2=6054+27008*w := by omega
+    simpa only [hx,hy] using hp3
+  have hp4 := (six_even_right_blank_reach_iff
+    (105436+470272*w) (6054+27008*w)
+    (by omega) (by omega) (by omega) (by omega)).mp h3
+  have h4 : BB6.Agent3.CReach
+      (111488+497280*w) (3026+13504*w) := by
+    have hx : (105436+470272*w)+(6054+27008*w)-2=111488+497280*w := by omega
+    have hy : ((6054+27008*w)-2)/2=3026+13504*w := by omega
+    simpa only [hx,hy] using hp4
+  have hp5 := (six_even_right_blank_reach_iff
+    (111488+497280*w) (3026+13504*w)
+    (by omega) (by omega) (by omega) (by omega)).mp h4
+  have h5 : BB6.Agent3.CReach
+      (114512+510784*w) (1512+6752*w) := by
+    have hx : (111488+497280*w)+(3026+13504*w)-2=114512+510784*w := by omega
+    have hy : ((3026+13504*w)-2)/2=1512+6752*w := by omega
+    simpa only [hx,hy] using hp5
+  let x := 114512+510784*w
+  let y := 1512+6752*w
+  let S := 14503+64692*w
+  have hD : ¬ BB6.Agent3.CReach (x+y-2) ((y-2)/2) := by
+    intro hD0
+    have hxD : x+y-2=116022+517536*w := by dsimp [x,y]; omega
+    have hyD : (y-2)/2=755+3376*w := by dsimp [y]; omega
+    have hDreach : BB6.Agent3.CReach
+        (116022+517536*w) (755+3376*w) := by
+      simpa only [hxD,hyD] using hD0
+    exact blank_no_odd_sum_one (116022+517536*w) (755+3376*w)
+      (by omega) (by omega) (by omega) (by omega) hDreach
+  have hE : ¬ BB6.Agent3.CReach (2*S-2)
+      ((x+2*y-2*S-8)/2) := by
+    intro hE0
+    have hxE : 2*S-2=29004+129384*w := by dsimp [S]; omega
+    have hyE : (x+2*y-2*S-8)/2=44261+197452*w := by
+      dsimp [x,y,S]
+      omega
+    have hEreach : BB6.Agent3.CReach
+        (29004+129384*w) (44261+197452*w) := by
+      simpa only [hxE,hyE] using hE0
+    exact blank_no_odd_sum_one (29004+129384*w) (44261+197452*w)
+      (by omega) (by omega) (by omega) (by omega) hEreach
+  have hnot : ¬ BB6.Agent3.CReach x y :=
+    blank_no_sumzero_target x y S
+      (by dsimp [x]; omega) (by dsimp [x]; omega)
+      (by dsimp [y]; omega) (by dsimp [y]; omega)
+      (by dsimp [x,y,S]; omega)
+      (by dsimp [S]; omega) (by dsimp [S]; omega) hD hE
+  exact hnot h5
+
+/-- A_(512w+165) has its two source parents excluded: L_s by the
+    all-s=5 mod 8 lemma, and B_s by the five-step inverse chain above. -/
+theorem blank_no_A_s165 (w : Nat) :
+    ¬ BB6.Agent3.CReach (34450+106496*w) (25174+77824*w) := by
+  let s := 512*w+165
+  have hx : 130+208*s=34450+106496*w := by
+    dsimp [s]
+    rw [Nat.mul_add, ← Nat.mul_assoc,
+      show 208*512=106496 by decide,
+      show 208*165=34320 by decide]
+    calc
+      130 + (106496*w + 34320) = 130 + (34320 + 106496*w) := by
+        rw [Nat.add_comm (106496*w) 34320]
+      _ = (130+34320) + 106496*w := by
+        rw [← Nat.add_assoc]
+      _ = 34450 + 106496*w := by
+        rw [show 130+34320=34450 by decide]
+  have hy : 94+152*s=25174+77824*w := by
+    dsimp [s]
+    rw [Nat.mul_add, ← Nat.mul_assoc,
+      show 152*512=77824 by decide,
+      show 152*165=25080 by decide]
+    calc
+      94 + (77824*w + 25080) = 94 + (25080 + 77824*w) := by
+        rw [Nat.add_comm (77824*w) 25080]
+      _ = (94+25080) + 77824*w := by
+        rw [← Nat.add_assoc]
+      _ = 25174 + 77824*w := by
+        rw [show 94+25080=25174 by decide]
+  intro hA
+  have hA' : BB6.Agent3.CReach (130+208*s) (94+152*s) := by
+    simpa only [hx,hy] using hA
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    cReach_parent_of_left_gt5 (130+208*s) (94+152*s) (by omega) hA'
+  have hp := m0_odd_ray_parent s a k (by dsimp [s]; omega) hstep
+  rcases hp with ⟨ha,hk⟩ | ⟨ha,hk⟩
+  · subst a
+    subst k
+    exact blank_no_L_s_mod8_five s (by dsimp [s]; omega) hprev
+  · subst a
+    subst k
+    have hxB : 54+90*s=14904+46080*w := by
+      dsimp [s]
+      rw [Nat.mul_add, ← Nat.mul_assoc,
+        show 90*512=46080 by decide,
+        show 90*165=14850 by decide]
+      calc
+        54 + (46080*w + 14850) = 54 + (14850 + 46080*w) := by
+          rw [Nat.add_comm (46080*w) 14850]
+        _ = (54+14850) + 46080*w := by
+          rw [← Nat.add_assoc]
+        _ = 14904 + 46080*w := by
+          rw [show 54+14850=14904 by decide]
+    have hyB : 127+211*s=34942+108032*w := by
+      dsimp [s]
+      rw [Nat.mul_add, ← Nat.mul_assoc,
+        show 211*512=108032 by decide,
+        show 211*165=34815 by decide]
+      calc
+        127 + (108032*w + 34815) = 127 + (34815 + 108032*w) := by
+          rw [Nat.add_comm (108032*w) 34815]
+        _ = (127+34815) + 108032*w := by
+          rw [← Nat.add_assoc]
+        _ = 34942 + 108032*w := by
+          rw [show 127+34815=34942 by decide]
+    have hB : BB6.Agent3.CReach
+        (14904+46080*w) (34942+108032*w) := by
+      simpa only [hxB,hyB] using hprev
+    exact blank_no_B_s165 w hB
+
+/-- Original-blank high stopping targets with j=10599 modulo 32768
+    are unreachable for every parameter w. -/
+theorem blank_no_high_m0_j10599 (w : Nat) :
+    ¬ BB6.Agent3.CReach
+      (2*(10599+32768*w)+3) (31804+98304*w) := by
+  let t := 1024*w+331
+  have hx : 2*(10599+32768*w)+3=17+64*t := by dsimp [t]; omega
+  have hy : 31804+98304*w=28+96*t := by dsimp [t]; omega
+  intro hr
+  have hroot : BB6.Agent3.CReach (17+64*t) (28+96*t) := by
+    simpa only [hx,hy] using hr
+  have hA := mzero_first_two_reach t hroot
+  have hxA : 26+104*t=34450+106496*w := by dsimp [t]; omega
+  have hyA : 18+76*t=25174+77824*w := by
+    dsimp [t]
+    rw [Nat.mul_add, ← Nat.mul_assoc,
+      show 76*1024=77824 by decide,
+      show 76*331=25156 by decide]
+    calc
+      18 + (77824*w + 25156) = 18 + (25156 + 77824*w) := by
+        rw [Nat.add_comm (77824*w) 25156]
+      _ = (18+25156) + 77824*w := by
+        rw [← Nat.add_assoc]
+      _ = 25174 + 77824*w := by
+        rw [show 18+25156=25174 by decide]
+  have hA' : BB6.Agent3.CReach
+      (34450+106496*w) (25174+77824*w) := by
+    simpa only [hxA,hyA] using hA
+  exact blank_no_A_s165 w hA'
+
+/-- The high m=0 stopping equation and j=10599 (mod 32768) fix k,
+    so the preceding root exclusion removes this whole stop family. -/
+theorem high_stop_mzero_10599 (j k : Nat)
+    (hj : j%32768=10599)
+    (hstop : k+j+3*0+5=(2:Nat)^(2*0+2)*(j+3)) :
+    ¬ BB6.Agent3.CReach (2*j+3) k := by
+  let w := (j-10599)/32768
+  have hjform : j=10599+32768*w := by dsimp [w]; omega
+  have hp : (2:Nat)^(2*0+2)=4 := by decide
+  rw [hp] at hstop
+  have hkform : k=31804+98304*w := by rw [hjform] at hstop; omega
+  have hxform : 2*j+3=2*(10599+32768*w)+3 := by rw [hjform]
+  intro hr
+  have hr' : BB6.Agent3.CReach
+      (2*(10599+32768*w)+3) (31804+98304*w) := by
+    simpa only [hxform,hkform] using hr
+  exact blank_no_high_m0_j10599 w hr'
+
+#print axioms blank_no_B_s165
+#print axioms blank_no_A_s165
+#print axioms blank_no_high_m0_j10599
+#print axioms high_stop_mzero_10599
+
+
 #print axioms blank_no_L_s_mod8_five
 #print axioms blank_no_B_s85
 #print axioms blank_no_A_s85
@@ -758,4 +960,4 @@ theorem high_stop_mzero_5479 (j k : Nat)
 #print axioms blank_no_high_m0_j1895
 #print axioms blank_no_high_m0_j359
 
-end BB6.Agent11M0SumZero
+end BB6.Agent11M0SumZeroVerified
