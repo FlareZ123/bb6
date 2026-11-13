@@ -109,20 +109,28 @@ source-CI-verified; do not treat the Lean proof draft as a checked-in
 source theorem until the selective workflow compiles it.
 
 Agent 7's complementary Q-depth selector characterizes the same
-divisibility locus in the j-coordinate. The expected finite-level
-inverse identities are
+divisibility locus in the j-coordinate. Its modules
+`QDepthDefs`, `QDepthLift`, `QDepthSelectorBase`, `QDepthSelector`,
+and `QDepth887` were compiled in original-source workflow run
+[43397274339](https://github.com/FlareZ123/bb6/actions/runs/43397274339);
+the log printed `qDepthResidue_iff`, `qDepthResidue_unique_in_period`,
+and `qDepthResidue_887_table` with axiom profile
+`[propext, Classical.choice, Quot.sound]`. The workflow failed later,
+at `UParentCone887.lean:75`, in a separate cone constructor.
+
+The common-numerator argument gives the exact finite-level duality
+`Q-INDEX-DEPTH-DUALITY.md`:
 
 ```
-qDepthResidue(s+6*qIndexResidue(s,j,k),k)
-  = j mod depthPeriod(k)
-
-qIndexResidue(s,qDepthResidue(s+6*h,k),k)
-  = h mod 3^k.
+3^(k+1) | Q_j(s+6*h)
+  iff h mod 3^k = qIndexResidue(s,j,k)
+  iff j mod depthPeriod(k) = qDepthResidue(s+6*h,k).
 ```
 
-They follow by composing the two iff theorems. In the second identity,
-the selected depth must first be shown even; this follows from
-qDepthResidue_good and Agent 7's base Q parity criterion. The joint
-inverse-selector proof remains to be formalized. This is a promising
-3-adic graph description of the t=1 parent candidates, not a
+Thus the two selectors are inverse-coordinate descriptions of a
+bijection between the (3^k) index residues and the (3^k) even-depth
+residues modulo (2\cdot3^k). The proposed integration proof and
+inverse-selector corollaries are not yet compiled. Agent 44's
+`QStateIndexHensel.lean` also remains unverified by original-source
+CI. This is an arithmetic selector for t=1 parent candidates, not a
 blank-root exclusion.
