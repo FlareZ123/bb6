@@ -124,8 +124,10 @@ rigorous tails.
 The complementary [generation-survival census](generation_survival_census.md),
 reproduced by [generation_survival_census.py](generation_survival_census.py),
 now gives exact depth-2/3 survival measures and rigorous Haar/natural-density
-intervals through depth 7. At depth 7 the upper bounds are below 0.36 for both
-feeders. This is a finite-generation result only: no asymptotic extinction
-theorem or infinite-path measure claim has been proved. The calculations
-remain in the abstract shadow model; the original-source lift is still
-one-way, so no P1 or BB(6) decision follows.
+intervals through depth 7. The local no-child and affine failure-residue rules
+are kernel-checked in [ShadowSurvivalCore.lean](ShadowSurvivalCore.lean) under
+Lean 4.36.0-rc2. At depth 7 the upper bounds are below 0.36 for both feeders.
+This is a finite-generation result only: no asymptotic extinction theorem or
+infinite-path measure claim has been proved. The calculations remain in the
+abstract shadow model; the original-source lift is still one-way, so no P1 or
+BB(6) decision follows.

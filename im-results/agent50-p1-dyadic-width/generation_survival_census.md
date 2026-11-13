@@ -56,6 +56,8 @@ and the parent cylinder minus it is the other half-cylinder.
 
 Consequently, for every depth-(d-1) parent word, the full set of parameters for which that node has at least one child is a finite union of one or three dyadic cylinders. Taking the union over all parent words gives E(s,d), without imposing any cutoff on the last edge.
 
+The local failure characterization and the unique affine failure residues are also kernel-checked in [ShadowSurvivalCore.lean](ShadowSurvivalCore.lean). It proves that type 0 has no legal depth exactly when z=2 modulo 4, type 1 has no legal depth exactly when z is odd, and that an odd-slope affine coordinate a+b r selects exactly one failing residue modulo 4 or 2. The Lean 4.36.0-rc2 axiom audit reports only standard axioms [propext, Classical.choice, Quot.sound], with no sorryAx. This module certifies the local cylinder rule, not the global tail or density argument.
+
 ## Rigorous tail bound for the parent cutoff
 
 The finite calculation enumerates only parent words whose first d-1 edge depths are at most T. Every such parent contributes its exact full child-existence region as described above.
@@ -81,7 +83,7 @@ There are d-2 non-root edge positions among the first d-1 edges. By a union boun
 
 where E_T is the finite union computed from parent words with all first d-1 depths at most T. This proves every upper endpoint in the table.
 
-Each finite cylinder union is periodic on the ordinary integers. The omitted upper-density bound is the same cylinder-mass bound, so the natural density of nonnegative integer q admitting a depth-d shadow word exists and equals the Haar measure \mu(E(s,d)). The table therefore also bounds those natural densities.
+For ordinary integers q≤Q, every actual edge depth satisfies t≤log2(z) because z is a positive integer divisible by 2^t. The offset invariant gives z≤L+m, and therefore m'=m+t+1≤2m+L+1 (using log2(L+m)≤L+m). For fixed d and q≤Q, this recurrence bounds every parent cost by O_d(Q), hence every parent depth by O_d(log Q). Only O_d((log Q)^(d-1)) distinct parent words can therefore occur among q≤Q. Counting each omitted cylinder contributes at most Q times its Haar mass plus one; the total additive overhead is o(Q). The same tail bound consequently controls upper natural density, not just Haar measure. Since each finite-cutoff union is periodic, squeezing its density between the lower approximation and the tail-corrected upper approximation, then letting T tend to infinity, proves that the natural density of nonnegative integer q admitting a depth-d shadow word exists and equals the Haar measure \mu(E(s,d)). The table therefore also bounds those natural densities.
 
 ## Reproduction
 
