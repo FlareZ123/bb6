@@ -343,3 +343,24 @@ Ran the combined grid (L=2..8), every odd (1\le n<2^L) with n≤31, a=0..2, b=0.
 - q4First10_cells now uses explicit coordinate equalities; the d0Sweep induction predecessor uses rw rather than subst; q4 suffix htail cases have explicit g-3/g-2/g-1 coordinate equalities. The q4First10-preserves-after lemma and q4RightShape destructuring were also repaired.
 - Remaining work: verify the latest Q4Suffix compile; continue eliminating any residual sorryAx; then prove the suffix output tape equals s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 (h+5+3*b), using q4SuffixTargetLeft for the left-facing stream, q4TailEnd for the local right-facing cells, and an all-zero far-right tail property. The current prefix theorem's q4RightShape only certifies five trailing zeros, so its stronger far-tail property still needs to be exported/proved from the original S1 configuration.
 - The full Rst2 cost 71+12*a+3*b and the resulting root state after 332 steps are conditional arithmetic predictions only until the canonical suffix composition is kernel-checked.
+
+
+## 2026-11-13 continuation: q4 endpoint bridge and reset-base CI repair
+
+The q4 prefix proof in `im-results/agent6-q4-prefix/CountedQ4Prefix.lean` already had a local proof `hrightT` for the entire right-facing stream. I strengthened `oddRst2_q4_prefix` to export that exact stream as an additional result conjunct after `q4RightShape` (commit `7369e2778204ed876a9cb8529981ac1f09ad9796`). The old finite-interface theorem passed CI 43334058991; the strengthened signature has not yet been compiled. I notified Agent 6.
+
+I added `im-results/agent24-champion-time/Q4RightEndpoint.lean`, included after `Q4Suffix.lean` in the existing manual-only `agent48-champion-root.yml`, with:
+- `q4_prefix_far_tail`: derives the infinite blank ray from Agent 6's exported stream and the length `9+3*b`;
+- `q4_suffix_right_word`: proves the q4 suffix frame's complete right-facing output is `s0RightFacing 0`, including every cell beyond the final local frame;
+- `q4_suffix_run_right_word`: connects that pointwise right endpoint to the exact `39+3*b) source run.
+The module also has helper lemmas for `d0pow` length, its periodic `0,0,1` bit pattern, and the one-cell drop identity. These are proof candidates only: local shell calls returned ClientError, and no workflow-dispatch tool is available. The manual audit remains unrun. The q4 left-facing endpoint is the remaining tape equality; its three-region coordinate proof is in `im-results/agent24-champion-time/Q4RightEndpoint.md` and in messages to Agent 8. Do not edit `Q4Suffix.lean` without coordination.
+
+I also repaired the concrete `CountedResetBase.lean` workflow blockers:
+- the three output marked lists are now in exact `fMove` insertion/filter order, not sorted order (sorting preserves the set but fails `FConfig` list equality);
+- a deterministic replay is preserved in `im-results/agent8-counted-reset/reset_base_check.js`;
+- `v2` is qualified as `BB6ChampionArithmetic.v2);
+- `CountedOneZeroUnary` is imported and `even_finite_heads` replaces the unavailable `finite_heads`;
+- the manual champion-root workflow compiles `CountedOddUnary` and `CountedOneZeroUnary` before `CountedResetBase`, and now captures the reset-base axiom output and rejects `sorryAx`.
+The exact ordered replay outputs are documented in `im-results/agent8-counted-reset/README.md`. These repairs are not CI-verified; I notified Agents 8 and 48 and asked Agent 48 to localize the failure in run 43340804651 and rerun the manual audit if possible.
+
+No exact BB(6) value, complete champion primitive-step theorem, or universal six-state upper bound has been established. Keep all of the above in `im-results/`, not `results/`, until the relevant Lean checks and full source compositions are complete.
