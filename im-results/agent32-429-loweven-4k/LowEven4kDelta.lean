@@ -3,7 +3,6 @@ import BB429JuncHeadExcursion
 import BB429PhysicalBridge
 import BB429SourceE1Return
 import BB429SourceE1Delta
-import MidAposBoundary
 import Low3Delta
 import Lean.Elab.Tactic.Omega
 
@@ -13,7 +12,7 @@ set_option maxRecDepth 65536
 namespace BB429LowEven4k
 
 open BB6Coverage BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta
-open BB429FinishScanEDelta BB429JuncHeadExcursion BB429MidAposBoundary
+open BB429FinishScanEDelta BB429JuncHeadExcursion
 open BB429Low3Delta BB429PhysicalFrontier BB429PhysicalBridge
 open BB429DeltaPhysicalBridge
 
@@ -26,6 +25,131 @@ private theorem compose_delta
   simp only [Option.bind_some]
   rw [h2]
   rfl
+
+
+private theorem shift_A01_tail_delta (n : Nat) (hn : 1 ≤ n)
+    (left : List Bool) :
+    runWithDelta (2*n) (z 0 left false (true :: pairs01 n)) =
+      some (z 0 (ones (2*n) ++ left) false [true], ((2*n : Nat) : Int)) := by
+  induction n generalizing left with
+  | zero =>
+      omega
+  | succ n ih =>
+      cases n with
+      | zero =>
+          simpa [pairs01, ones] using
+            (shift_A01_pair_delta left [false,true])
+      | succ n =>
+          have hpair :
+              runWithDelta 2
+                (z 0 left false (true :: (false :: true :: pairs01 (n+1)))) =
+              some (z 0 (true :: true :: left) false (true :: pairs01 (n+1)), 2) := by
+            simpa [pairs01] using
+              (shift_A01_pair_delta left (false :: true :: pairs01 (n+1)))
+          have hrest := ih (by omega) (true :: true :: left)
+          have htime : 2*(n+2) = 2 + 2*(n+1) := by omega
+          rw [htime, runWithDelta_add]
+          have hpair' :
+              runWithDelta 2 (z 0 left false (true :: pairs01 (n+2))) =
+                some (z 0 (true :: true :: left) false (true :: pairs01 (n+1)), 2) := by
+            simpa only [pairs01] using hpair
+          rw [hpair']
+          simp only [Option.bind_some]
+          rw [hrest]
+          simp only [Option.map_some]
+          have hleft : ones (2*(n+1)) ++ [true,true] = ones (2*(n+2)) := by
+            calc
+              ones (2*(n+1)) ++ [true,true] =
+                  ones (2*(n+1)) ++ ones 2 := by simp [ones]
+              _ = ones (2*(n+1)+2) := by rw [← ones_add]
+              _ = ones (2*(n+2)) := by congr 1 <;> omega
+          have hleft' : ones (2*(n+1)) ++ (true :: true :: left) =
+              ones (2+2*(n+1)) ++ left := by
+            calc
+              ones (2*(n+1)) ++ (true :: true :: left) =
+                  (ones (2*(n+1)) ++ [true,true]) ++ left := by
+                    rw [show true :: true :: left = [true,true] ++ left by rfl,
+                      ← List.append_assoc]
+              _ = ones (2+2*(n+1)) ++ left := by
+                rw [hleft]
+                rw [show 2*(n+2) = 2+2*(n+1) by omega]
+          rw [hleft']
+          simp [Int.natCast_add, Int.natCast_mul]
+
+private theorem juncPos_w0_exit_delta (u v : Nat) :
+    runWithDelta (2*v+6) (junc (u+1) v 0) =
+      some (z 0 (ones (2*v+5) ++ pairs01 u ++ ones 5) false [true],
+        ((2*v+2 : Nat) : Int)) := by
+  have hprep := juncPos_prep4_delta u v 0
+  have htail := shift_A01_tail_delta (v+1) (by omega)
+    (true :: true :: true :: (pairs01 u ++ ones 5))
+  have htime : 2*v+6 = 4 + 2*(v+1) := by omega
+  rw [htime, runWithDelta_add, hprep]
+  simp only [Option.bind_some]
+  have hright : pairs01 v ++ ones 0 ++ [false,true] = pairs01 (v+1) := by
+    simpa [ones] using pairs01_succ_append v
+  have hinput :
+      z 0 (true :: true :: true :: (pairs01 u ++ ones 5)) false
+        (true :: (pairs01 v ++ ones 0 ++ [false,true])) =
+      z 0 (true :: true :: true :: (pairs01 u ++ ones 5)) false
+        (true :: pairs01 (v+1)) := by
+    exact congrArg (fun r : List Bool =>
+      z 0 (true :: true :: true :: (pairs01 u ++ ones 5)) false (true :: r)) hright
+  rw [hinput, htail]
+  simp only [Option.map_some]
+  have hleft : ones (2*(v+1)) ++ [true,true,true] = ones (2*v+5) := by
+    calc
+      ones (2*(v+1)) ++ [true,true,true] =
+          ones (2*(v+1)) ++ ones 3 := by simp [ones]
+      _ = ones (2*(v+1)+3) := by rw [← ones_add]
+      _ = ones (2*v+5) := by congr 1 <;> omega
+  have hleft' :
+      ones (2*(v+1)) ++ (true :: true :: true :: (pairs01 u ++ ones 5)) =
+        ones (2*v+5) ++ pairs01 u ++ ones 5 := by
+    calc
+      ones (2*(v+1)) ++ (true :: true :: true :: (pairs01 u ++ ones 5)) =
+          (ones (2*(v+1)) ++ [true,true,true]) ++ (pairs01 u ++ ones 5) := by
+            rw [show true :: true :: true :: (pairs01 u ++ ones 5) =
+              [true,true,true] ++ (pairs01 u ++ ones 5) by rfl,
+              ← List.append_assoc]
+      _ = ones (2*v+5) ++ pairs01 u ++ ones 5 := by
+        rw [hleft, List.append_assoc]
+  rw [hleft']
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
+private theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
+    runWithDelta n (z 4 (ones n ++ left) true suffix) =
+      some (z 4 left true (ones n ++ suffix), -((n : Nat) : Int)) := by
+  induction n generalizing left suffix with
+  | zero =>
+      rfl
+  | succ n ih =>
+      rw [show n+1 = 1+n by omega, runWithDelta_add]
+      have hleft : ones (1+n) ++ left = true :: (ones n ++ left) := by
+        rw [ones_add 1 n]
+        simp [ones]
+      have hstep :
+          runWithDelta 1 (z 4 (ones (1+n) ++ left) true suffix) =
+            some (z 4 (ones n ++ left) true (true :: suffix), -1) := by
+        rw [hleft]
+        rfl
+      rw [hstep]
+      simp only [Option.bind_some]
+      rw [ih]
+      simp only [Option.map_some]
+      have hones : ones n ++ [true] = ones (n+1) := by
+        simpa [ones] using (ones_add n 1).symm
+      have hright : ones n ++ (true :: suffix) = ones (n+1) ++ suffix := by
+        calc
+          ones n ++ (true :: suffix) = ones n ++ ([true] ++ suffix) := rfl
+          _ = (ones n ++ [true]) ++ suffix := by rw [← List.append_assoc]
+          _ = ones (n+1) ++ suffix := by rw [hones]
+      rw [hright, show n+1 = 1+n by omega]
+      simp only [Option.some.injEq, Prod.mk.injEq]
+      constructor
+      · trivial
+      · omega
 
 private theorem pairs01_snoc (n : Nat) :
     pairs01 (n+1) = pairs01 n ++ [false, true] := by
