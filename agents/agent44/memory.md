@@ -511,3 +511,78 @@ Extended Agent 7's t=7 continuation on the exact-Q lift \(r\equiv13\pmod{27}\).
 - Status remains intermediate: depends on Agent 7's exact source identity and first-digit classification; the scaled selector and second-layer band theorem are not Lean-verified and do not establish blank-root reachability.
 
 Next: request Agent 7's adversarial check of the R source formula/first-digit premise; then consider formalizing the scaled-cylinder Hensel theorem once an authorized manual CI dispatch path is available. Avoid redoing the existing Q/T selectors.
+
+
+## 2026-11-13 checkpoint: nested cascade adversarial review and seven-edge extension
+
+Agent 7 sent a proposed arbitrary finite-depth odd-parent cascade and corrected a subtle exact-valuation issue. I reviewed the recurrence and the branch independently.
+
+### Induction review
+
+- The exact parent identity is
+  \[
+  p=2^{t+1}d-8\cdot2^k-k-5,\quad
+  2v+5=3^{t+1}d,\quad k=n+t-\sigma.
+  \]
+  It implies
+  \[
+  2p+5=4\cdot2^t(2v+5)/3^{t+1}-16\cdot2^k-2k-5.
+  \]
+  Multiplying by \(3^{E+t+1}\) yields Agent 7's numerator recurrence
+  \[
+  X_{\rm next}=4\cdot2^tX-16\cdot2^k3^{E+t+1}-(2k+5)3^{E+t+1}.
+  \]
+- If \(X=A2^n+Bn+C\), then \(B_{\rm next}=4\cdot2^tB-2\cdot3^{E+t+1}\), so B remains a 3-adic unit (the first term is a unit, the second divisible by 3).
+- The gamma recurrence is correct when \(\gamma_i=\lim(2v_i+5)/2^n\), i.e. the unscaled state ratio:
+  \[
+  R_i=\gamma_{i-1}2^{\sigma_i}/3^{t_i+1},\qquad
+  \gamma_i=4\cdot2^{t_i-\sigma_i}(R_i-4).
+  \]
+  The first four band limits for Agent 7's branch are \(458752/59049\), \(3560896/531441\), \(11481056/1594323\), and \(326640896/43046721\), all in (6,8).
+- Crucial correction: the next layer's unique Hensel digit may be the third lift, where the previous quotient has higher 3-adic valuation. This is valid because ResetParent needs divisibility and an odd quotient, not an exact valuation or a 3-coprime quotient. Keep the full divisibility cylinder when composing layers; do not restrict to the two exact-valuation lifts. This correction was sent to Agent 7 and added to AFFINE-EXP-HENSEL.md and R-SECOND-LAYER-HENSEL.md.
+- For every fixed finite depth, the nested selectors produce a positive-density natural-index cylinder. Do not claim one natural index has an infinite chain; the inverse-limit point may be a non-natural 3-adic integer.
+
+### Five-, six-, and seven-edge checks
+
+Agent 7 proposed the five-edge branch
+\[
+r\equiv74803\pmod{177147}= \pmod{3^{11}},
+\quad (t_i)=(7,1,0,2,1),\quad
+(\sigma_i)=(14,9,9,13,13).
+\]
+At representative r=74803, n=981565853, independent evaluation of the recurrence modulo \(3^{28}\) gives:
+\[
+v_3(X_0)=10,\quad v_3(G_1)=2,\quad v_3(G_2)=1,\quad
+v_3(G_3)=5,\quad v_3(G_4)=2,\quad v_3(G_5)=1,
+\]
+consistent with Agent 7's class lower bounds. The five band limits are respectively
+\(458752/59049\), \(3560896/531441\), \(11481056/1594323\),
+\(326640896/43046721\), \(2471264192/387420489\), all in (6,8).
+
+The same cylinder has a sixth edge \((t,\sigma)=(0,13)\): \(3\mid G_5\) is constant on r mod \(3^{11}\) because shifting r by \(3^{11}\) shifts n by \(6\cdot3^{18}\), and after dividing \(X_5\) by \(3^{18}\) the change is 0 mod 3. The sixth band limit is
+\[
+7372657888/1162261467\approx6.34337.
+\]
+For the seventh edge, evaluate the next digit r=74803+a*3^11, a=0,1,2. Modulo \(3^{28}\), \(G_5\bmod3=(0,0,0)\) and \(G_6\bmod3=(0,2,1)\). Thus the unique next digit is a=0, giving
+\[
+r\equiv74803\pmod{3^{12}},
+\]
+and the seventh edge \((t,\sigma)=(0,14)\) has band limit
+\[
+21788896160/3486784401\approx6.24899.
+\]
+This gives a seven-edge branch on a positive-density cylinder, for sufficiently large r. The reproducible script is NestedCascadeCheck.mjs; it computes the modular valuations, B_i mod 3, band limits, and next-digit selection. Sent all checks and the extension to Agent 7.
+
+### CI dispatch status
+
+- Agent 7 asked me to dispatch the corrected manual-only UParentCone workflow. I verified branch agent7-887-even-parent is at ca1223073674a519a8ee15dbd62ea96474e4ff94, three commits ahead of patch 7e71e610224fd3de2b66816724e7241ee96f3603.
+- UParentCone887.lean line 75 now passes the bundled hband conjunction as one constructor field: ResetParent q z := Or.inr ⟨k,t,d,hdodd,hband,hout,hscale⟩. This fixes the known run-43397274339 mismatch.
+- The available GitHub tool surface has no workflow_dispatch/create-run action. Rerunning the old run would target the stale commit, so I did not do that or claim CI success. I informed Agent 7 to dispatch through an authorized Actions UI/Work path.
+
+### Durable artifacts
+
+- R-SECOND-LAYER-HENSEL.md: full scaled R selector, root residues, unbounded second-layer exponent proof.
+- AFFINE-EXP-HENSEL.md: generic and scaled-cylinder Hensel lemmas plus exact-lift composition warning.
+- RSecondLayerHensel.mjs: exact modular selector reproducer.
+- NestedCascadeCheck.mjs: independent five-to-seven-edge recurrence and band check.
+- Dossier README and top-level README #746 synthesis updated. All remain in im-results; no BB(6) root decision has been established.
