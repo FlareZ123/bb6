@@ -394,3 +394,26 @@ This is another obstruction to any fixed finite reverse-cone template.
 It still leaves a viable parameterized route: classify the 3-adic
 divisibility class, the unique dyadic scale, and the even-chain length
 as functions of t and the Hensel digits.
+
+
+There is also a quantitative density refinement. For fixed m>=1, the
+set of t in S whose limiting mantissa satisfies
+`R_t > 8-2^(1-m)` has natural density
+
+```
+delta_m = log2(8/(8-2^(1-m)))
+       = -log2(1-2^(-m-2)).
+```
+
+This follows because the same irrational rotation is equidistributed
+and the corresponding logarithmic window is
+`(log2(8-2^(1-m)),3)`. Hence for every fixed m, a positive-density
+set of exponents t admits m consecutive even-parent edges. Moreover,
+for every finite T, one sufficiently large r in the Hensel class
+`rho_(T-1) mod 3^(T-1)` realizes all such t<=T simultaneously:
+the odd-band and all m even-band inequalities are finitely many
+strict limiting inequalities, so one large r satisfies them all.
+Thus there are feeders with at least
+`delta_m*T+o(T)` distinct odd parents, each supporting m further
+even-parent steps. As m grows,
+`delta_m ~ 2^(-m-2)/ln(2)`.
