@@ -203,58 +203,93 @@ composition along the actual blank-root orbit.
 
 ## Remaining open problem
 
-This work does not prove that the subsequent J/Junc orbit stays in a safe
-chart, that every later C/0 event is at the global frontier, or that #429
-never halts. The root is now connected through a candidate source-verified finite chain to J(11,62), but the all-time physical frontier/history invariant remains open. The next root-specific transitions (including the low-odd and low-even returns) still need their complete prefix maxima composed with the blank-root history, and the general J/Junc chart must be closed across every regular and exceptional transition.
+The blank-root orbit now has a **source-level finite proof candidate** through
+Junc(45,0,58) at primitive step **16,280**. The appended regular-chart
+segment has an exact physical frontier theorem: its 2,562 primitive steps
+preserve the absolute rightmost marked cell, and every head position in that
+segment remains strictly to its left. The all-prefix source/physical
+composition also excludes C/01 through step 16,280. This remains a finite
+prefix certificate, not an all-time invariant or a nonhalting proof.
 
-Keep this candidate in `im-results/`. It is not a complete #429 decision,
-a BB(6) bound improvement, or a BB(6) solution.
+The next root-connected leaf is the concrete low-even r=32 segment
+Junc(45,0,58) -> Junc(11,0,146), proposed at 4,407 primitive steps. Agent 32
+owns its source no-fatal and physical proof in PR #81; the reported recent
+source-proof CI attempts failed, so do not treat the conditional prepared
+input theorem as an authentic blank-root result or as CI-certified evidence.
+Further low-deficit cases and the all-time physical frontier/history
+invariant remain open.
 
+Keep this work in `im-results/`. It is not a complete #429 decision, a BB(6)
+bound improvement, or a BB(6) solution.
 
-## Root suffix after J(11,98): outer-safe plus low42 (new, CI pending)
+## Root suffix after J(11,98): outer-safe, low42, and regular-chart bridge
 
-The existing step-9243 root frontier is J(11,98), with physical head -55.
-The already-proved all-parameter outer-safe theorem
-`BB429OuterSafe.junc_outer_safe` composes twice:
+The step-9,243 root frontier is J(11,98), with physical head -55 and
+rightmost mark 46. The two all-parameter outer-safe returns are:
 
 - J(11,98) -> J(25,73), 621 steps;
-- J(25,73) -> J(53,20), 2777 steps.
+- J(25,73) -> J(53,20), 2,777 steps.
 
-The 3398-step source run is C/0-free at every processed instruction, and
-`root_outer_no_czero_physical` lifts that fact to every physical prefix,
-including the endpoint. Its total head displacement is +78, so the
-corresponding root checkpoint is J(53,20), head +23, at step 12641.
+Their 3,398-step source run is C/0-free at every processed instruction and
+has net head displacement +78, reaching head +23 at step 12,641.
 
-J(53,20) is the concrete low42 instance j=10, k=21. The new
-`Low42RootNoFatal.lean` source audit certifies the 1077-step run to
-Junc(0,0,136). Its exact C/0 event census is:
+J(53,20) is the concrete low42 instance j=10, k=21. The 1,077-step
+`Low42RootNoFatal` source audit records exactly two C/0 starts, at local
+times 510 and 919; both have a blank right neighbor. Its guarded source run
+and physical lift exclude C/01 throughout and reach Junc(0,0,136), with net
+head displacement -109 from the J(53,20) entry.
 
-| Primitive time from J(53,20) | Head displacement | Right neighbor |
-|---:|---:|---|
-| 510 | +26 | blank |
-| 919 | +29 | blank |
+Agent 48's `RootNoFatalChain.lean` composes the original 9,243-step
+blank-root prefix, the 3,398-step outer-safe suffix, and the 1,077-step
+low42 suffix. Its theorem
+`BB429RootNoFatalChain.blank_root_no_fatal_to_junc136` states that the
+blank root reaches a configuration represented by Junc(0,0,136) at step
+**13,718**, with C/01 excluded at every physical prefix through the
+endpoint.
 
-There are no other C/0 instruction starts in this branch. The guarded
-source theorem `low42_root_no_fatal_source` and its physical all-prefix
-lift `low42_root_no_fatal_physical` exclude C/01 throughout the branch,
-while permitting these two harmless C/0/blank-right visits. The existing
-`Low42Physical.low42_raw_head_all 10 21` gives net head displacement
-(-109), hence the expected physical endpoint head is (-86) from the
-root's +23 entry head.
+The new `RootJunc136To45.lean` then composes the seven ordinary Junc
+segments:
 
-The compositional theorem `blank_root_outer_low42_no_fatal` is conditional
-on any authentic blank-root entry into Junc(11,0,98). It certifies the next
-4475 steps to Junc(0,0,136): the first 3398 contain no C/0 at all, and the
-last 1077 contain no fatal C/01. The existing step-9243 root theorem supplies
-the required entry; a separate small instantiation theorem remains to be
-added to turn this conditional suffix into an explicit step-13718 root
-checkpoint.
+| Segment | Transition | Steps | Endpoint |
+|---|---|---:|---|
+| 1 | zero-u, v=0, w=136 | 27 | Junc(3,0,133) |
+| 2 | positive-u, 3 returns | 54 | Junc(0,6,127) |
+| 3 | zero-u, v=6, w=127 | 39 | Junc(9,0,124) |
+| 4 | positive-u, 9 returns | 378 | Junc(0,18,106) |
+| 5 | zero-u, v=18, w=106 | 63 | Junc(21,0,103) |
+| 6 | positive-u, 21 returns | 1,890 | Junc(0,42,61) |
+| 7 | zero-u, v=42, w=61 | 111 | Junc(45,0,58) |
 
-The new files are in `im-results/`, not `results/`. They are committed
-with a targeted push-triggered workflow extension in
-`.github/workflows/agent6-429-low42.yml`. This invocation could not run the
-local shell, and the available GitHub interface did not expose the
-push-triggered run status. Therefore the new Lean proofs are **not yet
-claimed CI-certified**; the workflow's axiom audit is configured to reject
-`sorryAx`. Do not treat the suffix as a complete #429 decision or as a
-BB(6) solution.
+The exact total is **2,562**. The source composition uses the existing
+C/0-free `junc0_regular_safe` and `junc_positive_iter_safe` theorems.
+Its physical lift composes the ordinary-return prefix bounds and frontier
+conservation theorems. If the Junc(0,0,136) input has head h, the original
+rightmost mark is at h+139; every head in the appended 2,562-step segment
+is strictly below h+139, and the Junc(45,0,58) endpoint has its rightmost
+mark at the same absolute coordinate (endpoint head +61 = h+139).
+
+The resulting candidate theorem
+`BB429RootJunc136To45.blank_root_no_fatal_to_junc45` composes that segment
+with Agent 48's 13,718-step root certificate. It gives a 16,280-step
+blank-root path to Junc(45,0,58), excludes C/01 at every physical prefix,
+and retains the regular-segment frontier bound. This is the correct
+prepared input for Agent 32's 4,407-step r=32 continuation.
+
+## Verification status and source boundary
+
+The 35-step blank-root entry and the original-table bridge have local
+Lean 4.36.0-rc2 proof-script preflights described above. The finite
+RootJunctionChain monitors and the newer 13,718-/16,280-step physical
+composition candidates still require an unchanged-original-source CI run.
+The manual-only workflow
+`.github/workflows/agent6-429-low42.yml` builds the low42 and outer-safe
+dependencies; it must also compile Agent 48's
+`NoFatalGuard`, `RootNoFatalPrefix`, `RootNoFatalPhysical`, and
+`RootNoFatalChain`, followed by the ordinary physical-frontier modules and
+`RootJunc136To45.lean`. The audit must check the named theorem axiom
+reports and reject `sorryAx`. The workflow remains manual-only; no
+push-triggered validation is claimed.
+
+Until that end-to-end run succeeds, the 13,718-step and 16,280-step results
+are **Lean proof candidates, not CI-certified original-source results**.
+They are finite prefixes only and do not decide #429 or BB(6).
