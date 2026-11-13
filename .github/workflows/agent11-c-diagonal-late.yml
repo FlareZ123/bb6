@@ -177,6 +177,40 @@ jobs:
           # The mixed even/odd four inverse is also used by the generalized y=3 boundary below.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/EvenOddFourExact.lean .
           lean -o EvenOddFourExact.olean EvenOddFourExact.lean
+
+          # Prioritize the source-authentic m=0 sum-zero and nested S31 proof chain
+          # before the separate, currently failing generalized y=3 draft below.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZero.lean .
+          lean -o M0EvenEvenSumZero.olean M0EvenEvenSumZero.lean 2>&1 | tee M0EvenEvenSumZero.log
+          if grep -q sorryAx M0EvenEvenSumZero.log; then
+            echo "REJECTED: standalone m=0 sum-zero proof contains sorryAx"
+            exit 1
+          fi
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31.lean .
+          lean -o M0EvenEvenSumZeroS31.olean M0EvenEvenSumZeroS31.lean 2>&1 | tee M0EvenEvenSumZeroS31.log
+          if grep -q sorryAx M0EvenEvenSumZeroS31.log; then
+            echo "REJECTED: s=31 B-parent proof contains sorryAx"
+            exit 1
+          fi
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31W5.lean .
+          lean -o M0EvenEvenSumZeroS31W5.olean M0EvenEvenSumZeroS31W5.lean 2>&1 | tee M0EvenEvenSumZeroS31W5.log
+          if grep -q sorryAx M0EvenEvenSumZeroS31W5.log; then
+            echo "REJECTED: S31 w5 high-stop proof contains sorryAx"
+            exit 1
+          fi
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31W1.lean .
+          lean -o M0EvenEvenSumZeroS31W1.olean M0EvenEvenSumZeroS31W1.lean 2>&1 | tee M0EvenEvenSumZeroS31W1.log
+          if grep -q sorryAx M0EvenEvenSumZeroS31W1.log; then
+            echo "REJECTED: S31 w1 mod4 parent reduction contains sorryAx"
+            exit 1
+          fi
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31W13Q275.lean .
+          lean -o M0EvenEvenSumZeroS31W13Q275.olean M0EvenEvenSumZeroS31W13Q275.lean 2>&1 | tee M0EvenEvenSumZeroS31W13Q275.log
+          if grep -q sorryAx M0EvenEvenSumZeroS31W13Q275.log; then
+            echo "REJECTED: S31 w13 q275 high-stop proof contains sorryAx"
+            exit 1
+          fi
+
           # New exact x=2 mod 16 y=3 inverse boundary for the u=5 branch.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean .
           lean -o EvenOddThreeX2Mod16.olean EvenOddThreeX2Mod16.lean 2>&1 | tee EvenOddThreeX2Mod16.log
@@ -400,14 +434,6 @@ jobs:
             exit 1
           fi
 
-          # Standalone original-source proof module; distinct namespace from modular refactor.
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZero.lean .
-          lean -o M0EvenEvenSumZero.olean M0EvenEvenSumZero.lean 2>&1 | tee M0EvenEvenSumZero.log
-          if grep -q sorryAx M0EvenEvenSumZero.log; then
-            echo "REJECTED: standalone m=0 sum-zero proof contains sorryAx"
-            exit 1
-          fi
-
           # Audit the exact y=0/y=2 source fibres needed for the odd-v2
           # normalization's u=1 boundary case.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0SmallBoundaryZero.lean .
@@ -444,37 +470,6 @@ jobs:
           lean -o M0EvenEvenSumZeroS533.olean M0EvenEvenSumZeroS533.lean 2>&1 | tee M0EvenEvenSumZeroS533.log
           if grep -q sorryAx M0EvenEvenSumZeroS533.log; then
             echo "REJECTED: s=533 high-stop proof contains sorryAx"
-            exit 1
-          fi
-
-          # Source-check the B_s parent reduction for s=32*w+31.
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31.lean .
-          lean -o M0EvenEvenSumZeroS31.olean M0EvenEvenSumZeroS31.lean 2>&1 | tee M0EvenEvenSumZeroS31.log
-          if grep -q sorryAx M0EvenEvenSumZeroS31.log; then
-            echo "REJECTED: s=31 B-parent proof contains sorryAx"
-            exit 1
-          fi
-
-          # Source-check the restricted w=16*q+5 high-stop cylinder.
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31W5.lean .
-          lean -o M0EvenEvenSumZeroS31W5.olean M0EvenEvenSumZeroS31W5.lean 2>&1 | tee M0EvenEvenSumZeroS31W5.log
-          if grep -q sorryAx M0EvenEvenSumZeroS31W5.log; then
-            echo "REJECTED: S31 w5 high-stop proof contains sorryAx"
-            exit 1
-          fi
-
-          # Source-check the w=1 mod 4 L-parent reduction and its nested q=275 cylinder.
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31W1.lean .
-          lean -o M0EvenEvenSumZeroS31W1.olean M0EvenEvenSumZeroS31W1.lean 2>&1 | tee M0EvenEvenSumZeroS31W1.log
-          if grep -q sorryAx M0EvenEvenSumZeroS31W1.log; then
-            echo "REJECTED: S31 w1 mod4 parent reduction contains sorryAx"
-            exit 1
-          fi
-
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31W13Q275.lean .
-          lean -o M0EvenEvenSumZeroS31W13Q275.olean M0EvenEvenSumZeroS31W13Q275.lean 2>&1 | tee M0EvenEvenSumZeroS31W13Q275.log
-          if grep -q sorryAx M0EvenEvenSumZeroS31W13Q275.log; then
-            echo "REJECTED: S31 w13 q275 high-stop proof contains sorryAx"
             exit 1
           fi
 
