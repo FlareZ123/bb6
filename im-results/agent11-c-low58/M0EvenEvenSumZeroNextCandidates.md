@@ -307,6 +307,82 @@ The proof closes the previously unresolved direct L-parent residual on this slic
 The residue `t≡383 (mod 1024)` is disjoint from the four earlier m=0 classes `59 (mod 64)`, `11 (mod 256)`, `171 (mod 512)`, and `331 (mod 1024)`. If original-source CI succeeds, the m=0 odd-parameter-ray coverage rises from `23/512` to `24/512=3/64`. The file has been added to `agent11-c-diagonal-late.yml`; until that manual run succeeds with no `sorryAx`, treat this as a promising intermediate candidate, not a source-certified result or a results/ claim.
 
 
+## A second nested S31 high-stop cylinder
+
+The residual direct L-parent in the family \(s=32w+31\) admits another exact infinite slice. Set
+\[
+q=512d+275,\qquad w=16q+13=8192d+4413,
+\]
+so
+\[
+s=32w+31=262144d+141247,\quad
+t=2s+1=524288d+282495,
+\]
+and therefore
+\[
+j=7+32t=9039847+16777216d,\quad
+k=3j+7=27119548+50331648d.
+\]
+
+For \(L_s=(11382+11520w,2402+2432w)\), the existing \(w\equiv1\pmod4\) reduction forces
+\[
+R=(99724+114080q,64714+74032q).
+\]
+One six-even-right inverse gives
+\[
+R_1=(51895236+96313344d,10211756+18952192d),
+\]
+an even-even target of sum \(8S\), where
+\[
+S=7763374+14408192d\equiv2\pmod4.
+\]
+The source-certified two-parent theorem therefore leaves exactly its direct and depth-one bounce parents.
+
+The bounce parent is
+\[
+E=(15526746+28816384d,28395996+52700672d).
+\]
+Its sum is \(6\pmod8\), so one more six-even-right inverse gives
+\[
+E_1=(43922740+81517056d,14197997+26350336d),
+\]
+whose right coordinate is odd and whose sum is \(1\pmod4\). Thus the bounce parent is excluded by the odd-image invariant.
+
+The direct parent is
+\[
+D=(62106990+115265536d,5105877+9476096d).
+\]
+Its even/odd-four inverse is
+\[
+P=(33606431+62370816d,19356153+35923456d),
+\]
+with odd coordinates and sum \(8\pmod{16}\). The odd/odd val-three inverse gives
+\[
+Q=(26481290+49147136d,22918720+42535296d).
+\]
+A six-even-right inverse gives
+\[
+Q_1=(49400008+91682432d,11459359+21267648d),
+\]
+with even/odd coordinates and \(x+y+1\equiv8\pmod{16}\). Its unique odd-seven parent is
+\[
+A=(30429681+56475040d,20944519+38871344d),
+\]
+again odd/odd with sum \(8\pmod{16}\). The final val-three inverse is
+\[
+B=(25687098+47673192d,23315807+43272268d),
+\]
+whose right coordinate is odd and whose sum is \(1\pmod4\). Hence the direct parent is also excluded. This proves the L-parent exclusion on the displayed cylinder, provided the imported source lemmas are compiled against the original dependency chain.
+
+The all-parameter B_s exclusion is already established by blank_no_B_s31. Applying blank_no_sumzero_target to \(A_s=(130+208s,94+152s)\), with \(S=28+45s\equiv3\pmod4\), then excludes \(A_s\). Pulling back through mzero_first_two_reach yields the high-stop exclusion
+\[
+j\equiv9039847\pmod{16777216},\qquad k=3j+7.
+\]
+
+This is disjoint from the four source-certified cylinders and the separate \(t\equiv383\pmod{1024}\) W5 candidate: the new class has \(t\equiv895\pmod{1024}\). Its density is \(1/262144\) among odd \(t\). If the W5 and this new proof both pass original-source validation, the combined five-plus-one family coverage is \(3/64+1/262144=12289/262144\) of the odd \(t\)-ray.
+
+**Formal status:** M0EvenEvenSumZeroS31W13Q275.lean contains the full source-lemma proof draft and is wired into the existing manual-only workflow after M0EvenEvenSumZeroS31W1.lean. Neither the W1 reduction nor this new module has yet passed original-source CI. The workflow's earlier EvenOddThreeX128W.lean failure remains upstream of these additions, so no source-certification claim is made here. This remains an intermediate Machine C exclusion, not a complete Machine C decision or BB(6) result.
+
 The mod-7 fact and the 2-adic valuation combine into a finite parent-fan bound for every M. In `sectionPreimageAll` at `(16m+10,3)`, the zero-left, k=0, direct, and even-a branches are incompatible with y=3 (the finite small-a cases are incompatible with the large x); the remaining high-`k` a=1 bounce is the branch ruled out modulo 7. Thus every possible source parent is in the odd-a bounce branch. Its cost equation
 `2k+a+9+3n = 2^n(2a+6)+4`
 forces n even by parity. Writing `n=2j`, the section equation and `4 | (2a+6)` give
