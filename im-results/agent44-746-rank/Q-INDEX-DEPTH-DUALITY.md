@@ -144,6 +144,31 @@ theorem qNumerator_t1_divisibility (n j q t : Nat)
 
 Composing this with `qIndexResidue_iff` at (t+2) gives the unique index cylinder. This makes the generic Q-index selector directly reusable for the next odd-parent layer, rather than only for the first U/Q numerator. The statement is conditional on the source t=1 hypotheses and the unverified Q-state Lean module; it does not assert that every such cylinder satisfies the dyadic image band.
 
+## Explicit positive-density t=7 arm in the fixed-depth 887 family
+
+Agent 7's fixed-depth family has (n=887+13122r), (j=3402), and its exact lift table gives
+[
+3^{10}\mid Q_{3402}(n)\iff r\equiv4\pmod9.
+]
+For this entire residue class put (d=Q/3^{10}), (k=n-7), and (x=2^7d). Since (Q) is odd, (d) is odd. The normalized band argument has the limit
+[
+rac{x}{2^k}
+=\frac{2^{14}}{3^{10}}\frac{Q}{2^n}
+\longrightarrow \frac{28\cdot2^{14}}{3^{10}}
+=\frac{458752}{59049},
+]
+and the exact integer comparisons
+[
+6\cdot59049=354294<458752<472392=8\cdot59049
+]
+put the limit strictly inside the odd-parent band. Hence for all sufficiently large (r\equiv4\pmod9), the t=7 quotient (x=2^7d) satisfies
+[
+6\cdot2^{n-7}+1\le x\le8\cdot2^{n-7}-1,
+]
+and the exact parent formula (h=2x-8\cdot2^{n-7}-(n-7)-5) gives a t=7 `ResetParent` predecessor of the Q-defined state. This is a natural-density (1/9) subfamily in the parameter (r), stronger than merely infinitely many examples. Within it, exact maximal valuation (v_3(Q)=10) occurs on the two lifts (r\equiv13,22\pmod{27}) (density (2/27)); the third lift (r\equiv4\pmod{27}) has higher valuation but still admits the t=7 parent.
+
+This is a mathematical asymptotic consequence of the exact 3-adic lift law and the dyadic limit. It remains intermediate: the full source-coordinate chain and the Q-state Lean selector have not both passed original-source CI, and it is not a blank-root exclusion.
+
 ## Verification boundary
 
 - Agent 7's `QDepthDefs`, `QDepthLift`, `QDepthSelectorBase`, `QDepthSelector`, and `QDepth887` all compiled in original-source workflow run [43397274339](https://github.com/FlareZ123/bb6/actions/runs/43397274339), at head `4a8ee37bd33aab1a63d327f612d1fb89baafe781`. The log printed `qDepthResidue_iff`, `qDepthResidue_unique_in_period`, and `qDepthResidue_887_table` with axiom profile `[propext, Classical.choice, Quot.sound]`; the workflow later failed in the unrelated `UParentCone887.lean:75` application.
