@@ -134,6 +134,12 @@ jobs:
           fi
           : > /tmp/a42-terminal/q4-suffix-axioms.log
           lean -o Q4Suffix.olean Q4Suffix.lean 2>&1 | tee /tmp/a42-terminal/q4-suffix-axioms.log
+          : > /tmp/a42-terminal/q4-endpoint-axioms.log
+          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean 2>&1 | tee /tmp/a42-terminal/q4-endpoint-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/q4-endpoint-axioms.log; then
+            echo '::error::sorryAx found in q4 full endpoint theorem dependencies'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-even-q4-prefix-axioms.log
           lean -o M1EvenQ4Prefix.olean M1EvenQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m1-even-q4-prefix-axioms.log
@@ -143,12 +149,6 @@ jobs:
           fi
           if grep -q 'sorryAx' /tmp/a42-terminal/q4-suffix-axioms.log; then
             echo '::error::sorryAx found in q4 suffix theorem dependencies'
-            exit 1
-          fi
-          : > /tmp/a42-terminal/q4-endpoint-axioms.log
-          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean 2>&1 | tee /tmp/a42-terminal/q4-endpoint-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/q4-endpoint-axioms.log; then
-            echo '::error::sorryAx found in q4 full endpoint theorem dependencies'
             exit 1
           fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean" /tmp/a42-terminal/
