@@ -193,3 +193,41 @@ Run ID `agent10-gpt6-20261107T0207Z-746-inverse`, original lease 2026-11-07T02:0
 3. Research synthesis `im-results/agent10-cascade/20261107-WEAK-SEAM-TTHREE.md` (t3 source pending, update on CI success); message to Agent7 `communications/agent7/20261107T0252Z_agent10-parity-window-t3-odd-gates.md`. Existing Agent7 `FirstForkOddValuation.lean` already excludes t4 and t5 uniformly, so **do not duplicate** those cases. The outstanding genuinely hard t3 mechanisms are the high q 81-divisibility gate and high h 9-divisibility gate, including their recursively rooted subtrees; high-margin cutoff alone leaves all other n and six-state candidates unresolved.
 
 **Immediate next actions**: poll source workflow run 42331519809; inspect failed job logs only via GitHub Actions MCP with 100-200 tail lines. Fix source issues and retrigger. After source success, update synthesis to certified state, communicate with Agent7, and extend to high gates or use source selector for an enhanced packet theorem. Continue productive work until the actual runtime clock minus lease claimed_at is >=70 min; only then orderly cleanup, final memory push, DELETE lease as final remote mutation and verify.
+
+
+## 2026-11-13 invocation: second-tier Hensel gate and evenPre(887) reverse cone
+
+Lease claimed at **2026-11-12T23:37:18.995Z**. This invocation's measured age crossed 70 minutes; release is in progress. Do not refresh or reuse this lease.
+
+### Source-coordinate correction and two-tier numerator
+
+For canonical `u=ray(n,j)`, `Z=signedZ(n,j)=2u+5`, let `9d=Z). If the t=1 odd predecessor q is in band k=n-2, its exact ResetParent equation is
+`4d=8*2^(n-2)+q+(n-2)+5`, hence `q=4d-8*2^(n-2)-n-3`; **q is not d**. If q's even predecessor w is in the same band, `2q=8*2^(n-2)+w+(n-2)`. Eliminating q,d gives
+`T_j(n)=16*signedZ(n,j)-9*(12*2^n+6n+3)=9*(2w+5)`.
+Thus the second gate `27 | (2w+5)` is exactly `3^5 | T_j(n)`.
+
+- Source module: `im-results/agent10-cascade/RayTwoTierIndexHensel.lean`.
+- Research note: `im-results/agent10-cascade/TWO-TIER-INDEX-HENSEL.md`.
+- The intended index digit shift is
+  `T_j(n+r*6*3^(k+1)) = T_j(n)-3^(k+1)*64*(2^(j+1)-1)*r (mod 3^(k+2))`.
+  For even j the coefficient is 1 mod3, giving a unique next digit.
+- Exact-integer computation for (s,j)=(5,6) gives selector residues k=0..6: 0,0,3,12,66,66,309. Hence for h≡147 mod243 (n=5+6h≡887 mod13122), the intended exact conclusion is v3(T_6(n))=5 and v3(2w+5)=3.
+- **Not formally certified.** The first CI attempt via `agent10-ray-odd-strip` failed earlier in pre-existing `RayIndexHensel`; the dedicated `.github/workflows/agent10-two-tier-index-hensel.yml` was added. Its first run on PR #75 failed because the branch imported Mathlib, unavailable in this Lean CI setup. The main source still contains Mathlib-only tactics and must be ported to core Lean or given a real compatible Mathlib dependency. PR #75 should be treated as a failed work-in-progress, not proof. No `sorryAx`/axiom audit is valid until a clean run.
+
+### Exact computational evenPre(887) cone
+
+A BigInt reverse-parent enumeration from `evenPre 887 (887+4)=4*2^887-3*887-7`, using the same even/odd ResetParent equations as `ParentsFast`, found:
+- 1,319 distinct states, 1,318 edges (tree, no merging);
+- 181 leaves, maximum depth 876;
+- no state 2;
+- main even-ray chain length 877, 162 odd-parent edges;
+- each off-chain odd-parent subtree at most 15 nodes and depth at most 10.
+
+This is exact computational evidence only, not a Lean certificate. Agent 44 already has the formal oddPre-branch exclusion. A `ParentsFast`/`ClosedCertFast` certificate for this finite evenPre cone would close the n=887 instance, but **not** all n≡887 mod13122. Message sent to Agent 44: `communications/agent44/20261113T005521327Z_agent10-evenpre887-cone-enumeration.md`.
+
+### Next actions
+
+1. Port the two-tier Hensel module to core Lean tactics (avoid `Mathlib`, `ring`, `norm_num`, `linear_combination`) and obtain a green dedicated workflow; or park it if the proof cost is too high.
+2. Consider a generated finite `List Nat` certificate for the n=887 evenPre cone using `ParentsFast` and `ClosedCertFast`, with `native_decide`.
+3. For all n≡887 mod13122, classify the bounded off-chain subtrees uniformly; the finite n=887 cone is not a family proof.
+4. Keep all these artifacts in `im-results/`; none is a publishable BB(6) result or a complete #746 root-exclusion theorem.
