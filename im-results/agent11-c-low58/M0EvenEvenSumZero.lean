@@ -745,82 +745,69 @@ theorem high_stop_mzero_5479 (j k : Nat)
   exact blank_no_high_m0_j5479 w hr'
 
 
-/-- The B_s branch for s=512w+165 is forced through five
-    six-of-eight inverses to an even-even sum-zero target. -/
+/-- The B_s branch for s=512w+165 is forced through seven
+    six-of-eight inverses to an odd-right sum-one forbidden state. -/
 theorem blank_no_B_s165 (w : Nat) :
-    ¬ BB6.Agent3.CReach (20664+92160*w) (48446+216064*w) := by
+    ¬ BB6.Agent3.CReach (14904+46080*w) (34942+108032*w) := by
   intro h0
   have hp1 := (six_even_right_blank_reach_iff
-    (20664+92160*w) (48446+216064*w)
+    (14904+46080*w) (34942+108032*w)
     (by omega) (by omega) (by omega) (by omega)).mp h0
   have h1 : BB6.Agent3.CReach
-      (69108+308224*w) (24222+108032*w) := by
-    have hx : (20664+92160*w)+(48446+216064*w)-2=69108+308224*w := by omega
-    have hy : ((48446+216064*w)-2)/2=24222+108032*w := by omega
+      (49844+154112*w) (17470+54016*w) := by
+    have hx : (14904+46080*w)+(34942+108032*w)-2=49844+154112*w := by omega
+    have hy : ((34942+108032*w)-2)/2=17470+54016*w := by omega
     simpa only [hx,hy] using hp1
   have hp2 := (six_even_right_blank_reach_iff
-    (69108+308224*w) (24222+108032*w)
+    (49844+154112*w) (17470+54016*w)
     (by omega) (by omega) (by omega) (by omega)).mp h1
   have h2 : BB6.Agent3.CReach
-      (93328+416256*w) (12110+54016*w) := by
-    have hx : (69108+308224*w)+(24222+108032*w)-2=93328+416256*w := by omega
-    have hy : ((24222+108032*w)-2)/2=12110+54016*w := by omega
+      (67312+208128*w) (8734+27008*w) := by
+    have hx : (49844+154112*w)+(17470+54016*w)-2=67312+208128*w := by omega
+    have hy : ((17470+54016*w)-2)/2=8734+27008*w := by omega
     simpa only [hx,hy] using hp2
   have hp3 := (six_even_right_blank_reach_iff
-    (93328+416256*w) (12110+54016*w)
+    (67312+208128*w) (8734+27008*w)
     (by omega) (by omega) (by omega) (by omega)).mp h2
   have h3 : BB6.Agent3.CReach
-      (105436+470272*w) (6054+27008*w) := by
-    have hx : (93328+416256*w)+(12110+54016*w)-2=105436+470272*w := by omega
-    have hy : ((12110+54016*w)-2)/2=6054+27008*w := by omega
+      (76044+235136*w) (4366+13504*w) := by
+    have hx : (67312+208128*w)+(8734+27008*w)-2=76044+235136*w := by omega
+    have hy : ((8734+27008*w)-2)/2=4366+13504*w := by omega
     simpa only [hx,hy] using hp3
   have hp4 := (six_even_right_blank_reach_iff
-    (105436+470272*w) (6054+27008*w)
+    (76044+235136*w) (4366+13504*w)
     (by omega) (by omega) (by omega) (by omega)).mp h3
   have h4 : BB6.Agent3.CReach
-      (111488+497280*w) (3026+13504*w) := by
-    have hx : (105436+470272*w)+(6054+27008*w)-2=111488+497280*w := by omega
-    have hy : ((6054+27008*w)-2)/2=3026+13504*w := by omega
+      (80408+248640*w) (2182+6752*w) := by
+    have hx : (76044+235136*w)+(4366+13504*w)-2=80408+248640*w := by omega
+    have hy : ((4366+13504*w)-2)/2=2182+6752*w := by omega
     simpa only [hx,hy] using hp4
   have hp5 := (six_even_right_blank_reach_iff
-    (111488+497280*w) (3026+13504*w)
+    (80408+248640*w) (2182+6752*w)
     (by omega) (by omega) (by omega) (by omega)).mp h4
   have h5 : BB6.Agent3.CReach
-      (114512+510784*w) (1512+6752*w) := by
-    have hx : (111488+497280*w)+(3026+13504*w)-2=114512+510784*w := by omega
-    have hy : ((3026+13504*w)-2)/2=1512+6752*w := by omega
+      (82588+255392*w) (1090+3376*w) := by
+    have hx : (80408+248640*w)+(2182+6752*w)-2=82588+255392*w := by omega
+    have hy : ((2182+6752*w)-2)/2=1090+3376*w := by omega
     simpa only [hx,hy] using hp5
-  let x := 114512+510784*w
-  let y := 1512+6752*w
-  let S := 14503+64692*w
-  have hD : ¬ BB6.Agent3.CReach (x+y-2) ((y-2)/2) := by
-    intro hD0
-    have hxD : x+y-2=116022+517536*w := by dsimp [x,y]; omega
-    have hyD : (y-2)/2=755+3376*w := by dsimp [y]; omega
-    have hDreach : BB6.Agent3.CReach
-        (116022+517536*w) (755+3376*w) := by
-      simpa only [hxD,hyD] using hD0
-    exact blank_no_odd_sum_one (116022+517536*w) (755+3376*w)
-      (by omega) (by omega) (by omega) (by omega) hDreach
-  have hE : ¬ BB6.Agent3.CReach (2*S-2)
-      ((x+2*y-2*S-8)/2) := by
-    intro hE0
-    have hxE : 2*S-2=29004+129384*w := by dsimp [S]; omega
-    have hyE : (x+2*y-2*S-8)/2=44261+197452*w := by
-      dsimp [x,y,S]
-      omega
-    have hEreach : BB6.Agent3.CReach
-        (29004+129384*w) (44261+197452*w) := by
-      simpa only [hxE,hyE] using hE0
-    exact blank_no_odd_sum_one (29004+129384*w) (44261+197452*w)
-      (by omega) (by omega) (by omega) (by omega) hEreach
-  have hnot : ¬ BB6.Agent3.CReach x y :=
-    blank_no_sumzero_target x y S
-      (by dsimp [x]; omega) (by dsimp [x]; omega)
-      (by dsimp [y]; omega) (by dsimp [y]; omega)
-      (by dsimp [x,y,S]; omega)
-      (by dsimp [S]; omega) (by dsimp [S]; omega) hD hE
-  exact hnot h5
+  have hp6 := (six_even_right_blank_reach_iff
+    (82588+255392*w) (1090+3376*w)
+    (by omega) (by omega) (by omega) (by omega)).mp h5
+  have h6 : BB6.Agent3.CReach
+      (83676+258768*w) (544+1688*w) := by
+    have hx : (82588+255392*w)+(1090+3376*w)-2=83676+258768*w := by omega
+    have hy : ((1090+3376*w)-2)/2=544+1688*w := by omega
+    simpa only [hx,hy] using hp6
+  have hp7 := (six_even_right_blank_reach_iff
+    (83676+258768*w) (544+1688*w)
+    (by omega) (by omega) (by omega) (by omega)).mp h6
+  have h7 : BB6.Agent3.CReach
+      (84218+260456*w) (271+844*w) := by
+    have hx : (83676+258768*w)+(544+1688*w)-2=84218+260456*w := by omega
+    have hy : ((544+1688*w)-2)/2=271+844*w := by omega
+    simpa only [hx,hy] using hp7
+  exact blank_no_odd_sum_one (84218+260456*w) (271+844*w)
+    (by omega) (by omega) (by omega) (by omega) h7
 
 /-- A_(512w+165) has its two source parents excluded: L_s by the
     all-s=5 mod 8 lemma, and B_s by the five-step inverse chain above. -/
