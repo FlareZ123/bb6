@@ -61,15 +61,18 @@ def aCodeOutput (u : Nat) : Cfg :=
 theorem eall_source_return (u : Nat) :
     ObsEq (run (eAllTime u) (sourceStart u)) (eAllOutput u) := by
   have hstart :
-      sourceStart u = BB6.Agent32EAll.start (9*u+1) 4 [] := by
-    simp [sourceStart, BB6.Agent32EAll.start,
-      DRegularSource.sourceSection, CryptidBoundary.init,
-      CryptidBoundary.oppairs, CryptidBoundary.pairs,
-      List.append_assoc]
+      sourceStart u =
+        init (List.replicate (3*(9*u+1)+2) true ++
+          false :: (pairs 4 ++ [true,true])) := by
+    simp [sourceStart, DRegularSource.sourceSection,
+      CryptidBoundary.init, CryptidBoundary.oppairs,
+      CryptidBoundary.pairs]
+    omega
   rw [hstart]
   change ObsEq
     (run (BB6.Agent32EAll.duration (9*u+1) 4)
-      (BB6.Agent32EAll.start (9*u+1) 4 []))
+      (init (List.replicate (3*(9*u+1)+2) true ++
+        false :: (pairs 4 ++ [true,true]))))
     (BB6.Agent32EAll.output (9*u+1) 4 [])
   exact BB6.Agent32EAll.all_e_double_implicit_blank (9*u+1) 4
 
@@ -79,7 +82,7 @@ theorem eall_to_etriple_input (u : Nat) :
   have hnum : 8*(9*u+1)+5 = 3*(24*u+3)+4 := by omega
   simp [eAllOutput, eThreeInput, eThreeK,
     BB6.Agent32EAll.output, CryptidBoundary.init,
-    hnum, List.replicate_succ, List.append_assoc]
+    hnum, List.replicate_succ]
 
 /-- The E-three output is the A-code input up to one explicit far-right blank. -/
 theorem etriple_to_acode_input (u : Nat) :
@@ -96,15 +99,28 @@ theorem etriple_to_acode_input (u : Nat) :
       false :: CryptidA.wordCode aCodeWord := by
     decide
   have hout : eThreeOutput u = init xs := by
-    simp [eThreeOutput, xs, CryptidBoundary.init,
-      hprefix, htail, List.replicate_succ,
-      Nat.add_assoc, List.append_assoc]
+    change
+      (⟨[],false,
+        List.replicate (8*(eThreeK u)+9) true ++
+          (packetThree ++
+            (List.replicate 7 true ++ (false :: List.replicate 6 true))),5⟩ : Cfg) =
+      (⟨[],false,
+        [true,true] ++
+          (List.replicate (3*(aCodeK u)+1) true ++
+            (false :: CryptidA.wordCode aCodeWord)),5⟩ : Cfg)
+    congr 1
+    rw [hprefix, htail]
+    simp [List.replicate_succ]
   have hpad : ObsEq (init xs) (init (xs ++ [false])) := by
     simpa [CryptidBoundary.run] using
       (BB6.BoundaryPadding.source_init_pad 0 1 xs)
   have hinput : init (xs ++ [false]) = aCodeInput u := by
     simp [aCodeInput, xs, aCodeK, List.append_assoc]
   simpa [hout, hinput] using hpad
+
+private theorem two_ones_append (n : Nat) :
+    [true,true] ++ List.replicate n true = List.replicate (n+2) true := by
+  simp [List.replicate_succ]
 
 /-- The A-code word has increment 19, giving the exact unary endpoint. -/
 theorem acode_unary_endpoint (u : Nat) :
@@ -117,8 +133,11 @@ theorem acode_unary_endpoint (u : Nat) :
     omega
   unfold aCodeOutput
   rw [hlen]
-  simp [DRegularSource.sourceSection,
-    CryptidBoundary.init, CryptidBoundary.oppairs]
+  have hsum : 512*u+127+2 = 512*u+129 := by omega
+  have hrep := two_ones_append (512*u+127)
+  rw [hsum] at hrep
+  simpa [DRegularSource.sourceSection,
+    CryptidBoundary.init, CryptidBoundary.oppairs] using hrep.symm
 
 /-- Full original-source exception-33 q=5 continuation for t=3u:
     EAllDouble(q=4) -> E-three -> A-code -> pure unary. -/
@@ -145,8 +164,9 @@ theorem exception33_q5_rejoin (u : Nat) :
     (aCodeTime u) (etriple_to_acode_input u)
   have hraw3 :
       run (aCodeTime u) (aCodeInput u) = aCodeOutput u := by
-    simpa [aCodeTime, aCodeInput, aCodeOutput] using
-      (BB6.Agent35.full_A_code (aCodeK u) aCodeWord [])
+    simpa only [aCodeTime, aCodeInput, aCodeOutput, aCodeK,
+      List.append_nil, Nat.add_assoc] using
+      (BB6.Agent35.full_A_code (64*u+10) aCodeWord [])
   have h3 :
       ObsEq (run (aCodeTime u) (eThreeOutput u)) (aCodeOutput u) := by
     rw [hraw3] at htransport3
