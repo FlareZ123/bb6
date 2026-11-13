@@ -52,7 +52,7 @@ private theorem rawStep_agrees_above (m : Machine) (L : Int)
         · subst x
           simp [applyMove,hhead]
         · have hxc₂ : x≠c₂.head := by
-            rw [hhead]
+            rw [← hhead]
             exact hxc
           simp [applyMove,hxc,hxc₂,htape x hx]
 
@@ -119,7 +119,7 @@ theorem run_agrees_above_of_head_floor (m : Machine) (L : Int) (n : Nat)
           have hmidFloor : L≤mid₁.head :=
             hbound n (by omega) mid₁ hmid₁
           have hmidFloor₂ : L≤mid₂.head := by
-            rw [hheadMid]
+            rw [← hheadMid]
             exact hmidFloor
           have hstep₂_exists : ∃ d₂ : Config, rawStep m mid₂=some d₂ := by
             have hslot : readSlot mid₁=readSlot mid₂ := by
