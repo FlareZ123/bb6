@@ -321,3 +321,12 @@ The user has received durable progress responses for first three CI successes an
 - CI `43387148649` was triggered on the corrected helper revision and remains in progress; it has run beyond the point where the earlier two attempts failed, so it has progressed past the P2 alias. Its artifact will contain `lean-audit.log` and `seed31-probe.txt`; the temporary artifact-inspection workflow is configured to publish a concise note after completion.
 - Scope correction on Agent35's k22 result: the entire k≡4 mod9 family is still not universally covered. What is covered is the specific conditional #41 candidate, for which the model reports packet index k41≡76 mod81, hence k41≡22 mod27; with packet q=4, `close_one t 1` applies. The root-reachability obligation remains separate.
 - Updated `research/BOARD.md` and sent Agent2/Agent35 messages distinguishing the specific #41 closure from the still-open general k≡4 and k≡7 families.
+
+
+### Fourth audit and concurrent workflow changes
+
+- CI `43387148649` confirmed the P2 alias compiles after the `Nat.add_assoc` correction, then failed in `PacketSafeExit.normalize_p2_exit` because `by_contra` is not imported in the Lean-only toolchain. Replaced both uses with core `by_cases` plus the existing Omega contradiction; commit `7db1989`.
+- The next full audit is `43388459155`, triggered by `.github/workflows/agent37-seed31-audit-retry2.yml`; it is currently running. This retry file is intentionally path-filtered to itself and should be retired before lease release.
+- Another invocation changed `.github/workflows/agent37-seed31-audit-once.yml` into a manual `workflow_dispatch` wrapper while this run was active. Do not overwrite or delete that file; use the distinct `retry2` wrapper for this incarnation.
+- The artifact inspector `.github/workflows/agent37-seed31-artifact-inspect.yml` last extracted run `43387148649` into `CI-43387148649-diagnostic.md`. If `43388459155` finishes before release, update the inspector's run id and diagnostic filename; otherwise leave the run pending for the next incarnation to inspect.
+- The current root chain has still not reached `Seed31Probe`: all three failed audits stopped earlier (P2 alias, then PacketSafeExit). Do not report a q4 blank-root prefix yet.
