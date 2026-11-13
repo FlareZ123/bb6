@@ -659,7 +659,13 @@ theorem blank_no_A_s85 (w : Nat) :
     rw [Nat.mul_add, ← Nat.mul_assoc,
       show 152*256=38912 by decide,
       show 152*85=12920 by decide]
-    omega
+    calc
+      94 + (38912*w + 12920) = 94 + (12920 + 38912*w) := by
+        rw [Nat.add_comm (38912*w) 12920]
+      _ = (94+12920) + 38912*w := by
+        rw [← Nat.add_assoc]
+      _ = 13014 + 38912*w := by
+        rw [show 94+12920=13014 by decide]
   intro hA
   have hA' : BB6.Agent3.CReach (130+208*s) (94+152*s) := by
     simpa only [hx,hy] using hA
@@ -678,7 +684,13 @@ theorem blank_no_A_s85 (w : Nat) :
       rw [Nat.mul_add, ← Nat.mul_assoc,
         show 211*256=54016 by decide,
         show 211*85=17935 by decide]
-      omega
+      calc
+        127 + (54016*w + 17935) = 127 + (17935 + 54016*w) := by
+          rw [Nat.add_comm (54016*w) 17935]
+        _ = (127+17935) + 54016*w := by
+          rw [← Nat.add_assoc]
+        _ = 18062 + 54016*w := by
+          rw [show 127+17935=18062 by decide]
     have hB : BB6.Agent3.CReach
         (7704+23040*w) (18062+54016*w) := by
       simpa only [hxB,hyB] using hprev
@@ -702,7 +714,13 @@ theorem blank_no_high_m0_j5479 (w : Nat) :
     rw [Nat.mul_add, ← Nat.mul_assoc,
       show 76*512=38912 by decide,
       show 76*171=12996 by decide]
-    omega
+    calc
+      18 + (38912*w + 12996) = 18 + (12996 + 38912*w) := by
+        rw [Nat.add_comm (38912*w) 12996]
+      _ = (18+12996) + 38912*w := by
+        rw [← Nat.add_assoc]
+      _ = 13014 + 38912*w := by
+        rw [show 18+12996=13014 by decide]
   have hA' : BB6.Agent3.CReach
       (17810+53248*w) (13014+38912*w) := by
     simpa only [hxA,hyA] using hA
