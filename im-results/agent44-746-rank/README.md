@@ -185,7 +185,7 @@ next-digit selections; this is not a Lean certificate.
 [DENSE-T1-4-CASCADE.md](DENSE-T1-4-CASCADE.md) gives a separate cascade
 starting with \(t_1=4,\sigma_1=9\), which works on the full
 \(n=887+13122r\) family for all sufficiently large r. It has a
-five-edge cylinder \(r\equiv1618\pmod{3^7}\) of density \(3^{-7}\), and
-a seven-edge subcascade \(r\equiv1361932\pmod{3^{13}}\). This is denser
-at depth five than the t=7 branch above. The exact modular reproducer is
-[DenseT1FourBranch.mjs](DenseT1FourBranch.mjs).
+five-edge cylinder \(r\equiv1618\pmod{3^7}\), a seven-edge subcascade
+\(r\equiv1361932\pmod{3^{13}}\), and a denser eight-edge cylinder
+\(r\equiv1618\pmod{3^{10}}\) of density \(3^{-10}\). The exact modular
+reproducer is [DenseT1FourBranch.mjs](DenseT1FourBranch.mjs).
