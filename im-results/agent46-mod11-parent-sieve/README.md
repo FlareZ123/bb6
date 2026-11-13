@@ -52,42 +52,49 @@ A_r\equiv
 \end{cases}
 \]
 
-The cancellation recurrence also gives
+For each fixed \(A=A_r\), the recurrence
 \[
-P_r(A)=\sum_{j=0}^{2r-1}(-3)^jA^{2r-1-j}.
-\tag{1}
+P_{j+1}(A)=A^2P_j(A)+9^j(A-3)
 \]
+can be solved directly modulo \(11\).
 
-If \(r\) is odd, \(A_r\equiv7\pmod{11}\), so \(A_r+3\equiv10\) is invertible. The exact identity
+If \(r\) is odd, then \(A_r\equiv7\), so the recurrence becomes
 \[
-(A_r+3)P_r(A_r)+9^r=A_r^{2r}
+P_{j+1}\equiv5P_j+4\cdot9^j\pmod{11}.
 \]
-therefore gives, using \(7^2\equiv5\pmod{11}\),
+Starting from \(P_0=0\), induction gives
 \[
-P_r(A_r)\equiv10(5^r-9^r)\pmod{11}.
+P_r(A_r)\equiv9^r-5^rpmod{11}.
 \]
-Consequently
+Therefore
 \[
 A_rP_r(A_r)+3
-\equiv4(5^r-9^r)+3\pmod{11},
+\equiv7(9^r-5^r)+3pmod{11},
 \]
 and multiplying by \(6=2^{-1}\pmod{11}\) gives
 \[
-6(A_rP_r(A_r)+3)\equiv7+2(5^r-9^r)=w_r\pmod{11}.
+6(A_rP_r(A_r)+3)
+\equiv7+2(5^r-9^r)=w_rpmod{11}.
 \]
 
-If \(r\) is even, \(A_r\equiv-3\pmod{11}\). In (1), every summand is then \((-3)^{2r-1}=-3^{2r-1}\), so
+If \(r\) is even, then \(A_r\equiv8\), so the recurrence becomes
 \[
-P_r(A_r)\equiv-2r\,3^{2r-1}\pmod{11}.
+P_{j+1}\equiv9P_j+5\cdot9^jpmod{11}.
 \]
-It follows that
+Starting from \(P_0=0\), induction gives
+\[
+P_r(A_r)\equiv3r\,9^rpmod{11},
+\]
+since \(27\equiv5\pmod{11}\). Consequently
 \[
 A_rP_r(A_r)+3
-\equiv2r\,3^{2r}+3\pmod{11},
+\equiv24r\,9^r+3
+\equiv2r\,9^r+3pmod{11},
 \]
-and hence
+and
 \[
-6(A_rP_r(A_r)+3)\equiv7+r\,3^{2r}=w_r\pmod{11}.
+6(A_rP_r(A_r)+3)
+\equiv7+r\,9^r=7+r\,3^{2r}=w_rpmod{11}.
 \]
 
 Now suppose \(u\equiv2\pmod{10}\). Since \(2^{10}\equiv1\pmod{11}\),
