@@ -191,3 +191,18 @@ This is a uniform band-envelope theorem, not a complete parent census: exponents
 The Lean module `UParentBandEnvelope.lean` on branch `agent7-887-even-parent` contains the arithmetic proof and a wrapper that consumes the exact `CascadeResetInverse.ResetParent` disjunction, preserving its even arm and strengthening every odd arm. It imports `FirstInverseComplete`. The arithmetic and source-shaped wrapper compiled locally against a stub with the exact checked-in ResetParent signature; **that is not actual-source CI verification**. The focused manual-only workflow `agent7-u-parent-band.yml` compiles the original dependency chain through `FirstInverseComplete` and then the new module. Await a successful run and inspect all three `#print axioms` outputs before treating the source wrapper as verified.
 
 The new envelope is useful beyond the fixed n=887 census: it rules out the same seven exponents and fixes the same four band scales for every first-tier t=1 branch satisfying the exact formula and band hypotheses. It does not imply that only t′=2 or 4 can occur at larger n; higher admissible exponents such as 7 and 9 are already retained explicitly.
+
+
+## 11. All-exponent scale-window constraint for U/Q parents
+
+The envelope result has a useful all-exponent form. Suppose an odd U/Q parent has
+`U=3^(t′+3)d` and its source odd-band argument `x=2^t′d` lies in the band at scale k. Then `k<n), and with the integer scale parameter
+`s=n+t′−k` one necessarily has
+
+`81·3^t′ < 14·2^s < 112·3^t′`.
+
+Moreover, **there is at most one such integer s for a given t′**: if two distinct powers of two satisfied the window, their ratio would be at least 2, whereas the window's multiplicative width is `112/81 < 2`. Thus each candidate exponent t′ has at most one possible dyadic scale, namely `k=n+t′−s(t′)` when the window contains an integer.
+
+This is a general necessary Diophantine filter on every odd U/Q parent, not merely the first few exponents. It converts the scale search into the integer window `81·3^t′ < 14·2^s < 112·3^t′`. The finite table in section 10 is recovered for t′=0,...,10. The same filter additionally proves t′=13 impossible because no integer s lies in its window. The window is necessary, not sufficient: for t′=11 and 12 it intersects the narrow envelope only partially, so the exact U value must still be checked.
+
+The formal proof is in `UScaleParameter.lean` on `agent7-887-even-parent`, importing the source-shaped envelope module. It proves existence and uniqueness of s for every odd parent candidate and separately proves the t′=13 empty-window result. The focused manual workflow now compiles this module after `UParentBandEnvelope.lean`.
