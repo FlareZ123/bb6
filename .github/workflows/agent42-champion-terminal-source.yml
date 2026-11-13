@@ -27,6 +27,7 @@ jobs:
           cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a42-terminal/
           cp im-results/agent24-champion-time/Q4RightEndpoint.lean /tmp/a42-terminal/
           cp im-results/agent48-counted-inc0/TM63RootQ4Drain.lean /tmp/a42-terminal/
+          cp im-results/agent24-champion-time/ChampionRootQ4Drain.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TM63RootQ4Attainable.lean /tmp/a42-terminal/
           cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern}.lean /tmp/a42-terminal/
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a42-terminal/
@@ -208,6 +209,12 @@ jobs:
           lean -o TM63RootQ4Drain.olean TM63RootQ4Drain.lean 2>&1 | tee /tmp/a42-terminal/root-q4-drain-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/root-q4-drain-axioms.log; then
             echo '::error::sorryAx found in blank-root q4 all-ones drain composition'
+            exit 1
+          fi
+          : > /tmp/a42-terminal/champion-root-q4-drain-axioms.log
+          lean -o ChampionRootQ4Drain.olean ChampionRootQ4Drain.lean 2>&1 | tee /tmp/a42-terminal/champion-root-q4-drain-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/champion-root-q4-drain-axioms.log; then
+            echo '::error::sorryAx found in actual-champion root q4 all-ones drain transport'
             exit 1
           fi
           lean -o TerminalFinish.olean TerminalFinish.lean
