@@ -203,6 +203,13 @@ jobs:
             echo '::error::sorryAx found in source S1 all-ones counted drain dependencies'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M2EvenQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-q4-axioms.log
+          lean -o M2EvenQ4Prefix.olean M2EvenQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m2-even-q4-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m2-even-q4-axioms.log; then
+            echo '::error::sorryAx found in m=2,n=4 even q4 reset source theorem'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M1EvenQ4Suffix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-even-q4-suffix-axioms.log
           lean -o M1EvenQ4Suffix.olean M1EvenQ4Suffix.lean 2>&1 | tee /tmp/a42-terminal/m1-even-q4-suffix-axioms.log
@@ -277,6 +284,7 @@ jobs:
             /tmp/a42-terminal/s1-carry-inc0-axioms.log
             /tmp/a42-terminal/s1-counted-inc0-axioms.log
             /tmp/a42-terminal/s1-counted-drain-axioms.log
+            /tmp/a42-terminal/m2-even-q4-axioms.log
             /tmp/a42-terminal/s1-champion-counted-reset-axioms.log
             /tmp/a42-terminal/root-finite-axioms.log
             /tmp/a42-terminal/root-source-axioms.log
