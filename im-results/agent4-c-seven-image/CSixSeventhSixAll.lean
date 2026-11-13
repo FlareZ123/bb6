@@ -126,13 +126,11 @@ theorem prior_six_all_admits_s3_image_family (j m u v : Nat)
   exact ⟨hdiagDeep,hforced⟩
 
 /-- Strengthen the latest exact six-sector halting criterion by
-    removing every high-stop target in the second strict s3 image
-    family, while retaining the exact low branch and fixed-target test. -/
+    removing the second strict s3 image family in its exact parameter-only
+    congruence form, while retaining the exact low branch and fixed-target test. -/
 def highAllowedAllS3Six (j m : Nat) : Prop :=
   BB6.Agent11SixAll.highAllowed j m ∧
-  ¬(∃ u v, j=319+512*u ∧
-    (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v ∧
-    (u+v)%16=(15+4*u)%16)
+  ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0)
 
 theorem blank_halts_iff_six_both_s3 :
     BB6.CReachBridge.RunHalts ↔
@@ -151,9 +149,11 @@ theorem blank_halts_iff_six_both_s3 :
         (BB6.Agent11SixForced.sixForcedRootDecision_iff
           (2*j+3) k).mp hroot
       have hnot :
-          ¬(∃ u v, j=319+512*u ∧ k=574+1024*v ∧
-            (u+v)%16=(15+4*u)%16) := by
-        rintro ⟨u,v,hj,hk,hsector⟩
+          ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0) := by
+        rintro ⟨hjmod,hcong⟩
+        obtain ⟨u,v,hj,hk,hsector⟩ :=
+          (BB6.Agent4SevenC58.s3_image_pullback_iff_congruence j m).2
+            ⟨hjmod,hcong⟩
         obtain ⟨time,hrun⟩ := hreach
         have hblank :=
           BB6.Agent4Seven.blank_ne_six_seven_band_s3 u v time hsector
@@ -176,7 +176,10 @@ theorem s3_image_family_removed_from_six_all (j m u v : Nat)
     (hsector : (u+v)%16=(15+4*u)%16) :
     ¬highAllowedAllS3Six j m := by
   intro h
-  exact h.2 ⟨u,v,hj,hk,hsector⟩
+  have hcong :=
+    (BB6.Agent4SevenC58.s3_image_pullback_iff_congruence j m).1
+      ⟨u,v,hj,hk,hsector⟩
+  exact h.2 hcong
 
 #print axioms prior_six_all_admits_s3_image_family
 #print axioms blank_halts_iff_six_both_s3
