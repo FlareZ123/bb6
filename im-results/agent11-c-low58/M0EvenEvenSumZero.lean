@@ -2,7 +2,7 @@ import OddOddVal3Orbit
 import EvenRightSixOrbit
 import Lean.Elab.Tactic.Omega
 
-set_option maxRecDepth 8192
+set_option maxRecDepth 16384
 
 namespace BB6.Agent11M0SumZero
 open BB6.Agent46
@@ -26,7 +26,6 @@ private theorem no_pow_two_of_mod4_ne_zero (S : Nat)
           change S = 2^(n+2) at heq
           have hp : 2^(n+2) = 4*2^n := by
             rw [show n+2=2+n by omega, Nat.pow_add]
-            rfl
           rw [hp] at heq
           omega
 
@@ -73,12 +72,9 @@ theorem even_even_sumzero_parent (a k x y S : Nat)
                 simpa [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2,hk3] using hp
               rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hodd,_⟩
               · omega
-              · have hdiv : 2 ∣ 2^n*16 := by
-                  refine ⟨2^n*8, ?_⟩
-                  omega
-                have hdiv' : 2 ∣ x+y+1 := by
-                  rw [hodd]
-                  exact hdiv
+              · have hoddxy : (x+y+1)%2=1 := by omega
+                have hprod : (2^n*16)%2=0 := by simp [Nat.mul_mod]
+                rw [hodd] at hoddxy
                 omega
     · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp <;> omega
@@ -96,25 +92,29 @@ theorem even_even_sumzero_parent (a k x y S : Nat)
             rcases hcase with ⟨_,n,hxy,hcost⟩
             have hnodd : n%2=1 := by omega
             have hn1 : n=1 := by
-              by_contra hne
-              have hn3 : 3≤n := by omega
-              have hdivA : 2∣a := Nat.dvd_of_mod_eq_zero haeven
-              rcases hdivA with ⟨b,hb⟩
-              have hn' : n=3+(n-3) := by omega
-              have hpow : 2^n=8*2^(n-3) := by
-                rw [hn',Nat.pow_add]
-                rfl
-              have hfactor : 2*(a-1)+6=4*(b+1) := by
-                rw [hb]
-                omega
-              have hdivEq : 8*S=32*(2^(n-3)*(b+1)) := by
-                calc
-                  8*S = x+y := hsum.symm
-                  _ = 2^n*(2*(a-1)+6) := hxy
-                  _ = (8*2^(n-3))*(4*(b+1)) := by rw [hpow,hfactor]
-                  _ = 32*(2^(n-3)*(b+1)) := by
-                    simp [Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm]
-              omega
+              by_cases h : n=1
+              · exact h
+              · have hn3 : 3≤n := by omega
+                have hdivA : 2∣a := Nat.dvd_of_mod_eq_zero haeven
+                rcases hdivA with ⟨b,hb⟩
+                have hn' : n=3+(n-3) := by omega
+                have hpow : 2^n=8*2^(n-3) := by
+                  rw [hn',Nat.pow_add]
+                  rfl
+                have hfactor : 2*(a-1)+6=4*(b+1) := by
+                  rw [hb]
+                  omega
+                have hdiv32 : 32∣x+y := by
+                  refine ⟨2^(n-3)*(b+1), ?_⟩
+                  calc
+                    x+y = 2^n*(2*(a-1)+6) := hxy
+                    _ = (8*2^(n-3))*(4*(b+1)) := by rw [hpow,hfactor]
+                    _ = 32*(2^(n-3)*(b+1)) := by
+                      simp [Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm]
+                rcases hdiv32 with ⟨q,hq⟩
+                have hSdiv : S=4*q := by omega
+                have hSzero : S%4=0 := by rw [hSdiv]; simp
+                exact (hS4 hSzero).elim
             have hpow1 : 2^n=2 := by rw [hn1]; rfl
             have hxy' : x+y=2*(2*(a-1)+6) := by
               simpa [hpow1] using hxy
@@ -132,12 +132,11 @@ theorem even_even_sumzero_parent (a k x y S : Nat)
               simpa [sectionPreimageAll,ha0,ha1,hk0,hlow,haeven] using hp
             rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hodd,_⟩
             · omega
-            · have hdiv : 2∣2^n*(2*(a-1)+8) := by
-                refine ⟨2^n*(a+3), ?_⟩
-                omega
-              have hdiv' : 2∣x+y+1 := by
-                rw [hodd]
-                exact hdiv
+            · have hoddxy : (x+y+1)%2=1 := by omega
+              have hfac : (2*(a-1)+8)%2=0 := by omega
+              have hprod : (2^n*(2*(a-1)+8))%2=0 := by
+                simp [Nat.mul_mod,hfac]
+              rw [hodd] at hoddxy
               omega
 
 /-- Every genuine blank-section return to a non-seed state has an
@@ -200,9 +199,9 @@ theorem m0_odd_ray_parent (s a k : Nat) (hs : s%2=1)
     (130+208*s) (94+152*s) S hx hxe hy hye hsum hS4 hSgt hedge
   rcases hp with ⟨ha,hk⟩ | ⟨ha,hk⟩
   · left
-    constructor <;> dsimp [S] at ha hk <;> omega
+    constructor <;> omega
   · right
-    constructor <;> dsimp [S] at ha hk <;> omega
+    constructor <;> omega
 
 /-- The first two exact inverse edges of the high m=0 stopping target
     apply for every t, not only the t%4=0 subfamily handled by M0FourRoot. -/
@@ -239,8 +238,9 @@ theorem blank_no_v2one_target (x y S : Nat)
   intro hr
   obtain ⟨a,k,hprev,hstep⟩ :=
     cReach_parent_of_left_gt5 x y hx hr
+  have hx0 : 0<x := by omega
   have hparents := even_even_sumzero_parent a k x y S
-    hx hxe hy hye hsum (by omega) hSgt hstep
+    hx0 hxe hy hye hsum (by omega) hSgt hstep
   rcases hparents with hDparent | hEparent
   · rcases hDparent with ⟨ha,hk⟩
     subst a
@@ -406,17 +406,17 @@ theorem blank_no_A_t59 (v : Nat) :
     ¬ BB6.Agent3.CReach (6162+6656*v) (4502+4864*v) := by
   have hL : ¬ BB6.Agent3.CReach
       (222+360*(32*v+29)) (46+76*(32*v+29)) := by
-    have hx : 222+360*(32*v+29)=10662+11520*v := by omega
-    have hy : 46+76*(32*v+29)=2250+2432*v := by omega
+    have hx : 222+360*(32*v+29)=10662+11520*v := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hy : 46+76*(32*v+29)=2250+2432*v := by simp [Nat.mul_add, Nat.mul_assoc]
     simpa only [hx,hy] using blank_no_L_t59 v
   have hB : ¬ BB6.Agent3.CReach
       (54+90*(32*v+29)) (127+211*(32*v+29)) := by
-    have hx : 54+90*(32*v+29)=2664+2880*v := by omega
-    have hy : 127+211*(32*v+29)=6246+6752*v := by omega
+    have hx : 54+90*(32*v+29)=2664+2880*v := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hy : 127+211*(32*v+29)=6246+6752*v := by simp [Nat.mul_add, Nat.mul_assoc]
     simpa only [hx,hy] using blank_no_B_t59 v
   have hA := blank_no_A_from_two_parents (32*v+29) (by omega) hL hB
-  have hx : 130+208*(32*v+29)=6162+6656*v := by omega
-  have hy : 94+152*(32*v+29)=4502+4864*v := by omega
+  have hx : 130+208*(32*v+29)=6162+6656*v := by simp [Nat.mul_add, Nat.mul_assoc]
+  have hy : 94+152*(32*v+29)=4502+4864*v := by simp [Nat.mul_add, Nat.mul_assoc]
   simpa only [hx,hy] using hA
 where
   blank_no_A_from_two_parents (s : Nat) (hs : s%2=1)
@@ -441,17 +441,17 @@ theorem blank_no_A_t11 (w : Nat) :
     ¬ BB6.Agent3.CReach (1170+26624*w) (854+19456*w) := by
   have hL : ¬ BB6.Agent3.CReach
       (222+360*(128*w+5)) (46+76*(128*w+5)) := by
-    have hx : 222+360*(128*w+5)=2022+46080*w := by omega
-    have hy : 46+76*(128*w+5)=426+9728*w := by omega
+    have hx : 222+360*(128*w+5)=2022+46080*w := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hy : 46+76*(128*w+5)=426+9728*w := by simp [Nat.mul_add, Nat.mul_assoc]
     simpa only [hx,hy] using blank_no_L_t11 w
   have hB : ¬ BB6.Agent3.CReach
       (54+90*(128*w+5)) (127+211*(128*w+5)) := by
-    have hx : 54+90*(128*w+5)=504+11520*w := by omega
-    have hy : 127+211*(128*w+5)=1182+27008*w := by omega
+    have hx : 54+90*(128*w+5)=504+11520*w := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hy : 127+211*(128*w+5)=1182+27008*w := by simp [Nat.mul_add, Nat.mul_assoc]
     simpa only [hx,hy] using blank_no_B_t11 w
   have hA := blank_no_A_from_two_parents (128*w+5) (by omega) hL hB
-  have hx : 130+208*(128*w+5)=1170+26624*w := by omega
-  have hy : 94+152*(128*w+5)=854+19456*w := by omega
+  have hx : 130+208*(128*w+5)=1170+26624*w := by simp [Nat.mul_add, Nat.mul_assoc]
+  have hy : 94+152*(128*w+5)=854+19456*w := by simp [Nat.mul_add, Nat.mul_assoc]
   simpa only [hx,hy] using hA
 where
   blank_no_A_from_two_parents (s : Nat) (hs : s%2=1)
@@ -477,12 +477,12 @@ theorem blank_no_high_m0_j1895 (v : Nat) :
   intro hr
   have hroot : BB6.Agent3.CReach
       (17+64*(64*v+59)) (28+96*(64*v+59)) := by
-    have hx : 2*(1895+2048*v)+3=17+64*(64*v+59) := by omega
-    have hy : 5692+6144*v=28+96*(64*v+59) := by omega
+    have hx : 2*(1895+2048*v)+3=17+64*(64*v+59) := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hy : 5692+6144*v=28+96*(64*v+59) := by simp [Nat.mul_add, Nat.mul_assoc]
     simpa only [hx,hy] using hr
   have hA := mzero_first_two_reach (64*v+59) hroot
-  have hx : 26+104*(64*v+59)=6162+6656*v := by omega
-  have hy : 18+76*(64*v+59)=4502+4864*v := by omega
+  have hx : 26+104*(64*v+59)=6162+6656*v := by simp [Nat.mul_add, Nat.mul_assoc]
+  have hy : 18+76*(64*v+59)=4502+4864*v := by simp [Nat.mul_add, Nat.mul_assoc]
   have hA' : BB6.Agent3.CReach (6162+6656*v) (4502+4864*v) := by
     simpa only [hx,hy] using hA
   exact blank_no_A_t59 v hA'
@@ -494,12 +494,12 @@ theorem blank_no_high_m0_j359 (w : Nat) :
   intro hr
   have hroot : BB6.Agent3.CReach
       (17+64*(256*w+11)) (28+96*(256*w+11)) := by
-    have hx : 2*(359+8192*w)+3=17+64*(256*w+11) := by omega
-    have hy : 1084+24576*w=28+96*(256*w+11) := by omega
+    have hx : 2*(359+8192*w)+3=17+64*(256*w+11) := by simp [Nat.mul_add, Nat.mul_assoc]
+    have hy : 1084+24576*w=28+96*(256*w+11) := by simp [Nat.mul_add, Nat.mul_assoc]
     simpa only [hx,hy] using hr
   have hA := mzero_first_two_reach (256*w+11) hroot
-  have hx : 26+104*(256*w+11)=1170+26624*w := by omega
-  have hy : 18+76*(256*w+11)=854+19456*w := by omega
+  have hx : 26+104*(256*w+11)=1170+26624*w := by simp [Nat.mul_add, Nat.mul_assoc]
+  have hy : 18+76*(256*w+11)=854+19456*w := by simp [Nat.mul_add, Nat.mul_assoc]
   have hA' : BB6.Agent3.CReach (1170+26624*w) (854+19456*w) := by
     simpa only [hx,hy] using hA
   exact blank_no_A_t11 w hA'
