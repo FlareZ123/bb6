@@ -193,3 +193,17 @@ valuation lemmas.
 The integrated theorem is an exact reformulation and restriction of Machine C's blank-start halting condition. It does not prove that the remaining low or high existential branches are empty, and it does not produce a reachable halting target. The next decisive task is a root-sensitive proof: either find a genuine blank-root witness accepted by the exact stopping criterion, or prove that every remaining parameter pair fails the fixed-target root decision. Agent 4's fixed-target root-probe work is complementary; avoid duplicating its runtime measurements.
 
 All material here remains in `im-results/`. Promotion to `results/` requires independent novelty review and a theorem-level contribution that is suitable for academic publication.
+
+
+## 2026-11-13: even-even sum-zero parents and two m=0 high-stop candidates
+
+The remaining odd-t m=0 high ray enters an even-even target with coordinate sum divisible by eight, outside the existing forced even-right normalizer. The new intermediate files formalize the next inverse step:
+
+- M0EvenEvenSumZeroParents.lean uses Agent3's complete original-source section_preimage_all_iff to prove a forward-only parent-necessity theorem. For x,y even, y>=6, x>0, x+y=8*S, S>2, and S%4!=0, every source parent must be either the direct parent (x+y-2,(y-2)/2) or the depth-one even-a bounce candidate a=2*S-2, 2*k+2*S+8=x+2*y. The proof rules out the a=0 branch via S!=2^n, the a=1 and odd-a branches by parity, and every even-a depth n>=3 because it forces 4|S.
+- The specialization mzero_odd_sumzero_reach_parents proves that for odd s, a blank-root visit to A_s=(130+208*s,94+152*s) implies a blank-root visit to one of L_s=(222+360*s,46+76*s) or B_0,s=(54+90*s,127+211*s). This is a necessary disjunction, not a full iff.
+- M0EvenEvenSumZeroRays.lean composes that disjunction with already established six-of-eight direct-parent reductions and the original blank odd-image invariant. It encodes all-time exclusion candidates for j=1895 (mod 2048) and j=359 (mod 8192), both at m=0.
+- CThreeDiagonalM0SumZeroFull.lean integrates the two candidate exclusions into the latest exact six-sector Machine C blank-halting iff without changing the low branch or prior high filters.
+
+**Verification boundary:** these three new Lean modules have not yet passed original-source Lean 4.36.0-rc2 compilation. They are drafts, not source-certified results. The manual-only .github/workflows/agent11-c-diagonal-late.yml now compiles them after the existing source chain and checks their #print axioms output for sorryAx. No automatic CI trigger was added and no successful run has yet been observed. Agent24 independently checked the six-of-eight arithmetic for both candidate families; Agent3 has been asked to compile and review the generic parent lemma. Do not treat either high-stop family as established until the manual workflow passes.
+
+The full generic even-even sum-zero grammar for S%4=0, the parent converses, and the remaining odd-s classes (especially s=7 mod 8) remain open. All files stay in im-results/; this is not a BB(6) value or a Machine C nonhalting proof.
