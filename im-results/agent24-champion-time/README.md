@@ -197,25 +197,25 @@ Agent 48 has now written `im-results/agent48-counted-inc0/S1CountedInc0.lean`. I
 
 ## Marker-2 odd-n reset prefix: q4 decomposition (intermediate)
 
-The q4 decomposition is the source-level route for the marker-2, odd-inner-counter Rst2 case. It now has a complete **proof candidate** from the original S1 input to the canonical next S1 state. The result remains in \`im-results/\` because the strengthened prefix, suffix, and endpoint modules have not passed the complete manual Lean audit.
+The q4 decomposition is the source-level route for the marker-2, odd-inner-counter Rst2 case. It now has a complete **proof candidate** from the original S1 input to the canonical next S1 state. The result remains in `im-results/` because the strengthened prefix, suffix, and endpoint modules have not passed the complete manual Lean audit.
 
-**Prefix.** \`im-results/agent6-q4-prefix/CountedQ4Prefix.lean\` proves the original-table run for every odd \`n < 2^L\`, with cost \`32+12*a\`, the complete left-facing q4 word, and the finite right-shape contract. Its earlier finite-interface gate passed CI 43334058991 with no \`sorryAx\`. The current theorem additionally exports the complete right-facing stream, already established internally by the prefix proof; this strengthened signature has not yet been compiled.
+**Prefix.** `im-results/agent6-q4-prefix/CountedQ4Prefix.lean` proves the original-table run for every odd `n < 2^L`, with cost `32+12*a`, the complete left-facing q4 word, and the finite right-shape contract. Its earlier finite-interface gate passed CI 43334058991 with no `sorryAx`. The current theorem additionally exports the complete right-facing stream, already established internally by the prefix proof; this strengthened signature has not yet been compiled.
 
-**Suffix.** \`im-results/agent8-counted-reset/Q4Suffix.lean\` proves the proposed \`39+3*b\` frame decomposition: ten entry moves, a counted scan of \`b\` three-one blocks, and a 29-move local tail. Its source theorem is part of the current manual-only champion-root workflow, but no successful source-closure audit of the current revision is recorded.
+**Suffix.** `im-results/agent8-counted-reset/Q4Suffix.lean` proves the proposed `39+3*b` frame decomposition: ten entry moves, a counted scan of `b` three-one blocks, and a 29-move local tail. Its source theorem is part of the current manual-only champion-root workflow, but no successful source-closure audit of the current revision is recorded.
 
-**Full endpoint composition.** \`im-results/agent24-champion-time/Q4RightEndpoint.lean\` now contains the right and left infinite-stream endpoint lemmas, the source-run wrappers, \`q4_suffix_run_target_of_prefix\`, and \`oddRst2_q4_counted_source\`. The latter proposes the uniform theorem
+**Full endpoint composition.** `im-results/agent24-champion-time/Q4RightEndpoint.lean` now contains the right and left infinite-stream endpoint lemmas, the source-run wrappers, `q4_suffix_run_target_of_prefix`, and `oddRst2_q4_counted_source`. The latter proposes the uniform theorem
 
-\`\`\`lean
+```lean
 run tm2 (71+12*a+3*b) (s1Config L n 2 a 0 b h) =
   some (s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 (h+5+3*b))
-\`\`\`
+```
 
-for odd \`n < 2^L\`. The left proof separates the periodic \`d0pow b\` output, the six marked boundary cells, and the untouched q4-prefix left ray; the right proof uses the full prefix stream to establish the blank exterior. Together with the suffix frame's state/head, \`config_ext\` identifies the complete original-source target. All of these new declarations are **uncompiled proof candidates**.
+for odd `n < 2^L`. The left proof separates the periodic `d0pow b` output, the six marked boundary cells, and the untouched q4-prefix left ray; the right proof uses the full prefix stream to establish the blank exterior. Together with the suffix frame's state/head, `config_ext` identifies the complete original-source target. All of these new declarations are **uncompiled proof candidates**.
 
-For the authentic root \`(L,n,m,a,z,b,h)=(3,7,2,6,0,63,29)\`, the candidate is a 332-step transition to \`s1Config 3 6 1 71 (2^63-1) 0 223\`. Combined with the independently kernel-checked 27,959-step blank-root bridge, this would give a 28,291-step source prefix to that S1 state. Agent 48's simulator observed a 332-step endpoint at state 3/head 223 with 106 marked cells and support \`[-10,232]\`; the simulation did not identify the full canonical tape.
+For the authentic root `(L,n,m,a,z,b,h)=(3,7,2,6,0,63,29)`, the candidate is a 332-step transition to `s1Config 3 6 1 71 (2^63-1) 0 223`. Combined with the independently kernel-checked 27,959-step blank-root bridge, this would give a 28,291-step source prefix to that S1 state. Agent 48's simulator observed a 332-step endpoint at state 3/head 223 with 106 marked cells and support `[-10,232]`; the simulation did not identify the full canonical tape.
 
-The target has a positive all-ones S1 counter. \`im-results/agent48-counted-inc0/S1CountedInc0.lean\` proposes a parity-complete counted decrement, and \`S1CountedDrain.lean\` composes it into an all-ones drain. Those are also uncompiled candidates, not established dependencies.
+The target has a positive all-ones S1 counter. `im-results/agent48-counted-inc0/S1CountedInc0.lean` proposes a parity-complete counted decrement, and `S1CountedDrain.lean` composes it into an all-ones drain. Those are also uncompiled candidates, not established dependencies.
 
-**Validation gate.** The existing \`.github/workflows/agent48-champion-root.yml\` is manual-only after the Critic's intervention. Run the complete workflow at the current source revision, inspect the first Lean error if it fails, and audit the printed axioms for \`sorryAx\`. Do not restore push/PR triggers just to obtain continuous runs. Until the complete source closure passes, the 332-step composition remains conditional and no promotion to \`results/\` is warranted.
+**Validation gate.** The last available full champion-root run, 43340804651 (failed job 131608321957), reached `Q4Suffix.lean` and failed at line 439: `rw [heq1]` could not match `h + 6 + 3 * 1` against `h + 6 + 3 * ↑1` after `b=1`. The current suffix file still contains that rewrite. The same log reports `q4_suffix_frame` depends on `sorryAx`; there is no explicit `sorry` in the source, consistent with Lean tactic error recovery after the failed rewrite. Agent 8 has the exact error. Fix this upstream coordinate normalization, then run the complete manual-only `.github/workflows/agent48-champion-root.yml` and audit the new declarations for `sorryAx`. Do not restore push/PR triggers just to obtain continuous runs. Until the complete source closure passes, the 332-step composition remains conditional and no promotion to `results/` is warranted.
 
 The finite q4 screens remain in [LCIncQ4Cut.md](LCIncQ4Cut.md) as empirical support, not a substitute for the quantified proof. No exact BB(6) score or universal six-state upper bound follows yet.
