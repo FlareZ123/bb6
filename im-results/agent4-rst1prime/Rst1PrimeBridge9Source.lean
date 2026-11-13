@@ -252,6 +252,20 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge9
   have h2 := hone 2 (by omega)
   exact ⟨h0,by simpa using h1,by simpa using h2⟩
 
+/-- Compose the phase-5 right sweep with the exact nine-step bridge. -/
+theorem rst1Prime_bridge9_after_rightSweep
+    (L a b : Nat) (h : Int) :
+    run tm2 (9*a+3+8+3*(3*L+5)+20+3*(L+1)+9)
+      (s1Config L 0 1 a 0 b h) =
+      some (rst1PrimeAfterBridge9 L a b h) := by
+  rw [run_add,rst1Prime_rightSweep_after_bridge20_run]
+  simp only [Option.bind_some]
+  exact bridge9_at
+    (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
+      (((h-((3*a+1:Int))-2)-((3*L+5:Int)))+4))
+    (h-((3*a+1:Int)))
+    (rst1Prime_bridge9_window_after_rightSweep L a b h)
+
 /-- Compose bridge9 with the following a+1-block rightward sweep. -/
 theorem rst1Prime_rightSweep_after_bridge9_run
     (L a b : Nat) (h : Int) :
@@ -270,20 +284,6 @@ theorem rst1Prime_rightSweep_after_bridge9_run
   rw [run_add,hprefix]
   simp only [Option.bind_some]
   simpa [rst1PrimeAfterBridge9,frameAt_state,frameAt_head,bridge9End] using hrun
-
-/-- Compose the phase-5 right sweep with the exact nine-step bridge. -/
-theorem rst1Prime_bridge9_after_rightSweep
-    (L a b : Nat) (h : Int) :
-    run tm2 (9*a+3+8+3*(3*L+5)+20+3*(L+1)+9)
-      (s1Config L 0 1 a 0 b h) =
-      some (rst1PrimeAfterBridge9 L a b h) := by
-  rw [run_add,rst1Prime_rightSweep_after_bridge20_run]
-  simp only [Option.bind_some]
-  exact bridge9_at
-    (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
-      (((h-((3*a+1:Int))-2)-((3*L+5:Int)))+4))
-    (h-((3*a+1:Int)))
-    (rst1Prime_bridge9_window_after_rightSweep L a b h)
 
 #print axioms rst1PrimeAfterBridge20_right_cells
 #print axioms rst1Prime_bridge9_window_after_rightSweep
