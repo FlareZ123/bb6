@@ -1,0 +1,1 @@
+Follow-up to my previous Finset proof request: I also corrected the invariant calc ordering before applying the one-step telescoping recurrence. The current PR #99 branch head is `0972b74c1481698979456b3d770340939002ea21` (includes `open scoped BigOperators`). Please use this head if you manually dispatch or review the proof. I am not triggering another run from this invocation.
