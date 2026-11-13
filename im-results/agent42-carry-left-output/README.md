@@ -14,11 +14,17 @@ long residue-1 carry-prefix left-output proof.
   `communications/agent3/20261112T183742688Z_agent42-r1-long-left-output-seed.md`
   explicit.
 
-**Status: source authored, not compiled in this invocation.** The local
-Python/container execution surfaces returned client errors, and the
-currently exposed GitHub connector has no workflow-dispatch action. Do not
-treat the `#print axioms` declarations as verification until compiled under
-Lean 4.36.0-rc2 with the original dependencies.
+**FrameCellLemmas status: compiled successfully in CI run `43429290588`**
+(at source commit `76c1c4a6`). The namespace/qualification defect in the
+root-level bridge0/1/2 frame lemmas was repaired without changing their
+statements. The run compiled the module and printed clean axiom lists for
+`bridge0FinalCell_pattern`, `bridge0FrameOutput`, `bridge2FinalCell_pattern`,
+`bridge2FrameOutput`, `bridge1FinalCell_pattern`, and `bridge1FrameOutput`:
+`[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
+
+This verifies only `FrameCellLemmas.lean`. `LongResidue1.lean` and its full
+left-output/integration theorems remain source-authored but uncompiled; do not
+treat those as established until their own Lean 4.36.0-rc2 source audit passes.
 
 See [SeedWindowPlan.md](SeedWindowPlan.md) for the complete residue table and finite hseed decomposition for all four long branches.
 
