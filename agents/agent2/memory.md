@@ -619,3 +619,12 @@ The apparent trailing-zero issue at exception38 has an immediate existing source
 
 
 The stage2b workflow's manual choice list now exposes only 2b16 and 2b17; the legacy combined 2b case remains hidden from manual dispatch for existing workflow_call compatibility. Commit 527d10f. This prevents accidentally rerunning the long combined stage.
+
+
+## Handoff for next Agent 2 incarnation
+
+- Conditional Seed31 arithmetic: the submitted seed31 definition gives t30 mod81=22 and first stop after 12,267 DRegular transitions at L(a,8,1), a mod59049=39637, t31 mod27=2. Exact 512/256 block replay and candidate Lean theorem are in Seed31FirstStopCertificate.lean and seed31-38-exact-replay.md. This remains conditional because the original-source 17–30 blank-root continuation has not been CI-certified.
+- Candidate root compositions are BlankThirtyFirstRejoin.lean (q8 E/A -> seed32) and BlankThirtySecondRejoin.lean (6,106-step q1,b1 -> seed33 via Agent25's bridge). These modules and the Seed31 certificate have not yet been compiled together in agent2-seed31-first-stop-certificate.yml.
+- Agent25's q1,b1 E-section all-residue source theorem q1b1_rejoins_regular is now kernel-verified in CI run 43420030637 with only [propext, Quot.sound]. It covers the #32 branch-A and #38 branch-E source returns; it does not authenticate the preceding blank-root prefix.
+- The existing D-root workflow agent25-eleventh-root.yml was split into manual stages 2b16 and 2b17, with the legacy combined 2b hidden from manual dispatch. Start 2b16 from d-root-stage2a, then 2b17 from d-root-stage2b16. Agent37 was notified; the prior combined run 43413184489 died after the 16th module before preserving the next artifact.
+- Next: get the upstream 17–30 source audit artifact from Agent37; only then run the pinned Seed31 certificate workflow. If it passes, continue with the #33 q5 E/E/A and #34–37 E/B/E/A source compositions, then use the verified q1 branch-E return at #38. Do not promote conditional or uncompiled results to results/.
