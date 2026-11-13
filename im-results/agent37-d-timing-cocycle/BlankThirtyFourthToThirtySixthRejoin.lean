@@ -13,17 +13,17 @@ open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 
 def seed34 : DRegular.L := BB6.Agent2ThirtyThirdRejoin.seed34
 def terminal12638 : DRegular.L :=
-  (BB6.Agent2Fast64.fastRun 12638 seed34).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 12638 seed34).getD ⟨9,0,0⟩
 def t34 : Nat := (terminal12638.a-4)/9
 def seed35 : DRegular.L := ⟨64*t34+29,1,5⟩
 
 def terminal335 : DRegular.L :=
-  (BB6.Agent2Fast64.fastRun 335 seed35).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 335 seed35).getD ⟨9,0,0⟩
 def t35 : Nat := (terminal335.a-4)/9
 def seed36 : DRegular.L := ⟨64*t35+35,1,5⟩
 
 def terminal615 : DRegular.L :=
-  (BB6.Agent2Fast64.fastRun 615 seed36).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 615 seed36).getD ⟨9,0,0⟩
 def t36 : Nat := (terminal615.a-10)/9
 def seed37 : DRegular.L := ⟨64*t36+91,3,2⟩
 
@@ -57,14 +57,14 @@ theorem seed37_canon : DRegular.Canon seed37 := by
 theorem terminal12638_certificate :
     DRegular.run 12638 seed34 = some ⟨9*t34+4,6,1⟩ ∧
     terminal12638.a % 59049 = 55039 ∧ t34 % 27 = 13 := by
-  rw [BB6.Agent2Fast64.fastRun_correct 12638 seed34 seed34_canon]
+  rw [BB6.DRegularFast.fastRun_correct 12638 seed34 seed34_canon]
   decide
 
 theorem terminal12638_eq :
     terminal12638 = ⟨9*t34+4,6,1⟩ := by
-  have hfast : BB6.Agent2Fast64.fastRun 12638 seed34 =
+  have hfast : BB6.DRegularFast.fastRun 12638 seed34 =
       some ⟨9*t34+4,6,1⟩ := by
-    rw [← BB6.Agent2Fast64.fastRun_correct 12638 seed34 seed34_canon]
+    rw [← BB6.DRegularFast.fastRun_correct 12638 seed34 seed34_canon]
     exact terminal12638_certificate.1
   simp [terminal12638,hfast]
 
@@ -79,14 +79,14 @@ theorem terminal12638_first_stop :
 theorem terminal335_certificate :
     DRegular.run 335 seed35 = some ⟨9*t35+4,9,1⟩ ∧
     terminal335.a % 59049 = 54265 ∧ t35 % 27 = 8 := by
-  rw [BB6.Agent2Fast64.fastRun_correct 335 seed35 seed35_canon]
+  rw [BB6.DRegularFast.fastRun_correct 335 seed35 seed35_canon]
   decide
 
 theorem terminal335_eq :
     terminal335 = ⟨9*t35+4,9,1⟩ := by
-  have hfast : BB6.Agent2Fast64.fastRun 335 seed35 =
+  have hfast : BB6.DRegularFast.fastRun 335 seed35 =
       some ⟨9*t35+4,9,1⟩ := by
-    rw [← BB6.Agent2Fast64.fastRun_correct 335 seed35 seed35_canon]
+    rw [← BB6.DRegularFast.fastRun_correct 335 seed35 seed35_canon]
     exact terminal335_certificate.1
   simp [terminal335,hfast]
 
@@ -101,14 +101,14 @@ theorem terminal335_first_stop :
 theorem terminal615_certificate :
     DRegular.run 615 seed36 = some ⟨9*t36+10,7,1⟩ ∧
     terminal615.a % 59049 = 27469 ∧ t36 % 27 = 0 := by
-  rw [BB6.Agent2Fast64.fastRun_correct 615 seed36 seed36_canon]
+  rw [BB6.DRegularFast.fastRun_correct 615 seed36 seed36_canon]
   decide
 
 theorem terminal615_eq :
     terminal615 = ⟨9*t36+10,7,1⟩ := by
-  have hfast : BB6.Agent2Fast64.fastRun 615 seed36 =
+  have hfast : BB6.DRegularFast.fastRun 615 seed36 =
       some ⟨9*t36+10,7,1⟩ := by
-    rw [← BB6.Agent2Fast64.fastRun_correct 615 seed36 seed36_canon]
+    rw [← BB6.DRegularFast.fastRun_correct 615 seed36 seed36_canon]
     exact terminal615_certificate.1
   simp [terminal615,hfast]
 
