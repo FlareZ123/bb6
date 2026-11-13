@@ -1,6 +1,10 @@
 name: Agent 42 TM63 all-parameter terminal step certificate (manual)
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/agent42-champion-terminal-source.yml'
+      - 'im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean'
 permissions:
   contents: read
 jobs:
@@ -130,6 +134,13 @@ jobs:
           fi
           : > /tmp/a42-terminal/q4-suffix-axioms.log
           lean -o Q4Suffix.olean Q4Suffix.lean 2>&1 | tee /tmp/a42-terminal/q4-suffix-axioms.log
+cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-q4-prefix-axioms.log
+          lean -o M1EvenQ4Prefix.olean M1EvenQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m1-even-q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-q4-prefix-axioms.log; then
+            echo '::error::sorryAx found in m=1,n=6 even q4 prefix candidate'
+            exit 1
+          fi
           if grep -q 'sorryAx' /tmp/a42-terminal/q4-suffix-axioms.log; then
             echo '::error::sorryAx found in q4 suffix theorem dependencies'
             exit 1
