@@ -228,7 +228,7 @@ theorem q1b1_rejoins_regular (k : Nat) :
   by_cases h0 : k % 3 = 0
   · let t := k / 3
     have hk : k = 3*t := by omega
-    subst k
+    rw [hk]
     refine ⟨duration t, ⟨64*t+27,0,0⟩, ?_, ?_⟩
     · constructor
       · dsimp
@@ -239,7 +239,7 @@ theorem q1b1_rejoins_regular (k : Nat) :
   · by_cases h1 : k % 3 = 1
     · let t := (k-1) / 3
       have hk : k = 3*t+1 := by omega
-      subst k
+      rw [hk]
       refine ⟨bDuration t, ⟨64*t+37,3,0⟩, ?_, q1b1_regular_rejoin_B t⟩
       constructor
       · dsimp
@@ -249,7 +249,7 @@ theorem q1b1_rejoins_regular (k : Nat) :
     · have h2 : k % 3 = 2 := by omega
       let t := (k-2) / 3
       have hk : k = 3*t+2 := by omega
-      subst k
+      rw [hk]
       refine ⟨eDuration t, ⟨64*t+49,6,0⟩, ?_, q1b1_regular_rejoin_E t⟩
       constructor
       · dsimp
