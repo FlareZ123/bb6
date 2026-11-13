@@ -25,6 +25,8 @@ def t22 : Nat := (terminal730.a-7)/9
 theorem terminal730_certificate :
     DRegular.run 730 seed22 = some ⟨9*t22+7,8,1⟩ ∧
       t22 % 27 = 14 := by
+  have hcanon : DRegular.Canon seed22 := by decide
+  rw [BB6.Agent2Fast64.fastRun_correct 730 seed22 hcanon]
   decide
 
 theorem terminal730_exact :
