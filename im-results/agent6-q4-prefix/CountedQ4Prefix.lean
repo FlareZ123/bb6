@@ -729,7 +729,8 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
         some ⟨4,h,Tq⟩ ∧
       Tq h = true ∧
       (∀ i : Nat, Tq (h-(i:Int)) = sideBit (q4LeftFacing L (n-1) a) i) ∧
-      q4RightShape Tq h b := by
+      q4RightShape Tq h b ∧
+      (∀ i : Nat, Tq (h+1+(i:Int)) = sideBit (q4RightFacing b) i) := by
   let T := (s1Config L n 2 a 0 b h).tape
   let N := 3*a+2
   let T1 := sweptLeft N T h
@@ -1049,7 +1050,7 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
             have heq : h+1+((9+3*b+i:Int)) =
                 h+10+(3*b:Int)+(i:Int) := by omega
             simpa [heq] using hr
-  refine ⟨T2, ?_, hheadT, hleftT, hshape⟩
+  refine ⟨T2, ?_, hheadT, hleftT, hshape, hrightT⟩
   calc
     run tm2 (32+12*a) (s1Config L n 2 a 0 b h)
         = run tm2 (3*N+26+3*a) ⟨3,h,T⟩ := by
