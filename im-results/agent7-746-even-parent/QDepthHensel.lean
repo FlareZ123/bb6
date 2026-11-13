@@ -73,7 +73,8 @@ private theorem q_lift_criterion (n b k t : Nat) (ht:t<3)
     dsimp [m]
     rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
     exact Int.mul_comm _ _
-  have hs := signedZ_shift_digit_mod n b k t ht
+  have hs := signedZ_shift_digit_mod n b k t
+      ht
   have hmul :
       (8*signedZ n (b+t*depthPeriod k))%(3:Int)^(k+2) =
         (8*(signedZ n b-m*(a0*t)))%(3:Int)^(k+2) := by
@@ -299,28 +300,4 @@ theorem qDepthResidue_887_table :
   have h0 : (3:Int)^6∣qNumerator 887 0 := by decide
   have h486 : (3:Int)^7∣qNumerator 887 486 := by decide
   have h3402 : (3:Int)^8∣qNumerator 887 3402 := by decide
-  have hrez : ∠ k=5, ...   rw [hpow]
-    exact Int.dvd_mul_right _ _
-    have hlow : (3:Int)^(k+1)∣qNumerator 887 0 :=
-      Int.dvd_trans hdiv h0
-    have hsel := (qDepthResidue_iff 887 k 0 (by omega)).mp hlow
-    simpa using hsel.symm
-  have h6sel := (qDepthResidue_iff 887 6 486 (by omega)).mp h486
-  have h7sel := (qDepthResidue_iff 887 7 3402 (by omega)).mp h3402
-  have hp6 : depthPeriod 6=1458 := by decide
-  have hp7 : depthPeriod 7=4374 := by decide
-  have h6 : qDepthResidue 887 6=486 := by
-    rw [hp6] at h6sel
-    rw [Nat.mod_eq_of_lt (by decide : 486<1458)] at h6sel
-    exact h6sel.symm
-  have h7 : qDepthResidue 887 7=3402 := by
-    rw [hp7] at h7sel
-    rw [Nat.mod_eq_of_lt (by decide : 3402<4374)] at h7sel
-    exact h7sel.symm
-  exact ⟨h4 0 (by omega), hzero 1 (by omega), hzero 2 (by omega),
-    hzero 3 (by omega), hzero 4 (by omega), hzero 5 (by omega),h6,h7⟩
-
-#print axioms qDepthResidue_iff
-#print axioms qDepthResidue_unique_in_period
-#print axioms qDepthResidue_887_table
-end CascadeQDepthHensel
+  have hrez : ∠ k=5, ...
