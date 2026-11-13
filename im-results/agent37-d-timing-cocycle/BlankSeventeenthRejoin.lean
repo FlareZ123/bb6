@@ -1,6 +1,7 @@
 import Lean.Elab.Tactic.Omega
 import BlankSixteenthRejoin
 import ExceptionalE7ThirdReturn
+import DRegularFast
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -18,10 +19,14 @@ def terminal2656 : DRegular.L :=
 def t17 : Nat := (terminal2656.a-7)/9
 
 /-- One kernel computation certifies both the exact seventeenth
-    exceptional state and the residue needed by its three-return source proof. -/
+    exceptional state and the residue needed by its three-return source proof.
+    The 2,656-step prefix is evaluated through 3-adic blocks. -/
 theorem terminal2656_certificate :
     DRegular.run 2656 seed17 = some ⟨9*t17+7,7,1⟩ ∧
-      t17 % 27 = 6 := by decide
+      t17 % 27 = 6 := by
+  have hcanon : DRegular.Canon seed17 := by decide
+  rw [BB6.DRegularFast.fastRun_correct 2656 seed17 hcanon]
+  decide
 
 theorem terminal2656_exact :
     DRegular.run 2656 seed17 = some ⟨9*t17+7,7,1⟩ :=
