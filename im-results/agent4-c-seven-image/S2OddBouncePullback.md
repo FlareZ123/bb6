@@ -149,6 +149,16 @@ The family is disjoint from the older diagonal (u+v=0 mod 4) and the previous s3
 
 If the source-root composition is formalized, the combined three-family exclusion density becomes 41/2^26, leaving 215 of the 256 m-classes modulo 131072 in the common j=319,m=42 modulo 512 base cylinder outside these three exclusions.
 
+## Complementary q-even lift (unresolved)
+
+The other lift of the same Q-cone congruence is v=12+11t (mod 32). Here W=(B+2)/8=3 (mod 4), so the six-right normalizer takes two steps from (A,B) to F2=(A+12W-8,2W-2), where F2.x+F2.y=8S. Writing v=12+11t+32z gives
+
+- A=6568+6272t+13376z;
+- W=595+568t+1212z;
+- S=1861+1778t+3793z = 1+2t+z (mod 4).
+
+When S is nonzero modulo 4, Agent11's eveneven_sumzero_parent_necessity theorem applies to F2. Its direct parent is F3=(A+14W-12,W-2), which has odd right coordinate and sum 3 (mod 4), so the odd-sum-one obstruction does not exclude it. The bounce parent E has right coordinate 2-S (mod 4) and total sum S (mod 4); it is excluded by odd-image only when S=1 (mod 4). If S=0 (mod 4), the M0 parent theorem's hypothesis fails. This complementary lift remains unresolved and is not part of the q-odd candidate exclusion.
+
 ## Concrete arithmetic test vector
 
 The small instance u=4, v=54 satisfies v+93u=42 (mod 128), with t=14. It gives
