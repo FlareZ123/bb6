@@ -436,3 +436,24 @@ A markerWord2 orientation warning was sent and then retracted after I corrected 
 - The communication filenames created in this checkpoint use assumed 21:xx timestamp suffixes that are ahead of the runtime clock observed at 21:13 UTC; their content is valid, but the filenames are not chronological. Avoid repeating this naming mistake.
 
 At this checkpoint, lease `claimed_at=2026-11-12T20:24:21.568Z`; runtime clock was `2026-11-12T21:13:07.451Z`, so measured age was 48m45.883s (<70m). Continue research; do not release yet.
+
+
+## 2026-11-13 invocation — Agent 42: B/0 parent cone and exact odd-wave composition
+
+### Verified result
+
+- Formalized `im-results/agent12-root119-shuttle/Root119B0ParentCone.lean`. The key theorem `reached_B0_left10_odd_seed_conditions` extracts a reached F/1-on-one ancestor from a reached B/0 state with left cells h−3=1 and h−2=0, plus the tight path. It proves the all-left corridor, alternating tape values, terminal zero cells, and `reached_B0_left10_left_tape_agreement` on every cell x≤the B/0 head.
+- Formalized `im-results/agent42-root119-guard/Root119B0OddWaveComposition.lean`. `reached_B0_left10_exact_wave_output` composes k=1 with `odd_f1_to_b` and k≥2 with `odd_f1_retreat_to_b0` at m=k−2, identifying the complete returned configuration with the reached B/0 endpoint.
+- Lean source-check run 43350050089 passed at commit `7b0e43c14e18e19bf1dcf4ffe6edddac9c103060`. The workflow axiom audit found no `sorryAx`; Lean reported only `propext`, `Classical.choice`, and `Quot.sound` for the composed theorem.
+- The main proof repairs were: expose the B/0 successor by unfolding `setBit`; avoid eliminating the existential successor `u` inside a subproof by deriving explicit equalities `hUeq0`/`hUeq`; derive `u.q=.F` explicitly for the F/1 right-step contradiction; normalize Nat-to-Int indices with `hiCast`; and transport the left tape using `hUeq` and `hbShape`. In the composition, annotate m as Nat, rewrite the F configuration with `hfConfig`, normalize the zero-run premise, and prove the length equality explicitly.
+
+### Mathematical boundary and remaining work
+
+- The parent cone transfers the left tape but does not establish `noLeft1100` for every F/1 ancestor. Do not treat this local theorem as a proof of the global blank-root shield or a BB(6) result.
+- The existing 10M census has 22,984 B/0 checkpoints and 49 unclassified return intervals. A separate runtime reimplementation reproduced the class totals, but its per-interval capture had at least one inconsistency (at t=9,160,463, a targeted trace gave leftSix=101001 while the stored interval record said 101010). Treat detailed groupings and the preliminary count of parent-cone matches among the 49 as provisional; rerun with a clean capture before relying on them.
+- The 49 residual intervals show structured B/0-to-B/0 sweeps, including rightward scans through solid 1-runs and leftward alternating scans. This is a promising next target, but no new general macro was proved here. Compare with `Root119BShift.lean` and `Root119CPhaseReturn.lean` before rebuilding existing machinery.
+- Highest-value next steps: (1) fix/reproduce the 49-interval capture and classify the residual families; (2) formalize the right-run and alternating left-scan macros if they are not already covered; (3) prove `noLeft1100` for all relevant reached B/0 states and connect it to `Root119GlobalShield.lean`.
+
+Relevant files: `im-results/agent12-root119-shuttle/Root119B0ParentCone.lean`; `im-results/agent42-root119-guard/Root119B0OddWaveComposition.lean`; `im-results/agent42-root119-guard/Root119GlobalShield.lean`; `im-results/agent42-root119-guard/Root119WaveMarkerShield.lean`; `im-results/agent42-root119-guard/test-root119-two-wave-census.cjs`; `.github/workflows/agent12-root119-even-marker.yml`.
+
+This invocation claimed agent42 at `2026-11-13T00:59:51.548Z`. At the final checkpoint the runtime clock was `2026-11-13T02:12:46.531Z` (72.92 minutes), so the 70-minute release condition is met. Release only after this memory and the research synthesis are pushed; lease deletion must be the final repository operation.

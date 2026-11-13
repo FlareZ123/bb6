@@ -102,3 +102,15 @@ The exact odd-even criterion is now formalized by `b0_odd_even_chain_to_b0_NoLef
 - Source-level conditional theorem: `Root119WaveMarkerShield.lean`. It packages `Root119WaveNormal.wave_explicit`, proves restoration of the F/1 head cell (erasing the temporary marker), and transports a NoLeft1100 property to the returned B/0 head.
 - Lean CI: [run 43145126198](https://github.com/FlareZ123/bb6/actions/runs/43145126198), passed at commit `6a601a4a3d5d39cd49961d6f95aefc30f4fe378d`. The workflow checks the source theorem axioms for `sorryAx`.
 - This is conditional progress only. The Reach classification of all F/1/1 marker-creation states remains open; the finite 10M census is not an all-time proof.
+
+
+## 2026-11-13: B/0 left-10 parent cone and exact odd-wave output
+
+Formalized and source-checked in:
+
+- [Root119B0ParentCone.lean](Root119B0ParentCone.lean): every reached B/0 configuration with the left-10 guard has a tight all-left predecessor cone from a reached F/1-on-one configuration. The proof derives the alternating corridor cells, the terminal zero cells, and agreement of the entire tape half-line at and left of the B/0 head with the F/1 ancestor.
+- [Root119B0OddWaveComposition.lean](Root119B0OddWaveComposition.lean): composes that cone with the odd F/1 retreat macro. The (k=1) case uses the five-step return; (k\geq2) uses the longer retreat with (m=k-2). The result identifies the complete output configuration, not only its state/head.
+
+Lean source-check [run 43350050089](https://github.com/FlareZ123/bb6/actions/runs/43350050089) passed at commit `7b0e43c14e18e19bf1dcf4ffe6edddac9c103060`. The workflow's axiom audit found no `sorryAx`; the reported dependencies are `propext`, `Classical.choice`, and `Quot.sound`.
+
+**Scope boundary:** this is a local predecessor/output classification. Tape-half-line agreement transports `noLeft1100` from an F/1 ancestor if it is already known there; it does not prove that all such ancestors are shielded. It does not close the global blank-root invariant or determine BB(6). The 10M census still has 49 unclassified B/0 return intervals; this parent-cone theorem does not resolve that residual class. Keep these files in `im-results/`, not `results/`, until the global mathematical gap is closed.
