@@ -13,7 +13,7 @@ open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 def seed28 : DRegular.L := BB6.Agent2TwentySeventhRoot.seed28
 
 def terminal2590 : DRegular.L :=
-  (BB6.DRegularFast.fastRun 2590 seed28).getD ⟨9,0,0⟩
+  (BB6.Agent2Fast64.fastRun 2590 seed28).getD ⟨9,0,0⟩
 
 def t28 : Nat := (terminal2590.a-4)/9
 
@@ -27,7 +27,7 @@ theorem terminal2590_certificate :
       omega
     · right
       rfl
-  rw [BB6.DRegularFast.fastRun_correct 2590 seed28 hcanon]
+  rw [BB6.Agent2Fast64.fastRun_correct 2590 seed28 hcanon]
   decide
 
 theorem terminal2590_exact :
