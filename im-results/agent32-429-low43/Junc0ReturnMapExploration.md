@@ -58,3 +58,14 @@ The endpoint/time map should be formalizable by composing:
 The main technical step is lifting the generic low42 physical result to the represented Junc input and composing it with the outer-safe physical segments. The nofatal prefix property is not yet generalized here. A successful physical run to a nonhalting Junc endpoint already proves finite nonhalting for that segment; a generic C/01-prefix lemma would additionally preserve the repository's stronger guard invariant.
 
 The special transition J(0,344) -> J(0,408) is included in the current draft PR #83 blank-root chain, but this repeated +28 family is not yet part of its Lean declarations. Do not cite the simulation table as proof or infer infinite nonhalting from it.
+
+
+## Candidate generalization of the nofatal guard
+
+A useful lemma for the parameterized return map is likely:
+
+If the ordinary source run satisfies `run n z = some z'`, and the endpoint is neither the halting state D/1 nor a `fatalCZero` state, then `runNoFatal n z = some z'`.
+
+Reason: any `fatalCZero` state is C/0 with a marked immediate right neighbor. Its next transition enters D/1. If that state occurs before the final prefix, the ordinary run cannot continue past D/1; if it occurs exactly one step before the endpoint, the endpoint would be D/1; if it occurs at the endpoint, the endpoint is fatal. All three cases contradict the hypotheses. An induction on n should turn this into a small source-level lemma in `NoFatalGuard.lean`.
+
+This would let researchers derive `runNoFatal` from existing generic successful source-run theorems with safe Junc endpoints, rather than proving each low42 parameter instance by `decide`. It is a proof sketch only and has not been formalized or kernel-checked.
