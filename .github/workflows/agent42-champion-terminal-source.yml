@@ -245,6 +245,13 @@ jobs:
             echo '::error::sorryAx found in root-connected attained-score composition'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63M1EvenRootComposition.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-root-composition-axioms.log
+          lean -o TM63M1EvenRootComposition.olean TM63M1EvenRootComposition.lean 2>&1 | tee /tmp/a42-terminal/m1-even-root-composition-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-root-composition-axioms.log; then
+            echo '::error::sorryAx found in first-increment root composition'
+            exit 1
+          fi
           # This independent base-frame leaf is intentionally last: it is not an
           # import of the root/q4/drain/terminal chain, so its failure must not
           # hide diagnostics from the more decisive source-composition modules.
@@ -285,6 +292,7 @@ jobs:
             /tmp/a42-terminal/root-q4-drain-axioms.log
             /tmp/a42-terminal/champion-root-q4-drain-axioms.log
             /tmp/a42-terminal/root-q4-attainable-axioms.log
+            /tmp/a42-terminal/m1-even-root-composition-axioms.log
             /tmp/a42-terminal/counted-reset-base-axioms.log
           if-no-files-found: ignore
           retention-days: 3
