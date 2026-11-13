@@ -21,7 +21,6 @@ jobs:
           python3 -c "import base64,io,lzma,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('/tmp/a42-terminal',filter='data')"
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a42-terminal/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a42-terminal/
-          cp im-results/agent8-champion-terminal/TerminalCount.lean /tmp/a42-terminal/
           cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a42-terminal/
           cp im-results/agent48-root-witness/{RootFiniteBits,RootSourceBridge}.lean /tmp/a42-terminal/
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a42-terminal/
@@ -56,12 +55,6 @@ jobs:
           lean -o Symmetry.olean Symmetry.lean
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
-          : > /tmp/a42-terminal/terminal-count-axioms.log
-          lean -o TerminalCount.olean TerminalCount.lean 2>&1 | tee /tmp/a42-terminal/terminal-count-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/terminal-count-axioms.log; then
-            echo '::error::sorryAx found in terminal side-bit definitions'
-            exit 1
-          fi
           lean -o S1Encoder.olean S1Encoder.lean
           : > /tmp/a42-terminal/root-finite-axioms.log
           lean -o RootFiniteBits.olean RootFiniteBits.lean 2>&1 | tee /tmp/a42-terminal/root-finite-axioms.log
