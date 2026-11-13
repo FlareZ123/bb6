@@ -83,3 +83,24 @@ It passed all 200 cases (u=2,4,\ldots,20), (v=1,\ldots,20). The two root instanc
 Together with `juncPos_to_midA_delta`, these give the two 1,551- and 1,735-step w=1 returns in the checkpoint table. The reproducible grid test is [test_even_u_midA_w1.js](test_even_u_midA_w1.js). This remains a conjecture beyond the two concrete finite instances; it is not a general Lean theorem.
 
 Draft PR #91 adds concrete `by decide` proofs for the two root instances, the w=2 A/0 suffix, and the full 103,081-step continuation from the shifted C/0 zipper to J(0,0,408). The manual workflow was extended to compile and axiom-audit the module but has not yet run.
+
+
+## Empirical odd-u A/0 boundary law closes the w=2 suffix
+
+For odd (u\ge1), (v\ge1), the A/0 boundary produced by `midApos_w2_exit_delta` appears to satisfy:
+
+```
+A0(u,v) := z 0 (ones (2*v+9) ++ pairs01 (u-1) ++ ones 5) false [true]
+
+runWithDelta (9*u + 6*v + 76) (A0 u v)
+  = some (junc 0 0 (2*u+2*v+14), -(2*u+2*v+9))
+```
+
+This passed 220 cases (u=1,3,\ldots,21), (v=1,\ldots,20). The root instance ((u,v)=(77,120)) is 1,489 steps, displacement -403, ending at J(0,0,408). The reproducible test is [test_odd_u_a0_boundary.js](test_odd_u_a0_boundary.js).
+
+Consequently, the third partial return decomposes as:
+- J(78,120,2) -> midApos(77,120,2): 246 steps, +242;
+- `midApos_w2_exit_delta 77 120` -> A0(77,120): 494 steps, +2;
+- A0(77,120) -> J(0,0,408): 1,489 steps, -403.
+
+The total is 2,229 steps and displacement -159. The concrete 1,489-step suffix is proved by `decide` in draft PR #91; the general odd-u law is still an empirical conjecture.
