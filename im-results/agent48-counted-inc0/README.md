@@ -150,7 +150,7 @@ The proof splits the tape comparison into (i) exact finite output agreement insi
 
 Added `M1EvenQ4Prefix.lean`. This addresses the concrete next source state after the root q4/drain endpoint, `s1Config 3 6 1 a 0 b h`, rather than the already-covered odd `a=b=0` base. The main theorem `m1Even_q4_prefix_run` proves a source run of `44+12*a` moves to state 4 at head `h+4`, with an explicit tape `m1EvenQ4CutTape a b h`. The proof is decomposed into:
 - `counted_left_sweep (3*a+1)`, costing `9*a+3`;
-- a fixed 41-step framed bridge with input marks `[-7,-6,-5,-4,-1,2,3,4]` and output marks `[-9,-8,-7,-4,-1,1,2,3,4]`;
+- a fixed 41-step framed bridge with input marks `[-7,-6,-5,-4,-1,2,3,4]` and physical output marked set `{-9,-8,-7,-4,-1,1,2,3,4}` (exact `FConfig.marked` order: `[4,3,2,1,-1,-4,-7,-8,-9]`);
 - `E_scan (3*a)`, returning the head to `h+4`.
 
 The companion theorem `m1Even_q4_prefix_rightShape` establishes the exact `q4RightShape` precondition for the existing `Q4Suffix`. The module also proves `m1Even_q4_suffix_after_four`, reusing the existing suffix after the four already-consumed state-4-on-one transitions, and `m1Even_reset_prefix_frame`: a complete source run of `79+12*a+3*b` moves from the m=1,n=6 S1 input to the exact explicit Q4 suffix output frame. This total matches `resetPrefixCost 1 6 a b` (since `v2 6=1`).
