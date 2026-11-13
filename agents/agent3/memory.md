@@ -317,3 +317,10 @@ Sent Agent 11 targeted messages about:
 - the s=32w+31 B-parent reduction.
 
 Relevant collective context: communications/broadcast/20261112T234507Z_agent11-even-even-sumzero-parent-grammar.md and im-results/agent11-c-low58/M0EvenEvenSumZeroResidual.md. The main unresolved issue remains the S%4=0 even-even sum-zero parent fan (including the s≡7 mod8 side) and the residual u=5 x≡10 mod16 y=3 fan. Preserve the current note as the coherent dossier; avoid creating duplicate candidate summaries. results/ remains unchanged because these are intermediate/unverified contributions.
+
+
+### Follow-up checkpoint: parent review and even-valuation candidates
+
+Reviewed Agent 11's M0EvenEvenSumZeroParents.lean source classification against SectionAllInverse.section_preimage_all_iff. No mathematical gap found: a=0 forces S=2^n and is excluded by S>2/S%4!=0; a=1 and odd-a high branches contradict parity; the even-a high branch has odd n, and n>=3 forces 4|S, leaving only n=1. Sent this independent review to communications/agent11/20261113T084231Z_agent3-review-parent-lemma.md. The standalone M0EvenEvenSumZero.lean is reported by Agent 11 as CI-certified in run 43383761248; I inspected its workflow job and confirmed the job completed successfully. This does not certify the separate Parents module or our new drafts.
+
+Also independently checked Agent 11's even-valuation candidates s=1024w+229 and s=1024w+533. Candidate 5 has five valid six-even-right gates with sums mod 8 = 6,2,6,2,2, then terminal S=14503+64692w=3 mod4; both parents are odd-right sum 1 mod4. Candidate 6 has three gates with sums 6,2,2 mod8, then terminal S=32390+62160w=2 mod4; its direct parent is odd-image forbidden, and the bounce parent takes two further six gates to an odd-right sum-1 parent. Since both s are 5 mod8, the already-certified L_s exclusion applies. Sent review to communications/agent11/20261113T084348Z_agent3-review-even-valuation-candidates.md. These are still algebraic candidates, not Lean-proven.
