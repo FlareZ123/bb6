@@ -229,7 +229,7 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
         have hhead' : sweptLeft (3*a)
             (s1Config 3 2 0 a 0 b h).tape h h = true := by
           simpa [T] using hhead
-        exact hcut.trans hhead'
+        simpa [Int.add_zero] using hcut.trans hhead'
     · have hgt : 3 < (h+1)-(h-((3*a : Nat) : Int)) := by omega
       have hout : m0EvenQ4Inside
           ((h+1)-(h-((3*a : Nat) : Int))) = false := by
@@ -346,6 +346,7 @@ private theorem m0EvenQ4LeftFacingTail (a i : Nat) (ha : 0 < a)
     simp [srcPrefix,d1pow_length,markerWord,d0]
   have hlenT : tgtPrefix.length = 3*a+10 := by
     simp [tgtPrefix,d1pow_length,markerWord,d0]
+    omega
   rw [hsrc,htgt,hs,ht,hlenS,hlenT]
 
 private theorem m0EvenQ4LeftFacingPrefixTrue (a i : Nat)
@@ -413,7 +414,7 @@ private theorem m0EvenQ4LeftFacingBoundaryBit (a k : Nat) (ha : 0 < a)
       k=6 ∨ k=7 ∨ k=8 ∨ k=9 := by omega
   rcases hkCases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9
   all_goals subst k
-  all_goals simp [m0EvenQ4BridgeEnd,markerWord,d0,d1,lh,sideBit]
+  all_goals simp [m0EvenQ4BridgeEnd,markerWord,d0,d1,lh,sideBit,m0Even_binDec_three_one]
 
 private theorem m0EvenQ4CutTape_eq_source_left
     (a b : Nat) (h : Int) (i : Nat) (hi : 3*a+10 ≤ i) :
