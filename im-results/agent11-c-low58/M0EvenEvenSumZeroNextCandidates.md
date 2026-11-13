@@ -1,6 +1,6 @@
 # m=0 even-even sum-zero: odd-valuation normalization and residual candidates
 
-**Status:** The first theorem below has a complete paper-level derivation from the source-certified parent and inverse lemmas in M0EvenEvenSumZero.lean, but its **general induction has not yet been Lean-formalized or CI-checked**. The explicit s=2048w+293 instance now has a Lean draft in M0EvenEvenSumZeroS293.lean, its exact-criterion integration is drafted in CThreeDiagonalM0SumZeroS293Full.lean, and the u=1 low-boundary lemmas are drafted in M0SmallBoundaryZero.lean. All three files were added to the existing manual agent11-c-diagonal-late.yml workflow, which has not yet been run on these commits. Nothing here is in results/. Candidates 5 and 6 remain algebraic drafts. Do not report any of these extensions as source-certified until the original-source workflow passes with no sorryAx.
+**Status:** The first theorem below has a complete paper-level derivation from the source-certified parent and inverse lemmas in M0EvenEvenSumZero.lean, but its **general induction has not yet been Lean-formalized or CI-checked**. The explicit s=2048w+293 instance now has a Lean draft in M0EvenEvenSumZeroS293.lean, its exact-criterion integration is drafted in CThreeDiagonalM0SumZeroS293Full.lean, and the u=1 low-boundary lemmas are drafted in M0SmallBoundaryZero.lean, and the x=2 mod 16 y=3 boundary is drafted in EvenOddThreeX2Mod16.lean. All four files were added to the existing manual agent11-c-diagonal-late.yml workflow, which has not yet been run on these commits. Nothing here is in results/. Candidates 5 and 6 remain algebraic drafts. Do not report any of these extensions as source-certified until the original-source workflow passes with no sorryAx.
 
 ## General odd-valuation branch
 
@@ -39,7 +39,7 @@ It remains to check its modulo-eight gate. The coordinate sum at depth \(n\) is
 \[
 310+512s-2^q u-4n.
 \]
-If \(u\ge7\), then for every \(n<r\) the right coordinate is even and at least \(12\). The modulo-eight check is: if \(q\ge3\), the sum is \(6-4n\pmod8\), hence \(6\) or \(2\); if \(q=2\), it is \(2-4n\pmod8\), hence \(2\) or \(6\); if \(q=1\), then \(n=r-1\) is even because \(r\) is odd, and \(2u\equiv2\pmod8\), so the sum is \(4\pmod8\). Thus all \(r\) six-even-right predecessor steps are licensed. The terminal state is
+For \(u\ge7\), then for every \(n<r\) the right coordinate is even and at least \(12\). The modulo-eight check is: if \(q\ge3\), the sum is \(6-4n\pmod8\), hence \(6\) or \(2\); if \(q=2\), it is \(2-4n\pmod8\), hence \(2\) or \(6\); if \(q=1\), then \(n=r-1\) is even because \(r\) is odd, and \(2u\equiv2\pmod8\), so the sum is \(4\pmod8\). Thus all \(r\) six-even-right predecessor steps are licensed. The terminal state is
 \[
 T^r(B_s)=(312+512s-2u-4r,\;u-2),
 \]
@@ -55,7 +55,7 @@ If \(u=5\) and \(r\equiv3\pmod4\), the same \(r\) six-even-right steps are licen
 \[
 (x,3),\qquad x=302+512s-4r.
 \]
-Since \(s\equiv5\pmod8\) and \(r\equiv3\pmod4\), \(x\equiv2\pmod{16}\). The exact source lemma **blank_no_y3_xmod16_two** in EvenOddThreeX2Mod16.lean shows that every source of such a y=3 target is the unique parent \((x/2,(x+2)/4)\), which has odd right counter at least \(5\) and coordinate sum \(2\pmod4\); **blank_no_odd_sum_two** excludes that parent. This file is included in the manual workflow but has not yet been CI-checked.
+Since \(s\equiv5\pmod8\) and \(r\equiv3\pmod4\), \(x\equiv2\pmod{16}\). The q=1 gate uses \(2u=10\equiv2\pmod8\), and the q=2 and q>=3 gates are the same as above. The exact source lemma **blank_no_y3_xmod16_two** in EvenOddThreeX2Mod16.lean shows that every source of such a y=3 target is the unique parent \((x/2,(x+2)/4)\), which has odd right counter at least \(5\) and coordinate sum \(2\pmod4\); **blank_no_odd_sum_two** excludes that parent. This file is included in the manual workflow but has not yet been CI-checked.
 
 In all three cases \(B_s\) is unreachable. \(\square\`
 
@@ -108,7 +108,7 @@ If \(d=v_2(148+211q)\), then \(r=d+3\). For each even \(d\), the condition that 
 \[
 \sum_{d\text{ even},\,d\ge0}2^{-(d+2)}=\frac13
 \]
-within \(s\equiv5\pmod8\), hence density \(1/24\) among the odd-t high-stop parameters \(t=2s+1\). The residual quotient is \(u=5\), an infinite but zero-density sequence rather than a finite set. It forces \(5\cdot2^r=129+211s\), hence \(2^r\equiv68\pmod{211}\). Since \(2\) has order \(210\pmod{211}\) and \(2^{201}\equiv68\pmod{211}\), the odd exponents are exactly \(r\equiv201\pmod{210}\), with \(s=(5\cdot2^r-129)/211\) and \(s\equiv5\pmod8\). The new x=2 mod 16 y=3 theorem closes the \(r\equiv3\pmod4\) half of this sequence (equivalently \(r\equiv411\pmod{420}\)). The remaining \(r\equiv1\pmod4\) half (equivalently \(r\equiv201\pmod{420}\)) has terminal \(x\equiv10\pmod{16}, y=3\); its multiple even-depth y=3 parent fan remains open.
+within \(s\equiv5\pmod8\), hence density \(1/24\) among the odd-t high-stop parameters \(t=2s+1\). The residual quotient is \(u=5\), an infinite but zero-density sequence rather than a finite set. It forces \(5\cdot2^r=129+211s\), hence \(2^r\equiv68\pmod{211}\). Since \(2\) has order \(210\pmod{211}\) (\(2^{105}\equiv210\), \(2^{70}\equiv196\), \(2^{42}\equiv107\pmod{211}\)) and \(2^{201}\equiv68\pmod{211}\), the odd exponents are exactly \(r\equiv201\pmod{210}\), with \(s=(5\cdot2^r-129)/211\) and \(s\equiv5\pmod8\). The new x=2 mod 16 y=3 theorem closes the \(r\equiv3\pmod4\) half of this sequence (equivalently \(r\equiv411\pmod{420}\)). The remaining \(r\equiv1\pmod4\) half (equivalently \(r\equiv201\pmod{420}\)) has terminal \(x\equiv10\pmod{16}, y=3\); its multiple even-depth y=3 parent fan remains open.
 
 The remaining \(u=5\) sequence still has zero density (at most one q for each valuation d), so the density \(1/24\) is unchanged. This density statement describes only this m=0 parameter sieve, not a fraction of machines or halting runs.
 
