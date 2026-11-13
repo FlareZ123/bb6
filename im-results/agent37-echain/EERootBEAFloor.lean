@@ -252,6 +252,7 @@ private theorem q4_marker_prefix (m : Nat) :
     ∃ (T4 h t : Nat),
       1 ≤ h ∧
       1+4*8^1*h=27*t+20 ∧
+      t=2097152*m+1580151 ∧
       BB6.BoundaryPadding.ObsEq
         (run T4 (BB6.Agent2E7SecondSafe.sourceStart (2187*m+1647) 4))
         (BB6.Agent31PacketSource.packet (1+4*3^1*h) 0 (3*1+(3+4))
@@ -424,22 +425,24 @@ private theorem q4_marker_prefix (m : Nat) :
       (BB6.Agent31PacketSource.packet (3*k3+4) 2 2 fixedTail)
       (BB6.Agent31PacketSource.packet (1+4*3^1*h) 0 (3*1+(3+4))
         BB6.Agent35K4Shapes.marker) h3 hreset
-  exact ⟨T4,h,t,hpos,hBEA,h4⟩
+  exact ⟨T4,h,t,hpos,hBEA,rfl,h4⟩
 
-/-- For every m, the q=4 E/E source cylinder returns to regular L with
-    unary coordinate at least 411. This is a source-level endpoint bound,
-    not a claim that the authentic blank-root orbit reaches the cylinder. -/
-theorem q4_exceptional_EE_BEA_section_ge (m : Nat) :
+/-- The q=4 E/E source cylinder returns to a regular section whose
+    unary coordinate has an explicit affine lower bound in m. -/
+theorem q4_exceptional_EE_BEA_section_affine_floor (m : Nat) :
     ∃ (T a q b : Nat),
       BB6.BoundaryPadding.ObsEq
         (run T (BB6.Agent2E7SecondSafe.sourceStart (2187*m+1647) 4))
         (BB6.Agent2BoundaryBZero.regularSection a q b) ∧
-      411 ≤ a := by
-  obtain ⟨T4,h,t,hpos,hBEA,h4⟩ := q4_marker_prefix m
-  have hfloor : 411 ≤ 8*(64*t+50)+11 := by omega
+      1073741824*m+809037723 ≤ a := by
+  obtain ⟨T4,h,t,hpos,hBEA,ht,h4⟩ := q4_marker_prefix m
+  have hfloor :
+      1073741824*m+809037723 ≤ 8*(64*t+50)+11 := by
+    rw [ht]
+    omega
   obtain ⟨Ttail,a,q',b,htail,ha⟩ :=
     chain_B_E_A_reentry_floor
-      411 1 h t 0 4 hpos (by decide) hBEA hfloor
+      (1073741824*m+809037723) 1 h t 0 4 hpos (by decide) hBEA hfloor
   exact ⟨T4+Ttail,a,q',b,
     ⟨BB6.BoundaryPadding.source_chain T4 Ttail
       (BB6.Agent2E7SecondSafe.sourceStart (2187*m+1647) 4)
@@ -448,9 +451,21 @@ theorem q4_exceptional_EE_BEA_section_ge (m : Nat) :
       (BB6.Agent2BoundaryBZero.regularSection a q' b)
       h4 htail, ha⟩⟩
 
+/-- Simpler uniform corollary of the affine q=4 endpoint floor. -/
+theorem q4_exceptional_EE_BEA_section_ge (m : Nat) :
+    ∃ (T a q b : Nat),
+      BB6.BoundaryPadding.ObsEq
+        (run T (BB6.Agent2E7SecondSafe.sourceStart (2187*m+1647) 4))
+        (BB6.Agent2BoundaryBZero.regularSection a q b) ∧
+      411 ≤ a := by
+  obtain ⟨T,a,q,b,h,ha⟩ :=
+    q4_exceptional_EE_BEA_section_affine_floor m
+  exact ⟨T,a,q,b,h,by omega⟩
+
 #print axioms all_A_marker_returns_floor
 #print axioms regularEndpointFloor_reentry
 #print axioms chain_B_E_A_reentry_floor
+#print axioms q4_exceptional_EE_BEA_section_affine_floor
 #print axioms q4_exceptional_EE_BEA_section_ge
 
 end BB6.Agent37EERootBEAFloor
