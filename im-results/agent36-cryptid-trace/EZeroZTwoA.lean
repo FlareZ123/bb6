@@ -53,7 +53,6 @@ private theorem a_shape (t s : Nat) :
   simp only [postZ,init,hn,List.cons_append]
   rw [aWords_shape]
   rw [show 2*(3*s)=6*s by omega]
-  simp [List.append_assoc]
 
 private theorem a_shape_plus_one (t s : Nat) :
     postZ (3*t) (3*s+1) =
@@ -77,7 +76,6 @@ private theorem a_shape_plus_one (t s : Nat) :
     rfl
   rw [hs]
   rw [hw]
-  simp [List.append_assoc]
 
 private theorem a_shape_plus_two (t s : Nat) :
     postZ (3*t) (3*s+2) =
