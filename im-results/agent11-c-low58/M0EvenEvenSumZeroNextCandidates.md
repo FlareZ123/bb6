@@ -260,3 +260,35 @@ The two parents are `P₀ = (16t+5, 8t+3)` and `P₂ = (4t−1, 14t+3)`.
 For even `t`, `P_2` has odd right coordinate and sum `18t+2≡2 (mod 4)`, so the source-certified odd-sum-two obstruction excludes it. Any blank reachability of `(32t+10,3)` must therefore pass through `P_0`; its sum is `24t+8≡8 (mod 16)`, and the val-3 odd/odd inverse forces `(12t+2,10t+1)`.
 
 This is a source-exact reduction, not a complete exclusion of the y=3 target: the remaining even/odd state still needs analysis. It applies to the residual `u=5, r≡1 (mod 4)` sequence whenever `M` is even, since `m=32(s-1)-105M` is then even and `x=16m+10=32t+10`. The older `EvenOddThreeX128W.lean` slices are contained in this broader parent-fan classification, but their stronger terminal exclusions are not replaced by this reduction. The new file is in the manual `agent11-c-diagonal-late.yml` source audit and remains unverified until a successful run reports no `sorryAx`.
+
+
+## The u=5 residual has a single 2-adic parent-depth boundary
+
+For the remaining `u=5` valuation branch, write
+`r=201+420M`, `5·2^r=129+211s`, and
+`m=32(s−1)−105M`, so the terminal y=3 state is `(16m+10,3)`.
+The source fan's exceptional `a=1` branch would require `m+1=2^n`.
+But exact algebra gives
+
+`211(m+1)=160·2^r−10669−22155M`.
+
+Since `r≡0 (mod 3)`, `2^r≡1 (mod 7)`; also
+`211≡1`, `160≡6`, `10669≡1`, and `22155≡0` modulo 7.
+Therefore `m+1≡5 (mod 7)`. Powers of 2 modulo 7 are only 1, 2, and 4, so the `a=1` parent is impossible for every residual parameter M. The y=3 source fan therefore consists only of odd-a bounce parents with even bounce depth.
+
+There is a sharper 2-adic description of how many such depths can occur. Let
+`α = −10669/22155 ∈ ℤ₂`. Since `22155=3·5·7·211` and
+`gcd(10669,22155)=1`, the binary expansion of α is purely periodic with period
+`lcm(ord₃(2),ord₅(2),ord₇(2),ord₂₁₁(2)) = lcm(2,4,3,210)=420`.
+The order `ord₂₁₁(2)=210` follows from
+`2^105≡210`, `2^70≡196`, `2^42≡107`, and `2^30≡171` modulo 211.
+The period has a nonzero bit (indeed α is odd).
+
+The exact identity can be rewritten in `ℚ₂` as
+`m+1 = (160·2^r − 22155(M−α))/211`.
+Thus, whenever `v₂(M−α)<r+5`, the unequal-valuation rule gives
+`v₂(m+1)=v₂(M−α)`. This inequality holds for every natural M: for M=0, α is odd and the valuation is 0; for M≥1, if `L=⌈log₂(M+1)⌉≤M`, the finite binary expansion of M differs from the 420-periodic expansion of α at some bit no later than `L+419≤M+419<206+420M=r+5`.
+
+Consequently the maximum bounce depth in the y=3 source fan is controlled by the 2-adic distance from M to one fixed rational 2-adic integer. For each fixed K and all sufficiently large M, the condition `v₂(m+1)≥K` is exactly one residue class
+`M≡α (mod 2^K)`; hence this high-depth subfamily has natural density `2^{-K}`.
+This is a structural description of the residual parent fan, not yet a blank-root exclusion or a Lean-formalized theorem. It should make the remaining M-odd and high-v₂ branches amenable to a finite-depth, residue-directed analysis rather than an unstructured search.
