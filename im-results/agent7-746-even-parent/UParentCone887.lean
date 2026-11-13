@@ -72,7 +72,7 @@ theorem U_odd_parent_not_root
     · subst j; simp [roots]
     · subst j; simp [roots]
     · subst j; simp [roots]
-  have hparent : ResetParent q z := Or.inr ⟨k,t,d,hdodd,hband.1,hband.2,hout,hscale⟩
+  have hparent : ResetParent q z := Or.inr ⟨k,t,d,hdodd,hband,hout,hscale⟩
   have hmem : q∈parentsFast z := (parentsFast_iff q z).2 hparent
   exact cone_excludes_root q (first_parent_mem_cone z q hroot hmem)
 
