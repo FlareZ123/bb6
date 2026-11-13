@@ -56,7 +56,9 @@ theorem evenSweepTape_left (n : Nat) (t : Int → Bool) (h x : Int)
       have htail := ih (setBit (setBit t h true) (h+1) false)
         (h+2) (by omega)
       rw [htail]
-      simp (disch := omega) [setBit]
+      have h1 : x ≠ h := by omega
+      have h2 : x ≠ h+1 := by omega
+      simp [setBit,h1,h2]
 
 theorem evenSweepB0Tape_head (n : Nat) (t : Int → Bool) (h : Int)
     (hz : t (h+2*(n:Int)+1) = false) :
@@ -138,7 +140,7 @@ theorem zeroLeftEvenOutTape_head (n : Nat) (t : Int → Bool) (h : Int)
       (h+2*(n:Int)+2) (by omega)
     have hne : h+2*(n:Int)+2 ≠ h := by omega
     simp [setBit,hp,hne,hz]
-  simpa [zeroLeftEvenOutTape] using
+  simpa [zeroLeftEvenOutTape,hidx] using
     evenSweepB0Tape_head n (setBit (zeroLeftPrefixTape t h) h false)
       (h+1) hf
 
