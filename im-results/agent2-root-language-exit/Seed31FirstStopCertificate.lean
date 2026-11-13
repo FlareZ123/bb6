@@ -9,6 +9,7 @@ set_option maxRecDepth 55000
 namespace BB6.Agent2ThirtyFirstCertificate
 
 open DRegular
+open CryptidBoundary
 open BB6.Agent2ThirtiethRoot
 open BB6.Agent2ThirtyFirstProbe
 
@@ -38,7 +39,7 @@ theorem firstStopAux_sound :
           · simp [firstStopAux, hnext]
           · simp [DRegular.run, firstStopAux, hnext]
           · intro _
-            exact hnext
+            simpa [firstStopAux, hnext] using hnext
       | some u =>
           obtain ⟨k,hcount,hbound,hrun,hstop⟩ := ih (n+1) u
           have haux : firstStopAux (fuel+1) n s =
