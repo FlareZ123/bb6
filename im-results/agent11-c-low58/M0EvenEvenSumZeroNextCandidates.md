@@ -49,7 +49,7 @@ If \(u=1\), apply the same six-even-right gate only while \(q=r-n\ge3\). These s
 \[
 T^{r-2}(B_s)=(312+512s-4r,\;2).
 \]
-The exact low-boundary source fibre says every original section predecessor of a target \((x,2)\) is \((x+2,0)\), while no original section transition outputs a right coordinate \(0\). Hence this depth-\((r-2)\) state is also unreachable. This uses the paper-level low-boundary derivation in im-results/agent34-c-valuation-fanin/SMALL-BOUNDARY.md; its y=0/y=2 fibre lemmas should be added to the Lean source audit before this extension is promoted.
+The exact low-boundary source fibre says every original section predecessor of a target \((x,2)\) is \((x+2,0)\), while no original section transition outputs a right coordinate \(0\). Hence this depth-\((r-2)\) state is also unreachable. The y=0/y=2 fibre lemmas are now formalized in M0SmallBoundaryZero.lean and added to the existing manual agent11-c-diagonal-late.yml source audit. That workflow has not yet been run on this commit, so this boundary strengthening is not yet kernel-verified.
 
 In either case \(B_s\) is unreachable. \(\square\)
 
