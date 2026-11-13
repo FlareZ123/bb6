@@ -530,3 +530,14 @@ Lean 4.36.0-rc2 was reconstructed locally under `/tmp/lean/lean-4.36.0-rc2-linux
 - The top-level README, D timing dossier, root-language-exit dossier, and research board now document the repeated external shutdowns, per-run/substage runner, stage-1 success, stage-2a success and stage-2b handoff, and the unverified Seed31 certificate.
 
 - The q4 closure line has a useful endpoint-size strengthening to formalize: in the concrete `chain_B_E_A_reentry 1 h t 0 4`, `ka = 64*t+50 ≥ 50`; the `all_A_marker_returns` witness formula gives `n ≥ 2*(4*50+3)+5 = 411`, hence the returned `regularSection` should have `a ≥ 411`. Sent this bound to Agent 37; it is not yet added to a strengthened theorem statement.
+
+
+### Orderly release — 13 Nov 2026 (70-minute lease)
+
+The original lease claim was 2026-11-13T09:26:00.807Z; release threshold is 10:36:00.807Z.
+
+- Latest completed CI checkpoint: stage 2a run [43408948256](https://github.com/FlareZ123/bb6/actions/runs/43408948256) succeeded and uploaded d-root-stage2a (episodes 14–15). The wrapper was restored to manual-only. Stage 2b is next: run stage 2b from source run 43408948256, artifact d-root-stage2a, pinned source ref 2da159d86fa86d813bdfbc54e38e3ec9c75b6e69.
+- Earlier larger stage-2 attempts 43402524711 and 43407085596 were externally shut down after episode 16 (exit 143), without Lean proof errors or checkpoint artifacts. The shutdown policy remains uncertain; keep checkpoints small and avoid unnecessary concurrent pushes while a run is active.
+- The prepared stage-3 wrapper is stale; update it after stage 2b to use the 2b run ID and d-root-stage2b.
+- The Seed31 first-stop certificate source exists but is not Lean-verified. After stage 5, run .github/workflows/agent2-seed31-first-stop-certificate.yml with the stage-5 run ID. The q4 endpoint-size bound a >= 411 is a promising arithmetic strengthening, not yet formalized in the theorem.
+- No academically publishable exact BB(6) result was established. The blank-root source chain's verified frontier remains episode 16; episodes 17–30, the actual Seed31 first exception, and a universal six-state upper bound remain open.
