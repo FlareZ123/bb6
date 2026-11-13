@@ -422,6 +422,13 @@ jobs:
             echo '::error::sorryAx found in S1 reset-base outside-tape theorem'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-resetbase-embedding/S1ResetBaseRun.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/s1-reset-base-run-axioms.log
+          lean -o S1ResetBaseRun.olean S1ResetBaseRun.lean 2>&1 | tee /tmp/a42-terminal/s1-reset-base-run-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/s1-reset-base-run-axioms.log; then
+            echo '::error::sorryAx found in S1 reset-base run theorem'
+            exit 1
+          fi
           : > /tmp/a42-terminal/counted-reset-odd-base-axioms.log
           lean -o CountedResetOddBase.olean CountedResetOddBase.lean 2>&1 | tee /tmp/a42-terminal/counted-reset-odd-base-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/counted-reset-odd-base-axioms.log; then
