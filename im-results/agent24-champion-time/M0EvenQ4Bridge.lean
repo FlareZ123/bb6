@@ -37,7 +37,7 @@ theorem m0EvenQ4Bridge_heads :
       | some f => m0EvenQ4Inside f.head) = true := by
   decide
 
-private theorem binDec_three_two :
+theorem m0Even_binDec_three_two :
     binDec 3 2 = d1 ++ d0 ++ d1 := by
   have h1 : binDec 3 2 = d1 ++ binDec 2 1 := by
     simpa using binDec_even 2 1 (by decide)
@@ -47,7 +47,7 @@ private theorem binDec_three_two :
     simpa using binDec_even 0 0 (by decide)
   simp [h1,h2,h3,binDec_zero,d1pow]
 
-private theorem binDec_three_one :
+theorem m0Even_binDec_three_one :
     binDec 3 1 = d0 ++ d1 ++ d1 := by
   have h1 : binDec 3 1 = d0 ++ binDec 2 0 := by
     simpa using binDec_odd 2 0 (by decide)
@@ -64,7 +64,7 @@ private theorem m0EvenSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
   have hleft :
       s1LeftFacing 3 2 0 a 0 =
         d1pow a ++ markerWord 0 ++ d0 ++ d1 ++ d0 ++ d1 ++ lh := by
-    simp [s1LeftFacing,binDec_zero,binDec_three_two,List.append_assoc]
+    simp [s1LeftFacing,binDec_zero,m0Even_binDec_three_two,List.append_assoc]
   have hcell := s1Config_left_cell 3 2 0 a 0 b h (3*a+k)
   have hside := sideBit_d1pow_append a (3*a+k)
     (markerWord 0 ++ d0 ++ d1 ++ d0 ++ d1 ++ lh) (by omega)
