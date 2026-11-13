@@ -71,8 +71,8 @@ theorem q4First10_at (T : Int → Bool) (h : Int)
   · simpa [q4First10Start] using h56.1
   · simpa [q4First10Start] using h56.2
   · simpa [q4First10Start] using h79 0 (by omega)
-  · simpa [Int.add_assoc] using h79 1 (by omega)
-  · simpa [Int.add_assoc] using h79 2 (by omega)
+  · simpa [q4First10Start,Int.add_assoc] using h79 1 (by omega)
+  · simpa [q4First10Start,Int.add_assoc] using h79 2 (by omega)
 
 /-- After the first ten moves, the five-cell q4 output is fixed. -/
 theorem q4First10_cells (T : Int → Bool) (h : Int) :
@@ -217,13 +217,13 @@ theorem d0Sweep_block (n : Nat) (T : Int → Bool) (h : Int)
       · subst i
         have h0 : d0Sweep n (afterD1Block T h) (h+3) h = false := by
           rw [d0Sweep_before n (afterD1Block T h) (h+3) h (by omega)]
-          simp [afterD1Block]
+          simp [afterD1Block] <;> omega
         have h1 : d0Sweep n (afterD1Block T h) (h+3) (h+1) = false := by
           rw [d0Sweep_before n (afterD1Block T h) (h+3) (h+1) (by omega)]
-          simp [afterD1Block]
+          simp [afterD1Block] <;> omega
         have h2 : d0Sweep n (afterD1Block T h) (h+3) (h+2) = true := by
           rw [d0Sweep_before n (afterD1Block T h) (h+3) (h+2) (by omega)]
-          simp [afterD1Block]
+          simp [afterD1Block] <;> omega
         constructor
         · simpa [d0Sweep] using h0
         constructor
@@ -418,7 +418,7 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
         ⟨1,h+10,T1⟩ := by
       apply config_ext
       · simp [frameAt_state,q4First10End]
-      · simp [frameAt_head,q4First10End]
+      · simp [frameAt_head,q4First10End] <;> omega
       · rfl
     rw [hEq]
     simpa [T2,g] using hscan'
@@ -435,7 +435,7 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
           simpa [T1] using h6
         · have hb1 : b=1 := by omega
           subst b
-          have heq1 : h+6+3 = h+9 := by omega
+          have heq1 : h+6+3*(1:Int) = h+9 := by omega
           rw [heq1]
           simpa [T1] using h9
       · have hb2 : 2≤b := by omega
