@@ -183,8 +183,8 @@ i&R_i\\\hline
 3&11481056/1594323\approx7.2012108\\
 4&326640896/43046721\approx7.5880552\\
 5&2471264192/387420489\approx6.3787648\\
-6&7372657888/1162261467\approx6.3433700\\
-7&21788896160/3486784401\approx6.2489940
+6&7372657888/1162261467\approx6.3433729\\
+7&21788896160/3486784401\approx6.2489944
 \end{array}
 \]
 and all lie strictly inside \((6.2,7.9)\).
@@ -205,7 +205,7 @@ G_6\bmod3=(0,2,1),
 \]
 respectively at \(r=74803,\ 251950,\ 429097\). Thus the first lift is the unique one making \(3\mid G_6\), and it gives the seventh edge with \((t_7,\sigma_7)=(0,14)\). The seven-edge cylinder has density \(1/531441\) in \(r\).
 
-The five band tests use the linear/constant coefficients \((B_i,C_i)\) of \(Q=X_0,X_1,\ldots,X_6\), whose bit lengths are
+The seven band tests use the linear/constant coefficients \((B_i,C_i)\) of \(Q=X_0,X_1,\ldots,X_6\), whose bit lengths are
 \[
 (3408,3408),\ (3417,3417),\ (3420,3420),\ (3422,3422),\
 (3426,3426),\ (3429,3429),\ (3431,3431).
