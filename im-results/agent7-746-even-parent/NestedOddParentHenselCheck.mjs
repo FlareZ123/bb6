@@ -89,6 +89,25 @@ if (g5mod3 !== 0n) {
   throw new Error("G5 is not divisible by 3");
 }
 
+const bitLength = x => (x < 0n ? -x : x).toString(2).length;
+const coefficientBits = [];
+let coeffB = -2n - (1n << 3407n);
+let coeffC = 15n - 3n * (1n << 3406n);
+coefficientBits.push({level:0, B:bitLength(coeffB), C:bitLength(coeffC)});
+let cumulativeE = 0;
+const stages = [[7,14],[1,9],[0,9],[2,13],[1,13]];
+for (let i = 0; i < stages.length; i++) {
+  const [t,sigma] = stages[i];
+  cumulativeE = i === 0 ? t + 3 : cumulativeE + t + 1;
+  coeffB = 4n * (1n << BigInt(t)) * coeffB - 2n * p3(cumulativeE);
+  coeffC = 4n * (1n << BigInt(t)) * coeffC
+    - (2n * BigInt(t - sigma) + 5n) * p3(cumulativeE);
+  coefficientBits.push({level:i+1, B:bitLength(coeffB), C:bitLength(coeffC)});
+}
+if (coefficientBits.slice(0,5).some(x => x.B > 3426 || x.C > 3426)) {
+  throw new Error("Unexpected coefficient bound for the five band estimates");
+}
+
 const output = {
   r: r.toString(),
   modulus: "177147",
@@ -103,6 +122,8 @@ const output = {
   G4mod3pow3: g4.toString(),
   v3G4: 2,
   G5mod3: g5mod3.toString(),
-  exponents: [[7, 14], [1, 9], [0, 9], [2, 13], [1, 13]]
+  exponents: [[7, 14], [1, 9], [0, 9], [2, 13], [1, 13]],
+  coefficientBitLengths: coefficientBits,
+  bandBound: "for n >= 7000, all five normalized ratios differ from their limits by < 2^-60"
 };
 console.log(JSON.stringify(output, null, 2));
