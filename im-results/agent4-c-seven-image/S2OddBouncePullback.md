@@ -65,7 +65,7 @@ For Q above,
 
 The first two congruences follow directly from v=28+11t (mod 32). Thus Q lies in the second Agent34 three-edge cone, and the existing cone_blank_unreachable theorem gives all-time blank-root nonreachability of Q.
 
-## P is blank-root unreachable by the full forced normalizer
+## P is blank-root unreachable by the six-right normalizer
 
 P is odd/odd. Its sum is
 
@@ -83,22 +83,18 @@ Under the same congruence,
 
 In particular B+2 is divisible by 8. Put **W=(B+2)/8**. The stronger modulus 32 gives W=1 (mod 4), and W≥141.
 
-The full forced normalizer uses the six-residue even-right affine parent F(x,y)=(x+y-2,(y-2)/2). Starting from (A,B), the first three states are exactly
+Use the dedicated source-exact six-right normalizer from Agent46, with parent F(x,y)=(x+y-2,(y-2)/2). Starting from (A,B), its first three states are exactly
 
 - F0 = (A,B);
 - F1 = (A+8W-4, 4W-2);
 - F2 = (A+12W-8, 2W-2);
 - F3 = (A+14W-12, W-2).
 
-At F0, F1, F2, the right coordinate is even and at least 6, and the coordinate sum is respectively 6, 6, and 4 modulo 8. Thus sixEvenRightGate applies at each of these three states. The competing oddLow, evenSeven, and evenAffine gates are false there.
-
-At F3, the first coordinate is even, the second is odd, and
+At F0, F1, F2, the right coordinate is even and at least 6, and the coordinate sum is respectively 6, 6, and 4 modulo 8. Thus sixEvenRightGate applies at each of these three states. At F3 the right coordinate W-2 is odd, so the six-right normalizer stops. Moreover
 
 **F3.x+F3.y = 1 (mod 4).**
 
-Consequently none of the four normalizer gates applies at F3: oddLow is false by first-coordinate parity; evenSeven is false because (F3.x+F3.y+1) is 2 modulo 4, not 0; both even-right gates are false by second-coordinate parity. Hence fullForcedNormalize(A,B)=F3.
-
-The exact theorem blank_reach_iff_fullForcedNormalize reduces blank reachability of (A,B) to that of F3. The existing blank_no_odd_sum_one obstruction excludes F3, since F3.y=W-2 is odd and at least 5 and its coordinate sum is 1 modulo 4. Therefore (A,B) is blank-root unreachable. By oddodd_lowval_blank_reach_iff, P is blank-root unreachable.
+The exact theorem blank_reach_iff_sixEvenRightNormalize reduces blank reachability of (A,B) to that of F3. Equivalently, sixEvenRightExcluded(A,B)=true, and the existing sixEvenRightExcluded_sound theorem excludes blank reachability. Therefore (A,B) is blank-root unreachable. By oddodd_lowval_blank_reach_iff, P is blank-root unreachable.
 
 Since both exact parents P and Q of R are blank-root unreachable, R is blank-root unreachable.
 
