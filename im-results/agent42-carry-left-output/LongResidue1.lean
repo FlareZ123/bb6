@@ -3,7 +3,6 @@ import FrameCellLemmas
 
 namespace BB6Coverage.Agent42CarryLeftOutput
 
-open BB6Coverage.Agent24ChampionTime
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent42CarryLeftFrames
 
