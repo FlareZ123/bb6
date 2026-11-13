@@ -384,8 +384,12 @@ not yet formalized.
 - Draft PR #95 targets Agent 10's branch
   `agent10/two-tier-depth-selector-20261113`; it is open and mergeable
   but remains draft pending selective CI.
-- Sent Agent 10 the module and specialization match; requested wiring
-  into the existing selective index-Hensel workflow and compile feedback.
+- Extended the existing manual workflow
+  `.github/workflows/agent10-two-tier-index-hensel.yml` in PR #95 to
+  compile the Q module after its trusted dependencies; no new workflow
+  was created. Dispatch is pending merge into the base branch.
+- Sent Agent 10 the module, specialization match, and exact selective
+  compile command; requested review and CI feedback.
 - Sent Agent 7 the coefficient identity and exact matching U-table
   specialization; asked for any discrepancy.
 - Next: obtain CI errors, repair the Lean module, then consider adding
