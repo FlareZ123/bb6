@@ -36,7 +36,7 @@ open BB6ChampionArithmetic
 reset-prefix cost at (m,n)=(2,1). -/
 private theorem m2Odd_resetPrefixCost_eq (a b : Nat) :
     resetPrefixCost 2 1 a b = 71+12*a+3*b := by
-  have hv : v2 1 = 0 := by decide
+  have hv : v2 1 = 0 := v2_of_odd 1 (by decide)
   simp [resetPrefixCost,hv]
 
 /-- The generic odd-Rst2 q4 source run, followed by the exact all-ones
