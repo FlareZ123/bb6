@@ -7,7 +7,7 @@ set_option maxRecDepth 65536
 namespace BB429ParityShiftedEntry
 
 open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429PhysicalBridge
-open BB429JPhysical BB429Low43Physical BB429OddExcursion
+open BB429JPhysical BB429Low43Physical BB429OddExcursion BB429SourceE1Return
 
 /-- The parity-shifted C/0 zipper observed at the end of the 31,154-step
     original-table entry from J(93,0,173). -/

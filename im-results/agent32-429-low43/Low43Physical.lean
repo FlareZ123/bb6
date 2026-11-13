@@ -336,7 +336,10 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
     have hleftExact :=
       run_prefix_left_extremal target429 L s cStage d c1
         hleft hpre hs1 hdisp1
-    exact ⟨d,hpre,by rw [hleftExact]; omega⟩
+    have hbound : cStage.head-(L:Int)≤d.head := by
+      rw [← hhead1L]
+      omega
+    exact ⟨d,hpre,by simpa [cStage,L] using hbound⟩
   · by_cases hs2 : s≤2*L
     · let r : Nat := s-L
       have hr : r≤L := by dsimp [r]; omega
@@ -349,7 +352,10 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
       have hpre : run target429 s cStage=some d := by
         rw [htime,run_add',hleft]
         simpa using hpre2
-      exact ⟨d,hpre,by rw [hrightExact,hhead1L]; omega⟩
+      have hbound : cStage.head-(L:Int)≤d.head := by
+        rw [← hhead1L]
+        omega
+      exact ⟨d,hpre,by simpa [cStage,L] using hbound⟩
     · let r : Nat := s-2*L
       have hL : 8*v+15=2*L+3 := by dsimp [L]; omega
       have hr : r≤3 := by dsimp [r]; omega
@@ -365,7 +371,10 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
       have hpre : run target429 s cStage=some d := by
         rw [htime,run_add',hleftAR]
         simpa using hpre3
-      exact ⟨d,hpre,by rw [hrightExact,hhead2]; omega⟩
+      have hbound : cStage.head-(L:Int)≤d.head := by
+        rw [← hhead2]
+        omega
+      exact ⟨d,hpre,by simpa [cStage,L] using hbound⟩
 
 
 /-- Every prefix of the prepared 8v+16 stage stays at or to the right of
