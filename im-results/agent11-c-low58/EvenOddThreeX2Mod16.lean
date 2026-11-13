@@ -98,6 +98,7 @@ theorem evenodd_three_parent_of_xmod16_two
             rcases hp with ⟨_,n,hpow,hcost⟩ | ⟨h5,_⟩
             · have hbase : 2*(a-1)+8=2*a+6 := by omega
               rw [hbase] at hpow
+              rw [hbase] at hcost
               have hn := three_depth_zero_mod16_two x a k n hx haodd hpow hcost
               subst n
               have hax : x=2*a := by omega
