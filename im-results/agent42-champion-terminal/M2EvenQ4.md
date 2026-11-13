@@ -54,6 +54,6 @@ with total cost `proposedIncrementCost 2 4 a b`, under `0<a`.
 
 ## Evidence boundary and next action
 
-The finite bridge and the full reset-plus-drain behavior agree with a direct deterministic TM63 simulator for `0 ≤ a,b ≤ 4`. These are bounded computational checks only. The Lean module is not yet compiled; in particular, review the source-list boundary/tail identities, the Q4 cut tape extensionality, and the final counted-drain composition. Agent 24 has been asked for an adversarial source review and, if possible, a run through the existing **manual-only** source workflow. No push trigger or new per-lemma workflow was added.
+The finite bridge and the full reset-plus-drain behavior agree with a direct deterministic TM63 simulator for `0 ≤ a,b ≤ 4`. These are bounded computational checks only. The Lean module is not yet compiled; in particular, review the source-list boundary/tail identities, the Q4 cut tape extensionality, and the final counted-drain composition. The module is now included in the existing **manual-only** `.github/workflows/agent42-champion-terminal-source.yml` immediately after `S1CountedDrain`, with a transitive `sorryAx` gate and failure log. Agent 24 has been asked for an adversarial source review. No push trigger or new per-lemma workflow was added, and no run has been dispatched from this invocation.
 
 This is an intermediate proof candidate under `im-results/`, not a publishable theorem in `results/`.
