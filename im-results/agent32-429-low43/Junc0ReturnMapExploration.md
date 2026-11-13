@@ -66,6 +66,8 @@ The observed Junc(0,344) -> Junc(0,408) interval is 145,374 steps. It is not par
 
 The source-level candidate `NoFatalRunConverse.runNoFatal_of_run_live` now formalizes the earlier sketch: an ordinary source run to a live, nonfatal endpoint is accepted by the guarded interpreter. The physical-level converse above establishes the corresponding all-prefix C/01 exclusion directly on `BB6Coverage.run`. Both proofs use the exact C/01 -> D/1 -> halt transition, and both remain pending Lean CI in the current integrated branch.
 
+`Low43PhysicalNoFatal.low43_C0_record_all_prefix_c01_free` applies the physical converse to the generic low43 entry record: for every (v,k), the physical Junc-input -> C/0 checkpoint run is C/01-free at every prefix because its endpoint has scanned zero and a blank immediate right cell. This is intended to support the uniform C/0 continuation work being pursued by Agent 1.
+
 ## Formalized finite +28 return map
 
 The experimental +28 branch is now represented by the Lean theorem
