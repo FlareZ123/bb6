@@ -334,6 +334,7 @@ theorem rst1Prime_binDec_ones (n : Nat) :
   | zero =>
       simp [binDec,d0pow]
   | succ n ih =>
+      have hposN : 0 < 2^n := Nat.pow_pos (by decide)
       have hn : 2^n-1 < 2^n := by omega
       have harg : 2^(n+1)-1 = 2*(2^n-1)+1 := by
         rw [Nat.pow_succ]
@@ -352,12 +353,14 @@ theorem rst1Prime_binDec_reset (L a : Nat) :
       have hpow : 2^(L+2) = 2*2^(L+1) := by
         rw [show L+2 = (L+1)+1 by omega,Nat.pow_succ]
         omega
+      have hposL : 0 < 2^(L+1) := Nat.pow_pos (by decide)
       have harg : 2^(L+2)-2^0-1 = 2*(2^(L+1)-1) := by
         rw [hpow]
         norm_num
         omega
+      have hbound : 2^(L+1)-1 < 2^(L+1) := by omega
       rw [show L+0+2 = L+2 by omega,harg]
-      rw [binDec_even (L+1) (2^(L+1)-1) (by omega)]
+      rw [binDec_even (L+1) (2^(L+1)-1) hbound]
       simp [rst1Prime_binDec_ones]
   | succ a ih =>
       let R : Nat := 2^(L+a+2)-2^a-1
