@@ -120,12 +120,12 @@ The manual workflow `.github/workflows/agent32-429-lowodd-frontier.yml` compiles
 The result closes one prepared low-J (deficit (4k+3)) entrance and a concrete finite continuation. It does not prove that the genuine blank run remains in a closed J/Junc chart for all time. The next root-specific state is J(11,62), whose low-J deficit is (-40); the corresponding complete source return and its history-sensitive maximum must be established. More importantly, the preceding blank-root chain to J(21,11) must be composed and source-verified. No nonhalting conclusion for #429, and no BB(6) bound, follows from these finite branches.
 
 
-### Parity-shifted J(93,173) branch (simulation only)
+### Parity-shifted J(93,173) branch (simulation and draft proof candidate)
 
-The proposed `(86,3)` low43 match was off by one. The corrected parameter audit, alternate C/0 tape, and full 134,235-step observed path to J(0,408) are documented in [parity-shifted-junc93-173.md](parity-shifted-junc93-173.md). This is not yet a Lean theorem; the three partial returns and the shifted entry remain open.
+The proposed `(86,3)` low43 match was off by one. The corrected parameter audit, alternate C/0 tape, and full 134,235-step observed path to J(0,408) are documented in [parity-shifted-junc93-173.md](parity-shifted-junc93-173.md). Draft PR #91 adds source-level Lean proof candidates for the 425-step C/0 return, all three partial Junc returns, and the complete 103,081-step continuation from the shifted C/0 zipper to J(0,408). The manual raw-parent workflow has not yet been run, and the 31,154-step entry from J(93,0,173) to the shifted C/0 zipper remains open.
 
 The raw-table checkpoint sequence has a self-contained Node reproducer at [simulate_parity_shifted_junc93.js](simulate_parity_shifted_junc93.js); it asserts the tail difference, checkpoint states, and corrected 102,656/103,081/134,235 totals.
 
 The odd-u A/0 boundary grid test is [test_odd_u_a0_boundary.js](test_odd_u_a0_boundary.js); it covers 220 cases and the root (77,120) suffix.
 
-The odd-u A/0 boundary grid test is [test_odd_u_a0_boundary.js](test_odd_u_a0_boundary.js); it covers 220 cases and the root (77,120) suffix.
+The even-u w=1 MidA grid test is [test_even_u_midA_w1.js](test_even_u_midA_w1.js); it covers 200 cases and both root residuals.
