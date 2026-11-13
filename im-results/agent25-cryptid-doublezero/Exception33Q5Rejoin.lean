@@ -5,6 +5,9 @@ import CryptidThree
 import ABridgeCode
 import BoundaryPadding
 
+set_option maxHeartbeats 100000000
+set_option maxRecDepth 55000
+
 namespace BB6.Agent25Exception33Q5
 
 open CryptidBoundary
@@ -57,11 +60,18 @@ def aCodeOutput (u : Nat) : Cfg :=
     EAllDouble source input with k=9u+1 and q=4. -/
 theorem eall_source_return (u : Nat) :
     ObsEq (run (eAllTime u) (sourceStart u)) (eAllOutput u) := by
-  simpa [sourceStart, eAllTime, eAllOutput,
-    DRegularSource.sourceSection, CryptidBoundary.init,
-    CryptidBoundary.oppairs, CryptidBoundary.pairs,
-    List.append_assoc] using
-      (BB6.Agent32EAll.all_e_double_implicit_blank (9*u+1) 4)
+  have hstart :
+      sourceStart u = BB6.Agent32EAll.start (9*u+1) 4 [] := by
+    simp [sourceStart, BB6.Agent32EAll.start,
+      DRegularSource.sourceSection, CryptidBoundary.init,
+      CryptidBoundary.oppairs, CryptidBoundary.pairs,
+      List.append_assoc]
+  rw [hstart]
+  change ObsEq
+    (run (BB6.Agent32EAll.duration (9*u+1) 4)
+      (BB6.Agent32EAll.start (9*u+1) 4 []))
+    (BB6.Agent32EAll.output (9*u+1) 4 [])
+  exact BB6.Agent32EAll.all_e_double_implicit_blank (9*u+1) 4
 
 /-- EAllDouble's output is the exact full-E-three input at s=8t+3. -/
 theorem eall_to_etriple_input (u : Nat) :
@@ -77,16 +87,18 @@ theorem etriple_to_acode_input (u : Nat) :
   let xs : List Bool :=
     List.replicate (3*(aCodeK u)+1) true ++
       (false :: CryptidA.wordCode aCodeWord)
-  have hprefix : 8*(eThreeK u)+9 = 3*(aCodeK u)+3 := by omega
+  have hprefix : 8*(eThreeK u)+9 = 3*(aCodeK u)+3 := by
+    dsimp [eThreeK, aCodeK]
+    omega
   have htail :
       packetThree ++
         (List.replicate 7 true ++ (false :: List.replicate 6 true)) =
       false :: CryptidA.wordCode aCodeWord := by
-    simp [packetThree, aCodeWord, CryptidA.wordCode,
-      List.append_assoc]
+    decide
   have hout : eThreeOutput u = init xs := by
     simp [eThreeOutput, xs, CryptidBoundary.init,
-      hprefix, htail, eThreeK, aCodeK, List.append_assoc]
+      hprefix, htail, List.replicate_succ,
+      Nat.add_assoc, List.append_assoc]
   have hpad : ObsEq (init xs) (init (xs ++ [false])) := by
     simpa [CryptidBoundary.run] using
       (BB6.BoundaryPadding.source_init_pad 0 1 xs)
@@ -103,8 +115,9 @@ theorem acode_unary_endpoint (u : Nat) :
         512*u+129 := by
     simp [aCodeK, aCodeWord, CryptidA.wordInc]
     omega
+  unfold aCodeOutput
   rw [hlen]
-  simp [aCodeOutput, DRegularSource.sourceSection,
+  simp [DRegularSource.sourceSection,
     CryptidBoundary.init, CryptidBoundary.oppairs]
 
 /-- Full original-source exception-33 q=5 continuation for t=3u:
@@ -114,8 +127,11 @@ theorem exception33_q5_rejoin (u : Nat) :
       (run (eAllTime u + eThreeTime u + aCodeTime u) (sourceStart u))
       (DRegularSource.sourceSection ⟨512*u+129,0,0⟩) := by
   have h1 := eall_source_return u
+  have hEallInput : ObsEq (eAllOutput u) (eThreeInput u) := by
+    rw [eall_to_etriple_input u]
+    exact BB6.Padding.cfgEq_refl _
   have htransport2 := BB6.BoundaryPadding.source_congr
-    (eThreeTime u) (eall_to_etriple_input u)
+    (eThreeTime u) hEallInput
   have hraw2 :
       run (eThreeTime u) (eThreeInput u) = eThreeOutput u := by
     simpa [eThreeTime, eThreeInput, eThreeOutput, eThreeK] using
@@ -123,7 +139,6 @@ theorem exception33_q5_rejoin (u : Nat) :
         (List.replicate 7 true ++ (false :: List.replicate 6 true)))
   have h2 :
       ObsEq (run (eThreeTime u) (eAllOutput u)) (eThreeOutput u) := by
-    rw [eall_to_etriple_input] at htransport2
     rw [hraw2] at htransport2
     exact htransport2
   have htransport3 := BB6.BoundaryPadding.source_congr
