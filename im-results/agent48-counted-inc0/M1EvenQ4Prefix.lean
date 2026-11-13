@@ -510,7 +510,10 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
             (h+10+(3*b:Int)+(i:Int)) (by omega)
           have hsrc : T (h+10+(3*b:Int)+(i:Int)) =
               sideBit (s0RightFacing b) (9+3*b+i) := by
-            simpa [T] using s1Config_right_cell 3 6 1 a 0 b h (9+3*b+i)
+            have hcoord : h+1+((9+3*b+i:Int)) =
+                h+10+(3*b:Int)+(i:Int) := by omega
+            simpa [T,hcoord] using
+              s1Config_right_cell 3 6 1 a 0 b h (9+3*b+i)
           have hlen : (s0RightFacing b).length = 9+3*b := by
             simp [s0RightFacing,d1pow_length]
             omega
