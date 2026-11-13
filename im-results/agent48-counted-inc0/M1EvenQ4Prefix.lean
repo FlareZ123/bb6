@@ -547,12 +547,12 @@ private theorem m1EvenConfigExt {c d : Config}
   simp_all
 
 private theorem m1EvenQ4First4Frame_eq (T : Int → Bool) (h : Int)
-    (h0 : ∀ i, i < 5 → T (h+(i:Int)) = true) :
+    (h0 : ∀ i : Nat, i < 5 → T (h+(i:Int)) = true) :
     frameAt T h m1EvenQ4First4Inside m1EvenQ4First4End =
       ⟨4,h+4,T⟩ := by
   apply m1EvenConfigExt
   · simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4End]
-  · simp [frameAt,frame,shiftConfig,m1EvenQ4First4End]
+  · simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4End] <;> omega
   · funext x
     by_cases hin : m1EvenQ4First4Inside (x-h) = true
     · have hb : 0 ≤ x-h ∧ x-h ≤ 4 := by
@@ -582,17 +582,23 @@ private theorem m1EvenQ4First4Frame_eq (T : Int → Bool) (h : Int)
         · simp [h2x,m1EvenQ4First4End]
         · simp [h3x,m1EvenQ4First4End]
         · simp [h4x,m1EvenQ4First4End]
+      have hmem' : x-h=3 ∨ x-h=2 ∨ x-h=1 ∨ x-h=0 ∨ x-h=4 := by
+        simpa [m1EvenQ4First4End] using hmem
       have hshift :
           (shiftConfig h (embed m1EvenQ4First4End)).tape x = true := by
-        simp [shiftConfig,embed,m1EvenQ4First4End,hmem]
+        simp [shiftConfig,embed,m1EvenQ4First4End,hmem']
       simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4Inside,
-        m1EvenQ4First4End,hin,htrue,hshift]
-    · simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4Inside,
-        m1EvenQ4First4End,hin]
+        m1EvenQ4First4End,hin,htrue,hshift,hmem']
+    · have hnot : x-h < 0 ∨ 4 < x-h := by
+        simp [m1EvenQ4First4Inside] at hin
+        omega
+      have hcond : ¬ (h ≤ x ∧ x-h ≤ 4) := by omega
+      simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4Inside,
+        m1EvenQ4First4End,hin,hcond]
 
 /-- Four state-4-on-one moves are already consumed at the m=1,n=6 cut. -/
 theorem m1EvenQ4First4_at (T : Int → Bool) (h : Int)
-    (h0 : ∀ i, i < 5 → T (h+(i:Int)) = true) :
+    (h0 : ∀ i : Nat, i < 5 → T (h+(i:Int)) = true) :
     run tm2 4 ⟨4,h,T⟩ = some ⟨4,h+4,T⟩ := by
   have hmatch : ∀ x, m1EvenQ4First4Inside x = true →
       T (h+x) = decide (x ∈ m1EvenQ4First4Start.marked) := by
@@ -670,7 +676,7 @@ private theorem binDec_three_five :
     simpa using binDec_even 1 1 (by decide)
   have h3 : binDec 1 1 = d0 ++ binDec 0 0 := by
     simpa using binDec_odd 0 0 (by decide)
-  simp [h1,h2,h3,binDec_zero]
+  simp [h1,h2,h3,binDec_zero,d1pow]
 
 def m1EvenQ4LeftFacing (a : Nat) : List Bool :=
   [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec 3 5 ++ lh
@@ -723,7 +729,12 @@ private theorem m1EvenQ4LeftFacingTail (a i : Nat)
     (d0 ++ d1 ++ d0 ++ lh) i (by
       simp [d1pow_length,markerWord,d0]
       omega)
+  have hlenS : (d1pow a ++ markerWord 1 ++ d0).length = 3*a+6 := by
+    simp [d1pow_length,markerWord,d0]
+  have hlenT : ([true] ++ d1pow a ++ markerWord 0 ++ d0).length = 3*a+6 := by
+    simp [d1pow_length,markerWord,d0]
   rw [hsrc,htgt,hs,ht]
+  rw [hlenS,hlenT]
   apply sideBit_binDec36_eq_binDec35_after5
   simp [d1pow_length,markerWord,d0] at hi ⊢
   omega
@@ -744,6 +755,8 @@ private theorem m1EvenQ4LeftFacingPrefixTrue (a i : Nat)
     rw [sideBit_append_after_local [true]
       (d1pow a ++ (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh)) i
       (by simp; omega)]
+    change sideBit (d1pow a ++ (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh))
+      (i-1) = true
     have hrest := sideBit_append_left (d1pow a)
       (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh) (i-1) (by
         have hi' : i-1 < 3*a := by omega
@@ -768,7 +781,7 @@ private theorem m1EvenQ4LeftFacingBoundaryBit (a k : Nat)
       k = 6 ∨ k = 7 ∨ k = 8 ∨ k = 9 := by omega
   rcases hkCases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9
   all_goals subst k
-  all_goals simp [m1EvenQ4BridgeEnd,markerWord,d0,d1,lh,sideBit]
+  all_goals simp [m1EvenQ4BridgeEnd,markerWord,d0,d1,lh,sideBit,d1pow_length]
 
 private theorem m1EvenQ4CutTape_eq_source_left
     (a b : Nat) (h : Int) (i : Nat) (hi : 3*a+11 ≤ i) :
@@ -792,7 +805,7 @@ private theorem m1EvenQ4CutTape_eq_source_left
 single remaining interface needed to identify the composed Q4 suffix
 frame with the next S1 reset state. -/
 theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
-    ∀ i, m1EvenQ4CutTape a b h (h-(i:Int)) =
+    ∀ i : Nat, m1EvenQ4CutTape a b h (h-(i:Int)) =
       sideBit (m1EvenQ4LeftFacing a) i := by
   intro i
   by_cases hi0 : i = 0
