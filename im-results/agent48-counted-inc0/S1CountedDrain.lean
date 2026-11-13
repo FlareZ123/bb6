@@ -18,6 +18,19 @@ open BB6Coverage
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 
+ /-- The parity-complete source decrement in the exact Inc0 cost interface
+used by the generic counted-drain theorem. -/
+theorem s1Config_counted_decrement_inc0
+    (L n m a z c : Nat) (h : Int)
+    (hz : 0 < z) (hzlt : z < 2^a) :
+    run tm2 (inc0Cost z c)
+      (s1Config L n m a z c h) =
+      some (s1Config L n m a (z-1) (c+1) h) := by
+  obtain ⟨q,r,len,hfactor,ha,hq,hrun⟩ :=
+    s1Config_counted_decrement L n m a z c h hz hzlt
+  have hv := v2_of_odd_factorization z q r hfactor
+  simpa [inc0Cost,hv] using hrun
+
 /-- Any bounded S1 counter can be drained completely, transferring every
 unit to the right unary counter, with the exact recursively accumulated
 Inc0 cost. -/
@@ -32,10 +45,9 @@ theorem s1Config_counted_drain
       run tm2 (inc0Cost z c') (s0Config l a z c' h) =
         some (s0Config l a (z-1) (c'+1) h) := by
     intro z c' hz hzlt
-    obtain ⟨q,r,len,hfactor,ha,hq,hrun⟩ :=
-      s1Config_counted_decrement L n m a z c' h hz hzlt
-    have hv := v2_of_odd_factorization z q r hfactor
-    simpa [inc0Cost,l,s1Config,hv] using hrun
+    have hrun := s1Config_counted_decrement_inc0
+      L n m a z c' h hz hzlt
+    simpa [l,s1Config] using hrun
   have hrun := countedIncs0 l a (2^k-1) c h hbound hInc0
   simpa [l,s1Config] using hrun
 
