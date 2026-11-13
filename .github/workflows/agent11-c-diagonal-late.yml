@@ -411,3 +411,10 @@ jobs:
             echo "REJECTED: incomplete m=0 sum-zero exact criterion"
             exit 1
           fi
+
+          cp \${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeDiagonalM0SumZeroS293Full.lean .
+          lean -o CThreeDiagonalM0SumZeroS293Full.olean CThreeDiagonalM0SumZeroS293Full.lean 2>&1 | tee CThreeDiagonalM0SumZeroS293Full.log
+          if grep -q sorryAx CThreeDiagonalM0SumZeroS293Full.log; then
+            echo "REJECTED: incomplete s=293 exact criterion"
+            exit 1
+          fi
