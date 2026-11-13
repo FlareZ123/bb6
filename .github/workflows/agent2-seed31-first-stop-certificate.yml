@@ -67,6 +67,7 @@ jobs:
           tar -xzf source-artifact/lean-stage.tar.gz -C source
           mkdir -p source/im-results/agent2-root-language-exit
           cp proof/im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean source/im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean
+          cp proof/im-results/agent2-root-language-exit/BlankThirtyFirstRejoin.lean source/im-results/agent2-root-language-exit/BlankThirtyFirstRejoin.lean
       - name: Compile probe module and kernel-check first-stop/source-lift theorem
         working-directory: source
         shell: bash
@@ -78,6 +79,7 @@ jobs:
           R=im-results/agent2-root-language-exit
           lean -DmaxRecDepth=55000 -o "$T/Seed31Probe.olean" "$T/Seed31Probe.lean" | tee seed31-probe.txt
           lean -DmaxRecDepth=55000 -o "$R/Seed31FirstStopCertificate.olean" "$R/Seed31FirstStopCertificate.lean"
+          lean -DmaxRecDepth=55000 -o "$R/BlankThirtyFirstRejoin.olean" "$R/BlankThirtyFirstRejoin.lean"
           if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
