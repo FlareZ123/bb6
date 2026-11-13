@@ -500,9 +500,7 @@ theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
             m0OddQ4CutTape a b h x =
               decide ((2-(j:Int)) ∈ m0OddQ4Bridge27End.marked) := by
           have hcut'' := hcut
-          have hrel' : x-(h-3*(a:Int)) = 2-(j:Int) := by
-            simpa using hrel
-          rw [hrel'] at hcut''
+          rw [hrel] at hcut''
           exact hcut''
         exact hcut'.trans htarget.symm
       simpa [x] using hval
