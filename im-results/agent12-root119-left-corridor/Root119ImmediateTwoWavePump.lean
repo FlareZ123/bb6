@@ -166,6 +166,71 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
   exact ⟨bout,hrun,hreach,hB,hNoLeft,hhead,hleftTape,htail,
     hleftOut,hrunRight,hrightOut⟩
 
+/-- Under two extra left ones, one two-wave pump creates the exact `110101`
+    six-bit left boundary while preserving B/0, Reach, and NoLeft4. This
+    isolates the finite-replay boundary pattern as a conditional pump output. -/
+theorem imm_two_wave_pump_step_makes_110101 (n : Nat) (b : Conf)
+    (hb : BZero b) (hr : Reach b)
+    (hshield : NoLeft4 true true false b)
+    (hleft : leftAlternating 2 b)
+    (hfar : b.tape (b.h-10)=true ∧ b.tape (b.h-9)=true)
+    (hones : ∀ j : Nat, j < 2*n →
+      b.tape (b.h+1+(j:Int)) = true)
+    (hright : rightAlternating 1 n b) :
+    ∃ bout : Conf,
+      run (8*n+28) b = some bout ∧
+      Reach bout ∧ BZero bout ∧
+      NoLeft4 true true false bout ∧
+      bout.h = b.h-4 ∧
+      (∀ j : Nat, j < 2*n+8 →
+        bout.tape (bout.h+1+(j:Int))=true) ∧
+      bout.tape (bout.h-6)=true ∧
+      bout.tape (bout.h-5)=true ∧
+      bout.tape (bout.h-4)=false ∧
+      bout.tape (bout.h-3)=true ∧
+      bout.tape (bout.h-2)=false ∧
+      bout.tape (bout.h-1)=true := by
+  have hleft1 : leftAlternating 1 b := by
+    intro j hj
+    exact hleft j (by omega)
+  obtain ⟨bout,hrun,hreach,hB,hNoLeft,hhead,hleftTape,
+      hrightTail,hleftOut,honesOut,hrightOut⟩ :=
+    imm_two_wave_pump_step 0 n b hb hr hshield hleft1 hones hright
+  have hb5 : b.tape (b.h-5)=true := by
+    simpa using hleft 4 (by omega)
+  have hb6 : b.tape (b.h-6)=false := by
+    simpa using hleft 5 (by omega)
+  have hb7 : b.tape (b.h-7)=true := by
+    simpa using hleft 6 (by omega)
+  have hb8 : b.tape (b.h-8)=false := by
+    simpa using hleft 7 (by omega)
+  have hout10 : bout.tape (bout.h-6)=true := by
+    have hidx : bout.h-6=b.h-10 := by rw [hhead]; omega
+    rw [hidx]
+    exact (hleftTape (b.h-10) (by omega)).trans hfar.1
+  have hout9 : bout.tape (bout.h-5)=true := by
+    have hidx : bout.h-5=b.h-9 := by rw [hhead]; omega
+    rw [hidx]
+    exact (hleftTape (b.h-9) (by omega)).trans hfar.2
+  have hout8 : bout.tape (bout.h-4)=false := by
+    have hidx : bout.h-4=b.h-8 := by rw [hhead]; omega
+    rw [hidx]
+    exact (hleftTape (b.h-8) (by omega)).trans hb8
+  have hout7 : bout.tape (bout.h-3)=true := by
+    have hidx : bout.h-3=b.h-7 := by rw [hhead]; omega
+    rw [hidx]
+    exact (hleftTape (b.h-7) (by omega)).trans hb7
+  have hout6 : bout.tape (bout.h-2)=false := by
+    have hidx : bout.h-2=b.h-6 := by rw [hhead]; omega
+    rw [hidx]
+    exact (hleftTape (b.h-6) (by omega)).trans hb6
+  have hout5 : bout.tape (bout.h-1)=true := by
+    have hidx : bout.h-1=b.h-5 := by rw [hhead]; omega
+    rw [hidx]
+    exact (hleftTape (b.h-5) (by omega)).trans hb5
+  exact ⟨bout,hrun,hreach,hB,hNoLeft,hhead,honesOut,
+    hout10,hout9,hout8,hout7,hout6,hout5⟩
+
 /-- Total transition cost for k iterations of the two-wave pump. -/
 def twoWavePumpCost (k n : Nat) : Nat :=
   8*n*k + 16*k*k + 12*k
@@ -261,5 +326,6 @@ theorem imm_two_wave_pump_iter (k n : Nat) (b : Conf)
 
 #print axioms BB6Root119.imm_two_wave_pump_step
 #print axioms BB6Root119.imm_two_wave_pump_iter
+#print axioms BB6Root119.imm_two_wave_pump_step_makes_110101
 
 end BB6Root119
