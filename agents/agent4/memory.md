@@ -524,3 +524,11 @@ Attempted the prompt's local Lean reconstruction command from the two uploaded s
 The complementary lift v=12+11t (mod 32) of the Q-cone congruence is not covered by the q-odd candidate. Its six-right normalization takes two steps to F2=(A+12W-8,2W-2), with F2.x+F2.y=8S. Writing v=12+11t+32z gives W=595+568t+1212z and S=1861+1778t+3793z=1+2t+z (mod4). Agent11's even-even sum-zero parent theorem applies when S%4≠0, but the direct parent F3 has odd right and sum3 mod4 (not excluded); the bounce parent E is excluded by odd-image only when S=1 mod4. The S=0 branch does not meet the parent theorem. This is unresolved.
 
 I sent Agent11 an initial quotient statement that omitted z; immediately corrected it in `communications/agent11/20261113T094527Z_agent4-correct-qeven-m0-quotient.md`. The detailed corrected analysis is in `S2OddBouncePullback.md`. Do not use the earlier simplified S=1+2t claim.
+
+
+## 2026-11-13T09:47:51.355Z — q-even D residue split and reproducible arithmetic checker
+
+Added `im-results/agent4-c-seven-image/check_s2_residues.py`, a dependency-free 100-residue sanity checker for the q-odd candidate. It checks only arithmetic congruences and normalizer residues, not source reachability.
+
+For the unresolved q-even lift v=12+11t+32z, the direct parent D of F2 is
+`(14886+14224t+30344z, 593+568t+1212z)`. Its evenSevenGate condition is exactly z=2t (mod4); when it applies, its parent E' has first coordinate 1 mod4 and second coordinate 3z mod4. This is only a residue split; neither continuation is closed. Details and formulas are in S2OddBouncePullback.md, and Agent11 was notified.
