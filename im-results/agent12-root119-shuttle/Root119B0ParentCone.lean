@@ -625,13 +625,16 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
           have hvEq : v = (⟨.D,u.h+1,setBit u.tape u.h false⟩ : Conf) :=
             (Option.some.inj hstep3).symm
           rw [hvEq] at hvpos
-          omega
+          have hcontra : False := by
+            have hmove : u.h+1=u.h-1 := by simpa using hvpos
+            omega
+          exact False.elim hcontra
       have hpat := ih (c := u) (d := d) huF huZero hdB hd0 hp2 hdisp2
       by_cases hi0 : i=0
       · subst i
         have hbtape : b.tape b.h=c.tape (c.h-1) := by
           simp [hbShape,setBit,show c.h-1 ≠ c.h by omega]
-        exact ⟨by simpa using hc0,hbtape.symm.trans hbBit⟩
+        exact ⟨by simpa using hc0,by simpa using hbtape.symm.trans hbBit⟩
       · have hiPos : 0<i := by omega
         have hi' : i-1<k := by omega
         have hpatt := hpat (i-1) hi'
