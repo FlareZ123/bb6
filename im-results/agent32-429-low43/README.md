@@ -1,6 +1,6 @@
 # #429 low-J, low-even and blank-root prefix research
 
-**Status: intermediate research.** The strongest current artifact is a 169,592-step blank-root prefix theorem candidate ending at J(0,344). Its full original-source Lean workflow has not passed. This dossier establishes neither that #429 runs forever nor any exact or upper bound for BB(6).
+**Status: intermediate research.** The strongest current candidate is a 314,966-step physical blank-root prefix ending at J(0,408), obtained by extending the 169,592-step root prefix through a parity-shifted low43 return. The integrated original-source Lean workflow has not yet passed. This dossier establishes neither that #429 runs forever nor any exact or upper bound for BB(6).
 
 ## Strongest root-prefix candidate
 
@@ -113,6 +113,29 @@ The observed J(0,744) -> J(0,924) segment takes 1,158,049 steps. Its proposed de
 | Low42 j=17,k=211 | 5,407 | J(0,924) |
 
 The 7,382-step transition J(381,3) -> J(387,2) is the principal unidentified macro. It is the low43 C/0 continuation instance (v=1,k=189). Agent 1 is pursuing a parameter-uniform C/0 continuation; this dossier does not claim that the gap is closed.
+
+## Parity-shifted continuation of the blank root to J(0,408)
+
+The new integration candidate is in `ParityShiftedRootComplete.lean`. It composes three exact prepared-input components after the 169,592-step blank-root prefix:
+
+| Segment | Steps | Head displacement | Endpoint |
+|---|---:|---:|---|
+| Five ordinary Junc normalizations, U=0,3,9,21,45 | 11,139 | +171 | J(93,173) |
+| Parity-shifted low43 physical entry | 31,154 | +178 | shifted C/0 |
+| Parity-shifted source return, lifted to the physical tape | 103,081 | -397 | J(0,408) |
+| **Prepared-input composition** | **145,374** | **-48** | **J(0,408)** |
+
+The five normalizations are the concrete chain J(0,344) -> J(3,341) -> J(9,332) -> J(21,311) -> J(45,266) -> J(93,173). The new source-level theorem `junc0_344_to_junc93_173_delta` records the exact 11,139 steps and +171 displacement.
+
+The 31,154-step entry is Agent 1's `Low43ParityShift.lean` theorem `junc93_173_to_shiftedC0`. Its proof uses the all-prefix head floor -176: the three differing far-left tape cells are never visited, so a fixed three-cell tape patch commutes with the complete run. The entry endpoint is C/0 with a blank immediate right cell.
+
+The 103,081-step continuation is `ParityShiftedReturns.parityShiftedC0_to_junc0_408`. Its targeted CI run passed on PR #91. The physical lift uses the complete-tape `Represents` relation and `source_runWithDelta_rep`; the shift is transported with `RootShift.shift_run`.
+
+The final theorem `blank_root_to_junc0_408` composes this 145,374-step segment with `blank_root_lowEvenR32_to_junc0_344`. Its intended statement is an exact 314,966-step run from the authentic blank A-root to a complete physical representation of J(0,408), with C/01 excluded at every primitive prefix. The final head is -48 relative to the J(0,344) checkpoint head.
+
+**Validation status:** the individual continuation has passed targeted CI; the parity-shifted entry has been locally preflighted by its author but has not yet passed the integrated workflow; the 169,592-step root prefix and this new composition also await a successful integrated run. The manual-only workflow `.github/workflows/agent6-429-low42.yml` now compiles the updated lower-head-bound dependencies, both parity-shifted components, and the integrated root theorem, then audits their axiom reports. No integrated CI success is claimed.
+
+The immediate next extension is to compose the already-developed J(0,w) -> J(0,w+28) physical map twelve times, taking this root checkpoint from J(0,408) to J(0,744). The subsequent J(0,744) -> J(0,924) interval still contains the unresolved 7,382-step transition J(381,3) -> J(387,2).
 
 ## Validation and limits
 
