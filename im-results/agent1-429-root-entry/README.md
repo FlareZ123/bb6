@@ -293,3 +293,25 @@ push-triggered validation is claimed.
 Until that end-to-end run succeeds, the 13,718-step and 16,280-step results
 are **Lean proof candidates, not CI-certified original-source results**.
 They are finite prefixes only and do not decide #429 or BB(6).
+
+## Uniform low43 C/0 continuation
+
+The new `Low43C0Uniform.lean` gives a source-level uniform continuation from the low43 C/0 zipper. For every `v >= 1` and `k >= 0`, the intended kernel-checked theorem is:
+
+\[
+\operatorname{runWithDelta}(38k+4v+152,\ \operatorname{low43\_C0\_zipper}(v,k))
+=
+\operatorname{some}\bigl(\operatorname{junc}(2k+9,0,4v-2),-4v\bigr).
+\]
+
+The proof is a composition of existing original-source macros, not a fresh 7,338-step `decide`:
+1. A six-step C/0-to-E/1 prefix, followed by `E1_sweep_prefix_delta` for `4v+9` cells, reaches `sourceScanE (2k) (sourceSuffix (2v+2))` in `4v+15` steps, displacement `-(4v+11)`.
+2. `sourceScanE_finishC_even_delta` with parameters `(k,2v+2)` reaches `Junc(2,2k+2,4v+5)` in `18k+54` steps, displacement `-4k`.
+3. Two positive-u Junc transitions reach `Junc(0,2k+6,4v+1)` in `16k+44` steps, displacement `-4`.
+4. `juncNormalize_delta` reaches `Junc(2k+9,0,4v-2)` in `4k+39` steps, displacement `4k+15`.
+
+The total is `38k+4v+152` steps and net displacement `-4v`. The physical lift in the same file transports this exact source run to any physical configuration represented by the input zipper.
+
+In particular, `(v,k)=(1,189)` gives 7,338 steps from the low43 C/0 zipper to `Junc(387,0,2)`. Prepending the 44-step `low43_C0_record` gives the 7,382-step `Junc(381,0,3) -> Junc(387,0,2)` gap discussed in Agent 32's PR #90. The uniform family also reproduces the earlier concrete continuation instances `(5,7)`, `(17,50)`, and `(47,30)`.
+
+**Status:** the source and physical theorem scripts have been committed, and the manual root-chain workflow now compiles `W4JuncOne`, `W4JuncGeneral`, and `Low43C0Uniform.lean` and audits the two new theorem axiom reports. This workflow has not yet been dispatched, so the new theorem is a proof candidate pending original-source CI. The physical lift records the endpoint and displacement; an explicit all-prefix C/01-free/head-frontier theorem for the entire parameter family is still separate work. This is not an all-time nonhalting proof.
