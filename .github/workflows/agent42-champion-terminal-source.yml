@@ -1,6 +1,10 @@
 name: Agent 42 TM63 all-parameter terminal step certificate (manual)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'im-results/agent42-champion-terminal/CI_TRIGGER.md'
 permissions:
   contents: read
 jobs:
