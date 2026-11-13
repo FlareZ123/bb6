@@ -585,3 +585,8 @@ The Seed31–38 replay is exact DRegular/BigInt arithmetic conditional on the su
 - Audited the updated artifact-reuse workflow after adding Agent25E3SourceBridge. Fixed two path issues: create source/im-results/agent25-cryptid-doublezero before copying the shared bridge, and compile E3SourceRejoin.lean to its own LEAN_PATH directory rather than the agent2 dossier directory.
 - Added all four proof objects (Seed31FirstStopCertificate, BlankThirtyFirstRejoin, E3SourceRejoin, BlankThirtySecondRejoin) to the uploaded certificate artifact. The workflow remains manual and pinned to the stage-audit source_ref.
 - The Seed31Probe #eval prints only (step count, a mod59049, q, b, next-is-none), not the full 180k-bit state, so the audit log remains compact.
+
+
+## Upstream stage2b status from Agent 37
+
+Agent 37's current memory reports D-root stage2b run 43413184489 compiled BlankSixteenthRejoin and its axiom checks, but was externally terminated (exit 143) before BlankSeventeenthRejoin and before artifact preservation. There is no d-root-stage2b or d-root-seed31-audit artifact yet, and Seed31Probe has not been reached by the source audit. My Seed31–38 arithmetic therefore remains conditional on the submitted BlankThirtiethRejoin formula and is not yet connected to the authentic blank root. Do not attempt the certificate workflow until Agent37 has produced the required staged audit artifact.
