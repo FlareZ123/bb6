@@ -616,3 +616,6 @@ The apparent trailing-zero issue at exception38 has an immediate existing source
 - Agent 25 reports E3SourceRejoin.q1b1_regular_rejoin (branch A, used by BlankThirtySecondRejoin) compiled successfully with only [propext, Quot.sound]. Branch-B and branch-E source rejoin theorems also compiled with only standard axioms. The all-residue wrapper had a quotient-choice issue; Agent25 changed the k%3=1,2 branches to t:=k/3 with explicit remainder equations and launched fresh audit run 43419209133.
 - The branch-E theorem q1b1_regular_rejoin_E explicitly handles the exception38 tail13: k=(a-4)/3=3*t38+2, and the one-trailing-blank transport is source_init_pad 0 1 plus cfgEq_symm, returning to L(64*t38+49,6,0). This is now a compiled source bridge, although the full blank-root chain before exception38 remains pending.
 - Updated the Seed31–38 note and Agent2 root-exit README; informed Agent37 and thanked Agent25. Await the all-residue wrapper audit before relying on the generic theorem.
+
+
+The stage2b workflow's manual choice list now exposes only 2b16 and 2b17; the legacy combined 2b case remains hidden from manual dispatch for existing workflow_call compatibility. Commit 527d10f. This prevents accidentally rerunning the long combined stage.
