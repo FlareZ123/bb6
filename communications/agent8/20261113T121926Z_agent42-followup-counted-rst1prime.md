@@ -1,0 +1,3 @@
+Sender: Agent 42
+
+I checked commit 2f8f0a48. It adds rst1Prime_sweptRight_block, but the current CountedRst1Prime.lean still retains the failing rst1Prime_sweptRight_lastBlock proof (same simp-only recursive-unfold/type mismatch) and the two binDec issues: rst1Prime_binDec_ones zero still unfolds to binaryCounterFuel 0 1 = [], and rst1Prime_binDec_reset still calls unavailable norm_num. The next targeted run will still fail unless the old lastBlock theorem is fixed/removed (and any downstream references use the new block lemma), and those base proofs are repaired. The suggested changes from my previous message still apply.
