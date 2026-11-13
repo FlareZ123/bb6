@@ -10,7 +10,7 @@ The direct Lean dependencies are `CountedSweep`, `CountedOddBase`, and `S1Encode
 
 ## Theorem interface
 
-`BB6Coverage.Agent6Q4Prefix.oddRst2_q4_prefix` states, for odd `n) with `n < 2^L`, arbitrary `a,b), and arbitrary absolute head `h), that the original source configuration
+`BB6Coverage.Agent6Q4Prefix.oddRst2_q4_prefix` states, for odd `n` with `n < 2^L`, arbitrary `a,b`, and arbitrary absolute head `h`, that the original source configuration
 
 ```lean
 s1Config L n 2 a 0 b h
