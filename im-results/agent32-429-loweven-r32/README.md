@@ -1,6 +1,6 @@
 # #429 low-even r=32: source-level no-fatal continuation
 
-**Status: intermediate Lean proof candidate; original-source CI pending.** This is one concrete prepared-J instance of the conjectural low-even (r=4k) row. It is not a parameter-uniform return theorem and does not decide the authentic blank-root machine.
+**Status: concrete module compiled against the original-source dependency chain; isolated manual validation remains pending.** Run [43365025686](https://github.com/FlareZ123/bb6/actions/runs/43365025686) compiled this complete module and printed axiom reports for every public declaration: only standard `propext`, `Quot.sound`, and `Classical.choice` dependencies, with no `sorryAx` in this module. The overall workflow failed later in unrelated `Low43Continuation.lean`, whose declarations did contain `sorryAx`; it was not a green workflow. The isolated manual-only gate is `.github/workflows/agent32-loweven-r32.yml`. This is one concrete prepared-J instance of the conjectural low-even (r=4k) row, not a parameter-uniform return theorem and not a decision of the authentic blank-root machine.
 
 ## Exact candidate
 
@@ -18,7 +18,7 @@ Here (r=2u-w=90-58=32=4\cdot 8). Substituting (u=45,k=8) into Agent 18's experim
 - target ((11,4u-4k-2)=(11,146));
 - head displacement (9-2u=-81).
 
-The general (r=4k) formula remains conjectural outside separately source-proved instances. This module formalizes only the (u=45,k=8) instance.
+The general (r=4k) formula remains a separate unverified candidate in PR [#82](https://github.com/FlareZ123/bb6/pull/82). This module formalizes only the (u=45,k=8) instance.
 
 ## Proof structure
 
@@ -46,8 +46,8 @@ An independent full source-table replay observed no earlier C/0 events and these
 
 ## Root connection and limits
 
-Agent 1 derived a 2562-step ordinary-Junc path from `junc 0 0 136` to this `junc 45 0 58` start. Its seven segments use existing ordinary Junc return theorems, but the complete composition and physical frontier theorem were still pending when this module was written. The conditional `blank_root_lowEvenR32_no_fatal` theorem is ready to compose once that genuine-root entry is certified.
+Agent 1 is handling the separate 2562-step ordinary-Junc path from `junc 0 0 136` to this `junc 45 0 58` start. Its seven segments use existing ordinary Junc return theorems, but the complete composition and physical frontier theorem remain uncomposed and unverified. The conditional `blank_root_lowEvenR32_no_fatal` theorem is ready to compose once that genuine-root entry is certified.
 
-The empirical head maximum for this 4407-step segment is +68 relative to its start; it is **not** claimed as a theorem here. The present formal result, once CI confirms it, establishes the exact prepared-source endpoint and excludes the actual C/01 halt gateway at every prefix of this segment. It does not prove that the blank root reaches the segment, does not establish all-time nonhalting, and supplies no BB(6) value or universal upper bound.
+The empirical head maximum for this 4407-step segment is +68 relative to its start; it is **not** claimed as a theorem here. The module-level compile establishes that the Lean declarations for the exact prepared-source endpoint and every-prefix C/01 exclusion elaborate against the source dependency chain without `sorryAx` in the module. The isolated manual gate remains the next validation checkpoint. It does not prove that the blank root reaches the segment, does not establish all-time nonhalting, and supplies no BB(6) value or universal upper bound.
 
 Keep this dossier in `im-results/` until a stronger mathematical result is established.
