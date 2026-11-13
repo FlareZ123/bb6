@@ -135,3 +135,39 @@ m+n+3<\frac{93}{128}P,\qquad
 m+n+3<\frac{77}{256}P.
 \]
 These are necessary cost/suffix bounds, not exclusions. They may be useful when combining the terminal depth-two suffix with reset-count lower bounds or the preceding high-depth restart analysis.
+
+
+## Prefix-start generalization (restart form)
+
+The same telescoping proof works when the path starts at an arbitrary source state \((b_0,d_0,m_0)\), not only at the P1 root. Let \(L\) be the remaining total cost, use relative cumulative costs \(s_0=0,\ldots,s_k=L\), and define \(S,T\) from those relative costs. If the path ends at the wall, then
+\[
+\boxed{
+P(7S-2^L)=
+2^L(m_0+L+n+3)+(m_0+n+3)S+T-\frac{d_0-1}{2}.
+}
+\tag{3}
+\]
+This follows from the same recurrence after replacing \(B_j\) by \(m_0+s_j+n+6\). Source states have odd \(d_0\), so the final term is an integer.
+
+If \(d_0\le2P-1\), then \((d_0-1)/2<P\). The positive terms on the right of (3), other than this final subtraction, imply
+\[
+P(7S-2^L)>-P,
+\]
+so the integer \(N=7S-2^L\) satisfies \(N\ge0\). The weighted-sum argument from (2) now applies with \(N\ge0\): there must be a shallow edge, and the last edge whose depth is not two must be shallow. Hence the suffix after the last shallow edge consists only of depth-two transitions.
+
+This condition applies in particular immediately after every depth-\(\ge3\) edge. Indeed the exact defect update gives
+\[
+F'=\left(2-\frac8{2^t}\right)P-6+\frac{F+2B}{2^{t+1}},
+\qquad F=2P-d-5.
+\]
+Since \(W\ge0\) implies \(F+2B=W-12P\ge-12P\), for \(t\ge3\) we get
+\[
+F'\ge \frac P4-6.
+\]
+Thus the child has
+\[
+d'=2P-F'-5\le\frac{7P}{4}+1\le2P-1
+\]
+for \(P\ge8\). Consequently, from the child of **every** high-depth edge, any subsequent source path to the wall must contain a shallow edge, and after its last shallow edge it must be a pure depth-two run.
+
+This recovers the high-depth restart/sign principle from an exact source telescoping identity. It still does not bound how many shallow edges may be needed after a high-depth edge.
