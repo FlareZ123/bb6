@@ -1,5 +1,10 @@
 name: Agent 24 m0 even q4 prefix Lean verification
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent24-m0-even-q4-prefix.yml'
+      - 'im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean'
   workflow_dispatch:
 permissions:
   contents: read
