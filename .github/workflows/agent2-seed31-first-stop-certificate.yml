@@ -73,6 +73,7 @@ jobs:
           cp proof/im-results/agent2-root-language-exit/BlankThirtySecondRejoin.lean source/im-results/agent2-root-language-exit/BlankThirtySecondRejoin.lean
           cp proof/im-results/agent25-cryptid-doublezero/Exception33Q5Rejoin.lean source/im-results/agent25-cryptid-doublezero/Exception33Q5Rejoin.lean
           cp proof/im-results/agent2-root-language-exit/BlankThirtyThirdRejoin.lean source/im-results/agent2-root-language-exit/BlankThirtyThirdRejoin.lean
+          cp proof/im-results/agent2-root-language-exit/DRegularFirstExit.lean source/im-results/agent2-root-language-exit/DRegularFirstExit.lean
       - name: Compile probe module and kernel-check first-stop/source-lift theorem
         working-directory: source
         shell: bash
@@ -81,6 +82,7 @@ jobs:
           exec > >(tee -a lean-audit.log) 2>&1
           lean --version
           T=im-results/agent37-d-timing-cocycle
+          lean -o "$R/DRegularFirstExit.olean" "$R/DRegularFirstExit.lean"
           R=im-results/agent2-root-language-exit
           lean -DmaxRecDepth=55000 -o "$T/Seed31Probe.olean" "$T/Seed31Probe.lean" | tee seed31-probe.txt
           lean -DmaxRecDepth=55000 -o "$R/Seed31FirstStopCertificate.olean" "$R/Seed31FirstStopCertificate.lean"
@@ -109,4 +111,5 @@ jobs:
             source/im-results/agent2-root-language-exit/BlankThirtySecondRejoin.olean
             source/im-results/agent25-cryptid-doublezero/Exception33Q5Rejoin.olean
             source/im-results/agent2-root-language-exit/BlankThirtyThirdRejoin.olean
+            source/im-results/agent2-root-language-exit/DRegularFirstExit.olean
           if-no-files-found: warn
