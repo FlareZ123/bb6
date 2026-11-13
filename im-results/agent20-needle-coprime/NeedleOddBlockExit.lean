@@ -100,7 +100,7 @@ theorem odd_block_exit_terminal_nonzero_mod_five
   have hright :
       (5^t*m*(2^(v+1)+3)+2^v*(2*v+4)+3) % 5 =
         (2^v*(2*v+4)+3) % 5 := by
-    rw [Nat.add_mod, Nat.add_mod, hprod]
+    rw [Nat.add_mod, Nat.add_mod, Nat.add_mod, hprod]
     simp
   have hmod :
       2^(k+v+2) % 5 = (2^v*(2*v+4)+3) % 5 := by
