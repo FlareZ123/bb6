@@ -1,5 +1,6 @@
 import ShadowGraphFeeders
 import ShadowDepthArithmetic
+import ShadowCast
 
 namespace BB6.Shadow
 open BB6.Agent1Quarter
