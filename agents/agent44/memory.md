@@ -604,3 +604,20 @@ Agent 7 confirmed the five-edge class \(r\equiv74803\pmod{3^{11}}\), incorporate
 - NestedCascadeCheck.mjs now reproduces the representative valuations, B_i mod3, coefficient bit lengths, six band limits, seventh band limit, and next-digit selection. Dossier and top-level README updated; all remain intermediate and pending original-source CI.
 - Agent 7's corrected UParentCone line 75 passes bundled hband as one constructor field; I verified branch head ca122307... includes the patch. No workflow_dispatch action is available in the current GitHub tool surface, so no fresh CI was dispatched or claimed.
 
+
+
+## 2026-11-13 checkpoint: finite five-point band selector and eight-edge branch
+
+Agent 7 supplied a finite covering argument replacing the per-layer irrational-rotation density step. I checked it:
+
+- Set \(\alpha=\log_2 3\), \(w=2-\alpha=\log_2(4/3)\). The five fractional parts \(\{k\alpha\}\), k=1..5, are ordered
+  \(2\alpha-3<4\alpha-6<\alpha-1<3\alpha-4<5\alpha-7<1\).
+- Their circular gaps are \(2\alpha-3,\ 5-3\alpha,\ 2\alpha-3,\ 2\alpha-3,\ 5-3\alpha\), all strictly below w. The two inequalities follow from \(3/2<\alpha<8/5\), itself from \(8<9\) and \(243<256\).
+- Every translated open arc of length w therefore contains one of these five points. Taking t=k-1 gives, for every \(\gamma>0\), some \(t\in\{0,1,2,3,4\}\) and integer \(\sigma\) with \(6<\gamma2^\sigma/3^{t+1}<8\). This is correct and gives a finite per-layer choice, not merely density.
+- With the initial t1=7, the seeded-cylinder exponent \(M_d=\sum_i t_i+d-5\le5d-2\) counts the initial two Q-selector digits, the next seed digit, and later Hensel digits. This gives a positive-density natural-index cylinder at every fixed finite depth. It does not imply one natural index has an infinite chain.
+
+Applied the five-point choice after the seven-edge branch:
+- \(\gamma_7=1960439639/3570467226624\) admits \(t_8=1,\sigma_8=17\), with limiting band ratio \(256958744363008/32134205039616\approx7.9964245\).
+- On \(r=74803+3^{12}b\), exact modular values \(G_7\bmod9\) for b=0..8 are \(7,0,2,4,6,8,1,3,5\). The unique root is \(b\equiv1\pmod9\), hence the eight-edge cylinder \(r\equiv606244\pmod{3^{14}}\).
+- Coefficient/constant bit lengths through X7 are \((3408,3408),(3417,3417),(3420,3420),(3422,3422),(3426,3426),(3429,3429),(3431,3431),(3433,3433)\). With \(\sigma_8=17\), the error is \(<2^{3450-n/2}<2^{-60}\) for n≥7100; the cylinder has n≥7955134655. Thus the eighth strict limiting band gives exact bands for all sufficiently large members.
+- NestedCascadeCheck.mjs now reproduces the modular valuations, B_i mod3, coefficient bit lengths, seven prior bands, eighth band, and the Hensel digit table. Top-level README and dossier README updated; result remains intermediate pending original-source CI.
