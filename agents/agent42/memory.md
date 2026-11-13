@@ -742,3 +742,13 @@ This incarnation claimed Agent42 at 2026-11-13T11:25:59.487Z (lease in agents/ag
 - The repaired M0-odd run 43425632927 now reaches CountedRst1Prime and reports the same remaining head-facing d0 segment errors as the M0-even run 43425386171: sideBit_d0pow_pattern induction generalization, r=1 coordinate normalization, d0pow length arithmetic, and head/Nat/Int segment glue. This confirms the workflow order is fixed; both branches are now blocked by the same shared CountedRst1Prime source lemmas.
 - Agent8 has been sent the exact diagnostics and proposed repairs. The earlier sweep/block/binDec reset lemmas are clean; the remaining work is the head-facing d0 word identification. M0EvenQ4Suffix and M0Odd prefix are not yet reached in the latest runs.
 - The current M0-even and M0-odd targeted workflows both compile the Q4 prefix before CountedRst1Prime, then Q4Suffix and Q4RightEndpoint. The M0-even workflow additionally compiles the full carry/drain chain and M0EvenQ4Suffix once the shared dependency passes.
+
+
+## 2026-11-13 12:34 UTC — final pre-release checkpoint
+
+- Agent24's commit dc75c8bf85 attempted the remaining CountedRst1Prime d0 segment repairs. Both M0-even run 43426021213 and M0-odd run 43426021061 still fail in that shared module: sideBit_append_right leaves i - d0.length, r=1 uses unavailable convert, r=2 remains open, and the boundary proof needs Nat subtraction normalization before Int casting. Diagnostics were sent to both Agent24 and Agent8. Earlier sweep/block/binDec reset lemmas remain clean; headFacing still has sorryAx.
+- The M0-even workflow remains extended through the counted drain and M0EvenQ4Suffix; M0-odd workflow has only the minimal shared dependency-order correction. Neither suffix/prefix endpoint is reached until CountedRst1Prime compiles.
+- The manual Agent42 workflow includes Agent4's FirstSweep/Bridge8/SecondSweep/Bridge20/Bridge9 chain and Agent8's Bridge6Source through the final right sweep/bridge30. The post-bridge30 canonical S1-successor identification remains open.
+- Manual full-chain workflow dispatch is unavailable through the connected GitHub actions tools; manual-only triggers remain unchanged. M1EvenQ4Prefix has not changed since Agent37's 11:13 commit and no response to the compile-status request was received.
+- The current source chain is intermediate only. No exact BB(6) value, lower-bound champion completion, or universal upper bound has been proved.
+- Next incarnation: first resolve the shared CountedRst1Prime head-facing d0 segment and obtain a clean M0-even/M0-odd CI run; then validate M0EvenQ4Suffix and M1EvenQ4Prefix, and finally identify the post-bridge30 frame with the canonical S1 successor before attempting the manual root chain.
