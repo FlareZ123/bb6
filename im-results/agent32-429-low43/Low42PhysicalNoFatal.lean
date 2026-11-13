@@ -56,14 +56,15 @@ theorem low42_raw_head_all_c01_free (j k : Nat) :
         {state:=BB6Bubble.A, head:=0,
          tape:=jTape (j+2*k+1) (2*j)} = some c' ∧
       Represents (junc 0 0 (4*j+4*k+12)) c' ∧
+      c'.head = -((2*j+4*k+5:Nat):Int) ∧
       (∀ t, t ≤ 4*j*j+22*j+18*k+79 →
         ∃ d : Config,
           run target429 t
             {state:=BB6Bubble.A, head:=0,
              tape:=jTape (j+2*k+1) (2*j)} = some d ∧
           ¬ physicalC01 d) := by
-  obtain ⟨c', hrun, hrep, _⟩ := low42_raw_head_all j k
-  refine ⟨c', hrun, hrep, ?_⟩
+  obtain ⟨c', hrun, hrep, hhead⟩ := low42_raw_head_all j k
+  refine ⟨c', hrun, hrep, hhead, ?_⟩
   exact physical_run_prefix_c01_free
     (4*j*j+22*j+18*k+79)
     {state:=BB6Bubble.A, head:=0,
