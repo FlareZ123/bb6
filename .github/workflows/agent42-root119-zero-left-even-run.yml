@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/agent42-root119-zero-left-even-run.yml'
       - 'im-results/agent42-root119-guard/Root119ZeroLeftEvenRun.lean'
+      - 'im-results/agent42-root119-guard/test-root119-zero-left-even-run.cjs'
       - 'im-results/agent12-root119-shuttle/Root119Gate.lean'
       - 'im-results/agent12-root119-shuttle/Root119ShuttleSupport.lean'
       - 'im-results/agent12-root119-shuttle/Root119EvenSweep.lean'
@@ -42,3 +43,4 @@ jobs:
           fi
           grep -q 'zeroLeftEvenRun_exact.*depends on axioms' "$A/Root119ZeroLeftEvenRun.log"
           grep -q 'zeroLeftEvenRun_returns_Bzero.*depends on axioms' "$A/Root119ZeroLeftEvenRun.log"
+          node "$A/test-root119-zero-left-even-run.cjs"
