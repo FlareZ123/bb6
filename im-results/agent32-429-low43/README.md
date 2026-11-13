@@ -113,7 +113,7 @@ manual workflow.
 
 The root simulation reaches J(21,11) at step 1608 with head 12 and historical maximum 26. If that checkpoint is established by the separate blank-root source composition, the corrected 1559-step branch reaches J(11,62) at step 3167 with absolute head (-29) and historical maximum 36. This agrees with an independent raw simulation, but the full blank-root prefix to J(21,11) is not yet certified by this dossier.
 
-The manual workflow `.github/workflows/agent32-429-lowodd-frontier.yml` compiles the corrected continuation and physical lifts and audits their axioms. The previous run 43310306538 failed during compilation of the earlier candidate. The corrected declarations have not yet passed the full repository dependency workflow; do not call them CI-certified until a successful run prints their axiom audits and the fail-closed `sorryAx` check passes.
+The workflow `.github/workflows/agent32-429-lowodd-frontier.yml` remains manually dispatchable and now also has a path-scoped `pull_request` trigger covering its full declared dependency set. Source CI run [43345234972](https://github.com/FlareZ123/bb6/actions/runs/43345234972) reached `Low43Continuation.lean` and exposed five reversed uses of `runWithMax_toDelta`. The five concrete `runWithMax` monitors compiled without axioms; the derived delta declarations were recovered with `sorryAx`, and the physical wrapper was not reached. The current branch reverses those five projections and the corresponding five physical-lift projections. Treat the corrected physical declarations as pending until a fresh original-source PR run completes and the fail-closed `sorryAx` audit passes.
 
 ## Remaining mathematical gap
 
