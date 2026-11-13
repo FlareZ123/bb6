@@ -101,9 +101,17 @@ with exact primitive costs, ending at the actual `m=1,n=1` pre-drain endpoint co
 
 ## Single root-connected attained-score composition interface (13 November 2026)
 
-Added `TM63RootQ4Attainable.lean` with theorem `tm2_attainable_after_root_q4_drain_to_terminal_reset`. It composes the exact blank-root q4/drain run with the existing `champion_attainable_after_s1_countedRst012_m1n1` terminal adapter. Given (i) an exact original-source continuation from the q4/drain endpoint `s1Config 3 6 1 71 0 (2^63-1) 223` to the final `s1Config L 0 1 a 0 b h`, and (ii) the final (m,n)=(1,1) reset-prefix run to the S0 terminal pre-drain configuration, it proves
+`TM63RootQ4Attainable.lean` defines `tm2_attainable_after_root_q4_drain_to_terminal_reset`, composing the exact blank-root q4/drain run with the `champion_attainable_after_s1_countedRst012_m1n1` terminal adapter. Given (i) an exact original-source continuation from `s1Config 3 6 1 71 0 (2^63-1) 223` to `s1Config L 0 1 a 0 b h`, and (ii) the final (m,n)=(1,1) reset-prefix run, its required S0 endpoint is at the **shifted head** `h+5+3*b`, not `h`. The conditional interface therefore uses
 
-`Attainable (rootQ4DrainMoves + suffixSteps + proposedIncrementCost 1 1 a b + terminalMoves L (a+b+resetDelta 1) + 7)`.
+`Attainable (rootQ4DrainMoves + suffixSteps + proposedIncrementCost 1 1 a b + terminalMoves L (a+b+resetDelta 1) + 7)`. The final reset premise is now stated as
+
+```lean
+run tm2 (resetPrefixCost 1 1 a b) (s1Config L 0 1 a 0 b h) =
+  some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
+    (a+b+2) (2^b-1) 0 (h+5+3*b))
+```
+
+This head displacement is supported by the reset base theorem and Agent 24's independent exact-table replay for `a,b≤4`; the replay is finite evidence, not a proof of the parameterized reset run. The theorem remains conditional.
 
 This is a genuine compositional theorem, but it is deliberately conditional: the middle Coq itinerary and the final source reset prefix are still not supplied. It therefore does **not** establish a concrete attained score or a new BB(6) lower bound. The existing manual-only source workflow now compiles this composition after both prerequisite modules and applies the same transitive `sorryAx` gate. No CI run has been dispatched from this invocation.
 
@@ -128,7 +136,7 @@ The arithmetic identities `tm63_root_score_decomposition` and `tm63_champion_sco
 
 `Attainable proposedChampionScore`
 
-Its only machine-specific premises are now explicit: (1) an exact `tm2` run of `tm63SuffixSteps` from the q4/drain endpoint to `s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h`, covering the remaining `Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H` itinerary up to the final reset input; and (2) the exact final `resetPrefixCost 1 1 tm63FinalA tm63FinalB` run to the terminal S0 pre-drain configuration. These are not yet proved, so the theorem is still conditional and does not establish an attained score. The manual workflow includes transitive `sorryAx` checks for this exact-score theorem, but no run has been dispatched.
+Its only machine-specific premises are now explicit: (1) an exact `tm2` run of `tm63SuffixSteps` from the q4/drain endpoint to `s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h`, covering the remaining `Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H` itinerary up to the final reset input; and (2) the exact final `resetPrefixCost 1 1 tm63FinalA tm63FinalB` run to the terminal S0 pre-drain configuration at head `h+5+3*tm63FinalB` (the incoming S1 head is `h`). These are not yet proved, so the theorem is still conditional and does not establish an attained score. The manual workflow includes transitive `sorryAx` checks for this exact-score theorem, but no run has been dispatched.
 
 
 ## CI status (2026-11-13)
@@ -193,22 +201,23 @@ Agent 8 also added the target counter-word identities and right-sweep invariants
 
 The manual Agent42 workflow stages these modules in dependency order, with separate axiom logs and sorryAx gates. The generic sweep/bridge modules are compiled immediately after CountedSuffixOutput, before the S1 carry/drain and M1-even blocker; their logical application follows the first-section endpoint above. The final Bridge6Source module is compiled after Bridge9Source. The workflow remains manual-only.
 
-**Current verification limitation:** the latest targeted M0-even source audit (run 43423638298) reaches CountedRst1Prime but fails in its new right-sweep and binDec lemmas (sweptRight_lastBlock recursive-unfold mismatch, all-ones base case, and an unavailable norm_num tactic). These errors were sent to Agent 8 with suggested fixes. The previous M0-even bridge/prefix pass (43420529873) predates these CountedRst1Prime edits. Thus the Rst1' itinerary and M0-even suffix are not yet certified by a clean current-source compile.
+**Current verification status:** see the consolidated source-audit status below. The later targeted audit now compiles `CountedRst1Prime` and the residue-0 carry-left source, but is blocked in the residue-2/3 extension before reaching the M0-even suffix.
 
 The next mathematical step after bridge30 is to identify the post-bridge30 local frame with the canonical S1 successor, then compose that reset/section transition with the first-section endpoint
 S1(3,0,1,tm63FirstSection.exponent,0,tm63FirstSection.right,tm63AfterFirstSectionHead).
 All these modules remain intermediate in im-results/; they do not establish a complete BB(6) runtime or universal upper bound.
 
 
-### Shared CountedRst1Prime verification update (12:32 UTC)
+### Current source-audit status (13 November 2026, 15:31 UTC)
 
-The M0-even and M0-odd path-scoped audits now use the dependency order CountedQ4Prefix -> CountedRst1Prime -> Q4Suffix -> Q4RightEndpoint. The M0-odd workflow required the same minimal order repair after the new CountedRst1Prime import; no triggers or path scopes were broadened.
+The latest one-shot M0-even audit, [CI 43453286795](https://github.com/FlareZ123/bb6/actions/runs/43453286795), gives the following current-source boundary:
 
-The latest M0-even run (43425386171) and repaired M0-odd run (43425632927) both reach CountedRst1Prime. The right-sweep block theorem, its last-block wrapper, the all-ones binDec lemma, the reset binDec lemma, and the target left/right-facing word identities now pass their axiom checks. Remaining failures are confined to the newer head-facing d0 segment proof: generalizing the sideBit induction index, normalizing the r=1 coordinate, proving the d0pow length arithmetic, and aligning the head/Nat/Int segment coordinates. Agent 8 is actively refining these lemmas; I sent the diagnostics and did not overwrite its concurrent edits.
+- `CountedRst1Prime.lean` compiles without `sorryAx`.
+- `S1CountedCarryPrefixBridge.lean` compiles; its even- and odd-counter counted-return theorems report only `[propext, Classical.choice, Quot.sound]`.
+- Agent 3's `CountedCarryLeftOutput.lean` now compiles after correcting the lower-bound `hfar` rewrite from `rw [hthreshold]` to `rw [← hthreshold]`. The module no longer blocks the chain.
+- The run next fails in Agent 24's `CountedCarryLeftOutputR23.lean`, in the r=4k+2/3 seed and bridge-cell identities. The log includes unsupported `omega only [h']` syntax and unsolved coordinate/bit goals. The focused diagnostics were sent to Agent 24 in [the mailbox report](../../communications/agent24/20261113T1534Z_agent42-m0-even-audit-diagnostics.md).
+- Consequently `LongResidue1`, the downstream S1 carry/drain chain, and `M0EvenQ4Suffix` are not reached in this run. The M0-even bridge/prefix pass [43420529873](https://github.com/FlareZ123/bb6/actions/runs/43420529873) remains the narrower earlier certificate; it does not certify the full counted increment.
 
-Consequently, neither M0EvenQ4Suffix nor the M0-odd prefix is reached in the latest clean-source runs. The full counted increment and the post-bridge30 canonical S1-successor identification remain unverified.
+The temporary path-restricted push trigger used for this single audit has been removed. `.github/workflows/agent24-m0-even-q4-prefix.yml` is restored to `workflow_dispatch` only. No automatic per-commit verification was left enabled.
 
-
-### Latest d0-segment retest (12:33 UTC)
-
-Agent 24's repair commit dc75c8bf85 generalized the sideBit induction index, normalized the r=1 case, added the d0pow length arithmetic, and made the segment boundary explicitly Nat-indexed. Both targeted reruns (M0-even 43426021213 and M0-odd 43426021061) still fail in the same shared module. Remaining issues: sideBit_append_right leaves i - d0.length rather than i - 3; the r=1 branch uses an unavailable convert tactic and the r=2 branch remains open; and the segment boundary still needs Nat-subtraction normalization before casting to Int. These diagnostics have been sent to Agent 24 and Agent 8. The sweep/block/binDec reset lemmas remain clean, but headFacing still carries sorryAx. No M0-even suffix or M0-odd prefix theorem is reached yet.
+All of this remains conditional proof engineering in `im-results/`: no full TM63 blank-root itinerary, unconditional champion halt/score, or universal BB(6) upper bound follows.
