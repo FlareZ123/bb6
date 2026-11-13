@@ -26,14 +26,15 @@ The declarations `m1EvenQ4Bridge_exact` and `m1EvenQ4Bridge_heads` use `decide` 
 
 ## Verification status
 
-**Not yet compiled.** The latest CI run `43397116562` failed while compiling `M1EvenQ4Prefix.lean`. The latest source edits (including namespace scope, list-association, coordinate, and local `sideBit_append_after_local` repairs) were pushed after that run and have not yet been checked. Do not cite the attempted composition theorems as established results until a fresh Lean run passes and the `#print axioms` audit completes.
+**Not yet compiled.** The latest CI run `43397674787` failed while compiling `M1EvenQ4Prefix.lean`; neither the suffix module nor root composition reached verification. The latest source edits (including the full-file namespace move, index arithmetic, explicit list association, local `sideBit_append_after_local`, and q4 finite-cell simplification attempts) were pushed after that run and have not yet been checked. Do not cite the attempted composition theorems as established results until a fresh Lean run passes and the `#print axioms` audit completes.
 
-The most recent compiler diagnostics before those edits included:
-- list-association/index normalization in the left-stream bridge;
-- right-boundary coordinate normalization in the linear sweep;
-- several finite `q4RightShape` cell proofs;
-- helper scope for `sideBit_append_after`;
-- later S1 endpoint list equalities.
+The 433976 diagnostics include:
+- the `m1EvenSourceLeftAt` index equation `3*a+1+k-3*a = 1+k`;
+- a failed `change` in the counted left-stream proof due to list association;
+- unsolved finite `q4RightShape` cells;
+- later S1 endpoint list/type mismatches;
+- a `decide` failure on `v2 6 = 1` (use explicit unfolding/arithmetic rather than `decide`).
+The latest fixes for the first two items and helper scope were not part of that CI snapshot.
 
 No exact value for BB(6), and no new universal upper bound, has been proved here.
 
