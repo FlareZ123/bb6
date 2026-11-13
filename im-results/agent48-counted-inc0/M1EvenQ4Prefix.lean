@@ -511,8 +511,8 @@ private theorem m1EvenQ4First4Frame_eq (T : Int → Bool) (h : Int)
     by_cases hin : m1EvenQ4First4Inside (x-h) = true
     · have hb : 0 ≤ x-h ∧ x-h ≤ 4 := by
         simpa [m1EvenQ4First4Inside] using hin
+      have hcases : x-h=0 ∨ x-h=1 ∨ x-h=2 ∨ x-h=3 ∨ x-h=4 := by omega
       have htrue : T x = true := by
-        have hcases : x-h=0 ∨ x-h=1 ∨ x-h=2 ∨ x-h=3 ∨ x-h=4 := by omega
         rcases hcases with h0x | h1x | h2x | h3x | h4x
         · have hv := h0 0 (by omega)
           have hc : h+(0:Int)=x := by omega
@@ -529,8 +529,18 @@ private theorem m1EvenQ4First4Frame_eq (T : Int → Bool) (h : Int)
         · have hv := h0 4 (by omega)
           have hc : h+(4:Int)=x := by omega
           simpa [hc] using hv
+      have hmem : x-h ∈ m1EvenQ4First4End.marked := by
+        rcases hcases with h0x | h1x | h2x | h3x | h4x
+        · simp [h0x,m1EvenQ4First4End]
+        · simp [h1x,m1EvenQ4First4End]
+        · simp [h2x,m1EvenQ4First4End]
+        · simp [h3x,m1EvenQ4First4End]
+        · simp [h4x,m1EvenQ4First4End]
+      have hshift :
+          (shiftConfig h (embed m1EvenQ4First4End)).tape x = true := by
+        simp [shiftConfig,embed,m1EvenQ4First4End,hmem]
       simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4Inside,
-        m1EvenQ4First4End,hin,htrue]
+        m1EvenQ4First4End,hin,htrue,hshift]
     · simp [frameAt,frame,shiftConfig,embed,m1EvenQ4First4Inside,
         m1EvenQ4First4End,hin]
 
