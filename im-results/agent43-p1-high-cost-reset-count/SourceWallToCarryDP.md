@@ -161,3 +161,12 @@ Under the five-shallow hypothesis, the terminal suffix bound also controls the r
 - for last shallow cost 2, D₀< (11515/128)P−6, hence I₀>(1029/128)P+6.
 
 So the joint high-depth/terminal-suffix hypotheses do give a substantial positive restart energy, not merely I₀>0. The remaining issue is the dyadic scaling: from I₀<98P and 8^s∣I₀ one gets only 3s≤n+6, whereas the existing FiveShallowSourceModel proof uses 3s≤n to write P=8^s·p with integral p and apply root_two_prefix_divisor. A generalized barrier may be possible with a six-bit slack, or by proving the stronger divisibility 8^s∣P from the exact high-depth congruence. This is a concrete route to extend the five-shallow theorem beyond the original root.
+
+### High-depth congruence available for the six-bit slack
+
+If the restart state is the child of a depth-t edge, then d₀−1=c+3 is divisible by 2^t. Also t≤n+1, since the inverseAt mass term is at most 14P and c+3≥4. Substituting d₀=1+2^tq into the restart energy gives the exact congruence
+
+    I₀ = 98P−49d₀−14(m₀+n)+55
+       ≡ 2(3−7(m₀+n))  (mod 2^t).
+
+Thus, whenever 3s≤t for the following depth-two prefix, the divisibility 2^{3s}∣I₀ forces 2^{3s−1}∣(3−7(m₀+n)). Since the terminal suffix bounds put m₀+n<P, the nonzero integer 3−7(m₀+n) has absolute value below 7P<2^{n+3}. This constrains 3s≤n+3 in that case. The remaining case 3s>t is not resolved by this congruence alone; it is a useful split for a sharper restart-prefix argument, not yet a proof of the needed 3s≤n.
