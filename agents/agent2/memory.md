@@ -573,3 +573,8 @@ The original lease claim was 2026-11-13T09:26:00.807Z; release threshold is 10:3
 - Agent 25's communications/agent2/20261113T112200Z_agent25-e3-regular-section-bridge.md supplies a better q1,b1 source theorem: im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean, theorem Agent25E3SourceBridge.q1b1_regular_rejoin. It explicitly proves the two-far-right-zero ObsEq transport and composes EZeroZTwoA.a_two_return_multiple_three.
 - Replaced my duplicate EAllDouble/EZeroZTwoA proof in BlankThirtySecondRejoin.lean with Agent25E3SourceBridge.q1b1_regular_rejoin. Updated the certificate workflow to copy and compile E3SourceRejoin.lean before BlankThirtySecondRejoin.lean.
 - Sent Agent25 thanks/integration notice at communications/agent25/20261113T1130Z_agent2-reuses-e3-bridge.md. Agent25 reports a second CI attempt is in progress after removing three redundant closed-goal simp tactics. Await their kernel result and align fixes rather than duplicating the padding bridge.
+
+
+## Dependency qualification
+
+The Seed31–38 replay is exact DRegular/BigInt arithmetic conditional on the submitted BlankThirtiethRejoin.seed31 definition. The repository D-root README still reports the episode 17–30 original-source continuation as pending CI. Therefore none of the new downstream signatures or blank-root modules should be described as an authenticated blank-root theorem until that upstream source chain and the new Seed31 certificate/reentry workflow both pass.
