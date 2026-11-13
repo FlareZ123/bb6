@@ -288,20 +288,20 @@ private theorem stage43_decomposition (v k : Nat) :
     source_runWithDelta_rep (4*v+6) (stage43 v k) (stage43Config v k)
       hrepStage zMid (-((4*v+6:Nat):Int)) hleft
   obtain ⟨c2,hARP,hrep2,hhead2⟩ :=
-    source_runWithDelta_rep (4*v+6) zMid c1 hrep1 zAR (4*v+6) hAR
+    source_runWithDelta_rep (4*v+6) zMid c1 hrep1 zAR ((4*v+6:Nat):Int) hAR
   obtain ⟨c3,h4P,hrep3,hhead3⟩ :=
     source_runWithDelta_rep 4 zAR c2 hrep2 zC0 4 h4
   rcases hrep3 with ⟨hstate,hcur,hleftRep,hrightRep⟩
   have hrep3' : Represents (low43_C0_zipper v k) c3 := by
     simpa [zC0,low43_C0_zipper] using (show Represents zC0 c3 from ⟨hstate,hcur,hleftRep,hrightRep⟩)
-  have hstate' : c3.state.val=2 := by simpa [zC0] using hstate
-  have hcur' : c3.tape c3.head=false := by simpa [zC0] using hcur
+  have hstate' : c3.state.val=2 := by simpa [zC0,low43_C0_zipper] using hstate
+  have hcur' : c3.tape c3.head=false := by simpa [zC0,low43_C0_zipper] using hcur
   have hright' : c3.tape (c3.head+1)=false := by
     have h := hrightRep 0
     change c3.tape (c3.head+1)=false at h
     exact h
   have hhead1' : c1.head=(stage43Config v k).head-(4*v+6) := by
-    simpa using hhead1
+    omega
   have hhead2' : c2.head=(stage43Config v k).head := by
     rw [hhead2,hhead1']
     omega
@@ -339,7 +339,7 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
       run_prefix_left_extremal target429 L s cStage d c1
         hleft hpre hs1 hdisp1
     have hC : cStage.head = (stage43Config v k).head := rfl
-      exact ⟨d,hpre,by omega⟩
+    exact ⟨d,hpre,by omega⟩
   · by_cases hs2 : s≤2*L
     · let r : Nat := s-L
       have hr : r≤L := by dsimp [r]; omega
@@ -397,9 +397,10 @@ theorem low43_C0_record (v k : Nat) :
   let c0 : Config := {state:=A,head:=0,tape:=tape}
   let cStage : Config := stage43Config v k
   let B : Nat := 4*(v+1)*(v+1)+2*(v+1)
+  have hhead : 2*((v+1:Nat):Int)=2*(v:Int)+2 := by omega
+  have htape : stage43Tape v k = negFill tape (v+1) := rfl
   have hfirst : run target429 B c0=some cStage := by
-    simpa [c0,cStage,B,stage43Config,stage43Tape,tape,
-      Nat.cast_mul,Nat.cast_add] using
+    simpa [c0,cStage,B,stage43Config,hhead,htape] using
       multi_bubble_prefix target429 (v+1) (v+1) tape (by omega)
         (by decide) (by decide) (by decide) (by decide)
         (low43_holes v k) (low43_odds v k) (low43_right v k)
@@ -436,9 +437,13 @@ theorem low43_C0_record (v k : Nat) :
     omega
   have htime : B+(8*v+16)=4*v*v+18*v+22 := by
     dsimp [B]
-    rw [Nat.mul_assoc,hsq]
-    simp [Nat.mul_add,Nat.add_mul]
-    omega
+    calc
+      4*(v+1)*(v+1)+2*(v+1)+(8*v+16)
+          = 4*((v+1)*(v+1))+2*(v+1)+(8*v+16) := by rw [Nat.mul_assoc]
+      _ = 4*(v*v+2*v+1)+2*(v+1)+(8*v+16) := by rw [hsq]
+      _ = 4*(v*v)+8*v+4+2*v+2+8*v+16 := by simp [Nat.mul_add]
+      _ = 4*(v*v)+18*v+22 := by omega
+      _ = 4*v*v+18*v+22 := by rw [← Nat.mul_assoc]
   have htotal' : run target429 (4*v*v+18*v+22) c0=some cC := by
     simpa [htime] using htotal
   have hheadC : cC.head=2*(v:Int)+6 := by
