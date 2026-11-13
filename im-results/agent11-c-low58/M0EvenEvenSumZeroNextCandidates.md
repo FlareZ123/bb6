@@ -117,6 +117,24 @@ for those \(m\) for which the displayed quantities are integral and \(a\ge3\). F
 
 The remaining \(u=5\) sequence still has zero density (at most one q for each valuation d), so the density \(1/24\) is unchanged. This density statement describes only this m=0 parameter sieve, not a fraction of machines or halting runs.
 
+## A new B-parent reduction on the \(s\equiv7\pmod8\) side
+
+For \(s=32w+31\), write
+\[
+B_s=(54+90s,127+211s)=(2844+2880w,6668+6752w).
+\]
+Its sum is \(8S\) with \(S=1189+1204w\equiv1\pmod4\), so the source-certified generic sum-zero parent theorem applies. Both parents are excluded:
+
+- The direct parent is \(D=(9510+9632w,3333+3376w)\). It is even/odd with \((D_x+D_y+1)\equiv4\pmod8\), so **evenodd_four_blank_reach_iff** forces its unique parent \(P=(6419+6504w,4875+4940w)\). This \(P\) has odd right coordinate at least \(5\) and sum \(2\pmod4\), excluded by **blank_no_odd_sum_two**.
+- The bounce parent is \(E=(2376+2408w,6897+6988w)\). Its right coordinate is odd at least \(5\) and its sum is \(1\pmod4\), excluded by **blank_no_odd_sum_one**.
+
+Consequently **blank_no_B_s31** in M0EvenEvenSumZeroS31.lean proves
+\[
+\neg CReach(2844+2880w,6668+6752w).
+\]
+The file is added to the manual agent11-c-diagonal-late.yml workflow but is not yet CI-checked. This is only a B-parent reduction: for the corresponding \(A_s\) target, the parent theorem still leaves \(L_s\), and this note does **not** claim the full \(A_s\) or high-stop family is excluded.
+
+
 ## Even-valuation residual candidates
 
 The following two candidates have \(r\) even in the decomposition \(129+211s=2^r u\), so the odd-valuation theorem above does not cover them. They still use the existing \(L_s\) exclusion and the generic sum-zero parent theorem.
