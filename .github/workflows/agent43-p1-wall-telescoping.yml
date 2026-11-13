@@ -2,7 +2,7 @@ name: Agent43 P1 source wall telescoping theorem (targeted)
 on:
   workflow_dispatch:
   pull_request:
-    types: [opened]
+    types: [opened, ready_for_review]
     paths:
       - 'im-results/agent43-p1-high-cost-reset-count/WallTelescopingSource.lean'
       - '.github/workflows/agent43-p1-wall-telescoping.yml'
@@ -33,7 +33,11 @@ jobs:
             lean -o "$MAP/$m.olean" "$MAP/$m.lean"
           done
           lean -o "$INV/P1FiniteInverse.olean" "$INV/P1FiniteInverse.lean"
-          for m in MassInverse OddConeMass P1InverseLog InverseIff UpperTail; do
+          for m in MassInverse OddConeMass; do
+            lean -o "$P1/$m.olean" "$P1/$m.lean"
+          done
+          lean -o "$INV/P1InverseLog.olean" "$INV/P1InverseLog.lean"
+          for m in InverseIff UpperTail; do
             lean -o "$P1/$m.olean" "$P1/$m.lean"
           done
           for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount DefectTransport; do
