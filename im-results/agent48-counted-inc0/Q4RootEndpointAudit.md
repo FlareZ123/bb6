@@ -43,6 +43,23 @@ The common marked-cell set, sorted by absolute coordinate, is:
 Thus the full replay set equals the full canonical encoder set exactly:
 `actual \ target = ∅` and `target \ actual = ∅`.
 
+## Lean finite certificate
+
+`Q4FiniteAudit.lean` now reuses the repository's actual `tm2`,
+`fRun`, and `initialS1Finite` declarations from
+`ChampionRootBridge` and `InitialS1RootFinite`. It proves the exact
+332-step finite replay to the explicit ordered output list and then
+proves, order-independently, that this list has exactly the 106 cells
+above. The proof body was preflighted in Lean 4.36.0-rc2 against the
+identical finite simulator and initial/target lists; its axiom report was
+`[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
+
+The manual-only workflow `.github/workflows/agent48-champion-root.yml`
+now copies and compiles `InitialS1RootFinite.lean` and
+`Q4FiniteAudit.lean`, then checks both theorem axiom reports and fails
+closed on `sorryAx`. The actual imported repository workflow has not yet
+run for this addition.
+
 ## Reproduction
 
 Run:
