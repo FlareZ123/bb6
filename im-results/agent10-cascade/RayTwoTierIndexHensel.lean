@@ -405,5 +405,38 @@ theorem twoTierNumerator_parent_identity (n j:Nat) (d q w:Int)
 #print axioms twoTierNumerator_sector_mod_three
 #print axioms twoTierIndexResidue_good
 #print axioms twoTierIndexResidue_iff
+/-- The first five exact selector digits for the exceptional 887 ray. -/
+theorem twoTierIndexResidue_5_6_4 :
+    twoTierIndexResidue 5 6 4=66 := by
+  norm_num [twoTierIndexResidue,twoTierNumerator,signedZ,henselDigit]
+
+theorem twoTierIndexResidue_5_6_5 :
+    twoTierIndexResidue 5 6 5=66 := by
+  norm_num [twoTierIndexResidue,twoTierNumerator,signedZ,henselDigit]
+
+/-- On the entire h=147 mod 243 family (equivalently n=887 mod 13122
+inside the s=5 sector), the second-tier numerator has exact 3-adic
+valuation five. -/
+theorem twoTier887_second_gate_exact (h:Nat) (hh:h%243=147) :
+    (3:Int)^5∣twoTierNumerator (5+6*h) 6 ∧
+      ¬(3:Int)^6∣twoTierNumerator (5+6*h) 6 := by
+  have h81:h%3^4=66:=by
+    norm_num at hh ⊢
+    omega
+  have hnot:h%3^5≠66:=by
+    norm_num at hh ⊢
+    omega
+  constructor
+  · apply (twoTierIndexResidue_iff 5 6 4 h (by norm_num) (by norm_num)).2
+    simpa [twoTierIndexResidue_5_6_4] using h81
+  · intro hdiv
+    have heq: h%3^5=twoTierIndexResidue 5 6 5 :=
+      (twoTierIndexResidue_iff 5 6 5 h (by norm_num) (by norm_num)).mp hdiv
+    rw [twoTierIndexResidue_5_6_5] at heq
+    exact hnot heq
+
 #print axioms twoTierNumerator_parent_identity
+#print axioms twoTierIndexResidue_5_6_4
+#print axioms twoTierIndexResidue_5_6_5
+#print axioms twoTier887_second_gate_exact
 end CascadeRayTwoTierIndexHensel
