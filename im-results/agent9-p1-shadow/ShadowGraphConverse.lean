@@ -63,7 +63,7 @@ private theorem three_mul_add4_le_two_pow (k : Nat) (hk : 4 ≤ k) :
           omega
   exact aux k hk
 
-/-- For N>=2M+16 and L<=N+9, the parameter width dominates every
+/-- For N>=2M+7 and L<=N+9, the parameter width dominates every
     shadow coordinate of cost at most M. -/
 theorem shadow_width_bound (N L M : Nat)
     (hN : 2*M+7 ≤ N) (hL : L ≤ N+9) :
@@ -148,7 +148,7 @@ theorem shadow_encoded_left_properties
 
 /-- Converse to the bounded source-to-shadow simulation:
     every abstract feeder-rooted shadow path of total cost <=M is an
-    authentic original-source OddCone path once N>=2M+16.
+    authentic original-source OddCone path once N>=2M+7.
 
     This is a finite-word statement; it does not give a lift uniform in
     unbounded cost at fixed N, nor blank-root forward reachability. -/
@@ -364,7 +364,7 @@ theorem l0_bounded_shadow_word_has_source
     authentic original-source OddCone realization whenever 16q>=2M+16. -/
 theorem l1_bounded_shadow_word_has_source
     (q M u m z : Nat)
-    (hN : 2*M+16≤16*q)
+    (hN : 2*M+7≤16*q)
     (hu : u+4*q+3=7*2^(16*q))
     (hgraph : ShadowReach (16*q+9) (10*q+4) m z)
     (hm : m≤M) :
