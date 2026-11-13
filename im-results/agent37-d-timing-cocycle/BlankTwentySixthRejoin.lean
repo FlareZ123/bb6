@@ -1,4 +1,5 @@
 import Lean.Elab.Tactic.Omega
+import DRegularFast
 import BlankTwentyFifthRejoin
 import EFirstAPacket
 import AOnePacketBoundarySource
@@ -27,7 +28,7 @@ theorem terminal8516_certificate :
     · dsimp [seed26]
       omega
     · simp [seed26]
-  rw [BB6.Agent2Fast64.fastRun_correct 8516 seed26 hcanon]
+  rw [BB6.DRegularFast.fastRun_correct 8516 seed26 hcanon]
   decide
 
 theorem terminal8516_exact :
