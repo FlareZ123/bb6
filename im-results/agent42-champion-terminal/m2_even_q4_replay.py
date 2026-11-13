@@ -9,7 +9,6 @@ a,b.
 """
 
 from dataclasses import dataclass
-from typing import Optional
 
 D0 = (False, False, True)
 D1 = (True, True, True)
@@ -155,8 +154,14 @@ def check_small_parameters(max_a: int = 4, max_b: int = 4) -> int:
 
             # Continue from the q4 cut through its 39+3*b suffix and drain.
             run(source, 39 + 3 * b)
-            assert (source.state, source.head) == (3, 5 + 3 * b)
-            run(source, 6 * (4 ** b) + 42 * (2 ** b) - 12 * b - 48)
+            intermediate = s1_config(3, 3, 1, a + b + 2,
+                                      (1 << b) - 1, 0, 5 + 3 * b)
+            assert source.state == intermediate.state
+            assert source.head == intermediate.head
+            assert source.ones == intermediate.ones
+            drain = 6 * (4 ** b) + 42 * (2 ** b) - 12 * b - 48
+            assert prefix + 39 + 3 * b + drain == total_increment_cost(a, b)
+            run(source, drain)
             target = expected_final(a, b)
             assert source.state == target.state
             assert source.head == target.head
