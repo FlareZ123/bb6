@@ -234,7 +234,7 @@ theorem twoTierDepthResidue_iff (n k j : Nat)
       let d := henselDigit
         (twoTierDepthNumerator n b/(3:Int)^(k+1))
         (16*(2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k)
-      have hstep : pn=3*p := depthPeriod_next k
+      have hstep : pn=3*p := twoTierDepthPeriod_next k
       have hdiv : (3:Int)^(k+1)∣(3:Int)^(k+2) := by
         refine ⟨3,?_⟩
         rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
@@ -253,7 +253,7 @@ theorem twoTierDepthResidue_iff (n k j : Nat)
         have hb : (j%pn)%p=b := (ih (j%pn)).mp hlo
         have hp : 0<p := twoTierDepthPeriod_pos k
         have hjlt : j%pn<3*p := by
-          have h := Nat.mod_lt j (depthPeriod_pos (k+1))
+          have h := Nat.mod_lt j (twoTierDepthPeriod_pos (k+1))
           simpa only [pn,hstep] using h
         have ht : (j%pn)/p<3 := by
           apply (Nat.div_lt_iff_lt_mul hp).mpr
