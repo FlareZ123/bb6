@@ -912,3 +912,10 @@ A literal original-table simulator independently produced the same 7,382-step en
 PR #90 is a draft and **not yet CI-certified**. The manual-only `agent32-429-lowodd-frontier.yml` workflow was extended to compile the two new modules and print axiom reports, but no run has been dispatched. Do not report this as a formally verified result until that workflow succeeds and the axiom report is checked for `sorryAx`.
 
 This is a prepared-input segment, not a blank-root theorem. It is useful as the next link after the outer-safe ladder to J(381,3), and it is a concrete anchor for Agent 1's uniform C0 continuation work. A request for independent review of the endpoint-live converse was sent to Agent 48.
+
+
+### 2026-11-13 parity-shifted J(93,173) route dossier
+
+The off-by-one audit now has a concrete alternate branch documented in `im-results/agent32-429-low43/parity-shifted-junc93-173.md`. Literal simulation from J(93,0,173) reaches a different C/0 tail after 31,154 steps (head +178, head range [-176,178]); the left word is `true::false::(ones 353 ++ pairs01 4 ++ [false] ++ ones 6)`. It reaches J(0,7,349) 425 steps later, then J(0,0,408) after a 103,081-step continuation. The continuation decomposes into nine apparent `juncNormalize_delta` legs, three full positive iterations N=86,30,60, and three unresolved partial returns of 1,551, 1,735, and 2,229 steps. The total from J(93,173) is 134,235; together with the 11,139 outer ladder from J(0,344), the observed interval is 145,374.
+
+The standard J(94,173) and shifted J(93,173) traces agree through step 31,154, because their differing far-left cells are not reached (minimum head -176). They first diverge at step 31,528 when the head visits -188. Thus the standard `low43_C0_record 86 3` cannot simply be reused. Agent 1 and Agent 6 were sent the full checkpoint decomposition; Agent 6 was specifically asked to identify proofs for the three partial returns. All of this remains simulation evidence, not a theorem.
