@@ -6,7 +6,7 @@ set_option maxRecDepth 65536
 
 namespace BB429NoFatalGuard
 
-open BB6Coverage BB429OddExcursion
+open BB429OddExcursion
 
 /-- The actual halting gateway is C/0 with a marked cell immediately
     to the right. Harmless C/0/blank-right visits are allowed. -/
@@ -45,7 +45,7 @@ theorem runNoFatal_to_run (n : Nat) (z z' : BB429OddExcursion.Zipper)
           | some d =>
               have htail : runNoFatal n d = some z' := by
                 simpa [runNoFatal, hf, hstep] using hsafe
-              have hrun := ih d z' htail
+              have hrun := ih d htail
               simp [BB429OddExcursion.run, hstep, hrun]
 
 /-- Every source configuration through the endpoint of a successful
@@ -73,7 +73,11 @@ theorem runNoFatal_prefix (n t : Nat) (z z' : BB429OddExcursion.Zipper)
           by_cases ht0 : t = 0
           · subst t
             exact ⟨z, by simp [BB429OddExcursion.run], hf⟩
-          · obtain ⟨t', rfl⟩ : ∃ t', t = t' + 1 := by omega
+          · let t' := t - 1
+            have htEq : t = t' + 1 := by
+              dsimp [t']
+              omega
+            subst t
             have ht' : t' ≤ n := by
               apply Nat.le_of_succ_le_succ
               simpa [Nat.succ_eq_add_one] using ht
@@ -94,17 +98,19 @@ theorem runNoFatal_add (n k : Nat) (z : BB429OddExcursion.Zipper) :
       (runNoFatal n z).bind (fun d => runNoFatal k d) := by
   induction n generalizing z with
   | zero =>
-      simp [runNoFatal]
+      cases hf : fatalCZero z with
+      | true => simp [runNoFatal, hf]
+      | false => simp [runNoFatal, hf]
   | succ n ih =>
       simp only [Nat.succ_add, runNoFatal]
-      by_cases hf : fatalCZero z
-      · simp [hf]
-      · simp only [hf, ite_false]
-        rw [Option.bind_assoc]
-        apply congrArg (fun f : BB429OddExcursion.Zipper → Option BB429OddExcursion.Zipper =>
-          (BB429OddExcursion.one z).bind f)
-        funext d
-        exact ih d
+      cases hf : fatalCZero z with
+      | true => simp [hf]
+      | false =>
+          simp only [hf, ite_false, Option.bind_assoc]
+          apply congrArg (fun f : BB429OddExcursion.Zipper → Option BB429OddExcursion.Zipper =>
+            (BB429OddExcursion.one z).bind f)
+          funext d
+          exact ih d
 
 /-- Endpoint form of guarded-run composition. -/
 theorem runNoFatal_compose (n k : Nat) (z z' z'' : BB429OddExcursion.Zipper)
