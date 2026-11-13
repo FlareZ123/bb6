@@ -169,7 +169,7 @@ A further S0-specific theorem was added in `CountedSuffixOutput.lean`:
 
 - `s0Config_right_far_zero` and `s0Config_right_zero_after_counter` derive the blank right exterior directly from `s0Config_right_cell`.
 - `even_counted_suffix_canonical_s0_of_left` identifies the entire suffix output with an arbitrary canonical S0 target, provided the prefix supplies its nonpositive-cell identity and preserves the old far-right exterior.
-- `s0Config_counted_decrement_of_prefix` composes an assumed full-tape `15+12r` prefix run with the `33+12b) suffix run, using `shift_run` and `run_compose`, and concludes
+- `s0Config_counted_decrement_of_prefix` composes an assumed full-tape `15+12r` prefix run with the `33+12b` suffix run, using `shift_run` and `run_compose`, and concludes
   `run tm2 (48+12*r+12*b) (s0Config l a zIn b h) = some (s0Config l a zOut (b+1) h)`.
 
 This is the direct interface needed for Agent 8's `hInc0) premise, with arbitrary finite left exterior `l`. To instantiate it with a genuine decrement, take `zOut=z-1` and `r=v₂(z)`, then supply the prefix run, open boundary cells, right-run condition, exterior preservation, and left-output identity. The theorem source is now present and included in the manual terminal-source workflow, but **the actual repository module has not yet passed CI**; this is a proof candidate pending full compilation, not yet a certified `hInc0) result.
