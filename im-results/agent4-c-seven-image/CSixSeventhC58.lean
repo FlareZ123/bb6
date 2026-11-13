@@ -658,8 +658,10 @@ theorem blank_ne_s3_parameter_congruence (j m time : Nat)
   have hblank :=
     BB6.Agent4Seven.blank_ne_six_seven_band_s3 u v time hsector
   have hx : 2*j+3=641+1024*u := by omega
+  intro hrun
   apply hblank
-  rw [hx,hk]
+  rw [hx,hk] at hrun
+  exact hrun
 
 theorem blank_halts_iff_c58_late_fast_all_s3 :
     BB6.CReachBridge.RunHalts ↔
