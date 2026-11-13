@@ -159,3 +159,20 @@ The root-connected chain has been extended in [TM63M0M2RootComposition.md](TM63M
 ## Next branch: M1,n=3 odd q4 bridge (13 November 2026)
 
 A 26-step finite bridge for the next `(m,n)=(1,3)` odd reset stage is documented in [M1OddQ4Bridge.md](M1OddQ4Bridge.md) and certified by [M1OddQ4Bridge.lean](M1OddQ4Bridge.lean). The exact finite-list run and head confinement passed the repository source-audit step in run [43411782528](https://github.com/FlareZ123/bb6/actions/runs/43411782528), including the `sorryAx` gate. The overall workflow subsequently failed upstream in `M1EvenQ4Prefix.lean`, before reaching M2 or the M0/M2 root module. Agent 24 has since added the full parametric M1-odd prefix/suffix and root composition under `im-results/agent24-champion-time/`.
+
+
+## M0-even (m,n)=(0,2) and first-section continuation (13 November 2026)
+
+Agent 24's new M0-even q4 branch is recorded in the sibling project [M0EvenQ4Bridge.lean](../agent24-champion-time/M0EvenQ4Bridge.lean), [M0EvenQ4Prefix.lean](../agent24-champion-time/M0EvenQ4Prefix.lean), [M0EvenQ4Suffix.lean](../agent24-champion-time/M0EvenQ4Suffix.lean), and [m0_even_n2_replay.py](../agent24-champion-time/m0_even_n2_replay.py). The bridge is 39 primitive steps; the source prefix composes it with the 3a left sweep and 3(a-1) E-scan, yielding a q4 configuration with the required right shape and complete left-facing tape.
+
+**Verified:** targeted CI run [43420529873](https://github.com/FlareZ123/bb6/actions/runs/43420529873) passed. It reports the finite replay m=0,n=2 even q4 replay: PASS, compiles the bridge and source prefix, and checks that no sorryAx appears. This certifies the M0-even bridge and prefix only.
+
+The source suffix and counted drain are packaged in [M0EvenQ4Suffix.lean](../agent24-champion-time/M0EvenQ4Suffix.lean). It composes the generic q4 suffix with the all-ones counted drain to prove the full (0,2) counted increment. This suffix has not yet been independently compiled in a successful current-source run.
+
+Agent 4's [TM63M1OddFirstSectionContinuation.lean](../agent4-champion-time/TM63M1OddFirstSectionContinuation.lean) then composes the M0-even (0,2) increment and the M2-odd (2,1) increment after the M1-odd root endpoint. Its intended endpoint is
+S1(3,0,1,tm63FirstSection.exponent,0,tm63FirstSection.right,tm63AfterFirstSectionHead),
+the end of the complete first seven-increment section. The declaration-order and v2(1) proof issues were corrected, but this root continuation has not yet passed Lean compilation.
+
+The manual-only Agent42 source workflow now includes the M0-even bridge/prefix/suffix and the first-section continuation, with the independent M0-even suffix compiled before the M1-even prefix blocker. The workflow remains manual-only; no push/PR trigger was added, and this invocation had no workflow-dispatch action. The next source obligation after the first-section endpoint is the Rst1' reset core, for which Agent 8 has the existing intermediate bridge itinerary in im-results/agent8-rst1prime/.
+
+**Qualification:** the M0-even prefix is source-certified; the full (0,2) counted increment, first-section blank-root composition, Rst1' continuation, complete champion runtime, and universal BB(6) upper bound remain open. All of this work remains intermediate in im-results/, not a publishable result.
