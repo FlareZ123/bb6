@@ -86,7 +86,7 @@ Every primitive prefix of this physical run is C/01-free.
 
 Equivalently, this proves the return map Junc(0,w) -> Junc(0,w+28) for every (w=4(r+90)), i.e. every multiple of four from 408 through 736 inclusive. The proof is not a simulation replay: it composes six parameter-uniform physical outer-safe returns (U=0,3,9,21,45,93; 46,692 steps) with the arbitrary-head low42 physical theorem at (j=2r,k=94-r). The generic physical NoFatal converse supplies the all-prefix C/01 exclusion from the live Junc endpoint.
 
-In particular, twelve applications at (r=12,19,26,\ldots,89) give a formal path Junc(0,408) -> Junc(0,744). The 12-step composition has not yet been packaged as a separate theorem. The subsequent Junc(0,744) -> Junc(0,924) segment and its 7,382-step Junc(381,3) -> Junc(387,2) gap remain unresolved.
+In particular, twelve applications at (r=12,19,26,\ldots,89) give a formal path Junc(0,408) -> Junc(0,744), with total cost 1,199,072 primitive steps. The 12-step composition has not yet been packaged as a separate theorem. The subsequent Junc(0,744) -> Junc(0,924) segment and its 7,382-step Junc(381,3) -> Junc(387,2) gap remain unresolved.
 
 ## Second observed return family: J(11,w) -> J(11,w+32)
 
