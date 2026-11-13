@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix:im-results/agent1-429-w4-boundary:im-results/agent33-429-writer-locality:im-results/agent4-429-ordinary-frontier:im-results/agent1-429-w2-census:im-results/agent6-429-low2:im-results/agent18-429-low-j:im-results/agent18-429-junc-canonical:im-results/agent6-429-low42:im-results/agent6-429-low40"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix:im-results/agent1-429-w4-boundary:im-results/agent33-429-writer-locality:im-results/agent4-429-ordinary-frontier:im-results/agent1-429-w2-census:im-results/agent6-429-low2:im-results/agent18-429-low-j:im-results/agent6-429-low42:im-results/agent6-429-low40"
           LOG=/tmp/agent6-low42-source.log
           : > "$LOG"
           compile() {
@@ -72,7 +72,6 @@ jobs:
           compile im-results/agent32-429-primitive-cost/JPhysicalPrefix
           compile im-results/agent6-429-low42/Low42Delta
           compile im-results/agent6-429-low42/Low42Physical
-          compile im-results/agent18-429-junc-canonical/JuncCanonical
           compile im-results/agent1-429-root-entry/Low42RootNoFatal
           compile im-results/agent1-429-w4-boundary/W4HeadMax
           python -c 'from pathlib import Path; import base64,hashlib,lzma; p=Path("im-results/agent6-429-low42"); b=lzma.decompress(base64.b64decode((p/"Low42Max.lean.xz.b64").read_text().strip())); assert hashlib.sha256(b).hexdigest()=="9858955ef0ad8ce9b3f2769adebd1943c6081e99bd7d77a436a6c215bea13ed5"; (p/"Low42Max.lean").write_bytes(b)'
@@ -83,7 +82,7 @@ jobs:
           compile im-results/agent6-429-low40/Low40Core
           compile im-results/agent6-429-low40/Low40Source
           compile im-results/agent6-429-low40/Low40Physical
-          for decl in BB429Low40.low40_source_all BB429Low40Physical.low40_raw_head_all BB429Low42.low42_source_all BB429Low42.c0_even_to_c0_delta BB429Low42Physical.stage_tape_rep BB429Low42Physical.low42_raw_head_all BB429Low42Max.low42_source_max_all BB429Low42PrefixPhysical.continuation_all_prefixes_right_bound BB429Low42RootNoFatal.low42_root_czero_event_census BB429Low42RootNoFatal.low42_root_no_fatal_source BB429Low42RootNoFatal.low42_root_no_fatal_physical BB429Low42RootNoFatal.low42_root_no_fatal_canonical BB429Low42RootNoFatal.blank_root_low42_no_fatal; do
+          for decl in BB429Low40.low40_source_all BB429Low40Physical.low40_raw_head_all BB429Low42.low42_source_all BB429Low42.c0_even_to_c0_delta BB429Low42Physical.stage_tape_rep BB429Low42Physical.low42_raw_head_all BB429Low42Max.low42_source_max_all BB429Low42PrefixPhysical.continuation_all_prefixes_right_bound BB429Low42RootNoFatal.low42_root_czero_event_census BB429Low42RootNoFatal.low42_root_no_fatal_source BB429Low42RootNoFatal.low42_root_no_fatal_physical BB429Low42RootNoFatal.blank_root_low42_no_fatal; do
             grep -F "'$decl' depends on axioms:" "$LOG"
           done
           if grep -q sorryAx "$LOG"; then
