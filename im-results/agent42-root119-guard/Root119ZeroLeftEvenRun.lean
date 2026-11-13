@@ -300,6 +300,9 @@ theorem zeroLeftEvenOutTape_right (n : Nat) (t : Int → Bool) (h x : Int)
     _ = fTape x := hs
     _ = t x := hprefix
 
+#print axioms BB6Root119.zeroLeftPrefix_run
+#print axioms BB6Root119.evenSweepTape_left
+#print axioms BB6Root119.evenSweep_to_Bzero_exact
 #print axioms BB6Root119.zeroLeftEvenRun_exact
 #print axioms BB6Root119.zeroLeftEvenRun_returns_Bzero
 #print axioms BB6Root119.zeroLeftEvenOutTape_left
