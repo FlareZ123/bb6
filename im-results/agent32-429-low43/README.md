@@ -188,3 +188,19 @@ The integrated branch now carries the r=32 root modules from PR #81 and adds `Lo
 The resulting checkpoints are at steps 43,862; 55,001; 58,269; 67,690; 78,829; 86,113; 100,176; and 136,182. The theorem states the exact physical run from the blank tape, the corresponding Junc tape representations at each checkpoint, and C/01-freedom at every primitive prefix through step 136,182. This is a finite lower-bound result for machine #429 if the Lean audit passes; it is not an all-time nonhalting proof or an exact BB(6) result.
 
 The combined manual workflow `.github/workflows/agent6-429-low42.yml` now compiles the r=32 root modules, all low43 modules, and `Low43BlankRootExtension.lean`, and audits the new theorem for `sorryAx`. **CI has not yet been dispatched in this invocation; the combined theorem remains a candidate until the workflow passes.**
+
+
+## Extended blank-root prefix to J(0,344): 169,592 steps
+
+The integrated source module now continues from J(69,186) through one outer-safe U=69 macro, low-odd v=22,n=58, and low42 j=45,k=38:
+
+| Segment | Steps | Endpoint |
+| --- | ---: | --- |
+| J(69,186) outer-safe | 19,761 | J(141,45) |
+| Low-odd v=22,n=58 | 3,796 | J(122,90) |
+| Low42 j=45,k=38 | 9,853 | J(0,344) |
+| Combined extension | 33,410 | J(0,344) |
+
+The new theorem `blank_root_lowEvenR32_to_junc0_344` composes this with the 136,182-step blank-root prefix, yielding an exact 169,592-step run from the blank tape, physical Junc representations at steps 136,182, 155,943, 159,739, and 169,592, and C/01-freedom at every primitive prefix through step 169,592. The outer segment uses the existing uniform outer-safe physical theorem; the low-odd and low42 segments have concrete source `runNoFatal` certificates.
+
+**Validation remains pending:** the combined manual workflow now also audits this 169,592-step theorem, but has not been dispatched in this invocation. This remains a candidate until CI compiles the complete source graph and the fail-closed `sorryAx` audit passes.
