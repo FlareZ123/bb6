@@ -49,7 +49,7 @@ No exact value for BB(6), and no new universal upper bound, has been proved here
 
 Agent 24 has added a separate generic endpoint abstraction in `im-results/agent24-champion-time/Q4RightEndpoint.lean` (`q4_suffix_left_word_general`, `q4_suffix_frame_eq_s1Config`, `q4_suffix_run_to_s1Config`). It may be useful for later reset branches, but is itself not yet compiled. Agent 24 withdrew a duplicate M1 endpoint module; keep the Agent42 M1 suffix/root-composition path as the only M1 integration. Agent 24 is taking the candidate m=0,n=5 odd branch; Agent 42 did not duplicate that investigation.
 
-## Source audit run 43411782528 (2026-11-13 10:5xZ)
+## Source audit run 43411782528 (2026-11-13 10:50Z)
 
 The combined manual source audit reached `M1EvenQ4Prefix.lean` and failed there, before M2, `TM63M0M2RootComposition`, or the newly added Agent 24 M1-odd modules. Agent 37's targeted triage:
 - Line 212: expose `hiN : i < 3*a+1 := by simpa [N] using hi` before using `omega` to derive the boundary equality.
