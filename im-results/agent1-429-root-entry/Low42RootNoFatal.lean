@@ -1,6 +1,5 @@
-import Low42Physical
-import JuncCanonical
 import BB429PhysicalBridge
+import BB429FinishScanEDelta
 import Lean.Elab.Tactic.Omega
 
 set_option maxHeartbeats 30000000
@@ -10,8 +9,7 @@ namespace BB429Low42RootNoFatal
 
 open BB6Coverage BB6Bubble BB429PhysicalFrontier
 open BB429OddExcursion BB429FinishScanEDelta
-open BB429PhysicalBridge BB429JuncCanonical BB429Low42Physical
-open BB429JPhysical
+open BB429PhysicalBridge
 
 /-- The actual halting gateway is C/0 with a marked immediate right
     neighbor. Harmless C/0/blank-right visits are permitted. -/
@@ -163,31 +161,6 @@ theorem low42_root_no_fatal_physical
     simp [fatalCZero, hstate', hcurrent', hrightHead]
   simp [hfatal] at hpSafe
 
-/-- Exact canonical physical J(53,20) instance: the same no-fatal
-    certificate ends at Junc(0,0,136), 1077 steps later, with head -109. -/
-theorem low42_root_no_fatal_canonical :
-    ∃ d : Config,
-      BB6Coverage.run target429 1077
-        {state:=BB6Bubble.A, head:=0, tape:=jTape 53 20} = some d ∧
-      Represents rootLow42End d ∧
-      d.head = -109 ∧
-      (∀ t : Nat, t ≤ 1077 →
-        ∃ e : Config,
-          BB6Coverage.run target429 t
-            {state:=BB6Bubble.A, head:=0, tape:=jTape 53 20} = some e ∧
-          ¬(e.state.val = 2 ∧ e.tape e.head = false ∧
-            e.tape (e.head+1) = true)) := by
-  let c0 : Config := {state:=BB6Bubble.A, head:=0, tape:=jTape 53 20}
-  have hrep : Represents rootLow42Start c0 := by
-    simpa [c0] using canonical_junc_rep 53 20 0
-  obtain ⟨d, hraw, hrepD, hprefix⟩ :=
-    low42_root_no_fatal_physical c0 hrep
-  obtain ⟨d', hraw', hrepD', hhead⟩ :=
-    low42_raw_head_all 10 21
-  have heq : d = d' := Option.some.inj (hraw.symm.trans hraw')
-  subst d
-  exact ⟨d', hraw', hrepD', hhead, hprefix⟩
-
 /-- Composition lemma for the original physical raw-run semantics. -/
 private theorem physical_run_add (m n : Nat) (a b c : Config)
     (h1 : BB6Coverage.run target429 m a = some b)
@@ -223,7 +196,6 @@ theorem blank_root_low42_no_fatal
 #print axioms low42_root_czero_event_census
 #print axioms low42_root_no_fatal_source
 #print axioms low42_root_no_fatal_physical
-#print axioms low42_root_no_fatal_canonical
 #print axioms blank_root_low42_no_fatal
 
 end BB429Low42RootNoFatal
