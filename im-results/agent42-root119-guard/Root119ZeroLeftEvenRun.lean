@@ -183,18 +183,18 @@ theorem zeroLeftEvenRun_exact (n : Nat) (b : Conf)
     calc
       fTape (b.h+1+2*(n:Int)) = b.tape (b.h+1+2*(n:Int)) :=
         hfAway _ (by omega)
-      _ = false := by
+      _ = b.tape (b.h+2*(n:Int)+1) := by
         have hidx : b.h+1+2*(n:Int) = b.h+2*(n:Int)+1 := by omega
-        rw [hidx]
-        exact hzero
+        exact congrArg b.tape hidx
+      _ = false := hzero
   have hzeroNext' : fTape (b.h+1+2*(n:Int)+1) = false := by
     calc
       fTape (b.h+1+2*(n:Int)+1) = b.tape (b.h+1+2*(n:Int)+1) :=
         hfAway _ (by omega)
-      _ = false := by
+      _ = b.tape (b.h+2*(n:Int)+2) := by
         have hidx : b.h+1+2*(n:Int)+1 = b.h+2*(n:Int)+2 := by omega
-        rw [hidx]
-        exact hzeroNext
+        exact congrArg b.tape hidx
+      _ = false := hzeroNext
   have hprev' : n = 0 → fTape ((b.h+1)-1) = false := by
     intro hn
     have heq : (b.h+1)-1 = b.h := by omega
@@ -239,30 +239,52 @@ theorem zeroLeftEvenRun_returns_Bzero (n : Nat) (b : Conf)
 /-- The macro preserves the entire left exterior of its four-cell prefix. -/
 theorem zeroLeftEvenOutTape_left (n : Nat) (t : Int → Bool) (h x : Int)
     (hx : x ≤ h-4) : zeroLeftEvenOutTape n t h x = t x := by
-  dsimp [zeroLeftEvenOutTape,evenSweepB0Tape]
-  have hs := evenSweepTape_left n
-    (setBit (zeroLeftPrefixTape t h) h false) (h+1) x (by omega)
-  have hn1 : x ≠ h+1+2*(n:Int) := by omega
-  have hn2 : x ≠ h+1+2*(n:Int)-1 := by omega
-  have hn3 : x ≠ h := by omega
-  have hn4 : x ≠ h-1 := by omega
-  have hn5 : x ≠ h-2 := by omega
-  have hn6 : x ≠ h-3 := by omega
-  simp [setBit,zeroLeftPrefixTape,hs,hn1,hn2,hn3,hn4,hn5,hn6]
+  let fTape : Int → Bool := setBit (zeroLeftPrefixTape t h) h false
+  have hs : evenSweepTape n fTape (h+1) x = fTape x :=
+    evenSweepTape_left n fTape (h+1) x (by omega)
+  have houter : setBit (setBit (evenSweepTape n fTape (h+1))
+      (h+1+2*(n:Int)-1) true) (h+1+2*(n:Int)) true x =
+      evenSweepTape n fTape (h+1) x := by
+    have h1 : x ≠ h+1+2*(n:Int)-1 := by omega
+    have h2 : x ≠ h+1+2*(n:Int) := by omega
+    simp [setBit,h1,h2]
+  have hprefix : fTape x = t x := by
+    have h1 : x ≠ h := by omega
+    have h2 : x ≠ h-1 := by omega
+    have h3 : x ≠ h-2 := by omega
+    have h4 : x ≠ h-3 := by omega
+    simp [fTape,setBit,zeroLeftPrefixTape,h1,h2,h3,h4]
+  change setBit (setBit (evenSweepTape n fTape (h+1))
+    (h+1+2*(n:Int)-1) true) (h+1+2*(n:Int)) true x = t x
+  calc
+    _ = evenSweepTape n fTape (h+1) x := houter
+    _ = fTape x := hs
+    _ = t x := hprefix
 
 /-- The macro preserves the complete right exterior beginning at its new head. -/
 theorem zeroLeftEvenOutTape_right (n : Nat) (t : Int → Bool) (h x : Int)
     (hx : h+2*(n:Int)+2 ≤ x) : zeroLeftEvenOutTape n t h x = t x := by
-  dsimp [zeroLeftEvenOutTape,evenSweepB0Tape]
-  have hs := evenSweepTape_right n
-    (setBit (zeroLeftPrefixTape t h) h false) (h+1) x (by omega)
-  have hn1 : x ≠ h+2*(n:Int)-1 := by omega
-  have hn2 : x ≠ h+2*(n:Int) := by omega
-  have hn3 : x ≠ h := by omega
-  have hn4 : x ≠ h-1 := by omega
-  have hn5 : x ≠ h-2 := by omega
-  have hn6 : x ≠ h-3 := by omega
-  simp [setBit,zeroLeftPrefixTape,hs,hn1,hn2,hn3,hn4,hn5,hn6]
+  let fTape : Int → Bool := setBit (zeroLeftPrefixTape t h) h false
+  have hs : evenSweepTape n fTape (h+1) x = fTape x :=
+    evenSweepTape_right n fTape (h+1) x (by omega)
+  have houter : setBit (setBit (evenSweepTape n fTape (h+1))
+      (h+1+2*(n:Int)-1) true) (h+1+2*(n:Int)) true x =
+      evenSweepTape n fTape (h+1) x := by
+    have h1 : x ≠ h+1+2*(n:Int)-1 := by omega
+    have h2 : x ≠ h+1+2*(n:Int) := by omega
+    simp [setBit,h1,h2]
+  have hprefix : fTape x = t x := by
+    have h1 : x ≠ h := by omega
+    have h2 : x ≠ h-1 := by omega
+    have h3 : x ≠ h-2 := by omega
+    have h4 : x ≠ h-3 := by omega
+    simp [fTape,setBit,zeroLeftPrefixTape,h1,h2,h3,h4]
+  change setBit (setBit (evenSweepTape n fTape (h+1))
+    (h+1+2*(n:Int)-1) true) (h+1+2*(n:Int)) true x = t x
+  calc
+    _ = evenSweepTape n fTape (h+1) x := houter
+    _ = fTape x := hs
+    _ = t x := hprefix
 
 #print axioms BB6Root119.zeroLeftEvenRun_exact
 #print axioms BB6Root119.zeroLeftEvenRun_returns_Bzero
