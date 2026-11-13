@@ -61,6 +61,9 @@ This directory retains **all 39 topic links** from the old board, grouped by sub
 - [D physical first-return semantics](../im-results/agent32-cryptid-padding/README.md) · [notice](../communications/broadcast/2026-11-03T2352Z_agent32-physical-first-return-semantics.md)
 - [D cross-root symbolic relation](../im-results/agent39-d-semiconjugacy/README.md) · [issue record](issues/R-20261103T1013Z-agent39-d-semiconjugacy.md)
 - [Whole-stack binary-word era invariant](../im-results/agent15-stack-era) · [issue record](issues/R-20261103T1349Z-agent15-cryptid-stack-era.md)
+- [Original-source blank-root continuation through the sixteenth exceptional reentry](../im-results/agent37-d-timing-cocycle/README.md): CI [43394857303](https://github.com/FlareZ123/bb6/actions/runs/43394857303) compiled the fourteenth, fifteenth and sixteenth reentries with theorem axiom profiles `[propext, Classical.choice, Quot.sound]`. The runner then shut down with exit 143 before episode 17; episodes 17–30 and `Seed31Probe` remain unverified. The manual root workflow now uses five artifact-carrying Lean stages and includes the previously omitted `BlankTwentyFirstRejoin` dependency before episode 22.
+- The q4 source cylinder `L(59049*m+44494,4,1)` and its regular-section closure are not yet connected to the authentic blank root. The specific conditional exception-41 model candidate `k41 ≡ 76 (mod 81)` lies in Agent35's source-closed `k=27t+22` subfamily, but this does not establish that the root reaches that candidate or close the full `k ≡ 4 (mod 9)` or `k ≡ 7 (mod 9)` families.
+- The immediate next step is to run the staged source audit through episode 30, inspect the actual Seed31 first-exit state, then prove its exact DRegular prefix and compose the matching original-source return. Do not force the q4 hypothesis from the currently known `t30 mod 27` alone.
 
 ### Machines #429 and #746
 
@@ -96,23 +99,3 @@ This directory retains **all 39 topic links** from the old board, grouped by sub
 ## Maintenance
 
 When evidence changes, rewrite the relevant summary above and its primary dossier to reflect the strongest theorem, verification level, overlap, limits and next obstacle. **Never prepend chronological updates or retain superseded pending statuses.** Follow the [mandatory presentation rule](../README.md#mandatory-research-presentation). Agent communications may be cited as evidence and remain untouched by research documentation cleanup.
-
-
-## 2026-11-13 Agent 37 update: D-root q4 and exception-41 packet closure
-
-- The blank-root chain through the thirtieth source reentry is being re-audited against the original source. CI `43385887598` is pending after correcting the P2 reset helper's heartbeat budget; its next target is the `Seed31Probe` state. The q4 cylinder `L(59049m+44494,4,1)` still requires a source-certified blank-root prefix.
-- Do **not** treat the conditional exception-41 `k\equiv4\pmod9` packet as an uncovered reset family. Agent35's source theorem `BB6.Agent35K4.close_one` in `im-results/agent35-cryptid-code/P2K4Source.lean` covers `k=27t+22`, q=`3*1+1=4`, and its original-source CI `42518529775` succeeded. The model candidate `k41\equiv76\pmod{81}` implies `k41\equiv22\pmod{27}`, so `close_one t 1` matches the P2 reset packet. Its explicit trailing blank is physically removable via `BoundaryPadding.source_pad`.
-- This is a **conditional packet closure**, not a blank-root reachability theorem. The missing root prefix to q4 and the source-certified route through exceptions 31–40 remain the priority. The separate k=7 mod9 question is not resolved by this observation.
-
-
-### 2026-11-13 audit follow-up
-
-- CI `43385887598` exposed the P2 alias's real mismatch: addition association in the time expression. The helper now uses the source grouping and `simpa only [Nat.add_assoc]`.
-- CI `43387148649` compiled that alias and then stopped in `PacketSafeExit.normalize_p2_exit`: `by_contra` was unavailable in the Lean-only toolchain. The two uses were replaced with core `by_cases` branches (commit `7db1989`).
-- CI `43388459155` is the next full original-source audit, including the corrected P2 alias and PacketSafeExit proof. The earlier attempts did not reach `Seed31Probe`; do not treat the q4 blank-root prefix as established until a successful run and a proof of the probe output are committed.
-
-
-### 2026-11-13 fixed-tail follow-up
-
-- CI `43388459155` passed the P2 alias and `PacketSafeExit` fixes, then found that `PacketP2ReentryOrE` composed reset lemmas proved for explicit `false :: replicate 6 true` against a goal using `fixedTail`. Agent2 repaired this in commit `2749b329` with `hB0'`/`hreset'` and `simpa [fixedTail]`.
-- CI `43389968596` is the next original-source audit against that repaired main. It is running; no Seed31 output or q4 blank-root prefix is established yet.
