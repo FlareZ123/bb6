@@ -1,6 +1,10 @@
 name: Agent 42 TM63 all-parameter terminal step certificate (manual)
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/agent42-champion-terminal-source.yml'
+      - 'im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean'
 permissions:
   contents: read
 jobs:
