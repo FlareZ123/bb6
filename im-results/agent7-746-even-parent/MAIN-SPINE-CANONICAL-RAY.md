@@ -57,7 +57,7 @@ More strongly, `depthResidue_iff` gives the exact all-precision classification
 
 `3^(k+1) | (2y_m+5) ↔ (m+1) mod (2·3^k) = depthResidue(n,k)`.
 
-Therefore the first-tier odd-parent exponents along the entire main spine are governed by one recursively defined 3-adic depth class at each precision. This is an exact theorem for all n in the two surviving sectors, not a finite residue sample.
+Therefore the first-tier odd-parent exponents along the entire main spine are governed by one recursively defined 3-adic depth class at each precision. This is an exact theorem for all n in the two surviving sectors, not a finite residue sample. For the complete n=887 finite-depth evaluation, including the exact t=1,3,6 band-valid branch classes and the 17 second-tier fork depths, see [N887-MAIN-SPINE-BRANCHES.md](N887-MAIN-SPINE-BRANCHES.md).
 
 ## 4. Second-tier and nested branches
 
