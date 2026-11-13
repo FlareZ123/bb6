@@ -152,3 +152,12 @@ Thus the exact remainder replacing 14n+92 is
     D₀ = 49d₀+14(m₀+n)−55.
 
 A depth-two prefix of length s still divides I by 8^s, so the generalized source model would need to control 98P−D₀ (including its sign) and the divisibility of D₀. The high-depth defect bound d₀≤7P/4+1 controls the d₀ term, but by itself does not ensure D₀<98P when m₀ is large. This is the precise obstacle to reusing FiveShallowSourceModel.lean unchanged after a high-depth restart. A useful next step is to derive a sharper joint bound on m₀ and d₀ from the high-depth transition and the remaining wall suffix, then generalize the five-shallow affine barrier with that bound.
+
+### Combining the restart defect with the terminal suffix bound
+
+Under the five-shallow hypothesis, the terminal suffix bound also controls the restart cost m₀. If the last shallow edge has cost 1, then m+n+3<93P/128; if it has cost 2, then m+n+3<77P/256. Since m₀≤m, this gives m₀+n<CP with C equal to the corresponding constant. Combining with d₀≤7P/4+1:
+
+- for last shallow cost 1, D₀< (6139/64)P−6, hence I₀=98P−D₀>(133/64)P+6;
+- for last shallow cost 2, D₀< (11515/128)P−6, hence I₀>(1029/128)P+6.
+
+So the joint high-depth/terminal-suffix hypotheses do give a substantial positive restart energy, not merely I₀>0. The remaining issue is the dyadic scaling: from I₀<98P and 8^s∣I₀ one gets only 3s≤n+6, whereas the existing FiveShallowSourceModel proof uses 3s≤n to write P=8^s·p with integral p and apply root_two_prefix_divisor. A generalized barrier may be possible with a six-bit slack, or by proving the stronger divisibility 8^s∣P from the exact high-depth congruence. This is a concrete route to extend the five-shallow theorem beyond the original root.
