@@ -21,7 +21,7 @@ def m1EvenQ4BridgeStart : FConfig :=
   ⟨3, 0, [-7,-6,-5,-4,-1,2,3,4]⟩
 
 def m1EvenQ4BridgeEnd : FConfig :=
-  ⟨4, 5, [-9,-8,-7,-4,-1,1,2,3,4]⟩
+  ⟨4, 5, [4,3,2,1,-1,-4,-7,-8,-9]⟩
 
 theorem m1EvenQ4Bridge_exact :
     fRun tm2 41 m1EvenQ4BridgeStart = some m1EvenQ4BridgeEnd := by
@@ -480,7 +480,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
 def m1EvenQ4First4Inside (x : Int) : Bool := decide (0 ≤ x ∧ x ≤ 4)
 
 def m1EvenQ4First4Start : FConfig := ⟨4,0,[0,1,2,3,4]⟩
-def m1EvenQ4First4End : FConfig := ⟨4,4,[0,1,2,3,4]⟩
+def m1EvenQ4First4End : FConfig := ⟨4,4,[3,2,1,0,4]⟩
 
 theorem m1EvenQ4First4_exact :
     fRun tm2 4 m1EvenQ4First4Start = some m1EvenQ4First4End := by
