@@ -370,6 +370,66 @@ theorem shadow_reach_lifts_to_odd_cone
     hrootOff hrootW hrootZ hrootMass hrootCoord hb0 hb04 hd0 ha0 ha0lt
     hgraph hm
 
+/-- L0 feeder corollary with the exact direct width hypothesis. -/
+theorem l0_bounded_shadow_word_has_source_of_width
+    (q M u m z : Nat)
+    (hwidth : 16*q+8+M ≤ 2^(16*q-M-3))
+    (hu : u+4*q+3=7*2^(16*q))
+    (hgraph : ShadowReach (16*q+8) (12*q+4) m z)
+    (hm : m≤M) :
+    ∃ b d alpha,
+      OddCone (4*u-4) (4*u+9) b d m ∧
+      12≤b ∧ b%4=0 ∧ d%2=1 ∧ 28≤alpha ∧ alpha<56*2^m ∧
+      2^m*(b+4*(16*q+8+m-z))=alpha*2^(16*q) := by
+  have hu4 : 4≤u := by
+    have hpow := self_add_one_le_two_pow (16*q)
+    have hmul := Nat.mul_le_mul_left 7 hpow
+    omega
+  have hu1 : 1≤u := by omega
+  obtain ⟨hmass,hcoord,_,_⟩ :=
+    two_feeder_root_arithmetic q u (2^(16*q)) hu hu1
+  have h := shadow_reach_lifts_to_odd_cone_of_width
+    (16*q) (16*q+8) (12*q+4) (4*q+4) 28 (4*u-4) (4*u+9) M m z
+    (by omega) hwidth (by omega) (by omega) (by omega)
+    hmass hcoord (by omega) (by omega) (by omega) (by omega) (by omega)
+    hgraph hm
+  simpa using h
+
+/-- L1 feeder corollary with the exact direct width hypothesis. -/
+theorem l1_bounded_shadow_word_has_source_of_width
+    (q M u m z : Nat)
+    (hwidth : 16*q+9+M ≤ 2^(16*q-M-3))
+    (hu : u+4*q+3=7*2^(16*q))
+    (hgraph : ShadowReach (16*q+9) (10*q+4) m z)
+    (hm : m≤M) :
+    ∃ b d alpha,
+      OddCone (6*u-2) (2*u+5) b d m ∧
+      12≤b ∧ b%4=0 ∧ d%2=1 ∧ 28≤alpha ∧ alpha<56*2^m ∧
+      2^m*(b+4*(16*q+9+m-z))=alpha*2^(16*q) := by
+  have hmargin := width_forces_exponent (16*q) (16*q+9) M (by omega) hwidth
+  have hu4 : 4≤u := by
+    have hpow := self_add_one_le_two_pow (16*q)
+    have hmul := Nat.mul_le_mul_left 7 hpow
+    omega
+  have hu1 : 1≤u := by omega
+  have huOdd : u%2=1 := by
+    have hexp : 16*q=(16*q-1)+1 := by omega
+    have hpowEven : (2^(16*q))%2=0 := by
+      rw [hexp,Nat.pow_succ]
+      simp [Nat.mul_mod]
+    have heven : (u+4*q+3)%2=0 := by
+      rw [hu]
+      simp [Nat.mul_mod,hpowEven]
+    omega
+  obtain ⟨_,_,hmass,hcoord⟩ :=
+    two_feeder_root_arithmetic q u (2^(16*q)) hu hu1
+  have h := shadow_reach_lifts_to_odd_cone_of_width
+    (16*q) (16*q+9) (10*q+4) (6*q+5) 42 (6*u-2) (2*u+5) M m z
+    (by omega) hwidth (by omega) (by omega) (by omega)
+    hmass hcoord (by omega) (by omega) (by omega) (by omega) (by omega)
+    hgraph hm
+  simpa using h
+
 /-- The L0 feeder's every finite shadow word of cost <=M has an
     authentic original-source OddCone realization whenever 16q>=2M+7. -/
 theorem l0_bounded_shadow_word_has_source
@@ -435,6 +495,8 @@ theorem l1_bounded_shadow_word_has_source
 #print axioms shadow_encoded_left_properties
 #print axioms shadow_reach_lifts_to_odd_cone_of_width
 #print axioms shadow_reach_lifts_to_odd_cone
+#print axioms l0_bounded_shadow_word_has_source_of_width
+#print axioms l1_bounded_shadow_word_has_source_of_width
 #print axioms l0_bounded_shadow_word_has_source
 #print axioms l1_bounded_shadow_word_has_source
 
