@@ -100,7 +100,7 @@ theorem corrected_t1_parent (n : Nat) (hn : n%13122=887) :
     refine ⟨n-2,1,d0 n,hdodd,?_,?_,?_⟩
     · simpa [p,q0] using hqband
     · norm_num
-      exact hd
+      exact hd.symm
     · dsimp [z0,q0,p]
       omega
   exact hparent
