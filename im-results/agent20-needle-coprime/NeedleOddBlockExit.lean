@@ -19,7 +19,7 @@ run from 2^t*m-1 to 5^t*m-1, and highLevelNext is the original pinned
 machine's successor.
 -/
 theorem odd_block_exit_terminal_identity
-    (t m k : Nat) (ht : 0 < t) (hm : 0 < m) (hmOdd : m % 2 = 1)
+    (t m k : Nat) (_ht : 0 < t) (hm : 0 < m) (hmOdd : m % 2 = 1)
     (hterm :
       highLevelNext (.N (5^t*m-1)) = some (.N (haltTower k))) :
     ∃ q v,
@@ -98,10 +98,10 @@ theorem odd_block_exit_terminal_nonzero_mod_five
     rw [Nat.add_mod]
     simp
   have hright :
-      (5^t*m*(2^(v+1)+3)+(2^v*(2*v+4)+3)) % 5 =
+      (5^t*m*(2^(v+1)+3)+2^v*(2*v+4)+3) % 5 =
         (2^v*(2*v+4)+3) % 5 := by
-    rw [Nat.add_mod, hprod]
-    simp
+    rw [Nat.add_mod, Nat.add_mod]
+    simp [Nat.mul_mod, hpowT]
   have hmod :
       2^(k+v+2) % 5 = (2^v*(2*v+4)+3) % 5 := by
     have h := congrArg (fun z : Nat => z % 5) hidentity
