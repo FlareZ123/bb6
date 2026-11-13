@@ -24,7 +24,11 @@ def t17 : Nat := (terminal2656.a-7)/9
 theorem terminal2656_certificate :
     DRegular.run 2656 seed17 = some ⟨9*t17+7,7,1⟩ ∧
       t17 % 27 = 6 := by
-  have hcanon : DRegular.Canon seed17 := by decide
+  have hcanon : DRegular.Canon seed17 := by
+    constructor
+    · dsimp [seed17]
+      omega
+    · simp [seed17]
   rw [BB6.Agent2Fast64.fastRun_correct 2656 seed17 hcanon]
   decide
 
