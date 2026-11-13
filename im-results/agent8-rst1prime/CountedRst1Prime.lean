@@ -568,7 +568,9 @@ theorem rst1Prime_d0pow_segment
       rw [rst1Prime_d0pow_length]
     have hbd := hboundary (k-3*n) hrem
     have hcoord : head-(k:Int) =
-        head-((3*n+(k-3*n):Nat):Int) := by rw [hkdecomp]
+        head-(3*(n:Int)+((k-3*n):Int)) := by
+      have hkcast : (k:Int) = 3*(n:Int)+((k-3*n):Int) := by omega
+      rw [hkcast]
     rw [hcoord,hbd]
     exact hword.symm
 
