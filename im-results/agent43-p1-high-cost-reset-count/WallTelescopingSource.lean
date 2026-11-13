@@ -69,7 +69,7 @@ theorem source_weighted_sum_invariant
         _ = 2^(mp+t+1)*(c+3)+2*(mp+n+3)*2^mp+2*U := by
           rw [hrecMul]
         _ = 2^(mp+t+1)*(c+3)+2*(U+(n+3+mp)*2^mp) := by
-          rw [Nat.mul_add]
+          conv_rhs => rw [Nat.mul_add]
           ac_rfl
         _ = 2^(mp+t+1)*((c+4)-1)+2*(U+(n+3+mp)*2^mp) := by
           congr 1
