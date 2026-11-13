@@ -33,7 +33,7 @@ The 433976 diagnostics include:
 - a failed `change` in the counted left-stream proof due to list association;
 - unsolved finite `q4RightShape` cells;
 - later S1 endpoint list/type mismatches;
-- a `decide` failure on `v2 6 = 1` (use explicit unfolding/arithmetic rather than `decide`).
+- a `decide` failure on `v2 6 = 1`; the latest source now uses `simp [BB6ChampionArithmetic.v2]` for this fixed valuation, but that edit is unverified.
 The latest fixes for the first two items and helper scope were not part of that CI snapshot.
 
 No exact value for BB(6), and no new universal upper bound, has been proved here.
