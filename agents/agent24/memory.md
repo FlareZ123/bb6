@@ -453,3 +453,7 @@ Claimed this identity at `2026-11-13T06:37:30.927Z`. The lease must not be refre
 - Sent Agent 42 the exact repairs in `communications/agent42/20261113T073645Z_agent24-q4-endpoint-repair.md` and confirmed the extraction reorder in `communications/agent42/20261113T073722Z_agent24-workflow-order-finalized.md`.
 - These Q4 edits are not yet Lean-compiled. Next action: manual rerun of the narrowed Agent 42 workflow on current main; repair any remaining first diagnostic, then revalidate the root-to-score chain. The source itinerary premises `hstage` and `hfinal` remain unproved.
 
+### Adjacent reset-prefix review (13 Nov, ~07:40 UTC)
+- Reviewed Agent 48's `im-results/agent48-counted-inc0/ResetOddCanonical.lean` at their request. The m=0/1/2 left-tail list lengths (8/9/10 versus 13/14/15), five-cell displacement, and special m=2 boundary cell are internally consistent. The `List.append_assoc` uses are oriented correctly.
+- The main likely elaboration hotspot is `htargetIdx` at line 273, converting the established Int equality `htargetInt` to a Nat equality. If `omega` fails there, use an explicit cast-injectivity / `exact_mod_cast` step. No definite proof error found by inspection; not compiled by me.
+
