@@ -179,7 +179,8 @@ theorem blank_no_y3_x256 (t : Nat) (ht : 1≤t) :
   have hw : 1≤2*t := by omega
   have heven : (2*t)%2=0 := by omega
   have h := blank_no_y3_x128w (2*t) hw (Or.inl heven)
-  convert h using 1 <;> omega
+  have hx : 128*(2*t)+10=256*t+10 := by omega
+  simpa only [hx] using h
 
 #print axioms y3_x128w_parents
 #print axioms blank_no_y3_x128w
