@@ -220,9 +220,12 @@ private theorem q4Endpoint_first10_six (T : Int → Bool) (h : Int)
       (h+(i:Int)) = true := by
   have hcases :
       i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 := by omega
+  rw [frameAt_tape]
+  have hcoord : (h+(i:Int))-h = (i:Int) := by omega
+  rw [hcoord]
   rcases hcases with h0 | h1 | h2 | h3 | h4 | h5 <;>
     subst i <;>
-    simp [frameAt_tape, q4First10Inside, q4First10End]
+    simp [q4First10Inside, q4First10End]
 
 /-- The q4 suffix preserves the entire left-facing tape stream.  The
 nearest 3*b cells are the periodic d0 output of the counted scan; the next
