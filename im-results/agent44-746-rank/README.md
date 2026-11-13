@@ -178,3 +178,14 @@ five-edge residue \(r=74803\pmod{3^{11}}\), the sixth
 \((t,\sigma)=(1,17)\) edge on \(r=606244\pmod{3^{14}}\). It reproduces
 the valuation checks, coefficient bit lengths, band limits, and
 next-digit selections; this is not a Lean certificate.
+
+
+## Denser t=4 seed
+
+[DENSE-T1-4-CASCADE.md](DENSE-T1-4-CASCADE.md) gives a separate five-edge
+branch starting with \(t_1=4,\sigma_1=9\), which works on the full
+\(n=887+13122r\) family for all sufficiently large r. The next two
+edges also need no selector digit; the remaining selectors give the
+five-edge cylinder \(r\equiv1618\pmod{2187}\), of density \(1/2187\).
+This is denser at depth five than the t=7 branch above. The exact modular
+reproducer is [DenseT1FourBranch.mjs](DenseT1FourBranch.mjs).
