@@ -1,4 +1,5 @@
 import Lean.Elab.Tactic.Omega
+import DRegularFast
 import BlankNineteenthRejoin
 import ExceptionalE7ThirdReturnEscape
 
@@ -20,7 +21,10 @@ def t20 : Nat := (terminal2040.a-7)/9
 /-- Exact DRegular state and residue after the nineteenth E/A reentry. -/
 theorem terminal2040_certificate :
     DRegular.run 2040 seed20 = some ⟨9*t20+7,5,1⟩ ∧
-      t20 % 27 = 4 := by decide
+      t20 % 27 = 4 := by
+  have hcanon : DRegular.Canon seed20 := by decide
+  rw [BB6.DRegularFast.fastRun_correct 2040 seed20 hcanon]
+  decide
 
 theorem terminal2040_exact :
     DRegular.run 2040 seed20 = some ⟨9*t20+7,5,1⟩ :=
