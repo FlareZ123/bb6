@@ -77,6 +77,10 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429DeltaPhysicalBridge.olean im-results/agent32-429-raw-parent/BB429DeltaPhysicalBridge.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.olean im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion.olean im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion.lean 2>&1 | tee -a /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent48-429-safe/NoFatalGuard.olean im-results/agent48-429-safe/NoFatalGuard.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent48-429-safe/LowEvenNoFatal.olean im-results/agent48-429-safe/LowEvenNoFatal.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
+          grep -F "'BB429LowEvenNoFatal.lowEven_r96_no_fatal_source' depends on axioms:" /tmp/agent32-root-bridge.log
+          grep -F "'BB429LowEvenNoFatal.lowEven_r96_no_fatal_physical' depends on axioms:" /tmp/agent32-root-bridge.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2Prefix.olean im-results/agent32-429-high2-prefix/High2Prefix.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-primitive-cost/JPhysicalPrefix.olean im-results/agent32-429-primitive-cost/JPhysicalPrefix.lean | tee -a /tmp/agent32-bubble.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-root-entry/SourceBridge.olean im-results/agent1-429-root-entry/SourceBridge.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
@@ -111,10 +115,6 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent32-429-low43/Low43Continuation.olean im-results/agent32-429-low43/Low43Continuation.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-low43/Low43Physical.olean im-results/agent32-429-low43/Low43Physical.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-low43/Low43RootPhysical.olean im-results/agent32-429-low43/Low43RootPhysical.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent48-429-safe/NoFatalGuard.olean im-results/agent48-429-safe/NoFatalGuard.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent48-429-safe/LowEvenNoFatal.olean im-results/agent48-429-safe/LowEvenNoFatal.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
-          grep -F "'BB429LowEvenNoFatal.lowEven_r96_no_fatal_source' depends on axioms:" /tmp/agent32-root-bridge.log
-          grep -F "'BB429LowEvenNoFatal.lowEven_r96_no_fatal_physical' depends on axioms:" /tmp/agent32-root-bridge.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent1-429-root-entry/RootJunctionChain.olean im-results/agent1-429-root-entry/RootJunctionChain.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
           grep -F "'BB429Low43Continuation.root_low43_C0_to_junc_max' depends on axioms:" /tmp/agent32-root-bridge.log
           grep -F "'BB429Low43Continuation.root_low43_junc23_to_junc11_max' depends on axioms:" /tmp/agent32-root-bridge.log
