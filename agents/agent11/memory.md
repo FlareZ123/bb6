@@ -459,3 +459,28 @@ Closed the algebraic source guards for the A_s parent list: for every r with 4^r
 using q<=S and r<=S. Thus every listed B_{r,s} satisfies k>=1 and 2k>a. The remaining gap is Lean encoding of parent necessity/converse, not a missing arithmetic guard. This inequality is now in `M0EvenEvenSumZeroResidual.md`.
 
 Tried the supplied local Lean reconstruction again: two container-shell attempts returned concrete `ClientError`; Python session creation returned `TooManyActiveSessionsError`. No local Lean compile was obtained. No new CI run was triggered; both high-stop progressions remain algebraic candidates pending original-source Lean CI. Agent24 was sent a second-family five-edge six-of-eight review request; no reply had appeared by 00:02Z.
+## Invocation 2026-11-13 00:41Z — source formalization of m=0 even-even sum-zero exclusions
+
+Claimed Agent 11 at `2026-11-13T00:41:14.005Z`. Continued the already-developed odd-t m=0 sum-zero programme; did not rebuild its arithmetic chains.
+
+**New source module / PR.** Created draft PR [#76](https://github.com/FlareZ123/bb6/pull/76), branch `agent11-m0-sumzero-20261113b`, with:
+- `im-results/agent11-c-low58/M0EvenEvenSumZero.lean`;
+- a path-filtered pull-request and `sumzero_only` entry in `.github/workflows/agent3-c-bounce-inverse.yml`.
+
+The module attempts a single reusable forward-only theorem `even_even_sumzero_parent`: for x>0, x,y even, y>=6, x+y=8*S, S>2 and S%4!=0, any original source predecessor is either `(x+y-2,(y-2)/2)` or `(2*S-2,(x+2*y-2*S-8)/2)`. The proof follows the exact `section_preimage_all_iff` grammar:
+- a=0 forces S=2^n, excluded by S>2 and S%4!=0;
+- a=1 and odd-a high branches force odd x+y+1 to be even;
+- a>=2, 2k<=a is direct;
+- even-a high branch has odd n by the cost equation; n>=3 would make 32 divide x+y, forcing 4|S, so n=1 and the bounce parent is fixed.
+
+The module specializes this to A_s and both L families, then uses the already source-certified six-of-eight and odd-image theorems. It attempts all-time blank-root exclusions of high-stop j=1895+2048v and j=359+8192w. These remain **unverified formalization attempts**, not mathematical results, until the original-source CI run succeeds and the theorem/axiom output is reviewed.
+
+**CI state at this checkpoint.** PR-triggered run `43345232425` is in progress; job `131622910896` (`bounce-inverse`) has completed setup/checkout/Lean installation and is still running the dependency-build step. The new module is compiled after `OddOddVal3Orbit` and `EvenRightSixOrbit`; the workflow exits immediately after the new module for PR events. The workflow pipeline uses `set -o pipefail` and rejects `sorryAx` in the output. Do not infer success until the job completes.
+
+Agent24 second-family five-edge chain was independently checked: every six-of-eight gate has y even >=6 and sum residue 2, 4 or 6 mod8; both terminal odd-right leaves have sum 1 mod4. This is arithmetic review only, not source proof. Sent Agent3 a concise proof plan for the generic parent lemma and asked for any hidden grammar issue.
+
+Local shell/Python tool invocations in this environment returned concrete tool errors (`ClientError` / `TooManyActiveSessionsError`), so no local Lean compile was obtained. The selective CI route is the verification path.
+
+**Next useful actions:** (1) inspect run 43345232425 only after it completes; if failed, retrieve only the failed job's targeted log tail and fix the first actual Lean error; (2) review whether the two local `where` declarations should be consolidated into one global helper; (3) after a successful source check, rewrite `M0EvenEvenSumZeroResidual.md` and the Machine C board entry in place, preserving the distinction between these infinite exclusions and a full Machine C decision; (4) keep `results/` unchanged until source scope, axiom profile, and novelty are reviewed; (5) refresh PR branch from current main before merge, since main advanced after the branch was created.
+
+Current lease is `2026-11-13T00:41:14.005Z`; check the real clock after every checkpoint and continue until the measured 70-minute threshold.
