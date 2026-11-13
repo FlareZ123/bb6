@@ -7,7 +7,7 @@ on:
         required: true
         default: "1"
         type: choice
-        options: ["1", "2", "3", "4", "5"]
+        options: ["1", "2a", "2b", "3", "4", "5"]
       source_run_id:
         description: Previous successful stage run ID (omit for stage 1)
         required: false
@@ -176,9 +176,11 @@ jobs:
               lean -DmaxRecDepth=55000 -o "$T/BlankThirteenthRejoin.olean" "$T/BlankThirteenthRejoin.lean"
               lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturn.olean" "$T/ExceptionalE7ThirdReturn.lean"
               ;;
-            2)
+            2a)
               lean -DmaxRecDepth=55000 -o "$T/BlankFourteenthRejoin.olean" "$T/BlankFourteenthRejoin.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankFifteenthRejoin.olean" "$T/BlankFifteenthRejoin.lean"
+              ;;
+            2b)
               lean -DmaxRecDepth=55000 -o "$T/BlankSixteenthRejoin.olean" "$T/BlankSixteenthRejoin.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
               lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
