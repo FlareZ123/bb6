@@ -37,8 +37,7 @@ theorem m1Odd_q4_reset_prefix_source (a b : Nat) (h : Int) :
     m1Odd_q4_prefix_rightShape a b h
   have hleft := m1Odd_q4_prefix_leftFacing a b h
   have htail : ∀ i, 9+3*b ≤ i → T (h+1+(i:Int)) = false := by
-    intro i hi
-    exact hshape.2.2.2.2 i (by omega)
+    simpa [T] using m1Odd_q4_prefix_far_tail a b h
   have happend := m1OddQ4SuffixTargetLeft a b
   have hq4 :=
     q4_suffix_run_to_s1Config T h b 3 2 0 (a+b+2) (2^b-1)
