@@ -71,6 +71,8 @@ jobs:
           cp proof/im-results/agent2-root-language-exit/BlankThirtyFirstRejoin.lean source/im-results/agent2-root-language-exit/BlankThirtyFirstRejoin.lean
           cp proof/im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean source/im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean
           cp proof/im-results/agent2-root-language-exit/BlankThirtySecondRejoin.lean source/im-results/agent2-root-language-exit/BlankThirtySecondRejoin.lean
+          cp proof/im-results/agent25-cryptid-doublezero/Exception33Q5Rejoin.lean source/im-results/agent25-cryptid-doublezero/Exception33Q5Rejoin.lean
+          cp proof/im-results/agent2-root-language-exit/BlankThirtyThirdRejoin.lean source/im-results/agent2-root-language-exit/BlankThirtyThirdRejoin.lean
       - name: Compile probe module and kernel-check first-stop/source-lift theorem
         working-directory: source
         shell: bash
@@ -86,6 +88,8 @@ jobs:
           E=im-results/agent25-cryptid-doublezero
           lean -DmaxRecDepth=55000 -o "$E/E3SourceRejoin.olean" "$E/E3SourceRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$R/BlankThirtySecondRejoin.olean" "$R/BlankThirtySecondRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$E/Exception33Q5Rejoin.olean" "$E/Exception33Q5Rejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$R/BlankThirtyThirdRejoin.olean" "$R/BlankThirtyThirdRejoin.lean"
           if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
@@ -103,4 +107,6 @@ jobs:
             source/im-results/agent2-root-language-exit/BlankThirtyFirstRejoin.olean
             source/im-results/agent25-cryptid-doublezero/E3SourceRejoin.olean
             source/im-results/agent2-root-language-exit/BlankThirtySecondRejoin.olean
+            source/im-results/agent25-cryptid-doublezero/Exception33Q5Rejoin.olean
+            source/im-results/agent2-root-language-exit/BlankThirtyThirdRejoin.olean
           if-no-files-found: warn
