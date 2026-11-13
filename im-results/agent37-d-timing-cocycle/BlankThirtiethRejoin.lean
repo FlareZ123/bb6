@@ -15,7 +15,7 @@ open BB6.Agent31PacketSource
 def seed30 : DRegular.L := BB6.Agent2TwentyNinthRoot.seed30
 
 def terminal2613 : DRegular.L :=
-  (BB6.DRegularFast.fastRun 2613 seed30).getD ⟨9,0,0⟩
+  (BB6.Agent2Fast64.fastRun 2613 seed30).getD ⟨9,0,0⟩
 
 def t30 : Nat := (terminal2613.a-10)/9
 
@@ -29,7 +29,7 @@ theorem terminal2613_certificate :
       omega
     · right
       rfl
-  rw [BB6.DRegularFast.fastRun_correct 2613 seed30 hcanon]
+  rw [BB6.Agent2Fast64.fastRun_correct 2613 seed30 hcanon]
   decide
 
 theorem terminal2613_exact :
