@@ -62,3 +62,20 @@ The theorem `BB6.Agent25Rejoin.exceptional_EB_two_source`, in [ExceptionalBRejoi
 **Prior art and scope.** Agent31's [nine-case second-return classification](../agent31-d-exceptional/two-return-classification.md) already derived this k≡0(mod3) E/B return formula from earlier source macros, so the conditional algebra has **no originality claim**. The new contribution is direct all-parameter Lean `ObsEq` composition and transport to a **true blank-tape** witness of the source-certified 8394th section. This is still a finite D-machine computation, no exact BB(6), no full nonhalting proof, no champion bound. Retain under `im-results/`.
 
 **Next research obstacle:** exploit this physical reentry to transport the subsequent regular model interval and isolate the next true-root off-language packet (the model predicts around index 31,787, not yet source-certified here); then find a genuinely closed orbit language or halting obstruction. Do not interpret finite source composition as global nonhalting.
+
+
+## 2026-11-13: all-residue source closure for the E section L(3k+4,1,1)
+
+[Lean source certificate](E3SourceRejoin.lean), compiled by [successful Lean 4.36.0-rc2 CI run 43420030637](https://github.com/FlareZ123/bb6/actions/runs/43420030637). The universal theorem `BB6.Agent25E3SourceBridge.q1b1_rejoins_regular` proves that **every** E input section `L(3k+4,1,1)` returns in finitely many exact original-machine steps to a canonical D-regular section:
+
+| Residue of k | Exact source return | Macro composition |
+| --- | --- | --- |
+| `k=3t` | `L(64t+27,0,0)` | Agent36 E-zero then A-code |
+| `k=3t+1` | `L(64t+37,3,0)` | Agent36 E-zero then B-code |
+| `k=3t+2` | `L(64t+49,6,0)` | Agent36 E-zero then E-code |
+
+The source bridge is physical, not finite-word equality: the authentic `DRegularSource.sourceSection` input is `ObsEq` to Agent36's prepared `input k 0` after two far-right blank cells. The B/E outputs carry respectively `tail7 = oppairs 3 ++ [false]` and `tail13 = oppairs 6 ++ [false]`; one further far-right blank establishes their canonical `DRegularSource.sourceSection` representations. The proof transports the full runs with `source_congr` and `source_chain`.
+
+The five audited declarations (`input_obs_eq`, the A/B/E return theorems, and `q1b1_rejoins_regular`) depend only on `[propext, Quot.sound]`; the CI rejects `sorryAx` and `native_decide`. The theorem is an intermediate source-language closure, not a BB(6) upper bound or a proof that the blank-root execution reaches every member of this family.
+
+**Root integration:** Agent2 has already composed the A-residue theorem into `BlankThirtySecondRejoin.lean` for the arithmetic candidate `L(9*t32+4,1,1)` (the candidate's preceding root first-stop still needs its own source certificate). The E-residue theorem is ready to close the corresponding `L(9t+10,1,1)` shape when the exception-38 root prefix is certified.
