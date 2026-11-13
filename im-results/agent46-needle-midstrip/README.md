@@ -240,4 +240,4 @@ The two algebraic factorizations driving the induction are
 B^2-9=(B+3)(B-3),\qquad
 t^2A(A-3)-9(1+t)=(B+3)(t(A-3)-3).
 \]
-For the present parameters \(A\ge3\), \(t\ge2\), so all displayed natural subtractions are nonnegative. This certificate directly supplies the divisibility step in (1) and is a good starting point for a kernel-checked formalization.
+For the present parameters \(A=2^{a_r}\ge8\) and \(t=2^s\ge2\), so all displayed natural subtractions are nonnegative. This certificate directly supplies the divisibility step in (1) and is a good starting point for a kernel-checked formalization.
