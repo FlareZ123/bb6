@@ -100,7 +100,8 @@ theorem tm2_blank_reaches_m1Even_s1 :
   rw [run_add tm2 blank rootQ4DrainMoves
     (resetPrefixCost 1 6 71 (2^63-1))]
   rw [tm2_blank_reaches_q4_drain_endpoint]
-  exact m1Even_reset_prefix_to_s1 71 (2^63-1) 223
+  simpa only [Option.bind_some] using
+    m1Even_reset_prefix_to_s1 71 (2^63-1) 223
 
 #print axioms m1Even_q4_prefix_far_tail
 #print axioms m1Even_reset_prefix_to_s1
