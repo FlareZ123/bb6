@@ -51,7 +51,7 @@ The complete section-preimage grammar then gives exactly two parents of R:
 
 **Q(u,v) = (601+650t+162v, 1598+1723t+431v).**
 
-Reason: R.x+R.y is odd, so the even-a bounce branch is impossible. The a=0 branch is impossible for the same parity reason; the exceptional a=1 branch is impossible because R.x+R.y+1 has valuation exactly 4 and is far larger than 16. In the a odd bounce branch, the second equation forces the bounce exponent n to be odd. Since a+3 is even and v2(R.x+R.y+1)=4, n≤2, hence n=1. Solving the two source equations gives Q above. The remaining 2k≤a branch is exactly P.
+Reason: R.x+R.y is odd, so the even-a bounce branch is impossible. The a=0 branch is impossible for the same parity reason; the exceptional a=1 branch is impossible because R.x+R.y+1 has valuation exactly 4 and is far larger than 16. The a≥2, k=0 branch would force R.y=2, also impossible since R.y≥644. In the a odd bounce branch, the second equation forces the bounce exponent n to be odd. Since a+3 is even and v2(R.x+R.y+1)=4, n≤2, hence n=1. Solving the two source equations gives Q above. The remaining 2k≤a branch is exactly P.
 
 This exact parent enumeration should be formalized from section_preimage_all_iff; it is not yet a committed Lean theorem.
 
@@ -182,7 +182,7 @@ A deterministic residue sweep over u=0,...,99, taking the least nonnegative v wi
 
 1. Prove the exact two-parent classification of R from section_preimage_all_iff under (S2).
 2. Formalize the three sixEvenRightGate reductions of (A,B), including sixEvenRightNormalize(A,B)=F3 and the sixEvenRightExcluded_sound application.
-3. Compose the Agent34 cone exclusion for Q, the Agent3 full-normalizer/odd-image exclusion for P, and the established D/H1/H3 parent classification to prove V blank-root unreachable.
+3. Compose the Agent34 cone exclusion for Q, the Agent46 six-right-normalizer plus odd-image exclusion for P, and the established D/H1/H3 parent classification to prove V blank-root unreachable.
 4. Prove the parameter-only pullback equivalence in Lean and add the resulting exclusion to the C58 and SixAll high predicates.
 5. Run a fresh original-source CI audit before treating this as an established exclusion.
 
