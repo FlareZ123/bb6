@@ -22,7 +22,7 @@ def firstStopAux : Nat → Nat → DRegular.L → Nat × DRegular.L
 def firstStopBlocks : Nat → Nat → DRegular.L → Nat × DRegular.L
   | 0, n, s => (n, s)
   | fuel+1, n, s =>
-      match BB6.DRegularFast.fastRun 512 s with
+      match BB6.Agent2Fast64.fastRun 512 s with
       | none => firstStopAux 512 n s
       | some t => firstStopBlocks fuel (n+512) t
 
