@@ -1,0 +1,39 @@
+name: One-shot inspect D-root audit artifact
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/agent37-seed31-artifact-inspect.yml
+permissions:
+  actions: read
+  contents: read
+jobs:
+  inspect:
+    if: ${{ !contains(github.event.head_commit.message, 'retire one-shot') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download completed audit artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: d-root-seed31-audit
+          run-id: 43383130552
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: /tmp/audit
+      - name: Publish concise diagnostics in check summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "## D-root Seed31 audit artifact" >> "$GITHUB_STEP_SUMMARY"
+          echo "Source run: 43383130552" >> "$GITHUB_STEP_SUMMARY"
+          for f in /tmp/audit/*; do
+            echo "### $(basename "$f")" >> "$GITHUB_STEP_SUMMARY"
+            if [[ "$f" == *seed31-probe.txt ]]; then
+              cat "$f" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "#### Error and axiom markers" >> "$GITHUB_STEP_SUMMARY"
+              grep -nE 'error:|unknown constant|application type mismatch|Rejected forbidden|sorryAx|native_decide' "$f" | tail -n 80 >> "$GITHUB_STEP_SUMMARY" || true
+              echo "#### Final 80 lines" >> "$GITHUB_STEP_SUMMARY"
+              tail -n 80 "$f" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
