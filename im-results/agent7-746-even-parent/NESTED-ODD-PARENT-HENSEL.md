@@ -106,75 +106,53 @@ For any fixed \(\gamma>0\), there are infinitely many pairs \((t,\sigma)\), \(t\
 \]
 Indeed, taking base-two logarithms reduces this to the density modulo one of \((t+1)\log_2 3-\log_2\gamma\); the target interval has width \(\log_2(8/6)=\log_2(4/3)>0\). Since \(\log_2 3\) is irrational, the rotation is dense. This supplies a band choice at every finite stage.
 
-## The 3-adic lifting mechanism
+## Hensel input and band-compatible iteration
 
-The key point is that the numerator remains affine-exponential with a unit linear coefficient.
+The generic affine-exponential Hensel selector, including its scaled-cylinder form, is already derived in [Agent 44's AFFINE-EXP-HENSEL.md](../agent44-746-rank/AFFINE-EXP-HENSEL.md). Agent 10's [RayIndexHensel.lean](../agent10-cascade/RayIndexHensel.lean) also contains the source-coordinate nested-odd unique-digit criterion and recursive index selector for the signed-ray numerator. The argument here reuses that generic mechanism; it does not claim a new general Hensel lemma.
 
-Initially
+For this U/Q specialization, initially
 \[
 Q(n)=28\cdot2^n+B_0n+C_0,\qquad
 B_0=-2-2^{3407}\equiv2\pmod3.
 \]
-For the first edge, take \(X_0=Q\), \(G_0=Q/9\), and
-\(E_1=t_1+3\), so that \(X_1=3^{E_1}G_1\). For every later stage
-\(i\ge1\), write
+The exact modular base check gives \(3^8\mid Q(887)\), and \(13122=6\cdot3^7=2\cdot3^8\). The common power-period identity, already kernel-proved as ThreeAdic.power_period in [ThreeAdicLifting.lean](../agent1-429-threeadic/ThreeAdicLifting.lean), gives the scaled-cylinder shift law. Thus \(Q/3^8\) is a 3-adic isometry in the progression parameter.
+
+At the first odd-parent stage, \(E_1=t_1+3\) and
 \[
-X_i(n)=3^{E_i}G_i(n)=A_i2^n+B_i n+C_i,
+X_1=3^{E_1}G_1
+=4\cdot2^{t_1}Q
+-16\cdot2^{n+t_1-\sigma_1}3^{E_1}
+-(2(n+t_1-\sigma_1)+5)3^{E_1}.
 \]
-where \(A_i,C_i\in\mathbb Z[1/2]\), \(B_i\in\mathbb Z\), and
-\(3\nmid B_i\). At later stages
-\[
-E_{i+1}=E_i+t_{i+1}+1.
-\]
-The parent formula gives the exact recurrence
+For each later stage \(i\ge1\), put \(E_{i+1}=E_i+t_{i+1}+1\) and
 \[
 X_{i+1}
 =4\cdot2^{t_{i+1}}X_i
 -16\cdot2^{n+t_{i+1}-\sigma_{i+1}}3^{E_{i+1}}
--(2(n+t_{i+1}-\sigma_{i+1})+5)3^{E_{i+1}},
+-(2(n+t_{i+1}-\sigma_{i+1})+5)3^{E_{i+1}}.
 \]
-valid for \(i\ge1\), with the same displayed formula for \(X_1\) when
-\(i=0\) and \(X_0=Q\).
-In particular,
+Each \(X_i\) has the form \(A_i2^n+B_i n+C_i\), with \(A_i,C_i\in\mathbb Z[1/2]\), and
 \[
 B_{i+1}=4\cdot2^{t_{i+1}}B_i-2\cdot3^{E_{i+1}}
 \equiv4\cdot2^{t_{i+1}}B_i\not\equiv0\pmod3.
 \]
-Thus the unit condition persists at every level.
-
-For any \(X(n)=A2^n+Bn+C\) of this form and any \(a,s\ge0\),
+The unit linear coefficient is therefore preserved at every layer. In the original progression, the shift law is
 \[
-\begin{aligned}
-&X(n(r+a3^s))-X(n(r))\\
-&\quad=A2^{n(r)}(2^{2a3^{8+s}}-1)+2B\,a\,3^{8+s}\\
-&\quad\equiv2B\,a\,3^{8+s}\pmod{3^{9+s}},
-\end{aligned}
+X_i(n(r+a3^s))-X_i(n(r))
+\equiv2B_i a\,3^{8+s}\pmod{3^{9+s}}.
 \]
-using \(3^{9+s}\mid 2^{2\cdot3^{8+s}}-1\). The first term is divisible by \(3^{9+s}\), while \(3\nmid2B\). Hence this is a scaled 3-adic isometry.
+After restricting to the previously selected cylinder and dividing by its known power of 3, this is exactly the scaled-cylinder Hensel law in AFFINE-EXP-HENSEL.md. It gives one index cylinder for the required next divisibility and one of the three next-digit lifts for which the new target numerator is divisible by 3.
 
-If \(3^{E_i}\mid X_i\) on a residue class modulo \(3^{E_i-8}\), then \(G_i=X_i/3^{E_i}\) is integer-valued there. On the three next-digit lifts
-\[
-r,\quad r+3^{E_i-8},\quad r+2\cdot3^{E_i-8},
-\]
-the residues of \(G_i\pmod3\) differ by the unit step \(2B_i\). Exactly one lift therefore has \(3\mid G_i\). Choose that lift. This is the crucial recursive choice.
+The recursion is consequently:
+1. choose \(t_i,\sigma_i\) with \(R_i=\gamma_{i-1}2^{\sigma_i}/3^{t_i+1}\in(6,8)\);
+2. use the scaled Hensel selector to impose \(3^{t_i+1}\mid G_{i-1}\);
+3. form the odd parent \(z_i\) using the exact ResetParent formula;
+4. select the unique next digit making \(3\mid G_i=2z_i+5\);
+5. repeat.
 
-On the selected class modulo \(3^{E_i-7}\), \(G_i\) is divisible by 3. The quotient \(G_i/3\) is again a 3-adic isometry in the local parameter
-\[
-q=(r-r_i)/3^{E_i-7}.
-\]
-For any chosen \(t_{i+1}\), there is a unique further residue class modulo \(3^{t_{i+1}}\) in \(q\) on which \(3^{t_{i+1}}\mid G_i/3\). Equivalently,
-\[
-3^{t_{i+1}+1}\mid G_i.
-\]
-This gives the next odd quotient \(e_{i+1}\) and parent. The cumulative exponent increases to \(E_{i+1}=E_i+t_{i+1}+1\); choosing one of its three next-digit lifts makes \(3\mid G_{i+1}\), and the construction repeats.
+The selected next digit need not give exact valuation \(v_3(G_{i-1})=t_i+1\). It may give a higher valuation. This is harmless: ResetParent requires only that the quotient \(e_i=G_{i-1}/3^{t_i+1}\) be odd, not 3-adically primitive. Requiring exact valuation would incorrectly discard the unique lift that continues the chain.
 
-Importantly, the chosen next-digit lift need **not** give exact valuation \(v_3(G_i)=t_{i+1}+1\). It may give a higher valuation. This is harmless: the ResetParent relation only requires the quotient \(e_{i+1}\) to be odd, not 3-adically primitive. Requiring exact valuation would incorrectly discard the unique lift that continues the chain.
-
-The first stage starts from \(Q/3^8\), which is integer-valued for every \(r\). Since \(Q(887)\equiv0\pmod{3^8}\) and \(13122=2\cdot3^8\), the exponential difference and linear term preserve this divisibility throughout the progression. Choosing \(t_1\ge5\) asks for
-\[
-3^{t_1-5}\mid Q/3^8,
-\]
-which the same isometry supplies on one residue class. One next-digit lift then makes \(3\mid G_1\).
+For the first stage, \(G_0=Q/9=3^6(Q/3^8)\). Choosing \(t_1\ge5\) asks for \(3^{t_1-5}\mid Q/3^8\), which the base isometry supplies on one residue class. The next digit then makes \(3\mid G_1\). At every later stage, the scaled-cylinder selector lifts the quotient \(G_i/3\) to the requested precision, and the next unit digit selects \(3\mid G_{i+1}\).
 
 After \(d\) parent edges the final class has modulus
 \[
