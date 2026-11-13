@@ -255,15 +255,17 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
             omega
           rcases hx23 with hx2' | hx3'
           · rw [hx2'] at hpres
+            change sweptLeft N T h (h+2) = true
             have hsrc : T (h+2) = true := by
               simpa [T,s1PhysicalRight_source,sideBit] using
                 s1Config_right_cell 3 6 1 a 0 b h 1
-            simpa [hsrc] using hpres
+            rw [hpres,hsrc]
           · rw [hx3'] at hpres
+            change sweptLeft N T h (h+3) = true
             have hsrc : T (h+3) = true := by
               simpa [T,s1PhysicalRight_source,sideBit] using
                 s1Config_right_cell 3 6 1 a 0 b h 2
-            simpa [hsrc] using hpres
+            rw [hpres,hsrc]
     simpa [x,T2] using hframe.trans hT1
   have hScan := E_scan T2 (hN+5) (3*a) hlinear
   have hhead : hN+5+(3*a:Int) = h+4 := by
