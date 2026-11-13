@@ -117,7 +117,7 @@ private theorem zero_frontier_segment (v W : Nat) (c : Config) (F : Int)
     have hcalc : 2*v+(W-3)+6 = 2*v+W+3 := by omega
     calc
       d.head + ((W : Nat) : Int) =
-          d.head + (((W-3+3 : Nat) : Int) := by rw [← hW3]
+          d.head + ((W-3+3 : Nat) : Int) := by rw [← hW3]
       _ = c.head + ((2*v+(W-3)+6 : Nat) : Int) := hfront
       _ = c.head + ((2*v+W+3 : Nat) : Int) := by congr 1 <;> omega
       _ = F := hF
