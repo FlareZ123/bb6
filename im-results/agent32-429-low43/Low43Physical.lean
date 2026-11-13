@@ -12,7 +12,7 @@ namespace BB429Low43Physical
 
 open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429JPhysical
 open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta
-open BB429FinishScanEDelta BB429PhysicalBridge BB429Low43Delta BB429Low3Delta
+open BB429FinishScanEDelta BB429PhysicalBridge BB429DeltaPhysicalBridge BB429HeadDisplacement BB429Low43Delta BB429Low3Delta
 
 private theorem getD_append {α : Type} (xs ys : List α) (j : Nat) (d : α) :
     (xs ++ ys).getD j d =
@@ -81,7 +81,7 @@ private theorem stage43_left_char (v k j : Nat) :
     by_cases ht : j-(4*v+4)<4*k+2
     · rw [if_pos ht,tens_getD]
       have hp :
-          ((j-(4*v+4)<2*(2*k+1) ∧ (j-(4*v+4))%2=0) ↔
+          (j-(4*v+4)<2*(2*k+1) ∧ (j-(4*v+4))%2=0) ↔
             (j < 4*v+4*k+12 ∧
               ¬(4*v+4 ≤ j ∧ j<4*v+4*k+6 ∧ j%2=1)) := by omega
       simp [hp]
@@ -254,6 +254,7 @@ private theorem stage43_decomposition (v k : Nat) :
       (BB429Low3Delta.af_pairs_delta (2*v+2)
         (tens (2*k+1) ++ ones 6) [false,true])
   have h2 : runWithDelta 2 zFirst = some (zMid, -2) := by
+    dsimp [zFirst]
     rw [show tens (2*k+1) = true::false::tens (2*k) by rfl]
     change runWithDelta 2
       (z 0 (true::false::(tens (2*k) ++ ones 6)) true
@@ -270,7 +271,7 @@ private theorem stage43_decomposition (v k : Nat) :
     have htime : (4*v+4)+2=4*v+6 := by omega
     have hdelta : -((4*v+4:Nat):Int)+(-2) =
         -((4*v+6:Nat):Int) := by omega
-    simpa [htime,hdelta] using hleft0
+    convert hleft0 using 1 <;> omega
   have hAR : runWithDelta (4*v+6) zMid =
       some (zAR, ((4*v+6:Nat):Int)) := by
     simpa [zMid,zAR,show 2*(2*v+3)=4*v+6 by omega,
@@ -390,7 +391,7 @@ theorem low43_C0_record (v k : Nat) :
   let B : Nat := 4*(v+1)*(v+1)+2*(v+1)
   have hfirst : run target429 B c0=some cStage := by
     have hhead : 2*((v+1:Nat):Int)=2*(v:Int)+2 := by omega
-    simpa only [hhead,stage43Config,stage43Tape,c0,tape,B] using
+    simpa only [hhead,stage43Config,stage43Tape,c0,tape,B,cStage] using
       multi_bubble_prefix target429 (v+1) (v+1) tape (by omega)
         (by decide) (by decide) (by decide) (by decide)
         (low43_holes v k) (low43_odds v k) (low43_right v k)
@@ -418,12 +419,12 @@ theorem low43_C0_record (v k : Nat) :
   have hstage : run target429 (8*v+16) cStage=some cC := by
     rw [hS]
     exact hstageFull
-  have htotal : run target429 (B+8*v+16) c0=some cC := by
+  have htotal : run target429 (B+(8*v+16)) c0=some cC := by
     rw [run_add',hfirst]
     exact hstage
-  have htime : B+8*v+16=4*v*v+18*v+22 := by
+  have htime : B+(8*v+16)=4*v*v+18*v+22 := by
     dsimp [B]
-    omega
+    ring
   have htotal' : run target429 (4*v*v+18*v+22) c0=some cC := by
     simpa [htime] using htotal
   have hheadC : cC.head=2*(v:Int)+6 := by
