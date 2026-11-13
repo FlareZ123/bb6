@@ -192,7 +192,7 @@ theorem s1Config_shift (L n m a z b : Nat) (h0 h1 : Int) :
       s1Config L n m a z b h1 := by
   apply config_ext_by_fields
   · rfl
-  · simp [shiftConfig]
+  · omega
   · intro x
     by_cases hx : x ≤ h1
     · have hle : x-(h1-h0) ≤ h0 := by omega
