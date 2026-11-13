@@ -256,6 +256,13 @@ jobs:
             echo '::error::sorryAx found in Rst1Prime bridge9 source and right-sweep continuation'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent8-rst1prime/Rst1PrimeBridge6Source.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/rst1-prime-bridge6-source-axioms.log
+          lean -o Rst1PrimeBridge6Source.olean Rst1PrimeBridge6Source.lean 2>&1 | tee /tmp/a42-terminal/rst1-prime-bridge6-source-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/rst1-prime-bridge6-source-axioms.log; then
+            echo '::error::sorryAx found in Rst1Prime bridge6 source composition'
+            exit 1
+          fi
 
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/S1CarryOutputBridge.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/s1-carry-output-bridge-axioms.log
@@ -451,6 +458,7 @@ jobs:
             /tmp/a42-terminal/rst1-prime-second-sweep-axioms.log
             /tmp/a42-terminal/rst1-prime-bridge20-source-axioms.log
             /tmp/a42-terminal/rst1-prime-bridge9-source-axioms.log
+            /tmp/a42-terminal/rst1-prime-bridge6-source-axioms.log
             /tmp/a42-terminal/m0-even-q4-bridge-axioms.log
             /tmp/a42-terminal/m0-even-q4-prefix-axioms.log
             /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
