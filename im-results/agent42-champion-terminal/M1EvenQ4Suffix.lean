@@ -444,10 +444,11 @@ theorem m1Even_q4_counted_increment_source
         (h+5+3*b)) := by
   have hp := m1Even_q4_reset_prefix_source a b h
   have hbound := resetDrainBound a b 1 ha
-  have hdrain := s1Config_counted_drain 3 5 0 (a+b+2) b 0
-    (h+5+3*b) (by simpa [resetDelta] using hbound)
-  rw [proposedIncrementCost_decomp,run_add,hp]
-  simpa [s1Config] using hdrain
+  have hrun := s1Config_reset_prefix_then_counted_drain
+    3 5 0 (a+b+2) b (h+5+3*b)
+    (s1Config 3 6 1 a 0 b h) (resetPrefixCost 1 6 a b)
+    hp (by simpa [resetDelta] using hbound)
+  simpa [proposedIncrementCost_decomp] using hrun
 
 #print axioms q4_suffix_left_word_of_stream
 #print axioms m1Even_q4_prefix_far_tail
