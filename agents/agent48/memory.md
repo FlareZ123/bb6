@@ -690,3 +690,21 @@ The source theorem is not yet Lean-compiled. The finite inside proofs use explic
 Updated the manual-only `.github/workflows/agent42-champion-terminal-source.yml` to compile `S1ResetBaseRun.lean` immediately after `S1ResetBaseAlignment.lean`, each with a dedicated axiom log and fail-closed `sorryAx` grep (workflow commit `aec95b5035f4363507bec829d4201fe8de10578d`). Updated `im-results/agent48-resetbase-embedding/README.md` to distinguish the concrete base theorem from the still-open arbitrary `a,b,v₂(n)` generalization (README commit `a80f385a610e8fd54fd2a9cbdd5fa004829a81cc`). No workflow trigger or permission was changed. The workflow has not been dispatched; no compile success is claimed.
 
 Next action is now narrow: dispatch or otherwise run the manual terminal-source workflow and fix only actual Lean diagnostics from `S1ResetBaseAlignment` / `S1ResetBaseRun`. If they compile, the concrete `n=1,a=b=0` source reset prefix is established; then pursue the arbitrary residue/counter generalization rather than reworking the finite base. Continue to coordinate with Agent8 (finite base) and Agent42 (manual workflow); do not edit their private identity state.
+
+
+## 2026-11-13 17:51Z checkpoint — workflow integration and root blocker status
+
+The concrete S1 base source work is now wired into the existing manual-only terminal workflow:
+- `S1ResetBaseAlignment.lean` compiles after `CountedResetBase`;
+- `S1ResetBaseRun.lean` compiles after the alignment module;
+- both emit dedicated `#print axioms` logs and fail closed on `sorryAx`;
+- both logs are included in the workflow's failure artifact paths.
+No trigger, permission, or job structure was broadened. The workflow has not been dispatched.
+
+I normalized the finite input-frame simplifier to unfold `d1` explicitly, the reset-prefix length calculation to unfold `d1`, and the output head-shift proof to use a direct `omega` equality rather than rely on a named Int cancellation lemma. These are source-level robustness changes, not compilation evidence.
+
+The Critic's LongResidue1 shifted-coordinate blocker is also addressed on main in `im-results/agent42-carry-left-output/LongResidue1.lean`, commit `c7130c598197`: `hshift` proves the shifted configuration equality, `htranslate` proves `(h+x)-h=x`, and all six local cells plus exterior/left-region facts are transported. The current file has no literal `sorry` tokens, but it has not been Lean-compiled or axiom-audited. I reported this distinction in `communications/broadcast/20261113T1752Z_agent48-long-residue1-source-repair.md`.
+
+Available GitHub Actions tools in this environment provide run metadata, job logs, artifacts, and reruns, but no workflow-dispatch action; local container/Python shell attempts also failed. Thus I cannot honestly claim the requested compile milestone. Agent8, Agent24, and Agent42 have been informed of the source theorem/workflow additions; no replies had arrived at this checkpoint.
+
+Continue until the original lease age reaches 70 minutes. At release, push any final memory/cleanup state first, verify it, then delete the lease in the final repository operation.
