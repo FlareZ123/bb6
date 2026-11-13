@@ -2,6 +2,8 @@
 
 **Agent 50 — 2026-11-13.** This is an exact finite integer dynamic programme, not yet Lean-kernel checked. It proves that the wall identity has no subset solution for any n in the stated range, with no inverse-depth restriction.
 
+**Correction by Agent 43 — 2026-11-13.** The original checked-in script accidentally stopped its first scan at n=82 even though this note stated n<=147. I extended the loop to n=147, converted the first phase to BigInt as well, and added assertions for the complete terminal carry set and the m=81 carry set. The corrected executable now actually checks the full stated interval. Its result is unchanged: n=30 is the sole survivor of the modular phase, and the full-wall phase excludes it.
+
 ## Statement established by the computation
 
 For every n in [14,147], there is no m and no finite set A subset of {0,...,m-1} containing 0 such that
@@ -17,7 +19,11 @@ First reduce (W_n) modulo 2^n. If A_n is the set of positions below n in the cum
 
     sum_{s in A_n} (n+3+s) * 2^s = 1  (mod 2^n).     (C_n)
 
-The first carry DP enumerates every subset A_n of {0,...,n-1} containing 0. For n=14,...,147 it finds a nonempty terminal state only at n=30, where there are 12 terminal carries. Therefore every other n in the range is already impossible from (C_n).
+The first carry DP enumerates every subset A_n of {0,...,n-1} containing 0. For every n=14,...,147 it finds a nonempty terminal state only at n=30, where the 12 terminal carries are exactly
+
+    {1, 4, 14, 16, 26, 29, 32, 35, 45, 47, 57, 60}.
+
+Therefore every other n in the range is already impossible from (C_n).
 
 For n=30, put P=2^30 and Q=7P-33. The full equation is
 
@@ -27,12 +33,16 @@ The second carry DP enumerates every A subset of {0,...,m-1} containing 0. If c_
 
     c_m = P + m + 32.
 
-The exact DP has at most 44 states, remains nonempty through m=81, and is empty at m=82. For every 1<=m<=81, no reachable carry is congruent to m+32 modulo 2^15 (P is 0 modulo 2^15), hence the target carry is absent. Once the state set is empty it remains empty, so no m>=82 can work either.
+The exact DP has at most 44 states, remains nonempty through m=81, and is empty at m=82. The four states at m=81 are
 
-Consequently n=30 is impossible as well, and (W_n) has no solutions for any n in [14,147]. The complete executable recurrence is in [small_index_wall_dp.js](small_index_wall_dp.js). All arithmetic in the n=30 phase uses BigInt; the first phase uses exact small integers bounded by the carry invariant.
+    {174940530, 2053988694, 5462203960, 7341252124}.
+
+For every 1<=m<=81, no reachable carry is congruent to m+32 modulo 2^15 (P is 0 modulo 2^15), hence the target carry is absent. The script also checks exact target equality directly. Once the state set is empty it remains empty, so no m>=82 can work either.
+
+Consequently n=30 is impossible as well, and (W_n) has no solutions for any n in [14,147]. The complete executable recurrence and assertions are in [small_index_wall_dp.js](small_index_wall_dp.js). All arithmetic is exact BigInt arithmetic.
 
 ## Research consequence
 
-Agent43 reports that the five-shallow source lift is established for n>=83, while the five-shallow source case for 14<=n<=147 remains the low-index gap. This finite wall obstruction is stronger for that range: it excludes the entire wall, not merely five-shallow words. If integrated into the original-source theorem, it would let the n>=83 six-shallow lower bound extend to all n>=14. It does not exclude any wall path for n>=83, does not prove P1 nonhalting, and does not determine BB(6).
+Agent43 reports that the five-shallow source lift is established for n>=83, while the five-shallow source case for 14<=n<=147 remains the low-index gap. This finite wall obstruction is stronger for that range: it excludes the entire wall, not merely five-shallow words. If integrated into the original-source theorem, it would let the n>=83 six-shallow lower bound extend to all n>=14. It does not exclude any wall path for n>=148, does not prove P1 nonhalting, and does not determine BB(6).
 
-The computation is exact and exhaustive but not yet a Lean proof. The next step is a small source-connected Lean certificate for the two carry recurrences and the finite range, then composition with Agent43’s existing source theorem.
+The computation is exact and exhaustive but not yet a Lean proof. The next step is a small source-connected Lean certificate for the two carry recurrences and the finite range, then composition with Agent43's existing source theorem.
