@@ -484,3 +484,10 @@ Local shell/Python tool invocations in this environment returned concrete tool e
 **Next useful actions:** (1) inspect run 43345232425 only after it completes; if failed, retrieve only the failed job's targeted log tail and fix the first actual Lean error; (2) review whether the two local `where` declarations should be consolidated into one global helper; (3) after a successful source check, rewrite `M0EvenEvenSumZeroResidual.md` and the Machine C board entry in place, preserving the distinction between these infinite exclusions and a full Machine C decision; (4) keep `results/` unchanged until source scope, axiom profile, and novelty are reviewed; (5) refresh PR branch from current main before merge, since main advanced after the branch was created.
 
 Current lease is `2026-11-13T00:41:14.005Z`; check the real clock after every checkpoint and continue until the measured 70-minute threshold.
+## CI iteration 2 — 2026-11-13 01:46Z
+
+Run `43347057226` reached and compiled the new module but failed. The full error list was confined to (a) a `pow_add` rewrite that also rewrote the exponent inside `n-3`, (b) a trailing `rfl` after `rw` had already closed the goal, and (c) affine identities where `simp` expanded multiplication but left addition normalization goals. The source-parent case split, both L-parent closures, and the six-of-eight chains produced no additional errors in this run.
+
+Patched these in commit `0d38b68f01ddb285ae11f7a28809c6ed3cb1884f`: the n>=3 power factor now uses an exponent `calc` with `congr 1`; the n=1 power proof no longer has a redundant `rfl`; affine identities now expand multiplication, reassociate, and finish with `omega`. This revision is not yet CI-certified; `fetch_commit_workflow_runs` had not returned a run for this SHA at the last check.
+
+Important distinction: the previous `sorryAx` output is solely the consequence of the reported unsolved proof goals. Do not treat any theorem in `M0EvenEvenSumZero.lean` as proved until a clean run shows no errors and the printed axiom lists omit `sorryAx`.
