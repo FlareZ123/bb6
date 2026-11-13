@@ -244,15 +244,15 @@ theorem q1b1_rejoins_regular (k : Nat) :
       rw [hstart]
       exact q1b1_regular_rejoin t
   · by_cases h1 : k % 3 = 1
-    · let t := (k-1) / 3
+    · let t := k / 3
       have hk : k = 3*t+1 := by simpa [t, h1] using hdecomp
       rw [hk]
       refine ⟨bDuration t, ⟨64*t+37,3,0⟩, ?_, q1b1_regular_rejoin_B t⟩
       constructor
       · dsimp
         omega
-      · left
-        omega
+      · right
+        rfl
     · have h2 : k % 3 = 2 := by omega
       let t := k / 3
       have hk : k = 3*t+2 := by simpa [t, h2] using hdecomp
