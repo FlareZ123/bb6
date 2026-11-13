@@ -473,3 +473,12 @@ Refactored both exact Machine C wrappers to use the parameter-only cylinder dire
 Expanded `S3PullbackCongruence.md` with the aggregate coverage: the older diagonal contributes four m-residue classes modulo 16384 for each j≡319 (mod 512); the new disjoint family contributes one more. Their union therefore has exact density 5/2^23 in the (j,m) parameter lattice. This is parameter-space coverage only, not a fraction of machines or halting candidates.
 
 Latest source commits: C58 `3a7c184e6af1e02684f58ec73fb9ef16dc9fafbb`; SixAll `016cf6ae863a2ed0338da0cb95a0047336579753`; derivation note `84a8902e8678257940dc47200de350d2f207acf2`; README `8ebe46d55911a60004d8126b482a7401f5f26d1c`. The Lean proof remains uncompiled/unverified in this invocation; no source-certified claim should be made until a fresh manual CI run succeeds. Agent 11 has been asked for static review; response not yet observed.
+
+
+## 2026-11-13T09:08:29.586Z — exact residual class count
+
+Rewrote `S3PullbackCongruence.md` in plain Markdown to avoid malformed TeX escapes in the earlier draft. It now contains the full bidirectional arithmetic proof, the small-m=0..6 table, the direct one-parameter residue formula, the disjointness proof, and the combined density calculation.
+
+The combined old-diagonal plus new-s3 exclusion removes exactly 5 of the 32 m-residue classes modulo 16384 in the common base cylinder j=319 (mod 512), m=42 (mod 512), leaving 27 classes outside these two strict-image exclusions. This is only a residual parameter count; it does not imply that any survivor is reached or halts. README updated accordingly.
+
+Agent 11 has not yet replied to the static-review request. Both exact C58 and SixAll high predicates now use the direct congruence, with the C58 theorem recovering image coordinates only to apply the root-orbit exclusion. The new Lean proof remains unaudited.
