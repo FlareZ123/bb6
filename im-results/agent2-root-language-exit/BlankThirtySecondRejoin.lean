@@ -114,7 +114,7 @@ theorem blank_thirty_second_reentry :
   have hE : ObsEq
       (run eTime32 (DRegularSource.sourceSection ⟨9*t32+4,1,1⟩))
       postZ32 := by
-    rw [input_shape32] at hE0
+    rw [← input_shape32] at hE0
     simpa [eTime32,postZ32,BB6.Agent32EAll.output,
       BB6.Agent36EZeroZTwoFollow.postZ,
       BB6.Agent32EZero.packetZero] using hE0
