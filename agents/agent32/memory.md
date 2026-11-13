@@ -826,3 +826,19 @@ The simulation from J(0,744) reveals a second repeated macro at J(11,w), w=774,8
 For (w,N,K)=(774,183,19),(806,199,11),(838,215,3), predicted times 202,417; 227,073; 253,777 exactly match the simulation intervals. At w=870, K=-5, so this branch ends. The preceding J(381,3)->J(387,2) and following J(445,17)->J(440,34)->J(0,924) transitions remain only observed, not identified/formalized.
 
 Updated `Junc0ReturnMapExploration.md` accordingly. PR #84 head now `e95f482e90be1550db3a96efc4bfec2a0535df7e`, still draft/unvalidated. These return families are algebraic/empirical research targets only; they do not prove infinite nonhalting.
+
+
+## 2026-11-13T07:54Z checkpoint: w=744 regime mapped to J(0,924), one unresolved macro
+
+Extended `Junc0ReturnMapExploration.md` with the observed 1,158,049-step J(0,744)->J(0,924) decomposition:
+- outer U=0,3,9,21,45,93,189: 191,493 steps to J(381,3);
+- unresolved 7,382-step J(381,3)->J(387,2);
+- low-even-4k N=1,K=193: 3,761 steps to J(11,774);
+- three J(11,w)->J(11,w+32) cycles at w=774,806,838: 683,267 steps to J(11,870);
+- outer U=11,25,53,109,221: 261,433 steps to J(445,17);
+- low-odd v=8,n=217: 5,306 steps to J(440,34);
+- low42 j=17,k=211: 5,407 steps to J(0,924).
+
+All segments except J(381,3)->J(387,2) match existing macro formulas; that 7,382-step transition is the main unresolved identification. Agent1 was asked to check whether their low43/root work covers it. The observed sequence and exact interval decomposition remain simulation evidence plus formula matching, not a proof.
+
+PR #84 now has head `4a0152c49f253884b96a4811ac5e22a24459dd05`; draft, not CI-validated. The central 169,592-step blank-root theorem remains the only formal candidate in this branch; all later Junc0/Junc11 return-map material is exploratory. No local Lean shell or workflow-dispatch capability was available.
