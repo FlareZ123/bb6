@@ -108,7 +108,8 @@ theorem tm63_attainable_after_m1_even_q4
           tm63AfterM1EvenB tm63AfterM1EvenHead := by
       simp only [tm63AfterM1EvenA,tm63AfterM1EvenB,
         tm63AfterM1EvenHead,tm63NextRight_eq]
-      congr 1 <;> omega
+      congr 1 <;> try rfl
+      omega
     exact hfirst.trans (congrArg some hcfg)
   have hstageFull :
       run tm2 tm63SuffixSteps
