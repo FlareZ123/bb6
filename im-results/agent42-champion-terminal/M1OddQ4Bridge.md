@@ -1,6 +1,6 @@
 # M1,n=3 odd q4 bridge (intermediate)
 
-**Status:** the 26-step finite bridge is kernel-checked locally with Lean 4.36.0-rc2, and a repository source lemma has been added. The full parametric reset stage is not yet formally proved.
+**Status:** the 26-step finite bridge is kernel-checked in a standalone local Lean file using the exact `tm2`, `FConfig`, `fMove`, `fStep`, and `fRun` definitions copied from `ChampionRootBridge.lean`. A repository source lemma importing `ChampionRootBridge` has been added but is not yet compiled by the repository workflow. The full parametric reset stage is not yet formally proved.
 
 ## Finite bridge
 
