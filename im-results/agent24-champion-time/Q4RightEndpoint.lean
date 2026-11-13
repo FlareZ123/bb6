@@ -175,7 +175,7 @@ theorem q4_suffix_run_right_word (T : Int → Bool) (h : Int) (b : Nat)
     (htail : ∀ i : Nat, 9+3*b ≤ i →
       T (h+1+(i:Int)) = false) :
     ∃ U,
-      run tm2 (39+3*b) ⟨4,h,T⟩ = some U ∧
+      run BB6Coverage.Agent48Champion.tm2 (39+3*b) ⟨4,h,T⟩ = some U ∧
       (∀ i : Nat,
         U.tape (h+6+(3*b:Int)+(i:Int)) =
           sideBit (s0RightFacing 0) i) := by
@@ -197,7 +197,7 @@ theorem q4_suffix_run_right_word_of_prefix
         BB6Coverage.Agent8S1Encoder.sideBit
           (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i) :
     ∃ U,
-      run tm2 (39+3*b) ⟨4,h,Tq⟩ = some U ∧
+      run BB6Coverage.Agent48Champion.tm2 (39+3*b) ⟨4,h,Tq⟩ = some U ∧
       (∀ i : Nat,
         U.tape (h+6+(3*b:Int)+(i:Int)) =
           sideBit (s0RightFacing 0) i) := by
@@ -266,6 +266,7 @@ theorem q4_suffix_left_word
   · have hside :
         sideBit (d0pow b ++ d1pow 2 ++ tail) i =
           sideBit (d0pow b) i := by
+      rw [List.append_assoc]
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_left
         (d0pow b) (d1pow 2 ++ tail) i (by rw [hlen0]; omega)]
     have hcell : T2 x = sideBit (d0pow b) i := by
@@ -306,8 +307,7 @@ theorem q4_suffix_left_word
           · have hx1 : x = h+10+(3*(j:Int))+1 := by
               rw [hxcoord]
               have hdEq : d = 3*j+1 := by
-                rw [hdiv,hr1]
-                omega
+                rw [hdiv,hr1] <;> omega
               omega
             have hiMod : i%3=0 := by
               dsimp [r,d] at hr1
@@ -317,8 +317,7 @@ theorem q4_suffix_left_word
           · have hx2 : x = h+10+(3*(j:Int))+2 := by
               rw [hxcoord]
               have hdEq : d = 3*j+2 := by
-                rw [hdiv,hr2]
-                omega
+                rw [hdiv,hr2] <;> omega
               omega
             have hiMod : i%3=2 := by
               dsimp [r,d] at hr2
@@ -395,6 +394,7 @@ theorem q4_suffix_left_word
   · by_cases hi1 : i < 3*b+6
     · have hside :
           sideBit (d0pow b ++ d1pow 2 ++ tail) i = true := by
+        rw [List.append_assoc]
         rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
           (d0pow b) (d1pow 2 ++ tail) i (by rw [hlen0]; omega)]
         rw [hlen0]
@@ -471,7 +471,7 @@ theorem q4_suffix_run_left_word (T : Int → Bool) (h : Int) (b L n a : Nat)
     (hleft : ∀ i : Nat,
       T (h-(i:Int)) = sideBit (q4LeftFacing L n a) i) :
     ∃ U,
-      run tm2 (39+3*b) ⟨4,h,T⟩ = some U ∧
+      run BB6Coverage.Agent48Champion.tm2 (39+3*b) ⟨4,h,T⟩ = some U ∧
       (∀ i : Nat,
         U.tape (h+5+(3*b:Int)-(i:Int)) =
           sideBit (s1LeftFacing L n 1 (a+b+2) (2^b-1)) i) := by
@@ -490,9 +490,9 @@ theorem q4_suffix_run_target_of_prefix
     (L n a b : Nat) (h : Int)
     (hn : n % 2 = 1) (hbound : n < 2^L) :
     ∃ Tq,
-      run tm2 (32+12*a) (s1Config L n 2 a 0 b h) =
+      run BB6Coverage.Agent48Champion.tm2 (32+12*a) (s1Config L n 2 a 0 b h) =
         some ⟨4,h,Tq⟩ ∧
-      run tm2 (39+3*b) ⟨4,h,Tq⟩ =
+      run BB6Coverage.Agent48Champion.tm2 (39+3*b) ⟨4,h,Tq⟩ =
         some (s1Config L (n-1) 1 (a+b+2) (2^b-1) 0
           (h+5+3*b)) := by
   obtain ⟨Tq,hprefix,hhead,hleft,hshape,hright⟩ :=
@@ -523,7 +523,7 @@ theorem q4_suffix_run_target_of_prefix
         sideBit (s1LeftFacing L (n-1) 1 (a+b+2) (2^b-1)) i := by
     simpa [U,T1,T2,g] using
       q4_suffix_left_word Tq h b L (n-1) a hleft8
-  have hsuffix : run tm2 (39+3*b) ⟨4,h,Tq⟩ = some U := by
+  have hsuffix : run BB6Coverage.Agent48Champion.tm2 (39+3*b) ⟨4,h,Tq⟩ = some U := by
     simpa [U,T1,T2,g] using q4_suffix_frame Tq h b hshape8
   have htarget : U =
       s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 H := by
@@ -537,9 +537,19 @@ theorem q4_suffix_run_target_of_prefix
           dsimp [i]
           omega
         rw [hcoord]
-        exact (by
-          simpa [H] using hleftU i).trans
-          (s1Config_left_cell L (n-1) 1 (a+b+2) (2^b-1) 0 H i).symm
+        have hleftCell :
+            U.tape (H-(i:Int)) =
+              (s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 H).tape
+                (H-(i:Int)) := by
+          calc
+            U.tape (H-(i:Int)) =
+                U.tape (h+5+(3*b:Int)-(i:Int)) := by simp [H]
+            _ = sideBit (s1LeftFacing L (n-1) 1 (a+b+2) (2^b-1)) i :=
+              hleftU i
+            _ = (s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 H).tape
+                  (H-(i:Int)) :=
+              (s1Config_left_cell L (n-1) 1 (a+b+2) (2^b-1) 0 H i).symm
+        exact hleftCell
       · let i : Nat := Int.toNat (x-H-1)
         have hcoord : x = H+1+(i:Int) := by
           dsimp [i]
@@ -568,7 +578,7 @@ theorem q4_suffix_run_target_of_prefix
 theorem oddRst2_q4_counted_source
     (L n a b : Nat) (h : Int)
     (hn : n % 2 = 1) (hbound : n < 2^L) :
-    run tm2 (71+12*a+3*b) (s1Config L n 2 a 0 b h) =
+    run BB6Coverage.Agent48Champion.tm2 (71+12*a+3*b) (s1Config L n 2 a 0 b h) =
       some (s1Config L (n-1) 1 (a+b+2) (2^b-1) 0
         (h+5+3*b)) := by
   obtain ⟨Tq,hprefix,hsuffix⟩ :=
@@ -586,7 +596,7 @@ theorem oddRst2_q4_counted_source
 
 /-- Authentic TM63 root instance of the complete q4 source transition. -/
 theorem tm2_q4_root_source :
-    run tm2 332 (s1Config 3 7 2 6 0 63 29) =
+    run BB6Coverage.Agent48Champion.tm2 332 (s1Config 3 7 2 6 0 63 29) =
       some (s1Config 3 6 1 71 (2^63-1) 0 223) := by
   simpa using
     (oddRst2_q4_counted_source 3 7 6 63 29
