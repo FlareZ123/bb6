@@ -308,5 +308,6 @@ theorem reset_double_B_to_A_source_reentry (d k h t Q : Nat)
 #print axioms regularEndpointFloor_sourceSection
 #print axioms double_B_to_A_source_reentry
 #print axioms chain_double_B_to_A_source_reentry
+#print axioms reset_double_B_to_A_source_reentry
 
 end BB6.Agent37EChainDoubleBReentry
