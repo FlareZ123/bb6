@@ -140,12 +140,14 @@ private theorem terminal_mod20_table (k v : Nat)
     (k%4=3 ∧ (v%20=0 ∨ v%20=11 ∨ v%20=17 ∨ v%20=18)) := by
   have hv4 : v%4 = (v%20)%4 := by omega
   have hv5 : v%5 = (v%20)%5 := by omega
+  have hexp :
+      (k+v+2)%4 = ((k%4)+(v%20)%4+2)%4 := by
+    rw [← hv4]
+    omega
   have hpowLeft :
       2^(k+v+2) % 5 =
         2^(((k%4)+(v%20)%4+2)%4) % 5 := by
-    rw [pow_two_mod_five_period_four]
-    congr 1
-    omega
+    rw [pow_two_mod_five_period_four, hexp]
   have hpowRight :
       2^v % 5 = 2^((v%20)%4) % 5 := by
     rw [pow_two_mod_five_period_four, hv4]
@@ -166,7 +168,7 @@ private theorem terminal_mod20_table (k v : Nat)
   have hklt : k%4 < 4 := Nat.mod_lt _ (by decide)
   have hvlt : v%20 < 20 := Nat.mod_lt _ (by decide)
   interval_cases hk : k%4 <;> interval_cases hv : v%20 <;>
-    norm_num [hk, hv] at h' ⊢
+    norm_num [hk, hv] at h' <;> norm_num [hk, hv]
 
 theorem odd_block_exit_terminal_nonzero_mod_five
     (t m k : Nat) (ht : 0 < t) (hm : 0 < m) (hmOdd : m % 2 = 1)
