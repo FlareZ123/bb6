@@ -1,0 +1,15 @@
+name: One-shot trigger for D-root stage 3
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  stage3:
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, 'retire one-shot') }}
+    uses: ./.github/workflows/agent25-eleventh-root.yml
+    with:
+      stage: "3"
+      source_run_id: "43407085596"
+      previous_artifact: "d-root-stage2"
+      source_ref: "2da159d86fa86d813bdfbc54e38e3ec9c75b6e69"
