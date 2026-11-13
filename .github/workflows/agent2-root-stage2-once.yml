@@ -1,15 +1,19 @@
-name: One-shot trigger for D-root stage 2
+name: One-shot trigger for D-root stage 2a
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent2-root-stage2-once.yml
 permissions:
   contents: read
   actions: read
 jobs:
-  stage2:
+  stage2a:
     if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, 'retire one-shot') }}
     uses: ./.github/workflows/agent25-eleventh-root.yml
     with:
-      stage: "2"
+      stage: "2a"
       source_run_id: "43402524711"
       previous_artifact: "d-root-stage1"
       source_ref: "2da159d86fa86d813bdfbc54e38e3ec9c75b6e69"
