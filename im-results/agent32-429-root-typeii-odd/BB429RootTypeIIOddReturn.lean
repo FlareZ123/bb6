@@ -33,7 +33,7 @@ private theorem a0_outWords_sweep (n : Nat) (l r : List Bool) :
       some ⟨0, ones2 (2 * n) ++ l, false, false :: r⟩ := by
   induction n generalizing l r with
   | zero =>
-      simp [outWords, run]
+      simp [outWords, ones2, run]
   | succ n ih =>
       rw [show 8 * (n + 1) = 8 + 8 * n by omega, run_add]
       change
@@ -78,11 +78,18 @@ private theorem a0_outWords_to_C0 (n k : Nat) :
   have hleft :
       ones2 (k + 1) ++ ones2 2 ++ ones2 (2 * n) ++ ones2 3 =
         ones2 (k + 2 * n + 6) := by
-    rw [← ones2_add (k + 1) 2]
-    rw [← ones2_add (k + 3) (2 * n)]
-    rw [← ones2_add (k + 3 + 2 * n) 3]
-    congr 1
-    omega
+    calc
+      ones2 (k + 1) ++ ones2 2 ++ ones2 (2 * n) ++ ones2 3 =
+          (ones2 (k + 1) ++ ones2 2) ++
+            (ones2 (2 * n) ++ ones2 3) := by
+              simp only [List.append_assoc]
+      _ = ones2 ((k + 1) + 2) ++ ones2 ((2 * n) + 3) := by
+        rw [← ones2_add (k + 1) 2, ← ones2_add (2 * n) 3]
+      _ = ones2 (((k + 1) + 2) + ((2 * n) + 3)) := by
+        rw [← ones2_add]
+      _ = ones2 (k + 2 * n + 6) := by
+        congr 1
+        omega
   have hfinal :
       [true, false, true, true] ++ ones2 (k + 2 * n + 6) =
         [true, false] ++ ones2 (k + 2 * n + 7) := by
@@ -90,7 +97,7 @@ private theorem a0_outWords_to_C0 (n k : Nat) :
       [true, false, true, true] ++ ones2 (k + 2 * n + 6) =
           [true, false] ++ (ones2 1 ++ ones2 (k + 2 * n + 6)) := by rfl
       _ = [true, false] ++ ones2 (1 + (k + 2 * n + 6)) := by
-        rw [ones2_add]
+        rw [← ones2_add 1 (k + 2 * n + 6)]
       _ = [true, false] ++ ones2 (k + 2 * n + 7) := by
         congr 1
         omega
@@ -107,7 +114,7 @@ private theorem a0_outWords_to_C0 (n k : Nat) :
           congr 1
           omega
     _ = (run (8 * n) z0).bind (run (8 + (2 * (k + 1) + 4))) :=
-      run_add _ _ _
+      run_add _ _ _ 
     _ = run (8 + (2 * (k + 1) + 4)) z1 := by rw [h1]; rfl
     _ = (run 8 z1).bind (run (2 * (k + 1) + 4)) := run_add _ _ _
     _ = run (2 * (k + 1) + 4) z2 := by rw [h2]; rfl
@@ -136,7 +143,7 @@ theorem c0_typeII_odd_endpoint (k n : Nat) :
   let z4 : Z := ⟨2, [true, false] ++ ones2 (k + 2 * n + 7), false, []⟩
   have h0 : run (2 * k + 10 + 6 * n) z0 = some z1 := by
     simpa [z0, z1, r, List.append_assoc] using
-      c0_odd_pairs_to_e0 k n (ones2 3 ++ [false])
+      BB429RootOddSection.c0_odd_pairs_to_e0 k n (ones2 3 ++ [false])
   have h1 : run 7 z1 = some z2 := by
     simpa [z1, z2, r] using e0_even_left_to_A3 r
   have h2 : run 6 z2 = some z3 := by
