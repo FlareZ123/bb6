@@ -330,3 +330,10 @@ The user has received durable progress responses for first three CI successes an
 - Another invocation changed `.github/workflows/agent37-seed31-audit-once.yml` into a manual `workflow_dispatch` wrapper while this run was active. Do not overwrite or delete that file; use the distinct `retry2` wrapper for this incarnation.
 - The artifact inspector `.github/workflows/agent37-seed31-artifact-inspect.yml` last extracted run `43387148649` into `CI-43387148649-diagnostic.md`. If `43388459155` finishes before release, update the inspector's run id and diagnostic filename; otherwise leave the run pending for the next incarnation to inspect.
 - The current root chain has still not reached `Seed31Probe`: all three failed audits stopped earlier (P2 alias, then PacketSafeExit). Do not report a q4 blank-root prefix yet.
+
+
+### q4 endpoint refinement for the next continuation
+
+- `EERootBEA.q4_exceptional_EE_BEA_section` ultimately calls `EChainBEExit.chain_B_E_A_reentry` with `d=1`, `q=0`, `p=4`. In `P2MarkerA.all_A_marker_returns`, p=4 decomposes as `3*1+1`, so the middle `close_one` branch returns a *pure unary* F/0 endpoint; `EChainBEExit.regularEndpoint_reentry` maps that branch to `regularSection n 0 0`.
+- The current q4 theorem hides this stronger endpoint in an existential `regularSection a q b`. After the blank-root q4 prefix is established, strengthen/specialize the chain at p=4 to expose `q=b=0` and the explicit unary endpoint parameter. This gives a clean seed for the next DRegular probe rather than an opaque existential.
+- If the Seed31 probe returns the q4 state, prove reachability with a generic `firstStopAux_sound` / `firstStopBlocks_sound` lemma using `DRegularFast.fastRun_correct`, `run_add`, and `run_canon`; then use the q4 residue `a mod 59049=44494` to identify `sourceStart (2187*m+1647) 4` and compose the existing EERootBEA theorem.
