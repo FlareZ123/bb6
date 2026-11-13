@@ -96,7 +96,7 @@ theorem shadow_encoded_left_properties
     (hcoord : 2^m*(b+4*(L+m-z))=alpha*2^N) :
     440*2^(N-M-4) ≤ b ∧ 12 ≤ b ∧ b%4=0 := by
   let w := L+m-z
-  have hK : 4 ≤ N-M-3 := by
+  have hK4 : 4 ≤ N-M-3 := by
     by_contra hnot
     have hKle : N-M-3 ≤ 3 := by omega
     have hpow : 2^(N-M-3) ≤ 8 := by
@@ -106,13 +106,11 @@ theorem shadow_encoded_left_properties
         _ = 8 := by norm_num
     have hlin : N-M-3+11 ≤ L+M := by omega
     omega
-  have hKminus : 3 ≤ N-M-4 := by omega
   have hmN : m ≤ N := by omega
   have henc : b+4*w=alpha*2^(N-m) := by
     have h := unscale_coordinate N m b w alpha hmN (by simpa [w] using hcoord)
     simpa [w] using h
   have hwle : w ≤ L+M := by dsimp [w]; omega
-  have hK : 3 ≤ N-M-4 := by omega
   have hpowmono : 2^(N-M) ≤ 2^(N-m) :=
     Nat.pow_le_pow_right (by decide : 0<(2:Nat)) (by omega)
   have hprod1 : 28*2^(N-M) ≤ 28*2^(N-m) :=
