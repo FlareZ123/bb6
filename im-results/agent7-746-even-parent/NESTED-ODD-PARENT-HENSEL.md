@@ -202,66 +202,89 @@ It contains infinitely many natural \(r\). Each of the finitely many band ratios
 
 ## Explicit seven-edge specialization
 
-The following choices give seven successive bands:
+The uniform-density initial edge also gives a much denser concrete seven-edge branch. Choose
 \[
 \begin{aligned}
-&(t_1,\sigma_1)=(7,14),\quad
-(t_2,\sigma_2)=(1,9),\quad
-(t_3,\sigma_3)=(0,9),\\
-&(t_4,\sigma_4)=(2,13),\quad
-(t_5,\sigma_5)=(1,13),\quad
-(t_6,\sigma_6)=(0,13),\quad
-(t_7,\sigma_7)=(0,14).
+&(t_1,\sigma_1)=(4,9),\quad
+(t_2,\sigma_2)=(0,6),\quad
+(t_3,\sigma_3)=(0,7),\\
+&(t_4,\sigma_4)=(1,9),\quad
+(t_5,\sigma_5)=(1,11),\quad
+(t_6,\sigma_6)=(1,12),\quad
+(t_7,\sigma_7)=(0,12).
 \end{aligned}
 \]
-Their limiting band ratios are
+The limiting band ratios are
 \[
 \begin{array}{c|c}
 i&R_i\\\hline
-1&458752/59049\approx7.7690054\\
-2&3560896/531441\approx6.7004540\\
-3&11481056/1594323\approx7.2012108\\
-4&326640896/43046721\approx7.5880552\\
-5&2471264192/387420489\approx6.3787648\\
-6&7372657888/1162261467\approx6.3433729\\
-7&21788896160/3486784401\approx6.2489944
+1&14336/2187\approx6.5550983\\
+2&44704/6561\approx6.8135955\\
+3&147680/19683\approx7.5029213\\
+4&1103168/177147\approx6.2274156\\
+5&12626560/1594323\approx7.9197001\\
+6&99988288/14348907\approx6.9683557\\
+7&340741280/43046721\approx7.9156152
 \end{array}
 \]
-and all lie strictly inside \((6.2,7.9)\).
+and all lie strictly inside \((6.2,7.93)\).
 
-Exact modular evaluation gives the seven-edge class
+The exact Hensel digit choices give
 \[
-\boxed{r\equiv74803\pmod{531441}.}
+\boxed{r\equiv1618\pmod{19683}.}
 \]
-Its least representative has \(n=887+13122\cdot74803=981565853\). On this class the successive target numerators satisfy
+The least representative has \(n=887+13122\cdot1618=21232283\). The successive unique lifts are:
 \[
-v_3(Q)=10,\quad v_3(G_1)=2,\quad v_3(G_2)=1,\quad
-v_3(G_3)=5,\quad v_3(G_4)=2,\quad v_3(G_5)=1,\quad
-3\mid G_6.
+\begin{array}{c|c}
+\text{condition}&\text{selected residue}\\\hline
+3\mid G_2&r\equiv1\pmod3\\
+3\mid G_3&r\equiv7\pmod9\\
+9\mid G_3&r\equiv25\pmod{27}\\
+3\mid G_4&r\equiv79\pmod{81}\\
+9\mid G_4&r\equiv160\pmod{243}\\
+3\mid G_5&r\equiv160\pmod{729}\\
+9\mid G_5&r\equiv1618\pmod{2187}\\
+3\mid G_6&r\equiv1618\pmod{6561}\\
+3\mid G_7&r\equiv1618\pmod{19683}
+\end{array}
 \]
-The higher valuation \(v_3(G_3)=5\) is allowed: \(t_4=2\) only needs \(27\mid G_3\), and the quotient remains odd. The five-edge cylinder \(r\equiv74803\pmod{177147}\) already has \(3\mid G_5\), so the sixth edge with \((t_6,\sigma_6)=(0,13)\) holds throughout that cylinder. Its three lifts to modulus \(3^{12}=531441\) have
+At the representative, modular evaluation gives
 \[
-G_6\bmod3=(0,2,1),
+\begin{aligned}
+&Q\equiv95797161\pmod{3^{17}},\qquad
+G_1\equiv18582\pmod{3^{10}},\qquad
+G_2\equiv6018\pmod{3^9},\\
+&G_3\equiv1044\pmod{3^8},\qquad
+G_4\equiv567\pmod{3^6},\qquad
+G_5\equiv27\pmod{3^4},\\
+&G_6\equiv6\pmod{3^2},\qquad G_7\equiv0\pmod3.
+\end{aligned}
 \]
-respectively at \(r=74803,\ 251950,\ 429097\). Thus the first lift is the unique one making \(3\mid G_6\), and it gives the seventh edge with \((t_7,\sigma_7)=(0,14)\). The seven-edge cylinder has density \(1/531441\) in \(r\).
+Thus
+\[
+v_3(Q)=9,\quad v_3(G_1)=1,\quad v_3(G_2)=1,\quad
+v_3(G_3)=2,\quad v_3(G_4)=4,\quad v_3(G_5)=3,\quad
+v_3(G_6)=1,\quad 3\mid G_7.
+\]
+A shift \(r\mapsto r+3^9a\) changes \(n\) by \(2a3^{17}\). The affine-exponential shift law therefore changes \(Q,G_1,\ldots,G_7\) by multiples of \(3^{17},3^{10},3^9,3^8,3^6,3^4,3^2,3\), respectively. All displayed valuations and divisibilities consequently hold throughout the full class \(r\equiv1618\pmod{19683}\). Its density is \(1/19683\).
 
 The seven band tests use the linear/constant coefficients \((B_i,C_i)\) of \(Q=X_0,X_1,\ldots,X_6\), whose bit lengths are
 \[
-(3408,3408),\ (3417,3417),\ (3420,3420),\ (3422,3422),\
-(3426,3426),\ (3429,3429),\ (3431,3431).
+(3408,3408),\ (3414,3414),\ (3416,3416),\ (3418,3418),\
+(3421,3421),\ (3424,3424),\ (3427,3427).
 \]
-Thus \(|B_i|,|C_i|<2^{3432}\) for every coefficient used in the seven band tests. Each factor \(2^{\sigma_i}/3^{t_i+1}\) is below \(2^{13}\). For \(n\ge7000\), \(n+1<2^{n/2}\), so the difference between each exact normalized band ratio and its limit is less than
+Thus \(|B_i|,|C_i|<2^{3427}\) for every coefficient used in the seven band tests. Each factor \(2^{\sigma_i}/3^{t_i+1}\) is below \(2^{11}\). For \(n\ge7000\), \(n+1<2^{n/2}\), so the difference between each exact normalized band ratio and its limit is less than
 \[
-2^{13}\frac{2^{3432}(n+1)}{2^n}
-<2^{3445-n/2}\le2^{-55}.
+2^{11}\frac{2^{3427}(n+1)}{2^n}
+<2^{3438-n/2}\le2^{-62}.
 \]
-Consequently every exact ratio lies in \((6.19,7.91)\), with margin greater than \(0.09\) from both endpoints 6 and 8. Also \(k_i=n+t_i-\sigma_i\ge n-14\), so \(0.09\cdot2^{k_i}>1\). The exact integer bands
+Consequently every exact ratio lies in \((6.19,7.94)\), with margin greater than \(0.06\) from both endpoints 6 and 8. Also \(k_i=n+t_i-\sigma_i\ge n-12\), so \(0.06\cdot2^{k_i}>1\). The exact integer bands
 \[
 6\cdot2^{k_i}+1\le2^{t_i}e_i\le8\cdot2^{k_i}-1
 \]
-therefore hold for every \(n\ge7000\) in the class. In particular, the least representative itself gives a genuine seven-edge chain, and so does every nonnegative member of the class.
+therefore hold for every \(n\ge7000\) in the class. In particular, the least representative itself gives a genuine seven-edge chain, and so does every nonnegative member of the class. The last digit also makes \(3\mid G_7\), seeding an eighth edge.
 
-The exact modular residues, three next-digit values, coefficient bit lengths, and limiting ratios are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). Agent 44 independently recomputed the branch modulo \(3^{28}\) in [NestedCascadeCheck.mjs](../agent44-746-rank/NestedCascadeCheck.mjs), including the coefficient residues, all six first band limits, the seventh limit, and the next-digit lift. The band-compatible induction above is the arbitrary-depth mathematical argument.
+The exact modular residues, unique Hensel digits, coefficient bit lengths, and limiting ratios are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). Agent 44 independently checked an alternate seven-edge branch beginning with \((t_1,\sigma_1)=(7,14)\) modulo \(3^{28}\) in [NestedCascadeCheck.mjs](../agent44-746-rank/NestedCascadeCheck.mjs); that independent check is complementary to the denser \(t_1=4\) branch above.
 
 ## Scope and next formalization
 
