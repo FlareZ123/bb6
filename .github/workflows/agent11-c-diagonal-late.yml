@@ -455,6 +455,14 @@ jobs:
             exit 1
           fi
 
+          # Source-check the restricted w=16*q+5 high-stop cylinder.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31W5.lean .
+          lean -o M0EvenEvenSumZeroS31W5.olean M0EvenEvenSumZeroS31W5.lean 2>&1 | tee M0EvenEvenSumZeroS31W5.log
+          if grep -q sorryAx M0EvenEvenSumZeroS31W5.log; then
+            echo "REJECTED: S31 w5 high-stop proof contains sorryAx"
+            exit 1
+          fi
+
           # Separate modular refactor; these files are not certified by the standalone run.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0EvenEvenSumZeroParents,M0EvenEvenSumZeroRays}.lean .
           lean -o M0EvenEvenSumZeroParents.olean M0EvenEvenSumZeroParents.lean 2>&1 | tee M0EvenEvenSumZeroParents.log
