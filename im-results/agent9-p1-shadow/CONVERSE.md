@@ -29,9 +29,14 @@ $$z>0,\qquad w\ge4,$$
 so for $m\le M$,
 $$z\le L+m-4\le L+M-4<L+M.$$
 
-The elementary width estimate is as follows. Put $K=N-M-3$. From $N\ge2M+7$ we get $K\ge M+4\ge4$, and
-$L+M\le N+M+9=K+2M+12\le3K+4\le2^K=2^{N-M-3},$
+The direct width hypothesis itself forces the exponent margin. Put $K=N-M-3$. Since $L\ge N+8$, we have $K+11\le L+M\le2^K$. If $K\le3$, then $2^K\le8$, a contradiction; hence $K\ge4$. Consequently $N-M-4\ge3$ and $N-m\ge2$ for every $m\le M$.
+
+For the feeder range $N+8\le L\le N+9$, the simple linear budget $N\ge2M+7$ implies the width hypothesis: $K\ge M+4\ge4$ and
+$
+L+M\le N+M+9=K+2M+12\le3K+4\le2^K,
+$
 where $3K+4\le2^K$ for every $K\ge4$.
+
 Consequently $z<2^{N-M-3}$. On an abstract edge $z=2^t r$, positivity gives $r\ge1$, hence $2^t\le z$, and therefore
 $$t\le N-M-4,\qquad m+t+3\le N-1.$$
 This is exactly the source safety margin required by `encoded_shift_divisible`, with one unit to spare.
