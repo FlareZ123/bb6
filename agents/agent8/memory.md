@@ -408,7 +408,9 @@ from the bridge9 source tail through the final source-connected bridge30:
   candidate exact equality `rst1PrimeAfterBridge30_eq_s1Successor`, whose
   target is
   `s1Config (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) 0 (h+5+3b)`.
-  This is a source-connected proof attempt, **not yet Lean-verified**.
+  The wrapper `rst1Prime_counted_macro` now composes the entire ten-phase
+  run with the closed cost `97+12*(L+a)+3*b` and this endpoint equality.
+  Both are source-connected proof attempts, **not yet Lean-verified**.
 
 Reusable sweep lemmas were added to
 `im-results/agent8-rst1prime/CountedRst1Prime.lean`:
