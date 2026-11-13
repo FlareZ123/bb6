@@ -37,6 +37,8 @@ jobs:
           cp im-results/agent48-champion-root/UniformTM63HeadOffset.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63SourceRun.lean /tmp/a48-root/
           cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a48-root/
+          cp im-results/agent42-champion-terminal/InitialS1RootFinite.lean /tmp/a48-root/
+          cp im-results/agent48-counted-inc0/Q4FiniteAudit.lean /tmp/a48-root/
           cp im-results/agent42-champion-terminal/TerminalChampion.lean /tmp/a48-root/
           cp im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64 /tmp/a48-root/
           cp im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64 /tmp/a48-root/
@@ -54,6 +56,15 @@ jobs:
           lean -o CountedSweep.olean CountedSweep.lean
           lean -o CountedOddBase.olean CountedOddBase.lean
           lean -o S1Encoder.olean S1Encoder.lean
+          lean -o InitialS1RootFinite.olean InitialS1RootFinite.lean
+          : > /tmp/a48-root/q4-finite-audit-axioms.log
+          lean -o Q4FiniteAudit.olean Q4FiniteAudit.lean 2>&1 | tee /tmp/a48-root/q4-finite-audit-axioms.log
+          grep -F "'BB6Coverage.Agent48Q4FiniteAudit.q4_finite_endpoint' depends on axioms:" /tmp/a48-root/q4-finite-audit-axioms.log
+          grep -F "'BB6Coverage.Agent48Q4FiniteAudit.q4_finite_full_mark_set' depends on axioms:" /tmp/a48-root/q4-finite-audit-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/q4-finite-audit-axioms.log; then
+            echo '::error::sorryAx found in q4 finite root endpoint audit'
+            exit 1
+          fi
           : > /tmp/a48-root/q4-prefix-axioms.log
           lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean 2>&1 | tee /tmp/a48-root/q4-prefix-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/q4-prefix-axioms.log; then
