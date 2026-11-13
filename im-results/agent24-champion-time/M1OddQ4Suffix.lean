@@ -22,6 +22,7 @@ open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent24M1OddQ4Prefix
+open BB6ChampionArithmetic
 
 /-- The 29-step m=1,n=3 prefix ends four E-on-one moves into the
 ordinary q4 suffix.  Splitting the generic 39+3b suffix at those four
@@ -74,7 +75,28 @@ theorem m1Odd_q4_counted_increment_source
     hp (by simpa [resetDelta] using hbound)
   simpa [proposedIncrementCost_decomp] using hrun
 
+/-- Keep the successor exponent/counter symbolic for root composition.
+The explicit power is exposed only by the generic rewrite lemmas, so
+instantiating this theorem at a huge root counter does not normalize it. -/
+private theorem m1OddNextExponent_one_eq (a b : Nat) :
+    nextExponent 1 a b = a+b+2 := by
+  rfl
+
+private theorem m1OddNextRight_eq (b : Nat) :
+    nextRight b = 2^b-1 := by
+  rfl
+
+theorem m1Odd_q4_counted_increment_source_symbolic
+    (a b : Nat) (h : Int) (ha : 0 < a) :
+    run tm2 (proposedIncrementCost 1 3 a b)
+      (s1Config 3 3 1 a 0 b h) =
+      some (s1Config 3 2 0 (nextExponent 1 a b) 0
+        (nextRight b) (h+5+3*b)) := by
+  simpa only [m1OddNextExponent_one_eq,m1OddNextRight_eq] using
+    m1Odd_q4_counted_increment_source a b h ha
+
 #print axioms m1Odd_q4_reset_prefix_source
 #print axioms m1Odd_q4_counted_increment_source
+#print axioms m1Odd_q4_counted_increment_source_symbolic
 
 end BB6Coverage.Agent24M1OddSuffix
