@@ -218,6 +218,7 @@ jobs:
           for f in EvenEvenInverse OddEvenInverse ExtraEvenOrbit EvenRightSixOrbit; do lean -o "$f.olean" "$f.lean"; done
           # Source-check the new m=0 even-even sum-zero parent closure.
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-low58/M0EvenEvenSumZero.lean .
+          set -o pipefail
           lean -o M0EvenEvenSumZero.olean M0EvenEvenSumZero.lean 2>&1 | tee M0EvenEvenSumZero.log
           if grep -q sorryAx M0EvenEvenSumZero.log; then
             echo "REJECTED: m=0 sum-zero source proof contains sorryAx"
