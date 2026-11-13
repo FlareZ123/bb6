@@ -1,4 +1,4 @@
-name: Agent 3 #429 exact C-zero section grammar (path-filtered)
+name: Agent 3 #429 exact C-zero section grammar (manual)
 on:
   workflow_dispatch:
 permissions:
