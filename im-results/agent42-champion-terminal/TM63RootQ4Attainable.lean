@@ -60,6 +60,26 @@ theorem tm2_attainable_after_root_q4_drain_to_terminal_reset
     (rootQ4DrainMoves + suffixSteps) L a b h ha hblank
     (by simpa [s1Config] using hfinal)
 
+/-- The blank-root q4/drain prefix is exactly the first proposed
+Rst0/Rst1/Rst2 counted cost in the arithmetic itinerary, plus the initial
+27,959-step source bridge. This identifies the concrete source prefix with
+the first summand of `proposedTM63Moves`. -/
+theorem rootQ4Drain_matches_first_reset_cost :
+    rootQ4DrainMoves = 27959 + proposedIncrementCost 2 7 6 63 := by
+  have hv : v2 7 = 0 := by decide
+  have hp : 804 ≤ 6*4^63 + 42*2^63 := by decide
+  simp [rootQ4DrainMoves, q4DrainMoves, proposedIncrementCost, hv]
+  omega
+
+/-- The arithmetic Rsts1 recursion starts with precisely the q4/drain
+stage: its first update is (n,m,a,b)=(7,2,6,63) to
+(6,1,71,2^63-1). -/
+theorem first_section_cost_decomposition :
+    (sectionResult 7 2 6 63).cost =
+      proposedIncrementCost 2 7 6 63 +
+        (sectionResult 6 1 71 (2^63-1)).cost := by
+  simp [sectionResult, nextMarker, nextExponent, nextRight]
+
 /-- The root component already has a closed exact cost, independent of the
 unknown middle itinerary. -/
 theorem rootQ4Drain_attained_prefix_length :
@@ -67,6 +87,8 @@ theorem rootQ4Drain_attained_prefix_length :
   rootQ4DrainMoves_closed
 
 #print axioms tm2_attainable_after_root_q4_drain_to_terminal_reset
+#print axioms rootQ4Drain_matches_first_reset_cost
+#print axioms first_section_cost_decomposition
 #print axioms rootQ4Drain_attained_prefix_length
 
 end BB6Coverage.Agent42RootAttainable
