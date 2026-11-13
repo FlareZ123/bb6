@@ -175,14 +175,47 @@ lies strictly in `(2*2^n,3*2^n)` throughout the even-band range, so the t=0 bran
 **Do not extend this t=0 gap argument to t≥1.** The actual odd-parent band value at exponent t is `2^t*(2*y_m+5)/3^(t+1)=(2/3)^t*q₀), not `2^t*q₀`. In fact `D_m mod9` cycles `4,3,1,6,7,0`; for odd m, `(2*y_m+5) mod9` cycles `3,6,0`, so t=1 divisibility can occur when `m≡5 (mod 6)`. The higher-t branches require the nested 3-adic analysis; the first departure from the scale-`n-1` even band may also enter a lower-scale band rather than terminate.
 
 A concrete t=1 branch occurs after five same-scale even parents:
-`D₅=127*n+193`, so `D₅ mod9=0` because `n mod9=5`. Therefore `2*y₅+5` is divisible by 9 and
-`v₅=2*(2*y₅+5)/9=(16*2^n-4*D₅+10)/9`.
-This lies in the odd band at scale `n-2`,
-`6*2^(n-2)+1 ≤ v₅ ≤ 8*2^(n-2)-1`,
-provided `8*D₅≤5*2^n+2`, which follows from the existing growth bound `2^(n-2)≥10000*n+10000`. Since `d=(2*y₅+5)/9` is odd, this gives a genuine t=1 odd parent `z₅=d` of `y₅`. Thus the even predecessor has a concrete candidate chain `y₀←y₁←...←y₅←z₅`; the next task is to analyze the parents of `z₅`. This remains an arithmetic lead, not a root-reachability proof.
+`D₅=127*n+193`, so `D₅ mod9=0` because `n mod9=5`. Put
+`d=(2*y₅+5)/9`. The odd-band quantity is `q=2*d), and it lies in
+the odd band at scale `n-2`,
+`6*2^(n-2)+1 ≤ q ≤ 8*2^(n-2)-1`, under the existing growth bound.
+**The source predecessor is not d.** By the exact odd-arm equation in
+`ResetParent`,
+`2*q = 8*2^j + h + j + 5`, with `j=n-2`, so the actual predecessor is
+`h=4*d-8*2^(n-2)-(n-2)-5 = 4*d-2^(n+1)-n-3`.
+Equivalently, with `p=2^(n-2)`,
+`h=(56*p-1025*n-1551)/9`.
 
-This is an open route to the even predecessor, not a completed root exclusion.
+For `n mod13122=887`, this corrected branch has the following further
+source-parent candidates (all formulas use the same `p=2^(n-2)`):
 
-The t=1 parent `z₅` itself lies in the scale-`n-3` even band and has even parent
-`w=2*z₅-2^n-n+3=(7*2^n-517*n-735)/9`.
-At the representative (and throughout the period), `z₅ mod27=21` and `w mod27=17`, so `(2*w+5) mod9=3`: t≥1 odd parents of w are impossible. Its t=0 quotient `(2*w+5)/3` lies in the gap `(2*2^(n-2),3*2^(n-2))`, so t=0 is impossible as well. Meanwhile w remains in the scale-`n-3` even band. This extends the same-level even segment one step beyond z₅; the next scale-`n-3` even chain and its next nested-odd branch remain open.
+- `z₀=h=(56*p-1025*n-1551)/9` is in the even band at scale `n-2`.
+  Its even parent is
+  `z₁=2*z₀-8*2^(n-2)-(n-2)=(40*p-2059*n-3084)/9`, which is in the
+  middle-low gap at scale `n-2`.
+- `z₁ mod81=65`, so `v₃(2*z₁+5)=3). Its t=1 odd parent is
+  `z₂=(158*p-16553*n-24573)/81`, with odd-band parameter at scale
+  `n-4`. The t=0 and t=2 quotient positions are gaps.
+- `z₂` is in the even band at scale `n-4`, and its even parent is
+  `z₃=(154*p-33187*n-48822)/81`. Also `v₃(2*z₂+5)=2), so its t=1
+  odd parent is
+  `z₄=(535*p-133153*n-194964)/729`, with odd-band parameter at scale
+  `n-5`; the t=0 quotient is a gap and t≥2 is excluded.
+- `z₃` remains in the even band at scale `n-4`; its t=0 odd quotient is
+  a gap and t≥1 is excluded, so its even-parent chain continues.
+  `z₄` lies in the middle-low gap at scale `n-5` and
+  `z₄ mod3=1), hence it has no even or odd parent.
+
+The residues `z₀ mod81=75`, `z₁ mod81=65`, `z₂ mod81=47`,
+`z₃ mod81=59`, and `z₄ mod3=1` are fixed on this subresidue by the
+relevant powers-of-two periods and `n)-residues. The band/gap inequalities
+follow from the existing linear growth bound. These calculations are an
+arithmetic lead, not yet a Lean proof of the exhaustive parent sets.
+
+The earlier identification `z₅=d` as a parent of `y₅` is withdrawn:
+`d` is the quotient parameter, not the source predecessor. The expression
+`w=2*d-2^n-n+3` is indeed the even parent of the separate target `d`
+(which lies in the even band at scale `n-3`), but there is no established
+edge from `y₅` to `d`; that `w)-chain cannot be used in the inverse cone
+of `y₅`. The corrected branch through `z₀,z₁,z₂,z₃,z₄` still leaves the
+same-scale `z₃)-chain and all other higher-valuation side branches open.
