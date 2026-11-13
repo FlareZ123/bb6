@@ -503,19 +503,28 @@ theorem q4_suffix_run_target_of_prefix
   let g : Int := h+10+(3*b:Int)
   let H : Int := h+5+(3*b:Int)
   let U := frameAt T2 g q4TailInside q4TailEnd
+  have hshape8 : BB6Coverage.Agent8Q4Suffix.q4RightShape Tq h b := by
+    simpa [BB6Coverage.Agent6Q4Prefix.q4RightShape,
+      BB6Coverage.Agent8Q4Suffix.q4RightShape] using hshape
+  have hleft8 : ∀ i : Nat,
+      Tq (h-(i:Int)) =
+        sideBit (BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (n-1) a) i := by
+    intro i
+    simpa [BB6Coverage.Agent6Q4Prefix.q4LeftFacing,
+      BB6Coverage.Agent8Q4Suffix.q4LeftFacing] using hleft i
   have htail := q4_prefix_far_tail b Tq h hright
   have hrightU :
       ∀ i : Nat, U.tape (h+6+(3*b:Int)+(i:Int)) =
         sideBit (s0RightFacing 0) i := by
     simpa [U,T1,T2,g] using
-      q4_suffix_right_word Tq h b hshape htail
+      q4_suffix_right_word Tq h b hshape8 htail
   have hleftU :
       ∀ i : Nat, U.tape (h+5+(3*b:Int)-(i:Int)) =
         sideBit (s1LeftFacing L (n-1) 1 (a+b+2) (2^b-1)) i := by
     simpa [U,T1,T2,g] using
-      q4_suffix_left_word Tq h b L (n-1) a hleft
+      q4_suffix_left_word Tq h b L (n-1) a hleft8
   have hsuffix : run tm2 (39+3*b) ⟨4,h,Tq⟩ = some U := by
-    simpa [U,T1,T2,g] using q4_suffix_frame Tq h b hshape
+    simpa [U,T1,T2,g] using q4_suffix_frame Tq h b hshape8
   have htarget : U =
       s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 H := by
     apply config_ext
