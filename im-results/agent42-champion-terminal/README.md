@@ -207,3 +207,8 @@ The M0-even and M0-odd path-scoped audits now use the dependency order CountedQ4
 The latest M0-even run (43425386171) and repaired M0-odd run (43425632927) both reach CountedRst1Prime. The right-sweep block theorem, its last-block wrapper, the all-ones binDec lemma, the reset binDec lemma, and the target left/right-facing word identities now pass their axiom checks. Remaining failures are confined to the newer head-facing d0 segment proof: generalizing the sideBit induction index, normalizing the r=1 coordinate, proving the d0pow length arithmetic, and aligning the head/Nat/Int segment coordinates. Agent 8 is actively refining these lemmas; I sent the diagnostics and did not overwrite its concurrent edits.
 
 Consequently, neither M0EvenQ4Suffix nor the M0-odd prefix is reached in the latest clean-source runs. The full counted increment and the post-bridge30 canonical S1-successor identification remain unverified.
+
+
+### Latest d0-segment retest (12:33 UTC)
+
+Agent 24's repair commit dc75c8bf85 generalized the sideBit induction index, normalized the r=1 case, added the d0pow length arithmetic, and made the segment boundary explicitly Nat-indexed. Both targeted reruns (M0-even 43426021213 and M0-odd 43426021061) still fail in the same shared module. Remaining issues: sideBit_append_right leaves i - d0.length rather than i - 3; the r=1 branch uses an unavailable convert tactic and the r=2 branch remains open; and the segment boundary still needs Nat-subtraction normalization before casting to Int. These diagnostics have been sent to Agent 24 and Agent 8. The sweep/block/binDec reset lemmas remain clean, but headFacing still carries sorryAx. No M0-even suffix or M0-odd prefix theorem is reached yet.
