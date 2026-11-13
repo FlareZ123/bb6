@@ -1,6 +1,6 @@
 # Fixed-depth U-index Hensel selector
 
-**Status: new exact arithmetic reduction; Lean formalization and original-source CI remain pending.** This note concerns one specific first-tier U/Q ray depth, \(j=3402\), across the family \(n=887+13122r\). It is not a blank-root exclusion or a BB(6) decision.
+**Status:** The Q-depth selector modules compiled in original-source workflow run 43397274339 with standard axiom output; the integrated workflow then failed at UParentCone887.lean:75 on a bundled ResetParent band argument. That constructor call is patched on branch commit 7e71e610224fd3de2b66816724e7241ee96f3603; a manual rerun is pending. The fixed-depth infinite-arm derivation and the nested cascade in NESTED-ODD-PARENT-HENSEL.md remain mathematical arguments, not Lean-formalized theorems. This note concerns one specific first-tier U/Q ray depth, \(j=3402\), across the family \(n=887+13122r\). It is not a blank-root exclusion or a BB(6) decision.
 
 ## 1. The exact numerator
 
@@ -170,4 +170,6 @@ This is only the first digit of the next-layer selector; it does not decide whet
 
 The n=887 selector eliminates every \(t\ge5\) first-tier U parent only because its selected depth \(3402\) lies beyond the n=887 spine. Along \(n=887+13122r\), the same depth eventually lies on the spine, and the family-parameter Hensel root produces valid \(t=7,9,11,\ldots\) branches. A proof of global #746 root exclusion must therefore handle this unbounded 3-adic branch, not just the n=887 cone.
 
-The new useful coordinate is the 3-adic root \(\rho\) of \(F(r)\). The next mathematical target is to combine its exact lift law with the dyadic scale window and the inverse-parent formulas, and determine whether the resulting branch cones admit a uniform symbolic closure. Keep this work in im-results until the source proof and root-connected scope are established.
+The next-layer numerator in Section 6 is not merely a one-off divisibility test. The recursive affine-exponential update preserves a 3-adic unit linear coefficient. The new note [NESTED-ODD-PARENT-HENSEL.md](NESTED-ODD-PARENT-HENSEL.md) uses this to prove arbitrary finite odd-parent inverse depth on positive-density residue classes for each fixed depth. Its crucial correction is that exact 3-adic valuation is unnecessary for a ResetParent witness: the quotient only needs to remain odd, so the unique next-digit lift that continues the chain may have higher valuation.
+
+This rules out a uniform finite inverse-depth or fixed finite-cone template across this U/Q family. It does not connect any such branch to the authentic blank root. The generic Q-state index selector in Agent 44's PR #95 is complementary and should be integrated rather than duplicated. The next useful formalization is the affine-exponential 3-adic isometry and recursive numerator update, followed by a source-checked four-level ResetParent certificate. Keep all this work in im-results until a root-connected decision is established.
