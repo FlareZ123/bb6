@@ -1,7 +1,11 @@
-name: Agent 32 #429 raw F-entry predecessor source proof (manual)
+name: Agent 32 #429 raw-parent and parity-shifted continuation source proof
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/agent32-429-raw-parent.yml'
+      - 'im-results/agent32-429-low43/ParityShiftedReturns.lean'
 
 permissions:
   contents: read
@@ -23,7 +27,7 @@ jobs:
       - name: Compile original frontier, authentic #429 path and new all-time predecessor theorem
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent1-429-j-first-branch:im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent32-429-high3-ladder:im-results/agent32-429-high2-prefix:im-results/agent6-429-one-sided-excursion:im-results/agent18-429-lastwriter:im-results/agent3-429-prefatal:im-results/agent3-429-a-corridor:im-results/agent3-429-e-guard:im-results/agent39-429-frontier-left:im-results/agent3-429-root-language"
+          export LEAN_PATH="im-results/agent1-429-j-first-branch:im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent32-429-high3-ladder:im-results/agent32-429-high2-prefix:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-low43:im-results/agent18-429-lastwriter:im-results/agent3-429-prefatal:im-results/agent3-429-a-corridor:im-results/agent3-429-e-guard:im-results/agent39-429-frontier-left:im-results/agent3-429-root-language"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean -o im-results/agent32-429-primitive-cost/BubbleExact.olean im-results/agent32-429-primitive-cost/BubbleExact.lean | tee /tmp/agent32-bubble.log
           lean -o im-results/agent32-429-primitive-cost/BubblePrefix.olean im-results/agent32-429-primitive-cost/BubblePrefix.lean | tee -a /tmp/agent32-bubble.log
@@ -64,6 +68,9 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2TailBase.olean im-results/agent32-429-high2-prefix/High2TailBase.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2Return.olean im-results/agent32-429-high2-prefix/High2Return.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/MidAposBoundary.olean im-results/agent32-429-high2-prefix/MidAposBoundary.lean 2>&1 | tee -a /tmp/agent32-429-source.log
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent32-429-low43/ParityShiftedReturns.olean im-results/agent32-429-low43/ParityShiftedReturns.lean 2>&1 | tee -a /tmp/agent32-429-source.log
+          fi
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high3-ladder/High3Ladder.olean im-results/agent32-429-high3-ladder/High3Ladder.lean | tee /tmp/agent32-high3.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FEntry.olean im-results/agent32-429-raw-parent/BB429FEntry.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FatalB.olean im-results/agent32-429-raw-parent/BB429FatalB.lean | tee -a /tmp/agent32-429-source.log
@@ -123,3 +130,10 @@ jobs:
           audit_axiom_free "BB429MidAposBoundary.midApos_reenter_delta" /tmp/agent32-429-source.log
           audit_axiom_free "BB429MidAposBoundary.midApos_reenter_twice_delta" /tmp/agent32-429-source.log
           audit_axiom_free "BB429MidAposBoundary.midApos_w2_exit_delta" /tmp/agent32-429-source.log
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            audit_axiom_free "BB429ParityShiftedReturns.junc15_172_1_to_junc0_15_349" /tmp/agent32-429-source.log
+            audit_axiom_free "BB429ParityShiftedReturns.junc135_60_1_to_junc0_135_125" /tmp/agent32-429-source.log
+            audit_axiom_free "BB429ParityShiftedReturns.junc78_120_2_to_junc0_0_408" /tmp/agent32-429-source.log
+            audit_axiom_free "BB429ParityShiftedReturns.junc07_349_to_junc0_408" /tmp/agent32-429-source.log
+            audit_axiom_free "BB429ParityShiftedReturns.parityShiftedC0_to_junc0_408" /tmp/agent32-429-source.log
+          fi
