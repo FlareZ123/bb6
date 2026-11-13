@@ -13,10 +13,10 @@ where $u+4q+3=7\cdot2^N$.
 The proposed theorem is:
 
 > For every abstract feeder-rooted `ShadowReach` path ending at cost $m\le M$, if
-> $$N\ge2M+16,$$
+> $$N\ge2M+7,$$
 > then that path has a realization by the original source `OddCone` and the unchanged `inverseAt` definition.
 
-Equivalently, for a fixed finite path-cost budget $M$, every $q\ge\lceil M/8+1\rceil$ admits source realizations of all such shadow paths. This is a finite-word converse, not a bound uniform over unbounded $M$ at fixed $q$.
+Equivalently, for a fixed finite path-cost budget $M$, every $q\ge\lceil (2M+7)/16\rceil$ admits source realizations of all such shadow paths. This is a finite-word converse, not a bound uniform over unbounded $M$ at fixed $q$.
 
 The formal candidate is [ShadowGraphConverse.lean](./ShadowGraphConverse.lean), with feeder corollaries `l0_bounded_shadow_word_has_source` and `l1_bounded_shadow_word_has_source`.
 
@@ -27,10 +27,9 @@ $$z>0,\qquad w\ge4,$$
 so for $m\le M$,
 $$z\le L+m-4\le L+M-4<L+M.$$
 
-The elementary width estimate is
-$$N\ge2M+16,\quad L\le N+9
-\quad\Longrightarrow\quad
-L+M\le2^{N-M-3}.$$
+The elementary width estimate is as follows. Put $K=N-M-3$. From $N\ge2M+7$ we get $K\ge M+4\ge4$, and
+$L+M\le N+M+9=K+2M+12\le3K+4\le2^K=2^{N-M-3},$
+where $3K+4\le2^K$ for every $K\ge4$.
 Consequently $z<2^{N-M-3}$. On an abstract edge $z=2^t r$, positivity gives $r\ge1$, hence $2^t\le z$, and therefore
 $$t\le N-M-4,\qquad m+t+3\le N-1.$$
 This is exactly the source safety margin required by `encoded_shift_divisible`, with one unit to spare.
@@ -77,7 +76,7 @@ The feeder roots satisfy the required source mass and initial coefficient equati
 
 ## Scope
 
-This result would establish exact correspondence for every *fixed finite cost window* once $q\ge\lceil M/8+1\rceil$. It does **not** establish:
+This result would establish exact correspondence for every *fixed finite cost window* once $q\ge\lceil (2M+7)/16\rceil$. It does **not** establish:
 - a lift of arbitrarily high cost at one fixed $q$;
 - an infinite original-source inverse path;
 - blank-tape forward reachability of any feeder state;
