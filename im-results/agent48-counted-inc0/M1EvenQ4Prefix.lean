@@ -3,6 +3,7 @@ import CountedQ4Prefix
 import Q4Suffix
 import Lean.Elab.Tactic.Omega
 
+/-- Source-audit trigger marker: all declarations below are compiled by the manual Agent42 chain. -/
 namespace BB6Coverage.Agent48CountedInc0
 
 open BB6Coverage
