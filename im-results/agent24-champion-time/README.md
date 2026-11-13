@@ -221,35 +221,19 @@ The target has a positive all-ones S1 counter. Agent 48's `S1CountedDrain.s1Conf
 The finite q4 screens remain in [LCIncQ4Cut.md](LCIncQ4Cut.md) as empirical support, not a substitute for the quantified proof. No exact BB(6) score or universal six-state upper bound follows yet.
 
 
-## 2026-11-13: generic q4 suffix endpoint and m=1,n=6 root continuation
+## 2026-11-13: generic q4 suffix endpoint and branch reuse
 
 The q4 suffix endpoint has been generalized beyond the marker-2 odd-n branch:
 
-- `q4_suffix_left_word_general` accepts an arbitrary source left word and a target identity of the form
-  `s1LeftFacing L n m a z = d0pow b ++ d1pow 2 ++ sourceLeft.drop 1`.
-- `q4_suffix_frame_eq_s1Config` identifies the complete suffix frame with the canonical S1 target when the prefix supplies that left stream, the q4 right-shape contract, and the blank right exterior.
-- `q4_suffix_run_to_s1Config` packages the generic frame identity with the exact `39+3*b` original-table suffix run.
+- q4_suffix_left_word_general accepts an arbitrary source left word and a target identity of the form
+  s1LeftFacing L n m a z = d0pow b ++ d1pow 2 ++ sourceLeft.drop 1.
+- q4_suffix_frame_eq_s1Config identifies the complete suffix frame with a canonical S1 target when the prefix supplies that left stream, the q4 right-shape contract, and the blank right exterior.
+- q4_suffix_run_to_s1Config packages the generic frame identity with the exact 39+3*b original-table suffix run.
 
-These declarations are in `Q4RightEndpoint.lean` and have explicit `#print axioms` checks. The three earlier inline frame conversions were also simplified to direct applications of `q4_suffix_frame`, since the local frame is definitionally the returned frame. **None of the current Q4RightEndpoint revision has yet passed the full manual Lean workflow.** Historical successful runs 43385544822 and 43385985633 predate the Q4 regression; run 43386376198 failed on an earlier revision and does not validate the present fixes.
+These declarations are in Q4RightEndpoint.lean and have explicit #print axioms checks. The three earlier inline frame conversions were simplified to direct applications of q4_suffix_frame, since the local frame is definitionally the returned frame. None of the current Q4RightEndpoint revision has passed the full manual Lean workflow. Historical successful runs 43385544822 and 43385985633 predate the Q4 regression; run 43386376198 failed on an earlier revision and does not validate the present fixes.
 
-The generic endpoint has been instantiated in a new integration candidate, `M1EvenQ4Endpoint.lean`, using Agent 48's `M1EvenQ4Prefix.lean`:
+**M=1,n=6 integration audit.** Agent 42 already has the canonical m=1,n=6 integration in im-results/agent42-champion-terminal/M1EvenQ4Suffix.lean and TM63M1EvenRootComposition.lean, including the counted drain and root composition. I briefly prototyped a separate M1EvenQ4Endpoint.lean using the generic interface, then found Agent 42's existing modules already cover the same stage. The duplicate prototype was deleted; it must not be added to CI. Agent 42's modules remain the canonical m=1,n=6 integration.
 
-- `m1Even_q4_prefix_far_tail` proves the right exterior remains blank beyond the q4 suffix's query region.
-- `m1Even_reset_prefix_to_s1` upgrades the existing m=1,n=6 frame theorem to the canonical successor
-  `s1Config 3 5 0 (a+b+2) (2^b-1) 0 (h+5+3*b)`.
-- `tm63_root_m1Even_prefix_cost` gives the combined root/q4/drain plus m=1,n=6 reset prefix cost
-  `6*4^63 + 45*2^63 + 28415`.
-- `tm2_blank_reaches_m1Even_s1` composes the blank-root q4/drain endpoint with that even reset stage, producing a further root-connected canonical S1 state.
+The generic endpoint remains useful as a branch-independent interface for the next reset branches. The next root-connected input after Agent 42's m=1,n=6 drain is the m=0,n=5 state with left parameter 2^63+72 and unary parameter 2^(2^63-1)-1. The unresolved work is the source-level reset prefix from this m=0,n=5 state, not another m=1,n=6 proof.
 
-This is a meaningful extension of the source itinerary, but remains an **uncompiled proof candidate**: it depends on the uncompiled current `Q4RightEndpoint`, `TM63RootQ4Drain`, and Agent 48's `M1EvenQ4Prefix`. The local shell runtime was unavailable in this invocation, and no workflow-dispatch action was exposed. The integration module is deliberately separate, so Agent 48's source file need not import Agent 24's module; the existing manual workflow only needs a compile step for `M1EvenQ4Endpoint.lean` after both dependencies. No automatic trigger or new workflow was added. Keep this work in `im-results/`; it is not a halting proof or a BB(6) lower-bound certification until the full source closure compiles without `sorryAx`.
-
-
-The m=1,n=6 continuation is now extended through the next counted all-ones drain in the same integration module:
-
-- tm63_m1Even_counter_bound proves the new counter 2^(2^63-1)-1 fits in the enlarged field of length 2^63+72.
-- tm2_blank_reaches_m1Even_drained composes the root-connected m=1,n=6 endpoint with s1Config_counted_drain_closed, ending at
-  s1Config 3 5 0 (2^63+72) 0 (2^(2^63-1)-1) (225+3*2^63).
-- tm63_root_m1Even_drain_cost gives the exact cumulative prefix length
-  6*4^63 + 6*4^(2^63-1) + 33*2^63 + 42*2^(2^63-1) + 28379.
-
-This is a further uncompiled source-prefix candidate. It still depends on the Q4RightEndpoint, TM63RootQ4Drain, M1EvenQ4Prefix, and S1CountedDrain source closures. It does not establish halting; the next source reset stage from the drained m=0,n=5 state remains to be connected.
+All statements above are intermediate proof candidates until the current Q4 source closure passes the manual Lean audit with no sorryAx. Keep them in im-results; they do not establish halting or the exact BB(6) value.
