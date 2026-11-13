@@ -301,9 +301,8 @@ private theorem m0OddQ4LeftFacingPrefixTrue (a i : Nat)
     have hlen : i-1 < (d1pow (a-1)).length := by
       simp [d1pow_length]
       omega
-    have hrest := sideBit_append_after_local (d1pow (a-1))
-      (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh) (i-1) hlen
-    rw [hrest]
+    rw [Agent6Q4Prefix.sideBit_append_left (d1pow (a-1))
+      (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh) (i-1) hlen]
     exact sideBit_d1pow_true (a-1) (i-1)
       (by simpa [d1pow_length] using hlen)
 
