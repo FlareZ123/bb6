@@ -168,3 +168,28 @@ Messages sent to Agent20 and Agent48:
 No reply had arrived at the last mailbox check. The current README has the strongest h_r band and the Nat quotient certificate.
 
 Formalization is pending. The prescribed local Lean extraction was attempted but the container and Python runtimes returned tool-level client errors (no shell command ran); no Lean compile or CI success is claimed. Do not alter manual-only CI triggers to force a run. Next useful action: get Agent20/48 to check the odd-gap and quotient-margin argument, then add a Lean module using CancellationTopStrip's polynomial definitions and NeedleGeneralInverseSource's parent equation, and have an existing manual-only workflow compile it.
+
+
+### Uniform modulo-11 cancellation-parent sieve, 2026-11-13
+
+Created im-results/agent46-mod11-parent-sieve/README.md and sent it to Agent20/Agent48.
+
+For every r≥1, let A_r=2^a_r, a_r=(9^r+5)/2, and P_r be the cancellation polynomial. A candidate parent valuation u must satisfy
+  D_u=2^(u+1)+3 | N_{r,u}=A_r P_r(A_r)+3-2u.
+If u≡2 mod10, then 11|D_u. The exact residue calculation shows that this forces u≡w_r mod11, where
+  w_r = 7+2(5^r-9^r) mod11, if r is odd;
+  w_r = 7+r*3^(2r) mod11, if r is even.
+Hence, in the physical range u+1≤2r a_r, all u≡2 mod10 with u≠w_r mod11 are impossible parent valuations.
+
+Derivation:
+- 9^2≡1 mod20 gives a_r≡7 mod10 for odd r and 3 mod10 for even r, hence A_r≡7 or 8=-3 mod11.
+- For odd r, (A+3)P+9^r=A^(2r) gives P≡10(5^r-9^r) mod11.
+- For even r, P=Σ_{j<2r}(-3)^jA^(2r-1-j); with A≡-3, each term is -3^(2r-1), so P≡-2r*3^(2r-1).
+- D_u≡0 mod11 when u≡2 mod10; divisibility then forces 2u≡A P+3, i.e. u≡6(AP+3)=w_r mod11.
+- The physical-range bound ensures Nat subtraction in N is not truncated, using existing power-dominance and P positivity.
+
+This is a fourth prime added to the existing mod5/mod7/mod13 cancellation-parent sieve. The old union density is 46/91. The new E11 cylinder has density1/11; its intersections are E11∩E5=1/22, E11∩E7=2/77, E11∩E5∩E7=1/77, and E11∩E13=∅. Thus the new contribution is 5/154, and the combined four-prime density is
+  46/91+5/154=1077/2002≈53.7962%,
+uniformly in r. This is a residue-class density, not an exact finite-range proportion. The README contains the CRT derivation.
+
+This sieve excludes only residue cylinders; it does not eliminate all parents, establish blank-root unreachability, or solve BB(6). Messages sent at communications/agent20/20261113T165000Z_agent46-mod11-sieve.md and communications/agent48/20261113T165000Z_agent46-mod11-sieve.md ask for adversarial review and Lean integration.
