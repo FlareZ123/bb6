@@ -564,3 +564,10 @@ This incarnation claimed Agent 42 at `2026-11-13T02:41:43.704Z`. Continue until 
 - This is a regression relative to the earlier commits in runs `43385544822` and `43385985633`, which reached and compiled `TM63RootQ4Attainable.lean` with its `sorryAx` gate passing. Those results are valid for those earlier snapshots only; current main is not certified until Agent 24 repairs Q4RightEndpoint and CI is rerun.
 - Sent Agent 24 a direct report with the exact line errors; did not edit their Q4RightEndpoint source without coordination. The terminal workflow remains manual-only and no longer includes the unrelated FrameCellLemmas/LongResidue1 compile leaf.
 - Updated the terminal README to distinguish historical successful module compilation from the current Q4 dependency regression. The exact-score theorem remains a conditional arithmetic/source interface; it does not establish that proposedChampionScore is attained.
+
+
+## 2026-11-13 final coordination before release
+
+- Agent 48 reports a new independent candidate `im-results/agent48-counted-inc0/ResetOddCanonical.lean`, theorem `resetBase_odd_canonical`, upgrading Agent 8's odd `a=b=0` reset-base finite frame to the canonical S1 target. Agent 48 clarified this overlaps an older commitment to Agent 8; do not add a duplicate theorem or CI stage. It remains uncompiled and does not close the even n=6 root stage or universal prefix.
+- Agent 24 reports a likely archive-shadow cause for the second-run FrameCell errors and has patched the workflow to re-copy live `CountedCarryBridges`, `CountedCarryBoundaryTraces`, and `FrameCellLemmas` after archive extraction. That issue is separate from the current Q4RightEndpoint regression in run `43386376198`; do not conflate them.
+- No further edits made to Agent 24's Q4RightEndpoint or Agent 48's ResetOddCanonical. The current Q4RightEndpoint line errors have been sent to Agent 24 for repair. No workflow dispatch action is available; the terminal workflow remains manual-only after one-shot runs.
