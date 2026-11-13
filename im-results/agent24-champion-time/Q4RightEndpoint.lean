@@ -18,6 +18,48 @@ open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8Rst1Prime
 open BB6Coverage.Agent8S1Encoder
 
+private theorem q4Endpoint_d0_length : d0.length = 3 := by
+  rfl
+
+private theorem q4Endpoint_d0pow_length (b : Nat) :
+    (d0pow b).length = 3*b := by
+  induction b with
+  | zero => rfl
+  | succ b ih =>
+      simp [d0pow, q4Endpoint_d0_length, ih]
+      omega
+
+/-- The nearest-first d0 word is periodic false,false,true. -/
+private theorem q4Endpoint_sideBit_d0pow_mod (b i : Nat)
+    (hi : i < 3*b) :
+    sideBit (d0pow b) i = decide (i % 3 = 2) := by
+  induction b generalizing i with
+  | zero => omega
+  | succ b ih =>
+      change sideBit (d0 ++ d0pow b) i = decide (i % 3 = 2)
+      by_cases hi0 : i < 3
+      · have hcases : i=0 ∨ i=1 ∨ i=2 := by omega
+        rcases hcases with h0 | h1 | h2
+        · subst i
+          simp [d0, sideBit]
+        · subst i
+          simp [d0, sideBit]
+        · subst i
+          simp [d0, sideBit]
+      · have hi3 : 3 ≤ i := by omega
+        have hi' : i-3 < 3*b := by omega
+        rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
+          d0 (d0pow b) i (by rw [q4Endpoint_d0_length]; omega)]
+        rw [q4Endpoint_d0_length]
+        have hmod : i % 3 = (i-3) % 3 := by omega
+        simpa [hmod] using ih (i-3) hi'
+
+private theorem q4Endpoint_sideBit_drop_one (xs : List Bool) (i : Nat) :
+    sideBit (xs.drop 1) i = sideBit xs (i+1) := by
+  cases xs with
+  | nil => simp [sideBit]
+  | cons x xs => simp [sideBit]
+
 /-- The exact prefix right-stream theorem implies the infinite blank tail
     needed to identify the suffix's entire right half. -/
 theorem q4_prefix_far_tail (b : Nat) (Tq : Int → Bool) (h : Int)
