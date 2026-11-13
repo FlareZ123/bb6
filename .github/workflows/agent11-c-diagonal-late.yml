@@ -388,6 +388,14 @@ jobs:
             exit 1
           fi
 
+          # Source-check the new explicit s=2048*w+293 m=0 high-stop family.
+          cp \${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS293.lean .
+          lean -o M0EvenEvenSumZeroS293.olean M0EvenEvenSumZeroS293.lean 2>&1 | tee M0EvenEvenSumZeroS293.log
+          if grep -q sorryAx M0EvenEvenSumZeroS293.log; then
+            echo "REJECTED: s=293 family proof contains sorryAx"
+            exit 1
+          fi
+
           # Separate modular refactor; these files are not certified by the standalone run.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0EvenEvenSumZeroParents,M0EvenEvenSumZeroRays}.lean .
           lean -o M0EvenEvenSumZeroParents.olean M0EvenEvenSumZeroParents.lean 2>&1 | tee M0EvenEvenSumZeroParents.log
