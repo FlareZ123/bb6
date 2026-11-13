@@ -226,12 +226,17 @@ theorem shadow_reach_lifts_to_odd_cone
       have hCfactor : 2^t*(C+2*r)=2^t*(4*Q) := by
         calc
           2^t*(C+2*r)=2^t*C+2^t*(2*r) := by rw [Nat.mul_add]
-          _ = s+2*z := by rw [hC,hdiv]; simp [Nat.mul_assoc]
+          _ = s+2*(2^t*r) := by
+            rw [←hC]
+            congr 1
+            simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+          _ = s+2*z := by rw [←hdiv]
           _ = 2^(t+2)*Q := by simpa [s] using hQ
           _ = 2^t*(4*Q) := by
             rw [Nat.pow_add]
             norm_num [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
-      have hCeq : C+2*r=4*Q := Nat.mul_left_cancel hCfactor
+      have hpowPosT : 0<2^t := Nat.two_pow_pos t
+      have hCeq : C+2*r=4*Q := Nat.mul_left_cancel hpowPosT hCfactor
       have hCeven : C%2=0 := by omega
       have hpowT : 2^t≤2^(N-M-4) :=
         Nat.pow_le_pow_right (by decide : 1≤(2:Nat)) htBound
@@ -246,6 +251,7 @@ theorem shadow_reach_lifts_to_odd_cone
         have hC5 : C≤5 := by omega
         have hmul : 2^t*C≤2^t*5 := Nat.mul_le_mul_left (2^t) hC5
         rw [←hC] at hmul
+        have hpowPosT : 0<2^t := Nat.two_pow_pos t
         omega
       let c := C-3
       have hc3 : 3≤c := by dsimp [c]; omega
@@ -268,7 +274,9 @@ theorem shadow_reach_lifts_to_odd_cone
       have hk2 := inverseAt_left_ge_two b d t k c hb12 hb4 hi'
       have hpoly := original_odd_edge_polynomial N L m t b d w z alpha k c r zp b0 d0
         hcone hrootMass hoff hcoord hb12 hb4 hd hi' hcodd hdiv hnext
-      have hnat := shadow_poly_cast N L m t k zp alpha hk2 (by omega) hpoly
+      have hmargin := shadow_step_preserves_offset L m z t r zp hL8 hz hzmargin hdiv hnext
+      have hzpBound : zp≤L+m+t+1 := by omega
+      have hnat := shadow_poly_cast N L m t k zp alpha hk2 hzpBound hpoly
       let m' := m+t+1
       let alpha' := alpha+112*2^m*(2^t-1)
       have hm' : m'≤M := by dsimp [m']; omega
@@ -296,7 +304,6 @@ theorem shadow_reach_lifts_to_odd_cone
       have hcoord' :
           2^m'*((2*k-4)+4*(L+m'-zp))=alpha'*2^N := by
         simpa [m',alpha',Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using hnat
-      have hmargin := shadow_step_preserves_offset L m z t r zp hL8 hz hzmargin hdiv hnext
       have hw' : 4≤L+m'-zp := by dsimp [m']; omega
       have hchildProps := shadow_encoded_left_properties N L M m' zp alpha' (2*k-4)
         hN hwidth hm' hmargin.1 hw' hAlphaLo' hcoord'
