@@ -1,0 +1,57 @@
+# Seed31–38: exact DRegular replay and the actual first exception
+
+**Status:** intermediate computational result; not a Lean-certified root theorem. This note corrects the conditional q=4 first-stop hypothesis. It does not establish BB(6), nor by itself establish an original-machine blank-root theorem.
+
+## Seed31 is not the q=4 cylinder
+
+Using the submitted BlankThirtiethRejoin.seed31 definition
+seed31 = L(64*t30 + 117, 0, 0),
+I reconstructed the DRegular arithmetic through episode 30 with exact JavaScript BigInt arithmetic. The computed higher residue is:
+
+- t30 mod 81 = 22 (the existing Lean certificate only records t30 mod 27 = 22);
+- seed31.a has 180,684 bits and seed31.a mod 81 = 67.
+
+I then searched for the first undefined DRegular successor using the 3-adic shift identity. A 512-step block implementation and a separately parameterized 256-step block implementation agree exactly:
+
+| Field | First stop from seed31 |
+|---|---:|
+| DRegular transitions | 12,267 |
+| a mod 59049 | 39,637 |
+| a mod 81 | 28 |
+| q | 8 |
+| b | 1 |
+| successor undefined | yes |
+
+Thus the first exceptional state is L(a,8,1) with a mod 59049 = 39637, not the proposed q=4 state L(59049*m+44494,4,1). Its parameter t31=(a-10)/9 satisfies t31 mod 27 = 2.
+
+The 512/256 implementations both use the exact DRegular recurrence, reducing a modulo 3^B, running the base state for B steps, and lifting by 8^B * floor((a-2)/3^B). This is an arithmetic replay of the same shift law used by DRegularFast; it is not an independent raw-tape simulation.
+
+## Source-return continuation candidates
+
+The following are the subsequent first-stop signatures obtained by iterating the existing submitted source-return formulas. The transition counts and residues are exact in the DRegular arithmetic model. The source compositions listed below still need a single staged Lean audit and, where noted, an explicit padding bridge.
+
+| Exception | DRegular transitions | a mod 59049 | q,b | t mod 27 | Candidate source continuation |
+|---:|---:|---:|---:|---:|---|
+| 31 | 12,267 | 39,637 | 8,1 | 2 | E/A q=8 packet p=16; A-one boundary returns to L(64t+117,0,0) |
+| 32 | 6,106 | 58,126 | 1,1 | 5 | EAllDouble q=0, then EZeroZTwoA at k=3t; returns to L(64t+27,0,0) |
+| 33 | 9,276 | 49,579 | 5,1 | 0 | EAllDouble q=4, E-three, then generic A-code word [false,false,true,true,false,true,true]; proposed pure-unary return L(512u+129,0,0), u=t/3 |
+| 34 | 12,638 | 55,039 | 6,1 | 13 | E/B general return to L(64t+29,1,5) |
+| 35 | 335 | 54,265 | 9,1 | 8 | E/B general return to L(64t+35,1,5) |
+| 36 | 615 | 27,469 | 7,1 | 0 | E/A all-reentry packet closure; returns to L(64t+91,3,2) |
+| 37 | 2,348 | 50,584 | 6,1 | 4 | E/B general return to L(64t+29,1,5) |
+| 38 | 1,341 | 24,670 | 1,1 | 13 | EAllDouble q=0, then EZeroZTwoFollow; output has explicit tail13 = oppairs(6) ++ [false] |
+
+The q=8 first return at exception 31 is covered by the already-existing EFirstAPacket.exceptional_EA_packet and AOnePacketBoundarySource.a_p1_boundary: the E packet has p=16=3*5+1, so the candidate reentry is the same pure-unary form L(64*t31+117,0,0) used at exception 30.
+
+For exception 33, the proposed composition is explicit: with t=3u and q=5, EAllDouble(q-1=4) produces a suffix 1^10 0 1^6; splitting it as 111 ++ 1^7 0 1^6 feeds the E-three source theorem. Its output tail packetThree ++ 1^7 0 1^6 is false :: wordCode([false,false,true,true,false,true,true]). The A-code theorem then gives the stated unary endpoint. This composition is a proof target, not yet a kernel-checked theorem.
+
+At exception 38, EZeroZTwoFollow returns a physical configuration with prefix 1^(64*t38+49) and suffix oppairs(6) ++ [false]. Treating this as L(64*t38+49,6,0) requires the original-source trailing-blank ObsEq/padding lemma. Do not silently erase the explicit final zero or extend the DRegular trace past this point until that transport is supplied.
+
+## Next decisive work
+
+1. Add a Lean exact first-stop theorem to Seed31FirstStopCertificate.lean: certify 12,267 steps, a mod 59049 = 39637, q=8, b=1, then discharge the first-stop bound.
+2. Compose exception 31 with EFirstAPacket + AOne boundary and lift the result through BlankThirtiethRejoin.blank_thirtieth_reentry.
+3. Assemble and audit the exception 32–37 source returns. For exception 38, explicitly prove the trailing-zero ObsEq into the canonical DRegularSource.sourceSection before continuing.
+4. Update the conditional q=4/#41 lookahead: it is not the actual first-stop branch for this computed seed31.
+
+Relevant existing files: im-results/agent37-d-timing-cocycle/BlankThirtiethRejoin.lean, Seed31Probe.lean, im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean, im-results/agent2-packet-shift/EFirstAPacket.lean, AOnePacketBoundarySource.lean, im-results/agent36-cryptid-trace/EZeroZTwoFollow.lean, and im-results/agent37-d-timing-cocycle/ExceptionalEPacketClosure.lean.
