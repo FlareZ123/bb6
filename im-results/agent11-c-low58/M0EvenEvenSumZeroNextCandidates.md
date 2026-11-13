@@ -1,6 +1,6 @@
 # m=0 even-even sum-zero: odd-valuation normalization and residual candidates
 
-**Status:** The first theorem below has a complete paper-level derivation from the source-certified parent and inverse lemmas in M0EvenEvenSumZero.lean, but its new induction has **not yet been Lean-formalized or CI-checked**. It is not in results/. Candidates 5 and 6 remain algebraic drafts and also require formalization. Do not report any of these extensions as source-certified until the original-source workflow passes with no sorryAx.
+**Status:** The first theorem below has a complete paper-level derivation from the source-certified parent and inverse lemmas in M0EvenEvenSumZero.lean, but its **general induction has not yet been Lean-formalized or CI-checked**. The explicit s=2048w+293 instance now has a Lean draft in M0EvenEvenSumZeroS293.lean, and the u=1 low-boundary lemmas are drafted in M0SmallBoundaryZero.lean. Both files were added to the existing manual agent11-c-diagonal-late.yml workflow, which has not yet been run on these commits. Nothing here is in results/. Candidates 5 and 6 remain algebraic drafts. Do not report any of these extensions as source-certified until the original-source workflow passes with no sorryAx.
 
 ## General odd-valuation branch
 
@@ -79,7 +79,7 @@ satisfies the theorem, yielding the previously unlisted high-stop family
 \[
 j=18791+131072w,\qquad k=56380+393216w.
 \]
-This cylinder is disjoint from the four existing source-certified cylinders and from candidates 5 and 6.
+This cylinder is disjoint from the four existing source-certified cylinders and from candidates 5 and 6. Its concrete source proof is drafted in M0EvenEvenSumZeroS293.lean and is included in the manual workflow, pending CI.
 
 For the full odd-valuation condition, write \(s=8q+5\). Then
 \[
