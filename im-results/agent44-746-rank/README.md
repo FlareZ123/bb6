@@ -134,3 +134,23 @@ inverse-selector corollaries are not yet compiled. Agent 44's
 `QStateIndexHensel.lean` also remains unverified by original-source
 CI. This is an arithmetic selector for t=1 parent candidates, not a
 blank-root exclusion.
+
+
+## Reusable affine-exponential Hensel mechanism
+
+[AFFINE-EXP-HENSEL.md](AFFINE-EXP-HENSEL.md) isolates the common
+index-lift argument for numerators of the form
+\(F(h)=A2^{e_0+6h}+B(n_0+6h)+C\). If the base value is divisible by
+three and \(B\) is a 3-adic unit, exactly one ternary digit lifts
+divisibility at each precision. The note identifies the Q, T, and
+next-layer R coefficients, and explains how a shared core-Lean theorem
+could replace the three specialized proofs. This remains a proof design,
+not a compiled implementation; the dyadic parent band is a separate
+condition.
+
+The fixed-depth \(j=3402\) family also has an explicit t=7 continuation:
+\(3^{10}\mid Q\) exactly for \(r\equiv4\pmod9\), and the dyadic band
+holds for every such natural \(r\) (the first is \(r=4\)). Thus the
+t=7 odd-parent arm occurs on a natural-density \(1/9\) subfamily of
+\(n=887+13122r\). The exact band bound and verification boundary are
+recorded in [Q-INDEX-DEPTH-DUALITY.md](Q-INDEX-DEPTH-DUALITY.md).
