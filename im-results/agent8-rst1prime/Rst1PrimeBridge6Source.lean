@@ -511,4 +511,111 @@ theorem rst1Prime_bridge30_after_finalRightSweep
 #print axioms rst1Prime_bridge30_after_finalRightSweep
 
 
+/-- The final bridge leaves the canonical S1 head position. -/
+theorem rst1PrimeAfterBridge30_head
+    (L a b : Nat) (h : Int) :
+    (rst1PrimeAfterBridge30 L a b h).head = h+5+3*(b:Int) := by
+  simp [rst1PrimeAfterBridge30,frameAt_head,bridge30End]
+  omega
+
+/-- The complete right-facing output word after bridge30 is exactly
+the S1 separator followed by one d1 block. -/
+theorem rst1PrimeAfterBridge30_rightFacing
+    (L a b : Nat) (h : Int) :
+    ∀ i : Nat,
+      (rst1PrimeAfterBridge30 L a b h).tape
+        (h+5+3*(b:Int)+1+(i:Int)) =
+      sideBit (s0RightFacing 0) i := by
+  intro i
+  let H7 : Int := h+9
+  let H8 : Int := H7+3*(b:Int)
+  let Hf : Int := H8-4
+  change (frameAt
+    (sweptRight b (rst1PrimeAfterBridge6 L a b h).tape H7)
+    H8 inside30 bridge30End).tape (Hf+1+(i:Int)) =
+      sideBit (s0RightFacing 0) i
+  by_cases hi : i<9
+  · have hcases :
+      i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 ∨ i=6 ∨ i=7 ∨ i=8 := by omega
+    rcases hcases with hi0 | hi1 | hi2 | hi3 | hi4 | hi5 | hi6 | hi7 | hi8
+    · subst i
+      have hcoord : Hf+1+(0:Int) = H8+(-3:Int) := by
+        dsimp [Hf,H8,H7]
+        omega
+      rw [frameAt_tape,hcoord]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+    · subst i
+      have hcoord : Hf+1+(1:Int) = H8+(-2:Int) := by
+        dsimp [Hf,H8,H7]
+        omega
+      rw [frameAt_tape,hcoord]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+    · subst i
+      have hcoord : Hf+1+(2:Int) = H8+(-1:Int) := by
+        dsimp [Hf,H8,H7]
+        omega
+      rw [frameAt_tape,hcoord]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+    · subst i
+      have hcoord : Hf+1+(3:Int) = H8+(0:Int) := by
+        dsimp [Hf,H8,H7]
+        omega
+      rw [frameAt_tape,hcoord]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+    · subst i
+      have hcoord : Hf+1+(4:Int) = H8+1 := by
+        dsimp [Hf,H8,H7]
+        omega
+      rw [frameAt_tape,hcoord]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+    · subst i
+      have hcoord : Hf+1+(5:Int) = H8+2 := by
+        dsimp [Hf,H8,H7]
+        omega
+      rw [frameAt_tape,hcoord]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+    · subst i
+      have hcoord : Hf+1+(6:Int) = H8+3 := by
+        dsimp [Hf,H8,H7]
+        omega
+      rw [frameAt_tape,hcoord]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+    · subst i
+      have hcoord : Hf+1+(7:Int) = H8+4 := by
+        dsimp [Hf,H8,H7]
+        omega
+      rw [frameAt_tape,hcoord]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+    · subst i
+      have hcoord : Hf+1+(8:Int) = H8+5 := by
+        dsimp [Hf,H8,H7]
+        omega
+      rw [frameAt_tape,hcoord]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+  · have hcoord :
+      Hf+1+(i:Int) = H8 + ((i:Int)-3) := by
+        dsimp [Hf]
+        omega
+    have hout : inside30 ((i:Int)-3) = false := by
+      simp [inside30,inWindow]
+      omega
+    rw [frameAt_tape,hcoord]
+    simp only [hout]
+    have hafter := rst1Prime_sweptRight_preserves_after
+      b (rst1PrimeAfterBridge6 L a b h).tape H7
+      (H8+((i:Int)-3)) (by dsimp [H7,H8]; omega)
+    rw [hafter]
+    have hsource := rst1PrimeAfterBridge6_source_bit_false L a b h
+      (5+3*b+i) (by omega)
+    have hsourceCoord :
+      H8+((i:Int)-3) = h+1+((5+3*b+i:Int)) := by
+        dsimp [H7,H8]
+        omega
+    rw [hsourceCoord]
+    simpa [s0RightFacing,d1pow,sideBit] using hsource
+
+#print axioms rst1PrimeAfterBridge30_head
+#print axioms rst1PrimeAfterBridge30_rightFacing
+
+
 end BB6Coverage.Agent8Rst1PrimeTail
