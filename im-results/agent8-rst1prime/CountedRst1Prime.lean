@@ -413,4 +413,53 @@ theorem rst1Prime_target_rightFacing :
 #print axioms rst1Prime_target_rightFacing
 
 
+/-- Every scanned three-cell block is transformed to `1,0,0` in
+increasing tape order. Later blocks do not alter earlier blocks. -/
+theorem rst1Prime_sweptRight_block
+    (n : Nat) (T : Int → Bool) (h : Int) (i : Nat) (hi : i<n) :
+    sweptRight n T h (h+3*(i:Int)) = T (h+3*(i:Int)) ∧
+    sweptRight n T h (h+3*(i:Int)+1) = false ∧
+    sweptRight n T h (h+3*(i:Int)+2) = false := by
+  induction n generalizing T h i with
+  | zero => omega
+  | succ n ih =>
+      by_cases hi0 : i=0
+      · subst i
+        have h0 := rst1Prime_sweptRight_preserves_left n
+          (afterRight3 T h) (h+3) h (by omega)
+        have h1 := rst1Prime_sweptRight_preserves_left n
+          (afterRight3 T h) (h+3) (h+1) (by omega)
+        have h2 := rst1Prime_sweptRight_preserves_left n
+          (afterRight3 T h) (h+3) (h+2) (by omega)
+        have hn1 : h ≠ h+1 := by omega
+        have hn2 : h ≠ h+2 := by omega
+        simp only [sweptRight]
+        constructor
+        · simpa [afterRight3,hn1,hn2] using h0
+        constructor
+        · simpa [afterRight3] using h1
+        · simpa [afterRight3] using h2
+      · obtain ⟨j,rfl⟩ := Nat.exists_eq_succ_of_ne_zero hi0
+        have hj : j<n := by omega
+        have hrec := ih (afterRight3 T h) (h+3) j hj
+        simp only [sweptRight]
+        have e0 : h+3*((j+1:Int)) = (h+3)+3*(j:Int) := by omega
+        have e1 : h+3*((j+1:Int))+1 = (h+3)+3*(j:Int)+1 := by omega
+        have e2 : h+3*((j+1:Int))+2 = (h+3)+3*(j:Int)+2 := by omega
+        have hn0 : h+3*((j+1:Int)) ≠ h+1 := by omega
+        have hn1 : h+3*((j+1:Int)) ≠ h+2 := by omega
+        have hn2 : h+3*((j+1:Int))+1 ≠ h+1 := by omega
+        have hn3 : h+3*((j+1:Int))+1 ≠ h+2 := by omega
+        have hn4 : h+3*((j+1:Int))+2 ≠ h+1 := by omega
+        have hn5 : h+3*((j+1:Int))+2 ≠ h+2 := by omega
+        rcases hrec with ⟨r0,r1,r2⟩
+        constructor
+        · simpa [e0,afterRight3,hn0,hn1] using r0
+        constructor
+        · simpa [e1,afterRight3,hn2,hn3] using r1
+        · simpa [e2,afterRight3,hn4,hn5] using r2
+
+#print axioms rst1Prime_sweptRight_block
+
+
 end BB6Coverage.Agent8Rst1Prime
