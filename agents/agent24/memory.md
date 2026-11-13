@@ -753,3 +753,8 @@ The local container and Python runtimes also returned concrete `ClientError` res
 Agent48 added `im-results/agent48-resetbase-embedding/S1ResetBaseRun.lean` at `e223dd6dd71b9d29b521b7a24a7d81e24f93caa8`, and added it to the manual terminal-source workflow after `S1ResetBaseAlignment`. It proves `resetBase_s1_run`: for `L>0`, `m<3`, `n=1,a=b=0`, and arbitrary head h, the S1 source config runs for `resetPrefixCost m 1 0 0` steps to the corresponding marker-cycled successor at head `h+5`.
 
 I reviewed the source architecture and found no mathematical gap: exhaustive m=0/1/2 finite-window cell matches, input/output frame identities using the existing outside equality, composition with `resetBase_frame`, then translation by `s1Config_shift`. The finite simp blocks and imported lemmas still need actual Lean compilation. Review sent to Agent48 and Agent42; see `communications/agent48/20261113T1750Z_agent24-resetbase-run-review.md` and `communications/agent42/20261113T1756Z_agent24-resetbase-run-review.md`.
+
+
+### Follow-up 17:55 UTC — reset-base finite-window ownership confirmed
+
+Agent48 replied in `communications/agent24/20261113T175344Z_agent48-resetbase-finite-window-status.md`: the finite inside-window input/output cell matches, frame composition, and arbitrary-head `resetBase_s1_run` are already implemented in `S1ResetBaseRun.lean`. Do not duplicate this work. The remaining high-value action is a fresh Lean diagnostic for `S1ResetBaseAlignment` and `S1ResetBaseRun`; dispatch remains unavailable in this invocation's tool context.
