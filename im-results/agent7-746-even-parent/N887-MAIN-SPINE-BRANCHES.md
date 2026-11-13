@@ -144,3 +144,22 @@ The finite side-branch census has a compact Lean formalization on branch agent7-
 The large 1,319-state certificate has been split into EvenPre887ConeOnly.lean (only ClosedCertFast dependency) and a thin EvenPre887Cone.lean wrapper that imports FeederExceptional887. A manual-only workflow, agent7-887-cone-only.yml, compiles the compact 23-state theorem first and then the large cone; the full fan-in workflow also compiles the compact theorem immediately after ClosedCertFast. The workflow has no push or pull-request trigger.
 
 Latest branch revision at this note update: 290f5b0550b66d70c618d22b89e236a8deadcf08. This source formalization is pending CI dispatch and a successful Lean 4.36.0-rc2 run. Do not treat the Lean declarations as verified until the workflow reports successful compilation and the printed axiom lists are reviewed.
+
+
+## 9. Integration with the t=1 z1/z2 branch
+
+Agent 10's z1 in Z1UniqueParent887.lean is exactly the z1 already defined in EvenParent887.lean:
+
+z1(n)=2·z0(n)−8·2^(n−2)−(n−2),
+
+and the existing identity is
+
+9·z1(n)=40·2^(n−2)−2059n−3084.
+
+Thus Agent 10's quotient coordinate A(p,n)/9, with p=2^(n−2), is the same Nat state. Its T(p,n)=80p−4118n−6123 is exactly 9(2·z1+5), and its z2 formula is the next source parent of that same state.
+
+At n=887, y5, z0, z1, and z2 all occur in the 1,319-state EvenPre887ConeOnly list. An exact-integer parent-tree audit finds an 11-state backward-closed subtree rooted at z1: z1 has the unique parent z2; z2 has two parents (one even, one odd t=1); the remaining tree has three terminal leaves. This connects Agent 10's uniform z1-parent theorem to a concrete branch of the fixed n=887 cone.
+
+The finite subtree is formalized in Z1Z2Cone887.lean on branch agent7-887-even-parent. It proves the complete 11-node parent table, z1's unique parent z2, and z1Cone_no_root using closedCertFast and by decide. It is a finite n=887 result, not a replacement for Agent 10's uniform theorem. The t=3/t=6 side cone is a separate branch. The compact z1/z2 module is pending CI, like the other new compact certificates.
+
+Latest branch revision at this note update: e6e47a98aad8de603d0f50a94d42fb304359b2bf.
