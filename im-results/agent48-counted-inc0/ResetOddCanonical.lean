@@ -17,8 +17,9 @@ theorem resetBase_odd_binDec_even (L n : Nat)
     by_contra hL
     have hL0 : L = 0 := by omega
     subst L
-    norm_num at hbound
-    omega
+    have hn0 : n = 0 := by omega
+    subst n
+    simp at hn
   have hlen : L = (L-1)+1 := by omega
   have hpow : 2^L = 2^(L-1)*2 := by
     rw [hlen, Nat.pow_succ]
@@ -57,6 +58,20 @@ private theorem sideBit_false_after_length (xs : List Bool) (i : Nat)
             omega
           simpa [sideBit] using ih i hi'
 
+private theorem int_range_neg7_14 (y : Int)
+    (hlo : -7 ≤ y) (hhi : y ≤ 14) :
+    y = -7 ∨ y = -6 ∨ y = -5 ∨ y = -4 ∨ y = -3 ∨ y = -2 ∨
+    y = -1 ∨ y = 0 ∨ y = 1 ∨ y = 2 ∨ y = 3 ∨ y = 4 ∨
+    y = 5 ∨ y = 6 ∨ y = 7 ∨ y = 8 ∨ y = 9 ∨ y = 10 ∨
+    y = 11 ∨ y = 12 ∨ y = 13 ∨ y = 14 := by omega
+
+private theorem int_range_neg8_14 (y : Int)
+    (hlo : -8 ≤ y) (hhi : y ≤ 14) :
+    y = -8 ∨ y = -7 ∨ y = -6 ∨ y = -5 ∨ y = -4 ∨ y = -3 ∨
+    y = -2 ∨ y = -1 ∨ y = 0 ∨ y = 1 ∨ y = 2 ∨ y = 3 ∨
+    y = 4 ∨ y = 5 ∨ y = 6 ∨ y = 7 ∨ y = 8 ∨ y = 9 ∨
+    y = 10 ∨ y = 11 ∨ y = 12 ∨ y = 13 ∨ y = 14 := by omega
+
 /-- Outside the finite reset frame, the old and new left streams agree
 after the five-cell head displacement. The m=2 boundary cell is the
 third bit of d0/d1, which is one on both sides. -/
@@ -67,8 +82,9 @@ private theorem resetBase_odd_left_tail_alignment
       sideBit
         (d1pow (resetDelta m) ++ markerWord ((m+2)%3) ++
           d0 ++ d1 ++ B ++ lh) (i+5) := by
-  interval_cases m
-  · have hi8 : 8 ≤ i := by simpa using hi
+  rcases (show m = 0 ∨ m = 1 ∨ m = 2 by omega) with h0 | h1 | h2
+  · subst m
+    have hi8 : 8 ≤ i := by simpa using hi
     have hsrc :
         markerWord 0 ++ d0 ++ d0 ++ B ++ lh =
           (markerWord 0 ++ d0 ++ d0) ++ (B ++ lh) := by
@@ -97,7 +113,8 @@ private theorem resetBase_odd_left_tail_alignment
     rw [hs', ht']
     have hidx : i-8 = (i+5)-13 := by omega
     rw [hidx]
-  · have hi9 : 9 ≤ i := by simpa using hi
+  · subst m
+    have hi9 : 9 ≤ i := by simpa using hi
     have hsrc :
         markerWord 1 ++ d0 ++ d0 ++ B ++ lh =
           (markerWord 1 ++ d0 ++ d0) ++ (B ++ lh) := by
@@ -126,9 +143,10 @@ private theorem resetBase_odd_left_tail_alignment
     rw [hs', ht']
     have hidx : i-9 = (i+5)-14 := by omega
     rw [hidx]
-  · by_cases hi9 : i = 9
+  · subst m
+    by_cases hi9 : i = 9
     · subst i
-      norm_num [markerWord, d0, d1, d1pow, resetDelta, sideBit]
+      simp [markerWord, d0, d1, d1pow, resetDelta, sideBit]
     · have hi10 : 10 ≤ i := by omega
       have hsrc :
           markerWord 2 ++ d0 ++ d0 ++ B ++ lh =
@@ -180,31 +198,40 @@ theorem resetBase_odd_local_output
     s0Tape (markerWord ((m+2)%3) ++ d0 ++ binDec L (n-1) ++ lh)
       (resetDelta m) 0 0 0 (y-5)
   rw [hbinEven]
-  interval_cases m
-  · have hyb : -7 ≤ y ∧ y ≤ 14 := by
+  rcases (show m = 0 ∨ m = 1 ∨ m = 2 by omega) with h0 | h1 | h2
+  · subst m
+    have hyb : -7 ≤ y ∧ y ≤ 14 := by
       simpa [resetBaseInside] using hy
     rcases hyb with ⟨hlo,hhi⟩
-    interval_cases y <;>
-      norm_num [embed, resetBaseOutput, resetBaseOutput0,
-        resetBaseOutput1, resetBaseOutput2, s0Tape, s0LeftFacing,
-        s0RightFacing, markerWord, d0, d1, d1pow, lh, sideBit,
-        binDec_zero]
-  · have hyb : -8 ≤ y ∧ y ≤ 14 := by
+  rcases int_range_neg7_14 y hlo hhi with
+      h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 |
+      h11 | h12 | h13 | h14 | h15 | h16 | h17 | h18 | h19 |
+      h20 | h21 <;> subst y <;>
+      simp [embed, resetBaseOutput, resetBaseOutput0, resetBaseOutput1,
+        resetBaseOutput2, s0Tape, s0LeftFacing, s0RightFacing,
+        markerWord, d0, d1, d1pow, lh, sideBit, binDec_zero] <;> omega
+  · subst m
+    have hyb : -8 ≤ y ∧ y ≤ 14 := by
       simpa [resetBaseInside] using hy
     rcases hyb with ⟨hlo,hhi⟩
-    interval_cases y <;>
-      norm_num [embed, resetBaseOutput, resetBaseOutput0,
-        resetBaseOutput1, resetBaseOutput2, s0Tape, s0LeftFacing,
-        s0RightFacing, markerWord, d0, d1, d1pow, lh, sideBit,
-        binDec_zero]
-  · have hyb : -8 ≤ y ∧ y ≤ 14 := by
+  rcases int_range_neg8_14 y hlo hhi with
+      h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 |
+      h11 | h12 | h13 | h14 | h15 | h16 | h17 | h18 | h19 |
+      h20 | h21 | h22 <;> subst y <;>
+      simp [embed, resetBaseOutput, resetBaseOutput0, resetBaseOutput1,
+        resetBaseOutput2, s0Tape, s0LeftFacing, s0RightFacing,
+        markerWord, d0, d1, d1pow, lh, sideBit, binDec_zero] <;> omega
+  · subst m
+    have hyb : -8 ≤ y ∧ y ≤ 14 := by
       simpa [resetBaseInside] using hy
     rcases hyb with ⟨hlo,hhi⟩
-    interval_cases y <;>
-      norm_num [embed, resetBaseOutput, resetBaseOutput0,
-        resetBaseOutput1, resetBaseOutput2, s0Tape, s0LeftFacing,
-        s0RightFacing, markerWord, d0, d1, d1pow, lh, sideBit,
-        binDec_zero]
+  rcases int_range_neg8_14 y hlo hhi with
+      h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 |
+      h11 | h12 | h13 | h14 | h15 | h16 | h17 | h18 | h19 |
+      h20 | h21 | h22 <;> subst y <;>
+      simp [embed, resetBaseOutput, resetBaseOutput0, resetBaseOutput1,
+        resetBaseOutput2, s0Tape, s0LeftFacing, s0RightFacing,
+        markerWord, d0, d1, d1pow, lh, sideBit, binDec_zero] <;> omega
 
 /-- Outside the local frame, the old and new S1 encodings are identical
 after accounting for the five-cell head shift. -/
@@ -278,7 +305,16 @@ theorem resetBase_odd_input_outside
       by_contra hnot14
       have hle14 : y ≤ 14 := by omega
       have hinside : resetBaseInside m y = true := by
-        interval_cases m <;> simp [resetBaseInside] <;> omega
+        rcases (show m = 0 ∨ m = 1 ∨ m = 2 by omega) with h0 | h1 | h2
+        · subst m
+          simp [resetBaseInside]
+          omega
+        · subst m
+          simp [resetBaseInside]
+          omega
+        · subst m
+          simp [resetBaseInside]
+          omega
       exact hout hinside
     have hsrcNonneg : 0 ≤ y-1 := by omega
     have hsrcCast : ((Int.toNat (y-1) : Nat) : Int) = y-1 :=
