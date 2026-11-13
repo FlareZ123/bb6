@@ -608,7 +608,6 @@ theorem m0Even_resetPrefixCost_eq (a b : Nat) :
   have hv : BB6ChampionArithmetic.v2 2 = 1 := by
     simpa [hv1] using v2_of_even 2 (by omega) (by decide)
   simp [resetPrefixCost,hv]
-  omega
 
 #print axioms m0Even_q4_prefix_run
 #print axioms m0Even_q4_prefix_rightShape
