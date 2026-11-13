@@ -22,7 +22,11 @@ def t18 : Nat := (terminal2902.a-4)/9
 theorem terminal2902_certificate :
     DRegular.run 2902 seed18 = some ⟨9*t18+4,3,1⟩ ∧
       t18 % 27 = 22 := by
-  have hcanon : DRegular.Canon seed18 := by decide
+  have hcanon : DRegular.Canon seed18 := by
+    constructor
+    · dsimp [seed18]
+      omega
+    · simp [seed18]
   rw [BB6.Agent2Fast64.fastRun_correct 2902 seed18 hcanon]
   decide
 
