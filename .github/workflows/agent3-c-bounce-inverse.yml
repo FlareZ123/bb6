@@ -32,6 +32,15 @@ on:
         required: false
         type: boolean
         default: false
+      sumzero_only:
+        description: 'Compile the Machine C m=0 even-even sum-zero parent closure against original source and stop'
+        required: false
+        type: boolean
+        default: false
+  pull_request:
+    paths:
+      - 'im-results/agent11-c-low58/M0EvenEvenSumZero.lean'
+      - '.github/workflows/agent3-c-bounce-inverse.yml'
 permissions:
   contents: read
 jobs:
@@ -207,6 +216,16 @@ jobs:
           # Agent 24's six-residue even-right inverse is a dependency of the full normalizer.
           cp "$GITHUB_WORKSPACE"/im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean .
           for f in EvenEvenInverse OddEvenInverse ExtraEvenOrbit EvenRightSixOrbit; do lean -o "$f.olean" "$f.lean"; done
+          # New all-source m=0 even-even sum-zero parent closure. This is
+          # compiled after its exact source grammar, odd/odd bridge, and
+          # six-of-eight inverse dependencies are available.
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-low58/M0EvenEvenSumZero.lean .
+          lean -o M0EvenEvenSumZero.olean M0EvenEvenSumZero.lean 2>&1 | tee M0EvenEvenSumZero.log
+          if grep -q sorryAx M0EvenEvenSumZero.log; then
+            echo "REJECTED: m=0 sum-zero source proof contains sorryAx"
+            exit 1
+          fi
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ inputs.sumzero_only }}" = "true" ]; then exit 0; fi
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedNormalize.lean .
           lean -o FullForcedNormalize.olean FullForcedNormalize.lean
           if [ "${{ inputs.boundary_only }}" != "true" ]; then
