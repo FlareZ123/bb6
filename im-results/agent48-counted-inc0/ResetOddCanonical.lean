@@ -61,7 +61,7 @@ private theorem sideBit_false_after_length (xs : List Bool) (i : Nat)
 after the five-cell head displacement. The m=2 boundary cell is the
 third bit of d0/d1, which is one on both sides. -/
 private theorem resetBase_odd_left_tail_alignment
-    (m : Nat) (B : List Bool) (i : Nat)
+    (m : Nat) (hm : m < 3) (B : List Bool) (i : Nat)
     (hi : (if m = 0 then 8 else 9) ≤ i) :
     sideBit (markerWord m ++ d0 ++ d0 ++ B ++ lh) i =
       sideBit
