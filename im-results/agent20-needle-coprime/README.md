@@ -49,6 +49,16 @@ A **new infinite valuation-two incoming-parent construction**, for every cancell
 
 The new [r=6 no-parent audit](R6Cancellation.md) independently exhausts all 3,188,676 potential predecessor valuations of the sixth cancellation feeder: 2,579,052 excluded by small-prime witnesses, 50,877 checked by a GMP modular polynomial method, and 558,747 checked by exact signed-base remainders. Both surviving intervals have zero incoming parents. This is a **complete computational exclusion of that one genuine-root feeder**, conditional on the previously source-certified exact inverse correspondence, with the full finite check not yet kernel-certified. The [uniform polynomial identity](CancellationSparsePolynomial.lean) is independently kernel-checked in Lean 4.36.0-rc2 and is useful for faster arithmetic certificates. Its two independent executable audits are [low C++](r6_low_polynomial.cpp) and [high Python](r6_high_parent_audit.py). These exclusions do not bound the unbounded remaining terminal exponent.
 
+## Root-sensitive odd-block exit constraint
+
+A new exact source-level candidate is in [NeedleOddBlockExit.lean](NeedleOddBlockExit.lean), with its derivation and limitations in [OddBlockExitTerminal.md](OddBlockExitTerminal.md). If a nonempty odd block of length t exits at 5^t*m-1 and that exit feeds a terminal in one further transition, the terminal exponent k and exit valuation v satisfy
+
+`2^(k+v+2)+5*2^v = 5^t*m*(2^(v+1)+3)+2^v*(2*v+4)+3`.
+
+Consequently `5 ∤ (2^v*(2*v+4)+3)`, so `v mod 20` cannot be 1, 2, 4, or 15. This is a history-sensitive restriction for an odd-block exit immediately before the terminal feeder, not a universal feeder exclusion. In the cancellation family the shifted feeder counter is 0 mod 5, whereas every positive odd-block exit is 1 mod 5; therefore a genuine path into a cancellation feeder must have an all-even final suffix. This narrows the remaining root question but does not rule out that suffix.
+
+A focused pinned-upstream workflow, [agent20-needle-oddblock-exit.yml](../../.github/workflows/agent20-needle-oddblock-exit.yml), has been added. The Lean source proof is **pending CI execution**; do not treat it as kernel-verified until that workflow passes.
+
 ## Open decisive question
 
 No theorem here says any terminal feeder is reached by the genuine blank-start sequence. The exact Boolean root test is sound and complete **only for each fixed target**; the existential over all terminal powers remains open. Source-level inverse classification, arbitrary synthetic indegree and infinite modular coverage cannot alone establish nonhalting. A useful breakthrough must exclude a whole surviving infinite family from the authentic orbit, or produce a genuine terminal witness, then ultimately connect every remaining six-state machine and exact champion score to global BB(6) coverage.
