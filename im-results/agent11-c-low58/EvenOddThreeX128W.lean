@@ -55,7 +55,6 @@ theorem y3_x128w_parents (w a k : Nat) (hw : 1≤w)
               · omega
     · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
-        omega
       · by_cases hlow : 2*k≤a
         · simp [sectionPreimageAll,ha0,ha1,hk0,hlow] at hp
         · by_cases heven : a%2=0
@@ -74,24 +73,24 @@ theorem y3_x128w_parents (w a k : Nat) (hw : 1≤w)
                 by_cases hn : n≤2
                 · exact hn
                 · have hn3 : 3≤n := by omega
-                have hpowdiv : 8∣2^n := by
-                  have hh : 2^3∣2^n := Nat.pow_dvd_pow 2 hn3
-                  simpa only [show (2:Nat)^3=8 by decide] using hh
-                have hfacdiv : 4∣2*a+6 := by
-                  refine ⟨(a+3)/2,?_⟩
+                  have hpowdiv : 8∣2^n := by
+                    have hh : 2^3∣2^n := Nat.pow_dvd_pow 2 hn3
+                    simpa only [show (2:Nat)^3=8 by decide] using hh
+                  have hfacdiv : 4∣2*a+6 := by
+                    refine ⟨(a+3)/2,?_⟩
+                    omega
+                  have hdiv : 32∣2^n*(2*a+6) := by
+                    rcases hpowdiv with ⟨b,hb⟩
+                    rcases hfacdiv with ⟨c,hc⟩
+                    refine ⟨b*c,?_⟩
+                    calc
+                      2^n*(2*a+6)=(8*b)*(4*c) := by rw [hb,hc]
+                      _=32*(b*c) := by ac_rfl
+                  rw [← hpow'] at hdiv
+                  have hmod : (128*w+16)%32=16 := by omega
+                  have hzero : (128*w+16)%32=0 :=
+                    Nat.mod_eq_zero_of_dvd hdiv
                   omega
-                have hdiv : 32∣2^n*(2*a+6) := by
-                  rcases hpowdiv with ⟨b,hb⟩
-                  rcases hfacdiv with ⟨c,hc⟩
-                  refine ⟨b*c,?_⟩
-                  calc
-                    2^n*(2*a+6)=(8*b)*(4*c) := by rw [hb,hc]
-                    _=32*(b*c) := by ac_rfl
-                rw [← hpow'] at hdiv
-                have hmod : (128*w+16)%32=16 := by omega
-                have hzero : (128*w+16)%32=0 :=
-                  Nat.mod_eq_zero_of_dvd hdiv
-                omega
               have hpar : 2*k+a+3*n=128*w+11 := by omega
               have hnEven : n%2=0 := by omega
               have hnCases : n=0 ∨ n=2 := by omega
