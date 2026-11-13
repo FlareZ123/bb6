@@ -15,7 +15,7 @@ open BB6.Agent31PacketSource
 def seed29 : DRegular.L := BB6.Agent2TwentyEighthRoot.seed29
 
 def terminal6443 : DRegular.L :=
-  (BB6.Agent2Fast64.fastRun 6443 seed29).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 6443 seed29).getD ⟨9,0,0⟩
 
 def t29 : Nat := (terminal6443.a-10)/9
 
@@ -28,7 +28,7 @@ theorem terminal6443_certificate :
       omega
     · left
       norm_num [seed29, BB6.Agent2TwentyEighthRoot.seed29]
-  rw [BB6.Agent2Fast64.fastRun_correct 6443 seed29 hcanon]
+  rw [BB6.DRegularFast.fastRun_correct 6443 seed29 hcanon]
   decide
 
 theorem terminal6443_exact :
