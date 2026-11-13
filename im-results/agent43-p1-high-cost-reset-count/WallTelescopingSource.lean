@@ -50,8 +50,10 @@ theorem source_weighted_sum_invariant
             rw [Nat.mul_add]
             ac_rfl
           _ = 2^mp*(2^(t+1)*(c+3)+2*(mp+n+3)) := by rw [hrec]
+          _ = 2^mp*(2^(t+1)*(c+3))+2^mp*(2*(mp+n+3)) := by
+            exact Nat.mul_add _ _ _
+          _ = (2^mp*2^(t+1))*(c+3)+(2^mp*2)*(mp+n+3) := by ac_rfl
           _ = 2^(mp+t+1)*(c+3)+2*(mp+n+3)*2^mp := by
-            rw [Nat.mul_add]
             have hpows : 2^mp * 2^(t+1) = 2^(mp+t+1) := by
               rw [← Nat.pow_add]
               congr 1
@@ -108,9 +110,12 @@ theorem source_wall_cost_identity
       2*(1+7*2^n*S) = 2+14*2^n*S := by omega
       _ = 2^m*(2*2^n+2*m+2*n+6)+2*U := hInv'
       _ = 2*(2^m*(2^n+m+n+3)+U) := by
-        rw [hfactor, Nat.mul_add]
+        rw [hfactor]
+        conv_rhs => rw [Nat.mul_add]
+        ac_rfl
   have hfinal :
-      1+7*2^n*S = 2^m*(2^n+m+n+3)+U := by omega
+      1+7*2^n*S = 2^m*(2^n+m+n+3)+U :=
+    Nat.eq_of_mul_eq_mul_left (by decide : 0 < 2) hdouble
   refine ⟨S, 2^m*(m+n+3)+U, ?_⟩
   calc
     1+7*2^n*S = 2^m*(2^n+m+n+3)+U := hfinal
