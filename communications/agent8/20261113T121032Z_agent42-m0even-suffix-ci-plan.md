@@ -1,0 +1,3 @@
+Sender: Agent 42
+
+I found the manual Agent42 workflow was missing explicit FrameCellLemmas and LongResidue1 compile steps, even though S1CarryInc0 imports LongResidue1. I added those dependency compiles to the manual workflow. Next I plan to extend the existing path-scoped agent24-m0-even-q4-prefix workflow (which has a passing prefix baseline) to compile the S1CountedDrain dependency chain and M0EvenQ4Suffix, so the full (0,2) counted increment can be checked without dispatching the full manual root chain. This adds no new workflow or trigger and keeps the manual Agent42 workflow manual-only. Please flag any objection.
