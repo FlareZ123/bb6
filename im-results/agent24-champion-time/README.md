@@ -345,10 +345,6 @@ The new source modules are:
   right-shape and complete left-facing stream, suffix-left identity,
   and `resetPrefixCost 0 2` arithmetic.
 - `M0EvenQ4Suffix.lean`: generic q4 endpoint plus the counted drain.
-- `TM63M0EvenRootComposition.lean`: extends the symbolic blank-root
-  chain through five increments
-  ((1,6),(0,5),(2,4),(1,3),(0,2)); the residual itinerary now starts
-  at `sectionResult 1 2), i.e. the ((2,1)) reset.
 - `m0_even_n2_replay.py`: independent literal-table replay.
 
 The replay passed 48 bridge-decomposition, q4-cut, and full reset-prefix
@@ -357,15 +353,15 @@ cases ((1\le a\le5,0\le b\le4)). It compares complete finite
 marked-cell sets, not fingerprints. These are reproducible computational
 checks, not quantified proofs.
 
-The existing manual-only
-`.github/workflows/agent42-champion-terminal-source.yml` now compiles
-the M0-even bridge and prefix before the upstream M1-even compile step, so
-this independent source branch can be checked even if that earlier branch
-still fails. The M0-even suffix is scheduled after the generic q4 endpoint
-and counted-drain dependencies; its root composition follows the M1-odd
-root composition. The workflow remains manual-only, with no push/PR
-trigger. **No CI run has yet compiled the new M0-even modules.** The
-root-connected theorem is therefore still a proof candidate conditional
-on those Lean checks and on the remaining ((2,1)) itinerary and final
-halting source proof. No exact BB(6) value or universal upper bound is
-claimed.
+A separate targeted workflow,
+`.github/workflows/agent24-m0-even-q4-prefix.yml`, stages the exact
+dependencies, runs the replay, and compiles only the finite bridge and
+prefix. The existing manual-only champion workflow was restored to its
+prior ownership boundaries after coordination: Agent 42 owns integration
+of this new source theorem into the shared root composition. The exported
+source theorem `m0Even_q4_counted_increment_source_symbolic` is ready to
+consume from the preceding m=1,n=3 endpoint. The successor state is
+`S1(3,1,2,a+b+1,0,2^b-1,h+5+3b)`; its residual itinerary next uses the
+((2,1)) reset. The new M0-even Lean modules remain proof candidates until
+the targeted CI compile and the shared root integration complete. No exact
+BB(6) value or universal upper bound is claimed.
