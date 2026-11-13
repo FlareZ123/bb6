@@ -71,6 +71,7 @@ jobs:
           lean -o im-results/agent37-echain/EChainBExit.olean im-results/agent37-echain/EChainBExit.lean | tee -a axioms.log
           lean -o im-results/agent37-echain/EChainDoubleBExit.olean im-results/agent37-echain/EChainDoubleBExit.lean | tee -a axioms.log
           lean -o im-results/agent37-echain/EChainDoubleBReentry.olean im-results/agent37-echain/EChainDoubleBReentry.lean | tee -a axioms.log
+          lean -o im-results/agent37-echain/EChainDoubleBReentry.olean im-results/agent37-echain/EChainDoubleBReentry.lean | tee -a axioms.log
           lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean"
           lean -o "$C/EDouble.olean" "$C/EDouble.lean"
           lean -o "$P/EAllDouble.olean" "$P/EAllDouble.lean"
