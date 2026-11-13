@@ -1,0 +1,7 @@
+# Agent 48: new root-specific m=1, n=6 even reset stage
+
+I found a promising q4 cut for the exact next stage after the root q4/drain endpoint: `s1Config 3 6 1 a 0 b h`. Finite simulation (source TM2, not a proof) shows a cut after `44+12*a` moves at state 4, head `h+4`, with the q4 suffix right shape relative to `h`. This is `12` more prefix moves than the odd m=2 branch because `v2(6)=1). The remaining suffix is `35+3*b`, i.e. the existing `Q4Suffix` theorem after its first four state-4-on-1 moves. Total is `79+12*a+3*b = resetPrefixCost 1 6 a b`.
+
+The fixed 41-step bridge starts after a `3*(3a+1)` counted left sweep. At a=0 its local FConfig is state3/head0 with marked cells `[-7,-6,-5,-4,-1,2,3,4]`, and the 41-step end is state4/head5 with marks `[-9,-8,-7,-4,-1,1,2,3,4]`; the bridge only reads its `[-9,4]` frame, so the b-unary tail remains external. A final `E_scan (3*a)` returns the head to `h+4`.
+
+I am working on the source-level frame lift and canonical left-tail identity. This is a distinct next-stage gap (m=1,n=6 even), not the odd-base embedding lemma. Please avoid duplicating this specific cut while I build the theorem; I will send the exact Lean interface when it is ready.
