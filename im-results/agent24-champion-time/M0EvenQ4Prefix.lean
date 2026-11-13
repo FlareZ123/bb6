@@ -139,9 +139,11 @@ theorem m0Even_q4_prefix_run (a b : Nat) (h : Int) (ha : 0 < a) :
         hcut.trans hmark
       simpa [m0EvenQ4CutTape,T,N,T1,hN,T2] using htrue
     · let x : Int := hN+3+(i:Int)
-      have hout : m0EvenQ4Inside (x-hN) = false := by
-        simp [m0EvenQ4Inside,x]
+      have hgt : 3 < x-hN := by
+        dsimp [x]
         omega
+      have hout : m0EvenQ4Inside (x-hN) = false := by
+        simp [m0EvenQ4Inside,hgt]
       have hframe : T2 x = T1 x := by
         simpa [T2] using
           frameAt_tape_outside T1 hN m0EvenQ4Inside m0EvenQ4BridgeEnd x hout
@@ -202,12 +204,13 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
     all_goals subst i
     · by_cases ha1 : a = 1
       · subst a
+          have hc : h-(h-(3:Int)) = 3 := by omega
         have hin : m0EvenQ4Inside (h-(h-(3:Int))) = true := by
-          simp [m0EvenQ4Inside]
+          rw [hc]
+          decide
         have hcut := m0EvenQ4CutTape_eq_end_inside 1 b h h hin
         have hmark :
             decide ((h-(h-(3:Int))) ∈ m0EvenQ4BridgeEnd.marked) = true := by
-          have hc : h-(h-(3:Int)) = 3 := by omega
           rw [hc]
           simp [m0EvenQ4BridgeEnd]
         simpa using hcut.trans hmark
@@ -410,10 +413,10 @@ private theorem m0EvenQ4CutTape_eq_source_left
     m0EvenQ4CutTape a b h (h-(i:Int)) =
       sideBit (s1LeftFacing 3 2 0 a 0) i := by
   let T := (s1Config 3 2 0 a 0 b h).tape
+  have hlt : (h-(i:Int))-(h-((3*a : Nat) : Int)) < -9 := by omega
   have hout : m0EvenQ4Inside
       ((h-(i:Int))-(h-((3*a : Nat) : Int))) = false := by
-    simp [m0EvenQ4Inside]
-    omega
+    simp [m0EvenQ4Inside,hlt]
   have hcut := m0EvenQ4CutTape_eq_swept a b h (h-(i:Int)) hout
   have hpres := sweptLeft_preserves_left (3*a) T h
     (h-(i:Int)) (by omega)
@@ -562,8 +565,14 @@ theorem m0EvenQ4SuffixTargetLeft (a b : Nat) (ha : 0 < a) :
     s1LeftFacing 3 1 2 (a+b+1) (2^b-1) =
       d0pow b ++ d1pow 2 ++ (m0EvenQ4LeftFacing a).drop 1 := by
   unfold s1LeftFacing m0EvenQ4LeftFacing
-  rw [binDec_pow2_sub_one]
-  rw [d1pow_add_right 2 (a-1)]
+  have hbin : binDec (a+b+1) (2^b-1) =
+      d0pow b ++ d1pow (a+1) := by
+    have h := binDec_pow2_sub_one (a-1) b
+    have hlen : (a-1)+b+2 = a+b+1 := by omega
+    have hval : (a-1)+2 = a+1 := by omega
+    simpa [hlen,hval] using h
+  rw [hbin]
+  rw [d1pow_add_right (a-1) 2]
   simp [List.drop,List.append_assoc]
   omega
 
