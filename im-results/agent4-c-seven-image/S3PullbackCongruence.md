@@ -128,6 +128,19 @@ If both held, then \(8j+16804\equiv0\pmod{4096}\). But \(j\equiv319\pmod{512}\) 
 \]
 a contradiction. The two parameter cylinders are disjoint.
 
+## Combined parameter coverage with the first strict family
+
+The first strict sixth/seventh family pulls back to the older diagonal
+[
+j\equiv319\pmod{512},\qquad
+3m\equiv j+2879\pmod{4096}.
+]
+For each admissible (j), invertibility of (3) modulo (4096) gives one residue class of (m) modulo (4096), hence four residue classes modulo (16384). The new family gives one residue class modulo (16384) for each such (j), and the disjointness proof above shows that it is not one of those four. Thus the union of the two source-image exclusions covers exactly five of the (16384) possible (m)-classes for each (j\equiv319\pmod{512}), for total parameter density
+[
+rac{5}{512\cdot16384}=rac5{2^{23}}.
+]
+This is only a density in the ((j,m)) parameter lattice; it is not a fraction of halting machines or of all high-stop states.
+
 ## Verification boundary
 
 The underlying second strict sixth/seventh image theorem and its all-time exclusion from the genuine blank-root section orbit are original-source Lean certified by CI 43300420208, with no sorryAx.
