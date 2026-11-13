@@ -632,7 +632,7 @@ The stage2b workflow's manual choice list now exposes only 2b16 and 2b17; the le
 
 ## 2026-11-13 late-run checkpoint: exception33, seed39, and P2 reset closure
 
-Lease: original claim remains `2026-11-13T12:26:15.852Z`; do not refresh. At the 13:06 UTC checkpoint the lease age was about 40.5 minutes, so continue until a checkpoint measures 70 minutes and then release normally.
+Previous incarnation: claim `2026-11-13T12:26:15.852Z`; its 13:06 UTC checkpoint measured about 40.5 minutes. This lease was later stale and has been superseded by the new claim recorded below.
 
 ### Exception33 and blank-root composition
 - Added `im-results/agent2-root-language-exit/BlankThirtyThirdRejoin.lean`: conditional Seed33 → 9,276 DRegular transitions → q=5,b=1 exception → Agent25's EAllDouble(q=4) → E-three → A-code return → Seed34. This is conditional on the upstream episode17–30/Seed31 artifact; not a blank-root theorem until the staged source audit succeeds.
@@ -659,3 +659,27 @@ Lease: original claim remains `2026-11-13T12:26:15.852Z`; do not refresh. At the
 3. Run the existing manual `agent37-p2-k13.yml` audit for `EChainDoubleBExit` and `EChainDoubleBReentry`; check the axiom gate and concrete canonical witness.
 4. Formalize the 5,648-step DRegularFast run from `L(24972,2,2)` and compose it with the E/A source-return draft if the dependencies can be audited without duplicating the entire pipeline.
 5. Close the remaining P2-reset residue cylinders and prove an inductively closed language with actual blank-root side conditions. Keep all conditional and pending results in `im-results/`; do not claim an exact BB(6) value.
+
+
+## 2026-11-13 21:05 UTC: resume staged D-root chain and accelerate exact arithmetic
+
+### Current identity and checkpoint state
+- This incarnation claimed Agent 2 at `2026-11-13T20:47:49.615Z` with run_id `agent2-gpt6-20261113T2047Z-d-root-exception39-closure`. The current lease is `agents/agent2/.lease.json`; do not refresh it. Release only after a checkpoint measures 70 minutes from that original claim.
+- The stage-2a source audit succeeded in run [43408948256](https://github.com/FlareZ123/bb6/actions/runs/43408948256), artifact `d-root-stage2a`, using pinned source snapshot `2da159d86fa86d813bdfbc54e38e3ec9c75b6e69`. It kernel-checked BlankFourteenthRejoin and BlankFifteenthRejoin.
+- GitHub Actions manual dispatch is now available through the Actions connector (the earlier memory note that no dispatch action was exposed is stale). Stage 2b16 runs [43505124676](https://github.com/FlareZ123/bb6/actions/runs/43505124676) and [43506006971](https://github.com/FlareZ123/bb6/actions/runs/43506006971) ended with runner shutdown / exit 143 and no Lean diagnostic. Earlier run [43413184489](https://github.com/FlareZ123/bb6/actions/runs/43413184489) did compile the original BlankSixteenthRejoin and printed [propext, Classical.choice, Quot.sound], then was externally shut down while the next module was running. These are interrupted verification jobs, not Lean proof failures.
+- Current stage-2b16 run [43507047965](https://github.com/FlareZ123/bb6/actions/runs/43507047965) was dispatched against source_ref `22766afdfa53088c797234e73f5aafc7050510ee`; at this checkpoint it remained in progress. It contains the 64-step evaluator patch but predates the later explicit-canonicality simplification. Check its final status before starting another run.
+
+### Reusable 64-step DRegular evaluator
+- The old `BB6.DRegularFast.fastRun` uses fixed 512-step 3-adic blocks. I added namespace `BB6.Agent2Fast64` inside `im-results/agent37-d-timing-cocycle/BlankSixteenthRejoin.lean`: it uses 64-step blocks and proves `fastRun_correct` from the already checked `DRegularFast.run_block`, `run_add`, and `run_canon` theorems. This is an evaluator equivalence theorem, not a new original-machine result.
+- Updated the staged root modules BlankSixteenth through BlankThirtieth to use `Agent2Fast64.fastRun_correct`; also updated Agent37's BlankThirtyFourthToThirtySixth and BlankThirtySeventhToThirtyEighth modules on main to use the same evaluator. The corresponding 16–30 seed-canonicality proofs now use explicit `constructor; dsimp [seedN]; omega; simp [seedN]` rather than `by decide`, avoiding unnecessary unfolding of earlier huge root seeds.
+- Updated `Seed31Probe.lean` on the persistent branch to use `Agent2Fast64`. Updated main's `im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean` in commit `2189193edde6548c3e333240647569de44d92db5` so its generic first-stop block soundness proof matches the new evaluator.
+- Persistent source branch: `agent2-d-root-fast16`, latest head at this memory checkpoint `e89a022433523bdeb0702c5bbb78111d28a400ec`. It contains the 64-step evaluator and optimized 16–30 modules. The main branch contains the updated 34–38 wrappers and Seed31 certificate. Keep the exact source_ref in every artifact-reuse run; stage2a's .olean dependencies are unchanged from the pinned source snapshot.
+- The local container shell is unavailable in this environment (ClientError even on a simple `ls /mnt/data`; earlier unzip/Lean invocation also failed). Do not claim a local Lean run. Use the existing manual CI workflow to test the changed source graph; no push-trigger workflow was added.
+
+### Next actions
+1. Check run 43507047965. If it succeeds, record the artifact name (expected `d-root-stage2b16`) and dispatch stage `2b17` using that run/artifact and latest branch source_ref `e89a022433523bdeb0702c5bbb78111d28a400ec`. If it fails, inspect the first Lean diagnostic or runner shutdown and use the latest branch head; do not repeat an unchanged source snapshot.
+2. Stage 2b17 compiles BlankSeventeenthRejoin plus ExceptionalE7ThirdReturnEscape. The 17th and later root modules now use Agent2Fast64.
+3. Stage 3 compiles episodes 18–21; stage 4 compiles ExceptionalEPacketClosure plus 22–26; stage 5 compiles 27–30 and Seed31Probe. These remain unverified until the actual artifacts and axiom logs succeed.
+4. After stage 5, dispatch `agent2-seed31-first-stop-certificate.yml` with the stage5 artifact/run ID and the same latest source_ref. Its certificate must establish the actual q=8 first stop (12,267 DRegular transitions; a mod 59049 = 39637), not the withdrawn q=4 hypothesis. Then dispatch `agent37-root-exceptions34-38.yml` with both artifact run IDs and the same source_ref.
+5. Agent25 reports the corrected Exception33Q5Rejoin leaf compiles locally with [propext, Quot.sound], but it still needs the combined source audit. Agent37's 34–38 modules are candidate source compositions until the dedicated workflow succeeds.
+6. All of this remains an intermediate conditional root-chain investigation. Do not claim Cryptid D nonhalting or an exact BB(6) value. Keep it in `im-results/`; only promote a result if it actually closes a publishable mathematical quantifier.
