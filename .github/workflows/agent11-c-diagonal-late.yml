@@ -2,9 +2,6 @@ name: Agent 11 C58/late-depth diagonal original-root criterion (manual)
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - agent11-y3-s229-s533-validation
 
 permissions:
   contents: read
@@ -173,7 +170,7 @@ jobs:
           # The mixed even/odd four inverse is also used by the generalized y=3 boundary below.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/EvenOddFourExact.lean .
           lean -o EvenOddFourExact.olean EvenOddFourExact.lean
-          # Source-check the x=2 mod 16 y=3 boundary after the core-tactic repair.
+          # New exact x=2 mod 16 y=3 inverse boundary for the u=5 branch.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean .
           lean -o EvenOddThreeX2Mod16.olean EvenOddThreeX2Mod16.lean 2>&1 | tee EvenOddThreeX2Mod16.log
           if grep -q sorryAx EvenOddThreeX2Mod16.log; then
