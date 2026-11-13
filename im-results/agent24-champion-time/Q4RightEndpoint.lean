@@ -209,9 +209,6 @@ theorem q4_suffix_run_right_word_of_prefix
 #print axioms q4_suffix_run_right_word
 #print axioms q4_suffix_run_right_word_of_prefix
 
-end BB6Coverage.Agent24Q4Endpoint
-
-
 /-- The first-ten frame marks every cell from its head through five cells
 to the right. -/
 private theorem q4Endpoint_first10_six (T : Int → Bool) (h : Int)
@@ -579,3 +576,5 @@ theorem oddRst2_q4_counted_source
 #print axioms q4_suffix_run_left_word
 #print axioms q4_suffix_run_target_of_prefix
 #print axioms oddRst2_q4_counted_source
+
+end BB6Coverage.Agent24Q4Endpoint
