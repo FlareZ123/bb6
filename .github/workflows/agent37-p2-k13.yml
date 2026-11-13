@@ -77,6 +77,7 @@ jobs:
           lean -o "$G/ExceptionalE7SecondSafe.olean" "$G/ExceptionalE7SecondSafe.lean"
           lean -o im-results/agent37-echain/EChainBEExit.olean im-results/agent37-echain/EChainBEExit.lean | tee -a axioms.log
           lean -o im-results/agent37-echain/EERootBEA.olean im-results/agent37-echain/EERootBEA.lean | tee -a axioms.log
+          lean -o "$C/P2K4ShapeCfg.olean" "$C/P2K4ShapeCfg.lean" | tee -a axioms.log
           lean -o "$C/P2K4Source.olean" "$C/P2K4Source.lean" | tee -a axioms.log
           lean -o "$D/P2K4SourceReentry.olean" "$D/P2K4SourceReentry.lean" | tee -a axioms.log
           lean "$K/P2K13Source.lean" | tee -a axioms.log
