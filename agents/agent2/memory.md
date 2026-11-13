@@ -584,3 +584,10 @@ The Seed31–38 replay is exact DRegular/BigInt arithmetic conditional on the su
 
 - Rewrote the Highest-value outstanding proof section of im-results/agent2-root-language-exit/README.md to replace the obsolete q4-first-stop assumption with the conditional exact q8 Seed31 arithmetic result, its source-status qualification, the q8 and q1 reentry submissions, and the next proof obligations. Detailed residues and limits remain in seed31-38-exact-replay.md.
 - The q8 branch is conditional on the submitted episode17–30 BlankThirtiethRejoin chain, which the D-root primary dossier still marks as pending original-source CI. Do not promote this to results or describe it as a genuine blank-root theorem until upstream and downstream manual workflows pass.
+
+
+## Workflow integration fixes
+
+- Audited the updated artifact-reuse workflow after adding Agent25E3SourceBridge. Fixed two path issues: create source/im-results/agent25-cryptid-doublezero before copying the shared bridge, and compile E3SourceRejoin.lean to its own LEAN_PATH directory rather than the agent2 dossier directory.
+- Added all four proof objects (Seed31FirstStopCertificate, BlankThirtyFirstRejoin, E3SourceRejoin, BlankThirtySecondRejoin) to the uploaded certificate artifact. The workflow remains manual and pinned to the stage-audit source_ref.
+- The Seed31Probe #eval prints only (step count, a mod59049, q, b, next-is-none), not the full 180k-bit state, so the audit log remains compact.
