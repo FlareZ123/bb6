@@ -1,6 +1,9 @@
 name: Agent 42 TM63 all-parameter terminal step certificate (manual)
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'im-results/agent42-champion-terminal/.trigger-m1-even-q4-ci'
 permissions:
   contents: read
 jobs:
