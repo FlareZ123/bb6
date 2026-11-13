@@ -89,13 +89,24 @@ theorem shadow_reach_invariants
     large, 4-divisible original left counter. -/
 theorem shadow_encoded_left_properties
     (N L M m z alpha b : Nat)
-    (hN : 2*M+7 ≤ N)
+    (hLlo : N+8 ≤ L)
     (hwidth : L+M ≤ 2^(N-M-3))
     (hm : m ≤ M) (hz : 0 < z)
     (hw : 4 ≤ L+m-z) (ha : 28 ≤ alpha)
     (hcoord : 2^m*(b+4*(L+m-z))=alpha*2^N) :
     440*2^(N-M-4) ≤ b ∧ 12 ≤ b ∧ b%4=0 := by
   let w := L+m-z
+  have hK : 4 ≤ N-M-3 := by
+    by_contra hnot
+    have hKle : N-M-3 ≤ 3 := by omega
+    have hpow : 2^(N-M-3) ≤ 8 := by
+      calc
+        2^(N-M-3) ≤ 2^3 :=
+          Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hKle
+        _ = 8 := by norm_num
+    have hlin : N-M-3+11 ≤ L+M := by omega
+    omega
+  have hKminus : 3 ≤ N-M-4 := by omega
   have hmN : m ≤ N := by omega
   have henc : b+4*w=alpha*2^(N-m) := by
     have h := unscale_coordinate N m b w alpha hmN (by simpa [w] using hcoord)
@@ -148,14 +159,14 @@ theorem shadow_encoded_left_properties
 
 /-- Converse to the bounded source-to-shadow simulation:
     every abstract feeder-rooted shadow path of total cost <=M is an
-    authentic original-source OddCone path once N>=2M+7.
+    authentic original-source OddCone path under the direct width bound.
 
     This is a finite-word statement; it does not give a lift uniform in
     unbounded cost at fixed N, nor blank-root forward reachability. -/
-theorem shadow_reach_lifts_to_odd_cone
+theorem shadow_reach_lifts_to_odd_cone_of_width
     (N L z0 w0 alpha0 b0 d0 M m z : Nat)
-    (hN : 2*M+7 ≤ N)
-    (hLlo : N+8 ≤ L) (hLhi : L ≤ N+9)
+    (hLlo : N+8 ≤ L)
+    (hwidth : L+M ≤ 2^(N-M-3))
     (hrootOff : L=w0+z0) (hrootW : 4≤w0) (hrootZ : 0<z0)
     (hrootMass : b0+d0+2*L+3=56*2^N)
     (hrootCoord : b0+4*w0=alpha0*2^N)
@@ -166,7 +177,6 @@ theorem shadow_reach_lifts_to_odd_cone
       OddCone b0 d0 b d m ∧ 12≤b ∧ b%4=0 ∧ d%2=1 ∧
       28≤alpha ∧ alpha<56*2^m ∧
       2^m*(b+4*(L+m-z))=alpha*2^N := by
-  have hwidth := shadow_width_bound N L M hN hLhi
   have hL8 : 8≤L := by omega
   have hw0 : z0+4≤L := by omega
   revert hm
@@ -214,7 +224,7 @@ theorem shadow_reach_lifts_to_odd_cone
       have hmass : b+d+2*m+2*L+3=56*2^N := by omega
       have hbeven : b%2=0 := by omega
       obtain ⟨hbStrong,_,_⟩ :=
-        shadow_encoded_left_properties N L M m z alpha b hN hwidth hmParent hz hw4 haLo hcoord
+        shadow_encoded_left_properties N L M m z alpha b hLlo hwidth hmParent hz hw4 haLo hcoord
       have hBhalf : 220*2^(N-M-4)≤b/2 := by
         have hbEven : b=2*(b/2) := by omega
         omega
@@ -326,13 +336,35 @@ theorem shadow_reach_lifts_to_odd_cone
         simpa [m',alpha',Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using hnat
       have hw' : 4≤L+m'-zp := by dsimp [m']; omega
       have hchildProps := shadow_encoded_left_properties N L M m' zp alpha' (2*k-4)
-        hN hwidth hm' hmargin.1 hw' hAlphaLo' hcoord'
+        hLlo hwidth hm' hmargin.1 hw' hAlphaLo' hcoord'
       rcases hchildProps with ⟨hbStrong',hb12',hb4'⟩
       have hd' : (c+4)%2=1 := by omega
       refine ⟨2*k-4,c+4,alpha',
         OddCone.parent b d m t k c hcone (by omega) hb4 hd hi' hk2 hcodd,
         hb12',hb4',hd',hAlphaLo',hAlphaHi',?_⟩
       simpa [m'] using hcoord'
+
+/-- The simple linear budget N>=2M+7 implies the exact width
+    hypothesis needed by the finite-word converse. -/
+theorem shadow_reach_lifts_to_odd_cone
+    (N L z0 w0 alpha0 b0 d0 M m z : Nat)
+    (hN : 2*M+7 ≤ N)
+    (hLlo : N+8 ≤ L) (hLhi : L ≤ N+9)
+    (hrootOff : L=w0+z0) (hrootW : 4≤w0) (hrootZ : 0<z0)
+    (hrootMass : b0+d0+2*L+3=56*2^N)
+    (hrootCoord : b0+4*w0=alpha0*2^N)
+    (hb0 : 12≤b0) (hb04 : b0%4=0) (hd0 : d0%2=1)
+    (ha0 : 28≤alpha0) (ha0lt : alpha0<56)
+    (hgraph : ShadowReach L z0 m z) (hm : m≤M) :
+    ∃ b d alpha,
+      OddCone b0 d0 b d m ∧ 12≤b ∧ b%4=0 ∧ d%2=1 ∧
+      28≤alpha ∧ alpha<56*2^m ∧
+      2^m*(b+4*(L+m-z))=alpha*2^N := by
+  have hwidth := shadow_width_bound N L M hN hLhi
+  exact shadow_reach_lifts_to_odd_cone_of_width
+    N L z0 w0 alpha0 b0 d0 M m z hLlo hwidth
+    hrootOff hrootW hrootZ hrootMass hrootCoord hb0 hb04 hd0 ha0 ha0lt
+    hgraph hm
 
 /-- The L0 feeder's every finite shadow word of cost <=M has an
     authentic original-source OddCone realization whenever 16q>=2M+7. -/
@@ -397,6 +429,7 @@ theorem l1_bounded_shadow_word_has_source
 
 #print axioms shadow_width_bound
 #print axioms shadow_encoded_left_properties
+#print axioms shadow_reach_lifts_to_odd_cone_of_width
 #print axioms shadow_reach_lifts_to_odd_cone
 #print axioms l0_bounded_shadow_word_has_source
 #print axioms l1_bounded_shadow_word_has_source
