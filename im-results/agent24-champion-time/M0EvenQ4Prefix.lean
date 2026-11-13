@@ -66,9 +66,11 @@ private theorem m0EvenQ4CutTape_eq_source_right
       (s1Config 3 2 0 a 0 b h).tape x := by
   let T := (s1Config 3 2 0 a 0 b h).tape
   have hgt : 3 < x-(h-((3*a : Nat) : Int)) := by omega
+  have hnot : ¬(-9 ≤ x-(h-((3*a : Nat) : Int)) ∧
+      x-(h-((3*a : Nat) : Int)) ≤ 3) := by omega
   have hout : m0EvenQ4Inside
       (x-(h-((3*a : Nat) : Int))) = false := by
-    simp [m0EvenQ4Inside,hgt]
+    simp [m0EvenQ4Inside,hnot]
   have hcut := m0EvenQ4CutTape_eq_swept a b h x hout
   have hpres := sweptLeft_preserves_right (3*a) T h x (by omega)
   simpa [T] using hcut.trans hpres
@@ -419,9 +421,11 @@ private theorem m0EvenQ4CutTape_eq_source_left
       sideBit (s1LeftFacing 3 2 0 a 0) i := by
   let T := (s1Config 3 2 0 a 0 b h).tape
   have hlt : (h-(i:Int))-(h-((3*a : Nat) : Int)) < -9 := by omega
+  have hnot : ¬(-9 ≤ (h-(i:Int))-(h-((3*a : Nat) : Int)) ∧
+      (h-(i:Int))-(h-((3*a : Nat) : Int)) ≤ 3) := by omega
   have hout : m0EvenQ4Inside
       ((h-(i:Int))-(h-((3*a : Nat) : Int))) = false := by
-    simp [m0EvenQ4Inside,hlt]
+    simp [m0EvenQ4Inside,hnot]
   have hcut := m0EvenQ4CutTape_eq_swept a b h (h-(i:Int)) hout
   have hpres := sweptLeft_preserves_left (3*a) T h
     (h-(i:Int)) (by omega)
@@ -458,7 +462,7 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
     · by_cases hnear : i = 3*a-3 ∨ i = 3*a-2 ∨ i = 3*a-1
       · rcases hnear with h3 | h2 | h1
         · subst i
-          let x : Int := h-((3*a-3:Int))
+          let x : Int := h-((3*a-3:Nat):Int)
           have hin : m0EvenQ4Inside (x-(h-((3*a:Nat):Int))) = true := by
             simp [m0EvenQ4Inside,x]
             omega
@@ -472,7 +476,7 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
           have htarget := m0EvenQ4LeftFacingPrefixTrue a (3*a-3) (by omega)
           simpa [x] using hval.trans htarget.symm
         · subst i
-          let x : Int := h-((3*a-2:Int))
+          let x : Int := h-((3*a-2:Nat):Int)
           have hin : m0EvenQ4Inside (x-(h-((3*a:Nat):Int))) = true := by
             simp [m0EvenQ4Inside,x]
             omega
@@ -486,7 +490,7 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
           have htarget := m0EvenQ4LeftFacingPrefixTrue a (3*a-2) (by omega)
           simpa [x] using hval.trans htarget.symm
         · subst i
-          let x : Int := h-((3*a-1:Int))
+          let x : Int := h-((3*a-1:Nat):Int)
           have hin : m0EvenQ4Inside (x-(h-((3*a:Nat):Int))) = true := by
             simp [m0EvenQ4Inside,x]
             omega
@@ -582,13 +586,18 @@ theorem m0EvenQ4SuffixTargetLeft (a b : Nat) (ha : 0 < a) :
     have hval : (a-1)+2 = a+1 := by omega
     simpa [hlen,hval] using h
   rw [hbin]
-  rw [d1pow_add_right (a-1) 2]
+  have hadd : d1pow (a+1) = d1pow 2 ++ d1pow (a-1) := by
+    have h := d1pow_add_right (a-1) 2
+    have hval : (a-1)+2 = a+1 := by omega
+    simpa [hval] using h
+  rw [hadd]
   simp [List.drop,List.append_assoc]
   omega
 
 theorem m0Even_resetPrefixCost_eq (a b : Nat) :
     resetPrefixCost 0 2 a b = 75+12*a+3*b := by
-  have hv1 : BB6ChampionArithmetic.v2 1 = 0 := by decide
+  have hv1 : BB6ChampionArithmetic.v2 1 = 0 :=
+    v2_of_odd 1 (by decide)
   have hv : BB6ChampionArithmetic.v2 2 = 1 := by
     simpa [hv1] using v2_of_even 2 (by omega) (by decide)
   simp [resetPrefixCost,hv]
