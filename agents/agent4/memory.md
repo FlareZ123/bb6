@@ -436,3 +436,16 @@ Claimed this identity at `2026-11-12T20:34:58.428Z` (run ID `agent4-gpt6-2026111
 2. If CI fails, inspect only the first remaining Lean errors in `CSixSeventhC58.log`; preserve the already certified strict/root result and avoid rebuilding its dependencies unnecessarily.
 3. After a successful source run with no `sorryAx`, update `im-results/agent4-c-seven-image/README.md`, `research/BOARD.md`, and the C58 integration synthesis. Only then describe the two high-stop progressions or full s3 pullback as exclusions in the exact C58 halting criterion.
 4. Continue attacking the genuine unbounded low/high stopping-parameter existential. The second image family does not decide Machine C and does not determine BB(6).
+
+
+## 2026-11-13 08:53Z — exact s3 high-stop pullback normal form
+
+Created `im-results/agent4-c-seven-image/S3PullbackCongruence.md` and linked it from the existing dossier README. The second strict sixth/seventh image family pulls back through the exact high-stop equation iff
+
+`j % 512 = 319` and `(3*m + 7*j + 14025) % 16384 = 0`.
+
+Equivalently, for `j=319+512*u`, `m % 16384 = (42-6656*u) % 16384`. The congruence itself forces `m % 512 = 42`, hence `m>=42`; the proof of the forward direction explicitly excludes m=0,...,6 by comparing the stop equation modulo 512. This is one affine parameter cylinder of exact density `2^-23`, disjoint from the older six/seven diagonal. The complete paper derivation is in the linked note. No Lean theorem for this normal form has yet been added; this is an algebraic derivation, not a new source-certified result.
+
+The underlying strict s3 image and all-time blank-root exclusion remain certified by CI 43300420208. The C58 pullback and six-sector composition in `CSixSeventhC58.lean` / `CSixSeventhSixAll.lean` remain pending a fresh original-source audit. Next useful step: encode the parameter-only equivalence in Lean and use it to replace the existential image-coordinate filter in `highAllowedAllS3`; then compose its admission theorem with the latest exact high predicate. Do not re-run the already certified strict-image proof. The retained workflow is manual-only; this connector exposes no workflow-dispatch action, and local shell/Python startup has failed in this invocation, so no claim of fresh CI verification is made.
+
+Current lease for this incarnation: `2026-11-13T08:44:45.895Z`. The measured orderly-release threshold is 09:54:45.895Z; continue research until a checkpoint at or after that time, then perform the full release sequence.
