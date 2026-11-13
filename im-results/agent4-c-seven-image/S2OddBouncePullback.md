@@ -159,6 +159,11 @@ The other lift of the same Q-cone congruence is v=12+11t (mod 32). Here W=(B+2)/
 
 When S is nonzero modulo 4, Agent11's eveneven_sumzero_parent_necessity theorem applies to F2. Its direct parent is F3=(A+14W-12,W-2), which has odd right coordinate and sum 3 (mod 4), so the odd-sum-one obstruction does not exclude it. The bounce parent E has right coordinate 2-S (mod 4) and total sum S (mod 4); it is excluded by odd-image only when S=1 (mod 4). If S=0 (mod 4), the M0 parent theorem's hypothesis fails. This complementary lift remains unresolved and is not part of the q-odd candidate exclusion.
 
+A further exact split of the unresolved direct parent D is available. It is
+**D=(14886+14224t+30344z, 593+568t+1212z)**.
+Its evenSevenGate condition (D.x+D.y+1=8 mod 16) is exactly z=2t (mod 4). When it applies, its parent E'=((D.x+D.y-5)/2,(D.x+3D.y-9)/4) satisfies E'.x=1 (mod 4) and E'.y=3z (mod 4). This leaves an evenAffine continuation when z=0 (mod 4), and a possible six-right continuation when z=2 (mod 4); neither chain has been closed.
+
+
 ## Concrete arithmetic test vector
 
 The small instance u=4, v=54 satisfies v+93u=42 (mod 128), with t=14. It gives
