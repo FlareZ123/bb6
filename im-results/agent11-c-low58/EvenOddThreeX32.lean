@@ -3,7 +3,6 @@ import GenericSection
 import OddOddVal3Orbit
 import OddOddLowVal
 import EvenOddFourExact
-import OddEvenInverse
 import HighSumTwo
 import M0EvenEvenSumZero
 import Lean.Elab.Tactic.Omega
@@ -111,46 +110,6 @@ theorem y3_x32_parents (t a k : Nat) (ht : 1≤t)
                 right
                 constructor <;> omega
             · omega
-
-/-- The odd-first/even-right sum-three sector has a unique direct parent,
-    hence blank reachability is equivalent to reachability of that parent. -/
-theorem oddeven_sum3_blank_reach_iff (x y : Nat)
-    (hy : 6≤y) (hx : x%2=1) (he : y%2=0)
-    (hs : (x+y)%8=3) :
-    CReach x y ↔ CReach (x+y-2) ((y-2)/2) := by
-  let a := x+y-2
-  let k := (y-2)/2
-  have ha0 : a≠0 := by dsimp [a]; omega
-  have ha1 : a≠1 := by dsimp [a]; omega
-  have hk0 : k≠0 := by dsimp [k]; omega
-  have hlow : 2*k≤a := by dsimp [a,k]; omega
-  have hedge : secNext (a,k)=some (x,y) := by
-    apply (section_preimage_all_iff a k x y).mpr
-    simp [sectionPreimageAll,ha0,ha1,hk0,hlow]
-    dsimp [a,k]
-    omega
-  have hunique : ∀ b c, secNext (b,c)=some (x,y) → b=a ∧ c=k := by
-    intro b c hbc
-    have hh := section_oddeven_sum3_mod8_inverse b c x y hy hx he hs hbc
-    rcases hh with ⟨hb,hc⟩
-    constructor <;> dsimp [a,k] <;> omega
-  constructor
-  · rintro ⟨n,hn⟩
-    cases n with
-    | zero =>
-        simp [BB6.Agent8Section.run] at hn
-        omega
-    | succ n =>
-        cases hr : BB6.Agent8Section.run secNext n (some (5,1)) with
-        | none => simp [BB6.Agent8Section.run,hr] at hn
-        | some p =>
-            rcases p with ⟨b,c⟩
-            have hsrc : secNext (b,c)=some (x,y) := by
-              simpa [BB6.Agent8Section.run,hr] using hn
-            have hbc := hunique b c hsrc
-            exact ⟨n,by simpa [hbc.1,hbc.2] using hr⟩
-  · rintro ⟨n,hn⟩
-    exact ⟨n+1,by simp [BB6.Agent8Section.run,hn,hedge]⟩
 
 /-- The y=3 terminal is blank-unreachable on the infinite cylinder
     x=1024z+650.  Both exact source parents are eliminated: the n=2
