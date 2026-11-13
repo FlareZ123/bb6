@@ -373,29 +373,6 @@ Hensel class gives an actual branch with at least m consecutive even
 parents. Thus reverse-cone depth, as well as immediate odd-parent
 fan-in, is unbounded across this subresidue.
 
-The first examples from exact rational windows are:
-
-| t | j_t | R_t (decimal) | consecutive even parents |
-|---:|---:|---:|---:|
-| 2 | 6 | 6.021846263 | 0 |
-| 5 | 8 | 7.137002979 | 1 |
-| 7 | 9 | 6.344002648 | 0 |
-| 10 | 11 | 7.518817953 | 2 |
-| 12 | 12 | 6.683393736 | 0 |
-| 15 | 14 | 7.921059243 | 4 |
-| 17 | 15 | 7.040941549 | 1 |
-| 19 | 16 | 6.258614710 | 0 |
-| 22 | 18 | 7.417617434 | 1 |
-| 24 | 19 | 6.593437719 | 0 |
-| 27 | 21 | 7.814444704 | 3 |
-| 29 | 22 | 6.946173071 | 0 |
-
-This is another obstruction to any fixed finite reverse-cone template.
-It still leaves a viable parameterized route: classify the 3-adic
-divisibility class, the unique dyadic scale, and the even-chain length
-as functions of t and the Hensel digits.
-
-
 There is also a quantitative density refinement. For fixed m>=1, the
 set of t in S whose limiting mantissa satisfies
 `R_t > 8-2^(1-m)` has natural density
@@ -417,3 +394,25 @@ Thus there are feeders with at least
 `delta_m*T+o(T)` distinct odd parents, each supporting m further
 even-parent steps. As m grows,
 `delta_m ~ 2^(-m-2)/ln(2)`.
+
+The first examples from exact rational windows are:
+
+| t | j_t | R_t (decimal) | consecutive even parents |
+|---:|---:|---:|---:|
+| 2 | 6 | 6.021846263 | 0 |
+| 5 | 8 | 7.137002979 | 1 |
+| 7 | 9 | 6.344002648 | 0 |
+| 10 | 11 | 7.518817953 | 2 |
+| 12 | 12 | 6.683393736 | 0 |
+| 15 | 14 | 7.921059243 | 4 |
+| 17 | 15 | 7.040941549 | 1 |
+| 19 | 16 | 6.258614710 | 0 |
+| 22 | 18 | 7.417617434 | 1 |
+| 24 | 19 | 6.593437719 | 0 |
+| 27 | 21 | 7.814444704 | 3 |
+| 29 | 22 | 6.946173071 | 0 |
+
+This is another obstruction to any fixed finite reverse-cone template.
+It still leaves a viable parameterized route: classify the 3-adic
+divisibility class, the unique dyadic scale, and the even-chain length
+as functions of t and the Hensel digits.
