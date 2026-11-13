@@ -115,6 +115,10 @@ theorem p2_packet_reentry_or_reset (c : Packet) (ha : c.a ≥ 4)
     have hshape : packet d.a d.q d.p fixedTail =
         packet (3*k+4) d.q 2 fixedTail := by
       simp [hk,hpE]
+    have h0' :
+        run T0 (packet c.a c.q c.p fixedTail) =
+          packet d.a d.q d.p fixedTail := by
+      simpa [fixedTail] using h0
     have hreset := BB6.Agent2PacketP2Reset.e_two_reset k d.q
     have hreset' :
         run (BB6.Agent2PacketP2Reset.eTwoTime k d.q)
@@ -127,7 +131,7 @@ theorem p2_packet_reentry_or_reset (c : Packet) (ha : c.a ≥ 4)
           (packet c.a c.q c.p fixedTail) =
           packet (8*k+5) 0 (2*d.q+6)
             BB6.Agent2PacketP2Reset.marker := by
-      rw [run_add,h0,hshape,hreset']
+      rw [run_add,h0',hshape,hreset']
     exact Or.inr ⟨T0+BB6.Agent2PacketP2Reset.eTwoTime k d.q,
       k,d.q,hfinal⟩
 
