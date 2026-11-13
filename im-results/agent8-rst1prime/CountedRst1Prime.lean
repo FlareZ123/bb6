@@ -574,4 +574,14 @@ theorem rst1Prime_d0pow_segment
 #print axioms rst1Prime_d0pow_segment
 
 
+/-- The target left-facing word groups the three counter runs into
+three uniform d0 powers. -/
+theorem rst1Prime_target_leftFacing_compact (L a b : Nat) :
+    s1LeftFacing (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) =
+      d0pow b ++ markerWord 2 ++ d0pow (a+1) ++ d1 ++
+        d0pow (L+1) ++ lh := by
+  rw [rst1Prime_target_leftFacing]
+  simp [d0pow,List.append_assoc]
+
+
 end BB6Coverage.Agent8Rst1Prime
