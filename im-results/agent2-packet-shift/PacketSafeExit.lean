@@ -150,17 +150,19 @@ theorem normalize_p2_exit (c : Packet) (ha : c.a ≥ 4)
     simpa [d,hp] using normalize_pmod c
   by_cases h2 : d.a % 3 = 2
   · have hq : d.q = 0 := by
-      by_contra hq
-      unfold advance at he
-      simp [h2,hq] at he
+      by_cases hq0 : d.q = 0
+      · exact hq0
+      · unfold advance at he
+        simp [h2,hq0] at he
     exact Or.inr (Or.inl ⟨h2,hq⟩)
   by_cases h1 : d.a % 3 = 1
   · have hp2 : d.p = 2 := by
-      by_contra hp2
-      have hge : 3 ≤ d.p := by omega
-      have ha' : ¬ d.a < 4 := by omega
-      unfold advance at he
-      simp [h1,ha',hge] at he
+      by_cases hpEq : d.p = 2
+      · exact hpEq
+      · have hge : 3 ≤ d.p := by omega
+        have ha' : ¬ d.a < 4 := by omega
+        unfold advance at he
+        simp [h1,ha',hge] at he
     exact Or.inr (Or.inr ⟨h1,hp2⟩)
   have hzero : d.a % 3 = 0 := by omega
   exact Or.inl hzero
