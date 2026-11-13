@@ -209,7 +209,7 @@ theorem tm63_attainable_after_m2_even_q4
         some (s0Config (markerWord 0 ++ d0 ++
           binDec tm63Length2 0 ++ lh)
           (tm63FinalA+tm63FinalB+resetDelta 1)
-          (2^tm63FinalB-1) 0 h)) :
+          (2^tm63FinalB-1) 0 (h+5+3*tm63FinalB))) :
     Attainable proposedChampionScore := by
   have hstageAfterM1 :
       run tm2 tm63AfterM1EvenSteps
