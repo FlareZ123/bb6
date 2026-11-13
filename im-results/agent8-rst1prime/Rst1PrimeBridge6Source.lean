@@ -618,4 +618,96 @@ theorem rst1PrimeAfterBridge30_rightFacing
 #print axioms rst1PrimeAfterBridge30_rightFacing
 
 
+/-- All cells at and to the left of the bridge20 window are preserved
+through bridge9, the fourth sweep, bridge6, the final sweep, and bridge30. -/
+theorem rst1PrimeAfterBridge30_eq_afterBridge20_left
+    (L a b : Nat) (h x : Int)
+    (hx : x ≤ h-((3*a+1:Int))-2-((3*L+5:Int))) :
+    (rst1PrimeAfterBridge30 L a b h).tape x =
+      (rst1PrimeAfterBridge20 L a b h).tape x := by
+  let H0 : Int := h-((3*a+1:Int))
+  let H1 : Int := H0-2
+  let H2 : Int := H1-((3*L+5:Int))
+  let H3 : Int := H2+4
+  let Hs : Int := H0+3
+  let H6 : Int := Hs+3*((a+1):Int)
+  let H8 : Int := h+9+3*(b:Int)
+  change
+    (frameAt
+      (sweptRight b (rst1PrimeAfterBridge6 L a b h).tape (h+9))
+      H8 inside30 bridge30End).tape x =
+      (rst1PrimeAfterBridge20 L a b h).tape x
+  have hout30 : inside30 (x-H8) = false := by
+    simp [inside30,inWindow]
+    dsimp [H0,H1,H2,H3,Hs,H6,H8]
+    omega
+  rw [frameAt_tape]
+  simp only [hout30]
+  have hleftB :
+      sweptRight b (rst1PrimeAfterBridge6 L a b h).tape (h+9) x =
+        (rst1PrimeAfterBridge6 L a b h).tape x := by
+    apply rst1Prime_sweptRight_preserves_left
+    dsimp [H0,H1,H2,H3,Hs,H6,H8]
+    omega
+  rw [hleftB]
+  change
+    (frameAt
+      (sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs)
+      H6 inside6 bridge6End).tape x =
+      (rst1PrimeAfterBridge20 L a b h).tape x
+  have hout6 : inside6 (x-H6) = false := by
+    simp [inside6,inWindow]
+    dsimp [H0,H1,H2,H3,Hs,H6,H8]
+    omega
+  rw [frameAt_tape]
+  simp only [hout6]
+  have hleftA :
+      sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs x =
+        (rst1PrimeAfterBridge9 L a b h).tape x := by
+    apply rst1Prime_sweptRight_preserves_left
+    dsimp [H0,H1,H2,H3,Hs,H6,H8]
+    omega
+  rw [hleftA]
+  change
+    (frameAt
+      (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3)
+      H0 inside9 bridge9End).tape x =
+      (rst1PrimeAfterBridge20 L a b h).tape x
+  have hout9 : inside9 (x-H0) = false := by
+    simp [inside9,inWindow]
+    dsimp [H0,H1,H2,H3,Hs,H6,H8]
+    omega
+  rw [frameAt_tape]
+  simp only [hout9]
+  apply rst1Prime_sweptRight_preserves_left
+  dsimp [H0,H1,H2,H3,Hs,H6,H8]
+  omega
+
+/-- The six-cell left-hand source tail supplied by bridge20 survives
+unchanged through the entire Rst1' suffix. -/
+theorem rst1PrimeAfterBridge30_left_tail
+    (L a b : Nat) (h : Int) (i : Nat) (hi : i<6) :
+    (rst1PrimeAfterBridge30 L a b h).tape
+      (h-((3*a+1:Int))-2-((3*L+5:Int))-(i:Int)) =
+      sideBit lh i := by
+  let H2 : Int := h-((3*a+1:Int))-2-((3*L+5:Int))
+  have heq := rst1PrimeAfterBridge30_eq_afterBridge20_left
+    L a b h (H2-(i:Int)) (by dsimp [H2]; omega)
+  rw [heq]
+  simpa [H2] using rst1PrimeAfterBridge20_left_cell L a b h i hi
+
+/-- The tape is blank strictly beyond the six-cell left source tail. -/
+theorem rst1PrimeAfterBridge30_left_blank
+    (L a b : Nat) (h x : Int)
+    (hx : x ≤ h-((3*a+1:Int))-2-((3*L+5:Int))-6) :
+    (rst1PrimeAfterBridge30 L a b h).tape x = false := by
+  have heq := rst1PrimeAfterBridge30_eq_afterBridge20_left L a b h x (by omega)
+  rw [heq]
+  exact rst1PrimeAfterBridge20_left_blank L a b h x (by omega)
+
+#print axioms rst1PrimeAfterBridge30_eq_afterBridge20_left
+#print axioms rst1PrimeAfterBridge30_left_tail
+#print axioms rst1PrimeAfterBridge30_left_blank
+
+
 end BB6Coverage.Agent8Rst1PrimeTail
