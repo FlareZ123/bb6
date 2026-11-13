@@ -22,7 +22,6 @@ theorem blank_no_B_s31 (w : Nat) :
     have hP := (evenodd_four_blank_reach_iff
       (9510+9632*w) (3333+3376*w)
       (by omega) (by omega) (by omega) (by omega)).mp hreach
-    have hsum : (6419+6504*w)+(4875+4940*w) % 4 = 2 := by omega
     exact BB6.Agent11High.blank_no_odd_sum_two
       (6419+6504*w) (4875+4940*w)
       (by omega) (by omega) (by omega) hP
