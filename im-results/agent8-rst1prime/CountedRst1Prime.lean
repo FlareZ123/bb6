@@ -564,7 +564,8 @@ theorem rst1Prime_d0pow_segment
     have hword : sideBit (d0pow (n+1)) k =
         sideBit d0 (k-3*n) := by
       rw [← rst1Prime_d0pow_append_right n]
-      exact sideBit_append_right (d0pow n) d0 k hbound
+      rw [sideBit_append_right (d0pow n) d0 k hbound]
+      rw [rst1Prime_d0pow_length]
     have hbd := hboundary (k-3*n) hrem
     have hcoord : head-(k:Int) =
         head-((3*n+(k-3*n):Nat):Int) := by rw [hkdecomp]
