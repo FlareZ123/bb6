@@ -337,6 +337,14 @@ jobs:
             echo '::error::sorryAx found in M1-odd root composition theorem'
             exit 1
           fi
+          # Agent 4's concrete (0,2)+(2,1) continuation to the end of the first section.
+          cp "$GITHUB_WORKSPACE/im-results/agent4-champion-time/TM63M1OddFirstSectionContinuation.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-odd-first-section-continuation-axioms.log
+          lean -o TM63M1OddFirstSectionContinuation.olean TM63M1OddFirstSectionContinuation.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-first-section-continuation-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-first-section-continuation-axioms.log; then
+            echo '::error::sorryAx found in first-section root continuation'
+            exit 1
+          fi
 
           # This independent base-frame leaf is intentionally last: it is not an
           # import of the root/q4/drain/terminal chain, so its failure must not
@@ -386,6 +394,7 @@ jobs:
             /tmp/a42-terminal/m0-m2-root-composition-axioms.log
             /tmp/a42-terminal/m1-odd-q4-suffix-axioms.log
             /tmp/a42-terminal/m1-odd-root-composition-axioms.log
+            /tmp/a42-terminal/m1-odd-first-section-continuation-axioms.log
             /tmp/a42-terminal/m0-even-q4-bridge-axioms.log
             /tmp/a42-terminal/m0-even-q4-prefix-axioms.log
             /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
