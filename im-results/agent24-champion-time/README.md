@@ -321,7 +321,7 @@ all (a>0,b\ge0):
 
 - After the (3a)-cell counted left sweep (9a primitive moves), the
   fixed 39-step bridge is
-  `⟨3,0,[-7,-6,-5,-4,-1,2,3]⟩ -> ⟨4,3,[-9,-8,-7,-4,-1,1,2,3]⟩`,
+  `⟨3,0,[-7,-6,-5,-4,-1,2,3]⟩ -> ⟨4,3,[2,1,-1,-4,-7,-8,-9,3]⟩`,
   with its read-head trace confined to the local frame ([-9,2]).
 - An E-scan of (3(a-1)) cells reaches state 4 at the original head.
   The q4 cut is therefore reached after (36+12a) moves.
