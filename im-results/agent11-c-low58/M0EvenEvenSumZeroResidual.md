@@ -91,7 +91,7 @@ The divisibility condition is finite for each s: `r=0,...,floor(v2(S)/2)`. Hence
   ```
 
   The second equation forces n odd. Put n=2r+1. The first equation becomes `S=4^r*q` with `q=(a+2)/2`, so `a=2q-2`; solving the cost equation gives `k=155+256s-q-3r`.
-- The direct branch gives L_s. For every r with 4^r|S, the displayed bounce candidate also satisfies the source guards: q>=3, since q=1 or 2 would make S a power of two; hence a=2q-2>=4. Also q<=S and r<=S, so\n\n  2*k-a = 312+512*s-4*q-6*r >= 312+512*s-10*S = 32+62*s > 0.\n\nThus k>=1 and 2k>a. The exact source branch equations and all guards are now algebraically checked; the remaining gap is encoding the parent necessity/converse as a Lean theorem.
+- The direct branch gives L_s. For every r with 4^r|S, the displayed bounce candidate also satisfies the source guards: q>=3, since q=1 or 2 would make S a power of two; hence a=2q-2>=4. Also q<=S and r<=S, so\n\n  2*k-a = 312+512*s-4*q-6*r >= 312+512*s-10*S = 32+62*s > 0.\n\nThus k>=1 and 2k>a. The exact source branch equations and all guards are algebraically checked. `M0EvenEvenSumZeroParents.lean` now formalizes the forward-only necessity in the subcase S>2 and S%4!=0, but it has not yet passed original-source Lean compilation and does not encode the full generic iff or the S divisible by 4 cases.
 
 ## Odd-s specialization: exactly two parents
 
@@ -108,7 +108,7 @@ Consequently the intended blank-root theorem is the exact disjunction
 CReach(A_s) <-> CReach(L_s) or CReach(B_0,s),    s odd.
 ```
 
-This is a finite, exact two-branch reduction for the entire odd-t ray, not a bounded inverse-depth approximation. The specialized parent iff and this reachability iff remain to be Lean-formalized.
+This is a finite, exact two-branch reduction for the entire odd-t ray, not a bounded inverse-depth approximation. The new Lean draft proves only the forward implication from reachability of A_s to reachability of one of these two parents; it does not yet prove the converse or the all-time nonreachability of either branch.
 
 ## New algebraic subfamily: s=32v+29 (original high-stop j=1895 mod 2048)
 
