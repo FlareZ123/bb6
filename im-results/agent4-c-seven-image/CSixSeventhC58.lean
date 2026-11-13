@@ -646,6 +646,21 @@ theorem highAllowedAllS3_iff_congruence (j m : Nat) :
 /-- Exact Machine C blank-halting iff after excluding every high-stop
     target in the second strict sixth/seventh image family, not only
     the two explicit progressions. -/
+/-- Direct all-time blank-root exclusion in the parameter-only
+    high-stop congruence cylinder. -/
+theorem blank_ne_s3_parameter_congruence (j m time : Nat)
+    (hjmod : j%512=319)
+    (hcong : (3*m+7*j+14025)%16384=0) :
+    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+      some (2*j+3,(2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)) := by
+  obtain ⟨u,v,hj,hk,hsector⟩ :=
+    (s3_image_pullback_iff_congruence j m).2 ⟨hjmod,hcong⟩
+  have hblank :=
+    BB6.Agent4Seven.blank_ne_six_seven_band_s3 u v time hsector
+  have hx : 2*j+3=641+1024*u := by omega
+  apply hblank
+  rw [hx,hk]
+
 theorem blank_halts_iff_c58_late_fast_all_s3 :
     BB6.CReachBridge.RunHalts ↔
       (∃ m, BB6.Agent11C58ValSix.lowAllowed m ∧
@@ -664,15 +679,9 @@ theorem blank_halts_iff_c58_late_fast_all_s3 :
       have hnot :
           ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0) := by
         rintro ⟨hjmod,hcong⟩
-        obtain ⟨u,v,hj,hk,hsector⟩ :=
-          (s3_image_pullback_iff_congruence j m).2 ⟨hjmod,hcong⟩
         obtain ⟨time,hrun⟩ := hreach
-        have hblank :=
-          BB6.Agent4Seven.blank_ne_six_seven_band_s3 u v time hsector
-        have hx : 2*j+3=641+1024*u := by omega
-        apply hblank
-        rw [hx,hk] at hrun
-        exact hrun
+        exact blank_ne_s3_parameter_congruence j m time hjmod hcong
+          (by simpa [k] using hrun)
       exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
   · rintro (hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩)
     · exact Or.inl hlow
@@ -759,6 +768,7 @@ theorem s3_second_parameter_family_removed (t : Nat) :
   exact h.2.2 ⟨by rfl,by omega⟩
 
 #print axioms s3_image_pullback_iff_congruence
+#print axioms blank_ne_s3_parameter_congruence
 #print axioms highAllowedAllS3_iff_congruence
 #print axioms prior_c58_admits_six_seven_diagonal
 #print axioms prior_c58_admits_concrete_infinite_family
