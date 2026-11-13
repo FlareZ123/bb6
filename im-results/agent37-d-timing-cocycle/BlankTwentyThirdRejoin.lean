@@ -50,7 +50,11 @@ def t23 : Nat := (terminal3636.a-4)/9
 theorem terminal3636_certificate :
     DRegular.run 3636 seed23 = some ⟨9*t23+4,2,1⟩ ∧
       t23 % 27 = 21 := by
-  have hcanon : DRegular.Canon seed23 := by decide
+  have hcanon : DRegular.Canon seed23 := by
+    constructor
+    · dsimp [seed23]
+      omega
+    · simp [seed23]
   rw [BB6.Agent2Fast64.fastRun_correct 3636 seed23 hcanon]
   decide
 
