@@ -95,7 +95,7 @@ The five-prime union therefore gains
 beyond the four-prime density \(1077/2002\). Its total residue-class coverage is
 \[
 \frac{1077}{2002}+\frac7{247}
-=\boxed{\frac{21541}{38038}\approx56.6309\%}.
+=\boxed{\frac{21541}{38038}\approx56.6302\%}.
 \]
 This is a uniform residue-class density over the joint period, not an exact finite-range proportion.
 
