@@ -229,11 +229,15 @@ theorem m0Odd_q4_prefix_run (a b : Nat) (h : Int)
       have hcoord : x = h-(j:Int) := by
         dsimp [x,j,N,hN]
         omega
-      have hT : T2 x = true := by
-        rw [hcut]
+      have hblock' : sweptLeft N T h x = true := by
         rw [hcoord]
         exact hblock
-      simpa [T2,x] using hT
+      have hT : T2 x = true := by
+        have hcut' := m0OddQ4CutTape_eq_swept a b h x (by
+          simpa [hN,N] using hout)
+        have hval := hcut'.trans hblock'
+        simpa [T2,m0OddQ4CutTape,T,N,T1,hN] using hval
+      simpa [x] using hT
   have hScan := E_scan T2 (hN+3) (3*(a-1)) hlinear
   have hhead : hN+3+(3*(a-1):Int) = h := by
     dsimp [hN,N]
