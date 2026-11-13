@@ -48,32 +48,28 @@ T(w)=46,692+4j²+22j+18k+79
 
 This predicts the observed sequence 408,436,464,492,520,548,576,604,632,660,688,716,744. At w=744, the formula gives j=192 and k=-2, so this low42 branch no longer applies; the observed next return is J(0,924), indicating a different regime.
 
-## Formalization opportunity
+## Physical return-map bridge
 
-The endpoint/time map should be formalizable by composing:
-- the existing outer-safe Junc macro;
-- the second U=93 outer-safe step;
-- the generic low42_raw_head_all theorem in im-results/agent6-429-low42/Low42Physical.lean.
+The canonical low42 physical result is now paired with a machine-level safety converse in this branch:
 
-The main technical step is lifting the generic low42 physical result to the represented Junc input and composing it with the outer-safe physical segments. The nofatal prefix property is not yet generalized here. A successful physical run to a nonhalting Junc endpoint already proves finite nonhalting for that segment; a generic C/01-prefix lemma would additionally preserve the repository's stronger guard invariant.
+- `PhysicalNoFatalConverse.physicalC01_one_halts` proves directly from the original physical transition table that C/01 takes one step to D/1, after which `rawStep` is undefined.
+- `PhysicalNoFatalConverse.physical_run_prefix_c01_free` proves that any successful physical run ending at a live, non-C/01 configuration is C/01-free at every primitive prefix.
+- `Low42PhysicalNoFatal.low42_raw_head_all_c01_free` applies this to the canonical physical low42 run for every (j,k), using its represented Junc(0,0,4j+4k+12) endpoint.
 
-The special transition J(0,344) -> J(0,408) is included in the current draft PR #83 blank-root chain, but this repeated +28 family is not yet part of its Lean declarations. Do not cite the simulation table as proof or infer infinite nonhalting from it.
+These are Lean proof candidates pending the integrated manual workflow. They close the all-prefix C/01 gap for the canonical low42 physical run without lifting each prefix through the zipper.
 
+The remaining arbitrary-head translation ingredients already exist:
+- `JuncCanonical.represented_junc_eq_translatedJ` identifies a physical configuration representing Junc(u,0,w) with the corresponding translated canonical J configuration;
+- `JChartTwo.translatedJ_eq_shift` identifies that canonical translation with `RootShift.shiftConfig`;
+- `RootShift.shift_run` proves that physical execution commutes with this translation.
 
-## Candidate generalization of the nofatal guard
+The missing wrapper is to combine these existing lemmas with `low42_raw_head_all_c01_free`, so the canonical low42 physical return can be applied to any physical configuration representing the matching Junc input. Then compose it with the outer-safe physical segments. The integrated low42 workflow currently does not compile `JuncCanonical` and its full coverage dependency chain, so that wrapper is not included yet.
 
-A useful lemma for the parameterized return map is likely:
+The observed Junc(0,344) -> Junc(0,408) interval is 145,374 steps. It is not part of the 169,592-step blank-root theorem and remains a simulation observation, not a formal segment.
 
-If the ordinary source run satisfies `run n z = some z'`, and the endpoint is neither the halting state D/1 nor a `fatalCZero` state, then `runNoFatal n z = some z'`.
+## NoFatal converse status
 
-Reason: any `fatalCZero` state is C/0 with a marked immediate right neighbor. Its next transition enters D/1. If that state occurs before the final prefix, the ordinary run cannot continue past D/1; if it occurs exactly one step before the endpoint, the endpoint would be D/1; if it occurs at the endpoint, the endpoint is fatal. All three cases contradict the hypotheses. An induction on n should turn this into a small source-level lemma in `NoFatalGuard.lean`.
-
-This would let researchers derive `runNoFatal` from existing generic successful source-run theorems with safe Junc endpoints, rather than proving each low42 parameter instance by `decide`. It is a proof sketch only and has not been formalized or kernel-checked.
-
-Substituting w=408,436,...,716 into T(w) gives interval times 51,079; 54,733; 59,955; 66,745; 75,103; 85,029; 96,523; 109,585; 124,215; 140,413; 158,179; and 177,513. Their sum is 1,199,072, exactly matching the simulated interval from J(0,408) to J(0,744). Combined with the observed 145,374-step J(0,344)->J(0,408) segment, the simulation reaches J(0,744) 1,344,446 steps after J(0,344), or step 1,514,038 relative to the candidate blank-root prefix at step 169,592. This remains a conditional extrapolation until the generic physical composition is formalized.
-
-A useful route for the physical lifting gap: `low42_raw_head_all` starts from a canonical physical config with head 0, whereas a `Represents` witness for Junc may use any absolute head coordinate. Define a tape/head translation `translate d c` by moving the head to `c.head+d` and setting the new tape at x to `c.tape (x-d)`. Prove `rawStep` commutes with this translation, then induct on n to show `run` commutes with translation. This transports the canonical low42 physical theorem to any physical config represented by the matching Junc zipper. The endpoint representation and outer-safe physical segments can then be composed without per-(j,k) `by decide` proofs.
-
+The source-level candidate `NoFatalRunConverse.runNoFatal_of_run_live` now formalizes the earlier sketch: an ordinary source run to a live, nonfatal endpoint is accepted by the guarded interpreter. The physical-level converse above establishes the corresponding all-prefix C/01 exclusion directly on `BB6Coverage.run`. Both proofs use the exact C/01 -> D/1 -> halt transition, and both remain pending Lean CI in the current integrated branch.
 
 ## Second observed return family: J(11,w) -> J(11,w+32)
 
