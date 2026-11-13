@@ -59,6 +59,16 @@ Consequently `5 ∤ (2^v*(2*v+4)+3)`, so `v mod 20` cannot be 1, 2, 4, or 15. Th
 
 A focused pinned-upstream workflow, [agent20-needle-oddblock-exit.yml](../../.github/workflows/agent20-needle-oddblock-exit.yml), has been added. The Lean source proof is **pending CI execution**; do not treat it as kernel-verified until that workflow passes.
 
+## Odd-block entry filter for the known cancellation parents
+
+The new odd-block exit theorem also suggests a useful root-history filter on the already-known synthetic cancellation parents. Let (b_0) be the shifted parent counter. If (b_0) is the exit of a positive odd block of length (s), then necessarily (b_0\equiv1\pmod{5^s}).
+
+- In the (u=2), (r=110n+50) parent family, (B_r=11q+17) and (b_0=4(2q+3)), hence (11b_0=8B_r-4). The exact sparse-polynomial identity gives (B_r\equiv0\pmod{25}) on this progression: (10\mid r), (a_r=(9^r+5)/2\equiv3\pmod{20}), (A_r\equiv8\pmod{25}), and (A_r^{2r}\equiv9^r\equiv1\pmod{25}). Thus (b_0\equiv11\pmod{25}). If this parent is reached from an odd state, the preceding odd block must have length exactly one; length at least two is impossible.
+- In the (u=3), (r=9n+7) family, (B_r=19q+30\equiv0\pmod5) forces (q\equiv0\pmod5), so (b_0=8(2q+3)\equiv4\pmod5). It cannot be an odd-block exit.
+- In the three-parent family (r=214+495n), the (u=3) and (u=5) parent sources are respectively (4\pmod5) and (3\pmod5), so neither can be an odd-block exit. For (u=4), reduction modulo (175) gives (B_r\equiv20\pmod{175}) for even (n), and (B_r\equiv125\pmod{175}) for odd (n); the corresponding parent source is (1\pmod5) for even (n) and (2\pmod5) for odd (n). Thus only the (u=4), even-(n) branch can be an odd-block exit at all.
+
+These are exact modular consequences of the existing parent equations, but this family-specific filter is not yet packaged as a Lean theorem. It narrows the odd-entry branches; all-even predecessor suffixes remain unresolved. See [OddBlockExitTerminal.md](OddBlockExitTerminal.md) for the general exit identity and its scope.
+
 ## Open decisive question
 
 No theorem here says any terminal feeder is reached by the genuine blank-start sequence. The exact Boolean root test is sound and complete **only for each fixed target**; the existential over all terminal powers remains open. Source-level inverse classification, arbitrary synthetic indegree and infinite modular coverage cannot alone establish nonhalting. A useful breakthrough must exclude a whole surviving infinite family from the authentic orbit, or produce a genuine terminal witness, then ultimately connect every remaining six-state machine and exact champion score to global BB(6) coverage.
