@@ -69,8 +69,10 @@ v_3(F(h_1)-F(h_2))=k+1
 \]
 Thus \(F/3\) is a 3-adic isometry on the nonnegative integers and
 extends uniquely by continuity to an isometry on \(\mathbb Z_3\).
-The compatible residues \(\rho_k\) are the finite truncations of its
-unique 3-adic zero. On a deeper base cylinder where \(3^a\mid F\)
+More strongly, it is a bijection: for any target \(y\in\mathbb Z_3\),
+the same unit-slope digit lift applied to \(F/3-y\) gives a unique
+preimage. The compatible residues \(\rho_k\) are the finite truncations
+of its unique 3-adic zero. On a deeper base cylinder where \(3^a\mid F\)
 uniformly, the same argument after normalization gives the corresponding
 isometry for \(F/3^a\).
 
