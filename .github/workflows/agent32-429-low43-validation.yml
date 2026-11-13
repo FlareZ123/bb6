@@ -2,23 +2,6 @@ name: Agent32 low43 source and physical proof
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/agent32-429-low43-validation.yml'
-      - 'im-results/agent32-429-low43/**/*.lean'
-      - 'im-results/agent18-429-low-j/**/*.lean'
-      - 'im-results/agent1-429-w4-boundary/**/*.lean'
-      - 'im-results/agent6-429-one-sided-excursion/**/*.lean'
-      - 'im-results/agent32-429-raw-parent/**/*.lean'
-      - 'im-results/agent32-429-primitive-cost/**/*.lean'
-      - 'im-results/agent1-429-physical-frontier/**/*.lean'
-      - 'im-results/agent4-429-ordinary-frontier/**/*.lean'
-      - 'im-results/agent8-coverage-contract/**/*.lean'
-      - 'im-results/agent44-drift-closure/**/*.lean'
-      - 'im-results/agent4-coverage-smoke/**/*.lean'
-      - 'im-results/agent32-zero-prefix-global/**/*.lean'
-      - 'im-results/agent6-fresh-glider/**/*.lean'
 
 permissions:
   contents: read
