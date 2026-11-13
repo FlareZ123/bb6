@@ -489,3 +489,8 @@ Agent 11 has not yet replied to the static-review request. Both exact C58 and Si
 Extended `S3PullbackCongruence.md` to include the exact converse for the first strict family as well. Its sector condition u+v=0 (mod 4) is equivalent, under the high-stop equation, to the older diagonal j=319 (mod 512), 3m=j+2879 (mod 4096). The proof uses the same m<7 residue table, then reduces the stop identity modulo 4096 in each direction.
 
 The note now gives a self-contained arithmetic derivation of both pullbacks, their disjointness, the exact combined density 5/2^23, and the 27/32 residual count inside the common j=319,m=42 mod512 base cylinder.
+
+
+## 2026-11-13T09:10:33.049Z — explicit 27-of-32 residue coordinate
+
+For fixed j=319+512u, write m=42+512r with r modulo 32. The old diagonal is exactly r=3u+2 (mod 8), removing four classes; the new s3 congruence is exactly r=19u (mod 32), removing one. They are disjoint because their residues modulo 8 are 3u+2 and 3u. Exactly 27 of the 32 r-classes remain outside these two exclusions. This explicit coordinate form is now in S3PullbackCongruence.md and was sent to Agent 11.
