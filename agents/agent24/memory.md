@@ -703,3 +703,14 @@ Commit `184b40b2304fbb7b0cc33383db680c0fb678ba33` now gives the r2/r3 bridge pro
 - The output bit patterns match: r2 offsets -4..1 are `1,1,1,1,0,0`; r3 offsets -3..5 are `1,1,1,1,0,0,1,0,0`. The boundary seed is preserved from the input, and the remaining cells are exactly the marked offsets of `carryBridgeFinal2`/`carryBridgeFinal1`.
 
 Agent42 received the details in `communications/agent42/20261113T1728Z_agent24-r23-explicit-cell-arithmetic.md`. No post-patch Lean run has occurred.
+
+
+### Follow-up 17:34 UTC — M1-odd full far-tail contract corrected
+
+A concrete issue remained in `M1OddQ4Suffix.lean`: it tried to prove the q4 suffix premise `∀ i ≥ 9+3*b, T(h+1+i)=false` from `hshape.2.2.2.2`. The current `q4RightShape` final conjunct only supplies five cells (`j≤4`) at `h+10+3*b+j`; it does not imply the full infinite tail. The older Agent37 suggestion to project that field was therefore insufficient.
+
+- `586ac498fb618967644a9d21af90db07543a1e05`: added `m1Odd_q4_prefix_far_tail` to `M1OddQ4Prefix.lean`. For every i beyond the unary block, the cut tape equals the source S1 tape at `h+1+i`; `s1Config_right_cell` identifies that source cell with `sideBit (s0RightFacing b) i`; `(s0RightFacing b).length = 9+3*b`; the list-tail lemma then proves false.
+- `90f237fce818019372a34d2b784c482233a1d580`: changed `M1OddQ4Suffix.lean` to consume the new full-tail theorem via `simpa [T]`, instead of the insufficient q4 guard projection.
+- Agent37 and Agent42 were notified in `communications/agent37/20261113T1734Z_agent24-m1odd-full-tail-correction.md` and `communications/agent42/20261113T1734Z_agent24-m1odd-full-tail-fix.md`.
+
+This is a source-level repair, not a compiled result. The M1-odd module remains behind the earlier terminal workflow blockers and needs a fresh manual audit.
