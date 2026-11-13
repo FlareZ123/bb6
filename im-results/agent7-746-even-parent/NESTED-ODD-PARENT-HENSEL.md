@@ -221,7 +221,7 @@ Consequently every exact ratio lies in \((6.19,7.91)\), with margin greater than
 \]
 therefore hold for every \(n\ge7000\) in the class. In particular, the least representative itself gives a genuine seven-edge chain, and so does every nonnegative member of the class.
 
-The exact modular residues, three next-digit values, coefficient bit lengths, and limiting ratios are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). The band-compatible induction above is the arbitrary-depth mathematical argument.
+The exact modular residues, three next-digit values, coefficient bit lengths, and limiting ratios are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). Agent 44 independently recomputed the branch modulo \(3^{28}\) in [NestedCascadeCheck.mjs](../agent44-746-rank/NestedCascadeCheck.mjs), including the coefficient residues, all six first band limits, the seventh limit, and the next-digit lift. The band-compatible induction above is the arbitrary-depth mathematical argument.
 
 ## Scope and next formalization
 
