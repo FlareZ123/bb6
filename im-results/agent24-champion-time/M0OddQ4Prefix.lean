@@ -301,8 +301,9 @@ private theorem m0OddQ4LeftFacingPrefixTrue (a i : Nat)
     have hlen : i-1 < (d1pow (a-1)).length := by
       simp [d1pow_length]
       omega
-    rw [sideBit_append_left (d1pow (a-1))
-      (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh) (i-1) hlen]
+    have hrest := sideBit_append_after_local (d1pow (a-1))
+      (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh) (i-1) hlen
+    rw [hrest]
     exact sideBit_d1pow_true (a-1) (i-1)
       (by simpa [d1pow_length] using hlen)
 
@@ -431,7 +432,11 @@ theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
         have hmark :
             sideBit (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh) j =
               decide ((2-(j:Int)) ∈ m0OddQ4Bridge27End.marked) := by
-          simp [markerWord,d0,d1,binDec_three_four,sideBit,
+          have hjCases : j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 ∨
+              j=5 ∨ j=6 ∨ j=7 ∨ j=8 := by omega
+          rcases hjCases with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8
+          all_goals subst j
+          all_goals simp [markerWord,d0,d1,binDec_three_four,sideBit,
             m0OddQ4Bridge27End]
         exact hside.trans hmark
       have hval :
@@ -454,10 +459,10 @@ private theorem sideBit_s0RightFacing_eq_q4RightFacing
     all_goals simp [s0RightFacing,q4RightFacing,sideBit]
   · have hs := sideBit_append_after_local
       [false,true,true,true,false,false] (d1pow (b+1)) i
-      (by simp)
+      (by simp; omega)
     have ht := sideBit_append_after_local
       [true,true,true,true,false,false] (d1pow (b+1)) i
-      (by simp)
+      (by simp; omega)
     simpa [s0RightFacing,q4RightFacing] using hs.trans ht.symm
 
 /-- The complete right-facing word at the q4 cut is q4RightFacing b. -/
@@ -491,7 +496,8 @@ theorem m0Odd_q4_prefix_rightFacing (a b : Nat) (h : Int)
     have hsrc :
         (s1Config 3 5 0 a 0 b h).tape (h+1+(i:Int)) =
           sideBit (s0RightFacing b) i := by
-      simpa using s1Config_right_cell 3 5 0 a 0 b h i
+      simpa [s1PhysicalRight_source] using
+        s1Config_right_cell 3 5 0 a 0 b h i
     have hside := sideBit_s0RightFacing_eq_q4RightFacing b i hi
     calc
       m0OddQ4CutTape a b h (h+1+(i:Int)) =
@@ -504,9 +510,16 @@ theorem m0Odd_q4_prefix_rightFacing (a b : Nat) (h : Int)
 private theorem sideBit_false_after_length_local
     (xs : List Bool) (i : Nat) (hi : xs.length ≤ i) :
     sideBit xs i = false := by
-  unfold sideBit
-  have hnone : xs[i]? = none := List.getElem?_eq_none_iff.mpr hi
-  simp [hnone]
+  induction xs generalizing i with
+  | nil =>
+      simp [sideBit]
+  | cons x xs ih =>
+      cases i with
+      | zero =>
+          simp at hi
+      | succ i =>
+          have hi' : xs.length ≤ i := by simp at hi; omega
+          simpa [sideBit] using ih i hi'
 
 /-- The q4 right-shape contract follows from the exact right-facing word. -/
 theorem m0Odd_q4_prefix_rightShape (a b : Nat) (h : Int)
