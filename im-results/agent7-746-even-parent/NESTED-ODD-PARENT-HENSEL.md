@@ -155,7 +155,7 @@ For this U/Q specialization, initially
 Q(n)=28\cdot2^n+B_0n+C_0,\qquad
 B_0=-2-2^{3407}\equiv2\pmod3.
 \]
-The exact modular base check gives \(3^8\mid Q(887)\), and \(13122=6\cdot3^7=2\cdot3^8\). The common power-period identity, already kernel-proved as ThreeAdic.power_period in [ThreeAdicLifting.lean](../agent1-429-threeadic/ThreeAdicLifting.lean), gives the scaled-cylinder shift law. Thus \(Q/3^8\) is a 3-adic isometry in the progression parameter.
+The exact modular base check gives \(3^8\mid Q(887)\), and \(13122=6\cdot3^7=2\cdot3^8\). The common power-period identity, already kernel-proved as ThreeAdic.power_period in [ThreeAdicLifting.lean](../agent1-429-threeadic/ThreeAdicLifting.lean), gives the scaled-cylinder shift law. Thus \(Q/3^8\) is a 3-adic isometry in the progression parameter. For the density construction's first edge, \(t_1=4,\sigma_1=9\), so \(e_1=Q/3^7\) is odd and \(G_1=2^6e_1-16\cdot2^{n-5}-2(n-5)-5\). Since \(3\mid e_1\) and \(n-5\equiv0\pmod3\), \(3\mid G_1\) on the whole progression. As \(E_1=7\), \(G_1/3=X_1/3^8\) is the initial scaled-cylinder isometry.
 
 At the first odd-parent stage, \(E_1=t_1+3\) and
 \[
@@ -183,20 +183,20 @@ X_i(n(r+a3^s))-X_i(n(r))
 \]
 After restricting to the previously selected cylinder and dividing by its known power of 3, this is exactly the scaled-cylinder Hensel law in AFFINE-EXP-HENSEL.md. It gives one index cylinder for the required next divisibility and one of the three next-digit lifts for which the new target numerator is divisible by 3.
 
-The recursion is consequently:
-1. choose \(t_i,\sigma_i\) with \(R_i=\gamma_{i-1}2^{\sigma_i}/3^{t_i+1}\in(6,8)\);
-2. use the scaled Hensel selector to impose \(3^{t_i+1}\mid G_{i-1}\);
+After the special first edge \((t_1,\sigma_1)=(4,9)\), the recursion is:
+1. for each \(i\ge2\), choose \(t_i,\sigma_i\) with \(R_i=\gamma_{i-1}2^{\sigma_i}/3^{t_i+1}\in(6,8)\);
+2. use the scaled Hensel selector on \(G_{i-1}/3\) to impose \(3^{t_i}\mid G_{i-1}/3\), equivalently \(3^{t_i+1}\mid G_{i-1}\);
 3. form the odd parent \(z_i\) using the exact ResetParent formula;
 4. select the unique next digit making \(3\mid G_i=2z_i+5\);
 5. repeat.
 
 The selected next digit need not give exact valuation \(v_3(G_{i-1})=t_i+1\). It may give a higher valuation. This is harmless: ResetParent requires only that the quotient \(e_i=G_{i-1}/3^{t_i+1}\) be odd, not 3-adically primitive. Requiring exact valuation would incorrectly discard the unique lift that continues the chain.
 
-For the first stage, \(G_0=Q/9=3^6(Q/3^8)\). Choosing \(t_1\ge5\) asks for \(3^{t_1-5}\mid Q/3^8\), which the base isometry supplies on one residue class. The next digit then makes \(3\mid G_1\). At every later stage, the scaled-cylinder selector lifts the quotient \(G_i/3\) to the requested precision, and the next unit digit selects \(3\mid G_{i+1}\).
+For the density construction, \(G_1\) is already divisible by 3 on the full progression, so \(G_1/3=X_1/3^8\) is the starting isometry. At every later stage, the scaled-cylinder selector lifts \(G_i/3\) to the requested precision, and the next unit digit selects \(3\mid G_{i+1}\).
 
-After \(d\) parent edges the final class has modulus
+After \(d\) parent edges and the final seed digit, the class has modulus
 \[
-3^{E_d-7}=3^{\,\sum_{i=1}^d t_i+d-5}.
+3^{E_d-7}=3^{\,\sum_{i=2}^d(t_i+1)}.
 \]
 It contains infinitely many natural \(r\). Each of the finitely many band ratios is strictly inside \((6,8)\), so all corresponding integer band conditions hold once \(r\) is sufficiently large. This proves the stated arbitrary-finite-depth result and its positive density for each fixed depth.
 
