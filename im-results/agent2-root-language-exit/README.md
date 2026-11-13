@@ -32,26 +32,33 @@ These results prove that **all four first arithmetic-language exceptions have kn
 
 ## Highest-value outstanding proof
 
-The D-start blank-root chain now has an original-source continuation through the sixteenth exceptional reentry; see the [timing-cocycle dossier](../agent37-d-timing-cocycle/README.md). The first multi-job audit [43402524711](https://github.com/FlareZ123/bb6/actions/runs/43402524711) uploaded stage 1 and compiled episodes 14–16 in stage 2 before runner shutdown at 10:06:48Z (exit 143), without a Lean proof error. A separate stage-2 run [43407085596](https://github.com/FlareZ123/bb6/actions/runs/43407085596) also compiled through episode 16 before external shutdown at 10:21:15Z (exit 143), with no Lean proof error or checkpoint artifact. The smaller stage-2a run [43408948256](https://github.com/FlareZ123/bb6/actions/runs/43408948256) **succeeded**, compiling episodes 14–15 and uploading `d-root-stage2a`. Next compile episodes 16–17 plus the escape module in stage 2b. Episodes 17–30 and the Seed31 first-exit computation remain unverified.
+The D-start blank-root chain is original-source verified through the sixteenth exceptional reentry; the episode 17–30 continuation and its connection to Seed31 remain pending the staged manual audit described in the [Agent 37 timing-cocycle dossier](../agent37-d-timing-cocycle/README.md). The successful stage-2a artifact covers episodes 14–15 only. No result below should be read as an authenticated blank-root extension until that upstream 17–30 chain is source-verified.
 
-The immediate next proof boundary is the first undefined successor of `DRegular` after the thirtieth reentry. `Seed31Probe.lean` searches up to 1,024,000 regular transitions using 512-step `DRegularFast.fastRun` blocks and a linear scan of the first failed block. Its `#eval` output is only diagnostic; it must not be treated as a proof of the first exit.
+### Seed31: conditional exact arithmetic first stop
 
-I added `Seed31FirstStopCertificate.lean` as an intermediate proof submission. It aims to prove, for every canonical seed, that the block-search/linear-scan algorithm returns the exact first state with undefined `DRegular.next` whenever the result is below its cap. It also gives a conditional `Agent25RootChain.extend_regular` lift from the authentic blank root through episode 30 to that first exceptional state. **This module has not yet been Lean-verified.** The artifact-reusing workflow `agent2-seed31-first-stop-certificate.yml` can compile it from the final `d-root-seed31-audit` artifact without repeating the 30-episode chain. The workflow requires `source_run_id` explicitly; supply the stage-5 run ID that uploaded `d-root-seed31-audit`. Keep `source_ref` pinned to `2da159d86fa86d813bdfbc54e38e3ec9c75b6e69`.
+The submitted [BlankThirtiethRejoin.lean](../agent37-d-timing-cocycle/BlankThirtiethRejoin.lean) defines the next pure-unary seed as
+`seed31 = L(64*t30+117,0,0)`.
+An exact BigInt replay of the DRegular recurrence, using independent 512-step and 256-step 3-adic block sizes, gives:
 
-Once the probe output is available:
+- `t30 mod 81 = 22`; seed31 has 180,684 bits and `seed31.a mod 81 = 67`.
+- The first undefined DRegular successor occurs after **12,267** regular transitions, at `L(a,8,1)` with `a mod 59049 = 39637`, `a mod 81 = 28`, and `t31=(a-10)/9 mod 27 = 2`.
+- This is not the conditional q=4 cylinder `L(59049*m+44494,4,1)`. The q=4 local closure remains a valid source theorem, but this computed seed31 does not enter it.
 
-1. Verify whether the returned count is below 1,024,000. If not, extend the search bound rather than claiming that the first exit was found.
-2. Prove the exact count and state signature in Lean (including `a % 59049`, `q`, and `b`) using a kernel-checked computation, then discharge the first-stop certificate's bound premise.
-3. If and only if the actual first state is `L(59049*m+44494,4,1)`, compose the source theorem `q4_exceptional_EE_BEA_section`. Its `sourceStart u 4` is `DRegularSource.sourceSection ⟨27*u+25,4,1⟩`; setting `u=2187*m+1647` gives the target. Otherwise classify the actual state and select a source theorem that matches it.
+This is an exact arithmetic result for the submitted seed31, not a source-certified original-machine root theorem: its dependency on the unverified episode 17–30 root chain is essential. The detailed replay, downstream arithmetic signatures through exception 38, and exact limitations are in [seed31-38-exact-replay.md](seed31-38-exact-replay.md).
 
-   The verified companion theorem `BB6.Agent37EERootBEAFloor.q4_exceptional_EE_BEA_section_affine_floor` additionally gives `1,073,741,824*m+809,037,723 ≤ a` at the physical regular return (CI 43410773388). This strengthens the return endpoint only; it does not relax the requirement to prove the exact first-stop state is in this q=4 cylinder.
+### Candidate original-source continuation after the q=8 first stop
 
-The current certificate `t30 mod 27 = 22` does not determine `t30 mod 81`. The new certificate module includes a diagnostic `#eval t30 % 81`; it is not yet run. Do not assume the q4 cylinder is reached.
+The q=8 E/A exception has an existing source return. The E-first packet has p=16=3*5+1, so [EFirstAPacket.exceptional_EA_packet](../agent2-packet-shift/EFirstAPacket.lean) followed by [AOnePacketBoundarySource.a_p1_boundary](../agent2-packet-shift/AOnePacketBoundarySource.lean) returns to the pure-unary seed `L(64*t31+117,0,0)). The candidate root composition is [BlankThirtyFirstRejoin.lean](BlankThirtyFirstRejoin.lean).
 
-A complete blank-root proof still needs both:
+The next arithmetic first stop is after 6,106 regular transitions, at `L(9*t32+4,1,1)`, with `t32 mod 27 = 5`. Agent 25's [E3SourceRejoin.lean](../agent25-cryptid-doublezero/E3SourceRejoin.lean) proves the physical two-far-right-blank ObsEq bridge and the q=1,b=1 return to `L(64*t32+27,0,0)). [BlankThirtySecondRejoin.lean](BlankThirtySecondRejoin.lean) composes that shared bridge with the conditional blank-root prefix.
 
-1. A universal symbolic invariant or a machine-specific inductive argument for the full blank-origin orbit.
-2. A finite or inductive source proof showing that every exceptional family reached by that orbit either returns to the regular language or enters a separately proved terminal/nonhalting behavior.
+The exact first-stop signature, unconditional first-stop corollary, t30 residue theorem, and two blank-root reentry modules have been submitted in Lean. They are **not yet kernel-verified**. The artifact-reusing manual workflow [.github/workflows/agent2-seed31-first-stop-certificate.yml](../../.github/workflows/agent2-seed31-first-stop-certificate.yml) now compiles the certificate, q=8 reentry, Agent 25's q=1 bridge, and q=1 reentry in dependency order. It requires the completed `d-root-seed31-audit` artifact's `source_run_id`; keep the source revision pinned to `2da159d86fa86d813bdfbc54e38e3ec9c75b6e69`. It is manual and does not run on every commit.
 
-The existing q4 closure (now with a kernel-verified affine endpoint floor) and the exception-41 `k=27t+22` subfamily are conditional local source theorems. Neither establishes blank-root reachability, closes all of `k ≡ 4 (mod 9)`, or resolves the independent `k ≡ 7 (mod 9)` family. No conclusion about all-time nonhalting or the exact BB(6) value follows from the current finite prefix.
+### Next discriminating work
 
+1. Complete the original-source episode 17–30 audit and produce the pinned `d-root-seed31-audit` artifact. Without this, the Seed31 arithmetic is not connected to the authentic blank root.
+2. Run the updated certificate workflow. First settle the exact t30 residue and 12,267-step q=8 first-stop theorem; then compile the q=8 E/A source return and q=1 physical two-blank bridge.
+3. If those checks pass, source-certify the exception 33 q=5 E/E/A return and the subsequent q=6/q=9 E/B and q=7 E/A returns. At exception 38, explicitly prove the trailing-blank ObsEq transport for `oppairs(6) ++ [false]` before extending the DRegular trace.
+4. Continue toward an inductive physical blank-root invariant or find the first genuinely reachable uncovered successor. A finite sequence of prepared-section reentries is not an all-time nonhalting decision.
+
+The previous q=4 instructions remain relevant only for a root path that actually reaches `L(59049*m+44494,4,1)`; they must not be imposed on the q=8 Seed31 branch computed here. No conclusion about the D machine's eventual behavior, BB(6), or the exact Busy Beaver value follows from this intermediate work.
