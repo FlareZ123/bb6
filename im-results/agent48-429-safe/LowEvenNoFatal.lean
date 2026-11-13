@@ -88,9 +88,8 @@ theorem lowEven_r96_no_fatal_physical
     source_run_rep t lowEvenStart c hrep p hp
   refine ⟨e, he, ?_⟩
   intro hbad
-  rcases hrepE with ⟨hs, hcur, _, _⟩
-  have hstate : p.state = 2 := hs.symm.trans hbad.1
-  have hcurrent : p.current = false := hcur.symm.trans hbad.2.1
+  have hstate : p.state = 2 := hrepE.1.symm.trans hbad.1
+  have hcurrent : p.current = false := hrepE.2.1.symm.trans hbad.2.1
   have hr0' : e.tape (e.head+1) = p.right.getD 0 false :=
     BB429PhysicalBridge.represents_right_one p e hrepE
   have hright0 : p.right.getD 0 false = true :=
@@ -128,9 +127,8 @@ theorem rootSegment_no_fatal_physical
     source_run_rep t rootSegmentStart c hrep p hp
   refine ⟨e, he, ?_⟩
   intro hbad
-  rcases hrepE with ⟨hs, hcur, _, _⟩
-  have hstate : p.state = 2 := hs.symm.trans hbad.1
-  have hcurrent : p.current = false := hcur.symm.trans hbad.2.1
+  have hstate : p.state = 2 := hrepE.1.symm.trans hbad.1
+  have hcurrent : p.current = false := hrepE.2.1.symm.trans hbad.2.1
   have hr0' : e.tape (e.head+1) = p.right.getD 0 false :=
     BB429PhysicalBridge.represents_right_one p e hrepE
   have hright0 : p.right.getD 0 false = true :=
