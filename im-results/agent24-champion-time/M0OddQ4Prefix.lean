@@ -715,6 +715,21 @@ theorem m0Odd_reset_prefix_to_s1 (a b : Nat) (h : Int)
   rw [hsum,run_append,hprefix]
   simpa using hsuffix
 
+/-- The exact m=0,n=5 input reached by Agent 42's root-connected
+m=1,n=6 drain. These aliases mirror tm63AfterM1EvenA/B/Head. -/
+def m0OddRootA : Nat := 71+(2^63-1)+2
+def m0OddRootB : Nat := 2^(2^63-1)-1
+def m0OddRootHead : Int := (223:Int)+5+(3*(2^63-1):Nat)
+
+/-- Root-specific instantiation of the generic m=0,n=5 reset prefix. -/
+theorem m0Odd_root_reset_prefix :
+    run tm2 (resetPrefixCost 0 5 m0OddRootA m0OddRootB)
+      (s1Config 3 5 0 m0OddRootA 0 m0OddRootB m0OddRootHead) =
+    some (s1Config 3 4 2 (m0OddRootA+m0OddRootB+1)
+      (2^m0OddRootB-1) 0 (m0OddRootHead+5+3*m0OddRootB)) := by
+  exact m0Odd_reset_prefix_to_s1 m0OddRootA m0OddRootB m0OddRootHead
+    (by norm_num [m0OddRootA])
+
 #print axioms m0OddQ4Bridge_input_match
 #print axioms m0Odd_q4_prefix_run
 #print axioms m0Odd_q4_prefix_leftFacing
