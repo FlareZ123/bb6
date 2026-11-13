@@ -31,65 +31,32 @@ The state permutation is
 with tape reflection (imapsto-i). Each of the twelve nonhalting transitions
 is preserved by this mirror, and D_F1 halt maps to 85_A1 halt.
 
-An E3 seed in D is F scanning 0, blank to the left, with right tape
-`11110Y`: four ones, a zero delimiter, and a finite suffix Y. Its mirror is
-85 A scanning 0, with left tape `Yᴿ 0 1111` and blank right tape.
+An E3 seed in D is F scanning 0, blank to the left, with four 1s at
+positions 1 through 4, a zero at position 5, and a finite suffix Y beginning
+at position 6. Under the mirror, this is 85 A scanning 0, with 1s at positions
+-1 through -4, a zero at -5, the reversed suffix on positions -6 and farther
+left, and a blank right tape.
 
 The first two 85 steps are fixed:
 `A0 → B0 → C0`.
-At the resulting C/0 head, the right tape is still blank. The finite left
-tape, written from far left toward the head, is
-`Yᴿ 0 11111 0` (the five consecutive ones include the bit written by the
-first A-step). Thus, whenever this word is in the `encLeft` run-length
-language, the resulting configuration is exactly a `CR_n_n` stack
-configuration with the other stack L empty.
+The head is then at position 2 in state C scanning 0. Its head-adjacent
+left cell (position 1) is 0, written by the B0 step. By contrast,
+`encLeft R` has head bit 1 whenever R is nonempty
+(the source lemma `encLeft_head`). Since this configuration has a nonempty
+left tape but head-adjacent bit 0, it is **not** a `CR_n_n` configuration
+of the DeepMind stack system. This blocks the naive two-step bridge; no
+condition on the remote suffix Y can repair this fixed local mismatch.
 
-The `encLeft` definition in the DeepMind proof encodes a list of tokens
-`(d,b)` as a run of (d+1) ones followed by (1+b\bmod1=1) zeroes;
-the second coordinate is therefore immaterial. The relevant finite words
-are concatenations of nonempty one-runs separated by single zeros, up to
-irrelevant blank padding. A sufficient condition for the displayed mirrored
-word to have this form is that Y has no adjacent zeros and, if nonempty,
-begins with 1. This is a restricted suffix language, not arbitrary finite Y.
-(The census over arbitrary Y is strictly broader.)
+The first-event correspondence itself is exact: D F/1 maps to 85 A/1 halt,
+and D F/0 with no 1 anywhere to the left maps to 85 A/0 with no 1 anywhere
+to the right. Thus the E3 problem becomes a first-return problem for 85 from
+the reflected A/0 seed to an A/0 boundary with blank right, or halt.
 
-## 2. First-event equivalence
-
-In D, the E3 first-event alternatives are:
-- F/1, which is the actual halt; or
-- F/0 with no 1 anywhere to the left of the head, which is the physical F/0 return.
-
-Under the mirror, these are respectively:
-- 85 A/1 halt; or
-- 85 A/0 with no 1 anywhere to the right of the head.
-
-After the same fixed two-step prefix A0→B0→C0, the latter is a `CR_n_n`
-configuration with L empty. Therefore, on the encodable suffix sublanguage,
-the desired E3 first-event theorem reduces to:
-
-> From every stack configuration `CR_n_n L=[] R` arising from
-> `Yᴿ 0 11111 0`, the 85 machine reaches either a halt or another
-> `CR_n_n L=[] R'` configuration in finite time.
-
-This is a *first-return* property, not merely closure of the stack system.
-
-## 3. What the existing stack theorem does and does not give
-
-The DeepMind source defines
-`cfg_CR_n_n L R = encLeft R <{{C}}> encRight L`.
-Its `mode_CR_n_n_closed` theorem, in the L=[] case, takes a finite run to an
-EL configuration with L=[(0,0)] and R=`bumpPairHead R`.
-
-The EL proof uses the `tok_EL` procedure and a well-founded `BoundedLex`
-argument to establish finite progress to *some* stack-system mode. The
-global `stack_system_closed` theorem then establishes a finite transition
-to another member of CR/EL/DL/DR, or a halt.
-
-Neither statement proves eventual return to CR with L empty. In particular,
-the closure theorem cannot be silently strengthened to the first-return
-property above. The remaining mathematical task is a well-founded rank (or
-a stronger invariant for this initial subfamily) spanning the CR/EL/DL/DR
-mode transitions and forcing either a halt or a CR/L=[] return.
+A useful next question is whether a *longer, explicitly source-verified
+prefix* from this A/0 seed reaches one of the four encoded stack modes
+CR/EL/DL/DR. If so, the suffix language must also be checked against the
+exact `encLeft`/`encRight` conventions. The pair-stack reduction cannot
+be applied before that entry lemma is proved.
 
 ## 4. Relation to existing E3 evidence
 
