@@ -91,7 +91,7 @@ The divisibility condition is finite for each s: `r=0,...,floor(v2(S)/2)`. Hence
   ```
 
   The second equation forces n odd. Put n=2r+1. The first equation becomes `S=4^r*q` with `q=(a+2)/2`, so `a=2q-2`; solving the cost equation gives `k=155+256s-q-3r`.
-- The direct branch gives L_s. Conversely, the displayed candidates satisfy the exact source branch equations and guards; this last direction is part of the specialized iff still to be formalized in Lean.
+- The direct branch gives L_s. For every r with 4^r|S, the displayed bounce candidate also satisfies the source guards: q>=3, since q=1 or 2 would make S a power of two; hence a=2q-2>=4. Also q<=S and r<=S, so\n\n  2*k-a = 312+512*s-4*q-6*r >= 312+512*s-10*S = 32+62*s > 0.\n\nThus k>=1 and 2k>a. The exact source branch equations and all guards are now algebraically checked; the remaining gap is encoding the parent necessity/converse as a Lean theorem.
 
 ## Odd-s specialization: exactly two parents
 
