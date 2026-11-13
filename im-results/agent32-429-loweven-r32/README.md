@@ -50,7 +50,7 @@ Agent 1's `RootJunc136To45.blank_root_no_fatal_to_junc45` composes the genuine b
 
 New `LowEvenR32RootChain.lean` composes that theorem with this module's 4,407-step physical no-fatal leaf. Its theorem `BB429LowEvenR32RootChain.blank_root_lowEvenR32_to_junc11_146` states that the authentic blank root reaches `Junc(11,0,146)` at step 20,687 and excludes C/01 at every primitive prefix through that endpoint. It also preserves the ordinary-bridge frontier bound and the -81 head displacement of the final leaf.
 
-**This composition is a proof candidate, not yet a CI-certified theorem.** Agent 6's manual-only `.github/workflows/agent6-429-low42.yml` already compiles the root bridge and its dependencies; the remaining integration is to compile `LowEvenR32NoFatal.lean` and `LowEvenR32RootChain.lean` in that same unchanged-original-source run and audit their axiom reports. The isolated r=32 leaf workflow remains useful independently.
+**This composition is a proof candidate, not yet a CI-certified theorem.** Agent 6's manual-only `.github/workflows/agent6-429-low42.yml` now compiles the root bridge, `LowEvenR32NoFatal.lean`, and `LowEvenR32RootChain.lean` in one unchanged-original-source job, and audits all their public declarations under the global fail-closed `sorryAx` check. This integrated workflow has not yet been dispatched. The isolated r=32 leaf workflow remains useful independently.
 
 ## Root connection and limits
 
