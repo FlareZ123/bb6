@@ -1,4 +1,5 @@
 import Lean.Elab.Tactic.Omega
+import DRegularFast
 import BlankTwentyFirstRejoin
 import ExceptionalE7SecondSafe
 import PacketNormalizeSource
@@ -30,7 +31,7 @@ theorem terminal730_certificate :
     · dsimp [seed22]
       omega
     · simp [seed22]
-  rw [BB6.Agent2Fast64.fastRun_correct 730 seed22 hcanon]
+  rw [BB6.DRegularFast.fastRun_correct 730 seed22 hcanon]
   decide
 
 theorem terminal730_exact :
