@@ -118,3 +118,22 @@ The manual workflow `.github/workflows/agent32-429-lowodd-frontier.yml` compiles
 ## Remaining mathematical gap
 
 The result closes one prepared low-J (deficit (4k+3)) entrance and a concrete finite continuation. It does not prove that the genuine blank run remains in a closed J/Junc chart for all time. The next root-specific state is J(11,62), whose low-J deficit is (-40); the corresponding complete source return and its history-sensitive maximum must be established. More importantly, the preceding blank-root chain to J(21,11) must be composed and source-verified. No nonhalting conclusion for #429, and no BB(6) bound, follows from these finite branches.
+
+
+## Root-relevant prepared return J(119,35) -> J(109,66)
+
+A new source-level candidate covers the next low-43 parameter pair on the root chart: `v=17,k=50`, so the prepared input is `J(v+2k+2,2v+1)=J(119,35)`.
+
+The new file `Low43RootNext.lean` packages the exact branch:
+
+| Segment | Steps | Endpoint | Head displacement | Prefix maximum |
+| --- | ---: | --- | ---: | ---: |
+| J(119,35) to its C/0 frontier | 1,484 | `low43_C0_zipper 17 50` | +40 | +40 |
+| C/0 frontier continuation | 2,120 | J(109,66) | -68 | +1 |
+| Composed prepared return | 3,604 | J(109,66) | -28 | +41 |
+
+The source-level `runNoFatal` certificates guard both pieces and their composition, including the harmless initial C/0 checkpoint. The continuation's source run has no further C/0 visit before J(109,66). The physical theorem lifts the composed endpoint and all-prefix head bound to every complete tape represented by J(119,35).
+
+The C/0 entry at local head +40 is a strict record: the existing uniform `low43_C0_record` theorem bounds every earlier head by +39 and proves the right neighbour at the C/0 checkpoint is blank. The composed endpoint has deficit `2*109-66 = 152 = 4*38`, making it the next root-relevant low-even (r=4k) candidate.
+
+**Validation status:** this new module and the extended manual-only workflow are committed on the `agent32/429-low43-root-next-20261113` branch, but have not yet been compiled by CI in this invocation. Do not treat these new declarations as kernel-validated until the workflow compiles them and its fail-closed `sorryAx` audit passes. The transition is a prepared-Junc result; it does not by itself establish that the blank-root run reaches J(119,35), nor prove an all-time nonhalting claim.
