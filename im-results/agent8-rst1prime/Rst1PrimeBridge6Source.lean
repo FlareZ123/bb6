@@ -1169,4 +1169,117 @@ theorem rst1PrimeAfterBridge30_d1
 #print axioms rst1PrimeAfterBridge30_d1
 
 
+/-- The complete left-facing word after bridge30 agrees cellwise
+with the canonical S1 target. The proof decomposes the tape into the
+three swept d0 powers, the two short markers, and the preserved lh tail. -/
+theorem rst1PrimeAfterBridge30_leftFacing
+    (L a b : Nat) (h : Int) :
+    ∀ i : Nat,
+      (rst1PrimeAfterBridge30 L a b h).tape
+        (h+5+3*(b:Int)-(i:Int)) =
+      sideBit
+        (s1LeftFacing (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1)) i := by
+  intro i
+  let Hf : Int := h+5+3*(b:Int)
+  let H0 : Int := h-((3*a+1:Int))
+  let H2 : Int := H0-2-((3*L+5:Int))
+  rw [rst1Prime_target_leftFacing_compact L a b]
+  by_cases hi0 : i<3*b
+  · rw [sideBit_append_left (d0pow b)
+      (markerWord 2 ++ d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
+      i (by rw [rst1Prime_d0pow_length]; exact hi0)]
+    simpa [Hf] using rst1PrimeAfterBridge30_d0pow_b L a b h i hi0
+  · have hi0' : 3*b≤i := by omega
+    rw [sideBit_append_right (d0pow b)
+      (markerWord 2 ++ d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
+      i (by rw [rst1Prime_d0pow_length]; exact hi0')]
+    let j0 : Nat := i-3*b
+    by_cases hj0 : j0<4
+    · rw [sideBit_append_left (markerWord 2)
+        (d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
+        j0 (by simp [markerWord]; exact hj0)]
+      have hcoord : Hf-(i:Int) = h+5-(j0:Int) := by
+        dsimp [Hf,j0]
+        omega
+      rw [hcoord]
+      have hcases : j0=0 ∨ j0=1 ∨ j0=2 ∨ j0=3 := by omega
+      have hm := rst1PrimeAfterBridge30_markerWord2 L a b h
+      rcases hcases with hj00 | hj01 | hj02 | hj03
+      · subst j0
+        simpa [markerWord,sideBit] using hm.1
+      · subst j0
+        simpa [markerWord,sideBit] using hm.2.1
+      · subst j0
+        simpa [markerWord,sideBit] using hm.2.2.1
+      · subst j0
+        simpa [markerWord,sideBit] using hm.2.2.2
+    · have hj0' : 4≤j0 := by omega
+      rw [sideBit_append_right (markerWord 2)
+        (d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
+        j0 (by simp [markerWord]; exact hj0')]
+      let j1 : Nat := j0-4
+      by_cases hj1 : j1<3*(a+1)
+      · rw [sideBit_append_left (d0pow (a+1))
+          (d1 ++ d0pow (L+1) ++ lh)
+          j1 (by rw [rst1Prime_d0pow_length]; exact hj1)]
+        have hcoord : Hf-(i:Int) = h+1-(j1:Int) := by
+          dsimp [Hf,j0,j1]
+          omega
+        rw [hcoord]
+        exact rst1PrimeAfterBridge30_d0pow_a L a b h j1 hj1
+      · have hj1' : 3*(a+1)≤j1 := by omega
+        rw [sideBit_append_right (d0pow (a+1))
+          (d1 ++ d0pow (L+1) ++ lh)
+          j1 (by rw [rst1Prime_d0pow_length]; exact hj1')]
+        let j2 : Nat := j1-3*(a+1)
+        by_cases hj2 : j2<3
+        · rw [sideBit_append_left d1
+            (d0pow (L+1) ++ lh) j2 (by simp [d1]; exact hj2)]
+          have hcoord : Hf-(i:Int) = H0-1-(j2:Int) := by
+            dsimp [Hf,H0,j0,j1,j2]
+            omega
+          rw [hcoord]
+          have hD := rst1PrimeAfterBridge30_d1 L a b h
+          have hcases : j2=0 ∨ j2=1 ∨ j2=2 := by omega
+          rcases hcases with hj20 | hj21 | hj22
+          · subst j2
+            simpa [d1,sideBit] using hD.1
+          · subst j2
+            simpa [d1,sideBit] using hD.2.1
+          · subst j2
+            simpa [d1,sideBit] using hD.2.2
+        · have hj2' : 3≤j2 := by omega
+          rw [sideBit_append_right d1
+            (d0pow (L+1) ++ lh) j2 (by simp [d1]; exact hj2')]
+          let j3 : Nat := j2-3
+          by_cases hj3 : j3<3*(L+1)
+          · rw [sideBit_append_left (d0pow (L+1)) lh j3
+              (by rw [rst1Prime_d0pow_length]; exact hj3)]
+            have hcoord : Hf-(i:Int) = H0-4-(j3:Int) := by
+              dsimp [Hf,H0,j0,j1,j2,j3]
+              omega
+            rw [hcoord]
+            exact rst1PrimeAfterBridge30_d0pow_L L a b h j3 hj3
+          · have hj3' : 3*(L+1)≤j3 := by omega
+            rw [sideBit_append_right (d0pow (L+1)) lh j3
+              (by rw [rst1Prime_d0pow_length]; exact hj3')]
+            let j4 : Nat := j3-3*(L+1)
+            by_cases hj4 : j4<6
+            · rw [sideBit_append_left lh [] j4 (by simp [lh]; exact hj4)]
+              have hcoord : Hf-(i:Int) = H2-(j4:Int) := by
+                dsimp [Hf,H0,H2,j0,j1,j2,j3,j4]
+                omega
+              rw [hcoord]
+              exact rst1PrimeAfterBridge30_left_tail L a b h j4 hj4
+            · have hj4' : 6≤j4 := by omega
+              rw [sideBit_ge_length lh j4 (by simp [lh]; exact hj4')]
+              have hcoord : Hf-(i:Int) ≤ H2-6 := by
+                dsimp [Hf,H0,H2,j0,j1,j2,j3,j4]
+                omega
+              exact rst1PrimeAfterBridge30_left_blank L a b h
+                (Hf-(i:Int)) hcoord
+
+#print axioms rst1PrimeAfterBridge30_leftFacing
+
+
 end BB6Coverage.Agent8Rst1PrimeTail
