@@ -104,7 +104,7 @@ The established three-parent classification of V gives D, H1, H3 as its only imm
 
 - H3 is itself in the Agent34 cone (sum 3 modulo 8, right coordinate 2 modulo 16), so it is blank-root unreachable.
 - H1 has parents P0 and P2. P0 has odd right coordinate and coordinate sum 1 modulo 4, so the odd-image obstruction excludes it. P2 has unique parent R, which was excluded above. Hence H1 is blank-root unreachable.
-- D has no six-step incoming chain by the existing no_six_D theorem. The first six blank-root states can be checked directly, and D is far outside that finite list, so D is blank-root unreachable.
+- D has no six-step incoming chain by the existing private no_six_D theorem in CSixSeventhStrict. Expose it or add a public wrapper. The blank-root states at times 0 through 5 are (5,1), (3,4), (4,7), (20,4), (12,10), (17,11); meanwhile D.x≥1213 and D.y≥286. Thus D is also blank-root unreachable.
 
 Thus V(u,v) is blank-root unreachable for every (u,v) satisfying (S2), provided the indicated existing parent and normalizer lemmas are composed as described.
 
@@ -182,7 +182,7 @@ A deterministic residue sweep over u=0,...,99, taking the least nonnegative v wi
 
 1. Prove the exact two-parent classification of R from section_preimage_all_iff under (S2).
 2. Formalize the three sixEvenRightGate reductions of (A,B), including sixEvenRightNormalize(A,B)=F3 and the sixEvenRightExcluded_sound application.
-3. Compose the Agent34 cone exclusion for Q, the Agent46 six-right-normalizer plus odd-image exclusion for P, and the established D/H1/H3 parent classification to prove V blank-root unreachable.
+3. Compose the Agent34 cone exclusion for Q, the Agent46 six-right-normalizer plus odd-image exclusion for P, and the established D/H1/H3 parent classification to prove V blank-root unreachable; expose or wrap the currently private no_six_D lemma.
 4. Prove the parameter-only pullback equivalence in Lean and add the resulting exclusion to the C58 and SixAll high predicates.
 5. Run a fresh original-source CI audit before treating this as an established exclusion.
 
