@@ -75,7 +75,7 @@ def seed24972 : Option S := some ⟨24972,2,2⟩
     a ≡ 26,479 (mod 59,049). This is not a claim that the original TM halts. -/
 theorem seed24972_exception :
   (run 5648 seed24972).any
-    (fun s => s.a%59049 == 26479 && s.q == 4 && s.b == 1) = true := by decide
+    (fun s => s.a%59049 == 26479 && s.a%9 == 1 && s.q == 4 && s.b == 1) = true := by decide
 
 theorem seed24972_exit : run 5649 seed24972 = none := by decide
 
