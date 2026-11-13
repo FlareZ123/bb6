@@ -61,7 +61,7 @@ jobs:
           for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
-          for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ManyShield FastShield; do
+          for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ManyShield FastShield ParentsFast ClosedCertFast; do
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
           for m in UniformFatalParent UniformFatalMod9 UniformRootGate UniqueEvenBand SecondEven FirstFork FirstForkExactTwo FirstForkOddT2 FirstForkModulo54 FirstForkAt81 FirstFork162 FirstForkT3 FirstForkThree FirstForkOddT45 FirstForkOddValuation FirstForkExactThree FirstForkRootThree FirstForkFatalThree FirstForkSix FirstForkSixResidues FirstForkOddValuationSix FirstForkExactFour FirstForkRootFour FirstForkFourDistinct FirstForkFourResidues FatalValuationPower FatalValuationUnbounded FatalValuationBeyond; do
@@ -130,6 +130,8 @@ jobs:
           export LEAN_PATH="$LEAN_PATH:$e"
           lean -o "$e/EvenParent887.olean" "$e/EvenParent887.lean"
           echo "PASS: source-certified corrected t=1 even-predecessor branch for n = 887 mod 13122"
+          lean -o "$e/EvenPre887Cone.olean" "$e/EvenPre887Cone.lean"
+          echo "PASS: exact 1319-state source-certified reverse cone excludes the n=887 even fatal predecessor"
           echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
