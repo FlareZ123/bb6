@@ -560,8 +560,8 @@ theorem s1Config_evenCounter_countedReturn
     congr 1
     funext x
     change cfg.tape (h + (x-h)) = cfg.tape x
-    congr 1
-    omega
+    have hcoord : h+(x-h)=x := by omega
+    rw [hcoord]
   let Tpost : Int → Bool :=
     fun x => (frame even_tailArea (evenOpenFinalSweepTape b P)
       (embed even_tailFinal)).tape (x-h)
@@ -730,12 +730,12 @@ theorem s1Config_oddCounter_countedReturn
     simpa [P,cfg,even_rightStop,Int.add_assoc] using hv
   have hzero1 : P (11+3*(b:Int))=false := by
     have hv := s1Config_right_zero_after_counter L n m a z b h 1
-    have hcoord : (10:Int)+(3*(b:Int)+1) = 11+3*(b:Int) := by omega
+    have hcoord : (10:Int)+3*(b:Int)+(↑(1:Nat)) = 11+3*(b:Int) := by omega
     rw [hcoord] at hv
     simpa [P,cfg] using hv
   have hzero2 : P (12+3*(b:Int))=false := by
     have hv := s1Config_right_zero_after_counter L n m a z b h 2
-    have hcoord : (10:Int)+(3*(b:Int)+2) = 12+3*(b:Int) := by omega
+    have hcoord : (10:Int)+3*(b:Int)+(↑(2:Nat)) = 12+3*(b:Int) := by omega
     rw [hcoord] at hv
     simpa [P,cfg] using hv
   have hstop0 : rightStop b = 10+3*(b:Int) := by
@@ -751,7 +751,7 @@ theorem s1Config_oddCounter_countedReturn
   have hzero1' : P (rightStop b+1)=false := by simpa [hstop1] using hzero1
   have hzero2' : P (rightStop b+2)=false := by simpa [hstop2] using hzero2
   have hrun := counted_odd_counter P b hone hzero0' hzero1' hzero2'
-  let Tpost : Int → Bool := (oddCounterOutput b P).tape ∘ fun x => x-h
+  let Tpost : Int → Bool := fun x => (oddCounterOutput b P).tape (x-h)
   have hshift := shift_run h tm2 (oddCounterInput P) (48+12*b)
   rw [hrun] at hshift
   simp only [Option.map] at hshift
