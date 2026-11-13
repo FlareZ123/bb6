@@ -154,7 +154,7 @@ theorem shadow_encoded_left_properties
     unbounded cost at fixed N, nor blank-root forward reachability. -/
 theorem shadow_reach_lifts_to_odd_cone
     (N L z0 w0 alpha0 b0 d0 M m z : Nat)
-    (hN : 2*M+16 ≤ N)
+    (hN : 2*M+7 ≤ N)
     (hLlo : N+8 ≤ L) (hLhi : L ≤ N+9)
     (hrootOff : L=w0+z0) (hrootW : 4≤w0) (hrootZ : 0<z0)
     (hrootMass : b0+d0+2*L+3=56*2^N)
@@ -335,7 +335,7 @@ theorem shadow_reach_lifts_to_odd_cone
       simpa [m'] using hcoord'
 
 /-- The L0 feeder's every finite shadow word of cost <=M has an
-    authentic original-source OddCone realization whenever 16q>=2M+16. -/
+    authentic original-source OddCone realization whenever 16q>=2M+7. -/
 theorem l0_bounded_shadow_word_has_source
     (q M u m z : Nat)
     (hN : 2*M+7≤16*q)
@@ -361,7 +361,7 @@ theorem l0_bounded_shadow_word_has_source
   simpa using h
 
 /-- The L1 feeder's every finite shadow word of cost <=M has an
-    authentic original-source OddCone realization whenever 16q>=2M+16. -/
+    authentic original-source OddCone realization whenever 16q>=2M+7. -/
 theorem l1_bounded_shadow_word_has_source
     (q M u m z : Nat)
     (hN : 2*M+7≤16*q)
