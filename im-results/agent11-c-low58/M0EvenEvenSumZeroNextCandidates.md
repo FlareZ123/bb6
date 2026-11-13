@@ -19,7 +19,7 @@ s\equiv5\pmod8,\qquad
 129+211s=2^r u,\qquad
 r\equiv1\pmod2,\qquad
 u\equiv1\pmod4,\qquad
-u=1\ \text{or}\ u\ge7.
+u=1\ \text{or}\ u\ge7\ \text{or}\ (u=5\land r\equiv3\pmod4).
 \]
 Then \(B_s\) is not on the genuine blank-origin Machine C section orbit.
 
@@ -33,7 +33,7 @@ T^n(B_s)=
 \left(312+512s-2\cdot 2^{r-n}u-4n,\;
       2^{r-n}u-2\right).
 \]
-This identity follows by induction from \(129+211s=2^r u\). Put \(q=r-n\). For every \(n<r\), \(q\ge1\), so the right coordinate is even and at least \(12\), hence satisfies the size and parity hypotheses of the six-even-right source theorem.
+This identity follows by induction from \(129+211s=2^r u\). Put \(q=r-n\). For \(u\ge5\), every \(n<r\) has an even right coordinate at least \(8\), so the six-even-right size and parity hypotheses hold. The \(u=1\) case uses only the steps with \(q\ge3\), as handled separately below.
 
 It remains to check its modulo-eight gate. The coordinate sum at depth \(n\) is
 \[
@@ -51,7 +51,13 @@ T^{r-2}(B_s)=(312+512s-4r,\;2).
 \]
 The exact low-boundary source fibre says every original section predecessor of a target \((x,2)\) is \((x+2,0)\), while no original section transition outputs a right coordinate \(0\). Hence this depth-\((r-2)\) state is also unreachable. The y=0/y=2 fibre lemmas are now formalized in M0SmallBoundaryZero.lean and added to the existing manual agent11-c-diagonal-late.yml source audit. That workflow has not yet been run on this commit, so this boundary strengthening is not yet kernel-verified.
 
-In either case \(B_s\) is unreachable. \(\square\)
+If \(u=5\) and \(r\equiv3\pmod4\), the same \(r\) six-even-right steps are licensed (the terminal right coordinate is \(3\)). The terminal state is
+\[
+(x,3),\qquad x=302+512s-4r.
+\]
+Since \(s\equiv5\pmod8\) and \(r\equiv3\pmod4\), \(x\equiv2\pmod{16}\). The exact source lemma **blank_no_y3_xmod16_two** in EvenOddThreeX2Mod16.lean shows that every source of such a y=3 target is the unique parent \((x/2,(x+2)/4)\), which has odd right counter at least \(5\) and coordinate sum \(2\pmod4\); **blank_no_odd_sum_two** excludes that parent. This file is included in the manual workflow but has not yet been CI-checked.
+
+In all three cases \(B_s\) is unreachable. \(\square\`
 
 Since \(s\equiv5\pmod8\), the quotient \(S=28+45s\) for \(A_s\) is odd, greater than two, and nonzero modulo four. The source-certified theorem **blank_no_sumzero_target** applies to \(A_s\): its direct parent is \(L_s\), and its bounce parent is \(B_s\). Both are now excluded. Therefore \(A_s\) is unreachable under the same hypotheses.
 
@@ -60,7 +66,7 @@ Since \(s\equiv5\pmod8\), the quotient \(S=28+45s\) for \(A_s\) is odd, greater 
 This is a parameterized 2-adic exclusion, not a finite cutoff. In the exact six-sector criterion it can be represented by excluding
 \[
 m=0,\quad j=39+64s,\quad s\equiv5\pmod8,\quad
-\exists r,u:\ 129+211s=2^r u,\ r\text{ odd},\ u\equiv1\pmod4,\ u\ge7.
+\exists r,u:\ 129+211s=2^r u,\ r\text{ odd},\ u\equiv1\pmod4,\bigl(u=1\lor u\ge7\lor(u=5\land r\equiv3\pmod4)\bigr).
 \]
 
 ### Coverage and a new explicit cylinder
@@ -102,9 +108,9 @@ If \(d=v_2(148+211q)\), then \(r=d+3\). For each even \(d\), the condition that 
 \[
 \sum_{d\text{ even},\,d\ge0}2^{-(d+2)}=\frac13
 \]
-within \(s\equiv5\pmod8\), hence density \(1/24\) among the odd-t high-stop parameters \(t=2s+1\). The only omitted quotient in this odd-valuation branch is \(u=5\). It is an infinite but zero-density exceptional sequence, not a finite set: \(u=5\) forces \(5\cdot2^r=129+211s\), hence \(2^r\equiv68\pmod{211}\). Since \(2\) has order \(210\pmod{211}\) and \(2^{201}\equiv68\pmod{211}\), the odd exponents are exactly \(r\equiv201\pmod{210}\); then \(s=(5\cdot2^r-129)/211\) and \(s\equiv5\pmod8\). The terminal state in this case has right coordinate \(3\) and left coordinate \(2\pmod8\). It is not covered by the y>=5 odd-image theorem. Agent 11's separate y=3 inverse work currently treats the x=6 mod8 slice, so the x=2 mod8 boundary fibre and all its possible parents remain to be resolved.
+within \(s\equiv5\pmod8\), hence density \(1/24\) among the odd-t high-stop parameters \(t=2s+1\). The residual quotient is \(u=5\), an infinite but zero-density sequence rather than a finite set. It forces \(5\cdot2^r=129+211s\), hence \(2^r\equiv68\pmod{211}\). Since \(2\) has order \(210\pmod{211}\) and \(2^{201}\equiv68\pmod{211}\), the odd exponents are exactly \(r\equiv201\pmod{210}\), with \(s=(5\cdot2^r-129)/211\) and \(s\equiv5\pmod8\). The new x=2 mod 16 y=3 theorem closes the \(r\equiv3\pmod4\) half of this sequence (equivalently \(r\equiv411\pmod{420}\)). The remaining \(r\equiv1\pmod4\) half (equivalently \(r\equiv201\pmod{420}\)) has terminal \(x\equiv10\pmod{16}, y=3\); its multiple even-depth y=3 parent fan remains open.
 
-This omitted \(u=5\) sequence has zero density (at most one q for each valuation d), so the density \(1/24\) is unchanged. This density statement describes only this m=0 parameter sieve, not a fraction of machines or halting runs.
+The remaining \(u=5\) sequence still has zero density (at most one q for each valuation d), so the density \(1/24\) is unchanged. This density statement describes only this m=0 parameter sieve, not a fraction of machines or halting runs.
 
 ## Even-valuation residual candidates
 
