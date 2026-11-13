@@ -163,3 +163,31 @@ At n=887, y5, z0, z1, and z2 all occur in the 1,319-state EvenPre887ConeOnly lis
 The finite subtree is formalized in Z1Z2Cone887.lean on branch agent7-887-even-parent. It proves the complete 11-node parent table, z1's unique parent z2, and z1Cone_no_root using closedCertFast and by decide. It is a finite n=887 result, not a replacement for Agent 10's uniform theorem. The t=3/t=6 side cone is a separate branch. The compact z1/z2 module is pending CI, like the other new compact certificates.
 
 Latest branch revision at this note update: e6e47a98aad8de603d0f50a94d42fb304359b2bf.
+
+
+## 10. Uniform U/Q odd-parent band envelope
+
+The direct-odd-parent numerator on a first-tier t=1 spine branch is
+`U=9(2z₀+5)`, with the exact affine identity
+`U + 2n + 2^(j+4)(2n+3) = 112·2^(n−2)+15`.
+If the physical state z₀ lies in its source even band
+`6·2^(n−2)−1 ≤ z₀ ≤ 8·2^(n−2)−3`, these two identities imply the stronger, uniform envelope
+
+`27·2^n < U < 28·2^n`.
+
+For an odd ResetParent with exponent t′ and odd quotient d,
+`2z₀+5=3^(t′+1)d`, so `U=3^(t′+3)d` and the actual odd-band argument is `2^t′d`. The envelope now gives the following exact source-band restrictions, uniformly in n and j whenever the displayed affine identity and source-band premise hold:
+
+| t′ | Consequence |
+|---:|---|
+| 0, 1, 3, 5, 6, 8, 10 | The odd-band argument lies strictly in a dyadic gap; these exponents are impossible |
+| 2 | Any odd parent is forced to scale n−4 |
+| 4 | Any odd parent is forced to scale n−5 |
+| 7 | Any odd parent is forced to scale n−7 |
+| 9 | Any odd parent is forced to scale n−8 |
+
+This is a uniform band-envelope theorem, not a complete parent census: exponents t′≥11 are not classified here, and the hypotheses still need to be instantiated from the full first-tier t=1 ray construction. In particular, the Hensel selector remains the separate source of divisibility/index restrictions; this result deliberately does not duplicate Agent 44's Q/U selector work.
+
+The Lean module `UParentBandEnvelope.lean` on branch `agent7-887-even-parent` contains the arithmetic proof and a wrapper that consumes the exact `CascadeResetInverse.ResetParent` disjunction, preserving its even arm and strengthening every odd arm. It imports `FirstInverseComplete`. The arithmetic and source-shaped wrapper compiled locally against a stub with the exact checked-in ResetParent signature; **that is not actual-source CI verification**. The focused manual-only workflow `agent7-u-parent-band.yml` compiles the original dependency chain through `FirstInverseComplete` and then the new module. Await a successful run and inspect all three `#print axioms` outputs before treating the source wrapper as verified.
+
+The new envelope is useful beyond the fixed n=887 census: it rules out the same seven exponents and fixes the same four band scales for every first-tier t=1 branch satisfying the exact formula and band hypotheses. It does not imply that only t′=2 or 4 can occur at larger n; higher admissible exponents such as 7 and 9 are already retained explicitly.
