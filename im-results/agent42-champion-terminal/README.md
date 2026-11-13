@@ -158,4 +158,4 @@ The root-connected chain has been extended in [TM63M0M2RootComposition.md](TM63M
 
 ## Next branch: M1,n=3 odd q4 bridge (13 November 2026)
 
-A 26-step finite bridge for the next `(m,n)=(1,3)` odd reset stage is documented in [M1OddQ4Bridge.md](M1OddQ4Bridge.md) and certified by [M1OddQ4Bridge.lean](M1OddQ4Bridge.lean). The exact finite-list run and head confinement compile locally under Lean 4.36.0-rc2; the repository manual workflow includes the source lemma with a `sorryAx` gate. The full parametric frame/cut/suffix proof remains open.
+A 26-step finite bridge for the next `(m,n)=(1,3)` odd reset stage is documented in [M1OddQ4Bridge.md](M1OddQ4Bridge.md) and certified by [M1OddQ4Bridge.lean](M1OddQ4Bridge.lean). The exact finite-list run and head confinement compile in a standalone local Lean check under Lean 4.36.0-rc2 using the exact finite semantics copied from `ChampionRootBridge.lean`; the repository source lemma itself is not yet compiled. The manual workflow includes it with a `sorryAx` gate. The full parametric frame/cut/suffix proof remains open.
