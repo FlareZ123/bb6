@@ -4,6 +4,7 @@ import CountedSweep
 import CountedOddBase
 import S1Encoder
 import CountedReset
+import CountedQ4Prefix
 import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent8Rst1Prime
@@ -249,5 +250,78 @@ theorem rst1Prime_cost_decomposition (L a b : Nat) :
 #print axioms bridge6_at
 #print axioms bridge30_at
 #print axioms rst1Prime_cost_decomposition
+
+/-! Exact output-cell identities for the counted right sweep. These
+complement `counted_right_sweep`: the last scanned three-cell block is
+`1,0,0` in increasing tape order, hence `d0` in head-facing order. -/
+
+/-- A right sweep leaves every cell at or to the left of its starting head
+unchanged. -/
+theorem rst1Prime_sweptRight_preserves_left
+    (n : Nat) (T : Int → Bool) (h x : Int) (hx : x ≤ h) :
+    sweptRight n T h x = T x := by
+  induction n generalizing T h with
+  | zero => rfl
+  | succ n ih =>
+      simp only [sweptRight]
+      have hx' : x ≤ h+3 := by omega
+      have hrec := ih (afterRight3 T h) (h+3) hx'
+      rw [hrec]
+      have h1 : x ≠ h+1 := by omega
+      have h2 : x ≠ h+2 := by omega
+      simp [afterRight3, h1, h2]
+
+/-- A right sweep leaves every cell at or beyond its endpoint unchanged. -/
+theorem rst1Prime_sweptRight_preserves_after
+    (n : Nat) (T : Int → Bool) (h x : Int)
+    (hx : h + 3*(n:Int) ≤ x) :
+    sweptRight n T h x = T x := by
+  induction n generalizing T h with
+  | zero => rfl
+  | succ n ih =>
+      simp only [sweptRight]
+      have hx' : (h+3) + 3*(n:Int) ≤ x := by omega
+      have hrec := ih (afterRight3 T h) (h+3) hx'
+      rw [hrec]
+      have h1 : x ≠ h+1 := by omega
+      have h2 : x ≠ h+2 := by omega
+      simp [afterRight3, h1, h2]
+
+/-- The final three cells of a positive-length right sweep have the exact
+local pattern `1,0,0` in increasing tape order. Earlier blocks cannot
+change this final block. -/
+theorem rst1Prime_sweptRight_lastBlock
+    (n : Nat) (T : Int → Bool) (h : Int) :
+    sweptRight (n+1) T h (h+3*(n:Int)) = T (h+3*(n:Int)) ∧
+    sweptRight (n+1) T h (h+3*(n:Int)+1) = false ∧
+    sweptRight (n+1) T h (h+3*(n:Int)+2) = false := by
+  induction n generalizing T h with
+  | zero =>
+      have h1 : h ≠ h+1 := by omega
+      have h2 : h ≠ h+2 := by omega
+      simp [sweptRight, afterRight3, h1, h2]
+  | succ n ih =>
+      simp only [sweptRight]
+      have hrec := ih (afterRight3 T h) (h+3)
+      rcases hrec with ⟨h0, h1, h2⟩
+      have e0 : (h+3) + 3*(n:Int) = h+3*((n+1:Int)) := by omega
+      have e1 : (h+3) + 3*(n:Int)+1 = h+3*((n+1:Int))+1 := by omega
+      have e2 : (h+3) + 3*(n:Int)+2 = h+3*((n+1:Int))+2 := by omega
+      have hn0 : h+3*((n+1:Int)) ≠ h+1 := by omega
+      have hn1 : h+3*((n+1:Int)) ≠ h+2 := by omega
+      have hn2 : h+3*((n+1:Int))+1 ≠ h+1 := by omega
+      have hn3 : h+3*((n+1:Int))+1 ≠ h+2 := by omega
+      have hn4 : h+3*((n+1:Int))+2 ≠ h+1 := by omega
+      have hn5 : h+3*((n+1:Int))+2 ≠ h+2 := by omega
+      constructor
+      · simpa [e0, afterRight3, hn0, hn1] using h0
+      constructor
+      · simpa [e1, afterRight3, hn2, hn3] using h1
+      · simpa [e2, afterRight3, hn4, hn5] using h2
+
+#print axioms rst1Prime_sweptRight_preserves_left
+#print axioms rst1Prime_sweptRight_preserves_after
+#print axioms rst1Prime_sweptRight_lastBlock
+
 
 end BB6Coverage.Agent8Rst1Prime
