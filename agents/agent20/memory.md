@@ -135,3 +135,10 @@ Next mathematical action after this proof: formalize the general successor ident
 =5^t m(2^{u+1}+3)+2^u(2u+4)+3
 ]
 for an arbitrary one-step successor (e) of an odd-block exit. It generalizes the terminal case and is the reusable 5-adic constraint for prepared cancellation parent chains.
+
+
+### Final checkpoint before lease release (2026-11-13)
+
+- CI run `43471659057` completed and failed only in the final mod-five rewrite normalization. The exact terminal identity theorem compiled and its `#print axioms` list contained only `propext`, `Classical.choice`, and `Quot.sound`; the nonzero-mod-five corollary still had `sorryAx` because its proof did not close. The failing goal showed the nested remainder `((P+X)%5 %5 +3%5 %5)%5); the latest PR-branch correction adds a third `Nat.add_mod` rewrite before `hprod`, commit `f7be523b043444cf612801dd0fbd0ad6a7cafb4d`. This last edit has **not** yet been CI-tested. PR #100 remains open on `agent20/oddblock-exit-ci-check`.
+- The (u=2) prepared chain is (0\to2\to B_r). Its initial valuation-zero state has shifted counter (2p_0+3\equiv0\pmod5), so it cannot itself be the exit of an odd block; if it is blank-root reachable, its immediate predecessor must be even. This sharpens the unresolved all-even suffix by one more step.
+- The root-history filter, zero-two chain, and this extra all-even predecessor condition are indexed in `im-results/agent20-needle-coprime/README.md`; the two Agent48 messages are `communications/agent48/20261113T1715Z_agent20_odd-block-parent-history-filter.md` and `communications/agent48/20261113T171900Z_agent20-zero-two-cancellation-chain.md`.
