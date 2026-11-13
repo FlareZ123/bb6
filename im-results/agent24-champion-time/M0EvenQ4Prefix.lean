@@ -216,10 +216,11 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
           rw [hc]
           simp [m0EvenQ4BridgeEnd]
         simpa using hcut.trans hmark
-      · have hgt : 3 < h-(h-((3*a : Nat) : Int)) := by omega
+      · have hnot : ¬(-9 ≤ h-(h-((3*a : Nat) : Int)) ∧
+            h-(h-((3*a : Nat) : Int)) ≤ 3) := by omega
         have hout : m0EvenQ4Inside
             (h-(h-((3*a : Nat) : Int))) = false := by
-          simp [m0EvenQ4Inside,hgt]
+          simp [m0EvenQ4Inside,hnot]
         have hcut := m0EvenQ4CutTape_eq_swept a b h h hout
         have hhead : sweptLeft (3*a) T h h = true := by
           have hs := sweptLeft_head (3*a-2) T h
@@ -230,10 +231,11 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
             (s1Config 3 2 0 a 0 b h).tape h h = true := by
           simpa [T] using hhead
         simpa [Int.add_zero] using hcut.trans hhead'
-    · have hgt : 3 < (h+1)-(h-((3*a : Nat) : Int)) := by omega
+    · have hnot : ¬(-9 ≤ (h+1)-(h-((3*a : Nat) : Int)) ∧
+          (h+1)-(h-((3*a : Nat) : Int)) ≤ 3) := by omega
       have hout : m0EvenQ4Inside
           ((h+1)-(h-((3*a : Nat) : Int))) = false := by
-        simp [m0EvenQ4Inside,hgt]
+        simp [m0EvenQ4Inside,hnot]
       have hcut := m0EvenQ4CutTape_eq_swept a b h (h+1) hout
       have hplus : sweptLeft (3*a) T h (h+1) = true := by
         have hN : 3*a-1+1 = 3*a := by omega
