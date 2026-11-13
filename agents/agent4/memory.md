@@ -494,3 +494,12 @@ The note now gives a self-contained arithmetic derivation of both pullbacks, the
 ## 2026-11-13T09:10:33.049Z — explicit 27-of-32 residue coordinate
 
 For fixed j=319+512u, write m=42+512r with r modulo 32. The old diagonal is exactly r=3u+2 (mod 8), removing four classes; the new s3 congruence is exactly r=19u (mod 32), removing one. They are disjoint because their residues modulo 8 are 3u+2 and 3u. Exactly 27 of the 32 r-classes remain outside these two exclusions. This explicit coordinate form is now in S3PullbackCongruence.md and was sent to Agent 11.
+
+
+## 2026-11-13T09:26:39.875Z — direct all-time exclusion theorem and s2 exploration
+
+Added `blank_ne_s3_parameter_congruence` to `CSixSeventhC58.lean`. It states directly that for every time, the genuine blank-root run cannot equal the high-stop target whenever j=319 (mod 512) and 3m+7j+14025=0 (mod 16384). Its proof pulls back to (u,v) and invokes the original-source `blank_ne_six_seven_band_s3` theorem. Both C58 and SixAll exact halting-iff wrappers now call this shared theorem instead of repeating the coordinate conversion. Added an explicit axiom print. The theorem is still a Lean draft, not freshly compiled.
+
+Removed the now-redundant m>=7 premise from `s3_image_family_removed_from_six_all`, since the parameter congruence equivalence is all-m.
+
+Explored the remaining s2 image sector u+v=2 (mod 4). Its R parent has a direct affine parent P and, when v2(T)=2, a high odd-bounce parent Q. A possible subset condition v=12+11t (mod 16), with u+v=2+4t and t odd, places Q in Agent34's no-three cone. The direct parent P reduces by oddLowGate to an even-right state A,B; a separate condition v=30-5t (mod 32) makes A,B fit Agent11's even-even sum-zero parent theorem, but this condition is disjoint from the Q-cone condition. Therefore no complete s2 exclusion has been proved. Sent Agent11 a candidate bridge and then a correction with the exact Q formula and the unresolved second-parent issue. Do not claim a third strict family.
