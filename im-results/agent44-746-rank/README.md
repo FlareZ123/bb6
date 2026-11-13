@@ -77,19 +77,13 @@ The complementary [886 nine-lift diagnostic](FeederExceptional886.md) shows that
 
 ## Uniform 887 feeder and 3-adic valuation selector
 
-[Feeder887Hensel.md](Feeder887Hensel.md) derives the six-edge common-parent path from Agent 10's second-tier `z2` coordinate for every `n % 13122 = 887`, and proves an exact 3-adic isometry for its scalar numerator. This gives a unique Hensel residue at every precision and, together with an irrational-rotation band argument, proves unbounded distinct odd-parent fan-in and unbounded even-chain depth across the family. Thus no fixed finite-width or finite-depth inverse-cone template can cover every `n = 887 + 13122*r`. The source-parent chain and Agent 10's `Z1UniqueParent887.lean` draft still require unchanged-source Lean CI; no full #746 or BB(6) decision follows. [Feeder887Hensel.mjs](Feeder887Hensel.mjs) reproduces the first twelve residues, band-compatible exponents, and initial even-chain lengths with exact BigInt arithmetic.
+[Feeder887Hensel.md](Feeder887Hensel.md) derives the six-edge common-parent path from Agent 10's second-tier `z2` coordinate for every `n % 13122 = 887`, and proves an exact 3-adic isometry for its scalar numerator. This gives a unique Hensel residue at every precision. Combined with the irrational-rotation band argument, it proves unbounded distinct odd-parent fan-in and unbounded even-chain depth across the family, so no fixed finite-width or finite-depth inverse-cone template covers every `n=887+13122*r`.
 
+The exponent set `S` admitting an odd parent has natural density `log2(4/3)`. For each fixed `m>=1`, the subset whose limiting mantissa supports at least `m` further even-parent edges has density
+`delta_m=-log2(1-2^(-m-2))`. For every finite `T`, one sufficiently large index in the compatible Hensel class realizes all such exponents `t<=T` simultaneously, giving feeders with at least `delta_m*T+o(T)` distinct odd parents, each supporting `m` further even edges. These are densities in the exponent parameter `t`, not densities of machines or fatal indices.
 
-The density statement can be sharpened: for every fixed m>=1, the
-odd-parent exponents whose limiting mantissa satisfies
-`R_t>8-2^(1-m)` have natural density
-`delta_m=log2(8/(8-2^(1-m)))=-log2(1-2^(-m-2))`.
-Consequently, for every fixed m and large T, one can choose a feeder
-with at least `delta_m*T+o(T)` distinct odd parents among t<=T, each
-supporting m further even-parent steps. In particular, arbitrarily
-wide collections of arbitrarily deep branches occur in the family;
-the density for fixed m is positive and is asymptotic to
-`2^(-m-2)/ln(2)`.
+The common path and isometry are exact mathematical derivations but remain conditional on Agent 10's upstream `z2` parent coordinate, whose source CI is pending. The result does not decide #746 or BB(6). [Feeder887Hensel.mjs](Feeder887Hensel.mjs) reproduces the first twelve residues, band-compatible exponents, and initial even-chain lengths with exact BigInt arithmetic.
+
 
 ## Generic Q-state index selector (draft)
 
@@ -104,7 +98,8 @@ exact characterization
   iff h mod 3^k = qIndexResidue(s,j,k).
 ```
 
-The draft includes the direct coefficient
+The draft includes the full base criterion `3 | Q_j(n)` iff j is
+even in the two sectors, the direct coefficient
 `4*(1+2^(j+4))=32*(2^(j+1)-1)+36`, the unit-mod-three digit lift,
 the all-sector and 887-family specializations, and the t=1 source
 identity `Q_j(n)=9*(2*q+5)` under explicit odd-parent hypotheses.

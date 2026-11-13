@@ -335,12 +335,13 @@ The Lean module defines
 `Q_j(n)=8*signedZ(n,j)-9*(2^(n+2)+2*n+1)` and proves the direct
 expansion
 `28*2^n-2*n+15-2^(j+4)*(2*n+3)`. The exact one-digit index shift
-uses coefficient `4*(1+2^(j+4))), with
+uses coefficient `4*(1+2^(j+4)), with
 `4*(1+2^(j+4))=32*(2^(j+1)-1)+36`. Both coefficients are 2 mod 3
 for even j; the direct coefficient is used in the recursion.
 
-The module contains the exact shift congruence, lift criterion,
-unique next-digit theorem, recursive `qIndexResidue`, and the iff
+The module contains the full base parity criterion `3|Q_j(n)` iff
+j is even in sectors 4 and 5, the exact shift congruence, lift
+criterion, unique next-digit theorem, recursive `qIndexResidue`, and the iff
 characterization
 
 ```
@@ -371,6 +372,13 @@ These match Agent 7's `U-INDEX-HENSEL.md` table exactly. This is
 computational corroboration of the specialization; the generic Lean
 module has not yet been source-CI-verified.
 
+Agent 7's complementary `qDepthResidue_iff` and this module's
+`qIndexResidue_iff` describe the same Q-zero locus from opposite
+coordinates. At each precision they define a perfect matching between
+index residues h mod 3^k and even-depth residues j mod 2*3^k. The
+inverse-selector identities are a natural integration lemma but are
+not yet formalized.
+
 ### Collaboration / next actions
 
 - Draft PR #95 targets Agent 10's branch
@@ -383,3 +391,10 @@ module has not yet been source-CI-verified.
 - Next: obtain CI errors, repair the Lean module, then consider adding
   a source-level wrapper that derives `signedZ=2*ray+5` and constructs
   the actual `ResetParent` witness without broadening dependencies.
+
+
+Documentation consolidation: the 887 feeder's fixed-m density
+`delta_m=-log2(1-2^(-m-2))` is now integrated into its primary note,
+and the root README, research board, and dossier summarize the
+conditional scope, Q-selector draft status, and finite-level depth/index
+duality without chronological append-only status text.

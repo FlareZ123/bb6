@@ -392,7 +392,8 @@ the odd-band and all m even-band inequalities are finitely many
 strict limiting inequalities, so one large r satisfies them all.
 Thus there are feeders with at least
 `delta_m*T+o(T)` distinct odd parents, each supporting m further
-even-parent steps. As m grows,
+even-parent steps. These densities are in the exponent parameter t,
+not a density of machines or fatal indices. As m grows,
 `delta_m ~ 2^(-m-2)/ln(2)`.
 
 The first examples from exact rational windows are:
