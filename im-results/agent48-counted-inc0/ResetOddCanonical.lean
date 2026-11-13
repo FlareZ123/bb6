@@ -85,11 +85,16 @@ private theorem resetBase_odd_left_tail_alignment
       (markerWord 0 ++ d0 ++ d0) (B ++ lh) i (by omega)
     have ht := sideBit_append_after
       (d1pow 1 ++ markerWord 2 ++ d0 ++ d1) (B ++ lh) (i+5) (by omega)
-    rw [show sideBit (markerWord 0 ++ d0 ++ d0 ++ B ++ lh) i =
-        sideBit (B ++ lh) (i-8) by simpa [hsrc, hslen] using hs]
-    rw [show sideBit
-        (d1pow 1 ++ markerWord 2 ++ d0 ++ d1 ++ B ++ lh) (i+5) =
-        sideBit (B ++ lh) ((i+5)-13) by simpa [htgt, htlen] using ht]
+    have hs' :
+        sideBit ((markerWord 0 ++ d0 ++ d0) ++ (B ++ lh)) i =
+          sideBit (B ++ lh) (i-8) := by
+      simpa [hslen] using hs
+    have ht' :
+        sideBit ((d1pow 1 ++ markerWord 2 ++ d0 ++ d1) ++ (B ++ lh))
+            (i+5) =
+          sideBit (B ++ lh) ((i+5)-13) := by
+      simpa [htlen] using ht
+    rw [hs', ht']
     have hidx : i-8 = (i+5)-13 := by omega
     rw [hidx]
   · have hi9 : 9 ≤ i := by simpa using hi
@@ -109,11 +114,16 @@ private theorem resetBase_odd_left_tail_alignment
       (markerWord 1 ++ d0 ++ d0) (B ++ lh) i (by omega)
     have ht := sideBit_append_after
       (d1pow 2 ++ markerWord 0 ++ d0 ++ d1) (B ++ lh) (i+5) (by omega)
-    rw [show sideBit (markerWord 1 ++ d0 ++ d0 ++ B ++ lh) i =
-        sideBit (B ++ lh) (i-9) by simpa [hsrc, hslen] using hs]
-    rw [show sideBit
-        (d1pow 2 ++ markerWord 0 ++ d0 ++ d1 ++ B ++ lh) (i+5) =
-        sideBit (B ++ lh) ((i+5)-14) by simpa [htgt, htlen] using ht]
+    have hs' :
+        sideBit ((markerWord 1 ++ d0 ++ d0) ++ (B ++ lh)) i =
+          sideBit (B ++ lh) (i-9) := by
+      simpa [hslen] using hs
+    have ht' :
+        sideBit ((d1pow 2 ++ markerWord 0 ++ d0 ++ d1) ++ (B ++ lh))
+            (i+5) =
+          sideBit (B ++ lh) ((i+5)-14) := by
+      simpa [htlen] using ht
+    rw [hs', ht']
     have hidx : i-9 = (i+5)-14 := by omega
     rw [hidx]
   · by_cases hi9 : i = 9
@@ -136,11 +146,16 @@ private theorem resetBase_odd_left_tail_alignment
         (markerWord 2 ++ d0 ++ d0) (B ++ lh) i (by omega)
       have ht := sideBit_append_after
         (d1pow 2 ++ markerWord 1 ++ d0 ++ d1) (B ++ lh) (i+5) (by omega)
-      rw [show sideBit (markerWord 2 ++ d0 ++ d0 ++ B ++ lh) i =
-          sideBit (B ++ lh) (i-10) by simpa [hsrc, hslen] using hs]
-      rw [show sideBit
-          (d1pow 2 ++ markerWord 1 ++ d0 ++ d1 ++ B ++ lh) (i+5) =
-          sideBit (B ++ lh) ((i+5)-15) by simpa [htgt, htlen] using ht]
+      have hs' :
+          sideBit ((markerWord 2 ++ d0 ++ d0) ++ (B ++ lh)) i =
+            sideBit (B ++ lh) (i-10) := by
+        simpa [hslen] using hs
+      have ht' :
+          sideBit ((d1pow 2 ++ markerWord 1 ++ d0 ++ d1) ++ (B ++ lh))
+              (i+5) =
+            sideBit (B ++ lh) ((i+5)-15) := by
+        simpa [htlen] using ht
+      rw [hs', ht']
       have hidx : i-10 = (i+5)-15 := by omega
       rw [hidx]
 
