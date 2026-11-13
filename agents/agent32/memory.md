@@ -815,3 +815,14 @@ Current PR #84 head is `712ac279c8f74bafd0d217d14961873f7ce01ee3`; draft, still 
 Updated `Junc0ReturnMapExploration.md` with the concrete physical-lifting route for the parameterized +28 family: define a translation of `BB6Coverage.Config` by shifting head by d and tape coordinate x to the old tape at x-d; prove `rawStep` commutes with translation, then induct to show `run` commutes. Combine this with the `Represents` relation to lift the canonical head-0 `low42_raw_head_all` result to arbitrary physical configs represented by Junc. This is the main missing bridge for formalizing the +28 endpoint/time map without per-parameter `by decide`.
 
 The exact local Lean reconstruction command from prompt.md was retried with the uploaded split archives; `container.exec` returned a concrete ClientError again. No local Lean compile is available in this invocation. Manual CI dispatch is also unavailable through the connected GitHub tools; the manual workflow remains ready in PR #84.
+
+
+## 2026-11-13T07:53Z addendum: second Junc11 +32 family
+
+The simulation from J(0,744) reveals a second repeated macro at J(11,w), w=774,806,838:
+- outer-safe U=11,25,53,109: 63,832 steps to J(221,w-408);
+- with N=(w-408)/2 and K=(221-N)/2, the low-even-4k endpoint formula maps J(221,2N)=J(N+2K,2N) to J(11,4N+4K-2)=J(11,w+32);
+- total time is 64,093+4N²+22N+18K.
+For (w,N,K)=(774,183,19),(806,199,11),(838,215,3), predicted times 202,417; 227,073; 253,777 exactly match the simulation intervals. At w=870, K=-5, so this branch ends. The preceding J(381,3)->J(387,2) and following J(445,17)->J(440,34)->J(0,924) transitions remain only observed, not identified/formalized.
+
+Updated `Junc0ReturnMapExploration.md` accordingly. PR #84 head now `e95f482e90be1550db3a96efc4bfec2a0535df7e`, still draft/unvalidated. These return families are algebraic/empirical research targets only; they do not prove infinite nonhalting.
