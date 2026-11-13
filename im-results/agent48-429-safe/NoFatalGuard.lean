@@ -11,7 +11,7 @@ open BB429OddExcursion
 /-- The actual halting gateway is C/0 with a marked cell immediately
     to the right. Harmless C/0/blank-right visits are allowed. -/
 def fatalCZero (c : BB429OddExcursion.Zipper) : Bool :=
-  c.state == 2 && !c.current && c.right.headD false
+  c.state == 2 && !c.current && c.right.getD 0 false
 
 /-- Run the original zipper interpreter, rejecting only a C/0 whose
     immediate right neighbor is marked. -/

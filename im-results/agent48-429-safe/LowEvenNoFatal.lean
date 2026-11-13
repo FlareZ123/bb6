@@ -1,4 +1,5 @@
 import NoFatalGuard
+import BB429FinishScanEDelta
 import BB429JuncHeadExcursion
 import BB429PhysicalBridge
 import Lean.Elab.Tactic.Omega
@@ -8,7 +9,7 @@ set_option maxRecDepth 65536
 
 namespace BB429LowEvenNoFatal
 
-open BB6Coverage BB429OddExcursion BB429JuncHeadExcursion
+open BB6Coverage BB429OddExcursion BB429JuncHeadExcursion BB429FinishScanEDelta
 open BB429PhysicalFrontier BB429PhysicalBridge
 open BB429NoFatalGuard
 
@@ -24,12 +25,12 @@ def rootSegmentEnd : Zipper := junc 11 0 98
 def cZeroEventTrace : Nat → Nat → Int → Zipper → List (Nat × Int × Bool)
   | 0, t, delta, c =>
       if c.state == 2 && !c.current then
-        [(t, delta, c.right.headD false)]
+        [(t, delta, c.right.getD 0 false)]
       else []
   | n+1, t, delta, c =>
       let here :=
         if c.state == 2 && !c.current then
-          [(t, delta, c.right.headD false)]
+          [(t, delta, c.right.getD 0 false)]
         else []
       match BB429OddExcursion.action c.state c.current with
       | none => here
@@ -87,18 +88,15 @@ theorem lowEven_r96_no_fatal_physical
     source_run_rep t lowEvenStart c hrep p hp
   refine ⟨e, he, ?_⟩
   intro hbad
-  rcases hrepE with ⟨hs, hcur, hleft, hright⟩
+  rcases hrepE with ⟨hs, hcur, _, _⟩
   have hstate : p.state = 2 := hs.symm.trans hbad.1
   have hcurrent : p.current = false := hcur.symm.trans hbad.2.1
-  have hright0 : p.right.getD 0 false = true := by
-    have hr0 := hright 0
-    have hr0' : e.tape (e.head+1) = p.right.getD 0 false := by
-      simpa using hr0
-    exact hr0'.symm.trans hbad.2.2
-  have hrightHead : p.right.headD false = true := by
-    cases p.right <;> simp_all
+  have hr0' : e.tape (e.head+1) = p.right.getD 0 false :=
+    BB429PhysicalBridge.represents_right_one p e hrepE
+  have hright0 : p.right.getD 0 false = true :=
+    hr0'.symm.trans hbad.2.2
   have hfatal : fatalCZero p = true := by
-    simp [fatalCZero, hstate, hcurrent, hrightHead]
+    simp [fatalCZero, hstate, hcurrent, hright0]
   simp [hfatal] at hpSafe
 
 
@@ -130,18 +128,15 @@ theorem rootSegment_no_fatal_physical
     source_run_rep t rootSegmentStart c hrep p hp
   refine ⟨e, he, ?_⟩
   intro hbad
-  rcases hrepE with ⟨hs, hcur, hleft, hright⟩
+  rcases hrepE with ⟨hs, hcur, _, _⟩
   have hstate : p.state = 2 := hs.symm.trans hbad.1
   have hcurrent : p.current = false := hcur.symm.trans hbad.2.1
-  have hright0 : p.right.getD 0 false = true := by
-    have hr0 := hright 0
-    have hr0' : e.tape (e.head+1) = p.right.getD 0 false := by
-      simpa using hr0
-    exact hr0'.symm.trans hbad.2.2
-  have hrightHead : p.right.headD false = true := by
-    cases p.right <;> simp_all
+  have hr0' : e.tape (e.head+1) = p.right.getD 0 false :=
+    BB429PhysicalBridge.represents_right_one p e hrepE
+  have hright0 : p.right.getD 0 false = true :=
+    hr0'.symm.trans hbad.2.2
   have hfatal : fatalCZero p = true := by
-    simp [fatalCZero, hstate, hcurrent, hrightHead]
+    simp [fatalCZero, hstate, hcurrent, hright0]
   simp [hfatal] at hpSafe
 
 #print axioms rootSegment_czero_event_census
