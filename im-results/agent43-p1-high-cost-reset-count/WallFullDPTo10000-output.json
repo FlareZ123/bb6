@@ -1,0 +1,98 @@
+{
+  "range": {
+    "n_min": 14,
+    "n_max": 10000
+  },
+  "modular_subset_scan": {
+    "recurrence": "carry c_1=(n+2)/2; for j>=1, choose x_j in {0,1} with c_j+x_j(n+3+j) even and c_{j+1}=(c_j+x_j(n+3+j))/2",
+    "state": "carry and distance-since-last-selected capped at 2; objective counts selected gaps 1 or 2",
+    "nonempty_cases": [
+      {
+        "n": 30,
+        "minimum_short_gaps": 8
+      },
+      {
+        "n": 286,
+        "minimum_short_gaps": 88
+      },
+      {
+        "n": 350,
+        "minimum_short_gaps": 112
+      },
+      {
+        "n": 1614,
+        "minimum_short_gaps": 563
+      },
+      {
+        "n": 2990,
+        "minimum_short_gaps": 1068
+      },
+      {
+        "n": 3342,
+        "minimum_short_gaps": 1145
+      }
+    ]
+  },
+  "full_wall_scan": {
+    "terminal_carry": "2^n + m + n + 3",
+    "equation": "sum_{s<m}(Q-s)*2^s = 2^m*(2^n+m+n+3)-1, Q=7*2^n-(n+3)",
+    "cases": [
+      {
+        "n": 30,
+        "last_nonempty_m": 81,
+        "empty_at_m": 82,
+        "peak_states": 44,
+        "exact_hits": []
+      },
+      {
+        "n": 286,
+        "last_nonempty_m": 1441,
+        "empty_at_m": 1442,
+        "peak_states": 504,
+        "exact_hits": []
+      },
+      {
+        "n": 350,
+        "last_nonempty_m": 585,
+        "empty_at_m": 586,
+        "peak_states": 152,
+        "exact_hits": []
+      },
+      {
+        "n": 1614,
+        "last_nonempty_m": 5823,
+        "empty_at_m": 5824,
+        "peak_states": 1544,
+        "exact_hits": []
+      },
+      {
+        "n": 2990,
+        "last_nonempty_m": 6153,
+        "empty_at_m": 6154,
+        "peak_states": 3040,
+        "exact_hits": []
+      },
+      {
+        "n": 3342,
+        "last_nonempty_m": 13729,
+        "empty_at_m": 13730,
+        "peak_states": 7488,
+        "exact_hits": []
+      }
+    ],
+    "n30_mod15_audit": {
+      "exact_hits": [],
+      "mod15_hits": [],
+      "states_at_m81": [
+        "2244",
+        "4556",
+        "6604",
+        "12908"
+      ]
+    }
+  },
+  "interpretation": "Exact finite computational evidence for 14<=n<=10000, conditional on the source-to-finite-subset bridge. The root source wall identity is kernel-checked; the explicit Finset bridge is pending PR #99 verification.",
+  "code": "im-results/agent43-p1-high-cost-reset-count/WallFullDPTo10000.js",
+  "corrected_on": "2026-11-13",
+  "note": "The terminal carry was corrected from 2^n+m+n+2 to 2^n+m+n+3; corrected scans preserve the stated empty-state indices."
+}
