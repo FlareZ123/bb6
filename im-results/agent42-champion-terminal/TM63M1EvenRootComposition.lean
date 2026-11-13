@@ -23,8 +23,17 @@ open BB6ChampionArithmetic
 
 /-- Exact S1 parameters immediately after the first m=1,n=6 increment. -/
 def tm63AfterM1EvenA : Nat := 71+(2^63-1)+2
-def tm63AfterM1EvenB : Nat := 2^(2^63-1)-1
+def tm63AfterM1EvenB : Nat := nextRight (2^63-1)
 def tm63AfterM1EvenHead : Int := (223:Int)+5+(3*(2^63-1):Nat)
+
+private theorem tm63NextRight_eq (b : Nat) : nextRight b = 2^b-1 := by
+  rfl
+
+private theorem tm63SectionResult_succ_cost (n m a b : Nat) :
+    (sectionResult (n+1) m a b).cost =
+      proposedIncrementCost (m%3) (n+1) a b +
+        (sectionResult n (nextMarker m) (nextExponent m a b) (nextRight b)).cost := by
+  rfl
 
 /-- The still-conditional itinerary after the newly source-proved first
 m=1,n=6 increment. -/
@@ -45,9 +54,25 @@ theorem tm63SuffixSteps_split_m1_even :
         proposedIncrementCost 1 6 71 (2^63-1) +
           (sectionResult 5 0 tm63AfterM1EvenA tm63AfterM1EvenB).cost := by
     change (sectionResult 6 1 71 (2^63-1)).cost = _
-    rw [sectionResult]
-    simp [nextMarker,nextExponent,nextRight,
-      tm63AfterM1EvenA,tm63AfterM1EvenB]
+    have hm : nextMarker 1 = 0 := by decide
+    have ha : nextExponent 1 71 (2^63-1) = tm63AfterM1EvenA := by
+      change 71+(2^63-1)+2 = 71+(2^63-1)+2
+      rfl
+    have hb : nextRight (2^63-1) = tm63AfterM1EvenB := by
+      change nextRight (2^63-1) = nextRight (2^63-1)
+      rfl
+    calc
+      (sectionResult 6 1 71 (2^63-1)).cost =
+          proposedIncrementCost (1%3) 6 71 (2^63-1) +
+            (sectionResult 5 (nextMarker 1) (nextExponent 1 71 (2^63-1))
+              (nextRight (2^63-1))).cost :=
+        tm63SectionResult_succ_cost 5 1 71 (2^63-1)
+      _ = proposedIncrementCost 1 6 71 (2^63-1) +
+            (sectionResult 5 0 tm63AfterM1EvenA tm63AfterM1EvenB).cost := by
+        rw [hm,ha,hb]
+        have hmod : 1%3 = 1 := by decide
+        rw [hmod]
+        rfl
   unfold tm63SuffixSteps tm63AfterM1EvenSteps
   rw [hfirst]
   omega
@@ -76,8 +101,15 @@ theorem tm63_attainable_after_m1_even_q4
         (s1Config 3 6 1 71 0 (2^63-1) 223) =
         some (s1Config 3 5 0 tm63AfterM1EvenA 0
           tm63AfterM1EvenB tm63AfterM1EvenHead) := by
-    simpa [tm63AfterM1EvenA,tm63AfterM1EvenB,tm63AfterM1EvenHead]
-      using hfirst
+    have hcfg :
+        s1Config 3 5 0 (71+(2^63-1)+2) 0
+          (2^(2^63-1)-1) ((223:Int)+5+(3*(2^63-1):Nat)) =
+        s1Config 3 5 0 tm63AfterM1EvenA 0
+          tm63AfterM1EvenB tm63AfterM1EvenHead := by
+      simp only [tm63AfterM1EvenA,tm63AfterM1EvenB,
+        tm63AfterM1EvenHead,tm63NextRight_eq]
+      congr 1 <;> omega
+    exact hfirst.trans (congrArg some hcfg)
   have hstageFull :
       run tm2 tm63SuffixSteps
         (s1Config 3 6 1 71 0 (2^63-1) 223) =
