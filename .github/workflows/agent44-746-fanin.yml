@@ -8,6 +8,8 @@ on:
     paths:
       - 'im-results/agent7-746-even-parent/**'
       - 'im-results/agent44-746-rank/**'
+      - 'im-results/agent10-cascade/ParentsFast.lean'
+      - 'im-results/agent10-cascade/ClosedCertFast.lean'
       - '.github/workflows/agent44-746-fanin.yml'
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
