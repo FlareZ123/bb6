@@ -294,8 +294,16 @@ private theorem stage43_decomposition (v k : Nat) :
   rcases hrep3 with ⟨hstate,hcur,hleftRep,hrightRep⟩
   have hrep3' : Represents (low43_C0_zipper v k) c3 := by
     simpa [zC0,low43_C0_zipper] using (show Represents zC0 c3 from ⟨hstate,hcur,hleftRep,hrightRep⟩)
-  have hstate' : c3.state.val=2 := by simpa [zC0,low43_C0_zipper] using hstate
-  have hcur' : c3.tape c3.head=false := by simpa [zC0,low43_C0_zipper] using hcur
+  have hstate' : c3.state.val=2 := by
+    change c3.state.val = (low43_C0_zipper v k).state at hstate
+    have hz : (low43_C0_zipper v k).state = 2 := rfl
+    rw [hz] at hstate
+    exact hstate
+  have hcur' : c3.tape c3.head=false := by
+    change c3.tape c3.head = (low43_C0_zipper v k).current at hcur
+    have hz : (low43_C0_zipper v k).current = false := rfl
+    rw [hz] at hcur
+    exact hcur
   have hright' : c3.tape (c3.head+1)=false := by
     have h := hrightRep 0
     change c3.tape (c3.head+1)=false at h
@@ -397,7 +405,7 @@ theorem low43_C0_record (v k : Nat) :
   let c0 : Config := {state:=A,head:=0,tape:=tape}
   let cStage : Config := stage43Config v k
   let B : Nat := 4*(v+1)*(v+1)+2*(v+1)
-  have hhead : 2*((v+1:Nat):Int)=2*(v:Int)+2 := by omega
+  have hhead : 2*((v:Int)+1)=2*(v:Int)+2 := by omega
   have htape : stage43Tape v k = negFill tape (v+1) := rfl
   have hfirst : run target429 B c0=some cStage := by
     simpa [c0,cStage,B,stage43Config,hhead,htape] using
@@ -435,15 +443,22 @@ theorem low43_C0_record (v k : Nat) :
     rw [Nat.mul_add,Nat.add_mul]
     simp
     omega
+  have hmult : 4*(2*v)=8*v := by
+    rw [← Nat.mul_assoc]
+    rfl
   have htime : B+(8*v+16)=4*v*v+18*v+22 := by
     dsimp [B]
     calc
       4*(v+1)*(v+1)+2*(v+1)+(8*v+16)
           = 4*((v+1)*(v+1))+2*(v+1)+(8*v+16) := by rw [Nat.mul_assoc]
       _ = 4*(v*v+2*v+1)+2*(v+1)+(8*v+16) := by rw [hsq]
-      _ = 4*(v*v)+8*v+4+2*v+2+8*v+16 := by simp [Nat.mul_add]
-      _ = 4*(v*v)+18*v+22 := by omega
-      _ = 4*v*v+18*v+22 := by rw [← Nat.mul_assoc]
+      _ = 4*(v*v)+4*(2*v)+4+(2*v+2)+(8*v+16) := by simp [Nat.mul_add]
+      _ = 4*(v*v)+8*v+4+2*v+2+8*v+16 := by
+        rw [hmult]
+        omega
+      _ = 4*v*v+18*v+22 := by
+        rw [← Nat.mul_assoc]
+        omega
   have htotal' : run target429 (4*v*v+18*v+22) c0=some cC := by
     simpa [htime] using htotal
   have hheadC : cC.head=2*(v:Int)+6 := by
