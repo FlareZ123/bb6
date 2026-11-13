@@ -1,12 +1,6 @@
 name: Agent 3 #429 exact C-zero section grammar (path-filtered)
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - ".github/workflows/agent3-429-root-language.yml"
-      - "im-results/agent3-429-root-language/**"
-      - "im-results/agent39-429-frontier-left/Frontier429.lean"
-      - "im-results/agent32-429-root-typeii-odd/**"
 permissions:
   contents: read
 jobs:
