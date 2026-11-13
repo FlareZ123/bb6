@@ -19,7 +19,7 @@ s\equiv5\pmod8,\qquad
 129+211s=2^r u,\qquad
 r\equiv1\pmod2,\qquad
 u\equiv1\pmod4,\qquad
-u\ge7.
+u=1\ \text{or}\ u\ge7.
 \]
 Then \(B_s\) is not on the genuine blank-origin Machine C section orbit.
 
@@ -39,17 +39,19 @@ It remains to check its modulo-eight gate. The coordinate sum at depth \(n\) is
 \[
 310+512s-2^q u-4n.
 \]
-If \(q\ge3\), this is \(6-4n\pmod8\), hence \(6\) or \(2\). If \(q=2\), it is \(2-4n\pmod8\), hence \(2\) or \(6\). If \(q=1\), then \(n=r-1\) is even because \(r\) is odd; also \(2u\equiv2\pmod8\), so the sum is \(4\pmod8\). Thus at every depth \(n<r\), the sum is neither \(0\) nor \(7\pmod8\). The exact six-even-right predecessor theorem can therefore be applied \(r\) times.
+If \(u\ge7\), then for every \(n<r\) the right coordinate is even and at least \(12\). The modulo-eight check is: if \(q\ge3\), the sum is \(6-4n\pmod8\), hence \(6\) or \(2\); if \(q=2\), it is \(2-4n\pmod8\), hence \(2\) or \(6\); if \(q=1\), then \(n=r-1\) is even because \(r\) is odd, and \(2u\equiv2\pmod8\), so the sum is \(4\pmod8\). Thus all \(r\) six-even-right predecessor steps are licensed. The terminal state is
+\[
+T^r(B_s)=(312+512s-2u-4r,\;u-2),
+\]
+whose right coordinate is odd and at least \(5\), and whose sum is \(310+512s-u-4r\equiv1\pmod4\). This contradicts **blank_no_odd_sum_one**.
 
-The terminal state is
+If \(u=1\), apply the same six-even-right gate only while \(q=r-n\ge3\). These steps are all licensed: the right coordinate is \(2^q-2\ge6\), and the sum is \(6-4n\pmod8\in\{2,6\}\). At depth \(r-2\), the state is
 \[
-T^r(B_s)=(312+512s-2u-4r,\;u-2).
+T^{r-2}(B_s)=(312+512s-4r,\;2).
 \]
-Its right coordinate is odd and at least \(5\), while its coordinate sum is
-\[
-310+512s-u-4r\equiv 2-1\equiv1\pmod4.
-\]
-This contradicts the source-certified blank-section odd-image theorem (**blank_no_odd_sum_one**). Hence \(B_s\) is unreachable. \(\square\)
+The exact low-boundary source fibre says every original section predecessor of a target \((x,2)\) is \((x+2,0)\), while no original section transition outputs a right coordinate \(0\). Hence this depth-\((r-2)\) state is also unreachable. This uses the paper-level low-boundary derivation in im-results/agent34-c-valuation-fanin/SMALL-BOUNDARY.md; its y=0/y=2 fibre lemmas should be added to the Lean source audit before this extension is promoted.
+
+In either case \(B_s\) is unreachable. \(\square\)
 
 Since \(s\equiv5\pmod8\), the quotient \(S=28+45s\) for \(A_s\) is odd, greater than two, and nonzero modulo four. The source-certified theorem **blank_no_sumzero_target** applies to \(A_s\): its direct parent is \(L_s\), and its bounce parent is \(B_s\). Both are now excluded. Therefore \(A_s\) is unreachable under the same hypotheses.
 
@@ -87,7 +89,7 @@ If \(d=v_2(148+211q)\), then \(r=d+3\). For each even \(d\), the condition that 
 \[
 \sum_{d\text{ even},\,d\ge0}2^{-(d+2)}=\frac13
 \]
-within \(s\equiv5\pmod8\), hence density \(1/24\) among the odd-t high-stop parameters \(t=2s+1\). The restriction \(u\ge7\) removes at most the \(u=1,5\) exceptional solutions for each \(d\), a zero-density set. This density statement describes only this m=0 parameter sieve, not a fraction of machines or halting runs.
+within \(s\equiv5\pmod8\), hence density \(1/24\) among the odd-t high-stop parameters \(t=2s+1\). The restriction \(u=1\) or \(u\ge7\) removes only the \(u=5\) exceptional solution for each \(d\), a zero-density set. This density statement describes only this m=0 parameter sieve, not a fraction of machines or halting runs.
 
 ## Even-valuation residual candidates
 
@@ -163,6 +165,6 @@ which is odd-right with sum \(1\pmod4\). This family also awaits source formaliz
 
 ## Formalization and remaining obstruction
 
-The new general theorem should be formalized with a recursive predecessor iterator, an induction proving its closed form, and a gate lemma split by \(r-n=1\), \(r-n=2\), or \(r-n\ge3\). Then compose it with the already source-certified **blank_no_sumzero_target**, **blank_no_L_s_mod8_five**, **blank_no_odd_sum_one**, and **mzero_first_two_reach**. Add the new file to the existing manual agent11-c-diagonal-late.yml workflow and require a successful original-source run with no sorryAx before promoting it.
+The new general theorem should be formalized with a recursive predecessor iterator, an induction proving its closed form, and a gate lemma split by \(r-n=1\), \(r-n=2\), or \(r-n\ge3\). Then compose it with the already source-certified **blank_no_sumzero_target**, **blank_no_L_s_mod8_five**, **blank_no_odd_sum_one**, and **mzero_first_two_reach**. The added (u=1) boundary case also needs the y=0/y=2 fibre statements from SMALL-BOUNDARY.md formalized from the complete source iff. Add the new file to the existing manual agent11-c-diagonal-late.yml workflow and require a successful original-source run with no sorryAx before promoting it.
 
 The even-valuation bounce-parent cases and the remaining \(S\equiv0\pmod4\) states are still open. This is a stronger parameterized reduction, not a decision of Machine C or BB(6).
