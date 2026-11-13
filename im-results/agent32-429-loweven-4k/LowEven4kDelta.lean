@@ -27,8 +27,7 @@ private theorem compose_delta
   rfl
 
 
-private theorem shift_A01_tail_delta (n : Nat) (hn : 1 ≤ n)
-    (left : List Bool) :
+private theorem shift_A01_tail_delta (n : Nat) (hn : 1 ≤ n) (left : List Bool) :
     runWithDelta (2*n) (z 0 left false (true :: pairs01 n)) =
       some (z 0 (ones (2*n) ++ left) false [true], ((2*n : Nat) : Int)) := by
   induction n generalizing left with
@@ -46,7 +45,7 @@ private theorem shift_A01_tail_delta (n : Nat) (hn : 1 ≤ n)
               some (z 0 (true :: true :: left) false (true :: pairs01 (n+1)), 2) := by
             simpa [pairs01] using
               (shift_A01_pair_delta left (false :: true :: pairs01 (n+1)))
-          have hrest := ih (by omega) (true :: true :: left)
+          have htail := ih (by omega) (true :: true :: left)
           have htime : 2*(n+2) = 2 + 2*(n+1) := by omega
           rw [htime, runWithDelta_add]
           have hpair' :
@@ -55,7 +54,7 @@ private theorem shift_A01_tail_delta (n : Nat) (hn : 1 ≤ n)
             simpa only [pairs01] using hpair
           rw [hpair']
           simp only [Option.bind_some]
-          rw [hrest]
+          rw [htail]
           simp only [Option.map_some]
           have hleft : ones (2*(n+1)) ++ [true,true] = ones (2*(n+2)) := by
             calc
@@ -127,7 +126,7 @@ private theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
   | succ n ih =>
       rw [show n+1 = 1+n by omega, runWithDelta_add]
       have hleft : ones (1+n) ++ left = true :: (ones n ++ left) := by
-        rw [ones_add 1 n]
+        rw [BB429SourceE1Return.ones_add 1 n]
         simp [ones]
       have hstep :
           runWithDelta 1 (z 4 (ones (1+n) ++ left) true suffix) =
@@ -139,7 +138,7 @@ private theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
       rw [ih]
       simp only [Option.map_some]
       have hones : ones n ++ [true] = ones (n+1) := by
-        simpa [ones] using (ones_add n 1).symm
+        simpa [ones] using (BB429SourceE1Return.ones_add n 1).symm
       have hright : ones n ++ (true :: suffix) = ones (n+1) ++ suffix := by
         calc
           ones n ++ (true :: suffix) = ones n ++ ([true] ++ suffix) := rfl
