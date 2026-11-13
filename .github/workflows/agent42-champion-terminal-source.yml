@@ -282,6 +282,13 @@ jobs:
             echo '::error::sorryAx found in parity-complete S1 counted decrement dependencies'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M2OddGenericStage.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-odd-generic-stage-axioms.log
+          lean -o M2OddGenericStage.olean M2OddGenericStage.lean 2>&1 | tee /tmp/a42-terminal/m2-odd-generic-stage-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m2-odd-generic-stage-axioms.log; then
+            echo '::error::sorryAx found in generic odd m=2 counted reset stage'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/S1CountedDrain.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/s1-counted-drain-axioms.log
           lean -o S1CountedDrain.olean S1CountedDrain.lean 2>&1 | tee /tmp/a42-terminal/s1-counted-drain-axioms.log
