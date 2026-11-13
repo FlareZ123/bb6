@@ -2,14 +2,6 @@ name: Agent 7 U/Q parent-band and n=887 cone source certificate (manual)
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - agent7-887-even-parent
-    paths:
-      - .github/workflows/agent7-u-parent-band.yml
-      - im-results/agent7-746-even-parent/**
-      - im-results/agent7-fatal-density/**
-      - im-results/agent10-cascade/**
 
 permissions:
   contents: read
