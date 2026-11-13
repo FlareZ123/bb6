@@ -173,7 +173,8 @@ reachability.
 
 
 The independent modular reproducer NestedCascadeCheck.mjs checks Agent 7's
-five-edge residue \(r=74803\pmod{177147}\), its five band-limit fractions,
-and the immediate sixth \((t,\sigma)=(0,13)\) band limit. This is a
-representative-level arithmetic check plus a cylinder-period argument,
-not a Lean certificate.
+five-edge residue \(r=74803\pmod{3^{11}}\), the sixth
+\((t,\sigma)=(0,13)\) edge on that cylinder, and a seventh
+\((t,\sigma)=(0,14)\) edge on the subcylinder
+\(r=74803\pmod{3^{12}}\). It reproduces the valuation checks, band limits,
+and next-digit selection; this is not a Lean certificate.
