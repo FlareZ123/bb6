@@ -515,7 +515,6 @@ theorem q4_suffix_frame_eq_s1Config
     intro i
     have hcoord : H-(i:Int) = h+5+(3*b:Int)-(i:Int) := by
       dsimp [H]
-      rfl
     rw [hcoord]
     simpa [U,T1,T2,g] using
       q4_suffix_left_word_general T h b sourceLeft L n m a z hleft happend i
