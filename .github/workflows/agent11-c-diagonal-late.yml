@@ -168,7 +168,7 @@ jobs:
           lean -o LowInverseOne.olean LowInverseOne.lean
           lean -o HighSumTwo.olean HighSumTwo.lean
           # New exact x=2 mod 16 y=3 inverse boundary for the u=5 branch.
-          cp \${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean .
           lean -o EvenOddThreeX2Mod16.olean EvenOddThreeX2Mod16.lean 2>&1 | tee EvenOddThreeX2Mod16.log
           if grep -q sorryAx EvenOddThreeX2Mod16.log; then
             echo "REJECTED: x=2 mod 16 y=3 boundary proof contains sorryAx"
@@ -388,7 +388,7 @@ jobs:
 
           # Audit the exact y=0/y=2 source fibres needed for the odd-v2
           # normalization's u=1 boundary case.
-          cp \${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0SmallBoundaryZero.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0SmallBoundaryZero.lean .
           lean -o M0SmallBoundaryZero.olean M0SmallBoundaryZero.lean 2>&1 | tee M0SmallBoundaryZero.log
           if grep -q sorryAx M0SmallBoundaryZero.log; then
             echo "REJECTED: low-boundary source proof contains sorryAx"
@@ -396,7 +396,7 @@ jobs:
           fi
 
           # Source-check the new explicit s=2048*w+293 m=0 high-stop family.
-          cp \${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS293.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS293.lean .
           lean -o M0EvenEvenSumZeroS293.olean M0EvenEvenSumZeroS293.lean 2>&1 | tee M0EvenEvenSumZeroS293.log
           if grep -q sorryAx M0EvenEvenSumZeroS293.log; then
             echo "REJECTED: s=293 family proof contains sorryAx"
@@ -404,7 +404,7 @@ jobs:
           fi
 
           # Source-check the B_s parent reduction for s=32*w+31.
-          cp \${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31.lean .
           lean -o M0EvenEvenSumZeroS31.olean M0EvenEvenSumZeroS31.lean 2>&1 | tee M0EvenEvenSumZeroS31.log
           if grep -q sorryAx M0EvenEvenSumZeroS31.log; then
             echo "REJECTED: s=31 B-parent proof contains sorryAx"
@@ -427,7 +427,7 @@ jobs:
             exit 1
           fi
 
-          cp \${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeDiagonalM0SumZeroS293Full.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeDiagonalM0SumZeroS293Full.lean .
           lean -o CThreeDiagonalM0SumZeroS293Full.olean CThreeDiagonalM0SumZeroS293Full.lean 2>&1 | tee CThreeDiagonalM0SumZeroS293Full.log
           if grep -q sorryAx CThreeDiagonalM0SumZeroS293Full.log; then
             echo "REJECTED: incomplete s=293 exact criterion"
