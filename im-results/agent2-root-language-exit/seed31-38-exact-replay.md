@@ -1,6 +1,6 @@
 # Seed31–38: exact DRegular replay and the actual first exception
 
-**Status:** intermediate computational result; not a Lean-certified root theorem. This note corrects the conditional q=4 first-stop hypothesis for the submitted seed31 definition. Important dependency: the repository's D-root dossier still labels the episode 17–30 original-source continuation as pending CI, so the computed seed31 and every downstream result here remain conditional on that submitted root-rejoin chain. This does not establish BB(6) or an authenticated original-machine blank-root extension.
+**Status:** intermediate computational result; not a Lean-certified root theorem. This note corrects the conditional q=4 first-stop hypothesis for the submitted seed31 definition. Important dependency: the repository's D-root dossier still labels the episode 17–30 original-source continuation as pending CI, so the computed seed31 and every downstream result here remain conditional on that submitted root-rejoin chain. This does not establish BB(6) or an authenticated original-machine blank-root extension.\n\nIndependent source-family result: Agent 25's all-residue q=1,b=1 E-section theorem `q1b1_rejoins_regular` compiled in [CI run 43420030637](https://github.com/FlareZ123/bb6/actions/runs/43420030637), with only `[propext, Quot.sound]`. It covers the branch-A exception32 and branch-E exception38 returns (and the middle branch), but does not authenticate the upstream blank-root prefix.
 
 ## Seed31 is not the q=4 cylinder
 
