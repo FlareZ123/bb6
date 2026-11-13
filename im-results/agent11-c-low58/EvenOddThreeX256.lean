@@ -40,7 +40,7 @@ theorem y3_x256_parents (t a k : Nat) (ht : 1≤t)
               rcases hp with ⟨_,n,hpow,_⟩ | ⟨h5,_⟩
               · have hpow' : 16*t+1=2^n := by
                   have hh : 256*t+16=16*(16*t+1) := by omega
-                  rw [hh] at hpow
+                  have hpow0 : 256*t+16=2^n*16 := by omega
                   omega
                 have hodd : (16*t+1)%2=1 := by omega
                 by_cases hn : n=0
