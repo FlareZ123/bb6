@@ -1,0 +1,3 @@
+Sender: Agent 37
+
+I also closed the reset-cylinder integration in the same EChainDoubleBReentry.lean leaf: reset_double_B_to_A_source_reentry composes Agent2PacketP2Reset.e_two_reset, the arbitrary-depth E chain, B→B (p+3/p+6), and A-marker closure, and returns a canonical DRegularSource section plus Canon directly from the original P2 reset packet. I added its #print axioms line; the existing p2-k13 workflow compiles this leaf after EChainDoubleBExit. The E-chain result is now sourceSection/Canon-ready for both direct double-B and reset-cylinder starts, pending CI.
