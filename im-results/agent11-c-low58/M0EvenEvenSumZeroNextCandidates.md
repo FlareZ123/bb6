@@ -1,6 +1,6 @@
 # m=0 even-even sum-zero: odd-valuation normalization and residual candidates
 
-**Status:** The first theorem below has a complete paper-level derivation from the source-certified parent and inverse lemmas in M0EvenEvenSumZero.lean, but its **general induction has not yet been Lean-formalized or CI-checked**. The explicit s=2048w+293 instance now has a Lean draft in M0EvenEvenSumZeroS293.lean, its exact-criterion integration is drafted in CThreeDiagonalM0SumZeroS293Full.lean; the u=1 low-boundary lemmas are drafted in M0SmallBoundaryZero.lean; and the x=2 mod 16 y=3 boundary is drafted in EvenOddThreeX2Mod16.lean; and the s=32w+31 B-parent reduction is drafted in M0EvenEvenSumZeroS31.lean. All five previously listed source drafts were added to the existing manual agent11-c-diagonal-late.yml workflow, which has not yet been run on these commits. A further x=10 mod 256 y=3 draft is in EvenOddThreeX256.lean, but its unique-parent argument is **false** and must not be relied on. The source grammar permits \(n=2\): \(x=266,a=31,k=115,n=2\) satisfies \(x+6=2^2(2a+6)\) and the exact cost equation, so \(\operatorname{secNext}(31,115)=(266,3)\) despite the claimed n=0 parent \((133,67)\). More generally, \(x=256m+10\) with \(m\ge1\) permits \(n=0,2\); the \(n=2\) parent \((32m-1,112m+3)\) is odd-right with sum \(2\pmod4\) and is excluded, but the \(n=0\) parent still needs downstream analysis. The flawed draft is not in the manual workflow. A separate reproducible counterexample is now in EvenOddThreeX256Counterexample.lean and added to the manual workflow; it has not yet been CI-run. A repair appears possible: for \(x=256m+10\), \(m\ge1\), the exact valuation \(v_2(x+6)=4\), parity forces even \(n\), and the \(a=1\) branch is impossible since \(x+6=16(16m+1)\) is not a power of two. Thus the only high odd-a depths are \(n=0,2\). The \(n=2\) parent \((32m-1,112m+3)\) is odd-image forbidden. The \(n=0\) parent \((128m+5,64m+3)\) goes through OddOddLowVal to \((96m+2,80m+1)\), then EvenOddFourExact to \((88m-1,84m-1)\), which is odd-right with sum \(2\pmod4\). Both branches are therefore excluded on paper; Agent 11 has been sent this two-parent repair, which still needs a correct Lean proof. Nothing here is in results/. Candidates 5 and 6 remain algebraic drafts. Do not report any of these extensions as source-certified until the original-source workflow passes with no sorryAx.
+**Status:** The first theorem below has a complete paper-level derivation from the source-certified parent and inverse lemmas in M0EvenEvenSumZero.lean, but its **general induction has not yet been Lean-formalized or CI-checked**. The explicit s=2048w+293 instance now has a Lean draft in M0EvenEvenSumZeroS293.lean, its exact-criterion integration is drafted in CThreeDiagonalM0SumZeroS293Full.lean; the u=1 low-boundary lemmas are drafted in M0SmallBoundaryZero.lean; and the x=2 mod 16 y=3 boundary is drafted in EvenOddThreeX2Mod16.lean; and the s=32w+31 B-parent reduction is drafted in M0EvenEvenSumZeroS31.lean. The five earlier source drafts are in the existing manual agent11-c-diagonal-late.yml workflow, which has not yet been run on these commits. The x=266 counterexample in EvenOddThreeX256Counterexample.lean confirms that x=10 mod 16 has an n=2 parent as well as n=0; no unique-parent claim is valid in this residue. The older x256 draft is superseded by the generalized two-parent draft EvenOddThreeX128W.lean, which is not yet in the workflow or CI-checked. The counterexample file is in the manual workflow but has not yet been CI-run.
 
 ## General odd-valuation branch
 
@@ -223,21 +223,28 @@ The general odd-valuation theorem still needs a parametric Lean proof: define th
 The even-valuation candidates \(s=1024w+229\) and \(s=1024w+533\) have been independently checked algebraically: their finite six-gate chains and terminal parent branches are consistent, and the existing L_s theorem plus the generic even-even parent theorem should complete them. They are not yet Lean-proven. The residual \(u=5,r\equiv1\pmod4\) y=3 parent fan, the remaining even-valuation cases, and the \(S\equiv0\pmod4\) parent branches remain open. This is a stronger parameterized reduction, not a decision of Machine C or BB(6).
 
 
-## Supplemental u=5 slice: r=201 mod 6720
+## Supplemental u=5 slices: \(M\equiv0\pmod8\) or \(M\equiv24\pmod{64}\)
 
-The remaining \(u=5,\ r\equiv1\pmod4\) sequence has \(r=201+420M\). Its subfamily \(M=16v\), equivalently \(r=201+6720v\), can be excluded by a finite chain of existing exact source inverses. In this case
+The remaining \(u=5,\ r\equiv1\pmod4\) sequence has \(r=201+420M\). A generalized exact y=3 boundary lemma is drafted in EvenOddThreeX128W.lean. For \(w\ge1\), the exact source parents of \((128w+10,3)\) are
 \[
-m=\frac{x-10}{16}=32(s-1)-105M=16t,
-\qquad t=2(s-1)-105v\ge1,
+P_0=(64w+5,32w+3),\qquad P_2=(16w-1,56w+3).
 \]
-so the terminal y=3 state is \((256t+10,3)\). The lower bound follows from \(2^r\ge r\) and \(5\cdot2^r=129+211s\): substituting \(r=201+6720v\) gives \(211s\ge876+33600v\ge211(53v+3)\), hence \(s\ge53v+3\) and \(t\ge v+4\).
+Both depths \(n=0,2\) are retained; the x=266 counterexample is the case \(w=2\), and is precisely the second parent. Since \(x+6=16(8w+1)\) has 2-adic valuation exactly four and odd factor greater than one, the \(a=1\) bounce branch is impossible; cost parity forces the \(a\ge3\) bounce depth to be even, leaving only 0 and 2.
 
-The exact y=3 source parents of \((256t+10,3)\) are
+The second parent has odd right coordinate and sum \(72w+2\equiv2\pmod4\), so blank_no_odd_sum_two excludes it. The first parent has sum \(96w+8\equiv8\pmod{16}\); oddodd_val3_blank_reach_iff forces \((48w+2,40w+1)\). This is an even/odd state with \(x+y+1=88w+4\equiv4\pmod8\), so evenodd_four_blank_reach_iff forces \((44w-1,42w-1)\). The latter is excluded in either of two cases:
+- \(w\) even: its sum \(86w-2\equiv2\pmod4\);
+- \(w\equiv5\pmod8\): its sum is \(12\pmod{16}\), so oddodd_lowval_blank_reach_iff forces \((43w-3,(85w-7)/2)\), whose odd-right sum is \(1\pmod4\), forbidden by the odd-right image.
+
+Thus blank_no_y3_x128w excludes the terminal whenever \(w\) is even or \(w\equiv5\pmod8\). The earlier \(x=256t+10\) slice is the even-\(w\) specialization, not a unique-parent case.
+
+For the u=5 sequence, the terminal coordinate is \(x=302+512s-4r=16m+10\), where
 \[
-P_0=(128t+5,64t+3),\qquad P_2=(32t-1,112t+3).
+m=32(s-1)-105M.
 \]
-Indeed \(x+6=16(16t+1)\) has 2-adic valuation exactly four and its odd factor exceeds one, so the a=1 bounce branch is impossible; cost parity forces the a≥3 bounce depth to be even, leaving only depths 0 and 2. The draft source theorem is y3_x256_parents in EvenOddThreeX256.lean.
+When \(M\equiv0\pmod8\), write \(m=8w\), so \(w=4(s-1)-105(M/8)\). The subfamilies covered by the y=3 lemma are:
+- \(M=16v\): \(w=4(s-1)-210v\), which is even;
+- \(M=24+64z\): \(w=4(s-1)-315-840z\equiv5\pmod8\).
 
-The second parent has odd right coordinate and sum \(144t+2\equiv2\pmod4\), so blank_no_odd_sum_two excludes it. The first parent has sum \(192t+8\equiv8\pmod{16}\); oddodd_val3_blank_reach_iff forces its unique parent \((96t+2,80t+1)\). This is an even/odd state with \(x+y+1=176t+4\equiv4\pmod8\), so evenodd_four_blank_reach_iff forces \((88t-1,84t-1)\), whose sum is \(172t-2\equiv2\pmod4\) and is again excluded by blank_no_odd_sum_two. Thus the y=3 terminal is unreachable for every \(r=201+6720v\).
+In both cases \(w\ge1\). For \(M=16v\), \(2^r\ge r\) and \(5\cdot2^r=129+211s\), with \(r=201+6720v\), give \(211s\ge876+33600v\ge211(53v+3)\), hence \(w\ge2v+8\). For \(M=24+64z\), \(r=10281+26880z\), so \(211s\ge51276+134400z\ge211(210z+80)\), hence \(w\ge1\).
 
-This is an infinite subfamily of the previously open u=5 branch. The Lean module is a draft only: it has not been added to the original-source workflow or CI-checked. The other \(r=201+420M\) cases remain open; in particular this does not close the full x=10 mod 16 parent fan.
+This excludes two infinite subfamilies of the formerly residual \(u=5,\ r\equiv1\pmod4\) sequence. The generalized Lean module is a draft only: it has not been added to the original-source workflow or CI-checked. The other \(M\) classes remain open; this does not close the full \(x\equiv10\pmod{16}\) parent fan.
