@@ -436,7 +436,7 @@ private theorem m2EvenQ4CutTape_leftFacing (a b : Nat) (h : Int)
       · have htail : 3*a+15 ≤ i := by omega
         have hrel :
             (h-(i:Int))-(h-((3*a+2:Int))) =
-              ((3*a+2-i : Nat) : Int) := by omega
+              (3*a+2:Int)-(i:Int) := by omega
         have hout : m2EvenQ4Inside
             ((h-(i:Int))-(h-((3*a+2:Int)))) = false := by
           simp [m2EvenQ4Inside,hrel]
