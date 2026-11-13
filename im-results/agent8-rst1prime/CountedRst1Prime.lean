@@ -320,12 +320,12 @@ theorem rst1Prime_sweptRight_block
         have e0 : h+3*((j+1:Int)) = (h+3)+3*(j:Int) := by omega
         have e1 : h+3*((j+1:Int))+1 = (h+3)+3*(j:Int)+1 := by omega
         have e2 : h+3*((j+1:Int))+2 = (h+3)+3*(j:Int)+2 := by omega
-        have hn0 : h+3*((j+1:Int)) ≠ h+1 := by omega
-        have hn1 : h+3*((j+1:Int)) ≠ h+2 := by omega
-        have hn2 : h+3*((j+1:Int))+1 ≠ h+1 := by omega
-        have hn3 : h+3*((j+1:Int))+1 ≠ h+2 := by omega
-        have hn4 : h+3*((j+1:Int))+2 ≠ h+1 := by omega
-        have hn5 : h+3*((j+1:Int))+2 ≠ h+2 := by omega
+        have hn0 : h+3+3*(j:Int) ≠ h+1 := by omega
+        have hn1 : h+3+3*(j:Int) ≠ h+2 := by omega
+        have hn2 : h+3+3*(j:Int)+1 ≠ h+1 := by omega
+        have hn3 : h+3+3*(j:Int)+1 ≠ h+2 := by omega
+        have hn4 : h+3+3*(j:Int)+2 ≠ h+1 := by omega
+        have hn5 : h+3+3*(j:Int)+2 ≠ h+2 := by omega
         rcases hrec with ⟨r0,r1,r2⟩
         constructor
         · simpa [e0,afterRight3,hn0,hn1] using r0
@@ -383,12 +383,12 @@ theorem rst1Prime_binDec_reset (L a : Nat) :
       have hposL : 0 < 2^(L+1) := Nat.pow_pos (by decide)
       have harg : 2^(L+2)-2^0-1 = 2*(2^(L+1)-1) := by
         rw [hpow]
-        simp only [pow_zero]
+        simp only [Nat.pow_zero]
         omega
       have hbound : 2^(L+1)-1 < 2^(L+1) := by omega
       rw [show L+0+2 = L+2 by omega,harg]
       rw [binDec_even (L+1) (2^(L+1)-1) hbound]
-      simp [rst1Prime_binDec_ones]
+      simp [rst1Prime_binDec_ones,d0pow]
   | succ a ih =>
       let R : Nat := 2^(L+a+2)-2^a-1
       have hExp : a+1 ≤ L+a+2 := by omega
@@ -451,7 +451,8 @@ theorem rst1Prime_sideBit_d0pow_pattern
   | zero => omega
   | succ n ih =>
       by_cases hsmall : i<3
-      · interval_cases i <;> simp [d0pow,d0,sideBit]
+      · have hcases : i=0 ∨ i=1 ∨ i=2 := by omega
+        rcases hcases with rfl | rfl | rfl <;> simp [d0pow,d0,sideBit]
       · have hlarge : 3≤i := by omega
         have htail : i-3 < 3*n := by omega
         rw [d0pow]
@@ -498,6 +499,8 @@ theorem rst1Prime_sweptRight_headFacing_d0pow
   · rw [hcoord,hr0]
     simpa [hside,hr0] using hblock.2.2
   · rw [hcoord,hr1]
+    have hcoord1 : h+3*(j:Int)+2-1 = h+3*(j:Int)+1 := by omega
+    rw [hcoord1]
     simpa [hside,hr1] using hblock.2.1
   · rw [hcoord,hr2]
     simpa [hside,hr2,hT] using hblock.1
