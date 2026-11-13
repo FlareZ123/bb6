@@ -133,6 +133,21 @@ theorem sectionResult_2_0_source
 /-- Authentic blank-root run through the complete first seven-increment
 section: the root prefix through M1-odd, then M0-even (0,2), then
 odd-Rst2 (2,1). -/
+theorem tm63_first_section_endpoint_params :
+    (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).marker =
+      tm63FirstSection.marker ∧
+    (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).exponent =
+      tm63FirstSection.exponent ∧
+    (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).right =
+      tm63FirstSection.right := by
+  rfl
+
+
+def tm63AfterFirstSectionHead : Int :=
+  tm63AfterM1OddHead+10+3*tm63AfterM1OddB+
+    3*(nextRight tm63AfterM1OddB)
+
+
 theorem tm63_blank_reaches_after_first_section :
     run tm2
       (tm63AfterM1OddMoves +
@@ -161,19 +176,6 @@ def tm63AfterFirstSectionSteps : Nat :=
 
 /-- The two symbolic increments after M1-odd are exactly the last two
 increments of the original first section. -/
-theorem tm63_first_section_endpoint_params :
-    (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).marker =
-      tm63FirstSection.marker ∧
-    (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).exponent =
-      tm63FirstSection.exponent ∧
-    (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).right =
-      tm63FirstSection.right := by
-  rfl
-
-def tm63AfterFirstSectionHead : Int :=
-  tm63AfterM1OddHead+10+3*tm63AfterM1OddB+
-    3*(nextRight tm63AfterM1OddB)
-
 theorem tm63AfterM1OddSteps_split_first_section :
     tm63AfterM1OddSteps =
       (sectionResult 2 0 tm63AfterM1OddA tm63AfterM1OddB).cost +
