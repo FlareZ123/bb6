@@ -34,7 +34,7 @@ def resetBaseInput1 : FConfig :=
 def resetBaseInput2 : FConfig :=
   ⟨3, 0, [-6, -3, -1, 0, 2, 3, 4, 7, 8, 9]⟩
 
- /-- The marked lists below deliberately retain `fMove`'s exact insertion/filter order.
+/-- The marked lists below deliberately retain `fMove`'s exact insertion/filter order.
 Do not sort them: `FConfig` equality is ordered-list equality. -/
 /-- Local output tape after the marker-zero base trace. -/
 def resetBaseOutput0 : FConfig :=
