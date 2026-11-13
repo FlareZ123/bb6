@@ -49,3 +49,5 @@ M1 residual = proposedIncrementCost(0,5,A0,B0)
 Consequently, `tm63_attainable_after_m2_even_q4` reduces the original candidate-score theorem to the remaining itinerary beginning at `S1(3,3,1,A2,0,B2,H2)`, plus the final terminal reset. It does not claim that the remaining itinerary or the BB(6) exact value is already proved.
 
 The existing manual-only source workflow now compiles the M0 bridge/prefix, M2 prefix, and this root-composition module with transitive `sorryAx` gates. It has not been dispatched from this invocation. No push trigger or new workflow was added.
+
+The next residual stage is now isolated as `(m,n)=(1,3)`. Its 26-step finite bridge has been certified separately; see [M1OddQ4Bridge.md](M1OddQ4Bridge.md). The full parametric frame/cut/suffix proof is still an open next task.
