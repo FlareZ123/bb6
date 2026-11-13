@@ -144,3 +144,15 @@ resetBase_odd_canonical
 The proof splits the tape comparison into (i) exact finite output agreement inside the marker-specific reset frame, (ii) a common `binDec (L-1) (n/2) ++ lh` left tail outside the frame, with the single m=2 boundary cell handled by the shared third bit of d0/d1, and (iii) the blank right tail after the nine-cell right stream. It also derives the exact `binDec L (n-1) = d1 ++ binDec (L-1) (n/2)` rewrite and converts the framed result to the canonical shifted S1 configuration.
 
 **Verification boundary:** this is a newly authored Lean proof candidate and has not been compiled. It depends on `CountedResetOddBase.lean`, `CountedResetBase.lean`, `CountedReset.lean`, and their source dependencies. It covers only odd inner n with a=b=0; it does not discharge the general reset-prefix obligation or the root's next n=6 even stage. Keep it in `im-results/` until a source-pinned Lean compile and `sorryAx` audit pass.
+
+
+## Root's next reset stage: even n=6, marker m=1 (new q4 cut candidate)
+
+Added `M1EvenQ4Prefix.lean`. This addresses the concrete next source state after the root q4/drain endpoint, `s1Config 3 6 1 a 0 b h`, rather than the already-covered odd `a=b=0` base. The main theorem `m1Even_q4_prefix_run` proves a source run of `44+12*a` moves to state 4 at head `h+4`, with an explicit tape `m1EvenQ4CutTape a b h`. The proof is decomposed into:
+- `counted_left_sweep (3*a+1)`, costing `9*a+3`;
+- a fixed 41-step framed bridge with input marks `[-7,-6,-5,-4,-1,2,3,4]` and output marks `[-9,-8,-7,-4,-1,1,2,3,4]`;
+- `E_scan (3*a)`, returning the head to `h+4`.
+
+The companion theorem `m1Even_q4_prefix_rightShape` establishes the exact `q4RightShape` precondition for the existing `Q4Suffix`. This cut is the q4 suffix input after four already-consumed state-4-on-one transitions, so the remaining suffix length is `35+3*b`. The total is therefore `79+12*a+3*b`, matching `resetPrefixCost 1 6 a b` (since `v2 6=1`).
+
+**Verification boundary:** both new m=1,n=6 theorems are uncompiled candidates. The q4 cut's canonical left-facing identity and the composition with `Q4Suffix` to the target `s1Config 3 5 0 (a+b+2) (2^b-1) 0 (h+5+3*b)` remain open. Keep this in `im-results/`; it is not yet a complete reset-prefix theorem.
