@@ -141,4 +141,51 @@ theorem bubble_macro_prefix_head_bound (m : Machine) (q t : Nat)
 #print axioms run_prefix_right_extremal
 #print axioms bubble_macro_prefix_head_bound
 
+/-- The rightward half of a bubble macro is right-extremal.  Consequently
+    no primitive prefix of the complete macro moves left of the turning
+    point reached by its initial AF sweep. -/
+theorem bubble_macro_prefix_head_lower_bound (m : Machine) (q t : Nat)
+    (c c1 c2 d : Config)
+    (hAF : run m (2*q) c = some c1)
+    (hAFhead : c1.head = c.head - 2*q)
+    (hfull : run m (4*q+2) c = some c2)
+    (hfullhead : c2.head = c.head + 2)
+    (ht : t ≤ 4*q+2)
+    (hprefix : run m t c = some d) :
+    c.head - 2*(q:Int) ≤ d.head := by
+  by_cases hsmall : t ≤ 2*q
+  · have hdisp : c1.head - c.head = -(2*q : Int) := by
+      rw [hAFhead]
+      omega
+    have hleft := run_prefix_left_extremal m (2*q) t c d c1
+      hAF hprefix hsmall hdisp
+    rw [hleft]
+    omega
+  · let s : Nat := t - 2*q
+    have htime : t = 2*q+s := by
+      dsimp [s]
+      omega
+    have hs : s ≤ 2*(q+1) := by
+      dsimp [s]
+      omega
+    have htailFull : run m (2*(q+1)) c1 = some c2 := by
+      have hcomp := run_add' m (2*q) (2*(q+1)) c
+      have hlen : 2*q + 2*(q+1) = 4*q+2 := by omega
+      rw [← hlen] at hfull
+      rw [hcomp, hAF] at hfull
+      simpa using hfull
+    have htailPrefix : run m s c1 = some d := by
+      have hcomp := run_add' m (2*q) s c
+      rw [htime, hcomp, hAF] at hprefix
+      simpa using hprefix
+    have hdisp : c2.head - c1.head = (2*(q+1) : Nat) := by
+      rw [hAFhead, hfullhead]
+      omega
+    have hright := run_prefix_right_extremal m (2*(q+1)) s c1 d c2
+      htailFull htailPrefix hs hdisp
+    rw [hAFhead] at hright
+    omega
+
+#print axioms bubble_macro_prefix_head_lower_bound
+
 end BB429HeadDisplacement
