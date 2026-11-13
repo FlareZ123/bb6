@@ -536,7 +536,8 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
     have hstop : (574+1024*v)+j+3*m+5 =
         (2:Nat)^(2*m+2)*(j+3) := by
       rw [← hk]
-      exact Nat.sub_add_cancel (high_score_nonnegative j m)
+      have h := Nat.sub_add_cancel (high_score_nonnegative j m)
+      omega
     have hpow : 16384 ∣ (2:Nat)^(2*m+2) := by
       have hp : (2:Nat)^14 ∣ (2:Nat)^(2*m+2) :=
         Nat.pow_dvd_pow 2 (by omega)
@@ -575,7 +576,9 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
           _ = 0 := by decide
       rw [hj] at hmod512
       omega
-    have hm42 : 42≤m := by omega
+    have hm42 : 42≤m := by
+      have hle := Nat.mod_le m 512
+      omega
     have hm7 : 7≤m := by omega
     let k : Nat := (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)
     have hstop : k+j+3*m+5=(2:Nat)^(2*m+2)*(j+3) := by
