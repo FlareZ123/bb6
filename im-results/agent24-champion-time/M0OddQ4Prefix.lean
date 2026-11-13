@@ -604,8 +604,7 @@ theorem m0Odd_resetPrefixCost_eq (a b : Nat) :
     resetPrefixCost 0 5 a b = 63+12*a+3*b := by
   have hv : BB6ChampionArithmetic.v2 5 = 0 := by
     simp [BB6ChampionArithmetic.v2]
-  simp [resetPrefixCost,hv]
-  omega
+  simp [resetPrefixCost,hv] <;> omega
 
 /-- Complete source-level Rst0 prefix for the m=0,n=5 branch. -/
 theorem m0Odd_reset_prefix_to_s1 (a b : Nat) (h : Int)
