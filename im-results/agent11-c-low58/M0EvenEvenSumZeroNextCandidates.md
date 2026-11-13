@@ -256,9 +256,7 @@ This excludes two infinite subfamilies of the formerly residual \(u=5,\ r\equiv1
 ## General x=32t+10 source fan
 
 The new `EvenOddThreeX32.lean` extends the exact y=3 parent classification from the x=128w+10 and x=256w+10 cylinders to every `x=32t+10` with `t≥1`. Here `x+6=16(2t+1)` has 2-adic valuation exactly four. The original-source preimage theorem therefore leaves precisely the bounce depths `n=0` and `n=2`:
-[
-P_0=(16t+5,8t+3),qquad P_2=(4t-1,14t+3).
-]
+The two parents are `P₀ = (16t+5, 8t+3)` and `P₂ = (4t−1, 14t+3)`.
 For even `t`, `P_2` has odd right coordinate and sum `18t+2≡2 (mod 4)`, so the source-certified odd-sum-two obstruction excludes it. Any blank reachability of `(32t+10,3)` must therefore pass through `P_0`; its sum is `24t+8≡8 (mod 16)`, and the val-3 odd/odd inverse forces `(12t+2,10t+1)`.
 
 This is a source-exact reduction, not a complete exclusion of the y=3 target: the remaining even/odd state still needs analysis. It applies to the residual `u=5, r≡1 (mod 4)` sequence whenever `M` is even, since `m=32(s-1)-105M` is then even and `x=16m+10=32t+10`. The older `EvenOddThreeX128W.lean` slices are contained in this broader parent-fan classification, but their stronger terminal exclusions are not replaced by this reduction. The new file is in the manual `agent11-c-diagonal-late.yml` source audit and remains unverified until a successful run reports no `sorryAx`.
