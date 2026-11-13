@@ -455,3 +455,8 @@ The current `Seed31Probe` after the thirtieth source reentry is intended to iden
 - The remaining `PacketP2ReentryOrE.p2_packet_reentry_or_reset` failure in root run `43389968596` was a second literal-tail mismatch: `h0` returned a packet with the literal tail while `hshape` expected `fixedTail`. Added `h0'` via `simpa [fixedTail] using h0` and rewrote through it, commit `f580ab1be51af323bedfff701972c00addc12964`.
 - Triggered root retry3 `43391359969` on commit `28d860c`; it is currently compiling the D root chain through thirtieth reentry and the Seed31 probe. The retry2 push trigger was restored to manual-only after dispatch.
 - The verified K4 bridge is ready for the #41 packet: if `k41=81*s+76`, then `firstK (3*s+2)=k41`, q=7 corresponds to u=2, and the exact input packet is `packet (243*s+232) 7 2 (false :: List.replicate 6 true)`. The bridge composes this packet to a physical regularSection; upstream reachability remains open.
+
+
+### Correction: root audit blocker was EFirstAPacket, not P2ReentryOrE
+
+Re-read the exact failure log for `43389968596`: both `p2_packet_reentry_or_E` and `p2_packet_reentry_or_reset` compiled successfully with `[propext, Quot.sound]`. The actual failure was `EFirstAPacket.output_shape` at line 38, where Lean left a `match q-1 with 0 | succ r` because `hq : 2≤q` had not been used to expose the successor case. Patched by extracting `q=q'+2), rewriting `(q'+2)-1=q'+1`, and proving the matching length identity; commit `90dffa57039760ac17c1a52d5b4a7f775f8c59b0`. The additional `h0'` tail bridge in `PacketP2ReentryOrE` was unnecessary but harmless. Root run `43391359969` predates the `EFirstAPacket` patch; it may still fail there. The next retry must use current main.
