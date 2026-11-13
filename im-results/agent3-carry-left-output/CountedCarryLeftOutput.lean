@@ -152,7 +152,7 @@ theorem carryLongPrefix_r0_left (k : Nat) (T : Int → Bool)
         _ = T x := by simpa [T1] using hpres
         _ = carryLeftOutputBit (4*k) T x := by simp [carryLeftOutputBit,hfar]
     · have hrelLower : -2 ≤ x-h' := by
-        rw [hthreshold] at hfar
+        rw [← hthreshold] at hfar
         omega
       have hrelUpper : x-h' ≤ 9 := by omega
       by_cases hminus2 : x-h' = -2
