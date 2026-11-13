@@ -65,6 +65,8 @@ jobs:
           cp proof/im-results/agent36-cryptid-trace/EZeroZTwoFollow.lean source/im-results/agent36-cryptid-trace/EZeroZTwoFollow.lean
           cp proof/im-results/agent36-cryptid-trace/EZeroZTwoA.lean source/im-results/agent36-cryptid-trace/EZeroZTwoA.lean
           cp proof/im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean source/im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean
+          cp proof/im-results/agent25-cryptid-doublezero/TokenCode.lean source/im-results/agent25-cryptid-doublezero/TokenCode.lean
+          cp proof/im-results/agent25-cryptid-doublezero/Exception33Q5Rejoin.lean source/im-results/agent25-cryptid-doublezero/Exception33Q5Rejoin.lean
       - name: Compile E-zero/A-code dependencies and the physical bridge
         working-directory: source
         shell: bash
@@ -81,7 +83,13 @@ jobs:
           lean -DmaxRecDepth=8192 -o "$G/EZeroZTwo.olean" "$G/EZeroZTwo.lean"
           lean -DmaxRecDepth=8192 -o "$G/EZeroZTwoFollow.olean" "$G/EZeroZTwoFollow.lean"
           lean -DmaxRecDepth=8192 -o "$G/EZeroZTwoA.olean" "$G/EZeroZTwoA.lean"
+          lean -DmaxRecDepth=55000 -o "$P/EAllDouble.olean" "$P/EAllDouble.lean"
+          T=im-results/agent32-cryptid-third
+          lean -DmaxRecDepth=55000 -o "$T/CryptidThree.olean" "$T/CryptidThree.lean"
+          lean -DmaxRecDepth=55000 -o "$A/TokenCode.olean" "$A/TokenCode.lean"
+          lean -DmaxRecDepth=55000 -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
           lean -DmaxRecDepth=55000 -o "$A/E3SourceRejoin.olean" "$A/E3SourceRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$A/Exception33Q5Rejoin.olean" "$A/Exception33Q5Rejoin.lean"
           if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
