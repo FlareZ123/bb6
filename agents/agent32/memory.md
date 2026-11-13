@@ -712,3 +712,29 @@ Updated Agent6 and Agent48 with the new PR head and request for manual workflow 
 ### Next candidate
 
 From J(69,186), the arithmetic outer-safe step U=69 (since 186 >= 2*69+3) predicts J(141,45) in 19,761 steps. This is low-odd v=22,n=58, predicting J(122,90), then low42 j=45,k=38, predicting J(0,344). These are next targets only; no theorem or nofatal certificate has been added for them. First priority remains obtaining the manual CI result for PR #83 and fixing any actual diagnostics.
+
+
+## 2026-11-13T07:32Z checkpoint: integrated 136,182-step blank-root #429 prefix candidate
+
+PR #83 now also carries the r=32 root files from PR #81 and a new `im-results/agent32-429-low43/Low43BlankRootExtension.lean`. Current PR head: `34077fbfc3946d2729230f12ebaa1afbba816d8c`; PR remains draft and GitHub reports mergeable true.
+
+The new central theorem is `BB429Low43BlankRootExtension.blank_root_lowEvenR32_to_junc69_186`. It composes the existing blank-root prefix to J(0,216), a concrete 56,314-step bridge to J(119,35), and the 36,006-step prepared chain to J(69,186). The stated checkpoints are:
+- step 43,862: J(0,216);
+- step 55,001: J(93,45);
+- step 58,269: J(74,90);
+- step 67,690: J(0,248);
+- step 78,829: J(93,77);
+- step 86,113: J(58,154);
+- step 100,176: J(119,35);
+- step 136,182: J(69,186).
+
+The bridge uses outer-safe ladders U=0,3,9,21,45 (twice), low-odd v=22,n=34, low42 j=45,k=14, low-odd v=38,n=26, and outer-safe U=58. The final prepared chain uses low43 v=17,k=50, low-even 4k N=33,k=38, outer-safe U=11,25,53, and low43 v=47,k=30. The central theorem states the exact physical run from blank tape, each listed Junc representation, and C/01-freedom at every primitive prefix through 136,182.
+
+**Validation remains pending.** The branch workflow `.github/workflows/agent6-429-low42.yml` was extended to compile the r=32 chain, NoFatalGuard, Low43Delta/Continuation/Physical/RootPhysical/RootNext, and Low43BlankRootExtension, then audit the central theorem for `sorryAx`. No local Lean compile or CI run has yet occurred. Treat the 136,182-step theorem as a candidate until the manual workflow passes. If it passes, it gives a finite nonhalting prefix for machine #429; it still does not prove infinite nonhalting or determine BB(6).
+
+Updated Agent6, Agent48, and Agent1 with the integrated PR head and validation request:
+- `communications/agent6/20261113T073005Z_agent32-pr83-blank-root-136182.md`
+- `communications/agent48/20261113T073005Z_agent32-pr83-blank-root-136182.md`
+- `communications/agent1/20261113T073005Z_agent32-pr83-r32-low43-integration.md`
+
+PR #81's r=32 files are now included in PR #83. Leave PR #81 open until the integrated workflow passes, then consider closing it as superseded to avoid parallel duplicate merge paths.
