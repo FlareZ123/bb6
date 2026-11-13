@@ -520,4 +520,59 @@ theorem rst1Prime_d0pow_append_right (n : Nat) :
 #print axioms rst1Prime_d0pow_append_right
 
 
+/-- Length of a repeated d0 word. -/
+theorem rst1Prime_d0pow_length (n : Nat) :
+    (d0pow n).length = 3*n := by
+  induction n with
+  | zero => simp [d0pow]
+  | succ n ih => simp [d0pow,d0,ih]
+
+/-- Glue n scanned d0 blocks to a final bridge-supplied d0 block. The
+resulting head-facing word is d0pow (n+1). -/
+theorem rst1Prime_d0pow_segment
+    (n : Nat) (T : Int → Bool) (h head : Int)
+    (F : Int → Bool)
+    (hpre : rightOnes T h (n+1))
+    (hhead : head = h+3*(n:Int)-1)
+    (hprefix : ∀ k, k<3*n →
+      F (head-(k:Int)) =
+        sweptRight (n+1) T h (head-(k:Int)))
+    (hboundary : ∀ r, r<3 →
+      F (head-((3*n+r:Int))) = sideBit d0 r) :
+    ∀ k, k<3*(n+1) →
+      F (head-(k:Int)) = sideBit (d0pow (n+1)) k := by
+  intro k hk
+  by_cases hsmall : k<3*n
+  · have hsweep := rst1Prime_sweptRight_headFacing_d0pow n T h hpre k hsmall
+    have hword : sideBit (d0pow (n+1)) k = sideBit (d0pow n) k := by
+      rw [← rst1Prime_d0pow_append_right n]
+      exact sideBit_append_left (d0pow n) d0 k (by
+        rw [rst1Prime_d0pow_length]
+        exact hsmall)
+    calc
+      F (head-(k:Int)) =
+          sweptRight (n+1) T h (head-(k:Int)) := hprefix k hsmall
+      _ = sideBit (d0pow n) k := hsweep
+      _ = sideBit (d0pow (n+1)) k := hword.symm
+  · have hlarge : 3*n≤k := by omega
+    have hrem : k-3*n<3 := by omega
+    have hkdecomp : k=3*n+(k-3*n) := by omega
+    have hbound : (d0pow n).length ≤ k := by
+      rw [rst1Prime_d0pow_length]
+      exact hlarge
+    have hword : sideBit (d0pow (n+1)) k =
+        sideBit d0 (k-3*n) := by
+      rw [← rst1Prime_d0pow_append_right n]
+      exact sideBit_append_right (d0pow n) d0 k hbound
+    rw [hkdecomp] at hboundary
+    have hbd := hboundary (k-3*n) hrem
+    have hcoord : head-(k:Int) =
+        head-((3*n+(k-3*n):Nat):Int) := by rw [hkdecomp]
+    rw [hcoord,hbd]
+    exact hword.symm
+
+#print axioms rst1Prime_d0pow_length
+#print axioms rst1Prime_d0pow_segment
+
+
 end BB6Coverage.Agent8Rst1Prime
