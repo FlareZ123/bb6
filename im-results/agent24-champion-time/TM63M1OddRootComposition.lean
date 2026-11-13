@@ -107,12 +107,11 @@ theorem tm63_attainable_after_m1_odd_q4
           tm63AfterM2EvenHead) =
         some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) := by
     rw [tm63AfterM2EvenSteps_split_m1_odd,run_add]
-    simp only [Option.bind_some]
-    exact m1Odd_q4_counted_increment_source
+    rw [m1Odd_q4_counted_increment_source
       tm63AfterM2EvenA tm63AfterM2EvenB tm63AfterM2EvenHead
-      tm63_after_m1_odd_positivity
+      tm63_after_m1_odd_positivity]
     simp only [Option.bind_some]
-    exact hstage
+    simpa [tm63AfterM1OddA,tm63AfterM1OddB,tm63AfterM1OddHead] using hstage
   exact tm63_attainable_after_m2_even_q4 h hstageAfterM2 hfinal
 
 #print axioms tm63AfterM2EvenSteps_split_m1_odd
