@@ -1,4 +1,6 @@
 import CountedReset
+import ChampionRootBridge
+import S1Encoder
 import CountedQ4Prefix
 import Q4Suffix
 import Lean.Elab.Tactic.Omega
@@ -8,6 +10,7 @@ namespace BB6Coverage.Agent48CountedInc0
 open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
+open BB6.ChampionTerminal
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8CountedReset
@@ -42,7 +45,7 @@ private theorem binDec_three_six :
     simpa using binDec_odd 1 1 (by decide)
   have h3 : binDec 1 1 = d0 ++ binDec 0 0 := by
     simpa using binDec_odd 0 0 (by decide)
-  simp [h1,h2,h3,binDec_zero]
+  simp [h1,h2,h3,binDec_zero,d1pow]
 
 private theorem m1EvenSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
     (s1Config 3 6 1 a 0 b h).tape
@@ -55,7 +58,9 @@ private theorem m1EvenSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
   have hcell := s1Config_left_cell 3 6 1 a 0 b h (3*a+1+k)
   have hside := sideBit_d1pow_append a (3*a+1+k)
     (markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh) (by omega)
-  rw [hleft, hside] at hcell
+  rw [hleft] at hcell
+  rw [List.append_assoc] at hcell
+  rw [hside] at hcell
   exact hcell
 
 private theorem m1EvenSweptLeftCell (a b : Nat) (h : Int) (k : Nat) :
@@ -70,7 +75,8 @@ private theorem m1EvenSweptLeftCell (a b : Nat) (h : Int) (k : Nat) :
   have hcoord :
       h - ((3*a+1 : Nat) : Int) - (k : Int) =
         h - ((3*a+1+k : Nat) : Int) := by omega
-  simpa [hcoord] using hsrc
+  rw [hcoord]
+  exact hsrc
 
 /-- After the counted left sweep over 3a+1 leading ones, the complete
 [-9,4] input window is the fixed 41-step bridge above. -/
