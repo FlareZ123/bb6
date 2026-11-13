@@ -180,6 +180,26 @@ Thus the E,p=2 reset leaves resource 10, exactly the `3d+3+p` budget for the ver
 
 **Evidence status (original-source CI passed):** the corrected full audit [CI 43312703231](https://github.com/FlareZ123/bb6/actions/runs/43312703231) succeeded on 2026-11-12 with Lean 4.36.0-rc2, compiling the pinned original machine sources, `ExceptionalE7SecondSafe.lean`, `EChainBEExit.lean`, and `EERootBEA.lean`. The final axiom audit for `q4_exceptional_EE_BEA_section` is exactly `[propext, Quot.sound]`; the workflow's `sorryAx` / native-decision rejection passed. The earlier failure [CI 43275820208](https://github.com/FlareZ123/bb6/actions/runs/43275820208) was repaired by importing the B-general dependency and splitting the `q-1) predecessor case before the replicate rewrite, then normalizing append associativity. This certifies the stated original-source composition from every specified DRegular source section to a physical `regularSection`; it does not certify that any such start occurs on the authentic blank-root orbit.
 
+### Quantitative q=4 endpoint floor (original-source Lean verified)
+
+The new module EERootBEAFloor.lean proves
+**BB6.Agent37EERootBEAFloor.q4_exceptional_EE_BEA_section_affine_floor**:
+for every m, the source run from sourceStart (2187*m+1647) 4 reaches
+a physical regularSection a q b with
+
+**1,073,741,824*m + 809,037,723 ≤ a**.
+
+The bound is exact from the carried A-marker floor
+n ≥ 8*(64*t+50)+11 = 512*t+411, with
+t=2,097,152*m+1,580,151; the physical-section conversion gives a=n
+or a=n+1. The simpler uniform a≥411 theorem is retained as a
+corollary. Original-source CI run 43410773388 passed, and both floor
+theorems have axiom dependencies [propext, Quot.sound] with the
+sorryAx / _native.native_decide gate passing.
+
+This is still only a conditional source-section return: it does not show
+that the authentic blank-root orbit reaches the q=4 cylinder.
+
 **Blank-root boundary:** this is a DRegular source-section theorem, not a blank-tape-root theorem. Its starting index is `L(9t+7,4,1)` with `t=6561m+4943≡2 (mod 27)`. The currently documented blank-root chain rows of the form `L(9t+7,q,1)` have `(q,t mod 27)=(7,6),(5,4),(8,14),(6,17),(9,8)); none is the q=4 cylinder. This is only a comparison with the currently documented rows, not an unreachability proof. The exact missing obligation is a blank-root prefix to any `L(9t+7,4,1)` with `t≡2 (mod 27)), or a proof that no such prefix occurs. Agent 2 and Agent 36 have been asked to identify this prefix. Do not widen the residue search or describe this candidate as blank-root progress before that connection is established.
 
 ## Remaining obligations
