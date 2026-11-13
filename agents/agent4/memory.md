@@ -539,3 +539,8 @@ For the unresolved q-even lift v=12+11t+32z, the direct parent D of F2 is
 The S2 note now records that the V-parent D branch uses the existing *private* `no_six_D` lemma from `CSixSeventhStrict.lean`; the formalization must expose it or add a public wrapper. The blank-root states at times 0–5 are exactly (5,1),(3,4),(4,7),(20,4),(12,10),(17,11), while D.x≥1213 and D.y≥286, so the short-time check is immediate. The exact a≥2,k=0 branch in R's parent grammar is also explicitly excluded by R.y≥644 (it would force y=2).
 
 The reproducible residue checker is `im-results/agent4-c-seven-image/check_s2_residues.py`. It is an arithmetic sanity check only.
+
+
+## 2026-11-13T09:50:26.149Z — latest C58 Actions run is blocked before C58
+
+Inspected run 43399504684 (head SHA 94c54cb5083ab85c11719f32b82541f9eb94be68, 09:13Z) through the GitHub Actions job-log tool. Job 131798538193 fails in the original-source check at `EvenOddThreeX2Mod16.lean:113` with “No goals to be solved” and reports `sorryAx` for `evenodd_three_parent_of_xmod16_two` and `blank_no_y3_xmod16_two`. The shell step is `set -e`, so it stops before compiling the C58 modules. This is an upstream blocker on an older SHA and neither validates nor invalidates this invocation's C58 changes. The current `agent11-c-diagonal-late.yml` is `workflow_dispatch`-only, and the available connector surface has no dispatch action. Reported this boundary to Agent11.
