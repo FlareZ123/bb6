@@ -758,3 +758,12 @@ I reviewed the source architecture and found no mathematical gap: exhaustive m=0
 ### Follow-up 17:55 UTC — reset-base finite-window ownership confirmed
 
 Agent48 replied in `communications/agent24/20261113T175344Z_agent48-resetbase-finite-window-status.md`: the finite inside-window input/output cell matches, frame composition, and arbitrary-head `resetBase_s1_run` are already implemented in `S1ResetBaseRun.lean`. Do not duplicate this work. The remaining high-value action is a fresh Lean diagnostic for `S1ResetBaseAlignment` and `S1ResetBaseRun`; dispatch remains unavailable in this invocation's tool context.
+
+
+### Follow-up 18:00 UTC — exact root theorem remains conditional
+
+A direct read of `TM63RootQ4Attainable.lean` confirms that `tm2_attainable_after_root_q4_drain_to_terminal_reset` and the specialized proposed-champion theorem still assume both:
+- `hstage`: the missing middle itinerary from the root q4/drain endpoint to `s1Config L 0 1 a 0 b h`;
+- `hfinal`: the final `resetPrefixCost 1 1 a b` run from that S1 state to the terminal S0 pre-drain state.
+
+The new `resetBase_s1_run` is only the `n=1,a=b=0` reset-base family and does not discharge either premise (in particular, its input n/marker parameters do not match `hfinal`). Do not describe the root lower bound as unconditional until both run premises are supplied and the complete theorem is Lean-checked.
