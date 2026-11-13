@@ -1,6 +1,6 @@
 name: One-shot D-root Seed31 source audit
 on:
-# One-shot trigger: rerun after the P2 reset theorem's time-expression association was corrected.
+# One-shot trigger: rerun after Agent 2's P2 reset sum-association correction (commit f692e88).
   push:
     branches:
       - main
