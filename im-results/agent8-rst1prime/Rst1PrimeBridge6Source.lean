@@ -622,7 +622,7 @@ theorem rst1PrimeAfterBridge30_rightFacing
 through bridge9, the fourth sweep, bridge6, the final sweep, and bridge30. -/
 theorem rst1PrimeAfterBridge30_eq_afterBridge20_left
     (L a b : Nat) (h x : Int)
-    (hx : x ≤ h-((3*a+1:Int))-2-((3*L+5:Int))) :
+    (hx : x ≤ h-((3*a+1:Int))-2-((3*L+5:Int))+3) :
     (rst1PrimeAfterBridge30 L a b h).tape x =
       (rst1PrimeAfterBridge20 L a b h).tape x := by
   let H0 : Int := h-((3*a+1:Int))
