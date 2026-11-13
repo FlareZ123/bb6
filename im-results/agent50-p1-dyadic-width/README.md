@@ -112,3 +112,22 @@ As `T→∞`, the bounded-word random variables increase monotonically to unrest
 - Originality relative to external literature and priority over prior P1 shadow investigations remain to be independently reviewed. This is therefore maintained in `im-results/` rather than `results/`.
 
 **Next decisive mathematical question:** quantify **generation-level** second moments and survival probabilities of the correlated inverse-cylinder tree, and prove a source-connected, uniform-in-`q` lift for bounded-depth words. The local second moments above are for a *single node*, not for the generation total. A proof that the survival probability tends to zero would be a much stronger **density-one** statement but would still require handling genuine non-odd exits before becoming a P1 halting decision.
+
+## Correlated moments and generation survival (13 November 2026)
+
+The [exact second-moment census](second_moment_census.md) gives the nested-cylinder
+identity `E[N^2]=Σ_C 2^{-h(C)}(m(C)^2+2m(C)a(C))`, preserving multiplicity
+and strict-ancestor overlap rather than assuming independent branches. Its
+depth-2 and depth-3 second moments have explicit rational truncations and
+rigorous tails.
+
+The complementary [generation-survival census](generation_survival_census.md),
+reproduced by [generation_survival_census.py](generation_survival_census.py),
+now gives exact depth-2/3 survival measures and rigorous Haar/natural-density
+intervals through depth 7. The local no-child and affine failure-residue rules
+are kernel-checked in [ShadowSurvivalCore.lean](ShadowSurvivalCore.lean) under
+Lean 4.36.0-rc2. At depth 7 the upper bounds are below 0.36 for both feeders.
+This is a finite-generation result only: no asymptotic extinction theorem or
+infinite-path measure claim has been proved. The calculations remain in the
+abstract shadow model; the original-source lift is still one-way, so no P1 or
+BB(6) decision follows.

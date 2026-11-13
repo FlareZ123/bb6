@@ -47,16 +47,73 @@ theorem zeroLeftPrefix_run (b : Conf)
   have hidx3 : h-2-1 = h-3 := by omega
   have hidx4 : h-3+1 = h-2 := by omega
   have hidx5 : h-2+1 = h-1 := by omega
-  have hidx6 : h-2+1-1 = h-2 := by omega
-  have hidx7 : h-2+1-1+1 = h-1 := by omega
-  have hidx8 : h-2+1-1+1+1 = h := by omega
-  have h3' : t (h-2-1) = false := by rw [hidx3]; exact h3
-  have h30' : h-2-1 ≠ h := by omega
-  have h31' : h-2-1 ≠ h-1 := by omega
-  have h32' : h-2-1 ≠ h-2 := by omega
-  simp [shuttleRun, next, setBit, zeroLeftPrefixTape,
-    h0, h1, h2, h3, h3', h10, h20, h30, h21, h31, h32,
-    h30', h31', h32', hidx2, hidx3, hidx4, hidx5, hidx6, hidx7, hidx8]
+  have hidx8 : h-1+1 = h := by omega
+
+  let t1 : Int → Bool := setBit t h true
+  let t2 : Int → Bool := setBit t1 (h-1) true
+  let t3 : Int → Bool := setBit t2 (h-2) false
+  let t4 : Int → Bool := setBit t3 (h-3) true
+  let t5 : Int → Bool := setBit t4 (h-2) true
+  let t6 : Int → Bool := setBit t5 (h-1) true
+  let t7 : Int → Bool := setBit t6 (h-2) false
+  let t8 : Int → Bool := setBit t7 (h-1) true
+
+  have hread2 : t1 (h-1) = false := by
+    simp [t1, setBit, h10, h1]
+  have hread3 : t2 (h-2) = false := by
+    simp [t2, t1, setBit, h20, h21, h2]
+  have hread4 : t3 (h-3) = false := by
+    simp [t3, t2, t1, setBit, h30, h31, h32, h3]
+  have hread5 : t4 (h-2) = false := by
+    simp [t4, t3, setBit, show h-2 ≠ h-3 by omega]
+  have hread6 : t5 (h-1) = true := by
+    simp [t5, t4, t3, t2, t1, setBit, h10, h21, h31]
+  have hread7 : t6 (h-2) = true := by
+    simp [t6, t5, setBit, show h-2 ≠ h-1 by omega]
+  have hread8 : t7 (h-1) = true := by
+    simp [t7, t6, setBit, show h-1 ≠ h-2 by omega]
+
+  have hs1 : next ⟨.B,h,t⟩ = some ⟨.C,h-1,t1⟩ := by
+    simp [next, h0, t1]
+  have hs2 : next ⟨.C,h-1,t1⟩ = some ⟨.D,h-2,t2⟩ := by
+    simp [next, hread2, t2, t1, hidx2]
+  have hs3 : next ⟨.D,h-2,t2⟩ = some ⟨.E,h-3,t3⟩ := by
+    simp [next, hread3, t3, hidx3]
+  have hs4 : next ⟨.E,h-3,t3⟩ = some ⟨.A,h-2,t4⟩ := by
+    simp [next, hread4, t4, hidx4]
+  have hs5 : next ⟨.A,h-2,t4⟩ = some ⟨.B,h-1,t5⟩ := by
+    simp [next, hread5, t5, hidx5]
+  have hs6 : next ⟨.B,h-1,t5⟩ = some ⟨.F,h-2,t6⟩ := by
+    simp [next, hread6, t6, hidx2]
+  have hs7 : next ⟨.F,h-2,t6⟩ = some ⟨.D,h-1,t7⟩ := by
+    simp [next, hread7, t7, hidx5]
+  have hs8 : next ⟨.D,h-1,t7⟩ = some ⟨.F,h,t8⟩ := by
+    simp [next, hread8, t8, hidx8]
+
+  have hrun : shuttleRun 8 ⟨.B,h,t⟩ = some ⟨.F,h,t8⟩ := by
+    simp [shuttleRun, hs1, hs2, hs3, hs4, hs5, hs6, hs7, hs8]
+  have htape : t8 = zeroLeftPrefixTape t h := by
+    funext x
+    by_cases hx0 : x = h
+    · subst x
+      simp [t8, t7, t6, t5, t4, t3, t2, t1,
+        zeroLeftPrefixTape, setBit, h10, h20, h30, h21, h31, h32]
+    · by_cases hx1 : x = h-1
+      · subst x
+        simp [t8, t7, t6, t5, t4, t3, t2, t1,
+          zeroLeftPrefixTape, setBit, h10, h20, h30, h21, h31, h32]
+      · by_cases hx2 : x = h-2
+        · subst x
+          simp [t8, t7, t6, t5, t4, t3, t2, t1,
+            zeroLeftPrefixTape, setBit, h10, h20, h30, h21, h31, h32]
+        · by_cases hx3 : x = h-3
+          · subst x
+            simp [t8, t7, t6, t5, t4, t3, t2, t1,
+              zeroLeftPrefixTape, setBit, h10, h20, h30, h21, h31, h32]
+          · simp [t8, t7, t6, t5, t4, t3, t2, t1,
+              zeroLeftPrefixTape, setBit, h10, h20, h30, h21, h31, h32,
+              hx0, hx1, hx2, hx3]
+  simpa [htape] using hrun
 
 /-- Exact output tape after the even D/F sweep and its D0/E0/A0 return. -/
 def evenSweepB0Tape (n : Nat) (t : Int → Bool) (h : Int) : Int → Bool :=

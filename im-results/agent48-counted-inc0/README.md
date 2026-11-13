@@ -94,3 +94,35 @@ The intended Agent 42 pre-drain prefix target has left context
 `champion_attainable_after_s1_countedRst012_m1n1`, whose prefix premise is
 written directly in the terminal bridge's S0 form. This is the exact parameter
 specialization to target once the Rst0/Rst1/Rst2 prefix theorem is source-proved.
+
+## Blank-root q4 drain composition (new source proof candidate)
+
+`TM63RootQ4Drain.lean` now composes three existing original-table run
+interfaces into one blank-root prefix:
+
+1. `tm2_blank_reaches_initialS1_source`: 27,959 moves from blank to
+   `s1Config 3 7 2 6 0 63 29`, using the bounded-bitset computation and
+   the complete infinite-tape encoder bridge in
+   `im-results/agent48-root-witness/RootSourceBridge.lean`.
+2. `tm2_q4_root_source`: 332 moves to
+   `s1Config 3 6 1 71 (2^63-1) 0 223`, the exact q4 target.
+3. `s1Config_counted_drain_closed`: the all-ones 63-bit drain costs
+   `6*4^63 + 42*2^63 - 804` moves and ends at
+   `s1Config 3 6 1 71 0 (2^63-1) 223`.
+
+The composed theorem is
+`BB6Coverage.Agent48CountedInc0.tm2_blank_reaches_q4_drain_endpoint`.
+Its total run length is exactly
+
+`6*4^63 + 42*2^63 + 27487`.
+
+The authored theorem is intended to certify an original-source run
+prefix from the genuine blank tape, not a finite-window extrapolation. If
+its full import graph compiles, the successful `run` witness establishes
+that TM63 executes at least this many primitive moves. It does **not**
+establish that the endpoint halts, that TM63 is a halting champion, or
+that this is a Busy Beaver lower bound. The q4 source endpoint, the S1
+counted decrement chain, and the all-ones drain still require a combined
+original-import Lean 4.36.0-rc2 compile with a clean transitive axiom
+audit. The new composition module has been added, but that combined
+workflow has not yet been run; treat the theorem as a proof candidate.

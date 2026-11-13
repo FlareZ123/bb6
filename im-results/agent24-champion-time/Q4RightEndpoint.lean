@@ -549,7 +549,12 @@ theorem q4_suffix_run_target_of_prefix
           U.tape (H+1+(i:Int)) =
               sideBit (s0RightFacing 0) i := by
                 have hr := hrightU i
-                simpa [H] using hr
+                have hrightCoord :
+                    h+6+(3*b:Int)+(i:Int) = H+1+(i:Int) := by
+                  dsimp [H]
+                  omega
+                rw [hrightCoord] at hr
+                exact hr
           _ = sideBit (s1PhysicalRight 0) i := by
                 rfl
           _ = (s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 H).tape
@@ -569,12 +574,24 @@ theorem oddRst2_q4_counted_source
   obtain ⟨Tq,hprefix,hsuffix⟩ :=
     q4_suffix_run_target_of_prefix L n a b h hn hbound
   have hsum : 71+12*a+3*b = (32+12*a)+(39+3*b) := by omega
-  rw [hsum,run_append,hprefix]
+  rw [hsum,BB6Coverage.Agent8CountedReset.run_add,hprefix]
   simpa using hsuffix
 
 #print axioms q4_suffix_left_word
 #print axioms q4_suffix_run_left_word
 #print axioms q4_suffix_run_target_of_prefix
 #print axioms oddRst2_q4_counted_source
+
+
+
+/-- Authentic TM63 root instance of the complete q4 source transition. -/
+theorem tm2_q4_root_source :
+    run tm2 332 (s1Config 3 7 2 6 0 63 29) =
+      some (s1Config 3 6 1 71 (2^63-1) 0 223) := by
+  simpa using
+    (oddRst2_q4_counted_source 3 7 6 63 29
+      (by decide) (by decide))
+
+#print axioms tm2_q4_root_source
 
 end BB6Coverage.Agent24Q4Endpoint

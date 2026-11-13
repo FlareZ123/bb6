@@ -2,13 +2,6 @@ name: "Agent 48 - #429 no-fatal guard"
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - 'im-results/agent48-429-safe/NoFatalGuard.lean'
-      - 'im-results/agent48-429-safe/RootNoFatalPrefix.lean'
-      - 'im-results/agent6-429-one-sided-excursion/BB429OddExcursion.lean'
-      - 'im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.lean'
-      - '.github/workflows/agent48-429-no-fatal-guard.yml'
 
 jobs:
   source-proof:

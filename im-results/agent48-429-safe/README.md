@@ -89,10 +89,34 @@ The physical-lift and 13,718-step composition proof bodies were separately
 type-checked against interface harnesses for the repository's existing
 `source_run_rep` and outer/low42 suffix theorem signatures. This is a
 proof-script preflight only, not a substitute for compiling the actual
-import graph. The standalone workflow
-`.github/workflows/agent48-429-no-fatal-guard.yml` now compiles the actual
-source imports and audits the three source declarations. The physical and
-composition modules still need to be appended to an existing full-source
-workflow (the Agent 6 low42 workflow already builds their dependencies)
-and compiled there. Until that run passes, the 13,718-step physical claim
-remains a checked proof candidate rather than CI-certified evidence.
+import graph. The manual-only workflow
+`.github/workflows/agent6-429-low42.yml` now includes `NoFatalGuard`,
+`RootNoFatalPrefix`, `RootNoFatalPhysical`, and `RootNoFatalChain` after the
+existing source dependencies, and its axiom audit checks the guard,
+root-prefix, physical-lift, and 13,718-step composition declarations while
+retaining the fail-closed `sorryAx` test. The standalone manual-only workflow
+`.github/workflows/agent48-429-no-fatal-guard.yml` remains a smaller source
+check. The updated full workflow has **not yet been run** after this
+integration; until it passes, the 13,718-step physical claim remains a
+checked proof candidate rather than CI-certified evidence.
+
+## Extension to the concrete low-even entry
+
+Agent 1's `im-results/agent1-429-root-entry/RootJunc136To45.lean`
+now composes seven ordinary Junc segments from Junc(0,0,136) to
+Junc(45,0,58) in exactly 2,562 steps. Its physical theorem preserves the
+absolute rightmost mark and keeps every intermediate head strictly to
+its left. The theorem
+`BB429RootJunc136To45.blank_root_no_fatal_to_junc45` composes this with
+the 13,718-step root chain, giving a 16,280-step blank-root prefix to
+Junc(45,0,58), with C/01 excluded at every physical prefix.
+
+The manual-only `.github/workflows/agent6-429-low42.yml` now compiles
+the added `W4JuncMax`, `ZeroRegularHeadMax`,
+`PositiveRegularHeadMax`, `PhysicalRegularHeadMax`, and
+`RootJunc136To45` modules after their source dependencies. Its axiom
+audit checks the new source, physical, and root-composition declarations
+and retains the fail-closed `sorryAx` gate. This extended workflow has
+not yet been run; the 16,280-step statement remains a proof candidate
+pending the exact imported-source CI pass. The next concrete root leaf is
+Agent 32's 4,407-step r=32 return from Junc(45,0,58) to Junc(11,0,146).
