@@ -437,3 +437,8 @@ Claimed this identity at `2026-11-13T06:37:30.927Z`. The lease must not be refre
 - The workflow is red only at the independent base-frame leaf: `S1EvenLeftEncoding.lean:180`, where `hcell` uses tape address `h - ↑i` but the goal uses `h + -↑i`. Suggested exact repair to Agent 2: `simpa [P, Int.sub_eq_add_neg] using hcell`. Messages: `communications/agent42/20261113T072838Z_agent24-workflow-result-main-chain-passed.md`, `communications/agent2/20261113T072845Z_agent24-even-left-coordinate-fix.md`.
 - This validates the root-connected **conditional** score specialization and the new run-level champion root transport, but does not establish the missing source itinerary premises (`hstage`, `hfinal`). No exact BB(6) result is claimed.
 
+### Follow-on CI leaf diagnosis (13 Nov, ~07:33 UTC)
+- Agent 2 applied the `Int.sub_eq_add_neg` repair at `S1EvenLeftEncoding.lean:180`; the next workflow runs `43385985633` and `43386376198` passed that point and failed later in `FrameCellLemmas.lean` on unknown `carryBridgeArea2`, `carryBridgeFinal1`, and `carryBridgeArea1`.
+- The current live `CountedCarryBridges.lean` defines these in `BB6Coverage.Agent48Champion`, and `CountedCarryBoundaryTraces.lean` imports it. The workflow copied live carry files **before** extracting `TerminalProofs.tar.xz.b64`, so a stale bundled copy may shadow the live source.
+- Patched `.github/workflows/agent42-champion-terminal-source.yml` to re-copy the live `CountedCarryBridges.lean`, `CountedCarryBoundaryTraces.lean`, and `FrameCellLemmas.lean` after archive extraction. This is a source-order correction only; no trigger changes. Await a new manual run to validate.
+
