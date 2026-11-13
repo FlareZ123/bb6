@@ -87,62 +87,62 @@ theorem junc78_120_2_to_junc0_0_408 :
 theorem junc07_349_to_junc0_408 :
     runWithDelta 102656 (junc 0 7 349) =
       some (junc 0 0 408, -32) := by
-  have h₁ : runWithDelta (juncNormalizeTime 0 7) (junc 0 7 349) =
+  have step1 : runWithDelta (juncNormalizeTime 0 7) (junc 0 7 349) =
       some (junc 10 0 346, 17) := by
     simpa using juncNormalize_delta 0 7 349 (by omega)
-  have h₂ : runWithDelta (juncNormalizeTime 10 0) (junc 10 0 346) =
+  have step2 : runWithDelta (juncNormalizeTime 10 0) (junc 10 0 346) =
       some (junc 23 0 323, 23) := by
     simpa using juncNormalize_delta 10 0 346 (by omega)
-  have h₃ : runWithDelta (juncNormalizeTime 23 0) (junc 23 0 323) =
+  have step3 : runWithDelta (juncNormalizeTime 23 0) (junc 23 0 323) =
       some (junc 49 0 274, 49) := by
     simpa using juncNormalize_delta 23 0 323 (by omega)
-  have h₄ : runWithDelta (juncNormalizeTime 49 0) (junc 49 0 274) =
+  have step4 : runWithDelta (juncNormalizeTime 49 0) (junc 49 0 274) =
       some (junc 101 0 173, 101) := by
     simpa using juncNormalize_delta 49 0 274 (by omega)
-  have h₅ : runWithDelta (juncPosFullTime 86 0) (junc 101 0 173) =
+  have step5 : runWithDelta (juncPosFullTime 86 0) (junc 101 0 173) =
       some (junc 15 172 1, -172) := by
     simpa using juncPos_iter_full_delta 86 101 0 173 (by omega) (by omega)
-  have h₆ := junc15_172_1_to_junc0_15_349
-  have h₇ : runWithDelta (juncNormalizeTime 0 15) (junc 0 15 349) =
+  have step6 := junc15_172_1_to_junc0_15_349
+  have step7 : runWithDelta (juncNormalizeTime 0 15) (junc 0 15 349) =
       some (junc 18 0 346, 33) := by
     simpa using juncNormalize_delta 0 15 349 (by omega)
-  have h₈ : runWithDelta (juncNormalizeTime 18 0) (junc 18 0 346) =
+  have step8 : runWithDelta (juncNormalizeTime 18 0) (junc 18 0 346) =
       some (junc 39 0 307, 39) := by
     simpa using juncNormalize_delta 18 0 346 (by omega)
-  have h₉ : runWithDelta (juncNormalizeTime 39 0) (junc 39 0 307) =
+  have step9 : runWithDelta (juncNormalizeTime 39 0) (junc 39 0 307) =
       some (junc 81 0 226, 81) := by
     simpa using juncNormalize_delta 39 0 307 (by omega)
-  have h₁₀ : runWithDelta (juncNormalizeTime 81 0) (junc 81 0 226) =
+  have step1₀ : runWithDelta (juncNormalizeTime 81 0) (junc 81 0 226) =
       some (junc 165 0 61, 165) := by
     simpa using juncNormalize_delta 81 0 226 (by omega)
-  have h₁₁ : runWithDelta (juncPosFullTime 30 0) (junc 165 0 61) =
+  have step1₁ : runWithDelta (juncPosFullTime 30 0) (junc 165 0 61) =
       some (junc 135 60 1, -60) := by
     simpa using juncPos_iter_full_delta 30 165 0 61 (by omega) (by omega)
-  have h₁₂ := junc135_60_1_to_junc0_135_125
-  have h₁₃ : runWithDelta (juncNormalizeTime 0 135) (junc 0 135 125) =
+  have step1₂ := junc135_60_1_to_junc0_135_125
+  have step1₃ : runWithDelta (juncNormalizeTime 0 135) (junc 0 135 125) =
       some (junc 138 0 122, 273) := by
     simpa using juncNormalize_delta 0 135 125 (by omega)
-  have h₁₄ : runWithDelta (juncPosFullTime 60 0) (junc 138 0 122) =
+  have step1₄ : runWithDelta (juncPosFullTime 60 0) (junc 138 0 122) =
       some (junc 78 120 2, -120) := by
     simpa using juncPos_iter_full_delta 60 138 0 122 (by omega) (by omega)
-  have h₁₅ := junc78_120_2_to_junc0_0_408
+  have step1₅ := junc78_120_2_to_junc0_0_408
 
-  have h₂ := compose_runWithDelta h₁ h₂
-  have h₃ := compose_runWithDelta h₂ h₃
-  have h₄ := compose_runWithDelta h₃ h₄
-  have h₅ := compose_runWithDelta h₄ h₅
-  have h₆ := compose_runWithDelta h₅ h₆
-  have h₇ := compose_runWithDelta h₆ h₇
-  have h₈ := compose_runWithDelta h₇ h₈
-  have h₉ := compose_runWithDelta h₈ h₉
-  have h₁₀ := compose_runWithDelta h₉ h₁₀
-  have h₁₁ := compose_runWithDelta h₁₀ h₁₁
-  have h₁₂ := compose_runWithDelta h₁₁ h₁₂
-  have h₁₃ := compose_runWithDelta h₁₂ h₁₃
-  have h₁₄ := compose_runWithDelta h₁₃ h₁₄
-  have h₁₅ := compose_runWithDelta h₁₄ h₁₅
-  norm_num [juncNormalizeTime, juncPosFullTime] at h₁₅
-  exact h₁₅
+  have chain2 := compose_runWithDelta step1 step2
+  have chain3 := compose_runWithDelta chain2 step3
+  have chain4 := compose_runWithDelta chain3 step4
+  have chain5 := compose_runWithDelta chain4 step5
+  have chain6 := compose_runWithDelta chain5 step6
+  have chain7 := compose_runWithDelta chain6 step7
+  have chain8 := compose_runWithDelta chain7 step8
+  have chain9 := compose_runWithDelta chain8 step9
+  have chain10 := compose_runWithDelta chain9 step10
+  have chain11 := compose_runWithDelta chain10 step11
+  have chain12 := compose_runWithDelta chain11 step12
+  have chain13 := compose_runWithDelta chain12 step13
+  have chain14 := compose_runWithDelta chain13 step14
+  have chain15 := compose_runWithDelta chain14 step15
+  norm_num [juncNormalizeTime, juncPosFullTime] at chain15
+  exact chain15
 
 /-- Complete source-level continuation from the shifted C/0 zipper to J(0,0,408). -/
 theorem parityShiftedC0_to_junc0_408 :
