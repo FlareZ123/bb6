@@ -420,3 +420,14 @@ For the second equation, first prove the selected depth is even:
 `q_mod_three_even_iff` gives even parity. Agent 7 has been sent the
 two identities and this parity detail; the integration lemma remains
 unformalized.
+
+
+### Local Lean availability
+
+Reconstructed the split `lean-4.36.0-rc2-linux.zip.{001,002}`
+archive and confirmed Lean 4.36.0-rc2 runs locally. The archive
+contains a `.tar.zst` payload, so extraction required the additional
+tar/zstd step after unzip. A local repository checkout could not be
+populated because the shell has no GitHub network access; therefore
+the Q module has not been locally compiled. The existing selective
+workflow is wired in PR #95 and remains the intended source check.
