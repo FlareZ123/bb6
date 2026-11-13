@@ -453,7 +453,9 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
               (6+i) (by simp)
           have hones : sideBit (d1pow (b+1)) i = true :=
             sideBit_d1pow_true (b+1) i (by omega)
-          simpa [hsrc,hside,hones] using hcut.trans hsrc
+          have htarget : T (h+7+(i:Int)) = true := by
+            rw [hsrc,hside,hones]
+          exact hcut.trans htarget
         · intro i hi
           have hcut := m1EvenQ4CutTape_eq_source_right a b h
             (h+10+(3*b:Int)+(i:Int)) (by omega)
@@ -466,5 +468,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
           have hblank : sideBit (s0RightFacing b) (9+3*b+i) = false :=
             sideBit_false_after_length_local (s0RightFacing b)
               (9+3*b+i) (by omega)
-          simpa [hsrc,hblank] using hcut.trans hsrc
+          have htarget : T (h+10+(3*b:Int)+(i:Int)) = false := by
+            rw [hsrc,hblank]
+          exact hcut.trans htarget
 
