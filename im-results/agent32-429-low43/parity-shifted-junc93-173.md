@@ -52,3 +52,5 @@ The 15 durations sum to 102,656. Including the preceding 425-step C/0-to-`J(0,7,
 
 The direct simulation used the standard six-state table:
 `A: 1RB/0LF; B: 1RC/1RA; C: 0RD/0RB; D: 1LE/halt; E: 0LA/1LE; F: 1RD/1LA`.
+
+Reproduce the raw-table experiment from the repository root with `node im-results/agent32-429-low43/simulate_parity_shifted_junc93.js`. The script asserts the C/0 tape snapshot, the first differing-cell visit, all Junc checkpoints, and the corrected duration sums.
