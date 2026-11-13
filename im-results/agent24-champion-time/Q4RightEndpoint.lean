@@ -228,10 +228,13 @@ private theorem q4Endpoint_first10_six (T : Int → Bool) (h : Int)
 nearest 3*b cells are the periodic d0 output of the counted scan; the next
 six are the fixed all-one bridge; everything farther left is the q4
 prefix's original stream with its consumed head cell removed. -/
-theorem q4_suffix_left_word
-    (T : Int → Bool) (h : Int) (b L n a : Nat)
+theorem q4_suffix_left_word_general
+    (T : Int → Bool) (h : Int) (b : Nat)
+    (sourceLeft : List Bool) (L n m a z : Nat)
     (hleft : ∀ i : Nat,
-      T (h-(i:Int)) = sideBit (q4LeftFacing L n a) i) :
+      T (h-(i:Int)) = sideBit sourceLeft i)
+    (happend : s1LeftFacing L n m a z =
+      d0pow b ++ d1pow 2 ++ sourceLeft.drop 1) :
     ∀ i : Nat,
       (frameAt
         (d0Sweep b
@@ -239,9 +242,9 @@ theorem q4_suffix_left_word
           (h+10))
         (h+10+(3*b:Int)) q4TailInside q4TailEnd).tape
           (h+5+(3*b:Int)-(i:Int)) =
-      sideBit (s1LeftFacing L n 1 (a+b+2) (2^b-1)) i := by
+      sideBit (s1LeftFacing L n m a z) i := by
   intro i
-  rw [q4SuffixTargetLeft L n a b]
+  rw [happend]
   let T1 := (frameAt T h q4First10Inside q4First10End).tape
   let T2 := d0Sweep b T1 (h+10)
   let g : Int := h+10+(3*b:Int)
@@ -261,7 +264,7 @@ theorem q4_suffix_left_word
     q4Endpoint_d0pow_length b
   have hlen1 : (d1pow 2).length = 6 := by
     simp [d1pow, d1]
-  let tail := (q4LeftFacing L n a).drop 1
+  let tail := (sourceLeft).drop 1
   by_cases hi0 : i < 3*b
   · have hside :
         sideBit (d0pow b ++ d1pow 2 ++ tail) i =
@@ -451,20 +454,107 @@ theorem q4_suffix_left_word
         have hxcoord : x = h-((j+1:Int)) := by
           dsimp [x,j]
           omega
-        have hprefix : T x = sideBit (q4LeftFacing L n a) (j+1) := by
+        have hprefix : T x = sideBit (sourceLeft) (j+1) := by
           rw [hxcoord]
           exact hleft (j+1)
         have hdrop := q4Endpoint_sideBit_drop_one
-          (q4LeftFacing L n a) j
+          (sourceLeft) j
         calc
           T2 x = T1 x := hbefore
           _ = T x := hfirst
-          _ = sideBit (q4LeftFacing L n a) (j+1) := hprefix
+          _ = sideBit (sourceLeft) (j+1) := hprefix
           _ = sideBit tail j := hdrop.symm
       calc
         U.tape x = T2 x := hU
         _ = sideBit tail j := hcell
         _ = sideBit (d0pow b ++ d1pow 2 ++ tail) i := hside.symm
+
+
+/-- The odd-Rst2 specialization of the generic left-stream endpoint. -/
+theorem q4_suffix_left_word
+    (T : Int → Bool) (h : Int) (b L n a : Nat)
+    (hleft : ∀ i : Nat,
+      T (h-(i:Int)) = sideBit (q4LeftFacing L n a) i) :
+    ∀ i : Nat,
+      (frameAt
+        (d0Sweep b
+          (frameAt T h q4First10Inside q4First10End).tape
+          (h+10))
+        (h+10+(3*b:Int)) q4TailInside q4TailEnd).tape
+          (h+5+(3*b:Int)-(i:Int)) =
+      sideBit (s1LeftFacing L n 1 (a+b+2) (2^b-1)) i := by
+  exact q4_suffix_left_word_general T h b (q4LeftFacing L n a)
+    L n 1 (a+b+2) (2^b-1) hleft (q4SuffixTargetLeft L n a b)
+
+
+/-- Identify the entire q4 suffix frame with any canonical S1 target whose
+left word is obtained by prepending the counted d0/d1 blocks to the
+source's left stream.  This separates the physical suffix theorem from
+the particular reset branch supplying its input word. -/
+theorem q4_suffix_frame_eq_s1Config
+    (T : Int → Bool) (h : Int) (b L n m a z : Nat)
+    (sourceLeft : List Bool)
+    (hshape : q4RightShape T h b)
+    (htail : ∀ i : Nat, 9+3*b ≤ i → T (h+1+(i:Int)) = false)
+    (hleft : ∀ i : Nat, T (h-(i:Int)) = sideBit sourceLeft i)
+    (happend : s1LeftFacing L n m a z =
+      d0pow b ++ d1pow 2 ++ sourceLeft.drop 1) :
+    frameAt
+      (d0Sweep b
+        (frameAt T h q4First10Inside q4First10End).tape
+        (h+10))
+      (h+10+(3*b:Int)) q4TailInside q4TailEnd =
+    s1Config L n m a z 0 (h+5+(3*b:Int)) := by
+  let T1 := (frameAt T h q4First10Inside q4First10End).tape
+  let T2 := d0Sweep b T1 (h+10)
+  let g : Int := h+10+(3*b:Int)
+  let U := frameAt T2 g q4TailInside q4TailEnd
+  let H : Int := h+5+(3*b:Int)
+  have hleftU : ∀ i : Nat,
+      U.tape (H-(i:Int)) = sideBit (s1LeftFacing L n m a z) i := by
+    intro i
+    have hcoord : H-(i:Int) = h+5+(3*b:Int)-(i:Int) := by
+      dsimp [H]
+      rfl
+    rw [hcoord]
+    simpa [U,T1,T2,g] using
+      q4_suffix_left_word_general T h b sourceLeft L n m a z hleft happend i
+  have hrightU : ∀ i : Nat,
+      U.tape (H+1+(i:Int)) = sideBit (s0RightFacing 0) i := by
+    intro i
+    have hcoord : H+1+(i:Int) =
+        h+6+(3*b:Int)+(i:Int) := by
+      dsimp [H]
+      omega
+    rw [hcoord]
+    simpa [U,T1,T2,g] using
+      q4_suffix_right_word T h b hshape htail i
+  apply config_ext
+  · simp [U,frameAt_state,q4TailEnd,s1Config]
+  · simp [U,frameAt_head,q4TailEnd,g,H] <;> omega
+  · funext x
+    by_cases hx : x ≤ H
+    · let i : Nat := Int.toNat (H-x)
+      have hcoord : x = H-(i:Int) := by
+        dsimp [i]
+        omega
+      rw [hcoord]
+      calc
+        U.tape (H-(i:Int)) =
+            sideBit (s1LeftFacing L n m a z) i := hleftU i
+        _ = (s1Config L n m a z 0 H).tape (H-(i:Int)) :=
+          (s1Config_left_cell L n m a z 0 H i).symm
+    · let i : Nat := Int.toNat (x-H-1)
+      have hcoord : x = H+1+(i:Int) := by
+        dsimp [i]
+        omega
+      rw [hcoord]
+      calc
+        U.tape (H+1+(i:Int)) =
+            sideBit (s0RightFacing 0) i := hrightU i
+        _ = sideBit (s1PhysicalRight 0) i := by rfl
+        _ = (s1Config L n m a z 0 H).tape (H+1+(i:Int)) :=
+          (s1Config_right_cell L n m a z 0 H i).symm
 
 /-- Source-run version of the complete left-facing q4 suffix endpoint. -/
 theorem q4_suffix_run_left_word (T : Int → Bool) (h : Int) (b L n a : Nat)
