@@ -61,6 +61,9 @@ theorem ad12Offset_mod (h x : Int) (hh : h % 3 = 0) :
 
 end BB6Coverage.Agent42CarryLeftFrames
 
+-- The following bridge-frame lemmas intentionally retain their historical
+-- root-level names; reopen the source namespace after the first block.
+open BB6Coverage.Agent48Champion
 
 /-- The bridge0 final tape is true at offsets -1 and 0, then follows
 the every-third pattern at positive offsets in its active window. -/
@@ -165,3 +168,11 @@ theorem bridge1FrameOutput (bg : Int → Bool) (h x : Int)
   · have hgt : ¬ x-h ≤ 0 := by omega
     have hmod : (x-h) % 3 = 0 ↔ x % 3 = 1 := by omega
     simp [hx, hgt, hmod]
+
+
+#print axioms bridge0FinalCell_pattern
+#print axioms bridge0FrameOutput
+#print axioms bridge2FinalCell_pattern
+#print axioms bridge2FrameOutput
+#print axioms bridge1FinalCell_pattern
+#print axioms bridge1FrameOutput
