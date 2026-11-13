@@ -193,6 +193,33 @@ theorem qNumerator_unique_lift (n j k : Nat)
     (qNumerator_lift_criterion n j k r hrlt hbase).mp hrdiv
   exact henselDigit_div q a ha r hrlt (by simpa [q,a] using hcrit)
 
+/-- The base Q-state divisibility criterion: in either surviving
+index sector, Q_j(n) is divisible by three exactly for even j. -/
+theorem qNumerator_mod_three_even_iff (n j : Nat)
+    (hn : n%6=4∨n%6=5) :
+    qNumerator n j%3=0 ↔ j%2=0 := by
+  have hQmod : qNumerator n j%3=(8*signedZ n j)%3 := by
+    rw [qNumerator_eq_signedZ,Int.sub_emod,Int.mul_emod]
+    norm_num
+  have hZ := signedZ_mod_three_even_iff n j hn
+  constructor
+  · intro h
+    have h8 : (8*signedZ n j)%3=0 := by
+      rw [←hQmod]
+      exact h
+    have hrem : signedZ n j%3=0 ∨
+        signedZ n j%3=1 ∨ signedZ n j%3=2 := by omega
+    rcases hrem with h0|h1|h2
+    · exact hZ.mp h0
+    · rw [h1] at h8
+      norm_num at h8
+    · rw [h2] at h8
+      norm_num at h8
+  · intro hj
+    have hz : signedZ n j%3=0 := hZ.mpr hj
+    rw [hQmod,hz]
+    norm_num
+
 /-- The base Q-state numerator is divisible by three in both surviving
 index sectors whenever the ray depth j is even. -/
 theorem qNumerator_sector_mod_three (s h j : Nat)
@@ -204,16 +231,7 @@ theorem qNumerator_sector_mod_three (s h j : Nat)
       simp
     · rw [hs5]
       simp
-  have hZmod : signedZ (s+6*h) j%3=0 :=
-    (signedZ_mod_three_even_iff (s+6*h) j hsector).mpr hj
-  have hZdiv : (3:Int)∣signedZ (s+6*h) j :=
-    Int.dvd_iff_emod_eq_zero.mpr hZmod
-  rcases hZdiv with ⟨z,hz⟩
-  have hQdiv : (3:Int)∣qNumerator (s+6*h) j := by
-    refine ⟨8*z-3*((2:Int)^(s+6*h+2)+2*(s+6*h)+1),?_⟩
-    rw [qNumerator_eq_signedZ,hz]
-    ring
-  exact Int.dvd_iff_emod_eq_zero.mp hQdiv
+  exact (qNumerator_mod_three_even_iff (s+6*h) j hsector).mpr hj
 
 /-- Recursive index selector: for fixed even depth j and sector s=4 or 5,
 this returns the unique index h modulo 3^k for divisibility by 3^(k+1). -/
@@ -492,6 +510,7 @@ theorem qNumerator_t1_parent_identity (n j u q d : Nat)
         9*(8*(d:Int)-((2:Int)^(n+2)+2*n+1)) := by ring
     _=9*(2*q+5) := by rw [h8d]; ring
 
+#print axioms qNumerator_mod_three_even_iff
 #print axioms qNumerator_shift_digit_mod
 #print axioms qNumerator_lift_criterion
 #print axioms qNumerator_unique_lift
