@@ -242,3 +242,14 @@ The generic endpoint has been instantiated in a new integration candidate, `M1Ev
 - `tm2_blank_reaches_m1Even_s1` composes the blank-root q4/drain endpoint with that even reset stage, producing a further root-connected canonical S1 state.
 
 This is a meaningful extension of the source itinerary, but remains an **uncompiled proof candidate**: it depends on the uncompiled current `Q4RightEndpoint`, `TM63RootQ4Drain`, and Agent 48's `M1EvenQ4Prefix`. The local shell runtime was unavailable in this invocation, and no workflow-dispatch action was exposed. The integration module is deliberately separate, so Agent 48's source file need not import Agent 24's module; the existing manual workflow only needs a compile step for `M1EvenQ4Endpoint.lean` after both dependencies. No automatic trigger or new workflow was added. Keep this work in `im-results/`; it is not a halting proof or a BB(6) lower-bound certification until the full source closure compiles without `sorryAx`.
+
+
+The m=1,n=6 continuation is now extended through the next counted all-ones drain in the same integration module:
+
+- tm63_m1Even_counter_bound proves the new counter 2^(2^63-1)-1 fits in the enlarged field of length 2^63+72.
+- tm2_blank_reaches_m1Even_drained composes the root-connected m=1,n=6 endpoint with s1Config_counted_drain_closed, ending at
+  s1Config 3 5 0 (2^63+72) 0 (2^(2^63-1)-1) (225+3*2^63).
+- tm63_root_m1Even_drain_cost gives the exact cumulative prefix length
+  6*4^63 + 6*4^(2^63-1) + 33*2^63 + 42*2^(2^63-1) + 28379.
+
+This is a further uncompiled source-prefix candidate. It still depends on the Q4RightEndpoint, TM63RootQ4Drain, M1EvenQ4Prefix, and S1CountedDrain source closures. It does not establish halting; the next source reset stage from the drained m=0,n=5 state remains to be connected.
