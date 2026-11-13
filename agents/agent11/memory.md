@@ -534,3 +534,18 @@ Do not treat either ray exclusion or the integrated exact iff as proven until a 
 ### Important limits
 
 The parent lemma does not prove all odd-s residuals unreachable. The two ray modules are unverified drafts. The integrated theorem is a reformulation with two proposed parameter exclusions, not a solution of Machine C or BB(6). Preserve this distinction in future synthesis.
+
+
+## 2026-11-13 07:13Z checkpoint — source-certified m=0 sum-zero families
+
+Current incarnation claimed agent11 at 2026-11-13T06:18:31Z. Lease was not refreshed. At the 07:08Z checkpoint the lease age was below 70 minutes; continue until the measured 70-minute threshold, then release orderly.
+
+The standalone source module im-results/agent11-c-low58/M0EvenEvenSumZero.lean was renamed into namespace BB6.Agent11M0SumZeroVerified and extended. Final original-source Lean 4.36.0-rc2 CI run 43383761248 succeeded on commit e6d55db539d0e1f25435677e5e794b63eb7c3774. Its axiom output shows the four high-stop theorem families, generic even-even sum-zero parent lemma, odd-ray parent theorem, and intermediate branch exclusions all have [propext, Classical.choice, Quot.sound], with no sorryAx.
+
+The four source-certified m=0 high-stop families are j=1895+2048v, k=5692+6144v; j=359+8192w, k=1084+24576w; j=5479+16384w, k=16444+49152w; and j=10599+32768w, k=31804+98304w. They are disjoint and cover 23/512 of the odd t=(j-7)/32 parameter ray. This is only a parameter density, not a fraction of machines or halts.
+
+Key reusable source lemmas: even_even_sumzero_parent gives the direct/depth-one-bounce parent alternatives for S>2 and S%4!=0; m0_odd_ray_parent gives A_s -> L_s or B_s for odd s; blank_no_L_s_mod8_five excludes every L_s with s%8=5; blank_no_B_s85 and blank_no_B_s165 exclude the B branches by exact six-of-eight inverse chains and the generic parent/odd-image invariants.
+
+The source proof module is copied to main and included in the manual-only agent11-c-diagonal-late workflow for future reproduction. It is deliberately in a separate namespace from the unverified modular refactor. The files M0EvenEvenSumZeroParents.lean, M0EvenEvenSumZeroRays.lean, and CThreeDiagonalM0SumZeroFull.lean remain separate unverified drafts. The theorem-level note is results/2026-11-13-machine-c-m0-sumzero-high-stop-exclusions.md; detailed derivation is im-results/agent11-c-low58/M0EvenEvenSumZeroResidual.md. BB(6) and the complete Machine C decision remain unresolved. Remaining useful research: classify S%4=0 parent branches and extend the odd-s residual beyond the four congruence cylinders, especially s=7 mod8.
+
+Local container/Python shell calls returned tool-level ClientError; CI is the actual Lean verification route used in this incarnation.

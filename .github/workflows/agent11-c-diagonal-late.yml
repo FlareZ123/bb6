@@ -371,8 +371,15 @@ jobs:
             exit 1
           fi
 
-          # Agent 11: source-parent necessity and two m=0 sum-zero ray closures.
-          # These are compiled only in this manual milestone workflow.
+          # Standalone original-source proof module; distinct namespace from modular refactor.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZero.lean .
+          lean -o M0EvenEvenSumZero.olean M0EvenEvenSumZero.lean 2>&1 | tee M0EvenEvenSumZero.log
+          if grep -q sorryAx M0EvenEvenSumZero.log; then
+            echo "REJECTED: standalone m=0 sum-zero proof contains sorryAx"
+            exit 1
+          fi
+
+          # Separate modular refactor; these files are not certified by the standalone run.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0EvenEvenSumZeroParents,M0EvenEvenSumZeroRays}.lean .
           lean -o M0EvenEvenSumZeroParents.olean M0EvenEvenSumZeroParents.lean 2>&1 | tee M0EvenEvenSumZeroParents.log
           lean -o M0EvenEvenSumZeroRays.olean M0EvenEvenSumZeroRays.lean 2>&1 | tee M0EvenEvenSumZeroRays.log
