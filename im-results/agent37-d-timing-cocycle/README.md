@@ -164,3 +164,25 @@ The probe `Seed31Probe.lean` is a diagnostic computation over up to 1,024,000 DR
 In particular, do not assume the q=4 target `L(59049*m+44494,4,1)` is reached: the current `t30 mod 27 = 22` certificate does not determine `t30 mod 81`. The one-step regular-model preimage calculation in [Q4RegularPreimages.md](../agent2-root-language-exit/Q4RegularPreimages.md) is a constraint, not a blank-root path. The separate conditional exception-41 candidate with `k41 ≡ 76 (mod 81)` is covered by Agent35's source-certified `P2K4Source.close_one` subfamily `k=27t+22`; this closes that particular model candidate, not the entire `k ≡ 4 (mod 9)` family or the independent `k ≡ 7 (mod 9)` family. Neither conditional packet closure proves blank-root reachability.
 
 The chain is a finite ancestry result. It does not establish that the D machine runs forever, decide that holdout, or improve either BB(6) bound.
+
+
+## Conditional continuation from seed34 through exception38 (submitted; CI pending)
+
+Two new source-composition modules extend the candidate blank-root chain from the exception-33 unary seed through five further DRegular first stops and their matching original-source reentries:
+
+- [BlankThirtyFourthToThirtySixthRejoin.lean](BlankThirtyFourthToThirtySixthRejoin.lean)
+- [BlankThirtySeventhToThirtyEighthRejoin.lean](BlankThirtySeventhToThirtyEighthRejoin.lean)
+
+The exact 512-block DRegularFast certificate targets and reused source-return families are:
+
+| Exception | Regular transitions | First-stop section | a mod 59049 | Parameter residue | Source return |
+|---:|---:|---|---:|---:|---|
+| 34 | 12,638 | L(9*t34+4,6,1) | 55,039 | t34=(a-4)/9, t34 mod 27=13 | ExceptionalBGeneral.exceptional_EB_general with p=4; rejoin L(64*t34+29,1,5) |
+| 35 | 335 | L(9*t35+4,9,1) | 54,265 | t35=(a-4)/9, t35 mod 27=8 | E/B general with p=7; rejoin L(64*t35+35,1,5) |
+| 36 | 615 | L(9*t36+10,7,1) | 27,469 | t36=(a-10)/9, t36 mod 27=0 | Agent37TwelfthPacket.two_returns; rejoin L(64*t36+91,3,2) |
+| 37 | 2,348 | L(9*t37+4,6,1) | 50,584 | t37=(a-4)/9, t37 mod 27=4 | E/B general with p=4; rejoin L(64*t37+29,1,5) |
+| 38 | 1,341 | L(9*t38+10,1,1) | 24,670 | t38=(a-10)/9, t38 mod 27=13 | Agent25E3SourceBridge.q1b1_regular_rejoin_E; rejoin L(64*t38+49,6,0) |
+
+Each submitted segment proves a DRegular.run endpoint and DRegular.next = none at the following transition, then lifts the regular segment through Agent25RootChain.extend_regular. The exception closures reuse existing original-source theorems rather than re-proving their macro traces. The composed blank_thirty_eighth_reentry therefore reaches the canonical section seed39 = L(64*t38+49,6,0), conditional on the exception-33 root prefix and all earlier staged source lifts.
+
+The artifact-reusing manual workflow [agent37-root-exceptions34-38.yml](../../.github/workflows/agent37-root-exceptions34-38.yml) consumes both the stage-5 d-root-seed31-audit artifact and the successful seed31-first-stop-certificate artifact, then compiles these two modules and checks for forbidden sorryAx/native_decide dependencies. It has no push trigger. Until that audit succeeds, these files and the five exact signatures are submitted candidates, not kernel-verified results. In particular, this finite conditional continuation neither authenticates the still-pending episodes 17–30 nor proves that the D machine is nonhalting.
