@@ -830,7 +830,9 @@ theorem m1Odd_q4_prefix_leftFacing (a b : Nat) (h : Int) :
   by_cases hi0 : i = 0
   · subst i
     have hshape := m1Odd_q4_prefix_rightShape a b h
-    simpa using hshape.1 0 (by omega)
+    have htrue : m1OddQ4CutTape a b h h = true := by
+      simpa using hshape.1 0 (by omega)
+    simpa [m1OddQ4LeftFacing,sideBit] using htrue
   · by_cases hsmall : i+1 < 3*a+1
     · let x : Int := h-(i:Int)
       let r : Int := (3*a+1 : Nat) - (i:Int)
