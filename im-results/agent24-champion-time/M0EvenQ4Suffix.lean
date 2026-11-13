@@ -34,8 +34,7 @@ theorem m0Even_q4_reset_prefix_source
     m0Even_q4_prefix_rightShape a b h ha
   have hleft := m0Even_q4_prefix_leftFacing a b h ha
   have htail : ∀ i, 9+3*b ≤ i → T (h+1+(i:Int)) = false := by
-    intro i hi
-    exact hshape.2.2.2.2 i (by omega)
+    simpa [T] using m0Even_q4_prefix_far_tail a b h ha
   have happend := m0EvenQ4SuffixTargetLeft a b ha
   have hq4 :=
     q4_suffix_run_to_s1Config T h b 3 1 2 (a+b+1) (2^b-1)
