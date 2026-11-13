@@ -281,20 +281,22 @@ theorem q4_suffix_left_word
           let j : Nat := d/3
           let r : Nat := d%3
           have hdiv : d = 3*j+r := by
-            dsimp [j,r]
+            dsimp [j,r,d]
             omega
           have hj : j < b := by
-            dsimp [j]
+            dsimp [j,d]
             omega
           have hrcases : r=0 ∨ r=1 ∨ r=2 := by
-            dsimp [r]
+            dsimp [r,d]
             omega
           obtain ⟨hb0,hb1,hb2⟩ :=
             d0Sweep_block b T1 (h+10) j hj
           rcases hrcases with hr0 | hr1 | hr2
           · have hx0 : x = h+10+(3*(j:Int)) := by
               rw [hxcoord]
-              have hdEq : d = 3*j := by omega
+              have hdEq : d = 3*j := by
+                rw [hdiv,hr0]
+                omega
               omega
             have hiMod : i%3=1 := by
               dsimp [r,d] at hr0
@@ -303,7 +305,9 @@ theorem q4_suffix_left_word
             simpa [T2,hiMod] using hb0
           · have hx1 : x = h+10+(3*(j:Int))+1 := by
               rw [hxcoord]
-              have hdEq : d = 3*j+1 := by omega
+              have hdEq : d = 3*j+1 := by
+                rw [hdiv,hr1]
+                omega
               omega
             have hiMod : i%3=0 := by
               dsimp [r,d] at hr1
@@ -312,7 +316,9 @@ theorem q4_suffix_left_word
             simpa [T2,hiMod] using hb1
           · have hx2 : x = h+10+(3*(j:Int))+2 := by
               rw [hxcoord]
-              have hdEq : d = 3*j+2 := by omega
+              have hdEq : d = 3*j+2 := by
+                rw [hdiv,hr2]
+                omega
               omega
             have hiMod : i%3=2 := by
               dsimp [r,d] at hr2
@@ -322,7 +328,8 @@ theorem q4_suffix_left_word
         · have hlow : x < h+10 := by omega
           let j : Nat := 3*b-i
           have hjrange : 1 ≤ j ∧ j ≤ 4 := by
-            dsimp [j,x] at hlow
+            dsimp [j]
+            dsimp [x] at hlow
             omega
           have hcells := q4First10_cells T h
           have hcases : j=1 ∨ j=2 ∨ j=3 ∨ j=4 := by omega
