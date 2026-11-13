@@ -26,7 +26,7 @@ private theorem three_depth_zero_mod16_two (x a k n : Nat)
       · have hn2 : 2≤n+1 := by omega
         have hpow4 : 4 ∣ 2^(n+1) := by
           have hp := Nat.pow_dvd_pow 2 hn2
-          simpa only [show (2:Nat)^2=4 by norm_num] using hp
+          simpa only [show (2:Nat)^2=4 by decide] using hp
         have hfac4 : 4 ∣ 2*a+6 := by
           refine ⟨(a+3)/2,?_⟩
           omega
@@ -37,7 +37,7 @@ private theorem three_depth_zero_mod16_two (x a k n : Nat)
           calc
             x+6 = 2^(n+1)*(2*a+6) := hpow
             _ = (4*b)*(4*c) := by rw [hb,hc]
-            _ = 16*(b*c) := by ring
+            _ = 16*(b*c) := by ac_rfl
         have hmod : (x+6)%16=8 := by omega
         have hzero : (x+6)%16=0 :=
           Nat.mod_eq_zero_of_dvd h16
@@ -56,16 +56,13 @@ theorem evenodd_three_parent_of_xmod16_two
     · simp [sectionPreimageAll,hk0] at hp
     · by_cases hk1 : k=1
       · simp [sectionPreimageAll,hk0,hk1] at hp
-        omega
       · simp [sectionPreimageAll,hk0,hk1] at hp
         omega
   · by_cases ha1 : a=1
-    · subst a
-      by_cases hk0 : k=0
+    · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
       · by_cases hk1 : k=1
         · simp [sectionPreimageAll,ha0,ha1,hk0,hk1] at hp
-          omega
         · by_cases hk2 : k=2
           · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2] at hp
           · by_cases hk3 : k=3
@@ -77,7 +74,7 @@ theorem evenodd_three_parent_of_xmod16_two
                   refine ⟨2^n,?_⟩
                   calc
                     x+6 = 2^n*16 := hpow
-                    _ = 16*(2^n) := by ring
+                    _ = 16*(2^n) := by ac_rfl
                 have hzero : (x+6)%16=0 :=
                   Nat.mod_eq_zero_of_dvd hdiv
                 have hmod : (x+6)%16=8 := by omega
@@ -85,13 +82,10 @@ theorem evenodd_three_parent_of_xmod16_two
               · omega
     · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
-        omega
       · by_cases hlow : 2*k≤a
         · simp [sectionPreimageAll,ha0,ha1,hk0,hlow] at hp
-          omega
         · by_cases heven : a%2=0
           · simp [sectionPreimageAll,ha0,ha1,hk0,hlow,heven] at hp
-            omega
           · have haodd : a%2=1 := by omega
             simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
                   if_neg hk0,if_neg hlow,if_neg heven] at hp
