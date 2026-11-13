@@ -214,7 +214,7 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
         subst i
         have hlen : (d1pow a).length = 3*a := by simp [d1pow_length]
         rw [sideBit_append_right (d1pow a) R (3*a) (by simpa [hlen])]
-        simp [markerWord, d1pow_length]
+        simp [R, markerWord, sideBit, d1pow_length]
     simpa [T,hside] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 6 1 a 0 b h 0
@@ -397,7 +397,8 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
           have hhead : sweptLeft (3*a+1) T h h = true := by
             have hs := sweptLeft_head (3*a+1-2) T h
             have hN : 3*a+1 = (3*a+1-2)+2 := by omega
-            simpa [hN] using hs
+            rw [hN]
+            exact hs
           have hhead' : sweptLeft (3*a+1)
               (s1Config 3 6 1 a 0 b h).tape h (h+0) = true := by
             simpa [T] using hhead
@@ -493,7 +494,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
           have hsrc : T (h+7+(i:Int)) =
               sideBit (s0RightFacing b) (6+i) := by
             have hcoord : h+1+(6+i:Int) = h+7+(i:Int) := by omega
-            simpa [T,hcoord,s1PhysicalRight_source] using s1Config_right_cell 3 6 1 a 0 b h (6+i)
+            simpa [T,hcoord,s1PhysicalRight_source,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h (6+i)
           have hside :
               sideBit (s0RightFacing b) (6+i) =
                 sideBit (d1pow (b+1)) i := by
@@ -513,7 +514,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
               sideBit (s0RightFacing b) (9+3*b+i) := by
             have hcoord : h+1+((9+3*b+i:Int)) =
                 h+10+(3*b:Int)+(i:Int) := by omega
-            simpa [T,hcoord,s1PhysicalRight_source] using
+            simpa [T,hcoord,s1PhysicalRight_source,s0RightFacing] using
               s1Config_right_cell 3 6 1 a 0 b h (9+3*b+i)
           have hlen : (s0RightFacing b).length = 9+3*b := by
             simp [s0RightFacing,d1pow_length]
@@ -807,7 +808,7 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
   by_cases hi0 : i = 0
   · subst i
     have hshape := m1Even_q4_prefix_rightShape a b h
-    simpa [m1EvenQ4LeftFacing] using hshape.1 0 (by omega)
+    simpa [m1EvenQ4LeftFacing, sideBit] using hshape.1 0 (by omega)
   · by_cases hsmall : i+1 < 3*a+1
     · let x : Int := h-(i:Int)
       let r : Int := (3*a+1 : Nat) - (i:Int)
@@ -834,9 +835,9 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
               · have h4 : r=4 := by omega
                 exact Or.inr (Or.inr h4)
           rcases hcases with h2 | h3 | h4
-          · subst r; decide
-          · subst r; decide
-          · subst r; decide
+          · rw [h2]; decide
+          · rw [h3]; decide
+          · rw [h4]; decide
         have hmark' : decide
             ((x-(h-((3*a+1 : Nat):Int))) ∈ m1EvenQ4BridgeEnd.marked) = true := by
           rw [hrel]
@@ -905,7 +906,7 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
             rw [sideBit_append_after_local ([true] ++ d1pow a)
               (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh) (3*a+1)
               (by simp [d1pow_length])]
-            simp [markerWord,d1pow_length]
+            simp [markerWord,sideBit,d1pow_length]
           have hmark' : decide
               ((x-(h-((3*a+1 : Nat):Int))) ∈ m1EvenQ4BridgeEnd.marked) = false := by
             rw [hrel]
