@@ -22,7 +22,11 @@ def t20 : Nat := (terminal2040.a-7)/9
 theorem terminal2040_certificate :
     DRegular.run 2040 seed20 = some ⟨9*t20+7,5,1⟩ ∧
       t20 % 27 = 4 := by
-  have hcanon : DRegular.Canon seed20 := by decide
+  have hcanon : DRegular.Canon seed20 := by
+    constructor
+    · dsimp [seed20]
+      omega
+    · simp [seed20]
   rw [BB6.Agent2Fast64.fastRun_correct 2040 seed20 hcanon]
   decide
 
