@@ -26,7 +26,7 @@ theorem closedCertFast_sound (S : List Nat) (hc : closedCertFast S = true)
     source-C trajectory, via the exact reset-chain equivalence. -/
 theorem closedCertFast_excludes (u : Nat) (S : List Nat)
     (hc : closedCertFast S = true) (hu : u ∈ S) (h2 : 2 ∉ S) :
-    ¬ ReachC (2,0) (u,0) := by
+    ¬ CascadeSweep.ReachC (2,0) (u,0) := by
   intro hr
   have hchain : ResetChain 2 u := (root_reset_chain_iff u).mp hr
   have hclose : ∀ x, ResetChain 2 x → x ∈ S → False := by
