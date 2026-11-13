@@ -657,7 +657,10 @@ theorem m2EvenQ4SuffixTargetLeft (a b : Nat) :
     have hzero : binDec (a+1) 0 = d1pow (a+1) := binDec_zero _
     have hpow : d1 ++ d1pow (a+1) = d1pow (a+2) := by
       simp [d1pow]
-    simpa [Nat.add_assoc] using hstep.trans (by rw [hzero,hpow])
+    have hlen : a+b+2 = (a+1)+1+b := by omega
+    have hval : 2^b-1 = ((2*0+1)*2^b)-1 := by simp
+    rw [hlen,hval]
+    exact hstep.trans (by rw [hzero,hpow])
   have hdrop :
       (m2EvenQ4LeftFacing a).drop 1 =
         d1pow a ++ m2EvenQ4LeftSuffix := by
