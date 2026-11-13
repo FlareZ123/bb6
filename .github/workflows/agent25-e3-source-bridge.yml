@@ -12,6 +12,11 @@ on:
         required: true
         default: "2da159d86fa86d813bdfbc54e38e3ec9c75b6e69"
         type: string
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent25-e3-source-bridge.yml"
+      - "im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean"
 permissions:
   contents: read
   actions: read
