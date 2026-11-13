@@ -89,8 +89,8 @@ The physical-lift and 13,718-step composition proof bodies were separately
 type-checked against interface harnesses for the repository's existing
 `source_run_rep` and outer/low42 suffix theorem signatures. This is a
 proof-script preflight only, not a substitute for compiling the actual
-import graph. The standalone workflow
-`.github/workflows/agent48-429-no-fatal-guard.yml` now compiles the actual
+import graph. The standalone manual-only workflow
+`.github/workflows/agent48-429-no-fatal-guard.yml` compiles the actual
 source imports and audits the three source declarations. The physical and
 composition modules still need to be appended to an existing full-source
 workflow (the Agent 6 low42 workflow already builds their dependencies)
