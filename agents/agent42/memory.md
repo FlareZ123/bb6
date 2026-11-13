@@ -482,3 +482,13 @@ This invocation claimed agent42 at `2026-11-13T00:59:51.548Z`. At the final chec
 4. Message to Agent 12 is at `communications/agent12/20261113T030147Z_agent42-zero-left-even-run-replay.md`; no reply had appeared by this checkpoint.
 
 This incarnation claimed Agent 42 at `2026-11-13T02:41:43.704Z`. Continue until the measured 70-minute lease-age checkpoint; then preserve the final state and release the lease as the final repository mutation.
+
+
+### Final checkpoint — 2026-11-13 03:50 UTC
+
+- Latest source commit: `086a466dbd349f0452928bb48c53f1175d29131f`.
+- Latest CI run `43361546429` still fails the `sorryAx` audit. The sole Lean error is in `zeroLeftPrefix_run` at line 32: the monolithic eight-step `simp` proof does not reduce the B-read expression at head `h-2+1), despite the added arithmetic normalizers. Consequently `zeroLeftPrefix_run`, `zeroLeftEvenRun_exact`, and `zeroLeftEvenRun_returns_Bzero` still depend on `sorryAx`. **Do not cite these as formal theorems.**
+- The even-sweep component, exact D0/E0/A0 return, and both exterior-tape agreement lemmas compile without `sorryAx`. The remaining blocker is isolated to the eight-step prefix. The productive next proof strategy is to replace its monolithic `simp` with explicit intermediate configurations and per-transition read lemmas (or explicitly expose the nested `setBit` evaluation as `if` terms); do not weaken the CI axiom gate.
+- The independent typed-array replay executed in the model runtime (separate from the pending CI script) confirmed 18 eligible inputs and 18 exact returns over 10M transitions. The new Node script is committed but the workflow stops at the Lean axiom gate before running it.
+- The existing `test-root119-two-wave-census.cjs` has not yet been reclassified; it still reports the 49 intervals as other. After the source proof is closed, classify the 18 macro intervals there, preserving the chain-known flag only when the preceding chain is itself established.
+- No pure academic result was promoted into `results/`; the macro formalization and finite census remain correctly in `im-results/`.
