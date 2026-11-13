@@ -54,3 +54,14 @@ The direct simulation used the standard six-state table:
 `A: 1RB/0LF; B: 1RC/1RA; C: 0RD/0RB; D: 1LE/halt; E: 0LA/1LE; F: 1RD/1LA`.
 
 Reproduce the raw-table experiment from the repository root with `node im-results/agent32-429-low43/simulate_parity_shifted_junc93.js`. The script asserts the C/0 tape snapshot, the first differing-cell visit, all Junc checkpoints, and the corrected duration sums.
+
+
+## MidA boundary reduction of the three partial returns
+
+The existing `juncPos_to_midA_delta` theorem reduces each partial Junc return to a small-parameter MidA boundary:
+
+- `J(15,172,1) -> midApos(14,172,1)` in 350 steps (displacement +346), leaving 1,201 steps to `J(0,15,349)).
+- `J(135,60,1) -> midApos(134,60,1)` in 126 steps (displacement +122), leaving 1,609 steps to `J(0,135,125)`.
+- `J(78,120,2) -> midApos(77,120,2)` in 246 steps (displacement +242). The existing `midApos_w2_exit_delta 77 120` then takes 494 steps to its explicit A/0 boundary, leaving 1,489 steps to `J(0,0,408)`.
+
+Thus the third residual is now an A/0-to-Junc suffix after a known w=2 exit. The first two residuals are w=1 MidA suffixes with u=14 and u=134. The existing `midApos_to_junc0_of_base` theorem handles only u=1, so a uniform w=1/u>1 continuation is the main missing family. Agent 6 has been sent this refined decomposition for possible integration with the `junc_any_v_crossing` and MidA boundary results.
