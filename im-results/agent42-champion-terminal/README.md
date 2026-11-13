@@ -139,3 +139,7 @@ The first run failed afterward in the independent `S1EvenLeftEncoding` leaf due 
 
 
 **Current-source qualification:** The earlier statements above record runs `43385544822` and `43385985633`, which compiled the exact-score module and passed its `sorryAx` gate at those commits. The later narrowed run `43386376198` exposed a regression in the current `Q4RightEndpoint.lean` dependency (errors at lines 187, 269, 310, 321, 398, 428, 483, 527, 540, 564); it failed before reaching the terminal attained-score module, and the current q4 endpoint axiom output includes `sorryAx`. Therefore the exact-score theorem was compiled and axiom-clean in the earlier source snapshot, but **current main is not presently certified** until Agent 24 repairs the q4 endpoint and the narrowed workflow is rerun. The terminal-specific workflow itself is manual-only and no longer compiles the unrelated FrameCellLemmas/LongResidue1 leaf.
+
+## M1-even Q4 stage
+
+An intermediate source-level attempt to compose the even `n=6,m=1` reset prefix, q4 suffix, and counted drain is documented in [M1EvenQ4-progress.md](./M1EvenQ4-progress.md). The finite 41-step bridge is explicitly encoded, but the parameterized Lean development has not yet passed CI; this is not a certified result.
