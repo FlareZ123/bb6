@@ -293,7 +293,7 @@ counted increment
 `S1(3,3,1,a,0,b) -> S1(3,2,0,a+b+2,0,2^b-1)`.
 
 Files:
-- `M1OddQ4Prefix.lean`: parameterized q4-cut prefix, exact bridge, cut left/right stream and shape contracts.
+- `M1OddQ4Prefix.lean`: parameterized q4-cut prefix, exact bridge, cut left/right stream and shape contracts, plus `m1Odd_q4_prefix_far_tail`, which proves the entire blank suffix from the original S1 right-facing encoding (the five-cell `q4RightShape` guard alone is insufficient for the suffix's infinite-tail premise).
 - `M1OddQ4Suffix.lean`: generic q4 suffix endpoint plus counted drain.
 - `TM63M1OddRootComposition.lean`: extends the blank-root chain through the four increments
   ((1,6)), ((0,5)), ((2,4)), and ((1,3)), with the residual itinerary now beginning at
@@ -343,8 +343,11 @@ The new source modules are:
   the parameterized post-sweep input-frame match.
 - `M0EvenQ4Prefix.lean`: counted sweep/bridge/scan composition, q4
   right-shape and complete left-facing stream, suffix-left identity,
-  and `resetPrefixCost 0 2` arithmetic.
-- `M0EvenQ4Suffix.lean`: generic q4 endpoint plus the counted drain.
+  `resetPrefixCost 0 2` arithmetic, and `m0Even_q4_prefix_far_tail`,
+  which proves the entire blank suffix from the original S1 right-facing
+  encoding rather than extrapolating the five-cell q4 guard.
+- `M0EvenQ4Suffix.lean`: generic q4 endpoint plus the counted drain, now
+  consuming the full-tail theorem.
 - `m0_even_n2_replay.py`: independent literal-table replay.
 
 The replay passed 48 bridge-decomposition, q4-cut, and full reset-prefix
