@@ -56,6 +56,163 @@ theorem sectionResult_marker_two (k a b : Nat) :
   rw [sectionResult_marker]
   omega
 
+/-- Shifting the remaining outer counter by one changes only its 2-adic
+valuation contribution to a proposed reset-stage cost. -/
+theorem proposedIncrementCost_shift (m n a b : Nat) :
+    proposedIncrementCost m (n+1) a b + 12*v2 n =
+      proposedIncrementCost m n a b + 12*v2 (n+1) := by
+  unfold proposedIncrementCost
+  omega
+
+/-- The marker after one additional section stage is the successor marker
+of the state reached by the preceding stages. -/
+theorem sectionResult_marker_snoc (n m a b : Nat) :
+    (sectionResult (n+1) m a b).marker =
+      nextMarker (sectionResult n m a b).marker := by
+  induction n generalizing m a b with
+  | zero =>
+      simp [sectionResult, nextMarker]
+      omega
+  | succ n ih =>
+      let m' := nextMarker m
+      let a' := nextExponent m a b
+      let b' := nextRight b
+      change (sectionResult (n+1) m' a' b').marker =
+        nextMarker (sectionResult n m' a' b').marker
+      exact ih m' a' b'
+
+/-- The exponent after one additional section stage is obtained by applying
+the reset exponent update to the preceding section's endpoint. -/
+theorem sectionResult_exponent_snoc (n m a b : Nat) :
+    (sectionResult (n+1) m a b).exponent =
+      nextExponent (sectionResult n m a b).marker
+        (sectionResult n m a b).exponent
+        (sectionResult n m a b).right := by
+  induction n generalizing m a b with
+  | zero =>
+      simp [sectionResult, nextExponent]
+      omega
+  | succ n ih =>
+      let m' := nextMarker m
+      let a' := nextExponent m a b
+      let b' := nextRight b
+      change (sectionResult (n+1) m' a' b').exponent =
+        nextExponent (sectionResult n m' a' b').marker
+          (sectionResult n m' a' b').exponent
+          (sectionResult n m' a' b').right
+      exact ih m' a' b'
+
+/-- The right parameter after one additional section stage is the all-ones
+successor of the preceding section's right parameter. -/
+theorem sectionResult_right_snoc (n m a b : Nat) :
+    (sectionResult (n+1) m a b).right =
+      nextRight (sectionResult n m a b).right := by
+  induction n generalizing m a b with
+  | zero =>
+      simp [sectionResult, nextRight]
+  | succ n ih =>
+      let m' := nextMarker m
+      let a' := nextExponent m a b
+      let b' := nextRight b
+      change (sectionResult (n+1) m' a' b').right =
+        nextRight (sectionResult n m' a' b').right
+      exact ih m' a' b'
+
+/-- Snoc cost identity for sectionResult.  The correction term
+12*v2(n+1) is essential: the earlier stages are evaluated at counters one
+larger than in sectionResult n, so their valuation contributions telescope. -/
+theorem sectionResult_cost_snoc (n m a b : Nat) :
+    (sectionResult (n+1) m a b).cost =
+      (sectionResult n m a b).cost + 12*v2 (n+1) +
+        proposedIncrementCost
+          ((sectionResult n m a b).marker % 3) 1
+          (sectionResult n m a b).exponent
+          (sectionResult n m a b).right := by
+  induction n generalizing m a b with
+  | zero =>
+      simp [sectionResult, proposedIncrementCost, v2]
+      omega
+  | succ n ih =>
+      let m' := nextMarker m
+      let a' := nextExponent m a b
+      let b' := nextRight b
+      have h := ih m' a' b'
+      have hshift := proposedIncrementCost_shift (m%3) (n+1) a b
+      change
+        proposedIncrementCost (m%3) (n+2) a b +
+          (sectionResult (n+1) m' a' b').cost =
+        proposedIncrementCost (m%3) (n+1) a b +
+          (sectionResult n m' a' b').cost +
+          12*v2 (n+2) +
+          proposedIncrementCost
+            ((sectionResult n m' a' b').marker % 3) 1
+            (sectionResult n m' a' b').exponent
+            (sectionResult n m' a' b').right
+      rw [h]
+      have hshift' :
+          proposedIncrementCost (m%3) (n+2) a b + 12*v2 (n+1) =
+            proposedIncrementCost (m%3) (n+1) a b + 12*v2 (n+2) := by
+        simpa using hshift
+      omega
+
+/-- When the reset index is 2 mod 3, the final stage starts at marker 1.
+The last proposed cost is exactly the (m,n)=(1,1) reset cost, but the
+prefix cost must retain the additional 12*v2 n counter-shift correction. -/
+theorem sectionResult_last_stage_m1 (n a b : Nat) (hmod : n%3=2) :
+    (sectionResult n 2 a b).marker = 0 ∧
+    (sectionResult n 2 a b).exponent =
+      (sectionResult (n-1) 2 a b).exponent +
+        (sectionResult (n-1) 2 a b).right + 2 ∧
+    (sectionResult n 2 a b).right =
+      2^(sectionResult (n-1) 2 a b).right - 1 ∧
+    (sectionResult n 2 a b).cost =
+      (sectionResult (n-1) 2 a b).cost + 12*v2 n +
+        proposedIncrementCost 1 1
+          (sectionResult (n-1) 2 a b).exponent
+          (sectionResult (n-1) 2 a b).right := by
+  have hpos : 0 < n := by omega
+  have hsucc : (n-1)+1=n := by omega
+  have hdiv : ∃ k, n=3*k+2 := by
+    refine ⟨n/3, ?_⟩
+    omega
+  obtain ⟨k,hk⟩ := hdiv
+  have hprevMarker :
+      (sectionResult (n-1) 2 a b).marker = 1 := by
+    rw [hk]
+    have hidx : 3*k+2-1=3*k+1 := by omega
+    rw [hidx]
+    exact sectionResult_marker_one k a b
+  have hmarker := sectionResult_marker_snoc (n-1) 2 a b
+  rw [hsucc] at hmarker
+  have hmarkerOut : (sectionResult n 2 a b).marker = 0 := by
+    rw [hmarker,hprevMarker]
+    decide
+  have hexponent := sectionResult_exponent_snoc (n-1) 2 a b
+  rw [hsucc] at hexponent
+  rw [hprevMarker] at hexponent
+  have hexponentOut :
+      (sectionResult n 2 a b).exponent =
+        (sectionResult (n-1) 2 a b).exponent +
+          (sectionResult (n-1) 2 a b).right + 2 := by
+    simpa [nextExponent] using hexponent
+  have hright := sectionResult_right_snoc (n-1) 2 a b
+  rw [hsucc] at hright
+  have hrightOut :
+      (sectionResult n 2 a b).right =
+        2^(sectionResult (n-1) 2 a b).right - 1 := by
+    simpa [nextRight] using hright
+  have hcost := sectionResult_cost_snoc (n-1) 2 a b
+  rw [hsucc] at hcost
+  rw [hprevMarker] at hcost
+  have hcostOut :
+      (sectionResult n 2 a b).cost =
+        (sectionResult (n-1) 2 a b).cost + 12*v2 n +
+          proposedIncrementCost 1 1
+            (sectionResult (n-1) 2 a b).exponent
+            (sectionResult (n-1) 2 a b).right := by
+    simpa using hcost
+  exact ⟨hmarkerOut,hexponentOut,hrightOut,hcostOut⟩
+
 def resetCost (length exponent right : Nat) : Nat :=
   12*(length+exponent) + 6*4^right + 42*2^right+49-9*right
 
