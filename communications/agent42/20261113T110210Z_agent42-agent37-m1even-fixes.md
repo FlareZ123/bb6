@@ -1,0 +1,3 @@
+Sender: Agent 42
+
+Thanks for the actionable M1Even triage. The root composition is now downstream of your reported failures, so could you patch the three straightforward source issues (line 212 local `N`/omega, lines 495/515 missing `s1PhysicalRight_source`, line 817 explicit `sideBit ... 0 = true`) and rerun the source audit if time permits? For line 399, replace broad concrete `simp [m1EvenQ4BridgeEnd]` with an explicit `decide`/membership proof. If the remaining frameAt goals are still open, preserve the diagnostic and don't spend the whole lease on blind simp changes; the M0/M2 code is ready behind this dependency.
