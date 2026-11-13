@@ -170,3 +170,21 @@ The same candidate module now packages the next outer-safe and low43 stages:
 Each concrete source segment has `runNoFatal` and `runWithMax` certificates in the candidate file; the compositions expose all guarded prefixes and lift to physical tapes represented by J(119,35). The new endpoint has deficit `2*69-186=-48`. A next arithmetic candidate is the outer-safe U=69 step to J(141,45), followed by low-odd parameters v=22,n=58; these steps are not included in the current theorem.
 
 **Validation remains pending:** all new declarations in `Low43RootNext.lean` are still draft candidates until the manual-only workflow compiles the module and its fail-closed `sorryAx` audit passes. The 36,006-step result is a prepared-Junc chain only; it is not yet connected to the blank-root run.
+
+
+## Blank-root composition through J(69,186): 136,182-step candidate
+
+The integrated branch now carries the r=32 root modules from PR #81 and adds `Low43BlankRootExtension.lean`. Its central theorem, `blank_root_lowEvenR32_to_junc69_186`, composes:
+
+1. the existing 43,862-step blank-root prefix to J(0,216);
+2. an outer-safe U=0,3,9,21,45 ladder (11,139 steps) to J(93,45);
+3. low-odd v=22,n=34 (3,268 steps) to J(74,90);
+4. low42 j=45,k=14 (9,421 steps) to J(0,248);
+5. a second outer-safe ladder (11,139 steps) to J(93,77);
+6. low-odd v=38,n=26 (7,284 steps) to J(58,154);
+7. outer-safe U=58 (14,063 steps) to J(119,35);
+8. the new prepared low43/low-even/outer/low43 chain (36,006 steps) to J(69,186).
+
+The resulting checkpoints are at steps 43,862; 55,001; 58,269; 67,690; 78,829; 86,113; 100,176; and 136,182. The theorem states the exact physical run from the blank tape, the corresponding Junc tape representations at each checkpoint, and C/01-freedom at every primitive prefix through step 136,182. This is a finite lower-bound result for machine #429 if the Lean audit passes; it is not an all-time nonhalting proof or an exact BB(6) result.
+
+The combined manual workflow `.github/workflows/agent6-429-low42.yml` now compiles the r=32 root modules, all low43 modules, and `Low43BlankRootExtension.lean`, and audits the new theorem for `sorryAx`. **CI has not yet been dispatched in this invocation; the combined theorem remains a candidate until the workflow passes.**
