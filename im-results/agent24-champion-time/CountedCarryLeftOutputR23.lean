@@ -89,8 +89,10 @@ theorem carryLongPrefix_r2_left (k : Nat) (T : Int → Bool)
     intro x hx
     by_cases hfar : x < -3*(4*(k:Int)+2)-2
     · have ha : carryBridgeArea2 (x-h') = false := by
-        simp [carryBridgeArea2,h']
-        omega
+        have hnot : ¬ (-3 ≤ x-h') := by
+          dsimp [h']
+          omega
+        simp [carryBridgeArea2,hnot]
       have hpres := carryLeftSweep_preserves_at (4*k+2) (3*k+1) T hmatch hs hb x
         (by omega) (by omega)
       simp [T2,frame,shiftConfig,ha,hpres,carryLeftOutputBit,hfar,h']
@@ -101,16 +103,21 @@ theorem carryLongPrefix_r2_left (k : Nat) (T : Int → Bool)
       rcases hcases with hi4 | hi3 | hi2 | hi1 | hi0 | hi1p
       · have hxEq : x = h'+(-4) := by omega
         have ha : carryBridgeArea2 ((h'+(-4))-h') = false := by
-          simp [carryBridgeArea2]
-          omega
+          have hnot : ¬ (-3 ≤ (h'+(-4))-h') := by omega
+          simp [carryBridgeArea2,hnot]
         have hpres := carryLeftSweep_preserves_at (4*k+2) (3*k+1) T hmatch hs hb
           (h'+(-4)) (by omega) (by omega)
         have harea : carryInputArea (4*k+2) (h'+(-4)) = true := by
-          simp [carryInputArea,h']
-          omega
+          have hlow : -(3*(4*k+2:Int))-2 ≤ h'+(-4) := by
+            dsimp [h']
+            omega
+          have hupper : h'+(-4) ≤ 6 := by dsimp [h']; omega
+          simp [carryInputArea,hlow,hupper]
         have hbit : carryInputBit (4*k+2) (h'+(-4)) = true := by
-          simp [carryInputBit,h']
-          omega
+          have heq : h'+(-4) = -(3*(4*k+2:Int))-2 := by
+            dsimp [h']
+            omega
+          simp [carryInputBit,heq]
         have hmark : T (h'+(-4)) = true := by
           rw [hmatch (h'+(-4)) harea]
           exact hbit
@@ -126,34 +133,39 @@ theorem carryLongPrefix_r2_left (k : Nat) (T : Int → Bool)
           simp [carryLeftOutputBit,hnotfar,hle]
         simpa [hxEq] using hleft.trans hright.symm
       · have hxEq : x = h'+(-3) := by omega
+        have hcoord : (h'+(-3))-h' = -3 := by omega
         have hcase : T2 (h'+(-3)) =
             carryLeftOutputBit (4*k+2) T (h'+(-3)) := by
           simp [T2,frame,shiftConfig,carryBridgeArea2,embed,carryBridgeFinal2,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+(-2) := by omega
+        have hcoord : (h'+(-2))-h' = -2 := by omega
         have hcase : T2 (h'+(-2)) =
             carryLeftOutputBit (4*k+2) T (h'+(-2)) := by
           simp [T2,frame,shiftConfig,carryBridgeArea2,embed,carryBridgeFinal2,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+(-1) := by omega
+        have hcoord : (h'+(-1))-h' = -1 := by omega
         have hcase : T2 (h'+(-1)) =
             carryLeftOutputBit (4*k+2) T (h'+(-1)) := by
           simp [T2,frame,shiftConfig,carryBridgeArea2,embed,carryBridgeFinal2,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+0 := by omega
+        have hcoord : (h'+0)-h' = 0 := by omega
         have hcase : T2 (h'+0) =
             carryLeftOutputBit (4*k+2) T (h'+0) := by
           simp [T2,frame,shiftConfig,carryBridgeArea2,embed,carryBridgeFinal2,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+1 := by omega
+        have hcoord : (h'+1)-h' = 1 := by omega
         have hcase : T2 (h'+1) =
             carryLeftOutputBit (4*k+2) T (h'+1) := by
           simp [T2,frame,shiftConfig,carryBridgeArea2,embed,carryBridgeFinal2,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
   have hbound : -3*((4*k+2:Int))+1 ≤ 2+h' := by
     dsimp [h']
@@ -277,8 +289,10 @@ theorem carryLongPrefix_r3_left (k : Nat) (T : Int → Bool)
     intro x hx
     by_cases hfar : x < -3*(4*(k:Int)+3)-2
     · have ha : carryBridgeArea1 (x-h') = false := by
-        simp [carryBridgeArea1,h']
-        omega
+        have hnot : ¬ (-2 ≤ x-h') := by
+          dsimp [h']
+          omega
+        simp [carryBridgeArea1,hnot]
       have hpres := carryLeftSweep_preserves_at (4*k+3) (3*k+2) T hmatch hs hb x
         (by omega) (by omega)
       simp [T2,frame,shiftConfig,ha,hpres,carryLeftOutputBit,hfar,h']
@@ -291,16 +305,21 @@ theorem carryLongPrefix_r3_left (k : Nat) (T : Int → Bool)
           hi3p | hi4 | hi5
       · have hxEq : x = h'+(-3) := by omega
         have ha : carryBridgeArea1 ((h'+(-3))-h') = false := by
-          simp [carryBridgeArea1]
-          omega
+          have hnot : ¬ (-2 ≤ (h'+(-3))-h') := by omega
+          simp [carryBridgeArea1,hnot]
         have hpres := carryLeftSweep_preserves_at (4*k+3) (3*k+2) T hmatch hs hb
           (h'+(-3)) (by omega) (by omega)
         have harea : carryInputArea (4*k+3) (h'+(-3)) = true := by
-          simp [carryInputArea,h']
-          omega
+          have hlow : -(3*(4*k+3:Int))-2 ≤ h'+(-3) := by
+            dsimp [h']
+            omega
+          have hupper : h'+(-3) ≤ 6 := by dsimp [h']; omega
+          simp [carryInputArea,hlow,hupper]
         have hbit : carryInputBit (4*k+3) (h'+(-3)) = true := by
-          simp [carryInputBit,h']
-          omega
+          have heq : h'+(-3) = -(3*(4*k+3:Int))-2 := by
+            dsimp [h']
+            omega
+          simp [carryInputBit,heq]
         have hmark : T (h'+(-3)) = true := by
           rw [hmatch (h'+(-3)) harea]
           exact hbit
@@ -316,52 +335,60 @@ theorem carryLongPrefix_r3_left (k : Nat) (T : Int → Bool)
           simp [carryLeftOutputBit,hnotfar,hle]
         simpa [hxEq] using hleft.trans hright.symm
       · have hxEq : x = h'+(-2) := by omega
+        have hcoord : (h'+(-2))-h' = -2 := by omega
         have hcase : T2 (h'+(-2)) =
             carryLeftOutputBit (4*k+3) T (h'+(-2)) := by
           simp [T2,frame,shiftConfig,carryBridgeArea1,embed,carryBridgeFinal1,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+(-1) := by omega
+        have hcoord : (h'+(-1))-h' = -1 := by omega
         have hcase : T2 (h'+(-1)) =
             carryLeftOutputBit (4*k+3) T (h'+(-1)) := by
           simp [T2,frame,shiftConfig,carryBridgeArea1,embed,carryBridgeFinal1,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+0 := by omega
+        have hcoord : (h'+0)-h' = 0 := by omega
         have hcase : T2 (h'+0) =
             carryLeftOutputBit (4*k+3) T (h'+0) := by
           simp [T2,frame,shiftConfig,carryBridgeArea1,embed,carryBridgeFinal1,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+1 := by omega
+        have hcoord : (h'+1)-h' = 1 := by omega
         have hcase : T2 (h'+1) =
             carryLeftOutputBit (4*k+3) T (h'+1) := by
           simp [T2,frame,shiftConfig,carryBridgeArea1,embed,carryBridgeFinal1,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+2 := by omega
+        have hcoord : (h'+2)-h' = 2 := by omega
         have hcase : T2 (h'+2) =
             carryLeftOutputBit (4*k+3) T (h'+2) := by
           simp [T2,frame,shiftConfig,carryBridgeArea1,embed,carryBridgeFinal1,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+3 := by omega
+        have hcoord : (h'+3)-h' = 3 := by omega
         have hcase : T2 (h'+3) =
             carryLeftOutputBit (4*k+3) T (h'+3) := by
           simp [T2,frame,shiftConfig,carryBridgeArea1,embed,carryBridgeFinal1,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+4 := by omega
+        have hcoord : (h'+4)-h' = 4 := by omega
         have hcase : T2 (h'+4) =
             carryLeftOutputBit (4*k+3) T (h'+4) := by
           simp [T2,frame,shiftConfig,carryBridgeArea1,embed,carryBridgeFinal1,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
       · have hxEq : x = h'+5 := by omega
+        have hcoord : (h'+5)-h' = 5 := by omega
         have hcase : T2 (h'+5) =
             carryLeftOutputBit (4*k+3) T (h'+5) := by
           simp [T2,frame,shiftConfig,carryBridgeArea1,embed,carryBridgeFinal1,
-            carryLeftOutputBit,h'] <;> omega
+            carryLeftOutputBit,h',hcoord] <;> omega
         simpa [hxEq] using hcase
   have hbound : -3*((4*k+3:Int))+1 ≤ 6+h' := by
     dsimp [h']
