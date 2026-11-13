@@ -93,7 +93,9 @@ This closes the all-prefix physical safety gap for the canonical low42 run. `Low
 
 ## Junc(0,w) return-map exploration
 
-`Junc0ReturnMapExploration.md` records a 20-million-step deterministic simulation and an algebraic candidate for a repeated Junc(0,w) -> Junc(0,w+28) branch when (408\le w\le736) and (4\mid w). This is experimental, not a theorem.
+`Junc0ReturnMapExploration.md` records the 20-million-step discovery simulation and the still-unresolved J(0,744) -> J(0,924) segment. The finite +28 return branch is now formalized as `BB429Junc0ReturnMap28.junc0_return_map_28`, pending integrated Lean CI: for every (12\le r\le94), every physical configuration representing Junc(0,0,4(r+90)) has an exact original-machine run to a representation of Junc(0,0,4(r+97)), with every primitive prefix C/01-free. Thus the map Junc(0,w) -> Junc(0,w+28) is established for every multiple of four (408\le w\le736), not merely the simulated 28-spaced orbit.
+
+The proof composes six physical outer-safe returns (U=0,3,9,21,45,93; 46,692 steps total) with the arbitrary-head low42 physical macro (parameters j=2r,k=94-r). The exact total is (46692+4(2r)^2+22(2r)+18(94-r)+79), equivalently (16r^2+26r+48463).
 
 The observed J(0,744) -> J(0,924) segment takes 1,158,049 steps. Its proposed decomposition is:
 
