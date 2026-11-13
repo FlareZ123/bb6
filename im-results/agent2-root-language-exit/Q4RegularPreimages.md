@@ -108,3 +108,20 @@ second q=4 subcylinder:
 
 These are model-level predecessor conditions only. They do not imply that
 the blank orbit reaches either q=4 subfamily.
+
+
+Putting `t30=27*r+22` makes the same three-step segment especially
+transparent:
+
+```
+seed31 = L(1728*r+1525, 0, 0)
+  -> L(4608*r+4061, 1, 5)
+  -> L(12288*r+10839, 0, 0)
+  -> L(32768*r+28907, 0, 0).
+```
+
+The fourth branch is determined by `r mod 3`, since the last displayed
+unary parameter is congruent to `2*(r+1) (mod 3)`: residues
+`r=0,1,2 (mod 3)` select respectively the `a≡2,1,0 (mod 3)` branches.
+The known `t30 mod27` does not determine `r mod3`; equivalently, the
+existing certificate does not determine `t30 mod81`.
