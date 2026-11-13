@@ -184,7 +184,7 @@ theorem q4_suffix_run_right_word (T : Int → Bool) (h : Int) (b : Nat)
   let g : Int := h+10+(3*b:Int)
   let U := frameAt T2 g q4TailInside q4TailEnd
   refine ⟨U, ?_, ?_⟩
-  · simpa [U, T1, T2, g] using q4_suffix_frame T h b hshape
+  · exact q4_suffix_frame T h b hshape
   · simpa [U, T1, T2, g] using q4_suffix_right_word T h b hshape htail
 
 /-- Direct interface from Agent 6's exported prefix stream to the
@@ -481,7 +481,7 @@ theorem q4_suffix_run_left_word (T : Int → Bool) (h : Int) (b L n a : Nat)
   let g : Int := h+10+(3*b:Int)
   let U := frameAt T2 g q4TailInside q4TailEnd
   refine ⟨U, ?_, ?_⟩
-  · simpa [U,T1,T2,g] using q4_suffix_frame T h b hshape
+  · exact q4_suffix_frame T h b hshape
   · simpa [U,T1,T2,g] using q4_suffix_left_word T h b L n a hleft
 
 /-- Compose the parameter-uniform odd-Rst2 q4 prefix and suffix into an
@@ -525,7 +525,7 @@ theorem q4_suffix_run_target_of_prefix
     simpa [U,T1,T2,g] using
       q4_suffix_left_word Tq h b L (n-1) a hleft8
   have hsuffix : run BB6Coverage.Agent48Champion.tm2 (39+3*b) ⟨4,h,Tq⟩ = some U := by
-    simpa [U,T1,T2,g] using q4_suffix_frame Tq h b hshape8
+    exact q4_suffix_frame Tq h b hshape8
   have htarget : U =
       s1Config L (n-1) 1 (a+b+2) (2^b-1) 0 H := by
     apply config_ext
