@@ -14,7 +14,7 @@ This directory contains intermediate source-machine proofs for the repeated decr
 
 The module defines `inc0Cost z c = 48 + 12*v2(z) + 12*c` and the corresponding recursive `drainCost n c`. The theorem `countedIncs0` proves in the original `BB6Coverage.run` semantics that any family of counted one-step `Inc0` runs composes to the full `Incs0` drain:
 `S0(l,len,n,c) -> S0(l,len,0,c+n)`.
-For the all-ones counter, `countedIncs0_binary` specializes this to `2^b-1 -> 0), with exact cost `drainPattern b`.
+For the all-ones counter, `countedIncs0_binary` specializes this to `2^b-1 -> 0`, with exact cost `drainPattern b`.
 
 The machine-specific uniform single-decrement theorem remains an explicit premise. The repeated-run composition, endpoint arithmetic, and exact all-ones drain cost are proved; the universal source-level `Inc0` theorem is not.
 
@@ -22,7 +22,7 @@ The machine-specific uniform single-decrement theorem remains an explicit premis
 
 `proposedIncrementCost_decomp` splits the candidate Rst0/Rst1/Rst2 cost into:
 
-- a candidate prefix cost `48+12(a+v₂(n))+15+4m+3b);
+- a candidate prefix cost `48+12(a+v₂(n))+15+4m+3b`;
 - the proved all-ones `Incs0` drain `drainCost (2^b-1) 0`.
 
 `countedRst012_of_prefix` is the original-run composition theorem: once a counted prefix reaches the S0 intermediate with second counter `2^b-1` and right counter zero, the exact candidate total cost reaches the reset endpoint with second counter zero and right counter `2^b-1`.
@@ -57,15 +57,18 @@ These bases cover only `a=b=0`. They do not prove the universal prefix with arbi
 
 The intended source endpoint is
 
-```
+```text
 S1(L,n,m,a,0,b,h)
   -->[resetPrefixCost m n a b]
-S1(L,n-1,(m+2)%3,a+b+delta(m),2^b-1,0,h+5+3*b),
+S1(L,n-1,(m+2)%3,a+b+delta(m),2^b-1,0,h+5+3*b)
 ```
 
 where `delta(0)=1` and `delta(1)=delta(2)=2`. In S0 notation the target is
-`s0Config (markerWord ((m+2)%3) ++ d0 ++ binDec L (n-1) ++ lh)
-  (a+b+delta(m)) (2^b-1) (h+5+3*b)`.
+
+```lean
+s0Config (markerWord ((m+2)%3) ++ d0 ++ binDec L (n-1) ++ lh)
+  (a+b+delta(m)) (2^b-1) (h+5+3*b)
+```
 The head displacement is **`5+3*b`**, not zero.
 
 A direct simulator using the source TM63 table matched the full pre-drain endpoint (state, complete tape, and head displacement) in 684 finite parameter cases with `L<=5`, `n<=5` within the length bound, `m∈{0,1,2}`, `a<=3`, and `b<=2`. The observed head shift was exactly `5+3*b` in every case. This is computational evidence only, not a universal proof.
@@ -88,7 +91,7 @@ The latest overall champion-root run `43340804651` failed, and the available job
 ## Dependencies and ownership
 
 - `CountedSweep.lean`, `CountedOddBase.lean`, and `S1Encoder.lean` provide the source encodings and counted operations.
-- `CostRecurrence.lean` provides `v2) and the candidate reset cost.
+- `CostRecurrence.lean` provides `v2` and the candidate reset cost.
 - `CountPattern.lean` provides the carry pattern and closed drain arithmetic.
 - `ChampionRootBridge.lean` provides the original TM63 table and configuration semantics.
 - `CountedOneZeroUnary.lean` provides `even_finite_heads`.
