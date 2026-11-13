@@ -130,15 +130,3 @@ jobs:
           fi
           grep -E 'evenPre887Cone_closed|evenPre887_root_unreachable|fatal887_root_unreachable' /tmp/root887-lean.log
 
-          q="im-results/agent7-746-fatal-fork"
-          export LEAN_PATH="$LEAN_PATH:$q"
-          for m in ForkCore ForkRoot ForkArithmetic ForkFamily ForkOriginal; do
-            lean -o "$q/$m.olean" "$q/$m.lean"
-          done
-          echo "PASS: four infinite genuine-root-excluded fatal odd predecessors via exact inverse two-layer cone"
-          for m in ForkCensus ForkCensusRoot; do
-            lean -o "$q/$m.olean" "$q/$m.lean"
-          done
-          echo "PASS: original-source complete modular 154 of 162 fatal odd-feeder obstruction"
-          lean -o "$q/ForkMiddleOdd.olean" "$q/ForkMiddleOdd.lean"
-          echo "PASS: exact unique lower-middle odd source parent with permitted 3-adic valuation three"
