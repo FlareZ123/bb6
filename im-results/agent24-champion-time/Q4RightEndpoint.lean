@@ -23,14 +23,14 @@ open BB6Coverage.Agent8S1Encoder
 theorem q4_prefix_far_tail (b : Nat) (Tq : Int → Bool) (h : Int)
     (hright : ∀ i : Nat,
       Tq (h+1+(i:Int)) =
-        BB6Coverage.Agent6Q4Prefix.sideBit
+        BB6Coverage.Agent8S1Encoder.sideBit
           (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i) :
     ∀ i : Nat, 9+3*b ≤ i → Tq (h+1+(i:Int)) = false := by
   intro i hi
   rw [hright]
   have hlen :=
     BB6Coverage.Agent6Q4Prefix.q4RightFacing_length b
-  exact BB6Coverage.Agent6Q4Prefix.sideBit_ge_length
+  exact BB6Coverage.Agent8S1Encoder.sideBit_ge_length
     (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i (by omega)
 
 /-- A cell in the final 29-move local frame, expressed relative to its
@@ -114,7 +114,7 @@ theorem q4_suffix_right_word (T : Int → Bool) (h : Int) (b : Nat)
       simp [s0RightFacing, d1pow, d1]
     have htarget :
         sideBit (s0RightFacing 0) i = false :=
-      BB6Coverage.Agent6Q4Prefix.sideBit_ge_length
+      BB6Coverage.Agent8S1Encoder.sideBit_ge_length
         (s0RightFacing 0) i (by omega)
     calc
       U.tape (h+6+(3*b:Int)+(i:Int)) = U.tape x := by rfl
