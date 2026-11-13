@@ -35,8 +35,7 @@ private theorem twoTierDepthCoeff_unit (n b k : Nat)
     (16*(2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k)%3≠0 := by
   have h := rayCoeff_unit n b k hn
   have h16 : (16:Int)%3=1 := by decide
-  rw [Int.mul_emod]
-  simpa [h16] using h
+  simpa [Int.mul_emod,h16] using h
 
 private theorem twoTierDepth_lift_criterion (n b k t : Nat)
     (ht : t<3)
