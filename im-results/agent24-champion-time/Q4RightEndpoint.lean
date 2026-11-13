@@ -425,6 +425,7 @@ theorem q4_suffix_left_word
       have hside :
           sideBit (d0pow b ++ d1pow 2 ++ tail) i =
             sideBit tail j := by
+        rw [List.append_assoc]
         rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
           (d0pow b) (d1pow 2 ++ tail) i (by rw [hlen0]; omega)]
         rw [hlen0]
