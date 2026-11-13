@@ -997,3 +997,14 @@ theorem m1Even_reset_prefix_frame_cost (a b : Nat) (h : Int) :
   exact m1Even_reset_prefix_frame a b h
 
 end BB6Coverage.Agent48CountedInc0
+
+#print axioms m1EvenQ4Bridge_exact
+#print axioms m1EvenQ4Bridge_heads
+#print axioms m1Even_q4_prefix_run
+#print axioms m1Even_q4_prefix_rightShape
+#print axioms m1Even_reset_prefix_frame
+#print axioms m1Even_q4_prefix_leftFacing
+#print axioms m1EvenQ4SuffixTargetLeft
+#print axioms m1Even_reset_prefix_frame_cost
+
+end BB6Coverage.Agent48CountedInc0
