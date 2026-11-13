@@ -410,7 +410,8 @@ theorem m1Odd_q4_prefix_rightShape (a b : Nat) (h : Int) :
           have hhead : sweptLeft (3*a+1) T h h = true := by
             have hs := sweptLeft_head (3*a+1-2) T h
             have hN : 3*a+1 = (3*a+1-2)+2 := by omega
-            simpa [hN] using hs
+            rw [← hN] at hs
+            exact hs
           have hhead' : sweptLeft (3*a+1)
               (s1Config 3 3 1 a 0 b h).tape h (h+0) = true := by
             simpa [T] using hhead
@@ -506,7 +507,7 @@ theorem m1Odd_q4_prefix_rightShape (a b : Nat) (h : Int) :
           have hsrc : T (h+7+(i:Int)) =
               sideBit (s0RightFacing b) (6+i) := by
             have hcoord : h+1+(6+i:Int) = h+7+(i:Int) := by omega
-            simpa [T,hcoord] using s1Config_right_cell 3 3 1 a 0 b h (6+i)
+            simpa [T,hcoord,s1PhysicalRight_source,sideBit] using s1Config_right_cell 3 3 1 a 0 b h (6+i)
           have hside :
               sideBit (s0RightFacing b) (6+i) =
                 sideBit (d1pow (b+1)) i := by
@@ -526,7 +527,7 @@ theorem m1Odd_q4_prefix_rightShape (a b : Nat) (h : Int) :
               sideBit (s0RightFacing b) (9+3*b+i) := by
             have hcoord : h+1+((9+3*b+i:Int)) =
                 h+10+(3*b:Int)+(i:Int) := by omega
-            simpa [T,hcoord] using
+            simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
               s1Config_right_cell 3 3 1 a 0 b h (9+3*b+i)
           have hlen : (s0RightFacing b).length = 9+3*b := by
             simp [s0RightFacing,d1pow_length]
@@ -537,163 +538,6 @@ theorem m1Odd_q4_prefix_rightShape (a b : Nat) (h : Int) :
           have htarget : T (h+10+(3*b:Int)+(i:Int)) = false := by
             rw [hsrc,hblank]
           exact hcut.trans htarget
-
-
-
-def m1OddQ4First4Inside (x : Int) : Bool := decide (0 ≤ x ∧ x ≤ 4)
-
-def m1OddQ4First4Start : FConfig := ⟨4,0,[0,1,2,3,4]⟩
-def m1OddQ4First4End : FConfig := ⟨4,4,[3,2,1,0,4]⟩
-
-theorem m1OddQ4First4_exact :
-    fRun tm2 4 m1OddQ4First4Start = some m1OddQ4First4End := by
-  decide
-
-theorem m1OddQ4First4_heads :
-    (List.range 4).all (fun k =>
-      match fRun tm2 k m1OddQ4First4Start with
-      | none => true
-      | some f => m1OddQ4First4Inside f.head) = true := by
-  decide
-
-private theorem m1OddConfigExt {c d : Config}
-    (hs : c.state = d.state) (hh : c.head = d.head)
-    (ht : c.tape = d.tape) : c = d := by
-  cases c
-  cases d
-  simp_all
-
-private theorem m1OddQ4First4Frame_eq (T : Int → Bool) (h : Int)
-    (h0 : ∀ i : Nat, i < 5 → T (h+(i:Int)) = true) :
-    frameAt T h m1OddQ4First4Inside m1OddQ4First4End =
-      ⟨4,h+4,T⟩ := by
-  apply m1OddConfigExt
-  · simp [frameAt,frame,shiftConfig,embed,m1OddQ4First4End]
-  · simp [frameAt,frame,shiftConfig,embed,m1OddQ4First4End] <;> omega
-  · funext x
-    by_cases hin : m1OddQ4First4Inside (x-h) = true
-    · have hb : 0 ≤ x-h ∧ x-h ≤ 4 := by
-        simpa [m1OddQ4First4Inside] using hin
-      have hcases : x-h=0 ∨ x-h=1 ∨ x-h=2 ∨ x-h=3 ∨ x-h=4 := by omega
-      have htrue : T x = true := by
-        rcases hcases with h0x | h1x | h2x | h3x | h4x
-        · have hv := h0 0 (by omega)
-          have hc : h+(0:Int)=x := by omega
-          simpa [hc] using hv
-        · have hv := h0 1 (by omega)
-          have hc : h+(1:Int)=x := by omega
-          simpa [hc] using hv
-        · have hv := h0 2 (by omega)
-          have hc : h+(2:Int)=x := by omega
-          simpa [hc] using hv
-        · have hv := h0 3 (by omega)
-          have hc : h+(3:Int)=x := by omega
-          simpa [hc] using hv
-        · have hv := h0 4 (by omega)
-          have hc : h+(4:Int)=x := by omega
-          simpa [hc] using hv
-      have hmem : x-h ∈ m1OddQ4First4End.marked := by
-        rcases hcases with h0x | h1x | h2x | h3x | h4x
-        · simp [h0x,m1OddQ4First4End]
-        · simp [h1x,m1OddQ4First4End]
-        · simp [h2x,m1OddQ4First4End]
-        · simp [h3x,m1OddQ4First4End]
-        · simp [h4x,m1OddQ4First4End]
-      have hmem' : x-h=3 ∨ x-h=2 ∨ x-h=1 ∨ x-h=0 ∨ x-h=4 := by
-        simpa [m1OddQ4First4End] using hmem
-      have hshift :
-          (shiftConfig h (embed m1OddQ4First4End)).tape x = true := by
-        simp [shiftConfig,embed,m1OddQ4First4End,hmem']
-      simp [frameAt,frame,shiftConfig,embed,m1OddQ4First4Inside,
-        m1OddQ4First4End,hin,htrue,hshift,hmem']
-    · have hnot : x-h < 0 ∨ 4 < x-h := by
-        simp [m1OddQ4First4Inside] at hin
-        omega
-      have hcond : ¬ (h ≤ x ∧ x-h ≤ 4) := by omega
-      simp [frameAt,frame,shiftConfig,embed,m1OddQ4First4Inside,
-        m1OddQ4First4End,hin,hcond]
-
-/-- Four state-4-on-one moves are already consumed at the m=1,n=6 cut. -/
-theorem m1OddQ4First4_at (T : Int → Bool) (h : Int)
-    (h0 : ∀ i : Nat, i < 5 → T (h+(i:Int)) = true) :
-    run tm2 4 ⟨4,h,T⟩ = some ⟨4,h+4,T⟩ := by
-  have hmatch : ∀ x, m1OddQ4First4Inside x = true →
-      T (h+x) = decide (x ∈ m1OddQ4First4Start.marked) := by
-    intro x hx
-    have hb : 0 ≤ x ∧ x ≤ 4 := by
-      simpa [m1OddQ4First4Inside] using hx
-    have htrue : T (h+x) = true := by
-      have hcases : x=0 ∨ x=1 ∨ x=2 ∨ x=3 ∨ x=4 := by omega
-      rcases hcases with h0x | h1x | h2x | h3x | h4x
-      · subst x; exact h0 0 (by omega)
-      · subst x; exact h0 1 (by omega)
-      · subst x; exact h0 2 (by omega)
-      · subst x; exact h0 3 (by omega)
-      · subst x; exact h0 4 (by omega)
-    have hmem : decide (x ∈ m1OddQ4First4Start.marked) = true := by
-      have hcases : x=0 ∨ x=1 ∨ x=2 ∨ x=3 ∨ x=4 := by omega
-      rcases hcases with h0x | h1x | h2x | h3x | h4x
-      · subst x; simp [m1OddQ4First4Start]
-      · subst x; simp [m1OddQ4First4Start]
-      · subst x; simp [m1OddQ4First4Start]
-      · subst x; simp [m1OddQ4First4Start]
-      · subst x; simp [m1OddQ4First4Start]
-    exact htrue.trans hmem.symm
-  have hbridge := bridgeAt T h m1OddQ4First4Inside
-    m1OddQ4First4Start m1OddQ4First4End 4 rfl
-    m1OddQ4First4_exact m1OddQ4First4_heads hmatch
-  have hframe := m1OddQ4First4Frame_eq T h h0
-  rw [hframe] at hbridge
-  exact hbridge
-
-/-- Reuse the established Q4 suffix after the four guard moves already
-performed by the m=1,n=6 even prefix. -/
-theorem m1Odd_q4_suffix_after_four (T : Int → Bool) (h : Int) (b : Nat)
-    (hshape : BB6Coverage.Agent8Q4Suffix.q4RightShape T h b) :
-    run tm2 (35+3*b) ⟨4,h+4,T⟩ =
-      some (frameAt
-        (d0Sweep b
-          (frameAt T h q4First10Inside q4First10End).tape (h+10))
-        (h+10+3*b) q4TailInside q4TailEnd) := by
-  have hwhole := q4_suffix_frame T h b hshape
-  have hfirst := m1OddQ4First4_at T h hshape.1
-  have hnum : 39+3*b = 4+(35+3*b) := by omega
-  rw [hnum,run_append,hfirst] at hwhole
-  simp only [Option.bind_some] at hwhole
-  exact hwhole
-
-/-- The complete m=1,n=3 odd reset-prefix source run, ending at the
-same explicit Q4 suffix frame used by the existing suffix theorem.
-The canonical S1 identification of this frame is a separate left-tail
-identity and is intentionally not claimed here. -/
-theorem m1Odd_reset_prefix_frame (a b : Nat) (h : Int) :
-    run tm2 (67+12*a+3*b)
-      ⟨3,h,(s1Config 3 3 1 a 0 b h).tape⟩ =
-      some (frameAt
-        (d0Sweep b
-          (frameAt (m1OddQ4CutTape a b h) h
-            q4First10Inside q4First10End).tape (h+10))
-        (h+10+3*b) q4TailInside q4TailEnd) := by
-  have hprefix := m1Odd_q4_prefix_run a b h
-  have hshape := m1Odd_q4_prefix_rightShape a b h
-  have htail := m1Odd_q4_suffix_after_four
-    (m1OddQ4CutTape a b h) h b hshape
-  have hnum : 67+12*a+3*b = (32+12*a)+(35+3*b) := by omega
-  rw [hnum,run_append,hprefix]
-  simp only [Option.bind_some]
-  exact htail
-
-
-
-private theorem binDec_three_two :
-    binDec 3 2 = d1 ++ d0 ++ d1 := by
-  have h1 : binDec 3 2 = d1 ++ binDec 2 1 := by
-    simpa using binDec_even 2 1 (by decide)
-  have h2 : binDec 2 1 = d0 ++ binDec 1 0 := by
-    simpa using binDec_odd 1 0 (by decide)
-  have h3 : binDec 1 0 = d1 ++ binDec 0 0 := by
-    simpa using binDec_even 0 0 (by decide)
-  simp [h1,h2,h3,binDec_zero,d1pow]
 
 
 
@@ -998,16 +842,5 @@ theorem m1Odd_resetPrefixCost_eq (a b : Nat) :
   omega
 
 
-
-theorem m1Odd_reset_prefix_frame_cost (a b : Nat) (h : Int) :
-    run tm2 (resetPrefixCost 1 3 a b)
-      ⟨3,h,(s1Config 3 3 1 a 0 b h).tape⟩ =
-      some (frameAt
-        (d0Sweep b
-          (frameAt (m1OddQ4CutTape a b h) h
-            q4First10Inside q4First10End).tape (h+10))
-        (h+10+3*b) q4TailInside q4TailEnd) := by
-  rw [m1Odd_resetPrefixCost_eq]
-  exact m1Odd_reset_prefix_frame a b h
 
 end BB6Coverage.Agent24M1OddQ4Prefix
