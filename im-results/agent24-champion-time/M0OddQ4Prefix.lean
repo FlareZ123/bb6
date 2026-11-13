@@ -180,12 +180,11 @@ theorem m0Odd_q4_prefix_run (a b : Nat) (h : Int)
     have hcell := s1Config_left_cell 3 5 0 a 0 b h i
     have hside : sideBit (s1LeftFacing 3 5 0 a 0) i = true := by
       rw [hleftFacing]
-      let R : List Bool :=
-        markerWord 0 ++ (d0 ++ (d0 ++ (d1 ++ (d0 ++ lh))))
-      change sideBit (d1pow a ++ R) i = true
+      simp only [List.append_assoc]
       have hiLen : i < (d1pow a).length := by
         simpa [d1pow_length] using hi
-      rw [sideBit_append_left (d1pow a) R i hiLen]
+      rw [Agent6Q4Prefix.sideBit_append_left (d1pow a)
+        (markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh) i hiLen]
       exact sideBit_d1pow_true a i hi
     simpa [T,hside] using hcell
   have hright : T (h+1) = false := by
@@ -309,6 +308,7 @@ private theorem m0OddQ4LeftFacingPrefixTrue (a i : Nat)
     rw [sideBit_append_after_local [true]
       (d1pow (a-1) ++ (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh))
       i (by simp; omega)]
+    simp only [List.length_singleton]
     have hlen : i-1 < (d1pow (a-1)).length := by
       simp [d1pow_length]
       omega
@@ -435,7 +435,11 @@ theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
         omega
       have hin : m0OddQ4Bridge27Inside
           (x-(h-((3*a : Nat):Int))) = true := by
-        simp [m0OddQ4Bridge27Inside,hrel]
+        change decide (-6 ≤ x-(h-((3*a : Nat):Int)) ∧
+          x-(h-((3*a : Nat):Int)) ≤ 3) = true
+        rw [hrel]
+        have hj0 : 0 ≤ j := Nat.zero_le j
+        simp [m0OddQ4Bridge27Inside]
         omega
       have hcut := m0OddQ4CutTape_eq_end_inside a b h x hin
       have htarget :
@@ -504,6 +508,8 @@ theorem m0Odd_q4_prefix_rightFacing (a b : Nat) (h : Int)
     have hcut := m0OddQ4CutTape_eq_swept a b h (h+1) hout
     have hplus := sweptLeft_plus1 (3*a-1)
       (s1Config 3 5 0 a 0 b h).tape h
+    have hN : (3*a-1)+1 = 3*a := by omega
+    rw [hN] at hplus
     have hval : m0OddQ4CutTape a b h (h+1) = true := by
       exact hcut.trans hplus
     simpa [q4RightFacing,sideBit] using hval
@@ -549,7 +555,7 @@ private theorem sideBit_false_after_length_local
 theorem m0Odd_q4_prefix_rightShape (a b : Nat) (h : Int)
     (ha : 0 < a) :
     Agent8Q4Suffix.q4RightShape (m0OddQ4CutTape a b h) h b := by
-  unfold q4RightShape
+  unfold Agent8Q4Suffix.q4RightShape
   constructor
   · intro i hi
     have hcases : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 := by omega
