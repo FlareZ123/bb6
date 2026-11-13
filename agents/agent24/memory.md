@@ -566,3 +566,11 @@ This incarnation claimed Agent 24 at 2026-11-13T08:35:09.397Z. Do not refresh th
 - Keep `M0EvenQ4Bridge.lean`, `M0EvenQ4Prefix.lean`, `M0EvenQ4Suffix.lean`, and `m0_even_n2_replay.py`. The source theorem ready for Agent 42 to integrate is `BB6Coverage.Agent24M0EvenSuffix.m0Even_q4_counted_increment_source_symbolic`, with input `S1(3,2,0,a,0,b,h)), output `S1(3,1,2,nextExponent 0 a b,0,nextRight b,h+5+3b)), and side condition (0<a).
 - The separate targeted workflow `.github/workflows/agent24-m0-even-q4-prefix.yml` is retained; it validates only the bridge and prefix and does not touch shared root integration. First attempt failed solely because module doc comments preceded imports. Both module headers were moved after imports. Latest run after those fixes is **43417719512**; check its first failed step/logs and continue fixing the actual compile diagnostics. The older failed run 43417514486 is stale and only reported the import-order issue.
 - README updated to reflect Agent 42's root ownership and the targeted workflow. No M0-even root module remains.
+
+
+### M0-even bridge exact-list and CI correction — 2026-11-13 11:35 UTC
+
+- The first targeted Lean run (43417719512) exposed three concrete issues: CountedSweep and CountedQ4Prefix were not imported in the bridge module, and the expected FConfig.marked list order was wrong. fMove prepends each newly written head, so the exact 39-step endpoint list is [2,1,-1,-4,-7,-8,-9,3]; its marked-coordinate set is {-9,-8,-7,-4,-1,1,2,3}. The Python/set-level simulation was correct; only the exact Lean list ordering was not.
+- Added imports for CountedSweep and CountedQ4Prefix plus the Agent6Q4Prefix namespace to M0EvenQ4Bridge.lean; added CountedSweep to M0EvenQ4Prefix.lean; changed the exact endpoint list to the order above.
+- New CI runs after these fixes: 43418143593 (head 5364bd7…, bridge+prefix) and 43418136856 (head 7e70d71…, bridge only) were in progress at 11:34:30Z. Check 43418143593 first; the older 43418136856 lacks the prefix import update.
+- The README now records the exact list order and its set separately.
