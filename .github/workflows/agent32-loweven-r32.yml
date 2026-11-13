@@ -1,0 +1,71 @@
+name: Agent 32 concrete low-even r=32 source proof
+
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact source dependencies and low-even theorems
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix:im-results/agent1-429-w4-boundary:im-results/agent33-429-writer-locality:im-results/agent4-429-ordinary-frontier:im-results/agent1-429-w2-census:im-results/agent6-429-low2:im-results/agent18-429-low-j:im-results/agent32-429-low5:im-results/agent48-429-safe:im-results/agent32-429-loweven-r32:im-results/agent32-429-loweven-4k"
+          LOG=/tmp/agent32-loweven-r32-proof.log
+          : > "$LOG"
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent32-429-primitive-cost/BubbleExact.olean im-results/agent32-429-primitive-cost/BubbleExact.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent32-429-primitive-cost/BubblePrefix.olean im-results/agent32-429-primitive-cost/BubblePrefix.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-primitive-cost/HeadDisplacement.olean im-results/agent32-429-primitive-cost/HeadDisplacement.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-primitive-cost/BubblePrefixHeadBound.olean im-results/agent32-429-primitive-cost/BubblePrefixHeadBound.lean 2>&1 | tee -a "$LOG"
+          for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean 2>&1 | tee -a "$LOG"
+          for m in RayMacro EntryMacroOracle EntryMacroLeft; do
+            lean -o "im-results/agent6-fresh-glider/$m.olean" "im-results/agent6-fresh-glider/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean 2>&1 | tee -a "$LOG"
+          for m in ZeroMaskOracle FiniteDecision; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          for m in FrontierAudit FrontierMass; do
+            lean -o "im-results/agent4-coverage-smoke/$m.olean" "im-results/agent4-coverage-smoke/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          for m in ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit FiniteLassoOracle LassoTraceAudit; do
+            lean -o "im-results/agent32-zero-prefix-global/$m.olean" "im-results/agent32-zero-prefix-global/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.olean im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent6-429-one-sided-excursion/BB429OddExcursion.olean im-results/agent6-429-one-sided-excursion/BB429OddExcursion.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent48-429-safe/NoFatalGuard.olean im-results/agent48-429-safe/NoFatalGuard.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.olean im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent6-429-one-sided-excursion/BB429SourceE1Delta.olean im-results/agent6-429-one-sided-excursion/BB429SourceE1Delta.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/W4HeadMax.olean im-results/agent1-429-w4-boundary/W4HeadMax.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/W4HeadPrefix.olean im-results/agent1-429-w4-boundary/W4HeadPrefix.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent6-429-one-sided-excursion/BB429SourceRows.olean im-results/agent6-429-one-sided-excursion/BB429SourceRows.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429PhysicalBridge.olean im-results/agent6-429-one-sided-excursion/BB429PhysicalBridge.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent32-429-raw-parent/BB429E1ShiftDelta.olean im-results/agent32-429-raw-parent/BB429E1ShiftDelta.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429DeltaPhysicalBridge.olean im-results/agent32-429-raw-parent/BB429DeltaPhysicalBridge.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.olean im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion.olean im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent32-429-loweven-r32/LowEvenR32NoFatal.olean im-results/agent32-429-loweven-r32/LowEvenR32NoFatal.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429LowEvenR32.lowEvenR32_total_delta' depends on axioms:" "$LOG"
+          grep -F "'BB429LowEvenR32.lowEvenR32_no_fatal_source' depends on axioms:" "$LOG"
+          grep -F "'BB429LowEvenR32.lowEvenR32_tail_czero_event_census' depends on axioms:" "$LOG"
+          grep -F "'BB429LowEvenR32.lowEvenR32_no_fatal_physical' depends on axioms:" "$LOG"
+          grep -F "'BB429LowEvenR32.blank_root_lowEvenR32_no_fatal' depends on axioms:" "$LOG"
+          if grep -q sorryAx "$LOG"; then
+            echo "unexpected sorryAx in low-even proof chain" >&2
+            exit 1
+          fi
+          tail -n 40 "$LOG"
