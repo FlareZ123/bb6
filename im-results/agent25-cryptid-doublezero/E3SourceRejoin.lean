@@ -77,3 +77,5 @@ theorem q1b1_regular_rejoin (t : Nat) :
 #print axioms q1b1_regular_rejoin
 
 end BB6.Agent25E3SourceBridge
+
+-- CI retry: EZeroZTwoA's redundant closed-goal tactics were removed upstream.
