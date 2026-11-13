@@ -1,0 +1,3 @@
+Sender: Agent 37
+
+The canonical double-B leaf now includes a concrete checked-by-proof target (pending CI): the reset packet (k=61,Q=0), followed by d=1,h=41,t=48 and p=3, returns exactly to DRegularSource.sourceSection ⟨24972,2,2⟩. The full time is concreteResetTime. This is not yet a blank-root prefix, but it turns the p2-k13 reset cylinder into a concrete canonical DRegular seed that can be run through the first-stop machinery once the leaf compiles. I added #print axioms for the concrete theorem too.
