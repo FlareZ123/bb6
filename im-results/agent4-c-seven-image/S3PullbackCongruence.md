@@ -136,6 +136,21 @@ If both held, then 8j+16804 = 0 (mod 4096). But j = 319 (mod 512) forces
 
 a contradiction. The two parameter cylinders are disjoint.
 
+## Exact pullback of the first strict family
+
+The first strict family has the same affine target V(u,v), but with sector condition u+v = 0 (mod 4). Its exact high-stop pullback is the older diagonal:
+
+- j = 319 (mod 512);
+- 3m = j+2879 (mod 4096).
+
+For the forward direction, the same small-m table above forces m>=7, so 4096 divides 2^(2m+2). Reducing the stopping identity modulo 4096 gives
+0 = 898+1024v+512u+3m (mod 4096).
+Since v+u = 0 (mod 4), this becomes 3m = -898+512u = j+2879 (mod 4096).
+
+Conversely, suppose j=319 (mod 512) and 3m=j+2879 (mod 4096). Reducing modulo 512 gives 3m=126 (mod 512), hence m=42 (mod 512), so m>=42 and 4096 divides 2^(2m+2). The stopping identity then gives
+K = -j-3m-5 = -2j-2884 = 574-1024u (mod 4096),
+where j=319+512u. Thus K=574 (mod 1024), so K=574+1024v for some natural v; the stronger congruence modulo 4096 gives v+u=0 (mod 4). This recovers the first strict family.
+
 ## Combined parameter coverage with the first strict family
 
 The first strict sixth/seventh family pulls back to the older diagonal
