@@ -1059,6 +1059,10 @@ theorem rst1PrimeAfterBridge30_markerWord2
   let Hs : Int := H0+3
   let H6 : Int := Hs+3*((a+1):Int)
   have hH6 : H6=h+5 := by dsimp [H6,Hs,H0]; omega
+  have hcoord5 : h+5=H6 := hH6.symm
+  have hcoord4 : h+4=H6-1 := by rw [hH6]; omega
+  have hcoord3 : h+3=H6-2 := by rw [hH6]; omega
+  have hcoord2 : h+2=H6-3 := by rw [hH6]; omega
   have hpre := rst1Prime_rightSweep_preconditions_after_bridge9 L a b h
   have hblock := rst1Prime_sweptRight_block (a+1)
     (rst1PrimeAfterBridge9 L a b h).tape Hs a (by omega)
@@ -1073,19 +1077,19 @@ theorem rst1PrimeAfterBridge30_markerWord2
   have heq2 := rst1PrimeAfterBridge30_eq_afterBridge6_left
     L a b h (h+2) (by omega)
   constructor
-  · rw [heq5,hH6]
+  · rw [heq5,hcoord5]
     change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
       inside6 bridge6End).tape H6 = true
     rw [frameAt_tape]
     simp [inside6,inWindow,bridge6End]
   constructor
-  · rw [heq4,hH6]
+  · rw [heq4,hcoord4]
     change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
       inside6 bridge6End).tape (H6-1) = true
     rw [frameAt_tape]
     simp [inside6,inWindow,bridge6End]
   constructor
-  · rw [heq3,hH6]
+  · rw [heq3,hcoord3]
     change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
       inside6 bridge6End).tape (H6-2) = false
     rw [frameAt_tape]
@@ -1097,7 +1101,7 @@ theorem rst1PrimeAfterBridge30_markerWord2
       omega
     rw [hcoord]
     exact hblock.2.1
-  · rw [heq2,hH6]
+  · rw [heq2,hcoord2]
     change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
       inside6 bridge6End).tape (H6-3) = true
     rw [frameAt_tape]
