@@ -61,14 +61,14 @@ private theorem m0EvenQ4CutTape_eq_end_inside
   simpa [m0EvenQ4CutTape,T,N,T1] using hf
 
 private theorem m0EvenQ4CutTape_eq_source_right
-    (a b : Nat) (h x : Int) (hx : h+2 ≤ x) :
+    (a b : Nat) (h x : Int) (ha : 0 < a) (hx : h+2 ≤ x) :
     m0EvenQ4CutTape a b h x =
       (s1Config 3 2 0 a 0 b h).tape x := by
   let T := (s1Config 3 2 0 a 0 b h).tape
+  have hgt : 3 < x-(h-((3*a : Nat) : Int)) := by omega
   have hout : m0EvenQ4Inside
       (x-(h-((3*a : Nat) : Int))) = false := by
-    simp [m0EvenQ4Inside]
-    omega
+    simp [m0EvenQ4Inside,hgt]
   have hcut := m0EvenQ4CutTape_eq_swept a b h x hout
   have hpres := sweptLeft_preserves_right (3*a) T h x (by omega)
   simpa [T] using hcut.trans hpres
@@ -124,11 +124,16 @@ theorem m0Even_q4_prefix_run (a b : Nat) (h : Int) (ha : 0 < a) :
     intro i hi
     by_cases hi0 : i = 0
     · subst i
-      have hin : m0EvenQ4Inside ((hN+3)-hN) = true := by
-        simp [m0EvenQ4Inside]
+      have hcoord : (hN+3)-(h-((3*a:Nat):Int)) = 3 := by
+        dsimp [hN,N]
+        omega
+      have hin : m0EvenQ4Inside ((hN+3)-(h-((3*a:Nat):Int))) = true := by
+        rw [hcoord]
+        decide
       have hcut := m0EvenQ4CutTape_eq_end_inside a b h (hN+3) hin
       have hmark :
-          decide (((hN+3)-hN) ∈ m0EvenQ4BridgeEnd.marked) = true := by
+          decide (((hN+3)-(h-((3*a:Nat):Int))) ∈ m0EvenQ4BridgeEnd.marked) = true := by
+        rw [hcoord]
         simp [m0EvenQ4BridgeEnd]
       have htrue : m0EvenQ4CutTape a b h (hN+3) = true :=
         hcut.trans hmark
@@ -154,7 +159,7 @@ theorem m0Even_q4_prefix_run (a b : Nat) (h : Int) (ha : 0 < a) :
         exact hblock
       simpa [x,T2] using hframe.trans hT1
   have hScan := E_scan T2 (hN+3) (3*(a-1)) hlinear
-  have hhead : hN+3+(3*(a-1):Int) = h := by
+  have hhead : hN+3+3*((a-1:Nat):Int) = h := by
     dsimp [hN,N]
     omega
   have hscan :
@@ -226,35 +231,36 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
         omega
       have hcut := m0EvenQ4CutTape_eq_swept a b h (h+1) hout
       have hplus : sweptLeft (3*a) T h (h+1) = true := by
-        simpa [T] using sweptLeft_plus1 (3*a-1) T h
+        have hN : 3*a-1+1 = 3*a := by omega
+        simpa [T,hN] using sweptLeft_plus1 (3*a-1) T h
       simpa [T] using hcut.trans hplus
-    · have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+2) (by omega)
+    · have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+2) ha (by omega)
       have hsrc : T (h+2) = true := by
         have hcoord : h+1+(1:Int) = h+2 := by omega
         simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
           s1Config_right_cell 3 2 0 a 0 b h 1
       exact hcut.trans hsrc
-    · have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+3) (by omega)
+    · have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+3) ha (by omega)
       have hsrc : T (h+3) = true := by
         have hcoord : h+1+(2:Int) = h+3 := by omega
         simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
           s1Config_right_cell 3 2 0 a 0 b h 2
       exact hcut.trans hsrc
-    · have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+4) (by omega)
+    · have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+4) ha (by omega)
       have hsrc : T (h+4) = true := by
         have hcoord : h+1+(3:Int) = h+4 := by omega
         simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
           s1Config_right_cell 3 2 0 a 0 b h 3
       exact hcut.trans hsrc
   · constructor
-    · have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+5) (by omega)
+    · have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+5) ha (by omega)
       have hsrc : T (h+5) = false := by
         have hcoord : h+1+(4:Int) = h+5 := by omega
         simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
           s1Config_right_cell 3 2 0 a 0 b h 4
       simpa [T] using hcut.trans hsrc
     · constructor
-      · have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+6) (by omega)
+      · have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+6) ha (by omega)
         have hsrc : T (h+6) = false := by
           have hcoord : h+1+(5:Int) = h+6 := by omega
           simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
@@ -262,11 +268,11 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
         simpa [T] using hcut.trans hsrc
       · constructor
         · intro i hi
-          have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+7+(i:Int)) (by omega)
+          have hcut := m0EvenQ4CutTape_eq_source_right a b h (h+7+(i:Int)) ha (by omega)
           have hsrc : T (h+7+(i:Int)) =
               sideBit (s0RightFacing b) (6+i) := by
             have hcoord : h+1+(6+i:Int) = h+7+(i:Int) := by omega
-            simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+            simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using
               s1Config_right_cell 3 2 0 a 0 b h (6+i)
           have hside :
               sideBit (s0RightFacing b) (6+i) =
@@ -282,12 +288,12 @@ theorem m0Even_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
           exact hcut.trans htarget
         · intro i hi
           have hcut := m0EvenQ4CutTape_eq_source_right a b h
-            (h+10+(3*b:Int)+(i:Int)) (by omega)
+            (h+10+(3*b:Int)+(i:Int)) ha (by omega)
           have hsrc : T (h+10+(3*b:Int)+(i:Int)) =
               sideBit (s0RightFacing b) (9+3*b+i) := by
             have hcoord : h+1+((9+3*b+i:Int)) =
                 h+10+(3*b:Int)+(i:Int) := by omega
-            simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+            simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using
               s1Config_right_cell 3 2 0 a 0 b h (9+3*b+i)
           have hlen : (s0RightFacing b).length = 9+3*b := by
             simp [s0RightFacing,d1pow_length]
@@ -308,7 +314,7 @@ private theorem sideBit_append_after_local (xs ys : List Bool) (i : Nat)
     sideBit (xs ++ ys) i = sideBit ys (i-xs.length) := by
   exact BB6Coverage.Agent6Q4Prefix.sideBit_append_right xs ys i hi
 
-private theorem m0EvenQ4LeftFacingTail (a i : Nat)
+private theorem m0EvenQ4LeftFacingTail (a i : Nat) (ha : 0 < a)
     (hi : 3*a+10 ≤ i) :
     sideBit (s1LeftFacing 3 2 0 a 0) i =
       sideBit (m0EvenQ4LeftFacing a) i := by
@@ -352,7 +358,9 @@ private theorem m0EvenQ4LeftFacingPrefixTrue (a i : Nat)
       rw [show P = [true] ++ (d1pow (a-1) ++ [true,true]) by rfl]
       rw [sideBit_append_after_local [true]
         (d1pow (a-1) ++ [true,true]) i (by simp; omega)]
+      change sideBit (d1pow (a-1) ++ [true,true]) (i-1) = true
       let j := i-1
+      change sideBit (d1pow (a-1) ++ [true,true]) j = true
       by_cases hj : j < 3*(a-1)
       · have hlen : (d1pow (a-1)).length = 3*(a-1) := by
           simp [d1pow_length]
@@ -378,7 +386,7 @@ private theorem m0EvenQ4LeftFacingPrefixTrue (a i : Nat)
   rw [sideBit_append_left P R i (by simpa [hlen] using hi)]
   exact hP
 
-private theorem m0EvenQ4LeftFacingBoundaryBit (a k : Nat)
+private theorem m0EvenQ4LeftFacingBoundaryBit (a k : Nat) (ha : 0 < a)
     (hk1 : 1 ≤ k) (hk9 : k ≤ 9) :
     sideBit (m0EvenQ4LeftFacing a) (3*a+k) =
       decide (-(k:Int) ∈ m0EvenQ4BridgeEnd.marked) := by
@@ -438,7 +446,7 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
         simpa [x] using hblock
       have hval : m0EvenQ4CutTape a b h x = true := hcut.trans hblock'
       have htarget := m0EvenQ4LeftFacingPrefixTrue a i (by omega)
-      exact hval.trans htarget.symm
+      simpa [x] using hval.trans htarget.symm
     · by_cases hnear : i = 3*a-3 ∨ i = 3*a-2 ∨ i = 3*a-1
       · rcases hnear with h3 | h2 | h1
         · subst i
@@ -454,7 +462,7 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
             simp [m0EvenQ4BridgeEnd]
           have hval : m0EvenQ4CutTape a b h x = true := hcut.trans hmark
           have htarget := m0EvenQ4LeftFacingPrefixTrue a (3*a-3) (by omega)
-          exact hval.trans htarget.symm
+          simpa [x] using hval.trans htarget.symm
         · subst i
           let x : Int := h-((3*a-2:Int))
           have hin : m0EvenQ4Inside (x-(h-((3*a:Nat):Int))) = true := by
@@ -468,7 +476,7 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
             simp [m0EvenQ4BridgeEnd]
           have hval : m0EvenQ4CutTape a b h x = true := hcut.trans hmark
           have htarget := m0EvenQ4LeftFacingPrefixTrue a (3*a-2) (by omega)
-          exact hval.trans htarget.symm
+          simpa [x] using hval.trans htarget.symm
         · subst i
           let x : Int := h-((3*a-1:Int))
           have hin : m0EvenQ4Inside (x-(h-((3*a:Nat):Int))) = true := by
@@ -482,7 +490,7 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
             simp [m0EvenQ4BridgeEnd]
           have hval : m0EvenQ4CutTape a b h x = true := hcut.trans hmark
           have htarget := m0EvenQ4LeftFacingPrefixTrue a (3*a-1) (by omega)
-          exact hval.trans htarget.symm
+          simpa [x] using hval.trans htarget.symm
       · by_cases hieq : i = 3*a
         · subst i
           let x : Int := h-((3*a:Int))
@@ -507,7 +515,7 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
               (by simp [d1pow_length]; omega)]
             simp [markerWord,sideBit]
           have hval : m0EvenQ4CutTape a b h x = false := hcut.trans hmark
-          exact hval.trans htarget.symm
+          simpa [x] using hval.trans htarget.symm
         · by_cases hbound : i ≤ 3*a+9
           · let k : Nat := i-3*a
             have hk1 : 1 ≤ k := by dsimp [k]; omega
@@ -525,7 +533,7 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
               exact hin
             have hcut := m0EvenQ4CutTape_eq_end_inside a b h x hin'
             have hi : i=3*a+k := by dsimp [k]; omega
-            have htarget := m0EvenQ4LeftFacingBoundaryBit a k hk1 hk9
+            have htarget := m0EvenQ4LeftFacingBoundaryBit a k ha hk1 hk9
             have htarget' :
                 sideBit (m0EvenQ4LeftFacing a) i =
                   decide (-(k:Int) ∈ m0EvenQ4BridgeEnd.marked) := by
@@ -540,13 +548,13 @@ theorem m0Even_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
                   sideBit (m0EvenQ4LeftFacing a) i := by
               calc
                 m0EvenQ4CutTape a b h x =
-                    decide ((x-(h-((3*a:Nat):Int)) ∈
+                    decide ((x-(h-((3*a:Nat):Int))) ∈
                       m0EvenQ4BridgeEnd.marked) := hcut
                 _ = decide (-(k:Int) ∈ m0EvenQ4BridgeEnd.marked) := hmark'
                 _ = sideBit (m0EvenQ4LeftFacing a) i := htarget'.symm
             exact hval
           · have htail := m0EvenQ4CutTape_eq_source_left a b h i (by omega)
-            have hbits := m0EvenQ4LeftFacingTail a i (by omega)
+            have hbits := m0EvenQ4LeftFacingTail a i ha (by omega)
             exact htail.trans hbits
 
 /-- The q4 suffix's d0-sweep reconstructs the next marker-2 left word. -/
@@ -561,8 +569,9 @@ theorem m0EvenQ4SuffixTargetLeft (a b : Nat) (ha : 0 < a) :
 
 theorem m0Even_resetPrefixCost_eq (a b : Nat) :
     resetPrefixCost 0 2 a b = 75+12*a+3*b := by
+  have hv1 : BB6ChampionArithmetic.v2 1 = 0 := by decide
   have hv : BB6ChampionArithmetic.v2 2 = 1 := by
-    simpa using v2_of_even 2 (by omega) (by decide)
+    simpa [hv1] using v2_of_even 2 (by omega) (by decide)
   simp [resetPrefixCost,hv]
   omega
 
