@@ -38,6 +38,13 @@ theorem first_parent_mem_cone (u q:Nat) (hu:u∈roots)
   right
   exact mem_parentClosure 9 _ (List.mem_flatMap.mpr ⟨u,hu,hq⟩)
 
+/-- Every immediate ResetParent predecessor of any of the five roots is
+    excluded by the same finite closure certificate. -/
+theorem first_parent_not_root (u q:Nat) (hu:u∈roots)
+    (hp:ResetParent q u) : ¬CascadeSweep.ReachC (2,0) (q,0) := by
+  have hmem : q∈parentsFast u := (parentsFast_iff q u).2 hp
+  exact cone_excludes_root q (first_parent_mem_cone u q hu hmem)
+
 /-- All odd U-parents of the n=887 first-tier spine are excluded from the
     blank-root component. This closes the entire t=2/t=4 U arm. -/
 theorem U_odd_parent_not_root
