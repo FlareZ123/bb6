@@ -47,7 +47,7 @@ theorem tm2_attainable_after_root_q4_drain_to_terminal_reset
       run tm2 (resetPrefixCost 1 1 a b)
         (s1Config L 0 1 a 0 b h) =
         some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
-          (a+b+resetDelta 1) (2^b-1) 0 h)) :
+          (a+b+resetDelta 1) (2^b-1) 0 (h+5+3*b))) :
     Attainable
       (rootQ4DrainMoves + suffixSteps +
         proposedIncrementCost 1 1 a b +
@@ -60,7 +60,7 @@ theorem tm2_attainable_after_root_q4_drain_to_terminal_reset
     exact hstage
   exact champion_attainable_after_s1_countedRst012_m1n1
     (s1Config L 0 1 a 0 b h)
-    (rootQ4DrainMoves + suffixSteps) L a b h ha hblank
+    (rootQ4DrainMoves + suffixSteps) L a b (h+5+3*b) ha hblank
     (by simpa [s1Config] using hfinal)
 
 /--
@@ -80,7 +80,7 @@ theorem champion_attainable_after_root_q4_drain_to_terminal_reset
       run tm2 (resetPrefixCost 1 1 a b)
         (s1Config L 0 1 a 0 b h) =
         some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
-          (a+b+resetDelta 1) (2^b-1) 0 h)) :
+          (a+b+resetDelta 1) (2^b-1) 0 (h+5+3*b))) :
     Attainable
       (championRootQ4DrainMoves + suffixSteps +
         proposedIncrementCost 1 1 a b +
