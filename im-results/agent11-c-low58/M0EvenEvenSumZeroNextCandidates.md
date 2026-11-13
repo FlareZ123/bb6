@@ -113,7 +113,7 @@ within \(s\equiv5\pmod8\), hence density \(1/24\) among the odd-t high-stop para
 a=\frac{x+6}{2^{2m+1}}-3,\qquad
 k=\frac{x-a+1-6m}{2},
 \]
-for those \(m\) for which the displayed quantities are integral and \(a\ge3\). The \(a=1\) exceptional branch can occur only if \(x+6\) is itself a power of \(2\). The x=2 mod 16 lemma eliminates the depth fan when \(v_2(x+6)=3\), but the x=10 mod 16 case has \(v_2(x+6)\ge4\) and genuinely allows multiple even depths.
+for those \(m\) for which the displayed quantities are integral and \(a\ge3\). For this residual sequence, \(r\equiv201\pmod{420}\) implies \(r\equiv0\pmod3\), \(2^r\equiv1\pmod3\), and \(s\equiv2\pmod3\); hence \(3\mid x+6\). Thus the \(a=1\) exceptional branch \(x+6=2^n\cdot16\) is impossible. The x=2 mod 16 lemma eliminates the depth fan when \(v_2(x+6)=3\), but the x=10 mod 16 case has \(v_2(x+6)\ge4\) and genuinely allows multiple even depths.
 
 The remaining \(u=5\) sequence still has zero density (at most one q for each valuation d), so the density \(1/24\) is unchanged. This density statement describes only this m=0 parameter sieve, not a fraction of machines or halting runs.
 
