@@ -1,5 +1,6 @@
 import Lean.Elab.Tactic.Omega
 import BlankFifteenthRejoin
+import DRegularFast
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -16,9 +17,14 @@ def terminal2077 : DRegular.L :=
 
 def t16 : Nat := (terminal2077.a-4)/9
 
-/-- Exact DRegular computation after the fifteenth E/B reentry. -/
+/-- Exact DRegular computation after the fifteenth E/B reentry.
+    Evaluate the 2,077-step prefix through four 512-step 3-adic blocks;
+    this avoids normalizing the full huge unary seed at every transition. -/
 theorem terminal2077_exact :
-    DRegular.run 2077 seed16 = some ⟨9*t16+4,5,1⟩ := by decide
+    DRegular.run 2077 seed16 = some ⟨9*t16+4,5,1⟩ := by
+  have hcanon : DRegular.Canon seed16 := by decide
+  rw [BB6.DRegularFast.fastRun_correct 2077 seed16 hcanon]
+  decide
 
 def exception16Time : Nat :=
   BB6.Agent2FifteenthRoot.reentry15Time +
