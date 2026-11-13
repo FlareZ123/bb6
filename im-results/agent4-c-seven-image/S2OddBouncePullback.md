@@ -161,6 +161,7 @@ The small instance u=4, v=54 satisfies v+93u=42 (mod 128), with t=14. It gives
 - j=2367 and m=111658 (mod 131072), which satisfy 3m+102921=185j exactly in this representative. The high-stop value K(j,m) is 55870 (mod 131072), i.e. 574+1024*54 (mod 131072), so the induced image parameter is v=54 (mod 128), not necessarily the minimal representative v=54.
 
 This is a useful concrete test vector for the eventual Lean parent-enumeration and normalizer proofs; it is not a substitute for them.
+A deterministic residue sweep over u=0,...,99, taking the least nonnegative v with v+93u=42 (mod 128), also checked t-integrality, W=1 (mod 4), the Q cone residues, the F3 odd/sum-one residues, and the pulled-back m congruence for all 100 representatives. This is only an arithmetic sanity check, not a proof.
 
 ## Formalization work still required
 
