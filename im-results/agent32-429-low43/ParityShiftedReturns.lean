@@ -10,7 +10,6 @@ namespace BB429ParityShiftedReturns
 open BB6Coverage
 open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta
 open BB429FinishScanEDelta
-open BB429W4HeadMax
 open BB429JuncHeadExcursion
 open BB429MidAposBoundary
 
@@ -60,7 +59,6 @@ theorem junc15_172_1_to_junc0_15_349 :
   have h₂ := midApos_14_172_1_to_junc0
   have h := compose_runWithDelta h₁ h₂
   simpa using h
-  exact h
 
 /-- Exact return J(135,60,1) -> J(0,135,125), split at MidApos. -/
 theorem junc135_60_1_to_junc0_135_125 :
@@ -70,7 +68,6 @@ theorem junc135_60_1_to_junc0_135_125 :
   have h₂ := midApos_134_60_1_to_junc0
   have h := compose_runWithDelta h₁ h₂
   simpa using h
-  exact h
 
 /-- Exact return J(78,120,2) -> J(0,0,408), split at the w=2 MidA exit. -/
 theorem junc78_120_2_to_junc0_0_408 :
@@ -82,7 +79,6 @@ theorem junc78_120_2_to_junc0_0_408 :
   have h₁₂ := compose_runWithDelta h₁ h₂
   have h := compose_runWithDelta h₁₂ h₃
   simpa using h
-  exact h
 
 /-- Full source-level 102,656-step continuation from J(0,7,349) to J(0,0,408). -/
 theorem junc07_349_to_junc0_408 :
@@ -151,7 +147,6 @@ theorem parityShiftedC0_to_junc0_408 :
       some (junc 0 0 408, -397) := by
   have h := compose_runWithDelta parityShiftedC0_to_junc07 junc07_349_to_junc0_408
   simpa using h
-  exact h
 
 #print axioms parityShiftedC0_to_junc07
 #print axioms midApos_14_172_1_to_junc0
