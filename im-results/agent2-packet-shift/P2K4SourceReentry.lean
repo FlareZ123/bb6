@@ -42,7 +42,7 @@ theorem close_one_regular_reentry (t u : Nat) :
         [false,true,false,true,false,true,false,true,false],5⟩ : Cfg)
     simpa [totalTime,finalTime,ka,ws,m] using hclose
   obtain ⟨Ttail,a,q,b,htail⟩ :=
-    BB6.Agent37EChainAExit.regularEndpoint_reentry _ hend
+    BB6.Agent37EChainBEExit.regularEndpoint_reentry _ hend
   refine ⟨totalTime+Ttail,a,q,b,?_⟩
   rw [run_add]
   exact htail
