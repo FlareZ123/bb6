@@ -125,6 +125,12 @@ The difference \(2^{d_r}-n\) is a positive odd integer. If it were \(1\), then \
 \]
 where the second factor is odd and greater than \(1\). Thus \(3^m+1\) is not a power of two, proving (5).
 
+For a Lean-friendly version of this factorization, define \(H_0=1\) and
+\[
+H_{t+1}=H_t+2\cdot3^{2t+1}.
+\]
+Induction gives \(3^{2t+1}+1=4H_t\); each increment is even, so \(H_t\) is odd, and \(H_t>1\) for \(t\ge1\). This proves the required non-power-of-two claim without alternating-sum subtraction.
+
 For any \(s\ge d_r\), put
 \[
 T_s:=\frac{S}{2^{(2r-1)s}}
