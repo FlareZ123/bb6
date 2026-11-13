@@ -168,7 +168,26 @@ theorem q4_suffix_right_word (T : Int → Bool) (h : Int) (b : Nat)
         exact hzero
       _ = sideBit (s0RightFacing 0) i := htarget.symm
 
+/-- Source-run version of the right-facing endpoint lemma. -/
+theorem q4_suffix_run_right_word (T : Int → Bool) (h : Int) (b : Nat)
+    (hshape : q4RightShape T h b)
+    (htail : ∀ i : Nat, 9+3*b ≤ i →
+      T (h+1+(i:Int)) = false) :
+    ∃ U,
+      run tm2 (39+3*b) ⟨4,h,T⟩ = some U ∧
+      (∀ i : Nat,
+        U.tape (h+6+(3*b:Int)+(i:Int)) =
+          sideBit (s0RightFacing 0) i) := by
+  let T1 := (frameAt T h q4First10Inside q4First10End).tape
+  let T2 := d0Sweep b T1 (h+10)
+  let g : Int := h+10+(3*b:Int)
+  let U := frameAt T2 g q4TailInside q4TailEnd
+  refine ⟨U, ?_, ?_⟩
+  · simpa [U, T1, T2, g] using q4_suffix_frame T h b hshape
+  · simpa [U, T1, T2, g] using q4_suffix_right_word T h b hshape htail
+
 #print axioms q4_prefix_far_tail
 #print axioms q4_suffix_right_word
+#print axioms q4_suffix_run_right_word
 
 end BB6Coverage.Agent24Q4Endpoint
