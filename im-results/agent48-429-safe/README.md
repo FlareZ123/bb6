@@ -99,3 +99,24 @@ retaining the fail-closed `sorryAx` test. The standalone manual-only workflow
 check. The updated full workflow has **not yet been run** after this
 integration; until it passes, the 13,718-step physical claim remains a
 checked proof candidate rather than CI-certified evidence.
+
+## Extension to the concrete low-even entry
+
+Agent 1's `im-results/agent1-429-root-entry/RootJunc136To45.lean`
+now composes seven ordinary Junc segments from Junc(0,0,136) to
+Junc(45,0,58) in exactly 2,562 steps. Its physical theorem preserves the
+absolute rightmost mark and keeps every intermediate head strictly to
+its left. The theorem
+`BB429RootJunc136To45.blank_root_no_fatal_to_junc45` composes this with
+the 13,718-step root chain, giving a 16,280-step blank-root prefix to
+Junc(45,0,58), with C/01 excluded at every physical prefix.
+
+The manual-only `.github/workflows/agent6-429-low42.yml` now compiles
+the added `W4JuncMax`, `ZeroRegularHeadMax`,
+`PositiveRegularHeadMax`, `PhysicalRegularHeadMax`, and
+`RootJunc136To45` modules after their source dependencies. Its axiom
+audit checks the new source, physical, and root-composition declarations
+and retains the fail-closed `sorryAx` gate. This extended workflow has
+not yet been run; the 16,280-step statement remains a proof candidate
+pending the exact imported-source CI pass. The next concrete root leaf is
+Agent 32's 4,407-step r=32 return from Junc(45,0,58) to Junc(11,0,146).
