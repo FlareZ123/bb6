@@ -8,17 +8,30 @@ namespace CascadeQStateIndexHensel
 
 open CascadeRayDepthHensel CascadeRayDepthResidue CascadeRayPeriod
 
-/-- The Q-state numerator obtained from the signed ray coordinate. -/
-def qNumerator (n j : Nat) : Int :=
-  8*signedZ n j - 9*((2:Int)^(n+2)+2*n+1)
-
 /-- Expanded affine form of the Q-state numerator. -/
+def qNumerator (n j : Nat) : Int :=
+  28*(2:Int)^n - 2*n + 15 - (2:Int)^(j+4)*(2*n+3)
+
 theorem qNumerator_expanded (n j : Nat) :
     qNumerator n j =
-      28*(2:Int)^n - 2*n + 15 - (2:Int)^(j+4)*(2*n+3) := by
-  dsimp [qNumerator, signedZ]
+      28*(2:Int)^n - 2*n + 15 - (2:Int)^(j+4)*(2*n+3) := rfl
+
+/-- Source-coordinate definition: Q=8*signedZ-9*(2^(n+2)+2*n+1). -/
+theorem qNumerator_eq_signedZ (n j : Nat) :
+    qNumerator n j =
+      8*signedZ n j-9*((2:Int)^(n+2)+2*n+1) := by
+  dsimp [qNumerator,signedZ]
   push_cast
-  rw [Int.pow_add, Int.pow_add]
+  have hn : (2:Int)^(n+2)=4*(2:Int)^n := by
+    rw [Int.pow_add]
+    norm_num
+    ring
+  have hj : (2:Int)^(j+4)=8*(2:Int)^(j+1) := by
+    have he : j+4=(j+1)+3 := by omega
+    rw [he,Int.pow_add]
+    norm_num
+    ring
+  rw [hn,hj]
   ring
 
 /-- The direct Q coefficient differs by 36 from the coefficient obtained
@@ -198,8 +211,7 @@ theorem qNumerator_sector_mod_three (s h j : Nat)
   rcases hZdiv with ⟨z,hz⟩
   have hQdiv : (3:Int)∣qNumerator (s+6*h) j := by
     refine ⟨8*z-3*((2:Int)^(s+6*h+2)+2*(s+6*h)+1),?_⟩
-    dsimp [qNumerator]
-    rw [hz]
+    rw [qNumerator_eq_signedZ,hz]
     ring
   exact Int.dvd_iff_emod_eq_zero.mp hQdiv
 
@@ -474,8 +486,7 @@ theorem qNumerator_t1_parent_identity (n j u q d : Nat)
         rw [show (2:Int)^(n+2)=(2:Int)^(n+1)*2 by
           rw [Int.pow_succ]]
         ring
-  dsimp [qNumerator]
-  rw [hz]
+  rw [qNumerator_eq_signedZ,hz]
   calc
     8*(9*(d:Int))-9*((2:Int)^(n+2)+2*n+1) =
         9*(8*(d:Int)-((2:Int)^(n+2)+2*n+1)) := by ring
