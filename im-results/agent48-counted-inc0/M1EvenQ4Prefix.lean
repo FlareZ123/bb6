@@ -9,6 +9,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
+open BB6Coverage.Agent8CountedReset
 
 /-- The even n=6, m=1 branch reaches a q4 suffix after 44+12a moves.
 The local bridge is shifted four cells to the right relative to the
@@ -851,4 +852,12 @@ theorem m1EvenQ4SuffixTargetLeft (a b : Nat) :
   rw [binDec_pow2_sub_one]
   rw [d1pow_add_right a 2]
   simp [List.drop,List.append_assoc]
+
+
+
+theorem m1Even_resetPrefixCost_eq (a b : Nat) :
+    resetPrefixCost 1 6 a b = 79+12*a+3*b := by
+  have hv : BB6ChampionArithmetic.v2 6 = 1 := by decide
+  simp [resetPrefixCost,hv]
+  omega
 
