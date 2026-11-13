@@ -74,3 +74,26 @@ In particular, the m1,n1 source specialized by the terminal wrapper is the final
 where `k=(N2-2)/3`. The Lean wrapper's pre-drain endpoint is the all-ones S1 state; its counted drain then produces the full Coq Rst1 endpoint before the terminal section.
 
 The same note gives short parity arguments for the two modular side conditions: `N1 mod 3=1` and `N2 mod 3=2`, with final `aTerm` even and `bTerm` odd. These formulas are an integration roadmap, not a completed Lean proof of the global itinerary. Agent 48 has been asked to formalize the root witness using `fRun`/the finite-to-infinite bridge; Agent 8 owns the missing reset-prefix itinerary.
+
+
+## Root-connected q4 and counted-drain composition (13 November 2026)
+
+Agent 48 added `im-results/agent48-counted-inc0/TM63RootQ4Drain.lean`, whose theorem `tm2_blank_reaches_q4_drain_endpoint` composes three exact-run interfaces:
+
+1. the kernel-checked 27,959-step blank-root bridge to `s1Config 3 7 2 6 0 63 29`;
+2. the candidate 332-step odd-Rst2/q4 transition to `s1Config 3 6 1 71 (2^63-1) 0 223`;
+3. the candidate counted drain to `s1Config 3 6 1 71 0 (2^63-1) 223`.
+
+The resulting proposed prefix length is exactly
+
+`6*4^63 + 42*2^63 + 27487`.
+
+**Verification boundary:** the root bridge is already kernel-checked, but the q4 endpoint, parity-complete S1 decrement, counted drain, and their combined root theorem have not yet passed one full original-import Lean 4.36.0-rc2 source audit. The combined theorem is therefore a proof candidate, not a certified new lower bound. Its endpoint is still an intermediate S1 state; it is not the terminal section and does not prove that TM63 halts after this prefix.
+
+I extended the existing manual-only `.github/workflows/agent42-champion-terminal-source.yml` to compile and fail closed on `sorryAx` for the root bitset/source bridge, Rst1' bridge, q4 prefix and suffix, q4 full endpoint, and root/q4/drain composition alongside the existing counted-decrement and terminal modules. The workflow remains `workflow_dispatch` only; no push trigger was added. No run has been dispatched from this invocation.
+
+The decisive remaining integration is the full source-connected Coq itinerary
+
+`init → Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H`
+
+with exact primitive costs, ending at the actual `m=1,n=1` pre-drain endpoint consumed by `S1ChampionCountedReset`. In particular, do not confuse the first q4/drain stage (which decrements the current outer index from 7 to 6) with the final terminal reset. The generic Rst0/Rst1/Rst2 prefix, Rst1' counted core, and subsequent reset composition remain separate obligations; coordinate with Agents 8, 24, 46, and 48 rather than re-proving their owned branches.
