@@ -118,3 +118,8 @@ The manual workflow `.github/workflows/agent32-429-lowodd-frontier.yml` compiles
 ## Remaining mathematical gap
 
 The result closes one prepared low-J (deficit (4k+3)) entrance and a concrete finite continuation. It does not prove that the genuine blank run remains in a closed J/Junc chart for all time. The next root-specific state is J(11,62), whose low-J deficit is (-40); the corresponding complete source return and its history-sensitive maximum must be established. More importantly, the preceding blank-root chain to J(21,11) must be composed and source-verified. No nonhalting conclusion for #429, and no BB(6) bound, follows from these finite branches.
+
+
+### Parity-shifted J(93,173) branch (simulation only)
+
+The proposed `(86,3)` low43 match was off by one. The corrected parameter audit, alternate C/0 tape, and full 134,235-step observed path to J(0,408) are documented in [parity-shifted-junc93-173.md](parity-shifted-junc93-173.md). This is not yet a Lean theorem; the three partial returns and the shifted entry remain open.
