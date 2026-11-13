@@ -86,7 +86,7 @@ def terminal2077 : DRegular.L :=
 def t16 : Nat := (terminal2077.a-4)/9
 
 /-- Exact DRegular computation after the fifteenth E/B reentry.
-    Evaluate the 2,077-step prefix through four 512-step 3-adic blocks;
+    Evaluate the 2,077-step prefix through 64-step 3-adic blocks;
     this avoids normalizing the full huge unary seed at every transition. -/
 theorem terminal2077_exact :
     DRegular.run 2077 seed16 = some ⟨9*t16+4,5,1⟩ := by
