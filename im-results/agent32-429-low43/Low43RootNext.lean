@@ -189,6 +189,145 @@ theorem root_low43_119_to_11_physical
     exact ⟨e,he,by omega⟩
   exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
 
+/-- The outer-safe ladder U=11,25,53 maps J(11,282) to
+    J(109,95). This concrete 15191-step source run has no C/0 visit
+    and reaches a new low43 entrance. -/
+theorem root_outer_11_to_109_max :
+    runWithMax 15191 (junc 11 0 282) =
+      some (junc 109 0 95, 187, 187) := by
+  decide
+
+theorem root_outer_11_to_109_no_fatal :
+    runNoFatal 15191 (junc 11 0 282) =
+      some (junc 109 0 95) := by
+  decide
+
+/-- The next low43 entrance has v=47,k=30 and reaches its C/0
+    frontier after 9704 source steps. -/
+theorem root_low43_109_entry_max :
+    runWithMax 9704 (junc 109 0 95) =
+      some (low43_C0_zipper 47 30, 100, 100) := by
+  decide
+
+theorem root_low43_109_entry_no_fatal :
+    runNoFatal 9704 (junc 109 0 95) =
+      some (low43_C0_zipper 47 30) := by
+  decide
+
+/-- The v=47,k=30 C/0 continuation returns to J(69,186) in 1480
+    steps, with net displacement -188 and maximum +1. -/
+theorem root_low43_109_continuation_max :
+    runWithMax 1480 (low43_C0_zipper 47 30) =
+      some (junc 69 0 186, -188, 1) := by
+  decide
+
+theorem root_low43_109_continuation_no_fatal :
+    runNoFatal 1480 (low43_C0_zipper 47 30) =
+      some (junc 69 0 186) := by
+  decide
+
+theorem root_low43_109_to_69_max :
+    runWithMax 11184 (junc 109 0 95) =
+      some (junc 69 0 186, -88, 101) := by
+  have h1 := root_low43_109_entry_max
+  have h2 := root_low43_109_continuation_max
+  have ht : 9704 + 1480 = 11184 := by omega
+  rw [← ht, runWithMax_add, h1]
+  simp [h2, Int.max_def]
+
+theorem root_low43_109_to_69_no_fatal :
+    runNoFatal 11184 (junc 109 0 95) =
+      some (junc 69 0 186) := by
+  have h1 := root_low43_109_entry_no_fatal
+  have h2 := root_low43_109_continuation_no_fatal
+  have ht : 9704 + 1480 = 11184 := by omega
+  simpa [ht] using
+    runNoFatal_compose 9704 1480 (junc 109 0 95)
+      (low43_C0_zipper 47 30) (junc 69 0 186) h1 h2
+
+/-- The complete outer + low43 prepared segment J(11,282) ->
+    J(69,186) has 26375 guarded steps. -/
+theorem root_outer_11_to_69_max :
+    runWithMax 26375 (junc 11 0 282) =
+      some (junc 69 0 186, 99, 288) := by
+  have h1 := root_outer_11_to_109_max
+  have h2 := root_low43_109_to_69_max
+  have ht : 15191 + 11184 = 26375 := by omega
+  rw [← ht, runWithMax_add, h1]
+  simp [h2, Int.max_def]
+
+theorem root_outer_11_to_69_no_fatal :
+    runNoFatal 26375 (junc 11 0 282) =
+      some (junc 69 0 186) := by
+  have h1 := root_outer_11_to_109_no_fatal
+  have h2 := root_low43_109_to_69_no_fatal
+  have ht : 15191 + 11184 = 26375 := by omega
+  simpa [ht] using
+    runNoFatal_compose 15191 11184 (junc 11 0 282)
+      (junc 109 0 95) (junc 69 0 186) h1 h2
+
+/-- Extend the entire prepared path from J(119,35) to J(69,186):
+    36006 steps, displacement -138, all-prefix maximum +51. -/
+theorem root_low43_119_to_69_max :
+    runWithMax 36006 (junc 119 0 35) =
+      some (junc 69 0 186, -138, 51) := by
+  have h1 := root_low43_119_to_11_max
+  have h2 := root_outer_11_to_69_max
+  have ht : 9631 + 26375 = 36006 := by omega
+  rw [← ht, runWithMax_add, h1]
+  simp [h2, Int.max_def]
+
+theorem root_low43_119_to_69_no_fatal :
+    runNoFatal 36006 (junc 119 0 35) =
+      some (junc 69 0 186) := by
+  have h1 := root_low43_119_to_11_no_fatal
+  have h2 := root_outer_11_to_69_no_fatal
+  have ht : 9631 + 26375 = 36006 := by omega
+  simpa [ht] using
+    runNoFatal_compose 9631 26375 (junc 119 0 35)
+      (junc 11 0 282) (junc 69 0 186) h1 h2
+
+theorem root_low43_119_to_69_prefix_no_fatal (t : Nat)
+    (ht : t ≤ 36006) :
+    ∃ p, run t (junc 119 0 35) = some p ∧ fatalCZero p = false :=
+  runNoFatal_prefix 36006 t (junc 119 0 35) (junc 69 0 186)
+    root_low43_119_to_69_no_fatal ht
+
+/-- Physical lift of the 36006-step prepared chain, including its
+    complete-prefix head maximum. -/
+theorem root_low43_119_to_69_physical
+    (c : Config) (hrep : Represents (junc 119 0 35) c) :
+    ∃ d : Config,
+      run target429 36006 c = some d ∧
+      Represents (junc 69 0 186) d ∧
+      d.head = c.head - 138 ∧
+      (∀ t : Nat, t ≤ 36006 →
+        ∃ e : Config,
+          run target429 t c = some e ∧
+          e.head ≤ c.head + 51) := by
+  let zStart : Zipper := junc 119 0 35
+  have hmax :
+      runWithMax 36006 zStart =
+        some (junc 69 0 186, -138, 51) := by
+    simpa [zStart] using root_low43_119_to_69_max
+  have hdelta :
+      runWithDelta 36006 zStart = some (junc 69 0 186, -138) := by
+    simpa [hmax] using runWithMax_toDelta 36006 zStart
+  obtain ⟨d,hrun,hrepD,hhead⟩ :=
+    source_runWithDelta_rep 36006 zStart c hrep
+      (junc 69 0 186) (-138) hdelta
+  have hprefix :
+      ∀ t : Nat, t ≤ 36006 →
+        ∃ e : Config,
+          run target429 t c = some e ∧
+          e.head ≤ c.head + 51 := by
+    intro t ht
+    obtain ⟨e,he,hh⟩ :=
+      physical_source_max_prefix_bound 36006 t zStart c hrep
+        (junc 69 0 186, -138, 51) hmax ht
+    exact ⟨e,he,by omega⟩
+  exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
+
 #print axioms root_low43_119_entry_max
 #print axioms root_low43_119_entry_no_fatal
 #print axioms root_low43_119_continuation_max
@@ -201,6 +340,20 @@ theorem root_low43_119_to_11_physical
 #print axioms root_low43_119_to_11_no_fatal
 #print axioms root_low43_119_to_11_prefix_no_fatal
 #print axioms root_low43_119_to_11_physical
+#print axioms root_outer_11_to_109_max
+#print axioms root_outer_11_to_109_no_fatal
+#print axioms root_low43_109_entry_max
+#print axioms root_low43_109_entry_no_fatal
+#print axioms root_low43_109_continuation_max
+#print axioms root_low43_109_continuation_no_fatal
+#print axioms root_low43_109_to_69_max
+#print axioms root_low43_109_to_69_no_fatal
+#print axioms root_outer_11_to_69_max
+#print axioms root_outer_11_to_69_no_fatal
+#print axioms root_low43_119_to_69_max
+#print axioms root_low43_119_to_69_no_fatal
+#print axioms root_low43_119_to_69_prefix_no_fatal
+#print axioms root_low43_119_to_69_physical
 #print axioms root_loweven4k_109_to_11_max
 #print axioms root_loweven4k_109_to_11_no_fatal
 
