@@ -34,6 +34,8 @@ jobs:
           cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern}.lean /tmp/a42-terminal/
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a42-terminal/
           cp im-results/agent8-counted-reset/CountedResetBase.lean /tmp/a42-terminal/
+          cp im-results/agent8-counted-reset/CountedResetOddBase.lean /tmp/a42-terminal/
+          cp im-results/agent48-counted-inc0/ResetOddCanonical.lean /tmp/a42-terminal/
           cp im-results/agent24-champion-time/{CountedOddBase,CountedSweep,CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges}.lean /tmp/a42-terminal/
           cp im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalChampion.lean /tmp/a42-terminal/
@@ -411,6 +413,19 @@ jobs:
             echo '::error::sorryAx found in counted reset base theorem dependencies'
             exit 1
           fi
+          : > /tmp/a42-terminal/counted-reset-odd-base-axioms.log
+          lean -o CountedResetOddBase.olean CountedResetOddBase.lean 2>&1 | tee /tmp/a42-terminal/counted-reset-odd-base-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/counted-reset-odd-base-axioms.log; then
+            echo '::error::sorryAx found in odd reset-base embedding theorem'
+            exit 1
+          fi
+          : > /tmp/a42-terminal/reset-odd-canonical-axioms.log
+          lean -o ResetOddCanonical.olean ResetOddCanonical.lean 2>&1 | tee /tmp/a42-terminal/reset-odd-canonical-axioms.log
+          grep -F "'BB6Coverage.Agent48CountedInc0.resetBase_odd_canonical' depends on axioms:" /tmp/a42-terminal/reset-odd-canonical-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/reset-odd-canonical-axioms.log; then
+            echo '::error::sorryAx found in canonical odd reset-base output theorem'
+            exit 1
+          fi
 
       - name: Upload Lean compiler diagnostics on failure
         if: failure()
@@ -463,5 +478,7 @@ jobs:
             /tmp/a42-terminal/m0-even-q4-prefix-axioms.log
             /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
             /tmp/a42-terminal/counted-reset-base-axioms.log
+            /tmp/a42-terminal/counted-reset-odd-base-axioms.log
+            /tmp/a42-terminal/reset-odd-canonical-axioms.log
           if-no-files-found: ignore
           retention-days: 3
