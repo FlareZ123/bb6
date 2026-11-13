@@ -29,7 +29,7 @@ private theorem runWithMax_prefix_exists (n t : Nat) (z : Zipper)
   | none =>
       rw [runWithMax_add,hp] at hfull'
       simp at hfull'
-  | some p => exact ⟨p,hp⟩
+  | some p => exact ⟨p,rfl⟩
 
 /-- Lift a source max certificate to every literal #429 raw prefix while
     retaining the complete zipper/tape representation. -/
@@ -48,7 +48,7 @@ theorem physical_source_max_prefix_bound
   rw [hp] at hproj
   simp at hproj
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
-    source_runWithDelta_rep t z c hrep p.1 p.2.1 hproj
+    source_runWithDelta_rep t z c hrep p.1 p.2.1 hproj.symm
   exact ⟨d,hrun,by omega⟩
 
 /-- The concrete v=5,k=7 C/0 context continues for 438 moves to
@@ -69,7 +69,7 @@ theorem root_low43_C0_to_junc_physical
     simpa [zC0,low43_C0_zipper] using root_low43_C0_to_junc_max
   have hdelta :
       runWithDelta 438 zC0 = some (junc 23 0 18,-20) := by
-    simpa [hmax] using runWithMax_toDelta 438 zC0
+    simpa [hmax] using (runWithMax_toDelta 438 zC0).symm
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
     source_runWithDelta_rep 438 zC0 c hrep (junc 23 0 18) (-20) hdelta
   have hprefix :
@@ -81,7 +81,7 @@ theorem root_low43_C0_to_junc_physical
       physical_source_max_prefix_bound 438 t zC0 c hrep
         (junc 23 0 18,-20,1) hmax ht
     exact ⟨e,he,by omega⟩
-  exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
+  exact ⟨d,hrun,hrepD,by omega,hprefix⟩
 
 /-- The complete 1347-step C/0 continuation reaches J(11,62). Its
     all-prefix maximum is eight cells to the right of the C/0 entry. -/
@@ -101,7 +101,7 @@ theorem root_low43_C0_to_junc11_physical
     simpa [zC0,low43_C0_zipper] using root_low43_C0_to_junc11_max
   have hdelta :
       runWithDelta 1347 zC0 = some (junc 11 0 62,-57) := by
-    simpa [hmax] using runWithMax_toDelta 1347 zC0
+    simpa [hmax] using (runWithMax_toDelta 1347 zC0).symm
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
     source_runWithDelta_rep 1347 zC0 c hrep (junc 11 0 62) (-57) hdelta
   have hprefix :
@@ -113,7 +113,7 @@ theorem root_low43_C0_to_junc11_physical
       physical_source_max_prefix_bound 1347 t zC0 c hrep
         (junc 11 0 62,-57,8) hmax ht
     exact ⟨e,he,by omega⟩
-  exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
+  exact ⟨d,hrun,hrepD,by omega,hprefix⟩
 
 /-- Full physical low-43 branch from J(21,11) to J(23,18).
     Every prefix remains at or left of local coordinate 17. -/
@@ -141,7 +141,7 @@ theorem root_low43_branch_to_junc :
     simpa [htime] using htotal0
   have hhead : cEnd.head = -4 := by
     rw [hEndHead,hChead]
-    norm_num
+    omega
   have hprefix :
       ∀ t : Nat, t≤650 →
         ∃ d : Config,
@@ -192,7 +192,7 @@ theorem root_low43_branch_to_junc11 :
     simpa [htime] using htotal0
   have hhead : cEnd.head = -41 := by
     rw [hEndHead,hChead]
-    norm_num
+    omega
   have hprefix :
       ∀ t : Nat, t≤1559 →
         ∃ d : Config,
@@ -235,7 +235,7 @@ theorem root_low_even_r96_physical
     simpa [z49] using root_low_even_r96_max
   have hdelta :
       runWithDelta 719 z49 = some (junc 11 0 98,-89) := by
-    simpa [hmax] using runWithMax_toDelta 719 z49
+    simpa [hmax] using (runWithMax_toDelta 719 z49).symm
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
     source_runWithDelta_rep 719 z49 c hrep (junc 11 0 98) (-89) hdelta
   have hprefix :
@@ -247,7 +247,7 @@ theorem root_low_even_r96_physical
       physical_source_max_prefix_bound 719 t z49 c hrep
         (junc 11 0 98,-89,12) hmax ht
     exact ⟨e,he,by omega⟩
-  exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
+  exact ⟨d,hrun,hrepD,by omega,hprefix⟩
 
 
 /-- Physical all-prefix lift of the prepared J(11,62) -> J(10,74)
@@ -268,7 +268,7 @@ theorem root_junc11_to_junc10_physical
     simpa [z11] using root_junc11_to_junc10_max
   have hdelta :
       runWithDelta 2457 z11 = some (junc 10 0 74,-9) := by
-    simpa [hmax] using runWithMax_toDelta 2457 z11
+    simpa [hmax] using (runWithMax_toDelta 2457 z11).symm
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
     source_runWithDelta_rep 2457 z11 c hrep (junc 10 0 74) (-9) hdelta
   have hprefix :
@@ -280,7 +280,7 @@ theorem root_junc11_to_junc10_physical
       physical_source_max_prefix_bound 2457 t z11 c hrep
         (junc 10 0 74,-9,68) hmax ht
     exact ⟨e,he,by omega⟩
-  exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
+  exact ⟨d,hrun,hrepD,by omega,hprefix⟩
 
 
 /-- Physical all-prefix lift of the complete J(10,74) -> J(11,98)
@@ -301,7 +301,7 @@ theorem root_junc10_to_junc11_r96_physical
     simpa [z10] using root_junc10_to_junc11_r96_max
   have hdelta :
       runWithDelta 3619 z10 = some (junc 11 0 98,-17) := by
-    simpa [hmax] using runWithMax_toDelta 3619 z10
+    simpa [hmax] using (runWithMax_toDelta 3619 z10).symm
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
     source_runWithDelta_rep 3619 z10 c hrep (junc 11 0 98) (-17) hdelta
   have hprefix :
@@ -313,7 +313,7 @@ theorem root_junc10_to_junc11_r96_physical
       physical_source_max_prefix_bound 3619 t z10 c hrep
         (junc 11 0 98,-17,84) hmax ht
     exact ⟨e,he,by omega⟩
-  exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
+  exact ⟨d,hrun,hrepD,by omega,hprefix⟩
 
 #print axioms physical_source_max_prefix_bound
 #print axioms root_low43_C0_to_junc_physical
