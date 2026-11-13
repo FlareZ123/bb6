@@ -93,9 +93,9 @@ subresidue, four even edges followed by two t=0 odd edges:
 z2 -> u1 -> u2 -> u3 -> u4 -> w5 -> h.
 ```
 
-This proves the path formula algebraically, conditional only on the
-already established `z2` coordinate from the uniform second-tier
-unique-parent theorem. It is not a claim that this path is the whole
+This proves the path formula algebraically, conditional on the
+`z2` coordinate supplied by Agent 10's uniform second-tier unique-parent
+draft. That draft is not yet source-CI-verified. It is not a claim that this path is the whole
 reverse cone: `h` can have additional odd parents.
 
 Composing the formulas yields the key identity
