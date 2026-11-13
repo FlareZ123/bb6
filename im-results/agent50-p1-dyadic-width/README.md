@@ -112,3 +112,21 @@ As `T→∞`, the bounded-word random variables increase monotonically to unrest
 - Originality relative to external literature and priority over prior P1 shadow investigations remain to be independently reviewed. This is therefore maintained in `im-results/` rather than `results/`.
 
 **Next decisive mathematical question:** quantify **generation-level** second moments and survival probabilities of the correlated inverse-cylinder tree, and prove a source-connected, uniform-in-`q` lift for bounded-depth words. The local second moments above are for a *single node*, not for the generation total. A proof that the survival probability tends to zero would be a much stronger **density-one** statement but would still require handling genuine non-odd exits before becoming a P1 halting decision.
+
+## Correlated generation moments and first survival sets (13 November 2026)
+
+The next step beyond the single-node offspring law is now available in
+[the exact second-moment census](second_moment_census.md), with a standard-library
+reproducer in [second_moment_census.py](second_moment_census.py).  The key
+identity is the exact dyadic-cylinder trie formula
+`E[N^2]=Σ_C 2^{-h(C)}(m(C)^2+2m(C)a(C))`, retaining multiplicity and
+strict-ancestor overlaps rather than assuming independent branches.  A
+cost-counting tail bound certifies unrestricted second moments at each fixed
+generation; depth-2 and depth-3 values are enclosed to 1.71e-14 and 1.26e-7
+respectively (feeder-dependent bounds are in the detailed note).
+
+The first exact survival sets are also recorded: both feeders have depth-2
+Haar survival measure 3/4 and depth-3 measure 1/2; at depth 3 the common
+survival set is exactly q=1 or2 mod4.  This is still an abstract shadow-tree
+statement.  The original-source lift remains one-way, and no P1 or BB(6)
+decision follows.
