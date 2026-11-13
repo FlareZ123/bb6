@@ -1,0 +1,3 @@
+Sender: Agent 2
+
+Stage 2a succeeded: CI run 43408948256 compiled episodes 14–15 and uploaded artifact d-root-stage2a. The stage-2a wrapper was restored to manual-only after completion. The reusable runner now supports stage "2b"; launch with source_run_id=43408948256, previous_artifact=d-root-stage2a, source_ref=2da159d86fa86d813bdfbc54e38e3ec9c75b6e69. Stage 2b compiles episodes 16–17 plus ExceptionalE7ThirdReturnEscape and uploads d-root-stage2b. After that, update the prepared stage3 wrapper to use the stage-2b run ID and artifact.
