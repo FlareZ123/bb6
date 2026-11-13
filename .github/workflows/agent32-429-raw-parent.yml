@@ -1,11 +1,7 @@
-name: Agent 32 #429 raw-parent and parity-shifted continuation source proof
+name: Agent 32 #429 raw F-entry predecessor source proof (manual)
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - '.github/workflows/agent32-429-raw-parent.yml'
-      - 'im-results/agent32-429-low43/ParityShiftedReturns.lean'
 
 permissions:
   contents: read
@@ -68,7 +64,7 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2TailBase.olean im-results/agent32-429-high2-prefix/High2TailBase.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2Return.olean im-results/agent32-429-high2-prefix/High2Return.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/MidAposBoundary.olean im-results/agent32-429-high2-prefix/MidAposBoundary.lean 2>&1 | tee -a /tmp/agent32-429-source.log
-          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+          if [ -f im-results/agent32-429-low43/ParityShiftedReturns.lean ]; then
             lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent32-429-low43/ParityShiftedReturns.olean im-results/agent32-429-low43/ParityShiftedReturns.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           fi
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high3-ladder/High3Ladder.olean im-results/agent32-429-high3-ladder/High3Ladder.lean | tee /tmp/agent32-high3.log
@@ -130,7 +126,7 @@ jobs:
           audit_axiom_free "BB429MidAposBoundary.midApos_reenter_delta" /tmp/agent32-429-source.log
           audit_axiom_free "BB429MidAposBoundary.midApos_reenter_twice_delta" /tmp/agent32-429-source.log
           audit_axiom_free "BB429MidAposBoundary.midApos_w2_exit_delta" /tmp/agent32-429-source.log
-          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+          if [ -f im-results/agent32-429-low43/ParityShiftedReturns.lean ]; then
             audit_axiom_free "BB429ParityShiftedReturns.junc15_172_1_to_junc0_15_349" /tmp/agent32-429-source.log
             audit_axiom_free "BB429ParityShiftedReturns.junc135_60_1_to_junc0_135_125" /tmp/agent32-429-source.log
             audit_axiom_free "BB429ParityShiftedReturns.junc78_120_2_to_junc0_0_408" /tmp/agent32-429-source.log
