@@ -53,7 +53,9 @@ bridge30 endpoint in two intermediate modules:
   exact bridge30 input window, bridge30 run, final head/right-facing word,
   preservation of the left tail, three d0-counter segment proofs, marker2
   and d1 cells, the full left-facing target word, and the candidate exact
-  equality `rst1PrimeAfterBridge30_eq_s1Successor`.
+  equality `rst1PrimeAfterBridge30_eq_s1Successor`. The wrapper
+  `rst1Prime_counted_macro` now composes the full ten-phase run and the
+  closed cost `97+12*(L+a)+3*b) into the canonical S1 successor.
 - The intended endpoint is exactly
   `s1Config (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) 0 (h+5+3*b)`.
   The endpoint proof is a source-level Lean proof attempt, but has not yet
