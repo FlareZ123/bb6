@@ -335,7 +335,7 @@ The Lean module defines
 `Q_j(n)=8*signedZ(n,j)-9*(2^(n+2)+2*n+1)` and proves the direct
 expansion
 `28*2^n-2*n+15-2^(j+4)*(2*n+3)`. The exact one-digit index shift
-uses coefficient `4*(1+2^(j+4)), with
+uses coefficient `4*(1+2^(j+4))`, with
 `4*(1+2^(j+4))=32*(2^(j+1)-1)+36`. Both coefficients are 2 mod 3
 for even j; the direct coefficient is used in the recursion.
 
