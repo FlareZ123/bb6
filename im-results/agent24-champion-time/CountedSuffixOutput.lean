@@ -188,6 +188,56 @@ theorem sideBit_d1pow_false (n i : Nat) (hi : 3*n ≤ i) :
       simp [d1,sideBit]
       exact ih (i-3) hlt
 
+/-- The exact positive-facing word after the counted even suffix.  The
+six-cell guard is followed by the enlarged all-one block; beyond that block
+the source prefix's blank exterior is preserved. -/
+theorem even_counted_suffix_rightFacing (P : Int → Bool) (b : Nat)
+    (h6 : P 6 = true)
+    (hone : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true)
+    (hfar : ∀ x, even_rightStop b+3 ≤ x → P x = false) :
+    ∀ i : Nat,
+      (frame even_tailArea (evenOpenFinalSweepTape b P)
+        (embed even_tailFinal)).tape (1+(i:Int)) =
+        sideBit (s1PhysicalRight (b+1)) i := by
+  have hout := even_counted_suffix_tape_output P b h6 hone
+  intro i
+  rw [s1PhysicalRight_source, sideBit_append]
+  have hlen :
+      ([false,true,true,true,false,false] : List Bool).length = 6 := by
+    decide
+  rw [hlen]
+  by_cases hi6 : i < 6
+  · simp only [if_pos hi6]
+    have hx1 : 1 ≤ 1+(i:Int) := by omega
+    have hx6 : 1+(i:Int) ≤ 6 := by omega
+    have hlocal := hout.2.1 (1+(i:Int)) hx1 hx6
+    rw [hlocal]
+    have hguard :
+        decide (1+(i:Int) ∈ ([2,3,4] : List Int)) =
+          sideBit ([false,true,true,true,false,false] : List Bool) i := by
+      have hcases : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 := by omega
+      rcases hcases with h | h | h | h | h | h <;> subst i <;> decide
+    exact hguard
+  · by_cases hiEnd : i < 6+3*(b+2)
+    · simp only [if_neg hi6]
+      have hx7 : 7 ≤ 1+(i:Int) := by omega
+      have hxUpper : 1+(i:Int) ≤ even_rightStop b+2 := by
+        unfold even_rightStop
+        omega
+      have hones := hout.2.2.1 (1+(i:Int)) hx7 hxUpper
+      have hiD : i-6 < 3*(b+2) := by omega
+      rw [hones]
+      exact (sideBit_d1pow_true (b+2) (i-6) hiD).symm
+    · simp only [if_neg hi6]
+      have hx : even_rightStop b+3 ≤ 1+(i:Int) := by
+        unfold even_rightStop
+        omega
+      have hfalse := hfar (1+(i:Int)) hx
+      have htail := hout.2.2.2 (1+(i:Int)) hx
+      rw [htail, hfalse]
+      have hiD : 3*(b+2) ≤ i-6 := by omega
+      exact (sideBit_d1pow_false (b+2) (i-6) hiD).symm
+
 /-- The old S1 right side is blank beyond its six-cell guard and unary word. -/
 theorem s1Config_right_far_zero (L n m a z b : Nat) (h : Int) (i : Nat)
     (hi : 9+3*b ≤ i) :
