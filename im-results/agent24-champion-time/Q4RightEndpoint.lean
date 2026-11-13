@@ -590,7 +590,7 @@ theorem tm2_q4_root_source :
       some (s1Config 3 6 1 71 (2^63-1) 0 223) := by
   simpa using
     (oddRst2_q4_counted_source 3 7 6 63 29
-      (by norm_num) (by norm_num))
+      (by decide) (by decide))
 
 #print axioms tm2_q4_root_source
 
