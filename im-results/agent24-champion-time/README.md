@@ -261,3 +261,53 @@ It then transfers the unary counter to the right field, reaching s1Config 3 4 2 
 
 
 **Root-specific instantiation.** M0OddQ4Prefix.lean now also defines m0OddRootA/B/Head mirroring Agent 42's tm63AfterM1EvenA/B/Head and proves m0Odd_root_reset_prefix from that exact root-connected S1(3,5,0,A,0,B,H) state. This root-specific application compiled in targeted CI run 43403557772 (commit 1a0f07b4b13d8107b0e513e941f982c3944580ff), with the no-sorryAx check passing. It still proves only the next source prefix, not the preceding root composition or a halting result.
+
+
+## 2026-11-13: m=1,n=3 odd reset prefix (intermediate source candidate)
+
+The root-connected state after the m=2,n=4 even increment is
+`S1(3,3,1,A2,0,B2,H2)`. A new m=1,n=3 odd reset prefix has been derived for all
+`a,b ≥ 0`:
+
+```lean
+run tm2 (67+12*a+3*b) (s1Config 3 3 1 a 0 b h) =
+  some (s1Config 3 2 0 (a+b+2) (2^b-1) 0 (h+5+3*b))
+```
+
+The decomposition is:
+
+- a counted left sweep of (3(3a+1)) moves;
+- a 29-step finite bridge from
+  `⟨3,0,[-7,-4,-1,2,3,4]⟩` to
+  `⟨4,5,[4,3,2,1,-1,-4,-5,-6,-7]⟩`, with pre-step heads in ([-9,4]);
+- an E-scan of (3a) moves;
+- the q4 suffix after its four guard moves, (35+3b) moves.
+
+Thus the total is (32+12a+35+3b=67+12a+3b=resetPrefixCost(1,3,a,b)).
+The source left word uses `binDec 3 3 = d0 ++ d0 ++ d1`; the q4 cut's
+left-facing stream is
+`[true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec 3 2 ++ lh`.
+The new boundary-bit and tail lemmas align the finite bridge with that stream.
+After the generic q4 endpoint, the all-ones counted drain gives the full
+counted increment
+`S1(3,3,1,a,0,b) -> S1(3,2,0,a+b+2,0,2^b-1)`.
+
+Files:
+- `M1OddQ4Prefix.lean`: parameterized q4-cut prefix, exact bridge, cut left/right stream and shape contracts.
+- `M1OddQ4Suffix.lean`: generic q4 suffix endpoint plus counted drain.
+- `TM63M1OddRootComposition.lean`: extends the blank-root chain through the four increments
+  ((1,6)), ((0,5)), ((2,4)), and ((1,3)), with the residual itinerary now beginning at
+  `sectionResult 2 0`.
+- `m1_odd_q4_replay.py`: independent literal-table replay. It checks 81 full-tape cases
+  (0≤a,b≤8) and 36 q4-cut left/right-shape cases (0≤a,b≤5); all matched exactly.
+
+Agent 42 also supplied a compact 26-step bridge on ([-6,1]). The 29-step bridge used
+here is the same deterministic path with the following three state-4-on-one moves
+absorbed into the finite frame; both decompositions have the same (32+12a)
+prefix cost. The new prefix, suffix, and root-composition modules plus the replay
+script have been added to the existing manual-only
+`.github/workflows/agent42-champion-terminal-source.yml`; no push/PR trigger was
+added. **No CI run has yet compiled these three new Lean modules.** They remain
+intermediate proof candidates, not certified results. The next mathematical
+source stage is `S1(3,2,0,...)`, i.e. marker (m=0,n=2), followed by
+(m=2,n=1). No exact BB(6) value or universal upper bound follows yet.
