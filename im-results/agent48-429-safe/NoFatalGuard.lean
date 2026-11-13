@@ -77,7 +77,7 @@ theorem runNoFatal_prefix (n t : Nat) (z z' : BB429OddExcursion.Zipper)
             have htEq : t = t' + 1 := by
               dsimp [t']
               omega
-            subst t
+            rw [htEq] at ht ⊢
             have ht' : t' ≤ n := by
               apply Nat.le_of_succ_le_succ
               simpa [Nat.succ_eq_add_one] using ht
@@ -99,14 +99,16 @@ theorem runNoFatal_add (n k : Nat) (z : BB429OddExcursion.Zipper) :
   induction n generalizing z with
   | zero =>
       cases hf : fatalCZero z with
-      | true => simp [runNoFatal, hf]
-      | false => simp [runNoFatal, hf]
+      | true =>
+          cases k <;> simp [runNoFatal, hf]
+      | false =>
+          simp [runNoFatal, hf]
   | succ n ih =>
       simp only [Nat.succ_add, runNoFatal]
       cases hf : fatalCZero z with
       | true => simp [hf]
       | false =>
-          simp only [hf, ite_false, Option.bind_assoc]
+          simp [hf, Option.bind_assoc]
           apply congrArg (fun f : BB429OddExcursion.Zipper → Option BB429OddExcursion.Zipper =>
             (BB429OddExcursion.one z).bind f)
           funext d
