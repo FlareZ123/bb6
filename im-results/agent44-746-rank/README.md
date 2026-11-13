@@ -176,5 +176,5 @@ The independent modular reproducer NestedCascadeCheck.mjs checks Agent 7's
 five-edge residue \(r=74803\pmod{3^{11}}\), the sixth
 \((t,\sigma)=(0,13)\) edge on that cylinder, and a seventh
 \((t,\sigma)=(0,14)\) edge on the subcylinder
-\(r=74803\pmod{3^{12}}\). It reproduces the valuation checks, band limits,
+\(r=74803\pmod{3^{12}}\). It reproduces the valuation checks, coefficient bit lengths, band limits,
 and next-digit selection; this is not a Lean certificate.
