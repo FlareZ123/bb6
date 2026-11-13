@@ -92,8 +92,8 @@ theorem lowEven_r96_no_fatal_physical
   have hcurrent : p.current = false := hrepE.2.1.symm.trans hbad.2.1
   have hr0' : e.tape (e.head+1) = p.right.getD 0 false :=
     BB429PhysicalBridge.represents_right_one p e hrepE
-  have hright0 : p.right.getD 0 false = true :=
-    hr0'.symm.trans hbad.2.2
+  have hright0 : p.right[0]?.getD false = true := by
+    simpa using hr0'.symm.trans hbad.2.2
   have hfatal : fatalCZero p = true := by
     simp [fatalCZero, hstate, hcurrent, hright0]
   simp [hfatal] at hpSafe
@@ -131,8 +131,8 @@ theorem rootSegment_no_fatal_physical
   have hcurrent : p.current = false := hrepE.2.1.symm.trans hbad.2.1
   have hr0' : e.tape (e.head+1) = p.right.getD 0 false :=
     BB429PhysicalBridge.represents_right_one p e hrepE
-  have hright0 : p.right.getD 0 false = true :=
-    hr0'.symm.trans hbad.2.2
+  have hright0 : p.right[0]?.getD false = true := by
+    simpa using hr0'.symm.trans hbad.2.2
   have hfatal : fatalCZero p = true := by
     simp [fatalCZero, hstate, hcurrent, hright0]
   simp [hfatal] at hpSafe
