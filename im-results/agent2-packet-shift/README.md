@@ -141,3 +141,29 @@ For every u and q≥3, the E/E family `L(27u+25,q,1)` first reaches `M(192u+161,
 Consequently, both E/A (all q≥2) and E/E (all q≥3) exceptional source families are now reduced to regular L or, for the E/E q≡1 branch, the canonical E2 marker family consumed by Agent37's arbitrary-depth E-chain. The remaining issue is the subsequent canonical E2 orbit, not the A/B exits of p≡2 normalization. These are prepared-source family results, not statements that every such section occurs on the authentic blank orbit.
 
 The AP2 leaf theorem `a_p2_packet_reentry` has now compiled against the pinned original sources in root-chain CI 43315114860, with axiom profile `[propext, Quot.sound]`; the corrected physical endpoint is `regularSection a 3 2`. That run then stopped later at `P2ResetRegularReentry.lean` because its source-namespace references were stale. I corrected the packet reference to `Agent31PacketSource.packet` and the reset theorem/marker references to `Agent2PacketP2Reset` in commit e44510c69ed66f6dceb2462786a027960a8b4269. Full p2 reduction and E/A/E/E wrapper audit remains pending. Root-chain run 43319453437 compiled the corrected AP2 leaf and PacketP2ResetSource, but exposed a mathematical overclaim in the auxiliary P2ResetRegularReentry: a single e_two_reset produces a packet, not a regularSection. The actual regular return is the two-stage e_two_k0_regular theorem when the reset index is 3t; it then uses a q=0 B return and reaches regularSection (64*t+2*q+23,3,2). I corrected the helper to state exactly this existing source theorem in commit 8410b8e9483f17b88faea3e587ee54a94e36050d, then aligned its time-expression grouping exactly with the source theorem in commit b254c25dc42f140055aaf343befd144f3ec891dc. The 433194 log contains no sorryAx or native_decide among modules compiled before failure; e_two_k0_regular itself printed [propext, Quot.sound]. The wrappers and Seed31 continuation still need a fresh full audit. Do not promote PacketP2ReentryOrE or ExceptionalEPacketClosure to the verified theorem table until that run passes and their axiom output is checked.
+
+
+## K=4 p=2 source-return bridge (13 Nov 2026)
+
+Added `P2K4SourceReentry.lean` to convert Agent 35's raw
+`P2K4Source.close_one` endpoint into the `regularSection` language used by
+the blank-root chain.
+
+- `BB6.Agent2P2K4SourceReentry.close_one_regular_reentry` proves, for every
+  `t,u`, that the p=2 packet
+  `packet (3*firstK t+4) (3*u+1) 2 (false :: List.replicate 6 true)`
+  reaches a physical `regularSection`.
+- `source_chain_close_one` composes this return with any already-proved
+  `ObsEq` root prefix to that packet.
+- The #41 model candidate has q=7, so u=2. With
+  `k41=81*s+76=firstK (3*s+2)`, its input packet is exactly
+  `packet (243*s+232) 7 2 (false :: List.replicate 6 true)`.
+
+**Verification:** GitHub Actions run `43391093227` succeeded. The axiom
+audit reports `[propext, Quot.sound]` for both new theorems. The wrapper is
+therefore kernel-checked against the existing source modules; it does not by
+itself establish that the blank-root trajectory reaches the #41 packet.
+
+The root-prefix audit is separate. The current retry `43391359969` is testing
+the corrected `PacketP2ReentryOrE` tail normalization before it can reach
+`BlankThirtiethRejoin` and `Seed31Probe`.
