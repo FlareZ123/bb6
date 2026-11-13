@@ -46,9 +46,9 @@ private theorem self_add_one_le_two_pow (n : Nat) : n+1≤2^n := by
       rw [Nat.pow_succ]
       omega
 
-private theorem three_mul_le_two_pow (k : Nat) (hk : 4 ≤ k) :
-    3*k ≤ 2^k := by
-  have aux : ∀ n : Nat, 4 ≤ n → 3*n ≤ 2^n := by
+private theorem three_mul_add4_le_two_pow (k : Nat) (hk : 4 ≤ k) :
+    3*k+4 ≤ 2^k := by
+  have aux : ∀ n : Nat, 4 ≤ n → 3*n+4 ≤ 2^n := by
     intro n hn
     induction n with
     | zero => omega
@@ -66,11 +66,11 @@ private theorem three_mul_le_two_pow (k : Nat) (hk : 4 ≤ k) :
 /-- For N>=2M+16 and L<=N+9, the parameter width dominates every
     shadow coordinate of cost at most M. -/
 theorem shadow_width_bound (N L M : Nat)
-    (hN : 2*M+16 ≤ N) (hL : L ≤ N+9) :
+    (hN : 2*M+7 ≤ N) (hL : L ≤ N+9) :
     L+M ≤ 2^(N-M-3) := by
-  have hK : M+13 ≤ N-M-3 := by omega
-  have hthree := three_mul_le_two_pow (N-M-3) (by omega)
-  have hlin : L+M ≤ 3*(N-M-3) := by omega
+  have hK : M+4 ≤ N-M-3 := by omega
+  have hthree := three_mul_add4_le_two_pow (N-M-3) (by omega)
+  have hlin : L+M ≤ 3*(N-M-3)+4 := by omega
   exact le_trans hlin hthree
 
 /-- The four-unit interior offset is invariant along every abstract shadow path. -/
@@ -89,7 +89,7 @@ theorem shadow_reach_invariants
     large, 4-divisible original left counter. -/
 theorem shadow_encoded_left_properties
     (N L M m z alpha b : Nat)
-    (hN : 2*M+16 ≤ N)
+    (hN : 2*M+7 ≤ N)
     (hwidth : L+M ≤ 2^(N-M-3))
     (hm : m ≤ M) (hz : 0 < z)
     (hw : 4 ≤ L+m-z) (ha : 28 ≤ alpha)
@@ -101,7 +101,7 @@ theorem shadow_encoded_left_properties
     have h := unscale_coordinate N m b w alpha hmN (by simpa [w] using hcoord)
     simpa [w] using h
   have hwle : w ≤ L+M := by dsimp [w]; omega
-  have hK : 12 ≤ N-M-4 := by omega
+  have hK : 3 ≤ N-M-4 := by omega
   have hpowmono : 2^(N-M) ≤ 2^(N-m) :=
     Nat.pow_le_pow_right (by decide : 0<(2:Nat)) (by omega)
   have hprod1 : 28*2^(N-M) ≤ 28*2^(N-m) :=
@@ -338,7 +338,7 @@ theorem shadow_reach_lifts_to_odd_cone
     authentic original-source OddCone realization whenever 16q>=2M+16. -/
 theorem l0_bounded_shadow_word_has_source
     (q M u m z : Nat)
-    (hN : 2*M+16≤16*q)
+    (hN : 2*M+7≤16*q)
     (hu : u+4*q+3=7*2^(16*q))
     (hgraph : ShadowReach (16*q+8) (12*q+4) m z)
     (hm : m≤M) :
