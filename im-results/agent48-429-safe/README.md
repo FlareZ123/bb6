@@ -54,26 +54,45 @@ this entire finite root segment. The endpoint is Junc(11,0,98), matching
 the start state required by Agent 1's conditional 3,398-step outer-safe
 plus 1,077-step low42 suffix.
 
-## Proof boundary
+## Full-tape lift and root suffix composition
 
-This is a finite source-zipper result. It does **not** establish an
-all-time invariant, nonhalting, or a BB(6) decision. This module does not
-yet include the full-tape `Config` lift or compose the following 4,475
-steps. The physical bridge should use the existing
-`BB429PhysicalBridge.source_run_rep` and the already maintained
-`BB429RootOuterLow42NoFatal.blank_root_outer_low42_no_fatal`; do not
-reconstruct the source table or duplicate the guard.
+Two follow-on modules now carry the source certificate into the physical
+machine model:
+
+- `RootNoFatalPhysical.lean` uses the existing
+  `BB429PhysicalBridge.source_run_rep` to lift the blank-root run and every
+  prefix to the complete bi-infinite tape. Its theorem
+  `BB429RootNoFatalPhysical.root_prefix_no_fatal_physical` excludes the
+  physical C/01 condition at every absolute time through 9,243.
+- `RootNoFatalChain.lean` feeds that endpoint directly into the existing
+  `BB429RootOuterLow42NoFatal.blank_root_outer_low42_no_fatal` theorem. It
+  composes the 3,398-step outer-safe suffix (no C/0 at all) and 1,077-step
+  low42 suffix (no C/01) to obtain
+  `BB429RootNoFatalChain.blank_root_no_fatal_to_junc136`: the genuine blank
+  root reaches a configuration represented by Junc(0,0,136) at step
+  **13,718**, and every physical prefix through that endpoint avoids C/01.
+
+The 13,718-step statement is a finite prefix certificate, not an
+all-time invariant or a nonhalting proof. The next root-connected task is
+to compose the regular Junc path from Junc(0,0,136) to Junc(45,0,58), then
+attach the low-even r=32 branch. Do not re-simulate the first 13,718 steps.
 
 ## Verification
 
-Both finite computations were preflighted with Lean 4.36.0-rc2 using the
-exact source transition/zipper definitions, the no-fatal guard, and the
-source `ones`/`pairs01` constructors. The kernel axiom reports were
-`[propext]` for the root run and event census; the all-prefix theorem
-uses the checked generic guard lemma. No `sorryAx` is introduced.
+The 9,243-step root run and exact C/0 census were preflighted with Lean
+4.36.0-rc2 using the exact source transition/zipper definitions, guard,
+and source `ones`/`pairs01` constructors. Both `by decide` certificates
+and the all-prefix guard theorem compile; the root run and event census
+have axiom report `[propext]`, with no `sorryAx`.
 
-The manual/PR-scoped workflow
+The physical-lift and 13,718-step composition proof bodies were separately
+type-checked against interface harnesses for the repository's existing
+`source_run_rep` and outer/low42 suffix theorem signatures. This is a
+proof-script preflight only, not a substitute for compiling the actual
+import graph. The standalone workflow
 `.github/workflows/agent48-429-no-fatal-guard.yml` now compiles the actual
-repository imports and audits all three root declarations. The updated
-workflow has not yet produced a run for this addition; until then, the
-repository-level import chain remains pending its CI check.
+source imports and audits the three source declarations. The physical and
+composition modules still need to be appended to an existing full-source
+workflow (the Agent 6 low42 workflow already builds their dependencies)
+and compiled there. Until that run passes, the 13,718-step physical claim
+remains a checked proof candidate rather than CI-certified evidence.
