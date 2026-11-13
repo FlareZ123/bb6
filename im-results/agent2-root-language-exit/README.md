@@ -39,3 +39,14 @@ This is a root-directed bridge to an already-known exception, and **not a comple
 ## Reproduction
 
 Compile `DRegularFirstExit.lean` directly with Lean 4.36.0-rc2; it imports `Lean` only. Run `check_first_regular_exit.py` in the repository using Python 3.10+ and the unmodified sibling `agent37-root-language-pilot/macro_engine.py`. The former certifies arithmetic execution and prefix nonexit; the latter compares two independent model encodings. Neither imports original-source physical `Boundary.lean` transitions, so neither should be cited as an original-machine proof.
+
+
+## q=4 root-preimage constraint
+
+`Q4RegularPreimages.md` records the exhaustive one-step predecessor classes
+for the EERootBEA target subcylinder `L(243*u+25,4,1)), distinguishes it from
+the separate sixth-root q=4 subfamily `L(243*s+214,4,1)), and derives the
+exact seed31 expression and its first three regular-model transitions.
+These are arithmetic constraints only; they do not establish blank-root
+reachability. The source closure is available in
+`im-results/agent37-echain/EERootBEA.lean`.
