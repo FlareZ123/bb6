@@ -10,11 +10,18 @@ def zeroLeftPrefixTape (t : Int → Bool) (h : Int) : Int → Bool :=
 
 theorem zeroLeftPrefixTape_head (t : Int → Bool) (h : Int) :
     zeroLeftPrefixTape t h h = true := by
-  simp [zeroLeftPrefixTape, setBit]
+  have h1 : h ≠ h-1 := by omega
+  have h2 : h ≠ h-2 := by omega
+  have h3 : h ≠ h-3 := by omega
+  simp [zeroLeftPrefixTape, setBit, h1, h2, h3]
 
 theorem zeroLeftPrefixTape_right (t : Int → Bool) (h x : Int)
     (hx : h < x) : zeroLeftPrefixTape t h x = t x := by
-  simp (disch := omega) [zeroLeftPrefixTape, setBit]
+  have h0 : x ≠ h := by omega
+  have h1 : x ≠ h-1 := by omega
+  have h2 : x ≠ h-2 := by omega
+  have h3 : x ≠ h-3 := by omega
+  simp [zeroLeftPrefixTape, setBit, h0, h1, h2, h3]
 
 theorem zeroLeftPrefix_run (b : Conf)
     (hq : b.q = .B) (h0 : b.tape b.h = false)
@@ -24,6 +31,11 @@ theorem zeroLeftPrefix_run (b : Conf)
     shuttleRun 8 b =
       some ⟨.F,b.h,zeroLeftPrefixTape b.tape b.h⟩ := by
   rcases b with ⟨q,h,t⟩
+  change q = .B at hq
+  change t h = false at h0
+  change t (h-1) = false at h1
+  change t (h-2) = false at h2
+  change t (h-3) = false at h3
   subst q
   simp (disch := omega) [shuttleRun, next, setBit,
     zeroLeftPrefixTape, h0, h1, h2, h3]
@@ -42,9 +54,18 @@ theorem evenSweepTape_left (n : Nat) (t : Int → Bool) (h x : Int)
   | succ n ih =>
       simp only [evenSweepTape]
       have htail := ih (setBit (setBit t h true) (h+1) false)
-        (h+2) x (by omega)
+        (h+2) (by omega)
       rw [htail]
       simp (disch := omega) [setBit]
+
+theorem evenSweepB0Tape_head (n : Nat) (t : Int → Bool) (h : Int)
+    (hz : t (h+2*(n:Int)+1) = false) :
+    evenSweepB0Tape n t h (h+2*(n:Int)+1) = false := by
+  have hkeep := evenSweepTape_right n t h
+    (h+2*(n:Int)+1) (by omega)
+  have hne1 : h+2*(n:Int)+1 ≠ h+2*(n:Int)-1 := by omega
+  have hne2 : h+2*(n:Int)+1 ≠ h+2*(n:Int) := by omega
+  simp [evenSweepB0Tape,setBit,hkeep,hne1,hne2,hz]
 
 /-- An even D/F sweep followed by D0/E0/A0 returns to B/0. The full output
     tape is retained; the two terminal writes are included explicitly. -/
@@ -97,12 +118,7 @@ theorem evenSweep_to_Bzero_exact (n : Nat) (t : Int → Bool) (h : Int)
       _ = shuttleRun 3 ⟨.D,p,s⟩ := by simp [hsweep,p,s]
       _ = some ⟨.B,h+2*(n:Int)+1,evenSweepB0Tape n t h⟩ := by
             simpa [evenSweepB0Tape,p,s,t3,t2,t1,ht1] using htail
-  have hhead : evenSweepB0Tape n t h (h+2*(n:Int)+1) = false := by
-    dsimp [evenSweepB0Tape]
-    have hkeep := evenSweepTape_right n t h
-      (h+2*(n:Int)+1) (by omega)
-    rw [hkeep]
-    simp (disch := omega) [setBit,hzeroNext]
+  have hhead := evenSweepB0Tape_head n t h hzeroNext
   exact ⟨hrun,hhead⟩
 
 /-- The B/0 output of the zero-left macro: an even right run is swept into
@@ -146,27 +162,35 @@ theorem zeroLeftEvenRun_exact (n : Nat) (b : Conf)
   have hprefix : shuttleRun 8 b = some f := by
     simpa [f] using zeroLeftPrefix_run b hq h0 h1 h2 h3
   have hFread : zeroLeftPrefixTape b.tape b.h b.h = true := by
-    simp (disch := omega) [zeroLeftPrefixTape,setBit]
+    have h1 : b.h ≠ b.h-1 := by omega
+    have h2 : b.h ≠ b.h-2 := by omega
+    have h3 : b.h ≠ b.h-3 := by omega
+    simp [zeroLeftPrefixTape,setBit,h1,h2,h3]
   have hFstep : shuttleRun 1 f = some d := by
     simp [shuttleRun,next,f,d,fTape,hFread]
   have hfAway (x : Int) (hx : b.h < x) : fTape x = b.tape x := by
     have hp := zeroLeftPrefixTape_right b.tape b.h x hx
-    simp [fTape,setBit,show x ≠ b.h by omega,hp]
+    have hne : x ≠ b.h := by omega
+    simp [fTape,setBit,hne,hp]
   have hFzero : fTape b.h = false := by
     simp [fTape,zeroLeftPrefixTape,setBit]
   have hones' : ∀ j : Nat, j < 2*n →
       fTape (b.h+1+(j:Int)) = true := by
     intro j hj
-    rw [hfAway _ (by omega)]
-    exact hones j hj
+    calc
+      fTape (b.h+1+(j:Int)) = b.tape (b.h+1+(j:Int)) :=
+        hfAway _ (by omega)
+      _ = true := hones j hj
   have hzero' : fTape (b.h+1+2*(n:Int)) = false := by
-    have hidx : b.h+1+2*(n:Int) = b.h+2*(n:Int)+1 := by omega
-    rw [hidx,hfAway _ (by omega)]
-    exact hzero
+    calc
+      fTape (b.h+1+2*(n:Int)) = b.tape (b.h+2*(n:Int)+1) :=
+        hfAway _ (by omega)
+      _ = false := hzero
   have hzeroNext' : fTape (b.h+1+2*(n:Int)+1) = false := by
-    have hidx : b.h+1+2*(n:Int)+1 = b.h+2*(n:Int)+2 := by omega
-    rw [hidx,hfAway _ (by omega)]
-    exact hzeroNext
+    calc
+      fTape (b.h+1+2*(n:Int)+1) = b.tape (b.h+2*(n:Int)+2) :=
+        hfAway _ (by omega)
+      _ = false := hzeroNext
   have hprev' : n = 0 → fTape ((b.h+1)-1) = false := by
     intro hn
     have heq : (b.h+1)-1 = b.h := by omega
@@ -214,8 +238,13 @@ theorem zeroLeftEvenOutTape_left (n : Nat) (t : Int → Bool) (h x : Int)
   dsimp [zeroLeftEvenOutTape,evenSweepB0Tape]
   have hs := evenSweepTape_left n
     (setBit (zeroLeftPrefixTape t h) h false) (h+1) x (by omega)
-  simp only [hs]
-  simp (disch := omega) [setBit,zeroLeftPrefixTape]
+  have hn1 : x ≠ h+2*(n:Int) := by omega
+  have hn2 : x ≠ h+2*(n:Int)+1 := by omega
+  have hn3 : x ≠ h := by omega
+  have hn4 : x ≠ h-1 := by omega
+  have hn5 : x ≠ h-2 := by omega
+  have hn6 : x ≠ h-3 := by omega
+  simp [setBit,zeroLeftPrefixTape,hs,hn1,hn2,hn3,hn4,hn5,hn6]
 
 /-- The macro preserves the complete right exterior beginning at its new head. -/
 theorem zeroLeftEvenOutTape_right (n : Nat) (t : Int → Bool) (h x : Int)
@@ -223,8 +252,13 @@ theorem zeroLeftEvenOutTape_right (n : Nat) (t : Int → Bool) (h x : Int)
   dsimp [zeroLeftEvenOutTape,evenSweepB0Tape]
   have hs := evenSweepTape_right n
     (setBit (zeroLeftPrefixTape t h) h false) (h+1) x (by omega)
-  simp only [hs]
-  simp (disch := omega) [setBit,zeroLeftPrefixTape]
+  have hn1 : x ≠ h+2*(n:Int) := by omega
+  have hn2 : x ≠ h+2*(n:Int)+1 := by omega
+  have hn3 : x ≠ h := by omega
+  have hn4 : x ≠ h-1 := by omega
+  have hn5 : x ≠ h-2 := by omega
+  have hn6 : x ≠ h-3 := by omega
+  simp [setBit,zeroLeftPrefixTape,hs,hn1,hn2,hn3,hn4,hn5,hn6]
 
 #print axioms BB6Root119.zeroLeftEvenRun_exact
 #print axioms BB6Root119.zeroLeftEvenRun_returns_Bzero
