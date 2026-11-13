@@ -93,7 +93,7 @@ theorem carryLongPrefix_r2_left (k : Nat) (T : Int → Bool)
         omega
       have hpres := carryLeftSweep_preserves_at (4*k+2) (3*k+1) T hmatch hs hb x
         (by omega) (by omega)
-      simp [T2,frame,shiftConfig,T1,ha,hpres,carryLeftOutputBit,hfar,h']
+      simp [T2,frame,shiftConfig,ha,hpres,carryLeftOutputBit,hfar,h']
     · have hcases : x-h' = -4 ∨ x-h' = -3 ∨ x-h' = -2 ∨
           x-h' = -1 ∨ x-h' = 0 ∨ x-h' = 1 := by
         simp [h']
@@ -115,7 +115,7 @@ theorem carryLongPrefix_r2_left (k : Nat) (T : Int → Bool)
           rw [hmatch (h'+(-4)) harea]
           exact hbit
         have hleft : T2 (h'+(-4)) = true := by
-          simp [T2,frame,shiftConfig,T1,ha,hpres,hmark,h']
+          simp [T2,frame,shiftConfig,ha,hpres,hmark,h']
         have hnotfar : ¬ (h'+(-4) < -3*((4*k+2:Int))-2) := by
           dsimp [h']
           omega
@@ -281,7 +281,7 @@ theorem carryLongPrefix_r3_left (k : Nat) (T : Int → Bool)
         omega
       have hpres := carryLeftSweep_preserves_at (4*k+3) (3*k+2) T hmatch hs hb x
         (by omega) (by omega)
-      simp [T2,frame,shiftConfig,T1,ha,hpres,carryLeftOutputBit,hfar,h']
+      simp [T2,frame,shiftConfig,ha,hpres,carryLeftOutputBit,hfar,h']
     · have hcases : x-h' = -3 ∨ x-h' = -2 ∨ x-h' = -1 ∨
           x-h' = 0 ∨ x-h' = 1 ∨ x-h' = 2 ∨ x-h' = 3 ∨
           x-h' = 4 ∨ x-h' = 5 := by
@@ -305,7 +305,7 @@ theorem carryLongPrefix_r3_left (k : Nat) (T : Int → Bool)
           rw [hmatch (h'+(-3)) harea]
           exact hbit
         have hleft : T2 (h'+(-3)) = true := by
-          simp [T2,frame,shiftConfig,T1,ha,hpres,hmark,h']
+          simp [T2,frame,shiftConfig,ha,hpres,hmark,h']
         have hnotfar : ¬ (h'+(-3) < -3*((4*k+3:Int))-2) := by
           dsimp [h']
           omega
