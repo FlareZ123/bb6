@@ -494,6 +494,8 @@ jobs:
             /tmp/a42-terminal/m0-even-q4-prefix-axioms.log
             /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
             /tmp/a42-terminal/counted-reset-base-axioms.log
+            /tmp/a42-terminal/s1-reset-base-alignment-axioms.log
+            /tmp/a42-terminal/s1-reset-base-run-axioms.log
             /tmp/a42-terminal/counted-reset-odd-base-axioms.log
             /tmp/a42-terminal/reset-odd-canonical-axioms.log
           if-no-files-found: ignore
