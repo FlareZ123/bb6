@@ -527,3 +527,70 @@ original claim time.
    transitive axiom audit. Do not call the run prefix a halting lower bound.
 4. Keep all of these finite/candidate results in `im-results/`, not
    `results/`, until a genuinely publishable mathematical theorem exists.
+
+## 2026-11-13 follow-up checkpoint (05:45Z)
+
+### Root chain advanced to the concrete low-even entry
+
+Agent 1 has now committed
+`im-results/agent1-429-root-entry/RootJunc136To45.lean` on main.
+Its seven ordinary Junc segments compose to exactly 2,562 steps from
+Junc(0,0,136) to Junc(45,0,58), with:
+- a full-tape `Represents` endpoint;
+- an all-prefix strict head bound below the original rightmost mark;
+- conservation of that absolute rightmost mark;
+- all-prefix exclusion of C/01.
+
+The root theorem
+`BB429RootJunc136To45.blank_root_no_fatal_to_junc45` composes this with
+the 13,718-step root chain and gives a **16,280-step** blank-root path
+to Junc(45,0,58), C/01-free at every physical prefix. This is the exact
+prepared entry of Agent 32's concrete r=32 leaf.
+
+I extended `.github/workflows/agent6-429-low42.yml` in commit
+`bb25d8c0d4f61ce0c1063538238baecc33ff29ca` to compile:
+`W4JuncMax`, `ZeroRegularHeadMax`, `PositiveRegularHeadMax`,
+`PhysicalRegularHeadMax`, and `RootJunc136To45`, after the existing
+source dependencies. The workflow now audits the root regular source,
+physical, and blank-root composition declarations and retains the
+fail-closed `sorryAx` gate. It remains manual-only; no dispatcher tool
+is available in this invocation, so it has not been run.
+Updated my own synthesis in
+`im-results/agent48-429-safe/README.md` (commit
+`e24864211a9f1719d8663f9ed9537ca2af9099e0`).
+
+### Concrete r=32 PR separated from generalization
+
+PR #81 now contains only:
+- `.github/workflows/agent32-loweven-r32.yml` (manual-only, no
+  `pull_request` trigger);
+- `LowEvenR32NoFatal.lean`;
+- its candid README.
+
+The 4k generalization is separated into PR #82. PR #81 head at inspection
+was `68b00940f9c9350720162896745e07f194888a4b`. Its README says the
+concrete module compiled and had no `sorryAx` in run 43365025686, but
+the overall workflow failed later in unrelated `Low43Continuation`;
+the isolated manual gate is still pending.
+
+Agent 32 claimed a fresh run at 05:27:51.780Z
+(`429-loweven-r32-root-integration`) and is actively integrating the
+root. I sent a concise proof outline at
+`communications/agent32/20261113T0545Z_agent48-20687-compose-outline.md`:
+instantiate `blank_root_lowEvenR32_no_fatal` at n=16280 and the
+represented Junc(45,0,58) endpoint; split the global prefix at 16,280.
+This yields a 20,687-step blank-root path to Junc(11,0,146), C/01-free
+through every physical prefix. Do not duplicate Agent 32's integration.
+
+Agent 1's handoff is
+`communications/agent48/20261113T053748Z_agent1-root-chain-integration.md`.
+I told Agent 1 I would own the manual workflow integration and asked
+them not to edit that workflow.
+
+### TM63 composition status unchanged
+
+`TM63RootQ4Drain.lean` remains an uncompiled source-proof candidate
+for the exact prefix length `6*4^63 + 42*2^63 + 27487`. Agent 42 owns
+the active terminal workflow (claim 04:36:56Z); I asked them to
+integrate the root/q4 modules rather than editing their workflow.
+Agent 24's q4 endpoint remains pending a full original-import CI pass.
