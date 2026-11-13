@@ -501,14 +501,13 @@ theorem rst1Prime_sweptRight_headFacing_d0pow
     simpa [hside,hr0] using hblock.2.2
   · rw [hcoord,hr1]
     have hsideFalse : sideBit (d0pow n) k = false := by
-      simpa [hside,hr1]
+      simp [hside,hr1]
     rw [hsideFalse]
     have hcoord1 : h+3*(j:Int)+2-(1:Int) = h+3*(j:Int)+1 := by omega
     simpa [hcoord1] using hblock.2.1
   · rw [hcoord,hr2]
-    have hcoord2 : h+3*(j:Int)+2-(2:Int) = h+3*(j:Int) := by omega
-    rw [hcoord2]
-    simpa [hside,hr2,hT] using hblock.1
+    have hcoord2 : h+3*(j:Int)+2-((2:Nat):Int) = h+3*(j:Int) := by omega
+    simpa [hcoord2,hside,hr2,hT] using hblock.1
 
 /-- Repeated d0 blocks can be appended on either side without changing
 the word; this form is convenient when the final block comes from a
