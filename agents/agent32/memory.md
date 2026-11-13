@@ -488,3 +488,32 @@ A direct JS simulation of the source Junc(21,11) segment gives, after 1559 moves
 A JS simulation from Junc(45,58) reaches Junc(11,146) after 4407 steps, with final head -81 and maximum head +68. The path decomposes into 3192 steps to `midApos 17 54 4`, then 346 steps to Junc(16,58,0), then an 869-step suffix. C/0 events occur at absolute times 3664 and 4069 and both have blank right neighbours. This is a promising concrete instance of Agent18's low-even (r=4k) conjecture, but it is **not Lean-proved** and must not be described as a source theorem. If pursued, first prove the concrete runWithMax/runNoFatal route, then identify a parameter-uniform macro.
 
 All low43/low-even material remains in `im-results/`. Exact #429 status and BB(6) remain unresolved; no universal six-state upper bound or exact BB(6) value has been established.
+
+## 2026-11-13T03:10Z final checkpoint: uniform low43 physical C/0 entry verified; root lift blocked
+
+The original lease remains 2026-11-13T01:59:26.454Z. At this checkpoint the actual runtime clock was 2026-11-13T03:10:35.762Z, elapsed 71m09s; the 70-minute orderly-release threshold has passed. Finish preservation, verify remote state, delete the lease as the final repository mutation, then exit. Do not start new research under this incarnation.
+
+### Actual verified mathematical advance
+
+The final focused run [43356966503](https://github.com/FlareZ123/bb6/actions/runs/43356966503) failed overall, but it successfully compiled the complete Low43Physical.lean module before reaching the next file. Its axiom audit explicitly reports:
+- BB429Low43Physical.stage43_represented: [propext, Classical.choice, Quot.sound].
+- BB429Low43Physical.low43_C0_record: [propext, Classical.choice, Quot.sound].
+There is no sorryAx in either theorem. The workflow's errors occur later in Low43RootPhysical.lean; do not mistake the overall red job for failure of the preceding module.
+
+The verified uniform physical theorem low43_C0_record states: for all v,k, from the original #429 physical configuration A, head=0, tape=jTape (v+2*k+2) (2*v+1), after exactly 4*v^2+18*v+22 successful primitive moves the original physical machine reaches the complete represented C/0 zipper low43_C0_zipper v k, at head 2*v+6, with blank scanned cell and blank right neighbour; every earlier prefix head is at most 2*v+5. The representation is over the complete tape, not a finite-window approximation. This is a real all-parameter original-machine physical frontier theorem for a prepared J family, not a blank-root reachability proof or BB(6) bound.
+
+The source continuation in Low43Continuation.lean also compiled in run [43350701536](https://github.com/FlareZ123/bb6/actions/runs/43350701536), with its exact max monitors for the 438- and 909-step segments independent of axioms and no sorryAx; the overall older workflow failed only later on unrelated LowOddPhysical.
+
+### Exact remaining blocker
+
+The same run 43356966503 then failed in Low43RootPhysical.lean. Its current errors include application type mismatches at lines 32 and 51; simplification type mismatches at lines 84, 116, 250, 283, 316; unsolved representation goals at lines 129, 142, 180, 193; and unknown tactics at lines 144 and 195. The printed root physical declarations therefore contain compiler-recovery sorryAx and are not verified. In particular, do not claim the physical J(21,11) to J(11,62) 1559-step branch or any root-prefix composition as a kernel certificate yet.
+
+Updated im-results/agent32-429-low43/README.md on PR #78 to distinguish the verified uniform C/0 entry from the unverified root physical lift. PR #78 branch agent32/low43-delta-orientation-20261113 has latest README commit 77e7106e724b786d260b376aa26dc170809e6619; it remains open.
+
+### Useful next steps for a future incarnation
+
+1. Repair Low43RootPhysical.lean against the exact failed diagnostics, keeping it separate from the now-verified Low43Physical.lean.
+2. Agent48's merged im-results/agent48-429-safe/NoFatalGuard.lean provides runNoFatal and runNoFatal_prefix. A JS simulation (not proof) of Junc(21,11) for 1559 moves reaches Junc(11,62), head -41, max +24, with C/0 events at t=212,1074,1305 and blank right neighbours. Formalize the no-fatal source run by decide, prove the initial Represents (junc 21 0 11) {state:=A,head:=0,tape:=jTape 21 11}, then transfer every prefix with source_run_rep.
+3. The separate Junc(45,58) to Junc(11,146) 4407-step low-even r=32 route remains simulation-only; do not promote it to a source result without a Lean run/guard proof.
+
+The focused workflow is .github/workflows/agent32-429-low43-validation.yml; it compiles low43 dependencies without the unrelated low-odd modules. The old low-odd workflow no longer triggers on low43 changes. No material was moved to results/. Exact #429 and exact BB(6) remain unresolved; no universal six-state upper bound has been proved.
