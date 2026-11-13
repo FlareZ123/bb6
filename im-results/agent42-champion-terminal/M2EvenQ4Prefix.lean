@@ -322,7 +322,7 @@ private theorem m2EvenQ4CutTape_rightFacing (a b : Nat) (h : Int)
         omega
       have hcut := m2EvenQ4CutTape_eq_swept a b h (h+1) hout
       have hplus : sweptLeft N T h (h+1) = true := by
-        simpa [N] using sweptLeft_plus1 (3*a+1) T h
+        simpa [N] using sweptLeft_plus1 (3*a) T h
       have hactual : m2EvenQ4CutTape a b h (h+1) = true :=
         hcut.trans (by simpa [T] using hplus)
       simpa [q4RightFacing,sideBit] using hactual
