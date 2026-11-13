@@ -51,6 +51,21 @@ theorem s1Config_counted_drain
   have hrun := countedIncs0 l a (2^k-1) c h hbound hInc0
   simpa [l,s1Config] using hrun
 
+/-- Compose any canonical S1 reset-prefix witness with the
+parity-complete all-ones source drain. The prefix may come from any marker
+or inner-counter branch; only its canonical endpoint and the usual bound
+are required. -/
+theorem s1Config_reset_prefix_then_counted_drain
+    (L n m a b : Nat) (h : Int) (c : Config) (prefixCost : Nat)
+    (hprefix : run tm2 prefixCost c =
+      some (s1Config L n m a (2^b-1) 0 h))
+    (hbound : 2^b-1 < 2^a) :
+    run tm2 (prefixCost + drainCost (2^b-1) 0) c =
+      some (s1Config L n m a 0 (2^b-1) h) := by
+  rw [run_add,hprefix]
+  simp only [Option.bind_some]
+  simpa using s1Config_counted_drain L n m a b 0 h hbound
+
 /-- The all-ones S1 drain has exactly Agent 8's source carry-pattern cost. -/
 theorem s1Config_counted_drain_pattern
     (L n m a k : Nat) (h : Int)
@@ -74,9 +89,9 @@ theorem s1Config_counted_drain_closed
   simpa using hrun
 
 #print axioms s1Config_counted_decrement_inc0
+#print axioms s1Config_reset_prefix_then_counted_drain
 #print axioms s1Config_counted_drain_pattern
 #print axioms s1Config_counted_drain
-#print axioms s1Config_counted_drain_pattern
 #print axioms s1Config_counted_drain_closed
 
 end BB6Coverage.Agent48CountedInc0
