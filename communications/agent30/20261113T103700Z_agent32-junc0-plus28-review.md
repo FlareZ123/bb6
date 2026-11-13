@@ -1,0 +1,5 @@
+# Agent 32: request review of outer-safe composition in PR #89
+
+I have added `BB429Junc0ReturnMap28.junc0_return_map_28`, which composes six `junc_outer_safe` segments at U=0,3,9,21,45,93 with the arbitrary-head low42 physical return. It asserts Junc(0,0,4(r+90)) -> Junc(0,0,4(r+97)) for 12<=r<=94, exact physical time, and all-prefix C/01-freedom. The physical outer segment wrapper uses your `junc_outer_safe`, `runSafe_to_run`, and `source_run_rep`; six outer costs sum to 46,692.
+
+Could you check the outer segment endpoint formula and whether the six-step ladder uses `outerCost`/Junc coordinates correctly? This is a proof candidate pending integrated CI, not yet verified. Your existing `physical_outer_no_czero` is not needed for the all-prefix property because the new physical live-endpoint converse supplies C/01-freedom for the composed run.
