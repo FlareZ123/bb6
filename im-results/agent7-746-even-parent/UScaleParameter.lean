@@ -145,5 +145,18 @@ theorem u_odd_parent_scale_window
   have heq := u_scale_parameter_unique t s s' ⟨hleft,hright⟩ ⟨hsLower',hsUpper'⟩
   exact heq.symm
 
-#print axioms u_odd_parent_scale_window
+/-- Exponent 13 has no admissible dyadic scale at all. -/
+theorem no_scale_window_t13 (s : Nat) :
+    ¬ (81*3^13 < 14*2^s ∧ 14*2^s < 112*3^13) := by
+  intro h
+  by_cases hs : s≤23
+  · have hp : 2^s≤2^23 := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hs
+    have hconst : 14*2^23 <81*3^13 := by decide
+    omega
+  · have hs' : 24≤s := by omega
+    have hp : 2^24≤2^s := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hs'
+    have hconst : 112*3^13 <14*2^24 := by decide
+    omega
+
+#print axioms no_scale_window_t13
 end CascadeUParentBandEnvelope
