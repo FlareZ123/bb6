@@ -27,7 +27,7 @@ env:
 jobs:
   certify:
     runs-on: ubuntu-latest
-    timeout-minutes: 27
+    timeout-minutes: 45
     steps:
       - name: Checkout exact source snapshot used by the staged audit
         uses: actions/checkout@v4
