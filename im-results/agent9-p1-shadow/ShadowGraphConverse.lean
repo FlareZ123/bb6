@@ -85,6 +85,20 @@ theorem shadow_reach_invariants
   | @step m z t r zp hprev hdiv hnext ih =>
       exact shadow_step_preserves_offset L m z t r zp hL ih.1 ih.2 hdiv hnext
 
+private theorem width_forces_exponent (N L M : Nat)
+    (hLlo : N+8 ≤ L)
+    (hwidth : L+M ≤ 2^(N-M-3)) :
+    4 ≤ N-M-3 := by
+  by_contra hnot
+  have hKle : N-M-3 ≤ 3 := by omega
+  have hpow : 2^(N-M-3) ≤ 8 := by
+    calc
+      2^(N-M-3) ≤ 2^3 :=
+        Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hKle
+      _ = 8 := by norm_num
+  have hlin : N-M-3+11 ≤ L+M := by omega
+  omega
+
 /-- Exact source-coordinate encoding of an abstract node forces a very
     large, 4-divisible original left counter. -/
 theorem shadow_encoded_left_properties
@@ -96,16 +110,7 @@ theorem shadow_encoded_left_properties
     (hcoord : 2^m*(b+4*(L+m-z))=alpha*2^N) :
     440*2^(N-M-4) ≤ b ∧ 12 ≤ b ∧ b%4=0 := by
   let w := L+m-z
-  have hK4 : 4 ≤ N-M-3 := by
-    by_contra hnot
-    have hKle : N-M-3 ≤ 3 := by omega
-    have hpow : 2^(N-M-3) ≤ 8 := by
-      calc
-        2^(N-M-3) ≤ 2^3 :=
-          Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hKle
-        _ = 8 := by norm_num
-    have hlin : N-M-3+11 ≤ L+M := by omega
-    omega
+  have hK4 := width_forces_exponent N L M hLlo hwidth
   have hmN : m ≤ N := by omega
   have henc : b+4*w=alpha*2^(N-m) := by
     have h := unscale_coordinate N m b w alpha hmN (by simpa [w] using hcoord)
@@ -175,6 +180,7 @@ theorem shadow_reach_lifts_to_odd_cone_of_width
       OddCone b0 d0 b d m ∧ 12≤b ∧ b%4=0 ∧ d%2=1 ∧
       28≤alpha ∧ alpha<56*2^m ∧
       2^m*(b+4*(L+m-z))=alpha*2^N := by
+  have hK4 := width_forces_exponent N L M hLlo hwidth
   have hL8 : 8≤L := by omega
   have hw0 : z0+4≤L := by omega
   revert hm
