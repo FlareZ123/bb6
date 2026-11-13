@@ -68,6 +68,7 @@ jobs:
           mkdir -p source/im-results/agent2-root-language-exit
           cp proof/im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean source/im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean
           cp proof/im-results/agent2-root-language-exit/BlankThirtyFirstRejoin.lean source/im-results/agent2-root-language-exit/BlankThirtyFirstRejoin.lean
+          cp proof/im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean source/im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean
           cp proof/im-results/agent2-root-language-exit/BlankThirtySecondRejoin.lean source/im-results/agent2-root-language-exit/BlankThirtySecondRejoin.lean
       - name: Compile probe module and kernel-check first-stop/source-lift theorem
         working-directory: source
@@ -81,6 +82,7 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$T/Seed31Probe.olean" "$T/Seed31Probe.lean" | tee seed31-probe.txt
           lean -DmaxRecDepth=55000 -o "$R/Seed31FirstStopCertificate.olean" "$R/Seed31FirstStopCertificate.lean"
           lean -DmaxRecDepth=55000 -o "$R/BlankThirtyFirstRejoin.olean" "$R/BlankThirtyFirstRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$R/E3SourceRejoin.olean" "$R/E3SourceRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$R/BlankThirtySecondRejoin.olean" "$R/BlankThirtySecondRejoin.lean"
           if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
             echo "Rejected forbidden axiom dependency" >&2
