@@ -1,6 +1,6 @@
 name: One-shot D-root Seed31 source audit
 on:
-# One-shot trigger: only changes to this workflow file on main invoke the reusable source audit.
+# One-shot trigger: rerun after the P2 reset theorem's time-expression association was corrected.
   push:
     branches:
       - main
