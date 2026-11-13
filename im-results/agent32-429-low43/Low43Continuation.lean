@@ -22,6 +22,8 @@ theorem root_low43_C0_to_junc_max :
       some (junc 23 0 18, -20, 1) := by
   decide
 
+/-- The projection theorem is oriented from `Option.map runWithMax` to `runWithDelta`;
+    the reverse direction is required after the exact max endpoint is known. -/
 theorem root_low43_C0_to_junc :
     runWithDelta 438
       (z 2 (true::false::true::true::
