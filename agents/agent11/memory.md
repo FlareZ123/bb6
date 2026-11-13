@@ -554,3 +554,28 @@ Local container/Python shell calls returned tool-level ClientError; CI is the ac
 ## 2026-11-13 07:21Z — next two candidate cylinders
 
 After the four-family source proof was integrated on main, I derived two further algebraic candidates, s=1024w+229 and s=1024w+533. Their exact B-branch six-of-eight chains, sum-zero targets, parent formulas, and candidate high-stop classes are in im-results/agent11-c-low58/M0EvenEvenSumZeroNextCandidates.md. They would add t≡459 (mod 2048) and t≡1067 (mod 2048), raising the odd-t density from 23/512 to 3/64 if both are source-certified. They are NOT Lean-formalized or proven; keep them out of results/ and all proven-claim summaries until a fresh original-source CI passes.
+
+## 2026-11-13 09:00Z checkpoint — two new even-valuation high-stop drafts and corrected y=3 parent fan
+
+Current lease is agent11-gpt6-20261113T0815Z-m0-next-parent-closure, claimed at 2026-11-13T08:14:48.095Z; do not refresh. Measured age at this checkpoint is 45.7 minutes, so continue until the actual 70-minute threshold.
+
+### New source drafts
+
+- im-results/agent11-c-low58/M0EvenEvenSumZeroS229.lean: complete draft excluding the high-stop cylinder for s=1024*w+229. Five exact six-even-right inverse edges send B_s to (114512+510784w,1512+6752w), with sum 8*(14503+64692w). The generic blank_no_sumzero_target reduces this to two odd-right sum-one parents. The L_s parent is excluded by blank_no_L_s_mod8_five; the generic m=0 first-two-edge pullback excludes the high-stop root (29393+131072w,44092+196608w).
+- im-results/agent11-c-low58/M0EvenEvenSumZeroS533.lean: complete draft excluding the high-stop cylinder for s=1024*w+533. Three six-even-right edges lead to (245048+470272w,14072+27008w), sum 8*(32390+62160w). The sum-zero direct parent is odd-right sum one; its bounce parent takes two more six-even-right edges to another odd-right sum-one state. Then the same L_s exclusion and first-two-edge pullback exclude high-stop root (68305+131072w,102460+196608w).
+- im-results/agent11-c-low58/EvenOddThreeX128W.lean: generalized exact y=3 parent classification for (128*w+10,3), retaining both depth n=0 and n=2 parents: (64w+5,32w+3) and (16w-1,56w+3). The second is immediately excluded by odd-right sum two. The first passes through odd/odd val-3 and even/odd-four exact inverses; it is excluded if w is even (final sum two) or w≡5 mod8 (odd/odd low-val then final odd-right sum one). This covers the u=5 residual subfamilies M≡0 mod16 and M≡24 mod64 in r=201+420M, not all M divisible by 8.
+- The older EvenOddThreeX256.lean is superseded by the generalized two-parent file. Agent3's x=266 counterexample (31,115) -> (266,3) is the n=2 parent and is explicitly included; no unique-parent claim is valid for x≡10 mod16.
+
+All three new modules remain drafts until original-source Lean CI succeeds. They are in im-results/, not results/.
+
+### CI and workflow
+
+Updated .github/workflows/agent11-c-diagonal-late.yml to compile EvenOddThreeX128W.lean, M0EvenEvenSumZeroS229.lean, and M0EvenEvenSumZeroS533.lean in dependency order, with sorryAx rejection. Moved the existing EvenOddFourExact.lean compile earlier for the generalized y=3 module.
+
+To trigger the manual workflow without changing the main-branch trigger, created temporary branch agent11-y3-s229-s533-validation and added a branch-specific push trigger to the workflow on that branch. Run 43397606989 was in progress at 09:00:32Z; job 131792292835 had completed checkout and pinned Lean installation and was executing the combined source-check step. Poll the run via https://api.github.com/repos/FlareZ123/bb6/actions/runs?per_page=10; inspect jobs with mcp__GitHub__fetch_workflow_run_jobs. If it fails, use mcp__GitHub__fetch_workflow_job_logs for the failed job only, start with tail 100–200, and fix the first actual Lean error. If it succeeds, verify the #print axioms output has no sorryAx, update the candidate note, and communicate the exact run result. Do not merge/delete the validation branch until the run outcome is known.
+
+Local Lean reconstruction was attempted using the supplied .zip.001/.002; both container and Python runtimes returned concrete ClientError, so no local compile was obtained. CI is the available validation path.
+
+The note im-results/agent11-c-low58/M0EvenEvenSumZeroNextCandidates.md now records the s=229/s=533 drafts and the corrected two-parent y=3 slice. results/ remains unchanged. BB(6) and the full Machine C decision remain unsolved. Agent3 has been notified of all three drafts and asked to run/review the workflow; no response to the latest messages was observed at this checkpoint.
+
+Next priority: obtain and inspect run 43397606989; do not claim any of the new drafts source-certified before a clean run.
