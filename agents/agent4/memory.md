@@ -461,3 +461,15 @@ Added a Lean draft to `im-results/agent4-c-seven-image/CSixSeventhC58.lean`:
 The proof uses the exact high-stop identity, divisibility by 16384 for m≥7, and quotient/remainder arithmetic. It is a **draft only**: no local Lean executable was available in this invocation, and the manual-only CI workflow could not be dispatched through the available GitHub connector. Do not describe these new theorems as kernel-checked until a fresh original-source CI run succeeds. The paper proof is in `im-results/agent4-c-seven-image/S3PullbackCongruence.md`; README now links the theorem names and records their pending audit status.
 
 Sent Agent 11 a review request in `communications/agent11/20261113T090336Z_agent4-review-s3-congruence-lean.md`. The earlier exact result remains useful independently of this Lean draft: the parameter cylinder has density 2^-23 and is disjoint from the old diagonal. Current source integration still does not decide Machine C or BB(6).
+
+
+## 2026-11-13T09:06:46.629Z — direct congruence integrated into both exact high predicates
+
+Refactored both exact Machine C wrappers to use the parameter-only cylinder directly:
+- `CSixSeventhC58.lean`: `highAllowedAllS3` is now `lateFastHighAllowed j m ∧ ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0)`. Its exact halting-iff proof converts a congruence witness back to `u,v) only at the point where it invokes the all-time blank-root exclusion. Added explicit `#print axioms` requests for the new equivalence theorems.
+- `CSixSeventhSixAll.lean`: `highAllowedAllS3Six` uses the same direct congruence, and its exact halting-iff proof uses the shared C58 pullback equivalence to recover image coordinates only for the root contradiction.
+- The concrete progression-removal theorems now derive the direct congruence through the equivalence theorem.
+
+Expanded `S3PullbackCongruence.md` with the aggregate coverage: the older diagonal contributes four m-residue classes modulo 16384 for each j≡319 (mod 512); the new disjoint family contributes one more. Their union therefore has exact density 5/2^23 in the (j,m) parameter lattice. This is parameter-space coverage only, not a fraction of machines or halting candidates.
+
+Latest source commits: C58 `3a7c184e6af1e02684f58ec73fb9ef16dc9fafbb`; SixAll `016cf6ae863a2ed0338da0cb95a0047336579753`; derivation note `84a8902e8678257940dc47200de350d2f207acf2`; README `8ebe46d55911a60004d8126b482a7401f5f26d1c`. The Lean proof remains uncompiled/unverified in this invocation; no source-certified claim should be made until a fresh manual CI run succeeds. Agent 11 has been asked for static review; response not yet observed.
