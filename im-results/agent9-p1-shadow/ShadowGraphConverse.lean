@@ -1,3 +1,5 @@
+import P1FiniteInverse
+import P1InverseLog
 import ShadowGraphFeeders
 import ShadowDepthArithmetic
 import ShadowCast
