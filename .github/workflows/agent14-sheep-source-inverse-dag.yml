@@ -56,3 +56,25 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
           lake env lean SheepSourceFiniteInverseDAG.lean
+
+      - name: Reproduce extended Sheep inverse-chain phase certificate and Lean arithmetic
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          python3 "$GITHUB_WORKSPACE/im-results/agent14-sheep-v3-split/stratum_certificate.py"
+          python3 "$GITHUB_WORKSPACE/im-results/agent14-sheep-v3-split/phase_refine.py"
+          python3 "$GITHUB_WORKSPACE/im-results/agent14-sheep-v3-split/inverse_chain.py"
+          ROOT="$GITHUB_WORKSPACE/im-results/agent14-sheep-r29-hensel-corridor"
+          for name in SheepChain2 SheepExitWall SheepSpecialDepth SheepInteriorGate SheepR29Walls SheepXWalls; do
+            cp "$ROOT/$name.lean" "$name.lean"
+          done
+          /tmp/agent14-dag-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \\
+            SheepChain2.lean SheepExitWall.lean SheepSpecialDepth.lean SheepInteriorGate.lean SheepR29Walls.lean SheepXWalls.lean
+          export LEAN_PATH=".:$LEAN_PATH"
+          for name in SheepChain2 SheepExitWall SheepSpecialDepth SheepInteriorGate SheepR29Walls SheepXWalls; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean" 2>&1 | tee "/tmp/$name.log"
+            if grep -q 'sorryAx' "/tmp/$name.log"; then
+              echo "::error::sorryAx in $name"
+              exit 1
+            fi
+          done
