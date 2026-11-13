@@ -148,6 +148,112 @@ theorem rst1Prime_bridge9_window_after_rightSweep
     have hcell := (rst1PrimeAfterBridge20_right_cells L a b h).2.2
     simpa [bridge9Start] using hcell
 
+/-- The bridge9 output exposes exactly a+1 triples of ones:
+the first a blocks are the untouched tail of the first sweptLeft run,
+and the final block is the source right separator at h+2,h+3,h+4. -/
+theorem rst1Prime_rightSweep_preconditions_after_bridge9
+    (L a b : Nat) (h : Int) :
+    rightOnes (rst1PrimeAfterBridge9 L a b h).tape
+      (h-((3*a+1:Int))+3) (a+1) := by
+  let H0 : Int := h-((3*a+1:Int))
+  let H1 : Int := H0-2
+  let H2 : Int := H1-((3*L+5:Int))
+  let H3 : Int := H2+4
+  let T1 : Int → Bool :=
+    sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h
+  let T2 : Int → Bool := frameAt T1 H0 inside8 bridge8End
+  let T3 : Int → Bool := sweptLeft (3*L+5) T2 H1
+  let C2 : Int → Bool := frameAt T3 H2 inside20 bridge20End
+  let T5 : Int → Bool := sweptRight (L+1) C2 H3
+  change rightOnes (frameAt T5 H0 inside9 bridge9End).tape
+    (H0+3) (a+1)
+  intro i hi
+  have hone (k : Nat) (hk : k≤2) :
+      (frameAt T5 H0 inside9 bridge9End).tape
+        (H0+3+3*(i:Int)+(k:Int)) = true := by
+    let x : Int := H0+3+3*(i:Int)+(k:Int)
+    have hrel9 : x-H0 = 3+3*(i:Int)+(k:Int) := by dsimp [x]; omega
+    have hout9 : inside9 (x-H0) = false := by
+      simp [inside9,inWindow,hrel9]
+      omega
+    rw [frameAt_tape]
+    simp only [hout9]
+    have hafter5 :
+        sweptRight (L+1) C2 H3 x = C2 x := by
+      apply rst1Prime_sweptRight_preserves_after
+      dsimp [x,H0,H3,H2,H1]
+      omega
+    rw [hafter5]
+    have hrel20 : x-H2 = 3*L+10+3*(i:Int)+(k:Int) := by
+      dsimp [x,H0,H3,H2,H1]
+      omega
+    have hout20 : inside20 (x-H2) = false := by
+      simp [inside20,inWindow,hrel20]
+      omega
+    rw [frameAt_tape]
+    simp only [hout20]
+    have hunchanged2 : T3 x = T2 x := by
+      apply sweptLeft_eq_of_gt
+      dsimp [H1,x,H0,H3,H2]
+      omega
+    rw [hunchanged2]
+    have hrel8 : x-H0 = 3+3*(i:Int)+(k:Int) := by
+      dsimp [x]
+      omega
+    have hout8 : inside8 (x-H0) = false := by
+      simp [inside8,inWindow,hrel8]
+      omega
+    rw [frameAt_tape]
+    simp only [hout8]
+    by_cases hia : i<a
+    · have hj : 1+3*i+k < 3*a+1 := by omega
+      have hcoord : x = H0+2+((1+3*i+k:Int)) := by
+        dsimp [x]
+        omega
+      rw [hcoord]
+      exact sweptLeft_one_block (3*a+1)
+        (s1Config L 0 1 a 0 b h).tape h (1+3*i+k) hj
+    · have hieq : i=a := by omega
+      subst i
+      have hgt1 : h+1 < x := by
+        dsimp [x,H0]
+        omega
+      have hunchanged1 :
+          sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h x =
+          (s1Config L 0 1 a 0 b h).tape x := by
+        apply sweptLeft_eq_of_gt
+        exact hgt1
+      rw [hunchanged1]
+      have hcoord : x = h+((k+2:Int)) := by
+        dsimp [x,H0]
+        omega
+      rw [hcoord]
+      have hcell := s1Config_right_cell L 0 1 a 0 b h (k+1)
+      simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
+  have h0 := hone 0 (by omega)
+  have h1 := hone 1 (by omega)
+  have h2 := hone 2 (by omega)
+  exact ⟨h0,by simpa using h1,by simpa using h2⟩
+
+/-- Compose bridge9 with the following a+1-block rightward sweep. -/
+theorem rst1Prime_rightSweep_after_bridge9_run
+    (L a b : Nat) (h : Int) :
+    run tm2
+      (9*a+3+8+3*(3*L+5)+20+3*(L+1)+9+3*(a+1))
+      (s1Config L 0 1 a 0 b h) =
+      some ⟨3,
+        (h-((3*a+1:Int))+3)+3*((a+1):Int),
+        sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape
+          (h-((3*a+1:Int))+3)⟩ := by
+  have hprefix := rst1Prime_bridge9_after_rightSweep L a b h
+  have hpre := rst1Prime_rightSweep_preconditions_after_bridge9 L a b h
+  have hrun := counted_right_sweep (a+1)
+    (rst1PrimeAfterBridge9 L a b h).tape
+    (h-((3*a+1:Int))+3) hpre
+  rw [run_add,hprefix]
+  simp only [Option.bind_some]
+  simpa [rst1PrimeAfterBridge9,frameAt_state,frameAt_head,bridge9End] using hrun
+
 /-- Full original-source configuration after bridge9. -/
 def rst1PrimeAfterBridge9
     (L a b : Nat) (h : Int) : Config :=
