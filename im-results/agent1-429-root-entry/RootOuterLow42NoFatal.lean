@@ -2,7 +2,7 @@ import OuterSafe
 import Low42RootNoFatal
 import BB429PhysicalBridge
 import BB429FinishScanEDelta
-import BB6Bubble
+import BubbleExact
 import Lean.Elab.Tactic.Omega
 
 set_option maxRecDepth 16384
