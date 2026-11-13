@@ -485,8 +485,11 @@ theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
             sideBit (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh) j =
               decide ((2-(j:Int)) ∈ m0OddQ4Bridge27End.marked) := by
           have hjCases : j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 ∨
-              j=5 ∨ j=6 ∨ j=7 ∨ j=8 := by omega
+              j=5 ∨ j=6 ∨ j=7 ∨ j=8 := by
+            dsimp [j]
+            omega
           rcases hjCases with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8
+          all_goals dsimp [j] at *
           all_goals simp_all [markerWord,d0,d1,binDec_three_four,sideBit,
             m0OddQ4Bridge27End]
         exact hside'.trans hmark
