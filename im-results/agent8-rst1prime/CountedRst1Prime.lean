@@ -13,6 +13,7 @@ open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
+open BB6Coverage.Agent6Q4Prefix
 
 /-- A finite interval in head-relative coordinates. -/
 def inWindow (lo hi : Int) : Int → Bool :=
@@ -499,7 +500,7 @@ theorem rst1Prime_sweptRight_headFacing_d0pow
   · rw [hcoord,hr0]
     simpa [hside,hr0] using hblock.2.2
   · rw [hcoord,hr1]
-    have hcoord1 : h+3*(j:Int)+2-1 = h+3*(j:Int)+1 := by omega
+    have hcoord1 : h+3*(j:Int)+2-(1:Int) = h+3*(j:Int)+1 := by omega
     rw [hcoord1]
     simpa [hside,hr1] using hblock.2.1
   · rw [hcoord,hr2]
