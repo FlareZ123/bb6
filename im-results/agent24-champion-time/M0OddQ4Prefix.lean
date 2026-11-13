@@ -728,7 +728,7 @@ theorem m0Odd_root_reset_prefix :
     some (s1Config 3 4 2 (m0OddRootA+m0OddRootB+1)
       (2^m0OddRootB-1) 0 (m0OddRootHead+5+3*m0OddRootB)) := by
   exact m0Odd_reset_prefix_to_s1 m0OddRootA m0OddRootB m0OddRootHead
-    (by norm_num [m0OddRootA])
+    (by dsimp [m0OddRootA]; omega)
 
 #print axioms m0OddQ4Bridge_input_match
 #print axioms m0Odd_q4_prefix_run
