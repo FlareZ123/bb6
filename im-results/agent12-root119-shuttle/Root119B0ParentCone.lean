@@ -610,7 +610,7 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
       have hUeq : u = (⟨.F,b.h-1,setBit b.tape b.h true⟩ : Conf) := by
         rw [next_B_one b (by simpa [hbShape]) hbBit] at hstep2
         exact (Option.some.inj hstep2).symm
-      have huF : u.q = .F := by rw [hUeq]; rfl
+      have huF : u.q = .F := by rw [hUeq]
       obtain ⟨v,hstep3,hvpos,hp3,hdisp3⟩ :=
         parentCone_path_tight_first hp2 hdisp2
       have huZero : u.tape u.h=false := by
@@ -620,11 +620,11 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
             cases hbit : u.tape u.h <;> simp_all
           have hFone : next u =
               some ⟨.D,u.h+1,setBit u.tape u.h false⟩ := by
-            simp [next,huOne]
+            simp [next,huF,huOne]
           rw [hFone] at hstep3
           cases hstep3
           omega
-      have hpat := ih (c := u) (d := d) rfl huZero hdB hd0 hp2 hdisp2
+      have hpat := ih (c := u) (d := d) huF huZero hdB hd0 hp2 hdisp2
       by_cases hi0 : i=0
       · subst i
         have hbtape : b.tape b.h=c.tape (c.h-1) := by
