@@ -45,6 +45,7 @@ const twoWaveIntervals = [];
 const otherIntervals = [];
 const twoWaveShieldAudit = { inputs: 0, outputs: 0 };
 const zeroLeftEvenShieldAudit = { inputs: 0, outputs: 0 };
+const zeroLeftEvenSuccessors = {};
 const twoWaveIncomingAudit = {};
 
 /** @param {number} h */
@@ -341,6 +342,15 @@ for (let time = 0; time < LIMIT; time++) {
         lastIntervalClass = 'cphaseD1';
         const r = previousBZero.cphase.r;
         cphaseRuns[r] = (cphaseRuns[r] || 0) + 1;
+        if (previousBZero.incomingClass === 'zeroLeftEven') {
+          assert.equal(r, 3, 'Zero-left even-run successor is not C-phase D1(r=3)');
+          assert.equal(time - previousBZero.time, 10,
+            'Zero-left even-run successor C-phase D1 duration is not 10');
+          assert.equal(head - previousBZero.head, -2,
+            'Zero-left even-run successor C-phase D1 displacement is not -2');
+          zeroLeftEvenSuccessors.cphaseD1 =
+            (zeroLeftEvenSuccessors.cphaseD1 || 0) + 1;
+        }
       } else if (validZeroLeftEven) {
         assert.equal(previousBZero.noLeft4, true,
           'Zero-left even-run input does not satisfy the 1100 exclusion');
@@ -446,6 +456,7 @@ assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), bZeros - 1);
 assert.equal(cphaseShieldInputs, counts.cphaseD1);
 assert.equal(cphaseShieldOutputs, counts.cphaseD1);
 assert.deepEqual(zeroLeftEvenShieldAudit, { inputs: 18, outputs: 18 });
+assert.deepEqual(zeroLeftEvenSuccessors, { cphaseD1: 18 });
 assert.deepEqual(Object.keys(twoWavePairs).sort(), [
   '176,73', '184,194', '32,109', '32,17', '32,2', '40,15', '40,46', '96,1',
 ]);
@@ -472,6 +483,7 @@ const report = {
   cphaseD1RunLengths: cphaseRuns,
   cphaseD1ShieldAudit: { inputShielded: cphaseShieldInputs, outputShielded: cphaseShieldOutputs },
   zeroLeftEvenShieldAudit,
+  zeroLeftEvenSuccessors,
   residualMacroParameters: residualParameters,
   prefixShieldAudit,
   prefixLeftSixAudit,
