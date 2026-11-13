@@ -599,7 +599,6 @@ theorem m0EvenQ4SuffixTargetLeft (a b : Nat) (ha : 0 < a) :
     simpa [hval] using h
   rw [hadd]
   simp [List.drop,List.append_assoc]
-  omega
 
 theorem m0Even_resetPrefixCost_eq (a b : Nat) :
     resetPrefixCost 0 2 a b = 75+12*a+3*b := by
@@ -608,6 +607,7 @@ theorem m0Even_resetPrefixCost_eq (a b : Nat) :
   have hv : BB6ChampionArithmetic.v2 2 = 1 := by
     simpa [hv1] using v2_of_even 2 (by omega) (by decide)
   simp [resetPrefixCost,hv]
+  omega
 
 #print axioms m0Even_q4_prefix_run
 #print axioms m0Even_q4_prefix_rightShape
