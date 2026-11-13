@@ -291,7 +291,7 @@ private theorem binDec_three_four :
     simpa using binDec_even 1 1 (by decide)
   have h3 : binDec 1 1 = d0 ++ binDec 0 0 := by
     simpa using binDec_odd 0 0 (by decide)
-  simp [h1,h2,h3,binDec_zero]
+  simp [h1,h2,h3,binDec_zero,d1pow]
 
 private theorem m0OddQ4LeftFacingPrefixTrue (a i : Nat)
     (ha : 0 < a) (hi : i ≤ 3*a-3) :
@@ -402,7 +402,10 @@ theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
         omega
       have hin : m0OddQ4Bridge27Inside
           (x-(h-((3*a : Nat):Int))) = true := by
-        simp [m0OddQ4Bridge27Inside,hrel]
+        change decide (-6 ≤ x-(h-((3*a : Nat):Int)) ∧
+          x-(h-((3*a : Nat):Int)) ≤ 3) = true
+        rw [hrel]
+        decide
       have hcut := m0OddQ4CutTape_eq_end_inside a b h x hin
       have hmark :
           decide ((x-(h-((3*a : Nat):Int))) ∈
@@ -412,9 +415,15 @@ theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
         simpa [hrel] using hcut.trans hmark
       simpa [x] using hval.trans htarget.symm
     · let x : Int := h-(i:Int)
+      have hrel : x-(h-((3*a : Nat):Int)) = (3*a:Int)-(i:Int) := by
+        dsimp [x]
+        omega
       have hout : m0OddQ4Bridge27Inside
           (x-(h-((3*a : Nat):Int))) = false := by
-        simp [m0OddQ4Bridge27Inside,x]
+        change decide (-6 ≤ x-(h-((3*a : Nat):Int)) ∧
+          x-(h-((3*a : Nat):Int)) ≤ 3) = false
+        rw [hrel]
+        simp [m0OddQ4Bridge27Inside]
         omega
       have hcut := m0OddQ4CutTape_eq_swept a b h x hout
       have hblock := sweptLeft_block (3*a) i
