@@ -720,3 +720,122 @@ private theorem m1EvenQ4CutTape_eq_source_left
   have hcell := s1Config_left_cell 3 6 1 a 0 b h i
   simpa [T] using hcut.trans (hpres.trans hcell)
 
+
+
+/-- Canonical left-facing tape at the m=1,n=6 even q4 cut.  This is the
+single remaining interface needed to identify the composed Q4 suffix
+frame with the next S1 reset state. -/
+theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
+    ∀ i, m1EvenQ4CutTape a b h (h-(i:Int)) =
+      sideBit (m1EvenQ4LeftFacing a) i := by
+  intro i
+  by_cases hi0 : i = 0
+  · subst i
+    have hshape := m1Even_q4_prefix_rightShape a b h
+    simpa using hshape.1 0 (by omega)
+  · by_cases hsmall : i+1 < 3*a+1
+    · let x : Int := h-(i:Int)
+      let r : Int := (3*a+1 : Nat) - (i:Int)
+      have hrel : x-(h-((3*a+1 : Nat):Int)) = r := by
+        dsimp [x,r]
+        omega
+      have htarget := m1EvenQ4LeftFacingPrefixTrue a i (by omega)
+      by_cases hin : m1EvenQ4Inside r = true
+      · have hcut := m1EvenQ4CutTape_eq_end_inside a b h x
+          (by simpa [hrel] using hin)
+        have hbounds : 2 ≤ r ∧ r ≤ 4 := by
+          have hb : -9 ≤ r ∧ r ≤ 4 := by
+            simpa [m1EvenQ4Inside] using hin
+          constructor <;> omega
+        have hmark : decide (r ∈ m1EvenQ4BridgeEnd.marked) = true := by
+          have hcases : r=2 ∨ r=3 ∨ r=4 := by omega
+          rcases hcases with h2 | h3 | h4
+          · subst r; norm_num [m1EvenQ4BridgeEnd]
+          · subst r; norm_num [m1EvenQ4BridgeEnd]
+          · subst r; norm_num [m1EvenQ4BridgeEnd]
+        have hval : m1EvenQ4CutTape a b h x = true := by
+          simpa [hrel] using hcut.trans hmark
+        exact hval.trans htarget.symm
+      · have hout : m1EvenQ4Inside r = false := by
+          cases hb : m1EvenQ4Inside r <;> simp_all
+        have hcut := m1EvenQ4CutTape_eq_swept a b h x
+          (by simpa [hrel] using hout)
+        have hblock := sweptLeft_block (3*a+1) i
+          (s1Config 3 6 1 a 0 b h).tape h (by omega)
+        have hblock' :
+            sweptLeft (3*a+1) (s1Config 3 6 1 a 0 b h).tape h x = true := by
+          simpa [x] using hblock
+        have hval : m1EvenQ4CutTape a b h x = true := hcut.trans hblock'
+        exact hval.trans htarget.symm
+    · by_cases hieq : i = 3*a
+      · have htarget := m1EvenQ4LeftFacingPrefixTrue a i (by omega)
+        let x : Int := h-(i:Int)
+        have hrel : x-(h-((3*a+1 : Nat):Int)) = 1 := by
+          dsimp [x]
+          omega
+        have hin : m1EvenQ4Inside 1 = true := by
+          norm_num [m1EvenQ4Inside]
+        have hcut := m1EvenQ4CutTape_eq_end_inside a b h x
+          (by simpa [hrel] using hin)
+        have hmark : decide (1 ∈ m1EvenQ4BridgeEnd.marked) = true := by
+          norm_num [m1EvenQ4BridgeEnd]
+        have hval : m1EvenQ4CutTape a b h x = true := by
+          simpa [hrel] using hcut.trans hmark
+        exact hval.trans htarget.symm
+      · by_cases hnext : i = 3*a+1
+        · let x : Int := h-(i:Int)
+          have hrel : x-(h-((3*a+1 : Nat):Int)) = 0 := by
+            dsimp [x]
+            omega
+          have hin : m1EvenQ4Inside 0 = true := by
+            norm_num [m1EvenQ4Inside]
+          have hcut := m1EvenQ4CutTape_eq_end_inside a b h x
+            (by simpa [hrel] using hin)
+          have hmark : decide (0 ∈ m1EvenQ4BridgeEnd.marked) = false := by
+            norm_num [m1EvenQ4BridgeEnd]
+          have htarget : sideBit (m1EvenQ4LeftFacing a) i = false := by
+            subst i
+            have hlist :
+                m1EvenQ4LeftFacing a =
+                  ([true] ++ d1pow a) ++
+                    (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh) := by
+              simp [m1EvenQ4LeftFacing,List.append_assoc]
+            rw [hlist]
+            rw [sideBit_append_after ([true] ++ d1pow a)
+              (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh) (3*a+1)
+              (by simp [d1pow_length])]
+            simp [markerWord,sideBit]
+          have hval : m1EvenQ4CutTape a b h x = false := by
+            simpa [hrel] using hcut.trans hmark
+          exact hval.trans htarget.symm
+        · by_cases hbound : i ≤ 3*a+10
+          · let k : Nat := i-(3*a+1)
+            have hk1 : 1 ≤ k := by dsimp [k]; omega
+            have hk9 : k ≤ 9 := by dsimp [k]; omega
+            let x : Int := h-(i:Int)
+            have hrel : x-(h-((3*a+1 : Nat):Int)) = -(k:Int) := by
+              dsimp [x,k]
+              omega
+            have hin : m1EvenQ4Inside (-(k:Int)) = true := by
+              simp [m1EvenQ4Inside]
+              omega
+            have hcut := m1EvenQ4CutTape_eq_end_inside a b h x
+              (by simpa [hrel] using hin)
+            have hi : i = 3*a+1+k := by
+              dsimp [k]
+              omega
+            have htarget := m1EvenQ4LeftFacingBoundaryBit a k hk1 hk9
+            have htarget' :
+                sideBit (m1EvenQ4LeftFacing a) i =
+                  decide (-(k:Int) ∈ m1EvenQ4BridgeEnd.marked) := by
+              rw [hi]
+              exact htarget
+            have hval :
+                m1EvenQ4CutTape a b h x =
+                  sideBit (m1EvenQ4LeftFacing a) i := by
+              simpa [hrel] using hcut.trans htarget'.symm
+            exact hval
+          · have htail := m1EvenQ4CutTape_eq_source_left a b h i (by omega)
+            have hbits := m1EvenQ4LeftFacingTail a i (by omega)
+            exact htail.trans hbits
+
