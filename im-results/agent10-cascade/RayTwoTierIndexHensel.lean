@@ -1,8 +1,68 @@
-import RayIndexHensel
+import SignedRayPeriod
+import RayDepthHensel
+import RayDepthResidue
 set_option maxHeartbeats 0
 
 namespace CascadeRayTwoTierIndexHensel
-open CascadeRayIndexHensel CascadeRayDepthHensel CascadeRayDepthResidue CascadeRayPeriod
+open CascadeRayDepthHensel CascadeRayDepthResidue CascadeRayPeriod
+
+private theorem pow_two_mod_three (m:Nat) :
+    2^m%3=if m%2=0 then 1 else 2 := by
+  induction m with
+  | zero => decide
+  | succ m ih =>
+      rw [Nat.pow_succ,Nat.mul_mod]
+      by_cases hm:m%2=0
+      · have hs:(m+1)%2=1:=by omega
+        rw [ih,if_pos hm]
+        simp [hs]
+      · have hs:(m+1)%2=0:=by omega
+        rw [ih,if_neg hm]
+        simp [hs]
+
+/-- Independent exact index-shift lemma, reproved from the depth period
+rather than importing the unfinished RayIndexHensel development. -/
+private theorem signedZ_index_shift_digit_mod (n j k t:Nat)
+    (ht:t<3) :
+    signedZ (n+t*depthPeriod (k+1)) j%(3:Int)^(k+2) =
+      (signedZ n j-(3:Int)^(k+1)*
+        (4*((2:Int)^(j+1)-1)*t))%(3:Int)^(k+2) := by
+  have hpowNat:(2:Nat)^(n+t*depthPeriod (k+1)) =
+      (2:Nat)^n*(1+t*3^(k+2)*depthCoeff (k+1)+
+        3^(k+3)*depthError (k+1) t) := by
+    calc
+      (2:Nat)^(n+t*depthPeriod (k+1)) =
+          (2:Nat)^n*(2:Nat)^(t*depthPeriod (k+1)) := by
+            rw [Nat.pow_add]
+      _ = (2:Nat)^n*(1+t*3^(k+2)*depthCoeff (k+1)+
+          3^(k+3)*depthError (k+1) t) := by
+            rw [pow_period_digit (k+1) t ht]
+  have hpowInt:(2:Int)^(n+t*depthPeriod (k+1)) =
+      (2:Int)^n*(1+t*(3:Int)^(k+2)*depthCoeff (k+1)+
+        (3:Int)^(k+3)*depthError (k+1) t) := by
+    exact_mod_cast hpowNat
+  have hlin:(2:Int)*(n+t*depthPeriod (k+1))+3 =
+      (2:Int)*n+3+4*(3:Int)^(k+1)*t := by
+    simp [depthPeriod,Nat.pow_succ]
+    omega
+  have hz:signedZ (n+t*depthPeriod (k+1)) j =
+      signedZ n j-(3:Int)^(k+1)*
+        (4*((2:Int)^(j+1)-1)*t)
+        +(3:Int)^(k+2)*
+          (8*(2:Int)^n*(t*depthCoeff (k+1)+
+            3*depthError (k+1) t)) := by
+    dsimp [signedZ]
+    push_cast
+    rw [hpowInt,hlin]
+    simp only [Int.mul_add,Int.add_mul,Int.mul_sub,Int.sub_mul,
+      Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
+    omega
+  apply (Int.emod_eq_emod_iff_emod_sub_eq_zero).2
+  apply Int.emod_eq_zero_of_dvd
+  refine ⟨8*(2:Int)^n*(t*depthCoeff (k+1)+
+    3*depthError (k+1) t),?_⟩
+  rw [hz]
+  omega
 
 /-- The exact numerator of the second t=1 gate along a canonical even ray.
 If q is the t=1 odd parent of ray(n,j), and w is q's even parent at scale
@@ -111,13 +171,20 @@ private theorem twoTierNumerator_lift_criterion (n j k r : Nat)
 /-- The two-tier lift coefficient is a 3-adic unit at every even depth. -/
 theorem twoTierCoeff_mod_three (j:Nat) (hj:j%2=0) :
     (64*((2:Int)^(j+1)-1))%3=1 := by
-  have h:=indexCoeff_mod_three j hj
+  have hodd:(j+1)%2=1:=by omega
+  have hpNat:(2:Nat)^(j+1)%3=2:=by
+    rw [pow_two_mod_three]
+    simp [hodd]
+  have hpInt:((2:Int)^(j+1))%3=2:=by
+    exact_mod_cast hpNat
+  have hminus:((2:Int)^(j+1)-1)%3=1:=by
+    rw [Int.sub_emod,hpInt]
+    norm_num
   calc
     (64*((2:Int)^(j+1)-1))%3 =
-        (16*(4*((2:Int)^(j+1)-1)))%3:=by ring_nf
-    _=((16:Int)%3)*((4*((2:Int)^(j+1)-1))%3)%3:=by
-      rw [Int.mul_emod]
-    _=1:=by rw [h]; norm_num
+        ((64:Int)%3)*(((2:Int)^(j+1)-1)%3)%3:=by
+          rw [Int.mul_emod]
+    _=1:=by rw [hminus]; norm_num
 
 /-- Every surviving fatal sector starts the second-tier numerator in
 the zero class modulo three. -/
