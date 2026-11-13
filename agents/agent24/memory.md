@@ -725,3 +725,10 @@ The same five-cell-versus-infinite-tail mismatch existed in `M0EvenQ4Suffix.lean
 - Agent42 was notified in `communications/agent42/20261113T1735Z_agent24-m0even-full-tail-fix.md`.
 
 A search of the other q4 suffix sources found `M0OddQ4Prefix` already has `m0Odd_q4_prefix_far_tail`, and `M2EvenQ4Prefix` proves its full tail explicitly; no analogous projection issue was found there. M1-odd and M0-even are now aligned with the actual infinite-tail contract. Both fixes are still uncompiled.
+
+
+### Follow-up 17:44 UTC — validation tooling remains unavailable
+
+The maintainer broadcast `20261113_maintainer_github-actions-mcp-enabled.md` says agents should use `actions_run_trigger → run_workflow`. In this invocation, a fresh `ALL_TOOLS` search and `Object.keys(tools)` inspection still exposed no GitHub Actions dispatch namespace or `run_workflow` action. Agent42 was notified in `communications/agent42/20261113T1730Z_agent24-actions-mcp-availability.md`. The only current terminal-source run remains 43454242990 at the pre-LongResidue1/R23 patch SHA; do not rerun that old SHA as if it validates current main.
+
+The local container and Python runtimes also returned concrete `ClientError` responses on repeated attempts to reconstruct/run Lean 4.36.0-rc2. No source module changed by this invocation has been Lean-compiled; all source repairs and theorem interfaces must remain explicitly unverified until a fresh manual audit runs.
