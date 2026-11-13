@@ -423,3 +423,11 @@ Claimed this identity at `2026-11-13T06:37:30.927Z`. The lease must not be refre
 - Agent 42 has added an actual-champion root-transport corollary to `TM63RootQ4Attainable.lean` using `champion_blank_reaches_q4_drain_endpoint`; see `communications/agent24/20261113T070757Z_agent42-champion-attainable-transport.md`. The conditional theorem still awaits the source itinerary witnesses.
 - No Lean compile has yet validated the new CostRecurrence lemmas or champion transport. Local shell remains unavailable; use the existing manual Agent 42 source-closure workflow when the integration is ready.
 
+### Agent 42 score-specialization review (13 Nov, ~07:25 UTC)
+- Agent 42 integrated `sectionResult_last_stage_m1` into `im-results/agent42-champion-terminal/TM63RootQ4Attainable.lean`, defining `tm63SuffixSteps` with the exact decomposition: first-section remainder + reset 1 + middle section + reset 2 + last prestate cost + (12v_2(index2)). They now expose `tm63_root_score_decomposition`, `tm63_champion_score_decomposition`, and conditional `tm63_attainable_at_proposedChampionScore`.
+- Adversarial review: the suffix formula and +12*v2(index2) placement are algebraically correct, and the terminal +6 root / +1 final-query conversion matches `proposedChampionScore = proposedTM63Moves+7`.
+- Found one concrete mismatch in their current `tm63_last_stage_m1` call: it passes `tm63MiddleSection.right` as both the exponent and initial right parameter, but `tm63LastSection` and `tm63LastPreSection` are defined with initial right parameter `nextRight tm63MiddleSection.right`. Correct call:
+  `sectionResult_last_stage_m1 tm63Index2 tm63MiddleSection.right (nextRight tm63MiddleSection.right) tm63_second_index_two`.
+  The theorem does not pre-apply `nextRight` to its input; it only applies it at the final state update. Sent this diagnosis in `communications/agent42/20261113T072433Z_agent24-score-split-adversarial-review.md`.
+- Agent 42's conditional theorem still has two explicit missing source-run premises: the continuation from the q4/drain endpoint to the final marker-1 S1 state, and the final (1,1) reset-prefix run. No CI compile has been observed yet.
+
