@@ -39,32 +39,6 @@ private theorem outer_segment_physical
   have hwidth : ((w-2*U)-3) = w-(2*U+3) := by omega
   exact ⟨d, hraw, by simpa [hwidth] using hrepD⟩
 
-/-- Composition law for the original physical interpreter. -/
-private theorem physical_run_add (n t : Nat) (c : Config) :
-    run target429 (n+t) c =
-      (run target429 n c).bind (run target429 t) := by
-  induction t with
-  | zero => simp [BB6Coverage.run]
-  | succ t ih =>
-      calc
-        run target429 (n+(t+1)) c =
-            (run target429 (n+t) c).bind (rawStep target429) := by
-              simp [BB6Coverage.run, Nat.add_succ]
-        _ = ((run target429 n c).bind (run target429 t)).bind
-              (rawStep target429) := by rw [ih]
-        _ = (run target429 n c).bind
-              (fun d => (run target429 t d).bind (rawStep target429)) := by
-                simp [Option.bind_assoc]
-        _ = (run target429 n c).bind (run target429 (t+1)) := by rfl
-
-private theorem physical_run_add_of_endpoint
-    (n m : Nat) (c c1 c2 : Config)
-    (h1 : run target429 n c = some c1)
-    (h2 : run target429 m c1 = some c2) :
-    run target429 (n+m) c = some c2 := by
-  rw [physical_run_add, h1]
-  exact h2
-
 /-- Six outer-safe returns reduce Junc(0,0,4(r+90)) to
     Junc(189,0,4r), for 12 <= r <= 94. -/
 private theorem outer_ladder_physical
