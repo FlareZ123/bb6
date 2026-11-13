@@ -17,7 +17,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile source dependencies, exact return, shield transport, and C-phase macro edge
+      - name: Compile source dependencies, exact return, shield transport, and full C-phase sweep-back
         run: |
           set -euo pipefail
           A=im-results/agent42-root119-guard
@@ -58,5 +58,11 @@ jobs:
             exit 1
           fi
           grep -q 'zeroLeftEvenRun_then_cphaseD1.*depends on axioms' "$T/Root119ZeroLeftCPhaseEdge.log"
+          lean -o "$T/Root119ZeroLeftFullReturn.olean" "$T/Root119ZeroLeftFullReturn.lean" 2>&1 | tee "$T/Root119ZeroLeftFullReturn.log"
+          if grep -q 'sorryAx' "$T/Root119ZeroLeftFullReturn.log"; then
+            echo "::error::sorryAx found in full zero-left C-phase sweep-back"
+            exit 1
+          fi
+          grep -q 'BB6Root119.zeroLeftEven_full_return' "$T/Root119ZeroLeftFullReturn.log"
           node "$A/test-root119-zero-left-even-run.cjs"
           node "$A/test-root119-two-wave-census.cjs"
