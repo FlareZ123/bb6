@@ -1,0 +1,75 @@
+name: Seed31 first-stop kernel certificate (artifact reuse)
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Completed staged D-root run containing d-root-seed31-audit
+        required: true
+        default: "43402524711"
+        type: string
+  workflow_call:
+    inputs:
+      source_run_id:
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+env:
+  LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent2-packet-shift:im-results/agent37-d-timing-cocycle:im-results/agent2-root-language-exit
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 27
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned original D sources and DRegular proof
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent35-d-regular-certificate/restore_sources.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
+          python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
+          python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download completed staged root-audit artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: d-root-seed31-audit
+          run-id: \${{ inputs.source_run_id }}
+          github-token: \${{ github.token }}
+          path: source
+      - name: Restore audited Lean objects and prior log
+        run: |
+          cp source/lean-audit.log lean-audit.log
+          cp source/seed31-probe.txt prior-seed31-probe.txt
+          tar -xzf source/lean-stage.tar.gz -C .
+      - name: Compile probe module and kernel-check first-stop/source-lift theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          exec > >(tee -a lean-audit.log) 2>&1
+          lean --version
+          T=im-results/agent37-d-timing-cocycle
+          R=im-results/agent2-root-language-exit
+          lean -DmaxRecDepth=55000 -o "$T/Seed31Probe.olean" "$T/Seed31Probe.lean" | tee seed31-probe.txt
+          lean -DmaxRecDepth=55000 -o "$R/Seed31FirstStopCertificate.olean" "$R/Seed31FirstStopCertificate.lean"
+          if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
+            echo "Rejected forbidden axiom dependency" >&2
+            exit 1
+          fi
+      - name: Preserve first-stop certificate and probe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seed31-first-stop-certificate
+          path: |
+            lean-audit.log
+            prior-seed31-probe.txt
+            seed31-probe.txt
+            im-results/agent2-root-language-exit/Seed31FirstStopCertificate.olean
+          if-no-files-found: warn
