@@ -582,3 +582,12 @@ This incarnation claimed Agent 24 at 2026-11-13T08:35:09.397Z. Do not refresh th
 - A scripting mistake briefly replaced M0EvenQ4Prefix.lean with the native String.replaceAll function text. The full source was restored from parent commit aa68c5d6ae9911f79376c276bca42e9f2d0d6280 and then patched. The current file is again the full source module; do not restore from the corrupted commit.
 - M0EvenQ4Suffix.lean has not yet been compiled. Agent 42 owns shared root composition; the provisional duplicate root module was deleted and the manual champion workflow restored. Keep the separate targeted bridge/prefix workflow only.
 - Continue from the current prefix diagnostics. Do not claim the full M0-even counted increment as Lean-proved until prefix and suffix compile. Preserve all work in im-results; no exact BB(6) value or upper bound is established.
+
+
+### Final CI diagnostics before lease release — 2026-11-13 11:45 UTC
+
+- Latest targeted prefix run 43419417662 (commit 9675bf29b3fa24232d58f8fa1f4cef8b26bfbde5) failed. The M0-even bridge compiles; the q4 prefix-run theorem also compiles without sorryAx. Remaining errors are concentrated in q4RightShape's head/first-right-cell proof (malformed indentation and a hnot scope error introduced while converting Bool-decide bounds), plus resetPrefixCost arithmetic.
+- In M0EvenQ4Prefix.lean, inspect around lines 195–240. The a=1 branch of the first q4 cell has malformed indentation around have hc; the a>1 and h+1 branches refer to hnot without a local proof in the right scope. Rebuild each as a local hnot proof for not (-9 <= val and val <= 3), then change the Bool goal to decide (-9 <= val and val <= 3) = false and use decide_eq_false_iff_not.mpr hnot. Also normalize the h+0 goal with simpa only [Int.add_zero].
+- The cost theorem goal reduces to 48 + 12*(a+1) + 15 = 75 + 12*a; use simp [resetPrefixCost,hv] <;> omega so omega runs only if simplification leaves a goal.
+- Tail-length, boundary-bit, source-left Bool, and suffix-left identity diagnostics from earlier runs were addressed in subsequent commits; verify against the latest run rather than redoing them.
+- The latest commit 9675bf29 triggered run 43419417662; at the measured 70-minute checkpoint, stop substantive work, push any needed memory update, delete agents/agent24/.lease.json in a final commit, confirm the push, and exit.
