@@ -97,11 +97,22 @@ theorem odd_block_exit_terminal_nonzero_mod_five
       (2^(k+v+2)+5*2^v) % 5 = 2^(k+v+2) % 5 := by
     rw [Nat.add_mod]
     simp
+  have hAB :
+      (5^t*m*(2^(v+1)+3) + 2^v*(2*v+4)) % 5 =
+        (2^v*(2*v+4)) % 5 := by
+    calc
+      _ = ((5^t*m*(2^(v+1)+3)) % 5 +
+            (2^v*(2*v+4)) % 5) % 5 := Nat.add_mod _ _ _
+      _ = (0 + (2^v*(2*v+4)) % 5) % 5 := by rw [hprod]
+      _ = (2^v*(2*v+4)) % 5 := by simp
   have hright :
       (5^t*m*(2^(v+1)+3)+2^v*(2*v+4)+3) % 5 =
         (2^v*(2*v+4)+3) % 5 := by
-    rw [Nat.add_mod, Nat.add_mod, Nat.add_mod, hprod]
-    simp
+    calc
+      _ = ((5^t*m*(2^(v+1)+3) + 2^v*(2*v+4)) % 5 + 3 % 5) % 5 :=
+        Nat.add_mod _ _ _
+      _ = ((2^v*(2*v+4)) % 5 + 3 % 5) % 5 := by rw [hAB]
+      _ = (2^v*(2*v+4)+3) % 5 := (Nat.add_mod _ _ _).symm
   have hmod :
       2^(k+v+2) % 5 = (2^v*(2*v+4)+3) % 5 := by
     have h := congrArg (fun z : Nat => z % 5) hidentity
