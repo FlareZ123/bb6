@@ -208,3 +208,12 @@ that the authentic blank-root orbit reaches the q=4 cylinder.
 - Audit the corrected double-B-to-A residue cylinder and close the remaining B-to-E/B-to-B residue classes with source-exact proofs.
 - Integrate the conditional return cylinders into a complete physical blank-root invariant or produce a genuine blank-root witness.
 - Determine all remaining six-state machines and prove the exact maximum primitive step count. Nothing in this dossier supplies a universal BB(6) upper bound or an exact champion score.
+
+
+## Canonical DRegular bridge for the double-B A-marker closure (submitted; CI pending)
+
+EChainDoubleBReentry.lean strengthens the A-marker endpoint theorem with an explicit unary-prefix floor. For every A-marker parameter ka, the returned unary prefix n satisfies n ≥ 2*(4*ka+3)+5, so it is safely in the a≥2 domain of the DRegular source-section representation. The module then converts all three exact A-marker endpoint shapes—including the trailing-false observational case—to a canonical DRegularSource.sourceSection and proves DRegular.Canon.
+
+The resulting double_B_to_A_source_reentry theorem composes the two corrected B packets (suffix p→p+3→p+6) with the marker-A closure and returns a canonical DRegular source section. chain_double_B_to_A_source_reentry additionally composes any E-chain satisfying 1+4*8^d*h=27*t+17; its output is directly suitable for Agent25RootChain.extend_regular, rather than stopping at the intermediate regularEndpoint predicate.
+
+The module is added to the manual agent37-p2-k13.yml kernel audit immediately after EChainDoubleBExit. It is a submitted source-level candidate until that workflow succeeds; no BB(6) conclusion follows from this local closure alone.
