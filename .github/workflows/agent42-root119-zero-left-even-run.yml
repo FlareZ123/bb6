@@ -17,22 +17,30 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile source dependencies and exact return theorem
+      - name: Compile source dependencies, exact return, and shield transport
         run: |
           set -euo pipefail
           A=im-results/agent42-root119-guard
           S=im-results/agent12-root119-shuttle
-          export LEAN_PATH="$A:$S"
+          T=im-results/agent12-root119-left-corridor
+          export LEAN_PATH="$A:$S:$T"
           lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
           lean -o "$S/Root119ShuttleSupport.olean" "$S/Root119ShuttleSupport.lean"
           lean -o "$S/Root119EvenSweep.olean" "$S/Root119EvenSweep.lean"
           lean -o "$S/Root119EvenExtra.olean" "$S/Root119EvenExtra.lean"
-          lean "$A/Root119ZeroLeftEvenRun.lean" 2>&1 | tee "$A/Root119ZeroLeftEvenRun.log"
+          lean -o "$A/Root119ZeroLeftEvenRun.olean" "$A/Root119ZeroLeftEvenRun.lean" 2>&1 | tee "$A/Root119ZeroLeftEvenRun.log"
           if grep -q 'sorryAx' "$A/Root119ZeroLeftEvenRun.log"; then
             echo "::error::sorryAx found in zero-left even-run return proof"
             exit 1
           fi
           grep -q 'zeroLeftEvenRun_exact.*depends on axioms' "$A/Root119ZeroLeftEvenRun.log"
           grep -q 'zeroLeftEvenRun_returns_Bzero.*depends on axioms' "$A/Root119ZeroLeftEvenRun.log"
+          lean "$T/Root119ZeroLeftShield.lean" 2>&1 | tee "$T/Root119ZeroLeftShield.log"
+          if grep -q 'sorryAx' "$T/Root119ZeroLeftShield.log"; then
+            echo "::error::sorryAx found in zero-left shield transport proof"
+            exit 1
+          fi
+          grep -q 'zeroLeftEvenOutTape_preserves_NoLeft1100.*depends on axioms' "$T/Root119ZeroLeftShield.log"
+          grep -q 'zeroLeftEvenRun_exact_with_NoLeft1100.*depends on axioms' "$T/Root119ZeroLeftShield.log"
           node "$A/test-root119-zero-left-even-run.cjs"
           node "$A/test-root119-two-wave-census.cjs"
