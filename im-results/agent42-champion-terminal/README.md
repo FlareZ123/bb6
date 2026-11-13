@@ -101,12 +101,12 @@ with exact primitive costs, ending at the actual `m=1,n=1` pre-drain endpoint co
 
 ## Single root-connected attained-score composition interface (13 November 2026)
 
-`TM63RootQ4Attainable.lean` defines `tm2_attainable_after_root_q4_drain_to_terminal_reset`, composing the exact blank-root q4/drain run with the `champion_attainable_after_s1_countedRst012_m1n1` terminal adapter. Given (i) an exact original-source continuation from `s1Config 3 6 1 71 0 (2^63-1) 223` to `s1Config L 0 1 a 0 b h`, and (ii) the final (m,n)=(1,1) reset-prefix run, its required S0 endpoint is at the **shifted head** `h+5+3*b`, not `h`. The conditional interface therefore uses
+`TM63RootQ4Attainable.lean` defines `tm2_attainable_after_root_q4_drain_to_terminal_reset`, composing the exact blank-root q4/drain run with the `champion_attainable_after_s1_countedRst012_m1n1` terminal adapter. Given (i) an exact original-source continuation from `s1Config 3 6 1 71 0 (2^63-1) 223` to `s1Config L 1 1 a 0 b h`, and (ii) the final (m,n)=(1,1) reset-prefix run, its required S0 endpoint is at the **shifted head** `h+5+3*b`, not `h`. The conditional interface therefore uses
 
 `Attainable (rootQ4DrainMoves + suffixSteps + proposedIncrementCost 1 1 a b + terminalMoves L (a+b+resetDelta 1) + 7)`. The final reset premise is now stated as
 
 ```lean
-run tm2 (resetPrefixCost 1 1 a b) (s1Config L 0 1 a 0 b h) =
+run tm2 (resetPrefixCost 1 1 a b) (s1Config L 1 1 a 0 b h) =
   some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
     (a+b+2) (2^b-1) 0 (h+5+3*b))
 ```
@@ -136,7 +136,7 @@ The arithmetic identities `tm63_root_score_decomposition` and `tm63_champion_sco
 
 `Attainable proposedChampionScore`
 
-Its only machine-specific premises are now explicit: (1) an exact `tm2` run of `tm63SuffixSteps` from the q4/drain endpoint to `s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h`, covering the remaining `Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H` itinerary up to the final reset input; and (2) the exact final `resetPrefixCost 1 1 tm63FinalA tm63FinalB` run to the terminal S0 pre-drain configuration at head `h+5+3*tm63FinalB` (the incoming S1 head is `h`). These are not yet proved, so the theorem is still conditional and does not establish an attained score. The manual workflow includes transitive `sorryAx` checks for this exact-score theorem, but no run has been dispatched.
+Its only machine-specific premises are now explicit: (1) an exact `tm2` run of `tm63SuffixSteps` from the q4/drain endpoint to `s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h`, covering the remaining `Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H` itinerary up to the final reset input; and (2) the exact final `resetPrefixCost 1 1 tm63FinalA tm63FinalB` run to the terminal S0 pre-drain configuration at head `h+5+3*tm63FinalB` (the incoming S1 head is `h`). These are not yet proved, so the theorem is still conditional and does not establish an attained score. The manual workflow includes transitive `sorryAx` checks for this exact-score theorem, but no run has been dispatched.
 
 
 ## CI status (2026-11-13)
@@ -221,3 +221,6 @@ The latest one-shot M0-even audit, [CI 43453286795](https://github.com/FlareZ123
 The temporary path-restricted push trigger used for this single audit has been removed. `.github/workflows/agent24-m0-even-q4-prefix.yml` is restored to `workflow_dispatch` only. No automatic per-commit verification was left enabled.
 
 All of this remains conditional proof engineering in `im-results/`: no full TM63 blank-root itinerary, unconditional champion halt/score, or universal BB(6) upper bound follows.
+
+
+**Final-index correction (13 November 2026):** The last prestate in `tm63LastPreSection = sectionResult (tm63Index2-1) ...` has remaining outer index 1 and marker 1. The original Coq `Rsts2` is `Rsts` to index 2, then `Rst2` to `S1 L 1 m1`, then `Rst1` to `S1 L 0 m0`. Accordingly, both the `hstage` endpoint and the final reset-prefix input are now `s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h`. Earlier `n=0,m=1` signatures were off by one and have been corrected in the root theorem and its M1-even, M0/M2, M1-odd, and first-section wrappers. The final prefix output `s1Config L 0 0` is definitionally the required marker-0 S0 pre-drain context.
