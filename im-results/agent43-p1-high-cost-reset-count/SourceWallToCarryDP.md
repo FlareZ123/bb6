@@ -169,4 +169,4 @@ If the restart state is the child of a depth-t edge, then d₀−1=c+3 is divisi
     I₀ = 98P−49d₀−14(m₀+n)+55
        ≡ 2(3−7(m₀+n))  (mod 2^t).
 
-Thus, whenever 3s≤t for the following depth-two prefix, the divisibility 2^{3s}∣I₀ forces 2^{3s−1}∣(3−7(m₀+n)). Since the terminal suffix bounds put m₀+n<P, the nonzero integer 3−7(m₀+n) has absolute value below 7P<2^{n+3}. This constrains 3s≤n+3 in that case. The remaining case 3s>t is not resolved by this congruence alone; it is a useful split for a sharper restart-prefix argument, not yet a proof of the needed 3s≤n.
+Thus, whenever 3s≤t for the following depth-two prefix, the divisibility 2^{3s}∣I₀ forces 2^{3s−1}∣(3−7(m₀+n)). Since the terminal suffix bounds put m₀+n<P, the nonzero integer 3−7(m₀+n) has absolute value below 7P<2^{n+3}; this gives an explicit congruence restriction on m₀+n but does not by itself close the scaling gap. The remaining case 3s>t is also unresolved. This is a useful arithmetic constraint for a sharper restart-prefix argument, not yet a proof of the needed 3s≤n.
