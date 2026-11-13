@@ -362,10 +362,8 @@ theorem m1Even_q4_reset_prefix_source (a b : Nat) (h : Int) :
   let T2 := d0Sweep b T1 (h+10)
   let g : Int := h+10+(3*b:Int)
   let U := frameAt T2 g q4TailInside q4TailEnd
-  have hshape6 := m1Even_q4_prefix_rightShape a b h
   have hshape8 : BB6Coverage.Agent8Q4Suffix.q4RightShape T h b := by
-    simpa [BB6Coverage.Agent6Q4Prefix.q4RightShape,
-      BB6Coverage.Agent8Q4Suffix.q4RightShape] using hshape6
+    simpa [T] using m1Even_q4_prefix_rightShape a b h
   have hleft := m1Even_q4_prefix_leftFacing a b h
   have htail := m1Even_q4_prefix_far_tail a b h
   have hleftU :
