@@ -190,10 +190,10 @@ theorem tm63_attainable_after_first_section_q4
       run tm63AfterFirstSectionSteps
         (s1Config 3 0 1 tm63FirstSection.exponent 0
           tm63FirstSection.right tm63AfterFirstSectionHead) =
-        some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h))
+        some (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h))
     (hfinal :
       run tm2 (resetPrefixCost 1 1 tm63FinalA tm63FinalB)
-        (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) =
+        (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) =
         some (s0Config (markerWord 0 ++ d0 ++
           binDec tm63Length2 0 ++ lh)
           (tm63FinalA+tm63FinalB+resetDelta 1)
@@ -204,7 +204,7 @@ theorem tm63_attainable_after_first_section_q4
       run tm63AfterM1OddSteps
         (s1Config 3 2 0 tm63AfterM1OddA 0 tm63AfterM1OddB
           tm63AfterM1OddHead) =
-        some (s1Config tm63Length2 0 1 tm63FinalA 0 tm63FinalB h) := by
+        some (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) := by
     rw [tm63AfterM1OddSteps_split_first_section,run_add,
       sectionResult_2_0_source]
     simp only [Option.bind_some]
