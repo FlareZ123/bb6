@@ -574,7 +574,7 @@ theorem oddRst2_q4_counted_source
   obtain ⟨Tq,hprefix,hsuffix⟩ :=
     q4_suffix_run_target_of_prefix L n a b h hn hbound
   have hsum : 71+12*a+3*b = (32+12*a)+(39+3*b) := by omega
-  rw [hsum,run_append,hprefix]
+  rw [hsum,BB6Coverage.Agent8CountedReset.run_add,hprefix]
   simpa using hsuffix
 
 #print axioms q4_suffix_left_word
