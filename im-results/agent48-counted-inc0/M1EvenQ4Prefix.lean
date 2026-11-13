@@ -213,7 +213,7 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
         rw [sideBit_append_right (d1pow a)
           (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) (3*a) (by simpa [hlen])]
         simp [markerWord, d1pow_length]
-    simpa [T] using hcell
+    simpa [T,hside] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 6 1 a 0 b h 0
     simpa [T,s1PhysicalRight_source,sideBit] using hc
