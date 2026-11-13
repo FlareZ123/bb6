@@ -65,3 +65,21 @@ The existing `juncPos_to_midA_delta` theorem reduces each partial Junc return to
 - `J(78,120,2) -> midApos(77,120,2)` in 246 steps (displacement +242). The existing `midApos_w2_exit_delta 77 120` then takes 494 steps to its explicit A/0 boundary, leaving 1,489 steps to `J(0,0,408)`.
 
 Thus the third residual is now an A/0-to-Junc suffix after a known w=2 exit. The first two residuals are w=1 MidA suffixes with u=14 and u=134. The existing `midApos_to_junc0_of_base` theorem handles only u=1, so a uniform w=1/u>1 continuation is the main missing family. Agent 6 has been sent this refined decomposition for possible integration with the `junc_any_v_crossing` and MidA boundary results.
+
+
+## Empirical even-u w=1 MidA law
+
+A raw-table grid test suggests the general boundary formula, for even (u\ge2) and (v\ge1):
+
+```
+runWithDelta (9*u + 6*v + 43) (midApos u v 1)
+  = some (junc 0 (u+1) (2*v+5), -(2*u+2*v+5))
+```
+
+It passed all 200 cases (u=2,4,\ldots,20), (v=1,\ldots,20). The two root instances are exact:
+- `midApos 14 172 1` -> `J(0,15,349)` in 1,201 steps, displacement -377;
+- `midApos 134 60 1` -> `J(0,135,125)` in 1,609 steps, displacement -393.
+
+Together with `juncPos_to_midA_delta`, these give the two 1,551- and 1,735-step w=1 returns in the checkpoint table. The reproducible grid test is [test_even_u_midA_w1.js](test_even_u_midA_w1.js). This remains a conjecture beyond the two concrete finite instances; it is not a general Lean theorem.
+
+Draft PR #91 adds concrete `by decide` proofs for the two root instances, the w=2 A/0 suffix, and the full 103,081-step continuation from the shifted C/0 zipper to J(0,0,408). The manual workflow was extended to compile and axiom-audit the module but has not yet run.
