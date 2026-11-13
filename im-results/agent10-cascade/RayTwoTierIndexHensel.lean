@@ -1,3 +1,4 @@
+import Mathlib
 import SignedRayPeriod
 import RayDepthHensel
 import RayDepthResidue
@@ -43,8 +44,8 @@ private theorem signedZ_index_shift_digit_mod (n j k t:Nat)
     exact_mod_cast hpowNat
   have hlin:(2:Int)*(n+t*depthPeriod (k+1))+3 =
       (2:Int)*n+3+4*(3:Int)^(k+1)*t := by
-    simp [depthPeriod,Nat.pow_succ]
-    omega
+    simp [depthPeriod]
+    ring
   have hz:signedZ (n+t*depthPeriod (k+1)) j =
       signedZ n j-(3:Int)^(k+1)*
         (4*((2:Int)^(j+1)-1)*t)
@@ -54,15 +55,15 @@ private theorem signedZ_index_shift_digit_mod (n j k t:Nat)
     dsimp [signedZ]
     push_cast
     rw [hpowInt,hlin]
-    simp only [Int.mul_add,Int.add_mul,Int.mul_sub,Int.sub_mul,
+    simp only [Int.mul_add,Int.add_mul,Int.mul_sub,
       Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
-    omega
+    ring
   apply (Int.emod_eq_emod_iff_emod_sub_eq_zero).2
   apply Int.emod_eq_zero_of_dvd
   refine ⟨8*(2:Int)^n*(t*depthCoeff (k+1)+
     3*depthError (k+1) t),?_⟩
   rw [hz]
-  omega
+  ring
 
 /-- The exact numerator of the second t=1 gate along a canonical even ray.
 If q is the t=1 odd parent of ray(n,j), and w is q's even parent at scale
@@ -165,7 +166,7 @@ private theorem twoTierNumerator_lift_criterion (n j k r : Nat)
     calc
       _=P*(twoTierNumerator n j/P)-P*(a*r):=by rw [hquot]
       _=P*(twoTierNumerator n j/P-a*r):=by rw [Int.mul_sub]
-  rw [hdiviff,hfactor,hM]
+  rw [hdiviff,hfactor,hM,show (3:Int)*P=P*3 by ring]
   exact Int.mul_dvd_mul_iff_left hp
 
 /-- The two-tier lift coefficient is a 3-adic unit at every even depth. -/
@@ -257,7 +258,8 @@ theorem twoTierIndexResidue_lt (s j k:Nat) :
       have hb:b<3^k:=ih
       change b+d*3^k<3^(k+1)
       rw [Nat.pow_succ]
-      have hmul:=Nat.mul_lt_mul_of_pos_right hd (Nat.pow_pos (by decide : 0<3))
+      have hp0:0<3^k:=Nat.pow_pos (by decide : 0<3)
+      have hmul:=Nat.mul_lt_mul_of_pos_right hd hp0
       omega
 
 /-- The recursively selected second-tier index really has the required
@@ -290,7 +292,7 @@ theorem twoTierIndexResidue_good (s j k:Nat)
       have hshift:s+6*(b+d*3^k)=
           (s+6*b)+d*depthPeriod (k+1):=by
         simp [depthPeriod,Nat.pow_succ]
-        omega
+        ring
       change (3:Int)^(k+2)∣
         twoTierNumerator (s+6*(b+d*3^k)) j
       rw [hshift]
@@ -346,7 +348,7 @@ private theorem twoTierNumerator_period_dvd_iff (s j k h m:Nat) :
     (3:Int)^(k+1)∣twoTierNumerator (s+6*(h+m*3^k)) j ↔
       (3:Int)^(k+1)∣twoTierNumerator (s+6*h) j := by
   rw [Int.dvd_iff_emod_eq_zero,Int.dvd_iff_emod_eq_zero]
-  exact twoTierNumerator_period_mul s j k h m
+  rw [twoTierNumerator_period_mul]
 
 private theorem twoTierNumerator_period_mod_dvd_iff (s j k h:Nat) :
     (3:Int)^(k+1)∣twoTierNumerator (s+6*h) j ↔
@@ -410,12 +412,12 @@ theorem twoTierIndexResidue_iff (s j k h:Nat)
         have ht:(h%pn)/P<3:=
           (Nat.div_lt_iff_lt_mul hp).mpr hjlt
         have hsplit:h%pn=(h%pn)%P+((h%pn)/P)*P:=
-          Nat.mod_add_div' (h%pn) P
+          (Nat.mod_add_div' (h%pn) P).symm
         have hshift:s+6*(h%pn)=
             (s+6*b)+((h%pn)/P)*depthPeriod (k+1):=by
           rw [hsplit,haidx]
           simp [P,depthPeriod,Nat.pow_succ]
-          omega
+          ring
         have hbase:(3:Int)^(k+1)∣twoTierNumerator (s+6*b) j:=
           twoTierIndexResidue_good s j k hs hj
         have hshiftdiv:(3:Int)^(k+2)∣
@@ -461,10 +463,9 @@ theorem twoTierNumerator_parent_identity (n j:Nat) (d q w:Int)
     have hpow:(2:Int)^n=4*(2:Int)^(n-2):=by
       rw [he,Int.pow_add]
       norm_num
-    omega
   dsimp [twoTierNumerator]
-  rw [hz]
-  omega
+  rw [hz,hpow]
+  linear_combination 36*hq + 18*hw
 
 #print axioms twoTierNumerator_shift_digit_mod
 #print axioms twoTierNumerator_lift_criterion
@@ -472,5 +473,38 @@ theorem twoTierNumerator_parent_identity (n j:Nat) (d q w:Int)
 #print axioms twoTierNumerator_sector_mod_three
 #print axioms twoTierIndexResidue_good
 #print axioms twoTierIndexResidue_iff
+/-- The first five exact selector digits for the exceptional 887 ray. -/
+theorem twoTierIndexResidue_5_6_4 :
+    twoTierIndexResidue 5 6 4=66 := by
+  norm_num [twoTierIndexResidue,twoTierNumerator,signedZ,henselDigit]
+
+theorem twoTierIndexResidue_5_6_5 :
+    twoTierIndexResidue 5 6 5=66 := by
+  norm_num [twoTierIndexResidue,twoTierNumerator,signedZ,henselDigit]
+
+/-- On the entire h=147 mod 243 family (equivalently n=887 mod 13122
+inside the s=5 sector), the second-tier numerator has exact 3-adic
+valuation five. -/
+theorem twoTier887_second_gate_exact (h:Nat) (hh:h%243=147) :
+    (3:Int)^5∣twoTierNumerator (5+6*h) 6 ∧
+      ¬(3:Int)^6∣twoTierNumerator (5+6*h) 6 := by
+  have h81:h%3^4=66:=by
+    norm_num at hh ⊢
+    omega
+  have hnot:h%3^5≠66:=by
+    norm_num at hh ⊢
+    omega
+  constructor
+  · apply (twoTierIndexResidue_iff 5 6 4 h (by norm_num) (by norm_num)).2
+    simpa [twoTierIndexResidue_5_6_4] using h81
+  · intro hdiv
+    have heq: h%3^5=twoTierIndexResidue 5 6 5 :=
+      (twoTierIndexResidue_iff 5 6 5 h (by norm_num) (by norm_num)).mp hdiv
+    rw [twoTierIndexResidue_5_6_5] at heq
+    exact hnot heq
+
 #print axioms twoTierNumerator_parent_identity
+#print axioms twoTierIndexResidue_5_6_4
+#print axioms twoTierIndexResidue_5_6_5
+#print axioms twoTier887_second_gate_exact
 end CascadeRayTwoTierIndexHensel
