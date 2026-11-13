@@ -110,16 +110,22 @@ theorem blank_no_L_s31_w13_q275 (d : Nat) :
       have hy : ((22918720+42535296*d)-2)/2 =
           11459359+21267648*d := by omega
       simpa only [hx,hy] using hQ1
-    have hA := (BB6.Agent3.odd_seven_parent_iff
-      (49400008+91682432*d) (11459359+21267648*d)
-      (by omega) (by omega) (by omega) (by omega) (by omega)).mp hQ1'
+    obtain ⟨a7,k7,hprev7,hstep7⟩ :=
+      BB6.Agent3.cReach_parent_of_left_gt5
+        (49400008+91682432*d) (11459359+21267648*d)
+        (by omega) hQ1'
+    have h7eq := (BB6.Agent3.odd_seven_parent_iff
+      a7 k7 (49400008+91682432*d) (11459359+21267648*d)
+      (by omega) (by omega) (by omega) (by omega) (by omega)).mp hstep7
+    have ha7 : a7=30429681+56475040*d := by
+      rcases h7eq with ⟨hsum,hcost⟩
+      omega
+    have hk7 : k7=20944519+38871344*d := by
+      rcases h7eq with ⟨hsum,hcost⟩
+      omega
     have hA' : BB6.Agent3.CReach
         (30429681+56475040*d) (20944519+38871344*d) := by
-      have hx : ((49400008+91682432*d)+(11459359+21267648*d)-5)/2 =
-          30429681+56475040*d := by omega
-      have hy : ((49400008+91682432*d)+3*(11459359+21267648*d)-9)/4 =
-          20944519+38871344*d := by omega
-      simpa only [hx,hy] using hA
+      simpa only [ha7,hk7] using hprev7
     have hB := (BB6.Agent3.oddodd_val3_blank_reach_iff
       (30429681+56475040*d) (20944519+38871344*d)
       (by omega) (by omega) (by omega) (by omega) (by omega)).mp hA'
