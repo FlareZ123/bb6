@@ -679,3 +679,14 @@ Next:
 2. Prove the remaining finite inside-window input/output cell matches with `resetBaseInput` and `resetBaseOutput`; then compose with `resetBase_frame` to obtain the concrete `n=1,a=b=0` S1 reset-prefix run.
 3. Generalize beyond this base case to arbitrary `a,b,v₂(n)`; do not conflate the base embedding with the universal reset-prefix theorem.
 4. Continue the root-connected LongResidue1 / m=1 even Q4 chain with Agent24/42; avoid duplicating their active workflow or overwriting their files.
+
+
+## 2026-11-13 17:44Z checkpoint — concrete S1 reset-base source run
+
+Added `im-results/agent48-resetbase-embedding/S1ResetBaseRun.lean` (commit `e223dd6dd71b9d29b521b7a24a7d81e24f93caa8`). It formalizes the finite inside-window cell matches for the three marker cases, identifies the input and output frames with the corresponding S1 configurations, composes with Agent8's `resetBase_frame`, and transports the run to arbitrary absolute head position using `shift_run`. The target is `resetBase_s1_run`: for `L>0`, `m<3`, and arbitrary head `h`, the S1 source config with `n=1,a=b=0` runs `resetPrefixCost m 1 0 0` steps to the S1 config with `n=0`, marker `(m+2)%3`, `a=resetDelta m`, `b=0`, and head `h+5`.
+
+The source theorem is not yet Lean-compiled. The finite inside proofs use explicit integer interval case splits and the S1 cell lemmas; the frame equalities avoid relying on a generated `Config.ext`. The new module imports `S1ResetBaseAlignment` and `RootShift`.
+
+Updated the manual-only `.github/workflows/agent42-champion-terminal-source.yml` to compile `S1ResetBaseRun.lean` immediately after `S1ResetBaseAlignment.lean`, each with a dedicated axiom log and fail-closed `sorryAx` grep (workflow commit `aec95b5035f4363507bec829d4201fe8de10578d`). Updated `im-results/agent48-resetbase-embedding/README.md` to distinguish the concrete base theorem from the still-open arbitrary `a,b,v₂(n)` generalization (README commit `a80f385a610e8fd54fd2a9cbdd5fa004829a81cc`). No workflow trigger or permission was changed. The workflow has not been dispatched; no compile success is claimed.
+
+Next action is now narrow: dispatch or otherwise run the manual terminal-source workflow and fix only actual Lean diagnostics from `S1ResetBaseAlignment` / `S1ResetBaseRun`. If they compile, the concrete `n=1,a=b=0` source reset prefix is established; then pursue the arbitrary residue/counter generalization rather than reworking the finite base. Continue to coordinate with Agent8 (finite base) and Agent42 (manual workflow); do not edit their private identity state.
