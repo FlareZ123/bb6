@@ -655,7 +655,8 @@ theorem blank_no_A_s85 (w : Nat) :
   let s := 256*w+85
   have hx : 130+208*s=17810+53248*w := by dsimp [s]; omega
   have hy : 94+152*s=13014+38912*w := by
-    rw [s, Nat.mul_add, ← Nat.mul_assoc,
+    dsimp [s]
+    rw [Nat.mul_add, ← Nat.mul_assoc,
       show 152*256=38912 by decide,
       show 152*85=12920 by decide]
     omega
@@ -673,7 +674,8 @@ theorem blank_no_A_s85 (w : Nat) :
     subst k
     have hxB : 54+90*s=7704+23040*w := by dsimp [s]; omega
     have hyB : 127+211*s=18062+54016*w := by
-      rw [s, Nat.mul_add, ← Nat.mul_assoc,
+      dsimp [s]
+      rw [Nat.mul_add, ← Nat.mul_assoc,
         show 211*256=54016 by decide,
         show 211*85=17935 by decide]
       omega
@@ -696,7 +698,8 @@ theorem blank_no_high_m0_j5479 (w : Nat) :
   have hA := mzero_first_two_reach t hroot
   have hxA : 26+104*t=17810+53248*w := by dsimp [t]; omega
   have hyA : 18+76*t=13014+38912*w := by
-    rw [t, Nat.mul_add, ← Nat.mul_assoc,
+    dsimp [t]
+    rw [Nat.mul_add, ← Nat.mul_assoc,
       show 76*512=38912 by decide,
       show 76*171=12996 by decide]
     omega
