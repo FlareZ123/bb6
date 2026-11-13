@@ -126,3 +126,21 @@ counted decrement chain, and the all-ones drain still require a combined
 original-import Lean 4.36.0-rc2 compile with a clean transitive axiom
 audit. The new composition module has been added, but that combined
 workflow has not yet been run; treat the theorem as a proof candidate.
+
+
+## Odd inner-counter reset base: canonical endpoint (new proof candidate)
+
+Added `ResetOddCanonical.lean`. It closes the frame-to-encoder equality left open by `CountedResetOddBase.resetBase_odd_frame` and Agent 24's `ResetOddCanonicalization.md`. The main theorem is
+
+```lean
+resetBase_odd_canonical
+  (L n m : Nat) (h : Int) (hm : m < 3)
+  (hn : n % 2 = 1) (hbound : n < 2^L) :
+  run tm2 (resetPrefixCost m n 0 0)
+    (s1Config L n m 0 0 0 h) =
+    some (s1Config L (n-1) ((m+2)%3) (resetDelta m) 0 0 (h+5))
+```
+
+The proof splits the tape comparison into (i) exact finite output agreement inside the marker-specific reset frame, (ii) a common `binDec (L-1) (n/2) ++ lh` left tail outside the frame, with the single m=2 boundary cell handled by the shared third bit of d0/d1, and (iii) the blank right tail after the nine-cell right stream. It also derives the exact `binDec L (n-1) = d1 ++ binDec (L-1) (n/2)` rewrite and converts the framed result to the canonical shifted S1 configuration.
+
+**Verification boundary:** this is a newly authored Lean proof candidate and has not been compiled. It depends on `CountedResetOddBase.lean`, `CountedResetBase.lean`, `CountedReset.lean`, and their source dependencies. It covers only odd inner n with a=b=0; it does not discharge the general reset-prefix obligation or the root's next n=6 even stage. Keep it in `im-results/` until a source-pinned Lean compile and `sorryAx` audit pass.
