@@ -1,19 +1,60 @@
-name: D blank-root source chain through Seed31 (staged manual audit)
+name: D blank-root source chain (one checkpoint per run)
 on:
   workflow_dispatch:
+    inputs:
+      stage:
+        description: Checkpoint to compile (each stage is a separate workflow run)
+        required: true
+        default: "1"
+        type: choice
+        options: ["1", "2", "3", "4", "5"]
+      source_run_id:
+        description: Previous successful stage run ID (omit for stage 1)
+        required: false
+        default: ""
+        type: string
+      previous_artifact:
+        description: Previous stage artifact name (omit for stage 1)
+        required: false
+        default: "d-root-stage1"
+        type: string
+      source_ref:
+        description: Exact source commit for all Lean objects
+        required: true
+        default: "2da159d86fa86d813bdfbc54e38e3ec9c75b6e69"
+        type: string
   workflow_call:
+    inputs:
+      stage:
+        required: true
+        type: string
+      source_run_id:
+        required: false
+        type: string
+      previous_artifact:
+        required: false
+        type: string
+      source_ref:
+        required: true
+        type: string
 permissions:
   contents: read
+  actions: read
 env:
   LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent2-packet-shift:im-results/agent37-d-timing-cocycle
 jobs:
-  stage1:
-    name: Compile source dependencies through thirteenth reentry
+  audit:
+    name: Compile D-root checkpoint ${{ inputs.stage } (separate run)
     runs-on: ubuntu-latest
     timeout-minutes: 27
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact source snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }
+          path: source
       - name: Restore pinned original D sources and DRegular proof
+        working-directory: source
         run: |
           python3 -m pip install --quiet filelock
           python3 im-results/agent31-cryptid-boundary/unpack.py
@@ -26,8 +67,24 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile source dependencies through thirteenth reentry
+      - name: Download previous checkpoint
+        if: ${{ inputs.stage != '1' }
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.previous_artifact }
+          run-id: ${{ inputs.source_run_id }
+          github-token: ${{ github.token }
+          path: prior-artifact
+      - name: Restore compiled Lean objects and audit
+        if: ${{ inputs.stage != '1' }
+        run: |
+          cp prior-artifact/lean-audit.log source/lean-audit.log
+          tar -xzf prior-artifact/lean-stage.tar.gz -C source
+      - name: Compile selected checkpoint
+        working-directory: source
         shell: bash
+        env:
+          STAGE: ${{ inputs.stage }
         run: |
           set -euo pipefail
           exec > >(tee -a lean-audit.log) 2>&1
@@ -36,305 +93,145 @@ jobs:
           P=im-results/agent32-cryptid-padding
           H=im-results/agent35-d-regular-certificate
           D=im-results/agent2-cryptid-continuity
-          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
-          lean -o "$B/BoundaryExtra.olean" "$B/BoundaryExtra.lean"
           A=im-results/agent25-cryptid-doublezero
           C=im-results/agent35-cryptid-code
-          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump TokenCode SixOnes; do
-            lean -o "$A/$module.olean" "$A/$module.lean"
-          done
-          lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
-          lean -o "$H/DRegular.olean" "$H/DRegular.lean"
-          lean -o "$H/DTransport.olean" "$H/DTransport.lean"
-          lean -o "$H/DObservedTransport.olean" "$H/DObservedTransport.lean"
-          lean -o "$P/Generic.olean" "$P/Generic.lean"
-          lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
-          lean -o "$H/DObsSourceCandidate.olean" "$H/DObsSourceCandidate.lean"
-          for module in BRegularSource AZeroSource EZeroSource AOneSource AWordAlgebra ATwoSource ARegularFull; do
-            lean -o "$D/$module.olean" "$D/$module.lean"
-          done
           S=im-results/agent32-cryptid-third
-          for module in CryptidSix CryptidPairs CryptidTriplePairs; do
-            lean -o "$S/$module.olean" "$S/$module.lean"
-          done
-          for module in ERemaining DRegularShift DRegularFast DRegularDurationShift DRegularTimedShift DRegularSourceShift; do
-            lean -o "$D/$module.olean" "$D/$module.lean"
-          done
-          lean "$D/BlankRegular500.lean"
-          lean -o "$D/BlankRegular8394.olean" "$D/BlankRegular8394.lean"
-          lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean"
-          lean -o "$C/EDouble.olean" "$C/EDouble.lean"
-          lean -o "$P/EAllDouble.olean" "$P/EAllDouble.lean"
-          for module in ExceptionalBRejoin BlankRootRejoin BlankAfterExceptionalRegular ExceptionalARejoin BlankSecondExceptional ExceptionalBGeneral ExceptionalAGeneral; do
-            lean -o "$A/$module.olean" "$A/$module.lean"
-          done
-          lean -o "$D/EExceptionalShift.olean" "$D/EExceptionalShift.lean"
-          lean -o "$A/OriginalRootChain.olean" "$A/OriginalRootChain.lean"
-          for module in BlankThirdExceptional BlankFourthExceptional BlankFifthExceptional BlankSixthExceptional; do
-            lean -o "$A/$module.olean" "$A/$module.lean"
-          done
           R=im-results/agent31-d-exceptional
           P2=im-results/agent2-packet-shift
-          RL=im-results/agent37-root-language-pilot
-          lean -DmaxRecDepth=4096 -o "$P2/E110111Pairs.olean" "$RL/E110111Pairs.lean"
-          G=im-results/agent35-d-sixth-rejoin
-          for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
-            lean -DmaxRecDepth=8192 -o "$D/$module.olean" "$D/$module.lean"
-          done
-          for module in A1100 A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
-            lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
-          done
-          lean -DmaxRecDepth=55000 -o "$P2/AP2PacketBoundarySource.olean" "$P2/AP2PacketBoundarySource.lean"
-          lean -o "$R/ESecondSource.olean" "$R/ESecondSource.lean"
-          lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
-          lean -DmaxRecDepth=4096 -o "$P2/BoundaryBZero.olean" "$P2/BoundaryBZero.lean"
-          lean -DmaxRecDepth=55000 -o "$G/SixthRejoin.olean" "$G/SixthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$G/SeventhRejoin.olean" "$G/SeventhRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$D/BlankEighthRejoin.olean" "$D/BlankEighthRejoin.lean"
-          lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
-          lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
-          lean -o "$P2/PacketP2ResetSource.olean" "$P2/PacketP2ResetSource.lean"
-          lean -o "$P2/P2ResetRegularReentry.olean" "$P2/P2ResetRegularReentry.lean"
-          lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
-          lean -o "$S/CryptidThree.olean" "$S/CryptidThree.lean"
-          lean -o "$P2/PacketSafeExit.olean" "$P2/PacketSafeExit.lean"
-          lean -o "$P2/PacketNormalizeSource.olean" "$P2/PacketNormalizeSource.lean"
-          lean -DmaxRecDepth=55000 -o "$P2/PacketP2ReentryOrE.olean" "$P2/PacketP2ReentryOrE.lean"
-          lean -DmaxRecDepth=4096 -o "$P2/AOnePacketBoundarySource.olean" "$P2/AOnePacketBoundarySource.lean"
-          lean -DmaxRecDepth=4096 -o "$P2/PacketZeroBoundarySource.olean" "$P2/PacketZeroBoundarySource.lean"
-          lean -o "$P2/PacketOneReentry.olean" "$P2/PacketOneReentry.lean"
-          lean -o "$P2/PacketSafeReentry.olean" "$P2/PacketSafeReentry.lean"
-          lean -DmaxRecDepth=55000 -o "$P2/EFirstAPacket.olean" "$P2/EFirstAPacket.lean"
-          V=im-results/agent37-cryptid-model-bridge
-          for module in CrossModelBridge CompleteAReturn WordReturns ShortTripleGate; do
-            lean -o "$V/$module.olean" "$V/$module.lean"
-          done
-          lean -o "$A/EleventhPacketFive.olean" "$A/EleventhPacketFive.lean"
-          lean -DmaxRecDepth=55000 -o "$A/BlankEleventhRejoin.olean" "$A/BlankEleventhRejoin.lean"
           T=im-results/agent37-d-timing-cocycle
-          lean -DmaxRecDepth=8192 -o "$T/TwelfthPacket.olean" "$T/TwelfthPacket.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwelfthRejoin.olean" "$T/BlankTwelfthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankThirteenthRejoin.olean" "$T/BlankThirteenthRejoin.lean"
-          lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturn.olean" "$T/ExceptionalE7ThirdReturn.lean"
-          find im-results -type f -name '*.olean' -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
-      - name: Preserve stage 1 objects and audit
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: d-root-stage1
-          path: |
-            lean-stage.tar.gz
-            lean-audit.log
-          if-no-files-found: warn
-  stage2:
-    name: Compile fourteenth through seventeenth reentries
-    needs: stage1
-    runs-on: ubuntu-latest
-    timeout-minutes: 27
-    steps:
-      - uses: actions/checkout@v4
-      - name: Restore pinned original D sources and DRegular proof
-        run: |
-          python3 -m pip install --quiet filelock
-          python3 im-results/agent31-cryptid-boundary/unpack.py
-          python3 im-results/agent35-d-regular-certificate/restore_sources.py
-          python3 im-results/agent25-cryptid-doublezero/unpack.py
-          python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
-          python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Download previous stage checkpoint
-        uses: actions/download-artifact@v4
-        with:
-          name: d-root-stage1
-          path: stage1
-      - name: Restore compiled Lean objects and audit
-        run: |
-          cp stage1/lean-audit.log lean-audit.log
-          tar -xzf stage1/lean-stage.tar.gz -C .
-      - name: Compile fourteenth through seventeenth reentries
-        shell: bash
-        run: |
-          set -euo pipefail
-          exec > >(tee -a lean-audit.log) 2>&1
-          lean --version
-          T=im-results/agent37-d-timing-cocycle
-          lean -DmaxRecDepth=55000 -o "$T/BlankFourteenthRejoin.olean" "$T/BlankFourteenthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankFifteenthRejoin.olean" "$T/BlankFifteenthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankSixteenthRejoin.olean" "$T/BlankSixteenthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
-          lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
-          find im-results -type f -name '*.olean' -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
-      - name: Preserve stage 2 objects and audit
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: d-root-stage2
-          path: |
-            lean-stage.tar.gz
-            lean-audit.log
-          if-no-files-found: warn
-  stage3:
-    name: Compile eighteenth through twenty-first reentries
-    needs: stage2
-    runs-on: ubuntu-latest
-    timeout-minutes: 27
-    steps:
-      - uses: actions/checkout@v4
-      - name: Restore pinned original D sources and DRegular proof
-        run: |
-          python3 -m pip install --quiet filelock
-          python3 im-results/agent31-cryptid-boundary/unpack.py
-          python3 im-results/agent35-d-regular-certificate/restore_sources.py
-          python3 im-results/agent25-cryptid-doublezero/unpack.py
-          python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
-          python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Download previous stage checkpoint
-        uses: actions/download-artifact@v4
-        with:
-          name: d-root-stage2
-          path: stage2
-      - name: Restore compiled Lean objects and audit
-        run: |
-          cp stage2/lean-audit.log lean-audit.log
-          tar -xzf stage2/lean-stage.tar.gz -C .
-      - name: Compile eighteenth through twenty-first reentries
-        shell: bash
-        run: |
-          set -euo pipefail
-          exec > >(tee -a lean-audit.log) 2>&1
-          lean --version
-          T=im-results/agent37-d-timing-cocycle
-          lean -DmaxRecDepth=55000 -o "$T/BlankEighteenthRejoin.olean" "$T/BlankEighteenthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankNineteenthRejoin.olean" "$T/BlankNineteenthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethEscape.olean" "$T/BlankTwentiethEscape.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethRejoin.olean" "$T/BlankTwentiethRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFirstRejoin.olean" "$T/BlankTwentyFirstRejoin.lean"
-          find im-results -type f -name '*.olean' -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
-      - name: Preserve stage 3 objects and audit
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: d-root-stage3
-          path: |
-            lean-stage.tar.gz
-            lean-audit.log
-          if-no-files-found: warn
-  stage4:
-    name: Compile twenty-second through twenty-sixth reentries
-    needs: stage3
-    runs-on: ubuntu-latest
-    timeout-minutes: 27
-    steps:
-      - uses: actions/checkout@v4
-      - name: Restore pinned original D sources and DRegular proof
-        run: |
-          python3 -m pip install --quiet filelock
-          python3 im-results/agent31-cryptid-boundary/unpack.py
-          python3 im-results/agent35-d-regular-certificate/restore_sources.py
-          python3 im-results/agent25-cryptid-doublezero/unpack.py
-          python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
-          python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Download previous stage checkpoint
-        uses: actions/download-artifact@v4
-        with:
-          name: d-root-stage3
-          path: stage3
-      - name: Restore compiled Lean objects and audit
-        run: |
-          cp stage3/lean-audit.log lean-audit.log
-          tar -xzf stage3/lean-stage.tar.gz -C .
-      - name: Compile twenty-second through twenty-sixth reentries
-        shell: bash
-        run: |
-          set -euo pipefail
-          exec > >(tee -a lean-audit.log) 2>&1
-          lean --version
-          T=im-results/agent37-d-timing-cocycle
-          P2=im-results/agent2-packet-shift
-          lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7SecondSafe.olean" "$T/ExceptionalE7SecondSafe.lean"
-          lean -DmaxRecDepth=55000 -o "$P2/ExceptionalEPacketClosure.olean" "$P2/ExceptionalEPacketClosure.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentySecondRejoin.olean" "$T/BlankTwentySecondRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentyThirdRejoin.olean" "$T/BlankTwentyThirdRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFourthRejoin.olean" "$T/BlankTwentyFourthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFifthRejoin.olean" "$T/BlankTwentyFifthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentySixthRejoin.olean" "$T/BlankTwentySixthRejoin.lean"
-          find im-results -type f -name '*.olean' -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
-      - name: Preserve stage 4 objects and audit
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: d-root-stage4
-          path: |
-            lean-stage.tar.gz
-            lean-audit.log
-          if-no-files-found: warn
-  stage5:
-    name: Compile twenty-seventh through thirtieth reentries and run Seed31 probe
-    needs: stage4
-    runs-on: ubuntu-latest
-    timeout-minutes: 27
-    steps:
-      - uses: actions/checkout@v4
-      - name: Restore pinned original D sources and DRegular proof
-        run: |
-          python3 -m pip install --quiet filelock
-          python3 im-results/agent31-cryptid-boundary/unpack.py
-          python3 im-results/agent35-d-regular-certificate/restore_sources.py
-          python3 im-results/agent25-cryptid-doublezero/unpack.py
-          python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
-          python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Download previous stage checkpoint
-        uses: actions/download-artifact@v4
-        with:
-          name: d-root-stage4
-          path: stage4
-      - name: Restore compiled Lean objects and audit
-        run: |
-          cp stage4/lean-audit.log lean-audit.log
-          tar -xzf stage4/lean-stage.tar.gz -C .
-      - name: Compile thirtieth reentry and evaluate Seed31 probe
-        shell: bash
-        run: |
-          set -euo pipefail
-          exec > >(tee -a lean-audit.log) 2>&1
-          lean --version
-          T=im-results/agent37-d-timing-cocycle
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentySeventhRejoin.olean" "$T/BlankTwentySeventhRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentyEighthRejoin.olean" "$T/BlankTwentyEighthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankTwentyNinthRejoin.olean" "$T/BlankTwentyNinthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/BlankThirtiethRejoin.olean" "$T/BlankThirtiethRejoin.lean"
-          lean -DmaxRecDepth=55000 "$T/Seed31Probe.lean" | tee seed31-probe.txt
+          case "$STAGE" in
+            1)
+              lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+              lean -o "$B/BoundaryExtra.olean" "$B/BoundaryExtra.lean"
+              for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump TokenCode SixOnes; do
+                lean -o "$A/$module.olean" "$A/$module.lean"
+              done
+              lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
+              lean -o "$H/DRegular.olean" "$H/DRegular.lean"
+              lean -o "$H/DTransport.olean" "$H/DTransport.lean"
+              lean -o "$H/DObservedTransport.olean" "$H/DObservedTransport.lean"
+              lean -o "$P/Generic.olean" "$P/Generic.lean"
+              lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
+              lean -o "$H/DObsSourceCandidate.olean" "$H/DObsSourceCandidate.lean"
+              for module in BRegularSource AZeroSource EZeroSource AOneSource AWordAlgebra ATwoSource ARegularFull; do
+                lean -o "$D/$module.olean" "$D/$module.lean"
+              done
+              for module in CryptidSix CryptidPairs CryptidTriplePairs; do
+                lean -o "$S/$module.olean" "$S/$module.lean"
+              done
+              for module in ERemaining DRegularShift DRegularFast DRegularDurationShift DRegularTimedShift DRegularSourceShift; do
+                lean -o "$D/$module.olean" "$D/$module.lean"
+              done
+              lean "$D/BlankRegular500.lean"
+              lean -o "$D/BlankRegular8394.olean" "$D/BlankRegular8394.lean"
+              lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean"
+              lean -o "$C/EDouble.olean" "$C/EDouble.lean"
+              lean -o "$P/EAllDouble.olean" "$P/EAllDouble.lean"
+              for module in ExceptionalBRejoin BlankRootRejoin BlankAfterExceptionalRegular ExceptionalARejoin BlankSecondExceptional ExceptionalBGeneral ExceptionalAGeneral; do
+                lean -o "$A/$module.olean" "$A/$module.lean"
+              done
+              lean -o "$D/EExceptionalShift.olean" "$D/EExceptionalShift.lean"
+              lean -o "$A/OriginalRootChain.olean" "$A/OriginalRootChain.lean"
+              for module in BlankThirdExceptional BlankFourthExceptional BlankFifthExceptional BlankSixthExceptional; do
+                lean -o "$A/$module.olean" "$A/$module.lean"
+              done
+              RL=im-results/agent37-root-language-pilot
+              lean -DmaxRecDepth=4096 -o "$P2/E110111Pairs.olean" "$RL/E110111Pairs.lean"
+              G=im-results/agent35-d-sixth-rejoin
+              for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
+                lean -DmaxRecDepth=8192 -o "$D/$module.olean" "$D/$module.lean"
+              done
+              for module in A1100 A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
+                lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
+              done
+              lean -DmaxRecDepth=55000 -o "$P2/AP2PacketBoundarySource.olean" "$P2/AP2PacketBoundarySource.lean"
+              lean -o "$R/ESecondSource.olean" "$R/ESecondSource.lean"
+              lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
+              lean -DmaxRecDepth=4096 -o "$P2/BoundaryBZero.olean" "$P2/BoundaryBZero.lean"
+              lean -DmaxRecDepth=55000 -o "$G/SixthRejoin.olean" "$G/SixthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$G/SeventhRejoin.olean" "$G/SeventhRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$D/BlankEighthRejoin.olean" "$D/BlankEighthRejoin.lean"
+              lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
+              lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
+              lean -o "$P2/PacketP2ResetSource.olean" "$P2/PacketP2ResetSource.lean"
+              lean -o "$P2/P2ResetRegularReentry.olean" "$P2/P2ResetRegularReentry.lean"
+              lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
+              lean -o "$S/CryptidThree.olean" "$S/CryptidThree.lean"
+              lean -o "$P2/PacketSafeExit.olean" "$P2/PacketSafeExit.lean"
+              lean -o "$P2/PacketNormalizeSource.olean" "$P2/PacketNormalizeSource.lean"
+              lean -DmaxRecDepth=55000 -o "$P2/PacketP2ReentryOrE.olean" "$P2/PacketP2ReentryOrE.lean"
+              lean -DmaxRecDepth=4096 -o "$P2/AOnePacketBoundarySource.olean" "$P2/AOnePacketBoundarySource.lean"
+              lean -DmaxRecDepth=4096 -o "$P2/PacketZeroBoundarySource.olean" "$P2/PacketZeroBoundarySource.lean"
+              lean -o "$P2/PacketOneReentry.olean" "$P2/PacketOneReentry.lean"
+              lean -o "$P2/PacketSafeReentry.olean" "$P2/PacketSafeReentry.lean"
+              lean -DmaxRecDepth=55000 -o "$P2/EFirstAPacket.olean" "$P2/EFirstAPacket.lean"
+              V=im-results/agent37-cryptid-model-bridge
+              for module in CrossModelBridge CompleteAReturn WordReturns ShortTripleGate; do
+                lean -o "$V/$module.olean" "$V/$module.lean"
+              done
+              lean -o "$A/EleventhPacketFive.olean" "$A/EleventhPacketFive.lean"
+              lean -DmaxRecDepth=55000 -o "$A/BlankEleventhRejoin.olean" "$A/BlankEleventhRejoin.lean"
+              lean -DmaxRecDepth=8192 -o "$T/TwelfthPacket.olean" "$T/TwelfthPacket.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwelfthRejoin.olean" "$T/BlankTwelfthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankThirteenthRejoin.olean" "$T/BlankThirteenthRejoin.lean"
+              lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturn.olean" "$T/ExceptionalE7ThirdReturn.lean"
+              ;;
+            2)
+              lean -DmaxRecDepth=55000 -o "$T/BlankFourteenthRejoin.olean" "$T/BlankFourteenthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankFifteenthRejoin.olean" "$T/BlankFifteenthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankSixteenthRejoin.olean" "$T/BlankSixteenthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
+              lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
+              ;;
+            3)
+              lean -DmaxRecDepth=55000 -o "$T/BlankEighteenthRejoin.olean" "$T/BlankEighteenthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankNineteenthRejoin.olean" "$T/BlankNineteenthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethEscape.olean" "$T/BlankTwentiethEscape.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethRejoin.olean" "$T/BlankTwentiethRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFirstRejoin.olean" "$T/BlankTwentyFirstRejoin.lean"
+              ;;
+            4)
+              lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7SecondSafe.olean" "$T/ExceptionalE7SecondSafe.lean"
+              lean -DmaxRecDepth=55000 -o "$P2/ExceptionalEPacketClosure.olean" "$P2/ExceptionalEPacketClosure.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentySecondRejoin.olean" "$T/BlankTwentySecondRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyThirdRejoin.olean" "$T/BlankTwentyThirdRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFourthRejoin.olean" "$T/BlankTwentyFourthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFifthRejoin.olean" "$T/BlankTwentyFifthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentySixthRejoin.olean" "$T/BlankTwentySixthRejoin.lean"
+              ;;
+            5)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentySeventhRejoin.olean" "$T/BlankTwentySeventhRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyEighthRejoin.olean" "$T/BlankTwentyEighthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyNinthRejoin.olean" "$T/BlankTwentyNinthRejoin.lean"
+              lean -DmaxRecDepth=55000 -o "$T/BlankThirtiethRejoin.olean" "$T/BlankThirtiethRejoin.lean"
+              lean -DmaxRecDepth=55000 "$T/Seed31Probe.lean" | tee seed31-probe.txt
+              ;;
+            *)
+              echo "Unknown stage: $STAGE" >&2
+              exit 2
+              ;;
+          esac
           if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
           fi
           find im-results -type f -name '*.olean' -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
-      - name: Preserve stage 5 objects and audit
-        if: always()
+      - name: Preserve intermediate checkpoint
+        if: ${{ always() && inputs.stage != '5' }
+        uses: actions/upload-artifact@v4
+        with:
+          name: d-root-stage${{ inputs.stage }
+          path: |
+            source/lean-stage.tar.gz
+            source/lean-audit.log
+          if-no-files-found: warn
+      - name: Preserve final Seed31 audit
+        if: ${{ always() && inputs.stage == '5' }
         uses: actions/upload-artifact@v4
         with:
           name: d-root-seed31-audit
           path: |
-            lean-stage.tar.gz
-            lean-audit.log
-            seed31-probe.txt
+            source/lean-stage.tar.gz
+            source/lean-audit.log
+            source/seed31-probe.txt
           if-no-files-found: warn
