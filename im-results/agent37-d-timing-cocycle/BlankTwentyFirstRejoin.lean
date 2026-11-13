@@ -18,7 +18,7 @@ def seed21 : DRegular.L :=
 
 /-- Exact endpoint after 12,588 DRegular sections from the twentieth reentry. -/
 def terminal12588 : DRegular.L :=
-  (BB6.DRegularFast.fastRun 12588 seed21).getD ⟨9,0,0⟩
+  (BB6.Agent2Fast64.fastRun 12588 seed21).getD ⟨9,0,0⟩
 
 def t21 : Nat := (terminal12588.a-4)/9
 
@@ -30,7 +30,7 @@ theorem terminal12588_certificate :
     · dsimp [seed21]
       omega
     · simp [seed21]
-  rw [BB6.DRegularFast.fastRun_correct 12588 seed21 hcanon]
+  rw [BB6.Agent2Fast64.fastRun_correct 12588 seed21 hcanon]
   decide
 
 theorem terminal12588_exact :
