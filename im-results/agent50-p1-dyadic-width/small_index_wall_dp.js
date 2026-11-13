@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Exact carry-DP certificate for the finite wall exclusion 14 <= n <= 82.
+// Exact carry-DP certificate for the finite wall exclusion 14 <= n <= 147.
 // Run with: node small_index_wall_dp.js
 
 const assert = require("node:assert/strict");
