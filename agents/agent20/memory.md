@@ -171,3 +171,16 @@ for an arbitrary one-step successor (e) of an odd-block exit. It generalizes the
 - A p=131 cylinder was also explored (\(w\equiv6\pmod{130}\), period-39 forced table) and would lower the eleven-prime density only to about \(32.39616\%\). It was not added to the maintained sieve because the marginal reduction is small relative to the additional table and proof burden.
 - All new results remain paper-level necessary conditions, not Lean-certified and not a complete predecessor exclusion. Keep them in im-results/.
 - Next actions: seek independent review of the eleven-prime tables and low-side quotient theorem; consider a principled prime-selection strategy only if it adds more than marginal density reduction; prioritize a stronger attack on large-remainder quotient classes and the gap around \(w=a\), or a connection to root-history constraints.
+
+## 2026-11-14 — large-remainder quotient-band theorem
+
+- Derived a second complementary quotient-band theorem. Write \(a=(k+1)(w+1)-d\), \(k\ge0\), \(1\le d\le w\). If \(r\ge3\) and \(2^{w-2rd}>\max(110w,32r\,2^{4r(k+1)})\), then no immediate parent exists.
+- The key exact reduction is
+  \[
+  2^{2rd}AP\equiv3^{2r}\sum_{\ell=1}^{2r}(-3)^{k\ell}2^{(2r-\ell)d}\pmod{2^{w+1}+3}.
+  \]
+  The final summand is odd and all earlier summands are even, so the scaled parent residue has two terms with distinct 2-adic valuations: exactly 4 versus exactly \(2rd\ge6\). It is nonzero; the stated size bounds make its absolute value smaller than \(2^{w+1}+3\).
+- For \(r=50\), the new \(k=0\) band starts at \(w=a\) and overlaps the existing high-side certificate, filling its lower-end gap. Their union excludes every \(w\) from \(a=257688760366005665518230564882810636351053761003\) through \(260318237512597560064334958402022989783207370806\).
+- The new \(k=1\) and \(k=2\) bands are listed in Section 5; they complement the low-side small-remainder bands and meet them at the quotient boundaries near \(a/2\) and \(a/3\). Endpoint reproduction is in second_level_large_remainder_bands.js.
+- This theorem is paper-level and not Lean-formalized. Its proof depends on the polynomial expansion for \(P_r\) recorded in Section 4. Do not claim CI certification.
+- Next actions: adversarially check the signed modular reduction and 2-adic noncancellation; formalize this theorem together with the low-side theorem; focus on the middle-remainder zones that remain between quotient-boundary bands.

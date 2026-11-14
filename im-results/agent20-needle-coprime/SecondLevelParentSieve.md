@@ -526,7 +526,7 @@ a=(k+1)(w+1)-d,\qquad k\ge0,\quad 1\le d\le w.
 \]
 Equivalently, in the quotient representation \(a=k(w+1)+s\), we have \(s=w+1-d\).
 
-**Theorem.** Suppose \(r\ge3\), \(a=(k+1)(w+1)-d\), \(k\ge0\), \(1\le d\le w\), and
+**Theorem.** Suppose \(r\ge3\), \(a=(k+1)(w+1)-d\), \(k\ge0\), \(1\le d\le w\), \(w\ge2rd\), and
 \[
 \boxed{
 2^{\,w-2rd}>
@@ -599,16 +599,17 @@ For \(k\ge1\), the large-remainder bands complement the low-side small-remainder
 
 ## 6. What this resolves—and what it does not
 
-For the second-level target, the current exact restrictions are now:
+For the second-level target, the current exact restrictions are:
 
-1. \(w=0\) is impossible.
-2. \(w=1\) is possible only for \(j\equiv2\pmod3\), and then the divisibility condition is met.
-3. \(w=2\) is possible only for \(j\equiv7\pmod{11}\), and then the divisibility condition is met.
-4. \(w=3,4\) are impossible.
-5. The eight-prime cylinders leave exactly \(34.49381\%\) of valuation integers before any other restrictions.
-6. The high-side middle band in the theorem is impossible for every \(r\ge2\) in the prepared family.
+1. \(w=0,3,4,5\) are impossible.
+2. \(w=1\) survives the necessary divisibility condition only when \(j\equiv2\pmod3\).
+3. \(w=2\) survives the necessary divisibility condition only when \(j\equiv7\pmod{11}\).
+4. The eight-prime baseline leaves \(34.49381\%\) of valuation classes; adding \(37,79,101\) gives an eleven-prime density of \(32.63369325\%\).
+5. The separate \(11^2\) refinement lowers the eight-prime density to \(34.23664882\%\) when \(j\equiv10\pmod{11}\); it has not been combined with the eleven-prime sieve.
+6. The high-side certificate plus the \(k=0\) large-remainder theorem exclude a contiguous interval beginning at \(w=a\) for \(r=50\), with the upper endpoint given in Section 5.
+7. Low-side small-remainder and large-remainder quotient bands exclude additional intervals on both sides of the quotient boundaries near \(a/2,a/3,\ldots\).
 
-This does **not** prove that the second-level target has no predecessor: many valuations outside the band survive the modular sieve. It also does not establish an upper bound for BB(6). The next high-value work is to formalize the certificate and band theorem in Lean, then attack the remaining valuation classes rather than re-running the already settled first-level filters.
+These are necessary-condition results for one immediate predecessor only. They do **not** prove that the second-level target has no predecessor: middle-remainder classes outside the bands still survive. They also do not establish an upper bound for BB(6). The next high-value work is to obtain adversarial review and formalize the new parent lemmas in Lean, then attack the remaining middle-remainder zones rather than re-running the already settled first-level filters.
 
 Relevant source components:
 - im-results/agent20-needle-coprime/CancellationParentTwoSource.lean
