@@ -226,9 +226,7 @@ private theorem a_e_four (k v : Nat) (hk : 1 ≤ k) :
       some (sourceScanE (2*k-2)
         (ones 3 ++ pairs01 (v+3) ++ [false, false, true]), -2) := by
   have hleft : 2*k-1 = (2*k-2)+1 := by omega
-  have hv4 : v+4 = 4+v := by omega
-  have hv3 : v+3 = 3+v := by omega
-  rw [hleft, pairs01_snoc, hv4, hv3]
+  rw [hleft, pairs01_snoc]
   simpa [sourceScanE, first_suffix_rewrite, List.append_assoc]
 
 private theorem firstC_to_secondC
@@ -264,7 +262,7 @@ private theorem firstC_to_secondC
       (ones 2 ++ (tens (v+4) ++ [false, true])))
       (z 0 l false (tens (v+5) ++ [false, true]))
       (z 0 (ones (2*v+10) ++ l) false [false, true])
-      0 (2*v+10) h1 h2
+      0 ((2*v+10 : Nat) : Int) h1 h2
   have htotal := compose_delta (4+(2*v+10)) 4
       (z 2 l true (ones 2 ++ (tens (v+4) ++ [false, true])))
       (z 0 (ones (2*v+10) ++ l) false [false, true])
@@ -275,12 +273,14 @@ private theorem firstC_to_secondC
       true :: false :: true :: true :: (ones (2*v+10) ++ l) =
         true :: false :: ones (2*v+4*k+9) ++ pairs01 2 ++ ones 5 := by
     dsimp [l]
-    change [true, false] ++ (ones 2 ++ ones (2*v+10) ++ ones (4*k-3)) ++ pairs01 2 ++ ones 5 =
+    change [true, false] ++ (ones 2 ++ (ones (2*v+10) ++ ones (4*k-3))) ++ pairs01 2 ++ ones 5 =
       [true, false] ++ ones (2*v+4*k+9) ++ pairs01 2 ++ ones 5
     apply congrArg (fun xs : List Bool => [true, false] ++ xs ++ pairs01 2 ++ ones 5)
     calc
-      ones 2 ++ ones (2*v+10) ++ ones (4*k-3) =
-          ones (2+(2*v+10)) ++ ones (4*k-3) := by
+      ones 2 ++ (ones (2*v+10) ++ ones (4*k-3)) =
+          (ones 2 ++ ones (2*v+10)) ++ ones (4*k-3) := by
+            rw [← List.append_assoc]
+      _ = ones (2+(2*v+10)) ++ ones (4*k-3) := by
             rw [← BB429SourceE1Return.ones_add 2 (2*v+10)]
       _ = ones (2+(2*v+10)+(4*k-3)) := by
             rw [← BB429SourceE1Return.ones_add (2+(2*v+10)) (4*k-3)]
@@ -327,7 +327,7 @@ theorem junc_to_firstC (k v : Nat) (hk : 1 ≤ k) :
   have htotal := compose_delta (2*v+6) 4
       (junc (2*k) v 0) (z 0 l false [true])
       (z 2 (true :: true :: true :: true :: l) false [])
-      (2*v+2) 4 hExit' h12
+      ((2*v+2 : Nat) : Int) 4 hExit' h12
   have hleft :
       true :: true :: true :: true :: l =
         ones (2*v+9) ++ pairs01 (2*k-1) ++ ones 5 := by
@@ -337,7 +337,7 @@ theorem junc_to_firstC (k v : Nat) (hk : 1 ≤ k) :
           (ones (2*v+5) ++ pairs01 (2*k-1) ++ ones 5) =
         (ones 4 ++ ones (2*v+5)) ++ pairs01 (2*k-1) ++ ones 5 := by rfl
       _ = ones (4+(2*v+5)) ++ pairs01 (2*k-1) ++ ones 5 := by
-        rw [← BB429SourceE1Return.ones_add]
+        rw [← BB429SourceE1Return.ones_add 4 (2*v+5)]
       _ = ones (2*v+9) ++ pairs01 (2*k-1) ++ ones 5 := by
         congr 1 <;> omega
   have ht : (2*v+6)+4 = 2*v+10 := by omega
@@ -395,11 +395,11 @@ theorem sourceScanE_to_secondC (k v : Nat) (hk : 1 ≤ k) :
   have hrev' :
       runWithDelta (14*k+28) (firstScanE k v) =
         some (revisitC1 k v, 0) := by
-    simpa [firstScanE, revisitC1, hleft, hright, htime] using hrev
+    simpa only [firstScanE, revisitC1, hleft, hright, htime] using hrev
   have hC := firstC_to_secondC k v
   have htotal := compose_delta (14*k+28) (2*v+18)
       (firstScanE k v) (revisitC1 k v) (secondC k v)
-      0 (2*v+14) hrev' hC
+      0 ((2*v+14 : Nat) : Int) hrev' hC
   have ht : (14*k+28)+(2*v+18) = 14*k+2*v+46 := by omega
   simpa [ht] using htotal
 
@@ -435,7 +435,7 @@ theorem secondC_to_sourceScanE (k v : Nat) :
   have h2' :
       runWithDelta n (z 4 (ones n ++ tail) true [true, false, true]) =
         some (secondScanE k v, -(n : Int)) := by
-    simpa [secondScanE, sourceScanE, tail] using h2
+    simpa [secondScanE, sourceScanE, tail, hright] using h2
   have htotal := compose_delta 6 n (secondC k v)
       (z 4 (ones n ++ tail) true [true, false, true])
       (secondScanE k v) (-2) (-(n : Int)) h1 h2'
@@ -454,20 +454,11 @@ theorem final_sourceScanE (k v : Nat) :
   have ht :
       ((crossTime (2*1)+1+(12+2*(2*1))) +
         (juncPosFullTime 2 (2*1+2) + (2*(2*1+6)+27))) = 175 := by
-    norm_num [crossTime, juncPosFullTime]
+    decide
   have htarget :
       junc (2*1+9) 0 (2*(v+2*k+2)-6) =
         junc 11 0 (2*v+4*k-2) := by
-    norm_num
-    apply congrArg (fun w : Nat => junc 11 0 w)
-    by_cases hzero : 2*v+4*k = 0
-    · have hv : v = 0 := by omega
-      have hk : k = 0 := by omega
-      subst v
-      subst k
-      norm_num
-    · have hpos : 2 ≤ 2*v+4*k := by omega
-      omega
+    congr 1 <;> omega
   simpa [secondScanE, ht, htarget] using h
 
 #print axioms final_sourceScanE
@@ -484,10 +475,10 @@ theorem lowEven4k_suffix_delta (k v : Nat) (hk : 1 ≤ k) :
   have h5 := final_sourceScanE k v
   have h12 := compose_delta (2*v+10) (2*v+15)
       (junc (2*k) v 0) (firstC k v) (firstScanE k v)
-      (2*v+6) (-(2*v+11 : Int)) h1 h2
+      ((2*v+6 : Nat) : Int) (-(2*v+11 : Int)) h1 h2
   have h123 := compose_delta (2*v+10+2*v+15) (14*k+28+2*v+18)
       (junc (2*k) v 0) (firstScanE k v) (secondC k v)
-      ((2*v+6)+(-(2*v+11 : Int))) (2*v+14) h12 h3
+      ((2*v+6)+(-(2*v+11 : Int))) ((2*v+14 : Nat) : Int) h12 h3
   have h1234 := compose_delta
       (2*v+10+2*v+15+(14*k+28+2*v+18)) (2*v+4*k+15)
       (junc (2*k) v 0) (secondC k v) (secondScanE k v)
@@ -529,8 +520,11 @@ theorem lowEven4k_prepared_return_delta (N k : Nat) (hk : 1 ≤ k) :
       junc ((N+2*k)-N) (0+2*N) (2*N-2*N) = junc (2*k) (2*N) 0 := by
     congr 1 <;> omega
   rw [hmid, hsuffix]
-  simp only [Option.map_some]
-  congr 1 <;> omega
+  simp only [Option.map_some, Option.some.injEq, Prod.mk.injEq]
+  constructor
+  · rfl
+  · simp only [Int.natCast_mul]
+    omega
 
 #print axioms lowEven4k_prepared_return_delta
 
