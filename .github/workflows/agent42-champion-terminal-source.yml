@@ -503,6 +503,17 @@ jobs:
             exit 1
           fi
 
+          # Agent 8's generalized m=1, n=8k+3 source increment. It reuses
+          # the fixed n=3 bridge only on its read half-line and preserves the
+          # arbitrary binDec(L-3,k) tail by frame.
+          cp "$GITHUB_WORKSPACE/im-results/agent8-rst1prime/M1OddResidueThree.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-odd-residue3-axioms.log
+          lean -o M1OddResidueThree.olean M1OddResidueThree.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-residue3-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-residue3-axioms.log; then
+            echo '::error::sorryAx found in generalized m=1,n=8k+3 q4 source increment'
+            exit 1
+          fi
+
       - name: Upload Lean compiler diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -560,5 +571,6 @@ jobs:
             /tmp/a42-terminal/s1-reset-base-run-axioms.log
             /tmp/a42-terminal/counted-reset-odd-base-axioms.log
             /tmp/a42-terminal/reset-odd-canonical-axioms.log
+            /tmp/a42-terminal/m1-odd-residue3-axioms.log
           if-no-files-found: ignore
           retention-days: 3
