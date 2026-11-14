@@ -4,9 +4,9 @@
 
 const c7 = [6, 3, 1];
 const BASE = 152460;
-const FULL_MODULUS = BigInt(BASE) * 19n * 29n * 61n * 67n;
-const BASELINE = 130689505815n;
-const REFINED = 129806591205n;
+const FULL_MODULUS = BigInt(BASE) * 13n * 19n * 29n * 61n * 67n;
+const BASELINE = 1718539426890n;
+const REFINED = 1707061536960n;
 
 function mod(n, m) {
   return ((n % m) + m) % m;
@@ -17,7 +17,7 @@ function count(j) {
   const c11 = mod(9 - j, 11);
 
   for (let w = 0; w < BASE; w++) {
-    if ((w % 4 === 0 && w % 5 !== 4) || w % 12 === 9) continue;
+    if (w % 4 === 0 && w % 5 !== 4) continue;
     if (w % 3 === 1 && w % 7 !== c7[j % 3]) continue;
     if (w % 10 === 2 && w % 11 !== c11) continue;
 
@@ -30,11 +30,12 @@ function count(j) {
       if (w % 121 !== c121) continue;
     }
 
+    const n13 = w % 12 === 9 ? 1n : 13n;
     const n19 = w % 18 === 3 ? 1n : 19n;
     const n29 = w % 28 === 18 ? 1n : 29n;
     const n61 = w % 60 === 35 ? 1n : 61n;
     const n67 = w % 66 === 5 ? 1n : 67n;
-    total += n19 * n29 * n61 * n67;
+    total += n13 * n19 * n29 * n61 * n67;
   }
   return total;
 }
@@ -49,5 +50,5 @@ for (let j = 0; j < 121; j++) {
 console.log("modulus =", FULL_MODULUS.toString());
 console.log("baseline count =", BASELINE.toString());
 console.log("j = 10 (mod 11) refined count =", REFINED.toString());
-console.log("baseline density = 12984551/34111308");
-console.log("refined density = 141865127/375224388");
+console.log("baseline density = 2189027/5685218");
+console.log("refined density = 35877712/93806097");

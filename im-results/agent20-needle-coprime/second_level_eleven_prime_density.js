@@ -2,18 +2,19 @@
 "use strict";
 const BASE = 900900;
 const c7 = [6, 3, 1];
-const EXPECTED = 216088652661220365n;
-const FULL_MODULUS = BigInt(BASE) * 19n * 29n * 37n * 61n * 67n * 79n * 101n;
+const EXPECTED = 2840708872558889670n;
+const FULL_MODULUS = BigInt(BASE) * 13n * 19n * 29n * 37n * 61n * 67n * 79n * 101n;
 
 function count(j) {
   let total = 0n;
   const c11 = ((9 - j) % 11 + 11) % 11;
   for (let w = 0; w < BASE; w++) {
-    if ((w % 4 === 0 && w % 5 !== 4) || w % 12 === 9) continue;
+    if (w % 4 === 0 && w % 5 !== 4) continue;
     if (w % 3 === 1 && w % 7 !== c7[j % 3]) continue;
     if (w % 10 === 2 && w % 11 !== c11) continue;
 
     const factors = [
+      [w % 12 === 9, 13n],
       [w % 18 === 3, 19n],
       [w % 28 === 18, 29n],
       [w % 36 === 7, 37n],
@@ -34,5 +35,5 @@ for (let j = 0; j < 33; j++) {
 }
 console.log("modulus =", FULL_MODULUS.toString());
 console.log("surviving residues =", EXPECTED.toString());
-console.log("surviving density = 18166343224987/50352213408420");
-console.log("excluded density = 32185870183433/50352213408420");
+console.log("surviving density = 9185206688521/25176106704210");
+console.log("excluded density = 15990900015689/25176106704210");
