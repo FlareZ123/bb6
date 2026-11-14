@@ -526,7 +526,7 @@ theorem m1ZeroOddBase_q4_prefix_data
         dsimp [j, N, hN]
         omega
       rw [hcoord] at houtside
-      simpa [T2] using houtside.trans hblock
+      simpa [T2,m1ZeroOddBaseCutTape] using houtside.trans hblock
   have hscanHead : hN+2+(3*a-1 : Nat) = h := by
     dsimp [N, hN]
     omega
@@ -892,7 +892,7 @@ private theorem m1ZeroOddBase_prefix_head_bound
         simp [m1ZeroOddBridgeInside]
       have hbit := frameAt_tape_inside T1 hN
         m1ZeroOddBridgeInside m1ZeroOddBridgeEnd (hN+2) hin
-      simpa [T2,m1ZeroOddBridgeEnd] using hbit
+      simpa [T2,m1ZeroOddBaseCutTape,m1ZeroOddBridgeEnd] using hbit
     · have hj : i ≤ 3*a-2 := by omega
       let j := 3*a-1-i
       have hj0 : j+1 < N := by dsimp [j,N]; omega
@@ -970,7 +970,9 @@ theorem m1ZeroOdd_residue0_q4_prefix_source
         run tm2 j base = some d →
         m1ZeroOddResidue0Inside a h d.head = true := by
     intro j hj d hd
-    have hlow := m1ZeroOddBase_prefix_head_bound a b h ha j hj d hd
+    have hd' : run tm2 j (s1Config 4 8 1 a 0 b h) = some d := by
+      simpa [base] using hd
+    have hlow := m1ZeroOddBase_prefix_head_bound a b h ha j hj d hd'
     simpa [m1ZeroOddResidue0Inside] using hlow
   have hlift := run_frame tm2
     (m1ZeroOddResidue0Inside a h) background base (64+12*a) hheads
