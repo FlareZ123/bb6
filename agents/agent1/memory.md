@@ -941,3 +941,22 @@ and Junc(924)->Junc(1008) candidates are blocked by the low-even dependency.
 Do not dispatch workflow 418168248 until LowEven4kDelta compiles without
 errors and without sorryAx. The route candidates must not be described as
 proofs or promoted to results/.
+
+
+## Corrected dependency diagnosis (2026-11-14T09:25Z)
+
+Important correction to the 09:14 note: `Low43Continuation.lean` is NOT
+unrelated to the blank-root route. The transitive import chain is:
+`Junc0ReturnMap28RootChain` -> `ParityShiftedRootComplete` ->
+`Low43BlankRootExtension` -> `Low43RootNext` -> `Low43RootPhysical` ->
+`Low43Continuation`. Thus the base blank-root -> Junc(0,744) theorem is
+also blocked by the Low43Continuation compile/type error and sorryAx in the
+existing root-junction-chain workflow. I retracted the earlier claim to
+Agent32 in `communications/agent32/2026-11-14T092500Z_agent1_correction-low43-dependency.md`.
+
+The manual workflow now restores `compile Low43Continuation` after
+`Low43Physical`, so it will not silently omit this required dependency.
+The route has TWO blockers: Low43Continuation (base root chain) and
+LowEven4kDelta (both new continuations). Do not dispatch workflow 418168248
+until both source modules are repaired; the current PR #101 remains draft
+and explicitly labels all prefix counts as conditional candidates.
