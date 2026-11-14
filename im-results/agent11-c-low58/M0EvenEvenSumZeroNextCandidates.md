@@ -266,34 +266,73 @@ This is a source-exact reduction, not a complete exclusion of the y=3 target: th
 
 ## The u=5 residual has a single 2-adic parent-depth boundary
 
-For the remaining `u=5` valuation branch, write
-`r=201+420M`, `5·2^r=129+211s`, and
-`m=32(s−1)−105M`, so the terminal y=3 state is `(16m+10,3)`.
-The source fan's exceptional `a=1` branch would require `m+1=2^n`.
-But exact algebra gives
+For the residual sequence write
+\[
+r=201+420M,\qquad 5\cdot2^r=129+211s,\qquad
+m=32(s-1)-105M,
+\]
+so the terminal y=3 state is \((16m+10,3)\). Put
+\[
+N_M=10669+22155M.
+\]
+A direct expansion gives the exact identity
+\[
+211(m+1)=160\cdot2^r-N_M.
+\]
 
-`211(m+1)=160·2^r−10669−22155M`.
+The valuation argument has a much shorter bound than the 420-periodic 2-adic expansion previously used. The elementary inequality \(M\le2^M\), together with \(1\le2^M\), gives
+\[
+0<N_M\le32824\cdot2^M<65536\cdot2^M=2^{M+16}.
+\]
+Consequently \(d_M=v_2(N_M)\le M+15\). But
+\[
+M+15<206+420M=r+5=v_2(160\cdot2^r).
+\]
+The two terms in the identity therefore have distinct 2-adic valuations, and \(211\) is odd. Hence the exact equality is
+\[
+\boxed{v_2(m+1)=v_2(10669+22155M)=d_M.}
+\]
+This proves the valuation identity and the finite-depth bound without any estimate on the period of a 2-adic expansion.
 
-Since `r≡0 (mod 3)`, `2^r≡1 (mod 7)`; also
-`211≡1`, `160≡6`, `10669≡1`, and `22155≡0` modulo 7.
-Therefore `m+1≡5 (mod 7)`. Powers of 2 modulo 7 are only 1, 2, and 4, so the `a=1` parent is impossible for every residual parameter M. The y=3 source fan therefore consists only of odd-a bounce parents with even bounce depth.
+There is also a direct description of the valuation strata. For every \(K\ge0\),
+\[
+d_M\ge K
+\quad\Longleftrightarrow\quad
+22155M\equiv-10669\pmod{2^K}.
+\]
+Since \(22155\) is odd, this congruence has exactly one residue class modulo \(2^K\). Exactly one of its two lifts modulo \(2^{K+1}\) has valuation \(K+1\); the other has valuation exactly \(K\). Thus the set \(d_M=K\) is one residue class modulo \(2^{K+1}\), of natural density \(2^{-(K+1)}\). The period-420 description of \(-10669/22155\in\mathbb Z_2\) is true but unnecessary for these conclusions.
 
-There is a sharper 2-adic description of how many such depths can occur. Let
-`α = −10669/22155 ∈ ℤ₂`. Since `22155=3·5·7·211` and
-`gcd(10669,22155)=1`, the binary expansion of α is purely periodic with period
-`lcm(ord₃(2),ord₅(2),ord₇(2),ord₂₁₁(2)) = lcm(2,4,3,210)=420`.
-The order `ord₂₁₁(2)=210` follows from
-`2^105≡210`, `2^70≡196`, `2^42≡107`, and `2^30≡171` modulo 211.
-The period has a nonzero bit (indeed α is odd).
+Now use the exact original-source y=3 preimage grammar. For an odd source first counter \(a\ge3\), a predecessor of \((16m+10,3)\) has an even bounce depth \(n=2q\) and satisfies
+\[
+16(m+1)=2^{2q+1}(a+3),\qquad
+2k+a+9+6q=16m+20.
+\]
+Writing \(m+1=2^{d_M}U\) with \(U\) odd, every such parent is therefore
+\[
+\boxed{
+\begin{aligned}
+a_q&=2^{d_M-2q+3}U-3,\\
+k_q&=2^{d_M-2q+2}U(2^{2q+1}-1)-3q-1.
+\end{aligned}}
+\]
+For \(q\ge2\), oddness of \(a_q\) forces \(2^{2q-2}\mid m+1\), so
+\[
+0\le q\le q_{\max}:=\left\lfloor\frac{d_M+2}{2}\right\rfloor
+\le\left\lfloor\frac{M+17}{2}\right\rfloor.
+\]
+The cases \(q=0,1\) already satisfy this bound. Thus each fixed residual parameter has an explicitly bounded, finite parent fan; its maximum possible bounce depth is \(2q_{\max}\), not an unbounded search.
 
-The exact identity can be rewritten in `ℚ₂` as
-`m+1 = (160·2^r − 22155(M−α))/211`.
-Thus, whenever `v₂(M−α)<r+5`, the unequal-valuation rule gives
-`v₂(m+1)=v₂(M−α)`. This inequality holds for every natural M: for M=0, α is odd and the valuation is 0; for M≥1, if `L=⌈log₂(M+1)⌉≤M`, the finite binary expansion of M differs from the 420-periodic expansion of α at some bit no later than `L+419≤M+419<206+420M=r+5`.
+At the deepest divisibility-allowed depth, if that parent is present, its left coordinate simplifies to
+\[
+a_{q_{\max}}=
+\begin{cases}
+2U-3,&d_M\text{ even},\\
+4U-3,&d_M\text{ odd}.
+\end{cases}
+\]
+The corresponding right coordinate is still given by the boxed formula for \(k_q\). This identifies the exact terminal parent in each valuation stratum and is a better starting point for residue-directed exclusion than an unstructured search over all even bounce depths.
 
-Consequently the maximum bounce depth in the y=3 source fan is controlled by the 2-adic distance from M to one fixed rational 2-adic integer. For each fixed K and all sufficiently large M, the condition `v₂(m+1)≥K` is exactly one residue class
-`M≡α (mod 2^K)`; hence this high-depth subfamily has natural density `2^{-K}`.
-This is a structural description of the residual parent fan, not yet a blank-root exclusion or a Lean-formalized theorem. It should make the remaining M-odd and high-v₂ branches amenable to a finite-depth, residue-directed analysis rather than an unstructured search.
+**Status:** this is an algebraic reduction from the exact source grammar, not yet a Lean-certified theorem or a blank-root exclusion of the remaining y=3 parents. The unresolved task is to exclude the finitely many \((a_q,k_q)\) uniformly over the dyadic parameter cylinders, including the cases where the first six-even-right normalization gate is not applicable. The x=314 cylinder and the previously described even-\(M\) slices remain separate source-proof candidates; this depth formula does not certify them.
 
 
 ## New restricted S31 high-stop cylinder (source validation pending)
