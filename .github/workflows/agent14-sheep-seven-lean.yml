@@ -31,3 +31,6 @@ jobs:
           lean -o IndependentGenericHigh.olean IndependentGenericHigh.lean
           lean -o SheepSevenSpecial.olean SheepSevenSpecial.lean
           lean -o SheepSevenGenericHigh.olean SheepSevenGenericHigh.lean
+      - name: Audit exact deepest-node 3-adic unit distribution
+        run: |
+          python3 im-results/agent14-sheep-r29-hensel-corridor/deepest_unit_law.py
