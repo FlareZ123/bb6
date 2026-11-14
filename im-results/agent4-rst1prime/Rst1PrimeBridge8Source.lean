@@ -33,7 +33,7 @@ theorem sweptLeft_eq_of_le
   | succ n ih =>
       have hx' : x ≤ (h-1)-(n:Int) := by omega
       rw [sweptLeft]
-      rw [ih (holeThree T h) (h-1) x hx']
+      rw [ih (holeThree T h) (h-1) hx']
       have hne0 : x ≠ h := by omega
       have hne1 : x ≠ h+1 := by omega
       have hne2 : x ≠ h+2 := by omega
@@ -48,8 +48,7 @@ theorem s1Config_left_after_d1pow
       sideBit (markerWord 1 ++ d0 ++ binDec L 0 ++ lh) (k+1) := by
   have hcast : ((3*a+1+k : Nat) : Int) =
       3*(a:Int)+1+(k:Int) := by
-    push_cast
-    ring
+    omega
   rw [← hcast]
   rw [s1Config_left_cell L 0 1 a 0 b h (3*a+1+k)]
   simp only [s1LeftFacing,binDec_zero]
