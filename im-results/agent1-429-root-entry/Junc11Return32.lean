@@ -31,7 +31,7 @@ private theorem juncPosFullTime_formula (N v : Nat) :
   induction N generalizing v with
   | zero => simp [juncPosFullTime]
   | succ N ih =>
-      simp [juncPosFullTime, ih]
+      simp [juncPosFullTime, ih, Nat.mul_add, Nat.add_mul]
       omega
 
 /-- One complete outer-safe Junc return, now with its exact head
