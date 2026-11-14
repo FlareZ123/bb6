@@ -40,16 +40,25 @@ theorem rst1Prime_firstSweep_preconditions
     by_cases hi0 : i < 3*a
     · have hbit := sideBit_append_left (d1pow a)
         (markerWord 1 ++ d0 ++ d1pow L) i
-        (by rw [d1pow_length]; exact hi0)
-      rw [hbit]
-      exact sideBit_d1pow_true a i hi0
+        (by simpa [d1pow_length] using hi0)
+      calc
+        sideBit (d1pow a ++ markerWord 1 ++ d0 ++ d1pow L) i
+            = sideBit (d1pow a ++ (markerWord 1 ++ d0 ++ d1pow L)) i := by
+                simp only [List.append_assoc]
+        _ = sideBit (d1pow a) i := hbit
+        _ = true := sideBit_d1pow_true a i hi0
     · have heq : i = 3*a := by omega
       subst i
       have hbit := sideBit_append_right (d1pow a)
         (markerWord 1 ++ d0 ++ d1pow L) (3*a)
-        (by rw [d1pow_length])
-      rw [hbit]
-      simp [markerWord,sideBit]
+        (by simp [d1pow_length])
+      calc
+        sideBit (d1pow a ++ markerWord 1 ++ d0 ++ d1pow L) (3*a)
+            = sideBit (d1pow a ++ (markerWord 1 ++ d0 ++ d1pow L)) (3*a) := by
+                simp only [List.append_assoc]
+        _ = sideBit (markerWord 1 ++ d0 ++ d1pow L)
+              (3*a - (d1pow a).length) := hbit
+        _ = true := by simp [d1pow_length, markerWord, sideBit]
   · have hcell := s1Config_right_cell L 0 1 a 0 b h 0
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
 
@@ -65,17 +74,7 @@ theorem rst1Prime_firstSweep_run
   have hrun := counted_left_sweep (3*a+1)
     (s1Config L 0 1 a 0 b h).tape h hleft hright
   have hcost : 3*(3*a+1)=9*a+3 := by omega
-  change run tm2 (9*a+3)
-    (s0Config (markerWord 1 ++ (d0 ++ (binDec L 0 ++ lh))) a 0 b h) =
-      some ⟨3,h-((3*a+1:Int)),
-        sweptLeft (3*a+1)
-          (s0Config (markerWord 1 ++ (d0 ++ (binDec L 0 ++ lh))) a 0 b h).tape h⟩
-  change run tm2 (9*a+3)
-    (s0Config (markerWord 1 ++ (d0 ++ (binDec L 0 ++ lh))) a 0 b h) =
-      some ⟨3,h-((3*a+1:Int)),
-        sweptLeft (3*a+1)
-          (s0Config (markerWord 1 ++ (d0 ++ (binDec L 0 ++ lh))) a 0 b h).tape h⟩ at hrun
-  simpa [hcost] using hrun
+  simpa [s1Config, s0Config, hcost] using hrun
 
 #print axioms rst1Prime_firstSweep_preconditions
 #print axioms rst1Prime_firstSweep_run
