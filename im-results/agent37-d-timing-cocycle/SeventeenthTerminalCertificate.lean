@@ -26,8 +26,12 @@ theorem terminal2656_certificate :
     exact BB6.Agent2SeventeenthArithmetic.terminal2656_half_exact
   rcases BB6.Agent2SeventeenthArithmetic.terminal2656_signature with ⟨hsig, hmod⟩
   constructor
-  · simpa [seed17, t17, hsig] using htotal
-  · simpa [t17] using hmod
+  · change DRegular.run 2656 BB6.Agent2SeventeenthArithmetic.seed17 =
+      some ⟨9 * BB6.Agent2SeventeenthArithmetic.t17 + 7, 7, 1⟩
+    rw [← hsig]
+    exact htotal
+  · change BB6.Agent2SeventeenthArithmetic.t17 % 27 = 6
+    exact hmod
 
 theorem terminal2656_exact :
     DRegular.run 2656 seed17 = some ⟨9 * t17 + 7, 7, 1⟩ :=
