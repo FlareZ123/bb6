@@ -109,7 +109,7 @@ private theorem outer_ladder_924_to_381_183
         outerCost 189 0) = 191493 := by decide
   have hhead : c₇.head = c.head + 741 := by
     rw [hd₇,hd₆,hd₅,hd₄,hd₃,hd₂,hd₁]
-    norm_num
+    omega
   exact ⟨c₇,by simpa [htime] using h₁₂₃₄₅₆₇,by simpa using r₇,hhead⟩
 
 /-- The concrete low-even 4k return J(297,362) -> J(11,954). -/
@@ -123,11 +123,12 @@ private theorem lowEven_181_58_physical
     lowEven4k_prepared_return_physical 181 58 (by omega) c hrep
   have htime :
       juncPosFullTime 181 0 + (16*181+18*58+261) = 136331 := by
-    norm_num [juncPosFullTime_formula]
-  have hwidth : 4*181+4*58-2=954 := by norm_num
+    rw [juncPosFullTime_formula]
+    omega
+  have hwidth : 4*181+4*58-2=954 := by decide
   have hhead' : d.head = c.head - 585 := by
     rw [hhead]
-    norm_num
+    omega
   exact ⟨d,by simpa [htime] using hrun,
     by simpa [hwidth] using hrepD,hhead'⟩
 
@@ -161,7 +162,7 @@ private theorem outer_ladder_11_954_to_445_101
         outerCost 109 0) + outerCost 221 0) = 261433 := by decide
   have hhead : c₅.head = c.head + 853 := by
     rw [hd₅,hd₄,hd₃,hd₂,hd₁]
-    norm_num
+    omega
   exact ⟨c₅,by simpa [htime] using h₁₂₃₄₅,by simpa using r₅,hhead⟩
 
 /-- The full physical route J(0,924) -> J(0,1008), in 691,310
@@ -179,14 +180,14 @@ theorem junc0_924_to_junc0_1008_physical
     outer_ladder_924_to_381_183 c₉₂₄ hrep₉₂₄
   obtain ⟨c₂₉₇,h43,r₂₉₇,hd43⟩ :=
     low43_uniform_anyhead 91 144 (by omega) c₃₈₁ r₃₈₁
-  have h43Time : 4*91*91+22*91+38*144+174=40772 := by norm_num
+  have h43Time : 4*91*91+22*91+38*144+174=40772 := by decide
   have h43' : run target429 40772 c₃₈₁ = some c₂₉₇ := by
     simpa [h43Time] using h43
   have r₂₉₇' : Represents (junc 297 0 362) c₂₉₇ := by
     simpa using r₂₉₇
   have hhead43' : c₂₉₇.head = c₃₈₁.head - 176 := by
     rw [hd43]
-    norm_num
+    omega
 
   obtain ⟨c₁₁₉₅₄,hEven,r₁₁₉₅₄,hheadEven⟩ :=
     lowEven_181_58_physical c₂₉₇ r₂₉₇'
@@ -194,25 +195,25 @@ theorem junc0_924_to_junc0_1008_physical
     outer_ladder_11_954_to_445_101 c₁₁₉₅₄ r₁₁₉₅₄
   obtain ⟨c₃₉₈,hodd,r₃₉₈,hheadOdd⟩ :=
     lowOdd_raw_head_any 50 196 c₄₄₅ r₄₄₅
-  have hoddTime : 4*50*50+22*50+22*196+100=15512 := by norm_num
+  have hoddTime : 4*50*50+22*50+22*196+100=15512 := by decide
   have hodd' : run target429 15512 c₄₄₅ = some c₃₉₈ := by
     simpa [hoddTime] using hodd
   have r₃₉₈' : Represents (junc 398 0 202) c₃₉₈ := by
     simpa using r₃₉₈
   have hheadOdd' : c₃₉₈.head = c₄₄₅.head - 98 := by
     rw [hheadOdd]
-    norm_num
+    omega
 
   obtain ⟨c₁₀₀₈,h42,r₁₀₀₈,hhead42,_⟩ :=
     low42_raw_head_any_c01_free 101 148 c₃₉₈ r₃₉₈'
-  have h42Time : 4*101*101+22*101+18*148+79=45769 := by norm_num
+  have h42Time : 4*101*101+22*101+18*148+79=45769 := by decide
   have h42' : run target429 45769 c₃₉₈ = some c₁₀₀₈ := by
     simpa [h42Time] using h42
   have r₁₀₀₈' : Represents (junc 0 0 1008) c₁₀₀₈ := by
     simpa using r₁₀₀₈
   have hhead42' : c₁₀₀₈.head = c₃₉₈.head - 799 := by
     rw [hhead42]
-    norm_num
+    omega
 
   have h₁₂ := compose_run houter h43'
   have h₁₂₃ := compose_run h₁₂ hEven
@@ -221,7 +222,7 @@ theorem junc0_924_to_junc0_1008_physical
   have h₁₂₃₄₅₆ := compose_run h₁₂₃₄₅ h42'
   have htime :
       ((((((191493+40772)+136331)+261433)+15512)+45769) =
-        691310) := by norm_num
+        691310) := by decide
   have hrun : run target429 691310 c₉₂₄ = some c₁₀₀₈ := by
     simpa [htime] using h₁₂₃₄₅₆
   have hhead : c₁₀₀₈.head = c₉₂₄.head - 64 := by
@@ -250,7 +251,7 @@ theorem blank_root_to_junc0_1008 :
   obtain ⟨c₁₀₀₈,hroute,hrep₁₀₀₈,hheadRoute,_⟩ :=
     junc0_924_to_junc0_1008_physical c₉₂₄ hrep₉₂₄
   have htotal := compose_run hroot hroute
-  have htime : 2672087+691310=3363397 := by norm_num
+  have htime : 2672087+691310=3363397 := by decide
   have hrun : run target429 3363397 blank = some c₁₀₀₈ := by
     simpa [htime] using htotal
   have hfree := junc0_physical_c01_free 0 1008 c₁₀₀₈ hrep₁₀₀₈
