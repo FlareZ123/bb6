@@ -1,0 +1,22 @@
+name: Agent 20 second-level CRT recount
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-crt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Recount eight-prime CRT
+        run: node im-results/agent20-needle-coprime/second_level_cylinder_density.js
+      - name: Recount eleven-prime CRT
+        run: node im-results/agent20-needle-coprime/second_level_eleven_prime_density.js
+      - name: Recount conditional 11-squared CRT
+        run: node im-results/agent20-needle-coprime/second_level_prime_power_refinement.js
