@@ -101,29 +101,10 @@ Do not promote this sketch to `results/` until the Lean proof and full
 transitive axiom audit pass.
 
 
-## Additional +60 continuation from Junc(0,1112)
+## Rejected +60 attempt
 
-A further, unformalized route appears to extend Junc(0,1112) to Junc(0,1172).
-It uses the same seven-step outer ladder, then uniform low43, an outer
-reduction, low-odd, another outer reduction, low-odd again, and low42:
-
-| Segment | Transition | Steps | Head displacement |
-|---|---|---:|---:|
-| Outer ladder | Junc(0,1112) -> Junc(381,371) | 191,493 | +741 |
-| Uniform low43, (v,k)=(185,97) | Junc(381,371) -> Junc(203,738) | 144,830 | -364 |
-| Outer, U=203 | Junc(203,738) -> Junc(409,329) | 166,893 | +409 |
-| Low-odd, (v,n)=(164,121) | Junc(409,329) -> Junc(248,658) | 113,954 | -326 |
-| Outer, U=248 | Junc(248,658) -> Junc(499,159) | 248,523 | +499 |
-| Low-odd, (v,n)=(79,208) | Junc(499,159) -> Junc(422,318) | 31,378 | -156 |
-| Low42, (j,k)=(159,131) | Junc(422,318) -> Junc(0,1172) | 107,059 | -847 |
-| **Total** | **Junc(0,1112) -> Junc(0,1172)** | **1,004,130** | **-44** |
-
-The segment parameters satisfy the respective input shapes:
-- low43: (185+2(97)+2=381), (2(185)+1=371);
-- first low-odd: (164+2(121)+3=409), (2(164)+1=329);
-- second low-odd: (79+2(208)+3=499), (2(79)+1=159);
-- low42: (159+2(131)+1=422), (2(159)=318).
-
-Composed with the candidate prefix through Junc(0,1112), this would reach
-Junc(0,1172) at step **5,585,955** from blank. It remains an arithmetic
-route sketch only; no Lean module or CI check has been added.
+An attempted Junc(0,1112) -> Junc(0,1172) extension is invalid. After
+reaching Junc(499,159), the proposed second low-odd parameters would be
+(v=79) and (n=(499-79-3)/2=417/2), which is not a natural number.
+The apparent 1,004,130-step route therefore does not exist as written and
+must not be used. This is a parity obstruction, not a Lean issue.
