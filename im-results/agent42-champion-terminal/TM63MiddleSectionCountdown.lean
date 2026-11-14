@@ -269,8 +269,8 @@ private theorem tm63_middle_root_a_pos :
   exact sectionResult_right_pos 7 2 6 63 (by decide)
 
 private theorem tm63_middle_after7_a_pos :
-    0 < middleAfter7A tm63RootMiddleK
-      tm63FirstSection.right (nextRight tm63FirstSection.right) := by
+    0 < middleAfter7A tm63FirstSection.right
+      (nextRight tm63FirstSection.right) := by
   have ha1 := nextExponent_pos 2 tm63FirstSection.right
     (nextRight tm63FirstSection.right) tm63_middle_root_a_pos
   have ha2 := nextExponent_pos 1
@@ -302,24 +302,22 @@ def tm63MiddleFirst8Moves : Nat :=
     (nextRight tm63FirstSection.right)
 
 def tm63MiddleAfter7A : Nat :=
-  middleAfter7A tm63RootMiddleK tm63FirstSection.right
+  middleAfter7A tm63FirstSection.right
     (nextRight tm63FirstSection.right)
 
 def tm63MiddleAfter7B : Nat :=
-  middleAfter7B tm63RootMiddleK tm63FirstSection.right
-    (nextRight tm63FirstSection.right)
+  middleAfter7B (nextRight tm63FirstSection.right)
 
 def tm63MiddleAfter7Head : Int :=
   tm63AfterFirstResetHead +
     (middleFirst7HeadShift (nextRight tm63FirstSection.right) : Int)
 
 def tm63MiddleAfter8A : Nat :=
-  middleAfter8A tm63RootMiddleK tm63FirstSection.right
+  middleAfter8A tm63FirstSection.right
     (nextRight tm63FirstSection.right)
 
 def tm63MiddleAfter8B : Nat :=
-  middleAfter8B tm63RootMiddleK tm63FirstSection.right
-    (nextRight tm63FirstSection.right)
+  middleAfter8B (nextRight tm63FirstSection.right)
 
 def tm63MiddleAfter8Head : Int :=
   tm63AfterFirstResetHead +
