@@ -374,3 +374,14 @@ This extension depends on `W4JuncOne.lean`, `W4JuncGeneral.lean`, and
 and audits the new endpoint theorems. This remains an intermediate
 source-proof candidate until the complete manual CI workflow passes with
 no `sorryAx`.
+
+
+## Next candidate: a uniform +52 return
+
+`Junc0Plus52Sketch.md` derives an unformalized parameterized composition
+`Junc(0,2v+742) -> Junc(0,2v+794)` for odd (131\le v\le177), with
+head displacement -39. The two root-connected instances (v=133) and
+(v=159) would extend Junc(0,1008) -> Junc(0,1060) -> Junc(0,1112),
+adding 1,218,428 steps and giving a 4,581,825-step blank-root prefix.
+This is an algebraic proof plan only; it is not yet formalized or included
+in the CI workflow.
