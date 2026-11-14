@@ -861,3 +861,40 @@ For `(v,k)=(1,189)`, the theorem gives 7,338 steps from the C/0 zipper to Junc(3
 Commits: source module initially `5266616`, subsequent proof corrections `4b97c7a` and `67db31e`; manual root-chain workflow update `04c9b63`; synthesis update `c87c2f2`; Agent 32 coordination messages are under `communications/agent32/`. The manual workflow now compiles `W4JuncOne`, `W4JuncGeneral`, `Low43C0Uniform.lean` and checks the two new axiom reports. It has not been dispatched. The local container shell returned `ClientError`, so no local Lean compilation is claimed. Treat the file as a proof candidate pending manual original-source CI.
 
 Important limitation: the physical lift proves the exact run, endpoint representation and displacement, but does not yet include a parameter-uniform all-prefix head maximum or explicit C/01-free monitor. Next priority is to get the manual workflow run (Agent 32 was asked to dispatch it), correct any Lean elaboration failures, then prove the uniform max/frontier bound if possible. Do not duplicate PR #90's concrete (1,189) case; the generic theorem subsumes its source continuation but not its root-level max/no-fatal evidence.
+
+
+## 2026-11-14 continuation: Junc(0,1008) source candidate
+
+Current incarnation: branch `agent1/junc744-to924-20261114`, stacked draft PR #101 on Agent32 PR #94. The branch adds a two-stage physical continuation:
+- `Junc744To924.lean`: Junc(0,744) -> Junc(0,924), 1,158,049 steps, head displacement -139. It includes the parameterized Junc(11,w) +32 return using four outer-safe reductions and LowEven4k.
+- `Junc924To1008.lean`: Junc(0,924) -> Junc(0,1008), 691,310 steps, head displacement -64. It uses the uniform low43 theorem at (v,k)=(91,144), LowEven4k at (N,K)=(181,58), five outer-safe reductions, low-odd (50,196), and low42 (101,148).
+- `blank_root_to_junc0_1008` composes with the current blank-root -> Junc(0,924) candidate, yielding a 3,363,397-step candidate prefix ending at Junc(0,1008). The final live Junc endpoint gives all-prefix physical C/01 exclusion.
+
+Useful files:
+- `im-results/agent1-429-root-entry/Junc11Return32.lean`: reusable +32 return theorem for N+2K=221, K>=1, cost 64093+4N^2+22N+18K, head shift -25. `juncPosFullTime_formula` is now public; its induction proof needs `Nat.mul_add` and `Nat.add_mul` normalization before `omega`.
+- `im-results/agent1-429-root-entry/Junc744To924.lean`
+- `im-results/agent1-429-root-entry/Low43C0Uniform.lean` (copied from main) plus `im-results/agent1-429-w4-boundary/W4JuncOne.lean` and `W4JuncGeneral.lean`
+- `im-results/agent1-429-root-entry/Junc924To1008.lean`
+- `im-results/agent1-429-root-entry/Junc744To924AxiomAudit.lean`: focused transitive axiom audit, now imports Junc924To1008.
+- `im-results/agent1-429-root-entry/README.md`: route tables, costs, and status.
+- `im-results/agent1-429-root-entry/Junc0Plus52Sketch.md`: unformalized next family; see below.
+- `.github/workflows/agent1-429-junc744-to924.yml`: 90-minute manual source audit with cached dependencies. The workflow is also published on main so workflow_dispatch can target the research branch; workflow ID 418168248. It compiles W4JuncOne/W4JuncGeneral and Low43C0Uniform, then the new route modules and focused audit. It intentionally omits unrelated `Low43Continuation.lean`, which is not a dependency and failed in a separate root-junction-chain workflow with a type mismatch and sorryAx.
+- Communications to Agent32: `communications/agent32/2026-11-14T090800Z_agent1_junc1008-extension.md` and `communications/agent32/2026-11-14T091400Z_agent1_ci-dependency-triage.md`.
+
+Verification status: not yet CI-certified. PR #82's independent low-even 4k run is run_id 43576154592 and was still in progress at 2026-11-14T09:14Z; its compile step had not completed and job-log retrieval returned 404 while running. The new workflow has not yet been dispatched. Do not promote these candidates to `results/` or claim a BB(6) bound improvement until the full original-source Lean workflow passes and the focused transitive axiom audit contains no `sorryAx`.
+
+Local Lean 4.36.0-rc2 was reconstructed from the uploaded split ZIP. A standalone Lean check caught and fixed the recurrence proof: `juncPosFullTime_formula` does not close with `omega` alone; use `simp [juncPosFullTime, ih, Nat.mul_add, Nat.add_mul]` before `omega`. The route arithmetic (segment totals, widths, head shifts, and blank-root total 3,363,397) passed standalone Lean checks.
+
+### Next research direction: uniform +52 return
+
+`Junc0Plus52Sketch.md` derives an unformalized family J(0,2v+742) -> J(0,2v+794) for odd v in [131,177], with head shift -39, under v+2k=379 and nonnegativity constraints. Concrete consecutive instances:
+- (v,k)=(133,123): J(0,1008) -> J(0,1060), 544,773 steps.
+- (v,k)=(159,110): J(0,1060) -> J(0,1112), 673,655 steps.
+Combined with the current candidate, this would reach J(0,1112) at step 4,581,825. It is an algebraic proof plan only; formalize a generic parameterized +52 theorem before adding to the CI route.
+
+### Immediate next actions
+
+1. Check run_id 43576154592. If the LowEven4k dependency passes, dispatch workflow 418168248 against ref `agent1/junc744-to924-20261114`.
+2. Fix actual Lean errors in the integrated workflow; retain the focused transitive axiom audit and no-`sorryAx` gate.
+3. Keep PR #101 draft until both dependency and integrated CI succeed.
+4. Consider formalizing `Junc0Plus52Sketch.md` only after the current 1008 route compiles; do not compound unverified modules.
