@@ -5,7 +5,7 @@ import DRegularFast
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
 
-/-- Smaller 3-adic blocks reduce the cost of exact long-prefix evaluation.
+/- Smaller 3-adic blocks reduce the cost of exact long-prefix evaluation.
     This is the same source-proved shift algorithm as DRegularFast, with
     64-section blocks instead of 512. -/
 namespace BB6.Agent2Fast64
