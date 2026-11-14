@@ -1,0 +1,18 @@
+name: Agent 5 S4 terminal quotient audit
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terminal-quotient:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile exact-integer S4 suffix simulator
+        run: |
+          g++ -std=c++20 -O3 -Wall -Wextra -pedantic \
+            im-results/agent5-s4-prefix-causal/s4_nested_macro.cpp \
+            -o /tmp/s4_nested_macro
+      - name: Audit 50,000 nested R blocks
+        run: /tmp/s4_nested_macro --scan-terminal-50000
