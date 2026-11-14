@@ -1,5 +1,4 @@
 import Q4RightEndpoint
-import S1CountedDrain
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -9,7 +8,8 @@ This module establishes the m=2,n=6 even reset kernel, the next source row after
 The new finite kernel is a 38-step bridge, following the standard
 (3*a+2)-block counted left sweep and preceding the 3*a E-state scan.
 The resulting q4 cut is at state E/head h and feeds the generic full-tape
-q4 suffix endpoint.
+q4 suffix endpoint. This file stops at the reset-prefix source theorem; the
+independent counted-drain composition remains a separate reusable step.
 -/
 
 namespace BB6Coverage.Agent48M2EvenSixQ4
@@ -20,7 +20,6 @@ open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8CountedReset
-open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent24Q4Endpoint
 
 private theorem binDec_three_six :
@@ -667,26 +666,10 @@ theorem m2EvenSix_q4_reset_prefix_source
   simp only [Option.bind_some]
   exact hsuffix
 
-/-- Exact counted m=2,n=4 even reset, including the 2^b-1 Inc0 drain. -/
-theorem m2EvenSix_q4_counted_increment_source
-    (a b : Nat) (h : Int) (ha : 0 < a) :
-    run tm2 (proposedIncrementCost 2 4 a b)
-      (s1Config 3 6 2 a 0 b h) =
-      some (s1Config 3 5 1 (a+b+2) 0 (2^b-1)
-        (h+5+3*b)) := by
-  have hp := m2EvenSix_q4_reset_prefix_source a b h ha
-  have hbound := resetDrainBound a b 2 ha
-  have hrun := s1Config_reset_prefix_then_counted_drain
-    3 5 1 (a+b+2) b (h+5+3*b)
-    (s1Config 3 6 2 a 0 b h) (resetPrefixCost 2 6 a b)
-    hp (by simpa [resetDelta] using hbound)
-  simpa [proposedIncrementCost_decomp] using hrun
-
 #print axioms m2EvenSixQ4Bridge_exact
 #print axioms m2EvenSixQ4Bridge_input_match
 #print axioms m2EvenSix_q4_prefix_data
 #print axioms m2EvenSixQ4SuffixTargetLeft
 #print axioms m2EvenSix_q4_reset_prefix_source
-#print axioms m2EvenSix_q4_counted_increment_source
 
 end BB6Coverage.Agent48M2EvenSixQ4
