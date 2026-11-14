@@ -18,6 +18,7 @@ complete TM63 itinerary or BB(6) upper bound.
 namespace BB6Coverage.Agent41M0OddResidueSeven
 
 open BB6Coverage
+open BB6ChampionArithmetic
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
@@ -259,12 +260,12 @@ private theorem m0OddResidueSeven_cut_eq_input
       (s1Config L (16*r+7) 0 a 0 b h).tape x := by
   simp [m0OddResidueSevenCutTape,frame,hout]
 
-private theorem q4RightShape_congr
+private theorem BB6Coverage.Agent8Q4Suffix.q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
     (heq : ∀ x, h ≤ x → T x = U x)
-    (hT : q4RightShape T h b) :
-    q4RightShape U h b := by
-  unfold q4RightShape at *
+    (hT : BB6Coverage.Agent8Q4Suffix.q4RightShape T h b) :
+    BB6Coverage.Agent8Q4Suffix.q4RightShape U h b := by
+  unfold BB6Coverage.Agent8Q4Suffix.q4RightShape at *
   rcases hT with ⟨h0,h5,h6,h79,hzero⟩
   refine ⟨?_,?_,?_,?_,?_⟩
   · intro i hi
@@ -589,7 +590,7 @@ theorem m0Odd_residue7_q4_prefix_source
     simpa [base] using m0Odd_q4_prefix_run a b h ha
   rw [hbaseRun] at hlift
   simp only [Option.map_some] at hlift
-  simpa [m0OddResidueSevenCutTape,background] using hlift
+  simpa [m0OddResidueSevenCutTape,background,frame] using hlift
 
 private theorem m0OddResidueSeven_cut_eq_base
     (L r a b : Nat) (h x : Int) (hx : h ≤ x) :
@@ -656,7 +657,13 @@ theorem m0Odd_residue7_q4_prefix_leftFacing
       (m0OddResidueSevenTargetPrefix a)
       (d0 ++ d0 ++ d1 ++ binDec (L-4) r ++ lh) i
       (by rw [m0OddResidueSevenTargetPrefix_length]; omega)
+    have hlenEq :
+        (m0OddResidueSevenInputPrefix a).length =
+          (m0OddResidueSevenTargetPrefix a).length := by
+      rw [m0OddResidueSevenInputPrefix_length,
+        m0OddResidueSevenTargetPrefix_length]
     rw [hsrc] at hcell
+    rw [hlenEq] at hcell
     simpa [m0OddResidueSevenLeftFacing] using hcell.trans htgt.symm
 
 /-- Complete right-facing word at the generalized q4 cut. -/
@@ -679,8 +686,8 @@ theorem m0Odd_residue7_q4_prefix_rightFacing
 theorem m0Odd_residue7_q4_prefix_rightShape
     (L r a b : Nat) (h : Int)
     (hL : 4 ≤ L) (hbound : 16*r+7 < 2^L) (ha : 0<a) :
-    q4RightShape (m0OddResidueSevenCutTape L r a b h) h b := by
-  apply q4RightShape_congr
+    BB6Coverage.Agent8Q4Suffix.q4RightShape (m0OddResidueSevenCutTape L r a b h) h b := by
+  apply BB6Coverage.Agent8Q4Suffix.q4RightShape_congr
     (m0OddQ4CutTape a b h)
     (m0OddResidueSevenCutTape L r a b h) h b
   · intro x hx
@@ -696,7 +703,7 @@ theorem m0Odd_residue7_q4_prefix_data
         some ⟨4,h,Tq⟩ ∧
       (∀ i : Nat, Tq (h-(i:Int)) =
         sideBit (m0OddResidueSevenLeftFacing L r a) i) ∧
-      q4RightShape Tq h b ∧
+      BB6Coverage.Agent8Q4Suffix.q4RightShape Tq h b ∧
       (∀ i : Nat, Tq (h+1+(i:Int)) =
         sideBit (q4RightFacing b) i) := by
   refine ⟨m0OddResidueSevenCutTape L r a b h, ?_, ?_, ?_, ?_⟩
