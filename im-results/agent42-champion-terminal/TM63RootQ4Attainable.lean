@@ -282,7 +282,7 @@ theorem tm63_attainable_at_proposedChampionScore
         (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) =
         some (s0Config (markerWord 0 ++ d0 ++ binDec tm63Length2 0 ++ lh)
           (tm63FinalA+tm63FinalB+resetDelta 1)
-          (2^tm63FinalB-1) 0 h)) :
+          (2^tm63FinalB-1) 0 (h+5+3*tm63FinalB))) :
     Attainable proposedChampionScore := by
   have hscore := champion_attainable_after_root_q4_drain_to_terminal_reset
     tm63SuffixSteps tm63Length2 tm63FinalA tm63FinalB h
