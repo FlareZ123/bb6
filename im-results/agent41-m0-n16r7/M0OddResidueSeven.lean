@@ -774,9 +774,29 @@ theorem m0Odd_residue7_q4_reset_prefix_source
   simp only [Option.bind_some]
   exact hsuffix
 
+/-- Complete original-TM2 m=0 increment for every admissible n=16*r+7,
+including the exact geometric all-ones drain. -/
+theorem m0Odd_residue7_counted_increment_source
+    (L r a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hbound : 16*r+7 < 2^L) (ha : 0<a) :
+    run tm2 (proposedIncrementCost 0 (16*r+7) a b)
+      (s1Config L (16*r+7) 0 a 0 b h) =
+      some (s1Config L (16*r+6) 2 (a+b+1) 0 (2^b-1)
+        (h+5+3*b)) := by
+  have hp := m0Odd_residue7_q4_reset_prefix_source
+    L r a b h hL hbound ha
+  have hboundDrain := resetDrainBound a b 0 ha
+  have hrun := s1Config_reset_prefix_then_counted_drain
+    L (16*r+6) 2 (a+b+1) b (h+5+3*b)
+    (s1Config L (16*r+7) 0 a 0 b h)
+    (resetPrefixCost 0 (16*r+7) a b)
+    hp (by simpa [resetDelta] using hboundDrain)
+  simpa [proposedIncrementCost_decomp] using hrun
+
 #print axioms binDec_residue7
 #print axioms binDec_residue6
 #print axioms m0Odd_residue7_q4_prefix_source
 #print axioms m0Odd_residue7_q4_reset_prefix_source
+#print axioms m0Odd_residue7_counted_increment_source
 
 end BB6Coverage.Agent41M0OddResidueSeven
