@@ -367,14 +367,18 @@ private theorem m0OddResidueFive_leftFacing
       (m0OddResidueFiveTargetPrefix a)
       (binDec (L-3) k ++ lh) i
       (by rw [htargetPrefixLen]; omega)
-    rw [hbaseList] at hbaseBit
+    have hbaseBit' :
+        sideBit (m0OddQ4LeftFacing a) i =
+          sideBit (m0OddResidueFiveTargetPrefix a) i := by
+      rw [m0OddResidueFive_base_q4_leftFacing]
+      exact hbaseBit
     have hgenBit' :
         sideBit (m0OddResidueFiveLeftFacing L k a) i =
           sideBit (m0OddResidueFiveTargetPrefix a) i := by
       simpa [m0OddResidueFiveLeftFacing] using hgenBit
     calc
       sideBit (m0OddQ4LeftFacing a) i =
-          sideBit (m0OddResidueFiveTargetPrefix a) i := hbaseBit
+          sideBit (m0OddResidueFiveTargetPrefix a) i := hbaseBit'
       _ = sideBit (m0OddResidueFiveLeftFacing L k a) i := hgenBit'.symm
   · have hout :
       m0OddResidueFiveInside a h (h-(i:Int)) = false := by
