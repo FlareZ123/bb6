@@ -94,7 +94,7 @@ private theorem m2EvenSixSweptLeftCell (a b : Nat) (h : Int) (k : Nat) :
   rw [hcoord,hpres]
   simpa [T] using m2EvenSixSourceLeftAt a b h k
 
-/-- Exact input match for the 50-step bridge after sweeping the 3*a+2
+/-- Exact input match for the 38-step bridge after sweeping the 3*a+2
 leading one-blocks. -/
 theorem m2EvenSixQ4Bridge_input_match (a b : Nat) (h : Int) :
     ∀ y, m2EvenSixQ4Inside y = true →
@@ -102,7 +102,7 @@ theorem m2EvenSixQ4Bridge_input_match (a b : Nat) (h : Int) :
         (h-((3*a+2 : Nat) : Int)+y) =
           decide (y ∈ m2EvenSixQ4BridgeStart.marked) := by
   intro y hy
-  have hyb : -12 ≤ y ∧ y ≤ 2 := by
+  have hyb : -9 ≤ y ∧ y ≤ 2 := by
     simpa [m2EvenSixQ4Inside] using hy
   by_cases hy0 : y ≤ 0
   · let k : Nat := Int.toNat (-y)
@@ -209,7 +209,7 @@ private theorem m2EvenSixQ4LeftFacingPrefixTrue (a i : Nat)
       rw [hside]
       simp [m2EvenSixQ4LeftSuffix,markerWord,sideBit]
 
-/-- The 13-cell boundary written by the 50-step bridge is exactly the
+/-- The 10-cell boundary written by the 38-step bridge is exactly the
 marker-1/digit/BinDec boundary of the next S1 state. -/
 private theorem m2EvenSixQ4LeftFacingBridgeBit (a j : Nat)
     (hj : j ≤ 9) :
@@ -250,7 +250,7 @@ private theorem m2EvenSixQ4LeftFacingBridgeBit (a j : Nat)
     _ = decide ((-(j:Int)) ∈ m2EvenSixQ4BridgeEnd.marked) := hbits
 
 /-- The source and target left streams share the same final one and lh
-tail from index 3*a+15 onward. -/
+tail from index 3*a+12 onward. -/
 private theorem m2EvenSixQ4LeftFacingTail (a i : Nat)
     (hi : 3*a+12 ≤ i) :
     sideBit (s1LeftFacing 3 6 2 a 0) i =
@@ -552,7 +552,7 @@ theorem m2EvenSix_q4_prefix_data (a b : Nat) (h : Int)
       run tm2 38 ⟨3,hN,T1⟩ =
         some ⟨4,hN+2,T2⟩ := by
     have hb := bridgeAt T1 hN m2EvenSixQ4Inside
-      m2EvenSixQ4BridgeStart m2EvenSixQ4BridgeEnd 50 rfl
+      m2EvenSixQ4BridgeStart m2EvenSixQ4BridgeEnd 38 rfl
       m2EvenSixQ4Bridge_exact m2EvenSixQ4Bridge_heads hmatch
     have hframe :
         frameAt T1 hN m2EvenSixQ4Inside m2EvenSixQ4BridgeEnd =
