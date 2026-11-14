@@ -350,6 +350,16 @@ jobs:
             echo '::error::sorryAx found in generic m=1, n=6 mod 8 source increment'
             exit 1
           fi
+
+          # Agent 42: compose the first four source-verified rows of the 24-cycle.
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63MiddleSectionPrefix4.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/middle-section-prefix4-axioms.log
+          lean -o TM63MiddleSectionPrefix4.olean TM63MiddleSectionPrefix4.lean 2>&1 | tee /tmp/a42-terminal/middle-section-prefix4-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/middle-section-prefix4-axioms.log; then
+            echo '::error::sorryAx found in the four-stage TM63 middle-section source composition'
+            exit 1
+          fi
+
           : > /tmp/a42-terminal/root-q4-drain-axioms.log
           lean -o TM63RootQ4Drain.olean TM63RootQ4Drain.lean 2>&1 | tee /tmp/a42-terminal/root-q4-drain-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/root-q4-drain-axioms.log; then
@@ -548,6 +558,7 @@ jobs:
             /tmp/a42-terminal/m0-odd-q4-prefix-axioms.log
             /tmp/a42-terminal/s1-counted-drain-axioms.log
             /tmp/a42-terminal/root-q4-drain-axioms.log
+            /tmp/a42-terminal/middle-section-prefix4-axioms.log
             /tmp/a42-terminal/champion-root-q4-drain-axioms.log
             /tmp/a42-terminal/root-q4-attainable-axioms.log
             /tmp/a42-terminal/m1-even-root-composition-axioms.log
