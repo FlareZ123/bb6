@@ -137,3 +137,16 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent22-623-root-ray-20k/ExactDrainCocycleDepthSource.lean" Agent22ExactDrainCocycleDepthSource.lean
           lake env lean -o .lake/build/lib/lean/Agent22ExactDrainCocycleDepthSource.olean Agent22ExactDrainCocycleDepthSource.lean
+      - name: Verify exact quadratic gap-scale growth on original #623 source
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryShiftSource.lean" Agent49TernaryShiftSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TernaryShiftSource.olean Agent49TernaryShiftSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryBufferSource.lean" Agent49TernaryBufferSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TernaryBufferSource.olean Agent49TernaryBufferSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/CanonicalRayCocycleSource.lean" Agent49CanonicalRayCocycleSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49CanonicalRayCocycleSource.olean Agent49CanonicalRayCocycleSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent22-623-root-ray-20k/GapScaleExactArithmetic.lean" Agent22GapScaleExactArithmetic.lean
+          lake env lean -o .lake/build/lib/lean/Agent22GapScaleExactArithmetic.olean Agent22GapScaleExactArithmetic.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/GapScaleResidualSource.lean" Agent49GapScaleResidualSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49GapScaleResidualSource.olean Agent49GapScaleResidualSource.lean
