@@ -334,15 +334,19 @@ blank-root-to-Junc(0,744) candidate, yielding a 2,672,087-step
 blank-root prefix ending at Junc(0,924), again with C/01 excluded at every
 primitive prefix.
 
-**Verification status — blocked:** PR #82's low-even 4k original-source
-workflow (run 43576154592) failed. The exact `LowEven4kDelta.lean` dependency
-has multiple Lean type/tactic errors, and its downstream declarations report
-`sorryAx`. Both this route and the Junc(0,924)->Junc(0,1008) extension depend
-on `lowEven4k_prepared_return_physical`; neither is currently a valid
-sorry-free theorem. The integrated manual workflow has deliberately not been
-dispatched until that dependency is repaired. Keep all claims in
-`im-results/`; do not promote them to `results/` or claim a BB(6) bound
-improvement.
+**Verification status — blocked by two transitive dependencies:**
+(1) PR #82's low-even 4k original-source workflow (run 43576154592) failed:
+`LowEven4kDelta.lean` has multiple Lean type/tactic errors and downstream
+`sorryAx`. Both new continuations depend on `lowEven4k_prepared_return_physical`.
+(2) The base blank-root chain imports `Low43Continuation.lean` transitively
+through `Junc0ReturnMap28RootChain -> ParityShiftedRootComplete ->
+Low43BlankRootExtension -> Low43RootNext -> Low43RootPhysical`. The existing
+root-junction-chain workflow also failed compiling this module with a type
+mismatch and `sorryAx`. I incorrectly omitted it from the first version of
+this branch's workflow; it has now been restored as a required compile step.
+Consequently the base blank-root prefix and both new continuations are not
+currently certified sorry-free theorems. Do not promote them to `results/`
+or claim a BB(6) bound improvement.
 
 
 ## Second continuation: Junc(0,924) -> Junc(0,1008) (2026-11-14)
@@ -371,11 +375,12 @@ blank-root prefix of **3,363,397** primitive steps ending at Junc(0,1008),
 with C/01 excluded at every primitive prefix.
 
 This extension depends on `W4JuncOne.lean`, `W4JuncGeneral.lean`,
-`Low43C0Uniform.lean`, and the blocked low-even 4k theorem. The dedicated
-workflow is configured to compile these modules and audit the endpoint
-theorems, but it is not yet run. The low-even dependency must first compile
-without errors and without `sorryAx`; until then this is only a conditional
-composition candidate, not a proof.
+`Low43C0Uniform.lean`, and the blocked low-even 4k theorem. The dedicated workflow is configured to compile the full transitive chain,
+including Low43Continuation, the uniform low43 modules, and the low-even
+4k dependency, then audit the endpoint theorems. It has not been run. Both
+Low43Continuation and LowEven4kDelta must first compile without errors and
+without `sorryAx`; until then this is only a conditional composition
+candidate, not a proof.
 
 
 ## Next candidate: a uniform +52 return
