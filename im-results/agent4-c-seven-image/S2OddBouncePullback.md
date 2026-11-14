@@ -149,20 +149,71 @@ The family is disjoint from the older diagonal (u+v=0 mod 4) and the previous s3
 
 If the source-root composition is formalized, the combined three-family exclusion density becomes 41/2^26, leaving 215 of the 256 m-classes modulo 131072 in the common j=319,m=42 modulo 512 base cylinder outside these three exclusions.
 
-## Complementary q-even lift (unresolved)
+## Complementary q-even lift (partially resolved)
 
-The other lift of the same Q-cone congruence is v=12+11t (mod 32). Here W=(B+2)/8=3 (mod 4), so the six-right normalizer takes two steps from (A,B) to F2=(A+12W-8,2W-2), where F2.x+F2.y=8S. Writing v=12+11t+32z gives
+The other lift of the same Q-cone congruence is (v=12+11t\pmod{32}), still under (u+v=2+4t) with (u,v\in\mathbb N). The natural-number parameterization must therefore be
+\[
+v=12+11t-32z,\qquad u=32z-7t-10,
+\]
+with
+\[
+7t+10\le 32z\le 12+11t.
+\]
+The earlier plus-sign expression (v=12+11t+32z) is incompatible with (u+v=2+4t) for nonnegative (u,z); the formulas in this section are corrected accordingly.
 
-- A=6568+6272t+13376z;
-- W=595+568t+1212z;
-- S=1861+1778t+3793z = 1+2t+z (mod 4).
+For this lift, the first odd/odd parent and its two-step six-even-right normalizer are
+\[
+A=6568+6272t-13376z,\qquad
+W=(B+2)/8=595+568t-1212z,
+\]
+\[
+F_2=(A+12W-8,2W-2)
+=(13700+13088t-27920z,\;1188+1136t-2424z),
+\]
+with
+\[
+F_{2,x}+F_{2,y}=8S,\qquad S=1861+1778t-3793z.
+\]
 
-When S is nonzero modulo 4, Agent11's eveneven_sumzero_parent_necessity theorem applies to F2. Its direct parent is F3=(A+14W-12,W-2), which has odd right coordinate and sum 3 (mod 4), so the odd-sum-one obstruction does not exclude it. The bounce parent E has right coordinate 2-S (mod 4) and total sum S (mod 4); it is excluded by odd-image only when S=1 (mod 4). If S=0 (mod 4), the M0 parent theorem's hypothesis fails. This complementary lift remains unresolved and is not part of the q-odd candidate exclusion.
+A source-exact subfamily is now closed:
+\[
+2t-z\equiv1\pmod8.
+\]
+This implies (z) is odd and (S\equiv6\pmod8), so (S\equiv2\pmod4). The complete even-even sum-zero parent theorem then leaves exactly two possible source parents of (F_2):
 
-A further exact split of the unresolved direct parent D is available. It is
-**D=(14886+14224t+30344z, 593+568t+1212z)**.
-Its evenSevenGate condition (D.x+D.y+1=8 mod 16) is exactly z=2t (mod 4). When it applies, its parent E'=((D.x+D.y-5)/2,(D.x+3D.y-9)/4) satisfies E'.x=1 (mod 4) and E'.y=3z (mod 4). This leaves an evenAffine continuation when z=0 (mod 4), and a possible six-right continuation when z=2 (mod 4); neither chain has been closed.
+- Direct parent
+  \[
+  D=(14886+14224t-30344z,\;593+568t-1212z).
+  \]
+  Since (z) is odd, (D) lies in the exact even-left/odd-right valuation-two sector ((D_x+D_y+1)\equiv4\pmod8). Its unique source parent is
+  \[
+  U=(7737+7396t-15778z,\;4164+3982t-8495z),
+  \]
+  which has odd right coordinate and coordinate sum (2\pmod4). This contradicts the source-certified odd-right image invariant, whose only possible sum residues are (0,3\pmod4).
 
+- Bounce parent
+  \[
+  E=(3720+3556t-7586z,\;6173+5902t-12591z).
+  \]
+  It is even-even with sum (2\pmod4), so its unique source parent is the six-even-right affine parent
+  \[
+  H=(E_x+E_y-2,\;(E_y-2)/2).
+  \]
+  Under (2t-z\equiv1\pmod8), (H_y) is odd and (H_x+H_y\equiv1\pmod4), again forbidden by the source odd-right image invariant.
+
+Thus (F_2) is blank-unreachable for every natural (t,z) satisfying the upper bound (32z\le12+11t) and (2t-z\equiv1\pmod8). The formal proof is in [S2QEvenResidue.lean](S2QEvenResidue.lean), currently awaiting its fresh Lean CI audit.
+
+This is a genuine partial closure of the complementary lift's normalizer residual, not yet a full blank-root exclusion for the original image state (V=(641+1024u,574+1024v)). The remaining composition through the P/R/V parent tree and the high-stop parameter pullback are still open.
+
+A concrete infinite valid slice is
+\[
+t=32n+2,\qquad z=8n+3,\qquad n\ge1,
+\]
+which gives
+\[
+u=32n+72,\qquad v=96n-62.
+\]
+It satisfies the naturality bounds and the congruence above.
 
 ## Concrete arithmetic test vector
 
