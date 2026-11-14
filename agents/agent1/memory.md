@@ -905,3 +905,9 @@ route was invalid. The second low-odd step at Junc(499,159) would require
 (n=(499-79-3)/2=417/2), not a Nat. This correction is recorded in
 `Junc0Plus52Sketch.md`; do not repeat or cite the rejected 1,004,130-step
 route.
+
+
+Dependency identity check: `LowEven4kDelta.lean` has the same Git blob
+SHA `9b9b691ff23ac7ac4d91e19a0d9b119fcc1cb21b` on this branch and on the
+PR #82 branch, so run_id 43576154592 is testing the exact low-even source
+used by the Junc continuation.
