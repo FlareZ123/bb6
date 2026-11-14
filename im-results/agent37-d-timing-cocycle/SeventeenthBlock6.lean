@@ -16,8 +16,37 @@ def block17_6 : DRegular.L :=
 
 theorem block17_6_exact :
     DRegular.run 304 block17_5 = some block17_6 := by
-  rw [BB6.DRegularFast.fastRun_correct 304 block17_5 block17_5_canon]
-  decide
+  have h512 : DRegular.run 512 BB6.Agent2SeventeenthArithmetic.middle17 =
+      some block17_4 := by
+    simpa [block17_3] using block17_4_exact
+  have h1024 : DRegular.run 1024 BB6.Agent2SeventeenthArithmetic.middle17 =
+      some block17_5 := by
+    calc
+      DRegular.run 1024 BB6.Agent2SeventeenthArithmetic.middle17 =
+          (DRegular.run 512 BB6.Agent2SeventeenthArithmetic.middle17).bind
+            (DRegular.run 512) := by
+              simpa using (BB6.DRegularFast.run_add 512 512
+                BB6.Agent2SeventeenthArithmetic.middle17)
+      _ = (some block17_4).bind (DRegular.run 512) := by rw [h512]
+      _ = DRegular.run 512 block17_4 := rfl
+      _ = some block17_5 := block17_5_exact
+  have hcomp :
+      DRegular.run 1328 BB6.Agent2SeventeenthArithmetic.middle17 =
+        DRegular.run 304 block17_5 := by
+    calc
+      DRegular.run 1328 BB6.Agent2SeventeenthArithmetic.middle17 =
+          (DRegular.run 1024 BB6.Agent2SeventeenthArithmetic.middle17).bind
+            (DRegular.run 304) := by
+              simpa using (BB6.DRegularFast.run_add 1024 304
+                BB6.Agent2SeventeenthArithmetic.middle17)
+      _ = (some block17_5).bind (DRegular.run 304) := by rw [h1024]
+      _ = DRegular.run 304 block17_5 := rfl
+  calc
+    DRegular.run 304 block17_5 =
+        DRegular.run 1328 BB6.Agent2SeventeenthArithmetic.middle17 := hcomp.symm
+    _ = some block17_6 := by
+      simpa [block17_6] using
+        BB6.Agent2SeventeenthArithmetic.terminal2656_half_exact
 
 theorem block17_6_canon : DRegular.Canon block17_6 :=
   BB6.DRegularFast.run_canon 304 block17_5 block17_6
