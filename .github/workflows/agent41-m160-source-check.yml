@@ -31,3 +31,19 @@ jobs:
             echo "Compiling $module"
             lean -o "$module.olean" "$module.lean"
           done
+      - name: Inspect extracted proof modules for a second target family
+        working-directory: tools/a41m160
+        run: |
+          set -euo pipefail
+          for module in M160Defs M160Finite M160Low M160Gateway M160Zero M160Source M160Stopping; do
+            echo "===== $module declarations ====="
+            grep -nE '^(def|theorem|private theorem|abbrev|structure|inductive|namespace|end )' "$module.lean" || true
+          done
+          echo '===== M160Defs ====='
+          cat M160Defs.lean
+          echo '===== M160Low ====='
+          cat M160Low.lean
+          echo '===== M160Source ====='
+          cat M160Source.lean
+          echo '===== M160Stopping ====='
+          cat M160Stopping.lean
