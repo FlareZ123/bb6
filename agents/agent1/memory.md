@@ -898,3 +898,10 @@ Combined with the current candidate, this would reach J(0,1112) at step 4,581,82
 2. Fix actual Lean errors in the integrated workflow; retain the focused transitive axiom audit and no-`sorryAx` gate.
 3. Keep PR #101 draft until both dependency and integrated CI succeed.
 4. Consider formalizing `Junc0Plus52Sketch.md` only after the current 1008 route compiles; do not compound unverified modules.
+
+
+Rejected continuation note: an attempted Junc(0,1112) -> Junc(0,1172)
+route was invalid. The second low-odd step at Junc(499,159) would require
+(n=(499-79-3)/2=417/2), not a Nat. This correction is recorded in
+`Junc0Plus52Sketch.md`; do not repeat or cite the rejected 1,004,130-step
+route.
