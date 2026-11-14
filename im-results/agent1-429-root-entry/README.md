@@ -293,3 +293,52 @@ push-triggered validation is claimed.
 Until that end-to-end run succeeds, the 13,718-step and 16,280-step results
 are **Lean proof candidates, not CI-certified original-source results**.
 They are finite prefixes only and do not decide #429 or BB(6).
+
+
+## Candidate continuation after Junc(0,744): Junc(0,924) (2026-11-14)
+
+The current PR #94 source candidate reaches Junc(0,744) at primitive step
+1,514,038. The new continuation module proposes a further 1,158,049-step
+physical run to Junc(0,924), with exact head displacement -139. The route is
+compositional:
+
+| Segment | Transition | Steps | Head displacement |
+|---|---|---:|---:|
+| Outer-safe ladder | Junc(0,744) -> Junc(381,3) | 191,493 | +741 |
+| Low43 gap | Junc(381,3) -> Junc(387,2) | 7,382 | +4 |
+| Low-even 4k | Junc(387,2) -> Junc(11,774) | 3,761 | -765 |
+| Three +32 returns | Junc(11,774) -> Junc(11,870) | 683,267 | -75 |
+| Outer-safe ladder | Junc(11,870) -> Junc(445,17) | 261,433 | +853 |
+| Low-odd | Junc(445,17) -> Junc(440,34) | 5,306 | -14 |
+| Low42 | Junc(440,34) -> Junc(0,924) | 5,407 | -883 |
+| **Total** | **Junc(0,744) -> Junc(0,924)** | **1,158,049** | **-139** |
+
+The central new reusable return is in `Junc11Return32.lean`. For
+N+2K=221 and K>=1, it composes four outer-safe reductions with the
+parameterized low-even 4k return:
+
+`Junc(11,408+2N) -> Junc(11,440+2N)`
+
+in `64093 + 4N^2 + 22N + 18K` steps, with head displacement -25.
+The three route instances are (N,K)=(183,19),(199,11),(215,3), giving
+Junc(11,774) -> Junc(11,870) in 683,267 steps. The same family also
+supplies the 3,761-step Junc(387,2) -> Junc(11,774) return (N=1,K=193).
+
+`Junc744To924.lean` lifts the low43 and low-odd canonical runs to arbitrary
+physical Junc representations, composes all seven segments, and applies the
+physical C/01 converse at the live Junc(0,924) endpoint. Its candidate
+theorem `junc0_744_to_junc0_924_physical` therefore states all-prefix
+C/01-freedom for the entire 1,158,049-step interval. The theorem
+`blank_root_to_junc0_924` composes this with the 1,514,038-step
+blank-root-to-Junc(0,744) candidate, yielding a 2,672,087-step
+blank-root prefix ending at Junc(0,924), again with C/01 excluded at every
+primitive prefix.
+
+**Verification status:** these are source-proof candidates, not yet
+CI-certified original-source results. The separate PR #82 low-even 4k
+workflow is currently testing the parameterized dependency. The new manual
+workflow `.github/workflows/agent1-429-junc744-to924.yml` compiles the
+full dependency graph, the new modules, and their axiom reports; it rejects
+any `sorryAx`. It has not yet been dispatched. Do not promote these
+statements to `results/` or claim a BB(6) bound improvement until that
+original-source CI run succeeds.
