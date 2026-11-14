@@ -740,7 +740,7 @@ theorem m1OddResidueThree_counted_increment_source
   rw [proposedIncrementCost_decomp 1 (8*k+3) a b,hcost]
   exact hrun
 
-/-- The symbolic endpoint matches the -notation used by sectionResult. -/
+/-- The symbolic endpoint matches the additive notation used by sectionResult. -/
 theorem m1OddResidueThree_counted_increment_source_symbolic
     (L k a b : Nat) (h : Int)
     (hL : 3 ≤ L) (hbound : 8*k+3 < 2^L) (ha : 0 < a) :
