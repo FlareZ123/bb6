@@ -30,11 +30,23 @@ theorem rst1Prime_firstSweep_preconditions
     rw [hcell]
     simp only [s1LeftFacing,binDec_zero]
     rw [sideBit_append]
-    rw [d1pow_length]
+    have hprefixLen :
+        i < (d1pow a ++ markerWord 1 ++ d0 ++ d1pow L).length := by
+      simp [List.length_append, d1pow_length, markerWord, d0]
+      omega
+    rw [if_pos hprefixLen]
     by_cases hi0 : i < 3*a
-    · simp [hi0,sideBit_d1pow_true a i hi0]
+    · have hbit := sideBit_append_left (d1pow a)
+        (markerWord 1 ++ d0 ++ d1pow L) i
+        (by rw [d1pow_length]; exact hi0)
+      rw [hbit]
+      exact sideBit_d1pow_true a i hi0
     · have heq : i = 3*a := by omega
       subst i
+      have hbit := sideBit_append_right (d1pow a)
+        (markerWord 1 ++ d0 ++ d1pow L) (3*a)
+        (by rw [d1pow_length])
+      rw [hbit]
       simp [markerWord,sideBit]
   · have hcell := s1Config_right_cell L 0 1 a 0 b h 0
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
@@ -51,7 +63,12 @@ theorem rst1Prime_firstSweep_run
   have hrun := counted_left_sweep (3*a+1)
     (s1Config L 0 1 a 0 b h).tape h hleft hright
   have hcost : 3*(3*a+1)=9*a+3 := by omega
-  simpa [s1Config,hcost] using hrun
+  change run tm2 (9*a+3)
+    (s0Config (markerWord 1 ++ (d0 ++ (binDec L 0 ++ lh))) a 0 b h) =
+      some ⟨3,h-((3*a+1:Int)),
+        sweptLeft (3*a+1)
+          (s0Config (markerWord 1 ++ (d0 ++ (binDec L 0 ++ lh))) a 0 b h).tape h⟩
+  simpa [hcost] using hrun
 
 #print axioms rst1Prime_firstSweep_preconditions
 #print axioms rst1Prime_firstSweep_run
