@@ -1,5 +1,6 @@
 import OuterSafe
 import LowEven4kDelta
+import PhysicalNoFatalConverse
 import Lean.Elab.Tactic.Omega
 
 set_option maxHeartbeats 30000000
@@ -10,6 +11,7 @@ namespace BB429Junc11Return32
 open BB6Coverage
 open BB429OddExcursion BB429JuncHeadExcursion BB429SourceE1Delta
 open BB429PhysicalFrontier BB429PhysicalBridge BB429DeltaPhysicalBridge
+open BB429PhysicalNoFatalConverse
 open BB429OuterSafe BB429LowEven4k
 
 /-- Compose two exact source displacement traces. -/
@@ -144,8 +146,10 @@ theorem junc11_lowEven_return32_physical
       d.head = c.head - 25 := by
   obtain ⟨c₂₂₁, houter, hrep₂₂₁, hheadOuter⟩ :=
     outer4_physical N c hrep
+  have hrep₂₂₁' : Represents (junc (N+2*K) 0 (2*N)) c₂₂₁ := by
+    simpa [hNK] using hrep₂₂₁
   obtain ⟨d, hlow, hrepD, hheadLow⟩ :=
-    lowEven4k_prepared_return_physical N K hK c₂₂₁ hrep₂₂₁
+    lowEven4k_prepared_return_physical N K hK c₂₂₁ hrep₂₂₁'
   have hrun :=
     physical_run_add_of_endpoint 63832
       (juncPosFullTime N 0 + (16*N+18*K+261))
