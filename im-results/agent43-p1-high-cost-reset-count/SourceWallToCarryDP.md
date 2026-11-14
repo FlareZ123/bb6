@@ -83,25 +83,30 @@ The finite-set representation in PR #99 supplies the distinct-start structure ne
 - im-results/agent50-p1-dyadic-width/small_index_wall_dp.md
 - PR #99 branch: agent43-wall-telescoping-finset-20261113 (unverified)
 
-## 5. Corrected full-wall carry target and exact finite scan
+## 5. Full-wall carry and exact finite scan
 
-An independent algebra audit found that the earlier version of WallFullDPTo10000.js checked the terminal carry against P+m+n+2. This is one too small. From the source wall identity,
+The full equation (W), with \(P=2^n\) and \(Q=7P-(n+3)\), is equivalent to
 
-    1 + 7·P·S = P·2^m + ∑_{s∈A}(n+3+s)2^s + (n+3+m)2^m,
+    ∑_{s<m}(Q−s)2^s = 2^m(P+m+n+3)−1.
 
-put Q=7P−(n+3) and T=∑s·2^s. Rearranging gives the exact full-wall equation
+The implemented bit recurrence starts with \(c_0=0\) and, at position \(j\), retains
+\((c_j+x_j(Q-j)-1)/2\) exactly when the numerator is odd. It therefore tracks
 
-    ∑_{s<m}(Q−s)2^s = 2^m(P+m+n+3) − 1.
+    c_m = (∑_{s<m}(Q−s)2^s − (2^m−1))/2^m.
 
-The implemented recurrence subtracts target bit 1 at each of the m positions, so after m bits its carry is `(sum−(2^m−1))/2^m`. From the full-wall equation this is `P+m+n+2`, one less than the coefficient `P+m+n+3` before the low all-ones word is removed.
+Substituting the full equation gives the actual terminal carry
 
-I independently reran the modular subset DP for every 14≤n≤10000: it returns a nonempty terminal state only for
+    c_m = P+m+n+2.
+
+The coefficient \(P+m+n+3\) in the multiple of \(2^m\) is one larger: the recurrence has already subtracted the low target word \(2^m-1\). Both scripts now compare against the recurrence carry, not the coefficient.
+
+The exact modular subset DP for every \(14≤n≤10000\) leaves only
 
     (30,8), (286,88), (350,112), (1614,563), (2990,1068), (3342,1145),
 
-where each pair is (n, minimum number of adjacent gaps 1 or 2). I then reran the BigInt full-wall scan for all six candidates with the corrected +3 carry. The results are unchanged: no exact carry hit, and the state sets become empty at m=82, 1442, 586, 5824, 6154, and 13730 respectively. Once the state set is empty at m₀, no terminal cost m≥m₀ can work, because restricting any candidate subset to positions below m₀ would already have to satisfy the impossible low-m₀-bit condition.
+where each pair is \((n,\text{minimum adjacent gaps of length 1 or 2})\). The exact BigInt full-wall scan for these six indices has no target-carry hits; its state sets become empty at \(m=82,1442,586,5824,6154,13730\), respectively. The independent n=30 scan through \(n=147\) likewise has no hits before its state set empties at \(m=82\). The empty-state argument excludes every larger terminal cost because any later candidate would restrict to a forbidden low-bit subset at the first empty layer.
 
-Thus the exact finite computation still excludes the shifted wall for all 14≤n≤10000, conditional on the source modular reduction (whose root identity is kernel-checked). The +2 error affected the exact-hit diagnostic but not the final finite exclusion; the corrected +3 computation independently confirms no hits. This remains a finite computational result, not an unbounded P1 exclusion.
+This is an exact finite computation, not a Lean-kernel proof of the full all-depth exclusion. It remains conditional on the source-to-finite-subset bridge: the merged source theorem exposes existential weighted aggregates, while the Finset-valued strengthening is still unverified in PR #99. The finite scan does not cover \(n>10000\), prove P1 nonhalting, or determine BB(6).
 
 ## 6. Arbitrary restart roots after a high-depth edge
 

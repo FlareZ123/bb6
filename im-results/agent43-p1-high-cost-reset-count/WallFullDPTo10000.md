@@ -84,7 +84,7 @@ At bit \(j\), suppose the carry after the lower \(j\) bits is \(c\), and choose 
 \(c+x_jC_j\equiv\epsilon_j\pmod2\), and is then
 \((c+x_jC_j-\epsilon_j)/2\). Induction on the processed bit count shows that the DP state set is exactly the set of carries arising from all allowed subset choices. The forced initial bit \(x_0=1\) enforces \(0\in A\).
 
-For the modular phase, \(\epsilon_0=1\) and \(\epsilon_j=0\) for \(j>0\). The extra gap-state coordinate records the distance to the previous selected bit, capped at 2; the short-gap counter increments exactly for gaps 1 or 2. Merging equal (carry, gap-state) pairs while retaining the minimum counter cannot remove a future transition, since all future transitions depend only on those two coordinates. For the full-wall phase, every target bit is 1 because the right side is a multiple of \(2^m\) minus 1. The terminal carry is therefore exactly \(P+m+n+3\). Empty state sets stay empty under every later transition.
+For the modular phase, \(\epsilon_0=1\) and \(\epsilon_j=0\) for \(j>0\). The extra gap-state coordinate records the distance to the previous selected bit, capped at 2; the short-gap counter increments exactly for gaps 1 or 2. Merging equal (carry, gap-state) pairs while retaining the minimum counter cannot remove a future transition, since all future transitions depend only on those two coordinates. For the full-wall phase, every target bit is 1 because the right side is a multiple of \(2^m\) minus 1. The terminal carry is therefore exactly \(P+m+n+2\), because the recurrence subtracts the low all-ones word \(2^m-1\). Empty state sets stay empty under every later transition.
 
 ## Phase 1: exhaustive modular scan, n=14..10000
 
@@ -125,7 +125,7 @@ For a fixed candidate \(n\), let \(P=2^n\) and \(Q=7P-(n+3)\). The full equation
 where \(A\subseteq\{0,\ldots,m-1\}\) contains \(0\). After processing \(m\) bits of the left-hand sum, the carry \(c_m\) must therefore equal
 
 \[
-c_m=P+m+n+3.
+c_m=P+m+n+2.
 \]
 
 The second DP starts with state set \(\{0\}\), forces \(x_0=1\), and at each bit \(j\) considers both \(x_j=0\) and \(x_j=1\). For \(C=Q-j\), it retains the next carry \((c+x_jC-1)/2\) exactly when the numerator is odd. This enumerates every subset with the required low bits; the full equation requires the exact target carry above.
