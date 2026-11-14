@@ -138,7 +138,7 @@ c_{61}(j)=y-29\pmod{61},\quad c_{67}(j)=y-32\pmod{67}.
   giving \(P_{50},P_{160},P_{270}\equiv2020,3120,3285\). Consequently \(B\equiv1480,2140,765\) and \(y\bmod67=29,20,22\) for \(j\bmod3=0,1,2\). Since \(2^6\equiv-3\pmod{67}\), the cylinder is \(w\equiv5\pmod{66}\); there \(b_w\equiv w+32\pmod{67}\), forcing \(w\bmod67=64,55,57\).
 
 
-These are necessary conditions, not sufficient conditions for a predecessor. In particular, the \(w=0,1,2,3,4\) classification follows immediately: \(w=0\) is impossible; \(w=1\) is possible exactly for \(j\equiv2\pmod3\); \(w=2\) is possible exactly for \(j\equiv7\pmod{11}\); \(w=3,4\) are impossible.
+These are necessary conditions, not sufficient conditions for a predecessor. In particular, the \(w=0,1,2,3,4\) classification follows immediately: \(w=0\) is impossible; \(w=1\) is possible exactly for \(j\equiv2\pmod3\); \(w=2\) is possible exactly for \(j\equiv7\pmod{11}\); \(w=3,4,5\) are impossible.
 
 ### Exact density of the eight-prime filter
 
