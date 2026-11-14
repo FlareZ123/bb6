@@ -63,7 +63,7 @@ Then
 \[
 55y=16B+25. \tag{2}
 \]
-If a prime \(p_*\) divides \(D_w\), equation (1) forces \(y\equiv b_w\pmod{p_*}\). Applying this to the established prime moduli \(5,7,11,13,19,29,61,67\) gives the following necessary conditions on every predecessor valuation.
+If a prime \(p_*\) divides \(D_w\), equation (1) forces \(y\equiv b_w\pmod{p_*}\). Applying this to the established prime moduli \(5,7,11,13,19,29,37,61,67,79,101\) gives the following necessary conditions on every predecessor valuation.
 
 | Prime | Divisibility cylinder for \(D_w\) | Necessary condition on \(w\) |
 |---|---|---|
@@ -75,6 +75,9 @@ If a prime \(p_*\) divides \(D_w\), equation (1) forces \(y\equiv b_w\pmod{p_*}\
 | \(29\) | \(w\equiv18\pmod{28}\) | \(w\equiv c_{29}(j)\pmod{29}\) |
 | \(61\) | \(w\equiv35\pmod{60}\) | \(w\equiv c_{61}(j)\pmod{61}\) |
 | \(67\) | \(w\equiv5\pmod{66}\) | \(w\equiv c_{67}(j)\pmod{67}\) |
+| \(37\) | \(w\equiv7\pmod{36}\) | \(w\equiv c_{37}(j)\pmod{37}\) |
+| \(79\) | \(w\equiv9\pmod{39}\) | \(w\equiv c_{79}(j)\pmod{79}\) |
+| \(101\) | \(w\equiv18\pmod{100}\) | \(w\equiv c_{101}(j)\pmod{101}\) |
 
 The parameter-dependent forced residues are:
 
@@ -104,7 +107,7 @@ c_{29}(j)&2&17&9&25&14&27&13&12&2&8&1&14&12&13&24&24&21&9&14&7&13
 \end{array}
 \]
 
-For prime 67, the additional period-three residues are \(y\bmod67=(29,20,22)\) and \(c_{67}(j)=(64,55,57)\) for \(j\bmod3=(0,1,2)\). Here the forced-residue functions are:
+For prime 67, the additional period-three residues are \(y\bmod67=(29,20,22)\) and \(c_{67}(j)=(64,55,57)\) for \(j\bmod3=(0,1,2)\). Here the forced-residue functions are: The additional forced-residue tables are \(c_{37}=(14,36,7,13,10,4,31,12,10)\) (period \(9\)), \(c_{79}=(74,37,5,47,56,12,31,49,34,63,19,32,67,42,67,4,37,59,44,22,15,5,63,13,42,53,35,64,16,42,41,73,18,22,60,63,78,55,29)\) (period \(39\)), and \(c_{101}=(80,90,73,38,18)\) (period \(5\)).
 \[
 c_7(j)=y-2\pmod7,\quad
 c_{19}(j)=y-8\pmod{19},\quad
@@ -137,6 +140,7 @@ c_{61}(j)=y-29\pmod{61},\quad c_{67}(j)=y-32\pmod{67}.
   \]
   giving \(P_{50},P_{160},P_{270}\equiv2020,3120,3285\). Consequently \(B\equiv1480,2140,765\) and \(y\bmod67=29,20,22\) for \(j\bmod3=0,1,2\). Since \(2^6\equiv-3\pmod{67}\), the cylinder is \(w\equiv5\pmod{66}\); there \(b_w\equiv w+32\pmod{67}\), forcing \(w\bmod67=64,55,57\).
 
+- **Primes 37, 79, and 101.** For each prime let \(M=55p\) and \(T(A)=\begin{pmatrix}A^2&A-3\\0&9\end{pmatrix}\pmod M\); then \(P_r(A)\) is the upper-right entry of \(T(A)^r\). For \(p=37\), \(9^r\equiv81\pmod{360}\), so \(A\equiv1053\pmod{2035}\), and \(T(1053)^{990}=I\); this gives period \(9\) and the \(c_{37}\) table above. For \(p=79\), \(9^r\bmod1560\) cycles \(81,321,1041\), giving \(A\)-cycle \(1438,4078,3363\); each corresponding \(T(A)^{4290}=I\pmod{4345}\), giving period \(39\) and the \(c_{79}\) table. For \(p=101\), \(9^r\equiv1\pmod{200}\), so \(A\equiv8\pmod{5555}\), and \(T(8)^{550}=I\); this gives period \(5\) and the \(c_{101}\) table. Their denominator cylinders follow from \(2^8\equiv-3\pmod{37}\), \(2^{10}\equiv-3\pmod{79}\), and \(2^{19}\equiv-3\pmod{101}\).
 
 These are necessary conditions, not sufficient conditions for a predecessor. In particular, the \(w=0,1,2,3,4\) classification follows immediately: \(w=0\) is impossible; \(w=1\) is possible exactly for \(j\equiv2\pmod3\); \(w=2\) is possible exactly for \(j\equiv7\pmod{11}\); \(w=3,4,5\) are impossible.
 
@@ -214,6 +218,38 @@ This is a conditional prime-square refinement, not a replacement for the eight-p
   \boxed{\frac{32\,116\,064}{93\,806\,097}\approx0.3423664882.}
   \]
 The accompanying second_level_prime_power_refinement.js checks all \(j\bmod121\) by exact integer counting. For \(j\not\equiv10\pmod{11}\), its count is \(118\,427\,708\,850\) modulo the same \(L_{121}\), exactly the baseline eight-prime density.
+
+
+### Eleven-prime extension
+
+The additional primes \(37,79,101\) give three more independent necessary cylinders:
+\[
+\begin{array}{c|c|c}
+p&\text{denominator cylinder}&\text{forced residue}\\
+37&w\equiv7\pmod{36}&w\equiv c_{37}(j)\pmod{37}\\
+79&w\equiv9\pmod{39}&w\equiv c_{79}(j)\pmod{79}\\
+101&w\equiv18\pmod{100}&w\equiv c_{101}(j)\pmod{101}.
+\end{array}
+\]
+The base modulus is now
+\[
+M_0=\operatorname{lcm}(4,12,3,10,18,28,36,39,60,66,100)=900900.
+\]
+For each \(b\bmod M_0\), apply the \(5,13,7,11\) filters as before; each active cylinder among \(19,29,37,61,67,79,101\) contributes one residue modulo its prime, otherwise all prime residues remain. Exact CRT counting gives
+\[
+L_{11}=900900\cdot19\cdot29\cdot37\cdot61\cdot67\cdot79\cdot101
+=598\,939\,578\,493\,155\,900
+\]
+and, for every \(j\bmod33\), exactly
+\[
+195\,456\,104\,794\,503\,150
+\]
+surviving residues. Therefore the eleven-prime necessary sieve leaves
+\[
+\boxed{\frac{1\,643\,178\,686\,797}{5\,035\,221\,340\,842}
+\approx0.3263369325.}
+\]
+It eliminates about \(67.36631\%\) of valuation classes. Reproduction is in second_level_eleven_prime_density.js; the forced-residue and matrix-period certificates for the new primes are in second_level_extra_prime_tables.js.
 
 
 ## 3. A uniform high-side middle-band exclusion
