@@ -186,8 +186,10 @@ jobs:
               lean -DmaxRecDepth=55000 -o "$T/BlankSixteenthRejoin.olean" "$T/BlankSixteenthRejoin.lean"
               ;;
             2b17)
-              # Resume from d-root-stage2b16, then compile the seventeenth reentry
-              # and its immediate E7 third-return escape.
+              # Keep the 2,656-transition computation in two separate Lean processes:
+              # this bounds peak kernel memory while preserving the exact run via run_add.
+              lean -DmaxRecDepth=55000 -o "$T/SeventeenthFirstHalf.olean" "$T/SeventeenthFirstHalf.lean"
+              lean -DmaxRecDepth=55000 -o "$T/SeventeenthSecondHalf.olean" "$T/SeventeenthSecondHalf.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
               lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
               ;;
