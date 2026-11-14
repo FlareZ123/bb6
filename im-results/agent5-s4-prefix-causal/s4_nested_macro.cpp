@@ -130,6 +130,60 @@ int main(int argc, char** argv) {
                   << " mass=" << mass << "\n";
     }
 
+    // Exact terminal-quotient diagnostic over the existing finite 50,000-R-block
+    // model horizon. If the carry consumes all n suffix digits, q=a+1 is the
+    // remaining empty-tail potential and G halts iff q is a power of two.
+    if (argc > 1 && std::string(argv[1]) == "--scan-terminal-50000") {
+        Tail state = actualTail;
+        uint64_t fullEvents = 0, residueCandidates = 0, exactPowers = 0;
+        uint64_t maxLen = state.size();
+        for (uint64_t n = 0; n < 50000; ++n) {
+            for (size_t i = 0; i < offsets.size(); ++i) {
+                bool fullSuffix = false;
+                uint64_t q = 0;
+                const uint64_t c = offsets[i];
+                const bool ok = G(c, state, out, &fullSuffix, &q);
+                if (fullSuffix) {
+                    ++fullEvents;
+                    const uint64_t r31 = q % 31;
+                    const uint64_t r127 = q % 127;
+                    const bool candidate31 =
+                        r31 == 1 || r31 == 2 || r31 == 4 || r31 == 8 || r31 == 16;
+                    const bool candidate127 =
+                        r127 == 1 || r127 == 2 || r127 == 4 ||
+                        r127 == 8 || r127 == 16 || r127 == 32 || r127 == 64;
+                    const bool qPower = q != 0 && (q & (q - 1)) == 0;
+                    residueCandidates += candidate127;
+                    exactPowers += qPower;
+                    std::cout << "event block=" << n << " gate=" << i
+                              << " length=" << state.size() << " q=" << q
+                              << " q_mod31=" << r31 << " q_mod127=" << r127
+                              << " candidate127=" << candidate127
+                              << " exact_power=" << qPower << "\n";
+                }
+                if (!ok) {
+                    std::cerr << "HALT block=" << n << " gate=" << i
+                              << " q=" << q << "\n";
+                    return 10;
+                }
+                state.swap(out);
+                if (state.size() > maxLen) maxLen = state.size();
+            }
+        }
+        uint64_t totalMass = state.size();
+        for (auto d : state) {
+            if (d > UINT64_MAX - totalMass) return 8;
+            totalMass += d;
+        }
+        std::cout << "SUMMARY blocks=50000 gates=" << 50000ULL * offsets.size()
+                  << " full_suffix_events=" << fullEvents
+                  << " candidate127=" << residueCandidates
+                  << " exact_power2=" << exactPowers
+                  << " max_length=" << maxLen
+                  << " final_length=" << state.size()
+                  << " final_mass=" << totalMass << "\n";
+    }
+
     if (argc > 1 && std::string(argv[1]) == "--print-offsets") {
         std::cout << "Offsets:";
         for (auto v : offsets) std::cout << " " << v;
