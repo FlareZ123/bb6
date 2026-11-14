@@ -15,7 +15,7 @@ open BB6Coverage.Agent24M1OddQ4Prefix
 open BB6Coverage.Agent8CountedReset
 open BB6ChampionArithmetic
 
-/-- The low-three-bit decomposition used by every m=1, n=6 (mod 8) source. -/
+/-- The low-three-bit decomposition for m=1 and n=8k+3. -/
 /-- Low-three-bit decomposition for the m=1, n=3 (mod 8) source family. -/
 theorem binDec_residue3 (L k : Nat) (hL : 3 ≤ L)
     (hbound : 8*k+3 < 2^L) :
@@ -429,8 +429,8 @@ private theorem m1OddResidueThree_config_ext_by_fields (c d : Config)
       cases htape
       rfl
 
-/-- The n=8k+6 and n=6 S1 source tapes agree on the half-line read by
-the n=6 prefix.  Their left words share the complete low-order input prefix;
+/-- The n=8k+3 and n=3 S1 source tapes agree on the half-line read by
+the n=3 prefix. Their left words share the complete low-order input prefix;
 their right words depend only on b. -/
 private theorem m1OddResidueThree_input_matches
     (L k a b : Nat) (h : Int)
@@ -494,8 +494,8 @@ private theorem m1OddResidueThree_input_matches
     rw [hcoord] at hsrc hbase
     exact hsrc.trans hbase.symm
 
-/-- Lift the 32+12a source prefix from n=6 to every admissible n=8k+6.
-The original n=6 run reads only the common half-line, so the rest of the
+/-- Lift the 32+12a source prefix from n=3 to every admissible n=8k+3.
+The original n=3 run reads only the common half-line, so the rest of the
 general source tape is preserved exactly by run_frame. -/
 theorem m1OddResidueThree_q4_prefix_source
     (L k a b : Nat) (h : Int)
@@ -679,8 +679,8 @@ private theorem m1OddResidueThree_target_left
   rw [d1pow_add_right a 2]
   simp [List.drop,List.append_assoc]
 
-/-- A complete source-level m=1 reset prefix for every n=8k+6.  The only
-specialized simulation reused is the n=6 finite bridge; its arbitrary left
+/-- A complete source-level m=1 reset prefix for every n=8k+3. The only
+specialized simulation reused is the n=3 finite bridge; its arbitrary left
 tail is transported by run_frame, and the suffix consumes only the right
 counter and the explicitly described left-facing stream. -/
 theorem m1OddResidueThree_reset_prefix_source
@@ -714,7 +714,7 @@ theorem m1OddResidueThree_reset_prefix_source
   simp only [Option.bind_some]
   exact hfullSuffix
 
-/-- Counted drain closes the full generic residue-six increment. -/
+/-- Counted drain closes the full generic residue-three increment. -/
 theorem m1OddResidueThree_counted_increment_source
     (L k a b : Nat) (h : Int)
     (hL : 3 ≤ L) (hbound : 8*k+3 < 2^L) (ha : 0 < a) :
