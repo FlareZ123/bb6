@@ -204,12 +204,8 @@ theorem runWithHeadMax_add (m : Machine) (n k : Nat) (c : Config) :
         (runWithHeadMax m n c).bind (fun (d, h₁) =>
           (runWithHeadMax m (k + 1) d).map (fun (e, h₂) => (e, max h₁ h₂)))
       rw [ih]
-      simp [Option.bind_assoc, Option.map_bind, Option.bind_map]
-      congr 1
-      funext y
-      congr 1
-      funext z
-      simp [Function.comp_def, Int.max_assoc]
+      simp [runWithHeadMax, Option.bind_assoc, Option.map_bind,
+        Option.bind_map, Function.comp_def, Int.max_assoc]
 
 /-- Exact two-step law for the head-maximum monitor, stated in terms of
     the two primitive raw transitions. -/

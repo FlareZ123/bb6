@@ -293,3 +293,111 @@ push-triggered validation is claimed.
 Until that end-to-end run succeeds, the 13,718-step and 16,280-step results
 are **Lean proof candidates, not CI-certified original-source results**.
 They are finite prefixes only and do not decide #429 or BB(6).
+
+
+## Candidate continuation after Junc(0,744): Junc(0,924) (2026-11-14)
+
+The current PR #94 source candidate reaches Junc(0,744) at primitive step
+1,514,038. The new continuation module proposes a further 1,158,049-step
+physical run to Junc(0,924), with exact head displacement -139. The route is
+compositional:
+
+| Segment | Transition | Steps | Head displacement |
+|---|---|---:|---:|
+| Outer-safe ladder | Junc(0,744) -> Junc(381,3) | 191,493 | +741 |
+| Low43 gap | Junc(381,3) -> Junc(387,2) | 7,382 | +4 |
+| Low-even 4k | Junc(387,2) -> Junc(11,774) | 3,761 | -765 |
+| Three +32 returns | Junc(11,774) -> Junc(11,870) | 683,267 | -75 |
+| Outer-safe ladder | Junc(11,870) -> Junc(445,17) | 261,433 | +853 |
+| Low-odd | Junc(445,17) -> Junc(440,34) | 5,306 | -14 |
+| Low42 | Junc(440,34) -> Junc(0,924) | 5,407 | -883 |
+| **Total** | **Junc(0,744) -> Junc(0,924)** | **1,158,049** | **-139** |
+
+The central new reusable return is in `Junc11Return32.lean`. For
+N+2K=221 and K>=1, it composes four outer-safe reductions with the
+parameterized low-even 4k return:
+
+`Junc(11,408+2N) -> Junc(11,440+2N)`
+
+in `64093 + 4N^2 + 22N + 18K` steps, with head displacement -25.
+The three route instances are (N,K)=(183,19),(199,11),(215,3), giving
+Junc(11,774) -> Junc(11,870) in 683,267 steps. The same family also
+supplies the 3,761-step Junc(387,2) -> Junc(11,774) return (N=1,K=193).
+
+`Junc744To924.lean` lifts the low43 and low-odd canonical runs to arbitrary
+physical Junc representations, composes all seven segments, and applies the
+physical C/01 converse at the live Junc(0,924) endpoint. Its candidate
+theorem `junc0_744_to_junc0_924_physical` therefore states all-prefix
+C/01-freedom for the entire 1,158,049-step interval. The theorem
+`blank_root_to_junc0_924` composes this with the 1,514,038-step
+blank-root-to-Junc(0,744) candidate, yielding a 2,672,087-step
+blank-root prefix ending at Junc(0,924), again with C/01 excluded at every
+primitive prefix.
+
+**Verification status — blocked by two transitive dependencies:**
+(1) PR #82's low-even 4k original-source workflow (run 43576154592) failed:
+`LowEven4kDelta.lean` has multiple Lean type/tactic errors and downstream
+`sorryAx`. Both new continuations depend on `lowEven4k_prepared_return_physical`.
+(2) The base blank-root chain imports `Low43Continuation.lean` transitively
+through `Junc0ReturnMap28RootChain -> ParityShiftedRootComplete ->
+Low43BlankRootExtension -> Low43RootNext -> Low43RootPhysical`. The existing
+root-junction-chain workflow also failed compiling this module with a type
+mismatch and `sorryAx`. I incorrectly omitted it from the first version of
+this branch's workflow; it has now been restored as a required compile step.
+Consequently the base blank-root prefix and both new continuations are not
+currently certified sorry-free theorems. A branch-local patch replaces the
+five Low43Continuation runWithMax-to-runWithDelta projection wrappers with
+explicit rewrites; run 43580648197 passed that module and then failed at
+`JRootEntry.runWithHeadMax_add`. A second branch patch unfolds the recursive
+successor in that Option map-bind proof; root-chain CI run 43580820177 is
+testing it. Both repairs remain unverified. Do not promote them to
+`results/` or claim a BB(6) bound improvement.
+
+
+## Second continuation: Junc(0,924) -> Junc(0,1008) (2026-11-14)
+
+The uniform low43 Junc-to-Junc theorem in `Low43C0Uniform.lean` permits a
+second continuation beyond the special v=1,k=189 gap used above. Starting
+from Junc(0,924), seven outer-safe returns reach Junc(381,183). The uniform
+low43 instance (v,k)=(91,144) then reaches Junc(297,362), followed by a
+low-even 4k return, a five-step outer ladder, low-odd, and low42:
+
+| Segment | Transition | Steps | Head displacement |
+|---|---|---:|---:|
+| Outer-safe ladder | Junc(0,924) -> Junc(381,183) | 191,493 | +741 |
+| Uniform low43, (v,k)=(91,144) | Junc(381,183) -> Junc(297,362) | 40,772 | -176 |
+| Low-even 4k, (N,K)=(181,58) | Junc(297,362) -> Junc(11,954) | 136,331 | -585 |
+| Outer-safe ladder | Junc(11,954) -> Junc(445,101) | 261,433 | +853 |
+| Low-odd, (v,n)=(50,196) | Junc(445,101) -> Junc(398,202) | 15,512 | -98 |
+| Low42, (j,k)=(101,148) | Junc(398,202) -> Junc(0,1008) | 45,769 | -799 |
+| **Total** | **Junc(0,924) -> Junc(0,1008)** | **691,310** | **-64** |
+
+`Junc924To1008.lean` lifts the uniform low43 canonical run to arbitrary
+physical Junc representations, proves each segment, and composes the
+physical run. The final live Junc(0,1008) endpoint gives all-prefix C/01
+exclusion. Composing with `blank_root_to_junc0_924` yields a candidate
+blank-root prefix of **3,363,397** primitive steps ending at Junc(0,1008),
+with C/01 excluded at every primitive prefix.
+
+This extension depends on `W4JuncOne.lean`, `W4JuncGeneral.lean`,
+`Low43C0Uniform.lean`, and the blocked low-even 4k theorem. The dedicated workflow is configured to compile the full transitive chain,
+including Low43Continuation, the uniform low43 modules, and the low-even
+4k dependency, then audit the endpoint theorems. It has not been run. Both
+Low43Continuation and LowEven4kDelta must first compile without errors and
+without `sorryAx`; until then this is only a conditional composition
+candidate, not a proof.
+
+
+## Next candidate: a uniform +52 return
+
+`Junc0Plus52Sketch.md` derives an unformalized parameterized composition
+`Junc(0,2v+742) -> Junc(0,2v+794)` for odd (131\le v\le177), with
+head displacement -39. The two root-connected instances (v=133) and
+(v=159) would extend Junc(0,1008) -> Junc(0,1060) -> Junc(0,1112),
+adding 1,218,428 steps and giving a 4,581,825-step blank-root prefix.
+This is an algebraic proof plan only; it is not yet formalized or included
+in the CI workflow.
+
+A proposed +60 continuation beyond Junc(0,1112) was rejected: its
+second low-odd step has a parity mismatch (`n=417/2`). The correction is
+recorded in `Junc0Plus52Sketch.md`; do not use the rejected route.
