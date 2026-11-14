@@ -757,4 +757,9 @@ theorem m1Even_residue6_counted_increment_source
   rw [proposedIncrementCost_decomp 1 (8*k+6) a b,hcost]
   exact hrun
 
+#print axioms binDec_residue6
+#print axioms m1Even_residue6_q4_prefix_source
+#print axioms m1Even_residue6_reset_prefix_source
+#print axioms m1Even_residue6_counted_increment_source
+
 end BB6Coverage.Agent42M1EvenResidueSix
