@@ -7,7 +7,7 @@ on:
         required: true
         default: "1"
         type: choice
-        options: ["1", "2a", "2b16", "2b17a", "2b17b", "2b17c", "2b17d", "2b17e", "2b17f", "2b17g", "2b17h", "3a", "3b", "3c", "3d", "3e", "4a", "4b", "4c", "4d", "4e", "4f", "4g", "5a", "5b", "5c", "5d", "5e"]
+        options: ["1", "2a", "2b16", "2b17a", "2b17b", "2b17c", "2b17d", "2b17e", "2b17f", "2b17g", "2b17h", "2b17i", "2b17j", "3a", "3b", "3c", "3d", "3e", "4a", "4b", "4c", "4d", "4e", "4f", "4g", "5a", "5b", "5c", "5d", "5e"]
       source_run_id:
         description: Previous successful stage run ID (omit for stage 1)
         required: false
@@ -202,18 +202,27 @@ jobs:
               lean -DmaxRecDepth=55000 -o "$T/SeventeenthBlock2.olean" "$T/SeventeenthBlock2.lean"
               ;;
             2b17e)
-              # Compose the two short checkpoints with the existing half certificates.
+              # Certify the first-half 304-step remainder and preserve the arithmetic join.
               lean -DmaxRecDepth=55000 -o "$T/SeventeenthTerminalCertificate.olean" "$T/SeventeenthTerminalCertificate.lean"
+              lean -DmaxRecDepth=55000 -o "$T/SeventeenthBlock3.olean" "$T/SeventeenthBlock3.lean"
               ;;
             2b17f)
-              # Lift the exact terminal state through the authentic blank-root exception.
-              lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthException.olean" "$T/BlankSeventeenthException.lean"
+              # Lift the fourth 512-section arithmetic block to the authentic blank root.
+              lean -DmaxRecDepth=55000 -o "$T/SeventeenthBlock4.olean" "$T/SeventeenthBlock4.lean"
               ;;
             2b17g)
-              # Compose the exact E/E/A packet and prove the physical blank-root reentry.
-              lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
+              # Lift the fifth 512-section arithmetic block to the authentic blank root.
+              lean -DmaxRecDepth=55000 -o "$T/SeventeenthBlock5.olean" "$T/SeventeenthBlock5.lean"
               ;;
             2b17h)
+              # Close the final 304-section remainder and the seventeenth root exception.
+              lean -DmaxRecDepth=55000 -o "$T/SeventeenthBlock6.olean" "$T/SeventeenthBlock6.lean"
+              ;;
+            2b17i)
+              # Compose the six source-certified blocks with the original E/E/A return.
+              lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
+              ;;
+            2b17j)
               # Certify the general q>=3 E7 exceptional escape used by later closures.
               lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
               ;;
@@ -221,16 +230,16 @@ jobs:
               # Legacy combined path retained for existing workflow_call callers only.
               lean -DmaxRecDepth=55000 -o "$T/SeventeenthFirstHalf.olean" "$T/SeventeenthFirstHalf.lean"
               lean -DmaxRecDepth=55000 -o "$T/SeventeenthSecondHalf.olean" "$T/SeventeenthSecondHalf.lean"
-              lean -DmaxRecDepth=55000 -o "$T/SeventeenthBlock1.olean" "$T/SeventeenthBlock1.lean"
-              lean -DmaxRecDepth=55000 -o "$T/SeventeenthBlock2.olean" "$T/SeventeenthBlock2.lean"
               lean -DmaxRecDepth=55000 -o "$T/SeventeenthTerminalCertificate.olean" "$T/SeventeenthTerminalCertificate.lean"
-              lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthException.olean" "$T/BlankSeventeenthException.lean"
+              for module in SeventeenthBlock1 SeventeenthBlock2 SeventeenthBlock3 SeventeenthBlock4 SeventeenthBlock5 SeventeenthBlock6; do
+                lean -DmaxRecDepth=55000 -o "$T/$module.olean" "$T/$module.lean"
+              done
               lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
               lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
               ;;
             2b)
               # Legacy combined path for existing workflow_call callers only.
-              # Manual dispatch should use 2b16, 2b17a-h, 3a-e, 4a-g and 5a-e so each Lean module is checkpointed.
+              # Manual dispatch should use 2b16, 2b17a-j, 3a-e, 4a-g and 5a-e so each Lean module is checkpointed.
               lean -DmaxRecDepth=55000 -o "$T/BlankSixteenthRejoin.olean" "$T/BlankSixteenthRejoin.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
               lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
