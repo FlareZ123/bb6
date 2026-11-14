@@ -385,3 +385,8 @@ head displacement -39. The two root-connected instances (v=133) and
 adding 1,218,428 steps and giving a 4,581,825-step blank-root prefix.
 This is an algebraic proof plan only; it is not yet formalized or included
 in the CI workflow.
+
+A second, more complex unformalized continuation from the hypothetical
+Junc(0,1112) endpoint reaches Junc(0,1172) in 1,004,130 additional steps;
+its segment table and parameter checks are also recorded in
+`Junc0Plus52Sketch.md`. Neither sketch is part of the current CI route.
