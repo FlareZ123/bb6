@@ -41,13 +41,13 @@ A level entry is the initial height at a new value of (K(h)), including (h=2).  
 |---:|---:|---:|---:|---:|
 | 9 | 3 | 3 | 4 | 5,551 |
 | 27 | 9 | 9 | 39 | 1,884 |
-| 81 | 27 | 27 | 146 | 633 |
-| 243 | 81 | 81 | 3,735 | 218 |
+| 81 | 27 | 27 | 259 | 633 |
+| 243 | 81 | 81 | 1,212 | 218 |
 | 729 | 243 | 243 | 3,735 | 75 |
 | 2,187 | 729 | 729 | 16,448 | 21 |
 | 6,561 | 2,187 | 2,186 | not reached | 6 |
 
-“Same-level fatal congruence match” counts entries ((K,h)) with
+At modulus 6,561, the only missing class is 530.\n\n“Same-level fatal congruence match” counts entries ((K,h)) with
 (h\equiv F_K\pmod{3^a}), where (F_K=4\cdot2^K-K-4).  Such matches automatically occur only in the eligible (K\bmod6\in\{4,5\}) sectors because all observed entries are (2\pmod3).
 
 ## Research implications and cautions
