@@ -7,7 +7,7 @@ on:
         required: true
         default: "1"
         type: choice
-        options: ["1", "2a", "2b16", "2b17a", "2b17b", "2b17c", "2b17d", "2b17e", "2b17f", "3", "4", "5"]
+        options: ["1", "2a", "2b16", "2b17a", "2b17b", "2b17c", "2b17d", "2b17e", "2b17f", "3a", "3b", "3c", "3d", "3e", "4a", "4b", "4c", "4d", "4e", "4f", "4g", "5a", "5b", "5c", "5d", "5e"]
       source_run_id:
         description: Previous successful stage run ID (omit for stage 1)
         required: false
@@ -220,10 +220,25 @@ jobs:
               ;;
             2b)
               # Legacy combined path for existing workflow_call callers only.
-              # Manual dispatch should use 2b16 followed by 2b17 to preserve the checkpoint.
+              # Manual dispatch should use 2b16, 2b17a-f, 3a-e, 4a-g and 5a-e so each Lean module is checkpointed.
               lean -DmaxRecDepth=55000 -o "$T/BlankSixteenthRejoin.olean" "$T/BlankSixteenthRejoin.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
               lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
+              ;;
+            3a)
+              lean -DmaxRecDepth=55000 -o "$T/BlankEighteenthRejoin.olean" "$T/BlankEighteenthRejoin.lean"
+              ;;
+            3b)
+              lean -DmaxRecDepth=55000 -o "$T/BlankNineteenthRejoin.olean" "$T/BlankNineteenthRejoin.lean"
+              ;;
+            3c)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethEscape.olean" "$T/BlankTwentiethEscape.lean"
+              ;;
+            3d)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethRejoin.olean" "$T/BlankTwentiethRejoin.lean"
+              ;;
+            3e)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFirstRejoin.olean" "$T/BlankTwentyFirstRejoin.lean"
               ;;
             3)
               lean -DmaxRecDepth=55000 -o "$T/BlankEighteenthRejoin.olean" "$T/BlankEighteenthRejoin.lean"
@@ -231,6 +246,27 @@ jobs:
               lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethEscape.olean" "$T/BlankTwentiethEscape.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethRejoin.olean" "$T/BlankTwentiethRejoin.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFirstRejoin.olean" "$T/BlankTwentyFirstRejoin.lean"
+              ;;
+            4a)
+              lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7SecondSafe.olean" "$T/ExceptionalE7SecondSafe.lean"
+              ;;
+            4b)
+              lean -DmaxRecDepth=55000 -o "$P2/ExceptionalEPacketClosure.olean" "$P2/ExceptionalEPacketClosure.lean"
+              ;;
+            4c)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentySecondRejoin.olean" "$T/BlankTwentySecondRejoin.lean"
+              ;;
+            4d)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyThirdRejoin.olean" "$T/BlankTwentyThirdRejoin.lean"
+              ;;
+            4e)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFourthRejoin.olean" "$T/BlankTwentyFourthRejoin.lean"
+              ;;
+            4f)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFifthRejoin.olean" "$T/BlankTwentyFifthRejoin.lean"
+              ;;
+            4g)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentySixthRejoin.olean" "$T/BlankTwentySixthRejoin.lean"
               ;;
             4)
               lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7SecondSafe.olean" "$T/ExceptionalE7SecondSafe.lean"
@@ -240,6 +276,21 @@ jobs:
               lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFourthRejoin.olean" "$T/BlankTwentyFourthRejoin.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFifthRejoin.olean" "$T/BlankTwentyFifthRejoin.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankTwentySixthRejoin.olean" "$T/BlankTwentySixthRejoin.lean"
+              ;;
+            5a)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentySeventhRejoin.olean" "$T/BlankTwentySeventhRejoin.lean"
+              ;;
+            5b)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyEighthRejoin.olean" "$T/BlankTwentyEighthRejoin.lean"
+              ;;
+            5c)
+              lean -DmaxRecDepth=55000 -o "$T/BlankTwentyNinthRejoin.olean" "$T/BlankTwentyNinthRejoin.lean"
+              ;;
+            5d)
+              lean -DmaxRecDepth=55000 -o "$T/BlankThirtiethRejoin.olean" "$T/BlankThirtiethRejoin.lean"
+              ;;
+            5e)
+              lean -DmaxRecDepth=55000 "$T/Seed31Probe.lean" | tee seed31-probe.txt
               ;;
             5)
               lean -DmaxRecDepth=55000 -o "$T/BlankTwentySeventhRejoin.olean" "$T/BlankTwentySeventhRejoin.lean"
@@ -259,7 +310,7 @@ jobs:
           fi
           find im-results -type f -name '*.olean' -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
       - name: Preserve intermediate checkpoint
-        if: ${{ always() && inputs.stage != '5' }}
+        if: ${{ always() && inputs.stage != '5' && inputs.stage != '5e' }}
         uses: actions/upload-artifact@v4
         with:
           name: d-root-stage${{ inputs.stage }}
@@ -268,7 +319,7 @@ jobs:
             source/lean-audit.log
           if-no-files-found: warn
       - name: Preserve final Seed31 audit
-        if: ${{ always() && inputs.stage == '5' }}
+        if: ${{ always() && (inputs.stage == '5' || inputs.stage == '5e') }}
         uses: actions/upload-artifact@v4
         with:
           name: d-root-seed31-audit
