@@ -87,22 +87,14 @@ As \(2^{-1}\equiv31\pmod{61}\), this says \(u\equiv w_r\pmod{61}\), proving the 
 
 The physical-range hypothesis ensures the natural subtraction in the parent numerator is not truncated, by the existing power-dominance and positivity lemmas.
 
-## Improvement to the combined residue sieve
+## Corrected combined residue sieve
 
-The new excluded set \(E_{61}(r)\) has density \(1/61\). Its valuation cylinder \(u\equiv35\pmod{60}\) is disjoint from all six previous filters:
-- \(u\bmod20=15\), not one of the \(E_5\) residues;
-- \(u\bmod3=2\), not the \(E_7\) residue \(1\);
-- \(u\bmod12=11\), not the \(E_{13}\) residue \(9\);
-- \(u\bmod10=5\), not the \(E_{11}\) residue \(2\);
-- \(u\bmod18=17\), not the \(E_{19}\) residue \(3\);
-- \(u\bmod28=7\), not the \(E_{29}\) residue \(18\).
+The u ≡ 35 (mod 60) cylinder is disjoint from the six earlier filters, including the corrected E29 cylinder u ≡ 18 (mod 28). Thus E61 adds exactly 1/61 to the corrected six-prime coverage. The resulting seven-prime residue-class density is:
+- 3,162,121/5,176,094 ≈ 61.0909% when r ≡ 1 (mod 3);
+- 3,113,443/5,176,094 ≈ 60.1504% when r ≡ 0 or 2 (mod 3).
 
-Thus the seven-prime union adds exactly \(1/61\) beyond the six-prime density \(655811/1103102\):
-\[
-\frac{655811}{1103102}+\frac1{61}
-=\boxed{\frac{3162121}{5176094}\approx61.0909\%}.
-\]
-This is a residue-class density over the joint period, not an exact finite-range proportion.
+These are exact residue-class densities over the joint period, not exact finite-range proportions. The r-dependence comes from the E29/E7 overlap documented in [the corrected modulo-29 audit](../agent46-mod29-parent-sieve/README.md).
+
 
 ## Formalization route and limits
 
