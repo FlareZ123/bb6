@@ -97,3 +97,18 @@ Two immediate consequences:
 2. If \(n\\ge18\), then \(U+3=2^n(u_0+3)\) implies \(U\\equiv-3\\pmod{2^{18}}\), i.e. \(U\\bmod 2^{18}=262141\).
 
 The current repository sieve data in [BB429Count58Sixteen.lean](../../agent33-429-five-shift/BB429Count58Sixteen.lean) and [BB429SplitSieve.lean](../../agent1-429-262144-sieve/BB429SplitSieve.lean) leaves 255 terminal residue classes; **262141 is among those 255 survivors**. Therefore the existing 58-class / \(2^{18}\) sieve does not exclude the long-outer case. A useful refinement should retain the pre-outer quotient \(u_0+3\), the outer length \(n\), or the exact predecessor equation above, rather than filtering only \(U\\bmod 2^{18}\).
+
+
+### Parity and mod-4 restrictions on the last outer length
+
+Every non-outer boundary branch outputs an even \(w_0\) (this is immediate from the branch-output column above). Reducing the boxed predecessor equation modulo 2 therefore gives
+\[
+0\equiv w_0+3n+7\equiv n+1\pmod2,
+\]
+so **every halt must have an odd final outer-ladder length \(n\)**.
+
+Reducing the same equation modulo 4 gives the stronger necessary congruence
+\[
+\boxed{\quad w_0+3n+7\equiv -2(u_0+3)\pmod4,\quad}
+\]
+or \(3n\equiv2u_0-w_0-5\pmod4\). This is a branch-local filter on the final reset, independent of the size of the candidate halt state. It should be incorporated into any reverse search or refined terminal sieve.
