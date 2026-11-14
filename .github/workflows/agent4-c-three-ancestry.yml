@@ -35,7 +35,8 @@ jobs:
           cp im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean /tmp/agent4-three/
           cp im-results/agent3-c-bounce-inverse/{OddSliver,OddSevenSliver,OddOddWedge,OddOddOrbit,OddOddVal3,OddOddVal3Orbit,OddOddLowVal,EvenOddFourExact}.lean /tmp/agent4-three/
           cp im-results/agent11-c-low58/M0EvenEvenSumZero.lean /tmp/agent4-three/
-          cp im-results/agent4-c-seven-image/{CSixSeventhS2,S2QEvenResidue}.lean /tmp/agent4-three/
+          # S2QEvenResidue is a separate, unfinished complementary lift; audit the root-connected S2 proof independently.
+          cp im-results/agent4-c-seven-image/CSixSeventhS2.lean /tmp/agent4-three/
           cp im-results/agent15-c-halting/SectionAffineInverse.lean /tmp/agent4-three/
           cp im-results/agent34-c-degree-profile/{ConeArithmetic,ConeSource,ConeBroadArithmetic,ConeBroadSource,ThreeConeArithmetic,ThreeConeSource,ThreeConeProper}.lean /tmp/agent4-three/
           cp im-results/agent4-c-three-ancestry/{CThreeArithmetic,CThreeSource,CThreeStop,CThreeGenericSource,CThreeGenericStop,CThreeWit,CThreeAltSource,CThreeAltStop,CThreeAltWit,CThreeDiagonal}.lean /tmp/agent4-three/
@@ -45,11 +46,11 @@ jobs:
           cp im-results/agent4-c-four-step-image/CNewM1.lean /tmp/agent4-three/
           cp im-results/agent4-c-four-step-image/CNewM1Depth4.lean /tmp/agent4-three/
           cp im-results/agent4-c-five-image/{CAltFifthArithmetic,CAltFifthSource,CAltFifthGate,CAltFifthStrict,CAltSixthStrict,CAltSixthGate,CAltSeventhCounterexample}.lean /tmp/agent4-three/
-          cp im-results/agent4-c-seven-image/{CSixSeventhArithmetic,CSixSeventhStrict,CSixSeventhRoot,CSixSeventhS2,CSixSeventhGate,CSixSeventhGateWide,CSixSeventhDiagonal,S2QEvenResidue}.lean /tmp/agent4-three/
+          cp im-results/agent4-c-seven-image/{CSixSeventhArithmetic,CSixSeventhStrict,CSixSeventhRoot,CSixSeventhS2,CSixSeventhGate,CSixSeventhGateWide,CSixSeventhDiagonal}.lean /tmp/agent4-three/
           cd /tmp/agent4-three
           export LEAN_PATH=.
           lean --version
-          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour Agent38SectionParity BounceAllExact SectionAllInverse Agent3CImage Agent3COneFamily Agent3COrbitIff OddSliver OddSevenSliver OddOddWedge OddOddOrbit OddOddVal3 OddOddVal3Orbit OddOddLowVal EvenOddFourExact EvenEvenInverse OddEvenInverse ExtraEvenOrbit SectionAffineInverse EvenRightSixOrbit M0EvenEvenSumZero S2QEvenResidue ConeArithmetic ConeSource ConeBroadArithmetic ConeBroadSource ThreeConeArithmetic ThreeConeSource ThreeConeProper CThreeArithmetic CThreeSource CThreeStop CThreeGenericSource CThreeGenericStop CThreeWit CThreeAltSource CThreeAltStop CThreeAltWit CThreeDiagonal CThreeToFourSource CFourHierarchy CAllDepthBlank CNewM1 CNewM1Depth4 CAltFifthArithmetic CAltFifthSource CAltFifthGate CAltFifthStrict CAltSixthStrict CAltSixthGate CAltSeventhCounterexample CSixSeventhArithmetic CSixSeventhStrict CSixSeventhRoot CSixSeventhS2 CSixSeventhGate CSixSeventhGateWide CSixSeventhDiagonal; do
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour Agent38SectionParity BounceAllExact SectionAllInverse Agent3CImage Agent3COneFamily Agent3COrbitIff OddSliver OddSevenSliver OddOddWedge OddOddOrbit OddOddVal3 OddOddVal3Orbit OddOddLowVal EvenOddFourExact EvenEvenInverse OddEvenInverse ExtraEvenOrbit SectionAffineInverse EvenRightSixOrbit M0EvenEvenSumZero ConeArithmetic ConeSource ConeBroadArithmetic ConeBroadSource ThreeConeArithmetic ThreeConeSource ThreeConeProper CThreeArithmetic CThreeSource CThreeStop CThreeGenericSource CThreeGenericStop CThreeWit CThreeAltSource CThreeAltStop CThreeAltWit CThreeDiagonal CThreeToFourSource CFourHierarchy CAllDepthBlank CNewM1 CNewM1Depth4 CAltFifthArithmetic CAltFifthSource CAltFifthGate CAltFifthStrict CAltSixthStrict CAltSixthGate CAltSeventhCounterexample CSixSeventhArithmetic CSixSeventhStrict CSixSeventhRoot CSixSeventhS2 CSixSeventhGate CSixSeventhGateWide CSixSeventhDiagonal; do
             echo "Compiling $f"
             lean -o "$f.olean" "$f.lean" 2>&1 | tee "$f.log"
             if grep -q "sorryAx" "$f.log"; then
