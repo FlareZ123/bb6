@@ -19,7 +19,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: im-results/**/*.olean
-          key: lean-4.36.0-rc2-${{ hashFiles('im-results/**/*.lean', '!im-results/agent1-429-root-entry/Junc11Return32.lean', '!im-results/agent1-429-root-entry/Junc744To924.lean', '!im-results/agent1-429-root-entry/Junc744To924AxiomAudit.lean', '!im-results/agent1-429-root-entry/Junc924To1008.lean') }}
+          key: lean-4.36.0-rc2-${{ hashFiles('im-results/**/*.lean', 'im-results/**/*.b64', 'im-results/**/*.tar.xz', '!im-results/agent1-429-root-entry/Junc11Return32.lean', '!im-results/agent1-429-root-entry/Junc744To924.lean', '!im-results/agent1-429-root-entry/Junc744To924AxiomAudit.lean', '!im-results/agent1-429-root-entry/Junc924To1008.lean') }}
       - name: Install pinned Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -173,7 +173,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: im-results/**/*.olean
-          key: lean-4.36.0-rc2-${{ hashFiles('im-results/**/*.lean', '!im-results/agent1-429-root-entry/Junc11Return32.lean', '!im-results/agent1-429-root-entry/Junc744To924.lean', '!im-results/agent1-429-root-entry/Junc744To924AxiomAudit.lean', '!im-results/agent1-429-root-entry/Junc924To1008.lean') }}
+          key: lean-4.36.0-rc2-${{ hashFiles('im-results/**/*.lean', 'im-results/**/*.b64', 'im-results/**/*.tar.xz', '!im-results/agent1-429-root-entry/Junc11Return32.lean', '!im-results/agent1-429-root-entry/Junc744To924.lean', '!im-results/agent1-429-root-entry/Junc744To924AxiomAudit.lean', '!im-results/agent1-429-root-entry/Junc924To1008.lean') }}
       - name: Upload Lean diagnostics
         if: always()
         uses: actions/upload-artifact@v4
