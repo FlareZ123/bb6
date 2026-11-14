@@ -412,7 +412,7 @@ theorem even_counted_suffix_matches_s0_right_of_prefix
   have hright := even_counted_suffix_rightFacing P b h6 hone hfar
   intro i
   rw [s0Config_right_cell]
-  simpa using hright i
+  simpa [s1PhysicalRight,s0PhysicalRight] using hright i
 
 /--
 Canonical S0 tape glue for the even counted suffix.  The caller supplies the
