@@ -60,7 +60,12 @@ Thus this is a (+52) return
 [
 J(0,2v+742)longrightarrow J(0,2v+794).
 ]
-The head shifts sum to (-39), independent of (v,k).
+The head shifts sum to \(-39\), independent of \(v,k\). Substituting
+\(k=(379-v)/2\) into the five segment costs simplifies the total to
+\[
+188v^2-49939v+3861128.
+\]
+This gives 544,773 at \(v=133\) and 673,655 at \(v=159\).
 
 The nonnegativity conditions reduce to odd (v) with
 (131le vle177), and (k=(379-v)/2). There are 24 candidate instances.
