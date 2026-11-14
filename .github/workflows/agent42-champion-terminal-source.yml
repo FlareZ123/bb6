@@ -326,6 +326,13 @@ jobs:
             echo '::error::sorryAx found in m=1,n=6 even q4 suffix and counted-increment composition'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M1EvenResidueSix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-residue6-axioms.log
+          lean -o M1EvenResidueSix.olean M1EvenResidueSix.lean 2>&1 | tee /tmp/a42-terminal/m1-even-residue6-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-residue6-axioms.log; then
+            echo '::error::sorryAx found in generic m=1, n=6 mod 8 source increment'
+            exit 1
+          fi
           : > /tmp/a42-terminal/root-q4-drain-axioms.log
           lean -o TM63RootQ4Drain.olean TM63RootQ4Drain.lean 2>&1 | tee /tmp/a42-terminal/root-q4-drain-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/root-q4-drain-axioms.log; then
