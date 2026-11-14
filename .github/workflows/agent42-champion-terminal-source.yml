@@ -183,14 +183,6 @@ jobs:
             echo '::error::sorryAx found in source M0 odd q4 prefix theorem'
             exit 1
           fi
-          # Agent 24: lift the m=0 odd q4 prefix to every n=8*k+5.
-          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0OddResidueFive.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/m0-odd-residue5-axioms.log
-          lean -o M0OddResidueFive.olean M0OddResidueFive.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue5-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-residue5-axioms.log; then
-            echo '::error::sorryAx found in generalized m=0,n=8*k+5 source increment'
-            exit 1
-          fi
           if grep -q 'sorryAx' /tmp/a42-terminal/q4-suffix-axioms.log; then
             echo '::error::sorryAx found in q4 suffix theorem dependencies'
             exit 1
@@ -302,6 +294,15 @@ jobs:
           lean -o S1CountedDrain.olean S1CountedDrain.lean 2>&1 | tee /tmp/a42-terminal/s1-counted-drain-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/s1-counted-drain-axioms.log; then
             echo '::error::sorryAx found in source S1 all-ones counted drain dependencies'
+            exit 1
+          fi
+
+          # Agent 24: lift the m=0 odd q4 prefix to every n=8*k+5.
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0OddResidueFive.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-odd-residue5-axioms.log
+          lean -o M0OddResidueFive.olean M0OddResidueFive.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue5-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-residue5-axioms.log; then
+            echo '::error::sorryAx found in generalized m=0,n=8*k+5 source increment'
             exit 1
           fi
           # The M0-even q4 suffix is independent of the M1-even prefix.
