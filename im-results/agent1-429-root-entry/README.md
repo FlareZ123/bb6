@@ -347,9 +347,11 @@ this branch's workflow; it has now been restored as a required compile step.
 Consequently the base blank-root prefix and both new continuations are not
 currently certified sorry-free theorems. A branch-local patch replaces the
 five Low43Continuation runWithMax-to-runWithDelta projection wrappers with
-explicit rewrites; root-junction-chain CI run 43580648197 is testing that
-patch. This remains unverified. Do not promote them to `results/` or claim
-a BB(6) bound improvement.
+explicit rewrites; run 43580648197 passed that module and then failed at
+`JRootEntry.runWithHeadMax_add`. A second branch patch unfolds the recursive
+successor in that Option map-bind proof; root-chain CI run 43580820177 is
+testing it. Both repairs remain unverified. Do not promote them to
+`results/` or claim a BB(6) bound improvement.
 
 
 ## Second continuation: Junc(0,924) -> Junc(0,1008) (2026-11-14)
