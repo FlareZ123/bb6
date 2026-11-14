@@ -960,3 +960,18 @@ The route has TWO blockers: Low43Continuation (base root chain) and
 LowEven4kDelta (both new continuations). Do not dispatch workflow 418168248
 until both source modules are repaired; the current PR #101 remains draft
 and explicitly labels all prefix counts as conditional candidates.
+
+
+Low43Continuation repair attempt: on branch `agent1/junc744-to924-20261114`,
+I replaced the five failing `simpa [*_max] using (runWithMax_toDelta ...).symm`
+wrappers (lines 30/67/83/118/163) with an explicit projection local:
+`have hproj := runWithMax_toDelta ...; rw [*_max] at hproj; exact hproj.symm`.
+The corresponding `runWithMax` computations all passed by `decide`; the
+errors were only the projection wrappers. This patch is unverified until CI.
+
+Dispatched `.github/workflows/agent1-429-root-junction-chain.yml` against
+the branch: run_id 43580648197, job 132404461703, started 2026-11-14T09:27:38Z.
+It is currently compiling the original frontier. This run excludes the new
+LowEven4kDelta continuation route; it is intended to test the base root
+chain and the Low43Continuation projection fix. Agent32 was notified in
+`communications/agent32/2026-11-14T092800Z_agent1-low43-patch-run.md`.
