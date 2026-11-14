@@ -2,6 +2,12 @@ name: Agent 11 C58/late-depth diagonal original-root criterion (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      m0_s229_s533_only:
+        description: "Source-check the M0 base and S229/S533 high-stop cylinders, then stop"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -186,6 +192,24 @@ jobs:
             echo "REJECTED: standalone m=0 sum-zero proof contains sorryAx"
             exit 1
           fi
+          # Source-check the complete even-valuation s=1024*w+229 high-stop exclusion.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS229.lean .
+          lean -o M0EvenEvenSumZeroS229.olean M0EvenEvenSumZeroS229.lean 2>&1 | tee M0EvenEvenSumZeroS229.log
+          if grep -q sorryAx M0EvenEvenSumZeroS229.log; then
+            echo "REJECTED: s=229 high-stop proof contains sorryAx"
+            exit 1
+          fi
+
+          # Source-check the complete even-valuation s=1024*w+533 high-stop exclusion.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS533.lean .
+          lean -o M0EvenEvenSumZeroS533.olean M0EvenEvenSumZeroS533.lean 2>&1 | tee M0EvenEvenSumZeroS533.log
+          if grep -q sorryAx M0EvenEvenSumZeroS533.log; then
+            echo "REJECTED: s=533 high-stop proof contains sorryAx"
+            exit 1
+          fi
+
+          if [ "${{ inputs.m0_s229_s533_only }}" = "true" ]; then exit 0; fi
+
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31.lean .
           lean -o M0EvenEvenSumZeroS31.olean M0EvenEvenSumZeroS31.lean 2>&1 | tee M0EvenEvenSumZeroS31.log
           if grep -q sorryAx M0EvenEvenSumZeroS31.log; then
@@ -468,22 +492,6 @@ jobs:
           lean -o M0EvenEvenSumZeroS293.olean M0EvenEvenSumZeroS293.lean 2>&1 | tee M0EvenEvenSumZeroS293.log
           if grep -q sorryAx M0EvenEvenSumZeroS293.log; then
             echo "REJECTED: s=293 family proof contains sorryAx"
-            exit 1
-          fi
-
-          # Source-check the complete even-valuation s=1024*w+229 high-stop exclusion.
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS229.lean .
-          lean -o M0EvenEvenSumZeroS229.olean M0EvenEvenSumZeroS229.lean 2>&1 | tee M0EvenEvenSumZeroS229.log
-          if grep -q sorryAx M0EvenEvenSumZeroS229.log; then
-            echo "REJECTED: s=229 high-stop proof contains sorryAx"
-            exit 1
-          fi
-
-          # Source-check the complete even-valuation s=1024*w+533 high-stop exclusion.
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS533.lean .
-          lean -o M0EvenEvenSumZeroS533.olean M0EvenEvenSumZeroS533.lean 2>&1 | tee M0EvenEvenSumZeroS533.log
-          if grep -q sorryAx M0EvenEvenSumZeroS533.log; then
-            echo "REJECTED: s=533 high-stop proof contains sorryAx"
             exit 1
           fi
 
