@@ -13,6 +13,7 @@ claim that the required reset state or burst exists.
 namespace BB429LastResetEquation
 
 open BB429SourceBridge
+open BusyBeaver
 open BusyBeaver.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA
 
 def rootHalts : Prop :=
@@ -140,6 +141,79 @@ theorem root_halts_iff_last_reset_equation :
       exact firstRun_source u w n a b hprefix
     exact ⟨(i+1)+n,a,b,hroot,(source_none_iff a b).mpr hhalt⟩
 
+/-- A sourceRun path ending in a halting state is exactly a CollatzHalts
+    witness for the upstream source accelerator. -/
+theorem collatzHalts_of_sourceRun (n : Nat) (s t : HighLevelState)
+    (h : sourceRun n s = some t)
+    (ht : CollatzHalts highLevelNext t) :
+    CollatzHalts highLevelNext s := by
+  induction n generalizing s t with
+  | zero =>
+    simp only [sourceRun, Option.some.injEq] at h
+    subst t
+    exact ht
+  | succ n ih =>
+    change (sourceRun n s).bind highLevelNext = some t at h
+    cases hp : sourceRun n s with
+    | none => simp [hp] at h
+    | some p =>
+      simp only [hp, Option.bind_some] at h
+      exact ih hp (CollatzHalts.of_next_eq_some h ht)
+
+/-- Every CollatzHalts witness has a corresponding sourceRun endpoint whose
+    next transition is none. -/
+theorem sourceRun_of_collatzHalts (s : HighLevelState)
+    (h : CollatzHalts highLevelNext s) :
+    ∃ n t, sourceRun n s = some t ∧ highLevelNext t = none := by
+  obtain ⟨N,hN⟩ := h
+  induction N generalizing s with
+  | zero => simp at hN
+  | succ N ih =>
+    rw [Function.iterate_succ_apply] at hN
+    cases hs : highLevelNext s with
+    | none => exact ⟨0,s,rfl,hs⟩
+    | some s' =>
+      have htail : CollatzHalts highLevelNext s' := by
+        refine ⟨N,?_⟩
+        simpa [hs] using hN
+      obtain ⟨m,t,hr,ht⟩ := ih s' htail
+      refine ⟨m+1,t,?_ ,ht⟩
+      have h1 : sourceRun 1 s = some s' := by simp [sourceRun,hs]
+      calc
+        sourceRun (m+1) s = sourceRun (1+m) s := by congr 1 <;> omega
+        _ = (sourceRun 1 s).bind (sourceRun m) := sourceRun_add 1 m s
+        _ = some t := by simp [h1,hr]
+
+theorem rootHalts_iff_CollatzHalts :
+    rootHalts ↔ CollatzHalts highLevelNext (.J 0 0) := by
+  constructor
+  · rintro ⟨n,a,b,hr,hh⟩
+    exact collatzHalts_of_sourceRun n (.J 0 0) (.J a b) hr
+      (CollatzHalts.of_next_eq_none hh)
+  · intro h
+    obtain ⟨n,t,hr,hh⟩ := sourceRun_of_collatzHalts (.J 0 0) h
+    cases t with
+    | J a b => exact ⟨n,a,b,hr,hh⟩
+
+/-- The upstream, unchanged Cryptids acceleration therefore transports this
+    last-reset criterion all the way to halting of the literal blank-root
+    Turing machine. -/
+theorem isHalt_iff_rootHalts :
+    IsHalt target ↔ rootHalts :=
+  isHalt_iff_highLevel_acceleration.trans rootHalts_iff_CollatzHalts.symm
+
+/-- Exact raw-machine halting criterion with the authentic pre-reset state,
+    even reset seed, and final outer-ladder length all retained. -/
+theorem isHalt_iff_last_reset_equation :
+    IsHalt target ↔
+    ∃ i x y u w k,
+      sourceRun i (.J 0 0) = some (.J x y) ∧
+      y < 2*x+3 ∧
+      highLevelNext (.J x y) = some (.J u w) ∧
+      w%2=0 ∧
+      2*u+w+3*k+13 = 4*((u+3)*2^k) := by
+  exact isHalt_iff_rootHalts.trans root_halts_iff_last_reset_equation
+
 /-- The exact root-level criterion also forces the known odd-burst and
     mod-six restrictions on the even reset seed. -/
 theorem root_halt_has_odd_burst_and_mod6_seed (h : rootHalts) :
@@ -158,6 +232,11 @@ theorem root_halt_has_odd_burst_and_mod6_seed (h : rootHalts) :
 #print axioms source_orbit_last_reset
 #print axioms initial_first_run_only_zero
 #print axioms root_halts_iff_last_reset_equation
+#print axioms collatzHalts_of_sourceRun
+#print axioms sourceRun_of_collatzHalts
+#print axioms rootHalts_iff_CollatzHalts
+#print axioms isHalt_iff_rootHalts
+#print axioms isHalt_iff_last_reset_equation
 #print axioms root_halt_has_odd_burst_and_mod6_seed
 
 end BB429LastResetEquation
