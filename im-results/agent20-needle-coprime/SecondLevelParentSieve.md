@@ -518,7 +518,86 @@ k=2:\quad&
 \]
 The \(k=1,s=0\) boundary \(w=a-1\) is not covered by this estimate. The high-side band in Section 3 begins at \(w=a+d+5\); the remaining narrow gap around \(a\) and the quotient classes not satisfying (7) still require separate treatment.
 
-## 5. What this resolves—and what it does not
+## 5. Large-remainder quotient bands
+
+There is a complementary exclusion when the quotient remainder \(s\) is close to its maximum \(w\). Write
+\[
+a=(k+1)(w+1)-d,\qquad k\ge0,\quad 1\le d\le w.
+\]
+Equivalently, in the quotient representation \(a=k(w+1)+s\), we have \(s=w+1-d\).
+
+**Theorem.** Suppose \(r\ge3\), \(a=(k+1)(w+1)-d\), \(k\ge0\), \(1\le d\le w\), and
+\[
+\boxed{
+2^{\,w-2rd}>
+\max\!\left\{110w,\;32r\,2^{4r(k+1)}\right\}.
+} \tag{12}
+\]
+Then no \(q\in\mathbb N\) satisfies the parent equation (1) at valuation \(w\).
+
+**Proof.** Put \(D=2^{w+1}+3\). A parent still forces
+\[
+D\mid16AP+215-110w. \tag{13}
+\]
+Since \(2^{w+1}\equiv-3\pmod D\) and \(a=(k+1)(w+1)-d\),
+\[
+2^dA\equiv(-3)^{k+1}\pmod D.
+\]
+Using the polynomial expansion for \(P_r\) from Section 4 and multiplying by \(2^{2rd}\), we obtain
+\[
+2^{2rd}AP\equiv3^{2r}T\pmod D,
+\qquad
+T=\sum_{\ell=1}^{2r}(-3)^{k\ell}2^{(2r-\ell)d}.
+\]
+Thus (13) implies \(D\mid R\), where
+\[
+R=16\cdot3^{2r}T-(110w-215)2^{2rd}. \tag{14}
+\]
+
+The final summand of \(T\) is odd and every earlier summand is even, so \(T\) is odd. Hence the first term of \(R\) has exact 2-adic valuation \(4\). The second term has exact 2-adic valuation \(2rd\ge6\), since \(110w-215\) is odd. Therefore \(R\ne0\).
+
+For the size bound, each summand of \(T\) has absolute value at most \(3^{2rk}2^{2rd}\), so
+\[
+|16\cdot3^{2r}T|
+\le32r\cdot3^{2r(k+1)}2^{2rd}
+<32r\cdot2^{4r(k+1)}2^{2rd}
+<2^w.
+\]
+The other term satisfies
+\[
+|(110w-215)2^{2rd}|
+<110w\,2^{2rd}<2^w.
+\]
+Consequently \(0<|R|<2^{w+1}<D\), contradicting \(D\mid R\). \(\square\)
+
+For fixed \(k\), the relation \(a=(k+1)(w+1)-d\) requires \(d\equiv-a\pmod{k+1}\); as \(d\) increases by \(k+1\), \(w\) increases by one. The condition (12) is monotone decreasing in \(d\), so each nonempty class gives one contiguous excluded interval.
+
+For \(r=50\), the first three intervals are:
+\[
+\begin{aligned}
+k=0:\quad&
+257688760366005665518230564882810636351053761003\\
+&\le w\le
+260291677137379460119424813012940036718236122222,\\[1mm]
+k=1:\quad&
+128844380183002832759115282441405318175526880501\\
+&\le w\le
+129491839379902344481522896926035495653795859797,\\[1mm]
+k=2:\quad&
+85896253455335221839410188294270212117017920334\\
+&\le w\le
+86183531894985172414123934743414928545502930098.
+\end{aligned}
+\]
+For \(k=0\), this band overlaps the high-side certificate of Section 3 and fills its lower-end gap. Their union excludes the entire contiguous interval
+\[
+a\le w\le
+260318237512597560064334958402022989783207370806
+\qquad(r=50).
+\]
+For \(k\ge1\), the large-remainder bands complement the low-side small-remainder bands of Section 4. In particular, for \(r=50\), the \(k=1\) large-remainder band begins immediately after the \(k=2\) low-side band ends, at the quotient boundary near \(a/2\); the same adjacent-boundary phenomenon occurs near \(a/3\).
+
+## 6. What this resolves—and what it does not
 
 For the second-level target, the current exact restrictions are now:
 
