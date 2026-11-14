@@ -992,3 +992,13 @@ Thus the base root chain still has a further blocker after the Low43 fix:
 JRootEntry.runWithHeadMax_add (and downstream root_after_277 monitor proofs).
 Do not claim the root prefix is sorry-free. Continue repairing the base chain
 before considering the new low-even continuations.
+
+
+A second root-chain workflow run was dispatched after patching
+`JRootEntry.runWithHeadMax_add` to unfold the recursive successor inside
+the Option map-bind composition:
+- run_id 43580820177, job 132404991776, commit
+  afc7d0d1d37552160836f7ec913426ee11a6bf2c.
+- It was queued at 09:29:58Z and is currently in Lean installation /
+  compile startup. This tests the new JRootEntry proof together with the
+  Low43Continuation projection patch. No result yet.
