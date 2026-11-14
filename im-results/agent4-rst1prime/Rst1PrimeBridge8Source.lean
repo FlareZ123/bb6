@@ -76,22 +76,22 @@ theorem rst1Prime_bridge8_window_after_firstSweep
   · subst x
     have hcoord :
         h-((3*a+1:Int))+(-3:Int) = h-((3*a+1+3:Int)) := by omega
-    rw [hcoord,s1Config_left_after_d1pow]
+    rw [hcoord,s1Config_left_after_d1pow L a b h 3]
     simp [markerWord,d0,sideBit,bridge8Start]
   · subst x
     have hcoord :
         h-((3*a+1:Int))+(-2:Int) = h-((3*a+1+2:Int)) := by omega
-    rw [hcoord,s1Config_left_after_d1pow]
+    rw [hcoord,s1Config_left_after_d1pow L a b h 2]
     simp [markerWord,d0,sideBit,bridge8Start]
   · subst x
     have hcoord :
         h-((3*a+1:Int))+(-1:Int) = h-((3*a+1+1:Int)) := by omega
-    rw [hcoord,s1Config_left_after_d1pow]
+    rw [hcoord,s1Config_left_after_d1pow L a b h 1]
     simp [markerWord,d0,sideBit,bridge8Start]
   · subst x
     have hcoord :
         h-((3*a+1:Int))+(0:Int) = h-((3*a+1+0:Int)) := by omega
-    rw [hcoord,s1Config_left_after_d1pow]
+    rw [hcoord,s1Config_left_after_d1pow L a b h 0]
     simp [markerWord,d0,sideBit,bridge8Start]
 
 /-- The first Rst1' bridge is now a genuine original-machine run from the
@@ -102,7 +102,7 @@ theorem rst1Prime_bridge8_after_firstSweep
       some (frameAt
         (sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h)
         (h-((3*a+1:Int))) inside8 bridge8End) := by
-  rw [run_add,rst1Prime_firstSweep_run]
+  rw [run_append,rst1Prime_firstSweep_run]
   simp only [Option.bind_some]
   exact bridge8_at
     (sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h)
