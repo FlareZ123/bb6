@@ -218,27 +218,70 @@ These describe hypothetical **generic h=0 incoming-source valuations** only. Ove
 
 The generic modular sieves remain nonvacuous necessary restrictions, reproduced by [exit_val_sieve.py](./exit_val_sieve.py). The original first-even edge correspondence is source faithful through the existing [SheepChain2.lean](./SheepChain2.lean) relation; the new complete no-exception theorem still requires unchanged-original-machine CI integration to close that final provenance gap.
 
-## Exact deepest-node hidden-run obstruction density
+## Exact deepest-node hidden-run distribution
 
-The maximum-length endpoint `x_{L_r(k)}` of the distinguished genuine P tail is the **only** node on that tail at which a predecessor of hidden odd-run length `h>0` might remain possible. A stronger density theorem determines precisely how often even that necessary mod-three condition can occur.
+The maximum-length endpoint x_{L_r(k)} of the distinguished genuine P tail is the **only** node on that tail at which a predecessor of hidden odd-run length h>0 might remain possible. We can determine the exact 3-adic distribution of the *largest hidden length permitted by divisibility* at this endpoint, not merely whether it is zero.
 
-Write `t=v3(N_r(k))−10≥0`. Since both denominator valuations `e_r=4,10` are even, the offset valuation `v3(Y_r(k)+12)=10−e_r+t` has the same parity as t. The exact maximal-tail identity therefore has
+Define H_r(k)=v_3(x_{L_r(k)}−1). Every genuine incoming E edge has target form 1+3^h u' with u' odd. Therefore its hidden length must satisfy h≤H_r(k). The integer H_r(k) is only a necessary upper bound: it does not assert that an incoming source with any such h actually exists.
 
-```text
-x_L+12 = 8^L * 3^(t%2) * u,   3∤u.
-```
-
-If t is odd, `x_L≡0 (mod3)`, hence **every** genuine incoming E edge must have hidden h=0. If t is even, `x_L≡±1 (mod3)`; h>0 requires `x_L≡1 (mod3)`, since all h-positive true E targets are `1+3^h u'`.
-
-The unique Hensel root modulo `3^t` and its three distinct lifts show that, at each exact valuation t, **the two non-lifting next digits produce normalized units `+1` and `−1` modulo three exactly once each**. Thus the two signs of `x_L` for even t have equal arithmetic density. The exact valuation distribution is `Pr[v3(N_r(k))=10+t]=(2/3)*3^(−t)`. Summing the geometric series gives
+Write t=v_3(N_r(k))−10≥0. Since both denominator valuations e_r=4,10 are even, the offset valuation v_3(Y_r(k)+12)=10−e_r+t has the same parity as t. With L=L_r(k), the exact maximal-tail identity is
 
 ```text
-Pr[t odd] = 1/4;
-Pr[t even, x_L≡1 (mod3)] = 3/8;
-Pr[t even, x_L≡2 (mod3)] = 3/8.
+x_L+12 = 8^L * 3^(t mod 2) * u,   3∤u.
 ```
 
-Consequently, for **every** one of the eight families, the deepest distinguished P node has `x_L≠1 (mod3)` for an **exact natural density 5/8** of exponent parameters k. For all such k, *every* incoming E predecessor into that deepest node has hidden h=0. The remaining density 3/8 merely passes the necessary mod-three test for a positive-h edge; no such edge is claimed to exist. The argument is elementary exact all-parameter 3-adic arithmetic, with the preceding kernel-proved `interior_hidden_zero` reasoning supplying the shape implication. This 5/8 density theorem has **not** been separately assembled in Lean and is not a blank-seed reachability result.
+If t is odd, then x_L−1 = 3*8^L*u−13 ≡ −13 (mod 3), so H_r(k)=0. If t is even, then x_L−1=8^L*u−13.
+
+### The normalized-unit bijection
+
+For each family write N_r(k)=A_r*g^k+C_r, where g=2^Delta, Delta=1102248, and v_3(g−1)=10. The base congruence 3^10 | N_r(0) gives one Hensel root modulo 3^t for every t. More strongly, **for every exact t and every precision m≥1**, the normalized unit
+
+```text
+u = N_r(k) / (3^(10+t) * d_r),
+d_29=43,   d_r=1 for the seven X families,
+```
+
+induces a bijection from the exact-valuation k-cylinder modulo 3^(t+m) onto the units modulo 3^m.
+
+The key isometry is a direct LTE consequence. For distinct k,l,
+
+```text
+v_3(N_r(k)−N_r(l)) = 10 + v_3(k−l).
+```
+
+Indeed, after factoring out the smaller power of g, the remaining difference is A_r*g^min(k,l)*(g^|k−l|−1); both prefactors are 3-adic units and v_3(g^n−1)=10+v_3(n). On the unique root cylinder modulo 3^t, parameterize k as k_t+3^t z. Dividing the numerator difference by 3^(10+t) shows that the normalized-unit map is a 3-adic isometry in z, hence a permutation modulo every 3^m. Multiplication by d_r^{-1} does not change this because d_r is coprime to three.
+
+Thus, conditional on exact t, u is uniformly distributed over the units modulo every 3^m. The exact-t stratum itself has density 2/3^(t+1): the unique root modulo 3^t has three lifts modulo 3^(t+1), one with a further factor of three and two with exact valuation t.
+
+### Exact law of the deepest possible hidden length
+
+For odd t, H is always zero. For even t, multiplication by 8^L permutes the units, and the congruence 8^L*u−13 ≡ 0 (mod 3^h) selects exactly one unit residue class modulo 3^h. Among its three lifts modulo 3^(h+1), one has H≥h+1 and two have exact H=h. Consequently, conditional on even t,
+
+```text
+Pr[H=0 | t even] = 1/2;
+Pr[H=h | t even] = 3^(−h),  h≥1.
+```
+
+Summing the exact-t densities gives Pr[t even]=3/4 and Pr[t odd]=1/4. Therefore, for **each of all eight families**,
+
+```text
+Pr[H=0] = 5/8;
+Pr[H=h] = 1/(4*3^(h−1)),  h≥1;
+Pr[H≥h] = 3/(8*3^(h−1)),  h≥1.
+```
+
+This recovers the previous 5/8 obstruction as the h=0 case, but also gives the complete geometric tail. For example, the densities with deepest endpoint permitting hidden length at least 1, 2, 3, 4 are respectively 3/8, 1/8, 1/24, 1/72. These are necessary 3-adic possibilities, not counts of actual source edges.
+
+The law is independent of the exact P-chain length. If b_29=3 and b_r=0 for the seven X families, then for every m≥0 the exact joint natural densities are
+
+```text
+Pr[L=b_r+m, H=0]   = 5 / 3^(2m+2);
+Pr[L=b_r+m, H=h]   = 2 / 3^(2m+h+1),  h≥1.
+```
+
+In particular, Pr[L=b_r+m]=8/3^(2m+2), matching the earlier exact inverse-depth distribution.
+
+This is an all-parameter arithmetic theorem, not a blank-seed reachability result. The written proof uses LTE and the one-digit Hensel construction above; it has **not** been separately assembled as a single Lean theorem. The finite reproducibility audit [deepest_unit_law.py](./deepest_unit_law.py) checks the normalized-unit bijection and endpoint-valuation counts for all eight families, exact t=0..4 and precision m=1..4. It is supplementary to the all-parameter proof, not its substitute.
 
 ## Reusable 3-adic affine-corridor principle
 
