@@ -401,4 +401,22 @@ theorem carryLongPrefix_r3_left (k : Nat) (T : Int → Bool)
 #print axioms carryLongPrefix_r2_left
 #print axioms carryLongPrefix_r3_left
 
+/-! Diagnostic provenance for the transitive axiom gate. These declarations
+are the only imported theorem families used by the two new residue bridges. -/
+#print axioms carryInput_leftOnes
+#print axioms carryInput_unmarked
+#print axioms counted_left_sweep
+#print axioms carryBridge2
+#print axioms carryBridge1
+#print axioms carryLeftSweep_closed
+#print axioms carryLeftSweep_marked
+#print axioms carryLeftSweep_preserves_at
+#print axioms carryLeftSweep_rightOutside
+#print axioms frame_head_segment
+#print axioms carryFinishFromD
+#print axioms composeCarryRuns
+#print axioms bridge2FrameOutput
+#print axioms bridge1FrameOutput
+#print axioms carryLongPrefix_r0_left
+
 end BB6Coverage.Agent24CarryLeftOutput
