@@ -28,14 +28,18 @@ theorem physicalC01_one_halts (c : Config)
   have htable : target429 (⟨2, by decide⟩, false) = some mv := by
     decide
   have hstep : rawStep target429 c = some d := by
-    simp [rawStep, hread, htable, d]
+    unfold rawStep
+    rw [hread, htable]
+    rfl
   have hne : c.head+1 ≠ c.head := by omega
   have hreadD : readSlot d = (⟨3, by decide⟩, true) := by
     simp [d, mv, readSlot, applyMove, hright, hne]
   have htableD : target429 (⟨3, by decide⟩, true) = none := by
     decide
   have hhalt : rawStep target429 d = none := by
-    simp [rawStep, hreadD, htableD]
+    unfold rawStep
+    rw [hreadD, htableD]
+    rfl
   exact ⟨d, hstep, hhalt⟩
 
 /-- Any successful original physical run ending at a live, non-C/01

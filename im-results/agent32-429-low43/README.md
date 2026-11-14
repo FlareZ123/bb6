@@ -1,6 +1,6 @@
 # #429 low-J, low-even and blank-root prefix research
 
-**Status: intermediate research.** The strongest current artifact is a 169,592-step blank-root prefix theorem candidate ending at J(0,344). Its full original-source Lean workflow has not passed. This dossier establishes neither that #429 runs forever nor any exact or upper bound for BB(6).
+**Status: intermediate research.** The strongest current candidate is a 1,514,038-step physical blank-root prefix ending at J(0,744), obtained by extending the 169,592-step root prefix through a parity-shifted low43 return and twelve proved +28 returns. The integrated original-source Lean workflow has not yet passed. This dossier establishes neither that #429 runs forever nor any exact or upper bound for BB(6).
 
 ## Strongest root-prefix candidate
 
@@ -112,7 +112,60 @@ The observed J(0,744) -> J(0,924) segment takes 1,158,049 steps. Its proposed de
 | Low-odd v=8,n=217 | 5,306 | J(440,34) |
 | Low42 j=17,k=211 | 5,407 | J(0,924) |
 
-The 7,382-step transition J(381,3) -> J(387,2) is the principal unidentified macro. It is the low43 C/0 continuation instance (v=1,k=189). Agent 1 is pursuing a parameter-uniform C/0 continuation; this dossier does not claim that the gap is closed.
+### Concrete low43 C/0 continuation gap closed
+
+`Low43C0_1_189.lean` now gives a concrete exact source monitor for the previously unidentified (v=1,k=189) C/0 context:
+`runWithMax 7338 (low43_C0_zipper 1 189) = some (junc 387 0 2, -4, 1)`.
+The proof is a direct `by decide` evaluation of the exact zipper semantics. The complete-tape lift applies `source_runWithDelta_rep` and the physical no-fatal converse, so every prefix of this 7,338-step C/0 continuation excludes C/01.
+
+The module also composes the 44-step uniform low43 entry from J(381,3) with the 7,338-step C/0 return. Its theorem `junc381_3_to_junc387_2_physical` states the exact 7,382-step physical transition J(381,3) -> J(387,2), net head displacement +4, with C/01 excluded at every primitive prefix. This is a concrete closure of the former low43 gap, pending the integrated manual CI run.
+
+The full J(0,744) -> J(0,924) route is still not formalized end-to-end. The remaining components in the decomposition table—especially the 191,493-step outer-safe ladder, low-even 4k N=1,K=193, three J(11,w) -> J(11,w+32) cycles, the second outer-safe ladder, low-odd v=8,n=217, and low42 j=17,k=211—must still be connected by physical prefix theorems. Agent 1's parameter-uniform C/0 program remains valuable beyond this concrete instance.
+
+## Parity-shifted continuation of the blank root to J(0,408)
+
+The new integration candidate is in `ParityShiftedRootComplete.lean`. It composes three exact prepared-input components after the 169,592-step blank-root prefix:
+
+| Segment | Steps | Head displacement | Endpoint |
+|---|---:|---:|---|
+| Five ordinary Junc normalizations, U=0,3,9,21,45 | 11,139 | +171 | J(93,173) |
+| Parity-shifted low43 physical entry | 31,154 | +178 | shifted C/0 |
+| Parity-shifted source return, lifted to the physical tape | 103,081 | -397 | J(0,408) |
+| **Prepared-input composition** | **145,374** | **-48** | **J(0,408)** |
+
+The five normalizations are the concrete chain J(0,344) -> J(3,341) -> J(9,332) -> J(21,311) -> J(45,266) -> J(93,173). The new source-level theorem `junc0_344_to_junc93_173_delta` records the exact 11,139 steps and +171 displacement.
+
+The 31,154-step entry is Agent 1's `Low43ParityShift.lean` theorem `junc93_173_to_shiftedC0`. Its proof uses the all-prefix head floor -176: the three differing far-left tape cells are never visited, so a fixed three-cell tape patch commutes with the complete run. The entry endpoint is C/0 with a blank immediate right cell.
+
+The 103,081-step continuation is `ParityShiftedReturns.parityShiftedC0_to_junc0_408`. Its targeted CI run passed on PR #91. The physical lift uses the complete-tape `Represents` relation and `source_runWithDelta_rep`; the shift is transported with `RootShift.shift_run`.
+
+The final theorem `blank_root_to_junc0_408` composes this 145,374-step segment with `blank_root_lowEvenR32_to_junc0_344`. Its intended statement is an exact 314,966-step run from the authentic blank A-root to a complete physical representation of J(0,408), with C/01 excluded at every primitive prefix. The final head is -48 relative to the J(0,344) checkpoint head.
+
+**Validation status:** the individual continuation has passed targeted CI; the parity-shifted entry has been locally preflighted by its author but has not yet passed the integrated workflow; the 169,592-step root prefix and this new composition also await a successful integrated run. The manual-only workflow `.github/workflows/agent6-429-low42.yml` now compiles the updated lower-head-bound dependencies, both parity-shifted components, the 314,966-step root composition, the +28 map, and the 1,514,038-step root chain, then audits their axiom reports. No integrated CI success is claimed.
+
+## Twelve +28 returns: blank root to J(0,744)
+
+`Junc0ReturnMap28RootChain.lean` applies the physical `J(0,w) -> J(0,w+28)` theorem twelve times, using r=12,19,26,33,40,47,54,61,68,75,82,89. The exact segment costs are:
+
+| r | Junc input | Steps | Junc output |
+|---:|---:|---:|---:|
+| 12 | J(0,408) | 51,079 | J(0,436) |
+| 19 | J(0,436) | 54,733 | J(0,464) |
+| 26 | J(0,464) | 59,955 | J(0,492) |
+| 33 | J(0,492) | 66,745 | J(0,520) |
+| 40 | J(0,520) | 75,103 | J(0,548) |
+| 47 | J(0,548) | 85,029 | J(0,576) |
+| 54 | J(0,576) | 96,523 | J(0,604) |
+| 61 | J(0,604) | 109,585 | J(0,632) |
+| 68 | J(0,632) | 124,215 | J(0,660) |
+| 75 | J(0,660) | 140,413 | J(0,688) |
+| 82 | J(0,688) | 158,179 | J(0,716) |
+| 89 | J(0,716) | 177,513 | J(0,744) |
+| **Total** | **J(0,408)** | **1,199,072** | **J(0,744)** |
+
+The new theorem `junc0_408_to_junc0_744_physical` preserves the complete-tape representation and excludes C/01 at every primitive prefix. Composing it with `blank_root_to_junc0_408` yields `blank_root_to_junc0_744`: a candidate 1,514,038-step successful physical run from the authentic blank A-root to J(0,744), with C/01 excluded at every prefix.
+
+This moves the next unresolved interval to the observed J(0,744) -> J(0,924) trajectory. Its proposed decomposition still contains the unidentified 7,382-step transition J(381,3) -> J(387,2).
 
 ## Validation and limits
 
