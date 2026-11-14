@@ -257,6 +257,10 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedCarryLeftOutputR23.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/carry-left-output-r23-axioms.log
           lean -o CountedCarryLeftOutputR23.olean CountedCarryLeftOutputR23.lean 2>&1 | tee /tmp/a42-terminal/carry-left-output-r23-axioms.log
+          # Diagnose the exact imported helper carrying sorryAx before the fail-closed gate.
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/CarryAxiomProbe.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/carry-axiom-probe.log
+          lean -o CarryAxiomProbe.olean CarryAxiomProbe.lean 2>&1 | tee /tmp/a42-terminal/carry-axiom-probe.log
           if grep -q 'sorryAx' /tmp/a42-terminal/carry-left-output-r23-axioms.log; then
             echo '::error::sorryAx found in counted carry left-output residue 2/3 theorem dependencies'
             exit 1
@@ -311,6 +315,14 @@ jobs:
           lean -o M0EvenQ4Suffix.olean M0EvenQ4Suffix.lean 2>&1 | tee /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-q4-suffix-axioms.log; then
             echo '::error::sorryAx found in source m=0,n=2 even q4 suffix and counted increment'
+            exit 1
+          fi
+          # Agent 24: generalized source increment for the middle-section (2,0) row.
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0EvenResidueTwo.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-residue-two-axioms.log
+          lean -o M0EvenResidueTwo.olean M0EvenResidueTwo.lean 2>&1 | tee /tmp/a42-terminal/m0-even-residue-two-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-residue-two-axioms.log; then
+            echo '::error::sorryAx found in generalized m=0,n=8*k+2 counted increment'
             exit 1
           fi
           cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean" /tmp/a42-terminal/
@@ -451,6 +463,14 @@ jobs:
             echo '::error::sorryAx found in m=1,n=3 odd q4 suffix/count composition'
             exit 1
           fi
+          # Agent 8: generalized source increment for every n=8*k+3.
+          cp "$GITHUB_WORKSPACE/im-results/agent8-rst1prime/M1OddResidueThree.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-odd-residue-three-axioms.log
+          lean -o M1OddResidueThree.olean M1OddResidueThree.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-residue-three-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-residue-three-axioms.log; then
+            echo '::error::sorryAx found in generalized m=1,n=8*k+3 counted increment'
+            exit 1
+          fi
 
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/TM63M1OddRootComposition.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-odd-root-composition-axioms.log
@@ -473,6 +493,15 @@ jobs:
           lean -o TM63M1OddRst1PrimeContinuation.olean TM63M1OddRst1PrimeContinuation.lean 2>&1 | tee /tmp/a42-terminal/rst1prime-root-continuation-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/rst1prime-root-continuation-axioms.log; then
             echo '::error::sorryAx found in root-connected Rst1Prime continuation'
+            exit 1
+          fi
+
+          # Agent 42: compose the seven root-specific middle rows and the (1,8*k) continuation.
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63MiddleSectionCountdown.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/middle-section-countdown-axioms.log
+          lean -o TM63MiddleSectionCountdown.olean TM63MiddleSectionCountdown.lean 2>&1 | tee /tmp/a42-terminal/middle-section-countdown-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/middle-section-countdown-axioms.log; then
+            echo '::error::sorryAx found in root-specific seven/eight-row middle countdown'
             exit 1
           fi
 
