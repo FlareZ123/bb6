@@ -132,6 +132,7 @@ Tail blockRoot() {
             3252483, 6310511, 24221543, 24423525, 56750562,
             67602890, 162126013, 335820941, 659578070};
 }
+#ifndef BB6_S4_SUFFIX_MACRO_LIBRARY
 int main() {
     auto w = extract();
     Tail full = blockRoot(), out;
