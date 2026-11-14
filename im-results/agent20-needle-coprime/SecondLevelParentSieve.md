@@ -103,7 +103,7 @@ c_{29}(j)&2&17&9&25&14&27&13&12&2&8&1&14&12&13&24&24&21&9&14&7&13
 \end{array}
 \]
 
-Here the forced-residue functions are:
+For prime 67, the additional period-three residues are \(y\\bmod67=(29,20,22)\) and \(c_{67}(j)=(64,55,57)\) for \(j\\bmod3=(0,1,2)\). Here the forced-residue functions are:
 \[
 c_7(j)=y-2\pmod7,\quad
 c_{19}(j)=y-8\pmod{19},\quad
@@ -130,31 +130,38 @@ c_{61}(j)=y-29\pmod{61}.
   Equation (2) gives the displayed period-21 table. Since \(2^{18}\equiv13\pmod{29}\), the cylinder \(w\equiv18\pmod{28}\) forces \(w\equiv y-13\pmod{29}\).
 - **Prime 61.** Since \(r\) is even, the established residues are \(A\equiv43\) and \(P\equiv4(19^r-9^r)\pmod{61}\). Equation (2) gives the period-three table. Since \(2^{35}\equiv29\pmod{61}\), the cylinder \(w\equiv35\pmod{60}\) forces \(w\equiv y-29\pmod{61}\).
 
+- **Prime 67.** Modulo \(1320\), \(9^{50}\equiv9^{110}\equiv441\) and \(441^2\equiv441\), so \(v=(9^r+3)/2\equiv222\pmod{660}\). Hence \(A\equiv2373\) and \(2^v\equiv3029\pmod{3685}\). The recurrence has \(A^2\equiv449\), \(A-3\equiv2370\), \(G_{110}\equiv2420\), \(A^{220}\equiv3521\), and \(9^{50}\equiv2476\pmod{3685}\). Thus
+  \[
+  P_{r+110}\equiv3521P_r+2750\pmod{3685},\qquad P_{50}\equiv2020,
+  \]
+  giving \(P_{50},P_{160},P_{270}\equiv2020,3120,3285\). Consequently \(B\equiv1480,2140,765\) and \(y\bmod67=29,20,22\) for \(j\bmod3=0,1,2\). Since \(2^6\equiv-3\pmod{67}\), the cylinder is \(w\equiv5\pmod{66}\); there \(b_w\equiv w+32\pmod{67}\), forcing \(w\bmod67=64,55,57\).
+
+
 These are necessary conditions, not sufficient conditions for a predecessor. In particular, the \(w=0,1,2,3,4\) classification follows immediately: \(w=0\) is impossible; \(w=1\) is possible exactly for \(j\equiv2\pmod3\); \(w=2\) is possible exactly for \(j\equiv7\pmod{11}\); \(w=3,4\) are impossible.
 
-### Exact density of the seven-prime filter
+### Exact density of the eight-prime filter
 
-All base cylinders are determined by \(w\bmod1260\), where
+All base cylinders are determined by \(w\bmod13860\), where
 \[
-1260=\operatorname{lcm}(4,12,3,10,18,28,60).
+13860=\operatorname{lcm}(4,12,3,10,18,28,60,66).
 \]
-For each base residue \(b\bmod1260\), first reject \(b\equiv0\pmod4\), reject \(b\equiv9\pmod{12}\), and, when \(b\equiv1\pmod3\), require \(b\equiv c_7(j)\pmod7\). For each remaining base residue, the number of choices modulo \(11,19,29,61\) is respectively \(1\) or the full prime, according as its corresponding divisibility cylinder is active or inactive. The Chinese remainder theorem then gives the exact count.
+For each base residue \(b\bmod13860\), reject \(b\equiv0\pmod4\), reject \(b\equiv9\pmod{12}\), and apply the forced \(7\)- and \(11\)-residues whenever \(b\equiv1\pmod3\) and \(b\equiv2\pmod{10}\), respectively. For each remaining base residue, the number of choices modulo \(19,29,61,67\) is respectively one or the full prime, according as its corresponding divisibility cylinder is active or inactive. The Chinese remainder theorem then gives the exact count.
 
-The full period modulus is
+The full valuation modulus is
 \[
-L=1260\cdot11\cdot19\cdot29\cdot61=465\,848\,460.
+L=13860\cdot19\cdot29\cdot61\cdot67=31\,211\,846\,820.
 \]
-For each \(j\bmod3\), exactly
+For every \(j\bmod33\), exactly
 \[
-166\,957\,950
+10\,766\,155\,350
 \]
-residues modulo \(L\) survive. Thus the exact natural density of valuations not eliminated by these seven necessary filters is
+residues modulo \(L\) survive. Thus the exact natural density of valuations not eliminated by these eight necessary filters is
 \[
-\boxed{\frac{166\,957\,950}{465\,848\,460}
-=\frac{5\,565\,265}{15\,528\,282}
-\approx0.3583954104.}
+\boxed{\frac{10\,766\,155\,350}{31\,211\,846\,820}
+=\frac{5\,883\,145}{17\,055\,654}
+\approx0.3449381067.}
 \]
-Equivalently, the filters eliminate about \(64.16046\%\) of all valuations. This is a density of candidate valuations, not a probability of a machine or a proof that any surviving valuation is realizable.
+Equivalently, the filters eliminate about \(65.50619\%\) of all valuations. This is a density of candidate valuations, not a probability of a machine or a proof that any surviving valuation is realizable.
 
 The accompanying second_level_cylinder_density.js reproduces the finite CRT count using only integer arithmetic.
 
