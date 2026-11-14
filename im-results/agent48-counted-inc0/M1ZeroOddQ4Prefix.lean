@@ -906,7 +906,7 @@ private theorem m1ZeroOddBase_prefix_head_bound
         dsimp [j,N,hN]
         omega
       rw [hcoord] at houtside
-      simpa [T2] using houtside.trans hblock
+      simpa [T2,m1ZeroOddBaseCutTape] using houtside.trans hblock
   have hBridge' :
       run tm2 62 ⟨3,hN,T1⟩ = some ⟨4,hN+2,T2⟩ := hBridge
   have hScan :
