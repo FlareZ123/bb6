@@ -151,7 +151,7 @@ If the source-root composition is formalized, the combined three-family exclusio
 
 ## Complementary q-even lift (partially resolved)
 
-The other lift of the same Q-cone congruence is (v=12+11t\pmod{32}), still under (u+v=2+4t) with (u,v\in\mathbb N). The natural-number parameterization must therefore be
+The other lift of the same Q-cone congruence is \(v=12+11t\pmod{32}\), still under \(u+v=2+4t\) with \(u,v\in\mathbb N\). The natural-number parameterization must therefore be
 \[
 v=12+11t-32z,\qquad u=32z-7t-10,
 \]
@@ -159,7 +159,7 @@ with
 \[
 7t+10\le 32z\le 12+11t.
 \]
-The earlier plus-sign expression (v=12+11t+32z) is incompatible with (u+v=2+4t) for nonnegative (u,z); the formulas in this section are corrected accordingly.
+The earlier plus-sign expression \(v=12+11t+32z\) is incompatible with \(u+v=2+4t\) for nonnegative \(u,z\); the formulas in this section are corrected accordingly.
 
 For this lift, the first odd/odd parent and its two-step six-even-right normalizer are
 \[
@@ -179,31 +179,31 @@ A source-exact subfamily is now closed:
 \[
 2t-z\equiv1\pmod8.
 \]
-This implies (z) is odd and (S\equiv6\pmod8), so (S\equiv2\pmod4). The complete even-even sum-zero parent theorem then leaves exactly two possible source parents of (F_2):
+This implies \(z\) is odd and \(S\equiv6\pmod8\), so \(S\equiv2\pmod4\). The complete even-even sum-zero parent theorem then leaves exactly two possible source parents of \(F_2\):
 
 - Direct parent
   \[
   D=(14886+14224t-30344z,\;593+568t-1212z).
   \]
-  Since (z) is odd, (D) lies in the exact even-left/odd-right valuation-two sector ((D_x+D_y+1)\equiv4\pmod8). Its unique source parent is
+  Since \(z\) is odd, \(D\) lies in the exact even-left/odd-right valuation-two sector \((D_x+D_y+1)\equiv4\pmod8\). Its unique source parent is
   \[
   U=(7737+7396t-15778z,\;4164+3982t-8495z),
   \]
-  which has odd right coordinate and coordinate sum (2\pmod4). This contradicts the source-certified odd-right image invariant, whose only possible sum residues are (0,3\pmod4).
+  which has odd right coordinate and coordinate sum \(2\pmod4\). This contradicts the source-certified odd-right image invariant, whose only possible sum residues are \(0,3\pmod4\).
 
 - Bounce parent
   \[
   E=(3720+3556t-7586z,\;6173+5902t-12591z).
   \]
-  It is even-even with sum (2\pmod4), so its unique source parent is the six-even-right affine parent
+  It is even-even with sum \(2\pmod4\), so its unique source parent is the six-even-right affine parent
   \[
   H=(E_x+E_y-2,\;(E_y-2)/2).
   \]
-  Under (2t-z\equiv1\pmod8), (H_y) is odd and (H_x+H_y\equiv1\pmod4), again forbidden by the source odd-right image invariant.
+  Under \(2t-z\equiv1\pmod8\), \(H_y\) is odd and \(H_x+H_y\equiv1\pmod4\), again forbidden by the source odd-right image invariant.
 
-Thus (F_2) is blank-unreachable for every natural (t,z) satisfying the upper bound (32z\le12+11t) and (2t-z\equiv1\pmod8). The formal proof is in [S2QEvenResidue.lean](S2QEvenResidue.lean), currently awaiting its fresh Lean CI audit.
+Thus \(F_2\) is blank-unreachable for every natural \(t,z\) satisfying the upper bound \(32z\le12+11t\) and \(2t-z\equiv1\pmod8\). The formal proof is in [S2QEvenResidue.lean](S2QEvenResidue.lean), currently awaiting its fresh Lean CI audit.
 
-This is a genuine partial closure of the complementary lift's normalizer residual, not yet a full blank-root exclusion for the original image state (V=(641+1024u,574+1024v)). The remaining composition through the P/R/V parent tree and the high-stop parameter pullback are still open.
+This is a genuine partial closure of the complementary lift's normalizer residual, not yet a full blank-root exclusion for the original image state \(V=(641+1024u,574+1024v)\). The remaining composition through the P/R/V parent tree and the high-stop parameter pullback are still open.
 
 A concrete infinite valid slice is
 \[
