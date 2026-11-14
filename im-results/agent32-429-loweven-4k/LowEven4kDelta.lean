@@ -227,7 +227,8 @@ private theorem a_e_four (k v : Nat) (hk : 1 ≤ k) :
         (ones 3 ++ pairs01 (v+3) ++ [false, false, true]), -2) := by
   have hleft : 2*k-1 = (2*k-2)+1 := by omega
   rw [hleft, pairs01_snoc]
-  simpa [sourceScanE, first_suffix_rewrite, List.append_assoc]
+  rw [first_suffix_rewrite v]
+  rfl
 
 private theorem firstC_to_secondC
     (k v : Nat) :
@@ -273,18 +274,21 @@ private theorem firstC_to_secondC
       true :: false :: true :: true :: (ones (2*v+10) ++ l) =
         true :: false :: ones (2*v+4*k+9) ++ pairs01 2 ++ ones 5 := by
     dsimp [l]
-    change [true, false] ++ (ones 2 ++ (ones (2*v+10) ++ ones (4*k-3))) ++ pairs01 2 ++ ones 5 =
-      [true, false] ++ ones (2*v+4*k+9) ++ pairs01 2 ++ ones 5
-    apply congrArg (fun xs : List Bool => [true, false] ++ xs ++ pairs01 2 ++ ones 5)
-    calc
-      ones 2 ++ (ones (2*v+10) ++ ones (4*k-3)) =
-          (ones 2 ++ ones (2*v+10)) ++ ones (4*k-3) := by
-            rw [← List.append_assoc]
-      _ = ones (2+(2*v+10)) ++ ones (4*k-3) := by
-            rw [← BB429SourceE1Return.ones_add 2 (2*v+10)]
-      _ = ones (2+(2*v+10)+(4*k-3)) := by
-            rw [← BB429SourceE1Return.ones_add (2+(2*v+10)) (4*k-3)]
-      _ = ones (2*v+4*k+9) := by congr 1 <;> omega
+    have hcombine :
+        (ones 2 ++ ones (2*v+10)) ++ ones (4*k-3) =
+          ones (2*v+4*k+9) := by
+      calc
+        (ones 2 ++ ones (2*v+10)) ++ ones (4*k-3) =
+            ones (2+(2*v+10)) ++ ones (4*k-3) := by
+              rw [← BB429SourceE1Return.ones_add 2 (2*v+10)]
+        _ = ones (2+(2*v+10)+(4*k-3)) := by
+              rw [← BB429SourceE1Return.ones_add (2+(2*v+10)) (4*k-3)]
+        _ = ones (2*v+4*k+9) := by congr 1 <;> omega
+    simp only [List.append_assoc]
+    change true :: false :: (ones 2 ++ (ones (2*v+10) ++
+      (ones (4*k-3) ++ (pairs01 2 ++ ones 5)))) =
+      true :: false :: (ones (2*v+4*k+9) ++ (pairs01 2 ++ ones 5))
+    rw [← List.append_assoc, ← List.append_assoc, hcombine
   have ht : (4+(2*v+10))+4 = 2*v+18 := by omega
   simpa [ht, hleft] using htotal
 
@@ -339,7 +343,7 @@ theorem junc_to_firstC (k v : Nat) (hk : 1 ≤ k) :
       _ = ones (4+(2*v+5)) ++ pairs01 (2*k-1) ++ ones 5 := by
         rw [← BB429SourceE1Return.ones_add 4 (2*v+5)]
       _ = ones (2*v+9) ++ pairs01 (2*k-1) ++ ones 5 := by
-        congr 1 <;> omega
+        rw [show 4+(2*v+5)=2*v+9 by omega]
   have ht : (2*v+6)+4 = 2*v+10 := by omega
   simpa [firstC, l, ht, hleft] using htotal
 
