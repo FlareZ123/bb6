@@ -431,6 +431,15 @@ jobs:
             exit 1
           fi
 
+          # Agent 42's integration closes the final (1,1) reset premise.
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63FinalResetIntegration.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-final-reset-integration-axioms.log
+          lean -o TM63FinalResetIntegration.olean TM63FinalResetIntegration.lean 2>&1 | tee /tmp/a42-terminal/m1-final-reset-integration-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-final-reset-integration-axioms.log; then
+            echo '::error::sorryAx found in final reset/root-score integration'
+            exit 1
+          fi
+
           # This independent carry-output residue audit is deliberately after the
           # root-critical composition modules, so its failure cannot mask them.
           cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/LongResidue1.lean" /tmp/a42-terminal/
@@ -519,6 +528,7 @@ jobs:
             /tmp/a42-terminal/m1-odd-root-composition-axioms.log
             /tmp/a42-terminal/m1-odd-first-section-continuation-axioms.log
             /tmp/a42-terminal/rst1prime-root-continuation-axioms.log
+            /tmp/a42-terminal/m1-final-reset-integration-axioms.log
             /tmp/a42-terminal/rst1-prime-first-sweep-axioms.log
             /tmp/a42-terminal/rst1-prime-bridge8-source-axioms.log
             /tmp/a42-terminal/rst1-prime-second-sweep-axioms.log
