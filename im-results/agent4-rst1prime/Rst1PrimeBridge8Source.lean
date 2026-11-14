@@ -46,6 +46,11 @@ theorem s1Config_left_after_d1pow
     (s1Config L 0 1 a 0 b h).tape
       (h-((3*a+1+k:Int))) =
       sideBit (markerWord 1 ++ d0 ++ binDec L 0 ++ lh) (k+1) := by
+  have hcast : ((3*a+1+k : Nat) : Int) =
+      3*(a:Int)+1+(k:Int) := by
+    push_cast
+    ring
+  rw [← hcast]
   rw [s1Config_left_cell L 0 1 a 0 b h (3*a+1+k)]
   simp only [s1LeftFacing,binDec_zero]
   rw [sideBit_append]
@@ -75,22 +80,22 @@ theorem rst1Prime_bridge8_window_after_firstSweep
   rcases hcases with h3 | h2 | h1 | h0
   · subst x
     have hcoord :
-        h-((3*a+1:Int))+(-3:Int) = h-((3*a+1+3:Int)) := by omega
+        h-((3*a+1:Int))+(-3:Int) = h-(3*(a:Int)+1+((3:Nat):Int)) := by omega
     rw [hcoord,s1Config_left_after_d1pow L a b h 3]
     simp [markerWord,d0,sideBit,bridge8Start]
   · subst x
     have hcoord :
-        h-((3*a+1:Int))+(-2:Int) = h-((3*a+1+2:Int)) := by omega
+        h-((3*a+1:Int))+(-2:Int) = h-(3*(a:Int)+1+((2:Nat):Int)) := by omega
     rw [hcoord,s1Config_left_after_d1pow L a b h 2]
     simp [markerWord,d0,sideBit,bridge8Start]
   · subst x
     have hcoord :
-        h-((3*a+1:Int))+(-1:Int) = h-((3*a+1+1:Int)) := by omega
+        h-((3*a+1:Int))+(-1:Int) = h-(3*(a:Int)+1+((1:Nat):Int)) := by omega
     rw [hcoord,s1Config_left_after_d1pow L a b h 1]
     simp [markerWord,d0,sideBit,bridge8Start]
   · subst x
     have hcoord :
-        h-((3*a+1:Int))+(0:Int) = h-((3*a+1+0:Int)) := by omega
+        h-((3*a+1:Int))+(0:Int) = h-(3*(a:Int)+1+((0:Nat):Int)) := by omega
     rw [hcoord,s1Config_left_after_d1pow L a b h 0]
     simp [markerWord,d0,sideBit,bridge8Start]
 
