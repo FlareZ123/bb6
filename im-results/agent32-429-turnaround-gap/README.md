@@ -76,3 +76,24 @@ All entries follow by substituting the corresponding branch formula into (g'=2u'
 - It exposes the remaining mathematical task: analyze the successive boundary resets and prove or refute a future return to (g=4).
 - It does **not** establish an all-time invariant, a first hitting time, or a halt/nonhalt decision. The published (sim10^{110}) expectation remains heuristic.
 - The next useful direction is to derive a return recurrence or congruence invariant for the boundary gap, potentially combining this coordinate with the existing 58-class / 2^18 terminal-residue sieve. Further finite-prefix extension alone does not answer the hitting question.
+
+
+## Exact equation for the final outer ladder
+
+Let \((u_0,w_0)\) be the state immediately after the last non-outer boundary transition, and suppose \(n\) outer steps then reach a halting state \((U,W)\). The closed form above gives
+\[
+U+3=2^n(u_0+3),\qquad
+W=w_0-2(u_0+3)(2^n-1)+3n.
+\]
+At halt, \(W=2U-1\). Substitution and rearrangement give the exact predecessor equation
+\[
+\boxed{\quad w_0+3n+7=(2^{n+2}-2)(u_0+3).\quad}
+\]
+This is a sharper target for a reverse analysis than the terminal equality alone: the state after the last boundary reset must satisfy a specific exponential divisibility/equality condition.
+
+Two immediate consequences:
+
+1. \(n=0\) is impossible for a non-outer boundary output: direct substitution into the boundary branch table gives no output with \(w_0=2u_0-1\). Thus a halt must follow at least one outer step.
+2. If \(n\\ge18\), then \(U+3=2^n(u_0+3)\) implies \(U\\equiv-3\\pmod{2^{18}}\), i.e. \(U\\bmod 2^{18}=262141\).
+
+The current repository sieve data in [BB429Count58Sixteen.lean](../../agent33-429-five-shift/BB429Count58Sixteen.lean) and [BB429SplitSieve.lean](../../agent1-429-262144-sieve/BB429SplitSieve.lean) leaves 255 terminal residue classes; **262141 is among those 255 survivors**. Therefore the existing 58-class / \(2^{18}\) sieve does not exclude the long-outer case. A useful refinement should retain the pre-outer quotient \(u_0+3\), the outer length \(n\), or the exact predecessor equation above, rather than filtering only \(U\\bmod 2^{18}\).
