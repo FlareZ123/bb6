@@ -151,7 +151,7 @@ private theorem low43_gap_anyhead
 
 /-- Lift the low-odd canonical physical run to any complete physical
     configuration representing its Junc input. -/
-private theorem lowOdd_raw_head_any
+theorem lowOdd_raw_head_any
     (v n : Nat) (c : Config)
     (hrep : Represents (junc (v+2*n+3) 0 (2*v+1)) c) :
     ∃ d : Config,
