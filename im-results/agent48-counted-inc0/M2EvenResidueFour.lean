@@ -733,11 +733,11 @@ theorem m2Even_residue4_q4_prefix_data
       (∀ i : Nat, Tq (h+1+(i:Int)) =
         sideBit (q4RightFacing b) i) := by
   refine ⟨m2EvenResidueFourCutTape L k a b h, ?_, ?_, ?_, ?_⟩
-  · exact m2Even_residue4_q4_prefix_source L k a b h hL hbound
+  · exact m2Even_residue4_q4_prefix_source L k a b h hL hbound ha
   · simpa [m2EvenResidueFourLeftFacing] using
       m2EvenResidueFour_leftFacing L k a b h hL hbound ha
-  · exact m2EvenResidueFour_prefix_rightShape L k a b h hL hbound
-  · exact m2EvenResidueFour_rightFacing L k a b h hL hbound
+  · exact m2EvenResidueFour_prefix_rightShape L k a b h hL hbound ha
+  · exact m2EvenResidueFour_rightFacing L k a b h hL hbound ha
 
 /-- The full right ray is blank beyond the q4 suffix's nine-cell window. -/
 private theorem m2EvenResidueFour_prefix_far_tail
