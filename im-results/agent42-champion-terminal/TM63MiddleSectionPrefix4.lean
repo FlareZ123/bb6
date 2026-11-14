@@ -135,7 +135,7 @@ theorem tm63_middle_first4_source
         (s1Config L (8*k+7) 2 a 0 b h) =
       some (s1Config L (8*k+6) 1 a1 0 b1 h1) := by
     have hn : (8*k+7)%2 = 1 := by omega
-    simpa [a1,b1,h1,middleAfter1A,middleAfter1B] using
+    simpa [a1,b1,h1,middleAfter1A,middleAfter1B,nextExponent,nextRight] using
       m2Odd_counted_increment_source L (8*k+7) a b h hn hbound
 
   have ha1 : 0 < a1 := by
@@ -146,7 +146,7 @@ theorem tm63_middle_first4_source
         (s1Config L (8*k+6) 1 a1 0 b1 h1) =
       some (s1Config L (8*k+5) 0 a2 0 b2 h2) := by
     simpa [a2,b2,h2,middleAfter2A,middleAfter2B,
-      a1,b1,middleAfter1A,middleAfter1B] using
+      a1,b1,middleAfter1A,middleAfter1B,nextExponent,nextRight] using
       m1Even_residue6_counted_increment_source
         L k a1 b1 h1 hL (by omega) ha1
 
@@ -160,7 +160,7 @@ theorem tm63_middle_first4_source
       some (s1Config L (8*k+4) 2 a3 0 b3 h3) := by
     simpa [a3,b3,h3,middleAfter3A,middleAfter3B,
       a2,b2,middleAfter2A,middleAfter2B,
-      a1,b1,middleAfter1A,middleAfter1B] using
+      a1,b1,middleAfter1A,middleAfter1B,nextExponent,nextRight] using
       m0Odd_residue5_counted_increment_source
         L k a2 b2 h2 hL (by omega) ha2
 
@@ -175,7 +175,7 @@ theorem tm63_middle_first4_source
     simpa [a4,b4,h4,middleAfter4A,middleAfter4B,
       a3,b3,middleAfter3A,middleAfter3B,
       a2,b2,middleAfter2A,middleAfter2B,
-      a1,b1,middleAfter1A,middleAfter1B] using
+      a1,b1,middleAfter1A,middleAfter1B,nextExponent,nextRight] using
       m2Even_residue4_counted_increment_source
         L k a3 b3 h3 hL (by omega) ha3
 
@@ -184,13 +184,13 @@ theorem tm63_middle_first4_source
   have h0123 := run_compose h012 h3run
   have hhead : h + (middleFirst4HeadShift b : Int) = h4 := by
     dsimp [middleFirst4HeadShift,h4,h3,h2,h1,
-      middleAfter1B,middleAfter2B,middleAfter3B,b1,b2,b3]
+      middleAfter1B,middleAfter2B,middleAfter3B,b1,b2,b3,nextRight]
     omega
   rw [hhead]
   simpa [middleFirst4Cost,a1,b1,a2,b2,a3,b3,a4,b4,
     middleAfter1A,middleAfter1B,middleAfter2A,middleAfter2B,
     middleAfter3A,middleAfter3B,middleAfter4A,middleAfter4B,
-    h1,h2,h3,h4] using h0123
+    h1,h2,h3,h4,nextExponent,nextRight] using h0123
 
 #print axioms sectionResult_first4_cost
 #print axioms tm63_middle_first4_source
