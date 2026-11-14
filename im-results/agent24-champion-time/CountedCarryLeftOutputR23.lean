@@ -152,7 +152,7 @@ theorem carryLongPrefix_r2_left (k : Nat) (T : Int → Bool)
           simp [carryInputArea,hlow,hupper]
         have hbit : carryInputBit (4*k+2) x = true := by
           rw [hxEq,hthreshold]
-          simp [carryInputBit]
+          simp [carryInputBit] <;> omega
         have hmark : T x = true := by
           rw [hmatch x harea]
           exact hbit
@@ -333,7 +333,7 @@ theorem carryLongPrefix_r3_left (k : Nat) (T : Int → Bool)
           simp [carryInputArea,hlow,hupper]
         have hbit : carryInputBit (4*k+3) x = true := by
           rw [hxEq,hthreshold]
-          simp [carryInputBit]
+          simp [carryInputBit] <;> omega
         have hmark : T x = true := by
           rw [hmatch x harea]
           exact hbit
