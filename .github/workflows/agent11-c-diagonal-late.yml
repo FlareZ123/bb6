@@ -24,6 +24,8 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check original C source and both Machine C low-family exclusions
+        env:
+          M0_S229_S533_ONLY: ${{ inputs.m0_s229_s533_only }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/a38-section
@@ -208,7 +210,7 @@ jobs:
             exit 1
           fi
 
-          if [ "${{ inputs.m0_s229_s533_only }}" = "true" ]; then exit 0; fi
+          if [ "$M0_S229_S533_ONLY" = "true" ]; then exit 0; fi
 
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31.lean .
           lean -o M0EvenEvenSumZeroS31.olean M0EvenEvenSumZeroS31.lean 2>&1 | tee M0EvenEvenSumZeroS31.log
