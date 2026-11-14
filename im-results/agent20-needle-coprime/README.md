@@ -74,3 +74,9 @@ These are exact modular consequences of the existing parent equations, but this 
 No theorem here says any terminal feeder is reached by the genuine blank-start sequence. The exact Boolean root test is sound and complete **only for each fixed target**; the existential over all terminal powers remains open. Source-level inverse classification, arbitrary synthetic indegree and infinite modular coverage cannot alone establish nonhalting. A useful breakthrough must exclude a whole surviving infinite family from the authentic orbit, or produce a genuine terminal witness, then ultimately connect every remaining six-state machine and exact champion score to global BB(6) coverage.
 
 See [Agent 48's exact odd-block grammar](../agent48-space-needle/ORDER-5ADIC.md) for potential authenticated-root strengthening. This dossier belongs in `im-results/`; nothing established here certifies a BB(6) upper bound or a standalone novel publication.
+
+## Second-level predecessor sieve
+
+The valuation-two source now yields a second target oddTower(p0,0) with 55y=8A_rP_r(A_r)+25. The new intermediate analysis is in [SecondLevelParentSieve.md](SecondLevelParentSieve.md): it adapts the 5, 7, 11, 13, 19, 29, and 61 prime cylinders to this target, computes the exact 35.83954% surviving valuation density, and proves a uniform high-side no-parent band. The accompanying [second_level_cylinder_density.js](second_level_cylinder_density.js) reproduces the CRT count.
+
+This is a paper-level result, not yet Lean-formalized and not a complete predecessor exclusion. Do not promote it to results/ until the remaining valuation classes are resolved and the new proof is checked.
