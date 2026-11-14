@@ -1,0 +1,88 @@
+name: Agent 41 m0 n=16r+7 root successor Lean verification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Stage exact source dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a41-m0-seven
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a41-m0-seven/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a41-m0-seven/
+          base64 --decode im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64 | gzip --decompress > /tmp/a41-m0-seven/UniformTM63.lean
+          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,ChampionModular,CostRecurrence,CountPattern,Q4RightEndpoint}.lean /tmp/a41-m0-seven/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a41-m0-seven/
+          cp im-results/agent8-counted-reset/{CountedReset,Q4Suffix}.lean /tmp/a41-m0-seven/
+          cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a41-m0-seven/
+          cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a41-m0-seven/
+          cp im-results/agent24-champion-time/{M0OddQ4Bridges,M0OddQ4Prefix}.lean /tmp/a41-m0-seven/
+      - name: Compile dependencies and new m0 odd q4 proof
+        run: |
+          set -euo pipefail
+          cd /tmp/a41-m0-seven
+          export LEAN_PATH=.
+          lean --version
+          lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          lean -o UniformTM63.olean UniformTM63.lean
+          lean -o CountedSweep.olean CountedSweep.lean
+          lean -o CountedOddBase.olean CountedOddBase.lean
+          lean -o S1Encoder.olean S1Encoder.lean
+          lean -o ChampionModular.olean ChampionModular.lean
+          lean -o CostRecurrence.olean CostRecurrence.lean
+          lean -o CountPattern.olean CountPattern.lean
+          : > rst1-prime-axioms.log
+          lean -o CountedReset.olean CountedReset.lean
+          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean
+          lean -o CountedRst1Prime.olean CountedRst1Prime.lean 2>&1 | tee rst1-prime-axioms.log
+          if grep -q 'sorryAx' rst1-prime-axioms.log; then echo '::error::sorryAx in CountedRst1Prime'; exit 1; fi
+          lean -o Q4Suffix.olean Q4Suffix.lean
+          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
+          : > m0-odd-q4-axioms.log
+          if ! lean -o M0OddQ4Bridges.olean M0OddQ4Bridges.lean > m0-odd-q4-axioms.log 2>&1; then
+            echo '## M0OddQ4Bridges compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 100 m0-odd-q4-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat m0-odd-q4-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' m0-odd-q4-axioms.log; then
+            echo '::error::sorryAx found in m0 finite bridge proofs'
+            exit 1
+          fi
+          if ! lean -o M0OddQ4Prefix.olean M0OddQ4Prefix.lean >> m0-odd-q4-axioms.log 2>&1; then
+            echo '## M0OddQ4Prefix compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 140 m0-odd-q4-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat m0-odd-q4-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' m0-odd-q4-axioms.log; then
+            echo '::error::sorryAx found in m0 odd q4 prefix proof'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m0-n16r7/M0OddResidueSeven.lean" /tmp/a41-m0-seven/
+          : > m0-seven-axioms.log
+          if ! lean -o M0OddResidueSeven.olean M0OddResidueSeven.lean > m0-seven-axioms.log 2>&1; then
+            echo '## M0OddResidueSeven compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 160 m0-seven-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat m0-seven-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' m0-seven-axioms.log; then
+            echo '::error::sorryAx found in n=16*r+7 source theorem'
+            exit 1
+          fi
+          echo '## m=0,n=16*r+7 q4 reset prefix Lean verification' >> "$GITHUB_STEP_SUMMARY"
+          echo 'M0OddResidueSeven compiles under Lean 4.36.0-rc2 without sorryAx.' >> "$GITHUB_STEP_SUMMARY"
