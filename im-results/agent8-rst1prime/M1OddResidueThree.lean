@@ -275,7 +275,7 @@ private theorem E_scan_prefix_head
   omega
 
 /-- The 32+12a prefix has a one-sided head bound sharp enough to frame any
-arbitrary S1 tail following the first five low-order counter bits. -/
+arbitrary S1 tail following the finite low-order input prefix. -/
 private theorem m1Odd_q4_prefix_head_bound
     (a b : Nat) (h : Int) :
     ∀ k, k < 32+12*a → ∀ d,
@@ -739,5 +739,23 @@ theorem m1OddResidueThree_counted_increment_source
     (by simpa [resetDelta] using hdrainBound)
   rw [proposedIncrementCost_decomp 1 (8*k+3) a b,hcost]
   exact hrun
+
+/-- The symbolic endpoint matches the -notation used by sectionResult. -/
+theorem m1OddResidueThree_counted_increment_source_symbolic
+    (L k a b : Nat) (h : Int)
+    (hL : 3 ≤ L) (hbound : 8*k+3 < 2^L) (ha : 0 < a) :
+    run tm2 (proposedIncrementCost 1 (8*k+3) a b)
+      (s1Config L (8*k+3) 1 a 0 b h) =
+      some (s1Config L (8*k+2) (nextMarker 1)
+        (nextExponent 1 a b) 0 (nextRight b) (h+5+3*b)) := by
+  simpa [nextMarker,nextExponent,nextRight] using
+    m1OddResidueThree_counted_increment_source L k a b h hL hbound ha
+
+#print axioms binDec_residue3
+#print axioms binDec_residue2
+#print axioms m1OddResidueThree_q4_prefix_source
+#print axioms m1OddResidueThree_reset_prefix_source
+#print axioms m1OddResidueThree_counted_increment_source
+#print axioms m1OddResidueThree_counted_increment_source_symbolic
 
 end BB6Coverage.Agent8M1OddResidueThree
