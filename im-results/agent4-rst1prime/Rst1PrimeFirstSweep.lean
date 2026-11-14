@@ -18,6 +18,7 @@ namespace BB6Coverage.Agent4Rst1Prime
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24ChampionTime
+open BB6Coverage.Agent6Q4Prefix
 
 /-- Exact source-side preconditions for the first Rst1' counted sweep. -/
 theorem rst1Prime_firstSweep_preconditions
