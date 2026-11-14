@@ -166,6 +166,56 @@ Equivalently, the filters eliminate about \(65.50619\%\) of all valuations. This
 
 The accompanying second_level_cylinder_density.js reproduces the finite CRT count using only integer arithmetic.
 
+### Conditional prime-square refinement at \(11^2\)
+
+The eight-prime sieve can be sharpened on one parameter class by using \(121\), not merely \(11\).
+
+For \(r=110j+50\), \(9^r\equiv1\pmod{440}\), so \(v=(9^r+3)/2\equiv2\pmod{220}\), hence \(A\equiv8\) and \(2^v\equiv4\pmod{6655}\). The recurrence for \(P_r(A)\), now modulo \(6655=55\cdot121\), gives
+\[
+P_{r+110}\equiv3631P_r+2750,\qquad P_{50}\equiv2185.
+\]
+The affine recurrence has the exact solution
+\[
+P_{110j+50}\equiv2185+1540j\pmod{6655}.
+\]
+Indeed, substituting this expression into the recurrence reduces to
+\[
+3630\cdot2185+1210=1192\cdot6655,\qquad
+3630\cdot1540=840\cdot6655.
+\]
+Consequently
+\[
+B=4P\equiv2085-495j\pmod{6655},
+\qquad
+\boxed{y\equiv2-23j\pmod{121}.}
+\]
+
+Since \(2^{33}\equiv118=-3\pmod{121}\) and the order of \(2\) modulo \(121\) is \(110\), the cylinder \(121\mid D_w\) is exactly
+\[
+w\equiv32\pmod{110}.
+\]
+There \(2^w\equiv59\pmod{121}\), so the parent equation forces
+\[
+w\equiv y-59\equiv-57-23j\pmod{121}.
+\]
+The first-level \(11\)-filter already requires \(w\equiv9-j\pmod{11}\). The \(121\)-cylinder has \(w\equiv10\pmod{11}\), so it is automatically excluded unless \(j\equiv10\pmod{11}\). On that parameter class, write \(j=10+11t\); the additional forced residue is
+\[
+\boxed{w\equiv76-11t\pmod{121}.}
+\]
+
+This is a conditional prime-square refinement, not a replacement for the eight-prime baseline. The exact CRT count is parameter-dependent:
+- If \(j\not\equiv10\pmod{11}\), the eight-prime density is unchanged.
+- If \(j\equiv10\pmod{11}\), the surviving count modulo
+  \[
+  L_{121}=152460\cdot19\cdot29\cdot61\cdot67=343\,330\,315\,020
+  \]
+  is \(117\,544\,794\,240\), giving
+  \[
+  \boxed{\frac{32\,116\,064}{93\,806\,097}\approx0.3423664882.}
+  \]
+The accompanying second_level_prime_power_refinement.js checks all \(j\bmod121\) by exact integer counting. For \(j\not\equiv10\pmod{11}\), its count is \(118\,427\,708\,850\) modulo the same \(L_{121}\), exactly the baseline eight-prime density.
+
+
 ## 3. A uniform high-side middle-band exclusion
 
 The prime cylinders leave many valuations. There is also a large contiguous interval, depending on \(r\), that can be excluded without any prime-specific residue table.

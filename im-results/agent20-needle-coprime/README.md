@@ -77,6 +77,6 @@ See [Agent 48's exact odd-block grammar](../agent48-space-needle/ORDER-5ADIC.md)
 
 ## Second-level predecessor sieve
 
-The valuation-two source now yields a second target oddTower(p0,0) with 55y=8A_rP_r(A_r)+25. The new intermediate analysis is in [SecondLevelParentSieve.md](SecondLevelParentSieve.md): it adapts the 5, 7, 11, 13, 19, 29, 61, and 67 prime cylinders to this target, computes the exact 34.49381% surviving valuation density, and proves both a uniform high-side no-parent band and low-side quotient-band exclusions. The accompanying [second_level_cylinder_density.js](second_level_cylinder_density.js) reproduces the CRT count.
+The valuation-two source now yields a second target oddTower(p0,0) with 55y=8A_rP_r(A_r)+25. The new intermediate analysis is in [SecondLevelParentSieve.md](SecondLevelParentSieve.md): it adapts the 5, 7, 11, 13, 19, 29, 61, and 67 prime cylinders to this target, computes the exact 34.49381% surviving valuation density, and proves high-side and low-side quotient-band exclusions, and includes a conditional 11-squared refinement. The accompanying [second_level_cylinder_density.js](second_level_cylinder_density.js) reproduces the CRT count.
 
 This is a paper-level result, not yet Lean-formalized and not a complete predecessor exclusion. Do not promote it to results/ until the remaining valuation classes are resolved and the new proof is checked.
