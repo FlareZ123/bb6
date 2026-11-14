@@ -2,9 +2,9 @@
 
 ## Correction record (2026-11-14)
 
-The original p=5 guard incorrectly rejected every valuation divisible by 4. The exact parent equation instead forces \(w\equiv4\pmod5\) on that cylinder, so \(w\equiv4\pmod{20}\) must be retained. The corrected exact CRT counts are 38.06523925% (eight primes), 36.07853954% (eleven primes), and 37.80807739% for the conditional \(11^2\) refinement. Agent 48's independent derivation and executable BigInt recount are preserved in [SecondLevelPrime5Correction.md](../agent48-needle-sieve-audit/SecondLevelPrime5Correction.md). This correction changes only the necessary-congruence sieve; it does not establish a full integer predecessor.
+Two independent errors affected the original second-level prime sieve. On the p=5 cylinder \(w\equiv0\pmod4\), the parent equation forces \(w\equiv4\pmod5\), so \(w\equiv4\pmod{20}\) must be retained; see [Agent 48's p=5 audit](../agent48-needle-sieve-audit/SecondLevelPrime5Correction.md). On the p=13 cylinder \(w\equiv9\pmod{12}\), the parent equation forces \(w\equiv12\pmod{13}\), rather than excluding the whole cylinder; the derivation and exact recount are in [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md).
 
-**Status:** intermediate mathematical result. The source-level construction below uses existing Lean-checked components, but the new second-level modular sieve and band lemmas are not yet Lean-formalized. This is not an exact BB(6) result and does not eliminate every possible predecessor.
+With both corrections applied, the exact CRT counts are 38.50383574% (eight primes), 36.48382491% (eleven primes), and 38.24667388% for the conditional \(11^2\) refinement. These are candidate-valuation densities only. The corrected finite congruence sieve still does not establish an actual integer predecessor or blank-root reachability.
 
 ## 1. The second-level target
 
@@ -74,7 +74,7 @@ If a prime \(p_*\) divides \(D_w\), equation (1) forces \(y\equiv b_w\pmod{p_*}\
 | \(5\) | \(w\equiv0\pmod4\) | \(w\equiv4\pmod5\) (equivalently \(w\equiv4\pmod{20}\)) |
 | \(7\) | \(w\equiv1\pmod3\) | \(w\equiv c_7(j)\pmod7\) |
 | \(11\) | \(w\equiv2\pmod{10}\) | \(w\equiv9-j\pmod{11}\) |
-| \(13\) | \(w\equiv9\pmod{12}\) | Impossible |
+| \(13\) | \(w\equiv9\pmod{12}\) | \(w\equiv12\pmod{13}\) |
 | \(19\) | \(w\equiv3\pmod{18}\) | \(w\equiv c_{19}(j)\pmod{19}\) |
 | \(29\) | \(w\equiv18\pmod{28}\) | \(w\equiv c_{29}(j)\pmod{29}\) |
 | \(61\) | \(w\equiv35\pmod{60}\) | \(w\equiv c_{61}(j)\pmod{61}\) |
@@ -128,7 +128,7 @@ c_{61}(j)=y-29\pmod{61},\quad c_{67}(j)=y-32\pmod{67}.
   P_{110j+50}\equiv7+88j\equiv7-33j\pmod{121}.
   \]
   Hence \(B\equiv28-11j\pmod{121}\), and (2) gives \(y\equiv2-j\pmod{11}\). On \(w\equiv2\pmod{10}\), \(b_w\equiv w+4\pmod{11}\), giving \(w\equiv9-j\pmod{11}\).
-- **Prime 13.** Here \(v\equiv6\pmod{12}\), so \(A\equiv11\pmod{13}\), and \(A^2\equiv4\). The geometric sum \(G_r(4,9)\) vanishes modulo 13 because \(4^r=9^r\) for even \(r\). Thus \(P\equiv B\equiv0\pmod{13}\), and (2) gives \(y\equiv4\pmod{13}\). But \(w\equiv9\pmod{12}\) gives \(b_w\equiv1\pmod{13}\). This entire cylinder is impossible.
+- **Prime 13.** Here \(v\equiv6\pmod{12}\), so \(A\equiv11\pmod{13}\) and \(A^2\equiv4\). Since \(r=110j+50\) is even, \(4^r\equiv9^r\pmod{13}\); the closed polynomial identity therefore gives \(P\equiv0\pmod{13}\), and (2) yields \(y\equiv4\pmod{13}\). On the denominator cylinder \(w\equiv9\pmod{12}\), \(2^w\equiv5\pmod{13}\), so \(b_w=3\cdot2^w+w+3\equiv w+5\pmod{13}\). Thus the parent equation forces \(w\equiv12\pmod{13}\); the cylinder is not impossible.
 - **Prime 19.** Since \(9^r\equiv9\pmod{36}\), \(v\equiv6\pmod{18}\), \(A\equiv14\), and \(2^v\equiv7\pmod{19}\). The geometric-sum identity gives \(B\equiv G_r(6,9)\equiv6(6^r-9^r)\pmod{19}\). Substitution into (2) gives the nine-entry table above. On \(w\equiv3\pmod{18}\), \(b_w\equiv w+8\pmod{19}\).
 - **Prime 29.** Reusing the established first-level residues \(A\bmod29=8,12,27\) according as \(r\bmod3=0,1,2\), evaluate
   \[
@@ -154,23 +154,23 @@ All base cylinders are determined by \(w\bmod13860\), where
 \[
 13860=\operatorname{lcm}(4,12,3,10,18,28,60,66).
 \]
-For each base residue \(b\bmod13860\), reject \(b\equiv9\pmod{12}\), and reject \(b\equiv0\pmod4\) only when \(b\not\equiv4\pmod5\). Apply the forced \(7\)- and \(11\)-residues whenever \(b\equiv1\pmod3\) and \(b\equiv2\pmod{10}\), respectively. For each remaining base residue, the number of choices modulo \(19,29,61,67\) is respectively one or the full prime, according as its corresponding divisibility cylinder is active or inactive. The Chinese remainder theorem then gives the exact count.
+For each base residue \(b\bmod13860\), reject \(b\equiv0\pmod4\) only when \(b\not\equiv4\pmod5\), and reject \(b\equiv9\pmod{12}\) unless the \(p=13\) coordinate is \(b\equiv12\pmod{13}\). Apply the forced \(7\)- and \(11\)-residues whenever \(b\equiv1\pmod3\) and \(b\equiv2\pmod{10}\), respectively. For each remaining base residue, the number of choices modulo \(13,19,29,61,67\) is one or the full prime according as its corresponding divisibility cylinder is active or inactive. The Chinese remainder theorem then gives the exact count.
 
 The full valuation modulus is
 \[
-L=13860\cdot19\cdot29\cdot61\cdot67=31\,211\,846\,820.
+L=13860\cdot13\cdot19\cdot29\cdot61\cdot67=405\,754\,008\,660.
 \]
 For every \(j\bmod33\), exactly
 \[
-11\,880\,864\,165
+156\,230\,856\,990
 \]
 residues modulo \(L\) survive. Thus the exact natural density of valuations not eliminated by these eight necessary filters is
 \[
-\boxed{\frac{11\,880\,864\,165}{31\,211\,846\,820}
-=\frac{12\,984\,551}{34\,111\,308}
-\approx0.3806523925.}
+\boxed{\frac{156\,230\,856\,990}{31\,211\,846\,820}
+=\frac{2\,189\,027}{5\,685\,218}
+\approx0.3850383574.}
 \]
-Equivalently, the filters eliminate about \(61.93476\%\) of all valuations. This is a density of candidate valuations, not a probability of a machine or a proof that any surviving valuation is realizable.
+Equivalently, the filters eliminate about \(61.49616\%\) of all valuations. This is a density of candidate valuations, not a probability of a machine or a proof that any surviving valuation is realizable.
 
 The accompanying second_level_cylinder_density.js reproduces the finite CRT count using only integer arithmetic.
 
@@ -215,13 +215,13 @@ This is a conditional prime-square refinement, not a replacement for the eight-p
 - If \(j\not\equiv10\pmod{11}\), the eight-prime density is unchanged.
 - If \(j\equiv10\pmod{11}\), the surviving count modulo
   \[
-  L_{121}=152460\cdot19\cdot29\cdot61\cdot67=343\,330\,315\,020
+  L_{121}=152460\cdot13\cdot19\cdot29\cdot61\cdot67=4\,463\,294\,095\,260
   \]
-  is \(129\,806\,591\,205\), giving
+  is \(1\,707\,061\,536\,960\), giving
   \[
-  \boxed{\frac{141\,865\,127}{375\,224\,388}\approx0.3780807739.}
+  \boxed{\frac{35\,877\,712}{93\,806\,097}\approx0.3824667388.}
   \]
-The accompanying second_level_prime_power_refinement.js checks all \(j\bmod121\) by exact integer counting. For \(j\not\equiv10\pmod{11}\), its count is \(130\,689\,505\,815\) modulo the same \(L_{121}\), exactly the baseline eight-prime density.
+The accompanying second_level_prime_power_refinement.js checks all \(j\bmod121\) by exact integer counting. For \(j\not\equiv10\pmod{11}\), its count is \(1\,718\,539\,426\,890\) modulo the same \(L_{121}\), exactly the baseline eight-prime density.
 
 
 ### Eleven-prime extension
@@ -239,21 +239,21 @@ The base modulus is now
 \[
 M_0=\operatorname{lcm}(4,12,3,10,18,28,36,39,60,66,100)=900900.
 \]
-For each base residue \(b\bmod M_0\), apply the corrected p=5 guard (reject \(b\equiv0\pmod4\) only if \(b\not\equiv4\pmod5\)), the p=13 guard, and the forced p=7 and p=11 residues; each active cylinder among \(19,29,37,61,67,79,101\) contributes one residue modulo its prime, otherwise all prime residues remain.
+For each base residue \(b\bmod M_0\), apply the corrected p=5 guard, force \(w\equiv12\pmod{13}\) on the p=13 cylinder \(w\equiv9\pmod{12}\), and apply the forced p=7 and p=11 residues; each active cylinder among \(19,29,37,61,67,79,101\) contributes one residue modulo its prime, otherwise all prime residues remain.
 \[
-L_{11}=900900\cdot19\cdot29\cdot37\cdot61\cdot67\cdot79\cdot101
-=598\,939\,578\,493\,155\,900
+L_{11}=900900\cdot13\cdot19\cdot29\cdot37\cdot61\cdot67\cdot79\cdot101
+=7\,786\,214\,520\,411\,026\,700
 \]
 and, for every \(j\bmod33\), exactly
 \[
-216\,088\,652\,661\,220\,365
+2\,840\,708\,872\,558\,889\,670
 \]
 surviving residues. Therefore the eleven-prime necessary sieve leaves
 \[
-\boxed{\frac{18\,166\,343\,224\,987}{50\,352\,213\,408\,420}
-\approx0.3607853954.}
+\boxed{\frac{9\,185\,206\,688\,521}{25\,176\,106\,704\,210}
+\approx0.3648382491.}
 \]
-It eliminates about \(63.92146\%\) of valuation classes. Reproduction is in second_level_eleven_prime_density.js; the forced-residue and matrix-period certificates for the new primes are in second_level_extra_prime_tables.js.
+It eliminates about \(63.51618\%\) of valuation classes. Reproduction is in second_level_eleven_prime_density.js; the forced-residue and matrix-period certificates for the new primes are in second_level_extra_prime_tables.js.
 
 
 ## 3. A uniform high-side middle-band exclusion
@@ -608,8 +608,8 @@ For the second-level target, the current exact restrictions are:
 1. \(w=0,3,4,5\) are impossible.
 2. \(w=1\) survives the necessary divisibility condition only when \(j\equiv2\pmod3\).
 3. \(w=2\) survives the necessary divisibility condition only when \(j\equiv7\pmod{11}\).
-The corrected eight-prime baseline leaves \(38.06523925\%\) of candidate valuation classes; adding \(37,79,101\) gives an eleven-prime density of \(36.07853954\%.
-The separate corrected \(11^2\) refinement leaves \(37.80807739\%\) of candidate valuation classes when \(j\equiv10\pmod{11}\); it has not been combined with the eleven-prime sieve.
+The corrected eight-prime baseline leaves \(38.50383574\%\) of candidate valuation classes; adding \(37,79,101\) gives an eleven-prime density of \(36.48382491\%.
+The separate corrected \(11^2\) refinement leaves \(38.24667388\%\) of candidate valuation classes when \(j\equiv10\pmod{11}\); it has not been combined with the eleven-prime sieve.
 6. The high-side certificate plus the \(k=0\) large-remainder theorem exclude a contiguous interval beginning at \(w=a\) for \(r=50\), with the upper endpoint given in Section 5.
 7. Low-side small-remainder and large-remainder quotient bands exclude additional intervals on both sides of the quotient boundaries near \(a/2,a/3,\ldots\).
 
