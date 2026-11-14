@@ -29,10 +29,11 @@ theorem root_low43_C0_to_junc :
       (z 2 (true::false::true::true::
         (ones 26 ++ (tens 14 ++ ones 6))) false []) =
       some (junc 23 0 18, -20) := by
-  simpa [root_low43_C0_to_junc_max] using
-    ((runWithMax_toDelta 438
+  have hproj := runWithMax_toDelta 438
       (z 2 (true::false::true::true::
-        (ones 26 ++ (tens 14 ++ ones 6))) false [])).symm)
+        (ones 26 ++ (tens 14 ++ ones 6))) false [])
+  rw [root_low43_C0_to_junc_max] at hproj
+  exact hproj.symm
 
 /-- The next exact root-relevant prepared return, from J(23,18) to
     J(11,62), including the complete prefix maximum. -/
@@ -66,10 +67,11 @@ theorem root_low43_C0_to_junc11 :
       (z 2 (true::false::true::true::
         (ones 26 ++ (tens 14 ++ ones 6))) false []) =
       some (junc 11 0 62, -57) := by
-  simpa [root_low43_C0_to_junc11_max] using
-    ((runWithMax_toDelta 1347
+  have hproj := runWithMax_toDelta 1347
       (z 2 (true::false::true::true::
-        (ones 26 ++ (tens 14 ++ ones 6))) false [])).symm)
+        (ones 26 ++ (tens 14 ++ ones 6))) false [])
+  rw [root_low43_C0_to_junc11_max] at hproj
+  exact hproj.symm
 
 
 /-- A concrete prepared low-even return on the simulated root route:
@@ -82,8 +84,9 @@ theorem root_low_even_r96_max :
 theorem root_low_even_r96 :
     runWithDelta 719 (junc 49 0 2) =
       some (junc 11 0 98, -89) := by
-  simpa [root_low_even_r96_max] using
-    ((runWithMax_toDelta 719 (junc 49 0 2)).symm)
+  have hproj := runWithMax_toDelta 719 (junc 49 0 2)
+  rw [root_low_even_r96_max] at hproj
+  exact hproj.symm
 
 
 /-- The next prepared root-route high-three branch, J(11,62) -> J(25,37). -/
@@ -117,8 +120,9 @@ theorem root_junc11_to_junc10_max :
 theorem root_junc11_to_junc10 :
     runWithDelta 2457 (junc 11 0 62) =
       some (junc 10 0 74, -9) := by
-  simpa [root_junc11_to_junc10_max] using
-    ((runWithMax_toDelta 2457 (junc 11 0 62)).symm)
+  have hproj := runWithMax_toDelta 2457 (junc 11 0 62)
+  rw [root_junc11_to_junc10_max] at hproj
+  exact hproj.symm
 
 
 /-- First high-three branch from J(10,74) to J(23,51). -/
@@ -162,8 +166,9 @@ theorem root_junc10_to_junc11_r96_max :
 theorem root_junc10_to_junc11_r96 :
     runWithDelta 3619 (junc 10 0 74) =
       some (junc 11 0 98, -17) := by
-  simpa [root_junc10_to_junc11_r96_max] using
-    ((runWithMax_toDelta 3619 (junc 10 0 74)).symm)
+  have hproj := runWithMax_toDelta 3619 (junc 10 0 74)
+  rw [root_junc10_to_junc11_r96_max] at hproj
+  exact hproj.symm
 
 #print axioms root_low43_C0_to_junc_max
 #print axioms root_low43_C0_to_junc
