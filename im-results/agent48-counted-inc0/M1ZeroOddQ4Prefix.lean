@@ -61,6 +61,114 @@ private theorem binDec_four_seven :
   rw [binDec_odd 3 3 (by decide)]
   rw [binDec_three_three]
 
+
+/-- The q4 cut for the marker-1, n=8 row carries the *marker-0* word:
+the following q4 suffix is the source transition to marker 0. -/
+def m1ZeroOddQ4LeftFacing (L n a : Nat) : List Bool :=
+  [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec L n ++ lh
+
+/-- Low four blocks of the marker-1 n=8k source when k is odd. -/
+theorem m1ZeroOdd_binDec_residue8 (L k : Nat)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1) (hbound : 8*k < 2^L) :
+    binDec L (8*k) =
+      d1 ++ d1 ++ d1 ++ d0 ++ binDec (L-4) (k/2) := by
+  have hpow3 : 2^L = 8 * 2^(L-3) := by
+    rw [show L = (L-3)+3 by omega, Nat.pow_add]
+    norm_num
+    ring
+  have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
+    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
+    norm_num
+    ring
+  have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
+    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
+    norm_num
+    ring
+  have hpow4 : 2^(L-3) = 2 * 2^(L-4) := by
+    rw [show L-3 = (L-4)+1 by omega, Nat.pow_succ]
+    norm_num
+  have hk : k < 2^(L-3) := by
+    rw [hpow3] at hbound
+    omega
+  have hq1 : 4*k < 2^(L-1) := by rw [hpow2]; omega
+  have hq2 : 2*k < 2^(L-2) := by rw [hpow1]; omega
+  have hk2 : k/2 < 2^(L-4) := by
+    rw [hpow4] at hk
+    omega
+  have hdiv : k = 2*(k/2)+1 := by omega
+  have h1 : binDec L (8*k) =
+      d1 ++ binDec (L-1) (4*k) := by
+    rw [show L = (L-1)+1 by omega,
+      show 8*k = 2*(4*k) by omega]
+    exact binDec_even (L-1) (4*k) hq1
+  have h2 : binDec (L-1) (4*k) =
+      d1 ++ binDec (L-2) (2*k) := by
+    rw [show L-1 = (L-2)+1 by omega,
+      show 4*k = 2*(2*k) by omega]
+    exact binDec_even (L-2) (2*k) hq2
+  have h3 : binDec (L-2) (2*k) =
+      d1 ++ binDec (L-3) k := by
+    rw [show L-2 = (L-3)+1 by omega,
+      show 2*k = 2*k by rfl]
+    exact binDec_even (L-3) k hk
+  have h4 : binDec (L-3) k =
+      d0 ++ binDec (L-4) (k/2) := by
+    rw [show L-3 = (L-4)+1 by omega, hdiv]
+    exact binDec_odd (L-4) (k/2) hk2
+  rw [h1,h2,h3,h4]
+  simp [List.append_assoc]
+
+/-- The decremented n=8k-1 word shares the same high-order quotient tail. -/
+theorem m1ZeroOdd_binDec_residue7 (L k : Nat)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1) (hbound : 8*k < 2^L) :
+    binDec L (8*k-1) =
+      d0 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) (k/2) := by
+  have hpow3 : 2^L = 8 * 2^(L-3) := by
+    rw [show L = (L-3)+3 by omega, Nat.pow_add]
+    norm_num
+    ring
+  have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
+    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
+    norm_num
+    ring
+  have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
+    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
+    norm_num
+    ring
+  have hpow4 : 2^(L-3) = 2 * 2^(L-4) := by
+    rw [show L-3 = (L-4)+1 by omega, Nat.pow_succ]
+    norm_num
+  have hk : k < 2^(L-3) := by
+    rw [hpow3] at hbound
+    omega
+  have hq1 : 4*k-1 < 2^(L-1) := by rw [hpow2]; omega
+  have hq2 : 2*k-1 < 2^(L-2) := by rw [hpow1]; omega
+  have hk2 : k/2 < 2^(L-4) := by
+    rw [hpow4] at hk
+    omega
+  have hdiv : k-1 = 2*(k/2) := by omega
+  have h1 : binDec L (8*k-1) =
+      d0 ++ binDec (L-1) (4*k-1) := by
+    rw [show L = (L-1)+1 by omega,
+      show 8*k-1 = 2*(4*k-1)+1 by omega]
+    exact binDec_odd (L-1) (4*k-1) hq1
+  have h2 : binDec (L-1) (4*k-1) =
+      d0 ++ binDec (L-2) (2*k-1) := by
+    rw [show L-1 = (L-2)+1 by omega,
+      show 4*k-1 = 2*(2*k-1)+1 by omega]
+    exact binDec_odd (L-2) (2*k-1) hq2
+  have h3 : binDec (L-2) (2*k-1) =
+      d0 ++ binDec (L-3) (k-1) := by
+    rw [show L-2 = (L-3)+1 by omega,
+      show 2*k-1 = 2*(k-1)+1 by omega]
+    exact binDec_odd (L-3) (k-1) (by omega)
+  have h4 : binDec (L-3) (k-1) =
+      d1 ++ binDec (L-4) (k/2) := by
+    rw [show L-3 = (L-4)+1 by omega, hdiv]
+    exact binDec_even (L-4) (k/2) hk2
+  rw [h1,h2,h3,h4]
+  simp [List.append_assoc]
+
 private theorem m1ZeroOddSourceLeftFacing (a : Nat) :
     s1LeftFacing 4 8 1 a 0 =
       d1pow a ++ [true] ++ m1ZeroOddSourceLeftSuffix := by
@@ -171,9 +279,9 @@ private theorem m1ZeroOddBaseCutTape_eq_end_inside
 
 private theorem m1ZeroOddLeftFacingPrefixTrue (a i : Nat)
     (hi : i ≤ 3*a) :
-    sideBit (q4LeftFacing 4 7 a) i = true := by
+    sideBit (m1ZeroOddQ4LeftFacing 4 7 a) i = true := by
   have hface :
-      q4LeftFacing 4 7 a =
+      m1ZeroOddQ4LeftFacing 4 7 a =
         [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec 4 7 ++ lh := by
     rfl
   rw [hface]
@@ -187,10 +295,10 @@ private theorem m1ZeroOddLeftFacingPrefixTrue (a i : Nat)
 
 private theorem m1ZeroOddLeftFacingBridgeBit
     (a j : Nat) (hj : j ≤ 15) :
-    sideBit (q4LeftFacing 4 7 a) (3*a+1+j) =
+    sideBit (m1ZeroOddQ4LeftFacing 4 7 a) (3*a+1+j) =
       decide (-(j : Int) ∈ m1ZeroOddBridgeEnd.marked) := by
   have hface :
-      q4LeftFacing 4 7 a =
+      m1ZeroOddQ4LeftFacing 4 7 a =
         [true] ++ d1pow a ++
           (markerWord 0 ++ d0 ++ binDec 4 7 ++ lh) := by
     rfl
@@ -209,7 +317,7 @@ private theorem m1ZeroOddLeftFacingBridgeBit
 private theorem m1ZeroOddLeftFacingTail
     (a i : Nat) (hi : 3*a+17 ≤ i) :
     sideBit (s1LeftFacing 4 8 1 a 0) i =
-      sideBit (q4LeftFacing 4 7 a) i := by
+      sideBit (m1ZeroOddQ4LeftFacing 4 7 a) i := by
   let shared : List Bool := [true] ++ lh
   let sourcePrefix : List Bool :=
     d1pow a ++ markerWord 1 ++ d0 ++ d1 ++ d1 ++ d1 ++ [false, false]
@@ -221,7 +329,7 @@ private theorem m1ZeroOddLeftFacingTail
     simp [sourcePrefix, shared, s1LeftFacing,
       markerWord, binDec_four_eight, d0, d1, lh, List.append_assoc]
   have htarget :
-      q4LeftFacing 4 7 a = targetPrefix ++ shared := by
+      m1ZeroOddQ4LeftFacing 4 7 a = targetPrefix ++ shared := by
     simp [targetPrefix, shared, q4LeftFacing,
       markerWord, binDec_four_seven, d0, d1, lh, List.append_assoc]
   have hsourceLen : sourcePrefix.length = 3*a+17 := by
@@ -250,7 +358,7 @@ private theorem m1ZeroOddBaseCutTape_head
 private theorem m1ZeroOddBaseCutTape_leftFacing
     (a b : Nat) (h : Int) (ha : 0 < a) :
     ∀ i, m1ZeroOddBaseCutTape a b h (h - (i : Int)) =
-      sideBit (q4LeftFacing 4 7 a) i := by
+      sideBit (m1ZeroOddQ4LeftFacing 4 7 a) i := by
   intro i
   by_cases hi : i ≤ 3*a-2
   · have hout : m1ZeroOddBridgeInside
@@ -361,7 +469,7 @@ theorem m1ZeroOddBase_q4_prefix_data
     ∃ Tq,
       run tm2 (64+12*a) (s1Config 4 8 1 a 0 b h) =
         some ⟨4, h, Tq⟩ ∧
-      (∀ i, Tq (h-(i:Int)) = sideBit (q4LeftFacing 4 7 a) i) ∧
+      (∀ i, Tq (h-(i:Int)) = sideBit (m1ZeroOddQ4LeftFacing 4 7 a) i) ∧
       q4RightShape Tq h b ∧
       (∀ i, Tq (h+1+(i:Int)) = sideBit (q4RightFacing b) i) := by
   let T := (s1Config 4 8 1 a 0 b h).tape
