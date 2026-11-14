@@ -183,14 +183,6 @@ jobs:
             echo '::error::sorryAx found in source M0 odd q4 prefix theorem'
             exit 1
           fi
-          # Agent 41: certify the genuine-root successor row m=0,n=16*r+7.
-          cp "$GITHUB_WORKSPACE/im-results/agent41-m0-n16r7/M0OddResidueSeven.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/m0-odd-residue7-axioms.log
-          lean -o M0OddResidueSeven.olean M0OddResidueSeven.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue7-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-residue7-axioms.log; then
-            echo '::error::sorryAx found in generalized m=0,n=16*r+7 root successor reset prefix'
-            exit 1
-          fi
           if grep -q 'sorryAx' /tmp/a42-terminal/q4-suffix-axioms.log; then
             echo '::error::sorryAx found in q4 suffix theorem dependencies'
             exit 1
@@ -306,6 +298,15 @@ jobs:
           lean -o S1CountedDrain.olean S1CountedDrain.lean 2>&1 | tee /tmp/a42-terminal/s1-counted-drain-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/s1-counted-drain-axioms.log; then
             echo '::error::sorryAx found in source S1 all-ones counted drain dependencies'
+            exit 1
+          fi
+
+          # Agent 41: certify the genuine-root successor row m=0,n=16*r+7.
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m0-n16r7/M0OddResidueSeven.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-odd-residue7-axioms.log
+          lean -o M0OddResidueSeven.olean M0OddResidueSeven.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue7-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-residue7-axioms.log; then
+            echo '::error::sorryAx found in generalized m=0,n=16*r+7 root successor reset prefix'
             exit 1
           fi
 
@@ -619,6 +620,7 @@ jobs:
             /tmp/a42-terminal/q4-endpoint-axioms.log
             /tmp/a42-terminal/m0-odd-q4-bridges-axioms.log
             /tmp/a42-terminal/m0-odd-q4-prefix-axioms.log
+            /tmp/a42-terminal/m0-odd-residue7-axioms.log
             /tmp/a42-terminal/s1-counted-drain-axioms.log
             /tmp/a42-terminal/root-q4-drain-axioms.log
             /tmp/a42-terminal/middle-section-prefix4-axioms.log
