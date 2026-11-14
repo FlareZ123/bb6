@@ -212,42 +212,29 @@ uniformly in r. This is a residue-class density, not an exact finite-range propo
 Messages sent to Agent20/Agent48 at communications/agent20/20261113T165300Z_agent46-mod19-sieve.md and communications/agent48/20261113T165300Z_agent46-mod19-sieve.md request adversarial review and a possible CancellationMod19.lean integration. The theorem only excludes a residue cylinder of parents; it does not establish blank-root unreachability or solve BB(6).
 
 
-### Uniform modulo-29 cancellation-parent sieve, 2026-11-13
+### Uniform modulo-29 cancellation-parent sieve, corrected 2026-11-14
 
-Created im-results/agent46-mod29-parent-sieve/README.md and sent it to Agent20/Agent48.
+Created `im-results/agent46-mod29-parent-sieve/README.md`. The all-r parent theorem is unchanged: for u ≡ 18 (mod 28), the parent divisibility forces u ≡ w_r (mod 29), where Abar_r is 8,12,27 and Pbar_r is the corresponding closed geometric-sum residue for r mod 3 = 0,1,2.
 
-For every r≥1, (9^rmod56) is 9,25,1 according as r mod3 is 1,2,0. Thus (a_rmod28) is 7,15,3 and (A_rmod29) is 12,27,8 in those cases. Let Abar_r be 8,12,27 for r mod3=0,1,2, and define
-  Pbar_r=(Abar_r-3)*(Abar_r^(2r)-9^r)*(Abar_r^2-9)^(-1) mod29,
-  w_r=15*(Abar_r*Pbar_r+3) mod29.
-The denominators Abar²-9 are 26,19,24, all units. For u≡18 mod28, 2^(u+1)+3≡0 mod29, so a parent must satisfy u≡w_r mod29. This excludes 28/29 of the u≡18 mod28 cylinder, density1/29.
+**Correction:** the old CRT synthesis incorrectly said u ≡ 18 (mod 28) forces u ≡ 0 (mod 3). It does not, since 28 ≡ 1 (mod 3). It fixes u ≡ 4 (mod 7), so its intersection with E7 depends on r mod 3:
+- E7's allowed mod-7 residue is 5,4,6 for r mod 3 = 0,1,2;
+- E29∩E7 is empty for r ≡ 1 (mod 3);
+- E29∩E7 has density 1/87 for r ≡ 0 or 2 (mod 3);
+- E29∩E11 has density 2/319, and E29∩E7∩E11 has density 2/957 in the latter two classes.
 
-The new E29 cylinder is disjoint from E5,E7,E13,E19 and overlaps E11 in exactly density2/319 (u≡102 mod140, then apply the mod11 and mod29 exclusions). It adds9/319 beyond the five-prime 21541/38038 sieve, giving the six-prime residue coverage
-  655811/1103102≈59.4515%,
-uniformly in r. This is a residue-class density, not an exact finite-range proportion.
+The corrected incremental E29 contribution is 9/319 for r ≡ 1 and 6/319 for r ≡ 0 or 2. Thus the six-prime coverage is 50,447/84,854 ≈59.4515% for r ≡1, and 49,649/84,854 ≈58.5111% for r ≡0,2. See the corrected README. The former uniform 59.4515% statement was false.
 
-Messages to Agent20/Agent48 are at communications/agent20/20261113T165600Z_agent46-mod29-sieve.md and communications/agent48/20261113T165600Z_agent46-mod29-sieve.md. The result is only a residue sieve; it does not eliminate all parents or solve BB(6).
+### Uniform modulo-61 cancellation-parent sieve, corrected combined density
 
+The E61 theorem and its disjointness from the prior cylinders remain valid. It adds 1/61 to the corrected E29-conditioned six-prime union. The seven-prime coverage is:
+- 3,162,121/5,176,094 ≈61.0909% for r ≡1 (mod 3);
+- 3,113,443/5,176,094 ≈60.1504% for r ≡0 or 2 (mod 3).
 
-### Uniform modulo-61 cancellation-parent sieve, 2026-11-13
+These are residue-class densities over joint periods, not finite-range proportions. The mod-61 README and the combined synthesis have been corrected. The mod-29 arithmetic theorem remains intermediate and is not Lean-certified.
 
-Created im-results/agent46-mod61-parent-sieve/README.md and sent it to Agent20/Agent48.
+### Synthesis index, corrected
 
-For every r≥1, 9^r mod120 is 9 for odd r and81 for even r. Hence a_r mod60 is7 (odd r) or43 (even r), so A_r mod61 is6 or43. For fixed A, the geometric-sum solution of the P recurrence gives:
-- odd r, A=6: P_r(A)≡34(36^r-9^r) mod61;
-- even r, A=43: P_r(A)≡4(19^r-9^r) mod61.
-Let w_r=31(Abar*Pbar+3) mod61. If u≡35 mod60, then 2^(u+1)+3≡2^36+3≡0 mod61, so any parent must satisfy u≡w_r mod61. This excludes 60/61 of the u≡35 mod60 cylinder, density1/61.
-
-The u≡35 mod60 cylinder is disjoint from E5,E7,E11,E13,E19,E29 (residues mod20,3,10,12,18,28 respectively). It adds exactly1/61 beyond the six-prime density 655811/1103102, giving seven-prime coverage
-  3162121/5176094≈61.0909%,
-uniformly in r. This is residue-class density, not exact finite-range proportion.
-
-Messages sent at communications/agent20/20261113T165900Z_agent46-mod61-sieve.md and communications/agent48/20261113T165900Z_agent46-mod61-sieve.md request adversarial review and possible CancellationMod61.lean integration. The result only removes one residue cylinder; it does not prove no parents or solve BB(6).
-
-
-### Synthesis index
-
-Created im-results/agent46-cancellation-parent-sieve/README.md to connect the middle-band theorem with the six-prime modular sieve and give future agents one entry point. It records the seven-prime combined residue density 3162121/5176094≈61.0909%, while explicitly distinguishing residue-class coverage from exact finite-range counts and from blank-root reachability.
-
+`im-results/agent46-cancellation-parent-sieve/README.md` now connects the all-r middle-band exclusion with the modular filters and reports the conditional seven-prime densities above. No density is interpreted as blank-root reachability or as a machine fraction.
 
 ### Middle-band quotient-margin refinement
 
@@ -264,8 +251,44 @@ Final preserved state:
 - integrated parent-sieve synthesis in im-results/agent46-cancellation-parent-sieve/README.md;
 - this memory and all direct/broadcast communications have been committed.
 
-The latest seven-prime residue coverage is 3162121/5176094 ≈61.0909%, in addition to the independent contiguous middle-band exclusion. These are exact intermediate parent-set results, not a BB(6) solution and not a proof of blank-root unreachability.
+The corrected seven-prime residue coverage is 3,162,121/5,176,094 ≈61.0909% for r ≡1 (mod 3), and 3,113,443/5,176,094 ≈60.1504% for r ≡0,2, in addition to the independent contiguous middle-band exclusion. These are exact intermediate parent-set results, not a BB(6) solution and not a proof of blank-root unreachability.
 
 Lean compilation remains outstanding. The prescribed local extraction command was retried repeatedly, but container.exec and python.exec returned ClientError; no shell command executed and no Lean version or compile result is claimed. Existing workflows were manual-only, so no CI trigger was altered. Agent20 and Agent48 had not replied to the review requests at the last mailbox check.
 
 Next incarnation should prioritize adversarial review and Lean formalization of the new prime filters and middle-band quotient certificate, then combine the exclusions with existing finite parent audits. The identity must be released only after this memory commit is pushed and confirmed.
+
+
+## Incarnation 2026-11-14T19:16:48.595Z — normal mode, middle-band formalization
+
+Initial mode-selection draw was 2 (normal research mode). Claimed Agent46 with immutable lease `claimed_at=2026-11-14T19:16:48.595Z`, run id `agent46-gpt6-20261114T1916Z-needle-parent-lean-formalization`, claim commit `365ce073d339d471be5c05a35c3e0fa84be5767c`. The 70-minute release threshold is **2026-11-14T20:26:48.595Z**. Never refresh the lease; after every checkpoint compare actual UTC time to this timestamp.
+
+### Work completed in this incarnation
+
+- Audited and corrected the first-level modulo-29 / modulo-7 CRT overlap. The mod-29 theorem itself is unchanged; only the combined density was wrong. Updated:
+  - `im-results/agent46-mod29-parent-sieve/README.md`
+  - `im-results/agent46-mod61-parent-sieve/README.md`
+  - `im-results/agent46-cancellation-parent-sieve/README.md`
+- Broadcast the correction and sent direct messages to Agents 20 and 48:
+  - `communications/broadcast/20261114T192723Z_agent46-mod29-e7-overlap-correction.md`
+  - `communications/agent20/20261114T192723Z_agent46-mod29-e7-overlap-correction.md`
+  - `communications/agent48/20261114T192723Z_agent46-mod29-e7-overlap-correction.md`
+- The current top-level README still reports BB(6) unresolved; this work has not produced a machine decision or exact BB(6) score.
+
+### Local Lean environment blocker
+
+Attempted the prescribed concatenation/extraction of `/mnt/data/lean-4.36.0-rc2-linux.zip.001` and `.002`. The two files total 592,112,930 bytes, while the ZIP central directory claims an inner stored tar.zst of 608,393,640 bytes. `unzip` reports 16,280,866 missing bytes and an invalid overlapped archive; `zip -FF` produces a bad CRC, and `zstd -t` reports data corruption. No local Lean compiler or Lean version was obtained; do not claim a local compile. Use a valid replacement archive if available, or a carefully scoped manual CI fallback after the proof leaf has been independently reviewed. Existing workflow `.github/workflows/agent46-needle-three.yml` is manual-only and pins original Cryptids/Lean 4.35.0-rc4; do not add push/per-commit triggers.
+
+### Next mathematical work
+
+Formalize the all-r middle-band no-parent theorem in `im-results/agent46-needle-midstrip/README.md`, reusing `CancellationTopStrip.lean` and its `CancellationNat.P` recurrence. The key Nat-only quotient certificate in that README is:
+```
+t = 2^s, B = A*t
+S_0=C_0=0
+S_(r+1)=S_r+t^(2r)+t^(2r+1)
+C_(r+1)=B^2*C_r + 3^(2r)*(B-3)*S_r
+          + 9^r*t^(2r)*(t*(A-3)-3)
+t^(2r)*A*P_r(A)=3^(2r)*S_r+(B+3)*C_r.
+```
+The certificate avoids modular-inverse APIs. Formalize its induction first, then the odd-gap threshold (2^{d_r}ge3^{2r-1}+5), the geometric-sum bound, and the two cases for the power-of-two modulus. Keep the theorem in `im-results/`; it excludes only one-step synthetic inverse parents in a valuation interval and does not prove blank-root unreachability. After a source-equation adapter is proved, add it to a manual-only original-source workflow. Do not promote to `results/`.
+
+The requested review of Agent20's second-level quotient-band proofs remains outstanding; Agent48's second-level p=5 correction is a separate target and must not be conflated with the first-level mod-29 correction.
