@@ -343,14 +343,17 @@ theorem junc_to_firstC (k v : Nat) (hk : 1 ≤ k) :
   have ht : (2*v+6)+4 = 2*v+10 := by omega
   simpa [firstC, l, ht, hleft] using htotal
 
+#print axioms junc_to_firstC
+
 /-- First C/0-to-E/1 leg, preserving the arbitrary alternating left tail. -/
 theorem firstC_to_sourceScanE (k v : Nat) (hk : 1 ≤ k) :
     runWithDelta (2*v+15) (firstC k v) =
       some (firstScanE k v, -(2*v+11 : Int)) := by
   let tail := pairs01 (2*k-1) ++ ones 5
   have hsplit : ones (2*v+9) = true :: ones (2*v+8) := by
-    rw [show 2*v+9 = 1+(2*v+8) by omega, ones_add]
-    rfl
+    rw [show 2*v+9 = 1+(2*v+8) by omega,
+      BB429SourceE1Return.ones_add 1 (2*v+8)]
+    simp [ones]
   have h1 :
       runWithDelta 3 (firstC k v) =
         some (z 0 (ones (2*v+8) ++ tail) true [false, true], -1) := by
@@ -376,6 +379,8 @@ theorem firstC_to_sourceScanE (k v : Nat) (hk : 1 ≤ k) :
   have hd : (-1 : Int) - (2*v+8 : Int) + (-2) = -(2*v+11 : Int) := by omega
   simpa [firstScanE, tail, ht, hd] using htotal
 
+#print axioms firstC_to_sourceScanE
+
 /-- The E/1 revisit returns to C/1 with the even final-left pattern. -/
 theorem sourceScanE_to_secondC (k v : Nat) (hk : 1 ≤ k) :
     runWithDelta (14*k+28+2*v+18) (firstScanE k v) =
@@ -397,6 +402,8 @@ theorem sourceScanE_to_secondC (k v : Nat) (hk : 1 ≤ k) :
       0 (2*v+14) hrev' hC
   have ht : (14*k+28)+(2*v+18) = 14*k+2*v+46 := by omega
   simpa [ht] using htotal
+
+#print axioms sourceScanE_to_secondC
 
 /-- Six-step second C/0-to-E/1 prefix, followed by a tail-preserving E/1 sweep. -/
 theorem secondC_to_sourceScanE (k v : Nat) :
@@ -436,6 +443,8 @@ theorem secondC_to_sourceScanE (k v : Nat) :
   have hd : (-2 : Int) + (-(n : Int)) = -(2*v+4*k+11 : Int) := by omega
   simpa [n, ht, hd] using htotal
 
+#print axioms secondC_to_sourceScanE
+
 /-- The final 175-step sourceScanE continuation closes at Junc(11,0,*). -/
 theorem final_sourceScanE (k v : Nat) :
     runWithDelta 175 (secondScanE k v) =
@@ -460,6 +469,8 @@ theorem final_sourceScanE (k v : Nat) :
     · have hpos : 2 ≤ 2*v+4*k := by omega
       omega
   simpa [secondScanE, ht, htarget] using h
+
+#print axioms final_sourceScanE
 
 /-- Parameter-uniform exact source suffix from Junc(2k,v,0) to
     Junc(11,0,2v+4k-2), valid for every k>=1 and every v>=0. -/
@@ -496,6 +507,8 @@ theorem lowEven4k_suffix_delta (k v : Nat) (hk : 1 ≤ k) :
         (-(2*v+4*k+11 : Int))+11 = 9-4*k := by omega
   simpa [ht, hd] using htotal
 
+#print axioms lowEven4k_suffix_delta
+
 /-- The complete low-even r=4k prepared return, preceded by N full
     positive-u Junc transitions. Here u=N+2k and the initial right budget
     is 2N. -/
@@ -519,6 +532,8 @@ theorem lowEven4k_prepared_return_delta (N k : Nat) (hk : 1 ≤ k) :
   simp only [Option.map_some]
   congr 1 <;> omega
 
+#print axioms lowEven4k_prepared_return_delta
+
 /-- Physical lifting of the entire parameterized low-even prepared return. -/
 theorem lowEven4k_prepared_return_physical
     (N k : Nat) (hk : 1 ≤ k) (c : Config)
@@ -536,6 +551,8 @@ theorem lowEven4k_prepared_return_physical
       (9-2*(N+2*k) : Int)
       (lowEven4k_prepared_return_delta N k hk)
   exact ⟨d, hraw, hrepD, hhead⟩
+
+#print axioms lowEven4k_prepared_return_physical
 
 #print axioms junc_to_firstC
 #print axioms firstC_to_sourceScanE
