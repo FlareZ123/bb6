@@ -45,7 +45,7 @@ jobs:
           cp im-results/agent4-c-four-step-image/CNewM1.lean /tmp/agent4-three/
           cp im-results/agent4-c-four-step-image/CNewM1Depth4.lean /tmp/agent4-three/
           cp im-results/agent4-c-five-image/{CAltFifthArithmetic,CAltFifthSource,CAltFifthGate,CAltFifthStrict,CAltSixthStrict,CAltSixthGate,CAltSeventhCounterexample}.lean /tmp/agent4-three/
-          cp im-results/agent4-c-seven-image/{CSixSeventhArithmetic,CSixSeventhStrict,CSixSeventhRoot,CSixSeventhGate,CSixSeventhGateWide,CSixSeventhDiagonal}.lean /tmp/agent4-three/
+          cp im-results/agent4-c-seven-image/{CSixSeventhArithmetic,CSixSeventhStrict,CSixSeventhRoot,CSixSeventhS2,CSixSeventhGate,CSixSeventhGateWide,CSixSeventhDiagonal,S2QEvenResidue}.lean /tmp/agent4-three/
           cd /tmp/agent4-three
           export LEAN_PATH=.
           lean --version
