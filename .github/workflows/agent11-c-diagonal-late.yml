@@ -217,6 +217,14 @@ jobs:
             exit 1
           fi
 
+          # Agent 41: disjoint c=512*g+7 closure of the u=64*c+7 E4 branch.
+          cp ${GITHUB_WORKSPACE}/im-results/agent41-m0-u7-c512/OddSevenU7C512.lean .
+          lean -o OddSevenU7C512.olean OddSevenU7C512.lean 2>&1 | tee OddSevenU7C512.log
+          if grep -q sorryAx OddSevenU7C512.log; then
+            echo "REJECTED: Agent41 c512 E4 closure contains sorryAx"
+            exit 1
+          fi
+
           # New exact x=2 mod 16 y=3 inverse boundary for the u=5 branch.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean .
           lean -o EvenOddThreeX2Mod16.olean EvenOddThreeX2Mod16.lean 2>&1 | tee EvenOddThreeX2Mod16.log
