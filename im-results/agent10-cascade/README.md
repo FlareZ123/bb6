@@ -2,6 +2,12 @@
 
 **Research state (12 November 2026): original-source inverse and fixed-target nonreachability theorems remain the strongest root-facing results; a dual index/depth 3-adic selector is now drafted, but its new Lean source check is pending. The genuine blank-start halt/nonhalt question remains open.** All closed forms, certificates, experiments and earlier verification entries are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
 
+## 14 November 2026: 100,000-step blank-root forward orbit and 3-adic coverage
+
+The reproducible [root forward audit](root_forward_3adic.py) ran 100,000 exact reset transitions from height 2 in [CI 43638425432](https://github.com/FlareZ123/bb6/actions/runs/43638425432). It reached level K=77,220 (height bit length 77,223) without halting. The 49,717 level-entry heights cover every residue congruent to 2 modulo 3 modulo 3^7, and 2,186/2,187 such residues modulo 3^8. The prefix also contains same-index fatal congruence matches at every precision 3^a for 2≤a≤8, so fixed-modulus height-versus-fatal residue exclusions through 3^7 do not separate this root prefix.
+
+The [full report](ROOT-3ADIC-COVERAGE-100K.md) includes the exact recurrence, coverage table, terminal-residual statistics, and a counterexample showing that the observed all-odd-exit tail is not implied by the simple condition D_K odd and D_K>4K+10. These are finite computational observations, not a proof of infinite 3-adic density or nonhalting.
+
 ## 12 November 2026: dual index/depth and nested-parent Hensel selectors (CI pending)
 
 The [index/depth Hensel analysis](RAY-INDEX-DEPTH-HENSEL.md) complements the existing depth-coordinate selector. For every even canonical-ray depth j and sector s=4 or 5, exactly one fatal-index class h modulo 3^k makes Z_j(s+6h) divisible by 3^(k+1). Theorems depth_index_duality and indexResidue_bijective show that the depth and index selectors are inverse coordinates and form a finite bijection in each precision block.
