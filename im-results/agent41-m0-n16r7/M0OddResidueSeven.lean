@@ -1,4 +1,5 @@
 import M0OddQ4Prefix
+import S1CountedDrain
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -24,6 +25,7 @@ open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8CountedReset
+open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent24M0OddQ4Bridges
 open BB6Coverage.Agent24M0OddQ4Prefix
@@ -534,7 +536,9 @@ private theorem m0Odd_base_prefix_head_bound
     · let j : Nat := k-p1
       have hj : j<27 := by dsimp [j,p1] at *; omega
       have hkEq : k=p1+j := by dsimp [j,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add] at hd
+      dsimp [p1] at hd
+      rw [hSweep] at hd
       simp only [Option.bind_some] at hd
       have hlow := m0Odd_bridge_prefix_lower T1 hN hmatch j hj d hd
       dsimp [hN,N] at *
@@ -542,7 +546,9 @@ private theorem m0Odd_base_prefix_head_bound
     · let j : Nat := k-p2
       have hj : j<3*(a-1) := by dsimp [j,p2,p1,N] at *; omega
       have hkEq : k=p1+(27+j) := by dsimp [j,p2,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add] at hd
+      dsimp [p1] at hd
+      rw [hSweep] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge'] at hd
       simp only [Option.bind_some] at hd
@@ -750,6 +756,7 @@ private theorem m0OddResidueSeven_resetPrefixCost_eq (r a b : Nat) :
   have hv : v2 (16*r+7) = 0 := by
     exact v2_of_odd (16*r+7) (by omega)
   simp [resetPrefixCost,hv]
+  omega
 
 /-- Full original-table Rst0 reset prefix for every admissible n=16*r+7. -/
 theorem m0Odd_residue7_q4_reset_prefix_source
