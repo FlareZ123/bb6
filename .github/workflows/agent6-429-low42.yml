@@ -65,6 +65,7 @@ jobs:
           compile im-results/agent32-429-high2-prefix/High2Prefix
           compile im-results/agent32-429-high2-prefix/High2Tail
           compile im-results/agent32-429-high2-prefix/High2TailBase
+          compile im-results/agent1-429-w4-boundary/W4JuncOne
           compile im-results/agent1-429-w4-boundary/W4CZeroSafe
           compile im-results/agent1-429-w4-boundary/W4CZeroCount
           compile im-results/agent1-429-w4-boundary/W4CZeroOrdinary
