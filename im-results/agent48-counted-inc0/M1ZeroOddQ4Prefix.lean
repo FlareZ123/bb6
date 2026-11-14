@@ -63,9 +63,24 @@ private theorem binDec_four_seven :
 
 private theorem m1ZeroOddSourceLeftFacing (a : Nat) :
     s1LeftFacing 4 8 1 a 0 =
-      d1pow a ++ m1ZeroOddSourceLeftSuffix := by
+      d1pow a ++ [true] ++ m1ZeroOddSourceLeftSuffix := by
   simp [s1LeftFacing, m1ZeroOddSourceLeftSuffix,
     markerWord, binDec_four_eight, List.append_assoc]
+
+private theorem m1ZeroOddBaseLeftOnes
+    (a b : Nat) (h : Int) :
+    leftOnes (s1Config 4 8 1 a 0 b h).tape h (3*a+1) := by
+  intro i hi
+  have hcell := s1Config_left_cell 4 8 1 a 0 b h i
+  have hface := m1ZeroOddSourceLeftFacing a
+  have hside := sideBit_d1pow_append a i
+    ([true] ++ m1ZeroOddSourceLeftSuffix) (by simp [d1pow_length]; omega)
+  rw [hface, hside] at hcell
+  have hc : i < 3*a ∨ i = 3*a := by omega
+  rcases hc with hlt | heq
+  · simp [sideBit_d1pow, hlt] at hcell ⊢
+  · subst i
+    simp [sideBit] at hcell ⊢
 
 private theorem m1ZeroOddSweptLeftCell
     (a b : Nat) (h : Int) (i : Nat) :
@@ -75,11 +90,14 @@ private theorem m1ZeroOddSweptLeftCell
   let T := (s1Config 4 8 1 a 0 b h).tape
   have hcell := s1Config_left_cell 4 8 1 a 0 b h (3*a+1+i)
   have hface := m1ZeroOddSourceLeftFacing a
-  have hside := sideBit_d1pow_append a (3*a+1+i)
-    m1ZeroOddSourceLeftSuffix (by simp [d1pow_length]; omega)
+  have hside1 := sideBit_d1pow_append a (3*a+1+i)
+    ([true] ++ m1ZeroOddSourceLeftSuffix) (by simp [d1pow_length]; omega)
+  have hside2 := sideBit_append_right [true] m1ZeroOddSourceLeftSuffix
+    (1+i) (by simp)
   have hpres := sweptLeft_preserves_left (3*a+1) T h
     (h - ((3*a+1+i : Nat) : Int)) (by omega)
-  simpa [T, hface, hside] using hpres.trans hcell
+  rw [hface, hside1, hside2] at hcell
+  simpa [T] using hpres.trans hcell
 
 private theorem m1ZeroOddSourceLeftBridgeBit
     (i : Nat) (hi : i ≤ 15) :
@@ -219,19 +237,7 @@ private theorem m1ZeroOddLeftFacingTail
 private theorem m1ZeroOddBaseCutTape_head
     (a b : Nat) (h : Int) (ha : 0 < a) :
     m1ZeroOddBaseCutTape a b h h = true := by
-  have hOn : leftOnes (s1Config 4 8 1 a 0 b h).tape h (3*a+1) := by
-    intro i hi
-    have hcell := s1Config_left_cell 4 8 1 a 0 b h i
-    have hface := m1ZeroOddSourceLeftFacing a
-    have hside := sideBit_d1pow_append a i
-      m1ZeroOddSourceLeftSuffix (by simp [d1pow_length]; omega)
-    rw [hface, hside] at hcell
-    have hc : i < 3*a ∨ i = 3*a := by omega
-    rcases hc with hlt | heq
-    · simp [sideBit_d1pow, hlt] at hcell ⊢
-    · subst i
-      simp [sideBit, m1ZeroOddSourceLeftSuffix,
-        markerWord, d0, d1, lh] at hcell ⊢
+  have hOn := m1ZeroOddBaseLeftOnes a b h
   have hblock := sweptLeft_block (3*a+1) 0
     (s1Config 4 8 1 a 0 b h).tape h (by omega) hOn
   have hout : m1ZeroOddBridgeInside
@@ -252,19 +258,7 @@ private theorem m1ZeroOddBaseCutTape_leftFacing
       simp [m1ZeroOddBridgeInside]
       omega
     rw [m1ZeroOddBaseCutTape_eq_swept a b h (h-(i:Int)) hout]
-    have hOn : leftOnes (s1Config 4 8 1 a 0 b h).tape h (3*a+1) := by
-      intro j hj
-      have hcell := s1Config_left_cell 4 8 1 a 0 b h j
-      have hface := m1ZeroOddSourceLeftFacing a
-      have hside := sideBit_d1pow_append a j
-        m1ZeroOddSourceLeftSuffix (by simp [d1pow_length]; omega)
-      rw [hface, hside] at hcell
-      have hc : j < 3*a ∨ j = 3*a := by omega
-      rcases hc with hlt | heq
-      · simp [sideBit_d1pow, hlt] at hcell ⊢
-      · subst j
-        simp [sideBit, m1ZeroOddSourceLeftSuffix,
-          markerWord, d0, d1, lh] at hcell ⊢
+    have hOn := m1ZeroOddBaseLeftOnes a b h
     have hblock := sweptLeft_block (3*a+1) i
       (s1Config 4 8 1 a 0 b h).tape h (by omega) hOn
     have htrue := m1ZeroOddLeftFacingPrefixTrue a i (by omega)
@@ -346,19 +340,20 @@ private theorem m1ZeroOddRightShape_of_stream
     (hright : ∀ i, T (h+1+(i:Int)) = sideBit (q4RightFacing b) i) :
     q4RightShape T h b := by
   unfold q4RightShape
-  refine ⟨hhead, ?_, ?_, ?_, ?_⟩
+  refine ⟨hhead, ?_, ?_, ?_, ?_, ?_⟩
   · intro i hi
     have hbit := hright (i+1)
-    simpa using hbit
+    simpa [q4RightFacing, sideBit] using hbit
+  · have hbit := hright 4
+    simpa [q4RightFacing, sideBit] using hbit
+  · have hbit := hright 5
+    simpa [q4RightFacing, sideBit] using hbit
   · intro i hi
-    have hbit := hright (i+1)
-    simp [q4RightFacing, hi] at hbit ⊢
+    have hbit := hright (6+i)
+    simpa [q4RightFacing, sideBit] using hbit
   · intro i hi
-    have hbit := hright (i+1)
-    simp [q4RightFacing, hi] at hbit ⊢
-  · intro i hi
-    have hbit := hright (i+1)
-    simp [q4RightFacing, hi] at hbit ⊢
+    have hbit := hright (9+3*b+i)
+    simpa [q4RightFacing, sideBit] using hbit
 
 /-- The base n=8, marker-1 source prefix reaches a q4 cut. -/
 theorem m1ZeroOddBase_q4_prefix_data
@@ -375,18 +370,7 @@ theorem m1ZeroOddBase_q4_prefix_data
   let hN := h - (N : Int)
   let T2 := (frameAt T1 hN m1ZeroOddBridgeInside m1ZeroOddBridgeEnd).tape
   have hface := m1ZeroOddSourceLeftFacing a
-  have hOn : leftOnes T h N := by
-    intro i hi
-    have hcell := s1Config_left_cell 4 8 1 a 0 b h i
-    have hside := sideBit_d1pow_append a i
-      m1ZeroOddSourceLeftSuffix (by simp [d1pow_length]; omega)
-    rw [hface, hside] at hcell
-    have hc : i < 3*a ∨ i = 3*a := by omega
-    rcases hc with hlt | heq
-    · simp [sideBit_d1pow, hlt] at hcell ⊢
-    · subst i
-      simp [sideBit, m1ZeroOddSourceLeftSuffix,
-        markerWord, d0, d1, lh] at hcell ⊢
+  have hOn := m1ZeroOddBaseLeftOnes a b h
   have hRight : T (h+1) = false := by
     have hcell := s1Config_right_cell 4 8 1 a 0 b h 0
     simpa [s0RightFacing, sideBit] using hcell
@@ -434,10 +418,11 @@ theorem m1ZeroOddBase_q4_prefix_data
     simpa [hscanHead] using E_scan T2 (hN+2) (3*a-1) hlinear
   have hRun := run_append hSweep hBridge
   have hRun := run_append hRun hScan
+  have hsteps : 3*(3*a+1)+62+(3*a-1) = 64+12*a := by omega
   have hRun :
       run tm2 (64+12*a) (s1Config 4 8 1 a 0 b h) =
         some ⟨4, h, T2⟩ := by
-    simpa [N, T, T1, T2, hN] using hRun
+    simpa [N, T, T1, T2, hN, hsteps] using hRun
   have hleft := m1ZeroOddBaseCutTape_leftFacing a b h ha
   have hright := m1ZeroOddBaseCutTape_rightFacing a b h ha
   have hhead := m1ZeroOddBaseCutTape_head a b h ha
