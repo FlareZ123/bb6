@@ -300,7 +300,7 @@ d_M\ge K
 \quad\Longleftrightarrow\quad
 22155M\equiv-10669\pmod{2^K}.
 \]
-Since \(22155\) is odd, this congruence has exactly one residue class modulo \(2^K\). Exactly one of its two lifts modulo \(2^{K+1}\) has valuation \(K+1\); the other has valuation exactly \(K\). Thus the set \(d_M=K\) is one residue class modulo \(2^{K+1}\), of natural density \(2^{-(K+1)}\). The period-420 description of \(-10669/22155\in\mathbb Z_2\) is true but unnecessary for these conclusions.
+Since \(22155\) is odd, this congruence has exactly one residue class modulo \(2^K\). Exactly one of its two lifts modulo \(2^{K+1}\) has valuation at least \(K+1\); the other has valuation exactly \(K\). Thus the set \(d_M=K\) is one residue class modulo \(2^{K+1}\), of natural density \(2^{-(K+1)}\). The period-420 description of \(-10669/22155\in\mathbb Z_2\) is true but unnecessary for these conclusions.
 
 Now use the exact original-source y=3 preimage grammar. For an odd source first counter \(a\ge3\), a predecessor of \((16m+10,3)\) has an even bounce depth \(n=2q\) and satisfies
 \[
