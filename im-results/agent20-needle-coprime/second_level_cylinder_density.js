@@ -4,7 +4,7 @@
 
 const c7 = [6, 3, 1]; // j mod 3 -> forced w mod 7
 const BASE = 13860;
-const EXPECTED = 10766155350n;
+const EXPECTED = 11880864165n;
 
 function survivingResidues(j) {
   let total = 0n;
@@ -12,8 +12,8 @@ function survivingResidues(j) {
   const c11 = ((9 - j) % 11 + 11) % 11;
 
   for (let w = 0; w < BASE; w++) {
-    // p=5 and p=13 cylinders are wholly impossible.
-    if (w % 4 === 0 || w % 12 === 9) continue;
+    // On w = 0 (mod 4), p=5 forces w = 4 (mod 5); p=13 is wholly impossible.
+    if ((w % 4 === 0 && w % 5 !== 4) || w % 12 === 9) continue;
 
     // Apply the forced residues when p=7 or p=11 divides D_w.
     if (w % 3 === 1 && w % 7 !== c7[j % 3]) continue;
@@ -39,7 +39,7 @@ for (let j = 0; j < 33; j++) {
   if (result.total !== EXPECTED) {
     throw new Error("Unexpected CRT count for j mod 33 = " + j);
   }
-  if (result.baseResidues !== 5820) {
+  if (result.baseResidues !== 6315) {
     throw new Error("Unexpected base-residue count");
   }
 }
@@ -48,5 +48,5 @@ const excluded = fullModulus - EXPECTED;
 console.log("modulus =", fullModulus.toString());
 console.log("surviving residues =", EXPECTED.toString());
 console.log("excluded residues =", excluded.toString());
-console.log("surviving density = 5883145/17055654");
-console.log("excluded density = 11172509/17055654");
+console.log("surviving density = 12984551/34111308");
+console.log("excluded density = 21126757/34111308");
