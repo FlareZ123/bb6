@@ -155,7 +155,8 @@ theorem s2_R_parents (u v t a k : Nat)
                       _=(2*16)*z := by ac_rfl
                       _=32*z := by simp
                   have hmod := Nat.mod_eq_zero_of_dvd hdiv
-                  omega
+                  rw [hval] at hmod
+                  norm_num at hmod
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at h <;> omega
@@ -167,8 +168,44 @@ theorem s2_R_parents (u v t a k : Nat)
         · by_cases haeven : a%2=0
           · simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_pos haeven] at h
-            obtain ⟨_,n,hs,_⟩ := h
-            omega
+            obtain ⟨_,n,hs,hc⟩ := h
+            have hfacmod4 : (2*(a-1)+8)%4=2 := by omega
+            have hn3 : 3≤n := by
+              by_contra hnot
+              have hnle : n≤2 := by omega
+              rw [hs] at hval
+              interval_cases n <;> norm_num at hval <;> omega
+            have hn4 : n≤3 := by
+              by_contra hnot
+              have hn4 : 4≤n := by omega
+              have hp : 16∣(2:Nat)^n := by
+                have hh : (2:Nat)^4∣(2:Nat)^n :=
+                  Nat.pow_dvd_pow 2 hn4
+                simpa only [show (2:Nat)^4=16 by decide] using hh
+              have hf : 2∣2*(a-1)+8 := by
+                refine ⟨a+3,?_⟩
+                omega
+              obtain ⟨p,hp⟩ := hp
+              obtain ⟨q,hq⟩ := hf
+              have hdiv : 32∣x+y+1 := by
+                refine ⟨p*q,?_⟩
+                calc
+                  x+y+1=(2:Nat)^n*(2*(a-1)+8) := hs
+                  _=(16*p)*(2*q) := by rw [hp,hq]
+                  _=32*(p*q) := by ring
+              have hmod := Nat.mod_eq_zero_of_dvd hdiv
+              rw [hval] at hmod
+              norm_num at hmod
+            have hn : n=3 := by omega
+            subst n
+            have hxodd : x%2=1 := by dsimp [x]; omega
+            have hyEven : y%2=0 := by dsimp [y]; omega
+            have hleft :
+                (2*k-a+3+(2*(a-1)+8)+9)%2=0 := by omega
+            have hright : (x+2*y+2)%2=1 := by omega
+            have hmodEq := congrArg (fun z : Nat => z%2) hc
+            rw [hleft,hright] at hmodEq
+            norm_num at hmodEq
           · have haodd : a%2=1 := by omega
             simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_neg haeven] at h
@@ -297,7 +334,7 @@ private theorem s2_p0_blank_unreachable (u v : Nat) :
       | some p =>
           rcases p with ⟨a,k⟩
           have hstep : secNext (a,k)=some
-              (518+320*u+576*v) (627+352*u+736*v) := by
+              (518+320*u+576*v,627+352*u+736*v) := by
             simpa [BB6.Agent8Section.run,hp] using htime
           have himage := BB6.Agent3.section_odd_image a k
             (518+320*u+576*v) (627+352*u+736*v)
@@ -313,7 +350,7 @@ private theorem s2_p2_blank_unreachable (u v t : Nat)
   rcases hr with ⟨time,htime⟩
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at htime
+      simp [BB6.Agent8Section.run] at htime <;> omega
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
@@ -321,7 +358,7 @@ private theorem s2_p2_blank_unreachable (u v t : Nat)
       | some p =>
           rcases p with ⟨a,k⟩
           have hstep : secNext (a,k)=some
-              (128+80*u+144*v) (819+472*u+952*v) := by
+              (128+80*u+144*v,819+472*u+952*v) := by
             simpa [BB6.Agent8Section.run,hp] using htime
           have hpre : sectionPreimageAll a k
               (128+80*u+144*v) (819+472*u+952*v) :=
@@ -342,7 +379,7 @@ private theorem s2_h1_blank_unreachable (u v t : Nat)
   rcases hr with ⟨time,htime⟩
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at htime
+      simp [BB6.Agent8Section.run] at htime <;> omega
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
@@ -350,7 +387,7 @@ private theorem s2_h1_blank_unreachable (u v t : Nat)
       | some p =>
           rcases p with ⟨a,k⟩
           have hstep : secNext (a,k)=some
-              (301+256*u+256*v) (739+384*u+896*v) := by
+              (301+256*u+256*v,739+384*u+896*v) := by
             simpa [BB6.Agent8Section.run,hp] using htime
           have hpre : sectionPreimageAll a k
               (301+256*u+256*v) (739+384*u+896*v) :=
@@ -490,7 +527,7 @@ theorem blank_ne_s2_image (u v t time : Nat)
   intro hrun
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at hrun
+      simp [BB6.Agent8Section.run] at hrun <;> omega
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
@@ -498,7 +535,7 @@ theorem blank_ne_s2_image (u v t time : Nat)
       | some p =>
           rcases p with ⟨a,k⟩
           have hstep : secNext (a,k)=some
-              (641+1024*u) (574+1024*v) := by
+              (641+1024*u,574+1024*v) := by
             simpa [BB6.Agent8Section.run,hp] using hrun
           have hpre : sectionPreimageAll a k
               (641+1024*u) (574+1024*v) :=
