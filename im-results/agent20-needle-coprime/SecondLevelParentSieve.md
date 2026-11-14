@@ -1,6 +1,6 @@
 # Second-level predecessor sieve for the valuation-two cancellation family
 
-**Status:** intermediate mathematical result. The source-level construction below uses existing Lean-checked components, but the new second-level modular sieve and band lemma are not yet Lean-formalized. This is not an exact BB(6) result and does not eliminate every possible predecessor.
+**Status:** intermediate mathematical result. The source-level construction below uses existing Lean-checked components, but the new second-level modular sieve and band lemmas are not yet Lean-formalized. This is not an exact BB(6) result and does not eliminate every possible predecessor.
 
 ## 1. The second-level target
 
@@ -334,7 +334,105 @@ Thus the theorem excludes every predecessor valuation in the contiguous interval
 260318237512597560064334958402022989783207370806.
 \]
 
-## 4. What this resolves—and what it does not
+## 4. Low-side quotient bands
+
+The high-side theorem treats \(w>a\). There is a complementary family below \(a\). For any candidate valuation \(w<a\), write
+\[
+a=k(w+1)+s,\qquad k\ge1,\quad s\ge0.
+\]
+The quotient \(k\) and remainder \(s\) are uniquely determined by \(w\).
+
+**Theorem.** Suppose \(r\ge2\), \(55y=8AP+25\), and
+\[
+a=k(w+1)+s,\qquad k\ge1,\quad s\ge0,
+\]
+with either \(k\ge2\) or \(s\ge1\). If
+\[
+\boxed{a>(2rk+1)s+4rk^2+6k,} \tag{7}
+\]
+then no \(q\in\mathbb N\) satisfies the parent equation (1) at valuation \(w\).
+
+**Proof.** Put \(D=2^{w+1}+3\). As before, a parent would force
+\[
+D\mid16AP+215-110w. \tag{8}
+\]
+Since \(2^{w+1}\equiv-3\pmod D\) and \(a=k(w+1)+s\),
+\[
+A=2^a\equiv2^s(-3)^k\pmod D.
+\]
+The polynomial identity
+\[
+P_r(A)=\sum_{j=0}^{2r-1}(-3)^jA^{2r-1-j}
+\]
+therefore gives
+\[
+AP\equiv3^{2r}S\pmod D,\qquad
+S=\sum_{\ell=1}^{2r}X^\ell,\qquad
+X=(-3)^{k-1}2^s.
+\]
+Thus \(D\) divides
+\[
+R=16\cdot3^{2r}S+215-110w. \tag{9}
+\]
+
+Let \(Y=3^{k-1}2^s=|X|\). The hypothesis (7), after substituting \(a=k(w+1)+s\), is exactly
+\[
+w>2rs+4rk+5. \tag{10}
+\]
+It implies \(w\ge14\). Also \(Y\ge2\): the only excluded case \(k=1,s=0\) is precisely the case \(Y=1\).
+
+The geometric-sum bound gives \(|S|\le2Y^{2r}\). Hence
+\[
+|16\cdot3^{2r}S|
+\le32\cdot3^{2rk}2^{2rs}
+<2^{5+4rk+2rs}<2^w,
+\]
+where the last inequality is (10) and \(3<4\). Since \(w\ge14\), also \(|215-110w|<2^w\). Consequently
+\[
+|R|<2^{w+1}<D. \tag{11}
+\]
+
+It remains to show \(R>0\). If \(k\) is odd, then \(X=Y\ge2\), so \(S\ge2r\). Therefore
+\[
+R\ge32r\cdot9^r+215-110w
+\ge(32r-55)9^r-60>0,
+\]
+using \(w\le a-1\) and \(110a=55\cdot9^r+275\). If \(k\) is even, then \(X=-Y\), with \(Y\ge3\), and
+\[
+S=\frac{Y(Y^{2r}-1)}{Y+1}\ge\frac{Y^{2r}}2.
+\]
+Thus
+\[
+R\ge8\cdot3^{2rk}2^{2rs}+215-110w
+\ge8\cdot3^{4r}-55\cdot9^r-60>0.
+\]
+The final inequality holds for every \(r\ge2\). In either parity case, (9) and (11) give \(0<R<D\), contradicting \(D\mid R\). \(\square\)
+
+For fixed \(k\), condition (7) is equivalent to
+\[
+0\le s\le
+s_{\max}(k):=
+\left\lfloor\frac{a-4rk^2-6k-1}{2rk+1}\right\rfloor,
+\qquad s\equiv a\pmod k.
+\]
+For \(k=1\), additionally omit \(s=0\). Since \(s\) advances in steps of \(k\), each nonempty quotient class gives a contiguous interval of excluded \(w=(a-s)/k-1\).
+
+For \(r=50\), the first two low-side bands are:
+\[
+\begin{aligned}
+k=1:\quad&
+255137386500995708433891648398822412228766100005\\
+&\le w\le
+257688760366005665518230564882810636351053761001,\\[2mm]
+k=2:\quad&
+128203363366171972894642072081000316592564060202\\
+&\le w\le
+128844380183002832759115282441405318175526880500.
+\end{aligned}
+\]
+The \(k=1,s=0\) boundary \(w=a-1\) is not covered by this estimate. The high-side band in Section 3 begins at \(w=a+d+5\); the remaining narrow gap around \(a\) and the quotient classes not satisfying (7) still require separate treatment.
+
+## 5. What this resolves—and what it does not
 
 For the second-level target, the current exact restrictions are now:
 
