@@ -21,6 +21,7 @@ open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent24Q4Endpoint
+open BB6ChampionArithmetic
 
 private theorem binDec_three_six :
     binDec 3 6 = d1 ++ d0 ++ d0 := by
@@ -346,7 +347,7 @@ private theorem m2EvenSixQ4CutTape_leftFacing (a b : Nat) (h : Int)
   intro i
   by_cases hi0 : i = 0
   · subst i
-    simpa [sideBit] using hhead
+    simpa [sideBit,m2EvenSixQ4LeftFacing] using hhead
   · have hpos : 1 ≤ i := by omega
     by_cases hpre : i ≤ 3*a+1
     · have htarget := m2EvenSixQ4LeftFacingPrefixTrue a i hpre
@@ -408,6 +409,7 @@ private theorem m2EvenSixQ4CutTape_leftFacing (a b : Nat) (h : Int)
         have hin : m2EvenSixQ4Inside
             ((h-(i:Int))-(h-((3*a+2:Int)))) = true := by
           simp [m2EvenSixQ4Inside,hrel]
+          exact_mod_cast hj
         have hcut := m2EvenSixQ4CutTape_eq_end_inside a b h
           (h-(i:Int)) hin
         have htarget :
@@ -461,10 +463,8 @@ private theorem m2EvenSixQ4RightShape_of_stream (T : Int → Bool)
       have hr := hright (i-1)
       have hcoord : h+(i:Int) = h+1+((i-1:Int)) := by omega
       rw [hcoord]
-      have hcast : ((i-1:Int)) = (i:Int)-1 := by omega
-      rw [hcast] at hr
       calc
-        T (h+1+((i:Int)-1)) =
+        T (h+1+((i-1:Int))) =
             sideBit (q4RightFacing b) (i-1) := hr
         _ = true := hq
   · constructor
@@ -522,7 +522,7 @@ theorem m2EvenSix_q4_prefix_data (a b : Nat) (h : Int)
     have hcell := s1Config_left_cell 3 6 2 a 0 b h i
     rw [hface] at hcell
     by_cases hi3 : i < 3*a
-    · have hside := sideBit_append_left d1pow
+    · have hside := sideBit_append_left (d1pow a)
         m2EvenSixSourceLeftSuffix i (by rw [d1pow_length]; omega)
       rw [hside] at hcell
       have hbit := sideBit_d1pow_true a i hi3
@@ -559,6 +559,7 @@ theorem m2EvenSix_q4_prefix_data (a b : Nat) (h : Int)
       apply config_ext
       · simp [frameAt_state,m2EvenSixQ4BridgeEnd]
       · simp [frameAt_head,m2EvenSixQ4BridgeEnd]
+        omega
       · rfl
     rw [hframe] at hb
     exact hb
@@ -626,7 +627,7 @@ theorem m2EvenSix_q4_prefix_data (a b : Nat) (h : Int)
   have hshape := m2EvenSixQ4RightShape_of_stream
     (m2EvenSixQ4CutTape a b h) h b hhead hrightT
   refine ⟨m2EvenSixQ4CutTape a b h, ?_, hleftT, hshape, hrightT⟩
-  simpa [T] using hprefix'
+  simpa [T,s1Config] using hprefix'
 
 /-- The q4 suffix's target left stream is exactly the m=1,n=3 S1 word. -/
 theorem m2EvenSixQ4SuffixTargetLeft (a b : Nat) :
