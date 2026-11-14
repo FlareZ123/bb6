@@ -112,3 +112,18 @@ Reducing the same equation modulo 4 gives the stronger necessary congruence
 \boxed{\quad w_0+3n+7\equiv -2(u_0+3)\pmod4,\quad}
 \]
 or \(3n\equiv2u_0-w_0-5\pmod4\). This is a branch-local filter on the final reset, independent of the size of the candidate halt state. It should be incorporated into any reverse search or refined terminal sieve.
+
+
+### Higher 2-adic congruence for the final outer length
+
+For any \(k\\ge1\) with \(n\\ge k-2\), the exponential term in the predecessor equation vanishes modulo \(2^k\):
+\[
+w_0+3n+7\\equiv-2(u_0+3)\\pmod{2^k}.
+\]
+Since \(3\) is invertible modulo every \(2^k\),
+\[
+\boxed{\quad n\\equiv3^{-1}(-2u_0-w_0-13)\\pmod{2^k}.\quad}
+\]
+In particular, for \(k=18\) and \(n\\ge16\), the final outer length is fixed modulo \(2^{18}\) by the pre-outer state. If \(n<2^{18}\), this congruence determines \(n\) exactly, not merely its parity. The terminal residue \(U\\equiv-3\\pmod{2^{18}}\) separately follows when \(n\\ge18\).
+
+This suggests a concrete refinement of the inverse sieve: carry the pre-outer pair and the outer length (or its \(2^{18}\) residue) through the inverse certificate. The terminal \(U\\bmod2^{18}\) filter alone loses this information.
