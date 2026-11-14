@@ -984,6 +984,226 @@ theorem m1ZeroOdd_residue0_q4_prefix_source
   simpa [m1ZeroOddResidue0CutTape,background] using hlift
 
 
+
+
+private theorem m1ZeroOddResidue0_cut_eq_base
+    (L k a b : Nat) (h x : Int)
+    (hin : m1ZeroOddResidue0Inside a h x = true) :
+    m1ZeroOddResidue0CutTape L k a b h x =
+      m1ZeroOddBaseCutTape a b h x := by
+  simp [m1ZeroOddResidue0CutTape,frame,hin]
+
+private theorem m1ZeroOddResidue0_cut_eq_input
+    (L k a b : Nat) (h x : Int)
+    (hout : m1ZeroOddResidue0Inside a h x = false) :
+    m1ZeroOddResidue0CutTape L k a b h x =
+      (s1Config L (8*k) 1 a 0 b h).tape x := by
+  simp [m1ZeroOddResidue0CutTape,frame,hout]
+
+private theorem m1ZeroOddResidue0_leftFacing
+    (L k a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1)
+    (hbound : 8*k < 2^L) (ha : 0 < a) :
+    ∀ i, m1ZeroOddResidue0CutTape L k a b h (h-(i:Int)) =
+      sideBit (m1ZeroOddResidue0LeftFacing L k a) i := by
+  obtain ⟨_,hbaseLeft,_,_⟩ :=
+    m1ZeroOddBase_q4_prefix_data a b h ha
+  have hbaseTarget := m1ZeroOddResidue0_base_target_left a
+  have htarget :=
+    m1ZeroOddResidue0_target_left L k a hL hkodd hbound
+  have hsource :=
+    m1ZeroOddResidue0_input_left L k a hL hkodd hbound
+  have hinputLen := m1ZeroOddResidue0_inputPrefix_length a
+  have htargetLen := m1ZeroOddResidue0_targetPrefix_length a
+  intro i
+  by_cases hi : i ≤ 3*a+16
+  · have hin :
+        m1ZeroOddResidue0Inside a h (h-(i:Int)) = true := by
+      simp [m1ZeroOddResidue0Inside]
+      omega
+    rw [m1ZeroOddResidue0_cut_eq_base L k a b h (h-(i:Int)) hin]
+    rw [hbaseLeft i,hbaseTarget,htarget]
+    have hbaseBit := sideBit_append_left
+      (m1ZeroOddResidue0TargetPrefix a) ([true] ++ lh) i
+      (by rw [m1ZeroOddResidue0_targetPrefix_length]; omega)
+    have htargetBit := sideBit_append_left
+      (m1ZeroOddResidue0TargetPrefix a)
+      ([true] ++ binDec (L-4) (k/2) ++ lh) i
+      (by rw [m1ZeroOddResidue0_targetPrefix_length]; omega)
+    rw [hbaseBit,htargetBit]
+  · have hout :
+        m1ZeroOddResidue0Inside a h (h-(i:Int)) = false := by
+      simp [m1ZeroOddResidue0Inside]
+      omega
+    rw [m1ZeroOddResidue0_cut_eq_input L k a b h (h-(i:Int)) hout]
+    rw [s1Config_left_cell L (8*k) 1 a 0 b h i]
+    rw [hsource,htarget]
+    have hinputBit := sideBit_append_right
+      (m1ZeroOddResidue0InputPrefix a)
+      ([true] ++ binDec (L-4) (k/2) ++ lh) i
+      (by rw [hinputLen]; omega)
+    have htargetBit := sideBit_append_right
+      (m1ZeroOddResidue0TargetPrefix a)
+      ([true] ++ binDec (L-4) (k/2) ++ lh) i
+      (by rw [htargetLen]; omega)
+    rw [hinputBit,htargetBit]
+    rw [hinputLen,htargetLen]
+
+private theorem m1ZeroOddResidue0_rightFacing
+    (L k a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1)
+    (hbound : 8*k < 2^L) (ha : 0 < a) :
+    ∀ i, m1ZeroOddResidue0CutTape L k a b h (h+1+(i:Int)) =
+      sideBit (q4RightFacing b) i := by
+  obtain ⟨_,_,_,hright⟩ :=
+    m1ZeroOddBase_q4_prefix_data a b h ha
+  intro i
+  have hin :
+      m1ZeroOddResidue0Inside a h (h+1+(i:Int)) = true := by
+    simp [m1ZeroOddResidue0Inside]
+    omega
+  rw [m1ZeroOddResidue0_cut_eq_base L k a b h
+    (h+1+(i:Int)) hin]
+  exact hright i
+
+private theorem m1ZeroOdd_sideBit_ge_length
+    (xs : List Bool) (i : Nat) (hi : xs.length ≤ i) :
+    sideBit xs i = false := by
+  induction xs generalizing i with
+  | nil => simp [sideBit]
+  | cons x xs ih =>
+      cases i with
+      | zero => simp at hi
+      | succ i =>
+          simp only [sideBit]
+          apply ih
+          simp at hi
+          omega
+
+private theorem m1ZeroOddResidue0_head
+    (L k a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1)
+    (hbound : 8*k < 2^L) (ha : 0 < a) :
+    m1ZeroOddResidue0CutTape L k a b h h = true := by
+  have hin : m1ZeroOddResidue0Inside a h h = true := by
+    simp [m1ZeroOddResidue0Inside]
+  rw [m1ZeroOddResidue0_cut_eq_base L k a b h h hin]
+  exact m1ZeroOddBaseCutTape_head a b h ha
+
+private theorem m1ZeroOddResidue0_rightShape
+    (L k a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1)
+    (hbound : 8*k < 2^L) (ha : 0 < a) :
+    q4RightShape (m1ZeroOddResidue0CutTape L k a b h) h b := by
+  apply m1ZeroOddRightShape_of_stream
+    (m1ZeroOddResidue0CutTape L k a b h) h b
+    (m1ZeroOddResidue0_head L k a b h hL hkodd hbound ha)
+    (m1ZeroOddResidue0_rightFacing L k a b h hL hkodd hbound ha)
+
+private theorem m1ZeroOddResidue0_far_tail
+    (L k a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1)
+    (hbound : 8*k < 2^L) (ha : 0 < a) :
+    ∀ i, 9+3*b ≤ i →
+      m1ZeroOddResidue0CutTape L k a b h (h+1+(i:Int)) = false := by
+  have hright :=
+    m1ZeroOddResidue0_rightFacing L k a b h hL hkodd hbound ha
+  have hlen : (q4RightFacing b).length = 9+3*b := by
+    simp [q4RightFacing,d1pow_length]
+    omega
+  intro i hi
+  rw [hright i]
+  exact m1ZeroOdd_sideBit_ge_length (q4RightFacing b) i (by rw [hlen]; exact hi)
+
+/-- The generic marker-zero target left word is exactly the q4 suffix
+interface, with the high-order quotient carried unchanged. -/
+private theorem m1ZeroOddResidue0_target_left_identity
+    (L k a b : Nat) :
+    s1LeftFacing L (8*k-1) 0 (a+b+2) (2^b-1) =
+      d0pow b ++ d1pow 2 ++
+        (m1ZeroOddResidue0LeftFacing L k a).drop 1 := by
+  unfold s1LeftFacing m1ZeroOddResidue0LeftFacing
+  rw [binDec_pow2_sub_one]
+  rw [d1pow_add_right a 2]
+  simp [List.drop,List.append_assoc]
+
+/-- Compose the generalized q4 suffix after the lifted n=8 prefix. -/
+theorem m1ZeroOdd_residue0_reset_prefix_source
+    (L k a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1)
+    (hbound : 8*k < 2^L) (ha : 0 < a) :
+    run tm2 (103+12*a+3*b)
+      (s1Config L (8*k) 1 a 0 b h) =
+      some (s1Config L (8*k-1) 0 (a+b+2) (2^b-1) 0
+        (h+5+3*b)) := by
+  let T := m1ZeroOddResidue0CutTape L k a b h
+  let sourceLeft := m1ZeroOddResidue0LeftFacing L k a
+  have hprefix :=
+    m1ZeroOdd_residue0_q4_prefix_source L k a b h hL hkodd hbound ha
+  have hshape :=
+    m1ZeroOddResidue0_rightShape L k a b h hL hkodd hbound ha
+  have htail :=
+    m1ZeroOddResidue0_far_tail L k a b h hL hkodd hbound ha
+  have hleft :=
+    m1ZeroOddResidue0_leftFacing L k a b h hL hkodd hbound ha
+  have happend := m1ZeroOddResidue0_target_left_identity L k a b
+  have hfullSuffix := q4_suffix_run_to_s1Config
+    T h b L (8*k-1) 0 (a+b+2) (2^b-1) sourceLeft
+    hshape htail hleft happend
+  have hnumTotal : 103+12*a+3*b =
+      (64+12*a)+(39+3*b) := by omega
+  rw [hnumTotal,run_append,hprefix]
+  simp only [Option.bind_some]
+  exact hfullSuffix
+
+/-- The complete original-TM2 counted increment for marker 1 and n=8k,
+where k is odd. -/
+theorem m1ZeroOdd_residue0_counted_increment_source
+    (L k a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1)
+    (hbound : 8*k < 2^L) (ha : 0 < a) :
+    run tm2 (proposedIncrementCost 1 (8*k) a b)
+      (s1Config L (8*k) 1 a 0 b h) =
+      some (s1Config L (8*k-1) 0 (a+b+2) 0 (2^b-1)
+        (h+5+3*b)) := by
+  have hvodd : v2 k = 0 :=
+    v2_of_odd k (by omega)
+  have hv2k : v2 (2*k) = 1 := by
+    have hgt : 1 < 2*k := by omega
+    have heven : (2*k)%2 = 0 := by omega
+    have hdiv : (2*k)/2 = k := by omega
+    simp [v2,hgt,heven,hdiv,hvodd]
+  have hv4k : v2 (4*k) = 2 := by
+    have hgt : 1 < 4*k := by omega
+    have heven : (4*k)%2 = 0 := by omega
+    have hdiv : (4*k)/2 = 2*k := by omega
+    simp [v2,hgt,heven,hdiv,hv2k]
+  have hv : v2 (8*k) = 3 := by
+    have hgt : 1 < 8*k := by omega
+    have heven : (8*k)%2 = 0 := by omega
+    have hdiv : (8*k)/2 = 4*k := by omega
+    simp [v2,hgt,heven,hdiv,hv4k]
+  have hcost : resetPrefixCost 1 (8*k) a b =
+      103+12*a+3*b := by
+    simp [resetPrefixCost,hv]
+    omega
+  have hprefix := m1ZeroOdd_residue0_reset_prefix_source
+    L k a b h hL hkodd hbound ha
+  have hdrainBound := resetDrainBound a b 1 ha
+  have hrun := s1Config_reset_prefix_then_counted_drain
+    L (8*k-1) 0 (a+b+2) b (h+5+3*b)
+    (s1Config L (8*k) 1 a 0 b h)
+    (resetPrefixCost 1 (8*k) a b)
+    (by simpa [hcost] using hprefix)
+    (by simpa [resetDelta] using hdrainBound)
+  rw [proposedIncrementCost_decomp 1 (8*k) a b,hcost]
+  exact hrun
+
+#print axioms m1ZeroOdd_residue0_q4_prefix_source
+#print axioms m1ZeroOdd_residue0_reset_prefix_source
+#print axioms m1ZeroOdd_residue0_counted_increment_source
+
+
 #print axioms m1ZeroOddBridge_exact
 #print axioms m1ZeroOddBridge_heads
 #print axioms m1ZeroOddBase_q4_prefix_data
