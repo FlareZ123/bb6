@@ -123,7 +123,7 @@ jobs:
           compile im-results/agent32-429-loweven-r32/LowEvenR32RootExtension
           compile im-results/agent6-429-low42/Low42PrefixPhysical
           compile im-results/agent32-429-low43/Low43Delta
-          compile im-results/agent32-429-low43/Low43Continuation
+          # Low43Continuation is intentionally omitted: this route depends on Low43Physical and the uniform C0 theorem, not the unrelated v=5,k=7 continuation candidate.
           compile im-results/agent32-429-low43/Low43Physical
           compile im-results/agent1-429-root-entry/Low43ParityShift
           compile im-results/agent32-429-low43/ParityShiftedReturns
