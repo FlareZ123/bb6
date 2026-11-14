@@ -435,7 +435,7 @@ private theorem m2EvenSixQ4CutTape_leftFacing (a b : Nat) (h : Int)
         have hcut := m2EvenSixQ4CutTape_eq_swept a b h (h-(i:Int)) hout
         have hpres := sweptLeft_preserves_left (3*a+2)
           (s1Config 3 6 2 a 0 b h).tape h (h-(i:Int)) (by omega)
-        have hcell := s1Config_left_cell 3 4 2 a 0 b h i
+        have hcell := s1Config_left_cell 3 6 2 a 0 b h i
         have htailEq := m2EvenSixQ4LeftFacingTail a i htail
         calc
           m2EvenSixQ4CutTape a b h (h-(i:Int)) =
@@ -520,7 +520,7 @@ theorem m2EvenSix_q4_prefix_data (a b : Nat) (h : Int)
       List.append_assoc]
   have hOn : leftOnes T h N := by
     intro i hi
-    have hcell := s1Config_left_cell 3 4 2 a 0 b h i
+    have hcell := s1Config_left_cell 3 6 2 a 0 b h i
     rw [hface] at hcell
     by_cases hi3 : i < 3*a
     · have hside := sideBit_append_left d1pow
@@ -541,7 +541,7 @@ theorem m2EvenSix_q4_prefix_data (a b : Nat) (h : Int)
         rw [hside] at hcell
         simpa [m2EvenSixSourceLeftSuffix,markerWord,sideBit] using hcell
   have hright : T (h+1) = false := by
-    have hc := s1Config_right_cell 3 4 2 a 0 b h 0
+    have hc := s1Config_right_cell 3 6 2 a 0 b h 0
     simpa [T,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hc
   have hSweep :
       run tm2 (3*N) ⟨3,h,T⟩ =
@@ -631,7 +631,7 @@ theorem m2EvenSix_q4_prefix_data (a b : Nat) (h : Int)
 
 /-- The q4 suffix's target left stream is exactly the m=1,n=3 S1 word. -/
 theorem m2EvenSixQ4SuffixTargetLeft (a b : Nat) :
-    s1LeftFacing 3 3 1 (a+b+2) (2^b-1) =
+    s1LeftFacing 3 5 1 (a+b+2) (2^b-1) =
       d0pow b ++ d1pow 2 ++ (m2EvenSixQ4LeftFacing a).drop 1 := by
   simpa [m2EvenSixQ4LeftFacing,m2EvenSixQ4LeftSuffix,
     BB6Coverage.Agent8Q4Suffix.q4LeftFacing,List.append_assoc] using
@@ -656,7 +656,7 @@ theorem m2EvenSix_q4_reset_prefix_source
     omega
   have happend := m2EvenSixQ4SuffixTargetLeft a b
   have hsuffix := q4_suffix_run_to_s1Config Tq h b
-    3 3 1 (a+b+2) (2^b-1) (m2EvenSixQ4LeftFacing a)
+    3 5 1 (a+b+2) (2^b-1) (m2EvenSixQ4LeftFacing a)
     hshape htail hleft happend
   have hsum :
       resetPrefixCost 2 6 a b = (44+12*a)+(39+3*b) := by
@@ -677,7 +677,7 @@ theorem m2EvenSix_q4_counted_increment_source
   have hp := m2EvenSix_q4_reset_prefix_source a b h ha
   have hbound := resetDrainBound a b 2 ha
   have hrun := s1Config_reset_prefix_then_counted_drain
-    3 3 1 (a+b+2) b (h+5+3*b)
+    3 5 1 (a+b+2) b (h+5+3*b)
     (s1Config 3 6 2 a 0 b h) (resetPrefixCost 2 6 a b)
     hp (by simpa [resetDelta] using hbound)
   simpa [proposedIncrementCost_decomp] using hrun
