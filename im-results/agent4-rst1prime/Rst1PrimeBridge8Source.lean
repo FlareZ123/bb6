@@ -55,11 +55,7 @@ theorem s1Config_left_after_d1pow
   rw [sideBit_append_right (d1pow a)
     (markerWord 1 ++ d0 ++ d1pow L ++ lh) (3*a+1+k)
     (by simp [d1pow_length]; omega)]
-  rw [d1pow_length]
-  have hlt : ¬ 3*a+1+k < 3*a := by omega
-  simp only [if_neg hlt]
-  have hindex : 3*a+1+k-3*a = k+1 := by omega
-  simpa [hindex]
+  simp [d1pow_length]
 
 /-- The post-sweep local tape is exactly bridge8Start on its entire
 queried window [-3,0]. -/
