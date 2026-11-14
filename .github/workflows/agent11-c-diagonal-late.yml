@@ -509,3 +509,10 @@ jobs:
             echo "REJECTED: incomplete s=293 exact criterion"
             exit 1
           fi
+          # Agent 11: new exact x=314 mod 512 y=3 parent fan and u=5 cylinder.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX314Mod512.lean .
+          lean -o EvenOddThreeX314Mod512.olean EvenOddThreeX314Mod512.lean 2>&1 | tee EvenOddThreeX314Mod512.log
+          if grep -q sorryAx EvenOddThreeX314Mod512.log; then
+            echo "REJECTED: x=314 mod 512 y=3 source exclusion contains sorryAx"
+            exit 1
+          fi
