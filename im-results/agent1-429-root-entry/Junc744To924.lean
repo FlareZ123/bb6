@@ -66,7 +66,7 @@ private theorem outer_ladder_744_to_381_3
         outerCost 189 0) = 191493 := by decide
   have hhead : c₇.head = c.head + 741 := by
     rw [hd₇,hd₆,hd₅,hd₄,hd₃,hd₂,hd₁]
-    norm_num
+    omega
   exact ⟨c₇, by simpa [htime] using h₁₂₃₄₅₆₇, by simpa using r₇, hhead⟩
 
 /-- The five outer-safe returns 11 -> 25 -> 53 -> 109 -> 221
@@ -101,7 +101,7 @@ private theorem outer_ladder_11_870_to_445_17
         outerCost 109 0) + outerCost 221 0) = 261433 := by decide
   have hhead : c₅.head = c.head + 853 := by
     rw [hd₅,hd₄,hd₃,hd₂,hd₁]
-    norm_num
+    omega
   exact ⟨c₅, by simpa [htime] using h₁₂₃₄₅, by simpa using r₅, hhead⟩
 
 /-- Lift the canonical 7,382-step low43 gap to every physical
@@ -224,47 +224,47 @@ theorem junc0_744_to_junc0_924_physical
     lowEven4k_prepared_return_physical 1 193 (by omega) c₃₈₇ r₃₈₇
   have hEvenTime :
       juncPosFullTime 1 0 + (16*1+18*193+261) = 3761 := by
-    norm_num [juncPosFullTime]
+    decide
   have hEven' : run target429 3761 c₃₈₇ = some c₇₇₄ := by
     simpa [hEvenTime] using hEven
   have r₇₇₄' : Represents (junc 11 0 774) c₇₇₄ := by
     simpa using r₇₇₄
   have hheadEven' : c₇₇₄.head = c₃₈₇.head - 765 := by
     rw [hheadEven]
-    norm_num
+    omega
 
   obtain ⟨c₈₀₆,hcycle₁,r₈₀₆,hheadCycle₁⟩ :=
-    junc11_lowEven_return32_physical 183 19 (by norm_num) (by norm_num)
+    junc11_lowEven_return32_physical 183 19 (by omega) (by omega)
       c₇₇₄ (by simpa using r₇₇₄')
   have hcycle₁' : run target429 202417 c₇₇₄ = some c₈₀₆ := by
     have ht : junc11Return32Cost 183 19 = 202417 := by
-      norm_num [junc11Return32Cost]
+      decide
     simpa [ht] using hcycle₁
   have r₈₀₆' : Represents (junc 11 0 806) c₈₀₆ := by
     simpa using r₈₀₆
 
   obtain ⟨c₈₃₈,hcycle₂,r₈₃₈,hheadCycle₂⟩ :=
-    junc11_lowEven_return32_physical 199 11 (by norm_num) (by norm_num)
+    junc11_lowEven_return32_physical 199 11 (by omega) (by omega)
       c₈₀₆ (by simpa using r₈₀₆')
   have hcycle₂' : run target429 227073 c₈₀₆ = some c₈₃₈ := by
     have ht : junc11Return32Cost 199 11 = 227073 := by
-      norm_num [junc11Return32Cost]
+      decide
     simpa [ht] using hcycle₂
   have r₈₃₈' : Represents (junc 11 0 838) c₈₃₈ := by
     simpa using r₈₃₈
 
   obtain ⟨c₈₇₀,hcycle₃,r₈₇₀,hheadCycle₃⟩ :=
-    junc11_lowEven_return32_physical 215 3 (by norm_num) (by norm_num)
+    junc11_lowEven_return32_physical 215 3 (by omega) (by omega)
       c₈₃₈ (by simpa using r₈₃₈')
   have hcycle₃' : run target429 253777 c₈₃₈ = some c₈₇₀ := by
     have ht : junc11Return32Cost 215 3 = 253777 := by
-      norm_num [junc11Return32Cost]
+      decide
     simpa [ht] using hcycle₃
   have r₈₇₀' : Represents (junc 11 0 870) c₈₇₀ := by
     simpa using r₈₇₀
   have hcycles₁₂ := compose_run hcycle₁' hcycle₂'
   have hcycles := compose_run hcycles₁₂ hcycle₃'
-  have hcyclesTime : (202417+227073)+253777=683267 := by norm_num
+  have hcyclesTime : (202417+227073)+253777=683267 := by decide
   have hcycles' : run target429 683267 c₇₇₄ = some c₈₇₀ := by
     simpa [hcyclesTime] using hcycles
   have hheadCycles : c₈₇₀.head = c₇₇₄.head - 75 := by
@@ -275,25 +275,25 @@ theorem junc0_744_to_junc0_924_physical
     outer_ladder_11_870_to_445_17 c₈₇₀ r₈₇₀'
   obtain ⟨c₄₄₀,hodd,r₄₄₀,hheadOdd⟩ :=
     lowOdd_raw_head_any 8 217 c₄₄₅ r₄₄₅
-  have hoddTime : 4*8*8+22*8+22*217+100=5306 := by norm_num
+  have hoddTime : 4*8*8+22*8+22*217+100=5306 := by decide
   have hodd' : run target429 5306 c₄₄₅ = some c₄₄₀ := by
     simpa [hoddTime] using hodd
   have r₄₄₀' : Represents (junc 440 0 34) c₄₄₀ := by
     simpa using r₄₄₀
   have hheadOdd' : c₄₄₀.head = c₄₄₅.head - 14 := by
     rw [hheadOdd]
-    norm_num
+    omega
 
   obtain ⟨c₉₂₄,h42,r₉₂₄,hhead42,_⟩ :=
     low42_raw_head_any_c01_free 17 211 c₄₄₀ r₄₄₀'
-  have h42Time : 4*17*17+22*17+18*211+79=5407 := by norm_num
+  have h42Time : 4*17*17+22*17+18*211+79=5407 := by decide
   have h42' : run target429 5407 c₄₄₀ = some c₉₂₄ := by
     simpa [h42Time] using h42
   have r₉₂₄' : Represents (junc 0 0 924) c₉₂₄ := by
     simpa using r₉₂₄
   have hhead42' : c₉₂₄.head = c₄₄₀.head - 883 := by
     rw [hhead42]
-    norm_num
+    omega
 
   have h₁₂ := compose_run houter hgap
   have h₁₂₃ := compose_run h₁₂ hEven'
@@ -303,7 +303,7 @@ theorem junc0_744_to_junc0_924_physical
   have h₁₂₃₄₅₆₇ := compose_run h₁₂₃₄₅₆ h42'
   have htime :
       (((((((191493+7382)+3761)+683267)+261433)+5306)+5407) =
-        1158049) := by norm_num
+        1158049) := by decide
   have hrun : run target429 1158049 c₇₄₄ = some c₉₂₄ := by
     simpa [htime] using h₁₂₃₄₅₆₇
   have hhead : c₉₂₄.head = c₇₄₄.head - 139 := by
@@ -330,7 +330,7 @@ theorem blank_root_to_junc0_924 :
   obtain ⟨c₉₂₄,hroute,hrep₉₂₄,_,_⟩ :=
     junc0_744_to_junc0_924_physical c₇₄₄ hrep₇₄₄
   have htotal := compose_run hroot hroute
-  have htime : 1514038+1158049=2672087 := by norm_num
+  have htime : 1514038+1158049=2672087 := by decide
   have hrun : run target429 2672087 blank = some c₉₂₄ := by
     simpa [htime] using htotal
   have hfree := junc0_physical_c01_free 0 924 c₉₂₄ hrep₉₂₄
