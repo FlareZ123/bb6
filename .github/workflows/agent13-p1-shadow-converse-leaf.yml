@@ -1,0 +1,42 @@
+name: Agent 13 P1 bounded shadow converse leaf
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  leaf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact dependency closure and converse leaf
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent9-p1-shadow"
+          compile() {
+            local dir="$1"
+            local mod="$2"
+            lean -o "$dir/$mod.olean" "$dir/$mod.lean"
+          }
+          for m in GParity GInverse; do compile im-results/agent1-p1-map "$m"; done
+          for m in P1FiniteInverse P1InverseLog; do compile im-results/agent47-p1-finite-inverse "$m"; done
+          for m in MassInverse OddConeMass; do compile im-results/agent1-p1-quarter "$m"; done
+          for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic ShadowDepthSource ShadowSourceTransport ShadowParitySource ShadowSourceStep ShadowConeLift ShadowFeederRoots ShadowGraphBridge ShadowGraphFeeders; do
+            compile im-results/agent9-p1-shadow "$m"
+          done
+          lean -o im-results/agent9-p1-shadow/ShadowGraphConverse.olean im-results/agent9-p1-shadow/ShadowGraphConverse.lean 2>&1 | tee /tmp/converse-audit.log
+          lean im-results/agent9-p1-shadow/ShadowGraphConverse.lean 2>&1 | tee -a /tmp/converse-audit.log
+          if grep -Fq 'sorryAx' /tmp/converse-audit.log; then
+            echo 'sorryAx detected in converse leaf' >&2
+            exit 1
+          fi
+          if grep -Fq 'native_decide' /tmp/converse-audit.log; then
+            echo 'native_decide detected in converse leaf' >&2
+            exit 1
+          fi
