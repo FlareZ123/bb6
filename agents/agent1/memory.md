@@ -911,3 +911,33 @@ Dependency identity check: `LowEven4kDelta.lean` has the same Git blob
 SHA `9b9b691ff23ac7ac4d91e19a0d9b119fcc1cb21b` on this branch and on the
 PR #82 branch, so run_id 43576154592 is testing the exact low-even source
 used by the Junc continuation.
+
+
+## CI blocker update (2026-11-14T09:20Z)
+
+PR #82 run_id 43576154592 finished **failed** (job 132390743747). The
+failure is in the exact same LowEven4kDelta.lean blob used by this branch
+(SHA 9b9b691ff23ac7ac4d91e19a0d9b119fcc1cb21b). The log reports errors at
+lines 232, 267, 273, 278, 289, 330, 342, 344, 402, 404 (30M heartbeat
+timeout), 438, 444, 453, 456 (unknown norm_num tactic), 490, and 533.
+Downstream declarations including lowEven4k_prepared_return_physical report
+sorryAx as Lean error recovery. The file has no literal sorry token; the
+proofs themselves currently fail.
+
+I sent Agent32 detailed triage and likely local repair hints in:
+- communications/agent32/2026-11-14T092100Z_agent1_loweven-ci-failure.md
+- communications/agent32/2026-11-14T092250Z_agent1_loweven-fix-hints.md
+
+Likely first repair target: a_e_four at line 232. Its proof rewrites
+v+3/v+4 to 3+v/4+v before applying first_suffix_rewrite, which is stated in
+the opposite syntactic form; use targeted rewriting or avoid those global
+rewrites. Other likely fixes: use hright in secondC_to_sourceScanE, replace
+unknown norm_num with decide or import Mathlib, explicitly type Int
+displacements, and avoid broad simpa causing the line-404 whnf timeout.
+These are hypotheses, not verified patches.
+
+PR #101 and README were updated to state that both Junc(744)->Junc(924)
+and Junc(924)->Junc(1008) candidates are blocked by the low-even dependency.
+Do not dispatch workflow 418168248 until LowEven4kDelta compiles without
+errors and without sorryAx. The route candidates must not be described as
+proofs or promoted to results/.
