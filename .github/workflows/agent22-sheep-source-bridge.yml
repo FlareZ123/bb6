@@ -254,3 +254,12 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
           lake env lean Sheep31104NoBlank.lean
+          # Agent16: source-level all-valuation exclusion for the h=4 gate.
+          # This closes the arithmetic Gate4 -> authentic blank-even source edge.
+          cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-power-h4-h5-root-gap/SheepPowerH4Source.lean" SheepPowerH4Source.lean
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepPowerH4Source.lean
+          lake env lean -o ".lake/build/lib/lean/SheepPowerH4Source.olean" SheepPowerH4Source.lean 2>&1 | tee /tmp/sheep-power-h4-source-axioms.log
+          if grep -q 'sorryAx' /tmp/sheep-power-h4-source-axioms.log; then
+            echo '::error::sorryAx in SheepPowerH4Source exported theorems'
+            exit 1
+          fi
