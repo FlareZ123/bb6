@@ -546,6 +546,283 @@ theorem m1ZeroOddBase_q4_prefix_data
   refine ⟨m1ZeroOddBaseCutTape a b h, ?_, hleft, hshape, hright⟩
   simpa [m1ZeroOddBaseCutTape, T2] using hRun
 
+
+
+/-! ## General odd-quotient lift
+
+The finite bridge only reads the first four low-order BinDec blocks.  For
+odd k, both 8k and 8k-1 have a common quotient tail after those four blocks.
+We lift the n=8 source prefix over the half-line it actually visits.
+-/
+
+/-- The first 3a+17 cells of the m=1, n=8k input left word. -/
+private def m1ZeroOddResidue0InputPrefix (a : Nat) : List Bool :=
+  d1pow a ++ markerWord 1 ++ d0 ++ d1 ++ d1 ++ d1 ++ [false,false]
+
+/-- The first 3a+17 cells of the q4 cut left word for the n=8k row. -/
+private def m1ZeroOddResidue0TargetPrefix (a : Nat) : List Bool :=
+  [true] ++ d1pow a ++ markerWord 0 ++ d0 ++
+    d0 ++ d0 ++ d0 ++ [true,true]
+
+/-- The source/target half-line used to transport the fixed n=8 bridge. -/
+def m1ZeroOddResidue0Inside (a : Nat) (h : Int) : Int → Bool :=
+  fun x => decide (h-((3*a+1:Int))-15 ≤ x)
+
+/-- Marker-zero q4 left stream after the generalized n=8k prefix. -/
+def m1ZeroOddResidue0LeftFacing (L k a : Nat) : List Bool :=
+  [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec L (8*k-1) ++ lh
+
+/-- The generalized cut tape is the fixed n=8 output on the read half-line,
+and the original n=8k input everywhere to its left. -/
+def m1ZeroOddResidue0CutTape
+    (L k a b : Nat) (h : Int) : Int → Bool :=
+  (frame (m1ZeroOddResidue0Inside a h)
+    (s1Config L (8*k) 1 a 0 b h).tape
+    (⟨4,h,m1ZeroOddBaseCutTape a b h⟩ : Config)).tape
+
+private theorem m1ZeroOddResidue0_config_ext_by_fields (c d : Config)
+    (hstate : c.state = d.state) (hhead : c.head = d.head)
+    (htape : c.tape = d.tape) : c = d := by
+  cases c with
+  | mk cs ch ct =>
+    cases d with
+    | mk ds dh dt =>
+      cases hstate
+      cases hhead
+      cases htape
+      rfl
+
+private theorem m1ZeroOddResidue0_input_left
+    (L k a : Nat) (hL : 4 ≤ L) (hkodd : k % 2 = 1)
+    (hbound : 8*k < 2^L) :
+    s1LeftFacing L (8*k) 1 a 0 =
+      m1ZeroOddResidue0InputPrefix a ++
+        ([true] ++ binDec (L-4) (k/2) ++ lh) := by
+  have hbin := m1ZeroOdd_binDec_residue8 L k hL hkodd hbound
+  simp [s1LeftFacing,m1ZeroOddResidue0InputPrefix,
+    markerWord,hbin,d0,d1,List.append_assoc]
+
+private theorem m1ZeroOddResidue0_base_input_left (a : Nat) :
+    s1LeftFacing 4 8 1 a 0 =
+      m1ZeroOddResidue0InputPrefix a ++ ([true] ++ lh) := by
+  simp [s1LeftFacing,m1ZeroOddResidue0InputPrefix,
+    markerWord,binDec_four_eight,d0,d1,List.append_assoc]
+
+private theorem m1ZeroOddResidue0_target_left
+    (L k a : Nat) (hL : 4 ≤ L) (hkodd : k % 2 = 1)
+    (hbound : 8*k < 2^L) :
+    m1ZeroOddResidue0LeftFacing L k a =
+      m1ZeroOddResidue0TargetPrefix a ++
+        ([true] ++ binDec (L-4) (k/2) ++ lh) := by
+  have hbin := m1ZeroOdd_binDec_residue7 L k hL hkodd hbound
+  simp [m1ZeroOddResidue0LeftFacing,m1ZeroOddResidue0TargetPrefix,
+    markerWord,hbin,d0,d1,List.append_assoc]
+
+private theorem m1ZeroOddResidue0_base_target_left (a : Nat) :
+    m1ZeroOddQ4LeftFacing 4 7 a =
+      m1ZeroOddResidue0TargetPrefix a ++ ([true] ++ lh) := by
+  simp [m1ZeroOddQ4LeftFacing,m1ZeroOddResidue0TargetPrefix,
+    markerWord,binDec_four_seven,d0,d1,List.append_assoc]
+
+private theorem m1ZeroOddResidue0_inputPrefix_length (a : Nat) :
+    (m1ZeroOddResidue0InputPrefix a).length = 3*a+17 := by
+  simp [m1ZeroOddResidue0InputPrefix,d1pow_length,markerWord,d0,d1]
+
+private theorem m1ZeroOddResidue0_targetPrefix_length (a : Nat) :
+    (m1ZeroOddResidue0TargetPrefix a).length = 3*a+17 := by
+  simp [m1ZeroOddResidue0TargetPrefix,d1pow_length,markerWord,d0,d1]
+
+/-- The general and n=8 source tapes agree on every cell the prefix reads. -/
+private theorem m1ZeroOddResidue0_input_matches
+    (L k a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1) (hbound : 8*k < 2^L) :
+    ∀ x, m1ZeroOddResidue0Inside a h x = true →
+      (s1Config L (8*k) 1 a 0 b h).tape x =
+      (s1Config 4 8 1 a 0 b h).tape x := by
+  have hsourceLeft :=
+    m1ZeroOddResidue0_input_left L k a hL hkodd hbound
+  have hbaseLeft := m1ZeroOddResidue0_base_input_left a
+  have hprefixLength := m1ZeroOddResidue0_inputPrefix_length a
+  intro x hx
+  by_cases hleft : x ≤ h
+  · let i : Nat := Int.toNat (h-x)
+    have hnonneg : 0 ≤ h-x := by omega
+    have hcast : (i : Int) = h-x := by
+      dsimp [i]
+      exact Int.toNat_of_nonneg hnonneg
+    have hcoord : h-(i:Int) = x := by omega
+    have hthreshold : h-((3*a+1:Int))-15 ≤ x := by
+      simpa [m1ZeroOddResidue0Inside] using hx
+    have hi : i ≤ 3*a+16 := by omega
+    have hiPrefix : i < (m1ZeroOddResidue0InputPrefix a).length := by
+      rw [hprefixLength]
+      omega
+    have hsrc := s1Config_left_cell L (8*k) 1 a 0 b h i
+    have hbase := s1Config_left_cell 4 8 1 a 0 b h i
+    rw [hcoord] at hsrc hbase
+    rw [hsourceLeft] at hsrc
+    rw [hbaseLeft] at hbase
+    have hsrcBit := sideBit_append_left
+      (m1ZeroOddResidue0InputPrefix a)
+      ([true] ++ binDec (L-4) (k/2) ++ lh) i hiPrefix
+    have hbaseBit := sideBit_append_left
+      (m1ZeroOddResidue0InputPrefix a) ([true] ++ lh) i hiPrefix
+    rw [hsrcBit] at hsrc
+    rw [hbaseBit] at hbase
+    exact hsrc.trans hbase.symm
+  · let i : Nat := Int.toNat (x-h-1)
+    have hnonneg : 0 ≤ x-h-1 := by omega
+    have hcast : (i : Int) = x-h-1 := by
+      dsimp [i]
+      exact Int.toNat_of_nonneg hnonneg
+    have hcoord : h+1+(i:Int) = x := by omega
+    have hsrc := s1Config_right_cell L (8*k) 1 a 0 b h i
+    have hbase := s1Config_right_cell 4 8 1 a 0 b h i
+    rw [hcoord] at hsrc hbase
+    exact hsrc.trans hbase.symm
+
+private theorem m1ZeroOddBase_prefix_head_bound
+    (a b : Nat) (h : Int) (ha : 0 < a) :
+    ∀ k, k < 64+12*a → ∀ d,
+      run tm2 k (s1Config 4 8 1 a 0 b h) = some d →
+      h-((3*a+1:Int))-15 ≤ d.head := by
+  let T := (s1Config 4 8 1 a 0 b h).tape
+  let N := 3*a+1
+  let T1 := sweptLeft N T h
+  let hN : Int := h-(N:Int)
+  let T2 := m1ZeroOddBaseCutTape a b h
+  have hOn := m1ZeroOddBaseLeftOnes a b h
+  have hRight : T (h+1) = false := by
+    have hcell := s1Config_right_cell 4 8 1 a 0 b h 0
+    simpa [s0RightFacing,sideBit] using hcell
+  have hSweep :
+      run tm2 (3*N) (s1Config 4 8 1 a 0 b h) =
+        some ⟨3,hN,T1⟩ := by
+    simpa [N,T,T1,hN] using counted_left_sweep N T h hOn hRight
+  have hInput := m1ZeroOddBridge_input_match a b h hOn
+  have hBridgeHeads : ∀ k < 62,
+      m1ZeroOddBridgeInside
+        ((fRun tm2 k m1ZeroOddBridgeStart).getD m1ZeroOddBridgeStart).head = true := by
+    intro k hk
+    have hall := List.all_eq_true.mp m1ZeroOddBridge_heads k
+      (by simp [List.mem_range,hk])
+    simpa using hall
+  have hBridge :
+      run tm2 62 ⟨3,hN,T1⟩ =
+        some ⟨4,hN+2,T2⟩ := by
+    have hb := bridgeAt T1 hN m1ZeroOddBridgeInside
+      m1ZeroOddBridgeStart m1ZeroOddBridgeEnd 62 rfl
+      m1ZeroOddBridge_exact hBridgeHeads hInput
+    simpa [T2,m1ZeroOddBridgeBaseCutTape,frameAt_head] using hb
+  have hlinear : linearRightOnes T2 (hN+2) (3*a-1) := by
+    intro i hi
+    by_cases hi0 : i = 0
+    · subst i
+      have hin : m1ZeroOddBridgeInside ((hN+2)-hN) = true := by
+        simp [m1ZeroOddBridgeInside]
+      have hbit := frameAt_tape_inside T1 hN
+        m1ZeroOddBridgeInside m1ZeroOddBridgeEnd (hN+2) hin
+      simpa [T2,m1ZeroOddBridgeEnd] using hbit
+    · have hj : i ≤ 3*a-2 := by omega
+      let j := 3*a-1-i
+      have hj0 : j+1 < N := by dsimp [j,N]; omega
+      have hblock := sweptLeft_block N j T h hj0 hOn
+      have hout : m1ZeroOddBridgeInside ((hN+2+(i:Int))-hN) = false := by
+        simp [m1ZeroOddBridgeInside]
+        omega
+      have houtside := frameAt_tape_outside T1 hN
+        m1ZeroOddBridgeInside m1ZeroOddBridgeEnd (hN+2+(i:Int)) hout
+      have hcoord : hN+2+(i:Int) = h-(j:Int) := by
+        dsimp [j,N,hN]
+        omega
+      rw [hcoord] at houtside
+      simpa [T2] using houtside.trans hblock
+  have hBridge' :
+      run tm2 62 ⟨3,hN,T1⟩ = some ⟨4,hN+2,T2⟩ := hBridge
+  have hScan :
+      run tm2 (3*a-1) ⟨4,hN+2,T2⟩ =
+        some ⟨4,h,T2⟩ := by
+    have hscanHead : hN+2+(3*a-1 : Nat) = h := by
+      dsimp [N,hN]
+      omega
+    simpa [hscanHead] using E_scan T2 (hN+2) (3*a-1) hlinear
+  intro k hk d hd
+  let p1 := 3*N
+  let p2 := p1+62
+  by_cases hk1 : k < p1
+  · have hlow := counted_left_sweep_heads N T h hOn hRight k
+      (by dsimp [p1,N] at *; omega) d hd
+    dsimp [hN,N] at *
+    omega
+  · by_cases hk2 : k < p2
+    · let j := k-p1
+      have hj : j < 62 := by dsimp [j,p1,p2] at *; omega
+      have hkEq : k = p1+j := by dsimp [j,p1]; omega
+      rw [hkEq,run_append,hSweep] at hd
+      simp only [Option.bind_some] at hd
+      have hlow := m1ZeroOdd_bridge_prefix_lower T1 hN hInput j hj d hd
+      dsimp [hN,N] at *
+      omega
+    · let j := k-p2
+      have hj : j < 3*a-1 := by dsimp [j,p2,p1,N] at *; omega
+      have hkEq : k = p1+(62+j) := by dsimp [j,p2,p1]; omega
+      rw [hkEq,run_append,hSweep] at hd
+      simp only [Option.bind_some] at hd
+      rw [run_append,hBridge'] at hd
+      simp only [Option.bind_some] at hd
+      have hhead := E_scan_prefix_head T2 (hN+2) (3*a-1) hlinear j hj d hd
+      dsimp [hN,N] at *
+      omega
+
+private theorem m1ZeroOddResidue0_config_ext_by_fields
+    (c d : Config) (hstate : c.state = d.state)
+    (hhead : c.head = d.head) (htape : c.tape = d.tape) : c = d := by
+  cases c with
+  | mk cs ch ct =>
+    cases d with
+    | mk ds dh dt =>
+      cases hstate
+      cases hhead
+      cases htape
+      rfl
+
+/-- Lift the exact 64+12a n=8 prefix to every admissible n=8k with odd k. -/
+theorem m1ZeroOdd_residue0_q4_prefix_source
+    (L k a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hkodd : k % 2 = 1)
+    (hbound : 8*k < 2^L) (ha : 0 < a) :
+    run tm2 (64+12*a) (s1Config L (8*k) 1 a 0 b h) =
+      some ⟨4,h,m1ZeroOddResidue0CutTape L k a b h⟩ := by
+  let base : Config := ⟨3,h,(s1Config 4 8 1 a 0 b h).tape⟩
+  let background := (s1Config L (8*k) 1 a 0 b h).tape
+  have hinput := m1ZeroOddResidue0_input_matches L k a b h hL hkodd hbound
+  have hstart :
+      frame (m1ZeroOddResidue0Inside a h) background base =
+        s1Config L (8*k) 1 a 0 b h := by
+    apply m1ZeroOddResidue0_config_ext_by_fields
+    · rfl
+    · rfl
+    · funext x
+      by_cases hx : m1ZeroOddResidue0Inside a h x = true
+      · simp [frame,background,base,hx,hinput x hx]
+      · simp [frame,background,base,hx]
+  have hheads :
+      ∀ j, j < 64+12*a → ∀ d,
+        run tm2 j base = some d →
+        m1ZeroOddResidue0Inside a h d.head = true := by
+    intro j hj d hd
+    have hlow := m1ZeroOddBase_prefix_head_bound a b h ha j hj d hd
+    simpa [m1ZeroOddResidue0Inside] using hlow
+  have hlift := run_frame tm2
+    (m1ZeroOddResidue0Inside a h) background base (64+12*a) hheads
+  rw [hstart] at hlift
+  obtain ⟨Tq,hprefix,hleft,hshape,hright⟩ :=
+    m1ZeroOddBase_q4_prefix_data a b h ha
+  rw [hprefix] at hlift
+  simp only [Option.map_some] at hlift
+  simpa [m1ZeroOddResidue0CutTape,background] using hlift
+
+
 #print axioms m1ZeroOddBridge_exact
 #print axioms m1ZeroOddBridge_heads
 #print axioms m1ZeroOddBase_q4_prefix_data
