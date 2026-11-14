@@ -117,7 +117,9 @@ within \(s\equiv5\pmod8\), hence density \(1/24\) among the odd-t high-stop para
 a=\frac{x+6}{2^{2m+1}}-3,\qquad
 k=\frac{x-a+1-6m}{2},
 \]
-for those \(m\) for which the displayed quantities are integral and \(a\ge3\). For this residual sequence, \(r\equiv201\pmod{420}\) implies \(r\equiv0\pmod3\), \(2^r\equiv1\pmod3\), and \(s\equiv2\pmod3\); hence \(3\mid x+6\). Thus the \(a=1\) exceptional branch \(x+6=2^n\cdot16\) is impossible. For this residual sequence, (r\equiv201\pmod{420}) implies (3\mid r) and (r) is odd. Hence (2^r\equiv1\pmod7), and (129\equiv3,211\equiv1\pmod7), so (s\equiv2\pmod7). Therefore (x=302+512s-4r\equiv4\pmod7) and (x+6\equiv3\pmod7). The (a=1) exceptional branch (x+6=2^n\cdot16) is impossible, since (16\cdot2^n\pmod7\in\{1,2,4\}), never (3). Equivalently, writing (x+6=16(m+1)), one has (m+1\equiv5\pmod7), so its odd part cannot be (1); the deepest permitted quotient therefore still has (a\ge3). **Correction:** the earlier mod-3 calculation was wrong: because (r) is odd, (2^r\equiv2\pmod3), giving (s\equiv1\pmod3) and (3\nmid x+6). For this residual sequence, the valuation is explicit. Substituting \(s=(5\cdot2^r-129)/211\) gives
+for those \(m\) for which the displayed quantities are integral and \(a\ge3\). For this residual sequence, \(r\equiv201\pmod{420}\) implies \(3\mid r\) and \(r\) is odd. Since \(2\) has order \(3\) modulo \(7\), \(2^r\equiv1\pmod7\); the defining equation then gives \(s\equiv2\pmod7\). Thus \(x=302+512s-4r\equiv4\pmod7\), so \(x+6\equiv3\pmod7\). The exceptional \(a=1\) branch would require \(x+6=16\cdot2^n\), whose right side is congruent to one of \(1,2,4\pmod7\), never \(3\). Equivalently, if \(M_0=(x+6)/16\), then \(M_0\equiv5\pmod7\), so its odd part is not \(1\): writing \(M_0=2^dU\) with \(U\) odd gives \(U\equiv5\cdot2^{-d}\pmod7\in\{3,5,6\}\), hence \(U\ge3\). This also proves that the deepest permitted odd-\(a\) quotient still has \(a\ge3\). **The previous mod-3 rationale was incorrect**: because \(r\) is odd, \(2^r\equiv2\pmod3\), so in fact \(s\equiv1\pmod3\) and \(3\nmid x+6\).
+
+The valuation is explicit. Substituting \(s=(5\cdot2^r-129)/211\) gives
 \[
 x+6=\frac4{211}(640\cdot2^r-211r-265).
 \]
@@ -126,7 +128,7 @@ For \(r\ge201\), \(v_2(211r+265)<r+7=v_2(640\cdot2^r)\), so
 v_2(x+6)=2+v_2(211r+265)
 =4+v_2(10669+22155t),\qquad r=201+420t.
 \]
-Thus the valuation permits \(\lfloor v_2(x+6)/2\rfloor=2+\lfloor v_2(10669+22155t)/2\rfloor\) even depths, unbounded along 2-adically nested values of \(t\). Since \(3\mid x+6\), the odd part is at least \(3\), so the deepest quotient still gives \(a\ge3\); for these enormous \(x\), the cost formula also gives \(k\ge1\) at every permitted depth. The x=2 mod 16 lemma eliminates the depth fan when \(v_2(x+6)=3\), but the x=10 mod 16 case has \(v_2(x+6)\ge4\) and genuinely allows multiple even depths.
+Thus the valuation permits \(2+\lfloor v_2(10669+22155t)/2\rfloor\) even-depth parents, unbounded along 2-adically nested values of \(t\). For these enormous \(x\), the cost formula also gives \(k\ge1\) at every permitted depth. The x=2 mod 16 lemma eliminates the depth fan when \(v_2(x+6)=3\), but the x=10 mod 16 case has \(v_2(x+6)\ge4\) and genuinely allows multiple even depths.
 
 The remaining \(u=5\) sequence still has zero density (at most one q for each valuation d), so the density \(1/24\) is unchanged. This density statement describes only this m=0 parameter sieve, not a fraction of machines or halting runs.
 
