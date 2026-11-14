@@ -87,6 +87,7 @@ theorem m1ZeroOdd_binDec_residue8 (L k : Nat)
   have hpow4 : 2^(L-3) = 2 * 2^(L-4) := by
     rw [show L-3 = (L-4)+1 by omega, Nat.pow_succ]
     norm_num
+    ring
   have hk : k < 2^(L-3) := by
     rw [hpow3] at hbound
     omega
@@ -138,6 +139,7 @@ theorem m1ZeroOdd_binDec_residue7 (L k : Nat)
   have hpow4 : 2^(L-3) = 2 * 2^(L-4) := by
     rw [show L-3 = (L-4)+1 by omega, Nat.pow_succ]
     norm_num
+    ring
   have hk : k < 2^(L-3) := by
     rw [hpow3] at hbound
     omega
@@ -466,12 +468,13 @@ private theorem m1ZeroOddRightShape_of_stream
 /-- The base n=8, marker-1 source prefix reaches a q4 cut. -/
 theorem m1ZeroOddBase_q4_prefix_data
     (a b : Nat) (h : Int) (ha : 0 < a) :
-    ∃ Tq,
-      run tm2 (64+12*a) (s1Config 4 8 1 a 0 b h) =
-        some ⟨4, h, Tq⟩ ∧
-      (∀ i, Tq (h-(i:Int)) = sideBit (m1ZeroOddQ4LeftFacing 4 7 a) i) ∧
-      q4RightShape Tq h b ∧
-      (∀ i, Tq (h+1+(i:Int)) = sideBit (q4RightFacing b) i) := by
+    run tm2 (64+12*a) (s1Config 4 8 1 a 0 b h) =
+        some ⟨4, h, m1ZeroOddBaseCutTape a b h⟩ ∧
+      (∀ i, m1ZeroOddBaseCutTape a b h (h-(i:Int)) =
+        sideBit (m1ZeroOddQ4LeftFacing 4 7 a) i) ∧
+      q4RightShape (m1ZeroOddBaseCutTape a b h) h b ∧
+      (∀ i, m1ZeroOddBaseCutTape a b h (h+1+(i:Int)) =
+        sideBit (q4RightFacing b) i) := by
   let T := (s1Config 4 8 1 a 0 b h).tape
   let N := 3*a+1
   let T1 := sweptLeft N T h
@@ -543,7 +546,7 @@ theorem m1ZeroOddBase_q4_prefix_data
   have hhead := m1ZeroOddBaseCutTape_head a b h ha
   have hshape := m1ZeroOddRightShape_of_stream
     (m1ZeroOddBaseCutTape a b h) h b hhead hright
-  refine ⟨m1ZeroOddBaseCutTape a b h, ?_, hleft, hshape, hright⟩
+  refine ⟨?_, hleft, hshape, hright⟩
   simpa [m1ZeroOddBaseCutTape, T2] using hRun
 
 
@@ -972,7 +975,7 @@ theorem m1ZeroOdd_residue0_q4_prefix_source
   have hlift := run_frame tm2
     (m1ZeroOddResidue0Inside a h) background base (64+12*a) hheads
   rw [hstart] at hlift
-  obtain ⟨Tq,hprefix,hleft,hshape,hright⟩ :=
+  obtain ⟨hprefix,hleft,hshape,hright⟩ :=
     m1ZeroOddBase_q4_prefix_data a b h ha
   rw [hprefix] at hlift
   simp only [Option.map_some] at hlift
