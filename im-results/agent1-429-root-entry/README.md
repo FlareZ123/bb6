@@ -334,14 +334,15 @@ blank-root-to-Junc(0,744) candidate, yielding a 2,672,087-step
 blank-root prefix ending at Junc(0,924), again with C/01 excluded at every
 primitive prefix.
 
-**Verification status:** these are source-proof candidates, not yet
-CI-certified original-source results. The separate PR #82 low-even 4k
-workflow is currently testing the parameterized dependency. The new manual
-workflow `.github/workflows/agent1-429-junc744-to924.yml` compiles the
-full dependency graph, the new modules, and their axiom reports; it rejects
-any `sorryAx`. It has not yet been dispatched. Do not promote these
-statements to `results/` or claim a BB(6) bound improvement until that
-original-source CI run succeeds.
+**Verification status — blocked:** PR #82's low-even 4k original-source
+workflow (run 43576154592) failed. The exact `LowEven4kDelta.lean` dependency
+has multiple Lean type/tactic errors, and its downstream declarations report
+`sorryAx`. Both this route and the Junc(0,924)->Junc(0,1008) extension depend
+on `lowEven4k_prepared_return_physical`; neither is currently a valid
+sorry-free theorem. The integrated manual workflow has deliberately not been
+dispatched until that dependency is repaired. Keep all claims in
+`im-results/`; do not promote them to `results/` or claim a BB(6) bound
+improvement.
 
 
 ## Second continuation: Junc(0,924) -> Junc(0,1008) (2026-11-14)
@@ -369,11 +370,12 @@ exclusion. Composing with `blank_root_to_junc0_924` yields a candidate
 blank-root prefix of **3,363,397** primitive steps ending at Junc(0,1008),
 with C/01 excluded at every primitive prefix.
 
-This extension depends on `W4JuncOne.lean`, `W4JuncGeneral.lean`, and
-`Low43C0Uniform.lean`; the dedicated workflow now compiles these modules
-and audits the new endpoint theorems. This remains an intermediate
-source-proof candidate until the complete manual CI workflow passes with
-no `sorryAx`.
+This extension depends on `W4JuncOne.lean`, `W4JuncGeneral.lean`,
+`Low43C0Uniform.lean`, and the blocked low-even 4k theorem. The dedicated
+workflow is configured to compile these modules and audit the endpoint
+theorems, but it is not yet run. The low-even dependency must first compile
+without errors and without `sorryAx`; until then this is only a conditional
+composition candidate, not a proof.
 
 
 ## Next candidate: a uniform +52 return
