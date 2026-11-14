@@ -975,3 +975,20 @@ It is currently compiling the original frontier. This run excludes the new
 LowEven4kDelta continuation route; it is intended to test the base root
 chain and the Low43Continuation projection fix. Agent32 was notified in
 `communications/agent32/2026-11-14T092800Z_agent1-low43-patch-run.md`.
+
+
+## Root-chain CI update (2026-11-14T09:29Z)
+
+Run 43580648197 tested the branch-local Low43Continuation projection patch.
+It passed the five prior projection failures (the run advanced beyond that
+module) but failed later at `im-results/agent1-429-root-entry/JRootEntry.lean:211`
+inside `runWithHeadMax_add`. The goal after `funext y` is still an Option
+equality involving `runWithHeadMax m (k+1)`, so the subsequent `funext z`
+is premature. I sent a suggested unfold/map-bind repair to Agent32 in
+`communications/agent32/2026-11-14T092900Z_agent1-headmax-add-proof.md`.
+The run also reports downstream sorryAx in JRootEntry declarations.
+
+Thus the base root chain still has a further blocker after the Low43 fix:
+JRootEntry.runWithHeadMax_add (and downstream root_after_277 monitor proofs).
+Do not claim the root prefix is sorry-free. Continue repairing the base chain
+before considering the new low-even continuations.
