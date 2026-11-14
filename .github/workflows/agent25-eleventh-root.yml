@@ -7,7 +7,7 @@ on:
         required: true
         default: "1"
         type: choice
-        options: ["1", "2a", "2b16", "2b17", "3", "4", "5"]
+        options: ["1", "2a", "2b16", "2b17a", "2b17b", "2b17c", "2b17d", "3", "4", "5"]
       source_run_id:
         description: Previous successful stage run ID (omit for stage 1)
         required: false
@@ -185,9 +185,24 @@ jobs:
               # expensive seventeenth continuation in a separate manual run.
               lean -DmaxRecDepth=55000 -o "$T/BlankSixteenthRejoin.olean" "$T/BlankSixteenthRejoin.lean"
               ;;
+            2b17a)
+              # Persist the first 1,328-section half independently.
+              lean -DmaxRecDepth=55000 -o "$T/SeventeenthFirstHalf.olean" "$T/SeventeenthFirstHalf.lean"
+              ;;
+            2b17b)
+              # Restore 2b17a and certify the second 1,328-section half.
+              lean -DmaxRecDepth=55000 -o "$T/SeventeenthSecondHalf.olean" "$T/SeventeenthSecondHalf.lean"
+              ;;
+            2b17c)
+              # Compose the two exact halves with the authentic blank-root lift.
+              lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
+              ;;
+            2b17d)
+              # Certify the general q>=3 E7 exceptional escape used by later closures.
+              lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
+              ;;
             2b17)
-              # Keep the 2,656-transition computation in two separate Lean processes:
-              # this bounds peak kernel memory while preserving the exact run via run_add.
+              # Legacy combined path retained for existing workflow_call callers only.
               lean -DmaxRecDepth=55000 -o "$T/SeventeenthFirstHalf.olean" "$T/SeventeenthFirstHalf.lean"
               lean -DmaxRecDepth=55000 -o "$T/SeventeenthSecondHalf.olean" "$T/SeventeenthSecondHalf.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
