@@ -80,3 +80,41 @@ See [Agent 48's exact odd-block grammar](../agent48-space-needle/ORDER-5ADIC.md)
 The valuation-two source now yields a second target oddTower(p0,0) with 55y=8A_rP_r(A_r)+25. The new intermediate analysis is in [SecondLevelParentSieve.md](SecondLevelParentSieve.md): it adapts eleven prime cylinders (5, 7, 11, 13, 19, 29, 37, 61, 67, 79, 101) to this target, with an exact 32.63369% surviving valuation density, and proves high-side, low-side small-remainder, and complementary large-remainder quotient-band exclusions. The eight-prime subset has a 34.49381% baseline density; a separate conditional 11-squared refinement lowers that to 34.23665% when j≡10 (mod 11), but that refinement is not combined with the eleven-prime count. Reproduction: [second_level_cylinder_density.js](second_level_cylinder_density.js) (eight-prime baseline), [second_level_prime_power_refinement.js](second_level_prime_power_refinement.js) (conditional 11-squared refinement), [second_level_eleven_prime_density.js](second_level_eleven_prime_density.js) (eleven-prime count), and [second_level_extra_prime_tables.js](second_level_extra_prime_tables.js) (new forced-residue tables).
 
 These are paper-level intermediate results, not yet Lean-formalized and not a complete predecessor exclusion. Do not promote them to results/ until the remaining valuation classes are resolved and the new proofs are checked.
+
+
+## Exact all-r cancellation-feeder mid-band exclusion (Lean)
+
+A new kernel-checked file, [CancellationMidBand.lean](./CancellationMidBand.lean), formalizes the full middle-band exclusion developed in [Agent 46's mid-strip note](../agent46-needle-midstrip/README.md), with the exact logarithmic threshold rather than the coarser (4r-3) threshold.
+
+For (r\ge2), put
+[
+a_r=\frac{9^r+5}{2},\qquad
+d_r=1+\lfloor\log_2(3^{2r-1})\rfloor.
+]
+The Lean definition is `cancellation_threshold r := Nat.log2 (3^(2*r-1))+1`. The principal theorem
+`CancellationMidBand.midband_no_parent` proves, for every (s\) satisfying
+[
+d_r\le s,\qquad (2r-2)s\le a_r-d_r,
+]
+that
+[
+2^{a_r+s}+3\nmid
+\left(2^{a_r}P(2^{a_r},r)+3-2(a_r-1+s)\right).
+]
+This is an all-(r) result, not a finite enumeration.
+
+The formal proof closes several points that were previously only part of the paper-level derivation:
+
+- `log2_gap_five` proves the sharper margin (2^{d_r}\ge 3^{2r-1}+5), using parity modulo (2), the residue (3^{2r-1}\equiv3\pmod8), and the fact that powers of (2) are nonzero modulo (3).
+- `midband_interval_nonempty` proves ((2r-1)d_r\le a_r), so the stated interval is nonempty for every (r\ge2).
+- `midband_no_parent_of_gap` isolates the reusable quotient/divisibility argument from the particular choice of threshold.
+- `midband_no_parent_source_equation` connects the exclusion to the exact cancellation-form source equation
+  [
+  (2^{a_r}+3)(2q+3)+9^r=(2^{a_r})^{2r}.
+  ]
+
+The quotient certificate and weighted geometric-sum estimates are proved directly in the file; the proof distinguishes the two cases (2rs\le a_r+s) and (a_r+s\le2rs), obtains a power-of-two divisor of (z+R), and contradicts the strict bound (0<z+R<M). The `#print axioms` checks for the main theorem, generic theorem, log-gap lemma, interval lemma, and source-equation adapter show only Lean's standard `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` is present.
+
+Local verification used Lean 4.36.0-rc2. The existing manual workflow `.github/workflows/agent46-needle-three.yml` now also compiles this file after `CancellationTopStrip.lean` under its pinned Lean 4.35.0-rc4 toolchain; that workflow still needs a manual run to validate the pinned-toolchain path.
+
+**Scope:** this excludes the specified immediate inverse-parent valuation band for the synthetic cancellation feeder. It is not a BB(6) upper bound, does not resolve all possible parent valuations, and the source-equation adapter is not yet a direct composition with `NeedleGeneralInverseSource.original_source_inverse_iff`. That source-inverse integration is the next formalization step.
