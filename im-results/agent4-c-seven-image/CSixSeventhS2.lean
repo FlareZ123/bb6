@@ -168,50 +168,30 @@ theorem s2_R_parents (u v t a k : Nat)
         · by_cases haeven : a%2=0
           · simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_pos haeven] at h
-            obtain ⟨_,n,hs,hc⟩ := h
-            have hfacmod4 : (2*(a-1)+8)%4=2 := by omega
-            have hn3 : 3≤n := by
-              by_contra hnot
-              have hnle : n≤2 := by omega
-              rw [hs] at hval
-              interval_cases n <;> norm_num at hval <;> omega
-            have hn4 : n≤3 := by
-              by_contra hnot
-              have hn4 : 4≤n := by omega
-              have hp : 16∣(2:Nat)^n := by
-                have hh : (2:Nat)^4∣(2:Nat)^n :=
-                  Nat.pow_dvd_pow 2 hn4
-                simpa only [show (2:Nat)^4=16 by decide] using hh
-              have hf : 2∣2*(a-1)+8 := by
-                refine ⟨a+3,?_⟩
-                omega
-              obtain ⟨p,hp⟩ := hp
-              obtain ⟨q,hq⟩ := hf
-              have hdiv : 32∣x+y+1 := by
-                refine ⟨p*q,?_⟩
-                calc
-                  x+y+1=(2:Nat)^n*(2*(a-1)+8) := hs
-                  _=(16*p)*(2*q) := by rw [hp,hq]
-                  _=32*(p*q) := by ring
-              have hmod := Nat.mod_eq_zero_of_dvd hdiv
-              rw [hval] at hmod
-              norm_num at hmod
-            have hn : n=3 := by omega
-            subst n
-            have hxodd : x%2=1 := by dsimp [x]; omega
-            have hyEven : y%2=0 := by dsimp [y]; omega
-            have hleft :
-                (2*k-a+3+(2*(a-1)+8)+9)%2=0 := by omega
-            have hright : (x+2*y+2)%2=1 := by omega
-            have hmodEq := congrArg (fun z : Nat => z%2) hc
-            rw [hleft,hright] at hmodEq
-            norm_num at hmodEq
+            obtain ⟨_,n,hs,_⟩ := h
+            have hfactor : 2*(a-1)+6=2*(a+2) := by omega
+            have hdiv : 2∣x+y := by
+              refine ⟨(2:Nat)^n*(a+2),?_⟩
+              calc
+                x+y=(2:Nat)^n*(2*(a-1)+6) := hs
+                _=(2:Nat)^n*(2*(a+2)) := by rw [hfactor]
+                _=2*((2:Nat)^n*(a+2)) := by ring
+            have hmod := Nat.mod_eq_zero_of_dvd hdiv
+            omega
           · have haodd : a%2=1 := by omega
             simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_neg haeven] at h
             rcases h with ⟨h3,_⟩ | ⟨_,n,hs,hc⟩
             · omega
-            · have hnodd : n%2=1 := by omega
+            · have hnodd : n%2=1 := by
+                have hxodd : x%2=1 := by dsimp [x]; omega
+                have hyEven : y%2=0 := by dsimp [y]; omega
+                have hmodEq := congrArg (fun z : Nat => z%2) hc
+                have hleft :
+                    (2*k-a+3+(2*(a-1)+8)+3*n)%2=n%2 := by omega
+                have hright : (x+2*y+2)%2=1 := by omega
+                rw [hleft,hright] at hmodEq
+                omega
               have hnle : n≤2 := by
                 by_contra hn
                 have hn3 : 3≤n := by omega
@@ -287,6 +267,14 @@ private theorem s2_q_blank_unreachable (u v t : Nat)
 /-- The odd-bounce parent P is excluded by the six-right normalizer,
     while the one-bounce parent Q is excluded by Agent 34's three-edge
     source cone.  Therefore R itself is blank-root unreachable. -/
+private theorem s2_zero_not_initial (x y : Nat) (hx : 5 < x)
+    (h : BB6.Agent8Section.run secNext 0 (some (5,1))=some (x,y)) : False := by
+  have heq : (5,1)=(x,y) := by
+    apply Option.some.inj
+    simpa [BB6.Agent8Section.run] using h
+  have hfirst := congrArg Prod.fst heq
+  omega
+
 private theorem s2_r_blank_unreachable (u v t : Nat)
     (ht : u+v=2+4*t)
     (hv : v%32=(28+11*t)%32) :
@@ -296,7 +284,7 @@ private theorem s2_r_blank_unreachable (u v t : Nat)
   rcases hr with ⟨time,hrun⟩
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at hrun <;> omega
+      exact s2_zero_not_initial _ _ (by omega) hrun
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
@@ -327,7 +315,7 @@ private theorem s2_p0_blank_unreachable (u v : Nat) :
   rcases hr with ⟨time,htime⟩
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at htime <;> omega
+      exact s2_zero_not_initial _ _ (by omega) htime
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
@@ -351,7 +339,7 @@ private theorem s2_p2_blank_unreachable (u v t : Nat)
   rcases hr with ⟨time,htime⟩
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at htime <;> omega
+      exact s2_zero_not_initial _ _ (by omega) htime
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
@@ -380,7 +368,7 @@ private theorem s2_h1_blank_unreachable (u v t : Nat)
   rcases hr with ⟨time,htime⟩
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at htime <;> omega
+      exact s2_zero_not_initial _ _ (by omega) htime
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
@@ -528,7 +516,7 @@ theorem blank_ne_s2_image (u v t time : Nat)
   intro hrun
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at hrun <;> omega
+      exact s2_zero_not_initial _ _ (by omega) hrun
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
