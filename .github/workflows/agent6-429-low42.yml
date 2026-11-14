@@ -63,7 +63,8 @@ jobs:
           compile im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta
           compile im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion
           compile im-results/agent32-429-high2-prefix/High2Prefix
-          compile im-results/agent32-429-high2-prefix/MidAposBoundary
+          compile im-results/agent32-429-high2-prefix/High2Tail
+          compile im-results/agent32-429-high2-prefix/High2TailBase
           compile im-results/agent1-429-w4-boundary/W4CZeroSafe
           compile im-results/agent1-429-w4-boundary/W4CZeroCount
           compile im-results/agent1-429-w4-boundary/W4CZeroOrdinary
@@ -78,6 +79,8 @@ jobs:
           compile im-results/agent32-429-primitive-cost/JF0Prefix
           compile im-results/agent1-429-j-first-branch/JFirstBranch
           compile im-results/agent32-429-high2-prefix/High2PhysicalBridge
+          compile im-results/agent32-429-high2-prefix/High2Return
+          compile im-results/agent32-429-high2-prefix/MidAposBoundary
           compile im-results/agent18-429-junc-canonical/JuncCanonical
           compile im-results/agent6-429-low42/Low42Delta
           compile im-results/agent6-429-low42/Low42Physical
