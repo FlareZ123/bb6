@@ -5,7 +5,7 @@ import Lean.Elab.Tactic.Omega
 /-!
 # The m=2,n=6 even q4 reset branch
 
-This module closes the next TM63 reset after the m=0,n=5 branch.
+This module establishes the m=2,n=6 even reset kernel, the next source row after the root-specific m=0,n=16r+7 successor.
 The new finite kernel is a 38-step bridge, following the standard
 (3*a+2)-block counted left sweep and preceding the 3*a E-state scan.
 The resulting q4 cut is at state E/head h and feeds the generic full-tape
@@ -41,7 +41,7 @@ private def m2EvenSixQ4LeftSuffix : List Bool :=
 def m2EvenSixQ4LeftFacing (a : Nat) : List Bool :=
   [true] ++ (d1pow a ++ m2EvenSixQ4LeftSuffix)
 
-/-- The finite bridge sees the even-n=4 boundary, not the odd-n boundary
+/-- The finite bridge sees the even-n=6 boundary, not the odd-n boundary
 used by Agent 6's 26-step m=2 bridge. -/
 def m2EvenSixQ4Inside (x : Int) : Bool :=
   decide (-9 ≤ x ∧ x ≤ 2)
@@ -73,7 +73,7 @@ private theorem m2EvenSixSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
       d1pow a ++ m2EvenSixSourceLeftSuffix := by
     simp [s1LeftFacing,binDec_zero,m2EvenSixSourceLeftSuffix,
       List.append_assoc]
-  have hcell := s1Config_left_cell 3 4 2 a 0 b h (3*a+2+k)
+  have hcell := s1Config_left_cell 3 6 2 a 0 b h (3*a+2+k)
   rw [hface] at hcell
   have hside := sideBit_d1pow_append a (3*a+2+k)
     m2EvenSixSourceLeftSuffix (by omega)
@@ -327,7 +327,7 @@ private theorem m2EvenSixQ4CutTape_rightFacing (a b : Nat) (h : Int)
       have hpres : sweptLeft N T h x = T x := by
         exact sweptLeft_preserves_right N T h x (by dsimp [x]; omega)
       have hsource : T x = sideBit (s0RightFacing b) (i+1) := by
-        have hc := s1Config_right_cell 3 4 2 a 0 b h (i+1)
+        have hc := s1Config_right_cell 3 6 2 a 0 b h (i+1)
         simpa [T,x,s1PhysicalRight,s0PhysicalRight] using hc
       calc
         m2EvenSixQ4CutTape a b h (h+1+((i+1:Int))) =
