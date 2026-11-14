@@ -319,6 +319,14 @@ jobs:
             echo '::error::sorryAx found in m=2,n=4 even q4 reset source theorem'
             exit 1
           fi
+          # Agent 48: lift the n=4 bridge to every admissible n=8*k+4.
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M2EvenResidueFour.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-residue4-axioms.log
+          lean -o M2EvenResidueFour.olean M2EvenResidueFour.lean 2>&1 | tee /tmp/a42-terminal/m2-even-residue4-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m2-even-residue4-axioms.log; then
+            echo '::error::sorryAx found in generalized m=2,n=8*k+4 q4 source theorem'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M1EvenQ4Suffix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-even-q4-suffix-axioms.log
           lean -o M1EvenQ4Suffix.olean M1EvenQ4Suffix.lean 2>&1 | tee /tmp/a42-terminal/m1-even-q4-suffix-axioms.log
