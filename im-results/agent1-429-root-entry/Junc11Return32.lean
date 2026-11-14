@@ -58,7 +58,7 @@ private theorem outer_delta (U v w : Nat) (hw : 2*U+3 ≤ w) :
 
 /-- Lift one outer return to any complete physical tape representing its
     Junc input, retaining the exact endpoint and absolute head shift. -/
-private theorem outer_segment_physical_delta
+theorem outer_segment_physical_delta
     (U v w : Nat) (c : Config)
     (hrep : Represents (junc U v w) c)
     (hw : 2*U+3 ≤ w) :
