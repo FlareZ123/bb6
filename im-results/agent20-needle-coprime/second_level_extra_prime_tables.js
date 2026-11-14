@@ -10,6 +10,10 @@ function mm(X,Y,m){return [
 ];}
 function mp(X,e,m){let R=[[1n,0n],[0n,1n]];while(e>0n){if(e&1n)R=mm(R,X,m);X=mm(X,X,m);e>>=1n;}return R;}
 function orderAndExponent(p){let o=1;while(powmod(2n,BigInt(o),BigInt(p))!==1n)o++;for(let e=0;e<o;e++)if(powmod(2n,BigInt(e),BigInt(p))===BigInt(p-3))return {o,e};throw new Error("no exponent");}
+function Aat(j,p,M,lam){
+ const r=BigInt(110*j+50),x=powmod(9n,r,2n*lam),a=((x+5n)/2n)%lam;
+ return powmod(2n,a,M);
+}
 const specs=[
  {p:37,T:9,APeriod:1,As:[1053],expected:[14,36,7,13,10,4,31,12,10]},
  {p:79,T:39,APeriod:3,As:[1438,4078,3363],expected:[74,37,5,47,56,12,31,49,34,63,19,32,67,42,67,4,37,59,44,22,15,5,63,13,42,53,35,64,16,42,41,73,18,22,60,63,78,55,29]},
@@ -27,10 +31,11 @@ for(const {p,T,APeriod,As,expected} of specs){
   rows.push(Number(mod(num/55n-bias,BigInt(p))));
 }
  if(rows.some((x,i)=>x!==expected[i]))throw new Error("forced-residue table mismatch for p="+p);
- const unique=[...new Set(Array.from({length:T},(_,j)=>{
-  const r=BigInt(110*j+50),x=powmod(9n,r,2n*lam),a=((x+5n)/2n)%lam;
-  return powmod(2n,a,M).toString();
- }))];
+ const unique=[...new Set(Array.from({length:T},(_,j)=>Aat(j,p,M,lam).toString()))];
+ for(let j=0;j<T;j++){
+  if(Aat(j+T,p,M,lam)!==Aat(j,p,M,lam))throw new Error("A period-T check failed for p="+p);
+  if(Aat(j+APeriod,p,M,lam)!==Aat(j,p,M,lam))throw new Error("A-cycle check failed for p="+p);
+ }
  if(unique.length!==As.length||unique.some((x,i)=>x!==String(As[i])))throw new Error("A-cycle mismatch for p="+p);
  for(const A0 of As){
   const A=BigInt(A0),mat=[[A*A%M,mod(A-3n,M)],[0n,9n%M]];

@@ -142,7 +142,7 @@ c_{61}(j)=y-29\pmod{61},\quad c_{67}(j)=y-32\pmod{67}.
 
 - **Primes 37, 79, and 101.** For each prime let \(M=55p\) and \(T(A)=\begin{pmatrix}A^2&A-3\\0&9\end{pmatrix}\pmod M\); then \(P_r(A)\) is the upper-right entry of \(T(A)^r\). For \(p=37\), \(9^r\equiv81\pmod{360}\), so \(A\equiv1053\pmod{2035}\), and \(T(1053)^{990}=I\); this gives period \(9\) and the \(c_{37}\) table above. For \(p=79\), \(9^r\bmod1560\) cycles \(81,321,1041\), giving \(A\)-cycle \(1438,4078,3363\); each corresponding \(T(A)^{4290}=I\pmod{4345}\), giving period \(39\) and the \(c_{79}\) table. For \(p=101\), \(9^r\equiv1\pmod{200}\), so \(A\equiv8\pmod{5555}\), and \(T(8)^{550}=I\); this gives period \(5\) and the \(c_{101}\) table. Their denominator cylinders follow from \(2^8\equiv-3\pmod{37}\), \(2^{10}\equiv-3\pmod{79}\), and \(2^{19}\equiv-3\pmod{101}\).
 
-These are necessary conditions, not sufficient conditions for a predecessor. In particular, the \(w=0,1,2,3,4\) classification follows immediately: \(w=0\) is impossible; \(w=1\) is possible exactly for \(j\equiv2\pmod3\); \(w=2\) is possible exactly for \(j\equiv7\pmod{11}\); \(w=3,4,5\) are impossible.
+These are necessary conditions, not sufficient conditions for a predecessor. In particular, the \(w=0,1,2,3,4,5\) classification follows immediately: \(w=0\) is impossible; \(w=1\) is possible exactly for \(j\equiv2\pmod3\); \(w=2\) is possible exactly for \(j\equiv7\pmod{11}\); \(w=3,4,5\) are impossible.
 
 ### Exact density of the eight-prime filter
 
