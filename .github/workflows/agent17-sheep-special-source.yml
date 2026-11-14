@@ -88,6 +88,22 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/Hub.olean" Hub.lean
           lake env lean -o ".lake/build/lib/lean/HubSource.olean" HubSource.lean
 
+          # Agent 17: exact seventh 3-adic stratum and authentic blank-root exclusion.
+          python3 "$GITHUB_WORKSPACE/im-results/agent17-sheep-power1458/certificate.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent40-sheep-third-preimages/SheepOddGap.lean" SheepOddGap.lean
+          for name in SheepPower1458Core SheepPower1458Rows SheepPower1458All SheepPower1458RootGate SheepPower1458High SheepPower1458Target SheepPower1458Special SheepPower1458NoSource SheepPower1458Source; do
+            cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-power1458/$name.lean" "$name.lean"
+          done
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            SheepOddGap.lean SheepPower1458Core.lean SheepPower1458Rows.lean SheepPower1458All.lean \
+            SheepPower1458RootGate.lean SheepPower1458High.lean SheepPower1458Target.lean \
+            SheepPower1458Special.lean SheepPower1458NoSource.lean SheepPower1458Source.lean
+          for name in SheepOddGap SheepPower1458Core SheepPower1458Rows SheepPower1458All SheepPower1458RootGate SheepPower1458High SheepPower1458Target SheepPower1458Special SheepPower1458NoSource; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          lake env lean SheepPower1458Source.lean
+
+
           # Agent 16: pure 2-adic zero-fiber saturation using Agent17's
           # existing Lean-certified explicit zero-fiber construction.
           cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-forward/PureTwo.lean" PureTwo.lean
