@@ -46,7 +46,7 @@ theorem rst1Prime_firstSweep_preconditions
             = sideBit (d1pow a ++ (markerWord 1 ++ d0 ++ d1pow L)) i := by
                 simp only [List.append_assoc]
         _ = sideBit (d1pow a) i := hbit
-        _ = true := sideBit_d1pow_true a i hi0
+        _ = true := BB6Coverage.Agent24ChampionTime.sideBit_d1pow_true a i hi0
     · have heq : i = 3*a := by omega
       subst i
       have hbit := sideBit_append_right (d1pow a)
