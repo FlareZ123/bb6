@@ -379,7 +379,7 @@ private theorem m2Even_q4_prefix_head_bound
         (markerWord 2 ++ (d0 ++ (d1 ++ (d1 ++ (d0 ++ lh)))))
         i (by rw [d1pow_length]; omega)
       rw [hbit] at hcell
-      exact hcell
+      exact hcell.trans (sideBit_d1pow_true a i hi3)
     · have hcases : i=3*a ∨ i=3*a+1 := by omega
       rcases hcases with hi0|hi1
       · subst i
@@ -499,10 +499,10 @@ private theorem m2EvenResidueFour_input_matches
   by_cases hleft : x ≤ h
   · let i := Int.toNat (h-x)
     have hnonneg : 0 ≤ h-x := by omega
-    have hcoord : h-(i:Int)=x := by
+    have hcast : (i:Int) = h-x := by
       dsimp [i]
-      exact congrArg (fun z : Nat => h-(z:Int))
-        (Int.toNat_of_nonneg hnonneg)
+      exact Int.toNat_of_nonneg hnonneg
+    have hcoord : h-(i:Int)=x := by omega
     have hthreshold :
         h-((3*a+2:Int))-12 ≤ x := by
       simpa [m2EvenResidueFourInside] using hx
@@ -526,10 +526,10 @@ private theorem m2EvenResidueFour_input_matches
     exact hsrc.trans hbase.symm
   · let i := Int.toNat (x-h-1)
     have hnonneg : 0 ≤ x-h-1 := by omega
-    have hcoord : h+1+(i:Int)=x := by
+    have hcast : (i:Int) = x-h-1 := by
       dsimp [i]
-      exact congrArg (fun z : Nat => h+1+(z:Int))
-        (Int.toNat_of_nonneg hnonneg)
+      exact Int.toNat_of_nonneg hnonneg
+    have hcoord : h+1+(i:Int)=x := by omega
     have hsrc := s1Config_right_cell L (8*k+4) 2 a 0 b h i
     have hbase := s1Config_right_cell 3 4 2 a 0 b h i
     rw [hcoord] at hsrc hbase
@@ -579,7 +579,7 @@ def m2EvenResidueFourLeftFacing (L k a : Nat) : List Bool :=
 
 private theorem m2EvenResidueFour_leftFacing
     (L k a b : Nat) (h : Int)
-    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) :
+    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     ∀ i : Nat,
       m2EvenResidueFourCutTape L k a b h (h-(i:Int)) =
         sideBit (m2EvenResidueFourLeftFacing L k a) i := by
@@ -594,13 +594,16 @@ private theorem m2EvenResidueFour_leftFacing
     m2EvenResidueFour_target_base_left a
   have hbaseFace :
       m2EvenQ4LeftFacing a = q4LeftFacing 3 3 a := by
-    simp [m2EvenQ4LeftFacing,q4LeftFacing,List.append_assoc]
+    change [true] ++ (d1pow a ++
+      (markerWord 1 ++ (d0 ++ (binDec 3 3 ++ lh)))) =
+      q4LeftFacing 3 3 a
+    simp [q4LeftFacing,List.append_assoc]
   have hprefixLength := m2EvenResidueFourTargetPrefix_length a
   have hinputLength := m2EvenResidueFourInputPrefix_length a
   have hbaseLeft : ∀ i : Nat,
       m2EvenQ4CutTape a b h (h-(i:Int)) =
         sideBit (m2EvenQ4LeftFacing a) i := by
-    obtain ⟨Tq,_,hleft,_,_⟩ := m2Even_q4_prefix_data a b h (by omega)
+    obtain ⟨Tq,_,hleft,_,_⟩ := m2Even_q4_prefix_data a b h ha
     have hTq : Tq = m2EvenQ4CutTape a b h := by rfl
     simpa [hTq] using hleft
   intro i
@@ -612,6 +615,7 @@ private theorem m2EvenResidueFour_leftFacing
     rw [m2EvenResidueFour_cut_eq_base L k a b h
       (h-(i:Int)) (by omega)]
     rw [hbaseLeft i]
+    rw [hbaseFace]
     have hbaseBit := sideBit_append_left
       (m2EvenResidueFourTargetPrefix a) lh i
       (by rw [hprefixLength]; omega)
@@ -619,8 +623,8 @@ private theorem m2EvenResidueFour_leftFacing
       (m2EvenResidueFourTargetPrefix a)
       (binDec (L-3) k ++ lh) i
       (by rw [hprefixLength]; omega)
-    rw [hbaseTarget] at *
-    rw [htargetLeft] at *
+    rw [hbaseTarget]
+    rw [htargetLeft]
     rw [hbaseBit,htargetBit]
   · have hout :
       m2EvenResidueFourInside a h (h-(i:Int)) = false := by
@@ -645,14 +649,14 @@ private theorem m2EvenResidueFour_leftFacing
 
 private theorem m2EvenResidueFour_rightFacing
     (L k a b : Nat) (h : Int)
-    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) :
+    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     ∀ i : Nat,
       m2EvenResidueFourCutTape L k a b h (h+1+(i:Int)) =
         sideBit (q4RightFacing b) i := by
   intro i
   have hbase : m2EvenQ4CutTape a b h (h+1+(i:Int)) =
       sideBit (q4RightFacing b) i := by
-    obtain ⟨Tq,_,_,_,hright⟩ := m2Even_q4_prefix_data a b h (by omega)
+    obtain ⟨Tq,_,_,_,hright⟩ := m2Even_q4_prefix_data a b h ha
     have hTq : Tq = m2EvenQ4CutTape a b h := by rfl
     simpa [hTq] using hright i
   rw [m2EvenResidueFour_cut_eq_base L k a b h
@@ -661,15 +665,15 @@ private theorem m2EvenResidueFour_rightFacing
 
 private theorem m2EvenResidueFour_prefix_rightShape
     (L k a b : Nat) (h : Int)
-    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) :
+    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     q4RightShape (m2EvenResidueFourCutTape L k a b h) h b := by
   apply q4RightShape_congr
-    (m2EvenResidueFourCutTape L k a b h)
-    (m2EvenQ4CutTape a b h) h b
+    (m2EvenQ4CutTape a b h)
+    (m2EvenResidueFourCutTape L k a b h) h b
   · intro x hx
-    exact m2EvenResidueFour_cut_eq_base L k a b h x hx
+    exact (m2EvenResidueFour_cut_eq_base L k a b h x hx).symm
   · obtain ⟨Tq,_,_,hshape,_⟩ :=
-      m2Even_q4_prefix_data a b h (by omega)
+      m2Even_q4_prefix_data a b h ha
     have hTq : Tq = m2EvenQ4CutTape a b h := by rfl
     simpa [hTq] using hshape
 
@@ -677,7 +681,7 @@ private theorem m2EvenResidueFour_prefix_rightShape
 higher-order input tail preserved outside the finite read half-line. -/
 theorem m2Even_residue4_q4_prefix_source
     (L k a b : Nat) (h : Int)
-    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) :
+    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     run tm2 (56+12*a)
       (s1Config L (8*k+4) 2 a 0 b h) =
       some ⟨4,h,m2EvenResidueFourCutTape L k a b h⟩ := by
@@ -708,7 +712,7 @@ theorem m2Even_residue4_q4_prefix_source
       run tm2 (56+12*a) base =
         some (⟨4,h,m2EvenQ4CutTape a b h⟩ : Config) := by
     obtain ⟨Tq,hprefix,_,_,_⟩ :=
-      m2Even_q4_prefix_data a b h (by omega)
+      m2Even_q4_prefix_data a b h ha
     have hTq : Tq = m2EvenQ4CutTape a b h := by rfl
     simpa [base,hTq] using hprefix
   rw [hbaseRun] at hlift
@@ -719,7 +723,7 @@ theorem m2Even_residue4_q4_prefix_source
 infinite-tape interfaces. -/
 theorem m2Even_residue4_q4_prefix_data
     (L k a b : Nat) (h : Int)
-    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) :
+    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     ∃ Tq,
       run tm2 (56+12*a) (s1Config L (8*k+4) 2 a 0 b h) =
         some ⟨4,h,Tq⟩ ∧
@@ -731,18 +735,18 @@ theorem m2Even_residue4_q4_prefix_data
   refine ⟨m2EvenResidueFourCutTape L k a b h, ?_, ?_, ?_, ?_⟩
   · exact m2Even_residue4_q4_prefix_source L k a b h hL hbound
   · simpa [m2EvenResidueFourLeftFacing] using
-      m2EvenResidueFour_leftFacing L k a b h hL hbound
+      m2EvenResidueFour_leftFacing L k a b h hL hbound ha
   · exact m2EvenResidueFour_prefix_rightShape L k a b h hL hbound
   · exact m2EvenResidueFour_rightFacing L k a b h hL hbound
 
 /-- The full right ray is blank beyond the q4 suffix's nine-cell window. -/
 private theorem m2EvenResidueFour_prefix_far_tail
     (L k a b : Nat) (h : Int)
-    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) :
+    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     ∀ i : Nat, 9+3*b ≤ i →
       m2EvenResidueFourCutTape L k a b h (h+1+(i:Int)) = false := by
   intro i hi
-  rw [m2EvenResidueFour_rightFacing L k a b h hL hbound i]
+  rw [m2EvenResidueFour_rightFacing L k a b h hL hbound ha i]
   apply sideBit_ge_length
   rw [q4RightFacing_length]
   omega
@@ -750,13 +754,13 @@ private theorem m2EvenResidueFour_prefix_far_tail
 /-- Full source-level Rst2 reset prefix for every admissible n=8*k+4. -/
 theorem m2Even_residue4_q4_reset_prefix_source
     (L k a b : Nat) (h : Int)
-    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) :
+    (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     run tm2 (resetPrefixCost 2 (8*k+4) a b)
       (s1Config L (8*k+4) 2 a 0 b h) =
       some (s1Config L (8*k+3) 1 (a+b+2) (2^b-1) 0
         (h+5+3*b)) := by
   obtain ⟨Tq,hprefix,hleft,hshape,hright⟩ :=
-    m2Even_residue4_q4_prefix_data L k a b h hL hbound
+    m2Even_residue4_q4_prefix_data L k a b h hL hbound ha
   have htail : ∀ i : Nat, 9+3*b ≤ i → Tq (h+1+(i:Int)) = false := by
     intro i hi
     rw [hright i]
@@ -788,7 +792,7 @@ theorem m2Even_residue4_counted_increment_source
       some (s1Config L (8*k+3) 1 (a+b+2) 0 (2^b-1)
         (h+5+3*b)) := by
   have hp := m2Even_residue4_q4_reset_prefix_source
-    L k a b h hL hbound
+    L k a b h hL hbound ha
   have hboundDrain := resetDrainBound a b 2 ha
   have hrun := s1Config_reset_prefix_then_counted_drain
     L (8*k+3) 1 (a+b+2) b (h+5+3*b)
