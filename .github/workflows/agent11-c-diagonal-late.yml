@@ -8,6 +8,11 @@ on:
         required: false
         type: boolean
         default: false
+      u5_x314_only:
+        description: "Source-check the u=5 x=314 mod-512 y=3 exclusion after its original-source dependencies, then stop"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -26,6 +31,7 @@ jobs:
       - name: Check original C source and both Machine C low-family exclusions
         env:
           M0_S229_S533_ONLY: ${{ inputs.m0_s229_s533_only }}
+          U5_X314_ONLY: ${{ inputs.u5_x314_only }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/a38-section
@@ -193,6 +199,18 @@ jobs:
           if grep -q sorryAx M0EvenEvenSumZero.log; then
             echo "REJECTED: standalone m=0 sum-zero proof contains sorryAx"
             exit 1
+          fi
+
+          # Focused original-source audit of Agent 11's new u=5 x=314
+          # boundary, stopping before the unrelated S229/S533 and S31 chains.
+          if [ "$U5_X314_ONLY" = "true" ]; then
+            cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX314Mod512.lean .
+            lean -o EvenOddThreeX314Mod512.olean EvenOddThreeX314Mod512.lean 2>&1 | tee EvenOddThreeX314Mod512.log
+            if grep -q sorryAx EvenOddThreeX314Mod512.log; then
+              echo "REJECTED: x=314 mod 512 y=3 source exclusion contains sorryAx"
+              exit 1
+            fi
+            exit 0
           fi
           # Source-check the complete even-valuation s=1024*w+229 high-stop exclusion.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS229.lean .
