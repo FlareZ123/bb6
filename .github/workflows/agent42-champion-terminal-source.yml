@@ -400,6 +400,15 @@ jobs:
             echo '::error::sorryAx found in root-connected attained-score composition'
             exit 1
           fi
+
+          # Agent 42: certify the exact root index after seven middle decrements.
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63RootCountdownArithmetic.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/root-countdown-arithmetic-axioms.log
+          lean -o TM63RootCountdownArithmetic.olean TM63RootCountdownArithmetic.lean 2>&1 | tee /tmp/a42-terminal/root-countdown-arithmetic-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/root-countdown-arithmetic-axioms.log; then
+            echo '::error::sorryAx found in root-specific seven-decrement index arithmetic'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63M1EvenRootComposition.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-even-root-composition-axioms.log
           lean -o TM63M1EvenRootComposition.olean TM63M1EvenRootComposition.lean 2>&1 | tee /tmp/a42-terminal/m1-even-root-composition-axioms.log
