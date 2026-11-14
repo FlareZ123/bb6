@@ -93,33 +93,33 @@ As \(2^{-1}\equiv15\pmod{29}\), this says \(u\equiv w_r\pmod{29}\), proving the 
 
 The physical-range hypothesis ensures the natural subtraction in the parent numerator is not truncated, by the existing power-dominance and positivity lemmas.
 
-## Improvement to the combined residue sieve
+## Corrected overlap with the existing residue sieve
 
-Let \(E_{29}(r)\) be the new excluded set
-\[
-u\equiv18\pmod{28},\qquad u\not\equiv w_r\pmod{29}.
-\]
-It has density \(1/29\). It is disjoint from the existing \(E_5,E_7,E_{13},E_{19}\) sets:
-- \(u\equiv18\pmod{28}\) gives \(u\equiv2\pmod4\), whereas \(E_5\) requires \(u\equiv0\pmod4\);
-- it gives \(u\equiv0\pmod3\), whereas \(E_7\) requires \(u\equiv1\pmod3\);
-- it gives \(u\equiv2\pmod4\), whereas \(E_{13}\) requires \(u\equiv1\pmod4\);
-- it is even, whereas \(E_{19}\) requires \(u\equiv3\pmod{18}\), which is odd.
+Let E29(r) be the excluded set
+```
+u ≡ 18 (mod 28),   u ≢ w_r (mod 29).
+```
+Its density is 1/29. The earlier claim that this cylinder is disjoint from E7 was incorrect: u ≡ 18 (mod 28) fixes u ≡ 4 (mod 7), but it does not fix u modulo 3 because 28 ≡ 1 (mod 3).
 
-Its only overlap with the existing five-prime union is \(E_{11}\). The two valuation cylinders \(u\equiv18\pmod{28}\) and \(u\equiv2\pmod{10}\) combine to \(u\equiv102\pmod{140}\). Applying the mod-\(29\) and mod-\(11\) exclusions leaves intersection density
-\[
-\frac1{140}\cdot\frac{28}{29}\cdot\frac{10}{11}
-=\frac2{319}.
-\]
-Thus the new part outside the existing union has density
-\[
-\frac1{29}-\frac2{319}=\frac9{319}.
-\]
-The six-prime union consequently excludes
-\[
-\frac{21541}{38038}+\frac9{319}
-=\boxed{\frac{655811}{1103102}\approx59.4515\%}
-\]
-of all predecessor-valuation residue classes, uniformly in \(r\). This is a residue-class density over the joint period, not an exact finite-range proportion.
+The existing E7 filter requires u ≡ 1 (mod 3) and u modulo 7 different from its allowed residue, which is 5, 4, 6 for r modulo 3 equal to 0, 1, 2 respectively. Since E29 fixes u ≡ 4 (mod 7):
+- for r ≡ 1 (mod 3), E29 and E7 are disjoint;
+- for r ≡ 0 or 2 (mod 3), their intersection is the part with u ≡ 1 (mod 3), of density 1/87 after the mod-29 exclusion.
+
+The other overlaps are:
+- E29 is disjoint from E5 (their residues modulo 4 are 2 and 0), E13 (2 and 1), and E19 (even versus odd);
+- E29 ∩ E11 has density 2/319, from the joint cylinder u ≡ 102 (mod 140), followed by the independent mod-29 and mod-11 exclusions;
+- for r ≡ 0 or 2 (mod 3), E29 ∩ E7 ∩ E11 has density 2/957.
+
+Consequently the incremental contribution of E29 beyond the previous five-prime union is:
+```
+r ≡ 1 (mod 3):       1/29 - 2/319                 = 9/319;
+r ≡ 0 or 2 (mod 3):  1/29 - 2/319 - 1/87 + 2/957 = 6/319.
+```
+The six-prime union therefore excludes:
+- 50,447/84,854 ≈ 59.4515% when r ≡ 1 (mod 3);
+- 49,649/84,854 ≈ 58.5111% when r ≡ 0 or 2 (mod 3).
+
+These are exact residue-class densities over the joint periods, not exact finite-range proportions. The modulo-29 parent theorem itself is unchanged; only the claimed disjointness and combined density have been corrected.
 
 ## Formalization route and limits
 
