@@ -1,5 +1,6 @@
 import CountedSweep
 import CountedSuffixOutput
+import CountedQ4Prefix
 import S1Encoder
 import Lean.Elab.Tactic.Omega
 
@@ -69,6 +70,11 @@ theorem rst1Prime_firstSweep_run
       some ⟨3,h-((3*a+1:Int)),
         sweptLeft (3*a+1)
           (s0Config (markerWord 1 ++ (d0 ++ (binDec L 0 ++ lh))) a 0 b h).tape h⟩
+  change run tm2 (9*a+3)
+    (s0Config (markerWord 1 ++ (d0 ++ (binDec L 0 ++ lh))) a 0 b h) =
+      some ⟨3,h-((3*a+1:Int)),
+        sweptLeft (3*a+1)
+          (s0Config (markerWord 1 ++ (d0 ++ (binDec L 0 ++ lh))) a 0 b h).tape h⟩ at hrun
   simpa [hcost] using hrun
 
 #print axioms rst1Prime_firstSweep_preconditions
