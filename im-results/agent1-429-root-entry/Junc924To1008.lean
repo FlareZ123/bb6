@@ -21,7 +21,7 @@ private theorem compose_run {m n : Nat} {c d e : Config}
   physical_run_add_of_endpoint m n c d e h₁ h₂
 
 /-- Arbitrary-head lift of the uniform low43 Junc-to-Junc theorem. -/
-private theorem low43_uniform_anyhead
+theorem low43_uniform_anyhead
     (v k : Nat) (hv : 1 ≤ v) (c : Config)
     (hrep : Represents (junc (v+2*k+2) 0 (2*v+1)) c) :
     ∃ d : Config,
