@@ -39,6 +39,8 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent49FullFailureSpectrumSource.olean Agent49FullFailureSpectrumSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FastFailureSpectrumSource.lean" Agent49FastFailureSpectrumSource.lean
           lake env lean -o .lake/build/lib/lean/Agent49FastFailureSpectrumSource.olean Agent49FastFailureSpectrumSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/ExactEvenSectorSource.lean" Agent49ExactEvenSectorSource.lean
+          lake env lean Agent49ExactEvenSectorSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/SharpSpectrumCapacitySource.lean" Agent49SharpSpectrumCapacitySource.lean
           lake env lean -o .lake/build/lib/lean/Agent49SharpSpectrumCapacitySource.olean Agent49SharpSpectrumCapacitySource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent22-623-robust-band/Agent22RobustBand.lean" Agent22RobustBand.lean
