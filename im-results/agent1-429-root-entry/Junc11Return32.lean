@@ -26,7 +26,7 @@ private theorem compose_delta {m n : Nat} {z z₁ z₂ : Zipper}
   simp only [Option.map_some]
 
 /-- The closed form for the positive-u Junc iteration time. -/
-private theorem juncPosFullTime_formula (N v : Nat) :
+theorem juncPosFullTime_formula (N v : Nat) :
     juncPosFullTime N v = 4*N*N + (4*v+6)*N := by
   induction N generalizing v with
   | zero => simp [juncPosFullTime]
