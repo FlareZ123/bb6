@@ -207,7 +207,7 @@ The first-level \(11\)-filter already requires \(w\equiv9-j\pmod{11}\). The \(12
 \boxed{w\equiv76-11t\pmod{121}.}
 \]
 
-This is a conditional prime-square refinement, not a replacement for the eight-prime baseline. The exact CRT count is parameter-dependent:
+This is a conditional prime-square refinement, not a replacement for the eight-prime baseline. The density numbers in this subsection are calculated against the eight-prime sieve alone; they are not combined with the later eleven-prime extension. The exact CRT count is parameter-dependent:
 - If \(j\not\equiv10\pmod{11}\), the eight-prime density is unchanged.
 - If \(j\equiv10\pmod{11}\), the surviving count modulo
   \[
