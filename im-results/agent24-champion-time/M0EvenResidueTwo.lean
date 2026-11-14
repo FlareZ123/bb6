@@ -435,6 +435,26 @@ private theorem E_scan_prefix_head
 
 /-- Every prefix of the base n=2 source run stays inside the half-line
 on which the generalized and base inputs agree. -/
+private theorem m0EvenResidueTwo_baseCut_eq_swept
+    (a b : Nat) (h x : Int)
+    (hout : m0EvenQ4Inside (x-(h-((3*a : Nat):Int))) = false) :
+    m0EvenQ4CutTape a b h x =
+      sweptLeft (3*a) (s1Config 3 2 0 a 0 b h).tape h x := by
+  have hcut := frameAt_tape_outside
+    (sweptLeft (3*a) (s1Config 3 2 0 a 0 b h).tape h)
+    (h-((3*a : Nat):Int)) m0EvenQ4Inside m0EvenQ4BridgeEnd x hout
+  simpa [m0EvenQ4CutTape] using hcut
+
+private theorem m0EvenResidueTwo_baseCut_eq_end_inside
+    (a b : Nat) (h x : Int)
+    (hin : m0EvenQ4Inside (x-(h-((3*a : Nat):Int))) = true) :
+    m0EvenQ4CutTape a b h x =
+      decide ((x-(h-((3*a : Nat):Int))) ∈ m0EvenQ4BridgeEnd.marked) := by
+  have hcut := frameAt_tape_inside
+    (sweptLeft (3*a) (s1Config 3 2 0 a 0 b h).tape h)
+    (h-((3*a : Nat):Int)) m0EvenQ4Inside m0EvenQ4BridgeEnd x hin
+  simpa [m0EvenQ4CutTape] using hcut
+
 private theorem m0Even_q4_prefix_head_bound
     (a b : Nat) (h : Int) (ha : 0<a) :
     ∀ k, k < 36+12*a → ∀ d,
@@ -486,7 +506,7 @@ private theorem m0Even_q4_prefix_head_bound
       have hrel : x-hN=3 := by dsimp [x]; omega
       have hin : m0EvenQ4Inside (x-hN)=true := by
         simp [m0EvenQ4Inside,hrel]
-      have hcut := m0EvenQ4CutTape_eq_end_inside a b h x hin
+      have hcut := m0EvenResidueTwo_baseCut_eq_end_inside a b h x hin
       have hmark :
           decide ((x-hN) ∈ m0EvenQ4BridgeEnd.marked) = true := by
         rw [hrel]
@@ -497,7 +517,7 @@ private theorem m0Even_q4_prefix_head_bound
       have hout : m0EvenQ4Inside (x-hN)=false := by
         simp [m0EvenQ4Inside,hrel]
         omega
-      have hcut := m0EvenQ4CutTape_eq_swept a b h x hout
+      have hcut := m0EvenResidueTwo_baseCut_eq_swept a b h x hout
       let j : Nat := 3*a-3-i
       have hj : j+1 < N := by
         dsimp [j,N]
