@@ -379,12 +379,19 @@ theorem m1ZeroOddBase_q4_prefix_data
         some ⟨3, hN, T1⟩ := by
     simpa [N, T, T1, hN] using counted_left_sweep N T h hOn hRight
   have hInput := m1ZeroOddBridge_input_match a b h hOn
+  have hBridgeHeads : ∀ k < 62,
+      m1ZeroOddBridgeInside
+        ((fRun tm2 k m1ZeroOddBridgeStart).getD m1ZeroOddBridgeStart).head = true := by
+    intro k hk
+    have hall := List.all_eq_true.mp m1ZeroOddBridge_heads k
+      (by simp [List.mem_range, hk])
+    simpa using hall
   have hBridge :
       run tm2 62 ⟨3, hN, T1⟩ =
         some ⟨4, hN+2, T2⟩ := by
     have hb := bridgeAt T1 hN m1ZeroOddBridgeInside
       m1ZeroOddBridgeStart m1ZeroOddBridgeEnd 62 rfl
-      m1ZeroOddBridge_exact m1ZeroOddBridge_heads hInput
+      m1ZeroOddBridge_exact hBridgeHeads hInput
     simpa [T2, frameAt_head] using hb
   have hlinear : linearRightOnes T2 (hN+2) (3*a-1) := by
     intro i hi
