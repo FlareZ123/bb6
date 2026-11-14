@@ -16,16 +16,17 @@ def t17 : Nat := BB6.Agent2SeventeenthArithmetic.t17
 
 theorem terminal2656_certificate :
     DRegular.run 2656 seed17 = some ⟨9 * t17 + 7, 7, 1⟩ ∧ t17 % 27 = 6 := by
-  have htotal : DRegular.run 2656 seed17 = some terminal2656 := by
+  have htotal :
+      DRegular.run 2656 BB6.Agent2SeventeenthArithmetic.seed17 =
+        some BB6.Agent2SeventeenthArithmetic.terminal2656 := by
     rw [show 2656 = 1328 + 1328 by omega,
-      BB6.DRegularFast.run_add 1328 1328 seed17,
+      BB6.DRegularFast.run_add 1328 1328
+        BB6.Agent2SeventeenthArithmetic.seed17,
       BB6.Agent2SeventeenthArithmetic.middle17_exact]
-    simpa [terminal2656] using
-      BB6.Agent2SeventeenthArithmetic.terminal2656_half_exact
+    exact BB6.Agent2SeventeenthArithmetic.terminal2656_half_exact
   rcases BB6.Agent2SeventeenthArithmetic.terminal2656_signature with ⟨hsig, hmod⟩
   constructor
-  · rw [hsig] at htotal
-    simpa [t17] using htotal
+  · simpa [seed17, t17, hsig] using htotal
   · simpa [t17] using hmod
 
 theorem terminal2656_exact :
