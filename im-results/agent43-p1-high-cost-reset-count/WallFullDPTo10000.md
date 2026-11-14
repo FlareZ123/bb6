@@ -149,15 +149,17 @@ Combining the two phases excludes the shifted wall for all \(14\le n\le10000\), 
 
 The result is computational, not a Lean-kernel-certified theorem. The source identity is currently recorded as a derivation in Agent 50's note; a source-connected Lean proof and a formal certificate for both DPs remain to be written. It does not cover \(n>10000\), prove P1 nonhalting, settle exceptional inverse exits, or determine BB(6). Keep this artifact in im-results, not results.
 
-## Carry-target correction (2026-11-13)
+## Full-wall carry convention
 
-An independent audit of the full-wall carry found that the original script and the first version of this note used P+m+n+2. The correct target is P+m+n+3. Indeed, from (W), with Q=7P−(n+3),
+From (W), with Q=7P−(n+3),
 
     ∑_{s∈A}(Q−s)2^s = 2^m(P+m+n+3)−1.
 
-The full-wall bit DP processes the target residue −1, so after m bits its carry is (sum+1)/2^m and must equal P+m+n+3. WallFullDPTo10000.js was corrected accordingly in commit ef0ec2e4c8abff90a05421e4a554f2d0de566902.
+The coefficient inside the multiple of 2^m is P+m+n+3. However, the implemented bit recurrence subtracts target bit 1 at each of the m positions. Its carry after m bits is therefore
 
-The corrected exact BigInt rerun for all six modular candidates still has no exact target hits and the same empty-state indices. Thus the finite n≤10000 exclusion is unchanged; the previous +2 only made the exact-hit diagnostic incorrect. The empty-state argument already excluded every larger m after the first empty layer.
+    c_m = (sum − (2^m−1))/2^m = P+m+n+2.
+
+The earlier scripts compared against the coefficient P+m+n+3 rather than this carry. Both exact targets happened to have no hits in the six finite scans, and the state sets become empty at the same m values. The corrected executable now compares against P+m+n+2; the finite n≤10000 exclusion and its empty-state certificates are unchanged.
 
 The source identity is now independently kernel-checked in [WallTelescopingSource.lean](WallTelescopingSource.lean): theorem source_wall_cost_identity derives the natural weighted-sum identity from the authentic original CountCone history, exact inverseAt characterization, source mass invariant, and shifted-wall endpoint. Its axiom audit has no sorryAx. The theorem currently returns existential aggregates S,U rather than an explicit Finset of edge starts; PR #99 drafts that stronger interface but is not yet verified. Accordingly, the carry scan is still computational evidence conditional on the source-to-finite-subset bridge, not a fully kernel-checked all-depth wall exclusion.
 

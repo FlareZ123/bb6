@@ -91,8 +91,8 @@ function fullWallScan(n, maxM = 20000) {
     states = next;
     const m = j + 1;
     // From the exact wall identity, the required terminal carry is
-    // P + m + n + 3 (since sum (Q-s)2^s = 2^m(P+m+n+3)-1).
-    const targetCarry = P + BigInt(m + n + 3);
+    // P + m + n + 2: subtract the all-ones low m-bit word from the sum.
+    const targetCarry = P + BigInt(m + n + 2);
 
     if (states.has(targetCarry)) exactHits.push(m);
     peakStates = Math.max(peakStates, states.size);

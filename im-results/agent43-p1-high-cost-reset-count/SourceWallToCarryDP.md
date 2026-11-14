@@ -93,7 +93,7 @@ put Q=7P−(n+3) and T=∑s·2^s. Rearranging gives the exact full-wall equation
 
     ∑_{s<m}(Q−s)2^s = 2^m(P+m+n+3) − 1.
 
-The bit recurrence in fullWallScan processes the target residue −1, so after m bits its carry is (sum+1)/2^m. The required terminal carry is therefore P+m+n+3. The script was corrected in commit ef0ec2e4c8abff90a05421e4a554f2d0de566902.
+The implemented recurrence subtracts target bit 1 at each of the m positions, so after m bits its carry is `(sum−(2^m−1))/2^m`. From the full-wall equation this is `P+m+n+2`, one less than the coefficient `P+m+n+3` before the low all-ones word is removed.
 
 I independently reran the modular subset DP for every 14≤n≤10000: it returns a nonempty terminal state only for
 

@@ -45,7 +45,7 @@ assert.deepEqual(viable, [{
 
 function fullWallCarriesAtN30() {
   // W_30 is sum_{s in A} (Q-s)2^s = 2^m(P+m+33)-1,
-  // with P=2^30 and Q=7P-33. The carry c_m must equal P+m+33.
+  // with P=2^30 and Q=7P-33. The recurrence carry is P+m+32.
   const P = 1n << 30n;
   const Q = 7n * P - 33n;
   const mod = 1n << 15n;
@@ -70,7 +70,7 @@ function fullWallCarriesAtN30() {
     states = next;
     peakStates = Math.max(peakStates, states.size);
     const m = j + 1;
-    const target = P + BigInt(m + 33);
+    const target = P + BigInt(m + 32);
     if (states.has(target)) exactHits.push(m);
     if ([...states].some(c => c % mod === target % mod)) mod15Hits.push(m);
     if (states.size !== 0) lastNonemptyM = m;
