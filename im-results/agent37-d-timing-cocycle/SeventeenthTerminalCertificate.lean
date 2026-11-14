@@ -1,4 +1,3 @@
-import Lean.Elab.Tactic.Omega
 import BlankSixteenthRejoin
 import SeventeenthSecondHalf
 import DRegularFast
@@ -8,47 +7,30 @@ set_option maxRecDepth 55000
 
 namespace BB6.Agent2SeventeenthRoot
 
-def seed17 : DRegular.L := BB6.Agent2SeventeenthArithmetic.seed17
+/-- Compose the two independently checked 1,328-section halves.  Use
+    Option.bind_some explicitly: rewriting or reflexivity on the reducible
+    run function can otherwise unfold the full 1,328-step evaluator. -/
+theorem terminal2656_run_exact :
+    DRegular.run 2656 BB6.Agent2SeventeenthArithmetic.seed17 =
+      some BB6.Agent2SeventeenthArithmetic.terminal2656 := by
+  have hlen : 2656 = 1328 + 1328 := rfl
+  have hmid := BB6.Agent2SeventeenthArithmetic.middle17_exact
+  have hmid_bind :=
+    congrArg (fun o : Option DRegular.L => o.bind (DRegular.run 1328)) hmid
+  calc
+    DRegular.run 2656 BB6.Agent2SeventeenthArithmetic.seed17 =
+        DRegular.run (1328 + 1328) BB6.Agent2SeventeenthArithmetic.seed17 :=
+      congrArg (fun n => DRegular.run n BB6.Agent2SeventeenthArithmetic.seed17) hlen
+    _ = (DRegular.run 1328 BB6.Agent2SeventeenthArithmetic.seed17).bind
+          (DRegular.run 1328) :=
+      BB6.DRegularFast.run_add 1328 1328 BB6.Agent2SeventeenthArithmetic.seed17
+    _ = (some BB6.Agent2SeventeenthArithmetic.middle17).bind
+          (DRegular.run 1328) := hmid_bind
+    _ = DRegular.run 1328 BB6.Agent2SeventeenthArithmetic.middle17 :=
+      Option.bind_some _ _
+    _ = some BB6.Agent2SeventeenthArithmetic.terminal2656 :=
+      BB6.Agent2SeventeenthArithmetic.terminal2656_half_exact
 
-def terminal2656 : DRegular.L := BB6.Agent2SeventeenthArithmetic.terminal2656
-
-def t17 : Nat := BB6.Agent2SeventeenthArithmetic.t17
-
-theorem terminal2656_certificate :
-    DRegular.run 2656 seed17 = some ⟨9 * t17 + 7, 7, 1⟩ ∧ t17 % 27 = 6 := by
-  have htotal :
-      DRegular.run 2656 BB6.Agent2SeventeenthArithmetic.seed17 =
-        some BB6.Agent2SeventeenthArithmetic.terminal2656 := by
-    rw [show 2656 = 1328 + 1328 by omega,
-      BB6.DRegularFast.run_add 1328 1328
-        BB6.Agent2SeventeenthArithmetic.seed17,
-      BB6.Agent2SeventeenthArithmetic.middle17_exact]
-    exact BB6.Agent2SeventeenthArithmetic.terminal2656_half_exact
-  rcases BB6.Agent2SeventeenthArithmetic.terminal2656_signature with ⟨hsig, hmod⟩
-  constructor
-  · change DRegular.run 2656 BB6.Agent2SeventeenthArithmetic.seed17 =
-      some ⟨9 * BB6.Agent2SeventeenthArithmetic.t17 + 7, 7, 1⟩
-    rw [← hsig]
-    exact htotal
-  · change BB6.Agent2SeventeenthArithmetic.t17 % 27 = 6
-    exact hmod
-
-theorem terminal2656_exact :
-    DRegular.run 2656 seed17 = some ⟨9 * t17 + 7, 7, 1⟩ :=
-  terminal2656_certificate.1
-
-theorem t17_mod27 : t17 % 27 = 6 :=
-  terminal2656_certificate.2
-
-def u17 : Nat := t17 / 3
-
-theorem t17_eq_three_u17 : t17 = 3 * u17 := by
-  have h := t17_mod27
-  dsimp [u17]
-  omega
-
-#print axioms terminal2656_exact
-#print axioms t17_mod27
-#print axioms t17_eq_three_u17
+#print axioms terminal2656_run_exact
 
 end BB6.Agent2SeventeenthRoot
