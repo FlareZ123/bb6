@@ -29,6 +29,14 @@ private theorem nextExponent_pos_local (m a b : Nat) (ha : 0 < a) :
   unfold nextExponent
   omega
 
+private theorem run_compose_local
+    {c d e : Config} {t u : Nat}
+    (h1 : run tm2 t c = some d)
+    (h2 : run tm2 u d = some e) :
+    run tm2 (t+u) c = some e := by
+  rw [run_add,h1]
+  simpa using h2
+
 private theorem tm63_middle_length_ge_four : 4 ≤ tm63Length1 := by
   have hA := tm63FirstSection_exponent_ge_five
   dsimp [tm63Length1]
@@ -127,7 +135,7 @@ theorem tm63_blank_reaches_after_middle9 :
         (2^tm63MiddleAfter8B-1)
         (tm63MiddleAfter8Head+5+3*tm63MiddleAfter8B)) := by
     simpa [hindex] using hrow
-  have hcomp := run_compose tm63_blank_reaches_after_middle8 hrow'
+  have hcomp := run_compose_local tm63_blank_reaches_after_middle8 hrow'
   simpa [tm63MiddleFirst9Moves] using hcomp
 
 #print axioms tm63_blank_reaches_after_middle9
