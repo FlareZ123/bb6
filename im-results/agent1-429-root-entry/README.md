@@ -342,3 +342,35 @@ full dependency graph, the new modules, and their axiom reports; it rejects
 any `sorryAx`. It has not yet been dispatched. Do not promote these
 statements to `results/` or claim a BB(6) bound improvement until that
 original-source CI run succeeds.
+
+
+## Second continuation: Junc(0,924) -> Junc(0,1008) (2026-11-14)
+
+The uniform low43 Junc-to-Junc theorem in `Low43C0Uniform.lean` permits a
+second continuation beyond the special v=1,k=189 gap used above. Starting
+from Junc(0,924), seven outer-safe returns reach Junc(381,183). The uniform
+low43 instance (v,k)=(91,144) then reaches Junc(297,362), followed by a
+low-even 4k return, a five-step outer ladder, low-odd, and low42:
+
+| Segment | Transition | Steps | Head displacement |
+|---|---|---:|---:|
+| Outer-safe ladder | Junc(0,924) -> Junc(381,183) | 191,493 | +741 |
+| Uniform low43, (v,k)=(91,144) | Junc(381,183) -> Junc(297,362) | 40,772 | -176 |
+| Low-even 4k, (N,K)=(181,58) | Junc(297,362) -> Junc(11,954) | 136,331 | -585 |
+| Outer-safe ladder | Junc(11,954) -> Junc(445,101) | 261,433 | +853 |
+| Low-odd, (v,n)=(50,196) | Junc(445,101) -> Junc(398,202) | 15,512 | -98 |
+| Low42, (j,k)=(101,148) | Junc(398,202) -> Junc(0,1008) | 45,769 | -799 |
+| **Total** | **Junc(0,924) -> Junc(0,1008)** | **691,310** | **-64** |
+
+`Junc924To1008.lean` lifts the uniform low43 canonical run to arbitrary
+physical Junc representations, proves each segment, and composes the
+physical run. The final live Junc(0,1008) endpoint gives all-prefix C/01
+exclusion. Composing with `blank_root_to_junc0_924` yields a candidate
+blank-root prefix of **3,363,397** primitive steps ending at Junc(0,1008),
+with C/01 excluded at every primitive prefix.
+
+This extension depends on `W4JuncOne.lean`, `W4JuncGeneral.lean`, and
+`Low43C0Uniform.lean`; the dedicated workflow now compiles these modules
+and audits the new endpoint theorems. This remains an intermediate
+source-proof candidate until the complete manual CI workflow passes with
+no `sorryAx`.
