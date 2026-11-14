@@ -63,7 +63,7 @@ Then
 \[
 55y=16B+25. \tag{2}
 \]
-If a prime \(p_*\) divides \(D_w\), equation (1) forces \(y\equiv b_w\pmod{p_*}\). Applying this to the established prime moduli \(5,7,11,13,19,29,61\) gives the following necessary conditions on every predecessor valuation.
+If a prime \(p_*\) divides \(D_w\), equation (1) forces \(y\equiv b_w\pmod{p_*}\). Applying this to the established prime moduli \(5,7,11,13,19,29,61,67\) gives the following necessary conditions on every predecessor valuation.
 
 | Prime | Divisibility cylinder for \(D_w\) | Necessary condition on \(w\) |
 |---|---|---|
@@ -74,6 +74,7 @@ If a prime \(p_*\) divides \(D_w\), equation (1) forces \(y\equiv b_w\pmod{p_*}\
 | \(19\) | \(w\equiv3\pmod{18}\) | \(w\equiv c_{19}(j)\pmod{19}\) |
 | \(29\) | \(w\equiv18\pmod{28}\) | \(w\equiv c_{29}(j)\pmod{29}\) |
 | \(61\) | \(w\equiv35\pmod{60}\) | \(w\equiv c_{61}(j)\pmod{61}\) |
+| \(67\) | \(w\equiv5\pmod{66}\) | \(w\equiv c_{67}(j)\pmod{67}\) |
 
 The parameter-dependent forced residues are:
 
@@ -103,12 +104,12 @@ c_{29}(j)&2&17&9&25&14&27&13&12&2&8&1&14&12&13&24&24&21&9&14&7&13
 \end{array}
 \]
 
-For prime 67, the additional period-three residues are \(y\\bmod67=(29,20,22)\) and \(c_{67}(j)=(64,55,57)\) for \(j\\bmod3=(0,1,2)\). Here the forced-residue functions are:
+For prime 67, the additional period-three residues are \(y\bmod67=(29,20,22)\) and \(c_{67}(j)=(64,55,57)\) for \(j\bmod3=(0,1,2)\). Here the forced-residue functions are:
 \[
 c_7(j)=y-2\pmod7,\quad
 c_{19}(j)=y-8\pmod{19},\quad
 c_{29}(j)=y-13\pmod{29},\quad
-c_{61}(j)=y-29\pmod{61}.
+c_{61}(j)=y-29\pmod{61},\quad c_{67}(j)=y-32\pmod{67}.
 \]
 
 ### Derivation checkpoints
@@ -341,7 +342,7 @@ For the second-level target, the current exact restrictions are now:
 2. \(w=1\) is possible only for \(j\equiv2\pmod3\), and then the divisibility condition is met.
 3. \(w=2\) is possible only for \(j\equiv7\pmod{11}\), and then the divisibility condition is met.
 4. \(w=3,4\) are impossible.
-5. The seven-prime cylinders leave exactly \(35.83954\%\) of valuation integers before any other restrictions.
+5. The eight-prime cylinders leave exactly \(34.49381\%\) of valuation integers before any other restrictions.
 6. The high-side middle band in the theorem is impossible for every \(r\ge2\) in the prepared family.
 
 This does **not** prove that the second-level target has no predecessor: many valuations outside the band survive the modular sieve. It also does not establish an upper bound for BB(6). The next high-value work is to formalize the certificate and band theorem in Lean, then attack the remaining valuation classes rather than re-running the already settled first-level filters.
