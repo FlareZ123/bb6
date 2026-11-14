@@ -10,36 +10,25 @@ namespace BB6.Agent2SeventeenthRoot
 
 open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 
-def seed17 : DRegular.L :=
-  ⟨64*BB6.Agent2SixteenthRoot.t16+27,1,5⟩
+def seed17 : L := BB6.Agent2SeventeenthArithmetic.seed17
 
-def terminal2656 : DRegular.L :=
-  (DRegular.run 2656 seed17).getD ⟨9,0,0⟩
+def terminal2656 : L := BB6.Agent2SeventeenthArithmetic.terminal2656
 
-def t17 : Nat := (terminal2656.a-7)/9
+def t17 : Nat := BB6.Agent2SeventeenthArithmetic.t17
 
-/-- One kernel computation certifies both the exact seventeenth
-    exceptional state and the residue needed by its three-return source proof.
-    The 2,656-step prefix is evaluated through 3-adic blocks. -/
 theorem terminal2656_certificate :
-    DRegular.run 2656 seed17 = some ⟨9*t17+7,7,1⟩ ∧
-      t17 % 27 = 6 := by
-  have hcanon : DRegular.Canon seed17 := by
-    constructor
-    · dsimp [seed17]
-      omega
-    · simp [seed17]
-  rw [BB6.Agent2Fast64.fastRun_correct 2656 seed17 hcanon]
-  decide
-
-theorem terminal2656_exact :
-    DRegular.run 2656 seed17 = some ⟨9*t17+7,7,1⟩ :=
-  terminal2656_certificate.1
-
-/-- The exceptional parameter lies in the k≡1, t≡0 (mod 3), q=7
-    third-return subfamily; EAllDouble uses parameter 6. -/
-theorem t17_mod27 : t17 % 27 = 6 :=
-  terminal2656_certificate.2
+    run 2656 seed17 = some ⟨9 * t17 + 7, 7, 1⟩ ∧ t17 % 27 = 6 := by
+  have htotal : run 2656 seed17 = some terminal2656 := by
+    rw [show 2656 = 1328 + 1328 by omega,
+      BB6.DRegularFast.run_add 1328 1328 seed17,
+      BB6.Agent2SeventeenthArithmetic.middle17_exact]
+    simpa [terminal2656] using
+      BB6.Agent2SeventeenthArithmetic.terminal2656_half_exact
+  rcases BB6.Agent2SeventeenthArithmetic.terminal2656_signature with ⟨hsig, hmod⟩
+  constructor
+  · rw [hsig] at htotal
+    simpa [t17] using htotal
+  · simpa [t17] using hmod
 
 def u17 : Nat := t17/3
 
