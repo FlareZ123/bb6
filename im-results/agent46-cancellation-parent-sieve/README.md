@@ -45,12 +45,11 @@ The allowed residues \(w_{p,r}\) and complete derivations are in the linked prim
 - [Modulo 29](../agent46-mod29-parent-sieve/README.md)
 - [Modulo 61](../agent46-mod61-parent-sieve/README.md)
 
-The filters have been arranged so each new density is counted outside the union of the earlier filters. The seven-prime residue sieve therefore excludes
-\[
-\frac{46}{91}+\frac5{154}+\frac7{247}+\frac9{319}+\frac1{61}
-=\boxed{\frac{3162121}{5176094}\approx61.0909\%}
-\]
-of all predecessor-valuation residue classes, uniformly in \(r\). This is an asymptotic density over the joint period, not an exact finite-range proportion.
+The modulo-29 cylinder is not uniformly disjoint from E7: it fixes u ≡ 4 (mod 7), which intersects E7 when r ≡ 0 or 2 (mod 3), because the E7 allowed residues are 5, 4, 6 for r mod 3 equal to 0, 1, 2. After exact E29/E7/E11 inclusion-exclusion, the seven-prime residue sieve excludes:
+- 3,162,121/5,176,094 ≈ 61.0909% when r ≡ 1 (mod 3);
+- 3,113,443/5,176,094 ≈ 60.1504% when r ≡ 0 or 2 (mod 3).
+
+These are exact residue-class densities over the joint period, not exact finite-range proportions. The detailed corrected CRT counts are in [the modulo-29 audit](../agent46-mod29-parent-sieve/README.md).
 
 The middle-band theorem is independent of the modular density count and can remove additional valuations inside the physical interval. The two methods should be combined in finite audits, but their overlap must be counted rather than added blindly.
 
