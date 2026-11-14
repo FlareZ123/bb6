@@ -86,14 +86,24 @@ Word extract() {
 }
 
 // Original partial G(c), including G(c,[]) = H(c-1,[]).
-bool G(uint64_t c, const Tail& xs, Tail& out) {
+bool G(uint64_t c, const Tail& xs, Tail& out,
+       bool* fullSuffix = nullptr, uint64_t* terminalQuotient = nullptr) {
     out.clear();
+    if (fullSuffix) *fullSuffix = false;
+    if (terminalQuotient) *terminalQuotient = 0;
     uint64_t a = xs.empty() ? c - 1 : xs[0] + c;
     size_t i = xs.empty() ? 0 : 1;
     while (i < xs.size() && (a & 1)) {
         out.push_back(a / 2);
         a = xs[i] + a / 2 + 1;
         ++i;
+    }
+    // If every suffix digit was consumed by an odd carry, the remaining
+    // empty-tail H call has potential q = a+1. Its failure criterion is
+    // exactly that q is a power of two.
+    if (i == xs.size()) {
+        if (fullSuffix) *fullSuffix = true;
+        if (terminalQuotient) *terminalQuotient = a + 1;
     }
     if (a & 1) {
         while (a & 1) {
