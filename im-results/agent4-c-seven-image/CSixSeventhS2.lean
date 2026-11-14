@@ -258,15 +258,14 @@ private theorem s2_r_blank_unreachable (u v t : Nat)
   rcases hr with ⟨time,hrun⟩
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at hrun
+      simp [BB6.Agent8Section.run] at hrun <;> omega
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
           simp [BB6.Agent8Section.run,hp] at hrun
       | some p =>
           rcases p with ⟨a,k⟩
-          have hstep : secNext (a,k)=some (471+276*u+548*v)
-              (644+374*u+750*v) := by
+          have hstep : secNext (a,k)=some (471+276*u+548*v,644+374*u+750*v) := by
             simpa [BB6.Agent8Section.run,hp] using hrun
           have hpre : sectionPreimageAll a k
               (471+276*u+548*v) (644+374*u+750*v) :=
@@ -290,7 +289,7 @@ private theorem s2_p0_blank_unreachable (u v : Nat) :
   rcases hr with ⟨time,htime⟩
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at htime
+      simp [BB6.Agent8Section.run] at htime <;> omega
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
