@@ -681,6 +681,173 @@ private theorem m1ZeroOddResidue0_input_matches
     rw [hcoord] at hsrc hbase
     exact hsrc.trans hbase.symm
 
+
+private theorem m1ZeroOdd_sweptLeft_head_eq_source (q : Nat)
+    (T : Int → Bool) (h : Int) :
+    sweptLeft q T h (h-(q:Int)) = T (h-(q:Int)) := by
+  induction q with
+  | zero => simp [sweptLeft]
+  | succ q ih =>
+      have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
+      rw [show sweptLeft (q+1) T h =
+        sweptLeft q (holeThree T h) (h-1) by rfl]
+      rw [hcoord,ih]
+      have hne1 : h-((q+1:Int)) ≠ h+1 := by omega
+      have hne2 : h-((q+1:Int)) ≠ h := by omega
+      simp [holeThree,hne1,hne2]
+
+private theorem m1ZeroOdd_sweptLeft_head_plus1_false (q : Nat)
+    (T : Int → Bool) (h : Int) :
+    sweptLeft (q+1) T h (h-(q:Int)) = false := by
+  induction q with
+  | zero => simp [sweptLeft,holeThree]
+  | succ q ih =>
+      have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
+      rw [show sweptLeft (q+2) T h =
+        sweptLeft (q+1) (holeThree T h) (h-1) by rfl]
+      rw [hcoord]
+      exact ih (holeThree T h) (h-1)
+
+private theorem m1ZeroOdd_leftSweep_one (T : Int → Bool) (h : Int)
+    (ht : T h = true) :
+    run tm2 1 ⟨3,h,T⟩ = some ⟨1,h+1,T⟩ := by
+  simp [run,rawStep,readSlot,applyMove,tm2,ht]
+
+private theorem m1ZeroOdd_leftSweep_two (T : Int → Bool) (h : Int)
+    (ht : T h = true) (hr : T (h+1) = false) :
+    run tm2 2 ⟨3,h,T⟩ =
+      some ⟨2,h,(fun x => if x = h+1 then true else T x)⟩ := by
+  rw [show 2 = 1+1 by omega,run_append,
+    m1ZeroOdd_leftSweep_one T h ht]
+  simp [run,rawStep,readSlot,applyMove,tm2,hr]
+
+private theorem m1ZeroOdd_counted_left_sweep_heads
+    (N : Nat) (T : Int → Bool) (h : Int)
+    (hOn : leftOnes T h N) (hr : T (h+1) = false)
+    (k : Nat) (hk : k < 3*N) (d : Config)
+    (hd : run tm2 k ⟨3,h,T⟩ = some d) :
+    h-(N:Int) ≤ d.head := by
+  let q := k/3
+  let r := k%3
+  have hkdecomp : k = 3*q+r := by dsimp [q,r]; omega
+  have hq : q < N := by dsimp [q]; omega
+  have hqOn : leftOnes T h q := by
+    intro i hi
+    exact hOn i (by omega)
+  have hqrun := counted_left_sweep q T h hqOn hr
+  let Tq := sweptLeft q T h
+  have hqhead : Tq (h-(q:Int)) = true := by
+    rw [show Tq = sweptLeft q T h by rfl,
+      m1ZeroOdd_sweptLeft_head_eq_source]
+    exact hOn q hq
+  have hqright : Tq (h-(q:Int)+1) = false := by
+    by_cases hq0 : q = 0
+    · subst q
+      simpa [Tq] using hr
+    · obtain ⟨q',rfl⟩ := Nat.exists_eq_succ_of_ne_zero hq0
+      have hfalse := m1ZeroOdd_sweptLeft_head_plus1_false q' T h
+      simpa [Tq] using hfalse
+  have hqrun' :
+      run tm2 (3*q) ⟨3,h,T⟩ =
+        some ⟨3,h-(q:Int),Tq⟩ := by
+    simpa [Tq] using hqrun
+  rw [hkdecomp,run_append,hqrun'] at hd
+  simp only [Option.bind_some] at hd
+  have hrCases : r = 0 ∨ r = 1 ∨ r = 2 := by
+    have hrlt : r < 3 := Nat.mod_lt _ (by decide)
+    omega
+  rcases hrCases with hr0|hr1|hr2
+  · subst r
+    simp [run] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+  · subst r
+    rw [m1ZeroOdd_leftSweep_one Tq (h-(q:Int)) hqhead] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+  · subst r
+    rw [m1ZeroOdd_leftSweep_two Tq (h-(q:Int)) hqhead hqright] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+
+private theorem m1ZeroOdd_fRun_prefix_exists {m c n k d}
+    (h : fRun m n c = some d) (hk : k ≤ n) :
+    ∃ e, fRun m k c = some e := by
+  induction n generalizing k c d with
+  | zero =>
+      have hk0 : k = 0 := by omega
+      subst k
+      exact ⟨c,by simpa [fRun] using h⟩
+  | succ n ih =>
+      have h' : (fRun m n c).bind (fStep m) = some d := by
+        simpa [fRun] using h
+      cases hp : fRun m n c with
+      | none => simp [hp] at h'
+      | some e =>
+          by_cases hk' : k ≤ n
+          · exact ih hp hk'
+          · have hkEq : k = n+1 := by omega
+            subst k
+            exact ⟨d,h⟩
+
+private theorem m1ZeroOdd_bridge_prefix_lower
+    (T : Int → Bool) (h : Int)
+    (hmatch : ∀ y, m1ZeroOddBridgeInside y = true →
+      T (h+y) = decide (y ∈ m1ZeroOddBridgeStart.marked))
+    (j : Nat) (hj : j < 62) (d : Config)
+    (hd : run tm2 j ⟨3,h,T⟩ = some d) :
+    h-15 ≤ d.head := by
+  obtain ⟨e,hexact⟩ :=
+    m1ZeroOdd_fRun_prefix_exists m1ZeroOddBridge_exact (by omega)
+  have hcheckj :
+      (List.range j).all (fun k =>
+        match fRun tm2 k m1ZeroOddBridgeStart with
+        | none => true
+        | some f => m1ZeroOddBridgeInside f.head) = true := by
+    apply List.all_eq_true.mpr
+    intro k hk
+    have hk62 : k < 62 := by
+      have hmem := List.mem_range.mp hk
+      omega
+    exact (List.all_eq_true.mp m1ZeroOddBridge_heads) k
+      (List.mem_range.mpr hk62)
+  have hbridge := bridgeAt T h m1ZeroOddBridgeInside
+    m1ZeroOddBridgeStart e j rfl hexact hcheckj hmatch
+  rw [hbridge] at hd
+  have hdeq : d = frameAt T h m1ZeroOddBridgeInside e :=
+    Option.some.inj hd
+  have hinside : m1ZeroOddBridgeInside e.head = true := by
+    have hh := (List.all_eq_true.mp m1ZeroOddBridge_heads) j
+      (List.mem_range.mpr hj)
+    simpa [hexact] using hh
+  have hlow : -15 ≤ e.head := by
+    simp [m1ZeroOddBridgeInside] at hinside
+    omega
+  rw [hdeq]
+  simp [frameAt_head]
+  omega
+
+private theorem m1ZeroOdd_E_scan_prefix_head
+    (T : Int → Bool) (h : Int) (n : Nat)
+    (hlinear : linearRightOnes T h n)
+    (j : Nat) (hj : j < n) (d : Config)
+    (hd : run tm2 j ⟨4,h,T⟩ = some d) :
+    d.head = h+(j:Int) := by
+  have hlinearJ : linearRightOnes T h j := by
+    intro i hi
+    exact hlinear i (by omega)
+  have hrun := E_scan T h j hlinearJ
+  rw [hrun] at hd
+  have heq := Option.some.inj hd
+  simp at heq
+  omega
+
 private theorem m1ZeroOddBase_prefix_head_bound
     (a b : Nat) (h : Int) (ha : 0 < a) :
     ∀ k, k < 64+12*a → ∀ d,
@@ -713,7 +880,7 @@ private theorem m1ZeroOddBase_prefix_head_bound
     have hb := bridgeAt T1 hN m1ZeroOddBridgeInside
       m1ZeroOddBridgeStart m1ZeroOddBridgeEnd 62 rfl
       m1ZeroOddBridge_exact hBridgeHeads hInput
-    simpa [T2,m1ZeroOddBridgeBaseCutTape,frameAt_head] using hb
+    simpa [T2,m1ZeroOddBaseCutTape,frameAt_head] using hb
   have hlinear : linearRightOnes T2 (hN+2) (3*a-1) := by
     intro i hi
     by_cases hi0 : i = 0
@@ -750,8 +917,9 @@ private theorem m1ZeroOddBase_prefix_head_bound
   let p1 := 3*N
   let p2 := p1+62
   by_cases hk1 : k < p1
-  · have hlow := counted_left_sweep_heads N T h hOn hRight k
-      (by dsimp [p1,N] at *; omega) d hd
+  · have hd' : run tm2 k ⟨3,h,T⟩ = some d := by simpa [T] using hd
+    have hlow := m1ZeroOdd_counted_left_sweep_heads N T h hOn hRight k
+      (by dsimp [p1,N] at *; omega) d hd'
     dsimp [hN,N] at *
     omega
   · by_cases hk2 : k < p2
@@ -770,21 +938,9 @@ private theorem m1ZeroOddBase_prefix_head_bound
       simp only [Option.bind_some] at hd
       rw [run_append,hBridge'] at hd
       simp only [Option.bind_some] at hd
-      have hhead := E_scan_prefix_head T2 (hN+2) (3*a-1) hlinear j hj d hd
+      have hhead := m1ZeroOdd_E_scan_prefix_head T2 (hN+2) (3*a-1) hlinear j hj d hd
       dsimp [hN,N] at *
       omega
-
-private theorem m1ZeroOddResidue0_config_ext_by_fields
-    (c d : Config) (hstate : c.state = d.state)
-    (hhead : c.head = d.head) (htape : c.tape = d.tape) : c = d := by
-  cases c with
-  | mk cs ch ct =>
-    cases d with
-    | mk ds dh dt =>
-      cases hstate
-      cases hhead
-      cases htape
-      rfl
 
 /-- Lift the exact 64+12a n=8 prefix to every admissible n=8k with odd k. -/
 theorem m1ZeroOdd_residue0_q4_prefix_source
