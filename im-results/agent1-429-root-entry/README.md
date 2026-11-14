@@ -345,8 +345,11 @@ root-junction-chain workflow also failed compiling this module with a type
 mismatch and `sorryAx`. I incorrectly omitted it from the first version of
 this branch's workflow; it has now been restored as a required compile step.
 Consequently the base blank-root prefix and both new continuations are not
-currently certified sorry-free theorems. Do not promote them to `results/`
-or claim a BB(6) bound improvement.
+currently certified sorry-free theorems. A branch-local patch replaces the
+five Low43Continuation runWithMax-to-runWithDelta projection wrappers with
+explicit rewrites; root-junction-chain CI run 43580648197 is testing that
+patch. This remains unverified. Do not promote them to `results/` or claim
+a BB(6) bound improvement.
 
 
 ## Second continuation: Junc(0,924) -> Junc(0,1008) (2026-11-14)
