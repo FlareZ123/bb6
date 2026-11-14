@@ -351,6 +351,15 @@ jobs:
             exit 1
           fi
 
+          # Agent 48: verify the finite q4 bridge for the next root row m=1,n=8k with odd k.
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1ZeroOddQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-zero-odd-q4-prefix-axioms.log
+          lean -o M1ZeroOddQ4Prefix.olean M1ZeroOddQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m1-zero-odd-q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-zero-odd-q4-prefix-axioms.log; then
+            echo '::error::sorryAx found in marker-1 n=8 q4 prefix source theorem'
+            exit 1
+          fi
+
           # Agent 42: compose the first four source-verified rows of the 24-cycle.
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63MiddleSectionPrefix4.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/middle-section-prefix4-axioms.log
