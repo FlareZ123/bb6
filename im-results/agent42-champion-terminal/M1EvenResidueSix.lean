@@ -429,6 +429,121 @@ private def m1EvenResidueSixInputBoundary (a : Nat) : List Bool :=
 private def m1EvenResidueSixTargetBoundary (a : Nat) : List Bool :=
   [true] ++ d1pow a ++ markerWord 0 ++ d0
 
+
+/-- Config extensionality for the repository's explicit infinite-tape record. -/
+private theorem m1EvenResidueSix_config_ext_by_fields (c d : Config)
+    (hstate : c.state = d.state) (hhead : c.head = d.head)
+    (htape : c.tape = d.tape) : c = d := by
+  cases c with
+  | mk cs ch ct =>
+    cases d with
+    | mk ds dh dt =>
+      cases hstate
+      cases hhead
+      cases htape
+      rfl
+
+/-- The n=8k+6 and n=6 S1 source tapes agree on the half-line read by
+the n=6 prefix.  Their left words share the complete low-order input prefix;
+their right words depend only on b. -/
+private theorem m1EvenResidueSix_input_matches
+    (L k a b : Nat) (h : Int)
+    (hL : 3 ≤ L) (hbound : 8*k+6 < 2^L) :
+    ∀ x, m1EvenResidueSixInside a h x = true →
+      (s1Config L (8*k+6) 1 a 0 b h).tape x =
+      (s1Config 3 6 1 a 0 b h).tape x := by
+  have hbin6 := binDec_residue6 L k hL hbound
+  have hbin36 : binDec 3 6 = d1 ++ d0 ++ d0 := by
+    have hh := binDec_residue6 3 0 (by omega) (by decide)
+    simpa [binDec_zero,d1pow] using hh
+  have hsourceLeft :
+      s1LeftFacing L (8*k+6) 1 a 0 =
+        m1EvenResidueSixInputPrefix a ++
+          (binDec (L-3) k ++ lh) := by
+    simp [s1LeftFacing,m1EvenResidueSixInputPrefix,
+      binDec_zero,hbin6,List.append_assoc]
+  have hbaseLeft :
+      s1LeftFacing 3 6 1 a 0 =
+        m1EvenResidueSixInputPrefix a ++ lh := by
+    simp [s1LeftFacing,m1EvenResidueSixInputPrefix,
+      binDec_zero,hbin36,List.append_assoc]
+  have hprefixLength :
+      (m1EvenResidueSixInputPrefix a).length = 3*a+15 := by
+    simp [m1EvenResidueSixInputPrefix,d1pow_length,markerWord,d0,d1]
+  intro x hx
+  by_cases hleft : x ≤ h
+  · let i := Int.toNat (h-x)
+    have hnonneg : 0 ≤ h-x := by omega
+    have hcast : (i : Int) = h-x := by
+      dsimp [i]
+      exact Int.toNat_of_nonneg hnonneg
+    have hcoord : h-(i:Int) = x := by omega
+    have hthreshold : h - ((3*a+1:Int)) - 9 ≤ x := by
+      simpa [m1EvenResidueSixInside] using hx
+    have hi : i ≤ 3*a+10 := by omega
+    have hiPrefix : i < (m1EvenResidueSixInputPrefix a).length := by
+      rw [hprefixLength]
+      omega
+    have hsrc := s1Config_left_cell L (8*k+6) 1 a 0 b h i
+    have hbase := s1Config_left_cell 3 6 1 a 0 b h i
+    rw [hcoord] at hsrc hbase
+    rw [hsourceLeft] at hsrc
+    rw [hbaseLeft] at hbase
+    have hsrcBit := sideBit_append_left
+      (m1EvenResidueSixInputPrefix a) (binDec (L-3) k ++ lh)
+      i hiPrefix
+    have hbaseBit := sideBit_append_left
+      (m1EvenResidueSixInputPrefix a) lh i hiPrefix
+    rw [hsrcBit] at hsrc
+    rw [hbaseBit] at hbase
+    exact hsrc.trans hbase.symm
+  · let i := Int.toNat (x-h-1)
+    have hnonneg : 0 ≤ x-h-1 := by omega
+    have hcast : (i : Int) = x-h-1 := by
+      dsimp [i]
+      exact Int.toNat_of_nonneg hnonneg
+    have hcoord : h+1+(i:Int) = x := by omega
+    have hsrc := s1Config_right_cell L (8*k+6) 1 a 0 b h i
+    have hbase := s1Config_right_cell 3 6 1 a 0 b h i
+    rw [hcoord] at hsrc hbase
+    exact hsrc.trans hbase.symm
+
+/-- Lift the 44+12a source prefix from n=6 to every admissible n=8k+6.
+The original n=6 run reads only the common half-line, so the rest of the
+general source tape is preserved exactly by run_frame. -/
+theorem m1Even_residue6_q4_prefix_source
+    (L k a b : Nat) (h : Int)
+    (hL : 3 ≤ L) (hbound : 8*k+6 < 2^L) :
+    run tm2 (44+12*a)
+      (s1Config L (8*k+6) 1 a 0 b h) =
+      some ⟨4,h+4,m1EvenResidueSixCutTape L k a b h⟩ := by
+  let base : Config := ⟨3,h,(s1Config 3 6 1 a 0 b h).tape⟩
+  let background := (s1Config L (8*k+6) 1 a 0 b h).tape
+  have hinput := m1EvenResidueSix_input_matches L k a b h hL hbound
+  have hstart :
+      frame (m1EvenResidueSixInside a h) background base =
+        s1Config L (8*k+6) 1 a 0 b h := by
+    apply m1EvenResidueSix_config_ext_by_fields
+    · rfl
+    · rfl
+    · funext x
+      by_cases hx : m1EvenResidueSixInside a h x = true
+      · simp [frame,background,base,hx,hinput x hx]
+      · simp [frame,background,base,hx]
+  have hheads :
+      ∀ j, j < 44+12*a → ∀ d,
+        run tm2 j base = some d →
+        m1EvenResidueSixInside a h d.head = true := by
+    intro j hj d hd
+    have hlow := m1Even_q4_prefix_head_bound a b h j hj d hd
+    simpa [m1EvenResidueSixInside] using hlow
+  have hlift := run_frame tm2 (m1EvenResidueSixInside a h)
+    background base (44+12*a) hheads
+  rw [hstart] at hlift
+  rw [m1Even_q4_prefix_run a b h] at hlift
+  simp only [Option.map_some] at hlift
+  simpa [m1EvenResidueSixCutTape,background] using hlift
+
 def m1EvenResidueSixLeftFacing (L k a : Nat) : List Bool :=
   [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec L (8*k+5) ++ lh
 
