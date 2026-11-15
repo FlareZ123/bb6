@@ -146,7 +146,7 @@ private theorem no_y3_x186_parent0 (v : Nat) :
     (by omega) (by omega) (by omega) (by omega)).mp hQ'
   have hR' : BB6.Agent3.CReach (1408*v+122) (320*v+27) := by
     have hx : ((768*v+68)+(640*v+56)-2)=1408*v+122 := by omega
-    rw [hx] at hR
+    rw [hx,hy] at hR
     exact hR
   exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
     (1408*v+122) (320*v+27)
@@ -160,7 +160,7 @@ private theorem no_y3_x186_parent1 (v : Nat) :
     (by omega) (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (1152*v+99) (448*v+39) := by
     have hx : ((256*v+21)+(896*v+80)-2)=1152*v+99 := by omega
-    rw [hx] at hQ
+    rw [hx,hy] at hQ
     exact hQ
   exact BB6.Agent11High.blank_no_odd_sum_two
     (1152*v+99) (448*v+39)
@@ -174,21 +174,21 @@ private theorem no_y3_x186_parent2 (v : Nat) :
     (by omega) (by omega) (by omega) (by omega)).mp hr
   have hQ1' : BB6.Agent3.CReach (1056*v+87) (496*v+42) := by
     have hx : ((64*v+3)+(992*v+86)-2)=1056*v+87 := by omega
-    rw [hx] at hQ1
+    rw [hx,hy] at hQ1
     exact hQ1
   have hQ2 := (BB6.Agent46.six_even_right_blank_reach_iff
     (1056*v+87) (496*v+42)
     (by omega) (by omega) (by omega) (by omega)).mp hQ1'
   have hQ2' : BB6.Agent3.CReach (1552*v+127) (248*v+20) := by
     have hx : ((1056*v+87)+(496*v+42)-2)=1552*v+127 := by omega
-    rw [hx] at hQ2
+    rw [hx,hy] at hQ2
     exact hQ2
   have hQ3 := (BB6.Agent46.six_even_right_blank_reach_iff
     (1552*v+127) (248*v+20)
     (by omega) (by omega) (by omega) (by omega)).mp hQ2'
   have hQ3' : BB6.Agent3.CReach (1800*v+145) (124*v+9) := by
     have hx : ((1552*v+127)+(248*v+20)-2)=1800*v+145 := by omega
-    rw [hx] at hQ3
+    rw [hx,hy] at hQ3
     exact hQ3
   exact BB6.Agent11High.blank_no_odd_sum_two
     (1800*v+145) (124*v+9)
