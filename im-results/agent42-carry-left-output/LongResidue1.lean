@@ -177,9 +177,23 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
     have hmod := ad12Offset_mod h' x hh
     have hnotfar : ¬ x < h'-5 := by omega
     have hnotterm : ¬ x ≤ h'-3 := by omega
+    have hthresholdCast :
+        -3*(4*(k:Int)+1)-2 = h'-5 := by
+      simpa [Int.natCast_add,Int.natCast_mul] using hthreshold
+    have hthresholdCast' :
+        -3*(4*(k:Int)+1) = h'-3 := by
+      simpa [Int.natCast_add,Int.natCast_mul] using hthreshold'
+    have hnotfar' : ¬ x < -3*(4*(k:Int)+1)-2 := by
+      intro hx
+      apply hnotfar
+      simpa [hthresholdCast] using hx
+    have hnotterm' : ¬ x ≤ -3*(4*(k:Int)+1) := by
+      intro hx
+      apply hnotterm
+      simpa [hthresholdCast'] using hx
     have htarget : carryLeftOutputBit (4*k+1) T x =
         decide (x % 3 = 1) := by
-      simp [carryLeftOutputBit,Int.natCast_add,Int.natCast_mul,hthreshold,hthreshold',hnotfar,hnotterm]
+      simp [carryLeftOutputBit,Int.natCast_add,Int.natCast_mul,hnotfar',hnotterm']
     rw [hT2,hcell]
     simpa [hmod,htarget]
 
