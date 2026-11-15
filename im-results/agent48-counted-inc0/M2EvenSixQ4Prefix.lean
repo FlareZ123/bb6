@@ -230,6 +230,7 @@ private theorem m2EvenSixQ4LeftFacingBridgeBit (a j : Nat)
     have happ := sideBit_append_right (d1pow a)
       m2EvenSixQ4LeftSuffix (3*a+1+j) (by rw [d1pow_length]; omega)
     have hidx : 3*a+1+j-3*a = j+1 := by omega
+    rw [d1pow_length] at happ
     simpa [hidx] using happ
   have hbits :
       sideBit m2EvenSixQ4LeftSuffix (j+1) =
@@ -264,14 +265,12 @@ private theorem m2EvenSixQ4LeftFacingTail (a i : Nat)
     simp [s1LeftFacing,binDec_zero,sourcePrefix,shared,
       binDec_three_six,d0,d1,List.append_assoc]
   have htgt : m2EvenSixQ4LeftFacing a = targetPrefix ++ shared := by
-    simp [m2EvenSixQ4LeftFacing,targetPrefix,shared,
+    simp [m2EvenSixQ4LeftFacing,m2EvenSixQ4LeftSuffix,targetPrefix,shared,
       binDec_three_five,d0,d1,List.append_assoc]
   have hlenS : sourcePrefix.length = 3*a+12 := by
-    simp [sourcePrefix,d1pow_length,markerWord,d0,d1]
-    omega
+    simp [sourcePrefix,d1pow_length,markerWord,d0,d1] <;> omega
   have hlenT : targetPrefix.length = 3*a+12 := by
-    simp [targetPrefix,d1pow_length,markerWord,d0,d1]
-    omega
+    simp [targetPrefix,d1pow_length,markerWord,d0,d1] <;> omega
   rw [hsrc,htgt]
   rw [sideBit_append_right sourcePrefix shared i (by rw [hlenS]; omega)]
   rw [sideBit_append_right targetPrefix shared i (by rw [hlenT]; omega)]
@@ -309,7 +308,7 @@ private theorem m2EvenSixQ4CutTape_rightFacing (a b : Nat) (h : Int)
         omega
       have hcut := m2EvenSixQ4CutTape_eq_swept a b h (h+1) hout
       have hplus : sweptLeft N T h (h+1) = true := by
-        simpa [N] using sweptLeft_plus1 (3*a) T h
+        simpa [N] using sweptLeft_plus1 (3*a+1) T h
       have hactual : m2EvenSixQ4CutTape a b h (h+1) = true :=
         hcut.trans (by simpa [T] using hplus)
       simpa [q4RightFacing,sideBit] using hactual
@@ -462,6 +461,8 @@ private theorem m2EvenSixQ4RightShape_of_stream (T : Int → Bool)
       have hq := q4RightFacing_first4 b (i-1) hidx
       have hr := hright (i-1)
       have hcoord : h+(i:Int) = h+1+((i-1:Int)) := by omega
+      have hcast : ((i-1 : Nat) : Int) = (i:Int)-1 := by omega
+      rw [hcast] at hr
       rw [hcoord]
       calc
         T (h+1+((i-1:Int))) =
@@ -627,7 +628,31 @@ theorem m2EvenSix_q4_prefix_data (a b : Nat) (h : Int)
   have hshape := m2EvenSixQ4RightShape_of_stream
     (m2EvenSixQ4CutTape a b h) h b hhead hrightT
   refine ⟨m2EvenSixQ4CutTape a b h, ?_, hleftT, hshape, hrightT⟩
-  simpa [T,s1Config] using hprefix'
+  simpa [T,s1Config,s0Config] using hprefix'
+
+/-- The E scan after the 38-step bridge crosses exactly the remaining
+3*a marked cells to the right of its starting point. -/
+theorem m2EvenSixQ4CutTape_linearRightOnes
+    (a b : Nat) (h : Int) (ha : 0 < a) :
+    linearRightOnes (m2EvenSixQ4CutTape a b h)
+      (h-(3*a:Int)) (3*a) := by
+  obtain ⟨Tq,_,hleft,_,_⟩ := m2EvenSix_q4_prefix_data a b h ha
+  have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
+  intro i hi
+  let j := 3*a-i
+  have hj1 : 1 ≤ j := by dsimp [j]; omega
+  have hj2 : j ≤ 3*a := by dsimp [j]; omega
+  have hbit : sideBit (m2EvenSixQ4LeftFacing a) j = true :=
+    m2EvenSixQ4LeftFacingPrefixTrue a j (by omega)
+  have hcell := hleft j
+  have htrue : Tq (h-(j:Int)) = true := by
+    rw [hbit] at hcell
+    exact hcell
+  rw [hTq] at htrue
+  have hcoord : h-(j:Int) = h-(3*a:Int)+(i:Int) := by
+    dsimp [j]
+    omega
+  simpa [hcoord] using htrue
 
 /-- The q4 suffix's target left stream is exactly the m=1,n=3 S1 word. -/
 theorem m2EvenSixQ4SuffixTargetLeft (a b : Nat) :
@@ -660,7 +685,8 @@ theorem m2EvenSix_q4_reset_prefix_source
     hshape htail hleft happend
   have hsum :
       resetPrefixCost 2 6 a b = (44+12*a)+(39+3*b) := by
-    have hv : v2 6 = 1 := by decide
+    have hv : v2 6 = 1 := by
+      exact v2_of_odd_factorization 6 1 1 (by omega)
     simp [resetPrefixCost,hv]
     omega
   rw [hsum,run_add,hprefix]
