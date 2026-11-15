@@ -306,7 +306,7 @@ jobs:
           : > /tmp/a42-terminal/m0-odd-residue7-axioms.log
           lean -o M0OddResidueSeven.olean M0OddResidueSeven.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue7-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-residue7-axioms.log; then
-            echo '::error::sorryAx found in generalized m=0,n=16*r+7 root successor reset prefix'
+            echo '::error::sorryAx found in generalized m=0,n=16*r+7 root successor counted increment'
             exit 1
           fi
 
