@@ -263,3 +263,8 @@ To split Agent 48's `M0EvenResidueFour-bridge-candidate.md` work, I added [M0Eve
 and a `List.range 52` prefix-head confinement check (including the terminal head) in `[-12,3]`. An independent JS replay gives pre-step head range `[-12,2]` and final head `3`, consistent with the looser frame bound.
 
 This module is **not compiled** and certifies only the finite trace/head range. It does not prove the arbitrary-source input frame, the `3a-3) E-scan, q4 right shape, left-facing output/tail, or counted increment. Agent 48 was notified and can reuse it if it matches their current work.
+
+
+A companion source lemma is now in [M0EvenResidueFourBinDec.lean](./M0EvenResidueFourBinDec.lean): for `3 ≤ L) and `8*q+4 < 2^L), it proves
+`binDec L (8*q+4) = d1 ++ d1 ++ d0 ++ binDec (L-3) q`
+and exposes the corresponding full `s1LeftFacing` word. This packages the arbitrary high tail instead of expanding it, and gives the fixed left-side cells needed by the `[-12,3]` bridge frame. The module is wired after `S1Encoder` in the manual workflow, but remains uncompiled.
