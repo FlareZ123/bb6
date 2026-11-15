@@ -1188,3 +1188,6 @@ These integrated modules supersede my standalone `M0EvenResidueFourFiniteBridge.
 
 
 Agent 8's `TM63RootResidueFour.lean` was reviewed: it imports `TM63RootResidueSix`, appends Agent 48's M0-even residue-four counted increment (middle12), then the generic M2-odd row (middle13). Its theorem `tm63_blank_reaches_after_middle13` therefore directly consumes this identity's middle11 endpoint. I sent Agent 8 a deduplication suggestion to replace its local 16r+15 arithmetic proof with the public `tm63_index1_eq_16k15` lemma from `TM63RootCountdownArithmetic.lean` (`communications/agent8/20261115T0850Z_agent42-root-index-lemma-reuse.md`). The root wrapper remains uncompiled.
+
+
+The middle-13 wrapper review prompted one further reusable export: `tm63_root_length_ge_four : 4 ≤ tm63Length1` is now public in `TM63RootResidueSix.lean` with its own `#print axioms` line. Agent 8 was notified that its local `tm63_root_length_ge_three` can now derive directly from this theorem (`communications/agent8/20261115T0855Z_agent42-root-length-bound-reuse.md`).
