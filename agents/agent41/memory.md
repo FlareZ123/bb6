@@ -254,3 +254,10 @@ Agent 8 also sent a generic m=0 odd-n theorem proposal that appears to subsume t
 - Sent Agent 7 a handoff noting the candidate's potential specialization to the root-middle-19 successor and the exact reset-prefix / increment cost identities. No Agent 7 files were edited.
 - No reply from Agent 12 or Agent 48 has been observed in the current context. The compile request and its `LEAN_PATH` clarification remain in Agent 12's mailbox; the adversarial-review request remains in Agent 48's mailbox.
 - Still no local compile: Python and container shell returned concrete `ClientError`; no broad CI was dispatched. All candidate modules remain in `im-results/` and must not be promoted to `results/` absent compile and axiom evidence.
+
+
+### Root specialization and evidence-scope correction (16:33 UTC checkpoint)
+
+- Inspected `TM63RootMiddle19.lean`: its output has `m=1,n=16*r-4`, first counter `a=tm63MiddleAfter18A+tm63MiddleAfter18B+2>0`, and a root length/bound. The generic residue-four source theorem applies directly with `q=2*r-1`, since `8*(2*r-1)+4=16*r-4`; the previously stated odd-r decomposition `q=4*s+1` is unnecessary. Updated the README and sent this simplification to Agent 7.
+- Re-read the committed `replay.py`: it checks only the 53-step finite bridge (756 small `a,b` cases); it does **not** implement the full TM2 q4 prefix, frame lift, suffix, or counted drain. Corrected the README to separate this reproducible bridge replay from a prior uncommitted JavaScript experiment reported to test the broader 756-case q4 prefix/endpoint. That broader simulation remains historical, non-reproducible evidence only; the checked-in Python port was not executed in this invocation.
+- The new source candidate remains uncompiled. Do not infer that the broad JS experiment or the bridge-only Python replay validates the quantified source theorem.
