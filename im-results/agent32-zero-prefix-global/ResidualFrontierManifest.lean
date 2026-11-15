@@ -1,7 +1,6 @@
 import LassoTraceAudit
 import FrontierUnique
 import FrontierManifestMass
-import Symmetry
 
 namespace BB6Coverage
 
@@ -63,16 +62,101 @@ def encodeTransition (t : Transition) : String :=
   | some mv =>
       "M" ++ encodeBit mv.write ++ encodeBit mv.right ++ toString mv.next.val
 
+def encodeSlot (slot : Slot) : String :=
+  toString slot.1.val ++ encodeBit slot.2
+
 def encodeEntry (entry : Slot × Transition) : String :=
-  toString entry.1.1.val ++ encodeBit entry.1.2 ++ ":" ++ encodeTransition entry.2
+  encodeSlot entry.1 ++ ":" ++ encodeTransition entry.2
 
+def encodePath (path : List (Slot × Transition)) : String :=
+  String.intercalate "," (path.map encodeEntry)
+
+/-- Reconstruct the exact partial table represented by a terminal path. -/
+def partialOfPath (path : List (Slot × Transition)) : PartialMachine :=
+  path.foldl (fun p entry => refine p entry.1 entry.2) emptyTable
+
+/-- A diagnostic execution of the same physical scan used to choose audit
+    branches. It distinguishes a next free input, an assigned halt, and the
+    12-move scan limit, while retaining the exact physical configuration. -/
+inductive PhysicalScanProbe where
+  | unknown (successfulMoves : Nat) (cfg : FinRayCfg) (slot : Slot)
+  | halt (successfulMoves : Nat) (cfg : FinRayCfg)
+  | limit (successfulMoves : Nat) (cfg : FinRayCfg)
+
+def physicalScanProbe (p : PartialMachine) :
+    Nat → Nat → FinRayCfg → PhysicalScanProbe
+  | 0, successfulMoves, cfg => .limit successfulMoves cfg
+  | n+1, successfulMoves, cfg =>
+      match p (cfg.state, finiteTape cfg cfg.head) with
+      | none => .unknown successfulMoves cfg (cfg.state, finiteTape cfg cfg.head)
+      | some none => .halt successfulMoves cfg
+      | some (some mv) =>
+          physicalScanProbe p n (successfulMoves+1) (finiteMove cfg mv)
+
+/-- The probe's unknown-input case is exactly the slot selected by the
+    original firstUnknownPhysical branch policy. -/
+theorem physicalScanProbe_unknown_matches (p : PartialMachine)
+    (n successfulMoves : Nat) (cfg : FinRayCfg) (k : Nat)
+    (d : FinRayCfg) (slot : Slot)
+    (h : physicalScanProbe p n successfulMoves cfg =
+      .unknown k d slot) :
+    firstUnknownPhysical p n cfg = some slot := by
+  induction n generalizing successfulMoves cfg k d with
+  | zero =>
+      simp [physicalScanProbe] at h
+  | succ n ih =>
+      cases hp : p (cfg.state, finiteTape cfg cfg.head) with
+      | none =>
+          simp [physicalScanProbe, hp] at h
+          cases h
+          simp [firstUnknownPhysical, hp]
+      | some t =>
+          cases t with
+          | none =>
+              simp [physicalScanProbe, hp] at h
+          | some mv =>
+              have hnext :
+                  physicalScanProbe p n (successfulMoves+1)
+                    (finiteMove cfg mv) = .unknown k d slot := by
+                simpa [physicalScanProbe, hp] using h
+              have hscan := ih (successfulMoves+1) (finiteMove cfg mv) k d hnext
+              simpa [firstUnknownPhysical, hp] using hscan
+
+def encodeProbeFields : PhysicalScanProbe → List String
+  | .unknown successfulMoves cfg slot =>
+      ["U", toString successfulMoves, toString cfg.state.val,
+        toString cfg.head, String.intercalate "," (cfg.ones.map toString),
+        encodeSlot slot]
+  | .halt successfulMoves cfg =>
+      ["H", toString successfulMoves, toString cfg.state.val,
+        toString cfg.head, String.intercalate "," (cfg.ones.map toString), "-"]
+  | .limit successfulMoves cfg =>
+      ["L", toString successfulMoves, toString cfg.state.val,
+        toString cfg.head, String.intercalate "," (cfg.ones.map toString), "-"]
+
+/-- Each open terminal is accompanied by the failed-oracle status and a
+    concrete next-step diagnostic. An open node at path depth four stopped
+    only because the tree budget was exhausted; a shallower open node stopped
+    because its 12-position physical scan found no unassigned input. -/
 def encodeTerminal (term : AuditTerminal) : String :=
-  (if term.certified then "C" else "O") ++ "\t" ++ toString term.weight ++ "\t" ++
-    String.intercalate "," (term.path.map encodeEntry)
-
-def encodeManifest (terms : List AuditTerminal) : String :=
-  "status\tweight\tpath\n" ++
-    String.intercalate "\n" (terms.map encodeTerminal) ++ "\n"
+  let p := partialOfPath term.path
+  let auditStop :=
+    if term.certified then "source-certified"
+    else if term.path.length == 4 then "tree-depth-exhausted"
+    else "physical-scan-no-unassigned-input"
+  let oracleOutcomes :=
+    if term.certified then "accepted"
+    else "halt=0,ray=0,zero=0,lasso=0,entryMacro=0"
+  let probeFields :=
+    if term.certified then ["-", "0", "-", "0", "", "-"]
+    else encodeProbeFields (physicalScanProbe p 12 0 finiteBlank)
+  String.intercalate "\\t"
+    ([if term.certified then "C" else "O",
+      toString term.weight,
+      toString term.path.length,
+      auditStop,
+      oracleOutcomes] ++ probeFields ++
+      [encodePath term.path])
 
 /-!
 The canonicalizer applies the 240 root-preserving symmetries: all 5!
@@ -87,7 +171,9 @@ computes the finite orbit key; it does not alter the source proof tree.
   let report := depth4ResidualAudit.report
   let openCount := (terms.filter (fun t => !t.certified)).length
   let certifiedCount := (terms.filter (fun t => t.certified)).length
-  IO.FS.writeFile "/tmp/bb6-depth4-frontier.tsv" (encodeManifest terms)
+  IO.FS.writeFile "/tmp/bb6-depth4-frontier.tsv"
+    ("status\tweight\tdepth\taudit_stop\toracle_outcomes\tprobe_kind\tprobe_steps\tprobe_state\tprobe_head\tprobe_ones\tprobe_next_slot\tpath\n" ++
+      String.intercalate "\n" (terms.map encodeTerminal) ++ "\n")
   IO.FS.writeFile "/tmp/bb6-depth4-frontier-report.txt"
     (toString report.1 ++ "\n" ++ toString report.2 ++ "\n")
   IO.println s!"BB6_DEPTH4_TERMINAL_COUNT={terms.length}"
@@ -102,5 +188,6 @@ computes the finite orbit key; it does not alter the source proof tree.
 #print axioms depth4ResidualManifest_openMass
 #print axioms depth4ResidualManifest_totalMass
 #print axioms depth4ResidualManifest_exhaustive
+#print axioms physicalScanProbe_unknown_matches
 
 end BB6Coverage
