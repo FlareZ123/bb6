@@ -129,6 +129,15 @@ jobs:
             echo '::error::sorryAx found in counted carry residue bridge dependencies'
             exit 1
           fi
+          # LongResidue1 is imported by S1CarryInc0. Compile the live source now,
+          # before any consumer, rather than allowing an archived .olean to shadow it.
+          cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/LongResidue1.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/long-residue1-axioms.log
+          lean -o LongResidue1.olean LongResidue1.lean 2>&1 | tee /tmp/a42-terminal/long-residue1-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/long-residue1-axioms.log; then
+            echo '::error::sorryAx found in current LongResidue1 dependency of S1CarryInc0'
+            exit 1
+          fi
           lean -o ChampionModular.olean ChampionModular.lean
           lean -o CostRecurrence.olean CostRecurrence.lean
           lean -o CountPattern.olean CountPattern.lean
@@ -547,15 +556,6 @@ jobs:
             exit 1
           fi
 
-          # This independent carry-output residue audit is deliberately after the
-          # root-critical composition modules, so its failure cannot mask them.
-          cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/LongResidue1.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/long-residue1-axioms.log
-          lean -o LongResidue1.olean LongResidue1.lean 2>&1 | tee /tmp/a42-terminal/long-residue1-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/long-residue1-axioms.log; then
-            echo '::error::sorryAx found in long-residue1 carry output theorem dependencies'
-            exit 1
-          fi
           # This independent base-frame leaf is intentionally last: it is not an
           # import of the root/q4/drain/terminal chain, so its failure must not
           # hide diagnostics from the more decisive source-composition modules.
