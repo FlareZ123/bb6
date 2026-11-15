@@ -5,14 +5,14 @@ import Lean.Elab.Tactic.Omega
 /-!
 # Source-level m=1, n=8q+7 odd q4 reset prefix
 
-This is the next genuine TM63 middle-row successor after the
-(m=0,n=16r+7) reset and the intervening (m=2,n=16r+6) decrement.
-It uses the 26-step original-table bridge shared with Agent 42.
+This is the successor row after the m=2, n=32k+16 transition in the
+root branch (where q=4*k+1). It reuses the 26-step original-table bridge
+shared with Agent 42.
 
 The theorem is parameterized over the actual S1 encoding, not a copied
-machine.  The finite bridge window is [-6,1]; the source/target left
-streams agree from index 3a+8 onward, and the two differing bits are
-exactly the bridge's marks at -5 and -6.
+machine. The finite bridge window is [-6,1]; the source/target left
+streams agree from index 3a+8 onward, and the bridge writes the boundary
+pattern required by marker 0 and the first target BinDec blocks.
 -/
 
 namespace BB6Coverage.Agent41M1ResidueSeven
