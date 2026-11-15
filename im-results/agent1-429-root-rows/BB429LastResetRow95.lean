@@ -20,8 +20,11 @@ private theorem pow_lower_18 (n : Nat) (hn : 18 ≤ n) :
       have hpos : 0 < (2:Nat)^k := Nat.pow_pos (by decide)
       have hlarge : 3 ≤ 2^(20+k) := by
         rw [Nat.pow_add]
-        norm_num
-        omega
+        have hpowpos : 1 ≤ 2^k := by omega
+        have hbase : 3 ≤ 2^20 := by decide
+        calc
+          3 = 3*1 := by omega
+          _ ≤ 2^20*2^k := Nat.mul_le_mul hbase hpowpos
       calc
         3*(18+(k+1))+77 = (3*(18+k)+77)+3 := by omega
         _ ≤ 2^(20+k)+3 := by omega
