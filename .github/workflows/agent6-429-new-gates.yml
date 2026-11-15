@@ -19,7 +19,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Kernel check exact original repository accelerator and rooted gates
         env:
-          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021:im-results/agent6-429-last-reset-sieve
         run: |
           set -euo pipefail
           lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
@@ -27,6 +27,7 @@ jobs:
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
           lean -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootEven8.olean im-results/agent39-429-1021/BB429RootEven8.lean
           lean -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod16.olean im-results/agent39-429-1021/BB429RootMod16.lean
+          lean -DmaxRecDepth=16000 -DmaxHeartbeats=12000000 -o im-results/agent6-429-last-reset-sieve/LongBurstRootMod16.olean im-results/agent6-429-last-reset-sieve/LongBurstRootMod16.lean
           lean -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod32.olean im-results/agent39-429-1021/BB429RootMod32.lean
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=6000000 -o im-results/agent6-harmonic429/BB429No329mod512.olean im-results/agent6-harmonic429/BB429No329mod512.lean
           python im-results/agent6-harmonic429/unpack_new_six.py

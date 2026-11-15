@@ -1,0 +1,152 @@
+# Last-reset arithmetic intersected with the 242-class terminal sieve
+
+**Intermediate result — not a BB(6) solution.**
+
+This note combines two existing lines of work:
+
+- the root-level last-reset decomposition in **Agent 32's LastResetEquation.lean** and its branch table;
+- the 242 surviving terminal residues modulo \(2^{18}=262144\), reconstructed from Agent 1's base/split sieve and Agent 30's additional 4+9 shifted exclusions.
+
+****Proof status.** The repaired LastResetEquation module passed the pinned original-source audit (workflow run [43691972685](https://github.com/FlareZ123/bb6/actions/runs/43691972685)). The root mod-8 invariant is the existing Lean theorem **BB429Mod8.all_blank_returns_allowed**. The finite arithmetic below is reproducible by the accompanying script.
+
+## 1. Last-reset equation and branch parametrization
+
+Let \((x,y)\) be the root-reachable state immediately before the final non-first transition, and let \((u_0,w_0)\) be the even seed immediately after it. If the final first-branch run has length \(n\), the equation is
+
+\[
+w_0+3n+7=(2^{n+2}-2)(u_0+3).
+\]
+
+The final burst length \(n\) is positive and odd. Write
+\(d=x-\lfloor y/2\rfloor\). The ten nonhalting reset branches in the existing boundary table give:
+
+| Branch | Conditions | \(u_0\) | \(w_0\) | Congruence forced by integrality |
+|---|---|---:|---:|---|
+| 1 | \(y=2x+2\) | 0 | \(4x+18\) | \(n\equiv3\pmod4\) |
+| 2 | \(y=2x+1\) | 11 | \(4x+2\) | \(n\equiv1\pmod4\) |
+| 3 | \(y=2x\) | 0 | \(4x+12\) | \(n\equiv1\pmod4\) |
+| 4 | \(y\) even, \(d=1\) | 0 | \(4x+8\) | \(n\equiv1\pmod4\) |
+| 5 | \(y\) even, \(d\ge2\) even | 11 | \(4x-2d-2\) | \(n\equiv1\pmod4\) |
+| 6 | \(y\) even, \(d\ge3\) odd | 0 | \(4x-2d+10\) | \(n\equiv1\pmod4\) |
+| 7 | \(y\) odd, \(d=2\) | 0 | \(4x+2\) | \(n\equiv3\pmod4\) |
+| 8 | \(y=1,\ d=x\ge4\) even | 11 | \(2x+10\) | \(n\equiv1\pmod4\) |
+| 9 | \(y\ge3\) odd, \(d\ge4\) even | \(d+7\) | \(4x-4d-2\) | \(n\equiv1\pmod4\) |
+| 10 | \(y\) odd, \(d\ge3\) odd | \(d+3\) | \(4x-4d+2\) | \(n\equiv3\pmod4\) |
+
+Solving the equation for \(x\) gives:
+
+\[
+\begin{array}{ll}
+1:&4x=3\cdot2^{n+2}-3n-31,\\
+2:&4x=14\cdot2^{n+2}-3n-37,\\
+3:&4x=3\cdot2^{n+2}-3n-25,\\
+4:&4x=3\cdot2^{n+2}-3n-21,\\
+5:&4x=14\cdot2^{n+2}+2d-3n-33,\\
+6:&4x=3\cdot2^{n+2}+2d-3n-23,\\
+7:&4x=3\cdot2^{n+2}-3n-15,\\
+8:&2x=14\cdot2^{n+2}-3n-45,\\
+9:&4x=2^{n+2}(d+10)+2d-3n-25,\\
+10:&4x=2^{n+2}(d+6)+2d-3n-21.
+\end{array}
+\]
+
+The branch conditions on \(d\) and \(x\) still apply; these equations are necessary arithmetic parametrizations, not sufficient root-reachability tests.
+
+## 2. Intersection with the 242 terminal residues
+
+The terminal state is \((U,2U-1)\), with
+
+\[
+U+3=2^n(u_0+3).
+\]
+
+For \(n<18\), its residue modulo \(2^{18}\) determines
+\(A=(U+3)/2^n\) modulo \(2^{18-n}\).
+
+The constant-seed branches have \(A=3\) (\(u_0=0\)) or \(A=14\) (\(u_0=11\)). The reconstructed 242-residue set contains none of \(3\cdot2^n-3\) for odd \(1\le n<18\), and contains none of \(14\cdot2^n-3\) for the valid \(A=14\) cases \(n\equiv1\pmod4\). (The \(A=14,n=7\) residue happens to survive, but no \(A=14\) reset branch permits \(n\equiv3\pmod4\).)
+
+Therefore, **for every odd \(n<18\), any surviving last reset must be branch 9 or branch 10**:
+
+- \(n\equiv1\pmod4\): branch 9, \(d\) even, \(A=d+10\);
+- \(n\equiv3\pmod4\): branch 10, \(d\) odd, \(A=d+6\).
+
+The root-reachable pre-reset state \((x,y)\) must also satisfy the formally proved mod-8 condition \((x\bmod8,y\bmod4)\in\texttt{BB429Mod8.Allowed}\). Applying it to the branch formulas further restricts the d-classes. Each row lists the allowed d-classes modulo \(2^{18-n}\), first after the terminal sieve and then after the root mod-8 filter. Full arrays are in **d-residues.json**.
+
+| Final burst \(n\) | Only possible branch | Modulus for \(d\) | Terminal sieve | After root mod-8 |
+|---:|---:|---:|---:|---:|
+| 1 | 9 | 131072 | 242 | 122 |
+| 3 | 10 | 32768 | 60 | 60 |
+| 5 | 9 | 8192 | 60 | 44 |
+| 7 | 10 | 2048 | 29 | 15 |
+| 9 | 9 | 512 | 16 | 8 |
+| 11 | 10 | 128 | 4 | 4 |
+| 13 | 9 | 32 | 4 | 4 |
+| 15 | 10 | 8 | 1 | 1 |
+| 17 | 9 | 2 | 1 | 1 |
+
+In particular:
+
+- \(n=1\): branches 2, 5, and 8 all force the same post-reset seed \((11,74)\), hence terminal \(U=25\), which is not a survivor. Branch 9 remains with 122 classes modulo \(2^{17}\).
+- \(n=3\): branches 1 and 7 both force seed \((0,74)\), hence terminal \(U=21\), which is not a survivor. Branch 10 remains with 60 classes modulo \(2^{15}\).
+
+For \(n\ge18\), the terminal sieve leaves the cylinder \(U\equiv-3\pmod{2^{18}}\), so it no longer restricts \(A\). The table below is **conditional on branches 9 and 10**; it is not a classification of every long-burst reset branch. For these two variable-\(d\) branches, the root mod-8 invariant first gives three parity-compatible classes modulo 16, depending only on \(n\bmod32\).
+
+There is a further source-root refinement for branch 9. The already-proved theorem \(\texttt{BB429RootMod16.rooted\_not\_7\_7}\) says that a genuine blank-root state cannot have both counters congruent to 7 modulo 8. In the four cases
+\[
+(n\bmod32,d\bmod16)\in\{(1,12),(9,8),(17,4),(25,0)\},
+\]
+the branch-9 equation forces exactly \((x\bmod8,y\bmod8)=(7,7)\). Those four classes are therefore impossible. The Lean files LongBurstRootMod16.lean and SourceLongBurstRootMod16.lean formalize the local and original-source versions, respectively. The source version transports the original sourceRun through BB429SourceMod16.source_run_to_local.
+
+The table uses both the root mod-8 allowed-pair condition and this root mod-16 obstruction. Branch 10 is unchanged. Branch 8 is separately incompatible with the root mod-8 invariant because it has \(y=1\) and even \(x=d\). **Branches 1–7 remain separate unresolved long-burst cases**: the \(2^{18}\) terminal cylinder does not eliminate their constant-seed parameters, and the table below makes no such claim.
+
+| \(n\bmod32\) | Branch | Allowed \(d\bmod16\) |
+|---:|---:|---|
+| 1 | 9 | 4, 8 |
+| 3 | 10 | 1, 5, 9 |
+| 5 | 9 | 2, 10, 14 |
+| 7 | 10 | 7, 11, 15 |
+| 9 | 9 | 0, 4 |
+| 11 | 10 | 1, 5, 13 |
+| 13 | 9 | 6, 10, 14 |
+| 15 | 10 | 3, 7, 11 |
+| 17 | 9 | 0, 12 |
+| 19 | 10 | 1, 9, 13 |
+| 21 | 9 | 2, 6, 10 |
+| 23 | 10 | 3, 7, 15 |
+| 25 | 9 | 8, 12 |
+| 27 | 10 | 5, 9, 13 |
+| 29 | 9 | 2, 6, 14 |
+| 31 | 10 | 3, 11, 15 |
+
+
+
+## 3. Reproduction
+
+From the repository root:
+
+~~~bash
+python3 im-results/agent6-429-last-reset-sieve/derive.py
+~~~
+
+The script parses the exact Lean lists from the four sieve source files, reconstructs the 242 survivors, uses the 17 allowed residue pairs expanded from **BB429Mod8.lean**, derives each \(d\)-residue set, and writes **d-residues.json**.
+
+## 4. What this does and does not establish
+
+Established by finite arithmetic and the cited kernel-checked invariants:
+
+- the 242 terminal residue count and \(v_2(U+3)\) distribution;
+- the branch-specific formulas above;
+- elimination of all constant \(A=3,14\) branches for their valid short-burst lengths \(n<18\);
+- the exact finite \(d\)-residue classes for the remaining variable branches at \(n<18\);
+- exclusion of the four branch-9 long-burst classes listed above by rooted_not_7_7;
+- exclusion of branch 8 by the root mod-8 allowed-pair invariant.
+
+Not established:
+
+- that any of the remaining \(d\)-classes is root-reachable;
+- exclusion or realization of branches 1–7 for \(n\ge18\);
+- that any candidate actually halts;
+- an upper bound on \(n\);
+- the exact value of \(BB(6)\).
+
+The long-burst case \(n\ge18\), especially the terminal cylinder \(U\equiv-3\pmod{2^{18}}\), remains the main unresolved obstruction.

@@ -71,33 +71,39 @@ theorem source_orbit_last_reset (n a b : Nat)
             change (BB429Burst.firstRun k (0,0)).bind BB429Burst.firstStep =
               some (2*x+3,y-2*x-3)
             rw [hk]
-            simp [BB429Burst.firstStep,hfirst]
+            simp [BB429Burst.firstStep, hfirst] <;> omega
           · apply Or.inr
             refine ⟨i,x0,y0,u,w,k+1,?_ ,hr,hnot,hreset,heven,?_⟩
             · omega
             · change (BB429Burst.firstRun k (u,w)).bind BB429Burst.firstStep =
                 some (2*x+3,y-2*x-3)
               rw [hprefix]
-              simp [BB429Burst.firstStep,hfirst]
+              simp [BB429Burst.firstStep, hfirst] <;> omega
         · have hnot : y < 2*x+3 := by omega
           have heven : b%2=0 := exit_even x y a b hnot h
           exact Or.inr ⟨n,x,y,a,b,0,by omega,hp,hnot,h,heven,rfl⟩
 
 /-- The blank seed has no positive-length first-branch prefix. -/
+private theorem blankFirstRun_pos_none (k : Nat) :
+    BB429Burst.firstRun (k+1) (0,0) = none := by
+  induction k with
+  | zero => simp [BB429Burst.firstRun, BB429Burst.firstStep]
+  | succ k ih =>
+      change (BB429Burst.firstRun (k+1) (0,0)).bind BB429Burst.firstStep = none
+      rw [ih]
+      rfl
+
 theorem initial_first_run_only_zero (k a b : Nat)
     (h : BB429Burst.firstRun k (0,0) = some (a,b)) :
     k=0 ∧ a=0 ∧ b=0 := by
   cases k with
   | zero =>
-    simp only [BB429Burst.firstRun, Option.some.injEq, Prod.mk.injEq] at h
-    obtain ⟨rfl,rfl⟩ := h
-    exact ⟨rfl,rfl,rfl⟩
+      simp only [BB429Burst.firstRun, Option.some.injEq, Prod.mk.injEq] at h
+      obtain ⟨rfl,rfl⟩ := h
+      exact ⟨rfl,rfl,rfl⟩
   | succ k =>
-    have hnone : BB429Burst.firstRun (k+1) (0,0)=none := by
-      induction k with
-      | zero => simp [BB429Burst.firstRun,BB429Burst.firstStep]
-      | succ k ih => simp [BB429Burst.firstRun,ih]
-    simp [hnone] at h
+      have hnone := blankFirstRun_pos_none k
+      simp [hnone] at h
 
 /-- Exact root-level last-reset characterization.
 
@@ -139,7 +145,7 @@ theorem root_halts_iff_last_reset_equation :
     have hroot : sourceRun ((i+1)+n) (.J 0 0) = some (.J a b) := by
       rw [sourceRun_add,hseed]
       exact firstRun_source u w n a b hprefix
-    exact ⟨(i+1)+n,a,b,hroot,(source_none_iff a b).mpr hhalt⟩
+    exact ⟨(i+1)+n,a,b,hroot,hhalt⟩
 
 /-- A sourceRun path ending in a halting state is exactly a CollatzHalts
     witness for the upstream source accelerator. -/
@@ -158,7 +164,7 @@ theorem collatzHalts_of_sourceRun (n : Nat) (s t : HighLevelState)
     | none => simp [hp] at h
     | some p =>
       simp only [hp, Option.bind_some] at h
-      exact ih hp (CollatzHalts.of_next_eq_some h ht)
+      exact ih s p hp (CollatzHalts.of_next_eq_some h ht)
 
 /-- Every CollatzHalts witness has a corresponding sourceRun endpoint whose
     next transition is none. -/
@@ -173,10 +179,10 @@ theorem sourceRun_of_collatzHalts (s : HighLevelState)
     cases hs : highLevelNext s with
     | none => exact ⟨0,s,rfl,hs⟩
     | some s' =>
-      have htail : CollatzHalts highLevelNext s' := by
-        refine ⟨N,?_⟩
+      have htailRaw :
+          ((fun x => x.bind highLevelNext)^[N] (some s')).isNone = true := by
         simpa [hs] using hN
-      obtain ⟨m,t,hr,ht⟩ := ih s' htail
+      obtain ⟨m,t,hr,ht⟩ := ih s' htailRaw
       refine ⟨m+1,t,?_ ,ht⟩
       have h1 : sourceRun 1 s = some s' := by simp [sourceRun,hs]
       calc
