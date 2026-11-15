@@ -38,7 +38,7 @@ private theorem tm63_root_index_bound :
     tm63Index1 < 2^tm63Length1 :=
   tm63_index1_lt_pow_length1
 
-private theorem tm63_root_length_ge_four : 4 ≤ tm63Length1 := by
+theorem tm63_root_length_ge_four : 4 ≤ tm63Length1 := by
   have hA := tm63FirstSection_exponent_ge_five
   dsimp [tm63Length1]
   omega
@@ -172,6 +172,7 @@ theorem tm63_blank_reaches_after_middle11 :
     tm63_blank_reaches_after_middle10 hrow'
   simpa [tm63MiddleFirst11Moves] using hcomp
 
+#print axioms tm63_root_length_ge_four
 #print axioms tm63_blank_reaches_after_middle10
 #print axioms tm63_blank_reaches_after_middle11
 
