@@ -71,14 +71,14 @@ theorem source_orbit_last_reset (n a b : Nat)
             change (BB429Burst.firstRun k (0,0)).bind BB429Burst.firstStep =
               some (2*x+3,y-2*x-3)
             rw [hk]
-            simp [BB429Burst.firstStep,hfirst] <;> omega
+            simp [BB429Burst.firstStep]
           · apply Or.inr
             refine ⟨i,x0,y0,u,w,k+1,?_ ,hr,hnot,hreset,heven,?_⟩
             · omega
             · change (BB429Burst.firstRun k (u,w)).bind BB429Burst.firstStep =
                 some (2*x+3,y-2*x-3)
               rw [hprefix]
-              simp [BB429Burst.firstStep,hfirst] <;> omega
+              simp [BB429Burst.firstStep]
         · have hnot : y < 2*x+3 := by omega
           have heven : b%2=0 := exit_even x y a b hnot h
           exact Or.inr ⟨n,x,y,a,b,0,by omega,hp,hnot,h,heven,rfl⟩
@@ -91,6 +91,7 @@ private theorem blankFirstRun_pos_none (k : Nat) :
   | succ k ih =>
       change (BB429Burst.firstRun (k+1) (0,0)).bind BB429Burst.firstStep = none
       rw [ih]
+      rfl
 
 theorem initial_first_run_only_zero (k a b : Nat)
     (h : BB429Burst.firstRun k (0,0) = some (a,b)) :
