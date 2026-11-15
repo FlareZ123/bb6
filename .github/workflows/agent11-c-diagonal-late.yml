@@ -13,6 +13,11 @@ on:
         required: false
         type: boolean
         default: false
+      u5_x186_only:
+        description: "Source-check the u=5 x=186 mod-2048 y=3 exclusion after its original-source dependencies, then stop"
+        required: false
+        type: boolean
+        default: false
       s31_w13_only:
         description: "Source-check the M0 base and S31 B/W5/W1/q275/q403 high-stop chain, then stop"
         required: false
@@ -37,6 +42,7 @@ jobs:
         env:
           M0_S229_S533_ONLY: ${{ inputs.m0_s229_s533_only }}
           U5_X314_ONLY: ${{ inputs.u5_x314_only }}
+          U5_X186_ONLY: ${{ inputs.u5_x186_only }}
           S31_W13_ONLY: ${{ inputs.s31_w13_only }}
         run: |
           set -euo pipefail
@@ -214,6 +220,15 @@ jobs:
             lean -o EvenOddThreeX314Mod512.olean EvenOddThreeX314Mod512.lean 2>&1 | tee EvenOddThreeX314Mod512.log
             if grep -q sorryAx EvenOddThreeX314Mod512.log; then
               echo "REJECTED: x=314 mod 512 y=3 source exclusion contains sorryAx"
+              exit 1
+            fi
+            exit 0
+          fi
+          if [ "$U5_X186_ONLY" = "true" ]; then
+            cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX186Mod2048.lean .
+            lean -o EvenOddThreeX186Mod2048.olean EvenOddThreeX186Mod2048.lean 2>&1 | tee EvenOddThreeX186Mod2048.log
+            if grep -q sorryAx EvenOddThreeX186Mod2048.log; then
+              echo "REJECTED: x=186 mod 2048 y=3 source exclusion contains sorryAx"
               exit 1
             fi
             exit 0
