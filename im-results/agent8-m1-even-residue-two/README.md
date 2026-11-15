@@ -69,3 +69,18 @@ The candidate root extension in
 is the next natural source family to investigate.  Do not add it to the
 root chain until the full source theorem compiles and passes a transitive
 axiom audit.
+
+
+## Kernel-checked base source connection
+
+`M1EvenResidueTwoBaseInputCheck.lean` additionally checks the smallest
+nontrivial source instance `L=3,n=2,m=1,a=1,b=0`: the actual encoded S1
+configuration runs for 12 original TM63 steps (the `3*a+1` left sweep),
+lands in state 3 at head `-4`, and agrees cell-for-cell with the finite
+bridge start on all sixteen offsets `-11..4`.  This is a closed
+`decide` proof, with `#print axioms` showing only the standard
+`propext, Classical.choice, Quot.sound` axioms.
+
+The base check validates the intended source-window orientation for this
+single parameter instance.  It does not prove the quantified
+`a,b,L,k` source-frame theorem.
