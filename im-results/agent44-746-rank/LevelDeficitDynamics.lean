@@ -167,9 +167,9 @@ theorem odd_reset_guards (h k t d : Nat)
   have hmul := Nat.mul_le_mul_right (3*d) hpow
   have h3q : 3*(2^t*d)≤3^(t+1)*d := by
     calc
-      3*(2^t*d)=2^t*(3*d) := by omega
+      3*(2^t*d)=2^t*(3*d) := by ac_rfl
       _≤3^t*(3*d) := hmul
-      _=3^(t+1)*d := by rw [Nat.pow_succ]; omega
+      _=3^(t+1)*d := by rw [Nat.pow_succ]; ac_rfl
   have hnum : 2*oddOutput t d+5=3^(t+1)*d :=
     odd_output_equation t d hd (by omega)
   have hnumlo : 18*2^k+3≤3^(t+1)*d := by
@@ -196,13 +196,11 @@ theorem odd_reset_level_increases (h k t d k' : Nat)
     (hpar : (h+k)%2=1)
     (hd : d%2=1)
     (hfactor : oddParameter h k=2^t*d)
-    (hprefix : ∀ j, j<k' → 8*2^j≤oddOutput t d+j+5)
     (hfail : oddOutput t d+k'+5<8*2^k') :
     k<k' := by
   have hall := odd_reset_guards h k t d hg hhigh hpar hd hfactor
   by_cases hle : k'≤k
   · have hguard := hall k' hle
-    have hbad := hprefix k' (by omega)
     omega
   · omega
 
@@ -210,9 +208,7 @@ theorem odd_reset_level_increases (h k t d k' : Nat)
 theorem odd_offset_bounds (h k : Nat)
     (hg : ∀ j, j<k → 8*2^j≤h+j+5)
     (hhigh : h+k+5<8*2^k)
-    (hpar : (h+k)%2=1)
-    (hfactor : oddParameter h k=2^t*d)
-    (hd : d%2=1) :
+    (hpar : (h+k)%2=1) :
     1≤oddOffset h k ∧ oddOffset h k≤2^(k+1)-1 := by
   have hlow := first_low h k hg
   have hnot : h+k+4≠4*2^k := by
@@ -306,8 +302,7 @@ theorem odd_offset_factorization (h k t d : Nat)
     cases he : k+3-t with
     | zero => omega
     | succ e =>
-        rw [he,Nat.pow_succ]
-        simp [Nat.mul_mod]
+        simp [Nat.pow_succ,Nat.mul_mod]
   have hodd : (2^(k+3-t)-d)%2=1 := by omega
   have hsum :
       2^t*(2^(k+3-t)-d)+2^t*d=2^(k+3) := by
