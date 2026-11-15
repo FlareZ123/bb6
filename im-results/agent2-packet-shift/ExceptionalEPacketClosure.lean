@@ -33,7 +33,8 @@ theorem exceptional_EA_safe_reentry (t q : Nat) (hq : 2 ≤ q)
       (packet c.a c.q c.p fixedTail) := by
     simpa [BB6.Agent2EFirstAPacket.sourceStart,
       BB6.Agent2EFirstAPacket.packetOutput,c,fixedTail,
-      BB6.Agent2EFirstAPacket.fixedTail] using hEA0
+      BB6.Agent2EFirstAPacket.fixedTail,
+      BB6.Agent2PacketOneReentry.fixedTail] using hEA0
   have ha : c.a ≥ 4 := by
     change 4 ≤ 24*t+21
     omega
@@ -57,7 +58,8 @@ theorem exceptional_EA_all_reentry (t q : Nat) (hq : 2 ≤ q) :
         (run T (DRegularSource.sourceSection ⟨9*t+10,q,1⟩))
         (BB6.Agent2BoundaryBZero.regularSection a q' b) := by
   by_cases hclass : q % 3 ≠ 1
-  · exact exceptional_EA_safe_reentry t q hq hclass
+  · obtain ⟨T,a,q',b,h⟩ := exceptional_EA_safe_reentry t q hq hclass
+    exact ⟨BB6.Agent2EFirstAPacket.duration t q + T,a,q',b,h⟩
   · have hqmod : q % 3 = 1 := by omega
     let r : Nat := (2*q-2)/3
     let k : Nat := 8*t+6
@@ -69,13 +71,15 @@ theorem exceptional_EA_all_reentry (t q : Nat) (hq : 2 ≤ q) :
         (packet c.a c.q c.p fixedTail) := by
       simpa [BB6.Agent2EFirstAPacket.sourceStart,
         BB6.Agent2EFirstAPacket.packetOutput,c,fixedTail,
-        BB6.Agent2EFirstAPacket.fixedTail] using hEA0
+        BB6.Agent2EFirstAPacket.fixedTail,
+      BB6.Agent2PacketOneReentry.fixedTail] using hEA0
     have hk : 3*k+3=24*t+21 := by dsimp [k]; omega
     have hr : 3*r+2=2*q := by dsimp [r]; omega
     have hshape : packet c.a c.q c.p fixedTail =
         BB6.Agent2AP2PacketBoundary.input k 0 r := by
       simp [c,k,r,BB6.Agent2AP2PacketBoundary.input,
         BB6.Agent2AP2PacketBoundary.fixedTail,
+        BB6.Agent2PacketOneReentry.fixedTail,
         packet,word,fixedTail,hk,hr]
     have hAP2 :=
       BB6.Agent2AP2PacketBoundary.a_p2_packet_reentry k 0 r
