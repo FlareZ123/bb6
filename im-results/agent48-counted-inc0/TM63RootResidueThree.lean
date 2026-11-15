@@ -5,8 +5,8 @@ import Lean.Elab.Tactic.Omega
 /-!
 # Candidate authentic-root extension through middle row 15
 
-This composes the candidate middle-14 endpoint with the m=0,n=8*k+1
-source increment, instantiated at k=2*r.  The resulting candidate
+This composes the candidate middle-14 endpoint with the generic all-odd
+m=0 source increment, instantiated at n=16*r+1.  The resulting candidate
 middle-15 state has m=2 and n=16*r.
 
 Status: source-level composition only; all imported candidate modules
@@ -65,7 +65,7 @@ private theorem run_compose_local {n m : Nat} {c1 c2 c3 : Config}
   exact h2
 
 /-- Candidate blank-root original-machine prefix through middle row 15.
-The new row is the generalized m=0,n=8*k+1 source increment at k=2*r. -/
+The new row is the generic m=0 odd-n source increment at n=16*r+1. -/
 theorem tm63_blank_reaches_after_middle15 :
     run tm2 tm63MiddleFirst15Moves blank =
       some (s1Config tm63Length1 (16*tm63RootResidueSixK) 2
