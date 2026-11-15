@@ -57,4 +57,4 @@ I re-ran the blank-root machine with C/1 -> A and the exact table. The summary m
 
 These observations suggest the missing information is a correlation between the prefix suffix, d, and the local right context. A finite suffix automaton with exact distance classes through at least d=6 (and a saturated larger-distance state) may be a more natural invariant than the four scalar clauses. The d=3 condition has predecessors at d=2 (A/0,C/1), d=4 (A/0,D sweep), and d=6 (A/1,C/1), so all three predecessor families need compatible suffix constraints.
 
-No source file or formal theorem was changed by this audit.
+The exact transition traces are also kernel-checked in the standalone module im-results/agent1-machine623-macro-closure-lean.lean (compiled with Lean 4.36.0-rc2 using `lean im-results/agent1-machine623-macro-closure-lean.lean`). The module proves the five finite traces and checks the resulting A-state bits; it does not assert that any counterexample configuration is reachable from the blank root.
