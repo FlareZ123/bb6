@@ -104,11 +104,25 @@ function longBurstFamily(branch, t, splitBits) {
   return { A1: C, A2, a, B1: 2n * C, B2: 2n * A2, b: 2n * a + yShift };
 }
 
+function powMod(base, exponent, modulus) {
+  let a = mod(base, modulus);
+  let e = exponent;
+  let result = 1n;
+  while (e > 0n) {
+    if (e % 2n === 1n) result = (result * a) % modulus;
+    a = (a * a) % modulus;
+    e /= 2n;
+  }
+  return result;
+}
+
 function gapFamily(branch, t, e0, splitBits) {
   const M = 2n ** BigInt(splitBits);
+  const coefficient = branch === 5 ? 28n : 6n;
   const gapOffset = branch === 5 ? 9n : 7n;
   const delta = branch === 5 ? 0n : 1n;
-  const r0 = mod(-3n * BigInt(t) - gapOffset - BigInt(e0), M);
+  const powerResidue = powMod(256n, BigInt(t), M);
+  const r0 = mod(coefficient * powerResidue - 3n * BigInt(t) - gapOffset - BigInt(e0), M);
   return {
     A1: M, A2: 2n * M, a: r0 + 2n * BigInt(e0) + delta,
     B1: 2n * M, B2: 0n, b: 2n * r0
