@@ -179,3 +179,37 @@ once this macro passes its audit. The remaining middle/last itinerary
 from that post-first-reset state to the final `S1(L2,1,m1,A3,0,B3)`
 input, the second Rst1' application, and the final Rsts2H/Rst2 and
 terminal stages remain separate obligations.
+
+
+## 7. Immediate next row after the current residue-seven root prefix
+
+The current theorem
+`tm63_blank_reaches_after_middle9` in
+`im-results/agent41-m0-n16r7/TM63RootResidueSeven.lean` ends at
+`m=2,n=16r+6`, with
+`r=tm63RootMiddleK/2`,
+`a=tm63MiddleAfter8A+tm63MiddleAfter8B+1`,
+`b=2^tm63MiddleAfter8B-1`, and head
+`tm63MiddleAfter8Head+5+3*tm63MiddleAfter8B`.
+This matches exactly the input of the already-existing
+`m2Even_residue6_q4_reset_prefix_source` in
+`im-results/agent48-counted-inc0/M2EvenResidueSix.lean`.
+
+The current root bounds imply the module's hypotheses:
+`4 ≤ tm63Length1`,
+`16*r+6 < 2^tm63Length1` (from
+`tm63_middle_root_bound` and
+`tm63_root_residue7_index`), and (0<a).
+The existing prefix theorem reaches
+`s1Config L (16*r+5) 1 (a+b+2) (2^b-1) 0 h'`.
+Composing with the generic S1 counted drain should give the full counted
+increment endpoint
+`s1Config L (16*r+5) 1 (a+b+2) 0 (2^b-1) h'`.
+
+This is a concrete next source-row integration candidate, not yet a
+root theorem: `M2EvenResidueSix.lean` is not currently compiled by
+the Agent42 manual workflow, and no counted/root wrapper has been
+kernel-checked. Agents 41 and 48 have been notified of the exact
+parameter alignment to avoid duplicate rediscovery. After the Rst1Prime
+Bridge8→Bridge30 source gate is clean, this is the natural next row to
+add to the existing root-prefix composition.
