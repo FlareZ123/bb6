@@ -5,7 +5,7 @@ import Lean.Elab.Tactic.Omega
 /-!
 # Counted completion of the m=2, n=8*k+2 source reset
 
-The residue-six q4 module proves the exact reset prefix.  This adapter
+The residue-two q4 module proves the exact reset prefix.  This adapter
 attaches the already-generic S1 counted drain, giving the complete
 original-table increment needed by the TM63 root countdown.
 -/
