@@ -78,6 +78,41 @@ The q4 suffix contributes `35+3*b` moves after its already-accounted four
 state-4 moves. Hence the complete reset prefix costs
 `(56+12*a)+(35+3*b)=91+12*a+3*b`.
 
+## General-width lift strategy
+
+Use the fixed `L=3,n=4` q4 prefix as the base theorem, then lift it with the existing
+`run_frame` pattern. The complete q4-prefix head path is contained in the half-line
+
+```lean
+h - ((3*a+14 : Nat) : Int) ≤ x
+```
+
+because the counted sweep never moves left of `h-(3*a+1)`, the 53-step bridge
+never moves left of its post-sweep head minus 12 (hence no further left than
+`h-(3*a+13)`), and the final state-4 scan only moves right.
+
+The input left-facing word decomposes as
+
+```lean
+d1pow a ++ markerWord 1 ++ d0 ++
+  d1 ++ d1 ++ d0 ++ binDec (L-3) k ++ lh
+```
+
+while the base `s1Config 3 4 1 a 0 b` has the same first `3*a+15` cells
+followed by `lh`. The q4-cut left-facing word decomposes as
+
+```lean
+[true] ++ d1pow a ++ markerWord 0 ++
+  d0 ++ d0 ++ d0 ++ d1 ++ binDec (L-3) k ++ lh
+```
+
+and the base q4 cut has the same first `3*a+15` cells followed by `lh`.
+Thus both the input and cut-tape left words agree with their base counterparts
+through every index `i ≤ 3*a+14`; beyond that, both general words share the
+same `binDec (L-3) k ++ lh` tail. All right-side cells lie in the half-line.
+This gives a direct arbitrary-width frame-lift route without enlarging the
+finite bridge.
+
 ## Computational evidence
 
 `replay.py` is a standard-library, finite-support simulator transcription of the
