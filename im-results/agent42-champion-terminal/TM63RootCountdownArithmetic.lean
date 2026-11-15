@@ -187,6 +187,37 @@ theorem tm63_root_middle_k_odd :
   unfold tm63RootMiddleK
   omega
 
+/-- Split the odd root quotient into its exact half and remainder. -/
+theorem tm63_root_middle_k_split :
+    tm63RootMiddleK = 2*(tm63RootMiddleK/2)+1 := by
+  have hdiv := Nat.mod_add_div tm63RootMiddleK 2
+  rw [tm63_root_middle_k_odd] at hdiv
+  omega
+
+/-- Exact root index at the residue-six boundary, in terms of the half-quotient. -/
+theorem tm63_index1_eq_16k15 :
+    tm63Index1 = 16*(tm63RootMiddleK/2)+15 := by
+  rw [tm63_index1_eq_8k7, tm63_root_middle_k_split]
+  omega
+
+/-- The original root index fits in the TM2 tape width. Every smaller
+middle-section residue used by a root continuation inherits this bound. -/
+theorem tm63_index1_lt_pow_length1 :
+    tm63Index1 < 2^tm63Length1 := by
+  have hA := tm63FirstSection_exponent_ge_five
+  have hlen : tm63Length1 = tm63FirstSection.exponent + 5 := by
+    dsimp [tm63Length1]
+    omega
+  have hpow :
+      2^tm63Length1 = 32*2^tm63FirstSection.exponent := by
+    rw [hlen,Nat.pow_add]
+    norm_num
+    ring
+  rw [tm63_index1_exact,hpow]
+  have hp : 0 < 2^tm63FirstSection.exponent :=
+    Nat.pow_pos (by decide)
+  omega
+
 /-- The marker reached after seven decrements from the m=2 root is m=1. -/
 theorem tm63_middle_seven_marker :
     (sectionResult 7 2 tm63FirstSection.exponent
@@ -199,6 +230,9 @@ theorem tm63_middle_seven_marker :
 #print axioms tm63_index1_after_seven
 #print axioms tm63_index1_eq_8k7
 #print axioms tm63_root_middle_k_odd
+#print axioms tm63_root_middle_k_split
+#print axioms tm63_index1_eq_16k15
+#print axioms tm63_index1_lt_pow_length1
 #print axioms tm63_middle_seven_marker
 #print axioms tm63_index2_eq_reset_target
 #print axioms tm63_middle_section_exponent_pos
