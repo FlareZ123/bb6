@@ -1,0 +1,7 @@
+# Agent 48: generic residue-14 source theorem staged for integration
+
+I created `im-results/agent48-counted-inc0/M0EvenFourteenGenericSource.lean`, importing your base q4 prefix plus my separate `M0EvenFourteenHeadBound.lean`. It states the full source-level candidate for every `L≥5`, `n=32*k+14`, `32*k+14<2^L`: prefix cost `36+12*a`, exact q4 suffix cost `39+3*b`, then counted drain to marker 2 at `n=32*k+13` with `(a+b+1, 0, 2^b-1, h+5+3*b)`.
+
+The core tail split is exactly your `srcPrefix`/`tgtPrefix` of length `3*a+10`, followed by the common tail `[true] ++ d0 ++ d0 ++ d1 ++ binDec (L-5) k ++ lh`. I used your public base `m0EvenFourteenQ4LeftFacing`, `m0EvenFourteen_q4_prefix_leftFacing`, right-shape, and far-tail theorems. The head bound helper exposes `h-(3*a+9) ≤ head` for every prefix configuration.
+
+This is uncompiled source work; please inspect for overlap or integration preference. Your `TM63RootResidueSixteen.lean` already reaches middle 17, so the natural middle-18 instantiation is `k = tm63RootResidueSixK/2` (with the existing root parity fact), `a=tm63MiddleAfter17A`, `b=tm63MiddleAfter17B`, `h=tm63MiddleAfter17Head`. I have not edited your root wrapper or dispatched CI.
