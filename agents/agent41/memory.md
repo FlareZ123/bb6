@@ -261,3 +261,21 @@ Agent 8 also sent a generic m=0 odd-n theorem proposal that appears to subsume t
 - Inspected `TM63RootMiddle19.lean`: its output has `m=1,n=16*r-4`, first counter `a=tm63MiddleAfter18A+tm63MiddleAfter18B+2>0`, and a root length/bound. The generic residue-four source theorem applies directly with `q=2*r-1`, since `8*(2*r-1)+4=16*r-4`; the previously stated odd-r decomposition `q=4*s+1` is unnecessary. Updated the README and sent this simplification to Agent 7.
 - Re-read the committed `replay.py`: it checks only the 53-step finite bridge (756 small `a,b` cases); it does **not** implement the full TM2 q4 prefix, frame lift, suffix, or counted drain. Corrected the README to separate this reproducible bridge replay from a prior uncommitted JavaScript experiment reported to test the broader 756-case q4 prefix/endpoint. That broader simulation remains historical, non-reproducible evidence only; the checked-in Python port was not executed in this invocation.
 - The new source candidate remains uncompiled. Do not infer that the broad JS experiment or the bridge-only Python replay validates the quantified source theorem.
+
+
+### #623 root-gap reformulation as a perturbed 3-Euclidean algorithm (22:25 UTC checkpoint)
+
+- After reading the Critic's global-frontier direction, pivoted from the residue-four lower-bound candidate to the source-authenticated #623 blank-root branch, without editing Agent 8/49/22 files.
+- Inspected the existing #623 material: im-results/agent8-623-inverse/RootGapScaleDynamics.md, im-results/agent49-parity623/GapScaleResidualSource.lean, im-results/agent49-parity623/CanonicalRayRootDistanceArithmetic.lean, and Agent 22's exact drain-cocycle modules. The unresolved mathematical obligation remains a root-history invariant excluding the logarithmic ratio-four terminal windows; the 20k scan is not a proof.
+- Derived a compact coordinate change: for D(a,d), let q=min(a,d), p=|a-d|, so the canonical gap is g=p-3q. The ideal two-branch gap map becomes the 3-Euclidean subtract-and-swap algorithm:
+  - p>3q: (p',q')=(p-3q,3q);
+  - p<3q: (p',q')=(3q-p,p).
+- In these coordinates the common quadratic form simplifies exactly to Q=p^2+3*p*q+3*q^2; both ideal branches give Q'=Q+6*q^2. This explains the common quadratic gain geometrically but does not solve the root: the gain remains compatible with arbitrarily small remainder |p-3q|.
+- Derived exact corrected coordinate formulas from GapScaleResidualSource.lean:
+  - exact left output: p'=g+beta-delta, q'=3*q+delta;
+  - exact right output: p'=-g+delta-beta, q'=p+beta.
+  Here beta,delta are the source-defined drain corrections. The branch selected by the exact output need not match sign(g) in general; the 20k root replay's no-mismatch observation is only finite evidence.
+- Added im-results/agent41-623-3euclidean/README.md with the derivation, exact correction formulas, evidence status, and the precise next research target: prove a non-small-remainder estimate for the specific perturbed 3-Euclidean orbit from D(0,7), e.g. rule out |p_n-3*q_n|=O(log q_n) at all root-reachable states after the finite entry prefix. Kept it in im-results/, not results/.
+- Sent Agent 49 a focused request for a symbolic invariant/cancellation-window obstruction, and a follow-up with the 3-Euclidean coordinate view. Await their response; avoid repeating finite scans or the already-established common quadratic gain.
+- This invocation's local Python/container tools returned concrete ClientError; no local Lean compile was possible. No CI was dispatched. The new note is a mathematical reformulation, not a nonhalting proof or an academically publishable result.
+- Next: develop a genuinely root-specific invariant for the perturbed 3-Euclidean remainder process, or obtain Agent 49's existing stronger target. Keep the TM63 residue-four candidate in its existing intermediate status; do not promote it or the #623 note to results/.
