@@ -256,15 +256,17 @@ The failed run printed `sorryAx` for `carryLongPrefix_r1_left`. Given the unsolv
 The shared root arithmetic module `TM63RootCountdownArithmetic.lean` now exports `tm63_root_middle_k_split`, `tm63_index1_eq_16k15`, and `tm63_index1_lt_pow_length1). These package the odd quotient, the exact `16*r+15` root index, and the root-width bound for reuse by subsequent residue rows; `TM63RootResidueSix.lean` consumes them directly. These new lemmas are also uncompiled pending the same source-closure gate.
 
 
-## M0-even residue-four finite bridge handoff
+## M0-even residue-four row (integrated candidate)
 
-To split Agent 48's `M0EvenResidueFour-bridge-candidate.md` work, I added [M0EvenResidueFourFiniteBridge.lean](./M0EvenResidueFourFiniteBridge.lean). It states the exact finite certificate
-`fRun tm2 51 ⟨3,0,[-10,-9,-8,-7,-6,-5,-4,-1,2,3]⟩ = some ⟨4,3,[-12,-11,-10,-7,-4,-1,1,2,3]⟩`
-and a `List.range 52` prefix-head confinement check (including the terminal head) in `[-12,3]`. An independent JS replay gives pre-step head range `[-12,2]` and final head `3`, consistent with the looser frame bound.
+Agent 48 has now supplied the integrated source-row candidate in:
+- `M0EvenFourQ4Bridge.lean`: exact 51-step finite bridge, head confinement, and arbitrary-source input match;
+- `M0EvenFourQ4Prefix.lean`: the base `L=3,n=4` prefix, E-scan, and q4 suffix interfaces;
+- `M0EvenResidueFour.lean`: the uniform `n=8*k+4` source prefix and counted increment, including the low-block `binDec_residue4` decomposition and S1 left-facing frame lift.
 
-This module is **not compiled** and certifies only the finite trace/head range. It does not prove the arbitrary-source input frame, the `3a-3) E-scan, q4 right shape, left-facing output/tail, or counted increment. Agent 48 was notified and can reuse it if it matches their current work.
+Agent 8's `im-results/agent8-root-residue-four/TM63RootResidueFour.lean` imports the Agent 42 middle-11 endpoint, applies the M0-even residue-four counted increment, then the generic M2-odd row to produce the candidate `tm63_blank_reaches_after_middle13`. Thus the Agent 42 middle-11 root module is a direct dependency of the new root-through-middle13 candidate.
 
+I independently replayed the full base prefix from the exact S1 source encoding for `L=3,n=4,m=0,z=0`. For `(a,b)=(1,0),(2,1),(3,2)`, the `12*a+48)-step run reached state 4 at the original head and satisfied `q4RightShape`; the first 15 bits for `(1,0)` were `11111 00 111 00000`. This is deterministic sample evidence only, not a universal source proof.
 
-A companion source lemma is now in [M0EvenResidueFourBinDec.lean](./M0EvenResidueFourBinDec.lean): for `3 ≤ L) and `8*q+4 < 2^L), it proves
-`binDec L (8*q+4) = d1 ++ d1 ++ d0 ++ binDec (L-3) q`
-and exposes the corresponding full `s1LeftFacing` word plus `m0EvenFour_leftFrameWord`, the exact first 13 head-facing cells `[0,1,0,0,1,1,1,1,1,1,1,0,0]`. This packages the arbitrary high tail instead of expanding it, and gives the fixed left-side cells needed by the `[-12,3]` bridge frame. The module is wired after `S1Encoder` in the manual workflow, but remains uncompiled.
+The standalone Agent 42 finite-bridge and BinDec helper files were removed after the integrated Agent 48 modules superseded them; their extra workflow compile steps were also removed. The independent simulation record remains in `communications/agent48/20261115T0752Z_agent42-m0even-q4-shape-samples.md`.
+
+**Status:** the Agent 48 M0 row modules and Agent 8 root-through-middle13 wrapper are still uncompiled candidates. They do not yet certify a longer BB(6) lower bound. The next source gate remains the Critic-requested residue-seven/Rst1Prime dependency compile; no CI was dispatched.
