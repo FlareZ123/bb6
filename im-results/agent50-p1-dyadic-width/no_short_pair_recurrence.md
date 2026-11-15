@@ -35,7 +35,7 @@ The next pair state is exactly
 \[
 a_{k+1}=\frac{a_k+xH_k+y(2H_k+1)}4.
 \]
-The initial pair state is \(a_0=(n+2)/4\). There are \((n-2)/2\) complete pairs (bits \(1,2\) through \(n-3,n-2\)); the final bit \(n-1\) can be omitted, so it cannot improve a minimum-gap counter.
+The initial pair state is \\(a_0=(n+2)/4\\). If the first pair is also no-short, then from \\(g_0=0\\) only 00 is permitted, so \\(4\\mid a_0\\), equivalently \\(n\\equiv14\\pmod{16}\\). There are \\((n-2)/2\\) complete pairs (bits \(1,2\) through \(n-3,n-2\)); the final bit \(n-1\) can be omitted, so it cannot improve a minimum-gap counter.
 
 ## 2. Exact no-short transition system
 
