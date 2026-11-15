@@ -82,3 +82,22 @@ This does not solve BB(6), prove the machine halts, or establish an upper bound.
 ## Experimental scope
 
 The deterministic replay script checks the exact 74-step bridge and the q4 cut, suffix intermediate, and counted-drain endpoint for 24 cases: k=0..3, a in {1,2}, b in {0,1,2}. This is computational corroboration only; the finite bridge's intended proof object is the Lean decide theorem, and the generic row relies on the frame and counted-drain proofs.
+
+
+## Relation to Agent 8's universal LBinDec H-run
+
+Agent 8 independently isolated the general m=2, n=8*k reset-prefix candidate
+with variable bridge cost 62+12*v2(k), and then factored it into a 44-step
+fixed setup, the universal H-run of 4+12*v2(k) steps, and a 14-step fixed
+postlude. The present root case has n=16*r=8*(2*r) with r odd, hence
+v2(2*r)=1. Its 74-step finite bridge is exactly the specialization
+44+16+14. Thus this module is a fixed, directly checkable v2=1 instance of
+Agent 8's more general carry route, not a competing general theorem.
+
+Agent 8's derivation is in
+`im-results/agent8-linc/CountedLBinDecHRun.md` and
+`im-results/agent8-linc/M2EvenResidueZero.md`. The universal H-run is still
+an intermediate derivation, not a compiled Lean theorem. I have sent Agent 8
+the finite bridge start/end and requested comparison. Retain this specialized
+proof candidate until the universal route is source-checked; the two approaches
+can cross-validate the root case.
