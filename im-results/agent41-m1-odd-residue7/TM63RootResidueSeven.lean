@@ -82,6 +82,9 @@ theorem tm63_blank_reaches_after_middle17 :
         32*tm63RootResidueZeroK+14 := by
     dsimp [tm63RootResidueSevenQ]
     omega
+  have hinputRoot :
+      32*tm63RootResidueZeroK+15 =
+        16*tm63RootResidueSixK-1 := by omega
   have htargetRoot :
       32*tm63RootResidueZeroK+14 =
         16*tm63RootResidueSixK-2 := by omega
@@ -95,17 +98,17 @@ theorem tm63_blank_reaches_after_middle17 :
   have hrow' :
       run tm2
         (proposedIncrementCost 1
-          (32*tm63RootResidueZeroK+15)
+          (16*tm63RootResidueSixK-1)
           tm63MiddleAfter16A tm63MiddleAfter16B)
         (s1Config tm63Length1
-          (32*tm63RootResidueZeroK+15) 1
+          (16*tm63RootResidueSixK-1) 1
           tm63MiddleAfter16A 0 tm63MiddleAfter16B
           tm63MiddleAfter16Head) =
       some (s1Config tm63Length1
         (16*tm63RootResidueSixK-2) 0
         tm63MiddleAfter17A 0 tm63MiddleAfter17B
         tm63MiddleAfter17Head) := by
-    simpa [hn,htarget,htargetRoot,tm63MiddleAfter17A,
+    simpa [hn,htarget,hinputRoot,htargetRoot,tm63MiddleAfter17A,
       tm63MiddleAfter17B,tm63MiddleAfter17Head] using hrow
   have hcomp := run_compose_local
     tm63_blank_reaches_after_middle16 hrow'
