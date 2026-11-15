@@ -83,4 +83,4 @@ The external Hardness.lean note describes a partial exact even-c underflow invar
 
 ## Research opportunity
 
-Build a formal bridge between the external high-level map and the local source ResetParent grammar. Then express the blank-derived C(2,0) orbit as an exact deterministic one-dimensional return map and investigate whether its iterates can ever hit the fatal-height set. This may unify the source-root inverse analysis with the independent Collatz-like acceleration.
+The arithmetic bridge is now explicit: after the high-b drain, the only low-branch residues are 0 and 2, and they yield exactly the even and odd local `ResetParent` constructors, respectively, with the same scale parameter. The remaining task is to formalize the edge-by-edge refinement in Lean, then use the resulting deterministic first-return map from the blank-derived C(2,0) root to prove or refute that the orbit ever hits the fatal-height set. This unifies the source-root inverse analysis with the independent Collatz-like acceleration without treating the heuristic hazard estimate as a proof.
