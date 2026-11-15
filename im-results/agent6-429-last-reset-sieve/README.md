@@ -89,23 +89,31 @@ In particular:
 - \(n=1\): branches 2, 5, and 8 all force the same post-reset seed \((11,74)\), hence terminal \(U=25\), which is not a survivor. Branch 9 remains with 122 classes modulo \(2^{17}\).
 - \(n=3\): branches 1 and 7 both force seed \((0,74)\), hence terminal \(U=21\), which is not a survivor. Branch 10 remains with 60 classes modulo \(2^{15}\).
 
-For \(n\ge18\), the terminal sieve leaves the cylinder \(U\equiv-3\pmod{2^{18}}\), so it no longer restricts \(A\). However, the root mod-8 invariant still restricts the reset parameter to exactly three of the eight parity-compatible classes modulo 16, depending only on \(n\bmod32\). This follows by reducing the branch-9/10 formulas for \(x\) modulo 8 (the \(2^n\) term vanishes modulo 8) and imposing \((x\bmod8,y\bmod4)\in\texttt{BB429Mod8.Allowed}\), with \(y=2(x-d)+1\).
+For \(n\ge18\), the terminal sieve leaves the cylinder \(U\equiv-3\pmod{2^{18}}\), so it no longer restricts \(A\). The table below is **conditional on branches 9 and 10**; it is not a classification of every long-burst reset branch. For these two variable-\(d\) branches, the root mod-8 invariant first gives three parity-compatible classes modulo 16, depending only on \(n\bmod32\).
+
+There is a further source-root refinement for branch 9. The already-proved theorem \(\texttt{BB429RootMod16.rooted\_not\_7\_7}\) says that a genuine blank-root state cannot have both counters congruent to 7 modulo 8. In the four cases
+\[
+(n\bmod32,d\bmod16)\in\{(1,12),(9,8),(17,4),(25,0)\},
+\]
+the branch-9 equation forces exactly \((x\bmod8,y\bmod8)=(7,7)\). Those four classes are therefore impossible. The Lean files LongBurstRootMod16.lean and SourceLongBurstRootMod16.lean formalize the local and original-source versions, respectively. The source version transports the original sourceRun through BB429SourceMod16.source_run_to_local.
+
+The table uses both the root mod-8 allowed-pair condition and this root mod-16 obstruction. Branch 10 is unchanged. Branch 8 is separately incompatible with the root mod-8 invariant because it has \(y=1\) and even \(x=d\). **Branches 1–7 remain separate unresolved long-burst cases**: the \(2^{18}\) terminal cylinder does not eliminate their constant-seed parameters, and the table below makes no such claim.
 
 | \(n\bmod32\) | Branch | Allowed \(d\bmod16\) |
 |---:|---:|---|
-| 1 | 9 | 4, 8, 12 |
+| 1 | 9 | 4, 8 |
 | 3 | 10 | 1, 5, 9 |
 | 5 | 9 | 2, 10, 14 |
 | 7 | 10 | 7, 11, 15 |
-| 9 | 9 | 0, 4, 8 |
+| 9 | 9 | 0, 4 |
 | 11 | 10 | 1, 5, 13 |
 | 13 | 9 | 6, 10, 14 |
 | 15 | 10 | 3, 7, 11 |
-| 17 | 9 | 0, 4, 12 |
+| 17 | 9 | 0, 12 |
 | 19 | 10 | 1, 9, 13 |
 | 21 | 9 | 2, 6, 10 |
 | 23 | 10 | 3, 7, 15 |
-| 25 | 9 | 0, 8, 12 |
+| 25 | 9 | 8, 12 |
 | 27 | 10 | 5, 9, 13 |
 | 29 | 9 | 2, 6, 14 |
 | 31 | 10 | 3, 11, 15 |
@@ -124,16 +132,19 @@ The script parses the exact Lean lists from the four sieve source files, reconst
 
 ## 4. What this does and does not establish
 
-Established by finite arithmetic from the cited source lists:
+Established by finite arithmetic and the cited kernel-checked invariants:
 
 - the 242 terminal residue count and \(v_2(U+3)\) distribution;
 - the branch-specific formulas above;
 - elimination of all constant \(A=3,14\) branches for their valid short-burst lengths \(n<18\);
-- the exact finite \(d\)-residue classes for the remaining variable branches.
+- the exact finite \(d\)-residue classes for the remaining variable branches at \(n<18\);
+- exclusion of the four branch-9 long-burst classes listed above by rooted_not_7_7;
+- exclusion of branch 8 by the root mod-8 allowed-pair invariant.
 
 Not established:
 
 - that any of the remaining \(d\)-classes is root-reachable;
+- exclusion or realization of branches 1–7 for \(n\ge18\);
 - that any candidate actually halts;
 - an upper bound on \(n\);
 - the exact value of \(BB(6)\).
