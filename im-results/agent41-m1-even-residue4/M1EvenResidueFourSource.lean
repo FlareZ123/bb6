@@ -249,13 +249,20 @@ theorem m1EvenResidueFour_q4_prefix_source
     (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     run tm2 (56+12*a) (s1Config L (8*k+4) 1 a 0 b h) =
       some ⟨4,h+4,m1EvenResidueFourLiftedCutTape L k a b h⟩ := by
-  let base := s1Config 3 4 1 a 0 b h
-  let background := s1Config L (8*k+4) 1 a 0 b h
+  let base : Config := ⟨3,h,(s1Config 3 4 1 a 0 b h).tape⟩
+  let background := (s1Config L (8*k+4) 1 a 0 b h).tape
   let Tq := m1EvenResidueFourCutTape a b h
-  have hstart : ∀ x, m1EvenResidueFourReadInside a h x = true →
-      background.tape x = base.tape x := by
-    intro x hx
-    exact m1EvenResidueFour_input_matches L k a b h hL hbound x hx
+  have hinput := m1EvenResidueFour_input_matches L k a b h hL hbound
+  have hstart :
+      frame (m1EvenResidueFourReadInside a h) background base =
+        s1Config L (8*k+4) 1 a 0 b h := by
+    apply config_ext
+    · rfl
+    · rfl
+    · funext x
+      by_cases hx : m1EvenResidueFourReadInside a h x = true
+      · simp [frame,background,base,hx,hinput x hx]
+      · simp [frame,background,base,hx]
   have hheads :
       ∀ j, j < 56+12*a → ∀ d,
         run tm2 j base = some d →
