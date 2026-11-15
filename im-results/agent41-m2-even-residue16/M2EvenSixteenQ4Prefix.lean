@@ -5,8 +5,8 @@ import Lean.Elab.Tactic.Omega
 /-!
 # The m=2,n=16 even q4 reset branch
 
-This module closes the next TM63 reset after the m=0,n=5 branch.
-The new finite kernel is a 50-step bridge, following the standard
+This module establishes the finite n=16 base case for the next m=2 reset row.
+The new finite kernel is a 74-step bridge, following the standard
 (3*a+2)-block counted left sweep and preceding the 3*a E-state scan.
 The resulting q4 cut is at state E/head h and feeds the generic full-tape
 q4 suffix endpoint.
@@ -206,9 +206,7 @@ private theorem m2EvenSixteenQ4LeftFacingPrefixTrue (a i : Nat)
       rw [hside]
       simp [m2EvenSixteenQ4LeftSuffix,markerWord,sideBit]
 
-/-- The 13-cell boundary written by the 50-step bridge is exactly the
-marker-1/digit/BinDec boundary of the next S1 state. -/
-/-- The bridge writes the complete 20-cell suffix window of the q4
+/-- /-- The bridge writes the complete 20-cell suffix window of the q4
 left stream, indexed by y=1-j in its local frame. -/
 private theorem m2EvenSixteenQ4LeftFacingBridgeBit (a j : Nat)
     (hj : j ≤ 19) :
