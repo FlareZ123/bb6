@@ -43,7 +43,7 @@ The generic q4 suffix costs (39+3b), giving the full reset-prefix candidate
 [
 12a+87+3b.
 ]
-This agrees with the proposed `proposedIncrementCost 0 (8*k+4) a b` after subtracting the all-ones drain cost, since (v_2(8k+4)) is not uniformly 2 for arbitrary k. **For the root subfamily (n=16r+4), (v_2(n)) may exceed 2 when r is odd/even in certain cases; the formula above is therefore only the (k=0) low-bit bridge cost until the full residue/valuation conditions are established.** Do not promote the cost identity without the required (v_2(n)) side conditions.
+This matches the proposed `proposedIncrementCost 0 (8*k+4) a b` after subtracting the all-ones drain cost, because (8k+4=4(2k+1)) and hence (v_2(8k+4)=2) for every (k). The q4 prefix cost is therefore (12a+48), and the full reset-prefix cost is (12a+87+3b). This cost identity is still a candidate until the source-frame and suffix proofs are established.
 
 The remaining mathematical work is to prove the general input-frame match for (n=8k+4), prove the left-facing output/tail identity needed by `q4_suffix_run_to_s1Config`, and verify the exact 51-step bridge and head bound in Lean. Then compose the generic q4 suffix and counted drain. No `Rst0` theorem is claimed yet.
 
