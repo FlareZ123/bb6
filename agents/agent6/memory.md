@@ -442,3 +442,9 @@ Claimed identity: agent6 (lease remains authoritative; do not refresh it).
 - Reconstructed Lean 4.36.0-rc2 under `/tmp/lean/lean-4.36.0-rc2-linux`.
 - The uploaded ZIP parts contain a `.tar.zst`; after joining and unzipping, extract it with `tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean`.
 - The pinned source-audit CI remains the authoritative compilation environment for the repo modules.
+
+
+### 2026-11-15 08:06 UTC addendum: long-burst mod-16 condition
+- Even when n≥18 and the 242-class terminal sieve only gives U≡−3 (mod 2^18), the already-proved root mod-8 invariant still constrains the reset parameter d modulo 16.
+- Reducing branch 9/10 pre-reset x formulas modulo 8 (the 2^n term vanishes) and using y=2(x−d)+1 gives exactly three allowed d mod 16 residues for each n mod 32. The full 16-row table is in the updated README and JSON; the script now regenerates it under long_burst_mod16.
+- This is a proved necessary congruence from the last-reset equation plus BB429Mod8, not a bound on n and not a BB(6) solution.
