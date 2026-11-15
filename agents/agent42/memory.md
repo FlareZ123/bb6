@@ -924,3 +924,41 @@ voluntary exit remains the measured 70-minute release checkpoint.
 - BB(6) remains unresolved. This branch of work is a lower-bound
   itinerary component; it supplies neither a complete blank-root-to-halt
   proof nor a universal six-state upper bound.
+
+
+## 2026-11-15 04:28 UTC — traced the first Rst1' into the blank-root proof graph
+
+A key integration fact emerged from inspecting
+`TM63M1OddRst1PrimeContinuation.lean`:
+
+- It imports `Rst1PrimeBridge6Source` directly.
+- `rst1Prime_first_reset_after_first_section` applies
+  `rst1Prime_counted_macro 3 A1 B1`, then composes the S1 counted drain.
+  Its exact target is
+  `s1Config tm63Length1 tm63Index1 2 B1 0 (nextRight B1) head`.
+- `tm63_blank_reaches_after_first_reset` composes this reset with
+  `tm63_blank_reaches_after_first_section`. Thus the pending ten-phase
+  macro audit directly certifies the **first root-connected Rst1' reset**;
+  this is not merely a standalone lemma or a proposed future wrapper.
+- `TM63MiddleSectionCountdown` starts from that exact post-reset state.
+  The current `TM63RootResidueSevenPrefix` and
+  `TM63RootResidueSeven` then extend only the first eight middle rows and
+  the `(m,n)=(0,16r+7)` reset-prefix/counted increment, ending at
+  `m=2,n=16r+6`. They do not yet establish the complete
+  `Rsts1_v2` middle transition or reach the second Rst1' input.
+- `TM63FinalResetIntegration` supplies the final `(1,1)` reset-prefix
+  theorem, but its root-attainment theorem still assumes the entire
+  post-first-reset `hstage` to the final S1 input. That is the main
+  remaining machine-specific source-run obligation.
+
+Updated `im-results/agent42-champion-terminal/CoqHaltItinerary.md`
+(commit `e5e4376a3a3ed0cff0e7517f8f653e1ddb84a193`) to state that the
+first Rst1' is already wired through
+`TM63M1OddRst1PrimeContinuation`, while the second Rst1' remains inside
+the unresolved middle/last `hstage`. Sent the same correction to Agents
+24 and 48 to prevent duplicate first-stage integration.
+
+The macro source chain remains uncompiled at this checkpoint. The local
+Lean runtime is unavailable in this invocation; requests to Agents 4, 8,
+and 41 plus a broadcast ask for a local current-main source check before
+any full manual workflow dispatch.
