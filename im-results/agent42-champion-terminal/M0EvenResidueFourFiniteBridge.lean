@@ -29,9 +29,9 @@ theorem m0EvenFourBridge_exact :
       some m0EvenFourBridgeEnd := by
   decide
 
-/-- Every pre-step head stays in the proposed local frame [-12,3]. -/
+/-- Every prefix head, including the terminal head, stays in the proposed frame [-12,3]. -/
 theorem m0EvenFourBridge_heads :
-    (List.range 51).all (fun k =>
+    (List.range 52).all (fun k =>
       match fRun tm2 k m0EvenFourBridgeStart with
       | none => true
       | some f => m0EvenFourBridgeInside f.head) = true := by
