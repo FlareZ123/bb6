@@ -53,6 +53,7 @@ theorem s1Config_left_after_d1pow
   rw [← hcast]
   rw [s1Config_left_cell L 0 1 a 0 b h (3*a+1+k)]
   simp only [s1LeftFacing,binDec_zero]
+  simp only [List.append_assoc]
   rw [sideBit_append_right (d1pow a)
     (markerWord 1 ++ d0 ++ d1pow L ++ lh) (3*a+1+k)
     (by simp [d1pow_length]; omega)]
@@ -102,7 +103,7 @@ S1 source, not merely a finite-frame computation. -/
 theorem rst1Prime_bridge8_after_firstSweep
     (L a b : Nat) (h : Int) :
     run tm2 (9*a+3+8) (s1Config L 0 1 a 0 b h) =
-      some (frameAt
+      some (BB6Coverage.Agent8Rst1Prime.frameAt
         (sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h)
         (h-((3*a+1:Int))) inside8 bridge8End) := by
   rw [run_append,rst1Prime_firstSweep_run]
