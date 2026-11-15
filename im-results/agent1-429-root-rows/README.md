@@ -38,33 +38,33 @@ The existing upstream-source bridge `BB429SourceMod16.source_run_to_local` ident
 The certificate does not claim any surviving terminal cylinder is actually reachable. Arbitrarily deep inverse-feasible synthetic paths exist, and these two exclusions alone leave infinitely many possible true-root terminals. The productive next step is to find a nonperiodic, history-sensitive, all-parameter obstruction covering an entire remaining root-halting component, or a genuine source halting witness, rather than simply counting higher-modulus leaf filters.
 
 
-## New two-step odd/odd row: pending Lean compilation (2026-11-15)
+## Two-step odd/odd inverse obstructions and branch-10 application (draft)
 
-A further inverse argument appears to strengthen the odd/odd row at first-counter residue 9:
+The feature-branch module [BB429RootOddRowsStrong.lean](BB429RootOddRowsStrong.lean) now has two candidate all-time root obstructions:
 
-```
-Reach(a,b) ∧ a≥33 ∧ a%16=9 ∧ b%8=5  -> False.
-```
+- `rooted_not_9_5`: `Reach(a,b) ∧ a≥33 ∧ a%16=9 ∧ b%8=5 → False`.
+- `rooted_not_13_1`: `Reach(a,b) ∧ a≥33 ∧ a%32=13 ∧ b%8=1 → False`.
+- `rooted_not_5_1`: `Reach(a,b) ∧ a≥61 ∧ a%32=5 ∧ b%8=1 → False`.
 
-Equivalently, for a genuine root-reachable odd/odd state with a≥33, the row a%16=9 forces b%8=1 (rather than allowing both 1 and 5).
+Row 9/5 and row 13/1 use two successive `odd_back` decompositions. For row 9/5, both second-predecessor cases force a positive-even predecessor whose second counter is 1 mod 4, contradicting `even_back`. For row 13/1, the second-predecessor case gives the same even-back contradiction, while the first-predecessor case reaches a state with first counter 1 mod 8 and second counter 3 mod 4, excluded by `BB429Mod8.Allowed`. Row 5/1 follows a third inverse step: one branch contradicts `even_back`; the other reaches a positive-even first counter with second counter 6 mod 8, contradicting `rooted_positive_even_eight`.
 
-Proof sketch from the existing BB429NewResidue odd_back/even_back:
-1. Since b%4=1, odd_back(a,b) has only its first alternative, giving Reach(p,q), a=2p+3, q=a+b.
-2. The hypotheses imply p≥15, p%4=3, and q%8=6.
-3. Apply odd_back(p,q). In its first alternative, p=2r+3 and s=q+p; hence r≥6 is even and s%4=1. In its second alternative, 4r+26=4p+q and 2s=q+4; q%8=6 and p odd again give r≥6 even and s%4=1.
-4. Both alternatives contradict even_back(r,s), which requires s%4=2 for a reachable positive-even first counter.
+[BB429LastResetRow95.lean](BB429LastResetRow95.lean) composes these root obstructions with the exact branch-10 last-reset prestate equation. It excludes the following refined residue progressions:
 
-A fuller Lean skeleton was sent to Agents 6 and 32 in communications. This lemma has **not yet been compiled**; treat it as a candidate until the source-root theorem is added and CI confirms it.
+- Eight pairs `(n mod 64,d mod 32)=(7,7),(15,19),(23,31),(31,11),(39,23),(47,3),(55,15),(63,27)`, which force `x mod 16=9` and `y mod 8=5`.
+- Sixteen pairs `(n mod 128,d mod 64)=(3,41),(11,53),(19,1),(27,13),(35,25),(43,37),(51,49),(59,61),(67,9),(75,21),(83,33),(91,45),(99,57),(107,5),(115,17),(123,29)`, which force `x mod 32=13` and `y mod 8=1`.
+- Sixteen pairs `(n mod 128,d mod 64)=(3,25),(11,37),(19,49),(27,61),(35,9),(43,21),(51,33),(59,45),(67,57),(75,5),(83,17),(91,29),(99,41),(107,53),(115,1),(123,13)`, which force `x mod 32=5` and `y mod 8=1`.
 
-### Last-reset application
+The lower bound `x≥33` follows uniformly from `9(3n+77)≤2^(n+2)(d+6)` for `n≥18,d≥3`. [SourceLastResetRow95.lean](../agent6-harmonic429/SourceLastResetRow95.lean) transports both families to the original Cryptids `sourceRun` semantics through `BB429SourceMod16.source_run_to_local`.
 
-For branch 9/10 last-reset prestate (x,y), y is odd and, when n≥18, x≥33. The strengthened odd/odd rows applied to the current 44 (n mod32,d mod16) candidates eliminate 16 complete parameter classes (112 of 176 four-way lifts remain before the further mod64 gates):
+The same two root obstructions have been added as terminal bad states in `BB429KernelExtended.Bad`, so the existing affine inverse-tree certificate can use them at arbitrary recursion depth. This is a reusable strengthening of the certificate engine, not yet a new machine decision.
 
-```
-(3,5),(5,10),(7,7),(7,11),(11,1),(13,6),(15,3),(15,7),
-(19,13),(21,2),(23,3),(23,15),(27,9),(29,14),(31,11),(31,15)
-```
+The new 40 refined lifts (8 in row 9/5 and 16 each in rows 13/1 and 5/1) are only the additions in this branch. The complementary eight lifts and 12 earlier whole-class exclusions remain on the separate draft PR #102 branch; those modules are not yet integrated here. Agent 1's full residue audit reports 16 complete long-burst parameter classes eliminated and 28 remaining classes / 112 of 176 refined lifts. This is a finite modular classification of necessary-condition rows, not a proportion of machines or a #429 decision.
 
-The four classes newly eliminated by the 9/5 strengthening are (7,7), (15,3), (23,15), and (31,11). The finite residue enumeration and exact last-reset equations are recorded in communications/broadcast/20261115T122229Z_agent1-update-rooted-9-5-strengthening.md (see the actual timestamped file in that directory).
+**Verification status:** the root-row workflow's earlier run 43714798173 failed on an argument-strength mismatch at `BB429RootOddRowsStrong.lean:26`; Agent 1 corrected that argument, but no fresh successful source CI is recorded. The new `rooted_not_13_1` and `rooted_not_5_1` theorems, all last-reset consumers, and the modified inverse-kernel certificate have not been locally compiled or source-CI checked. The next discriminating test is a local Lean 4.36.0-rc2 compile of the changed dependency closure, followed by one pinned source-chain check and transitive `#print axioms` audit. Do not treat these draft integrations as source-certified.
 
-For short branches, the same root rows eliminate 15 of 44 n=5 branch-9 d residues via the existing rooted-eleven lemma, and eliminate n=13 branch-9 d=22 via rooted-eleven plus d=6 via the new row 3→7. These are intermediate necessary-condition reductions, not a BB(6) solution.
+The finite short-branch residue reductions remain as previously described in the last-reset communications; they do not establish a complete root-halt exclusion.
+
+
+### Reproducible finite certificate audit (not a proof)
+
+The BigInt transcription at [audit_cert14.mjs](../agent6-429-last-reset-row95/audit_cert14.mjs) evaluates the depth-14 affine inverse certificate with the three new root predicates over every odd n in 19..529 and all four d mod 64 lifts of the 44 d mod 16 candidates in the current terminal-residue table. It checks 2,816 affine families: 1,984 certify, 16 of the 44 (n mod 32,d mod 16) classes certify completely, 27 certify partially, and one class has no certificate exclusion in this finite range: (23,7). This is a JS transcription of the Lean recursion, not a Lean evaluation and not a uniform-in-n theorem. The untouched (23,7) class is the next concrete holdout for inverse-tree refinement.
