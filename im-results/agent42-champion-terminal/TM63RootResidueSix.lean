@@ -35,20 +35,8 @@ private theorem run_compose_local {n m : Nat} {c1 c2 c3 : Config}
 
 /-- The genuine middle index is strictly below its binary width. -/
 private theorem tm63_root_index_bound :
-    tm63Index1 < 2^tm63Length1 := by
-  have hA := tm63FirstSection_exponent_ge_five
-  have hlen : tm63Length1 = tm63FirstSection.exponent + 5 := by
-    dsimp [tm63Length1]
-    omega
-  have hpow :
-      2^tm63Length1 = 32 * 2^tm63FirstSection.exponent := by
-    rw [hlen, Nat.pow_add]
-    norm_num
-    ring
-  have hpos : 0 < 2^tm63FirstSection.exponent :=
-    Nat.pow_pos (by decide)
-  rw [tm63_index1_exact,hpow]
-  omega
+    tm63Index1 < 2^tm63Length1 :=
+  tm63_index1_lt_pow_length1
 
 private theorem tm63_root_length_ge_four : 4 ≤ tm63Length1 := by
   have hA := tm63FirstSection_exponent_ge_five
@@ -70,14 +58,7 @@ def tm63RootResidueSixHead : Int :=
 exactly 16*r+6 and lies below the root's binary width. -/
 private theorem tm63_root_index_as_16r15 :
     tm63Index1 = 16*tm63RootResidueSixK + 15 := by
-  have hdiv := Nat.mod_add_div tm63RootMiddleK 2
-  rw [tm63_root_middle_k_odd] at hdiv
-  have hk :
-      tm63RootMiddleK = 2*tm63RootResidueSixK+1 := by
-    dsimp [tm63RootResidueSixK]
-    omega
-  rw [tm63_index1_eq_8k7,hk]
-  omega
+  simpa [tm63RootResidueSixK] using tm63_index1_eq_16k15
 
 private theorem tm63_root_residue6_bound :
     16*tm63RootResidueSixK+6 < 2^tm63Length1 := by
