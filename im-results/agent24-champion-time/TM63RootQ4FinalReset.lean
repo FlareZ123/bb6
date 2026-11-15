@@ -26,18 +26,16 @@ theorem tm63Length2_pos : 0 < tm63Length2 := by
   unfold tm63Length2 tm63Length1
   omega
 
-/-- The arbitrary-(a,b) final (m,n)=(1,1) reset source run discharges the
-second machine-specific premise of the conditional champion theorem. -/
-theorem tm63_final_reset_prefix_source :
+/-- The arbitrary-(a,b) final (m,n)=(1,1) reset source run, with its
+essential translated head, specialized to the exact final itinerary state. -/
+theorem tm63_final_reset_prefix_source (h : Int) :
     run tm2 (resetPrefixCost 1 1 tm63FinalA tm63FinalB)
-      (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB
-        (0 : Int)) =
+      (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) =
     some (s1Config tm63Length2 0 0
       (tm63FinalA+tm63FinalB+2) (2^tm63FinalB-1) 0
-      (5+3*tm63FinalB)) := by
-  simpa using
-    m1One_q4_reset_prefix_source tm63Length2 tm63FinalA tm63FinalB
-      (0 : Int) tm63Length2_pos
+      (h+5+3*tm63FinalB)) := by
+  exact m1One_q4_reset_prefix_source tm63Length2 tm63FinalA
+    tm63FinalB h tm63Length2_pos
 
 /-- Exact proposed champion attainability, conditional only on the
 remaining original-TM2 itinerary from the root-connected q4/drain endpoint
@@ -50,9 +48,7 @@ theorem tm63_attainable_at_proposedChampionScore_of_remaining_itinerary
         (s1Config 3 6 1 71 0 (2^63-1) 223) =
         some (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h)) :
     Attainable proposedChampionScore := by
-  have hfinalS1 :=
-    m1One_q4_reset_prefix_source tm63Length2 tm63FinalA tm63FinalB h
-      tm63Length2_pos
+  have hfinalS1 := tm63_final_reset_prefix_source h
   have hfinal :
       run tm2 (resetPrefixCost 1 1 tm63FinalA tm63FinalB)
         (s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h) =
