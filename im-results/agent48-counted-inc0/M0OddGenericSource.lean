@@ -248,7 +248,8 @@ theorem m0Odd_generic_q4_prefix_leftFacing
     rw [m0OddGeneric_cut_eq_base_inside L k a b h
       (h-(i:Int)) hin]
     rw [m0Odd_q4_prefix_leftFacing a b h ha i]
-    rw [hbaseLeft,m0OddGenericLeftFacing]
+    rw [hbaseLeft]
+    simp only [m0OddGenericLeftFacing]
     have hbaseBit := Agent6Q4Prefix.sideBit_append_left
       (m0OddGenericTargetPrefix a) (d1 ++ d0 ++ lh) i
       (by rw [htargetPrefixLength]; omega)
@@ -263,7 +264,8 @@ theorem m0Odd_generic_q4_prefix_leftFacing
     rw [m0OddGeneric_cut_eq_input_outside L k a b h
       (h-(i:Int)) hout]
     rw [s1Config_left_cell L (2*k+1) 0 a 0 b h i]
-    rw [hsourceLeft,m0OddGenericLeftFacing]
+    rw [hsourceLeft]
+    simp only [m0OddGenericLeftFacing]
     have hsourceBit := Agent6Q4Prefix.sideBit_append_right
       (m0OddGenericInputPrefix a) (binDec (L-1) k ++ lh) i
       (by rw [hinputPrefixLength]; omega)
