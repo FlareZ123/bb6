@@ -47,23 +47,34 @@ theorem s1Config_left_after_d1pow
     (s1Config L 0 1 a 0 b h).tape
       (h-((3*a+1+k:Int))) =
       sideBit (markerWord 1 ++ d0 ++ binDec L 0 ++ lh) (k+1) := by
-  have hcast : ((3*a+1+k : Nat) : Int) =
-      3*(a:Int)+1+(k:Int) := by
+  have hcoord :
+      h - ((3*a+1+k:Int)) =
+        h - ((3*a+1+k:Nat):Int) := by
     omega
-  rw [← hcast]
-  rw [s1Config_left_cell L 0 1 a 0 b h (3*a+1+k)]
-  simp only [s1LeftFacing,binDec_zero]
-  simp only [List.append_assoc]
-  rw [sideBit_append_right (d1pow a)
-    (markerWord 1 ++ (d0 ++ (d1pow L ++ lh))) (3*a+1+k)
-    (by simp [d1pow_length]; omega)]
-  simp [d1pow_length]
+  have hcell := s1Config_left_cell L 0 1 a 0 b h (3*a+1+k)
+  have hleft :
+      s1LeftFacing L 0 1 a 0 =
+        d1pow a ++ markerWord 1 ++ d0 ++ binDec L 0 ++ lh := by
+    simp [s1LeftFacing,binDec_zero,List.append_assoc]
+  have hside := sideBit_d1pow_append a (3*a+1+k)
+    (markerWord 1 ++ d0 ++ binDec L 0 ++ lh) (by omega)
+  calc
+    (s1Config L 0 1 a 0 b h).tape (h-((3*a+1+k:Int))) =
+        (s1Config L 0 1 a 0 b h).tape
+          (h-((3*a+1+k:Nat):Int)) := by
+            rw [hcoord]
+    _ = sideBit (s1LeftFacing L 0 1 a 0) (3*a+1+k) := hcell
+    _ = sideBit (d1pow a ++ markerWord 1 ++ d0 ++ binDec L 0 ++ lh)
+          (3*a+1+k) := by
+            rw [hleft]
+    _ = sideBit (markerWord 1 ++ d0 ++ binDec L 0 ++ lh) (k+1) := by
+            simpa only [show 3*a+1+k-3*a = k+1 by omega] using hside
 
-/-- The post-sweep local tape is exactly bridge8Start on its entire
+/-- The post-sweep local tape is exactly BB6Coverage.Agent8Rst1Prime.bridge8Start on its entire
 queried window [-3,0]. -/
 theorem rst1Prime_bridge8_window_after_firstSweep
     (L a b : Nat) (h : Int) :
-    ∀ x, inside8 x = true →
+    ∀ x, BB6Coverage.Agent8Rst1Prime.inside8 x = true →
       (sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h)
         (h-((3*a+1:Int))+x) =
         decide (x ∈ bridge8Start.marked) := by
@@ -105,10 +116,10 @@ theorem rst1Prime_bridge8_after_firstSweep
     run tm2 (9*a+3+8) (s1Config L 0 1 a 0 b h) =
       some (BB6Coverage.Agent8Rst1Prime.frameAt
         (sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h)
-        (h-((3*a+1:Int))) inside8 bridge8End) := by
+        (h-((3*a+1:Int))) inside8 BB6Coverage.Agent8Rst1Prime.bridge8End) := by
   rw [run_append,rst1Prime_firstSweep_run]
   simp only [Option.bind_some]
-  exact bridge8_at
+  exact BB6Coverage.Agent8Rst1Prime.bridge8_at
     (sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h)
     (h-((3*a+1:Int)))
     (rst1Prime_bridge8_window_after_firstSweep L a b h)
