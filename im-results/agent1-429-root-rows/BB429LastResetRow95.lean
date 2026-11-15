@@ -17,6 +17,11 @@ private theorem pow_lower_18 (n : Nat) (hn : 18 ≤ n) :
     induction k with
     | zero => decide
     | succ k ih =>
+      have hpos : 0 < (2:Nat)^k := Nat.pow_pos (by decide)
+      have hlarge : 3 ≤ 2^(20+k) := by
+        rw [Nat.pow_add]
+        norm_num
+        omega
       calc
         3*(18+(k+1))+77 = (3*(18+k)+77)+3 := by omega
         _ ≤ 2^(20+k)+3 := by omega
