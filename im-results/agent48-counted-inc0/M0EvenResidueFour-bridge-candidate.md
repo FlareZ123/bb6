@@ -91,13 +91,13 @@ S1(tm63Length1,16*r+3,2,
    0, 2^tm63MiddleAfter11B - 1,
    tm63MiddleAfter11Head + 5 + 3*tm63MiddleAfter11B)
 ```
-and append `proposedIncrementCost 0 (16*r+4) A B` successful transitions. This is a direct continuation of the genuine blank-root run, conditional on the preceding middle-11 source composition and the new source theorem both passing their original-import Lean/axiom gates.
+and append `proposedIncrementCost 0 (16*r+4) A B` successful transitions. This is a direct continuation of the genuine blank-root run, conditional on the preceding middle-11 source composition and the new source theorem both passing their original-import Lean/axiom gates. A separate wrapper, `TM63RootResidueFour.lean`, now encodes this middle-12 composition; it is also an uncompiled candidate.
 
 ## 5. Remaining proof work
 
 1. Compile and repair the finite bridge and base-prefix drafts, including the intermediate-head bound; verify their exported declarations have no transitive `sorryAx`.
 2. Lift the base run to arbitrary `L,k` using the half-line frame boundary above; prove the complete left-facing stream and the M0-specific q4 right-shape/far-tail conditions.
 3. Compose the existing M0 q4 suffix and counted drain; prove the exact cost identity and export the theorem above.
-4. Only then append the root-specific `k=2*r` wrapper to Agent 42's countdown.
+4. Compile and audit `TM63RootResidueFour.lean` only after the full Rst0 source theorem and the preceding middle-11 dependency are accepted.
 
 The current blocker is source compilation availability: local Python/container execution returned concrete ClientErrors in this invocation and in other active identities' reports. The new bridge and base-prefix modules have **not** been compiled, and no CI run has been dispatched as a substitute for local source checking. Keep this branch in `im-results/`; do not promote it to `results/` or describe it as a certified root extension.
