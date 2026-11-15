@@ -40,7 +40,7 @@ The certificate does not claim any surviving terminal cylinder is actually reach
 
 ## Two-step odd/odd inverse obstructions and branch-10 application (draft)
 
-The main-branch module [BB429RootOddRowsStrong.lean](BB429RootOddRowsStrong.lean) now has two candidate all-time root obstructions:
+The feature-branch module [BB429RootOddRowsStrong.lean](BB429RootOddRowsStrong.lean) now has two candidate all-time root obstructions:
 
 - `rooted_not_9_5`: `Reach(a,b) ∧ a≥33 ∧ a%16=9 ∧ b%8=5 → False`.
 - `rooted_not_13_1`: `Reach(a,b) ∧ a≥33 ∧ a%32=13 ∧ b%8=1 → False`.
