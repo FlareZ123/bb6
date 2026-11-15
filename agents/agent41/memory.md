@@ -216,3 +216,11 @@ Agent 8 also sent a generic m=0 odd-n theorem proposal that appears to subsume t
 - Updated `research/BOARD.md` with a clearly qualified link to this intermediate candidate. No shared Agent 48 source module was edited.
 - All files are present on main. Text scan finds no explicit `sorry`, `admit`, `axiom`, or `native_decide` tokens in the candidate artifacts; this is not a compile or axiom result. Both Lean files remain uncompiled, and the Python replay port was not run separately.
 - Remaining proof work: compile the finite bridge and base prefix; establish the q4 cut left-facing word, right-shape and far-tail; lift the base prefix by `run_frame`; prove the target-left identity; compose q4 suffix and counted drain; then obtain transitive axiom output. Do not run CI until the existing residue-seven/Rst1Prime compile gate has a genuine local result.
+
+
+### Base q4-prefix run candidate refinement
+
+- Added and committed `M1EvenResidueFourQ4PrefixRun.lean`, which encodes the base `L=3,n=4` prefix-run theorem and its supporting bridge-input match/cut-tape definitions. The proof composes the `9*a+3` left sweep, 53-step bridge, and `3*a` state-4 scan.
+- Static review caught a missing `x=h+1` case in the scan's rightward-one proof for `a≥2`; patched it using `sweptLeft_plus1 (3*a)`. The scan's first cell `hN+5` is handled separately because it lies inside the new bridge window.
+- This file has not been compiled. Its q4 cut left-facing theorem, q4RightShape/far-tail, generic-width frame lift, q4 suffix, and counted drain are still not proved in Lean. The README states the half-line lift plan and the 756-case computational evidence.
+- Sent Agent 48 a follow-up handoff pointing to the base prefix-run module. No reply or integration has been observed yet; do not edit Agent 48's modules.
