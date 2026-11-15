@@ -221,11 +221,9 @@ theorem s1Config_counted_decrement_odd
   refine ⟨q,len,hfactor',ha',hq,?_⟩
   simpa [hinput,houtput] using hrun
 
-/-- Parity-complete source S1 decrement. For every positive bounded
-counter z, the original TM63 performs the canonical transition
-S1(z,b) ↦ S1(z-1,b+1) in exactly 48+12*v₂(z)+12b steps, where
-z=(2q+1)2^r. The odd case is r=0; the even case composes the proved
-positive-valuation source prefix and canonical suffix. -/
+/-- Uniform source S1 decrement. Odd-factor decomposition supplies
+z=(2q+1)2^r, and the uniform counted H-run now handles every r≥0,
+including the valuation-zero case, with the same canonical suffix. -/
 theorem s1Config_counted_decrement
     (L n m a z b : Nat) (h : Int)
     (hz : 0 < z) (hzlt : z < 2^a) :
@@ -234,46 +232,16 @@ theorem s1Config_counted_decrement
         some (s1Config L n m a (z-1) (b+1) h) := by
   obtain ⟨q,r,len,hfactor,ha,hq⟩ :=
     exists_odd_factor_bounded a z hz hzlt
-  by_cases heven : z % 2 = 0
-  · have hrpos : 0 < r := by
-      by_cases hr0 : r = 0
-      · have hodd : z % 2 = 1 := by
-          rw [hfactor]
-          simp [hr0]
-        omega
-      · omega
-    have hdec := s1Config_counted_decrement_allPositive
-      L n m len q r b h hq hrpos
-    have hinput : s1Config L n m a z b h =
-        s1Config L n m (len+1+r) ((2*q+1)*2^r) b h := by
-      rw [ha,hfactor]
-    have houtput : s1Config L n m a (z-1) (b+1) h =
-        s1Config L n m (len+1+r) (((2*q+1)*2^r)-1) (b+1) h := by
-      rw [ha,hfactor]
-    refine ⟨q,r,len,hfactor,ha,hq,?_⟩
-    simpa [hinput,houtput] using hdec
-  · have hodd : z % 2 = 1 := by omega
-    have hr0 : r = 0 := by
-      cases r with
-      | zero => rfl
-      | succ r =>
-          have heven' : z % 2 = 0 := by
-            rw [hfactor]
-            simp [Nat.pow_succ,Nat.mul_mod]
-          omega
-    have hfactor' : z = 2*q+1 := by simpa [hr0] using hfactor
-    have ha' : a = len+1 := by simpa [hr0] using ha
-    have hsub : z-1 = 2*q := by omega
-    have hrun := s1Config_oddCounter_countedReturn_canonical
-      L n m len q b h hq
-    have hinput : s1Config L n m a z b h =
-        s1Config L n m (len+1) (2*q+1) b h := by
-      rw [ha',hfactor']
-    have houtput : s1Config L n m a (z-1) (b+1) h =
-        s1Config L n m (len+1) (2*q) (b+1) h := by
-      rw [ha',hsub]
-    refine ⟨q,r,len,hfactor,ha,hq,?_⟩
-    simpa [hr0,hinput,houtput] using hrun
+  have hdec := s1Config_counted_decrement_anyValuation_hRun
+    L n m len q r b h hq
+  have hinput : s1Config L n m a z b h =
+      s1Config L n m (len+1+r) ((2*q+1)*2^r) b h := by
+    rw [ha,hfactor]
+  have houtput : s1Config L n m a (z-1) (b+1) h =
+      s1Config L n m (len+1+r) (((2*q+1)*2^r)-1) (b+1) h := by
+    rw [ha,hfactor]
+  refine ⟨q,r,len,hfactor,ha,hq,?_⟩
+  simpa [hinput,houtput] using hdec
 
 #print axioms s1Config_oddCounter_countedReturn_canonical
 #print axioms s1Config_counted_decrement_odd
