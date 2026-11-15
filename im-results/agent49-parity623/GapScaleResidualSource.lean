@@ -1,4 +1,5 @@
 import Agent49CanonicalRayCocycleSource
+import Agent49TernaryBufferSource
 import Agent22ExactDrainCocycleSource
 import Agent22GapScaleExactArithmetic
 
@@ -18,6 +19,7 @@ namespace BB6.Agent49GapScaleResidualSource
 
 open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 open BB6.Agent49CanonicalRayCocycleSource
+open BB6.Agent49TernaryBufferSource
 open BB6.Agent22ExactDrainCocycleSource
 open BB6.Agent22GapScaleExactArithmetic
 
@@ -305,8 +307,15 @@ theorem leftOddBaseDrain (d k B E : Nat) (hd : d%2=1)
 
 /-- Extract the exact B-drain from a left-even canonical base transition. -/
 theorem leftEvenBaseDrain (d k B E : Nat) (hd : d%2=0)
+    (hbudget : d+2 ≤ ternaryOnes k)
     (hbase : highLevelNext (.D (d+2+k) d) = some (.D B E)) :
     drainB k (d+2) 2 = some (.D B E) := by
+  have hk : 0 < k := by
+    by_contra h
+    have hk0 : k=0 := by omega
+    have hz : ternaryOnes 0 = 0 := by simp [ternaryOnes]
+    rw [hk0, hz] at hbudget
+    omega
   have hEq : highLevelNext (.D (d+2+k) d) = drainB k (d+2) 2 := by
     rw [highLevelNext]
     have h0 : d+2+k ≠ 0 := by omega
@@ -363,7 +372,7 @@ theorem rightEvenBaseEvalDrain (a k B E : Nat) (ha : 0<a) (he : a%2=0)
   | some p =>
       rcases p with ⟨a1,b1,d1⟩
       simp only [heval,Option.bind_some] at hbase
-      exact ⟨a1,b1,d1,heval,hbase⟩
+      exact ⟨a1,b1,d1,rfl,hbase⟩
 
 /-- Every successful transition in the four-sector canonical cone strictly
 increases the common quadratic gap potential by at least six times the
@@ -417,7 +426,8 @@ theorem newAffine_quadratic_gain (a d : Nat)
       leftEvenCanonicalTransition a d hd hbranch hbudget
     have hbase' : highLevelNext (.D (d+2+k) d) = some (.D B E) := by
       simpa [k] using hbase
-    have hdrain := leftEvenBaseDrain d k B E hd hbase'
+    have hdrain := leftEvenBaseDrain d k B E hd
+      (by simpa [k] using leftEvenExponent_spec d) hbase'
     have hres := left_even_residual_bounds k d B E
       (by simpa [k] using leftEvenExponent_spec d) hdrain
     have hm : scale a d = d := by
