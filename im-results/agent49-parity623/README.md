@@ -353,3 +353,5 @@ A new exploratory derivation is recorded in [ProjectiveGapLyapunov.md](Projectiv
 
 This is **not** a root proof: exact affine corrections, the neutral direction of the far-left map, and control of the relevant individual old-ray coordinate remain open. The separate `GapScaleResidualSource.lean` scalar potential is also still outside the current source-import workflow.
 
+The algebraic identities now have a self-contained Lean-core certificate in [ProjectiveGapLyapunov.lean](ProjectiveGapLyapunov.lean), compiled with Lean 4.36.0-rc2. This verifies only the leading-matrix statement, not the affine root-orbit induction.
+
