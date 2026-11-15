@@ -144,19 +144,19 @@ transitive axiom output is inspected.
 
 ## Computational evidence
 
-`replay.py` is a standard-library, finite-support simulator transcription of the
-TM2 table and the checked-in S1 encoder. The same deterministic simulator logic
-was executed in the available JavaScript runtime over **756** parameter cases:
+The checked-in `replay.py` is a standard-library finite-support simulator of
+the **53-step finite bridge only**. It checks the exact bridge input/output
+lists and head confinement over 756 small `(a,b)` cases; it does not implement
+the complete TM2 q4 prefix, arbitrary-width frame lift, q4 suffix, or counted
+drain. The Python port was not executed in this invocation.
 
-- `3 ≤ L ≤ 8`, all `k` with `8*k+4 < 2^L`;
-- `0 ≤ a ≤ 3`;
-- `0 ≤ b ≤ 2`.
-
-All cases matched the 53-step bridge input, q4-prefix endpoint, complete q4
-source-left word, q4 right-shape conditions, and the exact reset-prefix endpoint
-and cost. The test domain is finite and does not prove the quantified theorem.
-The checked-in Python port is provided for independent replay; it was not
-separately executed in this invocation.
+A prior JavaScript experiment was reported to test 756 cases
+(`3 ≤ L ≤ 8`, all admissible `k`, `0 ≤ a ≤ 3`, `0 ≤ b ≤ 2`) against
+the q4-prefix endpoint, complete q4 source-left word, right-shape conditions,
+and reset-prefix endpoint/cost. Its source is not checked in, so that broader
+simulation is historical, non-reproducible computational evidence only. The
+finite domain does not prove the quantified theorem; the Lean source candidates
+are the intended proof route.
 
 ## Required proof work / acceptance boundary
 
