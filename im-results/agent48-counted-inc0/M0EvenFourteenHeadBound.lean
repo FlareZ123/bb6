@@ -96,7 +96,7 @@ private theorem E_scan_prefix_head
   omega
 
 private theorem m0EvenFourteenQ4LeftFacingPrefixTrue
-    (a i : Nat) (hi : i < 3*a) :
+    (a i : Nat) (ha : 0<a) (hi : i < 3*a) :
     sideBit (m0EvenFourteenQ4LeftFacing a) i = true := by
   let P : List Bool := [true] ++ d1pow (a-1) ++ [true,true]
   let R : List Bool := [false,true] ++ d0 ++ binDec 5 13 ++ lh
@@ -192,7 +192,7 @@ theorem m0EvenFourteen_q4_prefix_head_bound
     let j : Nat := 3*a-3-i
     have hj : j < 3*a := by dsimp [j]; omega
     have hleftCut := m0EvenFourteen_q4_prefix_leftFacing a b h ha j
-    have htrue := m0EvenFourteenQ4LeftFacingPrefixTrue a j hj
+    have htrue := m0EvenFourteenQ4LeftFacingPrefixTrue a j ha hj
     have hval :
         m0EvenFourteenQ4CutTape a b h (h-(j:Int)) = true := by
       rw [hleftCut,htrue]
