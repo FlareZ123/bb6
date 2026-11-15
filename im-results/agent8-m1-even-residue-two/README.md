@@ -25,9 +25,12 @@ The exact finite configurations are recorded in
   `[3,2,1,-1,-4,-7,-8,-9,-11,-10,4]`;
 - every pre-transition head is inside `[-11,4]`.
 
-The module was locally compiled with Lean 4.36.0-rc2.  Its two
+The finite bridge module was locally compiled with Lean 4.36.0-rc2 against
+copied current `ChampionRootBridge`/TM2 simulator source and a local
+reconstruction of its core `Config`/`Move`/`run` semantics.  Its two
 `#print axioms` outputs are exactly `[propext, Classical.choice, Quot.sound]`;
-there is no `sorryAx`.
+there is no `sorryAx`.  This is a local check of the finite certificate, not
+a complete compile of the repository's full dependency closure.
 
 ## Source-level lifting still required
 
