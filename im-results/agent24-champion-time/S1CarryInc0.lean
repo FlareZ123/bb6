@@ -1,6 +1,4 @@
 import S1CarryOutputBridge
-import CountedCarryLeftOutputR23
-import LongResidue1
 import S1CountedCarryPrefixBridge
 import CountedSuffixOutput
 import CountedCarryPrefixHRun
@@ -25,7 +23,6 @@ private theorem config_ext_by_fields (c d : Config)
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent3CarryLeftOutput
-open BB6Coverage.Agent24CarryLeftOutput
 
 set_option maxHeartbeats 3000000
 
@@ -274,81 +271,6 @@ theorem s1Config_counted_decrement_of_prefix
     hprefix0' hP1 hP2 hP3 hP4 hP5 hP6 honeP hpreserveP hleftP
   simpa [s1Config] using hdec
 
-/-- Long residue one: consume Agent 42's already-shifted prefix
-interface directly, translating only the duplicate left-output definition. -/
-theorem s1Config_counted_decrement_r1
-    (L n m len q k b : Nat) (h : Int) (hq : q < 2^len) (hk : 0 < k) :
-    run tm2 (48+12*(4*k+1)+12*b)
-        (s1Config L n m (len+1+(4*k+1))
-          ((2*q+1)*2^(4*k+1)) b h) =
-      some (s1Config L n m (len+1+(4*k+1))
-        (((2*q+1)*2^(4*k+1))-1) (b+1) h) := by
-  let T : Int → Bool := fun x =>
-    (s1Config L n m (len+1+(4*k+1))
-      ((2*q+1)*2^(4*k+1)) b h).tape (h+x)
-  have hmatch := s1Config_carryInput_match L n m len q (4*k+1) b h hq
-  obtain ⟨Tpre,hrun,h1,h2,h3,h4,h5,h6,hpreserve,hleft⟩ :=
-    BB6Coverage.Agent42CarryLeftOutput.carryLongPrefix_r1_shifted
-      k T h hmatch hk
-  have hprefix :
-      ∃ Tpre : Int → Bool,
-        run tm2 (15+12*(4*k+1))
-          (shiftConfig h ⟨3,0,fun x =>
-            (s1Config L n m (len+1+(4*k+1))
-              ((2*q+1)*2^(4*k+1)) b h).tape (h+x)⟩) =
-          some ⟨4,h+7,Tpre⟩ ∧
-        Tpre (h+1) = true ∧ Tpre (h+2) = true ∧ Tpre (h+3) = true ∧
-        Tpre (h+4) = true ∧ Tpre (h+5) = false ∧ Tpre (h+6) = true ∧
-        (∀ x, 6 < x →
-          Tpre (h+x) =
-            (s1Config L n m (len+1+(4*k+1))
-              ((2*q+1)*2^(4*k+1)) b h).tape (h+x)) ∧
-        (∀ x, x ≤ 0 →
-          Tpre (h+x) = carryLeftOutputBit (4*k+1)
-            (fun y =>
-              (s1Config L n m (len+1+(4*k+1))
-                ((2*q+1)*2^(4*k+1)) b h).tape (h+y)) x) := by
-    refine ⟨Tpre,hrun,h1,h2,h3,h4,h5,h6,hpreserve,?_⟩
-    intro x hx
-    simpa [BB6Coverage.Agent42CarryLeftOutput.carryLeftOutputBit,
-      BB6Coverage.Agent3CarryLeftOutput.carryLeftOutputBit] using hleft x hx
-  exact s1Config_counted_decrement_of_shifted_prefix
-    L n m len q (4*k+1) b h hq hprefix
-
-/-- The even-valuation residue-2 carry prefix is a complete source S1
-counted decrement, including the canonical full tape after the suffix. -/
-theorem s1Config_counted_decrement_r2
-    (L n m len q k b : Nat) (h : Int) (hq : q < 2^len) :
-    run tm2 (48+12*(4*k+2)+12*b)
-        (s1Config L n m (len+1+(4*k+2))
-          ((2*q+1)*2^(4*k+2)) b h) =
-      some (s1Config L n m (len+1+(4*k+2))
-        (((2*q+1)*2^(4*k+2))-1) (b+1) h) := by
-  let T : Int → Bool := fun x =>
-    (s1Config L n m (len+1+(4*k+2))
-      ((2*q+1)*2^(4*k+2)) b h).tape (h+x)
-  have hmatch := s1Config_carryInput_match L n m len q (4*k+2) b h hq
-  have hprefix := carryLongPrefix_r2_left k T hmatch
-  exact s1Config_counted_decrement_of_prefix
-    L n m len q (4*k+2) b h hq hprefix
-
-/-- The even-valuation residue-3 carry prefix is a complete source S1
-counted decrement, including the canonical full tape after the suffix. -/
-theorem s1Config_counted_decrement_r3
-    (L n m len q k b : Nat) (h : Int) (hq : q < 2^len) :
-    run tm2 (48+12*(4*k+3)+12*b)
-        (s1Config L n m (len+1+(4*k+3))
-          ((2*q+1)*2^(4*k+3)) b h) =
-      some (s1Config L n m (len+1+(4*k+3))
-        (((2*q+1)*2^(4*k+3))-1) (b+1) h) := by
-  let T : Int → Bool := fun x =>
-    (s1Config L n m (len+1+(4*k+3))
-      ((2*q+1)*2^(4*k+3)) b h).tape (h+x)
-  have hmatch := s1Config_carryInput_match L n m len q (4*k+3) b h hq
-  have hprefix := carryLongPrefix_r3_left k T hmatch
-  exact s1Config_counted_decrement_of_prefix
-    L n m len q (4*k+3) b h hq hprefix
-
 /-- Uniform source-level S1 decrement for every 2-adic valuation r,
 including r=0. The exact counted LInc H-run supplies the prefix for all r;
 the existing suffix interface then canonicalizes the complete S1 tape. -/
@@ -384,6 +306,44 @@ theorem s1Config_counted_decrement_anyValuation_hRun
     · simpa [T] using hleft
   exact s1Config_counted_decrement_of_prefix
     L n m len q r b h hq hprefix
+
+/-- The former residue-one bridge is now a direct specialization of the
+uniform all-valuation H-run; the positivity side condition is retained only
+for compatibility with the earlier interface. -/
+theorem s1Config_counted_decrement_r1
+    (L n m len q k b : Nat) (h : Int) (hq : q < 2^len)
+    (_hk : 0 < k) :
+    run tm2 (48+12*(4*k+1)+12*b)
+        (s1Config L n m (len+1+(4*k+1))
+          ((2*q+1)*2^(4*k+1)) b h) =
+      some (s1Config L n m (len+1+(4*k+1))
+        (((2*q+1)*2^(4*k+1))-1) (b+1) h) := by
+  exact s1Config_counted_decrement_anyValuation_hRun
+    L n m len q (4*k+1) b h hq
+
+/-- The former residue-two bridge is a direct specialization of the
+uniform all-valuation H-run. -/
+theorem s1Config_counted_decrement_r2
+    (L n m len q k b : Nat) (h : Int) (hq : q < 2^len) :
+    run tm2 (48+12*(4*k+2)+12*b)
+        (s1Config L n m (len+1+(4*k+2))
+          ((2*q+1)*2^(4*k+2)) b h) =
+      some (s1Config L n m (len+1+(4*k+2))
+        (((2*q+1)*2^(4*k+2))-1) (b+1) h) := by
+  exact s1Config_counted_decrement_anyValuation_hRun
+    L n m len q (4*k+2) b h hq
+
+/-- The former residue-three bridge is a direct specialization of the
+uniform all-valuation H-run. -/
+theorem s1Config_counted_decrement_r3
+    (L n m len q k b : Nat) (h : Int) (hq : q < 2^len) :
+    run tm2 (48+12*(4*k+3)+12*b)
+        (s1Config L n m (len+1+(4*k+3))
+          ((2*q+1)*2^(4*k+3)) b h) =
+      some (s1Config L n m (len+1+(4*k+3))
+        (((2*q+1)*2^(4*k+3))-1) (b+1) h) := by
+  exact s1Config_counted_decrement_anyValuation_hRun
+    L n m len q (4*k+3) b h hq
 
 /-- Backward-compatible positive-valuation wrapper. The uniform H-run
 actually proves the stronger statement for r=0 as well. -/
