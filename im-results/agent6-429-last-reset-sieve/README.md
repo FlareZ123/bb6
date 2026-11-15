@@ -89,7 +89,28 @@ In particular:
 - \(n=1\): branches 2, 5, and 8 all force the same post-reset seed \((11,74)\), hence terminal \(U=25\), which is not a survivor. Branch 9 remains with 122 classes modulo \(2^{17}\).
 - \(n=3\): branches 1 and 7 both force seed \((0,74)\), hence terminal \(U=21\), which is not a survivor. Branch 10 remains with 60 classes modulo \(2^{15}\).
 
-For \(n\ge18\), the current terminal sieve leaves the cylinder \(U\equiv-3\pmod{2^{18}}\), so this particular intersection no longer restricts \(A\).
+For \(n\ge18\), the terminal sieve leaves the cylinder \(U\equiv-3\pmod{2^{18}}\), so it no longer restricts \(A\). However, the root mod-8 invariant still restricts the reset parameter to exactly three of the eight parity-compatible classes modulo 16, depending only on \(n\bmod32\). This follows by reducing the branch-9/10 formulas for \(x\) modulo 8 (the \(2^n\) term vanishes modulo 8) and imposing \((x\bmod8,y\bmod4)\in\texttt{BB429Mod8.Allowed}\), with \(y=2(x-d)+1\).
+
+| \(n\bmod32\) | Branch | Allowed \(d\bmod16\) |
+|---:|---:|---|
+| 1 | 9 | 4, 8, 12 |
+| 3 | 10 | 1, 5, 9 |
+| 5 | 9 | 2, 10, 14 |
+| 7 | 10 | 7, 11, 15 |
+| 9 | 9 | 0, 4, 8 |
+| 11 | 10 | 1, 5, 13 |
+| 13 | 9 | 6, 10, 14 |
+| 15 | 10 | 3, 7, 11 |
+| 17 | 9 | 0, 4, 12 |
+| 19 | 10 | 1, 9, 13 |
+| 21 | 9 | 2, 6, 10 |
+| 23 | 10 | 3, 7, 15 |
+| 25 | 9 | 0, 8, 12 |
+| 27 | 10 | 5, 9, 13 |
+| 29 | 9 | 2, 6, 14 |
+| 31 | 10 | 3, 11, 15 |
+
+
 
 ## 3. Reproduction
 
