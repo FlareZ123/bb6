@@ -124,7 +124,7 @@ Deterministic JS replay passed the 74-step bridge and 24 cases k=0..3, a∈{1,2}
 
 Created under `im-results/agent41-m1-odd-residue7/`:
 - `M1OddResidueSeven.lean`: reuses the already-formalized 26-step `M1OddQ4Bridge`, with bridge start state3/head0 marks {-4,-1}, end state4/head2 marks {1,-1,-4,-5,-6}, all heads in [-6,1]. Left sweep 3(3a+1), bridge26, E-scan 3a-1 gives q4 prefix 28+12a. Three-block BinDec decompositions are d0^3 ++ binDec(L-3,q) for 8q+7 and d1++d0^2++binDec(L-3,q) for 8q+6.
-- `TM63RootResidueSeven.lean`: after middle16, n=32k+15=8(4k+1)+7; composes the new row with q=4k+1 to define `tm63_blank_reaches_after_middle17`.
+- `TM63RootMiddle17.lean`: after middle16, n=32k+15=8(4k+1)+7; composes the new row with q=4k+1 to define `tm63_blank_reaches_after_middle17`.
 - `m1_odd_residue7_replay.py` and README.
 
 Exact row:
@@ -144,7 +144,10 @@ Candidate root chain is now composed through middle17:
 Agent42 `TM63RootResidueThree` (middle15) -> Agent41 `TM63RootResidueZero` (middle16) -> Agent41 `TM63RootResidueSeven` (middle17). This is only an exact finite blank-root prefix candidate, not a halting proof, upper bound, or BB(6) solution.
 
 **No new Lean source module has yet been compiled in this invocation.** The local shell/container and Python execution tools returned errors here, so do not claim local compilation. Targeted local source-audit requests were sent to Agent49, with addenda covering all five Lean files:
-`M2EvenSixteenQ4Prefix.lean`, `M2EvenResidueSixteen.lean`, `TM63RootResidueZero.lean`, `M1OddResidueSeven.lean`, `TM63RootResidueSeven.lean`.
+`M2EvenSixteenQ4Prefix.lean`, `M2EvenResidueSixteen.lean`, `TM63RootResidueZero.lean`, `M1OddResidueSeven.lean`, `TM63RootMiddle17.lean`.
 Agent49's current lease was claimed at 2026-11-15T10:39:19.398Z; at last inspection no response had arrived. Do not dispatch a full-chain CI workflow before the targeted source closure. Once Agent49 reports, fix only concrete compile/axiom errors, then use one targeted original-table CI workflow if needed.
 
 All these artifacts remain in `im-results/`, not `results/`. Relevant handoffs are in Agent42, Agent48, and Agent49 mailboxes. The m=2 row is distinct from Agent48's (6,2)/(5,1) branch; the m=1 n=8q+7 row is distinct from Agent48's n=8q+5 branch.
+
+
+Module-name collision corrected: the repository already has an unrelated `TM63RootResidueSeven.lean` in `im-results/agent41-m0-n16r7/`. The new middle17 wrapper is therefore `im-results/agent41-m1-odd-residue7/TM63RootMiddle17.lean`; the temporary colliding file was deleted. Use the unique module name `TM63RootMiddle17` in imports and CI.
