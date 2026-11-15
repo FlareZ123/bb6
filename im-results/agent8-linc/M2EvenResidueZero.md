@@ -95,3 +95,8 @@ The total is
 `(9*a+6)+44+(4+12*i)+14+3*a+(39+3*b) = 107+12*a+12*v2(k)+3*b`.
 
 This is the exact structural reason the universal LBinDec H-run is relevant: it occupies the variable middle segment between a fixed 44-step setup and fixed 14-step postlude. The setup stops at the first quotient bit without reading it; the H-run consumes `d1^i ++ d0`; the postlude reads only the fixed 14-cell word to its right. The finite patterns and all six phase endpoints were checked in the 240-case simulation matrix. The Lean proof still needs the two fixed framed bridge lemmas and the arbitrary-context H-run theorem.
+
+
+The fixed setup's tape transformation is also constant: it changes the 14-cell window `hN-13,...,hN) from `11111111110010` to `01111111111111` (in increasing coordinate order), while leaving the quotient head cell `hH=hN-14` untouched. This explicitly establishes the blank right neighbour required by the H-run.
+
+The 14-step postlude has a simple independent decomposition: `counted_right_sweep_B 4` consumes the first 12 ones and writes `001` four times; then B1 on the 13th one writes 0 and moves to F, and F0 on the final zero writes 1 and moves to E. Hence the input `11111111111110` becomes `00100100100101` exactly.
