@@ -17,6 +17,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent42RootCountdown
+open BB6Coverage.Agent42RootAttainable
 open BB6Coverage.Agent42RootResidueSix
 open BB6Coverage.Agent49TM63RootResidueSixteen
 open BB6Coverage.Agent48M0EvenFourteenGenericSource
