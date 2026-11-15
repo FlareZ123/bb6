@@ -1,6 +1,6 @@
 # Candidate m=1, n=8q+1 source reset row
 
-**Status:** the new 29-step finite bridge is written as a Lean decide theorem, and a deterministic JavaScript replay passes 756 small parameter cases. The arbitrary-width source theorem, suffix/drain composition, original-import compilation, and transitive axiom audit are not yet written/accepted. Keep this in im-results.
+**Status:** the base n=1 q4 prefix already exists in `im-results/agent48-final-rst1/M1OneQ4Prefix.lean`; its 29-step bridge uses the narrower read window [-7,4]. This dossier records the general n=8q+1 lift. `M1OddResidueOneBridge.lean` gives a wider-window [-9,4] finite embedding of the same path, `M1OddResidueOneTargetLeft.lean` formalizes the binary target-left identity, and a deterministic JavaScript replay passes 756 small parameter cases. The arbitrary-width source theorem, suffix/drain composition, original-import compilation, and transitive axiom audit remain open. Keep this in im-results.
 
 ## Target source theorem
 
@@ -24,7 +24,7 @@ For the base L=3,n=1 configuration, the counted left sweep has length 9*a+3 and 
 
 [-9,-8,-7,-4,-1,2,3,4]
 
-The new original-TM2 bridge is:
+The same 29-step original-TM2 path is already used by the fixed n=1 q4 prefix. The following wider finite-support embedding is recorded here:
 
 ~~~text
 state 3, head 0, ones [-9,-8,-7,-4,-1,2,3,4]
@@ -32,7 +32,7 @@ state 3, head 0, ones [-9,-8,-7,-4,-1,2,3,4]
 state 4, head 5, ones [-9,-8,-7,-6,-5,-4,-1,1,2,3,4].
 ~~~
 
-All pre-final heads lie in [-9,4]. The Lean finite exactness and head-confinement declarations are in M1OddResidueOneBridge.lean.
+All pre-final heads lie in [-9,4]. The exactness and head-confinement declarations for this wider embedding are in M1OddResidueOneBridge.lean. The existing M1OneQ4Prefix proof uses only the smaller read window [-7,4], whose start support is [-7,-4,-1,2,3,4]; the extra -9,-8 cells above are not read by the bridge.
 
 After the bridge, a 3*a-step state-4-on-one scan ends at head h+4. Thus the q4 prefix length is 32+12*a.
 
@@ -43,7 +43,7 @@ The q4 cut's left-facing word is:
   ++ binDec (L-3) q ++ lh
 ~~~
 
-and its right-facing shape is the ordinary q4RightFacing b guard/counter/tail. The base n=1 q4 cut has the same right shape and scan endpoint as the existing m=1,n=3 q4 prefix, but a different finite bridge and a different low-order left word.
+and its right-facing shape is the ordinary q4RightFacing b guard/counter/tail. The base n=1 q4 cut has the same right shape and scan endpoint as the existing m=1,n=3 q4 prefix, with a different low-order left word.
 
 ## Arbitrary-width lift and suffix identity
 
@@ -55,7 +55,7 @@ binDec L (8*q+1) = d0 ++ d1 ++ d1 ++ binDec (L-3) q.
 
 The bridge head window [-9,4], after the counted sweep endpoint, gives the half-line read region x ≥ h-(3*a+10). A general source theorem can therefore be lifted from the base L=3,n=1 prefix using run_frame, provided the left input/cut prefixes and untouched tails are aligned on that half-line. The right tape depends only on b.
 
-The generic q4 suffix starts at state 4/head h with length 39+3*b; the first four moves are already consumed by the q4 prefix ending at head h+4. The remaining suffix is 35+3*b. The target-left identity is:
+The generic q4 suffix starts at state 4/head h with length 39+3*b; the first four moves are already consumed by the q4 prefix ending at head h+4. The remaining suffix is 35+3*b. The target-left identity below is now stated in M1OddResidueOneTargetLeft.lean (source draft, not yet compiled):
 
 ~~~text
 s1LeftFacing L (8*q) 0 (a+b+2) (2^b-1) =
