@@ -34,7 +34,7 @@ theorem exceptional_EA_safe_reentry (t q : Nat) (hq : 2 ≤ q)
     simpa [BB6.Agent2EFirstAPacket.sourceStart,
       BB6.Agent2EFirstAPacket.packetOutput,c,fixedTail,
       BB6.Agent2EFirstAPacket.fixedTail] using hEA0
-  have ha : c.a ≥ 4 := by simp [c]; omega
+  have ha : c.a ≥ 4 := by simp [c]
   have hp : c.p % 3 ≠ 2 := by
     dsimp [c]
     omega
@@ -122,8 +122,9 @@ theorem exceptional_EE_safe_reentry (u q : Nat) (hq : 3 ≤ q)
     simpa [BB6.Agent2E7SecondSafe.sourceStart,
       BB6.Agent2E7SecondSafe.secondOutput,c,fixedTail,ha0,
       packet,word,CryptidBoundary.packetThree,
-      BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs] using hEE0
-  have ha : c.a ≥ 4 := by simp [c]; omega
+      BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs,
+      BB6.Agent2PacketOneReentry.fixedTail] using hEE0
+  have ha : c.a ≥ 4 := by simp [c]
   have hp : c.p % 3 ≠ 2 := by
     dsimp [c]
     omega
@@ -154,7 +155,8 @@ theorem exceptional_EE_all_reentry_or_reset (u q : Nat) (hq : 3 ≤ q) :
           BB6.Agent2PacketP2Reset.marker)) := by
   by_cases hclass : q % 3 ≠ 1
   · obtain ⟨T,a,q',b,h⟩ := exceptional_EE_safe_reentry u q hq hclass
-    exact Or.inl ⟨T,a,q',b,h⟩
+    exact Or.inl ⟨BB6.Agent2E7SecondSafe.eTime u q +
+      BB6.Agent2E7SecondSafe.middleTime u + T, a,q',b,h⟩
   · have hqmod : q % 3 = 1 := by omega
     let c : BB6.Agent31PacketRank.Packet := ⟨192*u+161,2,2*q-3⟩
     have hEE0 := BB6.Agent2E7SecondSafe.exceptional_EE_packet u q hq
@@ -167,17 +169,22 @@ theorem exceptional_EE_all_reentry_or_reset (u q : Nat) (hq : 3 ≤ q) :
       simpa [BB6.Agent2E7SecondSafe.sourceStart,
         BB6.Agent2E7SecondSafe.secondOutput,c,fixedTail,ha0,
         packet,word,CryptidBoundary.packetThree,
-        BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs] using hEE0
-    have ha : c.a ≥ 4 := by simp [c]; omega
+        BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs,
+        BB6.Agent2PacketOneReentry.fixedTail] using hEE0
+    have ha : c.a ≥ 4 := by simp [c]
     have hp : c.p % 3 = 2 := by
       dsimp [c]
       omega
     rcases BB6.Agent2PacketP2ReentryOrE.p2_packet_reentry_or_reset
         c ha hp with hL | hR
     · rcases hL with ⟨T,a,q',b,hEq⟩
+      have hEq' : run T (packet c.a c.q c.p fixedTail) =
+          BB6.Agent2BoundaryBZero.regularSection a q' b := by
+        simpa [fixedTail, BB6.Agent2PacketOneReentry.fixedTail,
+          BB6.Agent2PacketP2ReentryOrE.fixedTail] using hEq
       have hP2 : ObsEq (run T (packet c.a c.q c.p fixedTail))
           (BB6.Agent2BoundaryBZero.regularSection a q' b) := by
-        rw [hEq]
+        rw [hEq']
         exact BB6.Padding.cfgEq_refl _
       exact Or.inl ⟨BB6.Agent2E7SecondSafe.eTime u q +
           BB6.Agent2E7SecondSafe.middleTime u + T,
@@ -189,10 +196,15 @@ theorem exceptional_EE_all_reentry_or_reset (u q : Nat) (hq : 3 ≤ q) :
           (packet c.a c.q c.p fixedTail)
           (BB6.Agent2BoundaryBZero.regularSection a q' b) hEE hP2⟩
     · rcases hR with ⟨T,k,q2,hEq⟩
+      have hEq' : run T (packet c.a c.q c.p fixedTail) =
+          packet (8*k+5) 0 (2*q2+6)
+            BB6.Agent2PacketP2Reset.marker := by
+        simpa [fixedTail, BB6.Agent2PacketOneReentry.fixedTail,
+          BB6.Agent2PacketP2ReentryOrE.fixedTail] using hEq
       have hP2 : ObsEq (run T (packet c.a c.q c.p fixedTail))
           (packet (8*k+5) 0 (2*q2+6)
             BB6.Agent2PacketP2Reset.marker) := by
-        rw [hEq]
+        rw [hEq']
         exact BB6.Padding.cfgEq_refl _
       exact Or.inr ⟨BB6.Agent2E7SecondSafe.eTime u q +
           BB6.Agent2E7SecondSafe.middleTime u + T,
