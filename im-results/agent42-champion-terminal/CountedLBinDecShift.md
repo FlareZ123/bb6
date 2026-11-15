@@ -57,3 +57,16 @@ A direct simulator using the original TM63 table and the exact Coq stream orient
 Then lift this counted H-hypothesis through the same `not_full_Inc` / `LBinDec_spec` argument used by BusyCoq. The repeated carry count is the trailing-one count of the complemented `BinDec) word, hence should become (v_2(k)) for the decremented counter (k) (check the successor convention at the theorem boundary).
 
 This is a promising route to the universal outer-counter decrement used by Rst0/Rst1/Rst2. It does **not** yet prove the complete reset prefix or the exact TM63 score.
+
+
+## Refined phase-level tape account
+
+The finite trace factorization is now explicit. Let (h) be the initial head position and (h'=h-3n).
+
+- The initial left stream has (d_1^n) at its head, then (d_0), then arbitrary (l); the right stream begins with the distinguished zero and then arbitrary (r).
+- The first phase is exactly `counted_left_sweep` with parameter (3n), not a new 9n-step primitive. Its theorem contributes (3(3n)=9n) steps. It shifts the zero left to (h'+1), leaving the d0 boundary zeros at (h'-1,h'), and a run of (3n) ones at (h'+2,ldots,h'+3n+1).
+- The base bridge consumes the three zeros at (h'-1,h',h'+1), writes ones there, and ends in state B at (h'+2).
+- The new B/F/D sweep consumes the (3n) ones beginning at (h'+2), in (n) groups of three. Each group writes physical (001) and advances the head by three. Its exact tape update must be composed with the preceding left sweep and base bridge; because the target stream is nearest-first, do not identify the physical (001) block naively with the stream word (d_0).
+- The composed target is state B at (h+2), with nearest-first left stream ([1] ++ d_0^n ++ d_1 ++ l), and right tail (r). This is the `LInc` H target.
+
+The formal proof obligations are therefore narrowly localized: the four-step bridge, the B-starting right-sweep induction, and the tape-function identity for the composition. The 9n phase is already covered by the existing source-certified `counted_left_sweep` theorem.
