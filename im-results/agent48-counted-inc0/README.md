@@ -49,9 +49,9 @@ The source module, the generic prefix-then-drain adapters, and their axiom gates
 
 ### Generic all-odd m=0 increment
 
-`M0OddGenericSource.lean` is a new source-level generalization of the m=0 reset row to every odd `n=2*k+1`. It frames the existing `n=5` q4 prefix on the half-line `x≥h-(3*a+7)`; the base head bound is stronger, and both the source input prefix and generic cut prefix have length `3*a+8), so the arbitrary tail `binDec (L-1) k` aligns exactly after the finite bridge. The generic cut stream is `[true] ++ d1pow (a-1) ++ markerWord 2 ++ d0 ++ d1 ++ binDec (L-1) k ++ lh`, after which the existing q4 suffix and counted drain yield the exact m=0 increment.
+`M0OddGenericSource.lean` is a new source-level generalization of the m=0 reset row to every odd `n=2*k+1`. It frames the existing `n=5` q4 prefix on the half-line `x≥h-(3*a+7)`; the base head bound is stronger, and both the source input prefix and generic cut prefix have length `3*a+8`, so the arbitrary tail `binDec (L-1) k` aligns exactly after the finite bridge. The generic cut stream is `[true] ++ d1pow (a-1) ++ markerWord 2 ++ d0 ++ d1 ++ binDec (L-1) k ++ lh`, after which the existing q4 suffix and counted drain yield the exact m=0 increment.
 
-This theorem interface subsumes the m=0 odd residue-one, residue-five, and residue-seven specializations; those files are retained as independent regression evidence. The middle-15 root wrapper now instantiates the generic theorem at `n=16*r+1). **The new generic module and updated root wrapper are not yet compiled or axiom-audited.**
+This theorem interface subsumes the m=0 odd residue-one, residue-five, and residue-seven specializations; those files are retained as independent regression evidence. The middle-15 root wrapper now instantiates the generic theorem at `n=16*r+1`. **The new generic module and updated root wrapper are not yet compiled or axiom-audited.**
 
 ### Conditional champion adapter
 
