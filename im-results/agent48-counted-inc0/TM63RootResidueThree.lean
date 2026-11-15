@@ -1,5 +1,5 @@
 import TM63RootResidueTwo
-import M0OddResidueOneSource
+import M0OddGenericSource
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -21,20 +21,13 @@ open BB6Coverage.Agent42RootCountdown
 open BB6Coverage.Agent42RootResidueSix
 open BB6Coverage.Agent8TM63RootResidueFour
 open BB6Coverage.Agent48TM63RootResidueTwo
-open BB6Coverage.Agent48M0OddResidueOneSource
+open BB6Coverage.Agent48M0OddGenericSource
 
 set_option maxHeartbeats 3000000
 
-private theorem eight_twice (r : Nat) : 8*(2*r)=16*r := by
-  calc
-    8*(2*r) = (8*2)*r := (Nat.mul_assoc 8 2 r).symm
-    _ = 16*r := by rw [show 8*2=16 by decide]
-
 private theorem tm63_root_residue1_bound :
-    8*(2*tm63RootResidueSixK)+1 < 2^tm63Length1 := by
+    16*tm63RootResidueSixK+1 < 2^tm63Length1 := by
   have hroot := tm63_index1_lt_pow_length1
-  have hmul := eight_twice tm63RootResidueSixK
-  rw [hmul]
   rw [tm63_root_index_eq_16r15] at hroot
   omega
 
@@ -77,11 +70,11 @@ theorem tm63_blank_reaches_after_middle15 :
     run tm2 tm63MiddleFirst15Moves blank =
       some (s1Config tm63Length1 (16*tm63RootResidueSixK) 2
         tm63MiddleAfter15A 0 tm63MiddleAfter15B tm63MiddleAfter15Head) := by
-  have hrow := m0Odd_residue1_counted_increment_source
-    tm63Length1 (2*tm63RootResidueSixK)
+  have hrow := m0Odd_counted_increment_source
+    tm63Length1 (16*tm63RootResidueSixK+1)
     tm63MiddleAfter14A tm63MiddleAfter14B tm63MiddleAfter14Head
-    tm63_root_length_ge_three tm63_root_residue1_bound
-    tm63_middle_after14_a_pos
+    tm63_root_length_ge_three (by omega)
+    tm63_root_residue1_bound tm63_middle_after14_a_pos
   have hrow' :
       run tm2
         (proposedIncrementCost 0 (16*tm63RootResidueSixK+1)
@@ -90,9 +83,7 @@ theorem tm63_blank_reaches_after_middle15 :
           tm63MiddleAfter14A 0 tm63MiddleAfter14B tm63MiddleAfter14Head) =
       some (s1Config tm63Length1 (16*tm63RootResidueSixK) 2
         tm63MiddleAfter15A 0 tm63MiddleAfter15B tm63MiddleAfter15Head) := by
-    have hmul := eight_twice tm63RootResidueSixK
-    simpa [tm63MiddleAfter15A,tm63MiddleAfter15B,tm63MiddleAfter15Head,
-      hmul] using hrow
+    simpa [tm63MiddleAfter15A,tm63MiddleAfter15B,tm63MiddleAfter15Head] using hrow
   exact run_compose_local tm63_blank_reaches_after_middle14 hrow'
 
 #print axioms tm63_root_residue1_bound
