@@ -57,3 +57,20 @@ This decomposition is a research hypothesis until the base bridge, arbitrary-con
 The existing root continuation after middle 15 has marker 2 and index `16*r = 8*(2*r)`. Thus this candidate, if proved, is exactly the next missing source row with `k=2*r`. The root's stronger index bound `16*r+15 < 2^L` implies `16*r < 2^L`; the root length bound also gives `L≥4`.
 
 **Status:** useful new candidate and reproducible finite evidence only. Keep it in `im-results/`; do not promote it to `results/` or report it as a proved lower-bound step.
+
+
+## Observed four-phase structure
+
+The raw runs factor at exact intermediate configurations, not merely at the final endpoint. For the tested cases, the phases are:
+
+1. **Initial left sweep:** `9*a+6` steps, ending in D at `h-(3*a+2)`.
+2. **Carry bridge:** `62+12*v2(k)` steps, ending in E at `h-(3*a+2)+2`.
+3. **E scan:** `3*a` steps, ending in E at the original head `h`.
+4. **Q4 suffix:** `39+3*b` steps, ending in D at `h+5+3*b` with the exact reset-prefix target tape.
+
+The total is
+`(9*a+6)+(62+12*v2(k))+3*a+(39+3*b) = 107+12*a+12*v2(k)+3*b`.
+
+For `a=1,b=0`, additional traces for `k=1..16` show that the carry bridge reaches its endpoint in exactly `62+12*v2(k)` steps. Its head path has maximum `hN+2` and minimum `hN-15-3*v2(k)`, where `hN=h-5`. Thus each extra factor of 2 in k extends the leftward excursion by three cells and the bridge by twelve steps. This is consistent with the generic H-run's `4+12*v2(k)` cost, with its fixed four-step bridge absorbed into the base 62-step bridge. That internal identification remains a proof hypothesis.
+
+The simulator is being upgraded to check all four intermediate endpoints, so the phase decomposition is reproducible rather than inferred from total length alone.
