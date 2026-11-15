@@ -169,8 +169,8 @@ theorem source_weighted_cost_list_invariant
       · intro hm
         rfl
       · intro hm
-        omega
-      · simp [costPowSum, costWeightedSum]
+        exact (Nat.lt_irrefl 0 hm).elim
+      · norm_num [costPowSum, costWeightedSum]
   | parent bp dp mp zp t k c hp hb hb4 hd hi hk hc ih =>
       obtain ⟨A, hnodup, hlt, hzero, hstart, hInv⟩ := ih
       have hodd : OddCone (14*2^n-2*n-16) 3 bp dp mp :=
@@ -275,7 +275,7 @@ theorem source_weighted_cost_list_invariant
               Nat.mul_add 2 (costWeightedSum n A) ((n+3+mp)*2^mp)
             calc
               _ = 2^(mp+t+1)*(c+3)+
-                    (2*(costWeightedSum n A)+2*(n+3+mp)*2^mp) := by ac_rfl
+                    (2*(costWeightedSum n A)+2*((n+3+mp)*2^mp)) := by ac_rfl
               _ = 2^(mp+t+1)*(c+3)+
                     2*((costWeightedSum n A)+(n+3+mp)*2^mp) := by
                 exact congrArg
