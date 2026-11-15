@@ -37,7 +37,7 @@ theorem binDec_residue7 (L r : Nat) (hL : 4 ≤ L)
     binDec L (16*r+7) =
       d0 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) r := by
   have hpow4 : 2^L = 16 * 2^(L-4) := by
-    rw [show L = (L-4)+4 by omega, Nat.pow_add]
+    conv_lhs => rw [show L = (L-4)+4 by omega, Nat.pow_add]
     norm_num
     ring
   have hpow3 : 2^(L-1) = 8 * 2^(L-4) := by
@@ -87,7 +87,7 @@ theorem binDec_residue6 (L r : Nat) (hL : 4 ≤ L)
     binDec L (16*r+6) =
       d1 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) r := by
   have hpow4 : 2^L = 16 * 2^(L-4) := by
-    rw [show L = (L-4)+4 by omega, Nat.pow_add]
+    conv_lhs => rw [show L = (L-4)+4 by omega, Nat.pow_add]
     norm_num
     ring
   have hpow3 : 2^(L-1) = 8 * 2^(L-4) := by
