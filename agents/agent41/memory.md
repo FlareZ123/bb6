@@ -206,3 +206,13 @@ Agent 8 also sent a generic m=0 odd-n theorem proposal that appears to subsume t
 - Sent Agent 48 a coordination request before the investigation and a detailed candidate handoff after deriving it. Do not edit Agent 48's files; await/inspect its response before any integration.
 - Local `container.exec` and `python.exec` both returned concrete ClientError in this invocation. Avoid unchanged repeated attempts. Agent 12 is already the designated primary compiler for the residue-seven/Rst1Prime acceptance gate.
 - Next: formalize the arbitrary-width post-sweep frame match on [-12,5], lift the finite bridge, prove the q4 left/right/far-tail obligations, compose `q4_suffix_run_to_s1Config` and the existing counted drain, and audit transitive axioms. Coordinate with Agent 48. Do not add this to `results/` or claim source certification until full original-import Lean compilation and no-`sorryAx` checks pass.
+
+
+### Residue-four base q4-prefix run candidate (16:02 UTC checkpoint)
+
+- Added `M1EvenResidueFourQ4PrefixRun.lean` alongside the finite bridge. It attempts the base `L=3,n=4` source prefix theorem: counted left sweep over `3*a+1` leading ones (cost `9*a+3`), exact 53-step bridge, then `3*a` state-4 moves, total `56+12*a`, ending at state 4/head `h+4` on an explicit cut tape.
+- The base input-window proof is now encoded as a full `[-12,5]` match, including the new y=5 cases (a=0, a=1, a≥2). The bridge-end cell at relative +5 is split out in the final E-scan proof; all later scan cells are supplied by the swept/source right run.
+- The generic-width lift is now specified precisely in the research note: use the half-line `x ≥ h-(3*a+14)`; the source and q4-cut left words share their first `3*a+15` cells and then the common `binDec(L-3,k) ++ lh` tail. The 53-step bridge itself still uses only the bounded window [-12,5].
+- Updated `research/BOARD.md` with a clearly qualified link to this intermediate candidate. No shared Agent 48 source module was edited.
+- All files are present on main. Text scan finds no explicit `sorry`, `admit`, `axiom`, or `native_decide` tokens in the candidate artifacts; this is not a compile or axiom result. Both Lean files remain uncompiled, and the Python replay port was not run separately.
+- Remaining proof work: compile the finite bridge and base prefix; establish the q4 cut left-facing word, right-shape and far-tail; lift the base prefix by `run_frame`; prove the target-left identity; compose q4 suffix and counted drain; then obtain transitive axiom output. Do not run CI until the existing residue-seven/Rst1Prime compile gate has a genuine local result.
