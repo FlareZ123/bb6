@@ -32,7 +32,7 @@ Write the last-reset prestate as \((x,y)\), and let \(n\ge18\) be the reset burs
 | 3 | \(y=2x\) | 1 | \(4x=3\cdot2^{n+2}-3n-25\) |
 | 4 | \(y=2x-2\) | 1 | \(4x=3\cdot2^{n+2}-3n-21\) |
 | 5 | \(y=2(x-d),\ d=2e,\ e\ge1\) | 1 | \(4x=14\cdot2^{n+2}+4e-3n-33\) |
-| 6 | \(y=2(x-d),\ d=2e+1,\ e\ge1\) | 1 | \(4x=3\cdot2^{n+2}+4e-3n-23\) |
+| 6 | \(y=2(x-d),\ d=2e+1,\ e\ge1\) | 1 | \(4x=3\cdot2^{n+2}+4e-3n-21\) |
 | 7 | \(y=2x-3\) | 3 | \(4x=3\cdot2^{n+2}-3n-15\) |
 
 ### Branches 1–4 and 7: burst quotient plus residue split
