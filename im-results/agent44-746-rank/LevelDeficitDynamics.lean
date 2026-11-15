@@ -292,7 +292,10 @@ theorem odd_offset_factorization (h k t d : Nat)
   have hdt : d<2^(k+3-t) := by
     by_cases hdlt : d<2^(k+3-t)
     · exact hdlt
-    · have hle : 2^(k+3-t)≤d := le_of_not_gt hdlt
+    · have hle : 2^(k+3-t)≤d := by
+        rcases Nat.lt_or_ge d (2^(k+3-t)) with hlt|hle
+        · exact False.elim (hdlt hlt)
+        · exact hle
       have hm := Nat.mul_le_mul_left (2^t) hle
       rw [←hpow] at hm
       rw [hfactor] at hq_lt
