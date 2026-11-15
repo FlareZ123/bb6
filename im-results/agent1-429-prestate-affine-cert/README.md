@@ -80,3 +80,6 @@ For the 2,816 M=128 families, the computed Boolean outcome was unchanged when th
 5. Reproduce the 2,816 Boolean evaluations with Lean decide/native_decide and derive the corresponding d-family exclusions.
 
 The 624 surviving affine families are only a reduced search space, not evidence that any one is actually root-reachable.
+
+
+The 28 nonempty classes have survivor counts in {16,24,28,32}; each of the 16 empty classes is fully certified. Across all 2,816 trees, the JS traversal reaches at most inverse depth 6, at most 14 nodes, and at most 9 accumulated powers of two in the affine denominator. This is small enough that a Lean finite replay should be practical; the key work is proving the extended Bad clauses sound.
