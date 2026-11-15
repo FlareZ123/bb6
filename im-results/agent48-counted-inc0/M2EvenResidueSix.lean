@@ -516,12 +516,12 @@ private theorem m2EvenSix_q4_prefix_head_bound
       rcases hcases with hi0|hi1
       · subst i
         have hside := sideBit_append_right (d1pow a)
-          m2EvenSixSourceLeftSuffix (3*a) (by rw [d1pow_length])
+          m2EvenSixSourceLeftSuffix (3*a) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
         simpa [m2EvenSixSourceLeftSuffix,markerWord,sideBit] using hcell
       · subst i
         have hside := sideBit_append_right (d1pow a)
-          m2EvenSixSourceLeftSuffix (3*a+1) (by rw [d1pow_length])
+          m2EvenSixSourceLeftSuffix (3*a+1) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
         simpa [m2EvenSixSourceLeftSuffix,markerWord,sideBit] using hcell
   have hright : T (h+1) = false := by
