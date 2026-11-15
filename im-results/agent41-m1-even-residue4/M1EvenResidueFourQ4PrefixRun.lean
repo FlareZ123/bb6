@@ -310,28 +310,31 @@ theorem m1EvenResidueFour_q4_prefix_run (a b : Nat) (h : Int) :
           change sweptLeft N T h x = true
           rw [hcoord]
           exact hblock
-        · have hx2 : h+2 ≤ x := by
-            dsimp [x,N,hN] at *
-            omega
-          have hx23 : x = h+2 ∨ x = h+3 := by
-            dsimp [x,N,hN] at *
-            omega
-          have hpres := sweptLeft_preserves_right N T h x (by omega)
-          rcases hx23 with hx2' | hx3'
-          · rw [hx2'] at hpres ⊢
-            change sweptLeft N T h (h+2) = true
-            have hsrc : T (h+2) = true := by
-              have hcoord : h+1+1 = h+2 := by omega
-              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
-                s1Config_right_cell 3 4 1 a 0 b h 1
-            rw [hpres,hsrc]
-          · rw [hx3'] at hpres ⊢
-            change sweptLeft N T h (h+3) = true
-            have hsrc : T (h+3) = true := by
-              have hcoord : h+1+2 = h+3 := by omega
-              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
-                s1Config_right_cell 3 4 1 a 0 b h 2
-            rw [hpres,hsrc]
+        · by_cases hx1 : x = h+1
+          · rw [hx1]
+            simpa [T1,N] using sweptLeft_plus1 (3*a) T h
+          · have hx2 : h+2 ≤ x := by
+              dsimp [x,N,hN] at *
+              omega
+            have hx23 : x = h+2 ∨ x = h+3 := by
+              dsimp [x,N,hN] at *
+              omega
+            have hpres := sweptLeft_preserves_right N T h x (by omega)
+            rcases hx23 with hx2' | hx3'
+            · rw [hx2'] at hpres ⊢
+              change sweptLeft N T h (h+2) = true
+              have hsrc : T (h+2) = true := by
+                have hcoord : h+1+1 = h+2 := by omega
+                simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+                  s1Config_right_cell 3 4 1 a 0 b h 1
+              rw [hpres,hsrc]
+            · rw [hx3'] at hpres ⊢
+              change sweptLeft N T h (h+3) = true
+              have hsrc : T (h+3) = true := by
+                have hcoord : h+1+2 = h+3 := by omega
+                simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+                  s1Config_right_cell 3 4 1 a 0 b h 2
+              rw [hpres,hsrc]
       simpa [x,T2] using hframe.trans hT1
   have hScan := E_scan T2 (hN+5) (3*a) hlinear
   have hhead : hN+5+(3*a:Int) = h+4 := by
