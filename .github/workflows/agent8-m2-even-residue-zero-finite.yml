@@ -1,0 +1,44 @@
+name: Agent 8 m2-even residue-zero finite bridge kernels (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  finite-kernels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact finite bridge kernels
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a8-m2
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a8-m2/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a8-m2/
+          cp im-results/agent8-linc/M2EvenResidueZeroFinite.lean /tmp/a8-m2/
+          cd /tmp/a8-m2
+          export LEAN_PATH=.
+          lean --version
+          lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          : > m2-even-residue-zero-finite-axioms.log
+          lean -o M2EvenResidueZeroFinite.olean M2EvenResidueZeroFinite.lean 2>&1 | tee m2-even-residue-zero-finite-axioms.log
+          if grep -q 'sorryAx' m2-even-residue-zero-finite-axioms.log; then
+            echo '::error::sorryAx found in finite m2-even residue-zero bridge kernels'
+            exit 1
+          fi
+      - name: Upload diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m2-even-residue-zero-finite-diagnostics-${{ github.run_id }}
+          path: /tmp/a8-m2/m2-even-residue-zero-finite-axioms.log
+          if-no-files-found: ignore
+          retention-days: 3
