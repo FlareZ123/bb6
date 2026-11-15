@@ -539,3 +539,9 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 - Added `im-results/agent6-429-last-reset-row95/local-check-20261115.md` documenting the actual Lean modules compiled, the exact interface stubs used, the `Decidable Bad` fix, and the remaining full-closure/source-chain checks. This is explicitly intermediate material, not `results/`.
 - Feature branch head is now `a797d0562a03edd4f99f87be04f1a16932abc876`; main is `27e1ae00f85b7aa7fbaebb02a064a89998857958`. Branch includes latest main snapshot before this report; main's latest changes after the merge are only memory/communications commits.
 - Full dependency closure remains incomplete: real NewRootRows/RootMod16/RootMod32 and pinned source transport are not compiled. No CI dispatched. PR #103 remains draft.
+
+
+## 2026-11-15 18:46 UTC: PR base synchronized
+
+- Synchronized feature branch with main after the local-check report; final branch head at this checkpoint is `8da9a92ff903fca1bdd3b23d91b2ad7d1f336e81`. Retargeted/refreshed PR #103 to current main SHA `f2c30737157642e84338f5189c388b3f5c0d462f`; it now shows 9 changed files. GitHub reports mergeability state `unknown` (not a confirmed conflict), and the PR remains draft.
+- PR #103 body records the exact local compile scope and remaining stubs. The durable local-check report is in `im-results/agent6-429-last-reset-row95/local-check-20261115.md`.
