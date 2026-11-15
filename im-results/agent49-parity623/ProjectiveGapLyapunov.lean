@@ -63,3 +63,39 @@ theorem nearLeft_scaled_growth (r l : Int) :
     have h2 : 0 ≤ 68250 * l * l := by simpa [Int.mul_assoc] using h2'
     exact Int.add_nonneg h1 h2
   omega
+
+/-- The sector-adapted form corresponding exactly to 900 times quadraticGap. -/
+def naturalGapPotential (r l : Int) : Int :=
+  75 * (r + l) * (r + l) + 9 * (r - l) * (r - l)
+
+theorem naturalGapPotential_nonneg (r l : Int) : 0 ≤ naturalGapPotential r l := by
+  have h1 := int_sq_nonneg (r+l)
+  have h2 := int_sq_nonneg (r-l)
+  have hc1 : 0 ≤ (75 : Int) := by omega
+  have hc2 : 0 ≤ (9 : Int) := by omega
+  have h1' := Int.mul_nonneg hc1 h1
+  have h2' := Int.mul_nonneg hc2 h2
+  have h1'' : 0 ≤ 75 * (r+l) * (r+l) := by simpa [Int.mul_assoc] using h1'
+  have h2'' : 0 ≤ 9 * (r-l) * (r-l) := by simpa [Int.mul_assoc] using h2'
+  exact Int.add_nonneg h1'' h2''
+
+theorem naturalGapPotential_eq_900Q_left (g m : Int) :
+    naturalGapPotential (-15*m-4*g) g =
+      900 * (g*g + 9*g*m + 21*m*m) := by
+  grind [naturalGapPotential]
+
+theorem naturalGapPotential_eq_900Q_right (g m : Int) :
+    naturalGapPotential g (-15*m-4*g) =
+      900 * (g*g + 9*g*m + 21*m*m) := by
+  grind [naturalGapPotential]
+
+theorem farLeft_natural_scaled_identity (r l : Int) :
+    naturalGapPotential (3*r - 8*l) (3*r + 17*l) - 25 * naturalGapPotential r l =
+      600 * (r + 4*l) * (r + 4*l) := by
+  grind [naturalGapPotential]
+
+theorem nearLeft_natural_scaled_identity (r l : Int) :
+    naturalGapPotential (-8*r + 3*l) (17*r + 3*l) - 25 * naturalGapPotential r l =
+      600 * (4*r + l) * (4*r + l) := by
+  grind [naturalGapPotential]
+
