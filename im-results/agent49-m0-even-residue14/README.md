@@ -1,6 +1,6 @@
 # m=0, n=32k+14: finite q4 bridge candidate
 
-**Status: finite source certificate drafted, not Lean-compiled.** This is the next root family after the candidate middle-17 endpoint. It is an intermediate artifact, not a complete counted increment theorem.
+**Status: finite bridge and swept input-match source drafted, not Lean-compiled.** This is the next root family after the candidate middle-17 endpoint. It is an intermediate artifact, not a complete counted increment theorem.
 
 ## Exact finite bridge
 
@@ -10,7 +10,7 @@ Direct simulation of the 12-entry TM2 table from the source configuration `S1(5,
 - relative to that head, the `[-9,2]` window has ones at `{-7,-6,-5,-4,-1,2}`;
 - the next 39 transitions stay in `[-9,2]` and end in state 4 at relative head `+3`, with ones `{-9,-8,-7,-4,-1,1,2}` in the window.
 
-The Lean file records these as `m0EvenFourteenBridge_exact` and `m0EvenFourteenBridge_heads`, both by `decide` against the original `tm2` table.
+The Lean file records these as `m0EvenFourteenBridge_exact` and `m0EvenFourteenBridge_heads`, both by `decide` against the original `tm2` table. It also proves the five-block source/target BinDec decompositions and `m0EvenFourteenBridge_input_match`, which identifies the entire post-sweep `[-9,2]` window for arbitrary `a>0`.
 
 ## Why this is the next root family
 
@@ -42,3 +42,5 @@ The 39-step bridge plus the 3a sweep and 3(a-1) E-scan gives q4-prefix cost `36+
 5. Compose the resulting `m=0,n=32*k+14` counted increment with the middle-17 root endpoint.
 
 No local Lean runtime was available in this invocation, so the finite `decide` certificate and all proposed source-level generalizations remain uncompiled. Do not promote this directory to `results/` until the full source theorem compiles and passes transitive axiom checks.
+
+The remaining work starts at the q4 cut: lift the bridge over the untouched high-order tail, prove the standard q4 right shape and target left-facing word, compose the generic q4 suffix, and attach the counted drain. The current Lean file is still a bridge-level source artifact only.
