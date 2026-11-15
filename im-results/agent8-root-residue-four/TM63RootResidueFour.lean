@@ -81,7 +81,6 @@ private theorem tm63_root_residue3_bound :
 private theorem tm63_middle_after11_a_pos :
     0 < tm63MiddleAfter11A := by
   simp [tm63MiddleAfter11A,nextExponent]
-  omega
 
 /-- Marker-0, n=16*r+4 source row appended to the genuine blank-root
 endpoint after middle row 11.  This is a candidate composition until the
