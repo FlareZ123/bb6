@@ -208,65 +208,68 @@ private theorem m2EvenSixteenQ4LeftFacingPrefixTrue (a i : Nat)
 
 /-- The 13-cell boundary written by the 50-step bridge is exactly the
 marker-1/digit/BinDec boundary of the next S1 state. -/
+/-- The bridge writes the complete 20-cell suffix window of the q4
+left stream, indexed by y=1-j in its local frame. -/
 private theorem m2EvenSixteenQ4LeftFacingBridgeBit (a j : Nat)
-    (hj : j ≤ 12) :
-    sideBit (m2EvenSixteenQ4LeftFacing a) (3*a+2+j) =
-      decide ((-(j:Int)) ∈ m2EvenSixteenQ4BridgeEnd.marked) := by
+    (hj : j ≤ 19) :
+    sideBit (m2EvenSixteenQ4LeftFacing a) (3*a+1+j) =
+      decide ((1-(j:Int)) ∈ m2EvenSixteenQ4BridgeEnd.marked) := by
   have hface : m2EvenSixteenQ4LeftFacing a =
       [true] ++ (d1pow a ++ m2EvenSixteenQ4LeftSuffix) := by
-    simp [m2EvenSixteenQ4LeftFacing,m2EvenSixteenQ4LeftSuffix,List.append_assoc]
+    simp [m2EvenSixteenQ4LeftFacing,List.append_assoc]
   have hfirst :
-      sideBit (m2EvenSixteenQ4LeftFacing a) (3*a+2+j) =
-        sideBit (d1pow a ++ m2EvenSixteenQ4LeftSuffix) (3*a+1+j) := by
+      sideBit (m2EvenSixteenQ4LeftFacing a) (3*a+1+j) =
+        sideBit (d1pow a ++ m2EvenSixteenQ4LeftSuffix) (3*a+j) := by
     rw [hface]
     exact sideBit_append_right [true]
-      (d1pow a ++ m2EvenSixteenQ4LeftSuffix) (3*a+2+j) (by simp; omega)
+      (d1pow a ++ m2EvenSixteenQ4LeftSuffix) (3*a+1+j) (by simp; omega)
   have hsecond :
-      sideBit (d1pow a ++ m2EvenSixteenQ4LeftSuffix) (3*a+1+j) =
-        sideBit m2EvenSixteenQ4LeftSuffix (j+1) := by
+      sideBit (d1pow a ++ m2EvenSixteenQ4LeftSuffix) (3*a+j) =
+        sideBit m2EvenSixteenQ4LeftSuffix j := by
     have happ := sideBit_append_right (d1pow a)
-      m2EvenSixteenQ4LeftSuffix (3*a+1+j) (by rw [d1pow_length]; omega)
-    have hidx : 3*a+1+j-3*a = j+1 := by omega
-    simpa [hidx] using happ
+      m2EvenSixteenQ4LeftSuffix (3*a+j) (by rw [d1pow_length]; omega)
+    simpa using happ
   have hbits :
-      sideBit m2EvenSixteenQ4LeftSuffix (j+1) =
-        decide ((-(j:Int)) ∈ m2EvenSixteenQ4BridgeEnd.marked) := by
+      sideBit m2EvenSixteenQ4LeftSuffix j =
+        decide ((1-(j:Int)) ∈ m2EvenSixteenQ4BridgeEnd.marked) := by
     have hjCases :
-        j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 ∨ j=5 ∨ j=6 ∨
-        j=7 ∨ j=8 ∨ j=9 ∨ j=10 ∨ j=11 ∨ j=12 := by omega
-    rcases hjCases with h0 | h1 | h2 | h3 | h4 | h5 | h6 |
-        h7 | h8 | h9 | h10 | h11 | h12
+        j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 ∨ j=5 ∨ j=6 ∨ j=7 ∨
+        j=8 ∨ j=9 ∨ j=10 ∨ j=11 ∨ j=12 ∨ j=13 ∨ j=14 ∨
+        j=15 ∨ j=16 ∨ j=17 ∨ j=18 ∨ j=19 := by omega
+    rcases hjCases with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 |
+        h8 | h9 | h10 | h11 | h12 | h13 | h14 | h15 | h16 | h17 |
+        h18 | h19
     all_goals subst j
     all_goals simp [m2EvenSixteenQ4LeftSuffix,markerWord,d0,d1,lh,
       binDec_five_fifteen,sideBit,m2EvenSixteenQ4BridgeEnd]
   calc
-    sideBit (m2EvenSixteenQ4LeftFacing a) (3*a+2+j) =
-        sideBit (d1pow a ++ m2EvenSixteenQ4LeftSuffix) (3*a+1+j) :=
+    sideBit (m2EvenSixteenQ4LeftFacing a) (3*a+1+j) =
+        sideBit (d1pow a ++ m2EvenSixteenQ4LeftSuffix) (3*a+j) :=
       hfirst
-    _ = sideBit m2EvenSixteenQ4LeftSuffix (j+1) := hsecond
-    _ = decide ((-(j:Int)) ∈ m2EvenSixteenQ4BridgeEnd.marked) := hbits
+    _ = sideBit m2EvenSixteenQ4LeftSuffix j := hsecond
+    _ = decide ((1-(j:Int)) ∈ m2EvenSixteenQ4BridgeEnd.marked) := hbits
 
-/-- The source and target left streams share the same final one and lh
-tail from index 3*a+15 onward. -/
+/-- The source and target streams agree from index 3*a+21 onward. -/
 private theorem m2EvenSixteenQ4LeftFacingTail (a i : Nat)
-    (hi : 3*a+15 ≤ i) :
+    (hi : 3*a+21 ≤ i) :
     sideBit (s1LeftFacing 5 16 2 a 0) i =
       sideBit (m2EvenSixteenQ4LeftFacing a) i := by
   let shared : List Bool := [true] ++ lh
   let sourcePrefix : List Bool :=
-    d1pow a ++ markerWord 2 ++ d0 ++ d1 ++ d1 ++ [false,false]
+    d1pow a ++ markerWord 2 ++ d0 ++ d1pow 4 ++ [false,false]
   let targetPrefix : List Bool :=
-    [true] ++ d1pow a ++ markerWord 1 ++ d0 ++ d0 ++ d0 ++ [true,true]
+    [true] ++ d1pow a ++ markerWord 1 ++ d0 ++ d0pow 4 ++ [true,true]
   have hsrc : s1LeftFacing 5 16 2 a 0 = sourcePrefix ++ shared := by
     simp [s1LeftFacing,binDec_zero,sourcePrefix,shared,
-      binDec_five_sixteen,d0,d1,List.append_assoc]
+      binDec_five_sixteen,d0,d1,markerWord,List.append_assoc]
   have htgt : m2EvenSixteenQ4LeftFacing a = targetPrefix ++ shared := by
-    simp [m2EvenSixteenQ4LeftFacing,targetPrefix,shared,
-      binDec_five_fifteen,d0,d1,List.append_assoc]
-  have hlenS : sourcePrefix.length = 3*a+15 := by
+    simp [m2EvenSixteenQ4LeftFacing,m2EvenSixteenQ4LeftSuffix,
+      targetPrefix,shared,binDec_five_fifteen,d0,d1,markerWord,
+      List.append_assoc]
+  have hlenS : sourcePrefix.length = 3*a+21 := by
     simp [sourcePrefix,d1pow_length,markerWord,d0,d1]
     omega
-  have hlenT : targetPrefix.length = 3*a+15 := by
+  have hlenT : targetPrefix.length = 3*a+21 := by
     simp [targetPrefix,d1pow_length,markerWord,d0,d1]
     omega
   rw [hsrc,htgt]
@@ -274,7 +277,6 @@ private theorem m2EvenSixteenQ4LeftFacingTail (a i : Nat)
   rw [sideBit_append_right targetPrefix shared i (by rw [hlenT]; omega)]
   rw [hlenS,hlenT]
 
-/-- The head cell at the q4 cut is one. -/
 private theorem m2EvenSixteenQ4CutTape_head (a b : Nat) (h : Int)
     (ha : 0 < a) :
     m2EvenSixteenQ4CutTape a b h h = true := by
