@@ -137,26 +137,45 @@ cost is exactly (97+12(L+a)+3b).
 
 This is the exact Coq `Rst1'` interface above: the target counter identity
 `(2^(L+2)-1)*2^a-1 = 2^(L+a+2)-2^a-1` is the same expression after
-`pow_add`. Consequently, once the Lean source chain is kernel-verified,
-it can be instantiated directly at both stages:
-- first: `(L,a,b)=(3,A1,B1)`;
-- second: `(L,a,b)=(L1,A2,B2)`.
+`pow_add`.
 
-**Verification status:** this is currently a source proof attempt, not a
-certified result. The existing manual-only workflow
+**The first Rst1' instance is already wired into the root source path.**
+`im-results/agent8-rst1prime/TM63M1OddRst1PrimeContinuation.lean`
+imports this macro. Its theorem
+`rst1Prime_first_reset_after_first_section` composes the macro with the
+S1 counted drain and reaches
+`s1Config tm63Length1 tm63Index1 2 B1 0 (nextRight B1) head`;
+`tm63_blank_reaches_after_first_reset` then composes that reset with
+the preceding blank-root first section. The existing
+`TM63MiddleSectionCountdown` starts from this exact endpoint.
+
+The second Coq Rst1' instance is still part of the unresolved
+middle/last `hstage`. It should be applied with
+`(L,a,b)=(L1,A2,B2)`, after the full `Rsts1_v2` source transition has
+been established. The current
+`TM63MiddleSectionCountdown` plus
+`TM63RootResidueSevenPrefix` / `TM63RootResidueSeven` only certifies
+the first eight middle rows and the residue-seven prefix/counted
+increment; it does not yet reach the second Rst1' input.
+
+**Verification status:** the ten-phase macro and its root-connected first
+instance are source proof attempts, not yet certified by a post-patch
+kernel run. The existing manual-only workflow
 `.github/workflows/agent42-champion-terminal-source.yml` compiles
 FirstSweep → Bridge8Source → SecondSweep → Bridge20Source →
-Bridge9Source → Bridge6Source and checks for transitive `sorryAx`.
-The latest Bridge8 source patch is commit
+Bridge9Source → Bridge6Source, then
+`TM63M1OddRst1PrimeContinuation` and the root-prefix consumers, with
+transitive `sorryAx` gates. The latest Bridge8 source patch is commit
 `29118db656892e842a6237f86ae864e5ab98c3c0`; the second-sweep frame
 qualification is `c4deccae9aed0aee24ba0647fa13994f12ec7aa0`. A static
 ambiguity repair in Bridge6Source is commit
 `21ab4aa332ffb15d78bf2db7b679e0394b9917ac`. No post-patch full-chain
 run or successful local compile has yet been obtained. Do not promote the
-macro to a proved Coq Rst1' instance until the exact source and exported
-axiom audits pass.
+macro or its root instance to a proved Coq Rst1' stage until the exact
+source and exported axiom audits pass.
 
-Even when certified, this macro supplies only the two Rst1' stages of
-the blank-root itinerary. The preceding Rsts1/Rsts1_v2 transformations,
-the final Rsts2H/Rst2 stage, the terminal wrapper, and the full
-blank-tape-to-halt composition remain separate obligations.
+The first reset is therefore source-connected in the current proof graph
+once this macro passes its audit. The remaining middle/last itinerary
+from that post-first-reset state to the final `S1(L2,1,m1,A3,0,B3)`
+input, the second Rst1' application, and the final Rsts2H/Rst2 and
+terminal stages remain separate obligations.
