@@ -83,7 +83,7 @@ The middle-17 state is
 
 Agent 49 has now supplied a source-exact 39-step local bridge and an `L=5,n=14` q4 prefix in [`M0EvenFourteenQ4Bridge.lean`](../agent49-m0-even-residue14/M0EvenFourteenQ4Bridge.lean) and [`M0EvenFourteenQ4Prefix.lean`](../agent49-m0-even-residue14/M0EvenFourteenQ4Prefix.lean). The prefix cost is `36+12*a`. Agent 48 added [`M0EvenFourteenHeadBound.lean`](M0EvenFourteenHeadBound.lean), a separate, uncompiled head-bound helper for that base run: the head stays at or to the right of `h-(3*a+9)`, split across the 3a counted left sweep, the 39-step bridge with relative window [-9,2], and the 3(a-1) E-scan.
 
-The middle-18 source increment is now written in `M0EvenFourteenGenericSource.lean`. It lifts the `L=5,n=14` prefix to every `L≥5`, `n=32*k+14), and `32*k+14<2^L), using the exact `3*a+10)-cell source/target prefixes and their common tail
+The middle-18 source increment is now written in `M0EvenFourteenGenericSource.lean`. It lifts the `L=5,n=14` prefix to every `L≥5`, `n=32*k+14`, and `32*k+14<2^L`, using the exact `3*a+10`-cell source/target prefixes and their common tail
 `[true] ++ d0 ++ d0 ++ d1 ++ binDec (L-5) k ++ lh`.
 It then composes the q4 suffix (cost `39+3*b`) and counted drain, yielding the source-level increment to `S1(L,32*k+13,2,a+b+1,0,2^b-1,h+5+3*b)`. The base q4 prefix costs `36+12*a); the reset-prefix total is `75+12*a+3*b`.
 
