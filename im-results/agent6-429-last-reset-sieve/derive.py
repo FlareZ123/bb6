@@ -112,6 +112,25 @@ for n in range(1, 18, 2):
         "valid_A14_branch": n % 4 == 1,
     })
 
+long_burst_mod16 = []
+for n_mod32 in range(1, 32, 2):
+    branch = 9 if n_mod32 % 4 == 1 else 10
+    allowed_d = []
+    for d in range(16):
+        if (branch == 9 and d % 2 != 0) or (branch == 10 and d % 2 != 1):
+            continue
+        numerator = (2*d - 3*n_mod32 - 25) if branch == 9 else (2*d - 3*n_mod32 - 21)
+        assert numerator % 4 == 0
+        x = (numerator // 4) % 8
+        y = (2 * (x - d) + 1) % 4
+        if (x, y) in allowed8:
+            allowed_d.append(d)
+    long_burst_mod16.append({
+        "n_mod32": n_mod32,
+        "branch": branch,
+        "allowed_d_mod16": allowed_d,
+    })
+
 result = {
     "source_files": {key: str(path.relative_to(ROOT)) for key, path in FILES.items()},
     "construction": {
@@ -127,6 +146,7 @@ result = {
     "v2_distribution_of_U_plus_3": v2_distribution,
     "constant_seed_checks": constant_checks,
     "variable_branch_d_residues": rows,
+    "long_burst_mod16": long_burst_mod16,
 }
 assert len(base) == 58
 assert len(excluded_parts) == 673
@@ -140,4 +160,5 @@ print("n branch modulus terminal-sieve root-mod8")
 for row in rows:
     print(row["n"], row["branch"], row["modulus"],
           row["terminal_sieve_count"], row["mod8_prestate_count"])
+print("long-burst d mod 16:", long_burst_mod16)
 print(f"Wrote {out}")
