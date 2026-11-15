@@ -1,4 +1,5 @@
 import M0OddQ4Prefix
+import Mathlib
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -142,9 +143,9 @@ def m0OddResidueSevenLeftFacing (L r a : Nat) : List Bool :=
 private theorem m0OddResidueSevenInputPrefix_length (a : Nat) :
     (m0OddResidueSevenInputPrefix a).length = 3*a+8 := by
   simp [m0OddResidueSevenInputPrefix,d1pow_length,markerWord,d0]
-  omega
 
-private theorem m0OddResidueSevenTargetPrefix_length (a : Nat) :
+private theorem m0OddResidueSevenTargetPrefix_length (a : Nat)
+    (ha : 0<a) :
     (m0OddResidueSevenTargetPrefix a).length = 3*a+8 := by
   simp [m0OddResidueSevenTargetPrefix,d1pow_length,markerWord,d0,d1]
   omega
@@ -282,97 +283,6 @@ private theorem BB6Coverage.Agent8Q4Suffix.q4RightShape_congr
     rw [← heq (h+10+(3*b:Int)+(i:Int)) (by omega)]
     exact hzero i hi
 
-private theorem sweptLeft_head_eq_source (q : Nat)
-    (T : Int → Bool) (h : Int) :
-    sweptLeft q T h (h-(q:Int)) = T (h-(q:Int)) := by
-  induction q with
-  | zero => simp [sweptLeft]
-  | succ q ih =>
-      have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
-      rw [show sweptLeft (q+1) T h =
-        sweptLeft q (holeThree T h) (h-1) by rfl]
-      rw [hcoord,ih]
-      have hne1 : h-((q+1:Int)) ≠ h+1 := by omega
-      have hne2 : h-((q+1:Int)) ≠ h := by omega
-      simp [holeThree,hne1,hne2]
-
-private theorem sweptLeft_head_plus1_false (q : Nat)
-    (T : Int → Bool) (h : Int) :
-    sweptLeft (q+1) T h (h-(q:Int)) = false := by
-  induction q with
-  | zero => simp [sweptLeft,holeThree]
-  | succ q ih =>
-      have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
-      rw [show sweptLeft (q+2) T h =
-        sweptLeft (q+1) (holeThree T h) (h-1) by rfl]
-      rw [hcoord]
-      exact ih (holeThree T h) (h-1)
-
-private theorem leftSweep_one (T : Int → Bool) (h : Int)
-    (ht : T h = true) :
-    run tm2 1 ⟨3,h,T⟩ = some ⟨1,h+1,T⟩ := by
-  simp [run,rawStep,readSlot,applyMove,tm2,ht]
-
-private theorem leftSweep_two (T : Int → Bool) (h : Int)
-    (ht : T h = true) (hr : T (h+1) = false) :
-    run tm2 2 ⟨3,h,T⟩ =
-      some ⟨2,h,(fun x => if x = h+1 then true else T x)⟩ := by
-  rw [show 2 = 1+1 by omega,run_add,leftSweep_one T h ht]
-  simp [run,rawStep,readSlot,applyMove,tm2,hr]
-
-private theorem counted_left_sweep_heads
-    (N : Nat) (T : Int → Bool) (h : Int)
-    (hOn : leftOnes T h N) (hr : T (h+1) = false)
-    (k : Nat) (hk : k < 3*N) (d : Config)
-    (hd : run tm2 k ⟨3,h,T⟩ = some d) :
-    h-(N:Int) ≤ d.head := by
-  let q := k/3
-  let r := k%3
-  have hkdecomp : k = 3*q+r := by dsimp [q,r]; omega
-  have hq : q < N := by dsimp [q]; omega
-  have hqOn : leftOnes T h q := by
-    intro i hi
-    exact hOn i (by omega)
-  have hqrun := counted_left_sweep q T h hqOn hr
-  let Tq := sweptLeft q T h
-  have hqhead : Tq (h-(q:Int)) = true := by
-    rw [show Tq = sweptLeft q T h by rfl,sweptLeft_head_eq_source]
-    exact hOn q hq
-  have hqright : Tq (h-(q:Int)+1) = false := by
-    by_cases hq0 : q = 0
-    · subst q
-      simpa [Tq] using hr
-    · obtain ⟨q',rfl⟩ := Nat.exists_eq_succ_of_ne_zero hq0
-      have hfalse := sweptLeft_head_plus1_false q' T h
-      simpa [Tq] using hfalse
-  have hqrun' :
-      run tm2 (3*q) ⟨3,h,T⟩ =
-        some ⟨3,h-(q:Int),Tq⟩ := by
-    simpa [Tq] using hqrun
-  rw [hkdecomp,run_add,hqrun'] at hd
-  simp only [Option.bind_some] at hd
-  have hrlt : r < 3 := Nat.mod_lt _ (by decide)
-  have hrCases : r=0 ∨ r=1 ∨ r=2 := by omega
-  rcases hrCases with hr0|hr1|hr2
-  · subst r
-    simp [run] at hd
-    have heq := Option.some.inj hd
-    subst d
-    simp
-    omega
-  · subst r
-    rw [leftSweep_one Tq (h-(q:Int)) hqhead] at hd
-    have heq := Option.some.inj hd
-    subst d
-    simp
-    omega
-  · subst r
-    rw [leftSweep_two Tq (h-(q:Int)) hqhead hqright] at hd
-    have heq := Option.some.inj hd
-    subst d
-    simp
-    omega
-
 private theorem fRun_prefix_exists {m c n k d}
     (h : fRun m n c = some d) (hk : k ≤ n) :
     ∃ e, fRun m k c = some e := by
@@ -445,9 +355,33 @@ private theorem E_scan_prefix_head
   simp at heq
   omega
 
-/-- Every prefix of the base n=5 q4 run stays above h-3*a-6.
-This is the sharp read bound: 3*a sweep cells, then the bridge's -6
-left edge, followed only by the rightward E scan. -/
+private theorem m0OddQ4CutTape_eq_swept
+    (a b : Nat) (h x : Int)
+    (hout : m0OddQ4Bridge27Inside
+      (x-(h-((3*a : Nat):Int))) = false) :
+    m0OddQ4CutTape a b h x =
+      sweptLeft (3*a) (s1Config 3 5 0 a 0 b h).tape h x := by
+  have hcut := frameAt_tape_outside
+    (sweptLeft (3*a) (s1Config 3 5 0 a 0 b h).tape h)
+    (h-((3*a : Nat):Int)) m0OddQ4Bridge27Inside
+    m0OddQ4Bridge27End x hout
+  simpa [m0OddQ4CutTape] using hcut
+
+private theorem m0OddQ4CutTape_eq_end_inside
+    (a b : Nat) (h x : Int)
+    (hin : m0OddQ4Bridge27Inside
+      (x-(h-((3*a : Nat) : Int))) = true) :
+    m0OddQ4CutTape a b h x =
+      decide ((x-(h-((3*a : Nat) : Int))) ∈
+        m0OddQ4Bridge27End.marked) := by
+  have hcut := frameAt_tape_inside
+    (sweptLeft (3*a) (s1Config 3 5 0 a 0 b h).tape h)
+    (h-((3*a : Nat):Int)) m0OddQ4Bridge27Inside
+    m0OddQ4Bridge27End x hin
+  simpa [m0OddQ4CutTape] using hcut
+
+/-- Every prefix of the base m=0,n=5 source run stays in the finite
+half-line used by the generalized frame. -/
 private theorem m0Odd_base_prefix_head_bound
     (a b : Nat) (h : Int) (ha : 0<a) :
     ∀ k, k < 24+12*a → ∀ d,
@@ -460,20 +394,22 @@ private theorem m0Odd_base_prefix_head_bound
   let T2 := m0OddQ4CutTape a b h
   have hleft :
       s1LeftFacing 3 5 0 a 0 =
-        d1pow a ++ (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh) := by
-    simp [s1LeftFacing,binDec_zero,List.append_assoc]
+        d1pow a ++
+          (markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh) := by
+    simpa [m0OddResidueSevenInputPrefix,List.append_assoc] using
+      m0OddResidueSeven_base_input_left a
   have hOn : leftOnes T h N := by
     intro i hi
     have hcell := s1Config_left_cell 3 5 0 a 0 b h i
     rw [hleft] at hcell
-    have hbit := sideBit_append_left
-      (d1pow a) (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh) i
+    have hbit := Agent6Q4Prefix.sideBit_append_left
+      (d1pow a) (markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh) i
       (by rw [d1pow_length]; omega)
     rw [hbit] at hcell
     exact hcell.trans (sideBit_d1pow_true a i hi)
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 5 0 a 0 b h 0
-    simpa [T,s1PhysicalRight_source,sideBit] using hc
+    simpa [T,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hc
   have hSweep := counted_left_sweep N T h hOn hright
   have hmatch := m0OddQ4Bridge_input_match a b h ha
   have hBridge := m0OddQ4Bridge27At T1 hN hmatch
@@ -483,7 +419,7 @@ private theorem m0Odd_base_prefix_head_bound
     have hframeConfig :
         frameAt T1 hN m0OddQ4Bridge27Inside m0OddQ4Bridge27End =
           (⟨4,hN+3,T2⟩ : Config) := by
-      apply config_ext
+      apply m0OddResidueSeven_config_ext
       · simp [frameAt_state,m0OddQ4Bridge27End]
       · simp [frameAt_head,m0OddQ4Bridge27End] <;> omega
       · rfl
@@ -497,19 +433,17 @@ private theorem m0Odd_base_prefix_head_bound
       have hrel : x-hN=3 := by dsimp [x]; omega
       have hin : m0OddQ4Bridge27Inside (x-hN)=true := by
         simp [m0OddQ4Bridge27Inside,hrel]
-      have hcut := frameAt_tape_inside T1 hN
-        m0OddQ4Bridge27Inside m0OddQ4Bridge27End x hin
+      have hcut := m0OddQ4CutTape_eq_end_inside a b h x hin
       have hmark :
           decide ((x-hN) ∈ m0OddQ4Bridge27End.marked) = true := by
         rw [hrel]
         simp [m0OddQ4Bridge27End]
-      simpa [T2,m0OddQ4CutTape,x,hN] using hcut.trans hmark
+      simpa [T2,x,hN] using hcut.trans hmark
     · have hrel : x-hN=3+(i:Int) := by dsimp [x]; omega
       have hout : m0OddQ4Bridge27Inside (x-hN)=false := by
         simp [m0OddQ4Bridge27Inside,hrel]
         omega
-      have hcut := frameAt_tape_outside T1 hN
-        m0OddQ4Bridge27Inside m0OddQ4Bridge27End x hout
+      have hcut := m0OddQ4CutTape_eq_swept a b h x hout
       let j : Nat := 3*a-3-i
       have hj : j+1 < N := by
         dsimp [j,N]
@@ -521,7 +455,7 @@ private theorem m0Odd_base_prefix_head_bound
       have hblock' : sweptLeft N T h x = true := by
         rw [hcoord]
         exact hblock
-      simpa [T2,m0OddQ4CutTape,x] using hcut.trans hblock'
+      simpa [T2,x] using hcut.trans hblock'
   intro k hk d hd
   let p1 := 3*N
   let p2 := p1+27
@@ -531,33 +465,25 @@ private theorem m0Odd_base_prefix_head_bound
     dsimp [hN,N] at *
     omega
   · by_cases hk2 : k < p2
-    · let j : Nat := k-p1
+    · let j := k-p1
       have hj : j<27 := by dsimp [j,p1] at *; omega
       have hkEq : k=p1+j := by dsimp [j,p1]; omega
-      rw [hkEq,run_add] at hd
-      dsimp [p1] at hd
-      rw [hSweep] at hd
+      rw [hkEq,run_add,hSweep] at hd
       simp only [Option.bind_some] at hd
       have hlow := m0Odd_bridge_prefix_lower T1 hN hmatch j hj d hd
       dsimp [hN,N] at *
       omega
-    · let j : Nat := k-p2
+    · let j := k-p2
       have hj : j<3*(a-1) := by dsimp [j,p2,p1,N] at *; omega
       have hkEq : k=p1+(27+j) := by dsimp [j,p2,p1]; omega
-      rw [hkEq,run_add] at hd
-      dsimp [p1] at hd
-      rw [hSweep] at hd
+      rw [hkEq,run_add,hSweep] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge'] at hd
       simp only [Option.bind_some] at hd
-      have hhead := E_scan_prefix_head T2 (hN+3) (3*(a-1))
-        hlinear j hj d hd
+      have hhead := E_scan_prefix_head T2 (hN+3) (3*(a-1)) hlinear j hj d hd
       dsimp [hN,N] at *
       omega
 
-/-- The q4 prefix for n=16*r+7 is a framed copy of the n=5 source run.
-Only the first d0 block is read or changed; the remaining three low blocks
-are preserved from the genuine input and already equal the target tail. -/
 theorem m0Odd_residue7_q4_prefix_source
     (L r a b : Nat) (h : Int)
     (hL : 4 ≤ L) (hbound : 16*r+7 < 2^L) (ha : 0<a) :
