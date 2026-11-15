@@ -4,11 +4,15 @@
 
 ## Why this row matters
 
-The current Agent 48 root-middle-19 handoff identifies the next genuine-root state as
-`m=1, n=16*r-4=32*k+12=8*(4*k+1)+4`. Thus a general original-source increment for
-`m=1, n=8q+4` would close the next explicit TM63 root successor by specializing
-`q=4*k+1`. The repository has general m=1 rows for residues 2 and 6, but no
-`m=1,n=8q+4` source increment was found in the current tree.
+The Agent 48 root-middle-19 handoff ends at `m=1,n=16*r-4`. This is
+already of the required form `8*q+4` by taking `q=2*r-1`, since
+`8*(2*r-1)+4=16*r-4`. Thus the generic original-source increment theorem
+applies directly; no parity decomposition of `r` is needed (if
+`r=2*s+1` is used, the equivalent quotient is `q=4*s+1`). The root's
+post-middle-19 first counter is `a=tm63MiddleAfter18A+tm63MiddleAfter18B+2`,
+so the theorem's `a>0` hypothesis is immediate. The repository has general
+m=1 rows for residues 2 and 6, but no `m=1,n=8*q+4` source increment was
+found in the current tree.
 
 ## Candidate statement
 
