@@ -68,8 +68,8 @@ therefore gives
 `resetPrefixCost 0 (8*k+4) a b = 12*a+87+3*b`,
 exactly the prefix plus the generic q4 suffix cost `39+3*b`. Combining the existing closed all-ones drain identity gives the full candidate increment count
 ```
-proposedIncrementCost 0 (8*k+4) a b
-  = 6*4^b + 42*2^b + 12*a - 9*b + 39
+proposedIncrementCost 0 (8*k+4) a b + 9*b
+  = 6*4^b + 42*2^b + 12*a + 39
 ```
 This is a derived successful-transition count for the candidate Rst0 macro, not a measured BB(6) score.
 
