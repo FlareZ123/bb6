@@ -100,7 +100,7 @@ theorem y3_x314_parents (v a k : Nat)
                     calc
                       2^n*(2*a+6)=(32*b)*(4*c) := by rw [hb,hc]
                       _=128*(b*c) := by
-                      simp [Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm]
+                        simp [Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm]
                   rw [←hpow'] at hdiv
                   have hzero : (512*v+320)%128=0 :=
                     Nat.mod_eq_zero_of_dvd hdiv
