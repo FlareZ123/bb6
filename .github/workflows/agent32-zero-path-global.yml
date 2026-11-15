@@ -28,6 +28,11 @@ on:
         required: false
         type: boolean
         default: false
+      export_frontier:
+        description: 'Export exact depth-four residual cylinders and root-preserving symmetry classes'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -102,6 +107,28 @@ jobs:
         run: |
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
           lean im-results/agent32-zero-prefix-global/LassoTraceStrongEval.lean
+
+      - name: Export exact depth-four residual frontier and root-preserving symmetry classes (explicitly requested only)
+        if: ${{ inputs.export_frontier }}
+        run: |
+          set -eu
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
+          lean -o im-results/agent4-coverage-smoke/FrontierExtract.olean im-results/agent4-coverage-smoke/FrontierExtract.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierUnique.olean im-results/agent4-coverage-smoke/FrontierUnique.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierManifestMass.olean im-results/agent4-coverage-smoke/FrontierManifestMass.lean
+          lean im-results/agent32-zero-prefix-global/ResidualFrontierManifest.lean
+          python im-results/agent32-zero-prefix-global/canonicalize_residual_frontier.py /tmp/bb6-depth4-frontier.tsv /tmp/bb6-depth4-frontier-report.txt /tmp/bb6-depth4-frontier
+          gzip -9 /tmp/bb6-depth4-frontier.jsonl
+          gzip -9 /tmp/bb6-depth4-frontier-summary.json
+          ls -lh /tmp/bb6-depth4-frontier.jsonl.gz /tmp/bb6-depth4-frontier-summary.json.gz
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.export_frontier }}
+        with:
+          name: bb6-depth4-residual-frontier
+          path: |
+            /tmp/bb6-depth4-frontier.jsonl.gz
+            /tmp/bb6-depth4-frontier-summary.json.gz
+          retention-days: 30
 
   fresh-ray-entry-proof:
     runs-on: ubuntu-latest
