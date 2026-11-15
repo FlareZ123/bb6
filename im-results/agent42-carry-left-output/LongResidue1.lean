@@ -365,9 +365,20 @@ theorem carryLongPrefix_r1_full (k : Nat) (T : Int → Bool)
 #print axioms carryLongPrefix_r1_left
 #print axioms counted_left_sweep
 #print axioms run_frame
+#print axioms carryInput_leftOnes
+#print axioms carryInput_unmarked
 #print axioms carryLeftSweep_marked
+#print axioms carryLeftSweep_preserves_at
 #print axioms carryBridge3
+#print axioms carryBridge3_input_match
+#print axioms carryBridge3_matches_carryAD12
 #print axioms carryAD12
+#print axioms frame_head_segment
+#print axioms carryFinishFromD
+#print axioms composeCarryRuns
+#print axioms ad12FinalCell_mod
+#print axioms ad12Offset_mod
+#print axioms bridge3FinalCell_left
 
 
 /-- Spatially translate the complete residue-one prefix theorem. This is
