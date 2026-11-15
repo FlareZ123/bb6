@@ -47,9 +47,9 @@ The remaining work is the general tail lift for `L>=5`, `n=32*k+14`, the generic
 
 ## Independent finite simulations
 
-A direct JS replay of the original 12-entry TM2 table (same S1 encoding) was also run on two sample configurations:
+A self-contained Lean 4.36.0-rc2 replay of the original 12-entry TM2 table (copied verbatim from `ChampionRootBridge.lean`) and S1 encoding was compiled locally on two sample configurations. The source is `LocalFiniteReplay.lean` and imports only `Lean`:
 
 - `L=5,n=14,a=1,b=1`: 48 moves, state 4 at the original head, head range `[-12,1]`, and the complete left-facing stream agrees with the expected q4-cut word.
 - `L=6,n=46=32*1+14,a=2,b=0`: 60 moves, state 4 at the original head, head range `[-15,1]`, and the complete left-facing stream agrees with the expected generalized target word.
 
-These are reproducible finite computational checks, not formal proof or Lean compile evidence. The formal source candidate remains the authority once compiled.
+The four sample theorems (`sample14_a1_b1`, `sample46_a2_b0`, and the two head-bound checks) compile by kernel `decide`; `#print axioms` reports only `propext`, `Classical.choice`, and `Quot.sound`, with no `sorryAx`. These are finite sample checks, not a proof of the general source family. The repository-dependent `M0EvenFourteenQ4Bridge.lean` and `M0EvenFourteenQ4Prefix.lean` still require the project dependency environment and have not been compiled.
