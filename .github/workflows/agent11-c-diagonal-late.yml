@@ -13,6 +13,11 @@ on:
         required: false
         type: boolean
         default: false
+      s31_w13_only:
+        description: "Source-check the M0 base and S31 B/W5/W1/q275/q403 high-stop chain, then stop"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -32,6 +37,7 @@ jobs:
         env:
           M0_S229_S533_ONLY: ${{ inputs.m0_s229_s533_only }}
           U5_X314_ONLY: ${{ inputs.u5_x314_only }}
+          S31_W13_ONLY: ${{ inputs.s31_w13_only }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/a38-section
@@ -212,7 +218,8 @@ jobs:
             fi
             exit 0
           fi
-          # Source-check the complete even-valuation s=1024*w+229 high-stop exclusion.
+          if [ "$S31_W13_ONLY" != "true" ]; then
+            # Source-check the complete even-valuation s=1024*w+229 high-stop exclusion.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS229.lean .
           lean -o M0EvenEvenSumZeroS229.olean M0EvenEvenSumZeroS229.lean 2>&1 | tee M0EvenEvenSumZeroS229.log
           if grep -q sorryAx M0EvenEvenSumZeroS229.log; then
@@ -228,7 +235,8 @@ jobs:
             exit 1
           fi
 
-          if [ "$M0_S229_S533_ONLY" = "true" ]; then exit 0; fi
+            if [ "$M0_S229_S533_ONLY" = "true" ]; then exit 0; fi
+          fi
 
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31.lean .
           lean -o M0EvenEvenSumZeroS31.olean M0EvenEvenSumZeroS31.lean 2>&1 | tee M0EvenEvenSumZeroS31.log
@@ -260,6 +268,8 @@ jobs:
             echo "REJECTED: S31 w13 q403 high-stop proof contains sorryAx"
             exit 1
           fi
+
+          if [ "$S31_W13_ONLY" = "true" ]; then exit 0; fi
 
           # Agent 41: disjoint c=512*g+7 closure of the u=64*c+7 E4 branch.
           cp ${GITHUB_WORKSPACE}/im-results/agent41-m0-u7-c512/OddSevenU7C512.lean .
