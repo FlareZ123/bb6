@@ -293,8 +293,8 @@ increment, and the counted M1-odd residue-five increment. Its theorem
 
 The shared arithmetic module
 `TM63RootCountdownArithmetic.lean` now exports
-`tm63_root_middle_k_split`, `tm63_index1_eq_16k15`, and
-`tm63_index1_lt_pow_length1`; the residue-six root composition uses
+`tm63_root_middle_k_split`, `tm63_index1_eq_16k15`,
+`tm63_index1_lt_pow_length1`, and `tm63_root_length_ge_four`; the residue-six root composition uses
 these rather than duplicating the quotient and width proofs.
 
 **Current next source row:** M0-even residue four, input
