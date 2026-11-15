@@ -106,11 +106,14 @@ y ≡ 1 (mod 8), which is forbidden by the new two-step root lemma.
 theorem branch10_13_1_lifts_unreachable (n d x y : Nat)
     (hn : 18 ≤ n) (hd : 3 ≤ d) (hdx : d ≤ x)
     (hcase :
-      (n%64=35 ∧ d%32=25) ∨
-      (n%64=3 ∧ d%32=9) ∨
-      (n%64=11 ∧ d%32=21) ∨
-      (n%64=19 ∧ d%32=1) ∨
-      (n%64=27 ∧ d%32=13))
+      (n%128=19 ∧ d%32=1) ∨
+      (n%128=27 ∧ d%32=13) ∨
+      (n%128=35 ∧ d%32=25) ∨
+      (n%128=67 ∧ d%32=9) ∨
+      (n%128=75 ∧ d%32=21) ∨
+      (n%128=107 ∧ d%32=5) ∨
+      (n%128=115 ∧ d%32=17) ∨
+      (n%128=123 ∧ d%32=29))
     (hx : 4*x+3*n+21 = 2^(n+2)*(d+6)+2*d)
     (hy : y=2*(x-d)+1)
     (hr : Reach x y) : False := by
