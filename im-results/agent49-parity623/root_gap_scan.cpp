@@ -60,6 +60,21 @@ unsigned bitLength(const cpp_int& x) {
     if (x == 0) return 0;
     return boost::multiprecision::msb(x) + 1;
 }
+unsigned valuation2(cpp_int x) {
+    if (x == 0) return UINT32_MAX;
+    if (x < 0) x = -x;
+    unsigned v = 0;
+    while ((x & 1) == 0) { x >>= 1; ++v; }
+    return v;
+}
+
+bool isPowerOf3(cpp_int x, unsigned& exponent) {
+    if (x <= 0) return false;
+    exponent = 0;
+    while (x % 3 == 0) { x /= 3; ++exponent; }
+    return x == 1;
+}
+
 
 struct Best {
     bool set = false;
@@ -91,7 +106,26 @@ int main(int argc, char** argv) {
     State s{0, 7};
     Best canAll, oldAll, canTail, oldTail;
     std::uint64_t maxBitDiff = 0, maxBitIndex = 0;
+    unsigned maxPoleV2 = 0;
+    std::uint64_t maxPoleIndex = 0, exactPoleCount = 0, power3Count = 0;
+    std::uint64_t firstPower3Index = 0;
+    unsigned firstPower3Exponent = 0;
     for (std::uint64_t i = 0; i <= steps; ++i) {
+        cpp_int pole = s.d - 40 * s.a;
+        unsigned poleV2 = valuation2(pole);
+        if (poleV2 > maxPoleV2) {
+            maxPoleV2 = poleV2;
+            maxPoleIndex = i;
+        }
+        if (pole == 0) ++exactPoleCount;
+        unsigned exponent = 0;
+        if (isPowerOf3(2 * s.a + 5, exponent) && exponent >= 3) {
+            if (power3Count == 0) {
+                firstPower3Index = i;
+                firstPower3Exponent = exponent;
+            }
+            ++power3Count;
+        }
         if (i >= 9) {
             std::string sector;
             cpp_int canGap, oldGap, scale;
@@ -176,4 +210,12 @@ int main(int argc, char** argv) {
     show("old_ray_tail_min", oldTail);
     std::cout << "max_coordinate_bitlength_difference=" << maxBitDiff
               << " at_index=" << maxBitIndex << "\n";
+    std::cout << "max_v2(d-40a)=" << maxPoleV2
+              << " at_index=" << maxPoleIndex
+              << " exact_pole_count=" << exactPoleCount << "\n";
+    std::cout << "pure_power3(2a+5), exponent>=3 count=" << power3Count;
+    if (power3Count > 0)
+        std::cout << " first_at=" << firstPower3Index
+                  << " exponent=" << firstPower3Exponent;
+    std::cout << "\n";
 }
