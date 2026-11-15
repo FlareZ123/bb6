@@ -77,7 +77,7 @@ This exact counted/root composition is not yet kernel-checked. The next root row
 1. Pass the full original-import Lean 4.36.0-rc2 compile and transitive `sorryAx` audit for `S1CountedInc0.lean` and `S1CountedDrain.lean`.
 2. Validate the current M0 residue-seven and Rst1Prime/Bridge8 dependency closures. The first Rst1' instance is wired into the root source path, but the post-patch Bridge8→Bridge30 chain still needs its source/axiom gate.
 3. Validate the M2 residue-six leaf, then compose its prefix with the counted drain and the authentic root endpoint; validate the M1 residue-five successor.
-4. Prove the M0-even residue-four source row described above, then append it to the root countdown. The present 51-step bridge is not yet a general source theorem.
+4. Compile and audit the M0-even residue-four source row and its middle-12 root wrapper. They are present as drafts, but no original-import source or transitive axiom check has passed.
 5. Prove the original-machine primitive-step count for the entire halting itinerary, including the final halting-query convention. Independently, prove a universal six-state upper bound.
 
 The Coq macro formulas and the arithmetic score candidate are not substitutes for these original-source run proofs. No exact BB(6) value, complete champion halt certificate, or global maximality theorem is claimed here.
