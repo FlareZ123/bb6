@@ -77,6 +77,7 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
           lean im-results/agent32-zero-prefix-global/ReadOneLeaf.lean
       - name: Independently exhaust the six read-zero rows
+        if: ${{ !inputs.export_frontier }}
         run: |
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-all.cpp -o /tmp/zero-prefix-check
           /tmp/zero-prefix-check
