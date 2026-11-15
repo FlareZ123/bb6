@@ -154,17 +154,23 @@ middle/last `hstage`. It should be applied with
 `(L,a,b)=(L1,A2,B2)`, after the full `Rsts1_v2` source transition has
 been established. The universal macro and the already-proved
 `rst1Prime_resetCost_decomposition L a b` are parameter-generic, so
-the second reset should reuse the same ten-phase macro plus the S1
-counted drain; only the exact `resetIndex L a` algebraic identity
-needs to be stated at general (L) rather than the first-stage
-specialization (L=3). The current
-`TM63MiddleSectionCountdown` plus
+the second reset reuses the same ten-phase macro plus the S1 counted
+drain. The formerly missing general index identity is now proved in
+`BB6ChampionArithmetic.resetIndex_eq_pow_sub` in
+`im-results/agent24-champion-time/ChampionModular.lean`:
+`resetIndex L a = 2^(L+a+2)-2^a-1` for all natural L and a. This
+arithmetic theorem was kernel-checked locally with Lean 4.36.0-rc2;
+its axiom set is `[propext, Quot.sound]`. It establishes only the
+closed form of the parameter update, not a TM63 source run.
+
+The current `TM63MiddleSectionCountdown` plus
 `TM63RootResidueSevenPrefix` / `TM63RootResidueSeven` only certifies
 the first eight middle rows and the residue-seven prefix/counted
 increment; it does not yet reach the second Rst1' input. Thus the
-remaining hard source obligation is the complete `Rsts1_v2` middle
-transition to `S1(L1,0,m1,A2,0,B2)`; after that, the second Rst1'
-reset itself is a direct reuse of the existing macro.
+remaining hard source obligation is still the complete
+`Rsts1_v2` middle transition to `S1(L1,0,m1,A2,0,B2)`; after that,
+the second Rst1' reset itself is a direct reuse of the existing
+parameter-generic macro.
 
 **Verification status:** the ten-phase macro and its root-connected first
 instance are source proof attempts, not yet certified by a post-patch
