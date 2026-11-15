@@ -1,7 +1,6 @@
 # M1-even residue-two finite bridge
 
-**Status:** the finite 40-step bridge is kernel-checked; the quantified S1
-source-frame and complete counted-reset theorem remain open.
+**Status:** the 40-step bridge and quantified S1 source-window match are formalized; the complete counted-reset theorem remains open.
 
 ## Exact finite trace
 
@@ -29,37 +28,46 @@ The finite bridge module was locally compiled with Lean 4.36.0-rc2 against
 copied current `ChampionRootBridge`/TM2 simulator source and a local
 reconstruction of its core `Config`/`Move`/`run` semantics.  Its two
 `#print axioms` outputs are exactly `[propext, Classical.choice, Quot.sound]`;
-there is no `sorryAx`.  This is a local check of the finite certificate, not
-a complete compile of the repository's full dependency closure.
+there is no `sorryAx`.  This is a local check of the finite certificate, not a complete compile of the repository's full dependency closure.
 
-## Source-level lifting still required
+## General source-frame theorem now available
 
-The source input should be connected by proving
-`binDec 3 2 = d1 ++ d0 ++ d1` and matching the swept S1 tape to the
-finite start window.  The left-side pattern is determined by
-`markerWord 1 ++ d0 ++ d1 ++ d0 ++ d1 ++ lh`; positive offsets 1 through 4
-are the swept blank/one boundary and the bridge's right-side marks.
+`M1EvenResidueTwoInputFrame.lean` proves the low-order encoding identity
+`binDec L (8*k+2) = d1 ++ d0 ++ d1 ++ binDec (L-3) k` and the
+quantified source-window match.  For every `L≥3`, `k<2^(L-3)`, `a>0`,
+and arbitrary `b,h`, after the `3*a+1)-cell left sweep the S1 tape agrees
+with the exact finite bridge start on every offset in `[-11,4]`.
+The proof uses the existing sweep preservation/boundary lemmas and keeps
+the higher `binDec (L-3) k` tail outside the read window.
 
-For `a>0`, the expected prefix decomposition is:
+I locally compiled this source-frame module against minimal
+API-compatible reconstructions of the current `S1Encoder` and
+`CountedQ4Prefix` interfaces, along with the copied TM2 core.  Its
+`#print axioms` output contains only
+`propext, Classical.choice, Quot.sound`, with no `sorryAx`.  The module
+still needs compilation in the repository's complete dependency closure.
+
+## Remaining source composition
+
+The expected q4-prefix decomposition is:
 
 1. counted left sweep of `3*a+1` cells, costing `9*a+3`;
 2. the new 40-step bridge;
 3. a `3*a-3`-step right scan to the original head, costing `3*a-3`.
 
-This gives a candidate q4-prefix cost `40+12*a).  The existing q4 suffix
-has cost `39+3*b`, so the total reset-prefix cost is expected to be
-
+This gives q4-prefix cost `40+12*a`.  The existing q4 suffix costs
+`39+3*b`, so the total reset-prefix cost is
 `79+12*a+3*b = resetPrefixCost 1 (8*k+2) a b`.
 
-The resulting counted increment should therefore be
-`proposedIncrementCost 1 (8*k+2) a b`, ending at
-`S1(L,8*k+1,m=0,a+b+2,0,2^b-1,h+5+3*b)`.
+The intended counted increment ends at
+`S1(L,8*k+1,m=0,a+b+2,0,2^b-1,h+5+3*b)`, with cost
+`proposedIncrementCost 1 (8*k+2) a b`.
 
-These are source-level targets, not proved claims.  The q4-right-shape
-argument for arbitrary `a,b,L,k`, the left-facing stream equality, the
-suffix composition, and the counted drain have not yet been formalized in
-this directory.  The finite trace alone does not establish the increment
-macro.
+Still unproved here: lifting the finite bridge with `bridgeAt`, proving
+the q4-right-shape after the bridge and scan for arbitrary `a,b,L,k`,
+the left-facing stream equality for the q4 suffix, and composition with
+the counted drain.  The source-window theorem plus finite trace do not yet
+establish the increment macro.
 
 ## Root relevance
 
@@ -81,6 +89,5 @@ bridge start on all sixteen offsets `-11..4`.  This is a closed
 `decide` proof, with `#print axioms` showing only the standard
 `propext, Classical.choice, Quot.sound` axioms.
 
-The base check validates the intended source-window orientation for this
-single parameter instance.  It does not prove the quantified
-`a,b,L,k` source-frame theorem.
+The base check is a small independent regression instance; the quantified
+source-frame theorem is now in `M1EvenResidueTwoInputFrame.lean`.
