@@ -1,4 +1,5 @@
 import CountedCarryPrefix
+import CountedCarryLeftOutput
 import CountedLBinDecShape
 import Lean.Elab.Tactic.Omega
 
@@ -6,6 +7,7 @@ namespace BB6Coverage.Agent24CountedLBinDec
 
 open BB6Coverage
 open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent3CarryLeftOutput
 open BB6Coverage.Agent42CountedLBinDec
 
 set_option maxHeartbeats 1000000
@@ -264,12 +266,91 @@ private theorem b11T11_h6 (T : Int → Bool) (h : Int) :
   simp [b11T11,b11T10,b11T9,b11T8,b11T7,b11T6,b11T5,
     b11T4,b11T3,b11T2,b11T1,putAt] <;> omega
 
+/-- The exact left-output word of the counted LInc H-run.  The interior
+three-cell blocks are d0, the boundary is d1, and the exterior is untouched. -/
+theorem HOutputShape_leftOutput (r : Nat) (T U : Int → Bool)
+    (hshape : HOutputShape r T U 0) :
+    ∀ x : Int, x ≤ 0 → U x = carryLeftOutputBit r T x := by
+  rcases hshape with ⟨_, hblocks, hbase0, hbase1, hbase2, _, hkeepL⟩
+  intro x hx
+  by_cases hfar : x < -3*(r:Int)-2
+  · have hleft : x ≤ 0 - 3*(r:Int)-3 := by omega
+    have hkeep := hkeepL x hleft
+    simp [carryLeftOutputBit, hfar, hkeep]
+  · by_cases hbase : x ≤ -3*(r:Int)
+    · have hcases : x = 0 - 3*(r:Int) ∨
+        x = 0 - 3*(r:Int)-1 ∨ x = 0 - 3*(r:Int)-2 := by omega
+      rcases hcases with h0 | h1 | h2
+      · rw [h0]
+        have hnotfar : ¬ (0 - 3*(r:Int) < -3*(r:Int)-2) := by omega
+        have hle : 0 - 3*(r:Int) ≤ -3*(r:Int) := by omega
+        simpa [carryLeftOutputBit, hnotfar, hle] using hbase0
+      · rw [h1]
+        have hnotfar : ¬ (0 - 3*(r:Int)-1 < -3*(r:Int)-2) := by omega
+        have hle : 0 - 3*(r:Int)-1 ≤ -3*(r:Int) := by omega
+        simpa [carryLeftOutputBit, hnotfar, hle] using hbase1
+      · rw [h2]
+        have hnotfar : ¬ (0 - 3*(r:Int)-2 < -3*(r:Int)-2) := by omega
+        have hle : 0 - 3*(r:Int)-2 ≤ -3*(r:Int) := by omega
+        simpa [carryLeftOutputBit, hnotfar, hle] using hbase2
+    · have hgt : -3*(r:Int) < x := by omega
+      let i : Nat := Int.toNat (-x)
+      have hnonneg : 0 ≤ -x := by omega
+      have hi : (i:Int) = -x := by
+        dsimp [i]
+        exact Int.toNat_of_nonneg hnonneg
+      have hilt : i < 3*r := by omega
+      let j : Nat := i / 3
+      have hdiv : i % 3 + 3*j = i := by
+        dsimp [j]
+        omega
+      have hmodlt : i % 3 < 3 := Nat.mod_lt i (by omega)
+      have hjlt : j < r := by
+        dsimp [j]
+        omega
+      have hrem : i % 3 = 0 ∨ i % 3 = 1 ∨ i % 3 = 2 := by omega
+      rcases hrem with hrem0 | hrem1 | hrem2
+      · have hdivI : (i % 3 : Int) + 3*(j:Int) = (i:Int) := by
+          exact_mod_cast hdiv
+        have hremI : (i % 3 : Int) = 0 := by exact_mod_cast hrem0
+        have hxEq : x = -(3*(j:Int)) := by omega
+        have hnotfar : ¬ (-(3*(j:Int)) < -3*(r:Int)-2) := by omega
+        have hnotbase : ¬ (-(3*(j:Int)) ≤ -3*(r:Int)) := by omega
+        have hmod : (-(3*(j:Int))) % 3 = 0 := by omega
+        have hval : U (-(3*(j:Int))) = false := by
+          simpa [Int.zero_sub] using (hblocks j hjlt).1
+        rw [hxEq]
+        simp [carryLeftOutputBit, hnotfar, hnotbase, hmod, hval]
+      · have hdivI : (i % 3 : Int) + 3*(j:Int) = (i:Int) := by
+          exact_mod_cast hdiv
+        have hremI : (i % 3 : Int) = 1 := by exact_mod_cast hrem1
+        have hxEq : x = -(3*(j:Int))-1 := by omega
+        have hnotfar : ¬ (-(3*(j:Int))-1 < -3*(r:Int)-2) := by omega
+        have hnotbase : ¬ (-(3*(j:Int))-1 ≤ -3*(r:Int)) := by omega
+        have hmod : (-(3*(j:Int))-1) % 3 = 2 := by omega
+        have hval : U (-(3*(j:Int))-1) = false := by
+          simpa [Int.zero_sub] using (hblocks j hjlt).2.1
+        rw [hxEq]
+        simp [carryLeftOutputBit, hnotfar, hnotbase, hmod, hval]
+      · have hdivI : (i % 3 : Int) + 3*(j:Int) = (i:Int) := by
+          exact_mod_cast hdiv
+        have hremI : (i % 3 : Int) = 2 := by exact_mod_cast hrem2
+        have hxEq : x = -(3*(j:Int))-2 := by omega
+        have hnotfar : ¬ (-(3*(j:Int))-2 < -3*(r:Int)-2) := by omega
+        have hnotbase : ¬ (-(3*(j:Int))-2 ≤ -3*(r:Int)) := by omega
+        have hmod : (-(3*(j:Int))-2) % 3 = 1 := by omega
+        have hval : U (-(3*(j:Int))-2) = true := by
+          simpa [Int.zero_sub] using (hblocks j hjlt).2.2
+        rw [hxEq]
+        simp [carryLeftOutputBit, hnotfar, hnotbase, hmod, hval]
+
 end BB6Coverage.Agent24CountedLBinDec
 
 namespace BB6Coverage.Agent48Champion
 
 open BB6Coverage
 open BB6Coverage.Agent24CountedLBinDec
+open BB6Coverage.Agent3CarryLeftOutput
 open BB6Coverage.Agent42CountedLBinDec
 
 set_option maxHeartbeats 1000000
@@ -282,7 +363,8 @@ theorem carryPrefix_anyNonnegative_hRun (r : Nat) (T : Int → Bool)
       run tm2 (15+12*r) ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
       T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
       T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
-      (∀ x, 6 < x → T' x = T x) := by
+      (∀ x, 6 < x → T' x = T x) ∧
+      (∀ x, x ≤ 0 → T' x = carryLeftOutputBit r T x) := by
   have hleft : leftOnes T 0 (3*r) := by
     intro i hi
     simpa using carryInput_marked r T hmatch (-(i:Int))
@@ -329,6 +411,8 @@ theorem carryPrefix_anyNonnegative_hRun (r : Nat) (T : Int → Bool)
   obtain ⟨U,hHrun,hshape⟩ := counted_LInc_H_exact r T 0 hleft hright0
     (by simpa using hd0a) (by simpa using hd0b) (by simpa using hd0c)
   rcases hshape with ⟨hU1,hblocks,hbase0,hbase1,hbase2,hkeepR,hkeepL⟩
+  have hshape' : HOutputShape r T U 0 :=
+    ⟨hU1,hblocks,hbase0,hbase1,hbase2,hkeepR,hkeepL⟩
   have hU2 : U 2=true := by rw [hkeepR 2 (by omega)]; exact h2
   have hU3 : U 3=true := by rw [hkeepR 3 (by omega)]; exact h3
   have hU4 : U 4=true := by rw [hkeepR 4 (by omega)]; exact h4
@@ -355,7 +439,14 @@ theorem carryPrefix_anyNonnegative_hRun (r : Nat) (T : Int → Bool)
     calc
       b11T11 U 0 x = U x := b11T11_preserve_right U 0 x (by omega)
       _ = T x := hkeepR x (by omega)
-  exact ⟨T',hrun,h1,h2',h3',h4',h5',h6',hout⟩
+  have hleftU := HOutputShape_leftOutput r T U hshape'
+  have hleft : ∀ x, x ≤ 0 → T' x = carryLeftOutputBit r T x := by
+    intro x hx
+    dsimp [T']
+    calc
+      b11T11 U 0 x = U x := b11T11_preserve_before2 U 0 x (by omega)
+      _ = carryLeftOutputBit r T x := hleftU x hx
+  exact ⟨T',hrun,h1,h2',h3',h4',h5',h6',hout,hleft⟩
 
 #print axioms carryPrefix_anyNonnegative_hRun
 
