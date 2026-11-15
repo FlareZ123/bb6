@@ -24,15 +24,12 @@ theorem y3_x314_parents (v a k : Nat)
     · simp [sectionPreimageAll,ha0,hk0] at hp
     · by_cases hk1 : k=1
       · simp [sectionPreimageAll,ha0,hk0,hk1] at hp
-        omega
       · simp [sectionPreimageAll,ha0,hk0,hk1] at hp
-        omega
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
       · by_cases hk1 : k=1
         · simp [sectionPreimageAll,ha0,ha1,hk0,hk1] at hp
-          omega
         · by_cases hk2 : k=2
           · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2] at hp
           · by_cases hk3 : k=3
@@ -42,22 +39,32 @@ theorem y3_x314_parents (v a k : Nat)
               rcases hp with ⟨_,n,hpow,_⟩ | ⟨h5,_⟩
               · have hpow' : 4*(8*v+5)=2^n := by omega
                 have hnlt : n<3 := by
-                  by_contra hnlt
-                  have hn3 : 3≤n := by omega
-                  have hdiv : 8∣2^n := by
-                    have hh : 2^3∣2^n := Nat.pow_dvd_pow 2 hn3
-                    simpa only [show (2:Nat)^3=8 by decide] using hh
-                  have hzero : (2^n)%8=0 :=
-                    Nat.mod_eq_zero_of_dvd hdiv
-                  have hmod : (4*(8*v+5))%8=4 := by omega
-                  omega
+                  by_cases hn3 : 3≤n
+                  · have hdiv : 8∣2^n := by
+                      have hh : 2^3∣2^n := Nat.pow_dvd_pow 2 hn3
+                      simpa only [show (2:Nat)^3=8 by decide] using hh
+                    have hzero : (2^n)%8=0 :=
+                      Nat.mod_eq_zero_of_dvd hdiv
+                    have hmod : (4*(8*v+5))%8=4 := by omega
+                    rw [← hpow'] at hzero
+                    omega
+                  · omega
                 have hnge : 2≤n := by
-                  by_contra hnge
-                  have hnsmall : n<2 := by omega
-                  interval_cases n <;> norm_num at hpow' <;> omega
+                  by_cases hnsmall : n<2
+                  · cases n with
+                    | zero =>
+                        simp only [pow_zero] at hpow'
+                        omega
+                    | succ n =>
+                        cases n with
+                        | zero =>
+                            simp only [pow_one] at hpow'
+                            omega
+                        | succ n => omega
+                  · omega
                 have hn : n=2 := by omega
                 subst n
-                norm_num at hpow'
+                simp only [show (2:Nat)^2=4 by decide] at hpow'
                 omega
               · omega
     · have ha2 : 2≤a := by omega
@@ -135,12 +142,16 @@ private theorem no_y3_x314_parent0 (v : Nat) :
     (by omega) (by omega) (by omega)
     (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (192*v+116) (160*v+96) := by
-    convert hQ using 1 <;> omega
+    have hx : ((256*v+157)+(128*v+79)-4)/2=192*v+116 := by omega
+    have hy : ((256*v+157)+3*(128*v+79)-10)/4=160*v+96 := by omega
+    simpa only [hx,hy] using hQ
   have hR := (BB6.Agent46.six_even_right_blank_reach_iff
     (192*v+116) (160*v+96)
     (by omega) (by omega) (by omega) (by omega)).mp hQ'
   have hR' : BB6.Agent3.CReach (352*v+210) (80*v+47) := by
-    convert hR using 1 <;> omega
+    have hx : (192*v+116+160*v+96-2)=352*v+210 := by omega
+    have hy : (160*v+96-2)/2=80*v+47 := by omega
+    simpa only [hx,hy] using hR
   exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
     (352*v+210) (80*v+47)
     (by omega) (by omega) (by omega) (by omega) hR'
@@ -152,7 +163,9 @@ private theorem no_y3_x314_parent1 (v : Nat) :
     (64*v+37) (224*v+136)
     (by omega) (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (288*v+171) (112*v+67) := by
-    convert hQ using 1 <;> omega
+    have hx : (64*v+37+224*v+136-2)=288*v+171 := by omega
+    have hy : (224*v+136-2)/2=112*v+67 := by omega
+    simpa only [hx,hy] using hQ
   exact BB6.Agent11High.blank_no_odd_sum_two
     (288*v+171) (112*v+67)
     (by omega) (by omega) (by omega) hQ'
@@ -164,7 +177,9 @@ private theorem no_y3_x314_parent2 (v : Nat) :
     (16*v+7) (248*v+148)
     (by omega) (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (264*v+153) (124*v+73) := by
-    convert hQ using 1 <;> omega
+    have hx : (16*v+7+248*v+148-2)=264*v+153 := by omega
+    have hy : (248*v+148-2)/2=124*v+73 := by omega
+    simpa only [hx,hy] using hQ
   exact BB6.Agent11High.blank_no_odd_sum_two
     (264*v+153) (124*v+73)
     (by omega) (by omega) (by omega) hQ'
@@ -209,7 +224,7 @@ private theorem nat_le_two_pow (n : Nat) : n≤2^n := by
       calc
         n+1 ≤ 2^n+1 := Nat.add_le_add_right ih 1
         _ ≤ 2^n+2^n := by omega
-        _ = 2^(n+1) := by rw [Nat.pow_succ]; ring
+        _ = 2^(n+1) := by rw [Nat.pow_succ]; omega
 
 /-- The u=5 residual parameter slice t=32*w+5 has
     r=2301+13440*w and x=512*v+314.  Its defining equation for s
