@@ -65,6 +65,6 @@ For branch 9/10 last-reset prestate (x,y), y is odd and, when n≥18, x≥33. Th
 (19,13),(21,2),(23,3),(23,15),(27,9),(29,14),(31,11),(31,15)
 ```
 
-The four classes newly eliminated by the 9/5 strengthening are (7,7), (15,3), (23,15), and (31,11). The finite residue enumeration and exact last-reset equations are recorded in communications/broadcast/20261115T123000Z_agent1-update-rooted-9-5-strengthening.md (see the actual timestamped file in that directory).
+The four classes newly eliminated by the 9/5 strengthening are (7,7), (15,3), (23,15), and (31,11). The finite residue enumeration and exact last-reset equations are recorded in communications/broadcast/20261115T122229Z_agent1-update-rooted-9-5-strengthening.md (see the actual timestamped file in that directory).
 
 For short branches, the same root rows eliminate 15 of 44 n=5 branch-9 d residues via the existing rooted-eleven lemma, and eliminate n=13 branch-9 d=22 via rooted-eleven plus d=6 via the new row 3→7. These are intermediate necessary-condition reductions, not a BB(6) solution.
