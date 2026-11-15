@@ -832,3 +832,37 @@ Next actions:
 3. If Lean reports an issue, first inspect the generic frame's input-prefix match, output-prefix alignment at index `3*a+7`, and the suffix left-word identity.
 4. Continue source-level research on the authentic middle-17 `m=0,n=8*q+6` holdout; do not infer its behavior from small replay.
 5. At every checkpoint, use an actual runtime clock for the 70-minute lease-age test. If below threshold, continue; only release at/after **15:09:28.696Z** after the orderly push/delete sequence.
+
+
+## 2026-11-15 14:41 UTC checkpoint: generic middle-18 residue-14 source and root composition
+
+The prior checkpoint's original lease remains authoritative: Agent 48 was claimed at **2026-11-15T13:59:28.696Z**, so the 70-minute release threshold is **2026-11-15T15:09:28.696Z**. Do not refresh the lease. This checkpoint is below threshold; continue research after measuring the actual clock.
+
+### New Agent 49 residue-14 base source and head bound
+
+Agent 49's new files `im-results/agent49-m0-even-residue14/M0EvenFourteenQ4Bridge.lean` and `M0EvenFourteenQ4Prefix.lean` supply a source-exact 39-step local bridge and an `L=5,n=14` q4 prefix of cost `36+12*a`. This addresses the next row after the middle-17 endpoint: `m=0,n=16*r-2=32*k+14`, where `r=2*k+1`.
+
+Added `im-results/agent48-counted-inc0/M0EvenFourteenHeadBound.lean`. Its intended public theorem `m0EvenFourteen_q4_prefix_head_bound` proves that every pre-step configuration of the base `36+12*a) q4 prefix has head `≥ h-(3*a+9)`. The proof splits the `3*a)-cell counted left sweep, the 39-step bridge with relative head window [-9,2], and the `3*(a-1))-step E-scan. The E-scan linear-ones premise is derived from Agent 49's exported q4 left-facing theorem and the first-`3*a)-ones prefix. This file is uncompiled.
+
+### Generic all-width middle-18 increment
+
+Added `im-results/agent48-counted-inc0/M0EvenFourteenGenericSource.lean`. It contains:
+- source and target `binDec` decompositions for `n=32*k+14` and `n-1=32*k+13`, valid for `L≥5` and `32*k+14<2^L`;
+- the exact source/target prefix split of length `3*a+10`, followed by the common tail `[true] ++ d0 ++ d0 ++ d1 ++ binDec (L-5) k ++ lh`;
+- a frame lift of Agent 49's base q4 prefix using the head-bound helper;
+- the exact generic cut left-facing stream, q4 right-shape, and far-tail facts;
+- the q4 suffix composition (cost `39+3*b`) and counted drain.
+
+The exported source-level candidate is `m0EvenFourteen_counted_increment_source`: for every admissible `L,k,a,b,h`, the original TM2 run from `S1(L,32*k+14,0,a,0,b,h)` takes `proposedIncrementCost 0 (32*k+14) a b` steps to `S1(L,32*k+13,2,a+b+1,0,2^b-1,h+5+3*b)`. The reset-prefix split is `36+12*a + 39+3*b = 75+12*a+3*b`, using `v2(32*k+14)=1`. This is source code only, not a compiled theorem.
+
+### Middle-18 root composition and CI staging
+
+Agent 49's `im-results/agent49-tm63-root-middle16/TM63RootResidueSixteen.lean` already composes the root through middle 17 using Agent 41's middle-16/middle-17 source rows. Added `im-results/agent48-counted-inc0/TM63RootMiddle18.lean`, which imports that middle-17 endpoint and composes the generic residue-14 theorem at `k=tm63RootResidueSixK/2`. The intended middle-18 endpoint is `m=2,n=16*r-3`, with `A18=A17+B17+1`, `B18=2^B17-1`, and `H18=H17+5+3*B17`. This wrapper is uncompiled.
+
+Extended `.github/workflows/agent42-champion-terminal-source.yml` to compile (with `sorryAx` gates) Agent 49's residue-14 bridge/prefix, the Agent 48 head-bound and generic source modules, Agent 41's middle-16/middle-17 source rows, Agent 49's middle-17 root wrapper, and the new middle-18 root wrapper. The workflow was updated but **not dispatched**. Local `container.exec` again returned `ClientError`; no Lean compile has run in this invocation. Agent 7 remains the sole owner of the local compile / targeted CI queue and has been notified not to dispatch before the all-valuation H-run/S1 leaf closure is locally clean.
+
+Sent review/integration messages to Agents 49, 41, and 7. Relevant suffixes: `agent48-generic-residue14-source-ready`, `agent48-middle18-root-composition-review`, and `agent48-residue14-middle18-source-audit`.
+
+### Evidence boundary and next actions
+
+No new module has passed Lean compilation, no transitive `#print axioms` audit has passed, and no result is eligible for `results/`. The middle-18 chain is now a concrete source-level candidate, not a proven root theorem. The next productive action is to get Agent 7/49/41 review or compile diagnostics, fix the actual failures, then compile the new leaves and middle-18 consumer in dependency order. In particular, check the q4 prefix head-bound proof, the source/target `3*a+10) tail alignment, the general `binDec` lemmas, the q4 suffix target-left identity, and root wrapper imports. Do not dispatch the full workflow independently or claim a BB(6) value.
