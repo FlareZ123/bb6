@@ -25,15 +25,13 @@ The theorem `BB6ChampionArithmetic.drainPattern_closed` is kernel-checked with a
 
 ## Main source proof candidates
 
-### Parity-complete S1 decrement
+### Uniform all-valuation S1 decrement
 
-`S1CountedInc0.lean` proposes the uniform source theorem `s1Config_counted_decrement`: for every positive encoded counter `z<2^a`, the original machine decrements `z` to `z-1`, increments the unary counter `b` to `b+1`, and takes
-[
-48+12v_2(z)+12b
-]
-successful transitions.
+`CountedCarryPrefixHRun.lean` now supplies the exact original-table carry prefix for every valuation `r≥0`. Its `HOutputShape_leftOutput` theorem derives the full left-facing `carryLeftOutputBit) identity from the counted H-run output shape; `carryPrefix_anyNonnegative_hRun` then composes the exact counted LInc H-run with the fixed 11-step B→E bridge. The prefix cost is `15+12*r), and its contract includes the local six-cell output, the untouched right exterior, and the complete left-output stream.
 
-The proof combines the source-certified valuation-zero odd branch with the existing positive-valuation carry-prefix/suffix branch. The theorem and its exported `#print axioms` gates are present, but the complete repository import closure has not passed compilation. Earlier local interface harnesses used deliberately axiomatized imported source interfaces; they are not a source-closure proof.
+`S1CarryInc0.lean` composes that prefix with the existing counted suffix to prove the canonical full S1 decrement for every `r≥0), including `r=0), with exact cost `48+12*r+12*b). `S1CountedInc0.s1Config_counted_decrement` now factors any positive bounded `z<2^a) as `(2*q+1)*2^r) and uses this single all-valuation theorem, giving the endpoint `s1Config ... (z-1) (b+1)` and cost `48+12*v₂(z)+12*b`. The old odd-canonical theorem remains available as regression evidence but is no longer part of the primary decrement proof.
+
+The new H-run, S1 composition, and unified decrement all have explicit `#print axioms` declarations and are staged in the existing manual `agent42-counted-lbin-dec.yml` workflow. **The current repository import closure has not yet passed compilation or a transitive `sorryAx` audit.** Earlier local interface harnesses used deliberately axiomatized imported source interfaces; they are not a source-closure proof.
 
 ### All-ones S1 drain
 
@@ -76,7 +74,7 @@ This exact counted/root composition is not yet kernel-checked. The next root row
 
 ## Critical unresolved obligations
 
-1. Pass the full original-import Lean 4.36.0-rc2 compile and transitive `sorryAx` audit for `S1CountedInc0.lean` and `S1CountedDrain.lean`.
+1. Pass the full original-import Lean 4.36.0-rc2 compile and transitive `sorryAx` audit for `CountedCarryPrefixHRun.lean`, `S1CarryInc0.lean`, `S1CountedInc0.lean`, and `S1CountedDrain.lean`; in particular, audit the new all-valuation H-run and its left-output identity.
 2. Validate the current M0 residue-seven and Rst1Prime/Bridge8 dependency closures. The first Rst1' instance is wired into the root source path, but the post-patch Bridge8→Bridge30 chain still needs its source/axiom gate.
 3. Validate the M2 residue-six leaf, then compose its prefix with the counted drain and the authentic root endpoint; validate the M1 residue-five successor.
 4. Compile and audit the M0-even residue-four source row, Agent 8's middle-13 root wrapper, and the new M1-even residue-two source increment. They are present as drafts, but no original-import source or transitive axiom check has passed.
