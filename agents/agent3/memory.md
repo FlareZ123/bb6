@@ -396,3 +396,48 @@ Current lease was claimed at **2026-11-13T10:05:40.360Z** (do not refresh). Mand
 - Partial reduction for Agent11's v=4u+1, u=64c+7 bounce fan: n=3 and n=5 bounce parents, plus the n=1 direct parent, reduce to odd-right sum-one and are excluded. The n=1 bounce parent's own direct parent is also excluded. Its remaining depth-one bounce parent takes three six-even-right steps to `(7001018+59993960c, 415137+3557452c)`, an odd/odd sum-three state still allowed by the current invariant. No full exclusion claimed.
 - The manual workflow additions have not been dispatched/observed in this invocation; no original-source CI certification yet. Available GitHub tools did not expose a workflow-dispatch action. Ask Agent 11 to trigger the manual workflow and inspect only failed job tails.
 - All work remains in `im-results/`; `results/` is unchanged. No exact BB(6), universal upper bound, or machine decision has been established. Next priority: obtain original-source validation of the parent fan, S31 W5 cylinder, and x128W proof; then attack the residual odd/odd sum-three branch without repeating the disproven x256 unique-parent claim.
+
+## 2026-11-15 continuation: u=5 residual y=3 terminal cylinders
+
+Claimed Agent 3 at 2026-11-15T04:29:08Z (run_id agent3-gpt6-20261115T0429Z-c-root-bridge). The current incarnation continues the Machine C / low58 line. Local Python and container shell invocations returned ClientError, including attempts to reconstruct the provided Lean 4.36.0-rc2 archive; validation therefore used the repository's existing focused manual GitHub Actions workflow, not a local compiler.
+
+### x=314 mod 512 terminal cylinder
+
+The original draft `im-results/agent11-c-low58/EvenOddThreeX314Mod512.lean` was not yet Lean-certified. A focused workflow run initially exposed unsupported tactics and then proof-script errors. Repairs have been committed:
+- avoid unavailable `by_contra`, `interval_cases`, and `convert`;
+- use explicit arithmetic equalities to normalize `2*(a-1)+8` to `2*a+6`;
+- use explicit reachability rewrites and make the low-value inverse's existential/CReach bridge explicit;
+- repair the 2-adic divisibility product witness and remove redundant tactic calls;
+- express the small exponent cases by `change` rather than unavailable simp lemma names.
+
+Runs so far:
+- 43677540339: failed on unsupported tactics / redundant calls;
+- 43679255063: failed on missing factor normalization, product arithmetic, and CReach conversions;
+- 43680112672: failed on core `pow_zero`/`pow_one` names and missing second-coordinate rewrites;
+- 43680678870: failed on the previous commit's exponent-case and second-coordinate issues;
+- 43680974783: latest focused `u5_x314_only=true` run, in progress at the time of this checkpoint.
+
+Do not call the x314 cylinder certified until the latest run succeeds and the three `#print axioms` lines contain no `sorryAx`.
+
+### Additional disjoint residual cylinder: M = 128*z + 45
+
+Derived a second infinite y=3 terminal cylinder in the same u=5 residual family:
+- `M=128*z+45`;
+- `r=201+420*M=19101+53760*z`;
+- from `211*s+129=5*2^r), one gets `s % 8 = 5`;
+- with `m=32*(s-1)-105*M), this gives `m % 128 = 11` and, using `2^r >= r`, `m >= 11`;
+- writing `m=128*v+11), the terminal state `(302+512*s-4*r,3)` is exactly `(2048*v+186,3)`.
+
+For target `(2048*v+186,3)`, `x+6=64*(32*v+3)), so the exact original-section predecessor fan has only odd-a bounce depths n=0,2,4. The parent states are:
+- `(1024*v+93,512*v+47)`, reduced by the odd/odd low-value inverse and one six-even-right inverse to `(1408*v+122,320*v+27)`, odd-right sum 1 mod 4;
+- `(256*v+21,896*v+80)`, reduced by one six-even-right inverse to `(1152*v+99,448*v+39)`, odd/odd sum 2 mod 4;
+- `(64*v+3,992*v+86)`, reduced by three six-even-right inverses to `(1800*v+145,124*v+9)`, odd-right sum 2 mod 4.
+
+A source proof draft is now at `im-results/agent11-c-low58/EvenOddThreeX186Mod2048.lean`. The manual workflow has a new `u5_x186_only` input and focused branch in `.github/workflows/agent11-c-diagonal-late.yml`. This new theorem is only a terminal y=3 exclusion; it does **not** yet exclude the feeder `B_s` or the associated high-stop family. No BB(6) upper bound or complete Machine C resolution is claimed.
+
+### Next actions
+
+1. Inspect run 43680974783. If it passes, confirm `#print axioms` for `y3_x314_parents`, `blank_no_y3_x314_mod512`, and `blank_no_u5_residual_t32w5` contains no `sorryAx`.
+2. Dispatch `u5_x186_only=true` once after the x186 proof is ready; inspect only the failed job tail if it fails. Do not retry unchanged sources.
+3. If both terminal theorems pass, communicate the new x186 result and exact limitations to Agent 11. The next mathematically important dependency is a reusable parametric Lean proof of the u=5 six-even-right chain from `B_s=(54+90*s,127+211*s)` to the terminal y=3 state; the existing candidate synthesis identifies this as the missing composition needed to turn terminal exclusions into high-stop exclusions.
+4. Keep these as intermediate results under `im-results/`; do not promote them to `results/` until they materially establish a publishable mathematical conclusion.
