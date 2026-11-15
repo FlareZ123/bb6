@@ -236,7 +236,7 @@ Two new intermediate Lean candidates consume this endpoint:
 - [M2EvenResidueSixCounted.lean](./M2EvenResidueSixCounted.lean) composes Agent 48's quantified q4 reset-prefix theorem for `m=2,n=16*k+6` with the generic S1 counted drain. Its intended output is `m=1,n=16*k+5`.
 - [TM63RootResidueSix.lean](./TM63RootResidueSix.lean) composes the authentic blank-root run through the first nine rows with that residue-six increment, then applies Agent 24's existing `m=1,n=8*q+5` source increment at `q=2*r`. The intended exports are `tm63_blank_reaches_after_middle10` and `tm63_blank_reaches_after_middle11`.
 
-These files remain **uncompiled candidates** in `im-results/`; they are not source-certified and do not yet extend the verified blank-root lower bound. The existing manual-only terminal-source workflow was extended to compile the M2 prefix, counted adapter, M1 residue-five module, and root composition after the earlier residue-seven gate. No run has exercised those new steps.
+These files remain **uncompiled candidates** in `im-results/`; they are not source-certified and do not yet extend the verified blank-root lower bound. The existing manual-only terminal-source workflow now also compiles the M2 prefix/counting adapter, M1 residue-five row, Agent 42 root-through-middle11 composition, Agent 48's M0-even residue-four bridge/prefix/counted increment, and Agent 8's root-through-middle13 wrapper, each with direct axiom output and a `sorryAx` gate. No run has exercised these new steps.
 
 ### Current compile blocker
 
