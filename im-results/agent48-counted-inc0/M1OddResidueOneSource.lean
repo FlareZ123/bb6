@@ -121,7 +121,7 @@ private theorem m1OddResidueOne_input_matches
     exact hsrc.trans hbase.symm
 
 /-- Lift the 32+12a source prefix from n=1 to every admissible n=8k+1.
-The original n=3 run reads only the common half-line, so the rest of the
+The base n=1 run reads only the common half-line, so the rest of the
 general source tape is preserved exactly by run_frame. -/
 theorem m1OddResidueOne_q4_prefix_source
     (L k a b : Nat) (h : Int)
@@ -342,7 +342,7 @@ theorem m1OddResidueOne_reset_prefix_source
   simp only [Option.bind_some]
   exact hfullSuffix
 
-/-- Counted drain closes the full generic residue-three increment. -/
+/-- Counted drain closes the full generic residue-one increment. -/
 theorem m1OddResidueOne_counted_increment_source
     (L k a b : Nat) (h : Int)
     (hL : 3 ≤ L) (hbound : 8*k+1 < 2^L) (ha : 0 < a) :
@@ -386,4 +386,4 @@ theorem m1OddResidueOne_counted_increment_source_symbolic
 #print axioms m1OddResidueOne_counted_increment_source
 #print axioms m1OddResidueOne_counted_increment_source_symbolic
 
-end BB6Coverage.Agent8M1OddResidueOne
+end BB6Coverage.Agent48M1OddResidueOneSource
