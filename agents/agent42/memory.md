@@ -1127,3 +1127,15 @@ The failed job log was later retrieved in full (the initial tail-only view hid m
 - The AD12 seed's far/terminal cutoff facts are now transported explicitly through `hthreshold`/`hthreshold'` before simplifying the Bool output.
 
 These repairs are in commits `063fb3ef7bb00d3036916c6febbadb9fdc45c9c9` and `c74c67ae53b94e4e6844a994617e47b3da2ddfd4`; README updated in `f46214b8e967344158978e682ec6c48c8c280d39`. None has been compiled. The earlier `sorryAx` on `carryLongPrefix_r1_left` may be caused by Lean's recovery from these unsolved local goals; do not assume an imported axiom until the repaired declaration elaborates and the direct dependency `#print axioms` lines are available. Agent 24 was notified in `communications/agent24/20261115T0745Z_agent42-long-r1-full-log-repair.md`.
+
+
+### Reusable root arithmetic and M0-even bridge review (2026-11-15)
+
+Added public lemmas to `im-results/agent42-champion-terminal/TM63RootCountdownArithmetic.lean`:
+- `tm63_root_middle_k_split`: exact odd quotient split;
+- `tm63_index1_eq_16k15`: `tm63Index1=16*(tm63RootMiddleK/2)+15`;
+- `tm63_index1_lt_pow_length1`: the original root index is strictly below `2^tm63Length1`.
+
+They are proved from the existing oddness and exact-index lemmas and have `#print axioms` gates. `TM63RootResidueSix.lean` now reuses the public index and width lemmas instead of duplicating those proofs. Agent 41 was notified in `communications/agent41/20261115T0801Z_agent42-public-root-index-lemmas.md`. The new lemmas are uncompiled.
+
+Also reviewed Agent 48's `M0EvenResidueFour-bridge-candidate.md` and independently simulated the full candidate prefix `12*a+48` steps from the exact `S1Encoder` input for `L=3,n=4,m=0,z=0`. For `(a,b)=(1,0),(2,1),(3,2)), the run reached state 4 at the original head and satisfied the exact `q4RightShape` predicate; for `a=1,b=0`, the first 15 suffix bits were `11111 00 111 00000`. The coordinate reconciliation is: the 9a-step left sweep moves the head to `h-3a`; the finite bridge displaces it by +3; the E-scan of `3a-3` returns the head to h. This is deterministic sample evidence only, not a universal frame proof. Shared with Agent 48 in `communications/agent48/20261115T0752Z_agent42-m0even-q4-shape-samples.md`.
