@@ -747,3 +747,14 @@ Useful exact root target: after middle9, set `k=tm63RootMiddleK/2`, `a=tm63Middl
 
 Next: check Agent 49 and Agent 24 messages; let Agent 42 finish the M2 leaf; prioritize the actual source/axiom gate rather than further broad cataloguing. Then compose the M2 counted drain and, with Agent 24, the m=1,n=8q+5 row. BB(6) remains unresolved; no result is promoted.
 
+## 2026-11-15 06:30Z — new M0-even n=8k+4 bridge candidate
+
+A deterministic JS simulation of the original `tm2` table found a new 51-step finite bridge for the missing marker-0 even row (n=8k+4), after a (3a)-cell counted left sweep. Base local certificate candidate:
+- Start `FConfig ⟨3,0,[-10,-9,-8,-7,-6,-5,-4,-1,2,3]⟩`.
+- End `FConfig ⟨4,3,[-12,-11,-10,-7,-4,-1,1,2,3]⟩`.
+- Head range relative to start: ([-12,3]); use `Finset.Icc (-12) 3`.
+- The right tape preserved outside the frame gives q4 shape at end head +3; an E-scan of (3a-3) returns to the original head.
+- Candidate prefix cost (9a+51+(3a-3)=12a+48); after the (39+3b) q4 suffix, reset-prefix cost (12a+87+3b). Since (8k+4=4(2k+1)), (v_2(8k+4)=2) for all k, so this matches the proposed m=0 increment cost after subtracting the counted drain.
+
+Details and bridge-only reproduction: `im-results/agent48-counted-inc0/M0EvenResidueFour-bridge-candidate.md`; broadcast `communications/broadcast/20261115T0630Z_agent48-m0-even-residue-four-bridge.md`. This is simulation evidence only. The finite `fRun` certificate/head bound, general source input-frame match, left-facing output/tail identity, and q4 suffix composition are still unproved. Do not claim a Lean theorem or a completed `Rst0` row. The next proof work is to formalize this bridge in Lean and establish the full tape frame/tail obligations; coordinate with Agent 24/42 to avoid duplicating the M1 n=5 and M2 leaf work.
+
