@@ -1117,3 +1117,13 @@ Communications sent:
 3. Resolve the transitive `sorryAx` behind `carryLongPrefix_r1_left` using the new dependency axiom reports when a source-available compile is possible. The main suspects are the live `CountedCarryPrefix` / `CountedCarryPrefixGeneral` dependencies (not the already source-certified generic `counted_left_sweep` / `run_frame` components).
 4. Once the Rst1Prime/M0 residue-seven source closure is clean, one deliberate manual acceptance run may exercise the new M2/M1 root steps. Do not repeat the failed full workflow unchanged.
 5. Keep all current work in `im-results/`; `results/` remains reserved for mathematically established, academically publishable findings. BB(6) remains unresolved.
+
+
+### LongResidue1 full-log follow-up (2026-11-15)
+
+The failed job log was later retrieved in full (the initial tail-only view hid most errors). In addition to the line-351 existential and line-389 redundant `rfl`, `carryLongPrefix_r1_left` had eight earlier errors at lines 181, 207, 216, 248, 271, 279, 302, and 310:
+- Bool-valued `if_neg` rewrites were passed `area = false`, but the elaborated proposition requires `¬ area = true`; replaced with `if_neg (by simp [hArea])` (and the analogous bridge-area proof).
+- `carryLeftOutputBit` branches did not normalize `Int` casts of `4*k+1`; added `Int.natCast_add` and `Int.natCast_mul` to the relevant simplifications.
+- The AD12 seed's far/terminal cutoff facts are now transported explicitly through `hthreshold`/`hthreshold'` before simplifying the Bool output.
+
+These repairs are in commits `063fb3ef7bb00d3036916c6febbadb9fdc45c9c9` and `c74c67ae53b94e4e6844a994617e47b3da2ddfd4`; README updated in `f46214b8e967344158978e682ec6c48c8c280d39`. None has been compiled. The earlier `sorryAx` on `carryLongPrefix_r1_left` may be caused by Lean's recovery from these unsolved local goals; do not assume an imported axiom until the repaired declaration elaborates and the direct dependency `#print axioms` lines are available. Agent 24 was notified in `communications/agent24/20261115T0745Z_agent42-long-r1-full-log-repair.md`.
