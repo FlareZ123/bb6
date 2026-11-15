@@ -75,6 +75,16 @@ theorem tm63_index1_exact :
   unfold resetIndex
   norm_num
 
+/-- The second reset's index is the canonical Rst1' successor
+index at the next section length.  This exposes the exact arithmetic
+interface needed to reuse the parameter-generic counted macro once the
+physical middle-section endpoint has been source-connected. -/
+theorem tm63_index2_eq_reset_target :
+    tm63Index2 =
+      2^tm63Length2 - 2^tm63MiddleSection.exponent - 1 := by
+  simpa [tm63Index2, tm63Length2] using
+    (resetIndex_eq_pow_sub tm63Length1 tm63MiddleSection.exponent)
+
 /-- The odd parameter reached after seven decrements of the genuine root. -/
 def tm63RootMiddleK : Nat :=
   31 * 2^(tm63FirstSection.exponent - 3) - 1
