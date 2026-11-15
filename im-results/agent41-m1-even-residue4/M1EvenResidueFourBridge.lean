@@ -20,7 +20,7 @@ def m1EvenResidueFourBridgeStart : FConfig :=
 
 /-- Exact state-4 output window after 53 original TM2 transitions. -/
 def m1EvenResidueFourBridgeEnd : FConfig :=
-  ⟨4, 5, [-12,-11,-10,-7,-4,-1,1,2,3,4,5]⟩
+  ⟨4, 5, [4,3,2,1,-1,-4,-7,-10,-11,-12,5]⟩
 
 /-- The 53-step bridge is a finite computation over the original table. -/
 theorem m1EvenResidueFourBridge_exact :
