@@ -94,3 +94,24 @@ This is why the physical B/F/D output `001` is correctly aligned with the head-f
 Once the H-run theorem is proved with the exact `12*n+4` count and arbitrary contexts, it supplies the premise of the original `LBinDec_spec`. That shift-rule induction is the route to a single counted left-binary-decrement theorem, avoiding a catalogue of separately proved residue classes. The remaining work is to formalize the arbitrary-context tape equality and then lift the H-run through the binary-counter carry structure.
 
 **Status:** the phase lengths, primitive transition sequence, sweep invariant, and final tape alignment are derived from the original TM63 transition table and the existing `CountedSweep` definitions. No new Lean theorem has been compiled in this invocation. This file is an `im-results/` research note, not a publishable result.
+
+
+## Expected exact count for the generic LC decrement
+
+The original Coq proof identifies the exact carry length. In `verify/BinaryCounter_v2.v`, `BinDec d0 d1 len n` is `BinaryCounter (2^(len+1)-1-n)`; `LBinDec_spec` delegates to `BinaryCounter.v:not_full_Inc`, which factors a non-full counter as
+
+```coq
+BinaryCounter c     = d1^^i *> d0 *> s
+BinaryCounter (c+1) = d0^^i *> d1 *> s.
+```
+
+For the decrement `LC (n+1) → LC n`, the input counter is
+`c = 2^(len+1)-1-(n+1)`, the bitwise complement (at the fixed width) of `n+1`. Its trailing-one count `i` is therefore exactly `v2(n+1)`, the trailing-zero count of the decremented source index. The H-run above costs `12*i+4`. Thus the expected exact counted LC theorem is:
+
+```lean
+run tm2 (12 * v2 (n+1) + 4)
+  (LCInput len (n+1) l r) =
+  some (LCOutput len n l r)
+```
+
+under `n+1 < 2^len`, with the actual configuration wrappers fixing state D / right boundary 0 and state B / left boundary 1. This is the source of the `4 + 12*v2(n)` contribution in the repository's `resetPrefixCost` formula. The remaining formal work is to expose the carry-length decomposition in Lean and compose the arbitrary-context H-run with it; the count should not be guessed from finite simulations.
