@@ -183,6 +183,14 @@ jobs:
             echo '::error::sorryAx found in source M0 odd q4 prefix theorem'
             exit 1
           fi
+          # Agent 41: certify the generalized m=0,n=16*r+7 reset prefix independently of counted drain.
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m0-n16r7/M0OddResidueSeven.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-odd-residue7-axioms.log
+          lean -o M0OddResidueSeven.olean M0OddResidueSeven.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue7-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-residue7-axioms.log; then
+            echo '::error::sorryAx found in generalized m=0,n=16*r+7 root successor reset prefix'
+            exit 1
+          fi
           if grep -q 'sorryAx' /tmp/a42-terminal/q4-suffix-axioms.log; then
             echo '::error::sorryAx found in q4 suffix theorem dependencies'
             exit 1
@@ -300,15 +308,15 @@ jobs:
             echo '::error::sorryAx found in source S1 all-ones counted drain dependencies'
             exit 1
           fi
-
-          # Agent 41: certify the genuine-root successor row m=0,n=16*r+7.
-          cp "$GITHUB_WORKSPACE/im-results/agent41-m0-n16r7/M0OddResidueSeven.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/m0-odd-residue7-axioms.log
-          lean -o M0OddResidueSeven.olean M0OddResidueSeven.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue7-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-residue7-axioms.log; then
-            echo '::error::sorryAx found in generalized m=0,n=16*r+7 root successor counted increment'
+          # Agent 41: separately audit the counted-drain completion of the residue-seven prefix.
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m0-n16r7/M0OddResidueSevenCounted.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-odd-residue7-counted-axioms.log
+          lean -o M0OddResidueSevenCounted.olean M0OddResidueSevenCounted.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue7-counted-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-residue7-counted-axioms.log; then
+            echo '::error::sorryAx found in m=0,n=16*r+7 counted-drain completion'
             exit 1
           fi
+
 
           # Agent 24: lift the m=0 odd q4 prefix to every n=8*k+5.
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0OddResidueFive.lean" /tmp/a42-terminal/
@@ -513,6 +521,14 @@ jobs:
             echo '::error::sorryAx found in root-specific seven/eight-row middle countdown'
             exit 1
           fi
+          # Agent 41: source-check the blank-root prefix through the residue-seven reset prefix.
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m0-n16r7/TM63RootResidueSevenPrefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-residue7-prefix-axioms.log
+          lean -o TM63RootResidueSevenPrefix.olean TM63RootResidueSevenPrefix.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-residue7-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-residue7-prefix-axioms.log; then
+            echo '::error::sorryAx found in blank-root composition through the m=0,n=16*r+7 reset prefix'
+            exit 1
+          fi
           # Agent 41: compose the genuine blank-root run through the (0,16*r+7) increment.
           cp "$GITHUB_WORKSPACE/im-results/agent41-m0-n16r7/TM63RootResidueSeven.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/tm63-root-residue7-axioms.log
@@ -621,6 +637,7 @@ jobs:
             /tmp/a42-terminal/m0-odd-q4-bridges-axioms.log
             /tmp/a42-terminal/m0-odd-q4-prefix-axioms.log
             /tmp/a42-terminal/m0-odd-residue7-axioms.log
+            /tmp/a42-terminal/m0-odd-residue7-counted-axioms.log
             /tmp/a42-terminal/s1-counted-drain-axioms.log
             /tmp/a42-terminal/root-q4-drain-axioms.log
             /tmp/a42-terminal/middle-section-prefix4-axioms.log
@@ -632,6 +649,7 @@ jobs:
             /tmp/a42-terminal/m1-odd-root-composition-axioms.log
             /tmp/a42-terminal/m1-odd-first-section-continuation-axioms.log
             /tmp/a42-terminal/rst1prime-root-continuation-axioms.log
+            /tmp/a42-terminal/tm63-root-residue7-prefix-axioms.log
             /tmp/a42-terminal/tm63-root-residue7-axioms.log
             /tmp/a42-terminal/m1-final-reset-integration-axioms.log
             /tmp/a42-terminal/rst1-prime-first-sweep-axioms.log
