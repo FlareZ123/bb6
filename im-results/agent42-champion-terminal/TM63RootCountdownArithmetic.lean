@@ -197,7 +197,8 @@ theorem tm63_root_middle_k_split :
 /-- Exact root index at the residue-six boundary, in terms of the half-quotient. -/
 theorem tm63_index1_eq_16k15 :
     tm63Index1 = 16*(tm63RootMiddleK/2)+15 := by
-  rw [tm63_index1_eq_8k7, tm63_root_middle_k_split]
+  have hk := tm63_root_middle_k_split
+  rw [tm63_index1_eq_8k7]
   omega
 
 /-- The original root index fits in the TM2 tape width. Every smaller
