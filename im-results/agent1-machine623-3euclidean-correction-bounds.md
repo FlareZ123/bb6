@@ -186,6 +186,8 @@ right even:|p' - |g|| <= 10k+25.
 ```
 
 Consequently, a root-sensitive lower bound
-`|g| > K+5 + E_sector(k)`, with `E_sector` the corresponding displayed error, rules out a terminal successor. Since both the canonical exponent `k` and the terminal scale exponent `K` are logarithmic in the coordinates, an all-time square-gap estimate `g^2 >= C*q` for any fixed `C>0) would dominate this corridor for all sufficiently large scales; the remaining finite prefix can be checked exactly.
+`|g| > K+5 + E_sector(k)`, with `E_sector` the corresponding displayed error, rules out a terminal successor.
 
-This is the precise interface between the source-proved logarithmic terminal gate and the 3-Euclidean root-gap problem. It does not prove the required all-time square-gap estimate; that remains the decisive open obligation.
+A fixed positive square-gap estimate `g^2 >= C*q` is sufficient asymptotically, with a simple scale split. If `|g|<=q`, then `p=3q+g<=4q`, so the current and next coordinate scales are O(q) (the exact scale correction is O(k)); hence `K=O(log q)`, while `|g|>=sqrt(Cq)`. If `|g|>q`, then the output difference is `|g|+O(k)), and the output coordinate scale is O(q+|g|)=O(|g|); thus `K=O(log |g|)`, which is dominated by `|g|`. In both cases the O(k) correction and terminal corridor are eventually smaller than the gap. The remaining finite prefix can be checked exactly.
+
+This is a sufficient reduction, not an established root invariant: the all-time square-gap estimate for the actual D(0,7) orbit remains unproved.
