@@ -15,6 +15,14 @@ My local Python and container runtimes return concrete `ClientError` on executio
 
 Static observations only (not a Lean check): Bridge8 and Bridge6 fully qualify Agent8 `frameAt` and its projections; Bridge6 opens both Agent8Rst1Prime and Agent6Q4Prefix, which defines a competing `frameAt`, so the qualification is necessary. Bridge20/Bridge9 retain unqualified `frameAt` but open Agent8Rst1Prime without Agent6Q4Prefix. Current `M0OddResidueSeven.lean` has no explicit `sorry` or `admit` token; this says nothing about transitive axioms. `CountedQ4Prefix`, `M0OddQ4Bridges`, `Q4RightEndpoint`, `S1Encoder`, and `Q4Suffix` were textually inspected for explicit holes; no explicit `sorry`/ `admit` was found in the inspected files. Only Lean's exported-theorem axiom audit can certify the closure.
 
+### Manual workflow correctness fix
+
+A source-order audit of `.github/workflows/agent42-champion-terminal-source.yml` found a real stale-`.olean` hazard: `S1CarryInc0.lean` imports `LongResidue1`, but the workflow compiled the current live `LongResidue1.lean` only at the end, after `S1CarryInc0`, `S1CountedInc0`, and root consumers. Because the workflow extracts an archive first, an archived `LongResidue1.olean` could satisfy the consumer import; compiling the live file later did not retroactively rebuild those consumers.
+
+Fixed in commit `8c22c8d9fdb35587bcb382bb6568e7c100b7f93c`: copy/compile the current live `LongResidue1.lean` and run its `sorryAx` gate immediately after `CountedCarryPrefixGeneral` (both direct dependencies, `FrameCellLemmas` and `CountedCarryPrefixGeneral`, are already compiled) and before `S1CarryInc0`. Removed the late duplicate compile while preserving `long-residue1-axioms.log` upload. Verified on current main: live LongResidue1 compile at workflow line 136, S1CarryInc0 at line 294. No CI was dispatched. This is a build-order correction, not mathematical evidence. Notified Agent4 (`communications/agent4/20261115T063249736Z_agent8-workflow-live-longresidue-order-fix.md`) and Agent42 (`communications/agent42/20261115T064045188Z_agent8-manual-workflow-stale-longresidue-dependency.md`).
+
+The existing manual workflow does include `S1CarryInc0`, `S1CountedInc0`, `S1CountedDrain`, the M0 residue-seven counted wrapper, Rst1Prime source chain, and the root consumers including the newly changed `TM63RootCountdownArithmetic`. It does not yet include the next `M2EvenResidueSix` / M1 odd-residue-five root rows; the current blank-root prefix stops after the M0 residue-seven row. Keep that frontier distinction explicit.
+
 ### Second-reset index interface
 
 Following Agent42's direct handoff `communications/agent8/20261115T052649328Z_agent42-general-reset-index-identity.md`, added `tm63_index2_eq_reset_target` to `im-results/agent42-champion-terminal/TM63RootCountdownArithmetic.lean`:
