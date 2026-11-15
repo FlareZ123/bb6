@@ -478,13 +478,13 @@ theorem m1EvenResidueFour_q4_reset_prefix_source
     hshape htail hleft happend
   have hfirst := m1EvenQ4First4_at Tq h hshape.1
   have hnum : 39+3*b = 4+(35+3*b) := by omega
-  rw [hnum,run_append,hfirst] at hwhole
+  rw [hnum,run_add,hfirst] at hwhole
   simp only [Option.bind_some] at hwhole
   have hsum :
       resetPrefixCost 1 (8*k+4) a b = (56+12*a)+(35+3*b) := by
     rw [m1EvenResidueFour_resetPrefixCost_eq]
     omega
-  rw [hsum,run_append,hprefix]
+  rw [hsum,run_add,hprefix]
   simp only [Option.bind_some]
   exact hwhole
 
