@@ -40,10 +40,11 @@ private theorem pow2_mul_pow (n k c : Nat) (hc : 2^k = c) :
     _ = c * 2^n := Nat.mul_comm _ _
 
 /-- The low three blocks of the source binary word for n=8q+7. -/
+/-- The low three blocks of the source binary word for n=8q+7. -/
 theorem m1ResidueSeven_binDec (L q : Nat) (hL : 3 ≤ L)
     (hbound : 8*q+7 < 2^L) :
     binDec L (8*q+7) =
-      d0 ++ d1 ++ d0 ++ binDec (L-3) q := by
+      d0 ++ d0 ++ d0 ++ binDec (L-3) q := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     rw [show L = (L-3)+3 by omega]
     exact pow2_mul_pow (L-3) 3 8 (by decide)
@@ -56,24 +57,23 @@ theorem m1ResidueSeven_binDec (L q : Nat) (hL : 3 ≤ L)
   have hbound' : 8*q+7 < 8*2^(L-3) := by
     rw [← hpow3]
     exact hbound
-  have hq1 : 4*q+2 < 2^(L-1) := by
+  have hq1 : 4*q+3 < 2^(L-1) := by
     rw [hpow2]
     omega
   have hq2 : 2*q+1 < 2^(L-2) := by
     rw [hpow1]
     omega
-  have hq : q < 2^(L-3) := by
-    omega
+  have hq : q < 2^(L-3) := by omega
   have h1 : binDec L (8*q+7) =
-      d0 ++ binDec (L-1) (4*q+2) := by
+      d0 ++ binDec (L-1) (4*q+3) := by
     rw [show L = (L-1)+1 by omega,
-      show 8*q+7 = 2*(4*q+2)+1 by omega]
-    exact binDec_odd (L-1) (4*q+2) hq1
-  have h2 : binDec (L-1) (4*q+2) =
-      d1 ++ binDec (L-2) (2*q+1) := by
+      show 8*q+7 = 2*(4*q+3)+1 by omega]
+    exact binDec_odd (L-1) (4*q+3) hq1
+  have h2 : binDec (L-1) (4*q+3) =
+      d0 ++ binDec (L-2) (2*q+1) := by
     rw [show L-1 = (L-2)+1 by omega,
-      show 4*q+2 = 2*(2*q+1) by omega]
-    exact binDec_even (L-2) (2*q+1) hq2
+      show 4*q+3 = 2*(2*q+1)+1 by omega]
+    exact binDec_odd (L-2) (2*q+1) hq2
   have h3 : binDec (L-2) (2*q+1) =
       d0 ++ binDec (L-3) q := by
     rw [show L-2 = (L-3)+1 by omega]
@@ -85,7 +85,7 @@ theorem m1ResidueSeven_binDec (L q : Nat) (hL : 3 ≤ L)
 theorem m1ResidueSix_binDec (L q : Nat) (hL : 3 ≤ L)
     (hbound : 8*q+7 < 2^L) :
     binDec L (8*q+6) =
-      d1 ++ d1 ++ d0 ++ binDec (L-3) q := by
+      d1 ++ d0 ++ d0 ++ binDec (L-3) q := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     rw [show L = (L-3)+3 by omega]
     exact pow2_mul_pow (L-3) 3 8 (by decide)
@@ -98,24 +98,23 @@ theorem m1ResidueSix_binDec (L q : Nat) (hL : 3 ≤ L)
   have hbound' : 8*q+7 < 8*2^(L-3) := by
     rw [← hpow3]
     exact hbound
-  have hq1 : 4*q+2 < 2^(L-1) := by
+  have hq1 : 4*q+3 < 2^(L-1) := by
     rw [hpow2]
     omega
   have hq2 : 2*q+1 < 2^(L-2) := by
     rw [hpow1]
     omega
-  have hq : q < 2^(L-3) := by
-    omega
+  have hq : q < 2^(L-3) := by omega
   have h1 : binDec L (8*q+6) =
-      d1 ++ binDec (L-1) (4*q+2) := by
+      d1 ++ binDec (L-1) (4*q+3) := by
     rw [show L = (L-1)+1 by omega,
-      show 8*q+6 = 2*(4*q+2) by omega]
-    exact binDec_even (L-1) (4*q+2) hq1
-  have h2 : binDec (L-1) (4*q+2) =
-      d1 ++ binDec (L-2) (2*q+1) := by
+      show 8*q+6 = 2*(4*q+3) by omega]
+    exact binDec_even (L-1) (4*q+3) hq1
+  have h2 : binDec (L-1) (4*q+3) =
+      d0 ++ binDec (L-2) (2*q+1) := by
     rw [show L-1 = (L-2)+1 by omega,
-      show 4*q+2 = 2*(2*q+1) by omega]
-    exact binDec_even (L-2) (2*q+1) hq2
+      show 4*q+3 = 2*(2*q+1)+1 by omega]
+    exact binDec_odd (L-2) (2*q+1) hq2
   have h3 : binDec (L-2) (2*q+1) =
       d0 ++ binDec (L-3) q := by
     rw [show L-2 = (L-3)+1 by omega]
@@ -124,7 +123,7 @@ theorem m1ResidueSix_binDec (L q : Nat) (hL : 3 ≤ L)
   simp [List.append_assoc]
 
 private def m1ResidueSevenSourceSuffix (L q : Nat) : List Bool :=
-  markerWord 1 ++ d0 ++ d0 ++ d1 ++ d0 ++ binDec (L-3) q ++ lh
+  markerWord 1 ++ d0 ++ d0 ++ d0 ++ binDec (L-3) q ++ lh
 
 private theorem m1ResidueSevenSourceLeftAt
     (L q a b : Nat) (h : Int) (k : Nat)
@@ -451,7 +450,7 @@ private def m1ResidueSevenTargetPrefix (a : Nat) : List Bool :=
   [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ [true,true]
 
 private def m1ResidueSevenCommonTail (L q : Nat) : List Bool :=
-  [true] ++ d1 ++ d0 ++ binDec (L-3) q ++ lh
+  [true] ++ d0 ++ d0 ++ binDec (L-3) q ++ lh
 
 private theorem m1ResidueSevenLeftFacingPrefixTrue
     (L q a i : Nat) (hi : i ≤ 3*a) :
