@@ -1,0 +1,2 @@
+import CountedLBinDecShape
+#print axioms BB6Coverage.Agent42CountedLBinDec.counted_LInc_H_exact
