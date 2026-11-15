@@ -505,9 +505,8 @@ theorem m1EvenResidueFour_counted_increment_source
     (s1Config L (8*k+4) 1 a 0 b h)
     (resetPrefixCost 1 (8*k+4) a b)
     hp (by simpa [resetDelta] using hboundDrain)
-  rw [proposedIncrementCost_decomp 1 (8*k+4) a b,
-    m1EvenResidueFour_resetPrefixCost_eq]
-  exact hrun
+  rw [proposedIncrementCost_decomp 1 (8*k+4) a b]
+  simpa [m1EvenResidueFour_resetPrefixCost_eq] using hrun
 
 #print axioms m1EvenResidueFour_binDec_residue4
 #print axioms m1EvenResidueFour_binDec_residue3
