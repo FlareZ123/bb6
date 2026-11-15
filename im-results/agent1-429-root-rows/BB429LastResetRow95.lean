@@ -100,7 +100,7 @@ private theorem branch10_reduced_equation_128 (n d x : Nat)
     _ = 128*(2^(n-5)*(d+6))+2*d := by simp [Nat.mul_assoc]
 
 /--
-Five additional branch-10 refined lifts force x ≡ 13 (mod 32),
+Eight additional branch-10 refined lifts force x ≡ 13 (mod 32),
 y ≡ 1 (mod 8), which is forbidden by the new two-step root lemma.
 -/
 theorem branch10_13_1_lifts_unreachable (n d x y : Nat)
