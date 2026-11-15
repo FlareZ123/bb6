@@ -81,4 +81,4 @@ This does not solve BB(6), prove the machine halts, or establish an upper bound.
 
 ## Experimental scope
 
-The deterministic replay script checks the q4 cut, suffix intermediate, and counted-drain endpoint for a finite grid of k,a,b. This is computational corroboration only; the finite bridge's intended proof object is the Lean decide theorem, and the generic row relies on the frame and counted-drain proofs.
+The deterministic replay script checks the exact 74-step bridge and the q4 cut, suffix intermediate, and counted-drain endpoint for 24 cases: k=0..3, a in {1,2}, b in {0,1,2}. This is computational corroboration only; the finite bridge's intended proof object is the Lean decide theorem, and the generic row relies on the frame and counted-drain proofs.
