@@ -23,7 +23,7 @@ theorem m0EvenFourBridge_exact :
       some m0EvenFourBridgeEnd := by decide
 ```
 
-The source file `M0EvenFourQ4Bridge.lean` now contains this finite certificate, the `List.range 51` head-confinement proposition, both low-three-block binary identities, and the parameterized base-input-frame match. `M0EvenFourQ4Prefix.lean` composes that bridge with the counted left sweep and E-scan, giving the base `L=3,n=4` source run `m0EvenFour_q4_prefix_run` at cost `48+12*a`. **Both modules are drafts until compiled; the arbitrary-tail lift and q4 suffix/drain are still missing.**
+The source file `M0EvenFourQ4Bridge.lean` now contains this finite certificate, the `List.range 51` head-confinement proposition, both low-three-block binary identities, and the parameterized base-input-frame match. `M0EvenFourQ4Prefix.lean` composes that bridge with the counted left sweep and E-scan, giving the base `L=3,n=4` source run `m0EvenFour_q4_prefix_run` at cost `48+12*a`, together with an intermediate-head lower bound for the half-line frame lift. **Both modules are drafts until compiled; the arbitrary-tail lift and q4 suffix/drain are still missing.**
 
 The low-three-block words are:
 - `binDec 3 4 = d1 ++ d1 ++ d0`;
@@ -95,7 +95,7 @@ and append `proposedIncrementCost 0 (16*r+4) A B` successful transitions. This i
 
 ## 5. Remaining proof work
 
-1. Compile and repair the finite bridge and base-prefix drafts; verify their exported declarations have no transitive `sorryAx`.
+1. Compile and repair the finite bridge and base-prefix drafts, including the intermediate-head bound; verify their exported declarations have no transitive `sorryAx`.
 2. Lift the base run to arbitrary `L,k` using the half-line frame boundary above; prove the complete left-facing stream and the M0-specific q4 right-shape/far-tail conditions.
 3. Compose the existing M0 q4 suffix and counted drain; prove the exact cost identity and export the theorem above.
 4. Only then append the root-specific `k=2*r` wrapper to Agent 42's countdown.
