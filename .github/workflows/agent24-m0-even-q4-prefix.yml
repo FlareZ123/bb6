@@ -33,6 +33,7 @@ jobs:
           cp im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean /tmp/a24-m0-even/
           cp im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean /tmp/a24-m0-even/
           cp im-results/agent48-counted-inc0/{S1CountedInc0,S1CountedDrain}.lean /tmp/a24-m0-even/
+          cp im-results/agent48-counted-inc0/{M0EvenFourQ4Bridge,M0EvenFourQ4Prefix,M0EvenResidueFour}.lean /tmp/a24-m0-even/
       - name: Replay and compile m0 even q4 counted increment
         run: |
           set -euo pipefail
@@ -148,6 +149,42 @@ jobs:
             echo '::error::sorryAx found in M0EvenResidueTwo'
             exit 1
           fi
+
+          : > m0-even-four-bridge-axioms.log
+          if ! lean -o M0EvenFourQ4Bridge.olean M0EvenFourQ4Bridge.lean > m0-even-four-bridge-axioms.log 2>&1; then
+            echo '## M0EvenFourQ4Bridge compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 160 m0-even-four-bridge-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat m0-even-four-bridge-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' m0-even-four-bridge-axioms.log; then
+            echo '::error::sorryAx found in M0EvenFourQ4Bridge'
+            exit 1
+          fi
+
+          : > m0-even-four-prefix-axioms.log
+          if ! lean -o M0EvenFourQ4Prefix.olean M0EvenFourQ4Prefix.lean > m0-even-four-prefix-axioms.log 2>&1; then
+            echo '## M0EvenFourQ4Prefix compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 180 m0-even-four-prefix-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat m0-even-four-prefix-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' m0-even-four-prefix-axioms.log; then
+            echo '::error::sorryAx found in M0EvenFourQ4Prefix'
+            exit 1
+          fi
+
+          : > m0-even-residue-four-axioms.log
+          if ! lean -o M0EvenResidueFour.olean M0EvenResidueFour.lean > m0-even-residue-four-axioms.log 2>&1; then
+            echo '## M0EvenResidueFour compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 220 m0-even-residue-four-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat m0-even-residue-four-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' m0-even-residue-four-axioms.log; then
+            echo '::error::sorryAx found in M0EvenResidueFour'
+            exit 1
+          fi
           echo '## M0-even counted increment source verification' >> "$GITHUB_STEP_SUMMARY"
           echo 'The source-level q4 suffix and counted drain compile without sorryAx.' >> "$GITHUB_STEP_SUMMARY"
           echo '## m=0,n=2 even q4 prefix Lean verification' >> "$GITHUB_STEP_SUMMARY"
@@ -177,3 +214,6 @@ jobs:
             /tmp/a24-m0-even/s1-counted-drain-axioms.log
             /tmp/a24-m0-even/m0-even-q4-suffix-axioms.log
             /tmp/a24-m0-even/m0-even-residue-two-axioms.log
+            /tmp/a24-m0-even/m0-even-four-bridge-axioms.log
+            /tmp/a24-m0-even/m0-even-four-prefix-axioms.log
+            /tmp/a24-m0-even/m0-even-residue-four-axioms.log
