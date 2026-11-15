@@ -26,6 +26,7 @@ open BB6Coverage.Agent42RootResidueSix
 open BB6Coverage.Agent8TM63RootResidueFour
 open BB6Coverage.Agent48TM63RootResidueThree
 open BB6Coverage.Agent41M2EvenResidueSixteen
+open BB6Coverage.Agent41M1ResidueSeven
 
 private theorem four_dvd_pow_two (n : Nat) (hn : 2 ≤ n) :
     4 ∣ 2^n := by
@@ -217,6 +218,7 @@ theorem tm63_blank_reaches_after_middle17 :
     dsimp [tm63RootResidueSixteenQ]
     rw [hsplit]
     omega
+  have hL5 := tm63_root_length_ge_five
   have hL3 : 3 ≤ tm63Length1 := by omega
   have hrow := m1ResidueSeven_counted_increment_source_symbolic
     tm63Length1 tm63RootResidueSixteenQ
