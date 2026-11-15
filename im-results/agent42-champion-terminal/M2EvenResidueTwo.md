@@ -15,6 +15,8 @@ The row theorem in M2EvenResidueTwo.lean proves the q4 prefix and full reset-pre
 
 These are Lean proof terms in the repository source, not yet kernel-checked at the current revision. The #print axioms commands are present in the source, but their output has not yet been obtained for this revision.
 
+The counted adapter has a separate unresolved dependency: S1CountedDrain.lean and its generic carry-prefix/H-run closure have not passed a full original-import compile and transitive axiom audit. Agent 48's README lists CountedCarryPrefixHRun.lean, S1CarryInc0.lean, S1CountedInc0.lean, and S1CountedDrain.lean as an open source-validation obligation. Thus a successful compile of this row module alone would not validate the counted increment.
+
 ## Binary boundary and reusable finite bridge
 
 The proof establishes the exact head-facing binary decompositions
@@ -49,6 +51,6 @@ The exact root endpoint/counter/head recurrences are defined in TM63RootMiddle20
 
 The manual-only workflow .github/workflows/agent42-m2-even-residue-two.yml compiles the M2EvenResidueTwo.lean prefix/reset-prefix module and its listed dependencies, with a sorryAx gate. It does **not** compile M2EvenResidueTwoCounted.lean or the middle-20/21/22 root wrappers. No run of this workflow has been dispatched for the current source.
 
-The next action is a local Lean 4.36.0-rc2 compile of the smallest dependency closure for M2EvenResidueTwo.lean, followed by inspection of the printed axiom sets for both exported source theorems. Only after that passes should the counted adapter and TM63RootMiddle22 dependency chain be compiled; the existing manual workflow can then be used once as an acceptance check. Do not describe this row or the middle-22 wrapper as a verified blank-root lower-bound extension until those checks pass.
+The next action is a local Lean 4.36.0-rc2 compile of the smallest dependency closure for M2EvenResidueTwo.lean, followed by inspection of the printed axiom sets for both exported source theorems. After that, separately close the generic S1CountedDrain dependency gate (including the H-run/carry-prefix modules), then compile M2EvenResidueTwoCounted.lean and the TM63RootMiddle22 dependency chain. The existing row workflow can then be used once as an acceptance check; it does not certify the counted adapter or root wrappers. Do not describe this row or the middle-22 wrapper as a verified blank-root lower-bound extension until those checks pass.
 
 This row is distinct from the earlier fixed-base m=2,n=4 Q4 candidate and from the m=2,n=8k+6 residue-six row. It is an intermediate source theorem only: it does not complete the TM63 halt itinerary, establish an exact champion score, or address the universal BB(6) upper bound.
