@@ -217,10 +217,11 @@ theorem tm63_blank_reaches_after_middle17 :
     dsimp [tm63RootResidueSixteenQ]
     rw [hsplit]
     omega
+  have hL3 : 3 ≤ tm63Length1 := by omega
   have hrow := m1ResidueSeven_counted_increment_source_symbolic
     tm63Length1 tm63RootResidueSixteenQ
     tm63MiddleAfter16A tm63MiddleAfter16B tm63MiddleAfter16Head
-    tm63_root_length_ge_five tm63_root_residue16_m1_bound
+    hL3 tm63_root_residue16_m1_bound
     tm63_middle_after16_a_pos
   have hrow' :
       run tm2
@@ -241,6 +242,8 @@ theorem tm63_blank_reaches_after_middle17 :
     tm63MiddleAfter17B,tm63MiddleAfter17Head] using hcomp
 
 #print axioms tm63_root_residue16_r_odd
+#print axioms tm63_root_residue16_m1_bound
 #print axioms tm63_blank_reaches_after_middle16
+#print axioms tm63_blank_reaches_after_middle17
 
 end BB6Coverage.Agent49TM63RootResidueSixteen
