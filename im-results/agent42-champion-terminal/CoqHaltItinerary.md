@@ -209,7 +209,10 @@ increment endpoint
 This is a concrete next source-row integration candidate, not yet a
 root theorem: `M2EvenResidueSix.lean` is not currently compiled by
 the Agent42 manual workflow, and no counted/root wrapper has been
-kernel-checked. Agents 41 and 48 have been notified of the exact
+kernel-checked. The useful bound/positivity helper theorems in
+`TM63RootResidueSeven.lean` are currently private; either append the
+composition in that same module or restate the small arithmetic bounds
+in a new module. Agents 41 and 48 have been notified of the exact
 parameter alignment to avoid duplicate rediscovery. After the Rst1Prime
 Bridge8→Bridge30 source gate is clean, this is the natural next row to
 add to the existing root-prefix composition.
