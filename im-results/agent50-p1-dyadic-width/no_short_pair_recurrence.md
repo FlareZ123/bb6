@@ -157,7 +157,55 @@ If the segment starts at carry \(a\) and parameter \(H\), its ending parameter i
 \]
 All displayed quotients are exact. In particular, any segment with an initial \(0^r\) requires \(4^r\mid a\), so its initial zero-run has length at most \(\lfloor\log_4 a\rfloor\). This bounds the zero-run *inside one return segment*, but it does not bound the number of return segments. The remaining logarithmic-run problem is therefore to bound the number of admissible return segments, using the coupled divisibility conditions in these four affine maps.
 
-## 7. Suggested next step
+## 7. A bound for repeated identical return segments
+
+A useful partial bound is available when the *same* return segment repeats. Fix \(r\ge0\). For the three nonzero return types, write \(q=4^r\):
+
+- \(0^r10\): \(D=4^{r+2}\), \(L=r+2\), and
+  \[
+  a'=(a+q(H+r))/D,\qquad H'=H+L.
+  \]
+- \(0^r20\): \(D=4^{r+2}\), \(L=r+2\), and
+  \[
+  a'=(a+q(2H+2r+1))/D,\qquad H'=H+L.
+  \]
+- \(0^r120\): \(D=4^{r+3}\), \(L=r+3\), and
+  \[
+  a'=(a+q(9H+9r+12))/D,\qquad H'=H+L.
+  \]
+
+Each map has a unique invariant affine line \(a=cH+d\), with:
+
+\[
+\begin{array}{c|c|c}
+\text{type}&c&d\\
+\hline
+0^r10&
+\dfrac{q}{D-1}&
+-\dfrac{q(r+2D)}{(D-1)^2}\\[6pt]
+0^r20&
+\dfrac{2q}{D-1}&
+-\dfrac{q(3D+2r+1)}{(D-1)^2}\\[6pt]
+0^r120&
+\dfrac{9q}{D-1}&
+-\dfrac{q(15D+9r+12)}{(D-1)^2}.
+\end{array}
+\]
+
+For every integer \(H\), the value \(cH+d\) is nonintegral. Indeed, if it were integral, then (since \(q\) is coprime to \(D-1\)) the first row would force \(D-1\mid r+2\), the second \(D-1\mid2(r+2)\), and the third \(D-1\mid9(r+3)\). Each is impossible because respectively \(D-1=4^{r+2}-1>r+2\), \(D-1>2(r+2)\), and \(D-1=4^{r+3}-1>9(r+3)\).
+
+Consequently the deviation \(e=a-(cH+d)\) is nonzero for integer states, has denominator dividing \((D-1)^2\), and obeys \(e'=e/D\) under repetition of that same return segment. The carry bound \(a\le n+1\), together with \(H\le n+1\), \(0<c<1\), and \(|d|<1\), gives \(|e|<2n+4\). After \(m\) identical repetitions, integrality still forces \(|e_m|\ge1/(D-1)^2\), hence
+\[
+D^m < (2n+4)D^2,
+\qquad
+m<2+\log_D(2n+4)\le2+\log_{16}(2n+4).
+\]
+A pure \(0^r\) return segment instead divides \(a\) by \(4^r\) each time, so it can repeat at most \(\log_4(n+1)/r\) times while \(a>0\).
+
+This rigorously rules out long blocks of a *fixed identical return segment*. It does **not** bound switching among different values of \(r\) or among the three selected return types. Controlling those switches is still necessary for the desired logarithmic bound on an arbitrary no-short run.
+
+## 8. Suggested next step
+
 
 Prove or refute the following focused statement:
 
