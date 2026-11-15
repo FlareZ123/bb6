@@ -27,7 +27,7 @@ The theorem `BB6ChampionArithmetic.drainPattern_closed` is kernel-checked with a
 
 ### Parity-complete S1 decrement
 
-`S1CountedInc0.lean` proposes the uniform source theorem `s1Config_counted_decrement`: for every positive encoded counter `z<2^a`, the original machine decrements `z` to `z-1`, increments the unary counter `b) to `b+1`, and takes
+`S1CountedInc0.lean` proposes the uniform source theorem `s1Config_counted_decrement`: for every positive encoded counter `z<2^a`, the original machine decrements `z` to `z-1`, increments the unary counter `b` to `b+1`, and takes
 [
 48+12v_2(z)+12b
 ]
