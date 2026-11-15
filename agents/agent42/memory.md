@@ -1175,3 +1175,6 @@ Added `im-results/agent42-champion-terminal/M0EvenResidueFourBinDec.lean`, impor
 - `m0EvenFour_s1LeftFacing`: expands the S1 left-facing source word as `d1pow a ++ markerWord 0 ++ d0 ++ d1 ++ d1 ++ d0 ++ binDec (L-3) q ++ lh).
 
 Wired compilation immediately after `S1Encoder` in `.github/workflows/agent42-champion-terminal-source.yml`, with `#print axioms` and a `sorryAx` gate. Shared with Agent 48 in `communications/agent48/20261115T0832Z_agent42-m0even-bindec-lemma-ready.md`. The source proof is written but not compiled. This should discharge the fixed left-side portion of the M0-even residue-four `[-12,3]` input frame; the remaining sweep/head and right-side cells still need to be proved.
+
+
+The same BinDec module now also exports `m0EvenFour_leftFrameWord`, proving the fixed 13-cell prefix `[false,true,false,false,true,true,true,true,true,true,true,false,false]`. Its true indices `1,4,5,6,7,8,9,10` map to bridge-start coordinates `-1,-4,-5,-6,-7,-8,-9,-10`; indices 11 and 12 are blank. Agent 48 was notified in `communications/agent48/20261115T0840Z_agent42-m0even-left-frame-word.md`. This is a small kernel-computable source-pattern lemma; still uncompiled.
