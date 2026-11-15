@@ -240,7 +240,7 @@ private theorem add32_le_two_pow (k : Nat) (hk : 6 ≤ k) :
   have h : ∀ t : Nat, 6+t+32 ≤ 2^(6+t) := by
     intro t
     induction t with
-    | zero => norm_num
+    | zero => decide
     | succ t ih =>
       have hp : 2^(6+(t+1)) = 2*2^(6+t) := by
         rw [show 6+(t+1)=(6+t)+1 by omega, Nat.pow_succ]
@@ -261,14 +261,19 @@ private theorem n_le_two_pow_sub32 (n : Nat) (hn : 38 ≤ n) :
     affine family, uniformly in its free parameter. -/
 theorem branch1_family_cert (n : Nat) (hn : 38 ≤ n) (hmod : n%4=3) :
     cert 24 (branch1Family n) = true := by
-  simp [branch1Family, cert, Bad, Odd, Even, BB429Mod8.Allowed, hmod] <;> omega
+  repeat' (first
+    | assumption
+    | rfl
+    | (rw [cert] <;> split_ifs <;>
+        simp_all [Bad, Odd, Even, BB429Mod8.Allowed] <;> omega)
+  )
 
 private theorem branch1_small_cert (n : Nat) (hn : 18 ≤ n) (hmod : n%4=3) :
     cert 24 ⟨0,branch1X n,0,2*branch1X n+2⟩ = true := by
   have hcases : n=19 ∨ n=23 ∨ n=27 ∨ n=31 ∨ n=35 := by omega
   rcases hcases with h|h|h|h|h
   · subst n
-    norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
+    decide
   · subst n
     norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
   · subst n
@@ -286,7 +291,9 @@ theorem branch1_no_reach (n : Nat) (hn : 18 ≤ n) (hmod : n%4=3) :
   · let q := 2^(n-32)-n
     have hq : n ≤ 2^(n-32) := n_le_two_pow_sub32 n hlarge
     have hpow : 2^n = 2^32 * 2^(n-32) := by
-      rw [show n=32+(n-32) by omega, Nat.pow_add]
+      calc
+        2^n = 2^(32+(n-32)) := by congr 1 <;> omega
+        _ = 2^32 * 2^(n-32) := by rw [Nat.pow_add]
     have hx : va (branch1Family n) q = branch1X n := by
       dsimp [va, branch1Family, branch1X, q]
       rw [hpow]
