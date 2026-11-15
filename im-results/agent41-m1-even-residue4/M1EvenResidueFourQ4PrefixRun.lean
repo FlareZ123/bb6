@@ -546,12 +546,24 @@ theorem m1EvenResidueFour_q4_prefix_head_bound
   have hOn : leftOnes T h N := by
     intro i hi
     have hcell := s1Config_left_cell 3 4 1 a 0 b h i
-    rw [hleft] at hcell
-    have hbit := Agent6Q4Prefix.sideBit_append_left
-      (d1pow a) (markerWord 1 ++ d0 ++ d1 ++ d1 ++ d0 ++ lh) i
-      (by rw [d1pow_length]; omega)
-    rw [hbit] at hcell
-    exact hcell.trans (sideBit_d1pow_true a i (by simpa [d1pow_length] using hi))
+    have hside : sideBit (s1LeftFacing 3 4 1 a 0) i = true := by
+      rw [hleft]
+      let R : List Bool :=
+        markerWord 1 ++ (d0 ++ (d1 ++ (d1 ++ (d0 ++ lh))))
+      simp only [List.append_assoc]
+      change sideBit (d1pow a ++ R) i = true
+      by_cases hi3 : i < 3*a
+      · have hiLen : i < (d1pow a).length := by
+          simpa [d1pow_length] using hi3
+        rw [sideBit_append_left (d1pow a) R i hiLen]
+        exact sideBit_d1pow_true a i hi3
+      · have hiN_bound : i < 3*a+1 := by simpa [N] using hi
+        have hieq : i = 3*a := by omega
+        subst i
+        have hlen : (d1pow a).length = 3*a := by simp [d1pow_length]
+        rw [sideBit_append_right (d1pow a) R (3*a) (by simpa [hlen])]
+        simp [R,markerWord,sideBit,d1pow_length]
+    simpa [T,hside] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 4 1 a 0 b h 0
     simpa [T,s1PhysicalRight_source,sideBit] using hc
