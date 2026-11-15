@@ -13,7 +13,7 @@ namespace BB6.Agent2ExceptionalEPacketClosure
 open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 open BB6.Agent31PacketSource
 
-def fixedTail : List Bool := BB6.Agent2PacketOneReentry.fixedTail
+def fixedTail : List Bool := false :: List.replicate 6 true
 
 /-- The first E/A exceptional family produces a packet with p=2q.
     Whenever q is not 1 modulo 3, the universal safe-packet normalizer
@@ -34,7 +34,9 @@ theorem exceptional_EA_safe_reentry (t q : Nat) (hq : 2 ≤ q)
     simpa [BB6.Agent2EFirstAPacket.sourceStart,
       BB6.Agent2EFirstAPacket.packetOutput,c,fixedTail,
       BB6.Agent2EFirstAPacket.fixedTail] using hEA0
-  have ha : c.a ≥ 4 := by simp [c]
+  have ha : c.a ≥ 4 := by
+    change 4 ≤ 24*t+21
+    omega
   have hp : c.p % 3 ≠ 2 := by
     dsimp [c]
     omega
@@ -122,9 +124,10 @@ theorem exceptional_EE_safe_reentry (u q : Nat) (hq : 3 ≤ q)
     simpa [BB6.Agent2E7SecondSafe.sourceStart,
       BB6.Agent2E7SecondSafe.secondOutput,c,fixedTail,ha0,
       packet,word,CryptidBoundary.packetThree,
-      BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs,
-      BB6.Agent2PacketOneReentry.fixedTail] using hEE0
-  have ha : c.a ≥ 4 := by simp [c]
+      BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs] using hEE0
+  have ha : c.a ≥ 4 := by
+    change 4 ≤ 192*u+161
+    omega
   have hp : c.p % 3 ≠ 2 := by
     dsimp [c]
     omega
@@ -169,9 +172,10 @@ theorem exceptional_EE_all_reentry_or_reset (u q : Nat) (hq : 3 ≤ q) :
       simpa [BB6.Agent2E7SecondSafe.sourceStart,
         BB6.Agent2E7SecondSafe.secondOutput,c,fixedTail,ha0,
         packet,word,CryptidBoundary.packetThree,
-        BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs,
-        BB6.Agent2PacketOneReentry.fixedTail] using hEE0
-    have ha : c.a ≥ 4 := by simp [c]
+        BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs] using hEE0
+    have ha : c.a ≥ 4 := by
+    change 4 ≤ 192*u+161
+    omega
     have hp : c.p % 3 = 2 := by
       dsimp [c]
       omega
@@ -180,8 +184,7 @@ theorem exceptional_EE_all_reentry_or_reset (u q : Nat) (hq : 3 ≤ q) :
     · rcases hL with ⟨T,a,q',b,hEq⟩
       have hEq' : run T (packet c.a c.q c.p fixedTail) =
           BB6.Agent2BoundaryBZero.regularSection a q' b := by
-        simpa [fixedTail, BB6.Agent2PacketOneReentry.fixedTail,
-          BB6.Agent2PacketP2ReentryOrE.fixedTail] using hEq
+        simpa [fixedTail, BB6.Agent2PacketP2ReentryOrE.fixedTail] using hEq
       have hP2 : ObsEq (run T (packet c.a c.q c.p fixedTail))
           (BB6.Agent2BoundaryBZero.regularSection a q' b) := by
         rw [hEq']
@@ -199,8 +202,7 @@ theorem exceptional_EE_all_reentry_or_reset (u q : Nat) (hq : 3 ≤ q) :
       have hEq' : run T (packet c.a c.q c.p fixedTail) =
           packet (8*k+5) 0 (2*q2+6)
             BB6.Agent2PacketP2Reset.marker := by
-        simpa [fixedTail, BB6.Agent2PacketOneReentry.fixedTail,
-          BB6.Agent2PacketP2ReentryOrE.fixedTail] using hEq
+        simpa [fixedTail, BB6.Agent2PacketP2ReentryOrE.fixedTail] using hEq
       have hP2 : ObsEq (run T (packet c.a c.q c.p fixedTail))
           (packet (8*k+5) 0 (2*q2+6)
             BB6.Agent2PacketP2Reset.marker) := by
