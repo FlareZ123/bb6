@@ -85,6 +85,57 @@ theorem tm63_index2_eq_reset_target :
   simpa [tm63Index2, tm63Length2] using
     (resetIndex_eq_pow_sub tm63Length1 tm63MiddleSection.exponent)
 
+/-- The exponent carried into the second reset is positive. -/
+theorem tm63_middle_section_exponent_pos :
+    0 < tm63MiddleSection.exponent := by
+  have hright : 0 < tm63FirstSection.right :=
+    sectionResult_right_pos 7 2 6 63 (by decide)
+  simpa [tm63MiddleSection] using
+    (sectionResult_exponent_pos tm63Index1 2 tm63FirstSection.right
+      (nextRight tm63FirstSection.right) hright)
+
+/-- Every positive power of two is even. -/
+private theorem pow2_mod_two_eq_zero (n : Nat) (hn : 0 < n) :
+    2^n % 2 = 0 := by
+  cases n with
+  | zero => omega
+  | succ n => simp [Nat.pow_succ, Nat.mul_mod]
+
+/-- The second reset output is odd, so its next section begins in the
+generic m=2 odd-counter source family. -/
+theorem tm63_index2_odd : tm63Index2 % 2 = 1 := by
+  have ha := tm63_middle_section_exponent_pos
+  unfold tm63Index2 resetIndex
+  have hpow : 2^tm63MiddleSection.exponent % 2 = 0 :=
+    pow2_mod_two_eq_zero _ ha
+  have hbase : 0 < 4 * 2^tm63Length1 - 1 := by
+    have hp : 0 < 2^tm63Length1 := Nat.pow_pos (by decide)
+    omega
+  have hprod : 0 <
+      (4 * 2^tm63Length1 - 1) * 2^tm63MiddleSection.exponent :=
+    Nat.mul_pos hbase (Nat.pow_pos (by decide))
+  have hmod :
+      ((4 * 2^tm63Length1 - 1) * 2^tm63MiddleSection.exponent) % 2 = 0 := by
+    rw [Nat.mul_mod]
+    simp [hpow]
+  omega
+
+/-- The second reset output remains inside its new binary width. -/
+theorem tm63_index2_lt_pow_length2 :
+    tm63Index2 < 2^tm63Length2 := by
+  rw [tm63_index2_eq_reset_target]
+  have hx : 0 < 2^tm63Length2 := Nat.pow_pos (by decide)
+  have hy : 0 < 2^tm63MiddleSection.exponent := Nat.pow_pos (by decide)
+  omega
+
+/-- Exact admissibility conditions for applying the generic m=2 odd
+source increment immediately after the second reset and its counted drain.
+This is an arithmetic interface, not a claim that the root run reaches
+that configuration. -/
+theorem tm63_index2_m2_odd_admissible :
+    tm63Index2 % 2 = 1 ∧ tm63Index2 < 2^tm63Length2 :=
+  ⟨tm63_index2_odd, tm63_index2_lt_pow_length2⟩
+
 /-- The odd parameter reached after seven decrements of the genuine root. -/
 def tm63RootMiddleK : Nat :=
   31 * 2^(tm63FirstSection.exponent - 3) - 1
@@ -150,5 +201,9 @@ theorem tm63_middle_seven_marker :
 #print axioms tm63_root_middle_k_odd
 #print axioms tm63_middle_seven_marker
 #print axioms tm63_index2_eq_reset_target
+#print axioms tm63_middle_section_exponent_pos
+#print axioms tm63_index2_odd
+#print axioms tm63_index2_lt_pow_length2
+#print axioms tm63_index2_m2_odd_admissible
 
 end BB6Coverage.Agent42RootCountdown
