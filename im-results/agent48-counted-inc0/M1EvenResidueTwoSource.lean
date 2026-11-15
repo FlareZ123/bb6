@@ -224,6 +224,12 @@ private theorem m1EvenResidueTwo_leftFacing
         P ++ (d1 ++ binDec (L-3) k ++ lh) := by
     simp [m1EvenResidueTwoLeftFacing,s1LeftFacing,binDec_zero,
       hbin1,P,List.append_assoc]
+  have htargetLeftOutside :
+      m1EvenResidueTwoLeftFacing L k a =
+        targetBoundary ++
+          (d0 ++ d1 ++ d1 ++ binDec (L-3) k ++ lh) := by
+    simp [m1EvenResidueTwoLeftFacing,targetBoundary,binDec_zero,
+      hbin1,List.append_assoc]
   have hinputLeft :
       s1LeftFacing L (8*k+2) 1 a 0 =
         inputBoundary ++ (d1 ++ d0 ++ d1 ++ binDec (L-3) k ++ lh) := by
@@ -254,7 +260,7 @@ private theorem m1EvenResidueTwo_leftFacing
       omega
     rw [m1EvenResidueTwo_cut_eq_input L k a b h (h-(i:Int)) hout]
     rw [s1Config_left_cell L (8*k+2) 1 a 0 b h i]
-    rw [hinputLeft,htargetLeft]
+    rw [hinputLeft,htargetLeftOutside]
     have hinputBit := sideBit_append_right inputBoundary
       (d1 ++ d0 ++ d1 ++ binDec (L-3) k ++ lh) i
       (by rw [hinputBoundaryLength]; omega)
