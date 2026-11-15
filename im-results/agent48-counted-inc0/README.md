@@ -31,11 +31,11 @@ The theorem `BB6ChampionArithmetic.drainPattern_closed` is kernel-checked with a
 
 `S1CarryInc0.lean` composes that prefix with the existing counted suffix to prove the canonical full S1 decrement for every `r≥0`, including `r=0`, with exact cost `48+12*r+12*b`. `S1CountedInc0.s1Config_counted_decrement` now factors any positive bounded `z<2^a` as `(2*q+1)*2^r` and uses this single all-valuation theorem, giving the endpoint `s1Config ... (z-1) (b+1)` and cost `48+12*v₂(z)+12*b`. The old odd-canonical theorem remains available as regression evidence but is no longer part of the primary decrement proof.
 
-The new H-run, S1 composition, and unified decrement all have explicit `#print axioms` declarations and are staged in the existing manual `agent42-counted-lbin-dec.yml` workflow. **The current repository import closure has not yet passed compilation or a transitive `sorryAx` audit.** Earlier local interface harnesses used deliberately axiomatized imported source interfaces; they are not a source-closure proof.
+The new H-run, S1 composition, and unified decrement all have explicit `#print axioms` declarations and are staged in the manual `agent42-counted-lbin-dec.yml` workflow. The broader `agent42-champion-terminal-source.yml` has also been updated to rebuild the H-run dependencies before S1 consumers. **Neither workflow has yet passed the current original-import closure or transitive `sorryAx` audit.** Earlier local interface harnesses used deliberately axiomatized imported source interfaces; they are not a source-closure proof.
 
 ### All-ones S1 drain
 
-`S1CountedDrain.lean` instantiates the generic CountedReset drain using the parity-complete S1 decrement candidate. Its intended theorem is
+`S1CountedDrain.lean` instantiates the generic CountedReset drain using the uniform all-valuation S1 decrement candidate. Its intended theorem is
 [
 \operatorname{run}\ tm2\ (\operatorname{drainCost}(2^k-1,c))\
 \quad(\operatorname{s1Config}\ L\ n\ m\ a\ (2^k-1)\ c\ h)\
@@ -46,6 +46,12 @@ For `c=0`, the proposed exact cost is
 6\cdot4^k+42\cdot2^k-12k-48.
 ]
 The source module, the generic prefix-then-drain adapters, and their axiom gates are present, but the complete original-import workflow has not yet passed. Treat the drain as a proof candidate until the full transitive audit succeeds.
+
+### Generic all-odd m=0 increment
+
+`M0OddGenericSource.lean` is a new source-level generalization of the m=0 reset row to every odd `n=2*k+1`. It frames the existing `n=5` q4 prefix on the half-line `x≥h-(3*a+7)`; the base head bound is stronger, and both the source input prefix and generic cut prefix have length `3*a+8), so the arbitrary tail `binDec (L-1) k` aligns exactly after the finite bridge. The generic cut stream is `[true] ++ d1pow (a-1) ++ markerWord 2 ++ d0 ++ d1 ++ binDec (L-1) k ++ lh`, after which the existing q4 suffix and counted drain yield the exact m=0 increment.
+
+This theorem interface subsumes the m=0 odd residue-one, residue-five, and residue-seven specializations; those files are retained as independent regression evidence. The middle-15 root wrapper now instantiates the generic theorem at `n=16*r+1). **The new generic module and updated root wrapper are not yet compiled or axiom-audited.**
 
 ### Conditional champion adapter
 
@@ -65,19 +71,30 @@ The following later compositions remain candidates:
 | `M0EvenFourQ4Bridge.lean`, `M0EvenFourQ4Prefix.lean`, `M0EvenResidueFour.lean`, `M0EvenResidueFour-bridge-candidate.md`, and Agent 8's `im-results/agent8-root-residue-four/TM63RootResidueFour.lean` | The next row after the proposed middle-11 endpoint: `m=0,n=16r+4 → m=2,n=16r+3`, with the general residue parameter `n=8k+4`. | The 51-step finite bridge, base `L=3,n=4` source-prefix run, intermediate-head bound, arbitrary-tail half-line lift, q4 interfaces, M0-specific suffix/drain composition, and Agent 8's root-through-middle-13 wrapper are present as Lean drafts. The derived candidate increment count is `proposedIncrementCost 0 (8*k+4) a b + 9*b = 6*4^b + 42*2^b + 12*a + 39`. None has been compiled; these remain conditional source-proof candidates, not a certified root extension. |
 | `M1EvenResidueTwoSource.lean` | For every admissible `n=8k+2`, prove the `m=1` counted increment to `m=0,n=8k+1`, with the q4 reset prefix followed by the all-ones drain. | The source theorem reuses the existing n=6 q4 prefix via a sharp half-line `run_frame` lift; it does not need Agent 8's new 40-step bridge. The exact prefix and counted-increment statements are in [M1EvenResidueTwoSource.md](M1EvenResidueTwoSource.md). The module and manual CI gate are present but uncompiled; it is not yet connected to a root itinerary. |
 | `TM63RootResidueTwo.lean` | Append the `m=1,n=16r+2` residue-two counted increment to the candidate blank-root endpoint after middle 13, reaching `m=0,n=16r+1` (middle 14). | The root arithmetic supplies `k=2r`, the width bound, and positive counter length. The composition is documented in [TM63RootResidueTwo.md](TM63RootResidueTwo.md), with a manual CI/axiom gate after the middle-13 wrapper. It is uncompiled and remains conditional on both imported source modules. |
+| `M0OddGenericSource.lean`, `TM63RootResidueThree.lean` | Append the generic odd-`n), marker-0 source increment at `n=16r+1`, reaching marker 2 and `n=16r` (middle 15). | The generic theorem uses the base `n=5` q4 prefix and its public head bound; the root wrapper now calls this theorem instead of the narrow residue-one module. Both are source drafts only, uncompiled and unaudited. |
+| `M2EvenResidueSixteen.lean`, `TM63RootResidueZero.lean` | Append the `m=2,n=16r` row, specialized as `n=32k+16` with odd `k), reaching `m=1,n=16r-1` (middle 16). | The 74-step base bridge, lifted q4 prefix, counted increment, and root arithmetic are present in Agent 41's modules. No current source compile or transitive axiom audit has passed. |
+| `M1OddResidueSeven.lean`, `TM63RootMiddle17.lean` | Append the `m=1,n=16r-1=8q+7` row with `q=4k+1`, reaching `m=0,n=16r-2=8q+6` (middle 17). | The 26-step bridge and root composition are present as source drafts. No current source compile or transitive axiom audit has passed. |
 
-For the M2 residue-six row, the current theorem `m2Even_residue6_q4_reset_prefix_source` has endpoint
+The current candidate root chain now composes through middle 17:
+`blank → middle 13 → middle 14 → middle 15 → middle 16 → middle 17`.
+The middle-17 state is
+`S1(tm63Length1,16*r-2,0,A17,0,B17,H17)`, where the root arithmetic rewrites
+`16*r-2 = 32*k+14 = 8*(4*k+1)+6). The next required row is therefore the difficult marker-0 even sector `n=8*q+6` with `q=4*k+1). No source-exact q4 prefix for this row is currently available.
+
+Agent 41's finite replay of `n=8*q+6` at `q=1,a=1,b=0,1,2) and widths `L=4,5,8,12` survived a 200,000-step horizon. This is exploratory simulation only; it is not the authentic root configuration (whose `L,A17,B17` are different), and it proves neither halting nor nonhalting. The replay and its width caveat are in [Agent 41's holdout dossier](../agent41-m0-even-root-holdout/README.md).
+
+The separate M2 residue-six branch still has theorem `m2Even_residue6_q4_reset_prefix_source` with endpoint
 `S1(L,16k+5,1,a+b+2,2^b-1,0,h+5+3b)`
 and prefix cost `83+12a+3b`. Composing the generic all-ones drain would yield
-`S1(L,16k+5,1,a+b+2,0,2^b-1,h+5+3b)`.
-This exact counted/root composition is not yet kernel-checked. The next root row is `m=1,n=8q+5` with `q=2k`; Agent 24 owns the existing M1-odd prefix mechanism.
+`S1(L,16k+5,1,a+b+2,0,2^b-1,h+5+3b)`; this separate branch remains uncompiled and should not be confused with the current middle-17 continuation.
 
 ## Critical unresolved obligations
 
 1. Pass the full original-import Lean 4.36.0-rc2 compile and transitive `sorryAx` audit for `CountedCarryPrefixHRun.lean`, `S1CarryInc0.lean`, `S1CountedInc0.lean`, and `S1CountedDrain.lean`; in particular, audit the new all-valuation H-run and its left-output identity.
 2. Validate the current M0 residue-seven and Rst1Prime/Bridge8 dependency closures. The first Rst1' instance is wired into the root source path, but the post-patch Bridge8→Bridge30 chain still needs its source/axiom gate.
-3. Validate the M2 residue-six leaf, then compose its prefix with the counted drain and the authentic root endpoint; validate the M1 residue-five successor.
-4. Compile and audit the M0-even residue-four source row, Agent 8's middle-13 root wrapper, and the new M1-even residue-two source increment. They are present as drafts, but no original-import source or transitive axiom check has passed.
+3. Pass the source/axiom gate for the middle-15 generic all-odd m=0 increment and its root wrapper, then the middle-16 M2-even residue-sixteen row and middle-17 M1-odd residue-seven row.
+4. Develop a source-exact reset or other invariant for the middle-17 holdout `m=0,n=8q+6), with the authentic root parameter `q=4k+1`; do not infer its behavior from the small finite replay.
+5. Compile and audit the separate M2 residue-six, M0-even residue-four, Agent 8 middle-13, and M1-even residue-two source branches. They remain useful candidates but are not substitutes for closing the current root continuation.
 5. Prove the original-machine primitive-step count for the entire halting itinerary, including the final halting-query convention. Independently, prove a universal six-state upper bound.
 
 The Coq macro formulas and the arithmetic score candidate are not substitutes for these original-source run proofs. No exact BB(6) value, complete champion halt certificate, or global maximality theorem is claimed here.
