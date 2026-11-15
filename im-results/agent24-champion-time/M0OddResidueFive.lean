@@ -631,11 +631,11 @@ private theorem m0OddQ4CutTape_eq_end_inside
 
 /-- Every prefix of the base m=0,n=5 source run stays in the finite
 half-line used by the generalized frame. -/
-private theorem m0Odd_q4_prefix_head_bound
+theorem m0Odd_q4_prefix_head_bound_sharp
     (a b : Nat) (h : Int) (ha : 0<a) :
     ∀ k, k < 24+12*a → ∀ d,
       run tm2 k (s1Config 3 5 0 a 0 b h) = some d →
-      h-((3*a+13:Int)) ≤ d.head := by
+      h-((3*a+6:Int)) ≤ d.head := by
   let T := (s1Config 3 5 0 a 0 b h).tape
   let N := 3*a
   let T1 := sweptLeft N T h
@@ -760,8 +760,9 @@ theorem m0Odd_residue5_q4_prefix_source
         run tm2 j base = some d →
         m0OddResidueFiveInside a h d.head = true := by
     intro j hj d hd
-    have hlow := m0Odd_q4_prefix_head_bound a b h ha j hj d hd
-    simpa [m0OddResidueFiveInside] using hlow
+    have hlow := m0Odd_q4_prefix_head_bound_sharp a b h ha j hj d hd
+    have hlowWeak : h-((3*a+13:Int)) ≤ d.head := by omega
+    simpa [m0OddResidueFiveInside] using hlowWeak
   have hlift := run_frame tm2 (m0OddResidueFiveInside a h)
     background base (24+12*a) hheads
   rw [hstart] at hlift
