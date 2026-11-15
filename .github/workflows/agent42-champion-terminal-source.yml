@@ -387,6 +387,36 @@ jobs:
             echo '::error::sorryAx found in generic all-odd m=0 source increment'
             exit 1
           fi
+          # Lift the middle-17 m=0,n=32*k+14 holdout from Agent 49's
+          # source-exact L=5 bridge/prefix to arbitrary admissible L.
+          cp "$GITHUB_WORKSPACE/im-results/agent49-m0-even-residue14/M0EvenFourteenQ4Bridge.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-fourteen-bridge-axioms.log
+          lean -o M0EvenFourteenQ4Bridge.olean M0EvenFourteenQ4Bridge.lean 2>&1 | tee /tmp/a42-terminal/m0-even-fourteen-bridge-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-fourteen-bridge-axioms.log; then
+            echo '::error::sorryAx found in m=0,n=14 q4 bridge'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent49-m0-even-residue14/M0EvenFourteenQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-fourteen-prefix-axioms.log
+          lean -o M0EvenFourteenQ4Prefix.olean M0EvenFourteenQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m0-even-fourteen-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-fourteen-prefix-axioms.log; then
+            echo '::error::sorryAx found in m=0,n=14 q4 prefix'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0EvenFourteenHeadBound.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-fourteen-head-bound-axioms.log
+          lean -o M0EvenFourteenHeadBound.olean M0EvenFourteenHeadBound.lean 2>&1 | tee /tmp/a42-terminal/m0-even-fourteen-head-bound-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-fourteen-head-bound-axioms.log; then
+            echo '::error::sorryAx found in m=0,n=14 q4 prefix head bound'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0EvenFourteenGenericSource.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-fourteen-generic-source-axioms.log
+          lean -o M0EvenFourteenGenericSource.olean M0EvenFourteenGenericSource.lean 2>&1 | tee /tmp/a42-terminal/m0-even-fourteen-generic-source-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-fourteen-generic-source-axioms.log; then
+            echo '::error::sorryAx found in generic m=0,n=32*k+14 source increment'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0OddResidueOneSource.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m0-odd-residue1-source-axioms.log
           lean -o M0OddResidueOneSource.olean M0OddResidueOneSource.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue1-source-axioms.log
