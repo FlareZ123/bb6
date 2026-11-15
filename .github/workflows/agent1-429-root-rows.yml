@@ -28,6 +28,7 @@ jobs:
           lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootEven8.olean im-results/agent39-429-1021/BB429RootEven8.lean
           lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent1-429-root-rows/BB429NewRootRows.olean im-results/agent1-429-root-rows/BB429NewRootRows.lean
           lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
+          lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent1-429-root-rows/BB429RootOddRowsStrong.olean im-results/agent1-429-root-rows/BB429RootOddRowsStrong.lean
           lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod16.olean im-results/agent39-429-1021/BB429RootMod16.lean
           lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod32.olean im-results/agent39-429-1021/BB429RootMod32.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o im-results/agent1-429-root-rows/BB429InverseKernelExtended.olean im-results/agent1-429-root-rows/BB429InverseKernelExtended.lean
