@@ -930,11 +930,11 @@ private theorem m1EvenResidueFourQ4LeftFacingTail
       omega
     have hs : sideBit (srcInit ++ ([true] ++ lh)) (3*a+14) = true := by
       rw [m1EvenResidueFour_sideBit_append_after_local
-        srcInit ([true] ++ lh) (3*a+14) (by omega)]
+        srcInit ([true] ++ lh) (3*a+14) (by rw [hlenS])]
       simp [sideBit]
     have ht : sideBit (tgtInit ++ ([true] ++ lh)) (3*a+14) = true := by
       rw [m1EvenResidueFour_sideBit_append_after_local
-        tgtInit ([true] ++ lh) (3*a+14) (by omega)]
+        tgtInit ([true] ++ lh) (3*a+14) (by rw [hlenT])]
       simp [sideBit]
     rw [hsrc',htgt']
     exact hs.trans ht.symm
@@ -1054,15 +1054,18 @@ theorem m1EvenResidueFour_q4_prefix_leftFacing
           omega
         have hcut := m1EvenResidueFourCutTape_eq_end_inside a b h x hin
         have hy : 1 ≤ (3*a+1-i) ∧ (3*a+1-i) ≤ 5 := by omega
+        have hrel : x-(h-((3*a+1 : Nat) : Int)) =
+            ((3*a+1-i : Nat) : Int) := by
+          dsimp [x]
+          omega
         have hmark :
-            decide ((x-(h-((3*a+1 : Nat) : Int))) ∈
+            decide (x-(h-((3*a+1 : Nat) : Int)) ∈
               m1EvenResidueFourBridgeEnd.marked) = true := by
+          rw [hrel]
           have hyCases : 3*a+1-i=1 ∨ 3*a+1-i=2 ∨
               3*a+1-i=3 ∨ 3*a+1-i=4 ∨ 3*a+1-i=5 := by omega
           rcases hyCases with h1 | h2 | h3 | h4 | h5
-          all_goals rw [show x-(h-((3*a+1 : Nat) : Int)) =
-            3*a+1-i by dsimp [x]; omega]
-          all_goals subst h1 <;> simp [m1EvenResidueFourBridgeEnd]
+          all_goals simp [h1,h2,h3,h4,h5,m1EvenResidueFourBridgeEnd]
         have hval : m1EvenResidueFourCutTape a b h x = true :=
           hcut.trans hmark
         have htarget := m1EvenResidueFourQ4LeftFacingPrefixTrue a i hsmall
@@ -1075,7 +1078,7 @@ theorem m1EvenResidueFour_q4_prefix_leftFacing
           simp [m1EvenResidueFourInside,x]
         have hcut := m1EvenResidueFourCutTape_eq_end_inside a b h x hin
         have hmark :
-            decide ((x-(h-((3*a+1:Nat):Int)) ∈
+            decide (x-(h-((3*a+1:Nat):Int)) ∈
               m1EvenResidueFourBridgeEnd.marked) = false := by
           have hc : x-(h-((3*a+1:Nat):Int)) = 0 := by
             dsimp [x]
@@ -1086,7 +1089,15 @@ theorem m1EvenResidueFour_q4_prefix_leftFacing
           hcut.trans hmark
         have htarget :
             sideBit (m1EvenResidueFourQ4LeftFacing a) (3*a+1) = false := by
-          simp [m1EvenResidueFourQ4LeftFacing,markerWord,sideBit]
+          let P : List Bool := [true] ++ d1pow a
+          let R : List Bool := markerWord 0 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh
+          have hlist : m1EvenResidueFourQ4LeftFacing a = P ++ R := by
+            simp [P,R,m1EvenResidueFourQ4LeftFacing,List.append_assoc]
+          have hlen : P.length = 3*a+1 := by simp [P,d1pow_length]
+          rw [hlist]
+          rw [m1EvenResidueFour_sideBit_append_after_local P R
+            (3*a+1) (by rw [hlen])]
+          simp [R,markerWord,sideBit]
         simpa [x] using hval.trans htarget.symm
       · by_cases hbound : i ≤ 3*a+13
         · let k : Nat := i-(3*a+1)
@@ -1112,7 +1123,7 @@ theorem m1EvenResidueFour_q4_prefix_leftFacing
             rw [hi]
             exact htarget
           have hmark' : decide
-              ((x-(h-((3*a+1:Nat):Int)) ∈
+              (x-(h-((3*a+1:Nat):Int)) ∈
                 m1EvenResidueFourBridgeEnd.marked) =
                 decide (-(k:Int) ∈ m1EvenResidueFourBridgeEnd.marked) := by
             rw [hrel]
@@ -1121,7 +1132,7 @@ theorem m1EvenResidueFour_q4_prefix_leftFacing
                 sideBit (m1EvenResidueFourQ4LeftFacing a) i := by
             calc
               m1EvenResidueFourCutTape a b h x =
-                  decide ((x-(h-((3*a+1:Nat):Int)) ∈
+                  decide (x-(h-((3*a+1:Nat):Int)) ∈
                     m1EvenResidueFourBridgeEnd.marked) := hcut
               _ = decide (-(k:Int) ∈ m1EvenResidueFourBridgeEnd.marked) := hmark'
               _ = sideBit (m1EvenResidueFourQ4LeftFacing a) i := htarget'.symm
