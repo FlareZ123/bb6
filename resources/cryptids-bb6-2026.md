@@ -42,6 +42,22 @@ This is exactly the fatal-height formula used in FlareZ123/bb6. The drain condit
 
 ## The 3/2 underflow and the odd ResetParent equation
 
+## Exact low-branch bridge to the source ResetParent relation
+
+Work entirely in the shifted high-level coordinates defined above. Suppose the high-b drain starts at C(x,0) and runs for m valid drain transitions, reaching C(A_m,B_m), where
+`A_m = 4*2^m - 2` and `B_m = 2*x + 9 + 2*m - 8*2^m`.
+Put `d = B_m - 2). The low branch is taken when `d < 2*A_m). Its odd-residue arm returns C(y,r), with
+`y = (6*A_m+d+5)/4` and `r = (6*A_m+d+5) mod 4`.
+
+Since `A_m = 4*2^m-2`, we have `6*A_m = 0 mod 4). Therefore the specific low branch `r=2` is exactly `d=1 mod 4`. In that case,
+`c = y+3 = (6*A_m+d+15)/4 = 6*2^m + (d+3)/4`.
+The low-branch inequalities and `d=1 mod 4` give `1 ≤ d ≤ 8*2^m-5`, hence
+`6*2^m+1 ≤ c ≤ 8*2^m-1`.
+Substituting `d = 2*x+7+2*m-8*2^m` also gives the exact identity
+`2*c = 8*2^m + x + m + 5`.
+
+Now factor `c=2^t*z` with `z` odd. The underflow transitions described below yield a final state C(g,0) with `2*g+5=3^(t+1)*z`. Thus the external high-level path supplies **all four arithmetic clauses** of the local odd `ResetParent x g` constructor, with the exact parameter identification `l=m`: odd quotient, dyadic band, the (3^{t+1}) output equation, and the source-parent equation. This is an algebraic derivation from the external high-level map; the cross-repository Lean refinement theorem is still not present.
+
 When the low modulo-four branch reaches C(y,2), define c=y+3. If y is odd, then the next high-level transition sends
 
 c -> 3c/2,
