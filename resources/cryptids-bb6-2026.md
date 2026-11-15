@@ -15,6 +15,9 @@ The machine RLE in the paper and module is the same six-state machine studied in
 
 The machine-specific module proves a high-level acceleration with start state C(0,2). Its first transition reaches C(2,0), the source reset root used by the FlareZ123/bb6 development. The high-level transition map is:
 
+**Coordinate convention (important).** In this section, C(a,b) denotes the external Lean `HighLevelState.C a b`, which encodes the physical tape pattern C(a,b+1). Thus the high-level start C(0,2) represents physical C(0,3); high-level C(a,0) represents physical C(a,1); high-level C(a,1) represents physical C(a,2) and halts; and high-level C(a,2) represents physical C(a,3). Every C(a,b), drain, and underflow formula below uses these shifted high-level coordinates. To translate to the paper's physical tape notation, add one to the second coordinate. This is the explicit encoding documented at the `HighLevelState.C` declaration in the pinned external source revision `c86f15861709b76042998c5211c7b2f83991621b` (machine-module blob `6955c0d454833fb188620475f6f72aa7244f09da`).
+
+
 1. C(a,0) maps to C(2,2a+1).
 2. C(a,1) halts.
 3. For b>=2, let d=b-2.
