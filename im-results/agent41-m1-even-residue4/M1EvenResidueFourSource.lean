@@ -278,7 +278,7 @@ theorem m1EvenResidueFour_q4_prefix_source
 
 /-- The lifted cut agrees with the target left word on the common base
 prefix and on the untouched shared high-order tail. -/
-theorem m1EvenResidueFour_q4_prefix_leftFacing
+theorem m1EvenResidueFour_lifted_q4_prefix_leftFacing
     (L k a b : Nat) (h : Int)
     (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     ∀ i : Nat,
@@ -291,7 +291,7 @@ theorem m1EvenResidueFour_q4_prefix_leftFacing
       omega
     have hcut := m1EvenResidueFour_cut_eq_base_inside L k a b h
       (h-(i:Int)) hin
-    have hbase := m1EvenResidueFour_q4_prefix_leftFacing a b h ha i
+    have hbase := m1EvenResidueFour_lifted_q4_prefix_leftFacing a b h ha i
     have hbaseBits :
         sideBit (m1EvenResidueFourQ4LeftFacing a) i =
           sideBit (m1EvenResidueFourLeftFacing L k a) i := by
@@ -340,7 +340,7 @@ theorem m1EvenResidueFour_q4_prefix_leftFacing
       _ = sideBit (m1EvenResidueFourLeftFacing L k a) i :=
         htargetBits.symm
 
-private theorem m1EvenResidueFour_q4_prefix_far_tail
+private theorem m1EvenResidueFour_lifted_q4_prefix_far_tail
     (L k a b : Nat) (h : Int)
     (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     ∀ i : Nat, 9+3*b ≤ i →
@@ -351,7 +351,7 @@ private theorem m1EvenResidueFour_q4_prefix_far_tail
     omega
   rw [m1EvenResidueFour_cut_eq_base_inside L k a b h
     (h+1+(i:Int)) hin]
-  exact m1EvenResidueFour_q4_prefix_far_tail a b h ha i hi
+  exact m1EvenResidueFour_lifted_q4_prefix_far_tail a b h ha i hi
 
 private theorem m1EvenResidueFour_q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
@@ -375,7 +375,7 @@ private theorem m1EvenResidueFour_q4RightShape_congr
     rw [← heq (h+10+(3*b:Int)+(i:Int)) (by omega)]
     exact hzero i hi
 
-private theorem m1EvenResidueFour_q4_prefix_rightShape
+private theorem m1EvenResidueFour_lifted_q4_prefix_rightShape
     (L k a b : Nat) (h : Int)
     (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     q4RightShape (m1EvenResidueFourLiftedCutTape L k a b h) h b := by
@@ -387,7 +387,7 @@ private theorem m1EvenResidueFour_q4_prefix_rightShape
       simp [m1EvenResidueFourReadInside]
       omega
     exact (m1EvenResidueFour_cut_eq_base_inside L k a b h x hin).symm
-  · exact m1EvenResidueFour_q4_prefix_rightShape a b h ha
+  · exact m1EvenResidueFour_lifted_q4_prefix_rightShape a b h ha
 
 /-- Complete generalized q4 prefix interface for n=8*k+4, with head h+4
 after the first four state-4 guard moves have already been consumed. -/
@@ -403,9 +403,9 @@ theorem m1EvenResidueFour_q4_prefix_data
       (∀ i : Nat, 9+3*b ≤ i → Tq (h+1+(i:Int)) = false) := by
   refine ⟨m1EvenResidueFourLiftedCutTape L k a b h, ?_, ?_, ?_, ?_⟩
   · exact m1EvenResidueFour_q4_prefix_source L k a b h hL hbound ha
-  · exact m1EvenResidueFour_q4_prefix_leftFacing L k a b h hL hbound ha
-  · exact m1EvenResidueFour_q4_prefix_rightShape L k a b h hL hbound ha
-  · exact m1EvenResidueFour_q4_prefix_far_tail L k a b h hL hbound ha
+  · exact m1EvenResidueFour_lifted_q4_prefix_leftFacing L k a b h hL hbound ha
+  · exact m1EvenResidueFour_lifted_q4_prefix_rightShape L k a b h hL hbound ha
+  · exact m1EvenResidueFour_lifted_q4_prefix_far_tail L k a b h hL hbound ha
 
 /-- The generic q4 suffix reconstructs the canonical n-1=8*k+3 target. -/
 private theorem m1EvenResidueFour_suffix_target_left
