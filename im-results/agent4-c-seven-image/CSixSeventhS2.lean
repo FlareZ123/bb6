@@ -156,7 +156,7 @@ theorem s2_R_parents (u v t a k : Nat)
                       _=32*z := by simp
                   have hmod := Nat.mod_eq_zero_of_dvd hdiv
                   rw [hval] at hmod
-                  norm_num at hmod
+                  omega
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at h <;> omega
