@@ -49,7 +49,7 @@ Work entirely in the shifted high-level coordinates defined above. Suppose the h
 Put `d = B_m - 2). The low branch is taken when `d < 2*A_m). Its odd-residue arm returns C(y,r), with
 `y = (6*A_m+d+5)/4` and `r = (6*A_m+d+5) mod 4`.
 
-Since `A_m = 4*2^m-2`, we have `6*A_m = 0 mod 4). Therefore the specific low branch `r=2` is exactly `d=1 mod 4`. In that case,
+Since `A_m = 4*2^m-2`, we have `6*A_m = 0 mod 4`. Therefore the specific low branch `r=2` is exactly `d=1 mod 4`. Substituting `d=2*x+7+2*m-8*2^m`, this is equivalently the parity selector `x+m` odd; the local odd-parent equation forces the same parity. In that case,
 `c = y+3 = (6*A_m+d+15)/4 = 6*2^m + (d+3)/4`.
 The low-branch inequalities and `d=1 mod 4` give `1 ≤ d ≤ 8*2^m-5`, hence
 `6*2^m+1 ≤ c ≤ 8*2^m-1`.
