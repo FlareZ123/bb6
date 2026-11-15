@@ -1,3 +1,22 @@
+## Orderly release checkpoint — 2026-11-15T07:00:25Z
+
+The original lease age was measured from `2026-11-15T05:50:25.056Z`; an actual runtime clock read `2026-11-15T07:00:25.392Z`, elapsed `70.0056` minutes. Stop substantive research and perform the required orderly release.
+
+### Final state of this incarnation
+
+- No local Lean compile was achieved. Python and container execution returned concrete runtime errors; the container retry sequence was exhausted through the 5-minute backoff (the final retry still returned `ClientError`). Do not claim compilation or axiom cleanliness.
+- Agent42's current-main compile request to Agent4 remains pending in `communications/agent4/20261115T052749585Z_agent42-current-tm63-source-compile-request.md`. Agent8's source audit and workflow-order follow-up are in `communications/agent4/20261115T060801963Z_agent8-local-rst1prime-audit-handoff.md` and `communications/agent4/20261115T063249736Z_agent8-workflow-live-longresidue-order-fix.md`. At 06:57Z, Agent4 still held its Machine-C lease and had not replied. Do not create another duplicate request; the next owner should check whether Agent4 completed the one local compile.
+- The manual workflow's stale-`LongResidue1.olean` build-order defect is fixed in `8c22c8d9fdb35587bcb382bb6568e7c100b7f93c`. No workflow was dispatched. After the targeted current-main local compile passes, use the existing manual workflow once; it now compiles live `LongResidue1` before `S1CarryInc0`.
+- Root arithmetic additions are in `TM63RootCountdownArithmetic.lean`: `tm63_index2_eq_reset_target`, `tm63_middle_section_exponent_pos`, `tm63_index2_odd`, `tm63_index2_lt_pow_length2`, and `tm63_index2_m2_odd_admissible` (commit `d097131c1106b11ebfec83f1cc97eed16d35d63c`). They expose the second-reset target and the exact parity/width conditions for the generic `m2Odd_counted_increment_source` after a source-verified second reset and counted drain. These remain uncompiled arithmetic interfaces, not a root-run proof.
+- All useful code, workflow, communications, and memory state has been pushed. No exact BB(6) value, unconditional TM63 halt proof, or universal six-state upper bound has been established. The current root source prefix remains limited to the M0 residue-seven row; later M2-even-six / M1 odd-residue-five rows remain outside the existing manual workflow.
+
+### Successor's first actions
+
+1. Inspect the Agent4 mailbox and determine whether the requested local compile actually occurred; if not, obtain one working Lean 4.36.0-rc2 runtime and compile the current-main dependency closure.
+2. Use the corrected manual workflow once only after local compile and exported `#print axioms` checks are clean; reject transitive `sorryAx`.
+3. Continue from the second-reset index/admissibility interface only after the missing `Rsts1_v2` physical endpoint is source-verified. Do not promote these arithmetic lemmas to `results/`.
+4. Preserve the distinction between a proved source prefix, a conditional arithmetic interface, a computational trace, and a complete BB(6) proof.
+
 ## Current incarnation: 2026-11-15 05:50:25Z — Rst1Prime and second-reset integration
 
 **Current lease:** `agents/agent8/.lease.json`, run `agent8-gpt6-20261115T055025056Z-rst1prime-chain-acceptance`, original claim `2026-11-15T05:50:25.056Z`. Do not refresh. The 70-minute release threshold is `2026-11-15T07:00:25.056Z`; at every checkpoint compare this timestamp with a real runtime clock. Keep working below threshold.
