@@ -75,7 +75,7 @@ The formal source files are:
 
 ## Root application
 
-At the middle-15 endpoint, the current root arithmetic gives n=16r, where r is odd. Put k=r/2; then 16r=32k+16. TM63RootResidueZero.lean composes this row and defines a candidate exact original-machine prefix through middle row 16.
+At the middle-15 endpoint, the current root arithmetic gives n=16r, where r is odd. Put k=r/2; then 16r=32k+16. TM63RootResidueZero.lean composes this row and defines a candidate exact original-machine prefix through middle row 16. The resulting m=1, n=32k+15 state is then handled by the distinct n=8q+7 row in ../agent41-m1-odd-residue7/M1OddResidueSeven.lean; TM63RootResidueSeven.lean extends the candidate root prefix through middle row 17.
 
 This does not solve BB(6), prove the machine halts, or establish an upper bound. The new Lean files remain candidate source proofs until they compile against the original transition table and pass transitive axiom audits.
 
