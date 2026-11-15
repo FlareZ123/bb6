@@ -149,5 +149,6 @@ theorem tm63_middle_seven_marker :
 #print axioms tm63_index1_eq_8k7
 #print axioms tm63_root_middle_k_odd
 #print axioms tm63_middle_seven_marker
+#print axioms tm63_index2_eq_reset_target
 
 end BB6Coverage.Agent42RootCountdown
