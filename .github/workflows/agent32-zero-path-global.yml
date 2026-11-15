@@ -111,12 +111,17 @@ jobs:
       - name: Export exact depth-four residual frontier and root-preserving symmetry classes (explicitly requested only)
         if: ${{ inputs.export_frontier }}
         run: |
-          set -eu
+          set -euo pipefail
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
           lean -o im-results/agent4-coverage-smoke/FrontierExtract.olean im-results/agent4-coverage-smoke/FrontierExtract.lean
           lean -o im-results/agent4-coverage-smoke/FrontierUnique.olean im-results/agent4-coverage-smoke/FrontierUnique.lean
           lean -o im-results/agent4-coverage-smoke/FrontierManifestMass.olean im-results/agent4-coverage-smoke/FrontierManifestMass.lean
-          lean im-results/agent32-zero-prefix-global/ResidualFrontierManifest.lean
+          lean im-results/agent32-zero-prefix-global/ResidualFrontierManifest.lean | tee /tmp/bb6-residual-frontier-lean.log
+          if grep -q 'sorryAx' /tmp/bb6-residual-frontier-lean.log; then
+            echo "ERROR: residual-frontier proof graph depends on sorryAx"
+            exit 1
+          fi
+          python -m py_compile im-results/agent32-zero-prefix-global/canonicalize_residual_frontier.py
           python im-results/agent32-zero-prefix-global/canonicalize_residual_frontier.py /tmp/bb6-depth4-frontier.tsv /tmp/bb6-depth4-frontier-report.txt /tmp/bb6-depth4-frontier
           gzip -9 /tmp/bb6-depth4-frontier.jsonl
           gzip -9 /tmp/bb6-depth4-frontier-summary.json
