@@ -96,3 +96,55 @@ Read full current research guide, board, source files and mailbox. M32 B8 finite
 Locally reconstructed supplied Lean 4.36.0-rc2 (zip contains tar.zst, extracted to `/tmp/lean/lean-4.36.0-rc2-linux/`); local experimental C++ and Python live in `/tmp/bb6-agent41/` (**not durable across incarnations**). Mixed quotient B8/M192 BFS: 3,737,398 reached /8m, 28,286,015 edges; M1024 independent bitset recheck recovered 385,473,152 / 3,050,991,229. A 47-pair high-phase and 29-cell each low-phase inverse superset for target `(a%192,k%192,c)=(9,67,0)` passed exhaustive 8m representative predecessor-closure scan, 0 failures, with true blank root absent. Dropping low phase distinctions yields two false predecessor exclusions. Full detail and warning at `im-results/agent41-m192-reverse/README.md`. All current exclusions are **computational candidates only**; source Lean theorem and internal-novelty review pending. New high gate candidate `j%192=3,m%64=39` survives earlier M1024 quotient. Other 66 candidate residue pairs projected after partial overlap review; external novelty still unclear.
 
 Immediate next: write & verify a source-connected Lean proof of compact 12-clause high/finite-low reverse core (or reusable quotient checker). Save deterministic source/reconstruction code. If proof is successful, bridge to exact two-parameter stopping equation and source compare Agent4/11/15/29, then send collaborator notice. Keep nonpublishable material under im-results. This incarnation has not solved Machine C or BB(6).
+
+
+## 2026-11-15 incarnation: authentic TM63 root successors through middle17
+
+Current lease run_id `agent41-gpt6-20261115T1009Z-tm63-root-middle-successor`, claimed_at **2026-11-15T10:09:16.945Z**. Do not refresh. Mandatory release threshold is **2026-11-15T11:19:16.945Z**; after each checkpoint compare against actual runtime clock, and only release after 70 minutes by the normal final-commit procedure.
+
+### New m=2, n=32k+16 row (residue 0 mod 8, marker 2)
+
+Created under `im-results/agent41-m2-even-residue16/`:
+- `M2EvenSixteenQ4Prefix.lean`: n=16 finite base, exact 74-step bridge, start marked cells {-16,-15,-14,-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-1}, end state4/head2 with {-18,-17,-16,-13,-10,-7,-4,-1,1}; all bridge heads in [-18,1]. Left sweep 3(3a+2), bridge 74, E-scan 3a gives q4 prefix 80+12a.
+- `M2EvenResidueSixteen.lean`: five-block BinDec lift for n=32k+16 and target 32k+15, shared left prefix length 3a+22, frame boundary one cell left of the proven head lower bound. Exports `m2Even_residue16_counted_increment_source`.
+- `TM63RootResidueZero.lean`: proves root middle quotient r=tm63RootResidueSixK is odd (tm63RootMiddleK ≡3 mod4), sets k=r/2, and composes Agent42's middle15 endpoint with the new row to define `tm63_blank_reaches_after_middle16`.
+
+Exact row:
+[
+S_1(L,32k+16,2,a,0,b,h)\to^*
+S_1(L,32k+15,1,a+b+2,0,2^b-1,h+5+3b).
+]
+q4 prefix 80+12a; q4 suffix 39+3b; reset-prefix cost 119+12a+3b; counted increment cost
+[
+6\cdot4^b+42\cdot2^b+71+12a-9b.
+]
+Deterministic JS replay passed the 74-step bridge and 24 cases k=0..3, a∈{1,2}, b∈{0,1,2}. Python replay script stored as `m2_even_residue16_replay.py`; it was not run in this environment.
+
+### New m=1, n=8q+7 row (residue 7 mod 8, marker 1)
+
+Created under `im-results/agent41-m1-odd-residue7/`:
+- `M1OddResidueSeven.lean`: reuses the already-formalized 26-step `M1OddQ4Bridge`, with bridge start state3/head0 marks {-4,-1}, end state4/head2 marks {1,-1,-4,-5,-6}, all heads in [-6,1]. Left sweep 3(3a+1), bridge26, E-scan 3a-1 gives q4 prefix 28+12a. Three-block BinDec decompositions are d0^3 ++ binDec(L-3,q) for 8q+7 and d1++d0^2++binDec(L-3,q) for 8q+6.
+- `TM63RootResidueSeven.lean`: after middle16, n=32k+15=8(4k+1)+7; composes the new row with q=4k+1 to define `tm63_blank_reaches_after_middle17`.
+- `m1_odd_residue7_replay.py` and README.
+
+Exact row:
+[
+S_1(L,8q+7,1,a,0,b,h)\to^*
+S_1(L,8q+6,0,a+b+2,0,2^b-1,h+5+3b).
+]
+q4 prefix 28+12a; q4 suffix 39+3b; reset-prefix cost 67+12a+3b; counted increment cost
+[
+6\cdot4^b+42\cdot2^b+19+12a-9b.
+]
+Deterministic JS replay passed the 26-step bridge and 24 cases q=0..3, a∈{1,2}, b∈{0,1,2}. Python replay script stored but not run in this environment.
+
+### Root progress and trust boundary
+
+Candidate root chain is now composed through middle17:
+Agent42 `TM63RootResidueThree` (middle15) -> Agent41 `TM63RootResidueZero` (middle16) -> Agent41 `TM63RootResidueSeven` (middle17). This is only an exact finite blank-root prefix candidate, not a halting proof, upper bound, or BB(6) solution.
+
+**No new Lean source module has yet been compiled in this invocation.** The local shell/container and Python execution tools returned errors here, so do not claim local compilation. Targeted local source-audit requests were sent to Agent49, with addenda covering all five Lean files:
+`M2EvenSixteenQ4Prefix.lean`, `M2EvenResidueSixteen.lean`, `TM63RootResidueZero.lean`, `M1OddResidueSeven.lean`, `TM63RootResidueSeven.lean`.
+Agent49's current lease was claimed at 2026-11-15T10:39:19.398Z; at last inspection no response had arrived. Do not dispatch a full-chain CI workflow before the targeted source closure. Once Agent49 reports, fix only concrete compile/axiom errors, then use one targeted original-table CI workflow if needed.
+
+All these artifacts remain in `im-results/`, not `results/`. Relevant handoffs are in Agent42, Agent48, and Agent49 mailboxes. The m=2 row is distinct from Agent48's (6,2)/(5,1) branch; the m=1 n=8q+7 row is distinct from Agent48's n=8q+5 branch.
