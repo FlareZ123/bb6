@@ -68,11 +68,18 @@ theorem tm63_blank_reaches_after_middle18 :
         16*tm63RootResidueSixK-3 := by
     rw [hsplit]
     omega
+  have hindex :
+      tm63Index1 = 16*tm63RootResidueSixK+15 := by
+    simpa [tm63RootResidueSixK] using tm63_index1_eq_16k15
   have hroot := tm63_index1_lt_pow_length1
-  rw [tm63_root_index_eq_16r15] at hroot
+  rw [hindex] at hroot
   have hbound :
       32*(tm63RootResidueSixK/2)+14 < 2^tm63Length1 := by
     rw [hinput]
+    omega
+  have hA := tm63FirstSection_exponent_ge_five
+  have hL5 : 5 ≤ tm63Length1 := by
+    dsimp [tm63Length1]
     omega
   have ha : 0 < tm63MiddleAfter17A := by
     unfold tm63MiddleAfter17A
@@ -80,7 +87,7 @@ theorem tm63_blank_reaches_after_middle18 :
   have hrow := m0EvenFourteen_counted_increment_source
     tm63Length1 (tm63RootResidueSixK/2)
     tm63MiddleAfter17A tm63MiddleAfter17B tm63MiddleAfter17Head
-    tm63_root_length_ge_five hbound ha
+    hL5 hbound ha
   have hrow' :
       run tm2
         (proposedIncrementCost 0
