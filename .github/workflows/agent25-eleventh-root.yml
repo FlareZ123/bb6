@@ -85,9 +85,63 @@ jobs:
         shell: bash
         env:
           STAGE: ${{ inputs.stage }}
+          PREVIOUS_ARTIFACT: ${{ inputs.previous_artifact }}
+          SOURCE_REF: ${{ inputs.source_ref }}
         run: |
           set -euo pipefail
           exec > >(tee -a lean-audit.log) 2>&1
+          if [[ "$STAGE" != "1" ]]; then
+            expected_artifact=""
+            required_modules=()
+            case "$STAGE" in
+              2a) expected_artifact="d-root-stage1"; required_modules=("im-results/agent37-d-timing-cocycle/BlankThirteenthRejoin.olean") ;;
+              2b16) expected_artifact="d-root-stage2a"; required_modules=("im-results/agent37-d-timing-cocycle/BlankFifteenthRejoin.olean") ;;
+              2b17a) expected_artifact="d-root-stage2b16"; required_modules=("im-results/agent37-d-timing-cocycle/BlankSixteenthRejoin.olean") ;;
+              2b17b) expected_artifact="d-root-stage2b17a"; required_modules=("im-results/agent37-d-timing-cocycle/SeventeenthFirstHalf.olean") ;;
+              2b17c) expected_artifact="d-root-stage2b17b"; required_modules=("im-results/agent37-d-timing-cocycle/SeventeenthSecondHalf.olean") ;;
+              2b17d) expected_artifact="d-root-stage2b17c"; required_modules=("im-results/agent37-d-timing-cocycle/SeventeenthBlock1.olean") ;;
+              2b17e) expected_artifact="d-root-stage2b17d"; required_modules=("im-results/agent37-d-timing-cocycle/SeventeenthBlock2.olean") ;;
+              2b17f) expected_artifact="d-root-stage2b17e"; required_modules=("im-results/agent37-d-timing-cocycle/SeventeenthBlock3.olean" "im-results/agent37-d-timing-cocycle/SeventeenthTerminalCertificate.olean") ;;
+              2b17g) expected_artifact="d-root-stage2b17f"; required_modules=("im-results/agent37-d-timing-cocycle/SeventeenthBlock4.olean") ;;
+              2b17h) expected_artifact="d-root-stage2b17g"; required_modules=("im-results/agent37-d-timing-cocycle/SeventeenthBlock5.olean") ;;
+              2b17i) expected_artifact="d-root-stage2b17h"; required_modules=("im-results/agent37-d-timing-cocycle/SeventeenthBlock6.olean") ;;
+              2b17j) expected_artifact="d-root-stage2b17i"; required_modules=("im-results/agent37-d-timing-cocycle/BlankSeventeenthRejoin.olean") ;;
+              3a) expected_artifact="d-root-stage2b17j"; required_modules=("im-results/agent37-d-timing-cocycle/BlankSeventeenthRejoin.olean" "im-results/agent37-d-timing-cocycle/ExceptionalE7ThirdReturnEscape.olean") ;;
+              3b) expected_artifact="d-root-stage3a"; required_modules=("im-results/agent37-d-timing-cocycle/BlankEighteenthRejoin.olean") ;;
+              3c) expected_artifact="d-root-stage3b"; required_modules=("im-results/agent37-d-timing-cocycle/BlankNineteenthRejoin.olean" "im-results/agent37-d-timing-cocycle/ExceptionalE7ThirdReturnEscape.olean") ;;
+              3d) expected_artifact="d-root-stage3c"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentiethEscape.olean") ;;
+              3e) expected_artifact="d-root-stage3d"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentiethRejoin.olean") ;;
+              4a) expected_artifact="d-root-stage3e"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentyFirstRejoin.olean") ;;
+              4b) expected_artifact="d-root-stage4a"; required_modules=("im-results/agent37-d-timing-cocycle/ExceptionalE7SecondSafe.olean") ;;
+              4c) expected_artifact="d-root-stage4b"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentyFirstRejoin.olean" "im-results/agent37-d-timing-cocycle/ExceptionalE7SecondSafe.olean" "im-results/agent2-packet-shift/ExceptionalEPacketClosure.olean") ;;
+              4d) expected_artifact="d-root-stage4c"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentySecondRejoin.olean") ;;
+              4e) expected_artifact="d-root-stage4d"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentyThirdRejoin.olean") ;;
+              4f) expected_artifact="d-root-stage4e"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentyFourthRejoin.olean") ;;
+              4g) expected_artifact="d-root-stage4f"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentyFifthRejoin.olean") ;;
+              5a) expected_artifact="d-root-stage4g"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentySixthRejoin.olean") ;;
+              5b) expected_artifact="d-root-stage5a"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentySeventhRejoin.olean") ;;
+              5c) expected_artifact="d-root-stage5b"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentyEighthRejoin.olean") ;;
+              5d) expected_artifact="d-root-stage5c"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentyNinthRejoin.olean") ;;
+              5e) expected_artifact="d-root-stage5d"; required_modules=("im-results/agent37-d-timing-cocycle/BlankThirtiethRejoin.olean") ;;
+            esac
+            if [[ -n "$expected_artifact" && "$PREVIOUS_ARTIFACT" != "$expected_artifact" ]]; then
+              echo "Stage $STAGE requires predecessor artifact $expected_artifact, got $PREVIOUS_ARTIFACT" >&2
+              exit 1
+            fi
+            for module in "${required_modules[@]}"; do
+              if [[ ! -f "$module" ]]; then
+                echo "Stage $STAGE is missing predecessor module $module" >&2
+                exit 1
+              fi
+            done
+            if [[ -f im-results/.d-root-source-ref ]]; then
+              prior_source_ref=$(cat im-results/.d-root-source-ref)
+              if [[ "$prior_source_ref" != "$SOURCE_REF" ]]; then
+                echo "Source snapshot mismatch: predecessor=$prior_source_ref current=$SOURCE_REF" >&2
+                exit 1
+              fi
+            fi
+          fi
           lean --version
           B=im-results/agent31-cryptid-boundary
           P=im-results/agent32-cryptid-padding
@@ -323,11 +377,12 @@ jobs:
               exit 2
               ;;
           esac
+          printf '%s\n' "$SOURCE_REF" > im-results/.d-root-source-ref
           if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
           fi
-          find im-results -type f -name '*.olean' -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
+          find im-results -type f \( -name '*.olean' -o -name '.d-root-source-ref' \) -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
       - name: Preserve intermediate checkpoint
         if: ${{ always() && inputs.stage != '5' && inputs.stage != '5e' }}
         uses: actions/upload-artifact@v4
