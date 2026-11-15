@@ -122,14 +122,25 @@ for n_mod32 in range(1, 32, 2):
         numerator = (2*d - 3*n_mod32 - 25) if branch == 9 else (2*d - 3*n_mod32 - 21)
         assert numerator % 4 == 0
         x = (numerator // 4) % 8
-        y = (2 * (x - d) + 1) % 4
-        if (x, y) in allowed8:
+        y4 = (2 * (x - d) + 1) % 4
+        y8 = (2 * (x - d) + 1) % 8
+        # BB429RootMod16.rooted_not_7_7 excludes the rooted pair (7,7).
+        if (x, y4) in allowed8 and not (x == 7 and y8 == 7):
             allowed_d.append(d)
     long_burst_mod16.append({
         "n_mod32": n_mod32,
         "branch": branch,
         "allowed_d_mod16": allowed_d,
+        "rooted_not_7_7_applied": True,
     })
+
+expected_long_burst = {
+    1: [4, 8], 3: [1, 5, 9], 5: [2, 10, 14], 7: [7, 11, 15],
+    9: [0, 4], 11: [1, 5, 13], 13: [6, 10, 14], 15: [3, 7, 11],
+    17: [0, 12], 19: [1, 9, 13], 21: [2, 6, 10], 23: [3, 7, 15],
+    25: [8, 12], 27: [5, 9, 13], 29: [2, 6, 14], 31: [3, 11, 15],
+}
+assert {row["n_mod32"]: row["allowed_d_mod16"] for row in long_burst_mod16} == expected_long_burst
 
 result = {
     "source_files": {key: str(path.relative_to(ROOT)) for key, path in FILES.items()},
@@ -143,10 +154,12 @@ result = {
         "modulus": 262144,
     },
     "root_mod8_allowed_pairs": sorted(allowed8),
+    "root_mod16_not_7_7_source": "im-results/agent39-429-1021/BB429RootMod16.lean",
     "v2_distribution_of_U_plus_3": v2_distribution,
     "constant_seed_checks": constant_checks,
     "variable_branch_d_residues": rows,
     "long_burst_mod16": long_burst_mod16,
+    "long_burst_mod16_scope": "Branches 9 and 10 only; constant-seed branches 1-7 remain separate for n>=18.",
 }
 assert len(base) == 58
 assert len(excluded_parts) == 673
