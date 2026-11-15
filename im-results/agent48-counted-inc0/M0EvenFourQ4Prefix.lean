@@ -353,7 +353,7 @@ private theorem E_scan_prefix_head
 /-- Every intermediate configuration of the base q4 prefix stays in
 the half-line x≥h-(3a+12), so the arbitrary high-order left tail is safe
 to frame when the base run is lifted to general L,k. -/
-private theorem m0EvenFour_q4_prefix_head_bound
+theorem m0EvenFour_q4_prefix_head_bound
     (a b : Nat) (h : Int) (ha : 0<a) :
     ∀ k, k < 48+12*a → ∀ d,
       run tm2 k (s1Config 3 4 0 a 0 b h) = some d →
