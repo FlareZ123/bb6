@@ -1,6 +1,7 @@
 import BB429NewResidue
 import BB429RootMod32
 import BB429NewRootRows
+import BB429RootOddRowsStrong
 import Lean.Elab.Tactic.Omega
 
 namespace BB429KernelExtended
@@ -28,7 +29,10 @@ private def Bad (s : Affine) : Prop :=
   (s.A%16=0 ∧ s.B%8=0 ∧ s.a%16=5 ∧ s.b%8=6) ∨
   (s.A%32=0 ∧ s.B%16=0 ∧ s.a%32=5 ∧ s.b%16=1) ∨
   (s.A%16=0 ∧ s.B%8=0 ∧ s.a%16=11 ∧ s.b%8≠2 ∧ s.b%8≠6 ∧ s.b%8≠7) ∨
-  (s.A%32=0 ∧ s.B%8=0 ∧ (s.a%32=19 ∨ s.a%32=27) ∧ s.b%8≠2 ∧ s.b%8≠7)
+  (s.A%32=0 ∧ s.B%8=0 ∧ (s.a%32=19 ∨ s.a%32=27) ∧ s.b%8≠2 ∧ s.b%8≠7) ∨
+  (s.A%16=0 ∧ s.B%8=0 ∧ 33≤s.a ∧ s.a%16=9 ∧ s.b%8=5) ∨
+  (s.A%32=0 ∧ s.B%8=0 ∧ 33≤s.a ∧ s.a%32=13 ∧ s.b%8=1) ∨
+  (s.A%32=0 ∧ s.B%8=0 ∧ 61≤s.a ∧ s.a%32=5 ∧ s.b%8=1)
 
 instance (s : Affine) : Decidable (Bad s) := by
   unfold Bad BB429Mod8.Allowed
@@ -62,7 +66,7 @@ private theorem valb_mod (s : Affine) (q m : Nat) (hm : s.B %m=0) :
 private theorem bad_sound (s : Affine) (q : Nat) (hb : Bad s) :
     ¬ Reach (va s q) (vb s q) := by
   intro hr
-  rcases hb with h|h|h|h|h|h|h|h
+  rcases hb with h|h|h|h|h|h|h|h|h|h|h
   · have ha := val_mod s q 8 h.1
     have hb := valb_mod s q 4 h.2.1
     have hall := reach_allowed (va s q) (vb s q) hr
@@ -111,6 +115,27 @@ private theorem bad_sound (s : Affine) (q : Nat) (hb : Bad s) :
     obtain ⟨n,hn⟩ := hr
     have hh := BB429NewRootRows.rooted_nineteen_or_twentyseven n (va s q) (vb s q) hn (by omega)
     omega
+
+  · rcases h with ⟨hA,hB,hlarge,hmodA,hmodB⟩
+    have ham := val_mod s q 16 hA
+    have hbm := valb_mod s q 8 hB
+    have hlarge' : 33 ≤ va s q := by simp [va]; omega
+    exact BB429RootOddRowsStrong.rooted_not_9_5 (va s q) (vb s q) hr
+      hlarge' (by omega) (by omega)
+
+  · rcases h with ⟨hA,hB,hlarge,hmodA,hmodB⟩
+    have ham := val_mod s q 32 hA
+    have hbm := valb_mod s q 8 hB
+    have hlarge' : 33 ≤ va s q := by simp [va]; omega
+    exact BB429RootOddRowsStrong.rooted_not_13_1 (va s q) (vb s q) hr
+      hlarge' (by omega) (by omega)
+
+  · rcases h with ⟨hA,hB,hlarge,hmodA,hmodB⟩
+    have ham := val_mod s q 32 hA
+    have hbm := valb_mod s q 8 hB
+    have hlarge' : 61 ≤ va s q := by simp [va]; omega
+    exact BB429RootOddRowsStrong.rooted_not_5_1 (va s q) (vb s q) hr
+      hlarge' (by omega) (by omega)
 
 private theorem halved_coeff (x q k : Nat) (hk : x%k=0) (hkpos : 0<k) :
     x*q = k*((x/k)*q) := by
