@@ -585,6 +585,37 @@ jobs:
             exit 1
           fi
 
+          # Agent 48's integrated M0-even residue-four row, followed by
+          # Agent 8's authentic-root composition through middle row 13.
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0EvenFourQ4Bridge.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-four-q4-bridge-axioms.log
+          lean -o M0EvenFourQ4Bridge.olean M0EvenFourQ4Bridge.lean 2>&1 | tee /tmp/a42-terminal/m0-even-four-q4-bridge-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-four-q4-bridge-axioms.log; then
+            echo '::error::sorryAx found in M0-even residue-four finite bridge'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0EvenFourQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-four-q4-prefix-axioms.log
+          lean -o M0EvenFourQ4Prefix.olean M0EvenFourQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m0-even-four-q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-four-q4-prefix-axioms.log; then
+            echo '::error::sorryAx found in M0-even residue-four q4 prefix'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0EvenResidueFour.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-residue-four-axioms.log
+          lean -o M0EvenResidueFour.olean M0EvenResidueFour.lean 2>&1 | tee /tmp/a42-terminal/m0-even-residue-four-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-residue-four-axioms.log; then
+            echo '::error::sorryAx found in M0-even residue-four counted increment'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent8-root-residue-four/TM63RootResidueFour.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-residue4-axioms.log
+          lean -o TM63RootResidueFour.olean TM63RootResidueFour.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-residue4-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-residue4-axioms.log; then
+            echo '::error::sorryAx found in blank-root composition through middle row 13'
+            exit 1
+          fi
+
           # Agent 42's integration closes the final (1,1) reset premise.
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63FinalResetIntegration.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-final-reset-integration-axioms.log
