@@ -82,15 +82,15 @@ theorem rst1Prime_secondSweep_preconditions
     · have hcases : i=0 ∨ i=1 := by omega
       rcases hcases with h0 | h1
       · subst i
-        simp [BB6Coverage.Agent8Rst1Prime.frameAt_tape,BB6Coverage.Agent8Rst1Prime.inside8,inWindow,BB6Coverage.Agent8Rst1Prime.bridge8End]
+        simp [BB6Coverage.Agent8Rst1Prime.frameAt_tape,BB6Coverage.Agent8Rst1Prime.inside8,BB6Coverage.Agent8Rst1Prime.inWindow,BB6Coverage.Agent8Rst1Prime.bridge8End]
       · subst i
-        simp [BB6Coverage.Agent8Rst1Prime.frameAt_tape,BB6Coverage.Agent8Rst1Prime.inside8,inWindow,BB6Coverage.Agent8Rst1Prime.bridge8End]
+        simp [BB6Coverage.Agent8Rst1Prime.frameAt_tape,BB6Coverage.Agent8Rst1Prime.inside8,BB6Coverage.Agent8Rst1Prime.inWindow,BB6Coverage.Agent8Rst1Prime.bridge8End]
     · let j := i-2
       have hj : j ≤ 3*L+2 := by omega
       have hpos : H-2-(i:Int) = H-4-(j:Int) := by omega
       have hrel : (H-2-(i:Int))-H = -2-(i:Int) := by omega
       have hout : BB6Coverage.Agent8Rst1Prime.inside8 ((H-2-(i:Int))-H) = false := by
-        simp [BB6Coverage.Agent8Rst1Prime.inside8,inWindow,hrel]
+        simp [BB6Coverage.Agent8Rst1Prime.inside8,BB6Coverage.Agent8Rst1Prime.inWindow,hrel]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
       simp only [hout]
@@ -112,7 +112,7 @@ theorem rst1Prime_secondSweep_preconditions
   · rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
     have hrel : (H-1)-H = -1 := by omega
     rw [hrel]
-    simp [BB6Coverage.Agent8Rst1Prime.inside8,inWindow,BB6Coverage.Agent8Rst1Prime.bridge8End]
+    simp [BB6Coverage.Agent8Rst1Prime.inside8,BB6Coverage.Agent8Rst1Prime.inWindow,BB6Coverage.Agent8Rst1Prime.bridge8End]
 
 /-- Exact original-machine run through the second counted left sweep,
 following the first sweep and bridge8. -/
