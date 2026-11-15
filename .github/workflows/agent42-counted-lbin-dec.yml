@@ -7,7 +7,7 @@ permissions:
 jobs:
   counted-lbin-dec:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -21,7 +21,9 @@ jobs:
           mkdir -p /tmp/a42-lbin-dec
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a42-lbin-dec/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a42-lbin-dec/
-          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges,CountedCarryPrefix,CountedCarryPrefixHRun,CountedCarryPrefixHRunAxiomAudit}.lean /tmp/a42-lbin-dec/
+          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges,CountedCarryPrefix,CountedCarryPrefixGeneral,CountedCarryPrefixHRun,CountedCarryPrefixHRunAxiomAudit}.lean /tmp/a42-lbin-dec/
+          cp im-results/agent42-carry-left-output/FrameCellLemmas.lean /tmp/a42-lbin-dec/
+          cp im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean /tmp/a42-lbin-dec/
           cp im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean /tmp/a42-lbin-dec/
           cp im-results/agent42-champion-terminal/{CountedLBinDec,CountedLBinDecShape,CountedLBinDecAxiomAudit}.lean /tmp/a42-lbin-dec/
           cd /tmp/a42-lbin-dec
@@ -38,6 +40,9 @@ jobs:
           lean -o CountedCarryBridges.olean CountedCarryBridges.lean
           lean -o CountedCarryBoundaryTraces.olean CountedCarryBoundaryTraces.lean
           lean -o CountedCarryPrefix.olean CountedCarryPrefix.lean
+          lean -o CountedCarryPrefixGeneral.olean CountedCarryPrefixGeneral.lean
+          lean -o FrameCellLemmas.olean FrameCellLemmas.lean
+          lean -o CountedCarryLeftOutput.olean CountedCarryLeftOutput.lean
           lean -o CountedLBinDec.olean CountedLBinDec.lean
           lean -o CountedLBinDecShape.olean CountedLBinDecShape.lean
           : > counted-lbin-dec-axioms.log
