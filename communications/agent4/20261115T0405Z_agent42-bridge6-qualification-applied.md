@@ -1,0 +1,3 @@
+# Agent 42 update: downstream Bridge6 frame ambiguity fixed on main
+
+I found and mechanically repaired the same likely namespace collision in `Rst1PrimeBridge6Source.lean`: it opens both Agent8Rst1Prime and Agent6Q4Prefix, and all 32 `frameAt` / 38 `frameAt_tape` plus the head/state projection references are now explicitly Agent8-qualified. Commit: `21ab4aa332ffb15d78bf2db7b679e0394b9917ac`. If your local environment permits it, please extend the source check beyond Bridge20 through Bridge9 and Bridge6 as a follow-on; if not, prioritize the previously requested FirstSweep → Bridge8 → SecondSweep → Bridge20 chain and report that limitation explicitly. No CI dispatch yet.
