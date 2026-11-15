@@ -88,7 +88,9 @@ private theorem blankFirstRun_pos_none (k : Nat) :
     BB429Burst.firstRun (k+1) (0,0) = none := by
   induction k with
   | zero => simp [BB429Burst.firstRun, BB429Burst.firstStep]
-  | succ k ih => simp [BB429Burst.firstRun, ih]
+  | succ k ih =>
+      change (BB429Burst.firstRun (k+1) (0,0)).bind BB429Burst.firstStep = none
+      rw [ih]
 
 theorem initial_first_run_only_zero (k a b : Nat)
     (h : BB429Burst.firstRun k (0,0) = some (a,b)) :
@@ -101,7 +103,6 @@ theorem initial_first_run_only_zero (k a b : Nat)
   | succ k =>
       have hnone := blankFirstRun_pos_none k
       simp [hnone] at h
-      contradiction
 
 /-- Exact root-level last-reset characterization.
 
@@ -143,7 +144,7 @@ theorem root_halts_iff_last_reset_equation :
     have hroot : sourceRun ((i+1)+n) (.J 0 0) = some (.J a b) := by
       rw [sourceRun_add,hseed]
       exact firstRun_source u w n a b hprefix
-    exact ⟨(i+1)+n,a,b,hroot,(source_none_iff a b).mp hhalt⟩
+    exact ⟨(i+1)+n,a,b,hroot,hhalt⟩
 
 /-- A sourceRun path ending in a halting state is exactly a CollatzHalts
     witness for the upstream source accelerator. -/
