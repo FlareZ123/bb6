@@ -1,3 +1,24 @@
+## 2026-11-15 invocation: selected-gap defect identity (partial)
+
+I continued Agent 50's switching problem using Agent 43's selected-gap coordinates from `communications/agent50/2026-11-15T092500Z_agent43-no-short-selected-gap-recurrence.md`. The exact recurrence is
+`C' = C+g`, `b'=(C+b)/2^g`, with `g>=3`, `0<=b<=C/7` after the first step.
+
+Derived and committed `im-results/agent50-p1-dyadic-width/selected_gap_defect_identity.md`. For a prefix of gaps (g_j), starts (s_0=0), total span (G=s_k), and (S=\sum 2^{s_j}), (T=\sum s_j2^{s_j}), the exact expansion is
+`2^G b_k = S C_0 + T - 1`, where (C_0=n+3,b_0=-1).
+With (D=\sum(G-s_j)2^{s_j}), (\Delta=2^G-7S), (C_k=C_0+G), and (r_k=C_k-7b_k),
+`2^G r_k = Delta*C_k + 7*(D+1)`.
+Also (\Delta=1+\sum 2^{s_j}(2^{g_j}-8)>0).
+
+For an extendable prefix, (8\mid r_k), hence (r_k\ge8). The normalized additive term satisfies (0<\beta=7(D+1)/2^G\le24/7+7/2^G<4) for (G\ge6). Therefore the normalized defect (\varepsilon=\Delta/2^G) obeys (\varepsilon>4/C_k). If (i) is the last gap (g_i\ge4), the geometric tail estimate gives (\varepsilon\le(15/7)2^{-(G-s_i)}), so (2^{G-s_i}<15C_k/28). The all-3 case similarly gives (2^G<C_k/4). This is a rigorous logarithmic bound on the terminal suffix after the last non-3 gap in an extendable prefix.
+
+**Scope:** this does not bound how many gaps (g\ge4) occur or the total earlier span. It does not prove the unrestricted (O(\log n)) no-short-run bound or the six-shallow lemma. The unresolved switching issue is to control the count/total weight of non-3 gaps, or find a superlogarithmic counterexample family.
+
+Shared the derivation and a targeted request for a switching argument/counterexample with Agent 43 in `communications/agent43/20261115T223800Z_agent50-selected-gap-defect.md`.
+
+Useful context: Agent 50's earlier fixed-return-segment contraction lemma is in section 7 of `im-results/agent50-p1-dyadic-width/no_short_pair_recurrence.md`; it only controls repeated identical return segments. Agent 43's selected-gap recurrence is a distinct coordinate and the new defect identity is intended to bridge the switching gap.
+
+Next: investigate the 2-adic valuation sequence (v_j=v_2(C_j+b_j)). With (u_j=v_j-g_j), (q_{j+1}=C_{j+1}+2^{u_j}w_j) (odd (w_j)); absent equal-valuation cancellation, (v_{j+1}=\min(v_2(C_{j+1}),u_j)), which makes (g_j+g_{j+1}\le v_j). The difficult cases are precisely cancellations (u_j=v_2(C_{j+1})). Seek an amortized bound on their excess valuations or a counterexample.
+
 ## Final mathematical checkpoint before lease release: fixed-cycle contraction
 
 The pair-carry note now includes a rigorous bound for consecutive repetitions of one identical return segment (section 7 of `im-results/agent50-p1-dyadic-width/no_short_pair_recurrence.md`). For a fixed r, the return maps (0^r10), (0^r20), (0^r120) have denominators (D=4^{r+2},4^{r+2},4^{r+3}) and invariant affine lines (a=cH+d). Their coefficients are:
