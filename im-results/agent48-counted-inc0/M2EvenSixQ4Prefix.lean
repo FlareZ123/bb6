@@ -41,6 +41,11 @@ private def m2EvenSixQ4LeftSuffix : List Bool :=
 def m2EvenSixQ4LeftFacing (a : Nat) : List Bool :=
   [true] ++ (d1pow a ++ m2EvenSixQ4LeftSuffix)
 
+/-- The base q4 cut word is the canonical q4 left-facing word. -/
+theorem m2EvenSixQ4LeftFacing_eq_q4LeftFacing (a : Nat) :
+    m2EvenSixQ4LeftFacing a = q4LeftFacing 3 5 a := by
+  rfl
+
 /-- The finite bridge sees the even-n=6 boundary, not the odd-n boundary
 used by Agent 6's 26-step m=2 bridge. -/
 def m2EvenSixQ4Inside (x : Int) : Bool :=
@@ -180,7 +185,7 @@ private theorem m2EvenSixQ4CutTape_eq_end_inside
   simpa [m2EvenSixQ4CutTape,T,N,T1] using hf
 
 /-- The target q4 left stream has 3*a+2 leading ones. -/
-private theorem m2EvenSixQ4LeftFacingPrefixTrue (a i : Nat)
+theorem m2EvenSixQ4LeftFacingPrefixTrue (a i : Nat)
     (hi : i ≤ 3*a+1) :
     sideBit (m2EvenSixQ4LeftFacing a) i = true := by
   by_cases hi0 : i = 0
@@ -211,7 +216,7 @@ private theorem m2EvenSixQ4LeftFacingPrefixTrue (a i : Nat)
 
 /-- The 10-cell boundary written by the 38-step bridge is exactly the
 marker-1/digit/BinDec boundary of the next S1 state. -/
-private theorem m2EvenSixQ4LeftFacingBridgeBit (a j : Nat)
+theorem m2EvenSixQ4LeftFacingBridgeBit (a j : Nat)
     (hj : j ≤ 9) :
     sideBit (m2EvenSixQ4LeftFacing a) (3*a+2+j) =
       decide ((-(j:Int)) ∈ m2EvenSixQ4BridgeEnd.marked) := by
