@@ -49,6 +49,13 @@ theorem m0EvenFour_binDec_prefix (L q : Nat)
       (binDec_odd (L-3) q hq3)
   rw [h1, h2, h3]
 
+/-- The first thirteen cells of the fixed marker/digit prefix, in
+head-facing order (indices 0 through 12). -/
+theorem m0EvenFour_leftFrameWord :
+    (markerWord 0 ++ d0 ++ d1 ++ d1 ++ d0).take 13 =
+      [false,true,false,false,true,true,true,true,true,true,true,false,false] := by
+  decide
+
 /-- The full S1 left-facing source word after exposing the residue-four
 low blocks. The arbitrary high tail remains packaged as BinDec (L-3) q. -/
 theorem m0EvenFour_s1LeftFacing (L q a : Nat)
@@ -60,6 +67,7 @@ theorem m0EvenFour_s1LeftFacing (L q a : Nat)
     List.append_assoc]
 
 #print axioms m0EvenFour_binDec_prefix
+#print axioms m0EvenFour_leftFrameWord
 #print axioms m0EvenFour_s1LeftFacing
 
 end BB6Coverage.Agent42M0EvenResidueFourBridge
