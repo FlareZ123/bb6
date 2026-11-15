@@ -344,3 +344,12 @@ particular, neither square-gap bound has been proved for every future
 blank-root state, and no nonhalting conclusion follows. The direct next target
 is a source-exact induction or block-return argument establishing an
 all-time root-sensitive gap invariant.
+
+## 2026-11-15: common quadratic form for the leading root-gap maps
+
+A new exploratory derivation is recorded in [ProjectiveGapLyapunov.md](ProjectiveGapLyapunov.md). For Agent22's leading far-left/near-left gap matrices, the positive-definite form
+`P=[[91,64],[64,56]]` satisfies
+`AᵀPA-P = 8[[1],[4]][[1,4]]` and `2BᵀPB-3P=diag(95,30)`. Thus the far-left leading map is nondecreasing in this norm and the near-left map expands it by at least (3/2).
+
+This is **not** a root proof: exact affine corrections, the neutral direction of the far-left map, and control of the relevant individual old-ray coordinate remain open. The separate `GapScaleResidualSource.lean` scalar potential is also still outside the current source-import workflow.
+
