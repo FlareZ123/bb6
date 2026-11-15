@@ -1,11 +1,6 @@
 name: Agent43 P1 source wall telescoping theorem (targeted)
 on:
   workflow_dispatch:
-  pull_request:
-    types: [opened, ready_for_review]
-    paths:
-      - 'im-results/agent43-p1-high-cost-reset-count/WallTelescopingSource.lean'
-      - '.github/workflows/agent43-p1-wall-telescoping.yml'
 permissions:
   contents: read
 jobs:
