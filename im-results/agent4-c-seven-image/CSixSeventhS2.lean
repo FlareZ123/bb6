@@ -82,9 +82,16 @@ private theorem s2_normalizer_excluded (u v t : Nat)
       hF1x,hF1y,hF2x,hF2y,hF3x,hF3y]
   have hfinal :
       5≤W-2 ∧ (W-2)%2=1 ∧
-        ((A+14*W-12)+(W-2))%4=1 := by
-    refine ⟨?_,hF3odd,?_⟩ <;> omega
-  simp [sixEvenRightExcluded,hnorm,hfinal]
+        (((A+14*W-12)+(W-2))%4=1 ∨
+         ((A+14*W-12)+(W-2))%4=2) := by
+    refine ⟨?_,hF3odd,Or.inl ?_⟩ <;> omega
+  unfold sixEvenRightExcluded
+  change decide (5≤(sixEvenRightNormalize A B).2 ∧
+    (sixEvenRightNormalize A B).2%2=1 ∧
+    (((sixEvenRightNormalize A B).1+(sixEvenRightNormalize A B).2)%4=1 ∨
+     ((sixEvenRightNormalize A B).1+(sixEvenRightNormalize A B).2)%4=2)) = true
+  rw [hnorm]
+  exact decide_eq_true hfinal
 
 /-- The complete original-source parent classification of R.  The
     first parent is the direct P branch; the second is the unique
@@ -175,7 +182,7 @@ theorem s2_R_parents (u v t a k : Nat)
               calc
                 x+y=(2:Nat)^n*(2*(a-1)+6) := hs
                 _=(2:Nat)^n*(2*(a+2)) := by rw [hfactor]
-                _=2*((2:Nat)^n*(a+2)) := by ring
+                _=2*((2:Nat)^n*(a+2)) := by ac_rfl
             have hmod := Nat.mod_eq_zero_of_dvd hdiv
             omega
           · have haodd : a%2=1 := by omega
