@@ -671,7 +671,7 @@ theorem m0Even_residue2_q4_prefix_leftFacing
     calc
       m0EvenResidueTwoCutTape L k a b h (h-(i:Int)) =
           (s1Config L (8*k+2) 0 a 0 b h).tape (h-(i:Int)) := hcut
-      _ = sideBit (binDec (L-3) k ++ lh) (i-(3*a+10)) := hsourceCell
+      _ = sideBit (m0EvenResidueTwoSharedTail L k) (i-(3*a+10)) := hsourceCell
       _ = sideBit (m0EvenResidueTwoLeftFacing L k a) i :=
         htargetBits.symm
 
