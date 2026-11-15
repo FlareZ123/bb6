@@ -79,7 +79,6 @@ theorem exceptional_EA_all_reentry (t q : Nat) (hq : 2 ≤ q) :
         BB6.Agent2AP2PacketBoundary.input k 0 r := by
       simp [c,k,r,BB6.Agent2AP2PacketBoundary.input,
         BB6.Agent2AP2PacketBoundary.fixedTail,
-        BB6.Agent2PacketOneReentry.fixedTail,
         packet,word,fixedTail,hk,hr]
     have hAP2 :=
       BB6.Agent2AP2PacketBoundary.a_p2_packet_reentry k 0 r
@@ -178,8 +177,8 @@ theorem exceptional_EE_all_reentry_or_reset (u q : Nat) (hq : 3 ≤ q) :
         packet,word,CryptidBoundary.packetThree,
         BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs] using hEE0
     have ha : c.a ≥ 4 := by
-    change 4 ≤ 192*u+161
-    omega
+      dsimp [c]
+      omega
     have hp : c.p % 3 = 2 := by
       dsimp [c]
       omega
