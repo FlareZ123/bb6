@@ -71,14 +71,14 @@ theorem source_orbit_last_reset (n a b : Nat)
             change (BB429Burst.firstRun k (0,0)).bind BB429Burst.firstStep =
               some (2*x+3,y-2*x-3)
             rw [hk]
-            simp [BB429Burst.firstStep]
+            simp [BB429Burst.firstStep, hfirst] <;> omega
           · apply Or.inr
             refine ⟨i,x0,y0,u,w,k+1,?_ ,hr,hnot,hreset,heven,?_⟩
             · omega
             · change (BB429Burst.firstRun k (u,w)).bind BB429Burst.firstStep =
                 some (2*x+3,y-2*x-3)
               rw [hprefix]
-              simp [BB429Burst.firstStep]
+              simp [BB429Burst.firstStep, hfirst] <;> omega
         · have hnot : y < 2*x+3 := by omega
           have heven : b%2=0 := exit_even x y a b hnot h
           exact Or.inr ⟨n,x,y,a,b,0,by omega,hp,hnot,h,heven,rfl⟩
