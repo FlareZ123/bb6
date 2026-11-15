@@ -353,11 +353,33 @@ private theorem m1EvenResidueFour_q4_prefix_far_tail
     (h+1+(i:Int)) hin]
   exact m1EvenResidueFour_q4_prefix_far_tail a b h ha i hi
 
+private theorem m1EvenResidueFour_q4RightShape_congr
+    (T U : Int → Bool) (h : Int) (b : Nat)
+    (heq : ∀ x, h ≤ x → T x = U x)
+    (hT : q4RightShape T h b) :
+    q4RightShape U h b := by
+  unfold q4RightShape at *
+  rcases hT with ⟨h0,h5,h6,h79,hzero⟩
+  refine ⟨?_,?_,?_,?_,?_⟩
+  · intro i hi
+    rw [← heq (h+(i:Int)) (by omega)]
+    exact h0 i hi
+  · rw [← heq (h+5) (by omega)]
+    exact h5
+  · rw [← heq (h+6) (by omega)]
+    exact h6
+  · intro i hi
+    rw [← heq (h+7+(i:Int)) (by omega)]
+    exact h79 i hi
+  · intro i hi
+    rw [← heq (h+10+(3*b:Int)+(i:Int)) (by omega)]
+    exact hzero i hi
+
 private theorem m1EvenResidueFour_q4_prefix_rightShape
     (L k a b : Nat) (h : Int)
     (hL : 3 ≤ L) (hbound : 8*k+4 < 2^L) (ha : 0<a) :
     q4RightShape (m1EvenResidueFourLiftedCutTape L k a b h) h b := by
-  apply q4RightShape_congr
+  apply m1EvenResidueFour_q4RightShape_congr
     (m1EvenResidueFourCutTape a b h)
     (m1EvenResidueFourLiftedCutTape L k a b h) h b
   · intro x hx
@@ -427,7 +449,7 @@ including the all-ones drain. -/
 theorem m1EvenResidueFour_increment_cost_closed (k a b : Nat) :
     proposedIncrementCost 1 (8*k+4) a b + 9*b =
       6*4^b + 42*2^b + 12*a + 43 := by
-  rw [proposedIncrementCost_decomp,
+  rw [proposedIncrementCost_decomp 1 (8*k+4) a b,
     m1EvenResidueFour_resetPrefixCost_eq]
   have h := drainCost_binary_additive b
   omega
@@ -476,7 +498,9 @@ theorem m1EvenResidueFour_counted_increment_source
     (s1Config L (8*k+4) 1 a 0 b h)
     (resetPrefixCost 1 (8*k+4) a b)
     hp (by simpa [resetDelta] using hboundDrain)
-  simpa [proposedIncrementCost_decomp] using hrun
+  rw [proposedIncrementCost_decomp 1 (8*k+4) a b,
+    m1EvenResidueFour_resetPrefixCost_eq]
+  exact hrun
 
 #print axioms m1EvenResidueFour_binDec_residue4
 #print axioms m1EvenResidueFour_binDec_residue3
