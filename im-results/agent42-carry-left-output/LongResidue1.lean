@@ -360,8 +360,14 @@ theorem carryLongPrefix_r1_full (k : Nat) (T : Int → Bool)
         hrunGen.symm
       _ = some ⟨4,7,Tleft⟩ := hrunLeft
   cases hconf
+  exact ⟨Tgen,hrunGen,h1,h2,h3,h4,h5,h6,hout,hleft⟩
 
 #print axioms carryLongPrefix_r1_left
+#print axioms counted_left_sweep
+#print axioms run_frame
+#print axioms carryLeftSweep_marked
+#print axioms carryBridge3
+#print axioms carryAD12
 
 
 /-- Spatially translate the complete residue-one prefix theorem. This is
@@ -386,7 +392,6 @@ theorem carryLongPrefix_r1_shifted (k : Nat) (T : Int → Bool) (h : Int)
     change (⟨4,(7:Int)+h,fun x => T' (x-h)⟩ : Config) =
       ⟨4,h+7,Tpre⟩
     rw [show (7:Int)+h = h+7 by omega]
-    rfl
   have hrunShift :
       run tm2 (15+12*(4*k+1)) (shiftConfig h ⟨3,0,T⟩) =
         some ⟨4,h+7,Tpre⟩ := by
