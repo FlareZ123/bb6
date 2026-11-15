@@ -1,29 +1,28 @@
 # Two-parameter inverse-kernel sieve for last-reset branches 1–7
 
-**Status: intermediate computational research, not a formal result.** This directory records a reproducible reduction of the seven constant-seed last-reset cases. The source-level last-reset characterization is formalized elsewhere; the two-parameter affine certificate used here is currently a JavaScript/BigInt generalization of the one-parameter Lean kernel and still needs a Lean proof.
+**Status: intermediate computational research, not a formal result.** This dossier records a reproducible reduction of the seven constant-seed last-reset cases. The source-level last-reset characterization is formalized elsewhere; the two-parameter affine certificate used here is currently a JavaScript generalization of the one-parameter Lean kernel and still needs a Lean soundness proof.
 
-## What this computes
+## Basis
 
-The input is the exact last-reset equation and branch split in:
+- Exact source-level last-reset characterization: \`im-results/agent32-429-turnaround-gap/BB429LastResetEquation.lean\`
+- Existing one-parameter inverse kernel and terminal root predicates: \`im-results/agent1-429-root-rows/BB429InverseKernelExtended.lean\`
 
-- \`im-results/agent32-429-turnaround-gap/BB429LastResetEquation.lean\`
-- the one-parameter inverse kernel and its terminal root predicates in \`im-results/agent1-429-root-rows/BB429InverseKernelExtended.lean\`
-
-The prototype lifts the latter kernel from
+The prototype lifts
 \[
 (u,w)=(Aq+a,\;Bq+b)
 \]
-to two independent nonnegative parameters:
+to
 \[
-(u,w)=(A_1q_1+A_2q_2+a,\;B_1q_1+B_2q_2+b).
+(u,w)=(A_1q_1+A_2q_2+a,\;B_1q_1+B_2q_2+b),
+\qquad q_1,q_2\in\mathbb N.
 \]
-The inverse transformations are applied coefficientwise. A family is marked *excluded* only when every inverse path reaches one of the same terminal root obstructions used by the existing kernel within depth 14. A family not excluded by this bounded procedure is **unresolved**, not reachable.
+The inverse transformations F/S/E are applied coefficientwise. A family is marked *excluded* only when every inverse path reaches one of the existing terminal root obstructions within the specified depth. A family not excluded by this bounded procedure is **unresolved**, not reachable.
 
-The terminal predicates mirror the current \`BB429InverseKernelExtended.lean\` implementation: the mod-8 reachable-pair table, positive-even mod-8 restriction, and the established mod-16/mod-32 low-row obstructions. The script deliberately does not add unverified root lemmas.
+The terminal predicates mirror the current \`BB429InverseKernelExtended.lean\` implementation: the mod-8 reachable-pair table, positive-even mod-8 restriction, and established mod-16/mod-32 low-row obstructions. No unverified root lemmas are added.
 
-## Exact family parametrizations
+## Exact last-reset branch equations
 
-Write the last-reset prestate as \((x,y)\), and let \(n\ge18\) be the reset burst length. The seven cases are:
+Write the last-reset prestate as \((x,y)\), with burst length \(n\ge18\). The seven cases are:
 
 | Branch | Prestate shape | \(n\bmod4\) | Exact equation |
 |---:|---|---:|---|
@@ -35,11 +34,13 @@ Write the last-reset prestate as \((x,y)\), and let \(n\ge18\) be the reset burs
 | 6 | \(y=2(x-d),\ d=2e+1,\ e\ge1\) | 1 | \(4x=3\cdot2^{n+2}+4e-3n-21\) |
 | 7 | \(y=2x-3\) | 3 | \(4x=3\cdot2^{n+2}-3n-15\) |
 
+## Affine family coverage
+
 ### Branches 1–4 and 7: burst quotient plus residue split
 
 Put \(n=4t+3\) for branches 1 and 7, and \(n=4t+1\) for branches 2–4. The lower bounds are respectively \(t\ge4\) and \(t\ge5\).
 
-For a split width \(k\), write
+For split width \(k\), write
 \[
 t=t_0+r+2^k s,\qquad 0\le r<2^k,\quad s\ge0,
 \]
@@ -47,11 +48,11 @@ where \(t_0=4\) or \(5\). Set
 \[
 Q=256^{\,2^k s}-s-1\ge0.
 \]
-For the relevant branch constants \(K\) and \(c\), each prestate is in the two-parameter affine family
+Then every prestate in the branch belongs to the two-parameter affine family
 \[
 x=CQ+(C-3\cdot2^k)s+a,\qquad y=2x+c,
 \]
-with
+where
 \[
 C=K\,256^{t_0+r},\qquad a=C-3(t_0+r)-h.
 \]
@@ -64,59 +65,69 @@ C=K\,256^{t_0+r},\qquad a=C-3(t_0+r)-h.
 | 4 | 6 | 6 | -2 |
 | 7 | 24 | 6 | -3 |
 
-The family coefficients are therefore
+Thus
 \[
 (A_1,A_2,a)=(C,\ C-3\cdot2^k,\ a),\qquad
 (B_1,B_2,b)=(2C,\ 2(C-3\cdot2^k),\ 2a+c).
 \]
-This is an over-approximation because \(Q\) and \(s\) are treated as independent nonnegative parameters. Every actual \(n\) in the branch is nevertheless covered.
+This is an over-approximation because \(Q\) and \(s\) are treated as independent nonnegative parameters. Every actual \(n\) in the branch is covered.
 
 ### Branches 5 and 6: split the half-gap and burst residue
 
-Write \(n=4t+1\), \(t\ge5\), and let \(d=2e\) in branch 5 or \(d=2e+1\) in branch 6, with \(e\ge1\). Define
-\[
-r=\begin{cases}
-x-d,&\text{branch 5},\\
-x-d,&\text{branch 6}.
-\end{cases}
-\]
-Then \(y=2r\), and \(x=r+2e\) in branch 5, \(x=r+2e+1\) in branch 6.
+Write \(n=4t+1\), \(t\ge5\), and let \(d=2e\) in branch 5 or \(d=2e+1\) in branch 6, with \(e\ge1\). Put \(r=y/2\). Then \(x=r+2e\) in branch 5 and \(x=r+2e+1\) in branch 6.
 
 For split width \(k\), write
 \[
-t=t_0+2^k s,\quad t_0=5+r_t,\quad
+t=t_0+2^k s,\quad t_0=5+r_t,\qquad
 e=e_0+2^k p,\quad 1\le e_0\le2^k.
 \]
-Since \(256^t\equiv0\pmod{2^k}\),
+Let \(r_0\) be the least residue modulo \(2^k\) of
 \[
-r\equiv -3t_0-9-e_0\pmod{2^k}
+28\cdot256^{t_0}-3t_0-9-e_0
 \]
-in branch 5, and
+in branch 5, or
 \[
-r\equiv -3t_0-7-e_0\pmod{2^k}
+6\cdot256^{t_0}-3t_0-7-e_0
 \]
-in branch 6. Let \(r_0\) be the least nonnegative residue and write \(r=r_0+2^kq\), \(q\ge0\). The resulting affine families are
+in branch 6. Since \(r\ge0\), write \(r=r_0+2^kq\), \(q\ge0\). The resulting affine families are
 \[
 x=2^kq+2^{k+1}p+r_0+2e_0+\delta,\qquad
 y=2^{k+1}q+2r_0,
 \]
-where \(\delta=0\) in branch 5 and \(\delta=1\) in branch 6. This covers every admissible \(t,e\), while again allowing the quotient parameters \(q,p\) to vary independently.
+where \(\delta=0\) in branch 5 and \(\delta=1\) in branch 6. This covers every admissible \(t,e\), while allowing the quotient parameters \(q,p\) to vary independently.
 
-## Current bounded-sieve counts
+## Current bounded-sieve output
 
-The script uses inverse depth 14 and exact JavaScript \`BigInt\` arithmetic.
+### Branches 1–4 and 7
 
-| Branch | Split width \(k\) | Affine families | Excluded by the prototype | Unresolved |
-|---:|---:|---:|---:|---:|
-| 1 | 12 | 4,096 | 4,034 | 62 |
-| 2 | 12 | 4,096 | 4,046 | 50 |
-| 3 | 12 | 4,096 | 4,038 | 58 |
-| 4 | 12 | 4,096 | 4,042 | 54 |
-| 5 | 9 | 262,144 | 247,936 | 14,208 |
-| 6 | 9 | 262,144 | 249,685 | 12,459 |
-| 7 | 12 | 4,096 | 4,044 | 52 |
+These use a staged refinement:
+1. Split \(t\) modulo \(2^{14}\) and run depth 14.
+2. For each unresolved first-stage residue, split its four lifts modulo \(2^{16}\) and run depth 16.
 
-These are counts of affine parameter families, not counts of machines or reachable states. In particular, the branch-5/6 parameter grid has two residue parameters, whereas the other five branches have one.
+| Branch | Stage-1 families | Stage-1 excluded | Stage-1 unresolved | Stage-2 child families | Stage-2 excluded | Stage-2 unresolved |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 16,384 | 16,278 | 106 | 424 | 424 | 0 |
+| 2 | 16,384 | 16,298 | 86 | 344 | 344 | 0 |
+| 3 | 16,384 | 16,270 | 114 | 456 | 456 | 0 |
+| 4 | 16,384 | 16,276 | 108 | 432 | 432 | 0 |
+| 7 | 16,384 | 16,296 | 88 | 352 | 352 | 0 |
+
+Thus the JS prototype discharges all five of these branches at the staged bounded depth. This remains conditional on formalizing the two-parameter kernel.
+
+The long-burst implementation uses 96-bit residues. Each inverse step loses at most two precision bits; after 16 steps at least 64 bits remain, while every terminal predicate inspects at most 32 bits. The \`large\` flag is also justified throughout: the smallest initial affine constant is branch 1 at \(t=4\), \(24\cdot256^4-22>2^{36}\). Along F, the first coordinate changes to \((a-3)/2\); along S/E it changes to \(a+b/4-O(1)\), with \(b\ge0\). Even 16 consecutive F steps leave it above \(2^{20}\), so all depth-16 uses of \(a\ge13\) and \(a>0\) are valid.
+
+For \(t\ge12\), each coefficient \(K\cdot256^t\) is divisible by \(2^{96}\), so replacing it by zero in the 96-bit residue representation is exact. For \(t<12\), the script computes the exact residue.
+
+### Branches 5 and 6
+
+These use exact BigInt arithmetic, split \(t,e\) modulo \(2^9\), and inverse depth 14.
+
+| Branch | Affine families | Excluded by prototype | Unresolved |
+|---:|---:|---:|---:|
+| 5 | 262,144 | 247,936 | 14,208 |
+| 6 | 262,144 | 249,685 | 12,459 |
+
+The branch-5/6 grid has two residue parameters, so its family counts are not directly comparable to the one-residue grids above.
 
 ## Reproduction
 
@@ -126,21 +137,24 @@ Run with Node.js:
 node im-results/agent32-429-last-reset-affine2/affine2_sieve.mjs > affine2-sieve-output.json
 \`\`\`
 
-Environment variables can change the inverse depth and split widths:
-- \`DEPTH\` (default 14)
-- \`LONG_BITS\` (default 12; branches 1–4 and 7)
+Environment variables:
+- \`LONG_BITS\` (default 14; first-stage split for branches 1–4 and 7)
+- \`LONG_DEPTH\` (default 14)
+- \`LONG_CHILD_BITS\` (default 16)
+- \`LONG_CHILD_DEPTH\` (default 16)
 - \`GAP_BITS\` (default 9; branches 5 and 6)
+- \`GAP_DEPTH\` (default 14)
 
-The output includes every unresolved residue offset/pair, so later work can target only the remaining families.
+The output includes all unresolved first-stage offsets, child offsets, and branch-5/6 parameter pairs.
 
 ## What is and is not established
 
 1. The seven algebraic branch equations are transcribed from the formal last-reset characterization.
-2. The affine parametrizations above cover the corresponding branch families exactly (the inverse sieve then deliberately over-approximates by freeing quotient parameters).
-3. The numerical exclusion counts are reproducible computational evidence from this JavaScript port.
-4. **No new Lean theorem is claimed here.** In particular, the two-parameter analogue of \`cert_sound\` has not yet been proved. Until that generalization is formalized and compiled, the table is a research sieve, not a proof that the excluded families are unreachable.
-5. The unresolved families are not asserted to be reachable. They are simply not discharged by this depth-14 certificate.
+2. The affine parametrizations above cover the corresponding branch families exactly; the inverse sieve then deliberately over-approximates by freeing quotient parameters.
+3. The staged exclusion counts are reproducible computational evidence from the JavaScript prototype.
+4. **No new Lean theorem is claimed here.** In particular, the two-parameter analogue of \`cert_sound\` has not yet been proved. Until that generalization is formalized and compiled, the five-branch discharge and the branch-5/6 exclusion counts are not proven non-reachability results.
+5. The unresolved branch-5/6 families are not asserted reachable. They are simply not discharged by this bounded certificate.
 
 ## Highest-value next step
 
-Generalize the existing \`Affine\`/ \`cert_sound\` development in \`BB429InverseKernelExtended.lean\` to a finite coefficient vector (or at least \`Affine2\`), prove the coefficientwise F/S/E equations and the corresponding soundness theorem, then replay the exact family tables in Lean. After that, spend inverse depth and stronger root obstructions only on the unresolved offsets/pairs emitted by this script. Branches 5 and 6 are the largest remaining workload.
+Generalize the existing \`Affine\`/\`cert_sound\` development in \`BB429InverseKernelExtended.lean\` to a finite coefficient vector (or at least \`Affine2\`), prove the coefficientwise F/S/E equations and the corresponding soundness theorem, then replay the exact family tables in Lean. Once the five-branch discharge is formal, spend inverse depth and stronger root obstructions only on branches 5 and 6 and their emitted unresolved pairs.
