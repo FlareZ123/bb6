@@ -50,13 +50,13 @@ Both use two successive `odd_back` decompositions. For row 9/5, both second-pred
 [BB429LastResetRow95.lean](BB429LastResetRow95.lean) composes these root obstructions with the exact branch-10 last-reset prestate equation. It excludes the following refined residue progressions:
 
 - Eight pairs `(n mod 64,d mod 32)=(7,7),(15,19),(23,31),(31,11),(39,23),(47,3),(55,15),(63,27)`, which force `x mod 16=9` and `y mod 8=5`.
-- Five pairs `(n mod 64,d mod 32)=(35,25),(3,9),(11,21),(19,1),(27,13)`, which force `x mod 32=13` and `y mod 8=1`.
+- Eight pairs `(n mod 128,d mod 32)=(19,1),(27,13),(35,25),(67,9),(75,21),(107,5),(115,17),(123,29)`, which force `x mod 32=13` and `y mod 8=1`.
 
 The lower bound `x≥33` follows uniformly from `9(3n+77)≤2^(n+2)(d+6)` for `n≥18,d≥3`. [SourceLastResetRow95.lean](../agent6-harmonic429/SourceLastResetRow95.lean) transports both families to the original Cryptids `sourceRun` semantics through `BB429SourceMod16.source_run_to_local`.
 
 The same two root obstructions have been added as terminal bad states in `BB429KernelExtended.Bad`, so the existing affine inverse-tree certificate can use them at arbitrary recursion depth. This is a reusable strengthening of the certificate engine, not yet a new machine decision.
 
-The new 13 refined lifts are only the additions in this branch. The complementary eight lifts and 12 earlier whole-class exclusions remain on the separate draft PR #102 branch; those modules are not yet integrated here. Agent 1's full residue audit reports 16 complete long-burst parameter classes eliminated and 28 remaining classes / 112 of 176 refined lifts. This is a finite modular classification of necessary-condition rows, not a proportion of machines or a #429 decision.
+The new 16 refined lifts (eight row-9/5 and eight row-13/1) are only the additions in this branch. The complementary eight lifts and 12 earlier whole-class exclusions remain on the separate draft PR #102 branch; those modules are not yet integrated here. Agent 1's full residue audit reports 16 complete long-burst parameter classes eliminated and 28 remaining classes / 112 of 176 refined lifts. This is a finite modular classification of necessary-condition rows, not a proportion of machines or a #429 decision.
 
 **Verification status:** the root-row workflow's earlier run 43714798173 failed on an argument-strength mismatch at `BB429RootOddRowsStrong.lean:26`; Agent 1 corrected that argument, but no fresh successful source CI is recorded. The new `rooted_not_13_1` theorem, both last-reset consumers, and the modified inverse-kernel certificate have not been locally compiled or source-CI checked. The next discriminating test is a local Lean 4.36.0-rc2 compile of the changed dependency closure, followed by one pinned source-chain check and transitive `#print axioms` audit. Do not treat these draft integrations as source-certified.
 
