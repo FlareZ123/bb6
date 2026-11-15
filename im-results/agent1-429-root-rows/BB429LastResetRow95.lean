@@ -81,9 +81,13 @@ theorem branch10_not_9_5_lifts_unreachable (n d x y : Nat)
     simpa [t] using hxt
   have hx9 : x%16=9 := by
     rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
       ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
   have hy5 : y%8=5 := by
     rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
       ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
   exact BB429RootOddRowsStrong.rooted_not_9_5 x y hr hxlarge hx9 hy5
 
@@ -103,20 +107,28 @@ private theorem branch10_reduced_equation_128 (n d x : Nat)
     _ = 128*(2^(n-5)*(d+6))+2*d := by simp [Nat.mul_assoc]
 
 /--
-Eight additional branch-10 refined lifts force x ≡ 13 (mod 32),
+Sixteen additional branch-10 refined lifts force x ≡ 13 (mod 32),
 y ≡ 1 (mod 8), which is forbidden by the new two-step root lemma.
 -/
 theorem branch10_13_1_lifts_unreachable (n d x y : Nat)
     (hn : 18 ≤ n) (hd : 3 ≤ d) (hdx : d ≤ x)
     (hcase :
-      (n%128=19 ∧ d%32=1) ∨
-      (n%128=27 ∧ d%32=13) ∨
-      (n%128=35 ∧ d%32=25) ∨
-      (n%128=67 ∧ d%32=9) ∨
-      (n%128=75 ∧ d%32=21) ∨
-      (n%128=107 ∧ d%32=5) ∨
-      (n%128=115 ∧ d%32=17) ∨
-      (n%128=123 ∧ d%32=29))
+      (n%128=3 ∧ d%64=41) ∨
+      (n%128=11 ∧ d%64=53) ∨
+      (n%128=19 ∧ d%64=1) ∨
+      (n%128=27 ∧ d%64=13) ∨
+      (n%128=35 ∧ d%64=25) ∨
+      (n%128=43 ∧ d%64=37) ∨
+      (n%128=51 ∧ d%64=49) ∨
+      (n%128=59 ∧ d%64=61) ∨
+      (n%128=67 ∧ d%64=9) ∨
+      (n%128=75 ∧ d%64=21) ∨
+      (n%128=83 ∧ d%64=33) ∨
+      (n%128=91 ∧ d%64=45) ∨
+      (n%128=99 ∧ d%64=57) ∨
+      (n%128=107 ∧ d%64=5) ∨
+      (n%128=115 ∧ d%64=17) ∨
+      (n%128=123 ∧ d%64=29))
     (hx : 4*x+3*n+21 = 2^(n+2)*(d+6)+2*d)
     (hy : y=2*(x-d)+1)
     (hr : Reach x y) : False := by
@@ -132,30 +144,42 @@ theorem branch10_13_1_lifts_unreachable (n d x y : Nat)
   have hxt' : 4*x+3*n+21 = 128*t+2*d := by
     simpa [t] using hxt
   have hx13 : x%32=13 := by
-    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
-      ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
+    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
   have hy1 : y%8=1 := by
-    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
-      ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
+    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
   exact BB429RootOddRowsStrong.rooted_not_13_1 x y hr hxlarge hx13 hy1
 
 #print axioms branch10_13_1_lifts_unreachable
 
 /--
-Eight further branch-10 refined lifts force x ≡ 5 (mod 32), y ≡ 1
+Sixteen further branch-10 refined lifts force x ≡ 5 (mod 32), y ≡ 1
 (mod 8); the three-step inverse obstruction rules them out.
 -/
 theorem branch10_5_1_lifts_unreachable (n d x y : Nat)
     (hn : 18 ≤ n) (hd : 3 ≤ d) (hdx : d ≤ x)
     (hcase :
-      (n%128=3 ∧ d%32=25) ∨
-      (n%128=35 ∧ d%32=9) ∨
-      (n%128=43 ∧ d%32=21) ∨
-      (n%128=75 ∧ d%32=5) ∨
-      (n%128=83 ∧ d%32=17) ∨
-      (n%128=91 ∧ d%32=29) ∨
-      (n%128=115 ∧ d%32=1) ∨
-      (n%128=123 ∧ d%32=13))
+      (n%128=3 ∧ d%64=25) ∨
+      (n%128=11 ∧ d%64=37) ∨
+      (n%128=19 ∧ d%64=49) ∨
+      (n%128=27 ∧ d%64=61) ∨
+      (n%128=35 ∧ d%64=9) ∨
+      (n%128=43 ∧ d%64=21) ∨
+      (n%128=51 ∧ d%64=33) ∨
+      (n%128=59 ∧ d%64=45) ∨
+      (n%128=67 ∧ d%64=57) ∨
+      (n%128=75 ∧ d%64=5) ∨
+      (n%128=83 ∧ d%64=17) ∨
+      (n%128=91 ∧ d%64=29) ∨
+      (n%128=99 ∧ d%64=41) ∨
+      (n%128=107 ∧ d%64=53) ∨
+      (n%128=115 ∧ d%64=1) ∨
+      (n%128=123 ∧ d%64=13))
     (hx : 4*x+3*n+21 = 2^(n+2)*(d+6)+2*d)
     (hy : y=2*(x-d)+1)
     (hr : Reach x y) : False := by
@@ -171,11 +195,15 @@ theorem branch10_5_1_lifts_unreachable (n d x y : Nat)
   have hxt' : 4*x+3*n+21 = 128*t+2*d := by
     simpa [t] using hxt
   have hx5 : x%32=5 := by
-    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
-      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
+    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
   have hy1 : y%8=1 := by
-    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
-      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
+    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
   exact BB429RootOddRowsStrong.rooted_not_5_1 x y hr hxlarge hx5 hy1
 
 #print axioms branch10_5_1_lifts_unreachable
