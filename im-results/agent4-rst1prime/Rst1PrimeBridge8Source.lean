@@ -55,7 +55,7 @@ theorem s1Config_left_after_d1pow
   simp only [s1LeftFacing,binDec_zero]
   simp only [List.append_assoc]
   rw [sideBit_append_right (d1pow a)
-    (markerWord 1 ++ d0 ++ d1pow L ++ lh) (3*a+1+k)
+    (markerWord 1 ++ (d0 ++ (d1pow L ++ lh))) (3*a+1+k)
     (by simp [d1pow_length]; omega)]
   simp [d1pow_length]
 
