@@ -184,7 +184,7 @@ theorem m0EvenFourteen_q4_prefix_head_bound
       apply config_ext_by_fields
       · simp [frameAt_state,m0EvenFourteenBridgeEnd]
       · simp [frameAt_head,m0EvenFourteenBridgeEnd] <;> omega
-      · simp [m0EvenFourteenQ4CutTape,T,N,T1,hN]
+      · simp [m0EvenFourteenQ4CutTape,T,N,T1,hN,T2]
     rw [hframeConfig] at hBridge
     exact hBridge
   have hlinear : linearRightOnes T2 (hN+3) (3*(a-1)) := by
