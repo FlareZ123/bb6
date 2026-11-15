@@ -110,23 +110,30 @@ theorem binDec_residue1 (L k : Nat) (hL : 3 ≤ L)
   rw [h1,h2,h3]
   simp [List.append_assoc]
 
-/-- The fixed source prefix before the higher-order input tail. -/
+/-- The finite source prefix ends at the last cell in the readable half-line.
+The remaining two-cell d0 tail is split as a common four-one suffix. -/
 def m0EvenResidueTwoInputPrefix (a : Nat) : List Bool :=
-  d1pow a ++ markerWord 0 ++ d0 ++ d1 ++ d0 ++ d1
+  d1pow a ++ markerWord 0 ++ d0 ++ d1 ++ [false,false]
 
-/-- The corresponding fixed target prefix after the q4 suffix. -/
+/-- The finite target prefix ends at the same half-line boundary. -/
 def m0EvenResidueTwoTargetPrefix (a : Nat) : List Bool :=
-  [true] ++ d1pow (a-1) ++ markerWord 2 ++ d0 ++ d0 ++ d1 ++ d1
+  [true] ++ d1pow (a-1) ++ markerWord 2 ++ d0 ++ d0 ++ [true,true]
+
+/-- The exact four-one bridge between the finite prefix and the untouched
+higher-order BinDec tail is common to source and target. -/
+def m0EvenResidueTwoSharedTail (L k : Nat) : List Bool :=
+  [true] ++ d1 ++ binDec (L-3) k ++ lh
 
 def m0EvenResidueTwoLeftFacing (L k a : Nat) : List Bool :=
-  m0EvenResidueTwoTargetPrefix a ++ (binDec (L-3) k ++ lh)
+  m0EvenResidueTwoTargetPrefix a ++ m0EvenResidueTwoSharedTail L k
 
 private theorem m0EvenResidueTwo_inputPrefix_length (a : Nat) :
     (m0EvenResidueTwoInputPrefix a).length = 3*a+10 := by
   simp [m0EvenResidueTwoInputPrefix,d1pow_length,markerWord,d0,d1]
   omega
 
-private theorem m0EvenResidueTwo_targetPrefix_length (a : Nat) :
+private theorem m0EvenResidueTwo_targetPrefix_length (a : Nat)
+    (ha : 0 < a) :
     (m0EvenResidueTwoTargetPrefix a).length = 3*a+10 := by
   simp [m0EvenResidueTwoTargetPrefix,d1pow_length,markerWord,d0,d1]
   omega
@@ -134,23 +141,26 @@ private theorem m0EvenResidueTwo_targetPrefix_length (a : Nat) :
 private theorem m0EvenResidueTwo_source_left
     (L k a : Nat) (hL : 3 ≤ L) (hbound : 8*k+2 < 2^L) :
     s1LeftFacing L (8*k+2) 0 a 0 =
-      m0EvenResidueTwoInputPrefix a ++ (binDec (L-3) k ++ lh) := by
+      m0EvenResidueTwoInputPrefix a ++ m0EvenResidueTwoSharedTail L k := by
   have hbin := binDec_residue2 L k hL hbound
   unfold s1LeftFacing
   rw [hbin]
-  simp [m0EvenResidueTwoInputPrefix,List.append_assoc]
+  simp [m0EvenResidueTwoInputPrefix,m0EvenResidueTwoSharedTail,
+    d0,d1,List.append_assoc]
 
 private theorem m0EvenResidueTwo_base_input_left (a : Nat) :
     s1LeftFacing 3 2 0 a 0 =
-      m0EvenResidueTwoInputPrefix a ++ lh := by
+      m0EvenResidueTwoInputPrefix a ++ m0EvenResidueTwoSharedTail 3 0 := by
   simp [s1LeftFacing,m0EvenResidueTwoInputPrefix,
-    m0Even_binDec_three_two,List.append_assoc]
+    m0EvenResidueTwoSharedTail,m0Even_binDec_three_two,
+    d0,d1,List.append_assoc]
 
 private theorem m0EvenResidueTwo_base_target_left (a : Nat) :
     m0EvenQ4LeftFacing a =
-      m0EvenResidueTwoTargetPrefix a ++ lh := by
+      m0EvenResidueTwoTargetPrefix a ++ m0EvenResidueTwoSharedTail 3 0 := by
   simp [m0EvenQ4LeftFacing,m0EvenResidueTwoTargetPrefix,
-    m0Even_binDec_three_one,List.append_assoc]
+    m0EvenResidueTwoSharedTail,m0Even_binDec_three_one,
+    d0,d1,List.append_assoc]
 
 /-- The extra binary tail begins strictly to the left of the readable
 half-line used by the fixed n=2 source prefix. -/
@@ -187,9 +197,11 @@ private theorem m0EvenResidueTwo_input_matches
     rw [hsource] at hsrcCell
     rw [hbase] at hbaseCell
     have hsrcBit := Agent6Q4Prefix.sideBit_append_left
-      (m0EvenResidueTwoInputPrefix a) (binDec (L-3) k ++ lh) i hidx
+      (m0EvenResidueTwoInputPrefix a)
+      (m0EvenResidueTwoSharedTail L k) i hidx
     have hbaseBit := Agent6Q4Prefix.sideBit_append_left
-      (m0EvenResidueTwoInputPrefix a) lh i hidx
+      (m0EvenResidueTwoInputPrefix a)
+      (m0EvenResidueTwoSharedTail 3 0) i hidx
     rw [hsrcBit] at hsrcCell
     rw [hbaseBit] at hbaseCell
     exact hsrcCell.trans hbaseCell.symm
@@ -619,12 +631,16 @@ theorem m0Even_residue2_q4_prefix_leftFacing
           sideBit (m0EvenResidueTwoLeftFacing L k a) i := by
       rw [m0EvenResidueTwo_base_target_left,
         m0EvenResidueTwoLeftFacing]
-      have hlen := m0EvenResidueTwo_targetPrefix_length a
-      rw [Agent6Q4Prefix.sideBit_append_left
-        (m0EvenResidueTwoTargetPrefix a) lh i (by omega)]
+      have hlen := m0EvenResidueTwo_targetPrefix_length a ha
+      have hiPrefix : i < (m0EvenResidueTwoTargetPrefix a).length := by
+        rw [hlen]
+        omega
       rw [Agent6Q4Prefix.sideBit_append_left
         (m0EvenResidueTwoTargetPrefix a)
-        (binDec (L-3) k ++ lh) i (by omega)]
+        (m0EvenResidueTwoSharedTail 3 0) i hiPrefix]
+      rw [Agent6Q4Prefix.sideBit_append_left
+        (m0EvenResidueTwoTargetPrefix a)
+        (m0EvenResidueTwoSharedTail L k) i hiPrefix]
     exact hcut.trans (hbase.trans hbaseBits)
   · have hout : m0EvenResidueTwoInside a h (h-(i:Int)) = false := by
       simp [m0EvenResidueTwoInside]
@@ -635,21 +651,21 @@ theorem m0Even_residue2_q4_prefix_leftFacing
       s1Config_left_cell L (8*k+2) 0 a 0 b h i
     have hsourceBits :
         sideBit (s1LeftFacing L (8*k+2) 0 a 0) i =
-          sideBit (binDec (L-3) k ++ lh) (i-(3*a+10)) := by
+          sideBit (m0EvenResidueTwoSharedTail L k) (i-(3*a+10)) := by
       rw [m0EvenResidueTwo_source_left L k a hL hbound]
       rw [Agent6Q4Prefix.sideBit_append_right
         (m0EvenResidueTwoInputPrefix a)
-        (binDec (L-3) k ++ lh) i (by
+        (m0EvenResidueTwoSharedTail L k) i (by
           rw [m0EvenResidueTwo_inputPrefix_length]
           omega)]
     have htargetBits :
         sideBit (m0EvenResidueTwoLeftFacing L k a) i =
-          sideBit (binDec (L-3) k ++ lh) (i-(3*a+10)) := by
+          sideBit (m0EvenResidueTwoSharedTail L k) (i-(3*a+10)) := by
       rw [m0EvenResidueTwoLeftFacing]
       rw [Agent6Q4Prefix.sideBit_append_right
         (m0EvenResidueTwoTargetPrefix a)
-        (binDec (L-3) k ++ lh) i (by
-          rw [m0EvenResidueTwo_targetPrefix_length]
+        (m0EvenResidueTwoSharedTail L k) i (by
+          rw [m0EvenResidueTwo_targetPrefix_length a ha]
           omega)]
     rw [hsourceBits] at hsourceCell
     calc
