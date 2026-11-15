@@ -355,7 +355,7 @@ private theorem m2EvenSixteenQ4CutTape_leftFacing (a b : Nat) (h : Int)
           (h-(i:Int))-(h-((3*a+2:Int))) =
             ((3*a+2-i : Nat) : Int) := by omega
       have hout : m2EvenSixteenQ4Inside
-          ((h-(i:Int))-(h-((3*a+2:Int))) = false := by
+          ((h-(i:Int))-(h-((3*a+2:Int)))) = false := by
         simp [m2EvenSixteenQ4Inside,hrel]
         omega
       have hcut := m2EvenSixteenQ4CutTape_eq_swept a b h (h-(i:Int)) hout
@@ -374,7 +374,7 @@ private theorem m2EvenSixteenQ4CutTape_leftFacing (a b : Nat) (h : Int)
           dsimp [j]
           omega
         have hin : m2EvenSixteenQ4Inside
-            ((h-(i:Int))-(h-((3*a+2:Int))) = true := by
+            ((h-(i:Int))-(h-((3*a+2:Int)))) = true := by
           simp [m2EvenSixteenQ4Inside,hrel]
         have hcut := m2EvenSixteenQ4CutTape_eq_end_inside a b h
           (h-(i:Int)) hin
@@ -396,7 +396,7 @@ private theorem m2EvenSixteenQ4CutTape_leftFacing (a b : Nat) (h : Int)
             (h-(i:Int))-(h-((3*a+2:Int))) =
               (3*a+2:Int)-(i:Int) := by omega
         have hout : m2EvenSixteenQ4Inside
-            ((h-(i:Int))-(h-((3*a+2:Int))) = false := by
+            ((h-(i:Int))-(h-((3*a+2:Int)))) = false := by
           simp [m2EvenSixteenQ4Inside,hrel]
           omega
         have hcut := m2EvenSixteenQ4CutTape_eq_swept a b h (h-(i:Int)) hout
