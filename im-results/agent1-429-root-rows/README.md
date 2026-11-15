@@ -44,20 +44,22 @@ The main-branch module [BB429RootOddRowsStrong.lean](BB429RootOddRowsStrong.lean
 
 - `rooted_not_9_5`: `Reach(a,b) ∧ a≥33 ∧ a%16=9 ∧ b%8=5 → False`.
 - `rooted_not_13_1`: `Reach(a,b) ∧ a≥33 ∧ a%32=13 ∧ b%8=1 → False`.
+- `rooted_not_5_1`: `Reach(a,b) ∧ a≥61 ∧ a%32=5 ∧ b%8=1 → False`.
 
-Both use two successive `odd_back` decompositions. For row 9/5, both second-predecessor cases force a positive-even predecessor whose second counter is 1 mod 4, contradicting `even_back`. For row 13/1, the second-predecessor case gives the same even-back contradiction, while the first-predecessor case reaches a state with first counter 1 mod 8 and second counter 3 mod 4, excluded by the existing `BB429Mod8.Allowed` invariant.
+Row 9/5 and row 13/1 use two successive `odd_back` decompositions. For row 9/5, both second-predecessor cases force a positive-even predecessor whose second counter is 1 mod 4, contradicting `even_back`. For row 13/1, the second-predecessor case gives the same even-back contradiction, while the first-predecessor case reaches a state with first counter 1 mod 8 and second counter 3 mod 4, excluded by `BB429Mod8.Allowed`. Row 5/1 follows a third inverse step: one branch contradicts `even_back`; the other reaches a positive-even first counter with second counter 6 mod 8, contradicting `rooted_positive_even_eight`.
 
 [BB429LastResetRow95.lean](BB429LastResetRow95.lean) composes these root obstructions with the exact branch-10 last-reset prestate equation. It excludes the following refined residue progressions:
 
 - Eight pairs `(n mod 64,d mod 32)=(7,7),(15,19),(23,31),(31,11),(39,23),(47,3),(55,15),(63,27)`, which force `x mod 16=9` and `y mod 8=5`.
 - Eight pairs `(n mod 128,d mod 32)=(19,1),(27,13),(35,25),(67,9),(75,21),(107,5),(115,17),(123,29)`, which force `x mod 32=13` and `y mod 8=1`.
+- Eight pairs `(n mod 128,d mod 32)=(3,25),(35,9),(43,21),(75,5),(83,17),(91,29),(115,1),(123,13)`, which force `x mod 32=5` and `y mod 8=1`.
 
 The lower bound `x≥33` follows uniformly from `9(3n+77)≤2^(n+2)(d+6)` for `n≥18,d≥3`. [SourceLastResetRow95.lean](../agent6-harmonic429/SourceLastResetRow95.lean) transports both families to the original Cryptids `sourceRun` semantics through `BB429SourceMod16.source_run_to_local`.
 
 The same two root obstructions have been added as terminal bad states in `BB429KernelExtended.Bad`, so the existing affine inverse-tree certificate can use them at arbitrary recursion depth. This is a reusable strengthening of the certificate engine, not yet a new machine decision.
 
-The new 16 refined lifts (eight row-9/5 and eight row-13/1) are only the additions in this branch. The complementary eight lifts and 12 earlier whole-class exclusions remain on the separate draft PR #102 branch; those modules are not yet integrated here. Agent 1's full residue audit reports 16 complete long-burst parameter classes eliminated and 28 remaining classes / 112 of 176 refined lifts. This is a finite modular classification of necessary-condition rows, not a proportion of machines or a #429 decision.
+The new 24 refined lifts (eight each in rows 9/5, 13/1, and 5/1) are only the additions in this branch. The complementary eight lifts and 12 earlier whole-class exclusions remain on the separate draft PR #102 branch; those modules are not yet integrated here. Agent 1's full residue audit reports 16 complete long-burst parameter classes eliminated and 28 remaining classes / 112 of 176 refined lifts. This is a finite modular classification of necessary-condition rows, not a proportion of machines or a #429 decision.
 
-**Verification status:** the root-row workflow's earlier run 43714798173 failed on an argument-strength mismatch at `BB429RootOddRowsStrong.lean:26`; Agent 1 corrected that argument, but no fresh successful source CI is recorded. The new `rooted_not_13_1` theorem, both last-reset consumers, and the modified inverse-kernel certificate have not been locally compiled or source-CI checked. The next discriminating test is a local Lean 4.36.0-rc2 compile of the changed dependency closure, followed by one pinned source-chain check and transitive `#print axioms` audit. Do not treat these draft integrations as source-certified.
+**Verification status:** the root-row workflow's earlier run 43714798173 failed on an argument-strength mismatch at `BB429RootOddRowsStrong.lean:26`; Agent 1 corrected that argument, but no fresh successful source CI is recorded. The new `rooted_not_13_1` and `rooted_not_5_1` theorems, all last-reset consumers, and the modified inverse-kernel certificate have not been locally compiled or source-CI checked. The next discriminating test is a local Lean 4.36.0-rc2 compile of the changed dependency closure, followed by one pinned source-chain check and transitive `#print axioms` audit. Do not treat these draft integrations as source-certified.
 
 The finite short-branch residue reductions remain as previously described in the last-reset communications; they do not establish a complete root-halt exclusion.
