@@ -46,8 +46,13 @@ This is exactly the fatal-height formula used in FlareZ123/bb6. The drain condit
 
 Work entirely in the shifted high-level coordinates defined above. Suppose the high-b drain starts at C(x,0) and runs for m valid drain transitions, reaching C(A_m,B_m), where
 `A_m = 4*2^m - 2` and `B_m = 2*x + 9 + 2*m - 8*2^m`.
-Put `d = B_m - 2). The low branch is taken when `d < 2*A_m). Its odd-residue arm returns C(y,r), with
+Put `d = B_m - 2`. The low branch is taken when `d < 2*A_m`. Its odd-residue arm returns C(y,r), with
 `y = (6*A_m+d+5)/4` and `r = (6*A_m+d+5) mod 4`.
+
+The two possible residues are **exactly** `r=0` and `r=2`: `B_m` is odd, so `d=B_m-2` is odd, while `6*A_m=0 mod 4`. There is no `r=1` or `r=3` low-branch outcome. These two cases are precisely the two local `ResetParent` constructors:
+
+- If `r=0`, then `d=3 mod 4` and `x+m` is even. The quotient equation is `4*y=6*A_m+d+5`. Substitution gives `2*y=8*2^m+x+m`. Also `d≥0` and `d=3 mod 4` imply `d≥3`; together with `d<2*A_m=8*2^m-4`, this gives `6*2^m-1≤y≤8*2^m-3`. Thus `ResetParent x y` holds by its **even** constructor, with scale `k=m`; the high-level path has returned directly to C(y,0).
+- If `r=2`, then `d=1 mod 4` and `x+m` is odd. The following calculation gives the **odd** `ResetParent` constructor after the 3/2 underflow, again with scale `k=m`.
 
 Since `A_m = 4*2^m-2`, we have `6*A_m = 0 mod 4`. Therefore the specific low branch `r=2` is exactly `d=1 mod 4`. Substituting `d=2*x+7+2*m-8*2^m`, this is equivalently the parity selector `x+m` odd; the local odd-parent equation forces the same parity. In that case,
 `c = y+3 = (6*A_m+d+15)/4 = 6*2^m + (d+3)/4`.
