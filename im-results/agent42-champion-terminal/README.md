@@ -224,3 +224,24 @@ All of this remains conditional proof engineering in `im-results/`: no full TM63
 
 
 **Final-index correction (13 November 2026):** The last prestate in `tm63LastPreSection = sectionResult (tm63Index2-1) ...` has remaining outer index 1 and marker 1. The original Coq `Rsts2` is `Rsts` to index 2, then `Rst2` to `S1 L 1 m1`, then `Rst1` to `S1 L 0 m0`. Accordingly, both the `hstage` endpoint and the final reset-prefix input are now `s1Config tm63Length2 1 1 tm63FinalA 0 tm63FinalB h`. Earlier `n=0,m=1` signatures were off by one and have been corrected in the root theorem and its M1-even, M0/M2, M1-odd, and first-section wrappers. The final prefix output `s1Config L 0 0` is definitionally the required marker-0 S0 pre-drain context.
+
+## 2026-11-15: residue-six root continuation candidate and source gate
+
+The existing root-specific residue-seven theorem ends at the genuine blank-root state with
+`m=2` and `n=16*r+6`, where `r=tm63RootMiddleK/2). The quotient is odd, and the exact index identity is
+`tm63Index1 = 8*tm63RootMiddleK+7 = 16*r+15); the root width therefore gives the required bounds for both successor rows.
+
+Two new intermediate Lean candidates consume this endpoint:
+
+- [M2EvenResidueSixCounted.lean](./M2EvenResidueSixCounted.lean) composes Agent 48's quantified q4 reset-prefix theorem for `m=2,n=16*k+6` with the generic S1 counted drain. Its intended output is `m=1,n=16*k+5`.
+- [TM63RootResidueSix.lean](./TM63RootResidueSix.lean) composes the authentic blank-root run through the first nine rows with that residue-six increment, then applies Agent 24's existing `m=1,n=8*q+5` source increment at `q=2*r`. The intended exports are `tm63_blank_reaches_after_middle10` and `tm63_blank_reaches_after_middle11`.
+
+These files remain **uncompiled candidates** in `im-results/`; they are not source-certified and do not yet extend the verified blank-root lower bound. The existing manual-only terminal-source workflow was extended to compile the M2 prefix, counted adapter, M1 residue-five module, and root composition after the earlier residue-seven gate. No run has exercised those new steps.
+
+### Current compile blocker
+
+A single manual terminal-source run, [43689733460](https://github.com/FlareZ123/bb6/actions/runs/43689733460), at head `36c184379fd85c3a330f5eb2125e2b1ff4cdbae8`, stopped in `LongResidue1.lean` before reaching the M0 residue-seven or Rst1Prime modules. The first errors were an unclosed existential after `cases hconf` in `carryLongPrefix_r1_full` and a redundant `rfl` after `rw` in the shifted-config proof. Those two proof-script defects have been repaired in commits `c44b21fd9b60920512a1403084ca87b14ba54e4d` and `c7da10aa72908f59de067bd492dc9b20d713d02a`. The latter also adds direct axiom reports for the carry-sweep, frame, bridge, and AD12 dependencies so that any remaining `sorryAx` can be localized.
+
+The failed run printed `sorryAx` for `carryLongPrefix_r1_left`; it did not identify the transitive source. The new dependency reports have not yet been compiled. The local container/Python runtime in this invocation returned concrete `ClientError` responses, and other agents report that their local Lean runtimes cannot stage the current GitHub sources because outbound GitHub access is blocked. No further full workflow has been dispatched. The next acceptance action requires one source-available local compiler or a deliberately chosen single fallback after the dependency closure is repaired.
+
+**Qualification:** the 27,959-step blank-root prefix and the previously documented root/terminal components remain the established evidence. The new residue-six/residue-five extension is only a formalization candidate. The complete TM63 halting itinerary, exact champion primitive-step score, and universal six-state upper bound remain open.
