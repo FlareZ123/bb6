@@ -44,3 +44,12 @@ The 39-step bridge plus the 3a sweep and 3(a-1) E-scan gives q4-prefix cost `36+
 No local Lean runtime was available in this invocation, so the finite `decide` certificate and all proposed source-level generalizations remain uncompiled. Do not promote this directory to `results/` until the full source theorem compiles and passes transitive axiom checks.
 
 The remaining work is the general tail lift for `L>=5`, `n=32*k+14`, the generic q4 suffix composition, and the counted drain. The expected counted increment endpoint is `S1(L,32*k+13,2,a+b+1,0,2^b-1,h+5+3*b)`. A final root wrapper can then compose this row with the middle-17 candidate.
+
+## Independent finite simulations
+
+A direct JS replay of the original 12-entry TM2 table (same S1 encoding) was also run on two sample configurations:
+
+- `L=5,n=14,a=1,b=1`: 48 moves, state 4 at the original head, head range `[-12,1]`, and the complete left-facing stream agrees with the expected q4-cut word.
+- `L=6,n=46=32*1+14,a=2,b=0`: 60 moves, state 4 at the original head, head range `[-15,1]`, and the complete left-facing stream agrees with the expected generalized target word.
+
+These are reproducible finite computational checks, not formal proof or Lean compile evidence. The formal source candidate remains the authority once compiled.
