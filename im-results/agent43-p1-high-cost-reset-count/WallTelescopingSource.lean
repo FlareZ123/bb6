@@ -4,7 +4,16 @@ namespace BB6.Agent43WallTelescoping
 
 open BB6.Agent28 BB6.Agent1Quarter BB6.Agent1UpperTail BB6.Agent47P1
 open BB6.Agent43LastResetStrength
-open scoped BigOperators
+
+/-- Sum of powers over a finite list of inverse-edge costs. -/
+def costPowSum : List Nat → Nat
+  | [] => 0
+  | s :: A => 2^s + costPowSum A
+
+/-- Weighted sum of inverse-edge costs in the wall identity. -/
+def costWeightedSum (n : Nat) : List Nat → Nat
+  | [] => 0
+  | s :: A => (n+3+s)*2^s + costWeightedSum n A
 
 /-- The path-weighted source invariant.  S is the sum of 2^s over inverse-edge
     starting costs s, and U is the sum of (n+3+s)2^s over the same starts.
@@ -141,18 +150,20 @@ theorem source_wall_cost_identity
     cumulative edge-start costs.  This is the interface needed by the
     dyadic carry DP: no duplicate costs are possible, because every new
     start is strictly larger than every previous one. -/
-theorem source_weighted_finset_invariant
+theorem source_weighted_cost_list_invariant
     (n b d m z : Nat) (hn : 14 ≤ n)
     (h : CountCone (14*2^n-2*n-16) 3 b d m z) :
-    ∃ A : Finset Nat,
+    ∃ A : List Nat,
+      A.Nodup ∧
       (∀ s ∈ A, s < m) ∧
-      (m = 0 → A = ∅) ∧
+      (m = 0 → A = []) ∧
       (0 < m → 0 ∈ A) ∧
-      2 + 14*2^n*(∑ s ∈ A, 2^s) =
-        2^m*(d-1) + 2*(∑ s ∈ A, (n+3+s)*2^s) := by
+      2 + 14*2^n*(costPowSum A) =
+        2^m*(d-1) + 2*(costWeightedSum n A) := by
   induction h with
   | root =>
-      refine ⟨∅, ?_, ?_, ?_, ?_⟩
+      refine ⟨[], ?_, ?_, ?_, ?_, ?_⟩
+      · simp
       · intro s hs
         simp at hs
       · intro hm
@@ -161,7 +172,7 @@ theorem source_weighted_finset_invariant
         simp
       · simp
   | parent bp dp mp zp t k c hp hb hb4 hd hi hk hc ih =>
-      obtain ⟨A, hlt, hzero, hstart, hInv⟩ := ih
+      obtain ⟨A, hnodup, hlt, hzero, hstart, hInv⟩ := ih
       have hodd : OddCone (14*2^n-2*n-16) 3 bp dp mp :=
         counted_to_odd_cone _ _ _ _ _ _ hp
       have hmass0 := odd_cone_mass _ _ bp dp mp hodd
@@ -210,19 +221,19 @@ theorem source_weighted_finset_invariant
         intro hmem
         have := hlt mp hmem
         omega
-      have hS :
-          (∑ s ∈ insert mp A, 2^s) =
-            (∑ s ∈ A, 2^s) + 2^mp := by
-        rw [Finset.sum_insert hnot]
-        ac_rfl
+      have hS : costPowSum (mp :: A) = costPowSum A + 2^mp := by
+        change 2^mp + costPowSum A = costPowSum A + 2^mp
+        exact Nat.add_comm _ _
       have hU :
-          (∑ s ∈ insert mp A, (n+3+s)*2^s) =
-            (∑ s ∈ A, (n+3+s)*2^s) + (n+3+mp)*2^mp := by
-        rw [Finset.sum_insert hnot]
-        ac_rfl
-      refine ⟨insert mp A, ?_, ?_, ?_, ?_⟩
+          costWeightedSum n (mp :: A) =
+            costWeightedSum n A + (n+3+mp)*2^mp := by
+        change (n+3+mp)*2^mp + costWeightedSum n A =
+          costWeightedSum n A + (n+3+mp)*2^mp
+        exact Nat.add_comm _ _
+      refine ⟨mp :: A, ?_, ?_, ?_, ?_, ?_⟩
+      · exact List.nodup_cons.mpr ⟨hnot, hnodup⟩
       · intro s hs
-        rcases Finset.mem_insert.mp hs with hsEq | hsA
+        rcases List.mem_cons.mp hs with hsEq | hsA
         · subst s
           omega
         · exact Nat.lt_trans (hlt s hsA) (by omega)
@@ -236,39 +247,39 @@ theorem source_weighted_finset_invariant
         · have h0 := hstart (by omega)
           simp [h0]
       · calc
-          2+14*2^n*(∑ s ∈ insert mp A, 2^s) =
-              2+14*2^n*((∑ s ∈ A, 2^s)+2^mp) := by rw [hS]
-          _ = (2+14*2^n*(∑ s ∈ A, 2^s))+14*2^n*2^mp := by
+          2+14*2^n*(costPowSum (mp :: A)) =
+              2+14*2^n*((costPowSum A)+2^mp) := by rw [hS]
+          _ = (2+14*2^n*(costPowSum A))+14*2^n*2^mp := by
             rw [Nat.mul_add]
             ac_rfl
-          _ = 2^mp*(dp-1)+2*(∑ s ∈ A, (n+3+s)*2^s)+14*2^n*2^mp := by
+          _ = 2^mp*(dp-1)+2*(costWeightedSum n A)+14*2^n*2^mp := by
             rw [hInv]
           _ = 2^mp*(dp-1)+14*2^n*2^mp+
-                2*(∑ s ∈ A, (n+3+s)*2^s) := by ac_rfl
+                2*(costWeightedSum n A) := by ac_rfl
           _ = 2^(mp+t+1)*(c+3)+2*(mp+n+3)*2^mp+
-                2*(∑ s ∈ A, (n+3+s)*2^s) := by
+                2*(costWeightedSum n A) := by
             rw [hrecMul]
           _ = 2^(mp+t+1)*(c+3)+
-                2*(∑ s ∈ A, (n+3+s)*2^s)+2*(n+3+mp)*2^mp := by
+                2*(costWeightedSum n A)+2*(n+3+mp)*2^mp := by
             have hcoeff : 2*(mp+n+3)*2^mp =
                 2*(n+3+mp)*2^mp := by ac_rfl
             rw [hcoeff]
             ac_rfl
           _ = 2^(mp+t+1)*(c+3)+
-                2*((∑ s ∈ A, (n+3+s)*2^s)+(n+3+mp)*2^mp) := by
+                2*((costWeightedSum n A)+(n+3+mp)*2^mp) := by
             have hdist :
-                2*((∑ s ∈ A, (n+3+s)*2^s)+(n+3+mp)*2^mp) =
-                  2*(∑ s ∈ A, (n+3+s)*2^s)+2*(n+3+mp)*2^mp :=
-              Nat.mul_add 2 (∑ s ∈ A, (n+3+s)*2^s) ((n+3+mp)*2^mp)
+                2*((costWeightedSum n A)+(n+3+mp)*2^mp) =
+                  2*(costWeightedSum n A)+2*(n+3+mp)*2^mp :=
+              Nat.mul_add 2 (costWeightedSum n A) ((n+3+mp)*2^mp)
             calc
               _ = 2^(mp+t+1)*(c+3)+
-                    (2*(∑ s ∈ A, (n+3+s)*2^s)+2*(n+3+mp)*2^mp) := by ac_rfl
+                    (2*(costWeightedSum n A)+2*(n+3+mp)*2^mp) := by ac_rfl
               _ = 2^(mp+t+1)*(c+3)+
-                    2*((∑ s ∈ A, (n+3+s)*2^s)+(n+3+mp)*2^mp) := by
+                    2*((costWeightedSum n A)+(n+3+mp)*2^mp) := by
                 exact congrArg
                   (fun x => 2^(mp+t+1)*(c+3)+x) hdist.symm
           _ = 2^(mp+t+1)*((c+4)-1)+
-                2*(∑ s ∈ insert mp A, (n+3+s)*2^s) := by
+                2*(costWeightedSum n (mp :: A)) := by
             rw [hU]
             have hcd : c+3 = (c+4)-1 := by omega
             rw [hcd]
@@ -276,20 +287,21 @@ theorem source_weighted_finset_invariant
 /-- Source-certified finite-set form of the wall identity.  The set A contains
     every inverse-edge starting cost; the terminal cost m is the additional
     final element in the complete wall subset. -/
-theorem source_wall_cost_finset_identity
+theorem source_wall_cost_list_identity
     (n b d m z : Nat) (hn : 14 ≤ n)
     (h : CountCone (14*2^n-2*n-16) 3 b d m z)
     (hw : b+4*m+4*n+20 = 12*2^n) :
-    ∃ A : Finset Nat,
+    ∃ A : List Nat,
+      A.Nodup ∧
       (∀ s ∈ A, s < m) ∧
-      (m = 0 → A = ∅) ∧
+      (m = 0 → A = []) ∧
       (0 < m → 0 ∈ A) ∧
-      1+7*2^n*(∑ s ∈ A, 2^s) =
-        2^n*2^m + (∑ s ∈ A, (n+3+s)*2^s) + (n+3+m)*2^m := by
-  obtain ⟨A, hlt, hzero, hstart, hInv⟩ :=
-    source_weighted_finset_invariant n b d m z hn h
-  let S : Nat := ∑ s ∈ A, 2^s
-  let U : Nat := ∑ s ∈ A, (n+3+s)*2^s
+      1+7*2^n*(costPowSum A) =
+        2^n*2^m + (costWeightedSum n A) + (n+3+m)*2^m := by
+  obtain ⟨A, hnodup, hlt, hzero, hstart, hInv⟩ :=
+    source_weighted_cost_list_invariant n b d m z hn h
+  let S : Nat := costPowSum A
+  let U : Nat := costWeightedSum n A
   have hodd : OddCone (14*2^n-2*n-16) 3 b d m :=
     counted_to_odd_cone _ _ _ _ _ _ h
   have hmass0 := odd_cone_mass _ _ b d m hodd
@@ -323,7 +335,7 @@ theorem source_wall_cost_finset_identity
   have hfinal :
       1+7*2^n*S = 2^m*(2^n+m+n+3)+U :=
     Nat.eq_of_mul_eq_mul_left (by decide : 0 < 2) hdouble
-  refine ⟨A, hlt, hzero, hstart, ?_⟩
+  refine ⟨A, hnodup, hlt, hzero, hstart, ?_⟩
   calc
     1+7*2^n*S = 2^m*(2^n+m+n+3)+U := hfinal
     _ = 2^n*2^m+U+(n+3+m)*2^m := by
@@ -338,7 +350,7 @@ theorem source_wall_cost_finset_identity
 
 #print axioms BB6.Agent43WallTelescoping.source_weighted_sum_invariant
 #print axioms BB6.Agent43WallTelescoping.source_wall_cost_identity
-#print axioms BB6.Agent43WallTelescoping.source_weighted_finset_invariant
-#print axioms BB6.Agent43WallTelescoping.source_wall_cost_finset_identity
+#print axioms BB6.Agent43WallTelescoping.source_weighted_cost_list_invariant
+#print axioms BB6.Agent43WallTelescoping.source_wall_cost_list_identity
 
 end BB6.Agent43WallTelescoping
