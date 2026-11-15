@@ -56,7 +56,22 @@ def allowedPairs : List (Nat × Nat) := [
 ]
 
 def Allowed (u w : Nat) : Prop :=
-  (u % 16, w % 8) ∈ allowedPairs
+  (u % 16 = 0 ∧ (w % 8 = 0 ∨ w % 8 = 2 ∨ w % 8 = 4 ∨ w % 8 = 6)) ∨
+  (u % 16 = 1 ∧ (w % 8 = 1 ∨ w % 8 = 2)) ∨
+  (u % 16 = 2 ∧ (w % 8 = 2)) ∨
+  (u % 16 = 3 ∧ (w % 8 = 1 ∨ w % 8 = 2 ∨ w % 8 = 3 ∨ w % 8 = 5 ∨ w % 8 = 7)) ∨
+  (u % 16 = 4 ∧ (w % 8 = 2)) ∨
+  (u % 16 = 5 ∧ (w % 8 = 0 ∨ w % 8 = 1 ∨ w % 8 = 2 ∨ w % 8 = 3 ∨ w % 8 = 4 ∨ w % 8 = 5 ∨ w % 8 = 7)) ∨
+  (u % 16 = 6 ∧ (w % 8 = 2)) ∨
+  (u % 16 = 7 ∧ (w % 8 = 2 ∨ w % 8 = 3)) ∨
+  (u % 16 = 8 ∧ (w % 8 = 2)) ∨
+  (u % 16 = 9 ∧ (w % 8 = 0 ∨ w % 8 = 1 ∨ w % 8 = 2 ∨ w % 8 = 4 ∨ w % 8 = 5 ∨ w % 8 = 6)) ∨
+  (u % 16 = 10 ∧ (w % 8 = 2)) ∨
+  (u % 16 = 11 ∧ (w % 8 = 2 ∨ w % 8 = 6 ∨ w % 8 = 7)) ∨
+  (u % 16 = 12 ∧ (w % 8 = 2)) ∨
+  (u % 16 = 13 ∧ (w % 8 = 0 ∨ w % 8 = 1 ∨ w % 8 = 2 ∨ w % 8 = 3 ∨ w % 8 = 4 ∨ w % 8 = 5 ∨ w % 8 = 6 ∨ w % 8 = 7)) ∨
+  (u % 16 = 14 ∧ (w % 8 = 2)) ∨
+  (u % 16 = 15 ∧ (w % 8 = 2 ∨ w % 8 = 3))
 
 set_option maxHeartbeats 4000000 in
 theorem allowed_step (u w a b : Nat)
@@ -64,11 +79,11 @@ theorem allowed_step (u w a b : Nat)
     Allowed a b := by
   simp only [BB429.next] at hs
   repeat' (split at hs <;> try contradiction)
-  all_goals simp_all [Allowed, allowedPairs, Prod.mk.injEq, Option.some.injEq]
+  all_goals simp_all [Allowed, Prod.mk.injEq, Option.some.injEq]
   all_goals omega
 
 theorem initial_allowed : Allowed 0 0 := by
-  simp [Allowed, allowedPairs]
+  simp [Allowed]
 
 theorem all_blank_returns_allowed (n : Nat) (a b : Nat)
     (h : BB429.run n (0,0) = some (a,b)) : Allowed a b := by
