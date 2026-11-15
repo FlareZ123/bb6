@@ -86,26 +86,26 @@ theorem y3_x314_parents (v a k : Nat)
               have hcost' :
                   (2*k-a+3)+(2*a+6)+3*n=512*v+324 := by omega
               have hnle : n≤4 := by
-                by_contra hnle
-                have hn5 : 5≤n := by omega
-                have hpowdiv : 32∣2^n := by
-                  have hh : 2^5∣2^n := Nat.pow_dvd_pow 2 hn5
-                  simpa only [show (2:Nat)^5=32 by decide] using hh
-                have hfacdiv : 4∣2*a+6 := by
-                  refine ⟨(a+3)/2,?_⟩
+                by_cases hn5 : 5≤n
+                · have hpowdiv : 32∣2^n := by
+                    have hh : 2^5∣2^n := Nat.pow_dvd_pow 2 hn5
+                    simpa only [show (2:Nat)^5=32 by decide] using hh
+                  have hfacdiv : 4∣2*a+6 := by
+                    refine ⟨(a+3)/2,?_⟩
+                    omega
+                  have hdiv : 128∣2^n*(2*a+6) := by
+                    rcases hpowdiv with ⟨b,hb⟩
+                    rcases hfacdiv with ⟨c,hc⟩
+                    refine ⟨b*c,?_⟩
+                    calc
+                      2^n*(2*a+6)=(32*b)*(4*c) := by rw [hb,hc]
+                      _=128*(b*c) := by ring
+                  rw [←hpow'] at hdiv
+                  have hzero : (512*v+320)%128=0 :=
+                    Nat.mod_eq_zero_of_dvd hdiv
+                  have hmod : (512*v+320)%128=64 := by omega
                   omega
-                have hdiv : 128∣2^n*(2*a+6) := by
-                  rcases hpowdiv with ⟨b,hb⟩
-                  rcases hfacdiv with ⟨c,hc⟩
-                  refine ⟨b*c,?_⟩
-                  calc
-                    2^n*(2*a+6)=(32*b)*(4*c) := by rw [hb,hc]
-                    _=128*(b*c) := by ring
-                rw [←hpow'] at hdiv
-                have hzero : (512*v+320)%128=0 :=
-                  Nat.mod_eq_zero_of_dvd hdiv
-                have hmod : (512*v+320)%128=64 := by omega
-                omega
+                · omega
               have hfactorEven : (2*a+6)%2=0 := by omega
               have hpowEven : (2^n*(2*a+6))%2=0 := by
                 simp [Nat.mul_mod,hfactorEven]
