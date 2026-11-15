@@ -41,6 +41,8 @@ theorem rooted_not_9_5 (a b : Nat) (hr : Reach a b)
       omega
   · omega
 
+#print axioms rooted_not_9_5
+
 /--
 A two-step inverse obstruction: a root-reachable state with
 a ≥ 33, a = 13 mod 32, and b = 1 mod 8 cannot occur.
