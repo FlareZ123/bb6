@@ -73,7 +73,10 @@ private theorem s1M2Setup_suffix (L k a : Nat)
   have hfirst :
       sideBit (d1pow a ++ R) (3*a+2+i) = sideBit R (2+i) := by
     rw [sideBit_append]
-    simp [R,d1pow_length]
+    rw [d1pow_length]
+    have hnot : ¬ (3*a+2+i < 3*a) := by omega
+    have hsub : 3*a+2+i-3*a = 2+i := by omega
+    simp [hnot,hsub]
   have hsecond :
       sideBit R (2+i) = sideBit ([false,true] ++ d0 ++ d1pow 3) i := by
     interval_cases i <;>
