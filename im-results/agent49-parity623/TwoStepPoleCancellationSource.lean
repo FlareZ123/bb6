@@ -131,6 +131,11 @@ theorem two_step_zero_gap :
     have hgap : 36 * x + 2 * m - 4 = 4 * (9 * x + 23) := by
       dsimp [m]
       omega
-    simpa [x, a, b, d, m, hgap] using h
+    calc
+      highLevelNext (.D a b) =
+          some (.D (36*x + 2*m - 4) (9*x + 23)) := by
+            simpa [a, b] using h
+      _ = some (.D (4*d) d) := by
+            simp [d, hgap]
 
 end BB6.Agent49TwoStepPoleCancellation
