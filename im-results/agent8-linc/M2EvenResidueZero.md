@@ -73,4 +73,8 @@ The total is
 
 For `a=1,b=0`, additional traces for `k=1..16` show that the carry bridge reaches its endpoint in exactly `62+12*v2(k)` steps. Its head path has maximum `hN+2` and minimum `hN-15-3*v2(k)`, where `hN=h-5`. Thus each extra factor of 2 in k extends the leftward excursion by three cells and the bridge by twelve steps. This is consistent with the generic H-run's `4+12*v2(k)` cost, with its fixed four-step bridge absorbed into the base 62-step bridge. That internal identification remains a proof hypothesis.
 
-The simulator is being upgraded to check all four intermediate endpoints, so the phase decomposition is reproducible rather than inferred from total length alone.
+The Python simulator now checks all four intermediate endpoints. A separate execution of the same four-phase logic in the available JavaScript runtime passed all 240 cases; the committed Python script has not itself been executed in this environment.
+
+
+The four-phase checks were run across the same 240-case matrix, and all intermediate state/head endpoints and the final full tape matched. A separate trace for `a=1,b=0,k=1..16` confirmed the carry-bridge head range:
+`max = hN+2`, `min = hN-15-3*v2(k)`, with state E at `hN+2` after `62+12*v2(k)` steps. This gives a particularly concrete target for the universal carry proof.
