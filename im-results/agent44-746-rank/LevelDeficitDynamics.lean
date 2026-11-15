@@ -292,7 +292,7 @@ theorem odd_offset_factorization (h k t d : Nat)
   have hdt : d<2^(k+3-t) := by
     by_cases hdlt : d<2^(k+3-t)
     · exact hdlt
-    · have hle : 2^(k+3-t)≤d := by omega
+    · have hle : 2^(k+3-t)≤d := not_lt.mp hdlt
       have hm := Nat.mul_le_mul_left (2^t) hle
       rw [←hpow] at hm
       rw [hfactor] at hq_lt
@@ -312,7 +312,7 @@ theorem odd_offset_factorization (h k t d : Nat)
         rw [Nat.sub_add_cancel (Nat.le_of_lt hdt)]
       _=2^(k+3) := hpow.symm
   have hAq : oddOffset h k+2^t*d=2^(k+3) := by
-    dsimp [oddOffset,oddParameter]
+    change 8*2^k-oddParameter h k+2^t*d=2^(k+3)
     rw [hfactor,hpow3]
     omega
   have hAfac : oddOffset h k=2^t*(2^(k+3-t)-d) :=
