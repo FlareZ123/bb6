@@ -947,5 +947,151 @@
         0
       ]
     }
+  ],
+  "long_burst_mod16": [
+    {
+      "n_mod32": 1,
+      "branch": 9,
+      "allowed_d_mod16": [
+        4,
+        8,
+        12
+      ]
+    },
+    {
+      "n_mod32": 3,
+      "branch": 10,
+      "allowed_d_mod16": [
+        1,
+        5,
+        9
+      ]
+    },
+    {
+      "n_mod32": 5,
+      "branch": 9,
+      "allowed_d_mod16": [
+        2,
+        10,
+        14
+      ]
+    },
+    {
+      "n_mod32": 7,
+      "branch": 10,
+      "allowed_d_mod16": [
+        7,
+        11,
+        15
+      ]
+    },
+    {
+      "n_mod32": 9,
+      "branch": 9,
+      "allowed_d_mod16": [
+        0,
+        4,
+        8
+      ]
+    },
+    {
+      "n_mod32": 11,
+      "branch": 10,
+      "allowed_d_mod16": [
+        1,
+        5,
+        13
+      ]
+    },
+    {
+      "n_mod32": 13,
+      "branch": 9,
+      "allowed_d_mod16": [
+        6,
+        10,
+        14
+      ]
+    },
+    {
+      "n_mod32": 15,
+      "branch": 10,
+      "allowed_d_mod16": [
+        3,
+        7,
+        11
+      ]
+    },
+    {
+      "n_mod32": 17,
+      "branch": 9,
+      "allowed_d_mod16": [
+        0,
+        4,
+        12
+      ]
+    },
+    {
+      "n_mod32": 19,
+      "branch": 10,
+      "allowed_d_mod16": [
+        1,
+        9,
+        13
+      ]
+    },
+    {
+      "n_mod32": 21,
+      "branch": 9,
+      "allowed_d_mod16": [
+        2,
+        6,
+        10
+      ]
+    },
+    {
+      "n_mod32": 23,
+      "branch": 10,
+      "allowed_d_mod16": [
+        3,
+        7,
+        15
+      ]
+    },
+    {
+      "n_mod32": 25,
+      "branch": 9,
+      "allowed_d_mod16": [
+        0,
+        8,
+        12
+      ]
+    },
+    {
+      "n_mod32": 27,
+      "branch": 10,
+      "allowed_d_mod16": [
+        5,
+        9,
+        13
+      ]
+    },
+    {
+      "n_mod32": 29,
+      "branch": 9,
+      "allowed_d_mod16": [
+        2,
+        6,
+        14
+      ]
+    },
+    {
+      "n_mod32": 31,
+      "branch": 10,
+      "allowed_d_mod16": [
+        3,
+        11,
+        15
+      ]
+    }
   ]
 }
