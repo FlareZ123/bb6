@@ -355,4 +355,316 @@ theorem m1EvenResidueFour_q4_prefix_run (a b : Nat) (h : Int) :
     omega
   simpa [T,N,T1,hN,T2,m1EvenResidueFourCutTape,hnum] using htotal
 
+
+
+private theorem m1EvenResidueFour_sweptLeft_head_eq_source (q : Nat)
+    (T : Int → Bool) (h : Int) :
+    sweptLeft q T h (h-(q:Int)) = T (h-(q:Int)) := by
+  induction q with
+  | zero => simp [sweptLeft]
+  | succ q ih =>
+    have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
+    rw [show sweptLeft (q+1) T h =
+      sweptLeft q (holeThree T h) (h-1) by rfl]
+    rw [hcoord,ih]
+    have hne1 : h-((q+1:Int)) ≠ h+1 := by omega
+    have hne2 : h-((q+1:Int)) ≠ h := by omega
+    simp [holeThree,hne1,hne2]
+
+private theorem m1EvenResidueFour_sweptLeft_head_plus1_false (q : Nat)
+    (T : Int → Bool) (h : Int) :
+    sweptLeft (q+1) T h (h-(q:Int)) = false := by
+  induction q with
+  | zero => simp [sweptLeft,holeThree]
+  | succ q ih =>
+    have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
+    rw [show sweptLeft (q+2) T h =
+      sweptLeft (q+1) (holeThree T h) (h-1) by rfl]
+    rw [hcoord]
+    exact ih (holeThree T h) (h-1)
+
+private theorem m1EvenResidueFour_leftSweep_one
+    (T : Int → Bool) (h : Int) (ht : T h = true) :
+    run tm2 1 ⟨3,h,T⟩ = some ⟨1,h+1,T⟩ := by
+  simp [run,rawStep,readSlot,applyMove,tm2,ht]
+
+private theorem m1EvenResidueFour_leftSweep_two
+    (T : Int → Bool) (h : Int)
+    (ht : T h = true) (hr : T (h+1) = false) :
+    run tm2 2 ⟨3,h,T⟩ =
+      some ⟨2,h,(fun x => if x = h+1 then true else T x)⟩ := by
+  rw [show 2 = 1+1 by omega,run_add,
+    m1EvenResidueFour_leftSweep_one T h ht]
+  simp [run,rawStep,readSlot,applyMove,tm2,hr]
+
+/-- Every prefix of the counted left sweep stays to the right of h-N. -/
+private theorem m1EvenResidueFour_counted_left_sweep_heads
+    (N : Nat) (T : Int → Bool) (h : Int)
+    (hOn : leftOnes T h N) (hr : T (h+1) = false)
+    (k : Nat) (hk : k < 3*N) (d : Config)
+    (hd : run tm2 k ⟨3,h,T⟩ = some d) :
+    h-(N:Int) ≤ d.head := by
+  let q := k/3
+  let r := k%3
+  have hkdecomp : k = 3*q+r := by dsimp [q,r]; omega
+  have hq : q < N := by dsimp [q]; omega
+  have hqOn : leftOnes T h q := by
+    intro i hi
+    exact hOn i (by omega)
+  have hqrun := counted_left_sweep q T h hqOn hr
+  let Tq := sweptLeft q T h
+  have hqhead : Tq (h-(q:Int)) = true := by
+    rw [show Tq = sweptLeft q T h by rfl,
+      m1EvenResidueFour_sweptLeft_head_eq_source]
+    exact hOn q hq
+  have hqright : Tq (h-(q:Int)+1) = false := by
+    by_cases hq0 : q = 0
+    · subst q
+      simpa [Tq] using hr
+    · obtain ⟨q',rfl⟩ := Nat.exists_eq_succ_of_ne_zero hq0
+      have hfalse := m1EvenResidueFour_sweptLeft_head_plus1_false q' T h
+      simpa [Tq] using hfalse
+  have hqrun' :
+      run tm2 (3*q) ⟨3,h,T⟩ =
+        some ⟨3,h-(q:Int),Tq⟩ := by
+    simpa [Tq] using hqrun
+  rw [hkdecomp,run_add,hqrun'] at hd
+  simp only [Option.bind_some] at hd
+  have hrlt : r < 3 := Nat.mod_lt _ (by decide)
+  have hrCases : r=0 ∨ r=1 ∨ r=2 := by omega
+  rcases hrCases with hr0|hr1|hr2
+  · subst r
+    simp [run] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+  · subst r
+    rw [m1EvenResidueFour_leftSweep_one Tq (h-(q:Int)) hqhead] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+  · subst r
+    rw [m1EvenResidueFour_leftSweep_two Tq (h-(q:Int)) hqhead hqright] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+
+private theorem m1EvenResidueFour_fRun_prefix_exists {m c n k d}
+    (h : fRun m n c = some d) (hk : k ≤ n) :
+    ∃ e, fRun m k c = some e := by
+  induction n generalizing k c d with
+  | zero =>
+    have hk0 : k = 0 := by omega
+    subst k
+    exact ⟨c,by simpa [fRun] using h⟩
+  | succ n ih =>
+    have h' : (fRun m n c).bind (fStep m) = some d := by
+      simpa [fRun] using h
+    cases hp : fRun m n c with
+    | none => simp [hp] at h'
+    | some e =>
+      by_cases hk' : k ≤ n
+      · exact ih hp hk'
+      · have hkEq : k=n+1 := by omega
+        subst k
+        exact ⟨d,h⟩
+
+/-- Any intermediate configuration in the 53-step bridge stays above
+the lower edge h-12 of its translated finite frame. -/
+private theorem m1EvenResidueFour_bridge_prefix_lower
+    (T : Int → Bool) (h : Int)
+    (hmatch : ∀ y, m1EvenResidueFourInside y = true →
+      T (h+y) = decide (y ∈ m1EvenResidueFourBridgeStart.marked))
+    (j : Nat) (hj : j < 53) (d : Config)
+    (hd : run tm2 j ⟨3,h,T⟩ = some d) :
+    h-12 ≤ d.head := by
+  obtain ⟨e,hexact⟩ :=
+    m1EvenResidueFour_fRun_prefix_exists
+      m1EvenResidueFourBridge_exact (by omega)
+  have hcheckj :
+      (List.range j).all (fun k =>
+        match fRun tm2 k m1EvenResidueFourBridgeStart with
+        | none => true
+        | some f => m1EvenResidueFourInside f.head) = true := by
+    apply List.all_eq_true.mpr
+    intro k hk
+    have hkj : k < 53 := by
+      have hmem := List.mem_range.mp hk
+      omega
+    exact (List.all_eq_true.mp m1EvenResidueFourBridge_heads) k
+      (List.mem_range.mpr hkj)
+  have hbridge := bridgeAt T h m1EvenResidueFourInside
+    m1EvenResidueFourBridgeStart e j rfl hexact hcheckj hmatch
+  rw [hbridge] at hd
+  have hdeq : d = frameAt T h m1EvenResidueFourInside e :=
+    Option.some.inj hd
+  have hinside : m1EvenResidueFourInside e.head = true := by
+    have hh := (List.all_eq_true.mp m1EvenResidueFourBridge_heads) j
+      (List.mem_range.mpr hj)
+    simpa [hexact] using hh
+  have hlow : -12 ≤ e.head := by
+    simp [m1EvenResidueFourInside] at hinside
+    omega
+  rw [hdeq]
+  simp [frameAt_head]
+  omega
+
+private theorem m1EvenResidueFour_E_scan_prefix_head
+    (T : Int → Bool) (h : Int) (n : Nat)
+    (hlinear : linearRightOnes T h n)
+    (j : Nat) (hj : j < n) (d : Config)
+    (hd : run tm2 j ⟨4,h,T⟩ = some d) :
+    d.head = h+(j:Int) := by
+  have hlinearJ : linearRightOnes T h j := by
+    intro i hi
+    exact hlinear i (by omega)
+  have hrun := E_scan T h j hlinearJ
+  rw [hrun] at hd
+  have heq := Option.some.inj hd
+  simp at heq
+  omega
+
+/-- Every prefix of the base m=1,n=4 q4 prefix remains in
+x ≥ h-(3*a+13), allowing the later arbitrary-tail frame lift. -/
+theorem m1EvenResidueFour_q4_prefix_head_bound
+    (a b : Nat) (h : Int) :
+    ∀ k, k < 56+12*a → ∀ d,
+      run tm2 k (s1Config 3 4 1 a 0 b h) = some d →
+      h-((3*a+13:Int)) ≤ d.head := by
+  let T := (s1Config 3 4 1 a 0 b h).tape
+  let N := 3*a+1
+  let T1 := sweptLeft N T h
+  let hN : Int := h-(N:Int)
+  let T2 := m1EvenResidueFourCutTape a b h
+  have hleft :
+      s1LeftFacing 3 4 1 a 0 =
+        d1pow a ++ (markerWord 1 ++ d0 ++ d1 ++ d1 ++ d0 ++ lh) := by
+    simp [s1LeftFacing,binDec_zero,binDec_three_four,List.append_assoc]
+  have hOn : leftOnes T h N := by
+    intro i hi
+    have hcell := s1Config_left_cell 3 4 1 a 0 b h i
+    rw [hleft] at hcell
+    have hbit := Agent6Q4Prefix.sideBit_append_left
+      (d1pow a) (markerWord 1 ++ d0 ++ d1 ++ d1 ++ d0 ++ lh) i
+      (by rw [d1pow_length]; omega)
+    rw [hbit] at hcell
+    exact hcell.trans (sideBit_d1pow_true a i (by simpa [d1pow_length] using hi))
+  have hright : T (h+1) = false := by
+    have hc := s1Config_right_cell 3 4 1 a 0 b h 0
+    simpa [T,s1PhysicalRight_source,sideBit] using hc
+  have hSweep := counted_left_sweep N T h hOn hright
+  have hmatch :
+      ∀ y, m1EvenResidueFourInside y = true →
+        T1 (hN+y) = decide (y ∈ m1EvenResidueFourBridgeStart.marked) := by
+    intro y hy
+    have hm := m1EvenResidueFourBridge_input_match a b h y hy
+    simpa [T1,hN,N] using hm
+  have hBridge := bridgeAt T1 hN m1EvenResidueFourInside
+    m1EvenResidueFourBridgeStart m1EvenResidueFourBridgeEnd 53 rfl
+    m1EvenResidueFourBridge_exact m1EvenResidueFourBridge_heads hmatch
+  have hBridge' :
+      run tm2 53 ⟨3,hN,T1⟩ =
+        some ⟨4,hN+5,T2⟩ := by
+    have hframeConfig :
+        frameAt T1 hN m1EvenResidueFourInside
+          m1EvenResidueFourBridgeEnd = (⟨4,hN+5,T2⟩ : Config) := by
+      apply config_ext
+      · simp [frameAt_state,m1EvenResidueFourBridgeEnd]
+      · simp [frameAt_head,m1EvenResidueFourBridgeEnd] <;> omega
+      · rfl
+    rw [hframeConfig] at hBridge
+    exact hBridge
+  have hlinear : linearRightOnes T2 (hN+5) (3*a) := by
+    intro i hi
+    let x : Int := hN+5+(i:Int)
+    by_cases hi0 : i = 0
+    · subst i
+      have hin : m1EvenResidueFourInside ((hN+5)-hN) = true := by
+        simp [m1EvenResidueFourInside]
+      have hcut := m1EvenResidueFourCutTape_eq_end_inside a b h
+        (hN+5) (by simpa [hN] using hin)
+      have hmark :
+          decide (5 ∈ m1EvenResidueFourBridgeEnd.marked) = true := by
+        simp [m1EvenResidueFourBridgeEnd]
+      have htrue : T2 (hN+5) = true := by
+        simpa [T2,hN,m1EvenResidueFourCutTape] using hcut.trans hmark
+      simpa [x] using htrue
+    · have hiPos : 1 ≤ i := by omega
+      have hout : m1EvenResidueFourInside (x-hN) = false := by
+        simp [m1EvenResidueFourInside,x]
+        omega
+      have hframe : T2 x = T1 x := by
+        simpa [T2] using frameAt_tape_outside T1 hN
+          m1EvenResidueFourInside m1EvenResidueFourBridgeEnd x hout
+      have hT1 : T1 x = true := by
+        by_cases hx : x ≤ h
+        · let j : Nat := 3*a-4-i
+          have hj : j+1 < N := by
+            dsimp [j,N,x,hN] at *
+            omega
+          have hblock := sweptLeft_block N j T h hj
+          have hcoord : x = h-(j:Int) := by
+            dsimp [x,j,N,hN]
+            omega
+          change sweptLeft N T h x = true
+          rw [hcoord]
+          exact hblock
+        · by_cases hx1 : x = h+1
+          · rw [hx1]
+            simpa [T1,N] using sweptLeft_plus1 (3*a) T h
+          · have hx2 : h+2 ≤ x := by
+              dsimp [x,N,hN] at *
+              omega
+            have hx23 : x = h+2 ∨ x = h+3 := by
+              dsimp [x,N,hN] at *
+              omega
+            have hpres := sweptLeft_preserves_right N T h x (by omega)
+            rcases hx23 with hx2' | hx3'
+            · rw [hx2'] at hpres ⊢
+              change sweptLeft N T h (h+2) = true
+              have hsrc : T (h+2) = true := by
+                have hcoord : h+1+1 = h+2 := by omega
+                simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+                  s1Config_right_cell 3 4 1 a 0 b h 1
+              rw [hpres,hsrc]
+            · rw [hx3'] at hpres ⊢
+              change sweptLeft N T h (h+3) = true
+              have hsrc : T (h+3) = true := by
+                have hcoord : h+1+2 = h+3 := by omega
+                simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+                  s1Config_right_cell 3 4 1 a 0 b h 2
+              rw [hpres,hsrc]
+      simpa [x,T2] using hframe.trans hT1
+  intro k hk d hd
+  let p1 := 3*N
+  let p2 := p1+53
+  by_cases hk1 : k < p1
+  · have hlow := m1EvenResidueFour_counted_left_sweep_heads N T h hOn hright k
+      (by dsimp [p1]; omega) d hd
+    dsimp [hN,N] at *
+    omega
+  · by_cases hk2 : k < p2
+    · let j := k-p1
+      have hj : j<53 := by dsimp [j,p1] at *; omega
+      have hkEq : k=p1+j := by dsimp [j,p1]; omega
+      rw [hkEq,run_append,hSweep] at hd
+      simp only [Option.bind_some] at hd
+      have hlow := m1EvenResidueFour_bridge_prefix_lower T1 hN hmatch j hj d hd
+      dsimp [hN,N] at *
+      omega
+    · let j := k-p2
+      have hj : j<3*a := by dsimp [j,p2,p1,N] at *; omega
+      have hkEq : k=p1+(53+j) := by dsimp [j,p2,p1]; omega
+      rw [hkEq,run_append,hSweep] at hd
+      simp only [Option.bind_some] at hd
+      rw [run_append,hBridge'] at hd
+      simp only [Option.bind_some] at hd
+      have hhead := m1EvenResidueFour_E_scan_prefix_head
+        T2 (hN+5) (3*a) hlinear j hj d hd
+      dsimp [hN,N] at *
+      omega
+
 end BB6Coverage.Agent41M1EvenResidueFour
