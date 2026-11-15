@@ -51,7 +51,7 @@ the exact 18-cell bridge window `[-12,5]` has ones at
 and blanks elsewhere. The finite original-table bridge is:
 
 - start: `⟨3, 0, [-10,-9,-8,-7,-6,-5,-4,-1,2,3,4,5]⟩`;
-- after 53 moves: `⟨4, 5, [-12,-11,-10,-7,-4,-1,1,2,3,4,5]⟩`;
+- after 53 moves: state 4 at head 5, with one-cell support `{-12,-11,-10,-7,-4,-1,1,2,3,4,5}` (the exact ordered `FConfig` list is recorded in the Lean file);
 - every head during the 53-move bridge lies in `[-12,5]`.
 
 The exact finite transition is recorded as a `decide` theorem candidate in
