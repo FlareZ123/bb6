@@ -40,7 +40,6 @@ private theorem pow2_mul_pow (n k c : Nat) (hc : 2^k = c) :
     _ = c * 2^n := Nat.mul_comm _ _
 
 /-- The low three blocks of the source binary word for n=8q+7. -/
-/-- The low three blocks of the source binary word for n=8q+7. -/
 theorem m1ResidueSeven_binDec (L q : Nat) (hL : 3 ≤ L)
     (hbound : 8*q+7 < 2^L) :
     binDec L (8*q+7) =
