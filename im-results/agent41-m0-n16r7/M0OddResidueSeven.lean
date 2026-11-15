@@ -545,7 +545,7 @@ theorem m0Odd_residue7_q4_prefix_leftFacing
       m0OddResidueSevenCutTape L r a b h (h-(i:Int)) =
         sideBit (m0OddResidueSevenLeftFacing L r a) i := by
   have hsource := m0OddResidueSeven_source_left L r a hL hbound
-  have htargetLen := m0OddResidueSevenTargetPrefix_length a
+  have htargetLen := m0OddResidueSevenTargetPrefix_length a ha
   intro i
   by_cases hi : i ≤ 3*a+7
   · have hin :
@@ -586,12 +586,11 @@ theorem m0Odd_residue7_q4_prefix_leftFacing
     have htgt := sideBit_append_right
       (m0OddResidueSevenTargetPrefix a)
       (d0 ++ d0 ++ d1 ++ binDec (L-4) r ++ lh) i
-      (by rw [m0OddResidueSevenTargetPrefix_length]; omega)
+      (by rw [htargetLen]; omega)
     have hlenEq :
         (m0OddResidueSevenInputPrefix a).length =
           (m0OddResidueSevenTargetPrefix a).length := by
-      rw [m0OddResidueSevenInputPrefix_length,
-        m0OddResidueSevenTargetPrefix_length]
+      rw [m0OddResidueSevenInputPrefix_length,htargetLen]
     rw [hsrc] at hcell
     rw [hlenEq] at hcell
     simpa [m0OddResidueSevenLeftFacing] using hcell.trans htgt.symm
