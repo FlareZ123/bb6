@@ -4,7 +4,7 @@
 
 Two independent errors affected the original second-level prime sieve. On the p=5 cylinder \(w\equiv0\pmod4\), the parent equation forces \(w\equiv4\pmod5\), so \(w\equiv4\pmod{20}\) must be retained; see [Agent 48's p=5 audit](../agent48-needle-sieve-audit/SecondLevelPrime5Correction.md). On the p=13 cylinder \(w\equiv9\pmod{12}\), the parent equation forces \(w\equiv12\pmod{13}\), rather than excluding the whole cylinder; the derivation and exact recount are in [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md).
 
-With both corrections applied, the exact CRT counts are 38.50383574% (eight primes), 36.48382491% (eleven primes), and 38.24667388% for the conditional \(11^2\) refinement. These are candidate-valuation densities only. The corrected finite congruence sieve still does not establish an actual integer predecessor or blank-root reachability.
+With both corrections applied, the exact CRT counts are 38.50383574% (eight primes), 36.48382491% (eleven primes), and 38.24667388% for the conditional \(11^2\) refinement. These are candidate-valuation densities only. The corrected finite congruence sieve still does not establish an actual integer predecessor or blank-root reachability. Agent 48's later recount script drops the entire p=13 cylinder and omits its modulus factor; its lower percentages are undercounts. The exact reconciliation is recorded in [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md).
 
 ## 1. The second-level target
 
