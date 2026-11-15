@@ -127,11 +127,11 @@ The exact no-short transition DP gives these maximal initial no-short run length
 
 For even \(n\in[14,10{,}000]\), an exhaustive run of the no-short state recurrence found a maximum of 11 pairs (at \(n=4{,}094\)). The longer examples show that a constant bound is false; logarithmic growth is a plausible target. These data are exploratory, not proof.
 
-The no-short path for \(n=34{,}990\) survives 18 pairs and then dies. Near its end, the unique surviving branch has carry states
-\[
-556\to139\to4411\to9856\to2464\to616\to154\to4416\to1104\to276\to69,
-\]
-with the transition labels \(00,00,10,01,00,00,00,10,00,00,00\) over the corresponding final pairs. This illustrates why a naive monotone-carry argument fails: 10/01 can re-inject a carry of order \(n\).
+The no-short path for \\(n=34{,}990\\) survives 18 pairs and then dies. Its final 12 transitions have carry states
+\\[
+8896\\to2224\\to556\\to139\\to4411\\to9856\\to2464\\to616\\to154\\to4416\\to1104\\to276\\to69,
+\\]
+with labels \\`00,00,00,10,01,00,00,00,10,00,00,00\\`. This illustrates why a naive monotone-carry argument fails: 10/01 can re-inject a carry of order \\(n\\).
 
 ## 6. Return-cycle decomposition of no-short runs
 
