@@ -152,11 +152,19 @@ the preceding blank-root first section. The existing
 The second Coq Rst1' instance is still part of the unresolved
 middle/last `hstage`. It should be applied with
 `(L,a,b)=(L1,A2,B2)`, after the full `Rsts1_v2` source transition has
-been established. The current
+been established. The universal macro and the already-proved
+`rst1Prime_resetCost_decomposition L a b` are parameter-generic, so
+the second reset should reuse the same ten-phase macro plus the S1
+counted drain; only the exact `resetIndex L a` algebraic identity
+needs to be stated at general (L) rather than the first-stage
+specialization (L=3). The current
 `TM63MiddleSectionCountdown` plus
 `TM63RootResidueSevenPrefix` / `TM63RootResidueSeven` only certifies
 the first eight middle rows and the residue-seven prefix/counted
-increment; it does not yet reach the second Rst1' input.
+increment; it does not yet reach the second Rst1' input. Thus the
+remaining hard source obligation is the complete `Rsts1_v2` middle
+transition to `S1(L1,0,m1,A2,0,B2)`; after that, the second Rst1'
+reset itself is a direct reuse of the existing macro.
 
 **Verification status:** the ten-phase macro and its root-connected first
 instance are source proof attempts, not yet certified by a post-patch
