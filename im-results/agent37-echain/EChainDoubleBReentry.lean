@@ -172,8 +172,8 @@ theorem regularEndpointFloor_sourceSection
     exact hreg
     exact canon_nonzero_q n 4 0 hn2 (by decide)
 
-/-- Two consecutive B packets, with the second consuming the p+3 suffix
-    produced by the first, followed by a source-certified A-marker return. -/
+/-- Two consecutive B packets consume two alternating pairs; the original-source
+    B theorem preserves the unary suffix p, followed by A-marker closure. -/
 def bTwiceTime (t : Nat) : Nat :=
   BB6.Agent37EChainBExit.bTime (9*t+5) +
     BB6.Agent37EChainBExit.bTime (24*t+16)
@@ -188,12 +188,12 @@ theorem double_B_to_A_source_reentry (t q p : Nat) :
       DRegular.Canon ⟨a,q',b⟩ := by
   let ka := 64*t+45
   obtain ⟨ta,n,hA,hn⟩ :=
-    all_A_marker_returns_floor ka q (p+6)
+    all_A_marker_returns_floor ka q p
   have hB :
       CryptidBoundary.run (bTwiceTime t)
         (BB6.Agent31PacketSource.packet (27*t+17) (q+2) p
           BB6.Agent35K4Shapes.marker) =
-      BB6.Agent31PacketSource.packet (3*ka+3) q (p+6)
+      BB6.Agent31PacketSource.packet (3*ka+3) q p
         BB6.Agent35K4Shapes.marker := by
     simpa [bTwiceTime,ka] using
       (BB6.Agent37EChainDoubleBExit.b_twice t q p
@@ -325,19 +325,19 @@ private theorem endpointZero_sourceSection (n : Nat) :
   exact BB6.Padding.cfgEq_refl _
 
 /-- Concrete source path from the nonempty P2 reset cylinder to
-    L(24972,2,2): P2 reset, one E-chain step, B, B, then A. -/
+    L(24956,2,2): P2 reset, one E-chain step, B, B, then A. -/
 def concreteResetTime : Nat :=
   BB6.Agent2PacketP2Reset.eTwoTime 61 0 +
     BB6.Agent37EChain.chainTime 1 41 0 +
     bTwiceTime 48 +
-    BB6.Agent35MarkerA.aTime0 3117 0 3
+    BB6.Agent35MarkerA.aTime0 3117 0 1
 
 theorem concrete_reset_double_B_to_A_source_reentry :
     ObsEq
       (CryptidBoundary.run concreteResetTime
         (BB6.Agent31PacketSource.packet 187 0 2
           (false::List.replicate 6 true)))
-      (DRegularSource.sourceSection ⟨24972,2,2⟩) := by
+      (DRegularSource.sourceSection ⟨24956,2,2⟩) := by
   have hm : BB6.Agent2PacketP2Reset.marker =
       BB6.Agent35K4Shapes.marker := by decide
   have hresetRaw :
@@ -361,18 +361,18 @@ theorem concrete_reset_double_B_to_A_source_reentry :
       CryptidBoundary.run (bTwiceTime 48)
         (BB6.Agent31PacketSource.packet 1313 2 3
           BB6.Agent35K4Shapes.marker) =
-      BB6.Agent31PacketSource.packet 9354 0 9
+      BB6.Agent31PacketSource.packet 9354 0 3
         BB6.Agent35K4Shapes.marker := by
     have h := BB6.Agent37EChainDoubleBExit.b_twice 48 0 3
       BB6.Agent35K4Shapes.marker
     simpa [bTwiceTime] using h
   have hn :
       2*((4*3117+3)+CryptidA.wordInc
-        (BB6.Agent35MarkerA.code 0 3))+5 = 24971 := by decide
+        (BB6.Agent35MarkerA.code 0 1))+5 = 24955 := by decide
   have hARaw :
       CryptidBoundary.run (BB6.Agent35MarkerA.aTime0 3117 0 3)
         (BB6.Agent31PacketSource.packet 9354 0 9
-          BB6.Agent35K4Shapes.marker) = endpointZero 24971 := by
+          BB6.Agent35K4Shapes.marker) = endpointZero 24955 := by
     have h := BB6.Agent35MarkerA.close_zero 3117 0 3
     simpa [endpointZero,hn] using h
   have hreset : ObsEq
@@ -405,7 +405,7 @@ theorem concrete_reset_double_B_to_A_source_reentry :
           BB6.Agent35K4Shapes.marker))
       (DRegularSource.sourceSection ⟨24972,2,2⟩) := by
     rw [hARaw]
-    exact endpointZero_sourceSection 24971
+    exact endpointZero_sourceSection 24955
   have h12 := BB6.BoundaryPadding.source_chain
     (BB6.Agent2PacketP2Reset.eTwoTime 61 0)
     (BB6.Agent37EChain.chainTime 1 41 0)
