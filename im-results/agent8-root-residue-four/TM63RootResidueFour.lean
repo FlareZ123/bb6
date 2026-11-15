@@ -68,7 +68,8 @@ private theorem tm63_root_residue4_bound :
     8*(2*tm63RootResidueSixK)+4 < 2^tm63Length1 := by
   have hroot := tm63_index1_lt_pow_length1
   have hmul := eight_twice tm63RootResidueSixK
-  rw [hmul,tm63_root_index_eq_16r15] at hroot
+  rw [hmul]
+  rw [tm63_root_index_eq_16r15] at hroot
   omega
 
 private theorem tm63_root_residue3_bound :
