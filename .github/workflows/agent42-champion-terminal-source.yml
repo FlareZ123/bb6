@@ -547,6 +547,44 @@ jobs:
             exit 1
           fi
 
+          # Agent 42: validate the m=2,n=16*r+6 row and append the following
+          # m=1,n=16*r+5 residue-five increment to the authentic root path.
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M2EvenSixQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-six-q4-axioms.log
+          lean -o M2EvenSixQ4Prefix.olean M2EvenSixQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m2-even-six-q4-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m2-even-six-q4-axioms.log; then
+            echo '::error::sorryAx found in fixed m=2,n=6 q4 source bridge'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M2EvenResidueSix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-residue6-axioms.log
+          lean -o M2EvenResidueSix.olean M2EvenResidueSix.lean 2>&1 | tee /tmp/a42-terminal/m2-even-residue6-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m2-even-residue6-axioms.log; then
+            echo '::error::sorryAx found in m=2,n=16*k+6 lifted source prefix'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M2EvenResidueSixCounted.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-residue6-counted-axioms.log
+          lean -o M2EvenResidueSixCounted.olean M2EvenResidueSixCounted.lean 2>&1 | tee /tmp/a42-terminal/m2-even-residue6-counted-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m2-even-residue6-counted-axioms.log; then
+            echo '::error::sorryAx found in m=2,n=16*k+6 counted increment'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M1OddResidueFive.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-odd-residue-five-axioms.log
+          lean -o M1OddResidueFive.olean M1OddResidueFive.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-residue-five-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-residue-five-axioms.log; then
+            echo '::error::sorryAx found in m=1,n=8*q+5 counted increment'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63RootResidueSix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-residue6-axioms.log
+          lean -o TM63RootResidueSix.olean TM63RootResidueSix.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-residue6-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-residue6-axioms.log; then
+            echo '::error::sorryAx found in blank-root composition through the m=1,n=16*r+5 row'
+            exit 1
+          fi
+
           # Agent 42's integration closes the final (1,1) reset premise.
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63FinalResetIntegration.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-final-reset-integration-axioms.log
@@ -651,6 +689,11 @@ jobs:
             /tmp/a42-terminal/rst1prime-root-continuation-axioms.log
             /tmp/a42-terminal/tm63-root-residue7-prefix-axioms.log
             /tmp/a42-terminal/tm63-root-residue7-axioms.log
+            /tmp/a42-terminal/m2-even-six-q4-axioms.log
+            /tmp/a42-terminal/m2-even-residue6-axioms.log
+            /tmp/a42-terminal/m2-even-residue6-counted-axioms.log
+            /tmp/a42-terminal/m1-odd-residue-five-axioms.log
+            /tmp/a42-terminal/tm63-root-residue6-axioms.log
             /tmp/a42-terminal/m1-final-reset-integration-axioms.log
             /tmp/a42-terminal/rst1-prime-first-sweep-axioms.log
             /tmp/a42-terminal/rst1-prime-bridge8-source-axioms.log
