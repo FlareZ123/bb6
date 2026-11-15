@@ -298,23 +298,29 @@ The shared arithmetic module
 these rather than duplicating the quotient and width proofs.
 
 **Current next source row:** M0-even residue four, input
-`S1(L,16*r+4,0,A11,0,B11,H11)). Agent 48's finite bridge candidate is
-`im-results/agent48-counted-inc0/M0EvenResidueFour-bridge-candidate.md`.
-Agent 42 added the isolated 51-step finite certificate and full-frame head
-bound in
-`im-results/agent42-champion-terminal/M0EvenResidueFourFiniteBridge.lean`,
-and wired it into the manual source workflow. The companion
-`M0EvenResidueFourBinDec.lean` proves the general low-block identity
-`binDec L (8*r+4) = d1 ++ d1 ++ d0 ++ binDec (L-3) r` and the corresponding
-`s1LeftFacing` decomposition, packaging the variable high tail. Three deterministic sample
-replays `(a,b)=(1,0),(2,1),(3,2)` reached state 4 at the original head
-and satisfied `q4RightShape`; these are computational samples only.
+`S1(L,16*r+4,0,A11,0,B11,H11)`. Agent 48 has now supplied the integrated
+candidate modules:
+- `im-results/agent48-counted-inc0/M0EvenFourQ4Bridge.lean`: 51-step
+  finite bridge, head confinement, and arbitrary-source input match;
+- `M0EvenFourQ4Prefix.lean`: base `L=3,n=4) prefix, E-scan, and q4
+  suffix interfaces;
+- `M0EvenResidueFour.lean`: uniform `n=8*k+4) source prefix and counted
+  increment, including the BinDec low-block decomposition and frame lift.
+
+Agent 8's `im-results/agent8-root-residue-four/TM63RootResidueFour.lean`
+imports the Agent 42 middle-11 endpoint, applies this M0 row, then applies
+the generic M2-odd row to produce the candidate
+`tm63_blank_reaches_after_middle13`. Three independent deterministic
+sample replays `(a,b)=(1,0),(2,1),(3,2)` reached state 4 at the original
+head and satisfied `q4RightShape`; these are computational samples only.
+The redundant standalone Agent 42 finite-bridge/BinDec helper files and
+workflow steps were removed after Agent 48's integrated implementation
+superseded them.
 
 **Unverified boundary:** the M2 counted adapter, M1 residue-five source
-theorem, root composition through middle11, public root arithmetic
-lemmas, and finite M0 bridge certificate have not been compiled in this
-invocation. The M0 arbitrary-source frame, E-scan, q4 suffix/tail identity,
-and counted-drain composition remain open. Do not report a certified
-extension beyond the previously accepted root prefix until the Critic's
-residue-seven/Rst1Prime source gate and these new modules pass their
-Lean 4.36.0-rc2 axiom audits.
+theorem, root composition through middle11/middle13, Agent 48's M0 row
+modules, Agent 8's middle-13 wrapper, and public root arithmetic lemmas
+have not been compiled in this invocation. Do not report a certified
+extension beyond the previously accepted root prefix until the
+Critic's residue-seven/Rst1Prime source gate and these new modules pass
+their Lean 4.36.0-rc2 axiom audits.
