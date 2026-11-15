@@ -732,6 +732,43 @@ jobs:
             exit 1
           fi
 
+          # Agent 41's middle-16 and middle-17 source rows, composed by Agent 49.
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m2-even-residue16/M2EvenSixteenQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-sixteen-q4-prefix-axioms.log
+          lean -o M2EvenSixteenQ4Prefix.olean M2EvenSixteenQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m2-even-sixteen-q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m2-even-sixteen-q4-prefix-axioms.log; then
+            echo '::error::sorryAx found in m=2,n=16*k+16 q4 prefix'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m2-even-residue16/M2EvenResidueSixteen.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-residue16-axioms.log
+          lean -o M2EvenResidueSixteen.olean M2EvenResidueSixteen.lean 2>&1 | tee /tmp/a42-terminal/m2-even-residue16-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m2-even-residue16-axioms.log; then
+            echo '::error::sorryAx found in m=2,n=16*k+16 counted increment'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m1-odd-residue7/M1OddResidueSeven.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-odd-residue7-axioms.log
+          lean -o M1OddResidueSeven.olean M1OddResidueSeven.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-residue7-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-residue7-axioms.log; then
+            echo '::error::sorryAx found in m=1,n=16*k+15 counted increment'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent49-tm63-root-middle16/TM63RootResidueSixteen.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-residue16-axioms.log
+          lean -o TM63RootResidueSixteen.olean TM63RootResidueSixteen.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-residue16-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-residue16-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-16/17 composition'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/TM63RootMiddle18.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-middle18-axioms.log
+          lean -o TM63RootMiddle18.olean TM63RootMiddle18.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle18-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-middle18-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-18 composition'
+            exit 1
+          fi
+
           # Agent 42's integration closes the final (1,1) reset premise.
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63FinalResetIntegration.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-final-reset-integration-axioms.log
