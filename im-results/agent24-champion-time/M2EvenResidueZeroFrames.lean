@@ -98,7 +98,7 @@ theorem m2ZeroPostlude_match_after_HRun (n : Nat) (T : Int → Bool)
         _ = false := hr
     have hnot : (13:Int) ∉ m2ZeroPostludeStart.marked := by
       simp [m2ZeroPostludeStart]
-    simpa [hzero,hnot]
+    simpa [harg,hzero,hnot]
   · have hxle12 : x≤12 := by omega
     have hyinside : m2ZeroSetupInside (-12+x)=true := by
       simp [m2ZeroSetupInside]
@@ -122,9 +122,9 @@ theorem m2ZeroPostlude_match_after_HRun (n : Nat) (T : Int → Bool)
     have hmemPost : x ∈ m2ZeroPostludeStart.marked := by
       change x ∈ (List.range 13).map Int.ofNat
       rw [List.mem_map]
-      refine ⟨x.toNat, List.mem_range.mpr ?_, ?_⟩
-      · omega
-      · exact Int.toNat_of_nonneg (by omega)
+      have hxnat : (x.toNat : Int)=x := Int.toNat_of_nonneg (by omega)
+      have hxNat : x.toNat < 13 := by omega
+      exact ⟨x.toNat, List.mem_range.mpr hxNat, hxnat⟩
     simpa [hfinalTrue,hmemPost]
 
 /-- Compose the 44-step finite setup, the universal 12*n+4 H-run, and
