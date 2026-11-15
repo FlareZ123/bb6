@@ -340,7 +340,7 @@ theorem odd_output_equation_deficit (h k t d : Nat)
       intro heq
       have hodd : (h+k+4)%2=1 := by omega
       rw [heq] at hodd
-      norm_num at hodd
+      simp [Nat.mul_mod] at hodd
     have hband := odd_inverse_band h k hlow hhigh hnot hpar
     have hqlo' : 6*2^k+1≤oddParameter h k := by
       simpa [oddParameter] using hband.1.1
