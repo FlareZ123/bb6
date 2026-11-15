@@ -113,7 +113,7 @@ Thus both the input and cut-tape left words agree with their base counterparts
 through every index `i ≤ 3*a+14`; beyond that, both general words share the
 same `binDec (L-3) k ++ lh` tail. All right-side cells lie in the half-line.
 This gives a direct arbitrary-width frame-lift route without enlarging the
-finite bridge.
+finite bridge. The closest code-level template is `im-results/agent48-counted-inc0/M0EvenResidueFour.lean`: its `run_frame`, `q4RightShape_congr`, suffix target-left identity, and counted-drain composition are structurally reusable. It is an m=0 row and is itself still an uncompiled draft; do not reuse its base bridge, marker arithmetic, or cost without the m=1 adaptations above.
 
 ## Computational evidence
 
