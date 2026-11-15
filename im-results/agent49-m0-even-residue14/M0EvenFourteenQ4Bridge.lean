@@ -3,15 +3,18 @@ import CountedSweep
 import CountedQ4Prefix
 import ChampionRootBridge
 import S1Encoder
+import M0EvenQ4Bridge
 import Lean.Elab.Tactic.Omega
 
 /-!
-# m=0, n=32*k+14 finite q4 bridge
+# m=0, n=32*k+14 q4 bridge input match
 
-This is the 39-step finite bridge obtained after the 3a-cell left sweep
-for the next root family `S1(L,32*k+14,0,a,0,b,h)`. Its local input
-window is [-9,2], and the finite head trace stays entirely inside that
-window. The higher-order binary tail is handled by a separate frame lift.
+The 39-step finite bridge is exactly the existing m=0,n=2 bridge.
+The new content here is the source-specific five-block BinDec
+decomposition and the proof that, after the 3a-cell left sweep from
+`S1(5,14,0,a,0,b,h)`, its complete [-9,3] input frame matches that
+same finite bridge for every a>0. The high-order binary tail is
+outside the frame and is handled by the usual frame lift.
 -/
 
 namespace BB6Coverage.Agent49M0EvenFourteenQ4Bridge
@@ -20,29 +23,26 @@ open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
+open BB6Coverage.Agent24M0EvenQ4Bridge
 
-def m0EvenFourteenInside (x : Int) : Bool :=
-  decide (-9 ≤ x ∧ x ≤ 2)
+abbrev m0EvenFourteenInside := m0EvenQ4Inside
+abbrev m0EvenFourteenBridgeStart := m0EvenQ4BridgeStart
+abbrev m0EvenFourteenBridgeEnd := m0EvenQ4BridgeEnd
 
-def m0EvenFourteenBridgeStart : FConfig :=
-  ⟨3, 0, [-7,-6,-5,-4,-1,2]⟩
-
-def m0EvenFourteenBridgeEnd : FConfig :=
-  ⟨4, 3, [-9,-8,-7,-4,-1,1,2]⟩
-
-/-- Exact 39-step run of the original TM2 table on the finite window. -/
+/-- The exact finite bridge is reused unchanged from the n=2 family. -/
 theorem m0EvenFourteenBridge_exact :
     fRun tm2 39 m0EvenFourteenBridgeStart =
       some m0EvenFourteenBridgeEnd := by
-  decide
+  simpa [m0EvenFourteenBridgeStart,m0EvenFourteenBridgeEnd] using
+    m0EvenQ4Bridge_exact
 
-/-- Every pre-transition head remains in the [-9,2] bridge window. -/
 theorem m0EvenFourteenBridge_heads :
     (List.range 39).all (fun k =>
       match fRun tm2 k m0EvenFourteenBridgeStart with
       | none => true
       | some f => m0EvenFourteenInside f.head) = true := by
-  decide
+  simpa [m0EvenFourteenInside,m0EvenFourteenBridgeStart] using
+    m0EvenQ4Bridge_heads
 
 /-- Five low source blocks for n=14. -/
 theorem m0EvenFourteen_binDec_five_fourteen :
@@ -113,7 +113,7 @@ private theorem m0EvenFourteenSweptLeftCell
   exact hsrc
 
 /-- After the counted left sweep of 3a cells, the complete fixed
-[-9,2] input window is the 39-step bridge above. -/
+[-9,3] input window is the existing 39-step bridge. -/
 theorem m0EvenFourteenBridge_input_match
     (a b : Nat) (h : Int) (ha : 0 < a) :
     ∀ y, m0EvenFourteenInside y = true →
@@ -121,8 +121,8 @@ theorem m0EvenFourteenBridge_input_match
         (h - ((3*a : Nat) : Int) + y) =
           decide (y ∈ m0EvenFourteenBridgeStart.marked) := by
   intro y hy
-  have hyb : -9 ≤ y ∧ y ≤ 2 := by
-    simpa [m0EvenFourteenInside] using hy
+  have hyb : -9 ≤ y ∧ y ≤ 3 := by
+    simpa [m0EvenFourteenInside,m0EvenQ4Inside] using hy
   by_cases hy0 : y ≤ 0
   · let k : Nat := Int.toNat (-y)
     have hkcast : (k : Int) = -y := by
@@ -141,11 +141,12 @@ theorem m0EvenFourteenBridge_input_match
           y = -5 ∨ y = -4 ∨ y = -3 ∨ y = -2 ∨ y = -1 ∨ y = 0 := by omega
       rcases hyCases with h9 | h8 | h7 | h6 | h5 | h4 | h3 | h2 | h1 | h0
       all_goals subst y
-      all_goals simp [k,m0EvenFourteenBridgeStart,markerWord,d0,d1,lh,sideBit]
+      all_goals simp [k,m0EvenFourteenBridgeStart,
+        m0EvenQ4BridgeStart,markerWord,d0,d1,lh,sideBit]
     exact hleft.trans hbits
   · have hypos : 1 ≤ y := by omega
-    have hyCases : y = 1 ∨ y = 2 := by omega
-    rcases hyCases with h1 | h2
+    have hyCases : y = 1 ∨ y = 2 ∨ y = 3 := by omega
+    rcases hyCases with h1 | h2 | h3
     · subst y
       have hleft := sweptLeft_leftmost (3*a-1)
         (s1Config 5 14 0 a 0 b h).tape h
@@ -154,7 +155,7 @@ theorem m0EvenFourteenBridge_input_match
             h - ((3*a-1 : Nat) : Int) := by omega
       rw [hcoord]
       have hN : 3*a-1+1 = 3*a := by omega
-      simpa [m0EvenFourteenBridgeStart,hN] using hleft
+      simpa [m0EvenFourteenBridgeStart,m0EvenQ4BridgeStart,hN] using hleft
     · subst y
       have hblock := sweptLeft_block (3*a) (3*a-2)
         (s1Config 5 14 0 a 0 b h).tape h (by omega)
@@ -162,7 +163,23 @@ theorem m0EvenFourteenBridge_input_match
           h - ((3*a : Nat) : Int) + 2 =
             h - ((3*a-2 : Nat) : Int) := by omega
       rw [hcoord]
-      simpa [m0EvenFourteenBridgeStart] using hblock
+      simpa [m0EvenFourteenBridgeStart,m0EvenQ4BridgeStart] using hblock
+    · subst y
+      by_cases ha1 : a = 1
+      · subst a
+        have hhead := sweptLeft_head 1
+          (s1Config 5 14 0 1 0 b h).tape h
+        have hcoord : h - ((3 : Nat) : Int) + 3 = h := by omega
+        rw [hcoord]
+        simpa [m0EvenFourteenBridgeStart,m0EvenQ4BridgeStart] using hhead
+      · have ha2 : 2 ≤ a := by omega
+        have hblock := sweptLeft_block (3*a) (3*a-3)
+          (s1Config 5 14 0 a 0 b h).tape h (by omega)
+        have hcoord :
+            h - ((3*a : Nat) : Int) + 3 =
+              h - ((3*a-3 : Nat) : Int) := by omega
+        rw [hcoord]
+        simpa [m0EvenFourteenBridgeStart,m0EvenQ4BridgeStart] using hblock
 
 #print axioms m0EvenFourteenBridge_exact
 #print axioms m0EvenFourteenBridge_heads
