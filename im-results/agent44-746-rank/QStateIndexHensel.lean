@@ -511,6 +511,71 @@ theorem qNumerator_t1_parent_identity (n j u q d : Nat)
         9*(8*(d:Int)-((2:Int)^(n+2)+2*n+1)) := by ring
     _=9*(2*q+5) := by rw [h8d]; ring
 
+
+/-- The exact dyadic offset left after substituting the first-failure
+level K=n-2 into the Q-state numerator. -/
+def qParentOffset (K q : Nat) : Int :=
+  112*(2:Int)^K - 2*(K:Int) - 34 - 18*(q:Int)
+
+/-- The odd factor attached to a canonical ray depth at source level K. -/
+def qParentFactor (K : Nat) : Int :=
+  2*(K:Int)+7
+
+/-- Exact difference identity: the Q-state parent equation and the
+dyadic offset equation differ by no approximation or residue condition. -/
+theorem qNumerator_t1_parent_offset_difference (K j q : Nat) :
+    qNumerator (K+2) j - 9*(2*q+5) =
+      qParentOffset K q -
+        qParentFactor K*(2:Int)^(j+4) := by
+  have hpow : (2:Int)^(K+2)=4*(2:Int)^K := by
+    rw [Int.pow_add]
+    norm_num
+  unfold qNumerator qParentOffset qParentFactor
+  push_cast
+  rw [hpow]
+  ring
+
+/-- A source t=1 parent can lie on the canonical ray of depth j exactly
+when its Q numerator equals 9(2q+5), equivalently when the odd factor
+2K+7 times the exact dyadic depth power equals the root offset. -/
+theorem qNumerator_t1_parent_offset_iff (K j q : Nat) :
+    qNumerator (K+2) j = 9*(2*q+5) ↔
+      qParentOffset K q =
+        qParentFactor K*(2:Int)^(j+4) := by
+  have hdifference := qNumerator_t1_parent_offset_difference K j q
+  constructor
+  · intro h
+    have hz : qNumerator (K+2) j - 9*(2*q+5) = 0 :=
+      sub_eq_zero.mpr h
+    rw [hdifference] at hz
+    exact sub_eq_zero.mp hz
+  · intro h
+    have hz : qParentOffset K q -
+        qParentFactor K*(2:Int)^(j+4) = 0 :=
+      sub_eq_zero.mpr h
+    rw [← hdifference] at hz
+    exact sub_eq_zero.mp hz
+
+/-- Every genuine t=1 first-reset parent that matches a canonical ray
+has the unique exact offset equation at its source first-failure level.
+This is the binary alignment condition that must accompany the
+3-adic Q-depth residue selector. -/
+theorem qNumerator_t1_parent_exact_depth (n j u q d : Nat)
+    (hn : 2≤n)
+    (hSigned : signedZ n j=(2*u+5:Int))
+    (hd : d%2=1)
+    (hband : 6*2^(n-2)+1≤2*d ∧ 2*d≤8*2^(n-2)-1)
+    (hodd : 2*u+5=9*d)
+    (hparent : 2*(2*d)=8*2^(n-2)+q+(n-2)+5) :
+    qParentOffset (n-2) q =
+      qParentFactor (n-2)*(2:Int)^(j+4) := by
+  have hidentity := qNumerator_t1_parent_identity
+    n j u q d hn hSigned hd hband hodd hparent
+  have hindex : n-2+2=n := by omega
+  apply (qNumerator_t1_parent_offset_iff (n-2) j q).mp
+  simpa only [hindex] using hidentity
+
+
 #print axioms qNumerator_eq_signedZ
 #print axioms qIndexCoefficient_eq_signedZ
 #print axioms qNumerator_mod_three_even_iff
@@ -522,5 +587,8 @@ theorem qNumerator_t1_parent_identity (n j u q d : Nat)
 #print axioms qIndexResidue_all_sectors_iff
 #print axioms qIndexResidue_887_iff
 #print axioms qNumerator_t1_parent_identity
+#print axioms qNumerator_t1_parent_offset_difference
+#print axioms qNumerator_t1_parent_offset_iff
+#print axioms qNumerator_t1_parent_exact_depth
 
 end CascadeQStateIndexHensel
