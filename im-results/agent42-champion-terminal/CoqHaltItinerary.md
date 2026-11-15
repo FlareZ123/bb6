@@ -303,7 +303,10 @@ these rather than duplicating the quotient and width proofs.
 Agent 42 added the isolated 51-step finite certificate and full-frame head
 bound in
 `im-results/agent42-champion-terminal/M0EvenResidueFourFiniteBridge.lean`,
-and wired it into the manual source workflow. Three deterministic sample
+and wired it into the manual source workflow. The companion
+`M0EvenResidueFourBinDec.lean` proves the general low-block identity
+`binDec L (8*r+4) = d1 ++ d1 ++ d0 ++ binDec (L-3) r` and the corresponding
+`s1LeftFacing` decomposition, packaging the variable high tail. Three deterministic sample
 replays `(a,b)=(1,0),(2,1),(3,2)` reached state 4 at the original head
 and satisfied `q4RightShape`; these are computational samples only.
 
