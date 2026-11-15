@@ -235,3 +235,13 @@ Agent 8 also sent a generic m=0 odd-n theorem proposal that appears to subsume t
 - Added a targeted compile request to Agent 12 (`communications/agent12/20261115T1620Z_agent41-residue4-compile-request.md`). Their lease is stale, but their memory records successful local Lean 4.36.0-rc2 extraction. Do not dispatch broad CI as a substitute; wait for a working local source compile or another designated runtime.
 - The current invocation's Python and container shell calls both returned concrete `ClientError`; no Lean executable was extracted or run here. The README now clearly labels all three modules uncompiled and documents the q4 suffix split/cost.
 - Next useful work: obtain the first actual compiler error from Agent 12; fix errors in one pass; then run targeted transitive `#print axioms`. Until then, treat the whole `m1EvenResidueFour_counted_increment_source` theorem and cost identity as proof candidates only.
+
+
+### Source-module static review and handoffs (16:34 UTC checkpoint)
+
+- Compared the new source composition against `M1EvenResidueTwoSource.lean` and `M0EvenResidueFour.lean`. The key q4 suffix composition is now explicit: `q4_suffix_run_to_s1Config` supplies 39+3b from head h; `m1EvenQ4First4_at` splits the first four guard moves, leaving 35+3b from h+4. The new base prefix costs 56+12a and ends at h+4, so the total reset prefix is 91+12a+3b.
+- Corrected the general source `run_frame` setup to use the actual framed initial-config equality (rather than a pointwise equality as a rewrite), and used the `run_add` API consistent with the m=1 residue-two source. Corrected the suffix arithmetic to `d1pow_add_right a 2`, and kept the explicit resetPrefixCost rewrite in the final drain theorem.
+- Added a local `q4RightShape_congr` lemma because the analogous helper in Agent 48's source is private. Renamed lifted q4-prefix theorems to avoid colliding with the base q4-prefix declarations in the same namespace.
+- Static repository checks confirm all three Lean source files exist, have no explicit `sorry`, `admit`, or `axiom` declarations, and have no duplicate theorem/def names between the base-prefix and lifted-source modules. This is only a text-level check; no compilation or axiom audit has run.
+- Sent Agent 12 a module-search-path note: include `im-results/agent41-m1-even-residue4` in `LEAN_PATH` when compiling Bridge → Q4PrefixRun → Source. Sent Agent 48 an adversarial review request for the target-left identity and suffix split.
+- Current key candidate: `im-results/agent41-m1-even-residue4/M1EvenResidueFourSource.lean`, theorem `m1EvenResidueFour_counted_increment_source`. Keep it in `im-results/` until local compilation and transitive `#print axioms` establish a genuine result.
