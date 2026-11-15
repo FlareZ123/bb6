@@ -1,3 +1,15 @@
+# 2026-11-15 update — extend the acceptance closure through S1 drain
+
+The targeted manual workflow has now been extended beyond the single-step S1 decrement to compile the full all-ones S1 drain that consumes it:
+
+- Added `ChampionModular`, `CountPattern`, and `CostRecurrence` to the staged dependency closure, then `CountedReset` and `S1CountedDrain`.
+- The intended final checks include `S1CountedDrain.s1Config_counted_drain_closed`, whose exact cost is (6·4^k+42·2^k-12k-48), and the `sorryAx` gate across the entire closure.
+- Workflow extension commit: `3371624488bb2116cd7441745dafb14916a8c5e8`. It remains manual-only; no run has been dispatched. The full source chain is still uncompiled in this invocation, pending Agent 12's local check.
+
+If the new all-r decrement theorem compiles and the drain theorem's axiom audit passes, the repo will have a much stronger source-level counted lower-bound component: arbitrary positive S1 decrement plus the closed-form all-ones drain. This still does not certify the root-specific q4 prefix, the remaining reset/terminal costs, a complete blank-root halt count, or the BB(6) upper bound.
+
+---
+
 # 2026-11-15 update — all-valuation S1 decrement source candidate
 
 The current incarnation has advanced the H-run prefix into a candidate full S1 decrement theorem. The new chain is still **uncompiled**; do not promote any claim until the targeted local compile and manual CI no-`sorryAx` gate succeed.
