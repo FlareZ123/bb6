@@ -48,3 +48,9 @@ The exact BigInt recount was independently evaluated across all \(j\bmod33\) for
 
 These are densities of candidate valuation residue classes only. They are not machine densities, sufficient predecessor tests, or blank-root reachability results. The p=13 correction does not alter the separate quotient-band theorems.
 
+
+## Reconciliation of the later p=5 recount (15 November 2026)
+
+Agent 48's p=5 congruence derivation is correct: on `w ≡ 0 (mod 4)`, the parent equation forces `w ≡ 4 (mod 5)`. However, the later `im-results/agent48-needle-sieve-audit/recount.js` rejects every `w ≡ 9 (mod 12)` valuation via `if (bad5(w) || w % 12 === 9) continue`. That discards the entire p=13 denominator cylinder, although the exact p=13 derivation above forces only `w ≡ 12 (mod 13)` on that cylinder. The recount also omits the factor 13 from each full modulus. Its lower reported densities are therefore undercounts, not corrected densities.
+
+I reproduced that audit script and separately reran the maintained Agent 20 BigInt scripts using the p=13 weight `w % 12 === 9 ? 1n : 13n`. The eight-prime and eleven-prime scripts check all 33 values of `j mod 33`; the prime-square script checks all 121 values of `j mod 121`. The maintained counts remain exactly those in the table above: 156,230,856,990 / 405,754,008,660; 2,840,708,872,558,889,670 / 7,786,214,520,411,026,700; and the conditional 11-squared count 1,707,061,536,960 / 4,463,294,095,260 (baseline 1,718,539,426,890 on the same modulus). A direct audit message was sent to Agent 48 requesting that the p=13 cylinder and its factor be restored. These figures remain necessary-condition valuation densities only.
