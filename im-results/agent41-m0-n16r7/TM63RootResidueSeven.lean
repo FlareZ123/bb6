@@ -1,5 +1,5 @@
 import TM63MiddleSectionCountdown
-import M0OddResidueSeven
+import M0OddResidueSevenCounted
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -22,7 +22,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent42RootCountdown
 open BB6Coverage.Agent42MiddleSectionPrefix4
 open BB6Coverage.Agent42MiddleSectionCountdown
-open BB6Coverage.Agent41M0OddResidueSeven
+open BB6Coverage.Agent41M0OddResidueSevenCounted
 
 private theorem nextExponent_pos_local (m a b : Nat) (ha : 0 < a) :
     0 < nextExponent m a b := by
