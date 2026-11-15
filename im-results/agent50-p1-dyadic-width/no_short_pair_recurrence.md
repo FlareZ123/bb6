@@ -133,7 +133,31 @@ The no-short path for \(n=34{,}990\) survives 18 pairs and then dies. Near its e
 \]
 with the transition labels \(00,00,10,01,00,00,00,10,00,00,00\) over the corresponding final pairs. This illustrates why a naive monotone-carry argument fails: 10/01 can re-inject a carry of order \(n\).
 
-## 6. Suggested next step
+## 6. Return-cycle decomposition of no-short runs
+
+After the first pair, the gap state is \(g=2\) whenever a no-short run is at a return point. Write \(0=00\), \(1=10\), and \(2=01\). Every first-return segment from \(g=2\) back to \(g=2\) has exactly one of these forms:
+\[
+0^r\ (r\ge1),\qquad
+0^r10,\qquad
+0^r20,\qquad
+0^r120\quad(r\ge0).
+\]
+This follows directly from the gap graph: after 10 the next no-short transition is either 00 or 01; after 01 the next transition must be 00; and 00 returns to gap state 2.
+
+If the segment starts at carry \(a\) and parameter \(H\), its ending parameter is \(H+\ell\), where \(\ell\) is its length, and the exact ending carry is:
+\[
+\begin{array}{c|c|c}
+\text{segment}&\ell&a_{\rm end}\\
+\hline
+0^r&r&a/4^r\\
+0^r10&r+2&(a+4^r(H+r))/4^{r+2}\\
+0^r20&r+2&(a+4^r(2H+2r+1))/4^{r+2}\\
+0^r120&r+3&(a+4^r(9H+9r+12))/4^{r+3}.
+\end{array}
+\]
+All displayed quotients are exact. In particular, any segment with an initial \(0^r\) requires \(4^r\mid a\), so its initial zero-run has length at most \(\lfloor\log_4 a\rfloor\). This bounds the zero-run *inside one return segment*, but it does not bound the number of return segments. The remaining logarithmic-run problem is therefore to bound the number of admissible return segments, using the coupled divisibility conditions in these four affine maps.
+
+## 7. Suggested next step
 
 Prove or refute the following focused statement:
 
