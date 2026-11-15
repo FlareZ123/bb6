@@ -63,3 +63,8 @@ The new 24 refined lifts (eight each in rows 9/5, 13/1, and 5/1) are only the ad
 **Verification status:** the root-row workflow's earlier run 43714798173 failed on an argument-strength mismatch at `BB429RootOddRowsStrong.lean:26`; Agent 1 corrected that argument, but no fresh successful source CI is recorded. The new `rooted_not_13_1` and `rooted_not_5_1` theorems, all last-reset consumers, and the modified inverse-kernel certificate have not been locally compiled or source-CI checked. The next discriminating test is a local Lean 4.36.0-rc2 compile of the changed dependency closure, followed by one pinned source-chain check and transitive `#print axioms` audit. Do not treat these draft integrations as source-certified.
 
 The finite short-branch residue reductions remain as previously described in the last-reset communications; they do not establish a complete root-halt exclusion.
+
+
+### Reproducible finite certificate audit (not a proof)
+
+The BigInt transcription at [audit_cert14.mjs](../agent6-429-last-reset-row95/audit_cert14.mjs) evaluates the depth-14 affine inverse certificate with the three new root predicates over every odd n in 19..529 and all four d mod 64 lifts of the 44 d mod 16 candidates in the current terminal-residue table. It checks 2,816 affine families: 1,984 certify, 16 of the 44 (n mod 32,d mod 16) classes certify completely, 27 certify partially, and one class has no certificate exclusion in this finite range: (23,7). This is a JS transcription of the Lean recursion, not a Lean evaluation and not a uniform-in-n theorem. The untouched (23,7) class is the next concrete holdout for inverse-tree refinement.
