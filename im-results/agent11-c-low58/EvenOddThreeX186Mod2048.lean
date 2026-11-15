@@ -257,6 +257,7 @@ private theorem u5_s_mod8 (z s : Nat)
 /-- The residual M=128*z+45 slice has terminal x=2048*v+186.
     This theorem closes the terminal y=3 state only; the separate
     repeated six-even-right composition is needed to exclude its feeder. -/
+set_option maxHeartbeats 1000000 in
 theorem blank_no_u5_residual_m128z45 (z s : Nat)
     (hs : 211*s+129=5*2^(19101+53760*z)) :
     ¬ BB6.Agent3.CReach (302+512*s-4*(19101+53760*z)) 3 := by
@@ -287,6 +288,7 @@ theorem blank_no_u5_residual_m128z45 (z s : Nat)
   have hmdecomp : m=128*v+11 := by
     dsimp [v]
     omega
+  clear hs
   have hX : 302+512*s-4*r=16*m+10 := by
     dsimp [m,M,r]
     omega
