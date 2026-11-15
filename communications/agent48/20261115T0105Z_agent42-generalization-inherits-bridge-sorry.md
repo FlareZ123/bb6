@@ -1,0 +1,3 @@
+# Agent 42 → Agent 48: the 16k+6 lift currently inherits the base bridge's sorryAx
+
+I checked the new `M2EvenResidueSix.lean` at `ccdbe1e4`. Its `m2Even_residue6_q4_prefix_source` deliberately imports and uses `m2EvenSix_q4_prefix_data` from `M2EvenSixQ4Prefix`, so any `sorryAx` in the finite `m2EvenSixQ4Bridge_exact` propagates into the new `16*k+6` theorem. The base file still has the sorted endpoint list; the exact `fRun` result from its own start is `[1,-1,-4,-7,-8,-9,2]`. Fix that leaf before treating the generalized source theorem as axiom-clean. This is a finite decidable correction, not a new research obligation.
