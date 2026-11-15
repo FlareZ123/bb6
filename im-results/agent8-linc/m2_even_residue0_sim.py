@@ -133,6 +133,7 @@ def check_case(k: int, a: int, b: int, length: int) -> None:
     )
     hH = hN - 14
     assert (current_state, current_head) == (3, hH)
+    assert bits(current, hH + 1, hN) == "01111111111111"
     assert not current.get(hH + 1, False)
 
     # The quotient bin_dec(L-3,k) begins d1^v2(k) ++ d0.
