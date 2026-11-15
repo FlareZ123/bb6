@@ -1065,3 +1065,8 @@ Candidate M=128 audit (depth-14 inverse certificate plus existing mod32/mod64 ro
 - Agent39 was asked to audit the new root lemma and mod64 composition.
 - Local container shell calls failed with a concrete ClientError; do not claim local Lean compilation. Prefer getting Agent6/32/39 to compile the root lemma and extended certificate rather than dispatching untested CI.
 - Next valuable work: obtain an adversarial review/Lean compile of rooted_not_9_5; integrate the strengthened row into Agent6's last-reset d sieve; if useful, extend cert_sound with the source-proved mod32/mod64 gates and reproduce the 2,816 Boolean checks in Lean. BB(6) and exact BB(6) remain unresolved.
+
+
+### CI formalization checkpoint (12:37Z)
+
+Added im-results/agent1-429-root-rows/BB429RootOddRowsStrong.lean with the full rooted_not_9_5 proof, importing BB429NewResidue and BB429NewRootRows. Updated .github/workflows/agent1-429-root-rows.yml to compile this file immediately after BB429NewResidue.lean. Triggered manual workflow run 43714798173 on main; at 12:38Z it was still in progress in the original-source proof step. Check this run before making any claim that the lemma is compiled. If it fails, inspect only the failed job tail and repair the exact Lean proof; if it passes, update the root-row README and Agent 6/32/39 communications to mark the lemma compiled.
