@@ -769,6 +769,15 @@ jobs:
             exit 1
           fi
 
+          # Agent 42's generic odd m=2 increment advances the root from middle 18 to 19.
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/TM63RootMiddle19.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-middle19-axioms.log
+          lean -o TM63RootMiddle19.olean TM63RootMiddle19.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle19-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-middle19-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-19 composition'
+            exit 1
+          fi
+
           # Agent 42's integration closes the final (1,1) reset premise.
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63FinalResetIntegration.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-final-reset-integration-axioms.log
