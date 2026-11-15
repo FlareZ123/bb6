@@ -472,3 +472,28 @@ Claimed Agent 6 at `2026-11-15T17:39:35.755Z` (run id `agent6-gpt6-20261115T1739
 - Both `container.exec` and `python.exec` returned concrete ClientError when attempting the supplied Lean 4.36.0-rc2 environment; no local compile was achieved. Do not claim the new integration or Agent 1's corrected root lemma is source-certified. No CI dispatch was made, in compliance with Critic's compile-first gate.
 - Next: (1) check Agent 1/32 replies; (2) rebase/merge latest main into the feature branch without overwriting its four intentional file changes; (3) compile the root lemma and `BB429LastResetRow95` locally if runtime recovers, then use the existing manual root-row workflow once; (4) only after that, integrate/check the SourceMod16 wrapper in the pinned source chain; (5) continue on actual remaining branch 9/10 families or coordinate with Agent 32 on the −3 low-counter closure.
 - These are necessary-condition reductions only. No exact #429 result, six-state universal upper bound, or BB(6) value has been established.
+
+
+## 2026-11-15 18:10 UTC: three inverse-root gates and one remaining depth-14 class
+
+Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b03eaa8b0e5f2545d805715b074e69c999667`; main advanced independently to `3faf199e6d48bf0923893e90625bd331cdb275a5`. Reconcile before opening/merging a PR.
+
+### New root obstructions (all draft / uncompiled)
+- Added `rooted_not_13_1` to `BB429RootOddRowsStrong.lean`: Reach(a,b), a≥33, a≡13 mod32, b≡1 mod8 is impossible. Two odd-back steps yield either (r mod8=1,s mod4=3), contradicting `BB429Mod8.Allowed`, or a positive-even predecessor with s≡1 mod4, contradicting `even_back`.
+- Added `rooted_not_5_1`: Reach(a,b), a≥61, a≡5 mod32, b≡1 mod8 is impossible. Three odd-back steps yield either a positive-even predecessor with second counter 6 mod8, contradicting `BB429RootEven8.rooted_positive_even_eight`, or an even-back contradiction.
+- Existing `rooted_not_9_5` remains. Added `#print axioms` for all three in the feature branch.
+
+### Branch-10 last-reset consequences
+- `BB429LastResetRow95.lean` now has three consumers and `SourceLastResetRow95.lean` transports them to original `sourceRun` through `BB429SourceMod16.source_run_to_local`:
+  - 8 refined pairs with n mod64 / d mod32 forcing x≡9 mod16, y≡5 mod8;
+  - 8 pairs with n mod128 / d mod32 forcing x≡13 mod32, y≡1 mod8;
+  - 8 pairs with n mod128 / d mod32 forcing x≡5 mod32, y≡1 mod8.
+- Important correction: row-13/1 and row-5/1 need n mod128, not n mod64, because n→n+64 flips x mod32. Full eight-pair lists are in the consumer and README.
+- Added all three predicates to `BB429InverseKernelExtended.Bad` and corresponding `bad_sound` branches. Existing root-row manual workflow on the feature branch compiles the root lemma, the last-reset consumer, and then the extended kernel in dependency order.
+- Added `im-results/agent6-429-last-reset-row95/audit_cert14.mjs`, a reproducible BigInt transcription. It checks all odd n=19..529 and four d mod64 lifts of the 44 d mod16 candidates: 2,816 affine families, 1,984 certificate-positive; 16 classes fully excluded, 27 partial, and the sole untouched class is (n mod32,d mod16)=(23,7). This is finite computational evidence only, not a uniform theorem.
+- For the untouched (23,7) sample n=23,d=7, ordinary cert depths 14..128 fail on an inverse path where affine coefficients lose the required divisibility. A prototype that splits the quotient parameter q mod4 at non-uniform states also fails through depth128 (small state tree, 176 memo states); the first failing branch ends at a non-uniform affine family, not a concrete reachable state. This suggests the next algorithmic target: stronger 2-adic parameter refinement / exact inverse branching, not simply increasing depth.
+
+### Verification / communication status
+- Local Lean remains unavailable: `container.exec` and `python.exec` both returned ClientError. No compile or CI dispatch was made; Critic's compile-first gate remains active. Do not claim any new lemma, consumer, or kernel extension source-certified.
+- Agent 1 was sent a second review request at 18:04 UTC with all three lemmas, the corrected modulus-128 case lists, and the kernel extension. No reply was visible as of this checkpoint.
+- Next: obtain independent proof review; compile the full root-row dependency closure at Lean 4.36.0-rc2 when runtime permits; then use the existing manual workflow once. Only after that should the original-source wrapper be added to / checked by the pinned source chain. For research, prioritize the remaining (23,7) family and parameter-refinement gap; coordinate with Agent 32 before duplicating constant-seed or −3 low-counter work.
