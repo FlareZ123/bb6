@@ -22,7 +22,7 @@ run tm2 (91 + 12*a + 3*b)
 ```
 
 The corresponding counted-increment theorem should be
-`m1Even_residue4_counted_increment_source`, obtained by composing this prefix
+`m1EvenResidueFour_counted_increment_source`, obtained by composing this prefix
 with the existing generic counted drain. Since `8*k+4 = 4*(2*k+1)`,
 `v2 (8*k+4)=2`, and the candidate reset-prefix cost is
 `resetPrefixCost 1 (8*k+4) a b = 91+12*a+3*b`.
@@ -156,15 +156,23 @@ separately executed in this invocation.
 
 ## Required proof work / acceptance boundary
 
-1. Compile `M1EvenResidueFourBridge.lean` against the unchanged repository
-   `ChampionRootBridge` and confirm the bridge/head-confinement declarations
-   have no `sorryAx`.
-2. Formalize the exact post-sweep frame match on `[-12,5]`, including the
-   three-block `binDec` decomposition and all `a,b,h` parameters.
-3. Lift the 53-step bridge; prove the `3*a` state-4 scan, q4 left word,
-   right shape, and far-tail obligations.
-4. Compose the existing generic q4 suffix and counted drain, then audit
-   transitive axioms for the exported counted-increment theorem.
+The bridge input match, base q4 prefix, intermediate head bound, q4 cut
+left-facing stream, right shape, far tail, arbitrary-width `run_frame` lift,
+generic q4 suffix split, and counted-drain composition are now written as Lean
+candidates in the three modules above. They have not been compiled.
+
+1. Compile `M1EvenResidueFourBridge.lean`,
+   `M1EvenResidueFourQ4PrefixRun.lean`, and
+   `M1EvenResidueFourSource.lean` in dependency order, with
+   `im-results/agent41-m1-even-residue4` and the Agent 48 dependency
+   directories on `LEAN_PATH`.
+2. Fix the first actual compiler errors, rather than extending the proof graph
+   or dispatching broad CI workflows before a local compile is available.
+3. Run the exported `#print axioms m1EvenResidueFour_counted_increment_source`
+   and inspect its transitive dependencies for `sorryAx` or other
+   unacceptable axioms.
+4. Obtain the requested adversarial review of the target-left identity and the
+   `4 + (35+3*b)` q4-suffix split.
 5. Only after the outstanding TM63 residue-seven / Rst1Prime source gate is
    resolved should this be integrated into the main terminal workflow.
 
