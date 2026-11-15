@@ -342,7 +342,8 @@ theorem m0EvenFourteen_generic_q4_prefix_leftFacing
       (h-(i:Int)) hout]
     rw [s1Config_left_cell L (32*k+14) 0 a 0 b h i]
     rw [hsourceLeft]
-    simp only [m0EvenFourteenGenericLeftFacing]
+    simp only [m0EvenFourteenGenericInputLeftFacing,
+      m0EvenFourteenGenericLeftFacing]
     have hsourceBit := Agent6Q4Prefix.sideBit_append_right
       (m0EvenFourteenGenericInputPrefix a)
       (m0EvenFourteenGenericCommonTail L k) i
