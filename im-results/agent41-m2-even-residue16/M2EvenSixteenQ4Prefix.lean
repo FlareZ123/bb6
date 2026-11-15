@@ -746,7 +746,7 @@ private theorem m2EvenSixteenEScanPrefixHead
 
 /-- Every prefix of the base n=16 q4 source run stays above the
 leftmost readable cell h-(3*a+20). -/
-private theorem m2EvenSixteen_q4_prefix_head_bound
+theorem m2EvenSixteen_q4_prefix_head_bound
     (a b : Nat) (h : Int) :
     ∀ k, k < 80+12*a → ∀ d,
       run tm2 k (s1Config 5 16 2 a 0 b h) = some d →
