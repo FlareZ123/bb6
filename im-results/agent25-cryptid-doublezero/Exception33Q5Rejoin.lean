@@ -60,14 +60,22 @@ def aCodeOutput (u : Nat) : Cfg :=
     EAllDouble source input with k=9u+1 and q=4. -/
 theorem eall_source_return (u : Nat) :
     ObsEq (run (eAllTime u) (sourceStart u)) (eAllOutput u) := by
+  have hprefix : (27*u+7)-2 = 3*(9*u+1)+2 := by omega
+  have htail :
+      CryptidBoundary.oppairs 5 ++ [true] =
+        false :: (CryptidBoundary.pairs 4 ++ [true,true]) := by
+    decide
   have hstart :
       sourceStart u =
         init (List.replicate (3*(9*u+1)+2) true ++
           false :: (pairs 4 ++ [true,true])) := by
-    simp [sourceStart, DRegularSource.sourceSection,
-      CryptidBoundary.init, CryptidBoundary.oppairs,
-      CryptidBoundary.pairs]
-    omega
+    change CryptidBoundary.init
+      (List.replicate ((27*u+7)-2) true ++
+        (CryptidBoundary.oppairs 5 ++ [true])) =
+      CryptidBoundary.init
+        (List.replicate (3*(9*u+1)+2) true ++
+          (false :: (CryptidBoundary.pairs 4 ++ [true,true])))
+    rw [hprefix, htail]
   rw [hstart]
   change ObsEq
     (run (BB6.Agent32EAll.duration (9*u+1) 4)
