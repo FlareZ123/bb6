@@ -1,113 +1,54 @@
-# Marker-2 even residue-two source row: bridge reuse reduction
+# Marker-2 even residue-two source row (m=2, n=8k+2)
 
-**Status:** exact finite-bridge reduction and deterministic replay; the new universal Lean source theorem has not yet been formalized or compiled. Keep this in `im-results/`.
+**Status (15 November 2026):** the universal original-TM2 proof script is now written in Lean, but the current source and its counted/root consumers have **not** passed a current-source Lean 4.36.0-rc2 compile or transitive axiom audit. This remains intermediate work in im-results, not a certified champion extension.
 
-## Target
+## Exact source contract
 
-Prove the original-TM2 counted increment
+The row theorem in M2EvenResidueTwo.lean proves the q4 prefix and full reset-prefix source runs for every L, k, a, b satisfying the displayed width and positivity hypotheses:
 
-`m2Even_residue2_counted_increment_source
-    (L q a b : Nat) (h : Int)
-    (hL : 3 ≤ L) (hbound : 8*q+2 < 2^L) (ha : 0 < a) :
-  run tm2 (proposedIncrementCost 2 (8*q+2) a b)
-    (s1Config L (8*q+2) 2 a 0 b h) =
-  some (s1Config L (8*q+1) 1 (a+b+2) 0 (2^b-1)
-    (h+5+3*b))
-`
+- m2Even_residue2_q4_prefix_source: cost 44+12a, reaching the q4 configuration with left-facing target q4LeftFacing L (8k+1) a and the required right-facing q4 shape.
+- m2Even_residue2_q4_reset_prefix_source: cost resetPrefixCost 2 (8k+2) a b = 83+12a+3b, reaching the S1 configuration with marker 1 and index 8k+1.
+- M2EvenResidueTwoCounted.lean adds m2Even_residue2_counted_increment_source by composing that reset prefix with the generic counted S1 drain. Its final state is
+  s1Config L (8k+1) 1 (a+b+2) 0 (2^b-1) (h+5+3*b),
+  at total cost proposedIncrementCost 2 (8k+2) a b
+  = 6*4^b + 42*2^b - 9*b + 35 + 12*a.
 
-This is the 24-cycle class **(2,2)**: marker 2 and binary index n = 2 (mod 8). It is the natural successor after the current marker-1 n=8q+4 row and the already available generic marker-0 odd row n=8q+3. In the authentic root specialization, q=4k+1 when the preceding index is 32k+12.
+These are Lean proof terms in the repository source, not yet kernel-checked at the current revision. The #print axioms commands are present in the source, but their output has not yet been obtained for this revision.
 
-## Exact binary boundary
+## Binary boundary and reusable finite bridge
 
-With the repository's head-facing `binDec` convention, repeated `binDec_even`/`binDec_odd` gives
+The proof establishes the exact head-facing binary decompositions
 
-- source: `binDec L (8*q+2) = d1 ++ d0 ++ d1 ++ binDec (L-3) q`;
-- target: `binDec L (8*q+1) = d0 ++ d1 ++ d1 ++ binDec (L-3) q`.
+- binDec L (8k+2) = d1 ++ d0 ++ d1 ++ binDec (L-3) k;
+- binDec L (8k+1) = d0 ++ d1 ++ d1 ++ binDec (L-3) k.
 
-The marker-2 source stream is therefore
+The source and target S1/q4 left-facing streams therefore share the exact tail
+[true] ++ d1 ++ binDec (L-3) k ++ lh
+after their first 3a+12 cells. The finite prefixes are defined explicitly in M2EvenResidueTwo.lean and have equal length 3a+12.
 
-`d1pow a ++ markerWord 2 ++ d0 ++ d1 ++ d0 ++ d1
-  ++ binDec (L-3) q ++ lh`
+The local kernel is the existing 38-step n=6 bridge from M2EvenSixQ4Prefix.lean:
 
-and the marker-1 target q4 left stream is
+- input: state 3, head 0, ones at [-7,-6,-5,-4,-1,2];
+- output: state 4, head 2, ones at [1,-1,-4,-7,-8,-9,2].
 
-`[true] ++ d1pow a ++ markerWord 1 ++ d0 ++ d0 ++ d1 ++ d1
-  ++ binDec (L-3) q ++ lh`.
+The new row does not claim that the entire source tape equals the n=6 base tape. It proves equality only on the framed region read by the bridge, then preserves the untouched common tail. A (3a+2)-cell left sweep, the 38-step bridge, and a 3a-step E scan give the 44+12a prefix. The head-bound argument confines every intermediate head to the framed half-line beginning at h-(3a+11). The q4 suffix then contributes 39+3b steps.
 
-## Reuse the existing 38-step bridge
+The counted drain adds 6*4^b + 42*2^b - 12*b - 48 steps. Adding the reset prefix and drain yields the total formula above and the stated endpoint. The deterministic replay in m2_even_residue2_replay.js reports 120/120 exact finite endpoint matches over its tested parameter grid; this is computational evidence, not a substitute for the quantified Lean proof.
 
-The already formalized finite kernel is in
-`im-results/agent48-counted-inc0/M2EvenSixQ4Prefix.lean`:
+## Authentic-root composition
 
-- input `⟨3,0,[-7,-6,-5,-4,-1,2]⟩`;
-- output `⟨4,2,[1,-1,-4,-7,-8,-9,2]⟩`;
-- exact length 38;
-- all intermediate heads confined to [-9,2].
+Agent 48's source-only candidate wrappers in im-results/agent48-counted-inc0/ compose the row as follows:
 
-After the standard (3a+2)-cell left sweep, this window sees only the final two marker-2 cells, the following `d0` block, and the first five cells of the source `binDec` stream (plus the two swept cells at positive relative coordinates). For every q:
+1. Middle 20: m=1, n=16r-4 = 8(2r-1)+4, using Agent 41's m=1 even residue-four increment; output m=0, n=16r-5.
+2. Middle 21: the generic all-odd m=0 increment at n=16r-5; output m=2, n=16r-6.
+3. Middle 22: m=2, n=16r-6 = 8(2r-1)+2, using this marker-2 residue-two counted increment with quotient k=2r-1; output m=1, n=16r-7.
 
-- source 8q+2 begins `d1 ++ d0 ++ ...`, so those five cells are `11100`;
-- the existing base source 6 begins `d1 ++ d0 ++ ...`, with the same five cells.
+The exact root endpoint/counter/head recurrences are defined in TM63RootMiddle20.lean, TM63RootMiddle21.lean, and TM63RootMiddle22.lean. All three wrappers, the counted adapter, and their complete imported source closure remain uncompiled candidates. The quotient identity is exact arithmetic; it does not itself validate the underlying source-run theorems.
 
-Thus the **same exact 38-step bridge** and its existing head-confinement certificate apply. No new finite simulation is needed.
+## Validation gate and next action
 
-For the output boundary:
+The manual-only workflow .github/workflows/agent42-m2-even-residue-two.yml compiles the M2EvenResidueTwo.lean prefix/reset-prefix module and its listed dependencies, with a sorryAx gate. It does **not** compile M2EvenResidueTwoCounted.lean or the middle-20/21/22 root wrappers. No run of this workflow has been dispatched for the current source.
 
-- target 8q+1 begins `d0 ++ d1 ++ ...`, so its first five cells are `00111`;
-- the existing base target 5 begins `d0 ++ d1 ++ ...`, with the same five cells.
+The next action is a local Lean 4.36.0-rc2 compile of the smallest dependency closure for M2EvenResidueTwo.lean, followed by inspection of the printed axiom sets for both exported source theorems. Only after that passes should the counted adapter and TM63RootMiddle22 dependency chain be compiled; the existing manual workflow can then be used once as an acceptance check. Do not describe this row or the middle-22 wrapper as a verified blank-root lower-bound extension until those checks pass.
 
-The bridge's leftmost affected coordinate is the cell at source-stream index 3a+11. From index 3a+12 onward, source and target share the exact tail
-
-`[true] ++ d1 ++ binDec (L-3) q ++ lh`
-
-(the last bit of the second low-order block, followed by the third block and the high-order quotient). This is the key half-line frame equality. It explains why the n=2 row can reuse the n=6 bridge even though the third low-order block differs: that block is strictly beyond the bridge's read/write window and is part of the common tail.
-
-The remaining q4-prefix proof follows the existing M2-even-six decomposition:
-
-1. `counted_left_sweep (3*a+2)`;
-2. apply `m2EvenSixQ4Bridge_exact` through `bridgeAt`, using the five-cell boundary match above;
-3. prove the target q4 stream has its first 3a+2 cells equal to one, then apply `E_scan` for 3a steps to return the head to h;
-4. establish the unchanged right-facing `q4RightFacing b` shape;
-5. use `q4_suffix_run_to_s1Config` to obtain the q4 reset prefix.
-
-The q4 suffix is independent of q; its right-side shape depends only on b.
-
-## Exact cost
-
-Because 8q+2 = (2(4q)+1)2, v2(8q+2)=1. The q4 prefix and suffix costs are
-
-- prefix: 44+12a;
-- suffix: 39+3b.
-
-The generic all-ones counted drain costs
-
-`6*4^b + 42*2^b - 12*b - 48`.
-
-Their sum is
-
-`6*4^b + 42*2^b - 9*b + 35 + 12*a
-  = proposedIncrementCost 2 (8*q+2) a b`.
-
-The final head is `h+5+3*b`, matching the target above. The source theorem can then use the existing parity-complete `s1Config_reset_prefix_then_counted_drain` composition.
-
-## Deterministic replay
-
-`m2_even_residue2_replay.js` directly simulates the original six-state transition table from the exact S1 encoder and checks full finite-support tape equality at the predicted cost. It tests:
-
-- q=0,...,4;
-- the minimal valid width L≥3 and one extra width;
-- a=1,2,3;
-- b=0,1,2,3.
-
-Result in this invocation: **120/120** exact endpoint matches, including state, head, and the complete set of nonblank cells. This is computational evidence only; it is not a proof for all parameters.
-
-## Next proof action
-
-Implement a small `M2EvenResidueTwo.lean` module by reusing the 38-step bridge declarations from `M2EvenSixQ4Prefix.lean`, not by copying or re-simulating the bridge. The essential new lemmas are:
-
-- the two low-three-bit `binDec` expansions above;
-- equality of the post-sweep bridge window with the existing n=6 input;
-- equality of the source and target tails from index 3a+12;
-- the full q4-prefix tape equality and counted suffix/drain composition.
-
-Do not promote this to `results/` until the source theorem compiles and its transitive axiom audit is `sorryAx`-free.
+This row is distinct from the earlier fixed-base m=2,n=4 Q4 candidate and from the m=2,n=8k+6 residue-six row. It is an intermediate source theorem only: it does not complete the TM63 halt itinerary, establish an exact champion score, or address the universal BB(6) upper bound.

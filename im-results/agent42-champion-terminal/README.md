@@ -236,7 +236,7 @@ Two new intermediate Lean candidates consume this endpoint:
 - [M2EvenResidueSixCounted.lean](./M2EvenResidueSixCounted.lean) composes Agent 48's quantified q4 reset-prefix theorem for `m=2,n=16*k+6` with the generic S1 counted drain. Its intended output is `m=1,n=16*k+5`.
 - [TM63RootResidueSix.lean](./TM63RootResidueSix.lean) composes the authentic blank-root run through the first nine rows with that residue-six increment, then applies Agent 24's existing `m=1,n=8*q+5` source increment at `q=2*r`. The intended exports are `tm63_blank_reaches_after_middle10` and `tm63_blank_reaches_after_middle11`.
 
-These files remain **uncompiled candidates** in `im-results/`; they are not source-certified and do not yet extend the verified blank-root lower bound. The existing manual-only terminal-source workflow now also compiles the M2 prefix/counting adapter, M1 residue-five row, Agent 42 root-through-middle11 composition, Agent 48's M0-even residue-four bridge/prefix/counted increment, and Agent 8's root-through-middle13 wrapper, each with direct axiom output and a `sorryAx` gate. No run has exercised these new steps.
+These files remain **uncompiled candidates** in `im-results/`; they are not source-certified and do not yet extend the verified blank-root lower bound. The existing manual-only terminal-source workflow now also compiles the M2 residue-six prefix/counting adapter, M1 residue-five row, Agent 42 root-through-middle11 composition, Agent 48's M0-even residue-four bridge/prefix/counted increment, and Agent 8's root-through-middle13 wrapper, each with direct axiom output and a `sorryAx` gate. No run has exercised these new steps.
 
 ### Current compile blocker
 
@@ -269,4 +269,16 @@ I independently replayed the full base prefix from the exact S1 source encoding 
 
 The standalone Agent 42 finite-bridge and BinDec helper files were removed after the integrated Agent 48 modules superseded them; their extra workflow compile steps were also removed. The independent simulation record remains in `communications/agent48/20261115T0752Z_agent42-m0even-q4-shape-samples.md`.
 
-**Status:** the Agent 48 M0 row modules and Agent 8 root-through-middle13 wrapper are still uncompiled candidates. They do not yet certify a longer BB(6) lower bound. The next source gate remains the Critic-requested residue-seven/Rst1Prime dependency compile; no CI was dispatched.
+**Status:** the Agent 48 M0 row modules and Agent 8 root-through-middle13 wrapper are still uncompiled candidates. They do not yet certify a longer BB(6) lower bound. The Critic-requested residue-seven/Rst1Prime dependency compile remains a separate source gate. The new marker-2 residue-two row below has its own targeted local compile gate; no CI has been dispatched for it.
+
+
+## M2 marker-2 residue-two row and middle-22 continuation (15 November 2026)
+
+The distinct marker-2 row m=2, n=8k+2 is now formalized in Lean source:
+- M2EvenResidueTwo.lean contains the universal q4 prefix and reset-prefix run theorems.
+- M2EvenResidueTwoCounted.lean composes the generic S1 counted drain to produce the full counted increment.
+- The detailed binary-boundary, bridge, cost, and validation dossier is [M2EvenResidueTwo.md](./M2EvenResidueTwo.md).
+
+Agent 48 has connected this row to a candidate authentic-root chain through middle 22. The exact quotient is k=2r-1 at n=16r-6=8k+2; the row reaches m=1,n=16r-7. Its predecessors are the m=1 residue-four step at middle 20 and the generic m=0 odd step at middle 21. The wrappers are TM63RootMiddle20.lean, TM63RootMiddle21.lean, and TM63RootMiddle22.lean under im-results/agent48-counted-inc0/.
+
+**Qualification:** the row module, counted adapter, and middle-20/21/22 wrappers have not passed a current-source Lean compile or transitive axiom audit. The 120/120 replay is finite computational evidence only. The manual agent42-m2-even-residue-two workflow compiles only the row prefix/reset-prefix module, not the counted adapter or root wrappers; it has not been dispatched for this source. This is a candidate continuation, not an established increase to the 27,959-step verified blank-root prefix, a champion halt/score, or a BB(6) upper bound.
