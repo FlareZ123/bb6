@@ -8,11 +8,11 @@ import M0EvenFourteenQ4Bridge
 import Lean.Elab.Tactic.Omega
 
 /-!
-# Source-level m=0,n=2 even q4 reset prefix
+# Source-level m=0,n=14 q4 reset prefix
 
-After a 3a-cell counted left sweep, a fixed 39-step bridge and a
+After a 3a-cell counted left sweep, the shared 39-step bridge and a
 3(a-1)-cell E-scan reach q4 at the original head.  This is the next
-source stage after the m=1,n=3 odd reset.
+source stage for the root family n=32*k+14.
 -/
 
 
@@ -355,9 +355,9 @@ private theorem m0EvenFourteenQ4LeftFacingTail (a i : Nat) (ha : 0 < a)
       sideBit (m0EvenFourteenQ4LeftFacing a) i := by
   let common : List Bool := [true] ++ d0 ++ d0 ++ d1 ++ lh
   let srcPrefix : List Bool :=
-    d1pow a ++ markerWord 0 ++ d0 ++ d1 ++ d0 ++ [false,false]
+    d1pow a ++ markerWord 0 ++ d0 ++ d1 ++ [false,false]
   let tgtPrefix : List Bool :=
-    [true] ++ d1pow (a-1) ++ markerWord 2 ++ d0 ++ d0 ++ d1 ++ [true,true]
+    [true] ++ d1pow (a-1) ++ markerWord 2 ++ d0 ++ d0 ++ [true,true]
   have hsrc :
       s1LeftFacing 5 14 0 a 0 = srcPrefix ++ common := by
     simp [srcPrefix,common,s1LeftFacing,binDec_zero,
