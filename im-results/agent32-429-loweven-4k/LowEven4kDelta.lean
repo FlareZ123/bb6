@@ -288,7 +288,7 @@ private theorem firstC_to_secondC
     change true :: false :: (ones 2 ++ (ones (2*v+10) ++
       (ones (4*k-3) ++ (pairs01 2 ++ ones 5)))) =
       true :: false :: (ones (2*v+4*k+9) ++ (pairs01 2 ++ ones 5))
-    rw [← List.append_assoc, ← List.append_assoc, hcombine
+    rw [← List.append_assoc, ← List.append_assoc, hcombine]
   have ht : (4+(2*v+10))+4 = 2*v+18 := by omega
   simpa [ht, hleft] using htotal
 
@@ -450,7 +450,7 @@ theorem secondC_to_sourceScanE (k v : Nat) :
 #print axioms secondC_to_sourceScanE
 
 /-- The final 175-step sourceScanE continuation closes at Junc(11,0,*). -/
-theorem final_sourceScanE (k v : Nat) :
+theorem final_sourceScanE (k v : Nat) (hk : 1 ≤ k) :
     runWithDelta 175 (secondScanE k v) =
       some (junc 11 0 (2*v+4*k-2), 11) := by
   have h := sourceScanE_finishC_even_after_junc0_delta 1
@@ -476,7 +476,7 @@ theorem lowEven4k_suffix_delta (k v : Nat) (hk : 1 ≤ k) :
   have h2 := firstC_to_sourceScanE k v hk
   have h3 := sourceScanE_to_secondC k v hk
   have h4 := secondC_to_sourceScanE k v
-  have h5 := final_sourceScanE k v
+  have h5 := final_sourceScanE k v hk
   have h12 := compose_delta (2*v+10) (2*v+15)
       (junc (2*k) v 0) (firstC k v) (firstScanE k v)
       ((2*v+6 : Nat) : Int) (-(2*v+11 : Int)) h1 h2
