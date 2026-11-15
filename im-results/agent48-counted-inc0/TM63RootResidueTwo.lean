@@ -16,6 +16,7 @@ modules and has not passed an original-import or transitive axiom audit.
 namespace BB6Coverage.Agent48TM63RootResidueTwo
 
 open BB6ChampionArithmetic
+open BB6Coverage.Agent24ChampionTime
 open BB6Coverage.Agent42RootAttainable
 open BB6Coverage.Agent42RootCountdown
 open BB6Coverage.Agent42RootResidueSix
