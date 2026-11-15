@@ -819,7 +819,7 @@ theorem m2Even_residue2_q4_reset_prefix_source
   have hsum :
       resetPrefixCost 2 (8*k+2) a b = (44+12*a)+(39+3*b) := by
     have hv : v2 (8*k+2) = 1 := by
-      exact v2_of_odd_factorization (8*k+2) (4*k) 1 (by omega)
+      exact v2_of_odd_factorization (8*k+2) (2*k) 1 (by omega)
     simp [resetPrefixCost,hv]
     omega
   rw [hsum,run_add,hprefix]
