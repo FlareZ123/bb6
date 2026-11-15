@@ -954,9 +954,9 @@
       "branch": 9,
       "allowed_d_mod16": [
         4,
-        8,
-        12
-      ]
+        8
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 3,
@@ -965,7 +965,8 @@
         1,
         5,
         9
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 5,
@@ -974,7 +975,8 @@
         2,
         10,
         14
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 7,
@@ -983,16 +985,17 @@
         7,
         11,
         15
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 9,
       "branch": 9,
       "allowed_d_mod16": [
         0,
-        4,
-        8
-      ]
+        4
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 11,
@@ -1001,7 +1004,8 @@
         1,
         5,
         13
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 13,
@@ -1010,7 +1014,8 @@
         6,
         10,
         14
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 15,
@@ -1019,16 +1024,17 @@
         3,
         7,
         11
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 17,
       "branch": 9,
       "allowed_d_mod16": [
         0,
-        4,
         12
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 19,
@@ -1037,7 +1043,8 @@
         1,
         9,
         13
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 21,
@@ -1046,7 +1053,8 @@
         2,
         6,
         10
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 23,
@@ -1055,16 +1063,17 @@
         3,
         7,
         15
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 25,
       "branch": 9,
       "allowed_d_mod16": [
-        0,
         8,
         12
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 27,
@@ -1073,7 +1082,8 @@
         5,
         9,
         13
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 29,
@@ -1082,7 +1092,8 @@
         2,
         6,
         14
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     },
     {
       "n_mod32": 31,
@@ -1091,7 +1102,10 @@
         3,
         11,
         15
-      ]
+      ],
+      "rooted_not_7_7_applied": true
     }
-  ]
+  ],
+  "root_mod16_not_7_7_source": "im-results/agent39-429-1021/BB429RootMod16.lean",
+  "long_burst_mod16_scope": "Branches 9 and 10 only; constant-seed branches 1-7 remain separate for n>=18."
 }
