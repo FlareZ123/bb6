@@ -27,6 +27,11 @@ open BB6Coverage.Agent42M1OddQ4Bridge
 open BB6Coverage.Agent24Q4Endpoint
 open BB6ChampionArithmetic
 
+private theorem sideBit_append_after_local (xs ys : List Bool) (i : Nat)
+    (hi : xs.length ≤ i) :
+    sideBit (xs ++ ys) i = sideBit ys (i-xs.length) :=
+  Agent6Q4Prefix.sideBit_append_right xs ys i hi
+
 private theorem pow2_mul_pow (n k c : Nat) (hc : 2^k = c) :
     2^(n+k) = c*2^n := by
   calc
@@ -177,7 +182,9 @@ theorem m1ResidueFiveBridge_input_match
       exact Int.toNat_of_nonneg (by omega)
     have hcoord :
         h - ((3*a+1 : Nat) : Int) + y =
-          h - ((3*a+1 : Nat) : Int) - (k : Int) := by omega
+          h - ((3*a+1 : Nat) : Int) - (k : Int) := by
+      rw [hkcast]
+      omega
     rw [hcoord]
     have hleft := m1ResidueFiveSweptLeftCell L q a b h k hL hbound
     have hbits :
@@ -418,80 +425,6 @@ private theorem sideBit_false_after_length_local
           have hi' : xs.length ≤ i := by simp at hi; omega
           simpa [sideBit] using ih i hi'
 
-/-- The q4 right-shape contract follows from the exact right stream. -/
-theorem m1ResidueFive_q4_prefix_rightShape
-    (L q a b : Nat) (h : Int)
-    (hL : 3 ≤ L) (hbound : 8*q+5 < 2^L) (ha : 0 < a) :
-    q4RightShape (m1ResidueFiveQ4CutTape L q a b h) h b := by
-  unfold q4RightShape
-  constructor
-  · intro i hi
-    have hcases : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 := by omega
-    rcases hcases with h0 | h1 | h2 | h3 | h4
-    · subst i
-      have hleft := m1ResidueFive_q4_prefix_leftFacing
-        L q a b h hL hbound ha 0
-      simpa [m1ResidueFiveQ4LeftFacing,sideBit] using hleft
-    · subst i
-      have hr := m1ResidueFive_q4_prefix_rightFacing
-        L q a b h hL hbound ha 0
-      simpa [q4RightFacing,sideBit] using hr
-    · subst i
-      have hr := m1ResidueFive_q4_prefix_rightFacing
-        L q a b h hL hbound ha 1
-      have hcoord : h+2 = h+1+(1:Int) := by omega
-      simpa [hcoord,q4RightFacing,sideBit] using hr
-    · subst i
-      have hr := m1ResidueFive_q4_prefix_rightFacing
-        L q a b h hL hbound ha 2
-      have hcoord : h+3 = h+1+(2:Int) := by omega
-      simpa [hcoord,q4RightFacing,sideBit] using hr
-    · subst i
-      have hr := m1ResidueFive_q4_prefix_rightFacing
-        L q a b h hL hbound ha 3
-      have hcoord : h+4 = h+1+(3:Int) := by omega
-      simpa [hcoord,q4RightFacing,sideBit] using hr
-  · constructor
-    · have hr := m1ResidueFive_q4_prefix_rightFacing
-        L q a b h hL hbound ha 4
-      have hcoord : h+5 = h+1+(4:Int) := by omega
-      simpa [hcoord,q4RightFacing,sideBit] using hr
-    · constructor
-      · have hr := m1ResidueFive_q4_prefix_rightFacing
-          L q a b h hL hbound ha 5
-        have hcoord : h+6 = h+1+(5:Int) := by omega
-        simpa [hcoord,q4RightFacing,sideBit] using hr
-      · constructor
-        · intro i hi
-          have hr := m1ResidueFive_q4_prefix_rightFacing
-            L q a b h hL hbound ha (6+i)
-          have hsplit := sideBit_append_after_local
-            [true,true,true,true,false,false] (d1pow (b+1)) (6+i)
-            (by simp)
-          have hsplit' :
-              sideBit ([true,true,true,true,false,false] ++ d1pow (b+1))
-                  (6+i) =
-                sideBit (d1pow (b+1)) ((6+i)-6) := by
-            simpa using hsplit
-          have hidx : (6+i)-6 = i := by omega
-          have hones : sideBit (q4RightFacing b) (6+i) = true := by
-            rw [q4RightFacing]
-            rw [hidx] at hsplit'
-            exact hsplit'.trans (sideBit_d1pow_true (b+1) i (by omega))
-          have hcoord : h+7+(i:Int) = h+1+((6+i:Int)) := by omega
-          simpa [hcoord] using hr.trans hones
-        · intro i hi
-          have hr := m1ResidueFive_q4_prefix_rightFacing
-            L q a b h hL hbound ha (9+3*b+i)
-          have hlen : (q4RightFacing b).length = 9+3*b := by
-            simp [q4RightFacing,d1pow_length] <;> omega
-          have hblank := sideBit_false_after_length_local
-            (q4RightFacing b) (9+3*b+i) (by omega)
-          have hcoord :
-              h+10+(3*b:Int)+(i:Int) =
-                h+1+((9+3*b+i:Int)) := by omega
-          simpa [hcoord] using hr.trans hblank
-
 /-- The infinite blank right tail required by the generic q4 suffix. -/
 theorem m1ResidueFive_q4_prefix_far_tail
     (L q a b : Nat) (h : Int)
@@ -695,6 +628,81 @@ theorem m1ResidueFive_q4_prefix_leftFacing
           exact hcut
         have hval := hcut'.trans htarget.symm
         exact hval
+
+/-- The q4 right-shape contract follows from the exact right stream. -/
+theorem m1ResidueFive_q4_prefix_rightShape
+    (L q a b : Nat) (h : Int)
+    (hL : 3 ≤ L) (hbound : 8*q+5 < 2^L) (ha : 0 < a) :
+    q4RightShape (m1ResidueFiveQ4CutTape L q a b h) h b := by
+  unfold q4RightShape
+  constructor
+  · intro i hi
+    have hcases : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 := by omega
+    rcases hcases with h0 | h1 | h2 | h3 | h4
+    · subst i
+      have hleft := m1ResidueFive_q4_prefix_leftFacing
+        L q a b h hL hbound ha 0
+      simpa [m1ResidueFiveQ4LeftFacing,sideBit] using hleft
+    · subst i
+      have hr := m1ResidueFive_q4_prefix_rightFacing
+        L q a b h hL hbound ha 0
+      simpa [q4RightFacing,sideBit] using hr
+    · subst i
+      have hr := m1ResidueFive_q4_prefix_rightFacing
+        L q a b h hL hbound ha 1
+      have hcoord : h+2 = h+1+(1:Int) := by omega
+      simpa [hcoord,q4RightFacing,sideBit] using hr
+    · subst i
+      have hr := m1ResidueFive_q4_prefix_rightFacing
+        L q a b h hL hbound ha 2
+      have hcoord : h+3 = h+1+(2:Int) := by omega
+      simpa [hcoord,q4RightFacing,sideBit] using hr
+    · subst i
+      have hr := m1ResidueFive_q4_prefix_rightFacing
+        L q a b h hL hbound ha 3
+      have hcoord : h+4 = h+1+(3:Int) := by omega
+      simpa [hcoord,q4RightFacing,sideBit] using hr
+  · constructor
+    · have hr := m1ResidueFive_q4_prefix_rightFacing
+        L q a b h hL hbound ha 4
+      have hcoord : h+5 = h+1+(4:Int) := by omega
+      simpa [hcoord,q4RightFacing,sideBit] using hr
+    · constructor
+      · have hr := m1ResidueFive_q4_prefix_rightFacing
+          L q a b h hL hbound ha 5
+        have hcoord : h+6 = h+1+(5:Int) := by omega
+        simpa [hcoord,q4RightFacing,sideBit] using hr
+      · constructor
+        · intro i hi
+          have hr := m1ResidueFive_q4_prefix_rightFacing
+            L q a b h hL hbound ha (6+i)
+          have hsplit := sideBit_append_after_local
+            [true,true,true,true,false,false] (d1pow (b+1)) (6+i)
+            (by simp)
+          have hsplit' :
+              sideBit ([true,true,true,true,false,false] ++ d1pow (b+1))
+                  (6+i) =
+                sideBit (d1pow (b+1)) ((6+i)-6) := by
+            simpa using hsplit
+          have hidx : (6+i)-6 = i := by omega
+          have hones : sideBit (q4RightFacing b) (6+i) = true := by
+            rw [q4RightFacing]
+            rw [hidx] at hsplit'
+            exact hsplit'.trans (sideBit_d1pow_true (b+1) i (by omega))
+          have hcoord : h+7+(i:Int) = h+1+((6+i:Int)) := by omega
+          simpa [hcoord] using hr.trans hones
+        · intro i hi
+          have hr := m1ResidueFive_q4_prefix_rightFacing
+            L q a b h hL hbound ha (9+3*b+i)
+          have hlen : (q4RightFacing b).length = 9+3*b := by
+            simp [q4RightFacing,d1pow_length] <;> omega
+          have hblank := sideBit_false_after_length_local
+            (q4RightFacing b) (9+3*b+i) (by omega)
+          have hcoord :
+              h+10+(3*b:Int)+(i:Int) =
+                h+1+((9+3*b+i:Int)) := by omega
+          simpa [hcoord] using hr.trans hblank
+
 
 /-- The generic q4 suffix sees exactly the next S1 left-facing word. -/
 theorem m1ResidueFiveQ4SuffixTargetLeft
