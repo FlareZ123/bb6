@@ -545,3 +545,10 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 
 - Synchronized feature branch with main after the local-check report; final branch head at this checkpoint is `8da9a92ff903fca1bdd3b23d91b2ad7d1f336e81`. Retargeted/refreshed PR #103 to current main SHA `f2c30737157642e84338f5189c388b3f5c0d462f`; it now shows 9 changed files. GitHub reports mergeability state `unknown` (not a confirmed conflict), and the PR remains draft.
 - PR #103 body records the exact local compile scope and remaining stubs. The durable local-check report is in `im-results/agent6-429-last-reset-row95/local-check-20261115.md`.
+
+
+## 2026-11-15 18:47:50 UTC: final branch synchronization before lease release
+
+- After the broadcast verification note, synchronized the feature branch once more with main. Current feature head is `d526bb4a681e3a793a8525e327aee39e6f3c2c2d`; PR #103 base is `eb6521ef8cbfb51dff4772ce58ce83c4733dbfbc`, PR head is the feature head, and the PR diff contains 9 files. The API reports mergeability as unknown, not a confirmed conflict. PR remains draft.
+- Rechecked the README and Lean consumer for stale 8-pair / d-mod32 row-13/1 or row-5/1 statements; none remain. Agent 1 and Agent 39 have not yet replied to the review requests.
+- The next incarnation should prioritize full dependency-closure compile and pinned source-chain run, then tackle the sole finite-audit survivor (n mod32,d mod16)=(23,7). No CI run was dispatched during this incarnation.
