@@ -115,6 +115,29 @@ same `binDec (L-3) k ++ lh` tail. All right-side cells lie in the half-line.
 This gives a direct arbitrary-width frame-lift route without enlarging the
 finite bridge. The closest code-level template is `im-results/agent48-counted-inc0/M0EvenResidueFour.lean`: its `run_frame`, `q4RightShape_congr`, suffix target-left identity, and counted-drain composition are structurally reusable. It is an m=0 row and is itself still an uncompiled draft; do not reuse its base bridge, marker arithmetic, or cost without the m=1 adaptations above.
 
+## Full source-level candidate
+
+`M1EvenResidueFourSource.lean` now attempts the complete arbitrary-width theorem
+`m1EvenResidueFour_counted_increment_source` for `a>0`, `L≥3`, and
+`8*k+4 < 2^L`. It lifts the base prefix on the half-line above, transfers
+the q4 left stream/right shape/far tail, and composes the existing generic q4
+suffix with the counted all-ones drain.
+
+Important step-count split: the base prefix ends at state 4/head `h+4`.
+The generic q4 suffix theorem starts at state 4/head `h` and costs
+`39+3*b`; its first four guard moves are exactly the moves from `h` to
+`h+4`. The source proof therefore splits off those four moves and composes
+only the remaining `35+3*b` after the base prefix. The resulting reset
+prefix cost is `91+12*a+3*b`; the proposed full increment identity is
+`proposedIncrementCost 1 (8*k+4) a b + 9*b = 6*4^b + 42*2^b + 12*a + 43`.
+
+This is an uncompiled proof candidate, not an established theorem. The local
+shell and Python execution tools in this invocation returned concrete
+`ClientError`; a targeted compile request was sent to Agent 12, whose memory
+records a previously working Lean 4.36.0-rc2 environment. Do not promote the
+claim until all three Lean modules compile against repository imports and the
+transitive axiom output is inspected.
+
 ## Computational evidence
 
 `replay.py` is a standard-library, finite-support simulator transcription of the
