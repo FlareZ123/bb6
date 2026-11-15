@@ -47,28 +47,21 @@ theorem s1Config_left_after_d1pow
     (s1Config L 0 1 a 0 b h).tape
       (h-((3*a+1+k:Int))) =
       sideBit (markerWord 1 ++ d0 ++ binDec L 0 ++ lh) (k+1) := by
-  have hcoord :
-      h - ((3*a+1+k:Int)) =
-        h - ((3*a+1+k:Nat):Int) := by
-    omega
-  have hcell := s1Config_left_cell L 0 1 a 0 b h (3*a+1+k)
   have hleft :
       s1LeftFacing L 0 1 a 0 =
-        d1pow a ++ markerWord 1 ++ d0 ++ binDec L 0 ++ lh := by
-    simp [s1LeftFacing,binDec_zero,List.append_assoc]
+        d1pow a ++ (markerWord 1 ++ d0 ++ binDec L 0 ++ lh) := by
+    simp [s1LeftFacing, binDec_zero, List.append_assoc]
+  have hcell :=
+    s1Config_left_cell L 0 1 a 0 b h (3*a+1+k)
   have hside := sideBit_d1pow_append a (3*a+1+k)
     (markerWord 1 ++ d0 ++ binDec L 0 ++ lh) (by omega)
-  calc
-    (s1Config L 0 1 a 0 b h).tape (h-((3*a+1+k:Int))) =
-        (s1Config L 0 1 a 0 b h).tape
-          (h-((3*a+1+k:Nat):Int)) := by
-            rw [hcoord]
-    _ = sideBit (s1LeftFacing L 0 1 a 0) (3*a+1+k) := hcell
-    _ = sideBit (d1pow a ++ markerWord 1 ++ d0 ++ binDec L 0 ++ lh)
-          (3*a+1+k) := by
-            rw [hleft]
-    _ = sideBit (markerWord 1 ++ d0 ++ binDec L 0 ++ lh) (k+1) := by
-            simpa only [show 3*a+1+k-3*a = k+1 by omega] using hside
+  have hcoord :
+      h - ((3*a+1+k : Nat) : Int) =
+        h - (3*(a:Int)+1+(k:Int)) := by omega
+  rw [hcoord] at hcell
+  rw [hleft] at hcell
+  rw [hside] at hcell
+  simpa only [show 3*a+1+k-3*a = k+1 by omega] using hcell
 
 /-- The post-sweep local tape is exactly BB6Coverage.Agent8Rst1Prime.bridge8Start on its entire
 queried window [-3,0]. -/
@@ -77,10 +70,10 @@ theorem rst1Prime_bridge8_window_after_firstSweep
     ∀ x, BB6Coverage.Agent8Rst1Prime.inside8 x = true →
       (sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h)
         (h-((3*a+1:Int))+x) =
-        decide (x ∈ bridge8Start.marked) := by
+        decide (x ∈ BB6Coverage.Agent8Rst1Prime.bridge8Start.marked) := by
   intro x hx
   have hxw : -3 ≤ x ∧ x ≤ 0 := by
-    simpa [inside8,inWindow] using hx
+    simpa [BB6Coverage.Agent8Rst1Prime.inside8,BB6Coverage.Agent8Rst1Prime.inWindow] using hx
   have hle : h-((3*a+1:Int))+x ≤ h-((3*a+1:Int)) := by omega
   have hunchanged :=
     sweptLeft_eq_of_le (3*a+1) (s1Config L 0 1 a 0 b h).tape h
@@ -92,22 +85,22 @@ theorem rst1Prime_bridge8_window_after_firstSweep
     have hcoord :
         h-((3*a+1:Int))+(-3:Int) = h-(3*(a:Int)+1+((3:Nat):Int)) := by omega
     rw [hcoord,s1Config_left_after_d1pow L a b h 3]
-    simp [markerWord,d0,sideBit,bridge8Start]
+    simp [markerWord,d0,sideBit,BB6Coverage.Agent8Rst1Prime.bridge8Start]
   · subst x
     have hcoord :
         h-((3*a+1:Int))+(-2:Int) = h-(3*(a:Int)+1+((2:Nat):Int)) := by omega
     rw [hcoord,s1Config_left_after_d1pow L a b h 2]
-    simp [markerWord,d0,sideBit,bridge8Start]
+    simp [markerWord,d0,sideBit,BB6Coverage.Agent8Rst1Prime.bridge8Start]
   · subst x
     have hcoord :
         h-((3*a+1:Int))+(-1:Int) = h-(3*(a:Int)+1+((1:Nat):Int)) := by omega
     rw [hcoord,s1Config_left_after_d1pow L a b h 1]
-    simp [markerWord,d0,sideBit,bridge8Start]
+    simp [markerWord,d0,sideBit,BB6Coverage.Agent8Rst1Prime.bridge8Start]
   · subst x
     have hcoord :
         h-((3*a+1:Int))+(0:Int) = h-(3*(a:Int)+1+((0:Nat):Int)) := by omega
     rw [hcoord,s1Config_left_after_d1pow L a b h 0]
-    simp [markerWord,d0,sideBit,bridge8Start]
+    simp [markerWord,d0,sideBit,BB6Coverage.Agent8Rst1Prime.bridge8Start]
 
 /-- The first Rst1' bridge is now a genuine original-machine run from the
 S1 source, not merely a finite-frame computation. -/
@@ -116,7 +109,7 @@ theorem rst1Prime_bridge8_after_firstSweep
     run tm2 (9*a+3+8) (s1Config L 0 1 a 0 b h) =
       some (BB6Coverage.Agent8Rst1Prime.frameAt
         (sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h)
-        (h-((3*a+1:Int))) inside8 BB6Coverage.Agent8Rst1Prime.bridge8End) := by
+        (h-((3*a+1:Int))) BB6Coverage.Agent8Rst1Prime.inside8 BB6Coverage.Agent8Rst1Prime.bridge8End) := by
   rw [run_append,rst1Prime_firstSweep_run]
   simp only [Option.bind_some]
   exact BB6Coverage.Agent8Rst1Prime.bridge8_at
