@@ -93,8 +93,8 @@ def physicalScanProbe (p : PartialMachine) :
       | some (some mv) =>
           physicalScanProbe p n (successfulMoves+1) (finiteMove cfg mv)
 
-/-- The probe's unknown-input case is exactly the slot selected by the
-    original firstUnknownPhysical branch policy. -/
+/-- An unknown probe is exactly the slot selected by the original
+    firstUnknownPhysical branch policy. -/
 theorem physicalScanProbe_unknown_matches (p : PartialMachine)
     (n successfulMoves : Nat) (cfg : FinRayCfg) (k : Nat)
     (d : FinRayCfg) (slot : Slot)
@@ -110,8 +110,8 @@ theorem physicalScanProbe_unknown_matches (p : PartialMachine)
           simp [physicalScanProbe, hp] at h
           cases h
           simp [firstUnknownPhysical, hp]
-      | some t =>
-          cases t with
+      | some trans =>
+          cases trans with
           | none =>
               simp [physicalScanProbe, hp] at h
           | some mv =>
@@ -121,6 +121,183 @@ theorem physicalScanProbe_unknown_matches (p : PartialMachine)
                 simpa [physicalScanProbe, hp] using h
               have hscan := ih (successfulMoves+1) (finiteMove cfg mv) k d hnext
               simpa [firstUnknownPhysical, hp] using hscan
+
+/-- Every unknown probe records an exact finite prefix of successful moves,
+    and the selected slot is genuinely unassigned at its endpoint. -/
+theorem physicalScanProbe_unknown_exact (p : PartialMachine) :
+    ∀ n successfulMoves cfg k d slot,
+      physicalScanProbe p n successfulMoves cfg = .unknown k d slot →
+      ∃ moves, moves < n ∧ k = successfulMoves + moves ∧
+        finitePartialRun p moves cfg = some d ∧
+        slot = (d.state, finiteTape d d.head) ∧ p slot = none := by
+  intro n
+  induction n with
+  | zero =>
+      intro successfulMoves cfg k d slot h
+      simp [physicalScanProbe] at h
+  | succ n ih =>
+      intro successfulMoves cfg k d slot h
+      cases hp : p (cfg.state, finiteTape cfg cfg.head) with
+      | none =>
+          have heq : k = successfulMoves ∧ d = cfg ∧
+              slot = (cfg.state, finiteTape cfg cfg.head) := by
+            simpa [physicalScanProbe, hp] using h
+          rcases heq with ⟨rfl, rfl, rfl⟩
+          refine ⟨0, by omega, by omega, ?_, rfl, hp⟩
+          simp [finitePartialRun]
+      | some trans =>
+          cases trans with
+          | none =>
+              simp [physicalScanProbe, hp] at h
+          | some mv =>
+              have hnext :
+                  physicalScanProbe p n (successfulMoves+1)
+                    (finiteMove cfg mv) = .unknown k d slot := by
+                simpa [physicalScanProbe, hp] using h
+              obtain ⟨moves, hlt, hk, hrun, hslot, hfree⟩ :=
+                ih (successfulMoves+1) (finiteMove cfg mv) k d slot hnext
+              refine ⟨moves+1, ?_, ?_, ?_, hslot, hfree⟩
+              · omega
+              · omega
+              · rw [finitePartialRun_one_prefix p cfg mv hp moves]
+                exact hrun
+
+/-- A halt probe records the exact number of successful moves before the
+    assigned undefined transition is queried. -/
+theorem physicalScanProbe_halt_exact (p : PartialMachine) :
+    ∀ n successfulMoves cfg k d,
+      physicalScanProbe p n successfulMoves cfg = .halt k d →
+      ∃ moves, moves ≤ n ∧ k = successfulMoves + moves ∧
+        finitePartialRun p moves cfg = some d ∧
+        p (d.state, finiteTape d d.head) = some none := by
+  intro n
+  induction n with
+  | zero =>
+      intro successfulMoves cfg k d h
+      simp [physicalScanProbe] at h
+  | succ n ih =>
+      intro successfulMoves cfg k d h
+      cases hp : p (cfg.state, finiteTape cfg cfg.head) with
+      | none =>
+          simp [physicalScanProbe, hp] at h
+      | some trans =>
+          cases trans with
+          | none =>
+              have heq : k = successfulMoves ∧ d = cfg := by
+                simpa [physicalScanProbe, hp] using h
+              rcases heq with ⟨rfl, rfl⟩
+              refine ⟨0, by omega, by omega, ?_, hp⟩
+              simp [finitePartialRun]
+          | some mv =>
+              have hnext :
+                  physicalScanProbe p n (successfulMoves+1)
+                    (finiteMove cfg mv) = .halt k d := by
+                simpa [physicalScanProbe, hp] using h
+              obtain ⟨moves, hle, hk, hrun, hhalt⟩ :=
+                ih (successfulMoves+1) (finiteMove cfg mv) k d hnext
+              refine ⟨moves+1, ?_, ?_, ?_, hhalt⟩
+              · omega
+              · omega
+              · rw [finitePartialRun_one_prefix p cfg mv hp moves]
+                exact hrun
+
+/-- A limit probe is an exact source-simulator prefix of the stated length. -/
+theorem physicalScanProbe_limit_exact (p : PartialMachine) :
+    ∀ n successfulMoves cfg k d,
+      physicalScanProbe p n successfulMoves cfg = .limit k d →
+      k = successfulMoves + n ∧ finitePartialRun p n cfg = some d := by
+  intro n
+  induction n with
+  | zero =>
+      intro successfulMoves cfg k d h
+      have heq : k = successfulMoves ∧ d = cfg := by
+        simpa [physicalScanProbe] using h
+      rcases heq with ⟨rfl, rfl⟩
+      constructor
+      · omega
+      · simp [finitePartialRun]
+  | succ n ih =>
+      intro successfulMoves cfg k d h
+      cases hp : p (cfg.state, finiteTape cfg cfg.head) with
+      | none =>
+          simp [physicalScanProbe, hp] at h
+      | some trans =>
+          cases trans with
+          | none =>
+              simp [physicalScanProbe, hp] at h
+          | some mv =>
+              have hnext :
+                  physicalScanProbe p n (successfulMoves+1)
+                    (finiteMove cfg mv) = .limit k d := by
+                simpa [physicalScanProbe, hp] using h
+              obtain ⟨hk, hrun⟩ :=
+                ih (successfulMoves+1) (finiteMove cfg mv) k d hnext
+              constructor
+              · omega
+              · rw [finitePartialRun_one_prefix p cfg mv hp n]
+                exact hrun
+
+/-- A halt probe is a genuine exact-score blank-root witness for every
+    completion of the terminal partial table. -/
+theorem physicalScanProbe_halt_exact_for_completion
+    (p : PartialMachine) (m : Machine) (hm : compatible p m)
+    (scanLimit steps : Nat) (cfg : FinRayCfg)
+    (h : physicalScanProbe p scanLimit 0 finiteBlank = .halt steps cfg) :
+    HaltsAfter m steps := by
+  obtain ⟨moves, hle, hsteps, hrun, hhalt⟩ :=
+    physicalScanProbe_halt_exact p scanLimit 0 finiteBlank steps cfg h
+  have hsteps' : steps = moves := by simpa using hsteps
+  subst steps
+  have hroot : run m moves blank = some (embedFinRay cfg) := by
+    simpa only [embedFinRay_blank] using
+      finitePartialRun_sound p m hm finiteBlank cfg moves hrun
+  have hhaltRaw : m (readSlot (embedFinRay cfg)) = none := by
+    simpa [readSlot, embedFinRay] using
+      hm (cfg.state, finiteTape cfg cfg.head) none hhalt
+  exact ⟨by simp [HaltsAfter, hroot],
+    halting_entry m blank (embedFinRay cfg) moves hroot hhaltRaw⟩
+
+/-- Consequently a halt probe yields a source proof-carrying Cover leaf at
+    its exact score, even when that score exceeds the audit's bound six. -/
+theorem physicalScanProbe_halt_cover
+    (p : PartialMachine) (scanLimit steps : Nat) (cfg : FinRayCfg)
+    (h : physicalScanProbe p scanLimit 0 finiteBlank = .halt steps cfg) :
+    Cover (DecidedBelow (steps+1)) p := by
+  apply Cover.leaf
+  intro m hm
+  right
+  exact ⟨steps, by omega,
+    physicalScanProbe_halt_exact_for_completion p m hm scanLimit steps cfg h⟩
+
+/-- An unknown probe is a real blank-root prefix in every compatible
+    original machine, not merely a guessed control-path position. -/
+theorem physicalScanProbe_unknown_is_raw_prefix
+    (p : PartialMachine) (m : Machine) (hm : compatible p m)
+    (scanLimit steps : Nat) (cfg : FinRayCfg) (slot : Slot)
+    (h : physicalScanProbe p scanLimit 0 finiteBlank =
+      .unknown steps cfg slot) :
+    ∃ k, k < scanLimit ∧
+      run m k blank = some (embedFinRay cfg) ∧
+      slot = (cfg.state, finiteTape cfg cfg.head) ∧ p slot = none := by
+  obtain ⟨moves, hlt, hsteps, hrun, hslot, hfree⟩ :=
+    physicalScanProbe_unknown_exact p scanLimit 0 finiteBlank steps cfg slot h
+  have hroot : run m moves blank = some (embedFinRay cfg) := by
+    simpa only [embedFinRay_blank] using
+      finitePartialRun_sound p m hm finiteBlank cfg moves hrun
+  exact ⟨moves, hlt, hroot, hslot, hfree⟩
+
+/-- A scan-limit probe is an exact original-machine prefix of every
+    compatible completion. -/
+theorem physicalScanProbe_limit_is_raw_prefix
+    (p : PartialMachine) (m : Machine) (hm : compatible p m)
+    (scanLimit : Nat) (cfg : FinRayCfg)
+    (h : physicalScanProbe p scanLimit 0 finiteBlank =
+      .limit scanLimit cfg) :
+    run m scanLimit blank = some (embedFinRay cfg) := by
+  obtain ⟨_, hrun⟩ :=
+    physicalScanProbe_limit_exact p scanLimit 0 finiteBlank scanLimit cfg h
+  simpa only [embedFinRay_blank] using
+    finitePartialRun_sound p m hm finiteBlank cfg scanLimit hrun
 
 def encodeProbeFields : PhysicalScanProbe → List String
   | .unknown successfulMoves cfg slot =>
@@ -150,7 +327,7 @@ def encodeTerminal (term : AuditTerminal) : String :=
   let probeFields :=
     if term.certified then ["-", "0", "-", "0", "", "-"]
     else encodeProbeFields (physicalScanProbe p 12 0 finiteBlank)
-  String.intercalate "\\t"
+  String.intercalate "\t"
     ([if term.certified then "C" else "O",
       toString term.weight,
       toString term.path.length,
@@ -189,5 +366,12 @@ computes the finite orbit key; it does not alter the source proof tree.
 #print axioms depth4ResidualManifest_totalMass
 #print axioms depth4ResidualManifest_exhaustive
 #print axioms physicalScanProbe_unknown_matches
+#print axioms physicalScanProbe_unknown_exact
+#print axioms physicalScanProbe_halt_exact
+#print axioms physicalScanProbe_limit_exact
+#print axioms physicalScanProbe_halt_exact_for_completion
+#print axioms physicalScanProbe_halt_cover
+#print axioms physicalScanProbe_unknown_is_raw_prefix
+#print axioms physicalScanProbe_limit_is_raw_prefix
 
 end BB6Coverage
