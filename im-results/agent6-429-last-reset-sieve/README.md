@@ -7,7 +7,7 @@ This note combines two existing lines of work:
 - the root-level last-reset decomposition in **Agent 32's LastResetEquation.lean** and its branch table;
 - the 242 surviving terminal residues modulo \(2^{18}=262144\), reconstructed from Agent 1's base/split sieve and Agent 30's additional 4+9 shifted exclusions.
 
-**Proof status.** The repaired LastResetEquation module passed the pinned original-source audit (workflow run [43691972685](https://github.com/FlareZ123/bb6/actions/runs/43691972685)). The root mod-8 invariant is the existing Lean theorem **BB429Mod8.all_blank_returns_allowed**. The finite arithmetic below is reproducible by the accompanying script.
+****Proof status.** The repaired LastResetEquation module passed the pinned original-source audit (workflow run [43691972685](https://github.com/FlareZ123/bb6/actions/runs/43691972685)). The root mod-8 invariant is the existing Lean theorem **BB429Mod8.all_blank_returns_allowed**. The finite arithmetic below is reproducible by the accompanying script.
 
 ## 1. Last-reset equation and branch parametrization
 
@@ -99,7 +99,7 @@ From the repository root:
 python3 im-results/agent6-429-last-reset-sieve/derive.py
 ~~~
 
-The script parses the exact Lean lists from the four source files, reconstructs the 242 survivors, checks the source counts, derives each \(d\)-residue set, and writes **d-residues.json**.
+The script parses the exact Lean lists from the four sieve source files, reconstructs the 242 survivors, uses the 17 allowed residue pairs expanded from **BB429Mod8.lean**, derives each \(d\)-residue set, and writes **d-residues.json**.
 
 ## 4. What this does and does not establish
 
