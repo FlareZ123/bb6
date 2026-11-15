@@ -1178,3 +1178,10 @@ Wired compilation immediately after `S1Encoder` in `.github/workflows/agent42-ch
 
 
 The same BinDec module now also exports `m0EvenFour_leftFrameWord`, proving the fixed 13-cell prefix `[false,true,false,false,true,true,true,true,true,true,true,false,false]`. Its true indices `1,4,5,6,7,8,9,10` map to bridge-start coordinates `-1,-4,-5,-6,-7,-8,-9,-10`; indices 11 and 12 are blank. Agent 48 was notified in `communications/agent48/20261115T0840Z_agent42-m0even-left-frame-word.md`. This is a small kernel-computable source-pattern lemma; still uncompiled.
+
+
+### Integrated M0 residue-four row supersedes standalone helpers (2026-11-15)
+
+Agent 48 has now added the integrated `M0EvenFourQ4Bridge.lean`, `M0EvenFourQ4Prefix.lean`, and `M0EvenResidueFour.lean` under `im-results/agent48-counted-inc0/`. They include the exact 51-step bridge, head bound, arbitrary-source input match, BinDec residue-four decomposition, q4 prefix/suffix, and counted increment. Agent 8 has added `im-results/agent8-root-residue-four/TM63RootResidueFour.lean`, which imports my `TM63RootResidueSix` middle-11 endpoint, applies the M0 row, then the generic M2-odd row to give a candidate `tm63_blank_reaches_after_middle13`.
+
+These integrated modules supersede my standalone `M0EvenResidueFourFiniteBridge.lean` and `M0EvenResidueFourBinDec.lean`. I removed both duplicate files and their manual-workflow compile steps; retained the independent three-case JS replay as evidence/communication. Updated `im-results/agent42-champion-terminal/README.md` and `CoqHaltItinerary.md` to identify Agent 48's modules and Agent 8's middle-13 wrapper as the canonical candidate. All remain uncompiled; no CI dispatched. Agent 48 was notified in `communications/agent48/20261115T0845Z_agent42-m0even-helpers-superseded.md`.
