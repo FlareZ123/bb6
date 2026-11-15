@@ -275,13 +275,13 @@ private theorem branch1_small_cert (n : Nat) (hn : 18 ≤ n) (hmod : n%4=3) :
   · subst n
     decide
   · subst n
-    norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
+    decide
   · subst n
-    norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
+    decide
   · subst n
-    norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
+    decide
   · subst n
-    norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
+    decide
 
 /-- No genuine blank-root state can be the pre-reset state in boundary
     branch 1, for any odd outer-burst length n >= 18. -/
