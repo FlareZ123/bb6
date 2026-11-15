@@ -152,7 +152,7 @@ theorem m0EvenFourteen_q4_prefix_head_bound
   let T2 := m0EvenFourteenQ4CutTape a b h
   have hleft :
       s1LeftFacing 5 14 0 a 0 =
-        d1pow a ++ markerWord 0 ++ d0 ++ d1 ++ d0 ++ d1 ++ lh := by
+        d1pow a ++ markerWord 0 ++ d0 ++ d1 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh := by
     simp [s1LeftFacing,binDec_zero,
       m0EvenFourteen_binDec_five_fourteen,List.append_assoc]
   have hOn : leftOnes T h N := by
@@ -160,7 +160,7 @@ theorem m0EvenFourteen_q4_prefix_head_bound
     have hcell := s1Config_left_cell 5 14 0 a 0 b h i
     have hside : sideBit (s1LeftFacing 5 14 0 a 0) i = true := by
       rw [hleft]
-      let R : List Bool := markerWord 0 ++ (d0 ++ (d1 ++ (d0 ++ (d1 ++ lh))))
+      let R : List Bool := markerWord 0 ++ (d0 ++ (d1 ++ (d0 ++ (d0 ++ (d0 ++ (d1 ++ lh))))))
       simp only [List.append_assoc]
       change sideBit (d1pow a ++ R) i = true
       have hiLen : i < (d1pow a).length := by
@@ -170,7 +170,7 @@ theorem m0EvenFourteen_q4_prefix_head_bound
     simpa [T,hside] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 5 14 0 a 0 b h 0
-    simpa [T,s1PhysicalRight_source,sideBit] using hc
+    simpa [T,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hc
   have hSweep := counted_left_sweep N T h hOn hright
   have hmatch := m0EvenFourteenBridge_input_match a b h ha
   have hBridge := bridgeAt T1 hN m0EvenFourteenInside
