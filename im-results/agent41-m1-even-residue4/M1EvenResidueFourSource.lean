@@ -291,7 +291,7 @@ theorem m1EvenResidueFour_lifted_q4_prefix_leftFacing
       omega
     have hcut := m1EvenResidueFour_cut_eq_base_inside L k a b h
       (h-(i:Int)) hin
-    have hbase := m1EvenResidueFour_lifted_q4_prefix_leftFacing a b h ha i
+    have hbase := m1EvenResidueFour_q4_prefix_leftFacing a b h ha i
     have hbaseBits :
         sideBit (m1EvenResidueFourQ4LeftFacing a) i =
           sideBit (m1EvenResidueFourLeftFacing L k a) i := by
@@ -351,7 +351,7 @@ private theorem m1EvenResidueFour_lifted_q4_prefix_far_tail
     omega
   rw [m1EvenResidueFour_cut_eq_base_inside L k a b h
     (h+1+(i:Int)) hin]
-  exact m1EvenResidueFour_lifted_q4_prefix_far_tail a b h ha i hi
+  exact m1EvenResidueFour_q4_prefix_far_tail a b h ha i hi
 
 private theorem m1EvenResidueFour_q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
@@ -387,7 +387,7 @@ private theorem m1EvenResidueFour_lifted_q4_prefix_rightShape
       simp [m1EvenResidueFourReadInside]
       omega
     exact (m1EvenResidueFour_cut_eq_base_inside L k a b h x hin).symm
-  · exact m1EvenResidueFour_lifted_q4_prefix_rightShape a b h ha
+  · exact m1EvenResidueFour_q4_prefix_rightShape a b h ha
 
 /-- Complete generalized q4 prefix interface for n=8*k+4, with head h+4
 after the first four state-4 guard moves have already been consumed. -/
