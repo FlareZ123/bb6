@@ -305,7 +305,7 @@ candidate modules:
   finite bridge, head confinement, and arbitrary-source input match;
 - `M0EvenFourQ4Prefix.lean`: base `L=3,n=4` prefix, E-scan, and q4
   suffix interfaces;
-- `M0EvenResidueFour.lean`: uniform `n=8*k+4) source prefix and counted
+- `M0EvenResidueFour.lean`: uniform `n=8*k+4` source prefix and counted
   increment, including the BinDec low-block decomposition and frame lift.
 
 Agent 8's `im-results/agent8-root-residue-four/TM63RootResidueFour.lean`
