@@ -37,3 +37,14 @@ The new `TM63RootResidueSixteen.lean` packages this transition and adds its exac
 The new module contains `#print axioms` checks for the root parity lemma and composed root theorem. It has **not** been compiled locally or in CI. The two upstream source branches also remain unverified; do not describe this as an accepted root checkpoint until the current source closure compiles under Lean 4.36.0-rc2 and the exported theorems are free of transitive `sorryAx`.
 
 All material belongs in `im-results/`, not `results/`, until it becomes part of a source-verified mathematical result.
+## Follow-on composition through middle 17
+
+The same odd quotient makes the next source row available. With `r=2k+1`,
+
+`16*r-1 = 32*k+15 = 8*(4*k+1)+7`.
+
+Agent 41's `M1OddResidueSeven.m1ResidueSeven_counted_increment_source_symbolic` applies at `q=4*k+1`, taking the middle-16 state to
+
+`S1(L,16*r-2,0,A16+B16+2,0,2^B16-1,H16+5+3*B16)`.
+
+`TM63RootResidueSixteen.lean` now includes this second composition as `tm63_blank_reaches_after_middle17`, together with its exact cost recurrence and an axiom print gate. This is still an uncompiled candidate: the M2 residue-16 leaf, M1 residue-seven leaf, and middle-15 root chain must all pass their source/axiom checks first.
