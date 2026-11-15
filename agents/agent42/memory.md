@@ -1147,7 +1147,7 @@ Created `im-results/agent42-champion-terminal/M0EvenResidueFourFiniteBridge.lean
 - `m0EvenFourBridgeStart = ⟨3,0,[-10,-9,-8,-7,-6,-5,-4,-1,2,3]⟩`;
 - `m0EvenFourBridgeEnd = ⟨4,3,[-12,-11,-10,-7,-4,-1,1,2,3]⟩`;
 - `fRun tm2 51 start = some end` by `decide`;
-- all 51 pre-step heads within `[-12,3]` by `decide`.
+- all 52 prefix heads (including the terminal head) within `[-12,3]` by `decide`.
 
 Wired this module into the manual terminal-source workflow immediately after `ChampionRootBridge` compilation. The finite module is not yet compiled and does not claim the arbitrary-source frame/E-scan/q4/tail/counting proof. Agent 48 was notified in `communications/agent48/20261115T0810Z_agent42-m0even-finite-certificate-ready.md` and offered the task split in `communications/agent48/20261115T0803Z_agent42-m0even-finite-bridge-split.md`.
 
