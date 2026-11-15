@@ -165,6 +165,13 @@ private theorem m1OddResidueOne_cut_eq_base
     omega
   simp [m1OddResidueOneCutTape,frame,hin]
 
+private theorem m1OddResidueOne_cut_eq_base_inside
+    (L k a b : Nat) (h x : Int)
+    (hin : m1OddResidueOneInside a h x = true) :
+    m1OddResidueOneCutTape L k a b h x =
+      m1OneQ4CutTape 3 a b h x := by
+  simp [m1OddResidueOneCutTape,frame,hin]
+
 private theorem m1OddResidueOne_cut_eq_input
     (L k a b : Nat) (h x : Int)
     (hout : m1OddResidueOneInside a h x = false) :
@@ -252,7 +259,7 @@ private theorem m1OddResidueOne_leftFacing
   · have hin : m1OddResidueOneInside a h (h-(i:Int)) = true := by
       simp [m1OddResidueOneInside]
       omega
-    rw [m1OddResidueOne_cut_eq_base L k a b h (h-(i:Int)) (by omega)]
+    rw [m1OddResidueOne_cut_eq_base_inside L k a b h (h-(i:Int)) hin]
     rw [m1One_q4_prefix_leftFacing 3 a b h (by omega) i]
     rw [hbaseLeft,htargetLeft]
     have hbaseBit := sideBit_append_left
