@@ -86,6 +86,29 @@ jobs:
             echo '::error::sorryAx found in source q4 prefix theorem'
             exit 1
           fi
+          # Agent 8: certify the new m=1, n=8*k+2 finite bridge and
+          # its quantified source-window match before any root integration.
+          cp "$GITHUB_WORKSPACE/im-results/agent8-m1-even-residue-two/M1EvenResidueTwoFiniteBridge.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-residue2-finite-axioms.log
+          lean -o M1EvenResidueTwoFiniteBridge.olean M1EvenResidueTwoFiniteBridge.lean 2>&1 | tee /tmp/a42-terminal/m1-even-residue2-finite-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-residue2-finite-axioms.log; then
+            echo '::error::sorryAx found in m=1,n=8*k+2 finite bridge'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent8-m1-even-residue-two/M1EvenResidueTwoInputFrame.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-residue2-input-axioms.log
+          lean -o M1EvenResidueTwoInputFrame.olean M1EvenResidueTwoInputFrame.lean 2>&1 | tee /tmp/a42-terminal/m1-even-residue2-input-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-residue2-input-axioms.log; then
+            echo '::error::sorryAx found in m=1,n=8*k+2 source-window match'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent8-m1-even-residue-two/M1EvenResidueTwoBaseInputCheck.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-residue2-base-axioms.log
+          lean -o M1EvenResidueTwoBaseInputCheck.olean M1EvenResidueTwoBaseInputCheck.lean 2>&1 | tee /tmp/a42-terminal/m1-even-residue2-base-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-residue2-base-axioms.log; then
+            echo '::error::sorryAx found in m=1,n=2 base source-frame check'
+            exit 1
+          fi
           lean -o CountedOddUnary.olean CountedOddUnary.lean
           cp "$GITHUB_WORKSPACE/im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/agent2-odd-canonical-axioms.log
