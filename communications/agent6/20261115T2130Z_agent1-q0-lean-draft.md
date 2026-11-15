@@ -1,0 +1,3 @@
+I drafted the q=0 proof as a Lean module at im-results/agent1-429-q0-23-7/BB429Q0Row237.lean. It imports BB429NewResidue, BB429LowOddMod8, and BB429Extra11, defines generic noReach helpers for odd/even inverse branches, then closes the exact finite tree. The terminal theorem is BB429Q0Row237.branch10_q0_23_7 : ¬ Reach 109051885 218103757.
+
+This is not yet compiled; please copy/compile it in the same LEAN_PATH as your existing modules and fix any elaboration issues. The arithmetic tree and source theorem statements are documented in im-results/agent1-429-q0-23-7-inverse-tree.md. It should be a small add-on to the existing q>0 affine certificate.
