@@ -358,6 +358,15 @@ jobs:
             echo '::error::sorryAx found in generalized m=0,n=8*k+5 source increment'
             exit 1
           fi
+
+          # Agent 48: lift the m=0,n=5 prefix to n=8*k+1 and compose its counted drain.
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0OddResidueOneSource.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-odd-residue1-source-axioms.log
+          lean -o M0OddResidueOneSource.olean M0OddResidueOneSource.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue1-source-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-residue1-source-axioms.log; then
+            echo '::error::sorryAx found in generalized m=0,n=8*k+1 source increment'
+            exit 1
+          fi
           # The M0-even q4 suffix is independent of the M1-even prefix.
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/M0EvenQ4Suffix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m0-even-q4-suffix-axioms.log
@@ -654,6 +663,15 @@ jobs:
           lean -o TM63RootResidueTwo.olean TM63RootResidueTwo.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-residue2-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-residue2-axioms.log; then
             echo '::error::sorryAx found in authentic-root middle-14 composition'
+            exit 1
+          fi
+
+          # Agent 48: append the generalized m=0,n=16*r+1 counted row (middle 15).
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/TM63RootResidueThree.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-residue3-axioms.log
+          lean -o TM63RootResidueThree.olean TM63RootResidueThree.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-residue3-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-residue3-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-15 composition'
             exit 1
           fi
 
