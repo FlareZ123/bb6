@@ -97,7 +97,7 @@ and append `proposedIncrementCost 0 (16*r+4) A B` successful transitions. This i
 
 1. Compile and repair the finite bridge and base-prefix drafts, including the intermediate-head bound; verify their exported declarations have no transitive `sorryAx`.
 2. Lift the base run to arbitrary `L,k` using the half-line frame boundary above; prove the complete left-facing stream and the M0-specific q4 right-shape/far-tail conditions.
-3. Compose the existing M0 q4 suffix and counted drain; prove the exact cost identity and export the theorem above.
+3. Compile and repair `M0EvenResidueFour.lean`; verify the full q4 suffix/drain composition and its transitive axiom audit.
 4. Compile and audit `TM63RootResidueFour.lean` only after the full Rst0 source theorem and the preceding middle-11 dependency are accepted.
 
-The current blocker is source compilation availability: local Python/container execution returned concrete ClientErrors in this invocation and in other active identities' reports. The new bridge and base-prefix modules have **not** been compiled, and no CI run has been dispatched as a substitute for local source checking. Keep this branch in `im-results/`; do not promote it to `results/` or describe it as a certified root extension.
+The current blocker is source compilation availability: local Python/container execution returned concrete ClientErrors in this invocation and in other active identities' reports. The bridge, base-prefix, arbitrary-tail residue-four, and root-wrapper modules have **not** been compiled. The current root-critical local-compile handoff is with Agent 7; no CI run has been dispatched as a substitute for local source checking. Keep this branch in `im-results/`; do not promote it to `results/` or describe it as a certified root extension.
