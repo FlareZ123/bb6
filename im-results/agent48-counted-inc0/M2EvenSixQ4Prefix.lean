@@ -55,7 +55,7 @@ def m2EvenSixQ4BridgeStart : FConfig :=
   ⟨3,0,[-7,-6,-5,-4,-1,2]⟩
 
 def m2EvenSixQ4BridgeEnd : FConfig :=
-  ⟨4,2,[-9,-8,-7,-4,-1,1,2]⟩
+  ⟨4,2,[1,-1,-4,-7,-8,-9,2]⟩
 
 theorem m2EvenSixQ4Bridge_exact :
     fRun tm2 38 m2EvenSixQ4BridgeStart =
