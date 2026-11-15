@@ -65,8 +65,11 @@ private theorem first_mid_shape (u q : Nat) (hq : 3 ≤ q) :
       [true,true,true] ++ List.replicate (2*q-3) true := by
     rw [hqrep,←List.replicate_append_replicate]
     rfl
+  have hqsucc : q-1 = Nat.succ (q-2) := by omega
+  have hqidx : 2*((q-2)+1)+2 = 2*(q-1)+2 := by omega
+  rw [hqsucc]
   simp only [BB6.Agent32EAll.output,List.append_nil]
-  rw [hrep,hp]
+  rw [hqidx,hrep,hp]
   simp [init,suffix2,List.append_assoc]
 
 private def secondOutput (u q : Nat) : Cfg :=
@@ -103,7 +106,7 @@ private theorem second_a_shape (u q : Nat) (hq : 3 ≤ q) :
 private theorem third_return (u q : Nat) (hq : 3 ≤ q) :
     run (thirdTime u) (secondOutput u q) = sourceEnd u q := by
   rw [second_a_shape u q hq]
-  exact BB6.CryptidTriplePairs.full_E_triple_pairs
+  exact CryptidBoundary.full_E_triple_pairs
     (64*u+31) 2 (suffix3 q)
 
 private theorem first_return (u q : Nat) (hq : 3 ≤ q) :
