@@ -38,7 +38,8 @@ theorem binDec_residue16 (L k : Nat)
   have hq : k < 2^(L-5) := by omega
   have hlen : (L-5)+1+4 = L := by omega
   have hnum : (2*k+1)*2^4 = 32*k+16 := by norm_num; omega
-  rw [← hlen, ← hnum]
+  conv_lhs =>
+    rw [← hlen, ← hnum]
   exact binDec_carryPrefix (L-5) k 4 hq
 
 /-- Binary decrement prefix for n-1=32*k+15. -/
@@ -57,7 +58,8 @@ theorem binDec_residue15 (L k : Nat)
   have hq : k < 2^(L-5) := by omega
   have hlen : (L-5)+1+4 = L := by omega
   have hnum : ((2*k+1)*2^4)-1 = 32*k+15 := by norm_num; omega
-  rw [← hlen, ← hnum]
+  conv_lhs =>
+    rw [← hlen, ← hnum]
   exact binDec_sub_one_carryPrefix (L-5) k 4 hq
 
 /-- The common low-order input prefix through the fifth BinDec block. -/
