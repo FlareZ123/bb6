@@ -355,3 +355,5 @@ This is **not** a root proof: exact affine corrections, the neutral direction of
 
 The algebraic identities now have a self-contained Lean-core certificate in [ProjectiveGapLyapunov.lean](ProjectiveGapLyapunov.lean), compiled with Lean 4.36.0-rc2. This verifies only the leading-matrix statement, not the affine root-orbit induction.
 
+A sector-adapted common form is also recorded in [ProjectiveGapLyapunov.md](ProjectiveGapLyapunov.md): `W₀=75(R+L)²+9(R-L)²` has rank-one nonnegative gains under both leading projective maps and equals `900*quadraticGap(g,m)` in either unshifted old sector. This connects the projective matrix analysis directly to the source-exact scalar potential in `GapScaleResidualSource.lean`.
+
