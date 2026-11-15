@@ -100,4 +100,10 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleRootDecisionCore.lean" .
           lake env lean -o .lake/build/lib/lean/NeedleRootDecisionCore.olean NeedleRootDecisionCore.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleRootDecisionSource.lean" .
-          lake env lean NeedleRootDecisionSource.lean
+          lake env lean -o .lake/build/lib/lean/NeedleRootDecisionSource.olean NeedleRootDecisionSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleCancellationR5.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleCancellationR5.olean NeedleCancellationR5.lean | tee /tmp/needle-r5-axioms.log
+          if grep -q 'sorryAx' /tmp/needle-r5-axioms.log; then
+            echo "Unexpected sorryAx in r=5 root certificate"
+            exit 1
+          fi
