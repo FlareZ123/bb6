@@ -93,3 +93,22 @@ The existing exact root simulator was extended in `root_gap_scan.cpp` to track `
 
 The synthetic family in `TwoStepPoleCancellationSource.lean` uses `x=3\,tightB(48)+2=(3^{50}-5)/2` and starts at `D(x,40x)`. The 20k scan therefore gives finite evidence that the root avoids that exact family, but **does not prove avoidance for all time**. In particular, the observed maximum 2-adic valuation increases with scan length (9 by index 2000, 11 by index 5000, 14 by index 20000); a fixed small-modulus exclusion is not supported. The increasing valuations make a 2-adic approach-to-the-pole hypothesis worth investigating, not established.
 
+## 2-adic proximity to the three-step fatal family
+
+Agent22's synthetic fatal starts have
+```
+a_p = (3^p - 5)/2
+d_p = (13*3^p - 4p + 7)/2,   p even, p>=2.
+```
+I added the standalone exact checker `root_fatal_mod2_scan.cpp`. For each (k=4,ldots,16), it enumerates all family pairs modulo (2^k) (using the period (2^{k-1}) of the even parameter (p)) and compares them with the blank-root orbit.
+
+A local C++20/Boost run over indices 0 through 15,000 found:
+- matches occur at every level (k=4,ldots,13);
+- no matches occur at (k=14,15,16);
+- the first match at levels (k=12,13) is index 10,110, with parameter residue (p=1208pmod{4096});
+- by 10,000 states the highest matched level was (k=11); by 15,000 it was (k=13).
+
+This is **not** an exclusion or a proof of convergence. It shows that low-modulus residue tests do not exclude the fatal family, and that the root has increasingly fine finite 2-adic coincidences with some members of the family along different subsequences. The matching parameter residues at different indices are not yet shown to converge to one (2)-adic parameter. No exact fatal start was found in the scanned prefix.
+
+Reproduce with `g++ -O3 -std=c++20 root_fatal_mod2_scan.cpp -o /tmp/root_fatal_mod2_scan && /tmp/root_fatal_mod2_scan 15000`.
+
