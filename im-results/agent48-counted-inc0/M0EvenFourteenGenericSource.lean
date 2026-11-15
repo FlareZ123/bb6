@@ -193,7 +193,8 @@ private theorem m0EvenFourteenGeneric_inputPrefix_length (a : Nat) :
   simp [m0EvenFourteenGenericInputPrefix,d1pow_length,markerWord,d0,d1]
   omega
 
-private theorem m0EvenFourteenGeneric_targetPrefix_length (a : Nat) :
+private theorem m0EvenFourteenGeneric_targetPrefix_length (a : Nat)
+    (ha : 0<a) :
     (m0EvenFourteenGenericTargetPrefix a).length = 3*a+10 := by
   simp [m0EvenFourteenGenericTargetPrefix,d1pow_length,markerWord,d0,d1]
   omega
@@ -313,7 +314,7 @@ theorem m0EvenFourteen_generic_q4_prefix_leftFacing
   have hsourceLeft := m0EvenFourteen_sourceLeftFacing L k a hL hbound
   have hbaseCutLeft := m0EvenFourteen_baseCutLeftFacing a
   have hinputPrefixLength := m0EvenFourteenGeneric_inputPrefix_length a
-  have htargetPrefixLength := m0EvenFourteenGeneric_targetPrefix_length a
+  have htargetPrefixLength := m0EvenFourteenGeneric_targetPrefix_length a ha
   intro i
   by_cases hi : i ≤ 3*a+9
   · have hin :
