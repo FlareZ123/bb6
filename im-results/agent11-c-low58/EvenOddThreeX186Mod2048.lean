@@ -51,10 +51,10 @@ theorem y3_x186_parents (v a k : Nat)
                 have hn0 : n=0 ∨ n=1 ∨ n=2 := by omega
                 rcases hn0 with hn0|hn1|hn2
                 · subst n
-                  simp only [pow_zero] at hpow'
+                  change 4*(32*v+3)=1 at hpow'
                   omega
                 · subst n
-                  simp only [pow_one] at hpow'
+                  change 4*(32*v+3)=2 at hpow'
                   omega
                 · subst n
                   simp only [show (2:Nat)^2=4 by decide] at hpow'
@@ -63,14 +63,12 @@ theorem y3_x186_parents (v a k : Nat)
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
-        omega
       · by_cases hlow : 2*k≤a
         · have hcase : 2048*v+186=a-2*k ∧ 3=2*k+2 := by
             simpa [sectionPreimageAll,ha0,ha1,hk0,hlow] using hp
           omega
         · by_cases haeven : a%2=0
           · simp [sectionPreimageAll,ha0,ha1,hk0,hlow,haeven] at hp
-            omega
           · have haodd : a%2=1 := by omega
             simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
                   if_neg hk0,if_neg hlow,if_neg haeven] at hp
@@ -115,16 +113,16 @@ theorem y3_x186_parents (v a k : Nat)
               have hnCases : n=0 ∨ n=2 ∨ n=4 := by omega
               rcases hnCases with hn0|hn2|hn4
               · subst n
-                simp only [pow_zero] at hpow'
+                change 2048*v+192=2*a+6 at hpow'
                 left
                 constructor <;> omega
               · subst n
-                simp only [show (2:Nat)^2=4 by decide] at hpow'
+                change 2048*v+192=4*(2*a+6) at hpow'
                 right
                 left
                 constructor <;> omega
               · subst n
-                simp only [show (2:Nat)^4=16 by decide] at hpow'
+                change 2048*v+192=16*(2*a+6) at hpow'
                 right
                 right
                 constructor <;> omega
