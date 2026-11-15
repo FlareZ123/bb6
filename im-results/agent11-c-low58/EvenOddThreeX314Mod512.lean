@@ -53,12 +53,12 @@ theorem y3_x314_parents (v a k : Nat)
                   by_cases hnsmall : n<2
                   · cases n with
                     | zero =>
-                        simp only [pow_zero] at hpow'
+                        change 4*(8*v+5)=1 at hpow'
                         omega
                     | succ n =>
                         cases n with
                         | zero =>
-                            simp only [pow_one] at hpow'
+                            change 4*(8*v+5)=2 at hpow'
                             omega
                         | succ n => omega
                   · omega
@@ -70,19 +70,19 @@ theorem y3_x314_parents (v a k : Nat)
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
-        omega
       · by_cases hlow : 2*k≤a
         · have hcase : 512*v+314=a-2*k ∧ 3=2*k+2 := by
             simpa [sectionPreimageAll,ha0,ha1,hk0,hlow] using hp
           omega
         · by_cases haeven : a%2=0
           · simp [sectionPreimageAll,ha0,ha1,hk0,hlow,haeven] at hp
-            omega
           · have haodd : a%2=1 := by omega
             simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
                   if_neg hk0,if_neg hlow,if_neg haeven] at hp
             rcases hp with ⟨_,n,hpow,hcost⟩ | ⟨h5,_⟩
-            · have hpow' : 512*v+320=2^n*(2*a+6) := by omega
+            · have hfac : 2*(a-1)+8=2*a+6 := by omega
+              rw [hfac] at hpow hcost
+              have hpow' : 512*v+320=2^n*(2*a+6) := by omega
               have hcost' :
                   (2*k-a+3)+(2*a+6)+3*n=512*v+324 := by omega
               have hnle : n≤4 := by
@@ -99,7 +99,8 @@ theorem y3_x314_parents (v a k : Nat)
                     refine ⟨b*c,?_⟩
                     calc
                       2^n*(2*a+6)=(32*b)*(4*c) := by rw [hb,hc]
-                      _=128*(b*c) := by ring
+                      _=128*(b*c) := by
+                      simp [Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm]
                   rw [←hpow'] at hdiv
                   have hzero : (512*v+320)%128=0 :=
                     Nat.mod_eq_zero_of_dvd hdiv
@@ -142,6 +143,8 @@ private theorem no_y3_x314_parent0 (v : Nat) :
     (by omega) (by omega) (by omega)
     (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (192*v+116) (160*v+96) := by
+    change (∃ n, BB6.Agent8Section.run secNext n (some (5,1)) =
+      some (192*v+116,160*v+96))
     have hx : ((256*v+157)+(128*v+79)-4)/2=192*v+116 := by omega
     have hy : ((256*v+157)+3*(128*v+79)-10)/4=160*v+96 := by omega
     simpa only [hx,hy] using hQ
@@ -150,8 +153,8 @@ private theorem no_y3_x314_parent0 (v : Nat) :
     (by omega) (by omega) (by omega) (by omega)).mp hQ'
   have hR' : BB6.Agent3.CReach (352*v+210) (80*v+47) := by
     have hx : ((192*v+116)+(160*v+96)-2)=352*v+210 := by omega
-    have hy : (160*v+96-2)/2=80*v+47 := by omega
-    simpa only [hx,hy] using hR
+    rw [hx] at hR
+    exact hR
   exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
     (352*v+210) (80*v+47)
     (by omega) (by omega) (by omega) (by omega) hR'
@@ -164,8 +167,8 @@ private theorem no_y3_x314_parent1 (v : Nat) :
     (by omega) (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (288*v+171) (112*v+67) := by
     have hx : ((64*v+37)+(224*v+136)-2)=288*v+171 := by omega
-    have hy : (224*v+136-2)/2=112*v+67 := by omega
-    simpa only [hx,hy] using hQ
+    rw [hx] at hQ
+    exact hQ
   exact BB6.Agent11High.blank_no_odd_sum_two
     (288*v+171) (112*v+67)
     (by omega) (by omega) (by omega) hQ'
@@ -178,8 +181,8 @@ private theorem no_y3_x314_parent2 (v : Nat) :
     (by omega) (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (264*v+153) (124*v+73) := by
     have hx : ((16*v+7)+(248*v+148)-2)=264*v+153 := by omega
-    have hy : (248*v+148-2)/2=124*v+73 := by omega
-    simpa only [hx,hy] using hQ
+    rw [hx] at hQ
+    exact hQ
   exact BB6.Agent11High.blank_no_odd_sum_two
     (264*v+153) (124*v+73)
     (by omega) (by omega) (by omega) hQ'
