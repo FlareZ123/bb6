@@ -93,6 +93,10 @@ def run(steps: int, tape: dict[int, bool], head: int, state: int):
     return tape, head, state
 
 
+def bits(tape: dict[int, bool], lo: int, hi: int) -> str:
+    return "".join("1" if tape.get(x, False) else "0" for x in range(lo, hi + 1))
+
+
 def v2(n: int) -> int:
     assert n > 0
     count = 0
@@ -111,40 +115,52 @@ def check_case(k: int, a: int, b: int, length: int) -> None:
     assert k > 0 and a > 0 and n < 2**length
     head = 0
     carry = v2(k)
-
-    source = config_tape(length, n, 2, a, 0, b, head)
-    current, current_head, current_state = source, head, 3
+    current = config_tape(length, n, 2, a, 0, b, head)
+    current_head, current_state = head, 3
 
     # Phase 1: sweep the 3*a+2 initial ones to the left.
     left_steps = 9 * a + 6
     current, current_head, current_state = run(
         left_steps, current, current_head, current_state
     )
-    expected_left_head = head - (3 * a + 2)
-    assert (current_state, current_head) == (3, expected_left_head), (
-        f"left sweep failed: k={k}, a={a}, b={b}, L={length}"
-    )
+    hN = head - (3 * a + 2)
+    assert (current_state, current_head) == (3, hN)
+    assert bits(current, hN - 13, hN) == "11111111110010"
 
-    # Phase 2: the carry bridge. Its length grows by 12 per trailing zero of k.
-    bridge_steps = 62 + 12 * carry
+    # Phase 2: fixed 44-step setup, stopping immediately before quotient bit 0.
     current, current_head, current_state = run(
-        bridge_steps, current, current_head, current_state
+        44, current, current_head, current_state
     )
-    expected_bridge_head = expected_left_head + 2
-    assert (current_state, current_head) == (4, expected_bridge_head), (
-        f"carry bridge failed: k={k}, a={a}, b={b}, L={length}"
-    )
+    hH = hN - 14
+    assert (current_state, current_head) == (3, hH)
+    assert not current.get(hH + 1, False)
 
-    # Phase 3: E scans the 3*a unary cells back to the original head.
-    e_scan_steps = 3 * a
+    # The quotient bin_dec(L-3,k) begins d1^v2(k) ++ d0.
+    assert all(current.get(hH - j, False) for j in range(3 * carry))
+    assert bits(current, hH - 3 * carry - 2, hH - 3 * carry) == "100"
+
+    # Phase 3: the universal H-run, length 4+12*v2(k).
+    hrun_steps = 4 + 12 * carry
     current, current_head, current_state = run(
-        e_scan_steps, current, current_head, current_state
+        hrun_steps, current, current_head, current_state
     )
-    assert (current_state, current_head) == (4, head), (
-        f"E scan failed: k={k}, a={a}, b={b}, L={length}"
-    )
+    assert (current_state, current_head) == (1, hH + 2)
+    assert bits(current, hH + 2, hN + 1) == "11111111111110"
 
-    # Phase 4: the Q4 suffix performs the right-side b-dependent movement.
+    # Phase 4: fixed 14-step postlude, producing the Q4 suffix input.
+    current, current_head, current_state = run(
+        14, current, current_head, current_state
+    )
+    assert (current_state, current_head) == (4, hN + 2)
+    assert bits(current, hH + 2, hN + 1) == "00100100100101"
+
+    # Phase 5: E scans the 3*a unary cells back to the original head.
+    current, current_head, current_state = run(
+        3 * a, current, current_head, current_state
+    )
+    assert (current_state, current_head) == (4, head)
+
+    # Phase 6: the existing Q4 suffix.
     suffix_steps = 39 + 3 * b
     current, current_head, current_state = run(
         suffix_steps, current, current_head, current_state
@@ -166,8 +182,8 @@ def check_case(k: int, a: int, b: int, length: int) -> None:
             f"first differing cells={differing[:30]}"
         )
 
-    expected_total = reset_prefix_cost(2, n, a, b)
-    assert left_steps + bridge_steps + e_scan_steps + suffix_steps == expected_total
+    total = left_steps + 44 + hrun_steps + 14 + 3 * a + suffix_steps
+    assert total == reset_prefix_cost(2, n, a, b)
 
 
 def main() -> None:
@@ -194,7 +210,7 @@ def main() -> None:
                     cases += 1
 
     assert cases == 240
-    print(f"PASS: {cases} four-phase TM63 reset-prefix simulations")
+    print(f"PASS: {cases} six-phase TM63 reset-prefix simulations")
 
 
 if __name__ == "__main__":
