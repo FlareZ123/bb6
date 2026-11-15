@@ -79,9 +79,13 @@ The current candidate root chain now composes through middle 17:
 `blank → middle 13 → middle 14 → middle 15 → middle 16 → middle 17`.
 The middle-17 state is
 `S1(tm63Length1,16*r-2,0,A17,0,B17,H17)`, where the root arithmetic rewrites
-`16*r-2 = 32*k+14 = 8*(4*k+1)+6). The next required row is therefore the difficult marker-0 even sector `n=8*q+6` with `q=4*k+1). No source-exact q4 prefix for this row is currently available.
+`16*r-2 = 32*k+14 = 8*(4*k+1)+6`. The next required row is therefore the difficult marker-0 even sector `n=8*q+6` with `q=4*k+1`.
 
-Agent 41's finite replay of `n=8*q+6` at `q=1,a=1,b=0,1,2) and widths `L=4,5,8,12` survived a 200,000-step horizon. This is exploratory simulation only; it is not the authentic root configuration (whose `L,A17,B17` are different), and it proves neither halting nor nonhalting. The replay and its width caveat are in [Agent 41's holdout dossier](../agent41-m0-even-root-holdout/README.md).
+Agent 49 has now supplied a source-exact 39-step local bridge and an `L=5,n=14` q4 prefix in [`M0EvenFourteenQ4Bridge.lean`](../agent49-m0-even-residue14/M0EvenFourteenQ4Bridge.lean) and [`M0EvenFourteenQ4Prefix.lean`](../agent49-m0-even-residue14/M0EvenFourteenQ4Prefix.lean). The prefix cost is `36+12*a`. Agent 48 added [`M0EvenFourteenHeadBound.lean`](M0EvenFourteenHeadBound.lean), a separate, uncompiled head-bound helper for that base run: the head stays at or to the right of `h-(3*a+9)`, split across the 3a counted left sweep, the 39-step bridge with relative window [-9,2], and the 3(a-1) E-scan.
+
+The remaining middle-18 work is now sharply scoped: lift the base prefix to arbitrary `L≥5` and `n=32*k+14` using the first `3*a+10` input/target cells, prove the common-tail alignment, compose the q4 suffix, and then append the counted drain. This generic lift and counted increment have not yet been written or compiled.
+
+Agent 41's finite replay of `n=8*q+6` at `q=1,a=1,b=0,1,2` and widths `L=4,5,8,12` survived a 200,000-step horizon. This is exploratory simulation only; it is not the authentic root configuration (whose `L,A17,B17` are different), and it proves neither halting nor nonhalting. The replay and its width caveat are in [Agent 41's holdout dossier](../agent41-m0-even-root-holdout/README.md).
 
 The separate M2 residue-six branch still has theorem `m2Even_residue6_q4_reset_prefix_source` with endpoint
 `S1(L,16k+5,1,a+b+2,2^b-1,0,h+5+3b)`
@@ -93,9 +97,9 @@ and prefix cost `83+12a+3b`. Composing the generic all-ones drain would yield
 1. Pass the full original-import Lean 4.36.0-rc2 compile and transitive `sorryAx` audit for `CountedCarryPrefixHRun.lean`, `S1CarryInc0.lean`, `S1CountedInc0.lean`, and `S1CountedDrain.lean`; in particular, audit the new all-valuation H-run and its left-output identity.
 2. Validate the current M0 residue-seven and Rst1Prime/Bridge8 dependency closures. The first Rst1' instance is wired into the root source path, but the post-patch Bridge8→Bridge30 chain still needs its source/axiom gate.
 3. Pass the source/axiom gate for the middle-15 generic all-odd m=0 increment and its root wrapper, then the middle-16 M2-even residue-sixteen row and middle-17 M1-odd residue-seven row.
-4. Develop a source-exact reset or other invariant for the middle-17 holdout `m=0,n=8q+6), with the authentic root parameter `q=4k+1`; do not infer its behavior from the small finite replay.
+4. Complete the middle-18 general-width lift for `m=0,n=32k+14` using Agent 49's base bridge/prefix and Agent 48's head-bound helper; prove the exact common-tail alignment, q4 suffix, and counted drain. Only then evaluate the authentic root endpoint.
 5. Compile and audit the separate M2 residue-six, M0-even residue-four, Agent 8 middle-13, and M1-even residue-two source branches. They remain useful candidates but are not substitutes for closing the current root continuation.
-5. Prove the original-machine primitive-step count for the entire halting itinerary, including the final halting-query convention. Independently, prove a universal six-state upper bound.
+6. Prove the original-machine primitive-step count for the entire halting itinerary, including the final halting-query convention. Independently, prove a universal six-state upper bound.
 
 The Coq macro formulas and the arithmetic score candidate are not substitutes for these original-source run proofs. No exact BB(6) value, complete champion halt certificate, or global maximality theorem is claimed here.
 
