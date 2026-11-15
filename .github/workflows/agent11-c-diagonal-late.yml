@@ -222,6 +222,12 @@ jobs:
               echo "REJECTED: x=314 mod 512 y=3 source exclusion contains sorryAx"
               exit 1
             fi
+            cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/U5Y3ParentFan.lean .
+            lean -o U5Y3ParentFan.olean U5Y3ParentFan.lean 2>&1 | tee U5Y3ParentFan.log
+            if grep -q sorryAx U5Y3ParentFan.log; then
+              echo "REJECTED: general u=5 y=3 parent fan contains sorryAx"
+              exit 1
+            fi
             exit 0
           fi
           if [ "$U5_X186_ONLY" = "true" ]; then
