@@ -293,9 +293,10 @@ increment, and the counted M1-odd residue-five increment. Its theorem
 
 The shared arithmetic module
 `TM63RootCountdownArithmetic.lean` now exports
-`tm63_root_middle_k_split`, `tm63_index1_eq_16k15`,
-`tm63_index1_lt_pow_length1`, and `tm63_root_length_ge_four`; the residue-six root composition uses
-these rather than duplicating the quotient and width proofs.
+`tm63_root_middle_k_split`, `tm63_index1_eq_16k15`, and
+`tm63_index1_lt_pow_length1`; `TM63RootResidueSix.lean` also exports
+`tm63_root_length_ge_four`. The residue-six root composition uses these
+rather than duplicating the quotient, width, and length proofs.
 
 **Current next source row:** M0-even residue four, input
 `S1(L,16*r+4,0,A11,0,B11,H11)`. Agent 48 has now supplied the integrated
