@@ -19,6 +19,7 @@ open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24ChampionTime
+open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Rst1Prime
 
 /-- The counted left sweep does not alter any cell at or left of its
