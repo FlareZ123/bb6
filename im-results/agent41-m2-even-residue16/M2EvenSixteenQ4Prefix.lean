@@ -3,7 +3,7 @@ import S1CountedDrain
 import Lean.Elab.Tactic.Omega
 
 /-!
-# The m=2,n=4 even q4 reset branch
+# The m=2,n=16 even q4 reset branch
 
 This module closes the next TM63 reset after the m=0,n=5 branch.
 The new finite kernel is a 50-step bridge, following the standard
@@ -142,7 +142,7 @@ theorem m2EvenSixteenQ4Bridge_input_match (a b : Nat) (h : Int) :
     simpa [m2EvenSixteenQ4BridgeStart] using hleft
 
 
-/-- Explicit tape at the m=2,n=4 even q4 cut. -/
+/-- Explicit tape at the m=2,n=16 even q4 cut. -/
 def m2EvenSixteenQ4CutTape (a b : Nat) (h : Int) : Int → Bool :=
   let T := (s1Config 5 16 2 a 0 b h).tape
   let N := 3*a+2
@@ -465,7 +465,7 @@ private theorem m2EvenSixteenQ4RightShape_of_stream (T : Int → Bool)
             omega
           simpa [hcoord] using hr
 
-/-- The complete m=2,n=4 even q4 prefix, from source S1 to state E/head h. -/
+/-- The complete m=2,n=16 even q4 prefix, from source S1 to state E/head h. -/
 theorem m2EvenSixteen_q4_prefix_data (a b : Nat) (h : Int)
     (ha : 0 < a) :
     ∃ Tq,
@@ -519,7 +519,7 @@ theorem m2EvenSixteen_q4_prefix_data (a b : Nat) (h : Int)
       run tm2 74 ⟨3,hN,T1⟩ =
         some ⟨4,hN+2,T2⟩ := by
     have hb := bridgeAt T1 hN m2EvenSixteenQ4Inside
-      m2EvenSixteenQ4BridgeStart m2EvenSixteenQ4BridgeEnd 50 rfl
+      m2EvenSixteenQ4BridgeStart m2EvenSixteenQ4BridgeEnd 74 rfl
       m2EvenSixteenQ4Bridge_exact m2EvenSixteenQ4Bridge_heads hmatch
     have hframe :
         frameAt T1 hN m2EvenSixteenQ4Inside m2EvenSixteenQ4BridgeEnd =
@@ -533,34 +533,21 @@ theorem m2EvenSixteen_q4_prefix_data (a b : Nat) (h : Int)
   have hlinear : linearRightOnes T2 (hN+2) (3*a) := by
     intro i hi
     let x : Int := hN+2+(i:Int)
-    by_cases hi0 : i=0
-    · subst i
-      have hrel : x-hN = 2 := by dsimp [x]; omega
-      have hin : m2EvenSixteenQ4Inside (x-hN) = true := by
-        simp [m2EvenSixteenQ4Inside,hrel]
-      have hframe := frameAt_tape_inside T1 hN
-        m2EvenSixteenQ4Inside m2EvenSixteenQ4BridgeEnd x hin
-      have hmark :
-          decide (x-hN ∈ m2EvenSixteenQ4BridgeEnd.marked) = true := by
-        rw [hrel]
-        simp [m2EvenSixteenQ4BridgeEnd]
-      simpa [T2,x] using hframe.trans hmark
-    · have hrel : x-hN = 2+(i:Int) := by dsimp [x]; omega
-      have hout : m2EvenSixteenQ4Inside (x-hN) = false := by
-        simp [m2EvenSixteenQ4Inside,hrel]
-        omega
-      have hframe := frameAt_tape_outside T1 hN
-        m2EvenSixteenQ4Inside m2EvenSixteenQ4BridgeEnd x hout
-      have hcoord : x = h-((3*a-i : Nat) : Int) := by
-        dsimp [x,hN,N]
-        omega
-      have hj : (3*a-i)+1 < N := by dsimp [N]; omega
-      have hblock := sweptLeft_block N (3*a-i) T h hj
-      have hactual : T2 x = true := by
-        calc
-          T2 x = T1 x := by simpa [T2] using hframe
-          _ = true := by rw [hcoord]; exact hblock
-      exact hactual
+    have hrel : x-hN = 2+(i:Int) := by dsimp [x]; omega
+    have hout : m2EvenSixteenQ4Inside (x-hN) = false := by
+      simp [m2EvenSixteenQ4Inside,hrel]
+      omega
+    have hframe := frameAt_tape_outside T1 hN
+      m2EvenSixteenQ4Inside m2EvenSixteenQ4BridgeEnd x hout
+    have hcoord : x = h-((3*a-i : Nat) : Int) := by
+      dsimp [x,hN,N]
+      omega
+    have hj : (3*a-i)+1 < N := by dsimp [N]; omega
+    have hblock := sweptLeft_block N (3*a-i) T h hj
+    calc
+      T2 x = T1 x := by simpa [T2] using hframe
+      _ = true := by rw [hcoord]; exact hblock
+
   have hheadScan : hN+2+(3*a:Int) = h := by
     dsimp [hN,N]
     omega
@@ -569,18 +556,18 @@ theorem m2EvenSixteen_q4_prefix_data (a b : Nat) (h : Int)
         some ⟨4,h,T2⟩ := by
     simpa [hheadScan] using E_scan T2 (hN+2) (3*a) hlinear
   have h12 :
-      run tm2 (3*N+50) ⟨3,h,T⟩ =
+      run tm2 (3*N+74) ⟨3,h,T⟩ =
         some ⟨4,hN+2,T2⟩ := by
     rw [run_append,hSweep]
     simp only [Option.bind_some]
     exact hBridge
   have htotal :
-      run tm2 (3*N+50+3*a) ⟨3,h,T⟩ =
+      run tm2 (3*N+74+3*a) ⟨3,h,T⟩ =
         some ⟨4,h,T2⟩ := by
     rw [run_append,h12]
     simp only [Option.bind_some]
     exact hScan
-  have hcost : 80+12*a = 3*N+50+3*a := by
+  have hcost : 80+12*a = 3*N+74+3*a := by
     dsimp [N]
     omega
   have hprefix' :
@@ -596,7 +583,7 @@ theorem m2EvenSixteen_q4_prefix_data (a b : Nat) (h : Int)
   refine ⟨m2EvenSixteenQ4CutTape a b h, ?_, hleftT, hshape, hrightT⟩
   simpa [T] using hprefix'
 
-/-- The q4 suffix's target left stream is exactly the m=1,n=3 S1 word. -/
+/-- The q4 suffix's target left stream is exactly the m=1,n=15 S1 word. -/
 theorem m2EvenSixteenQ4SuffixTargetLeft (a b : Nat) :
     s1LeftFacing 5 15 1 (a+b+2) (2^b-1) =
       d0pow b ++ d1pow 2 ++ (m2EvenSixteenQ4LeftFacing a).drop 1 := by
@@ -605,7 +592,7 @@ theorem m2EvenSixteenQ4SuffixTargetLeft (a b : Nat) :
       q4SuffixTargetLeft 5 15 a b
 
 /-- The generic q4 suffix plus this even prefix gives the exact
-source-level Rst2 prefix to the canonical m=1,n=3 S1 intermediate. -/
+source-level Rst2 prefix to the canonical m=1,n=15 S1 intermediate. -/
 theorem m2EvenSixteen_q4_reset_prefix_source
     (a b : Nat) (h : Int) (ha : 0 < a) :
     run tm2 (resetPrefixCost 2 16 a b)
@@ -627,14 +614,14 @@ theorem m2EvenSixteen_q4_reset_prefix_source
     hshape htail hleft happend
   have hsum :
       resetPrefixCost 2 16 a b = (80+12*a)+(39+3*b) := by
-    have hv : v2 16 = 2 := by decide
+    have hv : v2 16 = 4 := by decide
     simp [resetPrefixCost,hv]
     omega
   rw [hsum,run_add,hprefix]
   simp only [Option.bind_some]
   exact hsuffix
 
-/-- Exact counted m=2,n=4 even reset, including the 2^b-1 Inc0 drain. -/
+/-- Exact counted m=2,n=16 even reset, including the 2^b-1 Inc0 drain. -/
 theorem m2EvenSixteen_q4_counted_increment_source
     (a b : Nat) (h : Int) (ha : 0 < a) :
     run tm2 (proposedIncrementCost 2 16 a b)
