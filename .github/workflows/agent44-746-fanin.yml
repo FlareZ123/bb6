@@ -59,6 +59,7 @@ jobs:
           r="im-results/agent44-746-rank"
           lean -o "$r/ReverseRank.olean" "$r/ReverseRank.lean"
           lean -o "$r/ResetRank.olean" "$r/ResetRank.lean"
+          lean -o "$r/LevelDeficitDynamics.olean" "$r/LevelDeficitDynamics.lean"
           lean -o "$r/FatalRank.olean" "$r/FatalRank.lean"
           lean -o "$r/RootDepth.olean" "$r/RootDepth.lean"
           lean -o "$r/ForwardRun.olean" "$r/ForwardRun.lean"
