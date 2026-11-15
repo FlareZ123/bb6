@@ -138,5 +138,45 @@ theorem branch10_13_1_lifts_unreachable (n d x y : Nat)
 
 #print axioms branch10_13_1_lifts_unreachable
 
+/--
+Eight further branch-10 refined lifts force x ≡ 5 (mod 32), y ≡ 1
+(mod 8); the three-step inverse obstruction rules them out.
+-/
+theorem branch10_5_1_lifts_unreachable (n d x y : Nat)
+    (hn : 18 ≤ n) (hd : 3 ≤ d) (hdx : d ≤ x)
+    (hcase :
+      (n%128=3 ∧ d%32=25) ∨
+      (n%128=35 ∧ d%32=9) ∨
+      (n%128=43 ∧ d%32=21) ∨
+      (n%128=75 ∧ d%32=5) ∨
+      (n%128=83 ∧ d%32=17) ∨
+      (n%128=91 ∧ d%32=29) ∨
+      (n%128=115 ∧ d%32=1) ∨
+      (n%128=123 ∧ d%32=13))
+    (hx : 4*x+3*n+21 = 2^(n+2)*(d+6)+2*d)
+    (hy : y=2*(x-d)+1)
+    (hr : Reach x y) : False := by
+  have hpow := pow_lower_18 n hn
+  have hfac : 9 ≤ d+6 := by omega
+  have hbig0 : 9*(3*n+77) ≤ (d+6)*2^(n+2) :=
+    Nat.mul_le_mul hfac hpow
+  have hbig : 9*(3*n+77) ≤ 2^(n+2)*(d+6) := by
+    simpa [Nat.mul_comm] using hbig0
+  have hxlarge : 61 ≤ x := by omega
+  let t := 2^(n-5)*(d+6)
+  have hxt := branch10_reduced_equation_128 n d x hn hx
+  have hxt' : 4*x+3*n+21 = 128*t+2*d := by
+    simpa [t] using hxt
+  have hx5 : x%32=5 := by
+    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
+  have hy1 : y%8=1 := by
+    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
+  exact BB429RootOddRowsStrong.rooted_not_5_1 x y hr hxlarge hx5 hy1
+
+#print axioms branch10_5_1_lifts_unreachable
+
+
 
 end BB429LastResetRow95
