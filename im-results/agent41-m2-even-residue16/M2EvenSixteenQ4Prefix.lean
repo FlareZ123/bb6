@@ -268,7 +268,7 @@ private theorem m2EvenSixteenQ4LeftFacingTail (a i : Nat)
     simp [sourcePrefix,d1pow_length,markerWord,d0,d1]
     omega
   have hlenT : targetPrefix.length = 3*a+21 := by
-    simp [targetPrefix,d1pow_length,markerWord,d0,d1]
+    simp [targetPrefix,d1pow_length,d0pow,markerWord,d0,d1]
     omega
   rw [hsrc,htgt]
   rw [sideBit_append_right sourcePrefix shared i (by rw [hlenS]; omega)]
