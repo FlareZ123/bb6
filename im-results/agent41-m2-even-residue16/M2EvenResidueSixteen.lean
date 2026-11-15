@@ -77,7 +77,7 @@ private theorem m2EvenResidueSixteenInputPrefix_length (a : Nat) :
 
 private theorem m2EvenResidueSixteenTargetPrefix_length (a : Nat) :
     (m2EvenResidueSixteenTargetPrefix a).length = 3*a+22 := by
-  simp [m2EvenResidueSixteenTargetPrefix,d1pow_length,markerWord,d0,d1]
+  simp [m2EvenResidueSixteenTargetPrefix,d1pow_length,d0pow,markerWord,d0,d1]
   omega
 
 private theorem m2EvenResidueSixteen_source_base_left (a : Nat) :
