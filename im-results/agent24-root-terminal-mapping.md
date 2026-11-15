@@ -1,4 +1,4 @@
-# Machine C and #623 in the depth-four residual export
+# Machine C and #623 mapped to the depth-four residual audit
 
 **Status:** source-authenticated open-leaf mapping; not a halting/nonhalting classification.
 
@@ -17,7 +17,9 @@ Both machine-specific frontier files prove the same depth-four audit is open at 
 - Machine C: `machineC_first_four_global_slots`, `machineC_oracle_false_first_five`, `machineC_depth_four_open`, `machineC_first_four_mass` in `im-results/agent4-machine-c-global-path/MachineCFrontier.lean`.
 - #623: `machine623_first_four_global_slots`, `machine623_oracle_false_first_five`, `machine623_depth_four_open`, `machine623_first_four_mass` in `im-results/agent8-623-frontier/Machine623Frontier.lean`.
 
-Thus both source-authenticated blank-root paths reach unique open terminals in the current depth-four export. "Open" means the bounded source oracles did not certify the cylinder; it does not mean all compatible completions are nonhalting.
+Thus both source-authenticated blank-root paths follow the same depth-four audit to unique unresolved leaves. "Open" means the bounded source oracles did not certify the cylinder; it does not mean all compatible completions are nonhalting.
+
+**Export caveat:** the latest known `agent32-zero-path-global.yml` run (43740950404) failed at the explicit export step, so no successful uploaded depth-four artifact was available for byte-level inspection. The mapping below is to the exact terminal records defined by the source manifest and machine-specific branch proofs; it is not a claim that a fresh JSONL artifact was successfully generated. The Machine C and #623 source-proof workflows themselves have successful runs (42338247534 and 42325888583, respectively).
 
 ## Machine C terminal
 
@@ -92,11 +94,11 @@ The compatible completion set is again the full cylinder over the eight free slo
 
 ## Deeper #623 refinement (not a depth-four export terminal)
 
-The separate `Machine623DeepFrontier.lean` follows eleven fresh physical inputs for 54 moves. `machine623_depth_eleven_open` proves the depth-eleven audit remains open even with physical scan limit 96, and `machine623_deep_leaf_mass` gives cylinder mass 25. The only unassigned slot is F/0.
+The separate `Machine623Path.lean` and `Machine623HaltCylinder.lean` (both included in the successful Agent 8 workflow) establish the eleven-entry/54-move cylinder of mass 25, with only F/0 unassigned. The separate `Machine623DeepFrontier.lean` file contains a further depth-eleven open-audit statement with physical scan limit 96, but that file is not included in the successful Agent 8 workflow and must be treated as an uncompiled experiment, not as an established Lean result.
 
 `Machine623HaltCylinder.lean` proves `machine623_only_one_nontrivial_completion`: every completion of this eleven-entry cylinder is either the original #623 machine or `NeverHalts`. The 24 choices making F/0 an ordinary transition have no halting instruction anywhere; the sole nontrivial completion is the original machine with F/0=halt. Therefore the remaining mathematical obligation for this refined cylinder is precisely `NeverHalts machine623`.
 
-The depth-eleven audit's 96-step physical scan finds no new slot. A direct replay of the exact `writeOnes` list semantics ends at state C, head -4, with `ones = [-6,-8,-3,-3,-2,-1,0,1,2,3,4,5]`; this endpoint has not yet been added as a separate Lean `by decide` lemma. The Lean theorem already proves that no unassigned physical input is reached within the 96-step scan.
+A direct 96-step replay of the experimental deep-frontier path (not a Lean-verified theorem) ends at state C, head -4, with `ones = [-6,-8,-3,-3,-2,-1,0,1,2,3,4,5]`. This endpoint has not been added as a separate Lean `by decide` lemma.
 
 ## Machine C's deeper source path
 
@@ -110,4 +112,4 @@ The depth-eleven audit's 96-step physical scan finds no new slot. A direct repla
 - Root-preserving symmetry action: `im-results/agent8-coverage-contract/Symmetry.lean`.
 - Canonical-key/orbit enumeration: `im-results/agent32-zero-prefix-global/canonicalize_residual_frontier.py`.
 
-The physical probe endpoint fields and 240-element canonicalization values above are deterministic replays of those source algorithms, not new Lean theorems in this report. The source Lean proofs certify the actual path, cylinder mass, and open status. No claim is made that either depth-four cylinder has been fully classified, or that BB(6) has been solved.
+The physical probe endpoint fields and 240-element canonicalization values above are deterministic replays of those source algorithms, not new Lean theorems in this report. The successful machine-specific workflows certify the actual first-four paths, cylinder masses, and open status. The symmetry orbit sizes and physical-probe endpoint fields above are deterministic replays of the repository algorithms, not new Lean lemmas. No claim is made that either depth-four cylinder has been fully classified, or that BB(6) has been solved.
