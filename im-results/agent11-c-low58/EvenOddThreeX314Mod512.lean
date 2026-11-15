@@ -120,16 +120,16 @@ theorem y3_x314_parents (v a k : Nat)
               have hnCases : n=0 ∨ n=2 ∨ n=4 := by omega
               rcases hnCases with hn0|hn2|hn4
               · subst n
-                norm_num at hpow' hcost'
+                change 512*v+320=2*a+6 at hpow'
                 left
                 constructor <;> omega
               · subst n
-                norm_num at hpow' hcost'
+                change 512*v+320=4*(2*a+6) at hpow'
                 right
                 left
                 constructor <;> omega
               · subst n
-                norm_num at hpow' hcost'
+                change 512*v+320=16*(2*a+6) at hpow'
                 right
                 right
                 constructor <;> omega
