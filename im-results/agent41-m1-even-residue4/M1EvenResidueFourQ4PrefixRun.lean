@@ -881,4 +881,254 @@ theorem m1EvenResidueFour_q4_prefix_far_tail
     _ = sideBit (s0RightFacing b) i := hsrc
     _ = false := hblank
 
+
+
+/-- Canonical left-facing word at the base m=1,n=4 q4 cut. -/
+def m1EvenResidueFourQ4LeftFacing (a : Nat) : List Bool :=
+  [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh
+
+private theorem m1EvenResidueFour_sideBit_append_after_local
+    (xs ys : List Bool) (i : Nat) (hi : xs.length ≤ i) :
+    sideBit (xs ++ ys) i = sideBit ys (i-xs.length) := by
+  exact Agent6Q4Prefix.sideBit_append_right xs ys i hi
+
+private theorem m1EvenResidueFourQ4LeftFacingTail
+    (a i : Nat) (hi : 3*a+14 ≤ i) :
+    sideBit (s1LeftFacing 3 4 1 a 0) i =
+      sideBit (m1EvenResidueFourQ4LeftFacing a) i := by
+  let common : List Bool := lh
+  let srcPrefix : List Bool :=
+    d1pow a ++ markerWord 1 ++ d0 ++ d1 ++ d1 ++ d0
+  let tgtPrefix : List Bool :=
+    [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ d0 ++ d0 ++ d1
+  have hsrc :
+      s1LeftFacing 3 4 1 a 0 = srcPrefix ++ common := by
+    simp [srcPrefix,common,s1LeftFacing,binDec_zero,
+      binDec_three_four,d0,d1,List.append_assoc]
+  have htgt :
+      m1EvenResidueFourQ4LeftFacing a = tgtPrefix ++ common := by
+    simp [tgtPrefix,common,m1EvenResidueFourQ4LeftFacing,
+      d0,d1,List.append_assoc]
+  by_cases hlast : i=3*a+14
+  · subst i
+    let srcInit : List Bool :=
+      d1pow a ++ markerWord 1 ++ d0 ++ d1 ++ d1 ++ [false,false]
+    let tgtInit : List Bool :=
+      [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ d0 ++ d0 ++ [true,true]
+    have hsrc' : s1LeftFacing 3 4 1 a 0 = srcInit ++ [true] ++ lh := by
+      simp [srcInit,s1LeftFacing,binDec_zero,binDec_three_four,
+        markerWord,d0,d1,lh,List.append_assoc]
+    have htgt' :
+        m1EvenResidueFourQ4LeftFacing a = tgtInit ++ [true] ++ lh := by
+      simp [tgtInit,m1EvenResidueFourQ4LeftFacing,
+        markerWord,d0,d1,lh,List.append_assoc]
+    have hlenS : srcInit.length = 3*a+14 := by
+      simp [srcInit,d1pow_length,markerWord,d0,d1]
+      omega
+    have hlenT : tgtInit.length = 3*a+14 := by
+      simp [tgtInit,d1pow_length,markerWord,d0,d1]
+      omega
+    have hs : sideBit (srcInit ++ ([true] ++ lh)) (3*a+14) = true := by
+      rw [m1EvenResidueFour_sideBit_append_after_local
+        srcInit ([true] ++ lh) (3*a+14) (by omega)]
+      simp [sideBit]
+    have ht : sideBit (tgtInit ++ ([true] ++ lh)) (3*a+14) = true := by
+      rw [m1EvenResidueFour_sideBit_append_after_local
+        tgtInit ([true] ++ lh) (3*a+14) (by omega)]
+      simp [sideBit]
+    rw [hsrc',htgt']
+    exact hs.trans ht.symm
+  · have hi' : 3*a+15 ≤ i := by omega
+    have hs := m1EvenResidueFour_sideBit_append_after_local
+      srcPrefix common i (by
+        simp [srcPrefix,d1pow_length,markerWord,d0,d1]
+        omega)
+    have ht := m1EvenResidueFour_sideBit_append_after_local
+      tgtPrefix common i (by
+        simp [tgtPrefix,d1pow_length,markerWord,d0,d1]
+        omega)
+    have hlenS : srcPrefix.length = 3*a+15 := by
+      simp [srcPrefix,d1pow_length,markerWord,d0,d1]
+    have hlenT : tgtPrefix.length = 3*a+15 := by
+      simp [tgtPrefix,d1pow_length,markerWord,d0,d1]
+    rw [hsrc,htgt,hs,ht,hlenS,hlenT]
+
+private theorem m1EvenResidueFourQ4LeftFacingPrefixTrue
+    (a i : Nat) (hi : i ≤ 3*a) :
+    sideBit (m1EvenResidueFourQ4LeftFacing a) i = true := by
+  let P : List Bool := [true] ++ d1pow a
+  let R : List Bool := markerWord 0 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh
+  have hlist : m1EvenResidueFourQ4LeftFacing a = P ++ R := by
+    simp [P,R,m1EvenResidueFourQ4LeftFacing,List.append_assoc]
+  have hP : sideBit P i = true := by
+    by_cases hi0 : i=0
+    · subst i
+      simp [P,sideBit]
+    · have hpos : 1 ≤ i := by omega
+      rw [show P = [true] ++ d1pow a by rfl]
+      rw [m1EvenResidueFour_sideBit_append_after_local
+        [true] (d1pow a) i (by simp; omega)]
+      have hi' : i-1 < 3*a := by omega
+      simpa [d1pow_length] using
+        sideBit_d1pow_true a (i-1) hi'
+  have hlen : P.length = 3*a+1 := by
+    simp [P,d1pow_length]
+  rw [hlist]
+  rw [sideBit_append_left P R i (by simpa [hlen] using hi)]
+  exact hP
+
+private theorem m1EvenResidueFourQ4LeftFacingBoundaryBit
+    (a k : Nat) (hk1 : 1 ≤ k) (hk12 : k ≤ 12) :
+    sideBit (m1EvenResidueFourQ4LeftFacing a) (3*a+1+k) =
+      decide (-(k:Int) ∈ m1EvenResidueFourBridgeEnd.marked) := by
+  let P : List Bool := [true] ++ d1pow a
+  let R : List Bool := markerWord 0 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh
+  have hlist : m1EvenResidueFourQ4LeftFacing a = P ++ R := by
+    simp [P,R,m1EvenResidueFourQ4LeftFacing,List.append_assoc]
+  have hlen : P.length = 3*a+1 := by simp [P,d1pow_length]
+  rw [hlist]
+  rw [m1EvenResidueFour_sideBit_append_after_local P R
+    (3*a+1+k) (by rw [hlen]; omega)]
+  rw [hlen]
+  rw [show 3*a+1+k-(3*a+1)=k by omega]
+  have hkCases : k=1 ∨ k=2 ∨ k=3 ∨ k=4 ∨ k=5 ∨ k=6 ∨
+      k=7 ∨ k=8 ∨ k=9 ∨ k=10 ∨ k=11 ∨ k=12 := by omega
+  rcases hkCases with h1 | h2 | h3 | h4 | h5 | h6 |
+      h7 | h8 | h9 | h10 | h11 | h12
+  all_goals subst k
+  all_goals simp [R,m1EvenResidueFourBridgeEnd,
+    markerWord,d0,d1,lh,sideBit]
+
+private theorem m1EvenResidueFourCutTape_eq_source_left
+    (a b : Nat) (h : Int) (i : Nat) (hi : 3*a+14 ≤ i) :
+    m1EvenResidueFourCutTape a b h (h-(i:Int)) =
+      sideBit (s1LeftFacing 3 4 1 a 0) i := by
+  let T := (s1Config 3 4 1 a 0 b h).tape
+  have hnot : ¬(-12 ≤ (h-(i:Int))-(h-((3*a+1 : Nat) : Int)) ∧
+      (h-(i:Int))-(h-((3*a+1 : Nat) : Int)) ≤ 5) := by omega
+  have hout : m1EvenResidueFourInside
+      ((h-(i:Int))-(h-((3*a+1 : Nat) : Int))) = false := by
+    change decide (-12 ≤ _ ∧ _ ≤ 5) = false
+    exact decide_eq_false_iff_not.mpr hnot
+  have hcut := m1EvenResidueFourCutTape_eq_swept a b h
+    (h-(i:Int)) hout
+  have hpres := sweptLeft_preserves_left (3*a+1) T h
+    (h-(i:Int)) (by omega)
+  have hcell := s1Config_left_cell 3 4 1 a 0 b h i
+  simpa [T] using hcut.trans (hpres.trans hcell)
+
+/-- The q4 cut's complete left-facing stream is the canonical m=0
+S1 source word for n=8k+3 at the base width k=0. -/
+theorem m1EvenResidueFour_q4_prefix_leftFacing
+    (a b : Nat) (h : Int) (ha : 0 < a) :
+    ∀ i : Nat, m1EvenResidueFourCutTape a b h (h-(i:Int)) =
+      sideBit (m1EvenResidueFourQ4LeftFacing a) i := by
+  intro i
+  by_cases hi0 : i=0
+  · subst i
+    have hshape := m1EvenResidueFour_q4_prefix_rightShape a b h ha
+    have htrue : m1EvenResidueFourCutTape a b h h = true := by
+      simpa using hshape.1 0 (by omega)
+    simpa [m1EvenResidueFourQ4LeftFacing,sideBit] using htrue
+  · by_cases hsmall : i ≤ 3*a
+    · let x : Int := h-(i:Int)
+      by_cases hfar : i+4 < 3*a
+      · have hout : m1EvenResidueFourInside
+            (x-(h-((3*a+1 : Nat) : Int))) = false := by
+          simp [m1EvenResidueFourInside,x]
+          omega
+        have hcut := m1EvenResidueFourCutTape_eq_swept a b h x hout
+        have hblock := sweptLeft_block (3*a+1) i
+          (s1Config 3 4 1 a 0 b h).tape h (by omega)
+        have hblock' :
+            sweptLeft (3*a+1) (s1Config 3 4 1 a 0 b h).tape h x = true := by
+          simpa [x] using hblock
+        have hval : m1EvenResidueFourCutTape a b h x = true :=
+          hcut.trans hblock'
+        have htarget := m1EvenResidueFourQ4LeftFacingPrefixTrue a i hsmall
+        simpa [x] using hval.trans htarget.symm
+      · let x : Int := h-(i:Int)
+        have hin : m1EvenResidueFourInside
+            (x-(h-((3*a+1 : Nat) : Int))) = true := by
+          simp [m1EvenResidueFourInside,x]
+          omega
+        have hcut := m1EvenResidueFourCutTape_eq_end_inside a b h x hin
+        have hy : 1 ≤ (3*a+1-i) ∧ (3*a+1-i) ≤ 5 := by omega
+        have hmark :
+            decide ((x-(h-((3*a+1 : Nat) : Int))) ∈
+              m1EvenResidueFourBridgeEnd.marked) = true := by
+          have hyCases : 3*a+1-i=1 ∨ 3*a+1-i=2 ∨
+              3*a+1-i=3 ∨ 3*a+1-i=4 ∨ 3*a+1-i=5 := by omega
+          rcases hyCases with h1 | h2 | h3 | h4 | h5
+          all_goals rw [show x-(h-((3*a+1 : Nat) : Int)) =
+            3*a+1-i by dsimp [x]; omega]
+          all_goals subst h1 <;> simp [m1EvenResidueFourBridgeEnd]
+        have hval : m1EvenResidueFourCutTape a b h x = true :=
+          hcut.trans hmark
+        have htarget := m1EvenResidueFourQ4LeftFacingPrefixTrue a i hsmall
+        simpa [x] using hval.trans htarget.symm
+    · by_cases hieq : i=3*a+1
+      · subst i
+        let x : Int := h-((3*a+1:Int))
+        have hin : m1EvenResidueFourInside
+            (x-(h-((3*a+1:Nat):Int))) = true := by
+          simp [m1EvenResidueFourInside,x]
+        have hcut := m1EvenResidueFourCutTape_eq_end_inside a b h x hin
+        have hmark :
+            decide ((x-(h-((3*a+1:Nat):Int)) ∈
+              m1EvenResidueFourBridgeEnd.marked) = false := by
+          have hc : x-(h-((3*a+1:Nat):Int)) = 0 := by
+            dsimp [x]
+            omega
+          rw [hc]
+          simp [m1EvenResidueFourBridgeEnd]
+        have hval : m1EvenResidueFourCutTape a b h x = false :=
+          hcut.trans hmark
+        have htarget :
+            sideBit (m1EvenResidueFourQ4LeftFacing a) (3*a+1) = false := by
+          simp [m1EvenResidueFourQ4LeftFacing,markerWord,sideBit]
+        simpa [x] using hval.trans htarget.symm
+      · by_cases hbound : i ≤ 3*a+13
+        · let k : Nat := i-(3*a+1)
+          have hk1 : 1 ≤ k := by dsimp [k]; omega
+          have hk12 : k ≤ 12 := by dsimp [k]; omega
+          let x : Int := h-(i:Int)
+          have hrel : x-(h-((3*a+1:Nat):Int)) = -(k:Int) := by
+            dsimp [x,k]
+            omega
+          have hin : m1EvenResidueFourInside (-(k:Int)) = true := by
+            simp [m1EvenResidueFourInside]
+            omega
+          have hin' : m1EvenResidueFourInside
+              (x-(h-((3*a+1:Nat):Int))) = true := by
+            rw [hrel]
+            exact hin
+          have hcut := m1EvenResidueFourCutTape_eq_end_inside a b h x hin'
+          have hi : i=3*a+1+k := by dsimp [k]; omega
+          have htarget := m1EvenResidueFourQ4LeftFacingBoundaryBit a k hk1 hk12
+          have htarget' :
+              sideBit (m1EvenResidueFourQ4LeftFacing a) i =
+                decide (-(k:Int) ∈ m1EvenResidueFourBridgeEnd.marked) := by
+            rw [hi]
+            exact htarget
+          have hmark' : decide
+              ((x-(h-((3*a+1:Nat):Int)) ∈
+                m1EvenResidueFourBridgeEnd.marked) =
+                decide (-(k:Int) ∈ m1EvenResidueFourBridgeEnd.marked) := by
+            rw [hrel]
+          have hval :
+              m1EvenResidueFourCutTape a b h x =
+                sideBit (m1EvenResidueFourQ4LeftFacing a) i := by
+            calc
+              m1EvenResidueFourCutTape a b h x =
+                  decide ((x-(h-((3*a+1:Nat):Int)) ∈
+                    m1EvenResidueFourBridgeEnd.marked) := hcut
+              _ = decide (-(k:Int) ∈ m1EvenResidueFourBridgeEnd.marked) := hmark'
+              _ = sideBit (m1EvenResidueFourQ4LeftFacing a) i := htarget'.symm
+          exact hval
+        · have htail := m1EvenResidueFourCutTape_eq_source_left
+            a b h i (by omega)
+          have hbits := m1EvenResidueFourQ4LeftFacingTail a i (by omega)
+          exact htail.trans hbits
+
 end BB6Coverage.Agent41M1EvenResidueFour
