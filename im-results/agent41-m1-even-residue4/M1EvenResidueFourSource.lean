@@ -400,8 +400,7 @@ private theorem m1EvenResidueFour_suffix_target_left
   have hbin3 := m1EvenResidueFour_binDec_residue3 L k hL hbound'
   unfold s1LeftFacing
   rw [hbin,hbin3]
-  rw [show a+2=2+a by omega]
-  rw [d1pow_add_right 2 a]
+  rw [d1pow_add_right a 2]
   simp [m1EvenResidueFourLeftFacing,m1EvenResidueFourTargetPrefix,
     List.drop,List.append_assoc]
 
@@ -411,12 +410,12 @@ private theorem m1EvenResidueFour_resetPrefixCost_eq (k a b : Nat) :
   have hvOdd : BB6ChampionArithmetic.v2 (2*k+1) = 0 :=
     v2_of_odd (2*k+1) (by omega)
   have hvMid : BB6ChampionArithmetic.v2 (4*k+2) = 1 := by
-    have h := v2_of_even (4*k+2) (by omega) (by omega)
+    have h := v2_of_even (4*k+2) (by omega)
     have hdiv : (4*k+2)/2 = 2*k+1 := by omega
     rw [hdiv,hvOdd] at h
     omega
   have hv : BB6ChampionArithmetic.v2 (8*k+4) = 2 := by
-    have h := v2_of_even (8*k+4) (by omega) (by omega)
+    have h := v2_of_even (8*k+4) (by omega)
     have hdiv : (8*k+4)/2 = 4*k+2 := by omega
     rw [hdiv,hvMid] at h
     omega
