@@ -544,6 +544,7 @@ private theorem m1ResidueSevenLeftFacingBoundaryBit
     (3*a+1+j) (by simp [d1pow_length]; omega)
   have hidx : (3*a+1+j) - (3*a+1) = j := by omega
   rw [hidx] at hside
+  rw [m1ResidueSix_binDec L q hL hbound] at hside
   have hjCases :
       j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 ∨ j=5 ∨ j=6 := by omega
   rcases hjCases with h0 | h1 | h2 | h3 | h4 | h5 | h6
