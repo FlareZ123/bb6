@@ -337,6 +337,7 @@ private theorem m2EvenSixteenQ4CutTape_rightFacing (a b : Nat) (h : Int)
           (q4RightFacing_succ b i).symm
 
 /-- The complete left stream at the q4 cut. -/
+/-- The complete left stream at the q4 cut. -/
 private theorem m2EvenSixteenQ4CutTape_leftFacing (a b : Nat) (h : Int)
     (ha : 0 < a)
     (hhead : m2EvenSixteenQ4CutTape a b h h = true) :
@@ -348,72 +349,39 @@ private theorem m2EvenSixteenQ4CutTape_leftFacing (a b : Nat) (h : Int)
   · subst i
     simpa [sideBit] using hhead
   · have hpos : 1 ≤ i := by omega
-    by_cases hpre : i ≤ 3*a+1
-    · have htarget := m2EvenSixteenQ4LeftFacingPrefixTrue a i hpre
-      by_cases htop : i = 3*a ∨ i = 3*a+1
-      · rcases htop with hi3 | hi4
-        · subst i
-          have hrel : (h-((3*a:Int)))-(h-((3*a+2:Int))) = 2 := by omega
-          have hin : m2EvenSixteenQ4Inside
-              ((h-((3*a:Int)))-(h-((3*a+2:Int)))) = true := by
-            simp [m2EvenSixteenQ4Inside,hrel]
-          have hcut := m2EvenSixteenQ4CutTape_eq_end_inside a b h
-            (h-((3*a:Int))) hin
-          have hmark :
-              decide ((h-((3*a:Int)))-(h-((3*a+2:Int))) ∈
-                m2EvenSixteenQ4BridgeEnd.marked) = true := by
-            rw [hrel]
-            simp [m2EvenSixteenQ4BridgeEnd]
-          have hactual : m2EvenSixteenQ4CutTape a b h (h-((3*a:Int))) = true :=
-            hcut.trans hmark
-          exact hactual.trans htarget.symm
-        · subst i
-          have hrel : (h-((3*a+1:Int)))-(h-((3*a+2:Int))) = 1 := by omega
-          have hin : m2EvenSixteenQ4Inside
-              ((h-((3*a+1:Int)))-(h-((3*a+2:Int)))) = true := by
-            simp [m2EvenSixteenQ4Inside,hrel]
-          have hcut := m2EvenSixteenQ4CutTape_eq_end_inside a b h
-            (h-((3*a+1:Int))) hin
-          have hmark :
-              decide ((h-((3*a+1:Int)))-(h-((3*a+2:Int))) ∈
-                m2EvenSixteenQ4BridgeEnd.marked) = true := by
-            rw [hrel]
-            simp [m2EvenSixteenQ4BridgeEnd]
-          have hactual : m2EvenSixteenQ4CutTape a b h (h-((3*a+1:Int))) = true :=
-            hcut.trans hmark
-          exact hactual.trans htarget.symm
-      · have hsmall : i ≤ 3*a-1 := by omega
+    by_cases hpre : i ≤ 3*a
+    · have htarget := m2EvenSixteenQ4LeftFacingPrefixTrue a i (by omega)
+      have hrel :
+          (h-(i:Int))-(h-((3*a+2:Int))) =
+            ((3*a+2-i : Nat) : Int) := by omega
+      have hout : m2EvenSixteenQ4Inside
+          ((h-(i:Int))-(h-((3*a+2:Int))) = false := by
+        simp [m2EvenSixteenQ4Inside,hrel]
+        omega
+      have hcut := m2EvenSixteenQ4CutTape_eq_swept a b h (h-(i:Int)) hout
+      have hblock := sweptLeft_block (3*a+2) i
+        (s1Config 5 16 2 a 0 b h).tape h (by omega)
+      have hactual :
+          m2EvenSixteenQ4CutTape a b h (h-(i:Int)) = true :=
+        hcut.trans (by simpa using hblock)
+      exact hactual.trans htarget.symm
+    · by_cases hbridge : i ≤ 3*a+20
+      · have hlow : 3*a+1 ≤ i := by omega
+        let j : Nat := i-(3*a+1)
+        have hj : j ≤ 19 := by dsimp [j]; omega
         have hrel :
-            (h-(i:Int))-(h-((3*a+2:Int))) =
-              ((3*a+2-i : Nat) : Int) := by omega
-        have hout : m2EvenSixteenQ4Inside
-            ((h-(i:Int))-(h-((3*a+2:Int)))) = false := by
-          simp [m2EvenSixteenQ4Inside,hrel]
-          omega
-        have hcut := m2EvenSixteenQ4CutTape_eq_swept a b h (h-(i:Int)) hout
-        have hblock := sweptLeft_block (3*a+2) i
-          (s1Config 5 16 2 a 0 b h).tape h (by omega)
-        have hactual :
-            m2EvenSixteenQ4CutTape a b h (h-(i:Int)) = true := by
-          exact hcut.trans (by simpa using hblock)
-        exact hactual.trans htarget.symm
-    · by_cases hbridge : i ≤ 3*a+14
-      · have hlow : 3*a+2 ≤ i := by omega
-        let j : Nat := i-(3*a+2)
-        have hj : j ≤ 12 := by dsimp [j]; omega
-        have hrel :
-            (h-(i:Int))-(h-((3*a+2:Int))) = -(j:Int) := by
+            (h-(i:Int))-(h-((3*a+2:Int))) = 1-(j:Int) := by
           dsimp [j]
           omega
         have hin : m2EvenSixteenQ4Inside
-            ((h-(i:Int))-(h-((3*a+2:Int)))) = true := by
+            ((h-(i:Int))-(h-((3*a+2:Int))) = true := by
           simp [m2EvenSixteenQ4Inside,hrel]
         have hcut := m2EvenSixteenQ4CutTape_eq_end_inside a b h
           (h-(i:Int)) hin
         have htarget :
             sideBit (m2EvenSixteenQ4LeftFacing a) i =
-              decide ((-(j:Int)) ∈ m2EvenSixteenQ4BridgeEnd.marked) := by
-          have hidx : i = 3*a+2+j := by dsimp [j]; omega
+              decide ((1-(j:Int)) ∈ m2EvenSixteenQ4BridgeEnd.marked) := by
+          have hidx : i = 3*a+1+j := by dsimp [j]; omega
           rw [hidx]
           exact m2EvenSixteenQ4LeftFacingBridgeBit a j hj
         have hmark :
@@ -423,12 +391,12 @@ private theorem m2EvenSixteenQ4CutTape_leftFacing (a b : Nat) (h : Int)
           rw [hrel]
           exact htarget.symm
         exact hcut.trans hmark
-      · have htail : 3*a+15 ≤ i := by omega
+      · have htail : 3*a+21 ≤ i := by omega
         have hrel :
             (h-(i:Int))-(h-((3*a+2:Int))) =
               (3*a+2:Int)-(i:Int) := by omega
         have hout : m2EvenSixteenQ4Inside
-            ((h-(i:Int))-(h-((3*a+2:Int)))) = false := by
+            ((h-(i:Int))-(h-((3*a+2:Int))) = false := by
           simp [m2EvenSixteenQ4Inside,hrel]
           omega
         have hcut := m2EvenSixteenQ4CutTape_eq_swept a b h (h-(i:Int)) hout
