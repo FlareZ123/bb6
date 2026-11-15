@@ -59,8 +59,7 @@ private theorem k_add_three_lt_eight_pow (k : Nat) :
 
 private theorem four_mul_pow_two_even (k : Nat) :
     (4*2^k)%2=0 := by
-  rw [Nat.mul_mod]
-  norm_num
+  simp [Nat.mul_mod]
 
 /-- A pair of first-failure certificates for the same height has the
 same level. -/
@@ -68,13 +67,13 @@ theorem first_fail_unique (h k l : Nat)
     (hk : (∀ j, j<k → 8*2^j≤h+j+5) ∧ h+k+5<8*2^k)
     (hl : (∀ j, j<l → 8*2^j≤h+j+5) ∧ h+l+5<8*2^l) :
     k=l := by
-  by_contra hne
   by_cases hkl : k<l
   · have hguard := hl.1 k hkl
     omega
-  · have hlk : l<k := by omega
-    have hguard := hk.1 l hlk
-    omega
+  · by_cases hlk : l<k
+    · have hguard := hk.1 l hlk
+      omega
+    · omega
 
 /-- The exact even reset identity: the level deficit is halved. -/
 theorem even_deficit_halves (h k : Nat)
@@ -157,11 +156,8 @@ theorem odd_reset_guards (h k t d : Nat)
   have hnot : h+k+4≠4*2^k := by
     intro heq
     have hodd : (h+k+4)%2=1 := by omega
-    have heven : (4*2^k)%2=0 := by
-      rw [Nat.mul_mod]
-      norm_num
-    rw [heq,heven] at hodd
-    norm_num at hodd
+    rw [heq] at hodd
+    simp [Nat.mul_mod] at hodd
   have hband := odd_inverse_band h k hlow hhigh hnot hpar
   have hqlo : 6*2^k+1≤oddParameter h k := by
     simpa [oddParameter] using hband.1.1
@@ -222,11 +218,8 @@ theorem odd_offset_bounds (h k : Nat)
   have hnot : h+k+4≠4*2^k := by
     intro heq
     have hodd : (h+k+4)%2=1 := by omega
-    have heven : (4*2^k)%2=0 := by
-      rw [Nat.mul_mod]
-      norm_num
-    rw [heq,heven] at hodd
-    norm_num at hodd
+    rw [heq] at hodd
+    simp [Nat.mul_mod] at hodd
   have hband := odd_inverse_band h k hlow hhigh hnot hpar
   have hqlo : 6*2^k+1≤oddParameter h k := by
     simpa [oddParameter] using hband.1.1
@@ -242,9 +235,14 @@ theorem odd_offset_bounds (h k : Nat)
 /-- Exact deficit-to-parameter identity at every odd exit:
 D = 2*A + 2*k + 5. -/
 theorem odd_deficit_identity (h k : Nat)
+    (hhigh : h+k+5<8*2^k)
     (hpar : (h+k)%2=1) :
     deficit h k=2*oddOffset h k+2*k+5 := by
   have hodd : h+k=2*((h+k)/2)+1 := by omega
+  have hDpos : h≤8*2^k+k := by omega
+  have hqpos : oddParameter h k≤8*2^k := by
+    dsimp [oddParameter]
+    omega
   dsimp [deficit,oddOffset,oddParameter]
   omega
 
@@ -261,11 +259,8 @@ theorem odd_offset_factorization (h k t d : Nat)
   have hnot : h+k+4≠4*2^k := by
     intro heq
     have hodd : (h+k+4)%2=1 := by omega
-    have heven : (4*2^k)%2=0 := by
-      rw [Nat.mul_mod]
-      norm_num
-    rw [heq,heven] at hodd
-    norm_num at hodd
+    rw [heq] at hodd
+    simp [Nat.mul_mod] at hodd
   have hband := odd_inverse_band h k hlow hhigh hnot hpar
   have hqlo : 6*2^k+1≤oddParameter h k := by
     simpa [oddParameter] using hband.1.1
@@ -273,7 +268,7 @@ theorem odd_offset_factorization (h k t d : Nat)
     simpa [oddParameter] using hband.1.2
   have hpow3 : 8*2^k=2^(k+3) := by
     calc
-      8*2^k=2^3*2^k := by norm_num
+      8*2^k=2^3*2^k := by rfl
       _=2^(3+k) := by rw [Nat.pow_add]
       _=2^(k+3) := by congr 1; omega
   have hApos : 1≤oddOffset h k := by
@@ -352,7 +347,7 @@ theorem odd_output_equation_deficit (h k t d : Nat)
     rw [hfactor] at hqlo'
     omega
   exact ⟨odd_output_equation t d hd hqlo,
-    odd_deficit_identity h k hpar,
+    odd_deficit_identity h k hhigh hpar,
     odd_offset_factorization h k t d hg hhigh hpar hfactor hd⟩
 
 #print axioms even_deficit_halves
