@@ -1,4 +1,4 @@
-name: Agent 24 m0 even q4 prefix Lean verification
+name: Agent 24 M0-even residue-two source verification
 on:
   workflow_dispatch:
 permissions:
@@ -27,13 +27,13 @@ jobs:
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a24-m0-even/
           cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a24-m0-even/
           cp im-results/agent24-champion-time/{M0EvenQ4Bridge,M0EvenQ4Prefix,M0EvenResidueTwo}.lean /tmp/a24-m0-even/
-          cp im-results/agent24-champion-time/{CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges,CountedCarryPrefix,CountedCarryPrefixGeneral,CountedCarryLeftOutputR23,CountedSuffixOutput,S1CarryOutputBridge,S1CarryInc0,M0EvenQ4Suffix}.lean /tmp/a24-m0-even/
+          cp im-results/agent24-champion-time/{CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges,CountedCarryPrefix,CountedCarryPrefixGeneral,CountedSuffixOutput,S1CarryOutputBridge,S1CarryInc0,M0EvenQ4Suffix,CountedCarryPrefixHRun,CountedCarryPrefixHRunAxiomAudit}.lean /tmp/a24-m0-even/
+          cp im-results/agent42-champion-terminal/{CountedLBinDec,CountedLBinDecShape,CountedLBinDecAxiomAudit}.lean /tmp/a24-m0-even/
           cp im-results/agent42-carry-boundary/{CountedCarryBoundaryTraces,S1CountedCarryPrefixBridge}.lean /tmp/a24-m0-even/
-          cp im-results/agent42-carry-left-output/{FrameCellLemmas,LongResidue1}.lean /tmp/a24-m0-even/
+          cp im-results/agent42-carry-left-output/FrameCellLemmas.lean /tmp/a24-m0-even/
           cp im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean /tmp/a24-m0-even/
           cp im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean /tmp/a24-m0-even/
           cp im-results/agent48-counted-inc0/{S1CountedInc0,S1CountedDrain}.lean /tmp/a24-m0-even/
-          cp im-results/agent48-counted-inc0/{M0EvenFourQ4Bridge,M0EvenFourQ4Prefix,M0EvenResidueFour}.lean /tmp/a24-m0-even/
       - name: Replay and compile m0 even q4 counted increment
         run: |
           set -euo pipefail
@@ -103,12 +103,14 @@ jobs:
           : > carry-left-output-axioms.log
           lean -o CountedCarryLeftOutput.olean CountedCarryLeftOutput.lean 2>&1 | tee carry-left-output-axioms.log
           if grep -q 'sorryAx' carry-left-output-axioms.log; then echo '::error::sorryAx in CountedCarryLeftOutput'; exit 1; fi
-          : > carry-left-output-r23-axioms.log
-          lean -o CountedCarryLeftOutputR23.olean CountedCarryLeftOutputR23.lean 2>&1 | tee carry-left-output-r23-axioms.log
-          if grep -q 'sorryAx' carry-left-output-r23-axioms.log; then echo '::error::sorryAx in CountedCarryLeftOutputR23'; exit 1; fi
-          : > long-residue1-axioms.log
-          lean -o LongResidue1.olean LongResidue1.lean 2>&1 | tee long-residue1-axioms.log
-          if grep -q 'sorryAx' long-residue1-axioms.log; then echo '::error::sorryAx in LongResidue1'; exit 1; fi
+          : > counted-lbin-dec-axioms.log
+          lean -o CountedLBinDec.olean CountedLBinDec.lean 2>&1 | tee counted-lbin-dec-axioms.log
+          lean -o CountedLBinDecShape.olean CountedLBinDecShape.lean 2>&1 | tee -a counted-lbin-dec-axioms.log
+          lean CountedLBinDecAxiomAudit.lean 2>&1 | tee -a counted-lbin-dec-axioms.log
+          : > carry-prefix-hrun-axioms.log
+          lean -o CountedCarryPrefixHRun.olean CountedCarryPrefixHRun.lean 2>&1 | tee carry-prefix-hrun-axioms.log
+          lean CountedCarryPrefixHRunAxiomAudit.lean 2>&1 | tee -a carry-prefix-hrun-axioms.log
+          if grep -q 'sorryAx' counted-lbin-dec-axioms.log carry-prefix-hrun-axioms.log; then echo '::error::sorryAx in counted LBinDec/H-run'; exit 1; fi
           : > counted-suffix-output-axioms.log
           lean -o CountedSuffixOutput.olean CountedSuffixOutput.lean 2>&1 | tee counted-suffix-output-axioms.log
           if grep -q 'sorryAx' counted-suffix-output-axioms.log; then echo '::error::sorryAx in CountedSuffixOutput'; exit 1; fi
@@ -149,46 +151,8 @@ jobs:
             echo '::error::sorryAx found in M0EvenResidueTwo'
             exit 1
           fi
-
-          : > m0-even-four-bridge-axioms.log
-          if ! lean -o M0EvenFourQ4Bridge.olean M0EvenFourQ4Bridge.lean > m0-even-four-bridge-axioms.log 2>&1; then
-            echo '## M0EvenFourQ4Bridge compilation failed' >> "$GITHUB_STEP_SUMMARY"
-            tail -n 160 m0-even-four-bridge-axioms.log >> "$GITHUB_STEP_SUMMARY"
-            cat m0-even-four-bridge-axioms.log
-            exit 1
-          fi
-          if grep -q 'sorryAx' m0-even-four-bridge-axioms.log; then
-            echo '::error::sorryAx found in M0EvenFourQ4Bridge'
-            exit 1
-          fi
-
-          : > m0-even-four-prefix-axioms.log
-          if ! lean -o M0EvenFourQ4Prefix.olean M0EvenFourQ4Prefix.lean > m0-even-four-prefix-axioms.log 2>&1; then
-            echo '## M0EvenFourQ4Prefix compilation failed' >> "$GITHUB_STEP_SUMMARY"
-            tail -n 180 m0-even-four-prefix-axioms.log >> "$GITHUB_STEP_SUMMARY"
-            cat m0-even-four-prefix-axioms.log
-            exit 1
-          fi
-          if grep -q 'sorryAx' m0-even-four-prefix-axioms.log; then
-            echo '::error::sorryAx found in M0EvenFourQ4Prefix'
-            exit 1
-          fi
-
-          : > m0-even-residue-four-axioms.log
-          if ! lean -o M0EvenResidueFour.olean M0EvenResidueFour.lean > m0-even-residue-four-axioms.log 2>&1; then
-            echo '## M0EvenResidueFour compilation failed' >> "$GITHUB_STEP_SUMMARY"
-            tail -n 220 m0-even-residue-four-axioms.log >> "$GITHUB_STEP_SUMMARY"
-            cat m0-even-residue-four-axioms.log
-            exit 1
-          fi
-          if grep -q 'sorryAx' m0-even-residue-four-axioms.log; then
-            echo '::error::sorryAx found in M0EvenResidueFour'
-            exit 1
-          fi
-          echo '## M0-even counted increment source verification' >> "$GITHUB_STEP_SUMMARY"
-          echo 'The source-level q4 suffix and counted drain compile without sorryAx.' >> "$GITHUB_STEP_SUMMARY"
-          echo '## m=0,n=2 even q4 prefix Lean verification' >> "$GITHUB_STEP_SUMMARY"
-          echo 'The finite bridge and source-level prefix compile under Lean 4.36.0-rc2 without sorryAx.' >> "$GITHUB_STEP_SUMMARY"
+          echo '## M0-even n=8*k+2 counted increment source verification' >> "$GITHUB_STEP_SUMMARY"
+          echo 'The finite bridge, q4 prefix, q4 suffix, uniform all-valuation S1 decrement, and counted drain compile under Lean 4.36.0-rc2 without sorryAx.' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload M0-even counted increment diagnostics
         if: always()
@@ -204,8 +168,8 @@ jobs:
             /tmp/a24-m0-even/carry-prefix-general-axioms.log
             /tmp/a24-m0-even/s1-counted-carry-prefix-bridge-axioms.log
             /tmp/a24-m0-even/carry-left-output-axioms.log
-            /tmp/a24-m0-even/carry-left-output-r23-axioms.log
-            /tmp/a24-m0-even/long-residue1-axioms.log
+            /tmp/a24-m0-even/counted-lbin-dec-axioms.log
+            /tmp/a24-m0-even/carry-prefix-hrun-axioms.log
             /tmp/a24-m0-even/counted-suffix-output-axioms.log
             /tmp/a24-m0-even/s1-carry-output-bridge-axioms.log
             /tmp/a24-m0-even/s1-carry-inc0-axioms.log
@@ -214,6 +178,3 @@ jobs:
             /tmp/a24-m0-even/s1-counted-drain-axioms.log
             /tmp/a24-m0-even/m0-even-q4-suffix-axioms.log
             /tmp/a24-m0-even/m0-even-residue-two-axioms.log
-            /tmp/a24-m0-even/m0-even-four-bridge-axioms.log
-            /tmp/a24-m0-even/m0-even-four-prefix-axioms.log
-            /tmp/a24-m0-even/m0-even-residue-four-axioms.log
