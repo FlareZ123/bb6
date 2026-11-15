@@ -221,4 +221,89 @@ theorem cert_sound (d : Nat) (s : Affine) (q : Nat)
           · simp [cert,hb,ho,he] at hc
 
 #print axioms cert_sound
+
+set_option maxHeartbeats 100000000
+set_option maxRecDepth 50000
+
+/-- The branch-1 last-reset prestate, written with the burst length n. -/
+def branch1X (n : Nat) : Nat := 3*2^n - (3*n+31)/4
+
+/-- Affine family for branch 1 after shifting the free parameter by n. -/
+def branch1Family (n : Nat) : Affine :=
+  let A := 3*2^32
+  let a := A*n - (3*n+31)/4
+  ⟨A,a,2*A,2*a+2⟩
+
+/-- A simple exponential lower bound used to keep the affine parameter natural. -/
+private theorem add32_le_two_pow (k : Nat) (hk : 6 ≤ k) :
+    k+32 ≤ 2^k := by
+  have h : ∀ t : Nat, 6+t+32 ≤ 2^(6+t) := by
+    intro t
+    induction t with
+    | zero => norm_num
+    | succ t ih =>
+      have hp : 2^(6+(t+1)) = 2*2^(6+t) := by
+        rw [show 6+(t+1)=(6+t)+1 by omega, Nat.pow_succ]
+        omega
+      rw [hp]
+      omega
+  have hk' : k = 6+(k-6) := by omega
+  rw [hk']
+  simpa using h (k-6)
+
+private theorem n_le_two_pow_sub32 (n : Nat) (hn : 38 ≤ n) :
+    n ≤ 2^(n-32) := by
+  have hk : 6 ≤ n-32 := by omega
+  have h := add32_le_two_pow (n-32) hk
+  omega
+
+/-- The complete 24-level inverse certificate closes the entire branch-1
+    affine family, uniformly in its free parameter. -/
+theorem branch1_family_cert (n : Nat) (hn : 38 ≤ n) (hmod : n%4=3) :
+    cert 24 (branch1Family n) = true := by
+  simp [branch1Family, cert, Bad, Odd, Even, BB429Mod8.Allowed, hmod] <;> omega
+
+private theorem branch1_small_cert (n : Nat) (hn : 18 ≤ n) (hmod : n%4=3) :
+    cert 24 ⟨0,branch1X n,0,2*branch1X n+2⟩ = true := by
+  have hcases : n=19 ∨ n=23 ∨ n=27 ∨ n=31 ∨ n=35 := by omega
+  rcases hcases with h|h|h|h|h
+  · subst n
+    norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
+  · subst n
+    norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
+  · subst n
+    norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
+  · subst n
+    norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
+  · subst n
+    norm_num [cert, Bad, Odd, Even, BB429Mod8.Allowed, branch1X]
+
+/-- No genuine blank-root state can be the pre-reset state in boundary
+    branch 1, for any odd outer-burst length n >= 18. -/
+theorem branch1_no_reach (n : Nat) (hn : 18 ≤ n) (hmod : n%4=3) :
+    ¬ Reach (branch1X n) (2*branch1X n+2) := by
+  by_cases hlarge : 38 ≤ n
+  · let q := 2^(n-32)-n
+    have hq : n ≤ 2^(n-32) := n_le_two_pow_sub32 n hlarge
+    have hpow : 2^n = 2^32 * 2^(n-32) := by
+      rw [show n=32+(n-32) by omega, Nat.pow_add]
+    have hx : va (branch1Family n) q = branch1X n := by
+      dsimp [va, branch1Family, branch1X, q]
+      rw [hpow]
+      omega
+    have hy : vb (branch1Family n) q = 2*branch1X n+2 := by
+      dsimp [vb, branch1Family, branch1X, q]
+      rw [hpow]
+      omega
+    have hno := cert_sound 24 (branch1Family n) q
+      (branch1_family_cert n hlarge hmod)
+    rw [hx,hy] at hno
+    exact hno
+  · have hc := branch1_small_cert n hn hmod
+    simpa [va,vb] using
+      (cert_sound 24 ⟨0,branch1X n,0,2*branch1X n+2⟩ 0 hc)
+
+#print axioms branch1_family_cert
+#print axioms branch1_no_reach
+
 end BB429Kernel16
