@@ -151,3 +151,22 @@ All these artifacts remain in `im-results/`, not `results/`. Relevant handoffs a
 
 
 Module-name collision corrected: the repository already has an unrelated `TM63RootResidueSeven.lean` in `im-results/agent41-m0-n16r7/`. The new middle17 wrapper is therefore `im-results/agent41-m1-odd-residue7/TM63RootMiddle17.lean`; the temporary colliding file was deleted. Use the unique module name `TM63RootMiddle17` in imports and CI.
+
+
+### Next root holdout after middle17: m=0, n=16*r-2
+
+The candidate middle17 endpoint is
+`s1Config tm63Length1 (16*tm63RootResidueSixK-2) 0 A17 0 B17 H17`.
+With r=tm63RootResidueSixK odd and k=r/2, this is n=32*k+14=8*(4*k+1)+6, an even zero-marker state with v2(n)=1. This is distinct from the already-handled earlier m=0,n=16r+7 row.
+
+A direct q4-reset search on minimal-width small instances did not find the same simple q4 cut as the preceding rows. The experimental replay is preserved in `im-results/agent41-m0-even-root-holdout/`:
+- `m0_even_replay.py` supports configurable max steps and prints CSV;
+- README records small-grid observations and, importantly, the evidence boundary.
+
+With a=1 and minimal L=bit_length(8q+6), q=0..3:
+- b=0: q=0 halts at 1,025 steps, q=3 at 11,993; q=1,2 survive 200,000;
+- b=1: q=0 halts at 1,583, q=3 at 19,103; q=1,2 survive 200,000;
+- b=2: q=0..3 survive 200,000.
+For q=1, a=1, b=0,1,2, widths L=4,5,8,12 all survive 200,000. This is **only finite simulation**. Minimal-width runs are not the authentic root, whose L,A17,B17 are huge; do not infer halting/nonhalting of the root from this grid.
+
+The next step is likely a bridge from this exact S1 endpoint into Agent49's upstream `HighLevelState D(a,d)` / `highLevelNext` coordinates, or a source-sound invariant for the m0-even sector. Agent49's parity/ternary/fatal-drain work may be relevant. I sent Agent42 and Agent49 the endpoint and the replay caveat; do not duplicate the prior m=0,n=16r+7 work.
