@@ -118,3 +118,45 @@ This supplies the two Coq `rw_mod` obligations (`N1 mod 3=1`, `N2 mod 3=2`) and 
 - The initial root run and finite support are computationally reproduced in JavaScript and recorded separately; not yet Lean-formalized.
 - The parameter chain above is a direct algebraic reading/simplification of the Coq macro statements; the Lean composition of the full itinerary remains open.
 - The final m1,n1 pre-drain endpoint is the correct input to the Agent 48 terminal wrapper; do not confuse it with the full post-`Incs0` Coq Rst1 endpoint.
+
+
+## 6. Current Lean Rst1' source-macro candidate (15 November 2026)
+
+A matching parameterized source-run proof attempt now exists in
+`im-results/agent8-rst1prime/Rst1PrimeBridge6Source.lean`:
+```lean
+rst1Prime_counted_macro :
+  run tm2 (97+12*(L+a)+3*b) (s1Config L 0 1 a 0 b h) =
+    some (s1Config (L+a+2) (2^(L+a+2)-2^a-1)
+      2 b (2^b-1) 0 (h+5+3*b))
+```
+Its ten phases are the left sweep of (3a+1), bridge 8, left sweep of
+(3L+5), bridge 20, right sweep of (L+1), bridge 9, right sweep of
+(a+1), bridge 6, right sweep of (b), and bridge 30. The primitive
+cost is exactly (97+12(L+a)+3b).
+
+This is the exact Coq `Rst1'` interface above: the target counter identity
+`(2^(L+2)-1)*2^a-1 = 2^(L+a+2)-2^a-1` is the same expression after
+`pow_add`. Consequently, once the Lean source chain is kernel-verified,
+it can be instantiated directly at both stages:
+- first: `(L,a,b)=(3,A1,B1)`;
+- second: `(L,a,b)=(L1,A2,B2)`.
+
+**Verification status:** this is currently a source proof attempt, not a
+certified result. The existing manual-only workflow
+`.github/workflows/agent42-champion-terminal-source.yml` compiles
+FirstSweep → Bridge8Source → SecondSweep → Bridge20Source →
+Bridge9Source → Bridge6Source and checks for transitive `sorryAx`.
+The latest Bridge8 source patch is commit
+`29118db656892e842a6237f86ae864e5ab98c3c0`; the second-sweep frame
+qualification is `c4deccae9aed0aee24ba0647fa13994f12ec7aa0`. A static
+ambiguity repair in Bridge6Source is commit
+`21ab4aa332ffb15d78bf2db7b679e0394b9917ac`. No post-patch full-chain
+run or successful local compile has yet been obtained. Do not promote the
+macro to a proved Coq Rst1' instance until the exact source and exported
+axiom audits pass.
+
+Even when certified, this macro supplies only the two Rst1' stages of
+the blank-root itinerary. The preceding Rsts1/Rsts1_v2 transformations,
+the final Rsts2H/Rst2 stage, the terminal wrapper, and the full
+blank-tape-to-halt composition remain separate obligations.
