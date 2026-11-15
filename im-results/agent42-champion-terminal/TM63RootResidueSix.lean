@@ -73,10 +73,10 @@ private theorem tm63_root_index_as_16r15 :
   have hdiv := Nat.mod_add_div tm63RootMiddleK 2
   rw [tm63_root_middle_k_odd] at hdiv
   have hk :
-      tm63RootMiddleK = 2*(tm63RootMiddleK/2)+1 := by
+      tm63RootMiddleK = 2*tm63RootResidueSixK+1 := by
+    dsimp [tm63RootResidueSixK]
     omega
   rw [tm63_index1_eq_8k7,hk]
-  dsimp [tm63RootResidueSixK]
   omega
 
 private theorem tm63_root_residue6_bound :
@@ -175,6 +175,8 @@ theorem tm63_blank_reaches_after_middle11 :
     tm63Length1 (2*tm63RootResidueSixK)
     tm63MiddleAfter10A tm63MiddleAfter10B tm63MiddleAfter10Head
     hL tm63_root_residue5_m1_bound tm63_after_middle10_a_pos
+  have hmul :
+      8*(2*tm63RootResidueSixK) = 16*tm63RootResidueSixK := by omega
   have hrow' :
       run tm2
         (proposedIncrementCost 1 (16*tm63RootResidueSixK+5)
@@ -184,7 +186,7 @@ theorem tm63_blank_reaches_after_middle11 :
       some (s1Config tm63Length1 (16*tm63RootResidueSixK+4) 0
         tm63MiddleAfter11A 0 tm63MiddleAfter11B tm63MiddleAfter11Head) := by
     simpa [tm63MiddleAfter11A,tm63MiddleAfter11B,
-      tm63MiddleAfter11Head,Nat.mul_assoc] using hrow
+      tm63MiddleAfter11Head,hmul] using hrow
   have hcomp := run_compose_local
     tm63_blank_reaches_after_middle10 hrow'
   simpa [tm63MiddleFirst11Moves] using hcomp
