@@ -167,11 +167,41 @@ Under the five-shallow hypothesis, the terminal suffix bound also controls the r
 
 So the joint high-depth/terminal-suffix hypotheses do give a substantial positive restart energy, not merely I₀>0. The remaining issue is the dyadic scaling: from I₀<98P and 8^s∣I₀ one gets only 3s≤n+6, whereas the existing FiveShallowSourceModel proof uses 3s≤n to write P=8^s·p with integral p and apply root_two_prefix_divisor. A generalized barrier may be possible with a six-bit slack, or by proving the stronger divisibility 8^s∣P from the exact high-depth congruence. This is a concrete route to extend the five-shallow theorem beyond the original root.
 
-### High-depth congruence available for the six-bit slack
+### Correct high-depth restart relation; the previous congruence was reversed
 
-If the restart state is the child of a depth-t edge, then d₀−1=c+3 is divisible by 2^t. Also t≤n+1, since the inverseAt mass term is at most 14P and c+3≥4. Substituting d₀=1+2^tq into the restart energy gives the exact congruence
+The previous draft asserted that, for a restart state immediately after a depth-t edge, d₀−1=c+3 is divisible by 2^t. This is **not** what the source inverse theorem says; that assertion reverses the quotient relation and must not be used.
 
-    I₀ = 98P−49d₀−14(m₀+n)+55
-       ≡ 2(3−7(m₀+n))  (mod 2^t).
+For the parent state (bₚ,dₚ,mₚ) and child restart state (b₀,d₀,m₀), the exact source theorem `inverseAt_iff_power_mass` gives
 
-Thus, whenever 3s≤t for the following depth-two prefix, the divisibility 2^{3s}∣I₀ forces 2^{3s−1}∣(3−7(m₀+n)). Since the terminal suffix bounds put m₀+n<P, the nonzero integer 3−7(m₀+n) has absolute value below 7P<2^{n+3}; this gives an explicit congruence restriction on m₀+n but does not by itself close the scaling gap. The remaining case 3s>t is also unresolved. This is a useful arithmetic constraint for a sharper restart-prefix argument, not yet a proof of the needed 3s≤n.
+```
+dₚ + bₚ/2 + 3 = 2^t (c+3),
+2k + c + 2t + 2 = bₚ + dₚ,
+b₀=2k−4, d₀=c+4, m₀=mₚ+t+1.
+```
+
+Thus d₀−1=c+3 is the **quotient** in the first equation, not a multiple of 2^t. The divisible quantity is dₚ+bₚ/2+3.
+
+Using the original parent mass equation,
+
+```
+bₚ+dₚ = 14P − 2(mₚ+n) − 13
+      = 14P − 2(m₀+n) + 2t − 11,
+```
+
+we obtain the exact restart relation
+
+```
+2^t(d₀−1) = 14P − 2(m₀+n) + 2t − 8 − bₚ/2.
+```
+
+Since bₚ%4=0, the term bₚ/2 is even. For n≥2 and t≥2, reducing this equality modulo four gives
+
+```
+m₀ ≡ t (mod 2).
+```
+
+Here n is even. Equivalently, the child mass equation gives d₀≡1 (mod 4) when t is odd and d₀≡3 (mod 4) when t is even.
+
+This is only a parity restriction. Without additional information about the parent coordinate bₚ/2, it does **not** yield a higher-power congruence on m₀+n. In particular, the previously stated implication 2^(3s−1) ∣ (3−7(m₀+n)) is unsupported and is withdrawn.
+
+The six-bit scaling slack remains unresolved. The valid next step is to combine the exact parent-coordinate relation above with sharper source bounds on bₚ,dₚ,mₚ, or to find a restart energy argument that does not assume the false divisibility.
