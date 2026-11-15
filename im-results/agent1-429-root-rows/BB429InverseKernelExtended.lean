@@ -35,7 +35,10 @@ private def Bad (s : Affine) : Prop :=
   (s.A%32=0 ∧ s.B%8=0 ∧ 61≤s.a ∧ s.a%32=5 ∧ s.b%8=1)
 
 instance (s : Affine) : Decidable (Bad s) := by
-  unfold Bad BB429Mod8.Allowed
+  unfold Bad
+  letI : Decidable (BB429Mod8.Allowed s.a s.b) := by
+    unfold BB429Mod8.Allowed
+    infer_instance
   infer_instance
 
 private def Odd (s : Affine) : Prop :=
