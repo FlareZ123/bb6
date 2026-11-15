@@ -182,6 +182,18 @@ remaining hard source obligation is still the complete
 the second Rst1' reset itself is a direct reuse of the existing
 parameter-generic macro.
 
+**Structural clarification from the pinned Rocq proof:** `Rsts1_v2` is
+only the division/modulo-3 wrapper `n=3q+1` followed by `Rsts1`.
+`Rsts1` is `Rsts` plus one final `Rst2`; `Rsts` itself is an
+induction applying `Rst2`, `Rst1`, and `Rst0` in each cycle.
+Consequently, the universal source-level blocker is the original-TM2
+counted realization of those three one-step reset families, not a
+separate simulation for `Rsts1_v2`. The exact induction, symbolic
+counter/head recurrences, and proposed Lean run interfaces are recorded
+in [`Rsts1-v2-source-closure.md`](../agent48-counted-inc0/Rsts1-v2-source-closure.md).
+The current residue-specific q4 modules are partial cases of this
+one-step obligation, not yet its universal proof.
+
 **Verification status:** the ten-phase macro and its root-connected first
 instance are source proof attempts, not yet certified by a post-patch
 kernel run. The existing manual-only workflow
