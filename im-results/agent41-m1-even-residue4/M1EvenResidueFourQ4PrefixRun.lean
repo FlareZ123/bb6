@@ -288,7 +288,7 @@ theorem m1EvenResidueFour_q4_prefix_run (a b : Nat) (h : Int) :
           decide (5 ∈ m1EvenResidueFourBridgeEnd.marked) = true := by
         simp [m1EvenResidueFourBridgeEnd]
       have htrue : T2 (hN+5) = true := by
-        simpa [T2,hN] using hcut.trans hmark
+        simpa [T2,hN,m1EvenResidueFourCutTape] using hcut.trans hmark
       simpa [x] using htrue
     · have hiPos : 1 ≤ i := by omega
       have hout : m1EvenResidueFourInside (x-hN) = false := by
