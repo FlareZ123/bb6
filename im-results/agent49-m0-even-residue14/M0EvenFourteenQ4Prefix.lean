@@ -27,7 +27,7 @@ open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent49M0EvenFourteenQ4Bridge
 open BB6ChampionArithmetic
 
-/-- Explicit tape at the m=0,n=2 even q4 cut. -/
+/-- Explicit tape at the m=0,n=14 q4 cut. -/
 def m0EvenFourteenQ4CutTape (a b : Nat) (h : Int) : Int → Bool :=
   let T := (s1Config 5 14 0 a 0 b h).tape
   let N := 3*a
@@ -340,7 +340,7 @@ theorem m0EvenFourteen_q4_prefix_far_tail (a b : Nat) (h : Int) (ha : 0 < a) :
     _ = false := hblank
 
 
-/-- Canonical left-facing stream at the m=0,n=2 even q4 cut. -/
+/-- Canonical left-facing stream at the m=0,n=14 q4 cut. -/
 def m0EvenFourteenQ4LeftFacing (a : Nat) : List Bool :=
   [true] ++ d1pow (a-1) ++ markerWord 2 ++ d0 ++ binDec 5 13 ++ lh
 
