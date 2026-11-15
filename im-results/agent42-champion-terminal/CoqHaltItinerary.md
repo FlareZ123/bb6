@@ -267,7 +267,7 @@ with the generic S1 counted drain and then with this authentic root
 endpoint.
 
 
-## 8. Current root composition through middle row 11; next M0-even residue-four row
+## 8. Earlier root composition through middle row 11 and middle-13 candidate
 
 The new candidate module
 `im-results/agent42-champion-terminal/TM63RootResidueSix.lean`
@@ -298,7 +298,7 @@ The shared arithmetic module
 `tm63_root_length_ge_four`. The residue-six root composition uses these
 rather than duplicating the quotient, width, and length proofs.
 
-**Current next source row:** M0-even residue four, input
+**Next row at the time of this handoff:** M0-even residue four, input
 `S1(L,16*r+4,0,A11,0,B11,H11)`. Agent 48 has now supplied the integrated
 candidate modules:
 - `im-results/agent48-counted-inc0/M0EvenFourQ4Bridge.lean`: 51-step
@@ -320,10 +320,23 @@ The redundant standalone Agent 42 finite-bridge/BinDec helper files and
 workflow steps were removed after Agent 48's integrated implementation
 superseded them.
 
-**Unverified boundary:** the M2 counted adapter, M1 residue-five source
-theorem, root composition through middle11/middle13, Agent 48's M0 row
-modules, Agent 8's middle-13 wrapper, and public root arithmetic lemmas
-have not been compiled in this invocation. Do not report a certified
-extension beyond the previously accepted root prefix until the
-Critic's residue-seven/Rst1Prime source gate and these new modules pass
-their Lean 4.36.0-rc2 axiom audits.
+**Historical verification boundary at the time of this handoff:** the M2 counted adapter, M1 residue-five source theorem, root composition through middle11/middle13, Agent 48's M0 row modules, Agent 8's middle-13 wrapper, and public root arithmetic lemmas had not been compiled in that invocation. The later middle-18 through middle-22 candidates are covered separately below and remain uncompiled as well.
+
+
+## 9. Current candidate root continuation through middle row 22 (15 November 2026)
+
+Agent 48 has added a further source-only continuation after the Agent 49 middle-17 endpoint. It composes five counted rows:
+
+1. **Middle 18:** from m=0,n=16r-2 = 32*(r/2)+14, use the M0-even residue-fourteen generic source increment to reach m=2,n=16r-3. Source wrapper: TM63RootMiddle18.lean.
+2. **Middle 19:** from m=2,n=16r-3 (odd), use the generic M2-odd increment to reach m=1,n=16r-4. Source wrapper: TM63RootMiddle19.lean.
+3. **Middle 20:** from m=1,n=16r-4 = 8*(2r-1)+4, use Agent 41's M1-even residue-four source increment to reach m=0,n=16r-5. Source wrapper: TM63RootMiddle20.lean.
+4. **Middle 21:** from m=0,n=16r-5 (odd), use Agent 48's generic all-odd M0 source increment to reach m=2,n=16r-6. Source wrapper: TM63RootMiddle21.lean.
+5. **Middle 22:** from m=2,n=16r-6 = 8*(2r-1)+2, use Agent 42's marker-2 M2-even residue-two counted increment with quotient q=2r-1 to reach m=1,n=16r-7. Source wrapper: TM63RootMiddle22.lean.
+
+All five wrappers are under im-results/agent48-counted-inc0/. The row dependencies include M0EvenFourteenGenericSource, M2OddGenericStage, M1EvenResidueFourSource, M0OddGenericSource, and M2EvenResidueTwoCounted. The exact counter/head recurrences and primitive costs are recorded in those modules and the Agent 48 README. The middle-22 source uses the universal marker-2 row dossier in M2EvenResidueTwo.md.
+
+**Validation boundary:** these middle-18 through middle-22 source wrappers, their imported row theorems, and the counted M2 residue-two adapter have not passed a current-main Lean 4.36.0-rc2 compile or transitive axiom audit. The 756-case replay for the next marker-1 row and the 120-case replay for marker-2 residue two are finite computational checks only. The 27,959-step blank-root prefix remains the established source-checked root lower bound; no longer root prefix, complete TM63 halt itinerary, exact primitive-step champion score, or universal BB(6) upper bound is established by these candidates.
+
+**Next row after middle 22:** marker 1, n=16r-7 = 8*(2r-1)+1. Agent 48 has a 29-step finite bridge, a target-left identity, and a 756/756 deterministic replay in M1OddResidueOneBridge.lean, M1OddResidueOneTargetLeft.lean, and M1OddResidueOneReplay.mjs. The arbitrary-width half-line lift and counted source theorem remain open; Agent 8 has been notified as the owner of that sibling generalization. No middle-23 root wrapper is claimed.
+
+The second Rst1' source reset in the Coq itinerary is still not reached. This continuation extends only the candidate middle-section prefix; it does not complete the missing Rsts1_v2 source transition or discharge the second Rst1' obligation.
