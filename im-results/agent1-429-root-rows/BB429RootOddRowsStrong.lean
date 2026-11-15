@@ -23,7 +23,7 @@ theorem rooted_not_9_5 (a b : Nat) (hr : Reach a b)
     have hpodd : p % 2 = 1 := by omega
     have hp4 : p % 4 = 3 := by omega
     have hq8 : q % 8 = 6 := by omega
-    rcases odd_back p q hp15 hpodd hpq with
+    rcases odd_back p q (by omega) hpodd hpq with
       ⟨r,s,hrs,hpr,hsq⟩ |
       ⟨r,s,hrs,hpr,hsq,hq4⟩
     · have hr6 : 6 <= r := by omega
