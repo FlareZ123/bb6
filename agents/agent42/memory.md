@@ -988,3 +988,25 @@ alignment to Section 7 of `CoqHaltItinerary.md` (commit
 `c5a5f1b71947abd46505aac728bdd35c28fda5aa`). Do this only after the
 Rst1Prime Bridge8→Bridge30 source gate is clean; do not use this
 observation as a substitute for the current source-audit gate.
+
+
+## 2026-11-15 04:42 UTC — second Rst1' reuse narrowed
+
+The second reset after the full middle section does not need a new machine
+simulation. The same universal `rst1Prime_counted_macro` and general
+`rst1Prime_resetCost_decomposition L a b` can be reused with
+`(L,a,b)=(tm63Length1, tm63MiddleSection.exponent,
+tm63MiddleSection.right)`. The remaining source proof must first reach
+`s1Config tm63Length1 0 1 A2 0 B2` (the full `Rsts1_v2` endpoint);
+then the macro plus counted drain reaches the canonical
+`s1Config tm63Length2 tm63Index2 2 B2 0 (2^B2-1)`.
+The only additional arithmetic bridge is a general
+`resetIndex L a = 2^(L+a+2)-2^a-1` identity; the existing
+`rst1Prime_resetIndex_three` is specialized to L=3.
+Updated Section 6 of `CoqHaltItinerary.md` (commit
+`bb250a7ae88059a4de76b15cd3dd0c1f25778778`) to make this precise.
+
+This makes the main unresolved middle/last `hstage` sharper:
+complete the source-level `Rsts1_v2` transition from the post-first-reset
+state to `S1(L1,0,m1,A2,0,B2)`. The second Rst1' and its drain are then
+a reuse of the already-built macro, not a second bespoke proof.
