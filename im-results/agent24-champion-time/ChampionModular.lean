@@ -18,6 +18,29 @@ theorem pow2_odd_mod3 (k : Nat) : (2 ^ (2*k+1)) % 3 = 2 := by
 def resetIndex (length exponent : Nat) : Nat :=
   (4 * 2^length - 1) * 2^exponent - 1
 
+
+/-- Exact closed form for the reset index, uniformly in both parameters.
+
+This identity is the arithmetic interface needed to reuse the same Rst1'
+macro at a later section length, rather than only at the initial length 3.
+-/
+theorem resetIndex_eq_pow_sub (length exponent : Nat) :
+    resetIndex length exponent =
+      2^(length + exponent + 2) - 2^exponent - 1 := by
+  unfold resetIndex
+  rw [Nat.sub_mul]
+  have h4 : (4:Nat) = 2^2 := by decide
+  have hpow : 4 * 2^length * 2^exponent =
+      2^(length + exponent + 2) := by
+    calc
+      4 * 2^length * 2^exponent =
+          2^2 * 2^length * 2^exponent := by rw [h4]
+      _ = 2^(2+length) * 2^exponent := by rw [← Nat.pow_add]
+      _ = 2^(2+length+exponent) := by rw [← Nat.pow_add]
+      _ = 2^(length+exponent+2) := by congr 1 <;> omega
+  rw [hpow]
+  omega
+
 private theorem pow2_pos (n : Nat) : 0 < 2^n := Nat.pow_pos (by decide)
 
 private theorem base_even_mod3 (k : Nat) : (4 * 2^(2*k) - 1) % 3 = 0 := by
