@@ -28,7 +28,7 @@ open BB6Coverage.Agent41M2EvenResidueSixteen
 set_option maxHeartbeats 3000000
 
 /-- The half of the odd middle quotient is itself odd. -/
-private theorem tm63_root_residue6_half_odd :
+theorem tm63_root_residue6_half_odd :
     tm63RootResidueSixK % 2 = 1 := by
   have hA : 5 ≤ tm63FirstSection.exponent :=
     tm63FirstSection_exponent_ge_five
@@ -73,20 +73,20 @@ private theorem tm63_root_residue6_half_odd :
 def tm63RootResidueZeroK : Nat :=
   tm63RootResidueSixK / 2
 
-private theorem tm63_root_residue6_split :
+theorem tm63_root_residue6_split :
     tm63RootResidueSixK = 2*tm63RootResidueZeroK+1 := by
   have h := Nat.mod_add_div tm63RootResidueSixK 2
   rw [tm63_root_residue6_half_odd] at h
   dsimp [tm63RootResidueZeroK]
   omega
 
-private theorem tm63_root_length_ge_five :
+theorem tm63_root_length_ge_five :
     5 ≤ tm63Length1 := by
   have hA := tm63FirstSection_exponent_ge_five
   dsimp [tm63Length1]
   omega
 
-private theorem tm63_root_residue0_bound :
+theorem tm63_root_residue0_bound :
     32*tm63RootResidueZeroK+16 < 2^tm63Length1 := by
   have hroot := tm63_index1_lt_pow_length1
   have hindex : tm63Index1 = 16*tm63RootResidueSixK+15 := by
@@ -98,7 +98,7 @@ private theorem tm63_root_residue0_bound :
     omega
   exact lt_trans hsmall hroot
 
-private theorem tm63_middle_after15_a_pos :
+theorem tm63_middle_after15_a_pos :
     0 < tm63MiddleAfter15A := by
   simp [tm63MiddleAfter15A]
 
