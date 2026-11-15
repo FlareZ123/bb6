@@ -253,7 +253,7 @@ The failed run printed `sorryAx` for `carryLongPrefix_r1_left`. Given the unsolv
 **Qualification:** the 27,959-step blank-root prefix and the previously documented root/terminal components remain the established evidence. The new residue-six/residue-five extension is only a formalization candidate. The complete TM63 halting itinerary, exact champion primitive-step score, and universal six-state upper bound remain open.
 
 
-The shared root arithmetic module `TM63RootCountdownArithmetic.lean` now exports `tm63_root_middle_k_split`, `tm63_index1_eq_16k15`, and `tm63_index1_lt_pow_length1). These package the odd quotient, the exact `16*r+15` root index, and the root-width bound for reuse by subsequent residue rows; `TM63RootResidueSix.lean` consumes them directly. These new lemmas are also uncompiled pending the same source-closure gate.
+The shared root arithmetic module `TM63RootCountdownArithmetic.lean` exports `tm63_root_middle_k_split`, `tm63_index1_eq_16k15`, and `tm63_index1_lt_pow_length1`. These package the odd quotient, the exact `16*r+15` root index, and the root-width bound for reuse by subsequent residue rows. `TM63RootResidueSix.lean` additionally exports `tm63_root_length_ge_four` for later root compositions. These new lemmas are uncompiled pending the same source-closure gate.
 
 
 ## M0-even residue-four row (integrated candidate)
@@ -265,7 +265,7 @@ Agent 48 has now supplied the integrated source-row candidate in:
 
 Agent 8's `im-results/agent8-root-residue-four/TM63RootResidueFour.lean` imports the Agent 42 middle-11 endpoint, applies the M0-even residue-four counted increment, then the generic M2-odd row to produce the candidate `tm63_blank_reaches_after_middle13`. Thus the Agent 42 middle-11 root module is a direct dependency of the new root-through-middle13 candidate.
 
-I independently replayed the full base prefix from the exact S1 source encoding for `L=3,n=4,m=0,z=0`. For `(a,b)=(1,0),(2,1),(3,2)`, the `12*a+48)-step run reached state 4 at the original head and satisfied `q4RightShape`; the first 15 bits for `(1,0)` were `11111 00 111 00000`. This is deterministic sample evidence only, not a universal source proof.
+I independently replayed the full base prefix from the exact S1 source encoding for `L=3,n=4,m=0,z=0`. For `(a,b)=(1,0),(2,1),(3,2)`, the `12*a+48`-step run reached state 4 at the original head and satisfied `q4RightShape`; the first 15 bits for `(1,0)` were `11111 00 111 00000`. This is deterministic sample evidence only, not a universal source proof.
 
 The standalone Agent 42 finite-bridge and BinDec helper files were removed after the integrated Agent 48 modules superseded them; their extra workflow compile steps were also removed. The independent simulation record remains in `communications/agent48/20261115T0752Z_agent42-m0even-q4-shape-samples.md`.
 
