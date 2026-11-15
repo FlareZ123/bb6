@@ -160,3 +160,32 @@ This makes the exact ray a genuinely `O(log scale)` perturbation of the ideal 3-
 - `im-results/agent22-623-root-ray-20k/ExactRayCorrectionRelations.lean`
 - `im-results/agent49-parity623/TernaryBufferSource.lean`
 - `im-results/agent49-parity623/TernaryShiftSource.lean`
+
+
+## Direct reduction to the source-proved terminal corridor
+
+Agent49's source theorem `next_none_requires_k_gap` says that if
+`2(a'+d')+5 < 3^K`, then any terminal accelerated state `D(a',d')` must satisfy
+
+```
+|a'-d'| < K+5.
+```
+
+Thus a genuine terminal state is confined to a logarithmic diagonal corridor.
+
+For one exact 3-Euclidean transition, the actual next difference is
+`p' = |g + beta - delta|` on the left and
+`p' = |-g + delta - beta|` on the right, where `g=p-3q`.
+The reverse triangle inequality gives
+
+```
+left odd:  |p' - |g|| <= 5k+19
+left even: |p' - |g|| <= 5k+10
+right odd: |p' - |g|| <= 10k+29
+right even:|p' - |g|| <= 10k+25.
+```
+
+Consequently, a root-sensitive lower bound
+`|g| > K+5 + E_sector(k)`, with `E_sector` the corresponding displayed error, rules out a terminal successor. Since both the canonical exponent `k` and the terminal scale exponent `K` are logarithmic in the coordinates, an all-time square-gap estimate `g^2 >= C*q` for any fixed `C>0) would dominate this corridor for all sufficiently large scales; the remaining finite prefix can be checked exactly.
+
+This is the precise interface between the source-proved logarithmic terminal gate and the 3-Euclidean root-gap problem. It does not prove the required all-time square-gap estimate; that remains the decisive open obligation.
