@@ -1,5 +1,4 @@
 import S1CarryOutputBridge
-import S1CountedCarryPrefixBridge
 import CountedSuffixOutput
 import CountedCarryPrefixHRun
 import Lean.Elab.Tactic.Omega
@@ -389,8 +388,9 @@ theorem s1Config_counted_decrement_even
 #print axioms s1Config_counted_decrement_allPositive
 #print axioms s1Config_counted_decrement_even
 
-/-- Canonicalize Agent 42's existing even-counter return witness:
-the returned state-3 tape is exactly the S1 encoding of z-1 and b+1. -/
+/-- Canonical state-3 witness for every even bounded S1 counter.  This
+now follows from the uniform source decrement itself, rather than importing
+a second prefix witness with a separate dependency chain. -/
 theorem s1Config_evenCounter_countedReturn_canonical
     (L n m a z b : Nat) (h : Int)
     (hz : 0<z) (hzlt : z<2^a) (heven : z%2=0) :
@@ -399,30 +399,18 @@ theorem s1Config_evenCounter_countedReturn_canonical
       run tm2 (48+12*r+12*b) (s1Config L n m a z b h) =
         some ⟨(3 : Fin 6),h,T'⟩ ∧
       T' = (s1Config L n m a (z-1) (b+1) h).tape := by
-  obtain ⟨q,r,len,T',hfactor,ha,hq,hr,hrun⟩ :=
-    BB6Coverage.Agent42CarryPrefixBridge.s1Config_evenCounter_countedReturn
-      L n m a z b h hz hzlt heven
-  have hdec := s1Config_counted_decrement_allPositive
-    L n m len q r b h hq hr
-  have hinput : s1Config L n m a z b h =
-      s1Config L n m (len+1+r) ((2*q+1)*2^r) b h := by
-    rw [ha,hfactor]
-  have houtput : s1Config L n m a (z-1) (b+1) h =
-      s1Config L n m (len+1+r) (((2*q+1)*2^r)-1) (b+1) h := by
-    rw [ha,hfactor]
-  have hcanonical : run tm2 (48+12*r+12*b)
-      (s1Config L n m a z b h) =
-      some (s1Config L n m a (z-1) (b+1) h) := by
-    simpa [hinput,houtput] using hdec
+  obtain ⟨q,r,len,hfactor,ha,hq,hr,hrun⟩ :=
+    s1Config_counted_decrement_even L n m a z b h hz hzlt heven
+  let T' := (s1Config L n m a (z-1) (b+1) h).tape
   have hcfg : (⟨(3 : Fin 6),h,T'⟩ : Config) =
       s1Config L n m a (z-1) (b+1) h := by
-    apply Option.some.inj
-    calc
-      some (⟨(3 : Fin 6),h,T'⟩ : Config) =
-          run tm2 (48+12*r+12*b) (s1Config L n m a z b h) := hrun.symm
-      _ = some (s1Config L n m a (z-1) (b+1) h) := hcanonical
-  refine ⟨q,r,len,T',hfactor,ha,hq,hr,hrun,?_⟩
-  exact congrArg Config.tape hcfg
+    apply config_ext_by_fields
+    · simp [s1Config_state]
+    · simp [s1Config_head]
+    · rfl
+  refine ⟨q,r,len,T',hfactor,ha,hq,hr,?_ ,?_⟩
+  · simpa [hcfg] using hrun
+  · rfl
 
 #print axioms s1Config_evenCounter_countedReturn_canonical
 #print axioms s1Config_carryInput_match
