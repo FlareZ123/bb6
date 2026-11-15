@@ -91,7 +91,7 @@ S1(tm63Length1,16*r+3,2,
    0, 2^tm63MiddleAfter11B - 1,
    tm63MiddleAfter11Head + 5 + 3*tm63MiddleAfter11B)
 ```
-and append `proposedIncrementCost 0 (16*r+4) A B` successful transitions. This is a direct continuation of the genuine blank-root run, conditional on the preceding middle-11 source composition and the new source theorem both passing their original-import Lean/axiom gates. A separate wrapper, `TM63RootResidueFour.lean`, now encodes this middle-12 composition; it is also an uncompiled candidate.
+and append `proposedIncrementCost 0 (16*r+4) A B` successful transitions. This is a direct continuation of the genuine blank-root run, conditional on the preceding middle-11 source composition and the new source theorem both passing their original-import Lean/axiom gates. Agent 8 has a separate wrapper at `im-results/agent8-root-residue-four/TM63RootResidueFour.lean`; it composes this middle-12 row and the following M2-odd row through middle 13. I removed my duplicate wrapper and will keep the root integration in Agent 8's file.
 
 ## 5. Remaining proof work
 
