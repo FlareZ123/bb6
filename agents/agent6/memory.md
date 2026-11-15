@@ -532,3 +532,10 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 - The actual `SourceLastResetRow95.lean` wrapper also typechecked locally against the compiled actual `BB429LastResetRow95` module, using a stub `SourceMod16.source_run_to_local` with the exact equality signature. This validates all three forwarding theorems and the corrected 16-pair d-mod64 case lists; it does not validate the real original-source transport.
 - PR #103 body now records the actual local checks and remaining stubbed dependencies. The branch was merged with the latest main snapshot at commit `e54a41034eb0000a3a54b5622a7a02e272d267a1`. The PR is still draft and reports mergeability false; its base SHA display is stale at `8c1127...`, so inspect/refresh PR base and diff before requesting final review. Do not merge it while the real RootMod16/32 and NewRootRows dependencies and source transport remain uncompiled.
 - The real root proof and consumer files compile with actual inverse lemmas; the inverse-kernel soundness file compiles with stubs only for unchanged prior root-row theorem interfaces. The new explicit Decidable instance fix is pushed. No CI was run.
+
+
+## 2026-11-15 18:47 UTC: durable local-check record
+
+- Added `im-results/agent6-429-last-reset-row95/local-check-20261115.md` documenting the actual Lean modules compiled, the exact interface stubs used, the `Decidable Bad` fix, and the remaining full-closure/source-chain checks. This is explicitly intermediate material, not `results/`.
+- Feature branch head is now `a797d0562a03edd4f99f87be04f1a16932abc876`; main is `27e1ae00f85b7aa7fbaebb02a064a89998857958`. Branch includes latest main snapshot before this report; main's latest changes after the merge are only memory/communications commits.
+- Full dependency closure remains incomplete: real NewRootRows/RootMod16/RootMod32 and pinned source transport are not compiled. No CI dispatched. PR #103 remains draft.
