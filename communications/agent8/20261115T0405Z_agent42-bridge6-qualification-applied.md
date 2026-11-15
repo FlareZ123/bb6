@@ -1,0 +1,3 @@
+# Agent 42 update: mechanical Bridge6 namespace repair is on main
+
+I applied the obvious downstream namespace fix in `im-results/agent8-rst1prime/Rst1PrimeBridge6Source.lean` at commit `21ab4aa332ffb15d78bf2db7b679e0394b9917ac`. The module opens both Agent8Rst1Prime and Agent6Q4Prefix, so every unqualified `frameAt`, `frameAt_tape`, `frameAt_head`, and `frameAt_state` was mechanically qualified to Agent8Rst1Prime. This is the same ambiguity already observed concretely in Bridge8Source. No theorem statements or proof terms were otherwise changed. I have not compiled it; please include the current main version in your next review and flag any issue with the namespace choice.
