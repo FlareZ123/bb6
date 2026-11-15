@@ -75,7 +75,9 @@ theorem y3_x186_parents (v a k : Nat)
             simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
                   if_neg hk0,if_neg hlow,if_neg haeven] at hp
             rcases hp with ⟨_,n,hpow,hcost⟩ | ⟨h5,_⟩
-            · have hpow' : 2048*v+192=2^n*(2*a+6) := by omega
+            · have hfac : 2*(a-1)+8=2*a+6 := by omega
+              rw [hfac] at hpow hcost
+              have hpow' : 2048*v+192=2^n*(2*a+6) := by omega
               have hcost' :
                   (2*k-a+3)+(2*a+6)+3*n=2048*v+196 := by omega
               have hnle : n≤4 := by
@@ -92,7 +94,8 @@ theorem y3_x186_parents (v a k : Nat)
                     refine ⟨b*c,?_⟩
                     calc
                       2^n*(2*a+6)=(32*b)*(4*c) := by rw [hb,hc]
-                      _=128*(b*c) := by ring
+                      _=128*(b*c) := by
+                        simp [Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm]
                   rw [←hpow'] at hdiv
                   have hzero : (2048*v+192)%128=0 :=
                     Nat.mod_eq_zero_of_dvd hdiv
@@ -135,6 +138,8 @@ private theorem no_y3_x186_parent0 (v : Nat) :
     (by omega) (by omega) (by omega)
     (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (768*v+68) (640*v+56) := by
+    change (∃ n, BB6.Agent8Section.run secNext n (some (5,1)) =
+      some (768*v+68,640*v+56))
     have hx : ((1024*v+93)+(512*v+47)-4)/2=768*v+68 := by omega
     have hy : ((1024*v+93)+3*(512*v+47)-10)/4=640*v+56 := by omega
     simpa only [hx,hy] using hQ
@@ -142,9 +147,9 @@ private theorem no_y3_x186_parent0 (v : Nat) :
     (768*v+68) (640*v+56)
     (by omega) (by omega) (by omega) (by omega)).mp hQ'
   have hR' : BB6.Agent3.CReach (1408*v+122) (320*v+27) := by
-    have hx : (768*v+68+640*v+56-2)=1408*v+122 := by omega
-    have hy : (640*v+56-2)/2=320*v+27 := by omega
-    simpa only [hx,hy] using hR
+    have hx : ((768*v+68)+(640*v+56)-2)=1408*v+122 := by omega
+    rw [hx] at hR
+    exact hR
   exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
     (1408*v+122) (320*v+27)
     (by omega) (by omega) (by omega) (by omega) hR'
@@ -156,9 +161,9 @@ private theorem no_y3_x186_parent1 (v : Nat) :
     (256*v+21) (896*v+80)
     (by omega) (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (1152*v+99) (448*v+39) := by
-    have hx : (256*v+21+896*v+80-2)=1152*v+99 := by omega
-    have hy : (896*v+80-2)/2=448*v+39 := by omega
-    simpa only [hx,hy] using hQ
+    have hx : ((256*v+21)+(896*v+80)-2)=1152*v+99 := by omega
+    rw [hx] at hQ
+    exact hQ
   exact BB6.Agent11High.blank_no_odd_sum_two
     (1152*v+99) (448*v+39)
     (by omega) (by omega) (by omega) hQ'
@@ -170,23 +175,23 @@ private theorem no_y3_x186_parent2 (v : Nat) :
     (64*v+3) (992*v+86)
     (by omega) (by omega) (by omega) (by omega)).mp hr
   have hQ1' : BB6.Agent3.CReach (1056*v+87) (496*v+42) := by
-    have hx : (64*v+3+992*v+86-2)=1056*v+87 := by omega
-    have hy : (992*v+86-2)/2=496*v+42 := by omega
-    simpa only [hx,hy] using hQ1
+    have hx : ((64*v+3)+(992*v+86)-2)=1056*v+87 := by omega
+    rw [hx] at hQ1
+    exact hQ1
   have hQ2 := (BB6.Agent46.six_even_right_blank_reach_iff
     (1056*v+87) (496*v+42)
     (by omega) (by omega) (by omega) (by omega)).mp hQ1'
   have hQ2' : BB6.Agent3.CReach (1552*v+127) (248*v+20) := by
-    have hx : (1056*v+87+496*v+42-2)=1552*v+127 := by omega
-    have hy : (496*v+42-2)/2=248*v+20 := by omega
-    simpa only [hx,hy] using hQ2
+    have hx : ((1056*v+87)+(496*v+42)-2)=1552*v+127 := by omega
+    rw [hx] at hQ2
+    exact hQ2
   have hQ3 := (BB6.Agent46.six_even_right_blank_reach_iff
     (1552*v+127) (248*v+20)
     (by omega) (by omega) (by omega) (by omega)).mp hQ2'
   have hQ3' : BB6.Agent3.CReach (1800*v+145) (124*v+9) := by
-    have hx : (1552*v+127+248*v+20-2)=1800*v+145 := by omega
-    have hy : (248*v+20-2)/2=124*v+9 := by omega
-    simpa only [hx,hy] using hQ3
+    have hx : ((1552*v+127)+(248*v+20)-2)=1800*v+145 := by omega
+    rw [hx] at hQ3
+    exact hQ3
   exact BB6.Agent11High.blank_no_odd_sum_two
     (1800*v+145) (124*v+9)
     (by omega) (by omega) (by omega) hQ3'
@@ -285,7 +290,6 @@ theorem blank_no_u5_residual_m128z45 (z s : Nat)
   have hXdecomp :
       302+512*s-4*(19101+53760*z)=2048*v+186 := by
     rw [hX,hmdecomp]
-    dsimp [v]
     omega
   rw [hXdecomp]
   exact blank_no_y3_x186_mod2048 v
