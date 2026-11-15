@@ -112,7 +112,7 @@ theorem tm63_blank_reaches_after_middle17 :
       tm63MiddleAfter17B,tm63MiddleAfter17Head] using hrow
   have hcomp := run_compose_local
     tm63_blank_reaches_after_middle16 hrow'
-  simpa [tm63MiddleFirst17Moves] using hcomp
+  simpa [tm63MiddleFirst17Moves,hinputRoot] using hcomp
 
 #print axioms tm63_root_residue7_bound
 #print axioms tm63_blank_reaches_after_middle17
