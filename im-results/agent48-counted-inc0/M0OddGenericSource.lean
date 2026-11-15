@@ -271,6 +271,7 @@ theorem m0Odd_generic_q4_prefix_leftFacing
       (m0OddGenericTargetPrefix a) (binDec (L-1) k ++ lh) i
       (by rw [htargetPrefixLength]; omega)
     rw [hsourceBit,htargetBit]
+    simp [hinputPrefixLength,htargetPrefixLength]
 
 private theorem m0OddGeneric_q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
