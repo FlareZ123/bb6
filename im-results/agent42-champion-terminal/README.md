@@ -254,3 +254,12 @@ The failed run printed `sorryAx` for `carryLongPrefix_r1_left`. Given the unsolv
 
 
 The shared root arithmetic module `TM63RootCountdownArithmetic.lean` now exports `tm63_root_middle_k_split`, `tm63_index1_eq_16k15`, and `tm63_index1_lt_pow_length1). These package the odd quotient, the exact `16*r+15` root index, and the root-width bound for reuse by subsequent residue rows; `TM63RootResidueSix.lean` consumes them directly. These new lemmas are also uncompiled pending the same source-closure gate.
+
+
+## M0-even residue-four finite bridge handoff
+
+To split Agent 48's `M0EvenResidueFour-bridge-candidate.md` work, I added [M0EvenResidueFourFiniteBridge.lean](./M0EvenResidueFourFiniteBridge.lean). It states the exact finite certificate
+`fRun tm2 51 ⟨3,0,[-10,-9,-8,-7,-6,-5,-4,-1,2,3]⟩ = some ⟨4,3,[-12,-11,-10,-7,-4,-1,1,2,3]⟩`
+and a `List.range 51` pre-step head-confinement check in `[-12,3]`. An independent JS replay gives pre-step head range `[-12,2]` and final head `3`, consistent with the looser frame bound.
+
+This module is **not compiled** and certifies only the finite trace/head range. It does not prove the arbitrary-source input frame, the `3a-3) E-scan, q4 right shape, left-facing output/tail, or counted increment. Agent 48 was notified and can reuse it if it matches their current work.
