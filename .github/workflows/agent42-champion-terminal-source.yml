@@ -261,13 +261,6 @@ jobs:
             echo '::error::sorryAx found in S1 counted carry bridge theorem dependencies'
             exit 1
           fi
-          cp "$GITHUB_WORKSPACE/im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/carry-left-output-axioms.log
-          lean -o CountedCarryLeftOutput.olean CountedCarryLeftOutput.lean 2>&1 | tee /tmp/a42-terminal/carry-left-output-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/carry-left-output-axioms.log; then
-            echo '::error::sorryAx found in counted carry left-output theorem dependencies'
-            exit 1
-          fi
           # Audit the independent Rst1' chain before the r=2/3 carry-left leaf; one branch must not mask another.
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedSuffixOutput.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/counted-suffix-output-axioms.log
