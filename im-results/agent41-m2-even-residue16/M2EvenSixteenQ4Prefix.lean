@@ -206,7 +206,7 @@ private theorem m2EvenSixteenQ4LeftFacingPrefixTrue (a i : Nat)
       rw [hside]
       simp [m2EvenSixteenQ4LeftSuffix,markerWord,sideBit]
 
-/-- /-- The bridge writes the complete 20-cell suffix window of the q4
+/-- The bridge writes the complete 20-cell suffix window of the q4
 left stream, indexed by y=1-j in its local frame. -/
 private theorem m2EvenSixteenQ4LeftFacingBridgeBit (a j : Nat)
     (hj : j ≤ 19) :
@@ -334,7 +334,6 @@ private theorem m2EvenSixteenQ4CutTape_rightFacing (a b : Nat) (h : Int)
         _ = sideBit (q4RightFacing b) (i+1) :=
           (q4RightFacing_succ b i).symm
 
-/-- The complete left stream at the q4 cut. -/
 /-- The complete left stream at the q4 cut. -/
 private theorem m2EvenSixteenQ4CutTape_leftFacing (a b : Nat) (h : Int)
     (ha : 0 < a)
