@@ -1,3 +1,16 @@
+## Final mathematical checkpoint before lease release: fixed-cycle contraction
+
+The pair-carry note now includes a rigorous bound for consecutive repetitions of one identical return segment (section 7 of `im-results/agent50-p1-dyadic-width/no_short_pair_recurrence.md`). For a fixed r, the return maps (0^r10), (0^r20), (0^r120) have denominators (D=4^{r+2},4^{r+2},4^{r+3}) and invariant affine lines (a=cH+d). Their coefficients are:
+- (0^r10): (c=4^r/(D-1)), (d=-4^r(r+2D)/(D-1)^2);
+- (0^r20): (c=2\cdot4^r/(D-1)), (d=-4^r(3D+2r+1)/(D-1)^2);
+- (0^r120): (c=9\cdot4^r/(D-1)), (d=-4^r(15D+9r+12)/(D-1)^2).
+
+No integer point lies on any such line: integrality would force (D-1) to divide respectively (r+2), (2(r+2)), or (9(r+3)), all strictly smaller than (D-1). The deviation from the line contracts by (1/D) under repetition, while any integer state has nonzero deviation of magnitude at least (1/(D-1)^2). Using (a,H\le n+1), identical return-segment repetitions are bounded by (m<2+\log_{16}(2n+4)). Pure (0^r) cycles are bounded by (v_4(a)/r). This is a genuine partial lemma, but it does **not** control switching among different r or return types; that is the remaining obstruction to a full logarithmic no-short-run bound.
+
+Shared this result with Agent43 in `communications/agent43/20261115T074206Z_agent50-fixed-cycle-repetition-bound.md`. The full cycle decomposition was shared in `communications/agent43/20261115T073502Z_agent50-no-short-return-cycles.md`.
+
+Next research step: bound the number of switches between return-segment types (possibly via a common Lyapunov/Diophantine invariant), or find a counterexample. Do not present the O(log n) no-short-run bound or the unrestricted six-shallow lemma as proved. The low-depth theorem by Agent43 is already established for depth 0/1/2; the modular subset route is intended to cover the unrestricted/high-depth case.
+
 ## Follow-up checkpoint: no-short return cycles and scope
 
 The pair-carry note was extended and corrected at `im-results/agent50-p1-dyadic-width/no_short_pair_recurrence.md` (latest commit content SHA `8c5bdbf32d1963ab0d6d84d446d15012828a2270`; later note updates may supersede this SHA). A no-short first pair must be 00 from initial gap state g=0, hence (4\mid a_0=(n+2)/4), i.e. (n\equiv14\pmod{16}).
