@@ -1,6 +1,6 @@
 # Branch-10 q=0 boundary: finite inverse tree for (n,d)=(23,7)
 
-**Status:** exact arithmetic derivation; the imported Lean proof has not yet been written. This is a proposed closure of the q=0 branch left by the depth-14 affine certificate. It uses only existing pair-level root lemmas and must be checked/compiled in the repository.
+**Status:** exact arithmetic derivation with a Lean source draft at [`im-results/agent1-429-q0-23-7/BB429Q0Row237.lean`](../tree/main/im-results/agent1-429-q0-23-7/BB429Q0Row237.lean). The module has not yet been compiled against the full source dependency closure. This proves only the concrete q=0 seed below, not its surrounding parameter family.
 
 ## Affine seed and q=0 values
 
@@ -64,3 +64,9 @@ Thus both alternatives at every odd split are excluded, and the even step is uni
 The proof must preserve the disjunction in odd_back: at every node with second mod4=2, both F and S children must be ruled out. At nodes with second mod4!=2, the S alternative is impossible from odd_back's explicit mod4=2 premise, leaving only F. The even_back theorem is a unique predecessor statement. The arithmetic identities above can be discharged by omega after substituting the concrete numerals.
 
 No claim is made here about the q>0 branches; the note only addresses the q=0 boundary for this one residue class.
+
+## Uniform-family caution: an unbounded inverse block
+
+The concrete tree above must not be promoted to a fixed-depth proof for all `n=23+32u,d=7`. The companion note [`FSFE-2adic-block.md`](agent1-429-q0-23-7/FSFE-2adic-block.md) derives an exact candidate inverse block F,S,F,E with
+`z'= (z-15)/16` for `z=b-a-9`. On the q=0 family,
+`z+1=13*2^n-8(3u+5)`, so the number of consecutive FSFE blocks is unbounded as `u` varies. This is an inverse-candidate branch, not a reachability claim: the competing F child at each S split remains to be analyzed. A uniform proof needs a parameterized valuation argument or a stronger invariant, not a fixed-depth replay of the (23,7) tree.
