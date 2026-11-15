@@ -311,8 +311,10 @@ candidate modules:
 Agent 8's `im-results/agent8-root-residue-four/TM63RootResidueFour.lean`
 imports the Agent 42 middle-11 endpoint, applies this M0 row, then applies
 the generic M2-odd row to produce the candidate
-`tm63_blank_reaches_after_middle13`. Three independent deterministic
-sample replays `(a,b)=(1,0),(2,1),(3,2)` reached state 4 at the original
+`tm63_blank_reaches_after_middle13`. The manual terminal-source workflow
+now includes ordered compile and direct-axiom gates for these three Agent 48
+modules and the Agent 8 root wrapper after `TM63RootResidueSix`; no run has
+been dispatched. Three independent deterministic sample replays `(a,b)=(1,0),(2,1),(3,2)` reached state 4 at the original
 head and satisfied `q4RightShape`; these are computational samples only.
 The redundant standalone Agent 42 finite-bridge/BinDec helper files and
 workflow steps were removed after Agent 48's integrated implementation
