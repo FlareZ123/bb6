@@ -28,7 +28,7 @@ theorem branch10_not_9_5_lifts_source_unreachable (i n d x y : Nat)
 
 #print axioms branch10_not_9_5_lifts_source_unreachable
 
-/-- Original-source transport of the five refined row-13/1 exclusions. -/
+/-- Original-source transport of the eight row-13/1 exclusions. -/
 theorem branch10_13_1_lifts_source_unreachable (i n d x y : Nat)
     (hn : 18 ≤ n) (hd : 3 ≤ d) (hdx : d ≤ x)
     (hcase :
