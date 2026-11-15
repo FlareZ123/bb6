@@ -86,4 +86,54 @@ theorem branch10_not_9_5_lifts_unreachable (n d x y : Nat)
 
 #print axioms branch10_not_9_5_lifts_unreachable
 
+/-- Expose one more 2-adic bit for the row-13/1 inverse obstruction. -/
+private theorem branch10_reduced_equation_128 (n d x : Nat)
+    (hn : 18 ≤ n)
+    (hx : 4*x+3*n+21 = 2^(n+2)*(d+6)+2*d) :
+    4*x+3*n+21 = 128*(2^(n-5)*(d+6))+2*d := by
+  have hexp : n+2 = 7+(n-5) := by omega
+  have hpow : 2^(n+2) = 128*2^(n-5) := by
+    rw [hexp, Nat.pow_add]
+  calc
+    4*x+3*n+21 = 2^(n+2)*(d+6)+2*d := hx
+    _ = (128*2^(n-5))*(d+6)+2*d := by rw [hpow]
+    _ = 128*(2^(n-5)*(d+6))+2*d := by simp [Nat.mul_assoc]
+
+/--
+Five additional branch-10 refined lifts force x ≡ 13 (mod 32),
+y ≡ 1 (mod 8), which is forbidden by the new two-step root lemma.
+-/
+theorem branch10_13_1_lifts_unreachable (n d x y : Nat)
+    (hn : 18 ≤ n) (hd : 3 ≤ d) (hdx : d ≤ x)
+    (hcase :
+      (n%64=35 ∧ d%32=25) ∨
+      (n%64=3 ∧ d%32=9) ∨
+      (n%64=11 ∧ d%32=21) ∨
+      (n%64=19 ∧ d%32=1) ∨
+      (n%64=27 ∧ d%32=13))
+    (hx : 4*x+3*n+21 = 2^(n+2)*(d+6)+2*d)
+    (hy : y=2*(x-d)+1)
+    (hr : Reach x y) : False := by
+  have hpow := pow_lower_18 n hn
+  have hfac : 9 ≤ d+6 := by omega
+  have hbig0 : 9*(3*n+77) ≤ (d+6)*2^(n+2) :=
+    Nat.mul_le_mul hfac hpow
+  have hbig : 9*(3*n+77) ≤ 2^(n+2)*(d+6) := by
+    simpa [Nat.mul_comm] using hbig0
+  have hxlarge : 33 ≤ x := by omega
+  let t := 2^(n-5)*(d+6)
+  have hxt := branch10_reduced_equation_128 n d x hn hx
+  have hxt' : 4*x+3*n+21 = 128*t+2*d := by
+    simpa [t] using hxt
+  have hx13 : x%32=13 := by
+    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
+  have hy1 : y%8=1 := by
+    rcases hcase with ⟨h1,h2⟩ | ⟨h1,h2⟩ | ⟨h1,h2⟩ |
+      ⟨h1,h2⟩ | ⟨h1,h2⟩ <;> omega
+  exact BB429RootOddRowsStrong.rooted_not_13_1 x y hr hxlarge hx13 hy1
+
+#print axioms branch10_13_1_lifts_unreachable
+
+
 end BB429LastResetRow95
