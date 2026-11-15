@@ -48,7 +48,7 @@ Manual-only workflow [agent44-746-fanin.yml](../../.github/workflows/agent44-746
 
 The predecessor grammar is still **unboundedly branching** across surviving fatal indices, as source-certified in [Agent 44's fan-in dossier](../agent44-746-fanin/README.md). Quadratic chain *depth* does not bound the complete reverse cone's number of nodes by a polynomial. The source-root equivalence `CascadeResetInverse.root_reset_chain_iff` remains the actual connection to the post-initial blank reset `(2,0)`; this new bound does not exclude the root from a single new fatal inverse cone. The original machine's halting decision and the global BB(6) exact value remain open.
 
-**Useful next experiment:** integrate the rank as an explicit depth/fuel certificate in Agent10's `ReachDecide.lean` or `ClosedCert.lean` to accelerate checked inverse-cone search, and seek a cross-index blank-root obstruction that survives synthetic fan-in. A proof of this depth bound should never be presented as a proof of global nonhalting.
+**Useful next experiment:** use the exact forward level-deficit map in [LEVEL-DEFICIT-DYNAMICS.md](LEVEL-DEFICIT-DYNAMICS.md) to derive a root-specific invariant or a fatal-hit obstruction, then connect that condition to the existing Q-index/depth selectors. The rank can still be integrated as a depth/fuel certificate in Agent10's `ReachDecide.lean` or `ClosedCert.lean`, but a proof of the depth bound alone must never be presented as a proof of global nonhalting.
 
 ## Executable first-return and complete finite fatal-index exclusion through 299
 
@@ -61,7 +61,20 @@ The verified source-connected proof chain has three substantive parts:
 3. Ordinary Lean kernel reduction (`by decide`, never `native_decide`) eliminates the 15 surviving indices `257, 262, 263, 268, 269, 274, 275, 280, 281, 286, 287, 292, 293, 298, 299`. `NewFiniteGates.lean`, `Gates270to281.lean`, `Gates282to299.lean`, `GatesTo299.lean` prove the finite range. `FullThrough299.lean` composes these with the previously source-verified `CascadeFastShield.blank_excludes_surviving_through_256`, and proves `fatal_unreachable_through_299`: every post-initial source-root reset target `fatal n` with `4≤n≤299` and `n%6∈{4,5}` is unreachable at **all** times.
 
 **Original physical-machine bridge, now source-certified:** [OriginalGate304.lean](OriginalGate304.lean) composes this full checked-in-source exclusion with Agent 10's genuine original six-state-machine theorem and its verified `rootReachBool_source_iff` bridge. It proves `Agent44Raw746.original_machine_halts_iff_surviving_304`: the exact original blank-tape Turing machine halts iff there exists a candidate `n≥304` with `n%6∈{4,5}` whose `rootReachBool(fatal n)` is true. **Successful unchanged pinned upstream Cryptids [manual CI 42310849868](https://github.com/FlareZ123/bb6/actions/runs/42310849868)**, source revision `c86f15861709b76042998c5211c7b2f83991621b`, proof commit `e09dcd3e0dc6c3b090971a98d46569f3cc31a074`. The final `#print axioms` reports exactly `[propext, Classical.choice, Quot.sound]`, without `sorryAx`; the workflow compiled the original unmodified physical-machine source, source-reset bridge, executable reset grammar and finite gates. This upgrades the previously established authentic-machine necessary index cutoff 268 to 304. The full original-source successful run is distinct from the earlier 4.36 checked-in-source run and confirms the physical-machine theorem in Lean 4.35.0-rc4.
-The remaining quantifier is infinite. Neither the stronger finite cutoff nor the polynomial fixed-target checker establishes global nonhalting or determines BB(6). The valuable next direction is a uniform genuine-root exclusion for all surviving indices, or a genuine root-to-fatal witness.
+The remaining quantifier is infinite. Neither the stronger finite cutoff nor the polynomial fixed-target checker establishes global nonhalting or determines BB(6).
+
+### Forward root level-deficit map
+
+[LEVEL-DEFICIT-DYNAMICS.md](LEVEL-DEFICIT-DYNAMICS.md) gives an exact forward coordinate for the #746 blank-root chain. At level (K), the deficit (D=8\cdot2^K+K-h) halves under each same-level even reset; an even reset advances to (K+1) exactly when (D\le4K+10). For a nonfatal entry (D_{\rm in}=2^e r), (r) odd, the whole level exits oddly iff (e=0) or (r>2K+5).
+
+At an odd exit, with (A=(D_{\rm exit}-2K-5)/2) and odd-reset parameter (P=2^t d), the source equations give (A=2^t a) with (a) odd and (t=v_2(A)), while the next height satisfies (2h'+5=3^{t+1}d). A fatal hit at next level (n) therefore requires
+[
+3^{t+1}d=8\cdot2^n-2n-3=2F_n+5.
+]
+This couples the root's 2-adic offset to the fatal index's 3-adic valuation. The target divisibility is only necessary: the dyadic source band and the exact offset match remain essential. The source-connected Lean file is in the selective CI audit; its verification status is recorded in the detailed note.
+
+This is a new structural reduction, not a global root exclusion. The valuable next direction is to prove a root-specific invariant for the entry deficits, or find a genuine root-to-fatal witness.
+
 
 
 ## Additional exceptional t=1 feeder classes (intermediate draft)

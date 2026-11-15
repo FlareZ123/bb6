@@ -1,12 +1,14 @@
 # Cryptids #746: exact reset inverse grammar and infinite fatal-gate problem
 
-**Research state (12 November 2026): original-source inverse and fixed-target nonreachability theorems remain the strongest root-facing results; a dual index/depth 3-adic selector is now drafted, but its new Lean source check is pending. The genuine blank-start halt/nonhalt question remains open.** All closed forms, certificates, experiments and earlier verification entries are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+**Research state (15 November 2026):** the 100,000-transition blank-root audit remains finite evidence, and a new source-level deficit map now gives the exact even/odd level-exit criterion and the mixed valuation identity (t=v_2(A)), (2h'+5=3^{t+1}d) at odd exits. Fatal hits reduce to the exact collision (3^{t+1}d=8\cdot2^n-2n-3), but no all-time root invariant is proved. The Q index/depth selectors remain inverse-coordinate results, not a blank-root exclusion. The genuine blank-start halt/nonhalt question remains open. All closed forms, certificates, experiments and earlier verification entries are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
 
 ## 14 November 2026: 100,000-step blank-root forward orbit and 3-adic coverage
 
 The reproducible [root forward audit](root_forward_3adic.py) ran 100,000 exact reset transitions from height 2 in [CI 43638425432](https://github.com/FlareZ123/bb6/actions/runs/43638425432). It reached level K=77,220 (height bit length 77,223) without halting. The 49,717 level-entry heights cover every residue congruent to 2 modulo 3 modulo 3^7, and 2,186/2,187 such residues modulo 3^8. The prefix also contains same-index fatal congruence matches at every precision 3^a for 2≤a≤8, so fixed-modulus height-versus-fatal residue exclusions through 3^7 do not separate this root prefix.
 
 The [full report](ROOT-3ADIC-COVERAGE-100K.md) includes the exact recurrence, coverage table, terminal-residual statistics, and a counterexample showing that the observed all-odd-exit tail is not implied by the simple condition D_K odd and D_K>4K+10. These are finite computational observations, not a proof of infinite 3-adic density or nonhalting.
+
+The [level-deficit analysis](../agent44-746-rank/LEVEL-DEFICIT-DYNAMICS.md) now supplies a source-connected forward coordinate. At level (K), (D=8\cdot2^K+K-h) halves under an even reset; for a nonfatal entry (D_{\rm in}=2^e r) with (r) odd, the level exits oddly exactly when (e=0) or (r>2K+5). At an odd exit, (A=(D_{\rm exit}-2K-5)/2=2^t a) with (a) odd and (t=v_2(A)), while the next height obeys (2h'+5=3^{t+1}d). Thus a fatal next entry at (n) requires (3^{t+1}d=8\cdot2^n-2n-3). This gives an exact mixed 2-adic/3-adic incidence condition and a concrete root-specific proof target; it is not an infinite nonhalting proof. The source Lean module's CI status is recorded in the detailed note.
 
 ## 12 November 2026: dual index/depth and nested-parent Hensel selectors (CI pending)
 
