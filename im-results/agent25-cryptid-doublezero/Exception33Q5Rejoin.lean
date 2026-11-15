@@ -43,9 +43,9 @@ def aCodeK (u : Nat) : Nat := 64*u+10
 def aCodeWord : List Bool := [false,false,true,true,false,true,true]
 
 def aCodeTime (u : Nat) : Nat :=
-  12*(aCodeK u)*(aCodeK u)+49*(aCodeK u)+64+
-    CryptidA.wordCost (4*(aCodeK u)+3) aCodeWord+
-    2*((4*(aCodeK u)+3)+CryptidA.wordInc aCodeWord)+6
+  (12*(aCodeK u)*(aCodeK u)+41*(aCodeK u)+32) +
+    (CryptidA.wordCost (4*(aCodeK u)+3) aCodeWord +
+      (2*((4*(aCodeK u)+3)+CryptidA.wordInc aCodeWord)+6))
 
 def aCodeInput (u : Nat) : Cfg :=
   init (List.replicate (3*(aCodeK u)+1) true ++
@@ -69,13 +69,8 @@ theorem eall_source_return (u : Nat) :
       sourceStart u =
         init (List.replicate (3*(9*u+1)+2) true ++
           false :: (pairs 4 ++ [true,true])) := by
-    change CryptidBoundary.init
-      (List.replicate ((27*u+7)-2) true ++
-        (CryptidBoundary.oppairs 5 ++ [true])) =
-      CryptidBoundary.init
-        (List.replicate (3*(9*u+1)+2) true ++
-          (false :: (CryptidBoundary.pairs 4 ++ [true,true])))
-    rw [hprefix, htail]
+    unfold sourceStart DRegularSource.sourceSection
+    simp only [List.replicate_one, hprefix, htail]
   rw [hstart]
   change ObsEq
     (run (BB6.Agent32EAll.duration (9*u+1) 4)
