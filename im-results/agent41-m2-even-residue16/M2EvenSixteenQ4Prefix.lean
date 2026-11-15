@@ -23,12 +23,12 @@ open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent24Q4Endpoint
 
-private theorem binDec_five_sixteen :
+theorem binDec_five_sixteen :
     binDec 5 16 = d1pow 4 ++ d0 := by
   simpa [binDec_zero,d1pow] using
     (binDec_carryPrefix 0 0 4 (by decide))
 
-private theorem binDec_five_fifteen :
+theorem binDec_five_fifteen :
     binDec 5 15 = d0pow 4 ++ d1 := by
   simpa [binDec_zero,d1pow] using
     (binDec_sub_one_carryPrefix 0 0 4 (by decide))
@@ -36,7 +36,7 @@ private theorem binDec_five_fifteen :
 private def m2EvenSixteenSourceLeftSuffix : List Bool :=
   markerWord 2 ++ (d0 ++ (binDec 5 16 ++ lh))
 
-private def m2EvenSixteenQ4LeftSuffix : List Bool :=
+def m2EvenSixteenQ4LeftSuffix : List Bool :=
   markerWord 1 ++ (d0 ++ (binDec 5 15 ++ lh))
 
 /-- The left-facing q4 word at the state-E cut. -/
