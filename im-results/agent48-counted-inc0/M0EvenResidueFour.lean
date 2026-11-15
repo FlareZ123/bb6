@@ -466,11 +466,11 @@ private theorem m0EvenResidueFour_resetPrefixCost_eq (k a b : Nat) :
 /-- Closed primitive-transition cost for the full Rst0 increment,
 including the all-ones drain. -/
 theorem m0Even_residue4_increment_cost_closed (k a b : Nat) :
-    proposedIncrementCost 0 (8*k+4) a b =
-      6*4^b + 42*2^b + 12*a - 9*b + 39 := by
+    proposedIncrementCost 0 (8*k+4) a b + 9*b =
+      6*4^b + 42*2^b + 12*a + 39 := by
   rw [proposedIncrementCost_decomp,
-    m0EvenResidueFour_resetPrefixCost_eq,
-    drainCost_binary_closed]
+    m0EvenResidueFour_resetPrefixCost_eq]
+  have h := drainCost_binary_additive b
   omega
 
 theorem m0Even_residue4_q4_reset_prefix_source
