@@ -215,9 +215,17 @@ private theorem q_even_p_blank_unreachable (t z : Nat)
       (by omega) (by omega) (by omega) (by omega)).mp hF1reach
     have hF2reach : BB6.Agent3.CReach F2x F2y := by
       simpa only [hF2x,hF2y] using hgate1
-    have hhi' : 32*z≤12+11*t := hhi
+    have hF2xeq : F2x=13700+13088*t-27920*z := by
+      dsimp [F2x,A,W]
+      omega
+    have hF2yeq : F2y=1188+1136*t-2424*z := by
+      dsimp [F2y,W]
+      omega
+    have hF2reach' : BB6.Agent3.CReach
+        (13700+13088*t-27920*z) (1188+1136*t-2424*z) := by
+      simpa only [hF2xeq,hF2yeq] using hF2reach
     exact (BB6.Agent4SevenS2QEven.q_even_normalizer_residual_unreachable
-      t z hhi' hcong) hF2reach
+      t z hhi hcong) hF2reach'
   intro hp
   have hiff := (BB6.Agent3.oddodd_lowval_blank_reach_iff
     px py (by omega) (by omega) (by omega)
@@ -382,7 +390,7 @@ private theorem q_even_h3_blank_unreachable (u v : Nat) :
   rcases hr with ⟨time,htime⟩
   have hsector :
       (((73+64*u+64*v)+(850+480*u+992*v))%8=1 ∧
-        (850+480*u+64*v)%16=10) ∨
+        (850+480*u+992*v)%16=10) ∨
       (((73+64*u+64*v)+(850+480*u+992*v))%8=3 ∧
         (850+480*u+992*v)%16=2) := by
     right
