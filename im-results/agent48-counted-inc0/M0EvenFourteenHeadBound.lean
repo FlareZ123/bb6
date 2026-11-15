@@ -164,9 +164,9 @@ theorem m0EvenFourteen_q4_prefix_head_bound
       simp only [List.append_assoc]
       change sideBit (d1pow a ++ R) i = true
       have hiLen : i < (d1pow a).length := by
-        simpa [d1pow_length] using hi
+        simpa [N,d1pow_length] using hi
       rw [sideBit_append_left (d1pow a) R i hiLen]
-      exact sideBit_d1pow_true a i (by simpa [d1pow_length] using hi)
+      exact sideBit_d1pow_true a i (by simpa [N,d1pow_length] using hi)
     simpa [T,hside] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 5 14 0 a 0 b h 0
@@ -184,7 +184,7 @@ theorem m0EvenFourteen_q4_prefix_head_bound
       apply config_ext
       · simp [frameAt_state,m0EvenFourteenBridgeEnd]
       · simp [frameAt_head,m0EvenFourteenBridgeEnd] <;> omega
-      · rfl
+      · simp [m0EvenFourteenQ4CutTape,T,N,T1,hN]
     rw [hframeConfig] at hBridge
     exact hBridge
   have hlinear : linearRightOnes T2 (hN+3) (3*(a-1)) := by
