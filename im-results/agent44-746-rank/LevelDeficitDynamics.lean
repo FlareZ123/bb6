@@ -57,6 +57,11 @@ private theorem k_add_three_lt_eight_pow (k : Nat) :
       rw [Nat.pow_succ]
       omega
 
+private theorem four_mul_pow_two_even (k : Nat) :
+    (4*2^k)%2=0 := by
+  rw [Nat.mul_mod]
+  norm_num
+
 /-- A pair of first-failure certificates for the same height has the
 same level. -/
 theorem first_fail_unique (h k l : Nat)
@@ -152,7 +157,10 @@ theorem odd_reset_guards (h k t d : Nat)
   have hnot : h+k+4≠4*2^k := by
     intro heq
     have hodd : (h+k+4)%2=1 := by omega
-    rw [heq] at hodd
+    have heven : (4*2^k)%2=0 := by
+      rw [Nat.mul_mod]
+      norm_num
+    rw [heq,heven] at hodd
     norm_num at hodd
   have hband := odd_inverse_band h k hlow hhigh hnot hpar
   have hqlo : 6*2^k+1≤oddParameter h k := by
@@ -196,11 +204,11 @@ theorem odd_reset_level_increases (h k t d k' : Nat)
     (hfail : oddOutput t d+k'+5<8*2^k') :
     k<k' := by
   have hall := odd_reset_guards h k t d hg hhigh hpar hd hfactor
-  by_contra hnot
-  have hle : k'≤k := by omega
-  have hguard := hall k' hle
-  have hbad := hprefix k' (by omega)
-  omega
+  by_cases hle : k'≤k
+  · have hguard := hall k' hle
+    have hbad := hprefix k' (by omega)
+    omega
+  · omega
 
 /-- The odd-reset parameter is 8*2^k minus a positive offset. -/
 theorem odd_offset_bounds (h k : Nat)
@@ -214,7 +222,10 @@ theorem odd_offset_bounds (h k : Nat)
   have hnot : h+k+4≠4*2^k := by
     intro heq
     have hodd : (h+k+4)%2=1 := by omega
-    rw [heq] at hodd
+    have heven : (4*2^k)%2=0 := by
+      rw [Nat.mul_mod]
+      norm_num
+    rw [heq,heven] at hodd
     norm_num at hodd
   have hband := odd_inverse_band h k hlow hhigh hnot hpar
   have hqlo : 6*2^k+1≤oddParameter h k := by
@@ -222,10 +233,10 @@ theorem odd_offset_bounds (h k : Nat)
   have hqhi : oddParameter h k≤8*2^k-1 := by
     simpa [oddParameter] using hband.1.2
   constructor
-  · dsimp [oddOffset]
+  · dsimp [oddOffset,oddParameter]
     omega
   · have hp : 2^(k+1)=2*2^k := by rw [Nat.pow_succ]; omega
-    dsimp [oddOffset]
+    dsimp [oddOffset,oddParameter]
     omega
 
 /-- Exact deficit-to-parameter identity at every odd exit:
@@ -250,7 +261,10 @@ theorem odd_offset_factorization (h k t d : Nat)
   have hnot : h+k+4≠4*2^k := by
     intro heq
     have hodd : (h+k+4)%2=1 := by omega
-    rw [heq] at hodd
+    have heven : (4*2^k)%2=0 := by
+      rw [Nat.mul_mod]
+      norm_num
+    rw [heq,heven] at hodd
     norm_num at hodd
   have hband := odd_inverse_band h k hlow hhigh hnot hpar
   have hqlo : 6*2^k+1≤oddParameter h k := by
@@ -263,7 +277,7 @@ theorem odd_offset_factorization (h k t d : Nat)
       _=2^(3+k) := by rw [Nat.pow_add]
       _=2^(k+3) := by congr 1; omega
   have hApos : 1≤oddOffset h k := by
-    dsimp [oddOffset]
+    dsimp [oddOffset,oddParameter]
     omega
   have hq_lt : oddParameter h k<2^(k+3) := by
     rw [←hpow3]
@@ -274,22 +288,24 @@ theorem odd_offset_factorization (h k t d : Nat)
     have hm := Nat.mul_le_mul_left (2^t) hdpos
     simpa using hm
   have htbound : t≤k+2 := by
-    by_contra ht
-    have ht' : k+3≤t := by omega
-    have hmono := pow_two_mono (k+3) t ht'
-    omega
+    by_cases ht : t≤k+2
+    · exact ht
+    · have ht' : k+3≤t := by omega
+      have hmono := pow_two_mono (k+3) t ht'
+      omega
   have hexp : t+(k+3-t)=k+3 := by omega
   have hpow : 2^(k+3)=2^t*2^(k+3-t) := by
     calc
       2^(k+3)=2^(t+(k+3-t)) := by rw [hexp]
       _=2^t*2^(k+3-t) := by rw [Nat.pow_add]
   have hdt : d<2^(k+3-t) := by
-    by_contra hnot'
-    have hle : 2^(k+3-t)≤d := by omega
-    have hm := Nat.mul_le_mul_left (2^t) hle
-    rw [←hpow] at hm
-    rw [hfactor] at hq_lt
-    omega
+    by_cases hdlt : d<2^(k+3-t)
+    · exact hdlt
+    · have hle : 2^(k+3-t)≤d := by omega
+      have hm := Nat.mul_le_mul_left (2^t) hle
+      rw [←hpow] at hm
+      rw [hfactor] at hq_lt
+      omega
   have hpoweven : 2^(k+3-t)%2=0 := by
     have hexppos : 0<k+3-t := by omega
     cases he : k+3-t with
@@ -306,7 +322,7 @@ theorem odd_offset_factorization (h k t d : Nat)
         rw [Nat.sub_add_cancel (Nat.le_of_lt hdt)]
       _=2^(k+3) := hpow.symm
   have hAq : oddOffset h k+2^t*d=2^(k+3) := by
-    dsimp [oddOffset]
+    dsimp [oddOffset,oddParameter]
     rw [hfactor,hpow3]
     omega
   have hAfac : oddOffset h k=2^t*(2^(k+3-t)-d) :=
