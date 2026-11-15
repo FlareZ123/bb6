@@ -81,3 +81,15 @@ The next mathematical target is an all-time root-sensitive invariant or a
 source-exact block-return argument proving avoidance of the terminal
 ratio-four windows. Any proof must account for all four sectors and the
 small exceptional prefix.
+
+## 2-adic diagnostic for the ratio-40 two-step pole (2026-11-15)
+
+The existing exact root simulator was extended in `root_gap_scan.cpp` to track `v₂(d-40a)`, exact hits of `d=40a`, and states with `2a+5` a pure power of three. A local Boost.Multiprecision C++20 run over 20,001 states (indices 0 through 20,000) produced:
+
+- no exact `d=40a` hit;
+- maximum observed `v₂(d-40a)=14`, at index 5449;
+- no state with `2a+5=3^p` for `p≥3`;
+- the existing root-gap checks still pass: canonical minimum `4096/235` at index 16, old-ray minimum `676/122` at index 13, and tail old-ray minimum `5329/235` at index 16.
+
+The synthetic family in `TwoStepPoleCancellationSource.lean` uses `x=3\,tightB(48)+2=(3^{50}-5)/2` and starts at `D(x,40x)`. The 20k scan therefore gives finite evidence that the root avoids that exact family, but **does not prove avoidance for all time**. In particular, the observed maximum 2-adic valuation increases with scan length (9 by index 2000, 11 by index 5000, 14 by index 20000); a fixed small-modulus exclusion is not supported. The increasing valuations make a 2-adic approach-to-the-pole hypothesis worth investigating, not established.
+
