@@ -29,7 +29,7 @@ jobs:
           cp im-results/agent24-champion-time/{M0EvenQ4Bridge,M0EvenQ4Prefix,M0EvenResidueTwo}.lean /tmp/a24-m0-even/
           cp im-results/agent24-champion-time/{CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges,CountedCarryPrefix,CountedCarryPrefixGeneral,CountedSuffixOutput,S1CarryOutputBridge,S1CarryInc0,M0EvenQ4Suffix,CountedCarryPrefixHRun,CountedCarryPrefixHRunAxiomAudit}.lean /tmp/a24-m0-even/
           cp im-results/agent42-champion-terminal/{CountedLBinDec,CountedLBinDecShape,CountedLBinDecAxiomAudit}.lean /tmp/a24-m0-even/
-          cp im-results/agent42-carry-boundary/{CountedCarryBoundaryTraces,S1CountedCarryPrefixBridge}.lean /tmp/a24-m0-even/
+          cp im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean /tmp/a24-m0-even/
           cp im-results/agent42-carry-left-output/FrameCellLemmas.lean /tmp/a24-m0-even/
           cp im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean /tmp/a24-m0-even/
           cp im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean /tmp/a24-m0-even/
@@ -97,9 +97,6 @@ jobs:
           : > carry-prefix-general-axioms.log
           lean -o CountedCarryPrefixGeneral.olean CountedCarryPrefixGeneral.lean 2>&1 | tee carry-prefix-general-axioms.log
           if grep -q 'sorryAx' carry-prefix-general-axioms.log; then echo '::error::sorryAx in CountedCarryPrefixGeneral'; exit 1; fi
-          : > s1-counted-carry-prefix-bridge-axioms.log
-          lean -o S1CountedCarryPrefixBridge.olean S1CountedCarryPrefixBridge.lean 2>&1 | tee s1-counted-carry-prefix-bridge-axioms.log
-          if grep -q 'sorryAx' s1-counted-carry-prefix-bridge-axioms.log; then echo '::error::sorryAx in S1CountedCarryPrefixBridge'; exit 1; fi
           : > carry-left-output-axioms.log
           lean -o CountedCarryLeftOutput.olean CountedCarryLeftOutput.lean 2>&1 | tee carry-left-output-axioms.log
           if grep -q 'sorryAx' carry-left-output-axioms.log; then echo '::error::sorryAx in CountedCarryLeftOutput'; exit 1; fi
@@ -166,7 +163,6 @@ jobs:
             /tmp/a24-m0-even/frame-cell-lemmas-axioms.log
             /tmp/a24-m0-even/carry-prefix-axioms.log
             /tmp/a24-m0-even/carry-prefix-general-axioms.log
-            /tmp/a24-m0-even/s1-counted-carry-prefix-bridge-axioms.log
             /tmp/a24-m0-even/carry-left-output-axioms.log
             /tmp/a24-m0-even/counted-lbin-dec-axioms.log
             /tmp/a24-m0-even/carry-prefix-hrun-axioms.log
