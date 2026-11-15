@@ -152,6 +152,33 @@ jobs:
             echo '::error::sorryAx found in counted carry residue bridge dependencies'
             exit 1
           fi
+          # The uniform all-valuation S1 decrement now imports the counted H-run.
+          # Rebuild its live source dependencies before compiling the H-run itself.
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/CountedLBinDec.lean" /tmp/a42-terminal/
+          lean -o CountedLBinDec.olean CountedLBinDec.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/CountedLBinDecShape.lean" /tmp/a42-terminal/
+          lean -o CountedLBinDecShape.olean CountedLBinDecShape.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/counted-carry-left-output-axioms.log
+          lean -o CountedCarryLeftOutput.olean CountedCarryLeftOutput.lean 2>&1 | tee /tmp/a42-terminal/counted-carry-left-output-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/counted-carry-left-output-axioms.log; then
+            echo '::error::sorryAx found in counted carry left-output source'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedCarryPrefixHRun.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/counted-prefix-hrun-axioms.log
+          lean -o CountedCarryPrefixHRun.olean CountedCarryPrefixHRun.lean 2>&1 | tee /tmp/a42-terminal/counted-prefix-hrun-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/counted-prefix-hrun-axioms.log; then
+            echo '::error::sorryAx found in all-valuation counted LInc H-run'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedCarryPrefixHRunAxiomAudit.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/counted-prefix-hrun-audit.log
+          lean CountedCarryPrefixHRunAxiomAudit.lean 2>&1 | tee /tmp/a42-terminal/counted-prefix-hrun-audit.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/counted-prefix-hrun-audit.log; then
+            echo '::error::sorryAx found in H-run left-output or all-valuation carry theorem'
+            exit 1
+          fi
           # LongResidue1 is imported by S1CarryInc0. Compile the live source now,
           # before any consumer, rather than allowing an archived .olean to shadow it.
           cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/LongResidue1.lean" /tmp/a42-terminal/
@@ -360,6 +387,13 @@ jobs:
           fi
 
           # Agent 48: lift the m=0,n=5 prefix to n=8*k+1 and compose its counted drain.
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0OddGenericSource.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-odd-generic-source-axioms.log
+          lean -o M0OddGenericSource.olean M0OddGenericSource.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-generic-source-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-odd-generic-source-axioms.log; then
+            echo '::error::sorryAx found in generic all-odd m=0 source increment'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0OddResidueOneSource.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m0-odd-residue1-source-axioms.log
           lean -o M0OddResidueOneSource.olean M0OddResidueOneSource.lean 2>&1 | tee /tmp/a42-terminal/m0-odd-residue1-source-axioms.log
