@@ -14,7 +14,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile exact dependencies and the m=2,n=6 source prefix
+      - name: Compile exact dependencies, n=6 bridge, and n=16*k+6 lift
         run: |
           set -euo pipefail
           mkdir -p /tmp/a48-m2-six
@@ -27,7 +27,7 @@ jobs:
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-m2-six/
           cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a48-m2-six/
           cp im-results/agent24-champion-time/Q4RightEndpoint.lean /tmp/a48-m2-six/
-          cp im-results/agent48-counted-inc0/M2EvenSixQ4Prefix.lean /tmp/a48-m2-six/
+          cp im-results/agent48-counted-inc0/{M2EvenSixQ4Prefix,M2EvenResidueSix}.lean /tmp/a48-m2-six/
           cd /tmp/a48-m2-six
           export LEAN_PATH=.
           lean --version
@@ -48,8 +48,9 @@ jobs:
           lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
           : > /tmp/a48-m2-six/m2-even-six-axioms.log
           lean -o M2EvenSixQ4Prefix.olean M2EvenSixQ4Prefix.lean 2>&1 | tee /tmp/a48-m2-six/m2-even-six-axioms.log
+          lean -o M2EvenResidueSix.olean M2EvenResidueSix.lean 2>&1 | tee -a /tmp/a48-m2-six/m2-even-six-axioms.log
           if grep -q 'sorryAx' /tmp/a48-m2-six/m2-even-six-axioms.log; then
-            echo '::error::sorryAx found in m=2,n=6 q4 source-prefix theorem'
+            echo '::error::sorryAx found in m=2,n=6 bridge or n=16*k+6 lifted source-prefix theorem'
             exit 1
           fi
       - name: Upload Lean diagnostics on failure
