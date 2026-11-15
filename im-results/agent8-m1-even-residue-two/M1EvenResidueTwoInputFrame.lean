@@ -39,6 +39,34 @@ theorem binDec_residue_two (L k : Nat) (hL : 3 ≤ L)
   rw [hL', h1, h2, h3]
   simp [List.append_assoc]
 
+/-- The output low-three-bit word after decrementing the residue-two source. -/
+theorem binDec_residue_one (L k : Nat) (hL : 3 ≤ L)
+    (hk : k < 2^(L-3)) :
+    binDec L (8*k+1) = d0 ++ d1 ++ d1 ++ binDec (L-3) k := by
+  let r := L-3
+  have hL' : L = r+3 := by dsimp [r]; omega
+  have hk0 : k < 2^r := by simpa [r] using hk
+  have hpow1 : 2^(r+2) = 4*2^r := by
+    rw [Nat.pow_add]
+    simp [show 2^2 = 4 by decide, Nat.mul_comm]
+  have hpow2 : 2^(r+1) = 2*2^r := by
+    rw [Nat.pow_add]
+    simp [show 2^1 = 2 by decide, Nat.mul_comm]
+  have hk1 : 4*k < 2^(r+2) := by rw [hpow1]; omega
+  have hk2 : 2*k < 2^(r+1) := by rw [hpow2]; omega
+  have h1 : binDec (r+3) (8*k+1) = d0 ++ binDec (r+2) (4*k) := by
+    have hnum : 8*k+1 = 2*(4*k)+1 := by omega
+    rw [hnum]
+    exact binDec_odd (r+2) (4*k) hk1
+  have h2 : binDec (r+2) (4*k) = d1 ++ binDec (r+1) (2*k) := by
+    have hnum : 4*k = 2*(2*k) := by omega
+    rw [hnum]
+    exact binDec_even (r+1) (2*k) hk2
+  have h3 : binDec (r+1) (2*k) = d1 ++ binDec r k := by
+    exact binDec_even r k hk0
+  rw [hL', h1, h2, h3]
+  simp [List.append_assoc]
+
 private theorem m1EvenResidueTwoSourceLeftAt (L k a b : Nat) (h : Int)
     (hL : 3 ≤ L) (hk : k < 2^(L-3)) (i : Nat) (hi : i ≤ 11) :
     (s1Config L (8*k+2) 1 a 0 b h).tape
@@ -156,6 +184,7 @@ theorem m1EvenResidueTwoBridge_input_match (L k a b : Nat) (h : Int)
       simpa [m1EvenResidueTwoBridgeStart] using hblock
 
 #print axioms binDec_residue_two
+#print axioms binDec_residue_one
 #print axioms m1EvenResidueTwoBridge_input_match
 
 end BB6Coverage.Agent8M1EvenResidueTwoInputFrameGeneral
