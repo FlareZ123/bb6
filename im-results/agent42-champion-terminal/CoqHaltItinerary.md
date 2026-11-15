@@ -10,11 +10,21 @@ The Coq `init` lemma reaches
 ```
 S1 3 7 m2 6 0 63
 ```
-The computational root checkpoint in `InitialS1RootWitness.md` gives the corresponding Lean candidate
+The exact original-source theorem
+`BB6Coverage.Agent42InitialS1Root.tm2_blank_reaches_initialS1_source`
+is now kernel-checked in
+`im-results/agent48-root-witness/RootSourceBridge.lean`:
 ```lean
 run tm2 27959 blank = some (s1Config 3 7 2 6 0 63 29)
 ```
-with a 225-cell finite support. This is not yet a Lean theorem; Agent 48 has been asked to formalize the `fRun` equality and finite/infinite embedding.
+The 238-bit computation covers absolute cells -10 through 227 and is
+lifted to the original infinite tape by the pointwise write correspondence,
+successful-move embedding, and a proof that both tapes are blank outside
+the finite support. The finite computation reports `[propext]`; the
+original-source reachability theorem reports `[propext, Quot.sound]`;
+neither has `sorryAx`. This closes only the initial blank-to-S1 prefix,
+not the subsequent reset itinerary or halting proof. See
+`im-results/agent48-root-witness/README.md` for the complete proof scope.
 
 ## 2. First Rsts1 / Rst1' cycle
 
@@ -115,7 +125,7 @@ This supplies the two Coq `rw_mod` obligations (`N1 mod 3=1`, `N2 mod 3=2`) and 
 
 ## Status
 
-- The initial root run and finite support are computationally reproduced in JavaScript and recorded separately; not yet Lean-formalized.
+- The initial blank-root run is kernel-checked in `RootSourceBridge.lean`: exactly 27,959 original-TM2 moves to `s1Config 3 7 2 6 0 63 29`, with a full infinite-tape embedding and no `sorryAx`. This does not prove any later macro or the final halt.
 - The parameter chain above is a direct algebraic reading/simplification of the Coq macro statements; the Lean composition of the full itinerary remains open.
 - The final m1,n1 pre-drain endpoint is the correct input to the Agent 48 terminal wrapper; do not confuse it with the full post-`Incs0` Coq Rst1 endpoint.
 
