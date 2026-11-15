@@ -7,7 +7,7 @@ permissions:
 jobs:
   counted-lbin-dec:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -32,6 +32,9 @@ jobs:
           cp im-results/agent42-carry-left-output/LongResidue1.lean /tmp/a42-lbin-dec/
           cp im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean /tmp/a42-lbin-dec/
           cp im-results/agent48-counted-inc0/S1CountedInc0.lean /tmp/a42-lbin-dec/
+          cp im-results/agent24-champion-time/{ChampionModular,CountPattern,CostRecurrence}.lean /tmp/a42-lbin-dec/
+          cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a42-lbin-dec/
+          cp im-results/agent48-counted-inc0/S1CountedDrain.lean /tmp/a42-lbin-dec/
           cd /tmp/a42-lbin-dec
           export LEAN_PATH=.
           lean --version
@@ -64,8 +67,13 @@ jobs:
           lean -o S1CarryInc0.olean S1CarryInc0.lean 2>&1 | tee s1-carry-inc0-compile.log
           lean -o S1OddCanonicalOutput.olean S1OddCanonicalOutput.lean 2>&1 | tee s1-odd-canonical-compile.log
           lean -o S1CountedInc0.olean S1CountedInc0.lean 2>&1 | tee s1-counted-inc0-compile.log
-          if grep -q 'sorryAx' counted-lbin-dec-axioms.log counted-prefix-hrun-compile.log counted-prefix-hrun-axioms.log s1-encoder-compile.log s1-prefix-bridge-compile.log counted-suffix-output-compile.log s1-carry-output-bridge-compile.log carry-left-r23-compile.log long-residue1-compile.log s1-carry-inc0-compile.log s1-odd-canonical-compile.log s1-counted-inc0-compile.log; then
-            echo '::error::sorryAx found in the counted LInc H-run or S1 counted-decrement dependency closure'
+          lean -o ChampionModular.olean ChampionModular.lean 2>&1 | tee champion-modular-compile.log
+          lean -o CountPattern.olean CountPattern.lean 2>&1 | tee count-pattern-compile.log
+          lean -o CostRecurrence.olean CostRecurrence.lean 2>&1 | tee cost-recurrence-compile.log
+          lean -o CountedReset.olean CountedReset.lean 2>&1 | tee counted-reset-compile.log
+          lean -o S1CountedDrain.olean S1CountedDrain.lean 2>&1 | tee s1-counted-drain-compile.log
+          if grep -q 'sorryAx' counted-lbin-dec-axioms.log counted-prefix-hrun-compile.log counted-prefix-hrun-axioms.log s1-encoder-compile.log s1-prefix-bridge-compile.log counted-suffix-output-compile.log s1-carry-output-bridge-compile.log carry-left-r23-compile.log long-residue1-compile.log s1-carry-inc0-compile.log s1-odd-canonical-compile.log s1-counted-inc0-compile.log champion-modular-compile.log count-pattern-compile.log cost-recurrence-compile.log counted-reset-compile.log s1-counted-drain-compile.log; then
+            echo '::error::sorryAx found in the counted LInc H-run, S1 decrement, or counted-drain dependency closure'
             exit 1
           fi
-          echo 'Counted LInc H proof, uniform all-r carry prefix, and full source S1 counted decrement compiled; no sorryAx dependency detected.'
+          echo 'Counted LInc H proof, uniform all-r S1 decrement, and closed-form S1 drain compiled; no sorryAx dependency detected.'
