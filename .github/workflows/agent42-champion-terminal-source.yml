@@ -412,6 +412,15 @@ jobs:
             exit 1
           fi
 
+          # Agent 48: lift the n=6 q4 prefix to the n=8*k+2 residue-two row.
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1EvenResidueTwoSource.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-residue2-source-axioms.log
+          lean -o M1EvenResidueTwoSource.olean M1EvenResidueTwoSource.lean 2>&1 | tee /tmp/a42-terminal/m1-even-residue2-source-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-residue2-source-axioms.log; then
+            echo '::error::sorryAx found in generalized m=1,n=8*k+2 counted source increment'
+            exit 1
+          fi
+
           # Agent 48: verify the finite q4 bridge for the next root row m=1,n=8k with odd k.
           cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1ZeroOddQ4Prefix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-zero-odd-q4-prefix-axioms.log
