@@ -288,7 +288,7 @@ private theorem E_scan_prefix_head
 
 /-- The 44+12a prefix has a one-sided head bound sharp enough to frame any
 arbitrary S1 tail following the first five low-order counter bits. -/
-private theorem m1Even_q4_prefix_head_bound
+theorem m1Even_q4_prefix_head_bound
     (a b : Nat) (h : Int) :
     ∀ k, k < 44+12*a → ∀ d,
       run tm2 k (s1Config 3 6 1 a 0 b h) = some d →
@@ -548,12 +548,10 @@ def m1EvenResidueSixLeftFacing (L k a : Nat) : List Bool :=
   [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec L (8*k+5) ++ lh
 
 private theorem m1EvenResidueSix_cut_eq_base
-    (L k a b : Nat) (h x : Int) (hx : h ≤ x) :
+    (L k a b : Nat) (h x : Int)
+    (hin : m1EvenResidueSixInside a h x = true) :
     m1EvenResidueSixCutTape L k a b h x =
       m1EvenQ4CutTape a b h x := by
-  have hin : m1EvenResidueSixInside a h x = true := by
-    simp [m1EvenResidueSixInside]
-    omega
   simp [m1EvenResidueSixCutTape,frame,hin]
 
 private theorem m1EvenResidueSix_cut_eq_input
@@ -636,7 +634,7 @@ private theorem m1EvenResidueSix_leftFacing
   · have hin : m1EvenResidueSixInside a h (h-(i:Int)) = true := by
       simp [m1EvenResidueSixInside]
       omega
-    rw [m1EvenResidueSix_cut_eq_base L k a b h (h-(i:Int)) (by omega)]
+    rw [m1EvenResidueSix_cut_eq_base L k a b h (h-(i:Int)) hin]
     rw [m1Even_q4_prefix_leftFacing a b h i]
     rw [hbaseLeft,htargetLeft]
     have hbaseBit := sideBit_append_left
@@ -670,8 +668,11 @@ private theorem m1EvenResidueSix_rightShape
   apply q4RightShape_congr (m1EvenQ4CutTape a b h)
     (m1EvenResidueSixCutTape L k a b h) h b
   · intro x hx
+    have hin : m1EvenResidueSixInside a h x = true := by
+      simp [m1EvenResidueSixInside]
+      omega
     symm
-    exact m1EvenResidueSix_cut_eq_base L k a b h x hx
+    exact m1EvenResidueSix_cut_eq_base L k a b h x hin
   · exact m1Even_q4_prefix_rightShape a b h
 
 private theorem m1EvenResidueSix_far_tail
@@ -679,8 +680,11 @@ private theorem m1EvenResidueSix_far_tail
     ∀ i, 9+3*b ≤ i →
       m1EvenResidueSixCutTape L k a b h (h+1+(i:Int)) = false := by
   intro i hi
+  have hin : m1EvenResidueSixInside a h (h+1+(i:Int)) = true := by
+    simp [m1EvenResidueSixInside]
+    omega
   rw [m1EvenResidueSix_cut_eq_base L k a b h
-    (h+1+(i:Int)) (by omega)]
+    (h+1+(i:Int)) hin]
   exact m1Even_q4_prefix_far_tail a b h i hi
 
 private theorem m1EvenResidueSix_target_left
