@@ -205,7 +205,6 @@ theorem tm63_index1_eq_16k15 :
 middle-section residue used by a root continuation inherits this bound. -/
 theorem tm63_index1_lt_pow_length1 :
     tm63Index1 < 2^tm63Length1 := by
-  have hA := tm63FirstSection_exponent_ge_five
   have hlen : tm63Length1 = tm63FirstSection.exponent + 5 := by
     dsimp [tm63Length1]
     omega
