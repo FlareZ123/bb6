@@ -302,7 +302,7 @@ these rather than duplicating the quotient and width proofs.
 candidate modules:
 - `im-results/agent48-counted-inc0/M0EvenFourQ4Bridge.lean`: 51-step
   finite bridge, head confinement, and arbitrary-source input match;
-- `M0EvenFourQ4Prefix.lean`: base `L=3,n=4) prefix, E-scan, and q4
+- `M0EvenFourQ4Prefix.lean`: base `L=3,n=4` prefix, E-scan, and q4
   suffix interfaces;
 - `M0EvenResidueFour.lean`: uniform `n=8*k+4) source prefix and counted
   increment, including the BinDec low-block decomposition and frame lift.
