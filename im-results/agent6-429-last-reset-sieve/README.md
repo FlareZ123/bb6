@@ -7,7 +7,7 @@ This note combines two existing lines of work:
 - the root-level last-reset decomposition in **Agent 32's LastResetEquation.lean** and its branch table;
 - the 242 surviving terminal residues modulo \(2^{18}=262144\), reconstructed from Agent 1's base/split sieve and Agent 30's additional 4+9 shifted exclusions.
 
-**Proof-status warning.** The last-reset source file was not yet CI-clean when this note was prepared. Its arithmetic consequences below are independently derived, but the root-level equivalence must not be cited as formally established until the pinned source-audit workflow passes without sorryAx. A repair branch is under test.
+**Proof status.** The repaired LastResetEquation module passed the pinned original-source audit (workflow run [43691972685](https://github.com/FlareZ123/bb6/actions/runs/43691972685)). The root mod-8 invariant is the existing Lean theorem **BB429Mod8.all_blank_returns_allowed**. The finite arithmetic below is reproducible by the accompanying script.
 
 ## 1. Last-reset equation and branch parametrization
 
