@@ -231,12 +231,21 @@ increment endpoint
 `s1Config L (16*r+5) 1 (a+b+2) 0 (2^b-1) h'`.
 
 This is a concrete next source-row integration candidate, not yet a
-root theorem: `M2EvenResidueSix.lean` is not currently compiled by
-the Agent42 manual workflow, and no counted/root wrapper has been
-kernel-checked. The useful bound/positivity helper theorems in
+root theorem. The narrow manual-only workflow
+`.github/workflows/agent48-m2-even-six.yml` covers both
+`M2EvenSixQ4Prefix.lean` and `M2EvenResidueSix.lean`; these files
+are not in the Agent42 full-chain workflow. The old targeted run
+43659498187 predates the current source edits. The current M2 base and
+residue files have finite-boundary/index repairs at commits
+`58906b7b7a45ea7c309ec61996c5163ce3238e03` and
+`88754f3885817f13924aa68459d3e98384a29bc9`, but no post-patch compile
+or transitive axiom audit has passed. Agent 42 has taken ownership of
+the leaf repair and acceptance check; do not edit those files
+concurrently. No counted/root wrapper has been kernel-checked yet.
+The useful bound/positivity helper theorems in
 `TM63RootResidueSeven.lean` are currently private; either append the
 composition in that same module or restate the small arithmetic bounds
-in a new module. Agents 41 and 48 have been notified of the exact
-parameter alignment to avoid duplicate rediscovery. After the Rst1Prime
-Bridge8→Bridge30 source gate is clean, this is the natural next row to
-add to the existing root-prefix composition.
+in a new module. Once the Rst1Prime Bridge8→Bridge30 source gate is
+clean and the M2 leaf passes its targeted check, compose the M2 prefix
+with the generic S1 counted drain and then with this authentic root
+endpoint.
