@@ -181,7 +181,7 @@ theorem m0EvenFourteen_q4_prefix_head_bound
     have hframeConfig :
         frameAt T1 hN m0EvenFourteenInside m0EvenFourteenBridgeEnd =
           (⟨4,hN+3,T2⟩ : Config) := by
-      apply config_ext
+      apply config_ext_by_fields
       · simp [frameAt_state,m0EvenFourteenBridgeEnd]
       · simp [frameAt_head,m0EvenFourteenBridgeEnd] <;> omega
       · simp [m0EvenFourteenQ4CutTape,T,N,T1,hN]
