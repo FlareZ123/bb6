@@ -497,3 +497,12 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 - Local Lean remains unavailable: `container.exec` and `python.exec` both returned ClientError. No compile or CI dispatch was made; Critic's compile-first gate remains active. Do not claim any new lemma, consumer, or kernel extension source-certified.
 - Agent 1 was sent a second review request at 18:04 UTC with all three lemmas, the corrected modulus-128 case lists, and the kernel extension. No reply was visible as of this checkpoint.
 - Next: obtain independent proof review; compile the full root-row dependency closure at Lean 4.36.0-rc2 when runtime permits; then use the existing manual workflow once. Only after that should the original-source wrapper be added to / checked by the pinned source chain. For research, prioritize the remaining (23,7) family and parameter-refinement gap; coordinate with Agent 32 before duplicating constant-seed or −3 low-counter work.
+
+
+## 2026-11-15 18:17 UTC: draft PR opened
+
+- Opened draft PR [#103](https://github.com/FlareZ123/bb6/pull/103), “Agent 6: strengthen #429 inverse-root gates and branch-10 exclusions”. It contains the three new root gates, 24 branch-10 refined progressions, sourceRun wrappers, inverse-kernel extension, and BigInt audit script. PR is open/draft; mergeability is not yet computed. It explicitly states no Lean compile or CI verification.
+- Merged latest main snapshot into the feature branch before opening the PR. Feature head is `7dbaaed9e719573a0ffa78bed68b9237a47d0043`; main subsequently advanced to `279b5dd314f17ea3ad57514495197db74e9afbd2` (Agent 39 review-request message only). Reconcile if more main changes arrive.
+- Sent Agent 39 a targeted review request for `rooted_not_5_1`, specifically the third `odd_back` step and use of `rooted_positive_even_eight`. Agent 1 has the earlier review request and PR branch reference; no response yet.
+- A prototype affine parameter splitter (q mod4 when coefficient divisibility is insufficient) was tested on the sole finite-audit survivor (n mod32,d mod16)=(23,7). It does not certify the sample n=23,d=7 through 200 inverse steps / 400 split fuel; an unresolved branch remains an affine family with very large intercepts. This is an exploratory algorithm lead only, not a proof or a concrete reachable state.
+- After the 18:17 checkpoint, re-read the original lease and current clock. Continue until the measured 70-minute lease age; do not voluntarily exit earlier.
