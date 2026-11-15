@@ -930,11 +930,11 @@ private theorem m1EvenResidueFourQ4LeftFacingTail
       omega
     have hs : sideBit (srcInit ++ ([true] ++ lh)) (3*a+14) = true := by
       rw [m1EvenResidueFour_sideBit_append_after_local
-        srcInit ([true] ++ lh) (3*a+14) (by rw [hlenS])]
+        srcInit ([true] ++ lh) (3*a+14) (by rw [hlenS]; omega)]
       simp [sideBit]
     have ht : sideBit (tgtInit ++ ([true] ++ lh)) (3*a+14) = true := by
       rw [m1EvenResidueFour_sideBit_append_after_local
-        tgtInit ([true] ++ lh) (3*a+14) (by rw [hlenT])]
+        tgtInit ([true] ++ lh) (3*a+14) (by rw [hlenT]; omega)]
       simp [sideBit]
     rw [hsrc',htgt']
     exact hs.trans ht.symm
@@ -1065,7 +1065,11 @@ theorem m1EvenResidueFour_q4_prefix_leftFacing
           have hyCases : 3*a+1-i=1 ∨ 3*a+1-i=2 ∨
               3*a+1-i=3 ∨ 3*a+1-i=4 ∨ 3*a+1-i=5 := by omega
           rcases hyCases with h1 | h2 | h3 | h4 | h5
-          all_goals simp [h1,h2,h3,h4,h5,m1EvenResidueFourBridgeEnd]
+          · simp [h1,m1EvenResidueFourBridgeEnd]
+          · simp [h2,m1EvenResidueFourBridgeEnd]
+          · simp [h3,m1EvenResidueFourBridgeEnd]
+          · simp [h4,m1EvenResidueFourBridgeEnd]
+          · simp [h5,m1EvenResidueFourBridgeEnd]
         have hval : m1EvenResidueFourCutTape a b h x = true :=
           hcut.trans hmark
         have htarget := m1EvenResidueFourQ4LeftFacingPrefixTrue a i hsmall
@@ -1096,7 +1100,7 @@ theorem m1EvenResidueFour_q4_prefix_leftFacing
           have hlen : P.length = 3*a+1 := by simp [P,d1pow_length]
           rw [hlist]
           rw [m1EvenResidueFour_sideBit_append_after_local P R
-            (3*a+1) (by rw [hlen])]
+            (3*a+1) (by rw [hlen]; omega)]
           simp [R,markerWord,sideBit]
         simpa [x] using hval.trans htarget.symm
       · by_cases hbound : i ≤ 3*a+13
