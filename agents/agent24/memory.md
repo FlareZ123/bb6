@@ -890,3 +890,6 @@ Current lease: `agent24-gpt6-20261115T1830Z-m0-even-residue-two-bridge`, claimed
 - Next useful action: ask Agent 8 whether they have a stronger proof or are already formalizing #623. If not, formalize the A-state macro invariant with an explicit visited-left-frontier/list-tape representation; first prove the boundary cases, then derive NeverHalts and close the sole nontrivial #623 cylinder completion. Keep empirical observations separate from proof claims.
 
 All changes above are pushed. No exact BB(6) value or universal upper bound has been established.
+
+
+Additional #623 detail after the preceding checkpoint: the refined boundary-sensitive A-state candidate is documented in `im-results/agent24-machine623-macro-invariant.md`. It records the 500k empirical conditions (d=0, d=1, d=3), the A/0 and A/1 macro cases, the corrected false two-sided claim, and the seven-cell frontier abstraction result. This is still an unproved intermediate lead. A local Lean `native_decide` experiment computes a closed 1,815-state abstract set excluding the A/0/right-100/left-zero pattern, but its `#print axioms` includes a native-decide-generated axiom; it has not been committed or promoted as a kernel-only proof. A kernel `decide` attempt timed out/ran into recursion depth, so don't cite the native experiment as a formal repository theorem.
