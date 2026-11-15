@@ -1,0 +1,113 @@
+# Machine C and #623 in the depth-four residual export
+
+**Status:** source-authenticated open-leaf mapping; not a halting/nonhalting classification.
+
+## Audit being mapped
+
+`im-results/agent32-zero-prefix-global/ResidualFrontierManifest.lean` defines
+
+```lean
+depth4ResidualAudit :=
+  lassoPhysicalTraceAudit emptyTable 6 6 12 12 2 4 4
+```
+
+The audit uses score bound 6, finite-ray limit 6, physical scan limit 12, exact-lasso limit 12, entry-prefix limit 2, macro limit 4, and branch depth 4. `depth4ResidualTerminals` is exactly `depth4ResidualAudit.terminals`; `depth4ResidualManifest_unique` gives one unique terminal for each full machine. `encodePath` preserves the terminal's fresh-slot assignment order. The Python canonicalizer separately sorts assignments when constructing a symmetry key.
+
+Both machine-specific frontier files prove the same depth-four audit is open at their respective full machines:
+- Machine C: `machineC_first_four_global_slots`, `machineC_oracle_false_first_five`, `machineC_depth_four_open`, `machineC_first_four_mass` in `im-results/agent4-machine-c-global-path/MachineCFrontier.lean`.
+- #623: `machine623_first_four_global_slots`, `machine623_oracle_false_first_five`, `machine623_depth_four_open`, `machine623_first_four_mass` in `im-results/agent8-623-frontier/Machine623Frontier.lean`.
+
+Thus both source-authenticated blank-root paths reach unique open terminals in the current depth-four export. "Open" means the bounded source oracles did not certify the cylinder; it does not mean all compatible completions are nonhalting.
+
+## Machine C terminal
+
+**Ordered terminal path** (also the `encodePath` field, preserving physical order):
+
+```text
+00:M111,10:M102,21:M001,20:M100
+```
+
+**Partial table:**
+
+| Slot | Transition |
+|---|---|
+| A/0 | 1RB |
+| B/0 | 1LC |
+| C/1 | 0LB |
+| C/0 | 1LA |
+
+**Free slots:** A/1, B/1, D/0, D/1, E/0, E/1, F/0, F/1.
+
+The compatible completion set is exactly
+`{m : Machine // compatible p m}` for this four-entry partial table: each of the eight free slots has 25 possible instructions (24 moves plus halt). Its cylinder mass is
+`25^8 = 152,587,890,625`, as certified by `machineC_first_four_mass`.
+
+**Physical scan probe (deterministic replay of the manifest's scanner):**
+
+- Result: `U` (first unassigned input), after 6 successful moves; this occurs before the 12-move scan limit.
+- Configuration: state B (index 1), head position -2, one-cells `[-3,-2,-1,1]`.
+- Next unassigned physical slot: B/1 (encoded slot `11`).
+- Export stop reason: `tree-depth-exhausted`, because the terminal path already has depth 4. The physical probe nevertheless identifies B/1.
+
+**Root-preserving symmetry class:** the group is the 240-element action of permutations of B–F fixing A, together with optional L/R reflection. Exhaustive enumeration of these 240 transforms using the algorithm in `canonicalize_residual_frontier.py` gives:
+
+- Canonical key: `00:M101;10:M112;20:M110;21:M011`.
+- Orbit size: 40; stabilizer size: 6 (the permutations of unused D, E, F).
+- Canonicalizing witness: identity state relabeling and L/R reflection.
+
+## #623 terminal
+
+**Ordered terminal path**:
+
+```text
+00:M111,10:M012,20:M013,30:M103
+```
+
+**Partial table:**
+
+| Slot | Transition |
+|---|---|
+| A/0 | 1RB |
+| B/0 | 0RC |
+| C/0 | 0RD |
+| D/0 | 1LD |
+
+**Free slots:** A/1, B/1, C/1, D/1, E/0, E/1, F/0, F/1.
+
+The compatible completion set is again the full cylinder over the eight free slots, with
+`25^8 = 152,587,890,625` completions, certified by `machine623_first_four_mass`.
+
+**Physical scan probe (deterministic replay of the manifest's scanner):**
+
+- Result: `U`, after 6 successful moves.
+- Configuration: state D (index 3), head position 0, one-cells `[1,2,3,0]` (the exact `FinRayCfg.ones` list order).
+- Next unassigned physical slot: D/1 (encoded slot `31`).
+- Export stop reason: `tree-depth-exhausted`.
+
+**Root-preserving symmetry class:**
+
+- Canonical key: `00:M101;10:M002;20:M003;30:M113`.
+- Orbit size: 120; stabilizer size: 2 (the swap of unused E and F).
+- Canonicalizing witness: identity state relabeling and L/R reflection.
+
+## Deeper #623 refinement (not a depth-four export terminal)
+
+The separate `Machine623DeepFrontier.lean` follows eleven fresh physical inputs for 54 moves. `machine623_depth_eleven_open` proves the depth-eleven audit remains open even with physical scan limit 96, and `machine623_deep_leaf_mass` gives cylinder mass 25. The only unassigned slot is F/0.
+
+`Machine623HaltCylinder.lean` proves `machine623_only_one_nontrivial_completion`: every completion of this eleven-entry cylinder is either the original #623 machine or `NeverHalts`. The 24 choices making F/0 an ordinary transition have no halting instruction anywhere; the sole nontrivial completion is the original machine with F/0=halt. Therefore the remaining mathematical obligation for this refined cylinder is precisely `NeverHalts machine623`.
+
+The depth-eleven audit's 96-step physical scan finds no new slot. A direct replay of the exact `writeOnes` list semantics ends at state C, head -4, with `ones = [-6,-8,-3,-3,-2,-1,0,1,2,3,4,5]`; this endpoint has not yet been added as a separate Lean `by decide` lemma. The Lean theorem already proves that no unassigned physical input is reached within the 96-step scan.
+
+## Machine C's deeper source path
+
+`MachineCPath.lean` separately proves that eleven fresh inputs fix 23 moves and leave F/0 unassigned, with cylinder mass 25. This is a deeper refinement of the depth-four Machine C cylinder, not an additional terminal in the current depth-four export.
+
+## Reproducibility and limitations
+
+- Raw transition tables and blank-root paths: `MachineCPath.lean`, `Machine623Path.lean`.
+- Depth-four open status and first four fresh slots: the two `*Frontier.lean` files cited above.
+- Export terminal semantics and probe encoding: `ResidualFrontierManifest.lean`.
+- Root-preserving symmetry action: `im-results/agent8-coverage-contract/Symmetry.lean`.
+- Canonical-key/orbit enumeration: `im-results/agent32-zero-prefix-global/canonicalize_residual_frontier.py`.
+
+The physical probe endpoint fields and 240-element canonicalization values above are deterministic replays of those source algorithms, not new Lean theorems in this report. The source Lean proofs certify the actual path, cylinder mass, and open status. No claim is made that either depth-four cylinder has been fully classified, or that BB(6) has been solved.
