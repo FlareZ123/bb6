@@ -428,24 +428,22 @@ theorem qIndexResidue_iff (s j k h : Nat)
             ((h%pn)/P) ht hbase).mp hshiftdiv
         have haunit : a%3≠0 := by
           rw [show a%3=2 by simpa [a] using qIndexCoefficient_mod_three j hj]
-          norm_num
+          decide
         have hdigit : (h%pn)/P=d :=
           henselDigit_div q a haunit ((h%pn)/P) ht
             (by simpa [q,a] using hcrit)
         have htarget : h%pn=b+d*P := by
           rw [hsplit,haidx,hdigit]
         have hnext : qIndexResidue s j (k+1)=b+d*P := rfl
-        have hcanon : h%pn=qIndexResidue s j (k+1) := by
+        have hcanon : h%3^(k+1)=qIndexResidue s j (k+1) := by
           rw [hnext]
-          exact htarget
-        change h%3^(k+1)=qIndexResidue s j (k+1)
-        simpa [pn] using hcanon
+          simpa [pn,P] using htarget
+        exact hcanon
       · intro hx
         have hcanon : h%pn=qIndexResidue s j (k+1) := by
           simpa [pn] using hx
         apply (qNumerator_period_mod_dvd_iff s j (k+1) h).mpr
-        rw [hcanon]
-        exact qIndexResidue_good s j (k+1) hs hj
+        simpa [hcanon] using qIndexResidue_good s j (k+1) hs hj
 
 /-- All-index form for n mod 6 in {4,5}. -/
 theorem qIndexResidue_all_sectors_iff (n j k : Nat)
@@ -486,13 +484,16 @@ theorem qNumerator_t1_parent_identity (n j u q d : Nat)
   have hz : signedZ n j=9*(d:Int) := by
     rw [hSigned]
     exact_mod_cast hodd
+  have hparentNat : 4*d=8*2^(n-2)+q+(n-2)+5 := by
+    omega
   have hparentI : 4*(d:Int)=
       8*(2:Int)^(n-2)+q+(n-2)+5 := by
-    exact_mod_cast hparent
+    exact_mod_cast hparentNat
   have hpow : 8*(2:Int)^(n-2)=(2:Int)^(n+1) := by
     have he : n+1=(n-2)+3 := by omega
     rw [he,Int.pow_add]
-    norm_num
+    have htwo : (2:Int)^3=8 := by decide
+    rw [htwo]
     ring
   have h8d : 8*(d:Int)=
       (2:Int)^(n+2)+2*q+2*n+6 := by
