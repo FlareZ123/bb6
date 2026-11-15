@@ -1,6 +1,8 @@
 import M0EvenEvenSumZero
 import Lean.Elab.Tactic.Omega
 
+set_option maxRecDepth 16384
+
 namespace BB6.Agent11M0SumZeroS533
 open BB6.Agent46
 
@@ -22,17 +24,23 @@ theorem blank_no_B_s533 (w : Nat) :
     have hp := six_parent_reach
       (48024+92160*w) (112590+216064*w)
       (by omega) (by omega) (by omega) (by omega) h0
-    convert hp using 1 <;> omega
+    have hx : (48024+92160*w)+(112590+216064*w)-2=160612+308224*w := by omega
+    have hy : ((112590+216064*w)-2)/2=56294+108032*w := by omega
+    simpa only [hx,hy] using hp
   have h2 : BB6.Agent3.CReach (216904+416256*w) (28146+54016*w) := by
     have hp := six_parent_reach
       (160612+308224*w) (56294+108032*w)
       (by omega) (by omega) (by omega) (by omega) h1
-    convert hp using 1 <;> omega
+    have hx : (160612+308224*w)+(56294+108032*w)-2=216904+416256*w := by omega
+    have hy : ((56294+108032*w)-2)/2=28146+54016*w := by omega
+    simpa only [hx,hy] using hp
   have h3 : BB6.Agent3.CReach (245048+470272*w) (14072+27008*w) := by
     have hp := six_parent_reach
       (216904+416256*w) (28146+54016*w)
       (by omega) (by omega) (by omega) (by omega) h2
-    convert hp using 1 <;> omega
+    have hx : (216904+416256*w)+(28146+54016*w)-2=245048+470272*w := by omega
+    have hy : ((28146+54016*w)-2)/2=14072+27008*w := by omega
+    simpa only [hx,hy] using hp
   have hD : ¬ BB6.Agent3.CReach (259118+497280*w) (7035+13504*w) := by
     exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
       (259118+497280*w) (7035+13504*w)
@@ -43,12 +51,16 @@ theorem blank_no_B_s533 (w : Nat) :
       have hp := six_parent_reach
         (64778+124320*w) (104202+199984*w)
         (by omega) (by omega) (by omega) (by omega) hE0
-      convert hp using 1 <;> omega
+      have hx : (64778+124320*w)+(104202+199984*w)-2=168978+324304*w := by omega
+    have hy : ((104202+199984*w)-2)/2=52100+99992*w := by omega
+    simpa only [hx,hy] using hp
     have hE2 : BB6.Agent3.CReach (221076+424296*w) (26049+49996*w) := by
       have hp := six_parent_reach
         (168978+324304*w) (52100+99992*w)
         (by omega) (by omega) (by omega) (by omega) hE1
-      convert hp using 1 <;> omega
+      have hx : (168978+324304*w)+(52100+99992*w)-2=221076+424296*w := by omega
+    have hy : ((52100+99992*w)-2)/2=26049+49996*w := by omega
+    simpa only [hx,hy] using hp
     exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
       (221076+424296*w) (26049+49996*w)
       (by omega) (by omega) (by omega) (by omega) hE2
@@ -103,12 +115,16 @@ theorem blank_no_high_stop_s533 (w : Nat) :
   intro hr
   have hstart : BB6.Agent3.CReach
       (17+64*(1067+2048*w)) (28+96*(1067+2048*w)) := by
-    convert hr using 1 <;> omega
+    have hx : (68305+131072*w)=17+64*(1067+2048*w) := by omega
+    have hy : (102460+196608*w)=28+96*(1067+2048*w) := by omega
+    simpa only [hx,hy] using hr
   have hA := BB6.Agent11M0SumZeroVerified.mzero_first_two_reach
     (1067+2048*w) hstart
   have hA' : BB6.Agent3.CReach
       (110994+212992*w) (81110+155648*w) := by
-    convert hA using 1 <;> omega
+    have hx : (26+104*(1067+2048*w))=110994+212992*w := by omega
+    have hy : (18+76*(1067+2048*w))=81110+155648*w := by omega
+    simpa only [hx,hy] using hA
   exact blank_no_A_s533 w hA'
 
 /-- Parameterized high-stop form: the m=0 stop equation and residue
