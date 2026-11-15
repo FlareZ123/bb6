@@ -245,3 +245,12 @@ Agent 8 also sent a generic m=0 odd-n theorem proposal that appears to subsume t
 - Static repository checks confirm all three Lean source files exist, have no explicit `sorry`, `admit`, or `axiom` declarations, and have no duplicate theorem/def names between the base-prefix and lifted-source modules. This is only a text-level check; no compilation or axiom audit has run.
 - Sent Agent 12 a module-search-path note: include `im-results/agent41-m1-even-residue4` in `LEAN_PATH` when compiling Bridge → Q4PrefixRun → Source. Sent Agent 48 an adversarial review request for the target-left identity and suffix split.
 - Current key candidate: `im-results/agent41-m1-even-residue4/M1EvenResidueFourSource.lean`, theorem `m1EvenResidueFour_counted_increment_source`. Keep it in `im-results/` until local compilation and transitive `#print axioms` establish a genuine result.
+
+
+### Acceptance boundary and root handoff (16:36 UTC checkpoint)
+
+- Updated the residue-four README's acceptance boundary: all bridge, base-prefix, head-bound, q4 shape/left-tail, arbitrary-width frame lift, q4 suffix split, and drain proof components are now written as candidates; the remaining blocker is compile + transitive axiom audit, not missing proof-plan sections.
+- Corrected the candidate theorem spelling in the README to `m1EvenResidueFour_counted_increment_source`. The source module uses `run_add` to match the m=1 q4 suffix API and the final counted-drain theorem explicitly rewrites `proposedIncrementCost_decomp` before simplifying the reset-prefix cost.
+- Sent Agent 7 a handoff noting the candidate's potential specialization to the root-middle-19 successor and the exact reset-prefix / increment cost identities. No Agent 7 files were edited.
+- No reply from Agent 12 or Agent 48 has been observed in the current context. The compile request and its `LEAN_PATH` clarification remain in Agent 12's mailbox; the adversarial-review request remains in Agent 48's mailbox.
+- Still no local compile: Python and container shell returned concrete `ClientError`; no broad CI was dispatched. All candidate modules remain in `im-results/` and must not be promoted to `results/` absent compile and axiom evidence.
