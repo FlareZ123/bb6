@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""Reconstruct the 242 terminal residues and derive last-reset d classes.
-
-Run from any directory:
-    python3 im-results/agent6-429-last-reset-sieve/derive.py
-
-This parses exact Lean list definitions. It does not simulate BB(6); it only
-intersects the terminal sieve with the last-reset arithmetic parametrization.
-"""
+"""Reconstruct terminal survivors and intersect the last-reset equation."""
 from pathlib import Path
 import json
 import re
@@ -39,6 +32,11 @@ for match in re.finditer(
 
 extra4 = read_list(FILES["extra4"], "extra")
 extra9 = read_list(FILES["extra9"], "extra9")
+# Expansion of BB429Mod8.Allowed from im-results/agent6-harmonic429/BB429Mod8.lean.
+allowed8 = {
+    (0,0),(0,2),(1,0),(1,1),(1,2),(2,2),(3,1),(3,2),(3,3),
+    (4,2),(5,0),(5,1),(5,2),(5,3),(6,2),(7,2),(7,3),
+}
 excluded = set(excluded_parts + extra4 + extra9)
 survivors = sorted(
     16384 * j + r
@@ -75,13 +73,30 @@ for n in range(1, 18, 2):
         (((u + 3) >> n) - offset) % modulus
         for u in eligible
     })
+    after_mod8 = []
+    lifts = 16 // min(16, modulus)
+    for residue in residues:
+        possible = False
+        for k in range(lifts):
+            d = residue + k * modulus
+            if branch == 9:
+                x = (2**(n + 2) * (d + 10) + 2*d - 3*n - 25) // 4
+            else:
+                x = (2**(n + 2) * (d + 6) + 2*d - 3*n - 21) // 4
+            y = 2 * (x - d) + 1
+            if (x % 8, y % 4) in allowed8:
+                possible = True
+                break
+        if possible:
+            after_mod8.append(residue)
     rows.append({
         "n": n,
         "branch": branch,
         "modulus": modulus,
-        "eligible_survivor_count": len(eligible),
-        "distinct_d_residue_count": len(residues),
+        "terminal_sieve_count": len(residues),
+        "mod8_prestate_count": len(after_mod8),
         "d_residues_modulus": residues,
+        "d_residues_after_mod8_prestate": after_mod8,
     })
 
 constant_checks = []
@@ -108,6 +123,7 @@ result = {
         "survivor_count": len(survivors),
         "modulus": 262144,
     },
+    "root_mod8_allowed_pairs": sorted(allowed8),
     "v2_distribution_of_U_plus_3": v2_distribution,
     "constant_seed_checks": constant_checks,
     "variable_branch_d_residues": rows,
@@ -116,8 +132,12 @@ assert len(base) == 58
 assert len(excluded_parts) == 673
 assert len(extra4) == 4
 assert len(extra9) == 9
+assert len(allowed8) == 17
 assert len(survivors) == 242
 out = Path(__file__).with_name("d-residues.json")
 out.write_text(json.dumps(result, indent=2) + "\n")
-print(json.dumps(result["variable_branch_d_residues"], indent=2))
+print("n branch modulus terminal-sieve root-mod8")
+for row in rows:
+    print(row["n"], row["branch"], row["modulus"],
+          row["terminal_sieve_count"], row["mod8_prestate_count"])
 print(f"Wrote {out}")
