@@ -24,57 +24,47 @@ open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent24Q4Endpoint
 
 private theorem binDec_five_sixteen :
-    binDec 3 4 = d1 ++ d1 ++ d0 := by
-  have h1 : binDec 3 4 = d1 ++ binDec 2 2 := by
-    simpa using binDec_even 2 2 (by decide)
-  have h2 : binDec 2 2 = d1 ++ binDec 1 1 := by
-    simpa using binDec_even 1 1 (by decide)
-  have h3 : binDec 1 1 = d0 ++ binDec 0 0 := by
-    simpa using binDec_odd 0 0 (by decide)
-  simp [h1,h2,h3,binDec_zero,d1pow]
+    binDec 5 16 = d1pow 4 ++ d0 := by
+  simpa [binDec_zero,d1pow] using
+    (binDec_carryPrefix 0 0 4 (by decide))
 
 private theorem binDec_five_fifteen :
-    binDec 3 3 = d0 ++ d0 ++ d1 := by
-  have h1 : binDec 3 3 = d0 ++ binDec 2 1 := by
-    simpa using binDec_odd 2 1 (by decide)
-  have h2 : binDec 2 1 = d0 ++ binDec 1 0 := by
-    simpa using binDec_odd 1 0 (by decide)
-  have h3 : binDec 1 0 = d1 ++ binDec 0 0 := by
-    simpa using binDec_even 0 0 (by decide)
-  simp [h1,h2,h3,binDec_zero,d1pow]
+    binDec 5 15 = d0pow 4 ++ d1 := by
+  simpa [binDec_zero,d1pow] using
+    (binDec_sub_one_carryPrefix 0 0 4 (by decide))
 
 private def m2EvenSixteenSourceLeftSuffix : List Bool :=
-  markerWord 2 ++ (d0 ++ (binDec 3 4 ++ lh))
+  markerWord 2 ++ (d0 ++ (binDec 5 16 ++ lh))
 
 private def m2EvenSixteenQ4LeftSuffix : List Bool :=
-  markerWord 1 ++ (d0 ++ (binDec 3 3 ++ lh))
+  markerWord 1 ++ (d0 ++ (binDec 5 15 ++ lh))
 
 /-- The left-facing q4 word at the state-E cut. -/
 def m2EvenSixteenQ4LeftFacing (a : Nat) : List Bool :=
   [true] ++ (d1pow a ++ m2EvenSixteenQ4LeftSuffix)
 
-/-- The finite bridge sees the even-n=4 boundary, not the odd-n boundary
-used by Agent 6's 26-step m=2 bridge. -/
+/-- The finite bridge reads exactly the interval [-18,1]. -/
 def m2EvenSixteenQ4Inside (x : Int) : Bool :=
-  decide (-12 ≤ x ∧ x ≤ 2)
+  decide (-18 ≤ x ∧ x ≤ 1)
 
 def m2EvenSixteenQ4BridgeStart : FConfig :=
-  ⟨3,0,[-10,-9,-8,-7,-6,-5,-4,-1,2]⟩
+  ⟨3,0,[-16,-15,-14,-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-1]⟩
 
 def m2EvenSixteenQ4BridgeEnd : FConfig :=
-  ⟨4,2,[1,-1,-4,-7,-10,-11,-12,2]⟩
+  ⟨4,2,[-18,-17,-16,-13,-10,-7,-4,-1,1]⟩
 
 theorem m2EvenSixteenQ4Bridge_exact :
-    fRun tm2 50 m2EvenSixteenQ4BridgeStart =
+    fRun tm2 74 m2EvenSixteenQ4BridgeStart =
       some m2EvenSixteenQ4BridgeEnd := by
   decide
 
 theorem m2EvenSixteenQ4Bridge_heads :
-    (List.range 50).all (fun k =>
+    (List.range 74).all (fun k =>
       match fRun tm2 k m2EvenSixteenQ4BridgeStart with
       | none => true
       | some f => m2EvenSixteenQ4Inside f.head) = true := by
   decide
+
 
 /-- The post-sweep source suffix, indexed from the new D head. -/
 private theorem m2EvenSixteenSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
@@ -106,7 +96,7 @@ private theorem m2EvenSixteenSweptLeftCell (a b : Nat) (h : Int) (k : Nat) :
   rw [hcoord,hpres]
   simpa [T] using m2EvenSixteenSourceLeftAt a b h k
 
-/-- Exact input match for the 50-step bridge after sweeping the 3*a+2
+/-- Exact input match for the 74-step bridge after sweeping the 3*a+2
 leading one-blocks. -/
 theorem m2EvenSixteenQ4Bridge_input_match (a b : Nat) (h : Int) :
     ∀ y, m2EvenSixteenQ4Inside y = true →
@@ -114,7 +104,7 @@ theorem m2EvenSixteenQ4Bridge_input_match (a b : Nat) (h : Int) :
         (h-((3*a+2 : Nat) : Int)+y) =
           decide (y ∈ m2EvenSixteenQ4BridgeStart.marked) := by
   intro y hy
-  have hyb : -12 ≤ y ∧ y ≤ 2 := by
+  have hyb : -18 ≤ y ∧ y ≤ 1 := by
     simpa [m2EvenSixteenQ4Inside] using hy
   by_cases hy0 : y ≤ 0
   · let k : Nat := Int.toNat (-y)
@@ -130,33 +120,27 @@ theorem m2EvenSixteenQ4Bridge_input_match (a b : Nat) (h : Int) :
         sideBit m2EvenSixteenSourceLeftSuffix (2+k) =
           decide (y ∈ m2EvenSixteenQ4BridgeStart.marked) := by
       have hyCases :
-          y = -12 ∨ y = -11 ∨ y = -10 ∨ y = -9 ∨ y = -8 ∨
-          y = -7 ∨ y = -6 ∨ y = -5 ∨ y = -4 ∨ y = -3 ∨
-          y = -2 ∨ y = -1 ∨ y = 0 := by omega
-      rcases hyCases with h12 | h11 | h10 | h9 | h8 | h7 | h6 |
-          h5 | h4 | h3 | h2 | h1 | h0
+          y = -18 ∨ y = -17 ∨ y = -16 ∨ y = -15 ∨ y = -14 ∨
+          y = -13 ∨ y = -12 ∨ y = -11 ∨ y = -10 ∨ y = -9 ∨
+          y = -8 ∨ y = -7 ∨ y = -6 ∨ y = -5 ∨ y = -4 ∨
+          y = -3 ∨ y = -2 ∨ y = -1 ∨ y = 0 := by omega
+      rcases hyCases with h18 | h17 | h16 | h15 | h14 | h13 |
+          h12 | h11 | h10 | h9 | h8 | h7 | h6 | h5 | h4 |
+          h3 | h2 | h1 | h0
       all_goals subst y
       all_goals simp [k,m2EvenSixteenSourceLeftSuffix,markerWord,d0,d1,lh,
         binDec_five_sixteen,sideBit,m2EvenSixteenQ4BridgeStart]
     exact hleft.trans hbits
-  · have hyCases : y = 1 ∨ y = 2 := by omega
-    rcases hyCases with h1 | h2
-    · subst y
-      have hleft := sweptLeft_leftmost (3*a+1)
-        (s1Config 5 16 2 a 0 b h).tape h
-      have hcoord :
-          h-((3*a+2 : Nat) : Int)+1 =
-            h-((3*a+1 : Nat) : Int) := by omega
-      rw [hcoord]
-      simpa [m2EvenSixteenQ4BridgeStart] using hleft
-    · subst y
-      have hleft := sweptLeft_block (3*a+2) (3*a)
-        (s1Config 5 16 2 a 0 b h).tape h (by omega)
-      have hcoord :
-          h-((3*a+2 : Nat) : Int)+2 =
-            h-((3*a : Nat) : Int) := by omega
-      rw [hcoord]
-      simpa [m2EvenSixteenQ4BridgeStart] using hleft
+  · have hy1 : y = 1 := by omega
+    subst y
+    have hleft := sweptLeft_leftmost (3*a+1)
+      (s1Config 5 16 2 a 0 b h).tape h
+    have hcoord :
+        h-((3*a+2 : Nat) : Int)+1 =
+          h-((3*a+1 : Nat) : Int) := by omega
+    rw [hcoord]
+    simpa [m2EvenSixteenQ4BridgeStart] using hleft
+
 
 /-- Explicit tape at the m=2,n=4 even q4 cut. -/
 def m2EvenSixteenQ4CutTape (a b : Nat) (h : Int) : Int → Bool :=
