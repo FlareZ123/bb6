@@ -100,3 +100,23 @@ This is the exact structural reason the universal LBinDec H-run is relevant: it 
 The fixed setup's tape transformation is also constant: it changes the 14-cell window `hN-13,...,hN) from `11111111110010` to `01111111111111` (in increasing coordinate order), while leaving the quotient head cell `hH=hN-14` untouched. This explicitly establishes the blank right neighbour required by the H-run.
 
 The 14-step postlude has a simple independent decomposition: `counted_right_sweep_B 4` consumes the first 12 ones and writes `001` four times; then B1 on the 13th one writes 0 and moves to F, and F0 on the final zero writes 1 and moves to E. Hence the input `11111111111110` becomes `00100100100101` exactly.
+
+
+## Binary-counter identities already present in S1Encoder
+
+The binary part of the proof does not require a new encoding theorem. Existing lemmas in `im-results/agent8-s1-encoder/S1Encoder.lean` give exactly the required source/target factorization.
+
+Choose `q,i` with `k=(2*q+1)*2^i`, using `exists_odd_factor`; `v2_of_odd_factorization` identifies `i=v2(k)). Put `ell=L-i-4`. Under the source bound, `q<2^ell). Then:
+
+- `binDec_mulpow2` with three low blocks gives
+  `binDec L (8*k) = d1pow 3 ++ binDec (L-3) k`.
+- `binDec_carryPrefix` gives
+  `binDec (L-3) k = d1pow i ++ d0 ++ binDec ell q`.
+- `binDec_sub_one_carryPrefix` gives
+  `binDec L (8*k-1) = d0pow (i+3) ++ d1 ++ binDec ell q`,
+  which reassociates to
+  `d0pow 3 ++ d0pow i ++ d1 ++ binDec ell q`.
+
+Thus the H-run's exact transformation
+`d1pow i ++ d0 ++ tail -> d0pow i ++ d1 ++ tail`
+is precisely the quotient part of the binary decrement from `8*k` to `8*k-1`; the fixed setup/postlude account for the outer three low blocks and marker framing. This is the key source/target word identity needed to compose the machine phases. No new arithmetic conjecture is involved; only the bounds and list reassociations need to be discharged in Lean.
