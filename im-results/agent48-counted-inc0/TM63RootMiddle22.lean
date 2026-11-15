@@ -80,9 +80,6 @@ theorem tm63_blank_reaches_after_middle22 :
       8*tm63Middle20ResidueK+2 < 2^tm63Length1 := by
     rw [hinput]
     omega
-  have hA20 : 0 < tm63MiddleAfter20A := by
-    unfold tm63MiddleAfter20A tm63MiddleAfter19A
-    omega
   have ha : 0 < tm63MiddleAfter21A := by
     unfold tm63MiddleAfter21A
     omega
