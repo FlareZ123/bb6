@@ -127,7 +127,7 @@ private theorem m0EvenFourteen_binDec_source
   have h4 : binDec (L-3) (4*k+1) =
       d0 ++ binDec (L-4) (2*k) := by
     rw [show L-3 = (L-4)+1 by omega]
-    exact binDec_odd (L-4) (4*k+1) hb.2.2.2.1
+    exact binDec_odd (L-4) (2*k) hb.2.2.2.1
   have h5 : binDec (L-4) (2*k) =
       d1 ++ binDec (L-5) k := by
     rw [show L-4 = (L-5)+1 by omega]
@@ -155,7 +155,7 @@ private theorem m0EvenFourteen_binDec_target
   have h4 : binDec (L-3) (4*k+1) =
       d0 ++ binDec (L-4) (2*k) := by
     rw [show L-3 = (L-4)+1 by omega]
-    exact binDec_odd (L-4) (4*k+1) hb.2.2.2.1
+    exact binDec_odd (L-4) (2*k) hb.2.2.2.1
   have h5 : binDec (L-4) (2*k) =
       d1 ++ binDec (L-5) k := by
     rw [show L-4 = (L-5)+1 by omega]
