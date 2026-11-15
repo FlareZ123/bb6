@@ -149,7 +149,7 @@ private theorem no_y3_x314_parent0 (v : Nat) :
     (192*v+116) (160*v+96)
     (by omega) (by omega) (by omega) (by omega)).mp hQ'
   have hR' : BB6.Agent3.CReach (352*v+210) (80*v+47) := by
-    have hx : (192*v+116+160*v+96-2)=352*v+210 := by omega
+    have hx : ((192*v+116)+(160*v+96)-2)=352*v+210 := by omega
     have hy : (160*v+96-2)/2=80*v+47 := by omega
     simpa only [hx,hy] using hR
   exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
@@ -163,7 +163,7 @@ private theorem no_y3_x314_parent1 (v : Nat) :
     (64*v+37) (224*v+136)
     (by omega) (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (288*v+171) (112*v+67) := by
-    have hx : (64*v+37+224*v+136-2)=288*v+171 := by omega
+    have hx : ((64*v+37)+(224*v+136)-2)=288*v+171 := by omega
     have hy : (224*v+136-2)/2=112*v+67 := by omega
     simpa only [hx,hy] using hQ
   exact BB6.Agent11High.blank_no_odd_sum_two
@@ -177,7 +177,7 @@ private theorem no_y3_x314_parent2 (v : Nat) :
     (16*v+7) (248*v+148)
     (by omega) (by omega) (by omega) (by omega)).mp hr
   have hQ' : BB6.Agent3.CReach (264*v+153) (124*v+73) := by
-    have hx : (16*v+7+248*v+148-2)=264*v+153 := by omega
+    have hx : ((16*v+7)+(248*v+148)-2)=264*v+153 := by omega
     have hy : (248*v+148-2)/2=124*v+73 := by omega
     simpa only [hx,hy] using hQ
   exact BB6.Agent11High.blank_no_odd_sum_two
