@@ -54,8 +54,10 @@ and blanks elsewhere. The finite original-table bridge is:
 - after 53 moves: state 4 at head 5, with one-cell support `{-12,-11,-10,-7,-4,-1,1,2,3,4,5}` (the exact ordered `FConfig` list is recorded in the Lean file);
 - every head during the 53-move bridge lies in `[-12,5]`.
 
-The exact finite transition is recorded as a `decide` theorem candidate in
-`M1EvenResidueFourBridge.lean`.
+The exact finite transition and head-confinement theorem candidates are in
+`M1EvenResidueFourBridge.lean`. The base `L=3,n=4` q4-prefix run candidate is in
+`M1EvenResidueFourQ4PrefixRun.lean`; it composes the counted left sweep, bridge,
+and state-4 scan. Both modules remain uncompiled.
 
 The bridge is followed by a state-4 one-scan of `3*a` moves. Thus the q4-prefix
 cost is `9*a+3 + 53 + 3*a = 56+12*a`, ending in state 4 at head `h+4`.
