@@ -1,5 +1,5 @@
 import M0OddQ4Prefix
-import Mathlib
+import Lean.Elab.Tactic.Omega
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -31,27 +31,30 @@ open BB6Coverage.Agent24M0OddQ4Prefix
 
 set_option maxHeartbeats 3000000
 
+private theorem pow2_mul_pow (n k c : Nat) (hc : 2^k = c) :
+    2^(n+k) = c*2^n := by
+  calc
+    2^(n+k) = 2^n * 2^k := Nat.pow_add 2 n k
+    _ = 2^n * c := by rw [hc]
+    _ = c * 2^n := Nat.mul_comm _ _
+
 /-- Four low source blocks for n=16*r+7. -/
 theorem binDec_residue7 (L r : Nat) (hL : 4 ≤ L)
     (hbound : 16*r+7 < 2^L) :
     binDec L (16*r+7) =
       d0 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) r := by
   have hpow4 : 2^L = 16 * 2^(L-4) := by
-    conv_lhs => rw [show L = (L-4)+4 by omega, Nat.pow_add]
-    norm_num
-    ring
+    conv_lhs => rw [show L = (L-4)+4 by omega]
+    exact pow2_mul_pow (L-4) 4 16 (by decide)
   have hpow3 : 2^(L-1) = 8 * 2^(L-4) := by
-    rw [show L-1 = (L-4)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-1 = (L-4)+3 by omega]
+    exact pow2_mul_pow (L-4) 3 8 (by decide)
   have hpow2 : 2^(L-2) = 4 * 2^(L-4) := by
-    rw [show L-2 = (L-4)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-2 = (L-4)+2 by omega]
+    exact pow2_mul_pow (L-4) 2 4 (by decide)
   have hpow1 : 2^(L-3) = 2 * 2^(L-4) := by
-    rw [show L-3 = (L-4)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-3 = (L-4)+1 by omega]
+    exact pow2_mul_pow (L-4) 1 2 (by decide)
   have hr : r < 2^(L-4) := by
     rw [hpow4] at hbound
     omega
@@ -87,21 +90,17 @@ theorem binDec_residue6 (L r : Nat) (hL : 4 ≤ L)
     binDec L (16*r+6) =
       d1 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) r := by
   have hpow4 : 2^L = 16 * 2^(L-4) := by
-    conv_lhs => rw [show L = (L-4)+4 by omega, Nat.pow_add]
-    norm_num
-    ring
+    conv_lhs => rw [show L = (L-4)+4 by omega]
+    exact pow2_mul_pow (L-4) 4 16 (by decide)
   have hpow3 : 2^(L-1) = 8 * 2^(L-4) := by
-    rw [show L-1 = (L-4)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-1 = (L-4)+3 by omega]
+    exact pow2_mul_pow (L-4) 3 8 (by decide)
   have hpow2 : 2^(L-2) = 4 * 2^(L-4) := by
-    rw [show L-2 = (L-4)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-2 = (L-4)+2 by omega]
+    exact pow2_mul_pow (L-4) 2 4 (by decide)
   have hpow1 : 2^(L-3) = 2 * 2^(L-4) := by
-    rw [show L-3 = (L-4)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-3 = (L-4)+1 by omega]
+    exact pow2_mul_pow (L-4) 1 2 (by decide)
   have hr : r < 2^(L-4) := by
     rw [hpow4] at hbound
     omega
@@ -411,6 +410,10 @@ private theorem m0Odd_base_prefix_head_bound
     have hc := s1Config_right_cell 3 5 0 a 0 b h 0
     simpa [T,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hc
   have hSweep := counted_left_sweep N T h hOn hright
+  have hSweep' :
+      run tm2 (3*N) (s1Config 3 5 0 a 0 b h) =
+        some (⟨3,hN,T1⟩ : Config) := by
+    simpa [N,hN,T1] using hSweep
   have hmatch := m0OddQ4Bridge_input_match a b h ha
   have hBridge := m0OddQ4Bridge27At T1 hN hmatch
   have hBridge' :
@@ -468,7 +471,7 @@ private theorem m0Odd_base_prefix_head_bound
     · let j := k-p1
       have hj : j<27 := by dsimp [j,p1] at *; omega
       have hkEq : k=p1+j := by dsimp [j,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       have hlow := m0Odd_bridge_prefix_lower T1 hN hmatch j hj d hd
       dsimp [hN,N] at *
@@ -476,7 +479,7 @@ private theorem m0Odd_base_prefix_head_bound
     · let j := k-p2
       have hj : j<3*(a-1) := by dsimp [j,p2,p1,N] at *; omega
       have hkEq : k=p1+(27+j) := by dsimp [j,p2,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge'] at hd
       simp only [Option.bind_some] at hd
