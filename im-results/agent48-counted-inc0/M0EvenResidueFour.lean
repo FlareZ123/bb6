@@ -516,6 +516,7 @@ theorem m0Even_residue4_counted_increment_source
 
 #print axioms binDec_residue4
 #print axioms binDec_residue3
+#print axioms m0Even_residue4_increment_cost_closed
 #print axioms m0Even_residue4_q4_prefix_source
 #print axioms m0Even_residue4_q4_reset_prefix_source
 #print axioms m0Even_residue4_counted_increment_source
