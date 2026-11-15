@@ -76,6 +76,9 @@ theorem tm63_blank_reaches_after_middle21 :
     tm63Length1 (16*tm63RootResidueSixK-5)
     tm63MiddleAfter20A tm63MiddleAfter20B tm63MiddleAfter20Head
     hL hn hbound ha
+  have htarget :
+      (16*tm63RootResidueSixK-5)-1 =
+        16*tm63RootResidueSixK-6 := by omega
   have hrow' :
       run tm2
         (proposedIncrementCost 0
@@ -90,7 +93,7 @@ theorem tm63_blank_reaches_after_middle21 :
         (tm63MiddleAfter20A+tm63MiddleAfter20B+1) 0
         (2^tm63MiddleAfter20B-1)
         (tm63MiddleAfter20Head+5+3*tm63MiddleAfter20B)) := by
-    simpa [tm63MiddleAfter21A,tm63MiddleAfter21B,
+    simpa [htarget,tm63MiddleAfter21A,tm63MiddleAfter21B,
       tm63MiddleAfter21Head] using hrow
   have hcomp := run_compose_local
     tm63_blank_reaches_after_middle20 hrow'
