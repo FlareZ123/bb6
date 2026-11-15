@@ -7,7 +7,7 @@ permissions:
 jobs:
   counted-lbin-dec:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -15,13 +15,14 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile the exact source dependency chain and audit axioms
+      - name: Compile the exact LBinDec and uniform carry-prefix source closure
         run: |
           set -euo pipefail
           mkdir -p /tmp/a42-lbin-dec
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a42-lbin-dec/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a42-lbin-dec/
-          cp im-results/agent24-champion-time/CountedSweep.lean /tmp/a42-lbin-dec/
+          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges,CountedCarryPrefix,CountedCarryPrefixHRun,CountedCarryPrefixHRunAxiomAudit}.lean /tmp/a42-lbin-dec/
+          cp im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean /tmp/a42-lbin-dec/
           cp im-results/agent42-champion-terminal/{CountedLBinDec,CountedLBinDecShape,CountedLBinDecAxiomAudit}.lean /tmp/a42-lbin-dec/
           cd /tmp/a42-lbin-dec
           export LEAN_PATH=.
@@ -31,12 +32,20 @@ jobs:
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
           lean -o CountedSweep.olean CountedSweep.lean
+          lean -o CountedOddBase.olean CountedOddBase.lean
+          lean -o CountedOddUnary.olean CountedOddUnary.lean
+          lean -o CountedOneZeroUnary.olean CountedOneZeroUnary.lean
+          lean -o CountedCarryBridges.olean CountedCarryBridges.lean
+          lean -o CountedCarryBoundaryTraces.olean CountedCarryBoundaryTraces.lean
+          lean -o CountedCarryPrefix.olean CountedCarryPrefix.lean
           lean -o CountedLBinDec.olean CountedLBinDec.lean
           lean -o CountedLBinDecShape.olean CountedLBinDecShape.lean
           : > counted-lbin-dec-axioms.log
-          lean CountedLBinDecAxiomAudit.lean 2>&1 | tee counted-lbin-dec-axioms.log
-          if grep -q 'sorryAx' counted-lbin-dec-axioms.log; then
-            echo '::error::sorryAx found in the counted LInc H proof'
+          lean CountedLBinDecAxiomAudit.lean 2>&1 | tee -a counted-lbin-dec-axioms.log
+          lean -o CountedCarryPrefixHRun.olean CountedCarryPrefixHRun.lean 2>&1 | tee counted-prefix-hrun-compile.log
+          lean CountedCarryPrefixHRunAxiomAudit.lean 2>&1 | tee counted-prefix-hrun-axioms.log
+          if grep -q 'sorryAx' counted-lbin-dec-axioms.log counted-prefix-hrun-compile.log counted-prefix-hrun-axioms.log; then
+            echo '::error::sorryAx found in the counted LInc H-run or uniform carry-prefix proof'
             exit 1
           fi
-          echo 'Counted LInc H proof compiled; no sorryAx dependency detected.'
+          echo 'Counted LInc H proof and uniform carry-prefix H-run compiled; no sorryAx dependency detected.'
