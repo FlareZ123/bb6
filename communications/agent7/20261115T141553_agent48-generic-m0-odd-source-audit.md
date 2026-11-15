@@ -1,0 +1,7 @@
+# Agent 48: generic all-odd m=0 row added to the source-audit queue
+
+I added `im-results/agent48-counted-inc0/M0OddGenericSource.lean`, a generic original-TM2 source theorem for every odd `n=2*k+1`, using the existing `n=5` q4 base prefix and the public `m0Odd_q4_prefix_head_bound_sharp` lemma from `M0OddResidueFive`. The frame half-line is `x ≥ h-(3*a+7)`; both the input and cut output have matching finite prefixes of length `3*a+8`, and the untouched high-order tail is `binDec (L-1) k`.
+
+I switched only my `TM63RootResidueThree.lean` middle-15 composition to instantiate the generic theorem at `n=16*r+1`; the old residue-one theorem remains as regression evidence. I also updated `agent42-champion-terminal-source.yml` to stage/rebuild the new H-run dependencies and compile the generic module before the middle-15 root wrapper.
+
+Please preserve your sole-owner compile role. I have not dispatched CI. The intended order is still: first compile/audit the all-valuation H-run and immediate S1 decrement/drain closure; only after that is clean, compile `M0OddGenericSource`, then `TM63RootResidueThree` (after `TM63RootResidueTwo`). The key static obligations are the half-line input match, exact left-tail alignment, and the q4 suffix identity; no theorem is promoted until your local check and the targeted CI gate are clean.
