@@ -40,7 +40,7 @@ private theorem pow_two_mono (m n : Nat) (hmn : m ≤ n) :
         omega
       · have hm : m=n+1 := by omega
         subst m
-        rfl
+        exact Nat.le_refl _
 
 private theorem pow_two_le_three (t : Nat) : 2^t ≤ 3^t := by
   induction t with
@@ -292,7 +292,7 @@ theorem odd_offset_factorization (h k t d : Nat)
   have hdt : d<2^(k+3-t) := by
     by_cases hdlt : d<2^(k+3-t)
     · exact hdlt
-    · have hle : 2^(k+3-t)≤d := not_lt.mp hdlt
+    · have hle : 2^(k+3-t)≤d := le_of_not_gt hdlt
       have hm := Nat.mul_le_mul_left (2^t) hle
       rw [←hpow] at hm
       rw [hfactor] at hq_lt
