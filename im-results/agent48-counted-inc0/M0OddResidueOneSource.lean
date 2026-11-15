@@ -89,7 +89,7 @@ def m0OddResidueOneLeftFacing (L k a : Nat) : List Bool :=
 
 /-- The prefix's exact read half-line is x >= h-3a-6. -/
 def m0OddResidueOneInside (a : Nat) (h : Int) : Int → Bool :=
-  fun x => decide (h-((3*a:Int))-6 ≤ x)
+  fun x => decide (h-((3*a+6:Int)) ≤ x)
 
 /-- The n=8*k+1 cut preserves its own unread left tail and reuses the
 base n=5 q4 cut on the readable half-line. -/
