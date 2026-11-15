@@ -32,7 +32,7 @@ private theorem pow_two_mono (m n : Nat) (hmn : m ≤ n) :
   | zero =>
       have : m=0 := by omega
       subst m
-      rfl
+      exact Nat.le_refl _
   | succ n ih =>
       by_cases h : m ≤ n
       · have hp := ih h
@@ -302,7 +302,7 @@ theorem odd_offset_factorization (h k t d : Nat)
     cases he : k+3-t with
     | zero => omega
     | succ e =>
-        simp [Nat.pow_succ,Nat.mul_mod]
+        simp [Nat.pow_succ]
   have hodd : (2^(k+3-t)-d)%2=1 := by omega
   have hsum :
       2^t*(2^(k+3-t)-d)+2^t*d=2^(k+3) := by
