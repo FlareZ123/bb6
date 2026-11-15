@@ -1,5 +1,6 @@
 import TM63RootResidueThree
 import M2EvenResidueSixteen
+import M1OddResidueSeven
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -156,6 +157,88 @@ theorem tm63_blank_reaches_after_middle16 :
     tm63_blank_reaches_after_middle15 hrow'
   simpa [tm63MiddleFirst16Moves,tm63MiddleAfter16A,
     tm63MiddleAfter16B,tm63MiddleAfter16Head] using hcomp
+
+
+/-! The next marker-one odd row is also root-compatible: with r=2k+1,
+16*r-1 = 8*(4*k+1)+7.  This is the exact input family of
+Agent 41's m=1, n=8*q+7 source theorem. -/
+
+def tm63RootResidueSixteenQ : Nat :=
+  4*(tm63RootResidueSixK/2)+1
+
+private theorem tm63_root_residue16_m1_bound :
+    8*tm63RootResidueSixteenQ+7 < 2^tm63Length1 := by
+  have hroot := tm63_index1_lt_pow_length1
+  rw [tm63_root_index_eq_16r15] at hroot
+  have hsplit := tm63_root_residue16_split
+  dsimp [tm63RootResidueSixteenQ]
+  rw [hsplit]
+  omega
+
+private theorem tm63_middle_after16_a_pos :
+    0 < tm63MiddleAfter16A := by
+  unfold tm63MiddleAfter16A
+  omega
+
+/-- Exact parameters after the m=1, n=16*r-1 counted increment. -/
+def tm63MiddleAfter17A : Nat :=
+  tm63MiddleAfter16A+tm63MiddleAfter16B+2
+
+def tm63MiddleAfter17B : Nat :=
+  2^tm63MiddleAfter16B-1
+
+def tm63MiddleAfter17Head : Int :=
+  tm63MiddleAfter16Head+5+3*tm63MiddleAfter16B
+
+def tm63MiddleFirst17Moves : Nat :=
+  tm63MiddleFirst16Moves +
+    proposedIncrementCost 1 (16*tm63RootResidueSixK-1)
+      tm63MiddleAfter16A tm63MiddleAfter16B
+
+/-- Candidate authentic blank-root source prefix through middle row 17.
+The m=1,n=8*q+7 row is instantiated at q=4*k+1 after the
+m=2,n=32*k+16 row. -/
+theorem tm63_blank_reaches_after_middle17 :
+    run tm2 tm63MiddleFirst17Moves blank =
+      some (s1Config tm63Length1
+        (16*tm63RootResidueSixK-2) 0
+        tm63MiddleAfter17A 0 tm63MiddleAfter17B
+        tm63MiddleAfter17Head) := by
+  have hsplit := tm63_root_residue16_split
+  have hinput :
+      8*tm63RootResidueSixteenQ+7 =
+        16*tm63RootResidueSixK-1 := by
+    dsimp [tm63RootResidueSixteenQ]
+    rw [hsplit]
+    omega
+  have htarget :
+      8*tm63RootResidueSixteenQ+6 =
+        16*tm63RootResidueSixK-2 := by
+    dsimp [tm63RootResidueSixteenQ]
+    rw [hsplit]
+    omega
+  have hrow := m1ResidueSeven_counted_increment_source_symbolic
+    tm63Length1 tm63RootResidueSixteenQ
+    tm63MiddleAfter16A tm63MiddleAfter16B tm63MiddleAfter16Head
+    tm63_root_length_ge_five tm63_root_residue16_m1_bound
+    tm63_middle_after16_a_pos
+  have hrow' :
+      run tm2
+        (proposedIncrementCost 1 (16*tm63RootResidueSixK-1)
+          tm63MiddleAfter16A tm63MiddleAfter16B)
+        (s1Config tm63Length1 (16*tm63RootResidueSixK-1) 1
+          tm63MiddleAfter16A 0 tm63MiddleAfter16B
+          tm63MiddleAfter16Head) =
+      some (s1Config tm63Length1
+        (16*tm63RootResidueSixK-2) 0
+        (tm63MiddleAfter16A+tm63MiddleAfter16B+2) 0
+        (2^tm63MiddleAfter16B-1)
+        (tm63MiddleAfter16Head+5+3*tm63MiddleAfter16B)) := by
+    simpa [hinput,htarget,nextExponent,nextRight] using hrow
+  have hcomp := run_compose_local
+    tm63_blank_reaches_after_middle16 hrow'
+  simpa [tm63MiddleFirst17Moves,tm63MiddleAfter17A,
+    tm63MiddleAfter17B,tm63MiddleAfter17Head] using hcomp
 
 #print axioms tm63_root_residue16_r_odd
 #print axioms tm63_blank_reaches_after_middle16
