@@ -64,3 +64,28 @@ Related source candidate: `GapScaleResidualSource.lean` proves a separate scalar
 
 The leading-map identities and growth inequalities are formalized in the self-contained Lean-core file `ProjectiveGapLyapunov.lean`. It was compiled locally with Lean 4.36.0-rc2. The file proves the scaled integer identities and their nonnegativity consequences; it does not formalize the exact affine root transitions or the root-specific gap invariant.
 
+## Sector-adapted form and connection to the exact scalar potential
+
+There is a more natural common form:
+```
+P₀ = [[42,33],[33,42]]
+W₀(R,L) = 2 [R L] P₀ [R L]ᵀ
+        = 75(R+L)² + 9(R-L)².
+```
+For the same leading maps, exact multiplication gives
+```
+W₀(5 A v) - 25 W₀(v) = 600(R+4L)²,
+W₀(5 B v) - 25 W₀(v) = 600(4R+L)².
+```
+Thus both leading maps are nondecreasing in this norm, with different rank-one gain directions. In the corresponding unshifted sector coordinates:
+- old-left: `R=-15m-4g, L=g`;
+- old-right: `R=g, L=-15m-4g`.
+
+In either sector,
+```
+W₀(R,L) = 900 Q(g,m),   Q(g,m)=g²+9gm+21m².
+```
+So this projective form is exactly the gap-coordinate representation of the existing scalar `quadraticGap` potential from `GapScaleResidualSource.lean`, not an independent root invariant. The source-exact theorem there proves `Q(g',m') ≥ Q(g,m)+6m²` for canonical-ray transitions. The new Lean file formalizes the leading matrix identities and the coordinate equivalence; it does not re-prove the affine-correction theorem.
+
+The earlier `P=[[91,64],[64,56]]` form remains an auxiliary alternative: it gives a nondecreasing far-left map and a globally strict near-left map. The sector-adapted `P₀` is the more natural bridge to the existing exact scalar analysis.
+
