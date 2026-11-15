@@ -41,4 +41,5 @@ jobs:
           lean -o "$AG43/CountedLastResetDraft.olean" "$AG43/CountedLastResetDraft.lean"
           lean -o "$AG43/LastResetStrengthSource.olean" "$AG43/LastResetStrengthSource.lean"
           lean -o "$AG43/CountedWallStrongGateSource.olean" "$AG43/CountedWallStrongGateSource.lean"
+          lean -o "$AG43/HighDepthRestartSource.olean" "$AG43/HighDepthRestartSource.lean"
           lean "$AG43/WallTelescopingSource.lean"
