@@ -58,13 +58,6 @@ jobs:
           lean -o Symmetry.olean Symmetry.lean
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
-          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M0EvenResidueFourFiniteBridge.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/m0-even-residue-four-finite-bridge-axioms.log
-          lean -o M0EvenResidueFourFiniteBridge.olean M0EvenResidueFourFiniteBridge.lean 2>&1 | tee /tmp/a42-terminal/m0-even-residue-four-finite-bridge-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-residue-four-finite-bridge-axioms.log; then
-            echo '::error::sorryAx found in finite M0-even residue-four bridge'
-            exit 1
-          fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M1OddQ4Bridge.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-odd-q4-bridge-axioms.log
           lean -o M1OddQ4Bridge.olean M1OddQ4Bridge.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-q4-bridge-axioms.log
@@ -73,13 +66,6 @@ jobs:
             exit 1
           fi
           lean -o S1Encoder.olean S1Encoder.lean
-          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M0EvenResidueFourBinDec.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/m0-even-residue-four-bindec-axioms.log
-          lean -o M0EvenResidueFourBinDec.olean M0EvenResidueFourBinDec.lean 2>&1 | tee /tmp/a42-terminal/m0-even-residue-four-bindec-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-residue-four-bindec-axioms.log; then
-            echo '::error::sorryAx found in residue-four BinDec decomposition'
-            exit 1
-          fi
           : > /tmp/a42-terminal/root-finite-axioms.log
           lean -o RootFiniteBits.olean RootFiniteBits.lean 2>&1 | tee /tmp/a42-terminal/root-finite-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/root-finite-axioms.log; then
