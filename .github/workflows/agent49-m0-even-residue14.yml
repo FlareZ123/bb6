@@ -1,0 +1,94 @@
+name: Agent 49 m0 residue-14 q4 prefix Lean verification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Stage exact source dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a49-m0-residue14
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a49-m0-residue14/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a49-m0-residue14/
+          base64 --decode im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64 | gzip --decompress > /tmp/a49-m0-residue14/UniformTM63.lean
+          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,ChampionModular,CostRecurrence,CountPattern,Q4RightEndpoint}.lean /tmp/a49-m0-residue14/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a49-m0-residue14/
+          cp im-results/agent8-counted-reset/{CountedReset,Q4Suffix}.lean /tmp/a49-m0-residue14/
+          cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a49-m0-residue14/
+          cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a49-m0-residue14/
+          cp im-results/agent24-champion-time/M0EvenQ4Bridge.lean /tmp/a49-m0-residue14/
+          cp im-results/agent49-m0-even-residue14/{M0EvenFourteenQ4Bridge,M0EvenFourteenQ4Prefix}.lean /tmp/a49-m0-residue14/
+      - name: Compile residue-14 bridge and q4 prefix
+        run: |
+          set -euo pipefail
+          cd /tmp/a49-m0-residue14
+          export LEAN_PATH=.
+          lean --version
+          lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          lean -o UniformTM63.olean UniformTM63.lean
+          lean -o CountedSweep.olean CountedSweep.lean
+          lean -o CountedOddBase.olean CountedOddBase.lean
+          lean -o S1Encoder.olean S1Encoder.lean
+          lean -o ChampionModular.olean ChampionModular.lean
+          lean -o CostRecurrence.olean CostRecurrence.lean
+          lean -o CountPattern.olean CountPattern.lean
+          lean -o CountedReset.olean CountedReset.lean
+          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean
+          lean -o CountedRst1Prime.olean CountedRst1Prime.lean
+          lean -o Q4Suffix.olean Q4Suffix.lean
+          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
+          : > residue14-bridge-axioms.log
+          if ! lean -o M0EvenQ4Bridge.olean M0EvenQ4Bridge.lean > residue14-bridge-axioms.log 2>&1; then
+            echo '## Canonical m0-even bridge compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 160 residue14-bridge-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat residue14-bridge-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' residue14-bridge-axioms.log; then
+            echo '::error::sorryAx in canonical m0-even bridge'
+            exit 1
+          fi
+          if ! lean -o M0EvenFourteenQ4Bridge.olean M0EvenFourteenQ4Bridge.lean >> residue14-bridge-axioms.log 2>&1; then
+            echo '## Residue-14 bridge input-match compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 180 residue14-bridge-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat residue14-bridge-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' residue14-bridge-axioms.log; then
+            echo '::error::sorryAx in residue-14 bridge input match'
+            exit 1
+          fi
+          : > residue14-prefix-axioms.log
+          if ! lean -o M0EvenFourteenQ4Prefix.olean M0EvenFourteenQ4Prefix.lean > residue14-prefix-axioms.log 2>&1; then
+            echo '## Residue-14 q4 prefix compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 220 residue14-prefix-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat residue14-prefix-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' residue14-prefix-axioms.log; then
+            echo '::error::sorryAx in residue-14 q4 prefix'
+            exit 1
+          fi
+          echo '## m=0,n=32k+14 base q4 prefix' >> "$GITHUB_STEP_SUMMARY"
+          echo 'The shared 39-step bridge, swept input match, base q4 prefix, right shape, far tail, left-facing stream and suffix target-left identity compile without sorryAx.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload residue-14 Lean diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m0-residue14-lean-${{ github.run_id }}
+          path: |
+            /tmp/a49-m0-residue14/residue14-bridge-axioms.log
+            /tmp/a49-m0-residue14/residue14-prefix-axioms.log
