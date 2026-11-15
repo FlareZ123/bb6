@@ -1,0 +1,35 @@
+name: Agent 44 Q-state index Hensel source check
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Branch or commit containing the Q-state selector under audit
+        required: true
+        type: string
+        default: agent44/q-state-index-hensel-20261113
+permissions:
+  contents: read
+jobs:
+  verify-qstate-index-hensel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact Q-state selector against trusted depth dependencies
+        run: |
+          set -eu
+          g="im-results/agent7-fatal-density"
+          a="im-results/agent44-746-rank"
+          export LEAN_PATH="$g:$a"
+          lean --version
+          lean -o "$g/SignedRayPeriod.olean" "$g/SignedRayPeriod.lean"
+          lean -o "$g/RayDepthHensel.olean" "$g/RayDepthHensel.lean"
+          lean -o "$g/RayDepthResidue.olean" "$g/RayDepthResidue.lean"
+          lean -o "$a/QStateIndexHensel.olean" "$a/QStateIndexHensel.lean"
