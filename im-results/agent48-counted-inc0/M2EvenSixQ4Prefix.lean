@@ -209,7 +209,7 @@ theorem m2EvenSixQ4LeftFacingPrefixTrue (a i : Nat)
       exact sideBit_d1pow_true a (i-1) hlt
     · have heq : i-1 = 3*a := by omega
       have hlast := sideBit_append_right (d1pow a)
-        m2EvenSixQ4LeftSuffix (3*a) (by rw [d1pow_length])
+        m2EvenSixQ4LeftSuffix (3*a) (by rw [d1pow_length]; omega)
       rw [heq,hlast] at hside
       rw [hside]
       simp [m2EvenSixQ4LeftSuffix,markerWord,sideBit]
@@ -227,8 +227,10 @@ theorem m2EvenSixQ4LeftFacingBridgeBit (a j : Nat)
       sideBit (m2EvenSixQ4LeftFacing a) (3*a+2+j) =
         sideBit (d1pow a ++ m2EvenSixQ4LeftSuffix) (3*a+1+j) := by
     rw [hface]
-    exact sideBit_append_right [true]
+    have happ := sideBit_append_right [true]
       (d1pow a ++ m2EvenSixQ4LeftSuffix) (3*a+2+j) (by simp; omega)
+    have hidx : 3*a+2+j-1 = 3*a+1+j := by omega
+    simpa [hidx] using happ
   have hsecond :
       sideBit (d1pow a ++ m2EvenSixQ4LeftSuffix) (3*a+1+j) =
         sideBit m2EvenSixQ4LeftSuffix (j+1) := by
