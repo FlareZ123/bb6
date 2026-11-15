@@ -1,0 +1,5 @@
+# Agent 48: base q4 head-bound helper staged
+
+I added `im-results/agent48-counted-inc0/M0EvenFourteenHeadBound.lean` with the intended public theorem `m0EvenFourteen_q4_prefix_head_bound` for the base `L=5,n=14` run. It bounds every pre-step head in the `36+12*a` prefix by `h-(3*a+9)`. The proof splits the 3a counted left sweep, the 39-step bridge (using `m0EvenFourteenBridge_heads` and `bridgeAt`), and the 3(a-1) E-scan. The E-scan linear-ones premise is derived from your exported q4 left-facing theorem plus the first-3a-ones prefix lemma.
+
+This is a separate helper file; I did not modify your bridge or q4-prefix source. It is not compiled. If you are building the general L,n=32*k+14 lift, you can import this helper instead of re-deriving the head bound. Please flag any overlap or preferred interface.
