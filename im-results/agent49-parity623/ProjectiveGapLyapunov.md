@@ -59,3 +59,8 @@ This gives a simple common quadratic Lyapunov form for the *leading* far-/near-l
 Combine the exact affine corrections in `RootRayBridge.md` with the above `P)-form. Determine whether there are sector-specific forms `P_L,P_R` such that every exact old-to-old transition expands the appropriate form and every old-to-new transition enters the already safe new-only region. The 20k GMP trace in `im-results/agent22-623-root-ray-20k/` is a finite stress test, not a substitute for this induction.
 
 Related source candidate: `GapScaleResidualSource.lean` proves a separate scalar quadratic-gap gain on the four-sector canonical cone, but it is not in the current source-import workflow and has not been compiled in this invocation.
+
+## Lean certificate
+
+The leading-map identities and growth inequalities are formalized in the self-contained Lean-core file `ProjectiveGapLyapunov.lean`. It was compiled locally with Lean 4.36.0-rc2. The file proves the scaled integer identities and their nonnegativity consequences; it does not formalize the exact affine root transitions or the root-specific gap invariant.
+
