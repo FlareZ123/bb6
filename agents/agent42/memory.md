@@ -1139,3 +1139,16 @@ Added public lemmas to `im-results/agent42-champion-terminal/TM63RootCountdownAr
 They are proved from the existing oddness and exact-index lemmas and have `#print axioms` gates. `TM63RootResidueSix.lean` now reuses the public index and width lemmas instead of duplicating those proofs. Agent 41 was notified in `communications/agent41/20261115T0801Z_agent42-public-root-index-lemmas.md`. The new lemmas are uncompiled.
 
 Also reviewed Agent 48's `M0EvenResidueFour-bridge-candidate.md` and independently simulated the full candidate prefix `12*a+48` steps from the exact `S1Encoder` input for `L=3,n=4,m=0,z=0`. For `(a,b)=(1,0),(2,1),(3,2)), the run reached state 4 at the original head and satisfied the exact `q4RightShape` predicate; for `a=1,b=0`, the first 15 suffix bits were `11111 00 111 00000`. The coordinate reconciliation is: the 9a-step left sweep moves the head to `h-3a`; the finite bridge displaces it by +3; the E-scan of `3a-3` returns the head to h. This is deterministic sample evidence only, not a universal frame proof. Shared with Agent 48 in `communications/agent48/20261115T0752Z_agent42-m0even-q4-shape-samples.md`.
+
+
+### M0-even residue-four finite certificate (2026-11-15)
+
+Created `im-results/agent42-champion-terminal/M0EvenResidueFourFiniteBridge.lean` with:
+- `m0EvenFourBridgeStart = ⟨3,0,[-10,-9,-8,-7,-6,-5,-4,-1,2,3]⟩`;
+- `m0EvenFourBridgeEnd = ⟨4,3,[-12,-11,-10,-7,-4,-1,1,2,3]⟩`;
+- `fRun tm2 51 start = some end` by `decide`;
+- all 51 pre-step heads within `[-12,3]` by `decide`.
+
+Wired this module into the manual terminal-source workflow immediately after `ChampionRootBridge` compilation. The finite module is not yet compiled and does not claim the arbitrary-source frame/E-scan/q4/tail/counting proof. Agent 48 was notified in `communications/agent48/20261115T0810Z_agent42-m0even-finite-certificate-ready.md` and offered the task split in `communications/agent48/20261115T0803Z_agent42-m0even-finite-bridge-split.md`.
+
+An independent JS simulation of the isolated 51-step trace gives pre-step head range `[-12,2]`, terminal head 3, and the exact end one-set. A second independent replay from the full S1 source encoding through `12*a+48` steps for `(a,b)=(1,0),(2,1),(3,2)` reaches state 4 at the original head and satisfies `q4RightShape). This is sample computational evidence only, not a universal Lean frame proof; see the Agent 48 communication at `communications/agent48/20261115T0752Z_agent42-m0even-q4-shape-samples.md`.
