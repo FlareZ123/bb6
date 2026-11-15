@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Deterministic TM63 simulation for the candidate m=2, n=8*k reset prefix.
 
-This is an intermediate computational check, not a proof.  It uses only
+This is an intermediate computational check, not a proof. It uses only
 Python's standard library and the S1Encoder tape conventions documented in
 im-results/agent8-s1-encoder/S1Encoder.lean.
 """
@@ -110,28 +110,64 @@ def check_case(k: int, a: int, b: int, length: int) -> None:
     n = 8 * k
     assert k > 0 and a > 0 and n < 2**length
     head = 0
-    steps = reset_prefix_cost(2, n, a, b)
+    carry = v2(k)
 
     source = config_tape(length, n, 2, a, 0, b, head)
-    actual, actual_head, actual_state = run(steps, source, head, 3)
+    current, current_head, current_state = source, head, 3
 
-    # Reset-prefix endpoint: the old right unary counter b has been moved
-    # into the S1 left-side z parameter; the right-side b parameter is zero.
+    # Phase 1: sweep the 3*a+2 initial ones to the left.
+    left_steps = 9 * a + 6
+    current, current_head, current_state = run(
+        left_steps, current, current_head, current_state
+    )
+    expected_left_head = head - (3 * a + 2)
+    assert (current_state, current_head) == (3, expected_left_head), (
+        f"left sweep failed: k={k}, a={a}, b={b}, L={length}"
+    )
+
+    # Phase 2: the carry bridge. Its length grows by 12 per trailing zero of k.
+    bridge_steps = 62 + 12 * carry
+    current, current_head, current_state = run(
+        bridge_steps, current, current_head, current_state
+    )
+    expected_bridge_head = expected_left_head + 2
+    assert (current_state, current_head) == (4, expected_bridge_head), (
+        f"carry bridge failed: k={k}, a={a}, b={b}, L={length}"
+    )
+
+    # Phase 3: E scans the 3*a unary cells back to the original head.
+    e_scan_steps = 3 * a
+    current, current_head, current_state = run(
+        e_scan_steps, current, current_head, current_state
+    )
+    assert (current_state, current_head) == (4, head), (
+        f"E scan failed: k={k}, a={a}, b={b}, L={length}"
+    )
+
+    # Phase 4: the Q4 suffix performs the right-side b-dependent movement.
+    suffix_steps = 39 + 3 * b
+    current, current_head, current_state = run(
+        suffix_steps, current, current_head, current_state
+    )
+
     target_head = head + 5 + 3 * b
     target = config_tape(
         length, n - 1, 1, a + b + 2, 2**b - 1, 0, target_head
     )
-
-    if (actual_state, actual_head, actual) != (3, target_head, target):
+    if (current_state, current_head, current) != (3, target_head, target):
         differing = sorted(
-            x for x in set(actual) | set(target) if actual.get(x, False) != target.get(x, False)
+            x for x in set(current) | set(target)
+            if current.get(x, False) != target.get(x, False)
         )
         raise AssertionError(
-            f"failed k={k}, a={a}, b={b}, L={length}, steps={steps}; "
-            f"end=(state {actual_state}, head {actual_head}), "
+            f"final tape failed: k={k}, a={a}, b={b}, L={length}; "
+            f"end=(state {current_state}, head {current_head}), "
             f"expected=(state 3, head {target_head}), "
             f"first differing cells={differing[:30]}"
         )
+
+    expected_total = reset_prefix_cost(2, n, a, b)
+    assert left_steps + bridge_steps + e_scan_steps + suffix_steps == expected_total
 
 
 def main() -> None:
@@ -158,7 +194,7 @@ def main() -> None:
                     cases += 1
 
     assert cases == 240
-    print(f"PASS: {cases} deterministic TM63 reset-prefix simulations")
+    print(f"PASS: {cases} four-phase TM63 reset-prefix simulations")
 
 
 if __name__ == "__main__":
