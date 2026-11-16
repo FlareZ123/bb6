@@ -64,3 +64,13 @@ The exact search returns **10,763** three-step halting candidates across **2,550
 This is computational evidence from a source transcription, not a proof that the family is complete outside the stated finite search domain. The generic bridge/budget implication is false; the blank-root mass gap excludes this particular large finite family, but no all-time root-history exclusion has been established.
 
 The latest `RootExclusion.lean` also contains `root_mass_corridor_excludes_small_d`: any surviving root state with mass strictly between 213720 and 347700 and second coordinate below 239399 is impossible. This single theorem covers every candidate in the finite scan domain, whose d is at most 24819, without enumerating the 10,763 cases in Lean.
+
+
+## New n≥10 root-mass / terminal-window composition route
+
+The earlier synthetic counterexample above remains valid: a generic budget implication cannot establish three-step survival. The new route uses genuine blank-root history instead.
+
+- [ThreeStepComposition.md](ThreeStepComposition.md) gives a uniform n≥10 arithmetic composition: q→p source output bounds, p terminal-parent corridor, terminal depth N=n+2 and exponent K=n+5, combined error (35n+93\le35n+120), p gap-two exclusion, and the separate q gap-two mass interval.
+- [TerminalWindowAtDepth12.lean](TerminalWindowAtDepth12.lean) is an uncompiled n=10 source helper. It aims to prove a width-128 ratio-four window at p from the terminal-parent corridor, p₂≤177204, and mass(p)≥39367.
+
+These are intermediate drafts only. The root-mass wrappers are not yet composed with the source terminal theorem; the near-q scale transfer and exact source branch extraction remain obligations. Keep all material here until the full dependency closure compiles without `sorryAx`.
