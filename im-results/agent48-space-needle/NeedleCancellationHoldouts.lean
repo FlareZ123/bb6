@@ -209,4 +209,9 @@ theorem cancellation_r5_not_reachable :
 #print axioms cancellation_r4_source_step
 #print axioms cancellation_r3_not_reachable
 #print axioms cancellation_r4_not_reachable
+#print axioms cancellation_r5_equation
+#print axioms cancellation_r5_source_step
+#print axioms cancellation_r5_incoming_parents
+#print axioms cancellation_r5_root_check_false
+#print axioms cancellation_r5_not_reachable
 end BB6.Agent48.SpaceNeedleCancellationHoldouts
