@@ -132,6 +132,52 @@ theorem t1_child_deficit (h k d a j : Nat)
     · rw [hfd]
       omega
 
+/-- The Q-parent equation forces the number j of same-level even
+resets to be strictly smaller than the source level K. This is a useful
+quantitative restriction for combining the 3-adic depth selector with the
+root-specific source orbit. -/
+theorem t1_q_parent_depth_lt_level (h k d a j : Nat)
+    (hg : ∀ i, i<k → 8*2^i≤h+i+5)
+    (hhigh : h+k+5<8*2^k)
+    (hpar : (h+k)%2=1)
+    (hfactor : oddParameter h k=2*d)
+    (hd : d%2=1)
+    (ha : oddOffset h k=2*a)
+    (hQ : 9*a+2*k+7-2^(k+2)=(2*k+7)*2^(j+1)) :
+    j<k := by
+  have hchild := t1_child_deficit h k d a j hg hhigh hpar hfactor hd ha hQ
+  by_contra hnot
+  have hk : k≤j := by omega
+  have hgap : j+1-k=(j-k)+1 := by omega
+  have hpGap : 2≤2^(j+1-k) := by
+    rw [hgap, Nat.pow_succ]
+    have hp : 1≤2^(j-k) := Nat.one_le_pow (j-k) 2 (by decide)
+    omega
+  have hpow : 2^(j+1)=2^k*2^(j+1-k) := by
+    calc
+      2^(j+1)=2^(k+(j+1-k)) := by congr 1; omega
+      _=2^k*2^(j+1-k) := by rw [Nat.pow_add]
+  have hpowLower : 2*2^k≤2^(j+1) := by
+    calc
+      2*2^k=2^k*2 := by ac_rfl
+      _≤2^k*2^(j+1-k) := Nat.mul_le_mul_left (2^k) hpGap
+      _=2^(j+1) := hpow.symm
+  have hmul : 2*(2*k+7)*2^k≤(2*k+7)*2^(j+1) := by
+    calc
+      2*(2*k+7)*2^k=(2*k+7)*(2*2^k) := by ac_rfl
+      _≤(2*k+7)*2^(j+1) := Nat.mul_le_mul_left (2*k+7) hpowLower
+  have hleft : (4*k+14)*2^k≤(2*k+7)*2^(j+1) := by
+    calc
+      (4*k+14)*2^k=2*(2*k+7)*2^k := by ring
+      _≤(2*k+7)*2^(j+1) := hmul
+  have hupper : (4*k+14)*2^k≤5*2^k+2*k-2 := by
+    have hdepth := hchild.2.1
+    omega
+  have heq : (4*k+14)*2^k=(4*k+9)*2^k+5*2^k := by ring
+  have hmin : 4*k+9≤(4*k+9)*2^k :=
+    Nat.mul_le_mul_left (4*k+9) (Nat.one_le_pow k 2 (by decide))
+  omega
+
 /-- From deficit c*2^j at level K+1, a nonfatal state reaches F_(K+2)
 through exactly j genuine even first-reset edges. The strict bound below
 the level-(K+1) fatal deficit is preserved by halving. -/
@@ -323,6 +369,7 @@ theorem root_t1_q_parent_fatal (h k d a j : Nat)
     exact (root_reset_chain_iff _).mpr hchain2
 
 #print axioms t1_child_deficit
+#print axioms t1_q_parent_depth_lt_level
 #print axioms even_reset_chain_to_fatal
 #print axioms root_t1_q_parent_fatal
 
