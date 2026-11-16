@@ -81,4 +81,21 @@ theorem u5_m8_t_mod128 (w s m t : Nat)
   have hBmod : (211*t+1360+22155*w)%128=0 := by omega
   omega
 
+
+/-- Exact residual identity after substituting m+1=8t+1. -/
+theorem u5_m8_t_identity (w s m t : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hp : m+1=8*t+1) :
+    211*t+1360+22155*w=20*2^(201+3360*w) := by
+  have hid : 211*(m+1)+10669+22155*(8*w)=160*2^(201+3360*w) := by omega
+  have hidForT :
+      211*(8*t+1)+10669+22155*(8*w)=160*2^(201+3360*w) := by
+    simpa [hp] using hid
+  have hlin :
+      211*(8*t+1)+10669+22155*(8*w)=
+        8*(211*t+1360+22155*w) := by omega
+  rw [hlin] at hidForT
+  omega
+
 end BB6.Agent3U5M16Residual
