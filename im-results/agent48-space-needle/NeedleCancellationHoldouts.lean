@@ -1,5 +1,6 @@
 import NeedleRootDecisionSource
 import NeedleQuadraticEnumerateSource
+import NeedleTerminalAffineSource
 import Lean.Elab.Tactic.Decide
 import Lean.Elab.Tactic.Omega
 
@@ -133,6 +134,75 @@ theorem cancellation_r4_not_reachable :
     (BB6.Agent20.SpaceNeedleRootDecision.exact_root_target
       cancellationFeeder4).mpr hreach
   rw [cancellation_r4_root_check_false] at htrue
+  contradiction
+
+/-- The fifth exact-cancellation terminal feeder. -/
+def cancellationK5 : Nat := 295269
+def cancellationV5 : Nat := 29526
+def cancellationQ5 : Nat :=
+  NeedleInverse.candidateQ cancellationV5 cancellationK5
+def cancellationFeeder5 : Nat :=
+  oddTower cancellationQ5 cancellationV5
+
+theorem cancellation_r5_equation :
+    NeedleInverse.equation cancellationQ5 cancellationV5 cancellationK5 := by
+  native_decide
+
+/-- The r=5 feeder is a genuine immediate predecessor of the original
+    terminal power, not merely a synthetic solution of the counter equation. -/
+theorem cancellation_r5_source_step :
+    highLevelNext (.N cancellationFeeder5) =
+      some (.N (haltTower (cancellationK5-1))) := by
+  have heq :
+      NeedleInverse.den cancellationV5 * cancellationQ5 +
+        NeedleInverse.bias cancellationV5 = (2:Nat)^cancellationK5 := by
+    exact ((NeedleInverse.equation_affine cancellationQ5 cancellationV5
+      cancellationK5).mp cancellation_r5_equation).symm
+  have h := BB6.Agent20.SpaceNeedleTriple.authentic_affine_successor
+    cancellationQ5 cancellationV5 cancellationK5 (by decide) heq
+  have hh := haltTower_power (cancellationK5-1)
+  have hk : cancellationK5-1+1=cancellationK5 := by omega
+  rw [hk] at hh
+  have hhalt : haltTower (cancellationK5-1)=2^cancellationK5-2 := by omega
+  simpa [hhalt] using h
+
+/-- Complete inverse enumeration: the fifth cancellation feeder has no
+    incoming high-level parent at any valuation. -/
+theorem cancellation_r5_incoming_parents :
+    NeedleGeneralInverse.parents (cancellationFeeder5+2) = [] := by
+  native_decide
+
+theorem cancellation_r5_root_check_false :
+    NeedleRootDecisionCore.reverseCheck
+      BB6.Agent20.SpaceNeedleRootDecision.finiteParents
+      (cancellationFeeder5+1) cancellationFeeder5 = false := by
+  have hpow : 2 ≤ (2:Nat)^cancellationV5 := by
+    have hv : 1 ≤ cancellationV5 := by decide
+    have hh := Nat.pow_le_pow_right (by decide : 0 < (2:Nat)) hv
+    simpa using hh
+  have hfactor : 3 ≤ 2*cancellationQ5+3 := by omega
+  have hmul :
+      6 ≤ (2:Nat)^cancellationV5 * (2*cancellationQ5+3) := by
+    calc
+      6 = 2*3 := by norm_num
+      _ ≤ (2:Nat)^cancellationV5 * (2*cancellationQ5+3) :=
+        Nat.mul_le_mul hpow hfactor
+  have hfac := oddTower_factor cancellationQ5 cancellationV5
+  have hgt : 1 < cancellationFeeder5 := by
+    dsimp [cancellationFeeder5]
+    omega
+  simp [NeedleRootDecisionCore.reverseCheck, ne_of_gt hgt,
+    BB6.Agent20.SpaceNeedleRootDecision.finiteParents,
+    cancellation_r5_incoming_parents]
+
+/-- The original blank-root orbit cannot reach this fifth terminal feeder. -/
+theorem cancellation_r5_not_reachable :
+    ¬ ReachN cancellationFeeder5 := by
+  intro hreach
+  have hroot :=
+    (BB6.Agent20.SpaceNeedleRootDecision.exact_root_target
+      cancellationFeeder5).mpr hreach
+  rw [cancellation_r5_root_check_false] at hroot
   contradiction
 
 #print axioms cancellation_r3_source_step
