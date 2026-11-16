@@ -325,9 +325,10 @@ reach the \(t=0\) odd-exit source \(h\). Write
 \[
 D_0=8\cdot2^K+K-h,\qquad D_{\rm ent}=2^qD_0.
 \]
-The entry is nonfatal, so
+The first-failure lower guard at level \(K\) is
+\(4\cdot2^K\le E+K+4\), hence
 \[
-D_{\rm ent}\le4\cdot2^K+2K+3.
+D_{\rm ent}\le4\cdot2^K+2K+4.
 \]
 The even-child band from level \(K-1\) is
 \[
@@ -342,8 +343,24 @@ The source band gives \(D_0\ge2K+7\), hence \(q\le K-1\).
 Suppose \(E\) has an even parent from level \(K-1\). The even-child
 band at that level, together with the entry bound above, forces
 \[
-D_{\rm ent}=4\cdot2^K+\delta,\qquad K+3\le\delta\le2K+3.
+D_{\rm ent}=4\cdot2^K+\delta,\qquad K+3\le\delta\le2K+4.
 \]
+The upper endpoint is real, not a loose estimate. Put \(p=2^K\),
+\[
+E=4p-K-4,\qquad H=4p-3K-7.
+\]
+For \(K\ge266\), \(H\) is a valid level-\((K-1)\) source and
+\[
+2E=8\cdot2^{K-1}+H+(K-1),
+\]
+with \(6\cdot2^{K-1}-1\le E\le8\cdot2^{K-1}-3\). The even reset
+therefore produces \(E\), which first enters level \(K\) at equality
+in \(4\cdot2^K\le E+K+4\). Its deficit is exactly
+\[
+D_{\rm ent}=8p+K-E=4p+2K+4.
+\]
+Thus the earlier \(2K+3\) upper bound omitted a valid even-parent
+boundary state. The corrected arithmetic exclusion below includes it.
 Multiplying (4) by \(2^q\) and substituting this expression yields
 \[
 (2K+7)2^{q+r+3}
@@ -355,9 +372,9 @@ Put \(\delta=2^qe\). Dividing by \(2^q\) gives
 (2K+7)2^{r+3}
 =16\cdot2^K+12\cdot2^{K-q}+3e-(2K+1). \tag{5}
 \]
-Here \(1\le e\le2K+3\), so
+Here \(1\le e\le2K+4\), so
 \[
-|3e-(2K+1)|\le4K+8.
+|3e-(2K+1)|\le4K+11.
 \]
 
 The source-band interval for the \(t=0\) fatal depth gives
@@ -366,11 +383,11 @@ The source-band interval for the \(t=0\) fatal depth gives
 \]
 and its upper endpoint gives \(r+3\le K+4\). For \(K\ge266\), these imply
 \[
-2^{r+3}>4K+8.
+2^{r+3}>4K+11.
 \]
-Also \(2^q\le\delta\le2K+3\), so
+Also \(2^q\le\delta\le2K+4\), so
 \[
-2^{K-q+2}\ge\frac{4\cdot2^K}{2K+3}>4K+8.
+2^{K-q+2}\ge\frac{4\cdot2^K}{2K+4}>4K+11.
 \]
 The last two elementary growth inequalities follow, for example, from
 \(2^K\ge K^3\) for \(K\ge10\).
