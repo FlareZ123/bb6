@@ -148,6 +148,9 @@ The 16 minimal cylinders found within the K≤20 enumeration are:
 The w residues follow from t=123+168z and the exact residual identity 211t+1360+22155w=20·2^(201+3360w); the right-hand side is divisible by every modulus used here. Explicitly, for a z cylinder modulo 2^k, the corresponding w residue modulo 2^(k+3) is the unique solution of 22155*w ≡ -211*(123+168*z)-1360 (mod 2^(k+3)). Every listed w class is inside w≡5 (mod128). These cylinders are pairwise disjoint from the short w=45 and w=101 cylinders.
 
 
+
+The same A/K32,C32 quotient also gives 40 full z cylinders mod128 outside z≡125. It overlaps 36 of the 40 M16 residues, adds z residues {20,52,84,116}, and misses M16 residues {23,55,87,119}. Thus M16 plus A/K32,C32 covers 44 full z cylinders, while M16 plus A/K64,C32 covers 46.
+
 ### Smaller quotient coverage of the sixteen deep cylinders
 
 The A/K32,C32 quotient (41,616 states; 21,190 reachable; 155,094 representative edges) also excludes every parent cell at every admissible depth for twelve of the sixteen deep cylinders:
