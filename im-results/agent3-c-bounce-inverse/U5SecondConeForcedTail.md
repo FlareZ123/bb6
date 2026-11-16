@@ -57,3 +57,19 @@ Every noninitial state in `BB6CLine.Reach` has an immediate predecessor. Hence t
 ## Scope
 
 This closes the *seen M32 lift* in the (a\equiv37\pmod{64}) part of the second cone's Side-predecessor analysis, without extending the quotient. It does not by itself complete the second cone: the (a\equiv5\pmod{64}) part still needs its M32-absent-cell argument, and the q=2 parent family remains a separate issue. The predecessor chain should be formalized as a Lean lemma against the exact `CLine` definition before it is treated as a theorem.
+
+
+## General source-image corollary
+
+The terminal check is an instance of a simpler global necessary condition. From the exact CLine transition clauses, any state ((a,0,c)) with (c\ge4) can have an immediate predecessor only in one of two cases:
+
+1. the (c=0,a=0) source clause, which forces (a=1); or
+2. the (c\ge4,a=0,k\) odd source clause, which forces (a=2k+5\equiv3\pmod4).
+
+All other source clauses either produce positive target right counter or target (c<4). Since the blank initial state has (c=1), every reachable state with right counter zero and (c\ge4) must satisfy
+
+[
+a=1\quad\text{or}\quad a\equiv3\pmod4.
+]
+
+In particular, every ((a,0,c)) with (c\ge4, a\ge5, a\equiv1\pmod4) is source-unreachable. This single source-image lemma excludes the entire forced-tail endpoint ((69+64u+32v,0,33+32v)), without checking its individual predecessor cases. It is a reusable global constraint, not specific to U5.
