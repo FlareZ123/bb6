@@ -36,8 +36,18 @@ The two residual wrappers reuse the exact congruences already derived from the U
 blank_no_high_m0_u5_w21
 ```
 
+Its exact draft quantifier is:
+
+```lean
+theorem blank_no_high_m0_u5_w21 (w s m : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hw : w%32=21) :
+    ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7)
+```
+
 It excludes the actual blank-section reachability of the high m=0 stopping root
-`(2*(39+64*s)+3, 3*(39+64*s)+7)` under the exact U5 residual equations and `w=21 (mod 32)`. The dependency chain contains no finite quotient certificate. The proof route is:
+`(2*(39+64*s)+3, 3*(39+64*s)+7)` for every natural triple `w,s,m` satisfying those three hypotheses. The dependency chain contains no finite quotient certificate. The proof route is:
 
 1. high stopping root `-> A_s` by `mzero_first_two_reach`;
 2. `A_s` has only the exact `L_s` and `B_s` source parents;
