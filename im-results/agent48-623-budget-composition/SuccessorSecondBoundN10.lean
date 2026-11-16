@@ -133,7 +133,7 @@ theorem successor_second_bound_n10
             rcases hdepth with ⟨r0,s0,hrs,hrpos,hqSmall,_,_⟩
             have hsBound : s0 <= 10 := by omega
             have hpow : 3^s0 <= 3^10 :=
-              Nat.pow_le_pow_right (by decide : 0 < 3) hsBound
+              Nat.pow_le_pow_right (by omega) hsBound
             omega
         have hEvalUpper :=
           evalA_upper_log 10 (v+1-u) u (2*u+5) p q r hUk hEval
