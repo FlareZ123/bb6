@@ -17,8 +17,7 @@ j\equiv m+3\pmod8,
 \]
 the M16 quotient maps the state \((a,k,0)\) to one of four abstract states which are absent from its certified reachable set:
 \[
-\( (15,12,0),\ (15,20,0),\ (23,12,0),\ (23,20,0) \).
-(23,12,0),\ (7,12,0),\ (23,20,0).
+(15,12,0),\ (15,20,0),\ (23,12,0),\ (23,20,0).
 \]
 Consequently, once the source-Reach embedding is composed with CCert.reachable_seen, this gives
 \[
