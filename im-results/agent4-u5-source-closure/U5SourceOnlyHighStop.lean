@@ -75,6 +75,19 @@ theorem u5_residual_nonempty (w : Nat) :
     omega
   exact ⟨s,m,by simpa [r] using hs,hm⟩
 
+
+/-- The residual equations determine s strictly increasingly with w;
+this makes the constructed w=32*n+21 root sequence pairwise distinct. -/
+theorem u5_residual_s_strict_mono
+    (w1 w2 s1 s2 : Nat) (hw : w1<w2)
+    (hs1 : 211*s1+129=5*2^(201+3360*w1))
+    (hs2 : 211*s2+129=5*2^(201+3360*w2)) :
+    s1<s2 := by
+  have hr : 201+3360*w1 < 201+3360*w2 := by omega
+  have hpow : 2^(201+3360*w1) < 2^(201+3360*w2) :=
+    Nat.pow_lt_pow_right (show 1<(2:Nat) by decide) hr
+  omega
+
 /-- The y=3 terminal of the U5 M8 residual is unreachable on
 w=21 (mod 32). The q=0 parent is excluded by the source-only
 t=19 (mod 32) inverse fan; q=1 is odd-right sum-two; q>=2
@@ -253,6 +266,7 @@ theorem every_w21_residual_has_unreachable_root (n : Nat) :
   exact ⟨s,m,hs,hm,hres.1,hroot⟩
 
 #print axioms u5_residual_nonempty
+#print axioms u5_residual_s_strict_mono
 #print axioms u5_high_root_parameter_residue
 #print axioms blank_no_u5_residual_m8w_w21
 #print axioms blank_no_u5_B_s_m8w_w21
