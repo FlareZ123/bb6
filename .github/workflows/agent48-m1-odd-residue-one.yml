@@ -6,7 +6,7 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -14,19 +14,26 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Stage exact source dependencies
+      - name: Stage exact residue-one and counted-drain source dependencies
         run: |
           set -euo pipefail
           mkdir -p /tmp/a48-m1one
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a48-m1one/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a48-m1one/
-          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,ChampionModular,CostRecurrence,CountPattern,Q4RightEndpoint,M1OddQ4Prefix}.lean /tmp/a48-m1one/
+          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges,CountedCarryPrefix,CountedCarryPrefixGeneral,CountedCarryPrefixHRun,CountedCarryPrefixHRunAxiomAudit,CountedSuffixOutput,S1CarryOutputBridge,S1CarryInc0,ChampionModular,CostRecurrence,CountPattern,Q4RightEndpoint,M1OddQ4Prefix}.lean /tmp/a48-m1one/
+          cp im-results/agent42-carry-boundary/{CountedCarryBoundaryTraces,S1CountedCarryPrefixBridge}.lean /tmp/a48-m1one/
+          cp im-results/agent42-carry-left-output/FrameCellLemmas.lean /tmp/a48-m1one/
+          cp im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean /tmp/a48-m1one/
+          cp im-results/agent42-champion-terminal/{CountedLBinDec,CountedLBinDecShape,CountedLBinDecAxiomAudit}.lean /tmp/a48-m1one/
           cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a48-m1one/
-          cp im-results/agent8-counted-reset/{CountedReset,Q4Suffix}.lean /tmp/a48-m1one/
-          cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-m1one/
+          cp im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean /tmp/a48-m1one/
+          cp im-results/agent48-counted-inc0/{S1CountedInc0,S1CountedDrain,M1OddResidueOneBridge,M1OddResidueOneTargetLeft,M1OddResidueOneHeadBound,M1OddResidueOneSource}.lean /tmp/a48-m1one/
+          cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a48-m1one/
           cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a48-m1one/
+          cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-m1one/
+          cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a48-m1one/
           cp im-results/agent48-final-rst1/M1OneQ4Prefix.lean /tmp/a48-m1one/
-          # Agent 24's source file has a module doc comment before imports;
+          # Agent 24's M1OddQ4Prefix source has a module doc comment before imports;
           # move imports to the first commands in the staged copy for Lean 4.
           python3 - <<'PY'
           from pathlib import Path
@@ -36,39 +43,61 @@ jobs:
           body = [line for line in lines if not line.startswith("import ")]
           p.write_text("\n".join(imports + [""] + body) + "\n")
           PY
-          cp im-results/agent48-counted-inc0/{M1OddResidueOneBridge,M1OddResidueOneTargetLeft,M1OddResidueOneHeadBound,M1OddResidueOneSource}.lean /tmp/a48-m1one/
-      - name: Compile source dependencies and residue-one theorem
+      - name: Compile exact S1 counted-drain closure and residue-one source theorem
         run: |
           set -euo pipefail
           cd /tmp/a48-m1one
           export LEAN_PATH=.
           lean --version
-          lean -o Frontier.olean Frontier.lean
-          lean -o Symmetry.olean Symmetry.lean
-          lean -o RootShift.olean RootShift.lean
-          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
-          lean -o CountedSweep.olean CountedSweep.lean
-          lean -o CountedOddBase.olean CountedOddBase.lean
-          lean -o S1Encoder.olean S1Encoder.lean
-          lean -o ChampionModular.olean ChampionModular.lean
-          lean -o CostRecurrence.olean CostRecurrence.lean
-          lean -o CountPattern.olean CountPattern.lean
-          lean -o CountedReset.olean CountedReset.lean
-          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean
-          lean -o CountedRst1Prime.olean CountedRst1Prime.lean
-          lean -o Q4Suffix.olean Q4Suffix.lean
-          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
-          : > m1-residue-one-axioms.log
-          for source in M1OddQ4Prefix M1OneQ4Prefix M1OddResidueOneTargetLeft M1OddResidueOneBridge M1OddResidueOneHeadBound M1OddResidueOneSource; do
-            if ! lean -o "$source.olean" "$source.lean" 2>&1 | tee -a m1-residue-one-axioms.log; then
-              echo "## $source compilation failed" >> "$GITHUB_STEP_SUMMARY"
-              tail -n 140 m1-residue-one-axioms.log >> "$GITHUB_STEP_SUMMARY"
-              exit 1
-            fi
-          done
-          if grep -q 'sorryAx' m1-residue-one-axioms.log; then
-            echo '::error::sorryAx found in m1 residue-one source modules'
+          : > m1-residue-one-source-closure.log
+          compile() {
+            local source="$1"
+            lean -o "$source.olean" "$source.lean" 2>&1 | tee -a m1-residue-one-source-closure.log
+          }
+          compile Frontier
+          compile Symmetry
+          compile RootShift
+          compile ChampionRootBridge
+          compile CountedSweep
+          compile CountedOddBase
+          compile CountedOddUnary
+          compile CountedOneZeroUnary
+          compile CountedCarryBridges
+          compile CountedCarryBoundaryTraces
+          compile CountedLBinDec
+          compile CountedLBinDecShape
+          lean CountedLBinDecAxiomAudit.lean 2>&1 | tee -a m1-residue-one-source-closure.log
+          compile CountedCarryPrefix
+          compile CountedCarryPrefixGeneral
+          compile FrameCellLemmas
+          compile CountedCarryLeftOutput
+          compile CountedCarryPrefixHRun
+          lean CountedCarryPrefixHRunAxiomAudit.lean 2>&1 | tee -a m1-residue-one-source-closure.log
+          compile S1Encoder
+          compile S1CountedCarryPrefixBridge
+          compile CountedSuffixOutput
+          compile S1CarryOutputBridge
+          compile S1CarryInc0
+          compile S1OddCanonicalOutput
+          compile ChampionModular
+          compile CountPattern
+          compile CostRecurrence
+          compile CountedReset
+          compile S1CountedInc0
+          compile S1CountedDrain
+          compile CountedQ4Prefix
+          compile CountedRst1Prime
+          compile Q4Suffix
+          compile Q4RightEndpoint
+          compile M1OddQ4Prefix
+          compile M1OneQ4Prefix
+          compile M1OddResidueOneTargetLeft
+          compile M1OddResidueOneBridge
+          compile M1OddResidueOneHeadBound
+          compile M1OddResidueOneSource
+          if grep -q 'sorryAx' m1-residue-one-source-closure.log; then
+            echo '::error::sorryAx found in the counted-drain or residue-one source dependency closure'
             exit 1
           fi
           echo '## m=1,n=8*q+1 source verification' >> "$GITHUB_STEP_SUMMARY"
-          echo 'The finite bridge, target-left algebra, q4 head bound, arbitrary-width prefix lift, reset prefix, and counted increment compile under Lean 4.36.0-rc2 without sorryAx.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'The all-valuation H-run, S1 decrement/drain, finite bridge, target-left algebra, q4 head bound, arbitrary-width prefix lift, reset prefix, and counted increment compile under Lean 4.36.0-rc2 without sorryAx.' >> "$GITHUB_STEP_SUMMARY"
