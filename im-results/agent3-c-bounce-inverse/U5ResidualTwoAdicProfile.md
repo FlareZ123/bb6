@@ -106,3 +106,28 @@ The first unique residue classes are:
 | 8 | 131072 | 19461 |
 
 Thus the q-fan depth is genuinely unbounded over the residual family. No proof strategy that handles only a fixed finite list of q-values can close all U5 residuals. A complete treatment must control q parametrically, establish a q-uniform source-parent obstruction, or find a different invariant that bypasses the fan.
+
+
+## A nested valuation on the q=0, w=1 (mod 16) branch
+
+The q=0 parent of (X_t) is
+[
+P_0=(43t-3, (85t-7)/2).
+]
+If (w\equiv1\pmod{16}), the residual identity gives (t\equiv7\pmod{16}), and (P_0) is even/even with sum divisible by eight. Its sum quotient is the natural number
+[
+S=(P_{0,1}+P_{0,2})/8=(171t-13)/16.
+]
+Multiplying the residual identity by 171 and rearranging gives the exact second-level identity
+```
+211*16*S + (3788505*w + 235303) = 855 * 2^(E+2).
+```
+The affine term (B(w)=3788505w+235303) is positive and strictly below (2^{E+2}), by the same elementary bound as above (now (2^{203}>3788505)). Hence, for every (w\equiv1\pmod{16}),
+
+```
+v2(S) = v2(3788505*w + 235303) - 4.
+```
+
+The coefficient 3788505 is odd, so its affine form has a unique zero residue modulo every (2^d). For each (d\ge4), the corresponding residue lies in (w\equiv1\pmod{16}) and yields (v_2(S)\ge d-4). Thus the q=0 branch itself contains an unbounded *secondary* two-adic fan in the even/even sum-zero parent quotient (S). This is distinct from the q-depth of the first odd/odd fan: it explains why the q=0-only classes cannot be assumed to have uniformly shallow source-parent closures.
+
+The existing `even_even_sumzero_parent` theorem applies when (S\bmod4\ne0), leaving the higher-secondary-valuation cases to a deeper source-parent analysis. This identity supplies the exact affine parameter controlling that remaining depth; it does not yet exclude the corresponding blank-root states.
