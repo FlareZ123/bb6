@@ -137,3 +137,34 @@ The next root successor is the odd-quotient family `S1(L,8*q,0,a,0,b,h)`, with `
 - `M0EvenEightQ4Prefix.lean`: composes the `3*a)-cell counted sweep (9a moves), the 63-step bridge, and a `3*(a-1))-step E-scan. The resulting source-level q4 prefix has cost `60+12*a` and ends in state 4 at the original head. It also states the target-left identity for the q4 suffix.
 
 The finite base is the first admissible quotient `q=1` (`L=4,n=8`), not the full `L=3,n=0` source. A direct replay of the latter halts for `a=1,b=0`; it is therefore not used as a whole-run base. The generalized bridge uses the common finite window for all odd q. The q4 cut's left-facing, right-shape, and far-tail interfaces are not yet proved, so no reset-prefix/count-drain theorem or middle-24 root wrapper is claimed. Both new modules are uncompiled and unaudited.
+
+## M0 even-eight source row: draft, not yet compiled
+
+The next source row after root middle 23 is
+`S1(L, 8q, 0, a, 0, b, h)` with odd `q`. The draft
+`M0EvenEightGenericSource.lean` attempts to close the q4 cut completely:
+
+- left-facing stream: the swept prefix is all ones; the 19-cell bridge window
+  reads `markerWord 2 ++ d0^4 ++ d1`; the remaining source tail aligns at
+  absolute left index `3*a+16`;
+- right-facing shape: the head and first right cell are established by the
+  sweep, the next cells and unary block are inherited from the S1 source,
+  and the complete blank tail begins at right offset `9+3*b`;
+- q4 suffix: the shared `Q4RightEndpoint` theorem consumes those complete
+  interfaces;
+- exact reset-prefix cost: `resetPrefixCost 0 (8*q) a b = 99+12*a+3*b`,
+  using `v2(8*q)=3);
+- proposed full increment cost:
+  `6*4^b + 42*2^b + 12*a - 9*b + 51`.
+
+The target source theorem is
+`S1(L,8q,0,a,0,b,h) -> S1(L,8q-1,2,a+b+1,0,2^b-1,h+5+3b)`
+with the original `proposedIncrementCost`. The companion
+`TM63RootMiddle24.lean` composes this row after middle 23, where
+`q=2*r-1`.
+
+**Status:** both Lean files are drafts only. They have not passed a focused
+local compile or an original-source CI check and are not evidence for a new
+BB(6) bound. Agent 6 has been asked to compile the exact dependency closure.
+The existing `agent42-counted-lbin-dec.yml` source-check workflow has been
+extended for this row, but dispatch is being held pending that preflight.
