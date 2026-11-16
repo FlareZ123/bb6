@@ -1,0 +1,33 @@
+name: Agent 3 U5 M32 w485 high-stop source closure
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compile-exact-source-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Lean 4.36.0-rc2
+        uses: leanprover/lean-action@v1
+        with:
+          lean-version: leanprover/lean4:v4.36.0-rc2
+
+      - name: Show toolchain
+        run: lean --version
+
+      - name: Generate M32 quotient source modules
+        run: python3 tools/agent43_c32_certificate.py
+
+      - name: Compile exact transitive import closure
+        run: |
+          python3 tools/lean_compile_closure.py \
+            im-results/agent3-c-bounce-inverse/U5Q0M32W485HighStop.lean \
+            --jobs 8 \
+            --workdir /tmp/lean-closure
