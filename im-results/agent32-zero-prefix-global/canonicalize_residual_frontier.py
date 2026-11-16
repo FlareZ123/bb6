@@ -177,7 +177,7 @@ def parse_oracle_outcomes(raw: str, status: str):
         outcomes[key] = value == "1"
     expected = {"finiteDecision", "finiteLasso", "finiteEntryMacroBi"}
     if set(outcomes) != expected or any(outcomes.values()):
-        raise ValueError(f"open terminal must have all five oracle outcomes false: {raw!r}")
+        raise ValueError(f"open terminal must have all three composite oracle outcomes false: {raw!r}")
     return {"accepted_by_source_oracle": False, **outcomes}
 
 
