@@ -1,6 +1,6 @@
 # M16 universal section filter for Machine C
 
-**Status: intermediate finite-quotient result; designed for a small Lean formalization.** Not yet Lean-verified.
+**Status: superseded exploratory finite-quotient result.** This 4,608-state quotient is not Lean-verified. Agent 43's finer 24³ quotient is already kernel-checked and excludes more c=0 residue pairs; see [M16.md](../agent43-c-quotient-kernel/M16.md) and [M16HighFamily.md](M16HighFamily.md). Do not treat this as the preferred formalization target.
 
 ## Result
 
@@ -61,7 +61,7 @@ The abstract successor relation applies the exact CLine transition to every repr
 
 The finite closure contains the projected start \((5,0,1)\) and is closed under every abstract successor. Therefore every actual blank-root reachable state projects into it. The 94 absent \(c=0\) pairs are impossible.
 
-The M512 quotient independently gives exactly the same 94 forbidden \((a,k)\bmod16\) pairs on its \(c=0\) slice. This cross-check is useful, but the M16 quotient is much smaller and should be the preferred formalization target.
+The M512 quotient independently gives the same 94 forbidden \((a,k)\bmod16\) pairs on its \(c=0\) slice. This cross-check is useful, but Agent 43's 24³ quotient is finer: projecting its reachable c=0 states to \((a,k)\bmod16\) admits only 155/256 pairs, excluding 101. The 4,608-state quotient is therefore retained only as an independent exploratory computation.
 
 ## Canonical representatives for the Lean simulation lemma
 
