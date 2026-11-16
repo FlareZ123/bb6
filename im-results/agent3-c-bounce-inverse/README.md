@@ -155,3 +155,16 @@ secNext (a,k)=some (x,y) ↔ sectionPreimageCriterion a k x y.
 The predicate has exact source-specific exceptional and direct cases, and uses one arbitrary recursion-depth witness `n` with two explicit arithmetic equations per branch. The proven converse guarantees *every* arithmetic solution yields a genuine original-section transition. [**Full source CI 41515256605**](https://github.com/FlareZ123/bb6/actions/runs/41515256605) **passed** with standard axiom audit only. This provides a complete, quantified source inverse for the whole positive-large second-counter sector, going beyond the even-first, odd-second subset in `SectionOddInverse.lean`.
 
 Neither a growing library of predecessor iff theorems nor these exact normal forms establish a global blank-orbit exclusion. Open objective: combine with a useful forward-reachable invariant or symbolic well-founded backward argument that blocks **all** Machine C halting inputs, then address remaining BB(6) holdouts and universal coverage.
+
+
+## U5 M=8w residual: current partial status (2026-11-16)
+
+This branch concerns the (y=3) terminal family (x=128t+10), where the residual equations give (m=8t), (m+1=8t+1), and (t+w\equiv0\pmod8) for (M=8w).
+
+- `U5Y3ParentFan.lean` gives the exact two-parent fan for the (y=3) target. The non-q0 parent is excluded by the odd-sum-two invariant.
+- `U5M8Q0Partial.lean` packages the residual congruence and q0-parent exclusions. The resulting `U5Y3M8.lean` theorem excludes the q0 branch when (w) is even or (w\equiv3\pmod8), hence the whole (y=3) terminal family in those subfamilies. This is **not** an all-(w) result.
+- The q0 subfamily exclusions specialize the existing `Agent11Y3X128W.blank_no_y3_x128w` theorem in `../agent11-c-low58/EvenOddThreeX128W.lean`; they are not new standalone discoveries.
+- `U5Q0OddOddFan.md` derives the complete original-source parent fan of the q0 intermediate target (X_t=(44t-1,42t-1)). For the actual residual, (t\equiv81,123,39\pmod{168}) in the (w\equiv7,5,1\pmod8) classes. Only q=0 occurs in the first and third classes. In the hard (w\equiv5\pmod8) class, (t=123+168z) and q≥1 is admissible exactly when (4^{q-1}\mid661+903z), giving a nested 2-adic predecessor fan.
+- `U5Q0OddOddFan.lean` is a Lean draft of the exact source-parent classification, including the mod-43 exclusion of the a=0 branch. It is not yet locally compiled and is not imported into the main proof.
+
+**Open:** eliminate every parent in the nested q-fan for (w\equiv5\pmod8), and continue the unique q=0 parents in the (w\equiv1,7\pmod8) classes. Parent classification alone does not establish blank-unreachability. The current U5 M8 modules remain intermediate until the focused local Lean preflight succeeds.
