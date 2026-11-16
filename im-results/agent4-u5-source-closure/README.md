@@ -1,0 +1,39 @@
+# U5 q=0 source-only closure
+
+**Status: Lean draft; exact-source preflight pending.** No theorem in this directory is yet claimed as compiled or source-certified.
+
+## Contribution
+
+`U5Q0SourceOnly.lean` proves two all-time exclusions for the exact original Machine C section orbit:
+
+- `X_t=(44t-1,42t-1)) is blank-unreachable for every `t=32n+19`.
+- `X_t=(44t-1,42t-1)) is blank-unreachable for every `t=128n+99`.
+
+It also supplies drop-in replacements for the q=0-parent lemmas on the existing U5 residual cylinders `w=21 (mod 32)` and `w=37 (mod 128)`.
+
+The proof does **not** use the finite M16 quotient certificate. It uses the exact source-parent fan `q0_oddodd_parent_fan_iff`, the complete even/even source-parent fan, the unique even/odd valuation-two parent theorem, and the existing blank-root odd-right sum-one and odd/odd sum-two image exclusions.
+
+## Proof structure
+
+For `t=32n+19`, the fan equation `43t-1=4^q U`, with `U` even, and `(43t-1) mod 32=16` force `q≤1`.
+
+- At `q=0`, the parent is `(1376n+814,1360n+804)`, an even/even state with sum `2 mod 4`. The complete source-parent fan leaves only its direct parent `(2736n+1616,680n+401)`, which has odd right coordinate and sum `1 mod 4`.
+- At `q=1`, the parent is `(344n+202,1876n+1107)`, which itself has odd right coordinate and sum `1 mod 4`.
+
+For `t=128n+99`, `(43t-1) mod 64=32` forces `q≤2`.
+
+- At `q=0`, the even/even sum-two parent again reduces to a forbidden odd-right sum-one state: `(10944n+8456,2720n+2101)`.
+- At `q=1`, the parent `(1376n+1062,7504n+5797)` has a unique original-source parent `(4440n+3427,5972n+4611)`, which is odd/odd with sum `2 mod 4`.
+- At `q=2`, the parent `(344n+264,8020n+6193)` is odd-right with sum `1 mod 4`.
+
+The two residual wrappers reuse the exact congruences already derived from the U5 equations: `t=19 (mod 32)` on `w=21 (mod 32)`, and `t=99 (mod 128)` on `w=37 (mod 128)`. The exact two-step pullback from `(64t+5,32t+3)` to `X_t` is retained.
+
+## Why this matters
+
+The current M16 route excludes the same q=0 source-parent fan by projecting its possible parents into absent cells of the kernel-checked finite quotient. This draft replaces that finite-quotient dependency on these two cylinders with direct original-source predecessor arguments. It therefore offers a smaller and more transparent route for the same two infinite U5 subfamilies.
+
+This does **not** close the remaining U5 odd residue classes, the full Machine C stopping criterion, or BB(6).
+
+## Verification and next step
+
+The source file has been committed but has not been compiled in this invocation. The local shell/runtime tool failed to start, so no claim of successful local Lean validation is made. Per the current research-direction instruction, do not dispatch CI until the exact changed-source dependency closure has passed a focused Lean preflight. The next useful action is to compile this file against the original dependencies, fix any elaboration issues, then replace the M16-specific q=0 imports in the residual closure with these source-only lemmas and run the existing manual source workflow.
