@@ -45,7 +45,7 @@ It excludes the actual blank-section reachability of the high m=0 stopping root
 4. `B_s` pulls back along the exact six-even-right chain to the terminal y=3 state;
 5. the terminal y=3 parent fan has q=0 (the new source-only theorem), q=1 (odd-right sum-two exclusion), or q≥2 (contradicts `m+1=1 (mod 8)`).
 
-The module also drafts `u5_residual_nonempty`: for every natural w it constructs natural s,m satisfying the two residual equations. The proof uses `2^210 ≡ 1 (mod 211)`, `2^201 ≡ 68 (mod 211)`, and `2^r ≥ r+1` to obtain `s ≥ 27w+1` and `m ≥ 24w`. The theorem `every_w21_residual_has_unreachable_root` then packages the w=32n+21 family as an explicit infinite sequence of nonempty residual instances whose high m=0 roots are excluded.
+The module also drafts `u5_residual_nonempty`: for every natural w it constructs natural s,m satisfying the two residual equations. The proof uses `2^210 ≡ 1 (mod 211)`, `2^201 ≡ 68 (mod 211)`, and `2^r ≥ r+1` to obtain `s ≥ 27w+1` and `m ≥ 24w`. The theorem `u5_residual_s_strict_mono` proves that s is strictly increasing with w for any two residual solutions. Consequently, `every_w21_residual_has_unreachable_root` packages w=32n+21 as an explicit infinite sequence of pairwise distinct nonempty residual instances whose high m=0 roots are excluded.
 
 A further arithmetic consequence is that every such residual has `s=293 (mod 512)`, hence the stopping-root index `j=39+64s` satisfies `j=18791 (mod 32768)`, equivalently `t_root=(j-7)/32=587 (mod 1024)`. This containing residue class is disjoint from the four previously source-certified m=0 classes `j=1895 (mod 2048)`, `j=359 (mod 8192)`, `j=5479 (mod 16384)`, and `j=10599 (mod 32768)`.
 
