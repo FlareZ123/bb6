@@ -57,24 +57,13 @@ theorem reset_j3_unreachable :
   rw [hf] at hs
   cases hs
 
-/-- Every side gate with index divisible by eight is absent from the
-    original-source M32 closure. -/
-theorem side_multiple_eight_unreachable (n : Nat) (hn : 1 ≤ n)
-    (hmod : n%8=0) :
-    ¬ BB6CLine.Reach (0,4*n,24*n+23) := by
-  intro h
-  have hs := reachable_seen (source_reachable_embeds32 h)
-  have hk : q (4*n) = q 32 :=
-    q_congr_big _ _ (by omega) (by decide) (by omega)
-  have hc : q (24*n+23) = q 215 :=
-    q_congr_big _ _ (by omega) (by decide) (by omega)
-  rw [hk,hc] at hs
-  have hf : seen (q 0) (q 32) (q 215) = false := by decide
-  rw [hf] at hs
-  cases hs
+/-- The M32 quotient admits the side gate n=8. It therefore cannot
+    exclude the whole n=0 (mod 8) side family. -/
+theorem side_multiple_eight_m32_admitted :
+    seen (q 0) (q 32) (q 215) = true := by decide
 
 #print axioms reset_m32_extra_unreachable
 #print axioms reset_j3_unreachable
-#print axioms side_multiple_eight_unreachable
+#print axioms side_multiple_eight_m32_admitted
 
 end CCert
