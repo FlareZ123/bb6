@@ -43,8 +43,10 @@ for (let d = 19681; d <= 24819; d += 2) {
     if (!p) continue;
     const [pa, pd] = p;
     if (pd % 2n !== 1n || pa < pd + 5n) continue;
+    if (pd + 3n >= 3n ** 14n) continue;
+    if (2n * (pa + 2n * pd + 10n + 42n) + 5n >= 3n ** 16n) continue;
     const h = next(pa, pd);
-    if (!h || next(...h) !== null) continue;
+    if (!h || h[0] % 2n !== 0n || next(...h) !== null) continue;
     const ratioGap = pa - 4n * pd;
     if (ratioGap < -115n || ratioGap > 115n) continue;
     const bridgeError = ratioGap - 5n - (a - 13n * D);
@@ -61,8 +63,10 @@ const noStep40State = hits.every(x => x.d !== 239399 || x.a !== 54138n);
 console.log(JSON.stringify({
   count: hits.length,
   distinctD: new Set(hits.map(x => x.d)).size,
+  distinctD: new Set(hits.map(x => x.d)).size,
   min: show(hits[0]),
   max: show(hits[hits.length - 1]),
+  atStep40Mass: hits.filter(x => x.mass === 293537n).map(show),
   atStep40Mass: atStep40Mass.map(show),
   allInRootMassGap,
   noStep40State
