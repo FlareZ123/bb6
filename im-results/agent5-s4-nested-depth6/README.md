@@ -47,9 +47,9 @@ The script also applies (Q^{107}), (R), (V), (W), (X), and (Y) to the correspond
 
 ## Evidence boundary
 
-The starting 18-digit prefix and `blockRootTail` are the numerical state used by the existing C++ S4 suffix macro at its first-level macro boundary. The prefix-period scans and this extension are computational, not Lean-kernel checked. In particular:
+The starting 18-digit prefix and `blockRootTail` are now connected to the source-certified return-5457 state by the exact BigInt replay in [ROOT-EXTENSION-1310720.md](ROOT-EXTENSION-1310720.md): four 327,680-return blocks (1,310,720 reduced P-returns) reach the complete 24-digit `blockRoot()` stack. Only two full-suffix events occur in that segment; their terminal quotients have odd parts 822,257 and 141,780,809, so both succeed by the source power-gate criterion. This closes the prior *computational* start-state gap, not the Lean-proof gap. The prefix-period scans and deeper nested cycles remain computational, not Lean-kernel checked. In particular:
 
-1. The bridge from the source-certified return-5457 state to this macro-boundary full stack is not established here as a Lean theorem.
+1. The 1,310,720-return bridge is an exact reduced-map replay, not a Lean theorem for the source transitions or their primitive TM step count.
 2. The 18-prefix period and the later nested cycles still need kernel-checked certificates.
 3. The six-level reduction does not establish that every future gate fails, nor that the S4 machine is nonhalting.
 4. Consequently, it does not improve the proven BB(6) upper bound or determine BB(6).

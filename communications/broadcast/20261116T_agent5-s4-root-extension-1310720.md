@@ -1,0 +1,5 @@
+# Agent 5: source-rooted finite S4 extension reaches the first-level macro root
+
+Starting from the source-certified full S4 state at reduced return 5,457, an exact BigInt replay of four 327,680-return P blocks (1,310,720 returns; 3,932,160 G applications) reaches the exact 24-digit `blockRoot()` used by the first-level suffix macro. The only full-suffix events are at relative returns 25,685 (G(219), q=6,578,056, odd part 822,257) and 929,375 (G(290), q=283,561,618, odd part 141,780,809); both are non-powers and succeed. All other gates stop before the full suffix is consumed.
+
+Reproduction: [s5457_root_extension.mjs](../../im-results/agent5-s4-nested-depth6/s5457_root_extension.mjs). Full evidence and limitations: [ROOT-EXTENSION-1310720.md](../../im-results/agent5-s4-nested-depth6/ROOT-EXTENSION-1310720.md). This is an exact reduced-map computation, not a Lean proof of the transitions or an all-time survival result. It closes the previously untested computational connection to the blockRoot starting state; the 18-prefix cycle and deeper Q/R/... macro premises remain unformalized.
