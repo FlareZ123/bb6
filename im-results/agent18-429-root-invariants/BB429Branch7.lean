@@ -73,6 +73,39 @@ theorem no_32q7_or_21 (q : Nat) (hq : 1 ≤ q)
   · exact no_32q7 q hq h
   · exact no_32q21 q hq h
 
+
+/-- On the odd reset line, a sufficiently large genuine blank-root state
+cannot have first counter 7 or 21 modulo 32. Combining the exact
+five-residue gate with the two inverse-cylinder exclusions leaves only
+13, 15, and 29. The size hypothesis is essential for q>=1. -/
+theorem rooted_odd_reset_necessary_three (n u w : Nat)
+    (hr : BB429.run n (0,0)=some (u,w))
+    (hg : w+3=2*u) (hlarge : 32≤u) :
+    u%32=13 ∨ u%32=15 ∨ u%32=29 := by
+  have hfive := BB429Reset31.odd_reset_necessary_five n u w hr hg
+  rcases hfive with h7 | h13 | h15 | h21 | h29
+  · let q := u/32
+    have hu : u=32*q+7 := by dsimp [q]; omega
+    have hw : w=64*q+11 := by omega
+    have hq : 1≤q := by dsimp [q]; omega
+    have hreach : Reach (32*q+7) (64*q+11) := by
+      refine ⟨n, ?_⟩
+      simpa [hu,hw] using hr
+    exact False.elim (no_32q7 q hq hreach)
+  · exact Or.inl h13
+  · exact Or.inr (Or.inl h15)
+  · let q := u/32
+    have hu : u=32*q+21 := by dsimp [q]; omega
+    have hw : w=64*q+39 := by omega
+    have hq : 1≤q := by dsimp [q]; omega
+    have hreach : Reach (32*q+21) (64*q+39) := by
+      refine ⟨n, ?_⟩
+      simpa [hu,hw] using hr
+    exact False.elim (no_32q21 q hq hreach)
+  · exact Or.inr (Or.inr h29)
+
+#print axioms rooted_odd_reset_necessary_three
+
 #print axioms no_32q7
 #print axioms no_32q21
 #print axioms no_32q7_or_21
