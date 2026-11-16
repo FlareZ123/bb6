@@ -1039,3 +1039,10 @@ Do not describe either new Lean file as compiled. Do not promote either to
 computational evidence; the #623 adapter is a conditional interface
 contribution only. The exact BB(6) value, a universal six-state upper bound,
 and the #623 blank-root decision all remain open.
+
+The final simulator correction at 05:41 replaced the prior finite-window
+comparison with an exact set comparison of **all nonblank tape positions**
+against the expected finite support at each of the three endpoints. The
+1,890-case V8 rerun still passed with zero failures. Thus the bounded
+simulation checks the complete tape support for each tested case, not just
+the first few blank cells beyond the encoded words.
