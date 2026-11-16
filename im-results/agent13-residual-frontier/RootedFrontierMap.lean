@@ -206,8 +206,9 @@ theorem machine623_manifest_oracles_false :
     finiteEntryMacroBiOracle (partialOfPath machine623DepthFourPath) 2 4 = false := by
   decide
 
-/-- Machine C is the unique authentic root matched by this exact open
-    terminal path. The terminal weight is the exact 25^8 completion mass. -/
+/-- Machine C is matched by this exact open terminal path; the existing
+    manifest uniqueness theorem makes it the root's unique matching terminal.
+    The terminal weight is the exact 25^8 completion mass. -/
 theorem machineC_manifest_terminal :
     ∃ term : AuditTerminal, term ∈ depth4ResidualTerminals ∧
       term.path = machineCDepthFourPath ∧
@@ -228,8 +229,9 @@ theorem machineC_manifest_terminal :
         rw [machineC_selected_partial_path]
       _ = 25^8 := by decide
 
-/-- #623 is the unique authentic root matched by this exact open terminal
-    path. The terminal weight is the exact 25^8 completion mass. -/
+/-- #623 is matched by this exact open terminal path; the existing manifest
+    uniqueness theorem makes it the root's unique matching terminal.
+    The terminal weight is the exact 25^8 completion mass. -/
 theorem machine623_manifest_terminal :
     ∃ term : AuditTerminal, term ∈ depth4ResidualTerminals ∧
       term.path = machine623DepthFourPath ∧
