@@ -194,3 +194,6 @@ U5Q0M16HighStop.lean then combines:
 Its conditional conclusion is that the high m=0 stop root j=39+64s is unreachable for every residual parameter triple satisfying the U5 equations and w=21 (mod32).
 
 **Verification status:** the new proof bodies have passed a local Lean interface-stub preflight. The exact M16 archive/source dependency closure has not yet been compiled against the repository sources. A focused u5_q0_m16_only CI path is prepared in .github/workflows/agent11-c-diagonal-late.yml; run it only after the exact local source preflight. This remains intermediate research, not a BB(6) bound.
+
+
+Independent quotient audit: verify_u5_m16_states.py reconstructs the nondeterministic quotient successor relation directly from the published CLine transition cases, using representatives r and r+16 for each large q-class. It reproduces exactly 7,115 reachable states out of 24^3 and independently confirms that all five c=0 targets above are absent. The focused CI path runs this audit before Lean compilation. This computation corroborates the table lookups; the Lean certificate remains the proof authority.
