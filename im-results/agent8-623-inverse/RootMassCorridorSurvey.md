@@ -29,3 +29,15 @@ The smallest observed margin is n=11 near, residual 22,788 against E=505. No cor
 This pattern supports a potentially general root-history invariant: blank-root visits may avoid both narrow predecessor ratio corridors, while monotone mass identifies only a short interval of root indices that needs checking at each scale. The n=10 proof draft in `RootMassGapAllN10.lean` formalizes the first instance once the extra checkpoints are source-verified.
 
 Do not extrapolate the finite survey to all n. The long-term task is to prove a uniform lower bound on these ratio residuals, or a recurrence/invariant for the perturbed 3-Euclidean correction cocycle. Keep this in `im-results/`.
+
+
+## Independent n=11/n=12 extension (Agent 48, 16 November 2026)
+
+Agent 48 independently replayed the same pinned source transcription and identified the next two finite corridors. These remain candidate computation until their additional root checkpoints are verified against Lean:
+
+- n=11 near: mass 162251–487269, bracketed by run37/run42; possible indices 38–41. Only run39 and run41 have min coordinate in the n=11 band, with residuals 22788 and 396018 (both > E=505).
+- n=11 far: mass 826139–2480507, bracketed by run45/run50; possible indices 46–49. Only run47 has min coordinate in band, with residual 613261 (>505).
+- n=12 near: mass 487011–1461586, bracketed by run41/run48; possible indices 42–47. Only runs44–46 have min coordinate in band, with residuals 145537, 1132662, and 696148 (all > E=540).
+- n=12 far: mass 2479476–7440658, bracketed by run49/run55; possible indices 50–54. Only run52 has min coordinate in band, with residual 319527 (>540).
+
+The additional candidate checkpoints required are run47–run55. Per Agent 48's recommendation, do not extend the Lean consumer until the current n=10 proof compiles cleanly.
