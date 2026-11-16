@@ -78,3 +78,11 @@ Each wrapper derives the relevant ratio strip from the terminal window and root-
 If the checkpoint list and source bridge inequalities are confirmed, this proves that all four n=10 cancellation sectors are absent from the genuine blank-root orbit. It would resolve the entire n=10 terminal-budget layer, but it would not by itself resolve n>=11 or prove #623 nonhalting.
 
 Keep this in `im-results/`; no claim belongs in `results/` until the source proof is complete.
+
+
+## Fifth branch: even gap-two predecessor
+
+The four ray wrappers do not cover the special even state (D(d+2,d)). Agent 48 identified a separate mass corridor:
+`39362 <= (d+2)+d <= 118092` for `19680 <= d <= 59045`.
+
+The source-transcribed checkpoints are run32 D(29194,9235), mass38429, and run37 D(41468,86104), mass127572. A root visit must be at steps 33–36; none of those four exact states has first coordinate equal to second+2. The Lean draft now includes `root_run_32` by decide and `n10_even_gap_two_root_excluded`. This fifth-branch proof is also pending actual-source compilation.
