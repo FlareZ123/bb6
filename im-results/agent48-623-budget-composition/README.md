@@ -98,3 +98,6 @@ This closes the isolated near-orientation arithmetic obligation, conditional on 
 
 
 The same file now also includes uniform n≥10 versions of both orientation lemmas, using the existing `min_scale_large` estimate (100n+500\le m). These general versions use the full root-corridor allowance (35n+120), not just the n=10 constant 470.
+
+
+The q→p helper also includes `run_succ_of_highLevelNext`, a small lemma turning a source transition from a seen root state into the next blank-root checkpoint. This supplies the p root-history premise needed by the terminal-parent theorem.
