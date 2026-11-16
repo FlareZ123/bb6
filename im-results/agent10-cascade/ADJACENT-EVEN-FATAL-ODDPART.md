@@ -81,7 +81,7 @@ been shown equivalent to root reachability of \(h\). In these coordinates,
 the direct fatal equation becomes \(3^t(2u_0+5)=G(n)\), and the
 one-even-exit equation becomes
 \[
-3^t(2u_0+5)+2^{r+1}(4L+10)=G(L+1).
+3^t(2u_0+5)+2^{r+1}(4L+10)=16\cdot2^L+2L+5=G(L+1)+(4L+10).
 \]
 This may let future work organize the all-\(t\) 3-adic intersection as
 a family of scaled \(t=0\) source parameters.
@@ -135,7 +135,7 @@ ratio above. Therefore:
 This applies to both the direct equation \(x=G(n)\) and the one-even-exit
 equation (G). For each candidate \(L\), the latter requires
 \[
-G(L+1)-x=2^{r+1}(4L+10),
+G(L+1)+(4L+10)-x=2^{r+1}(4L+10),
 \]
 which determines at most one \(r\). Thus the general all-\(t\) fatal
 search has at most two child-level/depth candidates for each fixed
@@ -157,7 +157,7 @@ X=G(n)
 \]
 for direct odd-output fatality, or
 \[
-X=G(L+1)-2^{r+1}(4L+10)
+X=16\cdot2^L+2L+5-2^{r+1}(4L+10)
 \]
 for a one-even-exit fatality. The odd-reset equation is
 \(X=3^{t+1}d\), so its source parameter must be
