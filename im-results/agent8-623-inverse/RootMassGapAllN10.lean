@@ -318,22 +318,18 @@ theorem n10_even_gap_two_root_excluded (n d : Nat)
     have hEq : some (.D 19954 27733) = some (.D (d+2) d) :=
       root_run_33.symm.trans hseen
     cases hEq
-    omega
   · subst n
     have hEq : some (.D 7784 59872) = some (.D (d+2) d) :=
       root_run_34.symm.trans hseen
     cases hEq
-    omega
   · subst n
     have hEq : some (.D 52084 23375) = some (.D (d+2) d) :=
       root_run_35.symm.trans hseen
     cases hEq
-    omega
   · subst n
     have hEq : some (.D 28698 70161) = some (.D (d+2) d) :=
       root_run_36.symm.trans hseen
     cases hEq
-    omega
 
 /-- Absolute difference is symmetric. -/
 theorem absDiff_comm (x y : Nat) : absDiff x y = absDiff y x := by
