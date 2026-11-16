@@ -1,12 +1,14 @@
 import T0EvenParentCombined
 import T0EvenParentBoundary
-import T1QParentFatal
 import LevelDeficitDynamics
 import ResetChain
 
 namespace Agent10T0Parent
 
-open CascadeResetInverse CascadeLevelDeficit CascadeSweep Agent10T1Fatal
+open CascadeResetInverse CascadeLevelDeficit CascadeSweep
+
+/-- Fatal height in the standard six-state two-symbol source coordinates. -/
+def t0FatalHeight (n : Nat) : Nat := 4 * 2^n - n - 4
 
 /-- The even arm of the exact original first-reset grammar at level k. -/
 def EvenParentAt (k h u : Nat) : Prop :=
@@ -188,7 +190,7 @@ theorem t0_adjacent_fatal_no_even_entry_parent
     (hOdd : OddParentAtZero K h u d)
     (hTail : SameLevelEvenRun (K + 1) r u x)
     (hFatalExit :
-      EvenParentAt (K + 1) x (Agent10T1Fatal.fatalHeight (K + 2))) :
+      EvenParentAt (K + 1) x (t0FatalHeight (K + 2))) :
     False := by
   rcases hEntryParent with ⟨hEntryBand, hEntryEquation⟩
   rcases hOdd with ⟨hd, hOddBand, hOddOutput, hOddSource⟩
@@ -203,7 +205,7 @@ theorem t0_adjacent_fatal_no_even_entry_parent
     have hpK2 : 2^(K + 2) = 4 * 2^K := by
       rw [Nat.pow_add]
       norm_num
-    have hF : Agent10T1Fatal.fatalHeight (K + 2) =
+    have hF : t0FatalHeight (K + 2) =
         16 * 2^K - K - 6 := by
       dsimp [Agent10T1Fatal.fatalHeight]
       rw [hpK2]
