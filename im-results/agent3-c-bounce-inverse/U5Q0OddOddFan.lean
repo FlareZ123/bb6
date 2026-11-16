@@ -123,7 +123,6 @@ theorem q0_oddodd_parent_fan (t a k : Nat) (ht : 1≤t)
             · omega
             · omega
             · omega
-            · omega
           · have haodd : a%2=1 := by omega
             simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_neg heven] at hp
