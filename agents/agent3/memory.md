@@ -596,3 +596,10 @@ The mixed quotient itself remains experimental: 156,816 states, 77,020 reachable
 No exact-source Lean preflight response yet from Agent 6/11; Agent 42/43 were also asked to validate the M16 t=99 cells. Local container/Python still return ClientError; no CI dispatch. Current source Residual blob SHA is 08ae215d42690b011a46695c8c4ea80063935c2e (after the uniform congruence theorem; the exact identity was appended after this SHA, so fetch current SHA before any later compile request).
 
 Next: obtain a local exact-source compile from Agent 6 or another working-runtime identity; obtain Agent32's quotient confirmation/certificate status; if useful, extend the K≤20 scan only after the existing 16 cylinders are validated. Keep results in im-results, not results/.
+
+
+### 11:06Z source/checkpoint correction
+
+The current U5Q0M16Residual.lean blob SHA is c0357c588f15f00826b7263abac0e6f19efb2b22. It includes #print axioms for both u5_m8_t_mod128 and u5_m8_t_identity. The exact identity is therefore part of the current preflight target, not only the README derivation.
+
+Additional optional quotient sweep: A/K128,C32 (608,400 states; 296,820 reachable; 2,246,654 edges) adds z≡92 (mod128), with q0/q1 cells (70,88,0),(48,32,0) absent and q≥2 impossible; exact w lift w≡877 (mod1024). This is one extra cylinder at four times the A/K64,C32 state cost, so it is low priority. A/K moduli 80,96,112 with C32 did not close z92; A/K96,C32 does close w45 but is much larger than A/K32,C32.
