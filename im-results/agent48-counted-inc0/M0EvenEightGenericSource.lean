@@ -500,8 +500,7 @@ theorem m0EvenEight_counted_increment_source
     L (8*q-1) 2 (a+b+1) b (h+5+(3*b:Int))
     (s1Config L (8*q) 0 a 0 b h)
     (resetPrefixCost 0 (8*q) a b) hprefix hdrain
-  rw [proposedIncrementCost_decomp 0 (8*q) a b]
-  exact hrun
+  simpa [proposedIncrementCost_decomp] using hrun
 
 #print axioms m0EvenEight_q4_prefix_leftFacing
 #print axioms m0EvenEight_q4_prefix_rightShape
