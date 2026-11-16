@@ -329,7 +329,7 @@ def encodeTerminal (term : AuditTerminal) : String :=
     else "physical-scan-no-unassigned-input"
   let oracleOutcomes :=
     if term.certified then "accepted"
-    else "halt=0,ray=0,zero=0,lasso=0,entryMacro=0"
+    else "finiteDecision=0,finiteLasso=0,finiteEntryMacroBi=0"
   let probeFields :=
     if term.certified then ["-", "0", "-", "0", "", "-"]
     else encodeProbeFields (physicalScanProbe p 12 0 finiteBlank)
