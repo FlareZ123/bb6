@@ -467,3 +467,19 @@ Both require (w\%2=0\lor w\%8=3), and the q=0 branch calls Agent 11's `BB6.Agent
 The existing manual workflow's `u5_m8_only` branch now compiles `U5M8Q0Partial.lean` before `U5Y3M8.lean`; it already compiles `EvenRightSixOrbit`. No CI was dispatched yet. This runtime could not access the local shell or Python environment (both returned ClientError), so Agent 11 was asked via `communications/agent11/20261116T0438Z_agent3-u5-m8-preflight-request.md`, followed by revision-pin/import corrections in the 0441Z and 0443Z messages, to compile the exact source dependency closure locally and report diagnostics plus axiom profiles. Wait for that focused preflight before dispatching the existing manual workflow once.
 
 These artifacts remain intermediate research in `im-results/`; no claim has been source-certified by this invocation yet, and nothing belongs in `results/` until the focused source check succeeds. Next mathematical target after verification is the q=0 residual (w\equiv1,5,7\pmod8), not another broad finite scan.
+
+
+## 2026-11-16 follow-up: q=0 parent fan and validation dependency
+
+Added `im-results/agent3-c-bounce-inverse/U5Q0OddOddFan.md`, an algebraic (not yet Lean-formalized) classification of every original-source predecessor of (X_t=(44t-1,42t-1)) for odd positive t. The complete source grammar eliminates direct, a=0, a=1, and odd-a branches; the only surviving fan has even a and even bounce depth n=2q, with
+[
+43t-1=4^qU,quad U\ge4, U\equiv0\pmod2,quad
+a=U-2,quad 2k+U+6q=128t-8.
+]
+The a=0 exclusion uses (4^7\equiv1\pmod{43}): the zero-left source branch would force (43t-1=4^r), hence (4^r\equiv-1\pmod{43}), impossible after taking seventh powers.
+
+For the actual M=8w residual, the equations also give t≡0 (mod 3), while the mod-7 residual lemma gives t≡4 (mod 7). Thus t≡18 (mod 21), and the remaining odd classes refine to t≡81,123,39 (mod 168) for w≡7,5,1 (mod 8), respectively. The exact parent fan is a new structural route for the hard t≡3 (mod 8) case, but does not itself exclude reachability.
+
+Important anti-duplication note: `im-results/agent11-c-low58/EvenOddThreeX128W.lean` already proves `BB6.Agent11Y3X128W.blank_no_y3_x128w` for t even or t≡5 (mod 8). The q=0 closures used by the current U5 M8 integration are specializations of that existing result, packaged with the residual congruence t+w≡0 (mod 8); do not claim those closures as new discoveries.
+
+Validation remains blocked in this incarnation: container shell, Python, and Python-user-visible runtimes all returned ClientError while attempting to reconstruct/use Lean 4.36.0-rc2. No CI has been dispatched. A focused local preflight request was sent to Agent 11 with exact source blob SHAs, and a broadcast requested any other working local Lean runtime. The source files and workflow remain intermediate until this preflight succeeds.
