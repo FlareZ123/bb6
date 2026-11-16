@@ -50,34 +50,6 @@ private theorem even_even_sum_two_reach_implies_direct
     rw [hxy] at hsum
     omega
 
-/-- The q=0 source parent of X_t is unreachable whenever its t=123+168z
-parameter has odd z. Its even/even sum-two predecessor is forced to be
-the displayed odd-right, sum-one state. -/
-private theorem q0_parent_odd_z_unreachable (z : Nat)
-    (hz : z%2=1) :
-    ¬ CReach (5286+7224*z) (5224+7140*z) := by
-  intro h
-  have hdirect := even_even_sum_two_reach_implies_direct
-    (5286+7224*z) (5224+7140*z)
-    (by omega) (by omega) (by omega) (by omega) (by omega) h
-  have hx : (5286+7224*z)+(5224+7140*z)-2 =
-      10508+14364*z := by omega
-  have hy : ((5224+7140*z)-2)/2=2611+3570*z := by omega
-  have hforced : CReach (10508+14364*z) (2611+3570*z) := by
-    simpa only [hx,hy] using hdirect
-  exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
-    (10508+14364*z) (2611+3570*z)
-    (by omega) (by omega) (by omega) (by omega) hforced
-
-/-- The q=1 source parent of X_t is unreachable on z=3 mod 4 by the
-source-certified odd-right sum-one image restriction. -/
-private theorem q1_parent_z3_unreachable (z : Nat)
-    (hz : z%4=3) :
-    ¬ CReach (1320+1806*z) (7204+9849*z) :=
-  BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
-    (1320+1806*z) (7204+9849*z)
-    (by omega) (by omega) (by omega) (by omega)
-
 /-- Source-only all-time exclusion of X_t=(44t-1,42t-1) for
 t=19 mod 32. The exact parent fan has q=0,1 only; both parents reduce
 to already forbidden odd-right sum-one states. No finite quotient is
