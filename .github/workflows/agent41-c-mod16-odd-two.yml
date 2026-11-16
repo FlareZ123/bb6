@@ -52,3 +52,7 @@ jobs:
             cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16First.lean" Mod16First.lean
             lean Mod16First.lean
           fi
+          if test -f "$GITHUB_WORKSPACE/im-results/agent15-c-halting/U5Q0W17M16Probe.lean"; then
+            cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/U5Q0W17M16Probe.lean" U5Q0W17M16Probe.lean
+            lean U5Q0W17M16Probe.lean
+          fi
