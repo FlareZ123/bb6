@@ -250,7 +250,7 @@ private theorem m0EvenEightQ4LeftFacing_prefix_true
     omega
   rw [hsplit]
   rw [sideBit_append_left prefix rest i (by rw [hlen]; omega)]
-  exact m0EvenEightQ4LeftPrefix_allTrue a i ha (by rw [hlen] at hi; exact hi)
+  exact m0EvenEightQ4LeftPrefix_allTrue a i ha hi
 
  /-- Full left-facing stream at the q4 cut, including the unbounded source tail. -/
 theorem m0EvenEight_q4_prefix_leftFacing
