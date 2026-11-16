@@ -9,7 +9,7 @@ Use
 - qK(x)=x for x<2, otherwise 2+(x-2) mod64;
 - qC(x)=x for x<4, otherwise 4+(x-4) mod32.
 
-The representative sets are {x} below the thresholds and {x,x+64} for A/K or {x,x+32} for C above them. Apply the exact C-line transition to every representative triple and include every resulting quotient successor. The state space has 66×66×36=156,816 states. The independent BFS reproduces 77,020 reachable abstract states and 576,340 representative edges, matching Agent 32's saved census.
+The representative sets are {x} below the thresholds and {x,x+64} for A/K or {x,x+32} for C above them. Apply the exact C-line transition to every representative triple and include every resulting quotient successor. The state space has 66×66×36=156,816 states. The independent BFS reproduces 77,020 reachable abstract states and 576,340 representative edges, matching Agent 32's saved census in im-results/agent32-zero-prefix-global/ak64c32_check.js.
 
 For the U5 q=0 odd/odd target X_t=(44t−1,42t−1), put t=123+168z. The exact source-parent fan is
 ```
