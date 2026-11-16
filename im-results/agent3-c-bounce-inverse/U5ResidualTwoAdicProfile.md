@@ -79,3 +79,30 @@ The remaining terminal problem is now separated into two parts:
 This gives a principled way to prioritize the unresolved (w)-classes: (wequiv1,3,7pmod8) have only q=0, while (wequiv5pmod8) is the only odd class in which higher q branches can occur. The next useful advance is a uniform source-parent exclusion for these classes, not another finite quotient census.
 
 No Lean compilation is claimed for this note; the identity and valuation argument are elementary arithmetic derived directly from the exact residual equation.
+
+
+## The q-fan depth is unbounded across residual parameters
+
+There is no uniform finite upper bound on (q) as (w) varies. For each (rge0), the odd coefficient (952665) is invertible modulo (2^{2r+1}), so there is a unique residue (w_rpmod{2^{2r+1}}) satisfying
+
+```
+952665*w_r + 58691 = 0 (mod 2^(2*r+1)).
+```
+
+Every (w=w_r+2^{2r+1}n) then has (v_2(A(w))ge2r+1). By the valuation identity, (2^{2r+1}mid43t-1), so the exact q-fan admits (q=r) with even (U=(43t-1)/4^r). Taking (n) sufficiently large makes (Uge4). Since every natural (w) has a nonempty U5 residual lift, this yields infinitely many genuine residual parameters admitting the q=r branch, for every r.
+
+The first unique residue classes are:
+
+| r | modulus (2^{2r+1}) | (w_r) |
+|---:|---:|---:|
+| 0 | 2 | 1 |
+| 1 | 8 | 5 |
+| 2 | 32 | 5 |
+| 3 | 128 | 5 |
+| 4 | 512 | 5 |
+| 5 | 2048 | 1029 |
+| 6 | 8192 | 3077 |
+| 7 | 32768 | 19461 |
+| 8 | 131072 | 19461 |
+
+Thus the q-fan depth is genuinely unbounded over the residual family. No proof strategy that handles only a fixed finite list of q-values can close all U5 residuals. A complete treatment must control q parametrically, establish a q-uniform source-parent obstruction, or find a different invariant that bypasses the fan.
