@@ -159,3 +159,24 @@ The source-shaped BigInt replay gives the following additional exact states; eac
 | 55 | D(319702,8896323) | 9216025 |
 
 These agree with the existing source-checked checkpoints through run 46 in `RootMassGapAllN10.lean`; run 47–55 themselves remain unverified until `decide` is compiled against the original imports.
+
+
+## 8. Existing source bridge calls (no new drain-bound development needed)
+
+The source bridge theorems are already packaged in `Agent49DrainLinearTerminalSource`:
+`oddFarGap`, `evenFarGap`, `oddNearGap`, and `evenNearGap`.
+They accept the branch-specific `drainB` / `evalA` equations and block bound, and internally derive the first- and third-counter estimates using the linear-log source lemmas.
+
+Each returns a pair of Int gap windows:
+- `.1`: right-ray gap, using (c_R=1);
+- `.2`: left-ray gap, using (c_L=5).
+
+At n=10 the right/left error radii are respectively:
+- odd far: 119 / 249;
+- even far: 101 / 222;
+- odd near: 98 / 184;
+- even near: 152 / 306.
+
+For a p terminal-far branch, feed the left gap (`.2`) and c=5 to the root-mass wrapper. For a p terminal-near branch, feed the right gap (`.1`) and c=1. Uniformly choose B=128 from the terminal helper and e=306 from the bridge source; both satisfy the existing wrapper caps (B≤145, e≤306, c≤9).
+
+For q-near branches, combine the terminal window and the selected bridge gap to obtain the strip required by `NearScaleTransferN10.lean`; this proves q₁≤q₂ before transferring the scale band to q₁. The remaining composition is a four-by-four case split over the already-defined source sectors, not a new drain-estimate development.
