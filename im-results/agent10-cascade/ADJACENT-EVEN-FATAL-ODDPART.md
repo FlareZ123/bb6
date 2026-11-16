@@ -44,7 +44,9 @@ valuation cutoff is claimed for \(L\ge K+2\). Direct odd-output fatality
 ## Descaling every odd-reset source to a \(t=0\) parameter
 
 There is an exact parameterization that may help organize the remaining
-all-\(t\) search. Put \(j=K-t\). Since
+all-\(t\) search. First \(t\le K\): if \(t\ge K+1\), the source band
+would force \(3<d<4\), impossible for an integer \(d\). Thus
+\(j=K-t\) is a natural number. Since
 \[
 6\cdot2^K+1\le2^td\le8\cdot2^K-1
 \]
