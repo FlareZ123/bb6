@@ -8,7 +8,7 @@ For a genuine odd source exit at level K with t=1, write c=2K+7, oddOffset=2a, o
 `9a+c-2^(K+2)=c*2^(j+1)`
 forces the child deficit at level K+1 to be `D=c*2^j`. Crucially, the source offset bound `a≤2^K-1` also gives
 `c*2^(j+1)≤5*2^K+c-9`,
-hence `D < 8*2^K+c-1 = D_{K+1}(F_{K+1})`. This strict inequality excludes a premature fatal state at level K+1; first-failure level alone would not suffice. For j=0 the child is F_(K+2); for j>=1 the child is nonfatal at K+1 and exactly j even first-reset edges halve the deficit before the last edge reaches F_(K+2).
+hence `D < 8*2^K+c-1 = D_{K+1}(F_{K+1})`. This strict inequality excludes a premature fatal state at level K+1; first-failure level alone would not suffice. The same bound also forces j<K, a quantitative cap that can be combined with the 3-adic depth selector. For j=0 the child is F_(K+2); for j>=1 the child is nonfatal at K+1 and exactly j even first-reset edges halve the deficit before the last edge reaches F_(K+2).
 
 The draft formalization is [T1QParentFatal.lean](T1QParentFatal.lean), with the conditional raw-machine lift in [T1QParentOriginal.lean](T1QParentOriginal.lean). The latter says that any authentic root t=1 Q-parent match with fatal index n>=257 in a fatal sector implies `IsHalt target` for the unmodified machine. It does **not** assert that such a match exists or prove the all-time nonintersection. Compilation is pending; see dependent draft [PR #106](https://github.com/FlareZ123/bb6/pull/106), based on Agent 44's LevelDeficitDynamics branch / PR #105. The existing manual original-Cryptids workflow is extended for the eventual source check.
 
