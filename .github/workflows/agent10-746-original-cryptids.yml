@@ -3,7 +3,12 @@ on:
   workflow_dispatch:
     inputs:
       preflight_only:
-        description: Stop after the LevelDeficitDynamics, T1QParentFatal, and t0 arithmetic preflight
+        description: Compile the t0 source bridge and t1 Q-parent source bridge, then stop
+        required: false
+        default: false
+        type: boolean
+      t0_only:
+        description: Compile only the t0 source-connected even-entry exclusion, then stop
         required: false
         default: false
         type: boolean
@@ -37,18 +42,19 @@ jobs:
       - name: Compile rooted chain and high-level reset bridge against unmodified upstream
         env:
           PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
+          T0_ONLY: ${{ inputs.t0_only }}
         run: |
           set -eu
           mkdir -p "$GITHUB_WORKSPACE/Agent10Bridge"
           a="$GITHUB_WORKSPACE/agent10/im-results/agent7-fatal-density"
           b="$GITHUB_WORKSPACE/agent10/im-results/agent10-cascade"
           c="$GITHUB_WORKSPACE/agent10/im-results/agent7-cascade-odd-fibers"
-          if [ "$PREFLIGHT_ONLY" = "true" ]; then
-            # Compile the exact transitive closure of the t1 source bridge and the
-            # t0 arithmetic/boundary modules. Do not build unrelated fast cones.
+          if [ "$PREFLIGHT_ONLY" = "true" ] || [ "$T0_ONLY" = "true" ]; then
+            # Compile the exact transitive closure of the t0 source bridge and, unless
+            # t0_only was requested, the t1 source bridge. No unrelated fast cones.
             set -o pipefail
             cp "$c"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
-            cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,T1QParentFatal,T0EvenParentPowerBounds,T0EvenParentArithmetic,T0EvenParentCombined,T0EvenParentBoundary}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+            cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,T1QParentFatal,T0EvenParentPowerBounds,T0EvenParentArithmetic,T0EvenParentCombined,T0EvenParentBoundary,T0EvenParentSource}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
             cp "$GITHUB_WORKSPACE/agent10/im-results/agent44-746-rank/LevelDeficitDynamics.lean" "$GITHUB_WORKSPACE/Agent10Bridge/"
             cd "$GITHUB_WORKSPACE"
             export LEAN_PATH="$GITHUB_WORKSPACE/Agent10Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
@@ -59,15 +65,21 @@ jobs:
               lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean" 2>&1 | tee -a "$log"
             done
             lake env lean -o "Agent10Bridge/LevelDeficitDynamics.olean" "Agent10Bridge/LevelDeficitDynamics.lean" 2>&1 | tee -a "$log"
-            lake env lean -o "Agent10Bridge/T1QParentFatal.olean" "Agent10Bridge/T1QParentFatal.lean" 2>&1 | tee -a "$log"
-            for m in T0EvenParentPowerBounds T0EvenParentArithmetic T0EvenParentCombined T0EvenParentBoundary; do
+            for m in T0EvenParentPowerBounds T0EvenParentArithmetic T0EvenParentCombined T0EvenParentBoundary T0EvenParentSource; do
               lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean" 2>&1 | tee -a "$log"
             done
+            if [ "$T0_ONLY" != "true" ]; then
+              lake env lean -o "Agent10Bridge/T1QParentFatal.olean" "Agent10Bridge/T1QParentFatal.lean" 2>&1 | tee -a "$log"
+            fi
             if grep -E 'sorryAx|native_decide' "$log"; then
               echo "FAIL: forbidden axiom or native_decide dependency in focused preflight"
               exit 1
             fi
-            echo "PASS: t1 source dependency closure and t0 arithmetic/boundary modules compiled; no sorryAx/native_decide in printed axiom profiles."
+            if [ "$T0_ONLY" = "true" ]; then
+              echo "PASS: t0 source-connected even-entry exclusion and dependencies compiled; no sorryAx/native_decide in printed axiom profiles."
+            else
+              echo "PASS: t0 source-connected exclusion and t1 source dependency closure compiled; no sorryAx/native_decide in printed axiom profiles."
+            fi
             exit 0
           fi
           cp "$c"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass,SurvivingSmall,SurvivingExactGate,OriginalSurvivingBridge,OriginalPhysicalGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
