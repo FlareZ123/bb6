@@ -114,6 +114,8 @@ jobs:
           echo "PASS: source-certified corrected t=1 even-predecessor branch for n = 887 mod 13122"
           lean -o "$e/EvenPre887Cone.olean" "$e/EvenPre887Cone.lean"
           echo "PASS: exact 1319-state source-certified reverse cone excludes the n=887 even fatal predecessor"
+          lean -o "$e/OddResetLevelScale.olean" "$e/OddResetLevelScale.lean"
+          echo "PASS: all-valuation odd-reset child-level scale bound"
           echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
