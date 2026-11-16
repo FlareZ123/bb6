@@ -28,6 +28,25 @@ For `t=128n+99`, `(43t-1) mod 64=32` forces `q≤2`.
 
 The two residual wrappers reuse the exact congruences already derived from the U5 equations: `t=19 (mod 32)` on `w=21 (mod 32)`, and `t=99 (mod 128)` on `w=37 (mod 128)`. The exact two-step pullback from `(64t+5,32t+3)` to `X_t` is retained.
 
+## End-to-end root connection
+
+`U5SourceOnlyHighStop.lean` composes the `w=21 (mod 32)` source-only q=0 closure with the existing exact U5 six-even-right chain and the original `mzero_first_two_reach` / `m0_odd_ray_parent` source-parent lemmas. Its main draft theorem is:
+
+```lean
+blank_no_high_m0_u5_w21
+```
+
+It excludes the actual blank-section reachability of the high m=0 stopping root
+`(2*(39+64*s)+3, 3*(39+64*s)+7)` under the exact U5 residual equations and `w=21 (mod 32)`. The dependency chain contains no finite quotient certificate. The proof route is:
+
+1. high stopping root `-> A_s` by `mzero_first_two_reach`;
+2. `A_s` has only the exact `L_s` and `B_s` source parents;
+3. `L_s` is excluded by the existing mod-8 image invariant;
+4. `B_s` pulls back along the exact six-even-right chain to the terminal y=3 state;
+5. the terminal y=3 parent fan has q=0 (the new source-only theorem), q=1 (odd-right sum-two exclusion), or q≥2 (contradicts `m+1=1 (mod 8)`).
+
+This is the intended source-to-root connection, but the new high-stop module is also still uncompiled and is not yet a certified theorem.
+
 ## Why this matters
 
 The current M16 route excludes the same q=0 source-parent fan by projecting its possible parents into absent cells of the kernel-checked finite quotient. This draft replaces that finite-quotient dependency on these two cylinders with direct original-source predecessor arguments. It therefore offers a smaller and more transparent route for the same two infinite U5 subfamilies.
