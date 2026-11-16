@@ -101,7 +101,12 @@ jobs:
           for name in SheepOddGap SheepPower1458Core SheepPower1458Rows SheepPower1458All SheepPower1458RootGate SheepPower1458High SheepPower1458Target SheepPower1458Special SheepPower1458NoSource; do
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
-          lake env lean SheepPower1458Source.lean
+          set -o pipefail
+          lake env lean SheepPower1458Source.lean 2>&1 | tee /tmp/agent17-sheep-power1458-source.log
+          if grep -q 'sorryAx' /tmp/agent17-sheep-power1458-source.log; then
+            echo "ERROR: transitive sorryAx in seventh-stratum source theorem" >&2
+            exit 1
+          fi
 
 
           # Agent 16: pure 2-adic zero-fiber saturation using Agent17's
