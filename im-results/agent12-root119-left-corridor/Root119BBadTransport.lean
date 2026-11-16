@@ -332,18 +332,20 @@ theorem b0_odd_even_prefix_then_cphaseD1_safe (b : Conf) (n : Nat)
     ∃ bout, run (6*n+33) b = some bout ∧
       Reach bout ∧ BZero bout ∧ ¬ BBad bout := by
   have hn : 2 ≤ n := by
-    by_contra hnot
-    have hcases : n = 0 ∨ n = 1 := by omega
-    obtain ⟨hr1,hr2,hr3,hr4⟩ :=
-      reached_B0_left10x_right1111 b hb hb0.1 hb0.2 hzero hone
-    rcases hcases with hn0 | hn1
-    · have hfalse : b.tape (b.h+1) = false := by
-        simpa [hn0] using hterminal1
-      have hfalse' : true = false := hr1.symm.trans hfalse
-      cases hfalse'
-    · have hfalse : b.tape (b.h+3) = false := by
-        simpa [hn1] using hterminal1
-      have hfalse' : true = false := hr3.symm.trans hfalse
+    by_cases h2 : 2 ≤ n
+    · exact h2
+    · have hcases : n = 0 ∨ n = 1 := by omega
+      obtain ⟨hr1,hr2,hr3,hr4⟩ :=
+        reached_B0_left10x_right1111 b hb hb0.1 hb0.2 hzero hone
+      rcases hcases with hn0 | hn1
+      · have hfalse : b.tape (b.h+1) = false := by
+          simpa [hn0] using hterminal1
+        have hfalse' : true = false := hr1.symm.trans hfalse
+        cases hfalse'
+      · have hfalse : b.tape (b.h+3) = false := by
+          simpa [hn1] using hterminal1
+        have hfalse' : true = false := hr3.symm.trans hfalse
+        cases hfalse'
       cases hfalse'
   obtain ⟨b1,hrun1,hreach1,hB1,hhead1,htape1⟩ :=
     b0_odd_even_chain_to_b0_exact b n hb hb0 hleft hzero hone hones
@@ -446,17 +448,11 @@ theorem cphase_seed_step (b : Conf) (k : Nat)
       hscan hzero hone hbarrier0 hbarrier1
   have hhead' : bout.h = b.h-2 := by rw [hhead]; omega
   have hleft' : bout.tape (b.h-5) = true := by
-    have heq : b.h-(3:Int)-2 = b.h-5 := by omega
-    rw [heq] at hleftOut
-    exact hleftOut
+    convert hleftOut using 1 <;> omega
   have hcenter' : bout.tape (b.h-4) = true := by
-    have heq : b.h-(3:Int)-1 = b.h-4 := by omega
-    rw [heq] at hcenterOut
-    exact hcenterOut
+    convert hcenterOut using 1 <;> omega
   have hright' : bout.tape (b.h-3) = true := by
-    have heq : b.h-(3:Int) = b.h-3 := by omega
-    rw [heq] at hrightOut
-    exact hrightOut
+    convert hrightOut using 1 <;> omega
   have hpres6 : ∀ x : Int, x ≤ b.h-6 →
       bout.tape x = b.tape x := by
     intro x hx
@@ -518,14 +514,16 @@ theorem cphase_seed_iterate (b : Conf) (k : Nat)
     (hb : Reach b) (hB : BZero b) (hseed : CPhaseSeed k b) :
     ∃ bout, shuttleRun (10*k) b = some bout ∧ Reach bout ∧ BZero bout ∧
       bout.h = b.h-2*(k:Int) ∧ ¬ BBad bout := by
-  induction k generalizing b hb hB hseed with
+  induction k generalizing b hb hB with
   | zero =>
       rcases hseed with ⟨hscan,hzero,hone,_⟩
       refine ⟨b, ?_, hb, hB, ?_, ?_⟩
       · simp [shuttleRun]
       · simp
       · exact not_BBad_of_suffix10111 b hone hzero
-          (hscan 2 (by omega)) (hscan 1 (by omega)) (hscan 0 (by omega))
+          (by convert hscan 2 (by omega) using 1 <;> omega)
+          (by convert hscan 1 (by omega) using 1 <;> omega)
+          (by convert hscan 0 (by omega) using 1 <;> omega)
   | succ k ih =>
       obtain ⟨b1,hrun1,hreach1,hB1,hhead1,hseed1,_⟩ :=
         cphase_seed_step b (k+1) hb hB (by omega) hseed
@@ -555,19 +553,20 @@ theorem b0_odd_even_prefix_to_cphase_seed (b : Conf) (n : Nat)
     ∃ b1, run (6*n+23) b = some b1 ∧ Reach b1 ∧ BZero b1 ∧
       b1.h = b.h+(2*n+3:Int) ∧ CPhaseSeed n b1 := by
   have hn : 2 ≤ n := by
-    by_contra hnot
-    have hcases : n = 0 ∨ n = 1 := by omega
-    obtain ⟨hr1,hr2,hr3,hr4⟩ :=
-      reached_B0_left10x_right1111 b hb hb0.1 hb0.2 hzero hone
-    rcases hcases with hn0 | hn1
-    · have hfalse : b.tape (b.h+1) = false := by
-        simpa [hn0] using hterminal1
-      have hfalse' : true = false := hr1.symm.trans hfalse
-      cases hfalse'
-    · have hfalse : b.tape (b.h+3) = false := by
-        simpa [hn1] using hterminal1
-      have hfalse' : true = false := hr3.symm.trans hfalse
-      cases hfalse'
+    by_cases h2 : 2 ≤ n
+    · exact h2
+    · have hcases : n = 0 ∨ n = 1 := by omega
+      obtain ⟨hr1,hr2,hr3,hr4⟩ :=
+        reached_B0_left10x_right1111 b hb hb0.1 hb0.2 hzero hone
+      rcases hcases with hn0 | hn1
+      · have hfalse : b.tape (b.h+1) = false := by
+          simpa [hn0] using hterminal1
+        have hfalse' : true = false := hr1.symm.trans hfalse
+        cases hfalse'
+      · have hfalse : b.tape (b.h+3) = false := by
+          simpa [hn1] using hterminal1
+        have hfalse' : true = false := hr3.symm.trans hfalse
+        cases hfalse'
   obtain ⟨b1,hrun,hreach,hB,hhead,htape⟩ :=
     b0_odd_even_chain_to_b0_exact b n hb hb0 hleft hzero hone hones
       hterminal1 hterminal2 hfinal
