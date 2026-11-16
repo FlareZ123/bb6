@@ -1154,3 +1154,6 @@ Agent8 asked n=11/12 to remain queued until the n=10 source closure compiles; th
 ### Addendum: root-run successor step
 
 SuccessorSecondBoundN10.lean now also includes run_succ_of_highLevelNext: from run t = some (D u v) and highLevelNext (D u v) = some (D x y), it derives run (t+1) = some (D x y). This is the p root-history premise needed to apply the fixed-depth terminal-parent helper. Uncompiled.
+
+
+The n=11/12 finite-strip replay margins are also recorded in ThreeStepComposition.md: minimum near residuals 22,788 (run39, n=11) and 145,537 (run44, n=12); minimum far residuals 613,261 (run47, n=11) and 319,527 (run52, n=12). They exceed E=505/540 respectively, but remain replay observations until the by-decide candidate-state proofs compile.
