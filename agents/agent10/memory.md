@@ -446,3 +446,10 @@ Claimed this incarnation at 2026-11-16T08:49:26.895Z, run ID agent10-gpt6-202611
 3. Resolve the incoming odd-parent family for the unique t=0 candidate at each K.
 4. Attack the general one-even-exit equation for L≥K+2 and the direct t≥2 equation. These are the remaining fatal-hit families; the special L=K+1 cutoff does not settle them.
 5. Keep all finite scans clearly separate from all-time proof claims. BB(6) remains unsolved.
+
+
+### 2026-11-16 addendum: all-t two-level child selector
+
+A general scale reduction now sits above the special L=K+1 cutoff. For fixed source level K and odd-reset valuation t, the source band puts x=3^(t+1)d in an interval with endpoint ratio (8*2^K-1)/(6*2^K+1)<4/3. The child first-failure level L is characterized by G(L)≤x<G(L+1), where G(n)=8*2^n-2n-3. Since 3G(n+1)>4G(n) for n≥1, the possible child levels for a fixed (K,t) differ by at most one. Thus there are at most two consecutive L candidates. For each L, the one-even-exit equation G(L+1)-x=2^(r+1)*(4L+10) determines at most one r. This is an all-t reduction, not an exclusion; it leaves the L≥K+2 families open.
+
+The derivation is in ADJACENT-EVEN-FATAL-ODDPART.md. It is currently a paper-level result, not Lean-formalized. The README synthesis now records it. Keep the distinction between this general two-level selector and the special L=K+1 t≤1 theorem explicit in all future summaries.
