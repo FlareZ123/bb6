@@ -464,3 +464,16 @@ For either fatal branch, fix source level K and the target quantity X:
 The odd-reset equation is X=3^(t+1)d, so the source parameter is P_t=2^t*d=2^t*X/3^(t+1). As t increases by one, P_t is multiplied by 2/3. The admissible source band [6*2^K+1, 8*2^K-1] has endpoint ratio <4/3, while two distinct t values give a ratio at least 3/2. Therefore, for fixed K and fixed fatal target X, at most one t can satisfy the source band. This is an exact all-t uniqueness result, not an exclusion.
 
 The note and README now combine this with the all-t two-level child selector: for fixed (K,t), at most two consecutive child levels L are possible; for fixed (K,X), at most one t is possible. General L≥K+2 and direct t≥2 families remain open.
+
+
+### 2026-11-16 addendum: dyadic descaling to a t=0 source
+
+For every odd-reset source at level K with valuation t, put j=K-t. The source band gives 6*2^j+1≤d≤8*2^j-1, so the same odd parameter d is a valid t=0 source parameter at level j. If h0 is the corresponding t=0 source height and h the original source height, then
+\[
+h=2^t h_0+(2^t-1)(j+5)-t.
+\]
+If u0 and u are the respective odd-reset children, then
+\[
+2u+5=3^t(2u_0+5).
+\]
+This is an exact affine parameterization of candidate sources, not a root-reachability equivalence. It may let future work express the all-t fatal 3-adic intersection as scaled t=0 source data. Full derivation is in ADJACENT-EVEN-FATAL-ODDPART.md.
