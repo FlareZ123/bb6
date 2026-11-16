@@ -1,4 +1,4 @@
-name: Agent 42 counted TM63 LBinDec proof
+name: Agent 42 counted TM63 LBinDec and M0-even 8q source proof
 on:
   workflow_dispatch:
   workflow_call:
@@ -15,7 +15,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile the exact LBinDec and uniform carry-prefix source closure
+      - name: Compile exact LBinDec, S1 drain, and M0-even 8q source closure
         run: |
           set -euo pipefail
           mkdir -p /tmp/a42-lbin-dec
@@ -35,6 +35,11 @@ jobs:
           cp im-results/agent24-champion-time/{ChampionModular,CountPattern,CostRecurrence}.lean /tmp/a42-lbin-dec/
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a42-lbin-dec/
           cp im-results/agent48-counted-inc0/S1CountedDrain.lean /tmp/a42-lbin-dec/
+          cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a42-lbin-dec/
+          cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a42-lbin-dec/
+          cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a42-lbin-dec/
+          cp im-results/agent24-champion-time/Q4RightEndpoint.lean /tmp/a42-lbin-dec/
+          cp im-results/agent48-counted-inc0/{M0EvenEightQ4Bridge,M0EvenEightQ4Prefix,M0EvenEightGenericSource}.lean /tmp/a42-lbin-dec/
           cd /tmp/a42-lbin-dec
           export LEAN_PATH=.
           lean --version
@@ -72,8 +77,15 @@ jobs:
           lean -o CostRecurrence.olean CostRecurrence.lean 2>&1 | tee cost-recurrence-compile.log
           lean -o CountedReset.olean CountedReset.lean 2>&1 | tee counted-reset-compile.log
           lean -o S1CountedDrain.olean S1CountedDrain.lean 2>&1 | tee s1-counted-drain-compile.log
-          if grep -q 'sorryAx' counted-lbin-dec-axioms.log counted-prefix-hrun-compile.log counted-prefix-hrun-axioms.log s1-encoder-compile.log s1-prefix-bridge-compile.log counted-suffix-output-compile.log s1-carry-output-bridge-compile.log carry-left-r23-compile.log long-residue1-compile.log s1-carry-inc0-compile.log s1-odd-canonical-compile.log s1-counted-inc0-compile.log champion-modular-compile.log count-pattern-compile.log cost-recurrence-compile.log counted-reset-compile.log s1-counted-drain-compile.log; then
+          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean 2>&1 | tee counted-q4-prefix-compile.log
+          lean -o CountedRst1Prime.olean CountedRst1Prime.lean 2>&1 | tee counted-rst1-prime-compile.log
+          lean -o Q4Suffix.olean Q4Suffix.lean 2>&1 | tee q4-suffix-compile.log
+          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean 2>&1 | tee q4-right-endpoint-compile.log
+          lean -o M0EvenEightQ4Bridge.olean M0EvenEightQ4Bridge.lean 2>&1 | tee m0-even-eight-q4-bridge-compile.log
+          lean -o M0EvenEightQ4Prefix.olean M0EvenEightQ4Prefix.lean 2>&1 | tee m0-even-eight-q4-prefix-compile.log
+          lean -o M0EvenEightGenericSource.olean M0EvenEightGenericSource.lean 2>&1 | tee m0-even-eight-generic-source-compile.log
+          if grep -q 'sorryAx' counted-lbin-dec-axioms.log counted-prefix-hrun-compile.log counted-prefix-hrun-axioms.log s1-encoder-compile.log s1-prefix-bridge-compile.log counted-suffix-output-compile.log s1-carry-output-bridge-compile.log carry-left-r23-compile.log long-residue1-compile.log s1-carry-inc0-compile.log s1-odd-canonical-compile.log s1-counted-inc0-compile.log champion-modular-compile.log count-pattern-compile.log cost-recurrence-compile.log counted-reset-compile.log s1-counted-drain-compile.log counted-q4-prefix-compile.log counted-rst1-prime-compile.log q4-suffix-compile.log q4-right-endpoint-compile.log m0-even-eight-q4-bridge-compile.log m0-even-eight-q4-prefix-compile.log m0-even-eight-generic-source-compile.log; then
             echo '::error::sorryAx found in the counted LInc H-run, S1 decrement, or counted-drain dependency closure'
             exit 1
           fi
-          echo 'Counted LInc H proof, uniform all-r S1 decrement, and closed-form S1 drain compiled; no sorryAx dependency detected.'
+          echo 'Counted LInc H proof, uniform all-r S1 decrement, closed-form S1 drain, and generic M0-even 8q counted source increment compiled; no sorryAx dependency detected.'
