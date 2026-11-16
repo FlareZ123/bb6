@@ -26,7 +26,30 @@ jobs:
           python -c "import base64,lzma,hashlib,pathlib; p=pathlib.Path('$B/Root119Corridor.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(b).hexdigest()=='65efa8844d8836f2579e4d7d5a71f308a2fc2f5343a0c0309f1f0c971ca2ab1d'; p.with_name('Root119Corridor.lean').write_bytes(b)"
           lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
           lean -o "$A/Root119BShift.olean" "$A/Root119BShift.lean"
+          lean -o "$A/Root119CGate.olean" "$A/Root119CGate.lean"
+          lean -o "$A/Root119BRegular.olean" "$A/Root119BRegular.lean"
           lean -o "$A/Root119BShield.olean" "$A/Root119BShield.lean"
+          lean -o "$A/Root119FBSweep.olean" "$A/Root119FBSweep.lean"
+          lean -o "$A/Root119DFSweep.olean" "$A/Root119DFSweep.lean"
+          lean -o "$S/Root119ShuttleSupport.olean" "$S/Root119ShuttleSupport.lean"
+          lean -o "$S/Root119Shuttle.olean" "$S/Root119Shuttle.lean"
+          lean -o "$S/Root119EvenSweep.olean" "$S/Root119EvenSweep.lean"
+          lean -o "$S/Root119EvenExtra.olean" "$S/Root119EvenExtra.lean"
+          lean -o "$S/Root119ParityDichotomy.olean" "$S/Root119ParityDichotomy.lean"
+          python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('$A/Root119Wave.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('wave-source-sha256',h); assert h=='715e5512da53986da896ea05d68d28869fc8489b6ad3e1e49e26459545299930'; p.with_name('Root119Wave.lean').write_bytes(b)"
+          lean -o "$A/Root119Wave.olean" "$A/Root119Wave.lean"
+          lean -o "$A/Root119WaveNormal.olean" "$A/Root119WaveNormal.lean"
+          lean -o "$A/Root119OddWaveRetreat.olean" "$A/Root119OddWaveRetreat.lean"
+          lean -o "$A/Root119OddEvenChain.olean" "$A/Root119OddEvenChain.lean" 2>&1 | tee "$A/Root119OddEvenChain.log"
+          if grep -q 'sorryAx' "$A/Root119OddEvenChain.log"; then
+            echo "::error::sorryAx found in even-wave return dependency"
+            exit 1
+          fi
+          lean -o "$A/Root119CPhaseReturn.olean" "$A/Root119CPhaseReturn.lean" 2>&1 | tee "$A/Root119CPhaseReturn.log"
+          if grep -q 'sorryAx' "$A/Root119CPhaseReturn.log"; then
+            echo "::error::sorryAx found in C-phase return dependency"
+            exit 1
+          fi
           lean "$B/Root119Sharpness.lean" 2>&1 | tee "$B/sharpness-check.log"
           if grep -q 'sorryAx' "$B/sharpness-check.log"; then
             echo "::error::Untrusted sorry axiom in genuine blank-witness sharpness"
@@ -41,6 +64,15 @@ jobs:
           fi
           grep -q 'reached_B0_exposed_no_right1110.*depends on axioms' "$B/ancestry-ten-check.log"
           grep -q 'reached_B0_left10x_right1111.*depends on axioms' "$B/ancestry-ten-check.log"
+          lean -o "$B/Root119BBadTransport.olean" "$B/Root119BBadTransport.lean" 2>&1 | tee "$B/Root119BBadTransport.log"
+          if grep -q 'sorryAx' "$B/Root119BBadTransport.log"; then
+            echo "::error::sorryAx found in BBad corridor iteration theorem"
+            exit 1
+          fi
+          grep -q 'cphase_seed_step.*depends on axioms' "$B/Root119BBadTransport.log"
+          grep -q 'cphase_seed_iterate.*depends on axioms' "$B/Root119BBadTransport.log"
+          grep -q 'b0_odd_even_prefix_to_cphase_seed.*depends on axioms' "$B/Root119BBadTransport.log"
+          grep -q 'b0_odd_even_prefix_then_cphaseD1_iterated.*depends on axioms' "$B/Root119BBadTransport.log"
           if grep -q 'sorryAx' "$B/ancestry-check.log"; then
             echo "::error::Untrusted sorry axiom in reached-source ancestry proof"
             exit 1
