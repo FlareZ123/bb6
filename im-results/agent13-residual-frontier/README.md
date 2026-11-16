@@ -31,7 +31,7 @@ The stop reason for the two roots below is `tree-depth-exhausted`. The physical 
 | 3 | C/1 | `0LB` |
 | 4 | C/0 | `1LA` |
 
-This is the first four entries of `machineCVisited`; the branch order matters. The partial table has eight free inputs:
+This is the first four entries of `machineCVisited`; the branch order matters. The terminal is the unique manifest terminal matching this root (not the unique machine in the cylinder). The partial table has eight free inputs:
 
 `A/1, B/1, D/0, D/1, E/0, E/1, F/0, F/1`.
 
@@ -69,7 +69,7 @@ Only F/0 remains free, so this source-authentic subcylinder has 25 completions a
 
 The partial table has eight free inputs:
 
-`A/1, B/1, C/1, D/1, E/0, E/1, F/0, F/1`.
+`A/1, B/1, C/1, D/1, E/0, E/1, F/0, F/1`. The terminal is the unique manifest terminal matching this root (not the unique machine in the cylinder).
 
 Its exact raw compatible completion mass is again `25^8 = 152,587,890,625`.
 
