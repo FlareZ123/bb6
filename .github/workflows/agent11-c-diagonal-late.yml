@@ -23,6 +23,11 @@ on:
         required: false
         type: boolean
         default: false
+      u5_q0_partial_only:
+        description: "Source-check the q=0 u=5 M=0 mod 8 even-w and w=3 mod 8 subfamilies, then stop"
+        required: false
+        type: boolean
+        default: false
       s31_w13_only:
         description: "Source-check the M0 base and S31 B/W5/W1/q275/q403 high-stop chain, then stop"
         required: false
@@ -49,6 +54,7 @@ jobs:
           U5_X314_ONLY: ${{ inputs.u5_x314_only }}
           U5_X186_ONLY: ${{ inputs.u5_x186_only }}
           U5_M8_ONLY: ${{ inputs.u5_m8_only }}
+          U5_Q0_PARTIAL_ONLY: ${{ inputs.u5_q0_partial_only }}
           S31_W13_ONLY: ${{ inputs.s31_w13_only }}
         run: |
           set -euo pipefail
@@ -221,6 +227,15 @@ jobs:
 
           # Focused original-source audit of Agent 11's new u=5 x=314
           # boundary, stopping before the unrelated S229/S533 and S31 chains.
+          if [ "$U5_Q0_PARTIAL_ONLY" = "true" ]; then
+            cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/U5M8Q0Partial.lean .
+            lean -o U5M8Q0Partial.olean U5M8Q0Partial.lean 2>&1 | tee U5M8Q0Partial.log
+            if grep -q sorryAx U5M8Q0Partial.log; then
+              echo "REJECTED: q=0 u=5 M=0 mod 8 partial exclusion contains sorryAx"
+              exit 1
+            fi
+            exit 0
+          fi
           if [ "$U5_X314_ONLY" = "true" ]; then
             cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX314Mod512.lean .
             lean -o EvenOddThreeX314Mod512.olean EvenOddThreeX314Mod512.lean 2>&1 | tee EvenOddThreeX314Mod512.log
