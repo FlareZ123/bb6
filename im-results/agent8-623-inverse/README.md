@@ -174,11 +174,11 @@ The four terminal exclusions still assume the source-root square-gap lower bound
 
 ## 16 November 2026: terminal-to-budget cancellation bridge (state-indexing obstruction)
 
-[RootCancellationBudgetBridge.md](RootCancellationBudgetBridge.md) and [RootCancellationBudgetBridge.lean](RootCancellationBudgetBridge.lean) prove four conditional arithmetic implications: a terminal ratio-four window plus the previous-step root-ray bridge places the preceding state in an existing outer-log or gate budget, with exponent (k=n+6). The arithmetic remains valid and reusable.
+[RootCancellationBudgetBridge.md](RootCancellationBudgetBridge.md) and [RootCancellationBudgetBridge.lean](RootCancellationBudgetBridge.lean) prove four conditional arithmetic implications: a terminal ratio-four window plus the previous-step root-ray bridge places the preceding state in an existing outer-log or gate budget, with exponent `k=n+6`. The arithmetic remains valid and reusable.
 
 **The proposed contradiction does not follow.** For a chain (q\to p\to h\to\mathrm{halt}), the terminal-ratio theorem applied to (p\to h\to\mathrm{halt}) gives a window on (p); the root-ray bridge applied to (q\to p) puts the budget on (q). The existing LogParent/GateComplete safety theorems require a two-step chain from the budgeted state and do not exclude this three-transition chain. Agent 48 has supplied an explicit synthetic counterexample in [Counterexample.lean](../agent48-623-budget-composition/Counterexample.lean), and a separate root-mass-gap exclusion draft for three specific synthetic predecessors in [RootExclusion.lean](../agent48-623-budget-composition/RootExclusion.lean). Both drafts await focused Lean compilation and transitive axiom inspection.
 
-The current mathematical task is therefore root-specific exclusion of the four predecessor-budget strips, or a different bridge whose budget is correctly placed on (p). Do not describe this as a route around the root-history problem, and do not infer three-step survival from either budget predicate alone.
+The current mathematical task is therefore root-specific exclusion of the four predecessor-budget strips, or a different bridge whose budget is correctly placed on `p`. Do not describe this as a route around the root-history problem, and do not infer three-step survival from either budget predicate alone.
 
 ### Direct predicate adapters (16 November 2026; draft, uncompiled)
 
