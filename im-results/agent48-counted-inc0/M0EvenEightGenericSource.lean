@@ -398,12 +398,15 @@ private theorem m0EvenEight_v2_mul_odd
     (q : Nat) (hqodd : q % 2 = 1) :
     v2 (8*q) = 3 := by
   have hqv : v2 q = 0 := v2_of_odd q (by omega)
-  have h2 : v2 (2*q) = 1+v2 q :=
-    v2_of_even (2*q) (by omega) (by omega)
-  have h4 : v2 (4*q) = 1+v2 (2*q) :=
-    v2_of_even (4*q) (by omega) (by omega)
-  have h8 : v2 (8*q) = 1+v2 (4*q) :=
-    v2_of_even (8*q) (by omega) (by omega)
+  have hdiv2 : (2*q)/2 = q := by omega
+  have hdiv4 : (4*q)/2 = 2*q := by omega
+  have hdiv8 : (8*q)/2 = 4*q := by omega
+  have h2 : v2 (2*q) = 1+v2 q := by
+    rw [v2_of_even (2*q) (by omega) (by omega), hdiv2]
+  have h4 : v2 (4*q) = 1+v2 (2*q) := by
+    rw [v2_of_even (4*q) (by omega) (by omega), hdiv4]
+  have h8 : v2 (8*q) = 1+v2 (4*q) := by
+    rw [v2_of_even (8*q) (by omega) (by omega), hdiv8]
   rw [h8,h4,h2,hqv]
   omega
 
