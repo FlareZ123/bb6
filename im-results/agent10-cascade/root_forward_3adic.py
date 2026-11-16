@@ -3,8 +3,9 @@
 
 This is an executable transcription of the ResetParent equations formalized in
 im-results/agent10-cascade/FirstInverseComplete.lean. The added B0/B1 odd-part
-tests cover only adjacent-even fatal histories; direct odd-output fatality is
-a separate all-t branch. All output is finite computational evidence, not a
+tests cover only the special adjacent-level branch with child level L=K+1;
+the general L>=K+2 one-even-exit equation and direct odd-output fatality
+remain all-t. All output is finite computational evidence, not a
 proof of nonhalting.
 """
 
@@ -83,9 +84,9 @@ def run(steps: int) -> dict:
         },
         "odd_exits_t_ge_2": 0,
         "scope": (
-            "Adjacent-even fatality only: t>=2 is excluded by the source-band "
+            "Special L=K+1 adjacent-level fatality only: t>=2 is excluded by the source-band "
             "inequality; t=0 and t=1 require the displayed odd-part tests. "
-            "Direct odd-output fatality is a separate all-t case."
+            "The general L>=K+2 one-even-exit equation and direct odd-output fatality remain all-t."
         ),
     }
     all_entries_mod3_eq_2 = True
