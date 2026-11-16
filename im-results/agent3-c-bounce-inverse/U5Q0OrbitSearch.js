@@ -47,7 +47,7 @@ const oddModuli = [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43];
 const residueSets = new Map(oddModuli.map(m => [m, new Set()]));
 
 let a = 5n, k = 1n;
-let candidateCount = 0, exactFanHits = [], q0Hits = [];
+let candidateCount = 0, exactFanHits = [], linearResidualHits = [];
 let minAbsLinearResidual = null, minResidualState = null;
 let firstMillion = Math.min(steps, 1_000_000);
 
@@ -65,8 +65,8 @@ for (let i = 0; i < steps; i++) {
     minAbsLinearResidual = absResidual;
     minResidualState = { step: i, a: a.toString(), k: k.toString(), L: L.toString() };
   }
-  if (L === 46n && q0Hits.length < 20) {
-    q0Hits.push({ step: i, a: a.toString(), k: k.toString(), M: M.toString() });
+  if (L === 46n && linearResidualHits.length < 20) {
+    linearResidualHits.push({ step: i, a: a.toString(), k: k.toString(), M: M.toString() });
   }
 
   for (let q = 0; q < qPowers.length; q++) {
@@ -92,7 +92,7 @@ console.log(JSON.stringify({
   steps,
   candidateCount,
   exactFanHits,
-  q0Hits,
+  linearResidualHits,
   minAbsLinearResidual: minAbsLinearResidual?.toString(),
   minResidualState,
   firstMillionResidueCoverage: residueCoverage,
