@@ -90,6 +90,7 @@ jobs:
           mkdir -p source/im-results/agent37-d-timing-cocycle
           cp proof/im-results/agent37-d-timing-cocycle/BlankThirtyFourthToThirtySixthRejoin.lean source/im-results/agent37-d-timing-cocycle/
           cp proof/im-results/agent37-d-timing-cocycle/BlankThirtySeventhToThirtyEighthRejoin.lean source/im-results/agent37-d-timing-cocycle/
+          cp proof/im-results/agent37-d-timing-cocycle/Seed39Probe.lean source/im-results/agent37-d-timing-cocycle/
       - name: Compile exact exceptions 34-38 and their source reentries
         working-directory: source
         shell: bash
@@ -100,6 +101,7 @@ jobs:
           T=im-results/agent37-d-timing-cocycle
           lean -DmaxRecDepth=55000 -o "$T/BlankThirtyFourthToThirtySixthRejoin.olean" "$T/BlankThirtyFourthToThirtySixthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankThirtySeventhToThirtyEighthRejoin.olean" "$T/BlankThirtySeventhToThirtyEighthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/Seed39Probe.olean" "$T/Seed39Probe.lean"
           if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
@@ -115,4 +117,5 @@ jobs:
             source/lean-stage.tar.gz
             source/im-results/agent37-d-timing-cocycle/BlankThirtyFourthToThirtySixthRejoin.olean
             source/im-results/agent37-d-timing-cocycle/BlankThirtySeventhToThirtyEighthRejoin.olean
+            source/im-results/agent37-d-timing-cocycle/Seed39Probe.olean
           if-no-files-found: warn
