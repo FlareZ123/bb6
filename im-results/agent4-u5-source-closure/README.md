@@ -49,9 +49,9 @@ The module also drafts `u5_residual_nonempty`: for every natural w it constructs
 
 A further arithmetic consequence is that every such residual has `s=293 (mod 512)`, hence the stopping-root index `j=39+64s` satisfies `j=18791 (mod 32768)`, equivalently `t_root=(j-7)/32=587 (mod 1024)`. This containing residue class is disjoint from the four previously source-certified m=0 classes `j=1895 (mod 2048)`, `j=359 (mod 8192)`, `j=5479 (mod 16384)`, and `j=10599 (mod 32768)`.
 
-**Important density qualification:** the U5 residual equations generate only the specific exponentially growing sequence indexed by `w=32n+21`; they do not generate every root index in `j=18791 (mod 32768)`. Thus this is an additional infinite, sparse subset inside a new residue class, not a fifth full arithmetic-progression exclusion. No density increment is claimed: the previously certified coverage remains `23/512` of the odd root-parameter ray. The new sequence itself has natural density zero.
+**Important density qualification:** the U5 residual equations generate only the specific exponentially growing sequence indexed by `w=32n+21`; they do not generate every root index in `j=18791 (mod 32768)`. Thus this is an additional infinite, sparse subset inside a new residue class, not a fifth full arithmetic-progression exclusion. No density increment is claimed: the previously certified coverage remains `23/512` of the odd root-parameter ray. The constructed sequence grows exponentially and therefore has natural density zero.
 
-This is the intended source-to-root connection, including nonvacuity and a new disjoint high-stop residue class, but the new high-stop module is still uncompiled and is not yet a certified theorem.
+This is the intended source-to-root connection, including nonvacuity and an additional infinite sparse family lying inside a new disjoint residue class, but the new high-stop module is still uncompiled and is not yet a certified theorem.
 
 ## Why this matters
 
