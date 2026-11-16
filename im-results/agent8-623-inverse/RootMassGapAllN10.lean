@@ -89,7 +89,7 @@ theorem n10_near_ratio_root_excluded (n a d : Nat)
       omega
     have hnotHi : ¬ 38 <= n := by
       intro hn
-      have hm := run_mass_mono 38 n 44634 124427 hn root_run_38 hseen
+      have hm := run_mass_mono 38 n 44634 124427 a d hn root_run_38 hseen
       omega
     have hnot33 : n ≠ 33 := by
       intro hn
@@ -135,7 +135,7 @@ theorem n10_near_ratio_root_excluded (n a d : Nat)
       omega
     have hnotHi : ¬ 38 <= n := by
       intro hn
-      have hm := run_mass_mono 38 n 44634 124427 hn root_run_38 hseen
+      have hm := run_mass_mono 38 n 44634 124427 a d hn root_run_38 hseen
       omega
     have hnot33 : n ≠ 33 := by
       intro hn
@@ -190,7 +190,7 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
       omega
     have hnotHi : ¬ 46 <= n := by
       intro hn
-      have hm := run_mass_mono 46 n 426044 571540 hn root_run_46 hseen
+      have hm := run_mass_mono 46 n 426044 571540 a d hn root_run_46 hseen
       omega
     have hnot39 : n ≠ 39 := by
       intro hn
@@ -248,7 +248,7 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
       omega
     have hnotHi : ¬ 46 <= n := by
       intro hn
-      have hm := run_mass_mono 46 n 426044 571540 hn root_run_46 hseen
+      have hm := run_mass_mono 46 n 426044 571540 a d hn root_run_46 hseen
       omega
     have hnot39 : n ≠ 39 := by
       intro hn
@@ -269,7 +269,7 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
       have hEq : some (.D 185262 162438) = some (.D a d) :=
         root_run_41.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both 162438 (13*185262) 470 hg
+      have hr := absDiff_le_both 185262 (13*162438) 470 hg
       omega
     · subst n
       have hEq : some (.D 22822 487342) = some (.D a d) :=
@@ -310,7 +310,7 @@ theorem n10_even_gap_two_root_excluded (n d : Nat)
     omega
   have hnotHi : ¬ 37 <= n := by
     intro hn
-    have hm := run_mass_mono 37 n 41468 86104 hn root_run_37 hseen
+    have hm := run_mass_mono 37 n 41468 86104 (d+2) d hn root_run_37 hseen
     omega
   have hcases : n = 33 ∨ n = 34 ∨ n = 35 ∨ n = 36 := by omega
   rcases hcases with h33 | h34 | h35 | h36
