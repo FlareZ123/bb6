@@ -122,7 +122,7 @@ e = v2(661+903 z0),
 dmax = floor((e+2)/2),
 K = max(e+1, 2*dmax+4).
 ```
-If e is fixed by z mod2^k and all parent cells through dmax are fixed, then the entire cylinder z≡z0 (mod2^k) has the same parent-fan exclusion. The depth-d A/K64 parent projection depends only on z mod2^(2d+4); the condition K≥2*dmax+4 fixes every such projection. Since K≥e+1, it also fixes e and hence the maximum possible d. Thus the finite cell check proves a whole arithmetic cylinder, conditional on quotient soundness.
+If e is fixed by z mod2^K and all parent cells through dmax are fixed, then the entire cylinder z≡z0 (mod2^K) has the same parent-fan exclusion. The depth-d A/K64 parent projection depends only on z mod2^(2d+4); the condition K≥2*dmax+4 fixes every such projection. Since K≥e+1, it also fixes e and hence the maximum possible d. Thus the finite cell check proves a whole arithmetic cylinder, conditional on quotient soundness.
 
 The 16 minimal cylinders found within the K≤20 enumeration are:
 
