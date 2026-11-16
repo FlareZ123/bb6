@@ -16,6 +16,9 @@ set_option maxHeartbeats 0
 pinned upstream highLevelNext via Agent49ParitySource.run, not via a copied
 simulator. -/
 
+theorem root_run_32 :
+    run 32 = some (.D 29194 9235) := by decide
+
 theorem root_run_33 :
     run 33 = some (.D 19954 27733) := by decide
 
@@ -293,6 +296,45 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
       have hr := absDiff_le_both 616551 (13*190506) 470 hg
       omega
 
+/-- The fifth n=10 root branch, the special even gap-two state
+D(d+2,d), is also absent from the blank-root orbit. -/
+theorem n10_even_gap_two_root_excluded (n d : Nat)
+    (hseen : run n = some (.D (d+2) d))
+    (hmin : 19680 <= d) (hmax : d <= 59045) :
+    False := by
+  have hlo : 39362 <= (d+2)+d := by omega
+  have hhi : (d+2)+d <= 118092 := by omega
+  have hnotlo : ¬ n <= 32 := by
+    intro hn
+    have hm := run_mass_mono n 32 (d+2) d 29194 9235 hn hseen root_run_32
+    omega
+  have hnotHi : ¬ 37 <= n := by
+    intro hn
+    have hm := run_mass_mono 37 n 41468 86104 hn root_run_37 hseen
+    omega
+  have hcases : n = 33 ∨ n = 34 ∨ n = 35 ∨ n = 36 := by omega
+  rcases hcases with h33 | h34 | h35 | h36
+  · subst n
+    have hEq : some (.D 19954 27733) = some (.D (d+2) d) :=
+      root_run_33.symm.trans hseen
+    cases hEq
+    omega
+  · subst n
+    have hEq : some (.D 7784 59872) = some (.D (d+2) d) :=
+      root_run_34.symm.trans hseen
+    cases hEq
+    omega
+  · subst n
+    have hEq : some (.D 52084 23375) = some (.D (d+2) d) :=
+      root_run_35.symm.trans hseen
+    cases hEq
+    omega
+  · subst n
+    have hEq : some (.D 28698 70161) = some (.D (d+2) d) :=
+      root_run_36.symm.trans hseen
+    cases hEq
+    omega
+
 /-- Absolute difference is symmetric. -/
 theorem absDiff_comm (x y : Nat) : absDiff x y = absDiff y x := by
   unfold absDiff
@@ -434,6 +476,8 @@ theorem n10_near_near_bridge_excluded (t u v x y B e c : Nat)
 #print axioms n10_far_mass_bounds
 #print axioms n10_near_ratio_root_excluded
 #print axioms n10_far_ratio_root_excluded
+#print axioms root_run_32
+#print axioms n10_even_gap_two_root_excluded
 #print axioms absDiff_comm
 #print axioms n10_scale_bounds
 #print axioms n10_far_far_bridge_excluded
