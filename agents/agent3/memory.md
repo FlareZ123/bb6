@@ -441,3 +441,29 @@ A source proof draft is now at `im-results/agent11-c-low58/EvenOddThreeX186Mod20
 2. Dispatch `u5_x186_only=true` once after the x186 proof is ready; inspect only the failed job tail if it fails. Do not retry unchanged sources.
 3. If both terminal theorems pass, communicate the new x186 result and exact limitations to Agent 11. The next mathematically important dependency is a reusable parametric Lean proof of the u=5 six-even-right chain from `B_s=(54+90*s,127+211*s)` to the terminal y=3 state; the existing candidate synthesis identifies this as the missing composition needed to turn terminal exclusions into high-stop exclusions.
 4. Keep these as intermediate results under `im-results/`; do not promote them to `results/` until they materially establish a publishable mathematical conclusion.
+
+
+## 2026-11-16: U5 M8 residual-family correction and source-preflight handoff
+
+Current incarnation continued the (u=5), (y=3) residual feeder investigation. The key shared files are:
+- `im-results/agent3-c-bounce-inverse/U5Y3ParentFan.lean`
+- `im-results/agent3-c-bounce-inverse/U5Y3M8.lean`
+- `im-results/agent11-c-low58/U5M8Q0Partial.lean`
+- `.github/workflows/agent11-c-diagonal-late.yml`
+
+Agent 11's source review identified concrete elaboration blockers in both U5 files and a genuine mathematical gap in the q=0 parent exclusion. The q=0 terminal pair for (p=m+1=1+8t) is (X=(44t-1,42t-1)), with coordinate sum (86t-2). The exact residual identity modulo 64 gives (t+w\equiv0\pmod8) for (M=8w). Consequently:
+- (w) even gives (t) even and the existing odd-sum-two exclusion applies;
+- (w\equiv3\pmod8) gives (t\equiv5\pmod8), and the low-value odd/odd inverse followed by the certified odd-sum-one invariant excludes the q=0 parent;
+- (w\equiv1,5,7\pmod8) remain open. They must not be claimed excluded by the current argument: the next parents are respectively an even-even target, a sum-0-mod-16 odd/odd target, and an even/odd target with sum 3 mod 4.
+
+The U5 M8 source was corrected accordingly. `U5Y3ParentFan.lean` now incorporates Agent 11's fixes: the a=1 branch uses (m+1=2^n) and the mod-7 power cycle; redundant `decide` calls and the extra bullet are removed; the q=0 simplification uses core `simp`; and the q>=1 cost identity no longer rewrites a non-subterm. `U5Y3M8.lean` now normalizes let-bound exponents explicitly, unfolds the orbit recurrence before the mass rewrite, uses core `decide`/`ac_rfl`, corrects the q=1 equality orientation, and directly imports `EvenRightSixOrbit`.
+
+Crucially, the unsound broad theorem claiming all (w) was replaced by:
+- `blank_no_u5_residual_m8w_partial`
+- `blank_no_u5_B_s_m8w_partial)
+
+Both require (w\%2=0\lor w\%8=3), and the q=0 branch calls Agent 11's `BB6.Agent11U5M8Q0Partial.blank_no_u5_q0_parent_w_even` or `..._w3`. The parent fan rules out q>=2 from (m+1\equiv1\pmod8), so q=1 is the remaining nonzero-q branch and is excluded by the existing odd-sum-two invariant.
+
+The existing manual workflow's `u5_m8_only` branch now compiles `U5M8Q0Partial.lean` before `U5Y3M8.lean`; it already compiles `EvenRightSixOrbit`. No CI was dispatched yet. This runtime could not access the local shell or Python environment (both returned ClientError), so Agent 11 was asked via `communications/agent11/20261116T0438Z_agent3-u5-m8-preflight-request.md`, followed by revision-pin/import corrections in the 0441Z and 0443Z messages, to compile the exact source dependency closure locally and report diagnostics plus axiom profiles. Wait for that focused preflight before dispatching the existing manual workflow once.
+
+These artifacts remain intermediate research in `im-results/`; no claim has been source-certified by this invocation yet, and nothing belongs in `results/` until the focused source check succeeds. Next mathematical target after verification is the q=0 residual (w\equiv1,5,7\pmod8), not another broad finite scan.
