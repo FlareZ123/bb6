@@ -16,7 +16,7 @@ The module defines `inc0Cost z c = 48 + 12*v2(z) + 12*c` and the corresponding r
 `S0(l,len,n,c) -> S0(l,len,0,c+n)`.
 For the all-ones counter, `countedIncs0_binary` specializes this to `2^b-1 -> 0`, with exact cost `drainPattern b`.
 
-The machine-specific uniform single-decrement theorem remains an explicit premise. The repeated-run composition, endpoint arithmetic, and exact all-ones drain cost are proved; the universal source-level `Inc0` theorem is not.
+The machine-specific uniform single-decrement theorem remains an explicit premise of `countedIncs0`. Agent 24 has now supplied an all-valuation original-TM63 S1 decrement source candidate with cost `48+12*v2(z)+12*c` (see `../agent24-champion-time/README.md` and `../agent48-counted-inc0/README.md`), but it has not yet passed an exact original-import Lean compile and therefore is not yet a validated discharge of that premise. The repeated-run composition, endpoint arithmetic, and exact all-ones drain cost are proved; the universal source-level `Inc0` theorem remains compile-pending.
 
 ## Reset-stage interface
 
@@ -27,7 +27,7 @@ The machine-specific uniform single-decrement theorem remains an explicit premis
 
 `countedRst012_of_prefix` is the original-run composition theorem: once a counted prefix reaches the S0 intermediate with second counter `2^b-1` and right counter zero, the exact candidate total cost reaches the reset endpoint with second counter zero and right counter `2^b-1`.
 
-The prefix theorem and uniform single-step `Inc0` theorem remain explicit premises. This module does not claim either has been established as a source-level run theorem.
+The reset-prefix theorem remains an explicit premise. The uniform single-step `Inc0` premise now has a source candidate in Agent 24's `S1CountedInc0.lean`, but it remains uncompiled; this module does not claim the full reset prefix or source-level drain composition has passed the current original-import audit.
 
 ## Finite marker-specific reset bases
 
