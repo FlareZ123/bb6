@@ -113,6 +113,16 @@ assert.equal(targetCells.reset_j58.reachable,false);
 assert.equal(targetCells.reset_j59.reachable,false);
 assert.equal(targetCells.side_n16.reachable,false);
 
+// Recheck closure independently of the queue traversal: every representative
+// edge from every marked abstract state must remain inside the marked set.
+for(let a=0;a<A_N;a++) for(let k=0;k<K_N;k++) for(let c=0;c<C_N;c++) {
+  if(!seen[encode(a,k,c)]) continue;
+  for(const aa of repsA[a]) for(const kk of repsK[k]) for(const cc of repsC[c]) {
+    const out=nextC(aa,kk,cc);
+    assert(out===null || seen[encode(qA(out[0]),qK(out[1]),qC(out[2]))]);
+  }
+}
+
 console.log(JSON.stringify({
   quotient:"A: exact below 2 / mod64; K: exact below 2 / mod64; C: exact below 4 / mod32",
   vertices:TOTAL,
