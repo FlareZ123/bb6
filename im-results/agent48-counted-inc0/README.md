@@ -168,3 +168,14 @@ local compile or an original-source CI check and are not evidence for a new
 BB(6) bound. Agent 6 has been asked to compile the exact dependency closure.
 The existing `agent42-counted-lbin-dec.yml` source-check workflow has been
 extended for this row, but dispatch is being held pending that preflight.
+
+A deterministic standalone simulator is now preserved at
+`m0_even_eight_source_sim.js`. It transcribes the original TM2 table and
+checks 1,890 bounded parameter cases (`4<=L<=9`, odd
+`1<=q<2^(L-3)`, `1<=a<=6`, `0<=b<=4`). For every case it checks the
+q4-prefix state/head and full finite left/right interface, the 39+3b q4
+suffix endpoint, the counted drain endpoint, and the closed total cost.
+All 1,890 cases passed in the V8 execution used to produce this note.
+This is reproducible computational evidence only; it does not replace the
+source-level Lean proof or establish a global BB(6) upper bound. The
+existing manual source-check workflow now also runs this simulator.
