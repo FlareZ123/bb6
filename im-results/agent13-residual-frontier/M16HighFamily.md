@@ -56,7 +56,7 @@ Since \(m\equiv3\pmod4\), \(m\) is odd and \(m\bmod8\in\{3,7\}\). The condition 
 \[
 j\bmod8\in\{2,6\},\qquad j\bmod4=2.
 \]
-For \(m\ge3\), \(P_m\) is divisible by 16. Also \(a=2j+3\ge7\), and \(k>4\). The q-images are determined by the residues of \(m,j\) modulo 16, with the single small-value exception \(j=2\), where \(q(a)=7\) rather than 23.
+For \(m\ge3\), \(P_m\) is divisible by 16. Also \(a=2j+3\ge7\), and \(k>4\): using the standard bound \(P_m\ge4m+4\) and \(j\ge2\), we have \(k\ge(4m+4)(j+3)-(j+3m+5)=4mj+9m+3j+7>4\). The q-images are determined by the residues of \(m,j\) modulo 16, with the single small-value exception \(j=2\), where \(q(a)=7\) rather than 23.
 
 The cases are:
 
