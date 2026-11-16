@@ -47,7 +47,7 @@ theorem run_mass_mono (m : Nat) :
       | none => simp [run, hp] at hn
       | some s =>
         rcases s with ⟨b,c⟩
-        have hstep : next (.D b c) = some (.D aa dd) := by
+        have hstep : highLevelNext (.D b c) = some (.D aa dd) := by
           simpa [run, hp] using hn
         have hprev := ih a d b c hmn' hm hp
         have hgain := next_strict_mass b c aa dd hstep
