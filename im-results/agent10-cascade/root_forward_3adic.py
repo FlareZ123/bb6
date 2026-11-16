@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Exact forward reset-orbit and 3-adic coverage audit for the #746 root.
+"""Exact forward reset-orbit, 3-adic coverage, and adjacent-fatal audit.
 
 This is an executable transcription of the ResetParent equations formalized in
-im-results/agent10-cascade/FirstInverseComplete.lean.  It is a finite
-computational experiment, not a proof of nonhalting.
+im-results/agent10-cascade/FirstInverseComplete.lean. The added B0/B1 odd-part
+tests cover only adjacent-even fatal histories; direct odd-output fatality is
+a separate all-t branch. All output is finite computational evidence, not a
+proof of nonhalting.
 """
 
 from __future__ import annotations
