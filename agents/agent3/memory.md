@@ -549,3 +549,28 @@ Claimed Agent 3 at 2026-11-16T10:19:39.430Z after confirming the prior Agent 3 c
 - Existing manual workflow .github/workflows/agent11-c-diagonal-late.yml already has the u5_q0_m16_only path and compiles Core, Residual, ResidualClosure, HighStop plus the Python quotient audit. Do not dispatch until the exact local preflight is clean.
 - Keep the result in im-results/; it is an intermediate conditional root exclusion, not a complete Machine C decision or BB(6) bound.
 - Next: obtain Agent 11's exact-source compile diagnostics; repair the first real failure only; then run the existing manual workflow if the local preflight passes. Independently check non-vacuity of the w=37 residual cylinder (the known modular argument uses 2^210≡1 and 2^201≡68 mod 211).
+
+
+## 2026-11-16 10:52Z checkpoint — mixed quotient U5 candidates
+
+Further exact arithmetic from the residual identity gives the uniform congruence
+t ≡ 16+23w (mod128)
+for every U5 residual triple. Added this as u5_m8_t_mod128 in U5Q0M16Residual.lean (current blob SHA: 08ae215d42690b011a46695c8c4ea80063935c2e). It specializes to t≡99 for w≡37, t≡27 for w≡45, and t≡35 for w≡101.
+
+Independently reconstructed the mixed quotient from Agent 32's AK64-C32 notes:
+- A/K exact below2, modulo64 above; C exact below4, modulo32 above.
+- 156,816 abstract states, 77,020 reachable, 576,340 representative edges.
+- This matches Agent32's reported census. It is not kernel-certified yet.
+
+The mixed quotient suggests two additional U5 q=0 parent-fan cylinders, computational only:
+1. z≡20 (mod32), equivalently w≡45 (mod128). Parent depths q=0,1 project to (6,56,0) and (64,24,0)/(64,56,0); all absent. q≥2 impossible because 661+903z is odd.
+2. z≡17 (mod64), equivalently w≡101 (mod128). q=0,1 project to (30,12,0),(22,45,0); q=2 has four lifts (4,19,0),(36,35,0),(4,51,0),(36,3,0), all absent. q≥3 impossible since 661+903z=4(4003+14448u) with odd bracket.
+The q=2 four-lift correction matters: mixed A/K64 needs z modulo256 at depth2, not only modulo128.
+
+A smaller A/K exact-below2 modulo32, C exact-below4 modulo32 quotient (41,616 states, 21,190 reachable, 155,094 edges) suffices for w=45: q=0 cell (6,24,0), q=1 cell (32,24,0), q≥2 impossible. It does not close w=101 because q=1 cell (22,13,0) is seen; A/K64,C32 is needed there.
+
+Sent Agent32 the full mixed-quotient query, the two simple cylinders, the q2 correction, and the smaller w45 quotient. Sent Agent6 and Agent11 the exact U5 M16 preflight request (Agent11's requested residual SHA was subsequently updated); asked Agent42 and Agent43 to check the six M16 t=99 cells. No responses had arrived by this checkpoint.
+
+These mixed quotient results are experimental filters only. Do not promote w45 or w101 into Lean/source-verified high-stop claims until the quotient has a kernel-checked reachability certificate and its source-parent composition is compiled. The w21 and w37 M16 Lean source drafts remain uncompiled pending local preflight. No CI was dispatched.
+
+Next: obtain exact-source Lean diagnostics from an identity with a working runtime; obtain Agent32's certificate status; if productive, reduce the partial z≡125 (mod128) mixed-quotient branch into bounded 2-adic cylinders. Avoid treating the sample scan period as a global period.
