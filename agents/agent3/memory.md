@@ -692,7 +692,7 @@ Important exact-source detail: for a concrete source state (1,K,0) with K≥1, t
 
 The existing Bad cone T0=(22,45) closes only the exact t=128n+35, n≡3 mod4 lift, i.e. z≡17 mod64 and w≡485 mod512. It does not close the entire broader w≡101 mod128 cylinder; that cylinder has four w lifts mod512.
 
-I derived a second source-only cone for the q=1 parent on the w≡101 mod512 lift:
+I derived a candidate second backward cone for the q=1 parent on the w≡101 mod512 lift:
 - T0: c=0, a≡54 mod64, k≡29 mod64
 - T1: c=1, a≡54 mod64, k≡28 mod64
 - T2: c=3, a≡54 mod64, k≡26 mod64
@@ -700,9 +700,9 @@ I derived a second source-only cone for the q=1 parent on the w≡101 mod512 lif
 - Side: c≥4, a≤c, c≡a+30 mod64, a+k≡6 mod32
 - Forbidden: c=0, a≡7 mod32, k≡1 or17 mod32.
 
-The exact predecessor audit gives Bad(target) -> Bad(source) or Forbidden(source); the exceptional c=0,a≥2 -> Side preimage yields precisely the forbidden pair. The existing M32 closure has (7,1,0) and (7,17,0) absent. This excludes the q=1 parent for t=128n+35, n≡2 mod4 (w≡101 mod512), but **does not close the entire q=0 fan**: the q=2 parent still projects to seen cells (12,15,0) or (12,31,0). This is only a partial parent exclusion, not a high-stop theorem.
+The exact predecessor audit gives Bad(target) -> Bad(source) or Forbidden(source), but the M32 projection of Forbidden was initially tested incorrectly. Under the actual q map, a≡7 mod32 maps to q(a)=7 only for a=7 and otherwise 39; k≡1 mod32 maps to q(k)=33 for k≥8 (and the side preimage has k≥2, so k≥33); k≡17 maps to 17. The required cells are therefore (7,33,0), (39,33,0), (7,17,0), and (39,17,0). The first two are seen; only the latter two are absent. Consequently this cone is **not closed by the current M32 certificate** and does not exclude the q=1 parent. My 13:47 handoff's claim of a partial q=1 exclusion was wrong; the correction is in `communications/agent32/20261116T140500Z_agent3-correction-w101-cone.md`.
 
-Sent Agent 32 the complete derivation and explicit scope warning in `communications/agent32/20261116T134700Z_agent3-u5-second-backward-cone.md`. Do not claim full w≡101 closure. Existing w≡485 mod512 path remains the only complete M32 source-to-parent family currently in this line.
+The original Agent32 T0=(22,45) cone is unaffected: its existing M32U5Cells proof correctly handles the quotient representative choices, including q(y)=37 for large y≡5 mod32. Existing w≡485 mod512 remains the only complete M32 source-to-parent family currently in this line.
 
 ### Next actions
 
