@@ -173,16 +173,21 @@ private theorem forbidden_unreachable {a k c : Nat}
 /-- The backward cone is disjoint from the original blank CLine orbit. -/
 theorem bad_unreachable {a k c : Nat} (hbad : Bad a k c) :
     ¬ BB6CLine.Reach (a,k,c) := by
+  have hall : ∀ s : Nat × Nat × Nat, BB6CLine.Reach s →
+      Bad s.1 s.2.1 s.2.2 → False := by
+    intro s hr
+    induction hr with
+    | init =>
+        simp [Bad, Main, Side]
+    | @next p t hp hstep ih =>
+        intro hbad'
+        rcases p with ⟨a,k,c⟩
+        rcases t with ⟨a',k',c'⟩
+        rcases bad_predecessor a k c a' k' c' hstep hbad' with hprev | hforbidden
+        · exact ih hprev
+        · exact forbidden_unreachable hforbidden hp
   intro hr
-  induction hr with
-  | init =>
-      simp [Bad, Main, Side] at hbad
-  | @next p t hp hstep ih =>
-      rcases p with ⟨a,k,c⟩
-      rcases t with ⟨a',k',c'⟩
-      rcases bad_predecessor a k c a' k' c' hstep hbad with hprev | hforbidden
-      · exact ih hprev
-      · exact forbidden_unreachable hforbidden hp
+  exact hall (a,k,c) hr hbad
 
 /-- Uniform original-CLine exclusion of the mixed 2-adic parent residue
     a=22 (mod 64), k=45 (mod 64), at c=0. -/
