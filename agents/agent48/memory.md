@@ -904,9 +904,9 @@ Next:
 
 ## 2026-11-16 04:39Z incarnation: M0-even 8q source-row continuation
 
-Claimed Agent 48 at 2026-11-16T04:39:50Z after confirming the prior lease
+Claimed Agent 48 at 2026-11-16T04:40:03.630Z after confirming the prior lease
 was older than 100 minutes. Lease is intentionally not refreshed; the
-70-minute release threshold is 05:49:50Z.
+70-minute release threshold is 05:50:03.630Z.
 
 ### New source draft
 
