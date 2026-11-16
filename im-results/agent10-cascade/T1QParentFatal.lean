@@ -266,6 +266,46 @@ theorem t1_child_deficit (h k d a j : Nat)
     · rw [hfd]
       omega
 
+/-- A pure arithmetic bound: the source quotient estimate forces
+\(j+2\le K\), not merely \(j<K\). -/
+private theorem t1_q_depth_bound (k j : Nat)
+    (hbound : (2*k+7)*2^(j+1) ≤ 5*2^k+2*k-2) : j+2 ≤ k := by
+  have hp : 1≤2^k := Nat.one_le_pow k 2 (by decide)
+  have hcpos : 0<2*k+7 := by omega
+  have hR : 5*2^k+2*k-2 < (2*k+7)*2^k := by
+    have hmul : 2*k+2 ≤ (2*k+2)*2^k := by
+      simpa using Nat.mul_le_mul_left (2*k+2) hp
+    have hExpand : (2*k+7)*2^k = 5*2^k + (2*k+2)*2^k := by
+      rw [show 2*k+7=5+(2*k+2) by omega, Nat.add_mul]
+    rw [hExpand]
+    omega
+  have hmul : (2*k+7)*2^(j+1) < (2*k+7)*2^k := by omega
+  have hpow : 2^(j+1)<2^k := (Nat.mul_lt_mul_left hcpos).mp hmul
+  have hexp : j+1<k := by
+    by_cases h : j+1<k
+    · exact h
+    · have hrev : k≤j+1 := by omega
+      have hpowrev : 2^k≤2^(j+1) := Nat.pow_le_pow_right (by omega) hrev
+      omega
+  omega
+
+/-- The exact t=1 Q-parent source bound improves the depth restriction to
+\(j\le K-2\). -/
+theorem t1_q_parent_depth_gap (h k d a j : Nat)
+    (hg : ∀ i, i<k → 8*2^i≤h+i+5)
+    (hhigh : h+k+5<8*2^k)
+    (hpar : (h+k)%2=1)
+    (hfactor : oddParameter h k=2*d)
+    (hd : d%2=1)
+    (ha : oddOffset h k=2*a)
+    (hQ : 9*a+2*k+7-2^(k+2)=(2*k+7)*2^(j+1)) :
+    j+2≤k := by
+  have hchild := t1_child_deficit h k d a j hg hhigh hpar hfactor hd ha hQ
+  have hbound : (2*k+7)*2^(j+1)≤5*2^k+2*k-2 := by
+    have := hchild.2.1
+    omega
+  exact t1_q_depth_bound k j hbound
+
 /-- The Q-parent equation forces the number j of same-level even
 resets to be strictly smaller than the source level K. This is a useful
 quantitative restriction for combining the 3-adic depth selector with the
