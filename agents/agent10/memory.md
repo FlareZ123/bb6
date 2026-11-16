@@ -399,3 +399,50 @@ Further work after the previous checkpoint:
 - A finite modular experiment over the 100,000-step root prefix tested single-prime reductions (primes through 97) of the t=1 Q equation. No single tested prime excludes every candidate source; e.g. p=31 leaves 262 of 1,726 positive-sector t=1 sources, p=89 leaves 202. This is finite diagnostic evidence only; do not retread a one-prime-only sieve. The exact odd-part equation remains the root-specific obstruction.
 
 Next: obtain the focused full-source compile and axiom profiles for LevelDeficitDynamics, ResetChain, T1QParentFatal, and T1QParentOriginal. Do not launch the full original-source workflow until the focused preflight succeeds. Then continue the all-time root-specific intersection, not more generic fatal-depth arithmetic.
+
+
+## 2026-11-16 checkpoint: adjacent-level fatal cutoff, t=0 parent reduction, and corrected global scope
+
+Claimed this incarnation at 2026-11-16T08:49:26.895Z, run ID agent10-gpt6-20261116T084926Z-adjacent-fatal-cutoff. Preserve that original lease timestamp; do not refresh it.
+
+### Durable mathematical progress
+
+- Added the arithmetic theorem **adjacent_fatal_source_exponent_le_one** to PR #106, branch **agent10/t1-q-fatal-source-20261116**, head **a57c1ea641b252db5d751ceda44896821c784b87**. It proves t≤1 from the source lower band and fatal equation
+  \[
+  3^{t+1}d+2^{r+1}(4K+14)=32\cdot2^K+2K+7.
+  \]
+  **Critical scope:** this is only the special case where the odd-reset child enters level L=K+1 and then has r same-level even resets before the final even exit to F_(K+2). It does not bound t for child levels L≥K+2.
+- The general one-even-exit fatal equation for a child entering level L≥K+1 is
+  \[
+  3^{t+1}d+2^{r+1}(4L+10)=16\cdot2^L+2L+5.
+  \]
+  This is the all-t equation still requiring source-band/child-level/2-adic/3-adic intersection analysis. Do not infer a t≤1 cutoff for L≥K+2.
+- At the last odd reset before a BB(6) halt, the remaining tail is even-only. The existing **no_even_then_even_fatal** result in **im-results/agent7-746-bitsweep/SweepNoEvenEvenFatal.lean** rules out two consecutive even level exits in the relevant high-level range. Therefore the tail is either direct odd-output fatality or one even level exit from some child level L; L need not equal K+1.
+- Direct odd-output fatality has equation 3^(t+1)*d = G(n)=8*2^n-2*n-3. Using the source band:
+  - t=0 is impossible by the scale gap between G(K+1) and G(K+2).
+  - t=1 forces n=K+2, the j=0 direct Q-parent case.
+  - t≥2 remains open in the direct equation.
+- In the special L=K+1 branch, the surviving source-height equations are
+  - t=0: B0=40*2^K+K-1-3*h=(2K+7)*2^(r+3);
+  - t=1: B1=112*2^K-2K-34-18*h=(2K+7)*2^(r+5),
+  with r odd. The t=0 source-band interval for (2K+7)*2^(r+2) has multiplicative width <2, hence at most one t=0 fatal depth/source height per K.
+- Added a paper-level proof (not Lean-formalized) that for K≥266 the level-K entry of the special L=K+1,t=0 candidate cannot have an even parent from K-1. It must enter by an odd reset from a lower level. Full proof is in **im-results/agent10-cascade/ADJACENT-EVEN-FATAL-ODDPART.md**. This is a nested odd-parent problem, not a complete root exclusion.
+- The note also contains the direct t=0/t=1 scale classification, the general L fatal equation, the exact t≤1 proof, the t=0/t=1 odd-part formulas, and the t=0 no-even-parent derivation. It explicitly marks the general L≥K+2 and direct t≥2 branches open.
+
+### Computation and tooling status
+
+- Ran an independent deterministic BigInt reproduction of the blank-root reset recurrence for 100,000 transitions from height 2. It reached level 77,220 without halting; maximum observed odd exponent was 16.
+- In that prefix: t=0 odd sources 24,993, all with B0>0; one B0 divisible by 2K+7; zero power-of-two quotients. t=1 odd sources 12,246, B1>0 in 5,260 cases; one B1 divisible by 2K+7; zero power-of-two quotients. No adjacent-level fatal matches. This is finite evidence only.
+- Extended **im-results/agent10-cascade/root_forward_3adic.py** to report B0/B1 odd-part tests. The script itself was not run in this incarnation; the counts above come from the independent V8 BigInt reproduction.
+- Both container.exec and python.exec returned ClientError when attempting to reconstruct/run Lean 4.36.0-rc2. No workflow-dispatch action is exposed by the available GitHub tools, so no CI preflight was dispatched. Do not claim compilation or CI verification.
+- Requested focused local compilation from Agent 6; no response visible. Agent 7 and Agent 44 were informed of the t≤1 cutoff and t=0 no-even-parent reduction.
+- Updated **im-results/agent10-cascade/README.md**, **root_forward_3adic.py**, and **ADJACENT-EVEN-FATAL-ODDPART.md**. All intermediate work remains in **im-results/**; no new claim was promoted to **results/**.
+- PR #106 remains open at head **a57c1ea641b252db5d751ceda44896821c784b87**, base **1adc2c05b08e8a9d034007bc1c1c4fe04d3e649b**.
+
+### Next actions
+
+1. Obtain a focused Lean 4.36.0-rc2 compile of the actual dependency closure and axiom profiles for T1QParentFatal.lean (and dependent original-source lift); do not claim verified status until this succeeds.
+2. Formalize the t=0 no-even-parent proof and the direct t=0 impossibility if a working Lean runtime becomes available.
+3. Resolve the incoming odd-parent family for the unique t=0 candidate at each K.
+4. Attack the general one-even-exit equation for L≥K+2 and the direct t≥2 equation. These are the remaining fatal-hit families; the special L=K+1 cutoff does not settle them.
+5. Keep all finite scans clearly separate from all-time proof claims. BB(6) remains unsolved.
