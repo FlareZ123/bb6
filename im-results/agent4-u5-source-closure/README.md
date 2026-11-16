@@ -47,17 +47,9 @@ It excludes the actual blank-section reachability of the high m=0 stopping root
 
 The module also drafts `u5_residual_nonempty`: for every natural w it constructs natural s,m satisfying the two residual equations. The proof uses `2^210 ≡ 1 (mod 211)`, `2^201 ≡ 68 (mod 211)`, and `2^r ≥ r+1` to obtain `s ≥ 27w+1` and `m ≥ 24w`. The theorem `every_w21_residual_has_unreachable_root` then packages the w=32n+21 family as an explicit infinite sequence of nonempty residual instances whose high m=0 roots are excluded.
 
-A further arithmetic consequence is that every such residual has `s=293 (mod 512)`, hence the stopping-root index `j=39+64s` satisfies `j=18791 (mod 32768)`, equivalently `(j-7)/32=587 (mod 1024)`. This is disjoint from the four previously source-certified m=0 classes `j=1895 (mod 2048)`, `j=359 (mod 8192)`, `j=5479 (mod 16384)`, and `j=10599 (mod 32768)`. If the new Lean draft compiles and passes its axiom audit, it adds a fifth disjoint class and raises the covered odd parameter-ray density from `23/512` to `24/512=3/64`. This is a density of parameter values, not machines or halting tables.
+A further arithmetic consequence is that every such residual has `s=293 (mod 512)`, hence the stopping-root index `j=39+64s` satisfies `j=18791 (mod 32768)`, equivalently `t_root=(j-7)/32=587 (mod 1024)`. This containing residue class is disjoint from the four previously source-certified m=0 classes `j=1895 (mod 2048)`, `j=359 (mod 8192)`, `j=5479 (mod 16384)`, and `j=10599 (mod 32768)`.
 
-| Class | Root index condition | Odd root-parameter condition | Density among odd parameters |
-|---|---|---|---:|
-| Existing 1 | `j=1895 (mod 2048)` | `t_root=59 (mod 64)` | `16/512` |
-| Existing 2 | `j=359 (mod 8192)` | `t_root=11 (mod 256)` | `4/512` |
-| Existing 3 | `j=5479 (mod 16384)` | `t_root=171 (mod 512)` | `2/512` |
-| Existing 4 | `j=10599 (mod 32768)` | `t_root=331 (mod 1024)` | `1/512` |
-| New draft | `j=18791 (mod 32768)` | `t_root=587 (mod 1024)` | `1/512` |
-
-The new parameter residue reduces to 11 mod64, 75 mod256, and 75 mod512, so it is disjoint from the first three classes; 587 differs from 331 mod1024, so it is disjoint from the fourth. The five densities sum to `24/512=3/64`.
+**Important density qualification:** the U5 residual equations generate only the specific exponentially growing sequence indexed by `w=32n+21`; they do not generate every root index in `j=18791 (mod 32768)`. Thus this is an additional infinite, sparse subset inside a new residue class, not a fifth full arithmetic-progression exclusion. No density increment is claimed: the previously certified coverage remains `23/512` of the odd root-parameter ray. The new sequence itself has natural density zero.
 
 This is the intended source-to-root connection, including nonvacuity and a new disjoint high-stop residue class, but the new high-stop module is still uncompiled and is not yet a certified theorem.
 
