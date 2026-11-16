@@ -130,7 +130,7 @@ theorem terminal_window_at_depth12
         have hroom : 2*16+6 <= 3*x := by omega
         have hgate : gateBudget x y 16 := by
           unfold gateBudget
-          exact ⟨hxEven, Or.inr (Or.inr (Or.inr (Or.inl ⟨hyEven, hgap, hxlt, hroom⟩)))⟩
+          exact Or.inr (Or.inr (Or.inr (Or.inl ⟨hyEven, hgap, hxlt, hroom⟩)))
         exact hnoGate 16 hgate
       · have hnear : x <= y := by omega
         have hEvalDrain :
