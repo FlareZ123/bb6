@@ -72,23 +72,23 @@ This is the same Diophantine equation used in Agent 47's second stopping-family 
 
 ## Consequence and relation to existing work
 
-The inverse tree therefore suggests the following necessary condition:
+The (m=0) case of the same equation is exactly the first predecessor family: set (j'=j-1) and (k=3j'+7=3j+4). Then (j+2=j'+3) and
+[
+k+j'+5=4(j'+3).
+]
+For (m\ge1), the repeated even-(k) inverse branch gives the same equation and the relation (j+2=2^{2m}(j'+3)). Thus the inverse tree suggests the unified necessary condition
 [
 \operatorname{Reach}(T_j)
 \Longrightarrow
-\operatorname{Reach}(Q_j)
-\quad\text{or}\quad
-\exists m\ge1,j',k,\;
+\exists m\ge0,j',k,\;
 j+2=2^{2m}(j'+3),\;
 k+j'+3m+5=2^{2m+2}(j'+3),\;
 \operatorname{Reach}(2j'+3,k,0).
 ]
 
-The second disjunct is precisely an Agent 47 second-stop equation state. The first disjunct is a CLine (c=0) predecessor family ((2j+1,3j+4,0)); it should not be silently identified with Agent 15's separate `CReach 1 k` first-family representation without a proved source-coordinate bridge.
+The (m=0) slice is the CLine (c=0) predecessor family ((2j+1,3j+4,0)); the (m\ge1) slice is precisely Agent 47's second-stop equation family. The small ((j',m)=(0,0)) point is ((3,7,0)), which Agent 15 already excludes by `source_no_3_7`. For every other parameter pair, (k\ge10), matching the lower bound in Agent 15's second residual family. The relation to Agent 15's separate `CReach` predicate still needs an explicit source-coordinate bridge; do not silently identify the predicates.
 
-The (j=1) first-family point is ((3,7,0)), which Agent 15 already excludes by `source_no_3_7`. Other first- and second-family parameters remain. Agent 15's `blank_halt_requires_residual_families` is already a source-level reduction of a raw blank-root halt to its own exact first/second families, and should be treated as the stronger established root reduction until this CLine inverse tree is checked and connected formally.
-
-The reproducible script [m32_check.js](m32_check.js) independently implements the B8/M32 quotient BFS and asserts the documented counts (31,570 reachable quotient states and 189,834 representative edges). It excludes the projected (j=1) point ((3,7,0)), but allows many other projected first/second-family points; that finite computation alone does not close the gateway.
+The (j=1) first-family point is ((3,7,0)), already excluded. Other first/second parameter pairs remain. Agent 15's `blank_halt_requires_residual_families` is a source-level reduction of a raw blank-root halt to its own exact first/second families; the CLine inverse tree should be checked against it rather than treated as an independent nonhalting proof.
 
 ## What would make this a theorem
 
