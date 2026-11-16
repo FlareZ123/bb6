@@ -162,7 +162,7 @@ theorem even_reset_chain_to_fatal (K j h : Nat)
       have hsum : 8*2^(K+1)+(K+1)=h+(2*K+7)*2^(j+1) := by
         dsimp [deficit] at hD
         omega
-      have hpowEven : (8*2^(K+1))%2=0 := by simp
+      have hpowEven : (8*2^(K+1))%2=0 := by simp [Nat.mul_mod]
       have hdefEven : ((2*K+7)*2^(j+1))%2=0 := by
         have hp : 2^(j+1)=2*2^j := by rw [Nat.pow_succ]
         rw [hp]
@@ -206,7 +206,10 @@ theorem even_reset_chain_to_fatal (K j h : Nat)
         have hpj : 2≤2^j := by
           cases j with
           | zero => omega
-          | succ j => simp [Nat.pow_succ]
+          | succ m =>
+              rw [Nat.pow_succ]
+              have hp : 1≤2^m := Nat.one_le_pow m 2 (by decide)
+              omega
         have hDgt : deficit h (K+1)>4*(K+1)+10 := by
           rw [hD]
           have hpplus : 2≤2^(j+1) := by
@@ -273,6 +276,7 @@ theorem root_t1_q_parent_fatal (h k d a j : Nat)
   · have hD0 : deficit (oddOutput 1 d) (k+1)=2*k+7 := by
       rw [hchild.1, hj]
       simp
+    have hpK1 : 2^(k+1)=2*2^k := by rw [Nat.pow_succ]
     have hpowK2 : 2^(k+2)=4*2^k := by
       rw [Nat.pow_add]
       simp
