@@ -84,6 +84,7 @@ theorem synthetic_predecessor_not_blank_reachable (n : Nat) :
 #print axioms root_run_39
 #print axioms root_run_40
 #print axioms run_mass_mono
+#print axioms root_mass_gap_exclusion
 #print axioms synthetic_predecessor_not_blank_reachable
 
 end BB6.Agent48TerminalBudgetCounterexample
