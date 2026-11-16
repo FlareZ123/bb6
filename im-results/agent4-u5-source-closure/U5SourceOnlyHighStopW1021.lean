@@ -146,10 +146,90 @@ theorem u5_w1021_t_param (w s m t : Nat)
 w=1021 (mod 1024). Its q=0 parent is excluded by the new
 z=2 (mod 128) source-only fan; q=1 is odd-right sum two; q>=2
 contradicts m+1=1 (mod 8). -/
-theorem blank_no_u5_residual_m8w_w1021 (w s m : Nat)
+/-- The exact residual identity lifts w=1125 (mod 4096) to
+t=123+168*z with z=193 (mod 512). -/
+theorem u5_w1125_t_param (w s m t : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%1024=1021) :
+    (hp : m+1=8*t+1)
+    (hw : w%4096=1125) :
+    ∃ v, t=123+168*(512*v+193) := by
+  have hId := BB6.Agent3U5M16Residual.u5_m8_t_identity
+    w s m t hs hm hp
+  have hrmod2 : (201+3360*w)%2=1 := by omega
+  have hpow3 : (2^(201+3360*w))%3=2 := by
+    rw [pow_two_mod_three]
+    simp [hrmod2]
+  have hpow3mul : (20*2^(201+3360*w))%3=1 := by
+    rw [Nat.mul_mod,hpow3]
+    norm_num
+  have hpow7 : (2^(201+3360*w))%7=1 := by
+    rw [show 201+3360*w=3*(67+1120*w) by omega,
+      Nat.pow_mul,Nat.pow_mod]
+    have hbase : (2:Nat)^3%7=1 := by decide
+    rw [hbase]
+    simp
+  have hpow7mul : (20*2^(201+3360*w))%7=6 := by
+    rw [Nat.mul_mod,hpow7]
+    norm_num
+  have ht3 : t%3=0 := by
+    have hmod : (211*t+1360+22155*w)%3 =
+        (20*2^(201+3360*w))%3 := by rw [hId]
+    rw [hpow3mul] at hmod
+    omega
+  have ht7 : t%7=4 := by
+    have hmod : (211*t+1360+22155*w)%7 =
+        (20*2^(201+3360*w))%7 := by rw [hId]
+    rw [hpow7mul] at hmod
+    omega
+  have hdiv8 : 8∣2^(201+3360*w) := by
+    change 2^3∣2^(201+3360*w)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have hpow8 : (2^(201+3360*w))%8=0 :=
+    Nat.mod_eq_zero_of_dvd hdiv8
+  have hpow8mul : (20*2^(201+3360*w))%8=0 := by
+    rw [Nat.mul_mod,hpow8]
+    norm_num
+  have hw8 : w%8=5 := by omega
+  have ht8 : t%8=3 := by
+    have hmod : (211*t+1360+22155*w)%8 =
+        (20*2^(201+3360*w))%8 := by rw [hId]
+    rw [hpow8mul] at hmod
+    omega
+  have ht21 : t%21=18 := by omega
+  have ht168 : t%168=123 := by omega
+  have hdiv4096 : 4096∣2^(201+3360*w) := by
+    change 2^12∣2^(201+3360*w)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have hpow4096 : (2^(201+3360*w))%4096=0 :=
+    Nat.mod_eq_zero_of_dvd hdiv4096
+  have hpow4096mul : (20*2^(201+3360*w))%4096=0 := by
+    rw [Nat.mul_mod,hpow4096]
+    norm_num
+  have hmod4096 : (211*t+1360+22155*w)%4096=0 := by
+    rw [hId]
+    exact hpow4096mul
+  have ht4096 : t%4096=3875 := by
+    have hconst : (211*3875+1360+22155*1125)%4096=0 := by decide
+    have hinv : 211*1883=4096*97+1 := by norm_num
+    omega
+  let z := (t-123)/168
+  have htEq : t=123+168*z := by
+    dsimp [z]
+    omega
+  have hzmod : z%512=193 := by
+    rw [htEq] at ht4096
+    have hinv21 : 21*317=512*13+1 := by norm_num
+    omega
+  obtain ⟨v,hv⟩ : ∃ v, z=512*v+193 := by
+    refine ⟨(z-193)/512,?_⟩
+    omega
+  exact ⟨v,by rw [htEq,hv]⟩
+
+theorem blank_no_u5_residual_m8w_w1125 (w s m : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hw : w%4096=1125) :
     ¬ CReach (302+512*s-4*(201+3360*w)) 3 := by
   have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
@@ -195,14 +275,14 @@ theorem blank_no_u5_residual_m8w_w1021 (w s m : Nat)
             have hp : m+1=8*t+1 := by dsimp [t]; omega
             have htpos : 1≤t := by dsimp [t]; omega
             obtain ⟨v,hv⟩ :=
-              u5_w1021_t_param w s m t hs hm hp hw
+              u5_w1125_t_param w s m t hs hm hp hw
             have hX := q0_parent_reach_implies_X
               t htpos hparent
             have hX' : CReach
-                (44*(123+168*(128*v+2))-1)
-                (42*(123+168*(128*v+2))-1) := by
+                (44*(123+168*(512*v+193))-1)
+                (42*(123+168*(512*v+193))-1) := by
               simpa only [hv] using hX
-            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t123_z2mod128
+            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t123_z193mod512
               v hX'
           · by_cases hq1 : q=1
             · subst q
@@ -229,10 +309,10 @@ theorem blank_no_u5_residual_m8w_w1021 (w s m : Nat)
               omega
 
 /-- The B_s feeder of the high m=0 stop is unreachable on this cylinder. -/
-theorem blank_no_u5_B_s_m8w_w1021 (w s m : Nat)
+theorem blank_no_u5_B_s_m8w_w1125 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%1024=1021) :
+    (hw : w%4096=1125) :
     ¬ CReach (54+90*s) (127+211*s) := by
   have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
@@ -242,14 +322,14 @@ theorem blank_no_u5_B_s_m8w_w1021 (w s m : Nat)
   have hM : 201+420*(8*w)=201+3360*w := by omega
   have hterminal' : CReach (302+512*s-4*(201+3360*w)) 3 := by
     simpa only [hM] using hterminal
-  exact blank_no_u5_residual_m8w_w1021 w s m hs hm hw hterminal'
+  exact blank_no_u5_residual_m8w_w1125 w s m hs hm hw hterminal'
 
 /-- Both exact source parents of A_s are excluded, closing the full
-A_s branch on w=1021 (mod 1024). -/
-theorem blank_no_u5_A_s_m8w_w1021 (w s m : Nat)
+A_s branch on w=1125 (mod 4096). -/
+theorem blank_no_u5_A_s_m8w_w1125 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%1024=1021) :
+    (hw : w%4096=1125) :
     ¬ CReach (130+208*s) (94+152*s) := by
   have hdiv : 8∣2^(201+3360*w) := by
     change 2^3∣2^(201+3360*w)
@@ -259,7 +339,7 @@ theorem blank_no_u5_A_s_m8w_w1021 (w s m : Nat)
     rw [hs,Nat.mul_mod,hpowmod]
   have hs8 : s%8=5 := by omega
   have hL := BB6.Agent11M0SumZeroVerified.blank_no_L_s_mod8_five s hs8
-  have hB := blank_no_u5_B_s_m8w_w1021 w s m hs hm hw
+  have hB := blank_no_u5_B_s_m8w_w1125 w s m hs hm hw
   intro hA
   obtain ⟨a,k,hprev,hstep⟩ :=
     BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
@@ -277,12 +357,12 @@ theorem blank_no_u5_A_s_m8w_w1021 (w s m : Nat)
     exact hB hBreach
 
 /-- The high m=0 stopping root j=39+64*s is excluded for the
-U5 residual family w=1021 (mod 1024), using only exact source
+U5 residual family w=1125 (mod 4096), using only exact source
 predecessors and the authentic blank-section orbit. -/
-theorem blank_no_high_m0_u5_w1021 (w s m : Nat)
+theorem blank_no_high_m0_u5_w1125 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%1024=1021) :
+    (hw : w%4096=1125) :
     ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
   intro hroot
   let t := 2*s+1
@@ -295,29 +375,35 @@ theorem blank_no_high_m0_u5_w1021 (w s m : Nat)
   have hy : 18+76*t=94+152*s := by dsimp [t]; omega
   have hA' : CReach (130+208*s) (94+152*s) := by
     simpa only [hx,hy] using hA
-  exact blank_no_u5_A_s_m8w_w1021 w s m hs hm hw hA'
+  exact blank_no_u5_A_s_m8w_w1125 w s m hs hm hw hA'
 
-/-- Every w=1024*n+1021 residual is non-vacuous and has an
+/-- Every w=4096*n+1125 residual is non-vacuous and has an
 authentic blank-unreachable high m=0 root. The root parameter remains
 j=18791 (mod 32768), so this is an additional parameter cylinder
 inside the existing containing root residue, not a new density claim. -/
-theorem every_w1021_residual_has_unreachable_root (n : Nat) :
+theorem every_w1125_residual_has_unreachable_root (n : Nat) :
     ∃ s m,
-      211*s+129=5*2^(201+3360*(1024*n+1021)) ∧
-      32*s=32+840*(1024*n+1021)+m ∧
+      211*s+129=5*2^(201+3360*(4096*n+1125)) ∧
+      32*s=32+840*(4096*n+1125)+m ∧
       (39+64*s)%32768=18791 ∧
       ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
   obtain ⟨s,m,hs,hm,_,_⟩ :=
     BB6.Agent4U5SourceOnlyHighStop.u5_residual_nonempty
-      (1024*n+1021)
-  have hw : (1024*n+1021)%1024=1021 := by omega
-  have hroot := blank_no_high_m0_u5_w1021
-    (1024*n+1021) s m hs hm hw
+      (4096*n+1125)
+  have hw : (4096*n+1125)%4096=1125 := by omega
+  have hroot := blank_no_high_m0_u5_w1125
+    (4096*n+1125) s m hs hm hw
   have hres :=
     BB6.Agent4U5SourceOnlyHighStop.u5_high_root_parameter_residue
-      (1024*n+1021) s hs
+      (4096*n+1125) s hs
   exact ⟨s,m,hs,hm,hres.1,hroot⟩
 
+#print axioms u5_w1125_t_param
+#print axioms blank_no_u5_residual_m8w_w1125
+#print axioms blank_no_u5_B_s_m8w_w1125
+#print axioms blank_no_u5_A_s_m8w_w1125
+#print axioms blank_no_high_m0_u5_w1125
+#print axioms every_w1125_residual_has_unreachable_root
 #print axioms q0_parent_reach_implies_X
 #print axioms pow_two_mod_three
 #print axioms u5_w1021_t_param

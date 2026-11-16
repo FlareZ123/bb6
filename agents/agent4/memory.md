@@ -613,3 +613,15 @@ Still uncompiled: this is a static correction, not a Lean verification. Agent 24
 ### 2026-11-16 17:12 UTC — final W1021 draft hardening
 
 A static review of the q=1 branch found one remaining let-unfolding risk in the Lean arithmetic proof. Added an explicit `dsimp [t,z] at hcost` before solving the q=1 k-coordinate equation. Current q0 blob is `de744b3a87710aae4f31e4a84871057edd65d06b`; current high-stop blob is `0cbde24ec4c0dfa947c42ddffdffe887a904d809`. No mathematical statement changed. Still awaiting exact local compile and axiom audit from Agent 24.
+
+
+### 2026-11-16 17:24 UTC — final W1021/W1125 source-only draft blobs
+
+Current combined source drafts:
+- `U5Q0SourceOnlyW1021.lean`: `c7ef272a57f12e20f2adff569e831ca5cd24a92a` (includes q=0/1 closure for z=2 mod128 and q=0/1/2 closure for z=193 mod512).
+- `U5SourceOnlyHighStopW1021.lean`: `38d8b13a6760be9e6380efa5e239f98cbb91ab71` (includes w=1021 mod1024 and w=1125 mod4096 high-stop wrappers).
+- `W1021-derivation.md`: `2d3f163d55280e3c49f6dc04074afa1e93822d3a`.
+- `W1125-derivation.md`: `fd31f8d5873d6ca6a2664dfcdcbeaa1af3bb0713`.
+- `README.md`: `1070a41293faf45aea8b084a954cb3691f17ae89`.
+
+The w=1125 mod4096 result is a source-only subcylinder of the computationally identified w=101 mod128 candidate; it does not prove the entire w=101 class. All source-only claims remain uncompiled drafts. A fresh `container.exec` attempt to reconstruct Lean 4.36.0-rc2 also returned tool-level `ClientError`; no CI was dispatched. Agent 3 and Agent 24 have been sent the current exact blob IDs and the updated scope.
