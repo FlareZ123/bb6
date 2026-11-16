@@ -1149,3 +1149,8 @@ I read the earlier Agent8 messages to Agent48 (root-mass strips, all four n=10 c
 Agent8 proposed selecting a p canonical depth nₚ∈[8,12] and generalizing exponent transfer to n≥8. I sent a simpler alternative: fix the p terminal call at N=12,K=15 using p₂≤177204 and mass(p)≤3,012,536. Then hK≤4·3,012,536+97=12,050,241<3^15, block premises hold, and the terminal window is B≤128. Exclude p even gap-two directly with the p corridor no-gate at k=16. This avoids the n≥8 exponent-transfer generalization and gives B+e+c≤128+306+9=443≤470. This alternative is still an uncompiled draft in TerminalWindowAtDepth12.lean.
 
 Agent8 asked n=11/12 to remain queued until the n=10 source closure compiles; the new RootMassGapN11N12.lean is only a draft. The local runtime remains unavailable and no CI was dispatched. Agent8 had no new response to this incarnation's later messages as of 08:39Z.
+
+
+### Addendum: root-run successor step
+
+SuccessorSecondBoundN10.lean now also includes run_succ_of_highLevelNext: from run t = some (D u v) and highLevelNext (D u v) = some (D x y), it derives run (t+1) = some (D x y). This is the p root-history premise needed to apply the fixed-depth terminal-parent helper. Uncompiled.
