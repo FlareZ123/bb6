@@ -44,3 +44,24 @@ theorem blank_no_u5_q0_parent_w21 (w s m t : Nat)
     refine ⟨t/32,?_⟩
     omega
   exact BB6.Agent3U5Q0M16.q0_X_not_reach t n hn hX
+
+/-- The q=0 member of the U5 parent fan is unreachable on the
+    additional w=37 (mod128) cylinder: its exact two-step pullback is
+    X_t with t=99 (mod128), where the M16 quotient excludes every
+    possible original-source parent. -/
+theorem blank_no_u5_q0_parent_w37 (w s m t : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hp : m+1=8*t+1)
+    (hw : w%128=37)
+    (ht : 1≤t)
+    (hparent : CReach (64*t+5) (32*t+3)) : False := by
+  have hX := q0_parent_reach_implies_X t ht hparent
+  have htmod := BB6.Agent3U5M16Residual.u5_m8_t_mod128_w37
+    w s m t hs hm hp hw
+  obtain ⟨n,hn⟩ : ∃ n, t=128*n+99 := by
+    refine ⟨t/128,?_⟩
+    omega
+  exact BB6.Agent3U5Q0M16.q0_X_not_reach_t99 t n hn hX
+
+end BB6.Agent3U5M16ResidualClosure
