@@ -25,3 +25,22 @@ private theorem q0_parent_reach_implies_X (t : Nat) (ht : 1≤t)
     simpa only [hx,hy] using h2
   exact h2'
 
+
+/-- The q=0 member of the U5 parent fan is unreachable on the
+    w=21 (mod 32) residual cylinder: its exact two-step pullback is
+    X_t, and the residual equations force t=19 (mod 32), where the
+    source-certified M16 quotient excludes every source parent. -/
+theorem blank_no_u5_q0_parent_w21 (w s m t : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hp : m+1=8*t+1)
+    (hw : w%32=21)
+    (ht : 1≤t)
+    (hparent : CReach (64*t+5) (32*t+3)) : False := by
+  have hX := q0_parent_reach_implies_X t ht hparent
+  have htmod := BB6.Agent3U5M16Residual.u5_m8_t_mod32
+    w s m t hs hm hp hw
+  obtain ⟨n,hn⟩ : ∃ n, t=32*n+19 := by
+    refine ⟨t/32,?_⟩
+    omega
+  exact BB6.Agent3U5Q0M16.q0_X_not_reach t n hn hX
