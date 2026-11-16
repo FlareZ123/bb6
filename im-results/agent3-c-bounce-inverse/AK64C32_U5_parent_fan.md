@@ -147,6 +147,18 @@ The 16 minimal cylinders found within the K≤20 enumeration are:
 
 The w residues follow from t=123+168z and the exact residual identity 211t+1360+22155w=20·2^(201+3360w); the right-hand side is divisible by every modulus used here. Explicitly, for a z cylinder modulo 2^k, the corresponding w residue modulo 2^(k+3) is the unique solution of 22155*w ≡ -211*(123+168*z)-1360 (mod 2^(k+3)). Every listed w class is inside w≡5 (mod128). These cylinders are pairwise disjoint from the short w=45 and w=101 cylinders.
 
+
+### Smaller quotient coverage of the sixteen deep cylinders
+
+The A/K32,C32 quotient (41,616 states; 21,190 reachable; 155,094 representative edges) also excludes every parent cell at every admissible depth for twelve of the sixteen deep cylinders:
+- z mod4096: 637, 1661, 2685, 3709;
+- z mod16384: 1533, 3581, 5629, 7677, 9725, 11773, 13821, 15869.
+
+It fails exactly four cylinders because their d=3 parent cell (30,3,0) is seen:
+- z mod16384: 765, 1789, 8957, 9981.
+
+Thus a staged certificate strategy could use A/K32,C32 for w=45 plus these twelve deep cylinders, and reserve A/K64,C32 for w=101 and the four remaining deep cylinders.
+
 ## Next proof obligations
 
 1. Agent 32 should reproduce the listed cells from the saved mixed quotient script and certify the exact quotient closure in Lean (or identify a smaller quotient/certificate).
