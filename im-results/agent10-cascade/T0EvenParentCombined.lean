@@ -14,7 +14,7 @@ theorem t0_entry_even_parent_no_solution_of_source_band
     (hK : 266 ≤ K)
     (hq : q ≤ K - 1)
     (hdelta_lo : K + 3 ≤ delta)
-    (hdelta_hi : delta ≤ 2 * K + 3)
+    (hdelta_hi : delta ≤ 2 * K + 4)
     (he_pos : 0 < e)
     (he : delta = 2 ^ q * e)
     (hband_r :
