@@ -57,7 +57,7 @@ theorem run_mass_mono (m : Nat) :
 orbit: before step 40 the root mass is at most 213720; from step 40 onward
 it is at least 293537, whereas the witness has mass 280179. -/
 theorem synthetic_predecessor_not_blank_reachable (n : Nat) :
-    run n != some (.D 260178 20001) := by
+    run n ≠ some (.D 260178 20001) := by
   intro hq
   by_cases hlt : n < 40
   · have hmono := run_mass_mono n 39 260178 20001 79788 133932
