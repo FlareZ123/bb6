@@ -468,7 +468,7 @@ The note and README now combine this with the all-t two-level child selector: fo
 
 ### 2026-11-16 addendum: dyadic descaling to a t=0 source
 
-For every odd-reset source at level K with valuation t, put j=K-t. The source band gives 6*2^j+1≤d≤8*2^j-1, so the same odd parameter d is a valid t=0 source parameter at level j. If h0 is the corresponding t=0 source height and h the original source height, then
+For every odd-reset source at level K with valuation t, first note t≤K: if t≥K+1, the source band would force 3<d<4, impossible for integer d. Thus j=K-t is natural. The source band then gives 6*2^j+1≤d≤8*2^j-1, so the same odd parameter d is a valid t=0 source parameter at level j. If h0 is the corresponding t=0 source height and h the original source height, then
 \[
 h=2^t h_0+(2^t-1)(j+5)-t.
 \]
