@@ -23,7 +23,7 @@ theorem t0_entry_even_parent_arithmetic_no_solution
     (hK : 266 ≤ K)
     (hq : q ≤ K - 1)
     (hdelta_lo : K + 3 ≤ delta)
-    (hdelta_hi : delta ≤ 2 * K + 3)
+    (hdelta_hi : delta ≤ 2 * K + 4)
     (hpow_r : 4 * K + 8 < 2 ^ (r + 3))
     (hpow_kq : 4 * K + 8 < 2 ^ (K - q + 2))
     (heq :
@@ -82,7 +82,7 @@ theorem t0_entry_even_parent_arithmetic_no_solution
     have he0 : e = 0 := by omega
     simp [he0] at he
     omega
-  have he_hi : e ≤ 2 * K + 3 := by
+  have he_hi : e ≤ 2 * K + 4 := by
     have hle : e ≤ 2 ^ q * e := Nat.le_mul_of_pos_left e (Nat.two_pow_pos q)
     rw [← he] at hle
     omega
