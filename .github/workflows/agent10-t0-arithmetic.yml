@@ -1,0 +1,34 @@
+name: Agent 10 t0 arithmetic Lean verification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-t0-arithmetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out requested branch
+        uses: actions/checkout@v4
+
+      - name: Set up Lean 4.36.0-rc2
+        uses: leanprover/lean-action@v1
+        with:
+          lean_version: 4.36.0-rc2
+          lakefile: lakefile.lean
+          lake_dir: .
+
+      - name: Compile power bounds
+        working-directory: im-results/agent10-cascade
+        run: lake env lean -o T0EvenParentPowerBounds.olean T0EvenParentPowerBounds.lean
+
+      - name: Compile arithmetic core
+        working-directory: im-results/agent10-cascade
+        run: lake env lean -o T0EvenParentArithmetic.olean T0EvenParentArithmetic.lean
+
+      - name: Compile combined theorem and print axiom profile
+        working-directory: im-results/agent10-cascade
+        run: lake env lean T0EvenParentCombined.lean
