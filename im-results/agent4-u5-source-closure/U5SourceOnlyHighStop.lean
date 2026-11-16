@@ -218,19 +218,39 @@ theorem blank_no_high_m0_u5_w21 (w s m : Nat)
     simpa only [hx,hy] using hA
   exact blank_no_u5_A_s_m8w_w21 w s m hs hm hw hA'
 
+/-- The residual equation fixes the high m=0 root's parameter
+residue: s=293 (mod512), hence j=39+64*s=18791 (mod32768)
+and t=(j-7)/32=587 (mod1024). This is disjoint from the four
+previously source-certified m=0 high-stop classes. -/
+theorem u5_high_root_parameter_residue_w21 (w s : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w)) :
+    (39+64*s)%32768=18791 ∧ (1+2*s)%1024=587 := by
+  have hdiv : 512∣2^(201+3360*w) := by
+    change 2^9∣2^(201+3360*w)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have hpowmod : (2^(201+3360*w))%512=0 :=
+    Nat.mod_eq_zero_of_dvd hdiv
+  have hmod : (211*s+129)%512=0 := by
+    rw [hs,Nat.mul_mod,hpowmod]
+    simp
+  have hsmod : s%512=293 := by omega
+  constructor <;> omega
+
 /-- Explicit infinite nonvacuity of the source-only root exclusion:
 for every n, the w=32*n+21 residual equations have a natural
 solution s,m, and the corresponding high m=0 stopping root is
-blank-unreachable. -/
+blank-unreachable in the new residue j=18791 (mod32768). -/
 theorem every_w21_residual_has_unreachable_root (n : Nat) :
     ∃ s m,
       211*s+129=5*2^(201+3360*(32*n+21)) ∧
       32*s=32+840*(32*n+21)+m ∧
+      (39+64*s)%32768=18791 ∧
       ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
   obtain ⟨s,m,hs,hm⟩ := u5_residual_nonempty (32*n+21)
   have hw : (32*n+21)%32=21 := by omega
   have hroot := blank_no_high_m0_u5_w21 (32*n+21) s m hs hm hw
-  exact ⟨s,m,hs,hm,hroot⟩
+  have hres := u5_high_root_parameter_residue_w21 (32*n+21) s hs
+  exact ⟨s,m,hs,hm,hres.1,hroot⟩
 
 #print axioms u5_residual_nonempty
 #print axioms blank_no_u5_residual_m8w_w21
