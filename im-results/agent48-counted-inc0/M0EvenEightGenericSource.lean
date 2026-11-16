@@ -361,7 +361,7 @@ theorem m0EvenEight_q4_prefix_rightShape
       have hidx : 6+i-6 = i := by omega
       rw [hidx]
       exact sideBit_d1pow_true (b+1) i (by omega)
-    rw [hcoord,hside] at hcell
+    rw [← hcoord,hside] at hcell
     exact hcell
   · intro i hi
     have j : Nat := 9+3*b+i
@@ -376,7 +376,7 @@ theorem m0EvenEight_q4_prefix_rightShape
       simp [s1PhysicalRight,s0PhysicalRight,s0RightFacing,d1pow_length]
     have hfalse := sideBit_false_after_length_local
       (s1PhysicalRight b) j (by rw [hlen]; dsimp [j]; omega)
-    rw [hcoord,hfalse] at hcell
+    rw [← hcoord,hfalse] at hcell
     exact hcell
 
 /-- The full infinite blank tail required by the generic q4 suffix. -/
