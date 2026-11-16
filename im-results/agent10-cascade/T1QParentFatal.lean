@@ -1,3 +1,4 @@
+import Lean
 import LevelDeficitDynamics
 import ResetChain
 
@@ -61,6 +62,139 @@ theorem fatal_deficit_succ (k : Nat) :
   dsimp [fatalDeficit]
   rw [Nat.pow_succ]
   omega
+
+
+/-- The powers of two alternate modulo three. -/
+private theorem t1_two_pow_mod_three (n : Nat) :
+    2^n % 3 = if n % 2 = 0 then 1 else 2 := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      have hn : n % 2 = 0 ∨ n % 2 = 1 := by omega
+      rcases hn with hn | hn
+      · have hn1 : (n+1) % 2 = 1 := by omega
+        rw [Nat.pow_succ]
+        simp [Nat.mul_mod, ih, hn, hn1]
+      · have hn0 : (n+1) % 2 = 0 := by omega
+        rw [Nat.pow_succ]
+        simp [Nat.mul_mod, ih, hn, hn0]
+
+private theorem t1_mod2_from_mod6 (k r : Nat) (h : k % 6 = r) :
+    k % 2 = r % 2 := by
+  have hdecomp : r + 6 * (k / 6) = k := by
+    simpa [h] using Nat.mod_add_div k 6
+  have hm := congrArg (fun x => x % 2) hdecomp
+  simp [Nat.add_mod, Nat.mul_mod] at hm
+  omega
+
+private theorem t1_mod3_from_mod6 (k r : Nat) (h : k % 6 = r) :
+    k % 3 = r % 3 := by
+  have hdecomp : r + 6 * (k / 6) = k := by
+    simpa [h] using Nat.mod_add_div k 6
+  have hm := congrArg (fun x => x % 3) hdecomp
+  simp [Nat.add_mod, Nat.mul_mod] at hm
+  omega
+
+/-- The additive form of the t=1 Q equation forces K mod 6 and the
+parity of the even-reset depth. -/
+private theorem t1_q_parent_sector_add (k a j : Nat)
+    (hq : 9*a + (2*k+7) = 2^(k+2) + (2*k+7)*2^(j+1)) :
+    (k % 6 = 2 ∨ k % 6 = 3) ∧ j % 2 = 0 := by
+  have hk6 : k % 6 < 6 := Nat.mod_lt _ (by decide)
+  have hmod : (2*k+7)%3 =
+      ((2^(k+2)%3) + ((2*k+7)%3)*(2^(j+1)%3))%3 := by
+    have h := congrArg (fun x : Nat => x % 3) hq
+    simpa [Nat.add_mod, Nat.mul_mod] using h
+  have hpowk : 2^(k+2)%3 = if k%2=0 then 1 else 2 := by
+    simpa using t1_two_pow_mod_three (k+2)
+  have hpowj : 2^(j+1)%3 = if j%2=0 then 2 else 1 := by
+    by_cases hj : j%2=0
+    · have hj1 : (j+1)%2=1 := by omega
+      simpa [hj, hj1] using t1_two_pow_mod_three (j+1)
+    · have hj1 : j%2=1 := by omega
+      have hj0 : (j+1)%2=0 := by omega
+      simpa [hj1, hj0] using t1_two_pow_mod_three (j+1)
+  have hkallowed : k%6=2 ∨ k%6=3 := by
+    by_cases hgood : k%6=2 ∨ k%6=3
+    · exact hgood
+    · have hbad : k%6=0 ∨ k%6=1 ∨ k%6=4 ∨ k%6=5 := by omega
+      rcases hbad with hk0 | hk1 | hk4 | hk5
+      · have hkpar : k%2=0 := by simpa using t1_mod2_from_mod6 k 0 hk0
+        have hk3 : k%3=0 := by simpa using t1_mod3_from_mod6 k 0 hk0
+        have hc : (2*k+7)%3=1 := by omega
+        by_cases hj : j%2=0
+        · rw [hpowk, hpowj, hkpar, hj, hc] at hmod
+          simp at hmod
+        · have hj1 : j%2=1 := by omega
+          rw [hpowk, hpowj, hkpar, hj1, hc] at hmod
+          simp at hmod
+      · have hkpar : k%2=1 := by simpa using t1_mod2_from_mod6 k 1 hk1
+        have hk3 : k%3=1 := by simpa using t1_mod3_from_mod6 k 1 hk1
+        have hc : (2*k+7)%3=0 := by omega
+        by_cases hj : j%2=0
+        · rw [hpowk, hpowj, hkpar, hj, hc] at hmod
+          simp at hmod
+        · have hj1 : j%2=1 := by omega
+          rw [hpowk, hpowj, hkpar, hj1, hc] at hmod
+          simp at hmod
+      · have hkpar : k%2=0 := by simpa using t1_mod2_from_mod6 k 4 hk4
+        have hk3 : k%3=1 := by simpa using t1_mod3_from_mod6 k 4 hk4
+        have hc : (2*k+7)%3=0 := by omega
+        by_cases hj : j%2=0
+        · rw [hpowk, hpowj, hkpar, hj, hc] at hmod
+          simp at hmod
+        · have hj1 : j%2=1 := by omega
+          rw [hpowk, hpowj, hkpar, hj1, hc] at hmod
+          simp at hmod
+      · have hkpar : k%2=1 := by simpa using t1_mod2_from_mod6 k 5 hk5
+        have hk3 : k%3=2 := by simpa using t1_mod3_from_mod6 k 5 hk5
+        have hc : (2*k+7)%3=2 := by omega
+        by_cases hj : j%2=0
+        · rw [hpowk, hpowj, hkpar, hj, hc] at hmod
+          simp at hmod
+        · have hj1 : j%2=1 := by omega
+          rw [hpowk, hpowj, hkpar, hj1, hc] at hmod
+          simp at hmod
+  have hjEven : j%2=0 := by
+    by_cases hj : j%2=0
+    · exact hj
+    · have hj1 : j%2=1 := by omega
+      rcases hkallowed with hk2 | hk3
+      · have hkpar : k%2=0 := by simpa using t1_mod2_from_mod6 k 2 hk2
+        have hkmod3 : k%3=2 := by simpa using t1_mod3_from_mod6 k 2 hk2
+        have hc : (2*k+7)%3=2 := by omega
+        rw [hpowk, hpowj, hkpar, hj1, hc] at hmod
+        simp at hmod
+      · have hkpar : k%2=1 := by simpa using t1_mod2_from_mod6 k 3 hk3
+        have hkmod3 : k%3=0 := by simpa using t1_mod3_from_mod6 k 3 hk3
+        have hc : (2*k+7)%3=1 := by omega
+        rw [hpowk, hpowj, hkpar, hj1, hc] at hmod
+        simp at hmod
+  exact ⟨hkallowed, hjEven⟩
+
+/-- Every t=1 Q-parent equation automatically puts the fatal index
+K+2 in one of the two original fatal sectors, and forces j even. -/
+theorem t1_q_parent_fatal_sector (k a j : Nat)
+    (hQ : 9*a + (2*k+7) - 2^(k+2) = (2*k+7)*2^(j+1)) :
+    ((k+2)%6=4 ∨ (k+2)%6=5) ∧ j%2=0 := by
+  have hcpos : 0 < 2*k+7 := by omega
+  have hpowpos : 0 < 2^(j+1) := Nat.pow_pos (by omega)
+  have hpos : 0 < 9*a+(2*k+7)-2^(k+2) := by
+    rw [hQ]
+    exact Nat.mul_pos hcpos hpowpos
+  have hlt : 2^(k+2) < 9*a+(2*k+7) := Nat.sub_pos_iff_lt.mp hpos
+  have hcancel := Nat.sub_add_cancel (Nat.le_of_lt hlt)
+  rw [hQ] at hcancel
+  have hQadd : 9*a+(2*k+7) = 2^(k+2)+(2*k+7)*2^(j+1) := by omega
+  have h := t1_q_parent_sector_add k a j hQadd
+  have hmod : (k+2)%6 = (k%6+2)%6 := by simp [Nat.add_mod]
+  constructor
+  · rcases h.1 with hk | hk
+    · left
+      rw [hmod, hk]
+    · right
+      rw [hmod, hk]
+  · exact h.2
 
 /-- The t=1 Q equation fixes the child deficit at c*2^j and, using the
 source odd-offset bound, proves that the child is strictly above the
