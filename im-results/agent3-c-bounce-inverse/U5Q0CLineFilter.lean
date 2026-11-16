@@ -74,13 +74,11 @@ theorem qfan_parent_not_reach_vq3
       _ ≤ 4^q*4 := hmul
       _ ≤ 43*t-1 := h4pow
   have hqbound : q ≤ 3*t := by omega
-  have h2k : 67*t-7 ≤ 2*k := by
-    rw [hUeq] at hcost
-    omega
+  have hcost' : 2*k+2*V+6*q=128*t-8 := by
+    simpa [hUeq] using hcost
+  have h2k : 67*t-7 ≤ 2*k := by omega
   have hkge : 5 ≤ k := by omega
-  have hcostV : k+V+3*q=64*t-4 := by
-    rw [hUeq] at hcost
-    omega
+  have hcostV : k+V+3*q=64*t-4 := by omega
   have hvq' : (V+q)%4=3 := by
     simpa [V] using hvq
   have hvqOdd : (V+q)%2=1 := by omega

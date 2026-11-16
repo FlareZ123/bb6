@@ -849,3 +849,6 @@ Proof: the fan equations give `k+V+3*q=64*t-4`, so `V+q=3 mod4` forces `k` odd. 
 Added `im-results/agent3-c-bounce-inverse/U5Q0CLineFilter.lean` with the intended Lean proof and a corollary composing it with the complete exact `q0_oddodd_parent_fan`. **Not yet locally compiled**: the local container shell still returns ClientError; no CI was dispatched, respecting the Critic's exact-source-preflight gate. The module prints exported axiom profiles for later review.
 
 This is a source-level exclusion of one quarter of each parameterized q-fan parent family, not a complete U5 source closure. It leaves `V+q=0,1,2 mod4` and does not determine BB(6). Next: request an adversarial review of the exact arithmetic/Lean draft; look for a second original-source inverse invariant that composes with the new filter, rather than expanding quotient moduli or residue catalogues. Preserve all uncompiled work in `im-results/`.
+
+
+Static Lean-source review of `U5Q0CLineFilter.lean` caught and corrected a local proof-script issue before any compile: the initial draft rewrote the same `hcost` hypothesis twice. The current file now creates a single normalized `hcost'` equation and derives both the lower bound on k and the half-scaled cost equation from it. This is a source edit only; no compile or CI result is claimed.
