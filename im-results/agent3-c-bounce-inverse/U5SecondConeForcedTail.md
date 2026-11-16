@@ -48,7 +48,7 @@ Then
 ]
 and the exact CLine zero-left clause has the predecessor
 [
-(0,2K+1,D)=(0,33+32u+16v,29+32v).
+(0,2K+1,D+4)=(0,33+32u+16v,33+32v).
 ]
 Indeed, (2K+1) is odd and its output left counter is (4\lfloor(2K+1)/2\rfloor+5=4K+5).
 
@@ -62,7 +62,7 @@ See `im-results/agent48-c-middle-zero/KZeroMod4.lean`, theorem `BB6.Agent48.reac
 
 Therefore this chain only reduces the seen M32 Side lift to the zero-left state
 [
-(0, 33+32u+16v, 29+32v).
+(0, 33+32u+16v, 33+32v).
 ]
 It does **not** exclude that state. The next useful step is to apply the existing exact zero-left predecessor calculus (for example Agent 21's `CBack.reached_zero_prev`, `reached_zero_hub`, and related lemmas) to this family, or derive a new source invariant for it.
 
