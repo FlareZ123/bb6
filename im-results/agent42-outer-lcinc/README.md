@@ -83,3 +83,14 @@ This is computational evidence only. It does not prove the universal
 prelude/postlude lemmas, does not establish a BB(6) upper bound, and must not
 be promoted to `results/` until the parameterized Lean proof compiles and its
 axioms are checked.
+
+
+## Prelude factorization
+
+The source prelude splits again without any fitted arithmetic:
+- the initial S1 tape has `leftOnes T h (3*a)` because `binDec a 0 = d1pow a`;
+- its immediate right neighbor is zero;
+- Agent 24's `counted_left_sweep` therefore proves the first (9a) steps and moves the D head to (h-3a);
+- a fixed marker/boundary bridge of (3m+17) steps then places the D head at (h_1=h-(3a+m+5)).
+
+Thus the only parameter-dependent part of the prelude after the existing sweep is a small three-case ((m=0,1,2)) local trace. The outer `binDec L n` is then exposed directly to the existing H-run theorem.
