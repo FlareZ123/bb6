@@ -435,6 +435,7 @@ theorem m0EvenEight_proposedIncrementCost_closed
     (q a b : Nat) (hqodd : q % 2 = 1) :
     proposedIncrementCost 0 (8*q) a b =
       6*4^b + 42*2^b + 12*a - 9*b + 51 := by
+  have hge := m0EvenEight_drainPolynomial_lower_bound b
   rw [proposedIncrementCost_decomp 0 (8*q) a b,
     m0EvenEight_resetPrefixCost q a b hqodd,
     drainCost_binary_closed b]
