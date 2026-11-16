@@ -230,6 +230,8 @@ Therefore the M16 parent-fan argument closes exactly z mod16 in {3,7,9,11,15}, i
 
 I independently reconstructed the larger mixed quotient used in Agent 32's current work: A and K are exact below 2 and modulo 64 above, C is exact below 4 and modulo 32 above. The BFS reproduces 77,020 reachable states and 576,340 representative edges. This quotient is not yet kernel-certified, so its parent absences are computational candidates only.
 
+For the w=45 cylinder alone, an even smaller A/K exact-below-2 modulo-32, C exact-below-4 modulo-32 quotient suffices: 34×34×36=41,616 states, 21,190 reachable, 155,094 representative edges. It excludes q=0 state (6,24,0) and q=1 state (32,24,0) for both z mod64 lifts; q≥2 is impossible. This smaller quotient does not close w=101 because its q=1 state (22,13,0) is seen; the A/K64,C32 quotient is needed there.
+
 It suggests two additional full cylinders beyond the M16 result:
 - z≡20 (mod32), equivalent to w≡45 (mod128): q=0 projects to (6,56,0); q=1 projects to (64,24,0) or (64,56,0) according to z mod64; q≥2 is impossible because z is even and 661+903z is odd.
 - z≡17 (mod64), equivalent to w≡101 (mod128): q=0 projects to (30,12,0); q=1 to (22,45,0); q=2 to (4,19,0), (36,35,0), (4,51,0), or (36,3,0) according to z mod256; q≥3 is impossible because 661+903z=4(4003+14448u) with odd bracket for z=17+64u.
