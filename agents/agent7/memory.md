@@ -174,3 +174,24 @@ Claimed Agent 7 at 2026-11-13T15:01:45.929Z after confirming the prior lease was
 5. Avoid duplicating Agent 10's T/z1 or z2 feeder selectors. Preserve the distinction between exact BigInt observations, mathematical derivations, Lean source proofs, and original-source CI.
 
 Local container/Python shell attempts returned concrete ClientError; no local Lean compile was achieved. No BB(6) exact value or #746 root exclusion has been established.
+
+
+## Current incarnation — 2026-11-16T13:21:43.571Z onward
+
+Claimed Agent 7 with run id \`agent7-gpt6-20261116T1321Z-t1-q-parent-descent\` at the timestamp above. Do not refresh the lease. After every checkpoint, compare the original claim time with an actual runtime clock and release only at 70 minutes.
+
+### Work and durable findings
+
+- Re-read the current #746 Q-depth/root-alignment dossiers, Agent 44's level-deficit dynamics, and Agent 10's draft PR #106. Agent 10's \`T1QParentFatal.lean\` gives a source-shaped theorem that any authentic t=1 Q-parent match reaches the fatal height \(F_{K+2}\) after the exact \(j\)-even-reset chain. PR #106 is still draft/uncompiled; no new Lean source verification is claimed.
+- Established a new exact root-source reduction: if a t=1 Q-aligned source at level \(K\) occurs after \(m\) same-level even resets from its level entry, then \(m\le1\). Proof: with \(D=8\cdot2^K+K-q\), Q alignment gives \(18D=32\cdot2^K+20K+34+(2K+7)2^{j+4}\), hence \(D>(16/9)2^K+(10K+17)/9\); the entry deficit is at most \(4\cdot2^K+2K+4\), while \(m\ge2\) would make it at least \(4D\), a contradiction. Thus only two entry deficits per \(K\) need be considered: \(D_Q(K,j)\) or \(2D_Q(K,j)\). Sent this proof to Agent 10 and added it to the maintained Q-parent dossier.
+- Established that a uniform finite inverse-depth cutoff is false over the full synthetic Q-parent family. The fixed-depth \(j=3402,\ n=887+13122r\) Hensel construction in \`NESTED-ODD-PARENT-HENSEL.md\` gives arbitrary finite odd-parent chain depth on positive-density cylinders. Sent the exact result to Agent 10. This does not produce a blank-root path and is not a #746 nonhalting result.
+- Independently recomputed the modular nine-edge witness at \(r=119716\), \(n=1,570,914,239\): \(Q\bmod3^{19}=612357813\), \(G_1,\ldots,G_8\) residues \(195729,104433,27288,3483,594,60,9,0\) at the precisions in the dossier; valuations are \(v_3(Q)=9\), then \(1,1,2,4,3,1,2\), and \(3\mid G_8\). Independently recomputed all nine limiting dyadic ratios; each is strictly in \((6,8)\). The all-index band margin proof is in the existing dossier/script. These checks reproduce intermediate arithmetic, not root reachability or Lean certification.
+- Attempted the prescribed local Lean reconstruction. The uploaded ZIP parts total 580,234,530 bytes, but the ZIP entry declares 608,393,640 bytes; 28,159,266 bytes are missing. \`unzip\` exits 12 and the partial Zstandard stream is corrupt before \`bin/lean\`. Container shell also returned ClientError. No local Lean compile or axiom profile is claimed. Sent Agent 8 the exact blocker; a narrowly scoped source-CI fallback is appropriate.
+- All new research remains intermediate in \`im-results/\`; nothing was promoted to \`results/\`. Messages were committed to Agent 10 and Agent 8 mailboxes.
+
+### Next actions
+
+1. Ask Agent 10 to integrate/compile the \(m\le1\) entry reduction in the exact source module; avoid duplicating its Q selectors or t=1 fatal-chain proof.
+2. Work on the actual root entry-deficit recurrence \(D_{\rm in}(K)\) and its possible equality with \(D_Q(K,j)\) or \(2D_Q(K,j)\); the generic inverse-depth strategy is ruled out.
+3. Check the reply/status of Agent 8's focused n=10 source-CI fallback only if useful; do not dispatch a broad workflow or repeat unchanged CI.
+4. Keep the distinction explicit: mathematical derivation, finite modular reproduction, Lean draft, source-CI verification, and authentic blank-root reachability are separate evidence levels.

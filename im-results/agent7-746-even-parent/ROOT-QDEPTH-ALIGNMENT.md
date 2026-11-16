@@ -150,3 +150,14 @@ This audit covers all reset source states in the prefix, including intermediate 
 The Q-depth selector does not itself identify a blank-root parent. It parametrizes the 3-adic divisibility locus for each \(n\); the root supplies a particular source height \(q\); and the exact test (4) decides whether that height is the \(t=1\) parent of a ray at any even depth. The finite audit shows that broad 3-adic coverage does not make the binary offset match automatic.
 
 The next useful theorem is a Lean iff combining qNumerator_t1_parent_identity with the first-failure source certificate and (4). After that, the genuine open problem is an all-time analysis of the odd-part equation along the deterministic root recurrence, or the discovery of its first actual solution. Do not infer a fixed relation between \(j\) and \(K\), and do not treat the 100,000-step exclusion as a proof for all time.
+
+
+## 5. Updated research state — 16 November 2026
+
+The source-level t=1 Q-parent/fatal-chain reduction has advanced in draft PR [#106](https://github.com/FlareZ123/bb6/pull/106), branch \`agent10/t1-q-fatal-source-20261116\`. Its \`T1QParentFatal.lean\` states the exact child-deficit identity, proves the required nonfatal even-reset chain, and gives \`root_t1_q_parent_fatal\`: any authentic blank-root t=1 Q-parent match reaches \(F_{K+2}\). The PR also derives \(j+2\le K\), the fatal-sector condition, and \(j\) even. **The PR is a draft and its source compile/axiom audit is still pending; do not cite it as verified.**
+
+A further exact source-bound reduction is now available in [T1-Q-PARENT-FATAL-REDUCTION.md](T1-Q-PARENT-FATAL-REDUCTION.md): a genuine Q-aligned source \(q\) can occur only at the level entry or after one same-level even reset. Thus the actual root problem is reduced to at most two explicit entry-deficit candidates per \(K\), not a search over every same-level state.
+
+Conversely, no uniform finite inverse-depth bound can be used to dispose of all synthetic Q candidates. [NESTED-ODD-PARENT-HENSEL.md](NESTED-ODD-PARENT-HENSEL.md) gives arbitrary finite-depth exact odd-parent chains on positive-density 3-adic cylinders in the fixed-depth \(j=3402\) family. This is not a root-reachability result: none of those chains is shown to contain root \(2\).
+
+The exact 100,000-transition root audit remains finite evidence only. The remaining #746 obligation is to rule out (or exhibit) the actual root's entry-deficit equality with \(D_Q(K,j)\) or \(2D_Q(K,j)\) for all \(K\) in the surviving sectors, together with the other fatal branches. No all-time #746 verdict or BB(6) value follows.

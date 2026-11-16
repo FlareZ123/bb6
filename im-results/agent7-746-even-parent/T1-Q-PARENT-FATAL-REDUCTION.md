@@ -78,3 +78,47 @@ This does **not** exclude the intersection. The existing exact 100,000-transitio
 ## Next formalization
 
 Add a source-Lean theorem proving (1), then prove the j-step even chain using even_deficit_halves, even_level_criterion, and even_next_level. The theorem should quantify over the actual odd-exit source height and its first-failure certificate, so it applies after arbitrary same-level even resets.
+
+
+## Root-source narrowing: at most one even reset before a Q-aligned t=1 edge
+
+There is a useful all-natural reduction for an authentic source history. Let \(p=2^K\), let \(q\) be the actual t=1 odd-exit source at first-failure level \(K\), and put
+\[
+D=8p+K-q.
+\]
+The source certificate gives
+\[
+4p\le q+K+4,\qquad q+K+5<8p.
+\]
+If the Q-alignment equation holds, the equivalent deficit equation is
+\[
+18D-32p-20K-34=(2K+7)2^{j+4}>0,
+\]
+hence
+\[
+D>\frac{16}{9}p+\frac{10K+17}{9}.
+\tag{8}
+\]
+For the level-entry height \(h_{\rm in}\), the first-failure lower bound gives
+\[
+D_{\rm in}=8p+K-h_{\rm in}\le4p+2K+4.
+\]
+If \(q\) occurs after \(m\) genuine same-level even resets from that entry, exact deficit halving gives \(D_{\rm in}=2^mD\). If \(m\ge2\), then
+\[
+D_{\rm in}\ge4D>
+\frac{64}{9}p+\frac{40K+68}{9}
+>
+4p+2K+4,
+\]
+a contradiction; the final difference is \((28p+22K+32)/9>0\).
+
+Therefore **a genuine t=1 Q-parent match can occur only at the level-entry state or after exactly one same-level even reset**. Equivalently, its level-entry deficit has 2-adic valuation at most one. This narrows the all-time root/Q intersection from every same-level state to at most two explicit entry deficits per \(K\):
+\[
+D_{\rm in}\in\{D_Q(K,j),\,2D_Q(K,j)\},\qquad
+D_Q(K,j)=\frac{32\cdot2^K+20K+34+(2K+7)2^{j+4}}{18}.
+\]
+This does not exclude either value. The next root-specific task is to characterize the actual entry-deficit recurrence and show it never equals these candidates (or find a genuine equality).
+
+## Inverse-depth warning
+
+A uniform finite inverse-depth cutoff is not available over the full Q-parent candidate family. The fixed-depth \(j=3402,\ n=887+13122r\) construction in [NESTED-ODD-PARENT-HENSEL.md](NESTED-ODD-PARENT-HENSEL.md) gives, for every finite \(d\), a positive-density 3-adic cylinder of candidates with a \(d\)-edge exact odd-parent chain. Its explicit nine-edge specialization is recorded there. These are synthetic inverse paths, not blank-root paths; the Hensel/band argument is a mathematical derivation and is not yet a standalone Lean theorem.
