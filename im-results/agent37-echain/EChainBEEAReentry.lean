@@ -83,14 +83,14 @@ theorem prefix243_88 (t Q : Nat) :
     run (time243_88 t Q)
       (packet (3*(243*t+88)+4) Q 2
         (false :: List.replicate 6 true)) =
-      packet (3*(32768*t+11955)+3) 2 (2*Q)
+      packet (3*(32768*t+11954)+3) 2 (2*Q)
         BB6.Agent35K4Shapes.marker := by
   have hreset := reset_one_E (243*t+88) (162*t+59) Q
     (by omega) (by omega)
   have h1 : 1+32*(162*t+59)=3*(1728*t+629)+2 := by omega
   have h2 : 8*(1728*t+629)+10=3*(4608*t+1680)+2 := by omega
   have h3 : 8*(4608*t+1680)+10=3*(12288*t+4482)+4 := by omega
-  have h4 : 8*(12288*t+4482)+9=3*(32768*t+11955)+3 := by omega
+  have h4 : 8*(12288*t+4482)+9=3*(32768*t+11954)+3 := by omega
   have hb1 :
       run (bTime (1728*t+629))
         (packet (3*(1728*t+629)+2) 2 (2*Q+3)
@@ -130,7 +130,7 @@ theorem reset243_88_source_reentry (t Q : Nat) :
   apply finish_A_to_source
     (packet (3*(243*t+88)+4) Q 2
       (false :: List.replicate 6 true))
-    (32768*t+11955) 2 (2*Q)
+    (32768*t+11954) 2 (2*Q)
   exact ⟨time243_88 t Q,prefix243_88 t Q⟩
 
 /-- k=243*t+97: one E, B, E, E, then A. -/
@@ -143,14 +143,14 @@ theorem prefix243_97 (t Q : Nat) (hQ : 2 ≤ Q) :
     run (time243_97 t Q)
       (packet (3*(243*t+97)+4) Q 2
         (false :: List.replicate 6 true)) =
-      packet (3*(32768*t+13163)+3) 5 (2*Q-3)
+      packet (3*(32768*t+13162)+3) 5 (2*Q-3)
         BB6.Agent35K4Shapes.marker := by
   have hreset := reset_one_E (243*t+97) (162*t+65) Q
     (by omega) (by omega)
   have h1 : 1+32*(162*t+65)=3*(1728*t+693)+2 := by omega
   have h2 : 8*(1728*t+693)+10=3*(4608*t+1850)+4 := by omega
   have h3 : 8*(4608*t+1850)+9=3*(12288*t+4935)+4 := by omega
-  have h4 : 8*(12288*t+4935)+9=3*(32768*t+13163)+3 := by omega
+  have h4 : 8*(12288*t+4935)+9=3*(32768*t+13162)+3 := by omega
   have hb :
       run (bTime (1728*t+693))
         (packet (3*(1728*t+693)+2) 2 (2*Q+3)
@@ -192,7 +192,7 @@ theorem reset243_97_source_reentry (t Q : Nat) (hQ : 2 ≤ Q) :
   apply finish_A_to_source
     (packet (3*(243*t+97)+4) Q 2
       (false :: List.replicate 6 true))
-    (32768*t+13163) 5 (2*Q-3)
+    (32768*t+13162) 5 (2*Q-3)
   exact ⟨time243_97 t Q,prefix243_97 t Q hQ⟩
 
 /-- k=243*t+124: one E, B, E, B, then A. -/
@@ -205,14 +205,14 @@ theorem prefix243_124 (t Q : Nat) :
     run (time243_124 t Q)
       (packet (3*(243*t+124)+4) Q 2
         (false :: List.replicate 6 true)) =
-      packet (3*(32768*t+16806)+3) 2 (2*Q)
+      packet (3*(32768*t+16805)+3) 2 (2*Q)
         BB6.Agent35K4Shapes.marker := by
   have hreset := reset_one_E (243*t+124) (162*t+83) Q
     (by omega) (by omega)
   have h1 : 1+32*(162*t+83)=3*(1728*t+885)+2 := by omega
   have h2 : 8*(1728*t+885)+10=3*(4608*t+2362)+4 := by omega
   have h3 : 8*(4608*t+2362)+9=3*(12288*t+6301)+2 := by omega
-  have h4 : 8*(12288*t+6301)+10=3*(32768*t+16806)+3 := by omega
+  have h4 : 8*(12288*t+6301)+10=3*(32768*t+16805)+3 := by omega
   have hb1 :
       run (bTime (1728*t+885))
         (packet (3*(1728*t+885)+2) 2 (2*Q+3)
@@ -252,7 +252,7 @@ theorem reset243_124_source_reentry (t Q : Nat) :
   apply finish_A_to_source
     (packet (3*(243*t+124)+4) Q 2
       (false :: List.replicate 6 true))
-    (32768*t+16806) 2 (2*Q)
+    (32768*t+16805) 2 (2*Q)
   exact ⟨time243_124 t Q,prefix243_124 t Q⟩
 
 #print axioms reset_one_E
