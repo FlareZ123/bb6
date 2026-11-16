@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exact forward reset-orbit, 3-adic coverage, and adjacent-fatal audit.
+"""Exact forward reset-orbit, 3-adic coverage, and special L=K+1 adjacent-fatal audit.
 
 This is an executable transcription of the ResetParent equations formalized in
 im-results/agent10-cascade/FirstInverseComplete.lean. The added B0/B1 odd-part
