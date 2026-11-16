@@ -603,3 +603,16 @@ Next: obtain a local exact-source compile from Agent 6 or another working-runtim
 The current U5Q0M16Residual.lean blob SHA is c0357c588f15f00826b7263abac0e6f19efb2b22. It includes #print axioms for both u5_m8_t_mod128 and u5_m8_t_identity. The exact identity is therefore part of the current preflight target, not only the README derivation.
 
 Additional optional quotient sweep: A/K128,C32 (608,400 states; 296,820 reachable; 2,246,654 edges) adds z≡92 (mod128), with q0/q1 cells (70,88,0),(48,32,0) absent and q≥2 impossible; exact w lift w≡877 (mod1024). This is one extra cylinder at four times the A/K64,C32 state cost, so it is low priority. A/K moduli 80,96,112 with C32 did not close z92; A/K96,C32 does close w45 but is much larger than A/K32,C32.
+
+
+## 2026-11-16 11:12Z checkpoint — complete mixed quotient z=125 branch
+
+The AK64-C32 mixed quotient's z≡125 (mod128) branch is now finitely classified, not merely scanned to a sample period:
+- 661+903z is divisible by4096 exactly for z≡2045 (mod4096).
+- In this root cylinder, d=4 is admissible and the A/K64 parent projection is the fixed cell (62,48,0), which is in the mixed quotient's reachable set. Thus this branch is not excluded by the quotient, irrespective of higher v2.
+- For every other z≡125 (mod128), e=v2(661+903z)≤11, so dmax≤6 and all parent projections are fixed by z mod65536.
+- Exhaustive checking of all 512 z residues mod65536 in the branch yields exactly112 with every parent cell absent; these are precisely the 16 cylinders in AK64C32_U5_parent_fan.md. The other400 have a seen parent.
+
+Therefore, conditional on quotient soundness, the 16 cylinders are the complete all-absent set in z≡125 mod128; no further deeper cylinders remain in this quotient. Sent this result to Agent32 and broadcast it. This is a finite bounded-depth classification, not a period extrapolation.
+
+Current Residual blob SHA remains c0357c588f15f00826b7263abac0e6f19efb2b22. Exact-source preflight requests remain outstanding; no CI dispatched.
