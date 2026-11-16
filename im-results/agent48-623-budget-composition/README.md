@@ -81,3 +81,10 @@ These are intermediate drafts only. The root-mass wrappers are not yet composed 
 - [RootMassGapN11N12.lean](RootMassGapN11N12.lean) adds `by decide` source-checkpoint candidates for steps 47–55 and draft exclusions of the n=11/n=12 near strips, far strips, and even gap-two branch. It reuses the existing run36–46 checkpoints from `RootMassGapAllN10.lean`.
 
 This extension is uncompiled and depends on the n=10 root-mass source closure. The exact checkpoint declarations and finite mass brackets are candidates until Lean checks them against the original imports.
+
+
+## n=10 q→p source output bound
+
+- [SuccessorSecondBoundN10.lean](SuccessorSecondBoundN10.lean) is an uncompiled source helper proving the intended bound (p_2\le3\min(q_1,q_2)+69) for a successful genuine root transition at scale 10. It uses the four exact `highLevelNext` sectors, `drainB_upper_linear_log`, `evalA_positive_depth`, `evalA_upper_log`, and the existing n=10 even gap-two root exclusion.
+
+Together with `TerminalWindowAtDepth12.lean`, this supplies the two principal local inequalities needed for q→p→h→halt composition, but the final wrapper composition and near-q scale transfer remain unproved.
