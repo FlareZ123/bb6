@@ -144,58 +144,18 @@ To check locally under the provided Lean 4.36.0-rc2, from this directory compile
 This development isolates one decisive missing proof, the authentic uniform counted `Rst0/1/2` macro transition, and two smaller bounded sublemmas, the `Inc0` micro-cost and `Rst1'` core cost. Filling those in original TM63 tape semantics would convert the explicit natural-number expression into a candidate exact-time witness subject to original-root transport and the final halt-action convention; proving the global maximum requires a separate exhaustive coverage certificate.
 
 
-## Counted positive-r prefix output and canonical even suffix (2026-11-12)
+## Uniform all-valuation S1 counted decrement (current proof candidate)
 
-The positive-r counted carry prefix is now being connected to a canonical S1 successor, rather than treated only as an explicit D/E tape return.
+The primary original-table S1 counted-decrement path is now a single all-valuation construction; the earlier residue-specific positive-r prefixes and parity-complete composition are superseded for this purpose.
 
-- `CountedCarryPrefixGeneral.lean` extends `carryFinishFromD` with the terminal nonpositive-cell formula
-  `T'(x) = if x < h then T(x) else decide ((x-h) % 3 = 0)`
-  under its existing one-run and two-zero tail premises. The first full CI diagnostic exposed a missing local-let unfold of `T3`; that exact simplification was patched in commit `a98ee53230b1ce07374c4b7638018f2800537d4a`. Full-repository CI has not yet certified the patched declaration.
-- The exceptional `carryShortPrefix_r1` theorem additionally proves its exact left output:
-  `if x < -5 then T(x) else if x ≤ -3 then true else decide (x % 3 = 1)`
-  for x≤0. Its proof evaluates the bridge3, AReturn12, and A3 frames and retains the existing `carryPrefix_anyPositive` public result type.
-- `CountedSuffixOutput.lean` proves the exact tape effect of the even counted suffix: preserve x≤0, install the local cells {2,3,4}, extend the unary block through `even_rightStop b + 2`, and preserve the old exterior after that point. It also proves `even_counted_suffix_matches_s1_right_of_prefix`, which identifies the complete positive half with the canonical S1 right side at counter b+1.
-- The main composition interface is `even_counted_suffix_canonical_of_left`: given the prefix's nonpositive-cell identity and its existing x>6 preservation, the entire suffix output equals the canonical S1 target `s1Config L n m a zOut (b+1) h`. The remaining premise is precisely the left-output identity being developed by Agent 3; the theorem does not assume that identity is already proved.
-- The existing `.github/workflows/agent42-champion-terminal-source.yml` now copies and compiles `CountedSuffixOutput.lean` after `S1CountedCarryPrefixBridge.lean`, and uploads its axiom log on failure. No new workflow or trigger was created. The workflow remains available for a deliberate source-check milestone; this invocation could not dispatch it.
+- `CountedCarryPrefixHRun.lean` proves `HOutputShape_leftOutput`, deriving the complete left-facing `carryLeftOutputBit` stream from the counted H-run shape. `carryPrefix_anyNonnegative_hRun` composes the exact H-run with the fixed 11-step B→E bridge, giving a `15+12*r` prefix for every `r≥0`, with six local output cells and preservation of the right exterior.
+- `S1CarryInc0.lean` composes that prefix with the existing `33+12*b` suffix. The theorem `s1Config_counted_decrement_anyValuation_hRun` gives the canonical full S1 decrement `S1(z,b) → S1(z-1,b+1)` in `48+12*r+12*b` moves when `z=(2*q+1)*2^r`.
+- `S1CountedInc0.lean` factors every positive bounded counter `z<2^a` in this form and proves the uniform cost `48+12*v₂(z)+12*b`. The older odd-canonical theorem remains available as regression evidence; it is not the primary all-valuation proof path.
+- `S1CountedDrain.lean` instantiates the generic `CountedReset` recurrence. For an all-ones counter `2^k-1) and initial unary count zero, the candidate drain cost is `6*4^k+42*2^k-12*k-48`.
 
-The proof components for the new suffix output were tested in isolated Lean 4.36.0-rc2 models with the exact frame, sweep, and list definitions. That is not a substitute for compiling the actual repository module. All new full-repository declarations remain CI-pending, and no `results/` publication or BB(6) value claim is made.
+**Validation boundary.** The targeted original-import workflow run `43858822223` at old SHA `68280aa969d8a0741848fee7d79fcbd9db9ed151` failed in the H-run source with three boundary-expression mismatches and one malformed extraction of the run/shape conjunction. The current `CountedCarryPrefixHRun.lean` blob `a940aab604a76a87c8ac54106616cac4e2895d43` contains the corresponding repairs: normalized `-(3*r)` boundary expressions and separate `hExact.1` / `hExact.2` extraction. These are source repairs, not a successful compile. The existing manual `.github/workflows/agent42-counted-lbin-dec.yml` now rejects both `sorryAx` and `native_decide`. A focused local Lean preflight is still pending; do not dispatch the workflow until that preflight is clean.
 
-**Next integration edges:** (1) complete the remaining positive-r prefix left-output residues in `im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean`; (2) compose that identity with `even_counted_suffix_canonical_of_left` to identify the even counted return as a canonical S1 successor; (3) use the existing manual terminal-source workflow to compile the complete dependency chain and audit axioms. Agent 42 may also reuse the explicit 11-coordinate `hreturn` proof block in `carryShortPrefix_r1` when revisiting its residue-3 t=1 AReturn12 frame match.
-
-
-### Direct S0 single-decrement composition interface
-
-A further S0-specific theorem was added in `CountedSuffixOutput.lean`:
-
-- `s0Config_right_far_zero` and `s0Config_right_zero_after_counter` derive the blank right exterior directly from `s0Config_right_cell`.
-- `even_counted_suffix_canonical_s0_of_left` identifies the entire suffix output with an arbitrary canonical S0 target, provided the prefix supplies its nonpositive-cell identity and preserves the old far-right exterior.
-- `s0Config_counted_decrement_of_prefix` composes an assumed full-tape `15+12r` prefix run with the `33+12b` suffix run, using `shift_run` and `run_compose`, and concludes
-  `run tm2 (48+12*r+12*b) (s0Config l a zIn b h) = some (s0Config l a zOut (b+1) h)`.
-
-This is the direct interface needed for Agent 8's `hInc0) premise, with arbitrary finite left exterior `l`. To instantiate it with a genuine decrement, take `zOut=z-1` and `r=v₂(z)`, then supply the prefix run, open boundary cells, right-run condition, exterior preservation, and left-output identity. The theorem source is now present and included in the manual terminal-source workflow, but **the actual repository module has not yet passed CI**; this is a proof candidate pending full compilation, not yet a certified `hInc0) result.
-
-
-## 2026-11-12: source S1 decrement composition (candidate, not CI-verified)
-
-Three new Lean sources extend the earlier counted-suffix interface:
-
-- `CountedCarryLeftOutputR23.lean`: residue (r=4k+2) and (r=4k+3) prefix theorems. Each supplies the exact left-output identity, the six local output cells, and right-exterior preservation. The bridge seed is placed at (h'=-12k-4) (r2, bridge2) or (h'=-12k-8) (r3, bridge1); only the finite bridge window and one source boundary cell need separate treatment.
-- `S1CarryOutputBridge.lean`: source-encoding lemma `s1Config_decrement_leftOutput`. It proves that the post-decrement S1 left stream is (d0^r ++ d1), while the input stream is (d1^r ++ d0), with the arbitrary encoded tail unchanged. The resulting tape agrees pointwise with `carryLeftOutputBit` on all (x\le 0).
-- `S1CarryInc0.lean`: source-window matching, right-run matching, shifted/unshifted prefix composition, and the candidate theorem `s1Config_counted_decrement_even`. Its intended statement is that every positive even bounded S1 counter has a full counted decrement, with runtime (48+12r+12b), where (z=(2q+1)2^r) and (r>0).
-
-The all-positive-(r) composition uses the existing residue-zero-mod-4 (positive r) and short-r1 results, Agent 42's long-r1 shifted interface, and the new r2/r3 full-prefix theorems. It is conditional on the imported prefix modules and remains an **uncompiled proof candidate**. The existing manual-only workflow has been extended to compile and reject `sorryAx` in these sources; no push trigger was added. A green CI run is still required before promoting any of these statements to `results/`.
-
-A further strengthening is now recorded in `S1CarryInc0.lean` as `s1Config_evenCounter_countedReturn_canonical`: it reuses the same ((q,r,len)) witness from Agent 42's existing even-counter return theorem and combines the exact counted-decrement run with run determinism. Consequently the return tape `T'` in that theorem is identified pointwise with the canonical S1 encoding of `z-1` and `b+1`. This is also uncompiled pending the manual source audit.
-
-
-Agent 48 has taken the disjoint next edge: a separate parity-unified S1 composition using the even canonical interface above and Agent 2's odd-counter canonical successor. They were asked to preserve the branch-specific parameter transformation rather than assume the odd branch is also a decrement.
-
-**13 November source-audit follow-up (still uncompiled).** Agent 48 repaired the shifted-coordinate proof in `LongResidue1.lean`. Agent 24 replaced the two unavailable `Config.ext` uses in `S1CarryInc0.lean` with explicit fieldwise extensionality, aligned its residue-0 call with Agent 3's current explicit `hk : 0 < k` signature, and strengthened the r2/r3 seed proofs in `CountedCarryLeftOutputR23.lean` with explicit bridge-area, threshold, and coordinate identities. The R23 proof deliberately keeps the intermediate swept tape `T1` opaque in the preservation simp sets. These are source repairs only; the manual terminal-source workflow has not yet compiled the post-patch dependency chain.
-
-
-## 2026-11-12 parity-complete composition handoff
-
-Agent 48 has now written `im-results/agent48-counted-inc0/S1CountedInc0.lean`. Its theorem `s1Config_counted_decrement` composes the valuation-zero odd-counter canonical output with `s1Config_counted_decrement_allPositive` and states, for every positive bounded z, the full canonical S1 transition `S1(z,b) -> S1(z-1,b+1)` in (48+12r+12b) steps for (z=(2q+1)2^r). The odd branch is (r=0), with cost (48+12b). Agent 24's static review found the branch-specific parameter transformations consistent; the module remains uncompiled. The manual source audit now includes a dedicated compile and `sorryAx` gate for it after `S1CarryInc0`; `S1OddCanonicalOutput` remains an upstream dependency.
+The older `CountedCarryLeftOutputR23.lean`, `LongResidue1.lean`, and residue-specific branches remain in the repository as supporting/regression material for other reset compositions. They are no longer the primary S1 decrement path. This entire S1 chain remains an intermediate source candidate: it does not by itself establish the blank-root itinerary, a halt, an attained BB(6) lower bound, or an exact score.
 
 ## Marker-2 odd-n reset prefix: q4 decomposition (intermediate)
 
@@ -218,7 +178,7 @@ For the authentic root `(L,n,m,a,z,b,h)=(3,7,2,6,0,63,29)`, the candidate is a 3
 
 The target has a positive all-ones S1 counter. Agent 48's `S1CountedDrain.s1Config_counted_drain_closed` applies at `(L,n,m,a,k,h)=(3,6,1,71,63,223)` and would take it to `s1Config 3 6 1 71 0 (2^63-1) 223` in `6*4^63+42*2^63-804` moves. Conditional on both q4 and the S1 decrement/drain chain compiling, the blank-root prefix through this drain would be `27959+332+(6*4^63+42*2^63-804) = 6*4^63+42*2^63+27487` steps. The `S1CountedInc0` and `S1CountedDrain` modules are uncompiled candidates, so this is not a certified lower bound or full halting score.
 
-**Validation gate.** The last available full champion-root run, 43340804651 (failed job 131608321957), reached `Q4Suffix.lean` and failed at line 439: `rw [heq1]` could not match `h + 6 + 3 * 1` against `h + 6 + 3 * ↑1` after `b=1`. Agent 24 patched the equality to use the explicit Nat-to-Int cast in commit `8c10a5f05db5a5a0706395005f7fb7a7b3e24580`; this source-level repair is not yet CI-verified. The old run reports `q4_suffix_frame` depends on `sorryAx`, consistent with Lean tactic error recovery after the failed rewrite. A fresh complete manual-only `.github/workflows/agent48-champion-root.yml` run must confirm the error is gone and the suffix plus new endpoint declarations have no `sorryAx`. Do not restore push/PR triggers just to obtain continuous runs. Until the complete source closure passes, the 332-step composition remains conditional and no promotion to `results/` is warranted.
+**Validation gate.** The current integration gate is the manual `.github/workflows/agent42-counted-lbin-dec.yml`, which stages the H-run, S1 decrement/drain, q4 endpoint, and M0-even 8q source chain. Its last attempt, run `43858822223` at old SHA `68280aa969d8a0741848fee7d79fcbd9db9ed151`, stopped in the H-run before reaching downstream modules. The current H-run blob `a940aab604a76a87c8ac54106616cac4e2895d43` repairs the reported boundary simplifications and run/shape extraction, but has not yet been compiled. The older Q4Suffix failure in run `43340804651` was patched by commit `8c10a5f05db5a5a0706395005f7fb7a7b3e24580`; that repair also remains unverified in the current full closure. The current workflow rejects both `sorryAx` and `native_decide`. Dispatch it once, only after the exact local source preflight is clean. Until the complete original-import closure passes, the q4-plus-drain root path remains conditional and is not a halt witness or BB(6) lower bound.
 
 The finite q4 screens remain in [LCIncQ4Cut.md](LCIncQ4Cut.md) as empirical support, not a substitute for the quantified proof. No exact BB(6) score or universal six-state upper bound follows yet.
 
