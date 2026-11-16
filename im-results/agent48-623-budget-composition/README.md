@@ -95,3 +95,6 @@ Together with `TerminalWindowAtDepth12.lean`, this supplies the two principal lo
 - [NearScaleTransferN10.lean](NearScaleTransferN10.lean) proves the two arithmetic orientation lemmas: either combined strip `absDiff v (13*u)≤470` or `absDiff (7*u) (4*v)≤470`, together with `19680≤min u v`, forces `u≤v`. This transfers the scale-10 minimum-coordinate band to the first coordinate required by the near wrappers.
 
 This closes the isolated near-orientation arithmetic obligation, conditional on the bridge-plus-terminal inequalities actually producing the stated strip.
+
+
+The same file now also includes uniform n≥10 versions of both orientation lemmas, using the existing `min_scale_large` estimate (100n+500\le m). These general versions use the full root-corridor allowance (35n+120), not just the n=10 constant 470.
