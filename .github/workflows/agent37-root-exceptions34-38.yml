@@ -101,7 +101,7 @@ jobs:
           T=im-results/agent37-d-timing-cocycle
           lean -DmaxRecDepth=55000 -o "$T/BlankThirtyFourthToThirtySixthRejoin.olean" "$T/BlankThirtyFourthToThirtySixthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankThirtySeventhToThirtyEighthRejoin.olean" "$T/BlankThirtySeventhToThirtyEighthRejoin.lean"
-          lean -DmaxRecDepth=55000 -o "$T/Seed39Probe.olean" "$T/Seed39Probe.lean"
+          lean -DmaxRecDepth=55000 -o "$T/Seed39Probe.olean" "$T/Seed39Probe.lean" 2>&1 | tee "$T/seed39-probe.txt"
           if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
@@ -118,4 +118,5 @@ jobs:
             source/im-results/agent37-d-timing-cocycle/BlankThirtyFourthToThirtySixthRejoin.olean
             source/im-results/agent37-d-timing-cocycle/BlankThirtySeventhToThirtyEighthRejoin.olean
             source/im-results/agent37-d-timing-cocycle/Seed39Probe.olean
+            source/seed39-probe.txt
           if-no-files-found: warn
