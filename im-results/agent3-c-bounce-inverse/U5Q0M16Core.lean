@@ -32,9 +32,9 @@ private theorem q1_absent_3 :
 
 /-- Every original-section predecessor of X_t=(44*t-1,42*t-1) is
     excluded by the certified 24^3 modulus-16 quotient whenever
-    t=627 (mod 672). The exact source fan leaves only q=0 and q=1;
+    t=19 (mod 32). The exact source fan leaves only q=0 and q=1;
     their quotient states are the five explicitly absent c=0 states. -/
-theorem q0_X_not_reach (t u : Nat) (ht : t=627+672*u) :
+theorem q0_X_not_reach (t n : Nat) (ht : t=32*n+19) :
     ¬ CReach (44*t-1) (42*t-1) := by
   intro hX
   obtain ⟨a,k,hprev,hstep⟩ :=
@@ -69,8 +69,8 @@ theorem q0_X_not_reach (t u : Nat) (ht : t=627+672*u) :
     have hU : U=43*t-1 := by simpa using hpow.symm
     have ha' : a=43*t-3 := by rw [hU] at ha; omega
     have hk' : 2*k=85*t-7 := by rw [hU] at hcost; omega
-    have haEq : a=26958+28896*u := by rw [ht] at ha'; omega
-    have hkEq : k=26644+28560*u := by rw [ht] at hk'; omega
+    have haEq : a=1376*n+814 := by rw [ht] at ha'; omega
+    have hkEq : k=1360*n+804 := by rw [ht] at hk'; omega
     have hqa : CCert.q a=CCert.q 14 := by
       apply CCert.q_congr_big
       · rw [haEq]; omega
@@ -87,27 +87,12 @@ theorem q0_X_not_reach (t u : Nat) (ht : t=627+672*u) :
     exact cReach_not_seen a k hseen hprev
   · subst q
     have hU : 4*U=43*t-1 := by simpa using hpow.symm
-    have hUeq : U=6740+7224*u := by rw [ht] at hU; omega
-    have ha' : a=6738+7224*u := by rw [hUeq] at ha; omega
-    have hk' : 2*k=73502+78792*u := by rw [hUeq,ht] at hcost; omega
-    have haEq : a=6738+7224*u := ha'
-    have hkEq : k=36751+39396*u := by omega
-    have huCases : u%4=0 ∨ u%4=1 ∨ u%4=2 ∨ u%4=3 := by omega
-    rcases huCases with hu0 | hu1 | hu2 | hu3
-    · have hqa : CCert.q a=CCert.q 18 := by
-        apply CCert.q_congr_big
-        · rw [haEq]; omega
-        · decide
-        · rw [haEq]; omega
-      have hqk : CCert.q k=CCert.q 15 := by
-        apply CCert.q_congr_big
-        · rw [hkEq]; omega
-        · decide
-        · rw [hkEq]; omega
-      have hseen : CCert.seen (CCert.q a) (CCert.q k) (CCert.q 0)=false := by
-        rw [hqa,hqk]
-        exact q1_absent_0
-      exact cReach_not_seen a k hseen hprev
+    have hUeq : U=344*n+204 := by rw [ht] at hU; omega
+    have haEq : a=344*n+202 := by rw [hUeq] at ha; omega
+    have hk' : 2*k=3752*n+2214 := by rw [hUeq,ht] at hcost; omega
+    have hkEq : k=1876*n+1107 := by omega
+    have hnCases : n%4=0 ∨ n%4=1 ∨ n%4=2 ∨ n%4=3 := by omega
+    rcases hnCases with hn0 | hn1 | hn2 | hn3
     · have hqa : CCert.q a=CCert.q 10 := by
         apply CCert.q_congr_big
         · rw [haEq]; omega
@@ -149,6 +134,20 @@ theorem q0_X_not_reach (t u : Nat) (ht : t=627+672*u) :
       have hseen : CCert.seen (CCert.q a) (CCert.q k) (CCert.q 0)=false := by
         rw [hqa,hqk]
         exact q1_absent_3
+      exact cReach_not_seen a k hseen hprev
+    · have hqa : CCert.q a=CCert.q 18 := by
+        apply CCert.q_congr_big
+        · rw [haEq]; omega
+        · decide
+        · rw [haEq]; omega
+      have hqk : CCert.q k=CCert.q 15 := by
+        apply CCert.q_congr_big
+        · rw [hkEq]; omega
+        · decide
+        · rw [hkEq]; omega
+      have hseen : CCert.seen (CCert.q a) (CCert.q k) (CCert.q 0)=false := by
+        rw [hqa,hqk]
+        exact q1_absent_0
       exact cReach_not_seen a k hseen hprev
 
 #print axioms q0_X_not_reach
