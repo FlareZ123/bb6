@@ -1,50 +1,8 @@
 import Root119ZeroLeftShield
 import Root119CPhaseReturn
+import Root119EvenExtra
 set_option linter.unusedSimpArgs false
 namespace BB6Root119
-
-/-- Any finite shuttleRun from a reached configuration ends at a reached configuration. -/
-theorem evenSweepTape_evenCell (n : Nat) (t : Int → Bool) (h : Int)
-    (j : Nat) (hj : j < n) :
-    evenSweepTape n t h (h+2*(j:Int)) = true := by
-  induction n generalizing t h j with
-  | zero => omega
-  | succ n ih =>
-      by_cases hj0 : j = 0
-      · subst j
-        simp only [evenSweepTape]
-        have hidx : h+2*((0:Nat):Int) = h := by omega
-        rw [hidx]
-        have hleft := evenSweepTape_left n
-          (setBit (setBit t h true) (h+1) false) (h+2) h (by omega)
-        rw [hleft]
-        simp [setBit, show h ≠ h+1 by omega]
-      · have hj' : j-1 < n := by omega
-        have hidx : h+2*(j:Int) = (h+2)+2*((j-1:Nat):Int) := by omega
-        simp only [evenSweepTape]
-        rw [hidx]
-        exact ih (setBit (setBit t h true) (h+1) false) (h+2) (j-1) hj'
-
-theorem evenSweepTape_oddCell (n : Nat) (t : Int → Bool) (h : Int)
-    (j : Nat) (hj : j < n) :
-    evenSweepTape n t h (h+2*(j:Int)+1) = false := by
-  induction n generalizing t h j with
-  | zero => omega
-  | succ n ih =>
-      by_cases hj0 : j = 0
-      · subst j
-        simp only [evenSweepTape]
-        have hidx : h+2*((0:Nat):Int)+1 = h+1 := by omega
-        rw [hidx]
-        have hleft := evenSweepTape_left n
-          (setBit (setBit t h true) (h+1) false) (h+2) (h+1) (by omega)
-        rw [hleft]
-        simp [setBit, show h+1 ≠ h by omega]
-      · have hj' : j-1 < n := by omega
-        have hidx : h+2*(j:Int)+1 = (h+2)+2*((j-1:Nat):Int)+1 := by omega
-        simp only [evenSweepTape]
-        rw [hidx]
-        exact ih (setBit (setBit t h true) (h+1) false) (h+2) (j-1) hj'
 
 theorem zeroLeftEvenOutTape_cphaseD1_pattern (n : Nat) (t : Int → Bool) (h : Int) :
     zeroLeftEvenOutTape n t h (h+2*(n:Int)+1) = true ∧

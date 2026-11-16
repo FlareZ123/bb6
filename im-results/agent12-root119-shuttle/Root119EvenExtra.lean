@@ -60,5 +60,70 @@ theorem evenSweep_to_B (n : Nat) (t : Int → Bool) (h : Int)
       _ = some ⟨.B,p+1,v3⟩ := ht
   · dsimp [p]
 
+
+
+/-- An even sweep preserves every cell strictly left of its start. -/
+theorem evenSweepTape_left_of_lt (n : Nat) (t : Int → Bool) (h x : Int)
+    (hx : x < h) : evenSweepTape n t h x = t x := by
+  induction n generalizing t h x with
+  | zero => rfl
+  | succ n ih =>
+      change evenSweepTape n (setBit (setBit t h true) (h+1) false) (h+2) x = t x
+      have hx' : x < h+2 := by omega
+      rw [ih (setBit (setBit t h true) (h+1) false) (h+2) x hx']
+      have h0 : x ≠ h := by omega
+      have h1 : x ≠ h+1 := by omega
+      simp [setBit,h0,h1]
+
+/-- The D/even cells of an even sweep are all one. -/
+theorem evenSweepTape_evenCell (n : Nat) (t : Int → Bool) (h : Int)
+    (j : Nat) (hj : j < n) :
+    evenSweepTape n t h (h+2*(j:Int)) = true := by
+  induction n generalizing t h j with
+  | zero => omega
+  | succ n ih =>
+      cases j with
+      | zero =>
+          simp only [evenSweepTape]
+          have hidx : h+2*((0:Nat):Int) = h := by omega
+          rw [hidx]
+          have hleft := evenSweepTape_left_of_lt n
+            (setBit (setBit t h true) (h+1) false) (h+2) h (by omega)
+          rw [hleft]
+          simp [setBit,show h ≠ h+1 by omega]
+      | succ j =>
+          have hj' : j < n := by omega
+          have hidx : h+2*((j+1:Nat):Int) = (h+2)+2*(j:Int) := by omega
+          simp only [evenSweepTape]
+          rw [hidx]
+          exact ih (setBit (setBit t h true) (h+1) false) (h+2) j hj'
+
+/-- The F/odd cells of an even sweep are all zero. -/
+theorem evenSweepTape_oddCell (n : Nat) (t : Int → Bool) (h : Int)
+    (j : Nat) (hj : j < n) :
+    evenSweepTape n t h (h+2*(j:Int)+1) = false := by
+  induction n generalizing t h j with
+  | zero => omega
+  | succ n ih =>
+      cases j with
+      | zero =>
+          simp only [evenSweepTape]
+          have hidx : h+2*((0:Nat):Int)+1 = h+1 := by omega
+          rw [hidx]
+          have hleft := evenSweepTape_left_of_lt n
+            (setBit (setBit t h true) (h+1) false) (h+2) (h+1) (by omega)
+          rw [hleft]
+          simp [setBit,show h+1 ≠ h by omega]
+      | succ j =>
+          have hj' : j < n := by omega
+          have hidx : h+2*((j+1:Nat):Int)+1 = (h+2)+2*(j:Int)+1 := by omega
+          simp only [evenSweepTape]
+          rw [hidx]
+          exact ih (setBit (setBit t h true) (h+1) false) (h+2) j hj'
+
+#print axioms BB6Root119.evenSweepTape_left_of_lt
+#print axioms BB6Root119.evenSweepTape_evenCell
+#print axioms BB6Root119.evenSweepTape_oddCell
+
 #print axioms BB6Root119.evenSweep_to_B
 end BB6Root119
