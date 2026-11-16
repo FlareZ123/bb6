@@ -109,7 +109,8 @@ theorem physicalScanProbe_unknown_matches (p : PartialMachine)
       | none =>
           rcases (by simpa [physicalScanProbe, hp] using h) with
             ⟨_, ⟨_, hslot⟩⟩
-          simp [firstUnknownPhysical, hp, hslot]
+          simp only [firstUnknownPhysical, hp]
+          exact congrArg some hslot
       | some trans =>
           cases trans with
           | none =>
@@ -139,12 +140,11 @@ theorem physicalScanProbe_unknown_exact (p : PartialMachine) :
       intro successfulMoves cfg k d slot h
       cases hp : p (cfg.state, finiteTape cfg cfg.head) with
       | none =>
-          have heq : k = successfulMoves ∧ d = cfg ∧
-              slot = (cfg.state, finiteTape cfg cfg.head) := by
-            rcases (by simpa [physicalScanProbe, hp] using h) with
-              ⟨hk, ⟨hd, hslot⟩⟩
-            exact ⟨hk.symm, hd.symm, hslot.symm⟩
-          rcases heq with ⟨rfl, rfl, rfl⟩
+          rcases (by simpa [physicalScanProbe, hp] using h) with
+            ⟨hk, ⟨hd, hslot⟩⟩
+          subst k
+          subst d
+          subst slot
           refine ⟨0, by omega, by omega, ?_, rfl, hp⟩
           simp [finitePartialRun]
       | some trans =>
@@ -185,11 +185,10 @@ theorem physicalScanProbe_halt_exact (p : PartialMachine) :
       | some trans =>
           cases trans with
           | none =>
-              have heq : k = successfulMoves ∧ d = cfg := by
-                rcases (by simpa [physicalScanProbe, hp] using h) with
-                  ⟨hk, hd⟩
-                exact ⟨hk.symm, hd.symm⟩
-              rcases heq with ⟨rfl, rfl⟩
+              rcases (by simpa [physicalScanProbe, hp] using h) with
+                ⟨hk, hd⟩
+              subst k
+              subst d
               refine ⟨0, by omega, by omega, ?_, hp⟩
               simp [finitePartialRun]
           | some mv =>
@@ -214,10 +213,9 @@ theorem physicalScanProbe_limit_exact (p : PartialMachine) :
   induction n with
   | zero =>
       intro successfulMoves cfg k d h
-      have heq : k = successfulMoves ∧ d = cfg := by
-        rcases (by simpa [physicalScanProbe] using h) with ⟨hk, hd⟩
-        exact ⟨hk.symm, hd.symm⟩
-      rcases heq with ⟨rfl, rfl⟩
+      rcases (by simpa [physicalScanProbe] using h) with ⟨hk, hd⟩
+      subst k
+      subst d
       constructor
       · omega
       · simp [finitePartialRun]
@@ -259,9 +257,11 @@ theorem physicalScanProbe_halt_exact_for_completion
   have hhaltRaw : m (readSlot (embedFinRay cfg)) = none := by
     simpa [readSlot, embedFinRay] using
       hm (cfg.state, finiteTape cfg cfg.head) none hhalt
-  refine ⟨by simp [HaltsAfter, hroot], ?_⟩
-  simpa [Nat.zero_add] using
-    halting_entry m blank (embedFinRay cfg) moves hroot hhaltRaw
+  change (run m moves blank).isSome = true ∧
+    run m (moves + 1) blank = none
+  constructor
+  · simp [hroot]
+  · exact halting_entry m blank (embedFinRay cfg) moves hroot hhaltRaw
 
 /-- Consequently a halt probe yields a source proof-carrying Cover leaf at
     its exact score, even when that score exceeds the audit's bound six. -/
@@ -352,8 +352,10 @@ computes the finite orbit key; it does not alter the source proof tree.
 #eval do
   let terms : List AuditTerminal := depth4ResidualTerminals
   let report := depth4ResidualAudit.report
-  let openCount := (terms.filter (fun (t : AuditTerminal) => !t.certified)).length
-  let certifiedCount := (terms.filter (fun (t : AuditTerminal) => t.certified)).length
+  let openCount := (terms.filter
+    (fun (t : AuditTerminal) => !(AuditTerminal.certified t))).length
+  let certifiedCount := (terms.filter
+    (fun (t : AuditTerminal) => AuditTerminal.certified t)).length
   IO.FS.writeFile "/tmp/bb6-depth4-frontier.tsv"
     ("status\tweight\tdepth\taudit_stop\toracle_outcomes\tprobe_kind\tprobe_steps\tprobe_state\tprobe_head\tprobe_ones\tprobe_next_slot\tpath\n" ++
       String.intercalate "\n" (terms.map encodeTerminal) ++ "\n")
