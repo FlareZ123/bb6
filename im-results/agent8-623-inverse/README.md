@@ -177,3 +177,30 @@ The four terminal exclusions still assume the source-root square-gap lower bound
 [RootCancellationBudgetBridge.md](RootCancellationBudgetBridge.md) and [RootCancellationBudgetBridge.lean](RootCancellationBudgetBridge.lean) combine a hypothetical terminal ratio-four window with the previous-step root-ray bridge. In four far/near combinations, the preceding state is forced into the existing outer-log or gate two-step safety budget, with budget exponent k=n+6. This is a possible route around a global square-gap invariant.
 
 The arithmetic module is Lean-checked and uses the previously proved width_pow bound. It remains conditional: the current-state depth n+4 and terminal mass exponent n+6 must still be justified from source output bounds without circularly assuming the terminal window, then the source theorems must be composed and the finite n<10 prefix handled. No #623 nonhalting conclusion is claimed.
+
+### Direct predicate adapters (16 November 2026; draft, uncompiled)
+
+`RootCancellationBudgetInterfaces.lean` adds four adapters from the
+conditional outputs of `RootCancellationBudgetBridge.lean` to the exact
+existing predicates consumed by `LogParentSource.lean` and
+`GateCompleteSource.lean`:
+
+- far/far and far/near terminal/ray combinations produce
+  `logOuterBudget u v (n+6)`;
+- near/far and near/near combinations produce
+  `gateBudget u v (n+6)`.
+
+The adapters split on the relevant parity and choose the corresponding
+existing disjunct. The odd-left gate case additionally retains the original
+root-band hypothesis `v+3<3^n`; the bridge's weaker
+`v+2<3^(n+6)` alone would not establish that disjunct. The existing outer
+and gate predicates accept the bridge's stronger arithmetic bounds without
+changing their definitions.
+
+The manual `agent8-623-third-affine.yml` workflow now compiles
+`SquareGapTerminalBridge`, `RootCancellationBudgetBridge`, and this
+adapter module after the existing LogParent/GateComplete dependencies.
+**Status:** the new adapter file and workflow extension have not yet passed a
+focused local compile or CI. They do not solve the remaining source-level
+transfer of current terminal depth `n+4` and mass exponent `n+6`, and
+they make no #623 nonhalting claim.
