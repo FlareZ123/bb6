@@ -267,7 +267,7 @@ jobs:
               echo "REJECTED: general u=5 y=3 parent fan contains sorryAx"
               exit 1
             fi
-            # Reuse Agent 11's proved q=0 subfamily closures for w even and w=3 mod 8.
+            # Compile Agent 11's q=0 subfamily closure lemmas for w even and w=3 mod 8.
             cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/U5M8Q0Partial.lean .
             lean -o U5M8Q0Partial.olean U5M8Q0Partial.lean 2>&1 | tee U5M8Q0Partial.log
             if grep -q sorryAx U5M8Q0Partial.log; then
@@ -277,7 +277,7 @@ jobs:
             cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/U5Y3M8.lean .
             lean -o U5Y3M8.olean U5Y3M8.lean 2>&1 | tee U5Y3M8.log
             if grep -q sorryAx U5Y3M8.log; then
-              echo "REJECTED: parametric u=5 M=0 mod 8 exclusion contains sorryAx"
+              echo "REJECTED: partial parametric u=5 M=0 mod 8 exclusion contains sorryAx"
               exit 1
             fi
             exit 0
