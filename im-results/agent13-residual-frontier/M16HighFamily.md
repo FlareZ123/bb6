@@ -68,7 +68,7 @@ Since \(m\equiv3\pmod4\), \(m\) is odd and \(m\bmod8\in\{3,7\}\). The condition 
 \[
 j\bmod8\in\{2,6\},\qquad j\bmod4=2.
 \]
-For \(m\ge3\), \(P_m\) is divisible by 16. Also \(a=2j+3\ge9\), and \(k>4\): using the standard bound \(P_m\ge4m+4\) and \(j\ge3\), we have \(k\ge(4m+4)(j+3)-(j+3m+5)=4mj+9m+3j+7>4\). The q-images are determined by the residues of \(m,j\) modulo 16; because \(j\ge3\), all coordinates in this high family are at least 8.
+For \(m\ge3\), \(P_m\) is divisible by 16. Also \(a=2j+3\ge9\) and \(k\ge79\): using the standard bound \(P_m\ge4m+4\) and \(j\ge3\), we have \(k\ge(4m+4)(j+3)-(j+3m+5)=4mj+9m+3j+7\ge79\). The q-images are determined by the residues of \(m,j\) modulo 16; because \(j\ge3\), all coordinates in this high family are at least 8.
 
 The cases are:
 
@@ -113,7 +113,7 @@ The current highAllowedValSixFull j m is a conjunction of the joint, Agent 11, A
    \equiv j+m-2
    \equiv3\pmod4.
    \]
-   Thus the first guard \(4\le k\land k\bmod2=0\land(a+k)\bmod4=1\) is false, so affineNormalize is the identity. Also \(k>4\), so its right coordinate is not 4.
+   Thus the first guard \(4\le k\land k\bmod2=0\land(a+k)\bmod4=1\) is false, so affineNormalize is the identity. Also \(k\ge79\), so its right coordinate is not 4.
 
 Therefore highAllowedValSixFull j m holds throughout the family, while the M16 quotient rules out its c=0 root state.
 
