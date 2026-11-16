@@ -49,6 +49,16 @@ The module also drafts `u5_residual_nonempty`: for every natural w it constructs
 
 A further arithmetic consequence is that every such residual has `s=293 (mod 512)`, hence the stopping-root index `j=39+64s` satisfies `j=18791 (mod 32768)`, equivalently `(j-7)/32=587 (mod 1024)`. This is disjoint from the four previously source-certified m=0 classes `j=1895 (mod 2048)`, `j=359 (mod 8192)`, `j=5479 (mod 16384)`, and `j=10599 (mod 32768)`. If the new Lean draft compiles and passes its axiom audit, it adds a fifth disjoint class and raises the covered odd parameter-ray density from `23/512` to `24/512=3/64`. This is a density of parameter values, not machines or halting tables.
 
+| Class | Root index condition | Odd root-parameter condition | Density among odd parameters |
+|---|---|---|---:|
+| Existing 1 | `j=1895 (mod 2048)` | `t_root=59 (mod 64)` | `16/512` |
+| Existing 2 | `j=359 (mod 8192)` | `t_root=11 (mod 256)` | `4/512` |
+| Existing 3 | `j=5479 (mod 16384)` | `t_root=171 (mod 512)` | `2/512` |
+| Existing 4 | `j=10599 (mod 32768)` | `t_root=331 (mod 1024)` | `1/512` |
+| New draft | `j=18791 (mod 32768)` | `t_root=587 (mod 1024)` | `1/512` |
+
+The new parameter residue reduces to 11 mod64, 75 mod256, and 75 mod512, so it is disjoint from the first three classes; 587 differs from 331 mod1024, so it is disjoint from the fourth. The five densities sum to `24/512=3/64`.
+
 This is the intended source-to-root connection, including nonvacuity and a new disjoint high-stop residue class, but the new high-stop module is still uncompiled and is not yet a certified theorem.
 
 ## Why this matters
