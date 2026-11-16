@@ -122,4 +122,132 @@ theorem blank_no_u5_q0_parent_w3 (w s m t : Nat)
 #print axioms blank_no_u5_q0_t5
 #print axioms blank_no_u5_q0_parent_w_even
 #print axioms blank_no_u5_q0_parent_w3
+
+
+/-- The power-of-two residue modulo nine depends only on the exponent
+    modulo six. -/
+private theorem u5_pow_period_six_mod9 (n : Nat) :
+    (2:Nat)^(n+6)%9 = 2^n%9 := by
+  rw [Nat.pow_add]
+  simp [Nat.mul_mod]
+
+private theorem u5_pow_mod_six_mod9 (n : Nat) :
+    (2:Nat)^n%9 = 2^(n%6)%9 := by
+  induction n using Nat.strongRecOn with
+  | ind n ih =>
+    by_cases hn : n < 6
+    · simp [Nat.mod_eq_of_lt hn]
+    · have hm : n-6<n := by omega
+      have he : n=(n-6)+6 := by omega
+      have hmod : n%6=(n-6)%6 := by omega
+      rw [he,u5_pow_period_six_mod9]
+      rw [ih (n-6) hm]
+      rw [hmod]
+
+/-- The power of seven modulo nineteen depends only on the exponent
+    modulo three, since 7^3=1 (mod 19). -/
+private theorem u5_pow_period_three_mod19 (q : Nat) :
+    7^(q+3)%19 = 7^q%19 := by
+  rw [Nat.pow_add]
+  simp [Nat.mul_mod]
+
+private theorem u5_pow_mod_three_mod19 (q : Nat) :
+    7^q%19 = 7^(q%3)%19 := by
+  induction q using Nat.strongRecOn with
+  | ind q ih =>
+    by_cases hq : q < 3
+    · simp [Nat.mod_eq_of_lt hq]
+    · have hm : q-3<q := by omega
+      have he : q=(q-3)+3 := by omega
+      have hmod : q%3=(q-3)%3 := by omega
+      rw [he,u5_pow_period_three_mod19]
+      rw [ih (q-3) hm]
+      rw [hmod]
+
+private theorem u5_pow7_mod19_ne18 (q : Nat) :
+    7^q%19 ≠ 18 := by
+  rw [u5_pow_mod_three_mod19]
+  have hcases : q%3=0 ∨ q%3=1 ∨ q%3=2 := by omega
+  rcases hcases with h0 | h1 | h2
+  · rw [h0]
+    decide
+  · rw [h1]
+    decide
+  · rw [h2]
+    decide
+
+/-- The q=0 even/even parent has sum 8*S with 16*S+13=171*t.
+    Its zero-left source-parent alternative would force S=2^n.
+    This is arithmetically impossible: modulo 9 one gets n=1 (mod 6);
+    writing n=6q+1, modulo 19 one gets 7^q=-1, contrary to 7^3=1. -/
+theorem u5_q0_sum_quotient_not_power (t S n : Nat)
+    (hS : 16*S+13=171*t) : S ≠ 2^n := by
+  intro hpower
+  have hEq : 16*2^n+13=171*t := by
+    rw [← hpower]
+    exact hS
+  have h9 : (16*2^n+13)%9=0 := by
+    rw [hEq]
+    simp
+  have h19 : (16*2^n+13)%19=0 := by
+    rw [hEq]
+    simp
+  have hmod9 :
+      (16*2^n+13)%9 = (7*(2^n%9)+4)%9 := by omega
+  rw [hmod9] at h9
+  have hbound9 : 2^n%9<9 := Nat.mod_lt _ (by decide)
+  have h2mod9 : 2^n%9=2 := by omega
+  have hmod19 :
+      (16*2^n+13)%19 = (16*(2^n%19)+13)%19 := by omega
+  rw [hmod19] at h19
+  have hbound19 : 2^n%19<19 := Nat.mod_lt _ (by decide)
+  have h2mod19 : 2^n%19=17 := by omega
+  have hres6 : n%6=1 := by
+    have hpow := u5_pow_mod_six_mod9 n
+    rw [hpow] at h2mod9
+    have hcases :
+        n%6=0 ∨ n%6=1 ∨ n%6=2 ∨
+        n%6=3 ∨ n%6=4 ∨ n%6=5 := by omega
+    rcases hcases with h0 | h1 | h2 | h3 | h4 | h5
+    · have hbad : (1:Nat)=2 := by simpa [h0] using h2mod9
+      omega
+    · exact h1
+    · have hbad : (4:Nat)=2 := by simpa [h2] using h2mod9
+      omega
+    · have hbad : (8:Nat)=2 := by simpa [h3] using h2mod9
+      omega
+    · have hbad : (7:Nat)=2 := by simpa [h4] using h2mod9
+      omega
+    · have hbad : (5:Nat)=2 := by simpa [h5] using h2mod9
+      omega
+  have hq : n=6*(n/6)+1 := by omega
+  have hpowEq :
+      (2:Nat)^(6*(n/6)+1) = 2*((2:Nat)^6)^(n/6) := by
+    rw [Nat.pow_add, Nat.pow_mul]
+    ac_rfl
+  have h2mod19q :
+      (2*((2:Nat)^6)^(n/6))%19=17 := by
+    rw [← hpowEq, ← hq]
+    exact h2mod19
+  have h64 : (2:Nat)^6%19=7 := by decide
+  have h7pow :
+      ((2:Nat)^6)^(n/6)%19 = 7^(n/6)%19 := by
+    rw [Nat.pow_mod, h64]
+  have h7res : 7^(n/6)%19=18 := by
+    rw [Nat.mul_mod, h7pow] at h2mod19q
+    have hbound : 7^(n/6)%19<19 := Nat.mod_lt _ (by decide)
+    omega
+  exact (u5_pow7_mod19_ne18 (n/6)) h7res
+
+/-- The exceptional zero-left alternative in the complete even/even
+    parent fan is impossible for the U5 q=0 parent, uniformly in t. -/
+theorem u5_q0_zero_left_branch_impossible (t S n : Nat)
+    (hS : 16*S+13=171*t)
+    (hzero : 8*S=2^n*8) : False := by
+  have hpower : S=2^n := by omega
+  exact (u5_q0_sum_quotient_not_power t S n hS) hpower
+
+#print axioms u5_q0_sum_quotient_not_power
+#print axioms u5_q0_zero_left_branch_impossible
+
 end BB6.Agent11U5M8Q0Partial
