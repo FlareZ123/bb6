@@ -1,6 +1,12 @@
 name: Agent 10 #746 original Cryptids source bridge (manual)
 on:
   workflow_dispatch:
+    inputs:
+      preflight_only:
+        description: Stop after the LevelDeficitDynamics and T1QParentFatal source preflight
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 jobs:
@@ -29,6 +35,8 @@ jobs:
         env:
           LEAN_NUM_THREADS: "1"
       - name: Compile rooted chain and high-level reset bridge against unmodified upstream
+        env:
+          PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
         run: |
           set -eu
           mkdir -p "$GITHUB_WORKSPACE/Agent10Bridge"
@@ -54,6 +62,11 @@ jobs:
             lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
           done
           lake env lean -o "Agent10Bridge/LevelDeficitDynamics.olean" "Agent10Bridge/LevelDeficitDynamics.lean"
+          lake env lean -o "Agent10Bridge/T1QParentFatal.olean" "Agent10Bridge/T1QParentFatal.lean"
+          if [ "$PREFLIGHT_ONLY" = "true" ]; then
+            echo "PASS: focused preflight compiled LevelDeficitDynamics, ResetChain, and T1QParentFatal; inspect the axiom profiles above."
+            exit 0
+          fi
           lake env lean -o "Agent10Bridge/HighLevelResetBridge.olean" "Agent10Bridge/HighLevelResetBridge.lean"
           lake env lean -o "Agent10Bridge/OriginalAlgorithmicGate.olean" "Agent10Bridge/OriginalAlgorithmicGate.lean"
           lake env lean -o "Agent10Bridge/FastParents.olean" "Agent10Bridge/FastParents.lean"
@@ -63,7 +76,6 @@ jobs:
             lake env lean -o "Agent10Bridge/FastCone$n.olean" "Agent10Bridge/FastCone$n.lean"
           done
           lake env lean -o "Agent10Bridge/OriginalGate268.olean" "Agent10Bridge/OriginalGate268.lean"
-          lake env lean -o "Agent10Bridge/T1QParentFatal.olean" "Agent10Bridge/T1QParentFatal.lean"
           lake env lean -o "Agent10Bridge/T1QParentOriginal.olean" "Agent10Bridge/T1QParentOriginal.lean"
           echo "PASS: t=1 Q-parent source identity, nonfatal even-reset chain, and conditional original-machine halting implication compiled."
           echo "Unmodified pinned upstream highLevelNext, exact ResetParent first-return equivalence, root reset-chain correspondence, and source-indexed surviving-gate bound compiled."
