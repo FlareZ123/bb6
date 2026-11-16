@@ -28,6 +28,13 @@ Consequently, once the source-Reach embedding is composed with CCert.reachable_s
 
 This is a genuinely new exclusion relative to the current highAllowedValSixFull parameter gate. It generalizes the special case \(m=3,\ j\equiv6\pmod8\).
 
+There is also an independent \(m=0\) family:
+\[
+m=0,\qquad j\equiv2\pmod{16}.
+\]
+Then \(a=2j+3\) and \(k=3j+7\). At \(j=2\), the q-state is \((7,13,0)\); for \(j\ge18\) in this progression it is \((23,13,0)\). Both are absent from the certified seen table. The full high gate accepts this family: every positive-\(m\) threshold is false, the universal dyadic condition has no index because \(n+4\le2m+2=2\) is impossible, the Agent 11 condition holds since \(j\bmod4=2\), and affineNormalize is the identity since \(k=3j+7\) is odd and greater than 4.
+
+
 ## Quotient and certified finite facts
 
 Agent 43's quotient uses
