@@ -28,6 +28,11 @@ on:
         required: false
         type: boolean
         default: false
+      u5_q0_fan_only:
+        description: "Source-check Agent 3's exact q=0 U5 original-section parent fan, then stop"
+        required: false
+        type: boolean
+        default: false
       s31_w13_only:
         description: "Source-check the M0 base and S31 B/W5/W1/q275/q403 high-stop chain, then stop"
         required: false
@@ -55,6 +60,7 @@ jobs:
           U5_X186_ONLY: ${{ inputs.u5_x186_only }}
           U5_M8_ONLY: ${{ inputs.u5_m8_only }}
           U5_Q0_PARTIAL_ONLY: ${{ inputs.u5_q0_partial_only }}
+          U5_Q0_FAN_ONLY: ${{ inputs.u5_q0_fan_only }}
           S31_W13_ONLY: ${{ inputs.s31_w13_only }}
         run: |
           set -euo pipefail
@@ -232,6 +238,15 @@ jobs:
             lean -o U5M8Q0Partial.olean U5M8Q0Partial.lean 2>&1 | tee U5M8Q0Partial.log
             if grep -q sorryAx U5M8Q0Partial.log; then
               echo "REJECTED: q=0 u=5 M=0 mod 8 partial exclusion contains sorryAx"
+              exit 1
+            fi
+            exit 0
+          fi
+          if [ "$U5_Q0_FAN_ONLY" = "true" ]; then
+            cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/U5Q0OddOddFan.lean .
+            lean -o U5Q0OddOddFan.olean U5Q0OddOddFan.lean 2>&1 | tee U5Q0OddOddFan.log
+            if grep -q sorryAx U5Q0OddOddFan.log; then
+              echo "REJECTED: U5 q=0 exact source parent fan contains sorryAx"
               exit 1
             fi
             exit 0

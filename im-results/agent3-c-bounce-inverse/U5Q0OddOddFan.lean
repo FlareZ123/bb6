@@ -22,7 +22,6 @@ private theorem four_pow_mod43_ne_42 (r : Nat) :
         simp
   have hright : ((4:Nat)^r)^7 % 43 = 42 := by
     rw [Nat.pow_mod, h]
-    decide
   omega
 
 private theorem pow_two_double_eq_four (q : Nat) :
@@ -40,7 +39,6 @@ theorem q0_oddodd_parent_fan (t a k : Nat) (ht : 1≤t)
   by_cases ha0 : a=0
   · by_cases hk0 : k=0
     · simp [sectionPreimageAll,ha0,hk0] at hp
-      omega
     · by_cases hk1 : k=1
       · simp [sectionPreimageAll,ha0,hk0,hk1] at hp
         omega
@@ -72,7 +70,7 @@ theorem q0_oddodd_parent_fan (t a k : Nat) (ht : 1≤t)
         have hmod : 4^(r+1)%43=42 := by
           rw [← hpow4']
           omega
-        exact (four_pow_mod43_ne_42 (r+1)) hmod
+        exact (four_pow_mod43_ne_42 (r+1) hmod).elim
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
@@ -125,6 +123,10 @@ theorem q0_oddodd_parent_fan (t a k : Nat) (ht : 1≤t)
             rcases hp with ⟨hy3,n,hpow,_⟩ | ⟨hy5,n,hpow,_⟩
             · omega
             · have hodd : ((44*t-1)+(42*t-1)+1)%2=1 := by omega
+              have haodd : a%2=1 := by omega
+              have hfactor : (2*(a-1)+8)%2=0 := by omega
+              have hprod : (2^n*(2*(a-1)+8))%2=0 := by
+                simp [Nat.mul_mod,hfactor]
               rw [hpow] at hodd
               omega
 
@@ -155,10 +157,13 @@ theorem q0_oddodd_parent_fan_iff (t a k : Nat) (ht : 1≤t) :
         (44*t-1)+2*(42*t-1) := by
       have hcost'' : 2*k+a+7+6*q=128*t-3 := by omega
       omega
+    have hfactor : 2*(a-1)+6=2*(a+2) := by omega
+    have hsum' : (44*t-1)+(42*t-1)=2^(2*q)*(2*(a-1)+6) := by
+      simpa [hfactor] using hsum
     have hpre : sectionPreimageAll a k (44*t-1) (42*t-1) := by
       simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
         if_neg hk0,if_neg hlow',if_pos haeven]
-      exact ⟨by omega,2*q,hsum,hcost'⟩
+      exact ⟨by omega,2*q,hsum',hcost'⟩
     exact (section_preimage_all_iff a k (44*t-1) (42*t-1)).mpr hpre
 
 #print axioms four_pow_mod43_ne_42
