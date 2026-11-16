@@ -852,3 +852,17 @@ This is a source-level exclusion of one quarter of each parameterized q-fan pare
 
 
 Static Lean-source review of `U5Q0CLineFilter.lean` caught and corrected a local proof-script issue before any compile: the initial draft rewrote the same `hcost` hypothesis twice. The current file now creates a single normalized `hcost'` equation and derives both the lower bound on k and the half-scaled cost equation from it. This is a source edit only; no compile or CI result is claimed.
+
+
+## 2026-11-16 continuation: second universal q-fan source filter
+
+Extended `U5Q0CLineFilter.lean` with a second all-parameter original-source exclusion:
+`V+q=0 (mod 4)` and `k=4 (mod 8)` is also impossible for an authentic blank-start CLine parent `(U-2,k,0)`. The proof uses `CBack.reached_zero_hub`, `reached_hub_prev`, `reached_one_high_or_reset`, Agent 48's exact `reached_middle_zero_mod4`, and Agent 21's `reached_odd_zero_mod4_hole`. The high predecessor branch would have middle-zero left coordinate 3 mod4 and is impossible; the reset branch is forced, with its new odd middle coordinate 1 mod4 and coordinate sum 1 mod4, also impossible.
+
+The reachable-parent corollary now carries both necessary conditions:
+- `(U/2+q)%4 != 3`;
+- `(U/2+q)%4 != 0 ∨ k%8 != 4`.
+
+Useful specialization: for `t=123+168*z`, put `B=661+903*z`. At q=0, `U=8B`, `V=4B`, and `k=64*t-4-4*B`. If z is odd, then B is even and k≡4 (mod8), so the second filter excludes the q=0 parent for every odd z. If z≡3 (mod4), then B≡2 (mod4), so the fan has only q=0,1; the q=0 parent is excluded by the second filter and the q=1 parent has V+q≡3 (mod4), excluded by the first filter. This recovers the complete t=123+168*z, z≡3 (mod4) X_t closure in a short source-invariant argument, overlapping the existing w=21 (mod32) cylinder rather than claiming a new cylinder.
+
+The new theorem is still an uncompiled Lean draft; the local runtime is unavailable at the tool boundary, and Agent 6 has been asked for exact local preflight. No CI was dispatched.
