@@ -50,7 +50,7 @@ theorem run_mass_mono (m : Nat) :
         have hstep : highLevelNext (.D b c) = some (.D aa dd) := by
           simpa [run, hp] using hn
         have hprev := ih a d b c hmn' hm hp
-        have hgain := next_strict_mass b c aa dd hstep
+        have hgain := next_strict_mass hstep
         omega
 
 theorem root_run_41 :
