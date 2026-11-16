@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent audit of the five U5 M16 quotient states.
+"""Independent audit of the eleven U5 M16 quotient states.
 
 The quotient map is q(n)=n for n<8 and q(n)=8+(n-8) mod 16 otherwise.
 For a quotient coordinate r>=8, representatives r and r+16 suffice:
@@ -80,6 +80,12 @@ if __name__ == "__main__":
         (18, 23, 0),
         (10, 11, 0),
         (18, 15, 0),
+        (14, 12, 0),
+        (22, 21, 0),
+        (8, 17, 0),
+        (16, 21, 0),
+        (8, 9, 0),
+        (16, 13, 0),
     }
     print(f"reachable quotient states: {len(seen)} / {24**3}")
     for state in sorted(targets):
