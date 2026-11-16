@@ -88,3 +88,49 @@ This parent-fan analysis concerns correctly ordered source cells
 `(q(a),q(k),0)`. It is independent of the withdrawn zero-left sieve
 claim about `(0,q(K),q(C))`, whose corrected census excludes only four of
 sixteen cells.
+
+
+## Cell-status detail for formalization
+
+The q0 parent cells for the 16 odd residues modulo 64 are:
+
+| t mod64 | (q(a),q(k),0) |
+|---:|---:|
+| 3 | (30,28,0) |
+| 5 | (20,17,0) |
+| 13 | (12,37,0) |
+| 15 | (34,26,0) |
+| 19 | (14,36,0) |
+| 21 | (36,25,0) |
+| 25 | (16,35,0) |
+| 27 | (38,24,0) |
+| 29 | (28,13,0) |
+| 35 | (30,12,0) |
+| 37 | (20,33,0) |
+| 45 | (12,21,0) |
+| 47 | (34,10,0) |
+| 51 | (14,20,0) |
+| 53 | (36,9,0) |
+| 61 | (28,29,0) |
+
+Every listed cell is M32-unseen.
+
+For t=19+64n, n=0,...,7, the q1 cells repeat
+(10,19), (26,27), (10,35), (26,11), all M32-unseen. For
+t=51+64n, the q1 cells repeat
+(34,39), (18,15), (34,23), (18,31), all M32-unseen.
+
+The seven special lifts have the following branch cells:
+
+| t mod512 | q1 cell/status | q2 cell/status |
+|---:|---|---|
+| 99 | (38,37), unseen | (8,17), unseen |
+| 155 | (32,24), unseen | q2 impossible |
+| 227 | (38,21), unseen | (32,37), unseen |
+| 355 | (38,37), unseen | (24,25), unseen |
+| 411 | (32,24), unseen | q2 impossible |
+| 419 | (22,13), seen but excluded by original_no_22_45 | (36,35), unseen |
+| 483 | (38,21), unseen | (16,13), unseen |
+
+All cells above have third coordinate 0. The q1/q2 status is for the
+corresponding exact parent formulas; the M32 quotient q values are shown.
