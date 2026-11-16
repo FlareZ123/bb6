@@ -176,7 +176,7 @@ theorem n11_near_ratio_root_excluded (n a d : Nat)
     omega
   have hnotHi : ¬ 42 <= n := by
     intro hn
-    have hm := run_mass_mono 42 n a d 22822 487342 hn hseen root_run_42
+    have hm := run_mass_mono 42 n 22822 487342 a d hn root_run_42 hseen
     omega
   have hcases : n = 38 ∨ n = 39 ∨ n = 40 ∨ n = 41 := by omega
   rcases hcases with h38 | h39 | h40 | h41
@@ -217,7 +217,7 @@ theorem n11_far_ratio_root_excluded (n a d : Nat)
     omega
   have hnotHi : ¬ 50 <= n := by
     intro hn
-    have hm := run_mass_mono 50 n a d 613374 2088523 hn hseen root_run_50
+    have hm := run_mass_mono 50 n 613374 2088523 a d hn root_run_50 hseen
     omega
   have hcases : n = 46 ∨ n = 47 ∨ n = 48 ∨ n = 49 := by omega
   rcases hcases with h46 | h47 | h48 | h49
@@ -258,7 +258,7 @@ theorem n12_near_ratio_root_excluded (n a d : Nat)
     omega
   have hnotHi : ¬ 48 <= n := by
     intro hn
-    have hm := run_mass_mono 48 n a d 1132670 436504 hn hseen root_run_48
+    have hm := run_mass_mono 48 n 1132670 436504 a d hn root_run_48 hseen
     omega
   have hcases : n = 42 ∨ n = 43 ∨ n = 44 ∨ n = 45 ∨ n = 46 ∨ n = 47 := by omega
   rcases hcases with h42 | h43 | h44 | h45 | h46 | h47
@@ -311,7 +311,7 @@ theorem n12_far_ratio_root_excluded (n a d : Nat)
     omega
   have hnotHi : ¬ 55 <= n := by
     intro hn
-    have hm := run_mass_mono 55 n a d 319702 8896323 hn hseen root_run_55
+    have hm := run_mass_mono 55 n 319702 8896323 a d hn root_run_55 hseen
     omega
   have hcases : n = 50 ∨ n = 51 ∨ n = 52 ∨ n = 53 ∨ n = 54 := by omega
   rcases hcases with h50 | h51 | h52 | h53 | h54
@@ -359,7 +359,7 @@ theorem n11_even_gap_two_root_excluded (n a d : Nat)
     omega
   have hnotHi : ¬ 42 <= n := by
     intro hn
-    have hm := run_mass_mono 42 n a d 22822 487342 hn hseen root_run_42
+    have hm := run_mass_mono 42 n 22822 487342 a d hn root_run_42 hseen
     omega
   have hcases : n = 37 ∨ n = 38 ∨ n = 39 ∨ n = 40 ∨ n = 41 := by omega
   rcases hcases with h37 | h38 | h39 | h40 | h41
@@ -402,7 +402,7 @@ theorem n12_even_gap_two_root_excluded (n a d : Nat)
     omega
   have hnotHi : ¬ 47 <= n := by
     intro hn
-    have hm := run_mass_mono 47 n a d 145494 1278161 hn hseen root_run_47
+    have hm := run_mass_mono 47 n 145494 1278161 a d hn root_run_47 hseen
     omega
   have hcases : n = 42 ∨ n = 43 ∨ n = 44 ∨ n = 45 ∨ n = 46 := by omega
   rcases hcases with h42 | h43 | h44 | h45 | h46
