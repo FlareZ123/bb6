@@ -39,7 +39,8 @@ little theorem is reduced to the two concrete residues
 theorem u5_residual_nonempty (w : Nat) :
     ∃ s m,
       211*s+129=5*2^(201+3360*w) ∧
-      32*s=32+840*w+m := by
+      32*s=32+840*w+m ∧
+      27*w+1≤s ∧ 24*w≤m := by
   let r := 201+3360*w
   have h210 : (2:Nat)^210%211=1 := by decide
   have h201 : (2:Nat)^201%211=68 := by decide
@@ -70,10 +71,13 @@ theorem u5_residual_nonempty (w : Nat) :
     dsimp [s]
     omega
   let m := 32*s-32-840*w
+  have hmge : 24*w≤m := by
+    dsimp [m]
+    omega
   have hm : 32*s=32+840*w+m := by
     dsimp [m]
     omega
-  exact ⟨s,m,by simpa [r] using hs,hm⟩
+  exact ⟨s,m,by simpa [r] using hs,hm,hsge,hmge⟩
 
 
 /-- The residual equations determine s strictly increasingly with w;
@@ -259,7 +263,7 @@ theorem every_w21_residual_has_unreachable_root (n : Nat) :
       32*s=32+840*(32*n+21)+m ∧
       (39+64*s)%32768=18791 ∧
       ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
-  obtain ⟨s,m,hs,hm⟩ := u5_residual_nonempty (32*n+21)
+  obtain ⟨s,m,hs,hm,_,_⟩ := u5_residual_nonempty (32*n+21)
   have hw : (32*n+21)%32=21 := by omega
   have hroot := blank_no_high_m0_u5_w21 (32*n+21) s m hs hm hw
   have hres := u5_high_root_parameter_residue (32*n+21) s hs
