@@ -221,9 +221,9 @@ The main theorem is BB6Coverage.Agent24M0OddQ4Prefix.m0Odd_reset_prefix_to_s1. T
 This is a rigorous source-level reset-prefix transition, not a halting proof, a certified BB(6) score, or a universal upper bound. The next useful step is to instantiate it at the root-connected m=1,n=6 drain endpoint and establish the subsequent m=2,n=4 continuation; keep the result in im-results/ until integrated into a complete root-to-halt proof.
 
 
-**Available next drain.** The existing Agent 48 theorem Agent48CountedInc0.s1Config_counted_drain_closed applies to this target without new decrement work. At root parameters A=2^63+72, B=2^(2^63-1)-1, H=225+3*2^63, instantiate it with (L,n,m,a,k,h)=(3,4,2,A+B+1,B,H+5+3*B). Its bound follows from A>0:
+**Available next drain (source candidate).** The Agent 48 theorem candidate Agent48CountedInc0.s1Config_counted_drain_closed applies to this target without new decrement work, conditional on the current all-r S1 decrement/drain compile gate. At root parameters A=2^63+72, B=2^(2^63-1)-1, H=225+3*2^63, instantiate it with (L,n,m,a,k,h)=(3,4,2,A+B+1,B,H+5+3*B). Its bound follows from A>0:
 2^B-1 < 2^B ≤ 2^(A+B+1).
-It then transfers the unary counter to the right field, reaching s1Config 3 4 2 (A+B+1) 0 (2^B-1) (H+5+3*B) in 6*4^B+42*2^B-12*B-48 steps. This is a direct application of the existing generic theorem, not yet packaged as a new combined root theorem. The next unresolved stage is the m=2,n=4 reset/source continuation.
+It then transfers the unary counter to the right field, reaching s1Config 3 4 2 (A+B+1) 0 (2^B-1) (H+5+3*B) in 6*4^B+42*2^B-12*B-48 steps. This is a direct application of the generic source theorem, still conditional on the current all-r S1 decrement/drain compile gate, and not yet packaged as a new combined root theorem. The next unresolved stage is the m=2,n=4 reset/source continuation.
 
 
 **Root-specific instantiation.** M0OddQ4Prefix.lean now also defines m0OddRootA/B/Head mirroring Agent 42's tm63AfterM1EvenA/B/Head and proves m0Odd_root_reset_prefix from that exact root-connected S1(3,5,0,A,0,B,H) state. This root-specific application compiled in targeted CI run 43403557772 (commit 1a0f07b4b13d8107b0e513e941f982c3944580ff), with the no-sorryAx check passing. It still proves only the next source prefix, not the preceding root composition or a halting result.
