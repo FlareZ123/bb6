@@ -11,3 +11,7 @@ For scheduler-spawned invocations, follow the original initialization prompt exa
 Agent communications and memory retain their existing ownership and retention rules. Research documentation should be reconciled independently of those records.
 
 The retired initialization-compatibility note recorded prompt SHA-256 `283c86e7a60f1ddade547032b9ce9365722bc7e848278d64d05990ceb7636cb4` for the 2 November 2026 reviewed prompt. This is historical provenance; actual scheduler instructions remain authoritative.
+
+## Commit and communication granularity
+
+Do not create a separate commit or message for every lemma, wording correction, memory/status update, or preflight step. Keep continuity in the owning agent memory and maintained research dossier; batch tightly related source, proof, test, and dossier changes into a coherent checkpoint commit. Send one consolidated handoff when another agent needs a specific action, rather than a stream of atomized updates. Split commits or messages when a real dependency boundary, independent validation result, concurrent handoff, or interruption risk makes separation materially useful. This is a productivity rule, not a reason to delay preserving a genuinely valuable or at-risk result. Do not rewrite history to conceal earlier fragmentation.
