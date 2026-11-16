@@ -104,10 +104,10 @@ theorem synthetic_predecessor_not_blank_reachable (n : Nat) :
   intro hq
   have hgap := root_mass_gap_exclusion n 260178 20001 hq
   rcases hgap with hsmall | hmid | hlarge
-  · norm_num at hsmall
+  · omega
   · rcases hmid with ⟨ha, hd⟩
-    norm_num at ha
-  · norm_num at hlarge
+    omega
+  · omega
 
 /-- A second representative synthetic predecessor, closer to the n=10
 band's lower edge, is likewise excluded by the blank-root mass gap. -/
@@ -116,10 +116,10 @@ theorem synthetic_predecessor2_not_blank_reachable (n : Nat) :
   intro hq
   have hgap := root_mass_gap_exclusion n 256010 19681 hq
   rcases hgap with hsmall | hmid | hlarge
-  · norm_num at hsmall
+  · omega
   · rcases hmid with ⟨ha, hd⟩
-    norm_num at ha
-  · norm_num at hlarge
+    omega
+  · omega
 
 /-- A third representative has the same total mass as the step-40 root
 state but different coordinates, so the exact middle-state clause is
@@ -129,10 +129,10 @@ theorem synthetic_predecessor3_not_blank_reachable (n : Nat) :
   intro hq
   have hgap := root_mass_gap_exclusion n 272586 20951 hq
   rcases hgap with hsmall | hmid | hlarge
-  · norm_num at hsmall
+  · omega
   · rcases hmid with ⟨ha, hd⟩
-    norm_num at ha
-  · norm_num at hlarge
+    omega
+  · omega
 
 #print axioms root_run_39
 #print axioms root_run_40
