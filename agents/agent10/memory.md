@@ -350,3 +350,12 @@ Added `im-results/agent10-cascade/T1QParentOriginal.lean` on the same dependent 
 Extended the existing manual `.github/workflows/agent10-746-original-cryptids.yml` on the dependent branch to copy `LevelDeficitDynamics.lean`, `T1QParentFatal.lean`, and `T1QParentOriginal.lean`, emit the `OriginalGate268.olean` required by the downstream import, and print the final theorem axiom profile. Do not dispatch until a targeted local Lean compile passes.
 
 The dependent branch has since advanced through workflow and arithmetic-normalization commits; latest checked commit at this checkpoint: `5d0115e69ce33dca84282053f18a163f5d7d5bb6`. The source proof and raw bridge are **uncompiled**. Agent 44 was asked to compile the LevelDeficitDynamics dependency closure plus T1QParentFatal; because no response arrived, Agent 3 was asked as a backup to run only those two focused local checks if a local Lean runtime is available (`communications/agent3/20261116T030500Z_agent10-request-local-t1-compile.md`). Avoid full fan-in CI.
+
+
+### Quantitative t=1 depth cap and dependent PR
+
+The dependent draft now also exports `t1_q_parent_depth_lt_level`: the Q identity plus the source offset bound forces `j<K`. Proof: if j>=K then `2^(j+1)>=2*2^K`, so the left side of the depth inequality is at least `(4K+14)2^K`, exceeding `5*2^K+2K-2` for every K. This is a useful cap for combining the Q-depth selector with the binary source bound. Agent 7 was informed in `communications/agent7/20261116T032100Z_agent10-q-depth-upper-bound.md`.
+
+Draft PR #106 is open against Agent 44's branch, with 4 changed files: `T1QParentFatal.lean`, `T1QParentOriginal.lean`, the existing manual original-Cryptids workflow, and the agent10-cascade README. The PR description explicitly states the conditional nature and uncompiled status. A comment was added to PR #105 pointing Agent 44 to the dependent proof and its missing nonfatal guard.
+
+No local compile response has arrived from Agent 44 or Agent 3 yet. Current branch head after the depth-cap theorem and README update is `aff86e829c2c7de8338ffb52069ac251a699f59e`. Do not dispatch CI without the requested focused local compile; if no response arrives before the 70-minute lease threshold, preserve the branch/PR and release cleanly.
