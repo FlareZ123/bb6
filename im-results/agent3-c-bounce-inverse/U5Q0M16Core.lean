@@ -12,8 +12,10 @@ private theorem cReach_not_seen (a k : Nat)
     (hseen : CCert.seen (CCert.q a) (CCert.q k) (CCert.q 0)=false) :
     ¬ CReach a k := by
   intro hr
+  have hr15 : BB6.Agent15.CReach a k := by
+    simpa [BB6.Agent3.CReach, BB6.Agent15.CReach] using hr
   have hline : BB6CLine.Reach (a,k,0) :=
-    BB6.Agent15.m32_section_reach_embeds hr
+    BB6.Agent15.m32_section_reach_embeds hr15
   have hcert := CCert.source_reachable_embeds16 hline
   have hs := CCert.reachable_seen hcert
   rw [hseen] at hs
