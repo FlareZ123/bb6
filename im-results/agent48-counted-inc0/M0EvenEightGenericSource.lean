@@ -407,6 +407,16 @@ private theorem m0EvenEight_v2_mul_odd
   rw [h8,h4,h2,hqv]
   omega
 
+/-- Closed exact primitive-step cost for the generic m=0,n=8q row. -/
+theorem m0EvenEight_proposedIncrementCost_closed
+    (q a b : Nat) (hqodd : q % 2 = 1) :
+    proposedIncrementCost 0 (8*q) a b =
+      6*4^b + 42*2^b + 12*a - 9*b + 51 := by
+  rw [proposedIncrementCost_decomp,
+    m0EvenEight_resetPrefixCost q a b hqodd,
+    drainCost_binary_closed]
+  omega
+
 private theorem m0EvenEight_resetPrefixCost
     (q a b : Nat) (hqodd : q % 2 = 1) :
     resetPrefixCost 0 (8*q) a b = (60+12*a)+(39+3*b) := by
@@ -478,6 +488,7 @@ theorem m0EvenEight_counted_increment_source
 #print axioms m0EvenEight_q4_prefix_leftFacing
 #print axioms m0EvenEight_q4_prefix_rightShape
 #print axioms m0EvenEight_q4_prefix_far_tail
+#print axioms m0EvenEight_proposedIncrementCost_closed
 #print axioms m0EvenEight_q4_reset_prefix_source
 #print axioms m0EvenEight_counted_increment_source
 
