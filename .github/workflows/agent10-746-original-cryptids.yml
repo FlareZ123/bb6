@@ -38,7 +38,8 @@ jobs:
           cp "$c"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass,SurvivingSmall,SurvivingExactGate,OriginalSurvivingBridge,OriginalPhysicalGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$a"/HighLevelResetBridge.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,ManyShield,RootMinIndex,FastShield,RootMin256,OriginalNextBridge,OriginalMinIndexBridge,OriginalRawGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
-          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict,ParentCheck,Parents,ClosedCert,ReachDecide,OriginalAlgorithmicGate,FastParents,FastClosedCert,OriginalGate268}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict,ParentCheck,Parents,ClosedCert,ReachDecide,OriginalAlgorithmicGate,FastParents,FastClosedCert,OriginalGate268,T1QParentFatal,T1QParentOriginal}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$GITHUB_WORKSPACE/agent10/im-results/agent44-746-rank/LevelDeficitDynamics.lean" "$GITHUB_WORKSPACE/Agent10Bridge/"
           cd "$GITHUB_WORKSPACE"
           export LEAN_PATH="$GITHUB_WORKSPACE/Agent10Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
           lake env lean --version
@@ -52,6 +53,7 @@ jobs:
           for m in FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ParentCheck Parents ClosedCert ReachDecide; do
             lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
           done
+          lake env lean -o "Agent10Bridge/LevelDeficitDynamics.olean" "Agent10Bridge/LevelDeficitDynamics.lean"
           lake env lean -o "Agent10Bridge/HighLevelResetBridge.olean" "Agent10Bridge/HighLevelResetBridge.lean"
           lake env lean -o "Agent10Bridge/OriginalAlgorithmicGate.olean" "Agent10Bridge/OriginalAlgorithmicGate.lean"
           lake env lean -o "Agent10Bridge/FastParents.olean" "Agent10Bridge/FastParents.lean"
@@ -61,4 +63,7 @@ jobs:
             lake env lean -o "Agent10Bridge/FastCone$n.olean" "Agent10Bridge/FastCone$n.lean"
           done
           lake env lean "Agent10Bridge/OriginalGate268.lean"
+          lake env lean -o "Agent10Bridge/T1QParentFatal.olean" "Agent10Bridge/T1QParentFatal.lean"
+          lake env lean -o "Agent10Bridge/T1QParentOriginal.olean" "Agent10Bridge/T1QParentOriginal.lean"
+          echo "PASS: t=1 Q-parent source identity, nonfatal even-reset chain, and conditional original-machine halting implication compiled."
           echo "Unmodified pinned upstream highLevelNext, exact ResetParent first-return equivalence, root reset-chain correspondence, and source-indexed surviving-gate bound compiled."
