@@ -86,6 +86,19 @@ jobs:
             echo "::error::sorryAx found in even/odd-even prefix-to-C-phase compositions"
             exit 1
           fi
+          lean -o "$B/Root119Ancestry.olean" "$B/Root119Ancestry.lean" 2>&1 | tee "$B/Root119Ancestry.log"
+          lean -o "$B/Root119AncestryTen.olean" "$B/Root119AncestryTen.lean" 2>&1 | tee "$B/Root119AncestryTen.log"
+          if grep -q 'sorryAx' "$B/Root119AncestryTen.log"; then
+            echo "::error::sorryAx found in the all-time four-right ancestry theorem"
+            exit 1
+          fi
+          grep -q 'reached_B0_left10x_right1111.*depends on axioms' "$B/Root119AncestryTen.log"
+          lean -o "$B/Root119BBadTransport.olean" "$B/Root119BBadTransport.lean" 2>&1 | tee "$B/Root119BBadTransport.log"
+          if grep -q 'sorryAx' "$B/Root119BBadTransport.log"; then
+            echo "::error::sorryAx found in the local-barrier BBad transport theorem"
+            exit 1
+          fi
+          grep -q 'b0_odd_even_prefix_then_cphaseD1_safe.*depends on axioms' "$B/Root119BBadTransport.log"
           lean -o "$A/Root119TwoWaveRootPrefix.olean" "$A/Root119TwoWaveRootPrefix.lean" 2>&1 | tee "$A/Root119TwoWaveRootPrefix.log"
           if grep -q 'sorryAx' "$A/Root119TwoWaveRootPrefix.log"; then
             echo "::error::sorryAx found in two-wave root prefix return theorems"
