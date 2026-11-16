@@ -77,7 +77,7 @@ The 16 minimal cylinders found within the K≤20 enumeration are:
 | 13821 | 16384 | 9 | 5 | 72709 | 131072 | (62,60), (62,57), (62,54), (62,19), (14,40), (34,59) |
 | 15869 | 16384 | 9 | 5 | 121861 | 131072 | (62,60), (62,57), (62,54), (62,19), (14,8), (18,3) |
 
-The w residues follow from t=123+168z and the uniform residual congruence 211t+1360+22155w≡0 modulo the relevant power of 2. Every listed w class is inside w≡5 (mod128). These cylinders are pairwise disjoint from the short w=45 and w=101 cylinders.
+The w residues follow from t=123+168z and the exact residual identity 211t+1360+22155w=20·2^(201+3360w); the right-hand side is divisible by every modulus used here. Every listed w class is inside w≡5 (mod128). These cylinders are pairwise disjoint from the short w=45 and w=101 cylinders.
 
 ## Next proof obligations
 
