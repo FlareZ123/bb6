@@ -53,36 +53,74 @@ theorem run_mass_mono (m : Nat) :
         have hgain := next_strict_mass b c aa dd hstep
         omega
 
-/-- No surviving blank-root state has mass strictly between the
-exact step-39 and step-40 masses. The source orbit jumps over this entire
-open interval because mass is strictly increasing. -/
+theorem root_run_41 :
+    run 41 = some (.D 185262 162438) := by
+  decide
+
+/-- Every surviving blank-root state is either before step 40, exactly the
+step-40 state, or at/after step 41. The source mass jumps are large enough
+that no other state can occupy the intervening mass interval. -/
 theorem root_mass_gap_exclusion (n a d : Nat)
     (hseen : run n = some (.D a d)) :
-    a+d <= 213720 ∨ 293537 <= a+d := by
+    a+d <= 213720 ∨
+      (a = 54138 ∧ d = 239399) ∨
+      347700 <= a+d := by
   by_cases hlt : n < 40
   · have hmono := run_mass_mono n 39 a d 79788 133932
       (by omega) hseen root_run_39
     exact Or.inl (by omega)
-  · have hmono := run_mass_mono 40 n 54138 239399 a d
-      (by omega) root_run_40 hseen
-    exact Or.inr (by omega)
+  · by_cases heq : n = 40
+    · subst n
+      have hEq : some (.D 54138 239399) = some (.D a d) :=
+        root_run_40.symm.trans hseen
+      cases hEq
+      exact Or.inr (Or.inl ⟨rfl, rfl⟩)
+    · have hge : 41 <= n := by omega
+      have hmono := run_mass_mono 41 n 185262 162438 a d
+        hge root_run_41 hseen
+      exact Or.inr (Or.inr (by omega))
 
 /-- The exact synthetic budget witness is not on the genuine blank-root
-orbit: before step 40 the root mass is at most 213720; from step 40 onward
-it is at least 293537, whereas the witness has mass 280179. -/
+orbit; it falls in the mass gap between the step-39 and step-41 checkpoints
+and is not the unique step-40 state. -/
 theorem synthetic_predecessor_not_blank_reachable (n : Nat) :
     run n ≠ some (.D 260178 20001) := by
   intro hq
-  by_cases hlt : n < 40
-  · have hmono := run_mass_mono n 39 260178 20001 79788 133932
-      (by omega) hq root_run_39
-    norm_num at hmono
-  · have hmono := run_mass_mono 40 n 54138 239399 260178 20001
-      (by omega) root_run_40 hq
-    norm_num at hmono
+  have hgap := root_mass_gap_exclusion n 260178 20001 hq
+  rcases hgap with hsmall | hmid | hlarge
+  · norm_num at hsmall
+  · rcases hmid with ⟨ha, hd⟩
+    norm_num at ha
+  · norm_num at hlarge
+
+/-- A second representative synthetic predecessor, closer to the n=10
+band's lower edge, is likewise excluded by the blank-root mass gap. -/
+theorem synthetic_predecessor2_not_blank_reachable (n : Nat) :
+    run n ≠ some (.D 256010 19681) := by
+  intro hq
+  have hgap := root_mass_gap_exclusion n 256010 19681 hq
+  rcases hgap with hsmall | hmid | hlarge
+  · norm_num at hsmall
+  · rcases hmid with ⟨ha, hd⟩
+    norm_num at ha
+  · norm_num at hlarge
+
+/-- A third representative has the same total mass as the step-40 root
+state but different coordinates, so the exact middle-state clause is
+essential rather than a mass-only argument. -/
+theorem synthetic_predecessor3_not_blank_reachable (n : Nat) :
+    run n ≠ some (.D 272586 20951) := by
+  intro hq
+  have hgap := root_mass_gap_exclusion n 272586 20951 hq
+  rcases hgap with hsmall | hmid | hlarge
+  · norm_num at hsmall
+  · rcases hmid with ⟨ha, hd⟩
+    norm_num at ha
+  · norm_num at hlarge
 
 #print axioms root_run_39
 #print axioms root_run_40
+#print axioms root_run_41
 #print axioms run_mass_mono
 #print axioms root_mass_gap_exclusion
 #print axioms synthetic_predecessor_not_blank_reachable
