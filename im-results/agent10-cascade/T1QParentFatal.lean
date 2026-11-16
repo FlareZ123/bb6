@@ -542,7 +542,9 @@ theorem root_t1_q_parent_fatal (h k d a j : Nat)
     have hchain2 := ResetChain.append hchain1 heven
     exact (root_reset_chain_iff _).mpr hchain2
 
+#print axioms t1_q_parent_fatal_sector
 #print axioms t1_child_deficit
+#print axioms t1_q_parent_depth_gap
 #print axioms t1_q_parent_depth_lt_level
 #print axioms even_reset_chain_to_fatal
 #print axioms root_t1_q_parent_fatal
