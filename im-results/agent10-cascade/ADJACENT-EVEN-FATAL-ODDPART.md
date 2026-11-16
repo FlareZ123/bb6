@@ -131,6 +131,10 @@ The entry is nonfatal, so
 \[
 D_{\rm ent}\le4\cdot2^K+2K+3.
 \]
+The even-child band from level \(K-1\) is
+\[
+6\cdot2^{K-1}-1\le E\le8\cdot2^{K-1}-3.
+\]
 The \(t=0\) equation gives
 \[
 3D_0=(2K+7)2^{r+3}-16\cdot2^K+2K+1. \tag{4}
