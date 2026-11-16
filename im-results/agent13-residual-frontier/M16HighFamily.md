@@ -28,11 +28,17 @@ Consequently, once the source-Reach embedding is composed with CCert.reachable_s
 
 This is a genuinely new exclusion relative to the current highAllowedValSixFull parameter gate. It generalizes the special case \(m=3,\ j\equiv6\pmod8\).
 
-There is also an independent \(m=0\) family:
+There is also an independent \(m=0\) family with three progressions:
 \[
-m=0,\qquad j\equiv2\pmod{16}.
+m=0,\qquad j\bmod16\in\{2,3,11\}.
 \]
-Then \(a=2j+3\) and \(k=3j+7\). At \(j=2\), the q-state is \((7,13,0)\); for \(j\ge18\) in this progression it is \((23,13,0)\). Both are absent from the certified seen table. The full high gate accepts this family: every positive-\(m\) threshold is false, the universal dyadic condition has no index because \(n+4\le2m+2=2\) is impossible, the Agent 11 condition holds since \(j\bmod4=2\), and affineNormalize is the identity since \(k=3j+7\) is odd and greater than 4.
+Then \(a=2j+3\) and \(k=3j+7\). The q-state is one of
+\[
+(7,13,0),\ (23,13,0),\ (9,16,0),\ (9,8,0),
+\]
+all absent from the certified seen table. For \(j=16t+2\), the q-state is \((7,13,0)\) at \(t=0\) and \((23,13,0)\) for \(t\ge1\); for \(j=16t+3\) it is \((9,16,0)\); for \(j=16t+11\) it is \((9,8,0)\).
+
+The full high gate accepts all three progressions: every positive-\(m\) threshold is false, the universal dyadic condition has no index because \(n+4\le2m+2=2\) is impossible, and the Agent 11 condition holds since \(j\bmod4\in\{2,3\}\). For \(j=16t+2\), \(k=48t+13\) is odd, so affineNormalize is the identity. For \(j=16t+3\), the one forced normalization step sends \((a,k)\) to \((80t+23,24t+7)\), whose right coordinate is odd; for \(j=16t+11\), it sends \((a,k)\) to \((80t+63,24t+19)\), again with odd right coordinate. In all cases the normalized right coordinate is not 4.
 
 
 ## Quotient and certified finite facts
