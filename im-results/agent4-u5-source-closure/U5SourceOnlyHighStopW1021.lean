@@ -42,6 +42,27 @@ private theorem pow_two_mod_three (n : Nat) :
       · have hn : (n+1)%2=0 := by omega
         simp [h,hn]
 
+private theorem q0_parent_reach_implies_X (t : Nat) (ht : 1≤t)
+    (h : CReach (64*t+5) (32*t+3)) :
+    CReach (44*t-1) (42*t-1) := by
+  have h1 := (BB6.Agent3.oddodd_val3_blank_reach_iff
+    (64*t+5) (32*t+3)
+    (by omega) (by omega) (by omega) (by omega) (by omega)).mp h
+  have h1' : CReach (48*t+2) (40*t+1) := by
+    have hx : ((64*t+5)+(32*t+3)-4)/2=48*t+2 := by omega
+    have hy : ((64*t+5)+3*(32*t+3)-10)/4=40*t+1 := by omega
+    simpa only [hx,hy] using h1
+  have h2 := (BB6.Agent3.evenodd_four_blank_reach_iff
+    (48*t+2) (40*t+1)
+    (by omega) (by omega) (by omega) (by omega)).mp h1'
+  have h2' : CReach (44*t-1) (42*t-1) := by
+    change (∃ n, BB6.Agent8Section.run BB6.Agent46.secNext n
+      (some (5,1)) = some (44*t-1,42*t-1))
+    have hx : ((48*t+2)+(40*t+1)-5)/2=44*t-1 := by omega
+    have hy : ((48*t+2)+3*(40*t+1)-9)/4=42*t-1 := by omega
+    simpa only [hx,hy] using h2
+  exact h2'
+
 /-- The exact residual identity and the cylinder w=1021 (mod 1024)
 force t=123+168*z with z=2 (mod 128). -/
 theorem u5_w1021_t_param (w s m t : Nat)
@@ -86,11 +107,13 @@ theorem u5_w1021_t_param (w s m t : Nat)
   have hpow8mul : (20*2^(201+3360*w))%8=0 := by
     rw [Nat.mul_mod,hpow8]
     norm_num
+  have hw8 : w%8=5 := by omega
   have ht8 : t%8=3 := by
     have hmod : (211*t+1360+22155*w)%8 =
         (20*2^(201+3360*w))%8 := by rw [hId]
     rw [hpow8mul] at hmod
     omega
+  have ht21 : t%21=18 := by omega
   have ht168 : t%168=123 := by omega
   have hdiv1024 : 1024∣2^(201+3360*w) := by
     change 2^10∣2^(201+3360*w)
@@ -173,7 +196,7 @@ theorem blank_no_u5_residual_m8w_w1021 (w s m : Nat)
             have htpos : 1≤t := by dsimp [t]; omega
             obtain ⟨v,hv⟩ :=
               u5_w1021_t_param w s m t hs hm hp hw
-            have hX := BB6.Agent4U5SourceOnly.q0_parent_reach_implies_X
+            have hX := q0_parent_reach_implies_X
               t htpos hparent
             have hX' : CReach
                 (44*(123+168*(128*v+2))-1)
@@ -295,6 +318,7 @@ theorem every_w1021_residual_has_unreachable_root (n : Nat) :
       (1024*n+1021) s hs
   exact ⟨s,m,hs,hm,hres.1,hroot⟩
 
+#print axioms q0_parent_reach_implies_X
 #print axioms pow_two_mod_three
 #print axioms u5_w1021_t_param
 #print axioms blank_no_u5_residual_m8w_w1021

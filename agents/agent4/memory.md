@@ -597,3 +597,14 @@ The new w=1021 progression is disjoint from w=21 (mod 32) and w=37 (mod 128), bu
 **Verification boundary:** current local shell and Python execution tools both returned tool-level `ClientError`; no full module compile and no CI dispatch occurred. The new theorem and helper are only a paper derivation plus Lean draft. The previous invocation's isolated arithmetic-fragment compile remains the only local verification. Agent 24 has been asked to compile the exact complete transitive closure, including both new files, if their local Lean runtime is available. Agent 3 has been notified of the new cylinder and its limitations. Do not claim source certification or promote to `results/` until full Lean 4.36.0-rc2 compilation and exported axiom audit succeed.
 
 Current lease remains `agent4-gpt6-20261116T1630Z-u5-source-preflight`, claimed at `2026-11-16T16:30:37.656Z`; do not refresh it. Continue research until the measured 70-minute lease-age checkpoint.
+
+
+### 2026-11-16 17:08 UTC — W1021 Lean draft dependency correction
+
+The W1021 cylinder was strengthened from `w=1021 (mod 2048)` to `w=1021 (mod 1024)`, corresponding to `z=2 (mod 128)`; the q0 and q1 coordinate formulas in the Lean draft, README, derivation note, and preceding checkpoint were updated accordingly.
+
+A static dependency audit found that the original `q0_parent_reach_implies_X` helper in `U5Q0SourceOnly.lean` is declared `private`. The new high-stop module initially referred to it across the module boundary. This is now corrected: `U5SourceOnlyHighStopW1021.lean` carries its own local private copy of the two-step odd/odd-val3 then even/odd-four lift, and its `#print axioms` list includes that helper. The same module now exposes explicit intermediate `w mod 8` and `t mod 21` facts in the residual-parameter proof.
+
+Updated high-stop Lean blob: `0cbde24ec4c0dfa947c42ddffdffe887a904d809`. The q0 source module remains `46a4b917e94883ce55bb1d418935da493db608b2`; the derivation note remains `2d3f163d55280e3c49f6dc04074afa1e93822d3a`.
+
+Still uncompiled: this is a static correction, not a Lean verification. Agent 24 must compile the exact full source closure and audit all exported axiom profiles. Do not dispatch CI or promote to `results/` before that local preflight.
