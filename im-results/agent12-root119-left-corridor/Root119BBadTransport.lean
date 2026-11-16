@@ -146,7 +146,10 @@ theorem cphase_d1_tail_barrier (c : Conf) (hc : Reach c)
     (hbarrier0 : c.tape (c.h-2) = false)
     (hbarrier1 : c.tape (c.h-3) = true) :
     ∃ bout, shuttleRun 6 c = some bout ∧ Reach bout ∧ BZero bout ∧
-      bout.h = c.h+2 ∧ ¬ BBad bout := by
+      bout.h = c.h+2 ∧
+      (∀ x : Int, x ≤ c.h-2 → bout.tape x = c.tape x) ∧
+      bout.tape (c.h-1) = true ∧ bout.tape c.h = true ∧
+      bout.tape (c.h+1) = true ∧ ¬ BBad bout := by
   let d : Conf := ⟨.D,c.h-1,setBit c.tape c.h true⟩
   let f : Conf := ⟨.F,c.h,setBit d.tape (c.h-1) true⟩
   let d2 : Conf := ⟨.D,c.h+1,setBit f.tape c.h false⟩
@@ -227,7 +230,7 @@ theorem cphase_d1_tail_barrier (c : Conf) (hc : Reach c)
     have hidx : bout.h-1 = c.h+1 := by rw [hhead]; omega
     rw [hidx]
     exact hrightFinal
-  exact ⟨bout,hrun,hreach,hBzero,hhead,
+  exact ⟨bout,hrun,hreach,hBzero,hhead,htail_left,hleftFinal,hcenterFinal,hrightFinal,
     not_BBad_of_suffix10111 bout hb5 hb4 hb3 hb2 hb1⟩
 
 /-- A B/0 C-phase return needs only a two-cell 01 barrier to exclude the
@@ -240,7 +243,11 @@ theorem b0_cphase_d1_zero_wave_return_barrier (b : Conf) (r : Nat)
     (hbarrier0 : b.tape (b.h-3-(r:Int)) = false)
     (hbarrier1 : b.tape (b.h-4-(r:Int)) = true) :
     ∃ bout, shuttleRun (r+7) b = some bout ∧ Reach bout ∧ BZero bout ∧
-      bout.h = b.h-(r:Int)+1 ∧ ¬ BBad bout := by
+      bout.h = b.h-(r:Int)+1 ∧
+      (∀ x : Int, x ≤ b.h-(r:Int)-3 → bout.tape x = b.tape x) ∧
+      bout.tape (b.h-(r:Int)-2) = true ∧
+      bout.tape (b.h-(r:Int)-1) = true ∧
+      bout.tape (b.h-(r:Int)) = true ∧ ¬ BBad bout := by
   obtain ⟨c,hscanRun,hc,hphase,hzeros⟩ :=
     scan_from_B_exact b hb hB r hscan
   have hpos : c.h = b.h-1-(r:Int) := hphase.2.2.1
@@ -277,7 +284,8 @@ theorem b0_cphase_d1_zero_wave_return_barrier (b : Conf) (r : Nat)
       c.tape (c.h-3) = b.tape (c.h-3) := hprefix (c.h-3) (by omega)
       _ = b.tape (b.h-4-(r:Int)) := by rw [hidx]
       _ = true := hbarrier1
-  obtain ⟨bout,htail,hbout,hBzero,hheadTail,hnotBad⟩ :=
+  obtain ⟨bout,htail,hbout,hBzero,hheadTail,hpresTail,
+      hleftTail,hcenterTail,hrightTail,hnotBad⟩ :=
     cphase_d1_tail_barrier c hc hC hCzero hDone hzero1 hzero2
       hbarrier0C hbarrier1C
   have htime : r+7 = (r+1)+6 := by omega
@@ -287,7 +295,26 @@ theorem b0_cphase_d1_zero_wave_return_barrier (b : Conf) (r : Nat)
   have hhead : bout.h = b.h-(r:Int)+1 := by
     rw [hheadTail,hpos]
     omega
-  exact ⟨bout,hrun,hbout,hBzero,hhead,hnotBad⟩
+  have hpres : ∀ x : Int, x ≤ b.h-(r:Int)-3 →
+      bout.tape x = b.tape x := by
+    intro x hx
+    have hxC : x ≤ c.h-2 := by rw [hpos]; omega
+    calc
+      bout.tape x = c.tape x := hpresTail x hxC
+      _ = b.tape x := hprefix x (by rw [hpos]; omega)
+  have hleftOut : bout.tape (b.h-(r:Int)-2) = true := by
+    have hidx : b.h-(r:Int)-2 = c.h-1 := by rw [hpos]; omega
+    rw [hidx]
+    exact hleftTail
+  have hcenterOut : bout.tape (b.h-(r:Int)-1) = true := by
+    have hidx : b.h-(r:Int)-1 = c.h := by rw [hpos]; omega
+    rw [hidx]
+    exact hcenterTail
+  have hrightOut : bout.tape (b.h-(r:Int)) = true := by
+    have hidx : b.h-(r:Int) = c.h+1 := by rw [hpos]; omega
+    rw [hidx]
+    exact hrightTail
+  exact ⟨bout,hrun,hbout,hBzero,hhead,hpres,hleftOut,hcenterOut,hrightOut,hnotBad⟩
 
 /-- The odd-even prefix followed by the C-phase D1 return is BBad-free
     for every genuine input. The old global 1100 shield and its sharp
@@ -371,7 +398,7 @@ theorem b0_odd_even_prefix_then_cphaseD1_safe (b : Conf) (n : Nat)
         (b.h-2)+2*((n+1)+1)-6 := by rw [hhead1']; omega
     rw [htape1',hidx]
     exact hp6
-  obtain ⟨bout,htail,hreach2,hB2,hhead2,hnotBad⟩ :=
+  obtain ⟨bout,htail,hreach2,hB2,hhead2,_,_,_,_,hnotBad⟩ :=
     b0_cphase_d1_zero_wave_return_barrier b1 3 hreach1 hB1 (by omega)
       hscan hzeroC honeD hbarrier0 hbarrier1
   have hrun2 : run 10 b1 = some bout := by
@@ -388,5 +415,266 @@ theorem b0_odd_even_prefix_then_cphaseD1_safe (b : Conf) (n : Nat)
 #print axioms BB6Root119.cphase_d1_tail_barrier
 #print axioms BB6Root119.b0_cphase_d1_zero_wave_return_barrier
 #print axioms BB6Root119.b0_odd_even_prefix_then_cphaseD1_safe
+
+
+/-- A B/0 state carrying the local C-phase D1 core and k further alternating
+    (1,0) pairs to its left.  One ten-step C-phase return consumes one pair
+    and reproduces the same core two cells to the left. -/
+def CPhaseSeed (k : Nat) (b : Conf) : Prop :=
+  (∀ i : Nat, i < 3 → b.tape (b.h-1-(i:Int)) = true) ∧
+  b.tape (b.h-4) = false ∧
+  b.tape (b.h-5) = true ∧
+  (∀ j : Nat, j < k →
+    b.tape (b.h-7-2*(j:Int)) = true ∧
+    b.tape (b.h-6-2*(j:Int)) = false)
+
+/-- One barrier-protected C-phase D1 return shifts the seed two cells left,
+    consuming exactly its first alternating pair. -/
+theorem cphase_seed_step (b : Conf) (k : Nat)
+    (hb : Reach b) (hB : BZero b) (hk : 0 < k)
+    (hseed : CPhaseSeed k b) :
+    ∃ bout, shuttleRun 10 b = some bout ∧ Reach bout ∧ BZero bout ∧
+      bout.h = b.h-2 ∧ CPhaseSeed (k-1) bout ∧ ¬ BBad bout := by
+  rcases hseed with ⟨hscan,hzero,hone,hpairs⟩
+  have hbarrier1 : b.tape (b.h-7) = true :=
+    (hpairs 0 (by omega)).1
+  have hbarrier0 : b.tape (b.h-6) = false :=
+    (hpairs 0 (by omega)).2
+  obtain ⟨bout,hrun,hreach,hBzero,hhead,hpres,hleftOut,
+      hcenterOut,hrightOut,hnotBad⟩ :=
+    b0_cphase_d1_zero_wave_return_barrier b 3 hb hB (by omega)
+      hscan hzero hone hbarrier0 hbarrier1
+  have hhead' : bout.h = b.h-2 := by rw [hhead]; omega
+  have hleft' : bout.tape (b.h-5) = true := by
+    have heq : b.h-(3:Int)-2 = b.h-5 := by omega
+    rw [heq] at hleftOut
+    exact hleftOut
+  have hcenter' : bout.tape (b.h-4) = true := by
+    have heq : b.h-(3:Int)-1 = b.h-4 := by omega
+    rw [heq] at hcenterOut
+    exact hcenterOut
+  have hright' : bout.tape (b.h-3) = true := by
+    have heq : b.h-(3:Int) = b.h-3 := by omega
+    rw [heq] at hrightOut
+    exact hrightOut
+  have hpres6 : ∀ x : Int, x ≤ b.h-6 →
+      bout.tape x = b.tape x := by
+    intro x hx
+    exact hpres x (by omega)
+  have hseed' : CPhaseSeed (k-1) bout := by
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · intro i hi
+      have hcases : i = 0 ∨ i = 1 ∨ i = 2 := by omega
+      rcases hcases with hi0 | hi1 | hi2
+      · subst i
+        have hidx : bout.h-1-((0:Nat):Int) = b.h-3 := by
+          rw [hhead']
+          omega
+        rw [hidx]
+        exact hright'
+      · subst i
+        have hidx : bout.h-1-((1:Nat):Int) = b.h-4 := by
+          rw [hhead']
+          omega
+        rw [hidx]
+        exact hcenter'
+      · subst i
+        have hidx : bout.h-1-((2:Nat):Int) = b.h-5 := by
+          rw [hhead']
+          omega
+        rw [hidx]
+        exact hleft'
+    · have hidx : bout.h-4 = b.h-6 := by rw [hhead']; omega
+      rw [hidx]
+      have hp := hpres6 (b.h-6) (by omega)
+      rw [hp]
+      exact hbarrier0
+    · have hidx : bout.h-5 = b.h-7 := by rw [hhead']; omega
+      rw [hidx]
+      have hp := hpres6 (b.h-7) (by omega)
+      rw [hp]
+      exact hbarrier1
+    · intro j hj
+      have hold := hpairs (j+1) (by omega)
+      have hidx1 : bout.h-7-2*(j:Int) =
+          b.h-7-2*((j+1):Int) := by rw [hhead']; omega
+      have hidx2 : bout.h-6-2*(j:Int) =
+          b.h-6-2*((j+1):Int) := by rw [hhead']; omega
+      constructor
+      · rw [hidx1]
+        have hp := hpres6 (b.h-7-2*((j+1):Int)) (by omega)
+        rw [hp]
+        exact hold.1
+      · rw [hidx2]
+        have hp := hpres6 (b.h-6-2*((j+1):Int)) (by omega)
+        rw [hp]
+        exact hold.2
+  exact ⟨bout,hrun,hreach,hBzero,hhead',hseed',hnotBad⟩
+
+/-- Repeating the C-phase return consumes an arbitrary finite alternating
+    corridor.  Every checkpoint is a reached B/0, and the final checkpoint
+    is outside the exact regular halting gate. -/
+theorem cphase_seed_iterate (b : Conf) (k : Nat)
+    (hb : Reach b) (hB : BZero b) (hseed : CPhaseSeed k b) :
+    ∃ bout, shuttleRun (10*k) b = some bout ∧ Reach bout ∧ BZero bout ∧
+      bout.h = b.h-2*(k:Int) ∧ ¬ BBad bout := by
+  induction k generalizing b hb hB hseed with
+  | zero =>
+      rcases hseed with ⟨hscan,hzero,hone,_⟩
+      refine ⟨b, ?_, hb, hB, ?_, ?_⟩
+      · simp [shuttleRun]
+      · simp
+      · exact not_BBad_of_suffix10111 b hone hzero
+          (hscan 2 (by omega)) (hscan 1 (by omega)) (hscan 0 (by omega))
+  | succ k ih =>
+      obtain ⟨b1,hrun1,hreach1,hB1,hhead1,hseed1,_⟩ :=
+        cphase_seed_step b (k+1) hb hB (by omega) hseed
+      obtain ⟨bout,hrun2,hreach2,hB2,hhead2,hnotBad⟩ :=
+        ih b1 hreach1 hB1 hseed1
+      have hrun : shuttleRun (10*(k+1)) b = some bout := by
+        have htime : 10*(k+1) = 10 + 10*k := by omega
+        rw [htime,shuttleRun_add,hrun1]
+        simp [hrun2]
+      have hhead : bout.h = b.h-2*((k+1):Int) := by
+        rw [hhead2,hhead1]
+        omega
+      exact ⟨bout,hrun,hreach2,hB2,hhead,hnotBad⟩
+
+/-- The odd-even prefix creates exactly n alternating pairs behind the
+    C-phase D1 core.  Consequently it supports n successive ten-step
+    C-phase returns, not merely the first return. -/
+theorem b0_odd_even_prefix_to_cphase_seed (b : Conf) (n : Nat)
+    (hb : Reach b) (hb0 : BZero b)
+    (hleft : b.tape (b.h-1) = true)
+    (hzero : b.tape (b.h-2) = false)
+    (hone : b.tape (b.h-3) = true)
+    (hones : ∀ j : Nat, j < 2*n → b.tape (b.h+1+(j:Int)) = true)
+    (hterminal1 : b.tape (b.h+(2*n+1:Int)) = false)
+    (hterminal2 : b.tape (b.h+(2*n+2:Int)) = false)
+    (hfinal : b.tape (b.h+(2*n+3:Int)) = false) :
+    ∃ b1, run (6*n+23) b = some b1 ∧ Reach b1 ∧ BZero b1 ∧
+      b1.h = b.h+(2*n+3:Int) ∧ CPhaseSeed n b1 := by
+  have hn : 2 ≤ n := by
+    by_contra hnot
+    have hcases : n = 0 ∨ n = 1 := by omega
+    obtain ⟨hr1,hr2,hr3,hr4⟩ :=
+      reached_B0_left10x_right1111 b hb hb0.1 hb0.2 hzero hone
+    rcases hcases with hn0 | hn1
+    · have hfalse : b.tape (b.h+1) = false := by
+        simpa [hn0] using hterminal1
+      have hfalse' : true = false := hr1.symm.trans hfalse
+      cases hfalse'
+    · have hfalse : b.tape (b.h+3) = false := by
+        simpa [hn1] using hterminal1
+      have hfalse' : true = false := hr3.symm.trans hfalse
+      cases hfalse'
+  obtain ⟨b1,hrun,hreach,hB,hhead,htape⟩ :=
+    b0_odd_even_chain_to_b0_exact b n hb hb0 hleft hzero hone hones
+      hterminal1 hterminal2 hfinal
+  let tD2 : Int → Bool :=
+    setBit (setBit (oddWaveTape n (twoWavePrefixTape b.tape b.h) (b.h-1))
+      (b.h-2) true) (b.h-3) false
+  have htape' : b1.tape =
+      evenSweepBResultTape (n+1) tD2 (b.h-2) := by
+    simpa [tD2] using htape
+  let p : Int := (b.h-2)+2*((n+1)+1)
+  have hhead' : b1.h = p+1 := by
+    rw [hhead]
+    dsimp [p]
+    omega
+  obtain ⟨hp6,hp5,hp4,hp3,hp2,hp1,hp0⟩ :=
+    evenSweepBResultTape_last7 (n+1) (by omega) tD2 (b.h-2)
+  have hscan : ∀ i : Nat, i < 3 →
+      b1.tape (b1.h-1-(i:Int)) = true := by
+    intro i hi
+    have hcases : i=0 ∨ i=1 ∨ i=2 := by omega
+    rcases hcases with hi0 | hi1 | hi2
+    · subst i
+      have hidx : b1.h-1-((0:Nat):Int) = p := by rw [hhead']; omega
+      rw [htape',hidx]
+      simpa [p] using hp0
+    · subst i
+      have hidx : b1.h-1-((1:Nat):Int) = p-1 := by rw [hhead']; omega
+      rw [htape',hidx]
+      simpa [p] using hp1
+    · subst i
+      have hidx : b1.h-1-((2:Nat):Int) = p-2 := by rw [hhead']; omega
+      rw [htape',hidx]
+      simpa [p] using hp2
+  have hzero' : b1.tape (b1.h-4) = false := by
+    have hidx : b1.h-4 = p-3 := by rw [hhead']; omega
+    rw [htape',hidx]
+    simpa [p] using hp3
+  have hone' : b1.tape (b1.h-5) = true := by
+    have hidx : b1.h-5 = p-4 := by rw [hhead']; omega
+    rw [htape',hidx]
+    simpa [p] using hp4
+  have hkeep (x : Int) (hx0 : x ≠ p) (hx1 : x ≠ p-1) :
+      evenSweepBResultTape (n+1) tD2 (b.h-2) x =
+        evenSweepTape (n+2) tD2 (b.h-2) x := by
+    simp [evenSweepBResultTape,p,setBit,hx0,hx1]
+  have hpairs : ∀ j : Nat, j < n →
+      b1.tape (b1.h-7-2*(j:Int)) = true ∧
+      b1.tape (b1.h-6-2*(j:Int)) = false := by
+    intro j hj
+    let i : Nat := n-j-1
+    have hi : i < n+2 := by dsimp [i]; omega
+    have hidx1 : b1.h-7-2*(j:Int) = (b.h-2)+2*(i:Int) := by
+      rw [hhead']
+      dsimp [p,i]
+      omega
+    have hidx2 : b1.h-6-2*(j:Int) = (b.h-2)+2*(i:Int)+1 := by
+      rw [hhead']
+      dsimp [p,i]
+      omega
+    have hnot0 : (b.h-2)+2*(i:Int) ≠ p := by
+      dsimp [p,i]
+      omega
+    have hnot1 : (b.h-2)+2*(i:Int) ≠ p-1 := by
+      dsimp [p,i]
+      omega
+    have hnot0' : (b.h-2)+2*(i:Int)+1 ≠ p := by
+      dsimp [p,i]
+      omega
+    have hnot1' : (b.h-2)+2*(i:Int)+1 ≠ p-1 := by
+      dsimp [p,i]
+      omega
+    constructor
+    · rw [htape',hidx1,hkeep _ hnot0 hnot1]
+      exact evenSweepTape_evenCell (n+2) tD2 (b.h-2) i hi
+    · rw [htape',hidx2,hkeep _ hnot0' hnot1']
+      exact evenSweepTape_oddCell (n+2) tD2 (b.h-2) i hi
+  exact ⟨b1,hrun,hreach,hB,hhead,hscan,hzero',hone',hpairs⟩
+
+/-- The full odd-even macro, including every C-phase D1 return supported by
+    its alternating sweep corridor, takes 16n+23 primitive steps and reaches
+    a B/0 state at head h+3 outside the exact regular halting gate. -/
+theorem b0_odd_even_prefix_then_cphaseD1_iterated (b : Conf) (n : Nat)
+    (hb : Reach b) (hb0 : BZero b)
+    (hleft : b.tape (b.h-1) = true)
+    (hzero : b.tape (b.h-2) = false)
+    (hone : b.tape (b.h-3) = true)
+    (hones : ∀ j : Nat, j < 2*n → b.tape (b.h+1+(j:Int)) = true)
+    (hterminal1 : b.tape (b.h+(2*n+1:Int)) = false)
+    (hterminal2 : b.tape (b.h+(2*n+2:Int)) = false)
+    (hfinal : b.tape (b.h+(2*n+3:Int)) = false) :
+    ∃ bout, run (16*n+23) b = some bout ∧ Reach bout ∧ BZero bout ∧
+      bout.h = b.h+3 ∧ ¬ BBad bout := by
+  obtain ⟨b1,hrun1,hreach1,hB1,hhead1,hseed⟩ :=
+    b0_odd_even_prefix_to_cphase_seed b n hb hb0 hleft hzero hone
+      hones hterminal1 hterminal2 hfinal
+  obtain ⟨bout,hrun2,hreach2,hB2,hhead2,hnotBad⟩ :=
+    cphase_seed_iterate b1 n hreach1 hB1 hseed
+  have hrun2' : run (10*n) b1 = some bout := by
+    rw [run_eq_shuttleRun]
+    exact hrun2
+  have htime : 16*n+23 = (6*n+23)+(10*n) := by omega
+  have hrun : run (16*n+23) b = some bout := by
+    rw [htime,run_add,hrun1]
+    simp [hrun2']
+  have hhead : bout.h = b.h+3 := by
+    rw [hhead2,hhead1]
+    omega
+  exact ⟨bout,hrun,hreach2,hB2,hhead,hnotBad⟩
 
 end BB6Root119
