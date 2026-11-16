@@ -358,6 +358,8 @@ theorem m0EvenEight_q4_prefix_rightShape
       simp only [s1PhysicalRight,s0PhysicalRight,s0RightFacing]
       rw [sideBit_append_right [false,true,true,true,false,false]
         (d1pow (b+1)) (6+i) (by simp)]
+      have hidx : 6+i-6 = i := by omega
+      rw [hidx]
       exact sideBit_d1pow_true (b+1) i (by omega)
     rw [hcoord,hside] at hcell
     exact hcell
@@ -421,9 +423,9 @@ theorem m0EvenEight_proposedIncrementCost_closed
     (q a b : Nat) (hqodd : q % 2 = 1) :
     proposedIncrementCost 0 (8*q) a b =
       6*4^b + 42*2^b + 12*a - 9*b + 51 := by
-  rw [proposedIncrementCost_decomp,
+  rw [proposedIncrementCost_decomp 0 (8*q) a b,
     m0EvenEight_resetPrefixCost q a b hqodd,
-    drainCost_binary_closed]
+    drainCost_binary_closed b]
   omega
 
 /-- Exact q4 prefix plus shared q4 suffix, before the S1 all-ones drain. -/
