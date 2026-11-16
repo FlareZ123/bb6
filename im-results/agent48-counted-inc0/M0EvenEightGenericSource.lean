@@ -418,6 +418,18 @@ private theorem m0EvenEight_resetPrefixCost
   rw [resetPrefixCost,m0EvenEight_v2_mul_odd q hqodd]
   omega
 
+private theorem m0EvenEight_drainPolynomial_lower_bound
+    (b : Nat) :
+    12*b+48 ≤ 6*4^b+42*2^b := by
+  induction b with
+  | zero =>
+      norm_num
+  | succ b ih =>
+      rw [pow_succ,pow_succ]
+      have h4 : 0 < 4^b := pow_pos (by decide) b
+      have h2 : 0 < 2^b := pow_pos (by decide) b
+      omega
+
 /-- Closed exact primitive-step cost for the generic m=0,n=8q row. -/
 theorem m0EvenEight_proposedIncrementCost_closed
     (q a b : Nat) (hqodd : q % 2 = 1) :
