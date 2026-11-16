@@ -21,7 +21,7 @@ jobs:
           mkdir -p /tmp/a42-lbin-dec
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a42-lbin-dec/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a42-lbin-dec/
-          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges,CountedCarryPrefix,CountedCarryPrefixGeneral,CountedCarryPrefixHRun,CountedCarryPrefixHRunAxiomAudit}.lean /tmp/a42-lbin-dec/
+          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges,CountedCarryPrefix,CountedCarryPrefixGeneral,CountedCarryPrefixHRun,CountedCarryPrefixHRunAxiomAudit,CountedLBinDecHRun}.lean /tmp/a42-lbin-dec/
           cp im-results/agent42-carry-left-output/FrameCellLemmas.lean /tmp/a42-lbin-dec/
           cp im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean /tmp/a42-lbin-dec/
           cp im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean /tmp/a42-lbin-dec/
@@ -33,7 +33,7 @@ jobs:
           cp im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean /tmp/a42-lbin-dec/
           cp im-results/agent48-counted-inc0/S1CountedInc0.lean /tmp/a42-lbin-dec/
           cp im-results/agent24-champion-time/{ChampionModular,CountPattern,CostRecurrence}.lean /tmp/a42-lbin-dec/
-          cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a42-lbin-dec/
+          cp im-results/agent8-counted-reset/{CountedReset,OuterLCIncPrelude}.lean /tmp/a42-lbin-dec/
           cp im-results/agent48-counted-inc0/S1CountedDrain.lean /tmp/a42-lbin-dec/
           cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a42-lbin-dec/
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a42-lbin-dec/
@@ -54,6 +54,7 @@ jobs:
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
           lean -o CountedSweep.olean CountedSweep.lean
+          lean -o CountedLBinDecHRun.olean CountedLBinDecHRun.lean
           lean -o CountedOddBase.olean CountedOddBase.lean
           lean -o CountedOddUnary.olean CountedOddUnary.lean
           lean -o CountedOneZeroUnary.olean CountedOneZeroUnary.lean
@@ -82,6 +83,7 @@ jobs:
           lean -o CountPattern.olean CountPattern.lean 2>&1 | tee count-pattern-compile.log
           lean -o CostRecurrence.olean CostRecurrence.lean 2>&1 | tee cost-recurrence-compile.log
           lean -o CountedReset.olean CountedReset.lean 2>&1 | tee counted-reset-compile.log
+          lean -o OuterLCIncPrelude.olean OuterLCIncPrelude.lean 2>&1 | tee outer-lcinc-prelude-compile.log
           lean -o S1CountedDrain.olean S1CountedDrain.lean 2>&1 | tee s1-counted-drain-compile.log
           lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean 2>&1 | tee counted-q4-prefix-compile.log
           lean -o CountedRst1Prime.olean CountedRst1Prime.lean 2>&1 | tee counted-rst1-prime-compile.log
@@ -91,7 +93,7 @@ jobs:
           lean -o M0EvenEightQ4Prefix.olean M0EvenEightQ4Prefix.lean 2>&1 | tee m0-even-eight-q4-prefix-compile.log
           lean -o M0EvenEightGenericSource.olean M0EvenEightGenericSource.lean 2>&1 | tee m0-even-eight-generic-source-compile.log
           grep -q 'PASS: 1890 exhaustive bounded cases' m0-even-eight-source-sim.log
-          if grep -q 'native_decide' counted-lbin-dec-axioms.log counted-prefix-hrun-compile.log counted-prefix-hrun-axioms.log s1-encoder-compile.log s1-prefix-bridge-compile.log counted-suffix-output-compile.log s1-carry-output-bridge-compile.log carry-left-r23-compile.log long-residue1-compile.log s1-carry-inc0-compile.log s1-odd-canonical-compile.log s1-counted-inc0-compile.log champion-modular-compile.log count-pattern-compile.log cost-recurrence-compile.log counted-reset-compile.log s1-counted-drain-compile.log counted-q4-prefix-compile.log counted-rst1-prime-compile.log q4-suffix-compile.log q4-right-endpoint-compile.log m0-even-eight-q4-bridge-compile.log m0-even-eight-q4-prefix-compile.log m0-even-eight-generic-source-compile.log; then
+          if grep -q 'native_decide' counted-lbin-dec-axioms.log counted-prefix-hrun-compile.log counted-prefix-hrun-axioms.log s1-encoder-compile.log s1-prefix-bridge-compile.log counted-suffix-output-compile.log s1-carry-output-bridge-compile.log carry-left-r23-compile.log long-residue1-compile.log s1-carry-inc0-compile.log s1-odd-canonical-compile.log s1-counted-inc0-compile.log champion-modular-compile.log count-pattern-compile.log cost-recurrence-compile.log counted-reset-compile.log s1-counted-drain-compile.log counted-q4-prefix-compile.log counted-rst1-prime-compile.log q4-suffix-compile.log q4-right-endpoint-compile.log m0-even-eight-q4-bridge-compile.log m0-even-eight-q4-prefix-compile.log m0-even-eight-generic-source-compile.log outer-lcinc-prelude-compile.log; then
             echo '::error::native_decide appeared in a compiled axiom log'
             exit 1
           fi
