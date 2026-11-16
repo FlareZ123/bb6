@@ -140,3 +140,22 @@ The n=10 version is already present as `n10_even_gap_two_root_excluded` in `Root
 5. Keep all of this in `im-results/` until the complete source composition and checkpoint dependencies compile without `sorryAx`.
 
 No #623 nonhalting conclusion, and no exact BB(6) value, follows until these obligations are completed. The root mass corridors are finite-scale evidence, not an all-time invariant.
+
+
+### Exact run 47–55 checkpoint candidates
+
+The source-shaped BigInt replay gives the following additional exact states; each should become a Lean `by decide` checkpoint before it is used in a root-mass proof:
+
+| step | state D(a,d) | mass |
+|---:|---|---:|
+| 47 | D(145494,1278161) | 1423655 |
+| 48 | D(1132670,436504) | 1569174 |
+| 49 | D(696164,1309542) | 2005706 |
+| 50 | D(613374,2088523) | 2701897 |
+| 51 | D(1475146,1840152) | 3315298 |
+| 52 | D(365000,4425473) | 4790473 |
+| 53 | D(4060470,1095032) | 5155502 |
+| 54 | D(2965430,3285134) | 6250564 |
+| 55 | D(319702,8896323) | 9216025 |
+
+These agree with the existing source-checked checkpoints through run 46 in `RootMassGapAllN10.lean`; run 47–55 themselves remain unverified until `decide` is compiled against the original imports.
