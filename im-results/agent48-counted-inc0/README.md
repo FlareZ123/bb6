@@ -173,7 +173,7 @@ A deterministic standalone simulator is now preserved at
 `m0_even_eight_source_sim.js`. It transcribes the original TM2 table and
 checks 1,890 bounded parameter cases (`4<=L<=9`, odd
 `1<=q<2^(L-3)`, `1<=a<=6`, `0<=b<=4`). For every case it checks the
-q4-prefix state/head and full finite left/right interface, the 39+3b q4
+q4-prefix state/head and exact set of all nonblank tape positions across the full left/right support, the 39+3b q4
 suffix endpoint, the counted drain endpoint, and the closed total cost.
 All 1,890 cases passed in the V8 execution used to produce this note.
 This is reproducible computational evidence only; it does not replace the
