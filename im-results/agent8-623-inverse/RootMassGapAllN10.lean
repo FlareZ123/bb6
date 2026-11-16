@@ -434,5 +434,11 @@ theorem n10_near_near_bridge_excluded (t u v x y B e c : Nat)
 #print axioms n10_far_mass_bounds
 #print axioms n10_near_ratio_root_excluded
 #print axioms n10_far_ratio_root_excluded
+#print axioms absDiff_comm
+#print axioms n10_scale_bounds
+#print axioms n10_far_far_bridge_excluded
+#print axioms n10_far_near_bridge_excluded
+#print axioms n10_near_far_bridge_excluded
+#print axioms n10_near_near_bridge_excluded
 
 end BB6.Agent8RootMassGapAllN10
