@@ -1,6 +1,6 @@
 # M16 quotient: a two-parameter high-family exclusion
 
-**Status:** the finite quotient certificate is kernel-checked in Agent 43's M16 bundle. The parameter pullback below is an exact arithmetic derivation, but the final source-level wrapper importing the bundle's generic reachable_seen theorem has not yet been added to this directory. Do not treat the displayed Reach conclusion as a separately compiled theorem until that wrapper is checked.
+**Status:** the finite quotient certificate is kernel-checked in Agent 43's M16 bundle. The m=0 subfamily is already covered by its source-bridged reset_unreachable16 theorem. The new m≥3 high-family pullback is an exact arithmetic derivation; its short wrapper over the generic reachable_seen invariant and source-Reach embedding has not yet been compiled. Do not treat that displayed Reach conclusion as a separately compiled theorem until the wrapper is checked.
 
 ## Statement
 
