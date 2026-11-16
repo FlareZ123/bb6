@@ -542,11 +542,79 @@ theorem root_t1_q_parent_fatal (h k d a j : Nat)
     have hchain2 := ResetChain.append hchain1 heven
     exact (root_reset_chain_iff _).mpr hchain2
 
+/--
+In an adjacent-even fatal history, the odd-reset valuation at the source
+level is at most one.  The child is at level K+1, then r same-level even
+resets bring its deficit to the final even-exit threshold 4K+14.  The
+source odd-parent band alone rules out t≥2.  Thus the adjacent-even branch
+has only t=0 and the t=1 Q-parent case; direct odd-output fatality is
+outside this lemma.
+-/
+theorem adjacent_fatal_source_exponent_le_one
+    (K t d r : Nat)
+    (hband : 6 * 2^K + 1 ≤ 2^t * d)
+    (hfatal :
+      3^(t+1) * d + 2^(r+1) * (4*K+14) =
+        32 * 2^K + 2*K+7) :
+    t ≤ 1 := by
+  by_contra hnot
+  have ht : 2 ≤ t := by omega
+  let A : Nat := 32 * 2^K + 2*K+7
+  let B : Nat := 6 * 2^K + 1
+  let X : Nat := 2^t * A
+  let Y : Nat := 3^(t+1) * B
+  have hk : K+1 ≤ 2^K := by
+    induction K with
+    | zero => norm_num
+    | succ K ih =>
+        rw [Nat.pow_succ]
+        omega
+  have hbase : 4*A < 27*B := by
+    dsimp [A, B]
+    nlinarith [hk]
+  have hpow : 27*2^t ≤ 4*3^(t+1) := by
+    obtain ⟨s, rfl⟩ : ∃ s, t = s+2 := by omega
+    have h23 : 2^s ≤ 3^s := by
+      induction s with
+      | zero => norm_num
+      | succ s ih =>
+          rw [Nat.pow_succ, Nat.pow_succ]
+          nlinarith [ih]
+    calc
+      27*2^(s+2) = 27*(2^s*2^2) := by rw [pow_add]
+      _ = 108*2^s := by norm_num
+      _ ≤ 108*3^s := by nlinarith [h23]
+      _ = 4*(3^s*3^3) := by norm_num
+      _ = 4*3^(s+3) := by rw [pow_add]
+  have hmul1 : 4*X < 27*2^t*B := by
+    have h := Nat.mul_lt_mul_of_pos_right hbase (by positivity : 0 < 2^t)
+    simpa [X, A, B, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm] using h
+  have hmul2 : 27*2^t*B ≤ 4*Y := by
+    have h := Nat.mul_le_mul_right B hpow
+    simpa [Y, Nat.mul_assoc] using h
+  have hstrong4 : 4*X < 4*Y := lt_of_lt_of_le hmul1 hmul2
+  have hstrong : X < Y := by omega
+  have hterm : 0 < 2^(r+1)*(4*K+14) := by positivity
+  have hdt : 3^(t+1)*d < A := by
+    dsimp [A]
+    omega
+  have hsource : Y ≤ 2^t*(3^(t+1)*d) := by
+    dsimp [Y, B]
+    calc
+      3^(t+1)*(6*2^K+1) ≤ 3^(t+1)*(2^t*d) :=
+        Nat.mul_le_mul_left _ hband
+      _ = 2^t*(3^(t+1)*d) := by ac_rfl
+  have hupper : 2^t*(3^(t+1)*d) < X := by
+    dsimp [X, A]
+    exact Nat.mul_lt_mul_of_pos_left hdt (by positivity)
+  omega
+
 #print axioms t1_q_parent_fatal_sector
 #print axioms t1_child_deficit
 #print axioms t1_q_parent_depth_gap
 #print axioms t1_q_parent_depth_lt_level
 #print axioms even_reset_chain_to_fatal
 #print axioms root_t1_q_parent_fatal
+#print axioms adjacent_fatal_source_exponent_le_one
 
 end Agent10T1Fatal
