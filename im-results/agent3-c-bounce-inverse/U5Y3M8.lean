@@ -1,4 +1,5 @@
 import U5Y3ParentFan
+import U5M8Q0Partial
 import OddOddVal3Orbit
 import EvenOddFourExact
 import HighSumTwo
@@ -35,7 +36,8 @@ private theorem u5Orbit_snd (M s n : Nat)
       have hq : r-n=(r-(n+1))+1 := by omega
       have hpow : 2^(r-n)=2^(r-(n+1))*2 := by
         rw [hq,Nat.pow_succ]
-      have hprev' := ih hprev
+      have hprev' : (u5Orbit s n).2=5*2^(r-n)-2 := by
+        simpa [r] using ih hprev
       change ((u5Orbit s n).2-2)/2=5*2^(r-(n+1))-2
       rw [hprev',hpow]
       omega
@@ -55,7 +57,8 @@ private theorem u5Orbit_mass (M s n : Nat)
       have hprev : n≤r := by omega
       have hlt : n<r := by omega
       have hprevMass := ih hprev
-      have hy := u5Orbit_snd M s n hs hprev
+      have hy : (u5Orbit s n).2=5*2^(r-n)-2 := by
+        simpa [r] using u5Orbit_snd M s n hs hprev
       have hdiv2 : 2∣2^(r-n) := by
         change 2^1∣2^(r-n)
         exact Nat.pow_dvd_pow 2 (by omega)
@@ -73,8 +76,7 @@ private theorem u5Orbit_mass (M s n : Nat)
           have hmod := Nat.mod_eq_zero_of_dvd hdiv2
           omega
         omega
-      change (u5Orbit s n).1+(u5Orbit s n).2-2+
-        2*((u5Orbit s n).2-2)/2+4*(n+1)=308+512*s
+      simp only [u5Orbit]
       rw [hdiv]
       omega
 
@@ -101,7 +103,8 @@ private theorem u5Orbit_xmod8 (M s n : Nat)
   | succ n ih =>
       have hprev : n≤r-2 := by omega
       have hq : 3≤r-n := by omega
-      have hy := u5Orbit_snd M s n hs (by omega)
+      have hy : (u5Orbit s n).2=5*2^(r-n)-2 := by
+        simpa [r] using u5Orbit_snd M s n hs (by omega)
       have hdiv : 8∣2^(r-n) := by
         change 2^3∣2^(r-n)
         exact Nat.pow_dvd_pow 2 hq
@@ -123,11 +126,12 @@ private theorem u5Orbit_last_xmod8 (M s : Nat)
   let r := 201+420*M
   have hrOdd : r%2=1 := by dsimp [r]; omega
   have hx := u5Orbit_xmod8 M s (r-2) hs (by omega)
-  have hy := u5Orbit_snd M s (r-2) hs (by omega)
+  have hy : (u5Orbit s (r-2)).2=5*2^(r-(r-2))-2 := by
+    simpa [r] using u5Orbit_snd M s (r-2) hs (by omega)
   have hq : r-(r-2)=2 := by omega
   have hyEq : (u5Orbit s (r-2)).2=18 := by
     rw [hy,hq]
-    norm_num
+    decide
   have hidx : r-1=(r-2)+1 := by omega
   have hstep : (u5Orbit s (r-1)).1=
       (u5Orbit s (r-2)).1+(u5Orbit s (r-2)).2-2 := by
@@ -147,7 +151,8 @@ private theorem u5Orbit_gate (M s n : Nat)
     ((u5Orbit s n).1+(u5Orbit s n).2)%8≠0 ∧
     ((u5Orbit s n).1+(u5Orbit s n).2)%8≠7 := by
   let r := 201+420*M
-  have hy := u5Orbit_snd M s n hs (by omega)
+  have hy : (u5Orbit s n).2=5*2^(r-n)-2 := by
+    simpa [r] using u5Orbit_snd M s n hs (by omega)
   have hqpos : 1≤r-n := by omega
   have hdiv2 : 2∣2^(r-n) := by
     change 2^1∣2^(r-n)
@@ -183,7 +188,7 @@ private theorem u5Orbit_gate (M s n : Nat)
       have hx := u5Orbit_xmod8 M s n hs (by omega)
       have hyEq : (u5Orbit s n).2=18 := by
         rw [hy,hq2]
-        norm_num
+        decide
       have hrOdd : r%2=1 := by dsimp [r]; omega
       have hnOdd : (r-2)%2=1 := by omega
       have hsum : ((u5Orbit s n).1+(u5Orbit s n).2)%8=6 := by
@@ -195,7 +200,7 @@ private theorem u5Orbit_gate (M s n : Nat)
       have hx := u5Orbit_last_xmod8 M s hs
       have hyEq : (u5Orbit s n).2=8 := by
         rw [hy,hq1]
-        norm_num
+        decide
       have hsum : ((u5Orbit s n).1+(u5Orbit s n).2)%8=4 := by
         rw [hyEq]
         omega
@@ -254,35 +259,13 @@ private theorem u5_q1_parent_unreachable (p : Nat)
   · omega
   · omega
 
-/-- The q=0 member of the u=5 y=3 predecessor fan has a two-step exact
-inverse chain to the same forbidden odd-right sum-two image. -/
-private theorem u5_q0_parent_unreachable (p : Nat)
-    (hp8 : p%8=1) (hpge : 3≤p) :
-    ¬ CReach (8*p-3) (4*p-1) := by
-  intro h
-  have hval3 : CReach (6*p-4) (5*p-4) := by
-    have hiff := (oddodd_val3_blank_reach_iff
-      (8*p-3) (4*p-1)
-      (by omega) (by omega) (by omega) (by omega) (by omega)
-      (by omega)).mp h
-    have hx : (8*p-3+4*p-1-4)/2=6*p-4 := by omega
-    have hy : (8*p-3+3*(4*p-1)-10)/4=5*p-4 := by omega
-    simpa only [hx,hy] using hiff
-  have hlast : CReach ((11*p-13)/2) ((21*p-25)/4) := by
-    have hiff := (evenodd_four_blank_reach_iff
-      (6*p-4) (5*p-4)
-      (by omega) (by omega) (by omega) (by omega)).mp hval3
-    have hx : (6*p-4+5*p-4-5)/2=(11*p-13)/2 := by omega
-    have hy : (6*p-4+3*(5*p-4)-9)/4=(21*p-25)/4 := by omega
-    simpa only [hx,hy] using hiff
-  exact blank_no_odd_sum_two ((11*p-13)/2) ((21*p-25)/4)
-    (by omega) (by omega) (by omega) hlast
-
-/-- Infinite new u=5 residual cylinder: for M=8*w, every possible
-original-source predecessor of the terminal y=3 state is excluded. -/
-theorem blank_no_u5_residual_m8w (w s m : Nat)
+/-- Infinite new u=5 residual cylinder: for M=8*w with w even or
+w=3 mod 8, every possible original-source predecessor of the terminal
+y=3 state is excluded. The other odd residue classes of w remain open. -/
+theorem blank_no_u5_residual_m8w_partial (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
-    (hm : 32*s=32+840*w+m) :
+    (hm : 32*s=32+840*w+m)
+    (hw : w%2=0 ∨ w%8=3) :
     ¬ CReach (302+512*s-4*(201+3360*w)) 3 := by
   have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
@@ -330,7 +313,16 @@ theorem blank_no_u5_residual_m8w (w s m : Nat)
           · have hparent : CReach (8*(m+1)-3) (4*(m+1)-1) := by
               rw [hq0.1,hq0.2] at hprev
               exact ⟨n,hprev⟩
-            exact u5_q0_parent_unreachable (m+1) hp8 hpge hparent
+            let t := (m+1)/8
+            have hp : m+1=8*t+1 := by
+              dsimp [t]
+              omega
+            have ht : 1≤t := by dsimp [t]; omega
+            rcases hw with hwEven|hw3
+            · exact BB6.Agent11U5M8Q0Partial.blank_no_u5_q0_parent_w_even
+                w s m t hs hm hp hwEven ht hparent
+            · exact BB6.Agent11U5M8Q0Partial.blank_no_u5_q0_parent_w3
+                w s m t hs hm hp hw3 ht hparent
           · have hq1 : q=1 := by
               by_contra hne
               have hq2 : 2≤q := by omega
@@ -343,10 +335,10 @@ theorem blank_no_u5_residual_m8w (w s m : Nat)
                 calc
                   m+1=2^(2*q-2)*U := hdecomp
                   _=(4*d)*U := by rw [hd]
-                  _=4*(d*U) := by ring
+                  _=4*(d*U) := by ac_rfl
               omega
             subst q
-            have hUeq : U=m+1 := by simpa using hdecomp
+            have hUeq : U=m+1 := by simpa using hdecomp.symm
             have hA : a=2*(m+1)-3 := by omega
             have hK : k=7*(m+1)-4 := by omega
             have hparent : CReach (2*(m+1)-3) (7*(m+1)-4) := by
@@ -354,10 +346,12 @@ theorem blank_no_u5_residual_m8w (w s m : Nat)
               exact ⟨n,hprev⟩
             exact u5_q1_parent_unreachable (m+1) hp8 hpge hparent
 
-/-- The full u=5 residual B_s cylinder is blank-unreachable when M=8*w. -/
-theorem blank_no_u5_B_s_m8w (w s m : Nat)
+/-- The u=5 residual B_s cylinder is blank-unreachable for M=8*w
+when w is even or w=3 mod 8. -/
+theorem blank_no_u5_B_s_m8w_partial (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
-    (hm : 32*s=32+840*w+m) :
+    (hm : 32*s=32+840*w+m)
+    (hw : w%2=0 ∨ w%8=3) :
     ¬ CReach (54+90*s) (127+211*s) := by
   have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
@@ -368,10 +362,10 @@ theorem blank_no_u5_B_s_m8w (w s m : Nat)
   have hX : 302+512*s-4*(201+3360*w)=16*m+10 := by omega
   have hterminal' : CReach (302+512*s-4*(201+3360*w)) 3 := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hterminal
-  exact blank_no_u5_residual_m8w w s m hs hm hterminal'
+  exact blank_no_u5_residual_m8w_partial w s m hs hm hw hterminal'
 
 #print axioms u5_residual_six_even_right_chain
-#print axioms blank_no_u5_residual_m8w
-#print axioms blank_no_u5_B_s_m8w
+#print axioms blank_no_u5_residual_m8w_partial
+#print axioms blank_no_u5_B_s_m8w_partial
 
 end BB6.Agent3U5M8
