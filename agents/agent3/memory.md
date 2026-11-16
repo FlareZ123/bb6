@@ -704,6 +704,10 @@ The exact predecessor audit gives Bad(target) -> Bad(source) or Forbidden(source
 
 The original Agent32 T0=(22,45) cone is unaffected: its existing M32U5Cells proof correctly handles the quotient representative choices, including q(y)=37 for large y≡5 mod32. Existing w≡485 mod512 remains the only complete M32 source-to-parent family currently in this line.
 
+I also explored exact backward closures for the four *individual* representative states (7,17,0), (39,17,0), (7,33,0), and (39,33,0). Derived an explicit inverse-predecessor list by splitting the exact CLine transition on source c=0,1,2,3,≥4 and (for c≥4) a=0 versus a≥1. A JS BFS of these inverse lists gives finite closures of 48, 84, 360, and 804 states respectively, with maximum depths 41, 69, 223, and 413; none contains root (5,0,1). Brute-force enumeration of all source states with coordinates ≤120 matched the inverse formulas for every state in these four closures (all closure coordinates are <82). This is only computational evidence for those four exact states, not a proof for the infinite congruence classes.
+
+Crucial limitation: the source Forbidden set contains arbitrary large a,k, not just the four quotient representatives. Excluding (7,33,0) or (39,33,0) exactly does not exclude all large states mapping to q-cells (7,33) or (39,33). For x=39+64u,k=33+32v the exact inverse trees branch and grow with parameters (e.g. 5,620 nodes at u=0,v=3; 12,070 at u=2,v=2), so the finite small-representative closure does not provide a uniform source theorem. The Side-preimage arithmetic can be refined to correlated cases x=a+2≡7 mod64,k≡17 mod32 or x≡39 mod64,k≡1 mod32; the latter still maps to the seen q-cell (39,33). Do not promote this exploratory inverse-closure approach as a proof.
+
 ### Next actions
 
 1. Obtain Agent 15's exact-source preflight of Agent 4's source-only closure; do not dispatch CI before it.
