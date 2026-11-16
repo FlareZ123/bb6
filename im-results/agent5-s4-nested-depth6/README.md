@@ -64,12 +64,23 @@ The mass identities are exact arithmetic checks on the extracted words; they are
 - `../agent5-s4-prefix-causal/TENTH-ATTRACTOR.md`: earlier 10th-coordinate contraction analysis.
 - `../agent5-s4-prefix-causal/README.md`: earlier source and prefix-causality context.
 
+## Terminal-quotient obstruction: the mod-31 / length-5 proposal fails
+
+The exact source criterion is `G c S = none iff Pow2(W(S)+c)`, with `W([])=0` and `W(b::S)=b+1+2W(S)`; see the original-source theorem `S4Octet.G_none_iff_power` and its source check in CI 42543510207. At a full-suffix carry through an `n)-digit suffix, the terminal empty-tail quotient is `q=(W(S)+c)/2^(n-1)`; the gate halts exactly when `q` is a power of two. Modulo 31, powers of two lie in `{1,2,4,8,16}`.
+
+The new exact-integer test in `s4_nested_depth6.mjs` rejects the proposed state summary `(W(S) mod 31, length mod 5)` in two independent ways:
+
+- The modeled eight-digit R-section tail has `W=57570541714408`, `W mod 31=27`, and length 8. The first R offset is `305419363311`. The synthetic eight-digit suffix `[1267650600228229401191283841810,0,0,0,0,0,0,0]` has the same two summary values, but `W+c=2^100), so its very first R gate halts by the source criterion. This is a synthetic counterexample to the abstraction, **not** a halt on the genuine root.
+- The distinct inputs `[0,16]` and `[1,0]` both have `(W mod 31,length mod 5)=(4,2)), and both survive the full 4,603-gate R word, but their output lengths are 12 and 13. Thus R does not induce a deterministic transition on this quotient.
+
+The modeled section tail and R word remain conditional on the unformalized numeric prefix-cycle/5457 bridge. The source gate iff is formal; the new counterexamples are exact BigInt computations. Full details and qualifications are in [TERMINAL-QUOTIENT-OBSTRUCTION.md](TERMINAL-QUOTIENT-OBSTRUCTION.md).
+
 ## Highest-value next work
 
-1. Execute this script under Node in CI and retain the machine-readable output.
-2. Prove the 18-prefix cycle and the (Q)-word extraction in Lean, then prove the modeled full-stack bridge from the source-certified root.
-3. Find the next prefix cycle under (Y) and extract the seventh-level word.
-4. More importantly, seek a uniform all-time obstruction to (W(S)+c) being a power of two, or an actual halting witness. Merely adding deeper finite prefixes is not itself a solution.
+1. Prove the 18-prefix cycle and the (Q)-word extraction in Lean, then prove the modeled full-stack bridge from the source-certified root.
+2. Seek a root-reachable, history-sensitive carry invariant under the six-level (Y) word, or a source-certified actual failing gate. The simple `W mod 31)/length-`5` quotient is no longer a viable closed-state model.
+3. Determine whether a further (Y)-prefix cycle gives a useful *new invariant*, not merely a deeper finite projection.
+4. Run the consolidated script in a pinned manual CI job if its complete six-level output is needed as a shared reproducibility artifact.
 
 
 ## Execution status

@@ -277,6 +277,75 @@ yMass.headAdds = Ydata.adds;
 const tailAfterY = applyWord(Y, tailAfterX.slice(8));
 assert(tailAfterY !== null, "halt in one Y block");
 
+// The terminal-quotient experiment requested in the Critic's 14 November note.
+// This is a counterexample to the proposed (W mod 31, length mod 5) quotient,
+// not a halt on the authentic blank-root orbit.
+function weightedMod(xs, m) { return mass(xs) % m; }
+const terminalRootW = mass(tailAfter28);
+const terminalRootWmod31 = weightedMod(tailAfter28, 31n);
+const terminalFirstOffset = R[0];
+assert(terminalFirstOffset === 305419363311n, "unexpected first R offset");
+assert(terminalRootW === 57570541714408n && terminalRootWmod31 === 27n,
+  "modeled R-section tail changed");
+const terminalPowerExponent = 100n;
+const terminalPower = 1n << terminalPowerExponent;
+const terminalSyntheticW = terminalPower - terminalFirstOffset;
+const terminalSyntheticMin = (1n << BigInt(tailAfter28.length)) - 1n;
+assert(terminalSyntheticW >= terminalSyntheticMin, "synthetic tail mass too small");
+const terminalSyntheticTail = [
+  terminalSyntheticW - terminalSyntheticMin,
+  ...Array(tailAfter28.length - 1).fill(0n)
+];
+assert(mass(terminalSyntheticTail) === terminalSyntheticW,
+  "synthetic tail mass construction failed");
+assert(terminalSyntheticTail.length === tailAfter28.length &&
+  weightedMod(terminalSyntheticTail, 31n) === terminalRootWmod31,
+  "synthetic tail does not share the proposed quotient state");
+assert(mass(terminalSyntheticTail) + terminalFirstOffset === terminalPower,
+  "synthetic terminal power equation failed");
+assert(gate(terminalFirstOffset, terminalSyntheticTail) === null,
+  "source G did not halt on the constructed power gate");
+
+// The complete R word is not a deterministic map on (W mod 31, length mod 5).
+const quotientInputA = [0n, 16n];
+const quotientInputB = [1n, 0n];
+assert(weightedMod(quotientInputA, 31n) === 4n &&
+  weightedMod(quotientInputB, 31n) === 4n &&
+  quotientInputA.length % 5 === quotientInputB.length % 5,
+  "quotient-collision inputs changed");
+const quotientOutputA = applyWord(R, quotientInputA);
+const quotientOutputB = applyWord(R, quotientInputB);
+assert(quotientOutputA !== null && quotientOutputB !== null,
+  "quotient-collision test input unexpectedly halts");
+assert(quotientOutputA.length === 12 && quotientOutputB.length === 13 &&
+  weightedMod(quotientOutputA, 31n) === 5n &&
+  weightedMod(quotientOutputB, 31n) === 5n,
+  "R-word quotient non-closure witness changed");
+const terminalQuotientObstruction = {
+  modeledRootTail: show(tailAfter28),
+  modeledRootW: String(terminalRootW),
+  modeledRootWmod31: String(terminalRootWmod31),
+  modeledRootLength: tailAfter28.length,
+  modeledRootLengthMod5: tailAfter28.length % 5,
+  firstROffset: String(terminalFirstOffset),
+  syntheticHaltingTail: show(terminalSyntheticTail),
+  syntheticW: String(terminalSyntheticW),
+  syntheticWmod31: String(weightedMod(terminalSyntheticTail, 31n)),
+  syntheticLength: terminalSyntheticTail.length,
+  powerExponent: String(terminalPowerExponent),
+  firstGateHalts: true
+};
+const quotientNonClosure = {
+  inputA: show(quotientInputA),
+  inputB: show(quotientInputB),
+  commonInputWmod31: "4",
+  commonInputLengthMod5: 2,
+  outputA: { length: quotientOutputA.length, lengthMod5: quotientOutputA.length % 5,
+    Wmod31: String(weightedMod(quotientOutputA, 31n)) },
+  outputB: { length: quotientOutputB.length, lengthMod5: quotientOutputB.length % 5,
+    Wmod31: String(weightedMod(quotientOutputB, 31n)) }
+};
+
 console.log(JSON.stringify({
   levels: {
     Q: qMass, R: rMass, V: vMass, W: wMass, X: xMass, Y: yMass
@@ -286,6 +355,8 @@ console.log(JSON.stringify({
     W_sevenDigit: wCycle,
     X_eightDigit: xCycle
   },
+  terminalQuotientObstruction,
+  quotientNonClosure,
   states: {
     rStar: show(rStar),
     sStar: show(sStar),
