@@ -95,6 +95,13 @@ theorem n10_near_ratio_root_excluded (n a d : Nat)
         root_run_33.symm.trans hseen
       cases hEq
       omega
+    have hnot33 : n ≠ 33 := by
+      intro hn
+      subst n
+      have hEq : some (.D 19954 27733) = some (.D a d) :=
+        root_run_33.symm.trans hseen
+      cases hEq
+      omega
     have hcases : n = 34 ∨ n = 35 ∨ n = 36 ∨ n = 37 := by omega
     rcases hcases with h34 | h35 | h36 | h37
     · subst n
@@ -133,6 +140,13 @@ theorem n10_near_ratio_root_excluded (n a d : Nat)
     have hnotHi : ¬ 38 <= n := by
       intro hn
       have hm := run_mass_mono 38 n 44634 124427 hn root_run_38 hseen
+      omega
+    have hnot33 : n ≠ 33 := by
+      intro hn
+      subst n
+      have hEq : some (.D 19954 27733) = some (.D a d) :=
+        root_run_33.symm.trans hseen
+      cases hEq
       omega
     have hcases : n = 34 ∨ n = 35 ∨ n = 36 ∨ n = 37 := by omega
     rcases hcases with h34 | h35 | h36 | h37
@@ -181,6 +195,13 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
     have hnotHi : ¬ 46 <= n := by
       intro hn
       have hm := run_mass_mono 46 n 426044 571540 hn root_run_46 hseen
+      omega
+    have hnot39 : n ≠ 39 := by
+      intro hn
+      subst n
+      have hEq : some (.D 79788 133932) = some (.D a d) :=
+        root_run_39.symm.trans hseen
+      cases hEq
       omega
     have hnot39 : n ≠ 39 := by
       intro hn
@@ -239,6 +260,13 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
     have hnotHi : ¬ 46 <= n := by
       intro hn
       have hm := run_mass_mono 46 n 426044 571540 hn root_run_46 hseen
+      omega
+    have hnot39 : n ≠ 39 := by
+      intro hn
+      subst n
+      have hEq : some (.D 79788 133932) = some (.D a d) :=
+        root_run_39.symm.trans hseen
+      cases hEq
       omega
     have hcases : n = 40 ∨ n = 41 ∨ n = 42 ∨ n = 43 ∨ n = 44 ∨ n = 45 := by omega
     rcases hcases with h40 | h41 | h42 | h43 | h44 | h45
