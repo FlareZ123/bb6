@@ -1,0 +1,49 @@
+name: Agent 10 #746 level-deficit original-source audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-level-deficit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -eu
+          for attempt in 1 2 3 4 5; do
+            if curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh &&
+               sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2; then
+              echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+      - name: Compile exact original-source first-reset dependencies and deficit theorems
+        run: |
+          set -eu
+          a="im-results/agent7-cascade-odd-fibers"
+          b="im-results/agent10-cascade"
+          r="im-results/agent44-746-rank"
+          export LEAN_PATH="$a:$b:$r"
+          lean --version
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
+            lean -o "$a/$m.olean" "$a/$m.lean"
+          done
+          lean -o "$b/FirstReturnCore.olean" "$b/FirstReturnCore.lean"
+          for m in LowGates SurvivingSmall WellInverseCases PreimageCandidates; do
+            lean -o "$a/$m.olean" "$a/$m.lean"
+          done
+          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          lean -o "$r/LevelDeficitDynamics.olean" "$r/LevelDeficitDynamics.lean"
+          echo "PASS: level-deficit identities and odd-offset factorization compile against the complete checked-in first-reset grammar."
