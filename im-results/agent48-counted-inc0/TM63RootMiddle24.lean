@@ -41,6 +41,19 @@ def tm63MiddleFirst24Moves : Nat :=
     proposedIncrementCost 0 (16*tm63RootResidueSixK-8)
       tm63MiddleAfter23A tm63MiddleAfter23B
 
+/-- Exact closed cost of the newly added middle-24 row. -/
+theorem tm63_middle24_row_cost :
+    proposedIncrementCost 0 (16*tm63RootResidueSixK-8)
+      tm63MiddleAfter23A tm63MiddleAfter23B =
+    6*4^tm63MiddleAfter23B + 42*2^tm63MiddleAfter23B +
+      12*tm63MiddleAfter23A - 9*tm63MiddleAfter23B + 51 := by
+  have hqOdd : (2*tm63RootResidueSixK-1)%2 = 1 := by omega
+  have h := m0EvenEight_proposedIncrementCost_closed
+    (2*tm63RootResidueSixK-1)
+    tm63MiddleAfter23A tm63MiddleAfter23B hqOdd
+  simpa [show 8*(2*tm63RootResidueSixK-1) =
+    16*tm63RootResidueSixK-8 by omega] using h
+
 private theorem run_compose_local {n m : Nat} {c1 c2 c3 : Config}
     (h1 : run tm2 n c1 = some c2)
     (h2 : run tm2 m c2 = some c3) :
@@ -104,6 +117,7 @@ theorem tm63_blank_reaches_after_middle24 :
   simpa [tm63MiddleFirst24Moves,tm63MiddleAfter24A,
     tm63MiddleAfter24B,tm63MiddleAfter24Head] using hcomp
 
+#print axioms tm63_middle24_row_cost
 #print axioms tm63_blank_reaches_after_middle24
 
 end BB6Coverage.Agent48TM63RootMiddle24
