@@ -61,7 +61,7 @@ The root-only section analysis is sharpened further in `im-results/agent15-c-hal
 - first family: `CReach 1 k`, with (m\ge1), (k\ge8), and `k+3*m+4 = 2^(2*m+3)`;
 - second family: `CReach (2*j+3) k`, with ((j,m)\ne(0,0)), (k\ge10), and `k+j+3*m+5 = 2^(2*m+2)*(j+3)`.
 
-The two small feeders `(1,4,0)` and `(3,7,0)` are separately excluded by `BB6CLine.special_unreachable` and `source_no_3_7`. This is the current exact root-reachability residue, not a nonhalting proof: the remaining infinite first- and second-family reachability questions are open. The current M192 low-core condition does not cover either family wholesale; the dossier records explicit first- and second-family examples outside that predicate.
+The two small feeders `(1,4,0)` and `(3,7,0)` are separately excluded by `BB6CLine.special_unreachable` and `source_no_3_7`. This is the current exact root-reachability residue, not a nonhalting proof: the remaining infinite first- and second-family reachability questions are open. The current M192 low-core condition does not cover either family wholesale; the dossier records explicit first- and second-family examples outside that predicate. An unformalized inverse-tree derivation in [ThinGatewayInverse.md](ThinGatewayInverse.md) suggests that the CLine thin gateway itself maps into the same second-stop equation family (the (m=0) slice is the first predecessor; (m\ge1) comes from repeated even-(k) inverse branches). This is an intermediate derivation pending Lean formalization and a source-coordinate bridge, not an additional proof.
 
 ## Machine #623
 
