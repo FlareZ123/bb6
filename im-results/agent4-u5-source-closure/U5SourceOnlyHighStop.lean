@@ -253,6 +253,7 @@ theorem every_w21_residual_has_unreachable_root (n : Nat) :
   exact ⟨s,m,hs,hm,hres.1,hroot⟩
 
 #print axioms u5_residual_nonempty
+#print axioms u5_high_root_parameter_residue_w21
 #print axioms blank_no_u5_residual_m8w_w21
 #print axioms blank_no_u5_B_s_m8w_w21
 #print axioms blank_no_u5_A_s_m8w_w21
