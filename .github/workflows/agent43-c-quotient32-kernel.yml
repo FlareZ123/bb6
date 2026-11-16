@@ -77,3 +77,9 @@ jobs:
           # Agent11: check eight extra absent cylinders in original M32 source
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-first-family/M32EightCells.lean" M32EightCells.lean
           lean M32EightCells.lean
+          # Agent32: source-level U5 mixed-64 backward-cone exclusion,
+          # reusing the already kernel-checked M32 quotient and source bridge.
+          cp "$GITHUB_WORKSPACE/im-results/agent32-u5-backward-cone/M32U5Cells.lean" M32U5Cells.lean
+          lean -o M32U5Cells.olean M32U5Cells.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent32-u5-backward-cone/M32U5Backward.lean" M32U5Backward.lean
+          lean M32U5Backward.lean
