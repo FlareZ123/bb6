@@ -12,7 +12,7 @@ k=P_m(j+3)-(j+3m+5).
 \]
 For all natural numbers \(m,j\) satisfying
 \[
-m\ge 3,\qquad m\equiv3\pmod4,\qquad
+m\ge 3,\qquad j\ge3,\qquad m\equiv3\pmod4,\qquad
 j\equiv m+3\pmod8,
 \]
 the M16 quotient maps the state \((a,k,0)\) to one of six abstract states which are absent from its certified reachable set:
@@ -30,13 +30,13 @@ This is a genuinely new exclusion relative to the current highAllowedValSixFull 
 
 There is also an independent \(m=0\) family with three progressions:
 \[
-m=0,\qquad j\bmod16\in\{2,3,11\}.
+m=0,\qquad j\ge3,\qquad j\bmod16\in\{2,3,11\}.
 \]
 Then \(a=2j+3\) and \(k=3j+7\). The q-state is one of
 \[
-(7,13,0),\ (23,13,0),\ (9,16,0),\ (9,8,0),
+(23,13,0),\ (9,16,0),\ (9,8,0),
 \]
-all absent from the certified seen table. For \(j=16t+2\), the q-state is \((7,13,0)\) at \(t=0\) and \((23,13,0)\) for \(t\ge1\); for \(j=16t+3\) it is \((9,16,0)\); for \(j=16t+11\) it is \((9,8,0)\).
+all absent from the certified seen table. For \(j=16t+2\) with \(t\ge1\), the q-state is \((23,13,0)\); for \(j=16t+3\) it is \((9,16,0)\); for \(j=16t+11\) it is \((9,8,0)\).
 
 The full high gate accepts all three progressions: every positive-\(m\) threshold is false, the universal dyadic condition has no index because \(n+4\le2m+2=2\) is impossible, and the Agent 11 condition holds since \(j\bmod4\in\{2,3\}\). For \(j=16t+2\), \(k=48t+13\) is odd, so affineNormalize is the identity. For \(j=16t+3\), the one forced normalization step sends \((a,k)\) to \((80t+23,24t+7)\), whose right coordinate is odd; for \(j=16t+11\), it sends \((a,k)\) to \((80t+63,24t+19)\), again with odd right coordinate. In all cases the normalized right coordinate is not 4.
 
@@ -69,16 +69,16 @@ Since \(m\equiv3\pmod4\), \(m\) is odd and \(m\bmod8\in\{3,7\}\). The condition 
 \[
 j\bmod8\in\{2,6\},\qquad j\bmod4=2.
 \]
-For \(m\ge3\), \(P_m\) is divisible by 16. Also \(a=2j+3\ge7\), and \(k>4\): using the standard bound \(P_m\ge4m+4\) and \(j\ge2\), we have \(k\ge(4m+4)(j+3)-(j+3m+5)=4mj+9m+3j+7>4\). The q-images are determined by the residues of \(m,j\) modulo 16, with the single small-value exception \(j=2\), where \(q(a)=7\) rather than 23.
+For \(m\ge3\), \(P_m\) is divisible by 16. Also \(a=2j+3\ge7\), and \(k>4\): using the standard bound \(P_m\ge4m+4\) and \(j\ge2\), we have \(k\ge(4m+4)(j+3)-(j+3m+5)=4mj+9m+3j+7>4\). The q-images are determined by the residues of \(m,j\) modulo 16; because \(j\ge3\), all coordinates in this high family are at least 8.
 
 The cases are:
 
 | \(m\bmod16\) | \(j\bmod8\) | Possible q-state(s) at c=0 |
 |---:|---:|---|
 | 3 | 6 | \((15,12,0),(15,20,0)\) |
-| 7 | 2 | \((7,20,0),(23,12,0),(23,20,0)\) |
+| 7 | 2 | \((23,12,0),(23,20,0)\) |
 | 11 | 6 | \((15,20,0),(15,12,0)\) |
-| 15 | 2 | \((7,12,0),(23,12,0),(23,20,0)\) |
+| 15 | 2 | \((23,20,0),(23,12,0)\) |
 
 Every listed state is absent from seen. The q-state of k follows from
 \[
