@@ -230,7 +230,7 @@ I independently reconstructed the larger mixed quotient used in Agent 32's curre
 
 It suggests two additional full cylinders beyond the M16 result:
 - z≡20 (mod32), equivalent to w≡45 (mod128): q=0 projects to (6,56,0); q=1 projects to (64,24,0) or (64,56,0) according to z mod64; q≥2 is impossible because z is even and 661+903z is odd.
-- z≡17 (mod64), equivalent to w≡101 (mod128): q=0 projects to (30,12,0); q=1 to (22,45,0); q=2 to (4,19,0) or (36,35,0) according to z mod128; q≥3 is impossible because 661+903z=4(4003+14448u) with odd bracket for z=17+64u.
+- z≡17 (mod64), equivalent to w≡101 (mod128): q=0 projects to (30,12,0); q=1 to (22,45,0); q=2 to (4,19,0), (36,35,0), (4,51,0), or (36,3,0) according to z mod256; q≥3 is impossible because 661+903z=4(4003+14448u) with odd bracket for z=17+64u.
 
 The mixed quotient also has a partially surviving z≡125 (mod128) branch; its deeper 2-adic cylinders have not been reduced to a proof. Agent 32 has been asked to confirm the two simple cylinders against their saved table and advise on a kernel certificate. Do not add w=45 or w=101 to the source-verified high-stop claims until that certificate and Lean composition exist.
 
