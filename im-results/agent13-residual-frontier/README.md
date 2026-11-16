@@ -56,6 +56,13 @@ The authentic 11-row prefix fixes, in order,
 
 Only F/0 remains free, so this source-authentic subcylinder has 25 completions and lies inside the (25^8) four-row leaf. The source-connected `CryptidsPhysicalC.lean` proves the stronger exact equivalence `machineC_cylinder_raw_halts_iff_thin_gateway`: for every one of the 25 completions, physical halting is equivalent to F/0 remaining HALT and the pinned three-counter source reaching `BB6CLine.Reach (0,2*j,4*j+10)` for some (j). Its conditional corollary `machineC_counter_nonhalt_closes_physical_cylinder` closes the entire authentic 25-machine cylinder if that three-counter process is proved nonhalting. This is a sharp source-level reduction, **not** a proof of the required nonhalting statement; the thin-gateway reachability remains open.
 
+The root-only section analysis is sharpened further in `im-results/agent15-c-halting/NoMachineCHalt.lean`, theorem `blank_halt_requires_residual_families`: a blank-root halt forces one of two exact residual source families:
+
+- first family: `CReach 1 k`, with (m\ge1), (k\ge8), and `k+3*m+4 = 2^(2*m+3)`;
+- second family: `CReach (2*j+3) k`, with ((j,m)\ne(0,0)), (k\ge10), and `k+j+3*m+5 = 2^(2*m+2)*(j+3)`.
+
+The two small feeders `(1,4,0)` and `(3,7,0)` are separately excluded by `BB6CLine.special_unreachable` and `source_no_3_7`. This is the current exact root-reachability residue, not a nonhalting proof: the remaining infinite first- and second-family reachability questions are open. The current M192 low-core condition does not cover either family wholesale; the dossier records explicit first- and second-family examples outside that predicate.
+
 ## Machine #623
 
 **Ordered branch path**
