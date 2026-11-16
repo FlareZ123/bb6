@@ -131,3 +131,27 @@ v2(S) = v2(3788505*w + 235303) - 4.
 The coefficient 3788505 is odd, so its affine form has a unique zero residue modulo every (2^d). For each (d\ge4), the corresponding residue lies in (w\equiv1\pmod{16}) and yields (v_2(S)\ge d-4). Thus the q=0 branch itself contains an unbounded *secondary* two-adic fan in the even/even sum-zero parent quotient (S). This is distinct from the q-depth of the first odd/odd fan: it explains why the q=0-only classes cannot be assumed to have uniformly shallow source-parent closures.
 
 The existing `even_even_sumzero_parent` theorem applies when (S\bmod4\ne0), leaving the higher-secondary-valuation cases to a deeper source-parent analysis. This identity supplies the exact affine parameter controlling that remaining depth; it does not yet exclude the corresponding blank-root states.
+
+
+### Exact bound on the secondary even/even fan depth
+
+The repository already has the *complete* source-parent classification `BB6.Agent3ParentFan.even_even_parent_fan` in `EvenEvenParentFan.lean`; the partial `even_even_sumzero_parent` specialization is not the right endpoint for this analysis. Apply the complete fan to (P_0=(x,y)), where (x,y) are even, (y\ge6), and (x+y=8S). Its three alternatives are:
+
+1. direct/low parent;
+2. zero-left parent, with (S=2^n);
+3. even-left bounce parent, with (n\) odd and
+   [
+   8S=2^{n+1}(a+2),\qquad a\text{ even}.
+   ]
+
+In alternative 2, (n=v_2(S)). In alternative 3, (a+2) is even, so
+[
+v_2(S)=n-2+v_2(a+2)\ge n-1,
+]
+hence (n\le v_2(S)+1). Combining with the exact affine identity gives the uniform per-parameter bound
+
+[
+n\le v_2(3788505w+235303)-3.
+]
+
+Thus the q=0, (w\equiv1\pmod{16}) branch has a complete secondary parent fan whose depth is explicitly bounded by a second affine 2-adic valuation. That bound is unbounded over (w), because 3788505 is odd and has a unique root modulo every power of two. The remaining proof obligation is now precise: exclude the direct/low parent, the power-of-two zero-left case, and every odd bounce depth (n) in this bounded range. This is a parametric fan problem, not a missing classification of immediate parents.
