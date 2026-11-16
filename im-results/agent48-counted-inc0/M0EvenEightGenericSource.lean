@@ -425,9 +425,9 @@ private theorem m0EvenEight_drainPolynomial_lower_bound
   | zero =>
       norm_num
   | succ b ih =>
-      rw [pow_succ,pow_succ]
-      have h4 : 0 < 4^b := pow_pos (by decide) b
-      have h2 : 0 < 2^b := pow_pos (by decide) b
+      rw [Nat.pow_succ,Nat.pow_succ]
+      have h4 : 0 < 4^b := Nat.pow_pos (a:=4) (n:=b) (by decide)
+      have h2 : 0 < 2^b := Nat.pow_pos (a:=2) (n:=b) (by decide)
       omega
 
 /-- Closed exact primitive-step cost for the generic m=0,n=8q row. -/
