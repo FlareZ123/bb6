@@ -248,3 +248,35 @@ The mixed quotient's z≡125 (mod128) branch is now completely classified: the u
 
 
 Independent quotient audit: verify_u5_m16_states.py reconstructs the nondeterministic quotient successor relation directly from the published CLine transition cases, using representatives r and r+16 for each large q-class. It reproduces exactly 7,115 reachable states out of 24^3 and independently confirms that all eleven c=0 targets used by the w=21 and w=37 proofs are absent. The focused CI path runs this audit before Lean compilation. This computation corroborates the table lookups; the Lean certificate remains the proof authority.
+
+
+## U5 second-cone Side lift: exact source parent fan (2026-11-16)
+
+This is a source-side follow-up to Agent 32's second M32 backward cone. It addresses the exceptional Side lift, not a new quotient.
+
+Write the Side state as
+`(a,k,c)=(37+64u,1,67+64v)`, with `v≥u≥0`. Its exceptional c=0 predecessor is
+`F=(39+64u,33+32v,0)`.
+The odd/odd valuation-three inverse reduces its section reachability to
+`P0=(34+32u+16v,32+16u+24v)`.
+The P0 coordinates are even and their sum is `2 mod 4`. Agent 4's draft `U5Q0SourceOnly.lean` argues that a reachable P0 must pass through the direct parent
+`P1=(64+48u+40v,15+8u+12v)`.
+**This P0→P1 step remains pending exact-source preflight; do not treat it as certified yet.** The CLine-to-section conversion should use Agent 46's source-verified `CFirstReach` + `CSectionCoincidence` chain, not the unverified `SectionReachEquivalence` draft.
+
+The full original-source `FullSectionInverse.lean` grammar gives the following algebraic parent fan for P1. Set
+`s=u+v`, `S=20+14u+13v`; then `x+y+1=4S` and `x+2y+2=96+64s`. Since x+y is odd and y≥15 is odd, the a=0 branch and the even-a/direct branches are impossible. The remaining source parents are exactly of these two forms:
+
+1. **Special a=1 branch:** `S=2^(n+2)` for an odd `n≥3`, with parent
+   `(1,K)`, `K=(83+64s-3n)/2).
+2. **Odd a≥3 branch:** `n=2r` is even and `4^r | S`. With `W=S/4^r`, the parent is
+   `(2W-3, 45+32s-W-3r)`,
+   subject to the original high-branch side conditions `W≥3`, `K>0`, and `2K>a`.
+
+This is an algebraic extraction from the source-certified inverse grammar, not yet a separately formalized parent-fan theorem. It shows why following only the n=0 parent is insufficient: all even-depth odd-a parents and the a=1 power-of-two branch must be closed.
+
+For the special a=1 branch, `2K ≡ 19-3n (mod 32)`. The existing source-certified affine/M8/M16 filter excludes the n classes `{1,3,5,11,17,19,23,27} mod 32`; it does not exclude `{7,9,13,15,21,25,29,31} mod 32`. This is a filter split, not a reachability result. Two finite inverse-tree checks give:
+- `u=v=4`: `S=128,n=5,K=290`; 648 reverse states, no blank root.
+- `u=11,v=26`: `S=512,n=7,K=1215`; 47,074 reverse states, no blank root. This second point is not covered by the visible M8/M16 cylinders or M192 lowCore.
+The reverse-predecessor implementation reproduces the earlier 804-state tree for `F=(39,33,0)`; these counts remain computational evidence, not Lean certificates.
+
+**Open:** prove the P0→P1 source reduction, then close the complete P1 parent fan against the blank root. Keep this in `im-results/`; it is not a publishable BB(6) result and does not decide Machine C.
