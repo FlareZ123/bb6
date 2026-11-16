@@ -169,12 +169,42 @@ K\bmod18&2&3&8&9&14&15\\
 j\bmod6&0&0&4&2&2&4
 \end{array}
 \]
-A mod-27 refinement must retain \(j\bmod18\), because \(2\) has order \(18\) modulo \(27\). The exact odd-entry condition \(h_{\rm in}\equiv2\pmod3\) selects the following pairs:
+This mod-9 table remains valid.
+
+**Correction: the odd-entry refinement has period 54 in \(K\), not 18.** Put \(c=2K+7\), \(X=2^{j+4}\), and \(W_m=18h_{\rm in}+45\). The exact formulas are
 \[
-\begin{array}{c|rrrrrr}
-K\bmod18&2&3&8&9&14&15\\
-j\bmod18\ (m=0)&12&12&10&8&8&4\\
-j\bmod18\ (m=1)&6&0&4&14&2&10
-\end{array}
+W_0=112\cdot2^K-2K+11-cX,\qquad
+W_1=80\cdot2^K-22K-23-2cX.
 \]
-The earlier 14:00 communication's K-only mod-27 conclusion was withdrawn in the 14:05 correction; use this pair table instead. These are necessary congruence conditions, not a root exclusion.
+Since \(W_m\) is odd, \(h_{\rm in}\equiv2\pmod3\) is equivalent to \(W_m\equiv0\pmod{27}\). The term \(2^K\bmod27\) has period 18, while the linear \(K\)-terms have period 27. The full period is therefore \(\operatorname{lcm}(18,27)=54\). The complete necessary table is:
+
+| \(K\bmod18\) | \(K\bmod54\) lifts | \(j\bmod18\), \(m=0\) | \(j\bmod18\), \(m=1\) |
+|---:|---:|---:|---:|
+| 2 | 2, 20, 38 | 12, 6, 0 | 6, 0, 12 |
+| 3 | 3, 21, 39 | 12, 0, 6 | 0, 6, 12 |
+| 8 | 8, 26, 44 | 10, 4, 16 | 4, 16, 10 |
+| 9 | 9, 27, 45 | 8, 14, 2 | 14, 2, 8 |
+| 14 | 14, 32, 50 | 8, 2, 14 | 2, 14, 8 |
+| 15 | 15, 33, 51 | 4, 10, 16 | 10, 16, 4 |
+
+The earlier six-column \(K\bmod18\) table omitted two lifts of each residue and is withdrawn. The corrected finite modular table is kernel-checked in [QPhaseTable.lean](QPhaseTable.lean).
+
+**Exact synthetic counterexample to the old table.** Take \(K=26,j=16,m=1\). Then \(c=59\), \(X=2^{20}\), and
+\[
+W_1=80\cdot2^{26}-22\cdot26-23-2\cdot59\cdot2^{20}
+=5,244,976,557\equiv0\pmod{27}.
+\]
+Thus \(h_{\rm in}=(W_1-45)/18=291,387,584\equiv2\pmod3\), with \(h_{\rm in}+K\equiv2\pmod4\). One even reset gives \(q=414,129,261\), and
+\[
+B(K,q)=112\cdot2^{26}-2K-34-18q
+=61,865,984=59\cdot2^{20}.
+\]
+So this is an exact \(m=1\), \(j=16\) Q match with \(K\bmod18=8\), whereas the withdrawn table incorrectly listed \(j\bmod18=4\).
+
+The level entry also has an exact odd parent at level 24: \(v_3(W_1)=4\), \(d=64,752,797\), \(P=2d=129,505,594\), and
+\[
+q_{\rm prev}=2P-8\cdot2^{24}-24-5=124,793,431.
+\]
+It satisfies the level-24 source certificate and its \(t=1\) reset gives \(h_{\rm in}\). The following one-even/t=1 chain has child \(u=1,069,875,227\) at level 27 with deficit \(59\cdot2^{16}\), so 16 even resets reach \(F_{28}\). All these numerical identities and level certificates are checked in [QPhaseCounterexample.lean](QPhaseCounterexample.lean).
+
+This is a synthetic inverse-grammar witness only: \(q_{\rm prev}\) has not been shown blank-root reachable. It corrects the modular phase classification; it does not produce a root hit or decide #746.
