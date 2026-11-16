@@ -282,16 +282,16 @@ theorem HOutputShape_leftOutput (r : Nat) (T U : Int → Bool)
         x = 0 - 3*(r:Int)-1 ∨ x = 0 - 3*(r:Int)-2 := by omega
       rcases hcases with h0 | h1 | h2
       · rw [h0]
-        have hnotfar : ¬ (0 - 3*(r:Int) < -3*(r:Int)-2) := by omega
-        have hle : 0 - 3*(r:Int) ≤ -3*(r:Int) := by omega
+        have hnotfar : ¬ (-(3*(r:Int)) < -3*(r:Int)-2) := by omega
+        have hle : -(3*(r:Int)) ≤ -3*(r:Int) := by omega
         simpa [carryLeftOutputBit, hnotfar, hle] using hbase0
       · rw [h1]
-        have hnotfar : ¬ (0 - 3*(r:Int)-1 < -3*(r:Int)-2) := by omega
-        have hle : 0 - 3*(r:Int)-1 ≤ -3*(r:Int) := by omega
+        have hnotfar : ¬ (-(3*(r:Int))-1 < -3*(r:Int)-2) := by omega
+        have hle : -(3*(r:Int))-1 ≤ -3*(r:Int) := by omega
         simpa [carryLeftOutputBit, hnotfar, hle] using hbase1
       · rw [h2]
-        have hnotfar : ¬ (0 - 3*(r:Int)-2 < -3*(r:Int)-2) := by omega
-        have hle : 0 - 3*(r:Int)-2 ≤ -3*(r:Int) := by omega
+        have hnotfar : ¬ (-(3*(r:Int))-2 < -3*(r:Int)-2) := by omega
+        have hle : -(3*(r:Int))-2 ≤ -3*(r:Int) := by omega
         simpa [carryLeftOutputBit, hnotfar, hle] using hbase2
     · have hgt : -3*(r:Int) < x := by omega
       let i : Nat := Int.toNat (-x)
@@ -408,8 +408,13 @@ theorem carryPrefix_anyNonnegative_hRun (r : Nat) (T : Int → Bool)
     · omega
     · intro hbad
       rcases hbad with hbad | hbad | hbad | hbad | hbad <;> omega
-  obtain ⟨U,hHrun,hshape⟩ := counted_LInc_H_exact r T 0 hleft hright0
+  have hExact := counted_LInc_H_exact r T 0 hleft hright0
     (by simpa using hd0a) (by simpa using hd0b) (by simpa using hd0c)
+  let U : Int → Bool := HComposedTape r T 0
+  have hHrun : run tm2 (12*r+4) ⟨3,0,T⟩ = some ⟨1,2,U⟩ := by
+    simpa [U] using hExact.1
+  have hshape : HOutputShape r T U 0 := by
+    simpa [U] using hExact.2
   rcases hshape with ⟨hU1,hblocks,hbase0,hbase1,hbase2,hkeepR,hkeepL⟩
   have hshape' : HOutputShape r T U 0 :=
     ⟨hU1,hblocks,hbase0,hbase1,hbase2,hkeepR,hkeepL⟩
