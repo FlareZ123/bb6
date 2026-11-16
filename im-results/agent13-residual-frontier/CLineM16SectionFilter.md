@@ -63,6 +63,16 @@ The finite closure contains the projected start \((5,0,1)\) and is closed under 
 
 The M512 quotient independently gives exactly the same 94 forbidden \((a,k)\bmod16\) pairs on its \(c=0\) slice. This cross-check is useful, but the M16 quotient is much smaller and should be the preferred formalization target.
 
+## Canonical representatives for the Lean simulation lemma
+
+A useful deterministic witness for the one-step simulation is:
+```text
+repA(n) = if n < 16 then n else n % 16 + 16
+repK(n) = if n < 16 then n else n % 16 + 16
+repC(n) = if n < 18 then n else projectC(n) + 16
+```
+Each chosen value belongs to the corresponding representative set of the projected coordinate. The tests (a=0,1), (k=0), and (c=0,1,2,3) have the same branch outcome on the actual triple and this chosen triple; parity of (k) is preserved because 16 is even. For (cge18), the chosen representative is at least 18, so outputs (c-1) or (c-3) stay at least 15 and are handled purely modulo 16. All other nonconstant outputs are affine in one coordinate with coefficient at most 2, so their residues agree. Thus, whenever `nextC(a,k,c)` succeeds, applying it to the chosen representative triple also succeeds and its projection is the same. This gives a single witness edge inside the full representative successor list, which is the key lemma to prove before checking the 72-word closure bitset.
+
 ## Consequences for the stopping families
 
 ### Low family
