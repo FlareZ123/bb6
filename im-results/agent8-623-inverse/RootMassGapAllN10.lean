@@ -1,0 +1,284 @@
+import Agent49ParitySource
+import RootExclusion
+import Agent8RootCancellationBudgetBridge
+import Lean.Elab.Tactic.Omega
+
+namespace BB6.Agent8RootMassGapAllN10
+
+open BB6.Agent49ParitySource
+open BB6.Agent48TerminalBudgetCounterexample
+open BB6.Agent8RootCancellationBudgetBridge
+
+set_option maxRecDepth 1000000
+set_option maxHeartbeats 0
+
+/-! Source-checkpoint candidates. These are deliberately proved against the
+pinned upstream highLevelNext via Agent49ParitySource.run, not via a copied
+simulator. -/
+
+theorem root_run_33 :
+    run 33 = some (.D 19954 27733) := by decide
+
+theorem root_run_34 :
+    run 34 = some (.D 7784 59872) := by decide
+
+theorem root_run_35 :
+    run 35 = some (.D 52084 23375) := by decide
+
+theorem root_run_36 :
+    run 36 = some (.D 28698 70161) := by decide
+
+theorem root_run_37 :
+    run 37 = some (.D 41468 86104) := by decide
+
+theorem root_run_38 :
+    run 38 = some (.D 44634 124427) := by decide
+
+theorem root_run_42 :
+    run 42 = some (.D 22822 487342) := by decide
+
+theorem root_run_43 :
+    run 43 = some (.D 464518 68489) := by decide
+
+theorem root_run_44 :
+    run 44 = some (.D 396018 205505) := by decide
+
+theorem root_run_45 :
+    run 45 = some (.D 190506 616551) := by decide
+
+theorem root_run_46 :
+    run 46 = some (.D 426044 571540) := by decide
+
+/-- A 7:4 ratio strip forces total mass into the open interval
+(47687,169061) throughout the n=10 scale band. -/
+theorem n10_near_mass_bounds (m L : Nat)
+    (hmLo : 19680 <= m) (hmHi : m <= 59045)
+    (hgap : absDiff (4*L) (7*m) <= 470) :
+    47687 < L+m /\ L+m < 169061 := by
+  have hg := absDiff_le_both (4*L) (7*m) 470 hgap
+  constructor <;> omega
+
+/-- A 13:1 ratio strip forces total mass into the open interval
+(213720,997584) throughout the n=10 scale band. -/
+theorem n10_far_mass_bounds (m L : Nat)
+    (hmLo : 19680 <= m) (hmHi : m <= 59045)
+    (hgap : absDiff L (13*m) <= 470) :
+    213720 < L+m /\ L+m < 997584 := by
+  have hg := absDiff_le_both L (13*m) 470 hgap
+  constructor <;> omega
+
+/-- No genuine blank-root state in the n=10 7:4 predecessor strip.
+This covers both near/far and near/near previous-ray orientations. -/
+theorem n10_near_ratio_root_excluded (n a d : Nat)
+    (hseen : run n = some (.D a d))
+    (hmLo : 19680 <= min a d) (hmHi : min a d <= 59045)
+    (hgap : absDiff (4 * max a d) (7 * min a d) <= 470) :
+    False := by
+  rcases le_total a d with had | hda
+  · have hlo : 19680 <= a := by simpa [min_eq_left had] using hmLo
+    have hhi : a <= 59045 := by simpa [min_eq_left had] using hmHi
+    have hg : absDiff (4*d) (7*a) <= 470 := by
+      simpa [min_eq_left had, max_eq_right had] using hgap
+    have hmass := n10_near_mass_bounds a d hlo hhi hg
+    have hnotlo : ¬ n < 33 := by
+      intro hn
+      have hm := run_mass_mono n 33 a d 19954 27733 (by omega) hseen root_run_33
+      omega
+    have hnotHi : ¬ 38 <= n := by
+      intro hn
+      have hm := run_mass_mono 38 n 44634 124427 hn root_run_38 hseen
+      omega
+    have hcases : n = 34 ∨ n = 35 ∨ n = 36 ∨ n = 37 := by omega
+    rcases hcases with h34 | h35 | h36 | h37
+    · subst n
+      have hEq : some (.D 7784 59872) = some (.D a d) :=
+        root_run_34.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both (4*59872) (7*7784) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 52084 23375) = some (.D a d) :=
+        root_run_35.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both (4*52084) (7*23375) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 28698 70161) = some (.D a d) :=
+        root_run_36.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both (4*70161) (7*28698) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 41468 86104) = some (.D a d) :=
+        root_run_37.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both (4*86104) (7*41468) 470 hg
+      omega
+  · have hlo : 19680 <= d := by simpa [min_eq_right hda] using hmLo
+    have hhi : d <= 59045 := by simpa [min_eq_right hda] using hmHi
+    have hg : absDiff (4*a) (7*d) <= 470 := by
+      simpa [min_eq_right hda, max_eq_left hda] using hgap
+    have hmass := n10_near_mass_bounds d a hlo hhi hg
+    have hnotlo : ¬ n < 33 := by
+      intro hn
+      have hm := run_mass_mono n 33 a d 19954 27733 (by omega) hseen root_run_33
+      omega
+    have hnotHi : ¬ 38 <= n := by
+      intro hn
+      have hm := run_mass_mono 38 n 44634 124427 hn root_run_38 hseen
+      omega
+    have hcases : n = 34 ∨ n = 35 ∨ n = 36 ∨ n = 37 := by omega
+    rcases hcases with h34 | h35 | h36 | h37
+    · subst n
+      have hEq : some (.D 7784 59872) = some (.D a d) :=
+        root_run_34.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both (4*59872) (7*7784) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 52084 23375) = some (.D a d) :=
+        root_run_35.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both (4*52084) (7*23375) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 28698 70161) = some (.D a d) :=
+        root_run_36.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both (4*70161) (7*28698) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 41468 86104) = some (.D a d) :=
+        root_run_37.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both (4*86104) (7*41468) 470 hg
+      omega
+
+/-- No genuine blank-root state in the n=10 13:1 predecessor strip.
+This covers both far/far and far/near previous-ray orientations. -/
+theorem n10_far_ratio_root_excluded (n a d : Nat)
+    (hseen : run n = some (.D a d))
+    (hmLo : 19680 <= min a d) (hmHi : min a d <= 59045)
+    (hgap : absDiff (max a d) (13 * min a d) <= 470) :
+    False := by
+  rcases le_total a d with had | hda
+  · have hlo : 19680 <= a := by simpa [min_eq_left had] using hmLo
+    have hhi : a <= 59045 := by simpa [min_eq_left had] using hmHi
+    have hg : absDiff d (13*a) <= 470 := by
+      simpa [min_eq_left had, max_eq_right had] using hgap
+    have hmass := n10_far_mass_bounds a d hlo hhi hg
+    have hnotlo : ¬ n < 39 := by
+      intro hn
+      have hm := run_mass_mono n 39 a d 79788 133932 (by omega) hseen root_run_39
+      omega
+    have hnotHi : ¬ 46 <= n := by
+      intro hn
+      have hm := run_mass_mono 46 n 426044 571540 hn root_run_46 hseen
+      omega
+    have hcases : n = 40 ∨ n = 41 ∨ n = 42 ∨ n = 43 ∨ n = 44 ∨ n = 45 := by omega
+    rcases hcases with h40 | h41 | h42 | h43 | h44 | h45
+    · subst n
+      have hEq : some (.D 54138 239399) = some (.D a d) :=
+        root_run_40.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 239399 (13*54138) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 185262 162438) = some (.D a d) :=
+        root_run_41.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 162438 (13*185262) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 22822 487342) = some (.D a d) :=
+        root_run_42.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 487342 (13*22822) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 464518 68489) = some (.D a d) :=
+        root_run_43.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 464518 (13*68489) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 396018 205505) = some (.D a d) :=
+        root_run_44.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 396018 (13*205505) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 190506 616551) = some (.D a d) :=
+        root_run_45.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 616551 (13*190506) 470 hg
+      omega
+  · have hlo : 19680 <= d := by simpa [min_eq_right hda] using hmLo
+    have hhi : d <= 59045 := by simpa [min_eq_right hda] using hmHi
+    have hg : absDiff a (13*d) <= 470 := by
+      simpa [min_eq_right hda, max_eq_left hda] using hgap
+    have hmass := n10_far_mass_bounds d a hlo hhi hg
+    have hnotlo : ¬ n < 39 := by
+      intro hn
+      have hm := run_mass_mono n 39 a d 79788 133932 (by omega) hseen root_run_39
+      omega
+    have hnotHi : ¬ 46 <= n := by
+      intro hn
+      have hm := run_mass_mono 46 n 426044 571540 hn root_run_46 hseen
+      omega
+    have hcases : n = 40 ∨ n = 41 ∨ n = 42 ∨ n = 43 ∨ n = 44 ∨ n = 45 := by omega
+    rcases hcases with h40 | h41 | h42 | h43 | h44 | h45
+    · subst n
+      have hEq : some (.D 54138 239399) = some (.D a d) :=
+        root_run_40.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 239399 (13*54138) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 185262 162438) = some (.D a d) :=
+        root_run_41.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 162438 (13*185262) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 22822 487342) = some (.D a d) :=
+        root_run_42.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 487342 (13*22822) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 464518 68489) = some (.D a d) :=
+        root_run_43.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 464518 (13*68489) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 396018 205505) = some (.D a d) :=
+        root_run_44.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 396018 (13*205505) 470 hg
+      omega
+    · subst n
+      have hEq : some (.D 190506 616551) = some (.D a d) :=
+        root_run_45.symm.trans hseen
+      cases hEq
+      have hr := absDiff_le_both 616551 (13*190506) 470 hg
+      omega
+
+#print axioms root_run_33
+#print axioms root_run_34
+#print axioms root_run_35
+#print axioms root_run_36
+#print axioms root_run_37
+#print axioms root_run_38
+#print axioms root_run_42
+#print axioms root_run_43
+#print axioms root_run_44
+#print axioms root_run_45
+#print axioms root_run_46
+#print axioms n10_near_mass_bounds
+#print axioms n10_far_mass_bounds
+#print axioms n10_near_ratio_root_excluded
+#print axioms n10_far_ratio_root_excluded
+
+end BB6.Agent8RootMassGapAllN10
