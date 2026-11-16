@@ -18,6 +18,11 @@ on:
         required: false
         type: boolean
         default: false
+      u5_m8_only:
+        description: "Source-check the parametric u=5 six-even-right chain and M=0 mod 8 y=3 exclusion, then stop"
+        required: false
+        type: boolean
+        default: false
       s31_w13_only:
         description: "Source-check the M0 base and S31 B/W5/W1/q275/q403 high-stop chain, then stop"
         required: false
@@ -43,6 +48,7 @@ jobs:
           M0_S229_S533_ONLY: ${{ inputs.m0_s229_s533_only }}
           U5_X314_ONLY: ${{ inputs.u5_x314_only }}
           U5_X186_ONLY: ${{ inputs.u5_x186_only }}
+          U5_M8_ONLY: ${{ inputs.u5_m8_only }}
           S31_W13_ONLY: ${{ inputs.s31_w13_only }}
         run: |
           set -euo pipefail
@@ -235,6 +241,21 @@ jobs:
             lean -o EvenOddThreeX186Mod2048.olean EvenOddThreeX186Mod2048.lean 2>&1 | tee EvenOddThreeX186Mod2048.log
             if grep -q sorryAx EvenOddThreeX186Mod2048.log; then
               echo "REJECTED: x=186 mod 2048 y=3 source exclusion contains sorryAx"
+              exit 1
+            fi
+            exit 0
+          fi
+          if [ "$U5_M8_ONLY" = "true" ]; then
+            cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/U5Y3ParentFan.lean .
+            lean -o U5Y3ParentFan.olean U5Y3ParentFan.lean 2>&1 | tee U5Y3ParentFan.log
+            if grep -q sorryAx U5Y3ParentFan.log; then
+              echo "REJECTED: general u=5 y=3 parent fan contains sorryAx"
+              exit 1
+            fi
+            cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/U5Y3M8.lean .
+            lean -o U5Y3M8.olean U5Y3M8.lean 2>&1 | tee U5Y3M8.log
+            if grep -q sorryAx U5Y3M8.log; then
+              echo "REJECTED: parametric u=5 M=0 mod 8 exclusion contains sorryAx"
               exit 1
             fi
             exit 0
