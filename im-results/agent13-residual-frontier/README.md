@@ -90,7 +90,7 @@ The authentic 11-row prefix fixes, in order,
 
 `A/0, B/0, C/0, D/0, D/1, C/1, B/1, A/1, E/1, E/0, F/1`.
 
-Only F/0 remains free, so the source-authentic subcylinder has 25 completions and lies inside the (25^8) leaf. The existing `machine623_only_one_nontrivial_completion` theorem proves that 24 of these 25 completions are `NeverHalts`; the sole remaining completion is the original #623 machine. `machine623_full_cylinder_if_never` closes the entire 25-machine cylinder if that original machine is proved nonhalting. The remaining question is precisely the original #623 F/0 reachability problem; it is not resolved here.
+Only F/0 remains free, so the source-authentic subcylinder has 25 completions and lies inside the (25^8) leaf. `Machine623Source.lean` proves cellwise equality `original_eq_machine623` with the pinned Cryptids source table. The source-connected `Machine623HaltCylinder.lean` theorem `machine623_only_one_nontrivial_completion` proves that 24 of these 25 completions are `NeverHalts`; the sole remaining completion is that original #623 machine. `machine623_full_cylinder_if_never` closes the entire 25-machine cylinder if the original machine is proved nonhalting. The remaining question is precisely whether the original #623 run ever reads F/0; it is not resolved here.
 
 ## What is formally connected, and what remains
 
