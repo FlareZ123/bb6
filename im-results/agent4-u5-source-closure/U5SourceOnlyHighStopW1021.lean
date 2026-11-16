@@ -682,7 +682,7 @@ theorem blank_no_u5_residual_m8w_w413 (w s m : Nat)
   have hbig : 211*(27*w+1)+129≤5*2^(201+3360*w) := by omega
   have hsge : 27*w+1≤s := by omega
   have hmge : 24*w≤m := by omega
-  have hwge : 1021≤w := by omega
+  have hwge : 413≤w := by omega
   have hpge : 3≤m+1 := by omega
   intro hreach
   obtain ⟨time,ht⟩ := hreach
