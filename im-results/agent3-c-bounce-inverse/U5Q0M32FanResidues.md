@@ -63,8 +63,10 @@ The exact M8 residual identity is
 ```
 211*t + 1360 + 22155*w = 20 * 2^(201 + 3360*w).
 ```
-Modulo 512, the right side vanishes and 22155 is 139. Thus each `t mod
-512` determines a unique `w mod 512`. The 111 residues in `T` map to:
+Modulo 512, the right side vanishes and 22155 is 139. Since
+139^{-1}=291 (mod 512), the exact map is
+`w ≡ -291*(211*t+1360) (mod 512)`. Thus each `t mod 512` determines a
+unique `w mod 512`. The 111 residues in `T` map to:
 
 - all eight lifts of 13 residues
   `w mod 64 in {3,11,19,21,25,27,31,35,43,51,53,57,59}`
