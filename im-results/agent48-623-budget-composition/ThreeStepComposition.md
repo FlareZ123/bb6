@@ -180,3 +180,6 @@ At n=10 the right/left error radii are respectively:
 For a p terminal-far branch, feed the left gap (`.2`) and c=5 to the root-mass wrapper. For a p terminal-near branch, feed the right gap (`.1`) and c=1. Uniformly choose B=128 from the terminal helper and e=306 from the bridge source; both satisfy the existing wrapper caps (B≤145, e≤306, c≤9).
 
 For q-near branches, combine the terminal window and the selected bridge gap to obtain the strip required by `NearScaleTransferN10.lean`; this proves q₁≤q₂ before transferring the scale band to q₁. The remaining composition is a four-by-four case split over the already-defined source sectors, not a new drain-estimate development.
+
+
+The near-q orientation transfer is now also stated uniformly for n≥10 in `NearScaleTransferN10.lean`, using `min_scale_large` to get (m\ge100n+500). The far-terminal strip would force (12m+13\le35n+120), and the near-terminal strip would force (3m+7\le35n+120), both impossible. This is an uncompiled arithmetic lemma.
