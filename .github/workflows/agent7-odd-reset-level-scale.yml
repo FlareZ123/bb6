@@ -1,0 +1,31 @@
+name: Agent 7 odd-reset level-scale proof (manual)
+
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -eu
+          for attempt in 1 2 3 4 5; do
+            if curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh &&
+               sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2; then
+              echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+      - name: Kernel-check odd-reset level-scale theorem
+        run: |
+          set -eu
+          lean --version
+          lean -o im-results/agent7-746-even-parent/OddResetLevelScale.olean im-results/agent7-746-even-parent/OddResetLevelScale.lean
+          echo "PASS: odd-reset source-to-child level-scale theorem"
