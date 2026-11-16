@@ -30,8 +30,16 @@ Substituting \(2u+5=3^{t+1}d\) gives the exact equation
 3^{t+1}d+2^{r+1}(4K+14)=32\cdot2^K+2K+7. \tag{1}
 \]
 
-This is not the direct odd-output fatality case \(u=F_n\) for arbitrary
-\(n\); that separate branch remains all-\(t\).
+This is the special case in which the odd-reset child first enters
+\(L=K+1\). More generally, if the child first enters level \(L\ge K+1\)
+and then has \(r\) same-level even resets before the final even exit to
+\(F_{L+1}\), the exact all-\(t\) equation is
+\[
+3^{t+1}d+2^{r+1}(4L+10)=16\cdot2^L+2L+5. \tag{G}
+\]
+The \(t\le1\) cutoff below has only been proved for \(L=K+1\); no
+valuation cutoff is claimed for \(L\ge K+2\). Direct odd-output fatality
+\(u=F_n\) is a separate all-\(t\) branch.
 
 ## Fatal histories split at the last odd reset
 
@@ -43,11 +51,11 @@ level exits in the BB(6) fatal range. Thus the tail has only two shapes:
 
 1. the odd-reset child itself is a fatal state \(F_n\) (direct odd-output
    fatality); or
-2. the child enters level \(K+1\), undergoes same-level even resets, and
-   the final even exit reaches \(F_{K+2}\) (the adjacent-even route
-   treated above).
+2. the child first enters some level \(L\ge K+1\), undergoes same-level
+   even resets, and the final even exit reaches \(F_{L+1}\), governed by
+   the general equation (G).
 
-The direct branch also has a useful low-valuation cutoff. Put
+The direct branch has a useful low-valuation cutoff. Put
 \[
 G(n)=8\cdot2^n-2n-3.
 \]
@@ -79,18 +87,16 @@ strictly increasing.
 
 Consequently, for the last odd reset before a BB(6) halt:
 
-- \(t=0\) must use the adjacent-even route; its unique per-level
-  candidate cannot have an even parent from \(K-1\), so its entry must
-  come from an odd reset at a lower level.
-- \(t=1\) direct fatality is the \(j=0\) Q-parent case; its adjacent-even
-  fatality is the \(j\ge2\) Q-parent case.
-- \(t\ge2\) is excluded from the adjacent-even route, but remains possible
-  in the direct odd-output equation \(3^{t+1}d=G(n)\).
+- \(t=0\) cannot be direct. Its one-even-exit branch is only reduced by
+  the results below when the child enters \(L=K+1\); the case \(L\ge K+2\)
+  remains open.
+- \(t=1\) direct fatality is the \(j=0\) Q-parent case. Its
+  \(L=K+1\) one-even-exit branch is the \(j\ge2\) Q-parent case.
+- \(t\ge2\) remains possible in the direct equation and in the general
+  one-even-exit equation (G) when \(L\ge K+2\). Only the special
+  \(L=K+1\) branch is excluded by the \(t\le1\) theorem.
 
-This decomposition is the reason the \(t\le1\) theorem is useful: it
-does not claim to solve the all-\(t\) direct branch.
-
-## Valuation cutoff: only \(t=0\) or \(t=1\)
+## Valuation cutoff in the special child-level case \(L=K+1\)
 
 Equation (1) and the lower source-band bound imply
 \[
@@ -112,7 +118,7 @@ since the difference is \(34\cdot2^K-8K-1>0\), using
 2^t(32\cdot2^K+2K+7)
 <3^{t+1}(6\cdot2^K+1),
 \]
-contradicting (2). Hence every adjacent-even fatal history has
+contradicting (2). Hence every adjacent-even fatal history with child level \(L=K+1\) has
 \[
 \boxed{t\le1.}
 \]
@@ -176,7 +182,7 @@ This turns the remaining source question into two explicit arithmetic
 conditions on the **actual odd-exit source height**, not merely a
 level-entry height.
 
-## The \(t=0\) candidate cannot enter level \(K\) by an even parent
+## The special \(L=K+1,t=0\) candidate cannot enter level \(K\) by an even parent
 
 There is a further root-facing restriction in the BB(6) range \(K\ge266\).
 Let \(E\) be the level-\(K\) entry before \(q\) same-level even resets
@@ -260,9 +266,8 @@ Now split on the relative exponents.
   where \(s=3e-(2K+1)\) satisfies \(|s|<M\). Therefore
   \(2M<3M+s<4M\), which is incompatible with divisibility by \(2M\).
 
-Both cases are impossible. Thus **the level-\(K\) entry of a \(t=0\)
-adjacent-even fatal candidate cannot have an even parent from level
-\(K-1\)**. Any authentic entry into this candidate level must instead
+Both cases are impossible. Thus **in the special \(L=K+1,t=0\) branch, the level-\(K\) entry
+cannot have an even parent from level \(K-1\)**. Any authentic entry into this candidate level must instead
 come from an odd reset at some lower level.
 
 This is a paper-level arithmetic derivation; a Lean formalization of this
@@ -274,7 +279,8 @@ odd-parent family of the unique \(t=0\) candidate at each level.
 
 An independent deterministic BigInt reproduction of the blank-root
 reset recurrence was run for 100,000 transitions from height \(2\). It
-checked the two exact odd-part tests at each actual odd source transition.
+checked the two exact odd-part tests for the special \(L=K+1\) branch
+at each actual odd source transition.
 
 | Quantity | \(t=0\) test | \(t=1\) test |
 |---|---:|---:|
@@ -303,8 +309,8 @@ odd-output fatality for arbitrary \(t\).
 
 ## Next mathematical target
 
-Prove that neither \(B_0(K,h)/(2K+7)\) nor
-\(B_1(K,h)/(2K+7)\) can be a power of two on an authentic blank-root
-odd-exit source, or produce the first authentic source that satisfies one.
-Keep direct odd-output fatality as a separate branch; do not infer its
-exclusion from the adjacent-even cutoff.
+Resolve the general fatal equation (G) for child levels \(L\ge K+2\),
+and prove or refute the \(B_0/B_1\) odd-part conditions on authentic
+blank-root sources in the special \(L=K+1\) branch. The direct odd-output
+branch for \(t\ge2\) also remains open; do not infer its exclusion from
+the special-case valuation cutoff.
