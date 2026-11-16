@@ -82,7 +82,7 @@ This narrows the root-facing predecessor search but does not exclude it. In part
 The bound is independent of the special t=1 Q equation and applies to every odd reset whose child has first-failure level at least 2. It can be used to prune exact inverse-parent searches and to bound the source level of any odd feeder of a fatal or Q-parent target.
 
 
-## Per-level uniqueness and a linear fan-in bound
+## Per-level uniqueness and source-level support
 
 Fix a target height (u) of first-failure level (K\ge2), and put (X=2u+5). For a fixed possible odd-parent source level (L), the exponent (t) is unique. Indeed, any such exponent must give the integer source parameter
 [
@@ -104,7 +104,7 @@ There are at most two even parents: the exact even-reset level criterion says an
 [
 \boxed{\deg^-(u)\le |S_K|+2.}
 ]
-This bound grows with (K), so it does not contradict the established unbounded-fan-in constructions. It gives a quantitative, level-indexed ceiling on that fan-in and can reduce exact inverse-cone enumeration.
+This bound grows with (K), so it does not contradict the established unbounded-fan-in constructions. Agent 44's exact odd-parent count formula in `im-results/agent44-746-fanin/ExactCount.md` is a separate global cardinality result and may give a sharper count in terms of the 3-adic valuation. The contribution here is the **location of the source levels** and a direct per-level pruning rule, not a claim to supersede that count.
 
 Since (3^L<4^L=2^{2L}), the scale condition also implies (L>(K-2)/2). Therefore
 [
