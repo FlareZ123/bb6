@@ -41,6 +41,49 @@ The \(t\le1\) cutoff below has only been proved for \(L=K+1\); no
 valuation cutoff is claimed for \(L\ge K+2\). Direct odd-output fatality
 \(u=F_n\) is a separate all-\(t\) branch.
 
+## Descaling every odd-reset source to a \(t=0\) parameter
+
+There is an exact parameterization that may help organize the remaining
+all-\(t\) search. Put \(j=K-t\). Since
+\[
+6\cdot2^K+1\le2^td\le8\cdot2^K-1
+\]
+and \(d\) is an integer, division by \(2^t\) gives
+\[
+6\cdot2^j+1\le d\le8\cdot2^j-1.
+\]
+Thus the same odd integer \(d\) is a valid \(t=0\) odd-reset parameter
+at the lower level \(j\).
+
+Let \(h\) be the source height at level \(K=j+t\), and let \(h_0\) be
+the corresponding \(t=0\) source height at level \(j\):
+\[
+h+8\cdot2^K+K+5=2^{t+1}d,\qquad
+h_0+8\cdot2^j+j+5=2d.
+\]
+Eliminating \(d\) gives the exact affine lift
+\[
+\boxed{h=2^t h_0+(2^t-1)(j+5)-t.} \tag{D}
+\]
+If \(u\) is the child of the original \(t\)-reset and \(u_0\) the child
+of the corresponding \(t=0\) reset, then
+\[
+2u+5=3^{t+1}d=3^t(2u_0+5). \tag{D'}
+\]
+
+Therefore every odd-reset source candidate \((K,t,h)\) is an affine
+lift of a \(t=0\) source candidate at \(j=K-t\), with the same odd
+parameter \(d\). This is a parameterization of candidate source states,
+not a reachability implication: root reachability of \(h_0\) has not
+been shown equivalent to root reachability of \(h\). In these coordinates,
+the direct fatal equation becomes \(3^t(2u_0+5)=G(n)\), and the
+one-even-exit equation becomes
+\[
+3^t(2u_0+5)+2^{r+1}(4L+10)=G(L+1).
+\]
+This may let future work organize the all-\(t\) 3-adic intersection as
+a family of scaled \(t=0\) source parameters.
+
 ## Fatal histories split at the last odd reset
 
 For a halting trajectory, take \(K\) to be the level of its **last odd
