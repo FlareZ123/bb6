@@ -195,7 +195,9 @@ Its conditional conclusion is that the high m=0 stop root j=39+64s is unreachabl
 
 ## Additional U5 M16 extension: w=37 (mod 128) high-stop cylinder
 
-A second, disjoint residual cylinder is now covered by the same certified 24^3 quotient. The residual identity used above, reduced modulo 1024 rather than 256, gives
+A second, disjoint residual cylinder is now covered by the same certified 24^3 quotient. The same reduction gives the uniform congruence t ≡ 16+23w (mod128) for every U5 residual triple; w=37 therefore gives t≡99, while the mixed-quotient candidates w=45 and w=101 would give t≡27 and t≡35 respectively.
+
+The residual identity used above, reduced modulo 1024 rather than 256, gives
 ```
 w = 37 (mod 128)  =>  t = 99 (mod 128).
 ```
