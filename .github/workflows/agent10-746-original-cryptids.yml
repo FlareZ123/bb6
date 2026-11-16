@@ -1,6 +1,17 @@
 name: Agent 10 #746 original Cryptids source bridge (manual)
 on:
   workflow_dispatch:
+    inputs:
+      preflight_only:
+        description: Compile the t0 source bridge and t1 Q-parent source bridge, then stop
+        required: false
+        default: false
+        type: boolean
+      t0_only:
+        description: Compile only the t0 source-connected even-entry exclusion, then stop
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 jobs:
@@ -29,16 +40,53 @@ jobs:
         env:
           LEAN_NUM_THREADS: "1"
       - name: Compile rooted chain and high-level reset bridge against unmodified upstream
+        env:
+          PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
+          T0_ONLY: ${{ inputs.t0_only }}
         run: |
           set -eu
           mkdir -p "$GITHUB_WORKSPACE/Agent10Bridge"
           a="$GITHUB_WORKSPACE/agent10/im-results/agent7-fatal-density"
           b="$GITHUB_WORKSPACE/agent10/im-results/agent10-cascade"
           c="$GITHUB_WORKSPACE/agent10/im-results/agent7-cascade-odd-fibers"
+          if [ "$PREFLIGHT_ONLY" = "true" ] || [ "$T0_ONLY" = "true" ]; then
+            # Compile the exact transitive closure of the t0 source bridge and, unless
+            # t0_only was requested, the t1 source bridge. No unrelated fast cones.
+            set -o pipefail
+            cp "$c"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+            cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,T1QParentFatal,T0EvenParentPowerBounds,T0EvenParentArithmetic,T0EvenParentCombined,T0EvenParentBoundary,T0EvenParentSource}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+            cp "$GITHUB_WORKSPACE/agent10/im-results/agent44-746-rank/LevelDeficitDynamics.lean" "$GITHUB_WORKSPACE/Agent10Bridge/"
+            cd "$GITHUB_WORKSPACE"
+            export LEAN_PATH="$GITHUB_WORKSPACE/Agent10Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
+            lake env lean --version
+            log="$GITHUB_WORKSPACE/t0-t1-preflight-axioms.log"
+            : > "$log"
+            for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain; do
+              lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean" 2>&1 | tee -a "$log"
+            done
+            lake env lean -o "Agent10Bridge/LevelDeficitDynamics.olean" "Agent10Bridge/LevelDeficitDynamics.lean" 2>&1 | tee -a "$log"
+            for m in T0EvenParentPowerBounds T0EvenParentArithmetic T0EvenParentCombined T0EvenParentBoundary T0EvenParentSource; do
+              lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean" 2>&1 | tee -a "$log"
+            done
+            if [ "$T0_ONLY" != "true" ]; then
+              lake env lean -o "Agent10Bridge/T1QParentFatal.olean" "Agent10Bridge/T1QParentFatal.lean" 2>&1 | tee -a "$log"
+            fi
+            if grep -E 'sorryAx|native_decide' "$log"; then
+              echo "FAIL: forbidden axiom or native_decide dependency in focused preflight"
+              exit 1
+            fi
+            if [ "$T0_ONLY" = "true" ]; then
+              echo "PASS: t0 source-connected even-entry exclusion and dependencies compiled; no sorryAx/native_decide in printed axiom profiles."
+            else
+              echo "PASS: t0 source-connected exclusion and t1 source dependency closure compiled; no sorryAx/native_decide in printed axiom profiles."
+            fi
+            exit 0
+          fi
           cp "$c"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass,SurvivingSmall,SurvivingExactGate,OriginalSurvivingBridge,OriginalPhysicalGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$a"/HighLevelResetBridge.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,ManyShield,RootMinIndex,FastShield,RootMin256,OriginalNextBridge,OriginalMinIndexBridge,OriginalRawGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
-          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict,ParentCheck,Parents,ClosedCert,ReachDecide,OriginalAlgorithmicGate,FastParents,FastClosedCert,OriginalGate268}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict,ParentCheck,Parents,ClosedCert,ReachDecide,OriginalAlgorithmicGate,FastParents,FastClosedCert,OriginalGate268,T1QParentFatal,T1QParentOriginal}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$GITHUB_WORKSPACE/agent10/im-results/agent44-746-rank/LevelDeficitDynamics.lean" "$GITHUB_WORKSPACE/Agent10Bridge/"
           cd "$GITHUB_WORKSPACE"
           export LEAN_PATH="$GITHUB_WORKSPACE/Agent10Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
           lake env lean --version
@@ -52,6 +100,8 @@ jobs:
           for m in FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ParentCheck Parents ClosedCert ReachDecide; do
             lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
           done
+          lake env lean -o "Agent10Bridge/LevelDeficitDynamics.olean" "Agent10Bridge/LevelDeficitDynamics.lean"
+          lake env lean -o "Agent10Bridge/T1QParentFatal.olean" "Agent10Bridge/T1QParentFatal.lean"
           lake env lean -o "Agent10Bridge/HighLevelResetBridge.olean" "Agent10Bridge/HighLevelResetBridge.lean"
           lake env lean -o "Agent10Bridge/OriginalAlgorithmicGate.olean" "Agent10Bridge/OriginalAlgorithmicGate.lean"
           lake env lean -o "Agent10Bridge/FastParents.olean" "Agent10Bridge/FastParents.lean"
@@ -60,5 +110,7 @@ jobs:
             python3 "$b/generate_fast_cone.py" --index "$n" --chunk-size 16 --output "$GITHUB_WORKSPACE/Agent10Bridge/FastCone$n.lean"
             lake env lean -o "Agent10Bridge/FastCone$n.olean" "Agent10Bridge/FastCone$n.lean"
           done
-          lake env lean "Agent10Bridge/OriginalGate268.lean"
+          lake env lean -o "Agent10Bridge/OriginalGate268.olean" "Agent10Bridge/OriginalGate268.lean"
+          lake env lean -o "Agent10Bridge/T1QParentOriginal.olean" "Agent10Bridge/T1QParentOriginal.lean"
+          echo "PASS: t=1 Q-parent source identity, nonfatal even-reset chain, and conditional original-machine halting implication compiled."
           echo "Unmodified pinned upstream highLevelNext, exact ResetParent first-return equivalence, root reset-chain correspondence, and source-indexed surviving-gate bound compiled."
