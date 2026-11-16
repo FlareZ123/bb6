@@ -119,6 +119,96 @@ This turns the remaining source question into two explicit arithmetic
 conditions on the **actual odd-exit source height**, not merely a
 level-entry height.
 
+## The \(t=0\) candidate cannot enter level \(K\) by an even parent
+
+There is a further root-facing restriction in the BB(6) range \(K\ge266\).
+Let \(E\) be the level-\(K\) entry before \(q\) same-level even resets
+reach the \(t=0\) odd-exit source \(h\). Write
+\[
+D_0=8\cdot2^K+K-h,\qquad D_{\rm ent}=2^qD_0.
+\]
+The entry is nonfatal, so
+\[
+D_{\rm ent}\le4\cdot2^K+2K+3.
+\]
+The \(t=0\) equation gives
+\[
+3D_0=(2K+7)2^{r+3}-16\cdot2^K+2K+1. \tag{4}
+\]
+The source band gives \(D_0\ge2K+7\), hence \(q\le K-1\).
+
+Suppose \(E\) has an even parent from level \(K-1\). The even-child
+band at that level, together with the entry bound above, forces
+\[
+D_{\rm ent}=4\cdot2^K+\delta,\qquad K+3\le\delta\le2K+3.
+\]
+Multiplying (4) by \(2^q\) and substituting this expression yields
+\[
+(2K+7)2^{q+r+3}
+=2^{K+q+4}+12\cdot2^K+3\delta-2^q(2K+1).
+\]
+Since \(q\le K-1\), reduction modulo \(2^q\) shows \(2^q\mid\delta\).
+Put \(\delta=2^qe\). Dividing by \(2^q\) gives
+\[
+(2K+7)2^{r+3}
+=16\cdot2^K+12\cdot2^{K-q}+3e-(2K+1). \tag{5}
+\]
+Here \(1\le e\le2K+3\), so
+\[
+|3e-(2K+1)|\le4K+8.
+\]
+
+The source-band interval for the \(t=0\) fatal depth gives
+\[
+(2K+7)2^{r+2}\ge8\cdot2^K+(2K+7)+3,
+\]
+and its upper endpoint gives \(r+3\le K+4\). For \(K\ge266\), these imply
+\[
+2^{r+3}>4K+8.
+\]
+Also \(2^q\le\delta\le2K+3\), so
+\[
+2^{K-q+2}\ge\frac{4\cdot2^K}{2K+3}>4K+8.
+\]
+The last two elementary growth inequalities follow, for example, from
+\(2^K\ge K^3\) for \(K\ge10\).
+
+Now split on the relative exponents.
+
+- If \(r+3\le K-q+2\), the first two terms on the right of (5) are
+  divisible by \(2^{r+3}\). Thus \(2^{r+3}\) divides
+  \(3e-(2K+1)\), whose absolute value is smaller than \(2^{r+3}\).
+  Hence \(3e=2K+1\), so
+  \[
+  \delta=2^q(2K+1)/3.
+  \]
+  The bounds on \(\delta\) rule out \(q=0\) and \(q\ge2\). If \(q=1\),
+  (5) reduces to
+  \[
+  (2K+7)2^{r+3}=22\cdot2^K=11\cdot2^{K+1},
+  \]
+  impossible because \(2K+7>11\) and both odd parts would have to agree.
+
+- If \(r+3>K-q+2\), then \(r+3\ge K-q+3\). Since \(r+3\le K+4\),
+  the left side of (5) and \(16\cdot2^K\) are divisible by
+  \(2^{r+3}\). It follows that
+  \[
+  2^{K-q+3}\mid 12\cdot2^{K-q}+3e-(2K+1).
+  \]
+  Put \(M=2^{K-q+2}\). The expression on the right is \(3M+s\),
+  where \(s=3e-(2K+1)\) satisfies \(|s|<M\). Therefore
+  \(2M<3M+s<4M\), which is incompatible with divisibility by \(2M\).
+
+Both cases are impossible. Thus **the level-\(K\) entry of a \(t=0\)
+adjacent-even fatal candidate cannot have an even parent from level
+\(K-1\)**. Any authentic entry into this candidate level must instead
+come from an odd reset at some lower level.
+
+This is a paper-level arithmetic derivation; a Lean formalization of this
+additional parent exclusion has not yet been added. It is stronger than
+the finite parent scan and identifies the next dependency: the incoming
+odd-parent family of the unique \(t=0\) candidate at each level.
+
 ## Finite blank-root audit
 
 An independent deterministic BigInt reproduction of the blank-root
