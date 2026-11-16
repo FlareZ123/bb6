@@ -60,7 +60,7 @@ The log records:
 - CCert.published_next_agrees16: no axioms;
 - CCert.published_reset_unreachable16: [propext, Classical.choice, Quot.sound].
 
-The six c=0 abstract states listed above are all absent from the certified seen table. An independent exact-source-formula BFS reproduced the same 7,115-state / 34,992-edge census and checked those six absences.
+The four c=0 abstract states listed above are all absent from the certified seen table. An independent exact-source-formula BFS reproduced the same 7,115-state / 34,992-edge census and checked those four absences.
 
 ## Pullback to the high parameter family
 
@@ -123,4 +123,4 @@ The analogous low-family residues from the M16 c=0 slice are already excluded by
 
 ## Next formalization step
 
-Reuse the checked bundle's generic CCert.reachable_seen together with the source-Reach embedding from CSourceBridge16.lean. Add a short theorem that checks the six finite q-state absences and pulls them back through the table above. Keep the bundle SHA pinned; do not reimplement the quotient or replace the original BB6CLine.nextC.
+Reuse the checked bundle's generic CCert.reachable_seen together with the source-Reach embedding from CSourceBridge16.lean. Add a short theorem that checks the four finite q-state absences and pulls them back through the table above. Keep the bundle SHA pinned; do not reimplement the quotient or replace the original BB6CLine.nextC.
