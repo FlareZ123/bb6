@@ -69,7 +69,7 @@ Since \(m\equiv3\pmod4\), \(m\) is odd and \(m\bmod8\in\{3,7\}\). The condition 
 \[
 j\bmod8\in\{2,6\},\qquad j\bmod4=2.
 \]
-For \(m\ge3\), \(P_m\) is divisible by 16. Also \(a=2j+3\ge7\), and \(k>4\): using the standard bound \(P_m\ge4m+4\) and \(j\ge2\), we have \(k\ge(4m+4)(j+3)-(j+3m+5)=4mj+9m+3j+7>4\). The q-images are determined by the residues of \(m,j\) modulo 16; because \(j\ge3\), all coordinates in this high family are at least 8.
+For \(m\ge3\), \(P_m\) is divisible by 16. Also \(a=2j+3\ge9\), and \(k>4\): using the standard bound \(P_m\ge4m+4\) and \(j\ge3\), we have \(k\ge(4m+4)(j+3)-(j+3m+5)=4mj+9m+3j+7>4\). The q-images are determined by the residues of \(m,j\) modulo 16; because \(j\ge3\), all coordinates in this high family are at least 8.
 
 The cases are:
 
