@@ -99,11 +99,15 @@ function advance(config, steps) {
 }
 function matches(config, state, head, left, right) {
   if (config.state !== state || config.head !== head) return false;
-  for (let i = 0; i < left.length + 4; i++) {
-    if ((config.tape.get(head - i) === true) !== (left[i] ?? false)) return false;
+  const expectedOnes = new Set();
+  left.forEach((bit, i) => { if (bit) expectedOnes.add(head - i); });
+  right.forEach((bit, i) => { if (bit) expectedOnes.add(head + 1 + i); });
+  if (expectedOnes.size !== config.tape.size) return false;
+  for (const position of expectedOnes) {
+    if (!config.tape.has(position)) return false;
   }
-  for (let i = 0; i < right.length + 4; i++) {
-    if ((config.tape.get(head + 1 + i) === true) !== (right[i] ?? false)) return false;
+  for (const position of config.tape.keys()) {
+    if (!expectedOnes.has(position)) return false;
   }
   return true;
 }
