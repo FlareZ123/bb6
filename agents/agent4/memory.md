@@ -573,3 +573,27 @@ I continued Agent 4's U5/Machine C work, taking the q=0 source-parent gap identi
 **Verification status:** both new Lean files remain uncompiled as complete modules. I reconstructed Lean 4.36.0-rc2 from the uploaded split ZIP (whose payload is a `.tar.zst`) using the Python-backed runtime. An isolated local compile of the exact arithmetic fragments `u5_residual_nonempty`, `u5_residual_s_strict_mono`, and `u5_high_root_parameter_residue` succeeded; their axiom profiles were respectively `[propext, Quot.sound]`, `[propext, Classical.choice, Quot.sound]`, and `[propext, Quot.sound]`. This does not certify the source-parent/root chain. Agent 3's 04:48 correction says `U5Y3ParentFan` was compiled by the earlier successful u314 run, but `U5Y3M8` and `U5M8Q0Partial` had not been CI-dispatched; `U5Q0OddOddFan` was also previously marked uncompiled. The complete import closure therefore remains a real preflight target. No CI was dispatched, respecting Critic's focused-local-preflight-before-CI instruction. Agent 3 was sent the replacement and end-to-end root draft; Agents 6, 11, and 15 were asked to preflight/review, and Agent 32 was asked to prioritize source closure over more quotient work. Await exact feedback rather than claiming certification.
 
 **Next actions:** obtain Agent 6's exact Lean preflight result; fix only concrete elaboration errors; inspect `#print axioms` for all exported theorems; then ask Agent 3 to integrate the source-only w=21 theorem into the maintained U5 high-stop path and run the existing manual source workflow. Keep the M16 quotient as independent corroboration, not a dependency. Do not expand further cylinders before this one is compiled and source-certified.
+
+
+## 2026-11-16 16:56 UTC — new U5 source-only cylinder w=1021 (mod 2048)
+
+Continued the U5 q=0 source-only program without changing the earlier t=19/t=99 results. Derived a new complete q-fan exclusion for
+`t=123+168*z`, `z=256*v+2`, and lifted it to a new residual parameter cylinder `w=1021 (mod 2048)`.
+
+**Exact source-parent result (Lean draft, not compiled):**
+- For `z=256v+2`, `43t-1=8(661+903z)=8 (mod 16)`, so the q-fan permits only q=0,1.
+- q=0 parent `P0=(19734+1849344v,19504+1827840v)` is forced through direct even/even, even/odd-four, six-even-right, and odd/odd valuation-three parents to `S0=(25082+2351328v,16819+1576848v)`, odd-right with sum 1 mod 4; blank-image exclusion.
+- q=1 parent `P1=(4932+462336v,26902+2521344v)` is forced through two even/even sum-two direct parents and a new sum-4-mod-8 direct-parent lemma to `D3=(52002+4874688v,3361+315168v)`, then even/odd-four to `Q3=(27679+2594928v,15519+1455048v)`, odd/odd with sum 2 mod 4; blank-image exclusion.
+- The new helper `even_even_sum_four_mod8_reach_implies_direct` is justified from the complete original-source even/even parent fan: its zero-left and even-a bounce branches both have sums divisible by 8, while the target sum is 4 mod 8.
+- q≥2 would force 16 | (43t-1), contradicting the residue 8 mod 16.
+
+The residual identity `211*t+1360+22155*w=20*2^(201+3360*w)` gives, for `w=1021 (mod 2048)`, `t=459 (mod 2048)`. Modulo 3, 7, and 8 it gives `t=123 (mod 168)`; therefore `z=2 (mod 256)`. New Lean drafts:
+- `im-results/agent4-u5-source-closure/U5Q0SourceOnlyW1021.lean`
+- `im-results/agent4-u5-source-closure/U5SourceOnlyHighStopW1021.lean`
+and full arithmetic note `W1021-derivation.md`. The second module composes the new terminal y=3 exclusion with the existing exact U5 M8 chain and m=0 feeder, producing `every_w1021_residual_has_unreachable_root`.
+
+The new w=1021 progression is disjoint from w=21 (mod 32) and w=37 (mod 128), but its high-root index remains in the same containing class `j=18791 (mod 32768)`. It is an additional infinite sparse parameter family, **not** a new root-index density class; no density increment is claimed. All material stays in `im-results/`.
+
+**Verification boundary:** current local shell and Python execution tools both returned tool-level `ClientError`; no full module compile and no CI dispatch occurred. The new theorem and helper are only a paper derivation plus Lean draft. The previous invocation's isolated arithmetic-fragment compile remains the only local verification. Agent 24 has been asked to compile the exact complete transitive closure, including both new files, if their local Lean runtime is available. Agent 3 has been notified of the new cylinder and its limitations. Do not claim source certification or promote to `results/` until full Lean 4.36.0-rc2 compilation and exported axiom audit succeed.
+
+Current lease remains `agent4-gpt6-20261116T1630Z-u5-source-preflight`, claimed at `2026-11-16T16:30:37.656Z`; do not refresh it. Continue research until the measured 70-minute lease-age checkpoint.
