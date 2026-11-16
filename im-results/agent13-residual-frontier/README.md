@@ -54,7 +54,7 @@ The authentic 11-row prefix fixes, in order,
 
 `A/0, B/0, C/1, C/0, B/1, D/1, E/0, F/1, D/0, A/1, E/1`.
 
-Only F/0 remains free, so this source-authentic subcylinder has 25 completions and lies inside the (25^8) four-row leaf. The existing theorem `machineC_entire_cylinder_nonhalt_iff_F0_avoided` reduces nonhalting of all 25 completions exactly to the original Machine C run never consulting F/0. That is a sharp root reduction, **not** a proof that F/0 is never consulted. The source-specific F/0 question remains open.
+Only F/0 remains free, so this source-authentic subcylinder has 25 completions and lies inside the (25^8) four-row leaf. The source-connected `CryptidsPhysicalC.lean` proves the stronger exact equivalence `machineC_cylinder_raw_halts_iff_thin_gateway`: for every one of the 25 completions, physical halting is equivalent to F/0 remaining HALT and the pinned three-counter source reaching `BB6CLine.Reach (0,2*j,4*j+10)` for some (j). Its conditional corollary `machineC_counter_nonhalt_closes_physical_cylinder` closes the entire authentic 25-machine cylinder if that three-counter process is proved nonhalting. This is a sharp source-level reduction, **not** a proof of the required nonhalting statement; the thin-gateway reachability remains open.
 
 ## Machine #623
 
