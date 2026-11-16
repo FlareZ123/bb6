@@ -66,6 +66,15 @@ Since x+2y is odd and a is even, the second equation forces n even. Write n=2q a
 
 For t≡1,5,7 (mod 8), v2(43t-1) is respectively 1,1,2, so only q=0 is possible and the unique parent is the familiar low-valuation parent ((43t-3,(85t-7)/2)). For t≡3 (mod 8), write t=3+8u; then v2(43t-1)=3+v2(16+43u), which is at least 3 and can be larger for suitable u. The admissible q values satisfy 2q+1≤v2(43t-1), with the additional endpoint condition U≥4 excluding any q for which U=2. Thus the w≡5 (mod 8) residual is a genuine parameter-dependent multi-depth parent fan, not merely another application of the unique low-valuation parent. This explains why the w≡5 (mod 8) residual is a genuine multi-depth parent fan, not merely another application of the unique low-valuation parent.
 
+## Extra congruence specific to the M=8w residual
+
+The actual residual equations sharpen the odd t parameter. Since r=201+3360w is odd, the equation 211s+129=5·2^r gives s≡1 (mod 3). The second identity 32s=32+840w+m then gives m≡0 (mod 3). With m+1=8t+1, this forces t≡0 (mod 3). Thus the three remaining odd classes refine to:
+- w≡7 (mod 8): t≡9 (mod 24);
+- w≡5 (mod 8): t≡3 (mod 24);
+- w≡1 (mod 8): t≡15 (mod 24).
+
+For every q in the exact parent fan, this also gives U≡2 (mod 3), a=U-2≡0 (mod 3), and k≡1 (mod 3). These are parameter constraints to exploit in a later blank-orbit invariant; by themselves they do not imply nonreachability.
+
 ## Next mathematical task
 
 For t≡3 (mod 8), eliminate every admissible parent in the finite-but-parameter-dependent fan above, or prove a reusable invariant that excludes the whole fan. For t≡1,7 (mod 8), continue the unique parent through the appropriate even/odd or even/even source normalization. Do not infer blank-unreachability from the parent classification alone.
