@@ -94,8 +94,14 @@ G(L+1)-x=2^{r+1}(4L+10),
 \]
 which determines at most one \(r\). Thus the general all-\(t\) fatal
 search has at most two child-level/depth candidates for each fixed
-source level and odd-reset valuation. This is a scale reduction, not an
-exclusion of the remaining \(L\ge K+2\) cases.
+source level and odd-reset valuation. The existing
+\(\texttt{odd\_entry\_adjacent\_fatal\_depth\_sector}\) theorem in
+\(\texttt{SweepOddFatalDepth.lean}\) further forces \(L\bmod6\in\{3,4\}\)
+for the one-even-exit branch. For direct odd-output fatality,
+\(G(n)\equiv 2^{n+1}+n\pmod3\) forces \(n\bmod6\in\{4,5\}\). Thus the
+all-\(t\) candidate levels are the intersection of the at-most-two
+consecutive levels with the appropriate fatal sector. This is a scale
+reduction, not an exclusion of the remaining \(L\ge K+2\) cases.
 
 The direct branch has a useful low-valuation cutoff. Put
 \[
