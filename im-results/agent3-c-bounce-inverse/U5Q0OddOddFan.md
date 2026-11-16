@@ -64,7 +64,7 @@ x+y=2^n(2(a-1)+6)=2^{n+1}(a+2),
 ]
 Since x+2y is odd and a is even, the second equation forces n even. Write n=2q and U=a+2. Dividing the first equation by 2 gives (43t-1=4^qU); U is even and at least 4. Substituting a=U-2 and n=2q into the cost equation gives (2k+U+6q=128t-8).
 
-For t≡1,5,7 (mod 8), v2(43t-1) is respectively 1,1,2, so only q=0 is possible and the unique parent is the familiar low-valuation parent ((43t-3,(85t-7)/2)). For t≡3 (mod 8), (43t-1) has 2-adic valuation at least 7, and several q values can survive; q is bounded by (2q+1le v_2(43t-1)). This explains why the w≡5 (mod 8) residual is a genuine multi-depth parent fan, not merely another application of the unique low-valuation parent.
+For t≡1,5,7 (mod 8), v2(43t-1) is respectively 1,1,2, so only q=0 is possible and the unique parent is the familiar low-valuation parent ((43t-3,(85t-7)/2)). For t≡3 (mod 8), write t=3+8u; then v2(43t-1)=3+v2(16+43u), which is at least 3 and can be larger for suitable u. The admissible q values satisfy 2q+1≤v2(43t-1), with the additional endpoint condition U≥4 excluding any q for which U=2. Thus the w≡5 (mod 8) residual is a genuine parameter-dependent multi-depth parent fan, not merely another application of the unique low-valuation parent. This explains why the w≡5 (mod 8) residual is a genuine multi-depth parent fan, not merely another application of the unique low-valuation parent.
 
 ## Next mathematical task
 
