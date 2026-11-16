@@ -46,7 +46,6 @@ theorem u5_residual_m_mod7 (M m : Nat)
     rw [Nat.mul_mod]
     have h160 : (160:Nat)%7=6 := by decide
     rw [h160,hpow]
-    decide
   have hmod :
       (211*(m+1)+10669+22155*M)%7 =
         (160*2^(201+420*M))%7 := by rw [h]
@@ -86,11 +85,8 @@ theorem y3_u5_parent_fan (m a k : Nat)
             · simp only [sectionPreimageAll,if_neg ha0,if_pos ha1,
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
               rcases hp with ⟨_,n,hpow,_⟩ | ⟨h5,_⟩
-              · have hpow' : 4*(m+1)=2^n := by omega
-                have hmod : (4*(m+1))%7=6 := by
-                  rw [Nat.mul_mod,hm7]
-                  decide
-                rw [hpow'] at hmod
+              · have hpow' : m+1=2^n := by omega
+                rw [hpow'] at hm7
                 rcases pow_two_mod_seven n with h|h|h <;> omega
               · omega
     · have ha2 : 2≤a := by omega
@@ -126,7 +122,7 @@ theorem y3_u5_parent_fan (m a k : Nat)
               by_cases hq0 : q=0
               · subst q
                 rw [show (2:Nat)^(2*0)=1 by decide] at hpow'
-                simp only [one_mul] at hpow'
+                simp at hpow'
                 have ha : a=8*(m+1)-3 := by omega
                 have hk : k=4*(m+1)-1 := by omega
                 exact Or.inl ⟨ha,hk⟩
@@ -167,7 +163,6 @@ theorem y3_u5_parent_fan (m a k : Nat)
                     2*k+a+9+6*q=16*(m+1)+4 := by omega
                 rw [hdecomp] at hcost3
                 have hA : a+9=2*U+6 := by omega
-                rw [hA] at hcost3
                 rw [hpowIdentity] at hcost3
                 have hcost4 :
                     2*k+2*U+6*q+2=2*U*2^(2*q+1) := by omega
@@ -193,7 +188,6 @@ theorem y3_u5_parent_fan (m a k : Nat)
                     _=m+1 := hdecomp.symm
                 exact Or.inr ⟨q,U,hqpos,hbound,hdecomp,hU,hk⟩
             · omega
-  · omega
 
 /-- The u=5 residual equation now feeds directly into the exact parent fan;
     no selected congruence cylinder or bounded-time premise is required. -/
