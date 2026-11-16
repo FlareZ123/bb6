@@ -490,3 +490,29 @@ Further refinement: the residual classes are explicitly (t=81+168z), (t=123+168z
 Added a Lean draft `im-results/agent3-c-bounce-inverse/U5Q0OddOddFan.lean` for the exact necessary source-parent classification, using `section_preimage_all_iff` and a mod-43 lemma excluding the a=0 branch. It is intentionally not in the workflow and has not been locally compiled. The internal synthesis `im-results/agent3-c-bounce-inverse/README.md` now records the full M8 partial status and open q-fan task.
 
 Agent 10 has been sent the complete transitive import-closure list for optional local preflight using their extracted Lean binary; no response yet. Agent 11's lease remains present but is older than the scheduler's 90-minute hard limit, with no preflight response. Do not alter another identity's lease. My own local container, Python, and Python-user-visible runtimes have all returned ClientError; no CI has been dispatched because local preflight remains a required gate.
+
+
+## 2026-11-16: U5 M16 q=0 / high-stop extension
+
+The exact U5 odd/odd parent fan has now been combined with Agent43's 24^3 M16 quotient. A simplification eliminated the earlier unnecessary CRT target t=627 (mod672): t=19 (mod32) is sufficient.
+
+For t=32*n+19:
+- q=0 parent (a,k)=(1376*n+814,1360*n+804), quotient state (14,20,0);
+- q=1 parent (a,k)=(344*n+202,1876*n+1107), with n mod4 giving (10,19,0), (18,23,0), (10,11,0), (18,15,0);
+- q>=2 impossible since 43*t-1=16 (mod32) while U is even.
+
+The five c=0 quotient states are absent. I independently reconstructed the nondeterministic quotient graph from BB6CLine.nextC, using q(x)=x for x<8 and q(x)=8+(x-8) mod16; each large quotient class uses representatives r and r+16. The BFS exactly reproduces 7,115 reachable states out of 24^3 and confirms all five target states absent. The reproducible audit is im-results/agent3-c-bounce-inverse/verify_u5_m16_states.py. Note the c=0, a=1, k>=1 transition must use output c=2*k-1 because the Lean pattern is (1,k+1,0); the script includes this off-by-two detail.
+
+New Lean files:
+- im-results/agent3-c-bounce-inverse/U5Q0M16Core.lean: source-parent fan exclusion using M32SectionEmbedding + CSourceBridge16.
+- U5Q0M16Residual.lean: derives t=19 mod32 from the residual equations on w=21 mod32.
+- U5Q0M16ResidualClosure.lean: pulls the q=0 exclusion back to the U5 y=3 parent.
+- U5Q0M16HighStop.lean: excludes the y=3 terminal, B_s, A_s, and the high m=0 root j=39+64*s for residual parameters with w=21 mod32.
+
+The proof bodies compiled locally against interface stubs, including the full high-stop chain. They have NOT been compiled against the exact M16 archive/source closure. The local shell/container and Python runtimes later returned ClientError. I therefore did not dispatch CI, in accordance with Critic's exact-local-preflight gate. A focused u5_q0_m16_only input/branch was added to .github/workflows/agent11-c-diagonal-late.yml; it rebuilds the SHA-pinned c-cert16 bundle, compiles the M32 source embedding and all new modules, runs the independent BFS audit, and rejects sorryAx.
+
+I requested exact local preflight from Agents 11, 15, and 43, and requested Agent43 confirm the five table lookups. No response had arrived at the last mailbox check. Agent3/Agent15 CReach definitions were inspected and have the same blank-origin run body; the explicit simpa bridge is in U5Q0M16Core.lean.
+
+Non-vacuity is elementary but not yet formalized: 2^210≡1 (mod211), 2^201≡68 (mod211), and 3360=16*210, so 5*2^(201+3360w)≡129 (mod211) for every w. Thus s=(5*2^(201+3360w)-129)/211 is integral. The bound 2^r≥r+1 gives s≥27w+1, hence m=32s-32-840w≥24w≥0. Formalizing this existence theorem is a useful next step after exact Lean source preflight.
+
+Current result remains an intermediate, conditional infinite-family exclusion, not an exact BB(6) result or global BB(6) bound. Do not move it into results/ until exact source compilation and mathematical review succeed.
