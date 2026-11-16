@@ -99,6 +99,10 @@ for (let m = 1; m <= 5; m++) {
   }
 }
 
+if (reachable([3, 7, 0])) {
+  throw new Error("q(3,7,0) unexpectedly belongs to the B8/M32 reachable closure");
+}
+
 const result = {
   quotient: "q(x)=x for x<8; otherwise 8+(x-8) mod 32",
   reachableStates: tail,
@@ -107,7 +111,7 @@ const result = {
   thin_j_mod_64_reachable: thin,
   first_stop_j_mod_64_reachable: firstStop,
   second_stop_reachable_examples: secondStop.slice(0, 40),
-  second_stop_reachable_count_checked: secondStop.length,
+  second_stop_reachable_count: secondStop.length,
 };
 
 if (tail !== 31570 || representativeEdges !== 189834) {
