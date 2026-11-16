@@ -108,7 +108,7 @@ The symmetry keys and orbit sizes are finite computations over the 240 root-pres
 
 1. Obtain the requested local Lean preflight for `ResidualFrontierManifest.lean`, the Machine C/#623 path and frontier modules, and `RootedFrontierMap.lean`. The prior manifest export run failed during elaboration; its diagnostics were repaired in the current source, but no fresh compile claim is made.
 2. Only after that local preflight succeeds, extend the existing manual-only `.github/workflows/agent32-zero-path-global.yml` export branch to compile the two root-frontier modules and `RootedFrontierMap.lean`, then run its `export_frontier=true` path once.
-3. Run [verify_export.py](verify_export.py) on `im-results/agent32-zero-prefix-global/depth4-residual-frontier.jsonl`; it asserts both exact ordered paths, partial tables, free slots, (25^8) masses, oracle outcomes, probe endpoints, discharge contract, canonical keys, and orbit sizes.
+3. Run [verify_export.py](verify_export.py) on `/tmp/bb6-depth4-residual-frontier.jsonl`; it asserts both exact ordered paths, partial tables, free slots, (25^8) masses, oracle outcomes, probe endpoints, discharge contract, canonical keys, and orbit sizes.
 4. For actual mathematical closure, either prove `Cover (DecidedBelow B) p` for the entire four-row leaf, or finish the authentic-root F/0 all-time question for each 25-completion subcylinder. The latter does not by itself close the entire (25^8) leaf.
 
 No exact BB(6) value, global six-state upper bound, Machine C all-time decision, or #623 all-time decision is claimed.
