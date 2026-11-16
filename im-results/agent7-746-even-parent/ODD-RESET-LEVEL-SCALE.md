@@ -105,3 +105,11 @@ There are at most two even parents: the exact even-reset level criterion says an
 \boxed{\deg^-(u)\le |S_K|+2.}
 ]
 This bound grows with (K), so it does not contradict the established unbounded-fan-in constructions. It gives a quantitative, level-indexed ceiling on that fan-in and can reduce exact inverse-cone enumeration.
+
+Since (3^L<4^L=2^{2L}), the scale condition also implies (L>(K-2)/2). Therefore
+[
+|S_K|\le\lceil K/2\rceil,
+\qquad
+\boxed{\deg^-(u)\le\lceil K/2\rceil+2.}
+]
+The exact set (S_K) is the sharper bound; the ceiling form is a simple closed upper bound.
