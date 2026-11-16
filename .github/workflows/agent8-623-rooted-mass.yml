@@ -51,7 +51,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/SquareGapTerminalBridge.olean SquareGapTerminalBridge.lean 2>&1 | tee square-gap-terminal-bridge.log
           lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetBridge.olean Agent8RootCancellationBudgetBridge.lean 2>&1 | tee root-cancellation-budget-bridge.log
           lake env lean -o .lake/build/lib/lean/RootExclusion.olean RootExclusion.lean 2>&1 | tee root-exclusion.log
-          lake env lean Agent8RootMassGapAllN10.lean 2>&1 | tee root-mass-gap-n10.log
+          lake env lean -o .lake/build/lib/lean/Agent8RootMassGapAllN10.olean Agent8RootMassGapAllN10.lean 2>&1 | tee root-mass-gap-n10.log
           cat square-gap-terminal-bridge.log root-cancellation-budget-bridge.log root-exclusion.log root-mass-gap-n10.log > n10-root-mass-axioms.log
           if grep -q 'sorryAx' n10-root-mass-axioms.log; then
             echo 'sorryAx detected in the exact-source n=10 root-corridor closure'
@@ -63,3 +63,4 @@ jobs:
         with:
           name: bb6-623-n10-root-corridor-axioms
           path: /tmp/cryptids/n10-root-mass-axioms.log
+          if-no-files-found: ignore
