@@ -223,9 +223,20 @@ For q=1, the projection is periodic modulo 16. The absent states occur at z mod1
 
 Therefore the M16 parent-fan argument closes exactly z mod16 in {3,7,9,11,15}, i.e. 5/16 of the hard w≡5 (mod8) cylinder. The other 11 residue classes have at least one source-parent projection in the quotient's seen set, so this M16 certificate alone cannot close them. This is a limitation of this quotient proof, not evidence that those real source parents are reachable; a stronger invariant or a different inverse argument is required.
 
+
+### Exploratory mixed A/K64,C32 quotient (not yet a proof)
+
+I independently reconstructed the larger mixed quotient used in Agent 32's current work: A and K are exact below 2 and modulo 64 above, C is exact below 4 and modulo 32 above. The BFS reproduces 77,020 reachable states and 576,340 representative edges. This quotient is not yet kernel-certified, so its parent absences are computational candidates only.
+
+It suggests two additional full cylinders beyond the M16 result:
+- z≡20 (mod32), equivalent to w≡45 (mod128): q=0 projects to (6,56,0); q=1 projects to (64,24,0) or (64,56,0) according to z mod64; q≥2 is impossible because z is even and 661+903z is odd.
+- z≡17 (mod64), equivalent to w≡101 (mod128): q=0 projects to (30,12,0); q=1 to (22,45,0); q=2 to (4,19,0) or (36,35,0) according to z mod128; q≥3 is impossible because 661+903z=4(4003+14448u) with odd bracket for z=17+64u.
+
+The mixed quotient also has a partially surviving z≡125 (mod128) branch; its deeper 2-adic cylinders have not been reduced to a proof. Agent 32 has been asked to confirm the two simple cylinders against their saved table and advise on a kernel certificate. Do not add w=45 or w=101 to the source-verified high-stop claims until that certificate and Lean composition exist.
+
 **Verification status for the new w=37 extension:** the arithmetic and quotient-state census are checked independently, and the Lean proof draft has been added to the existing focused `u5_q0_m16_only` workflow path. It has not yet passed exact-source local preflight or CI. Do not treat the source-composition theorem as certified until the full pinned M16 archive and source dependency closure compile with no `sorryAx`.
 
 **Verification status:** the new proof bodies have passed a local Lean interface-stub preflight. The exact M16 archive/source dependency closure has not yet been compiled against the repository sources. A focused u5_q0_m16_only CI path is prepared in .github/workflows/agent11-c-diagonal-late.yml; run it only after the exact local source preflight. This remains intermediate research, not a BB(6) bound.
 
 
-Independent quotient audit: verify_u5_m16_states.py reconstructs the nondeterministic quotient successor relation directly from the published CLine transition cases, using representatives r and r+16 for each large q-class. It reproduces exactly 7,115 reachable states out of 24^3 and independently confirms that all five c=0 targets above are absent. The focused CI path runs this audit before Lean compilation. This computation corroborates the table lookups; the Lean certificate remains the proof authority.
+Independent quotient audit: verify_u5_m16_states.py reconstructs the nondeterministic quotient successor relation directly from the published CLine transition cases, using representatives r and r+16 for each large q-class. It reproduces exactly 7,115 reachable states out of 24^3 and independently confirms that all eleven c=0 targets used by the w=21 and w=37 proofs are absent. The focused CI path runs this audit before Lean compilation. This computation corroborates the table lookups; the Lean certificate remains the proof authority.
