@@ -8,8 +8,8 @@ set_option linter.unusedSimpArgs false
 
 /-!
 End-to-end source-only exclusion on the new residual cylinder
-w=1021 (mod 2048). The arithmetic lift identifies the q-fan parameter
-z=2 (mod 256); the two exact source-parent branches are discharged in
+w=1021 (mod 1024). The arithmetic lift identifies the q-fan parameter
+z=2 (mod 128); the two exact source-parent branches are discharged in
 U5Q0SourceOnlyW1021.lean. The existing U5 M8 terminal and m=0 feeder
 bridges then lift this to the authentic high stopping root.
 
@@ -42,14 +42,14 @@ private theorem pow_two_mod_three (n : Nat) :
       · have hn : (n+1)%2=0 := by omega
         simp [h,hn]
 
-/-- The exact residual identity and the cylinder w=1021 (mod 2048)
-force t=123+168*z with z=2 (mod 256). -/
+/-- The exact residual identity and the cylinder w=1021 (mod 1024)
+force t=123+168*z with z=2 (mod 128). -/
 theorem u5_w1021_t_param (w s m t : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
     (hp : m+1=8*t+1)
-    (hw : w%2048=1021) :
-    ∃ v, t=123+168*(256*v+2) := by
+    (hw : w%1024=1021) :
+    ∃ v, t=123+168*(128*v+2) := by
   have hId := BB6.Agent3U5M16Residual.u5_m8_t_identity
     w s m t hs hm hp
   have hrmod2 : (201+3360*w)%2=1 := by omega
@@ -92,41 +92,41 @@ theorem u5_w1021_t_param (w s m t : Nat)
     rw [hpow8mul] at hmod
     omega
   have ht168 : t%168=123 := by omega
-  have hdiv2048 : 2048∣2^(201+3360*w) := by
-    change 2^11∣2^(201+3360*w)
+  have hdiv1024 : 1024∣2^(201+3360*w) := by
+    change 2^10∣2^(201+3360*w)
     exact Nat.pow_dvd_pow 2 (by omega)
-  have hpow2048 : (2^(201+3360*w))%2048=0 :=
-    Nat.mod_eq_zero_of_dvd hdiv2048
-  have hpow2048mul : (20*2^(201+3360*w))%2048=0 := by
-    rw [Nat.mul_mod,hpow2048]
+  have hpow1024 : (2^(201+3360*w))%1024=0 :=
+    Nat.mod_eq_zero_of_dvd hdiv1024
+  have hpow1024mul : (20*2^(201+3360*w))%1024=0 := by
+    rw [Nat.mul_mod,hpow1024]
     norm_num
-  have hmod2048 : (211*t+1360+22155*w)%2048=0 := by
+  have hmod1024 : (211*t+1360+22155*w)%1024=0 := by
     rw [hId]
-    exact hpow2048mul
-  have ht2048 : t%2048=459 := by
-    have hconst : (211*459+1360+22155*1021)%2048=0 := by decide
-    have hinv : 211*1883=2048*194+1 := by norm_num
+    exact hpow1024mul
+  have ht1024 : t%1024=459 := by
+    have hconst : (211*459+1360+22155*1021)%1024=0 := by decide
+    have hinv : 211*859=1024*177+1 := by norm_num
     omega
   let z := (t-123)/168
   have htEq : t=123+168*z := by
     dsimp [z]
     omega
-  have hzmod : z%256=2 := by
-    rw [htEq] at ht2048
+  have hzmod : z%128=2 := by
+    rw [htEq] at ht1024
     omega
-  obtain ⟨v,hv⟩ : ∃ v, z=256*v+2 := by
-    refine ⟨z/256,?_⟩
+  obtain ⟨v,hv⟩ : ∃ v, z=128*v+2 := by
+    refine ⟨z/128,?_⟩
     omega
   exact ⟨v,by rw [htEq,hv]⟩
 
 /-- The y=3 terminal of the U5 M8 residual is unreachable on
-w=1021 (mod 2048). Its q=0 parent is excluded by the new
-z=2 (mod 256) source-only fan; q=1 is odd-right sum two; q>=2
+w=1021 (mod 1024). Its q=0 parent is excluded by the new
+z=2 (mod 128) source-only fan; q=1 is odd-right sum two; q>=2
 contradicts m+1=1 (mod 8). -/
 theorem blank_no_u5_residual_m8w_w1021 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%2048=1021) :
+    (hw : w%1024=1021) :
     ¬ CReach (302+512*s-4*(201+3360*w)) 3 := by
   have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
@@ -176,10 +176,10 @@ theorem blank_no_u5_residual_m8w_w1021 (w s m : Nat)
             have hX := BB6.Agent4U5SourceOnly.q0_parent_reach_implies_X
               t htpos hparent
             have hX' : CReach
-                (44*(123+168*(256*v+2))-1)
-                (42*(123+168*(256*v+2))-1) := by
+                (44*(123+168*(128*v+2))-1)
+                (42*(123+168*(128*v+2))-1) := by
               simpa only [hv] using hX
-            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t123_z2mod256
+            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t123_z2mod128
               v hX'
           · by_cases hq1 : q=1
             · subst q
@@ -209,7 +209,7 @@ theorem blank_no_u5_residual_m8w_w1021 (w s m : Nat)
 theorem blank_no_u5_B_s_m8w_w1021 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%2048=1021) :
+    (hw : w%1024=1021) :
     ¬ CReach (54+90*s) (127+211*s) := by
   have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
@@ -222,11 +222,11 @@ theorem blank_no_u5_B_s_m8w_w1021 (w s m : Nat)
   exact blank_no_u5_residual_m8w_w1021 w s m hs hm hw hterminal'
 
 /-- Both exact source parents of A_s are excluded, closing the full
-A_s branch on w=1021 (mod 2048). -/
+A_s branch on w=1021 (mod 1024). -/
 theorem blank_no_u5_A_s_m8w_w1021 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%2048=1021) :
+    (hw : w%1024=1021) :
     ¬ CReach (130+208*s) (94+152*s) := by
   have hdiv : 8∣2^(201+3360*w) := by
     change 2^3∣2^(201+3360*w)
@@ -254,12 +254,12 @@ theorem blank_no_u5_A_s_m8w_w1021 (w s m : Nat)
     exact hB hBreach
 
 /-- The high m=0 stopping root j=39+64*s is excluded for the
-U5 residual family w=1021 (mod 2048), using only exact source
+U5 residual family w=1021 (mod 1024), using only exact source
 predecessors and the authentic blank-section orbit. -/
 theorem blank_no_high_m0_u5_w1021 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%2048=1021) :
+    (hw : w%1024=1021) :
     ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
   intro hroot
   let t := 2*s+1
@@ -274,25 +274,25 @@ theorem blank_no_high_m0_u5_w1021 (w s m : Nat)
     simpa only [hx,hy] using hA
   exact blank_no_u5_A_s_m8w_w1021 w s m hs hm hw hA'
 
-/-- Every w=2048*n+1021 residual is non-vacuous and has an
+/-- Every w=1024*n+1021 residual is non-vacuous and has an
 authentic blank-unreachable high m=0 root. The root parameter remains
 j=18791 (mod 32768), so this is an additional parameter cylinder
 inside the existing containing root residue, not a new density claim. -/
 theorem every_w1021_residual_has_unreachable_root (n : Nat) :
     ∃ s m,
-      211*s+129=5*2^(201+3360*(2048*n+1021)) ∧
-      32*s=32+840*(2048*n+1021)+m ∧
+      211*s+129=5*2^(201+3360*(1024*n+1021)) ∧
+      32*s=32+840*(1024*n+1021)+m ∧
       (39+64*s)%32768=18791 ∧
       ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
   obtain ⟨s,m,hs,hm,_,_⟩ :=
     BB6.Agent4U5SourceOnlyHighStop.u5_residual_nonempty
-      (2048*n+1021)
-  have hw : (2048*n+1021)%2048=1021 := by omega
+      (1024*n+1021)
+  have hw : (1024*n+1021)%1024=1021 := by omega
   have hroot := blank_no_high_m0_u5_w1021
-    (2048*n+1021) s m hs hm hw
+    (1024*n+1021) s m hs hm hw
   have hres :=
     BB6.Agent4U5SourceOnlyHighStop.u5_high_root_parameter_residue
-      (2048*n+1021) s hs
+      (1024*n+1021) s hs
   exact ⟨s,m,hs,hm,hres.1,hroot⟩
 
 #print axioms pow_two_mod_three

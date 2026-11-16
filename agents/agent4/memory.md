@@ -575,19 +575,19 @@ I continued Agent 4's U5/Machine C work, taking the q=0 source-parent gap identi
 **Next actions:** obtain Agent 6's exact Lean preflight result; fix only concrete elaboration errors; inspect `#print axioms` for all exported theorems; then ask Agent 3 to integrate the source-only w=21 theorem into the maintained U5 high-stop path and run the existing manual source workflow. Keep the M16 quotient as independent corroboration, not a dependency. Do not expand further cylinders before this one is compiled and source-certified.
 
 
-## 2026-11-16 16:56 UTC — new U5 source-only cylinder w=1021 (mod 2048)
+## 2026-11-16 16:56 UTC — new U5 source-only cylinder w=1021 (mod 1024)
 
 Continued the U5 q=0 source-only program without changing the earlier t=19/t=99 results. Derived a new complete q-fan exclusion for
-`t=123+168*z`, `z=256*v+2`, and lifted it to a new residual parameter cylinder `w=1021 (mod 2048)`.
+`t=123+168*z`, `z=128*v+2`, and lifted it to a new residual parameter cylinder `w=1021 (mod 1024)`.
 
 **Exact source-parent result (Lean draft, not compiled):**
-- For `z=256v+2`, `43t-1=8(661+903z)=8 (mod 16)`, so the q-fan permits only q=0,1.
-- q=0 parent `P0=(19734+1849344v,19504+1827840v)` is forced through direct even/even, even/odd-four, six-even-right, and odd/odd valuation-three parents to `S0=(25082+2351328v,16819+1576848v)`, odd-right with sum 1 mod 4; blank-image exclusion.
-- q=1 parent `P1=(4932+462336v,26902+2521344v)` is forced through two even/even sum-two direct parents and a new sum-4-mod-8 direct-parent lemma to `D3=(52002+4874688v,3361+315168v)`, then even/odd-four to `Q3=(27679+2594928v,15519+1455048v)`, odd/odd with sum 2 mod 4; blank-image exclusion.
+- For `z=128v+2`, `43t-1=8(661+903z)=8 (mod 16)`, so the q-fan permits only q=0,1.
+- q=0 parent `P0=(19734+924672v,19504+913920v)` is forced through direct even/even, even/odd-four, six-even-right, and odd/odd valuation-three parents to `S0=(25082+1175664v,16819+788424v)`, odd-right with sum 1 mod 4; blank-image exclusion.
+- q=1 parent `P1=(4932+231168v,26902+1260672v)` is forced through two even/even sum-two direct parents and a new sum-4-mod-8 direct-parent lemma to `D3=(52002+2437344v,3361+157584v)`, then even/odd-four to `Q3=(27679+1297464v,15519+727524v)`, odd/odd with sum 2 mod 4; blank-image exclusion.
 - The new helper `even_even_sum_four_mod8_reach_implies_direct` is justified from the complete original-source even/even parent fan: its zero-left and even-a bounce branches both have sums divisible by 8, while the target sum is 4 mod 8.
 - q≥2 would force 16 | (43t-1), contradicting the residue 8 mod 16.
 
-The residual identity `211*t+1360+22155*w=20*2^(201+3360*w)` gives, for `w=1021 (mod 2048)`, `t=459 (mod 2048)`. Modulo 3, 7, and 8 it gives `t=123 (mod 168)`; therefore `z=2 (mod 256)`. New Lean drafts:
+The residual identity `211*t+1360+22155*w=20*2^(201+3360*w)` gives, for `w=1021 (mod 1024)`, `t=459 (mod 1024)`. Modulo 3, 7, and 8 it gives `t=123 (mod 168)`; therefore `z=2 (mod 128)`. New Lean drafts:
 - `im-results/agent4-u5-source-closure/U5Q0SourceOnlyW1021.lean`
 - `im-results/agent4-u5-source-closure/U5SourceOnlyHighStopW1021.lean`
 and full arithmetic note `W1021-derivation.md`. The second module composes the new terminal y=3 exclusion with the existing exact U5 M8 chain and m=0 feeder, producing `every_w1021_residual_has_unreachable_root`.
