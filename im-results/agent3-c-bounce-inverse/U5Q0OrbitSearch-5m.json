@@ -1,0 +1,65 @@
+{
+  "status": "exploratory_computation_not_proof",
+  "source": "U5Q0OrbitSearch.js; secNext transcription from im-results/agent46-c-jump/FastSectionDef.lean",
+  "steps": 5000000,
+  "q_search": {
+    "q_range": "0..19",
+    "target_t_residues_mod_168": [
+      81,
+      123,
+      39
+    ],
+    "candidate_count": 13951,
+    "exact_fan_hits": []
+  },
+  "q0_linear_test": {
+    "linear_form": "85*a - 86*k",
+    "target": 46,
+    "exact_hits": [],
+    "minimum_absolute_difference": "10",
+    "minimum_state": {
+      "step": 5646,
+      "a": "13188",
+      "k": "13034",
+      "linear_form": "56",
+      "M": "39266"
+    }
+  },
+  "states_with_M_divisible_by_128": 39151,
+  "first_million_residue_coverage_mod_odd_m": {
+    "5": 25,
+    "7": 49,
+    "11": 121,
+    "13": 169,
+    "17": 289,
+    "19": 361,
+    "23": 529,
+    "29": 841,
+    "31": 961,
+    "37": 1369,
+    "41": 1681,
+    "43": 1849
+  },
+  "first_million_residue_coverage_of_85a_minus_86k_mod_powers_of_two": {
+    "4": 4,
+    "8": 8,
+    "16": 16,
+    "32": 32,
+    "64": 64,
+    "128": 128,
+    "256": 256,
+    "512": 512,
+    "1024": 1024,
+    "4096": 4096,
+    "16384": 16384
+  },
+  "final_state_after_five_million_steps": {
+    "a": "19358556",
+    "k": "7819034"
+  },
+  "caveats": [
+    "The computation is not a proof of non-reachability or of any global orbit property.",
+    "The simulator should be independently checked against FastSectionDef.lean before relying on it.",
+    "The finite residue coverage observations do not establish a general modular theorem."
+  ]
+}
