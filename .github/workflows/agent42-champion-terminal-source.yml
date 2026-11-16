@@ -778,6 +778,141 @@ jobs:
             exit 1
           fi
 
+          # Compose the current authentic-root continuation, middle 20 through 26.
+          # First compile each newly used original-source row at its exact import boundary.
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m1-even-residue4/M1EvenResidueFourBridge.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-residue4-bridge-axioms.log
+          lean -o M1EvenResidueFourBridge.olean M1EvenResidueFourBridge.lean 2>&1 | tee /tmp/a42-terminal/m1-even-residue4-bridge-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-residue4-bridge-axioms.log; then
+            echo '::error::sorryAx found in m=1 residue-four finite bridge'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m1-even-residue4/M1EvenResidueFourQ4PrefixRun.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-residue4-prefix-axioms.log
+          lean -o M1EvenResidueFourQ4PrefixRun.olean M1EvenResidueFourQ4PrefixRun.lean 2>&1 | tee /tmp/a42-terminal/m1-even-residue4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-residue4-prefix-axioms.log; then
+            echo '::error::sorryAx found in m=1 residue-four q4 prefix'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m1-even-residue4/M1EvenResidueFourSource.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-even-residue4-source-axioms.log
+          lean -o M1EvenResidueFourSource.olean M1EvenResidueFourSource.lean 2>&1 | tee /tmp/a42-terminal/m1-even-residue4-source-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-residue4-source-axioms.log; then
+            echo '::error::sorryAx found in m=1 residue-four counted source increment'
+            exit 1
+          fi
+
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M2EvenResidueTwo.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-residue2-axioms.log
+          lean -o M2EvenResidueTwo.olean M2EvenResidueTwo.lean 2>&1 | tee /tmp/a42-terminal/m2-even-residue2-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m2-even-residue2-axioms.log; then
+            echo '::error::sorryAx found in m=2 residue-two q4 source increment'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M2EvenResidueTwoCounted.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-residue2-counted-axioms.log
+          lean -o M2EvenResidueTwoCounted.olean M2EvenResidueTwoCounted.lean 2>&1 | tee /tmp/a42-terminal/m2-even-residue2-counted-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m2-even-residue2-counted-axioms.log; then
+            echo '::error::sorryAx found in m=2 residue-two counted increment'
+            exit 1
+          fi
+
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1OddResidueOneBridge.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-odd-residue1-bridge-axioms.log
+          lean -o M1OddResidueOneBridge.olean M1OddResidueOneBridge.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-residue1-bridge-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-residue1-bridge-axioms.log; then
+            echo '::error::sorryAx found in m=1 residue-one finite bridge'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1OddResidueOneTargetLeft.lean" /tmp/a42-terminal/
+          lean -o M1OddResidueOneTargetLeft.olean M1OddResidueOneTargetLeft.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1OddResidueOneHeadBound.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-odd-residue1-head-bound-axioms.log
+          lean -o M1OddResidueOneHeadBound.olean M1OddResidueOneHeadBound.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-residue1-head-bound-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-residue1-head-bound-axioms.log; then
+            echo '::error::sorryAx found in m=1 residue-one half-line head bound'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M1OddResidueOneSource.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m1-odd-residue1-source-axioms.log
+          lean -o M1OddResidueOneSource.olean M1OddResidueOneSource.lean 2>&1 | tee /tmp/a42-terminal/m1-odd-residue1-source-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m1-odd-residue1-source-axioms.log; then
+            echo '::error::sorryAx found in m=1 residue-one counted source increment'
+            exit 1
+          fi
+
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0EvenEightQ4Bridge.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-eight-bridge-axioms.log
+          lean -o M0EvenEightQ4Bridge.olean M0EvenEightQ4Bridge.lean 2>&1 | tee /tmp/a42-terminal/m0-even-eight-bridge-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-eight-bridge-axioms.log; then
+            echo '::error::sorryAx found in m=0 even 8q finite bridge'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0EvenEightQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-eight-prefix-axioms.log
+          lean -o M0EvenEightQ4Prefix.olean M0EvenEightQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m0-even-eight-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-eight-prefix-axioms.log; then
+            echo '::error::sorryAx found in m=0 even 8q q4 prefix'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M0EvenEightGenericSource.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-eight-source-axioms.log
+          lean -o M0EvenEightGenericSource.olean M0EvenEightGenericSource.lean 2>&1 | tee /tmp/a42-terminal/m0-even-eight-source-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-eight-source-axioms.log; then
+            echo '::error::sorryAx found in m=0 even 8q counted source increment'
+            exit 1
+          fi
+
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/TM63RootMiddle20.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-middle20-axioms.log
+          lean -o TM63RootMiddle20.olean TM63RootMiddle20.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle20-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-middle20-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-20 composition'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/TM63RootMiddle21.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-middle21-axioms.log
+          lean -o TM63RootMiddle21.olean TM63RootMiddle21.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle21-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-middle21-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-21 composition'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/TM63RootMiddle22.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-middle22-axioms.log
+          lean -o TM63RootMiddle22.olean TM63RootMiddle22.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle22-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-middle22-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-22 composition'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/TM63RootMiddle23.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-middle23-axioms.log
+          lean -o TM63RootMiddle23.olean TM63RootMiddle23.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle23-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-middle23-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-23 composition'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/TM63RootMiddle24.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-middle24-axioms.log
+          lean -o TM63RootMiddle24.olean TM63RootMiddle24.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle24-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-middle24-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-24 composition'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63RootMiddle25.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-middle25-axioms.log
+          lean -o TM63RootMiddle25.olean TM63RootMiddle25.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle25-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-middle25-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-25 composition'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63RootMiddle26.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-middle26-axioms.log
+          lean -o TM63RootMiddle26.olean TM63RootMiddle26.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle26-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/tm63-root-middle26-axioms.log; then
+            echo '::error::sorryAx found in authentic-root middle-26 composition'
+            exit 1
+          fi
+
           # Agent 42's integration closes the final (1,1) reset premise.
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/TM63FinalResetIntegration.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m1-final-reset-integration-axioms.log
