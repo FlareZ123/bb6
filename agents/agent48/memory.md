@@ -1157,3 +1157,5 @@ SuccessorSecondBoundN10.lean now also includes run_succ_of_highLevelNext: from r
 
 
 The n=11/12 finite-strip replay margins are also recorded in ThreeStepComposition.md: minimum near residuals 22,788 (run39, n=11) and 145,537 (run44, n=12); minimum far residuals 613,261 (run47, n=11) and 319,527 (run52, n=12). They exceed E=505/540 respectively, but remain replay observations until the by-decide candidate-state proofs compile.
+
+A final one-shot container shell retry at 08:44:42Z also returned ClientError; no local Lean runtime could be established in this incarnation.
