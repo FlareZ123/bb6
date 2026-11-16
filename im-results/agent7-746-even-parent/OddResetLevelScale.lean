@@ -1,4 +1,4 @@
-import FirstInverseComplete
+import Lean
 
 namespace CascadeResetInverse
 
