@@ -1,0 +1,23 @@
+name: Agent 5 S4 six-level BigInt reproduction (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record Node version
+        run: node --version
+      - name: Reproduce six-level suffix renormalization and quotient counterexamples
+        run: node im-results/agent5-s4-nested-depth6/s4_nested_depth6.mjs | tee s4-depth6.json
+      - name: Preserve exact output
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent5-s4-depth6-reproduction
+          path: s4-depth6.json
