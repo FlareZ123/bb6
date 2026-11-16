@@ -1098,3 +1098,37 @@ Tightened `scan_terminal_budget_family.js` to include the exact terminal-ratio s
 
 
 Final static-review note: `RootExclusion.lean` now uses the actual source function `highLevelNext` in its induction step and applies `next_strict_mass` with implicit state arguments inferred from that step. Its numeric contradictions use only `omega`, avoiding reliance on an unconfirmed `norm_num` import. This is still not a compile result.
+
+## 2026-11-16 07:38Z incarnation: n=10 three-step composition
+
+Claimed the existing Agent48 identity at 07:38:09Z. This incarnation did not obtain a working local runtime: container.exec, python.exec, and python_user_visible returned concrete ClientErrors. No Lean compile was performed and no CI was dispatched. Critic's workflow guidance was followed: first source preflight should remain in the consolidated rooted-mass workflow, not a new duplicate workflow. Messages were sent to Agent7 and Agent8; no reply or new workflow run was observed before this checkpoint.
+
+### New intermediate files
+
+All files below are under im-results/agent48-623-budget-composition/; none is a publishable result or a compiled theorem yet.
+
+- ThreeStepComposition.md: uniform n≥10 arithmetic for q→p→h→halt. q→p gives p₂≤3m+6n+9≤3^(n+1)+6n−3. The p terminal-parent corridor gives p₁+p₂≤Mₙ=51·3ⁿ+102n+17. Taking terminal depth N=n+2 and K=n+5 gives the largest hK premise ≤204·3ⁿ+414n+105<3^(n+5) for n≥10, and terminal window Bₙ=9n+38. With bridge error eₙ=26n+46 and c≤9, Bₙ+eₙ+c=35n+93≤Eₙ=35n+120 (margin 27). p's even gap-two case is excluded by the p corridor no-gate condition at k=n+6; q's even gap-two case still needs a separate root-mass interval exclusion.
+- TerminalWindowAtDepth12.lean: fixed n=10 p-terminal-parent helper. Intended conclusion: if p is a genuine root state, p₂≤177204, mass(p)≥39367, and p→h→halt, then one of the ratio-four windows has width ≤128. It applies blank_root_two_step_terminal_parent_corridor and the four TerminalRatio4Source branches. The gateBudget fourth disjunct needs both parity premises; the final witness includes both hxEven and hyEven. Uncompiled.
+- SuccessorSecondBoundN10.lean: source q→p output-depth helper. Intended conclusion p₂≤3·min(q₁,q₂)+69 for a successful genuine root transition in the n=10 scale band. It extracts the four highLevelNext sectors, uses direct drainB_upper_linear_log in three sectors and evalA_positive_depth + evalA_upper_log + drainB_upper_linear_log in even-near, and excludes q even gap-two via n10_even_gap_two_root_excluded. Uncompiled.
+- NearScaleTransferN10.lean: two arithmetic lemmas proving q₁≤q₂ for a near q state when the combined bridge/terminal strip is either absDiff v (13*u)≤470 or absDiff (7*u) (4*v)≤470, assuming 19680≤min(u,v). Uncompiled.
+- RootMassGapN11N12.lean: draft n=11/n=12 finite root-mass corridor exclusions. It declares run47–55 by decide, derives near/far mass intervals for E=505/540, and excludes the n=11/n=12 even gap-two intervals using existing run36–46 checkpoints. The run_mass_mono upper-bracket argument order was corrected. Uncompiled.
+
+README.md in this directory and ThreeStepComposition.md index the drafts. The directory's pre-existing generic three-step counterexample and RootExclusion.lean were preserved; they show why generic budget implications alone cannot establish three-step survival. All new work relies on genuine root history and remains in im-results/.
+
+### Source bridge composition
+
+The existing Agent49DrainLinearTerminalSource theorems oddFarGap, evenFarGap, oddNearGap, and evenNearGap already package the first-/third-counter estimates from drainB / evalA; no new derivation is needed. Each returns .1 (right-ray gap, cR=1) and .2 (left-ray gap, cL=5). At n=10, right/left error radii are:
+- odd far: 119 / 249;
+- even far: 101 / 222;
+- odd near: 98 / 184;
+- even near: 152 / 306.
+
+For p terminal-far, use the left gap and c=5; for p terminal-near, use the right gap and c=1. Uniform wrapper inputs B=128, e=306, c≤9 satisfy the existing n=10 bridge caps. For q-near, combine hterm and hbridge to form the relevant 470-strip, apply NearScaleTransferN10, then transfer the scale band to q₁. The final n=10 task is a four-by-four source-sector composition around the three local helpers and existing root-mass wrappers.
+
+### Next actions
+
+1. Obtain the focused n=10 source preflight in the consolidated rooted-mass workflow; do not dispatch a duplicate workflow. Local runtime was unavailable in this incarnation.
+2. Compile SuccessorSecondBoundN10.lean, TerminalWindowAtDepth12.lean, and NearScaleTransferN10.lean; fix any Lean errors before composing.
+3. Formalize the four q-source bridge calls with oddFarGap / evenFarGap / oddNearGap / evenNearGap, classify p's terminal branch, and call the existing four n=10 bridge-exclusion wrappers.
+4. Compile RootMassGapN11N12.lean after the base root-mass closure; its exact run47–55 checkpoints are still candidates until by decide is checked.
+5. Do not claim #623 nonhalting or any BB(6) value until the complete source composition is compiled and its hypotheses are discharged.
