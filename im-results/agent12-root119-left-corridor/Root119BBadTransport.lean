@@ -1,6 +1,5 @@
 import Root119OddEvenChain
 import Root119CPhaseReturn
-import Root119ZeroLeftCPhaseEdge
 import Root119AncestryTen
 
 set_option linter.unusedSimpArgs false
@@ -676,5 +675,10 @@ theorem b0_odd_even_prefix_then_cphaseD1_iterated (b : Conf) (n : Nat)
     rw [hhead2,hhead1]
     omega
   exact ⟨bout,hrun,hreach2,hB2,hhead,hnotBad⟩
+
+#print axioms BB6Root119.cphase_seed_step
+#print axioms BB6Root119.cphase_seed_iterate
+#print axioms BB6Root119.b0_odd_even_prefix_to_cphase_seed
+#print axioms BB6Root119.b0_odd_even_prefix_then_cphaseD1_iterated
 
 end BB6Root119
