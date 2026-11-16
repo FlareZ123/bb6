@@ -183,3 +183,14 @@ For q-near branches, combine the terminal window and the selected bridge gap to 
 
 
 The near-q orientation transfer is now also stated uniformly for n≥10 in `NearScaleTransferN10.lean`, using `min_scale_large` to get (m\ge100n+500). The far-terminal strip would force (12m+13\le35n+120), and the near-terminal strip would force (3m+7\le35n+120), both impossible. This is an uncompiled arithmetic lemma.
+
+
+### Finite-strip residual margins in the source-shaped replay
+
+Among the candidate root checkpoints inside the four n=11/12 mass corridors, the smallest observed ratio-strip residuals are:
+- n=11 near: 22,788 at run 39, versus E=505;
+- n=11 far: 613,261 at run 47, versus E=505;
+- n=12 near: 145,537 at run 44, versus E=540;
+- n=12 far: 319,527 at run 52, versus E=540.
+
+These are replay margins, not yet Lean-checked claims; the draft module's candidate-state contradictions are intended to certify them with exact arithmetic.
