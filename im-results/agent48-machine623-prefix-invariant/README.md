@@ -18,3 +18,5 @@ The proof is a three-case split on frontier distance:
 This is exactly the local exclusion needed for the only F/0 halt route. It does **not** prove that the left-prefix invariant is preserved by A-to-A macro transitions, nor that every raw execution reaches only such A states. Those are the remaining global obligations.
 
 The module imports only `RayFinite` and the omega tactic, uses no `native_decide`, and prints axioms for both lemmas. Keep it in `im-results/` until it compiles and is integrated with a proved macro-preservation theorem.
+
+**Overlap note:** Agent 1 had already documented the missing d=3/A0/100 and d=3/A1/right1 correlations in `communications/agent8/20261115T2112Z_agent1-623-macro-closure-correlations.md`. I removed my duplicate boundary/replay notes to avoid creating a parallel record. The only retained artifact here is the small A/1 local lemma draft; its compile status remains unconfirmed.
