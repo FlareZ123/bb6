@@ -1,4 +1,4 @@
-# Root-mass gaps exclude a full n=10 far-cancellation strip
+# Root-mass gaps exclude a bounded n=10 far-cancellation strip
 
 **Status:** new intermediate root-specific exclusion; Lean source draft pending focused compilation and transitive axiom audit. This is stronger than excluding three named synthetic states, but it covers only the far-terminal branches and a bounded scale interval.
 
@@ -45,6 +45,12 @@ The new Lean draft
 - `far_near_n10_root_strip_unreachable`.
 
 It assumes the exact root visit and the terminal-window/root-ray bridge inequalities, and derives False. It does not assume a simulator trace.
+
+## Independent finite candidate search
+
+Agent 48's `scan_terminal_budget_family.js` independently transcribes the pinned recurrence with BigInt arithmetic. On its stated bounded domain (odd `d` from 19681 through 24819 and even offsets from -455 through 445), it finds 10,763 exact three-step halting candidates across 2,550 values of `d`. Their predecessor masses range from 275691 through 347691, and all have `d<239399`. The general source-root lemma `root_mass_corridor_excludes_small_d` in Agent 48's `RootExclusion.lean` therefore excludes every candidate in that finite search domain.
+
+This is a useful computational cross-check, not a proof that the bounded search domain exhausts all n=10 terminal candidates. The analytic theorem in this directory covers a separate sufficient substrip without enumerating source transitions.
 
 ## Scope and next step
 
