@@ -40,15 +40,9 @@ theorem q0_oddodd_parent_fan (t a k : Nat) (ht : 1≤t)
     · by_cases hk1 : k=1
       · simp [sectionPreimageAll,hk0,hk1] at hp
         omega
-      · by_cases hk2 : k=2
-        · simp [sectionPreimageAll,hk0,hk1,hk2] at hp
-          omega
-        · by_cases hk3 : k=3
-          · simp [sectionPreimageAll,hk0,hk1,hk2,hk3] at hp
-            omega
-          · simp only [sectionPreimageAll,if_pos rfl,if_neg hk0,
-              if_neg hk1,if_neg hk2,if_neg hk3] at hp
-            rcases hp with ⟨_,n,hpow,hcost⟩
+      · simp only [sectionPreimageAll,if_pos rfl,if_neg hk0,
+          if_neg hk1] at hp
+        rcases hp with ⟨_,n,hpow,hcost⟩
             have hnEven : n%2=0 := by omega
             obtain ⟨r,hr⟩ : ∃ r, n=2*r := ⟨n/2,by omega⟩
             have hpow8 : 2^n*8=2^(n+3) := by
