@@ -516,3 +516,36 @@ I requested exact local preflight from Agents 11, 15, and 43, and requested Agen
 Non-vacuity is elementary but not yet formalized: 2^210≡1 (mod211), 2^201≡68 (mod211), and 3360=16*210, so 5*2^(201+3360w)≡129 (mod211) for every w. Thus s=(5*2^(201+3360w)-129)/211 is integral. The bound 2^r≥r+1 gives s≥27w+1, hence m=32s-32-840w≥24w≥0. Formalizing this existence theorem is a useful next step after exact Lean source preflight.
 
 Current result remains an intermediate, conditional infinite-family exclusion, not an exact BB(6) result or global BB(6) bound. Do not move it into results/ until exact source compilation and mathematical review succeed.
+
+
+## 2026-11-16 10:36Z checkpoint — U5 M16 parent-fan extension
+
+Claimed Agent 3 at 2026-11-16T10:19:39.430Z after confirming the prior Agent 3 claim (08:29:56Z) was over 100 minutes old and the lease had been released. Current lease is not to be refreshed; the 70-minute release threshold is 11:29:39.430Z.
+
+### Concrete source repair and new mathematical extension
+
+- Found a definite missing declaration: U5Q0M16HighStop.lean called BB6.Agent3U5M16ResidualClosure.blank_no_u5_q0_parent_w21, but U5Q0M16ResidualClosure.lean contained only the two-step pullback lemma. Added the missing wrapper, composing that pullback with u5_m8_t_mod32 and q0_X_not_reach. The closure file now explicitly closes its namespace.
+- Reconstructed the Agent 43 24^3 M16 quotient independently in functions.exec, using the exact nextC cases from the existing verifier. It reproduces the certified census exactly: 7,115 reachable abstract states and 34,992 representative edges. Treat this as a computational cross-check; the proof authority remains the kernel-checked Agent 43 archive.
+- Derived a new q=0 parent-fan exclusion for t=99 (mod 128). Writing t=128n+99, the exact source fan 43t-1=4^d U, U≥4 even, a=U-2, 2k+U+6d=128t-8 has only depths d=0,1,2. Their quotient projections are:
+  - d=0: (14,12,0), absent;
+  - d=1: (22,21,0), absent;
+  - d=2: (8,17,0), (16,21,0), (8,9,0), or (16,13,0), by n mod 4, all absent.
+  - d≥3 impossible since 43t-1=32(172n+133) with odd bracket.
+- The residual identity reduced mod 1024 proves w ≡ 37 (mod 128) -> t ≡ 99 (mod 128). Added u5_m8_t_mod128_w37, the q=0 closure wrapper, and the full high m=0 root exclusion through the y=3 terminal, B_s, and A_s.
+- Expanded verify_u5_m16_states.py from five to eleven absent c=0 states. Updated im-results/agent3-c-bounce-inverse/README.md with the w=37 cylinder and the exact M16 frontier: the quotient parent-fan method closes exactly z mod16 in {3,7,9,11,15} for t=123+168z. For the other eleven residues at least one source-parent projection is in the quotient's seen set, so this quotient alone cannot close them; that does not prove those real parents reachable.
+
+### Current source blobs
+
+- U5Q0M16Core.lean: fb333936ecc5f9181d83e6c9e9b2ab01e8e5f850
+- U5Q0M16Residual.lean: b5b4c2f31d6153d370d0570fd2976c9169cd5f5f
+- U5Q0M16ResidualClosure.lean: fcab83d09fe3610fc73164de56e6888cad944dd8
+- U5Q0M16HighStop.lean: d1c27d8eb1dbd2e58665c15a35dc1052dd553c7a
+- verify_u5_m16_states.py: 92f393f8e06336e5806fcd1b5ec7f8d2d3095603
+
+### Verification / coordination status
+
+- Exact full-source Lean compilation has NOT yet been performed. The local container.exec and Python runtimes returned tool-level errors, so I could not reconstruct the uploaded Lean 4.36.0-rc2 archive in this invocation.
+- Sent Agent 11 a consolidated request to compile the pinned exact dependency closure and audit both w=21 and w=37 theorems; it includes the current blob SHAs and explicitly says not to dispatch CI before local preflight. Also asked Agent 42 to independently check the six new CCert.seen states and q≥2 cylinders. No response had arrived by this checkpoint.
+- Existing manual workflow .github/workflows/agent11-c-diagonal-late.yml already has the u5_q0_m16_only path and compiles Core, Residual, ResidualClosure, HighStop plus the Python quotient audit. Do not dispatch until the exact local preflight is clean.
+- Keep the result in im-results/; it is an intermediate conditional root exclusion, not a complete Machine C decision or BB(6) bound.
+- Next: obtain Agent 11's exact-source compile diagnostics; repair the first real failure only; then run the existing manual workflow if the local preflight passes. Independently check non-vacuity of the w=37 residual cylinder (the known modular argument uses 2^210≡1 and 2^201≡68 mod 211).
