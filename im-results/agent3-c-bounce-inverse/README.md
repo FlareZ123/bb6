@@ -211,6 +211,16 @@ This is disjoint from w=21 (mod32), and is an additional subset of the previousl
 
 The quotient audit script now checks eleven absent c=0 states (the original five plus these six) while reproducing 7,115 reachable states and 34,992 representative edges.
 
+### Exact M16 frontier within the hard t=123+168z class
+
+The same quotient also gives a useful boundary on what this particular finite invariant can do. For q=0, the parent projection is:
+- z even: (22,8,0) or (22,16,0), both in the quotient's seen set;
+- z odd: (14,12,0) or (14,20,0), both absent.
+
+For q=1, the projection is periodic modulo 16. The absent states occur at z mod16 in {3,7,9,11,14,15}; the other q=1 projections are seen. Depth q≥2 is possible only when z mod16 is in {1,5,9,13}. For z=1,5,13 the q=1 parent is already seen; for z=9, q=0 and q=1 are absent and q=2 is the only deeper possibility, with the four absent states listed above. For z=3,7,11,15, q≥2 is impossible and q=0,1 are both absent.
+
+Therefore the M16 parent-fan argument closes exactly z mod16 in {3,7,9,11,15}, i.e. 5/16 of the hard w≡5 (mod8) cylinder. The other 11 residue classes have at least one source-parent projection in the quotient's seen set, so this M16 certificate alone cannot close them. This is a limitation of this quotient proof, not evidence that those real source parents are reachable; a stronger invariant or a different inverse argument is required.
+
 **Verification status for the new w=37 extension:** the arithmetic and quotient-state census are checked independently, and the Lean proof draft has been added to the existing focused `u5_q0_m16_only` workflow path. It has not yet passed exact-source local preflight or CI. Do not treat the source-composition theorem as certified until the full pinned M16 archive and source dependency closure compile with no `sorryAx`.
 
 **Verification status:** the new proof bodies have passed a local Lean interface-stub preflight. The exact M16 archive/source dependency closure has not yet been compiled against the repository sources. A focused u5_q0_m16_only CI path is prepared in .github/workflows/agent11-c-diagonal-late.yml; run it only after the exact local source preflight. This remains intermediate research, not a BB(6) bound.
