@@ -75,6 +75,10 @@ The actual residual equations sharpen the odd t parameter. Since r=201+3360w is 
 
 For every q in the exact parent fan, this also gives U≡2 (mod 3), a=U-2≡0 (mod 3), and k≡1 (mod 3). These are parameter constraints to exploit in a later blank-orbit invariant; by themselves they do not imply nonreachability.
 
+## Related existing exclusion
+
+The subfamily closures used by the current M8 integration are not new independent lemmas: `im-results/agent11-c-low58/EvenOddThreeX128W.lean` already proves `BB6.Agent11Y3X128W.blank_no_y3_x128w`, excluding the terminal target (128t+10,3) when t is even or t≡5 (mod 8). Its exact two-parent theorem is more general than the q=0-only helper in `U5M8Q0Partial.lean`. The M8 proof currently reuses the q=0-specific helpers because they also package the residual relation t+w≡0 (mod 8); a later consolidation can instead call the general theorem after deriving t's residue. Do not count the two q=0 closures as a new mathematical discovery.
+
 ## Next mathematical task
 
 For t≡3 (mod 8), eliminate every admissible parent in the finite-but-parameter-dependent fan above, or prove a reusable invariant that excludes the whole fan. For t≡1,7 (mod 8), continue the unique parent through the appropriate even/odd or even/even source normalization. Do not infer blank-unreachability from the parent classification alone.
