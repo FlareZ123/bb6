@@ -62,3 +62,5 @@ These Lean proofs are source-level drafts pending focused Lean 4.36.0-rc2 compil
 The exact search returns **10,763** three-step halting candidates across **2,550** distinct d values. Their predecessor masses range from **275,691** to **347,691**, all strictly between the step-39 and step-41 masses. Exactly one has mass 293,537: q3=(272586,20951), which is not the step-40 root state. Hence the root mass-gap theorem excludes every candidate in this finite search domain.
 
 This is computational evidence from a source transcription, not a proof that the family is complete outside the stated finite search domain. The generic bridge/budget implication is false; the blank-root mass gap excludes this particular large finite family, but no all-time root-history exclusion has been established.
+
+The latest `RootExclusion.lean` also contains `root_mass_corridor_excludes_small_d`: any surviving root state with mass strictly between 213720 and 347700 and second coordinate below 239399 is impossible. This single theorem covers every candidate in the finite scan domain, whose d is at most 24819, without enumerating the 10,763 cases in Lean.
