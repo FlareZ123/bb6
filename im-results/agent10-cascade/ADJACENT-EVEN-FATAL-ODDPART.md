@@ -33,6 +33,63 @@ Substituting \(2u+5=3^{t+1}d\) gives the exact equation
 This is not the direct odd-output fatality case \(u=F_n\) for arbitrary
 \(n\); that separate branch remains all-\(t\).
 
+## Fatal histories split at the last odd reset
+
+For a halting trajectory, take \(K\) to be the level of its **last odd
+reset**. The remaining tail is even-only. The existing
+\(\texttt{no\_even\_then\_even\_fatal}\) theorem in
+\(\texttt{SweepNoEvenEvenFatal.lean}\) rules out two consecutive even
+level exits in the BB(6) fatal range. Thus the tail has only two shapes:
+
+1. the odd-reset child itself is a fatal state \(F_n\) (direct odd-output
+   fatality); or
+2. the child enters level \(K+1\), undergoes same-level even resets, and
+   the final even exit reaches \(F_{K+2}\) (the adjacent-even route
+   treated above).
+
+The direct branch also has a useful low-valuation cutoff. Put
+\[
+G(n)=8\cdot2^n-2n-3.
+\]
+A direct odd-output fatality satisfies \(3^{t+1}d=G(n)\), and \(G\) is
+strictly increasing.
+
+- For \(t=0\), the source band gives
+  \[
+  18\cdot2^K+3\le G(n)\le24\cdot2^K-3.
+  \]
+  But
+  \[
+  G(K+1)=16\cdot2^K-2K-5<18\cdot2^K+3
+  \]
+  and
+  \[
+  G(K+2)=32\cdot2^K-2K-7>24\cdot2^K-3.
+  \]
+  Therefore **direct odd-output fatality is impossible for \(t=0\)**.
+
+- For \(t=1\), the source band gives
+  \(3\cdot2^K+1\le d\le4\cdot2^K-1\), hence
+  \[
+  27\cdot2^K+9\le G(n)=9d\le36\cdot2^K-9.
+  \]
+  The values at \(K+1,K+2,K+3\) place only \(G(K+2)\) in this
+  interval. Strict monotonicity therefore forces \(n=K+2\). This is
+  exactly the \(j=0\) direct case of the t=1 Q-parent equation.
+
+Consequently, for the last odd reset before a BB(6) halt:
+
+- \(t=0\) must use the adjacent-even route; its unique per-level
+  candidate cannot have an even parent from \(K-1\), so its entry must
+  come from an odd reset at a lower level.
+- \(t=1\) direct fatality is the \(j=0\) Q-parent case; its adjacent-even
+  fatality is the \(j\ge2\) Q-parent case.
+- \(t\ge2\) is excluded from the adjacent-even route, but remains possible
+  in the direct odd-output equation \(3^{t+1}d=G(n)\).
+
+This decomposition is the reason the \(t\le1\) theorem is useful: it
+does not claim to solve the all-\(t\) direct branch.
+
 ## Valuation cutoff: only \(t=0\) or \(t=1\)
 
 Equation (1) and the lower source-band bound imply
