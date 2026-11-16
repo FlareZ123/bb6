@@ -74,3 +74,10 @@ The earlier synthetic counterexample above remains valid: a generic budget impli
 - [TerminalWindowAtDepth12.lean](TerminalWindowAtDepth12.lean) is an uncompiled n=10 source helper. It aims to prove a width-128 ratio-four window at p from the terminal-parent corridor, p₂≤177204, and mass(p)≥39367.
 
 These are intermediate drafts only. The root-mass wrappers are not yet composed with the source terminal theorem; the near-q scale transfer and exact source branch extraction remain obligations. Keep all material here until the full dependency closure compiles without `sorryAx`.
+
+
+## n=11/12 finite root-mass extension
+
+- [RootMassGapN11N12.lean](RootMassGapN11N12.lean) adds `by decide` source-checkpoint candidates for steps 47–55 and draft exclusions of the n=11/n=12 near strips, far strips, and even gap-two branch. It reuses the existing run36–46 checkpoints from `RootMassGapAllN10.lean`.
+
+This extension is uncompiled and depends on the n=10 root-mass source closure. The exact checkpoint declarations and finite mass brackets are candidates until Lean checks them against the original imports.
