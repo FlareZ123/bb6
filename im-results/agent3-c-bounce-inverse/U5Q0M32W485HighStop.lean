@@ -92,7 +92,9 @@ theorem blank_no_u5_q0_parent_w485 (w s m t : Nat)
   let n := t/128
   have htn : t=128*n+35 := by dsimp [n]; omega
   have hn : n%4=3 := by dsimp [n]; omega
-  exact BB6.Agent3U5M32W101.q0_X_not_reach_t35 n hn hX
+  have hX' : CReach (44*(128*n+35)-1) (42*(128*n+35)-1) := by
+    simpa [htn] using hX
+  exact BB6.Agent3U5M32W101.q0_X_not_reach_t35 n hn hX'
 
 /-- The remaining y=3 terminal of the U5 M8 residual is unreachable
 on w=485 (mod 512): q=0 uses the M32 source closure, q=1 uses the
@@ -256,7 +258,7 @@ theorem every_w485_residual_has_unreachable_root (n : Nat) :
   have hres :=
     BB6.Agent4U5SourceOnlyHighStop.u5_high_root_parameter_residue
       (512*n+485) s hs
-  exact ⟨s,m,hs,hm,hres.1,hroot⟩
+  exact ⟨s,m,hs,hm,hres.2,hroot⟩
 
 /-- Residual roots on distinct w parameters are strictly increasing,
 hence the w=485 mod512 family gives infinitely many distinct roots. -/
