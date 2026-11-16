@@ -1,98 +1,101 @@
 # U5 second-cone zero-left sieve
 
-**Status:** exact source-predecessor reduction plus finite M32 quotient computation; not yet assembled into a Lean theorem. This advances the exceptional (a\equiv37\pmod{64}) Side branch beyond the reduction in `U5SecondConeForcedTail.md`.
+**Status:** exact source-predecessor reduction plus finite M32 quotient check. The earlier 13/16 exclusion claim is withdrawn: it used the wrong coordinate order for the M32 state. The source reduction to Z3 below remains an intermediate derivation, not yet Lean-compiled.
 
 ## Starting family
 
 The exceptional Side source is
-[
-Z_0=(0,K_0,C_0)
-=(0,33+32u+16v, 33+32v),\qquad v\ge u.
-]
-All parameters are natural. In particular, (K_0\ge33), (C_0\ge33), and (K_0\equiv1\pmod4).
+\[
+Z_0=(0,K_0,C_0)=(0,33+32u+16v,\;33+32v),\qquad v\ge u.
+\]
+All parameters are natural. In particular, K0,C0≥33 and K0≡1 (mod 4).
 
-Use the exact source predecessor lemmas in `im-results/agent21-c-source-bridge/CBack.lean`:
-- `reached_high_pred`;
-- `reached_hub_prev`;
-- `reached_one_high_or_reset`;
-- `reached_high_kzero_prev`;
-- `reached_zero_hub).
+Use the exact source predecessor lemmas in im-results/agent21-c-source-bridge/CBack.lean:
+- reached_high_pred;
+- reached_hub_prev;
+- reached_one_high_or_reset;
+- reached_high_kzero_prev;
+- reached_zero_hub.
 
-Use Agent 48's `reached_middle_zero_mod4` in `im-results/agent48-c-middle-zero/KZeroMod4.lean`, which says every reachable ((a,0,c)) has (a\equiv1\pmod4).
+Use Agent 48's reached_middle_zero_mod4 in im-results/agent48-c-middle-zero/KZeroMod4.lean, which says every reachable (a,0,c) has a≡1 (mod 4).
 
 ## Forced source reduction
 
-Assume (Z_0) is reachable.
+Assume Z0 is reachable.
 
-1. Apply `reached_high_pred` (K_0-2) times, then `reached_hub_prev), to obtain
-   [
+1. Apply reached_high_pred K0-2 times, then reached_hub_prev, to obtain
+   \[
    (K_0-1,1,C_0+K_0-1)\in\mathrm{Reach}.
-   ]
-   The `reached_one_high_or_reset` high branch would give ((K_0,0,C_0+K_0)). By `reached_high_kzero_prev), this implies a second zero-left state with middle
-   [
-   K_1=(K_0-3)/2=15+16u+8v\equiv3\pmod4
-   ]
-   and even right counter (C_0+K_0). Repeating the high-predecessor/hub/one chain from that state forces a middle-zero state with left coordinate (K_1\equiv3\pmod4), contradicting Agent 48. Hence the high branch is impossible, and the reset branch forces
-   [
+   \]
+   The high branch of reached_one_high_or_reset gives (K0,0,C0+K0). By reached_high_kzero_prev, this implies a second zero-left state with middle
+   \[
+   K_1=(K_0-3)/2=15+16u+8v\equiv3\pmod4.
+   \]
+   Its right counter C1=C0+K0 is even. Repeating the high-predecessor/hub/one chain from (0,K1,C1), the reset branch is impossible (its right parameter is even), while the high branch forces a middle-zero state with left coordinate K1≡3 (mod 4), contradicting Agent 48. Hence the first high branch is impossible and the reset branch forces
+   \[
    R_1=(K_0+1,L_1,0),\qquad L_1=(C_0+K_0-2)/2=32+16u+24v.
-   ]
+   \]
 
-2. Apply `reached_zero_hub`, `reached_hub_prev), and `reached_one_high_or_reset` to (R_1). The high branch gives a middle-zero state with left coordinate (K_0+L_1-2\equiv3\pmod4), so it is impossible. Thus
-   [
+2. Apply reached_zero_hub, reached_hub_prev, and reached_one_high_or_reset to R1. The high branch gives a middle-zero state with left coordinate K0+L1-2≡3 (mod 4), so it is impossible. Thus
+   \[
    R_2=(K_0+L_1-1,L_2,0),\qquad L_2=(L_1-2)/2=15+8u+12v.
-   ]
+   \]
 
-3. Apply `reached_zero_hub` to (R_2), obtaining a hub
-   [
-   H=(A_3,2,L_2-2),\qquad A_3=K_0+L_1+L_2-6\equiv2\pmod4.
-   ]
-   Its only possible immediate source classes in the exact CLine transition are:
-   - the high source ((A_3+1,1,L_2-1));
-   - the zero-left even source ((0,(A_3-2)/2,L_2+1)).
+3. Apply reached_zero_hub to R2, obtaining a hub
+   \[
+   H=(A_3,2,L_2-2),\qquad A_3=K_0+L_1+L_2-6=74+56u+52v\equiv2\pmod4.
+   \]
+   Its possible immediate source classes are:
+   - the high source (A3+1,1,L2-1);
+   - the zero-left even source (0,(A3-2)/2,L2+1).
 
-   The high source is impossible: `reached_one_high_or_reset` has even reset parameter (L_2-1), so it forces the high branch and then a middle-zero state with left coordinate (A_3+2\equiv0\pmod4), contradicting Agent 48. Therefore the zero-left even source is forced:
-   [
+   The high source is impossible: reached_one_high_or_reset has even reset parameter L2-1, so it forces the high branch and then a middle-zero state with left coordinate A3+2≡0 (mod 4), contradicting Agent 48. Therefore the zero-left even source is forced:
+   \[
    Z_3=(0,K_3,C_3),
-   ]
+   \]
    where
-   [
-   K_3=(A_3-2)/2=36+28u+26v,qquad
-   C_3=L_2+1=16+8u+12v.
-   ]
+   \[
+   K_3=36+28u+26v,\qquad C_3=16+8u+12v.
+   \]
 
-Thus
-[
-Z_0\in\mathrm{Reach}\quad\Longrightarrow\quad Z_3\in\mathrm{Reach}.
-]
+Thus Z0 reachable implies Z3 reachable.
 
-## M32 quotient sieve
+## Correct M32 quotient check
 
-For the M32 quotient with (q(x)=x) for (x<8), and (q(x)=8+(x-8)\bmod32) otherwise, the new state has (K_3\ge36,C_3\ge16). Put (L=2u+3v). Then
-[
-K_3\equiv4-2L\pmod{32},\qquad
-C_3\equiv16+4L\pmod{32}.
-]
+**Coordinate order matters.** The source state is Z3=(0,K3,C3), so the M32 quotient cell is
+\[
+(q(0),q(K_3),q(C_3))=(0,q(K_3),q(C_3)),
+\]
+not (q(K3),q(C3),0). The previous table used the latter, permuted cell and is withdrawn.
 
-Reproducing the finite M32 BFS from `tools/agent43_c32_certificate.py` gives exactly three seen cells among these parameterized cells:
-[
-egin{array}{c|c}
-L\pmod{16}&(q(K_3),q(C_3),0)\\
-6&(24,8,0)\\
-10&(16,24,0)\\
-14&(8,8,0)
-end{array}
-]
-All other (L\pmod{16}) values map to M32-unseen cells. The existing `CCert.original_m32_cell_unreachable` bridge should turn each such unseen cell into source nonreachability; the three seen-cell checks and the 13 absent residue cases still need to be exposed in a small Lean module and compiled.
+Put L=(2u+3v) mod 16. Since K3≥36 and C3≥16, the correct quotient representatives and exact M32 membership are:
 
-**Consequence once those finite checks are Lean-compiled:** reachability of the exceptional Side source (Z_0) requires
-[
-2u+3v\equiv6,10,14\pmod{16}.
-]
-This removes (13/16) of the parameter residue classes in this Side branch. It does not close the three surviving classes or the separate q=2 parent family.
+| L mod 16 | q(K3) | q(C3) | seen(0,qK,qC) |
+|---:|---:|---:|:---:|
+| 0 | 36 | 16 | yes |
+| 1 | 34 | 20 | yes |
+| 2 | 32 | 24 | yes |
+| 3 | 30 | 28 | **no** |
+| 4 | 28 | 32 | yes |
+| 5 | 26 | 36 | yes |
+| 6 | 24 | 8 | **no** |
+| 7 | 22 | 12 | yes |
+| 8 | 20 | 16 | **no** |
+| 9 | 18 | 20 | yes |
+| 10 | 16 | 24 | yes |
+| 11 | 14 | 28 | **no** |
+| 12 | 12 | 32 | yes |
+| 13 | 10 | 36 | yes |
+| 14 | 8 | 8 | yes |
+| 15 | 38 | 12 | yes |
+
+The corrected finite computation therefore excludes only L≡3,6,8,11 (mod 16), i.e. 4 of the 16 parameter residue classes. If Z0 is reachable, this quotient argument leaves the other 12 classes; it does not establish the earlier claimed 3-class remainder.
+
+The M32 graph census remains 31,570 reachable quotient states / 189,834 representative edges. The table above is a computational observation pending exposure as a small Lean theorem against the generated CCert.seen bitset. It is not itself a source-reachability theorem.
 
 ## Reproducibility and next step
 
-- Source predecessor lemmas: `im-results/agent21-c-source-bridge/CBack.lean`.
-- Middle-zero invariant: `im-results/agent48-c-middle-zero/KZeroMod4.lean`.
-- Finite quotient transition and certificate generator: `tools/agent43_c32_certificate.py`, `im-results/agent43-c-quotient-kernel/M32HighAll.lean`.
-- Add a Lean lemma proving the three seen cells and `¬ seen` for the other 13 (L\pmod{16}) residues, then compose with the source-predecessor reduction above.
+- Source predecessor lemmas: im-results/agent21-c-source-bridge/CBack.lean.
+- Middle-zero invariant: im-results/agent48-c-middle-zero/KZeroMod4.lean.
+- Finite quotient transition and certificate generator: tools/agent43_c32_certificate.py, im-results/agent43-c-quotient-kernel/M32HighAll.lean.
+- A source-only proof should first formalize the reduction Z0 ⇒ Z3, then check the 16 correct cells (0,q(K3),q(C3)). The 12 seen classes need an exact source-predecessor argument; no stronger quotient expansion is recommended.
