@@ -53,6 +53,20 @@ theorem run_mass_mono (m : Nat) :
         have hgain := next_strict_mass b c aa dd hstep
         omega
 
+/-- No surviving blank-root state has mass strictly between the
+exact step-39 and step-40 masses. The source orbit jumps over this entire
+open interval because mass is strictly increasing. -/
+theorem root_mass_gap_exclusion (n a d : Nat)
+    (hseen : run n = some (.D a d)) :
+    a+d <= 213720 ∨ 293537 <= a+d := by
+  by_cases hlt : n < 40
+  · have hmono := run_mass_mono n 39 a d 79788 133932
+      (by omega) hseen root_run_39
+    exact Or.inl (by omega)
+  · have hmono := run_mass_mono 40 n 54138 239399 a d
+      (by omega) root_run_40 hseen
+    exact Or.inr (by omega)
+
 /-- The exact synthetic budget witness is not on the genuine blank-root
 orbit: before step 40 the root mass is at most 213720; from step 40 onward
 it is at least 293537, whereas the witness has mass 280179. -/
