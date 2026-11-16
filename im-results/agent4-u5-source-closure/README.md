@@ -4,14 +4,14 @@
 
 ## Contribution
 
-`U5Q0SourceOnly.lean` proves two all-time exclusions for the exact original Machine C section orbit:
+`U5Q0SourceOnly.lean` contains formal proof drafts for two all-time exclusions in the exact original Machine C section orbit:
 
 - `X_t=(44t-1,42t-1)) is blank-unreachable for every `t=32n+19`.
 - `X_t=(44t-1,42t-1)) is blank-unreachable for every `t=128n+99`.
 
 It also supplies drop-in replacements for the q=0-parent lemmas on the existing U5 residual cylinders `w=21 (mod 32)` and `w=37 (mod 128)`.
 
-The proof does **not** use the finite M16 quotient certificate. It uses the exact source-parent fan `q0_oddodd_parent_fan_iff`, the complete even/even source-parent fan, the unique even/odd valuation-two parent theorem, and the existing blank-root odd-right sum-one and odd/odd sum-two image exclusions.
+The intended proof route does **not** use the finite M16 quotient certificate. It uses the exact source-parent fan `q0_oddodd_parent_fan_iff`, the complete even/even source-parent fan, the unique even/odd valuation-two parent theorem, and the existing blank-root odd-right sum-one and odd/odd sum-two image exclusions.
 
 ## Proof structure
 
