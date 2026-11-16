@@ -196,6 +196,7 @@ Its conditional conclusion is that the high m=0 stop root j=39+64s is unreachabl
 ## Additional U5 M16 extension: w=37 (mod 128) high-stop cylinder
 
 The certified 24^3 M16 quotient gives an exact parent-fan exclusion on this additional, disjoint residual cylinder; the source-level high-stop composition is still a Lean draft pending exact preflight. The same reduction gives the uniform congruence t ≡ 16+23w (mod128) for every U5 residual triple; w=37 therefore gives t≡99, while the mixed-quotient candidates w=45 and w=101 would give t≡27 and t≡35 respectively.
+More strongly, the residual equations and m+1=8t+1 give the exact identity 211t+1360+22155w = 20·2^(201+3360w). This is the source of every higher 2-adic w-residue lift listed in the mixed-quotient note.
 
 The residual identity used above, reduced modulo 1024 rather than 256, gives
 ```
