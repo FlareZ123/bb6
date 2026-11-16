@@ -74,6 +74,7 @@ theorem t1_child_deficit (h k d a j : Nat)
     (ha : oddOffset h k=2*a)
     (hQ : 9*a+2*k+7-2^(k+2)=(2*k+7)*2^(j+1)) :
     deficit (oddOutput 1 d) (k+1)=(2*k+7)*2^j ∧
+    (2*k+7)*2^(j+1)≤5*2^k+(2*k+7)-9 ∧
     deficit (oddOutput 1 d) (k+1)<fatalDeficit (k+1) := by
   have houtput0 := odd_output_equation_deficit h k 1 d hg hhigh hpar hfactor hd
   have houtput : 2*oddOutput 1 d+5=9*d := by
@@ -126,8 +127,10 @@ theorem t1_child_deficit (h k d a j : Nat)
   have hp : 1≤2^k := Nat.one_le_pow k 2 (by decide)
   constructor
   · exact hD
-  · rw [hfd]
-    omega
+  · constructor
+    · exact hD2bound
+    · rw [hfd]
+      omega
 
 /-- From deficit c*2^j at level K+1, a nonfatal state reaches F_(K+2)
 through exactly j genuine even first-reset edges. The strict bound below
@@ -315,7 +318,7 @@ theorem root_t1_q_parent_fatal (h k d a j : Nat)
       dsimp [deficit] at hDgt
       omega
     have heven := even_reset_chain_to_fatal k j (oddOutput 1 d)
-      hg' hhigh' hchild.1 hchild.2
+      hg' hhigh' hchild.1 hchild.2.2
     have hchain2 := ResetChain.append hchain1 heven
     exact (root_reset_chain_iff _).mpr hchain2
 
