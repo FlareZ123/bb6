@@ -230,8 +230,10 @@ theorem t1_child_deficit (h k d a j : Nat)
   have hpj : 2^(j+1)=2*2^j := by rw [Nat.pow_succ]
   have hapos : 1≤2^(j+1) := Nat.one_le_pow (j+1) 2 (by decide)
   have hc : 1≤2*k+7 := by omega
-  have hcpow : (2*k+7)≤(2*k+7)*2^(j+1) :=
-    Nat.mul_le_mul_left (2*k+7) hapos
+  have hcpow : (2*k+7)≤(2*k+7)*2^(j+1) := by
+    calc
+      (2*k+7)=(2*k+7)*1 := by ring
+      _≤(2*k+7)*2^(j+1) := Nat.mul_le_mul_left (2*k+7) hapos
   have haLower : 4*2^k≤9*a := by omega
   have hdUpper : 9*d≤32*2^k := by omega
   have huUpper : oddOutput 1 d≤16*2^k := by omega
@@ -262,7 +264,8 @@ theorem t1_child_deficit (h k d a j : Nat)
   constructor
   · exact hD
   · constructor
-    · exact hD2bound
+    · rw [← hD2]
+      exact hD2bound
     · rw [hfd]
       omega
 
@@ -320,8 +323,9 @@ theorem t1_q_parent_depth_lt_level (h k d a j : Nat)
     (hQ : 9*a+2*k+7-2^(k+2)=(2*k+7)*2^(j+1)) :
     j<k := by
   have hchild := t1_child_deficit h k d a j hg hhigh hpar hfactor hd ha hQ
-  by_contra hnot
-  have hk : k≤j := by omega
+  by_cases hlt : j<k
+  · exact hlt
+  · have hk : k≤j := by omega
   have hgap : j+1-k=(j-k)+1 := by omega
   have hpGap : 2≤2^(j+1-k) := by
     rw [hgap, Nat.pow_succ]
@@ -364,7 +368,7 @@ theorem even_reset_chain_to_fatal (K j h : Nat)
   induction j generalizing h with
   | zero =>
       have hD0 : deficit h (K+1)=2*K+7 := by simpa using hD
-      have hpK1 : 2^(K+1)=2*2^K := by rw [Nat.pow_succ]
+      have hpK1 : 2^(K+1)=2*2^K := by rw [Nat.pow_succ]; ring
       have hpK2 : 2^(K+2)=4*2^K := by
         rw [Nat.pow_add]
         simp
@@ -387,13 +391,15 @@ theorem even_reset_chain_to_fatal (K j h : Nat)
         omega
       have hpowEven : (8*2^(K+1))%2=0 := by simp [Nat.mul_mod]
       have hdefEven : ((2*K+7)*2^(j+1))%2=0 := by
-        have hp : 2^(j+1)=2*2^j := by rw [Nat.pow_succ]
+        have hp : 2^(j+1)=2*2^j := by rw [Nat.pow_succ]; ring
         rw [hp]
         simp [Nat.mul_mod]
       have hpar : (h+(K+1))%2=0 := by omega
       have hlow : 4*2^(K+1)≤h+(K+1)+4 := by
         have hguard := hg K (by omega)
-        simpa [Nat.pow_succ] using hguard
+        calc
+          4*2^(K+1)=8*2^K := by rw [Nat.pow_succ]; ring
+          _≤h+(K+1)+4 := by simpa using hguard
       have hFdef := fatal_deficit (K+1)
       have hgt : fatalHeight (K+1)<h := by
         have hbelow' := hbelow
@@ -414,7 +420,10 @@ theorem even_reset_chain_to_fatal (K j h : Nat)
         (reset_parent_iff h (evenOutput h (K+1))).mp hout
       by_cases hj : j=0
       · subst j
-        have hD0 : deficit h (K+1)=2*(2*K+7) := by simpa using hD
+        have hD0 : deficit h (K+1)=2*(2*K+7) := by
+          calc
+            deficit h (K+1)=(2*K+7)*2 := by simpa using hD
+            _=2*(2*K+7) := by ring
         have hF : fatalHeight (K+2)=8*2^(K+1)-(K+1)-5 :=
           fatalHeight_succ (K+1)
         have hu : evenOutput h (K+1)=fatalHeight (K+2) := by
@@ -439,8 +448,10 @@ theorem even_reset_chain_to_fatal (K j h : Nat)
             have hp : 1≤2^j := Nat.one_le_pow j 2 (by decide)
             rw [Nat.pow_succ]
             omega
-          have hmul : 2*(2*K+7)≤(2*K+7)*2^(j+1) :=
-            Nat.mul_le_mul_left (2*K+7) hpplus
+          have hmul : 2*(2*K+7)≤(2*K+7)*2^(j+1) := by
+            calc
+              2*(2*K+7)=(2*K+7)*2 := by ring
+              _≤(2*K+7)*2^(j+1) := Nat.mul_le_mul_left (2*K+7) hpplus
           omega
         have hlevel := even_level_criterion h (K+1) hg hhigh hpar
         have hg' := hlevel.1
@@ -453,7 +464,7 @@ theorem even_reset_chain_to_fatal (K j h : Nat)
                 2*deficit (evenOutput h (K+1)) (K+1) := by
             calc
               2*((2*K+7)*2^j)=(2*K+7)*(2*2^j) := by ac_rfl
-              _=(2*K+7)*2^(j+1) := by rw [←hpj]
+              _=(2*K+7)*2^(j+1) := by rw [Nat.pow_succ]; ring
               _=deficit h (K+1) := hD.symm
               _=2*deficit (evenOutput h (K+1)) (K+1) := hhalf
           omega
@@ -470,7 +481,8 @@ theorem even_reset_chain_to_fatal (K j h : Nat)
             Nat.mul_lt_mul_of_pos_left hpowlt (by omega)
           omega
         have hrec := ih (evenOutput h (K+1)) hg' hhigh' hD' hbelow'
-        exact ResetChain.append (ResetChain.append ResetChain.root hparent) hrec
+        have hchainTail := reset_chain_trans (ResetChain.append ResetChain.root hparent) hrec
+        exact hchainTail
 
 /-- Any genuine blank-root source state satisfying the exact t=1 Q-parent
 identity reaches the fatal reset height F_(K+2). The theorem includes the
@@ -499,7 +511,7 @@ theorem root_t1_q_parent_fatal (h k d a j : Nat)
   · have hD0 : deficit (oddOutput 1 d) (k+1)=2*k+7 := by
       rw [hchild.1, hj]
       simp
-    have hpK1 : 2^(k+1)=2*2^k := by rw [Nat.pow_succ]
+    have hpK1 : 2^(k+1)=2*2^k := by rw [Nat.pow_succ]; ring
     have hpowK2 : 2^(k+2)=4*2^k := by
       rw [Nat.pow_add]
       simp
@@ -530,8 +542,10 @@ theorem root_t1_q_parent_fatal (h k d a j : Nat)
             rw [Nat.pow_succ]
             have hp : 1≤2^m := Nat.one_le_pow m 2 (by decide)
             omega
-      have hmul : 2*(2*k+7)≤(2*k+7)*2^j :=
-        Nat.mul_le_mul_left (2*k+7) hpj
+      have hmul : 2*(2*k+7)≤(2*k+7)*2^j := by
+        calc
+          2*(2*k+7)=(2*k+7)*2 := by ring
+          _≤(2*k+7)*2^j := Nat.mul_le_mul_left (2*k+7) hpj
       omega
     have hhigh' :
         oddOutput 1 d+(k+1)+5<8*2^(k+1) := by
@@ -557,8 +571,9 @@ theorem adjacent_fatal_source_exponent_le_one
       3^(t+1) * d + 2^(r+1) * (4*K+14) =
         32 * 2^K + 2*K+7) :
     t ≤ 1 := by
-  by_contra hnot
-  have ht : 2 ≤ t := by omega
+  by_cases ht_le : t ≤ 1
+  · exact ht_le
+  · have ht : 2 ≤ t := by omega
   let A : Nat := 32 * 2^K + 2*K+7
   let B : Nat := 6 * 2^K + 1
   let X : Nat := 2^t * A
