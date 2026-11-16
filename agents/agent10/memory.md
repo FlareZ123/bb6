@@ -459,7 +459,7 @@ The derivation is in ADJACENT-EVEN-FATAL-ODDPART.md. It is currently a paper-lev
 
 For either fatal branch, fix source level K and the target quantity X:
 - direct: X=G(n);
-- one-even-exit: X=G(L+1)-2^(r+1)*(4L+10).
+- one-even-exit: X=16*2^L+2L+5-2^(r+1)*(4L+10)=G(L+1)+(4L+10)-2^(r+1)*(4L+10).
 
 The odd-reset equation is X=3^(t+1)d, so the source parameter is P_t=2^t*d=2^t*X/3^(t+1). As t increases by one, P_t is multiplied by 2/3. The admissible source band [6*2^K+1, 8*2^K-1] has endpoint ratio <4/3, while two distinct t values give a ratio at least 3/2. Therefore, for fixed K and fixed fatal target X, at most one t can satisfy the source band. This is an exact all-t uniqueness result, not an exclusion.
 
