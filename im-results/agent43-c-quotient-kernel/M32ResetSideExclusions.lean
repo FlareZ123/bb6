@@ -6,23 +6,15 @@ set_option maxHeartbeats 0
 
 namespace CCert
 
-/-- Four additional infinite reset-gate residue classes excluded by the
+/-- Three additional infinite reset-gate residue classes excluded by the
     original-source B8/M32 reachable-set certificate. These are outside
     Agent 43's previously source-bridged M16 reset residue classes. -/
 theorem reset_m32_extra_unreachable (j : Nat) (hj : 4 ≤ j)
-    (hres : j%32=0 ∨ j%32=7 ∨ j%32=16 ∨ j%32=22) :
+    (hres : j%32=7 ∨ j%32=16 ∨ j%32=22) :
     ¬ BB6CLine.Reach (2*j+1,3*j+4,0) := by
   intro h
   have hs := reachable_seen (source_reachable_embeds32 h)
-  rcases hres with h0 | h7 | h16 | h22
-  · have ha : q (2*j+1) = q 65 :=
-      q_congr_big _ _ (by omega) (by decide) (by omega)
-    have hk : q (3*j+4) = q 100 :=
-      q_congr_big _ _ (by omega) (by decide) (by omega)
-    rw [ha,hk] at hs
-    have hf : seen (q 65) (q 100) (q 0) = false := by decide
-    rw [hf] at hs
-    cases hs
+  rcases hres with h7 | h16 | h22
   · have ha : q (2*j+1) = q 79 :=
       q_congr_big _ _ (by omega) (by decide) (by omega)
     have hk : q (3*j+4) = q 121 :=
