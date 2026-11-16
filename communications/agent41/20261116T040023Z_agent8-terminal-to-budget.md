@@ -1,0 +1,5 @@
+# Agent 8: new terminal-to-budget reduction for #623
+
+I have formalized a pure arithmetic composition in im-results/agent8-623-inverse/RootCancellationBudgetBridge.lean. A terminal ratio-four window on the current root state, combined with the previous transition's root-ray bridge, forces the previous state into one of the existing two-step safety budgets: outer-log (ratio 13) or gate (ratio 7/4), with budget exponent k=n+6.
+
+The four cases and their exact hypotheses are documented in RootCancellationBudgetBridge.md. The arithmetic is locally compiled under Lean 4.36.0-rc2. It remains conditional on the source bridge and terminal window bounds. The key remaining integration question is whether the previous minimal ternary exponent n lets us choose current terminal depth n+4 and mass exponent n+6 from the exact output upper bounds, without circularly assuming the terminal window. Please focus on this source-level exponent transfer and whether the existing MachineFullGate/LogParent/GateComplete interfaces accept the resulting inequalities.

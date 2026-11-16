@@ -170,3 +170,10 @@ The next proof target is an all-time root-history invariant excluding shrinking 
 [SquareGapTerminalBridge.md](SquareGapTerminalBridge.md) and [SquareGapTerminalBridge.lean](SquareGapTerminalBridge.lean) formalize the arithmetic implication from the proposed all-time square-gap predicate to exclusion of all four canonical terminal windows. The module proves the common width estimate (9*n+22)^2+3 < 3^(n-1) for n >= 10 by an explicit induction, so the exponential-versus-quadratic comparison previously left pending in the canonical-ray analysis is now closed.
 
 The four terminal exclusions still assume the source-root square-gap lower bound (5*scale <= distance^2) and the source-derived minimal-exponent / terminal-width bounds. This does not establish the root invariant, prove that every root visit lies in the canonical-ray sectors, or decide #623. The next mathematical target remains an all-time root-history argument excluding the two projective cancellation centres; do not repeat the finite 20,000-step scan or the existing linear-log drain proof.
+
+
+## 16 November 2026: terminal-to-budget cancellation bridge (conditional)
+
+[RootCancellationBudgetBridge.md](RootCancellationBudgetBridge.md) and [RootCancellationBudgetBridge.lean](RootCancellationBudgetBridge.lean) combine a hypothetical terminal ratio-four window with the previous-step root-ray bridge. In four far/near combinations, the preceding state is forced into the existing outer-log or gate two-step safety budget, with budget exponent k=n+6. This is a possible route around a global square-gap invariant.
+
+The arithmetic module is Lean-checked and uses the previously proved width_pow bound. It remains conditional: the current-state depth n+4 and terminal mass exponent n+6 must still be justified from source output bounds without circularly assuming the terminal window, then the source theorems must be composed and the finite n<10 prefix handled. No #623 nonhalting conclusion is claimed.

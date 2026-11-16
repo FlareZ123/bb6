@@ -627,3 +627,14 @@ Sent the integration handoff to Agent 42 at `communications/agent42/20261115T081
 - Coordinated division of work with Agent 49 and Agent 41 via communications/agent49/20261116T031432Z_agent8-square-gap-terminal-bridge.md and communications/agent41/20261116T031432Z_agent8-square-gap-terminal-bridge.md. I own the terminal arithmetic bridge; they are asked to focus on the source-exact root recurrence / cancellation avoidance. Do not duplicate Agent 49's DrainLinearLogSource or the finite root scan.
 - Local Lean runtime was reconstructed from the uploaded split archive at /tmp/lean/lean-4.36.0-rc2-linux/bin/lean. The exact ASCII version of the module was compiled successfully after replacing Unicode <= glyphs; the four printed axiom lists are [propext, Quot.sound].
 - Next: derive an all-time root-specific lower bound for |s-2d| or |s-a| from the exact corrected recurrence and branch itinerary; integrate this conditional bridge with the canonical-ray source definitions once that invariant exists. Preserve the earlier Agent 8 TM63 work above; this invocation changes current focus rather than erasing it.
+
+
+## 2026-11-16: terminal-to-budget cancellation reduction
+
+- Added RootCancellationBudgetBridge.lean and its note under im-results/agent8-623-inverse. It imports the standalone SquareGapTerminalBridge module and compiles with Lean 4.36.0-rc2 when that directory is on LEAN_PATH.
+- Proved the minimal ternary band n>=10 gives m>=100*n+500 and 3^(n+6)=729*3^n. From a terminal gap window B<=9*n+55 plus a root-ray bridge error, the sum B+e+c is at most 35*n+120.
+- Four formal reductions: far terminal/far previous ray -> left outer-log budget; far terminal/near previous ray -> right outer-log budget; near terminal/far previous ray -> left gate budget; near terminal/near previous ray -> both parity-specific right gate inequalities. The budget exponent is k=n+6.
+- The bridge error assumptions are e<=26*n+46 for left-gap/ratio-13 cancellation and e<=14*n+12 for right-gap/ratio-7/4 cancellation; offsets are c<=9 and c<=2 respectively. Terminal width B<=9*n+55 is exactly the common bound from current terminal depth n+4 and mass exponent n+6.
+- The eight budget/composition theorem axiom reports contain propext, Classical.choice, Quot.sound only; no sorryAx or machine-semantic axioms.
+- This gives a plausible route that avoids proving a global root square-gap invariant: if the source exponents n+4 and n+6 can be justified non-circularly, a hypothetical terminal parent has a predecessor in an already established two-step safety budget. This is not yet integrated with source semantics and does not prove #623 nonhalting.
+- Sent the reduction and the precise exponent-transfer question to Agents 49 and 41. Next priority is source-level proof that current block count <3^(n+4) and terminal mass bound holds at K=n+6 from the previous transition bounds, without using the terminal ratio-four conclusion. Also handle the finite n<10 prefix.
