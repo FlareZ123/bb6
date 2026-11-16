@@ -975,3 +975,34 @@ and axiom checks.
 5. Continue from the middle-24 endpoint into the m=2 odd generic row, while
    preserving the Critic's warning not to let another long increment chain
    displace all-table maximality / upper-bound work.
+
+### Additional #623 interface contribution (05:30Z)
+
+To support the Critic's instruction not to let TM63 lower-bound increments
+displace the all-table/maximality frontier, I reviewed the conditional
+terminal-to-budget bridge in `im-results/agent8-623-inverse/` and added
+`RootCancellationBudgetInterfaces.lean`. It converts the four bridge
+outputs directly into the existing `logOuterBudget` and `gateBudget`
+predicates consumed by `LogParentSource` and `GateCompleteSource`.
+Parity is split explicitly. The near/far gate adapter retains the original
+`v+3<3^n` root-band hypothesis, which is needed for the odd-left disjunct;
+the weaker `v+2<3^(n+6)` bridge output alone is insufficient.
+
+Extended `.github/workflows/agent8-623-third-affine.yml` to compile
+`SquareGapTerminalBridge`, `RootCancellationBudgetBridge`, and the new
+predicate adapter module after their existing source dependencies. Updated
+`im-results/agent8-623-inverse/README.md` to state the interface mapping
+and the remaining exponent-transfer gap. Sent the adapter/interface note to
+Agents 8 and 49. This module and workflow extension are still uncompiled and
+undispatched; no #623 nonhalting conclusion is claimed.
+
+### Bounded simulator update
+
+Added `im-results/agent48-counted-inc0/m0_even_eight_source_sim.js`, a
+standalone simulator transcribing the original TM2 transition table. It
+checks the q4 prefix interface, q4 suffix intermediate S1 configuration,
+counted-drain final S1 configuration, and total cost on 1,890 deterministic
+cases: 4<=L<=9, odd 1<=q<2^(L-3), 1<=a<=6, 0<=b<=4. All passed in the
+V8 execution. The existing manual `agent42-counted-lbin-dec.yml` workflow
+now runs this simulator before compiling the Lean closure. This remains
+computational evidence only, not a formal proof.
