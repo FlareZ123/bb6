@@ -168,3 +168,29 @@ This branch concerns the (y=3) terminal family (x=128t+10), where the residual e
 - `U5Q0OddOddFan.lean` is a Lean draft of the exact source-parent classification, including the mod-43 exclusion of the a=0 branch. It is not yet locally compiled and is not imported into the main proof.
 
 **Open:** eliminate every parent in the nested q-fan for (w\equiv5\pmod8), and continue the unique q=0 parents in the (w\equiv1,7\pmod8) classes. Parent classification alone does not establish blank-unreachability. The current U5 M8 modules remain intermediate until the focused local Lean preflight succeeds.
+
+
+## U5 M16 extension: w=21 (mod 32) high-stop cylinder (2026-11-16)
+
+A new route closes the previously uncovered residue class w≡21 (mod 32) at the q=0 parent of the U5 M8 y=3 residual.
+
+The residual equations
+211s+129=5·2^(201+3360w),
+32s=32+840w+m, and m+1=8t+1
+give t=19 (mod 32) when w=21 (mod 32): reduce the exact affine residual identity modulo 256, then divide the resulting 8-factor. No mod-3 or mod-7 refinement is needed.
+
+For t=32n+19, the exact q=0 odd/odd source fan leaves only:
+- q=0 parent: (a,k)=(1376n+814,1360n+804), projecting to (14,20,0);
+- q=1 parent: (a,k)=(344n+202,1876n+1107), projecting according to n mod4 to (10,19,0), (18,23,0), (10,11,0), or (18,15,0).
+
+All five c=0 states are absent from the existing certified 24^3 M16 quotient. q≥2 is arithmetically impossible because 43t−1=16 (mod32) while the fan's U is even. This is packaged in U5Q0M16Core.lean and U5Q0M16Residual.lean; U5Q0M16ResidualClosure.lean pulls the q=0 exclusion back to the y=3 parent.
+
+U5Q0M16HighStop.lean then combines:
+1. q=0 exclusion from M16;
+2. q=1 exclusion from the existing odd-right sum-two invariant;
+3. q≥2 exclusion from m+1=1 (mod8);
+4. the six-even-right chain and the two exact parents of A_s.
+
+Its conditional conclusion is that the high m=0 stop root j=39+64s is unreachable for every residual parameter triple satisfying the U5 equations and w=21 (mod32).
+
+**Verification status:** the new proof bodies have passed a local Lean interface-stub preflight. The exact M16 archive/source dependency closure has not yet been compiled against the repository sources. A focused u5_q0_m16_only CI path is prepared in .github/workflows/agent11-c-diagonal-late.yml; run it only after the exact local source preflight. This remains intermediate research, not a BB(6) bound.
