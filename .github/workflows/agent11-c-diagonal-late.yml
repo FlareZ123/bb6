@@ -34,7 +34,7 @@ on:
         type: boolean
         default: false
       u5_q0_m16_only:
-        description: "Source-check the U5 w=21 mod32 M16 parent closure and high m=0 stop exclusion, then stop"
+        description: "Source-check the U5 w=21 mod32 and w=37 mod128 M16 parent closures and high m=0 stop exclusions, then stop"
         required: false
         type: boolean
         default: false
