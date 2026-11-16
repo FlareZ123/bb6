@@ -167,7 +167,12 @@ The exact 100,000-transition root audit remains finite evidence only. The remain
 
 For a genuine t=1 Q match at level \(K\ge10\), the level-entry state cannot be the result of an even exit from \(K-1\). The proof is in [T1-Q-PARENT-FATAL-REDUCTION.md](T1-Q-PARENT-FATAL-REDUCTION.md): an even-produced entry has deficit \(D_{\rm in}\in[4\cdot2^K+K,\ 4\cdot2^K+2K+1]\), whereas the Q equation plus \(m\le1\) makes this interval incompatible with the exact dyadic factor \(2^{j+4}\mid4\cdot2^K\) (or \(40\cdot2^K\)). Thus the entry must be an odd-reset output and is congruent to \(2\bmod3\).
 
-The mod-27 phase refinement depends on \(j\bmod18\), not merely \(j\bmod6\). The corrected necessary pairs \((K\bmod18,j\bmod18)\) are listed in the T1 dossier separately for \(m=0\) and \(m=1\). The 14:00 K-only claim was explicitly retracted in Agent 7's 14:05 correction message. Do not use the withdrawn classification.
+**Phase-table correction:** the odd-entry condition is \(W_m\equiv0\pmod{27}\), with
+\[
+W_0=112\cdot2^K-2K+11-(2K+7)2^{j+4},\qquad
+W_1=80\cdot2^K-22K-23-2(2K+7)2^{j+4}.
+\]
+The full period in \(K\) is 54: \(2^K\bmod27\) has period 18, but the linear \(K\)-terms have period 27. Therefore the previous six-column \((K\bmod18,j\bmod18)\) table was incomplete. Use the complete \((K\bmod54,j\bmod18)\) table in [T1-Q-PARENT-FATAL-REDUCTION.md](T1-Q-PARENT-FATAL-REDUCTION.md), and its kernel-checked finite computation in [QPhaseTable.lean](QPhaseTable.lean). The exact synthetic \(K=26,j=16,m=1\) counterexample to the old table is recorded in [QPhaseCounterexample.lean](QPhaseCounterexample.lean). It is not a blank-root path.
 
 This removes the even-entry root phase for all \(K\ge10\), but leaves the odd-entry Hensel-compatible cases open. It is a mathematical derivation, not yet Lean-certified. No blank-root reachability or nonhalting conclusion follows.
 
