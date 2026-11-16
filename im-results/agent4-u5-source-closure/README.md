@@ -73,4 +73,20 @@ Their isolated `#print axioms` profiles were respectively `[propext, Quot.sound]
 
 The full source files have not yet been staged in the local runtime. Preflight must compile the **complete exact import closure**, not only the two new files: in particular `U5Q0OddOddFan.lean` (previously marked an uncompiled source-fan draft), `U5Y3M8.lean`, `U5Y3ParentFan.lean`, `U5M8Q0Partial.lean`, `U5Q0M16Residual.lean`, and the original-source predecessor/image modules they import. The `U5Q0M16Residual` module is used only for elementary residual congruences; it does not import `CCert` or a finite quotient.
 
+### Pinned source-only preflight target
+
+The two authored Lean files currently have these Git blob SHAs:
+
+| File | Blob SHA |
+|---|---|
+| `U5Q0SourceOnly.lean` | `9a1b3a2d874413022d298a09ef097e251ca45100` |
+| `U5SourceOnlyHighStop.lean` | `518178a88e012fc26fbca75fac4f410b347451be` |
+
+Their direct imports are:
+
+- `U5Q0SourceOnly`: `U5Q0OddOddFan`, `U5Q0M16Residual`, `EvenEvenParentFan`, `EvenOddFourExact`, `OddOddVal3Orbit`, `M0EvenEvenSumZero`, `HighSumTwo`.
+- `U5SourceOnlyHighStop`: `U5Q0SourceOnly`, `U5Y3M8`, `M0EvenEvenSumZero`.
+
+Resolve and compile every transitive import from these pinned files, including the U5 parent fan, M8 orbit chain, original-section inverse, and Machine C source/image modules. Do not substitute a quotient certificate or a different branch snapshot.
+
 Per the current research-direction instruction, do not dispatch CI until this exact changed-source dependency closure has passed a focused local Lean preflight. After that, run a single focused manual source workflow with axiom prints for all exported declarations; if successful, integrate the w=21 source-only theorem into the maintained U5 high-stop dossier in place.
