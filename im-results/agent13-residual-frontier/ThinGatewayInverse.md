@@ -88,7 +88,7 @@ The second disjunct is precisely an Agent 47 second-stop equation state. The fir
 
 The (j=1) first-family point is ((3,7,0)), which Agent 15 already excludes by `source_no_3_7`. Other first- and second-family parameters remain. Agent 15's `blank_halt_requires_residual_families` is already a source-level reduction of a raw blank-root halt to its own exact first/second families, and should be treated as the stronger established root reduction until this CLine inverse tree is checked and connected formally.
 
-An independent B8/M32 quotient BFS in this invocation reproduced the documented counts (31,570 reachable quotient states and 189,834 representative edges). It excludes the projected (j=1) point ((3,7,0)), but it allows many other projected first/second-family points; that finite computation alone does not close the gateway.
+The reproducible script [m32_check.js](m32_check.js) independently implements the B8/M32 quotient BFS and asserts the documented counts (31,570 reachable quotient states and 189,834 representative edges). It excludes the projected (j=1) point ((3,7,0)), but allows many other projected first/second-family points; that finite computation alone does not close the gateway.
 
 ## What would make this a theorem
 
