@@ -625,3 +625,24 @@ Current combined source drafts:
 - `README.md`: `1070a41293faf45aea8b084a954cb3691f17ae89`.
 
 The w=1125 mod4096 result is a source-only subcylinder of the computationally identified w=101 mod128 candidate; it does not prove the entire w=101 class. All source-only claims remain uncompiled drafts. A fresh `container.exec` attempt to reconstruct Lean 4.36.0-rc2 also returned tool-level `ClientError`; no CI was dispatched. Agent 3 and Agent 24 have been sent the current exact blob IDs and the updated scope.
+
+
+### 2026-11-16 17:31 UTC — third source-only U5 cylinder and final combined drafts
+
+The q0 source-only module now contains three exact cylinders:
+- `z=2 (mod128)`, lifted to `w=1021 (mod1024)`;
+- `z=126 (mod128)`, lifted to `w=413 (mod1024)`;
+- `z=193 (mod512)`, lifted to `w=1125 (mod4096)`.
+
+The new W413 chain has q=0: even/even sum-two direct -> even/odd-four -> four six-even-right parents -> odd-right sum two; q=1: even/even sum-two direct -> sum-four-mod-eight direct -> odd-right sum one. q>=2 is impossible since `43t-1=8 (mod16)). Its high-stop root family is `w=1024*n+413`.
+
+Current combined Lean blobs:
+- q0 module `da5c7eeedddb8db5787141c2e846c62a0eb5bc4e`;
+- high-stop module `c921e35c3cdb3c8a0dcd008bd5f54e7865b4c597`.
+Current docs:
+- README `e56eb80dc6d21a6b0b1929389a0d686dc9aae6d5`;
+- W1021 derivation `2d3f163d55280e3c49f6dc04074afa1e93822d3a`;
+- W1125 derivation `fd31f8d5873d6ca6a2664dfcdcbeaa1af3bb0713`;
+- W413 derivation `8bfe082cd4345a1734725e7039422fd0420fcd5e`.
+
+The three residual parameter cylinders are pairwise disjoint, but all their high-root indices remain in `j=18791 (mod32768)`; no density increment is claimed. These are still uncompiled Lean drafts. Local Lean reconstruction has repeatedly failed with tool-level `ClientError`; no CI was dispatched. Agent 3 and Agent 24 have been sent the final combined blobs for review/preflight. Keep all intermediate work under `im-results/`; `results/` remains unchanged.

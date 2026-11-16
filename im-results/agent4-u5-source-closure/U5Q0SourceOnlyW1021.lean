@@ -448,9 +448,183 @@ theorem q0_X_not_reach_t123_z193mod512 (v : Nat) :
       (by omega) (by omega) (by omega) (by omega)
     exact hbad hS2
 
+/-- The exact U5 q-fan excludes X_t for z=128*v+126.
+The q=0 branch follows a direct even/even parent, one even/odd-four
+parent, and four six-even-right parents to odd-right sum two. The q=1
+branch follows two even/even direct parents to odd-right sum one.
+q>=2 is impossible modulo 16. -/
+theorem q0_X_not_reach_t123_z126mod128 (v : Nat) :
+    ¬ CReach
+      (44*(123+168*(128*v+126))-1)
+      (42*(123+168*(128*v+126))-1) := by
+  let z := 128*v+126
+  let t := 123+168*z
+  intro hX
+  have hX' : CReach (44*t-1) (42*t-1) := by
+    simpa only [t,z] using hX
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      (44*t-1) (42*t-1) (by dsimp [t,z]; omega) hX'
+  have hfan := (BB6.Agent3U5Q0Fan.q0_oddodd_parent_fan_iff
+      t a k (by dsimp [t,z]; omega)).mp hstep
+  rcases hfan with ⟨q,U,hpow,hUge,hUeven,ha,hkpos,hlow,hcost⟩
+  have hNmod : (43*t-1)%16=8 := by
+    dsimp [t,z]
+    omega
+  have hqle : q≤1 := by
+    by_contra hq
+    have hq2 : 2≤q := by omega
+    have h16 : 16∣4^q := by
+      have h := Nat.pow_dvd_pow 4 hq2
+      norm_num at h ⊢
+      exact h
+    have h2 : 2∣U := by
+      refine ⟨U/2,?_⟩
+      omega
+    obtain ⟨r,hr⟩ := h16
+    obtain ⟨s,hs⟩ := h2
+    have h32 : 32∣4^q*U := by
+      refine ⟨r*s,?_⟩
+      rw [hr,hs]
+      calc
+        (16*r)*(2*s) = (16*2)*(r*s) := by ac_rfl
+        _ = 32*(r*s) := by norm_num
+    obtain ⟨r,hr⟩ := h32
+    have hdiv16 : 16∣43*t-1 := by
+      refine ⟨2*r,?_⟩
+      rw [hpow,hr]
+      norm_num
+    have hzero : (43*t-1)%16=0 :=
+      Nat.mod_eq_zero_of_dvd hdiv16
+    omega
+  have hqcases : q=0 ∨ q=1 := by omega
+  rcases hqcases with hq0 | hq1
+  · subst q
+    have hU0 : U=43*t-1 := by simpa using hpow.symm
+    have ha0 : a=915510+924672*v := by
+      rw [hU0] at ha
+      dsimp [t,z] at ha
+      omega
+    have hk0 : k=904864+913920*v := by
+      rw [hU0] at hcost
+      dsimp [t,z] at hcost
+      omega
+    have hP0 : CReach
+        (915510+924672*v) (904864+913920*v) := by
+      simpa only [ha0,hk0] using hprev
+    have hD0raw := even_even_sum_two_reach_implies_direct
+      (915510+924672*v) (904864+913920*v)
+      (by omega) (by omega) (by omega) (by omega) (by omega) hP0
+    have hD0 : CReach
+        (1820372+1838592*v) (452431+456960*v) := by
+      have hx : (915510+924672*v)+(904864+913920*v)-2 =
+          1820372+1838592*v := by omega
+      have hy : ((904864+913920*v)-2)/2 =
+          452431+456960*v := by omega
+      simpa only [hx,hy] using hD0raw
+    have hQ0run := (BB6.Agent3.evenodd_four_blank_reach_iff
+      (1820372+1838592*v) (452431+456960*v)
+      (by omega) (by omega) (by omega) (by omega)).mp hD0
+    have hQ0 : CReach
+        (1136399+1147776*v) (794414+802368*v) := by
+      change (∃ n, BB6.Agent8Section.run BB6.Agent46.secNext n
+        (some (5,1)) = some
+        (1136399+1147776*v,794414+802368*v))
+      have hx : ((1820372+1838592*v)+(452431+456960*v)-5)/2 =
+          1136399+1147776*v := by omega
+      have hy : ((1820372+1838592*v)+3*(452431+456960*v)-9)/4 =
+          794414+802368*v := by omega
+      simpa only [hx,hy] using hQ0run
+    have hR0raw := (BB6.Agent46.six_even_right_blank_reach_iff
+      (1136399+1147776*v) (794414+802368*v)
+      (by omega) (by omega) (by omega) (by omega)).mp hQ0
+    have hR0 : CReach
+        (1930811+1950144*v) (397206+401184*v) := by
+      have hx : (1136399+1147776*v)+(794414+802368*v)-2 =
+          1930811+1950144*v := by omega
+      have hy : ((794414+802368*v)-2)/2 =
+          397206+401184*v := by omega
+      simpa only [hx,hy] using hR0raw
+    have hS0raw := (BB6.Agent46.six_even_right_blank_reach_iff
+      (1930811+1950144*v) (397206+401184*v)
+      (by omega) (by omega) (by omega) (by omega)).mp hR0
+    have hS0 : CReach
+        (2328015+2351328*v) (198602+200592*v) := by
+      have hx : (1930811+1950144*v)+(397206+401184*v)-2 =
+          2328015+2351328*v := by omega
+      have hy : ((397206+401184*v)-2)/2 =
+          198602+200592*v := by omega
+      simpa only [hx,hy] using hS0raw
+    have hT0raw := (BB6.Agent46.six_even_right_blank_reach_iff
+      (2328015+2351328*v) (198602+200592*v)
+      (by omega) (by omega) (by omega) (by omega)).mp hS0
+    have hT0 : CReach
+        (2526615+2551920*v) (99300+100296*v) := by
+      have hx : (2328015+2351328*v)+(198602+200592*v)-2 =
+          2526615+2551920*v := by omega
+      have hy : ((198602+200592*v)-2)/2 =
+          99300+100296*v := by omega
+      simpa only [hx,hy] using hT0raw
+    have hU0raw := (BB6.Agent46.six_even_right_blank_reach_iff
+      (2526615+2551920*v) (99300+100296*v)
+      (by omega) (by omega) (by omega) (by omega)).mp hT0
+    have hV0 : CReach
+        (2625913+2652216*v) (49649+50148*v) := by
+      have hx : (2526615+2551920*v)+(99300+100296*v)-2 =
+          2625913+2652216*v := by omega
+      have hy : ((99300+100296*v)-2)/2 =
+          49649+50148*v := by omega
+      simpa only [hx,hy] using hU0raw
+    have hbad := BB6.Agent11High.blank_no_odd_sum_two
+      (2625913+2652216*v) (49649+50148*v)
+      (by omega) (by omega) (by omega)
+    exact hbad hV0
+  · subst q
+    have hU1 : 4*U=43*t-1 := by simpa using hpow.symm
+    have hUval : U=228878+231168*v := by
+      have hval : 43*t-1=4*(228878+231168*v) := by
+        dsimp [t,z]
+        omega
+      omega
+    have ha1 : a=228876+231168*v := by
+      rw [hUval] at ha
+      omega
+    have hk1 : k=1248178+1260672*v := by
+      rw [hUval] at hcost
+      dsimp [t,z] at hcost
+      omega
+    have hP1 : CReach
+        (228876+231168*v) (1248178+1260672*v) := by
+      simpa only [ha1,hk1] using hprev
+    have hD1raw := even_even_sum_two_reach_implies_direct
+      (228876+231168*v) (1248178+1260672*v)
+      (by omega) (by omega) (by omega) (by omega) (by omega) hP1
+    have hD1 : CReach
+        (1477052+1491840*v) (624088+630336*v) := by
+      have hx : (228876+231168*v)+(1248178+1260672*v)-2 =
+          1477052+1491840*v := by omega
+      have hy : ((1248178+1260672*v)-2)/2 =
+          624088+630336*v := by omega
+      simpa only [hx,hy] using hD1raw
+    have hD2raw := even_even_sum_four_mod8_reach_implies_direct
+      (1477052+1491840*v) (624088+630336*v)
+      (by omega) (by omega) (by omega) (by omega) (by omega) hD1
+    have hD2 : CReach
+        (2101138+2122176*v) (312043+315168*v) := by
+      have hx : (1477052+1491840*v)+(624088+630336*v)-2 =
+          2101138+2122176*v := by omega
+      have hy : ((624088+630336*v)-2)/2 =
+          312043+315168*v := by omega
+      simpa only [hx,hy] using hD2raw
+    have hbad := BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
+      (2101138+2122176*v) (312043+315168*v)
+      (by omega) (by omega) (by omega) (by omega)
+    exact hbad hD2
+
 #print axioms even_even_sum_two_reach_implies_direct
 #print axioms even_even_sum_four_mod8_reach_implies_direct
 #print axioms q0_X_not_reach_t123_z2mod128
 #print axioms q0_X_not_reach_t123_z193mod512
+#print axioms q0_X_not_reach_t123_z126mod128
 
 end BB6.Agent4U5SourceOnlyW1021
