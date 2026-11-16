@@ -144,3 +144,15 @@ theorem successor_second_bound_n10
 #print axioms successor_second_bound_n10
 
 end BB6.Agent48SuccessorSecondBoundN10
+
+
+/-- Advance the genuine blank-root run by one source transition. -/
+theorem run_succ_of_highLevelNext
+    (t u v x y : Nat)
+    (hseen : run t = some (.D u v))
+    (hstep : highLevelNext (.D u v) = some (.D x y)) :
+    run (t+1) = some (.D x y) := by
+  simp only [run, hseen, Option.bind_some]
+  exact hstep
+
+#print axioms run_succ_of_highLevelNext
