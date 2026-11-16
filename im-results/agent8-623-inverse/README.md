@@ -184,6 +184,9 @@ The current mathematical task is therefore root-specific exclusion of the four p
 
 [RootMassGapStripExclusion.md](RootMassGapStripExclusion.md) and [RootMassGapStripExclusion.lean](RootMassGapStripExclusion.lean) extend Agent 48's exact step-39/40/41 mass-gap argument. The n=10 far/far and far/near terminal-cancellation inequalities force the predecessor mass into `(213720,347700)` whenever the smaller coordinate is between 19680 and 24802. Strict source mass growth makes that interval unreachable, apart from the unique step-40 state, whose coordinates do not lie in the strip.
 
+**Stronger all-n=10 proof plan:** [RootMassGapAllN10.md](RootMassGapAllN10.md) records a two-corridor argument that would exclude all four terminal-cancellation combinations across the full n=10 band. The near 7:4 predecessor geometry has mass 54003–162491 and is bracketed by root steps 33/38; the far 13:1 geometry has mass 275050–827100 and is bracketed by steps 39/46. The intermediate root states all have ratio residuals far above the bridge error 470. However, steps 33–38 and 42–46 are currently only JS source-transcription outputs; this is a proof plan, not a source-certified result, until Lean verifies those checkpoints and the consumer.
+
+
 Agent 48's independent BigInt transcription also found 10,763 exact three-step halting candidates in its stated finite domain (`d` odd in [19681,24819], even offset in [-455,445]); all have predecessor mass 275691–347691 and `d<239399`, so Agent 48's `root_mass_corridor_excludes_small_d` excludes every scanned candidate. This does not prove the search domain exhausts all n=10 candidates. The new analytic theorem covers a bounded sufficient substrip without relying on that enumeration.
 
 
