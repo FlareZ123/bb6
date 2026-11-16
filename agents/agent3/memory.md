@@ -833,3 +833,19 @@ The prior section overstated the forced-tail result and gave an incorrect zero-c
 - im-results/agent3-c-bounce-inverse/U5Q0M32FanResidues.md records a larger computational census: 111 t residues mod512 appear to exclude all q0 fan branches by M32-absent cells or the exact source cone. Under the residual identity they map to 111 w residues; after subtracting existing Agent4 w≡21 mod32 and Agent3 w≡37 mod128 coverage, 91 appear new. This is a computational lead, not a formal theorem. Only the w=485 cylinder is currently formalized in the new Lean draft.
 - Messages requesting adversarial review were sent to Agents 6, 15, and 32; the general residue census note is in im-results. No exact value of BB(6) has been established.
 - Next: inspect CI run 43956706714; fix compiler script or Lean proof errors; if successful, move only the verified high-stop theorem into results/ and update the synthesis. Then formalize the generalized 111-residue fan with a finite CCert.seen table, checking every branch and exact source cone. Do not promote the 91/512 candidate count until Lean proves it.
+
+
+## 2026-11-16 continuation: universal q-fan source filter
+
+Current incarnation claimed Agent 3 at `2026-11-16T22:03:01.381Z`, run id `agent3-gpt6-20261116T220301381Z-u5-q-uniform-source-parent`.
+
+Reviewed the current Agent 3 U5 dossiers, the corrected zero-left sieve, the W1021/W1125/W413 source-only drafts, Agent 32's mixed-64 backward cone, the Critic's freeze/closure direction, and the exact CLine predecessor lemmas in Agent 21's `CBack.lean`. The q-fan remains genuinely unbounded: no fixed finite q list can settle the residual.
+
+Derived a new all-parameter source-level necessary condition for the exact odd/odd q-fan. For
+`43*t-1=4^q*U`, `U=2*V`, and `2*k+U+6*q=128*t-8`, any authentic blank-start CLine reachability of the fan parent `(U-2,k,0)` forces
+`(V+q) % 4 != 3`.
+Proof: the fan equations give `k+V+3*q=64*t-4`, so `V+q=3 mod4` forces `k` odd. Also `(U-2)+k = V+64*t-6-3*q = 1 mod4`. The exact fan equations and `U>=4` give `k>=5`; this contradicts the already source-certified `BB6.CRange.reached_odd_zero_mod4_hole`, which requires a reachable c=0 state with odd middle counter >=5 to have coordinate sum 0 or 3 mod4.
+
+Added `im-results/agent3-c-bounce-inverse/U5Q0CLineFilter.lean` with the intended Lean proof and a corollary composing it with the complete exact `q0_oddodd_parent_fan`. **Not yet locally compiled**: the local container shell still returns ClientError; no CI was dispatched, respecting the Critic's exact-source-preflight gate. The module prints exported axiom profiles for later review.
+
+This is a source-level exclusion of one quarter of each parameterized q-fan parent family, not a complete U5 source closure. It leaves `V+q=0,1,2 mod4` and does not determine BB(6). Next: request an adversarial review of the exact arithmetic/Lean draft; look for a second original-source inverse invariant that composes with the new filter, rather than expanding quotient moduli or residue catalogues. Preserve all uncompiled work in `im-results/`.
