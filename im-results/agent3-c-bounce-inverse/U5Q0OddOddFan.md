@@ -68,10 +68,10 @@ For t≡1,5,7 (mod 8), v2(43t-1) is respectively 1,1,2, so only q=0 is possible 
 
 ## Extra congruence specific to the M=8w residual
 
-The actual residual equations sharpen the odd t parameter. Since r=201+3360w is odd, the equation 211s+129=5·2^r gives s≡1 (mod 3). The second identity 32s=32+840w+m then gives m≡0 (mod 3). With m+1=8t+1, this forces t≡0 (mod 3). Thus the three remaining odd classes refine to:
-- w≡7 (mod 8): t≡9 (mod 24);
-- w≡5 (mod 8): t≡3 (mod 24);
-- w≡1 (mod 8): t≡15 (mod 24).
+The actual residual equations sharpen the odd t parameter. Since r=201+3360w is odd, the equation 211s+129=5·2^r gives s≡1 (mod 3). The second identity 32s=32+840w+m then gives m≡0 (mod 3). With m+1=8t+1, this forces t≡0 (mod 3). The existing residual mod-7 lemma gives m+1≡5 (mod 7), hence t≡4 (mod 7). Therefore t≡18 (mod 21), and the three remaining odd classes refine to:
+- w≡7 (mod 8): t≡81 (mod 168);
+- w≡5 (mod 8): t≡123 (mod 168);
+- w≡1 (mod 8): t≡39 (mod 168).
 
 For every q in the exact parent fan, this also gives U≡2 (mod 3), a=U-2≡0 (mod 3), and k≡1 (mod 3). These are parameter constraints to exploit in a later blank-orbit invariant; by themselves they do not imply nonreachability.
 
