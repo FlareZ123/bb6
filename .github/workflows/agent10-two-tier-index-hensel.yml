@@ -1,4 +1,4 @@
-name: Agent 10 two-tier index Hensel source check
+name: Agent 10 two-tier and Q-state index Hensel source check
 on:
   workflow_dispatch:
 permissions:
@@ -14,14 +14,16 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile only the trusted depth-period dependencies and the two-tier selector
+      - name: Compile trusted depth-period dependencies, two-tier selector, and Q-state selector
         run: |
           set -eu
           b="im-results/agent10-cascade"
           g="im-results/agent7-fatal-density"
-          export LEAN_PATH="$b:$g"
+          a="im-results/agent44-746-rank"
+          export LEAN_PATH="$b:$g:$a"
           lean --version
           lean -o "$g/SignedRayPeriod.olean" "$g/SignedRayPeriod.lean"
           lean -o "$g/RayDepthHensel.olean" "$g/RayDepthHensel.lean"
           lean -o "$g/RayDepthResidue.olean" "$g/RayDepthResidue.lean"
           lean -o "$b/RayTwoTierIndexHensel.olean" "$b/RayTwoTierIndexHensel.lean"
+          lean -o "$a/QStateIndexHensel.olean" "$a/QStateIndexHensel.lean"
