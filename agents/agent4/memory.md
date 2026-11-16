@@ -556,3 +556,19 @@ This incarnation completed the following persistent work:
 4. Diagnosed the latest visible C58 Actions run 43399504684: it fails before the C58 modules at `EvenOddThreeX2Mod16.lean:113` ("No goals to be solved"). The current workflow is manual-only, and the available connector has no dispatch action. Local Lean reconstruction also failed because the shell tool returned ClientError and Python returned TooManyActiveSessions. Reported the failure boundary and likely redundant `omega` at line113 to Agent11.
 
 Important next actions for the next incarnation: fix the upstream line113 tactic issue and investigate the reported sorryAx dependency; obtain a fresh original-source CI run; formalize R's exact two-parent classification; formalize the three six-right normalizer steps and `sixEvenRightExcluded_sound`; expose or wrap private `no_six_D`; compose the V-parent proof; then prove the S2 pullback in Lean and integrate it into C58/SixAll only after certification. BB(6) remains unsolved by this work.
+
+
+## 2026-11-16 12:02 UTC: U5 source-only root closure draft
+
+I continued Agent 4's U5/Machine C work, taking the q=0 source-parent gap identified in the 16 Nov U5 M8 investigation. The important new direction is to replace the finite M16 quotient dependency on the two already-frozen q=0 cylinders with direct original-section predecessor arguments.
+
+- `im-results/agent4-u5-source-closure/U5Q0SourceOnly.lean` contains `q0_X_not_reach_t19` for `t=32*n+19` and `q0_X_not_reach_t99` for `t=128*n+99`, plus drop-in residual wrappers `blank_no_u5_q0_parent_w21/w37`.
+  - For t=32n+19, `43*t-1 mod32=16` and U even force q≤1. q=0 gives an even/even parent with sum 2 mod4; the complete even/even parent fan leaves only its direct parent, odd-right sum1 mod4. q=1 is already odd-right sum1 mod4.
+  - For t=128n+99, `43*t-1 mod64=32` forces q≤2. q=0 reduces to odd-right sum1; q=1 has the unique even/odd valuation-two parent, odd/odd sum2; q=2 is odd-right sum1.
+- `im-results/agent4-u5-source-closure/U5SourceOnlyHighStop.lean` composes the w=21 mod32 branch all the way to the authentic blank-root orbit. Main draft theorem: `blank_no_high_m0_u5_w21`. It follows root → A_s → L_s/B_s → exact six-even-right chain → terminal y=3 fan. Its q=0 edge uses the source-only theorem above; q=1 and q≥2 use existing sum-two and p=1 mod8 exclusions.
+- The high-stop file now also has `u5_residual_nonempty (w)`, constructing natural s,m for every w using `2^210 mod211=1`, `2^201 mod211=68`, and `2^r≥r+1`; `every_w21_residual_has_unreachable_root (n)` packages an explicit infinite nonempty w=32n+21 family.
+- The new chain imports `U5Q0M16Residual` only for elementary residual congruences; it does not import `CCert` or any finite quotient. No existing Agent 3 files were edited. Intermediate material is correctly under `im-results/`, not `results/`.
+
+**Verification status:** both new Lean files are drafts and have not been compiled or axiom-audited in this invocation. The local shell tool did not start here. No CI was dispatched, respecting Critic's focused-local-preflight-before-CI instruction. Agent 3 was sent the replacement and end-to-end root draft; Agent 6 was asked to preflight both files; Agent 11 was asked to adversarially review the source-parent reductions. Await exact feedback rather than claiming certification.
+
+**Next actions:** obtain Agent 6's exact Lean preflight result; fix only concrete elaboration errors; inspect `#print axioms` for all exported theorems; then ask Agent 3 to integrate the source-only w=21 theorem into the maintained U5 high-stop path and run the existing manual source workflow. Keep the M16 quotient as independent corroboration, not a dependency. Do not expand further cylinders before this one is compiled and source-certified.
