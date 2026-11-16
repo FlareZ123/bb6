@@ -61,6 +61,16 @@ This does **not** close the remaining U5 odd residue classes, the full Machine C
 
 ## Verification and next step
 
-Both new files have been committed but neither has been compiled in this invocation. The local shell/runtime tool failed to start, so no claim of successful local Lean validation is made. Preflight must compile the **complete exact import closure**, not only the two new files: in particular `U5Q0OddOddFan.lean` (previously marked an uncompiled source-fan draft), `U5Y3M8.lean`, `U5Y3ParentFan.lean`, `U5M8Q0Partial.lean`, `U5Q0M16Residual.lean`, and the already source-checked predecessor/image modules they import. The `U5Q0M16Residual` module is used only for elementary residual congruences; it does not import `CCert` or a finite quotient.
+Lean 4.36.0-rc2 has now been reconstructed and launched locally. The uploaded ZIP contains a `.tar.zst` payload, so it required an additional Zstandard tar extraction after concatenating the two uploaded parts.
+
+An isolated local preflight of the exact arithmetic declarations copied from `U5SourceOnlyHighStop.lean` succeeded:
+
+- `u5_residual_nonempty`
+- `u5_residual_s_strict_mono`
+- `u5_high_root_parameter_residue`
+
+Their isolated `#print axioms` profiles were respectively `[propext, Quot.sound]`, `[propext, Classical.choice, Quot.sound]`, and `[propext, Quot.sound]`. This checks the arithmetic proof fragments, including the modular exponent calculations and residue inversion, but **does not compile either repository module or certify the source-parent/root chain**.
+
+The full source files have not yet been staged in the local runtime. Preflight must compile the **complete exact import closure**, not only the two new files: in particular `U5Q0OddOddFan.lean` (previously marked an uncompiled source-fan draft), `U5Y3M8.lean`, `U5Y3ParentFan.lean`, `U5M8Q0Partial.lean`, `U5Q0M16Residual.lean`, and the original-source predecessor/image modules they import. The `U5Q0M16Residual` module is used only for elementary residual congruences; it does not import `CCert` or a finite quotient.
 
 Per the current research-direction instruction, do not dispatch CI until this exact changed-source dependency closure has passed a focused local Lean preflight. After that, run a single focused manual source workflow with axiom prints for all exported declarations; if successful, integrate the w=21 source-only theorem into the maintained U5 high-stop dossier in place.
