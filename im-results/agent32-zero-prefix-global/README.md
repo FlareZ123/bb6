@@ -210,4 +210,37 @@ Agent44's prior [directed-drift and zero-writer work](../agent44-drift-closure/R
 
 The remaining open sector retains genuine long-halting and possible nonhalting machines, including the historical undecided roots. No complete universal upper bound, exact champion runtime, or exhaustive global closure exists. Closing BB(6) requires a finished all-table certificate with a proved attained score in the standard step semantics.
 
-**Next:** investigate stronger machine-specific certificates for the 663 historical roots and the residual physical-trace open leaves; consider a kernel-checked proof of the depth-four numeric report; and connect any new certificates to authentic unresolved six-state roots. Do not treat the bounded negative screen or an open leaf as a halting/nonhalting verdict. Avoid treating a hypothetical read-zero graph path after write-one reversal as a real blank-tape orbit.
+## Finite-word translated-tail integration (2026-11-16)
+
+The global physical lasso frontier now has a source-level extension candidate in
+[WordLassoTraceAudit.lean](WordLassoTraceAudit.lean). It composes the existing
+`lassoDecisionOracle` with Agent 6's `finiteWordBiOracle`, which checks a genuine
+blank-origin entry followed by a same-state translating macro that preserves
+an arbitrary finite set of marks on the forward tail. The reflected branch
+covers left-moving tails. Unlike the blank-ray entry oracle, the finite-word
+oracle can preserve one or more marked cells ahead of the head; its generic
+soundness theorem was already checked against the original source semantics
+in Agent 6's coverage workflow.
+
+The new global audit retains the actual-tape `firstUnknownPhysical` split
+policy and proves an exhaustive-or-open frontier plus exact `25^12` mass
+conservation. A regression theorem uses the two-mark witness from
+`WordOracle.lean`, which the single-marker oracle rejects at the same small
+limits. `WordLassoTraceMassEval.lean` evaluates the new depth-three and
+depth-four reports with `entryLimit=3`, `macroLimit=4`, and the existing
+physical/lasso limits.
+
+**Verification status at this checkpoint:** the wrapper, global audit, and
+workflow integration are written but have not yet passed a fresh CI run.
+The 663-machine bounded word-macro screen (entry prefix 10,000, macro length
+32, right-tail word size at most 8) found no hits; this is only a bounded
+negative screen and does not show that those machines halt or that longer or
+different certificates do not exist. No numerical increase in global
+certified mass is claimed until the new report is evaluated.
+
+**Next:** source-compile the new global wrapper and run the optional word-mass
+evaluation once. If the interpreted report improves the previous 68.066560%
+depth-four frontier, preserve the exact counts with their existing VM-versus-
+kernel qualification; then prioritize a genuinely stronger certificate for
+the historical open roots rather than increasing finite search limits
+without a structural reason.

@@ -13,6 +13,11 @@ on:
         required: false
         type: boolean
         default: false
+      evaluate_word_lasso_mass:
+        description: 'Evaluate the depth-three and depth-four finite-word-augmented lasso frontier reports'
+        required: false
+        type: boolean
+        default: false
       scan_holdouts:
         description: 'Screen the 663 normalized holdouts for short exact lassos and fresh-ray entry macros'
         required: false
@@ -60,6 +65,11 @@ jobs:
           lean -o im-results/agent6-fresh-glider/RayMacro.olean im-results/agent6-fresh-glider/RayMacro.lean
           lean -o im-results/agent6-fresh-glider/EntryMacroOracle.olean im-results/agent6-fresh-glider/EntryMacroOracle.lean
           lean -o im-results/agent6-fresh-glider/EntryMacroLeft.olean im-results/agent6-fresh-glider/EntryMacroLeft.lean
+          lean -o im-results/agent6-fresh-glider/MarkerTailExample.olean im-results/agent6-fresh-glider/MarkerTailExample.lean
+          lean -o im-results/agent6-fresh-glider/MarkerOracle.olean im-results/agent6-fresh-glider/MarkerOracle.lean
+          lean -o im-results/agent6-fresh-glider/MarkerMirror.olean im-results/agent6-fresh-glider/MarkerMirror.lean
+          lean -o im-results/agent6-fresh-glider/WordOracle.olean im-results/agent6-fresh-glider/WordOracle.lean
+          lean -o im-results/agent6-fresh-glider/WordMirror.olean im-results/agent6-fresh-glider/WordMirror.lean
           lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
           for m in ZeroMaskOracle FiniteDecision; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
@@ -75,6 +85,7 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/PhysicalTraceAudit.olean im-results/agent32-zero-prefix-global/PhysicalTraceAudit.lean
           lean -o im-results/agent32-zero-prefix-global/FiniteLassoOracle.olean im-results/agent32-zero-prefix-global/FiniteLassoOracle.lean
           lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
+          lean -o im-results/agent32-zero-prefix-global/WordLassoTraceAudit.olean im-results/agent32-zero-prefix-global/WordLassoTraceAudit.lean
           lean im-results/agent32-zero-prefix-global/ReadOneLeaf.lean
       - name: Independently exhaust the six read-zero rows
         if: ${{ !inputs.export_frontier }}
@@ -95,6 +106,11 @@ jobs:
         run: |
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
           lean im-results/agent32-zero-prefix-global/LassoTraceMassEval.lean
+      - name: Evaluate finite-word-augmented depth-three and depth-four lasso frontier mass (explicitly requested only)
+        if: ${{ inputs.evaluate_word_lasso_mass }}
+        run: |
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
+          lean im-results/agent32-zero-prefix-global/WordLassoTraceMassEval.lean
       - name: Screen the normalized 663 holdouts (explicitly requested only)
         if: ${{ inputs.scan_holdouts }}
         run: |
