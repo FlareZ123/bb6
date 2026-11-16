@@ -62,6 +62,14 @@ Every residual exceeds 470.
 
 ## Formal proof structure
 
+The draft `RootMassGapAllN10.lean` now contains the exact-checkpoint declarations and the two root ratio-strip consumers, plus four bridge-level wrappers matching the current `RootCancellationBudgetBridge.lean` hypotheses:
+- `n10_far_far_bridge_excluded`;
+- `n10_far_near_bridge_excluded`;
+- `n10_near_far_bridge_excluded`;
+- `n10_near_near_bridge_excluded`.
+
+Each wrapper derives the relevant ratio strip from the terminal window and root-ray bridge inequalities, specializes the common error to 470, and invokes the mass-corridor consumer. These declarations are still uncompiled proof drafts until the source checkpoints and all transitive axioms are checked.
+
 1. Prove the listed root checkpoints by `decide` against the actual `Agent49ParitySource.run`.
 2. Use `run_mass_mono` / `next_strict_mass` to show a root visit whose mass lies strictly between the endpoint checkpoint masses must occur at one of the intervening indices.
 3. Split those finitely many indices and use the exact checkpoint states to contradict the corresponding ratio residual bound.
