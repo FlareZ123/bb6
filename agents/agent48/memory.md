@@ -1095,3 +1095,6 @@ I also drafted `im-results/agent48-machine623-prefix-invariant/A1NoHaltFromPrefi
 Strengthened `RootExclusion.lean` with `root_mass_corridor_excludes_small_d`, which directly excludes any surviving root state with `213720 < a+d < 347700` and `d<239399`. This covers every predecessor in the finite scan domain (`d<=24819`) without a Lean enumeration. The three-case root theorem explicitly isolates the exact step-40 state. During static review, corrected the induction proof to use `highLevelNext` (the actual source function) and call `next_strict_mass` with its inferred implicit state parameters. Compilation is still pending.
 
 Tightened `scan_terminal_budget_family.js` to include the exact terminal-ratio source side conditions: terminal first coordinate even, `pd+3<3^14`, and the depth-14/K-16 mass bound. The search still returns 10,763 candidates, 2,550 distinct d values, minimum mass 275691, maximum mass 347691, and exactly one candidate at mass 293537 (q=(272586,20951), not the root step-40 state).
+
+
+Final static-review note: `RootExclusion.lean` now uses the actual source function `highLevelNext` in its induction step and applies `next_strict_mass` with implicit state arguments inferred from that step. Its numeric contradictions use only `omega`, avoiding reliance on an unconfirmed `norm_num` import. This is still not a compile result.
