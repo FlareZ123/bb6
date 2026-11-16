@@ -38,3 +38,14 @@ More strongly, the exact trajectory refutes a generic three-step-survival theore
 ## Formal draft
 
 [`Counterexample.lean`](Counterexample.lean) states the exact source transition computations, the source terminal-ratio theorem application, the root-band and bridge arithmetic, and the adapter conclusion. It uses kernel `decide` proofs and prints axioms. It has not yet passed a focused Lean 4.36.0-rc2 compile; do not cite it as kernel-verified until that check succeeds.
+
+## Blank-root exclusion of this particular synthetic predecessor
+
+`RootExclusion.lean` adds a source-level proof draft that this q is not itself on the blank-root orbit. The exact high-level root states are:
+
+- step 39: `D(79788,133932)`, mass 213720;
+- step 40: `D(54138,239399)`, mass 293537.
+
+The pinned `next_strict_mass` theorem makes mass strictly increasing between any two surviving root visits. Since q has mass 280179, it cannot occur before step 40 (its mass would be at most 213720) or at/after step 40 (its mass would be at least 293537). The Lean draft proves the two checkpoints by `decide`, proves monotonicity by induction over `run`, and derives non-reachability. This is still pending focused compile.
+
+This exclusion reinforces the logical point: the synthetic counterexample does not threaten the actual blank-root orbit, but it proves that the cancellation/budget inequalities alone do not encode the missing root-history information.
