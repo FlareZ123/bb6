@@ -51,10 +51,8 @@ theorem u5_residual_nonempty (w : Nat) :
     dsimp [r]
     rw [show 201+3360*w=201+210*(16*w) by omega,
       Nat.pow_add,Nat.pow_mul,Nat.mul_mod,h201,h210pow]
-    decide
   have hmod : (5*2^r)%211=129 := by
     rw [Nat.mul_mod,hpow]
-    decide
   let s := 5*2^r/211
   have hdecomp := Nat.mod_add_div (5*2^r) 211
   have hs : 211*s+129=5*2^r := by
@@ -65,8 +63,10 @@ theorem u5_residual_nonempty (w : Nat) :
   have hlin : 211*(27*w+1)+129≤5*(r+1) := by
     dsimp [r]
     omega
-  have hbig : 211*(27*w+1)+129≤5*2^r :=
-    le_trans hlin (Nat.mul_le_mul_left 5 hrpow)
+  have hbig : 211*(27*w+1)+129≤5*2^r := by
+    calc
+      211*(27*w+1)+129 ≤ 5*(r+1) := hlin
+      _ ≤ 5*2^r := Nat.mul_le_mul_left 5 hrpow
   have hsge : 27*w+1≤s := by
     dsimp [s]
     omega
@@ -249,7 +249,6 @@ theorem u5_high_root_parameter_residue (w s : Nat)
     Nat.mod_eq_zero_of_dvd hdiv
   have hmod : (211*s+129)%512=0 := by
     rw [hs,Nat.mul_mod,hpowmod]
-    simp
   have hsmod : s%512=293 := by omega
   constructor <;> omega
 
