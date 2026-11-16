@@ -30,7 +30,7 @@ The even-near bound dominates for n≥10. Since (m\le3^n-4),
 p_2\le3m+6n+9\le3^{n+1}+6n-3. \tag{1}
 ]
 
-These are the source leaves that must be obtained from `drainB_upper_linear_log` and, in the even-near sector, `evalA_upper_log` followed by `drainB_upper_linear_log`.
+These are the source leaves now drafted in `SuccessorSecondBoundN10.lean`, using `drainB_upper_linear_log` and, in the even-near sector, `evalA_positive_depth` / `evalA_upper_log` followed by `drainB_upper_linear_log`. The file remains uncompiled.
 
 ## 3. Apply the terminal-parent corridor at p
 
@@ -135,7 +135,7 @@ The n=10 version is already present as `n10_even_gap_two_root_excluded` in `Root
 
 1. Compile `SuccessorSecondBoundN10.lean`, which now drafts the four q→p third-coordinate bounds and branch-specific `drainB`/`evalA` extraction. Its intended conclusion is p₂≤3·min(q₁,q₂)+69.
 2. Compile `TerminalWindowAtDepth12.lean` as the n=10 instance; generalize it to (N=n+2,K=n+5) if extending to n=11,12.
-3. Formalize the q bridge inequalities, prove the near-q orientation transfer, then compose them with the p terminal window and call the matching root-mass wrapper.
+3. Formalize the q bridge inequalities, then compose them with the p terminal window and call the matching root-mass wrapper. The standalone near-q orientation transfer is now drafted in `NearScaleTransferN10.lean`.
 4. Compile `RootMassGapN11N12.lean`: its run 47–55 `by decide` checkpoints and n=11/n=12 near, far, and q-gap-two exclusions are drafted but not yet source-checked.
 5. Keep all of this in `im-results/` until the complete source composition and checkpoint dependencies compile without `sorryAx`.
 
