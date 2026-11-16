@@ -102,6 +102,18 @@ The 44 z residues and their equivalent w residues (the latter modulo1024, using 
 
 The other 84 z residues mod128 each have at least one parent cell in the mixed quotient's seen set. The 44-class list is the mixed-quotient result only; combining it with the independent M16 quotient restores the two M16 cylinders that this mixed quotient misses. In addition, the 16 deeper cylinders in z≡125 (mod128) are listed in the next section. All remain computational candidates pending a kernel certificate.
 
+
+## Higher-cost A/K128,C32 refinement: one additional z=92 cylinder
+
+A further experimental quotient with A/K exact below2 modulo128 and C exact below4 modulo32 has 608,400 states, 296,820 reachable states, and 2,246,654 representative edges. For z mod128≠125, the same bounded-depth scan finds 46 full cylinders:
+```
+3,7,9,11,15,17,19,20,25,27,31,35,39,41,43,47,51,52,55,57,59,63,
+67,71,73,75,79,81,83,84,87,89,91,92,95,99,103,105,107,111,115,116,119,121,123,127.
+```
+It contains all M16 residues except z=23 and adds one further residue z≡92 (mod128) beyond the A/K64,C32 result. For z≡92 (mod128), q=0 and q=1 project to (70,88,0) and (48,32,0), both absent; q≥2 is impossible because 661+903z is odd. The exact residual lift is w≡877 (mod1024).
+
+This is a fourfold state-space increase over A/K64,C32 for one extra full cylinder. It is recorded as an optional candidate, not a priority, unless the larger quotient certificate is cheap to generate. Combining this quotient with M16 would cover 47 full z cylinders mod128, before the deeper z≡125 branch.
+
 ## Sixteen bounded cylinders inside z≡125 (mod128)
 
 For each candidate representative z0, define
