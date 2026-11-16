@@ -357,6 +357,7 @@ jobs:
 
             cd /tmp/a38-section
             export LEAN_PATH="/tmp/a38-section:/tmp/a43mod16"
+            python3 "${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/verify_u5_m16_states.py"
             cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/M32SectionEmbedding.lean .
             lean -o M32SectionEmbedding.olean M32SectionEmbedding.lean 2>&1 | tee M32SectionEmbedding.log
             if grep -q sorryAx M32SectionEmbedding.log; then
