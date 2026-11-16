@@ -124,7 +124,7 @@ K = max(e+1, 2*dmax+4).
 ```
 If e is fixed by z mod2^K and all parent cells through dmax are fixed, then the entire cylinder z≡z0 (mod2^K) has the same parent-fan exclusion. The depth-d A/K64 parent projection depends only on z mod2^(2d+4); the condition K≥2*dmax+4 fixes every such projection. Since K≥e+1, it also fixes e and hence the maximum possible d. Thus the finite cell check proves a whole arithmetic cylinder, conditional on quotient soundness.
 
-The 16 minimal cylinders found within the K≤20 enumeration are:
+The 16 minimal all-absent cylinders in the complete z≡125 (mod128) branch classification are:
 
 | z residue | modulus | e | dmax | w residue | w modulus | Parent cells (d=0 upward; every cell absent) |
 |---:|---:|---:|---:|---:|---:|---|
@@ -144,6 +144,8 @@ The 16 minimal cylinders found within the K≤20 enumeration are:
 | 11773 | 16384 | 9 | 5 | 23557 | 131072 | (62,60), (62,57), (62,54), (62,19), (14,8), (50,51) |
 | 13821 | 16384 | 9 | 5 | 72709 | 131072 | (62,60), (62,57), (62,54), (62,19), (14,40), (34,59) |
 | 15869 | 16384 | 9 | 5 | 121861 | 131072 | (62,60), (62,57), (62,54), (62,19), (14,8), (18,3) |
+
+Completeness of this branch is finite: 661+903z is divisible by4096 exactly when z≡2045 (mod4096). In that root cylinder, d=4 is admissible and always projects to the seen cell (62,48,0). Every other z in the branch has e=v2(661+903z)≤11, hence dmax≤6, and all parent projections are fixed by z mod65536. I checked all 512 residues z mod65536 with z≡125 (mod128): exactly 112 have every admissible parent cell absent, and these are precisely the 16 cylinders in the table; the other 400 have at least one seen parent. Thus there are no further deeper all-absent cylinders in this quotient's z≡125 branch.
 
 The w residues follow from t=123+168z and the exact residual identity 211t+1360+22155w=20·2^(201+3360w); the right-hand side is divisible by every modulus used here. Explicitly, for a z cylinder modulo 2^k, the corresponding w residue modulo 2^(k+3) is the unique solution of 22155*w ≡ -211*(123+168*z)-1360 (mod 2^(k+3)). Every listed w class is inside w≡5 (mod128). These cylinders are pairwise disjoint from the short w=45 and w=101 cylinders.
 
