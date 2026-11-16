@@ -8,7 +8,7 @@ Direct fatality is `3^(t+1)*d=G(n)`, where `G(n)=8*2^n-2*n-3`.
 
 Two new all-t scale reductions:
 1. For fixed (K,t), the child-level selector `G(L)<=3^(t+1)*d<G(L+1)` has at most two consecutive possible L values. The source band makes the range of `3^(t+1)*d` have endpoint ratio <4/3, while `3*G(n+1)>4*G(n)`.
-2. For fixed K and fixed fatal target quantity X (X=G(n) direct, or X=G(L+1)-2^(r+1)*(4L+10) for one-even exit), at most one t can satisfy the source band: `P_t=2^t*X/3^(t+1)` scales by 2/3 per t, whereas the source band has width ratio <4/3.
+2. For fixed K and fixed fatal target quantity X (X=G(n) direct, or X=16*2^L+2*L+5-2^(r+1)*(4*L+10) for one-even exit), at most one t can satisfy the source band: `P_t=2^t*X/3^(t+1)` scales by 2/3 per t, whereas the source band has width ratio <4/3.
 
 Existing adjacent-fatal sector theorem further filters one-even child levels to L mod 6 in {3,4}; direct fatal targets have n mod 6 in {4,5}.
 
