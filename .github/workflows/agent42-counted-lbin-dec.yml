@@ -42,6 +42,10 @@ jobs:
           cp im-results/agent48-counted-inc0/{M0EvenEightQ4Bridge,M0EvenEightQ4Prefix,M0EvenEightGenericSource}.lean /tmp/a42-lbin-dec/
           cp im-results/agent48-counted-inc0/m0_even_eight_source_sim.js /tmp/a42-lbin-dec/
           cd /tmp/a42-lbin-dec
+          if grep -R -n 'native_decide' . --include='*.lean'; then
+            echo '::error::native_decide found in the staged counted LBinDec/S1 source closure'
+            exit 1
+          fi
           node m0_even_eight_source_sim.js | tee m0-even-eight-source-sim.log
           export LEAN_PATH=.
           lean --version
@@ -87,10 +91,6 @@ jobs:
           lean -o M0EvenEightQ4Prefix.olean M0EvenEightQ4Prefix.lean 2>&1 | tee m0-even-eight-q4-prefix-compile.log
           lean -o M0EvenEightGenericSource.olean M0EvenEightGenericSource.lean 2>&1 | tee m0-even-eight-generic-source-compile.log
           grep -q 'PASS: 1890 exhaustive bounded cases' m0-even-eight-source-sim.log
-          if grep -R -n 'native_decide' . --include='*.lean'; then
-            echo '::error::native_decide found in the staged counted LBinDec/S1 source closure'
-            exit 1
-          fi
           if grep -q 'native_decide' counted-lbin-dec-axioms.log counted-prefix-hrun-compile.log counted-prefix-hrun-axioms.log s1-encoder-compile.log s1-prefix-bridge-compile.log counted-suffix-output-compile.log s1-carry-output-bridge-compile.log carry-left-r23-compile.log long-residue1-compile.log s1-carry-inc0-compile.log s1-odd-canonical-compile.log s1-counted-inc0-compile.log champion-modular-compile.log count-pattern-compile.log cost-recurrence-compile.log counted-reset-compile.log s1-counted-drain-compile.log counted-q4-prefix-compile.log counted-rst1-prime-compile.log q4-suffix-compile.log q4-right-endpoint-compile.log m0-even-eight-q4-bridge-compile.log m0-even-eight-q4-prefix-compile.log m0-even-eight-generic-source-compile.log; then
             echo '::error::native_decide appeared in a compiled axiom log'
             exit 1
