@@ -77,6 +77,13 @@ theorem reset_chain_to_cpath {s u : Nat}
       have hfirst := (reset_parent_iff _ _).mpr hp
       exact reach_trans ih (outcome_to_reach hfirst)
 
+/-- Concatenate two exact reset-parent chains with a shared endpoint. -/
+theorem reset_chain_trans {s h u : Nat}
+    (hs : ResetChain s h) (ht : ResetChain h u) : ResetChain s u := by
+  induction ht with
+  | root => exact hs
+  | append ht hp ih => exact ResetChain.append ih hp
+
 /-- **Exact reset-level semantics** of the post-initial #746 source-C
     trajectory. The full C-state reachability problem for reset targets is
     equivalent to the finite-chain closure of ResetParent. No approximation
