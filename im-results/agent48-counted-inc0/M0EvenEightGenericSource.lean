@@ -399,7 +399,7 @@ theorem m0EvenEight_q4_prefix_far_tail
 private theorem m0EvenEight_v2_mul_odd
     (q : Nat) (hqodd : q % 2 = 1) :
     v2 (8*q) = 3 := by
-  have hqv : v2 q = 0 := v2_of_odd q (by omega)
+  have hqv : v2 q = 0 := v2_of_odd q (by omega) (by omega)
   have hdiv2 : (2*q)/2 = q := by omega
   have hdiv4 : (4*q)/2 = 2*q := by omega
   have hdiv8 : (8*q)/2 = 4*q := by omega
