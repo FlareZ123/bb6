@@ -193,6 +193,26 @@ U5Q0M16HighStop.lean then combines:
 
 Its conditional conclusion is that the high m=0 stop root j=39+64s is unreachable for every residual parameter triple satisfying the U5 equations and w=21 (mod32).
 
+## Additional U5 M16 extension: w=37 (mod 128) high-stop cylinder
+
+A second, disjoint residual cylinder is now covered by the same certified 24^3 quotient. The residual identity used above, reduced modulo 1024 rather than 256, gives
+```
+w = 37 (mod 128)  =>  t = 99 (mod 128).
+```
+Write t=128n+99. The exact q=0 odd/odd source-parent fan has only depths d=0,1,2:
+- d=0 projects to (14,12,0);
+- d=1 projects to (22,21,0);
+- d=2 projects, according to n mod4, to (8,17,0), (16,21,0), (8,9,0), or (16,13,0);
+- d≥3 is impossible because 43t−1=32(172n+133) with the bracket odd.
+
+All six quotient states are absent from the certified M16 reachable set. The new Lean draft is in `U5Q0M16Core.lean`; the residual lift and parent closure are in `U5Q0M16Residual.lean` and `U5Q0M16ResidualClosure.lean`. `U5Q0M16HighStop.lean` carries this through the y=3 terminal, B_s, A_s, and the high m=0 root j=39+64s. The resulting conditional root exclusion is for every residual triple satisfying the U5 equations and w=37 (mod128).
+
+This is disjoint from w=21 (mod32), and is an additional subset of the previously hard w=5 (mod8) class. It does not close the whole w=5 class: the remaining parameter cylinders still admit source parents not excluded by this quotient.
+
+The quotient audit script now checks eleven absent c=0 states (the original five plus these six) while reproducing 7,115 reachable states and 34,992 representative edges.
+
+**Verification status for the new w=37 extension:** the arithmetic and quotient-state census are checked independently, and the Lean proof draft has been added to the existing focused `u5_q0_m16_only` workflow path. It has not yet passed exact-source local preflight or CI. Do not treat the source-composition theorem as certified until the full pinned M16 archive and source dependency closure compile with no `sorryAx`.
+
 **Verification status:** the new proof bodies have passed a local Lean interface-stub preflight. The exact M16 archive/source dependency closure has not yet been compiled against the repository sources. A focused u5_q0_m16_only CI path is prepared in .github/workflows/agent11-c-diagonal-late.yml; run it only after the exact local source preflight. This remains intermediate research, not a BB(6) bound.
 
 
