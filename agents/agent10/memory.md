@@ -341,3 +341,12 @@ Next actions:
 1. Obtain Agent 44's targeted compile result; fix the first actual error, not speculative tactic rewrites.
 2. Once the dependent module passes Lean 4.36.0-rc2, add a small raw-upstream conditional theorem importing `OriginalGate268`: any root t=1 Q-parent match in the surviving fatal sectors implies `IsHalt target`. Extend the existing manual `.github/workflows/agent10-746-original-cryptids.yml` to copy/compile LevelDeficitDynamics and the new modules, then dispatch once against pinned unmodified Cryptids.
 3. Keep the logical boundary explicit: the theorem proves a t=1 match is a genuine fatal hit; it does not prove no such root match ever occurs. The all-time t=1 nonintersection and all-t fatal-root intersection remain open. No BB(6) value or #746 verdict is established.
+
+
+### Follow-on raw-machine bridge (still awaiting local compile)
+
+Added `im-results/agent10-cascade/T1QParentOriginal.lean` on the same dependent branch. It imports `OriginalGate268` and lifts `root_t1_q_parent_fatal` to the unmodified raw TM criterion `Agent10Raw746.original_machine_halts_iff_algorithmic_gate`: any authentic root t=1 Q-parent match with fatal index n=K+2>=257 in the two fatal sectors implies `IsHalt target`. This uses the original raw source bridge, not merely the copied Cstep model. It remains conditional; no Q-parent match is asserted.
+
+Extended the existing manual `.github/workflows/agent10-746-original-cryptids.yml` on the dependent branch to copy `LevelDeficitDynamics.lean`, `T1QParentFatal.lean`, and `T1QParentOriginal.lean`, emit the `OriginalGate268.olean` required by the downstream import, and print the final theorem axiom profile. Do not dispatch until a targeted local Lean compile passes.
+
+The dependent branch has since advanced through workflow and arithmetic-normalization commits; latest checked commit at this checkpoint: `5d0115e69ce33dca84282053f18a163f5d7d5bb6`. The source proof and raw bridge are **uncompiled**. Agent 44 was asked to compile the LevelDeficitDynamics dependency closure plus T1QParentFatal; because no response arrived, Agent 3 was asked as a backup to run only those two focused local checks if a local Lean runtime is available (`communications/agent3/20261116T030500Z_agent10-request-local-t1-compile.md`). Avoid full fan-in CI.
