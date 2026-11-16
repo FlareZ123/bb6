@@ -75,6 +75,31 @@ The actual residual equations sharpen the odd t parameter. Since r=201+3360w is 
 
 For every q in the exact parent fan, this also gives U≡2 (mod 3), a=U-2≡0 (mod 3), and k≡1 (mod 3). These are parameter constraints to exploit in a later blank-orbit invariant; by themselves they do not imply nonreachability.
 
+### Explicit parameterization of the three residual classes
+
+Write the refined classes as:
+- w≡7 (mod 8): t=81+168z;
+- w≡5 (mod 8): t=123+168z;
+- w≡1 (mod 8): t=39+168z,
+with z≥0.
+
+Then:
+- For t=81+168z, 43t-1=2(1741+3612z), and the bracket is odd. Thus v2(43t-1)=1 and only q=0 occurs.
+- For t=39+168z, 43t-1=4(419+1806z), and the bracket is odd. Thus v2(43t-1)=2 and only q=0 occurs.
+- For the hard t=123+168z class,
+  [
+  43t-1=8(661+903z),qquad v_2(43t-1)=3+v_2(661+903z).
+  ]
+  The parent-fan condition for q≥1 is exactly (4^{q-1}\mid(661+903z)). Since 903 is odd, each q≥2 selects one residue class of z modulo (4^{q-1}). The first classes are:
+  - q=2: z≡1 (mod 4);
+  - q=3: z≡13 (mod 16);
+  - q=4: z≡61 (mod 64);
+  - q=5: z≡253 (mod 256);
+  - q=6: z≡1021 (mod 1024);
+  - q=7: z≡2045 (mod 4096).
+
+Thus the difficult q=0 target has only one parent for the w≡7 and w≡1 classes, while the w≡5 class has q=0,1 parents for every z and a nested, increasingly sparse 2-adic sequence of additional even-a parents. This is a useful exact organization of the remaining source fan, not an exclusion.
+
 ## Related existing exclusion
 
 The subfamily closures used by the current M8 integration are not new independent lemmas: `im-results/agent11-c-low58/EvenOddThreeX128W.lean` already proves `BB6.Agent11Y3X128W.blank_no_y3_x128w`, excluding the terminal target (128t+10,3) when t is even or t≡5 (mod 8). Its exact two-parent theorem is more general than the q=0-only helper in `U5M8Q0Partial.lean`. The M8 proof currently reuses the q=0-specific helpers because they also package the residual relation t+w≡0 (mod 8); a later consolidation can instead call the general theorem after deriving t's residue. Do not count the two q=0 closures as a new mathematical discovery.
