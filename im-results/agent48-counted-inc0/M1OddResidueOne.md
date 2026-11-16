@@ -1,10 +1,10 @@
 # Candidate m=1, n=8q+1 source reset row
 
-**Status:** the base n=1 q4 prefix already exists in `im-results/agent48-final-rst1/M1OneQ4Prefix.lean`; its 29-step bridge uses the narrower read window [-7,4]. This dossier records the general n=8q+1 lift. `M1OddResidueOneBridge.lean` gives a wider-window [-9,4] finite embedding of the same path, `M1OddResidueOneTargetLeft.lean` formalizes the binary target-left identity, and a deterministic JavaScript replay passes 756 small parameter cases. The arbitrary-width source theorem, suffix/drain composition, original-import compilation, and transitive axiom audit remain open. Keep this in im-results.
+**Status (2026-11-16):** `M1OddResidueOneSource.lean` now contains the arbitrary-width `n=8q+1` q4-prefix lift, suffix/reset-prefix composition, and counted-drain theorem. `TM63RootMiddle23.lean` composes this row into the candidate blank-root itinerary. `M1OddResidueOneBridge.lean` retains an independent wider-window [-9,4] finite embedding; the reused base prefix has the narrower [-7,4] read window. The deterministic JavaScript replay still supplies only finite corroboration (756 cases). The new source and its complete dependency closure have **not** passed Lean compilation or a transitive axiom audit. The source now explicitly imports `S1CountedDrain`; the manual workflow has been expanded to stage and compile its all-valuation H-run/S1 decrement dependency closure. Keep all of this in im-results.
 
 ## Target source theorem
 
-The next state after Agent 42's m=2 residue-two row is marker 1 with n=8q+1. The intended full counted increment is:
+The next state after Agent 42's m=2 residue-two row is marker 1 with n=8q+1. The full counted increment is now stated in `M1OddResidueOneSource.lean` as:
 
 ~~~lean
 m1OddResidueOne_counted_increment_source
@@ -53,7 +53,7 @@ The relevant low-three-bit expansion is:
 binDec L (8*q+1) = d0 ++ d1 ++ d1 ++ binDec (L-3) q.
 ~~~
 
-The bridge head window [-9,4], after the counted sweep endpoint, gives the half-line read region x ≥ h-(3*a+10). A general source theorem can therefore be lifted from the base L=3,n=1 prefix using run_frame, provided the left input/cut prefixes and untouched tails are aligned on that half-line. The right tape depends only on b.
+The reused `M1OneQ4Prefix` bridge has read window [-7,4]. After the counted left sweep of `3*a+1` cells, the base prefix head bound is `h-(3*a+1)-7 = h-(3*a+8)`. `M1OddResidueOneSource.lean` now implements the `run_frame` lift on the corresponding half-line: the source and base left words share a prefix of length `3*a+15`, so all cells in the read region agree; the right tape depends only on `b`. The separate wider [-9,4] bridge file is not the bound used by this lift.
 
 The generic q4 suffix starts at state 4/head h with length 39+3*b; the first four moves are already consumed by the q4 prefix ending at head h+4. The remaining suffix is 35+3*b. The target-left identity below is now stated in M1OddResidueOneTargetLeft.lean (source draft, not yet compiled):
 
@@ -94,3 +94,16 @@ The current candidate root after middle 22 is m=1,n=16*r-7. Since 16*r-7 = 8*(2*
 - H23 = H22+5+3*B22.
 
 This is a lower-bound itinerary extension only. It does not establish the full TM63 halting run, the exact BB(6) value, or a universal upper bound.
+
+
+## Current source and audit status
+
+The source module exports:
+- `m1OddResidueOne_q4_prefix_source`, the arbitrary-width prefix at cost `32+12*a`;
+- `m1OddResidueOne_reset_prefix_source`, the prefix plus the remaining q4 suffix at cost `67+12*a+3*b`;
+- `m1OddResidueOne_counted_increment_source`, the complete counted increment to marker 0 and `n=8*q`;
+- a symbolic endpoint corollary and `#print axioms` declarations for the exported results.
+
+The root wrapper `TM63RootMiddle23.lean` specializes `q=2*r-1), giving a source-level candidate endpoint at marker 0, `n=16*r-8`. This is not a certified root extension until its full imports compile and the transitive axiom output excludes `sorryAx`.
+
+The manual-only workflow `.github/workflows/agent48-m1-odd-residue-one.yml` now stages the H-run and S1 decrement/drain closure before compiling the residue-one modules. It omits `LongResidue1` and `CountedCarryLeftOutputR23`, which are not in the current import graph of `S1CarryInc0`. No workflow run has been dispatched. The next row `m=0,n=8*q` after middle 23 was explicitly handed to Agent 42; do not duplicate that row while its ownership remains with that identity.
