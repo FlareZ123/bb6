@@ -252,6 +252,38 @@ theorem machine623_manifest_terminal :
         rw [machine623_selected_partial_path]
       _ = 25^8 := by decide
 
+/-- The mapped Machine C leaf is the unique manifest terminal
+    matched by the complete Machine C table. -/
+theorem machineC_manifest_terminal_unique :
+    ∃ term : AuditTerminal, term ∈ depth4ResidualTerminals ∧
+      term.path = machineCDepthFourPath ∧
+      term.certified = false ∧ term.weight = 25^8 ∧
+      term.matches machineC ∧
+      (∀ other : AuditTerminal, other ∈ depth4ResidualTerminals →
+        other.matches machineC → other = term) := by
+  obtain ⟨term, hmem, hpath, hcert, hweight, hmatches⟩ :=
+    machineC_manifest_terminal
+  refine ⟨term, hmem, hpath, hcert, hweight, hmatches, ?_⟩
+  intro other hother hotherMatches
+  exact depth4ResidualAudit.terminals_unique [] machineC
+    other term hother hmem hotherMatches hmatches
+
+/-- The mapped #623 leaf is the unique manifest terminal matched by the
+    complete #623 table. -/
+theorem machine623_manifest_terminal_unique :
+    ∃ term : AuditTerminal, term ∈ depth4ResidualTerminals ∧
+      term.path = machine623DepthFourPath ∧
+      term.certified = false ∧ term.weight = 25^8 ∧
+      term.matches machine623 ∧
+      (∀ other : AuditTerminal, other ∈ depth4ResidualTerminals →
+        other.matches machine623 → other = term) := by
+  obtain ⟨term, hmem, hpath, hcert, hweight, hmatches⟩ :=
+    machine623_manifest_terminal
+  refine ⟨term, hmem, hpath, hcert, hweight, hmatches, ?_⟩
+  intro other hother hotherMatches
+  exact depth4ResidualAudit.terminals_unique [] machine623
+    other term hother hmem hotherMatches hmatches
+
 def machineCProbeEndpoint : FinRayCfg :=
   { state := ⟨1, by decide⟩, head := -2, ones := [-3, -2, -1, 1] }
 
@@ -320,6 +352,8 @@ theorem machine623_manifest_probe_uniform (m : Machine)
 #print axioms FrontierAudit.open_has_exact_terminal
 #print axioms machineC_manifest_terminal
 #print axioms machine623_manifest_terminal
+#print axioms machineC_manifest_terminal_unique
+#print axioms machine623_manifest_terminal_unique
 #print axioms partialOfPath_compatible
 #print axioms machineC_authentic_cylinder_inside_manifest_leaf
 #print axioms machine623_authentic_cylinder_inside_manifest_leaf
