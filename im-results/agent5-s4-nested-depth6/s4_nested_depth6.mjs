@@ -13,7 +13,11 @@ function same(a, b) {
 }
 function show(xs) { return xs.map(String); }
 function sumWord(word) { return word.reduce((s, x) => s + x, 0n); }
-function mass(xs) { return xs.reduce((s, x) => s + x + 1n, 0n); }
+function weightedW(xs) {
+  let w = 0n;
+  for (let i = xs.length - 1; i >= 0; i--) w = xs[i] + 1n + 2n * w;
+  return w;
+}
 
 function boundary(p, c) {
   let a = p[0] + c;
@@ -280,8 +284,8 @@ assert(tailAfterY !== null, "halt in one Y block");
 // The terminal-quotient experiment requested in the Critic's 14 November note.
 // This is a counterexample to the proposed (W mod 31, length mod 5) quotient,
 // not a halt on the authentic blank-root orbit.
-function weightedMod(xs, m) { return mass(xs) % m; }
-const terminalRootW = mass(tailAfter28);
+function weightedMod(xs, m) { return weightedW(xs) % m; }
+const terminalRootW = weightedW(tailAfter28);
 const terminalRootWmod31 = weightedMod(tailAfter28, 31n);
 const terminalFirstOffset = R[0];
 assert(terminalFirstOffset === 305419363311n, "unexpected first R offset");
@@ -296,7 +300,7 @@ const terminalSyntheticTail = [
   terminalSyntheticW - terminalSyntheticMin,
   ...Array(tailAfter28.length - 1).fill(0n)
 ];
-assert(mass(terminalSyntheticTail) === terminalSyntheticW,
+assert(weightedW(terminalSyntheticTail) === terminalSyntheticW,
   "synthetic tail mass construction failed");
 assert(terminalSyntheticTail.length === tailAfter28.length &&
   weightedMod(terminalSyntheticTail, 31n) === terminalRootWmod31,
