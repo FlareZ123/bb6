@@ -105,6 +105,8 @@ g++ -O3 -std=c++17 root_gap_scale_scan.cpp -lgmpxx -lgmp -o root_gap_scale_scan
 ./root_gap_scale_scan 20000
 \`\`\`
 
+The implementation deliberately skips diagnostic accumulation for the first nine transition indices (`if (i < 9) continue;`); all extrema below, including the minimum square ratio, are over old-state indices `i >= 9`, not over the entire initial transient from D(0,7).
+
 Completed 20,000-step run:
 \`\`\`text
 DONE steps=20000 mismatch=0 zero=0
