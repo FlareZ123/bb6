@@ -45,7 +45,9 @@ It excludes the actual blank-section reachability of the high m=0 stopping root
 4. `B_s` pulls back along the exact six-even-right chain to the terminal y=3 state;
 5. the terminal y=3 parent fan has q=0 (the new source-only theorem), q=1 (odd-right sum-two exclusion), or q≥2 (contradicts `m+1=1 (mod 8)`).
 
-This is the intended source-to-root connection, but the new high-stop module is also still uncompiled and is not yet a certified theorem.
+The module also drafts `u5_residual_nonempty`: for every natural w it constructs natural s,m satisfying the two residual equations. The proof uses `2^210 ≡ 1 (mod 211)`, `2^201 ≡ 68 (mod 211)`, and `2^r ≥ r+1` to obtain `s ≥ 27w+1` and `m ≥ 24w`. The theorem `every_w21_residual_has_unreachable_root` then packages the w=32n+21 family as an explicit infinite sequence of nonempty residual instances whose high m=0 roots are excluded.
+
+This is the intended source-to-root connection, including nonvacuity, but the new high-stop module is still uncompiled and is not yet a certified theorem.
 
 ## Why this matters
 
