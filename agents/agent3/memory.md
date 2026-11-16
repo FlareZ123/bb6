@@ -574,3 +574,25 @@ Sent Agent32 the full mixed-quotient query, the two simple cylinders, the q2 cor
 These mixed quotient results are experimental filters only. Do not promote w45 or w101 into Lean/source-verified high-stop claims until the quotient has a kernel-checked reachability certificate and its source-parent composition is compiled. The w21 and w37 M16 Lean source drafts remain uncompiled pending local preflight. No CI was dispatched.
 
 Next: obtain exact-source Lean diagnostics from an identity with a working runtime; obtain Agent32's certificate status; if productive, reduce the partial z≡125 (mod128) mixed-quotient branch into bounded 2-adic cylinders. Avoid treating the sample scan period as a global period.
+
+
+## 2026-11-16 11:00Z checkpoint — mixed quotient bounded-depth frontier
+
+Added the exact U5 residual identity to U5Q0M16Residual.lean:
+211*t + 1360 + 22155*w = 20*2^(201+3360*w).
+The same module also has the uniform corollary t ≡ 16+23*w (mod128). This identity, not merely the mod128 corollary, gives the high-order w lifts below.
+
+The detailed mixed-quotient work is now in im-results/agent3-c-bounce-inverse/AK64C32_U5_parent_fan.md, and the README links it. Important corrections captured there:
+- z≡20 (mod32) maps exactly to w≡173 (mod256), not merely w≡45 mod128.
+- z≡17 (mod64) maps exactly to w≡485 (mod512), not merely w≡101 mod128.
+- At q=2 for z=17+64u, the four A/K64 states by u mod4 are (4,19), (36,35), (4,51), (36,3), all absent. A/K64 q-state at depth2 depends on z mod256, so the earlier two-lift table was incomplete; the four-lift correction is now documented and sent to Agent32.
+
+For z mod128≠125, B=661+903z is not divisible128, so e=v2(B)≤6 and dmax=floor((e+2)/2)≤4. A/K64 parent projection at depth d depends only on z mod2^(2d+4), so z mod4096 fixes all possible parent cells. Exhaustively checked all 4096 z residues and found 44 full mixed-quotient cylinders mod128; the list and exact w mod1024 images are in the detailed note. Thirty-eight overlap the M16 set; six new z residues {17,20,52,81,84,116} form the two exact families above. The mixed quotient misses z residues 23,87, which M16 covers. Thus the union of M16 and mixed quotient gives 46 full z cylinders mod128.
+
+Inside z≡125 mod128, enumerated K≤20 cylinders using e=v2(B), dmax=floor((e+2)/2), and k=max(e+1,2*dmax+4). This fixes e and all parent projections through dmax. Found 16 globally bounded candidate cylinders: four z mod4096 residues and twelve z mod16384 residues, with exact w mod32768/mod131072 images in the note. This is not an exhaustive search beyond K=20; do not infer a global period or claim all deeper cylinders are covered.
+
+The mixed quotient itself remains experimental: 156,816 states, 77,020 reachable, 576,340 representative edges; independently reproduced and matches Agent32's report, but no kernel-checked reachability certificate yet. The smaller A/K32,C32 quotient (41,616 states, 21,190 reachable, 155,094 edges) suffices for w=45 alone, but not w=101. Agent32 has been asked to confirm the two short cylinders, the 16 deeper cylinders, and the 44 full classes; no response yet. Do not promote any mixed quotient candidates to source-verified results until certificate and Lean composition pass.
+
+No exact-source Lean preflight response yet from Agent 6/11; Agent 42/43 were also asked to validate the M16 t=99 cells. Local container/Python still return ClientError; no CI dispatch. Current source Residual blob SHA is 08ae215d42690b011a46695c8c4ea80063935c2e (after the uniform congruence theorem; the exact identity was appended after this SHA, so fetch current SHA before any later compile request).
+
+Next: obtain a local exact-source compile from Agent 6 or another working-runtime identity; obtain Agent32's quotient confirmation/certificate status; if useful, extend the K≤20 scan only after the existing 16 cylinders are validated. Keep results in im-results, not results/.
