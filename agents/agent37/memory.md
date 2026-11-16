@@ -387,3 +387,29 @@ The user has received durable progress responses for first three CI successes an
 - Original lease: 2026-11-13T10:24:32.347Z. Do not refresh it.
 - Current measured age at this checkpoint is below 70 minutes; continue research. After every future checkpoint, re-read the lease and actual system clock. At 70 minutes or later, perform the orderly release procedure.
 - Current priorities: preserve and review any Agent 48 fixes to M1Even; allow Agent 24's isolated M1Odd manual compile to proceed; do not claim any new champion theorem until its actual Lean compile/axiom gate passes. The exact value of BB(6) remains unresolved.
+
+
+## 2026-11-16 continuation: seventeenth-root handoff and new P2 reset cylinder
+
+Current incarnation claimed Agent 37 at 2026-11-16T09:59:37.334Z; do not refresh the lease. At the 2026-11-16T10:21:27.504Z checkpoint, lease age was 21.836166666666667 minutes.
+
+### Blank-root continuation
+- Agent 2's corrected seventeenth-reentry escape proof passed original-source CI run [43761344093](https://github.com/FlareZ123/bb6/actions/runs/43761344093), artifact `d-root-stage2b17j`.
+- Dispatched stage `3a` (eighteenth rejoin) in [run 43844908990](https://github.com/FlareZ123/bb6/actions/runs/43844908990), using predecessor artifact `d-root-stage2b17j` and pinned source ref `20509b53af45edce5b8a145e8714245d3d225cdd`. It was still running at this checkpoint; do not start 3b until it succeeds.
+- Added `im-results/agent37-d-timing-cocycle/Seed39Probe.lean` and wired it into `.github/workflows/agent37-root-exceptions34-38.yml`. Once stage-5 and Seed31 first-stop certificate artifacts exist, this workflow will search the DRegular orbit from the symbolic post-38 `seed39` for its first undefined successor within 1,024,000 transitions. The generic `firstStopBlocks_sound` theorem supplies a first-stop proof if the count is below the cap. This is only an arithmetic-model probe until the 17–38 original-source prefix is audited.
+- Sent Agent 2 a coordination message under `communications/agent2/` with the stage3a handoff and exception-41 correction.
+
+### New source theorem under audit: k = 81*s + 34
+- Added `im-results/agent37-echain/EChainDoubleBZero.lean` and a compile step in `.github/workflows/agent37-p2-k13.yml`.
+- Intended theorem `reset_k81_34_regular`: for every `s,Q ≥ 0`, the original P2 reset packet with `k=81*s+34` follows one E-chain step (h=54*s+23), two source B packets, then `b_zero_any`, reaching the canonical physical regular section `L(32768*s+2*Q+14028,3,2)`.
+- Exact intermediate indices: after E, `a=3*(576*s+245)+2`; after B1, `a=3*(1536*s+656)+2`; after B2, `a=3*(4096*s+1752)+2`; q then equals zero, so the arbitrary-tail B-zero source theorem applies.
+- The p=2 reset and B-zero theorem are original-source-derived; the E-chain and B packet theorems are imported from existing source-certified modules. This is a prepared-packet cylinder, not blank-root reachability or a global D nonhalting proof.
+- Manual audit run [43847192442](https://github.com/FlareZ123/bb6/actions/runs/43847192442) was queued from workflow commit `5848801bfb8c92df030cef9bc52fb4787043d4ca`. A follow-up commit `2b42c5cc74950f9e24bb07b984eff19ada5d73bf` right-associated the time sum after noticing the proof's `change` expects right-associated composition. The current run does not include that follow-up commit; if it fails, inspect only the failed job's tail and rerun against current main.
+- Existing p2 residual work is in `EChainBExit`, `EChainBEExit`, `EChainDoubleBExit`, `EChainDoubleBReentry`, `P2K4SourceReentry`, `P2K7Source`, and `MarkerTwoSource`. Do not repeat the already source-closed `k=27t+22` exception-41 packet or the existing `k=27t+25` family. The general k=4 and k=7 mod-9 classes remain only partially covered.
+
+### Immediate next actions
+1. Check run 43847192442; if failed, inspect its failed-job log only (small tail) and fix the actual Lean error. Rerun the current main version of `agent37-p2-k13.yml` after the time-association patch.
+2. Check stage3a run 43844908990; if successful, take its artifact and dispatch 3b with the exact artifact/source ref, then continue strictly in workflow order through 5e.
+3. Once stage-5 and Seed31 certificate artifacts are ready, run `agent37-root-exceptions34-38.yml` and read the Seed39Probe result; use it to choose the next source closure, not to claim a blank-root result before the preceding source prefix is audited.
+4. Update `im-results/agent37-echain/README.md` only after the new theorem passes CI; update the D-root synthesis after the next verified stage.
+
