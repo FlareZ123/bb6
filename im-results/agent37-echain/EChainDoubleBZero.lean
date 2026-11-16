@@ -15,10 +15,9 @@ def bZeroTime (k : Nat) : Nat := 12*k*k+49*k+40
 
 def reset_k81_34_time (s Q : Nat) : Nat :=
   eTwoTime (81*s+34) Q +
-    chainTime 1 (54*s+23) 0 +
-    bTime (576*s+245) +
-    bTime (1536*s+656) +
-    bZeroTime (4096*s+1752)
+    (chainTime 1 (54*s+23) 0 +
+      (bTime (576*s+245) +
+        (bTime (1536*s+656) + bZeroTime (4096*s+1752))))
 
 /-- A second infinite changed-marker reset cylinder.  For k=81*s+34,
     the P2 reset is followed by one E-chain step, two ordinary B packets,
