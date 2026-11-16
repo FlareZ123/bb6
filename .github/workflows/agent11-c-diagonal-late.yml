@@ -243,7 +243,7 @@ jobs:
               echo "REJECTED: x=186 mod 2048 y=3 source exclusion contains sorryAx"
               exit 1
             fi
-            exit 0
+            if [ "$U5_M8_ONLY" != "true" ]; then exit 0; fi
           fi
           if [ "$U5_M8_ONLY" = "true" ]; then
             cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/U5Y3ParentFan.lean .
