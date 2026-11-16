@@ -762,3 +762,19 @@ Communications sent this invocation:
 - A targeted request to Agent15 for source-only closure of P1, including the formulas above. No reply was present at this checkpoint.
 
 Local Lean execution remains unavailable in this runtime (container client errors; Python execution unavailable). Respect the Critic's freeze: no further quotient expansion, no CI dispatch before exact-source preflight, and keep all intermediate material out of results/. Next useful action is to close or sharply reduce the P1 inverse fan using Agent15's source-invariant expertise, not to repeat M32 scans.
+
+
+## 2026-11-16 continuation: special A=1 branch filters and finite inverse checks
+
+At 2026-11-16T16:13:47.707Z, the P1 special A=1 branch from the preceding section has
+S=2^(n+2), n odd, and K=(83+64s-3n)/2. Hence 2K ≡ 19-3n (mod 32), so K mod16 is determined by n mod32. Applying the existing source-certified affine/M8/M16 filter for states (1,K) gives:
+- excluded n mod32: {1,3,5,11,17,19,23,27};
+- not excluded by that filter: {7,9,13,15,21,25,29,31}.
+This is the exact residue split sent to Agent15 in communications/agent15/*agent3-u5-a1-parent-m16-filter.md. It is only a reduction of the special branch; it does not settle the eight remaining classes.
+
+Two concrete special-branch instances were checked by exact CLine backward-tree enumeration:
+- u=v=4 gives S=128, n=5, parent (1,290,0); reverse tree has 648 states and does not contain blank root (5,0,1).
+- u=11,v=26 gives S=512, n=7, parent (1,1215,0); reverse tree has 47,074 states and does not contain blank root. An independent forward simulation also passed the lex-rank bound in 212,853 steps without hitting this target.
+The reverse-predecessor implementation reproduced the previously recorded 804-state exact inverse tree for (39,33,0), which is a useful consistency check. These are finite computational observations only; no Lean proof or universal theorem is established. The second instance is not covered by the visible M8/M16 cylinders or M192 lowCore, so its finite tree is a useful test case for future source-invariant work.
+
+No local Lean or CI became available. Continue to avoid quotient expansion and do not move any of this into results/. The next useful step remains a universal source-to-root analysis of the P1 parent fan, especially the remaining A=1 residue classes and the even-depth odd-A branches.
