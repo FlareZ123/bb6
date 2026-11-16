@@ -80,3 +80,28 @@ This narrows the root-facing predecessor search but does not exclude it. In part
 ## Reuse
 
 The bound is independent of the special t=1 Q equation and applies to every odd reset whose child has first-failure level at least 2. It can be used to prune exact inverse-parent searches and to bound the source level of any odd feeder of a fatal or Q-parent target.
+
+
+## Per-level uniqueness and a linear fan-in bound
+
+Fix a target height (u) of first-failure level (K\ge2), and put (X=2u+5). For a fixed possible odd-parent source level (L), the exponent (t) is unique. Indeed, any such exponent must give the integer source parameter
+[
+P_t=\frac{2^tX}{3^{t+1}}
+]
+inside the same band ([6\cdot2^L+1,\,8\cdot2^L-1]). If (t'<t) are two distinct valid exponents, then
+[
+\frac{P_{t'}}{P_t}=\left(\frac32\right)^{t-t'}\ge\frac32,
+]
+whereas the ratio of the upper to lower endpoints of the source band is strictly less than (4/3). This is impossible. Thus there is **at most one odd parent per source level**.
+
+The scale theorem further restricts every odd-parent level to
+[
+S_K=\{L\in\mathbb N: L<K\text{ and }2^{K-2}<3^L\}.
+]
+Consequently the number of odd parents of a target at level (K\ge2) is at most (|S_K|).
+
+There are at most two even parents: the exact even-reset level criterion says an even child can remain at its parent's level or enter exactly the next level, so an even parent of a level-(K) target must have source level (K) or (K-1); at either fixed level the equation (2u=8\cdot2^M+h+M) determines (h) uniquely. Hence the complete first-reset inverse in-degree satisfies
+[
+\boxed{\deg^-(u)\le |S_K|+2.}
+]
+This bound grows with (K), so it does not contradict the established unbounded-fan-in constructions. It gives a quantitative, level-indexed ceiling on that fan-in and can reduce exact inverse-cone enumeration.
