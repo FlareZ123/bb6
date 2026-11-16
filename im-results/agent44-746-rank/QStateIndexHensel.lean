@@ -428,7 +428,7 @@ theorem qIndexResidue_iff (s j k h : Nat)
             ((h%pn)/P) ht hbase).mp hshiftdiv
         have haunit : a%3≠0 := by
           rw [show a%3=2 by simpa [a] using qIndexCoefficient_mod_three j hj]
-          decide
+          omega
         have hdigit : (h%pn)/P=d :=
           henselDigit_div q a haunit ((h%pn)/P) ht
             (by simpa [q,a] using hcrit)
@@ -485,7 +485,9 @@ theorem qNumerator_t1_parent_identity (n j u q d : Nat)
     rw [hSigned]
     exact_mod_cast hodd
   have hparentNat : 4*d=8*2^(n-2)+q+(n-2)+5 := by
-    omega
+    calc
+      4*d = 2*(2*d) := by omega
+      _ = 8*2^(n-2)+q+(n-2)+5 := hparent
   have hparentI : 4*(d:Int)=
       8*(2:Int)^(n-2)+q+(n-2)+5 := by
     exact_mod_cast hparentNat
@@ -494,22 +496,20 @@ theorem qNumerator_t1_parent_identity (n j u q d : Nat)
     rw [he,Int.pow_add]
     have htwo : (2:Int)^3=8 := by decide
     rw [htwo]
-    ring
+    omega
   have h8d : 8*(d:Int)=
       (2:Int)^(n+2)+2*q+2*n+6 := by
     calc
-      8*(d:Int)=2*(4*(d:Int)) := by ring
+      8*(d:Int)=2*(4*(d:Int)) := by omega
       _=2*(8*(2:Int)^(n-2)+q+(n-2)+5) := by rw [hparentI]
       _=2*((2:Int)^(n+1)+q+n+3) := by rw [hpow]; omega
       _=(2:Int)^(n+2)+2*q+2*n+6 := by
         rw [show (2:Int)^(n+2)=(2:Int)^(n+1)*2 by
           rw [Int.pow_succ]]
-        ring
+        omega
   rw [qNumerator_eq_signedZ,hz]
-  calc
-    8*(9*(d:Int))-9*((2:Int)^(n+2)+2*n+1) =
-        9*(8*(d:Int)-((2:Int)^(n+2)+2*n+1)) := by ring
-    _=9*(2*q+5) := by rw [h8d]; ring
+  rw [h8d]
+  omega
 
 
 /-- The exact dyadic offset left after substituting the first-failure
