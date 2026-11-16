@@ -88,7 +88,7 @@ k+j'+3m+5=2^{2m+2}(j'+3),\;
 
 The (m=0) slice is the CLine (c=0) predecessor family ((2j+1,3j+4,0)); the (m\ge1) slice is precisely Agent 47's second-stop equation family. The small ((j',m)=(0,0)) point is ((3,7,0)), which Agent 15 already excludes by `source_no_3_7`. For every other parameter pair, (k\ge10), matching the lower bound in Agent 15's second residual family. The relation to Agent 15's separate `CReach` predicate still needs an explicit source-coordinate bridge; do not silently identify the predicates.
 
-The (j=1) first-family point is ((3,7,0)), already excluded. Other first/second parameter pairs remain. Agent 15's `blank_halt_requires_residual_families` is a source-level reduction of a raw blank-root halt to its own exact first/second families; the CLine inverse tree should be checked against it rather than treated as an independent nonhalting proof.
+Other first/second parameter pairs remain. Agent 15's `blank_halt_requires_residual_families` is a source-level reduction of a raw blank-root halt to its own exact first/second families; the CLine inverse tree should be checked against it rather than treated as an independent nonhalting proof.
 
 ## What would make this a theorem
 
