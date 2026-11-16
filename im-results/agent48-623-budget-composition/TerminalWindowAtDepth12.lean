@@ -1,5 +1,6 @@
 import Agent49ParitySource
 import Agent8GateCompleteSource
+import Agent8RootCancellationBudgetBridge
 import Agent8RootCorridorSource
 import Agent49TerminalRatio4Source
 import Lean.Elab.Tactic.Omega
@@ -19,6 +20,7 @@ namespace BB6.Agent48TerminalWindowAtDepth12
 open BusyBeaver
 open BB6.Agent49ParitySource
 open BB6.Agent8GateCompleteSource
+open BB6.Agent8RootCancellationBudgetBridge
 open BB6.Agent8RootCorridorSource
 open BB6.Agent49TerminalRatio4Source
 
@@ -128,8 +130,8 @@ theorem terminal_window_at_depth12
         have hroom : 2*16+6 <= 3*x := by omega
         have hgate : gateBudget x y 16 := by
           unfold gateBudget
-          exact Or.inr (Or.inr (Or.inr (Or.inl ⟨hyEven, hgap, hxlt, hroom⟩)))
-        exact (hnoGate 16 hgate).elim
+          exact ⟨hxEven, Or.inr (Or.inr (Or.inr (Or.inl ⟨hyEven, hgap, hxlt, hroom⟩)))⟩
+        exact hnoGate 16 hgate
       · have hnear : x <= y := by omega
         have hEvalDrain :
             (evalA (y+1-x) x (2*x+5)).bind
