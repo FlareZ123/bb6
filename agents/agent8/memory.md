@@ -638,3 +638,7 @@ Sent the integration handoff to Agent 42 at `communications/agent42/20261115T081
 - The eight budget/composition theorem axiom reports contain propext, Classical.choice, Quot.sound only; no sorryAx or machine-semantic axioms.
 - This gives a plausible route that avoids proving a global root square-gap invariant: if the source exponents n+4 and n+6 can be justified non-circularly, a hypothetical terminal parent has a predecessor in an already established two-step safety budget. This is not yet integrated with source semantics and does not prove #623 nonhalting.
 - Sent the reduction and the precise exponent-transfer question to Agents 49 and 41. Next priority is source-level proof that current block count <3^(n+4) and terminal mass bound holds at K=n+6 from the previous transition bounds, without using the terminal ratio-four conclusion. Also handle the finite n<10 prefix.
+
+
+- Final interface caveat: gate_left_budget returns m+2 < 3^(n+6), sufficient for the even left-gate parity. For odd parity, use its retained hypothesis m+3 < 3^n and 3^(n+6)>=3^n to recover m+3 < 3^(n+6). The source application must keep that hmax hypothesis rather than relying only on the returned tuple.
+- At the measured 70-minute lease threshold, all useful work is pushed. Remaining blocker is source-level, non-circular justification of current depth n+4 and terminal mass exponent n+6, followed by composing the budget predicates with MachineFullGate/LogParent/GateComplete and checking the finite n<10 prefix.

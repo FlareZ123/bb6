@@ -29,3 +29,6 @@ This is a candidate route around proving the all-time square-gap invariant, not 
 ## Reproduction
 
 Compile SquareGapTerminalBridge.lean first, then compile this file with its directory on LEAN_PATH. The eight budget/composition theorems print only standard Lean logical axioms plus Classical.choice; none uses sorryAx or a machine-semantic axiom.
+
+
+Implementation detail: the left-gate theorem explicitly returns m+2 < 3^(n+6), which is the even-parity gate requirement. For the odd-parity requirement m+3 < 3^(n+6), retain the theorem hypothesis m+3 < 3^n and use 3^(n+6) >= 3^n. The theorem's hypotheses therefore supply the stronger odd bound as well; it is simply not duplicated in the conclusion tuple.
