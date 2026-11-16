@@ -138,14 +138,16 @@ theorem blank_no_u5_residual_m8w_w485 (w s m : Nat)
             simpa only [hM] using hedge
           rcases u5_residual_y3_parent_fan (8*w) s m a k hs' hm' hsec with
             hq0 | ⟨q,U,hqpos,hqbound,hdecomp,ha,hk⟩
-          · have hparent : CReach (64*((m+1)/8)+5) (32*((m+1)/8)+3) := by
-              have hx : 8*(m+1)-3=64*((m+1)/8)+5 := by omega
-              have hy : 4*(m+1)-1=32*((m+1)/8)+3 := by omega
+          · have hparent0 : CReach (8*(m+1)-3) (4*(m+1)-1) := by
               rw [hq0.1,hq0.2] at hr
               exact ⟨n,hr⟩
             let t := (m+1)/8
             have hp : m+1=8*t+1 := by dsimp [t]; omega
             have htpos : 1≤t := by dsimp [t]; omega
+            have hx : 8*(m+1)-3=64*t+5 := by dsimp [t]; omega
+            have hy : 4*(m+1)-1=32*t+3 := by dsimp [t]; omega
+            have hparent : CReach (64*t+5) (32*t+3) := by
+              simpa only [hx,hy] using hparent0
             exact blank_no_u5_q0_parent_w485 w s m t hs hm hp hw htpos hparent
           · by_cases hq1 : q=1
             · subst q
