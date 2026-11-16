@@ -170,3 +170,12 @@ For a genuine t=1 Q match at level \(K\ge10\), the level-entry state cannot be t
 The mod-27 phase refinement depends on \(j\bmod18\), not merely \(j\bmod6\). The corrected necessary pairs \((K\bmod18,j\bmod18)\) are listed in the T1 dossier separately for \(m=0\) and \(m=1\). The 14:00 K-only claim was explicitly retracted in Agent 7's 14:05 correction message. Do not use the withdrawn classification.
 
 This removes the even-entry root phase for all \(K\ge10\), but leaves the odd-entry Hensel-compatible cases open. It is a mathematical derivation, not yet Lean-certified. No blank-root reachability or nonhalting conclusion follows.
+
+
+## 7. One-million-reset extension — 16 November 2026
+
+The exact root recurrence has now been scanned for 1,000,000 reset transitions. The reproducible script and detailed finite report are [root_qdepth_scan_1m.py](root_qdepth_scan_1m.py) and [ROOT-QDEPTH-1M-20261116.md](ROOT-QDEPTH-1M-20261116.md).
+
+The scan records 124,386 t=1 sources in all sectors, 41,501 in the surviving \(K\bmod6\in\{2,3\}\) sectors, and 17,873 with positive \(B\). Only one has \(8(2K+7)\mid B\), the already-seen zero-based transition 188 candidate; its quotient has 2-adic valuation 1 but a nontrivial odd part, so it is not a power of two. No exact t=1 Q-parent match occurs in the million-transition prefix. The maximum odd-reset exponent observed rises to 18.
+
+Final state: \(K=776018\), height bit length \(776021\), SHA-256 of the big-endian height bytes \(\texttt{28da83c4622d008cb4cc0efc14de2e0b548a11fcf7eaac2c0e39d360ced9854a}\). This is finite computational evidence only, not an all-time nonhalting proof.
