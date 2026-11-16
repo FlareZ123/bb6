@@ -24,8 +24,8 @@ theorem t0_entry_even_parent_arithmetic_no_solution
     (hq : q ≤ K - 1)
     (hdelta_lo : K + 3 ≤ delta)
     (hdelta_hi : delta ≤ 2 * K + 4)
-    (hpow_r : 4 * K + 8 < 2 ^ (r + 3))
-    (hpow_kq : 4 * K + 8 < 2 ^ (K - q + 2))
+    (hpow_r : 4 * K + 11 < 2 ^ (r + 3))
+    (hpow_kq : 4 * K + 11 < 2 ^ (K - q + 2))
     (heq :
       (2 * K + 7) * 2 ^ (q + r + 3) + 2 ^ q * (2 * K + 1) =
         2 ^ (K + q + 4) + 12 * 2 ^ K + 3 * delta) : False := by
@@ -193,7 +193,7 @@ theorem t0_entry_even_parent_arithmetic_no_solution
   · have hcase' : K - q + 3 ≤ r + 3 := by omega
     let M : Nat := 2 ^ (K - q + 2)
     have hMpos : 0 < M := by dsimp [M]; positivity
-    have hMlarge : 4 * K + 8 < M := by dsimp [M]; exact hpow_kq
+    have hMlarge : 4 * K + 11 < M := by dsimp [M]; exact hpow_kq
     have hmodulus : 2 ^ (K - q + 3) = 2 * M := by
       dsimp [M]
       have h : K - q + 3 = (K - q + 2) + 1 := by omega
