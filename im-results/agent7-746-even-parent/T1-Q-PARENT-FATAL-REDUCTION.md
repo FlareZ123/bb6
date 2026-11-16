@@ -122,3 +122,59 @@ This does not exclude either value. The next root-specific task is to characteri
 ## Inverse-depth warning
 
 A uniform finite inverse-depth cutoff is not available over the full Q-parent candidate family. The fixed-depth \(j=3402,\ n=887+13122r\) construction in [NESTED-ODD-PARENT-HENSEL.md](NESTED-ODD-PARENT-HENSEL.md) gives, for every finite \(d\), a positive-density 3-adic cylinder of candidates with a \(d\)-edge exact odd-parent chain. Its explicit nine-edge specialization is recorded there. These are synthetic inverse paths, not blank-root paths; the Hensel/band argument is a mathematical derivation and is not yet a standalone Lean theorem.
+
+
+## Even-entry phase exclusion for large Q matches
+
+The \(m\le1\) result above can be sharpened. For every \(K\ge10\), the level-entry state of a genuine t=1 Q match **cannot have been produced by an even reset from level \(K-1\)**. Hence it must have been produced by an odd reset from some smaller level.
+
+Put \(p=2^K\), \(c=2K+7\), \(X=2^{j+4}\), and \(D_Q=(32p+20K+34+cX)/18\). We have \(D_{\rm in}=2^mD_Q\), \(m\in\{0,1\}\), and \(j+2\le K\), so \(X\mid4p\) and \(X\mid40p\).
+
+Suppose the level entry \(h_{\rm in}\) was produced by an even reset from level \(K-1\). If \(R\) is the predecessor's deficit at level \(K-1\), the exact even-reset formula gives
+\[
+D_{\rm in}=4p-2+R/2.
+\]
+For a nonfatal source at level \(K-1\) whose even reset crosses to \(K\), \(R\) is even and \(2K+3<R\le4K+6\). Thus
+\[
+4p+K\le D_{\rm in}\le4p+2K+1.
+\tag{9}
+\]
+
+If \(m=0\), (9) gives
+\[
+40p-2K-34\le cX\le40p+16K-16.
+\]
+The difference \(cX-40p\) is a nonzero multiple of \(X\): it is divisible by \(X\), and equality would force the odd factor \(c=5\), impossible since \(c=2K+7\ge7\). Hence \(X\le16K+34\). But the lower bound gives
+\[
+X\ge\frac{40\cdot2^K-2K-34}{2K+7}>16K+34
+\]
+for all \(K\ge6\). The last inequality holds at \(K=6\), and its difference is increasing thereafter.
+
+If \(m=1\), (9) gives
+\[
+4p-11K-34\le cX\le4p-2K-25.
+\]
+Now \(cX-4p\) is a nonzero multiple of \(X\), since \(X\mid4p\) and \(c>1\) is odd. Thus \(X\le11K+34\). The lower bound gives
+\[
+X\ge\frac{4\cdot2^K-11K-34}{2K+7}>11K+34
+\]
+for all \(K\ge10\); it holds at \(K=10\) and its difference is increasing thereafter. Both cases contradict the assumed even-produced entry.
+
+Consequently, for \(K\ge10\), every genuine Q match has an odd-reset-produced level entry, so \(h_{\rm in}\equiv2\pmod3\). This is a root-specific phase condition; it does not by itself exclude the surviving odd-entry cases.
+
+For reference, the mod-9 equation fixes \(j\bmod6\) from \(K\bmod18\):
+\[
+\begin{array}{c|rrrrrr}
+K\bmod18&2&3&8&9&14&15\\
+j\bmod6&0&0&4&2&2&4
+\end{array}
+\]
+A mod-27 refinement must retain \(j\bmod18\), because \(2\) has order \(18\) modulo \(27\). The exact odd-entry condition \(h_{\rm in}\equiv2\pmod3\) selects the following pairs:
+\[
+\begin{array}{c|rrrrrr}
+K\bmod18&2&3&8&9&14&15\\
+j\bmod18\ (m=0)&12&12&10&8&8&4\\
+j\bmod18\ (m=1)&6&0&4&14&2&10
+\end{array}
+\]
+The earlier 14:00 communication's K-only mod-27 conclusion was withdrawn in the 14:05 correction; use this pair table instead. These are necessary congruence conditions, not a root exclusion.

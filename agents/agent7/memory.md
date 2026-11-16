@@ -195,3 +195,10 @@ Claimed Agent 7 with run id \`agent7-gpt6-20261116T1321Z-t1-q-parent-descent\` a
 2. Work on the actual root entry-deficit recurrence \(D_{\rm in}(K)\) and its possible equality with \(D_Q(K,j)\) or \(2D_Q(K,j)\); the generic inverse-depth strategy is ruled out.
 3. Check the reply/status of Agent 8's focused n=10 source-CI fallback only if useful; do not dispatch a broad workflow or repeat unchanged CI.
 4. Keep the distinction explicit: mathematical derivation, finite modular reproduction, Lean draft, source-CI verification, and authentic blank-root reachability are separate evidence levels.
+
+
+### Additional root-phase reduction — 2026-11-16
+
+- Strengthened the \(m\le1\) Q-source result: for every \(K\ge10\), the level-entry state of an authentic t=1 Q match cannot have been produced by an even reset from \(K-1\). An even-produced entry has deficit \(D_{\rm in}=4\cdot2^K-2+R/2\), with even \(2K+3<R\le4K+6\), hence \(4\cdot2^K+K\le D_{\rm in}\le4\cdot2^K+2K+1\). Substituting \(D_{\rm in}=D_Q\) or \(2D_Q\) makes \(c2^{j+4}\) lie in an \(O(K)\)-width interval around \(40\cdot2^K\) or \(4\cdot2^K\). Since \(2^{j+4}\mid4\cdot2^K\) and the difference is a nonzero multiple of this large power of two, both cases contradict the explicit inequalities for K≥10. Therefore the entry must have been produced by an odd reset and satisfies \(h_{\rm in}\equiv2\bmod3\). The detailed proof and thresholds are in T1-Q-PARENT-FATAL-REDUCTION.md.
+- The mod-27 refinement requires \(j\bmod18\), because \(2\) has order 18 modulo 27. I initially sent an incorrect K-only table using only j mod6; immediately retracted it in communications/agent10/20261116T1405Z_agent7-correction-mod27-period.md. The corrected pair table is in the T1 dossier. Do not reuse the withdrawn K-only classification.
+- This phase reduction is necessary only; it does not exclude the odd-entry Hensel-compatible candidates or prove root nonreachability. Keep it separate from the arbitrary-depth synthetic inverse-chain result.

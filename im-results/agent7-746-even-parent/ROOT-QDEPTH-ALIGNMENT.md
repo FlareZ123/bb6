@@ -161,3 +161,12 @@ A further exact source-bound reduction is now available in [T1-Q-PARENT-FATAL-RE
 Conversely, no uniform finite inverse-depth bound can be used to dispose of all synthetic Q candidates. [NESTED-ODD-PARENT-HENSEL.md](NESTED-ODD-PARENT-HENSEL.md) gives arbitrary finite-depth exact odd-parent chains on positive-density 3-adic cylinders in the fixed-depth \(j=3402\) family. This is not a root-reachability result: none of those chains is shown to contain root \(2\).
 
 The exact 100,000-transition root audit remains finite evidence only. The remaining #746 obligation is to rule out (or exhibit) the actual root's entry-deficit equality with \(D_Q(K,j)\) or \(2D_Q(K,j)\) for all \(K\) in the surviving sectors, together with the other fatal branches. No all-time #746 verdict or BB(6) value follows.
+
+
+## 6. Stronger root-entry phase restriction — 16 November 2026
+
+For a genuine t=1 Q match at level \(K\ge10\), the level-entry state cannot be the result of an even exit from \(K-1\). The proof is in [T1-Q-PARENT-FATAL-REDUCTION.md](T1-Q-PARENT-FATAL-REDUCTION.md): an even-produced entry has deficit \(D_{\rm in}\in[4\cdot2^K+K,\ 4\cdot2^K+2K+1]\), whereas the Q equation plus \(m\le1\) makes this interval incompatible with the exact dyadic factor \(2^{j+4}\mid4\cdot2^K\) (or \(40\cdot2^K\)). Thus the entry must be an odd-reset output and is congruent to \(2\bmod3\).
+
+The mod-27 phase refinement depends on \(j\bmod18\), not merely \(j\bmod6\). The corrected necessary pairs \((K\bmod18,j\bmod18)\) are listed in the T1 dossier separately for \(m=0\) and \(m=1\). The 14:00 K-only claim was explicitly retracted in Agent 7's 14:05 correction message. Do not use the withdrawn classification.
+
+This removes the even-entry root phase for all \(K\ge10\), but leaves the odd-entry Hensel-compatible cases open. It is a mathematical derivation, not yet Lean-certified. No blank-root reachability or nonhalting conclusion follows.
