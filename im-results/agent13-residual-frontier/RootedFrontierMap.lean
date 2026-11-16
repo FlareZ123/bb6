@@ -136,6 +136,76 @@ theorem machine623_selected_partial_path :
     depth4ResidualAudit machine623 [] rfl
   simpa [machine623_selected_path] using h
 
+/-- Any finite path whose entries agree with a total machine defines
+    a partial table compatible with that machine. -/
+private theorem foldRefineCompatible (xs : List (Slot × Transition))
+    (p : PartialMachine) (m : Machine)
+    (hp : compatible p m)
+    (hxs : ∀ s t, (s,t) ∈ xs → m s = t) :
+    compatible (xs.foldl (fun acc entry => refine acc entry.1 entry.2) p) m := by
+  induction xs generalizing p with
+  | nil =>
+      simpa using hp
+  | cons entry xs ih =>
+      rcases entry with ⟨slot, trans⟩
+      have htrans : m slot = trans := hxs slot trans (by simp)
+      have hchild : compatible (refine p slot trans) m := by
+        rw [← htrans]
+        exact compatible_refine p m slot hp
+      apply ih (refine p slot trans) hchild
+      intro s t hmem
+      exact hxs s t (by simp [hmem])
+
+theorem partialOfPath_compatible (path : List (Slot × Transition))
+    (m : Machine) (hpath : ∀ s t, (s,t) ∈ path → m s = t) :
+    compatible (partialOfPath path) m := by
+  unfold partialOfPath
+  exact foldRefineCompatible path emptyTable m (empty_compatible m) hpath
+
+/-- The authentic eleven-row source cylinders lie inside the corresponding
+    four-row manifest cylinders. -/
+theorem machineC_path_in_source_prefix :
+    ∀ s t, (s,t) ∈ machineCDepthFourPath →
+      machineCPrefix 11 s = some t := by
+  decide
+
+theorem machine623_path_in_source_prefix :
+    ∀ s t, (s,t) ∈ machine623DepthFourPath →
+      machine623Prefix 11 s = some t := by
+  decide
+
+theorem machineC_authentic_cylinder_inside_manifest_leaf (m : Machine)
+    (hm : compatible (machineCPrefix 11) m) :
+    compatible (partialOfPath machineCDepthFourPath) m := by
+  apply partialOfPath_compatible
+  intro s t h
+  exact hm s t (machineC_path_in_source_prefix s t h)
+
+theorem machine623_authentic_cylinder_inside_manifest_leaf (m : Machine)
+    (hm : compatible (machine623Prefix 11) m) :
+    compatible (partialOfPath machine623DepthFourPath) m := by
+  apply partialOfPath_compatible
+  intro s t h
+  exact hm s t (machine623_path_in_source_prefix s t h)
+
+theorem machineC_manifest_path_length :
+    machineCDepthFourPath.length = 4 := by decide
+
+theorem machine623_manifest_path_length :
+    machine623DepthFourPath.length = 4 := by decide
+
+theorem machineC_manifest_oracles_false :
+    finiteDecisionOracle (partialOfPath machineCDepthFourPath) 6 6 = false ∧
+    finiteLassoOracle (partialOfPath machineCDepthFourPath) 12 = false ∧
+    finiteEntryMacroBiOracle (partialOfPath machineCDepthFourPath) 2 4 = false := by
+  decide
+
+theorem machine623_manifest_oracles_false :
+    finiteDecisionOracle (partialOfPath machine623DepthFourPath) 6 6 = false ∧
+    finiteLassoOracle (partialOfPath machine623DepthFourPath) 12 = false ∧
+    finiteEntryMacroBiOracle (partialOfPath machine623DepthFourPath) 2 4 = false := by
+  decide
+
 /-- Machine C is the unique authentic root matched by this exact open
     terminal path. The terminal weight is the exact 25^8 completion mass. -/
 theorem machineC_manifest_terminal :
@@ -248,6 +318,11 @@ theorem machine623_manifest_probe_uniform (m : Machine)
 #print axioms FrontierAudit.open_has_exact_terminal
 #print axioms machineC_manifest_terminal
 #print axioms machine623_manifest_terminal
+#print axioms partialOfPath_compatible
+#print axioms machineC_authentic_cylinder_inside_manifest_leaf
+#print axioms machine623_authentic_cylinder_inside_manifest_leaf
+#print axioms machineC_manifest_oracles_false
+#print axioms machine623_manifest_oracles_false
 #print axioms machineC_manifest_probe
 #print axioms machine623_manifest_probe
 #print axioms machineC_manifest_probe_uniform
