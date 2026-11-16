@@ -127,6 +127,16 @@ def markerBridgeInput (m : Nat) : FConfig :=
   else ⟨3,0,[0,-1,-3,-6]⟩
 
 /-- Exact finite outputs of the marker bridges. -/
+theorem markerBridgeInput_tape (m : Nat) (hm : m < 3) (i : Nat)
+    (hi : i ≤ m+4) :
+    (embed (markerBridgeInput m)).tape (-(i:Int)) =
+      sideBit (markerWord m ++ d0) i := by
+  have hm0 : m=0 ∨ m=1 ∨ m=2 := by omega
+  have hi0 : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 ∨ i=6 := by omega
+  rcases hm0 with hm0 | hm0 | hm0 <;> subst m <;>
+    rcases hi0 with hi0 | hi0 | hi0 | hi0 | hi0 | hi0 | hi0 <;>
+    subst i <;> simp [embed,markerBridgeInput,markerWord,d0,sideBit] <;> omega
+
 def markerBridgeOutput (m : Nat) : FConfig :=
   if m % 3 = 0 then ⟨3,-5,[-3,-2,-1,0]⟩
   else if m % 3 = 1 then ⟨3,-6,[-4,-3,-2,-1,1]⟩
