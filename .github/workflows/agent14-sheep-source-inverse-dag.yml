@@ -78,3 +78,9 @@ jobs:
               exit 1
             fi
           done
+          cp "$ROOT/SheepHenselLift.lean" SheepHenselLift.lean
+          lake env lean -o ".lake/build/lib/lean/SheepHenselLift.olean" SheepHenselLift.lean 2>&1 | tee /tmp/SheepHenselLift.log
+          if grep -q 'sorryAx' /tmp/SheepHenselLift.log; then
+            echo "::error::sorryAx in SheepHenselLift"
+            exit 1
+          fi
