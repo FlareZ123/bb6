@@ -204,7 +204,11 @@ strictly increasing.
   source. Since the direct case is impossible and the even-only tail
   cannot contain two consecutive level exits, every \(t=0\) fatal
   history must use the special one-even-exit route to \(F_{K+2}\).
-  Consequently the unique-depth and no-even-parent results below cover
+  The child is a nonfatal level entry; same-level even resets halve its
+  deficit and cannot reach the lower fatal boundary \(F_{K+1}\). Thus a
+  level exit is necessary, and the no-even-then-even theorem leaves only
+  the exit to \(F_{K+2}\). Consequently the unique-depth and no-even-parent
+  results below cover
   the entire \(t=0\) fatal branch, not merely a subset of it.
 
 - For \(t=1\), the source band gives
