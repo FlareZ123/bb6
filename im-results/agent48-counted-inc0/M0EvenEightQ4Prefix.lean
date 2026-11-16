@@ -200,6 +200,37 @@ theorem m0EvenEight_q4_prefix_run
     omega
   simpa [m0EvenEightQ4CutTape,T,N,T1,T2,hN,hnum] using htotal
 
+
+/-- Canonical left-facing stream at the marker-0, n=8q q4 cut. -/
+def m0EvenEightQ4LeftFacing (L q a : Nat) : List Bool :=
+  [true] ++ d1pow (a-1) ++ markerWord 2 ++
+    d0 ++ d0 ++ d0 ++ d0 ++ d1 ++
+    binDec (L-4) (q/2) ++ lh
+
+/-- The q4 suffix's d0 sweep reconstructs marker 2 and n=8q-1. -/
+theorem m0EvenEightQ4SuffixTargetLeft
+    (L q a b : Nat) (hL : 4 ≤ L) (hqodd : q % 2 = 1)
+    (hbound : 8*q < 2^L) (ha : 0 < a) :
+    s1LeftFacing L (8*q-1) 2 (a+b+1) (2^b-1) =
+      d0pow b ++ d1pow 2 ++
+        (m0EvenEightQ4LeftFacing L q a).drop 1 := by
+  unfold s1LeftFacing m0EvenEightQ4LeftFacing
+  have hbin : binDec (a+b+1) (2^b-1) =
+      d0pow b ++ d1pow (a+1) := by
+    have h := binDec_pow2_sub_one (a-1) b
+    have hlen : (a-1)+b+2 = a+b+1 := by omega
+    have hval : (a-1)+2 = a+1 := by omega
+    simpa [hlen,hval] using h
+  rw [hbin,m0EvenEight_binDec_residue7 L q hL hqodd hbound]
+  have hadd : d1pow (a+1) = d1pow 2 ++ d1pow (a-1) := by
+    have h := d1pow_add_right (a-1) 2
+    have hval : (a-1)+2 = a+1 := by omega
+    simpa [hval] using h
+  rw [hadd]
+  simp [List.drop,List.append_assoc]
+
+#print axioms m0EvenEightQ4SuffixTargetLeft
+
 #print axioms m0EvenEight_q4_prefix_run
 
 end BB6Coverage.Agent48M0EvenEightQ4Prefix
