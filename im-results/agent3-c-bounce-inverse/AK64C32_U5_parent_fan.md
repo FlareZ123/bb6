@@ -23,7 +23,7 @@ A parent is excluded if its quotient cell (qA(a),qK(k),0) is absent from the mix
 
 ## Two short cylinders
 
-### z≡20 (mod32), hence w≡45 (mod128)
+### z≡20 (mod32), hence w≡173 (mod256) (and w≡45 mod128)
 
 Here B=661+903z is odd, so d≥2 is impossible. The only parent cells are:
 - d=0: (6,56,0), absent;
@@ -33,7 +33,7 @@ A smaller quotient already suffices for this cylinder: A/K exact below2 modulo32
 
 The residual identity gives t≡16+23w (mod128); z≡20 (mod32) is equivalent to t≡27 (mod128), hence w≡45 (mod128).
 
-### z≡17 (mod64), hence w≡101 (mod128)
+### z≡17 (mod64), hence w≡485 (mod512) (and w≡101 mod128)
 
 Write z=17+64u. Then
 ```
@@ -44,7 +44,7 @@ with odd bracket, so d≥3 is impossible. The mixed quotient parent cells are:
 - d=1: (22,45,0), absent;
 - d=2, u mod4 = 0,1,2,3: (4,19,0), (36,35,0), (4,51,0), (36,3,0), all absent.
 
-The four d=2 lifts are required: the A/K64 projection at depth2 depends on z mod256, not merely mod128. The residual identity gives t≡35 (mod128), hence w≡101 (mod128).
+The four d=2 lifts are required: the A/K64 projection at depth2 depends on z mod256, not merely mod128. The exact residual identity gives w≡485 (mod512) (so t≡35 mod128).
 
 
 ## Exhaustive bounded-depth classification for z mod128 ≠125
