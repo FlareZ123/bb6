@@ -180,6 +180,12 @@ The four terminal exclusions still assume the source-root square-gap lower bound
 
 The current mathematical task is therefore root-specific exclusion of the four predecessor-budget strips, or a different bridge whose budget is correctly placed on `p`. Do not describe this as a route around the root-history problem, and do not infer three-step survival from either budget predicate alone.
 
+### Root mass-gap exclusion of n=10 far-terminal strips (16 November 2026; Lean draft)
+
+[RootMassGapStripExclusion.md](RootMassGapStripExclusion.md) and [RootMassGapStripExclusion.lean](RootMassGapStripExclusion.lean) extend Agent 48's exact step-39/40/41 mass-gap argument. The n=10 far/far and far/near terminal-cancellation inequalities force the predecessor mass into `(213720,347700)` whenever the smaller coordinate is between 19680 and 24802. Strict source mass growth makes that interval unreachable, apart from the unique step-40 state, whose coordinates do not lie in the strip.
+
+This excludes a bounded but whole portion of the two far-terminal predecessor strips, rather than only three named synthetic states. It does not cover the near-terminal/gate strips, the rest of the far strips, or n>=11. The Lean file is a new proof draft and awaits focused compilation plus transitive axiom inspection; no #623 nonhalting conclusion is claimed.
+
 ### Direct predicate adapters (16 November 2026; draft, uncompiled)
 
 `RootCancellationBudgetInterfaces.lean` adds four adapters from the
