@@ -407,6 +407,12 @@ private theorem m0EvenEight_v2_mul_odd
   rw [h8,h4,h2,hqv]
   omega
 
+private theorem m0EvenEight_resetPrefixCost
+    (q a b : Nat) (hqodd : q % 2 = 1) :
+    resetPrefixCost 0 (8*q) a b = (60+12*a)+(39+3*b) := by
+  rw [resetPrefixCost,m0EvenEight_v2_mul_odd q hqodd]
+  omega
+
 /-- Closed exact primitive-step cost for the generic m=0,n=8q row. -/
 theorem m0EvenEight_proposedIncrementCost_closed
     (q a b : Nat) (hqodd : q % 2 = 1) :
@@ -415,12 +421,6 @@ theorem m0EvenEight_proposedIncrementCost_closed
   rw [proposedIncrementCost_decomp,
     m0EvenEight_resetPrefixCost q a b hqodd,
     drainCost_binary_closed]
-  omega
-
-private theorem m0EvenEight_resetPrefixCost
-    (q a b : Nat) (hqodd : q % 2 = 1) :
-    resetPrefixCost 0 (8*q) a b = (60+12*a)+(39+3*b) := by
-  rw [resetPrefixCost,m0EvenEight_v2_mul_odd q hqodd]
   omega
 
 /-- Exact q4 prefix plus shared q4 suffix, before the S1 all-ones drain. -/
