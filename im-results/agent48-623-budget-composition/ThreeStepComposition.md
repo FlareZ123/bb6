@@ -129,14 +129,14 @@ It therefore needs a separate root-mass bracket. Candidate exact brackets from t
 | 11 | [118094, 354288] | run 36: 98859 | run 42: 510164 | 37–41 |
 | 12 | [354290, 1062876] | run 41: 347700 | run 47: 1423655 | 42–46 |
 
-The n=10 version is already present as `n10_even_gap_two_root_excluded` in `RootMassGapAllN10.lean`. The n=11 and n=12 rows still require exact source checkpoints and the corresponding finite exclusions.
+The n=10 version is already present as `n10_even_gap_two_root_excluded` in `RootMassGapAllN10.lean`. Draft n=11/n=12 checkpoint declarations and all six corresponding finite exclusions now live in `RootMassGapN11N12.lean`; they remain uncompiled.
 
 ## 7. Concrete remaining proof obligations
 
 1. Source-prove the four q→p third-coordinate bounds and extract the branch-specific `drainB`/`evalA` equalities from `highLevelNext`.
 2. Compile `TerminalWindowAtDepth12.lean` as the n=10 instance; generalize it to (N=n+2,K=n+5) if extending to n=11,12.
 3. Compose the q bridge inequalities with the p terminal window and call the matching root-mass wrapper.
-4. Add source-checked run 47–55 checkpoints and the n=11/n=12 near, far, and q-gap-two finite mass exclusions.
+4. Compile `RootMassGapN11N12.lean`: its run 47–55 `by decide` checkpoints and n=11/n=12 near, far, and q-gap-two exclusions are drafted but not yet source-checked.
 5. Keep all of this in `im-results/` until the complete source composition and checkpoint dependencies compile without `sorryAx`.
 
 No #623 nonhalting conclusion, and no exact BB(6) value, follows until these obligations are completed. The root mass corridors are finite-scale evidence, not an all-time invariant.
