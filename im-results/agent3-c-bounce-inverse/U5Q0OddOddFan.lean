@@ -43,29 +43,29 @@ theorem q0_oddodd_parent_fan (t a k : Nat) (ht : 1≤t)
       · simp only [sectionPreimageAll,if_pos rfl,if_neg hk0,
           if_neg hk1] at hp
         rcases hp with ⟨_,n,hpow,hcost⟩
-            have hnEven : n%2=0 := by omega
-            obtain ⟨r,hr⟩ : ∃ r, n=2*r := ⟨n/2,by omega⟩
-            have hpow8 : 2^n*8=2^(n+3) := by
-              rw [show (8:Nat)=2^3 by decide,←Nat.pow_add]
-            have hsum : 2*(43*t-1)=2^(n+3) := by
-              calc
-                2*(43*t-1) = (44*t-1)+(42*t-1) := by omega
-                _ = 2^n*8 := hpow
-                _ = 2^(n+3) := hpow8
-            have hpow2 : 43*t-1=2^(n+2) := by
-              rw [show n+3=(n+2)+1 by omega,Nat.pow_succ] at hsum
-              omega
-            have hpow4 : 43*t-1=4^(r+1) := by
-              rw [hr] at hpow2
-              calc
-                43*t-1 = 2^(2*r+2) := by simpa using hpow2
-                _ = 2^(2*(r+1)) := by congr 1; omega
-                _ = 4^(r+1) := by
-                  rw [Nat.pow_mul,show (2:Nat)^2=4 by decide]
-            have hmod : 4^(r+1)%43=42 := by
-              rw [←hpow4]
-              omega
-            exact (four_pow_mod43_ne_42 (r+1)) hmod
+        have hnEven : n%2=0 := by omega
+        obtain ⟨r,hr⟩ : ∃ r, n=2*r := ⟨n/2,by omega⟩
+        have hpow8 : 2^n*8=2^(n+3) := by
+          rw [show (8:Nat)=2^3 by decide,←Nat.pow_add]
+        have hsum : 2*(43*t-1)=2^(n+3) := by
+          calc
+            2*(43*t-1) = (44*t-1)+(42*t-1) := by omega
+            _ = 2^n*8 := hpow
+            _ = 2^(n+3) := hpow8
+        have hpow2 : 43*t-1=2^(n+2) := by
+          rw [show n+3=(n+2)+1 by omega,Nat.pow_succ] at hsum
+          omega
+        have hpow4 : 43*t-1=4^(r+1) := by
+          rw [hr] at hpow2
+          calc
+            43*t-1 = 2^(2*r+2) := by simpa using hpow2
+            _ = 2^(2*(r+1)) := by congr 1; omega
+            _ = 4^(r+1) := by
+              rw [Nat.pow_mul,show (2:Nat)^2=4 by decide]
+        have hmod : 4^(r+1)%43=42 := by
+          rw [←hpow4]
+          omega
+        exact (four_pow_mod43_ne_42 (r+1)) hmod
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
