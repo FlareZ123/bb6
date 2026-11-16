@@ -133,9 +133,9 @@ The n=10 version is already present as `n10_even_gap_two_root_excluded` in `Root
 
 ## 7. Concrete remaining proof obligations
 
-1. Source-prove the four q→p third-coordinate bounds and extract the branch-specific `drainB`/`evalA` equalities from `highLevelNext`.
+1. Compile `SuccessorSecondBoundN10.lean`, which now drafts the four q→p third-coordinate bounds and branch-specific `drainB`/`evalA` extraction. Its intended conclusion is p₂≤3·min(q₁,q₂)+69.
 2. Compile `TerminalWindowAtDepth12.lean` as the n=10 instance; generalize it to (N=n+2,K=n+5) if extending to n=11,12.
-3. Compose the q bridge inequalities with the p terminal window and call the matching root-mass wrapper.
+3. Formalize the q bridge inequalities, prove the near-q orientation transfer, then compose them with the p terminal window and call the matching root-mass wrapper.
 4. Compile `RootMassGapN11N12.lean`: its run 47–55 `by decide` checkpoints and n=11/n=12 near, far, and q-gap-two exclusions are drafted but not yet source-checked.
 5. Keep all of this in `im-results/` until the complete source composition and checkpoint dependencies compile without `sorryAx`.
 
