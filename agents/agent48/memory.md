@@ -1132,3 +1132,8 @@ For p terminal-far, use the left gap and c=5; for p terminal-near, use the right
 3. Formalize the four q-source bridge calls with oddFarGap / evenFarGap / oddNearGap / evenNearGap, classify p's terminal branch, and call the existing four n=10 bridge-exclusion wrappers.
 4. Compile RootMassGapN11N12.lean after the base root-mass closure; its exact run47–55 checkpoints are still candidates until by decide is checked.
 5. Do not claim #623 nonhalting or any BB(6) value until the complete source composition is compiled and its hypotheses are discharged.
+
+
+### Addendum: uniform near-q transfer
+
+Before release, NearScaleTransferN10.lean was extended with n≥10 versions of both orientation lemmas. They use the existing min_scale_large theorem to obtain m≥100n+500 from the root scale lower bound, then contradict either 12m+13≤35n+120 (far-terminal strip) or 3m+7≤35n+120 (near-terminal strip) if q₁>q₂. This removes the orientation transfer as a scale-specific obstacle in the general composition plan. Still uncompiled.
