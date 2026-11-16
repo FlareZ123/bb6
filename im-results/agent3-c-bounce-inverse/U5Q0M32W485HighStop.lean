@@ -5,7 +5,7 @@ import M0EvenEvenSumZero
 import U5SourceOnlyHighStop
 import Lean.Elab.Tactic.Omega
 
-set_option maxHeartbeats 1000000
+set_option maxHeartbeats 0
 set_option maxRecDepth 100000
 
 /-!
