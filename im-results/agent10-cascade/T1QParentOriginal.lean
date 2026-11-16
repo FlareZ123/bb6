@@ -3,9 +3,9 @@ import T1QParentFatal
 
 /-!
 Conditional original-machine consequence of the source t=1 Q-parent theorem.
-A root Q-parent match in a surviving fatal sector is an authentic halting
-witness for the unmodified six-state blank machine. This is not an assertion
-that such a match exists.
+A root Q-parent match in one of the original fatal sectors with n>=257 is
+an authentic halting witness for the unmodified six-state blank machine.
+This is not an assertion that such a match exists.
 -/
 
 namespace Agent10T1Fatal
@@ -26,14 +26,14 @@ theorem original_halts_of_root_t1_q_parent (h k d a j : Nat)
     (hd : d%2=1)
     (ha : CascadeLevelDeficit.oddOffset h k=2*a)
     (hQ : 9*a+2*k+7-2^(k+2)=(2*k+7)*2^(j+1))
-    (hlarge : 268≤k+2)
+    (hlarge : 257≤k+2)
     (hsector : (k+2)%6=4 ∨ (k+2)%6=5) :
     IsHalt target := by
   have hfatal : CascadeSweep.ReachC (2,0)
       (fatalHeight (k+2),0) :=
     root_t1_q_parent_fatal h k d a j hroot hg hhigh hnot hpar
       hfactor hd ha hQ
-  apply (Agent10Raw746.original_machine_halts_iff_surviving_268).2
+  apply (Agent10Raw746.original_machine_halts_iff_algorithmic_gate).2
   refine ⟨k+2,hlarge,hsector,?_⟩
   exact (rootReachBool_source_iff _).2 hfatal
 
