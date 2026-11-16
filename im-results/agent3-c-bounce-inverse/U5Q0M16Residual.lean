@@ -98,4 +98,7 @@ theorem u5_m8_t_identity (w s m t : Nat)
   rw [hlin] at hidForT
   omega
 
+#print axioms u5_m8_t_mod128
+#print axioms u5_m8_t_identity
+
 end BB6.Agent3U5M16Residual
