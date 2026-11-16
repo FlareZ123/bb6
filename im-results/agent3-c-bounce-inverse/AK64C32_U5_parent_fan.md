@@ -46,6 +46,62 @@ with odd bracket, so d≥3 is impossible. The mixed quotient parent cells are:
 
 The four d=2 lifts are required: the A/K64 projection at depth2 depends on z mod256, not merely mod128. The residual identity gives t≡35 (mod128), hence w≡101 (mod128).
 
+
+## Exhaustive bounded-depth classification for z mod128 ≠125
+
+The divisibility condition 128 | (661+903z) has the unique solution z≡125 (mod128), since 903 is odd. For every other z mod128, e=v2(661+903z)≤6, so dmax=floor((e+2)/2)≤4. The depth-d A/K64 parent cell depends only on z mod2^(2d+4), hence every admissible parent cell is fixed by z mod4096. I enumerated all 4,096 residues z0 mod4096 except the 32 residues with z0≡125 (mod128), checked every admissible d≤dmax, and found exactly 44 full z cylinders mod128 for which every parent cell is absent. Every one of their 32 lifts mod4096 passed the check.
+
+The 44 z residues and their equivalent w residues (the latter modulo1024, using the exact residual identity) are:
+
+| z mod128 | w mod1024 |
+|---:|---:|
+| 3 | 405 |
+| 7 | 1013 |
+| 9 | 805 |
+| 11 | 597 |
+| 15 | 181 |
+| 17 | 997 |
+| 19 | 789 |
+| 20 | 173 |
+| 25 | 165 |
+| 27 | 981 |
+| 31 | 565 |
+| 35 | 149 |
+| 39 | 757 |
+| 41 | 549 |
+| 43 | 341 |
+| 47 | 949 |
+| 51 | 533 |
+| 52 | 941 |
+| 55 | 117 |
+| 57 | 933 |
+| 59 | 725 |
+| 63 | 309 |
+| 67 | 917 |
+| 71 | 501 |
+| 73 | 293 |
+| 75 | 85 |
+| 79 | 693 |
+| 81 | 485 |
+| 83 | 277 |
+| 84 | 685 |
+| 89 | 677 |
+| 91 | 469 |
+| 95 | 53 |
+| 99 | 661 |
+| 103 | 245 |
+| 105 | 37 |
+| 107 | 853 |
+| 111 | 437 |
+| 115 | 21 |
+| 116 | 429 |
+| 119 | 629 |
+| 121 | 421 |
+| 123 | 213 |
+| 127 | 821 |
+
+The other 84 z residues mod128 each have at least one parent cell in the mixed quotient's seen set. The 44-class list is the mixed-quotient result only; combining it with the independent M16 quotient restores the two M16 cylinders that this mixed quotient misses. In addition, the 16 deeper cylinders in z≡125 (mod128) are listed in the next section. All remain computational candidates pending a kernel certificate.
+
 ## Sixteen bounded cylinders inside z≡125 (mod128)
 
 For each candidate representative z0, define
