@@ -605,6 +605,11 @@ The W1021 cylinder was strengthened from `w=1021 (mod 2048)` to `w=1021 (mod 102
 
 A static dependency audit found that the original `q0_parent_reach_implies_X` helper in `U5Q0SourceOnly.lean` is declared `private`. The new high-stop module initially referred to it across the module boundary. This is now corrected: `U5SourceOnlyHighStopW1021.lean` carries its own local private copy of the two-step odd/odd-val3 then even/odd-four lift, and its `#print axioms` list includes that helper. The same module now exposes explicit intermediate `w mod 8` and `t mod 21` facts in the residual-parameter proof.
 
-Updated high-stop Lean blob: `0cbde24ec4c0dfa947c42ddffdffe887a904d809`. The q0 source module remains `46a4b917e94883ce55bb1d418935da493db608b2`; the derivation note remains `2d3f163d55280e3c49f6dc04074afa1e93822d3a`.
+Updated high-stop Lean blob: `0cbde24ec4c0dfa947c42ddffdffe887a904d809`. The q0 source module is now `de744b3a87710aae4f31e4a84871057edd65d06b`; the derivation note remains `2d3f163d55280e3c49f6dc04074afa1e93822d3a`.
 
 Still uncompiled: this is a static correction, not a Lean verification. Agent 24 must compile the exact full source closure and audit all exported axiom profiles. Do not dispatch CI or promote to `results/` before that local preflight.
+
+
+### 2026-11-16 17:12 UTC — final W1021 draft hardening
+
+A static review of the q=1 branch found one remaining let-unfolding risk in the Lean arithmetic proof. Added an explicit `dsimp [t,z] at hcost` before solving the q=1 k-coordinate equation. Current q0 blob is `de744b3a87710aae4f31e4a84871057edd65d06b`; current high-stop blob is `0cbde24ec4c0dfa947c42ddffdffe887a904d809`. No mathematical statement changed. Still awaiting exact local compile and axiom audit from Agent 24.

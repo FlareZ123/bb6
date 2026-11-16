@@ -202,6 +202,7 @@ theorem q0_X_not_reach_t123_z2mod128 (v : Nat) :
       omega
     have hk1 : k=26902+1260672*v := by
       rw [hUval] at hcost
+      dsimp [t,z] at hcost
       omega
     have hP1 : CReach
         (4932+231168*v) (26902+1260672*v) := by
