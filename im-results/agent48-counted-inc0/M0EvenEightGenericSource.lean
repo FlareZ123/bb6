@@ -122,7 +122,7 @@ private theorem m0EvenEightQ4CutTape_head_true
     rw [m0EvenEightQ4CutTape_eq_swept L q a b h h hout]
     have hN : (3*a-2)+2 = 3*a := by omega
     rw [← hN]
-    exact sweptLeft_head (3*a-2) T h (by omega)
+    exact sweptLeft_head (3*a-2) T h
 
 private theorem m0EvenEightQ4CutTape_plus1_true
     (L q a b : Nat) (h : Int) (ha : 0 < a) :
