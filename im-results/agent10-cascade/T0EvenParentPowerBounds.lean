@@ -32,7 +32,7 @@ theorem t0_entry_even_parent_power_bounds
     (hdelta_hi : delta ≤ 2 * K + 4)
     (hband_r :
       8 * 2 ^ K + (2 * K + 7) + 3 ≤ (2 * K + 7) * 2 ^ (r + 2)) :
-    4 * K + 8 < 2 ^ (r + 3) ∧ 4 * K + 8 < 2 ^ (K - q + 2) := by
+    4 * K + 11 < 2 ^ (r + 3) ∧ 4 * K + 11 < 2 ^ (K - q + 2) := by
   have hpowK : 4 * K ^ 2 ≤ 2 ^ K := pow2_ge_four_sq K hK
   have hKK : 10 * K ≤ K ^ 2 := by
     simpa [pow_two] using Nat.mul_le_mul_right K hK
@@ -47,14 +47,14 @@ theorem t0_entry_even_parent_power_bounds
         rw [Nat.pow_succ]
         ring
   have hRstrict :
-      (2 * K + 7) * (4 * K + 8) <
+      (2 * K + 7) * (4 * K + 11) <
         16 * 2 ^ K + 2 * (2 * K + 7) + 6 := by
     nlinarith [hpowK, hK]
-  have hpow_r : 4 * K + 8 < 2 ^ (r + 3) := by
+  have hpow_r : 4 * K + 11 < 2 ^ (r + 3) := by
     by_contra h
-    have hle : 2 ^ (r + 3) ≤ 4 * K + 8 := by omega
+    have hle : 2 ^ (r + 3) ≤ 4 * K + 11 := by omega
     have hmul :
-        (2 * K + 7) * 2 ^ (r + 3) ≤ (2 * K + 7) * (4 * K + 8) :=
+        (2 * K + 7) * 2 ^ (r + 3) ≤ (2 * K + 7) * (4 * K + 11) :=
       Nat.mul_le_mul_left (2 * K + 7) hle
     omega
   have hq_bound : 2 ^ q ≤ 2 * K + 4 := by
@@ -87,18 +87,18 @@ theorem t0_entry_even_parent_power_bounds
       16 * K ^ 2 = 4 * (4 * K ^ 2) := by ring
       _ ≤ 4 * 2 ^ K := Nat.mul_le_mul_left 4 hpowK
       _ = 2 ^ (K + 2) := hpowKplus2.symm
-  have hpoly : (2 * K + 4) * (4 * K + 8) < 16 * K ^ 2 := by
+  have hpoly : (2 * K + 4) * (4 * K + 11) < 16 * K ^ 2 := by
     nlinarith [hKK, hK]
-  have hpow_kq : 4 * K + 8 < 2 ^ (K - q + 2) := by
+  have hpow_kq : 4 * K + 11 < 2 ^ (K - q + 2) := by
     by_contra h
-    have hle : 2 ^ (K - q + 2) ≤ 4 * K + 8 := by omega
+    have hle : 2 ^ (K - q + 2) ≤ 4 * K + 11 := by omega
     have hprod :
-        2 ^ q * 2 ^ (K - q + 2) ≤ (2 * K + 4) * (4 * K + 8) :=
+        2 ^ q * 2 ^ (K - q + 2) ≤ (2 * K + 4) * (4 * K + 11) :=
       Nat.mul_le_mul hq_bound hle
     have hupper : 2 ^ (K + 2) < 16 * K ^ 2 := by
       calc
         2 ^ (K + 2) = 2 ^ q * 2 ^ (K - q + 2) := hpowK2
-        _ ≤ (2 * K + 4) * (4 * K + 8) := hprod
+        _ ≤ (2 * K + 4) * (4 * K + 11) := hprod
         _ < 16 * K ^ 2 := hpoly
     omega
   exact ⟨hpow_r, hpow_kq⟩
