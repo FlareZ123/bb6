@@ -715,3 +715,18 @@ Crucial limitation: the source Forbidden set contains arbitrary large a,k, not j
 3. Continue source-to-root closure on the frozen U5 candidate; no further quotient scans or residue expansion.
 4. Preserve all uncompiled artifacts in `im-results/`; do not change the academically publishable `results/` index.
 5. No exact BB(6) value or universal upper bound has been established.
+
+
+## CLine inverse well-foundedness observation (not yet Lean-formalized)
+
+For a CLine state `(a,k,c)`, define `M=a+2k+c`. Direct substitution in the exact transition cases gives forward `ΔM`:
+- c=1: +1
+- c=3: +2
+- c=0,a=0: +3
+- c=0,a=1,k=0: +5
+- c=0,a=1,k≥1: +4
+- c=0,a≥2: +1
+- c≥4,a=0 (either parity branch): +3
+- c≥4,a≥1: 0, while k increases by1.
+
+Thus the lexicographic pair `(M,k)` strictly increases on every forward edge and strictly decreases on every exact predecessor edge. Since lexicographic order on `Nat × Nat` is well-founded, every fixed target has a finite exact backward predecessor tree. This suggests a general source-level reachability decision procedure by recursively enumerating exact predecessors. The inverse list and finite representative closures explored above are computational only; no Lean formalization or uniform exclusion for the infinite w≡101 forbidden family has been completed.
