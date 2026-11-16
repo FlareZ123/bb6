@@ -1,4 +1,4 @@
-name: Agent 8 BB6 623 rooted two-step mass proof (manual)
+name: Agent 8 BB6 623 rooted mass and n=10 corridors (manual)
 
 on:
   workflow_dispatch:
@@ -39,3 +39,27 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent8SharpMassSource.olean Agent8SharpMassSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8SharpMass10Source.olean Agent8SharpMass10Source.lean
           lake env lean Agent8RootedMassSource.lean
+
+      - name: Compile exact n=10 root-corridor dependencies
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SquareGapTerminalBridge.lean" SquareGapTerminalBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/RootCancellationBudgetBridge.lean" Agent8RootCancellationBudgetBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-623-budget-composition/RootExclusion.lean" RootExclusion.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/RootMassGapAllN10.lean" Agent8RootMassGapAllN10.lean
+          lake env lean -o .lake/build/lib/lean/SquareGapTerminalBridge.olean SquareGapTerminalBridge.lean 2>&1 | tee square-gap-terminal-bridge.log
+          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetBridge.olean Agent8RootCancellationBudgetBridge.lean 2>&1 | tee root-cancellation-budget-bridge.log
+          lake env lean -o .lake/build/lib/lean/RootExclusion.olean RootExclusion.lean 2>&1 | tee root-exclusion.log
+          lake env lean Agent8RootMassGapAllN10.lean 2>&1 | tee root-mass-gap-n10.log
+          cat square-gap-terminal-bridge.log root-cancellation-budget-bridge.log root-exclusion.log root-mass-gap-n10.log > n10-root-mass-axioms.log
+          if grep -q 'sorryAx' n10-root-mass-axioms.log; then
+            echo 'sorryAx detected in the exact-source n=10 root-corridor closure'
+            exit 1
+          fi
+      - name: Upload n=10 root-corridor axiom log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bb6-623-n10-root-corridor-axioms
+          path: /tmp/cryptids/n10-root-mass-axioms.log
