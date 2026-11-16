@@ -207,6 +207,8 @@ Write t=128n+99. The exact q=0 odd/odd source-parent fan has only depths d=0,1,2
 
 All six quotient states are absent from the certified M16 reachable set. The new Lean draft is in `U5Q0M16Core.lean`; the residual lift and parent closure are in `U5Q0M16Residual.lean` and `U5Q0M16ResidualClosure.lean`. `U5Q0M16HighStop.lean` carries this through the y=3 terminal, B_s, A_s, and the high m=0 root j=39+64s. The resulting conditional root exclusion is for every residual triple satisfying the U5 equations and w=37 (mod128).
 
+The residual cylinder is non-vacuous for every w in it (indeed, for every w≥0). Since 211 is prime, Fermat gives 2^210≡1 (mod211); also 2^9≡90 and 90·68≡1 (mod211), so 2^201≡68. Hence 2^(201+3360w)≡68 and 5·2^(201+3360w)−129 is divisible by 211. Choose s=(5·2^(201+3360w)−129)/211 and m=32s−32−840w. From 2^r≥r+1 with r=201+3360w, we get 5·2^r≥1010+16800w≥211(27w+1)+129, so s≥27w+1 and m≥24w≥0. The relation m≡0 (mod8) then supplies t=(m+1−1)/8. Thus the w=37 (mod128) exclusion is an infinite, non-vacuous arithmetic family, once the Lean composition is source-compiled.
+
 This is disjoint from w=21 (mod32), and is an additional subset of the previously hard w=5 (mod8) class. It does not close the whole w=5 class: the remaining parameter cylinders still admit source parents not excluded by this quotient.
 
 The quotient audit script now checks eleven absent c=0 states (the original five plus these six) while reproducing 7,115 reachable states and 34,992 representative edges.
