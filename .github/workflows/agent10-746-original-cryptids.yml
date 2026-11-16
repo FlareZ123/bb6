@@ -62,7 +62,7 @@ jobs:
             python3 "$b/generate_fast_cone.py" --index "$n" --chunk-size 16 --output "$GITHUB_WORKSPACE/Agent10Bridge/FastCone$n.lean"
             lake env lean -o "Agent10Bridge/FastCone$n.olean" "Agent10Bridge/FastCone$n.lean"
           done
-          lake env lean "Agent10Bridge/OriginalGate268.lean"
+          lake env lean -o "Agent10Bridge/OriginalGate268.olean" "Agent10Bridge/OriginalGate268.lean"
           lake env lean -o "Agent10Bridge/T1QParentFatal.olean" "Agent10Bridge/T1QParentFatal.lean"
           lake env lean -o "Agent10Bridge/T1QParentOriginal.olean" "Agent10Bridge/T1QParentOriginal.lean"
           echo "PASS: t=1 Q-parent source identity, nonfatal even-reset chain, and conditional original-machine halting implication compiled."
