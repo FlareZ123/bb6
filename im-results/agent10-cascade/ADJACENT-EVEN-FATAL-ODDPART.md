@@ -55,6 +55,48 @@ level exits in the BB(6) fatal range. Thus the tail has only two shapes:
    even resets, and the final even exit reaches \(F_{L+1}\), governed by
    the general equation (G).
 
+### Two-level selector for the child level
+
+There is a useful all-\(t\) restriction before solving (G). Put
+\(p=2^K\) and \(x=3^{t+1}d=2u+5\). The source band implies
+\[
+A_{K,t}:=\frac{3^{t+1}}{2^t}(6p+1)
+\le x\le
+\frac{3^{t+1}}{2^t}(8p-1)=:B_{K,t},
+\]
+and
+\[
+\frac{B_{K,t}}{A_{K,t}}
+=\frac{8p-1}{6p+1}<\frac43.
+\]
+The child first-failure level \(L\) is characterized exactly by
+\[
+G(L)\le x<G(L+1).
+\]
+For every \(n\ge1\),
+\[
+3G(n+1)-4G(n)=16\cdot2^n+2n-3>0,
+\]
+so \(G(n+1)>\frac43G(n)\). If two possible child levels for the same
+\((K,t)\) differed by at least two, the corresponding \(x\)-values would
+have ratio strictly greater than \(4/3\), contradicting the source-band
+ratio above. Therefore:
+
+\[
+\boxed{\text{For each fixed }(K,t),\text{ the child level }L
+\text{ has at most two possible values, and they are consecutive.}}
+\]
+
+This applies to both the direct equation \(x=G(n)\) and the one-even-exit
+equation (G). For each candidate \(L\), the latter requires
+\[
+G(L+1)-x=2^{r+1}(4L+10),
+\]
+which determines at most one \(r\). Thus the general all-\(t\) fatal
+search has at most two child-level/depth candidates for each fixed
+source level and odd-reset valuation. This is a scale reduction, not an
+exclusion of the remaining \(L\ge K+2\) cases.
+
 The direct branch has a useful low-valuation cutoff. Put
 \[
 G(n)=8\cdot2^n-2n-3.
