@@ -110,5 +110,15 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent8RootSpectrumSource.olean Agent8RootSpectrumSource.lean
           cp "../im-results/agent8-623-survival-density/RootTerminalSource.lean" Agent8TerminalSpectrumSource.lean
           lake env lean Agent8TerminalSpectrumSource.lean
+      - name: Compile terminal-to-budget arithmetic and existing-predicate adapters
+        working-directory: cryptids
+        run: |
+          set -eu
+          cp "../im-results/agent8-623-inverse/SquareGapTerminalBridge.lean" SquareGapTerminalBridge.lean
+          lake env lean -o .lake/build/lib/lean/SquareGapTerminalBridge.olean SquareGapTerminalBridge.lean
+          cp "../im-results/agent8-623-inverse/RootCancellationBudgetBridge.lean" Agent8RootCancellationBudgetBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetBridge.olean Agent8RootCancellationBudgetBridge.lean
+          cp "../im-results/agent8-623-inverse/RootCancellationBudgetInterfaces.lean" Agent8RootCancellationBudgetInterfaces.lean
+          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetInterfaces.olean Agent8RootCancellationBudgetInterfaces.lean
       - name: Reproduce 10,000-state canonical ray terminal-window audit
         run: python "$GITHUB_WORKSPACE/im-results/agent49-parity623/canonical_ray_terminal_scan.py" --steps 10000
