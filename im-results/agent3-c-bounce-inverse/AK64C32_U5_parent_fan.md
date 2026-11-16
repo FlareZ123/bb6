@@ -100,7 +100,7 @@ The 44 z residues and their equivalent w residues (the latter modulo1024, using 
 | 123 | 213 |
 | 127 | 821 |
 
-The other 84 z residues mod128 each have at least one parent cell in the mixed quotient's seen set. The 44-class list is the mixed-quotient result only; combining it with the independent M16 quotient restores the two M16 cylinders that this mixed quotient misses. In addition, the 16 deeper cylinders in z≡125 (mod128) are listed in the next section. All remain computational candidates pending a kernel certificate.
+The other 84 z residues mod128 each have at least one parent cell in the mixed quotient's seen set. The 44-class list is the mixed-quotient result only; combining it with the independent M16 quotient restores the two M16 cylinders that this mixed quotient misses. Those two M16-only residues are z≡23,87 (mod128), corresponding to w≡373,885 (mod1024), respectively. In addition, the 16 deeper cylinders in z≡125 (mod128) are listed in the next section. All remain computational candidates pending a kernel certificate.
 
 
 ## Higher-cost A/K128,C32 refinement: one additional z=92 cylinder
