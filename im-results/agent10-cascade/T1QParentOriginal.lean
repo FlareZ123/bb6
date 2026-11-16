@@ -14,8 +14,8 @@ open BusyBeaver
 open BusyBeaver.M_1RB0LF_1LC1RA_0RE0RD_HHH1LE_1LF1RC_1LC1LA
 open CascadeResetInverse
 
-/-- Any genuine blank-root t=1 Q-parent match whose fatal index is in the
-surviving original-source sectors forces the unmodified TM to halt. -/
+/-- Any genuine blank-root t=1 Q-parent match with fatal index at least 257
+forces the unmodified TM to halt; the Q equation supplies the sector. -/
 theorem original_halts_of_root_t1_q_parent (h k d a j : Nat)
     (hroot : CascadeSweep.ReachC (2,0) (h,0))
     (hg : ∀ i, i<k → 8*2^i≤h+i+5)
