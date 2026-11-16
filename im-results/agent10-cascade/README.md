@@ -1,8 +1,14 @@
 # Cryptids #746: exact reset inverse grammar and infinite fatal-gate problem
 
-**Research state (12 November 2026): original-source inverse and fixed-target nonreachability theorems remain the strongest root-facing results; a dual index/depth 3-adic selector is now drafted, but its new Lean source check is pending. The genuine blank-start halt/nonhalt question remains open.** All closed forms, certificates, experiments and earlier verification entries are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+**Research state (16 November 2026): the original-source inverse grammar and fixed-target nonreachability theorems remain the strongest root-facing results. A new adjacent-even fatality reduction limits its odd-reset valuation to t=0 or t=1, with exact root-source odd-part tests for both cases and no matches in the 100,000-transition prefix. The new Lean source theorem and the t=1 source-connected bridge are on PR #106 pending local compile; the genuine blank-start halt/nonhalt question remains open.** All closed forms, certificates, experiments and earlier verification entries are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
 
-## 14 November 2026: 100,000-step blank-root forward orbit and 3-adic coverage
+## 16 November 2026: adjacent-even fatal valuation cutoff and root odd-part tests
+
+The [adjacent-even fatal odd-part reduction](ADJACENT-EVEN-FATAL-ODDPART.md) derives the exact all-t fatal equation and proves that the odd-reset valuation must satisfy t≤1 whenever the child is at level K+1, undergoes same-level even resets, and exits to F_(K+2). The remaining t=0 and t=1 cases reduce to the two exact source-height equations B0=(2K+7)·2^(r+3) and B1=(2K+7)·2^(r+5), respectively, with r odd. The t=1 equation is the Q-depth bridge already developed in the preceding work; t=0 is the newly explicit companion branch.
+
+The extended [root forward audit](root_forward_3adic.py) now checks both odd-part equations at every actual t=0 or t=1 source transition. In a deterministic 100,000-transition BigInt reproduction, neither equation matched the blank-root prefix. This is finite evidence only. Direct odd-output fatality remains a separate all-t branch, and neither surviving adjacent-even case has been excluded for all root times. The Lean proof of the t≤1 cutoff and the t=1 source bridge are still awaiting local preflight on PR #106.
+
+## 14-16 November 2026: 100,000-step blank-root forward orbit and 3-adic coverage
 
 The reproducible [root forward audit](root_forward_3adic.py) ran 100,000 exact reset transitions from height 2 in [CI 43638425432](https://github.com/FlareZ123/bb6/actions/runs/43638425432). It reached level K=77,220 (height bit length 77,223) without halting. The 49,717 level-entry heights cover every residue congruent to 2 modulo 3 modulo 3^7, and 2,186/2,187 such residues modulo 3^8. The prefix also contains same-index fatal congruence matches at every precision 3^a for 2≤a≤8, so fixed-modulus height-versus-fatal residue exclusions through 3^7 do not separate this root prefix.
 
