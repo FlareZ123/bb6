@@ -43,6 +43,30 @@ jobs:
           a="$GITHUB_WORKSPACE/agent10/im-results/agent7-fatal-density"
           b="$GITHUB_WORKSPACE/agent10/im-results/agent10-cascade"
           c="$GITHUB_WORKSPACE/agent10/im-results/agent7-cascade-odd-fibers"
+          if [ "$PREFLIGHT_ONLY" = "true" ]; then
+            # Compile only the exact transitive closure of LevelDeficitDynamics,
+            # ResetChain, and T1QParentFatal. Do not build unrelated fast cones.
+            set -o pipefail
+            cp "$c"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+            cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,T1QParentFatal}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+            cp "$GITHUB_WORKSPACE/agent10/im-results/agent44-746-rank/LevelDeficitDynamics.lean" "$GITHUB_WORKSPACE/Agent10Bridge/"
+            cd "$GITHUB_WORKSPACE"
+            export LEAN_PATH="$GITHUB_WORKSPACE/Agent10Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
+            lake env lean --version
+            log="$GITHUB_WORKSPACE/t1-preflight-axioms.log"
+            : > "$log"
+            for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain; do
+              lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean" 2>&1 | tee -a "$log"
+            done
+            lake env lean -o "Agent10Bridge/LevelDeficitDynamics.olean" "Agent10Bridge/LevelDeficitDynamics.lean" 2>&1 | tee -a "$log"
+            lake env lean -o "Agent10Bridge/T1QParentFatal.olean" "Agent10Bridge/T1QParentFatal.lean" 2>&1 | tee -a "$log"
+            if grep -E 'sorryAx|native_decide' "$log"; then
+              echo "FAIL: forbidden axiom or native_decide dependency in focused preflight"
+              exit 1
+            fi
+            echo "PASS: exact source dependency closure compiled; no sorryAx/native_decide in printed axiom profiles."
+            exit 0
+          fi
           cp "$c"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass,SurvivingSmall,SurvivingExactGate,OriginalSurvivingBridge,OriginalPhysicalGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$a"/HighLevelResetBridge.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,ManyShield,RootMinIndex,FastShield,RootMin256,OriginalNextBridge,OriginalMinIndexBridge,OriginalRawGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
@@ -63,10 +87,6 @@ jobs:
           done
           lake env lean -o "Agent10Bridge/LevelDeficitDynamics.olean" "Agent10Bridge/LevelDeficitDynamics.lean"
           lake env lean -o "Agent10Bridge/T1QParentFatal.olean" "Agent10Bridge/T1QParentFatal.lean"
-          if [ "$PREFLIGHT_ONLY" = "true" ]; then
-            echo "PASS: focused preflight compiled LevelDeficitDynamics, ResetChain, and T1QParentFatal; inspect the axiom profiles above."
-            exit 0
-          fi
           lake env lean -o "Agent10Bridge/HighLevelResetBridge.olean" "Agent10Bridge/HighLevelResetBridge.lean"
           lake env lean -o "Agent10Bridge/OriginalAlgorithmicGate.olean" "Agent10Bridge/OriginalAlgorithmicGate.lean"
           lake env lean -o "Agent10Bridge/FastParents.olean" "Agent10Bridge/FastParents.lean"
