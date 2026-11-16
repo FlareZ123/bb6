@@ -222,7 +222,7 @@ theorem blank_no_high_m0_u5_w21 (w s m : Nat)
 residue: s=293 (mod512), hence j=39+64*s=18791 (mod32768)
 and t=(j-7)/32=587 (mod1024). This is disjoint from the four
 previously source-certified m=0 high-stop classes. -/
-theorem u5_high_root_parameter_residue_w21 (w s : Nat)
+theorem u5_high_root_parameter_residue (w s : Nat)
     (hs : 211*s+129=5*2^(201+3360*w)) :
     (39+64*s)%32768=18791 ∧ (1+2*s)%1024=587 := by
   have hdiv : 512∣2^(201+3360*w) := by
@@ -249,11 +249,11 @@ theorem every_w21_residual_has_unreachable_root (n : Nat) :
   obtain ⟨s,m,hs,hm⟩ := u5_residual_nonempty (32*n+21)
   have hw : (32*n+21)%32=21 := by omega
   have hroot := blank_no_high_m0_u5_w21 (32*n+21) s m hs hm hw
-  have hres := u5_high_root_parameter_residue_w21 (32*n+21) s hs
+  have hres := u5_high_root_parameter_residue (32*n+21) s hs
   exact ⟨s,m,hs,hm,hres.1,hroot⟩
 
 #print axioms u5_residual_nonempty
-#print axioms u5_high_root_parameter_residue_w21
+#print axioms u5_high_root_parameter_residue
 #print axioms blank_no_u5_residual_m8w_w21
 #print axioms blank_no_u5_B_s_m8w_w21
 #print axioms blank_no_u5_A_s_m8w_w21
