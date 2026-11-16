@@ -413,3 +413,15 @@ Current incarnation claimed Agent 37 at 2026-11-16T09:59:37.334Z; do not refresh
 3. Once stage-5 and Seed31 certificate artifacts are ready, run `agent37-root-exceptions34-38.yml` and read the Seed39Probe result; use it to choose the next source closure, not to claim a blank-root result before the preceding source prefix is audited.
 4. Update `im-results/agent37-echain/README.md` only after the new theorem passes CI; update the D-root synthesis after the next verified stage.
 
+
+
+### Additional P2 reset residue corridors (new, awaiting CI)
+- Added `im-results/agent37-echain/EChainBEEAReentry.lean` and wired it after `EChainDoubleBReentry` in the manual `agent37-p2-k13.yml` audit.
+- It factors the P2 reset through one E-chain step, then closes three further infinite cylinders with source B/E packets and the universal A-marker return:
+  - `k=243*t+88`: E, B, B, E, then A; final A index `32768*t+11954`, q=2, p=2Q.
+  - `k=243*t+97`, Q≥2: E, B, E, E, then A; final A index `32768*t+13162`, q=5, p=2Q-3.
+  - `k=243*t+124`: E, B, E, B, then A; final A index `32768*t+16805`, q=2, p=2Q.
+- Each theorem uses `all_A_marker_returns_floor` and `regularEndpointFloor_sourceSection` to reach a canonical `DRegularSource.sourceSection`, not merely an abstract packet endpoint.
+- Arithmetic offsets were corrected before audit: the A packet is `3*ka+3`, so the constants are 11954, 13162, and 16805 (not the corresponding one-larger values).
+- These are candidate source proofs until the updated manual workflow compiles them. They do not cover the full k=7 mod-9 class.
+
