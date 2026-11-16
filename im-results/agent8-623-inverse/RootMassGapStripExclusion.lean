@@ -3,7 +3,7 @@ import RootExclusion
 import Lean.Elab.Tactic.Omega
 
 /-!
-# A root-mass gap excludes a full n=10 far-cancellation strip
+# A root-mass gap excludes a bounded n=10 far-cancellation strip
 
 The source root run has exact states at steps 39, 40, and 41. Since every
 successful blank-root transition increases total mass, the open mass interval
