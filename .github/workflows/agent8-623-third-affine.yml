@@ -120,7 +120,9 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetBridge.olean Agent8RootCancellationBudgetBridge.lean 2>&1 | tee root-cancellation-budget-bridge.log
           cp "../im-results/agent8-623-inverse/RootCancellationBudgetInterfaces.lean" Agent8RootCancellationBudgetInterfaces.lean
           lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetInterfaces.olean Agent8RootCancellationBudgetInterfaces.lean 2>&1 | tee root-cancellation-budget-interfaces.log
-          if grep -q 'sorryAx' square-gap-terminal-bridge.log root-cancellation-budget-bridge.log root-cancellation-budget-interfaces.log; then
+          cp "../im-results/agent8-623-inverse/RootCancellationExponentTransfer.lean" Agent8RootCancellationExponentTransfer.lean
+          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationExponentTransfer.olean Agent8RootCancellationExponentTransfer.lean 2>&1 | tee root-cancellation-exponent-transfer.log
+          if grep -q 'sorryAx' square-gap-terminal-bridge.log root-cancellation-budget-bridge.log root-cancellation-budget-interfaces.log root-cancellation-exponent-transfer.log; then
             echo 'sorryAx detected in terminal-to-budget source chain'
             exit 1
           fi
