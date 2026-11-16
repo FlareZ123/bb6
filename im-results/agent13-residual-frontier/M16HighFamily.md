@@ -27,17 +27,17 @@ Consequently, once the source-Reach embedding is composed with CCert.reachable_s
 
 This is a genuinely new exclusion relative to the current highAllowedValSixFull parameter gate. It generalizes the special case \(m=3,\ j\equiv6\pmod8\).
 
-There is also an independent \(m=0\) family with three progressions:
+The \(m=0\) pullback has three progressions,
 \[
 m=0,\qquad j\ge3,\qquad j\bmod16\in\{2,3,11\}.
 \]
-Then \(a=2j+3\) and \(k=3j+7\). The q-state is one of
+This is already a direct corollary of the source-bridged Agent 43 theorem reset_unreachable16, not a new generic quotient result: set \(j'=j+1\), so
 \[
-(23,13,0),\ (9,16,0),\ (9,8,0),
+(a,k,0)=(2j+3,3j+7,0)=(2j'+1,3j'+4,0).
 \]
-all absent from the certified seen table. For \(j=16t+2\) with \(t\ge1\), the q-state is \((23,13,0)\); for \(j=16t+3\) it is \((9,16,0)\); for \(j=16t+11\) it is \((9,8,0)\).
+The three residue classes become \(j'\bmod16\in\{3,4,12\}\), all in the theorem's excluded set \(\{1,3,4,5,9,12,13\}\), and \(j'\ge4\). The q-state cross-check gives \((23,13,0),(9,16,0),(9,8,0)\), all absent from the certified seen table.
 
-The full high gate accepts all three progressions: every positive-\(m\) threshold is false, the universal dyadic condition has no index because \(n+4\le2m+2=2\) is impossible, and the Agent 11 condition holds since \(j\bmod4\in\{2,3\}\). For \(j=16t+2\), \(k=48t+13\) is odd, so affineNormalize is the identity. For \(j=16t+3\), the one forced normalization step sends \((a,k)\) to \((80t+23,24t+7)\), whose right coordinate is odd; for \(j=16t+11\), it sends \((a,k)\) to \((80t+63,24t+19)\), again with odd right coordinate. In all cases the normalized right coordinate is not 4.
+The full high gate accepts these three progressions: every positive-\(m\) threshold is false, the universal dyadic condition has no index because \(n+4\le2m+2=2\) is impossible, and the Agent 11 condition holds since \(j\bmod4\in\{2,3\}\). For \(j=16t+2\), \(k=48t+13\) is odd, so affineNormalize is the identity. For \(j=16t+3\), the one forced normalization step sends \((a,k)\) to \((80t+23,24t+7)\), whose right coordinate is odd; for \(j=16t+11\), it sends \((a,k)\) to \((80t+63,24t+19)\), again with odd right coordinate. In all cases the normalized right coordinate is not 4.
 
 
 ## Quotient and certified finite facts
