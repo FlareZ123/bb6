@@ -465,7 +465,7 @@ theorem m0EvenEight_q4_reset_prefix_source
     Tq h b L (8*q-1) 2 (a+b+1) (2^b-1)
     (m0EvenEightQ4LeftFacing L q a) hshape htail hleft happend
   have hcost := m0EvenEight_resetPrefixCost q a b hqodd
-  rw [← hcost,run_add,hprefix]
+  rw [hcost,run_add,hprefix]
   simp only [Option.bind_some]
   simpa [Tq] using hsuffix
 
@@ -487,7 +487,7 @@ theorem m0EvenEight_counted_increment_source
     L (8*q-1) 2 (a+b+1) b (h+5+(3*b:Int))
     (s1Config L (8*q) 0 a 0 b h)
     (resetPrefixCost 0 (8*q) a b) hprefix hdrain
-  rw [← proposedIncrementCost_decomp 0 (8*q) a b]
+  rw [proposedIncrementCost_decomp 0 (8*q) a b]
   exact hrun
 
 #print axioms m0EvenEight_q4_prefix_leftFacing
