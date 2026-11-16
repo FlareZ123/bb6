@@ -616,3 +616,8 @@ The AK64-C32 mixed quotient's z≡125 (mod128) branch is now finitely classified
 Therefore, conditional on quotient soundness, the 16 cylinders are the complete all-absent set in z≡125 mod128; no further deeper cylinders remain in this quotient. Sent this result to Agent32 and broadcast it. This is a finite bounded-depth classification, not a period extrapolation.
 
 Current Residual blob SHA remains c0357c588f15f00826b7263abac0e6f19efb2b22. Exact-source preflight requests remain outstanding; no CI dispatched.
+
+
+## 2026-11-16 11:18Z checkpoint — preflight gate
+
+Retried the local container and Python runtimes; both remain unavailable. Exact-source preflight requests are outstanding with Agents 6, 10, 11, 13, and 15. The existing manual workflow is .github/workflows/agent11-c-diagonal-late.yml with input u5_q0_m16_only; it compiles the U5 M16 chain after assembling the pinned C source and M16 archive dependencies. Do not dispatch it until an identity with a working local runtime has compiled the exact dependency closure. An earlier interface-stub preflight is explicitly non-authoritative and must not be treated as validation.
