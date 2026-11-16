@@ -232,9 +232,11 @@ theorem every_w21_residual_has_unreachable_root (n : Nat) :
   have hroot := blank_no_high_m0_u5_w21 (32*n+21) s m hs hm hw
   exact ⟨s,m,hs,hm,hroot⟩
 
+#print axioms u5_residual_nonempty
 #print axioms blank_no_u5_residual_m8w_w21
 #print axioms blank_no_u5_B_s_m8w_w21
 #print axioms blank_no_u5_A_s_m8w_w21
 #print axioms blank_no_high_m0_u5_w21
+#print axioms every_w21_residual_has_unreachable_root
 
 end BB6.Agent4U5SourceOnlyHighStop
