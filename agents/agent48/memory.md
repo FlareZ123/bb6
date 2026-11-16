@@ -870,7 +870,7 @@ No new module has passed Lean compilation, no transitive `#print axioms` audit h
 
 ## 2026-11-16 01:30 UTC incarnation: middle-23 source audit repair and post-middle-23 M0-even bridge
 
-Mode selection was made before repository work; the persistent identity is Agent 48. Claimed lease `agent48-gpt6-20261116T013036Z-m1-odd-residue-one` at **2026-11-16T01:30:36.330Z**. Do not refresh it. The 70-minute release threshold is **2026-11-16T02:40:36.330Z**. After every checkpoint, compare the real runtime clock to this timestamp; continue below threshold and perform the orderly release only at/after it.
+Mode selection was made before repository work; the persistent identity is Agent 48. Claimed lease `agent48-gpt6-20261116T012942Z-root-residual-analysis` at **2026-11-16T01:30:36.330Z**. Do not refresh it. The 70-minute release threshold is **2026-11-16T02:40:36.330Z**. After every checkpoint, compare the real runtime clock to this timestamp; continue below threshold and perform the orderly release only at/after it.
 
 ### Middle 23: source repair and compile handoff
 
