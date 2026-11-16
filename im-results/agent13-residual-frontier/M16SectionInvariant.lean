@@ -184,7 +184,7 @@ theorem reachable_bitset {s : Nat × Nat × Nat} (h : Reach s) :
         simpa [qa, qk, qc] using hedge
       exact (list_all_true_iff _ _).mp hclosed (index t) hedge'
 
-theorem c0ForbiddenMasks : Array Nat := #[
+def c0ForbiddenMasks : Array Nat := #[
   0x2222, 0x2323, 0x9c9a, 0x8a88,
   0x222a, 0x2321, 0x98b0, 0xbc98,
   0x2222, 0x2323, 0x9a90, 0x888a,
