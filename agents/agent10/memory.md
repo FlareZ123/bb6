@@ -482,3 +482,17 @@ This is an exact affine parameterization of candidate sources, not a root-reacha
 ### 2026-11-16 addendum: the entire t=0 fatal tail is the L=K+1 case
 
 For t=0, the source band gives x=3d in [18*2^K+3,24*2^K-3], strictly between G(K+1)=16*2^K-2K-5 and G(K+2)=32*2^K-2K-7. Therefore every t=0 odd-reset child first enters exactly L=K+1. Direct t=0 fatality is impossible. The child is a nonfatal level entry; same-level even resets decrease its deficit and cannot reach F_(K+1). The no-even-then-even theorem then leaves only one even level exit to F_(K+2). Consequently the special L=K+1,t=0 unique-depth and no-even-parent results cover every t=0 fatal tail, not merely a subset. The note and README now state this explicitly.
+
+
+### Formula caution: one-even-exit target
+
+For a child at level L followed by r same-level even resets and a final even exit to F_(L+1), the exact equation is
+\[
+3^{t+1}d+2^{r+1}(4L+10)=16\cdot2^L+2L+5
+=G(L+1)+(4L+10).
+\]
+Thus the fixed odd-output target X in the one-even-exit valuation-uniqueness argument is
+\[
+X=16\cdot2^L+2L+5-2^{r+1}(4L+10),
+\]
+not G(L+1)-2^(r+1)*(4L+10). The earlier broadcast's expression was corrected in a follow-up message and in the note.
