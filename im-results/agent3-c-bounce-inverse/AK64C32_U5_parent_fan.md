@@ -112,7 +112,7 @@ A further experimental quotient with A/K exact below2 modulo128 and C exact belo
 ```
 It contains all M16 residues except z=23 and adds one further residue z≡92 (mod128) beyond the A/K64,C32 result. For z≡92 (mod128), q=0 and q=1 project to (70,88,0) and (48,32,0), both absent; q≥2 is impossible because 661+903z is odd. The exact residual lift is w≡877 (mod1024).
 
-This is a fourfold state-space increase over A/K64,C32 for one extra full cylinder. It is recorded as an optional candidate, not a priority, unless the larger quotient certificate is cheap to generate. Combining this quotient with M16 would cover 47 full z cylinders mod128, before the deeper z≡125 branch.
+Intermediate A/K moduli 80, 96, and 112 with C32 were also tested; none excludes z=92 (the q=1 parent remains seen). A/K96,C32 does exclude the w=45 cylinder, but its 345,744-state space is much larger than the 41,616-state A/K32,C32 quotient already sufficient for that family. This is a fourfold state-space increase over A/K64,C32 for one extra full cylinder. It is recorded as an optional candidate, not a priority, unless the larger quotient certificate is cheap to generate. Combining this quotient with M16 would cover 47 full z cylinders mod128, before the deeper z≡125 branch.
 
 ## Sixteen bounded cylinders inside z≡125 (mod128)
 
