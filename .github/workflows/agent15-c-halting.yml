@@ -178,3 +178,16 @@ jobs:
           lean -o SmallSecondFamily.olean SmallSecondFamily.lean
           cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/NoMachineCHalt.lean" .
           lean -o NoMachineCHalt.olean NoMachineCHalt.lean
+
+          # Agent 15: exact q=0 U5 cylinder t=207+672*r. Reuse the
+          # complete original-section inverse and the kernel-checked M16
+          # quotient already built above; this is a source-level theorem,
+          # not a bounded orbit test.
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse,U5Q0OddOddFan}.lean /tmp/agent15-c-check/
+          cd /tmp/agent15-c-check
+          export LEAN_PATH="."
+          for f in BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour BounceAllExact SectionAllInverse U5Q0OddOddFan; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/U5Q0W1Z1M16.lean .
+          lean U5Q0W1Z1M16.lean
