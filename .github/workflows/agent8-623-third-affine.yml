@@ -113,12 +113,16 @@ jobs:
       - name: Compile terminal-to-budget arithmetic and existing-predicate adapters
         working-directory: cryptids
         run: |
-          set -eu
+          set -euo pipefail
           cp "../im-results/agent8-623-inverse/SquareGapTerminalBridge.lean" SquareGapTerminalBridge.lean
-          lake env lean -o .lake/build/lib/lean/SquareGapTerminalBridge.olean SquareGapTerminalBridge.lean
+          lake env lean -o .lake/build/lib/lean/SquareGapTerminalBridge.olean SquareGapTerminalBridge.lean 2>&1 | tee square-gap-terminal-bridge.log
           cp "../im-results/agent8-623-inverse/RootCancellationBudgetBridge.lean" Agent8RootCancellationBudgetBridge.lean
-          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetBridge.olean Agent8RootCancellationBudgetBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetBridge.olean Agent8RootCancellationBudgetBridge.lean 2>&1 | tee root-cancellation-budget-bridge.log
           cp "../im-results/agent8-623-inverse/RootCancellationBudgetInterfaces.lean" Agent8RootCancellationBudgetInterfaces.lean
-          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetInterfaces.olean Agent8RootCancellationBudgetInterfaces.lean
+          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetInterfaces.olean Agent8RootCancellationBudgetInterfaces.lean 2>&1 | tee root-cancellation-budget-interfaces.log
+          if grep -q 'sorryAx' square-gap-terminal-bridge.log root-cancellation-budget-bridge.log root-cancellation-budget-interfaces.log; then
+            echo 'sorryAx detected in terminal-to-budget source chain'
+            exit 1
+          fi
       - name: Reproduce 10,000-state canonical ray terminal-window audit
         run: python "$GITHUB_WORKSPACE/im-results/agent49-parity623/canonical_ray_terminal_scan.py" --steps 10000
