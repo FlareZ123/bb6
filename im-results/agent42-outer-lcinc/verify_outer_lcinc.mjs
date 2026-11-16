@@ -77,12 +77,26 @@ function verifyOne(L, n, m, a, b) {
   const machine = initialize(source);
   const r = v2(n);
 
-  // Part 1: source prelude.
+  // Part 1a: the existing counted left sweep over d1pow(a).
   const prelude = 9 * a + 3 * m + 17;
   const h1 = -(3 * a + m + 5);
-  advance(machine, prelude);
+  for (let i = 0; i < 3 * a; i++) {
+    if ((machine.tape.get(-i) || 0) !== 1) {
+      throw new Error(`initial leftOnes mismatch: ${[L,n,m,a,b]}`);
+    }
+  }
+  if ((machine.tape.get(1) || 0) !== 0) {
+    throw new Error(`initial right-zero mismatch: ${[L,n,m,a,b]}`);
+  }
+  advance(machine, 9 * a);
+  if (machine.state !== 3 || machine.head !== -3 * a) {
+    throw new Error(`counted left-sweep endpoint mismatch: ${[L,n,m,a,b]}`);
+  }
+
+  // Part 1b: the fixed marker/boundary bridge, with three marker cases.
+  advance(machine, 3 * m + 17);
   if (machine.state !== 3 || machine.head !== h1) {
-    throw new Error(`prelude endpoint mismatch: ${[L,n,m,a,b]}`);
+    throw new Error(`marker bridge endpoint mismatch: ${[L,n,m,a,b]}`);
   }
 
   const bit = x => machine.tape.get(x) || 0;
