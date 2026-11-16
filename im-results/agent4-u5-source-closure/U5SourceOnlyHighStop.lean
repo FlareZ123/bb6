@@ -31,6 +31,50 @@ private theorem u5_q1_parent_unreachable (p : Nat)
   · omega
   · omega
 
+
+/-- The U5 residual equations are nonempty for every w. Fermat's
+little theorem is reduced to the two concrete residues
+2^210=1 and 2^201=68 (mod 211); the elementary bound
+2^r≥r+1 then gives s≥27w+1 and m≥24w. -/
+theorem u5_residual_nonempty (w : Nat) :
+    ∃ s m,
+      211*s+129=5*2^(201+3360*w) ∧
+      32*s=32+840*w+m := by
+  let r := 201+3360*w
+  have h210 : (2:Nat)^210%211=1 := by decide
+  have h201 : (2:Nat)^201%211=68 := by decide
+  have h210pow : ((2:Nat)^210)^(16*w)%211=1 := by
+    rw [Nat.pow_mod,h210]
+    simp
+  have hpow : (2:Nat)^r%211=68 := by
+    dsimp [r]
+    rw [show 201+3360*w=201+210*(16*w) by omega,
+      Nat.pow_add,Nat.pow_mul,Nat.mul_mod,h201,h210pow]
+    decide
+  have hmod : (5*2^r)%211=129 := by
+    rw [Nat.mul_mod,hpow]
+    decide
+  let s := 5*2^r/211
+  have hdecomp := Nat.mod_add_div (5*2^r) 211
+  have hs : 211*s+129=5*2^r := by
+    dsimp [s]
+    rw [hmod] at hdecomp
+    omega
+  have hrpow : r+1≤2^r := succ_le_two_pow r
+  have hlin : 211*(27*w+1)+129≤5*(r+1) := by
+    dsimp [r]
+    omega
+  have hbig : 211*(27*w+1)+129≤5*2^r :=
+    le_trans hlin (Nat.mul_le_mul_left 5 hrpow)
+  have hsge : 27*w+1≤s := by
+    dsimp [s]
+    omega
+  let m := 32*s-32-840*w
+  have hm : 32*s=32+840*w+m := by
+    dsimp [m]
+    omega
+  exact ⟨s,m,by simpa [r] using hs,hm⟩
+
 /-- The y=3 terminal of the U5 M8 residual is unreachable on
 w=21 (mod 32). The q=0 parent is excluded by the source-only
 t=19 (mod 32) inverse fan; q=1 is odd-right sum-two; q>=2
@@ -173,6 +217,20 @@ theorem blank_no_high_m0_u5_w21 (w s m : Nat)
   have hA' : CReach (130+208*s) (94+152*s) := by
     simpa only [hx,hy] using hA
   exact blank_no_u5_A_s_m8w_w21 w s m hs hm hw hA'
+
+/-- Explicit infinite nonvacuity of the source-only root exclusion:
+for every n, the w=32*n+21 residual equations have a natural
+solution s,m, and the corresponding high m=0 stopping root is
+blank-unreachable. -/
+theorem every_w21_residual_has_unreachable_root (n : Nat) :
+    ∃ s m,
+      211*s+129=5*2^(201+3360*(32*n+21)) ∧
+      32*s=32+840*(32*n+21)+m ∧
+      ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
+  obtain ⟨s,m,hs,hm⟩ := u5_residual_nonempty (32*n+21)
+  have hw : (32*n+21)%32=21 := by omega
+  have hroot := blank_no_high_m0_u5_w21 (32*n+21) s m hs hm hw
+  exact ⟨s,m,hs,hm,hroot⟩
 
 #print axioms blank_no_u5_residual_m8w_w21
 #print axioms blank_no_u5_B_s_m8w_w21
