@@ -60,15 +60,22 @@ theorem u5_forbidden_absent (x y : Nat) (h : u5ForbiddenCells x y) :
     rw [hqx, hqy]
     decide
 
+/-- Generic original-CLine exclusion from any absent M32 quotient cell. -/
+theorem original_m32_cell_unreachable (x y : Nat)
+    (hseen : seen (q x) (q y) (q 0) = false) :
+    ¬ BB6CLine.Reach (x, y, 0) := by
+  intro hr
+  have hs := reachable_seen (source_reachable_embeds32 hr)
+  rw [hseen] at hs
+  cases hs
+
 /-- Original-CLine blank-orbit nonreachability of the two exceptional
     U5 predecessor families, using the already kernel-checked M32 graph. -/
 theorem original_u5_forbidden_unreachable (x y : Nat)
     (h : u5ForbiddenCells x y) :
     ¬ BB6CLine.Reach (x, y, 0) := by
-  intro hr
-  have hs := reachable_seen (source_reachable_embeds32 hr)
-  rw [u5_forbidden_absent x y h] at hs
-  cases hs
+  apply original_m32_cell_unreachable
+  exact u5_forbidden_absent x y h
 
 #print axioms original_u5_forbidden_unreachable
 end CCert
