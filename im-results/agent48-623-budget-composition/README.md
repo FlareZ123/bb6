@@ -39,14 +39,26 @@ More strongly, the exact trajectory refutes a generic three-step-survival theore
 
 [`Counterexample.lean`](Counterexample.lean) states the exact source transition computations, the source terminal-ratio theorem application, the root-band and bridge arithmetic, and the adapter conclusion. It uses kernel `decide` proofs and prints axioms. It has not yet passed a focused Lean 4.36.0-rc2 compile; do not cite it as kernel-verified until that check succeeds.
 
-## Blank-root exclusion of this particular synthetic predecessor
+## Exact blank-root mass gap
 
-`RootExclusion.lean` adds a source-level proof draft that this q is not itself on the blank-root orbit. The exact high-level root states are:
+`RootExclusion.lean` records three exact high-level root checkpoints:
 
 - step 39: `D(79788,133932)`, mass 213720;
-- step 40: `D(54138,239399)`, mass 293537.
+- step 40: `D(54138,239399)`, mass 293537;
+- step 41: `D(185262,162438)`, mass 347700.
 
-The pinned `next_strict_mass` theorem makes mass strictly increasing between any two surviving root visits. Since q has mass 280179, it cannot occur before step 40 (its mass would be at most 213720) or at/after step 40 (its mass would be at least 293537). The Lean draft proves the two checkpoints by `decide`, proves monotonicity by induction over `run`, and derives non-reachability. This is still pending focused compile.
+It iterates the pinned source theorem `next_strict_mass` to prove that every surviving blank-root state is in exactly one of these classes:
 
-This exclusion reinforces the logical point: the synthetic counterexample does not threaten the actual blank-root orbit, but it proves that the cancellation/budget inequalities alone do not encode the missing root-history information.
-The same file now proves the stronger interval statement `run n = some (.D a d) -> a+d <= 213720 ∨ 293537 <= a+d` for every n. Thus the entire open mass interval `(213720,293537)` is absent from the blank-root orbit, not only this one synthetic predecessor. This relies on exact step-39/40 checkpoints and the source `next_strict_mass` theorem.
+`a+d <= 213720`, or `(a,d)=(54138,239399)`, or `a+d >= 347700`.
+
+Thus every synthetic predecessor with mass strictly between 213720 and 347700 is excluded from the blank-root orbit, except that mass alone leaves the unique step-40 state; the exact coordinate clause handles that exception. The three representative predecessors q1=(260178,20001), q2=(256010,19681), and q3=(272586,20951) are all excluded. q3 deliberately has the same mass as step 40 but different coordinates.
+
+These Lean proofs are source-level drafts pending focused Lean 4.36.0-rc2 compilation. The exact root checkpoints are proved by `decide`; monotonicity is proved by induction using `next_strict_mass`.
+
+## Finite family search
+
+`scan_terminal_budget_family.js` is a reproducible independent BigInt transcription of the pinned source recurrence. It searches odd d in `[19681,24819]` and odd offsets s in `[-455,445]`, with q.a=13d+s even, and filters by the n=10 root band, `logOuterBudget` at K=16, the odd-far-left parent conditions, the depth-14/K-16 terminal-ratio-four source hypotheses, and the c=5/e=306 bridge bound.
+
+The exact search returns **10,763** three-step halting candidates across **2,550** distinct d values. Their predecessor masses range from **275,691** to **347,691**, all strictly between the step-39 and step-41 masses. Exactly one has mass 293,537: q3=(272586,20951), which is not the step-40 root state. Hence the root mass-gap theorem excludes every candidate in this finite search domain.
+
+This is computational evidence from a source transcription, not a proof that the family is complete outside the stated finite search domain. The generic bridge/budget implication is false; the blank-root mass gap excludes this particular large finite family, but no all-time root-history exclusion has been established.
