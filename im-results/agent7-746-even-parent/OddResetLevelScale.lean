@@ -106,10 +106,9 @@ theorem odd_parent_level_scale_of_data
       _ < 3^(t+1)*(8*2^L) := hmul
       _ ≤ 24*3^L*2^t := hupper
       _ = 2^t*(24*3^L) := by ac_rfl
+  have hpos : 0 < 2^t := Nat.pow_pos (by decide)
   have hXupper : X < 24*3^L :=
-    (Nat.mul_lt_mul_left (Nat.pow_pos (by decide : 0 < 2))).mp (by
-      have hpos : 0 < 2^t := Nat.pow_pos (by decide)
-      exact (Nat.mul_lt_mul_left hpos).mp hmul')
+    (Nat.mul_lt_mul_left hpos).mp hmul'
   have hlev' := Nat.mul_le_mul_left 2 hlevel
   have hlinear := two_mul_add_three_le_two_pow K hK
   have hXlower : 6*2^K ≤ X := by
