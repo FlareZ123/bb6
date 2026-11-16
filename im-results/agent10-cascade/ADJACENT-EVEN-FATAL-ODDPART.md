@@ -103,6 +103,33 @@ all-\(t\) candidate levels are the intersection of the at-most-two
 consecutive levels with the appropriate fatal sector. This is a scale
 reduction, not an exclusion of the remaining \(L\ge K+2\) cases.
 
+### At most one valuation for a fixed fatal target
+
+There is also an all-\(t\) uniqueness statement in the other direction.
+Fix \(K\) and a fatal target quantity \(X\), where
+\[
+X=G(n)
+\]
+for direct odd-output fatality, or
+\[
+X=G(L+1)-2^{r+1}(4L+10)
+\]
+for a one-even-exit fatality. The odd-reset equation is
+\(X=3^{t+1}d\), so its source parameter must be
+\[
+P_t=2^td=\frac{2^tX}{3^{t+1}}.
+\]
+For successive valuations, \(P_{t+1}=\frac23P_t\). But the source band
+\([6\cdot2^K+1,\,8\cdot2^K-1]\) has endpoint ratio strictly less than
+\(4/3\), whereas two distinct valuations give a ratio at least \(3/2\).
+Therefore **for fixed \(K\) and fixed fatal target \(X\), at most one
+valuation \(t\) can satisfy the source band**.
+
+Together, the two-level child selector and this fixed-target valuation
+uniqueness turn the general all-\(t\) fatal search into a sparse
+intersection problem. They do not by themselves exclude any of the
+remaining \(L\ge K+2\) or direct \(t\ge2\) cases.
+
 The direct branch has a useful low-valuation cutoff. Put
 \[
 G(n)=8\cdot2^n-2n-3.
