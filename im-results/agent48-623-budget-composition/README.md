@@ -88,3 +88,10 @@ This extension is uncompiled and depends on the n=10 root-mass source closure. T
 - [SuccessorSecondBoundN10.lean](SuccessorSecondBoundN10.lean) is an uncompiled source helper proving the intended bound (p_2\le3\min(q_1,q_2)+69) for a successful genuine root transition at scale 10. It uses the four exact `highLevelNext` sectors, `drainB_upper_linear_log`, `evalA_positive_depth`, `evalA_upper_log`, and the existing n=10 even gap-two root exclusion.
 
 Together with `TerminalWindowAtDepth12.lean`, this supplies the two principal local inequalities needed for q→p→h→halt composition, but the final wrapper composition and near-q scale transfer remain unproved.
+
+
+## Near-q scale transfer
+
+- [NearScaleTransferN10.lean](NearScaleTransferN10.lean) proves the two arithmetic orientation lemmas: either combined strip `absDiff v (13*u)≤470` or `absDiff (7*u) (4*v)≤470`, together with `19680≤min u v`, forces `u≤v`. This transfers the scale-10 minimum-coordinate band to the first coordinate required by the near wrappers.
+
+This closes the isolated near-orientation arithmetic obligation, conditional on the bridge-plus-terminal inequalities actually producing the stated strip.
