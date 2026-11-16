@@ -163,3 +163,10 @@ The corresponding projective map has cancellation centres (g/m=9) and (-9/4). Th
 [root_gap_scale_scan.cpp](root_gap_scale_scan.cpp) is a reproducible GMP mirror diagnostic. Its 20,000-step run had zero branch-selection mismatches after canonical-ray entry, minimum (g^2/m=4096/235) at index 16, and minimum (log_2(|g|/m)approx-12.9605) at index 6899. These are finite observations only; in particular they disprove a uniform linear cone bound (|g|ge c m) on the scanned prefix, not the weaker square-gap conjecture.
 
 The next proof target is an all-time root-history invariant excluding shrinking neighbourhoods of the two cancellation centres. The sharp linear-log drain theorem is already available in Agent49's [DrainLinearLogSource.lean](../agent49-parity623/DrainLinearLogSource.lean); do not duplicate it. The exact BB(6) value and the blank-root #623 halting status remain unresolved.
+
+
+## 16 November 2026: square-gap terminal bridge (conditional)
+
+[SquareGapTerminalBridge.md](SquareGapTerminalBridge.md) and [SquareGapTerminalBridge.lean](SquareGapTerminalBridge.lean) formalize the arithmetic implication from the proposed all-time square-gap predicate to exclusion of all four canonical terminal windows. The module proves the common width estimate (9*n+22)^2+3 < 3^(n-1) for n >= 10 by an explicit induction, so the exponential-versus-quadratic comparison previously left pending in the canonical-ray analysis is now closed.
+
+The four terminal exclusions still assume the source-root square-gap lower bound (5*scale <= distance^2) and the source-derived minimal-exponent / terminal-width bounds. This does not establish the root invariant, prove that every root visit lies in the canonical-ray sectors, or decide #623. The next mathematical target remains an all-time root-history argument excluding the two projective cancellation centres; do not repeat the finite 20,000-step scan or the existing linear-log drain proof.

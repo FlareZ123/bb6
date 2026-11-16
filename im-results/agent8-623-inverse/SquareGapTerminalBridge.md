@@ -24,9 +24,11 @@ The four exported theorems are:
 
 Each says that the corresponding signed terminal window and the square-gap lower bound are contradictory once the corresponding width bound and scale lower bound hold. The four published width bounds are unified by 9*n+22; the minimal ternary exponent supplies scale >= 3^(n-1)-3.
 
-The remaining numerical premise is explicit:
-(9*n+22)^2 < 3^(n-1)-3.
-It is the elementary comparison stated in the canonical-ray analysis for n >= 10. The theorem file keeps this premise explicit so the substantive interface is independent of how that elementary exponential-versus-quadratic estimate is discharged.
+The exponential-versus-quadratic comparison is now proved in the same Lean file. The theorem width_pow establishes
+(9*n+22)^2 + 3 < 3^(n-1)
+for every n >= 10, hence (9*n+22)^2 < 3^(n-1)-3. Its induction starts at n=10 and uses the one-step estimate
+(w+9)^2 + 3 <= 3*(w^2+3)
+for w=9*n+22 >= 112. No numerical side premise remains in the four terminal-exclusion theorem statements.
 
 ## What this does and does not establish
 
@@ -38,4 +40,4 @@ With Lean 4.36.0-rc2:
 
     lean SquareGapTerminalBridge.lean
 
-The four exported terminal-exclusion theorems print only [propext, Quot.sound].
+The four exported terminal-exclusion theorems print only [propext, Quot.sound]. The module also proves the width_pow estimate used to discharge the common numerical comparison.
