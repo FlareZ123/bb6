@@ -80,6 +80,22 @@ theorem root_mass_gap_exclusion (n a d : Nat)
         hge root_run_41 hseen
       exact Or.inr (Or.inr (by omega))
 
+/-- Any candidate in the open step-39/step-41 mass corridor whose
+second coordinate is below the step-40 second coordinate is not a root
+state. This covers the full finite search domain in
+scan_terminal_budget_family.js without enumerating its candidates. -/
+theorem root_mass_corridor_excludes_small_d (n a d : Nat)
+    (hseen : run n = some (.D a d))
+    (hlo : 213720 < a+d)
+    (hhi : a+d < 347700)
+    (hd : d < 239399) : False := by
+  have hgap := root_mass_gap_exclusion n a d hseen
+  rcases hgap with hsmall | hmid | hlarge
+  · omega
+  · rcases hmid with ⟨ha, hd'⟩
+    omega
+  · omega
+
 /-- The exact synthetic budget witness is not on the genuine blank-root
 orbit; it falls in the mass gap between the step-39 and step-41 checkpoints
 and is not the unique step-40 state. -/
@@ -123,6 +139,7 @@ theorem synthetic_predecessor3_not_blank_reachable (n : Nat) :
 #print axioms root_run_41
 #print axioms run_mass_mono
 #print axioms root_mass_gap_exclusion
+#print axioms root_mass_corridor_excludes_small_d
 #print axioms synthetic_predecessor_not_blank_reachable
 
 end BB6.Agent48TerminalBudgetCounterexample
