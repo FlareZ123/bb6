@@ -300,6 +300,7 @@ theorem blank_no_u5_residual_m8w (w s m : Nat)
     have hsum0 :
         (211*(m+1)+10669+22155*(8*w))%8=0 := by
       rw [hid]
+      rw [show 201+420*(8*w)=201+3360*w by omega]
       rw [Nat.mul_mod]
       omega
     omega
@@ -320,7 +321,11 @@ theorem blank_no_u5_residual_m8w (w s m : Nat)
           rcases state with ⟨a,k⟩
           have hedge : BB6.Agent46.secNext (a,k)=some (16*m+10,3) := by
             simpa [BB6.Agent8Section.run,hprev,hX] using ht
-          rcases u5_residual_y3_parent_fan (8*w) s m a k hs' hm' hedge with
+          have hX' : 302+512*s-4*(201+420*(8*w))=16*m+10 := by omega
+          have hedge' : BB6.Agent46.secNext (a,k)=
+              some (302+512*s-4*(201+420*(8*w)),3) := by
+            simpa only [hX'] using hedge
+          rcases u5_residual_y3_parent_fan (8*w) s m a k hs' hm' hedge' with
               hq0 | ⟨q,U,hqpos,hqbound,hdecomp,hU,hk⟩
           · have hparent : CReach (8*(m+1)-3) (4*(m+1)-1) := by
               rw [hq0.1,hq0.2] at hprev
@@ -362,7 +367,7 @@ theorem blank_no_u5_B_s_m8w (w s m : Nat)
     (u5_residual_six_even_right_chain (8*w) s hs').mp h
   have hX : 302+512*s-4*(201+3360*w)=16*m+10 := by omega
   have hterminal' : CReach (302+512*s-4*(201+3360*w)) 3 := by
-    simpa only [hX] using hterminal
+    simpa only [show 201+420*(8*w)=201+3360*w by omega] using hterminal
   exact blank_no_u5_residual_m8w w s m hs hm hterminal'
 
 #print axioms u5_residual_six_even_right_chain
