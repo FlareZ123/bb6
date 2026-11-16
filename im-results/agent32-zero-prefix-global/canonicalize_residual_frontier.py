@@ -175,7 +175,7 @@ def parse_oracle_outcomes(raw: str, status: str):
         if value not in {"0", "1"}:
             raise ValueError(f"bad oracle outcome: {item!r}")
         outcomes[key] = value == "1"
-    expected = {"halt", "ray", "zero", "lasso", "entryMacro"}
+    expected = {"finiteDecision", "finiteLasso", "finiteEntryMacroBi"}
     if set(outcomes) != expected or any(outcomes.values()):
         raise ValueError(f"open terminal must have all five oracle outcomes false: {raw!r}")
     return {"accepted_by_source_oracle": False, **outcomes}
