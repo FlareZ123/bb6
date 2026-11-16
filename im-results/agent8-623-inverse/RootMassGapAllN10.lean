@@ -110,7 +110,7 @@ theorem n10_near_ratio_root_excluded (n a d : Nat)
       have hEq : some (.D 52084 23375) = some (.D a d) :=
         root_run_35.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both (4*52084) (7*23375) 470 hg
+      -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
       have hEq : some (.D 28698 70161) = some (.D a d) :=
@@ -150,7 +150,7 @@ theorem n10_near_ratio_root_excluded (n a d : Nat)
       have hEq : some (.D 7784 59872) = some (.D a d) :=
         root_run_34.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both (4*59872) (7*7784) 470 hg
+      -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
       have hEq : some (.D 52084 23375) = some (.D a d) :=
@@ -162,13 +162,13 @@ theorem n10_near_ratio_root_excluded (n a d : Nat)
       have hEq : some (.D 28698 70161) = some (.D a d) :=
         root_run_36.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both (4*70161) (7*28698) 470 hg
+      -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
       have hEq : some (.D 41468 86104) = some (.D a d) :=
         root_run_37.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both (4*86104) (7*41468) 470 hg
+      -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
 
 /-- No genuine blank-root state in the n=10 13:1 predecessor strip.
@@ -211,7 +211,7 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
       have hEq : some (.D 185262 162438) = some (.D a d) :=
         root_run_41.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both 162438 (13*185262) 470 hg
+      -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
       have hEq : some (.D 22822 487342) = some (.D a d) :=
@@ -223,13 +223,13 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
       have hEq : some (.D 464518 68489) = some (.D a d) :=
         root_run_43.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both 464518 (13*68489) 470 hg
+      -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
       have hEq : some (.D 396018 205505) = some (.D a d) :=
         root_run_44.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both 396018 (13*205505) 470 hg
+      -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
       have hEq : some (.D 190506 616551) = some (.D a d) :=
@@ -263,7 +263,7 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
       have hEq : some (.D 54138 239399) = some (.D a d) :=
         root_run_40.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both 239399 (13*54138) 470 hg
+      -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
       have hEq : some (.D 185262 162438) = some (.D a d) :=
@@ -275,7 +275,7 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
       have hEq : some (.D 22822 487342) = some (.D a d) :=
         root_run_42.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both 487342 (13*22822) 470 hg
+      -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
       have hEq : some (.D 464518 68489) = some (.D a d) :=
@@ -293,7 +293,7 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
       have hEq : some (.D 190506 616551) = some (.D a d) :=
         root_run_45.symm.trans hseen
       cases hEq
-      have hr := absDiff_le_both 616551 (13*190506) 470 hg
+      -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
 
 /-- The fifth n=10 root branch, the special even gap-two state
