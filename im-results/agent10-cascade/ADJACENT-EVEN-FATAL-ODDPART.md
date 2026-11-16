@@ -195,6 +195,17 @@ strictly increasing.
   G(K+2)=32\cdot2^K-2K-7>24\cdot2^K-3.
   \]
   Therefore **direct odd-output fatality is impossible for \(t=0\)**.
+  More strongly, the same band gives
+  \[
+  18\cdot2^K+3\le x=3d\le24\cdot2^K-3,
+  \]
+  which lies strictly between \(G(K+1)\) and \(G(K+2)\). Thus the
+  child first enters **exactly level \(L=K+1\)** for every \(t=0\)
+  source. Since the direct case is impossible and the even-only tail
+  cannot contain two consecutive level exits, every \(t=0\) fatal
+  history must use the special one-even-exit route to \(F_{K+2}\).
+  Consequently the unique-depth and no-even-parent results below cover
+  the entire \(t=0\) fatal branch, not merely a subset of it.
 
 - For \(t=1\), the source band gives
   \(3\cdot2^K+1\le d\le4\cdot2^K-1\), hence
