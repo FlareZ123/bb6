@@ -155,7 +155,11 @@ The primary original-table S1 counted-decrement path is now a single all-valuati
 
 **Validation boundary.** The targeted original-import workflow run `43858822223` at old SHA `68280aa969d8a0741848fee7d79fcbd9db9ed151` failed in the H-run source with three boundary-expression mismatches and one malformed extraction of the run/shape conjunction. The current `CountedCarryPrefixHRun.lean` blob `a940aab604a76a87c8ac54106616cac4e2895d43` contains the corresponding repairs: normalized `-(3*r)` boundary expressions and separate `hExact.1` / `hExact.2` extraction. These are source repairs, not a successful compile. The existing manual `.github/workflows/agent42-counted-lbin-dec.yml` now rejects both `sorryAx` and `native_decide`. A focused local Lean preflight is still pending; do not dispatch the workflow until that preflight is clean.
 
-The older `CountedCarryLeftOutputR23.lean`, `LongResidue1.lean`, and residue-specific branches remain in the repository as supporting/regression material for other reset compositions. They are no longer the primary S1 decrement path. This entire S1 chain remains an intermediate source candidate: it does not by itself establish the blank-root itinerary, a halt, an attained BB(6) lower bound, or an exact score.
+The older `CountedCarryLeftOutputR23.lean`, `LongResidue1.lean`, and residue-specific branches remain in the repository as supporting/regression material for other reset compositions. They are no longer the primary S1 decrement path.
+
+**Scope boundary: inner counter versus outer Rst prefix.** This S1 chain decrements the active inner S0 counter `z`. It does not prove the Coq `Rst0/Rst1/Rst2` prefix: that prefix starts with `z=0` and uses `LC_Inc` to decrement the *outer* binary counter `n` embedded in the left context. It needs a separate S1 source re-encoding of `binDec L n` (plus unary `a`) into the exact carry-input frame while preserving the right suffix `b`. The rho=3 local boundary trace also still needs the contiguous right-run and final three-cell zero boundary. See `im-results/agent42-carry-boundary/README.md` for the established local traces and remaining outer-prefix obligations.
+
+This entire S1 chain remains an intermediate source candidate: it does not by itself establish the blank-root itinerary, a halt, an attained BB(6) lower bound, or an exact score.
 
 ## Marker-2 odd-n reset prefix: q4 decomposition (intermediate)
 
