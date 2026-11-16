@@ -293,6 +293,132 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
       have hr := absDiff_le_both 616551 (13*190506) 470 hg
       omega
 
+/-- Absolute difference is symmetric. -/
+theorem absDiff_comm (x y : Nat) : absDiff x y = absDiff y x := by
+  unfold absDiff
+  by_cases hxy : x <= y <;> by_cases hyx : y <= x <;> simp [hxy, hyx] <;> omega
+
+/-- Convert the exact n=10 ternary scale hypotheses to their integer band. -/
+theorem n10_scale_bounds (m : Nat)
+    (hmin : 3^9-3 <= m) (hmax : m+3 < 3^10) :
+    19680 <= m /\\ m <= 59045 := by
+  norm_num at hmin hmax
+  omega
+
+/-- Full far/far terminal-to-root-ray bridge is incompatible with a
+blank-root visit at n=10. -/
+theorem n10_far_far_bridge_excluded (t u v x y B e c : Nat)
+    (hseen : run t = some (.D u v))
+    (hmin : 3^9-3 <= v) (hmax : v+3 < 3^10)
+    (hB : B <= 145) (he : e <= 306) (hc : c <= 9)
+    (hterm : absDiff x (4*y) <= B)
+    (hbridgeLo : -(e : Int) <=
+      (x : Int)-4*(y : Int)-(c : Int)-((u : Int)-13*(v : Int)))
+    (hbridgeHi :
+      (x : Int)-4*(y : Int)-(c : Int)-((u : Int)-13*(v : Int)) <= e) :
+    False := by
+  have ht := absDiff_le_both x (4*y) B hterm
+  have hgapLo : -(470 : Int) <= (u : Int)-13*(v : Int) := by omega
+  have hgapHi : (u : Int)-13*(v : Int) <= 470 := by omega
+  have hgap := absDiff_of_int_window u (13*v) 470 hgapLo hgapHi
+  have hscale := n10_scale_bounds v hmin hmax
+  have hg := absDiff_le_both u (13*v) 470 hgap
+  have hlarge : v <= u := by omega
+  have hmLo : 19680 <= min u v := by
+    simpa [min_eq_right hlarge] using hscale.1
+  have hmHi : min u v <= 59045 := by
+    simpa [min_eq_right hlarge] using hscale.2
+  have hratio : absDiff (max u v) (13*min u v) <= 470 := by
+    simpa [max_eq_left hlarge, min_eq_right hlarge] using hgap
+  exact n10_far_ratio_root_excluded t u v hseen hmLo hmHi hratio
+
+/-- Full far/near terminal-to-root-ray bridge is incompatible with a
+blank-root visit at n=10. -/
+theorem n10_far_near_bridge_excluded (t u v x y B e c : Nat)
+    (hseen : run t = some (.D u v))
+    (hmin : 3^9-3 <= u) (hmax : u+3 < 3^10)
+    (hB : B <= 145) (he : e <= 306) (hc : c <= 9)
+    (hterm : absDiff x (4*y) <= B)
+    (hbridgeLo : -(e : Int) <=
+      (x : Int)-4*(y : Int)-(c : Int)-((v : Int)-13*(u : Int)))
+    (hbridgeHi :
+      (x : Int)-4*(y : Int)-(c : Int)-((v : Int)-13*(u : Int)) <= e) :
+    False := by
+  have ht := absDiff_le_both x (4*y) B hterm
+  have hgapLo : -(470 : Int) <= (v : Int)-13*(u : Int) := by omega
+  have hgapHi : (v : Int)-13*(u : Int) <= 470 := by omega
+  have hgap := absDiff_of_int_window v (13*u) 470 hgapLo hgapHi
+  have hscale := n10_scale_bounds u hmin hmax
+  have hg := absDiff_le_both v (13*u) 470 hgap
+  have hlarge : u <= v := by omega
+  have hmLo : 19680 <= min u v := by
+    simpa [min_eq_left hlarge] using hscale.1
+  have hmHi : min u v <= 59045 := by
+    simpa [min_eq_left hlarge] using hscale.2
+  have hratio : absDiff (max u v) (13*min u v) <= 470 := by
+    simpa [max_eq_right hlarge, min_eq_left hlarge] using hgap
+  exact n10_far_ratio_root_excluded t u v hseen hmLo hmHi hratio
+
+/-- Full near/far terminal-to-root-ray bridge is incompatible with a
+blank-root visit at n=10. -/
+theorem n10_near_far_bridge_excluded (t u v x y B e c : Nat)
+    (hseen : run t = some (.D u v))
+    (hmin : 3^9-3 <= v) (hmax : v+3 < 3^10)
+    (hB : B <= 145) (he : e <= 306) (hc : c <= 9)
+    (hterm : absDiff y (4*x) <= B)
+    (hbridgeLo : -(e : Int) <=
+      (y : Int)-4*(x : Int)-(c : Int)-(7*(v : Int)-4*(u : Int)))
+    (hbridgeHi :
+      (y : Int)-4*(x : Int)-(c : Int)-(7*(v : Int)-4*(u : Int)) <= e) :
+    False := by
+  have ht := absDiff_le_both y (4*x) B hterm
+  have hgapLo : -(470 : Int) <= 7*(v : Int)-4*(u : Int) := by omega
+  have hgapHi : 7*(v : Int)-4*(u : Int) <= 470 := by omega
+  have hgap := absDiff_of_int_window (7*v) (4*u) 470 hgapLo hgapHi
+  have hscale := n10_scale_bounds v hmin hmax
+  have hg := absDiff_le_both (7*v) (4*u) 470 hgap
+  have hlarge : v <= u := by omega
+  have hmLo : 19680 <= min u v := by
+    simpa [min_eq_right hlarge] using hscale.1
+  have hmHi : min u v <= 59045 := by
+    simpa [min_eq_right hlarge] using hscale.2
+  have hgap' : absDiff (4*u) (7*v) <= 470 := by
+    rw [absDiff_comm]
+    exact hgap
+  have hratio : absDiff (4*max u v) (7*min u v) <= 470 := by
+    simpa [max_eq_left hlarge, min_eq_right hlarge] using hgap'
+  exact n10_near_ratio_root_excluded t u v hseen hmLo hmHi hratio
+
+/-- Full near/near terminal-to-root-ray bridge is incompatible with a
+blank-root visit at n=10. -/
+theorem n10_near_near_bridge_excluded (t u v x y B e c : Nat)
+    (hseen : run t = some (.D u v))
+    (hmin : 3^9-3 <= u) (hmax : u+3 < 3^10)
+    (hB : B <= 145) (he : e <= 306) (hc : c <= 9)
+    (hterm : absDiff y (4*x) <= B)
+    (hbridgeLo : -(e : Int) <=
+      (y : Int)-4*(x : Int)-(c : Int)-(7*(u : Int)-4*(v : Int)))
+    (hbridgeHi :
+      (y : Int)-4*(x : Int)-(c : Int)-(7*(u : Int)-4*(v : Int)) <= e) :
+    False := by
+  have ht := absDiff_le_both y (4*x) B hterm
+  have hgapLo : -(470 : Int) <= 7*(u : Int)-4*(v : Int) := by omega
+  have hgapHi : 7*(u : Int)-4*(v : Int) <= 470 := by omega
+  have hgap := absDiff_of_int_window (7*u) (4*v) 470 hgapLo hgapHi
+  have hscale := n10_scale_bounds u hmin hmax
+  have hg := absDiff_le_both (7*u) (4*v) 470 hgap
+  have hlarge : u <= v := by omega
+  have hmLo : 19680 <= min u v := by
+    simpa [min_eq_left hlarge] using hscale.1
+  have hmHi : min u v <= 59045 := by
+    simpa [min_eq_left hlarge] using hscale.2
+  have hgap' : absDiff (4*v) (7*u) <= 470 := by
+    rw [absDiff_comm]
+    exact hgap
+  have hratio : absDiff (4*max u v) (7*min u v) <= 470 := by
+    simpa [max_eq_right hlarge, min_eq_left hlarge] using hgap'
+  exact n10_near_ratio_root_excluded t u v hseen hmLo hmHi hratio
+
 #print axioms root_run_33
 #print axioms root_run_34
 #print axioms root_run_35
