@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
   uint64_t prefixBad = 0, firstBad = 0;
   uint64_t d0Current1 = 0, d0Right100 = 0, d1A0Right000 = 0;
   uint64_t d3A1Right1Zero = 0, d3A1PrefixNot101 = 0;
-  uint64_t A0AppendDanger = 0, A0SameDanger = 0, A0DropDanger = 0;
+  uint64_t A0AppendDanger = 0, A0SameDanger = 0, A0DropDanger = 0;\n  uint64_t A1Pop2DropDanger = 0, A1Pop3_11AppendDanger = 0, A1Pop3_10SameDanger = 0;
 
   auto bit = [&](long long x) -> int { return (int)ones.count(x); };
   auto danger = [&]() -> bool {
@@ -66,6 +66,28 @@ int main(int argc, char** argv) {
 
       if (current) {
         if (danger()) ++A1Danger;
+
+        // A/1 pop-2: P = R ++ 101 with R dangerous, and r1=0
+        // makes the successor violate the A/0 drop-last clause.
+        if (d >= 6 && (d - 3) % 3 == 0 && dfa[d - 3] == 0
+            && prefix[d - 3] == 1 && prefix[d - 2] == 0
+            && prefix[d - 1] == 1 && r1 == 0)
+          ++A1Pop2DropDanger;
+
+        // A/1 pop-3 through suffix 011: P = R ++ 11011
+        // makes the successor violate the A/0 append clause.
+        if (d >= 8 && (d - 5) % 3 == 0 && dfa[d - 5] == 0
+            && prefix[d - 5] == 1 && prefix[d - 4] == 1
+            && prefix[d - 3] == 0 && prefix[d - 2] == 1
+            && prefix[d - 1] == 1)
+          ++A1Pop3_11AppendDanger;
+
+        // A/1 pop-3 through suffix 010: P = R ++ 010
+        // makes the successor violate the A/0 same-prefix clause.
+        if (d >= 6 && (d - 3) % 3 == 0 && dfa[d - 3] == 0
+            && prefix[d - 3] == 0 && prefix[d - 2] == 1
+            && prefix[d - 1] == 0)
+          ++A1Pop3_10SameDanger;
         if (d == 3) {
           ++d3A1;
           if (!r1) ++d3A1Right1Zero;
@@ -131,4 +153,7 @@ int main(int argc, char** argv) {
   cout << "A0AppendDanger=" << A0AppendDanger
        << " A0SameDanger=" << A0SameDanger
        << " A0DropDanger=" << A0DropDanger << "\n";
+  cout << "A1Pop2DropDanger=" << A1Pop2DropDanger
+       << " A1Pop3_11AppendDanger=" << A1Pop3_11AppendDanger
+       << " A1Pop3_10SameDanger=" << A1Pop3_10SameDanger << "\n";
 }
