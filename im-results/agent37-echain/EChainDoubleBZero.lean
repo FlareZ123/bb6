@@ -45,7 +45,6 @@ theorem reset_k81_34_regular (s Q : Nat) :
         (packet (3*k+4) Q 2 (false :: List.replicate 6 true)) =
       packet (1+4*3*h) 0 (2*Q+6) BB6.Agent35K4Shapes.marker := by
     rw [e_two_reset, hprefix, hmarker]
-    rfl
   have hchain :
       run (chainTime 1 h 0)
         (packet (1+4*3*h) 0 (3+p) BB6.Agent35K4Shapes.marker) =
@@ -77,22 +76,24 @@ theorem reset_k81_34_regular (s Q : Nat) :
       packet (8*k2+10) 0 p BB6.Agent35K4Shapes.marker :=
     BB6.Agent31PacketSource.b_packet k2 0 p
       BB6.Agent35K4Shapes.marker
+  have hmarkerTail :
+      BB6.Agent35K4Shapes.marker = oppairs 3 ++ [true,true] := by decide
   have hb0 :
       run (bZeroTime k3)
         (packet (3*k3+2) 0 p BB6.Agent35K4Shapes.marker) =
       regularSection (8*k3+9+p) 3 2 := by
-    simpa [bZeroTime, BB6.Agent2PacketP2Reset.marker,
-      BB6.Agent35K4Shapes.marker, regularSection] using
-      (BB6.Agent2PacketP2Reset.b_zero_any k3 p
-        BB6.Agent35K4Shapes.marker)
+    dsimp [bZeroTime]
+    rw [BB6.Agent2PacketP2Reset.b_zero_any, hmarkerTail]
+    rfl
   unfold reset_k81_34_time
-  change run
-      (eTwoTime k Q + (chainTime 1 h 0 +
-        (bTime k1 + (bTime k2 + bZeroTime k3))))
-      (packet (3*k+4) Q 2 (false :: List.replicate 6 true)) = _
-  rw [run_add, hreset, run_add, hchain, ha1,
-    run_add, hb1, ha2, run_add, hb2, ha3, hb0, ha4]
-  rfl
+  rw [run_add, hreset]
+  rw [run_add, hchain]
+  rw [ha1]
+  rw [run_add, hb1]
+  rw [ha2]
+  rw [run_add, hb2]
+  rw [ha3]
+  rw [hb0, ha4]
 
 #print axioms reset_k81_34_regular
 
