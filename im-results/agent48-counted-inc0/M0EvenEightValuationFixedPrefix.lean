@@ -53,10 +53,11 @@ theorem bridge_prefix44_at (T : Int → Bool) (h : Int) (bit : Bool)
     (hmatch : ∀ x, bridgeInside44 x = true →
       T (h+x) = decide (x ∈ (bridgeStartWithBit bit).marked)) :
     run tm2 44 ⟨3,h,T⟩ =
-      some (frameAt T h bridgeInside44 (bridgeMidWithBit bit)) := by
-  exact bridgeAt T h bridgeInside44
-    (bridgeStartWithBit bit) (bridgeMidWithBit bit) 44 rfl
-    (bridge_prefix44 bit) (bridge_heads44_all bit) hmatch
+      some ⟨3,h-14,frameAt T h bridgeInside44 (bridgeMidWithBit bit)⟩ := by
+  simpa [bridgeStartWithBit,bridgeMidWithBit] using
+    bridgeAt T h bridgeInside44
+      (bridgeStartWithBit bit) (bridgeMidWithBit bit) 44 rfl
+      (bridge_prefix44 bit) (bridge_heads44_all bit) hmatch
 
 /-- Tape update of the four-step zero exit from state 3 to state 1. -/
 def afterZeroExit4 (T : Int → Bool) (h : Int) : Int → Bool :=
