@@ -126,6 +126,31 @@ For a fixed episode start, there is at most one candidate \(n\): the difference 
 \]
 Thus each \(c<q\) episode can be tested by an exact monotone search rather than by iterating every low-branch transition.
 
+## Complete one-step preimage set of the halt states
+
+Let
+\[
+H_0(Q)=S(0,3Q+2,Q+1),\qquad
+H_1(Q)=S(1,3Q+2,Q+2).
+\]
+Inverting every branch of the pinned highLevelNext definition gives the following complete list of immediate predecessor families. Here \(d=c-q\).
+
+| Predecessor \((p,r,q,d)\) | Parameter range | Image |
+|---|---:|---|
+| \((0,1,5m+5,-4m-5)\) | \(m\ge0\) | \(H_0(4m+4)\) |
+| \((1,1,5m+4,-4m-4)\) | \(m\ge0\) | \(H_1(4m+3)\) |
+| \((0,0,3m,4m+1)\) | \(m\ge1\) | \(H_1(4m-1)\) |
+| \((0,1,3m+2,4m+5)\) | \(m\ge0\) | \(H_0(4m+3)\) |
+| \((0,2,0,3)\) | — | \(H_0(2)\) |
+| \((0,2,3m,4m+7)\) | \(m\ge0\) | \(H_0(4m+2)\) |
+| \((1,0,3m+1,4m+7)\) | \(m\ge0\) | \(H_1(4m+3)\) |
+| \((1,1,3m+2,4m+6)\) | \(m\ge0\) | \(H_0(4m+4)\) |
+| \((1,2,3m+2,4m+12)\) | \(m\ge0\) | \(H_0(4m+6)\) |
+
+The first two rows are the \(c<q\) preimages. The remaining rows come from the \(c\ge q\) cases. For example, the third row uses the \(p=0,r=0,d\ge1\) branch: \(q=3m\) gives output \(k'=4q-1=3(4m-1)+2\), \(c'=d=4m+1\), hence \(d'=2\) and phase \(p'=1\). The other rows follow by the same direct inversion of the corresponding branch formulas.
+
+This is an exact backward reduction: the root orbit can halt only if it visits one of these nine affine predecessor families. It does not by itself prove that the orbit avoids them; the remaining task is a forward-invariant or backward-reachability argument for the root \(S(0,2,0)\).
+
 ## What this reduces, and what remains open
 
 The repeated \(c<q\) transition is now explicit and diagonalized: \(u\) advances linearly by 9 per three-step block, while \(c\) follows an affine base-64 recurrence. A possible halt at the first \(r=2\) exit is reduced to one monotone exponential-linear equation with first-exit inequalities.
