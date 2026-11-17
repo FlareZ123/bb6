@@ -1,11 +1,21 @@
 name: Agent 42 TM63 all-parameter terminal step certificate (manual)
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Select the focused Lean acceptance target"
+        type: choice
+        options:
+          - all
+          - m0-even-eight-valuation-prefix
+        default: all
+        required: true
   workflow_call:
 permissions:
   contents: read
 jobs:
   terminal-source:
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.target == 'all' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1157,6 +1167,7 @@ jobs:
   # q4 prefix.  This deliberately does not depend on the broad terminal-source
   # job above, so unrelated root/carry experiments cannot mask its diagnostics.
   m0-even-eight-valuation-prefix:
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'm0-even-eight-valuation-prefix' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
