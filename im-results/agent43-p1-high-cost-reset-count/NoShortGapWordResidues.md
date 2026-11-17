@@ -53,7 +53,19 @@ The scan covers **1,773,314,928** gap words in total. Selected minima:
 
 The minimum of (C_0/2^{G/2}) over this finite scan is approximately (0.188985141), at (G=51). Thus the tempting uniform square-root estimate (C_0\ge\tfrac12 2^{G/2}) is already false. The finite minimum of (C_0/2^{0.45G}) is approximately (1.10676), also at (G=51); this is only a numerical pattern, not evidence for an all-(G) theorem.
 
-The minimum as a function of (G) is not monotone: the same (C_0=8{,}967{,}937) occurs at both (G=47) and (G=51), with different terminal gaps. Consequently, the table cannot simply be inverted as a monotone bound on the maximum span for a fixed (C_0).
+The minimum as a function of (G) is not monotone: the same (C_0=8{,}967{,}937) occurs at both (G=47) and (G=51), with different terminal gaps. For a finite scan range, the relevant quantity for “span at least G” is the suffix minimum over H\ge G. Over H\le57, selected suffix minima are:
+
+| Required span at least G | Least C_0 found with G\le H\le57 | Witness span H |
+|---:|---:|---:|
+| 31 | 34,993 | 31 |
+| 39 | 2,731,585 | 42 |
+| 45 | 8,967,937 | 51 |
+| 52 | 151,641,089 | 56 |
+| 57 | 1,327,639,841 | 57 |
+
+This is only a finite-range envelope: words with H>57 could lower it, so it is not yet a global lower bound.
+
+A greedy “take the largest currently admissible gap” strategy is also false. For C_0=1,249, the first gap 3 leads to C=1,252,b=156. At that state C+b=1,408=2^6\cdot22. Choosing the largest admissible gap 6 gives total span 9 and then stops; choosing 4 instead gives (C,b)=(1,256,88), where C+b=1,344=2^6\cdot21, and another gap 4 yields total span 11. Thus arbitrary switching cannot be discarded by a maximal-gap greedy argument.
 
 ## What remains to prove
 
