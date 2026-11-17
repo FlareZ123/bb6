@@ -160,8 +160,8 @@ theorem source_no_four_reset_shifted_wall
         simpa using hh
       have hmul : 16*P≤2^t4*(c4+3) := by
         have h8 : 16*P≤8*(c4+3) := by
-        have hh := Nat.mul_le_mul_left 8 hC4Lower
-        omega
+          have hh := Nat.mul_le_mul_left 8 hC4Lower
+          omega
         have hpowmul : 8*(c4+3)≤2^t4*(c4+3) :=
           Nat.mul_le_mul_right (c4+3) hpow
         exact Nat.le_trans h8 hpowmul
