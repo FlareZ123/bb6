@@ -11,6 +11,8 @@ on:
           - cline-filter
           - cline-residual
           - m32-w485-highstop
+          - w1821-primitives
+          - w1821-highstop
         default: m32-w485-highstop
 
 permissions:
@@ -55,6 +57,16 @@ jobs:
               python3 tools/lean_compile_closure.py \
                 im-results/agent3-c-bounce-inverse/U5Q0M32W485HighStop.lean \
                 --jobs 8 --workdir /tmp/lean-closure-m32-w485
+              ;;
+            w1821-primitives)
+              python3 tools/lean_compile_closure.py \
+                im-results/agent3-c-bounce-inverse/U5W1821Prerequisites.lean \
+                --jobs 4 --workdir /tmp/lean-closure-w1821-primitives
+              ;;
+            w1821-highstop)
+              python3 tools/lean_compile_closure.py \
+                im-results/agent3-c-bounce-inverse/U5Q0W1821HighStop.lean \
+                --jobs 8 --workdir /tmp/lean-closure-w1821
               ;;
             *)
               echo "Unknown target: ${{ inputs.target }}" >&2
