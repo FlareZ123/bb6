@@ -172,4 +172,4 @@ for (let t = 0; t <= 100; t++) {
 
 const result = { tested, failures, bridgeTested, bridgeFailures };
 console.log(JSON.stringify(result, null, 2));
-if (failures.length !== 0) process.exitCode = 1;
+if (failures.length !== 0 || bridgeFailures.length !== 0) process.exitCode = 1;
