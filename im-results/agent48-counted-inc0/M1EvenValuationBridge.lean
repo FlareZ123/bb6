@@ -341,9 +341,11 @@ theorem m1EvenValuationBridge_run (v : Nat) (T : Int → Bool) (h : Int)
       omega
     have hsetupCell : Tsetup ((x+1)+(i:Int)) =
         Tleft ((x+1)+(i:Int)) := by
-      simp [Tsetup, valuationSetupTape]
-      dsimp [x]
-      omega
+      have hne0 : (x+1)+(i:Int) ≠ x := by omega
+      have hne1 : (x+1)+(i:Int) ≠ x-1 := by omega
+      have hne2 : (x+1)+(i:Int) ≠ x-2 := by omega
+      have hne3 : (x+1)+(i:Int) ≠ x-3 := by omega
+      simp [Tsetup, valuationSetupTape, hne0, hne1, hne2, hne3]
     rw [hsetupCell, hcoord] at hblock
     exact hblock
   have hrightRun := counted_right_sweep_from5 (v+1) Tsetup (x+1) hrightOnes
@@ -354,37 +356,61 @@ theorem m1EvenValuationBridge_run (v : Nat) (T : Int → Bool) (h : Int)
     dsimp [Tright]
     rw [state5SweptRight_preserves_far_right (v+1) Tsetup (x+1)
       (h+1) (by rw [← hrightEnd]; omega)]
+  have hleftRight1 : Tleft (h+1) = T (h+1) := by
+    dsimp [Tleft]
+    exact state1SweptLeft_preserves_right N T h (h+1) (by omega)
+  have hleftRight2 : Tleft (h+2) = T (h+2) := by
+    dsimp [Tleft]
+    exact state1SweptLeft_preserves_right N T h (h+2) (by omega)
+  have hleftRight3 : Tleft (h+3) = T (h+3) := by
+    dsimp [Tleft]
+    exact state1SweptLeft_preserves_right N T h (h+3) (by omega)
+  have hleftRight4 : Tleft (h+4) = T (h+4) := by
+    dsimp [Tleft]
+    exact state1SweptLeft_preserves_right N T h (h+4) (by omega)
   have hsetupRight1 : Tsetup (h+1) = false := by
-    simp [Tsetup, valuationSetupTape]
-    dsimp [x,N]
-    omega
+    have hne0 : h+1 ≠ x := by dsimp [x,N]; omega
+    have hne1 : h+1 ≠ x-1 := by dsimp [x,N]; omega
+    have hne2 : h+1 ≠ x-2 := by dsimp [x,N]; omega
+    have hne3 : h+1 ≠ x-3 := by dsimp [x,N]; omega
+    simp [Tsetup, valuationSetupTape, hne0, hne1, hne2, hne3]
+    rw [hleftRight1]
     exact hr1
   have hfar2 : Tright (h+2) = Tsetup (h+2) := by
     dsimp [Tright]
     rw [state5SweptRight_preserves_far_right (v+1) Tsetup (x+1)
       (h+2) (by rw [← hrightEnd]; omega)]
   have hsetupRight2 : Tsetup (h+2) = true := by
-    simp [Tsetup, valuationSetupTape]
-    dsimp [x,N]
-    omega
+    have hne0 : h+2 ≠ x := by dsimp [x,N]; omega
+    have hne1 : h+2 ≠ x-1 := by dsimp [x,N]; omega
+    have hne2 : h+2 ≠ x-2 := by dsimp [x,N]; omega
+    have hne3 : h+2 ≠ x-3 := by dsimp [x,N]; omega
+    simp [Tsetup, valuationSetupTape, hne0, hne1, hne2, hne3]
+    rw [hleftRight2]
     exact hr2
   have hfar3 : Tright (h+3) = Tsetup (h+3) := by
     dsimp [Tright]
     rw [state5SweptRight_preserves_far_right (v+1) Tsetup (x+1)
       (h+3) (by rw [← hrightEnd]; omega)]
   have hsetupRight3 : Tsetup (h+3) = true := by
-    simp [Tsetup, valuationSetupTape]
-    dsimp [x,N]
-    omega
+    have hne0 : h+3 ≠ x := by dsimp [x,N]; omega
+    have hne1 : h+3 ≠ x-1 := by dsimp [x,N]; omega
+    have hne2 : h+3 ≠ x-2 := by dsimp [x,N]; omega
+    have hne3 : h+3 ≠ x-3 := by dsimp [x,N]; omega
+    simp [Tsetup, valuationSetupTape, hne0, hne1, hne2, hne3]
+    rw [hleftRight3]
     exact hr3
   have hfar4 : Tright (h+4) = Tsetup (h+4) := by
     dsimp [Tright]
     rw [state5SweptRight_preserves_far_right (v+1) Tsetup (x+1)
       (h+4) (by rw [← hrightEnd]; omega)]
   have hsetupRight4 : Tsetup (h+4) = true := by
-    simp [Tsetup, valuationSetupTape]
-    dsimp [x,N]
-    omega
+    have hne0 : h+4 ≠ x := by dsimp [x,N]; omega
+    have hne1 : h+4 ≠ x-1 := by dsimp [x,N]; omega
+    have hne2 : h+4 ≠ x-2 := by dsimp [x,N]; omega
+    have hne3 : h+4 ≠ x-3 := by dsimp [x,N]; omega
+    simp [Tsetup, valuationSetupTape, hne0, hne1, hne2, hne3]
+    rw [hleftRight4]
     exact hr4
   have hblank : Tright (h+1) = false := by rw [hfar1,hsetupRight1]
   have hExit := valuation_state5_exit1 Tright (h+1) hblank
