@@ -74,31 +74,32 @@ u\equiv4,6,12,14\pmod{16}
 \]
 give \(k\equiv0,1,0,1\pmod4\), respectively.
 
-The first F inverse is forced:
+The first F inverse is forced because \(b=2a-13\equiv1\pmod4\). At the next odd inverse, the two children are
 \[
-P_1=((a-3)/2,3a-13)=(5+8k,26+48k).
-\]
-At \(P_1\), the odd inverse splits F/S, giving
-\[
-P_{2F}=(1+4k,31+56k),\\
+P_{2F}=(1+4k,31+56k),\qquad
 P_{2S}=(5+20k,15+24k).
 \]
-Both second coordinates are \(7\pmod8\). If \(k\) is even, \(P_{2F}\) has first coordinate \(1\pmod8\) and violates Allowed, while \(P_{2S}\) has first coordinate \(5\pmod8\). If \(k\) is odd, the roles reverse. Thus exactly one child can be reachable; its first coordinate is \(5+8m\), with
-\[
-m=5k/2\quad(k\text{ even}),\qquad
-m=(k-1)/2\quad(k\text{ odd}).
-\]
-For \(k\equiv0,1\pmod4\), \(m\) is even.
+Both second coordinates are \(7\pmod8\). If \(k\) is even, \(P_{2F}\) has first coordinate \(1\pmod8\) and violates Allowed, while \(P_{2S}\) has first coordinate \(5\pmod8\). If \(k\) is odd, the roles reverse. Thus exactly one child can be reachable.
 
-The next three inverses are forced F, because the successive second coordinates are \(7\pmod8\), \(4\pmod8\), and \(5\pmod8\). The resulting states satisfy
-\[
-P_3=(1+4m,\,4\pmod8),\qquad
-P_4=(2m-1,\,5\pmod8),\qquad
-P_5=(m-2,\,6m+4\pmod8).
-\]
-For even \(m\), \(6m+4\equiv2m+4\pmod8\), so \(P_5\) has positive even first coordinate and second coordinate \(0\) or \(4\pmod8\), hence \(0\pmod4\). This already contradicts BB429LowOddMod8.rooted_even_parity (which requires \(2\pmod4\)); the stronger positive-even-eight theorem also suffices but is unnecessary for this four-sector extension. This gives the four additional candidate exclusions \(u\equiv4,6,12,14\pmod{16}\).
+A clean affine split avoids auxiliary half-parameters:
 
-Every discarded branch is rejected by Allowed; every retained predecessor is a genuine Reach predecessor by odd_back. The bound \(a>10^6\) comfortably supplies all lower bounds and positivity conditions. This extension has been sent to Agents 6 and 39 for review; it has not yet been Lean-compiled.
+**Case \(k=4t\).** The surviving child is \(P_{2S}\). Three further F inverses are forced, giving
+\[
+P_3=(1+40t,20+176t),\\
+P_4=(20t-1,21+216t),\\
+P_5=(10t-2,20+236t).
+\]
+
+**Case \(k=4t+1\).** The surviving child is \(P_{2F}\). Three further F inverses are forced, giving
+\[
+P_3=(1+8t,92+240t),\\
+P_4=(4t-1,93+248t),\\
+P_5=(2t-2,92+252t).
+\]
+
+In both cases \(P_5\) has positive even first coordinate and second coordinate \(0\pmod4\). This contradicts the already available BB429LowOddMod8.rooted_even_parity (which requires second coordinate \(2\pmod4\) for every positive-even reachable state). The stronger positive-even-eight theorem is unnecessary for these four sectors.
+
+Every discarded branch is rejected by Allowed; every retained predecessor is a genuine Reach predecessor by odd_back. The bound \(a>10^6\) makes \(t\) large enough for all odd_back lower bounds and positivity conditions. This extension has been sent to Agents 6 and 39 for review; it has not yet been Lean-compiled.
 
 ## Relation to the 2-adic FSFE block
 
