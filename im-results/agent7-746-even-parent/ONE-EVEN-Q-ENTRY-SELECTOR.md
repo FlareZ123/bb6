@@ -143,13 +143,19 @@ At \(k=2\), the condition is \(27\mid E_K(j)\), exactly the existing W1m27 condi
 
 At the next precision \(k=3\), sample exact residues are:
 \[
-\begin{array}{c|rrrrrr}
-K&2&3&8&9&14&15\\
+\begin{array}{c|rrrrrrr}
+K&2&3&8&9&14&15&26\\
 \hline
-j\bmod54&6&18&4&32&20&10
+j\bmod54&6&18&4&32&20&10&16
 \end{array}
 \]
 The selector's period in \(K\) is then \(162\), not \(54\).
+
+The synthetic \(K=26,j=16\) witness in [QPhaseCounterexample.lean](QPhaseCounterexample.lean) checks the distinction exactly. Its entry is \(h=291387584\), produced by an incoming \(s=1\) odd reset with \(d_0=64752797\). The one-even-reset numerator is
+\[
+E_{26}(16)=5244976557=3^4\cdot64752797,
+\]
+so the \(k=s+2=3\) selector gives \(j\equiv16\pmod{54}\). After the even reset, \(q=414129261\) and \(2q+5=828258527\equiv2\pmod3\), hence \(v_3(Q_j(28))=2\), not \(4\). This is a synthetic inverse-grammar witness, not a blank-root path.
 
 The companion [one_even_q_entry_selector.mjs](one_even_q_entry_selector.mjs) computes the compatible residues by the explicit lift and brute-checks uniqueness for \(K\) in the 18 displayed classes and \(1\le k\le5\). This finite check is a reproducibility aid, not the proof.
 
