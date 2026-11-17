@@ -181,14 +181,14 @@ u_L=u_0+\sum_{j=0}^{L-1}\delta_j,
 \]
 The digits come from the six branch types above and depend on the evolving state; they are not an independent or random sequence. This formula isolates the unresolved outer dynamics as a constrained rational-base \(4/3\) digit process, which is the part that must be controlled to settle the halt-preimage avoidance problem.
 
-## Complete one-step preimage set of the halt states
+## Exact one-step preimage set of the halt states
 
 Let
 \[
 H_0(Q)=S(0,3Q+2,Q+1),\qquad
 H_1(Q)=S(1,3Q+2,Q+2).
 \]
-Inverting every branch of the pinned highLevelNext definition gives the following complete list of immediate predecessor families. Here \(d=c-q\).
+These are the two source-defined halt states: phase-false with \((r,d)=(2,1)\), and phase-true with \((r,d)=(2,2)\). Inverting the pinned highLevelNext definition gives **eight** immediate-predecessor families. Here \(d=c-q\).
 
 | Predecessor \((p,r,q,d)\) | Parameter range | Image |
 |---|---:|---|
@@ -196,15 +196,27 @@ Inverting every branch of the pinned highLevelNext definition gives the followin
 | \((1,1,5m+4,-4m-4)\) | \(m\ge0\) | \(H_1(4m+3)\) |
 | \((0,0,3m,4m+1)\) | \(m\ge1\) | \(H_1(4m-1)\) |
 | \((0,1,3m+2,4m+5)\) | \(m\ge0\) | \(H_0(4m+3)\) |
-| \((0,2,0,3)\) | — | \(H_0(2)\) |
 | \((0,2,3m,4m+7)\) | \(m\ge0\) | \(H_0(4m+2)\) |
 | \((1,0,3m+1,4m+7)\) | \(m\ge0\) | \(H_1(4m+3)\) |
 | \((1,1,3m+2,4m+6)\) | \(m\ge0\) | \(H_0(4m+4)\) |
 | \((1,2,3m+2,4m+12)\) | \(m\ge0\) | \(H_0(4m+6)\) |
 
-The first two rows are the \(c<q\) preimages. The remaining rows come from the \(c\ge q\) cases. For example, the third row uses the \(p=0,r=0,d\ge1\) branch: \(q=3m\) gives output \(k'=4q-1=3(4m-1)+2\), \(c'=d=4m+1\), hence \(d'=2\) and phase \(p'=1\). The other rows follow by the same direct inversion of the corresponding branch formulas.
+The first two rows are the \(c<q\) preimages. In that branch, \(r=0,1,2\) maps respectively to residues \(1,2,0\); hence only input residue \(r=1\) can map directly to a halt state. Its update is \(q'=-d-1\), \(d'=4q+5d+6\). Solving \(d'=1\) for phase \(p=0\), or \(d'=2\) for phase \(p=1\), gives exactly the first two families.
 
-This is an exact backward reduction: the root orbit can halt only if it visits one of these nine affine predecessor families. It does not by itself prove that the orbit avoids them; the remaining task is a forward-invariant or backward-reachability argument for the root \(S(0,2,0)\).
+The remaining six rows are the \(c\ge q\) cases. For each of the six input pairs \((p,r)\), require the output residue to be \(2\), then impose the output gap \(d'=1\) or \(2\) according to the output phase. The resulting congruence and linear equations give the six displayed families. In particular, the \((p,r)=(0,2)\) generic branch uses \(k'=4q+8\), \(c'=d-4\); the \((p,r)=(1,2)\) generic branch uses \(k'=4q+12\), \(c'=d-5\).
+
+### Correction to the earlier nine-family table
+
+An earlier version included the extra row \((p,r,q,d)=(0,2,0,3)\mapsto H_0(2)\). That row is false. The pinned source at lines 1217–1221 says that the \(p=0,r=2,d=3\) branch maps
+\[
+S(0,3q+2,q+3)\longmapsto S(0,4q+6,3).
+\]
+For \(q=0\), this is \(S(0,6,3)\), whose quotient/remainder are \((2,0)\), not the required residue \(2\). More generally, the output residue is \(2\) only when \(q=3m+2\); then its quotient is \(4m+4\) and its gap is \(3-(4m+4)=-4m-1<0\). Thus no state in this entire \(d=3\) branch is an immediate predecessor of either halt family.
+
+The standalone HaltPreimageAudit.lean file locally checks this whole \(p=0,r=2,d=3\) branch against a literal transcription of the pinned highLevelNext definition using Lean 4.36.0-rc2. Its three declarations have axiom reports containing only propext; there is no sorryAx or native_decide. This is a copied-definition audit, not an import-based source-chain certificate. The eight-family inversion above is an algebraic case analysis and has not yet been packaged as one source-imported Lean theorem.
+
+This is an exact backward reduction: the root orbit can halt only if it visits one of these eight affine predecessor families. It does not prove that the orbit avoids them; the remaining task is a forward-invariant or backward-reachability argument for the root \(S(0,2,0)\).
+
 
 ## What this reduces, and what remains open
 
