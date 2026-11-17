@@ -46,3 +46,4 @@ jobs:
           lean -o SecondMod96.olean SecondMod96.lean
           lean -o GateArithmetic.olean GateArithmetic.lean
           lean SourceStop.lean
+          lean ForwardPrefixMacro.lean
