@@ -36,9 +36,11 @@ theorem u5_m8_t_mod43008_w1821 (w s m t : Nat)
   have hdiv : 2048∣20*2^(201+3360*w) := by
     refine ⟨20*2^(190+3360*w),?_⟩
     have hexp : 201+3360*w=11+(190+3360*w) := by omega
-    rw [hexp,Nat.pow_add]
-    norm_num
-    ring
+    calc
+      20*2^(201+3360*w)
+          =20*(2^11*2^(190+3360*w)) := by rw [hexp,Nat.pow_add]
+      _ =2048*(20*2^(190+3360*w)) := by
+            norm_num [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
   have hmod2048 :
       (211*t+1360+22155*w)%2048=0 := by
     rw [hid]
@@ -142,8 +144,7 @@ theorem blank_no_u5_q0_parent_t2475 (t : Nat)
     dsimp [n]
     omega
   have htEq : t=128*n+43 := by
-    rw [hnEq] at hdecomp
-    omega
+    simpa only [← hnEq] using htnorm
   have hn16 : n%16=3 := by rw [hnEq]; omega
   have hn19 : 19≤n := by rw [hnEq]; omega
 
@@ -257,7 +258,6 @@ theorem blank_no_u5_q0_parent_t2475 (t : Nat)
         exact hbad hE
     · subst q
       have hU : U=2*(688*n+231) := by
-        rw [hq1] at hfanPow
         norm_num at hfanPow
         rw [htEq] at hfanPow
         omega
