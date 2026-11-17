@@ -42,6 +42,7 @@ jobs:
           lean -o "$b/FirstOutcome.olean" "$b/FirstOutcome.lean"
           lean -o "$b/FirstInverseComplete.olean" "$b/FirstInverseComplete.lean"
           lean -o "$b/ResetChain.olean" "$b/ResetChain.lean"
+          lean -o "$b/T0PhaseRootLeaf.olean" "$b/T0PhaseRootLeaf.lean"
           lean -o "$e/T0D0ZeroPhaseSource.olean" "$e/T0D0ZeroPhaseSource.lean"
           lean -o "$b/ResetParentStrict.olean" "$b/ResetParentStrict.lean"
           lean -o "$b/ParentCheck.olean" "$b/ParentCheck.lean"
