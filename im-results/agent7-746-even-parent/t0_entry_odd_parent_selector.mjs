@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // O(log K) exact search for incoming odd parents of a t=0 fatal entry.
-// See T0-ENTRY-ODD-PARENT-SELECTOR.md and
+// Computes the unique possible fatal-tail depth r from K.
+// See T0-FATAL-DEPTH-EXPLICIT-R.md,
+// T0-ENTRY-ODD-PARENT-SELECTOR.md, and
 // T0-SAME-LEVEL-DEPTH-LOG-BOUND.md.
 
 function mod(x, m) {
@@ -28,19 +30,38 @@ function findSourceLevel(P) {
   return null;
 }
 
-function analyze(K, r) {
-  if (!Number.isSafeInteger(K) || !Number.isSafeInteger(r) ||
-      K < 266 || (K % 6 !== 2 && K % 6 !== 3) ||
-      r < 0 || r % 2 !== 1) {
-    throw new Error("Require K>=266, K mod 6 in {2,3}, and odd r.");
+function analyze(K) {
+  if (!Number.isSafeInteger(K) || K < 266) {
+    throw new Error("Require integer K>=266.");
+  }
+  if (K % 6 !== 2 && K % 6 !== 3) {
+    return { status: "outside-adjacent-fatal-K-sector" };
   }
 
   const k = BigInt(K);
   const p = pow2(K);
-  const B0 = (2n * k + 7n) * pow2(r + 3);
+  const c = 2n * k + 7n;
+
+  // a=floor(log2(c)); r=K+1-a is the only possible fatal-tail depth.
+  let a = 0n;
+  while (pow2(a + 1n) <= c) a++;
+  const r = k + 1n - a;
+
+  if (r % 2n !== 1n) {
+    return { status: "no-odd-r", a: String(a), r: String(r) };
+  }
+  if (4n * c > 7n * pow2(a)) {
+    return {
+      status: "fails-t0-source-band",
+      a: String(a),
+      r: String(r)
+    };
+  }
+
+  const B0 = c * pow2(r + 3n);
   const Dnumerator = B0 - 16n * p + 2n * k + 1n;
   if (Dnumerator % 3n !== 0n) {
-    throw new Error("The proposed (K,r) does not give integral D0.");
+    throw new Error("The K-sector and odd-r conditions should make D0 integral.");
   }
 
   const D0 = Dnumerator / 3n;
@@ -48,18 +69,20 @@ function analyze(K, r) {
   if (D0 <= 0n || D0 % 2n !== 1n ||
       4n * p > h + k + 4n || h + k + 5n >= 8n * p ||
       (h + k) % 2n !== 1n) {
-    throw new Error("The proposed (K,r) is not a valid level-K t=0 source.");
+    throw new Error("Explicit-r candidate failed its level-K source certificate.");
   }
 
   const raw = 4n * p + (h + k - 1n) / 2n + 3n;
   if (raw % 2n !== 1n || raw < 6n * p + 1n || raw > 8n * p - 1n) {
-    throw new Error("The proposed source fails the t=0 odd-reset band.");
+    throw new Error("Explicit-r candidate failed the t=0 odd-reset band.");
   }
 
   const D0mod3 = mod(D0, 3n);
   if (D0mod3 === 0n) {
     return {
       status: "no-incoming-odd-parent",
+      a: String(a),
+      r: String(r),
       D0: String(D0),
       D0mod3: "0",
       t0SourceHeight: String(h),
@@ -76,9 +99,10 @@ function analyze(K, r) {
     throw new Error("Base mod-3 selector failed.");
   }
 
-  // The proved bound is 2^q < 2K. Enumerate only q of the forced parity.
+  // The integer proof gives 16*2^q <= 15*c; equality is impossible
+  // because 15*c is odd. Enumerate only q of the forced parity.
   let qMax = -1n;
-  while (16n * pow2(qMax + 1n) < 15n * (2n * k + 7n)) qMax++;
+  while (16n * pow2(qMax + 1n) < 15n * c) qMax++;
 
   const localIncomingParents = [];
   for (let q = epsilon; q <= qMax; q += 2n) {
@@ -96,7 +120,7 @@ function analyze(K, r) {
     const P = pow2(t) * d;
     const L = findSourceLevel(P);
 
-    // q = 2m+epsilon, so X = A-C*4^m. This is the exact 3-adic selector.
+    // q=2m+epsilon, so X=A-C*4^m. This checks the exact 3-adic selector.
     const m = (q - epsilon) / 2n;
     if (v3(A - C * (4n ** m)) !== v) {
       throw new Error("3-adic selector/valuation mismatch.");
@@ -126,6 +150,8 @@ function analyze(K, r) {
 
   return {
     status: "selector",
+    a: String(a),
+    r: String(r),
     D0: String(D0),
     D0mod3: String(D0mod3),
     forcedQParity: String(epsilon),
@@ -136,14 +162,6 @@ function analyze(K, r) {
   };
 }
 
-for (const [K, r] of [
-  [267, 259],
-  [273, 265],
-  [279, 271],
-  [309, 301],
-  [333, 325],
-  [542, 533],
-  [704, 695]
-]) {
-  console.log(JSON.stringify({ K, r, ...analyze(K, r) }));
+for (const K of [266, 267, 273, 279, 309, 333, 542, 704, 1000]) {
+  console.log(JSON.stringify({ K, ...analyze(K) }));
 }
