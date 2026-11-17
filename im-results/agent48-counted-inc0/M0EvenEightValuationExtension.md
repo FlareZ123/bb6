@@ -147,3 +147,24 @@ The input frame match comes from `exists_odd_factor_bounded` and `binDec_carryPr
 `[true] ++ d1pow(a-1) ++ markerWord(2) ++ d0pow(4+t) ++ d1 ++ binDec(len,u) ++ lh`,
 which is the same as
 `[true] ++ d1pow(a-1) ++ markerWord(2) ++ d0 ++ binDec(L,8*q-1) ++ lh`.
+
+
+## Full source-level composition
+
+The intended theorem can be assembled from the existing S1 configuration and the four new local bridge lemmas without changing the machine or the q4 suffix.
+
+Let (h_N=h-3a), and use the factorization (q=(2u+1)2^t) from `factor8q`.
+
+1. **Initial sweep.** The first (3a) cells of `s1LeftFacing L (8*q) 0 a 0` are `d1pow a`, independent of q. Apply `counted_left_sweep` for (3a) cells: state 3 moves to (h_N).
+2. **Fixed prefix.** The generalized source left word begins `markerWord 0 ++ d0 ++ d1pow(3+t) ++ ...`. Its first 14 cells are `markerWord 0 ++ d0 ++ d1pow 3`, independent of t. Thus the post-sweep tape matches the finite bridge start on [-13,3]. Apply `bridge_prefix44_at`; state 3 reaches (h_N-14), while the entire valuation-dependent left tail is preserved.
+3. **Left bubble and zero exit.** The preserved tail has (3t) consecutive ones immediately left of (h_N-14), and the right neighbor is zero. Apply `counted_left_sweep` for (3t) cells (9t steps). The resulting head is (x=h_N-14-3t); the two cells (x-1,x) are the first two zeros of the following d0 block, and (x+1) is the swept zero. Apply `state3_zero_exit4`, reaching state 1 at (h_N-12-3t).
+4. **Right d1 scan.** The next (3(4+t)) cells are all ones: the bubble has shifted (3t) ones right, adjoining the fixed 12 ones left by the 44-step prefix. Apply `counted_right_sweep_from1` for (4+t) blocks (12+3t steps), reaching state 1 at (h_N).
+5. **Final boundary and E-scan.** The untouched cells at (h_N,h_N+1,h_N+2) are `101`. Apply `state1_101_boundary` (3 steps), reaching state 4 at (h_N+3). The existing E-scan over (3(a-1)) swept ones returns to (h).
+
+The bridge portion after the initial sweep therefore costs (44+9t+4+(12+3t)+3=63+12t). Adding the initial sweep and E-scan gives (60+12a+12t), as claimed.
+
+The output bridge frame is exactly the finite `bridgeEnd_t` described above. Its left-facing word is
+`[true] ++ markerWord(2) ++ d0pow(4+t) ++ d1 ++ binDec(len,u) ++ lh`
+before the E-scan restores the `d1pow(a-1)` prefix. This is precisely
+`[true] ++ d1pow(a-1) ++ markerWord(2) ++ d0 ++ binDec(L,8*q-1) ++ lh`
+by `binDec_sub_one_carryPrefix`. The right q4 interface is unchanged because the variable frame ends at relative cell 3; the existing source right tail is preserved. Then the parity-free q4 suffix-left identity and existing q4 suffix run apply, followed by the generic counted drain.

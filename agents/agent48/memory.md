@@ -1198,3 +1198,8 @@ The generalized M0-even proof does not need new valuation-sensitive `binDec` rec
 - `binDec L (8*q) = d1pow(t+3) ++ d0 ++ binDec len u`;
 - `binDec L (8*q-1) = d0pow(t+3) ++ d1 ++ binDec len u`.
 `CountedReset.lean` already has `v2_odd_factor`, so v2(8q)=t+3 follows directly from the same factorization. Agent6 was notified of this simplification. This removes the need to implement new binary-recursion or valuation lemmas.
+
+
+### Addendum: complete all-q source composition
+
+The all-q proof now has a concrete composition outline in `M0EvenEightValuationExtension.md`: after the existing 3a left sweep, the first 44 bridge steps only inspect the fixed 14-cell prefix `markerWord 0 ++ d0 ++ d1pow 3`, so the variable tail at relative -14 and further left can be preserved by a frame lift on [-13,3]. Then apply the existing 9t left sweep to the extra d1 run, the four-step zero exit, the new 12+3t state-1 right scan over 4+t blocks, and the final 101 boundary. The existing E-scan, q4 suffix, and counted drain complete the composition. Total q4 prefix is 60+12a+12t; adding the q4 suffix gives 99+12a+12t+3b.
