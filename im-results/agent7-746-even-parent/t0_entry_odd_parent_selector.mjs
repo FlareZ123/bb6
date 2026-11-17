@@ -143,6 +143,7 @@ for (const [K, r] of [
   [279, 271],
   [309, 301],
   [333, 325],
+  [542, 533],
   [704, 695]
 ]) {
   console.log(JSON.stringify({ K, r, ...analyze(K, r) }));
