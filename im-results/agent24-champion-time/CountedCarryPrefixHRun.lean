@@ -284,15 +284,15 @@ theorem HOutputShape_leftOutput (r : Nat) (T U : Int → Bool)
       · rw [h0]
         have hnotfar : ¬ (-(3*(r:Int)) < -3*(r:Int)-2) := by omega
         have hle : -(3*(r:Int)) ≤ -3*(r:Int) := by omega
-        simpa [carryLeftOutputBit, hnotfar, hle] using hbase0
+        simpa [carryLeftOutputBit, Int.zero_sub, hnotfar, hle] using hbase0
       · rw [h1]
         have hnotfar : ¬ (-(3*(r:Int))-1 < -3*(r:Int)-2) := by omega
         have hle : -(3*(r:Int))-1 ≤ -3*(r:Int) := by omega
-        simpa [carryLeftOutputBit, hnotfar, hle] using hbase1
+        simpa [carryLeftOutputBit, Int.zero_sub, hnotfar, hle] using hbase1
       · rw [h2]
         have hnotfar : ¬ (-(3*(r:Int))-2 < -3*(r:Int)-2) := by omega
         have hle : -(3*(r:Int))-2 ≤ -3*(r:Int) := by omega
-        simpa [carryLeftOutputBit, hnotfar, hle] using hbase2
+        simpa [carryLeftOutputBit, Int.zero_sub, hnotfar, hle] using hbase2
     · have hgt : -3*(r:Int) < x := by omega
       let i : Nat := Int.toNat (-x)
       have hnonneg : 0 ≤ -x := by omega
