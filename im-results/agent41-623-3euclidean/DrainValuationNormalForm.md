@@ -167,6 +167,13 @@ The right-even branch's initial evaluator followed by the drain is exactly the f
 \operatorname{drainB}(2k+3,m+1,0).
 \]
 
+The least integer exponent \(A_0(b)=\min\{a:b\le\tau(a)\}\) is also read off from \(N\):
+\[
+A_0(b)=L+\sigma,\qquad
+\sigma=\begin{cases}0&N\le\tau(L),\\1&N>\tau(L).\end{cases}
+\]
+Indeed \(2b+1=4N-3^L+2\), and \(3^{L-1}\le N<3^L\) forces \(3^{L-1}<2b+1<3^{L+1}\). Thus \(A_0\in\{L,L+1\}\), with the threshold above deciding which. The right-ray base exponent is the least admissible odd exponent (at least 5 for right-odd and 3 for right-even) not below \(A_0\). So the canonical exponent itself is determined by \(L\), one ternary threshold bit, and a parity adjustment.
+
 Let \((B,E)\) be the base drain output. In the notation of **GapScaleResidualSource.lean**, the residuals
 \[
 \beta=B-c-v_0,\qquad \delta=E-3m
