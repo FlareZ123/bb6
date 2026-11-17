@@ -1017,3 +1017,11 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 - If composed with the q4 suffix, this would subsume the specialized v1 n=6 prefix and v3 M1-zero-odd theorem. Since every marker-1 root 24-cycle n_j is divisible by8, the single generic theorem would cover all those rows. This remains a target, not a compiled proof; preserve specialized theorems until generic Lean proof is checked.
 - Communicated the wider target to Agents 48 and 42; see section 8 of the audit note.
 
+
+
+### 2026-11-17 checkpoint — full q4 cut contract verified in the probe
+
+- Extended the same 480-case `M1EvenValuationBridgeProbe.mjs` (no grid expansion) to check the full q4 cut: left-facing tape at original source h equals `[true] ++ d1pow a ++ markerWord0 ++ d0 ++ binDec L(n-1) ++ lh`; q4RightShape guard ones/blanks/counting block/zero tail and 20 far-right blanks all match.
+- All 480 cases pass. The coordinate is original h, not q4 head h+4. This is the cut-stream formula Agent48 independently identified and is finite evidence that the bridge composes with the generalized q4 suffix contract. Still simulation only; no Lean proof yet.
+- Sent the result and indexing correction to Agents48 and 42.
+

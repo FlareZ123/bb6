@@ -10,6 +10,7 @@
 const d0 = [0, 0, 1];
 const d1 = [1, 1, 1];
 const marker1 = [1, 0, 1];
+const marker0 = [0, 1];
 const lh = [1, 1, 0, 1, 1, 1];
 const d1pow = n => Array.from({ length: n }, () => d1).flat();
 
@@ -120,10 +121,44 @@ function checkCase({ L, v, qOdd, a, b }) {
   assert(c.q === 4 && c.h === 4,
     `final q4 scan endpoint, v=${v}, n=${n}, a=${a}`);
 
+  // Exact q4 cut left stream, anchored at the original source head h=0.
+  const cutLeft = [
+    1, ...d1pow(a), ...marker0, ...d0, ...binDec(L, n - 1), ...lh,
+  ];
+  for (let i = 0; i < cutLeft.length; i++) {
+    assert((c.tape.get(-i) === true) === (cutLeft[i] === 1),
+      `q4 cut left-facing mismatch, v=${v}, n=${n}, a=${a}, b=${b}, i=${i}`);
+  }
+
+  // The q4RightShape contract used by the existing q4 suffix.
+  for (let i = 0; i < 5; i++) {
+    assert(c.tape.get(i) === true,
+      `q4 right guard ones, v=${v}, n=${n}, a=${a}, b=${b}, i=${i}`);
+  }
+  for (const i of [5, 6]) {
+    assert(c.tape.get(i) !== true,
+      `q4 right guard blanks, v=${v}, n=${n}, a=${a}, b=${b}, i=${i}`);
+  }
+  for (let i = 0; i < 3 * (b + 1); i++) {
+    assert(c.tape.get(7 + i) === true,
+      `q4 right counted block, v=${v}, n=${n}, a=${a}, b=${b}, i=${i}`);
+  }
+  for (let i = 0; i < 5; i++) {
+    assert(c.tape.get(10 + 3 * b + i) !== true,
+      `q4 right tail zeros, v=${v}, n=${n}, a=${a}, b=${b}, i=${i}`);
+  }
+  for (let i = 9 + 3 * b; i < 9 + 3 * b + 20; i++) {
+    assert(c.tape.get(1 + i) !== true,
+      `q4 far-tail blank, v=${v}, n=${n}, a=${a}, b=${b}, i=${i}`);
+  }
+
   const total = 9 * a + 3 + 6 + 9 * (v + 1) + 4 + 3 +
     3 * (v + 1) + 1 + 3 + 3 * a;
   assert(total === 12 * a + 12 * v + 32, "prefix cost arithmetic");
-  return { L, v, qOdd, n, a, b, total, endpoint: [c.q, c.h] };
+  return {
+    L, v, qOdd, n, a, b, total, endpoint: [c.q, c.h],
+    cutLeftLength: cutLeft.length, q4RightShape: true, farTailBlank: true,
+  };
 }
 
 const cases = [];
