@@ -117,11 +117,13 @@ jobs:
             (h : u5ForbiddenCells x y) : ¬ BB6CLine.Reach (x,y,0)
           end CCert
           EOF
-          export LEAN_PATH=/tmp/u5-preflight
+          cp im-results/agent32-u5-backward-cone/M32U5Backward.lean /tmp/u5-preflight/M32U5Backward.lean
+          cd /tmp/u5-preflight
+          export LEAN_PATH=.
           lean --version
-          lean -o /tmp/u5-preflight/CLine.olean /tmp/u5-preflight/CLine.lean
-          lean -o /tmp/u5-preflight/M32U5Cells.olean /tmp/u5-preflight/M32U5Cells.lean
-          lean -o /tmp/u5-preflight/M32U5Backward.olean im-results/agent32-u5-backward-cone/M32U5Backward.lean | tee /tmp/u5-backward-preflight.log
+          lean -o CLine.olean CLine.lean
+          lean -o M32U5Cells.olean M32U5Cells.lean
+          lean -o M32U5Backward.olean M32U5Backward.lean | tee /tmp/u5-backward-preflight.log
           if grep -q 'sorryAx' /tmp/u5-backward-preflight.log; then
             echo "ERROR: backward-cone syntax preflight unexpectedly used sorryAx"
             exit 1
