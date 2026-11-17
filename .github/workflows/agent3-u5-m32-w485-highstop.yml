@@ -1,7 +1,17 @@
-name: Agent 3 U5 M32 w485 high-stop source closure
+name: Agent 3 U5 source closures (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Select the exact source import closure to compile"
+        required: true
+        type: choice
+        options:
+          - cline-filter
+          - cline-residual
+          - m32-w485-highstop
+        default: m32-w485-highstop
 
 permissions:
   contents: read
@@ -24,11 +34,30 @@ jobs:
         run: lean --version
 
       - name: Generate M32 quotient source modules
+        if: inputs.target == 'm32-w485-highstop'
         run: python3 tools/agent43_c32_certificate.py
 
       - name: Compile exact transitive import closure
         run: |
-          python3 tools/lean_compile_closure.py \
-            im-results/agent3-c-bounce-inverse/U5Q0M32W485HighStop.lean \
-            --jobs 8 \
-            --workdir /tmp/lean-closure
+          set -euo pipefail
+          case "${{ inputs.target }}" in
+            cline-filter)
+              python3 tools/lean_compile_closure.py \
+                im-results/agent3-c-bounce-inverse/U5Q0CLineFilter.lean \
+                --jobs 4 --workdir /tmp/lean-closure-cline-filter
+              ;;
+            cline-residual)
+              python3 tools/lean_compile_closure.py \
+                im-results/agent3-c-bounce-inverse/U5Q0CLineResidualClosure.lean \
+                --jobs 4 --workdir /tmp/lean-closure-cline-residual
+              ;;
+            m32-w485-highstop)
+              python3 tools/lean_compile_closure.py \
+                im-results/agent3-c-bounce-inverse/U5Q0M32W485HighStop.lean \
+                --jobs 8 --workdir /tmp/lean-closure-m32-w485
+              ;;
+            *)
+              echo "Unknown target: ${{ inputs.target }}" >&2
+              exit 2
+              ;;
+          esac

@@ -174,7 +174,10 @@ theorem qfan_parent_not_reach_vq0_k4
     simpa [heq] using hprev
   have hsplit := BB6.CBack.reached_one_high_or_reset (A+1) (k-5) hprev'
   rcases hsplit with hhigh | ⟨r,hrEq,hreset⟩
-  · have hmid := BB6.Agent48.reached_middle_zero_mod4 (A+2) k hhigh
+  · have hhigh' : BB6CLine.Reach (A+2,0,k) := by
+      have heq : (k-5)+5=k := by omega
+      simpa [heq] using hhigh
+    have hmid := BB6.Agent48.reached_middle_zero_mod4 (A+2) k hhigh'
     have hAplus2 : (A+2)%4=3 := by
       dsimp [A]
       omega

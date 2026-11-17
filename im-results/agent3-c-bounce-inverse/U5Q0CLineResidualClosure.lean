@@ -1,4 +1,5 @@
 import U5Q0CLineFilter
+import CHubSplit
 import U5Q0M16Residual
 import U5Y3M8
 import M0EvenEvenSumZero
@@ -144,47 +145,6 @@ theorem blank_no_u5_q0_parent_w21 (w s m t : Nat)
   exact q0_X_not_reach_t19 t n hn hX
 
 
-/-- If a high hub has first coordinate above 2, its final source step
-    is either the ordinary high predecessor or the even zero-left
-    branch. This is the exceptional case omitted by reached_hub_prev. -/
-private theorem reached_hub_prev_or_zero (a c : Nat)
-    (h : BB6CLine.Reach (a,2,c+4)) (ha : 2<a) :
-    BB6CLine.Reach (a+1,1,c+5) ∨
-      ∃ r, a=2*r+2 ∧ BB6CLine.Reach (0,r,c+7) := by
-  cases h with
-  | next s t hs hn =>
-      rcases s with ⟨x,m,d⟩
-      rcases d with _|_|_|_|e
-      · rcases x with _|_|x
-        · simp [BB6CLine.nextC] at hn
-        · rcases m with _|m
-          · simp [BB6CLine.nextC] at hn
-          · simp only [BB6CLine.nextC,Option.some.injEq,Prod.mk.injEq] at hn
-            omega
-        · simp [BB6CLine.nextC] at hn
-      · simp [BB6CLine.nextC] at hn
-      · simp [BB6CLine.nextC] at hn
-      · simp [BB6CLine.nextC] at hn
-      · rcases x with _|x
-        · by_cases hm : m%2=0
-          · simp only [BB6CLine.nextC,hm,↓reduceIte,Option.some.injEq,Prod.mk.injEq] at hn
-            rcases hn with ⟨haeq,hkeq,hceq⟩
-            right
-            refine ⟨m,?_ ,?_⟩
-            · omega
-            · have heq : (0,m,e+4)=(0,m,c+7) := by
-                simp only [Prod.mk.injEq]
-                exact ⟨rfl,rfl,by omega⟩
-              exact heq ▸ hs
-          · simp [BB6CLine.nextC,hm] at hn
-        · simp only [BB6CLine.nextC,Option.some.injEq,Prod.mk.injEq] at hn
-          rcases hn with ⟨haeq,hkeq,hceq⟩
-          left
-          have heq : (x+1,m,e+4)=(a+1,1,c+5) := by
-            simp only [Prod.mk.injEq]
-            omega
-          exact heq ▸ hs
-
 /-- The even zero-left source branch with residues (2,6) modulo 8
     cannot be in the authentic blank-start CLine orbit. Reverse the
     unique high tail to a k=2 hub; its high/reset alternatives violate
@@ -193,28 +153,23 @@ private theorem zero_left_26_not_reach (r c : Nat)
     (hrge : 10≤r) (hcge : 4≤c)
     (hr8 : r%8=2) (hc8 : c%8=6)
     (h : BB6CLine.Reach (0,r,c)) : False := by
-  have hrev := BB6.CBack.reverse_high 0 0 (c-4) (r-3) (by
-    simpa [show r-3+3=r by omega, show c-4+4=c by omega] using h)
-  have hrev' : BB6CLine.Reach (r-3,3,c+r-3) := by
-    have hright : (c-4)+(r-3)+4=c+r-3 := by omega
-    simpa [Nat.zero_add,hright] using hrev
-  have hrevInput : BB6CLine.Reach (r-3,0+3,(c+r-7)+4) := by
-    have hright : (c+r-7)+4=c+r-3 := by omega
-    simpa [hright] using hrev'
-  have hhub := BB6.CBack.reached_high_pred (r-3) 0 (c+r-7) hrevInput
-  have hhub' : BB6CLine.Reach (r-2,2,c+r-2) := by
-    have hleft : (r-3)+1=r-2 := by omega
-    have hright : (c+r-7)+5=c+r-2 := by omega
-    simpa [hleft,hright] using hhub
+  have hhub' : BB6CLine.Reach (r-2,2,c+r-2) :=
+    BB6.CHubSplit.zero_high_hub r c (by omega) (by omega) h
+  have hhubInput : BB6CLine.Reach (r-2,2,(c+r-6)+4) := by
+    have heq : (c+r-6)+4=c+r-2 := by omega
+    simpa [heq] using hhub'
   have hAne : (r-2)%4≠2 := by omega
-  have hprev := BB6.CBack.reached_hub_prev (r-2) (c+r-6) hhub' hAne
+  have hprev := BB6.CBack.reached_hub_prev (r-2) (c+r-6) hhubInput hAne
   have hprev' : BB6CLine.Reach (r-1,1,(c+r-5)+4) := by
     have hleft : (r-2)+1=r-1 := by omega
     have hright : (c+r-6)+5=c+r-5+4 := by omega
     simpa [hleft,hright] using hprev
   have hsplit := BB6.CBack.reached_one_high_or_reset (r-1) (c+r-5) hprev'
   rcases hsplit with hhigh | ⟨s,hsEq,hreset⟩
-  · have hmid := BB6.Agent48.reached_middle_zero_mod4 r (c+r) hhigh
+  · have hhigh' : BB6CLine.Reach (r,0,c+r) := by
+      have heq : (c+r-5)+5=c+r := by omega
+      simpa [heq] using hhigh
+    have hmid := BB6.Agent48.reached_middle_zero_mod4 r (c+r) hhigh'
     have hr4 : r%4=2 := by omega
     omega
   · have hsMod : s%4=3 := by
@@ -269,14 +224,21 @@ private theorem q1_parent_not_reach_t99 (t n R U k : Nat)
   have hright : (k-7)+5=k-2 := by omega
   have hhub' : BB6CLine.Reach (A,2,k-2) := by
     simpa [hleft,hright] using hhub
-  have hcase := reached_hub_prev_or_zero A (k-6) hhub' hAgt
-  rcases hcase with hhigh | ⟨r,hrEq,hzero⟩
+  have hA5 : 5≤A := by omega
+  have hhubInput : BB6CLine.Reach (A,2,(k-6)+4) := by
+    have heq : (k-6)+4=k-2 := by omega
+    simpa [heq] using hhub'
+  have hcase := BB6.CHubSplit.reached_two_split A (k-6) hA5 hhubInput
+  rcases hcase with hhigh | ⟨r,_hrEven,hrEq,hzero⟩
   · have hprev' : BB6CLine.Reach (A+1,1,(k-5)+4) := by
       have heq : (k-6)+5=(k-5)+4 := by omega
       simpa [heq] using hhigh
     have hsplit := BB6.CBack.reached_one_high_or_reset (A+1) (k-5) hprev'
     rcases hsplit with hmid | ⟨s,hsEq,hsReset⟩
-    · have hmid0 := BB6.Agent48.reached_middle_zero_mod4 (A+2) k hmid
+    · have hmid' : BB6CLine.Reach (A+2,0,k) := by
+        have heq : (k-5)+5=k := by omega
+        simpa [heq] using hmid
+      have hmid0 := BB6.Agent48.reached_middle_zero_mod4 (A+2) k hmid'
       have hAplus2 : (A+2)%4=0 := by omega
       omega
     · omega
@@ -293,7 +255,10 @@ private theorem q1_parent_not_reach_t99 (t n R U k : Nat)
     have hcge : 4≤k+1 := by
       rw [hk,ht,hR]
       omega
-    exact zero_left_26_not_reach r (k+1) hrge hcge hr8 hc8 hzero
+    have hzero' : BB6CLine.Reach (0,r,k+1) := by
+      have heq : (k-6)+7=k+1 := by omega
+      simpa [heq] using hzero
+    exact zero_left_26_not_reach r (k+1) hrge hcge hr8 hc8 hzero'
 
 /-- The complete q-fan of X_t is blank-unreachable when t=99
     (mod 128). q=0 and q=2 are excluded by the CLine filter; q=1

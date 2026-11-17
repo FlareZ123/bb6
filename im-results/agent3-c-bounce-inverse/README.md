@@ -170,99 +170,37 @@ This branch concerns the (y=3) terminal family (x=128t+10), where the residual e
 **Open:** eliminate every parent in the nested q-fan for (w\equiv5\pmod8), and continue the unique q=0 parents in the (w\equiv1,7\pmod8) classes. Parent classification alone does not establish blank-unreachability. The current U5 M8 modules remain intermediate until the focused local Lean preflight succeeds.
 
 
-## U5 M=8w residual: source-filter closures for w=21 and w=37 (2026-11-17)
+## U5 M=8w residual: source-level q-fan closures for w=21 and w=37
 
-The U5 residual equations are
-```
+The residual equations are
+```text
 211*s+129 = 5*2^(201+3360*w)
 32*s = 32+840*w+m
 m+1 = 8*t+1.
 ```
-They give the exact affine identity
+They imply:
+- `w=21 (mod 32)`: `t=32*n+19`;
+- `w=37 (mod 128)`: `t=128*n+99`.
+
+### Exact original-section parent filter
+
+For the complete q-fan of `X_t=(44*t-1,42*t-1)`, write `43*t-1=4^q*U`, `U=2*V`, and `2*k+U+6*q=128*t-8`. The new `U5Q0CLineFilter.lean` proves, for every such exact source parent, that authentic blank-start CLine reachability requires both
+```text
+(V+q) % 4 != 3
+(V+q) % 4 != 0  or  k % 8 != 4.
 ```
-211*t+1360+22155*w = 20*2^(201+3360*w),
-```
-hence `t = 16+23*w (mod 128)`. In particular:
-- `w=21 (mod 32)` gives `t=19 (mod 32)`;
-- `w=37 (mod 128)` gives `t=99 (mod 128)`.
+The first exclusion follows because `V+q=3 (mod 4)` forces `k` odd, `k>=5`, and `(U-2)+k=1 (mod 4)`, contradicting the source-certified `CRange.reached_odd_zero_mod4_hole`. The second follows by reversing the exact zero-right hub through `CBack.reached_zero_hub`, `reached_hub_prev`, and `reached_one_high_or_reset`; the high and reset branches violate the source middle-zero and odd-zero invariants. It is an all-parameter source argument, not a finite quotient.
 
-### Original-source q-fan filter
+### The two residual cylinders
 
-`U5Q0CLineFilter.lean` develops two necessary conditions for every reachable original CLine q=0 parent of
-`X_t=(44*t-1,42*t-1)`. With `43*t-1=4^q*U`, `U=2*V`, and the source cost equation, it excludes:
-1. `(V+q) = 3 (mod 4)`;
-2. `(V+q) = 0 (mod 4)` together with `k = 4 (mod 8)`.
+- **`w=21 (mod 32)`.** Here `t=32*n+19` and `43*t-1=16*(86*n+51)`. Since `U` is even, `q<=1`. The q=0 parent has `V=0 (mod 4)` and `k=4 (mod 8)`; q=1 has `V+q=3 (mod 4)`. The filter excludes the complete parent fan.
+- **`w=37 (mod 128)`.** Here `t=128*n+99` and `43*t-1=32*(172*n+133)`, so `q<=2`. The q=0 and q=2 parents are excluded by the same filter. For q=1 the associated k=2 hub has first coordinate `A=6 (mod 16)`. Its exact predecessor split is already available in [Agent 21's source-checked `CHubSplit.lean`](../agent21-c-source-bridge/CHubSplit.lean): `reached_two_split` separates the high predecessor from the even zero-left portal. The high branch contradicts the middle-zero invariant. The portal has `r=2 (mod 8)`, `c=6 (mod 8)`; [`zero_high_hub`](../agent21-c-source-bridge/CHubSplit.lean) reverses its high tail, after which `CBack` and the same two source invariants exclude both possibilities. This reuses the existing generic source theorem rather than duplicating its predecessor case split.
 
-The proof uses the exact q-fan, the original-source CRange odd-zero invariant, CBack hub predecessors, and the middle-zero mod-4 invariant. It is a source-level argument, not a finite quotient. This module and its residual integration are **drafts pending exact local Lean preflight**; do not yet treat the new closures as verified theorems.
+`U5Q0CLineResidualClosure.lean` lifts these two complete q-fan exclusions through the exact two-step pullback from the y=3 parent, with theorem endpoints `q0_X_not_reach_t19`, `q0_X_not_reach_t99`, `blank_no_u5_q0_parent_w21`, and `blank_no_u5_q0_parent_w37`. The source-level section-to-CLine embedding is Agent 15's independently source-checked `M32SectionEmbedding.m32_section_reach_embeds`. The residual arithmetic helper `U5Q0M16Residual.lean` imports only `U5Y3ParentFan`; it is not the M16 quotient certificate.
 
-### The w=21 (mod 32) cylinder
+**Verification status:** both new U5 modules remain uncompiled drafts. The local shell and Python runtimes returned `ClientError`, so no local Lean result or axiom audit is claimed. The existing manual-only workflow [`agent3-u5-m32-w485-highstop.yml`](../../.github/workflows/agent3-u5-m32-w485-highstop.yml) now has separate `cline-filter` and `cline-residual` targets for exact transitive-import compilation with Lean 4.36.0-rc2; run the smaller filter target first, then the residual closure. The existing `U5Q0M16HighStop.lean` wrapper still uses the independently checked M16 quotient for its q=0 calls and has **not** yet been switched to these source-only alternatives. The prior M16 proof remains a useful independent cross-check, not evidence that these new source drafts compile.
 
-Write `t=32*n+19` and `R=86*n+51` (odd). Then
-```
-43*t-1 = 16*R.
-```
-The evenness of `U` forces `q<=1`. The only parents are:
-- `q=0`: `U=16*R`, `V=8*R=0 (mod 4)`, and the cost equation gives `k=4 (mod 8)`;
-- `q=1`: `U=4*R`, `V=2*R=2 (mod 4)`, so `V+q=3 (mod 4)`.
-
-Both are excluded by the original-source q-fan filter. Thus the complete q-fan of `X_t` is excluded by the source argument. This is an alternative to the independently certified M16 quotient result below, not yet a replacement in the high-stop wrapper.
-
-The existing M16 proof remains an independent checked cross-check: its two parents are `(1376*n+814,1360*n+804)` and `(344*n+202,1876*n+1107)`, projecting to the five absent c=0 states `(14,20,0)`, `(10,19,0)`, `(18,23,0)`, `(10,11,0)`, and `(18,15,0)`. The M16 residual lift and high-stop composition remain in `U5Q0M16ResidualClosure.lean` and `U5Q0M16HighStop.lean`.
-
-### The w=37 (mod 128) cylinder
-
-Write `t=128*n+99` and `R=172*n+133` (with `R=1 (mod 4)`). Then
-```
-43*t-1 = 32*R.
-```
-The evenness of `U` forces `q<=2`:
-- `q=0`: `U=32*R`, `V=16*R=0 (mod 4)`, and `k=4 (mod 8)`, so the second filter excludes it;
-- `q=2`: `U=2*R`, `V=R=1 (mod 4)`, so `V+q=3 (mod 4)`, and the first filter excludes it;
-- `q=1`: `U=8*R`, `a=8*R-2`, `k=64*t-7-4*R`. The associated hub has first coordinate `A=64*t+4*R-14=6 (mod 16)`. Its possible high predecessor violates the middle-zero mod-4 invariant. Its exceptional even zero-left predecessor has coordinates `(0,r,c)` with `r=2 (mod 8)` and `c=6 (mod 8)`.
-
-The new source lemma `zero_left_26_not_reach` excludes every such zero-left state: reverse the high tail to a k=2 hub, then the high/reset alternatives contradict respectively the middle-zero mod-4 and odd-zero mod-4 invariants. This is the substantive new step for w=37; it avoids relying on the M16 quotient for the exceptional q=1 parent.
-
-`U5Q0CLineResidualClosure.lean` contains both source-only residual closures and their two-step pullback from the y=3 terminal. **Neither closure has yet passed exact local Lean preflight, and the existing high-stop wrapper has not yet been switched to these alternatives.** The prior certified M16 quotient still provides an independent fallback: for w=37 its q=0,1,2 parents project to `(14,12,0)`, `(22,21,0)`, and one of `(8,17,0)`, `(16,21,0)`, `(8,9,0)`, `(16,13,0)`, all absent from the certified reachable set. The source-only proof is intended to replace that finite quotient dependency after preflight.
-
-The residual cylinder is non-vacuous for every w in it (indeed, for every w>=0). Since 211 is prime, Fermat gives 2^210=1 (mod 211); also 2^9=90 and 90*68=1 (mod 211), so 2^201=68. Hence 5*2^(201+3360*w)-129 is divisible by 211. Choose `s=(5*2^(201+3360*w)-129)/211` and `m=32*s-32-840*w). From `2^r>=r+1` with `r=201+3360*w`, we get `5*2^r>=1010+16800*w>=211*(27*w+1)+129`, so `s>=27*w+1` and `m>=24*w>=0`. The relation `m=0 (mod 8)` supplies `t=(m+1-1)/8`.
-
-These are two disjoint, non-vacuous subfamilies inside the previously hard `w=5 (mod 8)` class. Neither closes the full class; the remaining q-fan parent families still require source-level elimination or a stronger global invariant.
-
-The quotient audit script now checks eleven absent c=0 states (the original five plus these six) while reproducing 7,115 reachable states and 34,992 representative edges.
-
-### Exact M16 frontier within the hard t=123+168z class
-
-The same quotient also gives a useful boundary on what this particular finite invariant can do. For q=0, the parent projection is:
-- z even: (22,8,0) or (22,16,0), both in the quotient's seen set;
-- z odd: (14,12,0) or (14,20,0), both absent.
-
-For q=1, the projection is periodic modulo 16. The absent states occur at z mod16 in {3,7,9,11,14,15}; the other q=1 projections are seen. Depth q≥2 is possible only when z mod16 is in {1,5,9,13}. For z=1,5,13 the q=1 parent is already seen; for z=9, q=0 and q=1 are absent and q=2 is the only deeper possibility, with the four absent states listed above. For z=3,7,11,15, q≥2 is impossible and q=0,1 are both absent.
-
-Therefore the M16 parent-fan argument closes exactly z mod16 in {3,7,9,11,15}, i.e. 5/16 of the hard w≡5 (mod8) cylinder. The other 11 residue classes have at least one source-parent projection in the quotient's seen set, so this M16 certificate alone cannot close them. This is a limitation of this quotient proof, not evidence that those real source parents are reachable; a stronger invariant or a different inverse argument is required.
-
-
-### Exploratory mixed A/K64,C32 quotient (not yet a proof)
-
-I independently reconstructed the larger mixed quotient used in Agent 32's current work: A and K are exact below 2 and modulo 64 above, C is exact below 4 and modulo 32 above. The BFS reproduces 77,020 reachable states and 576,340 representative edges. This quotient is not yet kernel-certified, so its parent absences are computational candidates only.
-
-For the w=45 cylinder alone, an even smaller A/K exact-below-2 modulo-32, C exact-below-4 modulo-32 quotient suffices: 34×34×36=41,616 states, 21,190 reachable, 155,094 representative edges. It excludes q=0 state (6,24,0) and q=1 state (32,24,0) for both z mod64 lifts; q≥2 is impossible. This smaller quotient does not close w=101 because its q=1 state (22,13,0) is seen; the A/K64,C32 quotient is needed there.
-
-It suggests two additional full cylinders beyond the M16 result:
-- z≡20 (mod32), which gives w≡173 (mod256) (hence w≡45 mod128): q=0 projects to (6,56,0); q=1 projects to (64,24,0) or (64,56,0) according to z mod64; q≥2 is impossible because z is even and 661+903z is odd.
-- z≡17 (mod64), which gives w≡485 (mod512) (hence w≡101 mod128): q=0 projects to (30,12,0); q=1 to (22,45,0); q=2 to (4,19,0), (36,35,0), (4,51,0), or (36,3,0) according to z mod256; q≥3 is impossible because 661+903z=4(4003+14448u) with odd bracket for z=17+64u.
-
-Outside z≡125 (mod128), an exhaustive bounded-depth scan over z mod4096 gives 44 full mixed-quotient cylinders mod128. Thirty-eight overlap the M16 set; the six new residues are {17,20,52,81,84,116}, which combine into z≡17 (mod64) and z≡20 (mod32), mapping to the exact lifts w≡485 (mod512) and w≡173 (mod256), respectively (hence w≡101 and w≡45 mod128). The mixed quotient misses two M16 residues (z≡23,87 mod128), so the union of the two quotient arguments covers 46 full z cylinders mod128. The detailed 44-class list and corresponding w mod1024 residues are in [AK64C32_U5_parent_fan.md](AK64C32_U5_parent_fan.md).
-An optional A/K128,C32 refinement (608,400 states; 296,820 reachable) adds z≡92 (mod128), mapping to w≡877 (mod1024), via absent q=0,1 cells (70,88,0),(48,32,0). This is a fourfold state-space increase for one extra cylinder and is not currently prioritized; details are in the same note.
-
-The mixed quotient's z≡125 (mod128) branch is now completely classified: the unique root cylinder z≡2045 (mod4096) has a seen d=4 parent cell (62,48,0), and all other cases have bounded depth d≤6 and are fixed by z mod65536. Checking all 512 residues in this branch yields exactly 16 all-absent cylinders. For each z0, put e=v2(661+903z0), dmax=floor((e+2)/2), and K=max(e+1,2*dmax+4). The modulus 2^K fixes e and every A/K64 parent projection through dmax, because the depth-d projection depends only on z modulo 2^(2d+4). The 16 minimal z cylinders are z mod4096 = {637,1661,2685,3709}, and z mod16384 = {765,1533,1789,3581,5629,7677,8957,9725,9981,11773,13821,15869}. They correspond to w mod32768 = {2053,26629,18437,10245}, and w mod131072 = {119813,39941,13317,89093,7173,56325,54277,105477,78853,23557,72709,121861}. The first four have e=7 and dmax=4; the remaining twelve have e=8 or 9 and dmax=5. Agent 32 has been asked to verify these against the saved table and assess a kernel certificate. If all these candidate families are eventually certified, their disjoint union with the M16 families has density 1479/32768 among all w, i.e. 1479/4096≈36.1% of the hard w≡5 (mod8) cylinder. This is a conditional coverage calculation, not a proven Machine C exclusion yet. All mixed-quotient cylinders, including w=45, w=101, and these sixteen, remain computational candidates only; do not add them to the source-verified high-stop claims until the quotient certificate and Lean composition exist.
-
-**Verification status for the new w=37 extension:** the arithmetic and quotient-state census are checked independently, and the Lean proof draft has been added to the existing focused `u5_q0_m16_only` workflow path. It has not yet passed exact-source local preflight or CI. Do not treat the source-composition theorem as certified until the full pinned M16 archive and source dependency closure compile with no `sorryAx`.
-
-**Verification status:** an earlier interface-stub preflight passed, but it is not authoritative and does not establish source correctness. The exact pinned M16 archive/source dependency closure has not yet been compiled against the repository sources. The existing manual u5_q0_m16_only path is .github/workflows/agent11-c-diagonal-late.yml; dispatch it only after exact local source preflight. This remains intermediate research, not a BB(6) bound.
-
-
-Independent quotient audit: verify_u5_m16_states.py reconstructs the nondeterministic quotient successor relation directly from the published CLine transition cases, using representatives r and r+16 for each large q-class. It reproduces exactly 7,115 reachable states out of 24^3 and independently confirms that all eleven c=0 targets used by the w=21 and w=37 proofs are absent. The focused CI path runs this audit before Lean compilation. This computation corroborates the table lookups; the Lean certificate remains the proof authority.
-
+The two parameter cylinders are non-vacuous; for each `w>=0`, one can take `s=(5*2^(201+3360*w)-129)/211` and `m=32*s-32-840*w`. They are only two subfamilies of the hard `w=5 (mod 8)` class. The remaining q-fan parents, other residual classes, Machine C's complete blank-root decision, and BB(6) remain open.
 
 ## U5 second-cone Side lift: exact source parent fan (2026-11-16)
 
