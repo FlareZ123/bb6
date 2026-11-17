@@ -49,8 +49,8 @@ jobs:
           done
           cp "$base/CancellationMidBand.lean" .
           lake env lean -o .lake/build/lib/lean/CancellationMidBand.olean CancellationMidBand.lean
-cp "$GITHUB_WORKSPACE/im-results/agent46-needle-midstrip/CancellationMidBandResidue.lean" .
-lake env lean -o .lake/build/lib/lean/CancellationMidBandResidue.olean CancellationMidBandResidue.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent46-needle-midstrip/CancellationMidBandResidue.lean" .
+          lake env lean -o .lake/build/lib/lean/CancellationMidBandResidue.olean CancellationMidBandResidue.lean
           # Compose the all-r exclusion with the complete original-source inverse.
           cp "$GITHUB_WORKSPACE/im-results/agent46-needle-midstrip/CancellationMidBandSource.lean" .
           lake env lean -o .lake/build/lib/lean/CancellationMidBandSource.olean CancellationMidBandSource.lean
