@@ -4,11 +4,11 @@
 
 ## Theorem
 
-There are infinitely many t=0 fatal-source levels \(K\) for which the **q=0 first level-\(K\) entry** \(E\) has no \(\operatorname{ResetParent}\) of either parity. Consequently this q=0 fatal history is not in the blank-root reset chain.
+There are infinitely many t=0 fatal-source levels \(K\) for which the first level-\(K\) entry \(E\) has no \(\operatorname{ResetParent}\) of either parity. The first-entry guard forces q=0 throughout this family, so the entire t=0 fatal branch at these K is excluded.
 
 This gives a second infinite q=0 root-exclusion family, independent of the unique-odd-parent-leaf family in [T0-INFINITE-SYNTHETIC-ODD-PARENT-FAMILY.md](T0-INFINITE-SYNTHETIC-ODD-PARENT-FAMILY.md). It instantiates the \(D_0\equiv0\bmod3\) phase identified in Agent 7's [3-adic selector](../agent7-746-even-parent/T0-ENTRY-ODD-PARENT-SELECTOR.md), but proves the even-parent obstruction directly from a dyadic gap rather than relying on the separate t=0 even-parent draft.
 
-For \(q>0\), the same mod-3 calculation still excludes odd parents of the first entry, but the even-parent gap argument below is specific to \(q=0\); the separate even-parent theorem would be needed to finish those cases.
+The q=0 conclusion is forced by the first-entry guard, as shown below; no separate even-parent theorem is used.
 
 ## Infinite parameter family and source entry
 
@@ -29,12 +29,12 @@ and define
 D_0=\frac{B_0-16p+2K+1}{3},\qquad E=8p+K-D_0.
 \tag{2}
 \]
-Here \(K\equiv2\bmod6\), \(a\equiv2\bmod6\), and \(r\equiv1\bmod6\), so \(r\) is odd. Also \(a=\lfloor\log_2c\rfloor\) and \(4c\le7\cdot2^a\). We are treating the q=0 case, so \(E\) is both the first level-\(K\) entry and the t=0 odd-exit source. Its fatal-source equation is
+Here \(K\equiv2\bmod6\), \(a\equiv2\bmod6\), and \(r\equiv1\bmod6\), so \(r\) is odd. Also \(a=\lfloor\log_2c\rfloor\) and \(4c\le7\cdot2^a\). Let \(h:=8p+K-D_0\) be the t=0 odd-exit source. Its fatal-source equation is
 \[
 B_0=40p+K-1-3E.
 \tag{3}
 \]
-The numerator defining \(D_0\) is divisible by \(3\), as follows from the stronger modulo-\(9\) calculation below.
+The numerator defining \(D_0\) is divisible by \(3\), as follows from the stronger modulo-\(9\) calculation below. The first level-\(K\) entry at same-level depth \(q\) is \(E_q=8p+K-2^qD_0\). Its first-entry lower guard gives \(2^qD_0\le4p+2K+4\). But \(x\ge3/2\) implies \(D_0\ge8p/3\), so if \(q\ge1\), then \(2^qD_0\ge16p/3>4p+2K+4\) for \(K\ge266\), a contradiction. Hence \(q=0\), \(E=E_0=h\), and the fatal source is the first entry.
 
 Since \(B_0=16xp\), (1) gives \(24p\le B_0\le28p\), which lies inside the t=0 source band
 \[
@@ -107,9 +107,9 @@ The root-chain equivalence in [ResetChain.lean](../ResetChain.lean) identifies b
 \[
 \neg\operatorname{ResetChain}(2,E).
 \]
-The q=0 t=0 fatal source is \(E\) itself, so this q=0 fatal history is excluded from the blank-root trajectory for every \(K\) in (1).
+The first-entry guard has forced \(q=0\), so the t=0 fatal source is \(E\) itself. It has no parent and is not root-reachable; thus the entire t=0 fatal branch is excluded for every \(K\) in (1).
 
-This excludes one infinite q=0 phase family. Other \(K\bmod18,r\bmod6\) phases, q>0 cases, the remaining odd-parent cases, and higher-valuation branches remain open.
+This excludes one infinite t=0 phase family. Other \(K\bmod18,r\bmod6\) phases, the remaining odd-parent cases, and higher-valuation branches remain open.
 
 ## Reproducible instance
 

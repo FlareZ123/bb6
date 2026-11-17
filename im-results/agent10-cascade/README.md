@@ -9,7 +9,7 @@ The exact paper derivation in [T0-INFINITE-SYNTHETIC-ODD-PARENT-FAMILY.md](T0-IN
 
 ### Second infinite q=0 phase family: \(D_0\equiv0\pmod3\)
 
-The separate [D0-zero note](T0-D0-ZERO-PHASE-ROOT-EXCLUSION.md) gives infinitely many q=0 t=0 first entries \(E\) with no parent of either parity. Its parameters are \(a=18n+2\), \(K\equiv2\pmod{18}\), and \((2K+7)/2^a\in[3/2,7/4]\). Here \(2E+5\equiv1\pmod3\), excluding odd parents, while \(4\cdot2^K<E<6\cdot2^K-1\) excludes every even-parent band. This proof is independent of the uncompiled t=0 even-parent draft. It covers q=0 only; q>0 still needs the separate even-parent result.
+The separate [D0-zero note](T0-D0-ZERO-PHASE-ROOT-EXCLUSION.md) gives infinitely many q=0 t=0 first entries \(E\) with no parent of either parity. Its parameters are \(a=18n+2\), \(K\equiv2\pmod{18}\), and \((2K+7)/2^a\in[3/2,7/4]\). Here \(2E+5\equiv1\pmod3\), excluding odd parents, while \(4\cdot2^K<E<6\cdot2^K-1\) excludes every even-parent band. This proof is independent of the uncompiled t=0 even-parent draft. For these K, q>0 is impossible from the first-entry guard (2^qD_0\le4p+2K+4) and (D_0\ge8p/3), so the whole t=0 branch at these levels is excluded.
 
 ### Related finite exclusion
 

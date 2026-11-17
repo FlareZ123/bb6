@@ -42,6 +42,7 @@ assert.equal(d0Numerator % 2n, 0n);
 const d0 = d0Numerator / 2n;
 assert.equal(d0 % 2n, 1n);
 assert(6n * p + 1n <= d0 && d0 <= 8n * p - 1n);
+assert(2n * D0 > 4n * p + 2n * K + 4n); // q>=1 violates the first-entry guard
 assert(4n * p <= E + K + 4n);
 assert(E + K + 5n < 8n * p);
 
