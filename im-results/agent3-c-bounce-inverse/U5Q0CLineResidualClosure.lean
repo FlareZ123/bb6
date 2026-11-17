@@ -277,9 +277,7 @@ private theorem q1_parent_not_reach_t99 (t n R U k : Nat)
     have hsplit := BB6.CBack.reached_one_high_or_reset (A+1) (k-5) hprev'
     rcases hsplit with hmid | ⟨s,hsEq,hsReset⟩
     · have hmid0 := BB6.Agent48.reached_middle_zero_mod4 (A+2) k hmid
-      have hAplus2 : (A+2)%4=0 := by
-        rw [hA16]
-        omega
+      have hAplus2 : (A+2)%4=0 := by omega
       omega
     · omega
   · have hr8 : r%8=2 := by
