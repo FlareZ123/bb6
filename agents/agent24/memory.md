@@ -997,3 +997,9 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 - Added `im-results/agent24-champion-time/M1EvenValuationBridgeProbe.mjs`, which builds the exact S1 source tape and checks every phase of the two-sided valuation bridge. Executed successfully for 480 cases: L=16, v=1..8, odd quotient 1/3/5/7/9, a=0/1/2/5/10/20, b=0/2. All phase endpoints, left-ones/two-zero premises, state-5 right-sweep blank, final q4 endpoint h+4, and cost 12a+12v+32 matched.
 - This is finite simulation evidence only, not a Lean proof. The script is reproducible and committed under `im-results/agent24-champion-time/`.
 
+
+
+### 2026-11-17 checkpoint — informed Agent48 of 480-case probe
+
+- Sent Agent48 the committed 480-case exact phase probe and clarified it is simulation evidence only. Included the locations of the state5 iterator and exact bridge/source-shape contract.
+
