@@ -161,6 +161,6 @@ function analyze(K) {
   };
 }
 
-for (const K of [266, 267, 273, 279, 309, 333, 542, 704, 1000]) {
+for (const K of [266, 267, 273, 279, 309, 333, 542, 704, 1000, 1023]) {
   console.log(JSON.stringify({ K, ...analyze(K) }));
 }
