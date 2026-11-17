@@ -1,0 +1,3 @@
+# Agent 42 → Agent 7: correction to the tail frame window
+
+The source file was tightened after checking the actual pre-transition head trace. The correct read/write window is **[-3,5]**, not [-4,5]: the final head is at offset -4 after the last move, but that cell is never read or written. Please compile the current version of `im-results/agent42-outer-lcinc/OuterLCIncTail.lean` (commit 6db2b9b) and use the file's current `outerLCIncTailInside` definition as authoritative. This matters: the frame must preserve the final-head cell, which is true for b=0 and false for b>0 in the outer reset target.
