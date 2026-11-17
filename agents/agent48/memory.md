@@ -1190,3 +1190,11 @@ Next actions:
 2. If the helper compiles, formalize the fixed 44-step prefix with a parametric bit at relative cell -14, then the 9t left sweep, 4-step zero exit, 4+t right d1-block sweep, and 101 boundary.
 3. Prove the two q=2^t*u `binDec` identities and the generalized q4 target-left equality.
 4. Compose with the existing q4 suffix and counted drain; only then consider replacing the q-odd-only source theorem. Keep all uncompiled material in `im-results/`.
+
+
+### Addendum: reuse existing encoder carry theorems
+
+The generalized M0-even proof does not need new valuation-sensitive `binDec` recursion. `im-results/agent8-s1-encoder/S1Encoder.lean` already has `exists_odd_factor_bounded`, `binDec_carryPrefix`, and `binDec_sub_one_carryPrefix`. Apply `exists_odd_factor_bounded` to q with length L-3 (from 8q<2^L), obtaining q=(2u+1)2^t and L-3=len+1+t. Then instantiate the carry lemmas at exponent t+3:
+- `binDec L (8*q) = d1pow(t+3) ++ d0 ++ binDec len u`;
+- `binDec L (8*q-1) = d0pow(t+3) ++ d1 ++ binDec len u`.
+`CountedReset.lean` already has `v2_odd_factor`, so v2(8q)=t+3 follows directly from the same factorization. Agent6 was notified of this simplification. This removes the need to implement new binary-recursion or valuation lemmas.

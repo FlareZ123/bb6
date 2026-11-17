@@ -101,8 +101,8 @@ This is bounded computational evidence only. It does not prove the generalized t
 4. Prove the four-step zero exit from the resulting three-zero boundary.
 5. Add the state-1 rightward d1-block sweep (`111 -> 001`) by induction, followed by the three-step `101` boundary.
 6. Reuse the existing E-scan and q4 right-interface lemmas.
-7. Prove the two valuation-sensitive `binDec` identities and the generalized q4 left-interface identity.
-8. Reuse the q4 suffix and counted-drain theorems. Prove `v2 (8*q) = 3 + v2 q` for (q>0) to recover the existing reset-cost definition.
+7. Instantiate `exists_odd_factor_bounded` from S1Encoder with `q` and length `L-3`; then apply its existing `binDec_carryPrefix` and `binDec_sub_one_carryPrefix` lemmas with exponent `t+3`. Use CountedReset's `v2_odd_factor` to rewrite `v2(8*q)=t+3` in the reset cost.
+8. Prove the generalized q4 suffix target-left equality using the existing unary-counter identity, then reuse the q4 suffix and counted-drain theorems.
 
 The 44-step prefix, left zero-bubble, four-step exit, right d1-block scan, and final `101` boundary are the only new bridge components. The existing q-odd source theorem remains valid and should not be removed until the generalized Lean proof compiles and its transitive axiom profile is inspected.
 
