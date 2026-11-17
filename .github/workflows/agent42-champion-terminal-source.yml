@@ -8,6 +8,7 @@ on:
         options:
           - all
           - m0-even-eight-valuation-prefix
+          - middle34-acceptance
         default: all
         required: true
   workflow_call:
@@ -1227,5 +1228,47 @@ jobs:
         with:
           name: m0-even-eight-valuation-prefix
           path: /tmp/m0-e8/*-axioms.log
+          if-no-files-found: ignore
+          retention-days: 3
+
+  # Independent acceptance gate for the full M1 row-32 / M2 row-34
+  # source increments and their authentic blank-root middle-34 composition.
+  # The import-closure compiler resolves only the transitive source modules
+  # of these three roots, avoiding unrelated failures in the broad job above.
+  middle34-acceptance:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'middle34-acceptance' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact M1, M2, and root-middle-34 import closure
+        run: |
+          set -euo pipefail
+          lean --version
+          python3 tools/lean_compile_closure.py \
+            im-results/agent48-counted-inc0/M1EvenValuationSource.lean \
+            im-results/agent44-tm63-middle/M2EvenSixGenericCounted.lean \
+            im-results/agent44-tm63-middle/TM63RootMiddle34.lean \
+            --jobs 8 \
+            --workdir /tmp/middle34-acceptance \
+            | tee /tmp/middle34-acceptance.log
+          grep -E "m1EvenValuation_counted_increment_source' depends on axioms:|m2EvenSix_generic_counted_increment_source' depends on axioms:|tm63_blank_reaches_after_middle34' depends on axioms:" /tmp/middle34-acceptance.log \
+            | tee /tmp/middle34-target-axioms.log
+          test "$(wc -l < /tmp/middle34-target-axioms.log)" -eq 3
+          if grep -Eq 'sorryAx|native_decide' /tmp/middle34-target-axioms.log; then
+            echo '::error::forbidden axiom or native_decide in M1/M2/root middle-34 target theorem'
+            exit 1
+          fi
+      - name: Upload focused Lean diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: middle34-acceptance-lean-diagnostics
+          path: /tmp/middle34-acceptance.log
           if-no-files-found: ignore
           retention-days: 3
