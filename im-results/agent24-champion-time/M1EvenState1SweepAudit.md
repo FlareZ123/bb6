@@ -154,3 +154,8 @@ The exact-valuation bridge is needed only for `v₂(n)≥4` in the root's marker
 - even j gives `v₂(n_j)≥4` (with exact valuation 4 when j/2 is odd, and at least 5 when j/2 is even).
 
 Therefore, **if the generic M1-even valuation bridge is formalized and composed with the existing q4 suffix**, it and the existing M1-zero-odd theorem cover every marker-1 row in the complete 24-cycle middle itinerary. The separate v4/v5 source modules are unnecessary; one exact-v theorem for v≥4 is the cleaner target. The remaining root work is the formal 24-cycle induction and its connection to the authentic middle-26 endpoint, not another valuation split.
+
+
+## 7. Reproducible phase audit
+
+The script `M1EvenValuationBridgeProbe.mjs` constructs the exact S1 source tape, runs each phase separately, and asserts every intermediate state/head/blank boundary, the `3v+4) left-ones premise, the two-zero exit boundary, the state-5 right-sweep endpoint, and the final q4 endpoint. Executed in the current JavaScript runtime, it passed **480 cases** with L=16, exact valuations v=1..8, odd quotients q∈{1,3,5,7,9}, a∈{0,1,2,5,10,20}, and b∈{0,2}. Every case ended state 4 at h+4 after exactly `12a+12v+32` steps. This is reproducible finite simulation evidence, not a formal theorem; the script is committed alongside the note.
