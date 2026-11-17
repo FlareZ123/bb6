@@ -195,7 +195,7 @@ The finite-frame formulation is now explicit in the extension note: `bridgeStart
 The helper set now comprises:
 - `M0EvenEightValuationFixedPrefix.lean`: parametric 44-step prefix and four-step zero exit;
 - `M0EvenEightValuationSweepFacts.lean`: post-bubble zero boundary and 4+t right-run invariant;
-- `M0EvenEightValuationMacros.lean`: state-1 right d1-block scan and 101 boundary;
+- `M0EvenEightValuationMacros.lean`: state-1 right d1-block scan, exact 001 block output, and 101 boundary;
 - `M0EvenEightValuationEncoding.lean`: existing BinDec carry and valuation lemmas instantiated for all q;
 - `M0EvenEightValuationSuffix.lean`: parity-free q4 suffix target-left identity.
 

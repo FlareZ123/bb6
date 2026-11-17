@@ -109,7 +109,7 @@ The 44-step prefix, left zero-bubble, four-step exit, right d1-block scan, and f
 
 ## Lean helper candidate
 
-`M0EvenEightValuationMacros.lean` contains candidate source lemmas for the state-1 right d1-block scan (`111 -> 001`), its n-block iteration, and the final `101` boundary. `M0EvenEightValuationFixedPrefix.lean` isolates the parametric 44-step prefix, its [-13,3] head bound, the `bridgeAt` lift, and the four-step 000 exit. `M0EvenEightValuationSweepFacts.lean` proves the post-bubble zero boundary and the 4+t right-run invariant. `M0EvenEightValuationSuffix.lean` removes q parity from the q4 suffix target-left identity. `M0EvenEightValuationEncoding.lean` instantiates the existing BinDec carry and valuation lemmas. All five are candidate Lean files, uncompiled; Agent6 has been asked to preflight them.
+`M0EvenEightValuationMacros.lean` contains candidate source lemmas for the state-1 right d1-block scan (`111 -> 001`), its n-block iteration, the exact `sweptRight1_block` output pattern, and the final `101` boundary. `M0EvenEightValuationFixedPrefix.lean` isolates the parametric 44-step prefix, its [-13,3] head bound, the `bridgeAt` lift, and the four-step 000 exit. `M0EvenEightValuationSweepFacts.lean` proves the post-bubble zero boundary and the 4+t right-run invariant. `M0EvenEightValuationSuffix.lean` removes q parity from the q4 suffix target-left identity. `M0EvenEightValuationEncoding.lean` instantiates the existing BinDec carry and valuation lemmas. All five are candidate Lean files, uncompiled; Agent6 has been asked to preflight them.
 
 
 ## Finite-frame target for the generalized bridge

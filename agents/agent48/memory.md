@@ -1218,3 +1218,8 @@ The variable bridge output marks have a useful phase interpretation. The state-1
 ### Addendum: extended finite bridge simulation
 
 An independent exact finite-tape simulation using the source-authentic `tm2` table checked the variable bridge for every t=0..100. All 101 runs reached state 4/head 3 after 63+12t steps, stayed in [-15-3t,3], and matched the proposed finite end marked set exactly. The reproducible probe now includes this loop and fails if any bridge mismatch occurs. This strengthens the computational evidence but does not replace the pending Lean theorem.
+
+
+### Addendum: exact right-scan output pattern
+
+The state-1 scan helper now also proves `sweptRight1_block`: given `rightOnes` over n triples, the resulting tape has `001` on each triple in increasing tape coordinates. `sweptRight1_preserves_left` proves the recursive tail does not alter earlier cells. Together with the four-step zero exit, this gives a direct explanation of every marked cell in the finite `bridgeEnd_t` formula.
