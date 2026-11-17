@@ -100,25 +100,41 @@ This formula can be substituted directly into the incoming-entry parity/3-adic s
 This characterizes only the t=0 source candidate. The incoming parent of the first level-K entry and its blank-root ancestry remain separate obligations.
 
 
-## Stronger logarithmic bound on q
+## Parity-sharpened logarithmic bound on q
 
-The explicit deficit formula (7), together with \(c>2^a\), gives
-\[
-D_0>\frac{2^{K+4-a}}3.
-\]
-The first-entry lower guard in (3) gives \(2^qD_0\le4p+2K+4\). For \(K\ge266\),
-\[
-3(4p+2K+4)<16p=2^{K+4},
-\]
-so
+Write \(\delta=c-2^a\). Since \(r=K+1-a\) is odd, \(K-a\) is even. The allowed \(K\)-sector therefore gives:
+
+- If \(K\equiv2\pmod6\), then \(a\) is even, \(c\equiv11\pmod{12}\), and \(2^a\equiv4\pmod{12}\). Hence \(\delta\equiv7\pmod{12}\), so \(\delta\ge7\).
+- If \(K\equiv3\pmod6\), then \(a\) is odd, \(c\equiv1\pmod{12}\), and \(2^a\equiv8\pmod{12}\). Hence \(\delta\equiv5\pmod{12}\), so \(\delta\ge5\).
+
+Using (7), \(D_0=(\delta2^{K+4-a}+2K+1)/3\), and the entry lower guard \(2^qD_0\le4p+2K+4\), we obtain the following sharper bounds.
+
+If \(K\equiv2\pmod6\), then
 \[
 2^q
-<\frac{3(4p+2K+4)}{2^{K+4-a}}
-<2^a.
+<\frac{3(4p+2K+4)}{7\cdot2^{K+4-a}}
+=\frac{3(4p+2K+4)}{112p}\,2^a
+<2^{a-3},
 \]
-Therefore
+where the last inequality is equivalent to \(p>3K+6\), true for \(K\ge266\). Thus \(q\le a-4\).
+
+If \(K\equiv3\pmod6\), then
 \[
-\boxed{q\le a-1=\lfloor\log_2(2K+7)\rfloor-1.}
+2^q
+<\frac{3(4p+2K+4)}{5\cdot2^{K+4-a}}
+=\frac{3(4p+2K+4)}{80p}\,2^a
+<2^{a-2},
+\]
+where the last inequality follows from \(p>(3K+6)/4\), also true for \(K\ge266\). Thus \(q\le a-3\).
+
+In summary,
+\[
+\boxed{
+q\le
+\begin{cases}
+a-4,&K\equiv2\pmod6,\\
+a-3,&K\equiv3\pmod6.
+\end{cases}}
 \tag{8}
 \]
-After the forced parity of \(q\) is applied, at most \(\lceil a/2\rceil\) candidates remain for each t=0 fatal source. This improves the earlier \(q\le\lfloor\log_2(2K)\rfloor\) bound.
+After the forced parity of \(q\) is applied, at most \(\lceil(a-3)/2\rceil\) candidates remain for each t=0 fatal source. This improves the uniform \(q\le a-1\) bound.
