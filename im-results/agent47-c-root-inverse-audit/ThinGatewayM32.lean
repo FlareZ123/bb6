@@ -216,7 +216,7 @@ private theorem no_parent_15_25 (n : Nat) :
   rw [hnot] at hs'
   cases hs'
 
-private theorem no_parent_13_6 (n : Nat) :
+private theorem no_parent_13_38 (n : Nat) :
     ¬ BB6CLine.Reach (173+256*n,262+384*n,0) := by
   intro h
   have hs := CCert.reachable_seen (CCert.source_reachable_embeds32 h)
@@ -225,18 +225,18 @@ private theorem no_parent_13_6 (n : Nat) :
       CCert.q (173+256*n) = CCert.q 13 :=
         CCert.q_congr_big _ _ (by omega) (by omega) (by omega)
       _ = 13 := by decide
-  have hqk : CCert.q (262+384*n)=6 := by
+  have hqk : CCert.q (262+384*n)=38 := by
     calc
-      CCert.q (262+384*n) = CCert.q 6 :=
+      CCert.q (262+384*n) = CCert.q 38 :=
         CCert.q_congr_big _ _ (by omega) (by omega) (by omega)
-      _ = 6 := by decide
-  have hs' : CCert.seen 13 6 0 = true := by
+      _ = 38 := by decide
+  have hs' : CCert.seen 13 38 0 = true := by
     simpa [hqa,hqk,CCert.q] using hs
-  have hnot : CCert.seen 13 6 0 = false := by decide
+  have hnot : CCert.seen 13 38 0 = false := by decide
   rw [hnot] at hs'
   cases hs'
 
-private theorem no_parent_9_5 (n : Nat) :
+private theorem no_parent_9_37 (n : Nat) :
     ¬ BB6CLine.Reach (41+64*n,325+480*n,0) := by
   intro h
   have hs := CCert.reachable_seen (CCert.source_reachable_embeds32 h)
@@ -245,14 +245,14 @@ private theorem no_parent_9_5 (n : Nat) :
       CCert.q (41+64*n) = CCert.q 9 :=
         CCert.q_congr_big _ _ (by omega) (by omega) (by omega)
       _ = 9 := by decide
-  have hqk : CCert.q (325+480*n)=5 := by
+  have hqk : CCert.q (325+480*n)=37 := by
     calc
-      CCert.q (325+480*n) = CCert.q 5 :=
+      CCert.q (325+480*n) = CCert.q 37 :=
         CCert.q_congr_big _ _ (by omega) (by omega) (by omega)
-      _ = 5 := by decide
-  have hs' : CCert.seen 9 5 0 = true := by
+      _ = 37 := by decide
+  have hs' : CCert.seen 9 37 0 = true := by
     simpa [hqa,hqk,CCert.q] using hs
-  have hnot : CCert.seen 9 5 0 = false := by decide
+  have hnot : CCert.seen 9 37 0 = false := by decide
   rw [hnot] at hs'
   cases hs'
 
@@ -271,7 +271,7 @@ theorem thin_gateway_103_unreachable (n : Nat) :
     omega
 
 /-- Every gateway with j=86 mod 128 has only two viable c=0 inverse
-    parents, with M32 images (13,6,0) and (9,5,0). -/
+    parents, with M32 images (13,38,0) and (9,37,0). -/
 theorem thin_gateway_86_unreachable (n : Nat) :
     ¬ BB6CLine.Reach (0,2*(86+128*n),4*(86+128*n)+10) := by
   intro h
@@ -280,7 +280,7 @@ theorem thin_gateway_86_unreachable (n : Nat) :
   rcases hp0 with hQ0 | hU0
   · have hQ0' : BB6CLine.Reach (173+256*n,262+384*n,0) := by
       convert hQ0.2 using 1 <;> omega
-    exact no_parent_13_6 n hQ0'
+    exact no_parent_13_38 n hQ0'
   · have hU0' : BB6CLine.Reach (0,84+128*n,527+768*n) := by
       convert hU0.2 using 1 <;> omega
     have hp1 := zeroA_reach_parent (84+128*n) (527+768*n)
@@ -295,7 +295,7 @@ theorem thin_gateway_86_unreachable (n : Nat) :
       rcases hp2 with hQ2 | hU2
       · have hQ2' : BB6CLine.Reach (41+64*n,325+480*n,0) := by
           convert hQ2.2 using 1 <;> omega
-        exact no_parent_9_5 n hQ2'
+        exact no_parent_9_37 n hQ2'
       · have hU2' : BB6CLine.Reach (0,18+32*n,653+960*n) := by
           convert hU2.2 using 1 <;> omega
         have hp3 := zeroA_reach_parent (18+32*n) (653+960*n)
