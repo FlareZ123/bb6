@@ -190,3 +190,13 @@ The companion Lean helper candidate `M0EvenEightValuationMacros.lean` adds the s
 
 
 The finite-frame formulation is now explicit in the extension note: `bridgeStart_t` adds 3t marks at -14-i, `bridgeEnd_t` has marks `{2,1,-1,3} ∪ {-4-3i | i<4+t} ∪ {-14-3t,-15-3t}`, and the dynamic frame is `[-15-3t,3]`. The intended finite run length is `63+12t`, lifted by the existing `bridgeAt` theorem.
+
+
+The helper set now comprises:
+- `M0EvenEightValuationFixedPrefix.lean`: parametric 44-step prefix and four-step zero exit;
+- `M0EvenEightValuationSweepFacts.lean`: post-bubble zero boundary and 4+t right-run invariant;
+- `M0EvenEightValuationMacros.lean`: state-1 right d1-block scan and 101 boundary;
+- `M0EvenEightValuationEncoding.lean`: existing BinDec carry and valuation lemmas instantiated for all q;
+- `M0EvenEightValuationSuffix.lean`: parity-free q4 suffix target-left identity.
+
+These are candidate Lean proofs pending local preflight; no CI has been dispatched.

@@ -1208,3 +1208,8 @@ The all-q proof now has a concrete composition outline in `M0EvenEightValuationE
 ### Addendum: finite bridge mark alignment
 
 The variable bridge output marks have a useful phase interpretation. The state-1 scan processes 4+t triples from hN-12-3t through hN-1, writing 001 in increasing tape coordinates. Its final one at hN-1 is the last bit of markerWord(2); the preceding 3+t ones are the d0-block marks. The four-step zero exit supplies the remaining d0 mark at hN-13-3t and the first two d1 cells at hN-14-3t and hN-15-3t. The third d1 cell at hN-16-3t remains outside the frame. This exactly matches the finite `bridgeEnd_t` mark formula.
+
+
+### Addendum: sweep invariants isolated
+
+`M0EvenEightValuationSweepFacts.lean` now contains two reusable tape lemmas: after a 3t left sweep, the first two zeros of the following d0 block plus the swept zero give the 000 exit boundary; and the shifted 3t ones adjoin the fixed 12-one bridge suffix to form `rightOnes` for 4+t blocks. These facts use the existing `sweptLeft_block`, `sweptLeft_plus1`, and `sweptLeft_preserves_right` theorems. Agent6 has been asked to compile this leaf as well.
