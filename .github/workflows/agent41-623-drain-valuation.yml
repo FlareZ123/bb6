@@ -1,0 +1,55 @@
+name: Agent 41 #623 3-adic drain normal form
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install source-pinned Lean 4.35.0-rc4
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Clone cryptids at the pinned #623 source revision
+        run: |
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet c86f15861709b76042998c5211c7b2f83991621b
+          test "$(git rev-parse HEAD)" = c86f15861709b76042998c5211c7b2f83991621b
+
+      - name: Reclaim runner space for the Mathlib cache
+        run: |
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+
+      - name: Restore Mathlib cache and compile the original machine
+        working-directory: /tmp/cryptids
+        run: |
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+
+      - name: Compile the unchanged-source parity interface
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
+
+      - name: Compile the 3-adic evaluator normal form
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainValuationNormalForm.lean" Agent41DrainValuationNormalForm.lean
+          lake env lean -o .lake/build/lib/lean/Agent41DrainValuationNormalForm.olean Agent41DrainValuationNormalForm.lean
+
+      - name: Audit theorem axioms
+        working-directory: /tmp/cryptids
+        run: |
+          printf 'import Agent41DrainValuationNormalForm\n#print axioms BB6.Agent41DrainValuationNormalForm.evalA_3adic_run\n' > Agent41DrainValuationAxiomAudit.lean
+          lake env lean Agent41DrainValuationAxiomAudit.lean
