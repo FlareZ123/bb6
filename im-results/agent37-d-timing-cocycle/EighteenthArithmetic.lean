@@ -1,5 +1,6 @@
 import Lean.Elab.Tactic.Omega
 import DRegularFast
+import SeventeenthSecondHalf
 import BlankSeventeenthRejoin
 
 set_option maxHeartbeats 100000000
@@ -9,14 +10,18 @@ namespace BB6.Agent2EighteenthRoot
 
 open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 
+/-- The seventeenth E/E/A return parameter is t17/3; it is defined by the
+    seventeenth arithmetic certificate, not in the root-rejoin namespace. -/
+def u17 : Nat := BB6.Agent2SeventeenthArithmetic.t17 / 3
+
 def seed18 : DRegular.L :=
-  ⟨8*(64*BB6.Agent2SeventeenthRoot.u17+10)+39,3,2⟩
+  ⟨8*(64*u17+10)+39,3,2⟩
 
 theorem seed18_canon : DRegular.Canon seed18 := by
   constructor
-  · dsimp [seed18]
+  · dsimp [seed18, u17]
     omega
-  · simp [seed18]
+  · simp [seed18, u17]
 
 def terminal2902 : DRegular.L :=
   (DRegular.run 2902 seed18).getD ⟨9,0,0⟩

@@ -42,7 +42,7 @@ After stage 3 succeeds, resume the existing
 workflow at stage 3b, with predecessor artifact d-root-stage3a, its
 successful run ID, and the same base source_ref.
 
-Until stage 3 succeeds, the eighteenth reentry remains a submitted candidate.
+The first split stage-1 run [44076940240](https://github.com/FlareZ123/bb6/actions/runs/44076940240) exposed a stale namespace reference: the submitted file used Agent2SeventeenthRoot.u17, but the predecessor defines the parameter as Agent2SeventeenthArithmetic.t17 / 3. The arithmetic module now defines this local alias explicitly; the failed run produced no artifact and is not evidence against the mathematical trajectory.\n\nUntil stage 3 succeeds, the eighteenth reentry remains a submitted candidate.
 Do not promote the D-root prefix beyond the sixteenth/seventeenth evidence
 already supported by completed source CI, and do not infer an all-time
 nonhalting result or any BB(6) value from this finite chain.
