@@ -55,6 +55,8 @@ sideBit (d1pow t ++ (d0 ++ (binDec ell q ++ lh))) i
 
 which is the `hleft` premise of `lbinDecHRunTape_leftFacing`. In particular, the four H-run boundary facts listed above are just the first `3*t+3` cells of this same identity; the right-zero fact at `hN-13=hH+1` is supplied by `m2ZeroSetupAt_window` at relative offset `-13`; `s1M2Setup_suffix` establishes the setup input window.
 
+The new wrapper `lbinDecHRunTape_leftFacing_of_input` derives `leftOnes`, the two zero cells, and the third one directly from this full `hleft` identity. Thus the M2 caller need only establish the full source word and the separate right-zero condition; it need not prove the four left-boundary premises independently.
+
 The generic H-run tape is `lbinDecHRunTape t Tsetup hH`. Its required left-facing identity is:
 
 ~~~lean
