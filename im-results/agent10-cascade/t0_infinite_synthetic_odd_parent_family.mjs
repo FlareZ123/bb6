@@ -13,8 +13,8 @@ const mod = (x, m) => ((x % m) + m) % m;
 assert.equal(K % 54n, 38n);
 assert.equal(K % 6n, 2n);
 assert(K >= 266n);
-assert(25n * c >= 38n * two(a));
-assert(20n * c <= 31n * two(a));
+assert(64n * c >= 97n * two(a));
+assert(8n * c <= 13n * two(a));
 
 const p = two(K);
 const r = K + 1n - a;
@@ -58,8 +58,8 @@ assert(4n * pL <= parent + L + 4n);
 assert(parent + L + 5n < 8n * pL);
 
 // E lies in the gap between every even-parent target band.
-assert(5n * p < E);
-assert(2n * E < 11n * p);
+assert(4n * p < E);
+assert(3n * E < 16n * p);
 assert(4n * p - 3n < E);
 assert(E < 6n * p - 1n);
 
@@ -68,7 +68,7 @@ assert.equal(mod(parent, 3n), 0n);
 assert(2n * p < parent);
 assert(parent < 3n * p - 1n);
 assert(2n * p - 3n < parent);
-assert(7n * p > 225n);
+assert(5n * K + 10n > 9n);
 
 assert(parent > 2n);
 assert(E > 2n);
