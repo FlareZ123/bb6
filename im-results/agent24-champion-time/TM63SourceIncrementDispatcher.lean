@@ -70,7 +70,7 @@ theorem tm63_source_increment_dispatch
     · have hq : 0 < k/8 := by omega
       have hboundq : 8*(k/8) < 2^L := by omega
       have hsrc := hm0zero (k/8) aa bb hh hq hL hboundq haa
-      simpa [hm0, hdecomp, nextMarker, nextExponent, nextRight] using hsrc
+      simpa [hm0, hdecomp, hr0, nextMarker, nextExponent, nextRight] using hsrc
     · have hsrc := m0Odd_counted_increment_source
         L k aa bb hh hLpos (by omega) hbound haa
       simpa [hm0, nextMarker, nextExponent, nextRight] using hsrc
@@ -102,7 +102,7 @@ theorem tm63_source_increment_dispatch
     · have hq : 0 < k/8 := by omega
       have hboundq : 8*(k/8) < 2^L := by omega
       have hsrc := hm2zero (k/8) aa bb hh hq hL hboundq haa
-      simpa [hm2, hdecomp, nextMarker, nextExponent, nextRight] using hsrc
+      simpa [hm2, hdecomp, hr0, nextMarker, nextExponent, nextRight] using hsrc
     · have hsrc := m2Odd_counted_increment_source
         L k aa bb hh (by omega) hbound
       simpa [hm2, nextMarker, nextExponent, nextRight] using hsrc
