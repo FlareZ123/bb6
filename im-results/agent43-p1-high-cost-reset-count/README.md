@@ -228,6 +228,10 @@ source theorem remains at least five shallow edges for 14<=n<=82 until the
 new fifth-overflow and residual finite certificates are completed.
 
 
+## No-short selected-gap residue scan (exploratory)
+
+[NoShortGapWordResidues.md](NoShortGapWordResidues.md) derives the unique residue class modulo \(2^{G+3}\) of the initial (C_0=n+3) for each fixed no-short gap word, then enumerates 1.77 billion words through total span (G=57). It falsifies a naive square-root lower bound for the least representative and suggests, but does not prove, a weaker exponential-height bound. The C++ scan is [no_short_gap_word_residue_scan.cpp](no_short_gap_word_residue_scan.cpp). This is intermediate evidence only; the all-(G) residue lower bound or a counterexample family remains open.
+
 ## Unrestricted-depth bridge (open)
 
 [HighDepthRestartPotential.md](HighDepthRestartPotential.md) derives an exact defect recurrence for arbitrary inverse depth. With
