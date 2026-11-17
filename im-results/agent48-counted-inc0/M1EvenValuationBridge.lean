@@ -245,10 +245,11 @@ theorem state5SweptRight_block_pattern (n : Nat) (T : Int → Bool)
         · subst j
           have hpres := state5SweptRight_preserves_left
             n (holeRight T h) (h+3) (h+1) (by omega)
+          have hbit := hon 1 (by omega)
           rw [state5SweptRight, hpres]
           have hne0 : h+1 ≠ h := by omega
           have hne2 : h+1 ≠ h+2 := by omega
-          simp [holeRight, hne0, hne2]
+          simpa [holeRight, hne0, hne2] using hbit
         · by_cases hj2 : j = 2
           · subst j
             have hpres := state5SweptRight_preserves_left
