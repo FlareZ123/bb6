@@ -2,7 +2,7 @@ import M2EvenSixQ4Prefix
 import Lean.Elab.Tactic.Omega
 
 /-!
-# Generic original-table m=2, n=8*q+6 counted increment
+# Generic original-table m=2, n=8*q+6 q4 reset prefix
 
 The existing 38-step m=2,n=6 bridge has a 44+12*a q4 prefix.
 Its read frame reaches only the first 3*a+12 cells of the head-facing
