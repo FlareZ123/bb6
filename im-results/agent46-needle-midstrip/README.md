@@ -1,6 +1,6 @@
 # Space Needle cancellation feeder: an all-r middle-band parent exclusion
 
-**Status:** complete paper derivation; not yet Lean-compiled or independently source-audited in this incarnation. All arithmetic is exact.
+**Status:** exact arithmetic theorem kernel-checked in Lean 4.36.0-rc2 in [CancellationMidBand.lean](../agent20-needle-coprime/CancellationMidBand.lean); the original-source inverse-parent composition is now implemented in [CancellationMidBandSource.lean](./CancellationMidBandSource.lean), with pinned-source CI pending. All arithmetic is exact.
 
 ## Result
 
@@ -214,44 +214,12 @@ The threshold is sharp for this particular quotient-size argument: if \(s<d_r\),
 
 It does **not** exclude the remaining valuations, prove that any cancellation feeder is unreachable from the true blank start, prove Space Needle nonhalting, or determine BB(6). The result belongs in im-results/, not results/.
 
-## Formalization target
+## Formalization and source integration
 
-A Lean formalization can reuse:
+The all-r arithmetic theorem is already formalized in [CancellationMidBand.lean](../agent20-needle-coprime/CancellationMidBand.lean). Agent 20's local Lean 4.36.0-rc2 check reports only standard Lean axioms (propext, Classical.choice, Quot.sound) and no sorryAx; this incarnation deliberately reuses that proof rather than duplicating it.
 
-- CancellationNat.P and CancellationNat.exact from CancellationTopStrip.lean;
-- CancellationConstructive.feederQ and feederQ_spec from CancellationTopConstructive.lean;
-- CancellationTerminalConstructive.feederV, feederK, and exact_terminal_feeder;
-- NeedleGeneralInverse.parent_successor_iff and the original-source inverse theorem in NeedleGeneralInverseSource.lean.
+This directory adds [CancellationMidBandSource.lean](./CancellationMidBandSource.lean). It composes the arithmetic theorem with NeedleGeneralInverseSource.original_source_inverse_iff, the exact inverse-parent characterization of the pinned original Space Needle transition. Its principal result states that for every r ≥ 2, every s in the excluded interval, and every odd quotient q', there is no original high-level transition from oddTower q' (a_r-1+s) to oddTower (feederQ r) (feederV r). The proof converts exact parent-list membership into the divisibility condition, then uses uniqueness of the odd-tail factorization to identify the source valuation. Thus the middle band is excluded from the authentic one-step source-parent set of this feeder, not merely from an abstract divisibility relaxation.
 
-The key reusable lemma is the exact congruence
-\[
-2^{2rs}AP_r(A)\equiv3^{2r}\sum_{j<2r}2^{js}
-\pmod{A2^s+3},
-\]
-followed by the two-modulus quotient bound above. No numerical parent enumeration is needed for this infinite-family theorem.
+Local preflight under Lean 4.36.0-rc2 compiled the parent-equation-to-divisibility lemma and the bridge module against exact-signature stubs for the imported source theorems. This checks the new proof structure, but is not authentic-source verification. The existing manual workflow [agent46-needle-three.yml](../../.github/workflows/agent46-needle-three.yml) has been extended to build the inverse-parent source modules and compile this bridge against the pinned Cryptids checkout under Lean 4.35.0-rc4. That run is pending.
 
-For a Lean implementation that avoids modular-inverse APIs entirely, there is an explicit natural-number quotient certificate. Put \(t=2^s\), \(B=At\), and
-\[
-S_0=0,\qquad S_{r+1}=S_r+t^{2r}+t^{2r+1},
-\]
-\[
-C_0=0,\qquad
-C_{r+1}=B^2C_r+3^{2r}(B-3)S_r
-       +9^rt^{2r}\bigl(t(A-3)-3\bigr).
-\]
-Then induction using \(P_{r+1}=A^2P_r+9^r(A-3)\) gives the exact identity
-\[
-t^{2r}AP_r(A)=3^{2r}S_r+(B+3)C_r.
-\]
-The two algebraic factorizations driving the induction are
-\[
-B^2-9=(B+3)(B-3),\qquad
-t^2A(A-3)-9(1+t)=(B+3)(t(A-3)-3).
-\]
-For the present parameters \(A=2^{a_r}\ge8\) and \(t=2^s\ge2\), so all displayed natural subtractions are nonnegative. This certificate directly supplies the divisibility step in (1) and is a good starting point for a kernel-checked formalization.
-
-The only small generic divisibility helper needed after (1) is
-\[
-2^m\mid 3x\quad\Longrightarrow\quad2^m\mid x.
-\]
-It can be proved in core Lean by induction on \(m\): the successor case first obtains \(2\mid3x\), uses \(\omega\) to deduce \(2\mid x\), writes \(x=2y\), cancels the leading factor two, and applies the induction hypothesis to \(3y\). The final contradiction can reuse CancellationTopStrip's \(Nat.not_dvd_of_pos_of_lt\) pattern.
+**Scope:** this is an all-r, source-linked one-step predecessor exclusion for one synthetic feeder family. It does not prove that the feeder is unreachable from the true blank start, does not exclude parent valuations outside the middle band, does not prove Space Needle nonhalting, and does not determine BB(6). Keep it in im-results/, not results.

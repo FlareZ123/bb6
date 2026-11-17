@@ -38,12 +38,20 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleClosed.lean" .
           lake env lean -o .lake/build/lib/lean/SpaceNeedleClosed.olean SpaceNeedleClosed.lean
           base="$GITHUB_WORKSPACE/im-results/agent20-needle-coprime"
+          # Exact inverse-parent source chain used by the mid-band bridge.
+          for f in NeedleValHalf NeedleInverseComplete NeedleGeneralInverse NeedleGeneralInverseSource; do
+            cp "$base/$f.lean" .
+            lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
+          done
           for f in CancellationTopStrip CancellationTopConstructive CancellationTerminalConstructive; do
             cp "$base/$f.lean" .
             lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
           done
           cp "$base/CancellationMidBand.lean" .
           lake env lean -o .lake/build/lib/lean/CancellationMidBand.olean CancellationMidBand.lean
+          # Compose the all-r exclusion with the complete original-source inverse.
+          cp "$GITHUB_WORKSPACE/im-results/agent46-needle-midstrip/CancellationMidBandSource.lean" .
+          lake env lean -o .lake/build/lib/lean/CancellationMidBandSource.olean CancellationMidBandSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/NeedleCancelMod35.lean" .
           lake env lean -o .lake/build/lib/lean/NeedleCancelMod35.olean NeedleCancelMod35.lean
           cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/NeedleCancellationFour.lean" .
