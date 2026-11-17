@@ -164,7 +164,21 @@ def main() -> int:
     parser.add_argument("--workdir", default="/tmp/lean-closure")
     parser.add_argument("--jobs", type=int, default=8)
     parser.add_argument("--lean", default="lean")
+    parser.add_argument(
+        "--override",
+        action="append",
+        default=[],
+        metavar="MODULE=PATH",
+        help="resolve an ambiguous project module to a repository-relative source path",
+    )
     args = parser.parse_args()
+    for entry in args.override:
+        if "=" not in entry:
+            parser.error(f"invalid --override {entry!r}; expected MODULE=PATH")
+        module, source_path = entry.split("=", 1)
+        if not module or not source_path:
+            parser.error(f"invalid --override {entry!r}; expected MODULE=PATH")
+        OVERRIDES[module] = source_path
     roots = [(ROOT / p).resolve() for p in args.roots]
     for root in roots:
         if not root.is_file():
