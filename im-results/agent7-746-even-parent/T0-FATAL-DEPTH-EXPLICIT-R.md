@@ -81,6 +81,12 @@ K+1-\lfloor\log_2(2K+7)\rfloor\ \text{is odd},
 \]
 The K-sector condition \(K\bmod6\in\{2,3\}\) remains in force. It ensures the numerator defining \(h\) in (1) is divisible by \(3\); since \(r\) is odd, \(c2^{r+3}\) is divisible by \(16\), and (1) modulo \(4\) gives \(h+K\equiv1\pmod4\), as required for the odd exit.
 
+Equivalently, for a fixed \(a\ge9\), the candidate levels are exactly
+\[
+2^{a-1}-3\le K\le7\cdot2^{a-3}-4,
+\]
+with \(K\equiv2\pmod6\) if \(a\) is even and \(K\equiv3\pmod6\) if \(a\) is odd. This follows by rewriting \(2^a\le2K+7\), \(4(2K+7)\le7\cdot2^a\), and \(K-a\) even.
+
 Finally, the deficit at the odd-exit source is now explicit:
 \[
 \boxed{
