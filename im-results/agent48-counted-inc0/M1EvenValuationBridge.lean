@@ -220,9 +220,9 @@ theorem state1SweptLeft_block (n : Nat) (T : Int → Bool) (h : Int)
       · subst i
         have hpres := state1SweptLeft_preserves_right
           n (holeLeft T h) (h-1) h (by omega)
-        have hcoord : h-(n+1:Int)+1+(n:Int) = (h-1)-(n:Int)+1+(n:Int) := by omega
-        rw [state1SweptLeft, hcoord, hpres]
-        simp [holeLeft]
+        have hcoord : h-(n+1:Int)+1+(n:Int) = h := by omega
+        rw [state1SweptLeft, hcoord]
+        simpa [holeLeft] using hpres
       · have hi' : i < n := by omega
         have htail := ih (holeLeft T h) (h-1) i hi'
         have hcoord :
