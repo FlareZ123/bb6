@@ -977,3 +977,10 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 - Existing S1Encoder `binDec_carryPrefix` gives `binDec L n = d1pow v ++ d0 ++ binDec ...` for n=(2q+1)2^v, q odd. This contributes 3v ones and the next two zeros, so the post-prelude state1 tape has exactly 3v+4 left ones plus the required two exit zeros.
 - Sent this source derivation to Agent48 and appended it to section 5 of the audit note. The generic bridge is now reduced to existing `sweptLeft`/binDec lemmas, fixed short transitions, and the two sweep macros.
 
+
+
+### 2026-11-17 checkpoint — root itinerary valuation coverage
+
+- Derived the complete valuation classification for marker-1 indices `n_j=16R-16-24j` with odd R: odd j has v2=3; even j has v2>=4. Thus the existing M1-zero-odd v2=3 theorem plus the proposed generic exact-v M1-even bridge for v>=4 cover all marker-1 rows in the 24-cycle middle itinerary, if the bridge is formalized and composed with the q4 suffix.
+- This removes the need for separate v4 and v5 modules; the remaining root work is the 24-cycle induction and its connection to the middle-26 endpoint. Communicated to Agent42 and documented in section 6 of the audit note.
+

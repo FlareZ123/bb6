@@ -144,3 +144,13 @@ The `d1pow v` block contributes 3v ones immediately after hN-4. Therefore after 
 The right-side hypotheses are not from the original S0 right-facing suffix. They are the local boundary left by the *first* `counted_left_sweep`: `sweptLeft_plus1` gives a blank at hN+1, and `sweptLeft_block` gives ones at hN+2,hN+3,hN+4. The six-step prelude does not touch these cells. This is exactly the right-side input needed by the generic bridge contract in section 4.
 
 Thus all source-shape hypotheses for the generic bridge reduce to existing `sweptLeft` lemmas plus `binDec_carryPrefix`; no simulation-specific tape assumption is needed. The remaining new proof code is the fixed six-step run, the fixed four-/three-/one-step transitions, and the composition with the two counted sweeps.
+
+
+## 6. Consequence for the full 24-cycle root itinerary
+
+The exact-valuation bridge is needed only for `v₂(n)≥4` in the root's marker-1 `n≡0 mod 8` rows. The existing `m1ZeroOdd_residue0_counted_increment_source` handles the exact `v₂(n)=3` class. For `n_j=16R-16-24j` with R odd:
+
+- odd j gives `v₂(n_j)=3`;
+- even j gives `v₂(n_j)≥4` (with exact valuation 4 when j/2 is odd, and at least 5 when j/2 is even).
+
+Therefore, **if the generic M1-even valuation bridge is formalized and composed with the existing q4 suffix**, it and the existing M1-zero-odd theorem cover every marker-1 row in the complete 24-cycle middle itinerary. The separate v4/v5 source modules are unnecessary; one exact-v theorem for v≥4 is the cleaner target. The remaining root work is the formal 24-cycle induction and its connection to the authentic middle-26 endpoint, not another valuation split.
