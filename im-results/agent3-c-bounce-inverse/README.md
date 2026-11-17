@@ -165,7 +165,7 @@ This branch concerns the (y=3) terminal family (x=128t+10), where the residual e
 - `U5M8Q0Partial.lean` packages the residual congruence and q0-parent exclusions. The resulting `U5Y3M8.lean` theorem excludes the q0 branch when (w) is even or (w\equiv3\pmod8), hence the whole (y=3) terminal family in those subfamilies. This is **not** an all-(w) result.
 - The q0 subfamily exclusions specialize the existing `Agent11Y3X128W.blank_no_y3_x128w` theorem in `../agent11-c-low58/EvenOddThreeX128W.lean`; they are not new standalone discoveries.
 - `U5Q0OddOddFan.md` derives the complete original-source parent fan of the q0 intermediate target (X_t=(44t-1,42t-1)). For the actual residual, (t\equiv81,123,39\pmod{168}) in the (w\equiv7,5,1\pmod8) classes. Only q=0 occurs in the first and third classes. In the hard (w\equiv5\pmod8) class, (t=123+168z) and q≥1 is admissible exactly when (4^{q-1}\mid661+903z), giving a nested 2-adic predecessor fan.
-- `U5Q0OddOddFan.lean` is a Lean draft of the exact source-parent classification, including the mod-43 exclusion of the a=0 branch. It is not yet locally compiled and is not imported into the main proof.
+- `U5Q0OddOddFan.lean` is a Lean draft of the exact source-parent classification, including the mod-43 exclusion of the a=0 branch. It is not yet locally compiled. The separate `U5Q0W1821HighStop.lean` draft now imports it, but that dependency chain is not yet verified.
 
 **Open:** eliminate every parent in the nested q-fan for (w\equiv5\pmod8), and continue the unique q=0 parents in the (w\equiv1,7\pmod8) classes. Parent classification alone does not establish blank-unreachability. The current U5 M8 modules remain intermediate until the focused local Lean preflight succeeds.
 
@@ -201,6 +201,20 @@ The first exclusion follows because `V+q=3 (mod 4)` forces `k` odd, `k>=5`, and 
 **Verification status:** both new U5 modules remain uncompiled drafts. The local shell and Python runtimes returned `ClientError`, so no local Lean result or axiom audit is claimed. The existing manual-only workflow [`agent3-u5-m32-w485-highstop.yml`](../../.github/workflows/agent3-u5-m32-w485-highstop.yml) now has separate `cline-filter` and `cline-residual` targets for exact transitive-import compilation with Lean 4.36.0-rc2; run the smaller filter target first, then the residual closure. The existing `U5Q0M16HighStop.lean` wrapper still uses the independently checked M16 quotient for its q=0 calls and has **not** yet been switched to these source-only alternatives. The prior M16 proof remains a useful independent cross-check, not evidence that these new source drafts compile.
 
 The two parameter cylinders are non-vacuous; for each `w>=0`, one can take `s=(5*2^(201+3360*w)-129)/211` and `m=32*s-32-840*w`. They are only two subfamilies of the hard `w=5 (mod 8)` class. The remaining q-fan parents, other residual classes, Machine C's complete blank-root decision, and BB(6) remain open.
+
+### w=1821 (mod 2048): source-only high-stop exclusion draft
+
+The separate draft U5Q0W1821HighStop.lean targets the nonempty residual cylinder w=2048r+1821. From
+
+211*t + 1360 + 22155*w = 20*2^(201+3360*w),
+
+the 2-adic equation alone gives t=427 (mod 2048). The earlier mod-21 refinement to t=2475 (mod 43008) was unnecessary: the inverse-parent proof uses only t=128n+43 with n=3 (mod 16). The Lean draft was simplified to state this larger t-class and its CRT proof no longer computes a mod-21 residue.
+
+For X_t=(44t-1,42t-1), the exact odd/odd source fan has 43t-1=4^q*U, U even, and 2k+U+6q=128t-8. Since 43t-1=8 (mod 16), only q=0,1 can occur. The q=0 parent is pulled through the exact odd/odd valuation-three, even/odd-four, two six-even-right, and seven-inverse source rules. The two final seven-fibre parents are odd/odd with right coordinate at least five and sum 2 (mod 4), so the existing blank_no_odd_sum_two invariant excludes them. The q=1 parent satisfies the arbitrary-depth dyadic six-cone hypotheses with r=2, u=1876n+629=1 (mod 4), u>=9, and the required mass congruence. This is intended to exclude the q=0 parent of the terminal y=3 family. The other terminal branches are handled by the existing odd-sum-two invariant and m+1=1 (mod 8), after which the draft pulls the exclusion back through the B_s and A_s feeders to the authentic high m=0 root j=39+64s.
+
+The residual nonemptiness helper supplies a root for every w=2048r+1821, and the existing strict monotonicity helper makes these roots distinct. Their indices all satisfy j=18791 (mod 32768), so this is an additional infinite sparse family, not a new root-index density class or a BB(6) decision.
+
+**Verification status:** this entire new chain is still an uncompiled Lean draft. Static review found and corrected a proof-scope error (a local htnorm hypothesis was referenced outside its tactic block) and strengthened the target residue from modulo 43008 to modulo 2048. The local Python/container runtimes returned tool-level ClientError; no full local Lean compile or axiom audit was possible, and no CI was dispatched. In particular, U5Q0OddOddFan.lean, U5Q0M16Residual.lean, and the W485 helper chain remain dependencies to compile against the unchanged original source. Keep this material in im-results/ until the complete import closure compiles and every exported axiom profile is checked.
 
 ## U5 second-cone Side lift: exact source parent fan (2026-11-16)
 
