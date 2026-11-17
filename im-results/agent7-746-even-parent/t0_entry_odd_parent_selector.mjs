@@ -79,7 +79,7 @@ function analyze(K, r) {
   // The proved bound is 2^q < 2K. Enumerate only q of the forced parity.
   const twoK = 2n * k;
   let qMax = -1n;
-  while (pow2(qMax + 1n) < twoK) qMax++;
+  while (16n * pow2(qMax + 1n) < 15n * (2n * k + 7n)) qMax++;
 
   const localIncomingParents = [];
   for (let q = epsilon; q <= qMax; q += 2n) {
