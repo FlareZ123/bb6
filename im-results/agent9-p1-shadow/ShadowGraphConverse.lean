@@ -41,7 +41,7 @@ theorem inverseAt_left_ge_two (b d t k c : Nat)
 
 private theorem self_add_one_le_two_pow (n : Nat) : n+1≤2^n := by
   induction n with
-  | zero => norm_num
+  | zero => decide
   | succ n ih =>
       rw [Nat.pow_succ]
       omega
@@ -56,7 +56,7 @@ private theorem three_mul_add4_le_two_pow (k : Nat) (hk : 4 ≤ k) :
         by_cases hbase : n+1=4
         · have hnEq : n=3 := by omega
           subst n
-          norm_num
+          decide
         · have hn4 : 4 ≤ n := by omega
           have hp := ih hn4
           rw [Nat.pow_succ]
@@ -95,7 +95,7 @@ private theorem width_forces_exponent (N L M : Nat)
     calc
       2^(N-M-3) ≤ 2^3 :=
         Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hKle
-      _ = 8 := by norm_num
+      _ = 8 := by decide
   have hlin : N-M-3+11 ≤ L+M := by omega
   omega
 
@@ -125,7 +125,7 @@ theorem shadow_encoded_left_properties
   have hprod : 28*2^(N-M) ≤ alpha*2^(N-m) := le_trans hprod1 hprod2
   have hpow16 : 2^(N-M)=16*2^(N-M-4) := by
     rw [show N-M=(N-M-4)+4 by omega, Nat.pow_add]
-    norm_num [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+    simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
   have hpow2 : 2^(N-M-3)=2*2^(N-M-4) := by
     rw [show N-M-3=(N-M-4)+1 by omega, Nat.pow_succ]
     simp [Nat.mul_comm]
@@ -136,8 +136,7 @@ theorem shadow_encoded_left_properties
       _ = 8*2^(N-M-4) := by rw [hpow2]; omega
   have hprodStrong : 448*2^(N-M-4) ≤ alpha*2^(N-m) := by
     rw [hpow16] at hprod
-    norm_num [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm] at hprod
-    exact hprod
+    simpa [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm] using hprod
   have hbStrong : 440*2^(N-M-4) ≤ b := by
     rw [←henc] at hprodStrong
     omega
@@ -242,7 +241,8 @@ theorem shadow_reach_lifts_to_odd_cone_of_width
             s+2*z = 2^(t+2)*Q := by simpa [s] using hQ
             _ = 2^t*(4*Q) := by
               rw [Nat.pow_add]
-              norm_num [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+              change (2^t * 4) * Q = 2^t * (4 * Q)
+              ac_rfl
         have h2 : 2^t∣2*z := by
           refine ⟨2*r, ?_⟩
           rw [hdiv]
@@ -261,7 +261,8 @@ theorem shadow_reach_lifts_to_odd_cone_of_width
           _ = 2^(t+2)*Q := by simpa [s] using hQ
           _ = 2^t*(4*Q) := by
             rw [Nat.pow_add]
-            norm_num [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+            change (2^t * 4) * Q = 2^t * (4 * Q)
+            ac_rfl
       have hpowPosT : 0<2^t := Nat.two_pow_pos t
       have hCeq : C+2*r=4*Q := Nat.mul_left_cancel hpowPosT hCfactor
       have hCdiv2 : 2∣C := by
