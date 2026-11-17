@@ -94,3 +94,62 @@ The source prelude splits again without any fitted arithmetic:
 - a fixed marker/boundary bridge of (3m+17) steps then places the D head at (h_1=h-(3a+m+5)).
 
 Thus the only parameter-dependent part of the prelude after the existing sweep is a small three-case ((m=0,1,2)) local trace. The outer `binDec L n` is then exposed directly to the existing H-run theorem.
+
+
+## Return/transfer postlude: finer exact decomposition
+
+Let (h_1=h-(3a+m+5)), the B-state head after the already formalized
+prelude plus outer binary H-run. The remaining source trajectory has the
+following parameterized decomposition:
+
+1. **Five-step marker exit:** from state B at (h_1+2), read four ones
+   followed by zero. The state sequence is B/F/D/B/F/E and the head ends
+   at (h_1+7).
+2. **E scan:** scan (3a+m+3) consecutive ones from (h_1+7), ending
+   in E at (h+5).
+3. **Two-step zero boundary:** the E/0 and A/0 moves write ones at
+   (h+5,h+6), ending in B at (h+7).
+4. **Counted B/F/D sweep:** scan (b+1) triples of ones, exactly
+   (3(b+1)) steps, ending in B at (h+3b+10). The per-triple output
+   is (001) in increasing tape coordinates.
+5. **Zero exit and fixed return:** B reads the zero at (h+3b+10),
+   writes one and moves left to state C at (h+3b+9); then a fixed
+   28-step trace ends in state D at (h+3b+5).
+
+The cost identity is exact:
+[
+5+(3a+m+3)+2+3(b+1)+1+28=3a+42+m+3b.
+]
+
+The fixed tail is now isolated in
+`OuterLCIncTail.lean`. Relative to its initial head (H+9), where
+(H=h+3b), its finite input has ones exactly at offsets
+({-3,0,1}). Its read/write window is ([-3,5]); the output is
+state D at offset (-4), with ones at offsets
+({-2,-1,0,3,4,5}). Crucially, offset (-4) is the final head cell
+but is **not** read or written, so the frame theorem preserves it. This
+is necessary: that cell is false when (b>0), but true when (b=0).
+
+The output of the tail on offsets (-3) through (5) is
+(011100111), exactly the target right word
+`s0RightFacing 0 = [0,1,1,1,0,0] ++ d1pow 1`. The preceding (b)
+left-facing d0 blocks are assembled from the first (b) B/F/D triples:
+each target d0 block uses the preceding boundary one (the E-zero cell
+for the first block, otherwise the previous triple's third cell) and
+the next triple's first two zero cells. The final triple is consumed by
+the fixed return tail.
+
+The remaining universal proof obligations are now sharply localized:
+- establish the five-step bridge's four-one/zero input from the three
+  marker-frame outputs;
+- prove the E-scan's (3a+m+3) one-run from the shifted unary block,
+  marker suffix, and original right 111;
+- lift the (b+1) B/F/D sweep and prove the (b)-block d0 prefix;
+- obtain the full `lbinDecHRunTape` output shape
+  `[1] ++ d0^r ++ d1` plus preserved exterior, then identify it with
+  `binDec L (n-1)` using `binDec_sub_one_carryPrefix`;
+- compose the finite tail frame and pointwise tape identities into the
+  complete `s1Config` endpoint.
+
+This decomposition is a proof plan, not yet a universal theorem. The
+2,400-case simulator remains computational evidence only.
