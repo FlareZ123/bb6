@@ -62,7 +62,7 @@ The upper inequality in (3) is equivalent to
 \[
 16p\left(c-\frac74\,2^a\right)\le(4K+8)2^a.
 \]
-If \(4c\le7\cdot2^a\), it holds immediately. If \(4c>7\cdot2^a\), integrality gives \(c-\frac74\,2^a\ge1/(4\cdot2^a)\), so the left side is at least \(4p/2^a\), which exceeds \((4K+8)2^a\) after the equivalent comparison \(p>(K+2)2^a\) for \(K\ge266\). Thus the upper inequality holds exactly when
+If \(4c\le7\cdot2^a\), it holds immediately. If \(4c>7\cdot2^a\), integrality gives \(c-\frac74\,2^a\ge1/4\), so the left side is at least \(4p\). This exceeds \((4K+8)2^a\), since \(2^a\le c<2K+7\) and \(p=2^K>(K+2)(2K+7)\) for \(K\ge266\). Thus the upper inequality holds exactly when
 \[
 \boxed{4(2K+7)\le7\cdot2^{\lfloor\log_2(2K+7)\rfloor}.}
 \tag{5}
