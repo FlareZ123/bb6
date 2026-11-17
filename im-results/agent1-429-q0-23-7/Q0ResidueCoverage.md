@@ -94,9 +94,9 @@ The next three inverses are forced F, because the successive second coordinates 
 \[
 P_3=(1+4m,\,4\pmod8),\qquad
 P_4=(2m-1,\,5\pmod8),\qquad
-P_5=(m-2,\,2m+4\pmod8).
+P_5=(m-2,\,6m+4\pmod8).
 \]
-For even \(m\), \(P_5\) has positive even first coordinate and second coordinate \(0\) or \(4\pmod8\), hence \(0\pmod4\). This already contradicts BB429LowOddMod8.rooted_even_parity (which requires \(2\pmod4\)); the stronger positive-even-eight theorem also suffices but is unnecessary for this four-sector extension. This gives the four additional candidate exclusions \(u\equiv4,6,12,14\pmod{16}\).
+For even \(m\), \(6m+4\equiv2m+4\pmod8\), so \(P_5\) has positive even first coordinate and second coordinate \(0\) or \(4\pmod8\), hence \(0\pmod4\). This already contradicts BB429LowOddMod8.rooted_even_parity (which requires \(2\pmod4\)); the stronger positive-even-eight theorem also suffices but is unnecessary for this four-sector extension. This gives the four additional candidate exclusions \(u\equiv4,6,12,14\pmod{16}\).
 
 Every discarded branch is rejected by Allowed; every retained predecessor is a genuine Reach predecessor by odd_back. The bound \(a>10^6\) comfortably supplies all lower bounds and positivity conditions. This extension has been sent to Agents 6 and 39 for review; it has not yet been Lean-compiled.
 
