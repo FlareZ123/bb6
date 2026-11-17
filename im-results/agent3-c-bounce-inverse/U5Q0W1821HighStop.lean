@@ -56,21 +56,6 @@ theorem u5_m8_t_mod2048_w1821 (w s m t : Nat)
     apply Nat.dvd_of_mod_eq_zero
     simpa [r] using hmodR
   obtain ⟨q,hq⟩ := hdivR
-  have hinv : 211*1883=1+2048*194 := by norm_num
-  have hconst :
-      1883*(1360+22155*1821)+427=2048*37095114 := by norm_num
-  have hEq :
-      r+2048*(194*r+37095114)=427+2048*(1883*q) := by
-    calc
-      r+2048*(194*r+37095114)
-          =(1+2048*194)*r+2048*37095114 := by ring
-      _ =(211*1883)*r+
-          1883*(1360+22155*1821)+427 := by
-            rw [hinv,hconst]
-            ring
-      _ =1883*(211*r+1360+22155*1821)+427 := by ring
-      _ =1883*(2048*q)+427 := by rw [hq]
-      _ =427+2048*(1883*q) := by ring
   have hrbound : r<2048 := by
     dsimp [r]
     exact Nat.mod_lt _ (by decide)
