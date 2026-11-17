@@ -416,7 +416,7 @@ theorem m1EvenValuationBridge_run (v : Nat) (T : Int → Bool) (h : Int)
   have hblank : Tright (h+1) = false := by rw [hfar1,hsetupRight1]
   have hExit := valuation_state5_exit1 Tright (h+1) hblank
   have hlinear : linearRightOnes (valuationExit1Tape Tright (h+1))
-      (h+2) 1 := by
+      (h+2) 3 := by
     intro i hi
     have hiCases : i=0 ∨ i=1 ∨ i=2 := by omega
     rcases hiCases with hi0 | hi1 | hi2
@@ -426,7 +426,7 @@ theorem m1EvenValuationBridge_run (v : Nat) (T : Int → Bool) (h : Int)
       simpa [valuationExit1Tape] using hfar3.trans hsetupRight3
     · subst i
       simpa [valuationExit1Tape] using hfar4.trans hsetupRight4
-  have hscan := E_scan (valuationExit1Tape Tright (h+1)) (h+2) 1 hlinear
+  have hscan := E_scan (valuationExit1Tape Tright (h+1)) (h+2) 3 hlinear
   have hleftRun := counted_left_sweep_from1 N T h h0 hon
   have hnum1 : 12*v+23 = 3*N + 7 + 3*(v+1) + 1 + 3 := by
     dsimp [N]
