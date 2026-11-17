@@ -234,7 +234,54 @@ theorem lbinDecHRunTape_rightPlus1
     rw [hcoord]
     simpa [lbinDecHRunTape,h',U,V] using hb.2.2
 
+
+private theorem sideBit_d1pow_true
+    (n i : Nat) (hi : i < 3*n) :
+    sideBit (d1pow n) i = true := by
+  induction n with
+  | zero =>
+      omega
+  | succ n ih =>
+      by_cases hsmall : i < 3
+      · interval_cases i <;> simp [d1pow,d1,sideBit]
+      · have htail : i-3 < 3*n := by omega
+        have hnot : ¬ i < d1.length := by simp [d1]; omega
+        have happ := sideBit_append_exact d1 (d1pow n) i
+        rw [d1pow, happ]
+        simp [hnot,d1,d1pow_length,ih (i-3) htail]
+
+/-- Convenient source-facing API: the complete input word itself supplies
+all three left-boundary facts needed by the counted H-run theorem. -/
+theorem lbinDecHRunTape_leftFacing_of_input
+    (n : Nat) (T : Int → Bool) (h : Int) (tail : List Bool)
+    (hr : T (h+1) = false)
+    (hleft : ∀ i, T (h-(i:Int)) =
+      sideBit (d1pow n ++ (d0 ++ tail)) i) :
+    ∀ i, lbinDecHRunTape n T h (h-(i:Int)) =
+      sideBit (d0pow n ++ (d1 ++ tail)) i := by
+  have hon : leftOnes T h (3*n) := by
+    intro i hi
+    rw [hleft i]
+    rw [sideBit_append_exact]
+    rw [d1pow_length]
+    simp [hi,sideBit_d1pow_true]
+  have h0 : T (h-(3*n:Int)) = false := by
+    have hx := hleft (3*n)
+    simpa [sideBit_append_exact,d1pow_length,d0] using hx
+  have hm1 : T (h-(3*n:Int)-1) = false := by
+    have hx := hleft (3*n+1)
+    have hcoord : h-(3*n:Int)-1 = h-((3*n+1):Int) := by omega
+    rw [hcoord]
+    simpa [sideBit_append_exact,d1pow_length,d0] using hx
+  have hthird : T (h-(3*n:Int)-2) = true := by
+    have hx := hleft (3*n+2)
+    have hcoord : h-(3*n:Int)-2 = h-((3*n+2):Int) := by omega
+    rw [hcoord]
+    simpa [sideBit_append_exact,d1pow_length,d0] using hx
+  exact lbinDecHRunTape_leftFacing n T h tail hon h0 hm1 hthird hr hleft
+
 #print axioms lbinDecHRunTape_leftFacing
+#print axioms lbinDecHRunTape_leftFacing_of_input
 #print axioms lbinDecHRunTape_rightPlus1
 
 end BB6Coverage.Agent24ChampionTime
