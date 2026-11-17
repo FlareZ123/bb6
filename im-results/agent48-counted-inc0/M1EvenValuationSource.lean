@@ -225,7 +225,6 @@ theorem m1EvenValuation_q4_prefix_run
       (len+1+v) ((2*q+1)*2^v) 1 a 0 b h i
     have hside : sideBit
         (d1pow a ++ markerWord 1 ++ d0 ++ d1pow v ++ d0 ++ tail) i = true := by
-      rw [← henc]
       by_cases hi3 : i < 3*a
       · have hlen : i < (d1pow a).length := by
           simpa [d1pow_length] using hi3
@@ -239,7 +238,10 @@ theorem m1EvenValuation_q4_prefix_run
           (markerWord 1 ++ d0 ++ d1pow v ++ d0 ++ tail) (3*a)
           (by simpa [hlen])]
         simp [markerWord,sideBit]
-    simpa [T,hside] using hcell
+    have hcell' : T (h-((i:Nat):Int)) =
+        sideBit (d1pow a ++ markerWord 1 ++ d0 ++ d1pow v ++ d0 ++ tail) i := by
+      simpa [T,henc] using hcell
+    exact hcell'.trans hside
   have hright : T (h+1) = false := by
     have hc := m1EvenValuationRightCell len q v a b h 0
     simpa [s0RightFacing,sideBit] using hc
@@ -264,7 +266,7 @@ theorem m1EvenValuation_q4_prefix_run
   have hpreLeftAll := fun i => m1EvenValuationPreludeLeftAt len q v a b h i hq
   have hstate1Head : P hN = false := by
     have hh := hpreLeftAll 0
-    simpa [P,hN,sideBit,m1EvenValuationPreludeLeft] using hh
+    simpa [P,hN,N0,T,T1,sideBit,m1EvenValuationPreludeLeft] using hh
   have hstate1Ones : state1LeftOnes P hN (3*(v+1)+1) := by
     intro i hi
     have hh := hpreLeftAll (i+1)
@@ -283,12 +285,15 @@ theorem m1EvenValuation_q4_prefix_run
         have hs := sideBit_append_after_local
           [false,true,true,true,true]
           (d1pow v ++ d0 ++ tail) (i+1) (by simp; omega)
+        change sideBit
+          ([false,true,true,true,true] ++ (d1pow v ++ d0 ++ tail))
+          (i+1) = true
         rw [hs]
         exact sideBit_d1pow_true v (i+1-5) htail
-    simpa [P,hN] using hh.trans hbit
+    simpa [P,hN,N0,T,T1] using hh.trans hbit
   have hzero1 : P (hN-((3*(v+1)+2:Nat):Int)) = false := by
     have hh := hpreLeftAll (3*(v+1)+2)
-    simpa [P,hN,m1EvenValuationPreludeLeft,sideBit,d0,d1pow_length,
+    simpa [P,hN,N0,T,T1,m1EvenValuationPreludeLeft,sideBit,d0,d1pow_length,
       List.append_assoc] using hh
   have hzero2 : P (hN-((3*(v+1)+3:Nat):Int)) = false := by
     have hh := hpreLeftAll (3*(v+1)+3)
