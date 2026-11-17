@@ -96,7 +96,7 @@ P_3=(1+4m,\,4\pmod8),\qquad
 P_4=(2m-1,\,5\pmod8),\qquad
 P_5=(m-2,\,2m+4\pmod8).
 \]
-For even \(m\), \(P_5\) has positive even first coordinate and second coordinate \(0\) or \(4\pmod8\), contradicting rooted_positive_even_eight (which requires \(2\pmod8\)). This gives the four additional candidate exclusions \(u\equiv4,6,12,14\pmod{16}\).
+For even \(m\), \(P_5\) has positive even first coordinate and second coordinate \(0\) or \(4\pmod8\), hence \(0\pmod4\). This already contradicts BB429LowOddMod8.rooted_even_parity (which requires \(2\pmod4\)); the stronger positive-even-eight theorem also suffices but is unnecessary for this four-sector extension. This gives the four additional candidate exclusions \(u\equiv4,6,12,14\pmod{16}\).
 
 Every discarded branch is rejected by Allowed; every retained predecessor is a genuine Reach predecessor by odd_back. The bound \(a>10^6\) comfortably supplies all lower bounds and positivity conditions. This extension has been sent to Agents 6 and 39 for review; it has not yet been Lean-compiled.
 
@@ -112,7 +112,7 @@ The FSFE block is only one candidate branch: its competing F sibling at each S s
 
 ## Evidence boundary and next work
 
-- The all-time source-equivalent root invariants Allowed and rooted_positive_even_eight have prior source-check history in the repository.
+- The all-time source-equivalent root invariants Allowed, rooted_even_parity, and rooted_positive_even_eight have prior source-check history in the repository. The four even sectors need only the weaker rooted_even_parity theorem, already imported by Agent 1's BB429Q0Row237.lean.
 - The six odd sectors and four even sectors above are not yet integrated into one Lean module with the full unchanged dependency closure.
 - No local Lean compile or new CI run was possible during this review; do not call the ten-sector coverage source-certified.
 - Next: have Agent 6/39 independently check and compile the even-sector extension; integrate the six+four proof modules against the actual BB429NewResidue and BB429RootEven8 imports; then attack the six remaining \(u\bmod16\) classes without fixed-depth simulation. Prioritize \(u\equiv3\pmod{16}\) separately from the unbounded \(u\equiv9\pmod{16}\) valuation branch.
