@@ -184,3 +184,6 @@ existing manual source-check workflow now also runs this simulator.
 ## Valuation-uniform M0-even 8q extension (experimental)
 
 A new probe suggests the q-odd restriction in `M0EvenEightGenericSource.lean` can be removed: for `t=v2(q)`, the same q4 interface appears after `60+12a+12t` steps. The experiment checks 288 exact finite-support cases and decomposes the extra cost into a 9t-step left zero-bubble plus a 12+3t-step right d1-block scan. This is not yet a Lean theorem; the complete statement, proof route, limitations, and probe are in [M0EvenEightValuationExtension.md](M0EvenEightValuationExtension.md) and [m0_even_eight_valuation_probe.js](m0_even_eight_valuation_probe.js).
+
+
+The companion Lean helper candidate `M0EvenEightValuationMacros.lean` adds the state-1 right d1-block scan and final `101` boundary; it remains uncompiled pending Agent6's local preflight. The existing S1Encoder `binDec_carryPrefix`, `binDec_sub_one_carryPrefix`, `exists_odd_factor_bounded`, and CountedReset `v2_odd_factor` already supply the binary and valuation identities for the generalization.

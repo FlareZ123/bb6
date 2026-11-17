@@ -105,3 +105,8 @@ This is bounded computational evidence only. It does not prove the generalized t
 8. Reuse the q4 suffix and counted-drain theorems. Prove `v2 (8*q) = 3 + v2 q` for (q>0) to recover the existing reset-cost definition.
 
 The 44-step prefix, left zero-bubble, four-step exit, right d1-block scan, and final `101` boundary are the only new bridge components. The existing q-odd source theorem remains valid and should not be removed until the generalized Lean proof compiles and its transitive axiom profile is inspected.
+
+
+## Lean helper candidate
+
+`M0EvenEightValuationMacros.lean` now contains candidate source lemmas for the state-1 right d1-block scan (`111 -> 001`), its n-block iteration, and the final `101` boundary. It is uncompiled. Agent6 has been asked to locally preflight this leaf and report its axiom profile.
