@@ -34,7 +34,7 @@ The 16 values are:
 | 14 | 29 | excluded by Agent 1 even-sector extension |
 | 15 | 5 | excluded by Agent 6 six-sector tree |
 
-Thus the current paper-level candidate reductions cover ten entire \(u\bmod16\) classes. Four additional \(u\bmod64\) cylinders inside the open classes 2 and 8 are excluded below, giving 44 of 64 residue classes (density 11/16). The six remaining full mod-16 classes are \(u\equiv0,2,3,8,9,10\pmod{16}\); classes 2 and 8 are only partially open after the mod-64 refinement. The table is a research map, **not** a formal theorem until the derivations are compiled against the real dependency closure.
+Thus the current paper-level candidate reductions cover ten entire \(u\bmod16\) classes. Nine additional \(u\bmod64\) cylinders inside the open even classes are excluded below, giving 49 of 64 residue classes (density 49/64). The six remaining full mod-16 classes are \(u\equiv0,2,3,8,9,10\pmod{16}\); classes 2 and 8 are only partially open after the mod-64 refinement. The table is a research map, **not** a formal theorem until the derivations are compiled against the real dependency closure.
 
 ## Six odd-u sectors (Agent 6)
 
@@ -122,6 +122,52 @@ In these two classes, \(P_5\) is odd with second coordinate \(2\pmod8\). Its F p
 | 56 | 10 | (19,28) | Allowed fails: first 3 mod8, second 0 mod4 |
 
 Therefore the four cylinders \(u\equiv18,34,40,56\pmod{64}\) are additionally excluded. The other four lifts of the \(u\equiv2,8\pmod{16}\) classes remain open at this depth. This raises the paper-level residue coverage to 44/64, or 11/16. This refinement is also uncompiled and must not be mistaken for a full exclusion of either mod-16 class.
+
+## Five more mod-64 cylinders inside the open classes \(u=0,10\pmod{16}\)
+
+The surviving odd branch after \(P_5\) in the \(u\equiv0,10\pmod{16}\) cases can be followed two more forced F inverses.
+
+For \(u\equiv0\pmod{16}\), \(k\equiv6\pmod8\) is even and
+\[
+P_5=((5k-4)/2,20+59k).
+\]
+Its S parent is positive even with second coordinate \(1\pmod4\), so rooted_even_parity excludes it. The F parent is
+\[
+P_6=((5k-10)/4,(36+123k)/2),
+\]
+odd with second coordinate \(3\pmod4\), so F is forced again:
+\[
+P_7=((5k-22)/8,(62+251k)/4).
+\]
+The four lifts give:
+- \(u\equiv0\): \(k=30\), \(P_7=(16,10)\pmod{32}\), survives this depth;
+- \(u\equiv16\): \(k=6\), \(P_7=(1,8)\pmod{32}\), survives this depth;
+- \(u\equiv32\): \(k=14\), \(P_7=(6,30)\pmod{32}\), positive even first with second 6 mod8, impossible;
+- \(u\equiv48\): \(k=22\), \(P_7=(11,20)\pmod{32}\), violates Allowed (first 3 mod8, second 0 mod4).
+
+For \(u\equiv10\pmod{16}\), \(k\equiv7\pmod8\) is odd and
+\[
+P_5=((k-5)/2,29+63k).
+\]
+Its S parent is again positive even with second coordinate \(1\pmod4\), so rooted_even_parity excludes it. The F parent is
+\[
+P_6=((k-11)/4,(53+127k)/2),
+\]
+odd with second coordinate \(3\pmod4\), so F is forced:
+\[
+P_7=((k-23)/8,(95+255k)/4).
+\]
+The four lifts give:
+- \(u\equiv10\): \(k=15\), \(P_7=(31,20)\pmod{32}\), violates Allowed (first 7 mod8, second 0 mod4);
+- \(u\equiv26\): \(k=7\), \(P_7=(30,22)\pmod{32}\), positive even first with second 6 mod8, impossible;
+- \(u\equiv42\): \(k=31\), \(P_7=(1,16)\pmod{32}\), survives this depth;
+- \(u\equiv58\): \(k=7\), \(P_7=(30,22)\pmod{32}\), positive even first with second 6 mod8, impossible.
+
+The additional excluded cylinders are \(u\equiv10,26,32,48,58\pmod{64}\). Combined with the previous four mod-64 exclusions and the ten complete mod-16 classes, this gives 49/64 residue classes excluded at the paper level. The 15 remaining mod-64 residues are
+\[
+0,2,3,8,9,16,19,24,25,35,41,42,50,51,57.
+\]
+This is not a full q0 proof; the surviving lifts remain open and the derivation is uncompiled.
 
 ## Relation to the 2-adic FSFE block
 
