@@ -377,4 +377,266 @@ theorem outerLCIncAfterSweep_blank
     (h+3*b+10+(j:Int)) (by omega)]
   exact hblank j
 
+
+/-- Given the source-side left run and right suffix, all six local
+hypotheses of the generic postlude theorem follow uniformly in a,m,b,r.
+The proof is by source-word decomposition and the exact sweep/frame
+lemmas, not by finite parameter enumeration. -/
+theorem outerLCInc_source_postlude_conditions
+    (T : Int → Bool) (h : Int) (a m b r : Nat)
+    (hm : m < 3)
+    (hleft : leftOnes T h (3*a))
+    (h111 : T (h+2) = true ∧ T (h+3) = true ∧ T (h+4) = true)
+    (hzero12 : T (h+5) = false ∧ T (h+6) = false)
+    (hrun : rightOnes T (h+7) (b+1))
+    (hblank : ∀ j : Nat, T (h+3*b+10+j) = false) :
+    (∀ x, outerLCIncFiveInside x = true →
+      outerLCIncSourceT3 T h a m r (outerLCIncH1 h a m+2+x) =
+        decide (x ∈ outerLCIncFiveStart.marked)) ∧
+    linearRightOnes
+      (outerLCIncAfterFive (outerLCIncSourceT3 T h a m r) h a m)
+      (outerLCIncH1 h a m+7) (3*a+m+3) ∧
+    ((outerLCIncAfterFive (outerLCIncSourceT3 T h a m r) h a m) (h+5) = false ∧
+      (outerLCIncAfterFive (outerLCIncSourceT3 T h a m r) h a m) (h+6) = false) ∧
+    rightOnes
+      (outerLCIncAfterZero (outerLCIncSourceT3 T h a m r) h a m)
+      (h+7) (b+1) ∧
+    (outerLCIncAfterSweep (outerLCIncSourceT3 T h a m r) h a m b)
+      (h+3*b+10) = false ∧
+    (∀ x, outerLCIncTailInside x = true →
+      (outerLCIncAfterZeroExit (outerLCIncSourceT3 T h a m r) h a m b)
+        (h+3*b+9+x) = decide (x ∈ outerLCIncTailStart.marked)) := by
+  let T1 := outerLCIncSourceT1 T h a
+  let T2 := outerLCIncSourceT2 T h a m
+  let T3 := outerLCIncSourceT3 T h a m r
+  let h0 : Int := h-(3*a:Int)
+  let h1 : Int := outerLCIncH1 h a m
+  have hT3T2 (x : Int) (hx : h1+2 ≤ x) : T3 x = T2 x := by
+    exact lbinDecHRunTape_preserves_right r T2 h1 x hx
+  have hT2T1 (x : Int) (hx : h0+1 < x) : T2 x = T1 x := by
+    exact markerBridgeFrameOut_preserves_right m T1 h0 x hx
+  have hT3source (x : Int) (hx : h+1 < x) : T3 x = T x := by
+    exact outerLCIncSourceT3_preserves_right T h a m r x hx
+  have hfive :
+      ∀ x, outerLCIncFiveInside x = true →
+        T3 (h1+2+x) = decide (x ∈ outerLCIncFiveStart.marked) := by
+    intro x hx
+    have hxrange : 0 ≤ x ∧ x ≤ 4 := by
+      simpa [outerLCIncFiveInside] using hx
+    have hj : (x.toNat:Int) = x :=
+      Int.toNat_of_nonneg hxrange.1
+    have hcoord : h1+2+x = h0-(m+3:Int)+(x.toNat:Int) := by
+      dsimp [h1, outerLCIncH1, h0]
+      omega
+    calc
+      T3 (h1+2+x) = T2 (h1+2+x) :=
+        hT3T2 _ (by dsimp [h1, outerLCIncH1]; omega)
+      _ = T2 (h0-(m+3:Int)+(x.toNat:Int)) := by rw [hcoord]
+      _ = decide (x.toNat < 4) :=
+        markerBridgeFrameOut_five m hm T1 h0 x.toNat (by omega)
+      _ = decide (x ∈ outerLCIncFiveStart.marked) := by
+        simp [outerLCIncFiveStart, hj]
+  have hscan :
+      linearRightOnes (outerLCIncAfterFive T3 h a m)
+        (h1+7) (3*a+m+3) := by
+    intro i hi
+    have hframe :
+        outerLCIncAfterFive T3 h a m (h1+7+(i:Int)) =
+          T3 (h1+7+(i:Int)) :=
+      outerLCIncAfterFive_preserves_right T3 h a m _ (by omega)
+    rw [hframe]
+    by_cases him : i < m
+    · have hmark := markerBridgeFrameOut_trailing m hm T1 h0 i him
+      have hcoord : h1+7+(i:Int) = h0-(m:Int)+2+(i:Int) := by
+        dsimp [h1, outerLCIncH1, h0]
+        omega
+      calc
+        T3 (h1+7+(i:Int)) = T2 (h1+7+(i:Int)) :=
+          hT3T2 _ (by dsimp [h1, outerLCIncH1]; omega)
+        _ = T2 (h0-(m:Int)+2+(i:Int)) := by rw [hcoord]
+        _ = true := hmark
+    · by_cases hia : i < m+3*a
+      · let j := i-m
+        have hj : j < 3*a := by dsimp [j]; omega
+        have hcoord : h1+7+(i:Int) = h0+2+(j:Int) := by
+          dsimp [h1, outerLCIncH1, h0, j]
+          omega
+        calc
+          T3 (h1+7+(i:Int)) = T2 (h1+7+(i:Int)) :=
+            hT3T2 _ (by dsimp [h1, outerLCIncH1]; omega)
+          _ = T2 (h0+2+(j:Int)) := by rw [hcoord]
+          _ = T1 (h0+2+(j:Int)) :=
+            hT2T1 _ (by dsimp [h0]; omega)
+          _ = true :=
+            sweptLeft_shifted_block (3*a) T h hleft j hj
+      · let k := i-(m+3*a)
+        have hk : k < 3 := by dsimp [k]; omega
+        have hcoord : h1+7+(i:Int) = h+2+(k:Int) := by
+          dsimp [h1, outerLCIncH1, k]
+          omega
+        have hcell : T (h+2+(k:Int)) = true := by
+          interval_cases k
+          · simpa using h111.1
+          · simpa using h111.2.1
+          · simpa using h111.2.2
+        calc
+          T3 (h1+7+(i:Int)) = T (h+2+(k:Int)) := by
+            rw [hcoord]
+            exact hT3source _ (by omega)
+          _ = true := hcell
+  have hzero :
+      (outerLCIncAfterFive T3 h a m) (h+5) = false ∧
+      (outerLCIncAfterFive T3 h a m) (h+6) = false := by
+    constructor
+    · calc
+        outerLCIncAfterFive T3 h a m (h+5) = T3 (h+5) :=
+          outerLCIncAfterFive_preserves_right T3 h a m _ (by
+            dsimp [h1, outerLCIncH1]
+            omega)
+        _ = T (h+5) := hT3source (h+5) (by omega)
+        _ = false := hzero12.1
+    · calc
+        outerLCIncAfterFive T3 h a m (h+6) = T3 (h+6) :=
+          outerLCIncAfterFive_preserves_right T3 h a m _ (by
+            dsimp [h1, outerLCIncH1]
+            omega)
+        _ = T (h+6) := hT3source (h+6) (by omega)
+        _ = false := hzero12.2
+  have hright' :
+      rightOnes (outerLCIncAfterZero T3 h a m) (h+7) (b+1) := by
+    intro i hi
+    obtain ⟨hi0,hi1,hi2⟩ := hrun i hi
+    refine ⟨?_, ?_, ?_⟩
+    · calc
+        outerLCIncAfterZero T3 h a m (h+7+3*(i:Int)) =
+            outerLCIncAfterFive T3 h a m (h+7+3*(i:Int)) :=
+          outerLCIncAfterZero_preserves_right T3 h a m _ (by omega)
+        _ = T3 (h+7+3*(i:Int)) :=
+          outerLCIncAfterFive_preserves_right T3 h a m _ (by
+            dsimp [h1, outerLCIncH1]
+            omega)
+        _ = T (h+7+3*(i:Int)) := hT3source _ (by omega)
+        _ = true := hi0
+    · calc
+        outerLCIncAfterZero T3 h a m (h+7+3*(i:Int)+1) =
+            outerLCIncAfterFive T3 h a m (h+7+3*(i:Int)+1) :=
+          outerLCIncAfterZero_preserves_right T3 h a m _ (by omega)
+        _ = T3 (h+7+3*(i:Int)+1) :=
+          outerLCIncAfterFive_preserves_right T3 h a m _ (by
+            dsimp [h1, outerLCIncH1]
+            omega)
+        _ = T (h+7+3*(i:Int)+1) := hT3source _ (by omega)
+        _ = true := hi1
+    · calc
+        outerLCIncAfterZero T3 h a m (h+7+3*(i:Int)+2) =
+            outerLCIncAfterFive T3 h a m (h+7+3*(i:Int)+2) :=
+          outerLCIncAfterZero_preserves_right T3 h a m _ (by omega)
+        _ = T3 (h+7+3*(i:Int)+2) :=
+          outerLCIncAfterFive_preserves_right T3 h a m _ (by
+            dsimp [h1, outerLCIncH1]
+            omega)
+        _ = T (h+7+3*(i:Int)+2) := hT3source _ (by omega)
+        _ = true := hi2
+  have hzeroExit :
+      outerLCIncAfterSweep T3 h a m b (h+3*b+10) = false := by
+    calc
+      outerLCIncAfterSweep T3 h a m b (h+3*b+10) =
+          outerLCIncAfterZero T3 h a m (h+3*b+10) := by
+            unfold outerLCIncAfterSweep
+            exact sweptRightB_preserves_right (b+1)
+              (outerLCIncAfterZero T3 h a m) (h+7)
+              (h+3*b+10) (by omega)
+      _ = outerLCIncAfterFive T3 h a m (h+3*b+10) :=
+        outerLCIncAfterZero_preserves_right T3 h a m _ (by omega)
+      _ = T3 (h+3*b+10) :=
+        outerLCIncAfterFive_preserves_right T3 h a m _ (by
+          dsimp [h1, outerLCIncH1]
+          omega)
+      _ = T (h+3*b+10) := hT3source _ (by omega)
+      _ = false := hblank 0
+  have hpat := outerLCIncAfterSweep_tailPattern T h a m b hright'
+  have h6 :
+      outerLCIncAfterZeroExit T3 h a m b (h+3*b+6) = true := by
+    rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
+    exact hpat.1
+  have h7 :
+      outerLCIncAfterZeroExit T3 h a m b (h+3*b+7) = false := by
+    rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
+    exact hpat.2.1
+  have h8 :
+      outerLCIncAfterZeroExit T3 h a m b (h+3*b+8) = false := by
+    rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
+    exact hpat.2.2.1
+  have h9 :
+      outerLCIncAfterZeroExit T3 h a m b (h+3*b+9) = true := by
+    rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
+    exact hpat.2.2.2
+  have h10 :
+      outerLCIncAfterZeroExit T3 h a m b (h+3*b+10) = true :=
+    outerLCIncAfterZeroExit_one T3 h a m b
+  have h11 :
+      outerLCIncAfterZeroExit T3 h a m b (h+3*b+11) = false := by
+    rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
+    exact outerLCIncAfterSweep_blank T h a m b r 1 hblank
+  have h12 :
+      outerLCIncAfterZeroExit T3 h a m b (h+3*b+12) = false := by
+    rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
+    exact outerLCIncAfterSweep_blank T h a m b r 2 hblank
+  have h13 :
+      outerLCIncAfterZeroExit T3 h a m b (h+3*b+13) = false := by
+    rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
+    exact outerLCIncAfterSweep_blank T h a m b r 3 hblank
+  have h14 :
+      outerLCIncAfterZeroExit T3 h a m b (h+3*b+14) = false := by
+    rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
+    exact outerLCIncAfterSweep_blank T h a m b r 4 hblank
+  have htail :
+      ∀ x, outerLCIncTailInside x = true →
+        outerLCIncAfterZeroExit T3 h a m b (h+3*b+9+x) =
+          decide (x ∈ outerLCIncTailStart.marked) := by
+    intro x hx
+    have hxrange : -3 ≤ x ∧ x ≤ 5 := by
+      simpa [outerLCIncTailInside] using hx
+    have hcases : x = -3 ∨ x = -2 ∨ x = -1 ∨ x = 0 ∨
+        x = 1 ∨ x = 2 ∨ x = 3 ∨ x = 4 ∨ x = 5 := by omega
+    rcases hcases with hcase | hcase | hcase | hcase | hcase |
+      hcase | hcase | hcase | hcase
+    · rw [hcase]
+      have hcoord : h+3*b+9+(-3:Int) = h+3*b+6 := by omega
+      rw [hcoord]
+      simpa [outerLCIncTailStart] using h6
+    · rw [hcase]
+      have hcoord : h+3*b+9+(-2:Int) = h+3*b+7 := by omega
+      rw [hcoord]
+      simpa [outerLCIncTailStart] using h7
+    · rw [hcase]
+      have hcoord : h+3*b+9+(-1:Int) = h+3*b+8 := by omega
+      rw [hcoord]
+      simpa [outerLCIncTailStart] using h8
+    · rw [hcase]
+      have hcoord : h+3*b+9+(0:Int) = h+3*b+9 := by omega
+      rw [hcoord]
+      simpa [outerLCIncTailStart] using h9
+    · rw [hcase]
+      have hcoord : h+3*b+9+(1:Int) = h+3*b+10 := by omega
+      rw [hcoord]
+      simpa [outerLCIncTailStart] using h10
+    · rw [hcase]
+      have hcoord : h+3*b+9+(2:Int) = h+3*b+11 := by omega
+      rw [hcoord]
+      simpa [outerLCIncTailStart] using h11
+    · rw [hcase]
+      have hcoord : h+3*b+9+(3:Int) = h+3*b+12 := by omega
+      rw [hcoord]
+      simpa [outerLCIncTailStart] using h12
+    · rw [hcase]
+      have hcoord : h+3*b+9+(4:Int) = h+3*b+13 := by omega
+      rw [hcoord]
+      simpa [outerLCIncTailStart] using h13
+    · rw [hcase]
+      have hcoord : h+3*b+9+(5:Int) = h+3*b+14 := by omega
+      rw [hcoord]
+      simpa [outerLCIncTailStart] using h14
+  exact ⟨hfive, hscan, hzero, hright', hzeroExit, htail⟩
+
 end BB6Coverage.Agent42OuterLCInc
