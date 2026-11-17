@@ -33,13 +33,23 @@ def is_standard(module: str) -> bool:
     return any(module == p or module.startswith(p + ".") for p in STANDARD_PREFIXES)
 
 
-def module_index() -> dict[str, list[Path]]:
+def module_index(extra_roots: list[Path] | None = None) -> dict[str, list[Path]]:
     found: dict[str, list[Path]] = defaultdict(list)
-    for path in ROOT.rglob("*.lean"):
-        if any(part in {".git", ".lake", "build", "dist"} for part in path.parts):
-            continue
-        found[path.stem].append(path)
+    for search_root in [ROOT, *(extra_roots or [])]:
+        if not search_root.is_dir():
+            raise FileNotFoundError(f"Lean source root does not exist: {search_root}")
+        for path in search_root.rglob("*.lean"):
+            if any(part in {".git", ".lake", "build", "dist"} for part in path.parts):
+                continue
+            found[path.stem].append(path)
     return found
+
+
+def display_source(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
 
 
 def resolve_source(module: str, index: dict[str, list[Path]]) -> Path:
@@ -73,8 +83,14 @@ def parse_imports(path: Path) -> list[str]:
     return imports
 
 
-def compile_closure(roots: list[Path], workdir: Path, jobs: int, lean: str) -> None:
-    index = module_index()
+def compile_closure(
+    roots: list[Path],
+    workdir: Path,
+    jobs: int,
+    lean: str,
+    extra_source_roots: list[Path] | None = None,
+) -> None:
+    index = module_index(extra_source_roots)
     sources: dict[str, Path] = {}
     graph: dict[str, list[str]] = {}
     visiting: list[str] = []
@@ -116,7 +132,7 @@ def compile_closure(roots: list[Path], workdir: Path, jobs: int, lean: str) -> N
     def compile_one(module: str) -> tuple[str, int]:
         target = workdir / (module.replace(".", "/") + ".lean")
         olean = workdir / (module.replace(".", "/") + ".olean")
-        print(f"[lean-closure] compiling {module} <- {sources[module].relative_to(ROOT)}", flush=True)
+        print(f"[lean-closure] compiling {module} <- {display_source(sources[module])}", flush=True)
         result = subprocess.run(
             [lean, "-o", str(olean), str(target)],
             cwd=workdir,
@@ -162,6 +178,8 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("roots", nargs="+", help="root .lean source paths")
     parser.add_argument("--workdir", default="/tmp/lean-closure")
+    parser.add_argument("--source-root", action="append", default=[], metavar="DIR",
+                        help="additional directory containing reconstructed Lean source files")
     parser.add_argument("--jobs", type=int, default=8)
     parser.add_argument("--lean", default="lean")
     parser.add_argument(
@@ -184,7 +202,14 @@ def main() -> int:
         if not root.is_file():
             parser.error(f"root source does not exist: {root}")
     try:
-        compile_closure(roots, Path(args.workdir).resolve(), max(1, args.jobs), args.lean)
+        extra_roots = [Path(p).resolve() for p in args.source_root]
+        compile_closure(
+            roots,
+            Path(args.workdir).resolve(),
+            max(1, args.jobs),
+            args.lean,
+            extra_roots,
+        )
     except Exception as exc:
         print(f"[lean-closure] ERROR: {exc}", file=sys.stderr, flush=True)
         return 1
