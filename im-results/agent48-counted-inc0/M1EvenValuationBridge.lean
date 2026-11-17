@@ -220,7 +220,7 @@ theorem state1SweptLeft_block (n : Nat) (T : Int → Bool) (h : Int)
       · subst i
         have hpres := state1SweptLeft_preserves_right
           n (holeLeft T h) (h-1) h (by omega)
-        have hcoord : h = (h-1)-(n:Int)+1+(n:Int) := by omega
+        have hcoord : h-(n+1:Int)+1+(n:Int) = (h-1)-(n:Int)+1+(n:Int) := by omega
         rw [state1SweptLeft, hcoord, hpres]
         simp [holeLeft]
       · have hi' : i < n := by omega
@@ -387,6 +387,7 @@ theorem m1EvenValuationBridge_run (v : Nat) (T : Int → Bool) (h : Int)
   have hrightEnd : x+1+(3*(v+1):Int) = h+1 := by
     dsimp [x,N]
     omega
+  rw [hrightEnd] at hrightRun
   have hfar1 : Tright (h+1) = Tsetup (h+1) := by
     dsimp [Tright]
     rw [state5SweptRight_preserves_far_right (v+1) Tsetup (x+1)
@@ -462,7 +463,7 @@ theorem m1EvenValuationBridge_run (v : Nat) (T : Int → Bool) (h : Int)
       simpa [valuationExit1Tape] using hfar4.trans hsetupRight4
   have hscan := E_scan (valuationExit1Tape Tright (h+1)) (h+2) 3 hlinear
   have hleftRun := counted_left_sweep_from1 N T h h0 hon
-  have hnum1 : 12*v+23 = 3*N + 7 + 3*(v+1) + 1 + 3 := by
+  have hnum1 : 12*v+23 = 3*N + (7 + (3*(v+1) + (1+3))) := by
     dsimp [N]
     omega
   rw [hnum1, run_append, hleftRun]
