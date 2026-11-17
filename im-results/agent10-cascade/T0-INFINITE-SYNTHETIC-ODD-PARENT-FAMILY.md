@@ -14,9 +14,9 @@ For every member of this family:
 2. \(E\) has exactly one odd \(\operatorname{ResetParent}\), namely \(h'\) at level \(L=K-1\).
 3. \(h'\) has no \(\operatorname{ResetParent}\) of either parity.
 
-Thus \(E\) is not reachable from the blank reset root. The associated t=0 fatal tail cannot occur on the blank-root trajectory. This excludes an infinite subfamily of candidate fatal histories, not all possible halting histories of machine #746.
+Thus \(E\) is not reachable from the blank reset root. Its associated t=0 fatal tail cannot occur on the blank-root trajectory. This excludes an infinite subfamily of candidate fatal histories, not all possible halting histories of machine #746.
 
-The proof uses the exact two-arm \(\operatorname{ResetParent}\) definition in [FirstInverseComplete.lean](FirstInverseComplete.lean) and the root-chain equivalence in [ResetChain.lean](ResetChain.lean). It does **not** rely on the still-uncompiled t=0 even-parent branch draft.
+The interval was widened from the initial construction to \([38/25,31/20]\) after an independent sharpening by Agent 7. The proof uses the exact two-arm \(\operatorname{ResetParent}\) definition in [FirstInverseComplete.lean](FirstInverseComplete.lean) and the root-chain equivalence in [ResetChain.lean](ResetChain.lean). It does **not** rely on the still-uncompiled t=0 even-parent branch draft.
 
 ## Infinite parameter family and fatal source
 
@@ -24,10 +24,10 @@ Take
 \[
 a=18n\quad(n\ge1),\qquad K\equiv38\pmod{54},
 \qquad
-\frac{309}{200}\le x:=\frac{2K+7}{2^a}\le\frac{31}{20}.
+\frac{38}{25}\le x:=\frac{2K+7}{2^a}\le\frac{31}{20}.
 \tag{1}
 \]
-For each \(a=18n\), the eligible \(K\)-interval has length \(2^a/400>54\), so it contains an integer in the residue class \(38\bmod54\). Hence infinitely many pairs \((a,K)\) exist. They all have \(K\ge266\).
+For each \(a=18n\), the eligible \(K\)-interval has length \(3\cdot2^a/200>54\), so it contains an integer in the residue class \(38\bmod54\). Hence infinitely many pairs \((a,K)\) exist. They all have \(K\ge266\).
 
 Put
 \[
@@ -66,7 +66,7 @@ Moreover, (3) is exactly the t=0 adjacent-fatal identity:
 \frac{B_0}{2}=2^{r+1}(4K+14).
 \tag{4}
 \]
-Thus \(E\) is one of the t=0 fatal-source candidates: its odd child has the prescribed same-level even deficit \(2^r(4K+14)\), followed by the fatal even exit.
+Thus \(E\) is a t=0 fatal-source candidate: its odd child has the prescribed same-level even deficit \(2^r(4K+14)\), followed by the fatal even exit.
 
 ## Exact odd parent of E
 
@@ -130,9 +130,10 @@ From (2),
 \frac{E}{p}
 =8-\frac{16}{3}(x-1)+\frac{K-1}{3p}.
 \]
-The interval (1) gives
+The interval (1), together with \(K-1<p/4\), gives
 \[
-5<\frac{E}{p}<\frac{407}{75}<\frac{11}{2}.
+5<\frac{E}{p}<\frac{392}{75}+\frac1{12}
+=\frac{531}{100}<\frac{11}{2}.
 \tag{9}
 \]
 An even parent at level \(j\) would require
@@ -150,35 +151,24 @@ h'=2P-8\cdot2^L-L-5\equiv0\pmod3.
 \]
 Every odd-parent output \(u\) satisfies \(2u+5=3^{t+1}d\), hence \(u\equiv2\bmod3\). Equation (10) therefore excludes every odd parent of \(h'\).
 
-For even parents, put
+For even parents, (6) and (8) simplify to
 \[
-\epsilon=\frac{2K+13}{p},\qquad
-\eta=\frac{L+5}{2^L}.
-\]
-Equations (6) and (8) yield
-\[
-\frac{h'}{2^L}
-=\frac{248-128x+4\epsilon}{9}-\eta.
+\frac{h'}p
+=\frac{124-64x-(5K+10)/p}{9}.
 \tag{11}
 \]
-For \(K\ge266\), \(\epsilon<1/100\) and \(\eta<1/100\). Using (1) in (11),
+For \(K\ge266\), \(5K+10<p\). Using (1) in (11),
 \[
-\frac{248}{45}-\frac1{100}
+\frac{119}{45}
 <
-\frac{h'}{2^L}
+\frac{h'}p
 <
-\frac{1256}{225}+\frac1{225}
-=\frac{419}{75}
-<6.
+\frac{668}{225}
+<3.
 \]
-The lower bound is greater than \(11/2\). Thus
-\[
-\frac{11}{2}\,2^L<h'<\frac{419}{75}\,2^L<6\cdot2^L.
-\tag{12}
-\]
-An even parent at level \(j\le L-1\) has target at most \(4\cdot2^L-3<h'\). An even parent at level \(j\ge L\) has target at least \(6\cdot2^L-1>h'\), using (12) and \((6-419/75)2^L>1\). So \(h'\) has no even parent either.
+In particular \(2p<h'<3p-1\), since \(7p/225>1\). An even parent at level \(j\le K-2\) has target at most \(2p-3<h'\). An even parent at level \(j\ge K-1\) has target at least \(3p-1>h'\). Thus \(h'\) has no even parent either.
 
-Combining (10) and (12), \(h'\) has no \(\operatorname{ResetParent}\) at all.
+Combining (10) and (11), \(h'\) has no \(\operatorname{ResetParent}\) at all.
 
 ## Root nonreachability
 
@@ -189,6 +179,10 @@ The exact source theorem \(\operatorname{root\_reset\_chain\_iff}\) identifies b
 Therefore the t=0 fatal-source configuration \(E\), and its associated fatal tail, are excluded from the blank-root trajectory for every pair in (1).
 
 This is an infinite, root-specific exclusion theorem for one structured family. It does not decide the other t=0 phases, the t=1 or higher-valuation branches, or the global nonhalting question.
+
+## Related finite exclusion
+
+Agent 7 independently excluded a separate \(K=1023,q=8\) t=0 entry by following its unique seven-edge reverse-parent chain to a parentless source. See [the K=1023 note](../agent7-746-even-parent/K1023-T0-ENTRY-ROOT-EXCLUSION.md) and [its exact reproducer](../agent7-746-even-parent/k1023_t0_root_exclusion.mjs). This is a separate candidate, not part of the infinite family above.
 
 ## Reproducible instance
 

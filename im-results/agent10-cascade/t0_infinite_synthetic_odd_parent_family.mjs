@@ -13,8 +13,8 @@ const mod = (x, m) => ((x % m) + m) % m;
 assert.equal(K % 54n, 38n);
 assert.equal(K % 6n, 2n);
 assert(K >= 266n);
-assert(200n * c >= 309n * two(a));
-assert(200n * c <= 310n * two(a));
+assert(25n * c >= 38n * two(a));
+assert(20n * c <= 31n * two(a));
 
 const p = two(K);
 const r = K + 1n - a;
@@ -65,11 +65,10 @@ assert(E < 6n * p - 1n);
 
 // The unique odd parent is itself parentless.
 assert.equal(mod(parent, 3n), 0n);
-assert(11n * pL < 2n * parent);
-assert(75n * parent < 419n * pL);
-assert(4n * pL - 3n < parent);
-assert(parent < 6n * pL - 1n);
-assert(31n * pL > 75n);
+assert(2n * p < parent);
+assert(parent < 3n * p - 1n);
+assert(2n * p - 3n < parent);
+assert(7n * p > 225n);
 
 assert(parent > 2n);
 assert(E > 2n);
