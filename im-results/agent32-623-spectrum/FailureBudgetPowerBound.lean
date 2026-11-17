@@ -166,4 +166,44 @@ theorem badAll_power_bound (a b : Nat) (hbad : badAll a b = true) :
 #print axioms badAll_first_le_pow
 #print axioms badAll_power_bound
 
+
+/-- An infinite family of fatal pairs showing the logarithmic bound is
+asymptotically sharp: a=k and b=(3^k+1)/2. -/
+def badBlock : Nat → Nat
+| 0 => 1
+| k + 1 => 3 * badBlock k - 1
+
+theorem badBlock_pos (k : Nat) : 0 < badBlock k := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+      simp only [badBlock]
+      omega
+
+theorem badBlock_fatal (k : Nat) : badAll k (badBlock k) = true := by
+  induction k with
+  | zero => simp [badAll, badBlock]
+  | succ k ih =>
+      have hp : 0 < badBlock k := badBlock_pos k
+      have hbpos : 3 * badBlock k - 1 ≠ 0 := by omega
+      have hrem0 : (3 * badBlock k - 1) % 3 ≠ 0 := by omega
+      have hrem1 : (3 * badBlock k - 1) % 3 ≠ 1 := by omega
+      have hdiv : (3 * badBlock k - 1) / 3 + 1 = badBlock k := by omega
+      change badAll (k + 1) (3 * badBlock k - 1) = true
+      rw [badAll.eq_1, if_neg hbpos, if_neg hrem0, if_neg hrem1]
+      have ha : k + 1 ≠ 0 := by omega
+      rw [if_neg ha, hdiv]
+      exact ih
+
+theorem two_badBlock_add_one (k : Nat) :
+    2 * badBlock k + 1 = 3 ^ k + 2 := by
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+      simp only [badBlock, Nat.pow_succ]
+      omega
+
+#print axioms badBlock_fatal
+#print axioms two_badBlock_add_one
+
 end BB6.Agent32FailureBudgetBound
