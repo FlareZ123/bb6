@@ -67,7 +67,9 @@ theorem only_class (m base shift C cycle good t v : Nat)
       (2^(base+4374*(t%cycle))+shift)%m=C%m := by
     rw [←reduce_hit m base shift cycle t hm hq hp, ←heq]
     exact Nat.mul_add_mod_self_left _ _ _
-  exact hc ⟨t%cycle, Nat.mod_lt t hq⟩ hh
+  have hh' : (Nat.powMod 2 (base+4374*(t%cycle)) m + shift)%m=C%m := by
+    simpa only [Nat.powMod_def, Nat.add_mod, Nat.mod_mod] using hh
+  exact hc ⟨t%cycle, Nat.mod_lt t hq⟩ hh'
 
 
 theorem no_h0_a1 (t v : Nat)
@@ -202,15 +204,15 @@ theorem no_h2_a6 (t v : Nat)
     heq
 
 
-theorem no_h3_a1 (t v : Nat)
-    (heq : 135*v+70=2^(4+4374*t)+81) : False := by
-  exact no_generic 135 4 81 70 2 t v
+theorem only_h3_a1 (t v : Nat)
+    (heq : 135*v+70=2^(4+4374*t)+81) : t%2=1 := by
+  exact only_class 135 4 81 70 2 1 t v
     (by decide) (by decide)
     (by rw [←Nat.powMod_def]; decide)
     (by simpa only [Nat.powMod_def, Nat.add_mod, Nat.mod_mod] using
       (show ∀ x : Fin 2,
         (Nat.powMod 2 (4+4374*x.val) 135+81)%135
-          ≠ 70%135 from by decide))
+          = 70%135 → x.val=1 from by decide))
     heq
 
 
@@ -418,15 +420,15 @@ theorem no_h4_a10 (t v : Nat)
     heq
 
 
-theorem no_h5_a1 (t v : Nat)
-    (heq : 1215*v+550=2^(6+4374*t)+729) : False := by
-  exact no_generic 1215 6 729 550 2 t v
+theorem only_h5_a1 (t v : Nat)
+    (heq : 1215*v+550=2^(6+4374*t)+729) : t%2=1 := by
+  exact only_class 1215 6 729 550 2 1 t v
     (by decide) (by decide)
     (by rw [←Nat.powMod_def]; decide)
     (by simpa only [Nat.powMod_def, Nat.add_mod, Nat.mod_mod] using
       (show ∀ x : Fin 2,
         (Nat.powMod 2 (6+4374*x.val) 1215+729)%1215
-          ≠ 550%1215 from by decide))
+          = 550%1215 → x.val=1 from by decide))
     heq
 
 
@@ -730,15 +732,15 @@ theorem no_h6_a14 (t v : Nat)
     heq
 
 
-theorem no_h7_a1 (t v : Nat)
-    (heq : 10935*v+4630=2^(8+4374*t)+6561) : False := by
-  exact no_generic 10935 8 6561 4630 2 t v
+theorem only_h7_a1 (t v : Nat)
+    (heq : 10935*v+4630=2^(8+4374*t)+6561) : t%2=1 := by
+  exact only_class 10935 8 6561 4630 2 1 t v
     (by decide) (by decide)
     (by rw [←Nat.powMod_def]; decide)
     (by simpa only [Nat.powMod_def, Nat.add_mod, Nat.mod_mod] using
       (show ∀ x : Fin 2,
         (Nat.powMod 2 (8+4374*x.val) 10935+6561)%10935
-          ≠ 4630%10935 from by decide))
+          = 4630%10935 → x.val=1 from by decide))
     heq
 
 
@@ -1141,6 +1143,877 @@ theorem no_h8_a18 (t v : Nat)
 set_option linter.unusedSimpArgs false
 
 /-- The complete generic-source residue census for j=4374*t. -/
+private theorem generic_gate_case_0 (h a t v : Nat)
+    (hh : h ≤ 8) (ha : 1 ≤ a)
+    (hzero : h=0 → a=1)
+    (hpos : 0<h → a ≤ 2*h+2)
+    (heq : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
+      = 2^(4374*t+h+1)+3*3^h)
+    (hcase : h = 0) :
+    (h=1 ∧ a=1 ∧ t%2=1) ∨
+    (h=1 ∧ a=3 ∧ t%4=2) ∨
+    (h=3 ∧ a=6 ∧ t%7=4) ∨
+    (h=8 ∧ a=2 ∧ t%9=5) ∨
+    (h=3 ∧ a=1 ∧ t%2=1) ∨
+    (h=5 ∧ a=1 ∧ t%2=1) ∨
+    (h=7 ∧ a=1 ∧ t%2=1) := by
+  subst h
+  have ha1 : a=1 := hzero rfl
+  subst a
+  exfalso
+  apply no_h0_a1 t v
+  have hexp : 4374*t+0+1 = 1+4374*t := by omega
+  rw [hexp] at heq
+  simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+  omega
+
+private theorem generic_gate_case_1 (h a t v : Nat)
+    (hh : h ≤ 8) (ha : 1 ≤ a)
+    (hzero : h=0 → a=1)
+    (hpos : 0<h → a ≤ 2*h+2)
+    (heq : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
+      = 2^(4374*t+h+1)+3*3^h)
+    (hcase : h = 1) :
+    (h=1 ∧ a=1 ∧ t%2=1) ∨
+    (h=1 ∧ a=3 ∧ t%4=2) ∨
+    (h=3 ∧ a=6 ∧ t%7=4) ∨
+    (h=8 ∧ a=2 ∧ t%9=5) ∨
+    (h=3 ∧ a=1 ∧ t%2=1) ∨
+    (h=5 ∧ a=1 ∧ t%2=1) ∨
+    (h=7 ∧ a=1 ∧ t%2=1) := by
+  subst h
+  rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 from by omega) with a1|a2|a3|a4
+
+  · subst a
+    have hgate : t%2=1 := by
+      apply only_h1_a1 t v
+      have hexp : 4374*t+1+1 = 2+4374*t := by omega
+      rw [hexp] at heq
+      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+      omega
+    omega
+
+  · subst a
+    exfalso
+    apply no_h1_a2 t v
+    have hexp : 4374*t+1+1 = 2+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    have hgate : t%4=2 := by
+      apply only_h1_a3 t v
+      have hexp : 4374*t+1+1 = 2+4374*t := by omega
+      rw [hexp] at heq
+      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+      omega
+    omega
+
+  · subst a
+    exfalso
+    apply no_h1_a4 t v
+    have hexp : 4374*t+1+1 = 2+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+private theorem generic_gate_case_2 (h a t v : Nat)
+    (hh : h ≤ 8) (ha : 1 ≤ a)
+    (hzero : h=0 → a=1)
+    (hpos : 0<h → a ≤ 2*h+2)
+    (heq : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
+      = 2^(4374*t+h+1)+3*3^h)
+    (hcase : h = 2) :
+    (h=1 ∧ a=1 ∧ t%2=1) ∨
+    (h=1 ∧ a=3 ∧ t%4=2) ∨
+    (h=3 ∧ a=6 ∧ t%7=4) ∨
+    (h=8 ∧ a=2 ∧ t%9=5) ∨
+    (h=3 ∧ a=1 ∧ t%2=1) ∨
+    (h=5 ∧ a=1 ∧ t%2=1) ∨
+    (h=7 ∧ a=1 ∧ t%2=1) := by
+  subst h
+  rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 from by omega) with a1|a2|a3|a4|a5|a6
+
+  · subst a
+    exfalso
+    apply no_h2_a1 t v
+    have hexp : 4374*t+2+1 = 3+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h2_a2 t v
+    have hexp : 4374*t+2+1 = 3+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h2_a3 t v
+    have hexp : 4374*t+2+1 = 3+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h2_a4 t v
+    have hexp : 4374*t+2+1 = 3+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h2_a5 t v
+    have hexp : 4374*t+2+1 = 3+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h2_a6 t v
+    have hexp : 4374*t+2+1 = 3+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+private theorem generic_gate_case_3 (h a t v : Nat)
+    (hh : h ≤ 8) (ha : 1 ≤ a)
+    (hzero : h=0 → a=1)
+    (hpos : 0<h → a ≤ 2*h+2)
+    (heq : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
+      = 2^(4374*t+h+1)+3*3^h)
+    (hcase : h = 3) :
+    (h=1 ∧ a=1 ∧ t%2=1) ∨
+    (h=1 ∧ a=3 ∧ t%4=2) ∨
+    (h=3 ∧ a=6 ∧ t%7=4) ∨
+    (h=8 ∧ a=2 ∧ t%9=5) ∨
+    (h=3 ∧ a=1 ∧ t%2=1) ∨
+    (h=5 ∧ a=1 ∧ t%2=1) ∨
+    (h=7 ∧ a=1 ∧ t%2=1) := by
+  subst h
+  rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8
+
+  · subst a
+    have hgate : t%2=1 := by
+      apply only_h3_a1 t v
+      have hexp : 4374*t+3+1 = 4+4374*t := by omega
+      rw [hexp] at heq
+      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+      omega
+    omega
+
+  · subst a
+    exfalso
+    apply no_h3_a2 t v
+    have hexp : 4374*t+3+1 = 4+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h3_a3 t v
+    have hexp : 4374*t+3+1 = 4+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h3_a4 t v
+    have hexp : 4374*t+3+1 = 4+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h3_a5 t v
+    have hexp : 4374*t+3+1 = 4+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    have hgate : t%7=4 := by
+      apply only_h3_a6 t v
+      have hexp : 4374*t+3+1 = 4+4374*t := by omega
+      rw [hexp] at heq
+      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+      omega
+    omega
+
+  · subst a
+    exfalso
+    apply no_h3_a7 t v
+    have hexp : 4374*t+3+1 = 4+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h3_a8 t v
+    have hexp : 4374*t+3+1 = 4+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+private theorem generic_gate_case_4 (h a t v : Nat)
+    (hh : h ≤ 8) (ha : 1 ≤ a)
+    (hzero : h=0 → a=1)
+    (hpos : 0<h → a ≤ 2*h+2)
+    (heq : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
+      = 2^(4374*t+h+1)+3*3^h)
+    (hcase : h = 4) :
+    (h=1 ∧ a=1 ∧ t%2=1) ∨
+    (h=1 ∧ a=3 ∧ t%4=2) ∨
+    (h=3 ∧ a=6 ∧ t%7=4) ∨
+    (h=8 ∧ a=2 ∧ t%9=5) ∨
+    (h=3 ∧ a=1 ∧ t%2=1) ∨
+    (h=5 ∧ a=1 ∧ t%2=1) ∨
+    (h=7 ∧ a=1 ∧ t%2=1) := by
+  subst h
+  rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 ∨ a=9 ∨ a=10 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8|a9|a10
+
+  · subst a
+    exfalso
+    apply no_h4_a1 t v
+    have hexp : 4374*t+4+1 = 5+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h4_a2 t v
+    have hexp : 4374*t+4+1 = 5+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h4_a3 t v
+    have hexp : 4374*t+4+1 = 5+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h4_a4 t v
+    have hexp : 4374*t+4+1 = 5+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h4_a5 t v
+    have hexp : 4374*t+4+1 = 5+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h4_a6 t v
+    have hexp : 4374*t+4+1 = 5+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h4_a7 t v
+    have hexp : 4374*t+4+1 = 5+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h4_a8 t v
+    have hexp : 4374*t+4+1 = 5+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h4_a9 t v
+    have hexp : 4374*t+4+1 = 5+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h4_a10 t v
+    have hexp : 4374*t+4+1 = 5+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+private theorem generic_gate_case_5 (h a t v : Nat)
+    (hh : h ≤ 8) (ha : 1 ≤ a)
+    (hzero : h=0 → a=1)
+    (hpos : 0<h → a ≤ 2*h+2)
+    (heq : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
+      = 2^(4374*t+h+1)+3*3^h)
+    (hcase : h = 5) :
+    (h=1 ∧ a=1 ∧ t%2=1) ∨
+    (h=1 ∧ a=3 ∧ t%4=2) ∨
+    (h=3 ∧ a=6 ∧ t%7=4) ∨
+    (h=8 ∧ a=2 ∧ t%9=5) ∨
+    (h=3 ∧ a=1 ∧ t%2=1) ∨
+    (h=5 ∧ a=1 ∧ t%2=1) ∨
+    (h=7 ∧ a=1 ∧ t%2=1) := by
+  subst h
+  rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 ∨ a=9 ∨ a=10 ∨ a=11 ∨ a=12 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8|a9|a10|a11|a12
+
+  · subst a
+    have hgate : t%2=1 := by
+      apply only_h5_a1 t v
+      have hexp : 4374*t+5+1 = 6+4374*t := by omega
+      rw [hexp] at heq
+      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+      omega
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a2 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a3 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a4 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a5 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a6 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a7 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a8 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a9 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a10 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a11 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h5_a12 t v
+    have hexp : 4374*t+5+1 = 6+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+private theorem generic_gate_case_6 (h a t v : Nat)
+    (hh : h ≤ 8) (ha : 1 ≤ a)
+    (hzero : h=0 → a=1)
+    (hpos : 0<h → a ≤ 2*h+2)
+    (heq : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
+      = 2^(4374*t+h+1)+3*3^h)
+    (hcase : h = 6) :
+    (h=1 ∧ a=1 ∧ t%2=1) ∨
+    (h=1 ∧ a=3 ∧ t%4=2) ∨
+    (h=3 ∧ a=6 ∧ t%7=4) ∨
+    (h=8 ∧ a=2 ∧ t%9=5) ∨
+    (h=3 ∧ a=1 ∧ t%2=1) ∨
+    (h=5 ∧ a=1 ∧ t%2=1) ∨
+    (h=7 ∧ a=1 ∧ t%2=1) := by
+  subst h
+  rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 ∨ a=9 ∨ a=10 ∨ a=11 ∨ a=12 ∨ a=13 ∨ a=14 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8|a9|a10|a11|a12|a13|a14
+
+  · subst a
+    exfalso
+    apply no_h6_a1 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a2 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a3 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a4 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a5 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a6 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a7 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a8 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a9 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a10 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a11 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a12 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a13 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h6_a14 t v
+    have hexp : 4374*t+6+1 = 7+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+private theorem generic_gate_case_7 (h a t v : Nat)
+    (hh : h ≤ 8) (ha : 1 ≤ a)
+    (hzero : h=0 → a=1)
+    (hpos : 0<h → a ≤ 2*h+2)
+    (heq : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
+      = 2^(4374*t+h+1)+3*3^h)
+    (hcase : h = 7) :
+    (h=1 ∧ a=1 ∧ t%2=1) ∨
+    (h=1 ∧ a=3 ∧ t%4=2) ∨
+    (h=3 ∧ a=6 ∧ t%7=4) ∨
+    (h=8 ∧ a=2 ∧ t%9=5) ∨
+    (h=3 ∧ a=1 ∧ t%2=1) ∨
+    (h=5 ∧ a=1 ∧ t%2=1) ∨
+    (h=7 ∧ a=1 ∧ t%2=1) := by
+  subst h
+  rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 ∨ a=9 ∨ a=10 ∨ a=11 ∨ a=12 ∨ a=13 ∨ a=14 ∨ a=15 ∨ a=16 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8|a9|a10|a11|a12|a13|a14|a15|a16
+
+  · subst a
+    have hgate : t%2=1 := by
+      apply only_h7_a1 t v
+      have hexp : 4374*t+7+1 = 8+4374*t := by omega
+      rw [hexp] at heq
+      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+      omega
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a2 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a3 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a4 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a5 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a6 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a7 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a8 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a9 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a10 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a11 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a12 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a13 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a14 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a15 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h7_a16 t v
+    have hexp : 4374*t+7+1 = 8+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+private theorem generic_gate_case_8 (h a t v : Nat)
+    (hh : h ≤ 8) (ha : 1 ≤ a)
+    (hzero : h=0 → a=1)
+    (hpos : 0<h → a ≤ 2*h+2)
+    (heq : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
+      = 2^(4374*t+h+1)+3*3^h)
+    (hcase : h = 8) :
+    (h=1 ∧ a=1 ∧ t%2=1) ∨
+    (h=1 ∧ a=3 ∧ t%4=2) ∨
+    (h=3 ∧ a=6 ∧ t%7=4) ∨
+    (h=8 ∧ a=2 ∧ t%9=5) ∨
+    (h=3 ∧ a=1 ∧ t%2=1) ∨
+    (h=5 ∧ a=1 ∧ t%2=1) ∨
+    (h=7 ∧ a=1 ∧ t%2=1) := by
+  subst h
+  rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 ∨ a=9 ∨ a=10 ∨ a=11 ∨ a=12 ∨ a=13 ∨ a=14 ∨ a=15 ∨ a=16 ∨ a=17 ∨ a=18 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8|a9|a10|a11|a12|a13|a14|a15|a16|a17|a18
+
+  · subst a
+    exfalso
+    apply no_h8_a1 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    have hgate : t%9=5 := by
+      apply only_h8_a2 t v
+      have hexp : 4374*t+8+1 = 9+4374*t := by omega
+      rw [hexp] at heq
+      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+      omega
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a3 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a4 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a5 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a6 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a7 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a8 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a9 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a10 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a11 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a12 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a13 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a14 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a15 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a16 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a17 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
+  · subst a
+    exfalso
+    apply no_h8_a18 t v
+    have hexp : 4374*t+8+1 = 9+4374*t := by omega
+    rw [hexp] at heq
+    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
+    omega
+
 theorem all_generic_gates (h a t v : Nat)
     (hh : h ≤ 8) (ha : 1 ≤ a)
     (hzero : h=0 → a=1)
@@ -1150,753 +2023,21 @@ theorem all_generic_gates (h a t v : Nat)
     (h=1 ∧ a=1 ∧ t%2=1) ∨
     (h=1 ∧ a=3 ∧ t%4=2) ∨
     (h=3 ∧ a=6 ∧ t%7=4) ∨
-    (h=8 ∧ a=2 ∧ t%9=5) := by
+    (h=8 ∧ a=2 ∧ t%9=5) ∨
+    (h=3 ∧ a=1 ∧ t%2=1) ∨
+    (h=5 ∧ a=1 ∧ t%2=1) ∨
+    (h=7 ∧ a=1 ∧ t%2=1) := by
   rcases (show h=0 ∨ h=1 ∨ h=2 ∨ h=3 ∨ h=4 ∨ h=5 ∨ h=6 ∨ h=7 ∨ h=8
     from by omega) with h0|h1|h2|h3|h4|h5|h6|h7|h8
-
-  · subst h
-    have ha1 : a=1 := hzero rfl
-    subst a
-    exfalso
-    apply no_h0_a1 t v
-    have hexp : 4374*t+0+1 = 1+4374*t := by omega
-    rw [hexp] at heq
-    simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-    omega
-
-  · subst h
-    rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 from by omega) with a1|a2|a3|a4
-
-    · subst a
-      have hgate : t%2=1 := by
-        apply only_h1_a1 t v
-        have hexp : 4374*t+1+1 = 2+4374*t := by omega
-        rw [hexp] at heq
-        simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-        omega
-      omega
-
-    · subst a
-      exfalso
-      apply no_h1_a2 t v
-      have hexp : 4374*t+1+1 = 2+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      have hgate : t%4=2 := by
-        apply only_h1_a3 t v
-        have hexp : 4374*t+1+1 = 2+4374*t := by omega
-        rw [hexp] at heq
-        simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-        omega
-      omega
-
-    · subst a
-      exfalso
-      apply no_h1_a4 t v
-      have hexp : 4374*t+1+1 = 2+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-  · subst h
-    rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 from by omega) with a1|a2|a3|a4|a5|a6
-
-    · subst a
-      exfalso
-      apply no_h2_a1 t v
-      have hexp : 4374*t+2+1 = 3+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h2_a2 t v
-      have hexp : 4374*t+2+1 = 3+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h2_a3 t v
-      have hexp : 4374*t+2+1 = 3+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h2_a4 t v
-      have hexp : 4374*t+2+1 = 3+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h2_a5 t v
-      have hexp : 4374*t+2+1 = 3+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h2_a6 t v
-      have hexp : 4374*t+2+1 = 3+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-  · subst h
-    rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8
-
-    · subst a
-      exfalso
-      apply no_h3_a1 t v
-      have hexp : 4374*t+3+1 = 4+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h3_a2 t v
-      have hexp : 4374*t+3+1 = 4+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h3_a3 t v
-      have hexp : 4374*t+3+1 = 4+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h3_a4 t v
-      have hexp : 4374*t+3+1 = 4+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h3_a5 t v
-      have hexp : 4374*t+3+1 = 4+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      have hgate : t%7=4 := by
-        apply only_h3_a6 t v
-        have hexp : 4374*t+3+1 = 4+4374*t := by omega
-        rw [hexp] at heq
-        simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-        omega
-      omega
-
-    · subst a
-      exfalso
-      apply no_h3_a7 t v
-      have hexp : 4374*t+3+1 = 4+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h3_a8 t v
-      have hexp : 4374*t+3+1 = 4+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-  · subst h
-    rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 ∨ a=9 ∨ a=10 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8|a9|a10
-
-    · subst a
-      exfalso
-      apply no_h4_a1 t v
-      have hexp : 4374*t+4+1 = 5+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h4_a2 t v
-      have hexp : 4374*t+4+1 = 5+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h4_a3 t v
-      have hexp : 4374*t+4+1 = 5+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h4_a4 t v
-      have hexp : 4374*t+4+1 = 5+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h4_a5 t v
-      have hexp : 4374*t+4+1 = 5+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h4_a6 t v
-      have hexp : 4374*t+4+1 = 5+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h4_a7 t v
-      have hexp : 4374*t+4+1 = 5+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h4_a8 t v
-      have hexp : 4374*t+4+1 = 5+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h4_a9 t v
-      have hexp : 4374*t+4+1 = 5+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h4_a10 t v
-      have hexp : 4374*t+4+1 = 5+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-  · subst h
-    rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 ∨ a=9 ∨ a=10 ∨ a=11 ∨ a=12 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8|a9|a10|a11|a12
-
-    · subst a
-      exfalso
-      apply no_h5_a1 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a2 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a3 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a4 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a5 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a6 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a7 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a8 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a9 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a10 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a11 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h5_a12 t v
-      have hexp : 4374*t+5+1 = 6+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-  · subst h
-    rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 ∨ a=9 ∨ a=10 ∨ a=11 ∨ a=12 ∨ a=13 ∨ a=14 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8|a9|a10|a11|a12|a13|a14
-
-    · subst a
-      exfalso
-      apply no_h6_a1 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a2 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a3 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a4 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a5 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a6 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a7 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a8 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a9 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a10 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a11 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a12 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a13 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h6_a14 t v
-      have hexp : 4374*t+6+1 = 7+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-  · subst h
-    rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 ∨ a=9 ∨ a=10 ∨ a=11 ∨ a=12 ∨ a=13 ∨ a=14 ∨ a=15 ∨ a=16 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8|a9|a10|a11|a12|a13|a14|a15|a16
-
-    · subst a
-      exfalso
-      apply no_h7_a1 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a2 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a3 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a4 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a5 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a6 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a7 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a8 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a9 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a10 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a11 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a12 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a13 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a14 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a15 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h7_a16 t v
-      have hexp : 4374*t+7+1 = 8+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-  · subst h
-    rcases (show a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 ∨ a=6 ∨ a=7 ∨ a=8 ∨ a=9 ∨ a=10 ∨ a=11 ∨ a=12 ∨ a=13 ∨ a=14 ∨ a=15 ∨ a=16 ∨ a=17 ∨ a=18 from by omega) with a1|a2|a3|a4|a5|a6|a7|a8|a9|a10|a11|a12|a13|a14|a15|a16|a17|a18
-
-    · subst a
-      exfalso
-      apply no_h8_a1 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      have hgate : t%9=5 := by
-        apply only_h8_a2 t v
-        have hexp : 4374*t+8+1 = 9+4374*t := by omega
-        rw [hexp] at heq
-        simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-        omega
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a3 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a4 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a5 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a6 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a7 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a8 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a9 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a10 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a11 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a12 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a13 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a14 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a15 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a16 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a17 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-    · subst a
-      exfalso
-      apply no_h8_a18 t v
-      have hexp : 4374*t+8+1 = 9+4374*t := by omega
-      rw [hexp] at heq
-      simp only [Nat.reducePow, Nat.reduceMul, Nat.reduceAdd, Nat.one_mul, Nat.mul_one] at heq
-      omega
-
-
+  · exact generic_gate_case_0 h a t v hh ha hzero hpos heq h0
+  · exact generic_gate_case_1 h a t v hh ha hzero hpos heq h1
+  · exact generic_gate_case_2 h a t v hh ha hzero hpos heq h2
+  · exact generic_gate_case_3 h a t v hh ha hzero hpos heq h3
+  · exact generic_gate_case_4 h a t v hh ha hzero hpos heq h4
+  · exact generic_gate_case_5 h a t v hh ha hzero hpos heq h5
+  · exact generic_gate_case_6 h a t v hh ha hzero hpos heq h6
+  · exact generic_gate_case_7 h a t v hh ha hzero hpos heq h7
+  · exact generic_gate_case_8 h a t v hh ha hzero hpos heq h8
 #print axioms all_generic_gates
 
 /-- No generic incoming edge exists in the root-free residue classes. -/
@@ -1908,7 +2049,7 @@ theorem no_generic_forbidden (h a t v : Nat)
     (heq : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
       = 2^(4374*t+h+1)+3*3^h) : False := by
   rcases all_generic_gates h a t v hh ha hzero hpos heq with
-    h1 | h2 | h3 | h4
+    h1 | h2 | h3 | h4 | h5 | h6 | h7
   all_goals omega
 
 private theorem stable_gap (D S A : Nat)

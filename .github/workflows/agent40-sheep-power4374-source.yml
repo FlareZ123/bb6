@@ -12,6 +12,8 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+      - name: Reproduce exact modular census
+        run: python3 im-results/agent40-sheep-power4374/certificate.py
       - name: Install pinned Cryptids Lean toolchain
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh

@@ -1,7 +1,7 @@
 """Exact modular and source-equation certificate for the Sheep j=4374*t stratum.
 
 This checks the complete 89-row period census, all 772 representatives,
-the four surviving generic predecessor sectors, the exceptional-source
+the seven surviving generic predecessor sectors, the exceptional-source
 inequality margins, and the 30 root-free exponent classes.
 """
 from fractions import Fraction
@@ -119,7 +119,10 @@ Q = (
 SURVIVORS = {
     (1, 1): (2, 1),
     (1, 3): (4, 2),
+    (3, 1): (2, 1),
     (3, 6): (7, 4),
+    (5, 1): (2, 1),
+    (7, 1): (2, 1),
     (8, 2): (9, 5),
 }
 
@@ -214,7 +217,7 @@ def certify() -> None:
             assert t%q != r
     assert 4374*8 == 34992
     print("PASS: 89 exact valuation rows, 772 complete-period representatives, max period 57")
-    print("PASS: exactly four generic source sectors; all other generic cases excluded")
+    print("PASS: exactly seven generic source sectors; all other generic cases excluded")
     print("PASS: exceptional v=3 source excluded for every h<=8 and every t>=1")
     print("PASS: 30 genuine blank-root power targets excluded modulo 252")
     print("PASS: density 5/28 within v3(j)=7 even exponent stratum; example j=34992")

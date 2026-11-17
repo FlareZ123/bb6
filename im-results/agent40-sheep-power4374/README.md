@@ -12,13 +12,16 @@ consider powers (Y=2^j) with
 j=4374t=2cdot3^7t,qquad t\ge1,quad 3\nmid t.
 ]
 
-Then (v_3(j)=7) and LTE gives (v_3(2^j-1)=8). The complete legal generic even-source predecessor census has **exactly four** sectors:
+Then (v_3(j)=7) and LTE gives (v_3(2^j-1)=8). The complete legal generic even-source predecessor census has **exactly seven** sectors:
 
 | Hidden odd steps (h) | Source valuation (a) | Exact existence condition |
 |---:|---:|---|
 | 1 | 1 | (t\equiv1\pmod2) |
 | 1 | 3 | (t\equiv2\pmod4) |
+| 3 | 1 | (t\equiv1\pmod2) |
 | 3 | 6 | (t\equiv4\pmod7) |
+| 5 | 1 | (t\equiv1\pmod2) |
+| 7 | 1 | (t\equiv1\pmod2) |
 | 8 | 2 | (t\equiv5\pmod9) |
 
 There are no other generic sources. The exceptional odd-part-three source is excluded for every (a\ge1) and every (0\le h\le8).
@@ -34,7 +37,7 @@ t\not\equiv4\pmod7,\quad t\not\equiv5\pmod9
 \neg\operatorname{EvenReach}(10,2^{4374t}).
 ]
 
-The argument is an exact last-edge contradiction in the original-source Sheep return graph: any nontrivial path from the genuine blank entry 10 to a larger power must have one of the two complete inverse forms (generic or exceptional). The generic forms reduce to the four residue sectors above, all incompatible with the displayed root-free conditions; the exceptional form is ruled out by a uniform exponential gap.
+The argument is an exact last-edge contradiction in the original-source Sheep return graph: any nontrivial path from the genuine blank entry 10 to a larger power must have one of the two complete inverse forms (generic or exceptional). The generic forms reduce to the seven residue sectors above. Four sectors (h=1,a=1 and the three h=3,5,7 cases with a=1) require odd t and are incompatible with 4|t; the other three are excluded by the t mod 4, 7, and 9 restrictions. The exceptional form is ruled out by a uniform exponential gap.
 
 The conditions define **30 residue classes modulo 252**:
 
@@ -62,6 +65,6 @@ Run `python3 certificate.py` to reproduce the modular periods, all 772 residues,
 
 ## Relation to adjacent research
 
-This is the **eighth** 3-adic target stratum (v_3(2^j-1)=8), distinct from Agent 17's seventh-stratum target (j=1458t) and Agent 40's sixth-stratum target (j=486t). It is also disjoint in 3-adic valuation from the earlier fourth/fifth target strata. Agent 14's mixed h=8 predecessor corridors concern particular (t\equiv0\pmod4) progressions; the present theorem isolates the complementary (t\equiv0\pmod4) residue classes not admitted by any of the four direct-parent sectors.
+This is the **eighth** 3-adic target stratum (v_3(2^j-1)=8), distinct from Agent 17's seventh-stratum target (j=1458t) and Agent 40's sixth-stratum target (j=486t). It is also disjoint in 3-adic valuation from the earlier fourth/fifth target strata. Agent 14's mixed h=8 predecessor corridors concern particular (t\equiv0\pmod4) progressions; the present theorem isolates the complementary (t\equiv0\pmod4) residue classes not admitted by any of the seven direct-parent sectors.
 
 All material remains in `im-results/`; external academic novelty has not been established.
