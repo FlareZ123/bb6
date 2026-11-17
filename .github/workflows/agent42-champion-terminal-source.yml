@@ -1031,6 +1031,25 @@ jobs:
             exit 1
           fi
 
+
+          # Agent 44: compile the original-run sectionResult composition lemma.
+          # StageAlgebra supplies the exact cumulative right-counter/head recurrence.
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/StageAlgebra.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/stage-algebra-axioms.log
+          lean -o StageAlgebra.olean StageAlgebra.lean 2>&1 | tee /tmp/a42-terminal/stage-algebra-axioms.log
+          if grep -qE 'sorryAx|native_decide' /tmp/a42-terminal/stage-algebra-axioms.log; then
+            echo '::error::sorryAx or native_decide found in StageAlgebra'
+            exit 1
+          fi
+
+          cp "$GITHUB_WORKSPACE/im-results/agent44-tm63-middle/SectionResultRunSource.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/section-result-run-source-axioms.log
+          lean -o SectionResultRunSource.olean SectionResultRunSource.lean 2>&1 | tee /tmp/a42-terminal/section-result-run-source-axioms.log
+          if grep -qE 'sorryAx|native_decide' /tmp/a42-terminal/section-result-run-source-axioms.log; then
+            echo '::error::sorryAx or native_decide found in original-run section composer'
+            exit 1
+          fi
+
       - name: Upload Lean compiler diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -1106,5 +1125,7 @@ jobs:
             /tmp/a42-terminal/m2-even-six-generic-source-axioms.log
             /tmp/a42-terminal/m2-even-six-generic-counted-axioms.log
             /tmp/a42-terminal/tm63-root-middle34-axioms.log
+            /tmp/a42-terminal/stage-algebra-axioms.log
+            /tmp/a42-terminal/section-result-run-source-axioms.log
           if-no-files-found: ignore
           retention-days: 3

@@ -47,6 +47,17 @@ so the generic quotient is (q=2R-3), also odd. This row is downstream of two ear
 
 This is a useful root integration boundary, not an unconditional root extension. It does not bypass row 32, establish the full 24-cycle induction, prove the later itinerary or halt, or determine BB(6).
 
+
+## Whole-section original-run composition
+
+`SectionResultRunSource.lean` adds a reusable conditional theorem: if a single original-`tm2` counted-increment source theorem is available for every (0<k<2^L), then the complete primitive-recursive `sectionResult` stage is itself an original-`tm2` run. The proof is induction on the stage length, composing each increment with `run_add`; it carries the moving head through `sectionHeadAfter`, with the closed form
+[
+  H(n,b)=5n+3\,sumRight(n,b).
+]
+The recurrence (H(n+1,b)=5+3b+H(n,nextRight(b))) matches the per-increment head shift exactly.
+
+This is a composition theorem, not a proof of the universal macro premise. The remaining work is to assemble a total one-step dispatcher over the reachable ((m\bmod3,n\bmod8)) classes. The M1-even full counted theorem and M2-even-six generic theorem are critical cases. Once the dispatcher is source-proved, this lemma offers a direct route through the entire middle `sectionResult` without manually enumerating every 24-periodic row.
+
 ## Verification and next work
 
 - The generic prefix source and its three `#print axioms` declarations are in `M2EvenSixGenericSource.lean`.
