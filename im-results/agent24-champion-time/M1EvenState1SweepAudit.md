@@ -1,16 +1,107 @@
-# M1-even state-1 sweep: precondition audit and next root gap
+# M1 state-1 sweep and valuation-parametric source audit
 
-**Status:** exact finite-source simulation and arithmetic diagnosis; not a Lean proof and not a BB(6) result.
+**Status — 17 November 2026.** The generic M1 valuation-parametric counted-increment source theorem is now written in `im-results/agent48-counted-inc0/M1EvenValuationSource.lean`, namespace `BB6Coverage.Agent48M1EvenValuationCountedSource`. Manual mathematical/API review found no substantive mismatch in the bridge, q4 cut, right-shape/far-tail, or final drain composition. The theorem remains **uncompiled**; its `#print axioms` commands are present but have not been executed in an accepted dependency closure.
 
-## 1. The local three-step lemma is sound, but its proposed placement is not uniform in a
+## 1. Current all-index source theorem
 
-Agent 48's `state1_three_left` / `counted_left_sweep_from1` is a valid local source macro: `n` three-step cycles require `n+1` consecutive ones immediately to the left of the blank under the state-1 head.
+The public theorem is:
 
-The proposed M1-even decomposition in `M1EvenZeroValuationGap.md` applies `4(v₂(n)-1)` such cycles immediately after a `12a+6`-step prefix. For `v₂(n)=5), this requires 16 cycles and hence 17 consecutive ones. That premise is not uniform in the S1 unary parameter `a`.
+~~~lean
+m1EvenValuation_counted_increment_source
+  (L n a b : Nat) (h : Int)
+  (hn : 0<n) (hnlt : n<2^L) (ha : 0<a) :
+  run tm2 (proposedIncrementCost 1 n a b)
+    (s1Config L n 1 a 0 b h) =
+  some (s1Config L (n-1) 0 (a+b+2) 0 (2^b-1)
+    (h+5+(3*b:Int)))
+~~~
 
-Using the exact `tm2` transition table from `ChampionRootBridge.lean` and the exact `S1Encoder` block order, with `L=16,n=32,m=1,b=0`, the following are the configurations after `12a+6` steps:
+It handles every positive `n<2^L`, including exact valuation `v₂(n)=0`; it is stronger than the original all-even target. The proof factorizes `n=(2*q+1)*2^v` with `exists_odd_factor_bounded L n hn hnlt`, proves the factorized source theorem, then rewrites by the factorization. Thus the root's marker-1 rows no longer need a separate split into valuations 3, 4, and at least 5.
 
-| a | state | head (initial head 0) | blank under head? | consecutive ones to left | required |
+## 2. Correct bridge placement and exact left-facing transformation
+
+The earlier proposed placement of `4*(v₂(n)-1)` state-1 cycles immediately after a `12*a+6` prefix was not uniform in `a`. The corrected placement is **after** the existing `counted_left_sweep (3*a+1)`, which costs `9*a+3` and leaves state 3 at `hN=h-(3*a+1)`.
+
+A fixed six-step prelude reaches state 1 at `hN`, blank under the head, with `3*v+4` ones to the left. The exact bridge then has:
+
+1. a state-1 left sweep of `3*(v+1)` three-step cycles, cost `9*(v+1)`;
+2. a fixed four-step exit to state 4 at `H=hN-3*(v+1)-2`;
+3. a fixed three-step setup to state 5 at `H+3`;
+4. a state-5 right sweep of `v+1` three-step cycles, consuming the `3*(v+1)` ones written by the left sweep;
+5. a one-step state-5 exit to state 4 at `hN+2`, followed by the final three-cell q4 scan.
+
+The bridge cost is `12*v+29`. The fixed prelude and source-boundary hypotheses are proved from the S1 encoding and the original transition table in the new source file.
+
+The central bridge left-facing transformation is:
+
+~~~lean
+(∀ i, P (hN-i) = sideBit
+  ([false,true,true,true,true] ++ d1pow v ++ d0 ++ tail) i) ->
+(∀ i, bridgeTape v P hN (hN-i) = sideBit
+  ([false,true] ++ d0 ++ d0pow v ++ d1 ++ tail) i)
+~~~
+
+The proof has three regions: the state-5 right-sweep blocks give the repeating modulo-3 prefix; the fixed exit gives the two-cell boundary and the three `d1` bits; the far-left exterior is preserved. The outer `counted_left_sweep (3*a+1)` supplies the prefix `[true] ++ d1pow a`.
+
+Consequently the exact q4 cut left-facing stream at the original source head `h` is:
+
+~~~lean
+Q = [true] ++ d1pow a ++ markerWord 0 ++ d0 ++
+      binDec L (n-1) ++ lh
+~~~
+
+The new `m1EvenValuation_q4_leftFacing` proves this pointwise from the outer sweep and bridge output. The target-left identity is:
+
+~~~lean
+s1LeftFacing L (n-1) 0 (a+b+2) (2^b-1) =
+  d0pow b ++ d1pow 2 ++ Q.drop 1
+~~~
+
+It follows from `binDec_pow2_sub_one` and `d1pow_add_right`. The source also proves the exact q4 right shape and blank far tail from the S1 right-facing word, then calls the existing `q4_suffix_run_to_s1Config`.
+
+## 3. Exact q4 suffix and counted-drain composition
+
+The q4 suffix theorem has total length `39+3*b`. Its first four steps are the unchanged q4 guard, moving from state 4/head `h` to state 4/head `h+4`; the remaining `35+3*b` steps are composed after the source prefix, which already ends at state 4/head `h+4` with the same tape. This split is explicit in `m1EvenValuation_reset_prefix_source` and avoids replaying the first four transitions.
+
+The source prefix ends at state 4/head `h+4` after `12*a+12*v+32` steps. The reset-prefix cost identity is:
+
+~~~lean
+resetPrefixCost 1 ((2*q+1)*2^v) a b =
+  (12*a+12*v+32) + (35+3*b)
+~~~
+
+Adding the existing `s1Config_reset_prefix_then_counted_drain` gives the full `proposedIncrementCost 1 n a b` source theorem above. The endpoint is exactly `s1Config L (n-1) 0 (a+b+2) 0 (2^b-1) (h+5+3*b)`.
+
+## 4. Sweep-coordinate sanity check
+
+The two left-sweep block lemmas have different contracts and must not be interchanged:
+
+- Outer sweep: `sweptLeft_block N j T h (hj : j+1<N)` writes true at `h-j`. The q4 cut proof uses `j=i` in the strict interior `i+1<N0`; the last index `i+1=N0` is handled separately by the bridge exit. The head cell uses `j=0` when `a>0`.
+- State-1 bridge sweep: `state1SweptLeft_block N T h i (hi : i<N)` writes true at `h-N+1+i`. It proves the `rightOnes` block consumed by the later state-5 right sweep; it is not the outer q4 left-facing prefix lemma.
+
+The current `M1EvenValuationSource.lean` uses each lemma with its correct coordinate and bound. In particular, the outer q4 proof's direct `sweptLeft_block N0 i` call is guarded by `i+1<N0`, while the bridge proof uses `state1SweptLeft_block N ... i` under `i<N`. The `sweptLeft_plus1 (3*a)` call supplies the cell at `h+1` for a sweep of length `N0=3*a+1`.
+
+## 5. Consequence for the 24-cycle root itinerary
+
+Let `R=tm63RootResidueSixK`, odd. The marker-1 indices after the relevant middle rows are `n_j=16*R-16-24*j`. Their valuation pattern is:
+
+- odd `j`: `v₂(n_j)=3`;
+- `j=2*u` with odd `u`: `v₂(n_j)=4`;
+- `j=2*u` with even `u`: `v₂(n_j)>=5`.
+
+This parity analysis remains useful motivation, but the new all-index source theorem covers all three cases (and more). The former separate valuation-four and valuation-at-least-five source obligations are no longer needed for marker 1. The remaining 24-cycle source gaps are the two residue-zero all-q families for markers 0 and 2, tracked in `TM63-24Cycle-Source-Coverage-20261117.md`.
+
+## 6. Validation boundary
+
+The committed `M1EvenValuationBridgeProbe.mjs` exercises the exact transition table and S1 encoding. It passed 480 cases with `L=16`, exact valuations `v=1..8`, odd quotients `q∈{1,3,5,7,9}`, `a∈{0,1,2,5,10,20}`, and `b∈{0,2}`. Every case ended state 4 at `h+4` after exactly `12*a+12*v+32` steps, and the full q4 cut guard/right tail/left stream matched. This is reproducible finite simulation evidence, not a formal proof.
+
+The Lean source theorem is written and manually reviewed, but no compile result or axiom profile is claimed yet. The remaining action is exact original-import compilation of `M1EvenValuationSource.lean` and its transitive closure, followed by inspection of the `#print axioms` output. Do not treat the theorem as source-certified until that succeeds.
+
+## 7. Historical diagnostic: the rejected `12*a+6` placement
+
+The original placement of `4*(v₂(n)-1)` state-1 cycles immediately after a `12*a+6` prefix was disproved as a uniform source-tape argument. For `L=16,n=32,m=1,b=0`, the exact transition table gave:
+
+| `a` | state after `12*a+6` | head | blank under head? | consecutive ones to left | required |
 |---:|---:|---:|:---:|---:|---:|
 | 1 | 1 | -4 | yes | 19 | 17 |
 | 3 | 1 | -12 | yes | 17 | 17 |
@@ -18,149 +109,8 @@ Using the exact `tm2` transition table from `ChampionRootBridge.lean` and the ex
 | 10 | 1 | -40 | yes | 10 | 17 |
 | 20 | 2 | -82 | yes | — | 17 |
 
-Thus at `a=10`, the `state1LeftOnes` premise for `counted_left_sweep_from1 16` is false; at `a=20`, even the claimed state-1 prefix endpoint is false. The 12-step hole-shift lemma itself is unaffected. What fails is the asserted *uniform source-tape precondition* for applying 16 cycles after that prefix.
+Thus the old fixed-sweep placement fails for authentic large `a`; the local state-1 sweep itself is valid. The corrected post-counted-sweep placement in sections 2–3 is the one now formalized in the source theorem.
 
-The script `M1EvenState1SweepAudit.mjs` reproduces the table from the exact transition table and S1 encoding. The tested full prefix of length `12a+12v₂(n)+32` still reaches state 4 at head `h+4` for the sampled cases, so this audit does **not** refute the proposed total cost or source theorem. It refutes only the current fixed-sweep decomposition as a proof for arbitrary `a`. A correct proof needs an `a)-dependent phase split or a different invariant; do not claim the fixed 16-cycle sweep is available for the authentic root parameter.
+## 8. Updated conclusion: all positive M1 indices are covered in the written source
 
-## 2. The full middle itinerary also needs the M1-even valuation-four row
-
-Let `R = tm63RootResidueSixK`, known odd. After middle row 26 and the five rows listed in `M1EvenZeroValuationGap.md`, the marker-1 index is
-[
-n_0=16R-16.
-]
-Every 24 source decrements return to marker 1, so the subsequent marker-1 indices are
-[
-n_j=16R-16-24j=8(2R-2-3j).
-]
-
-Their 2-adic valuations are forced by parity alone:
-
-- If `j` is odd, `2R-2-3j` is odd, so `v₂(n_j)=3`.
-- If `j=2u` with `u` odd, `n_j=16(R-1-3u)` with odd factor, so `v₂(n_j)=4).
-- If `j=2u` with `u` even, `R-1-3u` is even, so `v₂(n_j)≥5`.
-
-The existing `m1ZeroOdd_residue0_counted_increment_source` covers the valuation-3 class. Agent 48's proposed `n=32q` family covers valuation at least 5. A complete middle section therefore also needs a counted M1-even source theorem for
-[
-m=1,qquad n=16q,qquad q	ext{ odd},
-]
-with exact proposed cost
-[
-6cdot4^b+42cdot2^b+67+12a-9b.
-]
-This valuation-four row recurs every other 24-cycle (when `u` is odd); it is not optional after closing the first `n=32q` instance.
-
-## Recommended next proof target
-
-First replace the unsupported fixed `4(v₂(n)-1)`-cycle placement with a phase decomposition that is valid for arbitrary `a). In parallel, add the explicit `m=1,n=16q` odd-quotient row to the 24-cycle source-coverage plan. Keep both items in `im-results/` until the exact original-source Lean proof compiles and its transitive axiom profile is clean.
-
-
-## 3. Correct valuation-bridge placement found after the counted left sweep
-
-The failed placement above was not the right place to use the state-1 macro. A much cleaner bridge appears **after** the existing `counted_left_sweep (3*a+1)` from `M1EvenQ4Prefix.lean`. That sweep costs `9*a+3` and leaves state 3 at `hN = h-(3*a+1)`. Let `v=v₂(n)≥1`, with n's exact low-bit factorization `n=2^v*q`, q odd.
-
-The bridge from state 3 at `hN` has the following phase decomposition:
-
-1. A fixed 6-step prelude reaches state 1 at `hN`, blank under the head. The exact S1 source word supplies `3*v+4` consecutive ones to the left. This is exactly the premise for `counted_left_sweep_from1 (3*(v+1))`.
-2. The state-1 left sweep uses `3*(v+1)` three-step cycles: `9*(v+1)` steps, moving the blank to `hN-3*(v+1)`.
-3. A fixed 4-step exit reaches state 4 at `H = hN-3*(v+1)-2`, blank under the head.
-4. A fixed 3-step prelude reaches state 5 at `H+3`.
-5. The left sweep has written exactly `3*(v+1)` consecutive ones immediately to the right of `H+3`. A rightward state-5 sweep of `v+1` three-step cycles consumes them and returns state 5 at `hN+1`, reading blank.
-6. One fixed step exits state 5 to state 4 at `hN+2`; the three source ones at `hN+2,hN+3,hN+4` then give a final 3-step state-4 scan to `hN+5`.
-
-The total bridge cost is
-\[
-6+9(v+1)+4+3+3(v+1)+1+3=12v+29.
-\]
-Composing with the initial `9a+3` left sweep and the final `3a` state-4 scan from `hN+5) to `h+4) gives the uniform M1-even q4 prefix cost
-\[
-(9a+3)+(12v+29)+3a=12a+12v+32.
-\]
-Adding the existing q4 suffix gives exactly `proposedIncrementCost 1 n a b`, namely `6*4^b+42*2^b+19+12*a+12*v-9*b`.
-
-This is stronger than a separate v2=4 patch: one source theorem for arbitrary exact valuation v covers both the missing `n=16q` (q odd) row and the proposed `n=32q` (and higher) rows. It also recovers the existing v=1 bridge length 41. Finite simulations for n=6,16,32,64,96,128 and a=1 confirm every phase endpoint and exact length. The proof obligations still to formalize are:
-
-- a `state5_three_right` lemma and its counted `v+1)-cycle iterator (the symmetric rightward macro);
-- the `binDec`/S1-source proof of the initial `state1LeftOnes` length `3v+4`;
-- the fixed 6-, 4-, 3-, and 1-step phase transitions and the final 3-cell q4 scan;
-- the fact that the left-sweep output supplies the right-sweep ones, and the final source window supplies the last three q4 ones.
-
-This phase decomposition replaces the unsupported fixed `4(v₂-1))-cycle placement after `12a+6`. The local left-sweep macro remains useful, but its correct use is after the counted left sweep at `hN`.
-
-
-## 4. Exact state-1-to-state-4 bridge contract
-
-The variable part can be isolated from the 6-step prelude. Put `N=3*(v+1)`. For an arbitrary tape `T) and head `h`, the bridge theorem should take these hypotheses:
-
-- `T h = false`;
-- `state1LeftOnes T h (N+1)` (equivalently `3*v+4` consecutive ones immediately left of h);
-- `T (h-N-2) = false` and `T (h-N-3) = false` (the first two zeros of the `d0` block beyond those ones);
-- `T (h+1) = false` and `T (h+2)=T(h+3)=T(h+4)=true` (the four-cell [false,true,true,true] boundary left by the initial counted sweep).
-
-Then the `12*v+23)-step run from `⟨1,h,T⟩` decomposes as follows:
-
-| Phase | Exact run | Endpoint |
-|---|---:|---|
-| left-hole sweep | `3*N = 9(v+1)` | state 1 at `h-N`, blank |
-| four-step left exit | 4 | state 4 at `H=h-N-2`, blank |
-| rightward setup | 3 | state 5 at `H+3=h-N+1` |
-| right-hole sweep | `3(v+1)=N` | state 5 at `h+1`, blank |
-| state-5 exit | 1 | state 4 at `h+2` |
-| final q4 scan | 3 | state 4 at `h+5` |
-
-The left sweep's output tape `state1SweptLeft N T h` has a blank at `h-N` and writes ones at every cell `h-N+1,...,h`. These are exactly the `N=3(v+1)` cells consumed by the state-5 right sweep. The extra `(N+1)`st left one plus the two zeros beyond it give the four-step exit. The right sweep does not touch `h+1`, so its blank survives to the one-step state-5 exit; the final q4 scan then uses the untouched three ones at `h+2,h+3,h+4`.
-
-The output tape is the composition of these three simple updates: `state1SweptLeft N T h`, the fixed four-step exit writes at `h-N,h-N-1,h-N-3`, the fixed three-step setup writes at `H,H+1,H+2`, then `state5SweptRight (v+1)` from `h-N+1`, then the one-step state-5 exit writes at `h+1`. The final q4 scan leaves the tape unchanged. This contract is independent of the quotient q except for the two-zero boundary supplied by the first `d0` block after `d1pow v`.
-
-This is the clean theorem interface for a Lean implementation. The new `M1EvenState5Sweep.lean` supplies the rightward iterator; Agent48's existing `M1EvenState1Sweep.lean` supplies the leftward iterator. The remaining work is only the finite transition lemmas and the S1 source-shape proof for the six-step prelude.
-
-
-## 5. The six-step prelude hypotheses follow directly from S1Encoder
-
-Let `T0 = sweptLeft (3*a+1) (s1Config L n 1 a 0 b h).tape h` and `hN=h-(3a+1)`, the endpoint of the existing `counted_left_sweep`. The head-facing source suffix to the left of hN is
-```
-markerWord 1 ++ d0 ++ binDec L n ++ lh
-```
-(as in `m1EvenSourceLeftAt` in `M1EvenQ4Prefix.lean`). Since `markerWord 1=[true,false,true]` and `d0=[false,false,true]`, the four cells read by the fixed six-step prelude are
-```
-T0(hN)=false, T0(hN-1)=true, T0(hN-2)=false, T0(hN-3)=false.
-```
-The exact six-step trace is
-```
-state 3 @ hN  --false--> state 2 @ hN-1
-state 2 @ hN-1 --true-->  state 3 @ hN-2
-state 3 @ hN-2 --false--> state 2 @ hN-3
-state 2 @ hN-3 --false--> state 4 @ hN-2
-state 4 @ hN-2 --false--> state 0 @ hN-1
-state 0 @ hN-1 --false--> state 1 @ hN
-```
-It leaves the head blank and writes ones at hN-1,hN-2,hN-3. The third bit of the preceding `d0` block supplies one more one at hN-4.
-
-For exact `v=v₂(n)`, write `n=(2q+1)2^v` with q odd. S1Encoder's existing `binDec_carryPrefix` gives
-```
-binDec L n = d1pow v ++ d0 ++ binDec (L-v-1) q.
-```
-The `d1pow v` block contributes 3v ones immediately after hN-4. Therefore after the six-step prelude the left side has exactly the required `3v+4` consecutive ones; the next two cells are the first two false bits of the following `d0) block, giving the two exit zeros at hN-(3v+5) and hN-(3v+6).
-
-The right-side hypotheses are not from the original S0 right-facing suffix. They are the local boundary left by the *first* `counted_left_sweep`: `sweptLeft_plus1` gives a blank at hN+1, and `sweptLeft_block` gives ones at hN+2,hN+3,hN+4. The six-step prelude does not touch these cells. This is exactly the right-side input needed by the generic bridge contract in section 4.
-
-Thus all source-shape hypotheses for the generic bridge reduce to existing `sweptLeft` lemmas plus `binDec_carryPrefix`; no simulation-specific tape assumption is needed. The remaining new proof code is the fixed six-step run, the fixed four-/three-/one-step transitions, and the composition with the two counted sweeps.
-
-
-## 6. Consequence for the full 24-cycle root itinerary
-
-The exact-valuation bridge is needed only for `v₂(n)≥4` in the root's marker-1 `n≡0 mod 8` rows. The existing `m1ZeroOdd_residue0_counted_increment_source` handles the exact `v₂(n)=3` class. For `n_j=16R-16-24j` with R odd:
-
-- odd j gives `v₂(n_j)=3`;
-- even j gives `v₂(n_j)≥4` (with exact valuation 4 when j/2 is odd, and at least 5 when j/2 is even).
-
-Therefore, **if the generic M1-even valuation bridge is formalized and composed with the existing q4 suffix**, it and the existing M1-zero-odd theorem cover every marker-1 row in the complete 24-cycle middle itinerary. The separate v4/v5 source modules are unnecessary; one exact-v theorem for v≥4 is the cleaner target. The remaining root work is the formal 24-cycle induction and its connection to the authentic middle-26 endpoint, not another valuation split.
-
-
-## 7. Reproducible phase and q4-cut audit
-
-The script `M1EvenValuationBridgeProbe.mjs` constructs the exact S1 source tape, runs each phase separately, and asserts every intermediate state/head/blank boundary, the `3v+4` left-ones premise, the two-zero exit boundary, the state-5 right-sweep endpoint, and the final q4 endpoint. It additionally checks the **full q4 cut contract**: the left-facing tape at the original source head h matches `[true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec L (n-1) ++ lh`; the five-cell q4 guard, two blanks, counted right block, five-cell zero tail, and far-right blanks all satisfy the q4 suffix hypotheses. Executed in the current JavaScript runtime, it passed **480 cases** with L=16, exact valuations v=1..8, odd quotients q∈{1,3,5,7,9}, a∈{0,1,2,5,10,20}, and b∈{0,2}. Every case ended state 4 at h+4 after exactly `12a+12v+32` steps. This is reproducible finite simulation evidence, not a formal theorem; the script is committed alongside the note.
-
-
-## 8. The bridge has no v≥4 restriction: target all even n
-
-The exact state-1/state-5 bridge contract in sections 4–5 only requires `v≥1`; the source factorization `binDec_carryPrefix` is valid for every exact valuation `v≥1`. The 480-case probe already includes v=1,2,3 as well as v=4..8. Thus the clean formal target is not merely v≥4: it is **one M1-even counted-increment theorem for every even n=2^v q with q odd and v≥1**. It would subsume the specialized v=1 `n=6` prefix and the v=3 M1-zero-odd row, once its q4 suffix composition is proved. For the root itinerary, all marker-1 indices are divisible by 8 (v≥3), so this single theorem would cover every 24-cycle row without a separate valuation split. Keep the existing specialized theorems as independent evidence until the generic Lean theorem compiles; do not delete or replace them prematurely.
+The generic source theorem is not restricted to `v>=4`, to even `n`, or to a particular odd-quotient parity. It is stated for every `0<n<2^L` and `a>0`, and its factorization proof permits `v=0`. Therefore it covers the root's complete marker-1 subsequence without a separate valuation split. The only remaining status qualification is validation: the theorem is written and manually reviewed, but its Lean compilation and axiom audit are pending.
