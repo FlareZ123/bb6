@@ -55,6 +55,28 @@ private theorem no_d1_bad (d P n m : Nat)
   have hupper : d+6*P≤2344*n+8535 := by rw [hD]; omega
   omega
 
+private theorem four_reset_two_tail_wall_identity
+    (b m n P c : Nat)
+    (hwall : b+4*m+4*n+20+8*(c+3)=28*P)
+    (hC : c+3=2*P+146*m+146*n+1692) :
+    b+1172*m+1172*n+13556=12*P := by
+  omega
+
+private theorem four_reset_mass_d1
+    (b d m n P : Nat)
+    (hMass : b+d+2*m+2*n+13=14*P)
+    (hB : b+1172*m+1172*n+13556=12*P) :
+    d=2*P+1170*m+1170*n+13543 := by
+  omega
+
+private theorem four_reset_lower_b1
+    (b m n P : Nat)
+    (hn : 14≤n) (hP1100 : 1100*n≤P)
+    (hm : m≤3*n+4)
+    (hB : b+1172*m+1172*n+13556=12*P) :
+    6*P≤b := by
+  omega
+
 private theorem c2one_from_cost (P n m2 m1 t2 c2 : Nat)
     (hC2 : c2+3=2*P+146*m2+146*n+1254)
     (hpost2Cost : m2=m1+t2+1) (ht2eq : t2=1) :
@@ -344,11 +366,15 @@ theorem source_no_four_reset_shifted_wall
           rw [hpost2Cost, ht2eq] at hC2
           omega
         have hpow2 : 2^(t2+1)=8 := by simp [ht2eq]
-        have hB1Exact : b1+1172*m1+1172*n+13556=12*P := by
-          rw [hpow2] at hwallPre2
-          omega
-        have hD1Exact : d1=2*P+1170*m1+1170*n+13543 := by omega
-        have hb1Large : 6*P≤b1 := by omega
+        have hwallPre2Eight :
+            b1+4*m1+4*n+20+8*(c2+3)=28*P := by
+          simpa [hpow2] using hwallPre2
+        have hB1Exact := four_reset_two_tail_wall_identity
+          b1 m1 n P c2 hwallPre2Eight hC2two
+        have hD1Exact := four_reset_mass_d1
+          b1 d1 m1 n P hpre1MassExact hB1Exact
+        have hb1Large := four_reset_lower_b1
+          b1 m1 n P hn hP1100 hcost1Bound hB1Exact
 
         obtain ⟨B,D,R,r,u,j,c1,s1,hupperPre,hB,hB4,hD,hInv1,hj,
             hc1,hu,hupperPost⟩ :=
