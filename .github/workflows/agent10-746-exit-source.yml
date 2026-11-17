@@ -17,10 +17,12 @@ jobs:
       - name: Compile original copied source dependencies and downstream proofs
         run: |
           set -eu
-          export LEAN_PATH="im-results/agent7-cascade-odd-fibers:im-results/agent10-cascade"
           a="im-results/agent7-cascade-odd-fibers"
           b="im-results/agent10-cascade"
+          e="im-results/agent7-746-even-parent"
+          export LEAN_PATH="$a:$b:$e"
           lean --version
+          lean -o "$e/T0D0ZeroPhaseArithmetic.olean" "$e/T0D0ZeroPhaseArithmetic.lean"
           for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
             lean -o "$a/$m.olean" "$a/$m.lean"
           done
@@ -40,6 +42,7 @@ jobs:
           lean -o "$b/FirstOutcome.olean" "$b/FirstOutcome.lean"
           lean -o "$b/FirstInverseComplete.olean" "$b/FirstInverseComplete.lean"
           lean -o "$b/ResetChain.olean" "$b/ResetChain.lean"
+          lean -o "$e/T0D0ZeroPhaseSource.olean" "$e/T0D0ZeroPhaseSource.lean"
           lean -o "$b/ResetParentStrict.olean" "$b/ResetParentStrict.lean"
           lean -o "$b/ParentCheck.olean" "$b/ParentCheck.lean"
           lean -o "$b/Parents.olean" "$b/Parents.lean"
