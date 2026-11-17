@@ -55,7 +55,7 @@ This has a clean three-region proof:
 2. `i=3*t,3*t+1,3*t+2`: use `lbinDecHRunTape_d1` (the two bridge writes plus the original third one).
 3. `i>=3*t+3`: the H-run preserves the far-left exterior, and both input/output streams reduce to the same `tail` cell.
 
-The fixed postlude ends at state E, head `hN+2=hH+16`. Its output frame is the word with marked offsets `{13,11,8,5,2}` on `hN-12 .. hN+1`. Read head-facing from `hN+2`: the head cell is true (from the shifted initial-sweep block), the next three cells are exactly `markerWord 1`, and the next twelve cells are `d0pow 4`. The final bit of those twelve is at `hH+1`, supplied by the H-run's last right-sweep block. Hence the bridge/postlude output word at this head is:
+The fixed postlude ends at state E, head `hN+2=hH+16`. Its output frame is the word with marked offsets `{13,11,8,5,2}` on `hN-12 .. hN+1`. Read head-facing from `hN+2`: the head cell is true (from the shifted initial-sweep block), the next three cells are exactly `markerWord 1`, and the next twelve cells are `d0pow 4`. The final bit of those twelve is at `hH+1`, supplied by `lbinDecHRunTape_rightPlus1`: it is the last B-sweep block when `t>0`, and the `afterLIncBridge` write when `t=0`. Hence the bridge/postlude output word at this head is:
 
 ~~~lean
 [true] ++ markerWord 1 ++ d0pow 4 ++ d0pow t ++ d1 ++ tail
@@ -136,7 +136,7 @@ Already present:
 
 Still to formalize:
 
-1. the generic three-region H-run left-facing identity above;
+1. exact-import compilation/axiom audit of the drafted generic three-region H-run left-facing identity and `lbinDecHRunTape_rightPlus1` in `LBinDecHRunLeftFacing.lean`;
 2. the source-side H-run premises from the factorized quotient stream;
 3. the postlude-frame + H-run boundary word `markerWord 1 ++ d0pow 4`;
 4. the E-scan source-left word `Q`, q4 right shape, and far tail;
