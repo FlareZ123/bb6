@@ -1,5 +1,4 @@
 import M2EvenSixQ4Prefix
-import S1CountedDrain
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -13,8 +12,9 @@ respectively, followed by the same arbitrary BinDec(L-3,q) tail.
 A half-line frame therefore lifts the exact base run to all q.
 
 This is the complementary odd-quotient extension of the existing
-n=16*k+6 source theorem.  It is an intermediate source theorem, not a
-complete TM63 itinerary or a BB(6) upper bound.
+n=16*k+6 source theorem.  It proves the complete q4 reset prefix to the
+next S1 configuration; the later counted drain remains a separate generic
+composition.  It is not a complete TM63 itinerary or a BB(6) upper bound.
 -/
 
 namespace BB6Coverage.Agent44M2EvenSixGenericSource
@@ -27,7 +27,6 @@ open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent48M2EvenSixQ4
-open BB6Coverage.Agent48CountedInc0
 open BB6ChampionArithmetic
 
 set_option maxHeartbeats 5000000
