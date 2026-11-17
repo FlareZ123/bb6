@@ -18,7 +18,8 @@ theorem factor8q (L q : Nat) (hL : 4 ≤ L)
     calc
       2^L = 2^((L-3)+3) := by congr 1 <;> omega
       _ = 2^(L-3) * 2^3 := Nat.pow_add 2 (L-3) 3
-      _ = 8 * 2^(L-3) := by\n        rw [show 2^3 = 8 by norm_num, Nat.mul_comm]
+      _ = 8 * 2^(L-3) := by
+        rw [show 2^3 = 8 by norm_num, Nat.mul_comm]
   have hlt : 8*q < 8*2^(L-3) := by simpa [hpow] using hbound
   have hqBound : q < 2^(L-3) := by omega
   obtain ⟨u,t,len,hfactor,hlen,hu⟩ :=
@@ -32,7 +33,8 @@ private theorem factor8q_num (u t : Nat) (q : Nat)
   have hpow3 : 2^(t+3) = 8*2^t := by
     calc
       2^(t+3) = 2^t * 2^3 := Nat.pow_add 2 t 3
-      _ = 8*2^t := by\n        rw [show 2^3 = 8 by norm_num, Nat.mul_comm]
+      _ = 8*2^t := by
+        rw [show 2^3 = 8 by norm_num, Nat.mul_comm]
   calc
     8*q = 8*((2*u+1)*2^t) := by rw [hfactor]
     _ = (2*u+1)*(8*2^t) := by ring
