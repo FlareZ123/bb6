@@ -33,7 +33,10 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Show toolchain
-        run: lean --version
+        run: |
+          mkdir -p /tmp/lean-closure-reports
+          lean --version | tee /tmp/lean-closure-reports/toolchain.txt
+          git rev-parse HEAD | tee -a /tmp/lean-closure-reports/toolchain.txt
 
       - name: Generate M32 quotient source modules
         if: inputs.target == 'm32-w485-highstop'
@@ -42,34 +45,44 @@ jobs:
       - name: Compile exact transitive import closure
         run: |
           set -euo pipefail
-          case "${{ inputs.target }}" in
+          target="${{ inputs.target }}"
+          case "$target" in
             cline-filter)
               python3 tools/lean_compile_closure.py \
                 im-results/agent3-c-bounce-inverse/U5Q0CLineFilter.lean \
-                --jobs 4 --workdir /tmp/lean-closure-cline-filter
+                --jobs 4 --workdir /tmp/lean-closure-cline-filter 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
             cline-residual)
               python3 tools/lean_compile_closure.py \
                 im-results/agent3-c-bounce-inverse/U5Q0CLineResidualClosure.lean \
-                --jobs 4 --workdir /tmp/lean-closure-cline-residual
+                --jobs 4 --workdir /tmp/lean-closure-cline-residual 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
             m32-w485-highstop)
               python3 tools/lean_compile_closure.py \
                 im-results/agent3-c-bounce-inverse/U5Q0M32W485HighStop.lean \
-                --jobs 8 --workdir /tmp/lean-closure-m32-w485
+                --jobs 8 --workdir /tmp/lean-closure-m32-w485 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
             w1821-primitives)
               python3 tools/lean_compile_closure.py \
                 im-results/agent3-c-bounce-inverse/U5W1821Prerequisites.lean \
-                --jobs 4 --workdir /tmp/lean-closure-w1821-primitives
+                --jobs 4 --workdir /tmp/lean-closure-w1821-primitives 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
             w1821-highstop)
               python3 tools/lean_compile_closure.py \
                 im-results/agent3-c-bounce-inverse/U5Q0W1821HighStop.lean \
-                --jobs 8 --workdir /tmp/lean-closure-w1821
+                --jobs 8 --workdir /tmp/lean-closure-w1821 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
             *)
               echo "Unknown target: ${{ inputs.target }}" >&2
               exit 2
               ;;
           esac
+
+      - name: Upload exact-source compiler and axiom report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-closure-${{ inputs.target }}-${{ github.run_id }}
+          path: /tmp/lean-closure-reports/*
+          if-no-files-found: warn
+          retention-days: 14
