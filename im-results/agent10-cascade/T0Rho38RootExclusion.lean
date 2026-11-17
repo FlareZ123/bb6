@@ -389,4 +389,6 @@ theorem entry_not_root (a K : Nat)
   obtain ⟨q',_,hp'⟩ := reset_chain_last hprefix hHne
   exact hNoParentH q' hp'
 
+#print axioms entry_not_root
+
 end CascadeT0Rho38
