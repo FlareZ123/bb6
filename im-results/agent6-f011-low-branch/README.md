@@ -104,14 +104,14 @@ Set \(s=1\) when \(p=0\), and \(s=2\) when \(p=1\). Since \(p\) is unchanged dur
 
 | Starting residue \(r_0\) | First possible \(r=2\) exit | First-exit inequalities | Necessary halt equation |
 |---:|---|---|---|
-| 0 | 2 transitions after \(n\) complete blocks | \(16c_n+18<u_n\le64c_n+96\) | \((3c_0+5)64^{n+3}=3u_0+27n+32+9s\) |
-| 1 | 1 transition after \(n\) complete blocks | \(4c_n<u_n\le16c_n+18\) | \((3c_0+5)64^{n+2}=3u_0+27n+26+9s\) |
-| 2 | At a complete-block boundary | \(u_n\le4c_n\) | \((3c_0+5)64^{n+1}=3u_0+27n+20+9s\) |
+| 0 | 2 transitions after \(n\) complete blocks | \(16c_n+18<u_n\le64c_n+96\) | \((3c_0+5)64^{n+1}=3u_0+27n+32+9s\) |
+| 1 | 1 transition after \(n\) complete blocks | \(4c_n<u_n\le16c_n+18\) | \(16(3c_0+5)64^n=3u_0+27n+26+9s\) |
+| 2 | At a complete-block boundary | \(u_n\le4c_n\) | \(4(3c_0+5)64^n=3u_0+27n+20+9s\) |
 
 For each row, all earlier complete-block states must also satisfy \(u_j>4c_j\) for \(j<n\). The displayed inequalities enforce that the exit is at the indicated step, rather than an earlier state. The three equations combine into
 \[
 \boxed{
-(3c_0+5)\,64^{\,n+3-r_0}
+(3c_0+5)\,4^{\,3n+3-r_0}
 =
 3u_0+27n+32-6r_0+9s.
 }
@@ -122,7 +122,7 @@ For a fixed episode start, there is at most one candidate \(n\): the difference 
 \[
 (3c_0+5)64^{n+4-r_0}-(3c_0+5)64^{n+3-r_0}-27
 =
-63(3c_0+5)64^{n+3-r_0}-27>0.
+63(3c_0+5)4^{3n+3-r_0}-27>0.
 \]
 Thus each \(c<q\) episode can be tested by an exact monotone search rather than by iterating every low-branch transition.
 
