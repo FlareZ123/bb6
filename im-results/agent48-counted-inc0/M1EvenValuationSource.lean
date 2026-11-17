@@ -111,7 +111,7 @@ private theorem m1EvenValuationSourceLeftAt
 
 /-- The prelude tape, viewed from the new head, has the exact regular
 left word required by the uniform valuation bridge. -/
-private theorem m1EvenValuationPreludeLeftAt
+theorem m1EvenValuationPreludeLeftAt
     (len q v a b : Nat) (h : Int) (i : Nat)
     (hq : q < 2^len) :
     valuationPreludeTape
