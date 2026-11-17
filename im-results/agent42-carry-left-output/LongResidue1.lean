@@ -373,10 +373,16 @@ theorem carryLongPrefix_r1_full (k : Nat) (T : Int → Bool)
       some (⟨4,7,Tgen⟩ : Config) = run tm2 (15+12*(4*k+1)) ⟨3,0,T⟩ :=
         hrunGen.symm
       _ = some ⟨4,7,Tleft⟩ := hrunLeft
-  cases hconf
-  exact ⟨Tgen,hrunGen,h1,h2,h3,h4,h5,h6,hout,hleft⟩
+  have htape : Tgen = Tleft := congrArg Config.tape hconf
+  have hleftGen : ∀ x, x ≤ 0 →
+      Tgen x = carryLeftOutputBit (4*k+1) T x := by
+    intro x hx
+    rw [htape]
+    exact hleft x hx
+  exact ⟨Tgen,hrunGen,h1,h2,h3,h4,h5,h6,hout,hleftGen⟩
 
 #print axioms carryLongPrefix_r1_left
+#print axioms carryLongPrefix_r1_full
 #print axioms counted_left_sweep
 #print axioms run_frame
 #print axioms carryInput_leftOnes
