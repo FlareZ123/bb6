@@ -362,9 +362,8 @@ theorem outerLCIncAfterSweep_tailPattern
 /-- The post-sweep exterior remains blank strictly beyond the final
 head of the counted B/F/D sweep. -/
 theorem outerLCIncAfterSweep_blank
-    (T : Int → Bool) (h : Int) (a m b : Nat) (j : Nat)
-    (hblank : ∀ k : Nat, T (h+3*b+10+k) = false)
-    (xbound : j ≥ 0) :
+    (T : Int → Bool) (h : Int) (a m b r : Nat) (j : Nat)
+    (hblank : ∀ k : Nat, T (h+3*b+10+k) = false) :
     outerLCIncAfterSweep T h a m b (h+3*b+10+j) = false := by
   have hpres := sweptRightB_preserves_right (b+1)
     (outerLCIncAfterZero T h a m) (h+7)
@@ -374,8 +373,8 @@ theorem outerLCIncAfterSweep_blank
     (h+3*b+10+(j:Int)) (by omega)]
   rw [outerLCIncAfterFive_preserves_right T h a m
     (h+3*b+10+(j:Int)) (by dsimp [outerLCIncH1]; omega)]
-  rw [outerLCIncSourceT3_preserves_right T h a m
-    (Nat.succ rfl) (h+3*b+10+(j:Int)) (by omega)]
+  rw [outerLCIncSourceT3_preserves_right T h a m r
+    (h+3*b+10+(j:Int)) (by omega)]
   exact hblank j
 
 end BB6Coverage.Agent42OuterLCInc
