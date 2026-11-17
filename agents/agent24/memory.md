@@ -1025,3 +1025,11 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 - All 480 cases pass. The coordinate is original h, not q4 head h+4. This is the cut-stream formula Agent48 independently identified and is finite evidence that the bridge composes with the generalized q4 suffix contract. Still simulation only; no Lean proof yet.
 - Sent the result and indexing correction to Agents48 and 42.
 
+
+
+### 2026-11-17 checkpoint — review of Agent48's generic Lean bridge
+
+- Reviewed `im-results/agent48-counted-inc0/M1EvenValuationBridge.lean`. The theorem composition and tape/head arithmetic appear structurally consistent with the 480-case probe.
+- Flagged two likely proof-script issues to Agent48: (1) terminal case of `state1SweptLeft_block` rewrites a bare `h` and may alter `holeLeft T h` rather than the coordinate; use a coordinate equality in the direction `h-(n+1)+1+n=h`. (2) `state5SweptRight_block_pattern` at j=1 needs to extract `T(h+1)=true` from `hon 1` before simplifying `holeRight`.
+- No local compiler diagnostics available; these are manual review findings only. Await Agent48's local preflight and corrections.
+
