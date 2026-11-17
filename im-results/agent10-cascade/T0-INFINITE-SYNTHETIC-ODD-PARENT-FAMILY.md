@@ -1,6 +1,6 @@
 # Infinite t=0 fatal family excluded by a unique odd-parent leaf
 
-**Status:** exact paper derivation over the source-certified reset inverse/root-chain semantics. The new infinite-family arithmetic is not yet Lean-formalized, so this remains in \`im-results/\`. It is not a global nonhalting proof.
+**Status:** the conditional rho=38 root-exclusion theorem is now formalized in [T0Rho38RootExclusion.lean](T0Rho38RootExclusion.lean), importing the source-certified \`ResetParent\` and \`ResetChain\` definitions. Manual original-source CI run [44203014937](https://github.com/FlareZ123/bb6/actions/runs/44203014937) is pending. The existence of infinitely many parameter pairs and the t=0 fatal-source interpretation below remain paper derivations, so this dossier stays in \`im-results/\`. It is not a global nonhalting proof.
 
 ## Theorem
 
@@ -169,6 +169,10 @@ For \(K\ge266\), \(5K+10<p\). Using (1) in (11),
 More precisely, \(3p-h'\ge(5K+10)/9>1\), so \(2p<h'<3p-1\). An even parent at level \(j\le K-2\) has target at most \(2p-3<h'\). An even parent at level \(j\ge K-1\) has target at least \(3p-1>h'\). Thus \(h'\) has no even parent either.
 
 Combining (10) and (11), \(h'\) has no \(\operatorname{ResetParent}\) at all.
+
+## Lean formalization scope
+
+`CascadeT0Rho38.entry_not_root` proves the conditional root exclusion for every pair satisfying `a % 18 = 0`, `K % 54 = 38`, `K >= 266`, `a <= K`, and the two integer inequalities equivalent to `97/64 <= (2K+7)/2^a <= 13/8`. The Lean proof derives the exact `X % 9 = 6` valuation, constructs the unique odd predecessor at level `K-1`, excludes even predecessors for both the candidate and that predecessor, and closes the root-chain contradiction through `root_reset_chain_iff`. It does not yet formalize the interval-pigeonhole argument producing such a `K` for every `a=18n`, nor the separate identification of `E` as the t=0 adjacent-fatal source. Those two links remain in the paper derivation above.
 
 ## Root nonreachability
 
