@@ -694,4 +694,14 @@ theorem outerLCInc_full_run
 
 #print axioms outerLCInc_full_run
 
+
+/-- Canonical target counter word for the final m=1 outer LC_Inc row:
+the decremented binary counter is d0^b followed by a+2 one-blocks. -/
+theorem outerLCInc_target_binary_prefix (a b : Nat) :
+    binDec (a+b+2) (2^b-1) = d0pow b ++ d1pow (a+2) := by
+  have hq : 0 < 2^(a+1) := Nat.pow_pos (by decide : 0 < 2)
+  simpa [binDec_zero, d1pow] using
+    (binDec_sub_one_carryPrefix (a+1) 0 b hq)
+
+
 end BB6Coverage.Agent42OuterLCInc
