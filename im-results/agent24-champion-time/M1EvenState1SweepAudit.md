@@ -85,3 +85,30 @@ This is stronger than a separate v2=4 patch: one source theorem for arbitrary ex
 - the fact that the left-sweep output supplies the right-sweep ones, and the final source window supplies the last three q4 ones.
 
 This phase decomposition replaces the unsupported fixed `4(v₂-1))-cycle placement after `12a+6`. The local left-sweep macro remains useful, but its correct use is after the counted left sweep at `hN`.
+
+
+## 4. Exact state-1-to-state-4 bridge contract
+
+The variable part can be isolated from the 6-step prelude. Put `N=3*(v+1)`. For an arbitrary tape `T) and head `h`, the bridge theorem should take these hypotheses:
+
+- `T h = false`;
+- `state1LeftOnes T h (N+1)` (equivalently `3*v+4` consecutive ones immediately left of h);
+- `T (h-N-2) = false` and `T (h-N-3) = false` (the first two zeros of the `d0` block beyond those ones);
+- `T (h+1) = false` and `T (h+2)=T(h+3)=T(h+4)=true` (the fixed right-facing S0 prefix).
+
+Then the `12*v+23)-step run from `⟨1,h,T⟩` decomposes as follows:
+
+| Phase | Exact run | Endpoint |
+|---|---:|---|
+| left-hole sweep | `3*N = 9(v+1)` | state 1 at `h-N`, blank |
+| four-step left exit | 4 | state 4 at `H=h-N-2`, blank |
+| rightward setup | 3 | state 5 at `H+3=h-N+1` |
+| right-hole sweep | `3(v+1)=N` | state 5 at `h+1`, blank |
+| state-5 exit | 1 | state 4 at `h+2` |
+| final q4 scan | 3 | state 4 at `h+5` |
+
+The left sweep's output tape `state1SweptLeft N T h` has a blank at `h-N` and writes ones at every cell `h-N+1,...,h`. These are exactly the `N=3(v+1)` cells consumed by the state-5 right sweep. The extra `(N+1)`st left one plus the two zeros beyond it give the four-step exit. The right sweep does not touch `h+1`, so its blank survives to the one-step state-5 exit; the final q4 scan then uses the untouched three ones at `h+2,h+3,h+4`.
+
+The output tape is the composition of these three simple updates: `state1SweptLeft N T h`, the fixed four-step exit writes at `h-N,h-N-1,h-N-3`, the fixed three-step setup writes at `H,H+1,H+2`, then `state5SweptRight (v+1)` from `h-N+1`, then the one-step state-5 exit writes at `h+1`. The final q4 scan leaves the tape unchanged. This contract is independent of the quotient q except for the two-zero boundary supplied by the first `d0` block after `d1pow v`.
+
+This is the clean theorem interface for a Lean implementation. The new `M1EvenState5Sweep.lean` supplies the rightward iterator; Agent48's existing `M1EvenState1Sweep.lean` supplies the leftward iterator. The remaining work is only the finite transition lemmas and the S1 source-shape proof for the six-step prelude.
