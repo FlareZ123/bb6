@@ -24,6 +24,10 @@ jobs:
           python3 -c "import base64,io,lzma,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('/tmp/a42-terminal',filter='data')"
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a42-terminal/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a42-terminal/
+          cp im-results/agent48-root-witness/M1EvenState1Sweep.lean /tmp/a42-terminal/
+          cp im-results/agent24-champion-time/M1EvenState5Sweep.lean /tmp/a42-terminal/
+          cp im-results/agent48-counted-inc0/M1EvenValuationBridge.lean /tmp/a42-terminal/
+          cp im-results/agent48-counted-inc0/M1EvenValuationSource.lean /tmp/a42-terminal/
           cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a42-terminal/
           cp im-results/agent48-root-witness/{RootFiniteBits,RootSourceBridge}.lean /tmp/a42-terminal/
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a42-terminal/
@@ -86,6 +90,16 @@ jobs:
           lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/q4-prefix-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/q4-prefix-axioms.log; then
             echo '::error::sorryAx found in source q4 prefix theorem'
+            exit 1
+          fi
+          # Agent 48: compile the valuation sweep macros and their
+          # generic state-1/state-5 bridge before the original-source module.
+          lean -o M1EvenState1Sweep.olean M1EvenState1Sweep.lean
+          lean -o M1EvenState5Sweep.olean M1EvenState5Sweep.lean
+          : > /tmp/a42-terminal/m1-even-valuation-bridge-axioms.log
+          lean -o M1EvenValuationBridge.olean M1EvenValuationBridge.lean 2>&1 | tee /tmp/a42-terminal/m1-even-valuation-bridge-axioms.log
+          if grep -qE 'sorryAx|native_decide' /tmp/a42-terminal/m1-even-valuation-bridge-axioms.log; then
+            echo '::error::sorryAx or native_decide found in M1 valuation bridge'
             exit 1
           fi
           # Agent 8: certify the new m=1, n=8*k+2 finite bridge and
@@ -501,6 +515,14 @@ jobs:
           lean -o M1EvenQ4Suffix.olean M1EvenQ4Suffix.lean 2>&1 | tee /tmp/a42-terminal/m1-even-q4-suffix-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/m1-even-q4-suffix-axioms.log; then
             echo '::error::sorryAx found in m=1,n=6 even q4 suffix and counted-increment composition'
+            exit 1
+          fi
+          # Agent 48: full original-source M1 valuation increment,
+          # including the generic q4 suffix and counted-drain composition.
+          : > /tmp/a42-terminal/m1-even-valuation-source-axioms.log
+          lean -o M1EvenValuationSource.olean M1EvenValuationSource.lean 2>&1 | tee /tmp/a42-terminal/m1-even-valuation-source-axioms.log
+          if grep -qE 'sorryAx|native_decide' /tmp/a42-terminal/m1-even-valuation-source-axioms.log; then
+            echo '::error::sorryAx or native_decide found in full M1 valuation counted source'
             exit 1
           fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M1EvenResidueSix.lean" /tmp/a42-terminal/
@@ -1021,13 +1043,13 @@ jobs:
             exit 1
           fi
 
-          # Agent 44: rows 27--34 of the authentic root middle itinerary,
-          # conditional only on the still-open row-32 M1-even source theorem.
+          # Agent 44/48: rows 27--34 of the authentic root middle itinerary,
+          # with row 32 discharged by the full M1 valuation source theorem.
           cp "$GITHUB_WORKSPACE/im-results/agent44-tm63-middle/TM63RootMiddle34.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/tm63-root-middle34-axioms.log
           lean -o TM63RootMiddle34.olean TM63RootMiddle34.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle34-axioms.log
           if grep -qE 'sorryAx|native_decide' /tmp/a42-terminal/tm63-root-middle34-axioms.log; then
-            echo '::error::sorryAx or native_decide found in conditional TM63 middle-34 composition'
+            echo '::error::sorryAx or native_decide found in unconditional TM63 middle-34 composition'
             exit 1
           fi
 
