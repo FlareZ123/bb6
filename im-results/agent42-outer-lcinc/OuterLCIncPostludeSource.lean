@@ -586,4 +586,65 @@ theorem outerLCInc_source_postlude_conditions
       simpa [outerLCIncTailStart] using h14
   exact ⟨hfive, hscan, hzero, hright', hzeroExit, htail⟩
 
+
+/-- The left-facing source begins with d1^a when the second counter is
+zero, so the initial left sweep has exactly 3a one-cells. -/
+theorem outerLCInc_s1_leftOnes
+    (L n m a b : Nat) (h : Int) :
+    leftOnes (s1Config L n m a 0 b h).tape h (3*a) := by
+  intro i hi
+  have hcell := s1Config_left_cell L n m a 0 b h i
+  have hword :
+      s1LeftFacing L n m a 0 =
+        d1pow a ++ markerWord m ++ d0 ++ binDec L n ++ lh := by
+    simp [s1LeftFacing, binDec_zero]
+  rw [hword] at hcell
+  have happ := BB6Coverage.Agent6Q4Prefix.sideBit_append_left
+    (d1pow a) (markerWord m ++ d0 ++ binDec L n ++ lh) i
+    (by simpa [d1pow_length] using hi)
+  rw [happ] at hcell
+  exact hcell.trans
+    (BB6Coverage.Agent6Q4Prefix.sideBit_d1pow_true a i hi)
+
+/-- Specialization of the generic postlude source obligations to the
+actual S1 encoding with second counter zero. -/
+theorem outerLCInc_s1_postlude_conditions
+    (L n m a b r : Nat) (h : Int) (hm : m < 3) :
+    (∀ x, outerLCIncFiveInside x = true →
+      outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r
+        (outerLCIncH1 h a m+2+x) =
+        decide (x ∈ outerLCIncFiveStart.marked)) ∧
+    linearRightOnes
+      (outerLCIncAfterFive
+        (outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r)
+        h a m)
+      (outerLCIncH1 h a m+7) (3*a+m+3) ∧
+    ((outerLCIncAfterFive
+        (outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r)
+        h a m) (h+5) = false ∧
+      (outerLCIncAfterFive
+        (outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r)
+        h a m) (h+6) = false) ∧
+    rightOnes
+      (outerLCIncAfterZero
+        (outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r)
+        h a m)
+      (h+7) (b+1) ∧
+    (outerLCIncAfterSweep
+      (outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r)
+      h a m b) (h+3*b+10) = false ∧
+    (∀ x, outerLCIncTailInside x = true →
+      (outerLCIncAfterZeroExit
+        (outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r)
+        h a m b) (h+3*b+9+x) =
+        decide (x ∈ outerLCIncTailStart.marked)) := by
+  have hleft := outerLCInc_s1_leftOnes L n m a b h
+  have hright := outerLCInc_s1_right_facts L n m a b h
+  dsimp at hright
+  rcases hright with ⟨h2,h3,h4,h5,h6,hrun,hblank⟩
+  exact outerLCInc_source_postlude_conditions
+    (s1Config L n m a 0 b h).tape h a m b r hm hleft
+    ⟨h2,h3,h4⟩ ⟨h5,h6⟩ hrun hblank
+
+
 end BB6Coverage.Agent42OuterLCInc
