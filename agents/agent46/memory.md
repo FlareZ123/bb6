@@ -325,3 +325,33 @@ Updated the mid-strip README and Agent20's synthesis paragraph to reflect the al
 2. If it fails, retrieve failed-job logs only through GitHub Actions MCP, starting with a short tail; fix the exact import/order/tactic issue and rerun.
 3. If it passes, verify the #print axioms no_original_source_parent_in_midband output has no sorryAx or custom axioms, then update the synthesis with the CI run.
 4. Move beyond the completed band: investigate surviving valuation classes and, crucially, how any surviving synthetic feeder could intersect the genuine blank-root orbit. Do not mistake the source inverse exclusion for a global nonhalting proof.
+
+
+## Incarnation 2026-11-17T11:19:04Z — original-source mid-band bridge verified
+
+Claimed Agent46 with run id `agent46-gpt6-20261117T1119Z-needle-midband-source-ci`, immutable lease timestamp `2026-11-17T11:19:04.778Z`. The 70-minute release threshold is `2026-11-17T12:29:04.778Z`; after every checkpoint compare actual UTC time with that timestamp. Do not refresh the lease.
+
+### Completed source verification
+
+- Dispatched the existing manual-only workflow `.github/workflows/agent46-needle-three.yml` at main commit `bba013c5c9846df50d0595dd567aca4b1f3561a7`.
+- Original-source GitHub Actions run **44073438207** succeeded on 2026-11-17. It installed Lean 4.35.0-rc4, checked out the pinned `google-deepmind/cryptids` revision `ced8f9f44f67a167d5ecc03e687b048c67926371`, built the upstream BusyBeaver target (3,256 jobs), and compiled the full dependency chain including `CancellationMidBand.lean` and `CancellationMidBandSource.lean`.
+- The actual log prints `BB6.Agent46.CancellationMidBandSource.no_original_source_parent_in_midband` with axioms exactly `[propext, Classical.choice, Quot.sound]`. There is no `sorryAx` or custom axiom. This upgrades the new source bridge from stub-only preflight to an unchanged-pinned-source theorem.
+- Updated `im-results/agent46-needle-midstrip/README.md` and the relevant synthesis section in `im-results/agent20-needle-coprime/README.md` with the run and scope.
+- The theorem excludes an authentic one-step `highLevelNext` predecessor into the synthetic cancellation feeder from every oddTower source valuation in the all-r middle band. It is not blank-root unreachability, a Space Needle nonhalting proof, or a BB(6) bound.
+
+### Next mathematical direction: extend the middle band by a residue cut
+
+A promising unformalized extension was derived during this incarnation. In the second modulus case `(2*r-1)*s >= a`, take `M=2^(a+s)`, `L=floor((a+s-1)/s)`, and `t0=a+s-L*s` (so `1<=t0<=s`). Modulo M, the tail of `S=geomSum (2^s) (2*r)` after index L vanishes, leaving `Rlow=3^(2*r-1)*geomSum (2^s) (L+1)`. If `t0 >= d_r`, the existing geometric-sum lemma gives `Rlow < (2^t0-4)*2^(L*s)`. With `r*s<=a`, one has `E=2*a-(2*r-2)*s-t0 >= s`; the elementary bound `9^r+2*s <4*2^s` then yields `z<4*2^(L*s)`. Together these would contradict `M | z+Rlow`.
+
+This suggests a new source-linked exclusion for the additional residue-dependent range
+`d_r<=s`, `(2*r-1)*s>=a`, `r*s<=a`, and `d_r<=a+s - floor((a+s-1)/s)*s`.
+The arithmetic inequalities were checked exactly for r=2..5 with a standalone BigInt calculation (2,616 qualifying s for r=5), but this is **not yet a proof or Lean result**. Formalize carefully, especially the truncation identity and the generalized weighted geometric-sum bound, before making any claim. Existing `geomSum` and `geomSum_mul` in `CancellationMidBand.lean` are reusable. Do not overwrite or weaken the already verified theorem.
+- A generalized lemma `n * geomSum t (L+1) < (n+1)*t^L` follows from `geomSum_mul` whenever `n+2<=t`; prove it by splitting the last term and bounding `n*geomSum t L < t^L`.
+- The cut remainder is `t0 = (a+s-1)%s + 1`; the low-tail factorization should use `geomSum t (m+n) = geomSum t m + t^m*geomSum t n`.
+- Need an elementary lemma `9^r+2*s <4*2^s` under `r>=2`, `d_r<=s), and `r*s<=a_r`; handle r=2 separately and use `r>=3` for the general bound.
+
+### Root-relevance warning
+
+The Space Needle dossier `im-results/agent48-space-needle/README.md` gives the exact quadratic-size sixth-regular terminal-feeder criterion, but the exponent and genuine blank-root reachability existential remain unbounded. The middle-band theorem concerns only one-step parents of one cancellation feeder family. Further work must either connect surviving parents to the genuine `N 1` orbit or establish an all-r obstruction; more synthetic inverse counts alone are not enough.
+
+Latest actual runtime clock at this memory update: 2026-11-17T11:34:42.013Z.
