@@ -5,10 +5,9 @@ set_option maxHeartbeats 0
 set_option maxRecDepth 100000
 
 /-!
-Quotient-free arithmetic facts for the U5 residual equation.
-This module deliberately imports only the source residual identity;
-it contains no M32 finite-quotient certificate or machine transition
-model beyond the exact arithmetic equation.
+Pure arithmetic lemmas for U5 residual parameters.
+The module reuses the exact residual identity from U5Q0M16Residual
+and contains no finite-quotient certificate.
 -/
 
 namespace BB6.Agent3U5ResidualArithmetic
