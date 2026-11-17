@@ -160,8 +160,9 @@ theorem source_no_four_reset_shifted_wall
         simpa using hh
       have hmul : 16*P≤2^t4*(c4+3) := by
         have h8 : 16*P≤8*(c4+3) := by
-          have hh := Nat.mul_le_mul_left 8 hC4Lower
-          omega
+          calc
+            16*P = 8*(2*P) := by omega
+            _ ≤ 8*(c4+3) := Nat.mul_le_mul_left 8 hC4Lower
         have hpowmul : 8*(c4+3)≤2^t4*(c4+3) :=
           Nat.mul_le_mul_right (c4+3) hpow
         exact Nat.le_trans h8 hpowmul
@@ -242,8 +243,9 @@ theorem source_no_four_reset_shifted_wall
           have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) htLarge
           simpa using hh
         have h8 : 16*P≤8*(c3+3) := by
-          have hh := Nat.mul_le_mul_left 8 hC3Lower
-          omega
+          calc
+            16*P = 8*(2*P) := by omega
+            _ ≤ 8*(c3+3) := Nat.mul_le_mul_left 8 hC3Lower
         have hpowmul : 8*(c3+3)≤2^t3*(c3+3) :=
           Nat.mul_le_mul_right (c3+3) hpow
         have hmul : 16*P≤2^t3*(c3+3) := Nat.le_trans h8 hpowmul
@@ -321,8 +323,9 @@ theorem source_no_four_reset_shifted_wall
             have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) htLarge
             simpa using hh
           have h8 : 16*P≤8*(c2+3) := by
-            have hh := Nat.mul_le_mul_left 8 hC2Lower
-            omega
+            calc
+              16*P = 8*(2*P) := by omega
+              _ ≤ 8*(c2+3) := Nat.mul_le_mul_left 8 hC2Lower
           have hpowmul : 8*(c2+3)≤2^t2*(c2+3) :=
             Nat.mul_le_mul_right (c2+3) hpow
           have hmul : 16*P≤2^t2*(c2+3) := Nat.le_trans h8 hpowmul
