@@ -367,37 +367,37 @@ theorem b0_odd_even_prefix_then_cphaseD1_safe (b : Conf) (n : Nat)
     rcases hcases with hi0 | hi1 | hi2
     · subst i
       have hidx : b1.h-1-((0:Nat):Int) =
-          (b.h-2)+2*((n+1)+1) := by rw [hhead1']; omega
+          (b.h-2)+2*((n+1)+1) := by omega
       rw [htape1',hidx]
       exact hp0
     · subst i
       have hidx : b1.h-1-((1:Nat):Int) =
-          (b.h-2)+2*((n+1)+1)-1 := by rw [hhead1']; omega
+          (b.h-2)+2*((n+1)+1)-1 := by omega
       rw [htape1',hidx]
       exact hp1
     · subst i
       have hidx : b1.h-1-((2:Nat):Int) =
-          (b.h-2)+2*((n+1)+1)-2 := by rw [hhead1']; omega
+          (b.h-2)+2*((n+1)+1)-2 := by omega
       rw [htape1',hidx]
       exact hp2
   have hzeroC : b1.tape (b1.h-1-(3:Int)) = false := by
     have hidx : b1.h-1-(3:Int) =
-        (b.h-2)+2*((n+1)+1)-3 := by rw [hhead1']; omega
+        (b.h-2)+2*((n+1)+1)-3 := by omega
     rw [htape1',hidx]
     exact hp3
   have honeD : b1.tape (b1.h-2-(3:Int)) = true := by
     have hidx : b1.h-2-(3:Int) =
-        (b.h-2)+2*((n+1)+1)-4 := by rw [hhead1']; omega
+        (b.h-2)+2*((n+1)+1)-4 := by omega
     rw [htape1',hidx]
     exact hp4
   have hbarrier0 : b1.tape (b1.h-3-(3:Int)) = false := by
     have hidx : b1.h-3-(3:Int) =
-        (b.h-2)+2*((n+1)+1)-5 := by rw [hhead1']; omega
+        (b.h-2)+2*((n+1)+1)-5 := by omega
     rw [htape1',hidx]
     exact hp5
   have hbarrier1 : b1.tape (b1.h-4-(3:Int)) = true := by
     have hidx : b1.h-4-(3:Int) =
-        (b.h-2)+2*((n+1)+1)-6 := by rw [hhead1']; omega
+        (b.h-2)+2*((n+1)+1)-6 := by omega
     rw [htape1',hidx]
     exact hp6
   obtain ⟨bout,htail,hreach2,hB2,hhead2,_,_,_,_,hnotBad⟩ :=
@@ -480,12 +480,12 @@ theorem cphase_seed_step (b : Conf) (k : Nat)
           omega
         rw [hidx]
         exact hleft'
-    · have hidx : bout.h-4 = b.h-6 := by rw [hhead']; omega
+    · have hidx : bout.h-4 = b.h-6 := by omega
       rw [hidx]
       have hp := hpres6 (b.h-6) (by omega)
       rw [hp]
       exact hbarrier0
-    · have hidx : bout.h-5 = b.h-7 := by rw [hhead']; omega
+    · have hidx : bout.h-5 = b.h-7 := by omega
       rw [hidx]
       have hp := hpres6 (b.h-7) (by omega)
       rw [hp]
@@ -493,9 +493,9 @@ theorem cphase_seed_step (b : Conf) (k : Nat)
     · intro j hj
       have hold := hpairs (j+1) (by omega)
       have hidx1 : bout.h-7-2*(j:Int) =
-          b.h-7-2*((j+1):Int) := by rw [hhead']; omega
+          b.h-7-2*((j+1):Int) := by omega
       have hidx2 : bout.h-6-2*(j:Int) =
-          b.h-6-2*((j+1):Int) := by rw [hhead']; omega
+          b.h-6-2*((j+1):Int) := by omega
       constructor
       · rw [hidx1]
         have hp := hpres6 (b.h-7-2*((j+1):Int)) (by omega)
@@ -589,23 +589,23 @@ theorem b0_odd_even_prefix_to_cphase_seed (b : Conf) (n : Nat)
     have hcases : i=0 ∨ i=1 ∨ i=2 := by omega
     rcases hcases with hi0 | hi1 | hi2
     · subst i
-      have hidx : b1.h-1-((0:Nat):Int) = p := by rw [hhead']; omega
+      have hidx : b1.h-1-((0:Nat):Int) = p := by omega
       rw [htape',hidx]
       simpa [p] using hp0
     · subst i
-      have hidx : b1.h-1-((1:Nat):Int) = p-1 := by rw [hhead']; omega
+      have hidx : b1.h-1-((1:Nat):Int) = p-1 := by omega
       rw [htape',hidx]
       simpa [p] using hp1
     · subst i
-      have hidx : b1.h-1-((2:Nat):Int) = p-2 := by rw [hhead']; omega
+      have hidx : b1.h-1-((2:Nat):Int) = p-2 := by omega
       rw [htape',hidx]
       simpa [p] using hp2
   have hzero' : b1.tape (b1.h-4) = false := by
-    have hidx : b1.h-4 = p-3 := by rw [hhead']; omega
+    have hidx : b1.h-4 = p-3 := by omega
     rw [htape',hidx]
     simpa [p] using hp3
   have hone' : b1.tape (b1.h-5) = true := by
-    have hidx : b1.h-5 = p-4 := by rw [hhead']; omega
+    have hidx : b1.h-5 = p-4 := by omega
     rw [htape',hidx]
     simpa [p] using hp4
   have hkeep (x : Int) (hx0 : x ≠ p) (hx1 : x ≠ p-1) :
