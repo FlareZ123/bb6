@@ -866,3 +866,33 @@ The reachable-parent corollary now carries both necessary conditions:
 Useful specialization: for `t=123+168*z`, put `B=661+903*z`. At q=0, `U=8B`, `V=4B`, and `k=64*t-4-4*B`. If z is odd, then B is even and k≡4 (mod8), so the second filter excludes the q=0 parent for every odd z. If z≡3 (mod4), then B≡2 (mod4), so the fan has only q=0,1; the q=0 parent is excluded by the second filter and the q=1 parent has V+q≡3 (mod4), excluded by the first filter. This recovers the complete t=123+168*z, z≡3 (mod4) X_t closure in a short source-invariant argument, overlapping the existing w=21 (mod32) cylinder rather than claiming a new cylinder.
 
 The new theorem is still an uncompiled Lean draft; the local runtime is unavailable at the tool boundary, and Agent 6 has been asked for exact local preflight. No CI was dispatched.
+
+
+## 2026-11-17 continuation: source-only U5 q-fan residual closures
+
+Current incarnation claimed Agent 3 at `2026-11-17T00:02:57.602Z`, run id `agent3-gpt6-20261117T0003Z-u5-q-fan-source-continuation`. Do not refresh this lease. The 70-minute threshold is `2026-11-17T01:12:57.602Z`; check actual clock after every checkpoint and release only at/after that threshold.
+
+The existing all-parameter CLine q-fan filter now has two source exclusions in `im-results/agent3-c-bounce-inverse/U5Q0CLineFilter.lean`:
+- `(V+q)%4 != 3`;
+- `(V+q)%4 = 0` together with `k%8 = 4` is impossible.
+The module is still an uncompiled Lean draft; no CI was dispatched.
+
+Created `im-results/agent3-c-bounce-inverse/U5Q0CLineResidualClosure.lean` (latest blob SHA `e8c7226526a9401dddfd0a6360d517e938e28d00`). It attempts source-only q0-parent closures:
+1. For `t=32*n+19`, `43*t-1=16*(86*n+51)`; q≤1. q0 is filtered by `V=0 mod4, k=4 mod8`, q1 by `V+q=3 mod4`. This recovers the full q-fan exclusion for the w=21 (mod32) residual cylinder.
+2. For `t=128*n+99`, `43*t-1=32*(172*n+133)`; q≤2. q0 and q2 are excluded by the existing filter. The exceptional q1 parent has hub left coordinate `A=6 mod16`. A new direct `nextC` case split `reached_hub_prev_or_zero` gives either the high predecessor or the even zero-left predecessor. The high predecessor contradicts the middle-zero mod4 invariant. The zero-left predecessor has `Reach(0,r,c)` with `r=2 mod8, c=6 mod8`; the new `zero_left_26_not_reach` lemma reverses the high tail to a k=2 hub, then the high/reset alternatives contradict respectively the middle-zero and odd-zero mod4 source invariants. This eliminates q1 and closes the full q-fan for the w=37 (mod128) residual cylinder, if the Lean draft compiles.
+
+The dossier `im-results/agent3-c-bounce-inverse/README.md` was rewritten near its top to distinguish these source-only drafts from the independently certified M16 quotient results. The existing `U5Q0M16HighStop.lean` still calls the M16 residual closure; it has **not** yet been switched to the new source-only module. No claim of a verified root/high-stop theorem is made.
+
+Validation requests:
+- Agent 7 was asked to compile the exact source closure locally with Lean 4.36.0-rc2 and print axiom profiles; Agent 7's lease has since aged beyond 100 minutes, and no reply was found in Agent 3's mailbox.
+- Agent 15 was asked to adversarially review the q-fan filter and the new zero-left obstruction.
+- Agent 21 was asked to compare `reached_hub_prev_or_zero` with its older local `CHubSplit.lean` work and check the exceptional predecessor branches.
+- Agent 6 had an earlier local preflight request but no response.
+
+Next actions:
+1. Get a concrete exact local Lean diagnostic from an identity with a working local runtime; compile `U5Q0CLineFilter.lean` then the complete transitive closure of `U5Q0CLineResidualClosure.lean`, with original `CLine` and no stubs. Do not dispatch CI before this local preflight.
+2. If clean, inspect the full `#print axioms` outputs for all exported closure theorems; then switch the w21/w37 q0-parent calls in `U5Q0M16HighStop.lean` to `BB6.Agent3U5CLineResidualClosure`, remove the M16 residual-closure dependency if no longer used, and compile the full high-stop chain. Only then describe the high-stop conclusion as source-certified.
+3. If the exceptional hub split is already proved in Agent 21's CHubSplit work, reuse that generic theorem instead of retaining a duplicate helper.
+4. The remaining w=5 (mod8) q-fan cylinders are still open; neither these two cylinders nor the finite M16 quotient determines Machine C globally or BB(6).
+
+Important: the zero-left (2,6) mod-8 lemma is a mathematical derivation in an uncompiled draft, not yet a verified theorem. Keep all new material in `im-results/` until exact source preflight and high-stop integration succeed.
