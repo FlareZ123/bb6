@@ -1151,3 +1151,70 @@ jobs:
             /tmp/a42-terminal/section-result-run-source-axioms.log
           if-no-files-found: ignore
           retention-days: 3
+
+
+  # Independent, narrow acceptance gate for the marker-0 n=8q all-valuation
+  # q4 prefix.  This deliberately does not depend on the broad terminal-source
+  # job above, so unrelated root/carry experiments cannot mask its diagnostics.
+  m0-even-eight-valuation-prefix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile the exact M0-even 8q valuation-prefix dependency chain
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/m0-e8
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/m0-e8/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/m0-e8/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/m0-e8/
+          cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern,CountedOddBase,CountedSweep}.lean /tmp/m0-e8/
+          cp im-results/agent8-counted-reset/CountedReset.lean /tmp/m0-e8/
+          cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/m0-e8/
+          cp im-results/agent48-counted-inc0/{M0EvenEightQ4Bridge,M0EvenEightQ4Prefix,M0EvenEightValuationEncoding,M0EvenEightValuationFixedPrefix,M0EvenEightValuationMacros,M0EvenEightValuationSuffix,M0EvenEightValuationSweepFacts,M0EvenEightValuationSource}.lean /tmp/m0-e8/
+          cd /tmp/m0-e8
+          export LEAN_PATH=.
+          lean --version
+          compile_checked() {
+            local source="$1"
+            local stem
+            stem="$(basename "$source" .lean)"
+            lean -o "$stem.olean" "$source" 2>&1 | tee "$stem-axioms.log"
+            if grep -qE 'sorryAx|native_decide' "$stem-axioms.log"; then
+              echo "::error::forbidden axiom or native_decide in $source"
+              exit 1
+            fi
+          }
+          lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          lean -o S1Encoder.olean S1Encoder.lean
+          lean -o ChampionModular.olean ChampionModular.lean
+          lean -o CostRecurrence.olean CostRecurrence.lean
+          lean -o CountPattern.olean CountPattern.lean
+          compile_checked CountedReset.lean
+          lean -o CountedOddBase.olean CountedOddBase.lean
+          lean -o CountedSweep.olean CountedSweep.lean
+          compile_checked CountedQ4Prefix.lean
+          compile_checked M0EvenEightQ4Bridge.lean
+          compile_checked M0EvenEightQ4Prefix.lean
+          compile_checked M0EvenEightValuationMacros.lean
+          compile_checked M0EvenEightValuationFixedPrefix.lean
+          compile_checked M0EvenEightValuationSweepFacts.lean
+          compile_checked M0EvenEightValuationSuffix.lean
+          compile_checked M0EvenEightValuationEncoding.lean
+          compile_checked M0EvenEightValuationSource.lean
+      - name: Upload focused Lean diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m0-even-eight-valuation-prefix
+          path: /tmp/m0-e8/*-axioms.log
+          if-no-files-found: ignore
+          retention-days: 3
