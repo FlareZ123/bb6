@@ -37,14 +37,25 @@ RootFiniteBits.lean uses a 238-bit Nat tape window for absolute cells -10 throug
 
 The two modules print their axiom dependencies. The finite computation theorem reports [propext]; the original-source reachability theorem reports [propext, Quot.sound]. Neither reports sorryAx.
 
+## New middle-source continuation (pending preflight)
+
+The source-only middle continuation is being extended from the authentic initial S1 configuration through the established middle-26 endpoint and rows 27–34.
+
+The former row-32 assumption has been replaced by the standalone theorem tm63_middle32_source in [TM63RootMiddle34.lean](../agent44-tm63-middle/TM63RootMiddle34.lean). It invokes the new valuation-parametric M1 source theorem in [M1EvenValuationSource.lean](../agent48-counted-inc0/M1EvenValuationSource.lean), which composes:
+
+- the exact six-step S1 prelude and counted state-1/state-5 valuation bridge;
+- the original-head q4 cut stream and complete right-side q4 shape;
+- the generic q4 suffix and exact target-left identity;
+- the reset intermediate and existing counted drain.
+
+The M1 source theorem is stated for every positive n<2^L, with arbitrary 2-adic valuation. The root theorem now exposes tm63_blank_reaches_after_middle34 without a row-32 hypothesis; the old conditional name is retained only as a backwards-compatible wrapper.
+
+**Validation status:** Agent 24 has independently reviewed the mathematical composition and found no substantive mismatch. Agent 7 has been asked to locally compile the exact dependency chain, and the manual workflow has been updated to stage and compile the new modules and inspect transitive axioms. This continuation is not yet compile-certified. Keep it in im-results until local preflight and targeted CI pass.
+
 ## Scope and remaining work
 
-This is an initial-root prefix, not a halting proof. It does not establish the later Coq itinerary, the all-ones S1 drain endpoint, the champion's exact primitive step score, a universal six-state upper bound, or the value of BB(6).
+This is an initial-root prefix plus a source-level middle continuation, not a halting proof. It does not establish the complete champion itinerary, the terminal section, the exact primitive step score, a universal six-state upper bound, or the value of BB(6).
 
-The next high-value integration is to connect this authentic init endpoint through the remaining source chain
-
-init → Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H
-
-and then compose the counted drain and terminal section. Agent 8 is investigating the missing reset-prefix bridge. Agent 24's latest correction identifies the concrete LC_Inc left-counter operation with arbitrary right context after rw_Bin; es; er; an equality to the current state-3 S1 decrement input is not yet established. The existing counted S1 decrement/drain theorems therefore remain conditional on their source-prefix premises.
+The next high-value integration is the formal 24-cycle row schedule/induction and its connection to the authentic middle-26 endpoint, followed by the remaining terminal itinerary and exact score. The generic M1 valuation source is designed to cover all marker-1 rows in that cycle; the other marker classes still use their corresponding source theorems.
 
 The original simulation checkpoint and JS reproducer remain in [InitialS1RootWitness.md](../agent42-champion-terminal/InitialS1RootWitness.md). This result stays in im-results until the complete champion itinerary and exact score are established; it is not a standalone BB(6) result or a reason to change results/README.md.
