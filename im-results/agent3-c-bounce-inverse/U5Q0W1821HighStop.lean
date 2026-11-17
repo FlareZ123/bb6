@@ -465,7 +465,7 @@ theorem w1821_roots_pairwise_distinct
   omega
 
 #print axioms u5_m8_t_mod2048_w1821
-#print axioms blank_no_u5_q0_parent_t2475
+#print axioms blank_no_u5_q0_parent_t427
 #print axioms blank_no_u5_q0_parent_w1821
 #print axioms blank_no_u5_residual_m8w_w1821
 #print axioms blank_no_u5_B_s_m8w_w1821
