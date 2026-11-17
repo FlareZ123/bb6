@@ -341,13 +341,25 @@ theorem m1EvenValuation_q4_prefix_run
       rw [hcoord]
       exact hs
   have hPright1 : P (hN+1) = false := by
-    simp [P,valuationPreludeTape,hR1]
+    have hne1 : hN+1 ≠ hN-1 := by omega
+    have hne2 : hN+1 ≠ hN-2 := by omega
+    have hne3 : hN+1 ≠ hN-3 := by omega
+    simpa [P,valuationPreludeTape,hne1,hne2,hne3] using hR1
   have hPright2 : P (hN+2) = true := by
-    simp [P,valuationPreludeTape,hR2]
+    have hne1 : hN+2 ≠ hN-1 := by omega
+    have hne2 : hN+2 ≠ hN-2 := by omega
+    have hne3 : hN+2 ≠ hN-3 := by omega
+    simpa [P,valuationPreludeTape,hne1,hne2,hne3] using hR2
   have hPright3 : P (hN+3) = true := by
-    simp [P,valuationPreludeTape,hR3]
+    have hne1 : hN+3 ≠ hN-1 := by omega
+    have hne2 : hN+3 ≠ hN-2 := by omega
+    have hne3 : hN+3 ≠ hN-3 := by omega
+    simpa [P,valuationPreludeTape,hne1,hne2,hne3] using hR3
   have hPright4 : P (hN+4) = true := by
-    simp [P,valuationPreludeTape,hR4]
+    have hne1 : hN+4 ≠ hN-1 := by omega
+    have hne2 : hN+4 ≠ hN-2 := by omega
+    have hne3 : hN+4 ≠ hN-3 := by omega
+    simpa [P,valuationPreludeTape,hne1,hne2,hne3] using hR4
   have hBridge := m1EvenValuationBridge_run v P hN
     hstate1Head hstate1Ones hzero1 hzero2
     hPright1 hPright2 hPright3 hPright4
