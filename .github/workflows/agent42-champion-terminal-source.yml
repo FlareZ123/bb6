@@ -1255,6 +1255,7 @@ jobs:
             im-results/agent44-tm63-middle/M2EvenSixGenericCounted.lean \
             im-results/agent44-tm63-middle/TM63RootMiddle34.lean \
             --jobs 8 \
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --workdir /tmp/middle34-acceptance \
             | tee /tmp/middle34-acceptance.log
           grep -E "m1EvenValuation_counted_increment_source' depends on axioms:|m2EvenSix_generic_counted_increment_source' depends on axioms:|tm63_blank_reaches_after_middle34' depends on axioms:" /tmp/middle34-acceptance.log \
