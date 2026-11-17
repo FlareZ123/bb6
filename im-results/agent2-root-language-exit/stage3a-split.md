@@ -1,9 +1,17 @@
 # Eighteenth D-root reentry: split validation protocol
 
-The seventeenth authentic blank-root reentry is source-certified by manual CI run
-[43761344093](https://github.com/FlareZ123/bb6/actions/runs/43761344093), which
-preserves artifact d-root-stage2b17j at base source snapshot
-20509b53af45edce5b8a145e8714245d3d225cdd.
+The seventeenth authentic blank-root reentry is source-certified by stage-2b17i
+run [43760695437](https://github.com/FlareZ123/bb6/actions/runs/43760695437),
+which preserves artifact d-root-stage2b17i at source snapshot
+b3cc897d85ff6c69ca29a24be2aa3bf6931e13f7. The follow-on stage-2b17j run
+[43761344093](https://github.com/FlareZ123/bb6/actions/runs/43761344093)
+compiles the E7 escape and preserves d-root-stage2b17j at source snapshot
+20509b53af45edce5b8a145e8714245d3d225cdd. Commit 20509 is a one-commit child
+of b3cc and changes only ExceptionalE7ThirdReturnEscape.lean (+5/−2);
+BlankSeventeenthRejoin.lean imports ExceptionalE7ThirdReturn.lean, not that
+changed file. The stage-2b17i predecessor .olean closure is therefore
+source-content compatible with the 20509 snapshot used by stage-2b17j and
+by the split eighteenth workflow.
 
 The next submitted eighteenth segment was attempted in run
 [43844908990](https://github.com/FlareZ123/bb6/actions/runs/43844908990).
