@@ -687,6 +687,15 @@ jobs:
             echo '::error::sorryAx found in fixed m=2,n=6 q4 source bridge'
             exit 1
           fi
+
+          # Agent 44: arbitrary n=8*q+6 lift of the fixed m=2,n=6 source row.
+          cp "$GITHUB_WORKSPACE/im-results/agent44-tm63-middle/M2EvenSixGenericSource.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-six-generic-source-axioms.log
+          lean -o M2EvenSixGenericSource.olean M2EvenSixGenericSource.lean 2>&1 | tee /tmp/a42-terminal/m2-even-six-generic-source-axioms.log
+          if grep -qE 'sorryAx|native_decide' /tmp/a42-terminal/m2-even-six-generic-source-axioms.log; then
+            echo '::error::sorryAx or native_decide found in generic m=2,n=8*q+6 source prefix'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/M2EvenResidueSix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m2-even-residue6-axioms.log
           lean -o M2EvenResidueSix.olean M2EvenResidueSix.lean 2>&1 | tee /tmp/a42-terminal/m2-even-residue6-axioms.log
@@ -1003,6 +1012,25 @@ jobs:
             exit 1
           fi
 
+          # Agent 44: compose the generic M2-even-six q4 prefix with the exact S1 drain.
+          cp "$GITHUB_WORKSPACE/im-results/agent44-tm63-middle/M2EvenSixGenericCounted.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m2-even-six-generic-counted-axioms.log
+          lean -o M2EvenSixGenericCounted.olean M2EvenSixGenericCounted.lean 2>&1 | tee /tmp/a42-terminal/m2-even-six-generic-counted-axioms.log
+          if grep -qE 'sorryAx|native_decide' /tmp/a42-terminal/m2-even-six-generic-counted-axioms.log; then
+            echo '::error::sorryAx or native_decide found in generic m=2,n=8*q+6 counted increment'
+            exit 1
+          fi
+
+          # Agent 44: rows 27--34 of the authentic root middle itinerary,
+          # conditional only on the still-open row-32 M1-even source theorem.
+          cp "$GITHUB_WORKSPACE/im-results/agent44-tm63-middle/TM63RootMiddle34.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/tm63-root-middle34-axioms.log
+          lean -o TM63RootMiddle34.olean TM63RootMiddle34.lean 2>&1 | tee /tmp/a42-terminal/tm63-root-middle34-axioms.log
+          if grep -qE 'sorryAx|native_decide' /tmp/a42-terminal/tm63-root-middle34-axioms.log; then
+            echo '::error::sorryAx or native_decide found in conditional TM63 middle-34 composition'
+            exit 1
+          fi
+
       - name: Upload Lean compiler diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -1075,5 +1103,8 @@ jobs:
             /tmp/a42-terminal/counted-reset-odd-base-axioms.log
             /tmp/a42-terminal/reset-odd-canonical-axioms.log
             /tmp/a42-terminal/m1-odd-residue3-axioms.log
+            /tmp/a42-terminal/m2-even-six-generic-source-axioms.log
+            /tmp/a42-terminal/m2-even-six-generic-counted-axioms.log
+            /tmp/a42-terminal/tm63-root-middle34-axioms.log
           if-no-files-found: ignore
           retention-days: 3
