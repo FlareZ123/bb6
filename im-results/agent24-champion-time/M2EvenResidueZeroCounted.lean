@@ -102,7 +102,7 @@ private theorem m2ZeroSourceLeft
         d1pow t ++ d0 ++ binDec ell q ++ lh := by
   have hmul := binDec_mulpow2 (L-3) k 3 hkBound
   have hlen3 : L-3+3=L := by omega
-  have hnum : k*2^3=8*k := by norm_num [Nat.mul_comm]
+  have hnum : k*2^3=8*k := by ring
   have hbin8 : binDec L (8*k) =
       d1pow 3 ++ binDec (L-3) k := by
     simpa [hlen3,hnum] using hmul
@@ -374,9 +374,9 @@ theorem m2Even_residue0_q4_reset_prefix_source
     by_cases hi0 : i=0
     · subst i
       have hp := hpostRight (hN+2) (by omega)
-      have hb := sweptLeft_shifted_block N T h honN (3*a) (by omega)
+      have hb := sweptLeft_shifted_block N T h honN 0 (by omega)
       have hcoord : hN+2 =
-          h-(N:Int)+2+(3*a:Int) := by dsimp [hN]; omega
+          h-(N:Int)+2 := by dsimp [hN]; rfl
       calc
         Tpost (hN+2) = T1 (hN+2) := hp
         _ = true := by simpa [T1,hcoord,N] using hb
@@ -600,6 +600,9 @@ theorem m2Even_residue0_q4_reset_prefix_source
   have hblank : ∀ i : Nat, i≤4 →
       Tpost (h+10+(3*b:Int)+(i:Int))=false := by
     intro i hi
+    have hcoord :
+        h+10+(3*b:Int)+(i:Int)=h+1+((9+3*b+i):Int) := by omega
+    rw [hcoord]
     apply htail
     omega
   have hshape : q4RightShape Tpost h b :=
