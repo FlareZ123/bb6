@@ -187,3 +187,6 @@ A new probe suggests the q-odd restriction in `M0EvenEightGenericSource.lean` ca
 
 
 The companion Lean helper candidate `M0EvenEightValuationMacros.lean` adds the state-1 right d1-block scan and final `101` boundary; it remains uncompiled pending Agent6's local preflight. The existing S1Encoder `binDec_carryPrefix`, `binDec_sub_one_carryPrefix`, `exists_odd_factor_bounded`, and CountedReset `v2_odd_factor` already supply the binary and valuation identities for the generalization.
+
+
+The finite-frame formulation is now explicit in the extension note: `bridgeStart_t` adds 3t marks at -14-i, `bridgeEnd_t` has marks `{2,1,-1,3} ∪ {-4-3i | i<4+t} ∪ {-14-3t,-15-3t}`, and the dynamic frame is `[-15-3t,3]`. The intended finite run length is `63+12t`, lifted by the existing `bridgeAt` theorem.

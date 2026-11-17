@@ -110,3 +110,40 @@ The 44-step prefix, left zero-bubble, four-step exit, right d1-block scan, and f
 ## Lean helper candidate
 
 `M0EvenEightValuationMacros.lean` now contains candidate source lemmas for the state-1 right d1-block scan (`111 -> 001`), its n-block iteration, and the final `101` boundary. It is uncompiled. Agent6 has been asked to locally preflight this leaf and report its axiom profile.
+
+
+## Finite-frame target for the generalized bridge
+
+The variable bridge can be represented by a simple pair of finite configurations, making `bridgeAt` from `CountedQ4Prefix.lean` directly reusable.
+
+For (tge0), let the input finite configuration be state 3, head 0, with the existing `m0EvenEightBridgeStart.marked` plus the extra marks
+[
+{-14-imid 0le i<3t}.
+]
+These are exactly the (3t) extra one-cells in the valuation run.
+
+The proposed output finite configuration is state 4, head 3, with marked set
+[
+{2,1,-1,3}
+;cup;
+{-4-3imid 0le i<4+t}
+;cup;
+{-14-3t,-15-3t}.
+]
+At (t=0), this is exactly the existing `m0EvenEightBridgeEnd`. The dynamic frame is
+[
+-15-3tle xle3.
+]
+The third cell of the final d1 block, at (-16-3t), is intentionally outside the frame and remains part of the arbitrary source tail.
+
+The exact finite theorem target is
+[
+fRun(tm2,63+12t,operatorname{bridgeStart}_t)
+=operatorname{some}(operatorname{bridgeEnd}_t).
+]
+Its proof decomposes into the 44-step fixed prefix, 9t-step left bubble, four-step zero exit, (12+3t)-step state-1 d1 scan, and final three-step 101 boundary. The head path stays in the dynamic frame. Once this finite theorem and head bound are established, `bridgeAt` lifts it to the source tape.
+
+The input frame match comes from `exists_odd_factor_bounded` and `binDec_carryPrefix`; the output left word comes from `binDec_sub_one_carryPrefix`. The generalized q4 cut therefore has left-facing prefix
+`[true] ++ d1pow(a-1) ++ markerWord(2) ++ d0pow(4+t) ++ d1 ++ binDec(len,u) ++ lh`,
+which is the same as
+`[true] ++ d1pow(a-1) ++ markerWord(2) ++ d0 ++ binDec(L,8*q-1) ++ lh`.
