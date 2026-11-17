@@ -108,6 +108,7 @@ The companion [t0_entry_odd_parent_selector.mjs](t0_entry_odd_parent_selector.mj
 - \(K=267,r=259\): \(D_0\equiv0\pmod3\), so no incoming odd parent is possible.
 - \(K=309,r=301\): \(q=0,t=1\) gives an incoming odd parent from level \(L=308\).
 - \(K=333,r=325\): \(q=1,t=0\) gives an incoming odd parent from level \(L=332\).
+- \(K=542,r=533\): two distinct entries are locally possible, \((q,t)=(1,1)\) and \((3,0)\), both with incoming source level \(L=541\).
 
 The latter two are valid local inverse-grammar edges only; they do not assert blank-root reachability.
 
