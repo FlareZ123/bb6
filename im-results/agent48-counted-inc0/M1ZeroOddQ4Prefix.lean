@@ -29,7 +29,7 @@ def m1ZeroOddBridgeStart : FConfig :=
   ⟨3, 0, [-13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -1, 2]⟩
 
 def m1ZeroOddBridgeEnd : FConfig :=
-  ⟨4, 2, [-15, -14, -13, -10, -7, -4, -1, 1, 2]⟩
+  ⟨4, 2, [1, -1, -4, -7, -10, -13, -14, -15, 2]⟩
 
 /-- Exact 62-step finite bridge discovered from the source machine. -/
 theorem m1ZeroOddBridge_exact :
