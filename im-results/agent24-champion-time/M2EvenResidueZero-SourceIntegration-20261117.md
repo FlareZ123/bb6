@@ -41,6 +41,20 @@ Let `Tsetup` be the setup output tape and `hH=hN-14`. The H-run facts follow dir
 
 The existing `m2ZeroSetup_HRun_Postlude` needs only the first, two zero boundaries, and right-zero boundary for the run itself; the third bit is needed for the exact output-word lemma.
 
+More generally, the full H-run input word follows from the same source calculation. Put `T1=sweptLeft (3*a+2) T h`, `Tsetup=(frameAt T1 hN m2ZeroSetupInside m2ZeroSetupEnd).tape`, and `hH=hN-14=h-(3*a+16)`. For every i, the cell `hH-i` is outside the setup frame (its relative offset is `-14-i`) and is preserved by the initial left sweep (it lies strictly left of `hN`). Thus
+
+~~~lean
+Tsetup (hH-i) = T (h-(3*a+16+i))
+~~~
+
+Apply `s1Config_left_cell` at source index `3*a+16+i`. The S1 left-facing prefix before the quotient has exact length `3*a+16`, so `sideBit_append` drops it and leaves `sideBit (binDec L (8*k) ++ lh) i`. Then `binDec_mulpow2` and `binDec_carryPrefix` reduce this to
+
+~~~lean
+sideBit (d1pow t ++ (d0 ++ (binDec ell q ++ lh))) i
+~~~
+
+which is the `hleft` premise of `lbinDecHRunTape_leftFacing`. In particular, the four H-run boundary facts listed above are just the first `3*t+3` cells of this same identity; the right-zero fact at `hN+1` is supplied separately by `s1M2Setup_suffix`.
+
 The generic H-run tape is `lbinDecHRunTape t Tsetup hH`. Its required left-facing identity is:
 
 ~~~lean
