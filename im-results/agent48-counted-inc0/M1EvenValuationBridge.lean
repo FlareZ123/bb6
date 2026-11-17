@@ -312,6 +312,39 @@ def m1EvenValuationBridgeTape (v : Nat) (T : Int → Bool) (h : Int) :
   let Tright := state5SweptRight (v+1) Tsetup (x+1)
   valuationExit1Tape Tright (h+1)
 
+/-- Beyond the state-5 sweep's right endpoint, the bridge leaves
+the state-1 input tape unchanged. -/
+theorem m1EvenValuationBridgeTape_preserves_right
+    (v : Nat) (T : Int → Bool) (h x : Int)
+    (hx : h+2 ≤ x) :
+    m1EvenValuationBridgeTape v T h x = T x := by
+  let N : Nat := 3*(v+1)
+  let x0 : Int := h-(N:Int)
+  let Tleft : Int → Bool := state1SweptLeft N T h
+  let Tsetup : Int → Bool := valuationSetupTape Tleft x0
+  let Tright : Int → Bool := state5SweptRight (v+1) Tsetup (x0+1)
+  have hleft : Tleft x = T x := by
+    dsimp [Tleft]
+    exact state1SweptLeft_preserves_right N T h x (by omega)
+  have hneq0 : x ≠ x0 := by dsimp [x0,N]; omega
+  have hneq1 : x ≠ x0-1 := by dsimp [x0,N]; omega
+  have hneq2 : x ≠ x0-2 := by dsimp [x0,N]; omega
+  have hneq3 : x ≠ x0-3 := by dsimp [x0,N]; omega
+  have hsetup : Tsetup x = Tleft x := by
+    simp [Tsetup, valuationSetupTape, hneq0, hneq1, hneq2, hneq3]
+  have hend : x0+1+(3*(v+1):Int) = h+1 := by
+    dsimp [x0,N]
+    omega
+  have hright : Tright x = Tsetup x := by
+    dsimp [Tright]
+    exact state5SweptRight_preserves_far_right (v+1) Tsetup (x0+1) x
+      (by rw [← hend]; omega)
+  have hexit : valuationExit1Tape Tright (h+1) x = Tright x := by
+    simp [valuationExit1Tape]
+    omega
+  simp [m1EvenValuationBridgeTape, N, x0, Tleft, Tsetup, Tright,
+    hleft, hsetup, hright, hexit]
+
 /-- The exact state-1-to-state-4 valuation bridge, for every v≥0. -/
 theorem m1EvenValuationBridge_run (v : Nat) (T : Int → Bool) (h : Int)
     (h0 : T h = false)
