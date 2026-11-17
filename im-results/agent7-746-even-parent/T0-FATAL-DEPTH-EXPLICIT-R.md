@@ -137,4 +137,4 @@ a-3,&K\equiv3\pmod6.
 \end{cases}}
 \tag{8}
 \]
-After the forced parity of \(q\) is applied, at most \(\lceil(a-3)/2\rceil\) candidates remain for each t=0 fatal source. This improves the uniform \(q\le a-1\) bound.
+After the forced parity of \(q\) is applied, at most \(\lfloor(a-1)/2\rfloor\) candidates remain for each t=0 fatal source. This improves the uniform \(q\le a-1\) bound.
