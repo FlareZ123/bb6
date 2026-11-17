@@ -268,4 +268,57 @@ theorem outerLCIncSourceT3_preserves_right
     (outerLCIncSourceT1 T h a) (h-(3*a:Int)) x (by dsimp; omega)]
   exact sweptLeft_preserves_right (3*a) T h x hx
 
+
+/-- The five-step bridge frame preserves every cell at and beyond the
+start of the E scan. -/
+theorem outerLCIncAfterFive_preserves_right
+    (T : Int → Bool) (h : Int) (a m : Nat) (x : Int)
+    (hx : outerLCIncH1 h a m + 7 ≤ x) :
+    outerLCIncAfterFive T h a m x = T x := by
+  have hnot : outerLCIncFiveInside
+      (x-(outerLCIncH1 h a m+2)) = false := by
+    simp [outerLCIncFiveInside]
+    omega
+  simp [outerLCIncAfterFive, frameAt_tape, hnot]
+
+/-- The two-step E-zero frame preserves the B/F/D sweep region. -/
+theorem outerLCIncAfterZero_preserves_right
+    (T : Int → Bool) (h : Int) (a m : Nat) (x : Int)
+    (hx : h+7 ≤ x) :
+    outerLCIncAfterZero T h a m x =
+      outerLCIncAfterFive T h a m x := by
+  have hnot : outerLCIncZeroInside (x-(h+5)) = false := by
+    simp [outerLCIncZeroInside]
+    omega
+  simp [outerLCIncAfterZero, frameAt_tape, hnot]
+
+/-- The two zero-boundary moves write both cells to one. -/
+theorem outerLCIncAfterZero_cells
+    (T : Int → Bool) (h : Int) (a m : Nat) :
+    outerLCIncAfterZero T h a m (h+5) = true ∧
+    outerLCIncAfterZero T h a m (h+6) = true := by
+  constructor <;>
+    simp [outerLCIncAfterZero, frameAt_tape,
+      outerLCIncZeroInside, outerLCIncZeroEnd]
+
+/-- The one-step B-zero exit writes one at its current head. -/
+theorem outerLCIncAfterZeroExit_one
+    (T : Int → Bool) (h : Int) (a m b : Nat) :
+    outerLCIncAfterZeroExit T h a m b (h+3*b+10) = true := by
+  simp [outerLCIncAfterZeroExit, frameAt_tape,
+    outerLCIncZeroExitInside, outerLCIncZeroExitEnd]
+
+/-- Apart from its one written cell, the B-zero exit preserves the
+post-sweep tape. -/
+theorem outerLCIncAfterZeroExit_preserves
+    (T : Int → Bool) (h : Int) (a m b : Nat) (x : Int)
+    (hx : x ≠ h+3*b+10) :
+    outerLCIncAfterZeroExit T h a m b x =
+      outerLCIncAfterSweep T h a m b x := by
+  have hnot : outerLCIncZeroExitInside
+      (x-(h+3*b+10)) = false := by
+    simp [outerLCIncZeroExitInside]
+    omega
+  simp [outerLCIncAfterZeroExit, frameAt_tape, hnot]
+
 end BB6Coverage.Agent42OuterLCInc
