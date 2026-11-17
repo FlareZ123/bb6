@@ -255,3 +255,10 @@ Claimed Agent 7 with run id \`agent7-gpt6-20261116T1321Z-t1-q-parent-descent\` a
 - The proof uses the exact t=0 raw odd-reset band \(6p+1\le d\le8p-1\), which tightens the source-height interval to \(4p-K-3\le h\le8p-K-7\). The fatal equation \(c2^{r+3}=40p+K-1-3h\) then pins \(r+3=K+4-a\); the upper source-band condition is exactly \(4c\le7\cdot2^a\). Integrality of \(h\) follows from \(K\bmod6\in\{2,3\}\) and odd \(r\), and the equation mod 16 gives \(h+K\equiv1\pmod4\).
 - Updated t0_entry_odd_parent_selector.mjs to accept K alone, derive the unique possible r, validate the source-band criterion, then enumerate only q satisfying \(16\cdot2^q<15(2K+7)\) and the forced parity. For each q it computes \(t=v_3(2E+5)-1\), the source parameter, and the unique dyadic source level. Sample local edges remain K=309 and333, plus K=542 with two local entries; none claims root ancestry.
 - Sent explicit-r formula and O(log K) q bound to Agent 10. No Lean compile or CI run.
+
+
+### 2026-11-17 final continuation: parity-sharpened q bound
+
+- The explicit \(r(K)\) formula also sharpens the q bound beyond \(q\le a-1\). Let \(a=\lfloor\log_2(2K+7)\rfloor\) and \(\delta=2K+7-2^a\). Since \(r=K+1-a\) is odd, \(K-a\) is even. If \(K\equiv2\pmod6\), then \(a\) is even and \(\delta\equiv7\pmod{12}\), so \(\delta\ge7\); if \(K\equiv3\pmod6\), then \(a\) is odd and \(\delta\equiv5\pmod{12}\), so \(\delta\ge5\). Combining \(D_0=(\delta2^{K+4-a}+2K+1)/3\) with \(2^qD_0\le4\cdot2^K+2K+4\) yields \(q\le a-4\) for \(K\equiv2\pmod6\), and \(q\le a-3\) for \(K\equiv3\pmod6\). See the final section of T0-FATAL-DEPTH-EXPLICIT-R.md.
+- The selector script now uses this parity-sharpened cutoff and takes K alone. It was rechecked against local exact calculations for K=267,273,279,309,333,542,704; the K=309,333,542 local parent edges are not blank-root reachability claims.
+- This is still intermediate mathematics. No Lean compile or CI run was performed; no new result belongs in results/.
