@@ -56,8 +56,10 @@ The lower inequality in (3) is automatic for \(K\ge266\): since \(c>2^a\),
 c2^{K+4-a}-16p
 =(c-2^a)2^{K+4-a}
 \ge2^{K+4-a}
->\,4K+20.
+>\frac{16p}{2K+7}
+>4K+20.
 \]
+For the last inequality, use \(2^K\ge K^3\) for \(K\ge10\), followed by \(16K^3>(4K+20)(2K+7)\).
 The upper inequality in (3) is equivalent to
 \[
 16p\left(c-\frac74\,2^a\right)\le(4K+8)2^a.
