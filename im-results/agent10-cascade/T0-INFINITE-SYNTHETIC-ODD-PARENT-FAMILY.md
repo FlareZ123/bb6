@@ -59,6 +59,15 @@ satisfies \(6p+1\le d_0\le8p-1\). Equation (3), with \(16\mid B_0\), gives \(E+K
 \]
 which certifies \(\operatorname{FirstFailureAt}(E,K)\).
 
+Moreover, (3) is exactly the t=0 adjacent-fatal identity:
+\[
+3d_0+\frac{B_0}{2}=32p+2K+7,
+\qquad
+\frac{B_0}{2}=2^{r+1}(4K+14).
+\tag{4}
+\]
+Thus \(E\) is one of the t=0 fatal-source candidates: its odd child has the prescribed same-level even deficit \(2^r(4K+14)\), followed by the fatal even exit.
+
 ## Exact odd parent of E
 
 The residues are
@@ -80,7 +89,7 @@ hence \(D_0\equiv2\bmod9\). Also
 \[
 A:=16p+2K+5\equiv1\pmod9,\qquad
 X:=2E+5=A-2D_0\equiv6\pmod9.
-\tag{4}
+\tag{5}
 \]
 Therefore \(v_3(X)=1\) exactly. Set
 \[
@@ -90,29 +99,29 @@ Then \(P\) is odd. Direct substitution gives
 \[
 \frac{P}{p}
 =\frac{80-32x+(2K+13)/p}{9}.
-\tag{5}
+\tag{6}
 \]
 For the interval (1), and \(K\ge266\), this lies strictly between \(3\) and \(4\). Thus, with \(L=K-1\),
 \[
 6\cdot2^L+1\le P\le8\cdot2^L-1.
-\tag{6}
+\tag{7}
 \]
 Define
 \[
 h'=2P-8\cdot2^L-L-5.
-\tag{7}
+\tag{8}
 \]
 Then
 \[
 2P=8\cdot2^L+h'+L+5,\qquad 2E+5=3P.
 \]
-Together with (6), these are exactly the odd arm of \(\operatorname{ResetParent}(h',E)\), with \(t=0\).
+Together with (7), these are exactly the odd arm of \(\operatorname{ResetParent}(h',E)\), with \(t=0\).
 
 This odd parent is unique. Any odd parent of \(E\) has
 \[
 2E+5=3^{t+1}d.
 \]
-By (4), \(v_3(2E+5)=1\), so \(t=0\) and \(d=P\). The odd source bands \([6\cdot2^j+1,8\cdot2^j-1]\) are pairwise disjoint, and (6) places \(P\) in the unique band \(j=L\). The source equation then forces the parent height to be exactly \(h'\).
+By (5), \(v_3(2E+5)=1\), so \(t=0\) and \(d=P\). The odd source bands \([6\cdot2^j+1,8\cdot2^j-1]\) are pairwise disjoint, and (7) places \(P\) in the unique band \(j=L\). The source equation then forces the parent height to be exactly \(h'\).
 
 ## E has no even parent
 
@@ -124,35 +133,35 @@ From (2),
 The interval (1) gives
 \[
 5<\frac{E}{p}<\frac{407}{75}<\frac{11}{2}.
-\tag{8}
+\tag{9}
 \]
 An even parent at level \(j\) would require
 \[
 6\cdot2^j-1\le E\le8\cdot2^j-3.
 \]
-For \(j\le K-1\), the upper bound is at most \(4p-3<E\). For \(j\ge K\), the lower bound is at least \(6p-1>E\), by (8). Hence \(E\) has no even parent. Its unique parent of either parity is \(h'\).
+For \(j\le K-1\), the upper bound is at most \(4p-3<E\). For \(j\ge K\), the lower bound is at least \(6p-1>E\), by (9). Hence \(E\) has no even parent. Its unique parent of either parity is \(h'\).
 
 ## h' has no parent
 
-First, (4) gives \(P\equiv2\bmod3\). Since \(L=K-1\equiv1\bmod6\),
+First, (5) gives \(P\equiv2\bmod3\). Since \(L=K-1\equiv1\bmod6\),
 \[
 h'=2P-8\cdot2^L-L-5\equiv0\pmod3.
-\tag{9}
+\tag{10}
 \]
-Every odd-parent output \(u\) satisfies \(2u+5=3^{t+1}d\), hence \(u\equiv2\bmod3\). Equation (9) therefore excludes every odd parent of \(h'\).
+Every odd-parent output \(u\) satisfies \(2u+5=3^{t+1}d\), hence \(u\equiv2\bmod3\). Equation (10) therefore excludes every odd parent of \(h'\).
 
 For even parents, put
 \[
 \epsilon=\frac{2K+13}{p},\qquad
 \eta=\frac{L+5}{2^L}.
 \]
-Equations (5) and (7) yield
+Equations (6) and (8) yield
 \[
 \frac{h'}{2^L}
 =\frac{248-128x+4\epsilon}{9}-\eta.
-\tag{10}
+\tag{11}
 \]
-For \(K\ge266\), \(\epsilon<1/100\) and \(\eta<1/100\). Using (1) in (10),
+For \(K\ge266\), \(\epsilon<1/100\) and \(\eta<1/100\). Using (1) in (11),
 \[
 \frac{248}{45}-\frac1{100}
 <
@@ -165,11 +174,11 @@ For \(K\ge266\), \(\epsilon<1/100\) and \(\eta<1/100\). Using (1) in (10),
 The lower bound is greater than \(11/2\). Thus
 \[
 \frac{11}{2}\,2^L<h'<\frac{419}{75}\,2^L<6\cdot2^L.
-\tag{11}
+\tag{12}
 \]
-An even parent at level \(j\le L-1\) has target at most \(4\cdot2^L-3<h'\). An even parent at level \(j\ge L\) has target at least \(6\cdot2^L-1>h'\), using (11) and \((6-419/75)2^L>1\). So \(h'\) has no even parent either.
+An even parent at level \(j\le L-1\) has target at most \(4\cdot2^L-3<h'\). An even parent at level \(j\ge L\) has target at least \(6\cdot2^L-1>h'\), using (12) and \((6-419/75)2^L>1\). So \(h'\) has no even parent either.
 
-Combining (9) and (11), \(h'\) has no \(\operatorname{ResetParent}\) at all.
+Combining (10) and (12), \(h'\) has no \(\operatorname{ResetParent}\) at all.
 
 ## Root nonreachability
 

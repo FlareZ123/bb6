@@ -33,6 +33,7 @@ assert.equal(B0, 40n * p + K - 1n - 3n * E);
 const d0Numerator = 8n * p + E + K + 5n;
 assert.equal(d0Numerator % 2n, 0n);
 const d0 = d0Numerator / 2n;
+assert.equal(d0 % 2n, 1n);
 assert(6n * p + 1n <= d0 && d0 <= 8n * p - 1n);
 assert(4n * p <= E + K + 4n);
 assert(E + K + 5n < 8n * p);
@@ -68,9 +69,8 @@ assert(11n * pL < 2n * parent);
 assert(75n * parent < 419n * pL);
 assert(4n * pL - 3n < parent);
 assert(parent < 6n * pL - 1n);
-assert(28n * pL > 75n);
+assert(31n * pL > 75n);
 
-// All non-root chain states need a ResetParent; parent has none.
 assert(parent > 2n);
 assert(E > 2n);
 assert(two(K - 2n) < 3n ** L);
