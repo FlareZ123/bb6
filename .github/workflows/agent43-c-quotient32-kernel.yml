@@ -1,12 +1,19 @@
 name: Agent 43 Machine C M32 kernel certificate
 on:
   workflow_dispatch:
+    inputs:
+      u5_syntax_preflight:
+        description: 'Compile the Agent 32 U5 backward-cone logic against a temporary certificate interface only'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 jobs:
   prove-blocks:
+    if: ${{ !inputs.u5_syntax_preflight }}
     name: Kernel closure shard ${{ matrix.shard }}
     runs-on: ubuntu-latest
     timeout-minutes: 50
@@ -43,6 +50,7 @@ jobs:
           retention-days: 3
 
   prove-global:
+    if: ${{ !inputs.u5_syntax_preflight }}
     needs: [prove-blocks]
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -83,3 +91,43 @@ jobs:
           lean -o M32U5Cells.olean M32U5Cells.lean
           cp "$GITHUB_WORKSPACE/im-results/agent32-u5-backward-cone/M32U5Backward.lean" M32U5Backward.lean
           lean M32U5Backward.lean
+
+  u5-backward-syntax-preflight:
+    if: ${{ inputs.u5_syntax_preflight }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile the backward-cone logic against an explicitly untrusted stub
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/u5-preflight
+          cp im-results/agent11-c-line/CLine.lean /tmp/u5-preflight/CLine.lean
+          cat > /tmp/u5-preflight/M32U5Cells.lean <<'EOF'
+          import CLine
+          namespace CCert
+          def u5ForbiddenCells (x y : Nat) : Prop :=
+            x % 32 = 31 ∧ (y % 32 = 5 ∨ y % 32 = 21)
+          axiom original_u5_forbidden_unreachable (x y : Nat)
+            (h : u5ForbiddenCells x y) : ¬ BB6CLine.Reach (x,y,0)
+          end CCert
+          EOF
+          export LEAN_PATH=/tmp/u5-preflight
+          lean --version
+          lean -o /tmp/u5-preflight/CLine.olean /tmp/u5-preflight/CLine.lean
+          lean -o /tmp/u5-preflight/M32U5Cells.olean /tmp/u5-preflight/M32U5Cells.lean
+          lean -o /tmp/u5-preflight/M32U5Backward.olean im-results/agent32-u5-backward-cone/M32U5Backward.lean | tee /tmp/u5-backward-preflight.log
+          if grep -q 'sorryAx' /tmp/u5-backward-preflight.log; then
+            echo "ERROR: backward-cone syntax preflight unexpectedly used sorryAx"
+            exit 1
+          fi
+          if ! grep -q 'CCert.original_u5_forbidden_unreachable' /tmp/u5-backward-preflight.log; then
+            echo "ERROR: expected temporary stub axiom was not visible in the audit"
+            exit 1
+          fi
+          echo "SYNTAX-ONLY PREFLIGHT: pass; the one printed CCert axiom is an untrusted temporary stub."
