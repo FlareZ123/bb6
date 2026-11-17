@@ -143,8 +143,10 @@ private theorem m0EvenEightValuationBridgeInputMatch
     have hmark :
         decide (y ∈ (bridgeStartWithBit (decide (0<t))).marked) =
           decide ((-(i:Int)) ∈ m0EvenEightBridgeStart.marked) := by
-      rw [← hiCast]
-      simp [bridgeStartWithBit, show (y:Int) ≠ -14 by omega]
+      have hyEq : y = -(i:Int) := by omega
+      rw [hyEq]
+      have hneq : (-(i:Int)) ≠ -14 := by omega
+      simp [bridgeStartWithBit, hneq]
     calc
       sweptLeft (3*a) (s1Config L (8*q) 0 a 0 b h).tape h
           (h-((3*a:Nat):Int)+y)
@@ -228,8 +230,12 @@ theorem m0EvenEight_valuation_q4_prefix_run
     rw [sideBit_d1pow_append a i
       (m0EvenEightValuationSourceSuffix t len u)
       (by simp [d1pow_length]; omega)] at hcell
-    have hside : sideBit (d1pow a) i = true :=
-      sideBit_d1pow_true a i (by omega)
+    have hside : sideBit (d1pow a ++
+        m0EvenEightValuationSourceSuffix t len u) i = true := by
+      rw [sideBit_append_left (d1pow a)
+        (m0EvenEightValuationSourceSuffix t len u) i
+        (by simp [d1pow_length]; omega)]
+      exact sideBit_d1pow_true a i (by omega)
     simpa [T,hside] using hcell
   have hright0 : T (h+1) = false := by
     have hc := s1Config_right_cell L (8*q) 0 a 0 b h 0
