@@ -76,6 +76,8 @@ Since \(v_2((2q+1)2^v)=v\),
 \]
 The existing s1Config_reset_prefix_then_counted_drain then drains the intermediate counter \(2^b-1\), using the bound \(2^b-1<2^{a+b+2}\) supplied by \(a>0\). The result is exactly the proposed full counted increment cost and endpoint.
 
+The reproducible JavaScript probe M1EvenValuationBridgeProbe.mjs also checks the phase endpoints and the full original-head q4 cut contract across 480 cases (exact valuations v=1..8, five odd quotients, six unary values including a=0, and two right-counter values). Every case reaches state 4 at h+4 after 12a+12v+32 steps. This is finite simulation evidence only; the Lean source theorem is the intended proof.
+
 ## Current Lean artifacts
 
 - [M1EvenValuationBridge.lean](../agent48-counted-inc0/M1EvenValuationBridge.lean): state-1/state-5 bridge and tape updates.
