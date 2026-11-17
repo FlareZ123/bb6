@@ -128,7 +128,7 @@ private theorem m2ZeroTargetBinDec
       d0pow (t+3) ++ d1 ++ binDec ell q := by
   have hpow : 2^(t+3)=8*2^t := by
     rw [Nat.pow_add]
-    norm_num
+    ring
   have hnum : 8*k=(2*q+1)*2^(t+3) := by
     calc
       8*k = 8*((2*q+1)*2^t) := by rw [hfactor]
@@ -401,8 +401,8 @@ theorem m2Even_residue0_q4_reset_prefix_source
       · by_cases hi16 : 16≤i
         · have xcoord :
             hN+2-(i:Int)=hH-((i-16):Int) := by
-          dsimp [hH]
-          omega
+              dsimp [hH]
+              omega
           have hout :
               m2ZeroPostludeInside
                 ((hN+2-(i:Int))-(hN-12))=false := by
@@ -514,65 +514,68 @@ theorem m2Even_residue0_q4_reset_prefix_source
         apply sweptLeft_preserves_right
         omega
 
-  have hrightShape : q4RightShape Tpost h b := by
-    constructor
-    · intro i hi
-      by_cases hsmall : i<2
-      · let j : Nat := 3*a+i
-        have hj : j<N := by dsimp [j,N]; omega
-        have hcoord : h+(i:Int)=hN+2+(j:Int) := by
-          dsimp [hN,N,j]
-          omega
-        have hp := hpostRight (h+(i:Int)) (by dsimp [hN,N]; omega)
-        have hb := sweptLeft_shifted_block N T h honN j hj
-        calc
-          Tpost (h+(i:Int)) = T1 (h+(i:Int)) := hp
-          _ = true := by simpa [T1,hN,N,j,hcoord] using hb
-      · have hi2 : 2≤i := by omega
-        have hcoord : h+(i:Int)=h+1+((i-1):Int) := by omega
-        have hp := hpostOriginalRight (h+(i:Int)) (by omega)
-        have hcell := s1Config_right_cell L (8*k) 2 a 0 b h (i-1)
-        have hbit :
-            sideBit (s1PhysicalRight b) (i-1)=true := by
-          interval_cases i <;>
-            simp [s1PhysicalRight_source,sideBit]
-        calc
-          Tpost (h+(i:Int)) = T (h+(i:Int)) := hp
-          _ = sideBit (s1PhysicalRight b) (i-1) := by
-            simpa [T,hcoord] using hcell
-          _ = true := hbit
-    · have hp := hpostOriginalRight (h+5) (by omega)
-      have hcell := s1Config_right_cell L (8*k) 2 a 0 b h 4
-      have hbit : sideBit (s1PhysicalRight b) 4=false := by
-        simp [s1PhysicalRight_source,sideBit]
-      exact hp.trans (hcell.trans hbit)
-    · have hp := hpostOriginalRight (h+6) (by omega)
-      have hcell := s1Config_right_cell L (8*k) 2 a 0 b h 5
-      have hbit : sideBit (s1PhysicalRight b) 5=false := by
-        simp [s1PhysicalRight_source,sideBit]
-      exact hp.trans (hcell.trans hbit)
-    · intro i hi
-      have hp := hpostOriginalRight (h+7+(i:Int)) (by omega)
-      have hcoord : h+7+(i:Int)=h+1+((6+i):Int) := by omega
-      have hcell := s1Config_right_cell L (8*k) 2 a 0 b h (6+i)
-      have hbit :
-          sideBit (s1PhysicalRight b) (6+i)=true := by
-        rw [s1PhysicalRight_source]
-        have hbase :
-            sideBit ([false,true,true,true,false,false] ++
-              d1pow (b+1)) (6+i) =
-              sideBit (d1pow (b+1)) i := by
-          have hs := sideBit_append_right
-            [false,true,true,true,false,false] (d1pow (b+1))
-            (6+i) (by simp; omega)
-          simpa using hs
-        rw [hbase]
-        exact sideBit_d1pow_true (b+1) i hi
+  have hfirstFive : ∀ i : Nat, i<5 → Tpost (h+(i:Int))=true := by
+    intro i hi
+    by_cases hsmall : i<2
+    · let j : Nat := 3*a+i
+      have hj : j<N := by dsimp [j,N]; omega
+      have hcoord : h+(i:Int)=hN+2+(j:Int) := by
+        dsimp [hN,N,j]
+        omega
+      have hp := hpostRight (h+(i:Int)) (by dsimp [hN,N]; omega)
+      have hb := sweptLeft_shifted_block N T h honN j hj
       calc
-        Tpost (h+7+(i:Int)) = T (h+7+(i:Int)) := hp
-        _ = sideBit (s1PhysicalRight b) (6+i) := by
+        Tpost (h+(i:Int)) = T1 (h+(i:Int)) := hp
+        _ = true := by simpa [T1,hN,N,j,hcoord] using hb
+    · have hi2 : 2≤i := by omega
+      have hcoord : h+(i:Int)=h+1+((i-1):Int) := by omega
+      have hp := hpostOriginalRight (h+(i:Int)) (by omega)
+      have hcell := s1Config_right_cell L (8*k) 2 a 0 b h (i-1)
+      have hbit :
+          sideBit (s1PhysicalRight b) (i-1)=true := by
+        interval_cases i <;>
+          simp [s1PhysicalRight_source,sideBit]
+      calc
+        Tpost (h+(i:Int)) = T (h+(i:Int)) := hp
+        _ = sideBit (s1PhysicalRight b) (i-1) := by
           simpa [T,hcoord] using hcell
         _ = true := hbit
+  have hzero5 : Tpost (h+5)=false := by
+    have hp := hpostOriginalRight (h+5) (by omega)
+    have hcell := s1Config_right_cell L (8*k) 2 a 0 b h 4
+    have hbit : sideBit (s1PhysicalRight b) 4=false := by
+      simp [s1PhysicalRight_source,sideBit]
+    exact hp.trans (hcell.trans hbit)
+  have hzero6 : Tpost (h+6)=false := by
+    have hp := hpostOriginalRight (h+6) (by omega)
+    have hcell := s1Config_right_cell L (8*k) 2 a 0 b h 5
+    have hbit : sideBit (s1PhysicalRight b) 5=false := by
+      simp [s1PhysicalRight_source,sideBit]
+    exact hp.trans (hcell.trans hbit)
+  have hones : ∀ i : Nat, i<3*(b+1) →
+      Tpost (h+7+(i:Int))=true := by
+    intro i hi
+    have hp := hpostOriginalRight (h+7+(i:Int)) (by omega)
+    have hcoord : h+7+(i:Int)=h+1+((6+i):Int) := by omega
+    have hcell := s1Config_right_cell L (8*k) 2 a 0 b h (6+i)
+    have hbit :
+        sideBit (s1PhysicalRight b) (6+i)=true := by
+      rw [s1PhysicalRight_source]
+      have hbase :
+          sideBit ([false,true,true,true,false,false] ++
+            d1pow (b+1)) (6+i) =
+            sideBit (d1pow (b+1)) i := by
+        have hs := sideBit_append_right
+          [false,true,true,true,false,false] (d1pow (b+1))
+          (6+i) (by simp; omega)
+        simpa using hs
+      rw [hbase]
+      exact sideBit_d1pow_true (b+1) i hi
+    calc
+      Tpost (h+7+(i:Int)) = T (h+7+(i:Int)) := hp
+      _ = sideBit (s1PhysicalRight b) (6+i) := by
+        simpa [T,hcoord] using hcell
+      _ = true := hbit
   have htail :
       ∀ i : Nat, 9+3*b≤i → Tpost (h+1+(i:Int))=false := by
     intro i hi
@@ -599,15 +602,8 @@ theorem m2Even_residue0_q4_reset_prefix_source
     intro i hi
     apply htail
     omega
-  have hshape : q4RightShape Tpost h b := by
-    exact ⟨
-      (by
-        intro i hi
-        exact hrightShape.1 i hi),
-      hrightShape.2.1,
-      hrightShape.2.2.1,
-      hrightShape.2.2.2.1,
-      hblank⟩
+  have hshape : q4RightShape Tpost h b :=
+    ⟨hfirstFive,hzero5,hzero6,hones,hblank⟩
 
   have happend :
       s1LeftFacing L (8*k-1) 1 (a+b+2) (2^b-1) =
