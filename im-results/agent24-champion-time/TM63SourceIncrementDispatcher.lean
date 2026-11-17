@@ -40,13 +40,13 @@ one-step classes dispatch to the original TM2 counted-increment source. -/
 theorem tm63_source_increment_dispatch
     (L : Nat) (hL : 4 ≤ L)
     (hm0zero : ∀ (q aa bb : Nat) (hh : Int),
-      0 < q → 8*q < 2^L → 0 < aa →
+      0 < q → 4 ≤ L → 8*q < 2^L → 0 < aa →
       run tm2 (proposedIncrementCost 0 (8*q) aa bb)
         (s1Config L (8*q) 0 aa 0 bb hh) =
       some (s1Config L (8*q-1) 2 (aa+bb+1) 0 (2^bb-1)
         (hh+5+3*bb)))
     (hm2zero : ∀ (q aa bb : Nat) (hh : Int),
-      0 < q → 8*q < 2^L → 0 < aa →
+      0 < q → 4 ≤ L → 8*q < 2^L → 0 < aa →
       run tm2 (proposedIncrementCost 2 (8*q) aa bb)
         (s1Config L (8*q) 2 aa 0 bb hh) =
       some (s1Config L (8*q-1) 1 (aa+bb+2) 0 (2^bb-1)
@@ -69,7 +69,7 @@ theorem tm63_source_increment_dispatch
   · rcases hres with hr0 | hr1 | hr2 | hr3 | hr4 | hr5 | hr6 | hr7
     · have hq : 0 < k/8 := by omega
       have hboundq : 8*(k/8) < 2^L := by omega
-      have hsrc := hm0zero (k/8) aa bb hh hq hboundq haa
+      have hsrc := hm0zero (k/8) aa bb hh hq hL hboundq haa
       simpa [hm0, hdecomp, nextMarker, nextExponent, nextRight] using hsrc
     · have hsrc := m0Odd_counted_increment_source
         L k aa bb hh hLpos (by omega) hbound haa
@@ -101,7 +101,7 @@ theorem tm63_source_increment_dispatch
   · rcases hres with hr0 | hr1 | hr2 | hr3 | hr4 | hr5 | hr6 | hr7
     · have hq : 0 < k/8 := by omega
       have hboundq : 8*(k/8) < 2^L := by omega
-      have hsrc := hm2zero (k/8) aa bb hh hq hboundq haa
+      have hsrc := hm2zero (k/8) aa bb hh hq hL hboundq haa
       simpa [hm2, hdecomp, nextMarker, nextExponent, nextRight] using hsrc
     · have hsrc := m2Odd_counted_increment_source
         L k aa bb hh (by omega) hbound
@@ -134,13 +134,13 @@ theorem sectionResult_run_of_two_zero_sources
     (L n m a b : Nat) (head : Int)
     (hL : 4 ≤ L) (hbound : n < 2^L) (ha : 0 < a)
     (hm0zero : ∀ (q aa bb : Nat) (hh : Int),
-      0 < q → 8*q < 2^L → 0 < aa →
+      0 < q → 4 ≤ L → 8*q < 2^L → 0 < aa →
       run tm2 (proposedIncrementCost 0 (8*q) aa bb)
         (s1Config L (8*q) 0 aa 0 bb hh) =
       some (s1Config L (8*q-1) 2 (aa+bb+1) 0 (2^bb-1)
         (hh+5+3*bb)))
     (hm2zero : ∀ (q aa bb : Nat) (hh : Int),
-      0 < q → 8*q < 2^L → 0 < aa →
+      0 < q → 4 ≤ L → 8*q < 2^L → 0 < aa →
       run tm2 (proposedIncrementCost 2 (8*q) aa bb)
         (s1Config L (8*q) 2 aa 0 bb hh) =
       some (s1Config L (8*q-1) 1 (aa+bb+2) 0 (2^bb-1)
