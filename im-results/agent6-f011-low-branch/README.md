@@ -120,7 +120,7 @@ This is the exact exponential-versus-linear residue equation behind the low-bran
 
 For a fixed episode start, there is at most one candidate \(n\): the difference between the left side and the \(27n\) term increases strictly, since
 \[
-(3c_0+5)64^{n+4-r_0}-(3c_0+5)64^{n+3-r_0}-27
+(3c_0+5)4^{3(n+1)+3-r_0}-(3c_0+5)4^{3n+3-r_0}-27
 =
 63(3c_0+5)4^{3n+3-r_0}-27>0.
 \]
