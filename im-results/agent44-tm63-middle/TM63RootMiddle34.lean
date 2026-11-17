@@ -5,21 +5,16 @@ import M1OddResidueThree
 import M0EvenResidueTwo
 import M2OddGenericStage
 import M2EvenSixGenericCounted
+import M1EvenValuationSource
 import Lean.Elab.Tactic.Omega
 
 /-!
-# Conditional TM63 root continuation through middle row 34
+Unconditional TM63 root continuation through middle row 34.
 
-Rows 27--31 after the existing middle-26 endpoint use already-stated
-source increment theorems. Row 32 is the current M1-even arbitrary-
-valuation gap, so it is exposed as the sole explicit source-run
-hypothesis. The existing all-odd M0 theorem then supplies row 33, and
-the new generic M2-even-six theorem supplies row 34 at
-n=16*r-18=8*(2*r-3)+6, with odd quotient 2*r-3.
-
-This module does not claim the root itinerary through row 34
-unconditionally: that claim follows only once the row-32 hypothesis
-is discharged by the independent M1-even bridge.
+Rows 27--31 use the established source increment theorems. Row 32 is
+now discharged by the valuation-parametric M1 source theorem, which
+covers every positive bounded binary counter. The all-odd M0 theorem
+supplies row 33, and the generic M2-even-six theorem supplies row 34.
 -/
 
 namespace BB6Coverage.Agent44TM63RootMiddle34
@@ -39,6 +34,7 @@ open BB6Coverage.Agent8M1OddResidueThree
 open BB6Coverage.Agent24M0EvenResidueTwo
 open BB6Coverage.Agent42M2OddGeneric
 open BB6Coverage.Agent44M2EvenSixGenericCounted
+open BB6Coverage.Agent48M1EvenValuationCountedSource
 open BB6ChampionArithmetic
 
 private theorem run_compose_local {n m : Nat} {c1 c2 c3 : Config}
@@ -180,19 +176,7 @@ def tm63MiddleFirst34Moves : Nat :=
 /-- Compose rows 27--34 from the authentic blank-root middle-26 endpoint.
 The only remaining hypothesis is the exact arbitrary-valuation M1-even
 source increment at row 32, input n=16*r-16=32*((r-1)/2). -/
-theorem tm63_blank_reaches_after_middle34_of_m1even32
-    (h32 :
-      run tm2
-        (proposedIncrementCost 1 (16*tm63RootResidueSixK-16)
-          tm63MiddleAfter31A tm63MiddleAfter31B)
-        (s1Config tm63Length1
-          (16*tm63RootResidueSixK-16) 1
-          tm63MiddleAfter31A 0 tm63MiddleAfter31B
-          tm63MiddleAfter31Head) =
-      some (s1Config tm63Length1
-        (16*tm63RootResidueSixK-17) 0
-        tm63MiddleAfter32A 0 tm63MiddleAfter32B
-        tm63MiddleAfter32Head)) :
+theorem tm63_blank_reaches_after_middle34 :
     run tm2 tm63MiddleFirst34Moves blank =
       some (s1Config tm63Length1
         (16*tm63RootResidueSixK-19) 1
@@ -343,6 +327,31 @@ theorem tm63_blank_reaches_after_middle34_of_m1even32
     tm63Length1 (16*tm63RootResidueSixK-15)
     tm63MiddleAfter30A tm63MiddleAfter30B tm63MiddleAfter30Head
     hn31 hbound31
+  have hn32 : 0 < 16*tm63RootResidueSixK-16 := by omega
+  have hbound32 :
+      16*tm63RootResidueSixK-16 < 2^tm63Length1 := by omega
+  have ha31 : 0 < tm63MiddleAfter31A := by
+    unfold tm63MiddleAfter31A
+    omega
+  have h32raw := m1EvenValuation_counted_increment_source
+    tm63Length1 (16*tm63RootResidueSixK-16)
+    tm63MiddleAfter31A tm63MiddleAfter31B tm63MiddleAfter31Head
+    hn32 hbound32 ha31
+  have h32 :
+      run tm2
+        (proposedIncrementCost 1 (16*tm63RootResidueSixK-16)
+          tm63MiddleAfter31A tm63MiddleAfter31B)
+        (s1Config tm63Length1
+          (16*tm63RootResidueSixK-16) 1
+          tm63MiddleAfter31A 0 tm63MiddleAfter31B
+          tm63MiddleAfter31Head) =
+      some (s1Config tm63Length1
+        (16*tm63RootResidueSixK-17) 0
+        tm63MiddleAfter32A 0 tm63MiddleAfter32B
+        tm63MiddleAfter32Head) := by
+    simpa [tm63MiddleAfter32A,tm63MiddleAfter32B,
+      tm63MiddleAfter32Head] using h32raw
+
   have htarget31 :
       (16*tm63RootResidueSixK-15)-1 =
         16*tm63RootResidueSixK-16 := by omega
@@ -436,6 +445,29 @@ theorem tm63_blank_reaches_after_middle34_of_m1even32
   have hcomp34 := run_compose_local hcomp33 h34'
   simpa [tm63MiddleFirst34Moves] using hcomp34
 
+/-- Backwards-compatible conditional wrapper; the premise is no
+longer needed because the row-32 source theorem is proved above. -/
+theorem tm63_blank_reaches_after_middle34_of_m1even32
+    (_h32 :
+      run tm2
+        (proposedIncrementCost 1 (16*tm63RootResidueSixK-16)
+          tm63MiddleAfter31A tm63MiddleAfter31B)
+        (s1Config tm63Length1
+          (16*tm63RootResidueSixK-16) 1
+          tm63MiddleAfter31A 0 tm63MiddleAfter31B
+          tm63MiddleAfter31Head) =
+      some (s1Config tm63Length1
+        (16*tm63RootResidueSixK-17) 0
+        tm63MiddleAfter32A 0 tm63MiddleAfter32B
+        tm63MiddleAfter32Head)) :
+    run tm2 tm63MiddleFirst34Moves blank =
+      some (s1Config tm63Length1
+        (16*tm63RootResidueSixK-19) 1
+        tm63MiddleAfter34A 0 tm63MiddleAfter34B
+        tm63MiddleAfter34Head) :=
+  tm63_blank_reaches_after_middle34
+
+#print axioms tm63_blank_reaches_after_middle34
 #print axioms tm63_blank_reaches_after_middle34_of_m1even32
 
 end BB6Coverage.Agent44TM63RootMiddle34
