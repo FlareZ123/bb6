@@ -8,12 +8,14 @@ import CountedReset
 import Lean.Elab.Tactic.Omega
 
 /-!
-# M1-even valuation source prefix
+# M1 valuation source and complete counted increment
 
-For n=(2*q+1)*2^v, this module connects the uniform two-sided bridge
-to the actual S1 encoder.  It proves the source run from the canonical
-state-3 S1 configuration to the q4 cut, with exact tape and head.
-The parameter q is the odd quotient and v is the 2-adic valuation.
+For n=(2*q+1)*2^v, the first namespace connects the uniform two-sided
+bridge to the actual S1 encoder and proves the exact source run to the q4
+cut. The appended counted-source namespace proves the q4 suffix, reset
+intermediate, and counted drain, then packages the result for every
+positive n below the binary width. The parameter q is the odd quotient
+and v is the 2-adic valuation.
 -/
 
 namespace BB6Coverage.Agent48M1EvenValuationSource
