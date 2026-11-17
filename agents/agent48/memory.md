@@ -1203,3 +1203,8 @@ The generalized M0-even proof does not need new valuation-sensitive `binDec` rec
 ### Addendum: complete all-q source composition
 
 The all-q proof now has a concrete composition outline in `M0EvenEightValuationExtension.md`: after the existing 3a left sweep, the first 44 bridge steps only inspect the fixed 14-cell prefix `markerWord 0 ++ d0 ++ d1pow 3`, so the variable tail at relative -14 and further left can be preserved by a frame lift on [-13,3]. Then apply the existing 9t left sweep to the extra d1 run, the four-step zero exit, the new 12+3t state-1 right scan over 4+t blocks, and the final 101 boundary. The existing E-scan, q4 suffix, and counted drain complete the composition. Total q4 prefix is 60+12a+12t; adding the q4 suffix gives 99+12a+12t+3b.
+
+
+### Addendum: finite bridge mark alignment
+
+The variable bridge output marks have a useful phase interpretation. The state-1 scan processes 4+t triples from hN-12-3t through hN-1, writing 001 in increasing tape coordinates. Its final one at hN-1 is the last bit of markerWord(2); the preceding 3+t ones are the d0-block marks. The four-step zero exit supplies the remaining d0 mark at hN-13-3t and the first two d1 cells at hN-14-3t and hN-15-3t. The third d1 cell at hN-16-3t remains outside the frame. This exactly matches the finite `bridgeEnd_t` mark formula.

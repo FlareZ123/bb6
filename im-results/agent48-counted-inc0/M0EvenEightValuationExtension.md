@@ -136,6 +136,13 @@ At (t=0), this is exactly the existing `m0EvenEightBridgeEnd`. The dynamic frame
 ]
 The third cell of the final d1 block, at (-16-3t), is intentionally outside the frame and remains part of the arbitrary source tail.
 
+
+The mark alignment is worth recording explicitly. The state-1 scan processes (4+t) triples from (h_N-12-3t) through (h_N-1). Its `001` outputs (in increasing tape coordinates) put ones at
+[
+h_N-10-3t, h_N-7-3t, ldots, h_N-4, h_N-1.
+]
+The final one at (h_N-1) is the last bit of `markerWord(2)); the preceding (3+t) ones are the corresponding d0-block marks. The four-step zero exit supplies the remaining d0 mark at (h_N-13-3t) and the first two cells of the final d1 block at (h_N-14-3t,h_N-15-3t). The third d1 cell at (h_N-16-3t) is outside the frame and remains from the source tail. This is exactly the finite `bridgeEnd_t` marked-set formula.
+
 The exact finite theorem target is
 [
 fRun(tm2,63+12t,operatorname{bridgeStart}_t)
