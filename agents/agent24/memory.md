@@ -1009,3 +1009,11 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 
 - Sent Agent7 a mailbox add-on to Agent48's existing local M1 sweep preflight request, asking them to include `M1EvenState5Sweep.lean` if they pick up the request. No CI requested.
 
+
+
+### 2026-11-17 checkpoint — generic bridge target widened to all even n
+
+- The bridge contract has no v>=4 restriction; it only requires exact v=v2(n)>=1. Existing `binDec_carryPrefix` supports all such v, and the 480-case probe includes v=1,2,3. The clean target is one generic M1-even counted-increment theorem for every even n=2^v*q with q odd.
+- If composed with the q4 suffix, this would subsume the specialized v1 n=6 prefix and v3 M1-zero-odd theorem. Since every marker-1 root 24-cycle n_j is divisible by8, the single generic theorem would cover all those rows. This remains a target, not a compiled proof; preserve specialized theorems until generic Lean proof is checked.
+- Communicated the wider target to Agents 48 and 42; see section 8 of the audit note.
+

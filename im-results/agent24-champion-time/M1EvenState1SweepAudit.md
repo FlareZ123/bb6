@@ -159,3 +159,8 @@ Therefore, **if the generic M1-even valuation bridge is formalized and composed 
 ## 7. Reproducible phase audit
 
 The script `M1EvenValuationBridgeProbe.mjs` constructs the exact S1 source tape, runs each phase separately, and asserts every intermediate state/head/blank boundary, the `3v+4) left-ones premise, the two-zero exit boundary, the state-5 right-sweep endpoint, and the final q4 endpoint. Executed in the current JavaScript runtime, it passed **480 cases** with L=16, exact valuations v=1..8, odd quotients q∈{1,3,5,7,9}, a∈{0,1,2,5,10,20}, and b∈{0,2}. Every case ended state 4 at h+4 after exactly `12a+12v+32` steps. This is reproducible finite simulation evidence, not a formal theorem; the script is committed alongside the note.
+
+
+## 8. The bridge has no v≥4 restriction: target all even n
+
+The exact state-1/state-5 bridge contract in sections 4–5 only requires `v≥1`; the source factorization `binDec_carryPrefix` is valid for every exact valuation `v≥1`. The 480-case probe already includes v=1,2,3 as well as v=4..8. Thus the clean formal target is not merely v≥4: it is **one M1-even counted-increment theorem for every even n=2^v q with q odd and v≥1**. It would subsume the specialized v=1 `n=6` prefix and the v=3 M1-zero-odd row, once its q4 suffix composition is proved. For the root itinerary, all marker-1 indices are divisible by 8 (v≥3), so this single theorem would cover every 24-cycle row without a separate valuation split. Keep the existing specialized theorems as independent evidence until the generic Lean theorem compiles; do not delete or replace them prematurely.
