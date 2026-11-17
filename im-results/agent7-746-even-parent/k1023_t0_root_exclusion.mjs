@@ -83,6 +83,12 @@ while (true) {
 }
 if (chain.length!==8 || chain.slice(0,-1).some(x=>x.parentCount!==1) ||
     chain[7].parentCount!==0) throw Error("unexpected chain shape");
+const terminal = BigInt(chain[7].height);
+const terminalEvenLevel = bits(terminal)-3;
+if (terminal%3n!==0n ||
+    terminal>=6n*pow2(terminalEvenLevel)-1n) {
+  throw Error("terminal no-parent arithmetic check failed");
+}
 console.log(JSON.stringify({
   K:String(K),a:String(a),r:String(r),q:String(q),D0mod3:String(D0%3n),
   entry:String(E),incomingOddSource:String(h0),chain
