@@ -159,6 +159,20 @@ theorem state1SweptLeft_head (n : Nat) (T : Int → Bool) (h : Int)
       have hcoord : (h-1)-(n:Int) = h-((n+1:Int)) := by omega
       simpa [state1SweptLeft, hcoord] using htail
 
+/-- The state-1 sweep leaves every cell strictly right of its initial
+head unchanged. -/
+theorem state1SweptLeft_preserves_right (n : Nat) (T : Int → Bool)
+    (h x : Int) (hx : h < x) :
+    state1SweptLeft n T h x = T x := by
+  induction n generalizing T h with
+  | zero =>
+      simp [state1SweptLeft]
+  | succ n ih =>
+      have hpres := ih (holeLeft T h) (h-1) x (by omega)
+      have hne0 : x ≠ h := by omega
+      have hne1 : x ≠ h-1 := by omega
+      simpa [state1SweptLeft, holeLeft, hne0, hne1] using hpres
+
 /-- The state-1 sweep writes one at every cell strictly right of its
 final blank and at or left of its initial head. -/
 theorem state1SweptLeft_block (n : Nat) (T : Int → Bool) (h : Int)
@@ -190,24 +204,9 @@ theorem state1SweptLeft_preserves_left (n : Nat) (T : Int → Bool)
   induction n generalizing T h with
   | zero =>
       simp [state1SweptLeft]
-      omega
   | succ n ih =>
       have hx' : x < (h-1)-(n:Int) := by omega
       have hpres := ih (holeLeft T h) (h-1) x hx'
-      have hne0 : x ≠ h := by omega
-      have hne1 : x ≠ h-1 := by omega
-      simpa [state1SweptLeft, holeLeft, hne0, hne1] using hpres
-
-/-- The state-1 sweep leaves every cell strictly right of its initial
-head unchanged. -/
-theorem state1SweptLeft_preserves_right (n : Nat) (T : Int → Bool)
-    (h x : Int) (hx : h < x) :
-    state1SweptLeft n T h x = T x := by
-  induction n generalizing T h with
-  | zero =>
-      simp [state1SweptLeft]
-  | succ n ih =>
-      have hpres := ih (holeLeft T h) (h-1) x (by omega)
       have hne0 : x ≠ h := by omega
       have hne1 : x ≠ h-1 := by omega
       simpa [state1SweptLeft, holeLeft, hne0, hne1] using hpres
