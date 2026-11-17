@@ -35,3 +35,26 @@ The local Lean archive reconstruction was attempted from the two uploaded zip fr
 2. Formalize (2^K\ge4K^2) for (K\ge10), then derive the two power inequalities from the t=0 source-band lower bound and (delta=2^q e), (1\le e\le2K+3). Refactor the arithmetic theorem to consume the source-band bound rather than assume the power inequalities.
 3. Connect the t=0 level-entry even-parent hypothesis and deficit scaling to `ResetChain`; then the special t=0 branch can be closed at the source-connected level.
 4. Continue t=1 Q-parent root intersection only after Agent 7 responds; do not repeat finite forward scans or residue catalogues. The synthetic inverse tree is not an all-time decision.
+
+
+### 2026-11-17 addendum: two infinite t=0 root-exclusion families
+
+This invocation derived and committed two paper-level root-nonreachability families under im-results/agent10-cascade/:
+
+1. **Unique odd-parent leaf family** — T0-INFINITE-SYNTHETIC-ODD-PARENT-FAMILY.md and t0_infinite_synthetic_odd_parent_family.mjs. Parameters:
+   \[
+   a=18n,\quad K\equiv38\pmod{54},\quad (2K+7)/2^a\in[97/64,13/8].
+   \]
+   The t=0 candidate entry \(E\) has no even parent and exactly one odd parent \(h'\) at level \(K-1\). The parent satisfies \(h'\equiv0\pmod3\) and \(2\cdot2^K<h'<3\cdot2^K-1\), so it has neither odd nor even parents. Hence \(E\notin\operatorname{ResetChain}(2,\cdot)\). Agent 7 independently found the initial leaf subfamily and a separate finite \(K=1023,q=8\) seven-edge chain; see im-results/agent7-746-even-parent/K1023-T0-ENTRY-ROOT-EXCLUSION.md.
+
+2. **D0-zero phase family** — T0-D0-ZERO-PHASE-ROOT-EXCLUSION.md and t0_d0_zero_phase_root_exclusion.mjs. Parameters:
+   \[
+   a=18n+2,\quad K\equiv2\pmod{18},\quad (2K+7)/2^a\in[3/2,7/4].
+   \]
+   The mod-9 calculation gives \(D_0\equiv0\pmod3\), hence \(2E+5\equiv1\pmod3\), excluding odd parents. The entry lies in the even-parent dyadic gap \(4p<E<65p/12<6p-1\), excluding every even parent. Moreover \(D_0\ge8p/3\) while the first-entry guard requires \(2^qD_0\le4p+2K+4\), so \(q\ge1\) is impossible for \(K\ge266\); q=0 is forced. Thus the whole t=0 fatal branch is excluded at these levels.
+
+Both family proofs are **paper-level, not yet Lean-formalized or kernel-checked**. They belong in im-results/, not results/. The exact inverse grammar/root-chain framework is in FirstInverseComplete.lean and ResetChain.lean; do not confuse those existing source definitions with a Lean proof of the new family arithmetic. Agent 7's selector, explicit-r characterization, q-log bound, and D0 phase table are in im-results/agent7-746-even-parent/ and are the right basis for the remaining t=0 phases. Messages/reviews were sent to Agent 7 and Agent 44; no Agent 44 review had arrived by release.
+
+**Runtime note:** the local shell/container tool returned ClientError on repeated attempts, including the requested Lean archive reconstruction. No local Lean executable/version was obtained and no Lean compilation was performed. The standalone .mjs files were committed, while their BigInt witness arithmetic was independently re-run in the available JS tool runtime. Do not claim that the scripts were executed by Node or that the new theorems are formalized.
+
+**Next actions:** (i) formalize both root-exclusion arguments against the exact ResetParent and ResetChain definitions, using targeted CI if local shell remains unavailable; (ii) analyze remaining t=0 residue/q phases using Agent 7's logarithmic q bound and unique 3-adic selector, avoiding repeated finite scans; (iii) continue t=1/Q-parent root intersection after useful cross-agent feedback. Respect the existing Critic integration gate: do not deepen the dependent #746 PR stack before the parent PR is integrated.
