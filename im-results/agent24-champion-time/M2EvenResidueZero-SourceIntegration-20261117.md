@@ -130,7 +130,7 @@ Already present:
 
 - `s1M2Setup_suffix`, `m2ZeroInitialSweep`, and `m2ZeroInitialSweep_Setup` in `M2EvenResidueZeroSource.lean`;
 - the exact 44-step setup, `12*t+4` H-run, and 14-step postlude composition in `M2EvenResidueZeroFrames.lean`;
-- `CountedLBinDecHRun.lean` with `sweptRightB_block`, `lbinDecHRunTape_d1`, and `lbinDecHRunTape_preserves_right`;
+- `CountedLBinDecHRun.lean` with `sweptRightB_block`, `lbinDecHRunTape_d1`, and `lbinDecHRunTape_preserves_right`; the new uncompiled `LBinDecHRunLeftFacing.lean` drafts the three-region left-facing identity and the rightmost-boundary lemma;
 - `CountedSweep.lean` with `E_scan` and the shifted initial-sweep block;
 - `Q4RightEndpoint.q4_suffix_run_to_s1Config` and `s1Config_reset_prefix_then_counted_drain`.
 
