@@ -41,6 +41,8 @@ jobs:
           cp im-results/agent24-champion-time/Q4RightEndpoint.lean /tmp/a42-lbin-dec/
           cp im-results/agent48-counted-inc0/{M0EvenEightQ4Bridge,M0EvenEightQ4Prefix,M0EvenEightGenericSource}.lean /tmp/a42-lbin-dec/
           cp im-results/agent48-counted-inc0/m0_even_eight_source_sim.js /tmp/a42-lbin-dec/
+          cp im-results/agent48-counted-inc0/{M0EvenEightValuationEncoding,M0EvenEightValuationSuffix,M0EvenEightValuationSweepFacts,M0EvenEightValuationFixedPrefix,M0EvenEightValuationMacros}.lean /tmp/a42-lbin-dec/
+          cp im-results/agent48-counted-inc0/m0_even_eight_valuation_probe.js /tmp/a42-lbin-dec/
           cd /tmp/a42-lbin-dec
           if grep -R -n 'native_decide' . --include='*.lean'; then
             echo '::error::native_decide found in the staged counted LBinDec/S1 source closure'
@@ -92,6 +94,22 @@ jobs:
           lean -o M0EvenEightQ4Bridge.olean M0EvenEightQ4Bridge.lean 2>&1 | tee m0-even-eight-q4-bridge-compile.log
           lean -o M0EvenEightQ4Prefix.olean M0EvenEightQ4Prefix.lean 2>&1 | tee m0-even-eight-q4-prefix-compile.log
           lean -o M0EvenEightGenericSource.olean M0EvenEightGenericSource.lean 2>&1 | tee m0-even-eight-generic-source-compile.log
+          # Preflight the valuation-uniform q>0 helper leaves and their exact source imports.
+          node m0_even_eight_valuation_probe.js | tee m0-even-eight-valuation-probe.log
+          grep -q '"tested": 288' m0-even-eight-valuation-probe.log
+          grep -q '"bridgeTested": 101' m0-even-eight-valuation-probe.log
+          grep -q '"failures": \[\]' m0-even-eight-valuation-probe.log
+          grep -q '"bridgeFailures": \[\]' m0-even-eight-valuation-probe.log
+          : > m0-even-eight-valuation-axioms.log
+          lean -o M0EvenEightValuationSuffix.olean M0EvenEightValuationSuffix.lean 2>&1 | tee -a m0-even-eight-valuation-axioms.log
+          lean -o M0EvenEightValuationSweepFacts.olean M0EvenEightValuationSweepFacts.lean 2>&1 | tee -a m0-even-eight-valuation-axioms.log
+          lean -o M0EvenEightValuationFixedPrefix.olean M0EvenEightValuationFixedPrefix.lean 2>&1 | tee -a m0-even-eight-valuation-axioms.log
+          lean -o M0EvenEightValuationMacros.olean M0EvenEightValuationMacros.lean 2>&1 | tee -a m0-even-eight-valuation-axioms.log
+          lean -o M0EvenEightValuationEncoding.olean M0EvenEightValuationEncoding.lean 2>&1 | tee -a m0-even-eight-valuation-axioms.log
+          if grep -qE 'sorryAx|native_decide' m0-even-eight-valuation-axioms.log; then
+            echo '::error::sorryAx or native_decide in valuation-uniform M0-even helper closure'
+            exit 1
+          fi
           grep -q 'PASS: 1890 exhaustive bounded cases' m0-even-eight-source-sim.log
           if grep -q 'native_decide' counted-lbin-dec-axioms.log counted-prefix-hrun-compile.log counted-prefix-hrun-axioms.log s1-encoder-compile.log s1-prefix-bridge-compile.log counted-suffix-output-compile.log s1-carry-output-bridge-compile.log carry-left-r23-compile.log long-residue1-compile.log s1-carry-inc0-compile.log s1-odd-canonical-compile.log s1-counted-inc0-compile.log champion-modular-compile.log count-pattern-compile.log cost-recurrence-compile.log counted-reset-compile.log s1-counted-drain-compile.log counted-q4-prefix-compile.log counted-rst1-prime-compile.log q4-suffix-compile.log q4-right-endpoint-compile.log m0-even-eight-q4-bridge-compile.log m0-even-eight-q4-prefix-compile.log m0-even-eight-generic-source-compile.log outer-lcinc-prelude-compile.log; then
             echo '::error::native_decide appeared in a compiled axiom log'
