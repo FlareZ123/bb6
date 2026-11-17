@@ -37,7 +37,6 @@ theorem evalA_3adic_run
         have hkmod : k % 3 = 2 := by omega
         have hkdiv : k / 3 = q := by omega
         simp [evalA, hkmod, hkdiv, ternaryOnes]
-        rw [Nat.sub_add_cancel (by omega : 1 ≤ a)]
   | succ v ih =>
       have hpow : 3^(v+1) = 3*3^v := by
         rw [Nat.pow_succ]
