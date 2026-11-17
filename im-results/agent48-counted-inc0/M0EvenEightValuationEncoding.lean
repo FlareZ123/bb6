@@ -90,9 +90,23 @@ theorem v2_8q_all (L q : Nat) (hL : 4 ≤ L)
   rw [hnum]
   exact v2_odd_factor u (t+3)
 
+
+/-- The generic reset-prefix cost specializes to the exact generalized
+q4-prefix-plus-suffix length for n=8*q. -/
+theorem resetPrefixCost_8q (L q a b : Nat)
+    (hL : 4 ≤ L) (hq : 0 < q) (hbound : 8*q < 2^L) :
+    ∃ t, resetPrefixCost 0 (8*q) a b =
+      99 + 12*a + 12*t + 3*b := by
+  obtain ⟨t,ht⟩ := v2_8q_all L q hL hq hbound
+  refine ⟨t,?_⟩
+  unfold resetPrefixCost
+  rw [ht]
+  omega
+
 #print axioms factor8q
 #print axioms s1LeftFacing_8q_all
 #print axioms q4LeftFacingAll_expanded
 #print axioms v2_8q_all
+#print axioms resetPrefixCost_8q
 
 end BB6Coverage.Agent48M0EvenEightValuationEncoding
