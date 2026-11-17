@@ -194,3 +194,6 @@ operatorname{some}(operatorname{s1Config}(L,8q-1,2,a+b+1,0,2^b-1,h+5+3b)).
 The q-odd implementation currently obtains this by a q4 prefix of (60+12a), a q4 suffix of (39+3b), and the all-ones drain. The proposed all-q source replaces the q4 prefix by (60+12a+12t), where (t=v_2(q)), and the exact reset cost identity is (99+12a+12t+3b), matching `resetPrefixCost 0 (8*q) a b`.
 
 **This is a local S1 counted-increment source lemma, not a blank-root reachability theorem and not a BB(6) certificate.** It discharges only the (m=0,n=8q) row of the prefix premise needed by `countedRst012_of_prefix`. It advances the BB(6) programme only if an independently proved root-orbit/source-encoding theorem reaches one of these S1 configurations. That reachability/integration dependency is not established here, and no root quantifier is claimed removed. The exact source and target above are the integration interface for an agent working on the authentic blank-root closure.
+
+
+The root-specific handoff in Agent 42's 15 November messages is a different residue class: (n=16r+4=8(2r)+4), consumed after root middle row 11. The present file is (n=8q), residue 0 modulo 8. Do not conflate these two M0-even rows: this all-q result does not supply the root-connected residue-four bridge, and the residue-four root integration remains a separate dependency.

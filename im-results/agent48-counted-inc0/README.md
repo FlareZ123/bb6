@@ -206,3 +206,6 @@ The parameterized finite bridge formula was also checked independently for t=0..
 
 
 **Integration qualification:** the proposed all-q result targets the exact local S1 source/target pair in `m0EvenEight_counted_increment_source` (the (m=0,n=8q) row of `countedRst012_of_prefix`). It is not a blank-root reachability theorem. The connection from the authentic blank-root orbit to these S1 configurations remains unproved.
+
+
+Do not confuse this (n=8q) (residue-0 mod 8) source row with the root-connected (n=8(2r)+4) residue-four handoff after middle row 11; they are distinct obligations.

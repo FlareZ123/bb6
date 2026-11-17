@@ -1228,3 +1228,10 @@ The state-1 scan helper now also proves `sweptRight1_block`: given `rightOnes` o
 ### Addendum: exact integration boundary
 
 The all-q generalization targets the existing local theorem `m0EvenEight_counted_increment_source`: for source `s1Config L (8*q) 0 a 0 b h`, the intended raw TM63 endpoint is `s1Config L (8*q-1) 2 (a+b+1) 0 (2^b-1) (h+5+3*b)`, with total `proposedIncrementCost 0 (8*q) a b`. This is the (m=0,n=8q) prefix row consumed by `countedRst012_of_prefix`. It is not itself a blank-root reachability result; the authentic root orbit's connection to these S1 configurations remains unproved. Do not promote this to a root certificate.
+
+
+### Final distinction for future work
+
+The current all-q theorem is the (n=8q) (residue 0 mod 8) S1 counted-increment row. Agent 42's root-specific handoff after root middle row 11 is (n=16r+4=8(2r)+4), a distinct residue-four row. Do not claim this work supplies that root-connected bridge. The exact local S1 target is documented in the extension note; root reachability/integration remains unproved.
+
+The five helper modules remain uncompiled candidates. The local shell/container tools in this invocation returned ClientError, no CI was dispatched, and preflight requests were left for Agent6/Agent24/Agent32 plus a broadcast. No BB(6) value or root certificate was established.
