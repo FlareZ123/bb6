@@ -166,7 +166,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
     calc
       2^L = 2^((L-3)+3) := by congr 1 <;> omega
       _ = 2^(L-3)*2^3 := by rw [Nat.pow_add]
-      _ = 8*2^(L-3) := by norm_num
+      _ = 8*2^(L-3) := by ring
   have hkBound : k<2^(L-3) := by
     rw [hpowL] at hbound
     omega
@@ -553,15 +553,19 @@ theorem m2Even_residue0_q4_reset_prefix_source
   have hzero5 : Tpost (h+5)=false := by
     have hp := hpostOriginalRight (h+5) (by omega)
     have hcell := s1Config_right_cell L (8*k) 2 a 0 b h 4
+    have hcell' : T (h+5)=sideBit (s1PhysicalRight b) 4 := by
+      simpa [T] using hcell
     have hbit : sideBit (s1PhysicalRight b) 4=false := by
       simp [s1PhysicalRight_source,sideBit]
-    exact hp.trans (hcell.trans hbit)
+    exact hp.trans (hcell'.trans hbit)
   have hzero6 : Tpost (h+6)=false := by
     have hp := hpostOriginalRight (h+6) (by omega)
     have hcell := s1Config_right_cell L (8*k) 2 a 0 b h 5
+    have hcell' : T (h+6)=sideBit (s1PhysicalRight b) 5 := by
+      simpa [T] using hcell
     have hbit : sideBit (s1PhysicalRight b) 5=false := by
       simp [s1PhysicalRight_source,sideBit]
-    exact hp.trans (hcell.trans hbit)
+    exact hp.trans (hcell'.trans hbit)
   have hones : ∀ i : Nat, i<3*(b+1) →
       Tpost (h+7+(i:Int))=true := by
     intro i hi
@@ -640,7 +644,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
   have hfactor8 : 8*k=(2*q+1)*2^(t+3) := by
     have hpow : 2^(t+3)=8*2^t := by
       rw [Nat.pow_add]
-      norm_num
+      ring
     calc
       8*k = 8*((2*q+1)*2^t) := by rw [hfactor]
       _ = (2*q+1)*(8*2^t) := by ring
