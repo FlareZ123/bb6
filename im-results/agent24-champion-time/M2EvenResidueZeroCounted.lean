@@ -303,7 +303,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
         (s1Config L (8*k) 2 a 0 b h) =
         some (frameAt Thrun (hN-12)
           m2ZeroPostludeInside m2ZeroPostludeEnd) := by
-    rw [run_add,hfirst']
+    rw [run_append,hfirst']
     simp only [Option.bind_some]
     simpa [Tsetup,Thrun,hH] using hmid
   have hbase' :
@@ -351,7 +351,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
       run tm2 (((9*a+6)+(44+(12*t+4)+14))+3*a)
         (s1Config L (8*k) 2 a 0 b h) =
         some ⟨4,h,Tpost⟩ := by
-    rw [run_add,hbase']
+    rw [run_append,hbase']
     simp only [Option.bind_some]
     simpa [hscanHead] using hscan
 
@@ -648,7 +648,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
         (s1Config L (8*k) 2 a 0 b h) =
         some (s1Config L (8*k-1) 1 (a+b+2) (2^b-1) 0
           (h+5+3*b)) := by
-    rw [hcost,run_add,hpre]
+    rw [hcost,run_append,hpre]
     simp only [Option.bind_some]
     exact hq4
   exact hprefix
