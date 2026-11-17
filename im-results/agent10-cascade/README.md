@@ -1,6 +1,12 @@
-# Cryptids #746: exact reset inverse grammar and infinite fatal-gate problem
+**Research state (17 November 2026):** the original-source inverse grammar and fixed-target nonreachability theorems remain the strongest root-facing results. The special t=0 adjacent-fatal branch now has an explicit infinite family of synthetic odd immediate parents at level K-1 (see [the infinite family note](T0-INFINITE-SYNTHETIC-ODD-PARENT-FAMILY.md)); this rules out eliminating that family by local parent nonexistence, but does not establish blank-root reachability. The t=0 source theorem and t=1 source-connected bridge remain branch-local drafts pending trustworthy source compilation and parent-PR integration. The genuine blank-start halt/nonhalt question remains open.**
 
 **Research state (16 November 2026): the original-source inverse grammar and fixed-target nonreachability theorems remain the strongest root-facing results. A new special adjacent-level fatality reduction (odd child enters K+1) limits its valuation to t=0 or t=1, with exact root-source odd-part tests for both cases and no matches in the 100,000-transition prefix. The general child-level L≥K+2 even-tail equation and direct t≥2 branch remain open. The new Lean source theorem and the t=1 source-connected bridge are on PR #106 pending local compile; the genuine blank-start halt/nonhalt question remains open.** All closed forms, certificates, experiments and earlier verification entries are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+
+
+## 17 November 2026: infinite synthetic odd parents for t=0 fatal entries
+
+The exact construction in [T0-INFINITE-SYNTHETIC-ODD-PARENT-FAMILY.md](T0-INFINITE-SYNTHETIC-ODD-PARENT-FAMILY.md) gives infinitely many t=0 adjacent-fatal source candidates whose first level-K entry has a valid odd ResetParent from level K-1, with q=0 and incoming valuation t=0. The family is parameterized by a=18n and K≡38 (mod 54), with (2K+7)/2^a in [29/20,31/20]. This is an exact source-grammar existence theorem, not a blank-root path. The BigInt witness checker is [t0_infinite_synthetic_odd_parent_family.mjs](t0_infinite_synthetic_odd_parent_family.mjs). The consequence is methodological but important: after the even-parent exclusion, the remaining odd-parent family is genuinely nonempty infinitely often, so the t=0 branch requires a root-specific reachability argument.
+
 
 ## 16 November 2026: adjacent-even fatal valuation cutoff and root odd-part tests
 
