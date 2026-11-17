@@ -1235,3 +1235,22 @@ The all-q generalization targets the existing local theorem `m0EvenEight_counted
 The current all-q theorem is the (n=8q) (residue 0 mod 8) S1 counted-increment row. Agent 42's root-specific handoff after root middle row 11 is (n=16r+4=8(2r)+4), a distinct residue-four row. Do not claim this work supplies that root-connected bridge. The exact local S1 target is documented in the extension note; root reachability/integration remains unproved.
 
 The five helper modules remain uncompiled candidates. The local shell/container tools in this invocation returned ClientError, no CI was dispatched, and preflight requests were left for Agent6/Agent24/Agent32 plus a broadcast. No BB(6) value or root certificate was established.
+
+
+## 2026-11-17: full M1 valuation source composition and row-32 integration
+
+The main new contribution is in im-results/agent48-counted-inc0/M1EvenValuationSource.lean, appended under BB6Coverage.Agent48M1EvenValuationCountedSource. It composes the already-proved valuation bridge with the authentic M1 q4 cut, generic q4 suffix, reset intermediate, and counted drain. The exported theorem m1EvenValuation_counted_increment_source covers every 0<n<2^L and 0<a, with arbitrary 2-adic valuation: factor n=(2q+1)*2^v, use m1EvenValuation_q4_prefix_run, prove the exact original-head left-facing q4 cut stream and q4 right shape/far tail, apply q4_suffix_run_to_s1Config, split its first four moves, and compose the remaining 35+3*b suffix with the 12*a+12*v+32 prefix. The cost identity is resetPrefixCost 1 n a b = 12*a+12*v+67+3*b; resetDrainBound a b 1 ha supplies the bound for the intermediate 2^b-1.
+
+Important proof-script corrections made while reviewing the extension:
+- The q4 suffix target uses counter n-1, while the q4 cut stream is parameterized by input n; m1EvenValuationQ4SuffixTargetLeft now states s1LeftFacing L (n-1) ... = ... (m1EvenValuationQ4LeftFacing L n a).drop 1.
+- The outer sweptLeft_block has contract j+1<N at coordinate h-j. The new q4 left-facing proof uses it with j=i for the strict interior and j=0 for the head. This is distinct from state1SweptLeft_block, whose contract is i<N at h-N+1+i.
+- The bridge left-facing tail uses the input equality in the forward direction (hinput), not its symmetry.
+- The a=0 head is supplied by the valuation bridge's one-step exit at hN+1=h.
+
+The M1 source composition was independently reviewed by Agent 24 (no substantive mathematical or API mismatch reported). The exact q4 cut/bridge contract is also supported by the 480-case JS probe documented in im-results/agent24-champion-time/M1EvenState1SweepAudit.md; that is finite simulation evidence, not a formal proof.
+
+im-results/agent44-tm63-middle/TM63RootMiddle34.lean now exposes tm63_middle32_source, deriving row 32 from the generic theorem using R>=61 and tm63_index1_lt_pow_length1, and the main tm63_blank_reaches_after_middle34 theorem no longer assumes row 32. The old conditional theorem name remains as a compatibility wrapper. The root-witness README and M1EvenZeroValuationGap.md were updated to distinguish the previously rejected 12*a+6 placement from the corrected post-counted-sweep bridge and to mark the new source theorem as pending compile.
+
+The manual workflow .github/workflows/agent42-champion-terminal-source.yml now stages and compiles M1EvenState1Sweep, M1EvenState5Sweep, M1EvenValuationBridge, and M1EvenValuationSource, and checks transitive #print axioms output for sorryAx/native_decide. It has not been dispatched. Agent 7 has been asked to refresh main and locally compile the exact dependency chain, including TM63RootMiddle34; await the result and fix concrete Lean diagnostics before CI dispatch. Agent 42 was redirected from overlapping q4 work to formal 24-cycle row-schedule integration. The generic M1 theorem covers both parity classes in the 24-cycle, not merely v2>=4, but this remains pending compilation.
+
+Keep all these artifacts in im-results/ until local preflight and targeted CI pass. Do not claim BB(6) solved; this is a source-run increment lemma and a middle-34 root continuation, not a complete halting proof or universal upper bound.
