@@ -1,12 +1,12 @@
-name: Agent 8 m2-even residue-zero finite bridge kernels (manual)
+name: M2 even residue-zero source acceptance (manual)
 on:
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  finite-kernels:
+  m2-residue-zero-source:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -14,31 +14,96 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile exact finite bridge kernels
+      - name: Stage exact M2 residue-zero source dependency closure
         run: |
           set -euo pipefail
-          mkdir -p /tmp/a8-m2
-          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a8-m2/
-          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a8-m2/
-          cp im-results/agent8-linc/M2EvenResidueZeroFinite.lean /tmp/a8-m2/
-          cd /tmp/a8-m2
-          export LEAN_PATH=.
-          lean --version
-          lean -o Frontier.olean Frontier.lean
-          lean -o Symmetry.olean Symmetry.lean
-          lean -o RootShift.olean RootShift.lean
-          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
-          : > m2-even-residue-zero-finite-axioms.log
-          lean -o M2EvenResidueZeroFinite.olean M2EvenResidueZeroFinite.lean 2>&1 | tee m2-even-residue-zero-finite-axioms.log
-          if grep -q 'sorryAx' m2-even-residue-zero-finite-axioms.log; then
-            echo '::error::sorryAx found in finite m2-even residue-zero bridge kernels'
+          mkdir -p /tmp/m2-zero-source
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/m2-zero-source/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/m2-zero-source/
+          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges,CountedCarryPrefix,CountedCarryPrefixGeneral,CountedCarryPrefixHRun,CountedCarryPrefixHRunAxiomAudit,CountedLBinDecHRun}.lean /tmp/m2-zero-source/
+          cp im-results/agent42-carry-left-output/FrameCellLemmas.lean /tmp/m2-zero-source/
+          cp im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean /tmp/m2-zero-source/
+          cp im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean /tmp/m2-zero-source/
+          cp im-results/agent42-champion-terminal/{CountedLBinDec,CountedLBinDecShape,CountedLBinDecAxiomAudit}.lean /tmp/m2-zero-source/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/m2-zero-source/
+          cp im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean /tmp/m2-zero-source/
+          cp im-results/agent24-champion-time/{CountedSuffixOutput,S1CarryOutputBridge,CountedCarryLeftOutputR23,S1CarryInc0}.lean /tmp/m2-zero-source/
+          cp im-results/agent42-carry-left-output/LongResidue1.lean /tmp/m2-zero-source/
+          cp im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean /tmp/m2-zero-source/
+          cp im-results/agent48-counted-inc0/S1CountedInc0.lean /tmp/m2-zero-source/
+          cp im-results/agent24-champion-time/{ChampionModular,CountPattern,CostRecurrence}.lean /tmp/m2-zero-source/
+          cp im-results/agent8-counted-reset/{CountedReset,OuterLCIncPrelude}.lean /tmp/m2-zero-source/
+          cp im-results/agent48-counted-inc0/S1CountedDrain.lean /tmp/m2-zero-source/
+          cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/m2-zero-source/
+          cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/m2-zero-source/
+          cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/m2-zero-source/
+          cp im-results/agent24-champion-time/Q4RightEndpoint.lean /tmp/m2-zero-source/
+          cp im-results/agent8-linc/M2EvenResidueZeroFinite.lean /tmp/m2-zero-source/
+          cp im-results/agent24-champion-time/{M2EvenResidueZeroFrames,M2EvenResidueZeroSource,LBinDecHRunLeftFacing,M2EvenResidueZeroCounted}.lean /tmp/m2-zero-source/
+          cd /tmp/m2-zero-source
+          if grep -R -n 'native_decide' . --include='*.lean'; then
+            echo '::error::native_decide found in the staged M2 residue-zero source closure'
             exit 1
           fi
+      - name: Compile M2 source composition and audit axioms
+        run: |
+          set -euo pipefail
+          cd /tmp/m2-zero-source
+          export LEAN_PATH=.
+          lean --version
+          : > m2-even-residue-zero-source-axioms.log
+          lean -o Frontier.olean Frontier.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o Symmetry.olean Symmetry.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o RootShift.olean RootShift.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o M2EvenResidueZeroFinite.olean M2EvenResidueZeroFinite.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedSweep.olean CountedSweep.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedLBinDecHRun.olean CountedLBinDecHRun.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedOddBase.olean CountedOddBase.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedOddUnary.olean CountedOddUnary.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedOneZeroUnary.olean CountedOneZeroUnary.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedCarryBridges.olean CountedCarryBridges.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedCarryBoundaryTraces.olean CountedCarryBoundaryTraces.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedCarryPrefix.olean CountedCarryPrefix.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedCarryPrefixGeneral.olean CountedCarryPrefixGeneral.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o FrameCellLemmas.olean FrameCellLemmas.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedCarryLeftOutput.olean CountedCarryLeftOutput.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedLBinDec.olean CountedLBinDec.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedLBinDecShape.olean CountedLBinDecShape.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedCarryPrefixHRun.olean CountedCarryPrefixHRun.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o S1Encoder.olean S1Encoder.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o S1CountedCarryPrefixBridge.olean S1CountedCarryPrefixBridge.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedSuffixOutput.olean CountedSuffixOutput.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o S1CarryOutputBridge.olean S1CarryOutputBridge.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedCarryLeftOutputR23.olean CountedCarryLeftOutputR23.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o LongResidue1.olean LongResidue1.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o S1CarryInc0.olean S1CarryInc0.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o S1OddCanonicalOutput.olean S1OddCanonicalOutput.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o S1CountedInc0.olean S1CountedInc0.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o ChampionModular.olean ChampionModular.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountPattern.olean CountPattern.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CostRecurrence.olean CostRecurrence.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedReset.olean CountedReset.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o OuterLCIncPrelude.olean OuterLCIncPrelude.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o S1CountedDrain.olean S1CountedDrain.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o CountedRst1Prime.olean CountedRst1Prime.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o Q4Suffix.olean Q4Suffix.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o M2EvenResidueZeroFrames.olean M2EvenResidueZeroFrames.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o LBinDecHRunLeftFacing.olean LBinDecHRunLeftFacing.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o M2EvenResidueZeroSource.olean M2EvenResidueZeroSource.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          lean -o M2EvenResidueZeroCounted.olean M2EvenResidueZeroCounted.lean 2>&1 | tee -a m2-even-residue-zero-source-axioms.log
+          if grep -qE 'sorryAx|native_decide' m2-even-residue-zero-source-axioms.log; then
+            echo '::error::sorryAx or native_decide found in the M2 residue-zero source proof closure'
+            exit 1
+          fi
+          echo 'M2 even residue-zero all-q source composition compiled; no sorryAx or native_decide dependency detected.'
       - name: Upload diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: m2-even-residue-zero-finite-diagnostics-${{ github.run_id }}
-          path: /tmp/a8-m2/m2-even-residue-zero-finite-axioms.log
+          name: m2-even-residue-zero-source-diagnostics
+          path: /tmp/m2-zero-source/m2-even-residue-zero-source-axioms.log
           if-no-files-found: ignore
           retention-days: 3
