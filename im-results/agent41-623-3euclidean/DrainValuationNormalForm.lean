@@ -11,7 +11,7 @@ An exact closed form for one successful evalA call.
 The decomposition
   k = ternaryOnes v + 3^v * (3*q + 2*eps)
 says that the low-order base-three digits of k consist of v copies of 1,
-followed by 0 (eps = 0) or 2 (eps = 1).  The source evaluator consumes
+followed by 0 (eps = 0) or 2 (eps = 1). The source evaluator consumes
 exactly this run.
 -/
 theorem evalA_3adic_run
@@ -37,6 +37,7 @@ theorem evalA_3adic_run
         have hkmod : k % 3 = 2 := by omega
         have hkdiv : k / 3 = q := by omega
         simp [evalA, hkmod, hkdiv, ternaryOnes]
+        omega
   | succ v ih =>
       have hpow : 3^(v+1) = 3*3^v := by
         rw [pow_succ]
@@ -63,28 +64,29 @@ theorem evalA_3adic_run
       rw [evalA]
       simp only [if_neg hkmod2, if_neg ha0, if_neg hkmod0]
       rw [hkdiv]
+      let k0 := ternaryOnes v + 3^v*(3*q+2*eps)
       have hIH :=
-        ih (a-1)
-          (ternaryOnes v + 3^v*(3*q+2*eps))
-          (m + 2*(ternaryOnes v + 3^v*(3*q+2*eps)) + 3)
-          rfl habudget
+        ih (a-1) k0 (m + 2*k0 + 3) rfl habudget
       rw [hIH]
       simp only [Option.some.injEq, Prod.mk.injEq]
       constructor
       · omega
-      constructor
-      · rfl
-      · have hpow2 : 2*ternaryOnes v+1 = 3^v :=
-          twice_ones_add_one_eq_pow v
-        have hshift :
-            2*(ternaryOnes v + 3^v*(3*q+2*eps))+3
-              = (6*q+1+4*eps)*3^v+2 := by
-          rw [← hpow2]
-          ring
-        have hplus : 3^v + ternaryOnes v = ternaryOnes (v+1) := by
-          rw [← hpow2, hones]
-          ring
-        rw [hshift, hplus]
-        ring
+      · constructor
+        · trivial
+        · have hpow2 : 2*ternaryOnes v+1 = 3^v :=
+            twice_ones_add_one_eq_pow v
+          have hshift : 2*k0+3 = (6*q+1+4*eps)*3^v+2 := by
+            dsimp [k0]
+            rw [← hpow2]
+            ring
+          have hplus : 3^v + ternaryOnes v = ternaryOnes (v+1) := by
+            rw [← hpow2, hones]
+            ring
+          calc
+            m + 2*k0 + 3 + (6*q+1+4*eps)*ternaryOnes v + 2*v + 2*(1-eps)
+                = m + (2*k0+3) + (6*q+1+4*eps)*ternaryOnes v + 2*v + 2*(1-eps) := by ring
+            _ = m + ((6*q+1+4*eps)*3^v+2) + (6*q+1+4*eps)*ternaryOnes v + 2*v + 2*(1-eps) := by rw [hshift]
+            _ = m + (6*q+1+4*eps)*(3^v+ternaryOnes v) + 2*(v+1) + 2*(1-eps) := by ring
+            _ = m + (6*q+1+4*eps)*ternaryOnes (v+1) + 2*(v+1) + 2*(1-eps) := by rw [hplus]
 
 end BB6.Agent41DrainValuationNormalForm
