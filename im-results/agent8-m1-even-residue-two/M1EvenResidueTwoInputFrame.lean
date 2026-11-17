@@ -75,8 +75,8 @@ private theorem m1EvenResidueTwoSourceLeftAt (L k a b : Nat) (h : Int)
   rw [s1Config_left_cell L (8*k+2) 1 a 0 b h (3*a+1+i)]
   simp only [s1LeftFacing]
   rw [binDec_zero]
-  have hsb := sideBit_d1pow_append a (1+i)
-    (markerWord 1 ++ d0 ++ binDec L (8*k+2) ++ lh)
+  have hsb := sideBit_d1pow_append a (3*a+1+i)
+    (markerWord 1 ++ d0 ++ binDec L (8*k+2) ++ lh) (by omega)
   have hsb' : sideBit (d1pow a ++ markerWord 1 ++ d0 ++ binDec L (8*k+2) ++ lh)
       (3*a+1+i) = sideBit (markerWord 1 ++ d0 ++ binDec L (8*k+2) ++ lh) (1+i) := by
     simpa [List.append_assoc, Nat.add_assoc] using hsb
