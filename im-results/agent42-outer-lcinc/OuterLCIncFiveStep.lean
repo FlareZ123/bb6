@@ -52,4 +52,43 @@ theorem outerLCIncFive_at (T : Int → Bool) (h : Int)
 #print axioms outerLCIncFive_exact
 #print axioms outerLCIncFive_at
 
+
+/-! ## Two-step zero boundary -/
+
+/-- The zero boundary reads and writes offsets 0 and 1. -/
+def outerLCIncZeroInside (x : Int) : Bool :=
+  decide (0 ≤ x ∧ x ≤ 1)
+
+/-- E at a zero followed by A at a zero. -/
+def outerLCIncZeroStart : FConfig :=
+  ⟨4, 0, []⟩
+
+/-- B two cells to the right, with both zero cells now one. -/
+def outerLCIncZeroEnd : FConfig :=
+  ⟨1, 2, [1, 0]⟩
+
+theorem outerLCIncZero_exact :
+    fRun tm2 2 outerLCIncZeroStart = some outerLCIncZeroEnd := by
+  decide
+
+theorem outerLCIncZero_heads :
+    (List.range 2).all (fun k =>
+      match fRun tm2 k outerLCIncZeroStart with
+      | none => true
+      | some c => outerLCIncZeroInside c.head) = true := by
+  decide
+
+/-- Arbitrary-background lift of the two-step zero boundary. -/
+theorem outerLCIncZero_at (T : Int → Bool) (h : Int)
+    (hmatch : ∀ x, outerLCIncZeroInside x = true →
+      T (h+x) = decide (x ∈ outerLCIncZeroStart.marked)) :
+    run tm2 2 ⟨4,h,T⟩ =
+      some (frameAt T h outerLCIncZeroInside outerLCIncZeroEnd) := by
+  exact bridgeAt T h outerLCIncZeroInside
+    outerLCIncZeroStart outerLCIncZeroEnd 2 rfl
+    outerLCIncZero_exact outerLCIncZero_heads hmatch
+
+#print axioms outerLCIncZero_exact
+#print axioms outerLCIncZero_at
+
 end BB6Coverage.Agent42OuterLCInc
