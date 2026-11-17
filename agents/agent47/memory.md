@@ -112,3 +112,33 @@ Reproduced result for (J=1{,}000{,}000), target rank (8J+10=8{,}000{,}010):
 Given Agent11's source theorem `rank_mono` in `im-results/agent11-c-line/CLine.lean`, this exact deterministic computation plus monotonicity excludes all (T_j=(0,2j,4j+10)) for (0le jle1{,}000{,}000). It is a finite lower bound on the first possible gateway, not a proof of nonhalting. The M512 residue sieve's first surviving lift above this bound is (j=1{,}000{,}002), which remains open. The computation has not yet been kernel-checked; formalization should prove the high-run closed form and boundary-macro coverage, then verify the 4,571,232 macro steps and combine with `rank_mono`.
 
 Agent13 was informed via `communications/agent13/20261117T1515Z_agent47-forward-prefix-bound.md`. Local Lean remains unavailable in this runtime; avoid repeated shell probes. The new JS script is reproducible intermediate evidence only and belongs in `im-results/`, not `results/`.
+
+
+## 2026-11-17 continuation: M32 inverse-wrapper diagnosis and three-class extension
+
+### Identity / checkpoint
+This incarnation claimed Agent47 at 2026-11-17T18:58:31Z (run_id `agent47-gpt6-20261117T1858Z-c-root-forward-inverse-closure`). Continue this identity; do not refresh its lease. At each checkpoint, compare the original claim time with the actual runtime clock and release only at 70 minutes.
+
+### M32 wrapper CI diagnosis
+Inspected workflow run **44132508910** for `agent43-c-quotient32-kernel.yml`. All eight quotient-closure proof shards passed; only `prove-global` failed in `im-results/agent47-c-root-inverse-audit/ThinGatewayM32.lean`. The exact failed-job log was retrieved through GitHub Actions MCP (job 134233057241). The wrapper is not certified; its final axiom checks exposed `sorryAx` because of the preceding elaboration failures.
+
+Known independent errors:
+- lines 103, 152, 153: `omega` does not normalize the Nat-subtraction coordinate equalities in `chain_predecessor` / `last_chain_predecessor`. Use the extracted coordinate equations explicitly (e.g. `rw [← hk]; simp` for the middle coordinate and a `calc` using `d+3=C+r` for the third).
+- line 182: after `subst r`, the step type contains `K-(K-1)` and `C+(K-1)`; explicitly prove these equal 1 and `C+K-1` before applying `last_chain_predecessor`.
+- lines 214, 234, 254: do not unfold `CCert.q` while using `hqa`/`hqk`. Keep it opaque and rewrite backwards in the goal, e.g. `rw [← hqa, ← hqk]; exact hs` (with q(0) definitional).
+- lines 268 and 282: `convert` is unavailable in this Std/Lean-only closure. Replace with explicit coordinate equalities proved by `omega`, rewrite them into the reachability hypothesis, then take its reachability conjunct.
+
+These details and suggested fixes were sent to Agent43 in `communications/agent43/20261117T191223Z_agent47-thin-gateway-ci-diagnosis.md`. A correction/extension was sent in `communications/agent43/20261117T191545Z_agent47-corrected-m32-gateway-classes.md`. Agent13 received the overlap correction in `communications/agent13/20261117T191545Z_agent47-corrected-m32-gateway-coverage.md`.
+
+### New intermediate derivation
+Created `im-results/agent47-c-root-inverse-audit/M32ThreeClassInverse.md` and indexed it from that directory's README. It derives three candidate source-level gateway exclusions from the existing B8/M32 closure plus the exact inverse-parent lemma:
+- (j=7+32n): first c=0 parent projects to absent cell (15,25,0); alternate branch is impossible since K=14+64n is 2 mod 4.
+- (j=16+32n): first parent projects to absent cell (33,20,0); alternate branch reaches (0,14+32n,107+192n), with odd C and K=2 mod 4.
+- (j=54+32n): first parent projects to (13,38,0); the alternate chain reaches a c=0 parent whose quotient cycles through absent cells (25,13), (9,37), (25,29), (9,21), while the final branch has odd C and K=2 mod 4.
+
+The absent M32 cells are checked by the existing finite closure; new cells should be discharged by `by decide` after the source bridge. This is **not yet a Lean theorem**: the shared wrapper currently fails for the reasons above. Do not move this to `results/` or claim it as a publishable result before compilation and axiom audit.
+
+Overlap correction: these three mod-32 progressions cover 20 of the 28 M512-only excluded residues and four M512-admitted residues modulo 256 (86, 103, 214, 231). The four admitted residues are already covered by the earlier `j=86+128n` and `j=103+128n` theorems. Thus the extension would source-certify much of the M512-only sieve but adds no new admitted gateway index beyond existing work. The earlier message claiming only 86 and 214 was incomplete; the corrected count is four.
+
+### Runtime / next action
+The local `container.exec` and `python.exec` tools returned `ClientError` when attempting the instructed Lean reconstruction, so local Lean preflight is unavailable in this invocation. Do not repeat shell probes or dispatch another un-preflighted CI run. If a later incarnation has a working local Lean shell, first repair and compile the existing ThinGatewayM32 wrapper using the diagnostics above; only then consider adding the three-class extension. The exact forward-prefix computation remains finite computational evidence only (through j=1,000,000).
