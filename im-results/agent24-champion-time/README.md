@@ -1,6 +1,32 @@
-# Champion-family reset arithmetic: kernel-checked intermediate
+# TM63 champion reset arithmetic and counted source coverage
 
-**Agent 24, 2026-11-03, R005.** Mathematical arithmetic facts were checked in Lean 4.36.0-rc2. The Lean file [ChampionModular.lean](ChampionModular.lean) requires only `Lean.Elab.Tactic.Omega`, no mathlib, axioms, `sorry`, or replacement machine semantics. This is **not** a new BB(6) bound, champion step-count certificate, rooted-machine decision, or a source-integrated Coq-to-Lean proof.
+**Current status — 17 November 2026: BB(6) remains unresolved.** The exact blank-root prefix to the published S1 configuration after 27,959 original TM63 transitions is kernel-checked in the Agent 48 root dossier. The subsequent TM63 middle countdown is not yet source-certified end-to-end, and no universal six-state upper bound or exact maximal runtime proof exists.
+
+## Current middle-countdown bottleneck
+
+The `sectionResult` countdown changes the index by \(n\mapsto n-1\) and the marker by \(m\mapsto(m+2)\bmod 3\). Its source dispatcher has 24 residue/marker classes because \(\mathrm{lcm}(8,3)=24\). The current repository has source-theorem declarations for **22 of those 24 classes**:
+
+- marker 1: the new all-index `m1EvenValuation_counted_increment_source` covers all eight residues;
+- marker 0 and marker 2: the generic odd-index source theorems cover all four odd residues each;
+- markers 0 and 2: the even-residue-2, -4 and -6 source theorems cover the six nonzero even residues.
+
+The only missing all-q families are **marker 0, \(n=8q\)** and **marker 2, \(n=8q\)**. The existing marker-0 `q`-odd theorem covers only \(v_2(n)=3\); the marker-2 `n=32k+16` theorem covers only the \(v_2(q)=1\) subfamily. The root-connected 24-cycle genuinely needs both all-q extensions on alternating cycles: with `K=tm63RootMiddleK` odd, cycle `j` has marker-2 quotient `q₂=K-1-3j` and marker-0 quotient `q₀=K-2-3j`, whose parities alternate and whose even valuations are not fixed.
+
+The following files isolate the exact proof boundary:
+
+- [24-cycle source coverage and dispatcher contract](TM63-24Cycle-Source-Coverage-20261117.md): the complete rotated class table, current theorem mapping, root quotient formulas, and the arithmetic needed to dispatch all 24 cases.
+- [Conditional 24-class dispatcher](TM63SourceIncrementDispatcher.lean): an uncompiled Lean integration candidate. Given exactly the two all-q residue-zero source theorems, it constructs the total one-step macro and applies `sectionResult_run_of_source_macro` to obtain the full `sectionResult` original-machine run. The nonzero-residue wrappers also accept quotient zero, so no extra small-index base cases are needed.
+- [M2 residue-zero source-to-q4 derivation](M2EvenResidueZero-SourceIntegration-20261117.md): exact factorization, H-run premises, q4 source-left word, right shape, and cost decomposition for the missing marker-2 row.
+- [Generic H-run left-facing lemma](LBinDecHRunLeftFacing.lean): an uncompiled proof candidate showing the H-run's `d1pow n ++ d0 ++ tail` to `d0pow n ++ d1 ++ tail` transformation.
+- Agent 48's [M0 even 8q all-valuation proof plan](../agent48-counted-inc0/M0EvenEightValuationExtension.md) and its encoding, fixed-prefix, sweep, suffix, and macro helper modules.
+
+**Validation boundary:** the 22 existing declarations are not yet one accepted dependency closure; the conditional dispatcher, generic H-run left-facing lemma, and M2 source integration remain uncompiled drafts. No CI result is claimed for these new files. The repository's manual-only source workflows should be run only after an exact local Lean 4.36.0-rc2 preflight is clean. The local shell/runtime was unavailable during this update, so no preflight or CI dispatch was performed.
+
+**Next decisive steps:** complete the marker-0 and marker-2 all-q source theorems; compile and axiom-audit the exact combined dispatcher closure; instantiate it at the authentic blank-root parameters; then connect the resulting endpoint to the remaining reset/terminal source itinerary. Even a completed lower-bound path would not solve BB(6) without the separate universal six-state upper bound.
+
+## Historical development and established narrower results
+
+**Agent 24, 2026-11-03, R005.** The original arithmetic facts below were checked in Lean 4.36.0-rc2. The Lean file [ChampionModular.lean](ChampionModular.lean) requires only `Lean.Elab.Tactic.Omega`, no mathlib, axioms, `sorry`, or replacement machine semantics. These results are **not** a new BB(6) bound, champion step-count certificate, rooted-machine decision, or a source-integrated Coq-to-Lean proof.
 
 ## Source-certified exact physical sweep counts
 
