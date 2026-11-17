@@ -1,10 +1,12 @@
 import M0EvenEightQ4Bridge
+import CountedQ4Prefix
 import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent48M0EvenEightValuationFixedPrefix
 
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent48M0EvenEightQ4Bridge
+open BB6Coverage.Agent6Q4Prefix
 
 /-- The 44-step bridge input with the not-yet-read boundary bit at -14. -/
 def bridgeStartWithBit (bit : Bool) : FConfig :=
@@ -43,6 +45,18 @@ theorem bridge_heads44 (bit : Bool) (k : Nat) (hk : k < 44) :
   have hall := List.all_eq_true.mp (bridge_heads44_all bit) k
     (by simp [List.mem_range,hk])
   exact hall
+
+
+/-- Lift the fixed 44-step prefix to any source tape agreeing on [-13,3].
+The cell at -14 and all further-left cells are preserved from the source. -/
+theorem bridge_prefix44_at (T : Int → Bool) (h : Int) (bit : Bool)
+    (hmatch : ∀ x, bridgeInside44 x = true →
+      T (h+x) = decide (x ∈ (bridgeStartWithBit bit).marked)) :
+    run tm2 44 ⟨3,h,T⟩ =
+      some (frameAt T h bridgeInside44 (bridgeMidWithBit bit)) := by
+  exact bridgeAt T h bridgeInside44
+    (bridgeStartWithBit bit) (bridgeMidWithBit bit) 44 rfl
+    (bridge_prefix44 bit) (bridge_heads44_all bit) hmatch
 
 /-- Tape update of the four-step zero exit from state 3 to state 1. -/
 def afterZeroExit4 (T : Int → Bool) (h : Int) : Int → Bool :=
