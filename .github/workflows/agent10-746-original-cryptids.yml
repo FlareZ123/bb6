@@ -1,6 +1,12 @@
 name: Agent 10 #746 original Cryptids source bridge (manual)
 on:
   workflow_dispatch:
+    inputs:
+      t0_rho38_only:
+        description: "Compile only the source-connected rho-38 t=0 root-exclusion theorem"
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 jobs:
@@ -38,7 +44,7 @@ jobs:
           cp "$c"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass,SurvivingSmall,SurvivingExactGate,OriginalSurvivingBridge,OriginalPhysicalGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$a"/HighLevelResetBridge.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,ManyShield,RootMinIndex,FastShield,RootMin256,OriginalNextBridge,OriginalMinIndexBridge,OriginalRawGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
-          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict,ParentCheck,Parents,ClosedCert,ReachDecide,OriginalAlgorithmicGate,FastParents,FastClosedCert,OriginalGate268}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict,ParentCheck,Parents,ClosedCert,ReachDecide,OriginalAlgorithmicGate,FastParents,FastClosedCert,OriginalGate268,T0Rho38RootExclusion}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cd "$GITHUB_WORKSPACE"
           export LEAN_PATH="$GITHUB_WORKSPACE/Agent10Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
           lake env lean --version
@@ -52,6 +58,11 @@ jobs:
           for m in FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ParentCheck Parents ClosedCert ReachDecide; do
             lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
           done
+          if [ "${{ inputs.t0_rho38_only }}" = "true" ]; then
+            lake env lean -o "Agent10Bridge/T0Rho38RootExclusion.olean" "Agent10Bridge/T0Rho38RootExclusion.lean"
+            echo "Source-connected rho-38 t=0 root exclusion compiled; inspect #print axioms output above."
+            exit 0
+          fi
           lake env lean -o "Agent10Bridge/HighLevelResetBridge.olean" "Agent10Bridge/HighLevelResetBridge.lean"
           lake env lean -o "Agent10Bridge/OriginalAlgorithmicGate.olean" "Agent10Bridge/OriginalAlgorithmicGate.lean"
           lake env lean -o "Agent10Bridge/FastParents.olean" "Agent10Bridge/FastParents.lean"
