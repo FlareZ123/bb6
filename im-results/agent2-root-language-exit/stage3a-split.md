@@ -16,14 +16,13 @@ by the split eighteenth workflow.
 The next submitted eighteenth segment was attempted in run
 [43844908990](https://github.com/FlareZ123/bb6/actions/runs/43844908990).
 That run was cancelled while its compile step was still in progress and produced
-no artifact or Lean diagnostic. It is therefore an interrupted validation, not
-a Lean counterexample or a verified eighteenth reentry.
+no artifact or Lean diagnostic. It is an interrupted validation, not a Lean
+counterexample or a verified eighteenth reentry.
 
-To avoid rerunning the same monolithic compilation, the original 18th proof is
-split at its actual logical boundaries:
+The original eighteenth proof is split at three actual logical boundaries:
 
 1. EighteenthArithmetic.lean: certify the 2,902-step DRegular segment and
-   its terminal residue, using the already checked 64-step evaluator.
+   its terminal residue, using the checked 64-step evaluator.
 2. EighteenthRootPrefix.lean: lift that exact segment from the certified
    seventeenth blank-root reentry to the authentic eighteenth exception.
 3. BlankEighteenthRejoin.lean: apply the original-source E/B packet return
@@ -33,9 +32,15 @@ The manual workflow
 [agent2-d-root-stage3a-split.yml](../../.github/workflows/agent2-d-root-stage3a-split.yml)
 uses two explicit snapshots: the mathematical base remains pinned to
 20509b53af45edce5b8a145e8714245d3d225cdd, matching the predecessor
-artifact; extension_ref pins the repository commit from which the workflow copies
-only the three split proof modules. The workflow records both commits in its artifact markers and checks
-that the extension commit remains identical across all three runs.
+artifact; extension_ref pins the repository commit from which the workflow
+copies only the three split proof modules. The workflow records both commits
+in its artifact markers and checks that the extension commit remains identical
+across all three runs.
+
+The workflow also requires the relevant #print axioms output at each stage,
+rejects axioms outside {propext, Classical.choice, Quot.sound}, and rejects
+sorryAx/native_decide. The first stage-1 run predates this gate; stage 2
+rechecks the cumulative audit log before preserving its artifact.
 
 Run order:
 
@@ -50,7 +55,17 @@ After stage 3 succeeds, resume the existing
 workflow at stage 3b, with predecessor artifact d-root-stage3a, its
 successful run ID, and the same base source_ref.
 
-The first split stage-1 run [44076940240](https://github.com/FlareZ123/bb6/actions/runs/44076940240) exposed a stale namespace reference: the submitted file used Agent2SeventeenthRoot.u17, but the predecessor defines the parameter as Agent2SeventeenthArithmetic.t17 / 3. The arithmetic module now defines this local alias explicitly; the failed run produced no artifact and is not evidence against the mathematical trajectory. The corrected rerun is queued as [44078315654](https://github.com/FlareZ123/bb6/actions/runs/44078315654), with the extension snapshot pinned at 2dcc75abcf2e0ca06c877336fad1d2d8d07e0abd.\n\nUntil stage 3 succeeds, the eighteenth reentry remains a submitted candidate.
-Do not promote the D-root prefix beyond the sixteenth/seventeenth evidence
-already supported by completed source CI, and do not infer an all-time
-nonhalting result or any BB(6) value from this finite chain.
+The first split stage-1 run [44076940240](https://github.com/FlareZ123/bb6/actions/runs/44076940240)
+exposed a stale namespace reference: the submitted file used
+Agent2SeventeenthRoot.u17, but the predecessor defines the parameter as
+Agent2SeventeenthArithmetic.t17 / 3. The arithmetic module now defines this
+local alias explicitly; the failed run produced no artifact and is not
+evidence against the mathematical trajectory. The corrected rerun is queued
+as [44078315654](https://github.com/FlareZ123/bb6/actions/runs/44078315654),
+with extension snapshot
+2dcc75abcf2e0ca06c877336fad1d2d8d07e0abd.
+
+Until stage 3 succeeds, the eighteenth reentry remains a submitted candidate.
+The verified D-root prefix currently ends at the seventeenth reentry and its
+E7 escape. Episodes 18–30 and Seed31 remain unverified; this finite chain
+does not establish nonhalting or any BB(6) value.
