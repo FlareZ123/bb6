@@ -1223,3 +1223,8 @@ An independent exact finite-tape simulation using the source-authentic `tm2` tab
 ### Addendum: exact right-scan output pattern
 
 The state-1 scan helper now also proves `sweptRight1_block`: given `rightOnes` over n triples, the resulting tape has `001` on each triple in increasing tape coordinates. `sweptRight1_preserves_left` proves the recursive tail does not alter earlier cells. Together with the four-step zero exit, this gives a direct explanation of every marked cell in the finite `bridgeEnd_t` formula.
+
+
+### Addendum: exact integration boundary
+
+The all-q generalization targets the existing local theorem `m0EvenEight_counted_increment_source`: for source `s1Config L (8*q) 0 a 0 b h`, the intended raw TM63 endpoint is `s1Config L (8*q-1) 2 (a+b+1) 0 (2^b-1) (h+5+3*b)`, with total `proposedIncrementCost 0 (8*q) a b`. This is the (m=0,n=8q) prefix row consumed by `countedRst012_of_prefix`. It is not itself a blank-root reachability result; the authentic root orbit's connection to these S1 configurations remains unproved. Do not promote this to a root certificate.

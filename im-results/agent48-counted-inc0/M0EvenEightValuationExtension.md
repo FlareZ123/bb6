@@ -181,3 +181,16 @@ by `binDec_sub_one_carryPrefix`. The right q4 interface is unchanged because the
 ### Additional finite-frame bridge check
 
 A direct exact-tape simulation of the parameterized finite bridge was run for every (t=0,ldots,100). All 101 cases reached state 4/head 3 after exactly (63+12t) steps, stayed inside the dynamic frame ([-15-3t,3]), and matched the proposed `bridgeEnd_t` marked set exactly (101/101). The reproducible Node probe now includes this independent loop and treats any bridge mismatch as a failing exit condition. This is computational evidence, not a Lean proof.
+
+
+## Exact source obligation and root-integration boundary
+
+The existing q-odd theorem `m0EvenEight_counted_increment_source` in `M0EvenEightGenericSource.lean` states the exact local source obligation this generalization targets. For (q>0), (4le L), (8q<2^L), and (a>0), it should establish the raw TM63 run
+[
+operatorname{run} tm2 (operatorname{proposedIncrementCost}(0,8q,a,b))  (operatorname{s1Config}(L,8q,0,a,0,b,h))
+=
+operatorname{some}(operatorname{s1Config}(L,8q-1,2,a+b+1,0,2^b-1,h+5+3b)).
+]
+The q-odd implementation currently obtains this by a q4 prefix of (60+12a), a q4 suffix of (39+3b), and the all-ones drain. The proposed all-q source replaces the q4 prefix by (60+12a+12t), where (t=v_2(q)), and the exact reset cost identity is (99+12a+12t+3b), matching `resetPrefixCost 0 (8*q) a b`.
+
+**This is a local S1 counted-increment source lemma, not a blank-root reachability theorem and not a BB(6) certificate.** It discharges only the (m=0,n=8q) row of the prefix premise needed by `countedRst012_of_prefix`. It advances the BB(6) programme only if an independently proved root-orbit/source-encoding theorem reaches one of these S1 configurations. That reachability/integration dependency is not established here, and no root quantifier is claimed removed. The exact source and target above are the integration interface for an agent working on the authentic blank-root closure.

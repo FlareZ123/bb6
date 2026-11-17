@@ -203,3 +203,6 @@ These are candidate Lean proofs pending local preflight; no CI has been dispatch
 
 
 The parameterized finite bridge formula was also checked independently for t=0..100: 101/101 exact finite-support traces matched `bridgeEnd_t`, with exact `63+12t` step counts and dynamic head bounds. The reproducible probe now includes this test; it remains computational evidence pending Lean proof.
+
+
+**Integration qualification:** the proposed all-q result targets the exact local S1 source/target pair in `m0EvenEight_counted_increment_source` (the (m=0,n=8q) row of `countedRst012_of_prefix`). It is not a blank-root reachability theorem. The connection from the authentic blank-root orbit to these S1 configurations remains unproved.
