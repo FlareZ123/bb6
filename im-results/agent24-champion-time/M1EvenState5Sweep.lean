@@ -102,8 +102,24 @@ theorem counted_three_right (T : Int → Bool) (h : Int)
   have h2 : T (h+2) = true := hon 2 (by omega)
   exact state5_three_right T h h0 h1 h2
 
+
+/-- The rightward sweep never changes cells at or beyond its final head. -/
+theorem state5SweptRight_preserves_far_right (n : Nat) (T : Int → Bool)
+    (h x : Int) (hx : h+(3*n:Int) ≤ x) :
+    state5SweptRight n T h x = T x := by
+  induction n generalizing T h with
+  | zero =>
+      simp [state5SweptRight]
+  | succ n ih =>
+      have hx' : (h+3)+(3*n:Int) ≤ x := by omega
+      have hpres := ih (holeRight T h) (h+3) x hx'
+      have hne0 : x ≠ h := by omega
+      have hne2 : x ≠ h+2 := by omega
+      simpa [state5SweptRight, holeRight, hne0, hne2] using hpres
+
 #print axioms state5_three_right
 #print axioms counted_right_sweep_from5
 #print axioms counted_three_right
+#print axioms state5SweptRight_preserves_far_right
 
 end BB6Coverage.Agent24M1EvenValuationBridge
