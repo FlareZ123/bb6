@@ -34,7 +34,7 @@ The 16 values are:
 | 14 | 29 | excluded by Agent 1 even-sector extension |
 | 15 | 5 | excluded by Agent 6 six-sector tree |
 
-Thus the current paper-level candidate reductions cover ten of the sixteen \(u\bmod16\) classes. The six remaining classes are \(u\equiv0,2,3,8,9,10\pmod{16}\). The table is a research map, **not** a formal theorem until the two proof families are compiled against the real dependency closure.
+Thus the current paper-level candidate reductions cover ten entire \(u\bmod16\) classes. Four additional \(u\bmod64\) cylinders inside the open classes 2 and 8 are excluded below, giving 44 of 64 residue classes (density 11/16). The six remaining full mod-16 classes are \(u\equiv0,2,3,8,9,10\pmod{16}\); classes 2 and 8 are only partially open after the mod-64 refinement. The table is a research map, **not** a formal theorem until the derivations are compiled against the real dependency closure.
 
 ## Six odd-u sectors (Agent 6)
 
@@ -100,6 +100,28 @@ P_5=(2t-2,92+252t).
 In both cases \(P_5\) has positive even first coordinate and second coordinate \(0\pmod4\). This contradicts the already available BB429LowOddMod8.rooted_even_parity (which requires second coordinate \(2\pmod4\) for every positive-even reachable state). The stronger positive-even-eight theorem is unnecessary for these four sectors.
 
 Every discarded branch is rejected by Allowed; every retained predecessor is a genuine Reach predecessor by odd_back. The bound \(a>10^6\) makes \(t\) large enough for all odd_back lower bounds and positivity conditions. This extension has been sent to Agents 6 and 39 for review; it has not yet been Lean-compiled.
+
+## Four additional mod-64 cylinders inside the open even classes
+
+The odd-\(m\) continuation after \(P_5\) does not close all of \(u\equiv2,8\pmod{16}\), but it does close four specific lifts. The exact \(P_5\) states are
+\[
+P_5=((5k-4)/2,20+59k)\quad(k\text{ even},\ u\equiv8\pmod{16}),\\
+P_5=((k-5)/2,29+63k)\quad(k\text{ odd},\ u\equiv2\pmod{16}).
+\]
+In these two classes, \(P_5\) is odd with second coordinate \(2\pmod8\). Its F parent is positive even with second coordinate \(1\) or \(5\pmod8\), hence impossible by rooted_positive_even_eight. The S parent is odd with second coordinate \(3\pmod4\), so its next inverse is forced F. The resulting \(P_7\) residues depend only on \(u\bmod64\):
+
+| \(u\bmod64\) | \(k\bmod32\) | \(P_7\bmod32\) | Result |
+|---:|---:|---:|---|
+| 2 | 27 | (25,24) | survives this depth |
+| 18 | 3 | (22,30) | even first, second 6 mod8: impossible |
+| 34 | 11 | (23,28) | Allowed fails: first 7 mod8, second 0 mod4 |
+| 50 | 19 | (24,26) | survives this depth |
+| 8 | 18 | (24,18) | survives this depth |
+| 24 | 26 | (29,8) | survives this depth |
+| 40 | 2 | (14,6) | even first, second 6 mod8: impossible |
+| 56 | 10 | (19,28) | Allowed fails: first 3 mod8, second 0 mod4 |
+
+Therefore the four cylinders \(u\equiv18,34,40,56\pmod{64}\) are additionally excluded. The other four lifts of the \(u\equiv2,8\pmod{16}\) classes remain open at this depth. This raises the paper-level residue coverage to 44/64, or 11/16. This refinement is also uncompiled and must not be mistaken for a full exclusion of either mod-16 class.
 
 ## Relation to the 2-adic FSFE block
 
