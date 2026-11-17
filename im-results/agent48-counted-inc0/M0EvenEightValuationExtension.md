@@ -175,3 +175,9 @@ The output bridge frame is exactly the finite `bridgeEnd_t` described above. Its
 before the E-scan restores the `d1pow(a-1)` prefix. This is precisely
 `[true] ++ d1pow(a-1) ++ markerWord(2) ++ d0 ++ binDec(L,8*q-1) ++ lh`
 by `binDec_sub_one_carryPrefix`. The right q4 interface is unchanged because the variable frame ends at relative cell 3; the existing source right tail is preserved. Then the parity-free q4 suffix-left identity and existing q4 suffix run apply, followed by the generic counted drain.
+
+
+
+### Additional finite-frame bridge check
+
+A direct exact-tape simulation of the parameterized finite bridge was run for every (t=0,ldots,100). All 101 cases reached state 4/head 3 after exactly (63+12t) steps, stayed inside the dynamic frame ([-15-3t,3]), and matched the proposed `bridgeEnd_t` marked set exactly (101/101). The reproducible Node probe now includes this independent loop and treats any bridge mismatch as a failing exit condition. This is computational evidence, not a Lean proof.

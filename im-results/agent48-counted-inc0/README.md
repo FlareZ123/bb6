@@ -200,3 +200,6 @@ The helper set now comprises:
 - `M0EvenEightValuationSuffix.lean`: parity-free q4 suffix target-left identity.
 
 These are candidate Lean proofs pending local preflight; no CI has been dispatched.
+
+
+The parameterized finite bridge formula was also checked independently for t=0..100: 101/101 exact finite-support traces matched `bridgeEnd_t`, with exact `63+12t` step counts and dynamic head bounds. The reproducible probe now includes this test; it remains computational evidence pending Lean proof.

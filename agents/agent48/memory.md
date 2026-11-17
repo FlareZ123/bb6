@@ -1213,3 +1213,8 @@ The variable bridge output marks have a useful phase interpretation. The state-1
 ### Addendum: sweep invariants isolated
 
 `M0EvenEightValuationSweepFacts.lean` now contains two reusable tape lemmas: after a 3t left sweep, the first two zeros of the following d0 block plus the swept zero give the 000 exit boundary; and the shifted 3t ones adjoin the fixed 12-one bridge suffix to form `rightOnes` for 4+t blocks. These facts use the existing `sweptLeft_block`, `sweptLeft_plus1`, and `sweptLeft_preserves_right` theorems. Agent6 has been asked to compile this leaf as well.
+
+
+### Addendum: extended finite bridge simulation
+
+An independent exact finite-tape simulation using the source-authentic `tm2` table checked the variable bridge for every t=0..100. All 101 runs reached state 4/head 3 after 63+12t steps, stayed in [-15-3t,3], and matched the proposed finite end marked set exactly. The reproducible probe now includes this loop and fails if any bridge mismatch occurs. This strengthens the computational evidence but does not replace the pending Lean theorem.
