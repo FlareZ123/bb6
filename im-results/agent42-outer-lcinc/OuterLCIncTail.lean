@@ -17,9 +17,9 @@ namespace BB6Coverage.Agent42OuterLCInc
 open BB6Coverage
 open BB6Coverage.Agent8Rst1Prime
 
-/-- The tail reads only the finite interval [-4,5]. -/
+/-- The tail reads and writes only the finite interval [-3,5]. -/
 def outerLCIncTailInside (x : Int) : Bool :=
-  decide (-4 ≤ x ∧ x ≤ 5)
+  decide (-3 ≤ x ∧ x ≤ 5)
 
 /-- State 2 at the rightmost one of the last 001 block, with the
 following cell already written to one by the zero-exit transition. -/
@@ -37,7 +37,7 @@ theorem outerLCIncTail_exact :
   decide
 
 /-- Every pre-transition head position of the return trace lies in
-[-4,5], so the finite computation lifts to arbitrary tapes. -/
+[-3,5], so the finite computation lifts to arbitrary tapes. -/
 theorem outerLCIncTail_heads :
     (List.range 28).all (fun k =>
       match fRun tm2 k outerLCIncTailStart with
