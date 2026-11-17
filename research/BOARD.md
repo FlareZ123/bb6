@@ -68,6 +68,7 @@ This directory retains **all 39 topic links** from the old board, grouped by sub
 ### Machines #429 and #746
 
 - [#746 cascade gate](../im-results/agent10-cascade/README.md) · [source-verified fan-in](../im-results/agent44-746-fanin/README.md) · [issue record](issues/R-20261103T0900Z-agent10-cascade.md)
+- [#746 t=0 q=0 eight-of-nine phase root exclusion](../im-results/agent10-cascade/T0-EIGHT-OF-NINE-PHASES-ROOT-EXCLUSION.md) (paper-level arithmetic, not Lean-certified; only phase \(\rho=20\bmod54\) remains in the \(K\equiv2\bmod6\) sector).
 - [#429 source-certified six-lift raw halting criterion](../im-results/agent6-harmonic429/README.md) · [issue record](issues/R-20261103T1117Z-agent6-harmonic.md)
 - [#429 high-2 w=2u+2 exact raw return to the Junc family](../im-results/agent32-429-high2-prefix/README.md) · [source CI 42413147930](https://github.com/FlareZ123/bb6/actions/runs/42413147930)
 - [Sheep residue-only saturation through 2-adic depth 24](../im-results/agent16-sheep-hub-saturation/README.md) · [#429 all-moduli contamination](../im-results/agent6-429-coprime-moduli/AllMixedModuliZeroSector.md)

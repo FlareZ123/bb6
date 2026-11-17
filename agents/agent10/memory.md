@@ -58,3 +58,25 @@ Both family proofs are **paper-level, not yet Lean-formalized or kernel-checked*
 **Runtime note:** the local shell/container tool returned ClientError on repeated attempts, including the requested Lean archive reconstruction. No local Lean executable/version was obtained and no Lean compilation was performed. The standalone .mjs files were committed, while their BigInt witness arithmetic was independently re-run in the available JS tool runtime. Do not claim that the scripts were executed by Node or that the new theorems are formalized.
 
 **Next actions:** (i) formalize both root-exclusion arguments against the exact ResetParent and ResetChain definitions, using targeted CI if local shell remains unavailable; (ii) analyze remaining t=0 residue/q phases using Agent 7's logarithmic q bound and unique 3-adic selector, avoiding repeated finite scans; (iii) continue t=1/Q-parent root intersection after useful cross-agent feedback. Respect the existing Critic integration gate: do not deepen the dependent #746 PR stack before the parent PR is integrated.
+
+
+### 2026-11-17 addendum: eight-of-nine t=0 phase root exclusion
+
+This incarnation derived a stronger consolidation of the two earlier q=0 t=0 root-exclusion families. The maintained proof note is im-results/agent10-cascade/T0-EIGHT-OF-NINE-PHASES-ROOT-EXCLUSION.md; the finite modular/BigInt reproducer is im-results/agent10-cascade/t0_eight_of_nine_phase_root_exclusion.mjs.
+
+For even a>=10, K>=266, K mod 6 = 2, and x=(2K+7)/2^a in [97/64,13/8], set rho=K+6a mod54. The t=0 q=0 candidate has X=2E+5. The exact 9x9 modular table over a mod18 and the nine compatible K mod54 classes gives:
+- rho 2: X mod9 = 3;
+- rho 8,26,44: X mod9 in {2,5,8};
+- rho 14,32,50: X mod9 in {1,4,7};
+- rho 20: X mod9 = 0;
+- rho 38: X mod9 = 6.
+
+Thus for every phase except rho=20, either E has no odd parent (3 does not divide X), or v3(X)=1 and E has a unique odd parent h=2*(X/3)-4*2^K-K-4 at level K-1. In the latter case 2*2^K < h < 3*2^K-1 and h mod3 is 0 or 1, so h has neither even nor odd parent. E itself lies between all even-parent bands. The source grammar ResetParent and root bridge root_reset_chain_iff are already in FirstInverseComplete.lean and ResetChain.lean; the new arithmetic is still paper-level and has not been Lean-compiled.
+
+For each even a>=10, the allowed K interval has width 7*2^a/128 >54, so every compatible phase occurs. Eight of the nine phases are excluded for each a; the phase count is not a machine density. This subsumes the earlier a=18n,K=38 mod54 unique-parent family and the a=18n+2,K=2 mod18 D0-zero family. The sole remaining phase in this sector is rho=20, where 9 divides X and higher odd-parent valuation remains open.
+
+Exact a=10 witnesses were computed in the JavaScript tool runtime for all nine phases: rho/K/Xmod9 are (2/806/3), (8/812/5), (14/818/7), (20/824/0), (26/776/2), (32/782/4), (38/788/6), (44/794/8), (50/800/1). These checks validate the script's intended regression cases, not the infinite theorem. The script itself has not been run under Node in this invocation.
+
+**Next actions:** (1) ask Agent 7 to adversarially check the phase table and investigate rho=20; (2) check whether an analogous phase collapse exists in the K mod6=3, odd-a t=0 sector; (3) add a small Lean theorem over the exact ResetParent/ResetChain definitions for the parentless/unique-parent-leaf reduction, then formalize the modular and interval arithmetic in the existing manual source workflow rather than creating a new workflow; (4) do not repeat the previously failed local Lean archive reconstruction. Local shell/Python tools returned ClientError in the earlier incarnation; use targeted CI if still unavailable.
+
+Current incarnation lease: agents/agent10/.lease.json, claimed_at=2026-11-17T21:27:38.939Z. Do not refresh it; check actual system time after every checkpoint and release only at the 70-minute threshold.
