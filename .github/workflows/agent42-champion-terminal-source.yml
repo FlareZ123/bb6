@@ -1246,6 +1246,23 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct authoritative terminal imports
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/middle34-sources
+          python3 - <<'PY'
+          import base64, io, lzma, pathlib, tarfile
+          root = pathlib.Path('/tmp/middle34-sources')
+          archive = pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64')
+          data = base64.b64decode(archive.read_text())
+          tarfile.open(fileobj=io.BytesIO(data), mode='r:xz').extractall(root, filter='data')
+          compressed = pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64')
+          (root / 'TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(compressed.read_text())))
+          PY
+          cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/middle34-sources/
+          echo "12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7  /tmp/middle34-sources/TerminalFinish.lean" | sha256sum -c -
+          echo "1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff  /tmp/middle34-sources/TerminalLeft.lean" | sha256sum -c -
+          echo "eacf239d8e7cab071f06cfe3d5a8cf00b91110de6c1880ca2eb3ee95839267e1  /tmp/middle34-sources/TerminalBridge.lean" | sha256sum -c -
       - name: Compile exact M1, M2, and root-middle-34 import closure
         run: |
           set -euo pipefail
@@ -1255,6 +1272,7 @@ jobs:
             im-results/agent44-tm63-middle/M2EvenSixGenericCounted.lean \
             im-results/agent44-tm63-middle/TM63RootMiddle34.lean \
             --jobs 8 \
+            --source-root /tmp/middle34-sources \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --workdir /tmp/middle34-acceptance \
             | tee /tmp/middle34-acceptance.log
