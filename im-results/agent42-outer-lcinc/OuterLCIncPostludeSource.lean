@@ -1,4 +1,5 @@
 import OuterLCIncPostlude
+import CountedQ4Prefix
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -34,60 +35,6 @@ def outerLCIncSourceT3 (T : Int → Bool) (h : Int)
     (a m r : Nat) : Int → Bool :=
   lbinDecHRunTape r (outerLCIncSourceT2 T h a m)
     (outerLCIncH1 h a m)
-
-/-- sideBit ignores an appended suffix before the end of its prefix. -/
-theorem outer_sideBit_append_left (xs ys : List Bool) (i : Nat)
-    (hi : i < xs.length) :
-    sideBit (xs ++ ys) i = sideBit xs i := by
-  induction xs generalizing i with
-  | nil => simp at hi
-  | cons x xs ih =>
-      cases i with
-      | zero => rfl
-      | succ i =>
-          simpa [sideBit] using ih i (by simpa using hi)
-
-/-- sideBit enters the appended suffix once the prefix is exhausted. -/
-theorem outer_sideBit_append_right (xs ys : List Bool) (i : Nat)
-    (hi : xs.length ≤ i) :
-    sideBit (xs ++ ys) i = sideBit ys (i-xs.length) := by
-  induction xs generalizing i with
-  | nil => simp [sideBit]
-  | cons x xs ih =>
-      cases i with
-      | zero => simp at hi
-      | succ i =>
-          have hi' : xs.length ≤ i := by simp at hi; omega
-          simpa [sideBit] using ih ys i hi'
-
-/-- Beyond the end of a finite word, the physical tape is blank. -/
-theorem outer_sideBit_false_of_ge_length (xs : List Bool) (i : Nat)
-    (hi : xs.length ≤ i) : sideBit xs i = false := by
-  induction xs generalizing i with
-  | nil => cases i <;> rfl
-  | cons x xs ih =>
-      cases i with
-      | zero => simp at hi
-      | succ i =>
-          have hi' : xs.length ≤ i := by simp at hi; omega
-          simpa [sideBit] using ih i hi'
-
-/-- Every cell of a d1-power is one. -/
-theorem outer_sideBit_d1pow_true (n i : Nat) (hi : i < 3*n) :
-    sideBit (d1pow n) i = true := by
-  induction n generalizing i with
-  | zero => omega
-  | succ n ih =>
-      by_cases hsmall : i < 3
-      · interval_cases i <;> simp [d1pow, d1, sideBit]
-      · have htail : i-3 < 3*n := by omega
-        have hrec := ih (i-3) htail
-        have hshift : sideBit (d1pow (n+1)) i =
-            sideBit (d1pow n) (i-3) := by
-          simp [d1pow, d1, sideBit]
-          omega
-        rw [hshift]
-        exact hrec
 
 /-- The original S1 right suffix has its fixed 111 prefix, then 00,
 then exactly b+1 unary triples, and is blank afterwards. -/
@@ -145,23 +92,23 @@ theorem outerLCInc_s1_right_facts (L n m a b : Nat) (h : Int) :
   constructor
   · intro i hi
     have h0 : sideBit (d1pow (b+1)) (3*i) = true :=
-      outer_sideBit_d1pow_true (b+1) (3*i) (by omega)
+      BB6Coverage.Agent6Q4Prefix.sideBit_d1pow_true (b+1) (3*i) (by omega)
     have h1 : sideBit (d1pow (b+1)) (3*i+1) = true :=
-      outer_sideBit_d1pow_true (b+1) (3*i+1) (by omega)
+      BB6Coverage.Agent6Q4Prefix.sideBit_d1pow_true (b+1) (3*i+1) (by omega)
     have h2 : sideBit (d1pow (b+1)) (3*i+2) = true :=
-      outer_sideBit_d1pow_true (b+1) (3*i+2) (by omega)
+      BB6Coverage.Agent6Q4Prefix.sideBit_d1pow_true (b+1) (3*i+2) (by omega)
     have hc0 := hcell (6+3*i)
     have hc1 := hcell (7+3*i)
     have hc2 := hcell (8+3*i)
     have hr0 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
         (6+3*i) = sideBit (d1pow (b+1)) (3*i) :=
-      outer_sideBit_append_right _ _ _ (by simp)
+      BB6Coverage.Agent6Q4Prefix.sideBit_append_right _ _ _ (by simp)
     have hr1 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
         (7+3*i) = sideBit (d1pow (b+1)) (3*i+1) :=
-      outer_sideBit_append_right _ _ _ (by omega)
+      BB6Coverage.Agent6Q4Prefix.sideBit_append_right _ _ _ (by omega)
     have hr2 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
         (8+3*i) = sideBit (d1pow (b+1)) (3*i+2) :=
-      outer_sideBit_append_right _ _ _ (by omega)
+      BB6Coverage.Agent6Q4Prefix.sideBit_append_right _ _ _ (by omega)
     refine ⟨?_, ?_, ?_⟩
     · calc
         (s1Config L n m a 0 b h).tape (h+7+3*(i:Int)) =
@@ -186,7 +133,7 @@ theorem outerLCInc_s1_right_facts (L n m a b : Nat) (h : Int) :
         _ = true := h2
   · intro j
     have hc := hcell (3*b+9+j)
-    have hfalse := outer_sideBit_false_of_ge_length
+    have hfalse := BB6Coverage.Agent6Q4Prefix.sideBit_ge_length
       ([false,true,true,true,false,false] ++ d1pow (b+1))
       (3*b+9+j) (by omega)
     have hcoord : h+3*b+10+(j:Int) = h+1+(3*b+9+j) := by omega
