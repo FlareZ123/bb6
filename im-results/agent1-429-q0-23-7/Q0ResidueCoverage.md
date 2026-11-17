@@ -38,7 +38,7 @@ Thus the current paper-level candidate reductions cover ten of the sixteen \(u\b
 
 ## Six odd-u sectors (Agent 6)
 
-The provisional derivation in [Agent 6's Q0Mod128SixRows.md](../../agent6-harmonic429/Q0Mod128SixRows.md) handles
+The provisional derivation in [Agent 6's Q0Mod128SixRows.md](../agent6-harmonic429/Q0Mod128SixRows.md) handles
 \[
 u\bmod16\in\{1,5,7,11,13,15\},
 \quad
