@@ -8,17 +8,15 @@ open BB429NewResidue
 private theorem noReach_even_not8 (a b : Nat) (ha : 0<a) (he : a%2=0)
     (hb : b%8≠2) : ¬ Reach a b := by
   intro hr
-  have hreach := hr
-  rcases hr with ⟨n, _⟩
-  have h := BB429RootEven8.rooted_positive_even_eight n a b hreach ha he
+  rcases hr with ⟨n, hrun⟩
+  have h := BB429RootEven8.rooted_positive_even_eight n a b hrun ha he
   omega
 
 private theorem noReach_even_not4 (a b : Nat) (ha : 0<a) (he : a%2=0)
     (hb : b%4≠2) : ¬ Reach a b := by
   intro hr
-  have hreach := hr
-  rcases hr with ⟨n, _⟩
-  have h := BB429RootEven8.rooted_positive_even_eight n a b hreach ha he
+  rcases hr with ⟨n, hrun⟩
+  have h := BB429RootEven8.rooted_positive_even_eight n a b hrun ha he
   omega
 
 private theorem noReach_notAllowed (a b : Nat)
@@ -94,13 +92,35 @@ private theorem noReach_seed_of_p3 (a : Nat) (ha : 1000000≤a)
     (hS : ¬ Reach ((5*a-57)/8) ((11*a-63)/4)) :
     ¬ Reach a (2*a-13) := by
   apply noReach_odd_only_F a (2*a-13) (by omega) (by omega) (by omega)
-  have hc : 13≤(a-3)/2 := by omega
-  have hco : ((a-3)/2)%2=1 := by omega
-  apply noReach_odd_split ((a-3)/2) (3*a-13) hc hco
-  · apply noReach_odd_only_F ((a-9)/4) ((7*a-29)/2) (by omega) (by omega) (by omega)
-    exact hF
-  · apply noReach_odd_only_F ((5*a-45)/4) ((3*a-9)/2) (by omega) (by omega) (by omega)
-    exact hS
+  let c := (a-3)/2
+  let d := 2*a-13+a
+  have hc : 13≤c := by dsimp [c]; omega
+  have hco : c%2=1 := by dsimp [c]; omega
+  let p2fA := (c-3)/2
+  let p2fB := d+c
+  have hP2F : ¬ Reach p2fA p2fB := by
+    apply noReach_odd_only_F p2fA p2fB (by dsimp [p2fA,c]; omega)
+      (by dsimp [p2fA,c]; omega) (by dsimp [p2fB,p2fA,c,d]; omega)
+    have hx : (p2fA-3)/2=(a-21)/8 := by dsimp [p2fA,c]; omega
+    have hy : p2fB+p2fA=(15*a-67)/4 := by dsimp [p2fA,p2fB,c,d]; omega
+    intro h
+    have h' : Reach ((a-21)/8) ((15*a-67)/4) := by
+      rw [←hx, ←hy]
+      exact h
+    exact hF h'
+  let p2sA := (4*c+d-26)/4
+  let p2sB := (d+4)/2
+  have hP2S : ¬ Reach p2sA p2sB := by
+    apply noReach_odd_only_F p2sA p2sB (by dsimp [p2sA,c,d]; omega)
+      (by dsimp [p2sA,c,d]; omega) (by dsimp [p2sB,p2sA,c,d]; omega)
+    have hx : (p2sA-3)/2=(5*a-57)/8 := by dsimp [p2sA,c,d]; omega
+    have hy : p2sB+p2sA=(11*a-63)/4 := by dsimp [p2sA,p2sB,c,d]; omega
+    intro h
+    have h' : Reach ((5*a-57)/8) ((11*a-63)/4) := by
+      rw [←hx, ←hy]
+      exact h
+    exact hS h'
+  exact noReach_odd_split c d hc hco hP2F hP2S
 
 /-- Six entire q=0 branch-10 residue sectors are excluded from the authentic
     BB429 blank-root orbit by the exact inverse grammar and root invariants. -/
