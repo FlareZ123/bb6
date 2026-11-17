@@ -231,4 +231,4 @@ The remaining problem is now more sharply posed: control the valuation-cost sequ
 - Independent weighted drain identity: **ExactDrainCocycleSource.lean**.
 - Lean one-step theorem draft: **DrainValuationNormalForm.lean**.
 
-The evaluator identity was exhaustively checked for \(10{,}000\) positive \(b\)-values and four admissible \(a\)-values per \(b\). The whole-drain normal form was checked on more than \(15{,}000\) budgeted small inputs. These checks are only debugging evidence; the proof is the digit-run induction above plus the source budget theorem.
+The reproducible script **verify_drain_digit_stats.py** checks 100,000 recursive valuation signatures against the closed ternary digit formula, 40,000 one-step evaluator calls, 15,178 budgeted whole-drain inputs, and 100,000 canonical-exponent identities. The eight-case root gap table was separately checked against 148 canonical root transitions using exact BigInt arithmetic. These are debugging/reproduction checks, not substitutes for the proofs: the drain identity follows from the digit-run induction, sparse expansion, and the source budget theorem.
