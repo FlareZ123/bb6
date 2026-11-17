@@ -1,148 +1,195 @@
-# Infinite synthetic odd-parent family for the t=0 adjacent-fatal entry
+# Infinite t=0 fatal family excluded by a unique odd-parent leaf
 
-**Status:** exact arithmetic construction; not a blank-root reachability result and not Lean-verified. This belongs in \`im-results/\`, not \`results/\`.
+**Status:** exact paper derivation over the source-certified reset inverse/root-chain semantics. The new infinite-family arithmetic is not yet Lean-formalized, so this remains in \`im-results/\`. It is not a global nonhalting proof.
 
-## Result
+## Theorem
 
-There are infinitely many levels \(K\ge266\) for which the special \(t=0,\ L=K+1\) adjacent-fatal source candidate has a genuine odd immediate \`ResetParent\` from level \(K-1\), with no intervening even resets at level \(K\) (\(q=0\)) and incoming odd-parent valuation \(t=0\).
+There are infinitely many t=0 adjacent-fatal source candidates \(E\) for which
+\[
+\neg\operatorname{ResetChain}(2,E).
+\]
+For every member of this family:
 
-Thus the local inverse grammar does not eliminate this fatal family by parent nonexistence. The remaining question is whether the explicitly constructed parent is the actual blank-root state at that level. No root path is asserted.
+1. \(E\) has no even \(\operatorname{ResetParent}\).
+2. \(E\) has exactly one odd \(\operatorname{ResetParent}\), namely \(h'\) at level \(L=K-1\).
+3. \(h'\) has no \(\operatorname{ResetParent}\) of either parity.
 
-## Infinite parameter family
+Thus \(E\) is not reachable from the blank reset root. The associated t=0 fatal tail cannot occur on the blank-root trajectory. This excludes an infinite subfamily of candidate fatal histories, not all possible halting histories of machine #746.
+
+The proof uses the exact two-arm \(\operatorname{ResetParent}\) definition in [FirstInverseComplete.lean](FirstInverseComplete.lean) and the root-chain equivalence in [ResetChain.lean](ResetChain.lean). It does **not** rely on the still-uncompiled t=0 even-parent branch draft.
+
+## Infinite parameter family and fatal source
 
 Take
 \[
 a=18n\quad(n\ge1),\qquad K\equiv38\pmod{54},
 \qquad
-\frac{29}{20}\le x:=\frac{2K+7}{2^a}\le\frac{31}{20}.
+\frac{309}{200}\le x:=\frac{2K+7}{2^a}\le\frac{31}{20}.
 \tag{1}
 \]
-For each \(a=18n\), the interval of eligible \(K\) has length \(2^a/20>54\), so it contains an integer congruent to \(38\bmod54\). Hence there are infinitely many pairs \((a,K)\). In particular \(K\ge266\).
+For each \(a=18n\), the eligible \(K\)-interval has length \(2^a/400>54\), so it contains an integer in the residue class \(38\bmod54\). Hence infinitely many pairs \((a,K)\) exist. They all have \(K\ge266\).
 
 Put
 \[
-p=2^K,\quad c=2K+7,\quad r=K+1-a,\quad
-B_0=c\,2^{r+3},
+p=2^K,\quad c=2K+7,\quad r=K+1-a,\quad B_0=c\,2^{r+3},
 \]
-and define
+and
 \[
-D_0=\frac{B_0-16p+2K+1}{3},
-\qquad h=8p+K-D_0.
+D_0=\frac{B_0-16p+2K+1}{3},\qquad E=8p+K-D_0.
 \tag{2}
 \]
-Here \(K\equiv2\bmod6\), \(a\) is even, and \(r\) is odd. Also \(2^a\le c<2^{a+1}\) and \(4c\le7\cdot2^a\), since \(1<x\le31/20<7/4\). Thus \(r=K+1-\lfloor\log_2(2K+7)\rfloor\) is exactly the unique t=0 fatal-tail exponent from the source-band characterization.
-
-The fatal-source equation is
+Here \(K\equiv2\bmod6\), \(a\) is even, \(r\) is odd, and \(a=\lfloor\log_2 c\rfloor\). Also \(4c\le7\cdot2^a\), since \(x\le31/20<7/4\). The fatal-source equation is
 \[
-B_0=40p+K-1-3h.
+B_0=40p+K-1-3E.
 \tag{3}
 \]
-It follows directly from (2). Since \(B_0=16xp\) and \(29/20\le x\le31/20\),
-\[
-\frac{232}{10}p\le B_0\le\frac{248}{10}p.
-\]
-For \(K\ge266\), this lies strictly inside
+The numerator defining \(D_0\) is divisible by \(3\): modulo \(3\), \(c\equiv2\), \(2^{r+3}\equiv1\), \(16p\equiv1\), and \(2K+1\equiv2\).
+
+Since \(B_0=16xp\), the interval in (1) puts \(B_0\) strictly inside
 \[
 16p+4K+20\le B_0\le28p+4K+8.
 \]
-Equivalently, the t=0 raw source parameter
+Equivalently, the t=0 raw odd-source parameter
 \[
-d_0=4p+\frac{h+K+5}{2}
+d_0=4p+\frac{E+K+5}{2}
 \]
-lies in its exact band \(6p+1\le d_0\le8p-1\). The congruence \(16\mid B_0\) in (3) also gives \(h+K\equiv1\bmod4\), so this is a genuine odd-exit source. The same interval gives
+satisfies \(6p+1\le d_0\le8p-1\). Equation (3), with \(16\mid B_0\), gives \(E+K\equiv1\bmod4\), so this is a genuine odd-exit source. The same interval gives
 \[
-4p-K-3\le h\le8p-K-7,
+4p-K-3\le E\le8p-K-7,
 \]
-which certifies \(\operatorname{FirstFailureAt}(h,K)\): the lower endpoint gives the guard at \(K-1\), all earlier guards follow from the increasing thresholds, and the upper endpoint gives \(h+K+5<8p\).
+which certifies \(\operatorname{FirstFailureAt}(E,K)\).
 
-## Incoming odd parent: exact 3-adic phase
+## Exact odd parent of E
 
-The residues are fixed by the chosen congruence classes:
+The residues are
 \[
 2^a\equiv1\pmod{27},\quad
 K\equiv11\pmod{27},\quad
 K+4-a\equiv6\pmod{18},\quad
 2^{K+4-a}\equiv10\pmod{27}.
 \]
-Therefore
+Using
 \[
-3D_0=(c-2^a)2^{K+4-a}+2K+1
-\equiv(2-1)\cdot10+23
-\equiv6\pmod{27},
+3D_0=(c-2^a)2^{K+4-a}+2K+1,
 \]
-so
+we obtain
 \[
-D_0\equiv2\pmod9.
+3D_0\equiv(2-1)\cdot10+23\equiv6\pmod{27},
+\]
+hence \(D_0\equiv2\bmod9\). Also
+\[
+A:=16p+2K+5\equiv1\pmod9,\qquad
+X:=2E+5=A-2D_0\equiv6\pmod9.
 \tag{4}
 \]
-For the first level-\(K\) entry \(E=h\), let
+Therefore \(v_3(X)=1\) exactly. Set
 \[
-A=16p+2K+5,\qquad X=2E+5=A-2D_0.
+P=X/3.
 \]
-Since \(K\equiv2\bmod6\), \(2^K\equiv4\bmod9\), and \(2K+5\equiv0\bmod9\). Thus \(A\equiv1\bmod9\), and (4) yields
+Then \(P\) is odd. Direct substitution gives
 \[
-X\equiv1-4\equiv6\pmod9.
+\frac{P}{p}
+=\frac{80-32x+(2K+13)/p}{9}.
 \tag{5}
 \]
-Consequently \(v_3(X)=1\) exactly. The incoming odd-parent selector forces \(q\) even when \(D_0\equiv2\bmod3\); choose \(q=0\), which is admissible. Then \(E=h\) and
-\[
-P:=X/3
-\]
-is an odd integer. Its incoming odd-parent valuation is \(t=v_3(X)-1=0\).
-
-## The dyadic source band is exactly level \(K-1\)
-
-Substituting (2) into \(P=X/3\) gives
-\[
-\frac{P}{2^K}
-=\frac{80-32x+(2K+13)/2^K}{9}.
-\tag{6}
-\]
-For \(29/20\le x\le31/20\), the main term in (6) lies between \(152/45\) and \(56/15\). Since \((2K+13)/2^K<1\) for \(K\ge266\),
-\[
-3<\frac{P}{2^K}<4.
-\]
-With \(L=K-1\), this is precisely
+For the interval (1), and \(K\ge266\), this lies strictly between \(3\) and \(4\). Thus, with \(L=K-1\),
 \[
 6\cdot2^L+1\le P\le8\cdot2^L-1.
-\tag{7}
+\tag{6}
 \]
-
-Define the parent height
+Define
 \[
 h'=2P-8\cdot2^L-L-5.
+\tag{7}
+\]
+Then
+\[
+2P=8\cdot2^L+h'+L+5,\qquad 2E+5=3P.
+\]
+Together with (6), these are exactly the odd arm of \(\operatorname{ResetParent}(h',E)\), with \(t=0\).
+
+This odd parent is unique. Any odd parent of \(E\) has
+\[
+2E+5=3^{t+1}d.
+\]
+By (4), \(v_3(2E+5)=1\), so \(t=0\) and \(d=P\). The odd source bands \([6\cdot2^j+1,8\cdot2^j-1]\) are pairwise disjoint, and (6) places \(P\) in the unique band \(j=L\). The source equation then forces the parent height to be exactly \(h'\).
+
+## E has no even parent
+
+From (2),
+\[
+\frac{E}{p}
+=8-\frac{16}{3}(x-1)+\frac{K-1}{3p}.
+\]
+The interval (1) gives
+\[
+5<\frac{E}{p}<\frac{407}{75}<\frac{11}{2}.
 \tag{8}
 \]
-Equations (7) and (8) give
+An even parent at level \(j\) would require
 \[
-2P=8\cdot2^L+h'+L+5,\qquad
-2E+5=3P.
+6\cdot2^j-1\le E\le8\cdot2^j-3.
 \]
-The first is the odd-reset source equation at level \(L\), and the second is its output equation. Because \(P\) is odd and (7) is the exact odd-parent band, these equations give
-\[
-\operatorname{ResetParent}(h',E).
-\]
-They also certify \(\operatorname{FirstFailureAt}(h',L)\): the lower endpoint in (7) implies \(h'\ge4\cdot2^L-L-3\), while the upper endpoint gives \(h'+L+5<8\cdot2^L\); the earlier sweep guards follow from the lower bound. Finally,
-\[
-2^{K-2}<3^{K-1}=3^L,\qquad t=0\le L,
-\]
-so the odd-parent scale condition is satisfied as well.
+For \(j\le K-1\), the upper bound is at most \(4p-3<E\). For \(j\ge K\), the lower bound is at least \(6p-1>E\), by (8). Hence \(E\) has no even parent. Its unique parent of either parity is \(h'\).
 
-We have therefore constructed an exact local incoming odd parent from level \(K-1\) for every pair in (1). The fatal source at level \(K\) has \(q=0\), and its t=0 fatal-tail equation is (3).
+## h' has no parent
+
+First, (4) gives \(P\equiv2\bmod3\). Since \(L=K-1\equiv1\bmod6\),
+\[
+h'=2P-8\cdot2^L-L-5\equiv0\pmod3.
+\tag{9}
+\]
+Every odd-parent output \(u\) satisfies \(2u+5=3^{t+1}d\), hence \(u\equiv2\bmod3\). Equation (9) therefore excludes every odd parent of \(h'\).
+
+For even parents, put
+\[
+\epsilon=\frac{2K+13}{p},\qquad
+\eta=\frac{L+5}{2^L}.
+\]
+Equations (5) and (7) yield
+\[
+\frac{h'}{2^L}
+=\frac{248-128x+4\epsilon}{9}-\eta.
+\tag{10}
+\]
+For \(K\ge266\), \(\epsilon<1/100\) and \(\eta<1/100\). Using (1) in (10),
+\[
+\frac{248}{45}-\frac1{100}
+<
+\frac{h'}{2^L}
+<
+\frac{1256}{225}+\frac1{225}
+=\frac{419}{75}
+<6.
+\]
+The lower bound is greater than \(11/2\). Thus
+\[
+\frac{11}{2}\,2^L<h'<\frac{419}{75}\,2^L<6\cdot2^L.
+\tag{11}
+\]
+An even parent at level \(j\le L-1\) has target at most \(4\cdot2^L-3<h'\). An even parent at level \(j\ge L\) has target at least \(6\cdot2^L-1>h'\), using (11) and \((6-419/75)2^L>1\). So \(h'\) has no even parent either.
+
+Combining (9) and (11), \(h'\) has no \(\operatorname{ResetParent}\) at all.
+
+## Root nonreachability
+
+The exact source theorem \(\operatorname{root\_reset\_chain\_iff}\) identifies blank-root reachability with finite \(\operatorname{ResetParent}\)-chains from \(2\). If \(E\) were root-reachable, its last predecessor would have to be its unique parent \(h'\). But \(h'\ne2\) and has no parent, so no such chain can exist:
+\[
+\neg\operatorname{ResetChain}(2,E).
+\]
+Therefore the t=0 fatal-source configuration \(E\), and its associated fatal tail, are excluded from the blank-root trajectory for every pair in (1).
+
+This is an infinite, root-specific exclusion theorem for one structured family. It does not decide the other t=0 phases, the t=1 or higher-valuation branches, or the global nonhalting question.
 
 ## Reproducible instance
 
-The accompanying BigInt script checks the first concrete instance:
+The accompanying BigInt script checks
 \[
-a=18,\quad K=190064,\quad r=190047,\quad L=190063.
+a=18,\quad K=202538,\quad r=202521,\quad L=202537.
 \]
-It verifies the exact divisibilities, source bands, first-failure endpoint inequalities, and both parent equations without printing the enormous heights.
+It verifies the exact divisibilities, source bands, the unique odd parent, the mod-3 parentless condition, both dyadic gaps excluding even parents, and all displayed first-failure endpoint inequalities.
 
 Run:
 \`\`\`bash
 node im-results/agent10-cascade/t0_infinite_synthetic_odd_parent_family.mjs
 \`\`\`
-
-## Root-facing boundary
-
-This construction proves existence in the *synthetic source grammar*, not in the blank-root reset chain. In particular, \(\operatorname{ResetParent}(h',E)\) does not establish \(\operatorname{ResetChain}(2,h')\). The root-specific task is now sharply stated: exclude these explicit \(h'\) values from the actual root trajectory, or find one that is reached. A proof based only on the absence of a local odd parent cannot settle the t=0 family.
