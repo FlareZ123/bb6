@@ -128,6 +128,16 @@ the whole source drain has the exact normal form
 ]
 whenever the source ternary budget guarantees success. The cost (D) is signed; the branch (v_i=0,\epsilon_i=1) contributes (-1).
 
+Even the valuation recursion can be removed. If \(L\) is the unique integer with \(L\equiv b\pmod2\) and \(3^{L-1}\le2b-1<3^{L+1}\), put
+\[
+N=(2b-1+3^L)/4.
+\]
+The valuation expansion proves that \(N\)'s ordinary ternary digits are precisely \(r\) nonzero digits, of which \(e\) are 2s. Thus \(D=L-2e\), \(r=\operatorname{wt}_3(N)\), and
+\[
+\operatorname{drainB}(a,b,d)=(a-L+2e,\ d+3b+2L+2r-4e).
+\]
+The complete derivation and the 100,000-input comparison are in [DrainValuationNormalForm.md](DrainValuationNormalForm.md).
+
 Consequently the four canonical-ray residuals ((\beta,\delta)) from GapScaleResidualSource are exactly:
 
 | Input ray | \(\beta\) | \(\delta\) |
