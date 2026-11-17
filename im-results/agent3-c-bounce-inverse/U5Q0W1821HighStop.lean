@@ -4,6 +4,7 @@ import U5Q0M16Residual
 import U5Y3M8
 import DyadicSixCone
 import SevenInverse
+import SectionEvenOddSum3Inverse
 import HighSumTwo
 import M0EvenEvenSumZero
 
@@ -179,7 +180,7 @@ theorem blank_no_u5_q0_parent_t427 (t : Nat)
         BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
           (10944*n+3668) (2720*n+911) (by omega) hP1
       have hform1 :=
-        BB6.Agent46.section_evenodd_sum3_inverse
+        BB6.Agent46SourceInverse.section_evenodd_sum3_inverse
           a1 k1 (10944*n+3668) (2720*n+911)
           (by omega) (by omega) (by omega) hstep1
       have hP2 : CReach (6832*n+2287) (4776*n+1598) := by
