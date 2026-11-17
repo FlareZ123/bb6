@@ -104,7 +104,7 @@ Thus one third of the \((K\bmod18,r\bmod6)\) phase pairs have \(D_0\equiv0\pmod3
 
 ### Reproducer and small phase checks
 
-The companion [t0_entry_odd_parent_selector.mjs](t0_entry_odd_parent_selector.mjs) uses the logarithmic depth bound in [T0-SAME-LEVEL-DEPTH-LOG-BOUND.md](T0-SAME-LEVEL-DEPTH-LOG-BOUND.md) to enumerate only the \(O(\log K)\) parity-compatible \(q\)-values, then computes the exact incoming valuation \(t=v_3(2E+5)-1\) and checks the dyadic source band. Its sample checks include:
+The companion [t0_entry_odd_parent_selector.mjs](t0_entry_odd_parent_selector.mjs) uses the stronger bound \(q\le a-1\), \(a=\lfloor\log_2(2K+7)\rfloor\), from [T0-FATAL-DEPTH-EXPLICIT-R.md](T0-FATAL-DEPTH-EXPLICIT-R.md) to enumerate only \(O(\log K)\) parity-compatible \(q\)-values. It then computes the exact incoming valuation \(t=v_3(2E+5)-1\) and checks the dyadic source band. Its sample checks include:
 - \(K=267,r=259\): \(D_0\equiv0\pmod3\), so no incoming odd parent is possible.
 - \(K=309,r=301\): \(q=0,t=1\) gives an incoming odd parent from level \(L=308\).
 - \(K=333,r=325\): \(q=1,t=0\) gives an incoming odd parent from level \(L=332\).
