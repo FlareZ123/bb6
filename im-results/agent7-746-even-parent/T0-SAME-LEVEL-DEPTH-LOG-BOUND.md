@@ -22,7 +22,7 @@ The entry lower guard is \(E\ge4p-K-4\).
 ## Claim
 
 \[
-\boxed{2^q<2K,\qquad q\le\lfloor\log_2(2K)\rfloor.}
+\boxed{2^q\le\frac{15(2K+7)}{16}<2K,\qquad q\le\lfloor\log_2(2K)\rfloor.}
 \tag{4}
 \]
 Thus the number of same-level even resets before the t=0 odd exit is logarithmic in the level \(K\), not linear in \(K\).
