@@ -1,4 +1,4 @@
-import U5Q0M32W485HighStop
+import U5ResidualArithmetic
 import U5Q0OddOddFan
 import U5Q0M16Residual
 import DyadicSixCone
@@ -440,13 +440,13 @@ theorem every_w1821_residual_has_unreachable_root (n : Nat) :
       (1+2*s)%1024=587 ∧
       ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
   obtain ⟨s,m,hs,hm,_,_⟩ :=
-    BB6.Agent3U5M32W485HighStop.u5_residual_nonempty
+    BB6.Agent3U5ResidualArithmetic.u5_residual_nonempty
       (2048*n+1821)
   have hw : (2048*n+1821)%2048=1821 := by omega
   have hroot := blank_no_high_m0_u5_w1821
     (2048*n+1821) s m hs hm hw
   have hres :=
-    BB6.Agent3U5M32W485HighStop.u5_high_root_parameter_residue
+    BB6.Agent3U5ResidualArithmetic.u5_high_root_parameter_residue
       (2048*n+1821) s hs
   exact ⟨s,m,hs,hm,hres.1,hres.2,hroot⟩
 
@@ -460,7 +460,7 @@ theorem w1821_roots_pairwise_distinct
     39+64*s1 < 39+64*s2 := by
   have hw : 2048*n1+1821 < 2048*n2+1821 := by omega
   have hslt :=
-    BB6.Agent3U5M32W485HighStop.u5_residual_s_strict_mono
+    BB6.Agent3U5ResidualArithmetic.u5_residual_s_strict_mono
       (2048*n1+1821) (2048*n2+1821) s1 s2 hw hs1 hs2
   omega
 
