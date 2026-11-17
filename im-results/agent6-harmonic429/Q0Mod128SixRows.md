@@ -1,6 +1,6 @@
 # Six q0 root-inverse sectors on the line b = 2a - 13
 
-**Status: derived candidate; not yet compiled against the repository's full Lean dependency closure.** This is an intermediate result, not a claim that the q0 family is closed.
+**Status: exact Lean theorem formalized; unchanged-source CI pending.** `BB429Q0Mod128SixRows.lean` now proves the six-sector inverse exclusion and the corresponding uniform q0 parameter corollary. Its proof body compiled locally against declaration-only stubs matching the existing theorem signatures; that is a proof-body check, not a source certificate. The existing manual source-audit workflow now compiles the new module against the unchanged repository dependencies. This is an intermediate result, not a claim that the q0 family is closed.
 
 ## Claim to formalize
 
@@ -80,9 +80,10 @@ The two reusable terminal checks are elementary:
 
 All states used in this finite tree remain above the inverse-lemma thresholds when `a >= 1,000,000`. For the q0 family, that lower bound follows from `n = 23 + 32*u` and `u >= 0`.
 
-## What is and is not established
+## Verification status and scope
 
-- The arithmetic tree above is a proposed exact proof from the existing inverse and root-invariant lemmas; it is not a numerical simulation.
-- The q0 subfamily `u mod 16 = 7` has a proof-body check against declaration stubs matching the repository theorem signatures. This does not establish the generic line lemma or the other five sectors.
-- The full source dependency closure has **not** been compiled locally, so no Lean source certificate or CI claim is made here.
-- This does **not** close the q0 family. The ten remaining `u mod 16` sectors require separate treatment, including the unbounded FSFE valuation branch.
+- `BB429Q0Mod128SixRows.lean` states a quantified line theorem for all `a >= 1,000,000` in the six listed mod-128 classes, then proves the exact affine q0 family corollary for every natural `u` in the six odd classes modulo 16.
+- The full six-sector proof body compiled locally under Lean 4.36.0-rc2 against declaration-only stubs matching the signatures of `odd_back`, `even_back`, `reach_allowed`, and `rooted_positive_even_eight`. The stub axioms were not part of the submitted theorem; this is only a local proof-body preflight.
+- The dedicated existing manual workflow now compiles the module after the exact original accelerator, `BB429Mod8`, `BB429NewResidue`, and `BB429RootEven8` imports. The unchanged-source run and final `#print axioms` output are pending.
+- This excludes six of sixteen `u mod 16` sectors, not the entire q0 boundary. Ten sectors remain, including the unbounded FSFE valuation branch; the isolated `u=0` seed has its separate finite inverse-tree note.
+- No #429 halt/nonhalt decision, full branch-10 closure, or BB(6) upper bound follows.
