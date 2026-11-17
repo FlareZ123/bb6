@@ -111,8 +111,57 @@ theorem state1_101_boundary (T : Int → Bool) (h : Int)
     by_cases hx0 : x=h <;> by_cases hx1 : x=h+1 <;> by_cases hx2 : x=h+2 <;>
       simp [after101,hx0,hx1,hx2,h0,h1,h2,neh1,neh2]
 
+
+/-- The iterated state-1 scan preserves every cell strictly left of its
+current starting head. -/
+theorem sweptRight1_preserves_left (n : Nat) (T : Int → Bool)
+    (h x : Int) (hx : x < h) :
+    sweptRight1 n T h x = T x := by
+  induction n generalizing T h x with
+  | zero => rfl
+  | succ n ih =>
+    simp only [sweptRight1]
+    rw [ih (afterRight1 T h) (h+3) x (by omega)]
+    have h0 : x ≠ h := by omega
+    have h1 : x ≠ h+1 := by omega
+    have h2 : x ≠ h+2 := by omega
+    simp [afterRight1,h0,h1,h2]
+
+/-- Every scanned 111 block becomes 001 in increasing tape coordinates. -/
+theorem sweptRight1_block (n : Nat) (T : Int → Bool) (h : Int)
+    (hon : rightOnes T h n) :
+    ∀ i < n,
+      sweptRight1 n T h (h+3*(i:Int)) = false ∧
+      sweptRight1 n T h (h+3*(i:Int)+1) = false ∧
+      sweptRight1 n T h (h+3*(i:Int)+2) = true := by
+  induction n generalizing T h with
+  | zero => intro i hi; omega
+  | succ n ih =>
+    intro i hi
+    by_cases hi0 : i = 0
+    · subst i
+      have hp0 := sweptRight1_preserves_left n (afterRight1 T h) (h+3) h
+        (by omega)
+      have hp1 := sweptRight1_preserves_left n (afterRight1 T h) (h+3) (h+1)
+        (by omega)
+      have hp2 := sweptRight1_preserves_left n (afterRight1 T h) (h+3) (h+2)
+        (by omega)
+      simp [sweptRight1,afterRight1,hp0,hp1,hp2]
+    · have hi' : i-1 < n := by omega
+      have hon' := rightOnes_tail1 T h n hon
+      have htail := ih (afterRight1 T h) (h+3) hon' (i-1) hi'
+      have heq0 : h+3+3*((i-1:Int)) = h+3*(i:Int) := by omega
+      have heq1 : h+3+3*((i-1:Int))+1 = h+3*(i:Int)+1 := by omega
+      have heq2 : h+3+3*((i-1:Int))+2 = h+3*(i:Int)+2 := by omega
+      refine ⟨?_, ?_, ?_⟩
+      · simpa [sweptRight1,heq0] using htail.1
+      · simpa [sweptRight1,heq1] using htail.2.1
+      · simpa [sweptRight1,heq2] using htail.2.2
+
 #print axioms counted_three_right_from1
 #print axioms counted_right_sweep_from1
+#print axioms sweptRight1_preserves_left
+#print axioms sweptRight1_block
 #print axioms state1_101_boundary
 
 end BB6Coverage.Agent48M0EvenEightValuation
