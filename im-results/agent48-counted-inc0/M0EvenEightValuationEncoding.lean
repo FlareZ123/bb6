@@ -80,6 +80,14 @@ theorem q4LeftFacingAll_expanded (L q a : Nat)
   rw [hlenD]
   simp [d0pow,List.append_assoc]
 
+
+/-- The first 14 cells after the unary counter are valuation-independent:
+marker 0, d0, then the first three d1 blocks. -/
+theorem sourceLeftFixedPrefix14 (t : Nat) (tail : List Bool) :
+    (markerWord 0 ++ d0 ++ d1pow (3+t) ++ tail).take 14 =
+      markerWord 0 ++ d0 ++ d1pow 3 := by
+  simp [markerWord,d0,d1pow,List.take_append]
+
 /-- The encoder's odd-factor exponent is exactly the valuation used by reset cost. -/
 theorem v2_8q_all (L q : Nat) (hL : 4 ≤ L)
     (hq : 0 < q) (hbound : 8*q < 2^L) :
@@ -108,5 +116,6 @@ theorem resetPrefixCost_8q (L q a b : Nat)
 #print axioms q4LeftFacingAll_expanded
 #print axioms v2_8q_all
 #print axioms resetPrefixCost_8q
+#print axioms sourceLeftFixedPrefix14
 
 end BB6Coverage.Agent48M0EvenEightValuationEncoding
