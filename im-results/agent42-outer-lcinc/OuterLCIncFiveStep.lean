@@ -91,4 +91,47 @@ theorem outerLCIncZero_at (T : Int → Bool) (h : Int)
 #print axioms outerLCIncZero_exact
 #print axioms outerLCIncZero_at
 
+
+/-! ## One-step B-zero exit -/
+
+/-- The zero exit touches only its current cell. -/
+def outerLCIncZeroExitInside (x : Int) : Bool :=
+  decide (x = 0)
+
+/-- B on zero writes one and moves left into state C. -/
+def outerLCIncZeroExitStart : FConfig :=
+  ⟨1, 0, []⟩
+
+def outerLCIncZeroExitEnd : FConfig :=
+  ⟨2, -1, [0]⟩
+
+theorem outerLCIncZeroExit_exact :
+    fRun tm2 1 outerLCIncZeroExitStart =
+      some outerLCIncZeroExitEnd := by
+  decide
+
+theorem outerLCIncZeroExit_heads :
+    (List.range 1).all (fun k =>
+      match fRun tm2 k outerLCIncZeroExitStart with
+      | none => true
+      | some c => outerLCIncZeroExitInside c.head) = true := by
+  decide
+
+/-- Arbitrary-background lift of the one-step B-zero exit. -/
+theorem outerLCIncZeroExit_at (T : Int → Bool) (h : Int)
+    (hzero : T h = false) :
+    run tm2 1 ⟨1,h,T⟩ =
+      some (frameAt T h outerLCIncZeroExitInside
+        outerLCIncZeroExitEnd) := by
+  apply bridgeAt T h outerLCIncZeroExitInside
+    outerLCIncZeroExitStart outerLCIncZeroExitEnd 1 rfl
+    outerLCIncZeroExit_exact outerLCIncZeroExit_heads
+  intro x hx
+  have : x = 0 := by simpa [outerLCIncZeroExitInside] using hx
+  subst x
+  simpa [outerLCIncZeroExitStart] using hzero
+
+#print axioms outerLCIncZeroExit_exact
+#print axioms outerLCIncZeroExit_at
+
 end BB6Coverage.Agent42OuterLCInc
