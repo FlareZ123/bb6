@@ -24,14 +24,14 @@ private theorem succ_le_two_pow (n : Nat) : n+1≤2^n := by
     have hpow : 2^(n+1)=2^n*2 := by rw [Nat.pow_succ]
     omega
 
-/-- The U5 M8 residual fixes t modulo 43008 on the
-w=1821 (mod 2048) cylinder.  The modulus combines the
-2-adic residue modulo 2048 with the odd factor 21. -/
-theorem u5_m8_t_mod43008_w1821 (w s m t : Nat)
+/-- The U5 M8 residual fixes t modulo 2048 on the
+w=1821 (mod 2048) cylinder.  This is the only residue
+needed for the q=0/q=1 parent exclusion below. -/
+theorem u5_m8_t_mod2048_w1821 (w s m t : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
     (hp : m+1=8*t+1)
-    (hw : w%2048=1821) : t%43008=2475 := by
+    (hw : w%2048=1821) : t%2048=427 := by
   have hid := u5_m8_t_identity w s m t hs hm hp
   have hdiv : 2048∣20*2^(201+3360*w) := by
     refine ⟨20*2^(190+3360*w),?_⟩
@@ -74,32 +74,7 @@ theorem u5_m8_t_mod43008_w1821 (w s m t : Nat)
   have hrEq : r=427 := by omega
   have ht2048 : t%2048=427 := by simpa [r] using hrEq
 
-  have h6 : (2:Nat)^6%21=1 := by decide
-  have h3 : (2:Nat)^3%21=8 := by decide
-  have h6pow : ((2:Nat)^6)^(33+560*w)%21=1 := by
-    rw [Nat.pow_mod,h6]
-    simp
-  have hpow21 : (2:Nat)^(201+3360*w)%21=8 := by
-    have hexp : 201+3360*w=6*(33+560*w)+3 := by omega
-    rw [hexp,Nat.pow_add,Nat.pow_mul,Nat.mul_mod,h6pow,h3]
-    norm_num
-  have hmod21 :
-      (211*t+1360+22155*w)%21=13 := by
-    rw [hid,Nat.mul_mod,hpow21]
-    norm_num
-  have ht21 : t%21=18 := by omega
-  have htdiv : t%2048+2048*(t/2048)=t :=
-    Nat.mod_add_div t 2048
-  have htEq : t=2048*(t/2048)+427 := by
-    calc
-      t=t%2048+2048*(t/2048) := htdiv.symm
-      _=427+2048*(t/2048) := by rw [ht2048]
-      _=2048*(t/2048)+427 := by omega
-  have hqmod : (t/2048)%21=1 := by omega
-  have htdiv43008 : t%43008+43008*(t/43008)=t :=
-    Nat.mod_add_div t 43008
-  have htfinal : t%43008=2475 := by omega
-  exact htfinal
+  exact ht2048
 
 /-- Pulling the q=0 terminal parent through the two exact
 source inverses gives the odd/odd state X_t. -/
@@ -123,30 +98,31 @@ private theorem q0_parent_reach_implies_X (t : Nat) (ht : 1≤t)
   exact h2'
 
 /-- The q=0 and q=1 original-source parents of X_t are both
-unreachable when t=2475 (mod 43008).  The q=0 parent descends
-through exact source inverses to the sum-seven fibre; the q=1
-parent lies in the arbitrary-depth dyadic inverse cone. -/
-theorem blank_no_u5_q0_parent_t2475 (t : Nat)
-    (ht : t%43008=2475) :
+unreachable throughout t=427 (mod 2048).  The q=0 parent
+descends through exact source inverses to the sum-seven fibre;
+the q=1 parent lies in the arbitrary-depth dyadic inverse cone. -/
+theorem blank_no_u5_q0_parent_t427 (t : Nat)
+    (ht : t%2048=427) :
     ¬ CReach (64*t+5) (32*t+3) := by
   let n := t/128
-  have htdiv : t%43008+43008*(t/43008)=t :=
-    Nat.mod_add_div t 43008
-  have hdecomp : t=43008*(t/43008)+2475 := by omega
-  have hnEq : n=336*(t/43008)+19 := by
-    have htnorm :
-        t=128*(336*(t/43008)+19)+43 := by
-      rw [hdecomp]
-      ring
-    have hmod128 : t%128=43 := by rw [htnorm]; omega
-    have hdiv128 : t%128+128*(t/128)=t :=
-      Nat.mod_add_div t 128
+  have htdiv : t%2048+2048*(t/2048)=t :=
+    Nat.mod_add_div t 2048
+  have hdecomp : t=2048*(t/2048)+427 := by omega
+  have htnorm :
+      t=128*(16*(t/2048)+3)+43 := by
+    rw [hdecomp]
+    ring
+  have hmod128 : t%128=43 := by rw [htnorm]; omega
+  have hdiv128 : t%128+128*(t/128)=t :=
+    Nat.mod_add_div t 128
+  have hnEq : n=16*(t/2048)+3 := by
     dsimp [n]
     omega
   have htEq : t=128*n+43 := by
-    simpa only [← hnEq] using htnorm
+    rw [hnEq]
+    exact htnorm
   have hn16 : n%16=3 := by rw [hnEq]; omega
-  have hn19 : 19≤n := by rw [hnEq]; omega
+  have hn3 : 3≤n := by omega
 
   have hXnot : ¬ CReach (44*t-1) (42*t-1) := by
     intro hX
@@ -288,8 +264,8 @@ theorem blank_no_u5_q0_parent_w1821 (w s m t : Nat)
     (hp : m+1=8*t+1)
     (hw : w%2048=1821) :
     ¬ CReach (8*(m+1)-3) (4*(m+1)-1) := by
-  have htmod := u5_m8_t_mod43008_w1821 w s m t hs hm hp hw
-  have hnot := blank_no_u5_q0_parent_t2475 t htmod
+  have htmod := u5_m8_t_mod2048_w1821 w s m t hs hm hp hw
+  have hnot := blank_no_u5_q0_parent_t427 t htmod
   intro hparent
   have hx : 8*(m+1)-3=64*t+5 := by omega
   have hy : 4*(m+1)-1=32*t+3 := by omega
@@ -488,7 +464,7 @@ theorem w1821_roots_pairwise_distinct
       (2048*n1+1821) (2048*n2+1821) s1 s2 hw hs1 hs2
   omega
 
-#print axioms u5_m8_t_mod43008_w1821
+#print axioms u5_m8_t_mod2048_w1821
 #print axioms blank_no_u5_q0_parent_t2475
 #print axioms blank_no_u5_q0_parent_w1821
 #print axioms blank_no_u5_residual_m8w_w1821
