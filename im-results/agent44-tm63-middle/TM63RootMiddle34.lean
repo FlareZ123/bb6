@@ -56,7 +56,7 @@ private theorem tm63_root_residue_six_k_ge_61 :
   have hsub : 2 ≤ tm63FirstSection.exponent-3 := by omega
   have hpow : 4 ≤ 2^(tm63FirstSection.exponent-3) := by
     calc
-      4 = 2^2 := by norm_num
+      4 = 2^2 := by decide
       _ ≤ 2^(tm63FirstSection.exponent-3) :=
         Nat.pow_le_pow_right (by decide : 0 < 2) hsub
   have hK : 123 ≤ tm63RootMiddleK := by
@@ -198,7 +198,6 @@ theorem tm63_blank_reaches_after_middle34_of_m1even32
         (16*tm63RootResidueSixK-19) 1
         tm63MiddleAfter34A 0 tm63MiddleAfter34B
         tm63MiddleAfter34Head) := by
-  have hrOdd := tm63_root_residue16_r_odd
   have hrGe := tm63_root_residue_six_k_ge_61
   have hindex :
       tm63Index1 = 16*tm63RootResidueSixK+15 := by
@@ -340,9 +339,6 @@ theorem tm63_blank_reaches_after_middle34_of_m1even32
   have hn31 : (16*tm63RootResidueSixK-15)%2=1 := by omega
   have hbound31 :
       16*tm63RootResidueSixK-15 < 2^tm63Length1 := by omega
-  have ha30 : 0 < tm63MiddleAfter30A := by
-    unfold tm63MiddleAfter30A
-    omega
   have h31 := m2Odd_counted_increment_source
     tm63Length1 (16*tm63RootResidueSixK-15)
     tm63MiddleAfter30A tm63MiddleAfter30B tm63MiddleAfter30Head
@@ -366,9 +362,6 @@ theorem tm63_blank_reaches_after_middle34_of_m1even32
     simpa [htarget31,tm63MiddleAfter31A,tm63MiddleAfter31B,
       tm63MiddleAfter31Head] using h31
 
-  have h33input :
-      16*tm63RootResidueSixK-17 =
-        16*tm63RootResidueSixK-17 := rfl
   have hn33 :
       (16*tm63RootResidueSixK-17)%2=1 := by omega
   have hbound33 :
