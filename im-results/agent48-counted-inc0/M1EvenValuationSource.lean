@@ -1118,7 +1118,7 @@ def m1EvenValuationQ4LeftFacing (L n a : Nat) : List Bool :=
 
 theorem m1EvenValuationQ4SuffixTargetLeft
     (L n a b : Nat) :
-    s1LeftFacing L n 0 (a+b+2) (2^b-1) =
+    s1LeftFacing L (n-1) 0 (a+b+2) (2^b-1) =
       d0pow b ++ d1pow 2 ++
         (m1EvenValuationQ4LeftFacing L n a).drop 1 := by
   unfold s1LeftFacing m1EvenValuationQ4LeftFacing
@@ -1147,7 +1147,7 @@ theorem m1EvenValuation_reset_prefix_source
         (a+b+2) (2^b-1) =
         d0pow b ++ d1pow 2 ++ Q.drop 1 := by
     exact m1EvenValuationQ4SuffixTargetLeft
-      (len+1+v) (((2*q+1)*2^v)-1) a b
+      (len+1+v) ((2*q+1)*2^v) a b
   have hfirst := m1EvenQ4First4_at T h hshape.1
   have hfull := q4_suffix_run_to_s1Config
     T h b (len+1+v) (((2*q+1)*2^v)-1) 0 (a+b+2) (2^b-1)
