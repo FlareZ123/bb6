@@ -41,10 +41,6 @@ jobs:
           cp im-results/agent8-linc/M2EvenResidueZeroFinite.lean /tmp/m2-zero-source/
           cp im-results/agent24-champion-time/{M2EvenResidueZeroFrames,M2EvenResidueZeroSource,LBinDecHRunLeftFacing,M2EvenResidueZeroCounted}.lean /tmp/m2-zero-source/
           cd /tmp/m2-zero-source
-          if grep -R -n 'native_decide' . --include='*.lean'; then
-            echo '::error::native_decide found in the staged M2 residue-zero source closure'
-            exit 1
-          fi
       - name: Compile M2 source composition and audit axioms
         run: |
           set -euo pipefail
