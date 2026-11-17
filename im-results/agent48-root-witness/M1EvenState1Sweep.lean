@@ -83,7 +83,7 @@ theorem counted_left_sweep_from1 (n : Nat) (T : Int → Bool) (h : Int)
         simpa using this
       have hstep := state1_three_left T h h0 h1 h2
       have hon' : state1LeftOnes (holeLeft T h) (h-1) (n+1) :=
-        state1LeftOnes_tail T h n hon
+        state1LeftOnes_tail T h (n+1) hon
       have h0' : holeLeft T h (h-1) = false := by
         simp [holeLeft]
       have htail := ih (holeLeft T h) (h-1) h0' hon'
