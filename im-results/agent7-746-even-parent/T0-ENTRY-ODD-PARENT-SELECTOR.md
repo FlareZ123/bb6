@@ -100,6 +100,15 @@ For the allowed \(K\bmod6\in\{2,3\}\) and odd \(r\), the exact table is:
 
 Thus one third of the \((K\bmod18,r\bmod6)\) phase pairs have \(D_0\equiv0\pmod3\) and are excluded immediately by (2). In the remaining phases, the parity of \(q\) is fixed before any source-level search.
 
+### Reproducer and small phase checks
+
+The companion [t0_entry_odd_parent_selector.mjs](t0_entry_odd_parent_selector.mjs) computes the exact residue (5) with BigInt arithmetic and lists all representatives \(q\le K-1\). Its sample checks include:
+- \(K=267,r=259\): \(D_0\equiv0\pmod3\), so no incoming odd parent is possible.
+- \(K=309,r=301,t=1\): the selector gives \(q\equiv0\pmod6\).
+- \(K=333,r=325,t=0\): the selector gives \(q\equiv1\pmod2\).
+
+These are local inverse-grammar checks only; none asserts blank-root reachability.
+
 ## 4. Composition with the incoming-level scale bound
 
 If the even-parent exclusion is applied to the first level-K entry \(E\), any remaining immediate parent must be odd. For its source level \(L\), valuation \(t\), and quotient \(d\), the existing odd-parent scale theorem gives
