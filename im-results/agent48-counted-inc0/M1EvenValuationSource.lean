@@ -138,8 +138,11 @@ private theorem m1EvenValuationPreludeLeftAt
   by_cases hi0 : i=0
   · subst i
     have hbit := hT1 0
+    have hne1 : hN ≠ hN-1 := by omega
+    have hne2 : hN ≠ hN-2 := by omega
+    have hne3 : hN ≠ hN-3 := by omega
     simpa [valuationPreludeTape,m1EvenValuationPreludeLeft,
-      sideBit,d0,d1pow] using hbit
+      sideBit,d0,d1pow,hne1,hne2,hne3] using hbit
   · by_cases hi123 : i=1 ∨ i=2 ∨ i=3
     · rcases hi123 with hi1 | hi2 | hi3
       · subst i
@@ -151,8 +154,11 @@ private theorem m1EvenValuationPreludeLeftAt
     · by_cases hi4 : i=4
       · subst i
         have hbit := hT1 4
+        have hne1 : hN-4 ≠ hN-1 := by omega
+        have hne2 : hN-4 ≠ hN-2 := by omega
+        have hne3 : hN-4 ≠ hN-3 := by omega
         simpa [valuationPreludeTape,m1EvenValuationPreludeLeft,
-          sideBit,d0] using hbit
+          sideBit,d0,hne1,hne2,hne3] using hbit
       · have hi5 : 5≤i := by omega
         have hpres : valuationPreludeTape T1 hN (hN-(i:Int)) =
             T1 (hN-(i:Int)) := by
@@ -274,10 +280,18 @@ theorem m1EvenValuation_q4_prefix_run
       by_cases hsmall : i+1<5
       · have hcases : i+1=1 ∨ i+1=2 ∨ i+1=3 ∨ i+1=4 := by omega
         rcases hcases with h1 | h2 | h3 | h4
-        · subst i; simp [m1EvenValuationPreludeLeft,sideBit]
-        · subst i; simp [m1EvenValuationPreludeLeft,sideBit]
-        · subst i; simp [m1EvenValuationPreludeLeft,sideBit]
-        · subst i; simp [m1EvenValuationPreludeLeft,sideBit]
+        · have hiEq : i=0 := by omega
+          subst i
+          simp [m1EvenValuationPreludeLeft,sideBit]
+        · have hiEq : i=1 := by omega
+          subst i
+          simp [m1EvenValuationPreludeLeft,sideBit]
+        · have hiEq : i=2 := by omega
+          subst i
+          simp [m1EvenValuationPreludeLeft,sideBit]
+        · have hiEq : i=3 := by omega
+          subst i
+          simp [m1EvenValuationPreludeLeft,sideBit]
       · have hi5 : 5≤i+1 := by omega
         have htail : i+1-5 < 3*v := by
           dsimp [N0] at hi
