@@ -167,6 +167,33 @@ jobs:
 
           printf '%s\n' "$SOURCE_REF" > im-results/.d-root-source-ref
           printf '%s\n' "$actual_extension" > im-results/.d-root-extension-ref
+          case "$STAGE" in
+            1) audit_decl="terminal2902_certificate" ;;
+            2) audit_decl="blank_eighteenth_exception" ;;
+            3) audit_decl="blank_eighteenth_reentry" ;;
+          esac
+          if ! grep -Eq "$audit_decl.*depends on axioms:" lean-audit.log; then
+            echo "Missing #print axioms output for $audit_decl" >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import re
+          import sys
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          unexpected = []
+          with open("lean-audit.log", encoding="utf-8") as log:
+              for line in log:
+                  match = re.search(r"depends on axioms:\s*\[([^]]*)\]", line)
+                  if match:
+                      actual = {name.strip() for name in match.group(1).split(",") if name.strip()}
+                      extra = actual - allowed
+                      if extra:
+                          unexpected.append((line.strip(), sorted(extra)))
+          if unexpected:
+              for line, extra in unexpected:
+                  print(f"Unexpected axiom(s) {extra}: {line}")
+              sys.exit(1)
+          PY
           if grep -Eq 'sorryAx|native_decide' lean-audit.log; then
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
