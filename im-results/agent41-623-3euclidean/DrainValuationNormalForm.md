@@ -82,6 +82,58 @@ Summing over the drain yields the exact normal form, whenever the source ternary
 \]
 The pair on the right denotes the two output counters. The existing source theorem **drainB_safe_ones** supplies totality under \(b\le\tau(a)\); the evaluator budget is preserved at each step. Thus (2) is an exact reformulation of the source drain, not an approximation or a new simulator.
 
+### 2.1 A nonrecursive ternary-digit formula
+
+The valuation word itself can be eliminated. Put
+\[
+s_0=0,\qquad s_{i+1}=s_i+v_i+1,\qquad
+p_i=s_i+v_i,\qquad L=s_r,\qquad e=\sum_{i<r}\epsilon_i.
+\]
+For \(x_i=2b_i-1\), the one-step factorization gives
+\[
+x_i=3^{v_i+1}x_{i+1}+4(1+\epsilon_i)3^{v_i}.
+\]
+Unrolling to \(x_r=-1\) yields
+\[
+2b-1=4\sum_{i=0}^{r-1}(1+\epsilon_i)3^{p_i}-3^L,
+\]
+hence
+\[
+N=\frac{2b-1+3^L}{4}
+=\sum_{i=0}^{r-1}(1+\epsilon_i)3^{p_i}.
+\tag{3}
+\]
+The positions \(p_i\) are strictly increasing and the coefficients are \(1\) or \(2\). Thus (3) is exactly the ordinary base-three expansion of \(N\), with no carries:
+- \(r\) is the number of nonzero ternary digits of \(N\);
+- \(e\) is the number of ternary digits equal to \(2\);
+- \(D=L-2e\).
+
+The parity relation follows directly from the step decomposition:
+\[
+b_i\equiv b_{i+1}+v_i+1\pmod2,
+\]
+so \(L\equiv b\pmod2\). Since the top ternary digit of \(N\) is nonzero at position \(L-1\), one has \(3^{L-1}\le N<3^L\). Using \(2b-1=4N-3^L\) gives
+\[
+3^{L-1}\le2b-1<3^{L+1}.
+\]
+These inequalities and the parity condition uniquely determine \(L\): it is either \(\lfloor\log_3(2b-1)\rfloor\) or that integer plus one, whichever has the parity of \(b\).
+
+Consequently the whole drain has the fully nonrecursive digit-statistic form
+\[
+\boxed{
+\operatorname{drainB}(a,b,d)
+=
+\left(
+a-L+2e,\;
+d+3b+2L+2r-4e
+\right),
+}
+\tag{4}
+\]
+under the same source ternary-budget condition. This is stronger than the valuation-cost form (2): \(L\) is a parity-adjusted logarithmic depth, while \(r\) and \(e\) are ordinary ternary Hamming-weight and digit-2 counts of the single explicit integer \(N=(2b-1+3^L)/4\).
+
+The closed form was compared with the recursive valuation process for every \(1\le b\le100{,}000\), with zero discrepancies. This is computational corroboration; the proof is the unrolling identity (3).
+
 ## 3. Canonical-ray residuals become valuation statistics
 
 For the four canonical ray families, write \(m=\min(a,d)\). The base drain inputs are:
