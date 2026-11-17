@@ -59,3 +59,10 @@ The source theorem `rank_mono` in `im-results/agent11-c-line/CLine.lean` establi
 The M512 thin-gateway residue set in `im-results/agent13-residual-frontier/ThinGatewayM512.md` has residue 66 as its first surviving lift above this finite bound, namely (j=1{,}000{,}002). That is the first M512-admitted gateway not eliminated by this forward-prefix result; it remains open here.
 
 **Evidence status:** the JS simulation is exact and reproducible, but this 4.57-million-macro-step prefix has not yet been kernel-checked in Lean. A formal proof should prove the high-run closed form, prove that the boundary macro preserves reachability and covers every reachable (a=0) state, then verify the finite macro orbit and combine it with `rank_mono`. Do not describe the finite bound as a proof that no gateway exists.
+
+
+## 3. M32 source-level inverse progressions (draft)
+
+See [M32ThreeClassInverse.md](M32ThreeClassInverse.md) for a three-progression extension of the thin-gateway inverse-parent argument: j = 7 + 32n, j = 16 + 32n, and j = 54 + 32n. The candidate source proof uses only the existing kernel-checked M32 quotient and its absent cells; it would source-certify 20 of the 28 M512-only excluded residues, plus four M512-admitted residues already covered by the earlier 86+128n and 103+128n theorems.
+
+The mathematical derivation is exact, but the Lean wrapper is not accepted: run 44132508910 passed all eight quotient-closure shards and failed in ThinGatewayM32.lean. See the Agent 43 handoff for compiler diagnostics. Do not treat these three progressions as certified until the wrapper compiles without sorryAx.
