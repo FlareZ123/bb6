@@ -647,4 +647,51 @@ theorem outerLCInc_s1_postlude_conditions
     ⟨h2,h3,h4⟩ ⟨h5,h6⟩ hrun hblank
 
 
+
+/-- The generic postlude theorem specialized to the actual S1 source
+configuration with second counter zero. -/
+theorem outerLCInc_s1_postlude_run
+    (L n m a b r : Nat) (h : Int) (hm : m < 3) :
+    run tm2 (3*a+42+m+3*b)
+      ⟨1,outerLCIncH1 h a m+2,
+        outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r⟩ =
+    some ⟨3,h+3*b+5,
+      outerLCIncPostludeTape
+        (outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r)
+        h a m b⟩ := by
+  obtain ⟨hfive,hscan,hzero,hright,hzeroExit,htail⟩ :=
+    outerLCInc_s1_postlude_conditions L n m a b r h hm
+  exact outerLCInc_postlude_run
+    (outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r)
+    h a m b hfive hscan hzero hright hzeroExit htail
+
+/-- Complete source-level outer LC_Inc run: the already established
+left-sweep/marker/H-run prelude followed by the parameterized postlude.
+The endpoint tape is kept as an exact nested frame pending its
+pointwise identification with the canonical S1 target. -/
+theorem outerLCInc_full_run
+    (L n m a b : Nat) (h : Int)
+    (hn : 0 < n) (hnL : n < 2^L) (hm : m < 3) :
+    ∃ q r len : Nat,
+      n = (2*q+1)*2^r ∧
+      L = len+1+r ∧
+      q < 2^len ∧
+      run tm2 (12*a+4*m+63+12*r+3*b)
+        (s1Config L n m a 0 b h) =
+        some ⟨3,h+3*b+5,
+          outerLCIncPostludeTape
+            (s1Config L n m a 0 b h).tape h a m b⟩ := by
+  obtain ⟨q,r,len,hnfactor,hL,hq,hpre⟩ :=
+    outerLCInc_preHRun L n m a b h hn hnL hm
+  have hpost := outerLCInc_s1_postlude_run L n m a b r h hm
+  refine ⟨q,r,len,hnfactor,hL,hq,?_⟩
+  have hcost :
+      12*a+4*m+63+12*r+3*b =
+        (9*a+3*m+17+12*r+4) + (3*a+42+m+3*b) := by omega
+  rw [hcost, ← run_add, hpre]
+  simpa [outerLCIncSourceT3, outerLCIncSourceT2,
+    outerLCIncSourceT1, outerLCIncH1] using hpost
+
+#print axioms outerLCInc_full_run
+
 end BB6Coverage.Agent42OuterLCInc
