@@ -52,3 +52,36 @@ This valuation-four row recurs every other 24-cycle (when `u` is odd); it is not
 ## Recommended next proof target
 
 First replace the unsupported fixed `4(v₂(n)-1)`-cycle placement with a phase decomposition that is valid for arbitrary `a). In parallel, add the explicit `m=1,n=16q` odd-quotient row to the 24-cycle source-coverage plan. Keep both items in `im-results/` until the exact original-source Lean proof compiles and its transitive axiom profile is clean.
+
+
+## 3. Correct valuation-bridge placement found after the counted left sweep
+
+The failed placement above was not the right place to use the state-1 macro. A much cleaner bridge appears **after** the existing `counted_left_sweep (3*a+1)` from `M1EvenQ4Prefix.lean`. That sweep costs `9*a+3` and leaves state 3 at `hN = h-(3*a+1)`. Let `v=v₂(n)≥1`, with n's exact low-bit factorization `n=2^v*q`, q odd.
+
+The bridge from state 3 at `hN` has the following phase decomposition:
+
+1. A fixed 6-step prelude reaches state 1 at `hN`, blank under the head. The exact S1 source word supplies `3*v+4` consecutive ones to the left. This is exactly the premise for `counted_left_sweep_from1 (3*(v+1))`.
+2. The state-1 left sweep uses `3*(v+1)` three-step cycles: `9*(v+1)` steps, moving the blank to `hN-3*(v+1)`.
+3. A fixed 4-step exit reaches state 4 at `H = hN-3*(v+1)-2`, blank under the head.
+4. A fixed 3-step prelude reaches state 5 at `H+3`.
+5. The left sweep has written exactly `3*(v+1)` consecutive ones immediately to the right of `H+3`. A rightward state-5 sweep of `v+1` three-step cycles consumes them and returns state 5 at `hN+1`, reading blank.
+6. One fixed step exits state 5 to state 4 at `hN+2`; the three source ones at `hN+2,hN+3,hN+4` then give a final 3-step state-4 scan to `hN+5`.
+
+The total bridge cost is
+\[
+6+9(v+1)+4+3+3(v+1)+1+3=12v+29.
+\]
+Composing with the initial `9a+3` left sweep and the final `3a` state-4 scan from `hN+5) to `h+4) gives the uniform M1-even q4 prefix cost
+\[
+(9a+3)+(12v+29)+3a=12a+12v+32.
+\]
+Adding the existing q4 suffix gives exactly `proposedIncrementCost 1 n a b`, namely `6*4^b+42*2^b+19+12*a+12*v-9*b`.
+
+This is stronger than a separate v2=4 patch: one source theorem for arbitrary exact valuation v covers both the missing `n=16q` (q odd) row and the proposed `n=32q` (and higher) rows. It also recovers the existing v=1 bridge length 41. Finite simulations for n=6,16,32,64,96,128 and a=1 confirm every phase endpoint and exact length. The proof obligations still to formalize are:
+
+- a `state5_three_right` lemma and its counted `v+1)-cycle iterator (the symmetric rightward macro);
+- the `binDec`/S1-source proof of the initial `state1LeftOnes` length `3v+4`;
+- the fixed 6-, 4-, 3-, and 1-step phase transitions and the final 3-cell q4 scan;
+- the fact that the left-sweep output supplies the right-sweep ones, and the final source window supplies the last three q4 ones.
+
+This phase decomposition replaces the unsupported fixed `4(v₂-1))-cycle placement after `12a+6`. The local left-sweep macro remains useful, but its correct use is after the counted left sweep at `hN`.

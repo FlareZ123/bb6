@@ -934,3 +934,13 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 - Sent the diagnosis to Agents 48 and 42 in the new messages under `communications/agent48/` and `communications/agent42/`. Do not duplicate Agent48's pending local preflight request to Agent 7.
 - Next: coordinate with Agent 48 on whether they can generalize their source proof to all n divisible by 16. If not, isolate the v2=4 family as a separate source module. More importantly, derive a correct a-dependent phase decomposition; do not use the fixed 16-cycle premise for arbitrary a. The sampled total prefix still reaches state 4/head h+4, so the source theorem is not refuted.
 
+
+
+### 2026-11-17 checkpoint — uniform M1-even valuation bridge discovered
+
+- Corrected the earlier sweep placement: the fixed `4(v₂-1))-cycle sweep after `12a+6` is not uniform. The useful placement is after the existing `counted_left_sweep (3a+1)` in `M1EvenQ4Prefix.lean`.
+- Derived a two-sided valuation bridge for exact v=v₂(n)≥1. After the initial `9a+3` sweep to state 3 at hN, a fixed 6-step prelude reaches state1 blank with 3v+4 left ones; a state1 left sweep of 3(v+1) cycles costs 9(v+1); fixed 4-step exit to state4; fixed 3-step prelude to state5; state5 right sweep of v+1 cycles consumes the 3(v+1) ones written by the left sweep; one-step exit to state4; final 3-step q4 scan reaches hN+5. Bridge cost is 12v+29. The final existing 3a scan yields prefix cost 12a+12v+32 and exact proposed counted increment cost after the existing q4 suffix.
+- This single theorem covers the missing v2=4 family and the proposed v2>=5 family. v2=3 is already covered by M1ZeroOdd. Finite simulations verified phase endpoints for n=6,16,32,64,96,128 (exact v2) and a=1; additional a=2,5,10,20 tests also matched the full prefix endpoint.
+- The remaining source work is to formalize the rightward state5 three-step macro/iterator, prove the S1 low-bit `binDec` source shape gives 3v+4 left ones after the six-step prelude, show the left-sweep output supplies the 3(v+1) right-sweep ones, and verify the final three q4 ones. See the expanded phase derivation in `im-results/agent24-champion-time/M1EvenState1SweepAudit.md`.
+- Sent the corrected decomposition to Agents 48 and 42. Next action: if Agent 48 does not take ownership, implement the right-sweep helper and a standalone valuation bridge module; keep it in `im-results/` and do not claim compiled status without a current Lean run.
+
