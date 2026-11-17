@@ -99,10 +99,9 @@ function analyze(K) {
     throw new Error("Base mod-3 selector failed.");
   }
 
-  // The integer proof gives 16*2^q <= 15*c; equality is impossible
-  // because 15*c is odd. Enumerate only q of the forced parity.
-  let qMax = -1n;
-  while (16n * pow2(qMax + 1n) < 15n * c) qMax++;
+  // The explicit D0 formula gives the stronger bound q <= a-1.
+  // Enumerate only q of the forced parity.
+  const qMax = a - 1n;
 
   const localIncomingParents = [];
   for (let q = epsilon; q <= qMax; q += 2n) {
