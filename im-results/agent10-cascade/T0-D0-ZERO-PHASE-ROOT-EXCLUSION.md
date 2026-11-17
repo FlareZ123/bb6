@@ -103,7 +103,7 @@ Combining (6) and (8), \(E\) has no \(\operatorname{ResetParent}\) at all.
 
 ## Root consequence
 
-The root-chain equivalence in [ResetChain.lean](../ResetChain.lean) identifies blank-root reachability with finite \(\operatorname{ResetParent}\)-chains from \(2\). Since \(E>2\) and has no parent,
+The root-chain equivalence in [ResetChain.lean](ResetChain.lean) identifies blank-root reachability with finite \(\operatorname{ResetParent}\)-chains from \(2\). Since \(E>2\) and has no parent,
 \[
 \neg\operatorname{ResetChain}(2,E).
 \]
