@@ -1,9 +1,11 @@
 import U5ResidualArithmetic
 import U5Q0OddOddFan
 import U5Q0M16Residual
+import U5Y3M8
 import DyadicSixCone
-import GeneralMod8SectionRest
 import SevenInverse
+import HighSumTwo
+import M0EvenEvenSumZero
 
 set_option maxHeartbeats 0
 set_option maxRecDepth 100000
