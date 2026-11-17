@@ -126,6 +126,30 @@ For a fixed episode start, there is at most one candidate \(n\): the difference 
 \]
 Thus each \(c<q\) episode can be tested by an exact monotone search rather than by iterating every low-branch transition.
 
+## The generic outer branch is an affine 4/3 map
+
+Put \(w=u-c=3q\). In each of the six generic \(c\ge q\) cases (the cases beyond the small exceptional values of \(d\)), the source map has the form
+\[
+k'=4q+\alpha,\qquad c'=d-\beta,
+\]
+where \(r'=(4q+\alpha)\bmod3\). The six parameter pairs are:
+
+| Input phase and residue | Condition | \(\alpha\) | \(\beta\) |
+|---|---:|---:|---:|
+| \(p=0,r=0\) | \(d\ge1\) | \(-1\) | 0 |
+| \(p=0,r=1\) | \(d\ge2\) | 3 | 1 |
+| \(p=0,r=2\) | \(d\ge4\) | 8 | 4 |
+| \(p=1,r=0\) | \(d\ge3\) | 7 | 2 |
+| \(p=1,r=1\) | \(d\ge2\) | 6 | 1 |
+| \(p=1,r=2\) | \(d\ge5\) | 12 | 5 |
+
+Since \(u=4q+d\), these updates imply
+\[
+\boxed{u'=u+\alpha-\beta-r',\qquad
+w'=\frac43w+\alpha-r'.}
+\]
+Thus, away from the finitely many boundary subcases, the outer map advances \(u\) by a bounded integer and applies an affine \(4/3\) expansion to \(w=3q\), while resetting \(c\) to the previous gap minus a small constant. This identifies the precise source of the \(4/3\) cascade in the high-level dynamics. The exceptional \(d\)-values and \(q=0\) branches remain part of the exact map and must not be dropped in a proof.
+
 ## Complete one-step preimage set of the halt states
 
 Let
