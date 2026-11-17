@@ -22,7 +22,6 @@ open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8Rst1Prime
-open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8M2EvenResidueZero
 open BB6Coverage.Agent24M2EvenSource
@@ -88,6 +87,15 @@ private theorem d0pow_add_right (a b : Nat) :
   | succ b ih =>
       rw [Nat.add_succ]
       simp [d0pow,ih,List.append_assoc]
+
+
+private theorem frameAt_tape_outside8
+    (T : Int → Bool) (h : Int) (inside : Int → Bool)
+    (c : FConfig) (x : Int)
+    (hout : inside (x-h)=false) :
+    (frameAt T h inside c).tape x = T x := by
+  simpa [hout] using
+    BB6Coverage.Agent8Rst1Prime.frameAt_tape T h inside c x
 
 /-- The source word after exposing the three low d1 blocks and the
 quotient's exact odd-part carry prefix. -/
@@ -203,7 +211,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
     have hpres :
         T1 (hH-(i:Int)) = T (hH-(i:Int)) := by
       dsimp [T1]
-      apply sweptLeft_preserves_left
+      apply BB6Coverage.Agent6Q4Prefix.sweptLeft_preserves_left
       dsimp [hH,hN,N]
       omega
     have hcell :
@@ -267,7 +275,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
     have hout : m2ZeroSetupInside ((hH-(i:Int))-hN)=false := by
       simp [m2ZeroSetupInside,hH]
       omega
-    have hf := frameAt_tape_outside T1 hN
+    have hf := frameAt_tape_outside8 T1 hN
       m2ZeroSetupInside m2ZeroSetupEnd (hH-(i:Int)) hout
     calc
       Tsetup (hH-(i:Int)) = T1 (hH-(i:Int)) := by
@@ -318,13 +326,13 @@ theorem m2Even_residue0_q4_reset_prefix_source
         m2ZeroPostludeInside (x-(hN-12))=false := by
       simp [m2ZeroPostludeInside]
       omega
-    have hp := frameAt_tape_outside Thrun (hN-12)
+    have hp := frameAt_tape_outside8 Thrun (hN-12)
       m2ZeroPostludeInside m2ZeroPostludeEnd x houtPost
     have hh := lbinDecHRunTape_preserves_right t Tsetup hH x (by omega)
     have houtSetup : m2ZeroSetupInside (x-hN)=false := by
       simp [m2ZeroSetupInside]
       omega
-    have hs := frameAt_tape_outside T1 hN
+    have hs := frameAt_tape_outside8 T1 hN
       m2ZeroSetupInside m2ZeroSetupEnd x houtSetup
     calc
       Tpost x = Thrun x := by simpa [Tpost] using hp
@@ -389,7 +397,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
               ((hN+2-(15:Int))-(hN-12))=false := by
           simp [m2ZeroPostludeInside]
           omega
-        have hp := frameAt_tape_outside Thrun (hN-12)
+        have hp := frameAt_tape_outside8 Thrun (hN-12)
           m2ZeroPostludeInside m2ZeroPostludeEnd
           (hN+2-(15:Int)) hout
         calc
@@ -409,7 +417,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
                 ((hN+2-(i:Int))-(hN-12))=false := by
             simp [m2ZeroPostludeInside]
             omega
-          have hp := frameAt_tape_outside Thrun (hN-12)
+          have hp := frameAt_tape_outside8 Thrun (hN-12)
             m2ZeroPostludeInside m2ZeroPostludeEnd
             (hN+2-(i:Int)) hout
           have hside : sideBit W i=sideBit Rout (i-16) := by
@@ -513,7 +521,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
       Tpost x = T1 x := hpostRight x (by dsimp [hN,N]; omega)
       _ = T x := by
         dsimp [T1]
-        apply sweptLeft_preserves_right
+        apply BB6Coverage.Agent6Q4Prefix.sweptLeft_preserves_right
         omega
 
   have hfirstFive : ∀ i : Nat, i<5 → Tpost (h+(i:Int))=true := by
