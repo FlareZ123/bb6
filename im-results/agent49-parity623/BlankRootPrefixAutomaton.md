@@ -84,7 +84,31 @@ PrefixOK(P)
 
 The list append/drop operations make these predicates amenable to Lean proofs by case analysis and regular-language lemmas. **The displayed conjunction is a candidate, not a proved inductive invariant:** closure of every clause under every A→A macro case remains to be established.
 
-## 4. Reproducible finite audit
+## 4. First closure obstruction
+
+The displayed conjunction is **not inductive**. Here is a concrete synthetic A-state satisfying every displayed clause:
+
+- (d=6), (P=110101), current bit (b=1), and (r_1r_2r_3=000).
+- (P) starts with 1 and has no adjacent 00.
+- (P\notin D), since its aligned blocks are 110 and 101.
+- None of the (d=0,1,3) boundary clauses or the A/0 preimage clauses applies.
+
+The A/1 macro has suffix 01. It pops two symbols and returns to A with (d=4), (P'=1101), current bit 0, and right triple 000. This successor violates the displayed A/0 drop-last clause: its last prefix bit is 1 and (P'.dropLast=110\in D).
+
+The next A/0 macro (the D sweep across the three right-hand zeros) returns to A with (d=3), prefix 110, and current bit 1. The A/1 macro then returns to the left frontier with current bit 1; the following A/1 macro reaches F/0 and halts. This is a counterexample to *inductiveness of the predicate*, not a claim that this synthetic configuration is reachable from the blank root.
+
+The first missing A/1-preimage obligations for the three A/0 clauses are exact. Write (D=(11[01])^+\).
+
+1. **A/1 pop-2:** if (P=Q\,01), the successor has prefix (Q), current bit 0, and right triple (00r_1). It violates the A/0 drop-last clause exactly when (Q=R\,1), (R\in D), and (r_1=0). Thus an invariant must imply
+   [
+   b=1\ \land\ P\in D\,101\quad\Longrightarrow\quad r_1=1.
+   ]
+2. **A/1 pop-3 through suffix 11:** if (P=Q\,011), the successor has right triple 110. It violates the A/0 append clause when (Q\,1\in D), equivalently (P\in D\,11011). This pattern must be excluded at A/1.
+3. **A/1 pop-3 through suffix 10:** if (P=Q\,010), the successor has right triple 100. It violates the A/0 same-prefix clause when (Q\in D), equivalently (P\in D\,010). This pattern must be excluded at A/1.
+
+These are necessary first closure conditions, not a completed strengthening. Their own A/0 preimages still need closure analysis; simply appending them to the candidate would not yet be a proof.
+
+## 5. Reproducible finite audit
 
 The accompanying [`blank_root_prefix_audit.cpp`](blank_root_prefix_audit.cpp) implements the raw six-state transition table, tracks the visited prefix and the Danger DFA state, and checks the candidate obstructions. Run:
 
@@ -113,11 +137,11 @@ A local 50,000,000-primitive-step run produced:
 | A/0 D-stop-at-h preimage `Danger(P)` | 0 |
 | A/0 D-stop-at-h−1 preimage `Danger(P.dropLast)` | 0 |
 
-The run did not halt within the 50M-step horizon. The unique d=3/A1 state had prefix `101` and r1=1; its A/1 macro returned at d=1 with current bit 0 and right triple `001`.
+The run did not halt within the 50M-step horizon. The unique d=3/A1 state had prefix `101` and r1=1; its A/1 macro returned at d=1 with current bit 0 and right triple `001`. The reported 50M counters predate the A/1 closure-obstruction analysis above; they do not count the three newly identified A/1 preimage patterns.
 
 These are finite computational observations only. They do not imply an all-time bound or nonhalting.
 
-## 5. Proof work still required
+## 6. Proof work still required
 
 1. Define the A-state macro over a list prefix and a right-hand tape window, and prove its equivalence to the raw machine transitions.
 2. Formalize PrefixOK and the Danger DFA; prove the append, pop-2, pop-3, and drop-last lemmas.
