@@ -3,7 +3,13 @@ import SheepOddGap
 import SheepEvenReachInverse
 import EvenSourceBridge
 
-set_option maxRecDepth 8192
+#eval Nat.powMod 2 4 243
+#eval Nat.powMod 2 4374 243
+#eval Nat.powMod 2 (4+4374*0) 243
+example : Nat.powMod 2 4 243 = 16 := by decide
+example : Nat.powMod 2 4374 243 = 1 := by decide
+
+set_option maxRecDepth 32768
 set_option maxHeartbeats 0
 namespace BB6.Agent40.SheepPower4374
 
@@ -46,7 +52,9 @@ theorem no_generic (m base shift C cycle t v : Nat)
       (2^(base+4374*(t%cycle))+shift)%m=C%m := by
     rw [←reduce_hit m base shift cycle t hm hq hp, ←heq]
     exact Nat.mul_add_mod_self_left _ _ _
-  exact hc ⟨t%cycle, Nat.mod_lt t hq⟩ hh
+  have hh' : (Nat.powMod 2 (base+4374*(t%cycle)) m + shift)%m=C%m := by
+    simpa only [Nat.powMod_def, Nat.add_mod, Nat.mod_mod] using hh
+  exact hc ⟨t%cycle, Nat.mod_lt t hq⟩ hh'
 
 theorem only_class (m base shift C cycle good t v : Nat)
     (hm : 1 < m) (hq : 0 < cycle)
