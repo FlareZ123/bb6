@@ -33,7 +33,8 @@ private theorem pow_two_mod3_even (n : Nat) (hn : n%2=0) :
     2^n%3=1 := by
   have hp := pow_mod_two n
   rw [hn] at hp
-  norm_num at hp
+  have hzero : 2^0%3=1 := by decide
+  rw [hzero] at hp
   exact hp
 
 private theorem pow_period_eighteen (n : Nat) :
@@ -65,7 +66,9 @@ private theorem four_mul_le_pow (n : Nat) :
   | succ n ih =>
     intro hn
     by_cases hs : n<4
-    · interval_cases n <;> norm_num at *
+    · have hn3 : n=3 := by omega
+      subst n
+      decide
     · have hp := ih (by omega)
       rw [Nat.pow_succ]
       nlinarith
@@ -129,7 +132,7 @@ theorem entry_not_root (a K : Nat)
   have hpowK4 : 2^(K+4)=16*p := by
     dsimp [p]
     rw [Nat.pow_add]
-    norm_num
+    simp [Nat.mul_comm]
   have hpowAr : 2^a*2^r=16*p := by
     calc
       2^a*2^r = 2^(a+r) := (Nat.pow_add 2 a r).symm
@@ -160,7 +163,7 @@ theorem entry_not_root (a K : Nat)
   have hB3 : B%3=2 := by
     dsimp [B]
     rw [Nat.mul_mod,hc3,hrp3]
-    norm_num
+    decide
   have h2K3 : (2*K)%3=1 := by
     rw [Nat.mul_mod,hK3]
     norm_num
@@ -236,7 +239,7 @@ theorem entry_not_root (a K : Nat)
   have hdodd : d%2=1 := by
     have hmul : (3*d)%2=d%2 := by
       rw [Nat.mul_mod]
-      norm_num
+      omega
     rw [hXeq] at hXodd
     omega
   have h9d : 9*d+2*B=80*p+2*K+13 := by
@@ -304,7 +307,7 @@ theorem entry_not_root (a K : Nat)
   have hmodEq := congrArg (fun z : Nat => z%3) hAdd
   simp only [Nat.add_mod,Nat.mul_mod] at hmodEq
   rw [hp3,hK3,hdmod3] at hmodEq
-  norm_num at hmodEq
+  omega
   have hmodh : h%3=0 := by omega
 
   have hNoParentH : ∀q, ¬ResetParent q h := by
@@ -338,7 +341,7 @@ theorem entry_not_root (a K : Nat)
         have hpow : 3^(t+1)=9*3^(t-1) := by
           have he : t+1=(t-1)+2 := by omega
           rw [he,Nat.pow_add]
-          norm_num [Nat.mul_comm]
+          simp [Nat.mul_comm]
         have hdiv9 : 9∣X := by
           refine ⟨3^(t-1)*d', ?_⟩
           have houtX : X=3^(t+1)*d' := by simpa [X] using hout
