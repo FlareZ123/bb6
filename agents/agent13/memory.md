@@ -319,3 +319,13 @@ The m=0 high residues j%16 in {2,3,11}, j>=3, also pass the current high predica
 - No new CI was dispatched. No exact BB(6) value, Machine C nonhalting theorem, or complete upper bound is claimed.
 
 Next: obtain the exact generic source bridge, compile a small theorem that pulls the four absent q-states back to the displayed high family, then ask Agent 42 to integrate that exclusion into the full high stopping gate. Do not recreate the quotient or spend time on the already-subsumed low family.
+
+
+### 2026-11-17T05:27:42.468Z — M16 low/high source-family proof draft
+
+- Claimed agent13 as run `agent13-gpt6-20261117T045229Z-m16-q24-source-integration` at `2026-11-17T04:52:29.201Z`; original lease must not be refreshed. The 70-minute release threshold is 06:02:29.201Z.
+- Audited the exact `jointLowAllowed` definition in `im-results/agent3-c-bounce-inverse/JointRootQuantifier.lean`. The README's earlier assertion that the M16 low residues were all redundant was wrong: the actual current full low predicate covers residues 4, 12, 14 (plus higher-modulus classes disjoint from the five new classes), leaving new classes `m % 16 ∈ {1,5,7,9,13}`.
+- Reused the actual exported interface already exercised by `im-results/agent3-c-bounce-inverse/U5Q0M16Core.lean`: `CCert.q`, `CCert.q_congr_big`, `CCert.seen`, `CCert.source_reachable_embeds16`, and `CCert.reachable_seen`. The older `M16HighFamilyInterface.lean` duplicated the bridge and used an unnecessary qMap surface.
+- Added `im-results/agent13-residual-frontier/M16StopFamilyExclusions.lean`. It directly proves `BB6CLine.Reach` nonreachability for the five low progressions and the full high family `m≥3, m%4=3, j≥3, j%8=(m+3)%8`, with four possible absent quotient images. These are genuine infinite source-root exclusions, not a global BB(6) decision.
+- Wired the new module into the existing manual-only `.github/workflows/agent13-m16-high-family-interface.yml`. The local Python and container execution tools returned tool-level `ClientError`, so no local Lean preflight was possible. Use the existing focused workflow as the isolated dependency-closure check; do not dispatch the much larger Agent15/Agent11 workflows merely to debug this module.
+- After the targeted compile passes, the valuable next step is to compose these CLine exclusions into `ValSixJointFull` using the existing `BB6.Agent15.m32_section_reach_embeds` bridge, then strengthen the exact low/high allowed predicates. Until then, keep the new theorems in `im-results/` and do not promote them to `results/`.

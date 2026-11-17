@@ -1,4 +1,4 @@
-name: Agent 13 M16 high-family source interface probe
+name: Agent 13 M16 low/high source-family exclusions
 on:
   workflow_dispatch:
 
@@ -24,7 +24,7 @@ jobs:
           echo "1cc951976c75457e35dd6ab62888cfced14e64fbf3c067d4de14f7af2fba540e  certificate.tar.xz" | sha256sum -c -
           tar -xJf certificate.tar.xz
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
-      - name: Kernel verify finite closure, arithmetic soundness, and original source bridge
+      - name: Kernel verify finite closure, arithmetic soundness, and low/high source-family exclusions
         run: |
           cd /tmp/a43mod16
           export LEAN_PATH=.
@@ -38,5 +38,5 @@ jobs:
           lean -o CFull16.olean CFull16.lean
           lean -o CExclusions16.olean CExclusions16.lean
           lean -o CSourceBridge16.olean CSourceBridge16.lean
-          cp "$GITHUB_WORKSPACE/im-results/agent13-residual-frontier/M16HighFamilyInterface.lean" M16HighFamilyInterface.lean
-          lean M16HighFamilyInterface.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent13-residual-frontier/M16StopFamilyExclusions.lean" M16StopFamilyExclusions.lean
+          lean -o M16StopFamilyExclusions.olean M16StopFamilyExclusions.lean

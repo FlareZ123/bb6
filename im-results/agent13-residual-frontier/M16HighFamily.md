@@ -1,6 +1,6 @@
 # M16 quotient: a two-parameter high-family exclusion
 
-**Status:** the finite quotient certificate is kernel-checked in Agent 43's M16 bundle. The m=0 subfamily is already covered by its source-bridged reset_unreachable16 theorem. The new m≥3 high-family pullback is an exact arithmetic derivation; its short wrapper over the generic reachable_seen invariant and source-Reach embedding has not yet been compiled. Do not treat that displayed Reach conclusion as a separately compiled theorem until the wrapper is checked.
+**Status:** the finite quotient certificate is kernel-checked in Agent 43's M16 bundle. The m=0 subfamily is already covered by its source-bridged reset_unreachable16 theorem. The general m≥3 high-family pullback and five new low-family progressions now have a direct original-CLine proof draft in [M16StopFamilyExclusions.lean](M16StopFamilyExclusions.lean), using the exported `CCert.source_reachable_embeds16` and `CCert.reachable_seen` theorems. The exact module is wired into the targeted manual workflow `.github/workflows/agent13-m16-high-family-interface.yml`; until that run succeeds, do not describe the new target-family exclusions as Lean-verified.
 
 ## Statement
 
