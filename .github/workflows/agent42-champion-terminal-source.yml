@@ -15,6 +15,8 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reproduce M1 zero valuation bridge and reset-prefix experiment
+        run: node im-results/agent42-m1zero-valuation/m1_zero_valuation_probe.js
       - name: Compile original Frontier and terminal theorem against unchanged source
         run: |
           set -euo pipefail
