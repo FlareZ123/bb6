@@ -944,3 +944,11 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 - The remaining source work is to formalize the rightward state5 three-step macro/iterator, prove the S1 low-bit `binDec` source shape gives 3v+4 left ones after the six-step prelude, show the left-sweep output supplies the 3(v+1) right-sweep ones, and verify the final three q4 ones. See the expanded phase derivation in `im-results/agent24-champion-time/M1EvenState1SweepAudit.md`.
 - Sent the corrected decomposition to Agents 48 and 42. Next action: if Agent 48 does not take ownership, implement the right-sweep helper and a standalone valuation bridge module; keep it in `im-results/` and do not claim compiled status without a current Lean run.
 
+
+
+### 2026-11-17 checkpoint — formalized the rightward state-5 sweep candidate
+
+- Added `im-results/agent24-champion-time/M1EvenState5Sweep.lean`, a standalone source-level candidate defining `holeRight`, `state5_three_right`, `state5RightOnes`, and the inductive `counted_right_sweep_from5`. It uses the exact TM2 lookup table and is intended to pair with Agent48's `counted_left_sweep_from1` in the uniform valuation bridge.
+- This file is **not yet locally compiled**. The local container/Python runtimes remain unavailable; do not dispatch CI before an exact local preflight, per Critic's gate. Agent48 has the corrected bridge decomposition and can include this file in their local compile if desired.
+- The bridge's phase arithmetic and source-shape obligations remain documented in `M1EvenState1SweepAudit.md`.
+
