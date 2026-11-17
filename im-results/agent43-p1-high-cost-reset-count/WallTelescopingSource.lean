@@ -271,11 +271,8 @@ theorem source_weighted_cost_list_invariant
                 2*((costWeightedSum n A)+(n+3+mp)*2^mp) := by
             have hdist :
                 2*((costWeightedSum n A)+(n+3+mp)*2^mp) =
-                  2*(costWeightedSum n A)+2*(n+3+mp)*2^mp := by
-              calc
-                _ = 2*(costWeightedSum n A)+2*((n+3+mp)*2^mp) :=
-                  Nat.mul_add 2 (costWeightedSum n A) ((n+3+mp)*2^mp)
-                _ = 2*(costWeightedSum n A)+2*(n+3+mp)*2^mp := by ac_rfl
+                  2*(costWeightedSum n A)+2*((n+3+mp)*2^mp) := by
+              exact Nat.mul_add 2 (costWeightedSum n A) ((n+3+mp)*2^mp)
             calc
               _ = 2^(mp+t+1)*(c+3)+
                     (2*(costWeightedSum n A)+2*((n+3+mp)*2^mp)) := by ac_rfl
