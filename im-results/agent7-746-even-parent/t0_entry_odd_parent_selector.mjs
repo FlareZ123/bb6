@@ -101,7 +101,7 @@ function analyze(K) {
 
   // The explicit D0 formula gives the stronger bound q <= a-1.
   // Enumerate only q of the forced parity.
-  const qMax = a - 1n;
+  const qMax = K % 6 === 2 ? a - 4n : a - 3n;
 
   const localIncomingParents = [];
   for (let q = epsilon; q <= qMax; q += 2n) {
