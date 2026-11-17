@@ -53,6 +53,40 @@ def valuationSetup3Tape (T : Int → Bool) (h : Int) : Int → Bool :=
 def valuationExit1Tape (T : Int → Bool) (h : Int) : Int → Bool :=
   fun y => if y = h then true else T y
 
+/-- The six-step state-3 prelude writes three ones immediately to
+the left and returns to state 1 at the original head. -/
+def valuationPreludeTape (T : Int → Bool) (h : Int) : Int → Bool :=
+  fun y => if y = h-1 then true
+    else if y = h-2 then true
+    else if y = h-3 then true
+    else T y
+
+theorem valuation_state3_prelude6 (T : Int → Bool) (h : Int)
+    (h0 : T h = false)
+    (h1 : T (h-1) = true)
+    (h2 : T (h-2) = false)
+    (h3 : T (h-3) = false) :
+    run tm2 6 ⟨3,h,T⟩ =
+      some ⟨1,h,valuationPreludeTape T h⟩ := by
+  have hne1 : h-1 ≠ h := by omega
+  have hne2 : h-2 ≠ h := by omega
+  have hne3 : h-3 ≠ h := by omega
+  have hne4 : h-2 ≠ h-1 := by omega
+  have hne5 : h-3 ≠ h-1 := by omega
+  have hne6 : h-3 ≠ h-2 := by omega
+  simp [run, rawStep, readSlot, applyMove, tm2, h0, h1, h2, h3,
+    hne1, hne2, hne3, hne4, hne5, hne6, valuationPreludeTape]
+  constructor
+  · omega
+  · funext y
+    by_cases hy1 : y = h-1
+    · simp [hy1, valuationPreludeTape]
+    · by_cases hy2 : y = h-2
+      · simp [hy1, hy2, valuationPreludeTape]
+      · by_cases hy3 : y = h-3
+        · simp [hy1, hy2, hy3, valuationPreludeTape]
+        · simp [hy1, hy2, hy3, valuationPreludeTape]
+
 theorem valuation_state1_exit4 (T : Int → Bool) (h : Int)
     (h0 : T h = false)
     (h1 : T (h-1) = true)
