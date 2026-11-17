@@ -815,7 +815,7 @@ private theorem m1EvenValuationBridgeLeftFacing
                 _ = Tleft (x-((k+5):Int)) := hsetup
                 _ = T (x-((k+5):Int)) := hleftPres
                 _ = sideBit ([false,true,true,true,true] ++ d1pow v ++ d0 ++ tail) i :=
-                  hinput.symm
+                  hinput
                 _ = sideBit tail k := hInTail
                 _ = sideBit ([false,true] ++ d0 ++ d0pow v ++ d1 ++ tail) i :=
                   hOutTail.symm
@@ -887,7 +887,7 @@ theorem m1EvenValuation_q4_leftFacing
             dsimp [hN,N0]
             omega
           simp [P,valuationPreludeTape,hne1,hne2,hne3]
-        have hblock := state1SweptLeft_block N0 T h j hj
+        have hblock := sweptLeft_block N0 T h j hj
         have hcoord : h-(i:Int)=hN+1+(j:Int) := by
           dsimp [hN,N0,j]
           omega
@@ -996,15 +996,8 @@ private theorem m1EvenValuationCutTapeHead
       dsimp [hN,N0]
       omega
     have hexit :
-        m1EvenValuationBridgeTape v P hN h = true := by
-      change valuationExit1Tape
-        (state5SweptRight (v+1)
-          (valuationSetupTape (state1SweptLeft (3*(v+1)) P hN)
-            (hN-(3*(v+1):Int)))
-          (hN-(3*(v+1):Int)+1))
-        (hN+1) h = true
-      rw [hcoord]
-      simp [valuationExit1Tape]
+        m1EvenValuationBridgeTape v P hN (hN+1) = true := by
+      simp [m1EvenValuationBridgeTape,valuationExit1Tape]
     simpa [m1EvenValuationCutTape,T,T1,hN,N0,P] using hexit
   · have hx : hN+2≤h := by
       dsimp [hN,N0]
@@ -1015,7 +1008,7 @@ private theorem m1EvenValuationCutTapeHead
       have hne2 : h ≠ hN-2 := by dsimp [hN,N0]; omega
       have hne3 : h ≠ hN-3 := by dsimp [hN,N0]; omega
       simp [P,valuationPreludeTape,hne1,hne2,hne3]
-    have hblock := state1SweptLeft_block N0 T h (N0-1) (by omega)
+    have hblock := sweptLeft_block N0 T h (N0-1) (by omega)
     have hcoord : h-(N0:Int)+1+((N0-1):Int)=h := by omega
     have hT1 : T1 h = true := by
       simpa [T1,hcoord] using hblock
