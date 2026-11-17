@@ -25,8 +25,8 @@ The manual workflow
 [agent2-d-root-stage3a-split.yml](../../.github/workflows/agent2-d-root-stage3a-split.yml)
 uses two explicit snapshots: the mathematical base remains pinned to
 20509b53af45edce5b8a145e8714245d3d225cdd, matching the predecessor
-artifact; extension_ref pins the commit containing only the split proof
-modules. The workflow records both commits in its artifact markers and checks
+artifact; extension_ref pins the repository commit from which the workflow copies
+only the three split proof modules. The workflow records both commits in its artifact markers and checks
 that the extension commit remains identical across all three runs.
 
 Run order:

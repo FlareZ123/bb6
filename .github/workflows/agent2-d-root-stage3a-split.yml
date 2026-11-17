@@ -81,8 +81,8 @@ jobs:
       - name: Restore compiled Lean objects and audit
         working-directory: source
         run: |
-          cp prior-artifact/lean-audit.log lean-audit.log
-          tar -xzf prior-artifact/lean-stage.tar.gz -C .
+          cp ../prior-artifact/lean-audit.log lean-audit.log
+          tar -xzf ../prior-artifact/lean-stage.tar.gz -C .
 
       - name: Compile selected eighteenth checkpoint
         working-directory: source
