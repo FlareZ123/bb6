@@ -24,7 +24,7 @@ jobs:
             sleep 10
           done
           exit 1
-      - name: Compile exact original-source first-reset dependencies and deficit theorems
+      - name: Compile exact source closure through the t=1 fatal-parent theorem
         run: |
           set -eu
           a="im-results/agent7-cascade-odd-fibers"
@@ -45,5 +45,37 @@ jobs:
           for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete; do
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
+          lean -o "$b/ResetChain.olean" "$b/ResetChain.lean"
           lean -o "$r/LevelDeficitDynamics.olean" "$r/LevelDeficitDynamics.lean"
-          echo "PASS: level-deficit identities and odd-offset factorization compile against the complete checked-in first-reset grammar."
+          lean -o "$b/T1QParentFatal.olean" "$b/T1QParentFatal.lean"
+          cat > "$r/LevelDeficitAxiomAudit.lean" <<'EOF'
+          import LevelDeficitDynamics
+          import ResetChain
+          import T1QParentFatal
+
+          #print axioms CascadeLevelDeficit.first_fail_unique
+          #print axioms CascadeLevelDeficit.even_deficit_halves
+          #print axioms CascadeLevelDeficit.even_level_criterion
+          #print axioms CascadeLevelDeficit.even_next_level
+          #print axioms CascadeLevelDeficit.odd_reset_guards
+          #print axioms CascadeLevelDeficit.odd_reset_level_increases
+          #print axioms CascadeLevelDeficit.odd_offset_bounds
+          #print axioms CascadeLevelDeficit.odd_offset_factorization
+          #print axioms CascadeLevelDeficit.odd_output_equation_deficit
+          #print axioms CascadeResetInverse.root_reset_chain_iff
+          #print axioms CascadeResetInverse.cpath_has_reset_chain
+          #print axioms CascadeResetInverse.reset_chain_to_cpath
+          #print axioms Agent10T1Fatal.t1_child_deficit
+          #print axioms Agent10T1Fatal.t1_q_parent_depth_gap
+          #print axioms Agent10T1Fatal.t1_q_parent_depth_lt_level
+          #print axioms Agent10T1Fatal.even_reset_chain_to_fatal
+          #print axioms Agent10T1Fatal.root_t1_q_parent_fatal
+          #print axioms Agent10T1Fatal.adjacent_fatal_source_exponent_le_one
+          EOF
+          lean "$r/LevelDeficitAxiomAudit.lean" 2>&1 | tee "$RUNNER_TEMP/level-deficit-axioms.log"
+          if grep -q 'sorryAx' "$RUNNER_TEMP/level-deficit-axioms.log"; then
+            echo "FAIL: sorryAx appears in the source theorem dependency profile."
+            exit 1
+          fi
+          rm "$r/LevelDeficitAxiomAudit.lean"
+          echo "PASS: exact checked-in source closure, t=1 fatal-parent theorem, and sorryAx-free axiom audit."
