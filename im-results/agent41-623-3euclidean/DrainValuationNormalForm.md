@@ -134,9 +134,26 @@ under the same source ternary-budget condition. This is stronger than the valuat
 
 The closed form was compared with the recursive valuation process for every \(1\le b\le100{,}000\), with zero discrepancies. This is computational corroboration; the proof is the unrolling identity (3).
 
-## 3. Canonical-ray residuals become valuation statistics
+## 3. Canonical-ray residuals become ordinary digit statistics
 
-For the four canonical ray families, write \(m=\min(a,d)\). The base drain inputs are:
+For the explicit integer \(N=N(b)\) in (3), let
+\[
+e=\#\{\text{ternary digits of }N\text{ equal to }2\},
+\qquad
+\Delta=\#\{\text{digits equal to }1\}-\#\{\text{digits equal to }2\}.
+\]
+If \(r\) is the ternary Hamming weight, then \(\Delta=r-2e\), while \(D=L-2e\). The drain formula (4) therefore simplifies to
+\[
+\boxed{
+\operatorname{drainB}(a,b,d)
+=
+\bigl(a-L+2e,\ d+3b+2L+2\Delta\bigr).
+}
+\tag{5}
+\]
+Only three elementary statistics of \(N\) are needed: its depth \(L\), number of 2-digits \(e\), and signed digit count \(\Delta\).
+
+For the four canonical ray families, write \(m=\min(a,d)\). Their base drain inputs are:
 
 | Input ray | Base drain \((A,b,d_0)\) | First-coordinate shift |
 |---|---|---:|
@@ -150,22 +167,22 @@ The right-even branch's initial evaluator followed by the drain is exactly the f
 \operatorname{drainB}(2k+3,m+1,0).
 \]
 
-Let \(D=D(b)\), \(r=R(b)\), and let \((B,E)\) be the base drain output. In the notation of **GapScaleResidualSource.lean**, the residuals
+Let \((B,E)\) be the base drain output. In the notation of **GapScaleResidualSource.lean**, the residuals
 \[
 \beta=B-c-v_0,\qquad \delta=E-3m
 \]
-are therefore:
+are now explicit digit statistics:
 
 | Input ray | \(\beta\) | \(\delta\) |
 |---|---:|---:|
-| left odd | \(-D-5\) | \(2D+2r+14\) |
-| left even | \(-D-2\) | \(2D+2r+8\) |
-| right odd | \(4-D\) | \(2D+2r\) |
-| right even | \(1-D\) | \(2D+2r+3\) |
+| left odd | \(-L+2e-5\) | \(2L+2\Delta+14\) |
+| left even | \(-L+2e-2\) | \(2L+2\Delta+8\) |
+| right odd | \(4-L+2e\) | \(2L+2\Delta\) |
+| right even | \(1-L+2e\) | \(2L+2\Delta+3\) |
 
-This removes the opaque output-counter residuals: the exact projective correction is determined by only two statistics of a 3-adic descent.
+Thus the canonical-ray correction is computed directly from the ordinary ternary digits of the single integer \(N(m+c)\), with the appropriate branch offset \(c\).
 
-## 4. Exact gap/scale cocycle
+## 4. Exact gap/scale cocycle in digit coordinates
 
 Let \(g=a-4d\) in a left-oriented state and \(g=d-4a\) in a right-oriented state, and \(m=\min(a,d)\). The source gap/scale update is:
 
@@ -178,20 +195,20 @@ Let \(g=a-4d\) in a left-oriented state and \(g=d-4a\) in a right-oriented state
   g'=-4g-9m+\delta-4\beta,\qquad m'=3m+g+\beta.
   \]
 
-Substitution gives the following exact eight cases. “Output left/right” refers to the source comparison of the two output counters, not the sign of \(g'\).
+Substitution gives the exact eight cases below. “Output left/right” refers to the source comparison of the two output counters, not the sign of \(g'\).
 
 | Input ray | Output side | \(g'\) | \(m'\) |
 |---|---|---|---|
-| left odd | left | \(g-9m-9D-8r-61\) | \(3m+2D+2r+14\) |
-| left odd | right | \(-4g-9m+6D+2r+34\) | \(3m+g-D-5\) |
-| left even | left | \(g-9m-9D-8r-34\) | \(3m+2D+2r+8\) |
-| left even | right | \(-4g-9m+6D+2r+16\) | \(3m+g-D-2\) |
-| right odd | left | \(g-9m-9D-8r+4\) | \(3m+2D+2r\) |
-| right odd | right | \(-4g-9m+6D+2r-16\) | \(3m+g+4-D\) |
-| right even | left | \(g-9m-9D-8r-11\) | \(3m+2D+2r+3\) |
-| right even | right | \(-4g-9m+6D+2r-1\) | \(3m+g+1-D\) |
+| left odd | left | \(g-9m-9L+2e-8\Delta-61\) | \(3m+2L+2\Delta+14\) |
+| left odd | right | \(-4g-9m+6L-8e+2\Delta+34\) | \(3m+g-L+2e-5\) |
+| left even | left | \(g-9m-9L+2e-8\Delta-34\) | \(3m+2L+2\Delta+8\) |
+| left even | right | \(-4g-9m+6L-8e+2\Delta+16\) | \(3m+g-L+2e-2\) |
+| right odd | left | \(g-9m-9L+2e-8\Delta+4\) | \(3m+2L+2\Delta\) |
+| right odd | right | \(-4g-9m+6L-8e+2\Delta-16\) | \(3m+g-L+2e+4\) |
+| right even | left | \(g-9m-9L+2e-8\Delta-11\) | \(3m+2L+2\Delta+3\) |
+| right even | right | \(-4g-9m+6L-8e+2\Delta-1\) | \(3m+g-L+2e+1\) |
 
-The table is an algebraic consequence of the exact drain normal form and the source gap/scale identities. It was also checked against 148 canonical root transitions in a finite BigInt reproduction; that scan is a sanity check, not the proof.
+This is an exact affine cocycle driven by the ternary depth, count of 2-digits, and signed digit count of \(N\). The eight cases were checked against 148 canonical root transitions in a finite BigInt reproduction; that scan is a sanity check, not the proof.
 
 ## 5. Why this matters for the blank-root problem
 
