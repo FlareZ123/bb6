@@ -136,6 +136,40 @@ for (let q = 1; q <= 32; q++) {
     }
   }
 }
-const result = { tested, failures };
+
+/*
+ * Independent finite-frame check of the parameterized bridge itself.
+ * The third cell of the final d1 block lies outside [-15-3t,3] and is
+ * deliberately not part of this finite frame.
+ */
+const bridgeFailures = [];
+let bridgeTested = 0;
+for (let t = 0; t <= 100; t++) {
+  bridgeTested++;
+  const tape = new Map();
+  [-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-1,2,3]
+    .forEach(x => tape.set(x, true));
+  for (let i = 0; i < 3*t; i++) tape.set(-14-i, true);
+  const c = { tape, state: 3, head: 0 };
+  const lo = -15 - 3*t;
+  let minHead = c.head, maxHead = c.head, ok = true;
+  for (let k = 0; k < 63 + 12*t; k++) {
+    if (c.head < lo || c.head > 3 || !step(c)) { ok = false; break; }
+    minHead = Math.min(minHead, c.head);
+    maxHead = Math.max(maxHead, c.head);
+  }
+  const expected = new Set([2,1,-1,3]);
+  for (let i = 0; i < 4+t; i++) expected.add(-4-3*i);
+  expected.add(-14-3*t);
+  expected.add(-15-3*t);
+  const actualInside = [...c.tape.keys()].filter(x => lo <= x && x <= 3).sort((a,b)=>a-b);
+  const expectedInside = [...expected].filter(x => lo <= x && x <= 3).sort((a,b)=>a-b);
+  ok = ok && c.state === 4 && c.head === 3
+    && JSON.stringify(actualInside) === JSON.stringify(expectedInside)
+    && minHead >= lo && maxHead <= 3;
+  if (!ok) bridgeFailures.push({t,state:c.state,head:c.head,minHead,maxHead,actualInside,expectedInside});
+}
+
+const result = { tested, failures, bridgeTested, bridgeFailures };
 console.log(JSON.stringify(result, null, 2));
 if (failures.length !== 0) process.exitCode = 1;
