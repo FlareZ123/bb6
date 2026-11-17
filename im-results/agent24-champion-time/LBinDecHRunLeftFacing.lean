@@ -132,13 +132,13 @@ theorem lbinDecHRunTape_leftFacing
     (hthird : T (h-(3*n:Int)-2) = true)
     (hr : T (h+1) = false)
     (hleft : ∀ i, T (h-(i:Int)) =
-      sideBit (d1pow n ++ d0 ++ tail) i) :
+      sideBit (d1pow n ++ (d0 ++ tail)) i) :
     ∀ i, lbinDecHRunTape n T h (h-(i:Int)) =
-      sideBit (d0pow n ++ d1 ++ tail) i := by
+      sideBit (d0pow n ++ (d1 ++ tail)) i := by
   intro i
   by_cases hi0 : i < 3*n
   · have hb := lbinDecHRunTape_d0_region n T h hon i hi0
-    have hside : sideBit (d0pow n ++ d1 ++ tail) i =
+    have hside : sideBit (d0pow n ++ (d1 ++ tail)) i =
         decide (i%3=2) := by
       rw [sideBit_append_exact]
       rw [d0pow_length]
@@ -163,7 +163,7 @@ theorem lbinDecHRunTape_leftFacing
       rw [lbinDecHRunTape_preserves_left n T h (h-(i:Int)) hx]
       rw [hleft i]
       have hinput :
-          sideBit (d1pow n ++ d0 ++ tail) i =
+          sideBit (d1pow n ++ (d0 ++ tail)) i =
             sideBit tail (i-(3*n+3)) := by
         rw [sideBit_append_exact]
         rw [d1pow_length]
@@ -176,7 +176,7 @@ theorem lbinDecHRunTape_leftFacing
         simp [hnot2, d0]
         congr 1 <;> omega
       have houtput :
-          sideBit (d0pow n ++ d1 ++ tail) i =
+          sideBit (d0pow n ++ (d1 ++ tail)) i =
             sideBit tail (i-(3*n+3)) := by
         rw [sideBit_append_exact]
         rw [d0pow_length]
