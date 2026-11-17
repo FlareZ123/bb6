@@ -190,6 +190,51 @@ theorem lbinDecHRunTape_leftFacing
         congr 1 <;> omega
       exact hinput.trans houtput.symm
 
+
+/-- The B-sweep's rightmost cell is one; for n=0 this is the bridge's
+rightmost write, and for n>0 it is the final sweptRightB block. -/
+theorem lbinDecHRunTape_rightPlus1
+    (n : Nat) (T : Int → Bool) (h : Int)
+    (hon : leftOnes T h (3*n)) :
+    lbinDecHRunTape n T h (h+1) = true := by
+  let h' : Int := h-(3*n:Int)
+  let U : Int → Bool := sweptLeft (3*n) T h
+  let V : Int → Bool := afterLIncBridge U h'
+  have hright0 : rightOnes U (h'+2) n := by
+    have hs := sweptLeft_rightOnes n T h hon
+    simpa [U,h'] using hs
+  have hrightV : rightOnes V (h'+2) n := by
+    intro j hj
+    obtain ⟨hA,hB,hC⟩ := hright0 j hj
+    have hnA0 : h'+2+3*(j:Int) ≠ h'-1 := by omega
+    have hnA1 : h'+2+3*(j:Int) ≠ h' := by omega
+    have hnA2 : h'+2+3*(j:Int) ≠ h'+1 := by omega
+    have hnB0 : h'+2+3*(j:Int)+1 ≠ h'-1 := by omega
+    have hnB1 : h'+2+3*(j:Int)+1 ≠ h' := by omega
+    have hnB2 : h'+2+3*(j:Int)+1 ≠ h'+1 := by omega
+    have hnC0 : h'+2+3*(j:Int)+2 ≠ h'-1 := by omega
+    have hnC1 : h'+2+3*(j:Int)+2 ≠ h' := by omega
+    have hnC2 : h'+2+3*(j:Int)+2 ≠ h'+1 := by omega
+    exact ⟨by simpa [V,afterLIncBridge,hnA0,hnA1,hnA2] using hA,
+      by simpa [V,afterLIncBridge,hnB0,hnB1,hnB2] using hB,
+      by simpa [V,afterLIncBridge,hnC0,hnC1,hnC2] using hC⟩
+  by_cases hn0 : n=0
+  · subst n
+    have hp := sweptRightB_preserves_left 0 V (h'+2) (h'+1) (by omega)
+    have hv : V (h'+1)=true := by simp [V,afterLIncBridge]
+    have hcoord : h+1=h'+1 := by dsimp [h']; omega
+    rw [hcoord]
+    simpa [lbinDecHRunTape,h',U,V] using hp.trans hv
+  · have hj : n-1<n := by omega
+    have hb := sweptRightB_block n V (h'+2) hrightV (n-1) hj
+    have hcoord :
+        h+1=h'+2+3*((n-1:Nat):Int)+2 := by
+      dsimp [h']
+      omega
+    rw [hcoord]
+    simpa [lbinDecHRunTape,h',U,V] using hb.2.2
+
 #print axioms lbinDecHRunTape_leftFacing
+#print axioms lbinDecHRunTape_rightPlus1
 
 end BB6Coverage.Agent24ChampionTime
