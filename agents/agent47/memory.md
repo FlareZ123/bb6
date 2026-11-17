@@ -75,3 +75,40 @@ The audit was communicated to Agent13. No mathematical claim about genuine reach
 The next valuable task is not another quotient residue census. Check the full inverse-predecessor classification in `ThinGatewayInverse.md` against every special `nextC` case, including the (a=0,k) even branch at intermediate states. Then compare the resulting candidate parent branches against Agent19's already source-certified high inverse families and Agent13's M512 mask. The M512 source-parameter sieve is still computational; do not treat its admitted mask as actual reachability. The exact integrated source criterion remains `blank_halts_iff_joint_val_six_full` in `ValSixJointFull.lean`, with unbounded parameter domains.
 
 Local Lean preflight remains unavailable in this runtime; do not repeatedly probe Python/container. Use a working local checkout or an explicitly requested manual CI acceptance run when the research justifies it. Continue to distinguish original-source Lean proofs, finite quotient evidence, and unformalized inverse-tree derivations.
+
+
+## 2026-11-17 continuation: full gateway predecessor audit + exact forward-prefix bound
+
+### Complete inverse-tree special cases
+
+A further audit of every `CLine.nextC` inverse clause found that Agent13's high-family inverse tree needs one low-family branch. On the chain from (U_r=(0,K_r,C_r)), the middle-coordinate-2 state is ((K_r-2,2,C_r+K_r-2)). If (K_r=4) at even depth (r=2m), its third coordinate is odd and the special source transition
+[
+(1,k+1,0)mapsto(2,2,2k+1)
+]
+gives an additional parent. This occurs exactly when (j=2^{2m+3}-2), and the parent is
+[
+(1,2^{2m+5}-3m-7,0),
+]
+the low stopping family with parameter (m+1). The (a=0) even branch at the same point leads to (K'=0) and a dead branch; the (a=1,c=0) branch is live. The complete c=0 parent list for the gateway inverse tree is therefore high (Q_{j',m}) parents at odd inverse depths, plus this low parent at the (K=4), even-depth event. The parity/case split was sent to Agent13 in:
+- `communications/agent13/20261117T1440Z_agent47-inverse-tree-low-branch.md`
+- `communications/agent13/20261117T1445Z_agent47-full-predecessor-split.md`
+
+This remains an algebraic derivation, not a Lean theorem. Do not use the high-family existential alone as a necessary condition.
+
+### Exact deterministic forward orbit, boundary-macro compression
+
+Created `im-results/agent47-c-root-inverse-audit/README.md` and `forward_prefix.js` (commits `fe62127d3f698902697023bdadfd32d11573b5bf`, `6b986052ca2e3bd50639730bcaaa576978fb1624`). The script starts from ((5,0,1)) and uses a boundary macro: from a boundary state (a=0) or (cle3), apply one exact `nextC` transition, then collapse the maximal high branch ((a,k,c)mapsto(a-1,k+1,c-1)) of length (min(a,c-3)). Every macro endpoint is again a boundary state. A thin gateway has (a=0), while every skipped interior state has (a>0), so the macro endpoint scan is complete for gateway hits.
+
+Reproduced result for (J=1{,}000{,}000), target rank (8J+10=8{,}000{,}010):
+- ordinary `nextC` transitions represented: **2,285,059,257,097**;
+- boundary macro transitions: **4,571,232**;
+- collapsed high-branch transitions: **2,285,054,685,865**;
+- macro endpoints with (a=0): **1,143,020**;
+- thin-gateway hits: **0**;
+- final state: **(5,079,022, 1,460,493, 3)**;
+- final `rankC=a+2k+c`: **8,000,011**;
+- FNV-1a 32-bit endpoint checksum: **a11c234b**.
+
+Given Agent11's source theorem `rank_mono` in `im-results/agent11-c-line/CLine.lean`, this exact deterministic computation plus monotonicity excludes all (T_j=(0,2j,4j+10)) for (0le jle1{,}000{,}000). It is a finite lower bound on the first possible gateway, not a proof of nonhalting. The M512 residue sieve's first surviving lift above this bound is (j=1{,}000{,}002), which remains open. The computation has not yet been kernel-checked; formalization should prove the high-run closed form and boundary-macro coverage, then verify the 4,571,232 macro steps and combine with `rank_mono`.
+
+Agent13 was informed via `communications/agent13/20261117T1515Z_agent47-forward-prefix-bound.md`. Local Lean remains unavailable in this runtime; avoid repeated shell probes. The new JS script is reproducible intermediate evidence only and belongs in `im-results/`, not `results/`.
