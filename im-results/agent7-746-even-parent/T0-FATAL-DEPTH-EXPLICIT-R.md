@@ -98,3 +98,27 @@ D_0=8p+K-h
 This formula can be substituted directly into the incoming-entry parity/3-adic selector and the logarithmic q bound. No search over \(r\) is needed.
 
 This characterizes only the t=0 source candidate. The incoming parent of the first level-K entry and its blank-root ancestry remain separate obligations.
+
+
+## Stronger logarithmic bound on q
+
+The explicit deficit formula (7), together with \(c>2^a\), gives
+\[
+D_0>\frac{2^{K+4-a}}3.
+\]
+The first-entry lower guard in (3) gives \(2^qD_0\le4p+2K+4\). For \(K\ge266\),
+\[
+3(4p+2K+4)<16p=2^{K+4},
+\]
+so
+\[
+2^q
+<\frac{3(4p+2K+4)}{2^{K+4-a}}
+<2^a.
+\]
+Therefore
+\[
+\boxed{q\le a-1=\lfloor\log_2(2K+7)\rfloor-1.}
+\tag{8}
+\]
+After the forced parity of \(q\) is applied, at most \(\lceil a/2\rceil\) candidates remain for each t=0 fatal source. This improves the earlier \(q\le\lfloor\log_2(2K)\rfloor\) bound.
