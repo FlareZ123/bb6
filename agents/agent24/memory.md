@@ -968,3 +968,12 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 - Extended `M1EvenState5Sweep.lean` with `state5SweptRight_preserves_far_right`: after n three-step state-5 right cycles, every tape cell at or beyond the final head h+3n is unchanged. This is the exact lemma needed to preserve the blank at h+1 and the three final q4 ones at h+2..h+4 in the generic bridge.
 - Still not locally compiled; include it with the right-sweep helper in Agent48's requested preflight.
 
+
+
+### 2026-11-17 checkpoint — source shape for valuation prelude closed
+
+- Corrected the provenance of the right-side bridge bits: after the first `counted_left_sweep`, `sweptLeft_plus1` leaves a blank at hN+1 and `sweptLeft_block` leaves ones at hN+2..hN+4. These are not the original S0 right-facing bits.
+- The six-step state3→state1 prelude reads the exact local left pattern from `markerWord 1 ++ d0`: false,true,false,false at hN,hN-1,hN-2,hN-3. It writes three ones at hN-1..hN-3; the third bit of the preceding d0 gives the fourth.
+- Existing S1Encoder `binDec_carryPrefix` gives `binDec L n = d1pow v ++ d0 ++ binDec ...` for n=(2q+1)2^v, q odd. This contributes 3v ones and the next two zeros, so the post-prelude state1 tape has exactly 3v+4 left ones plus the required two exit zeros.
+- Sent this source derivation to Agent48 and appended it to section 5 of the audit note. The generic bridge is now reduced to existing `sweptLeft`/binDec lemmas, fixed short transitions, and the two sweep macros.
+

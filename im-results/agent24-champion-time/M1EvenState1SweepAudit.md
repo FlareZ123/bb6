@@ -94,7 +94,7 @@ The variable part can be isolated from the 6-step prelude. Put `N=3*(v+1)`. For 
 - `T h = false`;
 - `state1LeftOnes T h (N+1)` (equivalently `3*v+4` consecutive ones immediately left of h);
 - `T (h-N-2) = false` and `T (h-N-3) = false` (the first two zeros of the `d0` block beyond those ones);
-- `T (h+1) = false` and `T (h+2)=T(h+3)=T(h+4)=true` (the fixed right-facing S0 prefix).
+- `T (h+1) = false` and `T (h+2)=T(h+3)=T(h+4)=true` (the four-cell [false,true,true,true] boundary left by the initial counted sweep).
 
 Then the `12*v+23)-step run from `⟨1,h,T⟩` decomposes as follows:
 
@@ -112,3 +112,35 @@ The left sweep's output tape `state1SweptLeft N T h` has a blank at `h-N` and wr
 The output tape is the composition of these three simple updates: `state1SweptLeft N T h`, the fixed four-step exit writes at `h-N,h-N-1,h-N-3`, the fixed three-step setup writes at `H,H+1,H+2`, then `state5SweptRight (v+1)` from `h-N+1`, then the one-step state-5 exit writes at `h+1`. The final q4 scan leaves the tape unchanged. This contract is independent of the quotient q except for the two-zero boundary supplied by the first `d0` block after `d1pow v`.
 
 This is the clean theorem interface for a Lean implementation. The new `M1EvenState5Sweep.lean` supplies the rightward iterator; Agent48's existing `M1EvenState1Sweep.lean` supplies the leftward iterator. The remaining work is only the finite transition lemmas and the S1 source-shape proof for the six-step prelude.
+
+
+## 5. The six-step prelude hypotheses follow directly from S1Encoder
+
+Let `T0 = sweptLeft (3*a+1) (s1Config L n 1 a 0 b h).tape h` and `hN=h-(3a+1)`, the endpoint of the existing `counted_left_sweep`. The head-facing source suffix to the left of hN is
+```
+markerWord 1 ++ d0 ++ binDec L n ++ lh
+```
+(as in `m1EvenSourceLeftAt` in `M1EvenQ4Prefix.lean`). Since `markerWord 1=[true,false,true]` and `d0=[false,false,true]`, the four cells read by the fixed six-step prelude are
+```
+T0(hN)=false, T0(hN-1)=true, T0(hN-2)=false, T0(hN-3)=false.
+```
+The exact six-step trace is
+```
+state 3 @ hN  --false--> state 2 @ hN-1
+state 2 @ hN-1 --true-->  state 3 @ hN-2
+state 3 @ hN-2 --false--> state 2 @ hN-3
+state 2 @ hN-3 --false--> state 4 @ hN-2
+state 4 @ hN-2 --false--> state 0 @ hN-1
+state 0 @ hN-1 --false--> state 1 @ hN
+```
+It leaves the head blank and writes ones at hN-1,hN-2,hN-3. The third bit of the preceding `d0` block supplies one more one at hN-4.
+
+For exact `v=v₂(n)`, write `n=(2q+1)2^v` with q odd. S1Encoder's existing `binDec_carryPrefix` gives
+```
+binDec L n = d1pow v ++ d0 ++ binDec (L-v-1) q.
+```
+The `d1pow v` block contributes 3v ones immediately after hN-4. Therefore after the six-step prelude the left side has exactly the required `3v+4` consecutive ones; the next two cells are the first two false bits of the following `d0) block, giving the two exit zeros at hN-(3v+5) and hN-(3v+6).
+
+The right-side hypotheses are not from the original S0 right-facing suffix. They are the local boundary left by the *first* `counted_left_sweep`: `sweptLeft_plus1` gives a blank at hN+1, and `sweptLeft_block` gives ones at hN+2,hN+3,hN+4. The six-step prelude does not touch these cells. This is exactly the right-side input needed by the generic bridge contract in section 4.
+
+Thus all source-shape hypotheses for the generic bridge reduce to existing `sweptLeft` lemmas plus `binDec_carryPrefix`; no simulation-specific tape assumption is needed. The remaining new proof code is the fixed six-step run, the fixed four-/three-/one-step transitions, and the composition with the two counted sweeps.
