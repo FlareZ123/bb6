@@ -100,7 +100,7 @@ where
 E(Y)=\sum_{\ell=1}^{r}3^{2r-2\ell}Y^\ell,\qquad
 O(Y)=\sum_{\ell=0}^{r-1}3^{2r-2\ell-1}Y^\ell,\qquad C=3-2u.
 \]
-If \(D_u\mid g(A)\) and a quadratic relation \(f(A)\equiv0\pmod{D_u}\) holds, then squaring \(A\,O(A^2)\equiv E(A^2)+C\pmod{D_u}\) eliminates \(A\). In each side of the band this produces a positive integer \(H\) divisible by \(D_u\), but strictly smaller than \(D_u\).
+If \(D_u\mid g(A)\), then \(A\,O(A^2)\equiv E(A^2)+C\pmod{D_u}\). Squaring gives \(A^2O(A^2)^2\equiv(E(A^2)+C)^2\pmod{D_u}\). Substituting the relevant quadratic relation for \(A^2\) eliminates \(A\). On the upper side, clearing the denominator \(2^s\) yields \(D_u\mid2^sH^+\), and oddness of \(D_u\) gives \(D_u\mid H^+\). On the lower side the relation is integral and gives \(D_u\mid H^-\) directly. In both cases \(H\) is positive and strictly smaller than \(D_u\).
 
 ### Upper side: \(u=2a-1+s\)
 
