@@ -397,7 +397,8 @@ theorem m2Even_residue0_q4_reset_prefix_source
             simpa [Tpost] using hp
           _ = true := by rw [xcoord]; exact hrightPlus1
           _ = sideBit W 15 := by
-            simp [W,M,tail,markerWord,d0pow,d0,sideBit]
+            rw [hWsplit,sideBit_append]
+            simp [P,hPlen,markerWord,d0pow,d0,sideBit]
       · by_cases hi16 : 16≤i
         · have xcoord :
             hN+2-(i:Int)=hH-((i-16):Int) := by
@@ -436,8 +437,9 @@ theorem m2Even_residue0_q4_reset_prefix_source
             have hside :
                 sideBit W i =
                   decide (x∈m2ZeroPostludeEnd.marked) := by
+              rw [hWsplit,sideBit_append]
               interval_cases i <;>
-                simp [W,M,tail,markerWord,d0pow,d0,sideBit,x,
+                simp [P,hPlen,markerWord,d0pow,d0,sideBit,x,
                   m2ZeroPostludeEnd]
             change (frameAt Thrun (hN-12)
               m2ZeroPostludeInside m2ZeroPostludeEnd).tape
