@@ -113,7 +113,7 @@ private theorem lbinDecHRunTape_d0_region
         simpa [lbinDecHRunTape,h',U,V] using hp.trans hv
       simpa [hmod2] using hval
     · have hjm1 : j-1<n := by omega
-      have hcoord : h-(i:Int)=h'+2+3*((j-1:Int))+2 := by
+      have hcoord : h-(i:Int)=h'+2+3*((j-1:Nat):Int)+2 := by
         dsimp [h',j,q]
         omega
       have hb := sweptRightB_block n V (h'+2) hrightV (j-1) hjm1
