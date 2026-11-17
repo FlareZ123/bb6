@@ -37,6 +37,7 @@ theorem evalA_3adic_run
         have hkmod : k % 3 = 2 := by omega
         have hkdiv : k / 3 = q := by omega
         simp [evalA, hkmod, hkdiv, ternaryOnes]
+        rw [Nat.sub_add_cancel (by omega : 1 ≤ a)]
   | succ v ih =>
       have hpow : 3^(v+1) = 3*3^v := by
         rw [Nat.pow_succ]
@@ -66,7 +67,7 @@ theorem evalA_3adic_run
       rw [hkdiv]
       let k0 := ternaryOnes v + 3^v*(3*q+2*eps)
       have hIH :=
-        ih (a-1) k0 (m + 2*k0 + 3) rfl habudget
+        ih (a-1) k0 (m + 2*k0 + 3) (by trivial) habudget
       rw [hIH]
       simp only [Option.some.injEq, Prod.mk.injEq]
       constructor
@@ -75,8 +76,9 @@ theorem evalA_3adic_run
         · trivial
         · have hpow2 : 2*ternaryOnes v+1 = 3^v :=
             twice_ones_add_one_eq_pow v
-          have hshift : 2*k0+3 = (6*q+1+4*eps)*3^v+2 := by
-            dsimp [k0]
+          have hshift :
+              2*(ternaryOnes v + 3^v*(3*q+2*eps))+3 =
+                (6*q+1+4*eps)*3^v+2 := by
             have hcoeff : 1+2*(3*q+2*eps)=6*q+1+4*eps := by omega
             have hmul : 3^v + 2*(3^v*(3*q+2*eps)) = (6*q+1+4*eps)*3^v := by
               have hcomm : 3^v*(3*q+2*eps) = (3*q+2*eps)*3^v := Nat.mul_comm _ _
