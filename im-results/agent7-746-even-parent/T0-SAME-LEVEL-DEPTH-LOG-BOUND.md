@@ -50,34 +50,26 @@ By (5), \(B_0-16p\) is a positive integer multiple of \(2^{r+3}\), so
 \[
 B_0-16p\ge2^{r+3}.
 \]
-Equation (1), rewritten as
+Equation (1) gives \(3D_0=B_0-16p+2K+1\), hence \(3D_0\ge2^{r+3}\). Since \(c2^{r+3}=B_0\ge16p\), we obtain the integer inequality
 \[
-3D_0=B_0-16p+2K+1,
-\]
-therefore gives
-\[
-D_0\ge\frac{2^{r+3}}3
-=\frac{B_0}{3c}
-\ge\frac{16p}{3c}.
+3cD_0\ge c2^{r+3}=B_0\ge16p.
 \tag{8}
 \]
 Finally, (3) and the entry lower guard imply
 \[
 2^qD_0
 =8p+K-E
-\le4p+2K+4.
+\le4p+2K+4\le5p,
 \]
-Using (8),
+where \(2K+4\le p\) for \(K\ge266\). Multiplying by \(3c\) and combining with (8),
 \[
-2^q
-\le\frac{3c(4p+2K+4)}{16p}.
-\tag{9}
+16p\,2^q\le3c\,2^qD_0\le15cp.
 \]
-For \(K\ge266\), \(2K+4\le p\), so \(4p+2K+4\le5p\). Thus
+Since \(p>0\),
 \[
-2^q\le\frac{15(2K+7)}{16}<2K,
+\boxed{16\cdot2^q\le15c=15(2K+7)<32K}
 \]
-where the last inequality holds for \(K\ge53\). This proves (4).
+for \(K\ge266\). Therefore \(2^q<2K\), proving (4).
 
 ## Consequence for the incoming odd-parent search
 
