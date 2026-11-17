@@ -34,7 +34,7 @@ Here \(K\equiv2\bmod6\), \(a\equiv2\bmod6\), and \(r\equiv1\bmod6\), so \(r\) is
 B_0=40p+K-1-3E.
 \tag{3}
 \]
-The numerator defining \(D_0\) is divisible by \(3\), as follows from the stronger modulo-\(9\) calculation below. The first level-\(K\) entry at same-level depth \(q\) is \(E_q=8p+K-2^qD_0\). Its first-entry lower guard gives \(2^qD_0\le4p+2K+4\). But \(x\ge3/2\) implies \(D_0\ge8p/3\), so if \(q\ge1\), then \(2^qD_0\ge16p/3>4p+2K+4\) for \(K\ge266\), a contradiction. Hence \(q=0\), \(E=E_0=h\), and the fatal source is the first entry.
+The numerator defining \(D_0\) is divisible by \(3\), as follows from the stronger modulo-\(9\) calculation below. The first level-\(K\) entry at same-level depth \(q\) is \(E_q=8p+K-2^qD_0\). Its first-entry lower guard gives \(2^qD_0\le4p+2K+4\). Equation (4) also gives \\(3D_0=16(x-1)p+2K+1\\), so \\(x\\ge3/2\\) implies \\(D_0\\ge8p/3\\). But \(x\ge3/2\) implies \(D_0\ge8p/3\), so if \(q\ge1\), then \(2^qD_0\ge16p/3>4p+2K+4\) for \(K\ge266\), a contradiction. Hence \(q=0\), \(E=E_0=h\), and the fatal source is the first entry.
 
 Since \(B_0=16xp\), (1) gives \(24p\le B_0\le28p\), which lies inside the t=0 source band
 \[
