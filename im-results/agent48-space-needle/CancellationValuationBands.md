@@ -82,7 +82,7 @@ For \(d_r\le s\le S_{1,r}\), use Agent 46's source-equation middle-band theorem.
 
 Define
 \[
-T_{2,r}^{-}=\left\lfloor\frac{2a_r-8r-7}{2r+1}\right\rfloor,\qquad
+T_{2,r}^{-}=\left\lfloor\frac{2a_r-8r-8}{2r+1}\right\rfloor,\qquad
 T_{2,r}^{+}=\left\lfloor\frac{2a_r-8r-6}{2r-1}\right\rfloor.
 \]
 For every \(r\ge2\),
@@ -143,17 +143,17 @@ The same squared congruence gives
 \[
 D\mid H^-:=(E_t+C)^2+3\cdot2^tO_t^2.
 \]
-For \(0\le t\le T_{2,r}^{-}\), we have \(t\le a\), so \(|C|=4a-2t-5<3\cdot9^r\). The alternating sums, now read from their largest final terms, satisfy
+For \(0\le t\le T_{2,r}^{-}\), we have \(t\le a\), so \(|C|=4a-2t-5<3\cdot9^r\). The terms of E_t and O_t are geometric in magnitude with ratio \(2^t/3\). For \(t=0,1\) the first term dominates; for \(t\ge2\) the last term dominates. In all cases, the geometric-tail bounds give
 \[
-|E_t|<\tfrac32\,3^r2^{rt},\qquad
-|O_t|<\tfrac32\,3^r2^{(r-1)t}.
+|E_t|<4\cdot9^r2^{rt},\qquad
+|O_t|<4\cdot9^r2^{(r-1)t}.
 \]
-It follows that
+Together with \(|C|<3\cdot9^r\), this yields \(|E_t+C|<7\cdot9^r2^{rt}\), and hence
 \[
-0<H^-<37\cdot9^{2r}2^{2rt}
-<2^{8r+6+2rt}\le2^{2a-t-1}<D.
+0<H^-<97\cdot9^{2r}2^{2rt}
+<2^{8r+7+2rt}\le2^{2a-t-1}<D.
 \]
-Again \(O_t\ne0\), since its final term strictly dominates the preceding alternating tail. This proves the lower side.
+Again \(O_t\ne0\): for \(t=0,1\) its first term strictly dominates the tail, while for \(t\ge2\) its final term does. This proves the lower side.
 
 ### Sample interval endpoints
 
