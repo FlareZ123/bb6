@@ -102,10 +102,12 @@ Thus one third of the \((K\bmod18,r\bmod6)\) phase pairs have \(D_0\equiv0\pmod3
 
 ### Reproducer and small phase checks
 
-The companion [t0_entry_odd_parent_selector.mjs](t0_entry_odd_parent_selector.mjs) computes the exact residue (5), enumerates representatives \(q\le K-1\), and checks the exact incoming odd-parent source band. Its sample checks include:
+The companion [t0_entry_odd_parent_selector.mjs](t0_entry_odd_parent_selector.mjs) incrementally lifts the selector through all \(0\le t<K\), enumerates the \(q\le K-1\) representatives (only \(O(K)\) candidates in total, by the geometric moduli \(2\cdot3^t\)), and checks the exact incoming odd-parent source band. Its sample checks include:
 - \(K=267,r=259\): \(D_0\equiv0\pmod3\), so no incoming odd parent is possible.
-- \(K=309,r=301,t=1\): \(q=0\) gives an incoming odd parent from level \(L=308\).
-- \(K=333,r=325,t=0\): \(q=1\) gives an incoming odd parent from level \(L=332\).
+- \(K=309,r=301\): \(q=0,t=1\) gives an incoming odd parent from level \(L=308\).
+- \(K=333,r=325\): \(q=1,t=0\) gives an incoming odd parent from level \(L=332\).
+
+The latter two are valid local inverse-grammar edges only; they do not assert blank-root reachability.
 
 The latter two are valid local inverse-grammar edges only; they do not assert blank-root reachability.
 

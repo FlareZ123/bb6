@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// Exact 3-adic selector and local source-band test for the incoming odd
-// parent of a t=0 fatal entry. See T0-ENTRY-ODD-PARENT-SELECTOR.md.
+// Incremental all-t 3-adic selector and local source-band search for the
+// incoming odd parent of a t=0 fatal entry.
+// See T0-ENTRY-ODD-PARENT-SELECTOR.md.
 
 function mod(x, m) {
   return ((x % m) + m) % m;
@@ -38,11 +39,11 @@ function findSourceLevel(P) {
   return null;
 }
 
-function analyze(K, r, t) {
-  if (![K, r, t].every(Number.isSafeInteger) ||
+function analyzeAll(K, r) {
+  if (!Number.isSafeInteger(K) || !Number.isSafeInteger(r) ||
       K < 266 || (K % 6 !== 2 && K % 6 !== 3) ||
-      r < 0 || r % 2 !== 1 || t < 0) {
-    throw new Error("Require K>=266, K mod 6 in {2,3}, odd r, and t>=0.");
+      r < 0 || r % 2 !== 1) {
+    throw new Error("Require K>=266, K mod 6 in {2,3}, and odd r.");
   }
 
   const k = BigInt(K);
@@ -73,8 +74,9 @@ function analyze(K, r, t) {
       status: "no-incoming-odd-parent",
       D0: String(D0),
       D0mod3: "0",
-      h: String(h),
-      raw: String(raw)
+      t0SourceHeight: String(h),
+      t0Raw: String(raw),
+      localIncomingParents: []
     };
   }
 
@@ -85,58 +87,63 @@ function analyze(K, r, t) {
     throw new Error("Base Hensel congruence failed.");
   }
 
-  // Lift m_t modulo 3^t from A = C*4^m (mod 3^(t+1)).
-  let m = 0n;
   const invC = mod(C, 3n) === 1n ? 1n : 2n;
-  for (let n = 0; n < t; n++) {
-    const modulus = 3n ** BigInt(n + 2);
-    const scale = 3n ** BigInt(n + 1);
-    const residual = mod(A - C * powMod(4n, m, modulus), modulus);
+  let m = 0n;
+  const localIncomingParents = [];
+
+  // At stage t, m is the unique residue mod 3^t satisfying
+  // A = C*4^m (mod 3^(t+1)); q = 2*m+epsilon mod 2*3^t.
+  // Each stage adds one Hensel digit. The q representatives across all
+  // stages total O(K), since their moduli grow geometrically.
+  for (let t = 0; t < K; t++) {
+    const qResidue = 2n * m + epsilon;
+    const qModulus = 2n * (3n ** BigInt(t));
+    if (qResidue > k - 1n) break;
+
+    for (let q = qResidue; q <= k - 1n; q += qModulus) {
+      const entryDeficit = pow2(Number(q)) * D0;
+      const E = 8n * p + k - entryDeficit;
+
+      // E must itself be the first entry at level K.
+      if (4n * p > E + k + 4n || E + k + 5n >= 8n * p) continue;
+
+      const X = 2n * E + 5n;
+      if (v3(X) !== t + 1) continue; // exact incoming valuation
+
+      const d = X / (3n ** BigInt(t + 1));
+      const P = pow2(t) * d;
+      const L = findSourceLevel(P);
+      if (L === null || L >= K || t > L) continue;
+
+      const l = BigInt(L);
+      const pL = pow2(L);
+      const parentHeight = 2n * P - 8n * pL - l - 5n;
+      const parentLevelOK =
+        4n * pL <= parentHeight + l + 4n &&
+        parentHeight + l + 5n < 8n * pL;
+      const scaleOK = pow2(K - 2) < 3n ** BigInt(L);
+
+      if (parentLevelOK && scaleOK) {
+        localIncomingParents.push({
+          q: String(q),
+          t,
+          sourceLevel: L,
+          sourceHeight: String(parentHeight),
+          entryHeight: String(E),
+          oddQuotient: String(d)
+        });
+      }
+    }
+
+    // Lift m_t mod 3^t to m_(t+1) mod 3^(t+1).
+    const modulus3 = 3n ** BigInt(t + 2);
+    const scale = 3n ** BigInt(t + 1);
+    const residual = mod(A - C * powMod(4n, m, modulus3), modulus3);
     if (residual % scale !== 0n) {
       throw new Error("Hensel divisibility invariant failed.");
     }
     const digit = mod((residual / scale) * invC, 3n);
-    m += digit * (3n ** BigInt(n));
-    if (mod(A - C * powMod(4n, m, modulus), modulus) !== 0n) {
-      throw new Error("Hensel lift failed.");
-    }
-  }
-
-  const qResidue = 2n * m + epsilon;
-  const modulus = 2n * (3n ** BigInt(t));
-  const maxQ = k - 1n;
-  const localParents = [];
-
-  for (let q = qResidue; q <= maxQ; q += modulus) {
-    const entryDeficit = pow2(Number(q)) * D0;
-    const E = 8n * p + k - entryDeficit;
-    if (4n * p > E + k + 4n || E + k + 5n >= 8n * p) continue;
-
-    const X = 2n * E + 5n;
-    if (v3(X) !== t + 1) continue;
-    const d = X / (3n ** BigInt(t + 1));
-    const P = pow2(t) * d;
-    const L = findSourceLevel(P);
-    if (L === null || L >= K) continue;
-
-    const l = BigInt(L);
-    const pL = pow2(L);
-    const parentHeight = 2n * P - 8n * pL - l - 5n;
-    const parentLevelOK =
-      4n * pL <= parentHeight + l + 4n &&
-      parentHeight + l + 5n < 8n * pL;
-
-    if (parentLevelOK) {
-      localParents.push({
-        q: String(q),
-        entry: String(E),
-        incomingValuation: t,
-        quotient: String(d),
-        sourceParameter: String(P),
-        sourceLevel: L,
-        sourceHeight: String(parentHeight)
-      });
-    }
+    m += digit * (3n ** BigInt(t));
   }
 
   return {
@@ -144,19 +151,18 @@ function analyze(K, r, t) {
     D0: String(D0),
     D0mod3: String(D0mod3),
     forcedQParity: String(epsilon),
-    mResidue: String(m),
-    qResidue: String(qResidue),
-    modulus: String(modulus),
-    localIncomingParents: localParents,
-    h: String(h),
-    raw: String(raw)
+    localIncomingParents,
+    t0SourceHeight: String(h),
+    t0Raw: String(raw)
   };
 }
 
-for (const [K, r, t] of [
-  [267, 259, 0],
-  [309, 301, 1],
-  [333, 325, 0]
+for (const [K, r] of [
+  [267, 259],
+  [273, 265],
+  [279, 271],
+  [309, 301],
+  [333, 325]
 ]) {
-  console.log(JSON.stringify({ K, r, t, ...analyze(K, r, t) }));
+  console.log(JSON.stringify({ K, r, ...analyzeAll(K, r) }));
 }
