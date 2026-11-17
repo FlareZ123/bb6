@@ -870,8 +870,6 @@ theorem m1EvenValuation_q4_leftFacing
           simp [m1EvenValuationBridgeTape,valuationExit1Tape]
         simpa [m1EvenValuationCutTape,T,T1,hN,N0,P,hcoord] using hexit
       · have hsmall : i+1<N0 := by omega
-        let j : Nat := N0-i-1
-        have hj : j<N0 := by dsimp [j]; omega
         have hx : hN+2≤h-(i:Int) := by
           dsimp [hN,N0]
           omega
@@ -889,13 +887,9 @@ theorem m1EvenValuation_q4_leftFacing
             dsimp [hN,N0]
             omega
           simp [P,valuationPreludeTape,hne1,hne2,hne3]
-        have hblock := sweptLeft_block N0 T h j hj
-        have hcoord : h-(i:Int)=hN+1+(j:Int) := by
-          dsimp [hN,N0,j]
-          omega
+        have hblock := sweptLeft_block N0 i T h (by omega)
         have hT1 : T1 (h-(i:Int)) = true := by
-          rw [hcoord]
-          simpa [T1,hN,N0] using hblock
+          simpa [T1] using hblock
         calc
           m1EvenValuationCutTape len q v a b h (h-(i:Int)) =
               m1EvenValuationBridgeTape v P hN (h-(i:Int)) := by
@@ -1010,10 +1004,9 @@ private theorem m1EvenValuationCutTapeHead
       have hne2 : h ≠ hN-2 := by dsimp [hN,N0]; omega
       have hne3 : h ≠ hN-3 := by dsimp [hN,N0]; omega
       simp [P,valuationPreludeTape,hne1,hne2,hne3]
-    have hblock := sweptLeft_block N0 T h (N0-1) (by omega)
-    have hcoord : h-(N0:Int)+1+((N0-1):Int)=h := by omega
+    have hblock := sweptLeft_block N0 0 T h (by omega)
     have hT1 : T1 h = true := by
-      simpa [T1,hcoord] using hblock
+      simpa [T1] using hblock
     calc
       m1EvenValuationCutTape len q v a b h h =
           m1EvenValuationBridgeTape v P hN h := rfl
