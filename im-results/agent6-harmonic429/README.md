@@ -14,4 +14,6 @@ The rooted machine is `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`. The pinned [C
 
 None of the surviving necessary gates has been shown reachable by the authentic blank orbit; there is also no uniform nonreachability proof. The presence of parametric **synthetic** halting states in arbitrary moduli does not establish actual blank ancestry. See the [all-moduli limitation](../agent6-429-coprime-moduli/AllMixedModuliZeroSector.md).
 
+[Q0Mod128SixRows.md](Q0Mod128SixRows.md) records a new provisional inverse-tree reduction: six of the sixteen `u mod 16` sectors of the outstanding `(n mod 32, d mod 16) = (23, 7)` q0 family appear excluded using the existing positive-even-eight root invariant. It is not yet compiled against the full source dependency closure, and ten sectors remain open; do not treat it as an integrated result.
+
 **Next proof:** constrain genuine blank-root feeders into all surviving halting gates, including exceptional inverse parents. Check overlap with earlier #429 certificates before producing another residue claim. No #429 halt/nonhalt decision or BB(6) result follows.
