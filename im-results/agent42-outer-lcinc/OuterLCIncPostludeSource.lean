@@ -321,4 +321,61 @@ theorem outerLCIncAfterZeroExit_preserves
     omega
   simp [outerLCIncAfterZeroExit, frameAt_tape, hnot]
 
+
+/-- The B/F/D sweep creates the three-cell tail pattern immediately
+before and at its last block. The cell at h+3b+6 is the zero-boundary
+one when b=0, otherwise the preceding block's third cell. -/
+theorem outerLCIncAfterSweep_tailPattern
+    (T : Int → Bool) (h : Int) (a m b : Nat)
+    (hright : rightOnes (outerLCIncAfterZero T h a m) (h+7) (b+1)) :
+    outerLCIncAfterSweep T h a m b (h+3*b+6) = true ∧
+    outerLCIncAfterSweep T h a m b (h+3*b+7) = false ∧
+    outerLCIncAfterSweep T h a m b (h+3*b+8) = false ∧
+    outerLCIncAfterSweep T h a m b (h+3*b+9) = true := by
+  have hlast := sweptRightB_block (b+1)
+    (outerLCIncAfterZero T h a m) (h+7) hright b (by omega)
+  have h6 : outerLCIncAfterSweep T h a m b (h+3*b+6) = true := by
+    by_cases hb : b = 0
+    · subst b
+      have hpres := sweptRightB_preserves_left 1
+        (outerLCIncAfterZero T h a m) (h+7) (h+6) (by omega)
+      rw [outerLCIncAfterSweep, hpres]
+      exact (outerLCIncAfterZero_cells T h a m).2
+    · have hpos : 0 < b := by omega
+      have hprev := sweptRightB_block (b+1)
+        (outerLCIncAfterZero T h a m) (h+7) hright (b-1) (by omega)
+      have hcoord : h+3*b+6 =
+          h+7+3*((b-1:Int))+2 := by omega
+      rw [outerLCIncAfterSweep, hcoord]
+      exact hprev.2.2
+  refine ⟨h6, ?_, ?_, ?_⟩
+  · have hcoord : h+3*b+7 = h+7+3*(b:Int) := by omega
+    rw [outerLCIncAfterSweep, hcoord]
+    exact hlast.1
+  · have hcoord : h+3*b+8 = h+7+3*(b:Int)+1 := by omega
+    rw [outerLCIncAfterSweep, hcoord]
+    exact hlast.2.1
+  · have hcoord : h+3*b+9 = h+7+3*(b:Int)+2 := by omega
+    rw [outerLCIncAfterSweep, hcoord]
+    exact hlast.2.2
+
+/-- The post-sweep exterior remains blank strictly beyond the final
+head of the counted B/F/D sweep. -/
+theorem outerLCIncAfterSweep_blank
+    (T : Int → Bool) (h : Int) (a m b : Nat) (j : Nat)
+    (hblank : ∀ k : Nat, T (h+3*b+10+k) = false)
+    (xbound : j ≥ 0) :
+    outerLCIncAfterSweep T h a m b (h+3*b+10+j) = false := by
+  have hpres := sweptRightB_preserves_right (b+1)
+    (outerLCIncAfterZero T h a m) (h+7)
+    (h+3*b+10+(j:Int)) (by omega)
+  rw [outerLCIncAfterSweep, hpres]
+  rw [outerLCIncAfterZero_preserves_right T h a m
+    (h+3*b+10+(j:Int)) (by omega)]
+  rw [outerLCIncAfterFive_preserves_right T h a m
+    (h+3*b+10+(j:Int)) (by dsimp [outerLCIncH1]; omega)]
+  rw [outerLCIncSourceT3_preserves_right T h a m
+    (Nat.succ rfl) (h+3*b+10+(j:Int)) (by omega)]
+  exact hblank j
+
 end BB6Coverage.Agent42OuterLCInc
