@@ -179,3 +179,8 @@ All 1,890 cases passed in the V8 execution used to produce this note.
 This is reproducible computational evidence only; it does not replace the
 source-level Lean proof or establish a global BB(6) upper bound. The
 existing manual source-check workflow now also runs this simulator.
+
+
+## Valuation-uniform M0-even 8q extension (experimental)
+
+A new probe suggests the q-odd restriction in `M0EvenEightGenericSource.lean` can be removed: for `t=v2(q)`, the same q4 interface appears after `60+12a+12t` steps. The experiment checks 288 exact finite-support cases and decomposes the extra cost into a 9t-step left zero-bubble plus a 12+3t-step right d1-block scan. This is not yet a Lean theorem; the complete statement, proof route, limitations, and probe are in [M0EvenEightValuationExtension.md](M0EvenEightValuationExtension.md) and [m0_even_eight_valuation_probe.js](m0_even_eight_valuation_probe.js).
