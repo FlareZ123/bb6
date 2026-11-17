@@ -150,6 +150,20 @@ w'=\frac43w+\alpha-r'.}
 \]
 Thus, away from the finitely many boundary subcases, the outer map advances \(u\) by a bounded integer and applies an affine \(4/3\) expansion to \(w=3q\), while resetting \(c\) to the previous gap minus a small constant. This identifies the precise source of the \(4/3\) cascade in the high-level dynamics. The exceptional \(d\)-values and \(q=0\) branches remain part of the exact map and must not be dropped in a proof.
 
+Writing \(\epsilon=\alpha-r'\) and \(\delta=\alpha-\beta-r'\), each such generic outer step is
+\[
+w'=\frac43w+\epsilon,\qquad u'=u+\delta.
+\]
+Along a bridge of \(L\) generic outer steps, with branch-dependent digits \((\epsilon_j,\delta_j)\),
+\[
+u_L=u_0+\sum_{j=0}^{L-1}\delta_j,
+\]
+\[
+3^Lw_L=4^Lw_0+
+\sum_{j=0}^{L-1}4^{L-1-j}3^{j+1}\epsilon_j.
+\]
+The digits come from the six branch types above and depend on the evolving state; they are not an independent or random sequence. This formula isolates the unresolved outer dynamics as a constrained rational-base \(4/3\) digit process, which is the part that must be controlled to settle the halt-preimage avoidance problem.
+
 ## Complete one-step preimage set of the halt states
 
 Let
