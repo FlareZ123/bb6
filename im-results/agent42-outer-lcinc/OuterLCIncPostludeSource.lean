@@ -18,6 +18,23 @@ open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24LBinDecHRun
 open BB6Coverage.Agent48Champion
 
+/-- Source tape after the initial counted left sweep. -/
+def outerLCIncSourceT1 (T : Int → Bool) (h : Int) (a : Nat) :
+    Int → Bool :=
+  sweptLeft (3*a) T h
+
+/-- Source tape after the finite marker bridge frame. -/
+def outerLCIncSourceT2 (T : Int → Bool) (h : Int) (a m : Nat) :
+    Int → Bool :=
+  (markerBridgeFrameOut m (outerLCIncSourceT1 T h a)
+    (h-(3*a:Int))).tape
+
+/-- Source tape after the outer binary H-run. -/
+def outerLCIncSourceT3 (T : Int → Bool) (h : Int)
+    (a m r : Nat) : Int → Bool :=
+  lbinDecHRunTape r (outerLCIncSourceT2 T h a m)
+    (outerLCIncH1 h a m)
+
 /-- sideBit ignores an appended suffix before the end of its prefix. -/
 theorem outer_sideBit_append_left (xs ys : List Bool) (i : Nat)
     (hi : i < xs.length) :
@@ -91,20 +108,40 @@ theorem outerLCInc_s1_right_facts (L n m a b : Nat) (h : Int) :
         sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) i := by
     rw [s1Config_right_cell, s1PhysicalRight_source]
   constructor
-  · simpa [hcell 1] using (show sideBit
-      ([false,true,true,true,false,false] ++ d1pow (b+1)) 1 = true by decide)
+  · calc
+      (s1Config L n m a 0 b h).tape (h+2) =
+          (s1Config L n m a 0 b h).tape (h+1+1) := by congr 1 <;> omega
+      _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) 1 :=
+        hcell 1
+      _ = true := by decide
   constructor
-  · simpa [hcell 2] using (show sideBit
-      ([false,true,true,true,false,false] ++ d1pow (b+1)) 2 = true by decide)
+  · calc
+      (s1Config L n m a 0 b h).tape (h+3) =
+          (s1Config L n m a 0 b h).tape (h+1+2) := by congr 1 <;> omega
+      _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) 2 :=
+        hcell 2
+      _ = true := by decide
   constructor
-  · simpa [hcell 3] using (show sideBit
-      ([false,true,true,true,false,false] ++ d1pow (b+1)) 3 = true by decide)
+  · calc
+      (s1Config L n m a 0 b h).tape (h+4) =
+          (s1Config L n m a 0 b h).tape (h+1+3) := by congr 1 <;> omega
+      _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) 3 :=
+        hcell 3
+      _ = true := by decide
   constructor
-  · simpa [hcell 4] using (show sideBit
-      ([false,true,true,true,false,false] ++ d1pow (b+1)) 4 = false by decide)
+  · calc
+      (s1Config L n m a 0 b h).tape (h+5) =
+          (s1Config L n m a 0 b h).tape (h+1+4) := by congr 1 <;> omega
+      _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) 4 :=
+        hcell 4
+      _ = false := by decide
   constructor
-  · simpa [hcell 5] using (show sideBit
-      ([false,true,true,true,false,false] ++ d1pow (b+1)) 5 = false by decide)
+  · calc
+      (s1Config L n m a 0 b h).tape (h+6) =
+          (s1Config L n m a 0 b h).tape (h+1+5) := by congr 1 <;> omega
+      _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) 5 :=
+        hcell 5
+      _ = false := by decide
   constructor
   · intro i hi
     have h0 : sideBit (d1pow (b+1)) (3*i) = true :=
@@ -126,24 +163,40 @@ theorem outerLCInc_s1_right_facts (L n m a b : Nat) (h : Int) :
         (8+3*i) = sideBit (d1pow (b+1)) (3*i+2) :=
       outer_sideBit_append_right _ _ _ (by omega)
     refine ⟨?_, ?_, ?_⟩
-    · have := hc0
-      rw [hr0] at this
-      simpa [show h+7+3*(i:Int) = h+1+(6+3*i) by omega] using this.trans h0
-    · have := hc1
-      rw [hr1] at this
-      simpa [show h+7+3*(i:Int)+1 = h+1+(7+3*i) by omega] using this.trans h1
-    · have := hc2
-      rw [hr2] at this
-      simpa [show h+7+3*(i:Int)+2 = h+1+(8+3*i) by omega] using this.trans h2
+    · calc
+        (s1Config L n m a 0 b h).tape (h+7+3*(i:Int)) =
+            (s1Config L n m a 0 b h).tape (h+1+(6+3*i)) := by congr 1 <;> omega
+        _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
+            (6+3*i) := hc0
+        _ = sideBit (d1pow (b+1)) (3*i) := hr0
+        _ = true := h0
+    · calc
+        (s1Config L n m a 0 b h).tape (h+7+3*(i:Int)+1) =
+            (s1Config L n m a 0 b h).tape (h+1+(7+3*i)) := by congr 1 <;> omega
+        _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
+            (7+3*i) := hc1
+        _ = sideBit (d1pow (b+1)) (3*i+1) := hr1
+        _ = true := h1
+    · calc
+        (s1Config L n m a 0 b h).tape (h+7+3*(i:Int)+2) =
+            (s1Config L n m a 0 b h).tape (h+1+(8+3*i)) := by congr 1 <;> omega
+        _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
+            (8+3*i) := hc2
+        _ = sideBit (d1pow (b+1)) (3*i+2) := hr2
+        _ = true := h2
   · intro j
     have hc := hcell (3*b+9+j)
     have hfalse := outer_sideBit_false_of_ge_length
       ([false,true,true,true,false,false] ++ d1pow (b+1))
       (3*b+9+j) (by omega)
     have hcoord : h+3*b+10+(j:Int) = h+1+(3*b+9+j) := by omega
-    rw [hcoord]
-    rw [hc]
-    exact hfalse
+    calc
+      (s1Config L n m a 0 b h).tape (h+3*b+10+(j:Int)) =
+          (s1Config L n m a 0 b h).tape (h+1+(3*b+9+j)) := by
+            congr 1 <;> omega
+      _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
+          (3*b+9+j) := hc
+      _ = false := hfalse
 
 /-- Pointwise tape equation for the marker bridge frame. -/
 theorem markerBridgeFrameOut_tape (m : Nat) (T : Int → Bool)
