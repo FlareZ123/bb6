@@ -1,0 +1,68 @@
+name: Agent 44 M2-even n=8q+6 generic q4 source prefix (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Stage exact source dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a44-m2-even-six
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a44-m2-even-six/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a44-m2-even-six/
+          cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern,CountedOddBase,CountedSweep}.lean /tmp/a44-m2-even-six/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a44-m2-even-six/
+          cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a44-m2-even-six/
+          cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a44-m2-even-six/
+          cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a44-m2-even-six/
+          cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a44-m2-even-six/
+          cp im-results/agent24-champion-time/Q4RightEndpoint.lean /tmp/a44-m2-even-six/
+          cp im-results/agent48-counted-inc0/M2EvenSixQ4Prefix.lean /tmp/a44-m2-even-six/
+          cp im-results/agent44-tm63-middle/M2EvenSixGenericSource.lean /tmp/a44-m2-even-six/
+      - name: Compile the original base bridge and generic n=8q+6 lift
+        run: |
+          set -euo pipefail
+          cd /tmp/a44-m2-even-six
+          export LEAN_PATH=.
+          lean --version
+          lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          lean -o ChampionModular.olean ChampionModular.lean
+          lean -o CostRecurrence.olean CostRecurrence.lean
+          lean -o CountPattern.olean CountPattern.lean
+          lean -o S1Encoder.olean S1Encoder.lean
+          lean -o CountedOddBase.olean CountedOddBase.lean
+          lean -o CountedSweep.olean CountedSweep.lean
+          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean
+          lean -o CountedReset.olean CountedReset.lean
+          lean -o CountedRst1Prime.olean CountedRst1Prime.lean
+          lean -o Q4Suffix.olean Q4Suffix.lean
+          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
+          : > /tmp/a44-m2-even-six/m2-even-six-generic-axioms.log
+          lean -o M2EvenSixQ4Prefix.olean M2EvenSixQ4Prefix.lean 2>&1 | tee -a /tmp/a44-m2-even-six/m2-even-six-generic-axioms.log
+          lean -o M2EvenSixGenericSource.olean M2EvenSixGenericSource.lean 2>&1 | tee -a /tmp/a44-m2-even-six/m2-even-six-generic-axioms.log
+          if grep -qE 'sorryAx|native_decide' /tmp/a44-m2-even-six/m2-even-six-generic-axioms.log; then
+            echo '::error::sorryAx or native_decide found in M2-even generic source prefix closure'
+            exit 1
+          fi
+          echo 'M2-even n=8q+6 q4 reset-prefix source theorem compiled without sorryAx or native_decide.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload Lean diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent44-m2-even-six-generic-${{ github.run_id }}
+          path: /tmp/a44-m2-even-six/m2-even-six-generic-axioms.log
+          if-no-files-found: ignore
+          retention-days: 3
