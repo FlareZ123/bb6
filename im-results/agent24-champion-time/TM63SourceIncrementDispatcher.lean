@@ -22,6 +22,8 @@ exact remaining source obligations needed by SectionResultRunSource.
 namespace BB6Coverage.Agent24ChampionTime
 
 open BB6Coverage.Agent44SectionResultRunSource
+open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent48M0OddGenericSource
 open BB6Coverage.Agent48M1EvenValuationCountedSource
 open BB6Coverage.Agent24M0EvenResidueTwo
