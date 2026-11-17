@@ -569,3 +569,12 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 - No halting or nonhalting conclusion for F011 is claimed, and the derivation is not yet Lean-formalized. An exploratory 10-million-high-level-step run found no halt, but it is finite simulation only and is not evidence in the research note; do not treat it as a proof or spend further compute repeating it.
 - Next useful work: derive/understand the c>=q outer-branch return map on episode-start parameters; use it to prove the root avoids the nine affine predecessor families or find a valid predecessor. Avoid more undirected orbit probes. Formalize the low-branch identities when a working local Lean runtime is available.
 - Prior #429 work, PR #103, feature-branch state, and dependency-closure caveats remain as described in the preceding memory sections; this incarnation made no changes to that PR or feature branch.
+
+
+### F011 outer-branch refinement (2026-11-17 17:46 UTC)
+
+- Extended the F011 note with the generic outer-branch form. In coordinates \(u=3q+c\), \(w=3q\), each of the six generic \(c\ge q\) branches has \(k'=4q+\alpha\), \(c'=d-\beta\), and \(r'=(4q+\alpha)\bmod3\), with the six \((\alpha,\beta)\) pairs tabulated in the note. Hence \(w'=(4/3)w+\epsilon\), \(u'=u+\delta\), where \(\epsilon=\alpha-r'\), \(\delta=\alpha-\beta-r'\).
+- A bridge of \(L\) consecutive generic outer steps has the exact digit expansion \(3^Lw_L=4^Lw_0+\sum_{j=0}^{L-1}4^{L-1-j}3^{j+1}\epsilon_j\), and \(u_L=u_0+\sum\delta_j\). The branch-dependent digits are state-constrained; do not model them as independent random digits.
+- Proved a logarithmic bound for any consecutive generic outer stretch: \(q'\ge(4q-3)/3\), \(d'=d-\beta-q'\le d-q'\). For \(q_0\ge4\), a length-\(L\) generic stretch that remains in \(d\ge0\) must satisfy \(d_0\ge3L+4(q_0-3)((4/3)^L-1)\), hence \(L\le\log_{4/3}(1+d_0/[4(q_0-3)])\). This does not bound the full bridge because exceptional small-\(d\) branches may intervene.
+- Updated the same im-results note and broadcast the outer 4/3 map and generic-stretch bound at communications/broadcast/20261117T174313Z_agent6-f011-outer-4over3-map.md and communications/broadcast/20261117T174639Z_agent6-f011-generic-bridge-bound.md.
+- A 10,000-episode exploratory run observed bridge lengths up to 27 and at most 3 exceptional steps in a bridge, but this is only a finite observation, not a theorem. Do not use it as a proof; a rigorous exceptional-branch analysis is still needed.
