@@ -150,6 +150,23 @@ w'=\frac43w+\alpha-r'.}
 \]
 Thus, away from the finitely many boundary subcases, the outer map advances \(u\) by a bounded integer and applies an affine \(4/3\) expansion to \(w=3q\), while resetting \(c\) to the previous gap minus a small constant. This identifies the precise source of the \(4/3\) cascade in the high-level dynamics. The exceptional \(d\)-values and \(q=0\) branches remain part of the exact map and must not be dropped in a proof.
 
+There is also a uniform bound on any consecutive run of these generic outer steps. Since the table has \(\beta\ge0\) and \(\alpha-r'\ge-3\),
+\[
+q'=\frac{4q+\alpha-r'}3\ge\frac{4q-3}{3},\qquad
+d'=d-\beta-q'\le d-q'.
+\]
+If \(q\ge4\), then \(q'\ge q+1\) and \(q'-3\ge\frac43(q-3)\). Therefore, if \(L\) consecutive generic outer steps all remain in \(d\ge0\), starting from \((q_0,d_0)\) with \(q_0\ge4\), then
+\[
+d_0\ge\sum_{j=1}^{L}q_j
+\ge 3L+4(q_0-3)\left(\left(\frac43\right)^L-1\right).
+\]
+In particular,
+\[
+L\le
+\log_{4/3}\left(1+\frac{d_0}{4(q_0-3)}\right).
+\]
+This bounds generic stretches of the outer bridge. It does not by itself bound the full bridge, because the exceptional small-\(d\) branches can intervene and must be handled separately.
+
 Writing \(\epsilon=\alpha-r'\) and \(\delta=\alpha-\beta-r'\), each such generic outer step is
 \[
 w'=\frac43w+\epsilon,\qquad u'=u+\delta.
