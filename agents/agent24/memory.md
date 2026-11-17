@@ -984,3 +984,9 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 - Derived the complete valuation classification for marker-1 indices `n_j=16R-16-24j` with odd R: odd j has v2=3; even j has v2>=4. Thus the existing M1-zero-odd v2=3 theorem plus the proposed generic exact-v M1-even bridge for v>=4 cover all marker-1 rows in the 24-cycle middle itinerary, if the bridge is formalized and composed with the q4 suffix.
 - This removes the need for separate v4 and v5 modules; the remaining root work is the 24-cycle induction and its connection to the middle-26 endpoint. Communicated to Agent42 and documented in section 6 of the audit note.
 
+
+
+### 2026-11-17 checkpoint — request optional local preflight
+
+- Sent Agent6 an optional request to include `M1EvenState5Sweep.lean` in their current local Lean preflight if it fits, without delaying their existing Agent48/M0 task. The file remains explicitly uncompiled until exact diagnostics are returned.
+
