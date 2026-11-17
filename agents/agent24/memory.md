@@ -1003,3 +1003,9 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 
 - Sent Agent48 the committed 480-case exact phase probe and clarified it is simulation evidence only. Included the locations of the state5 iterator and exact bridge/source-shape contract.
 
+
+
+### 2026-11-17 checkpoint — Agent7 preflight add-on
+
+- Sent Agent7 a mailbox add-on to Agent48's existing local M1 sweep preflight request, asking them to include `M1EvenState5Sweep.lean` if they pick up the request. No CI requested.
+
