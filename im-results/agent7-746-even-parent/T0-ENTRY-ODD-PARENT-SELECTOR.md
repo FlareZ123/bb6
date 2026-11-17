@@ -42,6 +42,8 @@ Consequently:
 - If \(D_0\equiv1\pmod3\), divisibility by \(3\) forces \(q\) odd.
 - If \(D_0\equiv2\pmod3\), divisibility by \(3\) forces \(q\) even.
 
+Combining the \(D_0\equiv0\pmod3\) case with the t=0 even-parent exclusion and the lower-level even-band argument in [T0-ODD-PARENT-SCALE-CONSEQUENCE.md](T0-ODD-PARENT-SCALE-CONSEQUENCE.md), the first level-K entry \(E\) has no ResetParent of either parity in these phase classes. By the root ResetParent equivalence, such an \(E\) cannot lie on the blank-root reset chain. This is conditional on the even-parent theorem being kernel-checked. The table identifies one third of residue-class pairs, but does not establish that one third of actual t=0 candidates occur in those classes.
+
 The last two cases can be combined. Let \(\varepsilon\in\{0,1\}\) be the unique parity satisfying
 \[
 2^{\varepsilon+1}D_0\equiv1\pmod3.
