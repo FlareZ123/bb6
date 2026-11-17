@@ -629,27 +629,8 @@ theorem m2EvenSix_generic_q4_reset_prefix_source
   simp only [Option.bind_some]
   exact hsuffix
 
-/-- Complete original-TM2 m=2 counted increment for n=8*q+6. -/
-theorem m2EvenSix_counted_increment_source
-    (L q a b : Nat) (h : Int)
-    (hL : 3 ≤ L) (hbound : 8*q+6 < 2^L) (ha : 0<a) :
-    run tm2 (proposedIncrementCost 2 (8*q+6) a b)
-      (s1Config L (8*q+6) 2 a 0 b h) =
-      some (s1Config L (8*q+5) 1 (a+b+2) 0 (2^b-1)
-        (h+5+3*b)) := by
-  have hp := m2EvenSix_generic_q4_reset_prefix_source
-    L q a b h hL hbound ha
-  have hboundDrain := resetDrainBound a b 2 ha
-  have hrun := s1Config_reset_prefix_then_counted_drain
-    L (8*q+5) 1 (a+b+2) b (h+5+3*b)
-    (s1Config L (8*q+6) 2 a 0 b h)
-    (resetPrefixCost 2 (8*q+6) a b)
-    hp (by simpa [resetDelta] using hboundDrain)
-  simpa [proposedIncrementCost_decomp] using hrun
-
 #print axioms m2EvenSix_generic_q4_prefix_source
 #print axioms m2EvenSix_generic_q4_prefix_leftFacing
 #print axioms m2EvenSix_generic_q4_reset_prefix_source
-#print axioms m2EvenSix_counted_increment_source
 
 end BB6Coverage.Agent44M2EvenSixGenericSource
