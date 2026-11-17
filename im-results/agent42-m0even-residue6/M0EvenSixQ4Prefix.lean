@@ -8,7 +8,7 @@ import M0EvenSixQ4Bridge
 import Lean.Elab.Tactic.Omega
 
 /-!
-# Source-level m=0,n=14 q4 reset prefix
+# Source-level m=0,n=6 q4 reset prefix
 
 After a 3a-cell counted left sweep, the shared 39-step bridge and a
 3(a-1)-cell E-scan reach q4 at the original head.  This is the next
