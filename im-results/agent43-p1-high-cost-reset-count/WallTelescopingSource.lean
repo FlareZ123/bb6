@@ -1,4 +1,5 @@
 import CountedWallStrongGateSource
+import ThreeResetCore
 
 namespace BB6.Agent43WallTelescoping
 
@@ -349,6 +350,338 @@ theorem source_wall_cost_list_identity
       rw [hsplit, Nat.mul_add, hterm]
       ac_rfl
 
+
+private theorem pow_two_mod2 (k : Nat) (hk : 0 < k) : 2^k % 2 = 0 := by
+  cases k with
+  | zero => omega
+  | succ k =>
+    rw [Nat.pow_succ]
+    have hdiv : 2 ∣ 2^k * 2 := by
+      refine ⟨2^k, ?_⟩
+      ac_rfl
+    exact Nat.mod_eq_zero_of_dvd hdiv
+
+private theorem pow_two_mod16 (k : Nat) (hk : 4 ≤ k) : 2^k % 16 = 0 := by
+  cases k with
+  | zero => omega
+  | succ k =>
+    cases k with
+    | zero => omega
+    | succ k =>
+      cases k with
+      | zero => omega
+      | succ k =>
+        cases k with
+        | zero => omega
+        | succ k =>
+          rw [Nat.pow_succ, Nat.pow_succ, Nat.pow_succ, Nat.pow_succ]
+          omega
+
+private theorem terminalTerm_mod16 (n m : Nat) (hnEven : n%2=0)
+    (hm3 : 3≤m) : (n+3+m)*2^m % 16 = 0 := by
+  by_cases hm4 : 4≤m
+  · have hpow := pow_two_mod16 m hm4
+    rw [Nat.mul_mod, hpow]
+    simp
+  · have hmEq : m=3 := by omega
+    subst m
+    have hEven : (n+6)%2=0 := by omega
+    omega
+
+private theorem costPowSum_ge_one_of_zero_mem (A : List Nat) (h0 : 0 ∈ A) :
+    1 ≤ costPowSum A := by
+  induction A with
+  | nil => simp at h0
+  | cons s A ih =>
+    simp only [costPowSum]
+    rcases List.mem_cons.mp h0 with hs | htail
+    · subst s
+      simp
+    · have htail' := ih htail
+      exact Nat.le_trans htail' (Nat.le_add_left (costPowSum A) (2^s))
+
+private theorem costWeightedSum_le_two (n : Nat) :
+    ∀ A : List Nat, A.Nodup →
+      (∀ s ∈ A, s < 2) →
+      costWeightedSum n A ≤ 3*n+11 := by
+  intro A
+  induction A with
+  | nil =>
+      intro hnd hlt
+      simp [costWeightedSum]
+  | cons s A ih =>
+      intro hnd hlt
+      have hnd' := List.nodup_cons.mp hnd
+      have hslt : s < 2 := hlt s (by simp)
+      have htailLt : ∀ t ∈ A, t < 2 := by
+        intro t ht
+        exact hlt t (by simp [ht])
+      by_cases hs0 : s = 0
+      · subst s
+        have hnot0 : 0 ∉ A := hnd'.1
+        have htail1 : ∀ t ∈ A, t = 1 := by
+          intro t ht
+          have htlt := htailLt t ht
+          have htne : t ≠ 0 := by
+            intro hEq
+            subst t
+            exact hnot0 ht
+          omega
+        cases A with
+        | nil =>
+            simp [costWeightedSum]
+            omega
+        | cons t T =>
+            have ht1 := htail1 t (by simp)
+            subst t
+            have hnot1 : 1 ∉ T := (List.nodup_cons.mp hnd'.2).1
+            have hTnil : T = [] := by
+              cases T with
+              | nil => rfl
+              | cons u U =>
+                  have hu1 := htail1 u (by simp)
+                  subst u
+                  exact False.elim (hnot1 (by simp))
+            simp [costWeightedSum, hTnil]
+            omega
+      · have hs1 : s = 1 := by omega
+        subst s
+        have hnot1 : 1 ∉ A := hnd'.1
+        have htail0 : ∀ t ∈ A, t = 0 := by
+          intro t ht
+          have htlt := htailLt t ht
+          have htne : t ≠ 1 := by
+            intro hEq
+            subst t
+            exact hnot1 ht
+          omega
+        cases A with
+        | nil =>
+            simp [costWeightedSum]
+            omega
+        | cons t T =>
+            have ht0 := htail0 t (by simp)
+            subst t
+            have hnot0 : 0 ∉ T := (List.nodup_cons.mp hnd'.2).1
+            have hTnil : T = [] := by
+              cases T with
+              | nil => rfl
+              | cons u U =>
+                  have hu0 := htail0 u (by simp)
+                  subst u
+                  exact False.elim (hnot0 (by simp))
+            simp [costWeightedSum, hTnil]
+            omega
+
+private theorem costWeightedSum_mod2_pos (n : Nat) :
+    ∀ A : List Nat, (∀ s ∈ A, 0 < s) →
+      costWeightedSum n A % 2 = 0 := by
+  intro A
+  induction A with
+  | nil =>
+      intro hpos
+      simp [costWeightedSum]
+  | cons s A ih =>
+      intro hpos
+      have hs : 0 < s := hpos s (by simp)
+      have htail : ∀ t ∈ A, 0 < t := by
+        intro t ht
+        exact hpos t (by simp [ht])
+      have hpow : 2^s % 2 = 0 := by
+        cases s with
+        | zero => omega
+        | succ s =>
+          rw [Nat.pow_succ]
+          omega
+      have hterm : ((n+3+s)*2^s) % 2 = 0 := by
+        rw [Nat.mul_mod, hpow]
+        simp
+      have hA := ih htail
+      simp [costWeightedSum, Nat.add_mod, hterm, hA]
+
+private theorem costWeightedSum_mod2_zero_mem (n : Nat) :
+    ∀ A : List Nat, A.Nodup → 0 ∈ A →
+      costWeightedSum n A % 2 = (n+3)%2 := by
+  intro A
+  induction A with
+  | nil =>
+      intro hnd h0
+      simp at h0
+  | cons s A ih =>
+      intro hnd h0
+      have hnd' := List.nodup_cons.mp hnd
+      by_cases hs : s = 0
+      · subst s
+        have hpos : ∀ t ∈ A, 0 < t := by
+          intro t ht
+          have hne : t ≠ 0 := by
+            intro hEq
+            subst t
+            exact hnd'.1 ht
+          omega
+        have htail := costWeightedSum_mod2_pos n A hpos
+        simp [costWeightedSum, Nat.add_mod, htail]
+      · have h0s : 0 ≠ s := by omega
+        have h0A : 0 ∈ A := by simpa [h0s] using h0
+        have htail := ih hnd'.2 h0A
+        have hpow : 2^s % 2 = 0 := by
+          cases s with
+          | zero => omega
+          | succ s =>
+            rw [Nat.pow_succ]
+            omega
+        have hterm : ((n+3+s)*2^s) % 2 = 0 := by
+          rw [Nat.mul_mod, hpow]
+          simp
+        simp [costWeightedSum, Nat.add_mod, hterm, htail]
+
+private theorem costWeightedSum_mod16_zero_mem (n : Nat) (hnEven : n%2=0) :
+    ∀ A : List Nat, A.Nodup →
+      costWeightedSum n A % 16 =
+        ((if 0 ∈ A then n+3 else 0) +
+         (if 1 ∈ A then 2*(n+4) else 0) +
+         (if 2 ∈ A then 4*(n+5) else 0)) % 16 := by
+  intro A
+  induction A with
+  | nil =>
+      intro hnd
+      simp [costWeightedSum]
+  | cons s A ih =>
+      intro hnd
+      have hnd' := List.nodup_cons.mp hnd
+      have htail := ih hnd'.2
+      by_cases hs0 : s=0
+      · subst s
+        have hnot0 : 0 ∉ A := hnd'.1
+        simp [costWeightedSum, hnot0, htail, Nat.add_mod] <;> omega
+      · by_cases hs1 : s=1
+        · subst s
+          have hnot1 : 1 ∉ A := hnd'.1
+          simp [costWeightedSum, hnot1, htail, Nat.add_mod] <;> omega
+        · by_cases hs2 : s=2
+          · subst s
+            have hnot2 : 2 ∉ A := hnd'.1
+            simp [costWeightedSum, hnot2, htail, Nat.add_mod] <;> omega
+          · have hterm : ((n+3+s)*2^s)%16=0 := by
+              by_cases hs3 : s=3
+              · subst s
+                have hEven : (n+6)%2=0 := by omega
+                omega
+              · have hs4 : 4≤s := by omega
+                have hpow := pow_two_mod16 s hs4
+                rw [Nat.mul_mod, hpow]
+                simp
+            have h0s : 0 ≠ s := by omega
+            have h1s : 1 ≠ s := by omega
+            have h2s : 2 ≠ s := by omega
+            simp [costWeightedSum, Nat.add_mod, hterm, h0s, h1s, h2s, htail] <;> omega
+
+/-- On the exact shifted source wall, at least three reset-cost units are
+forced. The proof uses the duplicate-free cost list and its first two
+possible entries. -/
+theorem source_wall_forces_m_ge_three
+    (n b d m z : Nat) (hn : 14 ≤ n)
+    (h : CountCone (14*2^n-2*n-16) 3 b d m z)
+    (hw : b+4*m+4*n+20=12*2^n) : 3 ≤ m := by
+  obtain ⟨A, hnd, hlt, hzero, hstart, hId⟩ :=
+    source_wall_cost_list_identity n b d m z hn h hw
+  by_cases hm3 : 3≤m
+  · exact hm3
+  · have hmCases : m=0 ∨ m=1 ∨ m=2 := by omega
+    rcases hmCases with hm0 | hm1 | hm2
+    · have hA : A=[] := hzero hm0
+      rw [hm0, hA] at hId
+      simp [costPowSum, costWeightedSum] at hId
+      omega
+    · subst m
+      have h0 := hstart (by omega)
+      have hS := costPowSum_ge_one_of_zero_mem A h0
+      have hU := costWeightedSum_le_two n A hnd (by
+        intro s hs
+        have hslt := hlt s hs
+        omega)
+      have hP1100 : 1100*n ≤ 2^n :=
+        (BB6.ThreeResetCore.three_reset_numeric_bounds n (2^n) hn rfl).1
+      have hL : 1+7*2^n ≤ 1+7*2^n*costPowSum A := by
+        have hmul := Nat.mul_le_mul_left (7*2^n) hS
+        omega
+      have hR : 2^n*2 + costWeightedSum n A + (n+4)*2 ≤ 2*2^n+5*n+19 := by omega
+      omega
+    · subst m
+      have h0 := hstart (by omega)
+      have hS := costPowSum_ge_one_of_zero_mem A h0
+      have hU := costWeightedSum_le_two n A hnd (by
+        intro s hs
+        have hslt := hlt s hs
+        omega)
+      have hP1100 : 1100*n ≤ 2^n :=
+        (BB6.ThreeResetCore.three_reset_numeric_bounds n (2^n) hn rfl).1
+      have hL : 1+7*2^n ≤ 1+7*2^n*costPowSum A := by
+        have hmul := Nat.mul_le_mul_left (7*2^n) hS
+        omega
+      have hR : 2^n*4 + costWeightedSum n A + (n+5)*4 ≤ 4*2^n+7*n+31 := by omega
+      omega
+
+/-- Every source CountCone prefix on the exact shifted 12*2^n wall has
+n congruent to 2 or 14 modulo 16. The first two positive reset-cost entries
+must have opposite membership in the former case and equal membership in
+the latter. -/
+theorem source_wall_forces_n_mod16
+    (n b d m z : Nat) (hn : 14 ≤ n)
+    (h : CountCone (14*2^n-2*n-16) 3 b d m z)
+    (hw : b+4*m+4*n+20=12*2^n) :
+    ∃ A : List Nat,
+      A.Nodup ∧ (∀ s∈A, s<m) ∧ 0∈A ∧
+      (n%16=2 ∧ ((1∈A ∧ 2∉A) ∨ (1∉A ∧ 2∈A)) ∨
+       n%16=14 ∧ ((1∈A ∧ 2∈A) ∨ (1∉A ∧ 2∉A))) := by
+  obtain ⟨A, hnd, hlt, hzero, hstart, hId⟩ :=
+    source_wall_cost_list_identity n b d m z hn h hw
+  have hm3 := source_wall_forces_m_ge_three n b d m z hn h hw
+  have h0 : 0∈A := hstart (by omega)
+  have hnEven : n%2=0 := by
+    have hU := costWeightedSum_mod2_zero_mem n A hnd h0
+    have hpowN := pow_two_mod2 n (by omega)
+    have hpowM := pow_two_mod2 m (by omega)
+    have hleft : (1+7*2^n*costPowSum A)%2=1 := by
+      simp [Nat.add_mod, Nat.mul_mod, hpowN]
+    have hright :
+        (2^n*2^m+costWeightedSum n A+(n+3+m)*2^m)%2 =
+          costWeightedSum n A%2 := by
+      simp [Nat.add_mod, Nat.mul_mod, hpowN, hpowM]
+    have hmod := congrArg (fun x => x%2) hId
+    rw [hleft, hright, hU] at hmod
+    omega
+  have hU16 := costWeightedSum_mod16_zero_mem n hnEven A hnd
+  have hpowN16 := pow_two_mod16 n (by omega)
+  have htermM16 := terminalTerm_mod16 n m hnEven hm3
+  have hleft16 : (1+7*2^n*costPowSum A)%16=1 := by
+    simp [Nat.add_mod, Nat.mul_mod, hpowN16]
+  have hright16 :
+      (2^n*2^m+costWeightedSum n A+(n+3+m)*2^m)%16 =
+        costWeightedSum n A%16 := by
+    simp [Nat.add_mod, Nat.mul_mod, hpowN16, htermM16]
+  have hmod16 := congrArg (fun x => x%16) hId
+  rw [hleft16, hright16, hU16] at hmod16
+  by_cases h1 : 1∈A <;> by_cases h2 : 2∈A
+  · have hcase := hmod16
+    simp [h0, h1, h2] at hcase
+    have hn14 : n%16=14 := by omega
+    exact ⟨A,hnd,hlt,h0, Or.inr ⟨hn14, Or.inl ⟨h1,h2⟩⟩⟩
+  · have hcase := hmod16
+    simp [h0, h1, h2] at hcase
+    have hn2 : n%16=2 := by omega
+    exact ⟨A,hnd,hlt,h0, Or.inl ⟨hn2, Or.inl ⟨h1,h2⟩⟩⟩
+  · have hcase := hmod16
+    simp [h0, h1, h2] at hcase
+    have hn2 : n%16=2 := by omega
+    exact ⟨A,hnd,hlt,h0, Or.inl ⟨hn2, Or.inr ⟨h1,h2⟩⟩⟩
+  · have hcase := hmod16
+    simp [h0, h1, h2] at hcase
+    have hn14 : n%16=14 := by omega
+    exact ⟨A,hnd,hlt,h0, Or.inr ⟨hn14, Or.inr ⟨h1,h2⟩⟩⟩
+
+#print axioms BB6.Agent43WallTelescoping.source_wall_forces_m_ge_three
+#print axioms BB6.Agent43WallTelescoping.source_wall_forces_n_mod16
 
 #print axioms BB6.Agent43WallTelescoping.source_weighted_sum_invariant
 #print axioms BB6.Agent43WallTelescoping.source_wall_cost_identity
