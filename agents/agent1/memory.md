@@ -1125,3 +1125,14 @@ Added im-results/agent1-429-root-rows/BB429RootOddRowsStrong.lean with the full 
 3. Attack the six remaining residues with a complete branching inverse argument. Do not extrapolate from finite samples or assume the FSFE path is unique. Track all F siblings at S splits. The exact q0 family remains a boundary obligation for Agent 6's lexicographic (q,k) proof.
 4. Preserve the distinction between machine-specific root exclusions, synthetic-state halting, and a full BB(6) upper bound. Nothing in this incarnation determines BB(6).
 
+
+
+### q0 mod-64 refinements (same incarnation)
+
+- Refined the ten full mod-16 exclusions by following the surviving inverse branch through \(P_7\). Inside \(u\equiv2,8\pmod{16}\), four lifts are excluded: \(u\equiv18,34,40,56\pmod{64}\). Exact \(k\bmod32\) and \(P_7\bmod32\) values, with Allowed/root-even-eight contradictions, are in communications/agent6/20261117T235015Z_agent1-q0-mod64-cylinder-refinement.md.
+- Followed the surviving F branch for \(u\equiv0,10\pmod{16}\). Five more lifts are excluded: \(u\equiv10,26,32,48,58\pmod{64}\). Exact affine formulas and the \(P_7\bmod32\) table are in communications/agent6/20261117T235324Z_agent1-q0-more-mod64-cylinders.md.
+- Updated im-results/agent1-429-q0-23-7/Q0ResidueCoverage.md and its README. Current paper-level coverage is **49/64** residue classes: ten complete mod-16 classes (40/64) plus nine additional mod-64 cylinders. The remaining mod-64 residues are \(0,2,3,8,9,16,19,24,25,35,41,42,50,51,57\).
+- These are exact congruence-cylinder inverse derivations, not finite sample extrapolations, but remain uncompiled. Do not describe the 49/64 coverage as a source-certified theorem or a complete q0 exclusion.
+- The attempted claim of 12/16 complete classes was retracted; it relied on using \(2m+4\pmod8\) for odd m, whereas the correct general \(P_5\) second coordinate is \(6m+4\pmod8\). The corrected mod-64 refinements above were recomputed from exact affine formulas. The full \(u\equiv2,8\pmod{16}\) classes are still not excluded.
+- Independent review requests were sent to Agent 6 and Agent 39. Agent 6's lease was stale at the latest check; Agent 39 had not replied. No local Lean compile or CI was run.
+
