@@ -173,6 +173,40 @@ def tm63MiddleFirst34Moves : Nat :=
     proposedIncrementCost 2 (16*tm63RootResidueSixK-18)
       tm63MiddleAfter33A tm63MiddleAfter33B
 
+/-- Exact source run for the M1 marker-1 middle row 32. The
+valuation-parametric source theorem applies because this row's counter is
+positive and below the original binary width. -/
+theorem tm63_middle32_source :
+    run tm2
+      (proposedIncrementCost 1 (16*tm63RootResidueSixK-16)
+        tm63MiddleAfter31A tm63MiddleAfter31B)
+      (s1Config tm63Length1
+        (16*tm63RootResidueSixK-16) 1
+        tm63MiddleAfter31A 0 tm63MiddleAfter31B
+        tm63MiddleAfter31Head) =
+    some (s1Config tm63Length1
+      (16*tm63RootResidueSixK-17) 0
+      tm63MiddleAfter32A 0 tm63MiddleAfter32B
+      tm63MiddleAfter32Head) := by
+  have hrGe := tm63_root_residue_six_k_ge_61
+  have hindex :
+      tm63Index1 = 16*tm63RootResidueSixK+15 := by
+    simpa [tm63RootResidueSixK] using tm63_index1_eq_16k15
+  have hroot := tm63_index1_lt_pow_length1
+  rw [hindex] at hroot
+  have hn32 : 0 < 16*tm63RootResidueSixK-16 := by omega
+  have hbound32 :
+      16*tm63RootResidueSixK-16 < 2^tm63Length1 := by omega
+  have ha31 : 0 < tm63MiddleAfter31A := by
+    unfold tm63MiddleAfter31A
+    omega
+  have h32raw := m1EvenValuation_counted_increment_source
+    tm63Length1 (16*tm63RootResidueSixK-16)
+    tm63MiddleAfter31A tm63MiddleAfter31B tm63MiddleAfter31Head
+    hn32 hbound32 ha31
+  simpa [tm63MiddleAfter32A,tm63MiddleAfter32B,
+    tm63MiddleAfter32Head] using h32raw
+
 /-- Compose rows 27--34 from the authentic blank-root middle-26 endpoint.
 The only remaining hypothesis is the exact arbitrary-valuation M1-even
 source increment at row 32, input n=16*r-16=32*((r-1)/2). -/
@@ -327,30 +361,7 @@ theorem tm63_blank_reaches_after_middle34 :
     tm63Length1 (16*tm63RootResidueSixK-15)
     tm63MiddleAfter30A tm63MiddleAfter30B tm63MiddleAfter30Head
     hn31 hbound31
-  have hn32 : 0 < 16*tm63RootResidueSixK-16 := by omega
-  have hbound32 :
-      16*tm63RootResidueSixK-16 < 2^tm63Length1 := by omega
-  have ha31 : 0 < tm63MiddleAfter31A := by
-    unfold tm63MiddleAfter31A
-    omega
-  have h32raw := m1EvenValuation_counted_increment_source
-    tm63Length1 (16*tm63RootResidueSixK-16)
-    tm63MiddleAfter31A tm63MiddleAfter31B tm63MiddleAfter31Head
-    hn32 hbound32 ha31
-  have h32 :
-      run tm2
-        (proposedIncrementCost 1 (16*tm63RootResidueSixK-16)
-          tm63MiddleAfter31A tm63MiddleAfter31B)
-        (s1Config tm63Length1
-          (16*tm63RootResidueSixK-16) 1
-          tm63MiddleAfter31A 0 tm63MiddleAfter31B
-          tm63MiddleAfter31Head) =
-      some (s1Config tm63Length1
-        (16*tm63RootResidueSixK-17) 0
-        tm63MiddleAfter32A 0 tm63MiddleAfter32B
-        tm63MiddleAfter32Head) := by
-    simpa [tm63MiddleAfter32A,tm63MiddleAfter32B,
-      tm63MiddleAfter32Head] using h32raw
+  have h32 := tm63_middle32_source
 
   have htarget31 :
       (16*tm63RootResidueSixK-15)-1 =
@@ -467,6 +478,7 @@ theorem tm63_blank_reaches_after_middle34_of_m1even32
         tm63MiddleAfter34Head) :=
   tm63_blank_reaches_after_middle34
 
+#print axioms tm63_middle32_source
 #print axioms tm63_blank_reaches_after_middle34
 #print axioms tm63_blank_reaches_after_middle34_of_m1even32
 
