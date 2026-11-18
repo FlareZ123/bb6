@@ -1093,6 +1093,17 @@ theorem every_w445_residual_has_unreachable_root (n : Nat) :
       (2048*n+445) s hs
   exact ⟨s,m,hs,hm,hres.1,hroot⟩
 
+#print axioms u5_w541_t_param
+#print axioms blank_no_u5_residual_m8w_w541
+#print axioms blank_no_u5_B_s_m8w_w541
+#print axioms blank_no_u5_A_s_m8w_w541
+#print axioms blank_no_high_m0_u5_w541
+#print axioms every_w541_residual_has_unreachable_root
+#print axioms u5_w445_t_param
+#print axioms blank_no_u5_residual_m8w_w445
+#print axioms blank_no_u5_B_s_m8w_w445
+#print axioms blank_no_u5_A_s_m8w_w445
+#print axioms blank_no_high_m0_u5_w445
 #print axioms every_w445_residual_has_unreachable_root
 
 end BB6.Agent4U5SourceOnlyHighStopW1021
