@@ -90,7 +90,7 @@ x+y=2485+4096h+q-3r\equiv0\pmod3.
 Now apply the exact all-preimage source grammar to a hypothetical incoming source state \((a,k)\) for \(B_{r,h}=(x,y)\):
 
 - The exceptional \(a=0\) branch requires \(x+y=8\cdot2^n\) and \(2k+9+3n=x+2y\). Since \(x\) and \(x+y\) are even, the cost equation forces \(n\) odd. The first equation then gives \(x+y\equiv8\cdot2^n\equiv1\pmod3\), contradicting \(x+y\equiv0\pmod3\).
-- The exceptional \(a=1\) branch requires \(x+y+1=16\cdot2^n\) and \(2k+5+3n=x+2y\). Here \(x\) is even and \(x+y+1\) is even, so \(y\) is odd; the cost equation again forces \(n\) odd. The first equation gives \(x+y+1\equiv16\cdot2^n\equiv2\pmod3\), whereas the left side is \(1\pmod3\), a contradiction.
+- The exceptional \(a=1\) branch requires \(x+y+1=16\cdot2^n\) and \(2k+11+3n=x+2y\). Here \(x\) is even and \(x+y+1\) is even, so \(y\) is odd; the cost equation again forces \(n\) odd. The first equation gives \(x+y+1\equiv16\cdot2^n\equiv2\pmod3\), whereas the left side is \(1\pmod3\), a contradiction.
 
 The same bounds eliminate the other exceptional cases in the exact grammar. Since \(q\ge17\), the target's first coordinate is \(x\ge32\), excluding the listed small-output cases for \(a=0\) (including \(k=1\)) and \(a=1,k\le3\). Also, \(q\le S/4=104+171h\) and \(4^r\le S\), so \(r\le S\); hence
 \[
