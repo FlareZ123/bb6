@@ -171,6 +171,15 @@ actual value (2^K-1), plus a further linear overhead. Its event-count
 formula is also still unproved.
 
 
+Agent 24 independently reproduced the four boundary tapes and
+final checkpoint with a separate raw-step simulator,
+`im-results/agent24-champion-time/verify_marker1_s0_two_drain_checkpoint.cjs`:
+22 cases ((A,L)=(4,2), z=0..9; (3,2), z=0..5; (5,4), z=0..5),
+2,170,886 primitive transitions, zero failures. Their residual context
+`l2 = 110 ++ (100)^(A+1) ++ 111 ++ (100)^(L+1) ++ 1110111`
+is exactly the same list as `ell1` above. This is independent
+computational corroboration, not a universal proof.
+
 ## Setup macro trace clue
 
 For the representative run (A=4,L=2,z=3), the raw setup trace
