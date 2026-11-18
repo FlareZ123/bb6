@@ -1474,3 +1474,6 @@ Appended to SignedCoordinateNormalForm.lean and documented in SignedCoordinateNo
 ### Refined reset scan from the Lean carry bound
 
 Added synchronizing_reset_subwords_small_start.cpp. At position k+1, the Lean one-extra-digit lemma puts both initial carries in [-1,1]; after that, use the original branch-invariant carry ranges. On all 9,968 words, this smaller initial-state set has a common reset subword of length at most 4 (9,895 length-3, 73 length-4), ending by position 12. The full distribution and reproduction command are in SynchronizingWordScan.md. This is stronger and cheaper than the earlier broad-start reset scan, but remains finite evidence without an all-time closure proof.
+
+
+The basis identity is now also explicit in Lean: (UP=P\operatorname{diag}(1,-1)), theorem involution_diagonalized_by_P. This direct kernel-checked identity makes the 3-adic involution diagonalization transparent.
