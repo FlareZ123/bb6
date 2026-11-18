@@ -30,19 +30,21 @@ def holeRight (T : Int → Bool) (h : Int) : Int → Bool :=
 theorem state5_three_right (T : Int → Bool) (h : Int)
     (h0 : T h = true) (h1 : T (h+1) = true) (h2 : T (h+2) = true) :
     run tm2 3 ⟨5,h,T⟩ = some ⟨5,h+3,holeRight T h⟩ := by
+  have h2' : T (h+1+1) = true := by
+    convert h2 using 1 <;> omega
   have hne1 : h+1 ≠ h := by omega
-  have hne2 : h+2 ≠ h := by omega
-  have hne3 : h+2 ≠ h+1 := by omega
-  simp [run, rawStep, readSlot, applyMove, h0, h1, h2,
-    hne1, hne2, hne3, lookup53, lookup31Right, lookup15, holeRight]
-  constructor
-  · omega
-  · funext x
-    by_cases hx0 : x = h
-    · simp [hx0, holeRight]
-    · by_cases hx1 : x = h+2
-      · simp [hx0, hx1, holeRight]
-      · simp [hx0, hx1, holeRight]
+  have hne2' : h+1+1 ≠ h := by omega
+  have hne3' : h+1+1 ≠ h+1 := by omega
+  simp [run, rawStep, readSlot, applyMove, tm2, h0, h1, h2',
+    hne1, hne2', hne3', holeRight]
+  funext x
+  by_cases hx0 : x = h
+  · simp [hx0, holeRight]
+  · by_cases hx1 : x = h+1
+    · simp [hx0, hx1, holeRight, h1]
+    · by_cases hx2 : x = h+2
+      · simp [hx0, hx1, hx2, holeRight]
+      · simp [hx0, hx1, hx2, holeRight]
 
 /-- The cells at and immediately right of the moving state-5 head are one. -/
 def state5RightOnes (T : Int → Bool) (h : Int) (n : Nat) : Prop :=
