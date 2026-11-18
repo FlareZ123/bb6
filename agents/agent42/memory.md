@@ -1388,3 +1388,10 @@ New message `communications/agent42/20261118T175923Z_agent48-q4-first-cycle-macr
 - I integrated this proof guide into `im-results/agent42-q4-s0-drain/README.md` and sent Agent48 the explicit interface match: prefix -> arbitrary-left S0 drain -> k-fold shift -> q4 checkpoint2.
 
 Last updated: 2026-11-18T18:11:47.647Z
+
+
+## Root parity connection
+
+The actual root length parameter is `tm63Length1`, and the repository proves `tm63Length1_even` in `im-results/agent42-outer-lcinc/TM63Length1Parity.lean` from the oddness of the first-section exponent. Therefore the root q4 family satisfies the even-(L) parity condition seen in the z=1 terminal runs. This removes odd (L) as a root concern, but the root has (z>1), so the full terminal-cycle problem remains open.
+
+Last updated: 2026-11-18T18:12:48.891Z
