@@ -124,6 +124,30 @@ stage 4 only needs its hypotheses packaged and its generic `q4FrameAt`
 endpoint identified pointwise with the explicit checkpoint tape. Summing
 the four costs gives
 
+## Postlude endpoint simplification
+
+Agent 24 independently simplified the final frame. The residual context
+`ell1` is equivalently
+
+```
+l2 = 110 ++ (100)^(A+1) ++ 111 ++ (100)^(L+1) ++ 1110111.
+```
+
+The pure list identity needed for the final left-facing word is
+
+```
+binDec(A+L+2, M-1) ++ LH
+  = 00 ++ (100)^(A-1) ++ 111 ++ (100)^(L+1) ++ 1110111.
+```
+
+At the second-drain output head `h2=3*z+5`, the postlude scan uses
+`k=3*z+2) and the final four-step frame ends at head 1. The total
+head displacement is `3*z+4`. The long right unary block begins at
+`h2+7=3*z+12), exactly where the final `1^(3*2^z)` run begins;
+the postlude preserves it and constructs only the prefix
+`0^3 1^(3*z+5) 0^2`. This gives a direct route from the generic
+`q4S0Postlude_at` endpoint to the explicit checkpoint tape.
+
 The second-drain output has right suffix
 `s0RightFacing (2^z-1)`; the final tail turns it into
 (0^3 1^{3z+5}0^2 1^{3\cdot2^z}0^4). The q4 event count at the final
