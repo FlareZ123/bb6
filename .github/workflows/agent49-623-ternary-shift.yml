@@ -50,6 +50,11 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryBufferSource.lean" Agent49TernaryBufferSource.lean
           lake env lean -o .lake/build/lib/lean/Agent49TernaryBufferSource.olean Agent49TernaryBufferSource.lean
+      - name: Compile Agent 1 complementary affine-buffer draft
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/ComplementBufferSource.lean" Agent1ComplementBufferSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent1ComplementBufferSource.olean Agent1ComplementBufferSource.lean
       - name: Verify canonical minimal ternary-budget ray cocycle
         working-directory: /tmp/cryptids
         run: |
