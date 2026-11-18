@@ -522,4 +522,100 @@ theorem outerLCIncAfterSweep_leftFacing_m2
         htarget.symm
 
 
+/-- The final tail frame lies strictly to the right of its final head. -/
+private theorem outerLCIncPostludeTape_preserves_left
+    (T : Int → Bool) (h : Int) (a m b : Nat) (x : Int)
+    (hx : x ≤ h+3*b+5) :
+    outerLCIncPostludeTape T h a m b x =
+      outerLCIncAfterSweep T h a m b x := by
+  have hnot : outerLCIncTailInside (x-(h+3*b+9)) = false := by
+    simp [outerLCIncTailInside]
+    omega
+  have hframe :
+      outerLCIncPostludeTape T h a m b x =
+        outerLCIncAfterZeroExit T h a m b x := by
+    simp [outerLCIncPostludeTape,frameAt_tape,hnot]
+  have hne : x ≠ h+3*b+10 := by omega
+  calc
+    outerLCIncPostludeTape T h a m b x =
+        outerLCIncAfterZeroExit T h a m b x := hframe
+    _ = outerLCIncAfterSweep T h a m b x :=
+      outerLCIncAfterZeroExit_preserves T h a m b x hne
+
+/-- The final postlude tape has the complete left-facing word of the
+canonical marker-1 S1/S0 target at its final head. -/
+theorem outerLCIncPostludeTape_leftFacing_m2
+    (L a b : Nat) (h : Int) (hL : 0 < L) :
+    ∀ i : Nat,
+      outerLCIncPostludeTape
+        (outerLCIncSourceT3 (s1Config L 1 2 a 0 b h).tape h a 2 0)
+        h a 2 b (h+3*b+5-(i:Int)) =
+      sideBit
+        (d0pow b ++
+          (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
+  let T : Int → Bool := (s1Config L 1 2 a 0 b h).tape
+  let T3 : Int → Bool := outerLCIncSourceT3 T h a 2 0
+  intro i
+  have hleft := outerLCIncAfterSweep_leftFacing_m2 L a b h hL i
+  have hpres := outerLCIncPostludeTape_preserves_left T3 h a 2 b
+    (h+3*b+5-(i:Int)) (by omega)
+  calc
+    outerLCIncPostludeTape T3 h a 2 b (h+3*b+5-(i:Int)) =
+        outerLCIncAfterSweep T3 h a 2 b (h+3*b+5-(i:Int)) := hpres
+    _ = sideBit
+        (d0pow b ++
+          (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
+            simpa [T3] using hleft
+
+/-- The final tail frame writes exactly the canonical marker-1 S0 right
+suffix: 011100111 followed by blank cells. -/
+theorem outerLCIncPostludeTape_rightFacing_m2
+    (L a b : Nat) (h : Int) :
+    ∀ i : Nat,
+      outerLCIncPostludeTape
+        (outerLCIncSourceT3 (s1Config L 1 2 a 0 b h).tape h a 2 0)
+        h a 2 b (h+3*b+6+(i:Int)) =
+      sideBit (s0RightFacing 0) i := by
+  let T : Int → Bool := (s1Config L 1 2 a 0 b h).tape
+  let T3 : Int → Bool := outerLCIncSourceT3 T h a 2 0
+  let H : Int := h+3*b+5
+  have hblankFacts := outerLCInc_s1_right_facts L 1 2 a b h
+  dsimp at hblankFacts
+  rcases hblankFacts with ⟨_,_,_,_,_,_,hblank⟩
+  intro i
+  by_cases hi : i < 9
+  · interval_cases i <;>
+      norm_num [outerLCIncPostludeTape,frameAt_tape,
+        outerLCIncTailInside,outerLCIncTailEnd,H,
+        s0RightFacing,d1pow,d1,sideBit]
+  · have hnot : outerLCIncTailInside
+        ((H+1+(i:Int))-(h+3*b+9)) = false := by
+      simp [outerLCIncTailInside,H]
+      omega
+    have hframe :
+        outerLCIncPostludeTape T3 h a 2 b (H+1+(i:Int)) =
+          outerLCIncAfterZeroExit T3 h a 2 b (H+1+(i:Int)) := by
+      simp [outerLCIncPostludeTape,frameAt_tape,hnot]
+    have hcoord :
+        H+1+(i:Int) = h+3*b+10+((i-4):Int) := by
+      dsimp [H]
+      omega
+    have hzeroExit := outerLCIncAfterZeroExit_preserves T3 h a 2 b
+      (H+1+(i:Int)) (by dsimp [H]; omega)
+    have hswblank :=
+      outerLCIncAfterSweep_blank T h a 2 b 0 (i-4) hblank
+    have hlen : (s0RightFacing 0).length = 9 := by
+      simp [s0RightFacing,d1pow_length]
+    have htarget :
+        sideBit (s0RightFacing 0) i = false :=
+      BB6Coverage.Agent6Q4Prefix.sideBit_ge_length
+        (s0RightFacing 0) i (by omega)
+    calc
+      outerLCIncPostludeTape T3 h a 2 b (H+1+(i:Int)) =
+          outerLCIncAfterZeroExit T3 h a 2 b (H+1+(i:Int)) := hframe
+      _ = outerLCIncAfterSweep T3 h a 2 b (H+1+(i:Int)) := hzeroExit
+      _ = false := by rw [hcoord]; exact hswblank
+      _ = sideBit (s0RightFacing 0) i := htarget.symm
+
+
 end BB6Coverage.Agent42OuterLCInc
