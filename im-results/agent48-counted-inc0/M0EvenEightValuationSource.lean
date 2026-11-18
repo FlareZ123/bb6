@@ -197,18 +197,19 @@ def m0EvenEightValuationQ4CutTape
   let T5 := sweptRight1 (4+t) T4 hR
   after101 T5 hN
 
-/-- For every q>0, the all-valuation q4 prefix is an exact original-table
-run of length 60+12a+12*v2(q), ending in state 4 at the original head. -/
-theorem m0EvenEight_valuation_q4_prefix_run
-    (L q a b : Nat) (h : Int)
+/-- Exact all-valuation q4 prefix with its source-word factorization exposed.
+The explicit left-facing equality lets the later q4 suffix use the same
+2-adic valuation witness. -/
+theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
+    (L q a b u t len : Nat) (h : Int)
     (hL : 4 ≤ L) (hq : 0 < q)
-    (hbound : 8*q < 2^L) (ha : 0 < a) :
-    ∃ t,
-      run tm2 (60+12*a+12*t)
-        (s1Config L (8*q) 0 a 0 b h) =
+    (hbound : 8*q < 2^L) (ha : 0 < a)
+    (hface :
+      s1LeftFacing L (8*q) 0 a 0 =
+        d1pow a ++ m0EvenEightValuationSourceSuffix t len u) :
+    run tm2 (60+12*a+12*t)
+      (s1Config L (8*q) 0 a 0 b h) =
       some ⟨4,h,m0EvenEightValuationQ4CutTape L q a b t h⟩ := by
-  obtain ⟨u,t,len,hfactor,hlen,hu,hface⟩ :=
-    s1LeftFacing_8q_all L q a hL hq hbound
   let T := (s1Config L (8*q) 0 a 0 b h).tape
   let N : Nat := 3*a
   let hN : Int := h-((N:Nat):Int)
@@ -512,14 +513,28 @@ theorem m0EvenEight_valuation_q4_prefix_run
         60+12*a+12*t := by
     dsimp [N]
     omega
-  refine ⟨t, ?_⟩
   simpa [m0EvenEightValuationQ4CutTape,T,N,hN,bit,T1,T2,hH,T3,hB,T4,hR,T5,T6,hnum]
     using htotal
+
+/-- Existential convenience wrapper for the exact factorized prefix theorem. -/
+theorem m0EvenEight_valuation_q4_prefix_run
+    (L q a b : Nat) (h : Int)
+    (hL : 4 ≤ L) (hq : 0 < q)
+    (hbound : 8*q < 2^L) (ha : 0 < a) :
+    ∃ t,
+      run tm2 (60+12*a+12*t)
+        (s1Config L (8*q) 0 a 0 b h) =
+      some ⟨4,h,m0EvenEightValuationQ4CutTape L q a b t h⟩ := by
+  obtain ⟨u,t,len,hfactor,hlen,hu,hface⟩ :=
+    s1LeftFacing_8q_all L q a hL hq hbound
+  exact ⟨t, m0EvenEight_valuation_q4_prefix_run_of_leftFacing
+    L q a b u t len h hL hq hbound ha hface⟩
 
 #print axioms sourceSuffix_prefix14_match
 #print axioms sourceSuffix_extraOnes
 #print axioms sourceSuffix_zeroBoundary
 #print axioms m0EvenEightValuationBridgeInputMatch
+#print axioms m0EvenEight_valuation_q4_prefix_run_of_leftFacing
 #print axioms m0EvenEight_valuation_q4_prefix_run
 
 end BB6Coverage.Agent48M0EvenEightValuationSource
