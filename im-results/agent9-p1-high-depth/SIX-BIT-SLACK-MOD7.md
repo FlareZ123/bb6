@@ -76,7 +76,7 @@ If \(I_s=20\), depth 1 gives an odd \(I_1\), since its numerator is \(20\pmod8\)
 \[
 I_1=(-588P+84T_1-212)/2,
 \]
-whose residue modulo 4 is \(2\) when \(T_1\) is even and \(0\) when \(T_1\) is odd. Thus the only potentially continuing branch in the \(\delta=2\) case is \(I_s=20\), first shallow depth 0, with odd \(T_1\). This is not excluded here.
+whose residue modulo 4 is \(2\) when \(T_1\) is even and \(0\) when \(T_1\) is odd. For \(I_s=20\), first depth 1 gives odd \(I_1\) and cannot continue. First depth 0 gives \(I_1\equiv2\pmod4\) when \(T_1\) is even, so only a second shallow depth 0 can follow and no depth-two run can intervene; when \(T_1\) is odd, \(4\mid I_1\), so a second shallow depth 0 or 1, or a depth-two run if \(8\mid I_1\), remains possible. These branches are not excluded here.
 
 For the \(\delta=1\), \(n\equiv2\pmod3\) case, the seven possible values \(I_s\) remain to be analyzed beyond this first-profile filter. This is the main residual branch after the mod-7 reduction.
 
@@ -147,7 +147,7 @@ For \(A=2\), the lower bound still gives \(2^t>128\), hence \(t\ge8\); the displ
 Combining this with \(T_1\equiv t+s\pmod2\) narrows the first-profile continuations:
 - \(I_s=6\) (all listed cases): only depth 0 is possible, and \(I_1\) is odd for either \(T_1\) parity.
 - \(I_s=34\): only depth 0 is possible, and \(I_1\) is odd.
-- \(I_s=20\): depth 1 gives odd \(I_1\); depth 0 can continue only when \(T_1\) is odd. Thus for \((\delta,I_s)=(1,20)\), \(t=3\) and continuation requires \(n\equiv5\pmod6\); for \((2,20)\), continuation requires \(t=6\) when \(n\equiv1\pmod6\), or \(t=5\) when \(n\equiv4\pmod6\).
+- \(I_s=20\): depth 1 gives odd \(I_1\); depth 0 is the only first depth that can continue. If \(T_1\) is even, then \(I_1\equiv2\pmod4\), allowing only a second shallow depth 0 and forbidding an intervening depth-two run. If \(T_1\) is odd, then \(4\mid I_1\), so a second shallow depth 0 or 1, or a depth-two run when \(8\mid I_1\), remains possible. The parity relation \(T_1\equiv t+s\pmod2\) specifies which of these subcases applies but does not eliminate the even-\(T_1\) branch.
 - \(I_s=48\): exactly one of the first shallow depths 0 and 1 makes \(I_1\) divisible by 4, selected by the parity of \(T_1\). This remains the broadest unresolved branch.
 
 These bounds assume the restart-shifted \(T_1=m_0+n+6+3s\) convention for the parity statements. They are intended as a reduction for the next source-model step, not as a complete suffix exclusion.
