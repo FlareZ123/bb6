@@ -1413,3 +1413,26 @@ Last updated: 2026-11-18T18:14:03.397Z
 Correction to the earlier shorthand root-compatibility note: the current source theorem `tm63_blank_reaches_after_middle34_to_index_one` ends at an S1 configuration with marker 2. The subsequent `outerLCInc_full_run` theorem reaches `outerLCIncPostludeTape`, whose pointwise equality to the intended canonical marker-1 S0/S1 configuration is still open. Only after that equality is proved can the target be identified with `s1Config L 0 1 A (2^b-1) 0 h` and then with the marker-1 q4 initial S0 family. The parity fact `tm63Length1_even` is proved, but it does not close this endpoint equality.
 
 Last updated: 2026-11-18T18:15:14.524Z
+
+
+## 2026-11-18 checkpoint: canonical m=2,n=1 outer-LCInc endpoint draft
+
+Last updated: 2026-11-18T19:20:52.731Z
+
+- The outstanding root gap is now addressed by a **source-level Lean proof draft** in `im-results/agent42-outer-lcinc/OuterLCIncCanonicalEndpoint.lean`. Its intended exported theorem is `outerLCIncPostludeTape_eq_s1Config_m2`, identifying the exact nested postlude tape from `outerLCInc_full_run` with
+  `s1Config L 0 1 (a+b+2) (2^b-1) 0 (h+3*b+5)`.
+- The supporting chain in that file is:
+  1. `outerLCIncSourceT3_leftFacing_m2`: for n=1,m=2 the H-run valuation is zero; `afterLIncBridge` overwrites the first two bits of `binDec L 1 = d0 ++ d1pow(L-1)`, leaving the third bit and tail, yielding `d1pow L ++ lh`.
+  2. `outerLCIncAfterZero_leftFacing_m2`: E-scan + two-step zero boundary produce `d1pow(a+2)`; the five-step frame plus H-run bridge produce `markerWord 1 ++ d0`.
+  3. `outerLCIncAfterSweep_leftFacing_m2`: `sweptRightB_block` adds `d0pow b`; residues i mod 3 select offsets +1, +0, +2 of the corresponding 001 blocks, with the final +2 bit supplied by the boundary one at h+6.
+  4. `outerLCIncPostludeTape_leftFacing_m2` and `outerLCIncPostludeTape_rightFacing_m2`: the final tail frame writes `s0RightFacing 0` at offsets +1..+9, and the exterior after +9 is blank.
+  5. Extensionality with `s1Config_left_cell`/`right_cell` and `outerLCInc_target_binary_prefix` gives the canonical endpoint.
+- The target is **exactly** the S0 input family in `im-results/agent48-counted-inc0/Marker1TerminalQ4Macro.md`: unfolding the S1 wrapper gives `s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) (a+b+2) (2^b-1) 0 H`. This is the intended marker-1 q4 initial family, with no extra `S0CountedDrain` required before its stated S0-to-first-q4-checkpoint prefix.
+- The direct root-wrapper integration point is `im-results/agent48-counted-inc0/TM63RootAfterSectionResultToOne.lean`, theorem `tm63_blank_reaches_after_middle34_reset_frame`. Its `hpowL` bound supplies L>0. After successful compilation, compose `outerLCIncPostludeTape_eq_s1Config_m2` to replace the nested frame with `s1Config tm63Length1 0 1 (sectionResult.exponent + sectionResult.right + 2) (2^sectionResult.right-1) 0 (rootHead+3*sectionResult.right+5)`, then feed the exact marker-1 S0 q4 macro.
+- **Critical validation status:** the entire new endpoint module is uncompiled and must not be treated as an accepted theorem. In this invocation, both `container.exec` and `python.exec` return tool-level `ClientError`; no CI dispatch was made, following Critic guidance requiring a fresh local Lean preflight first. The module has no `sorry`, `admit`, or declared axioms in its source, but this is not an axiom audit.
+- Requests sent:
+  - Agent 6: focused local preflight of the endpoint module, latest request in `communications/agent6/*agent42-outerlcinc-Hrun-lemma-preflight.md`; Agent 6's last lease is stale and no response has arrived.
+  - Agent 24: independent review of the H-run and pointwise endpoint proof in `communications/agent24/*agent42-outerlcinc-canonical-endpoint-review.md`.
+  - Agent 48: exact root composition and marker-1 S0 family handoff in `communications/agent48/*agent42-root-wrapper-composition-snippet.md` and `*agent42-root-endpoint-exact-q4-family-match.md`.
+- The dossier `im-results/agent42-outer-lcinc/README.md` now accurately distinguishes the established nested-frame source-run theorem from this uncompiled canonical-tape equality candidate. Keep all of this in `im-results/`, not `results/`, until a local compile, full dependency closure, and `#print axioms` succeed.
+- Next high-value action: obtain a working Lean 4.36.0-rc2 local runtime or a collaborator's local diagnostic; fix the first compiler error, compile the entire dependency closure, and inspect axiom profiles. Only then integrate the canonical endpoint into the root wrapper and continue the marker-1 q4 chain. Do not dispatch CI as a substitute for the missing local preflight.
