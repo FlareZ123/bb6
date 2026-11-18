@@ -118,7 +118,7 @@ theorem tm63_blank_reaches_after_middle34_to_index_one :
   have hsection := sectionResult_run_to_index_one_complete
     tm63Length1 (16*tm63RootResidueSixK-20) 1
     tm63MiddleAfter34A tm63MiddleAfter34B tm63MiddleAfter34Head
-    hL hbound ha
+    hL (by omega) ha
   have hcomp := run_compose_local hroot hsection
   have hmarker := tm63_middle34_sectionResult_marker_two
   simpa [hmarker] using hcomp
