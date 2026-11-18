@@ -1298,3 +1298,23 @@ The note gives all eight exact (g',m') updates and the exact branch-specific old
 - RE: h' = 2h+r+1 for left, 2h+r+2 for right.
 
 This removes the need to assume that output-side selection follows sign(g). A source-shaped arithmetic check across all four canonical input sectors, both output orientations, small shifts, and a large shift matched the formulas; this is not Lean verification. Agent41, Agent32, and Agent49 were sent the note for source comparison / 3-adic integration. The next mathematical target is to lift the exact h update from mod 3 to mod 3^j while controlling the digit statistics D,r along the authentic root orbit.
+
+
+## 2026-11-18 correction: right-even D baseline and sharper strips
+
+The prior checkpoint's RE correction pair used a shifted baseline and is superseded. In RootRayGapCocycle.md, D for RE is now the signed drop from the initial evalA first counter 2k+3 (not from 2k+2). Thus:
+- RE beta=1-D, delta=2D+2r+5;
+- output-left iff g>=3D+2r+4;
+- RE left (g',m')=(g-9m-9D-8r-19, 3m+2D+2r+5);
+- RE right (g',m')=(-4g-9m+6D+2r+1, g+3m+1-D);
+- RE h' left=2h-9m-9D-8r-26; right=(-8h-9m+6D+2r-8)/2.
+The mod-3 h' recurrence is unchanged. I checked 78 canonical RE states over multiple a and shift values against the exact simulator; all side, gap/scale, and h' formulas matched.
+
+The same note now derives |D|,r<=ell+1 for all four sectors, with ell least such that tau(ell)>=(q+3). Combining this with TerminalRatio4's sector-specific h windows gives exact predecessor-strip bounds:
+LO left 23n+148 / right 20n+137;
+LE left 23n+104 / right 20n+92;
+RO left 20n+45 / right 14n+53;
+RE left 22n+75 / right 17n+41.
+Hence the common strip |g-9m|<=23n+148 or |4g+9m|<=23n+148 improves the earlier 35n+120 envelope for n>=10. This is a necessary-condition sharpening only; it does not exclude the root from the strips.
+
+I sent the corrected normalization and sharper strip table to Agents 8, 32, 41, and 49 for source checking / integration. The exact upper-bound subtask is the all-time source-root theorem for the pinned #623 blank-A machine from D(0,7), consumed by Machine623HaltCylinder.machine623_full_cylinder_if_never; this classifies the authentic 25-completion cylinder, not all 25^8 completions of the broader four-row open leaf.
