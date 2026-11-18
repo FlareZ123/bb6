@@ -163,7 +163,7 @@ theorem entry_not_root (a K : Nat)
   have h16pB : 16*p≤B := by omega
   have hNadd : N+16*p=B+2*K+1 := by
     dsimp [N]
-    exact Nat.sub_add_cancel h16pB
+    omega
   have hB3 : B%3=2 := by
     change (c*2^r)%3=2
     rw [Nat.mul_mod,hc3,hrp3]
