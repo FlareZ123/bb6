@@ -78,7 +78,7 @@ private theorem even_even_sum_four_mod8_reach_implies_direct
       rw [hr,hs]
       calc
         (4*r)*(2*s) = (4*2)*(r*s) := by ac_rfl
-        _ = 8*(r*s) := by norm_num
+        _ = 8*(r*s) := by rfl
     have hmod : (2^(n+1)*(a+2))%8=0 :=
       Nat.mod_eq_zero_of_dvd hdiv8
     rw [hxy] at hsum
@@ -110,9 +110,7 @@ theorem q0_X_not_reach_t459mod1024 (v : Nat) :
     by_contra hq
     have hq2 : 2≤q := by omega
     have hdiv16 : 16∣4^q := by
-      have h := Nat.pow_dvd_pow 4 hq2
-      norm_num at h ⊢
-      exact h
+      exact Nat.pow_dvd_pow 4 hq2
     obtain ⟨r,hr⟩ := hdiv16
     have hdivN : 16∣43*t-1 := by
       refine ⟨r*U,?_⟩
@@ -284,9 +282,7 @@ theorem q0_X_not_reach_t3875mod4096 (v : Nat) :
     by_contra hq
     have hq3 : 3≤q := by omega
     have hdiv64 : 64∣4^q := by
-      have h := Nat.pow_dvd_pow 4 hq3
-      norm_num at h ⊢
-      exact h
+      exact Nat.pow_dvd_pow 4 hq3
     have hdiv2 : 2∣U := by
       refine ⟨U/2,?_⟩
       omega
@@ -476,9 +472,7 @@ theorem q0_X_not_reach_t811mod1024 (v : Nat) :
     by_contra hq
     have hq2 : 2≤q := by omega
     have hdiv16 : 16∣4^q := by
-      have h := Nat.pow_dvd_pow 4 hq2
-      norm_num at h ⊢
-      exact h
+      exact Nat.pow_dvd_pow 4 hq2
     obtain ⟨r,hr⟩ := hdiv16
     have hdivN : 16∣43*t-1 := by
       refine ⟨r*U,?_⟩
