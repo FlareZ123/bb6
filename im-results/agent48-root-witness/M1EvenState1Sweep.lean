@@ -81,15 +81,17 @@ theorem counted_left_sweep_from1 (n : Nat) (T : Int → Bool) (h : Int)
       simp [run, state1SweptLeft]
   | succ n ih =>
       have h1 : T (h-1) = true := by
-        exact hon 0 (by omega)
+        have hh := hon 0 (by omega)
+        convert hh using 1 <;> omega
       have h2 : T (h-2) = true := by
-        have := hon 1 (by omega)
-        simpa using this
+        have hh := hon 1 (by omega)
+        convert hh using 1 <;> omega
       have hstep := state1_three_left T h h0 h1 h2
       have hon' : state1LeftOnes (holeLeft T h) (h-1) (n+1) :=
         state1LeftOnes_tail T h (n+1) hon
+      have hne : h-1 ≠ h := by omega
       have h0' : holeLeft T h (h-1) = false := by
-        simp [holeLeft]
+        simp [holeLeft, hne]
       have htail := ih (holeLeft T h) (h-1) h0' hon'
       have hnum : 3*(n+1) = 3 + 3*n := by omega
       rw [hnum, run_append, hstep]
