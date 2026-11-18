@@ -296,7 +296,7 @@ private theorem sweptRight1_preserves_right_local
   | zero => simp [sweptRight1]
   | succ n ih =>
       simp only [sweptRight1]
-      have hp := ih (afterRight1 T h) (h+3) x (by omega)
+      have hp := ih (afterRight1 T h) (h+3) (by omega)
       rw [hp]
       have hx0 : x ≠ h := by omega
       have hx1 : x ≠ h+1 := by omega
