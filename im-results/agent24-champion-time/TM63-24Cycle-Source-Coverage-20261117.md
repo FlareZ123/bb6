@@ -69,12 +69,14 @@ Since K is odd, `q₂(j)` is even for even j and odd for odd j; `q₀(j)` is odd
 
 The existing `SectionResultRunSource.sectionResult_run_of_source_macro` proves the full primitive-recursive `sectionResult` run by induction once a total one-step dispatcher `hmacro` is supplied for every `0<k<2^L`, marker m, exponent `a>0`, right counter b, and head.
 
-`TM63SourceIncrementDispatcher.lean` now contains an uncompiled integration candidate:
+`TM63SourceIncrementDispatcher.lean` retains the uncompiled two-hypothesis dispatcher:
 
-- `tm63_source_increment_dispatch` splits on `m%3` and `k%8`, dispatches the 22 previously covered classes, and leaves two hypotheses for the all-q marker-0 and marker-2 residue-zero sources. The new M2 draft supplies a candidate for the marker-2 hypothesis once its exact closure is compiled and audited; the marker-0 hypothesis remains unfilled.
-- `sectionResult_run_of_two_zero_sources` applies the existing `sectionResult_run_of_source_macro` theorem to obtain the complete `sectionResult` run under those two hypotheses.
+- `tm63_source_increment_dispatch` splits on `m%3` and `k%8`, dispatching the 22 previously covered classes and leaving the all-q marker-0 and marker-2 residue-zero sources.
+- `sectionResult_run_of_two_zero_sources` applies `sectionResult_run_of_source_macro` under those two hypotheses.
 
-The normalized zero-row hypotheses require `q>0`, `4≤L`, `8*q<2^L`, and `a>0`, with the exact original-machine counted-increment endpoints. The dispatcher source names, argument order, bounds, and target markers/exponents were manually cross-checked against the 22 imported declarations. The file has not been compiled.
+The new `TM63SourceIncrementDispatcherM2.lean` is a second uncompiled integration layer. It supplies the marker-2 hypothesis from `M2EvenResidueZeroCounted.m2Even_residue0_counted_increment_source` and exports `tm63_source_increment_dispatch_m2` plus `sectionResult_run_of_m0_zero_source`. Thus the full `sectionResult` run is now conditional only on the still-missing marker-0 all-q source theorem. This wrapper inherits the uncompiled M2 dependency and is not compiler-certified.
+
+The normalized zero-row hypotheses require `q>0`, `4≤L`, `8*q<2^L`, and `a>0`, with the exact original-machine counted-increment endpoints. The dispatcher source names, argument order, bounds, and target markers/exponents were manually cross-checked against the imported declarations. Neither dispatcher file has been compiled.
 
 For a residue-zero branch, `k=8*q` and the macro premise `k>0` gives q>0. If the M0 all-q proof is parameterized by `t=v₂(q)` and requires `L≥4+t`, factor q using `exists_odd_factor_bounded (L-3) q`; this gives `L=ell+4+t`. The other dispatcher side conditions are routine: `a>0` is preserved by `nextExponent`, k decreases by one, and `nextMarker` is 2, 0, 1 for markers 0, 1, 2 respectively.
 
@@ -84,7 +86,7 @@ The root arithmetic supplies `tm63Index1=8*K+7`, K odd, and `tm63Index1<2^L`; se
 
 1. Complete **M0 (0,0)** by finishing the all-q q4-cut tape shape and counted composition. Its target reset-prefix cost is `99+12*a+12*v₂(q)+3*b`, from `resetPrefixCost 0 (8*q) a b`.
 2. Compile the exact original-import closure of the existing **M2 (0,2)** draft and inspect every exported axiom profile. Its target reset-prefix cost is `107+12*a+12*v₂(q)+3*b`, from `resetPrefixCost 2 (8*q) a b`.
-3. Finish and compile the M0 all-q counted source theorem, then instantiate both zero-row hypotheses in `TM63SourceIncrementDispatcher.lean` and compile/axiom-audit the dispatcher.
+3. Finish and compile the M0 all-q counted source theorem, then compile/axiom-audit `TM63SourceIncrementDispatcherM2.lean` (one remaining M0 hypothesis) and the full dispatcher closure.
 4. Apply the resulting `sectionResult` theorem at the authentic root parameters and connect its endpoint to the remaining terminal source itinerary.
 
 **Validation boundary:** this audit is based on current source signatures, mathematical derivations, and uncompiled proof drafts. It does not certify a combined dependency closure or transitive axiom profile. Do not mark a class accepted until the exact original-import Lean closure compiles and every exported `#print axioms` profile is inspected; reject `sorryAx`, `native_decide`, and custom axioms. Standard Lean axioms such as `propext`, `Classical.choice`, and `Quot.sound` are expected. No CI run is claimed for the M2 counted draft, the M0 valuation extension, or the dispatcher.
