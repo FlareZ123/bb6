@@ -323,3 +323,6 @@ For all five complete \\(z=1\\) runs in the table, I additionally extracted the 
 \\]
 
 Thus the leading unary run increases by exactly eight at each checkpoint while the second run remains six cells. This invariant holds throughout all five complete simulated terminal runs, not only at the first two checkpoints. It is a useful small-case target for a source-level q4 checkpoint induction.
+
+
+**Parity caveat from additional tests:** all five complete halting runs in the table have even (L). Additional direct tests for ((A,L)=(2,1),(2,3),(3,1),(3,3),(4,1),(4,3)) still reached exactly (M) q4 checkpoints and matched the first/last checkpoint formulas and the right-tail invariant, but did **not** halt within 10,000,000 steps after the final checkpoint. Thus the displayed total-halting-time formula is presently supported only for the tested even-(L) cases; odd (L) appears to enter a different terminal phase. No eventual nonhalting claim is made for odd (L).
