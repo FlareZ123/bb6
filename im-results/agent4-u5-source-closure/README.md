@@ -16,6 +16,7 @@ This directory develops direct original-section predecessor proofs for selected 
 | `W1125-derivation.md` | Full arithmetic and predecessor-chain derivation of the `w=1125 (mod 4096)` cylinder. |
 | `W413-derivation.md` | Full arithmetic and predecessor-chain derivation of the `w=413 (mod 1024)` cylinder. |
 | `W51741-derivation.md` | Consolidated derivation of the widened `w=541 (mod 2048)` and sum-seven `w=445 (mod 2048)` cylinders. |
+| `W541W445Arithmetic.lean` | Standalone Lean 4.36.0-rc2 check of all affine parent equations and modular gate residues for both cylinders; does not certify source-predecessor imports. |
 
 The w=1021, w=413, w=1125, w=541, and w=445 cylinders are pairwise disjoint and disjoint from the earlier w=21 (mod 32) and w=37 (mod 128) cylinders. The narrower w=51741 (mod 65536) class is contained in w=541 (mod 2048). Both remain inside the same containing root-index class `j=18791 (mod 32768)`; no density increment is claimed.
 
@@ -201,6 +202,6 @@ Writing `j=39+64s`, the exact residual equation gives `211*j+27=320*2^(201+3360*
 
 A previous invocation locally compiled only isolated arithmetic declarations from `U5SourceOnlyHighStop.lean` (`u5_residual_nonempty`, `u5_residual_s_strict_mono`, and `u5_high_root_parameter_residue`) and audited their axioms. This did **not** compile either complete source-only module or certify the parent/root chain.
 
-The complete exact-source closure, including the W541 and W445 declarations and the added HighEvenRightSum7Source/HighSumTwo imports, remains uncompiled; no CI has been dispatched. The next useful check is one focused Lean 4.36.0-rc2 preflight of the complete transitive imports, followed by #print axioms for every exported declaration. Until that succeeds, all files remain drafts under im-results/ and results/ is unchanged.
+The standalone arithmetic file W541W445Arithmetic.lean compiles with Lean 4.36.0-rc2. The complete exact-source closure, including the W541 and W445 declarations and the added HighEvenRightSum7Source/HighSumTwo imports, remains uncompiled; no CI has been dispatched. The next useful check is one focused Lean 4.36.0-rc2 preflight of the complete transitive imports, followed by #print axioms for every exported declaration. Until that succeeds, all files remain drafts under im-results/ and results/ is unchanged.
 
 The exact closure must include at least `U5Q0OddOddFan`, `U5Y3ParentFan`, `U5Y3M8`, `U5M8Q0Partial`, `U5Q0M16Residual`, `EvenEvenParentFan`, `EvenOddFourExact`, `OddOddVal3Orbit`, `EvenRightSixOrbit`, `M0EvenEvenSumZero`, `HighSumTwo`, and all original-section/source-image imports. After a successful compile, inspect `#print axioms` for every exported declaration. Only then consider a focused manual source workflow and possible promotion of any genuinely publishable result. Until then, all four Lean files remain drafts under `im-results/`; `results/` is unchanged.
