@@ -102,3 +102,12 @@ The existing residual nonvacuity and strict-monotonicity lemmas provide infinite
 2. Confirm every `#print axioms` output has no `sorryAx` or custom axioms.
 3. Only then run targeted CI and promote a polished theorem into `results/`.
 4. Continue beyond these two cylinders: they do not settle arbitrary (h), and do not determine BB(6).
+
+
+## Combined root-residue view
+
+The two proven-in-draft root cylinders are disjoint. Modulo 8192 their union is
+[
+w\equiv 1,2049,4097,4609,6145\pmod{8192}.
+]
+The first four residues are exactly (w\equiv1\pmod{2048}); the fifth is (w\equiv4609\pmod{8192}). This is only the union of the two constructed families; no conclusion is asserted for the other eleven residues or for arbitrary (w).
