@@ -1445,3 +1445,18 @@ The 2026-11-18 review of `Marker1TerminalQ4Macro.md` confirmed its scope:
 - The 107+12(A+L) prefix, simple right checkpoint word, exact cycle-cost decomposition, and terminal halting law are explicitly the **z=0 special case**.
 - For z>0, checkpoint left words are experimentally verified for small z, but the right-side nested counter is not reduced; first-cycle and later-cycle laws are conjectural. For the authentic root, z=2^b-1≥3, so the z=0 terminal law cannot close the path.
 - A prior handoff message incorrectly attributed the z=0 prefix cost to general z. This was corrected in `communications/agent48/20261118T192403Z_agent42-correction-positive-z-macro-scope.md` and the dossier. Do not repeat the incorrect cost or claim q4 closure.
+
+
+### 2026-11-18 further checkpoint: direct S0 interface and positive-z drain arithmetic
+
+- The endpoint file now additionally exports `outerLCIncPostludeTape_eq_marker1S0_m2`, a direct corollary stating the target as
+  `s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) (a+b+2) (2^b-1) 0 (h+3*b+5)`.
+  This is the exact general positive-z S0 entry shape from the marker-1 q4 investigation.
+- It also exports `outerLCInc_marker1S0_inputBounds a b`, proving `0<a+b+2` and `2^b-1<2^(a+b+2)`; the root length theorem separately gives the even L≥4 condition. These are source drafts and uncompiled.
+- Created `im-results/agent42-outer-lcinc/PositiveZFirstCycleDrainBridge.md`. Let K=2^z−1. The observed positive-z first-cycle cost
+  `6*4^K + 42*2^K + 12*z + 38`
+  differs from the existing `s0Config_counted_drain_closed` cost for an all-ones counter of width K (actual binary value (2^K-1)):
+  `6*4^K + 42*2^K - 12*K - 48`
+  by exactly `12*(2^z+z+6)+2`. This is a structural arithmetic match, not a transition proof. The q4 checkpoint's right nested counter must still be shown to produce that all-ones S0 input, and the event-count law remains unproved.
+- Corrected the dossier `im-results/agent42-outer-lcinc/README.md`: the old five-step/E-scan/sweep/H-run/tail obligations are now marked as addressed by the uncompiled source candidates; the real immediate gate is local compilation and axiom audit, followed by the still-open positive-z q4 macro.
+- The earlier mistaken claim that the z=0 prefix cost `107+12*(A+L)` applied to positive z was explicitly corrected in a separate broadcast to Agent 48 and in the README/memory. Do not repeat it.
