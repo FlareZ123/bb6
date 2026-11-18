@@ -565,7 +565,7 @@ private theorem valuationQ4_cutTape_head_true
   let hN : Int := h-((3*a:Nat):Int)
   by_cases ha1 : a=1
   · subst a
-    have hcoord : hN+3=h := by dsimp [hN]; omega
+    have hcoord : h-((3*1:Nat):Int)+3=h := by norm_num
     have hm := valuationQ4_cutTape_markerCells L q 1 b t h
     simpa [hcoord] using hm.1
   · have ha2 : 2 ≤ a := by omega
@@ -950,7 +950,7 @@ theorem m0EvenEight_valuation_q4_prefix_rightShape
   · have hcell := valuationQ4_cutTape_sourceRightCell
       L q a b t h 4 ha (by omega)
     have hcoord : h+1+(4:Int) = h+5 := by omega
-    simpa [hcoord,s1PhysicalRight,s0PhysicalRight,s0Facing,sideBit] using hcell
+    simpa [hcoord,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
   · have hcell := valuationQ4_cutTape_sourceRightCell
       L q a b t h 5 ha (by omega)
     have hcoord : h+1+(5:Int) = h+6 := by omega
