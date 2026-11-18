@@ -84,12 +84,8 @@ private theorem even_even_sum_four_mod8_reach_implies_direct
     rw [hxy] at hsum
     omega
 
-/-- The exact U5 q-fan excludes X_t=(44t-1,42t-1) for
-t=123+168*(128*v+2). The q=0 branch is reduced through
-even/even -> even/odd -> odd/even -> odd/odd -> even/odd, ending in
-odd-right sum one. The q=1 branch is reduced through
-even/even -> even/even -> even/even -> even/odd -> odd/odd,
-ending in odd/odd sum two. q>=2 is impossible modulo 16. -/
+/- The older z=2 (mod 128) parameterization is retained below as
+a corollary of the stronger t=459 (mod 1024) theorem. -/
 /-- The exact U5 q-fan excludes X_t for every t=459 (mod 1024).
 The q=0 branch reaches odd-right sum one; q=1 reaches odd/odd sum
 two. Since 43*t-1 is 8 (mod 16), q>=2 is impossible. -/
