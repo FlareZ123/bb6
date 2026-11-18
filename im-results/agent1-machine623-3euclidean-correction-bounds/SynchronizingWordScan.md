@@ -101,3 +101,26 @@ Observed over all 9,968 exported blocks (indices 33 through 10,000):
 The unique length-5 case is index 3,874; the unique length-6 case is index 237. There are no blocks without a common reset subword of length at most 6.
 
 This is a local-certificate strengthening of the full-word synchronization scan. It still remains a finite computational observation: the subword language has not yet been proved invariant under the authentic root transition.
+
+
+## Uniform synchronization depth
+
+The reset-subword checker also records the earliest end-exclusive position of any common reset subword in each root word. The maximum is **13**. The complete distribution is:
+
+| Earliest reset end (exclusive) | Number of words |
+|---:|---:|
+| 3 | 2,175 |
+| 4 | 4,214 |
+| 5 | 2,252 |
+| 6 | 894 |
+| 7 | 272 |
+| 8 | 86 |
+| 9 | 49 |
+| 10 | 16 |
+| 11 | 5 |
+| 12 | 4 |
+| 13 | 1 |
+
+The unique depth-13 case is index 6,932. Since a reset subword sends every admissible transducer start to the same carry state, this gives a uniform finite-scan statement: after at most 13 symbols of each scanned root word, the remaining output suffix is independent of the initial previous-digit pair and carry pair, for either branch.
+
+This suggests a possible route to a deterministic high-digit recurrence: enlarge the low buffer by a fixed 13 symbols, so the remaining output digits no longer depend on the low carry. It is not yet a closure proof: the synchronized output suffix need not itself contain a reset subword, and the authentic root's changing digit-window boundaries still have to be controlled.
