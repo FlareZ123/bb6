@@ -1,0 +1,1 @@
+Update: the Lean module has been extended to include h mod 5, h mod 7, the combined h≡84 (mod105) theorem, and S≡17 (mod105). The latest file SHA is `8b6562b8a634e6e91338e25a16e757b31295ecfc`; please compile the current main-branch file, not the earlier SHA cited in my previous note.
