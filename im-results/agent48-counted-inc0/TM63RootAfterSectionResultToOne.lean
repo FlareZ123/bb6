@@ -1,6 +1,7 @@
 import TM63RootMiddle34
 import TM63SourceIncrementDispatcherComplete
 import ResetBaseM2Split
+import OuterLCIncPostludeSource
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -25,6 +26,7 @@ open BB6Coverage.Agent44TM63RootMiddle34
 open BB6Coverage.Agent44SectionResultRunSource
 open BB6Coverage.Agent24ChampionTime
 open BB6Coverage.Agent48ResetBaseM2Split
+open BB6Coverage.Agent42OuterLCInc
 open BB6ChampionArithmetic
 
 private theorem run_compose_local {n m : Nat} {c1 c2 c3 : Config}
@@ -169,11 +171,151 @@ theorem tm63_blank_reaches_after_middle34_to_index_one :
   have hmarker := tm63_middle34_sectionResult_marker_two
   simpa [hmarker] using hcomp
 
+/-- Compose the authentic index-one marker-2 root state with the
+general source-level outer-LC_Inc reset prefix. The endpoint remains the
+exact nested frame tape exported by OuterLCIncPostludeSource; the final
+pointwise S0Config/terminal identification is deliberately not claimed. -/
+theorem tm63_blank_reaches_after_middle34_reset_frame :
+    run tm2
+      (tm63MiddleFirst34Moves +
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).cost +
+        (12*(sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).exponent +
+          8 + 63 +
+          3*(sectionResult (16*tm63RootResidueSixK-20) 1
+            tm63MiddleAfter34A tm63MiddleAfter34B).right))
+      blank =
+    some ⟨3,
+      sectionHeadAfter (16*tm63RootResidueSixK-20)
+        tm63MiddleAfter34B tm63MiddleAfter34Head +
+        3*(sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).right + 5,
+      outerLCIncPostludeTape
+        (s1Config tm63Length1 1 2
+          (sectionResult (16*tm63RootResidueSixK-20) 1
+            tm63MiddleAfter34A tm63MiddleAfter34B).exponent
+          0
+          (sectionResult (16*tm63RootResidueSixK-20) 1
+            tm63MiddleAfter34A tm63MiddleAfter34B).right
+          (sectionHeadAfter (16*tm63RootResidueSixK-20)
+            tm63MiddleAfter34B tm63MiddleAfter34Head)).tape
+        (sectionHeadAfter (16*tm63RootResidueSixK-20)
+          tm63MiddleAfter34B tm63MiddleAfter34Head)
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).exponent
+        2
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).right) := by
+  have hroot := tm63_blank_reaches_after_middle34
+  have hL : 4 ≤ tm63Length1 := tm63_root_length_ge_four
+  have hindex : tm63Index1 =
+      16*tm63RootResidueSixK+15 := tm63_index1_eq_16k15
+  have hrootBound := tm63_index1_lt_pow_length1
+  rw [hindex] at hrootBound
+  have hsectionBound :
+      (16*tm63RootResidueSixK-20)+1 < 2^tm63Length1 := by
+    omega
+  have ha : 0 < tm63MiddleAfter34A := by
+    unfold tm63MiddleAfter34A
+    omega
+  have hsection := sectionResult_run_to_index_one_complete
+    tm63Length1 (16*tm63RootResidueSixK-20) 1
+    tm63MiddleAfter34A tm63MiddleAfter34B tm63MiddleAfter34Head
+    hL hsectionBound ha
+  have hsection' :
+      run tm2
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).cost
+        (s1Config tm63Length1
+          (16*tm63RootResidueSixK-19) 1
+          tm63MiddleAfter34A 0 tm63MiddleAfter34B
+          tm63MiddleAfter34Head) =
+      some (s1Config tm63Length1 1
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).marker
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).exponent
+        0
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).right
+        (sectionHeadAfter (16*tm63RootResidueSixK-20)
+          tm63MiddleAfter34B tm63MiddleAfter34Head)) := by
+    simpa [show (16*tm63RootResidueSixK-20)+1 =
+      16*tm63RootResidueSixK-19 by omega] using hsection
+  have hmarker := tm63_middle34_sectionResult_marker_two
+  have hrootSection := run_compose_local hroot hsection'
+  have hrootSection' := by
+    simpa [hmarker] using hrootSection
+  have houter := outerLCInc_full_run
+    tm63Length1 1 2
+    (sectionResult (16*tm63RootResidueSixK-20) 1
+      tm63MiddleAfter34A tm63MiddleAfter34B).exponent
+    (sectionResult (16*tm63RootResidueSixK-20) 1
+      tm63MiddleAfter34A tm63MiddleAfter34B).right
+    (sectionHeadAfter (16*tm63RootResidueSixK-20)
+      tm63MiddleAfter34B tm63MiddleAfter34Head)
+    (by norm_num) (by omega) (by omega)
+  rcases houter with ⟨q,r,len,hnfactor,hlen,hq,hreset⟩
+  have hpowle : 2^r ≤ 1 := by
+    have hmul : 1*2^r ≤ (2*q+1)*2^r :=
+      Nat.mul_le_mul_right (2^r) (by omega)
+    rw [hnfactor] at hmul
+    simpa using hmul
+  have hr0 : r = 0 := by
+    cases r with
+    | zero => rfl
+    | succ r =>
+        have hp : 0 < 2^r := Nat.pow_pos (by decide)
+        have hpow : 2^(r+1) = 2^r*2 := by rw [Nat.pow_succ]
+        rw [hpow] at hpowle
+        omega
+  have hreset' :
+      run tm2
+        (12*(sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).exponent +
+          8 + 63 +
+          3*(sectionResult (16*tm63RootResidueSixK-20) 1
+            tm63MiddleAfter34A tm63MiddleAfter34B).right)
+        (s1Config tm63Length1 1 2
+          (sectionResult (16*tm63RootResidueSixK-20) 1
+            tm63MiddleAfter34A tm63MiddleAfter34B).exponent
+          0
+          (sectionResult (16*tm63RootResidueSixK-20) 1
+            tm63MiddleAfter34A tm63MiddleAfter34B).right
+          (sectionHeadAfter (16*tm63RootResidueSixK-20)
+            tm63MiddleAfter34B tm63MiddleAfter34Head)) =
+      some ⟨3,
+        sectionHeadAfter (16*tm63RootResidueSixK-20)
+          tm63MiddleAfter34B tm63MiddleAfter34Head +
+          3*(sectionResult (16*tm63RootResidueSixK-20) 1
+            tm63MiddleAfter34A tm63MiddleAfter34B).right + 5,
+        outerLCIncPostludeTape
+          (s1Config tm63Length1 1 2
+            (sectionResult (16*tm63RootResidueSixK-20) 1
+              tm63MiddleAfter34A tm63MiddleAfter34B).exponent
+            0
+            (sectionResult (16*tm63RootResidueSixK-20) 1
+              tm63MiddleAfter34A tm63MiddleAfter34B).right
+            (sectionHeadAfter (16*tm63RootResidueSixK-20)
+              tm63MiddleAfter34B tm63MiddleAfter34Head)).tape
+          (sectionHeadAfter (16*tm63RootResidueSixK-20)
+            tm63MiddleAfter34B tm63MiddleAfter34Head)
+          (sectionResult (16*tm63RootResidueSixK-20) 1
+            tm63MiddleAfter34A tm63MiddleAfter34B).exponent
+          2
+          (sectionResult (16*tm63RootResidueSixK-20) 1
+            tm63MiddleAfter34A tm63MiddleAfter34B).right) := by
+    simpa [hr0] using hreset
+  exact run_compose_local hrootSection' hreset'
+
 #print axioms tm63_root_middle_k_mod_three
 #print axioms tm63_root_residue_six_k_mod_three
 #print axioms tm63_middle34_sectionResult_marker_two
 #print axioms tm63_blank_reaches_after_middle34_to_index_one
 #print axioms resetBase_m2_prefix27
 #print axioms resetBase_m2_suffix44
+#print axioms tm63_blank_reaches_after_middle34_reset_frame
+#print axioms outerLCInc_target_binary_prefix
 
 end BB6Coverage.Agent48RootAfterSectionResult
