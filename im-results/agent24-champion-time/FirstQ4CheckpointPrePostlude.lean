@@ -49,16 +49,26 @@ theorem firstQ4Checkpoint_prePostlude
   have hsecond :=
     s0Config_counted_drain_closed
       (firstQ4Left2 L A) z z (3*z+5) (by omega)
+  have hmid :
+      s0Config (firstQ4Left0 L) A 0 z 0 =
+        s1Config L 0 1 A 0 z 0 := rfl
+  have hhead : (0:Int)+5+3*(z:Int) = (3*z+5:Int) := by omega
+  have hout :
+      s1Config (L+A+2) (2^(L+A+2)-2^A-1) 2 z (2^z-1) 0
+          (0+5+3*(z:Int)) =
+        s0Config (firstQ4Left2 L A) z (2^z-1) 0 (3*z+5) := by
+    change s0Config (firstQ4Left2 L A) z (2^z-1) 0
+        (0+5+3*(z:Int)) =
+      s0Config (firstQ4Left2 L A) z (2^z-1) 0 (3*z+5)
+    exact congrArg
+      (fun h : Int => s0Config (firstQ4Left2 L A) z (2^z-1) 0 h)
+      hhead
   rw [run_append]
   rw [hfirst]
   simp only [Option.bind_some]
   rw [run_append]
-  change run tm2 (97+12*(L+A)+3*z)
-      (s1Config L 0 1 A 0 z 0) = _ at hrst
-  rw [hrst]
-  simp only [Option.bind_some]
-  have hhead : (0:Int)+5+3*(z:Int) = (3*z+5:Int) := by omega
-  simpa [firstQ4Left2, s1Config, hhead] using hsecond
+  rw [hmid, hrst, hout]
+  exact hsecond
 
 /-- The same initial left context as marker-1/d0/d1pow notation. -/
 theorem firstQ4Left0_eq_marker1_d1pow (L : Nat) :
