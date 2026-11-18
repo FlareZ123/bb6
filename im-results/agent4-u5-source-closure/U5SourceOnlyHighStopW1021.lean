@@ -887,4 +887,212 @@ theorem every_w541_residual_has_unreachable_root (n : Nat) :
 
 #print axioms every_w541_residual_has_unreachable_root
 
+
+
+/-- The U5 residual identity on w=445 (mod 2048) forces
+t=1547 (mod 2048), feeding the new q-fan closure with the exact
+sum-seven parent fan. -/
+theorem u5_w445_t_param (w s m t : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hp : m+1=8*t+1)
+    (hw : w%2048=445) :
+    ∃ v, t=1547+2048*v := by
+  have hId := BB6.Agent3U5M16Residual.u5_m8_t_identity
+    w s m t hs hm hp
+  have hdiv2048 : 2048∣2^(201+3360*w) := by
+    change 2^11∣2^(201+3360*w)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have hpow2048 : (2^(201+3360*w))%2048=0 :=
+    Nat.mod_eq_zero_of_dvd hdiv2048
+  have hpow2048mul : (20*2^(201+3360*w))%2048=0 := by
+    rw [Nat.mul_mod,hpow2048]
+  have hmod2048 : (211*t+1360+22155*w)%2048=0 := by
+    rw [hId]
+    exact hpow2048mul
+  have hconst : (211*1547+1360+22155*445)%2048=0 := by decide
+  have hinv : 211*22363=2048*2304+1 := by decide
+  have htmod : t%2048=1547 := by omega
+  refine ⟨t/2048,?_⟩
+  omega
+
+/-- The y=3 terminal of the U5 M8 residual is unreachable on
+w=445 (mod 2048). Its q=0 parent is excluded by the exact
+t=1547 (mod 2048) q-fan theorem; q=1 is odd-right sum one;
+q>=2 contradicts m+1=1 (mod 8). -/
+theorem blank_no_u5_residual_m8w_w445 (w s m : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hw : w%2048=445) :
+    ¬ CReach (302+512*s-4*(201+3360*w)) 3 := by
+  have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
+    simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
+  have hm' : 32*s=32+105*(8*w)+m := by omega
+  have hm8 : m%8=0 := by
+    have hmod : (32*s)%8=(32+840*w+m)%8 := by rw [hm]
+    have hleft : (32*s)%8=0 := by simp [Nat.mul_mod]
+    have hright : (32+840*w+m)%8=m%8 := by
+      simp [Nat.add_mod,Nat.mul_mod]
+    rw [hleft,hright] at hmod
+    exact hmod.symm
+  have hp8 : (m+1)%8=1 := by simp [Nat.add_mod,hm8]
+  have hrpow : 201+3360*w+1≤2^(201+3360*w) := succ_le_two_pow _
+  have hlin : 211*(27*w+1)+129≤5*(201+3360*w+1) := by omega
+  have hbig : 211*(27*w+1)+129≤5*2^(201+3360*w) := by omega
+  have hsge : 27*w+1≤s := by omega
+  have hmge : 24*w≤m := by omega
+  have hwge : 445≤w := by omega
+  have hpge : 3≤m+1 := by omega
+  intro hreach
+  obtain ⟨time,ht⟩ := hreach
+  cases time with
+  | zero =>
+      simp [BB6.Agent8Section.run] at ht
+  | succ n =>
+      cases hr : BB6.Agent8Section.run BB6.Agent46.secNext n (some (5,1)) with
+      | none => simp [BB6.Agent8Section.run,hr] at ht
+      | some p =>
+          rcases p with ⟨a,k⟩
+          have hedge : BB6.Agent46.secNext (a,k)=
+              some (302+512*s-4*(201+3360*w),3) := by
+            simpa [BB6.Agent8Section.run,hr] using ht
+          have hM : 201+420*(8*w)=201+3360*w := by omega
+          have hsec : BB6.Agent46.secNext (a,k)=
+              some (302+512*s-4*(201+420*(8*w)),3) := by
+            simpa only [hM] using hedge
+          rcases u5_residual_y3_parent_fan (8*w) s m a k hs' hm' hsec with
+            hq0 | ⟨q,U,hqpos,hqbound,hdecomp,ha,hk⟩
+          · have hparent : CReach (8*(m+1)-3) (4*(m+1)-1) := by
+              rw [hq0.1,hq0.2] at hr
+              exact ⟨n,hr⟩
+            let t := (m+1)/8
+            have hp : m+1=8*t+1 := by dsimp [t]; omega
+            have htpos : 1≤t := by dsimp [t]; omega
+            obtain ⟨v,hv⟩ :=
+              u5_w445_t_param w s m t hs hm hp hw
+            have hX := q0_parent_reach_implies_X
+              t htpos hparent
+            have hX' : CReach
+                (44*(1547+2048*v)-1)
+                (42*(1547+2048*v)-1) := by
+              simpa only [hv] using hX
+            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t1547mod2048
+              v hX'
+          · by_cases hq1 : q=1
+            · subst q
+              have hUeq : U=m+1 := by simpa using hdecomp.symm
+              have haEq : a=2*(m+1)-3 := by omega
+              have hkEq : k=7*(m+1)-4 := by omega
+              have hparent : CReach (2*(m+1)-3) (7*(m+1)-4) := by
+                rw [haEq,hkEq] at hr
+                exact ⟨n,hr⟩
+              have hbad := BB6.Agent11High.blank_no_odd_sum_two
+                (2*(m+1)-3) (7*(m+1)-4)
+                (by omega) (by omega) (by omega)
+              exact hbad hparent
+            · have hq2 : 2≤q := by omega
+              have h4pow : 4∣2^(2*q-2) := by
+                change 2^2∣2^(2*q-2)
+                exact Nat.pow_dvd_pow 2 (by omega)
+              rcases h4pow with ⟨r,hrpow⟩
+              have h4 : 4∣m+1 := by
+                refine ⟨r*U,?_⟩
+                rw [hdecomp,hrpow]
+                ac_rfl
+              have h4mod : (m+1)%4=0 := Nat.mod_eq_zero_of_dvd h4
+              omega
+
+/-- The B_s feeder of the high m=0 stop is unreachable on
+w=445 (mod 2048). -/
+theorem blank_no_u5_B_s_m8w_w445 (w s m : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hw : w%2048=445) :
+    ¬ CReach (54+90*s) (127+211*s) := by
+  have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
+    simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
+  intro hB
+  have hterminal :=
+    (BB6.Agent3U5M8.u5_residual_six_even_right_chain (8*w) s hs').mp hB
+  have hM : 201+420*(8*w)=201+3360*w := by omega
+  have hterminal' : CReach (302+512*s-4*(201+3360*w)) 3 := by
+    simpa only [hM] using hterminal
+  exact blank_no_u5_residual_m8w_w445 w s m hs hm hw hterminal'
+
+/-- Both exact source parents of A_s are excluded, closing the full
+A_s branch on w=445 (mod 2048). -/
+theorem blank_no_u5_A_s_m8w_w445 (w s m : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hw : w%2048=445) :
+    ¬ CReach (130+208*s) (94+152*s) := by
+  have hdiv : 8∣2^(201+3360*w) := by
+    change 2^3∣2^(201+3360*w)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have hpowmod : (2^(201+3360*w))%8=0 := Nat.mod_eq_zero_of_dvd hdiv
+  have hsmod : (211*s+129)%8=0 := by
+    rw [hs,Nat.mul_mod,hpowmod]
+  have hs8 : s%8=5 := by omega
+  have hL := BB6.Agent11M0SumZeroVerified.blank_no_L_s_mod8_five s hs8
+  have hB := blank_no_u5_B_s_m8w_w445 w s m hs hm hw
+  intro hA
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      (130+208*s) (94+152*s) (by omega) hA
+  have hfan := BB6.Agent11M0SumZeroVerified.m0_odd_ray_parent
+    s a k (by omega) hstep
+  rcases hfan with hLparent | hBparent
+  · have hLreach : CReach (222+360*s) (46+76*s) := by
+      rw [hLparent.1,hLparent.2] at hprev
+      exact hprev
+    exact hL hLreach
+  · have hBreach : CReach (54+90*s) (127+211*s) := by
+      rw [hBparent.1,hBparent.2] at hprev
+      exact hprev
+    exact hB hBreach
+
+/-- The high m=0 stopping root j=39+64*s is excluded for the
+U5 residual family w=445 (mod 2048), using only exact source
+predecessors and the authentic blank-section orbit. -/
+theorem blank_no_high_m0_u5_w445 (w s m : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hw : w%2048=445) :
+    ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
+  intro hroot
+  let t := 2*s+1
+  have hroot' : CReach (17+64*t) (28+96*t) := by
+    have hx : 2*(39+64*s)+3=17+64*t := by dsimp [t]; omega
+    have hy : 3*(39+64*s)+7=28+96*t := by dsimp [t]; omega
+    simpa only [hx,hy] using hroot
+  have hA := BB6.Agent11M0SumZeroVerified.mzero_first_two_reach t hroot'
+  have hx : 26+104*t=130+208*s := by dsimp [t]; omega
+  have hy : 18+76*t=94+152*s := by dsimp [t]; omega
+  have hA' : CReach (130+208*s) (94+152*s) := by
+    simpa only [hx,hy] using hA
+  exact blank_no_u5_A_s_m8w_w445 w s m hs hm hw hA'
+
+/-- Every w=2048*n+445 residual is non-vacuous and has an
+authentic blank-unreachable high m=0 root. The root parameter remains
+j=18791 (mod 32768), so this is another parameter cylinder inside
+the existing containing root residue, not a density claim. -/
+theorem every_w445_residual_has_unreachable_root (n : Nat) :
+    ∃ s m,
+      211*s+129=5*2^(201+3360*(2048*n+445)) ∧
+      32*s=32+840*(2048*n+445)+m ∧
+      (39+64*s)%32768=18791 ∧
+      ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
+  obtain ⟨s,m,hs,hm,_,_⟩ :=
+    BB6.Agent4U5SourceOnlyHighStop.u5_residual_nonempty
+      (2048*n+445)
+  have hw : (2048*n+445)%2048=445 := by omega
+  have hroot := blank_no_high_m0_u5_w445
+    (2048*n+445) s m hs hm hw
+  have hres :=
+    BB6.Agent4U5SourceOnlyHighStop.u5_high_root_parameter_residue
+      (2048*n+445) s hs
+  exact ⟨s,m,hs,hm,hres.1,hroot⟩
+
+#print axioms every_w445_residual_has_unreachable_root
+
 end BB6.Agent4U5SourceOnlyHighStopW1021
