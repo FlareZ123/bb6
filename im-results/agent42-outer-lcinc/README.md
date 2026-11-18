@@ -91,6 +91,27 @@ been made. A fresh local preflight, full dependency-chain compile, and
 exported axiom audit are still required. The older 2,400-case simulator
 remains computational evidence only.
 
+## Positive-z first q4 checkpoint normal form
+
+The direct simulator
+`marker1_q4_checkpoint_sweep.js` extends the existing marker-1 S0
+checkpoint experiment through z=9. The data and candidate decomposition
+are recorded in `PositiveZCheckpointNormalForm.md`. Across z=0..9 for
+A=4,L=2 and z=0..5 for A=3,L=2 / A=5,L=4, the first state-4/head-1
+checkpoint has:
+- left word `[0,1,1] ++ binDec(A+L+2, M-1) ++ LH`, with
+  `M=2^A*(2^(L+2)-1)), independent of z;
+- right suffix `0^3 1^(3*z+5) 0^2 1^(3*2^z) 0^4`, with no further ones;
+- q4/read-0 event count `3*2^z+3*z+5`;
+- first-checkpoint time matching
+  `drainCost(z,0)+drainCost(2^z-1,0)+12*(A+L+z)+107`.
+
+The two-drain interpretation (initial z, then all-ones value
+`2^z-1) at width z, then a linear bridge) is a structural hypothesis:
+the intermediate S0 configurations have not been proved. This is separate
+from the later first-cycle drain at width `2^z-1` described below.
+
+
 ## Positive-z counted-drain structural bridge
 
 See `PositiveZFirstCycleDrainBridge.md`. The observed first-cycle cost
