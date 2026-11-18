@@ -313,7 +313,7 @@ theorem every_w4609_8192_residual_has_unreachable_root (n : Nat) :
   obtain ⟨s,m,hs,hm,_,_⟩ :=
     BB6.Agent3U5ResidualArithmetic.u5_residual_nonempty
       (8192*n+4609)
-  have hw : (8192*n+4609)%8192=1 := by omega
+  have hw : (8192*n+4609)%8192=4609 := by omega
   have hroot := blank_no_high_m0_u5_w4609_8192
     (8192*n+4609) s m hs hm hw
   have hres :=
@@ -326,13 +326,13 @@ increasing, hence this source-excluded cylinder is infinite. -/
 theorem w4609_8192_roots_pairwise_distinct
     (n1 n2 s1 s2 : Nat)
     (hn : n1<n2)
-    (hs1 : 211*s1+129=5*2^(201+3360*(8192*n1+1)))
-    (hs2 : 211*s2+129=5*2^(201+3360*(8192*n2+1))) :
+    (hs1 : 211*s1+129=5*2^(201+3360*(8192*n1+4609)))
+    (hs2 : 211*s2+129=5*2^(201+3360*(8192*n2+4609))) :
     39+64*s1 < 39+64*s2 := by
-  have hw : 8192*n1+1 < 8192*n2+1 := by omega
+  have hw : 8192*n1+4609 < 8192*n2+4609 := by omega
   have hslt :=
     BB6.Agent3U5ResidualArithmetic.u5_residual_s_strict_mono
-      (8192*n1+1) (8192*n2+1) s1 s2 hw hs1 hs2
+      (8192*n1+4609) (8192*n2+4609) s1 s2 hw hs1 hs2
   omega
 
 #print axioms u5_m8_t_mod8192_w4609
