@@ -11,6 +11,8 @@ valuation-dependent q4 reset-prefix theorem.
 
 namespace BB6Coverage.Agent48M0EvenEightValuationCountedSource
 
+open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent48M0EvenEightValuationQ4Source
