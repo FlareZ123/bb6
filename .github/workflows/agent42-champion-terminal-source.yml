@@ -1247,7 +1247,7 @@ jobs:
   middle34-acceptance:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'middle34-acceptance' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -1280,16 +1280,50 @@ jobs:
             im-results/agent48-counted-inc0/M1EvenValuationSource.lean \
             im-results/agent44-tm63-middle/M2EvenSixGenericCounted.lean \
             im-results/agent44-tm63-middle/TM63RootMiddle34.lean \
+            im-results/agent48-counted-inc0/TM63RootAfterSectionResultToOne.lean \
             --jobs 8 \
             --source-root /tmp/middle34-sources \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --workdir /tmp/middle34-acceptance \
             | tee /tmp/middle34-acceptance.log
-          grep -E "m1EvenValuation_counted_increment_source' depends on axioms:|m2EvenSix_generic_counted_increment_source' depends on axioms:|tm63_blank_reaches_after_middle34' depends on axioms:" /tmp/middle34-acceptance.log \
-            | tee /tmp/middle34-target-axioms.log
-          test "$(wc -l < /tmp/middle34-target-axioms.log)" -eq 3
-          if grep -Eq 'sorryAx|native_decide' /tmp/middle34-target-axioms.log; then
-            echo '::error::forbidden axiom or native_decide in M1/M2/root middle-34 target theorem'
+          python3 - <<'PY'
+          import pathlib
+          log = pathlib.Path("/tmp/middle34-acceptance.log").read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "m1EvenValuation_counted_increment_source'",
+              "m2EvenSix_generic_counted_increment_source'",
+              "tm63_blank_reaches_after_middle34'",
+              "tm63_source_increment_dispatch_complete",
+              "sectionResult_run_to_index_one_complete",
+              "sectionResult_run_complete",
+              "tm63_root_middle_k_mod_three",
+              "tm63_root_residue_six_k_mod_three",
+              "tm63_middle34_sectionResult_marker_two",
+              "tm63_blank_reaches_after_middle34_to_index_one",
+              "resetBase_m2_prefix27",
+              "resetBase_m2_suffix44",
+              "tm63_blank_reaches_after_middle34_reset_frame",
+              "outerLCInc_target_binary_prefix",
+          )
+          for name in names:
+              lines = [line for line in log.splitlines()
+                       if name in line and "depends on axioms:" in line]
+              if len(lines) != 1:
+                  raise SystemExit(f"expected one axiom profile for {name}, got {len(lines)}")
+              profile = lines[0].split("depends on axioms:", 1)[1].strip()
+              if not (profile.startswith("[") and profile.endswith("]")):
+                  raise SystemExit(f"unrecognized profile for {name}: {profile}")
+              axioms = {x.strip() for x in profile[1:-1].split(",") if x.strip()}
+              bad = axioms - allowed
+              if bad:
+                  raise SystemExit(f"nonstandard axioms in {name}: {sorted(bad)}")
+              if "sorryAx" in axioms:
+                  raise SystemExit(f"sorryAx in {name}")
+              print(f"{name}: {sorted(axioms)}")
+          PY
+          if grep -R -n 'native_decide' /tmp/middle34-acceptance --include='*.lean'; then
+            echo '::error::native_decide found in the exact source closure'
             exit 1
           fi
       - name: Upload focused Lean diagnostics

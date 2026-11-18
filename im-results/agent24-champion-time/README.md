@@ -43,7 +43,7 @@ The exported theorem `tm63_blank_reaches_after_middle34_to_index_one` is an auth
 The existing manual-only [counted-source workflow](../../.github/workflows/agent42-counted-lbin-dec.yml) now has:
 - a targeted M0 all-valuation source compile within `counted-lbin-dec`;
 - a `tm63-24cycle-dispatcher` target that compiles the exact transitive import closure using `tools/lean_compile_closure.py` and audits three exported dispatcher/SectionResult theorems against the standard Lean axiom allowlist;
-- an explicit opt-in `tm63-root-index-one` target that compiles the authentic root-consumer closure and audits eight root theorem profiles (including the 27+44 finite m=2 reset-base split) (it is deliberately excluded from the default `all` target).
+- an explicit opt-in `middle34-acceptance` target that compiles the authentic root-consumer closure and audits eight root theorem profiles (including the 27+44 finite m=2 reset-base split) (it is deliberately excluded from the default `all` target).
 
 Neither manual target has been dispatched. The exact local Lean 4.36.0-rc2 preflight must pass first. The next decisive work is:
 

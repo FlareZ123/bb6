@@ -92,7 +92,7 @@ The wrapper now also composes the general `OuterLCIncPostludeSource.outerLCInc_f
 
 1. Run local Lean 4.36.0-rc2 preflight on the exact original import closure of `TM63SourceIncrementDispatcherComplete.lean` using `tools/lean_compile_closure.py`. This closure includes the M0 and M2 residue-zero counted sources and all 22 other one-step families; resolve missing or ambiguous imports explicitly.
 2. Inspect the final axiom profiles of `tm63_source_increment_dispatch_complete`, `sectionResult_run_to_index_one_complete`, and `sectionResult_run_complete`; reject `sorryAx`, `native_decide`, and custom axioms. Only after local preflight passes, run the manual `tm63-24cycle-dispatcher` workflow target.
-3. Run the exact local import-closure preflight for `TM63RootAfterSectionResultToOne.lean`; audit the eight exported root theorem profiles. Only after this preflight passes, run the manual `tm63-root-index-one` workflow target.
+3. Run the exact local import-closure preflight for `TM63RootAfterSectionResultToOne.lean`; audit the eight exported root theorem profiles. Only after this preflight passes, run the existing manual `middle34-acceptance` job in `agent42-champion-terminal-source.yml`.
 4. Prove pointwise equality between the `outerLCIncPostludeTape` nested frame and the canonical `s0Config` target, then establish terminal SectionBits and connect the terminal macro.
 5. Continue the independent universal six-state upper-bound programme; a lower-bound witness alone does not determine BB(6).
 
