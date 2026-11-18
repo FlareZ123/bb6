@@ -158,3 +158,14 @@ Together with the known left checkpoint frame
 011\;\Vert\;\operatorname{binDec}(A+L+2,M(A,L)-1)\;\Vert\;lh,
 \]
 this gives a concrete candidate input frame for a uniform source theorem proving the (P(z))-step prefix to the arbitrary-left S0 drain input. This is more useful than the earlier informal description of the positive-z right tail.
+
+
+The postlude output at checkpoint (j=2) has the corresponding right-tail form
+
+\[
+0^3\;1^{h_1}\;0^2\;1^{3\cdot2^{a_1}}\;0^4,
+\qquad
+h_1=3\cdot2^z+3z+7,\quad a_1=2^z-1.
+\]
+
+This was checked by direct simulation for (z=1,2,3), and by the predicted-drain splice plus direct postlude simulation for (z=4). In particular, for (z=4) the final run lengths are (0^3,1^{67},0^2,1^{98,304},0^4). This supplies a concrete right-tail target for the first-cycle postlude theorem.
