@@ -100,16 +100,30 @@ theorem outerLCIncSourceT3_leftFacing_m2
   intro i
   by_cases hi0 : i = 0
   · subst i
-    rw [hT3eq]
-    have htrue : sideBit (d1pow L) 0 = true :=
-      sideBit_d1pow_true L 0 (by omega)
-    simpa [afterLIncBridge] using htrue
+    have htarget : sideBit (d1pow L ++ lh) 0 = true := by
+      rw [sideBit_append]
+      have hlen : (d1pow L).length = 3*L := by simp [d1pow_length]
+      have hlt : 0 < (d1pow L).length := by omega
+      simp [hlt]
+      exact sideBit_d1pow_true L 0 (by omega)
+    calc
+      outerLCIncSourceT3 T h a 2 0 h1 =
+          afterLIncBridge T2 h1 h1 := hT3eq 0
+      _ = true := by simp [afterLIncBridge]
+      _ = sideBit (d1pow L ++ lh) 0 := htarget.symm
   · by_cases hi1 : i = 1
     · subst i
-      rw [hT3eq]
-      have htrue : sideBit (d1pow L) 1 = true :=
-        sideBit_d1pow_true L 1 (by omega)
-      simpa [afterLIncBridge] using htrue
+      have htarget : sideBit (d1pow L ++ lh) 1 = true := by
+        rw [sideBit_append]
+        have hlen : (d1pow L).length = 3*L := by simp [d1pow_length]
+        have hlt : 1 < (d1pow L).length := by omega
+        simp [hlt]
+        exact sideBit_d1pow_true L 1 (by omega)
+      calc
+        outerLCIncSourceT3 T h a 2 0 (h1-1) =
+            afterLIncBridge T2 h1 (h1-1) := hT3eq 1
+        _ = true := by simp [afterLIncBridge]
+        _ = sideBit (d1pow L ++ lh) 1 := htarget.symm
     · have hi2 : 2 ≤ i := by omega
       have hn0 : h1-(i:Int) ≠ h1-1 := by omega
       have hn1 : h1-(i:Int) ≠ h1 := by omega
@@ -160,7 +174,8 @@ The six cells immediately after the zero-valuation H-run are exactly
 the marker-1/d0 boundary in head-facing order.
 -/
 private theorem outerLCIncAfterZero_m2_middleCell
-    (T : Int → Bool) (h : Int) (a k : Nat) (hk : k < 6) :
+    (T : Int → Bool) (h : Int) (a k : Nat) (hk : k < 6)
+    (hT3right : T (outerLCIncH1 h a 2+1) = true) :
     outerLCIncAfterZero T h a 2
       (outerLCIncH1 h a 2+6-(k:Int)) =
       sideBit (markerWord 1 ++ d0) k := by
@@ -173,12 +188,18 @@ private theorem outerLCIncAfterZero_m2_middleCell
   · subst k
     have hpres := outerLCIncAfterFive_preserves_left T h a 2 (h1+1) (by omega)
     rw [hpres]
-    have hbridge : outerLCIncSourceT3 T h a 2 0 (h1+1) = true := by
-      change lbinDecHRunTape 0 (outerLCIncSourceT2 T h a 2) h1 (h1+1) = true
-      simp [lbinDecHRunTape,sweptLeft,sweptRightB,afterLIncBridge]
+    have hbridge : T (h1+1) = true := by
+      simpa [h1] using hT3right
     have htarget : sideBit (markerWord 1 ++ d0) 5 = true := by
       simp [sideBit,markerWord,d0]
-    simpa [h1] using hbridge.trans_eq htarget.symm
+    calc
+      outerLCIncAfterZero T h a 2 (h1+1) =
+          outerLCIncAfterFive T h a 2 (h1+1) :=
+        outerLCIncAfterZero_preserves_left T h a 2 (h1+1) (by omega)
+      _ = T (h1+1) :=
+        outerLCIncAfterFive_preserves_left T h a 2 (h1+1) (by omega)
+      _ = true := hbridge
+      _ = sideBit (markerWord 1 ++ d0) 5 := htarget.symm
   · have hk4 : k ≤ 4 := by omega
     have hcoord :
         h1+6-(k:Int) = h1+2+((4-k):Int) := by omega
@@ -206,6 +227,9 @@ theorem outerLCIncAfterZero_leftFacing_m2
   let h1 : Int := outerLCIncH1 h a 2
   rcases outerLCInc_s1_postlude_conditions L 1 2 a b 0 h (by omega) with
     ⟨_,hscan,_,_,_,_⟩
+  have hT3right : T3 (h1+1) = true := by
+    change lbinDecHRunTape 0 (outerLCIncSourceT2 T h a 2) h1 (h1+1) = true
+    simp [lbinDecHRunTape,sweptLeft,sweptRightB,afterLIncBridge]
   have hprefixLen :
       (d1pow (a+2) ++ (markerWord 1 ++ d0)).length = 3*a+12 := by
     simp [d1pow_length,markerWord,d0]
@@ -290,7 +314,7 @@ theorem outerLCIncAfterZero_leftFacing_m2
             h+5-(i:Int) = h1+6-(k:Int) := by
           dsimp [k,h1,outerLCIncH1]
           omega
-        have hcell := outerLCIncAfterZero_m2_middleCell T h a k hk
+        have hcell := outerLCIncAfterZero_m2_middleCell T3 h a k hk hT3right
         rw [hcoordX] at hcell
         calc
           outerLCIncAfterZero T3 h a 2 (h+5-(i:Int)) =
