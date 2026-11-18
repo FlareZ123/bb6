@@ -281,7 +281,7 @@ The reproducer also contains `check_z1_full_terminal_run()`, which directly chec
 
 ## (z=1) terminal subfamily: multi-parameter full simulations
 
-Full direct simulations were also run for five ((A,L)) choices with (z=1):
+Full direct simulations were also run for nine (A,L) choices with z=1 and even L:
 
 | (A,L) | (M=2^A(2^{L+2}-1)) | q4 checkpoints | first checkpoint | last checkpoint | halt step |
 |---|---:|---:|---:|---:|---:|
@@ -295,7 +295,7 @@ Full direct simulations were also run for five ((A,L)) choices with (z=1):
 | 3,4 | 504 | 504 | 299 | 4,125,809 | 4,130,001 |
 | 5,2 | 480 | 480 | 299 | 3,745,025 | 3,749,025 |
 
-Across these five complete runs, the observed quantities fit the following compact formulas, where (s_2(n)) is the binary digit sum:
+Across these nine complete even-L runs, the observed quantities fit the following compact formulas, where (s_2(n)) is the binary digit sum:
 
 \[
 t_{q4,1}=12(A+L)+215,
@@ -317,16 +317,16 @@ T_{z=1}(A,L)
 }
 \]
 
-These are empirically supported formulas for the (z=1) subfamily, not yet formalized or proved for arbitrary (A,L). Notably, individual checkpoint-to-checkpoint costs have 2-adic irregularities; the simple total-sum formula should not be mistaken for a uniform per-cycle formula.
+These are empirically supported formulas for the tested even-L z=1 cases, not yet formalized or proved for arbitrary even (A,L). Notably, individual checkpoint-to-checkpoint costs have 2-adic irregularities; the simple total-sum formula should not be mistaken for a uniform per-cycle formula.
 
 
-For all five complete \\(z=1\\) runs in the table, I additionally extracted the right-tail RLE at **every** q4 checkpoint \\(j=1,\\ldots,M\\). It is exactly
+For all nine complete \\(z=1\\) runs in the table, I additionally extracted the right-tail RLE at **every** q4 checkpoint \\(j=1,\\ldots,M\\). It is exactly
 
 \\[
 0^3\\;1^{8j}\\;0^2\\;1^6\\;0^4.
 \\]
 
-Thus the leading unary run increases by exactly eight at each checkpoint while the second run remains six cells. This invariant holds throughout all five complete simulated terminal runs, not only at the first two checkpoints. It is a useful small-case target for a source-level q4 checkpoint induction.
+Thus the leading unary run increases by exactly eight at each checkpoint while the second run remains six cells. This invariant holds throughout all nine complete simulated terminal runs, not only at the first two checkpoints. It is a useful small-case target for a source-level q4 checkpoint induction.
 
 
-**Parity caveat from additional tests:** all five complete halting runs in the table have even (L). Additional direct tests for ((A,L)=(2,1),(2,3),(3,1),(3,3),(4,1),(4,3)) still reached exactly (M) q4 checkpoints and matched the first/last checkpoint formulas and the right-tail invariant, but did **not** halt within 10,000,000 steps after the final checkpoint. Thus the displayed total-halting-time formula is presently supported only for the tested even-(L) cases; odd (L) appears to enter a different terminal phase. No eventual nonhalting claim is made for odd (L).
+**Parity caveat from additional tests:** all nine complete halting runs in the table have even (L). Additional direct tests for ((A,L)=(2,1),(2,3),(3,1),(3,3),(4,1),(4,3)) still reached exactly (M) q4 checkpoints and matched the first/last checkpoint formulas and the right-tail invariant, but did **not** halt within 10,000,000 steps after the final checkpoint. Thus the displayed total-halting-time formula is presently supported only for the tested even-(L) cases; odd (L) appears to enter a different terminal phase. No eventual nonhalting claim is made for odd (L).
