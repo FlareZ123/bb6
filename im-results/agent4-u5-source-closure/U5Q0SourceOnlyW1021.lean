@@ -8,10 +8,10 @@ set_option linter.unusedSimpArgs false
 /-!
 A source-only extension of the U5 odd/odd q-fan.
 
-For t=123+168*z with z=128*v+2, the exact fan has only q=0,1.
+For every t=459+1024*v, the exact fan has only q=0,1.
 Both parents are forced down finite, exact original-section predecessor
-chains to already forbidden blank-image classes. This cylinder is not
-one of the previously reported M16 or A/K64,C32 quotient cylinders.
+chains to already forbidden blank-image classes. The older z=2 (mod 128)
+parameterization is retained as a corollary wrapper.
 
 This is a Lean draft. It has not yet been compiled with Lean 4.36.0-rc2.
 -/
