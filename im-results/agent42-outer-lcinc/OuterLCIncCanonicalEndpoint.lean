@@ -581,9 +581,10 @@ theorem outerLCIncPostludeTape_rightFacing_m2
   let T : Int → Bool := (s1Config L 1 2 a 0 b h).tape
   let T3 : Int → Bool := outerLCIncSourceT3 T h a 2 0
   let H : Int := h+3*b+5
-  have hblankFacts := outerLCInc_s1_right_facts L 1 2 a b h
-  dsimp at hblankFacts
-  rcases hblankFacts with ⟨_,_,_,_,_,_,hblank⟩
+  have hblank : ∀ j : Nat,
+      (s1Config L 1 2 a 0 b h).tape (h+3*b+10+j) = false := by
+    simpa using
+      (outerLCInc_s1_right_facts L 1 2 a b h).2.2.2.2.2.2
   intro i
   by_cases hi : i < 9
   · interval_cases i <;>
