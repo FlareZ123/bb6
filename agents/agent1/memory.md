@@ -1197,3 +1197,40 @@ The prior paragraph deriving u=329 or457 mod512 from a1=157 or93 mod256 ignored 
 - No replies arrived in Agent 1's mailbox from Agent 6 or Agent 32 before release. Their mailboxes contain the derivations and corrections.
 - No Lean compilation was performed; local Lean preflight was unavailable. All findings remain in im-results/, not results/.
 - Next priority remains closing the nested affine 2-adic side-branch process and the terminal residual tails, then formalizing any complete result. No q0 nonreachability theorem or BB(6) solution has been established.
+
+
+## 2026-11-18 invocation: #623 complementary affine buffer + boundary reduction
+
+Claimed identity: agent1-gpt6-20261118T055804Z-bb6-frontier, claimed 2026-11-18T05:58:04.411Z.
+
+### New durable work
+
+- `im-results/agent1-machine623-3euclidean-correction-bounds/ComplementBuffer.md`
+- `im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitStack.md`
+- Communications sent to Agent 8 and Agent 49 under `communications/agent8/` and `communications/agent49/`.
+
+### Mathematical progress
+
+1. Derived the complementary affine-buffer theorem: for every positive even state outside `newAffineCone`, if the state is not on either narrow boundary family
+   - odd d with a=d+3;
+   - even d with a=d+2,
+   and its accelerated successor exists, then the successor is strong-right: b even and 2*b+1<=e. The proof uses `oldAffineCone ⊆ newAffineCone`, then the existing four source-certified `*_to_safe_right` theorems and the exact small exceptions D(4,5)->D(6,12), D(4,7)->D(8,12).
+
+2. Consequently, positive non-boundary states outside the exponential cone immediately re-enter the cone. Combined with `newAffine_quadratic_gain`, this gives a two-step attractor into `newAffineCone` for positive states unless the first successor lies on one of the two adjacent-diagonal boundary families.
+
+3. The two residual families have exact source reductions:
+   - even gap-two D(d+2,d): `drainB 0 (d+2) 2`;
+   - odd offset-three D(d+3,d): `drainB 1 (d+2) 3`.
+   This is a substantially narrower target than the prior generic square-gap/cancellation problem.
+
+4. Derived an exact ternary digit-stack normal form for `evalA`: low ternary 1 digits recurse, terminal 2 raises the first counter by one, terminal 0 lowers it by one (or halts when the zero-first-counter guard fires), with exact ternary-prefix consumption. This is a direct structural reading of the source recursion and gives a reusable route to analyze the two boundary drain families.
+
+5. Immediate boundary tests: for odd offset-three, the first evaluator is `evalA 1 (d+1) (2*d+10)`, so it fails immediately exactly when d ≡ 0 mod 9. For even gap-two, the first evaluator is `evalA 0 (d+1) (...)`, so it fails immediately exactly when d ≡ 2 mod 3. Surviving cases recurse on a smaller ternary block and a small first-counter state.
+
+### Evidence boundary
+
+The complement-buffer and digit-stack wrappers are mathematical derivations from source-certified lemmas but are not yet source-CI compiled. Keep them in `im-results/`; do not promote to `results/` yet. No BB(6) value or complete #623 nonhalting proof has been established.
+
+### Highest-value next step
+
+Package the complement theorem against the pinned original source, then attack the two one-parameter boundary families using the ternary digit-stack normal form. The goal is to characterize reachable/halting members of D(d+2,d) and D(d+3,d), rather than returning to broad finite root scans or the generic projective gap invariant.
