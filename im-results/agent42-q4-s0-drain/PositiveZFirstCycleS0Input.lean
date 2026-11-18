@@ -1,4 +1,6 @@
 import PositiveZFirstCycleBridges
+import CountedSuffixOutput
+import Agent6Q4Prefix
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -105,7 +107,9 @@ theorem firstCycleS0DrainOutput_leftOnes (z : Nat) (tail : List Bool) :
         (d1pow a) l i (by rw [d1pow_length]; omega)]
       rw [d1pow_length]
       have hprefix : sideBit l (i-3*a) = true := by
-        unfold firstCycleResidualLeft
+        change sideBit
+          (List.replicate m true ++ ([false,true,false,false] ++ tail))
+          (i-3*a) = true
         rw [sideBit_append]
         have hltm : i-3*a < (List.replicate m true).length := by
           simp [List.length_replicate]
