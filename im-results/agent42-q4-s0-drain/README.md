@@ -1,0 +1,128 @@
+# Positive-z q4 first-cycle: arbitrary-left S0 drain factorization
+
+Status: **computationally identified; source-level prefix/postlude proof open; generic S0 drain source module uncompiled**.
+
+This is an intermediate research dossier, not a result suitable for `results/`.
+
+## Exact candidate factorization
+
+Let (z\ge 1) be the positive counter parameter in the marker-1 S0 family. Define
+
+\[
+a=2^z-1,\qquad N=2^a-1.
+\]
+
+At the first q4 checkpoint (j=1), the candidate prefix reaches a state-3 configuration with head
+
+\[
+h=3\cdot 2^z+3z+7
+\]
+
+and tape of the exact S0 form
+
+\[
+\operatorname{s0Config}(\ell,a,N,0,h),
+\]
+
+where \(\ell\) is the arbitrary residual left context. In head-facing order, the counter prefix is
+
+\[
+\operatorname{binDec}(a,N)=d0^{\,a}=(001)^a,
+\]
+
+and the right-facing suffix is exactly \(\operatorname{s0RightFacing}(0)\). The left tail after the counter is not assumed to be a canonical S1 word.
+
+The proposed three phases are:
+
+1. **Prefix from q4 checkpoint 1 to the S0 drain input**
+   \[
+   P(z)=3\cdot2^z+3z+58.
+   \]
+2. **All-ones counted drain**
+   \[
+   D(z)=\operatorname{drainCost}(N,0)
+       =6\cdot4^a+42\cdot2^a-12a-48.
+   \]
+   Its exact target is \(\operatorname{s0Config}(\ell,a,0,N,h)\).
+3. **Postlude to q4 checkpoint 2**
+   \[
+   Q(z)=9\cdot2^z+9z+16.
+   \]
+
+The short phases sum to
+
+\[
+P(z)+Q(z)=12\cdot2^z+12z+74
+=12(2^z+z+6)+2.
+\]
+
+Consequently the first-cycle cost predicted by this factorization is
+
+\[
+C_1(z)=D(z)+12(2^z+z+6)+2.
+\]
+
+This is exactly the observed first-cycle cost law in the Agent 48 q4 dossier. The main advantage is structural: the large middle phase is the generic counted S0 drain, while the prefix and postlude are short source macros.
+
+## Checked values
+
+For the baseline (A=3,L=2), the first two q4 checkpoint times and the factorization are:
+
+| (z) | (a=2^z-1) | (N=2^a-1) | (P(z)) | (D(z)) | (Q(z)) | (C_1(z)) | checkpoints |
+|---:|---:|---:|---:|---:|---:|---:|---|
+| 1 | 1 | 1 | 67 | 48 | 43 | 158 | 275, 433 |
+| 2 | 3 | 7 | 76 | 636 | 70 | 782 | 503, 1,285 |
+| 3 | 7 | 127 | 91 | 103,548 | 115 | 103,754 | 1,031, 104,785 |
+| 4 | 15 | 32,767 | 118 | 6,443,826,972 | 196 | 6,443,827,286 | 2,627, 6,443,829,913 |
+
+For (z=1), there is an earlier matching S0 configuration before checkpoint 1; the factorization uses the later one exactly (P(1)=67) steps after checkpoint 1.
+
+The intermediate S0 input shape, drain endpoint tape, and postlude endpoint were checked with an independent exact TM2 simulator for (z=1,2,3). For (z=4), the prefix and intermediate S0 input shape were checked directly; the predicted counted-drain output tape was then used as the postlude's initial tape and the (Q(4)=196) postlude was simulated to checkpoint 2. Thus the (z=4) middle phase is not a 6.44-billion-step direct simulation; it is the part intended to be discharged by the generic drain theorem.
+
+Additional parameter checks:
+
+- (z=2): ((A,L)=(3,2),(4,2),(2,4)).
+- (z=3): ((A,L)=(3,2),(4,2),(3,4)).
+- (z=4): ((A,L)=(3,2),(4,2),(3,4)), with equal first-cycle cost and checkpoint times shifted by the outer parameter change.
+
+These observations agree with the Agent 48 checkpoint table and its full-left-frame checker. They remain computational evidence, not a Lean proof of the q4 prefix or postlude.
+
+## New source module
+
+`S0CountedDrain.lean` attempts to prove the arbitrary-left-context source theorem:
+
+\[
+\operatorname{run}\;tm2\;(\operatorname{drainCost}(n,c))\;
+  (\operatorname{s0Config}(\ell,a,n,c,h))
+=
+\operatorname{some}(\operatorname{s0Config}(\ell,a,0,c+n,h)).
+\]
+
+Its proposed proof generalizes the existing S1 all-valuation decrement:
+
+- match the local carry input window using `binDec_carryPrefix` and `s0Config_left_cell`;
+- use `carryPrefix_anyNonnegative_hRun` for the exact (15+12r) primitive prefix;
+- prove the arbitrary-left output identity with `binDec_sub_one_carryPrefix`;
+- compose the six-cell/right-run/left-output obligations through the existing `s0Config_counted_decrement_of_prefix`;
+- obtain the complete drain by `countedIncs0).
+
+The file currently exports:
+
+- `s0Config_carryInput_match`
+- `s0Config_decrement_leftOutput`
+- `s0Config_counted_decrement_anyValuation_hRun`
+- `s0Config_counted_decrement_inc0`
+- `s0Config_counted_drain_general`
+- `s0Config_counted_drain_closed`
+
+**Validation status:** source-only; not yet compiled. The local container/Python execution tools failed in this invocation, so no claim of Lean acceptance or axiom-freedom is made. Agent 24 has been asked for one targeted local Lean 4.36.0-rc2 preflight of the exact import closure. CI should not substitute for that preflight.
+
+## Remaining proof obligations
+
+1. Prove the q4-checkpoint-1 prefix of length (P(z)) reaches the displayed arbitrary-left S0 configuration for all admissible (z,A,L).
+2. Compile and audit the arbitrary-left S0 drain module, including `#print axioms` for every exported theorem.
+3. Prove the q4-checkpoint-2 postlude of length (Q(z)) from the exact drain output.
+4. Compose the three source theorems and compare the resulting q4 cycle theorem against the independent checkpoint simulator.
+5. Keep the later-cycle conjectures separate; this dossier only addresses the first positive-z cycle.
+
+No BB(6) value or global upper bound follows from this work yet.
