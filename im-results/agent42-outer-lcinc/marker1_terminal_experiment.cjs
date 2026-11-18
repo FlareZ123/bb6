@@ -39,11 +39,28 @@ function initialTape(A, L, marker) {
 function run(A, L, marker, maxSteps) {
   const ones = initialTape(A, L, marker);
   let q = 3, h = 0, minHead = 0, maxHead = 0;
+  const events = {
+    q4Zero: 0,
+    q4ZeroNext0: 0,
+    q4ZeroNext1: 0,
+    q0Read0: 0,
+    q0Read1: 0
+  };
   for (let step = 0; step < maxSteps; step++) {
-    const action = transition(q, ones.has(h) ? 1 : 0);
+    const bit = ones.has(h) ? 1 : 0;
+    if (q === 4 && bit === 0) {
+      events.q4Zero++;
+      if (ones.has(h + 1)) events.q4ZeroNext1++;
+      else events.q4ZeroNext0++;
+    }
+    if (q === 0) {
+      if (bit) events.q0Read1++;
+      else events.q0Read0++;
+    }
+    const action = transition(q, bit);
     if (action === null) {
       return { marker, A, L, halted: true, steps: step, finalState: q,
-        finalHead: h, ones: ones.size, minHead, maxHead };
+        finalHead: h, ones: ones.size, minHead, maxHead, events };
     }
     const [write, move, next] = action;
     if (write) ones.add(h); else ones.delete(h);
@@ -53,7 +70,7 @@ function run(A, L, marker, maxSteps) {
     if (h > maxHead) maxHead = h;
   }
   return { marker, A, L, halted: false, horizon: maxSteps, finalState: q,
-    finalHead: h, ones: ones.size, minHead, maxHead };
+    finalHead: h, ones: ones.size, minHead, maxHead, events };
 }
 
 function main(argv) {
