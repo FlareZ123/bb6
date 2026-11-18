@@ -1457,3 +1457,12 @@ The first positive-z event-count guess with factor (2^j-1) is falsified. The spa
 Revised conjecture: K_j(z)=(2^(z-1)-1)*(2^(2^(j-1))-1), E_j(z)=6*4^K_j(z)+2. It fits z1 j1,j2 (8,8), z2 j1,j2 (26,386), z3 j1 (386), and predicts 6,442,450,946 events for z2 j3. Still empirical, not a theorem. Measured cycle costs are close to drainCost(2K+1) plus overhead: z1j1 158 vs 48; z1j2 202 vs 48; z2j1 782 vs 636; z2j2 103810 vs 103548; z3j1 103754 vs 103548. Exact overheads and the drain subrun are unresolved.
 
 Correction to the earlier checkpoint table: for A=1,L=2,z=0 the first three checkpoint steps are 143,229,359 (not 347); v2(28)=2 makes the second ordinary cycle 130 steps.
+
+
+### 2026-11-18 positive-z first-cycle macro evidence
+
+The sparse block simulator was extended to z=4. For A=3,L=2,z=4 it verifies checkpoint 1 at step 2,627 and checkpoint 2 at step 6,443,829,913; for A=4,L=2,z=4 the corresponding steps are 2,639 and 6,443,829,925. In both cases the first-cycle cost is exactly 6,443,827,286 and the q4 event count is 98,306. The left checkpoint frame passes. This is a 6.44-billion-step, low-memory reproducible simulation.
+
+Across tested z=1..4 and multiple A,L, the first-cycle step cost matches the strong conjecture: let S_e=A+L+((A+L) mod 2), k=2^z-1; then C1=drainCost(k)+12*(S_e+2^z+z)+2 = 6*4^(2^z-1)+42*2^(2^z-1)+12*(S_e+z)-34. The first-cycle q4 event count matches E1=6*4^(2^(z-1)-1)+2. Data: z1 C1=158,E1=8; z2 C1=782,E1=26; z3 C1=103754,E1=386; z4 C1=6443827286,E1=98306. The z2 value is independent of A,L across (3,2),(4,2),(2,4); z4 is independent across (3,2),(4,2). This strongly suggests a counted-drain subrun of width 2^z-1, but no source-level decomposition has been proved.
+
+The later-cycle event-count conjecture remains K_j(z)=(2^(z-1)-1)*(2^(2^(j-1))-1), E_j=6*4^K+2. The z2,j3 cycle remains unfinished after 7B steps; this rejects the earlier (2^j-1) exponent candidate. Next proof target: identify the exact s1Config/countedd-drain boundary inside the first q4 cycle, prove the frame overhead, then generalize to later j and connect the authentic root endpoint z=2^b-1>=3.
