@@ -679,41 +679,43 @@ theorem every_w413_residual_has_unreachable_root (n : Nat) :
 
 
 
-/-- The exact U5 residual identity and w=51741 (mod 65536) force
-t=1707 (mod 65536). The stronger modulus is needed to close both
-branches of the original q=0 odd/odd parent fan. -/
-theorem u5_w51741_t_param (w s m t : Nat)
+
+
+/-- The exact U5 residual identity and w=541 (mod 2048) force
+t=1707 (mod 2048). The q-fan source exclusion then closes both
+possible parent branches. -/
+theorem u5_w541_t_param (w s m t : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
     (hp : m+1=8*t+1)
-    (hw : w%65536=51741) :
-    ∃ v, t=1707+65536*v := by
+    (hw : w%2048=541) :
+    ∃ v, t=1707+2048*v := by
   have hId := BB6.Agent3U5M16Residual.u5_m8_t_identity
     w s m t hs hm hp
-  have hdiv65536 : 65536∣2^(201+3360*w) := by
-    change 2^16∣2^(201+3360*w)
+  have hdiv2048 : 2048∣2^(201+3360*w) := by
+    change 2^11∣2^(201+3360*w)
     exact Nat.pow_dvd_pow 2 (by omega)
-  have hpow65536 : (2^(201+3360*w))%65536=0 :=
-    Nat.mod_eq_zero_of_dvd hdiv65536
-  have hpow65536mul : (20*2^(201+3360*w))%65536=0 := by
-    rw [Nat.mul_mod,hpow65536]
-  have hmod65536 : (211*t+1360+22155*w)%65536=0 := by
+  have hpow2048 : (2^(201+3360*w))%2048=0 :=
+    Nat.mod_eq_zero_of_dvd hdiv2048
+  have hpow2048mul : (20*2^(201+3360*w))%2048=0 := by
+    rw [Nat.mul_mod,hpow2048]
+  have hmod2048 : (211*t+1360+22155*w)%2048=0 := by
     rw [hId]
-    exact hpow65536mul
-  have hconst : (211*1707+1360+22155*51741)%65536=0 := by decide
-  have hinv : 211*22363=65536*72+1 := by decide
-  have htmod : t%65536=1707 := by omega
-  refine ⟨t/65536,?_⟩
+    exact hpow2048mul
+  have hconst : (211*1707+1360+22155*541)%2048=0 := by decide
+  have hinv : 211*22363=2048*2304+1 := by decide
+  have htmod : t%2048=1707 := by omega
+  refine ⟨t/2048,?_⟩
   omega
 
 /-- The y=3 terminal of the U5 M8 residual is unreachable on
-w=51741 (mod 65536). Its q=0 parent is excluded by the new
-t=1707 (mod 65536) source-only fan; q=1 is odd-right sum two;
+w=541 (mod 2048). Its q=0 parent is excluded by the new
+t=1707 (mod 2048) source-only fan; q=1 is odd-right sum two;
 q>=2 contradicts m+1=1 (mod 8). -/
-theorem blank_no_u5_residual_m8w_w51741 (w s m : Nat)
+theorem blank_no_u5_residual_m8w_w541 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%65536=51741) :
+    (hw : w%2048=541) :
     ¬ CReach (302+512*s-4*(201+3360*w)) 3 := by
   have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
@@ -731,7 +733,7 @@ theorem blank_no_u5_residual_m8w_w51741 (w s m : Nat)
   have hbig : 211*(27*w+1)+129≤5*2^(201+3360*w) := by omega
   have hsge : 27*w+1≤s := by omega
   have hmge : 24*w≤m := by omega
-  have hwge : 51741≤w := by omega
+  have hwge : 541≤w := by omega
   have hpge : 3≤m+1 := by omega
   intro hreach
   obtain ⟨time,ht⟩ := hreach
@@ -759,14 +761,14 @@ theorem blank_no_u5_residual_m8w_w51741 (w s m : Nat)
             have hp : m+1=8*t+1 := by dsimp [t]; omega
             have htpos : 1≤t := by dsimp [t]; omega
             obtain ⟨v,hv⟩ :=
-              u5_w51741_t_param w s m t hs hm hp hw
+              u5_w541_t_param w s m t hs hm hp hw
             have hX := q0_parent_reach_implies_X
               t htpos hparent
             have hX' : CReach
-                (44*(1707+65536*v)-1)
-                (42*(1707+65536*v)-1) := by
+                (44*(1707+2048*v)-1)
+                (42*(1707+2048*v)-1) := by
               simpa only [hv] using hX
-            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t1707mod65536
+            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t1707mod2048
               v hX'
           · by_cases hq1 : q=1
             · subst q
@@ -793,11 +795,11 @@ theorem blank_no_u5_residual_m8w_w51741 (w s m : Nat)
               omega
 
 /-- The B_s feeder of the high m=0 stop is unreachable on
-w=51741 (mod 65536). -/
-theorem blank_no_u5_B_s_m8w_w51741 (w s m : Nat)
+w=541 (mod 2048). -/
+theorem blank_no_u5_B_s_m8w_w541 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%65536=51741) :
+    (hw : w%2048=541) :
     ¬ CReach (54+90*s) (127+211*s) := by
   have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
@@ -807,14 +809,14 @@ theorem blank_no_u5_B_s_m8w_w51741 (w s m : Nat)
   have hM : 201+420*(8*w)=201+3360*w := by omega
   have hterminal' : CReach (302+512*s-4*(201+3360*w)) 3 := by
     simpa only [hM] using hterminal
-  exact blank_no_u5_residual_m8w_w51741 w s m hs hm hw hterminal'
+  exact blank_no_u5_residual_m8w_w541 w s m hs hm hw hterminal'
 
 /-- Both exact source parents of A_s are excluded, closing the full
-A_s branch on w=51741 (mod 65536). -/
-theorem blank_no_u5_A_s_m8w_w51741 (w s m : Nat)
+A_s branch on w=541 (mod 2048). -/
+theorem blank_no_u5_A_s_m8w_w541 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%65536=51741) :
+    (hw : w%2048=541) :
     ¬ CReach (130+208*s) (94+152*s) := by
   have hdiv : 8∣2^(201+3360*w) := by
     change 2^3∣2^(201+3360*w)
@@ -824,7 +826,7 @@ theorem blank_no_u5_A_s_m8w_w51741 (w s m : Nat)
     rw [hs,Nat.mul_mod,hpowmod]
   have hs8 : s%8=5 := by omega
   have hL := BB6.Agent11M0SumZeroVerified.blank_no_L_s_mod8_five s hs8
-  have hB := blank_no_u5_B_s_m8w_w51741 w s m hs hm hw
+  have hB := blank_no_u5_B_s_m8w_w541 w s m hs hm hw
   intro hA
   obtain ⟨a,k,hprev,hstep⟩ :=
     BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
@@ -842,12 +844,12 @@ theorem blank_no_u5_A_s_m8w_w51741 (w s m : Nat)
     exact hB hBreach
 
 /-- The high m=0 stopping root j=39+64*s is excluded for the
-U5 residual family w=51741 (mod 65536), using only exact source
+U5 residual family w=541 (mod 2048), using only exact source
 predecessors and the authentic blank-section orbit. -/
-theorem blank_no_high_m0_u5_w51741 (w s m : Nat)
+theorem blank_no_high_m0_u5_w541 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
-    (hw : w%65536=51741) :
+    (hw : w%2048=541) :
     ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
   intro hroot
   let t := 2*s+1
@@ -860,28 +862,29 @@ theorem blank_no_high_m0_u5_w51741 (w s m : Nat)
   have hy : 18+76*t=94+152*s := by dsimp [t]; omega
   have hA' : CReach (130+208*s) (94+152*s) := by
     simpa only [hx,hy] using hA
-  exact blank_no_u5_A_s_m8w_w51741 w s m hs hm hw hA'
+  exact blank_no_u5_A_s_m8w_w541 w s m hs hm hw hA'
 
-/-- Every w=65536*n+51741 residual is non-vacuous and has an
+/-- Every w=2048*n+541 residual is non-vacuous and has an
 authentic blank-unreachable high m=0 root. The root parameter remains
 j=18791 (mod 32768), so this is an additional parameter cylinder
-inside the existing containing root residue, not a density increment. -/
-theorem every_w51741_residual_has_unreachable_root (n : Nat) :
+inside the existing containing root residue, not a density claim. -/
+theorem every_w541_residual_has_unreachable_root (n : Nat) :
     ∃ s m,
-      211*s+129=5*2^(201+3360*(65536*n+51741)) ∧
-      32*s=32+840*(65536*n+51741)+m ∧
+      211*s+129=5*2^(201+3360*(2048*n+541)) ∧
+      32*s=32+840*(2048*n+541)+m ∧
       (39+64*s)%32768=18791 ∧
       ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
   obtain ⟨s,m,hs,hm,_,_⟩ :=
     BB6.Agent4U5SourceOnlyHighStop.u5_residual_nonempty
-      (65536*n+51741)
-  have hw : (65536*n+51741)%65536=51741 := by omega
-  have hroot := blank_no_high_m0_u5_w51741
-    (65536*n+51741) s m hs hm hw
+      (2048*n+541)
+  have hw : (2048*n+541)%2048=541 := by omega
+  have hroot := blank_no_high_m0_u5_w541
+    (2048*n+541) s m hs hm hw
   have hres :=
     BB6.Agent4U5SourceOnlyHighStop.u5_high_root_parameter_residue
-      (65536*n+51741) s hs
+      (2048*n+541) s hs
   exact ⟨s,m,hs,hm,hres.1,hroot⟩
 
+#print axioms every_w541_residual_has_unreachable_root
 
 end BB6.Agent4U5SourceOnlyHighStopW1021
