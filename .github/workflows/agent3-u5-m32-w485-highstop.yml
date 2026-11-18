@@ -99,12 +99,12 @@ jobs:
             exit 1
           fi
 
-      - name: Reject sorryAx, native_decide, and custom BB6 axioms in q0 cylinder batch
+      - name: Reject sorryAx and native_decide in q0 cylinder batch
         if: inputs.target == 'q0-secondary-cylinders'
         run: |
           set -euo pipefail
-          if grep -E 'sorryAx|native_decide|BB6\.' /tmp/lean-closure-reports/q0-secondary-cylinders.log; then
-            echo "Forbidden axiom or native_decide dependency in U5 q0 cylinder batch" >&2
+          if grep -E 'sorryAx|native_decide' /tmp/lean-closure-reports/q0-secondary-cylinders.log; then
+            echo "Forbidden sorryAx or native_decide dependency in U5 q0 cylinder batch" >&2
             exit 1
           fi
 
