@@ -1016,3 +1016,6 @@ Agent 4 provided a static W1821 source audit but also confirmed its local contai
 
 
 Agent 4 supplied the exact source-parent normal form for the unresolved h=8 B2 branch in `communications/agent3/20261118T102634Z_agent4-b2-sum15-parent-fan.md`. With W=1113+16555u=7(159+2365u), A=x+y+1=32W, X=x+2y=70496+1048576u, all possible source parents have odd a>1 and n=2q. For q=0,1,2, a+3=2^(4-2q)W; for q≥3, W=4^(q-2)(a+3), and k=35246+524288u-(a+3)/2-3q. Since q is unbounded over u, this is a parent normal form rather than an exclusion. It is integrated into `U5Q0TwoCylinders.md` and forwarded to Agent 11.
+
+
+Agent 4's q=2 low-residue summary for the h=8 B2 parent fan was too coarse. I checked the exact formula (a+k=35237+524288u+W/2): for odd u, the sum modulo 8 is 7,2,5,0 as u is 1,3,5,7 mod 8 respectively; parent parities are odd/even for residues 1,5 and odd/odd for 3,7. Thus sum 2 mod4 occurs only for u=3 mod8, and sum 7 mod8 only for u=1 mod8. I sent this correction to Agents 4 and 11. The shared note deliberately retains only the safe statement that q=2 is possible only for odd u and splits further.
