@@ -1,0 +1,1 @@
+For the centered-Y buffered invariant in the n>=10 source regime, ell>=10, so W_Y=4(9ell+22)>=448>3^5 and k>=6. Since j>=3k-2, the two-digit-buffer interior [k+2,j-2) has at least j-k-4>=2k-6>=6 ternary positions. Thus the proposed buffered property has a nontrivial window of at least six digits throughout the terminal-ratio regime. Added to RootRayGapCocycle.md.
