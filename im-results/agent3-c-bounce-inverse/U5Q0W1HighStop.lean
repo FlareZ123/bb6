@@ -154,7 +154,7 @@ private theorem q1_parent_unreachable (p : Nat)
   · omega
 
 /-- The remaining y=3 terminal of the U5 M8 residual is
-unreachable on w=1821 (mod 2048): q=0 uses the exact nested
+unreachable on w=1 (mod 2048): q=0 uses the exact nested
 source fan and dyadic cone; q=1 uses the odd-right sum-two
 invariant, and q>=2 contradicts p=1 (mod 8). -/
 theorem blank_no_u5_residual_m8w_w1_2048 (w s m : Nat)
@@ -231,7 +231,7 @@ theorem blank_no_u5_residual_m8w_w1_2048 (w s m : Nat)
               omega
 
 /-- The B_s feeder of the authentic high m=0 stop is
-unreachable on w=1821 (mod 2048). -/
+unreachable on w=1 (mod 2048). -/
 theorem blank_no_u5_B_s_m8w_w1_2048 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
@@ -248,7 +248,7 @@ theorem blank_no_u5_B_s_m8w_w1_2048 (w s m : Nat)
   exact blank_no_u5_residual_m8w_w1_2048 w s m hs hm hw hterminal'
 
 /-- Both exact source parents of A_s are excluded on
-w=1821 (mod 2048). -/
+w=1 (mod 2048). -/
 theorem blank_no_u5_A_s_m8w_w1_2048 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
@@ -281,7 +281,7 @@ theorem blank_no_u5_A_s_m8w_w1_2048 (w s m : Nat)
 
 /-- The authentic blank-root high m=0 stopping state j=39+64*s
 is excluded for the entire nonempty U5 residual cylinder
-w=1821 (mod 2048). -/
+w=1 (mod 2048). -/
 theorem blank_no_high_m0_u5_w1_2048 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
@@ -301,7 +301,7 @@ theorem blank_no_high_m0_u5_w1_2048 (w s m : Nat)
   exact blank_no_u5_A_s_m8w_w1_2048 w s m hs hm hw hA'
 
 /-- Nonvacuity: every n supplies an actual residual solution and
-an excluded authentic blank-root state in the w=1821 mod2048
+an excluded authentic blank-root state in the w=1 mod2048
 subcylinder.  The existing residual monotonicity theorem makes
 the resulting roots pairwise distinct. -/
 theorem every_w1_2048_residual_has_unreachable_root (n : Nat) :
@@ -314,7 +314,7 @@ theorem every_w1_2048_residual_has_unreachable_root (n : Nat) :
   obtain ⟨s,m,hs,hm,_,_⟩ :=
     BB6.Agent3U5ResidualArithmetic.u5_residual_nonempty
       (2048*n+1)
-  have hw : (2048*n+1)%2048=1821 := by omega
+  have hw : (2048*n+1)%2048=1 := by omega
   have hroot := blank_no_high_m0_u5_w1_2048
     (2048*n+1) s m hs hm hw
   have hres :=
@@ -327,16 +327,16 @@ increasing, hence this source-excluded cylinder is infinite. -/
 theorem w1_2048_roots_pairwise_distinct
     (n1 n2 s1 s2 : Nat)
     (hn : n1<n2)
-    (hs1 : 211*s1+129=5*2^(201+3360*(2048*n1+1821)))
-    (hs2 : 211*s2+129=5*2^(201+3360*(2048*n2+1821))) :
+    (hs1 : 211*s1+129=5*2^(201+3360*(2048*n1+1)))
+    (hs2 : 211*s2+129=5*2^(201+3360*(2048*n2+1))) :
     39+64*s1 < 39+64*s2 := by
-  have hw : 2048*n1+1821 < 2048*n2+1821 := by omega
+  have hw : 2048*n1+1 < 2048*n2+1 := by omega
   have hslt :=
     BB6.Agent3U5ResidualArithmetic.u5_residual_s_strict_mono
-      (2048*n1+1821) (2048*n2+1821) s1 s2 hw hs1 hs2
+      (2048*n1+1) (2048*n2+1) s1 s2 hw hs1 hs2
   omega
 
-#print axioms u5_m8_t_mod2048_w1_2048
+#print axioms u5_m8_t_mod2048_w1
 #print axioms blank_no_u5_q0_parent_t1063
 #print axioms blank_no_u5_q0_parent_w1_2048
 #print axioms blank_no_u5_residual_m8w_w1_2048
