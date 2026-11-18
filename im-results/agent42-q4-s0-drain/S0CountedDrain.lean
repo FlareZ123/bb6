@@ -1,4 +1,7 @@
-import S1CountedDrain
+import CountedSuffixOutput
+import CountedReset
+import CountedCarryPrefixHRun
+import S1Encoder
 import Lean.Elab.Tactic.Omega
 
 /-!
