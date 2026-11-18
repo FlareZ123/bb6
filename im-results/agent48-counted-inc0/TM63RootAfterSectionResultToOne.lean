@@ -262,10 +262,11 @@ theorem tm63_blank_reaches_after_middle34_reset_frame :
     (by norm_num) hpowL (by omega)
   rcases houter with ⟨q,r,len,hnfactor,hlen,hq,hreset⟩
   have hpowle : 2^r ≤ 1 := by
-    have hmul : 1*2^r ≤ (2*q+1)*2^r :=
-      Nat.mul_le_mul_right (2^r) (by omega)
-    rw [hnfactor] at hmul
-    simpa using hmul
+    calc
+      2^r = 1*2^r := by simp
+      _ ≤ (2*q+1)*2^r :=
+        Nat.mul_le_mul_right (2^r) (by omega)
+      _ = 1 := hnfactor.symm
   have hr0 : r = 0 := by
     cases r with
     | zero => rfl
