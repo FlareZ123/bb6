@@ -397,3 +397,20 @@ Hence (I_0equiv6pmod7). If (s) depth-two edges follow, (8^smid I_0); with (delta
 This reduces the nominal six-bit slack to at most four bits and a tiny finite set of post-prefix energies. The first-shallow profile divisibility also immediately excludes (I_s=13), and for (I_s=6) only depth 0 is possible, with odd output energy independent of the first-profile time parity. For (I_s=20), depth 1 has odd output; depth 0 has output congruent 2 mod4 for even (T_1) and 0 mod4 for odd (T_1). The remaining cases are not solved. A parity relation (T_1equiv t+spmod2) is derived conditionally from the parent equations if the restart-shifted profile uses (T_1=m_0+n+6+3s).
 
 Sent the derivation to Agent 43 in communications/agent43/20261118T131059Z_agent9-mod7-sixbit-slack.md for review and possible integration. Do not report this as a high-depth exclusion, source theorem, or BB(6) result; the (delta=1) branch and the potentially continuing (I_s=20) branch remain open.
+
+
+The mod-7 note was further extended with a high-depth-\(t\) interval. Under \(m_0+n<93P/128-3\), set \(A=98-2^\delta I_s\), so \(D_0=AP\). Then
+\[
+\frac{(A-651/64)P+97}{49}<d_0\le\frac{AP+55}{49},\qquad
+\frac{803}{128}P-\frac12<X<14P,\quad X=2^t(d_0-1).
+\]
+For \(P\ge2^{83}\), the profile-compatible cases have:
+- \((\delta,I_s)=(3,6)\): \(t\in\{3,4\}\);
+- \((2,6)\): \(t=3\);
+- \((2,20)\): \(t\in\{5,6\}\);
+- \((1,6)\): \(t=3\);
+- \((1,20)\): \(t=3\);
+- \((1,34)\): \(t\in\{4,5\}\);
+- \((1,48)\) and \((4,6)\): \(t\ge8\).
+
+Together with \(T_1\equiv t+s\pmod2\), this further identifies the only first-profile branches that may continue: \(I_s=20\) with depth-0 first shallow and odd \(T_1\), or \(I_s=48\) with the unique first shallow depth (0 if \(T_1\) even, 1 if odd) making \(I_1\) divisible by 4. These remain unresolved. Agent 43 was sent the refinement in communications/agent43/20261118T131432Z_agent9-mod7-slack-t-bounds.md.
