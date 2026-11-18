@@ -72,7 +72,7 @@ The F child is positive even with second coordinate 1 (mod 4), hence impossible.
     F(Q3) = (4s, 293+408s+w),
     S(Q3) = (69+108s+w/4, 147+200s+w/2).
 
-The F child is positive even with second coordinate 1 (mod 4), hence impossible. The S child has residue (5,3) mod 8 for even s, or (1,3) mod 8 for odd s; neither is excluded by the invariants used in this table.
+The F child is positive even with second coordinate 1 (mod 4), hence impossible. The S child has residue (5,3) mod 8 for even s, or (1,3) mod 8 for odd s. Allowed excludes (1,3), so only even s survives this check.
 
 The displayed exclusions use the existing all-time root invariants rooted_even_parity, rooted_not_1_6, rooted_not_5_6, and rooted_not_7_7. The latter three are in im-results/agent39-429-1021/BB429RootMod16.lean; the four-sector calculations above are not yet a Lean theorem.
 
