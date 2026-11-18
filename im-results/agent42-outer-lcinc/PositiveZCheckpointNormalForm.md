@@ -151,8 +151,10 @@ At the second-drain output head `h2=3*z+5`, the postlude scan uses
 head displacement is `3*z+4`. The long right unary block begins at
 `h2+7=3*z+12), exactly where the final `1^(3*2^z)` run begins;
 the postlude preserves it and constructs only the prefix
-`0^3 1^(3*z+5) 0^2`. This gives a direct route from the generic
-`q4S0Postlude_at` endpoint to the explicit checkpoint tape.
+`0^3 1^(3*z+5) 0^2`. This gives a direct route to the explicit checkpoint tape. An even
+cleaner decomposition, identified by Agent 24, is `counted_left_sweep
+(3*z)` followed by the fixed ten-step `firstQ4Postlude_exact` bridge;
+this avoids carrying the longer generic `q4S0Postlude_at` specialization.
 
 The second-drain output has right suffix
 `s0RightFacing (2^z-1)`; the final tail turns it into
