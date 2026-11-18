@@ -47,6 +47,7 @@ structure RestartPath (n b d m : Nat) : Type where
   hBase : c = m0+n
   hCost : m = m0+L
   hTotal : totalCost es = L
+  hLow : ∀ e, e ∈ es → e ≤ 3
   hEven : x0 = 2*xhalf
   hHalf : xhalf < 2^n
   walk : RestartWalk (2^n) c x0 0 es (d-1)
@@ -91,6 +92,7 @@ theorem restart_path_after_deep
     hBase := rfl
     hCost := by simp
     hTotal := rfl
+    hLow := by intro e he; simp at he
     hEven := hEven
     hHalf := hxsmall
     walk := ?_
@@ -106,7 +108,7 @@ theorem restart_path_extend
     (hmass : bp+dp+2*mp+2*n+13 = 14*2^n)
     (hb : 8 ≤ bp) (hb4 : bp%4=0) (hd : dp%2=1)
     (hi : inverseAt bp dp t = some (k,cInv))
-    (hk : 2 ≤ k) (hc : cInv%2=1)
+    (hk : 2 ≤ k) (hc : cInv%2=1) (ht : t ≤ 2)
     (path : RestartPath n bp dp mp) :
     RestartPath n (2*k-4) (cInv+4) (mp+t+1) := by
   have hsource := (inverseAt_iff_power_mass bp dp t k cInv (by omega) hb4 hd).mp hi
@@ -141,6 +143,7 @@ theorem restart_path_extend
     hBase := path.hBase
     hCost := ?_
     hTotal := ?_
+    hLow := ?_
     hEven := path.hEven
     hHalf := path.hHalf
     walk := ?_
@@ -151,6 +154,12 @@ theorem restart_path_extend
       totalCost (path.es++[t+1]) = totalCost path.es+(t+1) :=
         totalCost_append_singleton path.es (t+1)
       _ = path.L+(t+1) := by rw [path.hTotal]
+  · intro e he
+    rcases List.mem_append.mp he with heOld | heLast
+    · exact path.hLow e heOld
+    · simp at heLast
+      subst e
+      omega
   · simpa [hEq] using hWalk
 
 /-- A source history either has no depth>=3 edge, or carries the exact
@@ -190,7 +199,7 @@ theorem restart_state_of_odd_cone
             exact RestartState.active
               (hasDeep_append_last (oddConeDepths hpre) t hdeep) path'
           · have path' := restart_path_extend n bp dp mp t k cInv
-              hmass hb hb4 hd hi hk hc path
+              hmass hb hb4 hd hi hk hc (by omega) path
             exact RestartState.active
               (hasDeep_append_singleton (oddConeDepths hpre) t hDeep) path'
 
@@ -250,6 +259,105 @@ theorem source_wall_restart_path
 #print axioms restart_path_after_deep
 #print axioms restart_path_extend
 #print axioms restart_state_of_odd_cone
+theorem weightS_all_three
+    (s : Nat) (es : List Nat)
+    (hall : ∀ e, e ∈ es → e=3) :
+    7*weightS s es + 2^s = 2^(s+totalCost es) := by
+  induction es generalizing s with
+  | nil =>
+      simp [weightS, totalCost]
+  | cons e es ih =>
+      have he : e=3 := hall e (by simp)
+      have htail : ∀ u, u ∈ es → u=3 := by
+        intro u hu
+        exact hall u (by simp [hu])
+      subst e
+      simp only [weightS, totalCost]
+      have ih' := ih (s+3) htail
+      have hpow : 2^(s+3)=8*2^s := by
+        calc
+          2^(s+3) = 2^s*2^3 := Nat.pow_add 2 s 3
+          _ = 2^s*8 := by norm_num
+          _ = 8*2^s := by ac_rfl
+      calc
+        7*(2^s+weightS (s+3) es)+2^s =
+            7*weightS (s+3) es+2^(s+3) := by rw [hpow]; omega
+        _ = 2^((s+3)+totalCost es) := ih'
+        _ = 2^(s+(3+totalCost es)) := by congr 1 <;> omega
+
+/-- A nonnegative restart product forces at least one shallow edge in the
+    post-last-deep suffix, because that suffix contains only costs 1, 2, 3. -/
+theorem restart_path_has_shallow
+    {n b d m : Nat} (path : RestartPath n b d m)
+    (hbound : 2^path.L ≤ 7*weightS 0 path.es) :
+    ∃ e, e ∈ path.es ∧ e ≤ 2 := by
+  by_contra hnone
+  have hall : ∀ e, e ∈ path.es → e=3 := by
+    intro e he
+    have hle := path.hLow e he
+    have hgt : 2 < e := by
+      by_contra hgt
+      exact hnone ⟨e,he,by omega⟩
+    omega
+  have hEq := weightS_all_three 0 path.es hall
+  have hEq' : 7*weightS 0 path.es+1 = 2^path.L := by
+    simpa [path.hTotal] using hEq
+  omega
+
+/-- Locate the last shallow edge in a finite low-depth suffix. Everything
+    after it has inverse cost 3 (depth exactly two). -/
+theorem exists_last_shallow
+    (es : List Nat)
+    (hLow : ∀ e, e ∈ es → e≤3)
+    (hShallow : ∃ e, e ∈ es ∧ e≤2) :
+    ∃ pre e post, es=pre++[e]++post ∧ e≤2 ∧
+      (∀ u, u ∈ post → u=3) := by
+  induction es with
+  | nil =>
+      rcases hShallow with ⟨e,he,_⟩
+      exact False.elim (by simpa using he)
+  | cons a es ih =>
+      by_cases htail : ∃ e, e ∈ es ∧ e≤2
+      · have hLowTail : ∀ e, e ∈ es → e≤3 := by
+          intro e he
+          exact hLow e (by simp [he])
+        obtain ⟨pre,e,post,hEq,he2,hpost⟩ := ih hLowTail htail
+        refine ⟨a::pre,e,post,?_,he2,hpost⟩
+        simp [hEq, List.append_assoc]
+      · have hHead : a≤2 := by
+          rcases hShallow with ⟨e,he,he2⟩
+          simp at he
+          rcases he with hHead | hTail
+          · subst e
+            exact he2
+          · exact False.elim (htail ⟨e,hTail,he2⟩)
+        refine ⟨[],a,es,by simp,hHead,?_⟩
+        intro u hu
+        have hLowU := hLow u (by simp [hu])
+        have hNotLe : ¬ u≤2 := by
+          intro hle
+          exact htail ⟨u,hu,hle⟩
+        omega
+
+/-- Original-source form of the restart suffix conclusion: after the last
+    depth>=3 edge, a wall-reaching history has a shallow edge, and after its
+    last shallow edge all remaining inverse edges have depth exactly two. -/
+theorem source_wall_restart_suffix_shape
+    (n b d m : Nat) (hn : 14 ≤ n)
+    (h : OddCone (14*2^n-2*n-16) 3 b d m)
+    (hwall : b+4*m+4*n+20 = 12*2^n)
+    (hdeep : HasDeep (oddConeDepths h)) :
+    ∃ path : RestartPath n b d m,
+      ∃ pre e post,
+        path.es=pre++[e]++post ∧ e≤2 ∧
+          (∀ u, u ∈ post → u=3) := by
+  obtain ⟨path,hbound⟩ := source_wall_restart_path n b d m hn h hwall hdeep
+  obtain ⟨e,heMem,heLow⟩ := restart_path_has_shallow path hbound
+  obtain ⟨pre,e,post,hEq,he2,hpost⟩ :=
+    exists_last_shallow path.es path.hLow ⟨e,heMem,heLow⟩
+  exact ⟨path,pre,e,post,hEq,he2,hpost⟩
+
 #print axioms source_wall_restart_path
+#print axioms source_wall_restart_suffix_shape
 
 end BB6.Agent9RestartWallSource
