@@ -258,3 +258,6 @@ By the S1 encoder definition and `binDec L 0 = d1pow L), this is exactly the pos
 s0Config\;(markerWord\;1\; ++ d0 ++ d1pow\;L ++ lh)\;A\;(2^b-1)\;0\;h.
 \]
 For (b\ge2), (z=2^b-1>0) and (z<2^A), so the positive-z q4 first-cycle hypotheses hold. The remaining root-side dependency is the source proof of the initial prefix from this root endpoint to q4 checkpoint 1; the present dossier begins at that checkpoint.
+
+
+Additional (z=5) outer-parameter checks used ((A,L)=(4,2),(3,4),(5,2)). Their first checkpoint times were 8,015, 8,027, and 8,027 respectively, while (P=169), (h=118), (a=31), and (Q=349) remained unchanged. The checkpoint-1 RLE, S0 input, and predicted-output/postlude checkpoint-2 frames all matched. This further supports independence of the first-cycle macro from the tested outer parameters; the middle drain remains spliced, not simulated, in these cases.
