@@ -207,3 +207,10 @@ Those draft modules are not both included in the existing pinned source-CI workf
 ### Iteration-count refinement
 
 The outer-count estimate can be sharpened from \(r\le\ell+1\) to \(r\le\ell\). For LO/LE/RO, the drain block \(b<3^\ell\), so Agent22's drainB_weighted_depth lemma gives \(r\le\ell\). In RE, after the initial \(v+1\) evalA digits, the residual block is \(b_0<3^{\ell-v-1}\), so the same lemma gives \(r\le\ell-v-1\le\ell\). The signed first-counter bound remains \(|D|\le\ell+1\). This tightens the common predecessor strip to \(23n+140\).
+
+
+### Observed two-digit-buffer refinement (candidate invariant)
+
+A second diagnostic tracked the same nonmonochromatic condition simultaneously for \(h\) and \(m\), after trimming two digits from both ends of the middle block. On the 100-state root replay, both trimmed blocks were nonmonochromatic at every tested index \(30,\ldots,99\); the only trimmed-block exceptions in the earlier prefix occurred at indices 17–29. Trimming two positions is natural for the exact cocycle because the largest explicit 3-adic shift in the left branch is \(9m\), and the right branch also has coefficients divisible by \(9\) on the scale term.
+
+This suggests a possible finite-state induction target: after a separately certified finite prefix, maintain a two-digit-buffer nonmonochromatic property for the pair \((h,m)\). It is only a candidate invariant; the 100-state replay is not proof, and preservation under all four sector transitions still needs to be established.
