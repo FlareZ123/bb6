@@ -1293,7 +1293,7 @@ jobs:
           names = (
               "m1EvenValuation_counted_increment_source'",
               "m2EvenSix_generic_counted_increment_source'",
-              "tm63_blank_reaches_after_middle34'",
+              "tm63_blank_reaches_after_middle34",
               "tm63_source_increment_dispatch_complete",
               "sectionResult_run_to_index_one_complete",
               "sectionResult_run_complete",
@@ -1308,7 +1308,8 @@ jobs:
           )
           for name in names:
               lines = [line for line in log.splitlines()
-                       if name in line and "depends on axioms:" in line]
+                       if "depends on axioms:" in line
+                       and line.split(" depends on axioms:", 1)[0].split(".")[-1] == name]
               if len(lines) != 1:
                   raise SystemExit(f"expected one axiom profile for {name}, got {len(lines)}")
               profile = lines[0].split("depends on axioms:", 1)[1].strip()
