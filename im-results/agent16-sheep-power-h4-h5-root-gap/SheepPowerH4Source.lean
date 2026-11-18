@@ -539,13 +539,31 @@ theorem blank_even_cannot_hit_gate4 (m : Nat) (hm : Gate4 m) :
   have hnot : (2:Nat)^(54*m) ≠ 10 := by omega
   rcases SheepEvenReachInverse.blank_even_inverse_cases
       (y := (2:Nat)^(54*m)) (d := 1) (c := 0) (n := 54*m)
-      hreach hnot (by simp) with hspec | hgen
-  · rcases hspec with ⟨a,h,u,ha,hfactor,hu,hx,hy⟩
+      hreach hnot (by simp) with hgen | hspec
+  · rcases hgen with ⟨x,a,h,v,u,hreachx,ha,hv,hvo,huo,hx,hy,heq⟩
+    have hh : h≤4 := target_hidden_le4 m h u hm3 hy
+    have heq' : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
+        = 2^(54*m+h+1)+3*3^h := by
+      simpa using heq
+    exact no_generic_all_a h a m v hh ha hm2 hm4 hm7 hm9 hm15 heq'
+  · rcases hspec with ⟨x,a,h,u,hreachx,ha,hu,hx,hy,heq⟩
+    have hpow : (2:Nat)^(54*m+h)=2^h+2^h*3^h*u := by
+      rw [Nat.pow_add, hy, Nat.add_mul]
+      ac_rfl
+    have hEq' : 3^h*(3*2^a+a+2)+2^h=2^(54*m+h) := by
+      simpa using heq
+    have hcancel : 3^h*(3*2^a+a+2)=2^h*3^h*u := by
+      have hsum : 3^h*(3*2^a+a+2)+2^h=2^h+2^h*3^h*u := by
+        rw [hEq',hpow]
+      omega
+    have hmul : 3^h*(3*2^a+a+2)=3^h*(2^h*u) := by
+      calc
+        3^h*(3*2^a+a+2)=2^h*3^h*u := hcancel
+        _ = 3^h*(2^h*u) := by ac_rfl
+    have hfactor : 3*2^a+a+2=2^h*u :=
+      Nat.mul_left_cancel (Nat.pow_pos (by decide)) hmul
     exact Agent17SheepSpecial.special_no_even_power a h u (54*m)
       ha hfactor hu hy.symm
-  · rcases hgen with ⟨a,h,v,u,ha,hv,hvo,huo,hx,heq,hy⟩
-    have hh : h≤4 := target_hidden_le4 m h u hm3 hy
-    exact no_generic_all_a h a m v hh ha hm2 hm4 hm7 hm9 hm15 heq
 
 theorem blank_even_cannot_hit_gate4_source (m : Nat) (hm : Gate4 m) :
     ¬ BB6.Agent22.Sheep.Reach 5 (2^(54*m)) := by
@@ -555,9 +573,9 @@ theorem blank_even_cannot_hit_gate4_source (m : Nat) (hm : Gate4 m) :
     rcases hm with ⟨hm3,_,_,_,_,_⟩
     omega
   have he : (2^(54*m))%2=0 := by
-    cases 54*m with
-    | zero => omega
-    | succ k => simp [Nat.pow_succ]
+    have hexp : 54*m=(54*m-1)+1 := by omega
+    rw [hexp, Nat.pow_succ]
+    simp
   have hblank : SheepEven.EvenReach 10 (2^(54*m)) :=
     (SheepEven.blank_even_reach_iff he).mp ⟨n,hsteps⟩
   exact blank_even_cannot_hit_gate4 m hm hblank
