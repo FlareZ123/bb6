@@ -10,8 +10,8 @@ This directory develops direct original-section predecessor proofs for selected 
 |---|---|
 | `U5Q0SourceOnly.lean` | `X_t=(44t-1,42t-1)` is blank-unreachable for `t=32n+19` and `t=128n+99`; provides q=0-parent wrappers for `w=21 (mod 32)` and `w=37 (mod 128)`. |
 | `U5SourceOnlyHighStop.lean` | Composes the `w=21 (mod 32)` q=0 exclusion with the exact M8 terminal chain and original m=0 feeder, yielding an infinite sparse high-root family. |
-| `U5Q0SourceOnlyW1021.lean` | Four generalized source-only exclusions of `X_t`: `t=459+1024v`, `t=811+1024v`, `t=3875+4096v`, and the new `t=1707+2048v`; the older z-parameter statements remain as corollaries. |
-| `U5SourceOnlyHighStopW1021.lean` | Lifts the generalized q-fan closures to authentic high m=0 roots for `w=1024n+1021`, `w=1024n+413`, `w=4096n+1125`, and the new `w=2048n+541`. |
+| `U5Q0SourceOnlyW1021.lean` | Five generalized source-only exclusions of `X_t`: `t=459+1024v`, `t=811+1024v`, `t=3875+4096v`, `t=1707+2048v`, and the new `t=1547+2048v`; the older z-parameter statements remain as corollaries. |
+| `U5SourceOnlyHighStopW1021.lean` | Lifts the generalized q-fan closures to authentic high m=0 roots for `w=1024n+1021`, `w=1024n+413`, `w=4096n+1125`, `w=2048n+541`, and the new `w=2048n+445`. |
 | `W1021-derivation.md` | Full arithmetic and predecessor-chain derivation of the `w=1021 (mod 1024)` cylinder. |
 | `W1125-derivation.md` | Full arithmetic and predecessor-chain derivation of the `w=1125 (mod 4096)` cylinder. |
 | `W413-derivation.md` | Full arithmetic and predecessor-chain derivation of the `w=413 (mod 1024)` cylinder. |
@@ -139,6 +139,50 @@ from the other previously listed w-cylinders.
 The Lean declarations have been widened in the existing W1021 source
 modules. They remain uncompiled drafts; no exact-source certification or
 BB(6) conclusion is claimed.
+
+## Second source-only cylinder: w=445 (mod 2048)
+
+The residual identity and exact constants
+
+\[
+211\cdot1547+1360+22155\cdot445=2048\cdot4974,\qquad
+211\cdot22363=2048\cdot2304+1
+\]
+
+show that w=445 (mod 2048) forces t=1547 (mod 2048). Write
+t=1547+2048v. Again, 43t-1 is 8 modulo 16, so only q=0,1 occur.
+
+- **q=0:** the fan parent
+  P0=(66518+88064v,65744+87040v) is even/even with sum 2 mod 4.
+  Its forced direct parent is
+  D0=(132260+175104v,32871+43520v), even/odd with
+  x+y+1=4 (mod 8). The even/odd-four inverse gives
+  Q0=(82563+109312v,57716+76416v). This target satisfies the exact
+  sum-seven cylinder: y>=12, x+y=7 (mod 8), x+y+1=8 (mod 16),
+  x+y+1=24 (mod 32), x=3 (mod 4), and y=4 (mod 8).
+  The source-complete sum-seven parent theorem therefore sends every
+  possible parent to an odd/odd sum-two state, which is blank-unreachable.
+- **q=1:** the fan parent
+  P1=(16628+22016v,90686+120064v) is even/even with sum 2 mod 4.
+  Six forced even/even direct inverses give
+  D1=(107312+142080v,45342+60032v),
+  D2=(152652+202112v,22670+30016v),
+  D3=(175320+232128v,11334+15008v),
+  D4=(186652+247136v,5666+7504v),
+  D5=(192316+254640v,2832+3752v), and
+  D6=(195146+258392v,1415+1876v).
+  The first five direct steps use the sum-two-mod-four inverse; the
+  final step uses the even/even sum-four-mod-eight inverse. D6 is
+  odd-right with sum 1 mod 4, hence blank-unreachable.
+
+Both q branches are excluded, giving X_t unreachable for every
+t=1547+2048v. The same M8 terminal and original m=0 feeder then prove
+an infinite nonempty high-stop root sequence for w=2048n+445, again
+with j=18791 (mod 32768). This is a distinct parameter cylinder from
+w=541 (mod 2048), not a new root-index progression or density increment.
+
+The q=0 branch uses Agent 19's exact sum-seven parent theorem; it does
+not use a finite quotient. The declarations are still uncompiled drafts.
 
 ## End-to-end high-stop root connection
 
