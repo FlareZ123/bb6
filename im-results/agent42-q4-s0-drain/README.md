@@ -233,3 +233,12 @@ This is an empirical proof guide, not yet a Lean run lemma. It suggests proving 
 
 
 The Lean module's imports were minimized after review: it now imports `CountedSuffixOutput`, `CountedReset`, `CountedCarryPrefixHRun`, and `S1Encoder` directly. It no longer imports the higher-level `S1CountedDrain` / `S1CarryInc0` wrapper, since the S0 suffix composition and the H-run theorem are the only required interfaces. This reduces unnecessary dependency on the S1-specific source wrapper.
+
+
+Substituting (a=2^z-1) into the drain cost and adding the prefix/postlude overhead simplifies the first-cycle cost to the compact closed form
+
+\[
+\boxed{C_1(z)=6\cdot4^{2^z-1}+42\cdot2^{2^z-1}+12z+38.}
+\]
+
+The linear (2^z) terms cancel exactly. This is the cleanest expression of the first-cycle step-count law; it remains a conditional source-level result until the generic S0 drain and q4 prefix/postlude are formally compiled and composed.
