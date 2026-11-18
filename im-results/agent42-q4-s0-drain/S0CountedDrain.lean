@@ -2,6 +2,7 @@ import CountedSuffixOutput
 import CountedReset
 import CountedCarryPrefixHRun
 import S1Encoder
+import S1CarryOutputBridge
 import Lean.Elab.Tactic.Omega
 
 /-!
