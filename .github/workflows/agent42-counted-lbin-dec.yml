@@ -127,10 +127,10 @@ jobs:
           lean -o M0EvenEightValuationCountedSource.olean M0EvenEightValuationCountedSource.lean 2>&1 | tee m0-even-eight-valuation-counted-source-compile.log
           grep -F 'm0EvenEight_valuation_counted_increment_source' m0-even-eight-valuation-counted-source-compile.log
           python3 - <<'PY'
-          import pathlib, re, sys
+          import pathlib, re
           log = pathlib.Path("m0-even-eight-valuation-counted-source-compile.log").read_text()
           matches = re.findall(
-              r"m0EvenEight_valuation_counted_increment_source.*?depends on axioms:\\s*\\[([^\\]]*)\\]",
+              r"m0EvenEight_valuation_counted_increment_source.*?depends on axioms:\s*\[([^\]]*)\]",
               log,
           )
           if len(matches) != 1:
