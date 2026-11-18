@@ -1,6 +1,72 @@
 # TM63 outer `LC_Inc` reset-prefix: counted source decomposition
 
-**Status: computationally discovered and exhaustively checked on a finite parameter grid; not yet a Lean theorem.** This belongs in `im-results/`, not `results/`.
+**Status: a universal original-TM2 run theorem to an exact nested tape frame now exists in `OuterLCIncPostludeSource.lean`; identifying that frame with the canonical S1/S0 endpoint remains open.** This remains intermediate work in `im-results/`, not a publishable result.
+
+
+## Current formal status (2026-11-18)
+
+The earlier status above is superseded in one important respect: the source-run
+itself is now formalized. `OuterLCIncPostludeSource.lean` exports
+`outerLCInc_full_run`, a parameterized successful run from
+`s1Config L n m a 0 b h` to the exact nested
+`outerLCIncPostludeTape` frame, with cost
+
+[
+12a+4m+63+12v_2(n)+3b.
+]
+
+This is stronger than the original finite-grid evidence: the machine execution
+and its primitive-step count are stated uniformly for positive valid source
+counters. The remaining gap is not the run trace; it is the pointwise
+identification of the nested output tape with the canonical S1/S0 encoder.
+
+For the root-relevant `m=2,n=1` branch, the exact cost is
+`12*a+71+3*b`, and the intended canonical endpoint is
+
+```lean
+s1Config L 0 1 (a+b+2) (2^b-1) 0 (h+3*b+5)
+```
+
+—not marker 0. The already-proved
+`outerLCInc_target_binary_prefix` supplies
+
+```
+binDec (a+b+2) (2^b-1) = d0pow b ++ d1pow (a+2)
+```
+
+and the new intermediate file
+`OuterLCIncCanonicalEndpoint.lean` starts the pointwise endpoint proof.
+Its current theorem candidate
+`outerLCIncSourceT3_leftFacing_m2` identifies the zero-valuation H-run's
+far-left output with `d1pow L ++ lh`, using the source counter-cell and
+marker-frame preservation lemmas. **That file has not been Lean-compiled**;
+its declaration is not yet a verified theorem.
+
+The remaining endpoint proof can be organized into four independent
+pointwise statements:
+
+1. At the pre-sweep head `h+5`, prove the left-facing word is
+   `d1pow (a+2) ++ markerWord 1 ++ d0 ++ d1pow L ++ lh`. The E-scan
+   supplies the `d1pow(a+2)` run, the five-step frame supplies the marker
+   and first two d0 bits, the H-run bridge supplies the third d0 bit, and
+   the H-run tail lemma supplies `d1pow L ++ lh`.
+2. The B/F/D sweep adds exactly `d0pow b` to the left of that word.
+   Use `sweptRightB_block` by residues modulo 3 and the boundary one at
+   `h+6`; the sweep preserves the pre-sweep word to its left.
+3. The fixed tail frame writes the right word
+   `s0RightFacing 0 = [false,true,true,true,false,false] ++ d1pow 1`
+   at offsets +1 through +9 from the final head; the exterior from +10 is
+   blank by `outerLCIncAfterSweep_blank` and
+   `outerLCIncAfterZeroExit_preserves`.
+4. Combine both sides with
+   `outerLCInc_target_binary_prefix` and the S1 encoder cell lemmas to
+   identify the complete tape.
+
+No CI dispatch has been made for the new endpoint file. The local shell and
+Python runtimes in the current invocation return tool-level `ClientError`;
+keep the file marked uncompiled until a fresh local preflight and source
+axiom audit succeed. The older 2,400-case simulator remains computational
+evidence only.
 
 ## Candidate exact transition
 
