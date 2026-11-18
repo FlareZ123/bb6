@@ -217,3 +217,48 @@ This suggests a possible finite-state induction target: after a separately certi
 
 
 The buffer has a carry interpretation. A nonzero digit in the high block ensures the residue is not small; a digit different from two ensures its complement is not small. Addition can carry upward only through a run of twos, while subtraction can borrow upward only through a run of zeros. Thus a block containing both a nonzero digit and a digit below two stops both kinds of carry. The exact cocycle's explicit corrections are \(O(\ell)\), while \(3^{k+2}>9W\) and \(W=9\ell+22\); the largest linear shift is \(9m\), i.e. two ternary places. This explains why trimming two low/high positions is a natural candidate buffer. The remaining proof obligation is to show that the four integer linear transformations on \((h,m)\), together with their finite carry states, preserve a suitable nonmonochromatic block language.
+
+
+## Compact absolute-value cocycle
+
+Agent 3 supplied a useful all-sector compression of the eight cases. Put \(p=|a-d|\), \(q=\min(a,d)=m\), \(g=p-3q\), and
+\[
+T=\delta-\beta=3D+2r+c_s,\qquad
+c_s=\begin{cases}19&\mathrm{LO}\\10&\mathrm{LE}\\-4&\mathrm{RO}\\4&\mathrm{RE}.\end{cases}
+\]
+The two counters before sorting are exactly \(A=p+\beta\) and \(E=3q+\delta\). Hence
+\[
+\boxed{p'=|g-T|,\qquad q'=\min(p+\beta,\,3q+\delta).}
+\]
+The output-side decision is exactly the sign of \(g-T\); no sector-specific orientation guess is needed.
+
+With \(Y=2g\), this becomes the single gap/scale identity
+\[
+\boxed{Y'=|Y-2T|-6q'.}
+\]
+This follows by considering the sign of \(g-T\) in the preceding \(p',q'\) formula, and is equivalent to all eight exact \((g',m')\) updates.
+
+A second coordinate \(X=2g+9m=2p+3q\) has an especially simple update. Let \(S=\delta+2\beta\). Then
+\[
+S=\begin{cases}
+2r+4&\mathrm{LO/LE},\\
+2r+8&\mathrm{RO},\\
+2r+7&\mathrm{RE}.
+\end{cases}
+\]
+For left output, \(X'=X+S\), so both \(D\) and the old scale cancel. For right output,
+\[
+2X'=X+9m+3\delta+S.
+\]
+The factor \(9m\) is the explicit two-place ternary shift; the only remaining drain dependence is through \(\delta\) and \(S\).
+
+The old-ray distance is an affine rescaling of \(Y\):
+\[
+Y=2h+18\ (\mathrm{LO}),\quad
+Y=2h+10\ (\mathrm{LE}),\quad
+Y=4h+2\ (\mathrm{RO}),\quad
+Y=4h+4\ (\mathrm{RE}).
+\]
+Thus a terminal window \(|h|\le W\) is a short interval for \(Y\) centered at 18, 10, 2, or 4, with radius \(2W\) or \(4W\). This may be a better coordinate for a finite-state 3-adic transducer than carrying the four separate \(h'\) formulas.
+
+Normalization reminder: in RE, \(D\) includes the initial evalA first-counter drop from baseline \(2k+3\) plus the subsequent drain drop, while \(r\) counts only the subsequent outer drain iterations. If the initial evaluator is bundled into a single drain count \(R\), then \(r=R-1\). This is consistent with \(\beta=1-D\), \(\delta=2D+2r+5\), and \(S=2r+7\).
