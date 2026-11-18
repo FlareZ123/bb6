@@ -204,3 +204,10 @@ The arbitrary context \(\ell\) is not arbitrary in the q4 prefix's image: in eve
 \]
 
 This was observed for (z=1,2,3,4,5) and for the tested outer ((A,L)) variations. The remaining suffix of \(\ell\) carries the outer left-frame information and varies with (A,L). Thus, after the S0 counter block \(d0^a\), the tape has a contiguous leading run of ones of length (3z+7), followed by the encoded outer context. This is likely relevant to proving the postlude's exact left-frame update.
+
+
+## Reproducer
+
+`q4_s0_drain_splice_check.py` records the exact TM2 transition table and reproduces the checkpoint-1 right tail, (P(z))-step S0 input, and checkpoint-2 left/right frames. It directly simulates the middle drain for (z\le3); for (z\ge4) it uses a symbolic all-one interval for the theorem-predicted drain endpoint and simulates only the postlude. It also checks the residual-left-context leading run.
+
+The script was authored in this invocation but could not be executed here because the local Python/container tools failed. Its output is therefore pending execution; the numerical observations in this dossier come from the separate exact JavaScript simulations described above.
