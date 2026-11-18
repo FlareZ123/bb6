@@ -1337,3 +1337,16 @@ LE left 23n+96 / right 20n+90;
 RO left 20n+37 / right 14n+51;
 RE left 22n+67 / right 17n+39.
 The common strip is now 23n+140 (not the superseded 23n+148). The combined D/r wrapper is still not source-CI certified; source dependencies are recorded in the cocycle note.
+
+
+## 2026-11-18 compact cocycle and middle-block diagnostic
+
+Integrated Agent3's all-sector compression into RootRayGapCocycle.md. With p=|a-d|, q=min(a,d)=m, g=p-3q, T=delta-beta=3D+2r+c_s (c_s=19,10,-4,4 for LO/LE/RO/RE), the exact transition is:
+- p'=|g-T|;
+- q'=min(p+beta,3q+delta);
+- Y=2g satisfies Y'=|Y-2T|-6q'.
+The output-side decision is the sign of g-T. With X=2g+9m=2p+3q and S=delta+2beta (2r+4 in LO/LE, 2r+8 in RO, 2r+7 in RE), left output has X'=X+S, while right output has 2X'=X+9m+3delta+S. This may be a better finite-state 3-adic coordinate than the eight h' cases. RE normalization agrees with the corrected convention: D includes the initial evalA drop from 2k+3; r excludes the initial evaluator (r=R-1 if bundled).
+
+A 100-state diagnostic with W=9ell+22 found the h-residue middle block [k,j) (k least 3^k>W, j least 3^j>W^3) was neither all-zero nor all-two at every tested index 17..99; index16 was the only failure and had residue distance 73<=W=76. A stronger pair diagnostic found both h and m middle blocks remained nonmonochromatic after trimming two positions from each end at every tested index 30..99. These are finite observations only. The carry interpretation is that nonzero high digits stop subtraction from becoming small, digits below two stop the complement from becoming small; the two-digit buffer accommodates the explicit 9m shift and bounded O(ell) corrections. The remaining goal is a finite-state preservation proof for the four linear maps/carry states, or a check against Agent32's 10k replay.
+
+The current sharper necessary predecessor strips are E=23n+140 for n>=10, conditional on the D/r depth wrapper; do not describe this as source-CI certified. Exact dependencies and proof obligations are in RootRayGapCocycle.md. The root target remains the authentic #623 blank-A all-time nonhalting quantifier, consumed by Machine623HaltCylinder.machine623_full_cylinder_if_never; this does not by itself close the broader 25^8 leaf.
