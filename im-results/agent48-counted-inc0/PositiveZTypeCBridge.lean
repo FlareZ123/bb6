@@ -124,7 +124,54 @@ theorem typeC_input_from_sides (tailL tailR : List Bool) (h : Int) :
       (q4TapeFromSides
         ([false,true,true] ++ d1 ++ d1 ++ d0 ++ tailL)
         ([false,false,false] ++ tailR) h) h := by
-  simp [typeCInput, q4TapeFromSides, sideBit, d1, d0] <;> omega
+  let left : List Bool := [false,true,true] ++ d1 ++ d1 ++ d0 ++ tailL
+  let right : List Bool := [false,false,false] ++ tailR
+  let T : Int → Bool := q4TapeFromSides left right h
+  have hleft (i : Nat) (hi : i ≤ 10) :
+      T (h-(i:Int)) = sideBit left i := by
+    have hle : h-(i:Int) ≤ h := by omega
+    have hcoord : Int.toNat (h-(h-(i:Int))) = i := by omega
+    unfold T q4TapeFromSides
+    rw [if_pos hle, hcoord]
+  have hright (i : Nat) (hi : i < 3) :
+      T (h+1+(i:Int)) = sideBit right i := by
+    have hgt : ¬ h+1+(i:Int) ≤ h := by omega
+    have hcoord : Int.toNat ((h+1+(i:Int))-h-1) = i := by omega
+    unfold T q4TapeFromSides
+    rw [if_neg hgt, hcoord]
+  have hs0 : sideBit left 0 = false := by simp [left,sideBit,d1,d0]
+  have hs1 : sideBit left 1 = true := by simp [left,sideBit,d1,d0]
+  have hs2 : sideBit left 2 = true := by simp [left,sideBit,d1,d0]
+  have hs3 : sideBit left 3 = true := by simp [left,sideBit,d1,d0]
+  have hs4 : sideBit left 4 = true := by simp [left,sideBit,d1,d0]
+  have hs5 : sideBit left 5 = true := by simp [left,sideBit,d1,d0]
+  have hs6 : sideBit left 6 = true := by simp [left,sideBit,d1,d0]
+  have hs7 : sideBit left 7 = true := by simp [left,sideBit,d1,d0]
+  have hs8 : sideBit left 8 = true := by simp [left,sideBit,d1,d0]
+  have hs9 : sideBit left 9 = false := by simp [left,sideBit,d1,d0]
+  have hs10 : sideBit left 10 = false := by simp [left,sideBit,d1,d0]
+  have hr0 : sideBit right 0 = false := by simp [right,sideBit]
+  have hr1 : sideBit right 1 = false := by simp [right,sideBit]
+  change T (h-10) = false ∧ T (h-9) = false ∧
+    T (h-8) = true ∧ T (h-7) = true ∧ T (h-6) = true ∧
+    T (h-5) = true ∧ T (h-4) = true ∧ T (h-3) = true ∧
+    T (h-2) = true ∧ T (h-1) = true ∧ T h = false ∧
+    T (h+1) = false ∧ T (h+2) = false
+  exact ⟨by simpa using (hleft 10 (by omega)).trans hs10,
+    by simpa using (hleft 9 (by omega)).trans hs9,
+    by simpa using (hleft 8 (by omega)).trans hs8,
+    by simpa using (hleft 7 (by omega)).trans hs7,
+    by simpa using (hleft 6 (by omega)).trans hs6,
+    by simpa using (hleft 5 (by omega)).trans hs5,
+    by simpa using (hleft 4 (by omega)).trans hs4,
+    by simpa using (hleft 3 (by omega)).trans hs3,
+    by simpa using (hleft 2 (by omega)).trans hs2,
+    by simpa using (hleft 1 (by omega)).trans hs1,
+    by simpa using (hleft 0 (by omega)).trans hs0,
+    by simpa using (hright 0 (by omega)).trans hr0,
+    by
+      have hstepRight := (hright 1 (by omega)).trans hr1
+      simpa [show h+1+(1:Int) = h+2 by omega] using hstepRight
 
 /-- For A>=3, the authentic marker counter M=2^A(2^(L+2)-1)
 satisfies BinDec(M-4)=d1 d1 d0 followed by an arbitrary quotient tail. -/
@@ -133,17 +180,31 @@ theorem typeC_binDec_prefix (A L : Nat) (hA : 3 ≤ A) :
       d1 ++ d1 ++ d0 ++
         binDec (A+L-1) (2^(A-3)*(2^(L+2)-1)-1) := by
   let q : Nat := 2^(A-3)*(2^(L+2)-1)-1
+  have h22 : 2^2 = 4 := by decide
+  have hA3eq : A-2 = (A-3)+1 := by omega
   have hpowA2 : 2^(A-2) = 2*2^(A-3) := by
-    rw [show A-2 = (A-3)+1 by omega, Nat.pow_succ]
-    ac_rfl
+    calc
+      2^(A-2) = 2^((A-3)+1) := congrArg (fun n => 2^n) hA3eq
+      _ = 2^(A-3)*2 := by rw [Nat.pow_succ]
+      _ = 2*2^(A-3) := by ac_rfl
+  have hAeq : A = (A-2)+2 := by omega
   have hpowA : 2^A = 4*2^(A-2) := by
-    rw [show A = (A-2)+2 by omega, Nat.pow_add]
-    rw [show 2^2 = 4 by decide]
-    ac_rfl
+    calc
+      2^A = 2^((A-2)+2) := congrArg (fun n => 2^n) hAeq
+      _ = 2^(A-2)*2^2 := by rw [Nat.pow_add]
+      _ = 4*2^(A-2) := by rw [h22]; ac_rfl
+  have hOpos : 0 < 2^(L+2)-1 := by
+    have hpow : 4 ≤ 2^(L+2) := by
+      simpa [h22] using
+        (Nat.pow_le_pow_right (by decide : 2 > 0) (show 2 ≤ L+2 by omega))
+    omega
   have hfactor :
       2*q+1 = 2^(A-2)*(2^(L+2)-1)-1 := by
     dsimp [q]
     rw [hpowA2]
+    have hmul : (2*2^(A-3))*(2^(L+2)-1) =
+        2*(2^(A-3)*(2^(L+2)-1)) := by ac_rfl
+    rw [hmul]
     omega
   have hval :
       2^A*(2^(L+2)-1)-4 = (2*q+1)*2^2 := by
@@ -151,20 +212,29 @@ theorem typeC_binDec_prefix (A L : Nat) (hA : 3 ≤ A) :
       2^A*(2^(L+2)-1)-4 =
           (4*2^(A-2))*(2^(L+2)-1)-4 := by rw [hpowA]
       _ = 4*(2^(A-2)*(2^(L+2)-1))-4 := by ac_rfl
-      _ = 4*(2^(A-2)*(2^(L+2)-1)-1) := by omega
+      _ = 4*(2^(A-2)*(2^(L+2)-1)-1) := by
+        have hp : 0 < 2^(A-2)*(2^(L+2)-1) :=
+          Nat.mul_pos (Nat.pow_pos (by decide)) hOpos
+        omega
       _ = 4*(2*q+1) := by rw [hfactor]
-      _ = (2*q+1)*2^2 := by rw [show 2^2 = 4 by decide]; ac_rfl
+      _ = (2*q+1)*2^2 := by rw [h22]; ac_rfl
+  have hALeq : A+L-1 = (A-3)+(L+2) := by omega
   have hpow :
       2^(A+L-1) = 2^(A-3)*2^(L+2) := by
-    rw [show A+L-1 = (A-3)+(L+2) by omega, Nat.pow_add]
-  have hlt : 2^(L+2)-1 < 2^(L+2) := by omega
+    calc
+      2^(A+L-1) = 2^((A-3)+(L+2)) := congrArg (fun n => 2^n) hALeq
+      _ = 2^(A-3)*2^(L+2) := by rw [Nat.pow_add]
+  have hlt : 2^(L+2)-1 < 2^(L+2) :=
+    Nat.sub_lt (Nat.pow_pos (by decide)) (by decide)
   have hprod :
       2^(A-3)*(2^(L+2)-1) < 2^(A+L-1) := by
-    rw [hpow]
-    exact Nat.mul_lt_mul_of_pos_left hlt (Nat.pow_pos (by decide))
+    calc
+      2^(A-3)*(2^(L+2)-1) < 2^(A-3)*2^(L+2) :=
+        Nat.mul_lt_mul_of_pos_left hlt (Nat.pow_pos (by decide))
+      _ = 2^(A+L-1) := hpow.symm
   have hq : q < 2^(A+L-1) := by
     dsimp [q]
-    omega
+    exact Nat.lt_of_le_of_lt (Nat.sub_le _ _) hprod
   have hlen : A+L+2 = (A+L-1)+1+2 := by omega
   rw [hlen,hval]
   simpa [d1pow,List.append_assoc,q] using
@@ -237,7 +307,7 @@ theorem typeC_two_step_continuation
     _ = some (⟨1,h-7,
           afterFirstCycleTwoZero U (h-9)⟩ : Config) := by
           rw [hframe] at hsetup
-          simpa using hsetup
+          simpa [show (h-9)+(2:Int) = h-7 by omega] using hsetup
 
 #print axioms typeC_exact
 #print axioms typeC_heads
