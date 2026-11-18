@@ -193,3 +193,14 @@ C_1(5)=27,670,116,200,758,640,738.
 \]
 
 This extends the short-phase and endpoint-splice checks through (z=5), without simulating the enormous middle drain.
+
+
+## Residual left context at the S0 input
+
+The arbitrary context \(\ell\) is not arbitrary in the q4 prefix's image: in every tested case it begins with a run of
+
+\[
+1^{3z+7}.
+\]
+
+This was observed for (z=1,2,3,4,5) and for the tested outer ((A,L)) variations. The remaining suffix of \(\ell\) carries the outer left-frame information and varies with (A,L). Thus, after the S0 counter block \(d0^a\), the tape has a contiguous leading run of ones of length (3z+7), followed by the encoded outer context. This is likely relevant to proving the postlude's exact left-frame update.
