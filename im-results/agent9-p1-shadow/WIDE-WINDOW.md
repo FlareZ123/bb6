@@ -165,3 +165,14 @@ This is not yet a Lean-checked theorem. The current source leaf remains uncompil
 ## Scope
 
 This improves only the finite shadow-to-source correspondence. It does not establish an unbounded-cost lift at fixed q, an infinite original-source inverse path, blank-tape forward reachability, P1 nonhalting, or any BB(6) upper bound. The result remains in `im-results/` pending formalization, local compilation, independent source review, and the existing manual source audit.
+
+
+## Relationship to the exceptional c=1 terminal
+
+The c=1 terminal itself is not a new gap addressed by this window. Let \(B=8u+4=14\cdot2^{N+2}-2(N+2)-16\), the critical hub with right counter 3. The executable inverseAt from \((B,3)\) gives:
+- depth 0: \((k,c)=(2u,4u+5)\), whose source child is L0;
+- depth 1: \(v=(4u+5-3)/2=2u+1\), \(v/2=u\), so \((k,c)=(3u+1,2u+1)\), whose source child is L1.
+
+Thus both feeders are already in the CountCone rooted at \((B,3)\). A local L0 prefix of cost \(m_0\) prepends one unit to the CountCone predecessor cost; a local L1 prefix prepends two. The final local c=1 reset has depth \(N+3=(N+2)+1\), so Agent 50's existing source_mid_cost_exceptional_last_reset_depth theorem in im-results/agent50-p1-subwall/ExceptionalLastResetDepthSource.lean already covers both feeder cases after these cost shifts. In particular, the affine c=1 predecessor equations are translations of that existing theorem, not a new exclusion or discovery here.
+
+The contribution of this note is only the wider finite shadow-to-source converse window. It should not be presented as new work on the exceptional terminal or as a P1 nonhalting proof.
