@@ -1479,3 +1479,8 @@ Observed exact four-stage run:
 The total first-checkpoint time is `D(z)+D(2^z-1)+12*(A+L+z)+107). The q4 event count is `3*2^z+3*z+5), and the checkpoint right suffix is `0^3 1^(3*z+5) 0^2 1^(3*2^z) 0^4).
 
 All four intermediate tape configurations were checked for A=3,4,5,6; L=2,4; z=0,1,2,3. The checkpoint shape/time formula was checked through z=9 for A=4,L=2. The exact context ell1 was independently confirmed across A,L values. This is computational evidence, not a proof. The **only large missing transition macro in this prefix is Stage 2 setup**; the tail has an existing generic theorem. Do not conflate this pre-checkpoint decomposition with the separate post-checkpoint first-cycle drain at width K=2^z-1 documented in `PositiveZFirstCycleDrainBridge.md`.
+
+
+- Agent 24's independent static review identified and I fixed the missing `import S1CarryOutputBridge` in `S0CountedDrain.lean` (commit `0fc60a3`). Their raw-step S0 decrement regression covers 1,428 cases with zero failures, but no Lean compile/axiom audit is available.
+- Agent 24 further simplified the q4 postlude: the `ell1` residual is equivalently `110 ++ (100)^(A+1) ++ 111 ++ (100)^(L+1) ++ 1110111). The pure list identity is `binDec(A+L+2,M-1) ++ LH = 00 ++ (100)^(A-1) ++ 111 ++ (100)^(L+1) ++ 1110111`. The final q4 postlude has head displacement `3*z+4`; the long right unary block starts at `h2+7=3*z+12) and is preserved, while the postlude creates `0^3 1^(3*z+5) 0^2`. This is now in `PositiveZCheckpointNormalForm.md`.
+- The generic `q4S0Postlude_at` covers the `9*z+10) tail; setup Stage 2 remains the only large missing transition macro. Agent 48 and Agent 24 were informed; a broadcast also isolates this task.
