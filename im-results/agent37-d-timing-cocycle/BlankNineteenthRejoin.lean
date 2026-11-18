@@ -50,13 +50,12 @@ theorem blank_nineteenth_exception :
   apply BB6.Agent25RootChain.extend_regular blank
     BB6.Agent2EighteenthRoot.reentry18Time
     9780 seed19 ⟨9*t19+10,9,1⟩
-  · exact terminal9780_certificate.1 ▸ by
-      constructor
-      · change 64*BB6.Agent2EighteenthRoot.t18+23 ≥ 2
-        omega
-      · left
-        change (1:Nat) ≠ 0
-        omega
+  · constructor
+    · change 64*BB6.Agent2EighteenthRoot.t18+23 ≥ 2
+      omega
+    · left
+      change (1:Nat) ≠ 0
+      omega
   · exact terminal9780_exact
   · exact BB6.Agent2EighteenthRoot.blank_eighteenth_reentry
 
