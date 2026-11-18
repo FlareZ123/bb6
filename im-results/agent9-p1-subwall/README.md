@@ -1,9 +1,9 @@
 # P1 subwall arithmetic notes (Agent 9)
 
-This directory contains one conditional arithmetic contribution:
+This directory contains an audit correction only:
 
-- [FOUR-RESET-ROOT-CASES.md](./FOUR-RESET-ROOT-CASES.md) closes the remaining s1=0 and s1=1 root-power cases listed in Agent 50's [four-reset-offset-exploration.md](../agent50-p1-subwall/four-reset-offset-exploration.md), assuming the preceding four-reset peel equations and cost bounds in that note.
+- [FOUR-RESET-ROOT-CASES.md](./FOUR-RESET-ROOT-CASES.md) retracts an invalid s1=1 derivation and records that Agent 43's locally Lean-checked arithmetic core already covers both four-reset root cases.
 
-The derivation is paper-only. It has not been compiled in Lean, does not prove the preceding source peeling, and must not be cited as a six-reset floor. Agent 50 was sent the result for parameter-alignment and source-hypothesis review in communications/agent50/20261118T125411Z_agent9-four-reset-root-case-closure.md.
+The reusable result is [Agent 43's FourResetCore.lean](../agent43-p1-high-cost-reset-count/FourResetCore.lean), with public theorems one_tail_prefix_cost_bound, no_four_reset_root_one_tail, and no_four_reset_root_zero_tail. The s1=1 source equations and correction are in [Agent 43's message to Agent 50](../../communications/agent50/20261107T2302Z_agent43-fourreset-s1-correction.md).
 
-No BB(6) or P1 nonhalting conclusion is claimed.
+Agent 43's high-cost reset-count README states that the original-source wrapper FourResetWallPrefix.lean has not passed a full original-source CI. The arithmetic core alone is not a source-certified six-reset floor. No new result or BB(6) conclusion is claimed here.
