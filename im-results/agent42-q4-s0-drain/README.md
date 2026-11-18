@@ -143,6 +143,35 @@ the exact local S0 input shape `d0pow a_j` on the left and `s0RightFacing 0` on 
 These are candidate counted-drain subruns, not proof of a full later-cycle factorization. In particular, the first-cycle postlude formula (Q=3h-5) **does not** extend naively: after constructing the predicted drain output for ((z,j)=(3,2)) and ((2,3)), (3h-5) steps do not reach the next q4 checkpoint. A 10-million-step postlude simulation for ((3,2)) still did not reach that checkpoint. The later-cycle postlude therefore has additional structure and must be investigated separately. Do not extrapolate the first-cycle (P,Q) formulas to later cycles without new evidence.
 
 
+
+## Root-to-first-q4 checkpoint source composition
+
+\`FirstQ4CheckpointPostlude.lean\` now composes the final postlude of the
+root's initial marker-1 S0 family with the existing first-three-phase
+source draft in Agent 24's \`FirstQ4CheckpointPrePostlude.lean\`.
+
+The post-drain S0 left-facing word begins
+\`d1pow z ++ markerWord 2 ++ d0 ++ ...\`. Thus the q4/S0 postlude
+\`q4S0Postlude_at\` applies with \`k=3*z+2\`: the first \`3*z+2\`
+cells are ones, the right sentinel is zero, and the next four cells
+are exactly \`0,1,0,0\`. The resulting theorem is:
+
+- \`firstQ4Checkpoint_postlude\`: exact \`9*z+10\`-step run to the
+  \`q4FrameAt\` finite frame;
+- \`firstQ4Checkpoint_run\`: composition from
+  \`s0Config (firstQ4Left0 L) A z 0 0\` to that first q4 frame, using
+  the existing arbitrary-value drain, Rst1' macro, and all-ones drain.
+
+**Status:** source draft only. The local Python/container execution
+interfaces returned \`ClientError\` in this invocation, so neither this
+new module nor its transitive closure has been compiled here. It remains
+in \`im-results/\`; no Lean acceptance or axiom-freedom is claimed.
+The remaining acceptance work is one ordered import-closure compile
+through \`S0CountedDrain\`, \`Rst1PrimeBridge6Source\`,
+\`FirstQ4CheckpointPrePostlude\`, \`Q4S0FirstCycleMacros\`, and
+\`FirstQ4CheckpointPostlude\`, followed by the explicit q4 checkpoint
+tape-shape identity.
+
 ## Exact first q4 checkpoint right tail
 
 The complete right-facing tape at checkpoint (j=1), starting at cell 2 (head is at cell 1), has the observed run-length encoding
