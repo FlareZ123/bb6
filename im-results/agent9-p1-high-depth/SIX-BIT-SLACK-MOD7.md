@@ -156,6 +156,24 @@ Both sets of inequalities and all four depth conclusions are checked in RestartD
 
 The parity argument below removes the cost-one \(t=6\) branch. Thus the two terminal-cost cases have the same final residual families.
 
+### First-shallow offset congruences
+
+At the state after the \(s\) depth-two edges, let its counters be \(b_s,d_s\), and put \(T_1=M+6+3s\). The exact affine energy and mass identities give
+\[
+I_s=7(b_s-6d_s)+146,\qquad
+b_s+d_s+2(M+3s)+13=14P.
+\]
+Thus \(I_s=20\) gives \(b_s+18=6d_s\), while \(I_s=48\) gives \(b_s+14=6d_s\). Eliminating \(b_s,d_s,M,s\) yields
+\[
+\begin{array}{ll}
+I_s=20: & 7d_s+2T_1=14P+17,\quad T_1\equiv5\pmod7,\\
+I_s=48: & 7d_s+2T_1=14P+13,\quad T_1\equiv3\pmod7.
+\end{array}
+\]
+Combining with the already established parity of \(T_1\) sharpens this to \(T_1\equiv5\pmod{14}\) for \(I_s=20\); for \(I_s=48\), \(T_1\equiv10\pmod{14}\) when even and \(T_1\equiv3\pmod{14}\) when odd. These coordinate congruences are formalized in the Offset namespace of RestartDepthBounds.lean.
+
+
+
 ## Low-suffix closure and remaining cases
 
 At the exact shifted wall \(W=12P\), the affine energy is

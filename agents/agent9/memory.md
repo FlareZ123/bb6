@@ -449,3 +449,12 @@ Resolved the cost-two terminal t-interval rather than leaving it as an open bran
 The same file also kernel-checks the cost-one parent bounds and depth conclusions: A=18 gives t=5 or6, A=2 gives t>=8. Thus, after the parity filter, both terminal-cost branches leave exactly (delta,Is,t)=(2,20,5) and (1,48,t>=8). This closes the prior cost-two interval gap; do not continue treating it as unresolved.
 
 Next: attack these two residual families through sharper root/source constraints, and verify the scalar-to-source induction bridge with Agent 43. Do not repeat the cost-bound arithmetic or mod-7 enumeration.
+
+
+### 2026-11-18 continuation: first-shallow offset congruences
+
+Added source-coordinate offset congruences to RestartDepthBounds.lean under BB6.Agent9RestartDepthBounds.Offset. The affine energy/mass identity is I=7(b_s-6d_s)+146. Thus Is=20 gives b_s+18=6d_s and Is=48 gives b_s+14=6d_s. Combining with the parent mass at the post-s-depth-two state and T1=M+6+3s gives:
+- Is=20: 7*d_s+2*T1=14*P+17, hence T1 mod14=5 when T1 is odd.
+- Is=48: 7*d_s+2*T1=14*P+13, hence T1 mod14=10 when T1 is even and 3 when odd.
+
+These congruences are kernel-checked and may help constrain the first shallow profile in the two residual families. Next: connect this modular information to the generic source low-trace model from a high-depth restart state; do not repeat terminal-depth arithmetic.

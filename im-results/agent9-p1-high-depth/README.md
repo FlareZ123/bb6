@@ -15,7 +15,7 @@ The scalar proof is in [Mod7SlackLeaf.lean](./Mod7SlackLeaf.lean). It models arb
 
 The source-parent depth bounds for both terminal shallow costs are in [RestartDepthBounds.lean](./RestartDepthBounds.lean). They formalize the parent mass equation, the restart defect identity, the inverse-depth equation, and the terminal cost bounds. With \(P\ge2^{83}\), the cost-one bounds give \(t=5\) or \(6\) for \((\delta,I_s)=(2,20)\), and \(t\ge8\) for \((1,48)\). The cost-two bounds give \(t=5\) for \((2,20)\), and \(t\ge8\) for \((1,48)\).
 
-Combining these with \(T_1\equiv t+s\pmod2\) leaves the same two families for either terminal cost:
+Combining these with \(T_1\equiv t+s\pmod2\) leaves the same two families for either terminal cost. The Offset namespace in RestartDepthBounds.lean additionally proves the first-shallow offset congruences modulo 14: 5 for Is=20, and 10 (even T1) or 3 (odd T1) for Is=48:
 1. \((\delta,I_s,t)=(2,20,5)\), with odd \(T_1\) and first shallow depth \(0\);
 2. \((\delta,I_s)=(1,48)\), with \(t\ge8\); the first shallow depth is \(0\) for even \(T_1\), \(1\) for odd \(T_1\).
 

@@ -241,3 +241,65 @@ theorem source_cost_two_I48_depth_lower
 #print axioms source_cost_two_I48_depth_lower
 
 end BB6.Agent9RestartDepthBounds
+
+
+namespace BB6.Agent9RestartDepthBounds.Offset
+
+/-- The source affine energy plus the parent mass equation gives
+I = 7(b-6d)+146. These lemmas convert the residual energies to
+exact coordinate relations without subtraction in Nat. -/
+theorem Is20_coordinate
+    (b d : Nat) (h : 7 * b + 146 = 20 + 42 * d) : b + 18 = 6 * d := by
+  omega
+
+theorem Is48_coordinate
+    (b d : Nat) (h : 7 * b + 146 = 48 + 42 * d) : b + 14 = 6 * d := by
+  omega
+
+theorem first_offset_mod7_I20
+    (P M s b d T : Nat)
+    (hV : b + 18 = 6 * d)
+    (hmass : b + d + 2 * (M + 3 * s) + 13 = 14 * P)
+    (hT : T = M + 6 + 3 * s) : T % 7 = 5 := by
+  omega
+
+theorem first_offset_mod7_I48
+    (P M s b d T : Nat)
+    (hV : b + 14 = 6 * d)
+    (hmass : b + d + 2 * (M + 3 * s) + 13 = 14 * P)
+    (hT : T = M + 6 + 3 * s) : T % 7 = 3 := by
+  omega
+
+theorem first_offset_mod14_I20
+    (P M s b d T : Nat)
+    (hV : b + 18 = 6 * d)
+    (hmass : b + d + 2 * (M + 3 * s) + 13 = 14 * P)
+    (hT : T = M + 6 + 3 * s)
+    (hOdd : T % 2 = 1) : T % 14 = 5 := by
+  omega
+
+theorem first_offset_mod14_I48_even
+    (P M s b d T : Nat)
+    (hV : b + 14 = 6 * d)
+    (hmass : b + d + 2 * (M + 3 * s) + 13 = 14 * P)
+    (hT : T = M + 6 + 3 * s)
+    (hEven : T % 2 = 0) : T % 14 = 10 := by
+  omega
+
+theorem first_offset_mod14_I48_odd
+    (P M s b d T : Nat)
+    (hV : b + 14 = 6 * d)
+    (hmass : b + d + 2 * (M + 3 * s) + 13 = 14 * P)
+    (hT : T = M + 6 + 3 * s)
+    (hOdd : T % 2 = 1) : T % 14 = 3 := by
+  omega
+
+#print axioms Is20_coordinate
+#print axioms Is48_coordinate
+#print axioms first_offset_mod7_I20
+#print axioms first_offset_mod7_I48
+#print axioms first_offset_mod14_I20
+#print axioms first_offset_mod14_I48_even
+#print axioms first_offset_mod14_I48_odd
+
+end BB6.Agent9RestartDepthBounds.Offset
