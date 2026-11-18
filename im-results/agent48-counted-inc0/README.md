@@ -181,31 +181,24 @@ source-level Lean proof or establish a global BB(6) upper bound. The
 existing manual source-check workflow now also runs this simulator.
 
 
-## Valuation-uniform M0-even 8q extension (experimental)
+## Valuation-uniform M0-even 8q counted-source draft
 
-A new probe suggests the q-odd restriction in `M0EvenEightGenericSource.lean` can be removed: for `t=v2(q)`, the same q4 interface appears after `60+12a+12t` steps. The experiment checks 288 exact finite-support cases and decomposes the extra cost into a 9t-step left zero-bubble plus a 12+3t-step right d1-block scan. This is not yet a Lean theorem; the complete statement, proof route, limitations, and probe are in [M0EvenEightValuationExtension.md](M0EvenEightValuationExtension.md) and [m0_even_eight_valuation_probe.js](m0_even_eight_valuation_probe.js).
+The all-valuation marker-0 row `n=8q`, `q>0`, now has a complete **source-level** Lean composition. It remains uncompiled and unaudited; it is not yet an accepted theorem or a blank-root result.
 
+The chain is:
+- `M0EvenEightValuationSource.lean`: the valuation-dependent prefix run, cost `60+12*a+12*v₂(q)`;
+- `M0EvenEightValuationQ4Source.lean`: exact left-facing cut word, q4 right shape, blank far tail, and q4-suffix composition, with reset-prefix cost `99+12*a+12*v₂(q)+3*b`;
+- `M0EvenEightValuationCountedSource.lean`: the final counted-drain wrapper, exporting `m0EvenEight_valuation_counted_increment_source`.
 
-The companion Lean helper candidate `M0EvenEightValuationMacros.lean` adds the state-1 right d1-block scan and final `101` boundary; it remains uncompiled pending Agent6's local preflight. The existing S1Encoder `binDec_carryPrefix`, `binDec_sub_one_carryPrefix`, `exists_odd_factor_bounded`, and CountedReset `v2_odd_factor` already supply the binary and valuation identities for the generalization.
+Under `q>0`, `4≤L`, `8*q<2^L`, and `a>0`, the counted theorem declares the original-table run from
+`s1Config L (8*q) 0 a 0 b h`
+to
+`s1Config L (8*q-1) 2 (a+b+1) 0 (2^b-1) (h+5+3*b)`,
+using `proposedIncrementCost 0 (8*q) a b` primitive steps. Its exact cost is
+`6*4^b + 42*2^b + 12*a + 12*v₂(q) - 9*b + 51`.
 
+The construction retains the reproducible 288-case exact-tape probe and 101 parameterized finite-bridge checks described in [the derivation note](M0EvenEightValuationExtension.md). Agent 42 corrected the false marker-length objection using the actual four-bit `markerWord 2`; Agent 4 independently checked the dynamic coordinate partition symbolically in [the coordinate review](../../communications/agent48/20261118T121242Z_agent4-m0-valuation-coordinate-review.md). These checks support source review, not kernel acceptance.
 
-The finite-frame formulation is now explicit in the extension note: `bridgeStart_t` adds 3t marks at -14-i, `bridgeEnd_t` has marks `{2,1,-1,3} ∪ {-4-3i | i<4+t} ∪ {-14-3t,-15-3t}`, and the dynamic frame is `[-15-3t,3]`. The intended finite run length is `63+12t`, lifted by the existing `bridgeAt` theorem.
+The existing manual workflow `.github/workflows/agent42-counted-lbin-dec.yml` now stages and compiles the three new source modules after their dependencies and checks the final exported theorem output for forbidden axioms. It has not been dispatched. The exact import closure must first pass local Lean 4.36.0-rc2 preflight, followed by inspection of the complete transitive `#print axioms` profile; reject `sorryAx`, `native_decide`, and custom axioms.
 
-
-The helper set now comprises:
-- `M0EvenEightValuationFixedPrefix.lean`: parametric 44-step prefix and four-step zero exit;
-- `M0EvenEightValuationSweepFacts.lean`: post-bubble zero boundary and 4+t right-run invariant;
-- `M0EvenEightValuationMacros.lean`: state-1 right d1-block scan, exact 001 block output, and 101 boundary;
-- `M0EvenEightValuationEncoding.lean`: existing BinDec carry and valuation lemmas instantiated for all q;
-- `M0EvenEightValuationSuffix.lean`: parity-free q4 suffix target-left identity.
-
-These are candidate Lean proofs pending local preflight; no CI has been dispatched.
-
-
-The parameterized finite bridge formula was also checked independently for t=0..100: 101/101 exact finite-support traces matched `bridgeEnd_t`, with exact `63+12t` step counts and dynamic head bounds. The reproducible probe now includes this test; it remains computational evidence pending Lean proof.
-
-
-**Integration qualification:** the proposed all-q result targets the exact local S1 source/target pair in `m0EvenEight_counted_increment_source` (the (m=0,n=8q) row of `countedRst012_of_prefix`). It is not a blank-root reachability theorem. The connection from the authentic blank-root orbit to these S1 configurations remains unproved.
-
-
-Do not confuse this (n=8q) (residue-0 mod 8) source row with the root-connected (n=8(2r)+4) residue-four handoff after middle row 11; they are distinct obligations.
+**Scope:** this is only the local marker-0 `n=8q` S1 counted-increment premise for the TM63 24-cycle. It does not prove that the authentic blank-root orbit reaches these S1 configurations, does not establish a halt witness, and does not determine BB(6). It is distinct from the root-connected marker-0 `n=8q+4` residue-four row.

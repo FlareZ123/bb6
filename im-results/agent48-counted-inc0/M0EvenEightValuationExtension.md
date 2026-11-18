@@ -1,10 +1,10 @@
-# Valuation-uniform M0-even 8q increment: experimental extension
+# Valuation-uniform M0-even 8q counted increment: source draft
 
-**Status:** intermediate computational result and proof plan only. This is not a Lean theorem and does not belong in `results/`.
+**Status:** the complete source-level Lean composition is now present, but it is **uncompiled and unaudited**. `M0EvenEightValuationSource.lean` proves the valuation-dependent prefix run; `M0EvenEightValuationQ4Source.lean` proves its left-facing cut, q4 right shape, blank far tail, and q4-suffix composition; `M0EvenEightValuationCountedSource.lean` composes the counted drain and declares `m0EvenEight_valuation_counted_increment_source`. No exact import-closure compile or transitive axiom audit has passed, so this remains intermediate work in `im-results/`.
 
-## Conjectured source theorem
+## Source theorem draft
 
-The existing `M0EvenEightGenericSource.lean` handles `n = 8q` with `q` odd. Experiments on the original TM63 transition table indicate that the oddness restriction is unnecessary.
+The existing `M0EvenEightGenericSource.lean` handles `n = 8q` with `q` odd. The valuation-uniform extension removes that restriction at source-draft level. The finite probes and symbolic coordinate checks below support the construction but are not proof acceptance.
 
 Let (t=v_2(q)), with (q>0). For (Lge4+t), (8q<2^L), (a>0), and arbitrary (b), the proposed generalized q4 prefix has length
 [
@@ -16,7 +16,7 @@ It reaches state 4 at the original head, with the existing q4 right interface an
 operatorname{binDec}(L,8q-1);ell_h.
 ]
 
-The existing q4 suffix then takes (39+3b) steps and reaches
+The q4 suffix draft then takes (39+3b) steps and reaches
 [
 S1(L,8q-1,2,a+b+1,2^b-1,0,h+5+3b).
 ]
@@ -25,7 +25,7 @@ Thus the complete reset prefix has cost
 99+12a+12v_2(q)+3b
 =operatorname{resetPrefixCost}(0,8q,a,b).
 ]
-Composing the existing generic counted drain would give
+The counted-source wrapper composes the existing generic counted drain; its declared total cost is
 [
 operatorname{proposedIncrementCost}(0,8q,a,b)
 =6cdot4^b+42cdot2^b+12a+12v_2(q)-9b+51.
@@ -158,7 +158,7 @@ which is the same as
 
 ## Full source-level composition
 
-The intended theorem can be assembled from the existing S1 configuration and the four new local bridge lemmas without changing the machine or the q4 suffix.
+The current modules implement this composition without changing the original TM63 table or the generic q4 suffix. `M0EvenEightValuationSource.lean` proves the parameterized prefix run; `M0EvenEightValuationQ4Source.lean` proves the cut-tape interface and reset-prefix theorem; `M0EvenEightValuationCountedSource.lean` applies the all-ones counted drain. The five phases below explain the proof structure. They remain source drafts until the exact dependency closure compiles and its axiom profile is inspected.
 
 Let (h_N=h-3a), and use the factorization (q=(2u+1)2^t) from `factor8q`.
 
@@ -183,20 +183,35 @@ by `binDec_sub_one_carryPrefix`. The right q4 interface is unchanged because the
 A direct exact-tape simulation of the parameterized finite bridge was run for every (t=0,ldots,100). All 101 cases reached state 4/head 3 after exactly (63+12t) steps, stayed inside the dynamic frame ([-15-3t,3]), and matched the proposed `bridgeEnd_t` marked set exactly (101/101). The reproducible Node probe now includes this independent loop and treats any bridge mismatch as a failing exit condition. This is computational evidence, not a Lean proof.
 
 
-## Exact source obligation and root-integration boundary
+## Exact source theorem and root-integration boundary
 
-The existing q-odd theorem `m0EvenEight_counted_increment_source` in `M0EvenEightGenericSource.lean` states the exact local source obligation this generalization targets. For (q>0), (4le L), (8q<2^L), and (a>0), it should establish the raw TM63 run
-[
-operatorname{run} tm2 (operatorname{proposedIncrementCost}(0,8q,a,b))  (operatorname{s1Config}(L,8q,0,a,0,b,h))
-=
-operatorname{some}(operatorname{s1Config}(L,8q-1,2,a+b+1,0,2^b-1,h+5+3b)).
-]
-The q-odd implementation currently obtains this by a q4 prefix of (60+12a), a q4 suffix of (39+3b), and the all-ones drain. The proposed all-q source replaces the q4 prefix by (60+12a+12t), where (t=v_2(q)), and the exact reset cost identity is (99+12a+12t+3b), matching `resetPrefixCost 0 (8*q) a b`.
+The complete all-q counted-source declaration is now present in
+`M0EvenEightValuationCountedSource.lean`:
 
-**This is a local S1 counted-increment source lemma, not a blank-root reachability theorem and not a BB(6) certificate.** It discharges only the (m=0,n=8q) row of the prefix premise needed by `countedRst012_of_prefix`. It advances the BB(6) programme only if an independently proved root-orbit/source-encoding theorem reaches one of these S1 configurations. That reachability/integration dependency is not established here, and no root quantifier is claimed removed. The exact source and target above are the integration interface for an agent working on the authentic blank-root closure.
+`m0EvenEight_valuation_counted_increment_source`.
 
+For `q>0`, `4≤L`, `8*q<2^L`, `a>0`, and arbitrary `b,h`, it states the original-table TM63 run
 
-The root-specific handoff in Agent 42's 15 November messages is a different residue class: (n=16r+4=8(2r)+4), consumed after root middle row 11. The present file is (n=8q), residue 0 modulo 8. Do not conflate these two M0-even rows: this all-q result does not supply the root-connected residue-four bridge, and the residue-four root integration remains a separate dependency.
+```lean
+run tm2 (proposedIncrementCost 0 (8*q) a b)
+  (s1Config L (8*q) 0 a 0 b h) =
+  some (s1Config L (8*q-1) 2 (a+b+1) 0 (2^b-1)
+    (h+5+(3*b:Int)))
+```
+
+The proof composes:
+- the valuation-dependent q4 prefix of `60+12*a+12*v₂(q)` steps;
+- the generic q4 suffix of `39+3*b` steps, giving reset-prefix cost
+  `99+12*a+12*v₂(q)+3*b = resetPrefixCost 0 (8*q) a b`;
+- the existing generic counted drain.
+
+The theorem therefore supplies the local marker-0, `n=8q` S1 counted-increment row required by `countedRst012_of_prefix`, at source-draft level. The final declared primitive increment cost is `proposedIncrementCost 0 (8*q) a b`, equivalently
+`6*4^b + 42*2^b + 12*a + 12*v₂(q) - 9*b + 51`.
+
+**Validation boundary:** this is not yet a Lean-accepted theorem. The exact original import closure and the transitive `#print axioms` profile must be checked; reject `sorryAx`, `native_decide`, and custom axioms. Standard Lean axioms such as `propext`, `Classical.choice`, and `Quot.sound` are expected.
+
+**Root boundary:** this is a local S1 counted-increment source lemma, not a blank-root reachability theorem, a halt witness, or a BB(6) certificate. The connection from the authentic blank-root orbit to these S1 configurations remains unproved. Do not conflate this `n=8q`, residue-zero row with the root-connected `n=8(2r)+4` residue-four handoff after middle row 11; they are distinct obligations.
+
 
 
 ## Orientation audit correction — 18 November 2026
@@ -224,5 +239,4 @@ Consequently the bridge mark set
 cup {h_N-4-3j:0le j<4+t}
 cup {h_N-(14+3t),h_N-(15+3t)}
 ]
-matches the finite part of the proposed q4 left-facing target. The alleged equation (1=0) is actually (1=1). This removes the stated orientation objection; it does **not** by itself prove the full all-q left-facing theorem, compile the source closure, or establish the counted increment. Those remain the next proof/acceptance obligations.
-
+matches the finite part of the q4 left-facing target. The alleged equation (1=0) is actually (1=1). This removes the stated orientation objection. The current source implementation formalizes the cut-tape obligations in `M0EvenEightValuationQ4Source.lean`: `m0EvenEight_valuation_q4_prefix_leftFacing`, `m0EvenEight_valuation_q4_prefix_rightShape`, and `m0EvenEight_valuation_q4_prefix_far_tail`, followed by `m0EvenEight_valuation_q4_reset_prefix_source`. Agent 4's independent symbolic review at [the coordinate review](../../communications/agent48/20261118T121242Z_agent4-m0-valuation-coordinate-review.md) checks the moving d0/d1 cells and boundary cells for every t. These are source-level declarations only; compilation and the final counted-source axiom audit remain open.
