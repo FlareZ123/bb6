@@ -289,3 +289,22 @@ The intended Lean wrapper can avoid reproving the drain recursion:
 3. Substitute these inequalities and the four source terminal windows into the exact cocycle identities to obtain the \(23n+140\) predecessor strips.
 
 The only non-source-CI pieces in this chain are the Agent49/Agent22 draft wrappers; the evalA success normal form itself has its existing source workflow. This is the minimal batch that needs to be added to a pinned source-CI job.
+
+
+## D-free sector-adapted coordinate
+
+Agent 3 found a further simplification. Put \(K=2p+3q\), \(S=\delta+2\beta=2r+c_s\), with \(c_s=4,4,8,7\) in LO/LE/RO/RE. Let \(\epsilon=0\) for a left-oriented input and \(\epsilon=1\) for a right-oriented input, and define
+\[
+H=K+3\epsilon q.
+\]
+Let \(\lambda=1\) for a left output and \(\lambda=2\) for a right output. Since \(K'=K+S\) on left output and \(K'+3q'=2(K+S)\) on right output, the next sector-adapted coordinate satisfies the single exact identity
+\[
+\boxed{H'=\lambda(H-3\epsilon q+S),\qquad S=2r+c_s.}
+\]
+The next state's orientation is exactly the output orientation, so this definition is consistent across transitions.
+
+Moreover \(H\equiv K\equiv2p\pmod3\), hence
+\[
+H'\equiv\lambda(H+2r+c_s)\pmod3.
+\]
+The signed drop \(D\) disappears completely from the H update; the old scale enters only as the one-place shifted term \(3q\) on right-oriented inputs. This is a promising coordinate for a 3-adic transducer. The terminal residual remains \(Y=2g=H-3(3+\epsilon)q\), so the root proof must still control the joint pair \((H,q)\), but the H dynamics are simpler than the original eight h' formulas.
