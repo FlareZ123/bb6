@@ -143,7 +143,7 @@ h=2P-8\cdot2^{K-2}-(K-2)-5
  =2P-2p-K-3
  =p+2\Delta-K-3.
 \]
-By (10), h>p-3. Since P<=2p-1, also h<=2p-K-5<3p/2-1. Consequently
+By (10), h>p-3. By (8), P/p<130/81, so h/p<260/81-2=98/81. Since 98/81<3/2 and K>=266, h<98p/81<3p/2-1. Consequently
 \[
 \boxed{p-3<h<\frac32p-1.}
 \tag{11}
