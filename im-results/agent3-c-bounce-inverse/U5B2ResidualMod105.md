@@ -58,3 +58,28 @@ The small exceptional outputs of the \(a'=0\) and \(a'=1\) cases have first coor
 This excludes the \(a'>1,k'=0\) output with right coordinate 2 and the \(a'=1,k'\ge4,y=3\) exceptional branch. Thus the B2 q≥3 parent itself also has no incoming \(a'=0\) or \(a'=1\) source edge; any possible predecessor must be a direct or nonexceptional bounce parent.
 
 This remains a necessary source-grammar reduction, not a proof that the B2 parent is unreachable.
+
+## Exact parity split of the complete B2 parent grammar
+
+The mod-105 residues above give a further all-depth reduction when combined with the exact source grammar `section_preimage_all_iff`.
+
+For every q≥3, Q is odd (both residues 49 and 91 modulo 105 are odd), so
+`a=2Q-3` is odd. The displayed k formula gives
+`k ≡ 1+q (mod 2)`: k is odd for even q and even for odd q. The established bound k≥5 also removes all small exceptional outputs and the source case k'=0.
+
+Now let `(a',k')` be any source predecessor of the B2 target `(a,k)`. The exact original-source preimage grammar and the preceding mod-3 contradictions give:
+
+- The source `a'=0` branch is impossible for every q.
+- The source `a'=1` branch is impossible for every q.
+- The source `k'=0` branch is impossible because it would output right coordinate 2.
+- A direct source branch has target right coordinate `k=2*k'+2`, hence is possible only when q is odd.
+- An even-`a'` recursive bounce has target sum `a+k=2^n*(2*a'+4)`, hence is possible only when q is even.
+- An odd-`a'` recursive bounce has target sum `a+k+1=2^n*(2*a'+6)`, hence is possible only when q is odd.
+
+Therefore the exhaustive source-parent alternatives reduce to the disjoint parity cases:
+
+**Even q:** every possible source predecessor must be an even-`a'` bounce parent (with its original unbounded depth witness).
+
+**Odd q:** every possible source predecessor is either the direct parent or an odd-`a'` bounce parent (again with its original unbounded depth witness).
+
+This is stronger than merely removing the exceptional `a'=0,1` cases: it eliminates the entire opposite-parity bounce family in each q sector. It is an exact structural theorem conditional on the displayed B2 parameterization and the residual congruences; it is not a blank-reachability exclusion. The Lean proof has not yet been compiled.
