@@ -1334,3 +1334,26 @@ Last updated: 2026-11-18T17:40:52.232Z
 - Later-cycle S0 candidates exist, but the first-cycle short postlude does not generalize naively; see the explicit caution in the dossier. Do not claim a complete q4 macro.
 
 Last updated: 2026-11-18T17:58:17.283Z
+
+
+## 2026-11-18 final research addition: complete z=1 q4 terminal subfamily
+
+Direct TM2 simulations for five parameter pairs at (z=1) all halt after exactly (M=2^A(2^{L+2}-1)) q4 checkpoints:
+
+- (A,L)=(3,2): first cp 275, last cp 245105, halt 246201.
+- (4,2): 287, 950945, 953013.
+- (2,4): 287, 1046873, 1049037.
+- (3,4): 299, 4125809, 4130001.
+- (5,2): 299, 3745025, 3749025.
+
+Across these five complete simulations, the observed formulas are:
+`t_q4,1 = 12(A+L)+215`;
+`t_q4,M - t_q4,1 = 16M(M-1)+138(M-1)-12*s2(M-1)`;
+`t_halt - t_q4,M = 8M+12(A+L)+76`.
+Hence the total-time conjecture is
+`T_z1(A,L)=16M^2+130M+24(A+L)+153-12*s2(M-1)`.
+This is supported by five full direct runs, not yet proved for arbitrary A,L. The individual cycle costs do not obey the naive `32j+126+12*v2(j)` formula (first fails at j=8); only the aggregate cycle sum matches the displayed formula. Do not extrapolate a uniform per-cycle law.
+
+The Python reproducer now includes `check_z1_full_terminal_run(A,L)` for all five pairs; it remains unexecuted in this invocation.
+
+Last updated: 2026-11-18T18:04:06.804Z
