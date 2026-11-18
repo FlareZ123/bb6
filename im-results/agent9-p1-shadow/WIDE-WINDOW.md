@@ -148,7 +148,7 @@ The following maxima are obtained by checking the monotone integer inequality in
 | 11 | 176 | 164 | 164 | 172 |
 | 12 | 192 | 180 | 180 | 188 |
 
-This extends the certified-candidate finite window by 6–8 units for these feeder sizes. It remains a finite-cost statement, not a lift of unbounded paths at fixed q.
+This extends the existing formal-candidate finite window by 6–8 units for these feeder sizes. It remains a finite-cost statement, not a lift of unbounded paths at fixed q.
 
 ## Lean implementation delta
 
