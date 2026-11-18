@@ -175,3 +175,8 @@ theorem one_extra_digit_carry_bound
     · omega
 
 #print axioms one_extra_digit_carry_bound
+
+def J : Mat2 := ⟨1,0,0,-1⟩
+
+theorem involution_diagonalized_by_P : matMul U P = matMul P J := by decide
+#print axioms involution_diagonalized_by_P
