@@ -263,7 +263,7 @@ See [U5Q0TwoCylinders.md](U5Q0TwoCylinders.md) for the exact coordinate chains a
 - [U5Q0SecondaryH40.lean](U5Q0SecondaryH40.lean)
 - [U5Q0W4609HighStop.lean](U5Q0W4609HighStop.lean)
 
-**Status:** all four files remain uncompiled source drafts. Exact local preflight against Lean 4.36.0-rc2 and transitive axiom audit are pending; no CI was dispatched. Do not promote these to results/ or describe them as certified theorems until that gate passes. Other h/root residue classes remain open. In particular, the diagnostic h=8+128u branch is now matched exactly to w≡6657 (mod 8192) by the standalone locally kernel-checked `U5Q0H8Residue.lean`; this is a parameter correspondence only, and the B2 q≥3 source-parent fan remains open.
+**Status:** all four files remain uncompiled source drafts. Exact local preflight against Lean 4.36.0-rc2 and transitive axiom audit are pending; no CI was dispatched. Do not promote these to results/ or describe them as certified theorems until that gate passes. Other h/root residue classes remain open. For the U5 q=0 slice t=39+64h, the residual identity now gives w≡2496h+3073 (mod 8192), formally proved in `U5Q0RootAffineResidue.lean`. This affine map is a bijection between h modulo 128 and the 128 residues w modulo 8192 that are 1 modulo 64; the inverse is h≡23(⌊(w mod8192)/64⌋+80) (mod 128). The h=8, h=40, and h=16 (mod 32) families specialize to w=6657 (mod 8192), w=4609 (mod 8192), and w=1 (mod 2048). This is a parameter correspondence, not an exclusion; the B2 q≥3 source-parent fan remains open.
 
 
 Aggregate preflight target: [U5Q0TwoCylindersAudit.lean](U5Q0TwoCylindersAudit.lean), which imports all four new proof drafts plus the existing W1821 baseline and prints the principal axiom audits.

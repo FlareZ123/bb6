@@ -155,24 +155,44 @@ Applying the existing `section_preimage_all_iff` grammar gives a sharp normal fo
 
 The q-depth is genuinely unbounded as u varies: 16555 is odd, so for every d there is a residue u mod (2^d) with (2^dmid W). Low-q observations: q=0 gives the odd/even sum-three-mod-eight parent; q=1 is odd/odd sum two mod four and is excluded when u is even; q=2 is possible only for odd u and splits further. This is an exact source-parent normal form, not a reachability exclusion or a closure of h=8. See Agent 4's detailed derivation in `communications/agent3/20261118T102634Z_agent4-b2-sum15-parent-fan.md`.
 
-## Residual-identity lift of the unresolved h=8+128u branch
+## Residual-identity lift: affine bijection modulo 8192
 
-The authentic residual identity is
+The authentic residual identity on the U5 q=0 slice is
 ```text
 211*t + 1360 + 22155*w = 20*2^(201+3360*w),
 t = 39 + 64*h.
 ```
-The exact parameter correspondence is
+The general theorem is
 ```text
-h ≡ 8 (mod 128)  iff  w ≡ 6657 (mod 8192).
+w ≡ 2496*h + 3073 (mod 8192).
 ```
 
-Reason: the right side is divisible by 8192. If h=128v+8, then t=8192v+551. Substitution gives
-`22155*w + 147487195 ≡ 0 (mod 8192)`; since
-`291*22155 = 1 + 787*8192`, this is equivalent to w≡6657.
-Conversely, w≡6657 makes `211*t+147487195 ≡0 (mod 8192)`; since
-`5979*211 = 1 + 154*8192`, this forces t≡551, hence h≡8 (mod 128).
+The right side is divisible by 8192. Multiplication by 291 is invertible on the 22155 coefficient because
+`291*22155 = 1 + 787*8192`. The exact expansion is
+```text
+291*(211*(39+64*h) + 1360 + 22155*w)
+ = (w + 5696*h + 5119) + 8192*(787*w + 479*h + 340).
+```
+The complementary term satisfies
+`2496*h + 3073 + 5696*h + 5119 = 8192*(h+1)`,
+which gives the affine residue.
 
-The standalone Lean proof is [U5Q0H8Residue.lean](U5Q0H8Residue.lean). It was compiled locally with Lean 4.36.0-rc2 and `#print axioms` reported only `[propext, Quot.sound]` for all three exported theorems; no `sorryAx` or `native_decide` occurs. The theorem is conditional on the residual identity and is intentionally arithmetic-only: it does not recompile or certify the upstream original-source construction of that identity.
+This affine map is a bijection from h-residues modulo 128 to the 128 residues w modulo 8192 satisfying w≡1 (mod 64). The inverse is
+```text
+h ≡ 23 * ( floor((w mod 8192)/64) + 80 ) (mod 128).
+```
+The Lean module also proves injectivity, constructive surjectivity onto those 128 residues, and the q=0 consequence w≡1 (mod 64). The surjectivity statement concerns the affine congruence map, not realization by the full Diophantine residual equation.
 
-This identifies the exact root-parameter cylinder for the h=8 branch, not an exclusion. The B2 q≥3 parent fan, its direct/nonexceptional bounce alternatives, and blank-root reachability remain open. The residue 6657 is not part of the already drafted exclusion union `{1,2049,4097,4609,6145} (mod 8192)`.
+Selected inverse pairs:
+| w mod 8192 | h mod 128 |
+|---:|---:|
+| 1 | 48 |
+| 2049 | 16 |
+| 4097 | 112 |
+| 4609 | 40 |
+| 6145 | 80 |
+| 6657 | 8 |
+
+The first five w residues are the current drafted high-stop candidate union; the sixth is the unresolved h=8 branch. These are parameter correspondences only: the affine bijection does not validate the source-parent exclusions or prove blank-root unreachability. The B2 q≥3 parent fan and its direct/nonexceptional bounce alternatives remain open.
+
+The standalone Lean proof is [U5Q0RootAffineResidue.lean](U5Q0RootAffineResidue.lean). It compiles locally with Lean 4.36.0-rc2. The five exported theorem audits report only `[propext, Quot.sound]`; no `sorryAx` or `native_decide` occurs. The earlier [U5Q0H8Residue.lean](U5Q0H8Residue.lean) separately proves the h=8 iff specialization.

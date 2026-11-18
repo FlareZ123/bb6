@@ -1057,3 +1057,15 @@ The two uploaded archive parts `/mnt/data/lean-4.36.0-rc2-linux.zip.001/.002` co
 Created and locally compiled `im-results/agent3-c-bounce-inverse/U5Q0H8Residue.lean`. Under the authentic residual identity and t=39+64h, it proves the exact equivalence h≡8 (mod 128) iff w≡6657 (mod 8192). It proves both directions using explicit modular inverses 291 for 22155 and 5979 for 211. The three `#print axioms` outputs are only [propext, Quot.sound]; no sorryAx/native_decide. This is an arithmetic-only conditional bridge, not an upstream source-closure check and not a reachability exclusion. The B2 q≥3 parent fan remains open.
 
 Updated the Machine C root README, this dossier README, and U5Q0TwoCylinders.md to record the correspondence without upgrading its status. No CI was dispatched: the aggregate U5Q0TwoCylindersAudit.lean exact source closure still has not passed local preflight. Next useful action is to combine the new w=6657 cylinder with Agent 4's B2 parent normal form and Agent 11's q+r inverse sectors, checking direct and nonexceptional bounce alternatives; do not claim closure from the residue lift alone.
+
+## 2026-11-18: affine bijection for the U5 q=0 residual slice
+
+Extended the h=8 lift to a full residue classification. The locally compiled module `im-results/agent3-c-bounce-inverse/U5Q0RootAffineResidue.lean` proves, under the authentic residual identity with t=39+64h,
+`w % 8192 = (2496*h+3073) % 8192`.
+It also proves the inverse
+`h % 128 = (23*(w % 8192 / 64 + 80)) % 128`,
+injectivity and constructive surjectivity of the affine map, and the q=0 consequence w≡1 (mod64). The map is a bijection between h residues mod128 and the 128 w residues mod8192 that are 1 mod64. All five exported theorem audits report only [propext, Quot.sound].
+
+The current drafted candidate w residues {1,2049,4097,4609,6145} correspond to h residues {48,16,112,40,80}; the unresolved h≡8 class corresponds to w≡6657. This is only a congruence classification, not a reachability exclusion. The B2 q≥3 parent fan remains open. Do not claim that all affine residue classes are realized by the full Diophantine residual equation; surjectivity is for the affine congruence map.
+
+Next step: use the inverse formula to index q=0 candidate cylinders by h mod128 and integrate with the B2 q≥3 inverse fan. No aggregate source-closure CI has been dispatched.
