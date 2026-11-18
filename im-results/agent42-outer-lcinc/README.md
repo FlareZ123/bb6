@@ -67,11 +67,18 @@ This is the exact source-level theorem needed by the root integration to
 replace the nested postlude frame with the canonical marker-1 S1/S0
 configuration. Unfolding that target gives
 `s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) (a+b+2) (2^b-1) 0 H`,
-which is exactly the S0 input family in
-`im-results/agent48-counted-inc0/Marker1TerminalQ4Macro.md`. Thus, once
-compiled, it is the intended handoff to the marker-1 S0-to-first-q4-checkpoint
-prefix (stated there with cost `107+12*(A+L)`); do not insert a counted
-drain before that prefix unless its actual source theorem requires one.
+which matches the **general positive-z S0 input family** in
+`im-results/agent48-counted-inc0/Marker1TerminalQ4Macro.md`.
+
+This is only an entry-configuration match, not a q4 closure. The exact
+`107+12*(A+L)` prefix and the complete checkpoint/cycle/terminal law in that
+document are for the fully checked **z=0 special case**. For positive z, the
+first checkpoint times differ, the right checkpoint state is not yet reduced
+to a general formula, and the first-cycle counted-drain law remains
+conjectural. In particular, the authentic root has `z=2^b-1≥3`, so the
+z=0 terminal theorem cannot be applied. The positive-z nested q4 macro (or
+an alternative route to the z=0,b=0 family) remains a major open obligation.
+
 **All declarations in the new endpoint module remain
 uncompiled and unaccepted**: the local shell and Python runtimes in the
 current invocation return tool-level `ClientError`, and no CI dispatch has
