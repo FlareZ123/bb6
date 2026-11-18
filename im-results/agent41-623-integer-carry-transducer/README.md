@@ -4,13 +4,13 @@
 
 ## Purpose
 
-The existing #623 gap cocycle is naturally expressed in ((z,q)), but the right branch contains a half coefficient in (q'). Replacing (q) by (y=6q) gives integer affine maps and exposes a finite ternary carry transducer. This is intended as infrastructure for the buffered middle-digit approach.
+The existing #623 gap cocycle is naturally expressed in `(z,q)`, but the right branch contains a half coefficient in `q'`. Replacing (q) by (y=6q) gives integer affine maps and exposes a finite ternary carry transducer. This is intended as infrastructure for the buffered middle-digit approach.
 
 The root replay starts at (D(0,7)) and uses the source-shaped evaluator/drain implementation included in [replay.js](./replay.js). The underlying source derivations are in:
 
 - [RootRayGapCocycle.md](../agent1-machine623-3euclidean-correction-bounds/RootRayGapCocycle.md)
 - [Agent 3 exact p/q cocycle message](../../communications/agent41/20261118T115445Z_agent1-623-terminal-residue-cocycle.md)
-- [Agent 8 buffered-digit work](../agent8-623-inverse/README.md)
+- [Agent 8 source-shaped root replay](../agent8-623-inverse/root_mass_corridor_survey.js)
 
 ## Integer coordinates
 
@@ -53,7 +53,7 @@ B=max(B_c,B_t),qquad
 k=min{i:3^i>B},qquad
 j=min{i:3^i>B^3}.
 ]
-Then (jge3k-2), so the buffered middle block ([k+2,j-2)) has length at least (2k-6). Also (B<3^k), so the correction terms are absorbed into bounded carries before the middle block begins.
+Then (jge3k-2), so the buffered middle block ([k+2,j-2)) has length at least (2k-6). Also (B<3^k), so the corrections are absorbed into bounded carries before the middle block begins.
 
 ## Finite carry transducer
 
@@ -70,12 +70,12 @@ Write (x_i,y_iin{0,1,2}) for ternary digits and (a_i,b_i) for Euclidean quotient
   y'_iequiv x_{i-1}+y_{i-1}+b_ipmod3.
   ]
 
-The next carries are the corresponding quotients by 3. The carry ranges after the low correction digits have been consumed are finite:
+The next carries are the corresponding quotients by 3. The low linear part contributes carries in ([-1,0]), ({0}), ([-3,0]), and ([0,1]) for (L-x), (L-y), (R-x), and (R-y), respectively. Since each low correction has magnitude below (3^k), it contributes an additional carry in ({-1,0,1}). Therefore the following deliberately generous initial carry ranges are safe and are the ones checked by the script:
 
-- L: (a_iin[-1,1]), (b_iin[-1,1]);
-- R: (a_iin[-3,0]), (b_iin[-1,1]).
+- L: (a_kin[-2,2]), (b_kin[-2,2]);
+- R: (a_kin[-4,1]), (b_kin[-2,2]).
 
-The two discarded positions account for the one-place shifts and the low-part carry interface.
+These ranges are invariant under the digit recurrences. The two discarded positions account for the one-place shifts.
 
 ## Reproducible finite observation
 
@@ -90,9 +90,9 @@ The script checks the exact root source map through 10,000 transitions. For each
 Observed result:
 
 - 9,968 root states checked (indices 33 through 10,000);
-- 21 branch/carry cases per state, 209,328 cases total;
+- 55 branch/carry cases per state, 548,240 cases total;
 - no monochromatic output block;
-- block lengths between 7 and 16.
+- block lengths between 7 and 17.
 
 This is stronger than checking only the actual branch and actual correction carry on the finite prefix. It is nevertheless finite computational evidence only.
 
