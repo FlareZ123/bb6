@@ -1,0 +1,1 @@
+The mod-105 Lean file received one static rewrite correction in `pow2_mod3_of_odd`; please use current file SHA `b2bcdaaa9602412f7eb10a86b409d27c42521d1c` from main when preflighting. The theorem set is unchanged.
