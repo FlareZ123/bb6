@@ -35,3 +35,17 @@ x_0+14P S=2^Lx_{\rm wall}+2((c+3)S+T),
 where \(S=\sum_j2^{s_j}\), \(T=\sum_js_j2^{s_j}\), and \(L=\sum_je_j\). Substituting the wall value and an even initial defect gives the additive wall identity; if \(x_0/2<P\), it also proves \(2^L\le7S\), i.e. the nonnegative restart product \(N=7S-2^L\).
 
 This is a formal proof of the recurrence-level arithmetic, not yet a source-history extraction theorem: proving that the suffix after the last high-depth edge instantiates RestartWalk remains a separate source-level task. It is intended to close the formalization gap identified in Section 6 of SourceWallToCarryDP.md, without claiming that the original CountCone lift is complete.
+
+
+### Exact source recurrence needed for the lift
+
+The source-edge calculation in WallTelescopingSource.lean has the form
+\[
+d_{\rm parent}-1+14P
+=2^{t+1}(d_{\rm child}-1)+2(m_{\rm parent}+n+3).
+\]
+For a restart child at absolute cost \(m_0\), set \(c=m_0+n\), and for a later parent set \(s=m_{\rm parent}-m_0\). Then this is exactly the RestartWalk step
+\[
+x+14P=2^e x'+2(c+3+s),\qquad e=t+1.
+\]
+Thus the source lift should maintain \(m_{\rm current}=m_0+L\), reset \(L=S=T=0\) after every edge with \(t\ge3\), and apply restart_aggregate_step to each subsequent edge with \(t\le2\). At the final wall, source mass plus the wall equation supplies \(x_{\rm wall}=2P+2L+2c+6\). The high-depth defect positivity in HighDepthRestartSource.lean should supply \(x_0=2x_{\rm half}\) with \(x_{\rm half}<P\). The remaining work is to formalize this state extraction/induction over OddCone; the arithmetic interface is now in place.
