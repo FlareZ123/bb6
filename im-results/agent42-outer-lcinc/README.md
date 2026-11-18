@@ -66,6 +66,8 @@ The endpoint proof has now been written as a source-level candidate in
    directly as
    `s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) (a+b+2) (2^b-1) 0 H`,
    the exact general positive-z S0 input interface used by the q4 work.
+7. `outerLCInc_marker1S0_inputBounds`: proves automatically that
+   `0 < a+b+2` and `2^b-1 < 2^(a+b+2)`, the S0 width/value bounds.
 
 This is the exact source-level theorem needed by the root integration to
 replace the nested postlude frame with the canonical marker-1 S1/S0
