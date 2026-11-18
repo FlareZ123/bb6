@@ -92,4 +92,11 @@ Now apply the exact all-preimage source grammar to a hypothetical incoming sourc
 - The exceptional \(a=0\) branch requires \(x+y=8\cdot2^n\) and \(2k+9+3n=x+2y\). Since \(x\) and \(x+y\) are even, the cost equation forces \(n\) odd. The first equation then gives \(x+y\equiv8\cdot2^n\equiv1\pmod3\), contradicting \(x+y\equiv0\pmod3\).
 - The exceptional \(a=1\) branch requires \(x+y+1=16\cdot2^n\) and \(2k+5+3n=x+2y\). Here \(x\) is even and \(x+y+1\) is even, so \(y\) is odd; the cost equation again forces \(n\) odd. The first equation gives \(x+y+1\equiv16\cdot2^n\equiv2\pmod3\), whereas the left side is \(1\pmod3\), a contradiction.
 
-Therefore **neither exceptional zero-left nor one-left source branch can produce any \(B_{r,h}\)**. Every possible incoming source edge to a remaining secondary-bounce target must be in the direct branch or one of the nonexceptional odd/even bounce branches. This is a uniform source-grammar reduction for all \(r\ge1\), not a blank-reachability exclusion.
+The same bounds eliminate the other exceptional cases in the exact grammar. Since \(q\ge17\), the target's first coordinate is \(x\ge32\), excluding the listed small-output cases for \(a=0\) (including \(k=1\)) and \(a=1,k\le3\). Also, \(q\le S/4=104+171h\) and \(4^r\le S\), so \(r\le S\); hence
+\[
+y\ge2487+4096h-(104+171h)-3(416+684h)
+=1135+1873h\ge1135.
+\]
+This excludes the \(a=1,k\ge4,y=3\) subcase and the \(k=0\) output \(y=2\) for \(a>1\).
+
+Therefore **every possible incoming source edge to any remaining \(B_{r,h}\) must be either the direct branch \((2k\le a)\), the nonexceptional even-\(a\) bounce branch, or the nonexceptional odd-\(a\) bounce branch**. The complete \(a=0\), \(a=1\), and \(k=0\) cases are eliminated uniformly for all \(r\ge1\). This is a source-grammar reduction, not a blank-reachability exclusion.
