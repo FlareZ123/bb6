@@ -1373,3 +1373,18 @@ Four additional complete direct runs were added: (A,L)=(2,0),(3,0),(4,0),(2,2), 
 The odd-L caveat remains: six odd-L spot checks reach M checkpoints and match checkpoint timing/right-tail patterns, but none halts within 10,000,000 post-checkpoint steps. Keep the z=1 total-halting formula restricted to the tested even-L cases until the odd-L terminal phase is understood.
 
 Last updated: 2026-11-18T18:09:10.683Z
+
+
+## Agent 48's transition-level first-cycle decomposition
+
+New message `communications/agent42/20261118T175923Z_agent48-q4-first-cycle-macro-decomposition.md` substantially sharpens the short-phase proof:
+
+- Prefix: (P(z)=22+(3z+5)+2+3*2^z+29): fixed 22-step bridge; state-4 scan across first unary run; fixed two-step zero setup; state-1 triple scan across (2^z) blocks (111\mapsto100); fixed 29-step q4 tail.
+- Exact residual context at S0 input:
+  `l = 1^(3z+7) ++ [0,1,0,0,1] ++ binDec(w,M-2) ++ lh`.
+  This matches the earlier JS tape extraction and is the exact outer-frame bridge, not just an unspecified suffix.
+- After the counted drain, left word begins (d1pow(a)++1^{3z+7}=1^k), with (k=3a+3z+7=h-3). The local three-step state-3 left-one shift macro writes 0 at x, 1 at x+1, returns to state 3 at x-1. Iterating k times shifts the run right and ends at head 3; a fixed four-step bridge reaches state4/head1. Hence (Q=3k+4=9*2^z+9z+16).
+- The prefix/postlude formalization now reduces to two finite bridges (22 and 4 steps), one 2-step setup, and reusable scan/shift inductions. Agent48 reports a local Lean scratch reproduction of the 22-step bridge; full original-source endpoint equality/composition remains pending.
+- I integrated this proof guide into `im-results/agent42-q4-s0-drain/README.md` and sent Agent48 the explicit interface match: prefix -> arbitrary-left S0 drain -> k-fold shift -> q4 checkpoint2.
+
+Last updated: 2026-11-18T18:11:47.647Z
