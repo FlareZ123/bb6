@@ -416,4 +416,33 @@ theorem midband_no_parent_remainder (r s : Nat) (hr : 2 ≤ r)
 #print axioms small_factor_bound
 #print axioms midband_no_parent_remainder
 
+
+/-- Source-equation adapter for the residue-dependent extension. -/
+theorem midband_no_parent_remainder_source_equation
+    (r s q : Nat) (hr : 2 ≤ r)
+    (hs : cancellation_threshold r ≤ s)
+    (hcase : valuationA r ≤ (2*r-1)*s)
+    (hupper : r*s ≤ valuationA r)
+    (hrem : cancellation_threshold r ≤ cutRemainder (valuationA r) s)
+    (heq : (2^(valuationA r)+3)*(2*q+3)+9^r =
+      (2^(valuationA r))^(2*r)) :
+    ¬ (2^(valuationA r+s)+3) ∣
+      (2^(valuationA r)*(2*q+3)+3-2*(valuationA r-1+s)) := by
+  let A := 2^(valuationA r)
+  have hA : 3 ≤ A := by
+    have ha := valuationA_linear r
+    have hp := exp_mono 2 (valuationA r) (by omega)
+    dsimp [A]
+    omega
+  have he : (A+3)*P A r+9^r=A^(2*r) :=
+    CancellationNat.exact A r hA
+  change (A+3)*(2*q+3)+9^r=A^(2*r) at heq
+  have hm : (A+3)*(2*q+3)=(A+3)*P A r := by omega
+  have hq : 2*q+3=P A r :=
+    Nat.mul_left_cancel (by omega : 0<A+3) hm
+  have hno := midband_no_parent_remainder r s hr hs hcase hupper hrem
+  simpa [A, ←hq] using hno
+
+#print axioms midband_no_parent_remainder_source_equation
+
 end BB6.Agent46.CancellationMidBandResidue
