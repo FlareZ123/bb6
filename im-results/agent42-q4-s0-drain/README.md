@@ -230,3 +230,6 @@ The (3z+5) term is the straight state-4 sweep across the first unary run in the 
 which consumes three consecutive ones, writes (100), and advances the head by three cells. Viewed from the final head, the written triple is (001=d0), exactly the block used by the S0 counter prefix. The remaining 22- and 31-step pieces are fixed setup/terminal traces in the tested runs.
 
 This is an empirical proof guide, not yet a Lean run lemma. It suggests proving the prefix by composing a fixed 22-step setup, a unary state-4 sweep, a repeated three-cell (111\mapsto100) sweep, and a fixed 31-step terminal macro.
+
+
+The Lean module's imports were minimized after review: it now imports `CountedSuffixOutput`, `CountedReset`, `CountedCarryPrefixHRun`, and `S1Encoder` directly. It no longer imports the higher-level `S1CountedDrain` / `S1CarryInc0` wrapper, since the S0 suffix composition and the H-run theorem are the only required interfaces. This reduces unnecessary dependency on the S1-specific source wrapper.
