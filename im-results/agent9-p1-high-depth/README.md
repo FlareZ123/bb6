@@ -1,20 +1,22 @@
 # High-depth restart arithmetic (Agent 9)
 
-**Current result.** The exact restart-energy identity
+**Current conditional result.** The exact restart-energy identity
 \[
 I_0=14k-42c-50=2(7(k-3c)-25)
 \]
-gives \(I_0\equiv6\pmod7\). If \(s\) depth-two edges follow and \(I_0=8^sI_s\), the six-bit scaling slack \(\delta=3s-n>0\) reduces to the finite \(I_s\) list in [SIX-BIT-SLACK-MOD7.md](./SIX-BIT-SLACK-MOD7.md). This is conditional on the existing positive restart-energy bound \(0<I_0<98P\).
+gives \(I_0\equiv6\pmod7\). If \(s\) depth-two edges follow and \(I_0=8^sI_s\), the six-bit scaling slack \(\delta=3s-n>0\) reduces to the finite \(I_s\) list in [SIX-BIT-SLACK-MOD7.md](./SIX-BIT-SLACK-MOD7.md). This uses the positive restart-energy bound \(0<I_0<98P\).
 
-The exact first-shallow profiles and a Lean-checked low-suffix argument further remove:
+The exact first-shallow profiles and the Lean-checked low-suffix argument remove:
 - all odd \(I_s\) candidates, since neither shallow depth can start;
 - \(I_s=6,34\), since the only possible first shallow step produces odd energy;
 - \(I_s=20\) whenever \(T_1\) is even, since at most one further depth-zero step can follow and it produces odd energy.
 
-The scalar proof is in [Mod7SlackLeaf.lean](./Mod7SlackLeaf.lean). It models arbitrary finite suffixes of depths \(0,1,2\), uses the exact affine wall energy, and compiles with Lean 4.36.0-rc2. Its axiom lists are [propext, Quot.sound]; it has no original-source imports and is not itself a CountCone theorem.
+The scalar proof is in [Mod7SlackLeaf.lean](./Mod7SlackLeaf.lean). It models arbitrary finite suffixes of depths \(0,1,2\) and uses the exact affine wall energy. It has no original-source imports and is not itself a CountCone theorem.
 
-For the **cost-one terminal suffix** and \(P\ge2^{83}\), the remaining cases are:
+The source-parent depth bounds for both terminal shallow costs are in [RestartDepthBounds.lean](./RestartDepthBounds.lean). They formalize the parent mass equation, the restart defect identity, the inverse-depth equation, and the terminal cost bounds. With \(P\ge2^{83}\), the cost-one bounds give \(t=5\) or \(6\) for \((\delta,I_s)=(2,20)\), and \(t\ge8\) for \((1,48)\). The cost-two bounds give \(t=5\) for \((2,20)\), and \(t\ge8\) for \((1,48)\).
+
+Combining these with \(T_1\equiv t+s\pmod2\) leaves the same two families for either terminal cost:
 1. \((\delta,I_s,t)=(2,20,5)\), with odd \(T_1\) and first shallow depth \(0\);
 2. \((\delta,I_s)=(1,48)\), with \(t\ge8\); the first shallow depth is \(0\) for even \(T_1\), \(1\) for odd \(T_1\).
 
-The cost-two terminal branch still needs its own \(t\)-interval. Both residual families remain conditional on the restart/source hypotheses; neither is excluded, and BB(6) remains unresolved. See the detailed derivation, exact hypotheses, and next source-model target in [SIX-BIT-SLACK-MOD7.md](./SIX-BIT-SLACK-MOD7.md).
+Both formal files are arithmetic certificates under the displayed source-coordinate hypotheses, not original-source CountCone proofs. Neither residual family has been excluded; BB(6) remains unresolved. See the detailed derivation, hypotheses, and next target in [SIX-BIT-SLACK-MOD7.md](./SIX-BIT-SLACK-MOD7.md).

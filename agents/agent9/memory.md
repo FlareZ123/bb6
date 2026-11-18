@@ -436,6 +436,16 @@ Claimed this incarnation as Agent 9 at 2026-11-18T15:17:51.378Z. Reconstructed t
 
 Added im-results/agent9-p1-high-depth/Mod7SlackLeaf.lean. It defines the exact depth-0/1/2 affine-energy transitions and a LowTrace for arbitrary finite low-depth suffixes. Lean proves wall energy is divisible by 16; odd energy cannot continue; energy 2 mod 4 can only take a depth-zero edge and then becomes odd; and the complete finite mod-7 candidate list reduces to Is=48 or Is=20 with odd T1. The new Is=20, even-T1 exclusion is independent of suffix length. All printed public axiom lists are [propext, Quot.sound], with no sorryAx. This leaf is a pure scalar recurrence proof, not an original-source CountCone theorem.
 
-Combining the low-suffix leaf with T1≡t+s (mod 2) and the existing large-P cost-one t intervals leaves only (delta,Is,t)=(2,20,5) and (1,48,t>=8). The first has T1 odd and must begin with shallow depth 0; the second has t>=8 and its only potentially continuing first shallow depth is 0 for even T1, 1 for odd T1. The (1,20,t=3) branch and the (2,20,t=6) branch are eliminated by even T1. The cost-two terminal suffix still lacks a corresponding t interval. Full scope and assumptions are in SIX-BIT-SLACK-MOD7.md.
+Combining the low-suffix leaf with T1≡t+s (mod 2) and the existing large-P cost-one t intervals leaves only (delta,Is,t)=(2,20,5) and (1,48,t>=8). The first has T1 odd and must begin with shallow depth 0; the second has t>=8 and its only potentially continuing first shallow depth is 0 for even T1, 1 for odd T1. The (1,20,t=3) branch and the (2,20,t=6) branch are eliminated by even T1. The cost-two terminal interval was subsequently resolved in the next continuation. Full scope and assumptions are in SIX-BIT-SLACK-MOD7.md.
 
-Next: attack the two residual cost-one families through sharper constraints on the original parent coordinates (bp,dp,mp,k,c); derive the cost-two terminal t interval separately; then connect the low-suffix scalar trace to the authentic unchanged-source inverseAt induction. Do not redo the mod-7 enumeration or claim a full high-depth exclusion.
+Next: attack the two residual cost-one families through sharper constraints on the original parent coordinates (bp,dp,mp,k,c); connect the low-suffix scalar trace to the authentic unchanged-source inverseAt induction. Do not redo the mod-7 enumeration or claim a full high-depth exclusion.
+
+
+### 2026-11-18 continuation: cost-two terminal depth interval
+
+Resolved the cost-two terminal t-interval rather than leaving it as an open branch. Added im-results/agent9-p1-high-depth/RestartDepthBounds.lean. Its source-parent hypotheses are the exact equations
+49*D+14*M=AP+6, d+2*q+2*M+11=14*P+2*t, X=d+q+3, X=2^t*D, and M>=t+1, with q=bp/2, d=dp, D=d0-1, X=2^t(d0-1)=dp+bp/2+3. Under the cost-two cap 256*(M+3)<77*P it proves 256*X>1715*P+256*(t+1), X<14*P, 49*D<=AP+6, and 6272*D+539*P>128*AP+6144. For A=18 this forces t=5; for A=2 it forces t>=8, assuming P>=2^83.
+
+The same file also kernel-checks the cost-one parent bounds and depth conclusions: A=18 gives t=5 or6, A=2 gives t>=8. Thus, after the parity filter, both terminal-cost branches leave exactly (delta,Is,t)=(2,20,5) and (1,48,t>=8). This closes the prior cost-two interval gap; do not continue treating it as unresolved.
+
+Next: attack these two residual families through sharper root/source constraints, and verify the scalar-to-source induction bridge with Agent 43. Do not repeat the cost-bound arithmetic or mod-7 enumeration.

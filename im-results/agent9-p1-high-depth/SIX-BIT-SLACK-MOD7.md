@@ -104,34 +104,57 @@ T_1\equiv t+s\pmod2.
 \]
 This may settle the parity-sensitive \(I_s=20\) branch once the allowable high-depth \(t\) values are sharpened. Since \(n\) is even in the P1 setting, \(m_0+n\equiv t\pmod2\) is equivalent to the \(m_0\equiv t\pmod2\) restriction already recorded in SourceWallToCarryDP.md §7.
 
-## Bounding the high-depth edge in the remaining profile-compatible cases
+## Bounding the high-depth edge under both terminal costs
 
-The finite \(D_0/P\) list also bounds the depth \(t\) of the high-depth edge. Let \(A=98-2^\delta I_s\), so \(D_0=AP\). From
+Put
 \[
-49d_0=AP-14(m_0+n)+55
+M=m_0+n,\qquad D=d_0-1=c+3,\qquad
+X=2^tD=d_p+b_p/2+3,
 \]
-and the cost-one terminal bound \(m_0+n<93P/128-3\), we obtain
+and write \(A=98-2^\delta I_s\), so \(D_0=AP\). With \(q=b_p/2\) and \(d=d_p\), the exact parent-coordinate identities are
 \[
-\frac{(A-651/64)P+97}{49}<d_0\le\frac{AP+55}{49}.
+49D+14M=AP+6,\qquad
+d+2q+2M+11=14P+2t,\qquad
+X=d+q+3,\qquad M\ge t+1.
 \]
-Writing \(X=d_p+b_p/2+3=2^t(d_0-1)\), the parent mass and the same cost bound give
-\[
-\frac{803}{128}P-\frac12<X<14P.
-\]
-Consequently, whenever \(A>651/64\),
-\[
-\frac{49(803P/128-1/2)}{AP+6}<2^t<
-\frac{686P}{(A-651/64)P+48}.
-\]
+The last inequality is \(m_p+n\ge0\), since \(M=m_p+n+t+1\).
 
-For \(P\ge2^{83}\), under the cost-one terminal suffix bound \(m_0+n<93P/128-3\), the interval restricts the two candidate pairs that survive the first-profile divisibility test and the subsequent low-suffix analysis:
+For a **cost-one** terminal shallow edge, the source bound gives
+\[
+128(M+3)<93P.
+\]
+The parent identities then imply
+\[
+128X>803P+128(t+1),\quad X<14P,\quad
+49D\le AP+6,\quad
+3136D+651P>64AP+3072.
+\]
+For \(P\ge2^{83}\), these inequalities and \(X=2^tD\) give:
+- \(A=18\), i.e. \((\delta,I_s)=(2,20)\): \(t=5\) or \(6\);
+- \(A=2\), i.e. \((\delta,I_s)=(1,48)\): \(t\ge8\).
 
-| \((\delta,I_s)\) | \(A\) | allowed \(t\) |
+For a **cost-two** terminal shallow edge, the source bound instead gives
+\[
+256(M+3)<77P.
+\]
+The same parent identities imply
+\[
+256X>1715P+256(t+1),\quad X<14P,\quad
+49D\le AP+6,\quad
+6272D+539P>128AP+6144.
+\]
+Again for \(P\ge2^{83}\), the resulting power-of-two bounds give:
+- \(A=18\): \(t=5\) exactly;
+- \(A=2\): \(t\ge8\).
+
+Both sets of inequalities and all four depth conclusions are checked in RestartDepthBounds.lean. The file uses only natural-number arithmetic and the exact displayed parent-coordinate equations; it does not import or replace the original source induction.
+
+| Last shallow cost | \((\delta,I_s)=(2,20)\) | \((\delta,I_s)=(1,48)\) |
 |---|---:|---:|
-| \((2,20)\) | \(18\) | \(5\) or \(6\) |
-| \((1,48)\) | \(2\) | \(t\ge8\) |
+| \(1\) | \(t=5\) or \(6\) | \(t\ge8\) |
+| \(2\) | \(t=5\) | \(t\ge8\) |
 
-For \(A=2\), the lower bound still gives \(2^t>128\), hence \(t\ge8\); the displayed upper bound is not used. The \(t=6\) member of the first row is removed by the parity argument below. The table is only for a last shallow edge of cost \(1\); the cost-\(2\) terminal bound still needs its own \(t\)-interval analysis.
+The parity argument below removes the cost-one \(t=6\) branch. Thus the two terminal-cost cases have the same final residual families.
 
 ## Low-suffix closure and remaining cases
 
@@ -156,14 +179,9 @@ The Lean leaf Mod7SlackLeaf.lean packages arbitrary finite sequences of these tr
 
 The leaf was compiled locally with Lean 4.36.0-rc2. Its public theorem axiom lists are [propext, Quot.sound]; there is no sorryAx. It imports only Lean's arithmetic tactic, so this is a formal scalar-recurrence result, not an original-source CountCone theorem. Its hypotheses are exactly the displayed first-shallow equations and the restriction to depths \(0,1,2\) after the selected last high-depth restart.
 
-Combining \(T_1\equiv t+s\pmod2\) with the large-\(P\) \(t\)-intervals gives the following cost-one residual cases:
+Combining \(T_1\equiv t+s\pmod2\) with the large-\(P\) intervals gives the following residual cases, for either terminal shallow cost:
 - \((\delta,I_s,t)=(2,20,5)\). Here \(n\equiv1\pmod3\) and \(n\) is even, so \(s=(n+2)/3\) is even. Thus \(T_1\equiv t\pmod2\); \(t=6\) is excluded and \(t=5\) remains. Its first shallow edge must have depth \(0\).
 - \((\delta,I_s)=(1,48)\) with \(t\ge8\). Here \(n\equiv2\pmod3\) and \(n\) is even, so \(s=(n+1)/3\) is odd. If \(t\) is odd then \(T_1\) is even and the potentially continuing first shallow edge has depth \(0\); if \(t\) is even then \(T_1\) is odd and it has depth \(1\).
 
-In particular, the \((\delta,I_s)=(1,20)\) branch is eliminated: its interval gives \(t=3\), while \(s\) is odd, so \(T_1\) is even. The remaining \((2,20,5)\) and \((1,48,t\ge8)\) branches are the only cost-one cases left by this reduction.
+In particular, the \((\delta,I_s)=(1,20)\) branch is eliminated: its interval gives \(t=3\), while \(s\) is odd, so \(T_1\) is even. The remaining \((2,20,5)\) and \((1,48,t\ge8)\) branches are the only cases left by this reduction, whether the terminal shallow edge has cost one or two.
 
-## Boundary
-
-The mod-\(7\) classification and low-suffix closure remain conditional on the high-depth restart equations, the positive restart-energy bound \(0<I_0<98P\), and the existence of a wall-reaching suffix with at most five shallow edges. The \(t\)-interval and the final two-case list additionally use the cost-one terminal bound and \(P\ge2^{83}\). The cost-two terminal branch has not yet received a corresponding \(t\)-interval. The Lean leaf formalizes the scalar consequences but does not certify the source restart wrapper or exclude either residual case. It is not a BB(6) result.
-
-The next mathematical target is to eliminate one of the two residual families using the parent-coordinate relation \(2^t(c+3)=d_p+b_p/2+3\), the exact restart energy, and sharper constraints inherited from the original root. Do not repeat the mod-\(7\) enumeration or claim the six-bit slack is solved.
