@@ -126,3 +126,18 @@ The file currently exports:
 5. Keep the later-cycle conjectures separate; this dossier only addresses the first positive-z cycle.
 
 No BB(6) value or global upper bound follows from this work yet.
+
+
+## Later-cycle extrapolation: caution, not a theorem
+
+A limited search also found arbitrary-left S0 all-ones drain inputs in later q4 cycles. For the conjectured width
+\[
+a_j=2(2^{z-1}-1)(2^{2^{j-1}}-1)+1,
+\]
+the exact local S0 input shape `d0pow a_j` on the left and `s0RightFacing 0` on the right was found for:
+
+- ((z,j)=(2,2)): checkpoint time 1,285; S0 input at time 1,399, head 51, (a_2=7).
+- ((z,j)=(3,2)): checkpoint time 104,785; S0 input at time 105,274, head 426, (a_2=19).
+- ((z,j)=(2,3)): checkpoint time 105,095; S0 input at time 105,583, head 437, (a_3=31).
+
+These are candidate counted-drain subruns, not proof of a full later-cycle factorization. In particular, the first-cycle postlude formula (Q=3h-5) **does not** extend naively: after constructing the predicted drain output for ((z,j)=(3,2)) and ((2,3)), (3h-5) steps do not reach the next q4 checkpoint. A 10-million-step postlude simulation for ((3,2)) still did not reach that checkpoint. The later-cycle postlude therefore has additional structure and must be investigated separately. Do not extrapolate the first-cycle (P,Q) formulas to later cycles without new evidence.
