@@ -163,11 +163,11 @@ function universallySafe(x, y, q, parameters) {
   let cases = 0;
 
   for (const branch of ["L", "R"]) {
-    const minXCarry = branch === "L" ? -1 : -3;
-    const maxXCarry = branch === "L" ? 1 : 0;
+    const minXCarry = branch === "L" ? -2 : -4;
+    const maxXCarry = branch === "L" ? 2 : 1;
 
     for (let initialXCarry = minXCarry; initialXCarry <= maxXCarry; initialXCarry++) {
-      for (let initialYCarry = -1; initialYCarry <= 1; initialYCarry++) {
+      for (let initialYCarry = -2; initialYCarry <= 2; initialYCarry++) {
         const block = outputXMiddleBlock(
           xDigits, yDigits, k, j, branch, initialXCarry, initialYCarry
         );
@@ -265,7 +265,7 @@ console.log(JSON.stringify({
   transitionsRequested: transitions,
   checkedStates,
   carryCases,
-  carryCasesPerState: 21,
+  carryCasesPerState: 55,
   blockLength: { min: minBlockLength, max: maxBlockLength },
   firstFailure
 }, null, 2));
