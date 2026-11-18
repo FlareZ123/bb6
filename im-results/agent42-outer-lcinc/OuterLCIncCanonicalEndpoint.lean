@@ -187,6 +187,10 @@ private theorem outerLCIncAfterZero_m2_middleCell
     (h1+6-(k:Int)) hxleft
   by_cases hk5 : k=5
   · subst k
+    have hpres0' :
+        outerLCIncAfterZero T h a 2 (h1+1) =
+          outerLCIncAfterFive T h a 2 (h1+1) := by
+      simpa using hpres0
     have hpres5 := outerLCIncAfterFive_preserves_left T h a 2 (h1+1) (by omega)
     have hbridge : T (h1+1) = true := by
       simpa [h1] using hT3right
@@ -194,7 +198,7 @@ private theorem outerLCIncAfterZero_m2_middleCell
       simp [sideBit,markerWord,d0]
     calc
       outerLCIncAfterZero T h a 2 (h1+1) =
-          outerLCIncAfterFive T h a 2 (h1+1) := hpres0
+          outerLCIncAfterFive T h a 2 (h1+1) := hpres0'
       _ = T (h1+1) := hpres5
       _ = true := hbridge
       _ = sideBit (markerWord 1 ++ d0) 5 := htarget.symm
@@ -318,7 +322,7 @@ theorem outerLCIncAfterZero_leftFacing_m2
           dsimp [k,h1,outerLCIncH1]
           omega
         have hcell := outerLCIncAfterZero_m2_middleCell T3 h a k hk hT3right
-        rw [hcoordX] at hcell
+        rw [← hcoordX] at hcell
         calc
           outerLCIncAfterZero T3 h a 2 (h+5-(i:Int)) =
               sideBit (markerWord 1 ++ d0) k := by
