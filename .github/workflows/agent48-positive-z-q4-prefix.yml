@@ -26,7 +26,7 @@ jobs:
           cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a48-positive-z-q4/
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-positive-z-q4/
           cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a48-positive-z-q4/
-          cp im-results/agent48-counted-inc0/{PositiveZFirstCycleBridges,PositiveZFirstCyclePrefix,PositiveZSecondCycleBridge,PositiveZSecondCyclePrefix,D0SweepLeftFacing}.lean /tmp/a48-positive-z-q4/
+          cp im-results/agent48-counted-inc0/{PositiveZFirstCycleBridges,PositiveZFirstCyclePrefix,PositiveZSecondCycleBridge,PositiveZSecondCyclePrefix,D0SweepLeftFacing,PositiveZTypeCBridge}.lean /tmp/a48-positive-z-q4/
       - name: Compile dependencies and all positive-z q4 source drafts
         run: |
           set -euo pipefail
@@ -53,6 +53,7 @@ jobs:
           lean -o PositiveZSecondCycleBridge.olean PositiveZSecondCycleBridge.lean 2>&1 | tee -a positive-z-q4-axioms.log
           lean -o PositiveZSecondCyclePrefix.olean PositiveZSecondCyclePrefix.lean 2>&1 | tee -a positive-z-q4-axioms.log
           lean -o D0SweepLeftFacing.olean D0SweepLeftFacing.lean 2>&1 | tee -a positive-z-q4-axioms.log
+          lean -o PositiveZTypeCBridge.olean PositiveZTypeCBridge.lean 2>&1 | tee -a positive-z-q4-axioms.log
           if grep -q 'sorryAx' positive-z-q4-axioms.log; then
             echo '::error::sorryAx found in positive-z q4 source theorem dependencies'
             exit 1
