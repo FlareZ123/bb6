@@ -231,3 +231,13 @@ jobs:
             cp "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/${module}.lean" "${module}.lean"
             lake env lean -o "${module}.olean" "${module}.lean"
           done
+
+      - name: Verify Agent 5 source-weighted two-gate moment lemma
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=.:${LEAN_PATH:-}
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-weighted-drain/S4WeightFormula.lean" S4WeightFormula.lean
+          lake env lean -o S4WeightFormula.olean S4WeightFormula.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-terminal-gate/S4TerminalGate.lean" S4TerminalGate.lean
+          lake env lean -o S4TerminalGate.olean S4TerminalGate.lean
