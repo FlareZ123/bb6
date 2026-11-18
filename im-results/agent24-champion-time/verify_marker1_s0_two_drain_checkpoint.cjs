@@ -31,7 +31,7 @@
  * and the q4/read-0 event count is checked.
  *
  * Executed in the authoring invocation's JavaScript runtime:
- *   22 parameter cases, 2,170,886 raw transitions, zero failures.
+ *   30 parameter cases, 8,970,870 raw transitions, zero failures.
  *
  * This is computational evidence only. The intermediate-frame identities
  * and the parameterized macros still require Lean proofs and axiom audits.
@@ -241,6 +241,8 @@ const CASES = [
   [4, 2, 5], [4, 2, 6], [4, 2, 7], [4, 2, 8], [4, 2, 9],
   [3, 2, 0], [3, 2, 1], [3, 2, 2], [3, 2, 3], [3, 2, 4], [3, 2, 5],
   [5, 4, 0], [5, 4, 1], [5, 4, 2], [5, 4, 3], [5, 4, 4], [5, 4, 5],
+  [5, 4, 7], [6, 4, 7], [7, 4, 7], [5, 6, 7],
+  [5, 4, 9], [6, 4, 9], [7, 4, 9], [5, 6, 9],
 ];
 
 const results = CASES.map(([A, L, z]) => runCase(A, L, z));
