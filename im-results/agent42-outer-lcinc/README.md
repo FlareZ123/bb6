@@ -76,10 +76,11 @@ which matches the **general positive-z S0 input family** in
 `im-results/agent48-counted-inc0/Marker1TerminalQ4Macro.md`.
 
 This is only an entry-configuration match, not a q4 closure. The exact
-`107+12*(A+L)` prefix and the complete checkpoint/cycle/terminal law in that
-document are for the fully checked **z=0 special case**. For positive z, the
-first checkpoint times differ, the right checkpoint state is not yet reduced
-to a general formula, and the first-cycle counted-drain law remains
+`107+12*(A+L)` terminal law in that document is the fully checked
+**z=0 special case**. For positive z, the first q4 checkpoint's left/right
+normal form, event count, and time decomposition are now computationally
+identified and independently reproduced; the remaining formal setup macro
+is still open. The post-checkpoint first-cycle counted-drain law remains
 conjectural. In particular, the authentic root has `z=2^b-1≥3`, so the
 z=0 terminal theorem cannot be applied. The positive-z nested q4 macro (or
 an alternative route to the z=0,b=0 family) remains a major open obligation.
