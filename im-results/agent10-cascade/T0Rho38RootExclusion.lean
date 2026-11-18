@@ -262,11 +262,11 @@ theorem entry_not_root (a K : Nat)
   have hscaleK1 : 6*2^(K-1)=3*p := by
     dsimp [p]
     rw [hpK1]
-    ring
+    omega
   have hscaleK2 : 8*2^(K-2)=2*p := by
     dsimp [p]
     rw [hpK2]
-    ring
+    omega
 
   have hElo : 4*p<E := by omega
   have hEhi : E<6*p-1 := by omega
@@ -280,7 +280,7 @@ theorem entry_not_root (a K : Nat)
         have hs : 8*2^(K-1)=4*p := by
           dsimp [p]
           rw [hpK1]
-          ring
+          omega
         omega
       have htop : E≤4*p-3 := by omega
       omega
@@ -372,7 +372,7 @@ theorem entry_not_root (a K : Nat)
       have hscale : 8*2^(K-1)=4*p := by
         dsimp [p]
         rw [hpK1]
-        ring
+        omega
       have heq'' : 2*d=4*p+q+(K-1)+5 := by
         simpa only [Nat.pow_zero, one_mul] using heq
       rw [hscale] at heq''
