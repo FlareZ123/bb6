@@ -242,3 +242,19 @@ Substituting (a=2^z-1) into the drain cost and adding the prefix/postlude overhe
 \]
 
 The linear (2^z) terms cancel exactly. This is the cleanest expression of the first-cycle step-count law; it remains a conditional source-level result until the generic S0 drain and q4 prefix/postlude are formally compiled and composed.
+
+
+## Compatibility with the root endpoint
+
+The root source endpoint recorded in the q4 investigation is
+
+\[
+s1Config\;L\;0\;1\;(A)\;(2^b-1)\;0\;h,
+\qquad A=a+b+2.
+\]
+
+By the S1 encoder definition and `binDec L 0 = d1pow L), this is exactly the positive-z marker-1 initial S0 family
+\[
+s0Config\;(markerWord\;1\; ++ d0 ++ d1pow\;L ++ lh)\;A\;(2^b-1)\;0\;h.
+\]
+For (b\ge2), (z=2^b-1>0) and (z<2^A), so the positive-z q4 first-cycle hypotheses hold. The remaining root-side dependency is the source proof of the initial prefix from this root endpoint to q4 checkpoint 1; the present dossier begins at that checkpoint.
