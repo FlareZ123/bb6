@@ -158,7 +158,7 @@ theorem sweptLeft_preserves_left (n : Nat) (T : Int → Bool)
   induction n generalizing T h with
   | zero => rfl
   | succ n ih =>
-      have hrec := ih (holeThree T h) (h-1) x (by omega)
+      have hrec := ih (holeThree T h) (h-1) (by omega)
       have hne0 : x ≠ h := by omega
       have hne1 : x ≠ h+1 := by omega
       have hafter : holeThree T h x = T x := by
@@ -187,8 +187,9 @@ theorem sweptLeft_boundary_right_zero (n : Nat) (T : Int → Bool)
   induction n generalizing T h with
   | zero => simpa [sweptLeft] using hr
   | succ n ih =>
+      have hne : h ≠ h+1 := by omega
       have hr' : holeThree T h ((h-1)+1) = false := by
-        simp [holeThree]
+        simp [holeThree, hne]
       have hrec := ih (holeThree T h) (h-1) hr'
       have hcoord : h-1-(n:Int)+1 = h-((n+1:Int))+1 := by omega
       simpa [sweptLeft,hcoord] using hrec
@@ -205,7 +206,7 @@ theorem sweptLeft_shifted_block (k : Nat) (T : Int → Bool) (h : Int)
       intro i hi
       by_cases hlast : i=k
       · subst i
-        have hcoord : h-((k+1:Int))+2+(k:Int) = h+1 := by omega
+        have hcoord : h-((↑(k+1)))+2+(k:Int) = h+1 := by omega
         rw [hcoord]
         have hpres := sweptLeft_preserves_right k
           (holeThree T h) (h-1) (h+1) (by omega)
@@ -233,11 +234,11 @@ theorem sweptLeft_rightOnes (n : Nat) (T : Int → Bool) (h : Int)
   have h0 := sweptLeft_shifted_block (3*n) T h hon (3*i) (by omega)
   have h1 := sweptLeft_shifted_block (3*n) T h hon (3*i+1) (by omega)
   have h2 := sweptLeft_shifted_block (3*n) T h hon (3*i+2) (by omega)
-  have hc0 : h-(3*n:Int)+2+(3*i:Int) =
+  have hc0 : h-↑(3*n)+2+↑(3*i) =
       (h-(3*n:Int)+2)+3*(i:Int) := by omega
-  have hc1 : h-(3*n:Int)+2+((3*i+1:Int)) =
+  have hc1 : h-↑(3*n)+2+↑(3*i+1) =
       (h-(3*n:Int)+2)+3*(i:Int)+1 := by omega
-  have hc2 : h-(3*n:Int)+2+((3*i+2:Int)) =
+  have hc2 : h-↑(3*n)+2+↑(3*i+2) =
       (h-(3*n:Int)+2)+3*(i:Int)+2 := by omega
   rw [hc0] at h0
   rw [hc1] at h1
@@ -290,31 +291,21 @@ theorem sweptRightB_block (n : Nat) (T : Int → Bool) (h : Int)
           simp [afterRight3B]
         have ha1 : afterRight3B T h (h+1) = false := by
           simp [afterRight3B]
+        have hne20 : h+2 ≠ h := by omega
+        have hne21 : h+2 ≠ h+1 := by omega
         have ha2 : afterRight3B T h (h+2) = true := by
-          simp [afterRight3B,h2]
+          simp [afterRight3B,hne20,hne21]
         constructor
-        · calc
-            sweptRightB (n+1) T h h =
-                afterRight3B T h h := by
-                  rw [sweptRightB,hp0]
-            _ = false := ha0
+        · simpa using hp0.trans ha0
         · constructor
-          · calc
-              sweptRightB (n+1) T h (h+1) =
-                  afterRight3B T h (h+1) := by
-                    rw [sweptRightB,hp1]
-              _ = false := ha1
-          · calc
-              sweptRightB (n+1) T h (h+2) =
-                  afterRight3B T h (h+2) := by
-                    rw [sweptRightB,hp2]
-              _ = true := ha2
+          · simpa using hp1.trans ha1
+          · simpa using hp2.trans ha2
       · have hi' : i-1<n := by omega
         have hon' := rightOnes_tail_B T h n hon
         have hrec := ih (afterRight3B T h) (h+3) hon' (i-1) hi'
-        have hc0 : h+3+3*((i-1):Int) = h+3*(i:Int) := by omega
-        have hc1 : h+3+3*((i-1):Int)+1 = h+3*(i:Int)+1 := by omega
-        have hc2 : h+3+3*((i-1):Int)+2 = h+3*(i:Int)+2 := by omega
+        have hc0 : h+3*(i:Int) = h+3+3*((i-1):Int) := by omega
+        have hc1 : h+3*(i:Int)+1 = h+3+3*((i-1):Int)+1 := by omega
+        have hc2 : h+3*(i:Int)+2 = h+3+3*((i-1):Int)+2 := by omega
         simpa [sweptRightB,hc0,hc1,hc2] using hrec
 
 /-- The exact final tape of the universal carry H-run. -/
@@ -345,7 +336,7 @@ theorem counted_LBinDec_HRun (n : Nat) (T : Int → Bool) (h : Int)
   have hleftRun :
       run tm2 (9*n) ⟨3,h,T⟩ = some ⟨3,h',U⟩ := by
     have hs := counted_left_sweep k T h hon hr
-    simpa [k,h',U] using hs
+    convert hs using 1 <;> simp [k,h',U] <;> omega
   have hbridge :
       run tm2 4 ⟨3,h',U⟩ = some ⟨1,h'+2,V⟩ :=
     counted_LIncBridge U h' hz1 hz0 hz2
@@ -421,8 +412,9 @@ theorem lbinDecHRunTape_d1 (n : Nat) (T : Int → Bool) (h : Int)
   let V : Int → Bool := afterLIncBridge U h'
   have hthirdU : U (h'-2) = true := by
     have hp := sweptLeft_preserves_left k T h (h'-2) (by omega)
+    change sweptLeft k T h (h'-2) = true
     rw [hp]
-    exact hthird
+    simpa [h',k] using hthird
   have hthirdV : V (h'-2) = true := by
     have hn0 : h'-2 ≠ h'-1 := by omega
     have hn1 : h'-2 ≠ h' := by omega
