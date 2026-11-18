@@ -172,6 +172,30 @@ through \`S0CountedDrain\`, \`Rst1PrimeBridge6Source\`,
 \`FirstQ4CheckpointPostlude\`, followed by the explicit q4 checkpoint
 tape-shape identity.
 
+
+## Positive-z Q(z) interface from canonical drained S0
+
+PositiveZFirstCycleS0Input.lean packages Agent 48's
+firstCycleQ_from_S0Input theorem directly for an S0 configuration.
+It proves that if the residual left context has the exact prefix
+
+    1^(3*z+7) ++ 0010 ++ tail
+
+then after the all-ones S0 drain the tape has:
+
+- a left-one run of length 3*(2^z-1)+3*z+7;
+- the required zero sentinel immediately right of the head;
+- absolute cells 0,1,2,3 = 0,0,1,0.
+
+The wrapper firstCycleQ_from_drainedS0 therefore gives the exact
+9*2^z+9*z+16-step Q(z) postlude on this canonical S0 family.
+
+This is an interface lemma, not a proof that the still-open P(z)
+prefix produces the required residual context. That remaining endpoint
+identity must establish the displayed 1^(3*z+7) ++ 0010 prefix
+from the q4-tail output. This file is also source-only and has not been
+compiled in this invocation.
+
 ## Exact first q4 checkpoint right tail
 
 The complete right-facing tape at checkpoint (j=1), starting at cell 2 (head is at cell 1), has the observed run-length encoding
