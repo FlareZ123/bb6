@@ -192,8 +192,8 @@ theorem q0_X_not_reach_t123_z2mod128 (v : Nat) :
   · subst q
     have hU1 : 4*U=43*t-1 := by
       simpa using hpow.symm
-    have hUval : U=4934+462336*v := by
-      have hval : 43*t-1=4*(4934+462336*v) := by
+    have hUval : U=4934+231168*v := by
+      have hval : 43*t-1=4*(4934+231168*v) := by
         dsimp [t,z]
         omega
       omega
