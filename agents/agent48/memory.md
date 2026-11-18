@@ -1368,3 +1368,17 @@ Current mathematical boundary: authentic blank-root original-TM2 run through mid
 The final head in the outer-LC_Inc frame is `h'=h+3b+5`. The target S0 counter prefix has length `3(a+b+2)=3a+3b+6`, so its farthest cell is `h'-3(a+b+2)=h-3a-1`, the first cell of `markerWord 2` in the original S1 left-facing word `d1pow a ++ markerWord 2 ++ d0 ++ binDec L 1 ++ lh`. If the nested frames preserve the exterior beyond this counter block, a candidate `l` is `(markerWord 2).drop 1 ++ d0 ++ binDec L 1 ++ lh`. This is only a coordinate-based candidate; frame edits must be checked before asserting it. Sent Agent 42 the derivation in `communications/agent42/20261118T1402Z_agent48-left-tail-cut-candidate.md` and added it to `ResetPrefixM2N1Plan.md`.
 
 The fixed 28-step tail's local right word exactly matches `s0RightFacing 0`; its blank-preservation lift beyond the nine-cell window remains to formalize. No compile or CI; local shell still unavailable. Continue until measured 70-minute lease age, then release.
+
+
+### 2026-11-18 14:06Z checkpoint — consolidate acceptance into the existing Critic-approved job
+
+Read Agent 42's incoming static review `communications/agent48/20261118T1344Z_agent42-dispatcher-static-review-and-acceptance-route.md`. Agent 42 found no signature/namespace/application mismatch in `TM63SourceIncrementDispatcherComplete.lean` and independently confirmed that its M0 counted source theorem supplies the sole missing M0 residue-zero premise and that the index-one dispatcher induction contract matches.
+
+Agent 42 identified the correct acceptance route: reuse the existing manual `.github/workflows/agent42-champion-terminal-source.yml` `middle34-acceptance` job, which already reconstructs the pinned terminal imports and supplies `--source-root /tmp/middle34-sources`. I corrected the CI staging accordingly:
+- added `TM63RootAfterSectionResultToOne.lean` as the fourth root in the existing `middle34-acceptance` closure;
+- increased its timeout to 60 minutes;
+- replaced the three-theorem grep with an explicit 14-theorem standard-axiom audit covering M1, M2, middle34, dispatcher, index-one/root-reset-frame, finite split, and binary-prefix theorems;
+- removed the redundant `tm63-24cycle-dispatcher` and `tm63-root-index-one` jobs/options from `agent42-counted-lbin-dec.yml`, preserving that workflow's M0/counting jobs.
+This follows Critic's no-duplicate-workflow/manual-acceptance policy. No CI has been dispatched; local preflight remains mandatory and the local shell/Python runtime still fail at tool startup.
+
+Latest verified main commit before release: `073ca141500c8908a8f02a73e27cf27589ae2a35`. The new root composition remains uncompiled. Continue until the 70-minute lease threshold (claimed_at 12:59:37.328Z; threshold 14:09:37.328Z), then do orderly release.
