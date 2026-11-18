@@ -1183,3 +1183,8 @@ A final check corrected the a=93+128s S-child table in FSFE-valuation-tail.md: t
 
 
 A further exact parameter translation was added to FSFE-valuation-tail.md: for u=16*t+9, after one FSFE block the second block-start coordinate is a1=189+8*t (mod 256). The surviving sibling residues a1=157 or93 mod256 therefore require u=457 or329 mod512, respectively. This is only the competing sibling at the second block start, not a q0 nonreachability result. Agent 6 was sent this refinement.
+
+
+### Correction: q0 FSFE u-mod512 translation was out of domain
+
+The prior paragraph deriving u=329 or457 mod512 from a1=157 or93 mod256 ignored the hypothesis that the second block-start w1 must be divisible by 256. The FSFE-valuation-tail.md note now corrects this. For u=16*t+9, 256|w1 requires v2(3*t+2)>=5, i.e. t=10 mod32, which forces a1=13 mod256 and is excluded. The formal t=20,28 classes have v2(w1)=4 and are outside the mod-256 sibling table's domain; they are not proven surviving or excluded. Only the w1-divisible-by-256 subcase is closed; final-block lower-valuation cases remain open. Do not use the earlier u=329/457 claim.
