@@ -56,47 +56,92 @@ For (A=4,L=2):
 The left-word equality, right suffix, and absence of further ones also
 passed for (A=3,L=2,z=0,ldots,5) and (A=5,L=4,z=0,ldots,5).
 
-## Exact cost identity suggested by the data
+## Exact intermediate S0 configurations and cost decomposition
 
-Let (D(n)=operatorname{drainCost}(n,0)), using the existing recursive
-function from `CountedReset.lean`. In every tested case, the first
-checkpoint time is
+Let (D(n)=\operatorname{drainCost}(n,0)), using the existing recursive
+function from `CountedReset.lean`. The experiment identifies two exact
+intermediate S0 configuration families, not only the final checkpoint.
+
+Define the initial residual context
 
 [
-T_{mathrm{prefix}}(A,L,z)
+\ell_0=\operatorname{markerWord}(1)++d0++d1pow(L)++LH
+]
+
+and the second-drain residual context
+
+[
+\begin{aligned}
+\ell_1(A,L)={}&11++(010)^{A+1}++011++110\\
+&++(010)^L++011++101++11.
+\end{aligned}
+]
+
+For every tested case, the following four-stage decomposition matches
+the actual TM2 run exactly:
+
+1. **Initial counted drain.**
+   [
+   S_0(\ell_0,A,z,0,0)
+   \longrightarrow
+   S_0(\ell_0,A,0,z,0)
+   ]
+   in (D(z)) steps. This is the existing
+   `s0Config_counted_drain_general` interface.
+
+2. **Setup macro (not yet proved).**
+   [
+   S_0(\ell_0,A,0,z,0)
+   \longrightarrow
+   S_0(\ell_1(A,L),z,2^z-1,0,3z+5)
+   ]
+   in exactly (12(A+L)+3z+97) steps.
+
+3. **All-ones counted drain.**
+   [
+   S_0(\ell_1,z,2^z-1,0,3z+5)
+   \longrightarrow
+   S_0(\ell_1,z,0,2^z-1,3z+5)
+   ]
+   in (D(2^z-1)) steps. This is the existing
+   `s0Config_counted_drain_closed` theorem at width (z), since
+   (2^z-1) is the all-ones value of that width.
+
+4. **Tail to q4 checkpoint 1 (not yet proved).**
+   [
+   S_0(\ell_1,z,0,2^z-1,3z+5)
+   \longrightarrow
+   \text{state-4/head-1 checkpoint}
+   ]
+   in exactly (9z+10) steps.
+
+The two S0 drain stages are existing theorem interfaces. The setup and
+tail are the remaining transition-proof obligations. Summing the four
+costs gives
+
+[
+T_{\mathrm{prefix}}(A,L,z)
 =D(z)+D(2^z-1)+12(A+L+z)+107.
 ]
 
-For example, with (A=4,L=2), the formula gives the table above for
-(z=0,ldots,9). The (z=0) specialization is the already checked
-[
-107+12(A+L).
-]
+The second-drain output has right suffix
+`s0RightFacing (2^z-1)`; the final tail turns it into
+(0^3 1^{3z+5}0^2 1^{3\cdot2^z}0^4). The q4 event count at the final
+checkpoint is (3\cdot2^z+3z+5), equal to the total number of ones in
+that suffix.
 
-The formula is consistent with a two-drain decomposition:
-1. drain the initial binary value (z), costing (D(z));
-2. drain an all-ones binary value (2^z-1) of width (z), costing
-   (D(2^z-1));
-3. pay a remaining linear bridge/postlude of (12(A+L+z)+107).
-
-The observed right runs (1^{3z+5}) and (1^{3cdot2^z}) are consistent
-with these successive unary counts, but the exact intermediate TM2
-configurations have not been identified or proved. This decomposition
-must therefore be treated as a hypothesis, not as a source theorem.
-
-The separate first q4 cycle *after* this checkpoint has the still deeper
-counted-drain parameterization in
-`PositiveZFirstCycleDrainBridge.md`: with (K=2^z-1), its observed
-cost matches an all-ones drain of width (K), actual value (2^K-1),
-plus a further linear overhead. Its event-count formula is also still
-unproved.
-
-The experiment is reproducible with:
+The intermediate configurations and all four state/head/tape frames
+were checked for (A=3,4,5,6), (L=2,4), (z=0,1,2,3). The final
+checkpoint shape and cost formula were also checked through (z=9)
+for (A=4,L=2). The reproducible script now checks all four stages:
 
 ```sh
 node marker1_q4_checkpoint_sweep.js 4 2 9 3000000
 ```
 
-The simulator's checks are computational only. A formal proof still needs
-to expose the intermediate S0 configurations and compose the existing
-`s0Config_counted_drain_closed` theorem with the intervening TM2 frames.
+This remains computational evidence, not a source proof. The separate
+first q4 cycle *after* this checkpoint has the still deeper counted-drain
+parameterization in `PositiveZFirstCycleDrainBridge.md`: with
+(K=2^z-1), its observed cost matches an all-ones drain of width (K),
+actual value (2^K-1), plus a further linear overhead. Its event-count
+formula is also still unproved.
