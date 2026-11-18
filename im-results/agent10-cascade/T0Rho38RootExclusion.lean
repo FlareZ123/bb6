@@ -71,7 +71,7 @@ private theorem four_mul_le_pow (n : Nat) :
       decide
     · have hp := ih (by omega)
       rw [Nat.pow_succ]
-      nlinarith
+      omega
 
 private theorem reset_chain_last {s u : Nat}
     (hr : ResetChain s u) (hne : u≠s) :
@@ -123,10 +123,8 @@ theorem entry_not_root (a K : Nat)
   have hp27 : p%27=4 := by
     dsimp [p]
     rw [pow_mod_eighteen K,hK18]
-    decide
   have hrp27 : 2^r%27=10 := by
     rw [pow_mod_eighteen r,hr18]
-    decide
   have hc27 : c%27=2 := by dsimp [c]; omega
 
   have hpowK4 : 2^(K+4)=16*p := by
@@ -141,20 +139,20 @@ theorem entry_not_root (a K : Nat)
 
   have hBupper : 8*B≤208*p := by
     calc
-      8*B = (8*c)*2^r := by dsimp [B]; ring
+      8*B = (8*c)*2^r := by dsimp [B]; simp only [Nat.mul_assoc]
       _ ≤ (13*2^a)*2^r := Nat.mul_le_mul_right (2^r) hhi
-      _ = 13*(2^a*2^r) := by ring
+      _ = 13*(2^a*2^r) := by simp only [Nat.mul_assoc]
       _ = 13*(16*p) := by rw [hpowAr]
-      _ = 208*p := by ring
+      _ = 208*p := by omega
   have hBupper' : B≤26*p := by omega
   have hBlower : 97*p≤4*B := by
     have hmul := Nat.mul_le_mul_right (2^r) hlo
     have hbig : 97*(16*p)≤64*B := by
       calc
         97*(16*p) = 97*(2^a*2^r) := by rw [hpowAr]
-        _ = (97*2^a)*2^r := by ring
+        _ = (97*2^a)*2^r := by simp only [Nat.mul_assoc]
         _ ≤ (64*c)*2^r := hmul
-        _ = 64*B := by dsimp [B]; ring
+        _ = 64*B := by dsimp [B]; simp only [Nat.mul_assoc]
     omega
   have h16pB : 16*p≤B := by omega
   have hNadd : N+16*p=B+2*K+1 := by
@@ -244,7 +242,7 @@ theorem entry_not_root (a K : Nat)
     omega
   have h9d : 9*d+2*B=80*p+2*K+13 := by
     calc
-      9*d+2*B = 3*X+2*B := by rw [hXeq]; ring
+      9*d+2*B = 3*X+2*B := by rw [hXeq]; omega
       _ = 80*p+2*K+13 := h3Xeq
   have hdlo : 3*p<d := by omega
   have h18d : 18*d+4*B=160*p+4*K+26 := by omega
@@ -256,7 +254,7 @@ theorem entry_not_root (a K : Nat)
   have hpK1 : 2^K=2*2^(K-1) := by
     have he : K=(K-1)+1 := by omega
     rw [he,Nat.pow_succ]
-    ring
+    omega
   have hpK2 : 2^K=4*2^(K-2) := by
     have he : K=(K-2)+2 := by omega
     rw [he,Nat.pow_add]
@@ -324,7 +322,7 @@ theorem entry_not_root (a K : Nat)
         refine ⟨3^t*d', ?_⟩
         calc
           2*h+5 = 3^(t+1)*d' := hout
-          _ = 3*(3^t*d') := by rw [Nat.pow_succ]; ring
+          _ = 3*(3^t*d') := by rw [Nat.pow_succ]; simp only [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
       have hmodout : (2*h+5)%3=2 := by omega
       have hmodzero := Nat.mod_eq_zero_of_dvd hdiv
       omega
@@ -346,7 +344,7 @@ theorem entry_not_root (a K : Nat)
           have houtX : X=3^(t+1)*d' := by simpa [X] using hout
           calc
             X = 3^(t+1)*d' := houtX
-            _ = 9*(3^(t-1)*d') := by rw [hpow]; ring
+            _ = 9*(3^(t-1)*d') := by rw [hpow]; simp only [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
         have hmod9zero := Nat.mod_eq_zero_of_dvd hdiv9
         omega
       subst t
