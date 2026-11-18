@@ -216,3 +216,6 @@ The sparse 64-cell-block C++ simulator marker1_terminal_q4_block_sim.cpp extends
 
 
 New positive-z first-cycle evidence: for z=1..4, the measured q4 cycle cost matches drainCost(2^z-1)+12(S_e+2^z+z)+2, where S_e is the least even integer at least A+L; q4-event counts match 6*4^(2^(z-1)-1)+2. These are still computational macro conjectures pending a source-level proof. The z=4 case was checked through a 6.44-billion-step cycle.
+
+
+The positive-z first-cycle experiments now match a counted-drain law for z=1..4, including a verified 6,443,827,286-step first cycle at z=4. See Marker1TerminalQ4Macro.md for the formula, data, and the still-open source-level proof obligation.

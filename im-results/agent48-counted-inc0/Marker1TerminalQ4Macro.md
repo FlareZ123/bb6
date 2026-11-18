@@ -124,38 +124,68 @@ Important scope restriction: the Lean file proves the valuation sum and the alge
 
 ## Positive-z nested-cycle observations (conjectural)
 
-For `z >= 1`, the q4 event counts between successive checkpoints grow rapidly. The observed counts are:
+For z >= 1, the q4 event counts between successive checkpoints grow rapidly. The observed counts are:
 
-| `z` | `j` | q4/read-0 events between checkpoints |
+| z | j | q4/read-0 events between checkpoints |
 |---:|---:|---:|
 | 1 | 1 | 8 |
 | 1 | 2 | 8 |
 | 2 | 1 | 26 |
 | 2 | 2 | 386 |
 | 3 | 1 | 386 |
+| 4 | 1 | 98,306 |
 
-A compact conjecture fitting these data is to put
+A revised conjecture fitting these data is
 
 \[
-K_j(z)=(2^{z-1}-1)(2^j-1),\qquad
+K_j(z)=(2^{z-1}-1)(2^{2^{j-1}}-1),\qquad
 E_j(z)=6\cdot4^{K_j(z)}+2.
 \]
 
-This is **not proved** and has not been checked for all parameters. The earlier candidate with factor (2^j-1) is falsified: for A=3,L=2,z=2, a 7-billion-step run accumulates 102,460 q4/read-0 events after checkpoint j=3 without reaching checkpoint j=4, whereas that earlier candidate predicted only 98,306. The revised factor (2^{2^{j-1}}-1) predicts 6,442,450,946 events for that cycle and is consistent with the run, but remains a conjecture.
+The earlier candidate with factor (2^j-1) is falsified: for A=3,L=2,z=2, a 7-billion-step run accumulates 102,460 q4/read-0 events after checkpoint j=3 without reaching checkpoint j=4, whereas that earlier candidate predicted only 98,306. The revised factor (2^{2^{j-1}}-1) predicts 6,442,450,946 events for that cycle and is consistent with the run, but remains a conjecture.
 
-Some measured cycle step costs:
+### First-cycle cost law (strong computational evidence)
 
-- `A=4,L=2,z=1`: first two costs 158 and 202; the run halts at 953,013 steps after 240 checkpoints.
-- `A=3,L=2,z=2`: first two costs 782 and 103,810; the third checkpoint is reached at 105,095 steps. No fourth checkpoint was reached in a 50-million-step simulation from the initial configuration.
-- `A=3,L=2,z=3`: first cycle cost 103,754.
-
-The long positive-z cycles appear to contain counted-drain subruns. A plausible structural target is to isolate a `drainPattern` subrun with width related to
+Let S_e be the least even integer at least A+L,
 
 \[
-2(2^{z-1}-1)(2^j-1)+1,
+S_e=A+L+((A+L)\bmod 2),\qquad k=2^z-1.
 \]
 
-then prove the surrounding prefix/postlude costs. This width identification is a research hypothesis, not yet a theorem.
+The repository's counted-drain cost is
+
+\[
+\operatorname{drainCost}(k)=6\cdot4^k+42\cdot2^k-12k-48.
+\]
+
+Across z=1,2,3,4 and several A,L pairs, the first q4-checkpoint cycle cost matches
+
+\[
+\boxed{C_1=\operatorname{drainCost}(2^z-1)+12(S_e+2^z+z)+2}
+\]
+
+or equivalently
+
+\[
+C_1=6\cdot4^{2^z-1}+42\cdot2^{2^z-1}+12(S_e+z)-34.
+\]
+
+The first-cycle q4/read-0 event count matches E_1(z)=6\cdot4^{2^{z-1}-1}+2. Checked data:
+
+| z | (A,L) cases | first-cycle steps | q4 events |
+|---:|---|---:|---:|
+| 1 | (3,2), (4,2) | 158 | 8 |
+| 2 | (3,2), (4,2), (2,4) | 782 | 26 |
+| 3 | (3,2), (4,2) | 103,754 | 386 |
+| 4 | (3,2), (4,2) | 6,443,827,286 | 98,306 |
+
+For z=4, the sparse block simulator reaches checkpoint 2 at step 6,443,829,913 for (A,L)=(3,2), and at 6,443,829,925 for (4,2); both cycle costs are identical. The left checkpoint frame is checked at both endpoints.
+
+For j=1, 2K_1(z)+1=2^z-1, so the first-cycle law is exactly the existing counted-drain cost at width 2K_1+1 plus the displayed frame overhead. This strongly suggests a counted-drain subrun, but no source-level decomposition has yet been proved.
+
+For later cycles, the conjectured width remains 2K_j(z)+1. For example, z=2,j=2 has K=3, drainCost(7)=103,548, and observed cycle cost 103,810 (overhead 262); z=3,j=1 has the same drain width and observed cost 103,754 (overhead 206). The later-cycle overhead formula and the exact prefix/postlude decomposition remain open.
+
+The sparse 64-cell-block C++ simulator marker1_terminal_q4_block_sim.cpp verifies the complete left checkpoint frame and supports multi-billion-step runs. It does not prove halting or establish a general positive-z right-side macro.
 
 ## Critical root-connection caveat
 
