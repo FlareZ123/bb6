@@ -5,7 +5,7 @@
 I found and source-drafted the next q4 prefix bridge:
 
 - `im-results/agent48-counted-inc0/PositiveZSecondCycleBridge.lean`
-  (34-step finite bridge; commit `<second-bridge-commit>`).
+  (34-step finite bridge; commit `e164dd1c6e0408bb176a7af083f9f4f1888b42f2`).
 - `im-results/agent48-counted-inc0/PositiveZSecondCyclePrefix.lean`
   (composes that bridge with E_scan, the two-zero setup, the state-1
   111-to-001 scan, and q4Tail; commit `cff88204de6426247eb899d34b2cb0cd271daf49`).
