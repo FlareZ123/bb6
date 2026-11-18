@@ -81,3 +81,19 @@ The displayed exclusions use the existing all-time root invariants rooted_even_p
 The repeated FSFE path has a clean 2-adic valuation clock: every completed block consumes exactly four powers of two from w, and the endpoint rank drops by 24. The competing F sibling is immediately excluded on every block-start residue a=5 (mod 16), but the a=13 (mod 16) sibling has further surviving residue branches. Therefore the valuation calculation alone is insufficient.
 
 The next mathematically discriminating task is to close the two surviving sibling cylinders a=29,93 (mod 128) under the full inverse grammar, or find a stronger source-root invariant that eliminates them. Separately, the residual valuations 1,2,3,4 require an exact terminal-tail table. Do not promote the repeated FSFE branch to a proof of nonreachability until every sibling and terminal tail is closed.
+
+
+## Translation of the mod-256 sibling cylinders to the q0 parameter
+
+For the initial q0 family with u=16*t+9, modulo 256:
+    a0 = 21 - 128*t,
+    w0/16 = -24*t - 16.
+After one FSFE block,
+    a1 = a0 + 5*w0/16 - 8 = 189 + 8*t (mod 256).
+
+The previous sibling analysis leaves only a1=157 or 93 mod 256. These equations give
+    t = 28 (mod 32) or t = 20 (mod 32),
+respectively, hence
+    u = 457 (mod 512) or u = 329 (mod 512).
+
+This is the surviving parameter-cylinder refinement for the competing F sibling at the second block start. It applies to the non-final first-block case; both resulting t classes are even, as required for w0 divisible by 256. It does not exclude the main FSFE branch or the other q0 residue sectors.
