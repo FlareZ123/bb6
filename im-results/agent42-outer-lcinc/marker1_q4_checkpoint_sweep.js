@@ -7,9 +7,11 @@
  * Usage:
  *   node marker1_q4_checkpoint_sweep.js [A=4] [L=2] [zMax=9] [maxSteps=3000000]
  *
- * This is a direct transcription of the TM2 transition table and initial
- * tape convention in agent48-counted-inc0/marker1_terminal_q4_checkpoint.py.
- * It is computational evidence, not a Lean proof.
+ * This directly transcribes the TM2 transition table and initial tape
+ * convention in agent48-counted-inc0/marker1_terminal_q4_checkpoint.py.
+ * It checks three intermediate S0 configurations, both counted-drain
+ * costs, the linear setup/tail frames, and the final q4 checkpoint.
+ * This is computational evidence, not a Lean proof.
  */
 
 const TM2 = [
@@ -22,7 +24,14 @@ const TM2 = [
 ];
 
 const LH = [1, 1, 0, 1, 1, 1];
-const S0_RIGHT = [0, 1, 1, 1, 0, 0, 1, 1, 1];
+const S0_RIGHT_0 = [0, 1, 1, 1, 0, 0, 1, 1, 1];
+
+const repeatBlock = (n, block) =>
+  Array.from({ length: n }, () => block).flat();
+
+const d0pow = n => repeatBlock(n, [0, 0, 1]);
+const d1pow = n => repeatBlock(n, [1, 1, 1]);
+const d010pow = n => repeatBlock(n, [0, 1, 0]);
 
 function binDec(width, n) {
   let p = 2 ** (width + 1) - 1 - n;
@@ -54,98 +63,123 @@ function drainCost(n, c = 0) {
   return total;
 }
 
-function rle(bits) {
-  if (bits.length === 0) return [];
-  const out = [];
-  let bit = bits[0], count = 0;
-  for (const x of bits) {
-    if (x === bit) count++;
-    else {
-      out.push([bit, count]);
-      bit = x;
-      count = 1;
-    }
-  }
-  out.push([bit, count]);
-  return out;
+function s0RightFacing(b) {
+  return [0, 1, 1, 1, 0, 0, ...d1pow(b + 1)];
 }
 
-function expectedRight(z) {
+function marker1InitialContext(L) {
+  return [1, 0, 1, 0, 0, 1, ...d1pow(L), ...LH];
+}
+
+// Residual context after the setup macro, independent of z.
+function marker1Q4Context(A, L) {
   return [
-    ...Array(3).fill(0),
-    ...Array(3 * z + 5).fill(1),
-    ...Array(2).fill(0),
-    ...Array(3 * 2 ** z).fill(1),
-    ...Array(4).fill(0),
+    1, 1,
+    ...d010pow(A + 1),
+    0, 1, 1, 1, 1, 0,
+    ...d010pow(L),
+    0, 1, 1, 1, 0, 1, 1,
   ];
+}
+
+function q4CheckpointRight(z) {
+  return [
+    0, 0, 0,
+    ...Array(3 * z + 5).fill(1),
+    0, 0,
+    ...Array(3 * 2 ** z).fill(1),
+    0, 0, 0, 0,
+  ];
+}
+
+function sameSet(xs, ys) {
+  const a = new Set(xs), b = new Set(ys);
+  return a.size === b.size && [...a].every(x => b.has(x));
+}
+
+function matchesTape(tape, head, left, right) {
+  const expectedOnes = [];
+  left.forEach((bit, i) => { if (bit) expectedOnes.push(head - i); });
+  right.forEach((bit, i) => { if (bit) expectedOnes.push(head + 1 + i); });
+  return sameSet([...tape], expectedOnes);
 }
 
 function simulateFirstCheckpoint(A, L, z, maxSteps) {
   if (!(A >= 1 && L >= 0 && z >= 0 && z < 2 ** A)) {
     throw new Error(`invalid parameters A=${A}, L=${L}, z=${z}`);
   }
+
   const M = 2 ** A * (2 ** (L + 2) - 1);
   const width = A + L + 2;
-
-  // Initial s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) A z 0 0.
-  const left = [
-    ...binDec(A, z),
-    1, 0, 1,       // markerWord 1
-    0, 0, 1,       // d0
-    ...Array(3 * L).fill(1),
-    ...LH,
-  ];
+  const initialLeft = [...binDec(A, z), ...marker1InitialContext(L)];
   const tape = new Set();
-  left.forEach((bit, i) => { if (bit) tape.add(-i); });
-  S0_RIGHT.forEach((bit, i) => { if (bit) tape.add(i + 1); });
+  initialLeft.forEach((bit, i) => { if (bit) tape.add(-i); });
+  S0_RIGHT_0.forEach((bit, i) => { if (bit) tape.add(i + 1); });
+
+  const firstDrain = drainCost(z);
+  const setup = 12 * (A + L) + 3 * z + 97;
+  const secondDrain = drainCost(2 ** z - 1);
+  const tail = 9 * z + 10;
+
+  const checkpoints = [
+    {
+      name: "after-initial-counted-drain",
+      step: firstDrain,
+      state: 3,
+      head: 0,
+      left: [...d1pow(A), ...marker1InitialContext(L)],
+      right: s0RightFacing(z),
+    },
+    {
+      name: "before-second-counted-drain",
+      step: firstDrain + setup,
+      state: 3,
+      head: 3 * z + 5,
+      left: [...d0pow(z), ...marker1Q4Context(A, L)],
+      right: s0RightFacing(0),
+    },
+    {
+      name: "after-second-counted-drain",
+      step: firstDrain + setup + secondDrain,
+      state: 3,
+      head: 3 * z + 5,
+      left: [...d1pow(z), ...marker1Q4Context(A, L)],
+      right: s0RightFacing(2 ** z - 1),
+    },
+    {
+      name: "first-q4-checkpoint",
+      step: firstDrain + setup + secondDrain + tail,
+      state: 4,
+      head: 1,
+      left: [0, 1, 1, ...binDec(width, M - 1), ...LH],
+      right: q4CheckpointRight(z),
+    },
+  ];
 
   let state = 3, head = 0, q4Events = 0;
-  for (let steps = 0; steps < maxSteps; steps++) {
-    const bit = tape.has(head) ? 1 : 0;
-    if (state === 4 && bit === 0) {
+  const observed = [];
+  for (let steps = 0; steps <= checkpoints[3].step; steps++) {
+    if (state === 4 && (tape.has(head) ? 1 : 0) === 0) {
       q4Events++;
-      if (head === 1) {
-        const expectedLeft = [
-          0, 1, 1,
-          ...binDec(width, M - 1),
-          ...LH,
-        ];
-        const expectedLeftSet = new Set();
-        expectedLeft.forEach((v, i) => {
-          if (v) expectedLeftSet.add(1 - i);
-        });
-        const actualLeftSet = new Set([...tape].filter(p => p <= 1));
-        const leftOK =
-          expectedLeftSet.size === actualLeftSet.size &&
-          [...expectedLeftSet].every(p => actualLeftSet.has(p));
-
-        const right = expectedRight(z);
-        const rightOK = right.every(
-          (v, i) => (tape.has(2 + i) ? 1 : 0) === v
-        );
-        const noFurtherOnes = [...tape].every(
-          p => p < 2 || p < 2 + right.length
-        );
-
-        const K = 2 ** z - 1;
-        const predictedSteps =
-          drainCost(z) + drainCost(K) + 12 * (A + L + z) + 107;
-        const predictedQ4Events = 3 * 2 ** z + 3 * z + 5;
-
-        return {
-          A, L, z, checkpointStep: steps, q4Events,
-          leftOK, rightOK, noFurtherOnes,
-          rightRLE: rle(right),
-          predictedSteps, predictedQ4Events,
-          stepFormulaOK: steps === predictedSteps,
-          eventFormulaOK: q4Events === predictedQ4Events,
-        };
-      }
     }
 
+    for (const target of checkpoints.filter(x => x.step === steps)) {
+      observed.push({
+        name: target.name,
+        step: steps,
+        state,
+        head,
+        stateOK: state === target.state,
+        headOK: head === target.head,
+        tapeOK: matchesTape(tape, head, target.left, target.right),
+      });
+    }
+
+    if (steps === checkpoints[3].step) break;
+    const bit = tape.has(head) ? 1 : 0;
     const transition = TM2[state][bit];
     if (transition === null) {
-      return { A, L, z, status: "halted", steps, q4Events };
+      return { A, L, z, status: "halted", steps, q4Events, observed };
     }
     const [write, move, nextState] = transition;
     if (write === 1) tape.add(head);
@@ -153,7 +187,27 @@ function simulateFirstCheckpoint(A, L, z, maxSteps) {
     state = nextState;
     head += move;
   }
-  return { A, L, z, status: "step-limit", maxSteps, q4Events };
+
+  const predictedQ4Events = 3 * 2 ** z + 3 * z + 5;
+  const predictedSteps =
+    firstDrain + secondDrain + 12 * (A + L + z) + 107;
+
+  return {
+    A, L, z,
+    firstDrain,
+    setup,
+    secondDrain,
+    tail,
+    checkpointStep: checkpoints[3].step,
+    q4Events,
+    predictedQ4Events,
+    predictedSteps,
+    observed,
+    allIntermediateConfigsMatch: observed.length === 4 &&
+      observed.every(x => x.stateOK && x.headOK && x.tapeOK),
+    stepFormulaOK: checkpoints[3].step === predictedSteps,
+    eventFormulaOK: q4Events === predictedQ4Events,
+  };
 }
 
 const [A = 4, L = 2, zMax = 9, maxSteps = 3000000] =
@@ -162,9 +216,8 @@ const [A = 4, L = 2, zMax = 9, maxSteps = 3000000] =
 for (let z = 0; z <= zMax; z++) {
   const result = simulateFirstCheckpoint(A, L, z, maxSteps);
   console.log(JSON.stringify(result));
-  if (result.status || !result.leftOK || !result.rightOK ||
-      !result.noFurtherOnes || !result.stepFormulaOK ||
-      !result.eventFormulaOK) {
+  if (result.status || !result.allIntermediateConfigsMatch ||
+      !result.stepFormulaOK || !result.eventFormulaOK) {
     process.exitCode = 1;
     break;
   }
