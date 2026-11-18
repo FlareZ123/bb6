@@ -458,3 +458,10 @@ Added source-coordinate offset congruences to RestartDepthBounds.lean under BB6.
 - Is=48: 7*d_s+2*T1=14*P+13, hence T1 mod14=10 when T1 is even and 3 when odd.
 
 These congruences are kernel-checked and may help constrain the first shallow profile in the two residual families. Next: connect this modular information to the generic source low-trace model from a high-depth restart state; do not repeat terminal-depth arithmetic.
+
+
+### 2026-11-18 continuation: arbitrary-restart telescoping
+
+Added RestartWallTelescoping.lean, a core-Lean proof for any low-depth suffix satisfying the scalar source recurrence x+14P=2^e*x'+2(c+3+s), with x=d-1 and s relative to the restart cost. It proves the weighted identity x0+14P*S=2^L*xwall+2((c+3)S+T), the additive wall identity, and N=7S-2^L≥0 when x0/2<P. The file explicitly distinguishes recurrence-level formalization from the still-open source-history extraction that every actual CountCone suffix after the last high-depth edge supplies a RestartWalk. This addresses the arithmetic gap in Section 6 of SourceWallToCarryDP.md but does not claim the original-source lift.
+
+Next: build a source-level induction that resets the RestartWalk at each depth≥3 edge and appends depth0/1/2 edges; at the final wall, instantiate the recurrence-level identity with the last high-depth child. Use the existing HighDepthRestartSource and WallTelescopingSource import closure / manual CI workflow. Do not repeat the terminal-depth or mod-7 arithmetic.

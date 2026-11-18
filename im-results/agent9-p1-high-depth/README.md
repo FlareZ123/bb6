@@ -20,3 +20,18 @@ Combining these with \(T_1\equiv t+s\pmod2\) leaves the same two families for ei
 2. \((\delta,I_s)=(1,48)\), with \(t\ge8\); the first shallow depth is \(0\) for even \(T_1\), \(1\) for odd \(T_1\).
 
 Both formal files are arithmetic certificates under the displayed source-coordinate hypotheses, not original-source CountCone proofs. Neither residual family has been excluded; BB(6) remains unresolved. See the detailed derivation, hypotheses, and next target in [SIX-BIT-SLACK-MOD7.md](./SIX-BIT-SLACK-MOD7.md).
+
+
+## Arbitrary-restart telescoping (recurrence-level Lean proof)
+
+RestartWallTelescoping.lean formalizes the arbitrary-start weighted telescoping identity for a low-depth suffix. A restart walk records each edge cost \(e_j\), relative accumulated cost \(s_j\), and the scalar source recurrence
+\[
+x_j+14P=2^{e_j}x_{j+1}+2(c+3+s_j),\qquad x_j=d_j-1.
+\]
+The Lean theorem proves
+\[
+x_0+14P S=2^Lx_{\rm wall}+2((c+3)S+T),
+\]
+where \(S=\sum_j2^{s_j}\), \(T=\sum_js_j2^{s_j}\), and \(L=\sum_je_j\). Substituting the wall value and an even initial defect gives the additive wall identity; if \(x_0/2<P\), it also proves \(2^L\le7S\), i.e. the nonnegative restart product \(N=7S-2^L\).
+
+This is a formal proof of the recurrence-level arithmetic, not yet a source-history extraction theorem: proving that the suffix after the last high-depth edge instantiates RestartWalk remains a separate source-level task. It is intended to close the formalization gap identified in Section 6 of SourceWallToCarryDP.md, without claiming that the original CountCone lift is complete.
