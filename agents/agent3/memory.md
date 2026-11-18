@@ -1019,3 +1019,24 @@ Agent 4 supplied the exact source-parent normal form for the unresolved h=8 B2 b
 
 
 Agent 4's q=2 low-residue summary for the h=8 B2 parent fan was too coarse. I checked the exact formula (a+k=35237+524288u+W/2): for odd u, the sum modulo 8 is 7,2,5,0 as u is 1,3,5,7 mod 8 respectively; parent parities are odd/even for residues 1,5 and odd/odd for 3,7. Thus sum 2 mod4 occurs only for u=3 mod8, and sum 7 mod8 only for u=1 mod8. I sent this correction to Agents 4 and 11. The shared note deliberately retains only the safe statement that q=2 is possible only for odd u and splits further.
+
+## 2026-11-18: residual mod-105 restriction and uniform exceptional-parent pruning
+
+The q=0 branch with `t=39+64h` has a new exact arithmetic restriction from the authentic residual identity
+`211*t+1360+22155*w = 20*2^(201+3360*w)`.
+
+The exponent is odd and divisible by 3. Reducing modulo 3, 5, and 7 gives `t≡0 (mod3)`, `t≡0 (mod5)`, and `t≡4 (mod7)`. Since `t=39+64h`, this is
+`h≡84 (mod105)`, hence `S=416+684h≡17 (mod105)`.
+
+For every secondary bounce depth `r>=1`, `4^r*q=S`. As `4^6≡1 (mod105)`, the q residues by r mod6 are 17,83,47,38,62,68. Thus `q>=17` and the first coordinate of `B_(r,h)=(2q-2,2487+4096h-q-3r)` is at least 32. The second coordinate satisfies `y≡51-q-3r (mod105)`.
+
+A stronger immediate consequence for the source-preimage grammar of every B_(r,h): the mod-3 part gives `h≡0 (mod3)`, `S≡2 (mod3)`, `q≡2 (mod3)`, and therefore `x+y≡0 (mod3)`. In the exact `section_preimage_all_iff` grammar:
+- the a=0,k>=2 branch has `x+y=8*2^n` and cost `2k+9+3n=x+2y`; parity forces n odd, making the right side 1 mod3, contradiction;
+- the a=1,k>=4,y>=5 branch has `x+y+1=16*2^n` and cost `2k+11+3n=x+2y`; parity forces n odd, making the right side 2 mod3 while the left is 1 mod3, contradiction;
+- the exceptional a=0,k=1 and a=1,k<=3 outputs have tiny right coordinate, whereas the fan has y>=1135; the a>1,k=0 output y=2 is likewise impossible.
+
+The bound y>=1135 follows from q<=S/4=104+171h and r<=S=416+684h. Consequently every possible incoming source edge to any B_(r,h), r>=1, is either the direct branch or a nonexceptional even-/odd-a bounce branch. This is a uniform source-grammar reduction, not a reachability exclusion. It is recorded in `im-results/agent3-c-bounce-inverse/U5Q0ResidualMod105.md` and sent to Agent 11 at `communications/agent11/20261118T151037Z_agent3-mod105-bounce-source-pruning.md`.
+
+No Lean compilation was possible in this invocation: both local container and Python runtimes returned ClientError. Agent 15 received a follow-up request to preflight the existing `U5Q0TwoCylindersAudit.lean` using its previously working Lean 4.36.0-rc2 runtime. Do not dispatch CI before a successful local preflight. No CI was dispatched here.
+
+Next useful work: integrate the mod-3 source-grammar pruning into the exact B_r parent fan, then focus only on the remaining direct and nonexceptional bounce branches. In Agent 11's Q+r split, the still-open sectors are Q+r≡2 mod4 (odd/even sum-three, especially sum-seven) and Q+r≡3 mod4 (even/even sum-zero). Do not claim h=8 or the all-h q=0 branch closed.
