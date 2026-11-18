@@ -1,4 +1,4 @@
-import Q4Suffix
+import ChampionRootBridge
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -16,10 +16,193 @@ namespace BB6Coverage.Agent48Q4S0Macros
 
 open BB6Coverage
 open BB6Coverage.Agent48Champion
-open BB6Coverage.Agent8Rst1Prime
-open BB6Coverage.Agent8Q4Suffix
 
 set_option maxHeartbeats 4000000
+
+
+private theorem q4FrameConfigExt {c d : Config}
+    (hs : c.state = d.state) (hh : c.head = d.head)
+    (ht : c.tape = d.tape) : c = d := by
+  cases c with
+  | mk cs ch ct =>
+    cases d with
+    | mk ds dh dt =>
+      simp only at hs hh ht
+      subst ds
+      subst dh
+      subst dt
+      rfl
+
+/-- A finite frame replaces only the specified head-relative interval. -/
+def q4Frame (inside : Int → Bool) (background : Int → Bool)
+    (c : Config) : Config :=
+  { state := c.state, head := c.head,
+    tape := fun x => if inside x then c.tape x else background x }
+
+/-- Recenter an infinite tape at a chosen head coordinate. -/
+def q4CenterTape (T : Int → Bool) (h : Int) : Int → Bool :=
+  fun x => T (h+x)
+
+/-- Embed a finite trace frame at an absolute tape coordinate. -/
+def q4FrameAt (T : Int → Bool) (h : Int) (inside : Int → Bool)
+    (c : FConfig) : Config :=
+  shiftConfig h (q4Frame inside (q4CenterTape T h) (embed c))
+
+@[simp] theorem q4FrameAt_tape (T : Int → Bool) (h : Int)
+    (inside : Int → Bool) (c : FConfig) (x : Int) :
+    (q4FrameAt T h inside c).tape x =
+      (if inside (x-h) then decide (x-h ∈ c.marked) else T x) := by
+  have hcoord : h + (x-h) = x := by omega
+  simp [q4FrameAt,q4Frame,q4CenterTape,shiftConfig,embed,hcoord]
+
+private theorem q4Embed_fMove (c : FConfig) (t : Move) :
+    embed (fMove c t) = applyMove (embed c) t := by
+  cases c with
+  | mk q h marks =>
+    cases t with
+    | mk w d q' =>
+      cases w <;> cases d <;>
+        simp only [embed, fMove, applyMove] <;>
+        apply congrArg (fun f : Int → Bool => Config.mk q' _ f) <;>
+        funext x <;>
+        (by_cases hx : x = h <;> simp [hx])
+
+private theorem q4Embed_fStep (m : Machine) (c : FConfig) :
+    (fStep m c).map embed = rawStep m (embed c) := by
+  simp only [fStep,rawStep,readSlot,embed,Option.map_map]
+  congr 1
+  funext t
+  simpa only [Function.comp_def,embed] using q4Embed_fMove c t
+
+private theorem q4Embed_fRun (m : Machine) (n : Nat) (c : FConfig) :
+    (fRun m n c).map embed = run m n (embed c) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [fRun,run]
+    rw [← ih]
+    cases h : fRun m n c with
+    | none => simp [h]
+    | some d => simp [h,q4Embed_fStep]
+
+private theorem q4RawStepFrame (m : Machine) (inside background : Int → Bool)
+    (c : Config) (hinside : inside c.head = true) :
+    rawStep m (q4Frame inside background c) =
+      (rawStep m c).map (q4Frame inside background) := by
+  have hslot : readSlot (q4Frame inside background c) = readSlot c := by
+    simp [readSlot,q4Frame,hinside]
+  simp only [rawStep,hslot]
+  cases h : m (readSlot c) with
+  | none => simp
+  | some t =>
+    simp only [Option.map_some]
+    congr 1
+    apply q4FrameConfigExt
+    · rfl
+    · rfl
+    · funext x
+      by_cases hx : x = c.head
+      · subst x
+        simp [q4Frame,applyMove,hinside]
+      · simp [q4Frame,applyMove,hx]
+
+private theorem q4RunFrame (m : Machine) (inside background : Int → Bool)
+    (c : Config) (n : Nat)
+    (hheads : ∀ k, k<n → ∀ d, run m k c = some d → inside d.head = true) :
+    run m n (q4Frame inside background c) =
+      (run m n c).map (q4Frame inside background) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    have hprev : ∀ k, k<n → ∀ d, run m k c = some d → inside d.head = true := by
+      intro k hk d hd
+      exact hheads k (by omega) d hd
+    change (run m n (q4Frame inside background c)).bind (rawStep m) =
+      ((run m n c).bind (rawStep m)).map (q4Frame inside background)
+    rw [ih hprev]
+    cases hrun : run m n c with
+    | none => simp [hrun]
+    | some d =>
+      have hi := hheads n (by omega) d hrun
+      simp [hrun,q4RawStepFrame m inside background d hi]
+
+private theorem q4FiniteHeads (inside : Int → Bool) (c : FConfig) (n : Nat)
+    (hcheck : (List.range n).all (fun k =>
+      match fRun tm2 k c with
+      | none => true
+      | some f => inside f.head) = true) :
+    ∀ k, k<n → ∀ d, run tm2 k (embed c) = some d → inside d.head = true := by
+  intro k hk d hd
+  have hitem := List.all_eq_true.mp hcheck k (List.mem_range.mpr hk)
+  have hsource := q4Embed_fRun tm2 k c
+  cases hrun : fRun tm2 k c with
+  | none =>
+    simp only [hrun,Option.map_none] at hsource
+    rw [← hsource] at hd
+    cases hd
+  | some f =>
+    simp only [hrun,Option.map_some] at hsource
+    have hd' := Option.some.inj (hsource.trans hd)
+    subst d
+    simpa [hrun,embed] using hitem
+
+private theorem q4FiniteBridgeFrame (inside background : Int → Bool)
+    (c d : FConfig) (n : Nat)
+    (hexact : fRun tm2 n c = some d)
+    (hcheck : (List.range n).all (fun k =>
+      match fRun tm2 k c with
+      | none => true
+      | some f => inside f.head) = true) :
+    run tm2 n (q4Frame inside background (embed c)) =
+      some (q4Frame inside background (embed d)) := by
+  have hheads := q4FiniteHeads inside c n hcheck
+  rw [q4RunFrame tm2 inside background (embed c) n hheads]
+  rw [← q4Embed_fRun tm2 n c,hexact]
+  rfl
+
+/-- Lift a finite TM2 trace to an arbitrary surrounding tape. -/
+theorem q4BridgeAt (T : Int → Bool) (h : Int) (inside : Int → Bool)
+    (c d : FConfig) (n : Nat)
+    (hc : c.head = 0)
+    (hexact : fRun tm2 n c = some d)
+    (hcheck : (List.range n).all (fun k =>
+      match fRun tm2 k c with
+      | none => true
+      | some f => inside f.head) = true)
+    (hmatch : ∀ x, inside x = true →
+      T (h+x) = decide (x ∈ c.marked)) :
+    run tm2 n ⟨c.state,h,T⟩ = some (q4FrameAt T h inside d) := by
+  have hframe :
+      q4Frame inside (q4CenterTape T h) (embed c) =
+        ({state := c.state, head := 0, tape := q4CenterTape T h} : Config) := by
+    cases c with
+    | mk s ch marks =>
+      have hch : ch = 0 := hc
+      subst ch
+      apply q4FrameConfigExt
+      · rfl
+      · rfl
+      · funext x
+        have hcoord : h + (x-h) = x := by omega
+        by_cases hx : inside x = true
+        · simp [q4Frame,embed,q4CenterTape,hx,hmatch x hx]
+        · simp [q4Frame,embed,q4CenterTape,hx]
+  have hrun := q4FiniteBridgeFrame inside (q4CenterTape T h) c d n hexact hcheck
+  rw [hframe] at hrun
+  have hshift :
+      shiftConfig h
+        ({state := c.state, head := 0, tape := q4CenterTape T h} : Config)
+        = ⟨c.state,h,T⟩ := by
+    apply q4FrameConfigExt
+    · rfl
+    · simp [shiftConfig]
+    · funext x
+      have hcoord : h + (x-h) = x := by omega
+      simp [shiftConfig,q4CenterTape,hcoord]
+  rw [← hshift,shift_run,hrun]
+  rfl
+
+
 
 /-- The fixed 22-step entry bridge only reads the eight-cell window
 [-4,3] around the checkpoint-1 head. -/
@@ -52,23 +235,24 @@ def q4S0Prefix22Input (T : Int → Bool) (h : Int) : Prop :=
 theorem q4S0Prefix22_at (T : Int → Bool) (h : Int)
     (hin : q4S0Prefix22Input T h) :
     run tm2 22 ⟨4,h,T⟩ =
-      some (frameAt T h q4S0Prefix22Inside q4S0Prefix22End) := by
-  apply bridgeAt T h q4S0Prefix22Inside
+      some (q4FrameAt T h q4S0Prefix22Inside q4S0Prefix22End) := by
+  apply q4BridgeAt T h q4S0Prefix22Inside
     q4S0Prefix22Start q4S0Prefix22End 22 rfl
     q4S0Prefix22_exact q4S0Prefix22_heads
   intro x hx
-  exact hin x hx
+  have hlocal := hin x hx
+  simpa [q4S0Prefix22Start] using hlocal
 
 /-- The 22-step entry bridge leaves every cell at or to the right of
 the first unary sweep untouched. -/
 theorem q4S0Prefix22_preserves_after
     (T : Int → Bool) (h y : Int) (hy : h+4 ≤ y) :
-    (frameAt T h q4S0Prefix22Inside q4S0Prefix22End).tape y = T y := by
-  rw [frameAt_tape]
+    (q4FrameAt T h q4S0Prefix22Inside q4S0Prefix22End).tape y = T y := by
+  rw [q4FrameAt_tape]
   have hnot : q4S0Prefix22Inside (y-h) = false := by
     simp [q4S0Prefix22Inside]
     omega
-  simp [frameAt_tape,hnot]
+  simp [q4FrameAt_tape,hnot]
 
 /-- One state-3 leftward microcycle shifts a one one cell to the right:
 3 at h on 1, then state 1 reads the zero at h+1, then state 2
@@ -255,8 +439,8 @@ def q4S0Final4Input (T : Int → Bool) (h : Int) : Prop :=
 theorem q4S0Final4_at (T : Int → Bool) (h : Int)
     (hin : q4S0Final4Input T h) :
     run tm2 4 ⟨3,h,T⟩ =
-      some (frameAt T h q4S0Final4Inside q4S0Final4End) := by
-  apply bridgeAt T h q4S0Final4Inside
+      some (q4FrameAt T h q4S0Final4Inside q4S0Final4End) := by
+  apply q4BridgeAt T h q4S0Final4Inside
     q4S0Final4Start q4S0Final4End 4 rfl
     q4S0Final4_exact q4S0Final4_heads
   intro x hx
@@ -283,7 +467,7 @@ theorem q4S0Postlude_at (k : Nat) (T : Int → Bool) (h : Int)
     (hguard :
       q4S0Final4Input (s0LeftSweep k T h) (h-(k:Int))) :
     run tm2 (3*k+4) ⟨3,h,T⟩ =
-      some (frameAt (s0LeftSweep k T h) (h-(k:Int))
+      some (q4FrameAt (s0LeftSweep k T h) (h-(k:Int))
         q4S0Final4Inside q4S0Final4End) := by
   have hscan := state3_left_ones_scan k T h hones hright
   have htail := q4S0Final4_at (s0LeftSweep k T h) (h-(k:Int)) hguard
@@ -294,7 +478,7 @@ theorem q4S0Postlude_at (k : Nat) (T : Int → Bool) (h : Int)
     _ = run tm2 4 ⟨3,h-(k:Int),s0LeftSweep k T h⟩ := by
         rw [hscan]
         rfl
-    _ = some (frameAt (s0LeftSweep k T h) (h-(k:Int))
+    _ = some (q4FrameAt (s0LeftSweep k T h) (h-(k:Int))
           q4S0Final4Inside q4S0Final4End) := htail
 
 #print axioms q4S0Prefix22_at
