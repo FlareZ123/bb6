@@ -136,4 +136,66 @@ theorem no_one_left_bounce_parent (h r q x y k n : Nat)
   rw [hleft, hright] at hmod
   omega
 
+
+private theorem pow8_mod7 (n : Nat) : 8 ^ n % 7 = 1 := by
+  induction n with
+  | zero => norm_num
+  | succ n ih =>
+      rw [Nat.pow_succ, Nat.mul_mod, ih]
+      norm_num
+
+private theorem pow2_mod7_of_three_multiple (n k : Nat)
+    (hn : n = 3 * k) : 2 ^ n % 7 = 1 := by
+  rw [hn, Nat.pow_mul, show (2 : Nat) ^ 3 = 8 by norm_num]
+  exact pow8_mod7 k
+
+/-- The residual identity forces h=4 mod 5 on t=39+64h. -/
+theorem residual_h_mod5 (w s m t h : Nat)
+    (hs : 211 * s + 129 = 5 * 2 ^ (201 + 3360 * w))
+    (hm : 32 * s = 32 + 840 * w + m)
+    (hp : m + 1 = 8 * t + 1)
+    (ht : t = 39 + 64 * h) : h % 5 = 4 := by
+  have hid := u5_m8_t_identity w s m t hs hm hp
+  have hleft : (211 * t + 1360 + 22155 * w) % 5 = t % 5 := by omega
+  have hright : (20 * 2 ^ (201 + 3360 * w)) % 5 = 0 := by omega
+  have hmod := congrArg (fun z : Nat => z % 5) hid
+  rw [hleft, hright] at hmod
+  have htmod : t % 5 = 0 := by omega
+  rw [ht] at htmod
+  omega
+
+/-- The residual identity forces h=0 mod 7 on t=39+64h. -/
+theorem residual_h_mod7 (w s m t h : Nat)
+    (hs : 211 * s + 129 = 5 * 2 ^ (201 + 3360 * w))
+    (hm : 32 * s = 32 + 840 * w + m)
+    (hp : m + 1 = 8 * t + 1)
+    (ht : t = 39 + 64 * h) : h % 7 = 0 := by
+  have hid := u5_m8_t_identity w s m t hs hm hp
+  have hE : 201 + 3360 * w = 3 * (67 + 1120 * w) := by omega
+  have hpow : 2 ^ (201 + 3360 * w) % 7 = 1 := by
+    exact pow2_mod7_of_three_multiple _ _ hE
+  have hleft : (211 * t + 1360 + 22155 * w) % 7 = (t + 2) % 7 := by omega
+  have hright : (20 * 2 ^ (201 + 3360 * w)) % 7 = 6 := by
+    rw [Nat.mul_mod, hpow]
+    norm_num
+  have hmod := congrArg (fun z : Nat => z % 7) hid
+  rw [hleft, hright] at hmod
+  have htmod : t % 7 = 4 := by omega
+  rw [ht] at htmod
+  omega
+
+/-- The complete residual branch fixes h modulo 105. -/
+theorem residual_h_mod105 (w s m t h : Nat)
+    (hs : 211 * s + 129 = 5 * 2 ^ (201 + 3360 * w))
+    (hm : 32 * s = 32 + 840 * w + m)
+    (hp : m + 1 = 8 * t + 1)
+    (ht : t = 39 + 64 * h) : h % 105 = 84 := by
+  have h3 := residual_h_mod3 w s m t h hs hm hp ht
+  have h5 := residual_h_mod5 w s m t h hs hm hp ht
+  have h7 := residual_h_mod7 w s m t h hs hm hp ht
+  omega
+
+/-- The secondary-fan quotient S=416+684h is 17 mod 105. -/
+theorem secondary_S_mod105 (h : Nat) (hh : h % 105 = 84) :
+    (416 + 684 * h) % 105 = 17 := by omega
 end BB6.Agent3U5Q0ResidualMod105
