@@ -183,30 +183,33 @@ private theorem outerLCIncAfterZero_m2_middleCell
   have hxleft : h1+6-(k:Int) < h+5 := by
     dsimp [h1,outerLCIncH1]
     omega
-  rw [outerLCIncAfterZero_preserves_left T h a 2 _ hxleft]
+  have hpres0 := outerLCIncAfterZero_preserves_left T h a 2
+    (h1+6-(k:Int)) hxleft
   by_cases hk5 : k=5
   · subst k
-    have hpres := outerLCIncAfterFive_preserves_left T h a 2 (h1+1) (by omega)
-    rw [hpres]
+    have hpres5 := outerLCIncAfterFive_preserves_left T h a 2 (h1+1) (by omega)
     have hbridge : T (h1+1) = true := by
       simpa [h1] using hT3right
     have htarget : sideBit (markerWord 1 ++ d0) 5 = true := by
       simp [sideBit,markerWord,d0]
     calc
       outerLCIncAfterZero T h a 2 (h1+1) =
-          outerLCIncAfterFive T h a 2 (h1+1) :=
-        outerLCIncAfterZero_preserves_left T h a 2 (h1+1) (by omega)
-      _ = T (h1+1) :=
-        outerLCIncAfterFive_preserves_left T h a 2 (h1+1) (by omega)
+          outerLCIncAfterFive T h a 2 (h1+1) := hpres0
+      _ = T (h1+1) := hpres5
       _ = true := hbridge
       _ = sideBit (markerWord 1 ++ d0) 5 := htarget.symm
   · have hk4 : k ≤ 4 := by omega
     have hcoord :
         h1+6-(k:Int) = h1+2+((4-k):Int) := by omega
-    rw [hcoord]
     have hlocal := outerLCIncAfterFive_local T h a 2 (4-k) (by omega)
-    rw [hlocal]
-    interval_cases k <;> norm_num [sideBit,markerWord,d0]
+    calc
+      outerLCIncAfterZero T h a 2 (h1+6-(k:Int)) =
+          outerLCIncAfterFive T h a 2 (h1+6-(k:Int)) := hpres0
+      _ = outerLCIncAfterFive T h a 2 (h1+2+((4-k):Int)) := by
+        rw [hcoord]
+      _ = (if (4-k)=2 ∨ (4-k)=4 then true else false) := hlocal
+      _ = sideBit (markerWord 1 ++ d0) k := by
+        interval_cases k <;> norm_num [sideBit,markerWord,d0]
 
 /--
 The left-facing tape at the pre-sweep head h+5 is
