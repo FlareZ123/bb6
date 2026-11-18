@@ -126,7 +126,7 @@ The specialized even/even sum-zero parent theorem applies only when its quotient
 
 ## Aggregate Lean audit root
 
-`U5Q0TwoCylindersAudit.lean` imports all four source proof modules and prints axioms for both secondary-parent closures, both infinite root-family theorems, and both pairwise-distinctness theorems. Compiling this one root against the repository's actual import closure forces all four modules to compile; it is an audit harness, not a result.
+`U5Q0TwoCylindersAudit.lean` imports the four new source proof modules plus the existing W1821 baseline and prints axioms for both secondary-parent closures, all three infinite root-family theorems, and all three pairwise-distinctness theorems. Compiling this one root against the repository's actual import closure forces all four modules to compile; it is an audit harness, not a result.
 
 
 The two modular reductions have explicit integer witnesses:
