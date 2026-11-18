@@ -1180,3 +1180,6 @@ Lease for this incarnation: agent1-gpt6-20261118T005851Z-q0-branch-completion, c
 ### Final q0 FSFE sibling refinement (same invocation)
 
 A final check corrected the a=93+128s S-child table in FSFE-valuation-tail.md: the odd-s child is (1,3) mod 8 and is excluded by Allowed; only even s survives. Together with the a=29+128s branch (where even s is excluded by rooted_not_7_7), the only S-sibling cylinders remaining after this step are a=157 or 93 mod 256. This is still not closure. Agent 32 was sent this refinement.
+
+
+A further exact parameter translation was added to FSFE-valuation-tail.md: for u=16*t+9, after one FSFE block the second block-start coordinate is a1=189+8*t (mod 256). The surviving sibling residues a1=157 or93 mod256 therefore require u=457 or329 mod512, respectively. This is only the competing sibling at the second block start, not a q0 nonreachability result. Agent 6 was sent this refinement.
