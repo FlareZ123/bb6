@@ -23,7 +23,7 @@ Substitution gives the exact identity
 \]
 In particular \(I_0\equiv6\pmod7\).
 
-Suppose the suffix begins with \(s\) depth-two edges. Their energy recurrence gives \(8^s\mid I_0\). Write
+Assume the same candidate wall-reaching suffix hypotheses as Agent 43's HighDepthRestartPotential.md, including its established positive lower bound on \(I_0\) for a suffix with at most five shallow edges. Thus \(0<I_0<98P\). Suppose the suffix begins with \(s\) depth-two edges. Their energy recurrence gives \(8^s\mid I_0\). Write
 \[
 \delta=3s-n,\qquad I_s=I_0/8^s\in\mathbb N.
 \]
