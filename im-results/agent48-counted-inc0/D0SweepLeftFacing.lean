@@ -85,6 +85,9 @@ theorem d0Sweep_leftFacing_d0pow
         rw [hiq]
         omega
       rw [heq,hside]
+      have hbefore : d0Sweep n T h (h-1) = T (h-1) :=
+        d0Sweep_before n T h (h-1) (by omega)
+      rw [hbefore]
       simpa [h2] using hleft
     · let j : Nat := n-q-3
       have hiq : i=3*q+2 := by dsimp [q]; omega
