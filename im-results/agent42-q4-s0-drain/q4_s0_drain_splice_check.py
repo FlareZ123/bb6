@@ -302,6 +302,7 @@ def check_case(A: int, L: int, z: int) -> dict[str, object]:
 def main() -> None:
     cases = [(3, 2, z) for z in range(1, 6)]
     cases += [(4, 2, 2), (2, 4, 2), (3, 4, 2), (4, 2, 3), (3, 4, 3)]
+    cases += [(4, 2, 5), (3, 4, 5), (5, 2, 5)]
     for A, L, z in cases:
         print(json.dumps(check_case(A, L, z), sort_keys=True))
 
