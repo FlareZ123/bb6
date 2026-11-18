@@ -202,3 +202,8 @@ The construction retains the reproducible 288-case exact-tape probe and 101 para
 The existing manual workflow `.github/workflows/agent42-counted-lbin-dec.yml` now stages and compiles the three new source modules after their dependencies and checks the final exported theorem output for forbidden axioms. It has not been dispatched. The exact import closure must first pass local Lean 4.36.0-rc2 preflight, followed by inspection of the complete transitive `#print axioms` profile; reject `sorryAx`, `native_decide`, and custom axioms.
 
 **Scope:** this is only the local marker-0 `n=8q` S1 counted-increment premise for the TM63 24-cycle. It does not prove that the authentic blank-root orbit reaches these S1 configurations, does not establish a halt witness, and does not determine BB(6). It is distinct from the root-connected marker-0 `n=8q+4` residue-four row.
+
+
+## Marker-1 even-L q4 checkpoint macro (intermediate)
+
+See Marker1TerminalQ4Macro.md, Marker1TerminalArithmetic.lean, marker1_terminal_q4_macro.py, and marker1_terminal_q4_checkpoint.py. The z=0 family has a full-tape simulator-checked checkpoint/cycle decomposition, and Lean proves the resulting valuation-sum and runtime arithmetic. Positive-z experiments retain the left binary-countdown frame but exhibit nested right-side counters and only conjectural event-count laws. The authentic m=2,n=1 root endpoint has z=2^b-1>=3, so the z=0 law is not yet a root closure. No BB(6) value or universal upper bound is claimed.
