@@ -681,4 +681,16 @@ theorem outerLCIncPostludeTape_eq_marker1S0_m2
     outerLCIncPostludeTape_eq_s1Config_m2 L a b h hL
 
 
+/-- The canonical root parameters satisfy the width/value bound required
+by the general marker-1 S0 family. -/
+theorem outerLCInc_marker1S0_inputBounds (a b : Nat) :
+    0 < a+b+2 ∧ 2^b-1 < 2^(a+b+2) := by
+  constructor
+  · omega
+  · have hpow : 2^b ≤ 2^(a+b+2) :=
+      Nat.pow_le_pow_right (show 0<2 by decide) (by omega)
+    have hpos : 0 < 2^b := Nat.pow_pos (by decide)
+    omega
+
+
 end BB6Coverage.Agent42OuterLCInc
