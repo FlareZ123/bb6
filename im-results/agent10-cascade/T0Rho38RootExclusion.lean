@@ -137,22 +137,28 @@ theorem entry_not_root (a K : Nat)
       _ = 2^(K+4) := by congr 1 <;> omega
       _ = 16*p := hpowK4
 
+  have hhi' : 8*c≤13*2^a := by simpa [c] using hhi
   have hBupper : 8*B≤208*p := by
     calc
-      8*B = (8*c)*2^r := by dsimp [B]; simp only [Nat.mul_assoc]
-      _ ≤ (13*2^a)*2^r := Nat.mul_le_mul_right (2^r) hhi
-      _ = 13*(2^a*2^r) := by simp only [Nat.mul_assoc]
+      8*B = (8*c)*2^r := by
+        dsimp [B]
+        exact (Nat.mul_assoc 8 c (2^r)).symm
+      _ ≤ (13*2^a)*2^r := Nat.mul_le_mul_right (2^r) hhi'
+      _ = 13*(2^a*2^r) := Nat.mul_assoc 13 (2^a) (2^r)
       _ = 13*(16*p) := by rw [hpowAr]
       _ = 208*p := by omega
   have hBupper' : B≤26*p := by omega
+  have hlo' : 97*2^a≤64*c := by simpa [c] using hlo
   have hBlower : 97*p≤4*B := by
-    have hmul := Nat.mul_le_mul_right (2^r) hlo
+    have hmul := Nat.mul_le_mul_right (2^r) hlo'
     have hbig : 97*(16*p)≤64*B := by
       calc
         97*(16*p) = 97*(2^a*2^r) := by rw [hpowAr]
-        _ = (97*2^a)*2^r := by simp only [Nat.mul_assoc]
+        _ = (97*2^a)*2^r := (Nat.mul_assoc 97 (2^a) (2^r)).symm
         _ ≤ (64*c)*2^r := hmul
-        _ = 64*B := by dsimp [B]; simp only [Nat.mul_assoc]
+        _ = 64*B := by
+          dsimp [B]
+          exact Nat.mul_assoc 64 c (2^r)
     omega
   have h16pB : 16*p≤B := by omega
   have hNadd : N+16*p=B+2*K+1 := by
@@ -304,7 +310,6 @@ theorem entry_not_root (a K : Nat)
   have hmodEq := congrArg (fun z : Nat => z%3) hAdd
   simp only [Nat.add_mod,Nat.mul_mod] at hmodEq
   rw [hp3,hK3,hdmod3] at hmodEq
-  omega
   have hmodh : h%3=0 := by omega
 
   have hNoParentH : ∀q, ¬ResetParent q h := by
