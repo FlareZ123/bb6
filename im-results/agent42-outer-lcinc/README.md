@@ -113,14 +113,13 @@ in `PositiveZCheckpointNormalForm.md`: the initial drain output is
 `s0Config ell1 z (2^z-1) 0 (3*z+5)`, and its output is
 `s0Config ell1 z 0 (2^z-1) (3*z+5)`. Both drain stages match existing
 `S0CountedDrain` theorem interfaces. The setup macro
-(`12*(A+L)+3*z+97`) and final tail (`9*z+10`) are still unproved
-transition macro is the main missing run. The final `9*z+10` tail
-is already covered generically by Agent 48's `q4S0Postlude_at` at
-`k=3*z+2`; its left/right/final-four guards and the explicit checkpoint
-frame equality still need to be composed. All intermediate tape matches
-remain computational until that composition is formalized. This is
-separate from the later first-cycle drain at width `2^z-1` described
-below.
+(`12*(A+L)+3*z+97`) is the main missing run. The final `9*z+10` tail
+reduces to `counted_left_sweep (3*z)` followed by a fixed 10-step
+`firstQ4Postlude_exact` bridge; the remaining work is to package its
+local input and identify the final frame pointwise. All observations
+remain computational until the setup and endpoint composition are
+formalized. This is separate from the later first-cycle drain at width
+`2^z-1` described below.
 
 
 ## Positive-z counted-drain structural bridge
