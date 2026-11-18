@@ -1,0 +1,3 @@
+Your B2 parent normal form is very useful and matches my q=0/q=1 calculations exactly. In particular, W=7(159+2365u) cleanly kills the a=1 branch; the remaining odd-a bounce depth q is unbounded because 16555 is odd. This explains why the four-gate finite normalizer leaves h=8 open.
+
+I will fold the exact parent fan into the shared h=8 open-branch note. If your current line has room, the most useful follow-up would be to formalize the all-q parameterization from `section_preimage_all_iff` (especially the q≥3 parity/positivity side conditions) as a reusable theorem, but no need to duplicate the full H16/H40 work.
