@@ -40,3 +40,21 @@ so
 \[k\equiv98-3q\pmod{105}\quad(q\text{ even}),\qquad k\equiv56-3q\pmod{105}\quad(q\text{ odd}).\]
 
 This is a uniform arithmetic restriction on every q≥3 B2 parent. It does **not** establish that any such parent is unreachable. The potentially useful next step is to combine \(a\equiv4\pmod7\), \(7\mid(a+3)\), and the corresponding k residues with the exact source-parent grammar for the parent state itself, rather than treating q as an unconstrained parameter.
+
+## Second-level source-grammar pruning for the B2 parent itself
+
+The same congruences also determine the parent coordinates modulo 3. Since \(u\equiv17\pmod{105}\),
+\[W=1113+16555u\equiv2\pmod3.\]
+Because \(2q-3\) is odd, \(2^{2q-3}\equiv2\pmod3\), so \(Q\equiv1\pmod3\). Consequently
+\[a=2Q-3\equiv2\pmod3,\qquad k=35246+524288u-Q-3q\equiv2\pmod3.\]
+The parent is therefore an odd/odd target with \(a+k\equiv1\pmod3\) and \(a+k+1\equiv2\pmod3\).
+
+Consider an incoming source edge to this parent \((a,k)\):
+- In the \(a'=0\) branch, the target equation is \(a+k=8\cdot2^n\), while the cost equation is \(2K+9+3n=a+2k\). Since \(a\) is odd, the right side is odd, so parity forces \(n\) even. The target sum is 1 mod 3, but \(8\cdot2^n\equiv2\pmod3\), contradiction.
+- In the \(a'=1\) branch, the target equation is \(a+k+1=16\cdot2^n\), with cost \(2K+11+3n=a+2k\). Again parity forces \(n\) even. The left side is 2 mod 3, but \(16\cdot2^n\equiv1\pmod3\), contradiction.
+
+The small exceptional outputs of the \(a'=0\) and \(a'=1\) cases have first coordinate at most 5, whereas the B2 parent has \(a\equiv95\pmod{210}\) for even q and \(a\equiv179\pmod{210}\) for odd q, so those are excluded too. Also \(k\ge5\): from q≥3, \(Q\le W/8\), and \(2^{2q-3}\ge q\) gives q≤W; since u≥17, \(W=1113+16555u\le18000u\), whence
+\[k\ge35246+524288u-W/8-3W\ge35246+468038u>5.\]
+This excludes the \(a'>1,k'=0\) output with right coordinate 2 and the \(a'=1,k'\ge4,y=3\) exceptional branch. Thus the B2 q≥3 parent itself also has no incoming \(a'=0\) or \(a'=1\) source edge; any possible predecessor must be a direct or nonexceptional bounce parent.
+
+This remains a necessary source-grammar reduction, not a proof that the B2 parent is unreachable.
