@@ -33,7 +33,7 @@ theorem state5_three_right (T : Int → Bool) (h : Int)
   have hne1 : h+1 ≠ h := by omega
   have hne2 : h+2 ≠ h := by omega
   have hne3 : h+2 ≠ h+1 := by omega
-  simp [run, rawStep, readSlot, applyMove, tm2, h0, h1, h2,
+  simp [run, rawStep, readSlot, applyMove, h0, h1, h2,
     hne1, hne2, hne3, lookup53, lookup31Right, lookup15, holeRight]
   constructor
   · omega
@@ -74,7 +74,7 @@ theorem counted_right_sweep_from5 (n : Nat) (T : Int → Bool) (h : Int)
       simp [run, state5SweptRight]
   | succ n ih =>
       have h0 : T h = true := by
-        exact hon 0 (by omega)
+        simpa using hon 0 (by omega)
       have h1 : T (h+1) = true := by
         have := hon 1 (by omega)
         simpa using this
@@ -97,7 +97,7 @@ theorem counted_three_right (T : Int → Bool) (h : Int)
     (hon : state5RightOnes T h 3) :
     run tm2 3 ⟨5,h,T⟩ =
       some ⟨5,h+3,holeRight T h⟩ := by
-  have h0 : T h = true := hon 0 (by omega)
+  have h0 : T h = true := by simpa using hon 0 (by omega)
   have h1 : T (h+1) = true := hon 1 (by omega)
   have h2 : T (h+2) = true := hon 2 (by omega)
   exact state5_three_right T h h0 h1 h2
@@ -112,7 +112,7 @@ theorem state5SweptRight_preserves_far_right (n : Nat) (T : Int → Bool)
       simp [state5SweptRight]
   | succ n ih =>
       have hx' : (h+3)+(3*n:Int) ≤ x := by omega
-      have hpres := ih (holeRight T h) (h+3) x hx'
+      have hpres := ih (holeRight T h) (h+3) hx'
       have hne0 : x ≠ h := by omega
       have hne2 : x ≠ h+2 := by omega
       simpa [state5SweptRight, holeRight, hne0, hne2] using hpres

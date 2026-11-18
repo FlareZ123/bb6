@@ -34,7 +34,7 @@ theorem state1_three_left (T : Int → Bool) (h : Int)
   have hne1 : h-1 ≠ h := by omega
   have hne2 : h-2 ≠ h := by omega
   have hne3 : h-2 ≠ h-1 := by omega
-  simp [run, rawStep, readSlot, applyMove, tm2, h0, h1, h2,
+  simp [run, rawStep, readSlot, applyMove, h0, h1, h2,
     hne1, hne2, hne3, lookup10, lookup21, lookup31, holeLeft]
   constructor
   · omega

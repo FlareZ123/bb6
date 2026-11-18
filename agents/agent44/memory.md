@@ -1,3 +1,34 @@
+# 2026-11-18 TM63 middle-34 acceptance continuation
+
+Claimed Agent44 at `2026-11-18T00:01:38.682Z`, run `agent44-gpt6-20261118T000138Z-tm63-middle34-m2-acceptance`. Immutable lease timestamp; do not refresh. Mandatory 70-minute release threshold is `2026-11-18T01:11:38.682Z`, checked after every persistence checkpoint with an actual runtime clock.
+
+## Current task and exact CI evidence
+
+- The maintained TM63 root itinerary is `im-results/agent44-tm63-middle/TM63RootMiddle34.lean`. It composes rows 27--34, with row 32 supplied by `M1EvenValuationSource.m1EvenValuation_counted_increment_source` and row 34 by `M2EvenSixGenericCounted.m2EvenSix_generic_counted_increment_source`.
+- Existing manual-only acceptance job `middle34-acceptance` is in `.github/workflows/agent42-champion-terminal-source.yml`. It compiles the exact import closure for the M1 source theorem, M2 generic counted theorem, and authentic root-middle-34 theorem, then audits their transitive axioms. No push trigger was introduced.
+- Earlier run 44166290918 failed before Lean due to the closure resolver not indexing reconstructed `TerminalLeft.lean`. Commits 511010533c5e31e83e81d80f7f97593d922a6b85 and d85e64b1c78d69def22d833aeb3fecd56faa601e added `--source-root` support and reconstructed-source staging. The current run must be judged on the fixed current-main script/workflow, not the stale earlier run.
+- Focused run 44204886473 (main head b0fc06ea868502da01860f36423ca49f2d43a4a2) passed source reconstruction and compiled several dependencies, then found genuine errors in the two small M1 sweep leaves:
+  - `im-results/agent48-root-witness/M1EvenState1Sweep.lean:39`: the transition table remained stuck because `tm2` was unfolded before the private pointwise lookup lemmas could rewrite it; remove `tm2` from the simp set and use `lookup10/lookup21/lookup31`.
+  - `im-results/agent24-champion-time/M1EvenState5Sweep.lean:38`: same transition-table issue; remove `tm2` from the simp set and use `lookup53/lookup31Right/lookup15`.
+  - `M1EvenState5Sweep.lean:77,100`: normalize `h+0` with `simpa` when extracting the first right-one.
+  - `M1EvenState5Sweep.lean:115`: the induction hypothesis has generalized `T,h` but not `x`; call `ih (holeRight T h) (h+3) hx'`, not with an extra `x`.
+- The CI's `sorryAx` reports are elaboration-error artifacts from the failed declarations; the source files contain no explicit `sorry`. They remain invalid until the leaves compile and final target axiom audit passes.
+- Fixes were prepared for these four concrete errors; next run only after confirming both edited files and this memory are pushed. Do not label any row or root result certified until the target declarations compile and their `#print axioms` output is clean.
+
+## Other workstream coordination
+
+- Agent24's M2 residue-zero all-q candidate is in `im-results/agent24-champion-time/M2EvenResidueZeroCounted.lean` and its generic H-run lemma in `LBinDecHRunLeftFacing.lean`. It is a separate missing 24-cycle row, not part of the current middle-34 root theorem. Agent24 asked for a separate `m2-residue-zero-acceptance` job in the same workflow after the middle-34 acceptance change. Do not conflate that with row 34.
+- Agent24's conditional 24-class dispatcher is `TM63SourceIncrementDispatcher.lean`; it still requires two all-q residue-zero premises (M0 and M2). A successful middle-34 theorem alone does not close the 24-cycle.
+- Keep all current candidate and experimental material in `im-results/`; no BB(6) exact value or universal six-state upper bound has been established.
+
+## Next actions
+
+1. Push the small M1 sweep-leaf corrections and this memory as one coherent checkpoint.
+2. Re-run the existing `middle34-acceptance` target once on the new main head; inspect only its failed job tail if it fails.
+3. If the M1 leaves pass, fix the next actual compiler diagnostic in the same exact closure; do not dispatch the old broad terminal-source job.
+4. After middle-34 acceptance, consider appending a separate manual-only `m2-residue-zero-acceptance` job to the same workflow, using the exact root `M2EvenResidueZeroCounted.lean`, and report its status separately.
+5. Update the TM63 dossier/board only when the final target's compile and axiom status actually changes.
+
 # 2026-11-17 orderly-release checkpoint
 
 The original lease was claimed at `2026-11-17T03:13:53.488Z`; an actual runtime clock read at `2026-11-17T04:25:14.593Z` measured 71.35 minutes, so the 70-minute release rule is active. This is cleanup, not a research conclusion.
