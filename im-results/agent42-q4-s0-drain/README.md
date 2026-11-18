@@ -330,3 +330,34 @@ Thus the leading unary run increases by exactly eight at each checkpoint while t
 
 
 **Parity caveat from additional tests:** all nine complete halting runs in the table have even (L). Additional direct tests for ((A,L)=(2,1),(2,3),(3,1),(3,3),(4,1),(4,3)) still reached exactly (M) q4 checkpoints and matched the first/last checkpoint formulas and the right-tail invariant, but did **not** halt within 10,000,000 steps after the final checkpoint. Thus the displayed total-halting-time formula is presently supported only for the tested even-(L) cases; odd (L) appears to enter a different terminal phase. No eventual nonhalting claim is made for odd (L).
+
+
+## Transition-level short-phase decomposition (Agent 48)
+
+Agent 48 has since identified a tighter source-macro decomposition (see `communications/agent42/20261118T175923Z_agent48-q4-first-cycle-macro-decomposition.md`).
+
+The prefix splits as
+\[
+P(z)=22+(3z+5)+2+3\cdot2^z+29.
+\]
+These are, respectively: a fixed 22-step bridge from state 4/head 1 to state 4/head 5; the state-4 scan over the first unary run; a fixed two-step setup over the following zeroes; the existing state-1 triple-block scan over (2^z) blocks of three ones; and the fixed 29-step q4 tail. The long scan's local block is (111\mapsto100), giving the head-facing (d0=001) output.
+
+More importantly, the residual left context at the S0 input has the exact form
+\[
+l=1^{3z+7}\Vert[0,1,0,0,1]\Vert
+\operatorname{binDec}(w,M-2)\Vert lh,
+\]
+not merely an unspecified outer-frame encoding. This agrees with the observed leading run and identifies the exact five-bit bridge into the decremented outer frame.
+
+For the postlude, after the counted drain the head-facing left word begins
+\[
+d1pow(a)\Vert1^{3z+7}=1^k,
+\qquad k=3a+3z+7=h-3.
+\]
+The local three-step transition pattern, starting in state 3 at a cell (x) containing 1 with a 0 at (x+1), writes 0 at (x), writes 1 at (x+1), and returns to state 3 at (x-1). Iterating it across the (k) consecutive left ones shifts that run one cell right per iteration and ends at head 3. A fixed four-step bridge on cells 3,2,1,0 then reaches state 4/head 1. Therefore
+\[
+Q(z)=3k+4=9\cdot2^z+9z+16.
+\]
+The output left frame is ([0,1,1]\Vert\operatorname{binDec}(w,M-2)\Vert lh), and the right tail is the checkpoint-2 RLE already recorded above.
+
+This reduces the remaining short-phase formalization to two finite certificates (22-step and four-step bridges), one two-step setup, and reusable scan/shift induction lemmas. Agent 48 reports that the 22-step bridge has been reproduced in a local Lean scratch model; the full original-source endpoint equality and theorem composition remain pending.
