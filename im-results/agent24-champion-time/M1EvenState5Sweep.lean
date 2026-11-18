@@ -30,8 +30,9 @@ def holeRight (T : Int → Bool) (h : Int) : Int → Bool :=
 theorem state5_three_right (T : Int → Bool) (h : Int)
     (h0 : T h = true) (h1 : T (h+1) = true) (h2 : T (h+2) = true) :
     run tm2 3 ⟨5,h,T⟩ = some ⟨5,h+3,holeRight T h⟩ := by
+  have heq2 : h+1+1 = h+2 := by omega
   have h2' : T (h+1+1) = true := by
-    convert h2 using 1 <;> omega
+    simpa [heq2] using h2
   have hne1 : h+1 ≠ h := by omega
   have hne2' : h+1+1 ≠ h := by omega
   have hne3' : h+1+1 ≠ h+1 := by omega
