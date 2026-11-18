@@ -111,12 +111,12 @@ theorem rightEvenBundledBase (m k : Nat)
       (evalA (2*k+3) m (2*m+5)).bind
         (fun p => drainB p.1 p.2.1 p.2.2) := by
     rw [highLevelNext]
-    have h0 : m != 0 := by omega
-    have h1 : !((m+2+2*k)%2=1 /\ m>=m+2+2*k+5) := by omega
-    have h2 : !((m+2+2*k)%2=0 /\ m>=m+2+2*k+3) := by omega
-    have hodd : m%2 != 1 := by omega
-    have heq : m != m+2+2*k+2 := by omega
-    have hdBaseNotOne : (m+2+2*k)%2 != 1 := by omega
+    have h0 : m ≠ 0 := by omega
+    have h1 : ¬ ((m+2+2*k)%2=1 ∧ m≥m+2+2*k+5) := by omega
+    have h2 : ¬ ((m+2+2*k)%2=0 ∧ m≥m+2+2*k+3) := by omega
+    have hodd : m%2 ≠ 1 := by omega
+    have heq : m ≠ m+2+2*k+2 := by omega
+    have hdBaseNotOne : (m+2+2*k)%2 ≠ 1 := by omega
     simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd,
       if_neg heq, if_neg hdBaseNotOne]
     have harg : m+2+2*k+1-m = 2*k+3 := by omega
@@ -129,7 +129,7 @@ theorem rightEvenBundledBase (m k : Nat)
   obtain ⟨B, E, hDrain⟩ :=
     drainB_safe_ones (m+1) (2*k+3) 0 hbudgetFull
   refine ⟨B, E, ?_, hDrain⟩
-  rw [hbaseEq, hbundle, hDrain]
+  rw [hbaseEq, ← hbundle, hDrain]
 
 /-- Far-right even boundary drain, bundled from the original high-level
 branch: R counts the initial evaluator as well as all subsequent iterations,
