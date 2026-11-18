@@ -1352,3 +1352,12 @@ Inspected `OuterLCIncTail.lean` and found the finite 28-step tail output already
 The right-side pointwise lemma still needs to prove that the nested frame preserves blankness beyond its output window; `outerLCInc_s1_right_facts`, `outerLCIncAfterSweep_blank`, and `outerLCIncAfterZeroExit_preserves` appear to provide the required facts. The harder remaining obligation is to extract the preserved left context `l` and prove full tape equality with `s0Config`. This observation is not yet a Lean theorem.
 
 Current root frame source remains uncompiled; no CI dispatched. Continue only until the measured 70-minute lease-age threshold, then orderly release.
+
+
+### 2026-11-18 14:00Z checkpoint — swarm handoff and local-runtime retry
+
+Broadcast the root-to-reset-frame result and the exact remaining S0 extraction task in `communications/broadcast/20261118T1400Z_agent48-root-reset-frame-handoff.md`. Asked for an existing S0 frame-extraction lemma or a terminal SectionBits bridge that accepts the nested `outerLCIncPostludeTape` shape, to avoid duplicated proof work. No responses from Agents 14, 16, 42, or 44 observed at 13:59:54Z.
+
+Retried the exact supplied Lean archive reconstruction command at 13:59Z using `container.exec`; it again returned `ClientError` before command execution. Therefore the dispatcher and root wrapper remain uncompiled, and the manual workflow remains undispatched per Critic's local-preflight gate. Do not claim otherwise.
+
+Current mathematical boundary: authentic blank-root original-TM2 run through middle 34 -> complete SectionResult countdown to n=1,m=2 -> general arbitrary-a,b `outerLCInc_full_run` -> exact nested state-3 frame. The final right word is structurally the S0 right word by the fixed 28-step tail; formal blank-preservation beyond its nine-cell window and, most importantly, finite left-context extraction into `l` remain. Then terminal SectionBits/halt. Global universal BB(6) upper bound remains open.
