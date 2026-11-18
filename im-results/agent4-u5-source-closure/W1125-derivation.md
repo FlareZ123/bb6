@@ -1,86 +1,126 @@
 # Source-only closure on the U5 residual cylinder w = 1125 (mod 4096)
 
-**Status: exact arithmetic derivation and Lean draft; not yet compiled or source-certified.** This is intermediate work under `im-results/`.
+**Status: exact arithmetic derivation and Lean draft; not yet compiled or source-certified.** This is an intermediate result under im-results/, not an entry for results/.
 
-## 1. Residual lift
+## 1. Lift from w to the q-fan parameter
 
-The exact residual pullback identity is
+The U5 residual equations imply
 
 ```
 211*t + 1360 + 22155*w = 20*2^(201+3360*w).
 ```
 
-For `w=1125+4096*n`, the right side is divisible by 4096, and
+For w = 1125 (mod 4096), the right side is divisible by 4096 and
 
 ```
 211*3875 + 1360 + 22155*1125 = 4096*6285
 211*1883 = 4096*97 + 1.
 ```
 
-Hence `t=3875 (mod 4096)`. Modulo 3, 7, and 8 the same identity gives `t=0 (mod 3)`, `t=4 (mod 7)`, and `t=3 (mod 8)`, so `t=123 (mod 168)`. Write `t=123+168*z`. Combining this with `t=3875 (mod 4096)` gives `z=193 (mod 512)`, using `21*317=512*13+1`.
+Thus t = 3875 (mod 4096). Write t = 3875 + 4096*v. The same identity also gives t = 123 (mod 168) and the older z=193 (mod 512) parameterization, but the generalized q-fan proof needs only t = 3875 (mod 4096).
 
-Thus the residual cylinder maps exactly to
+## 2. The exact q-fan has only q = 0, 1, or 2
 
-```
-t = 123 + 168*(512*v+193).
-```
-
-## 2. Exact q-fan depth
-
-For `z=512*v+193`,
+For X_t=(44*t-1,42*t-1), the exact source-parent fan gives
 
 ```
-B = 661+903*z = 174940+462336*v = 12 (mod 16)
-43*t-1 = 8*B = 96 (mod 128).
+43*t - 1 = 4^q * U,   U even,   a=U-2,
+2*k + U + 6*q = 128*t - 8.
 ```
 
-The q-fan equation is `43*t-1=4^q*U` with `U` even. If `q>=3`, then `128 | 4^q*U`, contradicting the residue 96 mod 128. Therefore q is exactly one of 0, 1, or 2.
+With t = 3875 + 4096*v,
+
+```
+43*t - 1 = 166624 + 176128*v = 96 (mod 128).
+```
+
+If q >= 3, then 128 divides 4^q*U because 64 divides 4^q and U is even. This contradicts the displayed residue. Hence q is one of 0, 1, or 2.
 
 ## 3. q=0 source-parent chain
 
+The q=0 parent is
+
 ```
-P0 = (1399518+3698688*v, 1383244+3655680*v)
-  -> D0 = (2782760+7354368*v, 691621+1827840*v).
+P0 = (166622+176128*v, 164684+174080*v).
 ```
 
-`P0` is even/even with sum 2 mod 4, so the complete even/even parent fan forces the direct parent `D0`. The right coordinate of `D0` is odd and its sum is 1 mod 4, an established blank-image exclusion.
+It is even/even with sum 2 mod 4, so the complete source-parent fan forces its direct parent
+
+```
+D0 = (331304+350208*v, 82341+87040*v).
+```
+
+D0 has odd right coordinate and sum 1 mod 4, an established blank-image exclusion. Thus q=0 is impossible.
 
 ## 4. q=1 source-parent chain
 
+The q=1 parent is
+
 ```
-P1 = (349878+924672*v, 1908061+5042688*v)
-  -> Q1 = (1128967+2983680*v, 1518513+4013184*v)
-  -> R1 = (1323738+3498432*v, 1421124+3755808*v)
-  -> D1 = (2744860+7254240*v, 710561+1877904*v).
+P1 = (41654+44032*v, 227165+240128*v).
 ```
 
-- `P1` is even/odd with sum-plus-one 4 mod 8, so the even/odd-four parent is unique and is `Q1`.
-- `Q1` is odd/odd with sum 8 mod 16, so the valuation-three parent is unique and is `R1`.
-- `R1` is even/even with sum 2 mod 4, so the complete even/even parent fan forces `D1`.
-- `D1` has odd right coordinate and sum 1 mod 4, so it is not blank-reachable.
+It is even/odd with sum-plus-one 4 mod 8. The exact even/odd-four inverse gives
+
+```
+Q1 = (134407+142080*v, 180785+191104*v).
+```
+
+Q1 is odd/odd with sum 8 mod 16, so odd/odd valuation three gives
+
+```
+R1 = (157594+166592*v, 169188+178848*v).
+```
+
+R1 is even/even with sum 2 mod 4. Its forced direct parent is
+
+```
+D1 = (326780+345440*v, 84593+89424*v).
+```
+
+D1 has odd right coordinate and sum 1 mod 4, an established blank-image exclusion. Thus q=1 is impossible.
 
 ## 5. q=2 source-parent chain
 
+The q=2 parent is
+
 ```
-P2 = (87468+231168*v, 2039263+5389440*v)
-  -> Q2 = (1063363+2810304*v, 1551312+4099872*v)
-  -> R2 = (2614673+6910176*v, 775655+2049936*v)
-  -> S2 = (1695162+4480056*v, 1235407+3264996*v).
+P2 = (10412+11008*v, 242783+256640*v).
 ```
 
-- `P2` is even/odd with sum-plus-one 4 mod 8, so its unique even/odd-four parent is `Q2`.
-- `Q2` is odd/even with sum 3 mod 8, so six-even-right forces the direct parent `R2`.
-- `R2` is odd/odd with sum 8 mod 16, so valuation three forces `S2`.
-- `S2` has odd right coordinate and sum 1 mod 4, so it is not blank-reachable.
+It is even/odd with sum-plus-one 4 mod 8. The exact even/odd-four inverse gives
 
-All q branches therefore end in established blank-image exclusions. The Lean theorem is `q0_X_not_reach_t123_z193mod512`.
+```
+Q2 = (126595+133824*v, 184688+195232*v).
+```
 
-## 6. High-stop consequence and scope
+Q2 is odd/even with sum 3 mod 8, so the six-even-right theorem forces
 
-The existing exact U5 M8 terminal and original m=0 feeder lift this to `blank_no_high_m0_u5_w1125` and `every_w1125_residual_has_unreachable_root` for every `w=4096*n+1125`. The root index remains `j=39+64*s=18791 (mod 32768)`, the same containing class as the earlier W21 and W1021 families.
+```
+R2 = (311281+329056*v, 92343+97616*v).
+```
 
-This is a source-only subcylinder of the previously computationally identified `w=101 (mod 128)` candidate. It does not establish the whole w=101 class and does not add a new root-index arithmetic progression or density claim.
+R2 is odd/odd with sum 8 mod 16. Odd/odd valuation three gives
 
-## 7. Verification boundary
+```
+S2 = (201810+213336*v, 147075+155476*v).
+```
 
-The proof is currently a Lean draft in `U5Q0SourceOnlyW1021.lean` and `U5SourceOnlyHighStopW1021.lean`. No full Lean 4.36.0-rc2 transitive compile or exported axiom audit has succeeded yet. Keep this under `im-results/`; do not describe it as source-certified or promote it to `results/` until exact compilation and the axiom audit pass.
+S2 has odd right coordinate and sum 1 mod 4, an established blank-image exclusion. Thus q=2 is impossible as well.
+
+Together with q>=3 impossibility, all possible q branches terminate in established blank-image exclusions. This proves the source-only exclusion of X_t on the entire t = 3875 (mod 4096) cylinder, conditional only on the exact parent-fan and source-image lemmas in the Lean dependency closure.
+
+## 6. End-to-end high-stop consequence
+
+U5SourceOnlyHighStopW1021.lean lifts the generalized t = 3875 (mod 4096) q-fan exclusion through the exact U5 M8 six-even-right terminal chain and the original m=0 feeder. For every residual instance with w = 4096*n+1125, the q=0, q=1, and q=2 terminal parents are excluded above; q>=3 contradicts m+1 = 1 (mod 8); and the L_s feeder is excluded by the original mod-8 image invariant.
+
+The existing residual nonemptiness theorem supplies s,m for every natural w, and s is strictly increasing with w for any two residual solutions. Therefore this gives an infinite nonempty sequence w=4096*n+1125 of authentic blank-unreachable high m=0 roots.
+
+The root parameter remains j=39+64*s = 18791 (mod 32768), the same containing residue as the w=21, w=1021, and w=413 constructions. This is an additional residual-parameter cylinder, not a new root-index arithmetic-progression exclusion or a density increment. The older z=193 (mod 512) theorem remains as a corollary.
+
+## 7. Files and verification boundary
+
+- U5Q0SourceOnlyW1021.lean: generalized q=0/q=1/q=2 source exclusion for t = 3875 (mod 4096); the older z=193 (mod 512) theorem remains as a corollary.
+- U5SourceOnlyHighStopW1021.lean: residual lift and end-to-end high-stop draft for w = 1125 (mod 4096).
+
+No complete module in this directory has yet passed the required exact-source Lean 4.36.0-rc2 preflight and exported #print axioms audit. Do not describe this theorem as source-certified until the exact closure compiles and the axiom audit succeeds. Keep this material in im-results/; no results/ promotion is warranted yet.
