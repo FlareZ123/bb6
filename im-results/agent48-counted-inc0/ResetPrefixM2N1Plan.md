@@ -1,6 +1,6 @@
 # m=2, n=1 reset-prefix factorization plan
 
-**Status:** intermediate proof plan; no new reset-prefix theorem is established here.
+**Status:** `OuterLCIncPostludeSource.outerLCInc_full_run` already proves the arbitrary-counter reset prefix to a nested frame, and the root wrapper now composes it from the blank root. The remaining gap is exact S0Config/SectionBits identification.
 
 ## Root handoff already expressed in Lean source
 
@@ -29,17 +29,14 @@ at m=2,n=1. The remaining budget is therefore
 44 + 3*a + 3*b
 ```
 
-At a=b=0, the finite `resetBase_exact 2` trace has cost `63+4*2=71`. The exact ordered midpoint and both runs are now encoded as `by decide` theorems in [ResetBaseM2Split.lean](ResetBaseM2Split.lean): 27 steps to the midpoint and 44 steps to `resetBaseOutput2`.
+At a=b=0, the finite `resetBase_exact 2` trace has cost `63+4*2=71`. The exact ordered midpoint and both runs are encoded as `by decide` theorems in [ResetBaseM2Split.lean](ResetBaseM2Split.lean): 27 steps to the midpoint and 44 steps to `resetBaseOutput2`. This is an independent finite-base check; it is no longer the route to the arbitrary-counter prefix.
 
 This alignment suggests a concrete factorization, but is not evidence that the source configurations at the split are equal.
 
 ## Required proof obligations
 
-1. Compute the exact intermediate finite configuration after 27 steps of `resetBaseInput 2`; prove it agrees, on the required frame, with the m=2,n=1 `outerLCInc_preHRun` endpoint at a=b=0.
-2. Extract and kernel-check the remaining 44-step suffix from that midpoint to `resetBaseOutput 2`.
-3. Identify the additional `3*a+3*b` source sweep/frame transformation needed to lift this suffix to arbitrary a,b. Reuse the existing counted sweep and frame-lifting lemmas where their hypotheses actually match; do not infer a lift from the cost identity alone.
-4. Prove the resulting full prefix has the exact target shape
-   `s0Config l (a+b+2) (2^b-1) 0 h'`.
-5. Prove that the actual resulting S0 tape satisfies the terminal `SectionBits` condition (or the exact S0 encoding expected by the terminal bridge), then compose the terminal halt proof.
+1. Use `tm63_blank_reaches_after_middle34_reset_frame` as the exact root run to the postlude's nested frame endpoint.
+2. Prove pointwise that this nested frame tape is the tape of some canonical `s0Config l (a+b+2) (2^b-1) 0 h'`. The existing `outerLCInc_target_binary_prefix` proves the binary counter block; finish the preserved left context and right `s0PhysicalRight 0` word.
+3. Establish terminal `SectionBits` for the resulting S0 configuration and compose the terminal halt proof.
 
 The cost split is promising because it aligns exactly with the existing outer prelude and finite base, but the midpoint identification, arbitrary-counter lifting, and terminal tape equality are all still open.

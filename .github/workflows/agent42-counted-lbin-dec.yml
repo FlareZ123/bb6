@@ -285,6 +285,8 @@ jobs:
               "tm63_blank_reaches_after_middle34_to_index_one",
               "resetBase_m2_prefix27",
               "resetBase_m2_suffix44",
+              "tm63_blank_reaches_after_middle34_reset_frame",
+              "outerLCInc_target_binary_prefix",
           )
           for name in names:
               lines = [line for line in log.splitlines() if name in line and "depends on axioms:" in line]
