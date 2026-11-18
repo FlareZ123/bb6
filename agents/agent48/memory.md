@@ -1473,3 +1473,22 @@ The later-cycle event-count conjecture remains K_j(z)=(2^(z-1)-1)*(2^(2^(j-1))-1
 The preceding S_e=A+L+parity(A+L) overhead guess was falsified by A=3,L=4,z=4: its first-cycle cost is identical to A=3,L=2,z=4 despite the different A+L. New runs also give A=3,L=4,z=3 first-cycle cost 103754, identical to A=3,L=2 and A=4,L=2. The first-cycle cost appears independent of A,L for every tested case.
 
 Corrected first-cycle law: k=2^z-1; C1(z)=drainCost(k)+12*(2^z+z+6)+2 = 6*4^(2^z-1)+42*2^(2^z-1)+12*z+38. First-cycle q4 event count E1(z)=6*4^(2^(z-1)-1)+2. Tested: z1 158/8; z2 782/26; z3 103754/386; z4 6443827286/98306. z4 A3L4 reaches checkpoint2 at 6,443,829,937, confirming the same cycle cost as A3L2 and A4L2. This strengthens the counted-drain width 2^z-1 hypothesis; formal identification of the subrun remains open.
+
+
+### 2026-11-18 checkpoint — first positive-z q4-cycle bridge source draft
+
+- Continued Agent 48 after confirming the prior lease was more than 100 minutes old; new claim is 2026-11-18T20:17:57.794Z. Current lease must remain unchanged and be age-checked after every checkpoint.
+- Read Agent 42's first-cycle dossier and messages. The positive-z first q4 cycle is structurally
+  `q4 checkpoint 1 --P(z)--> arbitrary-left S0(l,a,N,0,h) --D(N)--> S0(l,a,0,N,h) --Q(z)--> q4 checkpoint 2`,
+  where a=2^z-1, N=2^a-1, h=3*2^z+3*z+7,
+  P=22+(3z+5)+2+3*2^z+29=3*2^z+3z+58,
+  Q=3*(3a+3z+7)+4=9*2^z+9z+16, and P+Q=12*(2^z+z+6)+2.
+  This is the first q4 cycle only; do not extrapolate its Q formula to later cycles.
+- Added `im-results/agent48-counted-inc0/PositiveZFirstCycleBridges.lean` (commit a17f12110375f5dd3501047c09dfd06714d88eca). It contains:
+  - the 22-step finite prefix bridge `⟨4,0,[-2,-1]⟩ -> ⟨4,4,[-4,-3,-2,1,3]⟩`, its head-window certificate, and arbitrary-tape lift on offsets [-4,3];
+  - the exact two-zero state-4/state-0 setup;
+  - the four-step post-drain bridge `⟨3,0,[-1]⟩ -> ⟨4,-2,[-3]⟩`, its frame lift, and a generic theorem composing it with `counted_left_sweep`;
+  - `firstCycleQ_from_S0Input`, which gives the exact Q(z) cost under the explicit left-run, right-boundary, and four-cell hypotheses.
+- Independently replayed the 22-step and four-step finite traces against the repository's exact 12-row TM2 table in the JS runtime. This is a computational cross-check only. The Lean file is source-only and has NOT been compiled.
+- Local `container.exec` and `python.exec` returned ClientError; do not dispatch CI before the exact local Lean 4.36.0-rc2 preflight. Communicated the file, exact hypotheses, and remaining obligations to Agent 42 in `communications/agent42/20261118T203356Z_agent48-first-cycle-bridge-draft.md`.
+- Next: prove the S0 drained tape supplies the `firstCycleQ_from_S0Input` hypotheses from its canonical `s0Config` representation; prove the Q output frame equals the explicit checkpoint-2 left/right streams; compose P from the 22-step bridge, E_scan, two-zero setup, `state1_d1_blocks_right`, and `q4Tail_at`; keep the S0 drain validation and later-cycle work separate. Agent 24's 9z+10 bridge is the initial root-to-first-checkpoint tail, not this post-drain Q(z).
