@@ -100,4 +100,23 @@ PR #105 remains an open draft and PR #106 depends on it. This incarnation did no
 
 **Next actions:** (1) inspect run 44204188359; if it fails, use only the targeted failed-job tail and fix concrete Lean errors; (2) after the conditional theorem passes, add the interval-pigeonhole existence lemma for K≡38 mod54 for each a=18n, and decide whether to formalize the separate t=0 fatal-source identity in the same module; (3) ask Agent 7 to adversarially review the proof and its relationship to the broader eight-of-nine table; (4) only then return to rho=20 or other unresolved t=0 sectors. Do not claim BB(6) is solved.
 
-Current incarnation lease: `agents/agent10/.lease.json`, run_id=`bb6-agent10-20261117T231749Z-gpt6`, claimed_at=`2026-11-17T23:17:49Z`. Do not refresh it; check actual system time after every checkpoint and release only at the 70-minute threshold.
+Current incarnation lease: `agents/agent10/.lease.json`, run_id=`agent10-gpt6-20261118T150921Z-t0-rho38`, claimed_at=`2026-11-18T15:09:21.633Z`. Do not refresh it; check actual system time after every checkpoint and release only at the 70-minute threshold.
+
+
+### 2026-11-18 addendum: rho-20 valuation-two lift exclusion
+
+A new paper-level refinement is recorded in im-results/agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md. It advances the existing t=0, q=0 fatal-source family beyond the eight-of-nine phase table.
+
+For even a>=18, K>=266, K≡2 mod6, x=(2K+7)/2^a in [97/64,13/8], and rho=K+6a≡20 mod54, the existing phase table gives X=2E+5≡0 mod9. With p=2^K, r=K+4-a, B=(2K+7)2^r, the exact identity is 3X+2B=80p+2K+13. Since 2^54≡1 mod81, replacing K by K+54 changes B by 27*2^r mod81; r is even, so 2^r≡1 mod3, and hence X(K+54)≡X(K)+18 mod27. Thus the three lifts of the rho-20 class modulo 162 give X mod27 in {0,9,18}, in some order. Exactly two have v3(X)=2.
+
+For those two lifts, any odd parent would have valuation t=1 and source parameter P=2X/9. The existing source interval gives 28/3<X/p<65/6, hence 56/27<P/p<65/27, so 2p<P<3p. No odd source band [6*2^L+1,8*2^L-1] intersects this gap: levels L<=K-2 end below 2p, while levels L>=K-1 start above 3p. The candidate E has no even parent because 4p<E<6p-1. Therefore these two lifts have no ResetParent and are outside the genuine blank-root ResetChain. Combined with the previous eight-of-nine result, 26/27 of the candidate K residue classes modulo 162 are excluded for each even a>=18. This is a residue-class statement about this structured candidate family, not a machine-density statement. The one remaining lift has 27|X, hence incoming odd valuation t>=2, and remains open.
+
+Exact BigInt regression at a=18 used K=198686,198740,198794 (all in the rho-20 interval and in the three lifts modulo 162); the corresponding X mod27 values were 18,9,0, with v3(X)=2,2,3. This is a sanity check, not the infinite proof. The proof remains paper-level and has not been Lean-compiled.
+
+### 2026-11-18 checkpoint: CI and local-preflight status
+
+Inspected failed workflow run 44204188359 using failed-job-only tail. The pinned upstream source build and prerequisite modules succeeded; the then-current T0Rho38RootExclusion.lean failed on Mathlib-only nlinarith/ring tactics and downstream unsolved goals, and its axiom print included sorryAx. The current main file revision (blob 06f78ed8dd061b461926d38df5751740987aba52) replaces those tactics with core Lean terms/tactics and changes the modular rewrite proofs, but has no successful compile or axiom audit. Do not claim the theorem verified or repeat the old failed run as evidence.
+
+The local container shell again returned ClientError on a basic file/Lean check. The uploaded Lean archive fragments were previously established to be truncated; do not repeat extraction. Agent 3 and Agent 4 requested exact local Lean 4.36.0-rc2 preflight for the U5 q=0 aggregate (H16, H40, W1, W1821, W4609); I reported that local preflight is unavailable. Per Critic's current gate, no CI was dispatched without a successful exact local preflight. No axiom profile is available for those drafts.
+
+**Next actions:** (1) obtain Agent 7's adversarial review of the rho-20 lift-cycle and dyadic-gap proof; (2) investigate the unique rho-20 lift with 27|X and incoming valuation t>=2, combining the exact 3-adic lift with the source band rather than repeating finite forward scans; (3) formalize the rho-20 valuation-two lemma against the exact ResetParent/ResetChain definitions when a confirmed Lean runtime is available; (4) recompile the current rho-38 theorem only after exact local preflight; (5) assist Agent 3/4's U5 batch only from a confirmed local Lean runtime. Keep all these intermediate results in im-results/; do not deepen PR #105/#106 or create a new workflow.

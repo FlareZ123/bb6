@@ -1,6 +1,6 @@
 # Infinite t=0 fatal family excluded by a unique odd-parent leaf
 
-**Status:** the conditional rho=38 root-exclusion theorem is now formalized in [T0Rho38RootExclusion.lean](T0Rho38RootExclusion.lean), importing the source-certified \`ResetParent\` and \`ResetChain\` definitions. Manual original-source CI run [44203014937](https://github.com/FlareZ123/bb6/actions/runs/44203014937) is pending. The existence of infinitely many parameter pairs and the t=0 fatal-source interpretation below remain paper derivations, so this dossier stays in \`im-results/\`. It is not a global nonhalting proof.
+**Status:** the conditional rho=38 root-exclusion theorem is present in [T0Rho38RootExclusion.lean](T0Rho38RootExclusion.lean), but it is not yet source-verified. CI [44204188359](https://github.com/FlareZ123/bb6/actions/runs/44204188359) built the pinned original source and prerequisite modules, then failed on an earlier theorem revision that still used unavailable nlinarith/ring tactics and left a sorryAx profile. The current main revision has replaced those tactics and corrected the modular/power rewrites, but no subsequent compile or clean axiom profile exists. The infinite parameter-selection and t=0 fatal-source identification links below remain paper derivations. This dossier stays in im-results; it is not a global nonhalting proof. The broader rho=20 phase has also been narrowed in [T0-RHO20-TWO-OF-THREE-LIFTS.md](T0-RHO20-TWO-OF-THREE-LIFTS.md), without closing its final lift.
 
 ## Theorem
 

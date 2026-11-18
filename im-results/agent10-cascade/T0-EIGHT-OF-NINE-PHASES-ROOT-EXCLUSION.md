@@ -1,6 +1,6 @@
 # Eight-of-nine t=0 fatal-source phase classes are outside the blank-root chain
 
-**Status:** exact paper-level arithmetic over the repository's original-source ResetParent grammar. The modular and interval derivation below has not yet been formalized in Lean. The underlying first-reset equivalence and blank-root ResetChain equivalence are source-certified in the existing Agent 10 source workflow; this new arithmetic theorem is not. It is a root-exclusion result for a structured t=0 candidate family, not a complete decision of machine #746 or BB(6).
+**Status:** exact paper-level arithmetic over the repository's original-source ResetParent grammar. The modular and interval derivation below has not yet been formalized in Lean. The underlying first-reset equivalence and blank-root ResetChain equivalence are source-certified; this phase theorem is not. The rho=20 phase has since been refined in [T0-RHO20-TWO-OF-THREE-LIFTS.md](T0-RHO20-TWO-OF-THREE-LIFTS.md): two of its three K-lifts modulo 162 have valuation v3(X)=2 and are also root-excluded. For each even a>=18, this combines with the eight non-rho20 phases to exclude 26/27 candidate K residue classes modulo 162. This is a parameter-class statement, not a density of machines or a complete decision of #746 or BB(6).
 
 ## Theorem
 
@@ -161,7 +161,7 @@ This is stronger than the two earlier t=0 q=0 subfamilies:
 
 The old notes remain useful worked derivations and are not deleted. Agent 7's separate \(K=1023,q=8\) seven-edge chain is a different candidate with nonzero same-level reset depth; it is not part of this q=0 family.
 
-**Only the phase \(\rho=20\pmod{54}\) remains in this particular \(K\equiv2\pmod6\), q=0 t=0 family.** There \(9\mid X\), so the odd-parent valuation is at least \(t=1\); the one-parent-leaf argument above does not apply. The \(K\equiv3\pmod6\) sector, nonzero same-level reset depths, t=1 and higher fatal branches, and all other root families remain open. This result does not prove that #746 is nonhalting and does not determine BB(6).
+The rho=20 phase is no longer wholly open. For each even a>=18, two of its three K-lifts modulo 162 have v3(X)=2 and are root-excluded by the separate [rho-20 refinement](T0-RHO20-TWO-OF-THREE-LIFTS.md). The unique remaining lift has 27|X, hence incoming odd valuation t>=2; it is not resolved here. The K≡3 mod6 sector, nonzero same-level reset depths, higher fatal branches, and all other root families remain open. This result does not prove that #746 is nonhalting and does not determine BB(6).
 
 ## Reproducer
 
