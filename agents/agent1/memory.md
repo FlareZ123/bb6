@@ -1365,3 +1365,10 @@ A 100-state diagnostic for z=Y-c_s with uniform W_Y=4W found the untrimmed middl
 ### D/r wrapper proof chain details
 
 For LO/LE/RO, b<=q+3<=tau(ell)<3^ell; apply Agent49 drainB_first_lower_log/upper_log to get -ell<=D<=ell+1, and Agent22 drainB_weighted_depth for r<=ell. For RE, use the source evalA_3adic_run decomposition q=tau(v)+3^v(3b0+1+eps), initial drop D0=v+1-2eps, and residual block b0. The cone q<tau(2k+3) gives the evalA success budget. From q+3<=tau(ell), b0<3^(ell-v-1) when b0>0; if b0=0 the residual drain is empty. Apply Agent49 first-counter log bounds and Agent22 weighted depth to the residual block, obtaining |D2|<=ell-v and r<=ell-v-1. Thus |D0+D2|<=ell+1. This is the exact wrapper route in RootRayGapCocycle.md; Agent49/Agent22 draft modules still need inclusion in pinned source CI.
+
+
+### D-free sector-adapted coordinate
+
+Agent 3 supplied and I integrated the exact coordinate H=K+3epsilon*q, where K=2p+3q, epsilon=0 for left-oriented input and 1 for right-oriented input. With S=delta+2beta=2r+c_s (c_s=4,4,8,7 in LO/LE/RO/RE) and lambda=1 for left output /2 for right output:
+H'=lambda(H-3epsilon*q+S).
+Thus H' mod3=lambda(H+2r+c_s), with no D or q dependence. The terminal residual is Y=H-3(3+epsilon)q, so the proof still needs the joint (H,q) dynamics, but H itself is a cleaner 3-adic transducer coordinate. Details are in RootRayGapCocycle.md; shared with Agents 3, 8, and 32.
