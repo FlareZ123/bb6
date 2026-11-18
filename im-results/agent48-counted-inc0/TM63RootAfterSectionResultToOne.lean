@@ -133,7 +133,8 @@ theorem tm63_blank_reaches_after_middle34_to_index_one :
       16*tm63RootResidueSixK+15 := tm63_index1_eq_16k15
   have hrootBound := tm63_index1_lt_pow_length1
   rw [hindex] at hrootBound
-  have hbound : 16*tm63RootResidueSixK-19 < 2^tm63Length1 := by
+  have hsectionBound :
+      (16*tm63RootResidueSixK-20)+1 < 2^tm63Length1 := by
     omega
   have ha : 0 < tm63MiddleAfter34A := by
     unfold tm63MiddleAfter34A
@@ -141,7 +142,7 @@ theorem tm63_blank_reaches_after_middle34_to_index_one :
   have hsection := sectionResult_run_to_index_one_complete
     tm63Length1 (16*tm63RootResidueSixK-20) 1
     tm63MiddleAfter34A tm63MiddleAfter34B tm63MiddleAfter34Head
-    hL (by omega) ha
+    hL hsectionBound ha
   have hcomp := run_compose_local hroot hsection
   have hmarker := tm63_middle34_sectionResult_marker_two
   simpa [hmarker] using hcomp
