@@ -139,9 +139,7 @@ def initial_machine(A: int, L: int, z: int) -> tuple[Machine, int, int]:
     assert A >= 1 and L >= 0 and 0 < z < 2**A
     width = A + L + 2
     M = 2**A * (2 ** (L + 2) - 1)
-    left = bin_dec(A, z) + [0, 1] + [0, 0, 1] + [1] * (3 * L) + list(LH)
-    # markerWord(1) is [1,0,1]; the preceding [0,1] above is markerWord(0)
-    # only for a zero-indexed concatenation.  The actual markerWord(1) is:
+    # markerWord(1) = [1,0,1].
     left = bin_dec(A, z) + [1, 0, 1] + [0, 0, 1] + [1] * (3 * L) + list(LH)
 
     tape = SparseTape()
@@ -266,6 +264,7 @@ def check_case(A: int, L: int, z: int) -> dict[str, object]:
         expected_ones.update(h - i for i in range(3 * a))
         expected_ones.update(h + 7 + i for i in range(3 * 2**a))
         check_predicted_drain_output(machine, a, h, N, expected_ones)
+        machine.tape.add_one_interval(h + 7, h + 6 + 3 * 2**a)
         drain_mode = "direct"
     else:
         install_predicted_drain_output(machine, a, h, N)
