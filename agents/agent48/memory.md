@@ -1466,3 +1466,10 @@ The sparse block simulator was extended to z=4. For A=3,L=2,z=4 it verifies chec
 Across tested z=1..4 and multiple A,L, the first-cycle step cost matches the strong conjecture: let S_e=A+L+((A+L) mod 2), k=2^z-1; then C1=drainCost(k)+12*(S_e+2^z+z)+2 = 6*4^(2^z-1)+42*2^(2^z-1)+12*(S_e+z)-34. The first-cycle q4 event count matches E1=6*4^(2^(z-1)-1)+2. Data: z1 C1=158,E1=8; z2 C1=782,E1=26; z3 C1=103754,E1=386; z4 C1=6443827286,E1=98306. The z2 value is independent of A,L across (3,2),(4,2),(2,4); z4 is independent across (3,2),(4,2). This strongly suggests a counted-drain subrun of width 2^z-1, but no source-level decomposition has been proved.
 
 The later-cycle event-count conjecture remains K_j(z)=(2^(z-1)-1)*(2^(2^(j-1))-1), E_j=6*4^K+2. The z2,j3 cycle remains unfinished after 7B steps; this rejects the earlier (2^j-1) exponent candidate. Next proof target: identify the exact s1Config/countedd-drain boundary inside the first q4 cycle, prove the frame overhead, then generalize to later j and connect the authentic root endpoint z=2^b-1>=3.
+
+
+### 2026-11-18 correction — first-cycle cost independent of A,L
+
+The preceding S_e=A+L+parity(A+L) overhead guess was falsified by A=3,L=4,z=4: its first-cycle cost is identical to A=3,L=2,z=4 despite the different A+L. New runs also give A=3,L=4,z=3 first-cycle cost 103754, identical to A=3,L=2 and A=4,L=2. The first-cycle cost appears independent of A,L for every tested case.
+
+Corrected first-cycle law: k=2^z-1; C1(z)=drainCost(k)+12*(2^z+z+6)+2 = 6*4^(2^z-1)+42*2^(2^z-1)+12*z+38. First-cycle q4 event count E1(z)=6*4^(2^(z-1)-1)+2. Tested: z1 158/8; z2 782/26; z3 103754/386; z4 6443827286/98306. z4 A3L4 reaches checkpoint2 at 6,443,829,937, confirming the same cycle cost as A3L2 and A4L2. This strengthens the counted-drain width 2^z-1 hypothesis; formal identification of the subrun remains open.

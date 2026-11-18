@@ -215,7 +215,7 @@ The sparse 64-cell-block C++ simulator marker1_terminal_q4_block_sim.cpp extends
 The sparse 64-cell-block C++ simulator marker1_terminal_q4_block_sim.cpp extends the positive-z checkpoint experiments to multi-billion-step limits while checking the complete left checkpoint frame. The revised nested event-count conjecture and the 7-billion-step z=2 observation are documented in Marker1TerminalQ4Macro.md.
 
 
-New positive-z first-cycle evidence: for z=1..4, the measured q4 cycle cost matches drainCost(2^z-1)+12(S_e+2^z+z)+2, where S_e is the least even integer at least A+L; q4-event counts match 6*4^(2^(z-1)-1)+2. These are still computational macro conjectures pending a source-level proof. The z=4 case was checked through a 6.44-billion-step cycle.
+New positive-z first-cycle evidence: for z=1..4, the measured q4 cycle cost matches C1(z)=drainCost(2^z-1)+12(2^z+z+6)+2, independent of A,L in tested cases; q4-event counts match 6*4^(2^(z-1)-1)+2. These remain computational macro conjectures pending a source-level proof. The z=4 case was checked through a 6.44-billion-step cycle.
 
 
 The positive-z first-cycle experiments now match a counted-drain law for z=1..4, including a verified 6,443,827,286-step first cycle at z=4. See Marker1TerminalQ4Macro.md for the formula, data, and the still-open source-level proof obligation.

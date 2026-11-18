@@ -146,42 +146,37 @@ The earlier candidate with factor (2^j-1) is falsified: for A=3,L=2,z=2, a 7-bil
 
 ### First-cycle cost law (strong computational evidence)
 
-Let S_e be the least even integer at least A+L,
+Let k=2^z-1. Across z=1,2,3,4 and several independent A,L choices, the first q4-checkpoint cycle cost is independent of A and L in every tested case and matches
 
 \[
-S_e=A+L+((A+L)\bmod 2),\qquad k=2^z-1.
+\boxed{C_1(z)=\operatorname{drainCost}(2^z-1)+12(2^z+z+6)+2}
 \]
 
-The repository's counted-drain cost is
-
+or, after simplifying the repository's counted-drain formula
 \[
-\operatorname{drainCost}(k)=6\cdot4^k+42\cdot2^k-12k-48.
+\operatorname{drainCost}(k)=6\cdot4^k+42\cdot2^k-12k-48,
 \]
-
-Across z=1,2,3,4 and several A,L pairs, the first q4-checkpoint cycle cost matches
-
 \[
-\boxed{C_1=\operatorname{drainCost}(2^z-1)+12(S_e+2^z+z)+2}
+C_1(z)=6\cdot4^{2^z-1}+42\cdot2^{2^z-1}+12z+38.
 \]
 
-or equivalently
-
+The first-cycle q4/read-0 event count matches
 \[
-C_1=6\cdot4^{2^z-1}+42\cdot2^{2^z-1}+12(S_e+z)-34.
+E_1(z)=6\cdot4^{2^{z-1}-1}+2.
 \]
 
-The first-cycle q4/read-0 event count matches E_1(z)=6\cdot4^{2^{z-1}-1}+2. Checked data:
+Checked data:
 
 | z | (A,L) cases | first-cycle steps | q4 events |
 |---:|---|---:|---:|
 | 1 | (3,2), (4,2) | 158 | 8 |
 | 2 | (3,2), (4,2), (2,4) | 782 | 26 |
-| 3 | (3,2), (4,2) | 103,754 | 386 |
-| 4 | (3,2), (4,2) | 6,443,827,286 | 98,306 |
+| 3 | (3,2), (4,2), (3,4) | 103,754 | 386 |
+| 4 | (3,2), (4,2), (3,4) | 6,443,827,286 | 98,306 |
 
-For z=4, the sparse block simulator reaches checkpoint 2 at step 6,443,829,913 for (A,L)=(3,2), and at 6,443,829,925 for (4,2); both cycle costs are identical. The left checkpoint frame is checked at both endpoints.
+For z=3,(A,L)=(3,4), checkpoints 1 and 2 occur at steps 1,055 and 104,809. For z=4, the second checkpoint occurs at 6,443,829,913 for (3,2), 6,443,829,925 for (4,2), and 6,443,829,937 for (3,4); all three first-cycle costs are identical. The left checkpoint frame is checked at both endpoints.
 
-For j=1, 2K_1(z)+1=2^z-1, so the first-cycle law is exactly the existing counted-drain cost at width 2K_1+1 plus the displayed frame overhead. This strongly suggests a counted-drain subrun, but no source-level decomposition has yet been proved.
+For j=1, 2K_1(z)+1=2^z-1, so the first-cycle law is exactly the existing counted-drain cost at width 2K_1+1 plus the displayed 12(2^z+z+6)+2 frame overhead. This strongly suggests a counted-drain subrun, but no source-level decomposition has yet been proved.
 
 For later cycles, the conjectured width remains 2K_j(z)+1. For example, z=2,j=2 has K=3, drainCost(7)=103,548, and observed cycle cost 103,810 (overhead 262); z=3,j=1 has the same drain width and observed cost 103,754 (overhead 206). The later-cycle overhead formula and the exact prefix/postlude decomposition remain open.
 
