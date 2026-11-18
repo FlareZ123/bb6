@@ -83,3 +83,49 @@ Therefore the exhaustive source-parent alternatives reduce to the disjoint parit
 **Odd q:** every possible source predecessor is either the direct parent or an odd-`a'` bounce parent (again with its original unbounded depth witness).
 
 This is stronger than merely removing the exceptional `a'=0,1` cases: it eliminates the entire opposite-parity bounce family in each q sector. It is an exact structural theorem conditional on the displayed B2 parameterization and the residual congruences; it is not a blank-reachability exclusion. The Lean proof has not yet been compiled.
+
+
+## Exact 2-adic root-index formula for the B2 depth
+
+The q≥3 fan can be tied directly to the original residual root parameter, rather than leaving u as a free-looking parameter.
+
+On this B2 cylinder,
+`h=8+128u`. The already-proved affine root relation `w≡2496h+3073 (mod 8192)` gives
+`w=6657+8192n` for some n. Since `t=39+64h=551+8192u`, substitution into the authentic residual identity yields the **exact** equation
+```
+18018 + 211*u + 22155*n = 20 * 2^(E-13),
+E = 201 + 3360*w.
+```
+Indeed, the constant term in the original residual equation is
+`211*551 + 1360 + 22155*6657 = 8192*18018`.
+
+Now put `W=1113+16555u` as in the B2 parent fan. Multiplying the exact equation by 16555 and adding `211*1113` gives
+```
+211*W = -21*(14193007 + 17465525*n)
+        + 82775*2^(E-11).
+```
+Both 21 and 82775 are odd. Moreover
+`0 < 14193007+17465525*n < 2^(E-11)` for every natural n: the left side is less than `2^25*(n+1) ≤ 2^(n+25)`, while `E-11=190+3360*w > n+25`. The two terms on the right therefore have distinct 2-adic valuations, and 211 is odd. Consequently the exact valuation identity is
+[
+\boxed{v_2(1113+16555u)=v_2(14193007+17465525n).}
+]
+
+For q≥3, the mod-105 calculation already proves that `Q=(a+3)/2` is odd. Since
+`W=2^(2q-3)*Q`, it follows that
+[
+\boxed{v_2(14193007+17465525n)=2q-3.}
+]
+Thus q is uniquely determined by the root index n whenever the q≥3 branch exists. In particular, q≥3 requires `n≡5 (mod 8)`. The exact q-strata are dyadic annuli: for each q, n lies in one residue class modulo `2^(2q-3)` but not the unique lift modulo `2^(2q-2)`.
+
+The first exact classes are:
+
+| q | Exact root-index condition |
+|---:|---|
+| 3 | n ≡ 5 (mod 16) |
+| 4 | n ≡ 13 (mod 64) |
+| 5 | n ≡ 109 (mod 256) |
+| 6 | n ≡ 493 (mod 1024) |
+| 7 | n ≡ 1005 (mod 4096) |
+| 8 | n ≡ 11245 (mod 16384) |
+
+This is a root-sensitive valuation normal form for the entire unbounded q≥3 B2 fan. It proves that the q-depth is not an independent search parameter: it is exactly the valuation of one odd affine function of the original root index. It does not by itself exclude the q-strata or the low q=0,1,2 branches. The derivation is arithmetic from the exact residual identity and the already source-certified affine root congruence; this new valuation identity has not yet been Lean-compiled.
