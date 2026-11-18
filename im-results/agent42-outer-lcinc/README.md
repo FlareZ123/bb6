@@ -1,6 +1,6 @@
 # TM63 outer `LC_Inc` reset-prefix: counted source decomposition
 
-**Status: a universal original-TM2 run theorem to an exact nested tape frame now exists in `OuterLCIncPostludeSource.lean`; identifying that frame with the canonical S1/S0 endpoint remains open.** This remains intermediate work in `im-results/`, not a publishable result.
+**Status: the universal original-TM2 run theorem to the nested frame exists, and a full pointwise canonical-endpoint proof has now been drafted in `OuterLCIncCanonicalEndpoint.lean`; the new module is uncompiled and unaccepted.** This remains intermediate work in `im-results/`, not a publishable result.
 
 
 ## Current formal status (2026-11-18)
@@ -34,13 +34,12 @@ s1Config L 0 1 (a+b+2) (2^b-1) 0 (h+3*b+5)
 binDec (a+b+2) (2^b-1) = d0pow b ++ d1pow (a+2)
 ```
 
-and the new intermediate file
-`OuterLCIncCanonicalEndpoint.lean` starts the pointwise endpoint proof.
-Its current theorem candidate
-`outerLCIncSourceT3_leftFacing_m2` identifies the zero-valuation H-run's
-far-left output with `d1pow L ++ lh`, using the source counter-cell and
-marker-frame preservation lemmas. **That file has not been Lean-compiled**;
-its declaration is not yet a verified theorem.
+The new intermediate file
+`OuterLCIncCanonicalEndpoint.lean` now contains the full pointwise
+endpoint proof chain, beginning with
+`outerLCIncSourceT3_leftFacing_m2` for the zero-valuation H-run and ending
+with `outerLCIncPostludeTape_eq_marker1S0_m2`. **The entire file has not
+been Lean-compiled**; none of its declarations is yet a verified theorem.
 
 The endpoint proof has now been written as a source-level candidate in
 `OuterLCIncCanonicalEndpoint.lean`. It exports the following chain:
@@ -91,6 +90,15 @@ current invocation return tool-level `ClientError`, and no CI dispatch has
 been made. A fresh local preflight, full dependency-chain compile, and
 exported axiom audit are still required. The older 2,400-case simulator
 remains computational evidence only.
+
+## Positive-z counted-drain structural bridge
+
+See `PositiveZFirstCycleDrainBridge.md`. The observed first-cycle cost
+is arithmetically consistent with `s0Config_counted_drain_closed` at
+all-ones width `K=2^z-1`, whose actual binary input value is
+`2^K-1), plus a linear overhead `12*(2^z+z+6)+2`. This is a
+parameterization hypothesis only: the q4 checkpoint's right nested counter
+and exact transition decomposition remain open.
 
 ## Candidate exact transition
 
@@ -229,17 +237,21 @@ for the first block, otherwise the previous triple's third cell) and
 the next triple's first two zero cells. The final triple is consumed by
 the fixed return tail.
 
-The remaining universal proof obligations are now sharply localized:
-- establish the five-step bridge's four-one/zero input from the three
-  marker-frame outputs;
-- prove the E-scan's (3a+m+3) one-run from the shifted unary block,
-  marker suffix, and original right 111;
-- lift the (b+1) B/F/D sweep and prove the (b)-block d0 prefix;
-- obtain the full `lbinDecHRunTape` output shape
-  `[1] ++ d0^r ++ d1` plus preserved exterior, then identify it with
-  `binDec L (n-1)` using `binDec_sub_one_carryPrefix`;
-- compose the finite tail frame and pointwise tape identities into the
-  complete `s1Config` endpoint.
+The universal pointwise obligations in this historical decomposition
+are now addressed by source-level candidates in
+`OuterLCIncCanonicalEndpoint.lean`:
+- the five-step bridge's four-one/zero input is extracted from the
+  marker-frame output;
+- the E-scan's `3a+5` one-run is aligned with the shifted unary block;
+- the `b+1` B/F/D sweep is split by residues modulo 3 to identify the
+  `d0pow b` prefix;
+- the zero-valuation H-run is identified with `d1pow L ++ lh`;
+- the fixed tail frame and both pointwise tape streams are composed into
+  the marker-1 S1/S0 endpoint.
 
-This decomposition is a proof plan, not yet a universal theorem. The
-2,400-case simulator remains computational evidence only.
+These are still **uncompiled source candidates**, not accepted universal
+theorems. The immediate proof-engineering obligation is a local compile of
+the full dependency closure and an exported `#print axioms` audit. The
+subsequent mathematical obstacle is the positive-z q4 macro described
+above, not the already-drafted nested-frame endpoint. The 2,400-case
+simulator remains computational evidence only.
