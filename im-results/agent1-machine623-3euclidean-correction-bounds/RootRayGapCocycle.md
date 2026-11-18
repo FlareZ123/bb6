@@ -162,8 +162,8 @@ The RE row above uses the initial evalA first counter \(2k+3\) as its baseline. 
 ## Sharpened exact predecessor strips from the two-statistic cocycle
 
 The drain normal form also gives a uniform depth bound for the statistics above. Let \(\ell\) be least with \(\tau(\ell)\ge q+3\), where \(q=m\) is the smaller current counter.
-- In LO/LE/RO, the drain block \(b\) satisfies \(b\le q+3\). Hence \(2b-1<3^\ell\). The parity-matched valuation length is at most \(\ell+1\); its ternary normal-form integer has fewer than \(3^{\ell+1}\) and at most \(\ell+1\) digits. Therefore \(|D|\le\ell+1\) and \(r\le\ell+1\).
-- In RE, let \(v\) be the initial low-order-1 run consumed by evalA. Its signed first-counter drop from baseline \(2k+3\) is \(v+1-2\varepsilon\), of absolute value at most \(v+1\). The remaining quotient has valuation length \(L_2\le\ell-v\): this follows from \(2q-1<3^\ell\) after removing the \(v+1\) consumed ternary positions, with at most one extra exponent for the parity match. Thus \(|D|\le v+1+L_2\le\ell+1\) and \(r\le L_2\le\ell+1\). The cone budget ensures the initial evalA run succeeds rather than taking its early-exit branch.
+- In LO/LE/RO, the drain block \(b\) satisfies \(b\le q+3\). Hence \(2b-1<3^\ell\). The parity-matched valuation length is at most \(\ell+1\); its ternary normal-form integer has fewer than \(3^{\ell+1}\) and at most \(\ell+1\) digits. Therefore \(|D|\le\ell+1\) and \(r\le\ell\).
+- In RE, let \(v\) be the initial low-order-1 run consumed by evalA. Its signed first-counter drop from baseline \(2k+3\) is \(v+1-2\varepsilon\), of absolute value at most \(v+1\). The remaining quotient has valuation length \(L_2\le\ell-v\): this follows from \(2q-1<3^\ell\) after removing the \(v+1\) consumed ternary positions, with at most one extra exponent for the parity match. Thus \(|D|\le v+1+L_2\le\ell+1\) and \(r\le L_2\le\ell\). The cone budget ensures the initial evalA run succeeds rather than taking its early-exit branch.
 
 Now suppose the output state is in the source terminal window. The TerminalRatio4 bounds with \(K=n+6\), translated to the old-ray distance, are:
 \[
@@ -172,22 +172,22 @@ W_{\rm LE}=6n+31,\quad
 W_{\rm RO}=(6n+19)/2,\quad
 W_{\rm RE}=(9n+25)/2.
 \]
-Using the exact \(h'\) table, a left output gives a predecessor far residual \(u=g-9m\), while a right output gives a predecessor near residual \(v=4g+9m\). Substituting \(|D|,r\le\ell+1\) and \(\ell\le n+1\) gives:
+Using the exact \(h'\) table, a left output gives a predecessor far residual \(u=g-9m\), while a right output gives a predecessor near residual \(v=4g+9m\). Substituting \(|D|\le\ell+1\), \(r\le\ell\), and \(\ell\le n+1\) gives:
 
 | Input sector | Output | Predecessor residual | Absolute bound |
 |---|---|---|---:|
-| LO | left | \(g-9m\) | \(23n+148\) |
-| LO | right | \(4g+9m\) | \(20n+137\) |
-| LE | left | \(g-9m\) | \(23n+104\) |
-| LE | right | \(4g+9m\) | \(20n+92\) |
-| RO | left | \(g-9m\) | \(20n+45\) |
-| RO | right | \(4g+9m\) | \(14n+53\) |
-| RE | left | \(g-9m\) | \(22n+75\) |
-| RE | right | \(4g+9m\) | \(17n+41\) |
+| LO | left | \(g-9m\) | \(23n+140\) |
+| LO | right | \(4g+9m\) | \(20n+135\) |
+| LE | left | \(g-9m\) | \(23n+96\) |
+| LE | right | \(4g+9m\) | \(20n+90\) |
+| RO | left | \(g-9m\) | \(20n+37\) |
+| RO | right | \(4g+9m\) | \(14n+51\) |
+| RE | left | \(g-9m\) | \(22n+67\) |
+| RE | right | \(4g+9m\) | \(17n+39\) |
 
 Thus every terminal event with canonical depth \(n\ge10\) has a predecessor in one of the two strips
 \[
-|g-9m|\le 23n+148
+|g-9m|\le 23n+140
 \quad\text{or}\quad
 |4g+9m|\le 23n+148.
 \]
@@ -202,3 +202,8 @@ The RE initial-run formula uses Agent41's source-compiled evalA_3adic_run theore
 - Agent49 DrainLinearLogSource.drainB_first_lower_log / drainB_first_upper_log bound the signed first-counter drop;
 - Agent22 ExactDrainCocycleDepthSource.drainB_weighted_depth bounds the outer iteration count.
 Those draft modules are not both included in the existing pinned source-CI workflows yet. Therefore the numerical strip table above is an exact derivation from the stated lemmas, but the combined \(|D|,r\le\ell+1\) wrapper and the sharpened 23n+148 strip have not yet been source-CI certified. Do not describe them as fully formalized until that wrapper is compiled against the pinned original machine.
+
+
+### Iteration-count refinement
+
+The outer-count estimate can be sharpened from \(r\le\ell+1\) to \(r\le\ell\). For LO/LE/RO, the drain block \(b<3^\ell\), so Agent22's drainB_weighted_depth lemma gives \(r\le\ell\). In RE, after the initial \(v+1\) evalA digits, the residual block is \(b_0<3^{\ell-v-1}\), so the same lemma gives \(r\le\ell-v-1\le\ell\). The signed first-counter bound remains \(|D|\le\ell+1\). This tightens the common predecessor strip to \(23n+140\).
