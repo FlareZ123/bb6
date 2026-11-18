@@ -527,10 +527,19 @@ theorem target_hidden_le4 (m h u : Nat) (hm3 : m%3≠0)
     norm_num at hmod
 
 theorem blank_even_cannot_hit_gate4 (m : Nat) (hm : Gate4 m) :
-    ¬ SheepEvenReach 10 (2^(54*m)) := by
+    ¬ SheepEven.EvenReach 10 (2^(54*m)) := by
   rcases hm with ⟨hm3,hm2,hm4,hm7,hm9,hm15⟩
   intro hreach
-  rcases SheepEvenReachInverse.blank_even_inverse_cases hreach with hspec | hgen
+  have hmpos : 1 ≤ m := by omega
+  have hbig : 10 < (2:Nat)^(54*m) := by
+    have hle : (2:Nat)^4 ≤ (2:Nat)^(54*m) :=
+      Nat.pow_le_pow_right (by decide) (by omega)
+    norm_num at hle
+    omega
+  have hnot : (2:Nat)^(54*m) ≠ 10 := by omega
+  rcases SheepEvenReachInverse.blank_even_inverse_cases
+      (y := (2:Nat)^(54*m)) (d := 1) (c := 0) (n := 54*m)
+      hreach hnot (by simp) with hspec | hgen
   · rcases hspec with ⟨a,h,u,ha,hfactor,hu,hx,hy⟩
     exact Agent17SheepSpecial.special_no_even_power a h u (54*m)
       ha hfactor hu hy.symm
@@ -538,16 +547,25 @@ theorem blank_even_cannot_hit_gate4 (m : Nat) (hm : Gate4 m) :
     have hh : h≤4 := target_hidden_le4 m h u hm3 hy
     exact no_generic_all_a h a m v hh ha hm2 hm4 hm7 hm9 hm15 heq
 
-theorem blank_even_cannot_hit_gate4_raw (m : Nat) (hm : Gate4 m) :
-    ¬ BB6.SheepSource.SheepHaltsAtPower (54*m) := by
-  intro hhalt
-  exact blank_even_cannot_hit_gate4 m hm
-    (EvenSourceBridge.sheep_halting_to_even_reach hhalt)
+theorem blank_even_cannot_hit_gate4_source (m : Nat) (hm : Gate4 m) :
+    ¬ BB6.Agent22.Sheep.Reach 5 (2^(54*m)) := by
+  intro hreach
+  obtain ⟨n,hsteps⟩ := BB6.Agent16.SheepEvenSource.reach_to_even_steps hreach
+  have hmpos : 1 ≤ m := by
+    rcases hm with ⟨hm3,_,_,_,_,_⟩
+    omega
+  have he : (2^(54*m))%2=0 := by
+    cases 54*m with
+    | zero => omega
+    | succ k => simp [Nat.pow_succ]
+  have hblank : SheepEven.EvenReach 10 (2^(54*m)) :=
+    (SheepEven.blank_even_reach_iff he).mp ⟨n,hsteps⟩
+  exact blank_even_cannot_hit_gate4 m hm hblank
 
 #print axioms target_hidden_le4
 #print axioms no_high_source
 #print axioms no_generic_all_a
 #print axioms blank_even_cannot_hit_gate4
-#print axioms blank_even_cannot_hit_gate4_raw
+#print axioms blank_even_cannot_hit_gate4_source
 
 end SheepPowerH4Source
