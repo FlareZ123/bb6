@@ -39,6 +39,74 @@ theorem tm63_source_increment_dispatch_complete
 
 /-- The complete SectionResult stage is an original-TM2 run, conditional
 only on acceptance of the exact source imports used by this dispatcher. -/
+/-- Run every source increment except the final one, leaving the
+counter at one for a terminal counted-reset prefix. -/
+theorem sectionResult_run_to_index_one_of_source_macro
+    (L k m a b : Nat) (head : Int)
+    (hbound : k+1 < 2^L) (ha : 0 < a)
+    (hmacro : ∀ (n mm aa bb : Nat) (hh : Int),
+      0 < n → n < 2^L → 0 < aa →
+      run tm2 (proposedIncrementCost (mm%3) n aa bb)
+        (s1Config L n (mm%3) aa 0 bb hh) =
+      some (s1Config L (n-1) (nextMarker mm)
+        (nextExponent mm aa bb) 0 (nextRight bb) (hh+5+3*bb))) :
+    run tm2 (sectionResult k m a b).cost
+      (s1Config L (k+1) (m%3) a 0 b head) =
+    some (s1Config L 1
+      (sectionResult k m a b).marker
+      (sectionResult k m a b).exponent 0
+      (sectionResult k m a b).right
+      (sectionHeadAfter k b head)) := by
+  induction k generalizing m a b head with
+  | zero =>
+      simp [sectionResult, sectionHeadAfter]
+  | succ k ih =>
+      have hstep := hmacro (k+2) m a b head (by omega) (by omega) ha
+      have hbound' : k+1 < 2^L := by omega
+      have ha' : 0 < nextExponent m a b := by
+        unfold nextExponent
+        omega
+      have hrest := ih (nextMarker m) (nextExponent m a b)
+        (nextRight b) (head+5+3*b) hbound' ha'
+      have hnorm : (nextMarker m)%3 = nextMarker m := by
+        simp [nextMarker]
+      have hrest' :
+          run tm2
+            (sectionResult k (nextMarker m) (nextExponent m a b)
+              (nextRight b)).cost
+            (s1Config L (k+1) (nextMarker m) (nextExponent m a b)
+              0 (nextRight b) (head+5+3*b)) =
+          some (s1Config L 1
+            (sectionResult k (nextMarker m) (nextExponent m a b)
+              (nextRight b)).marker
+            (sectionResult k (nextMarker m) (nextExponent m a b)
+              (nextRight b)).exponent
+            0
+            (sectionResult k (nextMarker m) (nextExponent m a b)
+              (nextRight b)).right
+            (sectionHeadAfter k (nextRight b) (head+5+3*b))) := by
+        simpa [hnorm] using hrest
+      have htotal := run_compose_local hstep hrest'
+      simpa [sectionResult, sectionHeadAfter] using htotal
+
+/-- The complete dispatcher proves the SectionResult countdown down to
+index one, so the final reset prefix can be handled separately. -/
+theorem sectionResult_run_to_index_one_complete
+    (L k m a b : Nat) (head : Int)
+    (hL : 4 ≤ L) (hbound : k+1 < 2^L) (ha : 0 < a) :
+    run tm2 (sectionResult k m a b).cost
+      (s1Config L (k+1) (m%3) a 0 b head) =
+    some (s1Config L 1
+      (sectionResult k m a b).marker
+      (sectionResult k m a b).exponent 0
+      (sectionResult k m a b).right
+      (sectionHeadAfter k b head)) := by
+  apply sectionResult_run_to_index_one_of_source_macro
+    L k m a b head hbound ha
+  intro n mm aa bb hh hn hbound' haa
+  exact tm63_source_increment_dispatch_complete
+    L hL n mm aa bb hh hn hbound' haa
+
 theorem sectionResult_run_complete
     (L n m a b : Nat) (head : Int)
     (hL : 4 ≤ L) (hbound : n < 2^L) (ha : 0 < a) :
@@ -56,6 +124,7 @@ theorem sectionResult_run_complete
     L q aa bb hh hLq hq hboundq haa
 
 #print axioms tm63_source_increment_dispatch_complete
+#print axioms sectionResult_run_to_index_one_complete
 #print axioms sectionResult_run_complete
 
 end BB6Coverage.Agent24ChampionTime
