@@ -487,3 +487,22 @@ RestartWallTelescoping.lean now also proves source_edge_recurrence: source mass 
 ### High-depth half-defect bound
 
 Added restart_half_defect_lt to RestartWallTelescoping.lean. From source mass, positive restart wall defect F=b+2m+2n+8-12P, and odd child d, it proves d-1=2*xhalf with xhalf<P. This is exactly the hypothesis needed by restart_wall_nonnegative_N; the source theorem HighDepthRestartSource already proves the defect positivity. The remaining source-level task is now entirely the aggregate reset/append induction over OddCone.
+
+
+### Concrete OddCone aggregate induction design
+
+The source lift can be implemented with a dependent structure indexed by the current OddCone endpoint (b,d,m):
+RestartAggregate n b d m with fields m0,c,x0,xhalf,L,S,T and proofs:
+- c=m0+n;
+- m=m0+L;
+- x0=2*xhalf and xhalf<2^n;
+- x0+14*2^n*S = 2^L*(d-1)+2*((c+3)*S+T).
+
+Use a status with either NoDeep (no high edge in the prefix) or Active (HasDeep plus RestartAggregate).
+Induction over OddCone parent constructors:
+- If t>=3, reset to m0=mp+t+1, c=m0+n, x0=d_child-1=c_edge+3, xhalf=(c_edge+3)/2, L=S=T=0. Obtain xhalf<2^n from defect_deep_positive + child source mass via restart_half_defect_lt; c_edge odd gives x0 even.
+- If t<=2 and status is NoDeep, remain NoDeep.
+- If t<=2 and status is Active, source_edge_recurrence plus m_parent=m0+L and c=m0+n gives hStep: (d_parent-1)+14P=2^(t+1)*(d_child-1)+2*(c+3+L). Apply restart_aggregate_step to update (L,S,T) to (L+t+1,S+2^L,T+L*2^L); retain m0,c,x0,xhalf.
+At the wall, hdeep rules out NoDeep. In Active, source_wall_endpoint and m=m0+L, c=m0+n yield d_wall-1=2P+2L+2c+6. Then restart_wall_identity_from_invariant gives the additive wall identity and restart_wall_nonnegative_N gives 2^L<=7S. This completes the arbitrary-restart product nonnegativity at source level.
+
+The scalar pieces are already kernel-checked in RestartWallTelescoping.lean; only this indexed OddCone induction remains. Avoid redoing depth bounds or offset congruences.
