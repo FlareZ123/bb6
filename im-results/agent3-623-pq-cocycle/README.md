@@ -90,3 +90,68 @@ This does **not** by itself exclude the terminal window: the allowed \(D,r\) are
 ## Derivation source
 
 The sector correction table and terminal-distance normalizations are the algebraic content of im-results/agent1-machine623-3euclidean-correction-bounds/RootRayGapCocycle.md; the valuation/digit interpretation is in im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitStack.md and im-results/agent41-623-3euclidean/DrainValuationNormalForm.md. The equations above are obtained by substituting \(A=p+\beta\), \(E=3q+\delta\) and sorting the two outputs. This note does not claim an independent Lean compilation.
+
+
+## Sector-adapted coordinate with no signed-drop term
+
+The coordinate \(K=2p+3q\) has a useful branch identity:
+\[
+K'=K+S\quad\text{on left output},\qquad
+K'+3q'=2(K+S)\quad\text{on right output}.
+\]
+Define a sector-adapted coordinate
+\[
+H=\begin{cases}
+K,&\text{left-oriented input (LO/LE)},\\
+K+3q,&\text{right-oriented input (RO/RE)}.
+\end{cases}
+\]
+Let \(\epsilon=0\) for left-oriented input and \(\epsilon=1\) for right-oriented input, and let \(\lambda=1\) for left output and \(\lambda=2\) for right output. The next state's orientation agrees with the output orientation, so the definition is consistent at the next step. The exact update is
+\[
+\boxed{H'=\lambda(H-3\epsilon q+S),\qquad S=2r+c_s.}
+\]
+In particular \(H\equiv2p\pmod3\), and
+\[
+H'\equiv\lambda(H+2r+c_s)\pmod3.
+\]
+The signed-drop statistic \(D\) disappears from this coordinate update entirely; the old scale \(q\) enters only as a multiple of \(3\) when the input is right-oriented.
+
+## Second-order recurrence in a right-output run
+
+On any sequence of consecutive right-output canonical transitions, the exact branch equations are
+\[
+p_{n+1}=3q_n+T_n-p_n,\qquad q_{n+1}=p_n+\beta_n.
+\]
+Eliminating \(p_n\) yields
+\[
+\boxed{q_{n+2}+q_{n+1}-3q_n=c_n,\qquad c_n=\delta_n+\beta_{n+1}.}
+\]
+The characteristic polynomial is \(X^2+X-3\). In \(\mathbb Z_3\), choose \(\sqrt{13}\equiv1\pmod3\) and set
+\[
+\lambda=\frac{-1-\sqrt{13}}2\equiv2\pmod3,\qquad
+\mu=\frac{-1+\sqrt{13}}2=-\frac3\lambda.
+\]
+Then \(\lambda\) is a unit, \(v_3(\mu)=1\), and \(\mu\equiv3\pmod9\). With \(w_n=q_{n+1}-\lambda q_n\), the recurrence becomes
+\[
+\boxed{w_{n+1}=\mu w_n+c_n.}
+\]
+Therefore \(w_n\) modulo \(3^j\) depends only on the last \(j\) correction terms:
+\[
+w_n\equiv c_{n-1}+\mu c_{n-2}+\cdots+\mu^{j-1}c_{n-j}
+\pmod{3^j}.
+\]
+This is an exact 3-adic finite-memory representation. It is conditional on consecutive right outputs; the source safe-right preservation lemmas are the relevant way to establish that hypothesis for a root tail.
+
+For a right-oriented state, the terminal distance satisfies
+\[
+q_{n+1}-3q_n=
+\begin{cases}
+2h_n+5-D_n&\text{RO},\\
+2h_n+3-D_n&\text{RE}.
+\end{cases}
+\]
+Since \(\lambda+\lambda^2=3\), this is equivalently
+\[
+w_n-\lambda^2q_n=q_{n+1}-3q_n.
+\]
+Thus a terminal event \(|h_n|\le W_n\) forces \(w_n-\lambda^2q_n\) to be an ordinary integer of size \(O(W_n+\ell_n)\), using the source depth bound \(|D_n|\le\ell_n+1\). The contraction recurrence reduces the remaining 3-adic question to the correlated recent correction sequence \(c_i=\delta_i+\beta_{i+1}\). It does not yet prove separation.
