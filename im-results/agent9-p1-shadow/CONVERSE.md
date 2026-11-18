@@ -122,3 +122,6 @@ The current source file still proves only the direct-width candidate stated abov
 N-M\ge2,\qquad L+M\le28\cdot2^{N-M}-7,\qquad L\le2z_0+1.
 \]
 It uses the additional invariant \(L+m\le2z+1\) and the fact that each constructed edge has child cost \(m+t+1\le M\). This gives a substantially wider finite budget, but it is only a paper derivation: no corresponding Lean theorem or successful compiler/CI run exists yet. The existing theorem and all claims above remain limited to the narrower condition in the Lean source.
+
+
+For the L1 feeder, the same paper argument can use the stronger root alpha bound \(\alpha_0=42\), since every update to alpha is nonnegative. Thus its paper-only budget improves further to \(L+M\le42\cdot2^{N-M}-7\). The common coefficient 28 remains the L0 bound. Neither extension is present in the Lean source.
