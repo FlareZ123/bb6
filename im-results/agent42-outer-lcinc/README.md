@@ -106,10 +106,16 @@ checkpoint has:
 - first-checkpoint time matching
   `drainCost(z,0)+drainCost(2^z-1,0)+12*(A+L+z)+107`.
 
-The two-drain interpretation (initial z, then all-ones value
-`2^z-1) at width z, then a linear bridge) is a structural hypothesis:
-the intermediate S0 configurations have not been proved. This is separate
-from the later first-cycle drain at width `2^z-1` described below.
+The exact intermediate S0 shapes are now identified computationally
+in `PositiveZCheckpointNormalForm.md`: the initial drain output is
+`s0Config ell0 A 0 z 0`, the second-drain input is
+`s0Config ell1 z (2^z-1) 0 (3*z+5)`, and its output is
+`s0Config ell1 z 0 (2^z-1) (3*z+5)`. Both drain stages match existing
+`S0CountedDrain` theorem interfaces. The setup macro
+(`12*(A+L)+3*z+97`) and final tail (`9*z+10`) are still unproved
+transition macros; all observations remain computational, not formal.
+This is separate from the later first-cycle drain at width
+`2^z-1` described below.
 
 
 ## Positive-z counted-drain structural bridge
