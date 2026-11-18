@@ -136,7 +136,9 @@ function runCase(A, L, z) {
   const preBridge = 12 * (A + L) + 3 * z + 97;
   const secondValue = 2 ** z - 1;
   const secondDrain = drainCost(secondValue);
-  const postlude = 9 * z + 10;
+  const postSweep = 9 * z;
+  const postBridge = 10;
+  const postlude = postSweep + postBridge;
 
   function runSteps(count) {
     for (let i = 0; i < count; i++) {
@@ -191,9 +193,23 @@ function runCase(A, L, z) {
       ),
   });
 
-  if (!runSteps(postlude)) {
-    return { ok: false, A, L, z, failedPhase: "postlude" };
+  if (!runSteps(postSweep)) {
+    return { ok: false, A, L, z, failedPhase: "postlude left sweep" };
   }
+  const bridgeInputFrame = Array.from(
+    { length: 7 }, (_, i) => ones.has(i) ? 1 : 0
+  ).join("");
+  checks.push({
+    phase: "postlude bridge input",
+    ok: state === 3 && head === 5 && bridgeInputFrame === "0010110",
+  });
+
+  if (!runSteps(postBridge)) {
+    return { ok: false, A, L, z, failedPhase: "postlude fixed bridge" };
+  }
+  const bridgeOutputFrame = Array.from(
+    { length: 7 }, (_, i) => ones.has(i) ? 1 : 0
+  ).join("");
   if (state === 4 && !ones.has(head)) q4Events++;
 
   const M = 2 ** A * (2 ** (L + 2) - 1);
@@ -215,6 +231,10 @@ function runCase(A, L, z) {
     firstDrain + secondDrain + 12 * (A + L + z) + 107;
   const expectedQ4Events = 3 * 2 ** z + 3 * z + 5;
 
+  checks.push({
+    phase: "postlude bridge output",
+    ok: state === 4 && head === 1 && bridgeOutputFrame === "1000011",
+  });
   checks.push({
     phase: "first q4 checkpoint",
     ok: state === 4 && head === 1 && !ones.has(1) &&
