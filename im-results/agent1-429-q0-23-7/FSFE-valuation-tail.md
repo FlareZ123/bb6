@@ -83,17 +83,16 @@ The repeated FSFE path has a clean 2-adic valuation clock: every completed block
 The next mathematically discriminating task is to close the two surviving sibling cylinders a=29,93 (mod 128) under the full inverse grammar, or find a stronger source-root invariant that eliminates them. Separately, the residual valuations 1,2,3,4 require an exact terminal-tail table. Do not promote the repeated FSFE branch to a proof of nonreachability until every sibling and terminal tail is closed.
 
 
-## Translation of the mod-256 sibling cylinders to the q0 parameter
+## Domain check when translating the mod-256 sibling table back to q0
 
-For the initial q0 family with u=16*t+9, modulo 256:
+For u=16*t+9, modulo 256:
     a0 = 21 - 128*t,
-    w0/16 = -24*t - 16.
-After one FSFE block,
+    w0/16 = -24*t - 16,
+and after one FSFE block
     a1 = a0 + 5*w0/16 - 8 = 189 + 8*t (mod 256).
 
-The previous sibling analysis leaves only a1=157 or 93 mod 256. These equations give
-    t = 28 (mod 32) or t = 20 (mod 32),
-respectively, hence
-    u = 457 (mod 512) or u = 329 (mod 512).
+However, the preceding mod-256 sibling table at the second block start assumes w1=w0/16 is divisible by 256. Since v2(w1)=v2(3u+5)-1=3+v2(3*t+2), this requires v2(3*t+2)>=5, equivalently t=10 (mod 32). In that case a1=13 (mod 256), which is the already-excluded a=13 (mod 128) row of the sibling table.
 
-This is the surviving parameter-cylinder refinement for the competing F sibling at the second block start. It applies to the non-final first-block case; both resulting t classes are even, as required for w0 divisible by 256. It does not exclude the main FSFE branch or the other q0 residue sectors.
+The formal residue equations a1=157 or 93 (mod 256) would give t=28 or20 (mod 32), but these have v2(3*t+2)=1 and hence v2(w1)=4. They are outside the table's w1-divisible-by-256 hypothesis. They must not be described as surviving or excluded by that table.
+
+Therefore, for the subcase where the second block start satisfies 256|w1, the competing sibling is excluded; the final-block cases with v2(w1) in {4,5,6,7} remain to be analyzed with their exact lower-valuation grammar. This is a domain-restricted branch reduction, not a q0 nonreachability result.
