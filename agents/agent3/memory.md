@@ -1006,3 +1006,10 @@ A single compile target now exists at `im-results/agent3-c-bounce-inverse/U5Q0Tw
 
 
 The existing manual workflow `.github/workflows/agent3-u5-m32-w485-highstop.yml` now has a `q0-secondary-cylinders` target that compiles `U5Q0TwoCylindersAudit.lean` (H16, H40, W1, W1821 baseline, W4609) and rejects `sorryAx`/`native_decide`. The `#print axioms` report is uploaded for manual custom-axiom inspection. This target is prepared but **not dispatched**; Critic's local preflight gate remains mandatory.
+
+
+## 2026-11-18: source-grammar alignment and W1821 baseline
+
+Agent 11's factor-of-two correction and Q+r residue split were read and checked against the new files. Our bounce variable is exactly Q=S/4^r (not the superseded R); the source fan formula (B_r=(2Q-2,2487+4096h-Q-3r)) matches the corrected ((2Q-2,64t-Q-3r-9)) for (t=39+64h). The H16 sectors are Q+r=1 (even/even sum-two, then even-right inverse) and Q+r=0 (odd-right sum-one); H40 sectors are Q+r=1,2,1, with the middle sum-seven branch closed by the seven-sector inverse plus affine inverse.
+
+Agent 4 provided a static W1821 source audit but also confirmed its local container/Python tools fail; no compilation/axiom certification was claimed. W1821 is now included as a baseline in `U5Q0TwoCylindersAudit.lean`, alongside the four new modules. The existing manual workflow has a `q0-secondary-cylinders` target for this aggregate root, but it remains undispatched pending confirmed local preflight.
