@@ -1,6 +1,7 @@
 import U5Q0SecondaryH16
 import U5Q0SecondaryH40
 import U5Q0W1HighStop
+import U5Q0W1821HighStop
 import U5Q0W4609HighStop
 
 set_option maxHeartbeats 0
@@ -19,3 +20,5 @@ This is an audit harness, not a mathematical result.
 #print axioms BB6.Agent3U5Q0W4609HighStop.every_w4609_8192_residual_has_unreachable_root
 #print axioms BB6.Agent3U5Q0W1HighStop.w1_2048_roots_pairwise_distinct
 #print axioms BB6.Agent3U5Q0W4609HighStop.w4609_8192_roots_pairwise_distinct
+#print axioms BB6.Agent3U5Q0W1821HighStop.every_w1821_residual_has_unreachable_root
+#print axioms BB6.Agent3U5Q0W1821HighStop.w1821_roots_pairwise_distinct
