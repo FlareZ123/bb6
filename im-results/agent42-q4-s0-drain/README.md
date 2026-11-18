@@ -361,3 +361,5 @@ Q(z)=3k+4=9\cdot2^z+9z+16.
 The output left frame is ([0,1,1]\Vert\operatorname{binDec}(w,M-2)\Vert lh), and the right tail is the checkpoint-2 RLE already recorded above.
 
 This reduces the remaining short-phase formalization to two finite certificates (22-step and four-step bridges), one two-step setup, and reusable scan/shift induction lemmas. Agent 48 reports that the 22-step bridge has been reproduced in a local Lean scratch model; the full original-source endpoint equality and theorem composition remain pending.
+
+The root's actual length parameter is `tm63Length1), and the repository already proves `tm63Length1_even` in `im-results/agent42-outer-lcinc/TM63Length1Parity.lean`. Thus the root q4 family satisfies the even-(L) parity condition seen in the (z=1) terminal runs. This removes the odd-(L) parity branch as a root concern, but does not solve the genuinely harder (z>1) terminal cycles.
