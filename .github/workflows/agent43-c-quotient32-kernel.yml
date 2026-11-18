@@ -7,13 +7,19 @@ on:
         required: false
         type: boolean
         default: false
+      thin_gateway_acceptance:
+        description: 'Compile Agent 47 thin-gateway source proofs using the already verified M32 closure artifacts'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   prove-blocks:
-    if: ${{ !inputs.u5_syntax_preflight }}
+    if: ${{ !inputs.u5_syntax_preflight && !inputs.thin_gateway_acceptance }}
     name: Kernel closure shard ${{ matrix.shard }}
     runs-on: ubuntu-latest
     timeout-minutes: 50
@@ -50,7 +56,7 @@ jobs:
           retention-days: 3
 
   prove-global:
-    if: ${{ !inputs.u5_syntax_preflight }}
+    if: ${{ !inputs.u5_syntax_preflight && !inputs.thin_gateway_acceptance }}
     needs: [prove-blocks]
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -98,6 +104,52 @@ jobs:
           lean -o M32U5Cells.olean M32U5Cells.lean
           cp "$GITHUB_WORKSPACE/im-results/agent32-u5-backward-cone/M32U5Backward.lean" M32U5Backward.lean
           lean M32U5Backward.lean
+
+  thin-gateway-acceptance:
+    if: ${{ inputs.thin_gateway_acceptance }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reproduce the exact M32 source and dependency files
+        run: python3 tools/agent43_c32_certificate.py
+      - name: Reuse the eight verified M32 kernel-shard artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: a43-m32-olean-*
+          merge-multiple: true
+          path: tools
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: 44132508910
+      - name: Compile the repaired original-source thin-gateway closure
+        run: |
+          set -euo pipefail
+          cd tools
+          export LEAN_PATH=.
+          lean --version
+          lean -o CCert32Pure.olean CCert32Pure.lean
+          lean -o CLine.olean CLine.lean
+          lean -o CQuotientSound32.olean CQuotientSound32.lean
+          lean -o CMapIf32.olean CMapIf32.lean
+          lean -o CGlobal32.olean CGlobal32.lean
+          lean -o CFull32.olean CFull32.lean
+          lean -o CExclusions32.olean CExclusions32.lean
+          lean -o CSourceBridge32.olean CSourceBridge32.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent47-c-root-inverse-audit/ThinGatewayM32.lean" ThinGatewayM32.lean
+          lean ThinGatewayM32.lean | tee /tmp/agent47-thin-gateway-axioms.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/agent47-thin-gateway-axioms.log; then
+            echo "ERROR: Agent 47 thin-gateway theorem used a forbidden axiom"
+            exit 1
+          fi
+          grep -q 'BB6.Agent47ThinGateway.thin_gateway_103_unreachable' /tmp/agent47-thin-gateway-axioms.log
+          grep -q 'BB6.Agent47ThinGateway.thin_gateway_86_unreachable' /tmp/agent47-thin-gateway-axioms.log
+          echo "ACCEPTED: both original-source thin-gateway theorems have no sorryAx/native_decide dependency."
 
   u5-backward-syntax-preflight:
     if: ${{ inputs.u5_syntax_preflight }}
