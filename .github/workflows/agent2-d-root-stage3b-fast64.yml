@@ -139,8 +139,8 @@ jobs:
               exit 1
             fi
           done
-          printf '%s\\n' "$SOURCE_REF" > im-results/.d-root-source-ref
-          printf '%s\\n' "$actual_extension" > im-results/.d-root-stage3b-extension-ref
+          printf '%s\n' "$SOURCE_REF" > im-results/.d-root-source-ref
+          printf '%s\n' "$actual_extension" > im-results/.d-root-stage3b-extension-ref
           echo "Pinned mathematical source: $actual_source"
           echo "Proof extension source: $actual_extension"
 
@@ -174,7 +174,7 @@ jobs:
           unexpected = []
           with open("lean-audit.log", encoding="utf-8") as log:
               for line in log:
-                  match = re.search(r"depends on axioms:\\s*\\[([^]]*)\\]", line)
+                  match = re.search(r"depends on axioms:\s*\[([^]]*)\\]", line)
                   if match:
                       actual = {name.strip() for name in match.group(1).split(",") if name.strip()}
                       extra = actual - allowed
@@ -189,7 +189,7 @@ jobs:
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
           fi
-          find im-results -type f \\( -name '*.olean' -o -name '.d-root-source-ref' -o -name '.d-root-stage3b-extension-ref' \\) -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
+          find im-results -type f \( -name '*.olean' -o -name '.d-root-source-ref' -o -name '.d-root-stage3b-extension-ref' \) -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
 
       - name: Preserve intermediate nineteenth checkpoint
         if: ${{ success() && inputs.stage != '6' }}
