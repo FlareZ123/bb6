@@ -154,3 +154,25 @@ Applying the existing `section_preimage_all_iff` grammar gives a sharp normal fo
   (k=35246+524288u-(a+3)/2-3q).
 
 The q-depth is genuinely unbounded as u varies: 16555 is odd, so for every d there is a residue u mod (2^d) with (2^dmid W). Low-q observations: q=0 gives the odd/even sum-three-mod-eight parent; q=1 is odd/odd sum two mod four and is excluded when u is even; q=2 is possible only for odd u and splits further. This is an exact source-parent normal form, not a reachability exclusion or a closure of h=8. See Agent 4's detailed derivation in `communications/agent3/20261118T102634Z_agent4-b2-sum15-parent-fan.md`.
+
+## Residual-identity lift of the unresolved h=8+128u branch
+
+The authentic residual identity is
+```text
+211*t + 1360 + 22155*w = 20*2^(201+3360*w),
+t = 39 + 64*h.
+```
+The exact parameter correspondence is
+```text
+h ≡ 8 (mod 128)  iff  w ≡ 6657 (mod 8192).
+```
+
+Reason: the right side is divisible by 8192. If h=128v+8, then t=8192v+551. Substitution gives
+`22155*w + 147487195 ≡ 0 (mod 8192)`; since
+`291*22155 = 1 + 787*8192`, this is equivalent to w≡6657.
+Conversely, w≡6657 makes `211*t+147487195 ≡0 (mod 8192)`; since
+`5979*211 = 1 + 154*8192`, this forces t≡551, hence h≡8 (mod 128).
+
+The standalone Lean proof is [U5Q0H8Residue.lean](U5Q0H8Residue.lean). It was compiled locally with Lean 4.36.0-rc2 and `#print axioms` reported only `[propext, Quot.sound]` for all three exported theorems; no `sorryAx` or `native_decide` occurs. The theorem is conditional on the residual identity and is intentionally arithmetic-only: it does not recompile or certify the upstream original-source construction of that identity.
+
+This identifies the exact root-parameter cylinder for the h=8 branch, not an exclusion. The B2 q≥3 parent fan, its direct/nonexceptional bounce alternatives, and blank-root reachability remain open. The residue 6657 is not part of the already drafted exclusion union `{1,2049,4097,4609,6145} (mod 8192)`.

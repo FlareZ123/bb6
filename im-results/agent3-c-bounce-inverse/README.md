@@ -263,7 +263,7 @@ See [U5Q0TwoCylinders.md](U5Q0TwoCylinders.md) for the exact coordinate chains a
 - [U5Q0SecondaryH40.lean](U5Q0SecondaryH40.lean)
 - [U5Q0W4609HighStop.lean](U5Q0W4609HighStop.lean)
 
-**Status:** all four files remain uncompiled source drafts. Exact local preflight against Lean 4.36.0-rc2 and transitive axiom audit are pending; no CI was dispatched. Do not promote these to results/ or describe them as certified theorems until that gate passes. Other h/root residue classes remain open.
+**Status:** all four files remain uncompiled source drafts. Exact local preflight against Lean 4.36.0-rc2 and transitive axiom audit are pending; no CI was dispatched. Do not promote these to results/ or describe them as certified theorems until that gate passes. Other h/root residue classes remain open. In particular, the diagnostic h=8+128u branch is now matched exactly to w≡6657 (mod 8192) by the standalone locally kernel-checked `U5Q0H8Residue.lean`; this is a parameter correspondence only, and the B2 q≥3 source-parent fan remains open.
 
 
 Aggregate preflight target: [U5Q0TwoCylindersAudit.lean](U5Q0TwoCylindersAudit.lean), which imports all four new proof drafts plus the existing W1821 baseline and prints the principal axiom audits.
