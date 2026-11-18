@@ -211,3 +211,22 @@ This was observed for (z=1,2,3,4,5) and for the tested outer ((A,L)) variations.
 `q4_s0_drain_splice_check.py` records the exact TM2 transition table and reproduces the checkpoint-1 right tail, (P(z))-step S0 input, and checkpoint-2 left/right frames. It directly simulates the middle drain for (z\le3); for (z\ge4) it uses a symbolic all-one interval for the theorem-predicted drain endpoint and simulates only the postlude. It also checks the residual-left-context leading run.
 
 The script was authored in this invocation but could not be executed here because the local Python/container tools failed. Its output is therefore pending execution; the numerical observations in this dossier come from the separate exact JavaScript simulations described above.
+
+
+## Prefix transition skeleton
+
+A transition trace of the (P(z))-step prefix for (z=2,3,4,5) exhibits the same cost decomposition
+
+\[
+P(z)=22+(3z+5)+3\cdot2^z+31.
+\]
+
+The (3z+5) term is the straight state-4 sweep across the first unary run in the checkpoint-1 right tail. The (3\cdot2^z) term is the long sweep over the second run, whose length is exactly (3\cdot2^z). In that sweep the repeated control cycle is
+
+\[
+(3,1)\to(1,1)\to(5,1)\to(3,1),
+\]
+
+which consumes three consecutive ones, writes (100), and advances the head by three cells. Viewed from the final head, the written triple is (001=d0), exactly the block used by the S0 counter prefix. The remaining 22- and 31-step pieces are fixed setup/terminal traces in the tested runs.
+
+This is an empirical proof guide, not yet a Lean run lemma. It suggests proving the prefix by composing a fixed 22-step setup, a unary state-4 sweep, a repeated three-cell (111\mapsto100) sweep, and a fixed 31-step terminal macro.
