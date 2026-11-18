@@ -632,6 +632,7 @@ theorem q0_X_not_reach_t123_z126mod128 (v : Nat) :
 
 #print axioms even_even_sum_two_reach_implies_direct
 #print axioms even_even_sum_four_mod8_reach_implies_direct
+#print axioms q0_X_not_reach_t459mod1024
 #print axioms q0_X_not_reach_t123_z2mod128
 #print axioms q0_X_not_reach_t123_z193mod512
 #print axioms q0_X_not_reach_t123_z126mod128
