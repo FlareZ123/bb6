@@ -1234,3 +1234,8 @@ The complement-buffer and digit-stack wrappers are mathematical derivations from
 ### Highest-value next step
 
 Package the complement theorem against the pinned original source, then attack the two one-parameter boundary families using the ternary digit-stack normal form. The goal is to characterize reachable/halting members of D(d+2,d) and D(d+3,d), rather than returning to broad finite root scans or the generic projective gap invariant.
+
+
+### 06:30Z refinement
+
+The complement-buffer proof is cleaner than first stated: the exceptional right-odd inputs D(4,5), D(4,7) are themselves inside `newAffineCone`, so they are automatically excluded by the complement hypothesis. The exact safe-output conclusion remains either b=0 or positive even b with 2b+1<=e. The two genuine boundary families remain d odd/a=d+3 and d even/a=d+2.
