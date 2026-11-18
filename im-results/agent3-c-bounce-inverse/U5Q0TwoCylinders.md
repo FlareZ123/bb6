@@ -14,7 +14,7 @@ P_0(h)=\left(1674+2752h,\;1654+2720h\right).
 ]
 The sum is (8S), where (S=416+684h).
 
-The exact secondary parent fan in [Agent 11's `U5Q0SecondaryFan.lean`](../../agent11-c-low58/U5Q0SecondaryFan.lean) reduces reachability of (P_0(h)) to:
+The exact secondary parent fan in [Agent 11's `U5Q0SecondaryFan.lean`](../agent11-c-low58/U5Q0SecondaryFan.lean) reduces reachability of (P_0(h)) to:
 - a direct alternative (E_h=(1036+1708h,1966+3242h)); or
 - a bounce alternative (B_{r,h}=(2q-2,2487+4096h-q-3r)), with (r\ge1) and (4^r q=S).
 
