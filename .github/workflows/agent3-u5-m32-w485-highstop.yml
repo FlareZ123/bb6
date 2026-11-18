@@ -13,6 +13,7 @@ on:
           - m32-w485-highstop
           - w1821-primitives
           - w1821-highstop
+          - q0-secondary-parent
         default: m32-w485-highstop
 
 permissions:
@@ -72,11 +73,25 @@ jobs:
                 im-results/agent3-c-bounce-inverse/U5Q0W1821HighStop.lean \
                 --jobs 8 --workdir /tmp/lean-closure-w1821 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
+            q0-secondary-parent)
+              python3 tools/lean_compile_closure.py \
+                im-results/agent11-c-low58/U5Q0SecondaryFan.lean \
+                --jobs 4 --workdir /tmp/lean-closure-q0-secondary-parent 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
+              ;;
             *)
               echo "Unknown target: ${{ inputs.target }}" >&2
               exit 2
               ;;
           esac
+
+      - name: Reject sorryAx and native_decide in q0 secondary parent theorem
+        if: inputs.target == 'q0-secondary-parent'
+        run: |
+          set -euo pipefail
+          if grep -E 'sorryAx|native_decide' /tmp/lean-closure-reports/q0-secondary-parent.log; then
+            echo "Forbidden axiom or native_decide dependency in q0 secondary parent theorem" >&2
+            exit 1
+          fi
 
       - name: Upload exact-source compiler and axiom report
         if: always()
