@@ -108,3 +108,46 @@ This may settle the parity-sensitive \(I_s=20\) branch once the allowable high-d
 ## Boundary
 
 This note only narrows the six-bit slack and filters the first shallow profile. It does not exclude the remaining \(\delta=1\) cases, the potentially continuing \(I_s=20\) branch, or all wall-reaching suffixes. It is not a source-certified theorem or a BB(6) result. The next useful check is whether the exact restart model can exploit the finite \(I_s\) list and the \(T_1\equiv t+s\pmod2\) relation without reintroducing the full six-bit model.
+
+
+## Bounding the high-depth edge in the remaining profile-compatible cases
+
+The finite \(D_0/P\) list also bounds the depth \(t\) of the high-depth edge. Let \(A=98-2^\delta I_s\), so \(D_0=AP\). From
+\[
+49d_0=AP-14(m_0+n)+55
+\]
+and the cost-one terminal bound \(m_0+n<93P/128-3\), we obtain
+\[
+\frac{(A-651/64)P+97}{49}<d_0\le\frac{AP+55}{49}.
+\]
+Writing \(X=d_p+b_p/2+3=2^t(d_0-1)\), the parent mass and the same cost bound give
+\[
+\frac{803}{128}P-\frac12<X<14P.
+\]
+Consequently, whenever \(A>651/64\),
+\[
+\frac{49(803P/128-1/2)}{AP+6}<2^t<
+\frac{686P}{(A-651/64)P+48}.
+\]
+For \(P\ge2^{83}\), these intervals imply the following ranges for the cases that can pass the first-profile parity test:
+
+| \((\delta,I_s)\) | \(A\) | allowed \(t\) |
+|---|---:|---:|
+| (3,6) | 50 | 3 or 4 |
+| (2,6) | 74 | 3 |
+| (2,20) | 18 | 5 or 6 |
+| (1,6) | 86 | 3 |
+| (1,20) | 58 | 3 |
+| (1,34) | 30 | 4 or 5 |
+| (1,48) | 2 | at least 8 |
+| (4,6) | 2 | at least 8 |
+
+For \(A=2\), the lower bound still gives \(2^t>128\), hence \(t\ge8\); the displayed upper bound is not used.
+
+Combining this with \(T_1\equiv t+s\pmod2\) narrows the first-profile continuations:
+- \(I_s=6\) (all listed cases): only depth 0 is possible, and \(I_1\) is odd for either \(T_1\) parity.
+- \(I_s=34\): only depth 0 is possible, and \(I_1\) is odd.
+- \(I_s=20\): depth 1 gives odd \(I_1\); depth 0 can continue only when \(T_1\) is odd. Thus for \((\delta,I_s)=(1,20)\), \(t=3\) and continuation requires \(n\equiv5\pmod6\); for \((2,20)\), continuation requires \(t=6\) when \(n\equiv1\pmod6\), or \(t=5\) when \(n\equiv4\pmod6\).
+- \(I_s=48\): exactly one of the first shallow depths 0 and 1 makes \(I_1\) divisible by 4, selected by the parity of \(T_1\). This remains the broadest unresolved branch.
+
+These bounds assume the restart-shifted \(T_1=m_0+n+6+3s\) convention for the parity statements. They are intended as a reduction for the next source-model step, not as a complete suffix exclusion.
