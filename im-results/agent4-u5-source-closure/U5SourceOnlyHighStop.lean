@@ -214,6 +214,13 @@ theorem blank_no_u5_A_s_m8w_w21 (w s m : Nat)
       exact hprev
     exact hB hBreach
 
+/-- Exact closed-form relation between the residual exponent and
+the high m=0 stopping-root index j=39+64*s. -/
+theorem u5_residual_root_index_formula (w s : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w)) :
+    211*(39+64*s)+27=320*2^(201+3360*w) := by
+  omega
+
 /-- The high m=0 stopping root j=39+64*s is excluded for the
 U5 residual family w=21 (mod 32), using only exact source
 predecessors and the authentic blank-section orbit. -/
@@ -242,15 +249,26 @@ previously source-certified m=0 high-stop classes. -/
 theorem u5_high_root_parameter_residue (w s : Nat)
     (hs : 211*s+129=5*2^(201+3360*w)) :
     (39+64*s)%32768=18791 ∧ (1+2*s)%1024=587 := by
-  have hdiv : 512∣2^(201+3360*w) := by
-    change 2^9∣2^(201+3360*w)
+  have hformula := u5_residual_root_index_formula w s hs
+  have hpowdiv : 32768∣2^(201+3360*w) := by
+    change 2^15∣2^(201+3360*w)
     exact Nat.pow_dvd_pow 2 (by omega)
-  have hpowmod : (2^(201+3360*w))%512=0 :=
-    Nat.mod_eq_zero_of_dvd hdiv
-  have hmod : (211*s+129)%512=0 := by
-    rw [hs,Nat.mul_mod,hpowmod]
-  have hsmod : s%512=293 := by omega
-  constructor <;> omega
+  obtain ⟨r,hr⟩ := hpowdiv
+  have hdiv : 32768∣320*2^(201+3360*w) := by
+    refine ⟨320*r,?_⟩
+    rw [hr]
+    ring
+  have hdivj : 32768∣211*(39+64*s)+27 := by
+    rw [hformula]
+    exact hdiv
+  have hmod : (211*(39+64*s)+27)%32768=0 :=
+    Nat.mod_eq_zero_of_dvd hdivj
+  have hconst : (211*18791+27)%32768=0 := by norm_num
+  have hinv : 211*22363=32768*144+1 := by norm_num
+  have hjmod : (39+64*s)%32768=18791 := by omega
+  have hrel : 39+64*s=7+32*(1+2*s) := by omega
+  have htmod : (1+2*s)%1024=587 := by omega
+  exact ⟨hjmod,htmod⟩
 
 /-- Explicit infinite nonvacuity of the source-only root exclusion:
 for every n, the w=32*n+21 residual equations have a natural
@@ -270,6 +288,7 @@ theorem every_w21_residual_has_unreachable_root (n : Nat) :
 
 #print axioms u5_residual_nonempty
 #print axioms u5_residual_s_strict_mono
+#print axioms u5_residual_root_index_formula
 #print axioms u5_high_root_parameter_residue
 #print axioms blank_no_u5_residual_m8w_w21
 #print axioms blank_no_u5_B_s_m8w_w21
