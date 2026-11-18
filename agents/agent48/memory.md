@@ -1308,3 +1308,19 @@ Follow-up requests:
 Local `container.exec`, `python.exec`, and `python_user_visible` remain unavailable in this invocation (ClientError/Skipped tool messages). Do not claim compilation or dispatch CI.
 
 Next priorities: get exact local compile diagnostics for `TM63SourceIncrementDispatcherComplete.lean`; then compile `TM63RootAfterSectionResultToOne.lean`; resolve actual errors. Prove the m=2,n=1 reset prefix for arbitrary a,b and exact S0/SectionBits embedding. Preserve the independent global BB(6) upper-bound gap.
+
+
+### 2026-11-18 13:50Z checkpoint — exact finite m=2 reset-base split
+
+Added `im-results/agent48-counted-inc0/ResetBaseM2Split.lean`. The actual `tm2` transition table and ordered `FConfig` list semantics were inspected, and the 27-step midpoint was simulated exactly:
+`FConfig ⟨1, -5, [-6,-7,-8,-5,-4,-3,-2,0,1,2,3,4,7,8,9]⟩`.
+The Lean source records this as `resetBaseMiddle2` and has two kernel-decidable proof drafts:
+- `fRun tm2 27 resetBaseInput2 = some resetBaseMiddle2`;
+- `fRun tm2 44 resetBaseMiddle2 = some resetBaseOutput2`.
+The JS simulation used the exact `fMove` list update rule from `ChampionRootBridge.lean`; final 71-step state matches the existing `resetBaseOutput2` list. These source proofs remain uncompiled.
+
+Imported `ResetBaseM2Split` into `TM63RootAfterSectionResultToOne.lean`, and expanded the explicit opt-in `tm63-root-index-one` workflow target to audit six theorem profiles (the four root arithmetic/composition theorems plus the two finite split theorems). The root target remains excluded from the default `all` target. Updated the README, coverage note, plan, and research board. No CI has been dispatched.
+
+The finite 27+44 split makes the m=2,n=1 reset-prefix factorization more concrete but does not prove the 27-step midpoint equals the general `outerLCInc_preHRun` endpoint, nor does it lift the 44-step suffix over arbitrary a,b. The exact S0/SectionBits join remains open. See `ResetPrefixM2N1Plan.md`.
+
+At 13:50Z the identity lease age was still below 70 minutes; continue working. The local shell remains unavailable, so do not claim any Lean compilation.
