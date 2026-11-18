@@ -269,3 +269,10 @@ Normalization reminder: in RE, \(D\) includes the initial evalA first-counter dr
 The compact coordinate gives a second way to formulate the terminal window. Let \(c_s=18,10,2,4\) in LO/LE/RO/RE and set \(z=Y-c_s\). Then \(z=2h\) in LO/LE and \(z=4h\) in RO/RE, so \(|h|\le W\) implies \(|z|\le4W\) uniformly. Using \(W_Y=4W\), and defining \(k,j\) by \(3^k>W_Y\), \(3^j>W_Y^3\), the same middle-block criterion applies to \(z\bmod3^j\).
 
 On the same 100-state diagnostic, this centered-\(Y\) middle block was neither all zero nor all two at every tested index 17–99; index 16 was the only failure. The \(Y\)-form may be better suited to a transducer proof because the exact update is the single absolute-value recurrence \(Y'=|Y-2T|-6q'\). This is finite computational evidence only.
+
+
+For the centered-\(Y\) window in the source regime \(n\ge10\), \(\ell\ge n\ge10\), so \(W_Y=4(9\ell+22)\ge448>3^5\), hence \(k\ge6\). Since \(j\ge3k-2\), the two-digit-buffer interior \([k+2,j-2)\) has length
+\[
+j-k-4\ge2k-6\ge6.
+\]
+Thus the proposed buffered invariant has at least six ternary positions throughout the n>=10 regime; it does not collapse to a vacuous short block.
