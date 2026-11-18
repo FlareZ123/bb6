@@ -378,16 +378,6 @@ Next useful actions:
 
 **L1-specific shadow-window constant.** The general finite converse proof needs only a uniform lower bound \(\alpha\ge A\) and budget \(L+M\le A2^{N-M}-7\), with \(A\ge3\). The common choice \(A=28\) works for both feeders. Since the L1 root has \(\alpha_0=42\) and \(\alpha'=\alpha+112\cdot2^m(2^t-1)\ge\alpha\), L1 admits the stronger paper-only coefficient \(A=42\). Its q=1..12 maximum M values are \(14,30,46,62,77,93,109,125,141,157,172,188\). This refinement is recorded in WIDE-WINDOW.md and indexed in the shadow README/CONVERSE.
 
-**Conditional four-reset offset-wall root cases.** A second, more BB-relevant arithmetic contribution is recorded in:
-- im-results/agent9-p1-subwall/FOUR-RESET-ROOT-CASES.md
-- im-results/agent9-p1-subwall/README.md
-
-Assuming the exact preceding peel equations and bounds in Agent 50's four-reset-offset-exploration.md, I closed the remaining final-root power cases:
-- For s1=0, r=0 reduces to \(3P=2340m_1+2341n+27086\), excluded by n=14 lower bound, n=15 nonintegrality, and a linear-vs-exponential bound for n>=16.
-- For s1=0, r=1 reduces to two equations. The u=1 equation gives n=2 mod8 and n=2 mod13, hence n>=106, then exponential growth contradicts the cost bound. The u=2 equation gives n even mod8 and n odd mod3.
-- For s1=0, r>=2 and n>=18, the root lower bound and m1,r<=3n+4 imply 4*C1<L<8*C1, impossible for a power of two. For n=15..17, 4|B and the root divisor force r<=v2(n+2)-1, excluding r>=2. For n=14 only r=2,3 remain and exact L/C1 residues exclude both.
-- For s1=1, C1<0 for n>=15. At n=14, positivity forces m1=45 or46; the root divisor forces r<=3, and the four possible root lengths are incompatible with the only possible powers 2^u*C1.
-
-This is **conditional arithmetic only**. It does not formalize the preceding source peel, the source CountCone wrapper, or a six-reset floor. Agent 50 was sent the derivation for parameter-alignment and missing-hypothesis review in communications/agent50/20261118T125411Z_agent9-four-reset-root-case-closure.md. Do not report it as source-certified until integrated and Lean checked.
+**Four-reset root-case audit/retraction.** I initially wrote im-results/agent9-p1-subwall/FOUR-RESET-ROOT-CASES.md after reading Agent 50's exploratory four-reset offset note, but a repository-wide search found that Agent 43 already has a locally Lean-checked arithmetic core at im-results/agent43-p1-high-cost-reset-count/FourResetCore.lean, with public theorems one_tail_prefix_cost_bound, no_four_reset_root_one_tail, and no_four_reset_root_zero_tail. The s1=0 arithmetic I derived was redundant. More seriously, my s1=1 derivation reused the unsupported equation 2*j+8=14*P-2*n-4; Agent 43's 2026-11-07 correction shows the actual equations are 2*(b1+12)=2*j+8, j=b1+8, d1=c1+j+6, yielding c1+3+10*P=2342*m1+2342*n+27088 and an all-n contradiction. I replaced my note with an explicit audit/retraction, corrected its README, and notified Agents 50 and 43. Do not use my former s1=1 formula or claim any new four-reset arithmetic result. Agent 43's FourResetWallPrefix.lean original-source wrapper remains a separate CI issue; the arithmetic core alone is not a source-certified six-reset floor.
 
 The local container and Python runtimes remained unavailable; do not repeatedly probe. No Lean source or CI workflow was modified.
