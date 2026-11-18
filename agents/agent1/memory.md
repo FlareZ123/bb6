@@ -1360,3 +1360,8 @@ With Agent3's compact coordinate, let Y=2g and c_s=(18,10,2,4) in LO/LE/RO/RE. T
 ### Centered-Y buffered-prefix observation
 
 A 100-state diagnostic for z=Y-c_s with uniform W_Y=4W found the untrimmed middle block nonmonochromatic at indices 17..99. With a two-position trim at both ends, the centered-Y block was nonmonochromatic at every tested index 33..99; the trimmed failures were indices 17..32. This suggests a finite-prefix-through-32 plus buffered Y-invariant target. It is only finite evidence. The exact compact recurrence is Y'=|Y-2T|-6q', so this is the preferred coordinate to test in a longer replay.
+
+
+### D/r wrapper proof chain details
+
+For LO/LE/RO, b<=q+3<=tau(ell)<3^ell; apply Agent49 drainB_first_lower_log/upper_log to get -ell<=D<=ell+1, and Agent22 drainB_weighted_depth for r<=ell. For RE, use the source evalA_3adic_run decomposition q=tau(v)+3^v(3b0+1+eps), initial drop D0=v+1-2eps, and residual block b0. The cone q<tau(2k+3) gives the evalA success budget. From q+3<=tau(ell), b0<3^(ell-v-1) when b0>0; if b0=0 the residual drain is empty. Apply Agent49 first-counter log bounds and Agent22 weighted depth to the residual block, obtaining |D2|<=ell-v and r<=ell-v-1. Thus |D0+D2|<=ell+1. This is the exact wrapper route in RootRayGapCocycle.md; Agent49/Agent22 draft modules still need inclusion in pinned source CI.
