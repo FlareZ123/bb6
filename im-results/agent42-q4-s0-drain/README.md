@@ -221,6 +221,52 @@ identity must establish the displayed 1^(3*z+7) ++ 0010 prefix
 from the q4-tail output. This file is also source-only and has not been
 compiled in this invocation.
 
+
+## Candidate second-cycle post-drain continuation
+
+SecondCyclePostDrainBridge.lean contains two exact finite-trace source
+drafts:
+
+- state 3 on four zeros at head -3 to state 1 at head -1 (4 steps);
+- state 1 on local pattern 001001 at head g to state 4 at head g+2
+  (8 steps).
+
+Combining these with the P2 output shape suggests the following
+post-drain continuation. Put
+
+- n = 2^(2^z-1),
+- m = 3*2^z+3*z+7,
+- H = m+2+3*n.
+
+The P2 output has left counter d0^(n-1). If its residual left context
+starts with 1^(m+8) followed by four zeros, then after the S0 drain the
+left one-run has length
+
+    K = 3*(n-1)+(m+8) = 3*n+m+5 = H+3.
+
+A counted left sweep reaches head -3. The 4-step zero bridge enters
+state 1 at -1. The sweep and right S0 suffix give a contiguous right
+one-run from -1 through H+4, of length
+
+    R = H+6 = 3*(n+2^z+z+5).
+
+The state-1 three-one-block scan consumes R cells and ends at head
+H+5. The 8-step 001001 bridge enters state 4 at H+7, the beginning
+of the remaining right unary counter d1pow(2^(n-1)). A state-4 E-scan
+of length 3*2^(n-1) would then reach state 4 at
+H+7+3*2^(n-1).
+
+The finite prefix before this E-scan has cost
+
+    3*K + 4 + R + 8 = 12*n + 12*2^z + 12*z + 63.
+
+**Status:** candidate composition only, not yet a proved theorem.
+The critical missing premise is the exact P2 endpoint residual-left
+prefix 1^(m+8) followed by four zeros, plus the corresponding right-run
+and bridge-input identities. The two finite bridges themselves are
+source drafts and have not been compiled in this invocation. Do not
+treat the displayed continuation or cost as an established BB(6) bound.
+
 ## Exact first q4 checkpoint right tail
 
 The complete right-facing tape at checkpoint (j=1), starting at cell 2 (head is at cell 1), has the observed run-length encoding
