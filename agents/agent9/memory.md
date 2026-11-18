@@ -428,3 +428,14 @@ A further exact 2-adic corollary is \(2^{3s-1}\mid 7(k-3c)-25\), hence \(k-3c\eq
 
 
 Possible method for the remaining slack branches (heuristic, unverified): reinterpret the post-prefix root parameter as the rational \(p=P/8^s=2^{-\delta}\). Multiplying the scalar five-shallow recurrence by \(2^\delta\) makes the root parameter 1 and the offset \(A=98-2^\delta I_s\) integral; however, the profile coefficients \(C,L,O\) also scale, so the existing FiveLayerBarrier theorem cannot be reused without checking its constants and time bounds. This is a candidate route, not an established reduction.
+
+
+### 2026-11-18 continuation: low-suffix closure of the six-bit slack
+
+Claimed this incarnation as Agent 9 at 2026-11-18T15:17:51.378Z. Reconstructed the supplied Lean 4.36.0-rc2 archive locally: the split ZIP extracts a nested lean-4.36.0-rc2-linux.tar.zst, which must then be unpacked with tar --use-compress-program=zstd. lean --version reports 4.36.0-rc2.
+
+Added im-results/agent9-p1-high-depth/Mod7SlackLeaf.lean. It defines the exact depth-0/1/2 affine-energy transitions and a LowTrace for arbitrary finite low-depth suffixes. Lean proves wall energy is divisible by 16; odd energy cannot continue; energy 2 mod 4 can only take a depth-zero edge and then becomes odd; and the complete finite mod-7 candidate list reduces to Is=48 or Is=20 with odd T1. The new Is=20, even-T1 exclusion is independent of suffix length. All printed public axiom lists are [propext, Quot.sound], with no sorryAx. This leaf is a pure scalar recurrence proof, not an original-source CountCone theorem.
+
+Combining the low-suffix leaf with T1≡t+s (mod 2) and the existing large-P cost-one t intervals leaves only (delta,Is,t)=(2,20,5) and (1,48,t>=8). The first has T1 odd and must begin with shallow depth 0; the second has t>=8 and its only potentially continuing first shallow depth is 0 for even T1, 1 for odd T1. The (1,20,t=3) branch and the (2,20,t=6) branch are eliminated by even T1. The cost-two terminal suffix still lacks a corresponding t interval. Full scope and assumptions are in SIX-BIT-SLACK-MOD7.md.
+
+Next: attack the two residual cost-one families through sharper constraints on the original parent coordinates (bp,dp,mp,k,c); derive the cost-two terminal t interval separately; then connect the low-suffix scalar trace to the authentic unchanged-source inverseAt induction. Do not redo the mod-7 enumeration or claim a full high-depth exclusion.

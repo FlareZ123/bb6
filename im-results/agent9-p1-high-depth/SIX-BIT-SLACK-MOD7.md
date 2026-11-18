@@ -60,30 +60,24 @@ Thus the nominal six-bit slack reduces to \(\delta\le4\), with only the displaye
 
 ## First-shallow profile filter
 
-For a first shallow edge of depth \(e\in\{0,1\}\), use the source profile equations
+For a first shallow edge of depth \(e\in\{0,1\}\), the exact source-profile equations are
 \[
 \begin{aligned}
 e=0:\quad&2I_1=I_s-588P+84T_1-232,\\
 e=1:\quad&4I_1=I_s-392P+56T_1-136.
 \end{aligned}
 \]
-For \(n\ge3\), \(P=2^n\) is divisible by 8, and the non-\(I_s\) terms in both numerators are divisible by 4. Consequently:
-- depth \(e=0\) requires \(I_s\) even;
-- depth \(e=1\) requires \(4\mid I_s\).
+Thus depth \(0\) requires \(2\mid I_s\), while depth \(1\) requires \(4\mid I_s\). In particular, the odd candidates \(I_s\in\{13,27,41\}\) cannot begin a shallow transition at all.
 
-This immediately eliminates \(I_s=13\). If \(I_s=6\), only \(e=0\) is possible, and
-\[
-I_1=(-588P+84T_1-226)/2
-\]
-is odd for either parity of \(T_1\): modulo 8 its numerator is \(6+4T_1\), so \(I_1\equiv1\) or \(3\pmod4\). Hence no following depth-two run (which requires \(8\mid I_1\)) and no second shallow edge (which requires \(2\mid I_1\) for depth 0 or \(4\mid I_1\) for depth 1) can follow this branch.
+For \(I_s=6\) or \(34\), only depth \(0\) is possible. Its output \(I_1\) is odd for every \(T_1\), since the numerator is \(2\bmod4\). Such a state cannot continue through depths \(0,1,2\), and it cannot itself be the wall because wall energy is divisible by \(16\). These two candidate values are therefore excluded from any wall-reaching low-depth suffix.
 
-If \(I_s=20\), depth 1 gives an odd \(I_1\), since its numerator is \(20\pmod8\). Depth 0 gives
+For \(I_s=20\), depth \(1\) gives odd \(I_1\). Depth \(0\) gives
 \[
 I_1=(-588P+84T_1-212)/2,
 \]
-whose residue modulo 4 is \(2\) when \(T_1\) is even and \(0\) when \(T_1\) is odd. For \(I_s=20\), first depth 1 gives odd \(I_1\) and cannot continue. First depth 0 gives \(I_1\equiv2\pmod4\) when \(T_1\) is even, so only a second shallow depth 0 can follow and no depth-two run can intervene; when \(T_1\) is odd, \(4\mid I_1\), so a second shallow depth 0 or 1, or a depth-two run if \(8\mid I_1\), remains possible. These branches are not excluded here.
+so \(I_1\equiv2\pmod4\) when \(T_1\) is even and \(4\mid I_1\) when \(T_1\) is odd. The even-\(T_1\) branch is now excluded completely: after the first depth-zero edge, the only possible next low edge is another depth-zero edge, whose output is odd. No wall endpoint can occur at either stage. The odd-\(T_1\) branch remains open.
 
-For the \(\delta=1\), \(n\equiv2\pmod3\) case, the seven possible values \(I_s\) remain to be analyzed beyond this first-profile filter. This is the main residual branch after the mod-7 reduction.
+For \(I_s=48\), exactly one first shallow depth can have output divisible by \(4\): depth \(0\) when \(T_1\) is even, and depth \(1\) when \(T_1\) is odd. The other first depth produces energy \(2\bmod4\) and cannot lead to the wall. This leaves one potentially continuing first-profile branch for either parity.
 
 ## A useful parity link for the restart time
 
@@ -110,11 +104,6 @@ T_1\equiv t+s\pmod2.
 \]
 This may settle the parity-sensitive \(I_s=20\) branch once the allowable high-depth \(t\) values are sharpened. Since \(n\) is even in the P1 setting, \(m_0+n\equiv t\pmod2\) is equivalent to the \(m_0\equiv t\pmod2\) restriction already recorded in SourceWallToCarryDP.md §7.
 
-## Boundary
-
-This note only narrows the six-bit slack and filters the first shallow profile. It does not exclude the remaining \(\delta=1\) cases, the potentially continuing \(I_s=20\) branch, or all wall-reaching suffixes. It is not a source-certified theorem or a BB(6) result. The next useful check is whether the exact restart model can exploit the finite \(I_s\) list and the \(T_1\equiv t+s\pmod2\) relation without reintroducing the full six-bit model.
-
-
 ## Bounding the high-depth edge in the remaining profile-compatible cases
 
 The finite \(D_0/P\) list also bounds the depth \(t\) of the high-depth edge. Let \(A=98-2^\delta I_s\), so \(D_0=AP\). From
@@ -134,25 +123,47 @@ Consequently, whenever \(A>651/64\),
 \frac{49(803P/128-1/2)}{AP+6}<2^t<
 \frac{686P}{(A-651/64)P+48}.
 \]
-For \(P\ge2^{83}\), these intervals imply the following ranges for the cases that can pass the first-profile parity test:
+
+For \(P\ge2^{83}\), under the cost-one terminal suffix bound \(m_0+n<93P/128-3\), the interval restricts the two candidate pairs that survive the first-profile divisibility test and the subsequent low-suffix analysis:
 
 | \((\delta,I_s)\) | \(A\) | allowed \(t\) |
 |---|---:|---:|
-| (3,6) | 50 | 3 or 4 |
-| (2,6) | 74 | 3 |
-| (2,20) | 18 | 5 or 6 |
-| (1,6) | 86 | 3 |
-| (1,20) | 58 | 3 |
-| (1,34) | 30 | 4 or 5 |
-| (1,48) | 2 | at least 8 |
-| (4,6) | 2 | at least 8 |
+| \((2,20)\) | \(18\) | \(5\) or \(6\) |
+| \((1,48)\) | \(2\) | \(t\ge8\) |
 
-For \(A=2\), the lower bound still gives \(2^t>128\), hence \(t\ge8\); the displayed upper bound is not used.
+For \(A=2\), the lower bound still gives \(2^t>128\), hence \(t\ge8\); the displayed upper bound is not used. The \(t=6\) member of the first row is removed by the parity argument below. The table is only for a last shallow edge of cost \(1\); the cost-\(2\) terminal bound still needs its own \(t\)-interval analysis.
 
-Combining this with \(T_1\equiv t+s\pmod2\) narrows the first-profile continuations:
-- \(I_s=6\) (all listed cases): only depth 0 is possible, and \(I_1\) is odd for either \(T_1\) parity.
-- \(I_s=34\): only depth 0 is possible, and \(I_1\) is odd.
-- \(I_s=20\): depth 1 gives odd \(I_1\); depth 0 is the only first depth that can continue. If \(T_1\) is even, then \(I_1\equiv2\pmod4\), allowing only a second shallow depth 0 and forbidding an intervening depth-two run. If \(T_1\) is odd, then \(4\mid I_1\), so a second shallow depth 0 or 1, or a depth-two run when \(8\mid I_1\), remains possible. The parity relation \(T_1\equiv t+s\pmod2\) specifies which of these subcases applies but does not eliminate the even-\(T_1\) branch.
-- \(I_s=48\): exactly one of the first shallow depths 0 and 1 makes \(I_1\) divisible by 4, selected by the parity of \(T_1\). This remains the broadest unresolved branch.
+## Low-suffix closure and remaining cases
 
-These bounds assume the restart-shifted \(T_1=m_0+n+6+3s\) convention for the parity statements. They are intended as a reduction for the next source-model step, not as a complete suffix exclusion.
+At the exact shifted wall \(W=12P\), the affine energy is
+\[
+I_{\rm wall}=49W-588P-112B+384=-112B+384,
+\]
+which is always divisible by \(16\). After the last depth-\(\ge3\) edge, all remaining transitions have depths \(0,1,2\). Their exact scalar recurrences are
+\[
+\begin{array}{c|c|c}
+e & B' & \text{energy equation}\\ \hline
+0 & B+1 & 2I'=I-588P+84B-232\\
+1 & B+2 & 4I'=I-392P+56B-136\\
+2 & B+3 & 8I'=I.
+\end{array}
+\]
+The Lean leaf Mod7SlackLeaf.lean packages arbitrary finite sequences of these transitions as LowTrace and proves:
+- odd energy cannot take any low-depth step and cannot equal wall energy;
+- energy \(2\bmod4\) can only take a depth-zero step, after which the energy is odd;
+- from \(I_s=20\) with even \(T_1\), either first shallow depth produces an energy from which no low-depth suffix can reach the wall;
+- across the full mod-\(7\) candidate list, a wall-reaching low suffix requires \(I_s=20\) with odd \(T_1\), or \(I_s=48\).
+
+The leaf was compiled locally with Lean 4.36.0-rc2. Its public theorem axiom lists are [propext, Quot.sound]; there is no sorryAx. It imports only Lean's arithmetic tactic, so this is a formal scalar-recurrence result, not an original-source CountCone theorem. Its hypotheses are exactly the displayed first-shallow equations and the restriction to depths \(0,1,2\) after the selected last high-depth restart.
+
+Combining \(T_1\equiv t+s\pmod2\) with the large-\(P\) \(t\)-intervals gives the following cost-one residual cases:
+- \((\delta,I_s,t)=(2,20,5)\). Here \(n\equiv1\pmod3\) and \(n\) is even, so \(s=(n+2)/3\) is even. Thus \(T_1\equiv t\pmod2\); \(t=6\) is excluded and \(t=5\) remains. Its first shallow edge must have depth \(0\).
+- \((\delta,I_s)=(1,48)\) with \(t\ge8\). Here \(n\equiv2\pmod3\) and \(n\) is even, so \(s=(n+1)/3\) is odd. If \(t\) is odd then \(T_1\) is even and the potentially continuing first shallow edge has depth \(0\); if \(t\) is even then \(T_1\) is odd and it has depth \(1\).
+
+In particular, the \((\delta,I_s)=(1,20)\) branch is eliminated: its interval gives \(t=3\), while \(s\) is odd, so \(T_1\) is even. The remaining \((2,20,5)\) and \((1,48,t\ge8)\) branches are the only cost-one cases left by this reduction.
+
+## Boundary
+
+The mod-\(7\) classification and low-suffix closure remain conditional on the high-depth restart equations, the positive restart-energy bound \(0<I_0<98P\), and the existence of a wall-reaching suffix with at most five shallow edges. The \(t\)-interval and the final two-case list additionally use the cost-one terminal bound and \(P\ge2^{83}\). The cost-two terminal branch has not yet received a corresponding \(t\)-interval. The Lean leaf formalizes the scalar consequences but does not certify the source restart wrapper or exclude either residual case. It is not a BB(6) result.
+
+The next mathematical target is to eliminate one of the two residual families using the parent-coordinate relation \(2^t(c+3)=d_p+b_p/2+3\), the exact restart energy, and sharper constraints inherited from the original root. Do not repeat the mod-\(7\) enumeration or claim the six-bit slack is solved.
