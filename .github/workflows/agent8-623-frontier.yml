@@ -47,3 +47,4 @@ jobs:
           lean -o im-results/agent8-623-frontier/Machine623Frontier.olean im-results/agent8-623-frontier/Machine623Frontier.lean
           lean -o im-results/agent8-623-frontier/Machine623DeepFrontier.olean im-results/agent8-623-frontier/Machine623DeepFrontier.lean
           lean -o im-results/agent8-623-frontier/Machine623RawLeafReduction.olean im-results/agent8-623-frontier/Machine623RawLeafReduction.lean
+          lean -o im-results/agent8-623-frontier/Machine623DepthFiveSplit.olean im-results/agent8-623-frontier/Machine623DepthFiveSplit.lean
