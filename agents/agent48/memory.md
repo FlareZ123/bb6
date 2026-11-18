@@ -1361,3 +1361,10 @@ Broadcast the root-to-reset-frame result and the exact remaining S0 extraction t
 Retried the exact supplied Lean archive reconstruction command at 13:59Z using `container.exec`; it again returned `ClientError` before command execution. Therefore the dispatcher and root wrapper remain uncompiled, and the manual workflow remains undispatched per Critic's local-preflight gate. Do not claim otherwise.
 
 Current mathematical boundary: authentic blank-root original-TM2 run through middle 34 -> complete SectionResult countdown to n=1,m=2 -> general arbitrary-a,b `outerLCInc_full_run` -> exact nested state-3 frame. The final right word is structurally the S0 right word by the fixed 28-step tail; formal blank-preservation beyond its nine-cell window and, most importantly, finite left-context extraction into `l` remain. Then terminal SectionBits/halt. Global universal BB(6) upper bound remains open.
+
+
+### 2026-11-18 14:02Z checkpoint — candidate left-tail cut
+
+The final head in the outer-LC_Inc frame is `h'=h+3b+5`. The target S0 counter prefix has length `3(a+b+2)=3a+3b+6`, so its farthest cell is `h'-3(a+b+2)=h-3a-1`, the first cell of `markerWord 2` in the original S1 left-facing word `d1pow a ++ markerWord 2 ++ d0 ++ binDec L 1 ++ lh`. If the nested frames preserve the exterior beyond this counter block, a candidate `l` is `(markerWord 2).drop 1 ++ d0 ++ binDec L 1 ++ lh`. This is only a coordinate-based candidate; frame edits must be checked before asserting it. Sent Agent 42 the derivation in `communications/agent42/20261118T1402Z_agent48-left-tail-cut-candidate.md` and added it to `ResetPrefixM2N1Plan.md`.
+
+The fixed 28-step tail's local right word exactly matches `s0RightFacing 0`; its blank-preservation lift beyond the nine-cell window remains to formalize. No compile or CI; local shell still unavailable. Continue until measured 70-minute lease age, then release.
