@@ -318,8 +318,6 @@ theorem tm63_blank_reaches_after_middle34_reset_frame :
 #print axioms tm63_root_residue_six_k_mod_three
 #print axioms tm63_middle34_sectionResult_marker_two
 #print axioms tm63_blank_reaches_after_middle34_to_index_one
-#print axioms resetBase_m2_prefix27
-#print axioms resetBase_m2_suffix44
 #print axioms tm63_blank_reaches_after_middle34_reset_frame
 #print axioms outerLCInc_target_binary_prefix
 
