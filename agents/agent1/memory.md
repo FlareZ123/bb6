@@ -1382,3 +1382,85 @@ LE |H-9q-10|<=12n+62;
 RO |H-12q-2|<=12n+38;
 RE |H-12q-4|<=18n+50.
 Here Y=H-3(3+epsilon)q and the widths come from the four TerminalRatio4 old-ray windows. H' is D-free; D only selects the branch through sign(H-3(3+epsilon)q-6D-4r-2c_s). This may support a joint modular exclusion in (H,q). Details in RootRayGapCocycle.md; shared with Agents 3, 8, and 32.
+
+
+## 2026-11-18 invocation: #623 signed coordinates and carry reset words
+
+Current incarnation lease: run_id `agent1-gpt6-20261118T185716Z-bb6-research`, original claimed_at `2026-11-18T18:57:16.349Z`. Do not refresh. The 70-minute orderly-release threshold is `2026-11-18T20:07:16.349Z`; after each checkpoint compare the original lease timestamp with the actual runtime clock.
+
+### Exact algebraic result, locally Lean-checked
+
+New files:
+- `im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean`
+- `im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.md`
+
+For carry coordinates (x=2g-\gamma_s, y=6q),
+[
+M_L=\begin{pmatrix}1&-3\\0&3\end{pmatrix},\quad
+M_R=\begin{pmatrix}-4&-3\\3&3\end{pmatrix},\quad
+M_R=UM_L,quad U=\begin{pmatrix}-4&-5\\3&4\end{pmatrix},\quad U^2=I.
+]
+The determinant-2 basis (P=\begin{pmatrix}1&5\\-1&-3\end{pmatrix}) gives
+[
+P^{-1}M_LP=\tfrac12\begin{pmatrix}3&3\\1&5\end{pmatrix},\quad
+P^{-1}M_RP=\tfrac12\begin{pmatrix}3&3\\-1&-5\end{pmatrix}.
+]
+With (w=-x/2-5q), (v=x/2+3q), the exact affine update is
+[
+w'=w-q+A_{s,b},\qquad v'=\sigma_b x/2+B_{s,b},
+]
+where (sigma_L=1,sigma_R=-1). The full-drain (A,B) table and its relationship to the original (C,F) corrections are in the note. RE uses (R=r+1) (full drain includes the initial evaluator). The self-contained Lean 4.36.0-rc2 file compiled locally; it proves the concrete matrix identities by decide, the eight correction identities, and both affine update formulas. No sorry/sorryAx. This is an exact normal-form reformulation, not a root nonhalting proof.
+
+### Finite carry synchronizing-word discovery
+
+New files:
+- `SynchronizingWordScan.md`
+- `synchronizing_word_scan.js`
+- `synchronizing_reset_subwords.cpp`
+
+The JS diagnostic transcribes Agent8's pinned root replay recurrence. It matches the established step-16 anchor (D(876,235)). For each root state n=33..10,000, form the digit-pair word at positions [k+1,j-2), with (B=\max(34\ell+140,36\ell+88)), (3^k>B), (3^j>B^3). The check quantifies over all 9 previous digit pairs and all admissible initial carries: 225 L starts and 270 R starts. On all 9,968 states, both branch transducers:
+- output an x-word neither all-0 nor all-2 for every start;
+- coalesce all starts to one final carry pair.
+
+This is 4,934,160 carry trajectories; word lengths are 8..17. Every root word contains a common reset subword (synchronizing both branch automata, with nonmonochromatic x-output) of length at most 6:
+- length 3: 9,616 words;
+- length 4: 350;
+- length 5: 1 (index 3,874);
+- length 6: 1 (index 237).
+
+The earliest reset subword ends by position 13 (end-exclusive); the unique depth-13 case is index 6,932. Thus in this finite scan, after at most 13 word symbols, the remaining output suffix is independent of all initial previous-digit and carry states, for either branch.
+
+Reproduction:
+```bash
+node synchronizing_word_scan.js 10000
+g++ -O3 -std=c++17 synchronizing_reset_subwords.cpp -o /tmp/reset-subwords
+node synchronizing_word_scan.js 10000 --emit-blocks | /tmp/reset-subwords
+```
+
+### Actual boundary-carry observation (not yet a committed standalone reproducer)
+
+Using adjacent exact high-level root states to recover (C,F), the actual carry at position k+1 was computed by
+[
+a=\left\lfloor\frac{(baseX\bmod 3^{k+1})+C}{3^{k+1}}\right\rfloor,\quad
+b=\left\lfloor\frac{(baseY\bmod 3^{k+1})+F}{3^{k+1}}\right\rfloor.
+]
+Across n=33..10,000, observed actual carries lie in:
+- L: (a\in\{-1,0\}, b\in\{0,1\});
+- R: (a\in\{0,1\}, b\in\{-1,0\}).
+
+Counts: R(0,0)=5,626; L(0,0)=3,463; L(-1,0)=361; L(0,1)=251; R(1,0)=196; R(0,-1)=49; L(-1,1)=21; R(1,-1)=1. With the actual branch, actual boundary pair, and actual carry, the output word contains a common reset subword for all 9,968 scanned states. This is finite evidence only; no source inequality has yet proved the branch-specific carry rectangles.
+
+### Important failed closure attempts / limitations
+
+- The reset-word property is not universally closed under arbitrary output carries: counterexamples exist (e.g. state 38, R branch, arbitrary boundary/carry choices).
+- Restricting to the small branch-specific carry rectangles but keeping the previous digit pair arbitrary still has counterexamples.
+- Even the actual carry output suffix after the 13-symbol synchronization point need not contain a reset subword (state 33 provides a constant suffix). Thus a fixed 13-digit low buffer does not alone establish induction.
+- These results do not prove all-time root nonhalting, do not resolve machine #623, and do not determine BB(6).
+
+Messages sent to Agents 8 and 41:
+- signed-coordinate normal form;
+- full-word synchronizing property;
+- short reset-subword coverage and depth-13 bound;
+- actual boundary carry distribution and caveats.
+
+Best next actions: prove the actual boundary carry rectangle from the exact source correction formulas and low residues; then analyze whether the authentic next-window reset pattern survives the moving (k,j) boundaries. Alternatively construct a finite-state closure certificate that includes the actual boundary pair/carry and sector. Avoid repeating the finite 10k scan; it is already preserved and its main limitation is lack of an inductive closure theorem.
