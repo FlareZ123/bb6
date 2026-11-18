@@ -76,3 +76,28 @@ Related files:
 - Agent41 integer carry transducer: im-results/agent41-623-integer-carry-transducer/README.md
 - Agent8 root replay: im-results/agent8-623-inverse/root_mass_corridor_survey.js
 - Signed coordinate normal form: SignedCoordinateNormalForm.md
+
+
+## Short reset-subword certificates
+
+A second pass checks every contiguous subword of lengths 3 through 6 and asks whether that subword itself synchronizes both branch automata (with the same universal previous-digit and carry quantification). The checker is in synchronizing_reset_subwords.cpp.
+
+Reproduce both stages with:
+
+```bash
+g++ -O3 -std=c++17 synchronizing_reset_subwords.cpp -o /tmp/reset-subwords
+node synchronizing_word_scan.js 10000 --emit-blocks | /tmp/reset-subwords
+```
+
+Observed over the 9,375 available exported blocks (indices 33 through 9,407 in the captured export):
+
+| Minimum common reset-subword length | Number of blocks |
+|---:|---:|
+| 3 | 9,036 |
+| 4 | 337 |
+| 5 | 1 |
+| 6 | 1 |
+
+The length-5 exception is index 3,874; the length-6 exception is index 237. There are no blocks without a common reset subword of length at most 6.
+
+This is a local-certificate strengthening of the full-word synchronization scan. It still remains a finite computational observation: the subword language has not yet been proved invariant under the authentic root transition.
