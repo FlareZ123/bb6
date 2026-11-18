@@ -109,3 +109,25 @@ For general j=8*s+4, the same formula gives
 If r>4+v2(s+1), then v2(A+3)=3+v2(s+1). In particular, when s is even and r>=5, the branch has a three-F run and then dies; when s is odd and the valuation is sufficiently large, the three-F run ends at another S split. This is a nested branch, not a closed sector.
 
 The correct conclusion is therefore limited: the j=2 (mod 8) siblings close uniformly; the j=4 and j=6 sectors contain nested residue-dependent branches. The exact j=4 and j=6 calculations above are useful terminal reductions but do not bound all earlier side branches. The main-spine terminal cases r=1,2,3,4 also remain separate obligations.
+
+
+## Exact parameter forms after the surviving macros
+
+These formulas expose the next 2-adic linear forms but do not by themselves close the recursion.
+
+For j=8*s+6, after the S child and its forced F,E pair, the resulting first coordinate A2 satisfies
+    A2+3 = [(10*2^k+1)*q - 16*(15*s+19)]/8.
+Thus, when the two terms have distinct valuations,
+    v2(A2+3) = min(r, 4+v2(15*s+19)) - 3.
+The resulting rank is R_S-10, which is 3 mod 4, so its next F-run splits at l=1 mod 4.
+
+For j=8*s+4, when the S child reaches its l=3 split and takes S, the new state (A2,B2) is exactly
+    A2 = (A+4*R_S-161)/16,
+    B2 = (4*R_S-A+1)/8,
+and
+    A2+3 = [q*(34*2^k+1) - 16*(51*s+61)]/32.
+When the two terms have distinct valuations,
+    v2(A2+3) = min(r, 4+v2(51*s+61)) - 5.
+The resulting rank is R_S-20, still 1 mod 4, so its next F-run splits at l=3 mod 4.
+
+The appearance of 15*s+19 and 51*s+61 suggests a recursive affine 2-adic transducer on the split index. This is a research lead only: the exceptional equal-valuation cases, root-invariant pruning at the next split, and well-foundedness of the resulting index transformations remain open.
