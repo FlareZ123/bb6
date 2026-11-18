@@ -40,18 +40,14 @@ The exported theorem `tm63_blank_reaches_after_middle34_to_index_one` is an auth
 
 ## Acceptance boundary and next steps
 
-The existing manual-only [counted-source workflow](../../.github/workflows/agent42-counted-lbin-dec.yml) now has:
-- a targeted M0 all-valuation source compile within `counted-lbin-dec`;
-- a `tm63-24cycle-dispatcher` target that compiles the exact transitive import closure using `tools/lean_compile_closure.py` and audits three exported dispatcher/SectionResult theorems against the standard Lean axiom allowlist;
-- an explicit opt-in `middle34-acceptance` target that compiles the authentic root-consumer closure and audits 14 theorem profiles (including the 27+44 finite m=2 reset-base split) (it is deliberately excluded from the default `all` target).
+The M0 all-valuation source remains in the manual-only [counted-source workflow](../../.github/workflows/agent42-counted-lbin-dec.yml). The complete dispatcher and authentic root-consumer closure are staged in the existing manual-only `middle34-acceptance` job of the [champion-terminal source workflow](../../.github/workflows/agent42-champion-terminal-source.yml). That job reconstructs the pinned terminal imports, compiles the M1, M2, middle-34, and new root-consumer files as four roots, and audits 14 exact theorem profiles. This reuses the existing acceptance route; no duplicate workflow is needed.
 
-Neither manual target has been dispatched. The exact local Lean 4.36.0-rc2 preflight must pass first. The next decisive work is:
-
-1. Compile `TM63SourceIncrementDispatcherComplete.lean` locally through the exact import-closure tool; resolve any ambiguous or missing module imports rather than weakening the closure.
-2. Inspect the axiom profiles for `tm63_source_increment_dispatch_complete`, `sectionResult_run_to_index_one_complete`, and `sectionResult_run_complete`; reject `sorryAx`, `native_decide`, and custom axioms.
-3. Compile `TM63RootAfterSectionResultToOne.lean` locally through the exact import-closure tool and inspect all 14 exported axiom profiles. Only after both local preflights pass should the manual `middle34-acceptance` workflow target be run.
-4. Generalize the m=2, n=1 reset-base prefix from a=b=0 to arbitrary a,b, prove its exact S0-config/SectionBits embedding, and connect the terminal macro.
-5. Continue the independent universal six-state upper-bound programme. Even a completed champion lower-bound proof alone would not determine BB(6).
+The focused job has not been dispatched. The exact local Lean 4.36.0-rc2 preflight must pass first. Next:
+1. Compile `TM63SourceIncrementDispatcherComplete.lean` locally through the exact import-closure tool and inspect the three dispatcher/SectionResult theorem profiles.
+2. Compile `TM63RootAfterSectionResultToOne.lean` locally through the exact import-closure tool; inspect all 14 target theorem profiles and resolve any missing/ambiguous imports.
+3. Only after both local preflights pass, dispatch the existing `middle34-acceptance` job.
+4. Prove the nested frame equals the canonical S1 index-zero marker-one configuration, then establish the marker-one-to-terminal-S0 conversion or a marker-one SectionBits proof. The m=2 branch is not yet terminal-ready.
+5. Continue the independent universal six-state upper-bound programme; a lower-bound witness alone does not determine BB(6).
 
 ## Historical development and established narrower results
 
