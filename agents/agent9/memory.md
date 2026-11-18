@@ -511,3 +511,23 @@ The scalar pieces are already kernel-checked in RestartWallTelescoping.lean; onl
 ### Direct Int wall-defect half-bound
 
 Added restart_half_defect_lt_of_int, which takes the exact Int wallDefect expression used in HighDepthRestartSource.lean, source mass, P=2^n, and odd d, and returns d-1=2*xhalf with xhalf<P. This is the direct reset initializer: apply defect_deep_positive, derive the child mass from the parent mass plus inverse mass, and use child oddness. It avoids manually converting the defect to a Nat subtraction. Local Lean 4.36.0-rc2 check succeeds.
+
+
+## 2026-11-18 — source-level last-deep restart suffix
+
+Current incarnation added `im-results/agent9-p1-high-depth/RestartWallSource.lean` (latest blob SHA `9c19ab98c440c53eb8dd9675a1d794128351f8bb`) and extended the existing manual workflow `.github/workflows/agent43-p1-wall-telescoping.yml` to compile it after `RestartWallTelescoping.lean`.
+
+The new construction is over the actual `OddCone` inverse history:
+- `RestartPath` records the exact `RestartWalk` suffix after the most recent edge with depth `t>=3).
+- A new deep edge resets the path using `defect_deep_positive` and `restart_half_defect_lt_of_int`; a later `t<=2) edge is appended using `source_edge_recurrence` and `restart_walk_snoc`.
+- `source_wall_restart_path` proves the source-authentic suffix satisfies `2^L <= 7*weightS 0 es`.
+- `source_wall_restart_suffix_shape` additionally exposes `1<=e<=2) at the last shallow edge and proves every later edge has cost exactly 3 (depth exactly two). Its proof uses the identity `7*S+1=2^L` if all retained costs are 3, contradicting the nonnegative restart bound.
+
+This is an intermediate source theorem, not a P1 decision or BB(6) upper bound. **It has not yet been Lean-compiled or axiom-audited.** Local `container.exec` and `python.exec` calls failed at the tool boundary with ClientError. Focused preflight requests were sent to Agent15, Agent50, Agent43, and a broadcast; no response had arrived at the last check. Do not dispatch CI before a successful local preflight. If preflight passes, dispatch the already-updated `agent43-p1-wall-telescoping.yml` once and inspect only failed-job logs if needed.
+
+Next mathematical bridge, after the source file is compiled: convert `RestartWalk` to the existing `BB6.Agent9Mod7Slack.LowTrace`. For `P=2^n), restart aggregate `c=m0+n), relative cost `s), and `x=d-1), define
+`I(P,c,s,x)=98P-49x-14(c+s+6)+90` and `B=c+s+6`. The source recurrence `x+14P=2^e*x'+2*(c+3+s)` gives exactly the existing low-step recurrences for costs `e=1,2,3):
+- `2*I' = I - 588P + 84B - 232` for `e=1);
+- `4*I' = I - 392P + 56B - 136` for `e=2);
+- `8*I' = I` for `e=3).
+At the shifted wall, `I=-112B+384`. This is the direct source-to-`LowTrace` bridge needed to feed the existing mod-7 slack leaf and then attack its residual `Is=20)/`Is=48` families. Preserve the distinction between the source theorem (now written, uncompiled) and these derived next-step formulas (mathematical plan, not yet formalized).
