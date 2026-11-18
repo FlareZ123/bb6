@@ -34,7 +34,6 @@ theorem reset_one_E (k h Q : Nat) (hh : 1 ≤ h)
       packet (1+4*3*h) 0 (2*Q+6)
         BB6.Agent35K4Shapes.marker := by
     rw [e_two_reset,hprefix,hm]
-    rfl
   have hchain :
       run (chainTime 1 h 0)
         (packet (1+4*3*h) 0 (3+(2*Q+3))
