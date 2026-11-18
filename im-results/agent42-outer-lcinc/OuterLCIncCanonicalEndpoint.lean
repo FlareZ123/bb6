@@ -1,5 +1,6 @@
 import OuterLCIncPostludeSource
 import CountedSuffixOutput
+import S1CarryOutputBridge
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -352,6 +353,173 @@ theorem outerLCIncAfterZero_leftFacing_m2
           _ = sideBit
               (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh))) i :=
             htarget.symm
+
+
+/--
+The counted B/F/D sweep prepends exactly d0^b to the pre-sweep left word.
+The three residues select the two zero cells and preceding one in each
+physical 001 block; the final one is the E-zero boundary at h+6.
+-/
+theorem outerLCIncAfterSweep_leftFacing_m2
+    (L a b : Nat) (h : Int) (hL : 0 < L) :
+    ∀ i : Nat,
+      outerLCIncAfterSweep
+        (outerLCIncSourceT3 (s1Config L 1 2 a 0 b h).tape h a 2 0)
+        h a 2 b (h+3*b+5-(i:Int)) =
+      sideBit
+        (d0pow b ++
+          (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
+  let T : Int → Bool := (s1Config L 1 2 a 0 b h).tape
+  let T3 : Int → Bool := outerLCIncSourceT3 T h a 2 0
+  let U : Int → Bool := outerLCIncAfterZero T3 h a 2
+  let H : Int := h+3*b+5
+  rcases outerLCInc_s1_postlude_conditions L 1 2 a b 0 h (by omega) with
+    ⟨_,_,_,hright,_,_⟩
+  have hleft := outerLCIncAfterZero_leftFacing_m2 L a b h hL
+  have htargetTail (i j : Nat) (hj : 3*b ≤ i)
+      (hcoord : i=3*b+j) :
+      sideBit
+        (d0pow b ++
+          (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i =
+      sideBit
+        (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh))) j := by
+    rw [sideBit_append]
+    have hlen : (d0pow b).length = 3*b := by
+      exact d0pow_length b
+    have hnot : ¬ i < (d0pow b).length := by
+      rw [hlen]
+      omega
+    have hsub : i-(d0pow b).length = j := by
+      rw [hlen]
+      omega
+    simp [hnot,hsub]
+  intro i
+  by_cases hi : i < 3*b
+  · have hmod : i%3=0 ∨ i%3=1 ∨ i%3=2 := by omega
+    let q : Nat := i/3
+    have hdiv : i=3*q+i%3 := by
+      dsimp [q]
+      omega
+    have hq : q < b := by
+      dsimp [q]
+      omega
+    rcases hmod with hmod0 | hmod1 | hmod2
+    · let j : Nat := b-q-1
+      have hj : j < b+1 := by dsimp [j]; omega
+      have hblock := sweptRightB_block (b+1) U (h+7) hright j hj
+      have hcoord : H-(i:Int) = h+7+3*(j:Int)+1 := by
+        dsimp [H,j]
+        rw [hdiv,hmod0]
+        omega
+      have htarget : sideBit (d0pow b) i = false := by
+        rw [sideBit_d0pow_formula]
+        simp [hi,hmod0]
+      calc
+        outerLCIncAfterSweep T3 h a 2 b (H-(i:Int)) =
+            sweptRightB (b+1) U (h+7) (h+7+3*(j:Int)+1) := by
+              simp [outerLCIncAfterSweep,hcoord,U]
+        _ = false := hblock.2.1
+        _ = sideBit
+            (d0pow b ++
+              (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
+              rw [sideBit_append]
+              have hlen : (d0pow b).length=3*b := d0pow_length b
+              have hnot : i < (d0pow b).length := by rw [hlen]; omega
+              simp [hnot]
+              exact htarget
+    · let j : Nat := b-q-1
+      have hj : j < b+1 := by dsimp [j]; omega
+      have hblock := sweptRightB_block (b+1) U (h+7) hright j hj
+      have hcoord : H-(i:Int) = h+7+3*(j:Int) := by
+        dsimp [H,j]
+        rw [hdiv,hmod1]
+        omega
+      have htarget : sideBit (d0pow b) i = false := by
+        rw [sideBit_d0pow_formula]
+        simp [hi,hmod1]
+      calc
+        outerLCIncAfterSweep T3 h a 2 b (H-(i:Int)) =
+            sweptRightB (b+1) U (h+7) (h+7+3*(j:Int)) := by
+              simp [outerLCIncAfterSweep,hcoord,U]
+        _ = false := hblock.1
+        _ = sideBit
+            (d0pow b ++
+              (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
+              rw [sideBit_append]
+              have hlen : (d0pow b).length=3*b := d0pow_length b
+              have hnot : i < (d0pow b).length := by rw [hlen]; omega
+              simp [hnot]
+              exact htarget
+    · by_cases hlast : q+1=b
+      · have hcoord : H-(i:Int)=h+6 := by
+          dsimp [H]
+          rw [hdiv,hmod2]
+          omega
+        have hpres := sweptRightB_preserves_left (b+1) U (h+7) (h+6) (by omega)
+        have hzero := (outerLCIncAfterZero_cells T3 h a 2).2
+        have hcell : outerLCIncAfterSweep T3 h a 2 b (h+6) = true := by
+          change sweptRightB (b+1) U (h+7) (h+6) = true
+          rw [hpres]
+          exact hzero
+        have htarget : sideBit (d0pow b) i = true := by
+          rw [sideBit_d0pow_formula]
+          simp [hi,hmod2]
+        calc
+          outerLCIncAfterSweep T3 h a 2 b (H-(i:Int)) = true := by
+            rw [hcoord]
+            exact hcell
+          _ = sideBit
+              (d0pow b ++
+                (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
+              rw [sideBit_append]
+              have hlen : (d0pow b).length=3*b := d0pow_length b
+              have hnot : i < (d0pow b).length := by rw [hlen]; omega
+              simp [hnot]
+              exact htarget
+      · have hq' : q+1 < b := by omega
+        let j : Nat := b-q-2
+        have hj : j < b+1 := by dsimp [j]; omega
+        have hblock := sweptRightB_block (b+1) U (h+7) hright j hj
+        have hcoord : H-(i:Int) = h+7+3*(j:Int)+2 := by
+          dsimp [H,j]
+          rw [hdiv,hmod2]
+          omega
+        have htarget : sideBit (d0pow b) i = true := by
+          rw [sideBit_d0pow_formula]
+          simp [hi,hmod2]
+        calc
+          outerLCIncAfterSweep T3 h a 2 b (H-(i:Int)) =
+              sweptRightB (b+1) U (h+7) (h+7+3*(j:Int)+2) := by
+                simp [outerLCIncAfterSweep,hcoord,U]
+          _ = true := hblock.2.2
+          _ = sideBit
+              (d0pow b ++
+                (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
+                rw [sideBit_append]
+                have hlen : (d0pow b).length=3*b := d0pow_length b
+                have hnot : i < (d0pow b).length := by rw [hlen]; omega
+                simp [hnot]
+                exact htarget
+  · let j : Nat := i-3*b
+    have hj : 3*b ≤ i := by dsimp [j]; omega
+    have hcoord : H-(i:Int) = h+5-(j:Int) := by
+      dsimp [H,j]
+      omega
+    have hpres : sweptRightB (b+1) U (h+7) (h+5-(j:Int)) =
+        U (h+5-(j:Int)) :=
+      sweptRightB_preserves_left (b+1) U (h+7) (h+5-(j:Int)) (by omega)
+    have htarget := htargetTail i j hj (by dsimp [j]; omega)
+    calc
+      outerLCIncAfterSweep T3 h a 2 b (H-(i:Int)) =
+          U (h+5-(j:Int)) := by
+            simp [outerLCIncAfterSweep,hcoord,U,hpres]
+      _ = sideBit
+          (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh))) j := by
+            simpa [U,T3] using hleft j
+      _ = sideBit
+          (d0pow b ++
+            (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i :=
+        htarget.symm
 
 
 end BB6Coverage.Agent42OuterLCInc
