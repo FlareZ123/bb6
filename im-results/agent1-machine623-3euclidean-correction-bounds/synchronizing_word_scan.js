@@ -89,6 +89,7 @@ function checkSync(word, branch) {
   return true;
 }
 const maxStep = Number(process.argv[2] || 10000);
+const emitBlocks = process.argv.includes('--emit-blocks');
 let a=0n,d=7n;
 let failL=0,failR=0,minLen=Infinity,maxLen=0,firstFailL=null,firstFailR=null;
 let anchor16=null, states=0;
@@ -104,8 +105,12 @@ for (let n=0;n<=maxStep;n++) {
     // fixed-boundary replay; previous input digits are quantified universally.
     const word=[]; for(let i=k+1;i<j-2;i++) word.push([xd[i],yd[i]]);
     minLen=Math.min(minLen,word.length); maxLen=Math.max(maxLen,word.length);
-    if(!checkSync(word,'L')) {failL++; if(firstFailL===null) firstFailL=n;}
-    if(!checkSync(word,'R')) {failR++; if(firstFailR===null) firstFailR=n;}
+    if (emitBlocks) {
+      console.log(`${n} ${word.length} ${word.map(([x,y]) => `${x}${y}`).join(' ')}`);
+    } else {
+      if(!checkSync(word,'L')) {failL++; if(firstFailL===null) firstFailL=n;}
+      if(!checkSync(word,'R')) {failR++; if(firstFailR===null) firstFailR=n;}
+    }
     states++;
   }
   if(n===maxStep) break;
@@ -113,4 +118,4 @@ for (let n=0;n<=maxStep;n++) {
   if(next===null) break;
   [a,d]=next;
 }
-console.log(JSON.stringify({states,anchor16,minLen,maxLen,failL,firstFailL,failR,firstFailR},null,2));
+if (!emitBlocks) console.log(JSON.stringify({states,anchor16,minLen,maxLen,failL,firstFailL,failR,firstFailR},null,2));
