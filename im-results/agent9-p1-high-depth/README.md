@@ -49,3 +49,6 @@ For a restart child at absolute cost \(m_0\), set \(c=m_0+n\), and for a later p
 x+14P=2^e x'+2(c+3+s),\qquad e=t+1.
 \]
 Thus the source lift should maintain \(m_{\rm current}=m_0+L\), reset \(L=S=T=0\) after every edge with \(t\ge3\), and apply restart_aggregate_step to each subsequent edge with \(t\le2\). At the final wall, source mass plus the wall equation supplies \(x_{\rm wall}=2P+2L+2c+6\). The high-depth defect positivity in HighDepthRestartSource.lean should supply \(x_0=2x_{\rm half}\) with \(x_{\rm half}<P\). The remaining work is to formalize this state extraction/induction over OddCone; the arithmetic interface is now in place.
+
+
+The same file now isolates the two source-coordinate reductions needed by that induction: source mass plus the doubled inverse-power equation gives the one-edge recurrence, and source mass plus the wall equation gives the terminal value \(d_{\rm wall}=2P+2m+2n+7\). These lemmas are elementary and kernel-checked; the remaining nontrivial step is carrying the restart aggregate through the actual OddCone path and resetting it at each high-depth edge.

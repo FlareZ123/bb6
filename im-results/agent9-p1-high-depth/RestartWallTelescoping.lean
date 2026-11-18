@@ -193,6 +193,23 @@ theorem restart_wall_identity_from_invariant
           Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
   exact Nat.eq_of_mul_eq_mul_left (by decide : 0<2) hdouble
 
+theorem source_edge_recurrence
+    (P n b d m t c : Nat)
+    (hMass : b+d+2*m+2*n+13=14*P)
+    (hInv2 : 2*d+b+6=2^(t+1)*(c+3))
+    (hd : 1≤d) :
+    d-1+14*P = 2^(t+1)*(c+3)+2*(m+n+3) := by
+  omega
+
+theorem source_wall_endpoint
+    (P n b d m : Nat)
+    (hMass : b+d+2*m+2*n+13=14*P)
+    (hWall : b+4*m+4*n+20=12*P) :
+    d=2*P+2*m+2*n+7 := by
+  omega
+
+#print axioms source_edge_recurrence
+#print axioms source_wall_endpoint
 #print axioms restart_aggregate_step
 #print axioms restart_wall_identity_from_invariant
 #print axioms restart_walk_telescopes

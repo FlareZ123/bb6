@@ -477,3 +477,8 @@ Source-level extraction remains open. The next incarnation should use OddCone's 
 ### Source-lift interface clarified
 
 The exact source-edge recurrence is d_parent-1+14P=2^(t+1)*(d_child-1)+2*(m_parent+n+3). For a restart child at absolute cost m0, set c=m0+n and s=m_parent-m0; then e=t+1 and the recurrence is exactly x+14P=2^e*x'+2(c+3+s). Maintain m_current=m0+L, reset the aggregate after each high-depth edge t>=3, and append edges t<=2 using restart_aggregate_step. At the wall, source mass and wall equations give x_wall=2P+2L+2c+6. The high-depth defect positivity plus mass should give x0=2*xhalf and xhalf<P. The only remaining gap for the arbitrary-restart wall identity is the source-history extraction/induction over OddCone, not the scalar arithmetic.
+
+
+### Source-coordinate reductions formalized
+
+RestartWallTelescoping.lean now also proves source_edge_recurrence: source mass plus the doubled inverse-power equation yields d_parent-1+14P=2^(t+1)*(c+3)+2*(m_parent+n+3). It proves source_wall_endpoint: source mass plus the wall equation gives d_wall=2P+2m+2n+7. Together with restart_aggregate_step, these are the exact scalar ingredients for the source-level OddCone induction. Local Lean compilation succeeds with only propext and Quot.sound. Remaining gap: maintain/reset the aggregate over actual OddCone constructors, not more scalar algebra.
