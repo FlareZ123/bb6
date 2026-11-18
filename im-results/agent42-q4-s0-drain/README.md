@@ -141,3 +141,20 @@ the exact local S0 input shape `d0pow a_j` on the left and `s0RightFacing 0` on 
 - ((z,j)=(2,3)): checkpoint time 105,095; S0 input at time 105,583, head 437, (a_3=31).
 
 These are candidate counted-drain subruns, not proof of a full later-cycle factorization. In particular, the first-cycle postlude formula (Q=3h-5) **does not** extend naively: after constructing the predicted drain output for ((z,j)=(3,2)) and ((2,3)), (3h-5) steps do not reach the next q4 checkpoint. A 10-million-step postlude simulation for ((3,2)) still did not reach that checkpoint. The later-cycle postlude therefore has additional structure and must be investigated separately. Do not extrapolate the first-cycle (P,Q) formulas to later cycles without new evidence.
+
+
+## Exact first q4 checkpoint right tail
+
+The complete right-facing tape at checkpoint (j=1), starting at cell 2 (head is at cell 1), has the observed run-length encoding
+
+\[
+0^3\;1^{3z+5}\;0^2\;1^{3\cdot2^z}\;0^4.
+\]
+
+This was checked for (z=1,2,3,4), and for the additional outer parameter choices ((A,L)=(4,2),(2,4),(3,4)) at (z=2) and ((4,2),(3,4)) at (z=3). The right tail is independent of (A,L) in these tests.
+
+Together with the known left checkpoint frame
+\[
+011\;\Vert\;\operatorname{binDec}(A+L+2,M(A,L)-1)\;\Vert\;lh,
+\]
+this gives a concrete candidate input frame for a uniform source theorem proving the (P(z))-step prefix to the arbitrary-left S0 drain input. This is more useful than the earlier informal description of the positive-z right tail.
