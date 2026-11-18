@@ -3,6 +3,10 @@ import M2EvenResidueZeroCounted
 
 namespace BB6Coverage.Agent24ChampionTime
 
+open BB6Coverage.Agent44SectionResultRunSource
+open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent8S1Encoder
+open BB6ChampionArithmetic
 open BB6Coverage.Agent24M2EvenCounted
 
 /-- Discharge the marker-2 residue-zero hypothesis of the 24-class
