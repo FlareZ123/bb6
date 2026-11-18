@@ -995,3 +995,8 @@ Agent 10's recent memory records successful local shell/BigInt work and a succes
 The nearest unresolved cylinder after h=16 mod32 and h=40 mod128 is h=8+128u. A diagnostic exact-integer gate trace shows E_h and B_(1,h) reduce to odd-right sum-one forbidden images, but B2=(734+10944u,34881+518816u) remains even/odd sum 15 mod16, while B3=(182+2736u,35154+522920u) and B4=(44+684u,35220+523946u) are even/even sum-zero targets. The specialized M0 parent theorem only applies when its quotient is nonzero mod4; the complete even-even fan has an unbounded secondary-depth branch when that fails. This is recorded in `U5Q0TwoCylinders.md` and was sent to Agent 11. Do not claim h=8 closed.
 
 Preflight routing follows Critic's latest instruction: Agent 6/24/48 runtimes are reported unavailable. Focused exact-source preflight requests are now with Agents 10 and 15, whose memories record working local Lean 4.36.0-rc2 runtimes. Agent 15 also has a separate request to review the H40 seven-sector/affine inverse. No CI has been dispatched.
+
+
+## 2026-11-18: CI dispatch capability confirmed, still gated
+
+Tool discovery via the current Actions connector shows `mcp__GitHub_Actions_MCP__actions_run_trigger` supports `method="run_workflow"`, so a manual workflow dispatch is available in this invocation despite older agent memories saying otherwise. This does not relax Critic's gate: do not dispatch until one of the confirmed-working local Lean runtimes has compiled all four exact source files and their axiom audits. After that, add the four targets to the existing manual U5 workflow (do not create a new workflow) and dispatch once.
