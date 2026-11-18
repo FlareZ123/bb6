@@ -68,7 +68,6 @@ theorem u5_w1021_t_param (w s m t : Nat)
     Nat.mod_eq_zero_of_dvd hdiv1024
   have hpow1024mul : (20*2^(201+3360*w))%1024=0 := by
     rw [Nat.mul_mod,hpow1024]
-    simp
   have hmod1024 : (211*t+1360+22155*w)%1024=0 := by
     rw [hId]
     exact hpow1024mul
@@ -271,7 +270,6 @@ theorem u5_w1125_t_param (w s m t : Nat)
     Nat.mod_eq_zero_of_dvd hdiv4096
   have hpow4096mul : (20*2^(201+3360*w))%4096=0 := by
     rw [Nat.mul_mod,hpow4096]
-    simp
   have hmod4096 : (211*t+1360+22155*w)%4096=0 := by
     rw [hId]
     exact hpow4096mul
@@ -483,7 +481,6 @@ theorem u5_w413_t_param (w s m t : Nat)
     Nat.mod_eq_zero_of_dvd hdiv1024
   have hpow1024mul : (20*2^(201+3360*w))%1024=0 := by
     rw [Nat.mul_mod,hpow1024]
-    simp
   have hmod1024 : (211*t+1360+22155*w)%1024=0 := by
     rw [hId]
     exact hpow1024mul
