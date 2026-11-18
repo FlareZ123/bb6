@@ -399,7 +399,8 @@ jobs:
           if [ "$U5_SOURCE_ONLY_W21_ONLY" = "true" ]; then
             # Focused exact-source fallback for the pending source-only U5 w=21
             # cylinder. This deliberately avoids the M16 quotient route.
-            cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{U5Y3ParentFan,U5M8Q0Partial,U5Q0M16Residual,U5Q0OddOddFan,U5Y3M8}.lean .
+            cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{U5Y3ParentFan,U5Q0M16Residual,U5Q0OddOddFan,U5Y3M8}.lean .
+            cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/U5M8Q0Partial.lean .
             for f in U5Y3ParentFan U5M8Q0Partial U5Q0M16Residual U5Q0OddOddFan U5Y3M8; do
               lean -o "$f.olean" "$f.lean" 2>&1 | tee "$f.log"
               if grep -Eq 'sorryAx|_native' "$f.log"; then
