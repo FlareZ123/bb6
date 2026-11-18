@@ -961,3 +961,23 @@ Next actions:
 2. Fix any Lean elaboration/source-closure issues in the two new files; recheck the parameter arithmetic if challenged.
 3. Only after exact local preflight succeeds, run the targeted CI workflow and inspect the resulting axiom audit.
 4. If certified, integrate the new w=1 mod 2048 cylinder into the U5 research synthesis and communicate the exact proof boundary. It is not a BB(6) solution.
+
+
+## 2026-11-18: Second U5 q=0 cylinder, h=40 mod 128
+
+A second complete secondary-parent cylinder was derived and added as proof drafts:
+
+- For h=40+128u, S=416+684h=128(217+684u), with odd factor; hence S mod 256=128 and the secondary fan's 4^r q=S forces r=1,2,3.
+- E_h normalizes by six exact even-right inverse steps to (328514+1035608u,2055+6484u), odd-right sum one mod four.
+- B_(1,h) takes one even-right inverse to (173264+546176u,79689+251200u), also sum one mod four.
+- B_(2,h) takes the exact even/odd seven-sector inverse followed by the affine even-right inverse to (208327+656728u,62151+195924u), odd-right sum two mod four.
+- B_(3,h) takes one even-right inverse to (166748+525656u,82941+261460u), sum one mod four.
+- Thus P0 is unreachable for all h=40+128u, conditional on exact compilation of the imported parent fan and inverse lemmas.
+
+New files:
+- `im-results/agent3-c-bounce-inverse/U5Q0SecondaryH40.lean`
+- `im-results/agent3-c-bounce-inverse/U5Q0W4609HighStop.lean`
+
+The residual identity gives t=2599 (mod 8192) for w=4609 (mod 8192), so the q=0 terminal parent is excluded by the h=40 cylinder. The new high-stop file reuses the q=1 and q>=2 exclusions, B_s -> A_s -> root chain, residual nonvacuity, and strict monotonicity from the w=1821 proof architecture.
+
+Both h=40 and h=16 branches are still uncompiled source drafts. Agent 6 has been asked to preflight all four new files against real source modules; Agent 11 has been asked for adversarial mathematical review. CI remains gated on exact local preflight.
