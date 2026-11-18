@@ -131,3 +131,24 @@ For an integer \(z\), let \(r\) be the least nonnegative residue of \(z\) modulo
 Proof: if \(r\le W<3^k\), every digit at positions \(i\ge k\) is zero. If \(3^j-r\le W<3^k\), write \(t=3^j-r\); since \(t<3^k\), subtracting \(t\) from \(3^j-1=(222\ldots2)_3\) changes only the bottom \(k\) digits, so every digit at positions \(i\ge k\) of \(r\) is \(2\). Either case contradicts the assumed middle digit \(1\).
 
 Thus the 3-adic residue-separation goal can be weakened to a concrete digit certificate: for the chosen \(W\) and \(j\), prove that \(h\bmod 3^j\) has at least one ternary digit \(1\) in the middle window \([k,j)\). This condition is sufficient, not necessary. It may be easier to preserve under a finite-state analysis of the exact cocycle than the original least-residue inequality.
+
+
+## Bridge to the terminal-window width used by the 3-adic scan
+
+For the canonical band parameter \(n\) used by RootCancellationExponentTransfer, the hypotheses are
+\[
+3^{n-1}-3\le q,\qquad q+3<3^n,\qquad n\ge10.
+\]
+Let \(\ell\) be least with \(\tau(\ell)=(3^\ell-1)/2\ge q+3\), as in Agent32's residue scan. Then
+\[
+n\le\ell\le n+1.
+\]
+Indeed, \(q+3\ge3^{n-1}>\tau(n-1)\), so \(\ell\ge n\); and \(\tau(n+1)>3^n>q+3\), so \(\ell\le n+1\).
+
+The terminal-ratio bounds with \(K=n+6\), converted to the old-ray distances above, are bounded in every sector by \(9n+22\) for \(n\ge10\):
+- LO: \(|h|\le 6n+44\le9n+22\);
+- LE: \(|h|\le 6n+31\le9n+22\);
+- RO: \(|h|\le(6n+19)/2\le9n+22\);
+- RE: \(|h|\le(9n+25)/2\le9n+22\).
+
+Consequently Agent32's \(W=9\ell+22\) is a conservative common terminal-window envelope for the source-supported n>=10 regime. This aligns the 3-adic residue target with the source terminal-ratio theorem. It does not cover the n<10 small-depth regime, which remains a separate root-prefix obligation.
