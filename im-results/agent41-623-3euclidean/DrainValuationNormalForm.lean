@@ -37,6 +37,8 @@ theorem evalA_3adic_run
         have hkmod : k % 3 = 2 := by omega
         have hkdiv : k / 3 = q := by omega
         simp [evalA, hkmod, hkdiv, ternaryOnes]
+        have hsub : a - 1 + 1 = a := Nat.sub_add_cancel (by omega)
+        omega
   | succ v ih =>
       have hpow : 3^(v+1) = 3*3^v := by
         rw [Nat.pow_succ]
@@ -72,7 +74,7 @@ theorem evalA_3adic_run
       constructor
       · omega
       · constructor
-        · trivial
+        · exact True.intro
         · have hpow2 : 2*ternaryOnes v+1 = 3^v :=
             twice_ones_add_one_eq_pow v
           have hshift :
@@ -93,13 +95,15 @@ theorem evalA_3adic_run
                       omega
               _ = 3^v + 2*(3^v*(3*q+2*eps)) + 2 := by rw [hpow2]
               _ = (6*q+1+4*eps)*3^v+2 := by rw [hmul]
+          have hshift' : 2*k0+3 = (6*q+1+4*eps)*3^v+2 := by
+            simpa [k0] using hshift
           have hplus : 3^v + ternaryOnes v = ternaryOnes (v+1) := by
             rw [← hpow2, hones]
             omega
           calc
             m + 2*k0 + 3 + (6*q+1+4*eps)*ternaryOnes v + 2*v + 2*(1-eps)
                 = m + (2*k0+3) + (6*q+1+4*eps)*ternaryOnes v + 2*v + 2*(1-eps) := by omega
-            _ = m + ((6*q+1+4*eps)*3^v+2) + (6*q+1+4*eps)*ternaryOnes v + 2*v + 2*(1-eps) := by rw [hshift]
+            _ = m + ((6*q+1+4*eps)*3^v+2) + (6*q+1+4*eps)*ternaryOnes v + 2*v + 2*(1-eps) := by rw [hshift']
             _ = m + (6*q+1+4*eps)*(3^v+ternaryOnes v) + 2*(v+1) + 2*(1-eps) := by
                   rw [Nat.mul_add]
                   omega
