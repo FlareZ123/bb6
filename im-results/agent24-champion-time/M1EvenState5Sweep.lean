@@ -44,12 +44,21 @@ theorem state5_three_right (T : Int → Bool) (h : Int)
   · omega
   · funext x
     by_cases hx0 : x = h
-    · simp [hx0, holeRight, hne0]
+    · subst x
+      have hne1 : h ≠ h+1 := by omega
+      have hne2 : h ≠ h+2 := by omega
+      simp [holeRight, heq2, hne1, hne2]
     · by_cases hx1 : x = h+1
-      · simp [hx0, hx1, holeRight, h1, hne12]
+      · subst x
+        have hne0 : h+1 ≠ h := by omega
+        have hne2 : h+1 ≠ h+2 := by omega
+        simp [holeRight, heq2, hne0, hne2, h1]
       · by_cases hx2 : x = h+2
-        · simp [hx0, hx1, hx2, holeRight, hne2']
-        · simp [hx0, hx1, hx2, holeRight]
+        · subst x
+          have hne0 : h+2 ≠ h := by omega
+          have hne1 : h+2 ≠ h+1 := by omega
+          simp [holeRight, heq2, hne0, hne1]
+        · simp [holeRight, heq2, hx0, hx1, hx2]
 
 /-- The cells at and immediately right of the moving state-5 head are one. -/
 def state5RightOnes (T : Int → Bool) (h : Int) (n : Nat) : Prop :=
