@@ -118,3 +118,33 @@ Examples:
 A fixed-depth inverse-certificate search cannot uniformly close this q=0 family while retaining the FSFE branch: there are natural parameters with arbitrarily many consecutive blocks. The useful next step is a parameterized argument on `v2(3u+5)` (or a root invariant that excludes the side branches before the block repeats), not simply increasing a fixed inverse-depth cap.
 
 The exact finite q=0 proof for `(n,d)=(23,7)` remains valid only for that concrete seed until the parameter family is formally handled. This block calculation does not extend it to all `u` and does not decide machine #429 or BB(6).
+
+
+## Root-compatibility correction: syntactic versus reachable block count
+
+The formula above
+```
+4 * floor(v2(z+1)/4)
+```
+counts **syntactically available** F,S,F,E inverse candidates, based only on divisibility by 16. It is not the number of blocks that can occur on a genuine blank-root path.
+
+There is a stronger all-time invariant at the intermediate positive-even state P3. In the w=z+1 coordinate,
+```
+P3.second = 2*a + 3*w/4.
+```
+If a=1 (mod 4) and 16 divides w, then
+```
+P3.second = 2 (mod 8)  iff  v2(w) >= 5;
+P3.second = 6 (mod 8)  iff  v2(w) = 4.
+```
+Since P3.first is positive even, a genuine root path requires P3.second=2 (mod 8). Therefore a completed root-compatible block requires valuation at least 5, not merely 4.
+
+If v=v2(w0), the maximum number of completed root-compatible blocks along this one branch is consequently
+```
+floor((v-1)/4),
+```
+leaving residual valuation in {1,2,3,4}. For residual 4, the next syntactic F,S,F prefix reaches a positive-even P3 with second coordinate 6 mod 8 and is immediately impossible. Residuals 1,2,3 have different partial inverse grammars and are not closed by this observation.
+
+This correction is important for the q0 family: when u=9 (mod 16), v=3+v2(3u+5) is unbounded, but the root-compatible completed-block count is floor((v-1)/4), not floor(v/4). For u=3 (mod 16), v=4: one full block is syntactically integral, but its P3 is root-incompatible, so it contributes **zero** completed root-compatible blocks.
+
+The competing F sibling at every S split remains a separate obligation in either count. This correction is a branch-level necessary-condition result, not a q0-family nonreachability theorem.
