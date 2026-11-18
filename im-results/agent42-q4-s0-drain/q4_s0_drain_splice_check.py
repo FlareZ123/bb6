@@ -299,12 +299,50 @@ def check_case(A: int, L: int, z: int) -> dict[str, object]:
     }
 
 
+
+def check_z1_full_terminal_run() -> dict[str, object]:
+    machine, width, M = initial_machine(3, 2, 1)
+    checkpoints: list[int] = []
+    for _ in range(1_000_000):
+        if (
+            machine.state == 4
+            and machine.head == 1
+            and machine.tape.read(machine.head) == 0
+        ):
+            checkpoints.append(machine.steps)
+        if machine.state == 0 and machine.tape.read(machine.head) == 1:
+            break
+        machine.step()
+    else:
+        raise RuntimeError("z=1 terminal run did not halt within limit")
+
+    assert M == 120
+    assert len(checkpoints) == M
+    assert checkpoints[0] == 275
+    assert checkpoints[-1] == 245_105
+    assert machine.steps == 246_201
+    assert machine.state == 0 and machine.head == 967
+    assert machine.tape.read(machine.head) == 1
+    return {
+        "A": 3,
+        "L": 2,
+        "z": 1,
+        "q4_checkpoints": len(checkpoints),
+        "first_checkpoint": checkpoints[0],
+        "last_checkpoint": checkpoints[-1],
+        "halt_step": machine.steps,
+        "halt_state": machine.state,
+        "halt_head": machine.head,
+    }
+
+
 def main() -> None:
     cases = [(3, 2, z) for z in range(1, 6)]
     cases += [(4, 2, 2), (2, 4, 2), (3, 4, 2), (4, 2, 3), (3, 4, 3)]
     cases += [(4, 2, 5), (3, 4, 5), (5, 2, 5)]
     for A, L, z in cases:
         print(json.dumps(check_case(A, L, z), sort_keys=True))
+    print(json.dumps(check_z1_full_terminal_run(), sort_keys=True))
 
 
 if __name__ == "__main__":
