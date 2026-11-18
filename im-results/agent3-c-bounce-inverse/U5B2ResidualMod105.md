@@ -129,3 +129,51 @@ The first exact classes are:
 | 8 | n ≡ 11245 (mod 16384) |
 
 This is a root-sensitive valuation normal form for the entire unbounded q≥3 B2 fan. It proves that the q-depth is not an independent search parameter: it is exactly the valuation of one odd affine function of the original root index. It does not by itself exclude the q-strata or the low q=0,1,2 branches. The derivation is arithmetic from the exact residual identity and the already source-certified affine root congruence; this new valuation identity has not yet been Lean-compiled.
+
+
+## Even-u B2 branch: exact two-parent reduction and an infinite exclusion
+
+There is a simpler source-depth bound on the B2 target whenever u is even; this does not require the mod-105 refinement.
+
+Write
+```
+x = 734 + 10944*u
+y = 34881 + 518816*u
+W = 1113 + 16555*u
+A = x+y+1 = 32*W
+X = x+2*y = 70496 + 1048576*u.
+```
+For even u, W is odd, so A has exact 2-adic valuation 5.
+
+Apply the complete `section_preimage_all_iff` grammar to any source predecessor of (x,y):
+- a=0 is impossible because x+y is odd, while its nonexceptional output equation makes x+y even; its exceptional output is (0,4).
+- a=1 is impossible: its exceptional outputs are small, its y=3 branch is too small, and its high branch would require `A=16*2^d`. Since A=32*W with W odd and W≥1113, this is impossible.
+- k=0 is impossible because the output right coordinate would be 2.
+- the direct branch is impossible because it outputs an even right coordinate.
+- the even-a bounce branch is impossible because it makes x+y even.
+- Hence only the odd-a high-bounce branch remains. Its equations simplify to
+  `A=2^(d+1)*(a+3)` and `2*k+a+9+3*d=X+2`.
+  Since a is odd, a+3 is even, so `2^(d+2) | A`; exact v2(A)=5 gives d≤3. Cost parity forces d even. Therefore d=0 or d=2, with the only possible source parents:
+  - d=0: `P0=(17805+264880*u, 26342+391848*u)`;
+  - d=2: `P1=(4449+66220*u, 33017+491178*u)`.
+
+For every even u, P1 is odd/odd, has right coordinate ≥5, and coordinate sum
+`37466+557398*u ≡ 2 (mod 4)`; the source-certified `blank_no_odd_sum_two` excludes it.
+
+P0 is odd/even with right coordinate ≥6 and sum `44147+656728*u ≡3 (mod8)`. The source-certified `section_odd_even_iff_affine` forces its unique direct predecessor
+`P2=(44145+656728*u,13170+195924*u)`.
+For even u, P2 is again odd/even with sum `57315+852652*u ≡3 (mod8)`, so its unique predecessor is
+`P3=(57313+852652*u,6584+97962*u)`.
+P3 has even right coordinate ≥6 and sum `63897+950614*u ≡1 or 5 (mod8)`; the source-certified `blank_reach_iff_even_right` therefore forces
+`P4=(63895+950614*u,3291+48981*u)`.
+
+P4 is odd/odd with right coordinate ≥5 and sum
+`67186+999595*u ≡ 2+3u (mod4)`.
+Thus for `u≡0 (mod4)`, its sum is 2 modulo 4 and `blank_no_odd_sum_two` excludes it. Consequently the complete B2 parent fan is closed on the infinite cylinder
+[
+\boxed{u\equiv0\pmod4\quad\Longrightarrow\quad \neg CReach(734+10944u,34881+518816u).}
+]
+For the remaining even-u class `u≡2 (mod4)`, the same argument gives the exact reduction
+`CReach(B2(u)) ↔ CReach(P4(u))`; the latter is the remaining odd/odd sum-zero state and is not excluded here.
+
+Combining with the root-index congruence `u+r≡2 (mod8)`, the excluded cylinder `u≡0 (mod4)` corresponds to root indices `r≡2 or 6 (mod8)`. This is a paper-level composition of the complete B2 source fan with already source-certified inverse/reachability lemmas. The new composed theorem has not yet been Lean-compiled in this invocation.
