@@ -11,15 +11,15 @@ P_4(u)=(x,y)=(63895+950614u,\;3291+48981u),
 \]
 with the authentic residual constraints
 \[
-u\equiv122\pmod{420},\qquad r\equiv2-u\pmod8.
+u\equiv122\pmod{420},\qquad u+r\equiv2\pmod8.
 \]
-Here \(r\) is the original root index. In particular, \(u\equiv2\pmod8\) and \(r\equiv0\pmod8\).
+Here \(r\) is the original root index. This note treats the **\(r\equiv0\pmod8\) subbranch** of the remaining \(u\equiv2\pmod4\) sector. On this subbranch \(u\equiv2\pmod8\), hence \(u\equiv122\pmod{840}\). The complementary \(r\equiv4\pmod8\) subbranch has \(u\equiv6\pmod8\), so \(v_2(S)=2\) and is the separate low-valuation case handled by OddOddLowVal.
 
 Put
 \[
 S=x+y=67186+999595u.
 \]
-The congruence \(u\equiv122\pmod{420}\) gives:
+The congruences \(u\equiv122\pmod{420}\) and \(u\equiv2\pmod8\) give:
 - \(x,y\) are odd and \(y\ge5\);
 - \(3\mid x\) and \(3\mid y\), hence \(3\mid S\);
 - \(8\mid S\), since \(u\equiv2\pmod8\).
@@ -68,7 +68,7 @@ candidate parent depths, namely \(n=0,2,4,\ldots\le v_2(S)-2\). This is a finite
 
 ## Exact root-index stratification
 
-Write \(r=8t\). Then
+Write \(r=8t\). Also write \(u=122+840w\). Then
 \[
 2570932352+3163718175r
 =8(321366544+3163718175t),
@@ -78,10 +78,10 @@ and \(v_2(321366544)=4\), while \(3163718175\) is odd. Therefore, whenever \(v_2
 v_2(S)=3+v_2(t).
 \]
 In particular:
-- \(r\equiv8\pmod{16}\) gives \(v_2(S)=3\), so only \(n=0\) can occur. This is exactly the unique-parent valuation-three layer covered by OddOddVal3Orbit.
-- \(r\equiv16\pmod{32}\) gives \(v_2(S)=4\), so only \(n=0,2\) can occur. This is the two-parent sum-16 layer covered by MixedOdd16TwoOrbit.
-- \(r\equiv32\pmod{64}\) gives \(v_2(S)=5\), so again only \(n=0,2\) can occur, now with the higher-valuation target.
-- \(64\mid r\) gives \(v_2(S)\ge6\); the admissible even depths extend to \(n=4\) and beyond according to the exact affine valuation.
+- \(r\equiv8\pmod{16}\) gives \(v_2(S)=3\), so only \(n=0\) can occur. Equivalently \(w\) is odd and \(u\equiv2\) or \(18\pmod{32}\). This is exactly the unique-parent valuation-three layer covered by OddOddVal3Orbit.
+- \(r\equiv16\pmod{32}\) gives \(v_2(S)=4\), so only \(n=0,2\) can occur. Equivalently \(w\equiv0\pmod4\) and \(u\equiv26\pmod{32}\). This is the two-parent sum-16 layer covered by MixedOdd16TwoOrbit.
+- \(r\equiv32\pmod{64}\) gives \(v_2(S)=5\), so again only \(n=0,2\) can occur, with \(w\equiv2\pmod4\) and \(u\equiv10\pmod{32}\).
+- \(64\mid r\) gives \(v_2(S)\ge6\); it corresponds to \(w\equiv2\pmod4\) with a higher lift, and the admissible even depths extend to \(n=4\) and beyond according to the exact affine valuation.
 
 The valuation identity therefore converts the unbounded-looking P4 inverse problem into a root-index-indexed finite dyadic parent fan. It does not yet show that any of these parents is blank-unreachable.
 
