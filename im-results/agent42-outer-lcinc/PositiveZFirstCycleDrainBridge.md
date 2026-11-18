@@ -51,6 +51,18 @@ This clarifies the notation in the empirical macro note: the
 (K=2^z-1), whose actual binary value is (2^K-1). It is not the
 drain of the binary value (2^z-1).
 
+## Distinguish the pre-checkpoint prefix
+
+The first q4 checkpoint itself is reached at the empirically observed
+time
+`drainCost(z,0) + drainCost(2^z-1,0) + 12*(A+L+z) + 107`,
+as detailed in `PositiveZCheckpointNormalForm.md`. That is a
+**pre-checkpoint** two-drain candidate and should not be conflated with
+the **post-checkpoint first-cycle** all-ones drain of width
+`K=2^z-1` and actual value `2^K-1` analyzed above. The exact
+intermediate configurations for both decompositions remain open.
+
+
 The arithmetic identity is exact, but the decomposition remains a
 hypothesis. The q4 checkpoint's right-side nested counter has not yet
 been identified as the required S0 all-ones input, and the prefix,
