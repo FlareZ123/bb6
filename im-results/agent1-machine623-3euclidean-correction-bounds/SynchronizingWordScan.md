@@ -89,15 +89,15 @@ g++ -O3 -std=c++17 synchronizing_reset_subwords.cpp -o /tmp/reset-subwords
 node synchronizing_word_scan.js 10000 --emit-blocks | /tmp/reset-subwords
 ```
 
-Observed over the 9,375 available exported blocks (indices 33 through 9,407 in the captured export):
+Observed over all 9,968 exported blocks (indices 33 through 10,000):
 
 | Minimum common reset-subword length | Number of blocks |
 |---:|---:|
-| 3 | 9,036 |
-| 4 | 337 |
+| 3 | 9,616 |
+| 4 | 350 |
 | 5 | 1 |
 | 6 | 1 |
 
-The length-5 exception is index 3,874; the length-6 exception is index 237. There are no blocks without a common reset subword of length at most 6.
+The unique length-5 case is index 3,874; the unique length-6 case is index 237. There are no blocks without a common reset subword of length at most 6.
 
 This is a local-certificate strengthening of the full-word synchronization scan. It still remains a finite computational observation: the subword language has not yet been proved invariant under the authentic root transition.
