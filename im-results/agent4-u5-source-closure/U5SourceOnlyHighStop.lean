@@ -257,14 +257,14 @@ theorem u5_high_root_parameter_residue (w s : Nat)
   have hdiv : 32768∣320*2^(201+3360*w) := by
     refine ⟨320*r,?_⟩
     rw [hr]
-    ring
+    omega
   have hdivj : 32768∣211*(39+64*s)+27 := by
     rw [hformula]
     exact hdiv
   have hmod : (211*(39+64*s)+27)%32768=0 :=
     Nat.mod_eq_zero_of_dvd hdivj
-  have hconst : (211*18791+27)%32768=0 := by norm_num
-  have hinv : 211*22363=32768*144+1 := by norm_num
+  have hconst : (211*18791+27)%32768=0 := by decide
+  have hinv : 211*22363=32768*144+1 := by decide
   have hjmod : (39+64*s)%32768=18791 := by omega
   have hrel : 39+64*s=7+32*(1+2*s) := by omega
   have htmod : (1+2*s)%1024=587 := by omega
