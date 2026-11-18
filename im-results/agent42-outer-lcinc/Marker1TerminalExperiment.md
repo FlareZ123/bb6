@@ -83,3 +83,33 @@ The even-L halting times grow by factors approaching 4 per increment of A and 16
 ## Evidence boundary
 
 The marker-0 control is a useful check that the transcribed transition table and physical tape orientation agree with the existing terminal theorem. The marker-1 observations are still finite computational evidence. The script does not replace a Lean proof, a cycle certificate, or a quantified simulation theorem.
+
+
+## State-4 exit observation
+
+The transition table has a useful exact reduction:
+
+- The only undefined transition is state 0 reading 1.
+- The only way to enter state 0 is from state 4 reading 0 (which writes 1, moves right, and enters state 0).
+- Therefore a halt occurs exactly when a state-4 scan reaches a 0 whose immediate right neighbor is 1; the following state-0 query then reads 1.
+
+The simulator now counts these events. Observed samples:
+
+| Marker | A | L | State-4 on 0 | Next cell 0 | Next cell 1 | State-0 reads 1 |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 1 | 3 | 5,289 | 5,289 | 0 | 0 |
+| 1 | 2 | 3 | 4,453 | 4,453 | 0 | 0 |
+| 1 | 1 | 2 | 157 | 156 | 1 | 1 |
+| 1 | 1 | 4 | 637 | 636 | 1 | 1 |
+| 0 | 1 | 3 | 5 | 4 | 1 | 1 |
+
+This isolates a sharper conjecture than parity-dependent survival:
+
+```
+marker=1 and L odd:
+  every reachable state-4 configuration reading 0 has a 0 immediately to its right.
+```
+
+If proved, this invariant immediately implies nonhalting for all A and odd L. The even-L samples instead eventually produce one state-4/0/1 boundary, causing the unique halt query.
+
+The transition-level equivalence is proved directly from the table; the quantified odd-L invariant is **not** proved. The event counts are finite computational evidence only.
