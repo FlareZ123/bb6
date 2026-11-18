@@ -28,7 +28,7 @@ RestartWallTelescoping.lean formalizes the arbitrary-start weighted telescoping 
 \[
 x_j+14P=2^{e_j}x_{j+1}+2(c+3+s_j),\qquad x_j=d_j-1.
 \]
-The Lean theorem proves
+The Lean theorems also prove a one-edge aggregate update: from an invariant at cost L, appending a step of cost e updates (S,T,L) to (S+2^L,T+L*2^L,L+e) while preserving the invariant. A second theorem derives the additive wall identity directly from that aggregate invariant, so a future source induction need not construct an explicit edge list. The Lean theorem proves
 \[
 x_0+14P S=2^Lx_{\rm wall}+2((c+3)S+T),
 \]

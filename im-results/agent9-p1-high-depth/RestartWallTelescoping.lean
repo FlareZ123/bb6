@@ -141,6 +141,60 @@ theorem restart_wall_nonnegative_N
     omega
   · omega
 
+theorem restart_aggregate_step
+    (P c x0 x x' L S T e : Nat)
+    (hInv : x0 + 14*P*S = 2^L*x + 2*((c+3)*S+T))
+    (hStep : x + 14*P = 2^e*x' + 2*(c+3+L)) :
+    x0 + 14*P*(S+2^L) =
+      2^(L+e)*x' + 2*((c+3)*(S+2^L) + (T+L*2^L)) := by
+  have hpow : 2^L*2^e=2^(L+e) := by rw [← Nat.pow_add]
+  calc
+    x0 + 14*P*(S+2^L) = x0+14*P*S+14*P*2^L := by
+      rw [Nat.mul_add]
+      omega
+    _ = 2^L*x + 2*((c+3)*S+T) + 14*P*2^L := by rw [hInv]
+    _ = 2^L*x + 2^L*(14*P) + 2*((c+3)*S+T) := by ac_rfl
+    _ = 2^L*(x+14*P) + 2*((c+3)*S+T) := by rw [← Nat.mul_add]
+    _ = 2^L*(2^e*x'+2*(c+3+L)) + 2*((c+3)*S+T) := by rw [hStep]
+    _ = 2^L*(2^e*x') + 2^L*(2*(c+3+L)) + 2*((c+3)*S+T) := by rw [Nat.mul_add]
+    _ = (2^L*2^e)*x' + 2^L*(2*(c+3+L)) + 2*((c+3)*S+T) := by
+      rw [← Nat.mul_assoc]
+    _ = 2^(L+e)*x' + 2^L*(2*(c+3+L)) + 2*((c+3)*S+T) := by rw [hpow]
+    _ = 2^(L+e)*x' + 2*((c+3+L)*2^L) + 2*((c+3)*S+T) := by ac_rfl
+    _ = 2^(L+e)*x' + 2*((c+3)*(S+2^L) + (T+L*2^L)) := by
+      simp [Nat.add_mul, Nat.mul_add, Nat.mul_assoc, Nat.mul_comm,
+        Nat.mul_left_comm, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
+
+theorem restart_wall_identity_from_invariant
+    (P c xhalf L S T : Nat)
+    (hInv : 2*xhalf + 14*P*S =
+      2^L*(2*P+2*L+2*c+6) + 2*((c+3)*S+T)) :
+    xhalf + P*(7*S) =
+      P*2^L + 2^L*(L+c+3) + (c+3)*S + T := by
+  have hterm :
+      2^L*(2*P+2*L+2*c+6) = 2*(P*2^L+2^L*(L+c+3)) := by
+    have hlin : 2*P+2*L+2*c+6=2*(P+L+c+3) := by omega
+    calc
+      _ = 2^L*(2*(P+L+c+3)) := by rw [hlin]
+      _ = 2*(2^L*(P+L+c+3)) := by ac_rfl
+      _ = 2*(2^L*P+2^L*(L+c+3)) := by
+        have hlin2 : P+L+c+3=P+(L+c+3) := by omega
+        rw [hlin2, Nat.mul_add]
+      _ = 2*(P*2^L+2^L*(L+c+3)) := by ac_rfl
+  have hdouble :
+      2*(xhalf+P*(7*S)) =
+      2*(P*2^L+2^L*(L+c+3)+(c+3)*S+T) := by
+    calc
+      _ = 2*xhalf+14*P*S := by rw [Nat.mul_add]; ac_rfl
+      _ = 2^L*(2*P+2*L+2*c+6)+2*((c+3)*S+T) := hInv
+      _ = 2*(P*2^L+2^L*(L+c+3))+2*((c+3)*S+T) := by rw [hterm]
+      _ = 2*(P*2^L+2^L*(L+c+3)+(c+3)*S+T) := by
+        simp [Nat.mul_add, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm,
+          Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+  exact Nat.eq_of_mul_eq_mul_left (by decide : 0<2) hdouble
+
+#print axioms restart_aggregate_step
+#print axioms restart_wall_identity_from_invariant
 #print axioms restart_walk_telescopes
 #print axioms restart_wall_identity_additive
 #print axioms restart_wall_nonnegative_N
