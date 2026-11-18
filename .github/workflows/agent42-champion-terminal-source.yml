@@ -1281,6 +1281,7 @@ jobs:
             im-results/agent44-tm63-middle/M2EvenSixGenericCounted.lean \
             im-results/agent44-tm63-middle/TM63RootMiddle34.lean \
             im-results/agent48-counted-inc0/TM63RootAfterSectionResultToOne.lean \
+            im-results/agent48-counted-inc0/Q4S0FirstCycleMacros.lean \
             --jobs 8 \
             --source-root /tmp/middle34-sources \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
