@@ -1,36 +1,15 @@
-import Machine623DeepFrontier
 
 namespace BB6Coverage
 
 set_option maxRecDepth 15000
 set_option maxHeartbeats 0
 
-/-- The fifth distinct physical input on the authentic #623 trace. -/
+/-- Selected depth-five raw-table coordinate D/1 in the authentic #623 table. -/
 def machine623D1Slot : Slot := (⟨3, by decide⟩, true)
 
 /-- The first four raw rows leave D/1 unassigned. -/
 theorem machine623D1_unassigned :
     machine623Prefix 4 machine623D1Slot = none := by decide
-
-/-- D/1 is not merely a convenient sparse-table coordinate: it is the
-    next genuinely consulted input after the first four source rows. -/
-theorem machine623D1_first_physical_unknown :
-    firstUnknownPhysical (machine623Prefix 4) 96 finiteBlank =
-      some machine623D1Slot := by decide
-
-/-- Every total completion of the depth-four cylinder reaches D/1 on its
-    actual blank-tape run, after the same six primitive moves. -/
-theorem machine623D1_reached_by_every_completion (m : Machine)
-    (hm : compatible (machine623Prefix 4) m) :
-    ∃ k, k < 96 ∧ ∃ d : FinRayCfg,
-      run m k blank = some (embedFinRay d) ∧
-      readSlot (embedFinRay d) = machine623D1Slot := by
-  obtain ⟨k, hk, d, hrun, hslot, _⟩ :=
-    firstUnknownPhysical_is_raw_prefix (machine623Prefix 4) m hm 96
-      finiteBlank machine623D1Slot machine623D1_first_physical_unknown
-  refine ⟨k, hk, d, ?_, ?_⟩
-  · simpa only [embedFinRay_blank] using hrun
-  · simpa only [readSlot, embedFinRay] using hslot.symm
 
 /-- A child of the depth-four cylinder obtained by fixing D/1. -/
 def machine623D1Child (t : Transition) : PartialMachine :=
@@ -114,8 +93,8 @@ theorem machine623D1ToCLeft1_cover :
   finiteLassoCheck_sound _ 8 6 machine623D1ToCLeft1_lasso_check
 
 /-- A source-sound one-level expansion of the 25^8 depth-four raw-table
-    cylinder. Seven children are proved all-time nonhalting; the other
-    eighteen are deliberately retained as open cylinders. -/
+    cylinder. Six children are proved all-time nonhalting; the other
+    nineteen are deliberately retained as open cylinders. -/
 def machine623D1Audit : FrontierAudit (DecidedBelow 6) (machine623Prefix 4) :=
   .branch (machine623Prefix 4) machine623D1Slot machine623D1_unassigned
     (fun t _ =>
@@ -183,7 +162,6 @@ theorem machine623D1Audit_root_remains_open :
     machine623D1ToDLeft0, machine623D1ToDLeft1, machine623D1ToDRight0,
     machine623D1ToCLeft1, machine623]
 
-#print axioms machine623D1_reached_by_every_completion
 #print axioms machine623D1ToBLeft0_ray_check
 #print axioms machine623D1ToCLeft1_lasso_check
 #print axioms machine623D1Audit_exhaustive

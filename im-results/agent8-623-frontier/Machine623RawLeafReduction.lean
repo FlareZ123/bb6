@@ -1,4 +1,3 @@
-import Machine623DeepFrontier
 import Machine623HaltCylinder
 
 namespace BB6Coverage
@@ -134,14 +133,6 @@ theorem machine623_depth11_mass_ratio :
   rw [machine623_first_four_mass, machine623_prefix_mass]
   norm_num [Nat.pow_succ]
 
-/-- The same 11-row cylinder is an explicitly open leaf for the stronger
-    96-move physical-trace scan.  Its only unresolved F/0 child is isolated
-    by machine623FinalSlotAudit above. -/
-theorem machine623_depth11_is_open :
-    (lassoPhysicalTraceAudit emptyTable 6 6 96 12 2 4 11).open
-      machine623 :=
-  machine623_depth_eleven_open
-
 #print axioms machine623_depth11_refines_depth4
 #print axioms machine623_ordinary_f0_extension_never
 #print axioms machine623FinalSlotAudit_exhaustive
@@ -149,6 +140,5 @@ theorem machine623_depth11_is_open :
 #print axioms machine623_depth11_only_root_remains
 #print axioms machine623FinalSlotAudit_report
 #print axioms machine623_depth11_mass_ratio
-#print axioms machine623_depth11_is_open
 
 end BB6Coverage
