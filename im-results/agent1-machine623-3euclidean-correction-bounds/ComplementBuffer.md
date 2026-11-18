@@ -9,7 +9,7 @@ Let D(a,d) be an accelerated #623 section state with a>0 even. Assume (1) D(a,d)
 - d odd and a=d+3;
 - d even and a=d+2;
 
-and (3) `highLevelNext(D(a,d))=D(b,e)` succeeds. Then b is even and 2b+1 <= e. In particular, the successful successor is itself in `newAffineCone`.
+and (3) `highLevelNext(D(a,d))=D(b,e)` succeeds. Then either b=0, or b is positive even and 2b+1 <= e. In the positive case the successful successor is itself in `newAffineCone`.
 
 ## Proof
 
@@ -27,7 +27,7 @@ Now split the source branch selected by `highLevelNext`.
 
 * Even d, a>d. Parity rules out a=d+1; the only remaining value below d+3 is a=d+2, explicitly excluded, so otherwise this is the far-left case.
 
-Finally, b even and 2b+1 <= e imply the exponential right budget, hence `newAffineCone(b,e)`: if e is odd, e+4-b >= b+5 and b-1 <= u_(e+4-b); if e is even, e+1-b >= b+2 and b < u_(e+1-b).
+Finally, in the b>0 case, b even and 2b+1 <= e imply the exponential right budget, hence `newAffineCone(b,e)`: if e is odd, e+4-b >= b+5 and b-1 <= u_(e+4-b); if e is even, e+1-b >= b+2 and b < u_(e+1-b).
 
 ## Two-step consequence
 
@@ -46,4 +46,4 @@ Zero-first-counter excursions are separately controlled by `Agent8RootCorridorSo
 
 ## Why this matters
 
-This removes the broad all-time square-gap requirement for the generic complement of the exponential cone. Every successful positive state outside the cone is forced back into the cone except for two explicit adjacent-diagonal families. The blank-root problem is consequently reduced to the exact inverse/reachability of these two one-parameter families, rather than a generic uncontrolled projective-cancellation region.
+This removes the broad all-time square-gap requirement for the generic complement of the exponential cone. Every successful positive state outside the cone is forced either to the zero-first-counter tail or back into the cone, except for two explicit adjacent-diagonal families. The blank-root problem is consequently reduced to the exact inverse/reachability of these two one-parameter families, rather than a generic uncontrolled projective-cancellation region.
