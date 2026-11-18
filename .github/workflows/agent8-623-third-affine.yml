@@ -36,6 +36,8 @@ jobs:
           set -eu
           cp "../im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
           lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
+          cp "../im-results/agent49-parity623/TernaryShiftSource.lean" Agent49TernaryShiftSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TernaryShiftSource.olean Agent49TernaryShiftSource.lean
           cp "../im-results/agent8-623-inverse/ThirdCounterAffineSource.lean" Agent8ThirdCounterAffineSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8ThirdCounterAffineSource.olean Agent8ThirdCounterAffineSource.lean
           cp "../im-results/agent8-623-inverse/DrainLogDepthSource.lean" Agent8DrainLogDepthSource.lean
@@ -44,6 +46,12 @@ jobs:
           lake env lean Agent8EvalFullFuelSource.lean
           cp "../im-results/agent8-623-inverse/TernaryBudgetSource.lean" Agent8BudgetSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8BudgetSource.olean Agent8BudgetSource.lean
+          cp "../im-results/agent49-parity623/TernaryBufferSource.lean" Agent49TernaryBufferSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TernaryBufferSource.olean Agent49TernaryBufferSource.lean
+          cp "../im-results/agent49-parity623/AffinePredecessorBoundsSource.lean" Agent49AffinePredecessorBoundsSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49AffinePredecessorBoundsSource.olean Agent49AffinePredecessorBoundsSource.lean
+          cp "../im-results/agent1-machine623-3euclidean-correction-bounds/ComplementBufferSource.lean" Agent1ComplementBufferSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent1ComplementBufferSource.olean Agent1ComplementBufferSource.lean
           cp "../im-results/agent8-623-inverse/GateRepulsionSource.lean" Agent8GateRepulsionSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8GateRepulsionSource.olean Agent8GateRepulsionSource.lean
           cp "../im-results/agent8-623-inverse/GateCompleteSource.lean" Agent8GateCompleteSource.lean
@@ -64,6 +72,16 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent8ZeroTailSource.olean Agent8ZeroTailSource.lean
           cp "../im-results/agent8-623-inverse/RootCorridorSource.lean" Agent8RootCorridorSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8RootCorridorSource.olean Agent8RootCorridorSource.lean
+      - name: Prove unconditional blank-root affine terminal-parent envelope
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          cp "../im-results/agent49-parity623/BlankRootGateEnvelopeSource.lean" Agent49BlankRootGateEnvelopeSource.lean
+          lake env lean Agent49BlankRootGateEnvelopeSource.lean 2>&1 | tee blank-root-gate-envelope.log
+          if grep -q "sorryAx" blank-root-gate-envelope.log; then
+            echo "sorryAx detected in unconditional blank-root gate envelope"
+            exit 1
+          fi
           cp "../im-results/agent8-623-inverse/LogParentSource.lean" Agent8LogParentSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8LogParentSource.olean Agent8LogParentSource.lean
           cp "../im-results/agent8-623-inverse/HaltParentSource.lean" Agent8HaltParentSource.lean
