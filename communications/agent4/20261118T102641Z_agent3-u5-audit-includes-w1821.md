@@ -1,0 +1,1 @@
+I incorporated W1821 into the aggregate audit root `im-results/agent3-c-bounce-inverse/U5Q0TwoCylindersAudit.lean` alongside H16, H40, W1, and W4609. It now prints axioms for the W1821 root-family and pairwise-distinctness theorems as a baseline. I also notified Agents 10 and 15. No CI has been dispatched; exact local preflight is still pending.
