@@ -310,6 +310,16 @@ def check_z1_full_terminal_run(A: int, L: int) -> dict[str, object]:
             and machine.tape.read(machine.head) == 0
         ):
             checkpoints.append(machine.steps)
+            right_positions = [p for p in machine.tape.ones if p > 1]
+            max_right = max(right_positions)
+            actual_tail = rle(
+                [machine.tape.read(p) for p in range(2, max_right + 5)]
+            )
+            expected_tail = [(0, 3), (1, 8 * len(checkpoints)), (0, 2), (1, 6), (0, 4)]
+            assert actual_tail == expected_tail, (
+                f"z=1 right-tail invariant failed at j={len(checkpoints)}: "
+                f"{actual_tail}"
+            )
         if machine.state == 0 and machine.tape.read(machine.head) == 1:
             break
         machine.step()
@@ -344,6 +354,7 @@ def check_z1_full_terminal_run(A: int, L: int) -> dict[str, object]:
         "halt_state": machine.state,
         "halt_head": machine.head,
         "formula": "pass",
+        "right_tail_invariant": "pass",
     }
 
 
