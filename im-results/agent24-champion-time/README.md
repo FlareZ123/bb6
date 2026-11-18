@@ -20,7 +20,7 @@ The proof graph is now:
 
 - [Conditional 24-class dispatcher](TM63SourceIncrementDispatcher.lean): the original two-hypothesis dispatcher, with the marker-0 and marker-2 residue-zero families explicit.
 - [M2-instantiated dispatcher](TM63SourceIncrementDispatcherM2.lean): supplies the marker-2 zero-row hypothesis and leaves only marker 0.
-- [Complete source-draft dispatcher](TM63SourceIncrementDispatcherComplete.lean): supplies marker 0 from the all-valuation M0 theorem and exports `tm63_source_increment_dispatch_complete` plus `sectionResult_run_complete`.
+- [Complete source-draft dispatcher](TM63SourceIncrementDispatcherComplete.lean): supplies marker 0 from the all-valuation M0 theorem and exports `tm63_source_increment_dispatch_complete`, `sectionResult_run_to_index_one_complete` (which leaves index one for a final reset prefix), and `sectionResult_run_complete`.
 
 The last theorem states that, if the exact 24 one-step source families are accepted, the original TM2 realizes the complete primitive-recursive `sectionResult` countdown for arbitrary valid (L,n,m,a,b) and head. It is a general S1 source-run theorem, not an authentic blank-root prefix, not a terminal S0 endpoint, and not a halt witness. The wrapper and every dependency in its transitive import closure remain uncompiled.
 
@@ -36,7 +36,7 @@ Neither target has been dispatched. The exact local Lean 4.36.0-rc2 preflight mu
 
 1. Compile `TM63SourceIncrementDispatcherComplete.lean` locally through the exact import-closure tool; resolve any ambiguous or missing module imports rather than weakening the closure.
 2. Inspect the full axiom profiles for both exported theorems; reject `sorryAx`, `native_decide`, and custom axioms. Only after local preflight passes should the manual workflow be run.
-3. Connect the general `sectionResult_run_complete` theorem to the authentic blank-root prefix and the already source-checked terminal S0/SectionBits interface. The required root parameter and final marker/terminal alignment still need an explicit proof.
+3. Use `sectionResult_run_to_index_one_complete` at the authentic middle-34 root endpoint. The root arithmetic gives marker 2 at index one; generalize the m=2, n=1 reset-base prefix from a=b=0 to arbitrary a,b, prove its exact S0-config/SectionBits embedding, and then connect the terminal macro.
 4. Continue the independent universal six-state upper-bound programme. Even a completed champion lower-bound proof alone would not determine BB(6).
 
 ## Historical development and established narrower results
