@@ -254,7 +254,7 @@ jobs:
           PY
 
   tm63-root-index-one:
-    if: ${{ inputs.target == 'all' || inputs.target == 'tm63-root-index-one' }}
+    if: ${{ inputs.target == 'tm63-root-index-one' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
