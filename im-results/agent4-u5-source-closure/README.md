@@ -10,7 +10,7 @@ This directory develops direct original-section predecessor proofs for selected 
 |---|---|
 | `U5Q0SourceOnly.lean` | `X_t=(44t-1,42t-1)` is blank-unreachable for `t=32n+19` and `t=128n+99`; provides q=0-parent wrappers for `w=21 (mod 32)` and `w=37 (mod 128)`. |
 | `U5SourceOnlyHighStop.lean` | Composes the `w=21 (mod 32)` q=0 exclusion with the exact M8 terminal chain and original m=0 feeder, yielding an infinite sparse high-root family. |
-| `U5Q0SourceOnlyW1021.lean` | Three source-only exclusions of `X_t`: the stronger `t=459+1024v` theorem (subsuming the older `z=2 (mod 128)` wrapper), `t=123+168*(128v+126)`, and `t=123+168*(512v+193)`. |
+| `U5Q0SourceOnlyW1021.lean` | Three generalized source-only exclusions of `X_t`: `t=459+1024v`, `t=811+1024v`, and `t=3875+4096v`; the older z-parameter statements remain as corollaries. |
 | `U5SourceOnlyHighStopW1021.lean` | Lifts all three new q-fan closures to authentic high m=0 roots for `w=1024n+1021`, `w=1024n+413`, and `w=4096n+1125`. |
 | `W1021-derivation.md` | Full arithmetic and predecessor-chain derivation of the `w=1021 (mod 1024)` cylinder. |
 | `W1125-derivation.md` | Full arithmetic and predecessor-chain derivation of the `w=1125 (mod 4096)` cylinder. |
@@ -51,37 +51,46 @@ The older z=2 (mod 128) statement is retained as a corollary. The full coordinat
 
 ## New source-only cylinder: w=1125 (mod 4096)
 
-The same exact residual identity gives a second, deeper lift. If `w=1125 (mod 4096)`, then the right side is divisible by 4096 and
-```
-211*3875 + 1360 + 22155*1125 = 4096*6285
-211*1883 = 4096*97 + 1.
-```
-Thus `t=3875 (mod 4096)`. Modulo 3, 7, and 8 the identity again gives `t=123 (mod 168)`, so `t=123+168z` with `z=193 (mod 512)`.
+The exact residual identity
 
-For `z=512v+193`, write `B=661+903z=174940+462336v=12 (mod 16)`. Since the q-fan condition for q≥3 requires `16 | B`, only q=0,1,2 remain. Their complete source-parent chains are:
+    211*t + 1360 + 22155*w = 20*2^(201+3360*w)
 
-- **q=0:** `P0=(1399518+3698688v,1383244+3655680v)` is even/even with sum 2 mod 4. Its forced direct parent `D0=(2782760+7354368v,691621+1827840v)` has odd right coordinate and sum 1 mod 4.
-- **q=1:** `P1=(349878+924672v,1908061+5042688v)` is even/odd with sum-plus-one 4 mod 8. The even/odd-four inverse gives odd/odd `Q1=(1128967+2983680v,1518513+4013184v)`, sum 8 mod 16. Odd/odd valuation three gives even/even `R1=(1323738+3498432v,1421124+3755808v)`, sum 2 mod 4. Its forced direct parent `D1=(2744860+7254240v,710561+1877904v)` has odd right coordinate and sum 1 mod 4.
-- **q=2:** `P2=(87468+231168v,2039263+5389440v)` is even/odd with sum-plus-one 4 mod 8. Its even/odd-four parent `Q2=(1063363+2810304v,1551312+4099872v)` is odd/even with sum 3 mod 8, so six-even-right forces `R2=(2614673+6910176v,775655+2049936v)`. This is odd/odd with sum 8 mod 16; valuation three gives `S2=(1695162+4480056v,1235407+3264996v)`, odd-right with sum 1 mod 4.
+and
 
-Thus all q branches terminate in established blank-image exclusions. The end-to-end high-stop theorem excludes every residual root in `w=4096n+1125`. This is a source-only subcylinder of the previously computationally identified `w=101 (mod 128)` candidate; it does not certify that entire broader cylinder. The full arithmetic is in [W1125-derivation.md](W1125-derivation.md).
+    211*3875 + 1360 + 22155*1125 = 4096*6285
+    211*1883 = 4096*97 + 1
+
+show directly that w=1125 (mod 4096) forces t=3875 (mod 4096). The older CRT calculation also gives z=193 (mod 512), but the generalized q-fan proof needs only the t residue.
+
+For t=3875+4096v, 43t-1=166624+176128v=96 (mod 128), so q≥3 is impossible. The three remaining source-parent branches are:
+
+- **q=0:** P0=(166622+176128v,164684+174080v) is even/even with sum 2 mod 4. Its forced direct parent D0=(331304+350208v,82341+87040v) has odd right coordinate and sum 1 mod 4.
+- **q=1:** P1=(41654+44032v,227165+240128v) is even/odd with sum-plus-one 4 mod 8. The even/odd-four inverse gives Q1=(134407+142080v,180785+191104v), odd/odd with sum 8 mod 16. Odd/odd valuation three gives R1=(157594+166592v,169188+178848v), even/even with sum 2 mod 4. Its forced direct parent D1=(326780+345440v,84593+89424v) has odd right coordinate and sum 1 mod 4.
+- **q=2:** P2=(10412+11008v,242783+256640v) is even/odd with sum-plus-one 4 mod 8. Its even/odd-four parent is Q2=(126595+133824v,184688+195232v), odd/even with sum 3 mod 8; six-even-right forces R2=(311281+329056v,92343+97616v), odd/odd with sum 8 mod 16; valuation three gives S2=(201810+213336v,147075+155476v), odd-right with sum 1 mod 4.
+
+All q branches terminate in established blank-image exclusions. The end-to-end high-stop theorem excludes every residual root in w=4096n+1125. This is a source-only subcylinder of the previously computationally identified w=101 (mod 128) candidate; it does not certify that entire broader cylinder. The full derivation is in [W1125-derivation.md](W1125-derivation.md).
 
 ## New source-only cylinder: w=413 (mod 1024)
 
-For `w=413 (mod 1024)`, the exact residual identity gives `t=811 (mod 1024)`. Together with the invariant `t=123 (mod 168)`, this forces `z=126 (mod 128)`, so `t=123+168*(128v+126)`.
+The exact residual identity and
 
-Here `B=661+903z` is odd, and `43t-1=8 (mod 16)`; hence q≥2 is impossible and only q=0,1 remain. The source-parent chains are:
+    211*811 + 1360 + 22155*413 = 1024*9104
+    211*859 = 1024*177 + 1
 
-- **q=0:** even/even sum-two direct parent `P0 -> D0`, then even/odd-four `D0 -> Q0`, followed by four six-even-right inverses `Q0 -> R0 -> S0 -> T0 -> U0`. The terminal `U0=(2625913+2652216v,49649+50148v)` is odd/odd with sum 2 mod 4, so blank-unreachable.
-- **q=1:** even/even sum-two direct parent `P1 -> D1`, then the sum-4-mod-8 direct-parent lemma `D1 -> D2`. The terminal `D2=(2101138+2122176v,312043+315168v)` has odd right coordinate and sum 1 mod 4.
+show directly that w=413 (mod 1024) forces t=811 (mod 1024). The older CRT calculation also gives z=126 (mod 128), but the generalized q-fan proof needs only the t residue.
 
-The complete affine coordinates and exact modular gates are in [W413-derivation.md](W413-derivation.md). The high-stop wrapper excludes every residual root in `w=1024n+413`.
+For t=811+1024v, 43t-1=34872+44032v=8 (mod 16), so q≥2 is impossible. The source-parent chains are:
+
+- **q=0:** even/even sum-two direct parent P0=(34870+44032v,34464+43520v) gives D0=(69332+87552v,17231+21760v); the even/odd-four inverse gives Q0=(43279+54656v,30254+38208v); four six-even-right inverses give R0=(73531+92864v,15126+19104v), S0=(88655+111968v,7562+9552v), T0=(96215+121520v,3780+4776v), and U0=(99993+126296v,1889+2388v). U0 is odd/odd with sum 2 mod 4.
+- **q=1:** even/even sum-two direct parent P1=(8716+11008v,47538+60032v) gives D1=(56252+71040v,23768+30016v). D1 is even/even with sum 4 mod 8, so the sum-4-mod-8 direct-parent lemma gives D2=(80018+101056v,11883+15008v), odd-right with sum 1 mod 4.
+
+The complete affine coordinates and exact modular gates are in [W413-derivation.md](W413-derivation.md). The high-stop wrapper excludes every residual root in w=1024n+413.
 
 ## End-to-end high-stop root connection
 
 `U5SourceOnlyHighStop.lean` composes the w=21 (mod 32) q=0 closure with the existing exact U5 six-even-right chain and the original `mzero_first_two_reach` / `m0_odd_ray_parent` source-parent lemmas. Its main draft theorem is `blank_no_high_m0_u5_w21`.
 
-`U5SourceOnlyHighStopW1021.lean` gives `blank_no_high_m0_u5_w1021` for `w=1021 (mod 1024)`, `blank_no_high_m0_u5_w413` for `w=413 (mod 1024)`, and `blank_no_high_m0_u5_w1125` for `w=1125 (mod 4096)`. These use respectively the t=459 (mod1024) q=0/1, z=126 (mod128) q=0/1, and z=193 (mod512) q=0/1/2 closures. Both are composed with the exact M8 terminal and m=0 feeder.
+`U5SourceOnlyHighStopW1021.lean` gives `blank_no_high_m0_u5_w1021` for `w=1021 (mod 1024)`, `blank_no_high_m0_u5_w413` for `w=413 (mod 1024)`, and `blank_no_high_m0_u5_w1125` for `w=1125 (mod 4096)`. These use respectively the generalized t=459 (mod1024), t=811 (mod1024), and t=3875 (mod4096) q-fan closures. Both are composed with the exact M8 terminal and m=0 feeder.
 
 The earlier high-stop file also drafts `u5_residual_nonempty`: for every natural w it constructs natural s,m satisfying the two residual equations. It uses `2^210 ≡ 1 (mod 211)`, `2^201 ≡ 68 (mod 211)`, and `2^r ≥ r+1` to obtain `s ≥ 27w+1` and `m ≥ 24w`. The theorem `u5_residual_s_strict_mono` proves s is strictly increasing with w for any two residual solutions. Consequently, `every_w1021_residual_has_unreachable_root`, `every_w413_residual_has_unreachable_root`, and `every_w1125_residual_has_unreachable_root` package w=1024n+1021, w=1024n+413, and w=4096n+1125 as explicit infinite sequences of nonempty residual instances whose high m=0 roots are excluded.
 
