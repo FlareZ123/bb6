@@ -68,12 +68,12 @@ theorem u5_w1021_t_param (w s m t : Nat)
     Nat.mod_eq_zero_of_dvd hdiv1024
   have hpow1024mul : (20*2^(201+3360*w))%1024=0 := by
     rw [Nat.mul_mod,hpow1024]
-    norm_num
+    simp
   have hmod1024 : (211*t+1360+22155*w)%1024=0 := by
     rw [hId]
     exact hpow1024mul
   have hconst : (211*459+1360+22155*1021)%1024=0 := by decide
-  have hinv : 211*859=1024*177+1 := by norm_num
+  have hinv : 211*859=1024*177+1 := by decide
   have htmod : t%1024=459 := by omega
   refine ⟨t/1024,?_⟩
   omega
@@ -271,12 +271,12 @@ theorem u5_w1125_t_param (w s m t : Nat)
     Nat.mod_eq_zero_of_dvd hdiv4096
   have hpow4096mul : (20*2^(201+3360*w))%4096=0 := by
     rw [Nat.mul_mod,hpow4096]
-    norm_num
+    simp
   have hmod4096 : (211*t+1360+22155*w)%4096=0 := by
     rw [hId]
     exact hpow4096mul
   have hconst : (211*3875+1360+22155*1125)%4096=0 := by decide
-  have hinv : 211*1883=4096*97+1 := by norm_num
+  have hinv : 211*1883=4096*97+1 := by decide
   have htmod : t%4096=3875 := by omega
   refine ⟨t/4096,?_⟩
   omega
@@ -483,12 +483,12 @@ theorem u5_w413_t_param (w s m t : Nat)
     Nat.mod_eq_zero_of_dvd hdiv1024
   have hpow1024mul : (20*2^(201+3360*w))%1024=0 := by
     rw [Nat.mul_mod,hpow1024]
-    norm_num
+    simp
   have hmod1024 : (211*t+1360+22155*w)%1024=0 := by
     rw [hId]
     exact hpow1024mul
   have hconst : (211*811+1360+22155*413)%1024=0 := by decide
-  have hinv : 211*859=1024*177+1 := by norm_num
+  have hinv : 211*859=1024*177+1 := by decide
   have htmod : t%1024=811 := by omega
   refine ⟨t/1024,?_⟩
   omega
