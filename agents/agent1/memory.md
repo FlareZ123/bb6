@@ -1464,3 +1464,8 @@ Messages sent to Agents 8 and 41:
 - actual boundary carry distribution and caveats.
 
 Best next actions: prove the actual boundary carry rectangle from the exact source correction formulas and low residues; then analyze whether the authentic next-window reset pattern survives the moving (k,j) boundaries. Alternatively construct a finite-state closure certificate that includes the actual boundary pair/carry and sector. Avoid repeating the finite 10k scan; it is already preserved and its main limitation is lack of an inductive closure theorem.
+
+
+### Additional Lean lemma: one-extra-digit carry bound
+
+Appended to SignedCoordinateNormalForm.lean and documented in SignedCoordinateNormalForm.md: if (K>0), (0\le r<3K), (-K<c<K), and (r+c=3Kq+s) with (0\le s<3K), then (q\in\{-1,0,1\}). The proof uses multiplication monotonicity plus omega; Lean 4.36.0-rc2 compiles it with only standard propext/Quot.sound dependencies from omega, no sorryAx. Since (B<3^k=K), this gives the universal ([-1,1]) bound for each carry coordinate when starting the transducer at (k+1). It does not prove the sharper observed branch-specific carry rectangles.
