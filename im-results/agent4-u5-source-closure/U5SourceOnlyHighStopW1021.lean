@@ -530,58 +530,16 @@ theorem every_w1125_residual_has_unreachable_root (n : Nat) :
 #print axioms blank_no_u5_A_s_m8w_w1125
 #print axioms blank_no_high_m0_u5_w1125
 #print axioms every_w1125_residual_has_unreachable_root
-/-- The exact residual identity lifts w=413 (mod 1024) to
-t=123+168*z with z=126 (mod 128). -/
+/-- The exact residual identity and w=413 (mod 1024) force
+t=811 (mod 1024), which is all the generalized q-fan exclusion needs. -/
 theorem u5_w413_t_param (w s m t : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
     (hp : m+1=8*t+1)
     (hw : w%1024=413) :
-    ∃ v, t=123+168*(128*v+126) := by
+    ∃ v, t=811+1024*v := by
   have hId := BB6.Agent3U5M16Residual.u5_m8_t_identity
     w s m t hs hm hp
-  have hrmod2 : (201+3360*w)%2=1 := by omega
-  have hpow3 : (2^(201+3360*w))%3=2 := by
-    rw [pow_two_mod_three]
-    simp [hrmod2]
-  have hpow3mul : (20*2^(201+3360*w))%3=1 := by
-    rw [Nat.mul_mod,hpow3]
-    norm_num
-  have hpow7 : (2^(201+3360*w))%7=1 := by
-    rw [show 201+3360*w=3*(67+1120*w) by omega,
-      Nat.pow_mul,Nat.pow_mod]
-    have hbase : (2:Nat)^3%7=1 := by decide
-    rw [hbase]
-    simp
-  have hpow7mul : (20*2^(201+3360*w))%7=6 := by
-    rw [Nat.mul_mod,hpow7]
-    norm_num
-  have ht3 : t%3=0 := by
-    have hmod : (211*t+1360+22155*w)%3 =
-        (20*2^(201+3360*w))%3 := by rw [hId]
-    rw [hpow3mul] at hmod
-    omega
-  have ht7 : t%7=4 := by
-    have hmod : (211*t+1360+22155*w)%7 =
-        (20*2^(201+3360*w))%7 := by rw [hId]
-    rw [hpow7mul] at hmod
-    omega
-  have hdiv8 : 8∣2^(201+3360*w) := by
-    change 2^3∣2^(201+3360*w)
-    exact Nat.pow_dvd_pow 2 (by omega)
-  have hpow8 : (2^(201+3360*w))%8=0 :=
-    Nat.mod_eq_zero_of_dvd hdiv8
-  have hpow8mul : (20*2^(201+3360*w))%8=0 := by
-    rw [Nat.mul_mod,hpow8]
-    norm_num
-  have hw8 : w%8=5 := by omega
-  have ht8 : t%8=3 := by
-    have hmod : (211*t+1360+22155*w)%8 =
-        (20*2^(201+3360*w))%8 := by rw [hId]
-    rw [hpow8mul] at hmod
-    omega
-  have ht21 : t%21=18 := by omega
-  have ht168 : t%168=123 := by omega
   have hdiv1024 : 1024∣2^(201+3360*w) := by
     change 2^10∣2^(201+3360*w)
     exact Nat.pow_dvd_pow 2 (by omega)
@@ -593,22 +551,11 @@ theorem u5_w413_t_param (w s m t : Nat)
   have hmod1024 : (211*t+1360+22155*w)%1024=0 := by
     rw [hId]
     exact hpow1024mul
-  have ht1024 : t%1024=811 := by
-    have hconst : (211*811+1360+22155*413)%1024=0 := by decide
-    have hinv : 211*859=1024*177+1 := by norm_num
-    omega
-  let z := (t-123)/168
-  have htEq : t=123+168*z := by
-    dsimp [z]
-    omega
-  have hzmod : z%128=126 := by
-    rw [htEq] at ht1024
-    have hinv21 : 21*61=128*10+1 := by norm_num
-    omega
-  obtain ⟨v,hv⟩ : ∃ v, z=128*v+126 := by
-    refine ⟨(z-126)/128,?_⟩
-    omega
-  exact ⟨v,by rw [htEq,hv]⟩
+  have hconst : (211*811+1360+22155*413)%1024=0 := by decide
+  have hinv : 211*859=1024*177+1 := by norm_num
+  have htmod : t%1024=811 := by omega
+  refine ⟨t/1024,?_⟩
+  omega
 
 theorem blank_no_u5_residual_m8w_w413 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
@@ -663,10 +610,10 @@ theorem blank_no_u5_residual_m8w_w413 (w s m : Nat)
             have hX := q0_parent_reach_implies_X
               t htpos hparent
             have hX' : CReach
-                (44*(123+168*(128*v+126))-1)
-                (42*(123+168*(128*v+126))-1) := by
+                (44*(811+1024*v)-1)
+                (42*(811+1024*v)-1) := by
               simpa only [hv] using hX
-            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t123_z126mod128
+            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t811mod1024
               v hX'
           · by_cases hq1 : q=1
             · subst q
