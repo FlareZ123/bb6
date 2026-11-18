@@ -426,7 +426,7 @@ theorem outerLCIncAfterSweep_leftFacing_m2
               have hlen : (d0pow b).length=3*b := d0pow_length b
               have hnot : i < (d0pow b).length := by rw [hlen]; omega
               simp [hnot]
-              exact htarget
+              exact htarget.symm
     · let j : Nat := b-q-1
       have hj : j < b+1 := by dsimp [j]; omega
       have hblock := sweptRightB_block (b+1) U (h+7) hright j hj
@@ -449,7 +449,7 @@ theorem outerLCIncAfterSweep_leftFacing_m2
               have hlen : (d0pow b).length=3*b := d0pow_length b
               have hnot : i < (d0pow b).length := by rw [hlen]; omega
               simp [hnot]
-              exact htarget
+              exact htarget.symm
     · by_cases hlast : q+1=b
       · have hcoord : H-(i:Int)=h+6 := by
           dsimp [H]
@@ -475,7 +475,7 @@ theorem outerLCIncAfterSweep_leftFacing_m2
               have hlen : (d0pow b).length=3*b := d0pow_length b
               have hnot : i < (d0pow b).length := by rw [hlen]; omega
               simp [hnot]
-              exact htarget
+              exact htarget.symm
       · have hq' : q+1 < b := by omega
         let j : Nat := b-q-2
         have hj : j < b+1 := by dsimp [j]; omega
@@ -499,7 +499,7 @@ theorem outerLCIncAfterSweep_leftFacing_m2
                 have hlen : (d0pow b).length=3*b := d0pow_length b
                 have hnot : i < (d0pow b).length := by rw [hlen]; omega
                 simp [hnot]
-                exact htarget
+                exact htarget.symm
   · let j : Nat := i-3*b
     have hj : 3*b ≤ i := by dsimp [j]; omega
     have hcoord : H-(i:Int) = h+5-(j:Int) := by
