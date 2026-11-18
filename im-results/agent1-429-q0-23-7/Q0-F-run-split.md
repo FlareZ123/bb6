@@ -78,3 +78,27 @@ Consequences when r>=4:
 - If j=12 (mod 16) and r>=5, then v2(A+3)>=4, so the next split at l=3 can occur. If r=4, then v2(A+3)=3 and the first coordinate is already even after three F steps. The exact parameter transformation at the l=3 split remains to be derived.
 
 This identifies a nested valuation mechanism: the main F spine reads v2(a0+3), while an S sibling at split j reads v2(j+4). It is a candidate well-founded descent on split indices, but the surviving j=6 E child and the j=12 (mod 16) recursive branch are not yet closed.
+
+
+## Closing two of the three earlier S-sibling sectors
+
+The secondary valuation gives more than just a run length.
+
+**j=2 (mod 8).** The S child is (3,3) mod 8. Its only inverse is F, which reaches a positive-even state (0,6) mod 8. It is excluded immediately by rooted_even_parity.
+
+**j=6 (mod 8).** The S child is (7,3) mod 8. F reaches a positive-even state (2,2) mod 8, so E is the only next candidate. For j=6 exactly, write k=25 and q=2^r*t with t odd. The E child is
+    A2 = ((10*2^k + 1)*q - 328)/8,
+    B2 = ((6*2^k - 1)*q - 156)/4.
+Since a0=2^k*q-3, these formulas are exact. Modulo 8:
+- r=4: (A2,B2) is (1 or 5, 5);
+- r=5: (A2,B2) is (3,1);
+- r>=6: (A2,B2) is (7,1), excluded by Allowed.
+Thus this j=6 sibling can survive only in the terminal residual cases r=4 or 5.
+
+**j=4 (mod 8).** Here A=a0+q/2-24, and
+    A+3 = [q*(2^(k+1)+1)-48]/2.
+If r>=5, v2(A+3)=3. After three F steps the first coordinate is even and the second is 0 mod 4, so the state is impossible by rooted_even_parity. If r=4, write q=16*t with t odd; then
+    (A+3)/8 = t*(2^(k+1)+1)-3
+is even, so after three F steps the first coordinate is still odd and the second is 2 mod 4. A new S split is available. This is the remaining nested exceptional branch.
+
+Consequently, for r>=5, the earlier S siblings at j=2,4,6 (mod 8) are all closed by the displayed finite arguments. For r=4, j=4 and j=6 remain; r=1,2,3 terminal tails of the main F spine are separate obligations. These are exact branch reductions, not a full q0 proof.
