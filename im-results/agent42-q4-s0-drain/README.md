@@ -274,3 +274,6 @@ A direct exact TM2 simulation of the entire initial S0 configuration (not merely
 The first-cycle difference (433-275=158) agrees with (C_1(1)). This is a complete computational terminal run for this small parameter instance, not a formal proof and not the BB(6) root instance.
 
 The later checkpoint-to-checkpoint costs are not captured by the naive extrapolation (32j+126+12v_2(j)): that expression already fails at (j=8). The full z=1 trace therefore confirms termination at (M) checkpoints but warns against extrapolating a simple later-cycle cost from the first-cycle law.
+
+
+The reproducer also contains `check_z1_full_terminal_run()`, which directly checks the complete (A=3,L=2,z=1) run: exactly 120 q4 checkpoints, first at 275, last at 245,105, and halt at 246,201 in state 0/head 967. This function is likewise pending execution in the repository environment.
