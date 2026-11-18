@@ -194,3 +194,11 @@ Thus every terminal event with canonical depth \(n\ge10\) has a predecessor in o
 This improves the common \(35n+120\) envelope in RootCancellationBudgetBridge.md for \(n\ge10\), since \(23n+148<35n+120\) whenever \(n\ge3\). The gain comes from keeping the exact sector-specific \(D,r\) coefficients instead of bounding the two bridge corrections independently.
 
 This is still a necessary-condition theorem, not an exclusion of the authentic root from these strips. It should be consumable by the existing root mass-corridor / checkpoint-gap method.
+
+
+### Formalization status of the depth bound
+
+The RE initial-run formula uses Agent41's source-compiled evalA_3adic_run theorem. The remaining drain depth estimates can be packaged from the current Lean drafts:
+- Agent49 DrainLinearLogSource.drainB_first_lower_log / drainB_first_upper_log bound the signed first-counter drop;
+- Agent22 ExactDrainCocycleDepthSource.drainB_weighted_depth bounds the outer iteration count.
+Those draft modules are not both included in the existing pinned source-CI workflows yet. Therefore the numerical strip table above is an exact derivation from the stated lemmas, but the combined \(|D|,r\le\ell+1\) wrapper and the sharpened 23n+148 strip have not yet been source-CI certified. Do not describe them as fully formalized until that wrapper is compiled against the pinned original machine.
