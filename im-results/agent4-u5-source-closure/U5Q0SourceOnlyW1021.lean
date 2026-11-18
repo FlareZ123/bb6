@@ -620,6 +620,10 @@ theorem q0_X_not_reach_t123_z126mod128 (v : Nat) :
   have ht : 123+168*(128*v+126)=811+1024*(20+21*v) := by omega
   simpa only [ht] using q0_X_not_reach_t811mod1024 (20+21*v)
 
+#print axioms q0_X_not_reach_t459mod1024
+#print axioms q0_X_not_reach_t123_z2mod128
+#print axioms q0_X_not_reach_t3875mod4096
+#print axioms q0_X_not_reach_t123_z193mod512
 #print axioms q0_X_not_reach_t811mod1024
 #print axioms q0_X_not_reach_t123_z126mod128
 
