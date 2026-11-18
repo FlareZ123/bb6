@@ -143,7 +143,27 @@ theorem tm63_blank_reaches_after_middle34_to_index_one :
     tm63Length1 (16*tm63RootResidueSixK-20) 1
     tm63MiddleAfter34A tm63MiddleAfter34B tm63MiddleAfter34Head
     hL hsectionBound ha
-  have hcomp := run_compose_local hroot hsection
+  have hsection' :
+      run tm2
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).cost
+        (s1Config tm63Length1
+          (16*tm63RootResidueSixK-19) 1
+          tm63MiddleAfter34A 0 tm63MiddleAfter34B
+          tm63MiddleAfter34Head) =
+      some (s1Config tm63Length1 1
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).marker
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).exponent
+        0
+        (sectionResult (16*tm63RootResidueSixK-20) 1
+          tm63MiddleAfter34A tm63MiddleAfter34B).right
+        (sectionHeadAfter (16*tm63RootResidueSixK-20)
+          tm63MiddleAfter34B tm63MiddleAfter34Head)) := by
+    simpa [show (16*tm63RootResidueSixK-20)+1 =
+      16*tm63RootResidueSixK-19 by omega] using hsection
+  have hcomp := run_compose_local hroot hsection'
   have hmarker := tm63_middle34_sectionResult_marker_two
   simpa [hmarker] using hcomp
 
