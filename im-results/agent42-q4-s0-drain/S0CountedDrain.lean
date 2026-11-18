@@ -98,7 +98,7 @@ theorem s0Config_carryInput_match
         sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) i =
           carryInputBit r (1+(i:Int)) := by
       rcases hc with h0 | h1 | h2 | h3 | h4 | h5
-      all_goals subst i <;> simp [sideBit,carryInputBit]
+      all_goals subst i <;> simp [sideBit,carryInputBit] <;> omega
     rw [hxEq,hsource]
     simpa [s0RightFacing] using hside
 
@@ -243,7 +243,7 @@ theorem s0Config_decrement_leftOutput
 
 /-- Compose a relative-head carry-prefix witness with the exact arbitrary-l
 S0 suffix. -/
-theorem s0Config_counted_decrement_of_prefix
+theorem s0Config_counted_decrement_from_relative_prefix
     (l : List Bool) (len q r b : Nat) (h : Int)
     (hq : q < 2^len)
     (hprefix :
@@ -311,7 +311,7 @@ theorem s0Config_counted_decrement_of_prefix
       _ = (s0Config l (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
         simpa [c0] using
           s0Config_decrement_leftOutput l len q r b h hq x hx
-  exact s0Config_counted_decrement_of_prefix
+  exact BB6Coverage.Agent24ChampionTime.s0Config_counted_decrement_of_prefix
     l (len+1+r) ((2*q+1)*2^r) (((2*q+1)*2^r)-1) b r h Tpre
     hprefix0 hP1 hP2 hP3 hP4 hP5 hP6 honeP hpreserveP hleftP
 
@@ -325,7 +325,10 @@ theorem s0Config_counted_decrement_anyValuation_hRun
       some (s0Config l (len+1+r) (((2*q+1)*2^r)-1) (b+1) h) := by
   let c0 := s0Config l (len+1+r) ((2*q+1)*2^r) b h
   let T : Int → Bool := fun x => c0.tape (h+x)
-  have hmatch := s0Config_carryInput_match l len q r b h hq
+  have hmatch : ∀ x, carryInputArea r x = true →
+      T x = carryInputBit r x := by
+    intro x hx
+    simpa [T,c0] using s0Config_carryInput_match l len q r b h hq x hx
   obtain ⟨T',hrun,h1,h2,h3,h4,h5,h6,hpreserve,hleft⟩ :=
     BB6Coverage.Agent48Champion.carryPrefix_anyNonnegative_hRun r T hmatch
   have hprefix :
@@ -347,7 +350,7 @@ theorem s0Config_counted_decrement_anyValuation_hRun
     · simpa [T,c0] using hrun
     · simpa [T,c0] using hpreserve
     · simpa [T,c0] using hleft
-  exact s0Config_counted_decrement_of_prefix l len q r b h hq hprefix
+  exact s0Config_counted_decrement_from_relative_prefix l len q r b h hq hprefix
 
 /-- Every bounded positive arbitrary-left S0 counter admits the exact
 source decrement at the Inc0 cost. -/
