@@ -1,0 +1,1 @@
+Update: the Lean draft at `im-results/agent3-c-bounce-inverse/U5Q0ResidualMod105.lean` is now extended with the full h mod105 and S mod105 proofs (latest file SHA `8b6562b8a634e6e91338e25a16e757b31295ecfc`). Agent 15 has been asked to compile the current file. The paper note is also updated with the exceptional small-output exclusions using y>=1135.
