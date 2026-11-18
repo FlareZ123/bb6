@@ -10,8 +10,8 @@ This directory develops direct original-section predecessor proofs for selected 
 |---|---|
 | `U5Q0SourceOnly.lean` | `X_t=(44t-1,42t-1)` is blank-unreachable for `t=32n+19` and `t=128n+99`; provides q=0-parent wrappers for `w=21 (mod 32)` and `w=37 (mod 128)`. |
 | `U5SourceOnlyHighStop.lean` | Composes the `w=21 (mod 32)` q=0 exclusion with the exact M8 terminal chain and original m=0 feeder, yielding an infinite sparse high-root family. |
-| `U5Q0SourceOnlyW1021.lean` | Three generalized source-only exclusions of `X_t`: `t=459+1024v`, `t=811+1024v`, and `t=3875+4096v`; the older z-parameter statements remain as corollaries. |
-| `U5SourceOnlyHighStopW1021.lean` | Lifts all three new q-fan closures to authentic high m=0 roots for `w=1024n+1021`, `w=1024n+413`, and `w=4096n+1125`. |
+| `U5Q0SourceOnlyW1021.lean` | Four generalized source-only exclusions of `X_t`: `t=459+1024v`, `t=811+1024v`, `t=3875+4096v`, and the new `t=1707+65536v`; the older z-parameter statements remain as corollaries. |
+| `U5SourceOnlyHighStopW1021.lean` | Lifts the generalized q-fan closures to authentic high m=0 roots for `w=1024n+1021`, `w=1024n+413`, `w=4096n+1125`, and the new `w=65536n+51741`. |
 | `W1021-derivation.md` | Full arithmetic and predecessor-chain derivation of the `w=1021 (mod 1024)` cylinder. |
 | `W1125-derivation.md` | Full arithmetic and predecessor-chain derivation of the `w=1125 (mod 4096)` cylinder. |
 | `W413-derivation.md` | Full arithmetic and predecessor-chain derivation of the `w=413 (mod 1024)` cylinder. |
@@ -86,6 +86,59 @@ For t=811+1024v, 43t-1=34872+44032v=8 (mod 16), so q≥2 is impossible. The sour
 
 The complete affine coordinates and exact modular gates are in [W413-derivation.md](W413-derivation.md). The high-stop wrapper excludes every residual root in w=1024n+413.
 
+## New source-only cylinder: w=51741 (mod 65536)
+
+The exact residual identity
+
+\[
+211t+1360+22155w=20\cdot 2^{201+3360w}
+\]
+
+and the arithmetic
+
+\[
+211\cdot1707+1360+22155\cdot51741=65536\cdot17497,\qquad
+211\cdot22363=65536\cdot72+1
+\]
+
+show that w=51741 (mod 65536) forces t=1707 (mod 65536). Write
+t=1707+65536v. Then 43t-1=73400+43\cdot65536v is 8 modulo 16, so
+the exact q-fan has only q=0 or q=1.
+
+The two source-parent branches both terminate in the established odd-image
+forbidden class:
+
+- **q=0:** the fan parent
+  P0=(73398+2818048v,72544+2785280v) is even/even with sum 2 mod 4.
+  Its forced direct parent is
+  D0=(145940+5603328v,36271+1392640v), even/odd with
+  (x+y+1)=4 (mod 8). The unique even/odd-four parent is
+  Q0=(91103+3497984v,63686+2445312v). Three exact six-even-right
+  inverses give
+  R1=(154787+5943296v,31842+1222656v),
+  R2=(186627+7165952v,15920+611328v), and
+  R3=(202545+7777280v,7959+305664v). Here R3 is odd/odd with
+  sum 8 mod 16; its unique valuation-three parent is
+  S0=(105250+4041472v,56603+2173568v), odd-right with sum 1 mod 4.
+- **q=1:** the fan parent
+  P1=(18348+704512v,100066+3842048v) is even/even with sum 2 mod 4.
+  Its forced direct parent is
+  D1=(118412+4546560v,50032+1921024v), even/even with sum 4 mod 8.
+  The forced direct parent
+  D2=(168442+6467584v,25015+960512v) is odd-right with sum 1 mod 4.
+
+Thus X_t is blank-unreachable for every t=1707+65536v. Composing this
+with the existing M8 terminal and original m=0 feeder proves an infinite
+nonempty high-stop root sequence for w=65536n+51741. Its root index
+remains j=18791 (mod 32768), so this is a further parameter cylinder
+inside the existing containing root residue, not a new root-index
+arithmetic-progression exclusion or a density increment. It is disjoint
+from the previously listed w-cylinders.
+
+The Lean declarations have been added to the existing W1021 source modules.
+They remain uncompiled drafts; no exact-source certification or BB(6)
+conclusion is claimed.
+
 ## End-to-end high-stop root connection
 
 `U5SourceOnlyHighStop.lean` composes the w=21 (mod 32) q=0 closure with the existing exact U5 six-even-right chain and the original `mzero_first_two_reach` / `m0_odd_ray_parent` source-parent lemmas. Its main draft theorem is `blank_no_high_m0_u5_w21`.
@@ -102,6 +155,6 @@ Writing `j=39+64s`, the exact residual equation gives `211*j+27=320*2^(201+3360*
 
 A previous invocation locally compiled only isolated arithmetic declarations from `U5SourceOnlyHighStop.lean` (`u5_residual_nonempty`, `u5_residual_s_strict_mono`, and `u5_high_root_parameter_residue`) and audited their axioms. This did **not** compile either complete source-only module or certify the parent/root chain.
 
-The complete source closure remains uncompiled and no CI was dispatched, respecting the focused-local-preflight-before-CI instruction. Agent 24 has been asked to preflight the latest W1021 source modules together with the W413/W1125 theorem families using Lean 4.36.0-rc2 if its local runtime is available.
+The complete exact-source closure, including the new W51741 declarations, remains uncompiled; no CI has been dispatched. The next useful check is one focused Lean 4.36.0-rc2 preflight of the complete transitive imports, followed by #print axioms for every exported declaration. Until that succeeds, all files remain drafts under im-results/ and results/ is unchanged.
 
 The exact closure must include at least `U5Q0OddOddFan`, `U5Y3ParentFan`, `U5Y3M8`, `U5M8Q0Partial`, `U5Q0M16Residual`, `EvenEvenParentFan`, `EvenOddFourExact`, `OddOddVal3Orbit`, `EvenRightSixOrbit`, `M0EvenEvenSumZero`, `HighSumTwo`, and all original-section/source-image imports. After a successful compile, inspect `#print axioms` for every exported declaration. Only then consider a focused manual source workflow and possible promotion of any genuinely publishable result. Until then, all four Lean files remain drafts under `im-results/`; `results/` is unchanged.
