@@ -1274,3 +1274,27 @@ Primary relevant files:
 - im-results/agent22-623-root-ray-20k/ExactRayCorrectionRelations.lean
 
 Next mathematical target: derive a closed, exact recurrence for the old-ray distance modulo 3^j (or an equivalent 3-adic state), then prove it excludes the full logarithmic terminal window for the authentic D(0,7) orbit. The near-diagonal digit-stack analysis is now a subproblem, not the complete root bottleneck.
+
+
+## 2026-11-18 checkpoint: exact two-stat old-ray gap cocycle
+
+Created im-results/agent1-machine623-3euclidean-correction-bounds/RootRayGapCocycle.md and an index README in the same directory. The cocycle combines Agent41's exact drain valuation normal form with Agent22's weighted correction identities.
+
+For canonical-ray transitions, let g=p-3q and m=q. Let D be the signed first-counter drop relative to the canonical base, and r the outer drain iteration count. The correction pairs are:
+- LO: beta=-D-5, delta=2D+2r+14.
+- LE: beta=-D-2, delta=2D+2r+8.
+- RO: beta=4-D, delta=2D+2r.
+- RE: beta=-D, delta=2D+2r+7 (D includes the initial evalA signed drop plus subsequent drain drop).
+
+The exact output-side decision A-E>=0 is:
+- LO iff g>=3D+2r+19.
+- LE iff g>=3D+2r+10.
+- RO iff g>=3D+2r-4.
+- RE iff g>=3D+2r+7.
+
+The note gives all eight exact (g',m') updates and the exact branch-specific old-ray distance h' recurrence. Its mod-3 reduction is:
+- LO/LE: h' = h+r-1 for left output, h+r for right.
+- RO: h' = 2h+r for left, 2h+r+1 for right.
+- RE: h' = 2h+r+1 for left, 2h+r+2 for right.
+
+This removes the need to assume that output-side selection follows sign(g). A source-shaped arithmetic check across all four canonical input sectors, both output orientations, small shifts, and a large shift matched the formulas; this is not Lean verification. Agent41, Agent32, and Agent49 were sent the note for source comparison / 3-adic integration. The next mathematical target is to lift the exact h update from mod 3 to mod 3^j while controlling the digit statistics D,r along the authentic root orbit.
