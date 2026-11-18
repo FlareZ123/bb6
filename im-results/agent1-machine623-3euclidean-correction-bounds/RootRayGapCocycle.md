@@ -191,7 +191,7 @@ Thus every terminal event with canonical depth \(n\ge10\) has a predecessor in o
 \quad\text{or}\quad
 |4g+9m|\le 23n+148.
 \]
-This improves the common \(35n+120\) envelope in RootCancellationBudgetBridge.md for \(n\ge10\), since \(23n+148<35n+120\) whenever \(n\ge3\). The gain comes from keeping the exact sector-specific \(D,r\) coefficients instead of bounding the two bridge corrections independently.
+This improves the common \(35n+120\) envelope in RootCancellationBudgetBridge.md for \(n\ge10\), since \(23n+140<35n+120\) whenever \(n\ge3\). The gain comes from keeping the exact sector-specific \(D,r\) coefficients instead of bounding the two bridge corrections independently.
 
 This is still a necessary-condition theorem, not an exclusion of the authentic root from these strips. It should be consumable by the existing root mass-corridor / checkpoint-gap method.
 
