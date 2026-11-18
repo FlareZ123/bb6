@@ -7,6 +7,7 @@ import ShadowCast
 namespace BB6.Shadow
 open BB6.Agent1Quarter
 open BB6.Agent47P1
+open BB6.P1Reduction
 
 private theorem pow_two_injective (j k : Nat) (h : 2^j = 2^k) : j = k := by
   by_cases hlt : j < k
@@ -71,7 +72,7 @@ theorem shadow_width_bound (N L M : Nat)
   have hK : M+4 ≤ N-M-3 := by omega
   have hthree := three_mul_add4_le_two_pow (N-M-3) (by omega)
   have hlin : L+M ≤ 3*(N-M-3)+4 := by omega
-  exact le_trans hlin hthree
+  exact Nat.le_trans hlin hthree
 
 /-- The four-unit interior offset is invariant along every abstract shadow path. -/
 theorem shadow_reach_invariants
@@ -83,21 +84,25 @@ theorem shadow_reach_invariants
   | root =>
       exact ⟨hz0,hw0⟩
   | @step m z t r zp hprev hdiv hnext ih =>
-      exact shadow_step_preserves_offset L m z t r zp hL ih.1 ih.2 hdiv hnext
+      simpa [Nat.add_assoc] using (shadow_step_preserves_offset L m z t r zp hL ih.1 ih.2 hdiv hnext)
 
 private theorem width_forces_exponent (N L M : Nat)
     (hLlo : N+8 ≤ L)
     (hwidth : L+M ≤ 2^(N-M-3)) :
     4 ≤ N-M-3 := by
-  by_contra hnot
-  have hKle : N-M-3 ≤ 3 := by omega
-  have hpow : 2^(N-M-3) ≤ 8 := by
-    calc
-      2^(N-M-3) ≤ 2^3 :=
-        Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hKle
-      _ = 8 := by decide
-  have hlin : N-M-3+11 ≤ L+M := by omega
-  omega
+  by_cases hK : 4 ≤ N-M-3
+  · exact hK
+  · have hKle : N-M-3 ≤ 3 := by omega
+    have hpow : 2^(N-M-3) ≤ 8 := by
+      calc
+        2^(N-M-3) ≤ 2^3 :=
+          Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hKle
+        _ = 8 := by decide
+    have hlarge : N+8+M ≤ 2^(N-M-3) := by omega
+    have hNM : N=0 ∧ M=0 := by omega
+    rcases hNM with ⟨rfl,rfl⟩
+    simp at hwidth hLlo
+    omega
 
 /-- Exact source-coordinate encoding of an abstract node forces a very
     large, 4-divisible original left counter. -/
@@ -122,7 +127,10 @@ theorem shadow_encoded_left_properties
     Nat.mul_le_mul_left 28 hpowmono
   have hprod2 : 28*2^(N-m) ≤ alpha*2^(N-m) :=
     Nat.mul_le_mul_right (2^(N-m)) ha
-  have hprod : 28*2^(N-M) ≤ alpha*2^(N-m) := le_trans hprod1 hprod2
+  have hprod : 28*2^(N-M) ≤ alpha*2^(N-m) := by
+    calc
+      28*2^(N-M) ≤ 28*2^(N-m) := hprod1
+      _ ≤ alpha*2^(N-m) := hprod2
   have hpow16 : 2^(N-M)=16*2^(N-M-4) := by
     rw [show N-M=(N-M-4)+4 by omega, Nat.pow_add]
     simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
@@ -188,8 +196,10 @@ theorem shadow_reach_lifts_to_odd_cone_of_width
       intro hm
       refine ⟨b0,d0,alpha0,OddCone.root,hb0,hb04,hd0,ha0,?_,?_⟩
       · simpa using ha0lt
-      · have hrootWcalc : L+0-z0=w0 := by omega
-        simpa [hrootWcalc] using hrootCoord
+      · have hrootWcalc : L-z0=w0 := by omega
+        simp only [Nat.pow_zero, Nat.one_mul, Nat.add_zero]
+        rw [hrootWcalc]
+        exact hrootCoord
   | @step m z t r zp hprev hdiv hnext ih =>
       intro hm
       have hmParent : m≤M := by omega
@@ -199,25 +209,36 @@ theorem shadow_reach_lifts_to_odd_cone_of_width
       let w := L+m-z
       have hw4 : 4≤w := by dsimp [w]; omega
       have hoff : L+m=w+z := by dsimp [w]; omega
-      have hrpos : 1≤r := by
-        by_contra h
-        have hr0 : r=0 := by omega
-        subst r
+      have hrne : r ≠ 0 := by
+        intro hr0
+        rw [hr0] at hdiv
         simp at hdiv
         omega
+      have hrpos : 1≤r := by omega
       have hpowle : 2^t≤z := by
         rw [hdiv]
         have hmul := Nat.mul_le_mul_left (2^t) hrpos
         simpa using hmul
       have hzlt : z<2^(N-M-3) := by
         have hzLM : z<L+M := by omega
-        exact lt_of_lt_of_le hzLM hwidth
+        calc
+          z < L+M := hzLM
+          _ ≤ 2^(N-M-3) := hwidth
       have htBound : t≤N-M-4 := by
-        by_contra hnot
-        have hle : N-M-3≤t := by omega
-        have hpow : 2^(N-M-3)≤2^t :=
-          Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hle
-        omega
+        by_cases ht : t≤N-M-4
+        · exact ht
+        · let A := N-M
+          have hA : 4≤A := by
+            dsimp [A]
+            exact Nat.le_trans hK4 (Nat.sub_le (N-M) 3)
+          have hdiffA : A-3=A-4+1 := by omega
+          have hdiff : N-M-3=N-M-4+1 := by simpa [A] using hdiffA
+          have hlt : N-M-4<t := Nat.lt_of_not_ge ht
+          have hsucc : N-M-4+1≤t := Nat.succ_le_of_lt hlt
+          have hle : N-M-3≤t := by rw [hdiff]; exact hsucc
+          have hpow : 2^(N-M-3)≤2^t :=
+            Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hle
+          omega
       have hsafe : m+t+3≤N := by omega
       have hmN : m≤N := by omega
       have henc : b+4*w=alpha*2^(N-m) := by
@@ -282,12 +303,13 @@ theorem shadow_reach_lifts_to_odd_cone_of_width
         dsimp [s]
         omega
       have hC6 : 6≤C := by
-        by_contra hlt
-        have hC5 : C≤5 := by omega
-        have hmul : 2^t*C≤2^t*5 := Nat.mul_le_mul_left (2^t) hC5
-        rw [←hC] at hmul
-        have hpowPosT : 0<2^t := Nat.two_pow_pos t
-        omega
+        by_cases hCsmall : 6≤C
+        · exact hCsmall
+        · have hC5 : C≤5 := by omega
+          have hmul : 2^t*C≤2^t*5 := Nat.mul_le_mul_left (2^t) hC5
+          rw [←hC] at hmul
+          have hpowPosT : 0<2^t := Nat.two_pow_pos t
+          omega
       let c := C-3
       have hc3 : 3≤c := by dsimp [c]; omega
       have hcodd : c%2=1 := by dsimp [c]; omega
@@ -308,7 +330,7 @@ theorem shadow_reach_lifts_to_odd_cone_of_width
       subst t'
       have hk2 := inverseAt_left_ge_two b d t k c hb12 hb4 hi'
       have hpoly := original_odd_edge_polynomial N L m t b d w z alpha k c r zp b0 d0
-        hcone hrootMass hoff hcoord hb12 hb4 hd hi' hcodd hdiv hnext
+        hcone hrootMass hoff hcoord (by omega) hb4 hd hi' hcodd hdiv hnext
       have hmargin := shadow_step_preserves_offset L m z t r zp hL8 hz hzmargin hdiv hnext
       have hzpBound : zp≤L+m+t+1 := by omega
       have hnat := shadow_poly_cast N L m t k zp alpha hk2 hzpBound hpoly
@@ -330,7 +352,11 @@ theorem shadow_reach_lifts_to_odd_cone_of_width
           _ =alpha+112*2^m*2^t := by rw [hMulShift]
       have hR : 56*2^(m+t+1)=112*2^m*2^t := by
         rw [show m+t+1=m+(t+1) by omega, Nat.pow_add, Nat.pow_succ]
-        simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+        have h56 : 56*2=112 := by decide
+        calc
+          56*(2^m*(2^t*2)) = (56*2)*(2^m*2^t) := by ac_rfl
+          _ = 112*(2^m*2^t) := by rw [h56]
+          _ = 112*2^m*2^t := by ac_rfl
       have hAlphaHi' : alpha'<56*2^m' := by
         dsimp [m']
         rw [hR]
