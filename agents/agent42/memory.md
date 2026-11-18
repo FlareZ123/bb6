@@ -1464,26 +1464,25 @@ The 2026-11-18 review of `Marker1TerminalQ4Macro.md` confirmed its scope:
 
 ### 2026-11-18 major q4 checkpoint decomposition
 
-A direct JS simulation of the TM2 table now identifies the exact intermediate S0 configurations before the first marker-1 q4 checkpoint. The reproducible checker is `im-results/agent42-outer-lcinc/marker1_q4_checkpoint_sweep.js`; analysis is in `PositiveZCheckpointNormalForm.md`.
+A direct JS simulation of the TM2 table identifies the exact intermediate S0 configurations before the first marker-1 q4 checkpoint. The reproducible checker is `im-results/agent42-outer-lcinc/marker1_q4_checkpoint_sweep.js`; the analysis is in `PositiveZCheckpointNormalForm.md`.
 
-Let
+Let:
 - `ell0 = markerWord 1 ++ d0 ++ d1pow L ++ lh`;
 - `ell1(A,L) = 11 ++ (010)^(A+1) ++ 011 ++ 110 ++ (010)^L ++ 011 ++ 101 ++ 11`;
 - `D(n)=drainCost(n,0)`.
 
-Observed exact four-stage run:
-1. `s0Config ell0 A z 0 0 -> s0Config ell0 A 0 z 0` in `D(z)), existing `s0Config_counted_drain_general`.
+Observed four-stage run:
+1. `s0Config ell0 A z 0 0 -> s0Config ell0 A 0 z 0` in `D(z)), matching existing `s0Config_counted_drain_general`.
 2. Setup (still unproved): `s0Config ell0 A 0 z 0 -> s0Config ell1 z (2^z-1) 0 (3*z+5)` in `12*(A+L)+3*z+97`.
-3. `s0Config ell1 z (2^z-1) 0 (3*z+5) -> s0Config ell1 z 0 (2^z-1) (3*z+5)` in `D(2^z-1)`, existing `s0Config_counted_drain_closed` at width z.
-4. Tail in `9*z+10) steps to first q4 checkpoint. This is already covered generically by Agent 48's `q4S0Postlude_at` with `k=3*z+2), start head `3*z+5). The left-one condition is `d1pow z ++ 11`; the right guard is the first zero of `s0RightFacing(2^z-1)`; the final-four guard is `0,1,0,0` from `ell1) after skipping its initial `11`, preserved by `s0LeftSweep_shift`. Remaining work is to package these guards and identify the resulting `q4FrameAt` tape pointwise with the explicit checkpoint.
-The total first-checkpoint time is `D(z)+D(2^z-1)+12*(A+L+z)+107). The q4 event count is `3*2^z+3*z+5), and the checkpoint right suffix is `0^3 1^(3*z+5) 0^2 1^(3*2^z) 0^4).
+3. `s0Config ell1 z (2^z-1) 0 (3*z+5) -> s0Config ell1 z 0 (2^z-1) (3*z+5)` in `D(2^z-1)), matching existing `s0Config_counted_drain_closed` at width z.
+4. Tail in `9*z+10` steps to the first q4 checkpoint. This is covered generically by Agent 48's `q4S0Postlude_at` with `k=3*z+2), starting at head `3*z+5`. The left-one condition follows from `d1pow z ++ 11`; the right guard is the first zero of `s0RightFacing(2^z-1)`; the final-four guard is `0,1,0,0` from `ell1) after its initial `11`, preserved by `s0LeftSweep_shift`. Remaining work is to package the guards and identify the resulting `q4FrameAt` tape pointwise with the explicit checkpoint.
 
-All four intermediate tape configurations were checked for A=3,4,5,6; L=2,4; z=0,1,2,3. The checkpoint shape/time formula was checked through z=9 for A=4,L=2. The exact context ell1 was independently confirmed across A,L values. This is computational evidence, not a proof. The **only large missing transition macro in this prefix is Stage 2 setup**; the tail has an existing generic theorem. Do not conflate this pre-checkpoint decomposition with the separate post-checkpoint first-cycle drain at width K=2^z-1 documented in `PositiveZFirstCycleDrainBridge.md`.
+The total first-checkpoint time is `D(z)+D(2^z-1)+12*(A+L+z)+107`. The q4 event count is `3*2^z+3*z+5`; the checkpoint right suffix is `0^3 1^(3*z+5) 0^2 1^(3*2^z) 0^4`. The intermediate tapes were checked for A=3,4,5,6; L=2,4; z=0,1,2,3. Checkpoint shape and cost were checked through z=9 for A=4,L=2. This is computational evidence, not a proof. Stage 2 setup is the only large missing transition macro in this prefix.
 
+Agent 24's equivalent residual context is `l2 = 110 ++ (100)^(A+1) ++ 111 ++ (100)^(L+1) ++ 1110111`. Their pure list identity is `binDec(A+L+2,M-1) ++ LH = 00 ++ (100)^(A-1) ++ 111 ++ (100)^(L+1) ++ 1110111`. The postlude head displacement is `3*z+4); the long right unary block starts at `h2+7=3*z+12) and is preserved, while the postlude constructs `0^3 1^(3*z+5) 0^2`.
 
-- Agent 24's independent static review identified and I fixed the missing `import S1CarryOutputBridge` in `S0CountedDrain.lean` (commit `0fc60a3`). Their raw-step S0 decrement regression covers 1,428 cases with zero failures, but no Lean compile/axiom audit is available.
-- Agent 24 further simplified the q4 postlude: the `ell1` residual is equivalently `110 ++ (100)^(A+1) ++ 111 ++ (100)^(L+1) ++ 1110111). The pure list identity is `binDec(A+L+2,M-1) ++ LH = 00 ++ (100)^(A-1) ++ 111 ++ (100)^(L+1) ++ 1110111`. The final q4 postlude has head displacement `3*z+4`; the long right unary block starts at `h2+7=3*z+12) and is preserved, while the postlude creates `0^3 1^(3*z+5) 0^2`. This is now in `PositiveZCheckpointNormalForm.md`.
-- The generic `q4S0Postlude_at` covers the `9*z+10) tail; setup Stage 2 remains the only large missing transition macro. Agent 48 and Agent 24 were informed; a broadcast also isolates this task.
+Agent 24's static review identified and I fixed the missing `import S1CarryOutputBridge` in `S0CountedDrain.lean` (commit `0fc60a3`). Their independent raw-step S0 decrement regression covers 1,428 cases with zero failures, but no Lean compile/axiom audit is available.
 
+Setup trace clue for A=4,L=2,z=3: the first segment is `state3_left_ones_scan` with `k=3*A+1=13`, 39 steps from head 0, scanning `d1pow A` plus the first marker one. After an 8-step bridge, a second scan with `k=3*L+5=11` takes 33 steps over `d1pow L` plus its five-cell boundary. These account for `9*(A+L)+18` of the setup cost; the remaining trace consists of short three- and six-step patterns. This is an empirical clue, shared with Agents 48 and 24.
 
-- Additional setup-trace clue (A=4,L=2,z=3): the first setup segment is `state3_left_ones_scan` with `k=3*A+1=13), 39 steps from head 0, scanning `d1pow A) plus the first marker one. After an 8-step bridge, a second identical scan with `k=3*L+5=11) takes 33 steps over `d1pow L) plus its five-cell boundary. These account for `9*(A+L)+18) of the setup's `12*(A+L)+3*z+97) steps. The remaining trace consists of short 3- and 6-step patterns; this is a trace-derived hint only. Shared with Agent 48 in `communications/agent48/20261118T195325Z_agent42-setup-trace-left-scans.md`.
+The separate post-checkpoint first-cycle cost still matches a deeper all-ones drain of width `K=2^z-1`, actual value `2^K-1`, plus a linear overhead, as recorded in `PositiveZFirstCycleDrainBridge.md`. Do not conflate this with the pre-checkpoint two-drain decomposition above. The canonical root endpoint source draft and the new checkpoint modules remain uncompiled; do not treat them as accepted Lean theorems.
