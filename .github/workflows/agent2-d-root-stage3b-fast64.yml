@@ -1,11 +1,22 @@
-name: D-root nineteenth reentry (64-step checkpoint)
+name: D-root nineteenth reentry (split 512-step checkpoints)
 on:
   workflow_dispatch:
     inputs:
+      stage:
+        description: "1-3 arithmetic blocks; 4 endpoint composition; 5 authentic-root lift; 6 source reentry"
+        required: true
+        default: "1"
+        type: choice
+        options: ["1", "2", "3", "4", "5", "6"]
       source_run_id:
-        description: "Successful eighteenth-reentry stage-3 run containing d-root-stage3a"
+        description: "Run ID containing the previous successful checkpoint artifact"
         required: true
         default: "44289033894"
+        type: string
+      previous_artifact:
+        description: "Previous checkpoint artifact name"
+        required: true
+        default: "d-root-stage3a"
         type: string
       source_ref:
         description: "Pinned mathematical source snapshot used by d-root-stage3a"
@@ -13,7 +24,7 @@ on:
         default: "20509b53af45edce5b8a145e8714245d3d225cdd"
         type: string
       extension_ref:
-        description: "Exact commit containing the optimized BlankNineteenthRejoin proof"
+        description: "Exact commit containing all split nineteenth proof modules"
         required: true
         default: "main"
         type: string
@@ -27,7 +38,7 @@ env:
 
 jobs:
   audit:
-    name: Compile optimized nineteenth blank-root reentry
+    name: "Nineteenth root checkpoint ${{ inputs.stage }}"
     runs-on: ubuntu-latest
     timeout-minutes: 27
     steps:
@@ -59,17 +70,19 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: Download successful eighteenth-reentry checkpoint
+      - name: Download previous checkpoint
         uses: actions/download-artifact@v4
         with:
-          name: d-root-stage3a
+          name: ${{ inputs.previous_artifact }}
           run-id: ${{ inputs.source_run_id }}
           github-token: ${{ github.token }}
           path: prior-artifact
 
-      - name: Restore audited Lean objects and install optimized proof
+      - name: Restore audited objects and install split proof modules
         working-directory: source
         env:
+          STAGE: ${{ inputs.stage }}
+          PREVIOUS_ARTIFACT: ${{ inputs.previous_artifact }}
           SOURCE_REF: ${{ inputs.source_ref }}
           EXTENSION_REF: ${{ inputs.extension_ref }}
         run: |
@@ -88,24 +101,70 @@ jobs:
           tar -xzf ../prior-artifact/lean-stage.tar.gz -C .
           prior_source_ref=$(cat im-results/.d-root-source-ref)
           if [[ "$prior_source_ref" != "$SOURCE_REF" ]]; then
-            echo "Predecessor artifact source mismatch: $prior_source_ref" >&2
+            echo "Predecessor mathematical source mismatch: $prior_source_ref" >&2
             exit 1
           fi
-          cp ../extension/im-results/agent37-d-timing-cocycle/BlankNineteenthRejoin.lean im-results/agent37-d-timing-cocycle/BlankNineteenthRejoin.lean
+          if [[ -f im-results/.d-root-stage3b-extension-ref ]]; then
+            prior_extension_ref=$(cat im-results/.d-root-stage3b-extension-ref)
+            if [[ "$prior_extension_ref" != "$actual_extension" ]]; then
+              echo "Nineteenth proof extension changed: $prior_extension_ref vs $actual_extension" >&2
+              exit 1
+            fi
+          elif [[ "$STAGE" != "1" ]]; then
+            echo "Missing nineteenth proof-extension marker in predecessor artifact" >&2
+            exit 1
+          fi
+
+          T=im-results/agent37-d-timing-cocycle
+          for module in NineteenthBlock1.lean NineteenthBlock2.lean NineteenthBlock3.lean NineteenthTerminalCertificate.lean NineteenthRootPrefix.lean BlankNineteenthRejoin.lean; do
+            cp "../extension/$T/$module" "$T/$module"
+          done
+
+          case "$STAGE" in
+            1) expected_artifact="d-root-stage3a"; required_modules=("$T/BlankEighteenthRejoin.olean" "$T/BlankSixteenthRejoin.olean" "im-results/agent2-cryptid-continuity/DRegularFast.olean"); source_file="$T/NineteenthBlock1.lean"; audit_decl="block19_1_exact" ;;
+            2) expected_artifact="d-root-stage3b1"; required_modules=("$T/NineteenthBlock1.olean"); source_file="$T/NineteenthBlock2.lean"; audit_decl="block19_2_exact" ;;
+            3) expected_artifact="d-root-stage3b2"; required_modules=("$T/NineteenthBlock2.olean"); source_file="$T/NineteenthBlock3.lean"; audit_decl="terminal1588_exact" ;;
+            4) expected_artifact="d-root-stage3b3"; required_modules=("$T/NineteenthBlock3.olean"); source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
+            5) expected_artifact="d-root-stage3b4"; required_modules=("$T/NineteenthTerminalCertificate.olean"); source_file="$T/NineteenthRootPrefix.lean"; audit_decl="blank_nineteenth_exception" ;;
+            6) expected_artifact="d-root-stage3b5"; required_modules=("$T/NineteenthRootPrefix.olean"); source_file="$T/BlankNineteenthRejoin.lean"; audit_decl="blank_nineteenth_reentry" ;;
+            *) echo "Unknown stage: $STAGE" >&2; exit 2 ;;
+          esac
+          if [[ "$PREVIOUS_ARTIFACT" != "$expected_artifact" ]]; then
+            echo "Stage $STAGE requires $expected_artifact, got $PREVIOUS_ARTIFACT" >&2
+            exit 1
+          fi
+          for module in "${required_modules[@]}"; do
+            if [[ ! -f "$module" ]]; then
+              echo "Stage $STAGE is missing predecessor module $module" >&2
+              exit 1
+            fi
+          done
+          printf '%s\\n' "$SOURCE_REF" > im-results/.d-root-source-ref
+          printf '%s\\n' "$actual_extension" > im-results/.d-root-stage3b-extension-ref
           echo "Pinned mathematical source: $actual_source"
           echo "Proof extension source: $actual_extension"
 
-      - name: Compile optimized nineteenth reentry and audit axioms
+      - name: Compile selected checkpoint and audit axioms
         working-directory: source
         shell: bash
+        env:
+          STAGE: ${{ inputs.stage }}
         run: |
           set -euo pipefail
           exec > >(tee -a lean-audit.log) 2>&1
-          lean --version
           T=im-results/agent37-d-timing-cocycle
-          lean -DmaxRecDepth=55000 -o "$T/BlankNineteenthRejoin.olean" "$T/BlankNineteenthRejoin.lean"
-          if ! grep -Eq 'blank_nineteenth_reentry.*depends on axioms:' lean-audit.log; then
-            echo "Missing #print axioms output for blank_nineteenth_reentry" >&2
+          case "$STAGE" in
+            1) source_file="$T/NineteenthBlock1.lean"; audit_decl="block19_1_exact" ;;
+            2) source_file="$T/NineteenthBlock2.lean"; audit_decl="block19_2_exact" ;;
+            3) source_file="$T/NineteenthBlock3.lean"; audit_decl="terminal1588_exact" ;;
+            4) source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
+            5) source_file="$T/NineteenthRootPrefix.lean"; audit_decl="blank_nineteenth_exception" ;;
+            6) source_file="$T/BlankNineteenthRejoin.lean"; audit_decl="blank_nineteenth_reentry" ;;
+          esac
+          lean --version
+          lean -DmaxRecDepth=55000 -o "${source_file%.lean}.olean" "$source_file"
+          if ! grep -Eq "$audit_decl.*depends on axioms:" lean-audit.log; then
+            echo "Missing #print axioms output for $audit_decl" >&2
             exit 1
           fi
           python3 - <<'PY'
@@ -115,7 +174,7 @@ jobs:
           unexpected = []
           with open("lean-audit.log", encoding="utf-8") as log:
               for line in log:
-                  match = re.search(r"depends on axioms:\s*\[([^]]*)\]", line)
+                  match = re.search(r"depends on axioms:\\s*\\[([^]]*)\\]", line)
                   if match:
                       actual = {name.strip() for name in match.group(1).split(",") if name.strip()}
                       extra = actual - allowed
@@ -130,10 +189,21 @@ jobs:
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
           fi
-          find im-results -type f \( -name '*.olean' -o -name '.d-root-source-ref' \) -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
+          find im-results -type f \\( -name '*.olean' -o -name '.d-root-source-ref' -o -name '.d-root-stage3b-extension-ref' \\) -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
 
-      - name: Preserve nineteenth-reentry checkpoint
-        if: success()
+      - name: Preserve intermediate nineteenth checkpoint
+        if: ${{ success() && inputs.stage != '6' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: d-root-stage3b${{ inputs.stage }}
+          path: |
+            source/lean-stage.tar.gz
+            source/lean-audit.log
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Preserve final nineteenth-reentry checkpoint
+        if: ${{ success() && inputs.stage == '6' }}
         uses: actions/upload-artifact@v4
         with:
           name: d-root-stage3b
