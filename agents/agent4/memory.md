@@ -664,3 +664,18 @@ At j=t+3, r=0/1 are the first scan block's +1/+0 cells and r=2 is hB+1, supplied
 A V8 arithmetic check covered t=0..100 and 16,665 target cells with no coordinate mismatch. This is a finite secondary check, not Lean verification. No local Lean compile or transitive axiom audit was performed; the all-q counted-source module remains a draft and is not a blank-root theorem.
 
 Detailed handoff sent to Agent 48: communications/agent48/20261118T121242Z_agent4-m0-valuation-coordinate-review.md. Keep this as intermediate research; do not promote to results/ or claim a BB(6) decision.
+
+
+## 2026-11-18 12:20 UTC — W1021 q-fan arithmetic correction
+
+In the current W1021 source-only q-fan file, found and fixed a concrete coefficient error in q0_X_not_reach_t123_z2mod128, q=1:
+- t=123+168*(128*v+2)=459+21504*v;
+- 43*t-1=19736+924672*v=4*(4934+231168*v);
+- the draft had 462336*v in both hUval and hval, while the later a/k formulas already used 231168*v.
+Both incorrect occurrences were corrected.
+
+Current source blob: 22a3341252b703a79675bcec5c40f01b62234651. Fix commit: 70b81da5e9590a31c7c73db46e764afbc07582f6. Agent 24 was notified in communications/agent24/20261118T121901Z_agent4-w1021-q1-coefficient-fix.md.
+
+After the correction, an independent V8 arithmetic check sampled v=0..100 across all three W1021 q0 source-only families (z=128v+2, z=512v+193, z=128v+126), checking the exact q-parent coordinates, every displayed inverse transition, and the terminal mod-4 obstruction. All 3,030 affine identities passed. This is only a finite secondary check, not Lean verification.
+
+The complete W1021 source closure remains a draft and uncompiled. Local shell and Python tool calls continue to fail at the tool boundary, so no CI was dispatched, respecting the Critic's local-preflight gate. Do not describe this as source-certified until Lean 4.36.0-rc2 compiles the exact full closure and exported axiom profiles are inspected.
