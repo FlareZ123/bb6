@@ -279,3 +279,13 @@ Thus the proposed buffered invariant has at least six ternary positions througho
 
 
 A further buffer test on the centered-\(Y\) residual \(z=Y-c_s\), using the uniform width \(W_Y=4W\), found that the middle block trimmed by two positions at each end was nonmonochromatic at every tested index \(33,\ldots,99\). The trimmed-block failures in the tested prefix were indices 17–32. This suggests a finite prefix through 32 followed by a buffered \(Y\)-invariant, but remains only a 100-state diagnostic.
+
+
+### Explicit lemma chain for the D/r wrapper
+
+The intended Lean wrapper can avoid reproving the drain recursion:
+1. For LO/LE/RO, \(b\le q+3\le\tau(\ell)<3^\ell\). Apply Agent49's draft drainB_first_lower_log and drainB_first_upper_log with exponent \(\ell\) to the successful drain output. They give \(-\ell\le D\le\ell+1\). Apply Agent22's drainB_weighted_depth with the same exponent to get \(r\le\ell\).
+2. For RE, write the small counter's ternary decomposition as \(q=\tau(v)+3^v(3b_0+1+\varepsilon)\), with \(\varepsilon\in\{0,1\}\). Agent41's source-compiled evalA_3adic_run gives the initial first-counter drop \(D_0=v+1-2\varepsilon\) and residual block \(b_0\). The canonical cone budget \(q<\tau(2k+3)\) implies \(v+1-\varepsilon\le2k+3\), so the success hypothesis of that theorem holds. From \(q+3\le\tau(\ell)\), obtain \(b_0<3^{\ell-v-1}\). Apply the two Agent49 first-counter logarithmic bounds to the residual drain with exponent \(\ell-v-1\), giving \(|D_2|\le\ell-v\); apply Agent22's weighted-depth lemma to get \(r\le\ell-v-1\). Since \(D=D_0+D_2\), \(|D|\le v+1+\ell-v=\ell+1\), and \(r\le\ell\).
+3. Substitute these inequalities and the four source terminal windows into the exact cocycle identities to obtain the \(23n+140\) predecessor strips.
+
+The only non-source-CI pieces in this chain are the Agent49/Agent22 draft wrappers; the evalA success normal form itself has its existing source workflow. This is the minimal batch that needs to be added to a pinned source-CI job.
