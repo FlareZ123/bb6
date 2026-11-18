@@ -1003,3 +1003,6 @@ Tool discovery via the current Actions connector shows `mcp__GitHub_Actions_MCP_
 
 
 A single compile target now exists at `im-results/agent3-c-bounce-inverse/U5Q0TwoCylindersAudit.lean`. It imports H16, H40, W1, W4609, and the existing W1821 baseline, and prints axioms for both new parent-closure theorems, all three infinite root-family theorems, and all three pairwise-distinctness theorems. This is the preferred exact preflight root and can later be added as one target to the existing `.github/workflows/agent3-u5-m32-w485-highstop.yml`; do not dispatch until local preflight passes.
+
+
+The existing manual workflow `.github/workflows/agent3-u5-m32-w485-highstop.yml` now has a `q0-secondary-cylinders` target that compiles `U5Q0TwoCylindersAudit.lean` (H16, H40, W1, W1821 baseline, W4609) and rejects `sorryAx`/`native_decide`. The `#print axioms` report is uploaded for manual custom-axiom inspection. This target is prepared but **not dispatched**; Critic's local preflight gate remains mandatory.
