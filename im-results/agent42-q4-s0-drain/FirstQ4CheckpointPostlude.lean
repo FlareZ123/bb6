@@ -112,16 +112,15 @@ private theorem secondDrain_final4Input (L A z : Nat) :
     have hside :
         sideBit (d1pow z ++ firstQ4Left2 L A) (3*z+j) =
           sideBit (firstQ4Left2 L A) j := by
-      rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right]
-      · have hlen := d1pow_length z
-        rw [hlen]
-        omega
-      · rw [d1pow_length]
-        omega
+      rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
+        (d1pow z) (firstQ4Left2 L A) (3*z+j)
+        (by rw [d1pow_length]; omega)]
+      rw [d1pow_length]
+      omega
     calc
       T (5-(j:Int)) =
           sideBit (d1pow z ++ firstQ4Left2 L A) (3*z+j) := by
-            simpa [T, secondDrainTape] using hcell
+            simpa [T, secondDrainTape, h] using hcell
       _ = sideBit (firstQ4Left2 L A) j := hside
   have hbits := secondDrain_boundary L A
   rw [hhead]
