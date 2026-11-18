@@ -108,3 +108,18 @@ Related source work:
 - im-results/agent41-623-integer-carry-transducer/README.md
 - im-results/agent8-623-inverse/RootRayDrainDepthSource.lean
 - im-results/agent1-machine623-3euclidean-correction-bounds/RootRayGapCocycle.md
+
+
+## 6. One-extra-digit carry bound
+
+The correction bound (B) also gives a small exact bound on the initial carry if the transducer is started one digit higher. Let (K=3^k), with (B<K), and let (r\in[0,3K)) be the low residue of the uncorrected linear term. For any correction (c) with (-K<c<K), write
+[
+r+c=3Kq+s,qquad 0\le s<3K.
+]
+Then
+[
+\boxed{q\in\{-1,0,1\}.}
+]
+The Lean theorem one_extra_digit_carry_bound proves this quotient bound using only integer order and multiplication monotonicity. Applying it independently to the two coordinates shows that, at position (k+1), both actual affine carries lie in ([-1,1]), since the source correction bounds are strictly below (3^k).
+
+The observed branch-specific rectangles (L: ({-1,0}\times{0,1}); R: ({0,1}\times{-1,0})) are sharper empirical facts and are not proved by this lemma. The universal ([-1,1]^2) bound is source-independent and can be used to tighten future carry abstractions.
