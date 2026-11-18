@@ -293,19 +293,20 @@ theorem sweptRightB_block (n : Nat) (T : Int → Bool) (h : Int)
           simp [afterRight3B]
         have hne20 : h+2 ≠ h := by omega
         have hne21 : h+2 ≠ h+1 := by omega
+        have h2' : T (h+2) = true := by simpa using h2
         have ha2 : afterRight3B T h (h+2) = true := by
-          simp [afterRight3B,hne20,hne21]
+          simp [afterRight3B,hne20,hne21,h2']
         constructor
-        · simpa using hp0.trans ha0
+        · simpa [sweptRightB] using hp0.trans ha0
         · constructor
-          · simpa using hp1.trans ha1
-          · simpa using hp2.trans ha2
+          · simpa [sweptRightB] using hp1.trans ha1
+          · simpa [sweptRightB] using hp2.trans ha2
       · have hi' : i-1<n := by omega
         have hon' := rightOnes_tail_B T h n hon
         have hrec := ih (afterRight3B T h) (h+3) hon' (i-1) hi'
-        have hc0 : h+3*(i:Int) = h+3+3*((i-1):Int) := by omega
-        have hc1 : h+3*(i:Int)+1 = h+3+3*((i-1):Int)+1 := by omega
-        have hc2 : h+3*(i:Int)+2 = h+3+3*((i-1):Int)+2 := by omega
+        have hc0 : h+3+3*((i:Int)-1) = h+3+3*((i-1):Int) := by omega
+        have hc1 : h+3+3*((i:Int)-1)+1 = h+3+3*((i-1):Int)+1 := by omega
+        have hc2 : h+3+3*((i:Int)-1)+2 = h+3+3*((i-1):Int)+2 := by omega
         simpa [sweptRightB,hc0,hc1,hc2] using hrec
 
 /-- The exact final tape of the universal carry H-run. -/
@@ -336,7 +337,9 @@ theorem counted_LBinDec_HRun (n : Nat) (T : Int → Bool) (h : Int)
   have hleftRun :
       run tm2 (9*n) ⟨3,h,T⟩ = some ⟨3,h',U⟩ := by
     have hs := counted_left_sweep k T h hon hr
-    convert hs using 1 <;> simp [k,h',U] <;> omega
+    have hcost : 3*k = 9*n := by dsimp [k]; omega
+    rw [hcost] at hs
+    simpa [h',U] using hs
   have hbridge :
       run tm2 4 ⟨3,h',U⟩ = some ⟨1,h'+2,V⟩ :=
     counted_LIncBridge U h' hz1 hz0 hz2
