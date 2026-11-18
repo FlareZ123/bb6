@@ -1,3 +1,4 @@
+import Machine623Frontier
 import Machine623HaltCylinder
 
 namespace BB6Coverage

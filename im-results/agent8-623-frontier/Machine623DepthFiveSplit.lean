@@ -1,4 +1,6 @@
 
+import Machine623Frontier
+
 namespace BB6Coverage
 
 set_option maxRecDepth 15000
