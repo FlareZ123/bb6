@@ -180,6 +180,79 @@ which yields
 \]
 The three lifts K,K+162,K+324 of the surviving class modulo 162 therefore give X residues 0,27,54 modulo 81 in some order. Exactly two have v3(X)=3 and are excluded by the preceding argument; the unique remaining lift has 81|X and incoming odd valuation t>=3.
 
+## General 3-adic lift law and infinitely many higher-valuation gaps
+
+The two explicit lift steps above are instances of a uniform Hensel-type rule. Let n>=2 and put
+\[
+\Delta_n=2\cdot3^{n+1}.
+\]
+By LTE,
+\[
+v_3(2^{\Delta_n}-1)
+=v_3(4^{3^{n+1}}-1)
+=v_3(4-1)+v_3(3^{n+1})
+=n+2,
+\]
+so 2^{Delta_n}≡1 mod 3^{n+2}. For K'=K+Delta_n, p and 2^r are unchanged modulo 3^{n+2}, while c'=c+4*3^{n+1}. Therefore
+\[
+B(K')\equiv B(K)+4\cdot2^r\cdot3^{n+1}
+\pmod{3^{n+2}}.
+\]
+Using (2) gives
+\[
+3(X(K')-X(K))
+\equiv(4-8\cdot2^r)3^{n+1}
+\pmod{3^{n+2}},
+\]
+hence
+\[
+\boxed{
+X(K+2\cdot3^{n+1})-X(K)
+\equiv(4-8\cdot2^r)3^n
+\pmod{3^{n+1}}.
+}
+\tag{13}
+\]
+Since r is even, 4-8*2^r≡2 mod3, a unit. Thus, from any class K modulo 2*3^(n+1) with 3^n|X, its three lifts modulo 2*3^(n+2) give all three possible next ternary digits. Exactly one lift has 3^(n+1)|X; the other two have v3(X)=n. The rho-20 phase is the base case n=2. Iterating (13) gives a unique high-valuation branch and two exact-valuation siblings at every 3-adic stage.
+
+For a candidate with exact v3(X)=t+1, its odd-parent source coordinate is
+\[
+P_t=\frac{2^tX}{3^{t+1}}.
+\]
+From (4), uniformly over the full x-interval,
+\[
+\boxed{
+\frac{28}{9}\left(\frac23\right)^t
+<\frac{P_t}{p}<
+\frac{65}{18}\left(\frac23\right)^t.
+}
+\tag{14}
+\]
+The normalized odd source bands are [6*2^(-m),8*2^(-m)] for integers m=K-L. Their intervening gaps are
+\[
+G_m=\left(4\cdot2^{-m},6\cdot2^{-m}\right).
+\]
+Whenever the whole interval in (14) lies inside one such gap, no odd source level L is possible. Since E has no even parent by (1), every candidate with that exact valuation is parentless.
+
+This gap condition occurs for a positive natural density of valuation indices t. Let
+\[
+y_t=\log_2(28/9)+t\log_2(2/3),
+\qquad
+w=\log_2(65/56),
+\qquad
+g=\log_2(3/2).
+\]
+In log2 coordinates, each source-band gap has width g and repeats with period 1, while the interval (14) has width w. The whole interval fits inside a gap exactly when the fractional part of y_t lies in an interval of length g-w. The increment log2(2/3) is irrational (otherwise a nonzero power of 3 would equal a power of 2), so the fractional parts of y_t are equidistributed modulo 1. Consequently the set of such t has natural density
+\[
+\boxed{
+g-w=\log_2(84/65)\approx0.36995.
+}
+\tag{15}
+\]
+For each fixed t in this set, the lift law (13) supplies two residue classes with v3(X)=t+1. The K-interval has width 7*2^a/128, which exceeds the required modulus 2*3^(t+3) for all sufficiently large even a. Hence both sibling classes occur for infinitely many admissible parameter pairs (a,K), and every such candidate is parentless. The first gap valuations include t=1,4,6,11,13,16,...; t=2 is not a uniform gap, but was separately excluded by the parent-leaf argument above.
+
+The density in (15) is a density of integer valuation indices t for this arithmetic family. It is not a density of machines or of halting histories. The argument is paper-level and has not been Lean-formalized.
+
 ## Combined residue-class scope
 
 For each even a>=18, the admissible K interval has width
@@ -216,4 +289,4 @@ At K=198794, P=4X/27 lies in the L=K-2 band and its parent h satisfies h/p=1.107
 
 ## Next mathematical target
 
-Analyze the unique rho-20 lift with 81|X, combining the next 3-adic digit of X/81 with the exact dyadic source-band condition for valuation t>=3. Avoid another finite forward-orbit scan: the remaining obstruction is the interaction between the unique higher 3-adic lift and the odd-parent dyadic band.
+Analyze valuation branches t>=3 whose uniform source-coordinate interval intersects an odd band, combining the next 3-adic lift with the exact even-parent chain of the resulting odd parent. The positive-density gap valuations are already excluded; the unresolved cases are precisely those where a source band can exist and its parent may continue.

@@ -134,3 +134,15 @@ A second lift calculation uses 2^162≡1 mod243 and gives X(K+162)≡X(K)+54 mod
 Exact a=18 checks: K=198794,198956,199118 give X mod81 =54,27,0 and v3(X)=3,3,4. At K=198794, P is in the K-2 band and h/p≈1.107699 with h mod3=0; at K=210944, v3(X)=3 but P/p≈1.407365, so no odd source band exists.
 
 **Next action:** analyze the unique rho-20 class with 81|X and incoming valuation t>=3; seek a general dyadic-gap or parent-leaf theorem for the higher 3-adic lifts. Do not repeat finite forward-orbit scans.
+
+### 2026-11-18 addendum: general 3-adic lift law and positive-density source-band gaps
+
+The rho-20 note now proves a uniform lift rule. For n>=2, shift K by Delta_n=2*3^(n+1). LTE gives 2^Delta_n≡1 mod3^(n+2); the exact identity 3X+2B=80p+2K+13 then yields
+X(K+Delta_n)-X(K) ≡ (4-8*2^r)*3^n mod3^(n+1).
+Since r is even, the coefficient is a 3-adic unit. Each three-way lift of a class with 3^n|X therefore has exactly one higher-valuation child and two siblings with v3(X)=n. The rho-20 class is the base n=2 case.
+
+For exact v3(X)=t+1, the odd source coordinate obeys
+(28/9)*(2/3)^t < P_t/p < (65/18)*(2/3)^t.
+The dyadic source-band gaps have log2 width log2(3/2); the interval has width log2(65/56). The phase log2(28/9)+t log2(2/3) is equidistributed mod 1 because log2(2/3) is irrational. Thus a positive natural density log2(84/65)≈0.36995 of valuation indices t have the whole source-coordinate interval inside a dyadic gap. For each such t, both exact-valuation sibling classes from the lift law occur for infinitely many admissible (a,K) pairs once the K interval width exceeds 2*3^(t+3), and E has no odd or even parent. This is an infinite higher-valuation parent-leaf family. The density is of valuation indices, not machines. First examples of gap t are 1,4,6,11,13,16,...; t=2 is separately excluded by the explicit parent-leaf lemma.
+
+The remaining work is now the higher t values whose P_t interval intersects a source band. Those candidates may have an odd parent whose own even-parent chain continues; the source-band gap argument alone does not resolve them. The new lift law, density argument, and t=2 leaf proof remain paper-level and are not Lean-certified.
