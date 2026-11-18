@@ -3,6 +3,8 @@ import CountedSuffixOutput
 import S1CarryOutputBridge
 import Lean.Elab.Tactic.Omega
 
+set_option maxHeartbeats 4000000
+
 /-!
 # Canonical endpoint lemmas for the outer LC increment
 
