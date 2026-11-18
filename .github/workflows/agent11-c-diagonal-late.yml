@@ -38,6 +38,11 @@ on:
         required: false
         type: boolean
         default: false
+      u5_source_only_w21_only:
+        description: "Source-check the U5 w=21 mod32 source-only q=0 parent and high m=0 closure, then stop"
+        required: false
+        type: boolean
+        default: false
       s31_w13_only:
         description: "Source-check the M0 base and S31 B/W5/W1/q275/q403 high-stop chain, then stop"
         required: false
@@ -67,6 +72,7 @@ jobs:
           U5_Q0_PARTIAL_ONLY: ${{ inputs.u5_q0_partial_only }}
           U5_Q0_FAN_ONLY: ${{ inputs.u5_q0_fan_only }}
           U5_Q0_M16_ONLY: ${{ inputs.u5_q0_m16_only }}
+          U5_SOURCE_ONLY_W21_ONLY: ${{ inputs.u5_source_only_w21_only }}
           S31_W13_ONLY: ${{ inputs.s31_w13_only }}
         run: |
           set -euo pipefail
@@ -388,6 +394,27 @@ jobs:
               echo "REJECTED: U5 M16 high-stop exclusion contains sorryAx"
               exit 1
             fi
+            exit 0
+          fi
+          if [ "$U5_SOURCE_ONLY_W21_ONLY" = "true" ]; then
+            # Focused exact-source fallback for the pending source-only U5 w=21
+            # cylinder. This deliberately avoids the M16 quotient route.
+            cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{U5Y3ParentFan,U5M8Q0Partial,U5Q0M16Residual,U5Q0OddOddFan,U5Y3M8}.lean .
+            for f in U5Y3ParentFan U5M8Q0Partial U5Q0M16Residual U5Q0OddOddFan U5Y3M8; do
+              lean -o "$f.olean" "$f.lean" 2>&1 | tee "$f.log"
+              if grep -Eq 'sorryAx|_native' "$f.log"; then
+                echo "REJECTED: $f depends on sorryAx or native-evaluation axioms"
+                exit 1
+              fi
+            done
+            cp ${GITHUB_WORKSPACE}/im-results/agent4-u5-source-closure/{U5Q0SourceOnly,U5SourceOnlyHighStop}.lean .
+            for f in U5Q0SourceOnly U5SourceOnlyHighStop; do
+              lean -o "$f.olean" "$f.lean" 2>&1 | tee "$f.log"
+              if grep -Eq 'sorryAx|_native' "$f.log"; then
+                echo "REJECTED: $f depends on sorryAx or native-evaluation axioms"
+                exit 1
+              fi
+            done
             exit 0
           fi
           if [ "$S31_W13_ONLY" != "true" ]; then
