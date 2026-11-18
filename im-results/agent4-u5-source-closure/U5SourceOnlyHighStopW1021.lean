@@ -29,19 +29,6 @@ private theorem succ_le_two_pow (n : Nat) : n+1≤2^n := by
       have hpow : 2^(n+1)=2^n*2 := by rw [Nat.pow_succ]
       omega
 
-private theorem pow_two_mod_three (n : Nat) :
-    2^n%3 = if n%2=0 then 1 else 2 := by
-  induction n with
-  | zero => norm_num
-  | succ n ih =>
-      rw [Nat.pow_succ,Nat.mul_mod]
-      rw [ih]
-      by_cases h : n%2=0
-      · have hn : (n+1)%2=1 := by omega
-        simp [h,hn]
-      · have hn : (n+1)%2=0 := by omega
-        simp [h,hn]
-
 private theorem q0_parent_reach_implies_X (t : Nat) (ht : 1≤t)
     (h : CReach (64*t+5) (32*t+3)) :
     CReach (44*t-1) (42*t-1) := by
@@ -63,58 +50,17 @@ private theorem q0_parent_reach_implies_X (t : Nat) (ht : 1≤t)
     simpa only [hx,hy] using h2
   exact h2'
 
-/-- The exact residual identity and the cylinder w=1021 (mod 1024)
-force t=123+168*z with z=2 (mod 128). -/
+/-- The exact residual identity and w=1021 (mod 1024) force
+t=459 (mod 1024), the only residue needed by the stronger q-fan
+source exclusion. -/
 theorem u5_w1021_t_param (w s m t : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
     (hp : m+1=8*t+1)
     (hw : w%1024=1021) :
-    ∃ v, t=123+168*(128*v+2) := by
+    ∃ v, t=459+1024*v := by
   have hId := BB6.Agent3U5M16Residual.u5_m8_t_identity
     w s m t hs hm hp
-  have hrmod2 : (201+3360*w)%2=1 := by omega
-  have hpow3 : (2^(201+3360*w))%3=2 := by
-    rw [pow_two_mod_three]
-    simp [hrmod2]
-  have hpow3mul : (20*2^(201+3360*w))%3=1 := by
-    rw [Nat.mul_mod,hpow3]
-    norm_num
-  have hpow7 : (2^(201+3360*w))%7=1 := by
-    rw [show 201+3360*w=3*(67+1120*w) by omega,
-      Nat.pow_mul,Nat.pow_mod]
-    have hbase : (2:Nat)^3%7=1 := by decide
-    rw [hbase]
-    simp
-  have hpow7mul : (20*2^(201+3360*w))%7=6 := by
-    rw [Nat.mul_mod,hpow7]
-    norm_num
-  have ht3 : t%3=0 := by
-    have hmod : (211*t+1360+22155*w)%3 =
-        (20*2^(201+3360*w))%3 := by rw [hId]
-    rw [hpow3mul] at hmod
-    omega
-  have ht7 : t%7=4 := by
-    have hmod : (211*t+1360+22155*w)%7 =
-        (20*2^(201+3360*w))%7 := by rw [hId]
-    rw [hpow7mul] at hmod
-    omega
-  have hdiv8 : 8∣2^(201+3360*w) := by
-    change 2^3∣2^(201+3360*w)
-    exact Nat.pow_dvd_pow 2 (by omega)
-  have hpow8 : (2^(201+3360*w))%8=0 :=
-    Nat.mod_eq_zero_of_dvd hdiv8
-  have hpow8mul : (20*2^(201+3360*w))%8=0 := by
-    rw [Nat.mul_mod,hpow8]
-    norm_num
-  have hw8 : w%8=5 := by omega
-  have ht8 : t%8=3 := by
-    have hmod : (211*t+1360+22155*w)%8 =
-        (20*2^(201+3360*w))%8 := by rw [hId]
-    rw [hpow8mul] at hmod
-    omega
-  have ht21 : t%21=18 := by omega
-  have ht168 : t%168=123 := by omega
   have hdiv1024 : 1024∣2^(201+3360*w) := by
     change 2^10∣2^(201+3360*w)
     exact Nat.pow_dvd_pow 2 (by omega)
@@ -126,21 +72,11 @@ theorem u5_w1021_t_param (w s m t : Nat)
   have hmod1024 : (211*t+1360+22155*w)%1024=0 := by
     rw [hId]
     exact hpow1024mul
-  have ht1024 : t%1024=459 := by
-    have hconst : (211*459+1360+22155*1021)%1024=0 := by decide
-    have hinv : 211*859=1024*177+1 := by norm_num
-    omega
-  let z := (t-123)/168
-  have htEq : t=123+168*z := by
-    dsimp [z]
-    omega
-  have hzmod : z%128=2 := by
-    rw [htEq] at ht1024
-    omega
-  obtain ⟨v,hv⟩ : ∃ v, z=128*v+2 := by
-    refine ⟨z/128,?_⟩
-    omega
-  exact ⟨v,by rw [htEq,hv]⟩
+  have hconst : (211*459+1360+22155*1021)%1024=0 := by decide
+  have hinv : 211*859=1024*177+1 := by norm_num
+  have htmod : t%1024=459 := by omega
+  refine ⟨t/1024,?_⟩
+  omega
 
 /-- The y=3 terminal of the U5 M8 residual is unreachable on
 w=1021 (mod 1024). Its q=0 parent is excluded by the new
@@ -199,10 +135,10 @@ theorem blank_no_u5_residual_m8w_w1021 (w s m : Nat)
             have hX := q0_parent_reach_implies_X
               t htpos hparent
             have hX' : CReach
-                (44*(123+168*(128*v+2))-1)
-                (42*(123+168*(128*v+2))-1) := by
+                (44*(459+1024*v)-1)
+                (42*(459+1024*v)-1) := by
               simpa only [hv] using hX
-            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t123_z2mod128
+            exact BB6.Agent4U5SourceOnlyW1021.q0_X_not_reach_t459mod1024
               v hX'
           · by_cases hq1 : q=1
             · subst q
