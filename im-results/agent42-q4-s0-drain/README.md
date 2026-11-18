@@ -246,123 +246,12 @@ The linear (2^z) terms cancel exactly. This is the cleanest expression of the fi
 
 ## Compatibility with the root endpoint
 
-The root source endpoint recorded in the q4 investigation is
+The root source chain currently reaches an S1 configuration with marker 2 after the middle-34 prefix, then applies `outerLCInc_full_run` to an `outerLCIncPostludeTape`. The remaining root-side gap is the pointwise equality of that postlude tape with the intended canonical marker-1 S0/S1 configuration. Therefore the q4 initial-family identification is a target interface, not yet a proved root endpoint.
 
-\[
-s1Config\;L\;0\;1\;(A)\;(2^b-1)\;0\;h,
-\qquad A=a+b+2.
-\]
-
-By the S1 encoder definition and `binDec L 0 = d1pow L), this is exactly the positive-z marker-1 initial S0 family
-\[
-s0Config\;(markerWord\;1\; ++ d0 ++ d1pow\;L ++ lh)\;A\;(2^b-1)\;0\;h.
-\]
-For (b\ge2), (z=2^b-1>0) and (z<2^A), so the positive-z q4 first-cycle hypotheses hold. The remaining root-side dependency is the source proof of the initial prefix from this root endpoint to q4 checkpoint 1; the present dossier begins at that checkpoint.
-
-
-Additional (z=5) outer-parameter checks used ((A,L)=(4,2),(3,4),(5,2)). Their first checkpoint times were 8,015, 8,027, and 8,027 respectively, while (P=169), (h=118), (a=31), and (Q=349) remained unchanged. The checkpoint-1 RLE, S0 input, and predicted-output/postlude checkpoint-2 frames all matched. This further supports independence of the first-cycle macro from the tested outer parameters; the middle drain remains spliced, not simulated, in these cases.
-
-
-## Complete small terminal run: (z=1,A=3,L=2)
-
-A direct exact TM2 simulation of the entire initial S0 configuration (not merely one cycle) gives:
-
-- (M(A,L)=120) q4 checkpoints, at indices (1,ldots,120);
-- checkpoint 1 at step 275 and checkpoint 120 at step 245,105;
-- the machine halts at step **246,201**, in state 0 at head 967 reading 1.
-
-The first-cycle difference (433-275=158) agrees with (C_1(1)). This is a complete computational terminal run for this small parameter instance, not a formal proof and not the BB(6) root instance.
-
-The later checkpoint-to-checkpoint costs are not captured by the naive extrapolation (32j+126+12v_2(j)): that expression already fails at (j=8). The full z=1 trace therefore confirms termination at (M) checkpoints but warns against extrapolating a simple later-cycle cost from the first-cycle law.
-
-
-The reproducer also contains `check_z1_full_terminal_run(A,L)`, which directly checks the nine complete even-L runs in the table, including checkpoint counts, the right-tail invariant, and the observed total-time formula. This function is likewise pending execution in the repository environment.
-
-
-## (z=1) terminal subfamily: multi-parameter full simulations
-
-Full direct simulations were also run for nine (A,L) choices with z=1 and even L:
-
-| (A,L) | (M=2^A(2^{L+2}-1)) | q4 checkpoints | first checkpoint | last checkpoint | halt step |
-|---|---:|---:|---:|---:|---:|
-| 2,0 | 12 | 12 | 239 | 3,833 | 4,029 |
-| 3,0 | 24 | 24 | 251 | 12,209 | 12,513 |
-| 4,0 | 48 | 48 | 263 | 42,785 | 43,293 |
-| 2,2 | 60 | 60 | 263 | 64,985 | 65,589 |
-| 3,2 | 120 | 120 | 275 | 245,105 | 246,201 |
-| 4,2 | 240 | 240 | 287 | 950,945 | 953,013 |
-| 2,4 | 252 | 252 | 287 | 1,046,873 | 1,049,037 |
-| 3,4 | 504 | 504 | 299 | 4,125,809 | 4,130,001 |
-| 5,2 | 480 | 480 | 299 | 3,745,025 | 3,749,025 |
-
-Across these nine complete even-L runs, the observed quantities fit the following compact formulas, where (s_2(n)) is the binary digit sum:
-
-\[
-t_{q4,1}=12(A+L)+215,
-\]
-\[
-t_{q4,M}-t_{q4,1}
-=16M(M-1)+138(M-1)-12s_2(M-1),
-\]
-\[
-t_{halt}-t_{q4,M}=8M+12(A+L)+76.
-\]
-
-Equivalently, the total time from the initial S0 configuration is
-
-\[
-\boxed{
-T_{z=1}(A,L)
-=16M^2+130M+24(A+L)+153-12s_2(M-1).
-}
-\]
-
-These are empirically supported formulas for the tested even-L z=1 cases, not yet formalized or proved for arbitrary even (A,L). Notably, individual checkpoint-to-checkpoint costs have 2-adic irregularities; the simple total-sum formula should not be mistaken for a uniform per-cycle formula.
-
-
-For all nine complete \\(z=1\\) runs in the table, I additionally extracted the right-tail RLE at **every** q4 checkpoint \\(j=1,\\ldots,M\\). It is exactly
-
-\\[
-0^3\\;1^{8j}\\;0^2\\;1^6\\;0^4.
-\\]
-
-Thus the leading unary run increases by exactly eight at each checkpoint while the second run remains six cells. This invariant holds throughout all nine complete simulated terminal runs, not only at the first two checkpoints. It is a useful small-case target for a source-level q4 checkpoint induction.
-
-
-**Parity caveat from additional tests:** all nine complete halting runs in the table have even (L). Additional direct tests for ((A,L)=(2,1),(2,3),(3,1),(3,3),(4,1),(4,3)) still reached exactly (M) q4 checkpoints and matched the first/last checkpoint formulas and the right-tail invariant, but did **not** halt within the 10,000,000-step simulation horizon from the initial configuration. Thus the displayed total-halting-time formula is presently supported only for the tested even-(L) cases; odd (L) appears to enter a different terminal phase. No eventual nonhalting claim is made for odd (L).
-
-
-## Transition-level short-phase decomposition (Agent 48)
-
-Agent 48 has since identified a tighter source-macro decomposition (see `communications/agent42/20261118T175923Z_agent48-q4-first-cycle-macro-decomposition.md`).
-
-The prefix splits as
-\[
-P(z)=22+(3z+5)+2+3\cdot2^z+29.
-\]
-These are, respectively: a fixed 22-step bridge from state 4/head 1 to state 4/head 5; the state-4 scan over the first unary run; a fixed two-step setup over the following zeroes; the existing state-1 triple-block scan over (2^z) blocks of three ones; and the fixed 29-step q4 tail. The long scan's local block is (111\mapsto100), giving the head-facing (d0=001) output.
-
-More importantly, the residual left context at the S0 input has the exact form
-\[
-l=1^{3z+7}\Vert[0,1,0,0,1]\Vert
-\operatorname{binDec}(w,M-2)\Vert lh,
-\]
-not merely an unspecified outer-frame encoding. This agrees with the observed leading run and identifies the exact five-bit bridge into the decremented outer frame.
-
-For the postlude, after the counted drain the head-facing left word begins
-\[
-d1pow(a)\Vert1^{3z+7}=1^k,
-\qquad k=3a+3z+7=h-3.
-\]
-The local three-step transition pattern, starting in state 3 at a cell (x) containing 1 with a 0 at (x+1), writes 0 at (x), writes 1 at (x+1), and returns to state 3 at (x-1). Iterating it across the (k) consecutive left ones shifts that run one cell right per iteration and ends at head 3. A fixed four-step bridge on cells 3,2,1,0 then reaches state 4/head 1. Therefore
-\[
-Q(z)=3k+4=9\cdot2^z+9z+16.
-\]
-The output left frame is ([0,1,1]\Vert\operatorname{binDec}(w,M-2)\Vert lh), and the right tail is the checkpoint-2 RLE already recorded above.
-
-This reduces the remaining short-phase formalization to two finite certificates (22-step and four-step bridges), one two-step setup, and reusable scan/shift induction lemmas. Agent 48 reports that the 22-step bridge has been reproduced in a local Lean scratch model; the full original-source endpoint equality and theorem composition remain pending.
-
-The root's actual length parameter is `tm63Length1`, and the repository already proves `tm63Length1_even` in `im-results/agent42-outer-lcinc/TM63Length1Parity.lean`. Thus the root q4 family satisfies the even-(L) parity condition seen in the (z=1) terminal runs. This removes the odd-(L) parity branch as a root concern, but does not solve the genuinely harder (z>1) terminal cycles.
+If that equality identifies the post-reset target as
+`s1Config L 0 1 A (2^b-1) 0 h`, then by the S1 encoder definition and `binDec L 0 = d1pow L` it is exactly
+`s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) A (2^b-1) 0 h`.
+For (b\ge2), (z=2^b-1>0) and (z<2^A), so the positive-z q4 first-cycle hypotheses would apply.
 
 
 I compared this full residual-context identity bit-for-bit against direct S0-input tape extraction for ten cases: ((A,L,z)=(3,2,1ldots5),(4,2,5),(3,4,5),(2,4,2),(4,2,3),(3,4,3)). Every extracted left tail had exactly the predicted length and bits. This directly validates the interface required by the postlude shift proof over a wider parameter sample.
