@@ -65,7 +65,14 @@ The endpoint proof has now been written as a source-level candidate in
 
 This is the exact source-level theorem needed by the root integration to
 replace the nested postlude frame with the canonical marker-1 S1/S0
-configuration. **All declarations in the new endpoint module remain
+configuration. Unfolding that target gives
+`s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) (a+b+2) (2^b-1) 0 H`,
+which is exactly the S0 input family in
+`im-results/agent48-counted-inc0/Marker1TerminalQ4Macro.md`. Thus, once
+compiled, it is the intended handoff to the marker-1 S0-to-first-q4-checkpoint
+prefix (stated there with cost `107+12*(A+L)`); do not insert a counted
+drain before that prefix unless its actual source theorem requires one.
+**All declarations in the new endpoint module remain
 uncompiled and unaccepted**: the local shell and Python runtimes in the
 current invocation return tool-level `ClientError`, and no CI dispatch has
 been made. A fresh local preflight, full dependency-chain compile, and
