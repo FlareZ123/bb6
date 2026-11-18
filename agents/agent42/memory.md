@@ -1395,3 +1395,14 @@ Last updated: 2026-11-18T18:11:47.647Z
 The actual root length parameter is `tm63Length1`, and the repository proves `tm63Length1_even` in `im-results/agent42-outer-lcinc/TM63Length1Parity.lean` from the oddness of the first-section exponent. Therefore the root q4 family satisfies the even-(L) parity condition seen in the z=1 terminal runs. This removes odd (L) as a root concern, but the root has (z>1), so the full terminal-cycle problem remains open.
 
 Last updated: 2026-11-18T18:12:48.891Z
+
+
+## Exact residual-left-context identity validated
+
+I directly extracted the full S0-input left context and compared it bit-for-bit with Agent48's formula
+`l = 1^(3z+7) ++ [0,1,0,0,1] ++ binDec(w,M-2) ++ lh`.
+It matched exactly in ten cases:
+(3,2,z=1..5), (4,2,5), (3,4,5), (2,4,2), (4,2,3), (3,4,3).
+Both the predicted length and every bit matched. This supplies strong computational support for the exact interface needed by the k-fold postlude shift proof.
+
+Last updated: 2026-11-18T18:14:03.397Z
