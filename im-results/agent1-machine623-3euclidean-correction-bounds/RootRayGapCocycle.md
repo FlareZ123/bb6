@@ -36,7 +36,7 @@ where \(B,E\) are the canonical base output counters and \(c,v\) are the sector'
 | LO | \(d\) odd, \(a=d+5+k+t\) | \(-D-5\) | \(2D+2r+14\) | \(2r+4\) |
 | LE | \(d\) even, \(a=d+2+k+t\) | \(-D-2\) | \(2D+2r+8\) | \(2r+4\) |
 | RO | \(d\) odd, \(d=a+1+2k+2t\) | \(4-D\) | \(2D+2r\) | \(2r+8\) |
-| RE | \(d\) even, \(d=a+2+2k+2t\) | \(-D\) | \(2D+2r+7\) | \(2r+7\) |
+| RE | \(d\) even, \(d=a+2+2k+2t\) | \(1-D\) | \(2D+2r+5\) | \(2r+7\) |
 
 These identities are the exact drain normal form and the four weighted correction identities written in a common pair of statistics. They do not assume an asymptotic approximation.
 
@@ -49,7 +49,7 @@ The output is \(D(A,E)\), where the affine shift contributes \(t\) to the first 
 | LO | \(g-3D-2r-19\) | left iff \(g\ge 3D+2r+19\) |
 | LE | \(g-3D-2r-10\) | left iff \(g\ge 3D+2r+10\) |
 | RO | \(g-3D-2r+4\) | left iff \(g\ge 3D+2r-4\) |
-| RE | \(g-3D-2r-7\) | left iff \(g\ge 3D+2r+7\) |
+| RE | \(g-3D-2r-4\) | left iff \(g\ge 3D+2r+4\) |
 
 Otherwise the output is right. This is an exact decision criterion; it avoids assuming that the output orientation is determined by the sign of \(g\).
 
@@ -74,8 +74,8 @@ Substitution of the two-statistic correction table yields all eight exact cases:
 | LE | right | \(-4g-9m+6D+2r+16\) | \(g+3m-D-2\) |
 | RO | left | \(g-9m-9D-8r+4\) | \(3m+2D+2r\) |
 | RO | right | \(-4g-9m+6D+2r-16\) | \(g+3m+4-D\) |
-| RE | left | \(g-9m-9D-8r-28\) | \(3m+2D+2r+7\) |
-| RE | right | \(-4g-9m+6D+2r+7\) | \(g+3m-D\) |
+| RE | left | \(g-9m-9D-8r-19\) | \(3m+2D+2r+5\) |
+| RE | right | \(-4g-9m+6D+2r+1\) | \(g+3m+1-D\) |
 
 The output parity is fixed by the input sector: LO gives odd E, LE gives even E, RO gives even E, and RE gives odd E.
 
@@ -88,7 +88,7 @@ Combining the preceding update with the parity-dependent definition of \(h\) giv
 | LO | \(h-9m-9D-8r-61\) | \((-4h-9m+6D+2r-3)/2\) |
 | LE | \(h-9m-9D-8r-34\) | \((-4h-9m+6D+2r-6)/2\) |
 | RO | \(2h-9m-9D-8r\) | \((-8h-9m+6D+2r-22)/2\) |
-| RE | \(2h-9m-9D-8r-35\) | \((-8h-9m+6D+2r-2)/2\) |
+| RE | \(2h-9m-9D-8r-26\) | \((-8h-9m+6D+2r-8)/2\) |
 
 The numerators in the right-output cases are even by the source parity constraints.
 
@@ -152,3 +152,8 @@ The terminal-ratio bounds with \(K=n+6\), converted to the old-ray distances abo
 - RE: \(|h|\le(9n+25)/2\le9n+22\).
 
 Consequently Agent32's \(W=9\ell+22\) is a conservative common terminal-window envelope for the source-supported n>=10 regime. This aligns the 3-adic residue target with the source terminal-ratio theorem. It does not cover the n<10 small-depth regime, which remains a separate root-prefix obligation.
+
+
+### Right-even baseline normalization (correction)
+
+The RE row above uses the initial evalA first counter \(2k+3\) as its baseline. If \(D\) is the total signed first-counter drop from that baseline, then \(B=2k+3-D\), so \(\beta=B-2-2k=1-D\). The exact weighted identity \(\delta+2\beta=2r+7\) then gives \(\delta=2D+2r+5\). This convention is preferable to measuring \(D\) from the shifted baseline \(2k+2\), because it makes \(D\) the actual initial-evalA drop plus the later drain drop and gives the uniform digit-depth bound \(|D|\le\ell+1\) when the two consumed ternary blocks are combined.
