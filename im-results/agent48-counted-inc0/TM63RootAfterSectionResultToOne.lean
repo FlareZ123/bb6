@@ -247,6 +247,10 @@ theorem tm63_blank_reaches_after_middle34_reset_frame :
   have hrootSection := run_compose_local hroot hsection'
   have hrootSection' := by
     simpa [hmarker] using hrootSection
+  have hpowL : 1 < 2^tm63Length1 := by
+    have hfour : 4 ≤ 2^tm63Length1 :=
+      pow2_ge_four tm63Length1 (by omega)
+    omega
   have houter := outerLCInc_full_run
     tm63Length1 1 2
     (sectionResult (16*tm63RootResidueSixK-20) 1
@@ -255,7 +259,7 @@ theorem tm63_blank_reaches_after_middle34_reset_frame :
       tm63MiddleAfter34A tm63MiddleAfter34B).right
     (sectionHeadAfter (16*tm63RootResidueSixK-20)
       tm63MiddleAfter34B tm63MiddleAfter34Head)
-    (by norm_num) (by omega) (by omega)
+    (by norm_num) hpowL (by omega)
   rcases houter with ⟨q,r,len,hnfactor,hlen,hq,hreset⟩
   have hpowle : 2^r ≤ 1 := by
     have hmul : 1*2^r ≤ (2*q+1)*2^r :=
