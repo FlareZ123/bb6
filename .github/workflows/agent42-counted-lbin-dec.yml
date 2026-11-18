@@ -10,6 +10,7 @@ on:
           - all
           - counted-lbin-dec
           - m0-valuation-prefix
+          - tm63-24cycle-dispatcher
         default: all
   workflow_call:
     inputs:
@@ -207,3 +208,46 @@ jobs:
             exit 1
           fi
           echo 'All-q M0-even 8q q4-prefix source theorem compiled; no sorryAx or native_decide detected.'
+
+  tm63-24cycle-dispatcher:
+    if: ${{ inputs.target == 'all' || inputs.target == 'tm63-24cycle-dispatcher' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile the exact complete 24-class dispatcher import closure
+        run: |
+          set -euo pipefail
+          python3 tools/lean_compile_closure.py \
+            im-results/agent24-champion-time/TM63SourceIncrementDispatcherComplete.lean \
+            --jobs 4 --workdir /tmp/tm63-24cycle-dispatcher | tee tm63-24cycle-dispatcher-compile.log
+          if grep -R -n 'native_decide' /tmp/tm63-24cycle-dispatcher --include='*.lean'; then
+            echo '::error::native_decide found in the exact dispatcher import closure'
+            exit 1
+          fi
+          python3 - <<'PY'
+          import pathlib
+          log = pathlib.Path("tm63-24cycle-dispatcher-compile.log").read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          for name in ("tm63_source_increment_dispatch_complete", "sectionResult_run_complete"):
+              lines = [line for line in log.splitlines() if name in line and "depends on axioms:" in line]
+              if len(lines) != 1:
+                  raise SystemExit(f"expected one axiom profile for {name}, found {len(lines)}")
+              profile = lines[0].split("depends on axioms:", 1)[1].strip()
+              if not (profile.startswith("[") and profile.endswith("]")):
+                  raise SystemExit(f"unrecognized axiom profile for {name}: {profile}")
+              axioms = {item.strip() for item in profile[1:-1].split(",") if item.strip()}
+              unexpected = axioms - allowed
+              if unexpected:
+                  raise SystemExit(f"nonstandard axioms in {name}: {sorted(unexpected)}")
+              if "sorryAx" in axioms:
+                  raise SystemExit(f"sorryAx dependency in {name}")
+              print(f"{name}: {sorted(axioms)}")
+          if "sorryAx" in log:
+              raise SystemExit("sorryAx appeared in the exact dispatcher compilation output")
+          PY

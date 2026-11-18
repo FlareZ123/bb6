@@ -1,30 +1,43 @@
 # TM63 champion reset arithmetic and counted source coverage
 
-**Current status — 18 November 2026: BB(6) remains unresolved.** The exact blank-root prefix to the published S1 configuration after 27,959 original TM63 transitions is kernel-checked in the Agent 48 root dossier. The subsequent TM63 middle countdown is not yet source-certified end-to-end, and no universal six-state upper bound or exact maximal runtime proof exists.
+**Current status — 18 November 2026: BB(6) remains unresolved.** The exact blank-root prefix to the published S1 configuration after 27,959 original TM63 transitions is kernel-checked in the Agent 48 root dossier. The subsequent TM63 middle countdown now has a complete **source-draft** dispatcher, but the complete import closure has not passed exact Lean compilation and no terminal blank-root continuation is established. No universal six-state upper bound or exact maximal-runtime proof exists.
 
-## Current middle-countdown bottleneck
+## 24-cycle source coverage
 
-The `sectionResult` countdown changes the index by \(n\mapsto n-1\) and the marker by \(m\mapsto(m+2)\bmod 3\). Its source dispatcher has 24 residue/marker classes because \(\mathrm{lcm}(8,3)=24\). The current repository has complete source-theorem declarations or drafts for **23 of those 24 classes** (the M2 residue-zero draft is not yet compiled):
+The `sectionResult` countdown changes the index by (n\mapsto n-1) and the marker by (m\mapsto(m+2)\bmod 3). Its source dispatcher has 24 residue/marker classes because (mathrm{lcm}(8,3)=24). All **24 of 24 classes now have counted-source theorem declarations or complete source drafts**:
 
-- marker 1: the new all-index `m1EvenValuation_counted_increment_source` covers all eight residues;
+- marker 1: `m1EvenValuation_counted_increment_source` covers all eight residues;
 - marker 0 and marker 2: the generic odd-index source theorems cover all four odd residues each;
-- markers 0 and 2: the even-residue-2, -4 and -6 source theorems cover the six nonzero even residues.
+- markers 0 and 2: the even-residue-2, -4 and -6 source theorems cover the six nonzero even residues;
+- marker 0, (n=8q): `m0EvenEight_valuation_counted_increment_source` is now a full all-valuation source draft in [M0EvenEightValuationCountedSource.lean](../agent48-counted-inc0/M0EvenEightValuationCountedSource.lean);
+- marker 2, (n=8q): `m2Even_residue0_counted_increment_source` is a full all-q source draft in [M2EvenResidueZeroCounted.lean](M2EvenResidueZeroCounted.lean).
 
-The remaining missing all-q composition is **marker 0, \(n=8q\)**. The existing marker-0 `q`-odd theorem covers only \(v_2(n)=3\); the new valuation prefix/suffix helpers do not yet compose into a counted increment. **Marker 2, \(n=8q\)** now has a full counted-source draft in `M2EvenResidueZeroCounted.lean`, but its exact import closure and axiom profile remain uncompiled. The root-connected 24-cycle needs both all-q extensions on alternating cycles: with `K=tm63RootMiddleK` odd, cycle `j` has marker-2 quotient `q₂=K-1-3j` and marker-0 quotient `q₀=K-2-3j`, whose parities alternate and whose even valuations are not fixed. The M2 draft covers every positive marker-2 quotient at source-draft level; the M0 even-quotient cases remain open. The remaining task is to prove the final q4 cut tape's left-facing word, right shape and blank far tail, then compose the q4 suffix and counted drain. A suspected orientation issue was retracted after checking the four-bit `markerWord 2 = [true,true,false,true]` alignment: it consumes the final scan block's rightmost `1`, and `d0pow(t+4)` begins at `hN-2`, with the final boundary bit supplied by `afterZeroExit4`. No orientation obstruction is currently established.
+The two residue-zero counted-source closures remain uncompiled and unaudited. The 24/24 figure is source-draft coverage, not accepted proof coverage. The root-connected 24-cycle needs both all-q extensions on alternating cycles: with (K=tm63RootMiddleK) odd, cycle (j) has marker-2 quotient (q_2=K-1-3j) and marker-0 quotient (q_0=K-2-3j), whose parities alternate and whose even valuations are not fixed.
 
-The following files isolate the exact proof boundary:
+## Dispatcher composition
 
-- [24-cycle source coverage and dispatcher contract](TM63-24Cycle-Source-Coverage-20261117.md): the complete rotated class table, current theorem mapping, root quotient formulas, and the arithmetic needed to dispatch all 24 cases.
-- [Conditional 24-class dispatcher](TM63SourceIncrementDispatcher.lean): the original uncompiled two-hypothesis dispatcher.
-- [M2-instantiated dispatcher](TM63SourceIncrementDispatcherM2.lean): an uncompiled wrapper that supplies the marker-2 zero-row hypothesis from the new M2 counted-source draft, leaving only the marker-0 all-q source assumption.
-- [M2 all-q counted source draft](M2EvenResidueZeroCounted.lean): exports `m2Even_residue0_q4_reset_prefix_source` and `m2Even_residue0_counted_increment_source`; composes the source-side H-run, q4 suffix and counted drain for every positive q. The exact import closure and transitive axioms remain uncompiled.
-- [M2 residue-zero source-to-q4 derivation](M2EvenResidueZero-SourceIntegration-20261117.md): exact factorization, H-run premises, q4 source-left word, right shape, and cost decomposition for the missing marker-2 row.
-- [Generic H-run left-facing lemma](LBinDecHRunLeftFacing.lean): an uncompiled proof candidate showing the H-run's `d1pow n ++ d0 ++ tail` to `d0pow n ++ d1 ++ tail` transformation, deriving its left-boundary premises from the full source word, and proving the rightmost output boundary (including the `n=0` bridge-write case).\n- [M1 all-index source audit](M1EvenState1SweepAudit.md): the new marker-1 source theorem's bridge, q4 cut, drain composition, and sweep-coordinate review; written and manually reviewed, pending Lean compilation.
-- Agent 48's [M0 even 8q all-valuation proof plan](../agent48-counted-inc0/M0EvenEightValuationExtension.md) and its encoding, fixed-prefix, sweep, suffix, and macro helper modules.
+The proof graph is now:
 
-**Validation boundary:** source-draft coverage is 23/24, not acceptance. The M1 all-index theorem, M2 all-q counted theorem, M2-instantiated dispatcher, generic H-run left-facing lemma, and remaining M0 valuation composition require exact original-import Lean compilation and complete axiom audit. The M0 all-q counted composition is not yet written. No CI result is claimed for these new files. Manual-only source workflows should run only after an exact local Lean 4.36.0-rc2 preflight is clean. The local shell/runtime was unavailable during this update, so no preflight or CI dispatch was performed.
+- [Conditional 24-class dispatcher](TM63SourceIncrementDispatcher.lean): the original two-hypothesis dispatcher, with the marker-0 and marker-2 residue-zero families explicit.
+- [M2-instantiated dispatcher](TM63SourceIncrementDispatcherM2.lean): supplies the marker-2 zero-row hypothesis and leaves only marker 0.
+- [Complete source-draft dispatcher](TM63SourceIncrementDispatcherComplete.lean): supplies marker 0 from the all-valuation M0 theorem and exports `tm63_source_increment_dispatch_complete` plus `sectionResult_run_complete`.
 
-**Next decisive steps:** prove the M0 all-q q4 cut-tape left-facing/right-shape/far-tail facts and finish the marker-0 counted composition; locally compile and axiom-audit the M2 counted draft and M2-instantiated dispatcher; then compile the complete dispatcher once M0 is supplied. Instantiate it at the authentic blank-root parameters and connect the resulting section endpoint to the already source-checked terminal m0 finish. Even a completed lower-bound path would not solve BB(6) without the separate universal six-state upper bound.
+The last theorem states that, if the exact 24 one-step source families are accepted, the original TM2 realizes the complete primitive-recursive `sectionResult` countdown for arbitrary valid (L,n,m,a,b) and head. It is a general S1 source-run theorem, not an authentic blank-root prefix, not a terminal S0 endpoint, and not a halt witness. The wrapper and every dependency in its transitive import closure remain uncompiled.
+
+The [24-cycle coverage audit](TM63-24Cycle-Source-Coverage-20261117.md) records the full rotated class table, theorem mapping, quotient formulas, and remaining root-integration boundary. Agent 48's [M0 even 8q derivation](../agent48-counted-inc0/M0EvenEightValuationExtension.md) records the valuation-bubble construction, finite probes, and corrected marker orientation. The [M2 residue-zero derivation](M2EvenResidueZero-SourceIntegration-20261117.md) records its separate H-run and q4 source proof.
+
+## Acceptance boundary and next steps
+
+The existing manual-only [counted-source workflow](../../.github/workflows/agent42-counted-lbin-dec.yml) now has:
+- a targeted M0 all-valuation source compile within `counted-lbin-dec`;
+- a `tm63-24cycle-dispatcher` target that compiles the exact transitive import closure using `tools/lean_compile_closure.py` and audits the two exported dispatcher theorems against the standard Lean axiom allowlist.
+
+Neither target has been dispatched. The exact local Lean 4.36.0-rc2 preflight must pass first. The next decisive work is:
+
+1. Compile `TM63SourceIncrementDispatcherComplete.lean` locally through the exact import-closure tool; resolve any ambiguous or missing module imports rather than weakening the closure.
+2. Inspect the full axiom profiles for both exported theorems; reject `sorryAx`, `native_decide`, and custom axioms. Only after local preflight passes should the manual workflow be run.
+3. Connect the general `sectionResult_run_complete` theorem to the authentic blank-root prefix and the already source-checked terminal S0/SectionBits interface. The required root parameter and final marker/terminal alignment still need an explicit proof.
+4. Continue the independent universal six-state upper-bound programme. Even a completed champion lower-bound proof alone would not determine BB(6).
 
 ## Historical development and established narrower results
 
