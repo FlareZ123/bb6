@@ -176,3 +176,26 @@ The c=1 terminal itself is not a new gap addressed by this window. Let \(B=8u+4=
 Thus both feeders are already in the CountCone rooted at \((B,3)\). A local L0 prefix of cost \(m_0\) prepends one unit to the CountCone predecessor cost; a local L1 prefix prepends two. The final local c=1 reset has depth \(N+3=(N+2)+1\), so Agent 50's existing source_mid_cost_exceptional_last_reset_depth theorem in im-results/agent50-p1-subwall/ExceptionalLastResetDepthSource.lean already covers both feeder cases after these cost shifts. In particular, the affine c=1 predecessor equations are translations of that existing theorem, not a new exclusion or discovery here.
 
 The contribution of this note is only the wider finite shadow-to-source converse window. It should not be presented as new work on the exceptional terminal or as a P1 nonhalting proof.
+
+
+## Feeder-specific coefficient
+
+The proof uses the alpha lower bound only through inequalities of the form \(\alpha\ge A\). More generally, for any \(A\ge3\), the same argument works with
+\[
+K\ge2,\qquad L+M\le A\cdot2^K-7,\qquad \alpha\ge A
+\]
+throughout the path. The lower bound \(A\ge3\) is more than enough for the final \(s\ge6\cdot2^t\) estimate when \(K\ge2\).
+
+The common theorem above takes \(A=28\), which applies to both feeders. But the alpha update is
+\[
+\alpha'=\alpha+112\cdot2^m(2^t-1)\ge\alpha,
+\]
+and the L1 root has \(\alpha_0=42\). Therefore L1 alone admits the stronger window
+\[
+K\ge2,\qquad L+M\le42\cdot2^K-7.
+\]
+The L0 root has \(\alpha_0=28\), so no analogous improvement follows uniformly at the root. For L1, the maxima under \(A=42\) for q=1..12 are:
+\[
+14,\ 30,\ 46,\ 62,\ 77,\ 93,\ 109,\ 125,\ 141,\ 157,\ 172,\ 188.
+\]
+This adds one unit at q=4 and q=7..10 relative to the common A=28 table.
