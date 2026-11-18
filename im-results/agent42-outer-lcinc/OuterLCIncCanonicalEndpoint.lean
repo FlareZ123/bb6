@@ -665,4 +665,17 @@ theorem outerLCIncPostludeTape_eq_s1Config_m2
     simpa [H] using hright.trans hcell.symm
 
 
+/-- Same endpoint stated directly in the S0 input interface used by the
+marker-1 q4 investigations. -/
+theorem outerLCIncPostludeTape_eq_marker1S0_m2
+    (L a b : Nat) (h : Int) (hL : 0 < L) :
+    outerLCIncPostludeTape
+        (outerLCIncSourceT3 (s1Config L 1 2 a 0 b h).tape h a 2 0)
+        h a 2 b =
+      (s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh)
+        (a+b+2) (2^b-1) 0 (h+3*b+5)).tape := by
+  simpa [s1Config,binDec_zero,List.append_assoc] using
+    outerLCIncPostludeTape_eq_s1Config_m2 L a b h hL
+
+
 end BB6Coverage.Agent42OuterLCInc
