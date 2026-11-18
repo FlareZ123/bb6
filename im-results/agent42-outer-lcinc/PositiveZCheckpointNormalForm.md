@@ -107,16 +107,22 @@ the actual TM2 run exactly:
    `s0Config_counted_drain_closed` theorem at width (z), since
    (2^z-1) is the all-ones value of that width.
 
-4. **Tail via existing `q4S0Postlude_at`.**
-   Specialize the generic theorem in
-   `im-results/agent48-counted-inc0/Q4S0FirstCycleMacros.lean` with
-   `k=3*z+2` and start head `h=3*z+5`. The left-one hypothesis follows
-   from `d1pow z ++ [1,1]`; the right guard is the first zero of
-   `s0RightFacing (2^z-1)`. After the scan, the final-four guard is
-   `0,1,0,0`: these are the first four bits of `ell1` after its initial
-   `11`, and `s0LeftSweep_shift` leaves the new-head-left cells
-   unchanged. The theorem gives exactly `3*(3*z+2)+4=9*z+10) steps
-   and a `q4FrameAt` endpoint.
+4. **Tail as counted sweep plus a fixed bridge.**
+   From the second-drain output head `h2=3*z+5), apply the existing
+   `counted_left_sweep (3*z)`. It costs `9*z), ends at head 5, and
+   consumes exactly `d1pow z`. The long right unary block beginning at
+   `h2+7=3*z+12` lies outside the sweep and is preserved. The remaining
+   10 steps are the finite trace `firstQ4Postlude_exact`, from state 3,
+   head 5, marked offsets `[-3,-1,0]`, to state 4, head 1, marked
+   offsets `[-5,0,1]`. The local input is forced by the first six
+   residual bits of `ell1` and the moving-zero boundary. A frame lift
+   gives the exact q4 checkpoint tape. This is a cleaner specialization
+   than the generic `q4S0Postlude_at` with `k=3*z+2`.
+
+The two S0 drain stages are existing theorem interfaces. The **setup
+macro** (stage 2) is the main remaining transition-proof obligation;
+the tail reduces to an existing counted sweep and a ten-step finite
+bridge, plus the pointwise endpoint identity. Summing the four costs gives
 
 The two S0 drain stages are existing theorem interfaces. The **setup
 macro** (stage 2) is the main remaining transition-proof obligation;
