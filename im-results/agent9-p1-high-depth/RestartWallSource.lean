@@ -47,6 +47,7 @@ structure RestartPath (n b d m : Nat) : Type where
   hBase : c = m0+n
   hCost : m = m0+L
   hTotal : totalCost es = L
+  hPos : ∀ e, e ∈ es → 1 ≤ e
   hLow : ∀ e, e ∈ es → e ≤ 3
   hEven : x0 = 2*xhalf
   hHalf : xhalf < 2^n
@@ -92,6 +93,7 @@ theorem restart_path_after_deep
     hBase := rfl
     hCost := by simp
     hTotal := rfl
+    hPos := by intro e he; simp at he
     hLow := by intro e he; simp at he
     hEven := hEven
     hHalf := hxsmall
@@ -143,6 +145,7 @@ theorem restart_path_extend
     hBase := path.hBase
     hCost := ?_
     hTotal := ?_
+    hPos := ?_
     hLow := ?_
     hEven := path.hEven
     hHalf := path.hHalf
@@ -154,6 +157,12 @@ theorem restart_path_extend
       totalCost (path.es++[t+1]) = totalCost path.es+(t+1) :=
         totalCost_append_singleton path.es (t+1)
       _ = path.L+(t+1) := by rw [path.hTotal]
+  · intro e he
+    rcases List.mem_append.mp he with heOld | heLast
+    · exact path.hPos e heOld
+    · simp at heLast
+      subst e
+      omega
   · intro e he
     rcases List.mem_append.mp he with heOld | heLast
     · exact path.hLow e heOld
@@ -348,14 +357,15 @@ theorem source_wall_restart_suffix_shape
     (hwall : b+4*m+4*n+20 = 12*2^n)
     (hdeep : HasDeep (oddConeDepths h)) :
     ∃ path : RestartPath n b d m,
+      2^path.L ≤ 7*weightS 0 path.es ∧
       ∃ pre e post,
-        path.es=pre++[e]++post ∧ e≤2 ∧
+        path.es=pre++[e]++post ∧ 1≤e ∧ e≤2 ∧
           (∀ u, u ∈ post → u=3) := by
   obtain ⟨path,hbound⟩ := source_wall_restart_path n b d m hn h hwall hdeep
   obtain ⟨e,heMem,heLow⟩ := restart_path_has_shallow path hbound
   obtain ⟨pre,e,post,hEq,he2,hpost⟩ :=
     exists_last_shallow path.es path.hLow ⟨e,heMem,heLow⟩
-  exact ⟨path,pre,e,post,hEq,he2,hpost⟩
+  exact ⟨path,hbound,pre,e,post,hEq,path.hPos e heMem,he2,hpost⟩
 
 #print axioms source_wall_restart_path
 #print axioms source_wall_restart_suffix_shape
