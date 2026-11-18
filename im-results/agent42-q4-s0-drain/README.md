@@ -261,3 +261,16 @@ For (b\ge2), (z=2^b-1>0) and (z<2^A), so the positive-z q4 first-cycle hypothese
 
 
 Additional (z=5) outer-parameter checks used ((A,L)=(4,2),(3,4),(5,2)). Their first checkpoint times were 8,015, 8,027, and 8,027 respectively, while (P=169), (h=118), (a=31), and (Q=349) remained unchanged. The checkpoint-1 RLE, S0 input, and predicted-output/postlude checkpoint-2 frames all matched. This further supports independence of the first-cycle macro from the tested outer parameters; the middle drain remains spliced, not simulated, in these cases.
+
+
+## Complete small terminal run: (z=1,A=3,L=2)
+
+A direct exact TM2 simulation of the entire initial S0 configuration (not merely one cycle) gives:
+
+- (M(A,L)=120) q4 checkpoints, at indices (1,ldots,120);
+- checkpoint 1 at step 275 and checkpoint 120 at step 245,105;
+- the machine halts at step **246,201**, in state 0 at head 967 reading 1.
+
+The first-cycle difference (433-275=158) agrees with (C_1(1)). This is a complete computational terminal run for this small parameter instance, not a formal proof and not the BB(6) root instance.
+
+The later checkpoint-to-checkpoint costs are not captured by the naive extrapolation (32j+126+12v_2(j)): that expression already fails at (j=8). The full z=1 trace therefore confirms termination at (M) checkpoints but warns against extrapolating a simple later-cycle cost from the first-cycle law.
