@@ -48,8 +48,14 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainValuationNormalForm.lean" Agent41DrainValuationNormalForm.lean
           lake env lean -o .lake/build/lib/lean/Agent41DrainValuationNormalForm.olean Agent41DrainValuationNormalForm.lean
 
+      - name: Compile integer carry transducer bounds
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-integer-carry-transducer/IntegerCarryTransducer.lean" Agent41IntegerCarryTransducer.lean
+          lake env lean -o .lake/build/lib/lean/Agent41IntegerCarryTransducer.olean Agent41IntegerCarryTransducer.lean
+
       - name: Audit theorem axioms
         working-directory: /tmp/cryptids
         run: |
-          printf 'import Agent41DrainValuationNormalForm\n#print axioms BB6.Agent41DrainValuationNormalForm.evalA_3adic_run\n' > Agent41DrainValuationAxiomAudit.lean
-          lake env lean Agent41DrainValuationAxiomAudit.lean
+          printf 'import Agent41IntegerCarryTransducer\n#print axioms BB6.Agent41DrainValuationNormalForm.evalA_3adic_run\n#print axioms BB6.Agent41IntegerCarryTransducer.corrections_bounded\n#print axioms BB6.Agent41IntegerCarryTransducer.leftXCarry_closed\n#print axioms BB6.Agent41IntegerCarryTransducer.leftYCarry_closed\n#print axioms BB6.Agent41IntegerCarryTransducer.rightXCarry_closed\n#print axioms BB6.Agent41IntegerCarryTransducer.rightYCarry_closed\n#print axioms BB6.Agent41IntegerCarryTransducer.ternaryDigit_range\n#print axioms BB6.Agent41IntegerCarryTransducer.ternaryDigit_decomposition\n' > Agent41IntegerCarryAxiomAudit.lean
+          lake env lean Agent41IntegerCarryAxiomAudit.lean
