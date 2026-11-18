@@ -199,20 +199,30 @@ The q-odd implementation currently obtains this by a q4 prefix of (60+12a), a q4
 The root-specific handoff in Agent 42's 15 November messages is a different residue class: (n=16r+4=8(2r)+4), consumed after root middle row 11. The present file is (n=8q), residue 0 modulo 8. Do not conflate these two M0-even rows: this all-q result does not supply the root-connected residue-four bridge, and the residue-four root integration remains a separate dependency.
 
 
-## Static orientation audit — 18 November 2026 (Agent 4)
+## Orientation audit correction — 18 November 2026
 
-The current all-valuation q4 cut candidate appears incompatible with the existing q4 suffix left-facing target. This is a one-cell mismatch, not merely an unfinished proof obligation.
+The proposed one-cell contradiction is incorrect: it counts `markerWord 2` as length 3, but the source definition is
+`markerWord 2 = [true,true,false,true]`, of length **4**.
 
-Write
-\[
-h_N=h-3a,\quad h_H=h_N-14,\quad h_B=h_H-3t,\quad h_R=h_B+2=h_N-12-3t,
-\]
-so the `sweptRight1 (4+t)` scan ends at (h_N). Its final block is at (h_N-3,h_N-2,h_N-1). By `sweptRight1_block`, the tape values in increasing coordinates are (0,0,1), hence the final cut tape has (T_q(h_N-1)=1). The later `after101` changes only (h_N,h_N+1,h_N+2), and the E-scan starts at (h_N+3), so neither changes (h_N-1).
+Let (h_N=h-3a). In the target left-facing word
+[
+Q=[1] ++ d1^{a-1} ++ markerWord(2) ++ d0^{4+t} ++ d1 ++ tail,
+]
+the prefix ([1] ++ d1^{a-1}) has length (3a-2). Thus `markerWord 2` occupies indices (3a-2,ldots,3a+1), at physical coordinates (h_N+2,h_N+1,h_N,h_N-1). Its bits are (1,1,0,1), so the scanned one at (h_N-1) is exactly the fourth marker bit, not the first d0 bit.
 
-The q4 target left-facing list begins
-\[
-Q=[1]\mathbin{+!!+}d1^{a-1}\mathbin{+!!+}\operatorname{markerWord}(2)\mathbin{+!!+}d0^{t+4}\mathbin{+!!+}\cdots,
-\]
-where `d0=[false,false,true]` and `markerWord 2` has length 3. The first d0 bit is therefore at index (3a+1), and `sideBit Q (3*a+1)=false`. Since (h-(3a+1)=h_N-1), the required q4 left-facing equality would force (1=0).
+The first d0 bit is at index (3a+2), hence at (h_N-2). The first d0 block occupies coordinates (h_N-2,h_N-3,h_N-4) in head-facing order and requires bits (0,0,1). The final right-scan block writes (0,0,1) in increasing coordinates (h_N-3,h_N-2,h_N-1), which gives exactly (1,0,0) when read from (h_N-1) leftward: the marker's final (1), then the first two d0 zeros. The preceding scan block supplies the d0 one at (h_N-4).
 
-Thus the prefix-run theorem may still be correct, but the current `sweptRight1` cut tape cannot satisfy `m0EvenEightQ4SuffixTargetLeftAllQ` as written. Resolve the scan orientation or the q4 target construction before attempting the final suffix/drain composition. The detailed communication is in `communications/agent48/20261118T104605Z_agent4-m0-q4-orientation-mismatch.md` and the single-cell witness in `communications/agent48/20261118T104743Z_agent4-m0-orientation-single-cell.md`.
+More generally, the state-1 scan writes ones at
+[
+h_N-1, h_N-4, h_N-7,ldots,h_N-(10+3t).
+]
+The first is the final marker bit; the remaining (3+t) positions are the first (3+t) d0 third-bits. The four-step zero exit supplies the final d0 third-bit at (h_N-(13+3t)), and also the first two bits of the following d1 block at (h_N-(14+3t)) and (h_N-(15+3t)). Its third d1 bit at (h_N-(16+3t)) lies outside the dynamic frame and is preserved from the source tail. The bridge's additional mark at (h_N+3) is the final bit of the preceding (d1^{a-1}) prefix.
+
+Consequently the bridge mark set
+[
+{h_N+3,h_N+2,h_N+1,h_N-1}
+cup {h_N-4-3j:0le j<4+t}
+cup {h_N-(14+3t),h_N-(15+3t)}
+]
+matches the finite part of the proposed q4 left-facing target. The alleged equation (1=0) is actually (1=1). This removes the stated orientation objection; it does **not** by itself prove the full all-q left-facing theorem, compile the source closure, or establish the counted increment. Those remain the next proof/acceptance obligations.
+
