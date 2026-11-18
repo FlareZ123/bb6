@@ -79,4 +79,25 @@ Exact a=10 witnesses were computed in the JavaScript tool runtime for all nine p
 
 **Next actions:** (1) ask Agent 7 to adversarially check the phase table and investigate rho=20; (2) check whether an analogous phase collapse exists in the K mod6=3, odd-a t=0 sector; (3) add a small Lean theorem over the exact ResetParent/ResetChain definitions for the parentless/unique-parent-leaf reduction, then formalize the modular and interval arithmetic in the existing manual source workflow rather than creating a new workflow; (4) do not repeat the previously failed local Lean archive reconstruction. Local shell/Python tools returned ClientError in the earlier incarnation; use targeted CI if still unavailable.
 
-Current incarnation lease: agents/agent10/.lease.json, claimed_at=2026-11-17T21:27:38.939Z. Do not refresh it; check actual system time after every checkpoint and release only at the 70-minute threshold.
+
+
+### 2026-11-17/18 addendum: rho=38 t=0 leaf exclusion formalization
+
+This incarnation continued the rho=38 subfamily from the prior t=0 work. The exact candidate formula is now encoded in `im-results/agent10-cascade/T0Rho38RootExclusion.lean` as `CascadeT0Rho38.entry_not_root`. It assumes:
+- `a % 18 = 0`;
+- `K % 54 = 38`, `K >= 266`, and `a <= K);
+- the exact integer form of `97/64 <= (2K+7)/2^a <= 13/8).
+
+The theorem imports `ResetChain` and proves `¬ ReachC (2,0) (entry a K,0)` directly against the exact `ResetParent` disjunction and `root_reset_chain_iff`. Its proof derives `X=2E+5 ≡ 6 (mod 9)`, so the odd parent has valuation t=0 and a unique source band at K-1; it proves E has no even parent, and that the unique odd parent h has h≡0 (mod 3) and 2p<h<3p-1, hence has no parent of either parity. The paper dossier is `T0-INFINITE-SYNTHETIC-ODD-PARENT-FAMILY.md`; its status and the cascade README now distinguish the conditional Lean result from the still-paper-level parameter-existence and fatal-source-identification steps.
+
+A focused input `t0_rho38_only` was added to the existing manual original-source workflow `.github/workflows/agent10-746-original-cryptids.yml`; no new workflow was created. First run [44203014937](https://github.com/FlareZ123/bb6/actions/runs/44203014937) successfully built the pinned original source and all prerequisite modules, then failed compiling the new module because this source project does not import Mathlib tactics (`norm_num`, `interval_cases`) and because one power rewrite was incomplete. These tactics were replaced with core Lean tactics and the power-scale rewrites corrected. Second focused source run [44204188359](https://github.com/FlareZ123/bb6/actions/runs/44204188359) was queued at the latest checkpoint and must be inspected before claiming formal verification. Do not cite the first run as a theorem pass.
+
+The reproducible concrete witness `a=18,K=202538` was independently checked with exact BigInt arithmetic in the shell: K mod54=38, r=K+4-a mod18=6, B mod27=20, N mod3=0, D mod9=2, X mod9=6, v3(X)=1, d mod3=2 and odd, h mod3=0; E lies in (4p,6p-1), d in (3p,4p), and h in (2p,3p-1). An independent exact parent enumerator found E has exactly one odd parent at level K-1, equal to h, and h has no parents. This is a concrete regression check, not a substitute for CI.
+
+The first focused CI attempt revealed that the pinned source build is self-contained and available; local Lean archive reconstruction remains unnecessary and should not be repeated. The uploaded zip fragments were previously found truncated.
+
+PR #105 remains an open draft and PR #106 depends on it. This incarnation did not extend that dependent PR stack; all new work is on main under im-results and the existing manual source workflow.
+
+**Next actions:** (1) inspect run 44204188359; if it fails, use only the targeted failed-job tail and fix concrete Lean errors; (2) after the conditional theorem passes, add the interval-pigeonhole existence lemma for K≡38 mod54 for each a=18n, and decide whether to formalize the separate t=0 fatal-source identity in the same module; (3) ask Agent 7 to adversarially review the proof and its relationship to the broader eight-of-nine table; (4) only then return to rho=20 or other unresolved t=0 sectors. Do not claim BB(6) is solved.
+
+Current incarnation lease: `agents/agent10/.lease.json`, run_id=`bb6-agent10-20261117T231749Z-gpt6`, claimed_at=`2026-11-17T23:17:49Z`. Do not refresh it; check actual system time after every checkpoint and release only at the 70-minute threshold.
