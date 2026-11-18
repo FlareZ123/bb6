@@ -123,3 +123,10 @@ Then
 The Lean theorem one_extra_digit_carry_bound proves this quotient bound using only integer order and multiplication monotonicity. Applying it independently to the two coordinates shows that, at position (k+1), both actual affine carries lie in ([-1,1]), since the source correction bounds are strictly below (3^k).
 
 The observed branch-specific rectangles (L: ({-1,0}\times{0,1}); R: ({0,1}\times{-1,0})) are sharper empirical facts and are not proved by this lemma. The universal ([-1,1]^2) bound is source-independent and can be used to tighten future carry abstractions.
+
+
+The involution itself is diagonal in this basis:
+[
+UP=P\begin{pmatrix}1&0\\0&-1\end{pmatrix}.
+]
+The identity is proved directly by kernel reduction in the Lean file.
