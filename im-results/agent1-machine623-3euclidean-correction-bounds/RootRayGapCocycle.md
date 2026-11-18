@@ -308,3 +308,21 @@ Moreover \(H\equiv K\equiv2p\pmod3\), hence
 H'\equiv\lambda(H+2r+c_s)\pmod3.
 \]
 The signed drop \(D\) disappears completely from the H update; the old scale enters only as the one-place shifted term \(3q\) on right-oriented inputs. This is a promising coordinate for a 3-adic transducer. The terminal residual remains \(Y=2g=H-3(3+\epsilon)q\), so the root proof must still control the joint pair \((H,q)\), but the H dynamics are simpler than the original eight h' formulas.
+
+
+### Terminal strips in the D-free coordinate
+
+Since \(Y=H-3(3+\epsilon)q\), the source terminal windows become direct linear strips in \((H,q)\):
+\[
+\begin{array}{ll}
+\mathrm{LO}:&|H-9q-18|\le 12n+88,\\
+\mathrm{LE}:&|H-9q-10|\le 12n+62,\\
+\mathrm{RO}:&|H-12q-2|\le 12n+38,\\
+\mathrm{RE}:&|H-12q-4|\le 18n+50.
+\end{array}
+\]
+Here the four widths are \(2W_{\rm LO}\), \(2W_{\rm LE}\), \(4W_{\rm RO}\), and \(4W_{\rm RE}\) from TerminalRatio4. Meanwhile the D-free H update is \(H'=\lambda(H-3\epsilon q+2r+c_s)\); \(D\) affects only the branch choice through the sign of
+\[
+H-3(3+\epsilon)q-6D-4r-2c_s.
+\]
+This separates the size update from the signed-drop statistic and may be useful for a joint modular exclusion of the four terminal strips.
