@@ -1469,3 +1469,8 @@ Best next actions: prove the actual boundary carry rectangle from the exact sour
 ### Additional Lean lemma: one-extra-digit carry bound
 
 Appended to SignedCoordinateNormalForm.lean and documented in SignedCoordinateNormalForm.md: if (K>0), (0\le r<3K), (-K<c<K), and (r+c=3Kq+s) with (0\le s<3K), then (q\in\{-1,0,1\}). The proof uses multiplication monotonicity plus omega; Lean 4.36.0-rc2 compiles it with only standard propext/Quot.sound dependencies from omega, no sorryAx. Since (B<3^k=K), this gives the universal ([-1,1]) bound for each carry coordinate when starting the transducer at (k+1). It does not prove the sharper observed branch-specific carry rectangles.
+
+
+### Refined reset scan from the Lean carry bound
+
+Added synchronizing_reset_subwords_small_start.cpp. At position k+1, the Lean one-extra-digit lemma puts both initial carries in [-1,1]; after that, use the original branch-invariant carry ranges. On all 9,968 words, this smaller initial-state set has a common reset subword of length at most 4 (9,895 length-3, 73 length-4), ending by position 12. The full distribution and reproduction command are in SynchronizingWordScan.md. This is stronger and cheaper than the earlier broad-start reset scan, but remains finite evidence without an all-time closure proof.
