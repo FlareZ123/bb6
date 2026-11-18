@@ -86,7 +86,7 @@ The root arithmetic supplies `tm63Index1=8*K+7`, K odd, and `tm63Index1<2^L`; se
 
 `TM63RootAfterSectionResultToOne.lean` composes the authentic blank-root theorem through middle 34 with the complete dispatcher, stopping at index one. The arithmetic is: `first_stage_exponent_odd` gives A odd; hence `2^(A-3) = 1 (mod 3)`, `K=31*2^(A-3)-1 = 0 (mod 3)`, and `r=K/2 = 1 (mod 3)`. Middle 34 has `n=16*r-19 = 0 (mod 3)`, `m=1`. Running `n-1` decrements leaves `n=1,m=2`. The file exports the exact blank-root run theorem `tm63_blank_reaches_after_middle34_to_index_one`.
 
-This is a useful root-connected source result, but it is not a halt witness. The m=2,n=1 `resetBase_odd_frame` source currently covers only a=b=0 and does not yet prove exact S0-config equality. The arbitrary-a,b reset prefix and terminal SectionBits join remain open. This root wrapper is uncompiled.
+This is a useful root-connected source result, but it is not a halt witness. The m=2,n=1 `resetBase_odd_frame` source currently covers only a=b=0 and does not yet prove exact S0-config equality. The arbitrary-a,b reset prefix and terminal SectionBits join remain open. The exact finite m=2 base trace is also split in [ResetBaseM2Split.lean](../agent48-counted-inc0/ResetBaseM2Split.lean) into a 27-step prefix and a 44-step suffix, with ordered finite-tape equality proved by `decide`; it remains only the a=b=0 base case. The root wrapper is uncompiled.
 
 ## 5. Exact next steps and validation boundary
 

@@ -29,7 +29,7 @@ at m=2,n=1. The remaining budget is therefore
 44 + 3*a + 3*b
 ```
 
-At a=b=0, the finite `resetBase_exact 2` trace has cost `63+4*2=71`, numerically splitting into the same 27-step prefix plus a 44-step suffix.
+At a=b=0, the finite `resetBase_exact 2` trace has cost `63+4*2=71`. The exact ordered midpoint and both runs are now encoded as `by decide` theorems in [ResetBaseM2Split.lean](ResetBaseM2Split.lean): 27 steps to the midpoint and 44 steps to `resetBaseOutput2`.
 
 This alignment suggests a concrete factorization, but is not evidence that the source configurations at the split are equal.
 

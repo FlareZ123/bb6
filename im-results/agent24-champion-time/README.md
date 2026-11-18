@@ -36,14 +36,14 @@ The [root continuation wrapper](../agent48-counted-inc0/TM63RootAfterSectionResu
 - middle 34 starts at `n=16*r-19`, marker 1, with `n` divisible by three;
 - after `n-1` source increments, the machine is at index one, marker two.
 
-The exported theorem `tm63_blank_reaches_after_middle34_to_index_one` is an authentic blank-root original-TM2 run to the m=2, n=1 reset input. This is not a halt witness. The existing `resetBase_odd_frame` only handles the finite-base case a=b=0 and leaves exact S0-config embedding open; the arbitrary-a,b m=2,n=1 reset prefix and terminal SectionBits join remain unproved. The cost alignment and proposed factorization are recorded in [ResetPrefixM2N1Plan.md](../agent48-counted-inc0/ResetPrefixM2N1Plan.md). The root wrapper is also uncompiled.
+The exported theorem `tm63_blank_reaches_after_middle34_to_index_one` is an authentic blank-root original-TM2 run to the m=2, n=1 reset input. This is not a halt witness. The existing `resetBase_odd_frame` only handles the finite-base case a=b=0 and leaves exact S0-config embedding open; the arbitrary-a,b m=2,n=1 reset prefix and terminal SectionBits join remain unproved. The cost alignment and proposed factorization are recorded in [ResetPrefixM2N1Plan.md](../agent48-counted-inc0/ResetPrefixM2N1Plan.md). The finite m=2 base split is now recorded in [ResetBaseM2Split.lean](../agent48-counted-inc0/ResetBaseM2Split.lean): the exact ordered finite tape is at the 27-step midpoint and the remaining 44 steps reach the existing reset-base output. This remains a finite a=b=0 trace, not the general reset prefix. The root wrapper is also uncompiled.
 
 ## Acceptance boundary and next steps
 
 The existing manual-only [counted-source workflow](../../.github/workflows/agent42-counted-lbin-dec.yml) now has:
 - a targeted M0 all-valuation source compile within `counted-lbin-dec`;
 - a `tm63-24cycle-dispatcher` target that compiles the exact transitive import closure using `tools/lean_compile_closure.py` and audits three exported dispatcher/SectionResult theorems against the standard Lean axiom allowlist;
-- an explicit opt-in `tm63-root-index-one` target that compiles the authentic root-consumer closure and audits four root theorem profiles (it is deliberately excluded from the default `all` target).
+- an explicit opt-in `tm63-root-index-one` target that compiles the authentic root-consumer closure and audits six root theorem profiles (including the 27+44 finite m=2 reset-base split) (it is deliberately excluded from the default `all` target).
 
 Neither manual target has been dispatched. The exact local Lean 4.36.0-rc2 preflight must pass first. The next decisive work is:
 
