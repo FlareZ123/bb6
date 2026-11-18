@@ -252,6 +252,8 @@ def check_case(A: int, L: int, z: int) -> dict[str, object]:
     h = 3 * 2**z + 3 * z + 7
     Q = 9 * 2**z + 9 * z + 16
     D = 6 * 4**a + 42 * 2**a - 12 * a - 48
+    closed_cost = 6 * 4**a + 42 * 2**a + 12 * z + 38
+    assert P + D + Q == closed_cost
 
     machine.run(P)
     check_s0_input(machine, z, a, N, h)
@@ -292,6 +294,7 @@ def check_case(A: int, L: int, z: int) -> dict[str, object]:
         "postlude_Q": Q,
         "checkpoint2_step": machine.steps,
         "cycle_cost": P + D + Q,
+        "closed_cost": closed_cost,
         "left_frame_and_right_tail": "pass",
     }
 
