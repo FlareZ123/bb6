@@ -1,4 +1,5 @@
 import Lean.Elab.Tactic.Omega
+import BlankSixteenthRejoin
 import BlankEighteenthRejoin
 import ExceptionalAGeneral
 
@@ -12,15 +13,25 @@ open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 def seed19 : DRegular.L :=
   ⟨64*BB6.Agent2EighteenthRoot.t18+23,1,5⟩
 
+/-- Use the 64-section residue-reduced evaluator already certified in
+    BlankSixteenthRejoin.lean. This avoids the much larger 512-section
+    residue representatives in the generic DRegularFast evaluator. -/
 def terminal9780 : DRegular.L :=
-  (DRegular.run 9780 seed19).getD ⟨9,0,0⟩
+  (BB6.Agent2Fast64.fastRun 9780 seed19).getD ⟨9,0,0⟩
 
 def t19 : Nat := (terminal9780.a-10)/9
 
 /-- Exact DRegular state and residue after the eighteenth E/B reentry. -/
 theorem terminal9780_certificate :
     DRegular.run 9780 seed19 = some ⟨9*t19+10,9,1⟩ ∧
-      t19 % 27 = 12 := by decide
+      t19 % 27 = 12 := by
+  have hcanon : DRegular.Canon seed19 := by
+    constructor
+    · dsimp [seed19]
+      omega
+    · simp [seed19]
+  rw [BB6.Agent2Fast64.fastRun_correct 9780 seed19 hcanon]
+  decide
 
 theorem terminal9780_exact :
     DRegular.run 9780 seed19 = some ⟨9*t19+10,9,1⟩ :=
@@ -39,12 +50,13 @@ theorem blank_nineteenth_exception :
   apply BB6.Agent25RootChain.extend_regular blank
     BB6.Agent2EighteenthRoot.reentry18Time
     9780 seed19 ⟨9*t19+10,9,1⟩
-  · constructor
-    · change 64*BB6.Agent2EighteenthRoot.t18+23 ≥ 2
-      omega
-    · left
-      change (1:Nat) ≠ 0
-      omega
+  · exact terminal9780_certificate.1 ▸ by
+      constructor
+      · change 64*BB6.Agent2EighteenthRoot.t18+23 ≥ 2
+        omega
+      · left
+        change (1:Nat) ≠ 0
+        omega
   · exact terminal9780_exact
   · exact BB6.Agent2EighteenthRoot.blank_eighteenth_reentry
 
