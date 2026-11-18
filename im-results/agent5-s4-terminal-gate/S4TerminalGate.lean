@@ -169,8 +169,11 @@ theorem two_gate_moment_mod32
   have hRhs64 :
       64 ∣ (k + 3) * (a + 1 + 2 * S4Power.W L) + 3 * 2 ^ k := by
     refine ⟨(k + 3) * x + 3 * p, ?_⟩
-    rw [hx, hp]
-    ring
+    calc
+      (k + 3) * (a + 1 + 2 * S4Power.W L) + 3 * 2 ^ k
+          = (k + 3) * (64 * x) + 3 * (64 * p) := by rw [hx, hp]
+      _ = 64 * ((k + 3) * x + 3 * p) := by
+        simp [Nat.mul_add, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
   rcases hRhs64 with ⟨r, hr⟩
   have hSum64 : 64 ∣ 2 * S4Power.W U + 2 * S4WeightFormula.Mfull L := by
     rw [hFormula]
