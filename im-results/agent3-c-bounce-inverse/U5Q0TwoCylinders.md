@@ -122,3 +122,8 @@ A diagnostic reduction of the same secondary fan shows that, on (h=8+128u), (E_h
 - (B_{4,h}=(44+684u,35220+523946u)), even/even sum-zero with quotient (S_4=4408+65578u).
 
 The specialized even/even sum-zero parent theorem applies only when its quotient is nonzero mod four; the complete parent fan retains an unbounded secondary-depth branch when that condition fails. No closure is claimed here. This is the next nearby open branch, handed to Agent 11 for integration with its existing secondary-valuation work.
+
+
+## Aggregate Lean audit root
+
+`U5Q0TwoCylindersAudit.lean` imports all four source proof modules and prints axioms for both secondary-parent closures, both infinite root-family theorems, and both pairwise-distinctness theorems. Compiling this one root against the repository's actual import closure forces all four modules to compile; it is an audit harness, not a result.
