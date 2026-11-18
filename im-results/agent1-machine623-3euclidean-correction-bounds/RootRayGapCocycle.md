@@ -116,7 +116,7 @@ This is the algebraic input needed to revisit the 3-adic residue-separation obse
 No blank-root reachability claim is made here. The formulas follow by substitution from DrainValuationNormalForm.md, ExactRayCorrectionRelations.lean, and the canonical-ray gap/scale update.
 
 
-## A sufficient middle-digit certificate for 3-adic separation
+## A middle-block certificate for 3-adic separation
 
 Let \(W\ge1\), let \(k\) be least with \(3^k>W\), and let \(j\) be least with \(3^j>W^3\). Then
 \[
@@ -124,13 +124,13 @@ Let \(W\ge1\), let \(k\) be least with \(3^k>W\), and let \(j\) be least with \(
 \]
 so \(j\ge3k-2\).
 
-For an integer \(z\), let \(r\) be the least nonnegative residue of \(z\) modulo \(3^j\). If the base-3 expansion of \(r\) has a digit \(1\) at any position \(i\) with \(k\le i<j\), then
+For an integer \(z\), let \(r\) be the least nonnegative residue of \(z\) modulo \(3^j\). Consider the block of base-3 digits of \(r\) in positions \(k,\ldots,j-1\). If this block is **neither all zero nor all two**, then
 \[
 \min(r,3^j-r)>W.
 \]
-Proof: if \(r\le W<3^k\), every digit at positions \(i\ge k\) is zero. If \(3^j-r\le W<3^k\), write \(t=3^j-r\); since \(t<3^k\), subtracting \(t\) from \(3^j-1=(222\ldots2)_3\) changes only the bottom \(k\) digits, so every digit at positions \(i\ge k\) of \(r\) is \(2\). Either case contradicts the assumed middle digit \(1\).
+Indeed, if the block is not all zero, some digit at position \(i\ge k\) is nonzero, so \(r\ge3^i\ge3^k>W\). If the block is not all two, some digit at position \(i\ge k\) is at most one; subtracting \(r\) from \(3^j\) then gives \(3^j-r\ge3^i\ge3^k>W\). The single-middle-digit-1 criterion is a special case, but a mixed block of zeros and twos also suffices.
 
-Thus the 3-adic residue-separation goal can be weakened to a concrete digit certificate: for the chosen \(W\) and \(j\), prove that \(h\bmod 3^j\) has at least one ternary digit \(1\) in the middle window \([k,j)\). This condition is sufficient, not necessary. It may be easier to preserve under a finite-state analysis of the exact cocycle than the original least-residue inequality.
+Thus a finite-state proof of residue separation can target the weaker-looking digit statement that the middle block is not monochromatic (all zero or all two), rather than directly proving a least-residue inequality. In a 100-state arithmetic diagnostic of the authentic root, using \(W=9\ell+22\) and the corresponding \(k,j\), this block was not all zero and not all two for every tested state from index 17 through 99; index 16 was the only failure, and there \(\min(r,3^j-r)=73\le W=76\). This is finite computational evidence only, not an all-time invariant.
 
 
 ## Bridge to the terminal-window width used by the 3-adic scan
