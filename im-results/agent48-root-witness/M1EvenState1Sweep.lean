@@ -40,16 +40,20 @@ theorem state1_three_left (T : Int → Bool) (h : Int)
   have hne1' : h + (-1 : Int) ≠ h := by omega
   have hne2' : h + (-1 : Int) + (-1 : Int) ≠ h := by omega
   have hne3' : h + (-1 : Int) + (-1 : Int) ≠ h + (-1 : Int) := by omega
+  have hne0 : h ≠ h-2 := by omega
+  have hne1 : h-1 ≠ h-2 := by omega
   simp [run, rawStep, readSlot, applyMove, h0, h1', h2',
-    hne1', hne2', hne3', lookup10, lookup21, lookup31, holeLeft]
-  funext x
-  by_cases hx0 : x = h
-  · simp [hx0, holeLeft]
-  · by_cases hx1 : x = h-1
-    · simp [hx0, hx1, holeLeft]
-    · by_cases hx2 : x = h-2
-      · simp [hx0, hx1, hx2, holeLeft, h2]
-      · simp [hx0, hx1, hx2, holeLeft]
+    hne1', hne2', hne3', lookup10, lookup21, lookup31]
+  constructor
+  · omega
+  · funext x
+    by_cases hx0 : x = h
+    · simp [hx0, holeLeft, hne0]
+    · by_cases hx1 : x = h-1
+      · simp [hx0, hx1, holeLeft, hne1]
+      · by_cases hx2 : x = h-2
+        · simp [hx0, hx1, hx2, holeLeft, h2, hne2', hne3']
+        · simp [hx0, hx1, hx2, holeLeft]
 
 /-- The cells immediately left of the moving blank are all one. -/
 def state1LeftOnes (T : Int → Bool) (h : Int) (n : Nat) : Prop :=
