@@ -173,7 +173,7 @@ theorem sweptLeft_preserves_right (n : Nat) (T : Int → Bool)
   induction n generalizing T h with
   | zero => rfl
   | succ n ih =>
-      have hrec := ih (holeThree T h) (h-1) x (by omega)
+      have hrec := ih (holeThree T h) (h-1) (by omega)
       have hne0 : x ≠ h := by omega
       have hne1 : x ≠ h+1 := by omega
       have hafter : holeThree T h x = T x := by
