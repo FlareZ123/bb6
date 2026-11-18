@@ -277,3 +277,40 @@ The later checkpoint-to-checkpoint costs are not captured by the naive extrapola
 
 
 The reproducer also contains `check_z1_full_terminal_run()`, which directly checks the complete (A=3,L=2,z=1) run: exactly 120 q4 checkpoints, first at 275, last at 245,105, and halt at 246,201 in state 0/head 967. This function is likewise pending execution in the repository environment.
+
+
+## (z=1) terminal subfamily: multi-parameter full simulations
+
+Full direct simulations were also run for five ((A,L)) choices with (z=1):
+
+| (A,L) | (M=2^A(2^{L+2}-1)) | q4 checkpoints | first checkpoint | last checkpoint | halt step |
+|---|---:|---:|---:|---:|---:|
+| 3,2 | 120 | 120 | 275 | 245,105 | 246,201 |
+| 4,2 | 240 | 240 | 287 | 950,945 | 953,013 |
+| 2,4 | 252 | 252 | 287 | 1,046,873 | 1,049,037 |
+| 3,4 | 504 | 504 | 299 | 4,125,809 | 4,130,001 |
+| 5,2 | 480 | 480 | 299 | 3,745,025 | 3,749,025 |
+
+Across these five complete runs, the observed quantities fit the following compact formulas, where (s_2(n)) is the binary digit sum:
+
+\[
+t_{q4,1}=12(A+L)+215,
+\]
+\[
+t_{q4,M}-t_{q4,1}
+=16M(M-1)+138(M-1)-12s_2(M-1),
+\]
+\[
+t_{halt}-t_{q4,M}=8M+12(A+L)+76.
+\]
+
+Equivalently, the total time from the initial S0 configuration is
+
+\[
+\boxed{
+T_{z=1}(A,L)
+=16M^2+130M+24(A+L)+153-12s_2(M-1).
+}
+\]
+
+These are empirically supported formulas for the (z=1) subfamily, not yet formalized or proved for arbitrary (A,L). Notably, individual checkpoint-to-checkpoint costs have 2-adic irregularities; the simple total-sum formula should not be mistaken for a uniform per-cycle formula.
