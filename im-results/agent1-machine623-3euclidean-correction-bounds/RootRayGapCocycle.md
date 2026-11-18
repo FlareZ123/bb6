@@ -276,3 +276,6 @@ For the centered-\(Y\) window in the source regime \(n\ge10\), \(\ell\ge n\ge10\
 j-k-4\ge2k-6\ge6.
 \]
 Thus the proposed buffered invariant has at least six ternary positions throughout the n>=10 regime; it does not collapse to a vacuous short block.
+
+
+A further buffer test on the centered-\(Y\) residual \(z=Y-c_s\), using the uniform width \(W_Y=4W\), found that the middle block trimmed by two positions at each end was nonmonochromatic at every tested index \(33,\ldots,99\). The trimmed-block failures in the tested prefix were indices 17–32. This suggests a finite prefix through 32 followed by a buffered \(Y\)-invariant, but remains only a 100-state diagnostic.
