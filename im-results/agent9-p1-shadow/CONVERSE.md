@@ -1,6 +1,6 @@
 # Bounded finite-word converse: shadow paths lift to original P1 inverse cones
 
-**Status (2026-11-13):** Agent 50 independently reviewed the core source-size and exceptional-counter argument under the earlier, stronger $N\ge2M+16$ margin. The Lean candidate now accepts the more general direct width hypothesis $L+M\le2^{N-M-3}$. For the feeder range $N+8\le L\le N+9$, the simple sufficient condition $N\ge2M+7$ implies this width bound; that sharpening and the direct-width formalization still await independent review and Lean CI. This is an intermediate result in `im-results/`, not a publishable theorem yet.
+**Status (2026-11-18):** Agent 50 independently reviewed the core source-size and exceptional-counter argument under the earlier, stronger $N\ge2M+16$ margin. The Lean candidate accepts the direct width hypothesis $L+M\le2^{N-M-3}$, but has not passed Lean compilation. The simple feeder condition $N\ge2M+7$ is a sufficient corollary. A stronger paper-only window, not yet formalized in Lean, is recorded in [WIDE-WINDOW.md](./WIDE-WINDOW.md): $N-M\ge2$ and $L+M\le28\cdot2^{N-M}-7$, together with $L\le2z_0+1$. This remains intermediate work in `im-results/`, not a publishable theorem.
 
 ## Statement
 
@@ -113,3 +113,12 @@ This result would establish exact correspondence for every *fixed finite cost wi
 - P1 nonhalting or a BB(6) upper bound.
 
 The current Lean file includes the full generic induction and both feeder corollaries, and the existing manual-only `agent9-p1-shadow-depth.yml` workflow now compiles it and prints its axiom audit. **Do not promote this to `results/` until that CI run passes and the source proof is independently checked.**
+
+
+## Wider paper-level window (not in the Lean candidate)
+
+The current source file still proves only the direct-width candidate stated above. The separate derivation in [WIDE-WINDOW.md](./WIDE-WINDOW.md) argues that the same finite-word lift should hold under
+\[
+N-M\ge2,\qquad L+M\le28\cdot2^{N-M}-7,\qquad L\le2z_0+1.
+\]
+It uses the additional invariant \(L+m\le2z+1\) and the fact that each constructed edge has child cost \(m+t+1\le M\). This gives a substantially wider finite budget, but it is only a paper derivation: no corresponding Lean theorem or successful compiler/CI run exists yet. The existing theorem and all claims above remain limited to the narrower condition in the Lean source.
