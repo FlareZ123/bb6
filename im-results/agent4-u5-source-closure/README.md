@@ -41,12 +41,13 @@ The residual identity
 ```
 shows that `w=1021 (mod 1024)` forces `t=459 (mod 1024)`. The same identity also gives `t=123 (mod 168)` and the older `z=2 (mod 128)` parameterization, but the generalized q-fan proof now needs only `t=459 (mod 1024)`.
 
-For `z=128v+2`, the q-fan equation has only q=0 or q=1, because `43t-1=8(661+903z)=8 (mod 16)`. Both branches have exact finite source-parent closures:
+For t=459+1024v, the q-fan equation has only q=0 or q=1, because
+`43t-1=19736+44032v=8 (mod 16)`. Both branches have exact finite source-parent closures:
 
-- **q=0:** `P0 -> D0 -> Q0 -> R0 -> S0`. The gates are even/even sum two, even/odd-four, six-even-right, and odd/odd valuation three. The terminal `S0=(25082+1175664v,16819+788424v)` has odd right coordinate and sum 1 mod 4.
-- **q=1:** `P1 -> D1 -> D2 -> D3 -> Q3`. The first two steps are even/even sum-two direct parents; `D2` has sum 4 mod 8, so the complete source fan forces its direct parent; the even/odd-four inverse then gives `Q3=(27679+1297464v,15519+727524v)`, odd/odd with sum 2 mod 4.
+- **q=0:** `P0=(19734+44032v,19504+43520v)` is even/even with sum 2 mod 4. Its forced direct parent is `D0=(39236+87552v,9751+21760v)`; the even/odd-four inverse gives `Q0=(24491+54656v,17120+38208v)`; six-even-right gives `R0=(41609+92864v,8559+19104v)`; odd/odd valuation three gives `S0=(25082+55984v,16819+37544v)`, odd-right with sum 1 mod 4.
+- **q=1:** `P1=(4932+11008v,26902+60032v)` is even/even with sum 2 mod 4. Two direct parents give `D1=(31832+71040v,13450+30016v)` and `D2=(45280+101056v,6724+15008v)`; the sum-4-mod-8 direct-parent lemma gives `D3=(52002+116064v,3361+7504v)`; the even/odd-four inverse gives `Q3=(27679+61784v,15519+34644v)`, odd/odd with sum 2 mod 4.
 
-The full coordinates and derivations are in [W1021-derivation.md](W1021-derivation.md). These are exact source-parent arguments, not finite quotient checks.
+The older z=2 (mod 128) statement is retained as a corollary. The full coordinates and derivations are in [W1021-derivation.md](W1021-derivation.md). These are exact source-parent arguments, not finite quotient checks.
 
 ## New source-only cylinder: w=1125 (mod 4096)
 
