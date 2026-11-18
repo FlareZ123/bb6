@@ -162,7 +162,43 @@ theorem secondCyclePrefix34_input_from_binDec
   simpa [binDec_twoDigit_d1d0 w r hr] using
     secondCyclePrefix34_input_from_sides (binDec w r) tailR h
 
+/-- For the q4 checkpoint-2 marker value
+M=2^A*(2^(L+2)-1), A≥2, the first two BinDec blocks of M-2 are
+exactly d1,d0. -/
+theorem q4Checkpoint2_binDec_prefix (A L : Nat) (hA : 2≤A) :
+    binDec (A+L+2) (2^A*(2^(L+2)-1)-2) =
+      d1 ++ d0 ++
+        binDec (A+L) (2^(A-2)*(2^(L+2)-1)-1) := by
+  let r : Nat := 2^(A-2)*(2^(L+2)-1)-1
+  have hAeq : A = (A-2)+2 := by omega
+  have hpowA : 2^A = 4*2^(A-2) := by
+    calc
+      2^A = 2^((A-2)+2) := by rw [hAeq]
+      _ = 2^(A-2)*2^2 := by rw [Nat.pow_add]
+      _ = 4*2^(A-2) := by norm_num
+  have hval :
+      2^A*(2^(L+2)-1)-2 = 2*(2*r+1) := by
+    dsimp [r]
+    rw [hpowA]
+    omega
+  have hpowAL :
+      2^(A+L) = 2^(A-2)*2^(L+2) := by
+    rw [show A+L = (A-2)+(L+2) by omega, Nat.pow_add]
+  have hltC : 2^(L+2)-1 < 2^(L+2) := by
+    have hpos : 0 < 2^(L+2) := by positivity
+    omega
+  have hprod :
+      2^(A-2)*(2^(L+2)-1) < 2^(A+L) := by
+    rw [hpowAL]
+    exact Nat.mul_lt_mul_of_pos_left hltC (by positivity)
+  have hr : r < 2^(A+L) := by
+    dsimp [r]
+    omega
+  rw [hval]
+  exact binDec_twoDigit_d1d0 (A+L) r hr
+
 #print axioms binDec_twoDigit_d1d0
+#print axioms q4Checkpoint2_binDec_prefix
 #print axioms secondCyclePrefix34_input_from_sides
 #print axioms secondCyclePrefix34_input_from_binDec
 
