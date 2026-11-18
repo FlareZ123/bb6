@@ -110,7 +110,7 @@ The two proven-in-draft root cylinders are disjoint. Modulo 8192 their union is
 [
 w\equiv 1,2049,4097,4609,6145\pmod{8192}.
 ]
-The first four residues are exactly (w\equiv1\pmod{2048}); the fifth is (w\equiv4609\pmod{8192}). This is only the union of the two constructed families; no conclusion is asserted for the other eleven residues or for arbitrary (w).
+The first four residues are exactly (w\equiv1\pmod{2048}); the fifth is (w\equiv4609\pmod{8192}). This is only the union of the two constructed families; no conclusion is asserted for the other eleven lifts of w=1 mod 512 among the 16 residue classes modulo 8192 or for arbitrary (w).
 
 
 ## Nearby unresolved branch: h=8+128u
@@ -126,7 +126,7 @@ The specialized even/even sum-zero parent theorem applies only when its quotient
 
 ## Aggregate Lean audit root
 
-`U5Q0TwoCylindersAudit.lean` imports the four new source proof modules plus the existing W1821 baseline and prints axioms for both secondary-parent closures, all three infinite root-family theorems, and all three pairwise-distinctness theorems. Compiling this one root against the repository's actual import closure forces all four modules to compile; it is an audit harness, not a result.
+`U5Q0TwoCylindersAudit.lean` imports the four new source proof modules plus the existing W1821 baseline and prints axioms for both secondary-parent closures, all three infinite root-family theorems, and all three pairwise-distinctness theorems. Compiling this one root against the repository's actual import closure forces all five modules to compile; it is an audit harness, not a result.
 
 
 The two modular reductions have explicit integer witnesses:
