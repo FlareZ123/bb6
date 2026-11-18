@@ -38,11 +38,11 @@ The following lemma is a direct consequence of the complete original-source gram
 \[
 \operatorname{secNext}(a,k)=(x,y).
 \]
-Then there is an even natural number \(n\) such that
+Then \(a\) is even and there is an even natural number \(n\) such that
 \[
 x+y=2^n(2a+4),\qquad 2k+a+7+3n=x+2y.
 \]
-Consequently \(a\) is even and \(n+2\le v_2(x+y)\).
+Consequently \(n+2\le v_2(x+y)\).
 
 **Proof by exhaustive source cases.**
 1. The \(a=0\) exceptional rows have right coordinate at most four. Its nonexceptional branch requires \(x+y=8\cdot2^n\), impossible because \(3\mid x+y\).
@@ -89,9 +89,8 @@ The valuation identity therefore converts the unbounded-looking P4 inverse probl
 
 For each admissible even depth \(n\), analyze the explicitly determined even-first-coordinate parent
 \[
-\left(
-\frac{67186+999595u}{2^{n+1}}-2,
-\frac{63895+950614u+2(3291+48981u)-a-7-3n}{2}
-\right).
+S=67186+999595u,\quad x=63895+950614u,\quad y=3291+48981u,\\
+a_n=\frac{S}{2^{n+1}}-2,\quad
+k_n=\frac{x+2y-a_n-7-3n}{2}.
 \]
 The next step is to intersect these parent families with the already source-certified even/even parent grammars and blank-image restrictions. In particular, distinguish the \(n=0\) and \(n=2\) branches from the genuinely new \(n\ge4\) tail. Do not claim P4 unreachable, or promote this note to results/, until every admissible parent depth is closed by a source proof.
