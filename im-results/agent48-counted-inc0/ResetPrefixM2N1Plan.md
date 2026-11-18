@@ -43,17 +43,17 @@ which is exactly the canonical S0 binary-counter block.
 `OuterLCIncTail.outerLCIncTailEnd` has ones at offsets `[-2,-1,0,3,4,5]` from its initial head. The tail starts at `h+3*b+9` and returns four cells left, so the final head is `h+3*b+5`; relative to that final head, the ones are at `[2,3,4,7,8,9]`. This is exactly the one-cell pattern of
 
 ```text
-s0RightFacing 0 = [false,true,true,true,false,false] ++ d1pow 1
+s1PhysicalRight 0 = [false,true,true,true,false,false] ++ d1pow 1
 ```
 
-The nine-cell local right word is therefore the S0 physical-right word. A formal pointwise lemma still needs to show the nested frame preserves blankness beyond that nine-cell window, using `outerLCInc_s1_right_facts`, `outerLCIncAfterSweep_blank`, and `outerLCIncAfterZeroExit_preserves`.
+The nine-cell local right word is therefore the S1 physical-right word. A formal pointwise lemma still needs to show the nested frame preserves blankness beyond that nine-cell window, using `outerLCInc_s1_right_facts`, `outerLCIncAfterSweep_blank`, and `outerLCIncAfterZeroExit_preserves`.
 
 ## Remaining obligations
 
 1. **Extract the preserved left context.** Prove pointwise that the nested `outerLCIncPostludeTape` left side is `binDec (a+b+2) (2^b-1) ++ l` for a suitable finite list `l`. The counter prefix is already handled by `outerLCInc_target_binary_prefix`; use the source-frame preservation lemmas to identify the remaining left tail and show it is finite.
 
 A useful coordinate cut for this extraction: the final head is `h' = h+3*b+5`; the target counter prefix has length `3*(a+b+2)=3*a+3*b+6`. Its farthest cell is `h' - 3*(a+b+2) = h-3*a-1`, the first cell of `markerWord 2` in the original S1 left-facing word `d1pow a ++ markerWord 2 ++ d0 ++ binDec L 1 ++ lh`. If the nested frames preserve the exterior beyond this counter block, a candidate left context is `(markerWord 2).drop 1 ++ d0 ++ binDec L 1 ++ lh`. This is only a coordinate-based candidate; verify which cells the frames rewrite before asserting the list equality.
-2. **Finish exact S0Config equality.** Combine the left-tail extraction and the right-word lemma to prove the complete tape equals `s0Config l (a+b+2) (2^b-1) 0 h'` (with the state/head already matching).
+2. **Finish exact S0Config equality.** Combine the left-tail extraction and the right-word lemma to prove the complete tape equals `s1Config L 0 1 (a+b+2) (2^b-1) 0 h'` (with the state/head already matching).
 3. **Finish terminal.** Establish `TerminalFinish.SectionBits` for that exact S0 configuration, then compose the terminal halt theorem. Do not infer the halt or score from the framed endpoint alone.
 
 ## Independent finite-base check
