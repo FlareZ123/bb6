@@ -63,7 +63,7 @@ For a non-final block, 256 divides w. In the difficult case a=13 (mod 16), the f
 For the two remaining rows, the next inverse alternatives are:
 
 **If a=29+128s:**
-    F(Q3) = (2+4s, 89+408s+w),
+    F(Q3) = (-2+4s, 89+408s+w),
     S(Q3) = (15+108s+w/4, 47+200s+w/2).
 
 The F child is positive even with second coordinate 1 (mod 4), hence impossible. The S child is (7,7) mod 8 when s is even, hence impossible by rooted-not-7-7. The case s odd survives these particular invariants.
