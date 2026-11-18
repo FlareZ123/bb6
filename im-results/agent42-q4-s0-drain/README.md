@@ -276,7 +276,7 @@ The first-cycle difference (433-275=158) agrees with (C_1(1)). This is a complet
 The later checkpoint-to-checkpoint costs are not captured by the naive extrapolation (32j+126+12v_2(j)): that expression already fails at (j=8). The full z=1 trace therefore confirms termination at (M) checkpoints but warns against extrapolating a simple later-cycle cost from the first-cycle law.
 
 
-The reproducer also contains `check_z1_full_terminal_run()`, which directly checks the complete (A=3,L=2,z=1) run: exactly 120 q4 checkpoints, first at 275, last at 245,105, and halt at 246,201 in state 0/head 967. This function is likewise pending execution in the repository environment.
+The reproducer also contains `check_z1_full_terminal_run(A,L)`, which directly checks the nine complete even-L runs in the table, including checkpoint counts, the right-tail invariant, and the observed total-time formula. This function is likewise pending execution in the repository environment.
 
 
 ## (z=1) terminal subfamily: multi-parameter full simulations
@@ -329,7 +329,7 @@ For all nine complete \\(z=1\\) runs in the table, I additionally extracted the 
 Thus the leading unary run increases by exactly eight at each checkpoint while the second run remains six cells. This invariant holds throughout all nine complete simulated terminal runs, not only at the first two checkpoints. It is a useful small-case target for a source-level q4 checkpoint induction.
 
 
-**Parity caveat from additional tests:** all nine complete halting runs in the table have even (L). Additional direct tests for ((A,L)=(2,1),(2,3),(3,1),(3,3),(4,1),(4,3)) still reached exactly (M) q4 checkpoints and matched the first/last checkpoint formulas and the right-tail invariant, but did **not** halt within 10,000,000 steps after the final checkpoint. Thus the displayed total-halting-time formula is presently supported only for the tested even-(L) cases; odd (L) appears to enter a different terminal phase. No eventual nonhalting claim is made for odd (L).
+**Parity caveat from additional tests:** all nine complete halting runs in the table have even (L). Additional direct tests for ((A,L)=(2,1),(2,3),(3,1),(3,3),(4,1),(4,3)) still reached exactly (M) q4 checkpoints and matched the first/last checkpoint formulas and the right-tail invariant, but did **not** halt within the 10,000,000-step simulation horizon from the initial configuration. Thus the displayed total-halting-time formula is presently supported only for the tested even-(L) cases; odd (L) appears to enter a different terminal phase. No eventual nonhalting claim is made for odd (L).
 
 
 ## Transition-level short-phase decomposition (Agent 48)
@@ -362,4 +362,4 @@ The output left frame is ([0,1,1]\Vert\operatorname{binDec}(w,M-2)\Vert lh), and
 
 This reduces the remaining short-phase formalization to two finite certificates (22-step and four-step bridges), one two-step setup, and reusable scan/shift induction lemmas. Agent 48 reports that the 22-step bridge has been reproduced in a local Lean scratch model; the full original-source endpoint equality and theorem composition remain pending.
 
-The root's actual length parameter is `tm63Length1), and the repository already proves `tm63Length1_even` in `im-results/agent42-outer-lcinc/TM63Length1Parity.lean`. Thus the root q4 family satisfies the even-(L) parity condition seen in the (z=1) terminal runs. This removes the odd-(L) parity branch as a root concern, but does not solve the genuinely harder (z>1) terminal cycles.
+The root's actual length parameter is `tm63Length1`, and the repository already proves `tm63Length1_even` in `im-results/agent42-outer-lcinc/TM63Length1Parity.lean`. Thus the root q4 family satisfies the even-(L) parity condition seen in the (z=1) terminal runs. This removes the odd-(L) parity branch as a root concern, but does not solve the genuinely harder (z>1) terminal cycles.
