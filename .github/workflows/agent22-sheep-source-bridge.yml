@@ -263,3 +263,23 @@ jobs:
             echo '::error::sorryAx in SheepPowerH4Source exported theorems'
             exit 1
           fi
+
+          # Agent16: restore and verify the all-natural h=5 arithmetic,
+          # then compose it with the pinned original-machine even-source bridge.
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-sheep-power-h4/reconstruct.py"
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-sheep-power-h5/reconstruct.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-power-h4/PowerGateH4.lean" PowerGateH4.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-power-h5/PowerGateH5.lean" PowerGateH5.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-power-h5/PowerGateH5Decision.lean" PowerGateH5Decision.lean
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            PowerGateH4.lean PowerGateH5.lean PowerGateH5Decision.lean
+          for name in PowerGateH4 PowerGateH5 PowerGateH5Decision; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-power-h4-h5-root-gap/SheepPowerH5Source.lean" SheepPowerH5Source.lean
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepPowerH5Source.lean
+          lake env lean -o ".lake/build/lib/lean/SheepPowerH5Source.olean" SheepPowerH5Source.lean 2>&1 | tee /tmp/sheep-power-h5-source-axioms.log
+          if grep -q 'sorryAx' /tmp/sheep-power-h5-source-axioms.log; then
+            echo '::error::sorryAx in SheepPowerH5Source exported theorems'
+            exit 1
+          fi
