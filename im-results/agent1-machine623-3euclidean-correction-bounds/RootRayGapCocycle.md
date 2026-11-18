@@ -262,3 +262,10 @@ Y=4h+4\ (\mathrm{RE}).
 Thus a terminal window \(|h|\le W\) is a short interval for \(Y\) centered at 18, 10, 2, or 4, with radius \(2W\) or \(4W\). This may be a better coordinate for a finite-state 3-adic transducer than carrying the four separate \(h'\) formulas.
 
 Normalization reminder: in RE, \(D\) includes the initial evalA first-counter drop from baseline \(2k+3\) plus the subsequent drain drop, while \(r\) counts only the subsequent outer drain iterations. If the initial evaluator is bundled into a single drain count \(R\), then \(r=R-1\). This is consistent with \(\beta=1-D\), \(\delta=2D+2r+5\), and \(S=2r+7\).
+
+
+### Centered-\(Y\) residue diagnostic
+
+The compact coordinate gives a second way to formulate the terminal window. Let \(c_s=18,10,2,4\) in LO/LE/RO/RE and set \(z=Y-c_s\). Then \(z=2h\) in LO/LE and \(z=4h\) in RO/RE, so \(|h|\le W\) implies \(|z|\le4W\) uniformly. Using \(W_Y=4W\), and defining \(k,j\) by \(3^k>W_Y\), \(3^j>W_Y^3\), the same middle-block criterion applies to \(z\bmod3^j\).
+
+On the same 100-state diagnostic, this centered-\(Y\) middle block was neither all zero nor all two at every tested index 17–99; index 16 was the only failure. The \(Y\)-form may be better suited to a transducer proof because the exact update is the single absolute-value recurrence \(Y'=|Y-2T|-6q'\). This is finite computational evidence only.
