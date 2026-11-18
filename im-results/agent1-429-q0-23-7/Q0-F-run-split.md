@@ -75,6 +75,6 @@ Consequences when r>=4:
 - The only S siblings that survive the initial Allowed check are j=2,4,6 (mod 8).
 - For j=2 or 6, v2(A+3)=1. The next F child is even. At j=2 its residue is (0,6) mod 8 and is killed by rooted_even_parity; at j=6 it is (2,2) mod 8 and the E alternative survives this first check.
 - For j=4 and r>=5, v2(A+3)=3. The sibling has a three-F run before its first even state. If r=4, the two terms in A+3 can have equal valuation and cancellation must be handled separately.
-- If j=12 (mod 16), then v2(j+4)>=4, so the next split at l=3 can occur; this is the first place where the side-branch recursion can continue. The new index is governed by the quotient (j+4)/16.
+- If j=12 (mod 16) and r>=5, then v2(A+3)>=4, so the next split at l=3 can occur. If r=4, then v2(A+3)=3 and the first coordinate is already even after three F steps. The exact parameter transformation at the l=3 split remains to be derived.
 
 This identifies a nested valuation mechanism: the main F spine reads v2(a0+3), while an S sibling at split j reads v2(j+4). It is a candidate well-founded descent on split indices, but the surviving j=6 E child and the j=12 (mod 16) recursive branch are not yet closed.
