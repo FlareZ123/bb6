@@ -2,6 +2,10 @@
 
 **Current status — 18 November 2026: BB(6) remains unresolved.** The exact blank-root prefix to the published S1 configuration after 27,959 original TM63 transitions is kernel-checked in the Agent 48 root dossier. The subsequent TM63 middle countdown now has a complete **source-draft** dispatcher, but the complete import closure has not passed exact Lean compilation and no terminal blank-root continuation is established. No universal six-state upper bound or exact maximal-runtime proof exists.
 
+## New positive-z first q4 checkpoint decomposition
+
+The [first q4 checkpoint decomposition](FirstQ4Checkpoint.md) factors the original TM2 run into a general S0 drain, the existing Rst1' counted macro, a second all-ones S0 drain, and a (9z+10)-step postlude. The postlude is reduced to a (3z)-cell counted sweep plus a fixed ten-step frame bridge. The full tape decomposition passes 30 raw-step test cases (8,970,870 transitions); the Lean composition and dependency CI acceptance remain in progress. This is a first-checkpoint result only, not a terminal witness or BB(6) solution.
+
 ## 24-cycle source coverage
 
 The `sectionResult` countdown decreases n by one and updates m to `(m+2) mod 3`. Its source dispatcher has 24 residue/marker classes because `lcm(8,3)=24`. All **24 of 24 classes now have counted-source theorem declarations or complete source drafts**:
