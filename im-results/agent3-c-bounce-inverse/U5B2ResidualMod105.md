@@ -177,3 +177,29 @@ For the remaining even-u class `u≡2 (mod4)`, the same argument gives the exact
 `CReach(B2(u)) ↔ CReach(P4(u))`; the latter is the remaining odd/odd sum-zero state and is not excluded here.
 
 Combining with the root-index congruence `u+r≡2 (mod8)`, the excluded cylinder `u≡0 (mod4)` corresponds to root indices `r≡2 or 6 (mod8)`. This is a paper-level composition of the complete B2 source fan with already source-certified inverse/reachability lemmas. The new composed theorem has not yet been Lean-compiled in this invocation.
+
+
+## Second root-index valuation: the remaining even-u P4 state
+
+For even u, the preceding section reduces B2 reachability to
+`P4=(63895+950614u,3291+48981u)`; when u≡0 mod4 this is excluded, while u≡2 mod4 leaves P4 as the exact residual state.
+
+Let `S4=P4.x+P4.y=67186+999595u`. Substituting the same exact residual equation
+`211u+22155r+18018=20*2^(E-13)`
+(with root index r and `w=6657+8192r)) gives
+```
+211*S4 = -7*(2570932352 + 3163718175*r)
+         + 2855985*2^(E-13).
+```
+The coefficient 2855985 is odd, and
+`0 < 2570932352+3163718175*r < 2^(E-13)`
+because the affine term is below `2^32*(r+1)≤2^(r+32)`, while `E-13=188+3360*w>r+32`. The two terms therefore have distinct 2-adic valuations. Since 7 and 211 are odd,
+[
+\boxed{v_2(S4)=v_2(2570932352+3163718175r).}
+]
+
+The exact root relation `u+r≡2 (mod8)` means the remaining u≡2 (mod4) sector is r≡0 or4 (mod8):
+- r≡4 (mod8) gives u≡6 (mod8), hence v2(S4)=2 and the existing odd/odd low-valuation inverse applies (unless the already-recorded special odd-image obstruction fires).
+- r≡0 (mod8) gives u≡2 (mod8), hence v2(S4)≥3. The displayed affine valuation now determines whether the next exact gate is the valuation-three inverse, the sum-16 two-orbit inverse, or the deeper sum-zero parent fan.
+
+This supplies a second exact 2-adic coordinate for the residual even-u chain. It does not yet close P4; the source-parent branches after its applicable odd/odd inverse remain to be resolved and Lean-compiled.
