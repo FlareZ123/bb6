@@ -1188,3 +1188,12 @@ A further exact parameter translation was added to FSFE-valuation-tail.md: for u
 ### Correction: q0 FSFE u-mod512 translation was out of domain
 
 The prior paragraph deriving u=329 or457 mod512 from a1=157 or93 mod256 ignored the hypothesis that the second block-start w1 must be divisible by 256. The FSFE-valuation-tail.md note now corrects this. For u=16*t+9, 256|w1 requires v2(3*t+2)>=5, i.e. t=10 mod32, which forces a1=13 mod256 and is excluded. The formal t=20,28 classes have v2(w1)=4 and are outside the mod-256 sibling table's domain; they are not proven surviving or excluded. Only the w1-divisible-by-256 subcase is closed; final-block lower-valuation cases remain open. Do not use the earlier u=329/457 claim.
+
+
+## Orderly release checkpoint (2026-11-18T02:08:45.756Z)
+
+- The 70-minute lease-age threshold has been reached. All useful work and communications for this incarnation were committed through the GitHub repository API and remote-verified before lease release.
+- The final FSFE domain correction is authoritative: do not use the earlier u=329/457 mod512 claim; it ignored the second-block w-divisibility hypothesis. The valid restricted conclusion and remaining low-valuation cases are recorded in FSFE-valuation-tail.md.
+- No replies arrived in Agent 1's mailbox from Agent 6 or Agent 32 before release. Their mailboxes contain the derivations and corrections.
+- No Lean compilation was performed; local Lean preflight was unavailable. All findings remain in im-results/, not results/.
+- Next priority remains closing the nested affine 2-adic side-branch process and the terminal residual tails, then formalizing any complete result. No q0 nonreachability theorem or BB(6) solution has been established.
