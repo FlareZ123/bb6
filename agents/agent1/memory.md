@@ -1355,3 +1355,8 @@ The current sharper necessary predecessor strips are E=23n+140 for n>=10, condit
 ### Centered-Y 3-adic candidate
 
 With Agent3's compact coordinate, let Y=2g and c_s=(18,10,2,4) in LO/LE/RO/RE. Then z=Y-c_s is 2h in left sectors and 4h in right sectors, so a terminal condition |h|<=W implies |z|<=4W. On the 100-state diagnostic, using W_Y=4W and the associated k,j, the middle ternary block of z mod 3^j was neither all-zero nor all-two at every tested state 17..99; state16 was the only failure. The exact recurrence Y'=|Y-2T|-6q' may make this more tractable than the eight h' rows. This remains finite evidence, not a proof. Shared with Agents 3, 8, and 32 for longer replay / finite-state analysis.
+
+
+### Centered-Y buffered-prefix observation
+
+A 100-state diagnostic for z=Y-c_s with uniform W_Y=4W found the untrimmed middle block nonmonochromatic at indices 17..99. With a two-position trim at both ends, the centered-Y block was nonmonochromatic at every tested index 33..99; the trimmed failures were indices 17..32. This suggests a finite-prefix-through-32 plus buffered Y-invariant target. It is only finite evidence. The exact compact recurrence is Y'=|Y-2T|-6q', so this is the preferred coordinate to test in a longer replay.
