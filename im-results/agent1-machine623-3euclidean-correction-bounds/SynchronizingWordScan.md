@@ -124,3 +124,24 @@ The reset-subword checker also records the earliest end-exclusive position of an
 The unique depth-13 case is index 6,932. Since a reset subword sends every admissible transducer start to the same carry state, this gives a uniform finite-scan statement: after at most 13 symbols of each scanned root word, the remaining output suffix is independent of the initial previous-digit pair and carry pair, for either branch.
 
 This suggests a possible route to a deterministic high-digit recurrence: enlarge the low buffer by a fixed 13 symbols, so the remaining output digits no longer depend on the low carry. It is not yet a closure proof: the synchronized output suffix need not itself contain a reset subword, and the authentic root's changing digit-window boundaries still have to be controlled.
+
+
+## Refinement using the Lean one-extra-digit carry bound
+
+At the start of this word (position k+1), the Lean lemma in SignedCoordinateNormalForm.lean proves both initial carry coordinates lie in [-1,1], because the correction magnitudes are below (3^k). Subsequent carries remain in the original branch-invariant ranges (L: a in [-2,2]; R: a in [-4,1]; both b in [-2,2]).
+
+The refined checker synchronizing_reset_subwords_small_start.cpp therefore quantifies over only 9 previous digit pairs and 9 initial carry pairs per branch, while retaining the original invariant ranges for intermediate carries. Across all 9,968 words:
+- minimum common reset length 3: 9,895;
+- minimum common reset length 4: 73;
+- no longer reset word is needed;
+- the earliest reset ends by position 12 (exclusive), rather than 13.
+
+The refined earliest-end distribution is: 3: 3,423; 4: 3,710; 5: 1,842; 6: 679; 7: 207; 8: 65; 9: 26; 10: 12; 11: 2; 12: 2.
+
+Reproduce:
+```bash
+g++ -O3 -std=c++17 synchronizing_reset_subwords_small_start.cpp -o /tmp/reset-small
+node synchronizing_word_scan.js 10000 --emit-blocks | /tmp/reset-small
+```
+
+This is a stronger finite observation justified by a general Lean carry bound, but the reset-word language is still not proved invariant under the authentic root transition.
