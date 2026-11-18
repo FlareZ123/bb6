@@ -144,3 +144,34 @@ theorem right_signed_update
 #print axioms corrB_identity
 #print axioms left_signed_update
 #print axioms right_signed_update
+
+
+-- One extra ternary buffer digit: if the low residue is in [0,3K)
+-- and the affine correction has absolute value < K, the carry is in {-1,0,1}.
+theorem one_extra_digit_carry_bound
+    (K r c q s : Int)
+    (hK : 0 < K)
+    (hr0 : 0 ≤ r) (hr1 : r < 3*K)
+    (hc0 : -K < c) (hc1 : c < K)
+    (hdiv : r + c = 3*K*q + s)
+    (hs0 : 0 ≤ s) (hs1 : s < 3*K) :
+    -1 ≤ q ∧ q ≤ 1 := by
+  constructor
+  · by_cases hq : q ≤ -2
+    · have hmul : 3*K*q ≤ (3*K)*(-2) :=
+        Int.mul_le_mul_of_nonneg_left hq (by omega)
+      have hmul' : 3*K*q ≤ -6*K := by omega
+      have hleft : -K < r+c := by omega
+      have hright : 3*K*q+s < -3*K := by omega
+      omega
+    · omega
+  · by_cases hq : 2 ≤ q
+    · have hmul : (3*K)*2 ≤ 3*K*q :=
+        Int.mul_le_mul_of_nonneg_left hq (by omega)
+      have hmul' : 6*K ≤ 3*K*q := by omega
+      have hleft : r+c < 4*K := by omega
+      have hright : 6*K ≤ 3*K*q+s := by omega
+      omega
+    · omega
+
+#print axioms one_extra_digit_carry_bound
