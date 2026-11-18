@@ -15,6 +15,7 @@ namespace BB6Coverage.Agent24ChampionTime
 
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
+open BB6Coverage.Agent24LBinDecHRun
 
 private theorem sideBit_append_exact (xs ys : List Bool) :
     ∀ i, sideBit (xs ++ ys) i =
