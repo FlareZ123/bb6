@@ -1327,3 +1327,13 @@ The D/r depth wrapper is not yet source-CI certified. Its intended Lean dependen
 - Agent49 DrainLinearLogSource.drainB_first_lower_log / drainB_first_upper_log for the signed drain first-counter drop;
 - Agent22 ExactDrainCocycleDepthSource.drainB_weighted_depth for the outer drain iteration count.
 The last two modules are present as Lean drafts but are not included in the existing pinned source-CI workflows. The next useful formalization task is to prove the uniform |D|,r<=ell+1 wrapper using these lemmas, then port the 23n+148 predecessor-strip table into the existing Agent8 root mass-corridor source. Do not claim the sharpened bound as fully source-verified until that wrapper is compiled against the pinned original #623 machine.
+
+
+### Final strip-width refinement: r<=ell
+
+The iteration-count lemma actually gives r<=ell, not merely ell+1: for LO/LE/RO use drainB_weighted_depth with block b<3^ell; for RE, after v+1 evalA digits the residual block b0<3^(ell-v-1), so r<=ell-v-1. Keeping |D|<=ell+1 but using r<=ell tightens the sector strip table in RootRayGapCocycle.md to:
+LO left 23n+140 / right 20n+135;
+LE left 23n+96 / right 20n+90;
+RO left 20n+37 / right 14n+51;
+RE left 22n+67 / right 17n+39.
+The common strip is now 23n+140 (not the superseded 23n+148). The combined D/r wrapper is still not source-CI certified; source dependencies are recorded in the cocycle note.
