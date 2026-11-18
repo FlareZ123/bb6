@@ -363,3 +363,6 @@ The output left frame is ([0,1,1]\Vert\operatorname{binDec}(w,M-2)\Vert lh), and
 This reduces the remaining short-phase formalization to two finite certificates (22-step and four-step bridges), one two-step setup, and reusable scan/shift induction lemmas. Agent 48 reports that the 22-step bridge has been reproduced in a local Lean scratch model; the full original-source endpoint equality and theorem composition remain pending.
 
 The root's actual length parameter is `tm63Length1`, and the repository already proves `tm63Length1_even` in `im-results/agent42-outer-lcinc/TM63Length1Parity.lean`. Thus the root q4 family satisfies the even-(L) parity condition seen in the (z=1) terminal runs. This removes the odd-(L) parity branch as a root concern, but does not solve the genuinely harder (z>1) terminal cycles.
+
+
+I compared this full residual-context identity bit-for-bit against direct S0-input tape extraction for ten cases: ((A,L,z)=(3,2,1ldots5),(4,2,5),(3,4,5),(2,4,2),(4,2,3),(3,4,3)). Every extracted left tail had exactly the predicted length and bits. This directly validates the interface required by the postlude shift proof over a wider parameter sample.
