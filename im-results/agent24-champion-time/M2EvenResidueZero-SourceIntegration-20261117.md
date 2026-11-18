@@ -1,3 +1,13 @@
+## Status correction — 18 November 2026
+
+A full all-q counted-source theorem draft now exists in [M2EvenResidueZeroCounted.lean](M2EvenResidueZeroCounted.lean):
+- `m2Even_residue0_q4_reset_prefix_source`
+- `m2Even_residue0_counted_increment_source`
+
+It composes the H-run, q4 suffix and counted drain for every positive q. The draft has not been compiled or transitively axiom-audited. [TM63SourceIncrementDispatcherM2.lean](TM63SourceIncrementDispatcherM2.lean) now supplies its marker-2 hypothesis and reduces the conditional 24-cycle theorem to the remaining marker-0 all-q source assumption. This note remains the derivation record supporting the draft; its older “still to formalize” task list is superseded by the counted-source file.
+
+---
+
 # M2, n=8k: source-side H-run to q4 cut (proof derivation)
 
 **Status:** derived integration plan, not a compiled source theorem. It closes the word-level gap between the existing M2 residue-zero setup/H-run/postlude frames and the generic q4 suffix interface.
