@@ -20,10 +20,10 @@ g-5 & \text{left-even (LE)},\\
 \]
 
 Use two integer statistics of the canonical drain:
-- \(D\): the signed first-counter drop relative to the canonical base, so the final base first counter is its baseline minus \(D\);
+- \(D\): the signed first-counter drop from the sector's canonical baseline. The baselines are \(k\) in LO/LE, \(2k+5\) in RO, and \(2k+3\) in RE, so the final base first counter is baseline minus \(D\);
 - \(r\): the number of outer drain iterations.
 
-For LO, LE, and RO, \(D=L-2e\) in the valuation normal form, where \(L\) is the valuation-run length and \(e\) counts the terminal-digit-2 cases. For RE, \(D\) includes the signed drop from the initial evalA call as well as the subsequent drain drop. In every sector, \(r\) is the outer drain iteration count appearing in the exact weighted correction identity.
+For LO, LE, and RO, \(D=L-2e\) in the valuation normal form, where \(L\) is the valuation-run length and \(e\) counts the terminal-digit-2 cases. For RE, \(D\) is measured from the initial evalA first counter \(2k+3\): it is the initial evalA drop (including its terminal-digit adjustment) plus the subsequent drain drop. In every sector, \(r\) is the outer drain iteration count appearing in the exact weighted correction identity.
 
 The correction variables from ExactRayCorrectionRelations.lean are
 \[
