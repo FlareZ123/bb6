@@ -47,7 +47,7 @@ private theorem even_even_sum_two_reach_implies_direct
             have hdiv8 : 8 ∣ x+y := by
               rw [hsum']
               refine ⟨2^hdepth, ?_⟩
-              ring
+              ac_rfl
             have hdiv4 : 4 ∣ x+y :=
               dvd_trans (by decide : 4 ∣ 8) hdiv8
             have hmod : (x+y)%4=0 :=
@@ -66,7 +66,7 @@ private theorem even_even_sum_two_reach_implies_direct
               rcases hdiv2 with ⟨v,hv⟩
               refine ⟨u*v, ?_⟩
               rw [hu,hv]
-              ring
+              ac_rfl
             have hdiv : 8 ∣ x+y := by
               rw [hsum']
               exact hdiv8
@@ -88,15 +88,24 @@ private theorem u5_q0_direct_parent_reduction (h : Nat)
       (by omega) (by omega) (by omega) (by omega)
       hsum hSgt hS4 hD
   rcases hparents with hQ | hE
-  · have hQdirect :=
+  · have hQ' : BB6.Agent3.CReach (4150+6832*h) (412+680*h) := by
+      have hx : (3326+5472*h)+(826+1360*h)-2=4150+6832*h := by omega
+      have hy : ((826+1360*h)-2)/2=412+680*h := by omega
+      simpa only [hx,hy] using hQ
+    have hQdirect :=
       even_even_sum_two_reach_implies_direct
         (4150+6832*h) (412+680*h)
         (by omega) (by omega) (by omega) (by omega)
-        (by omega) hQ
+        (by omega) hQ'
+    have hQdirect' : BB6.Agent3.CReach
+        (4560+7512*h) (205+340*h) := by
+      have hx : (4150+6832*h)+(412+680*h)-2=4560+7512*h := by omega
+      have hy : ((412+680*h)-2)/2=205+340*h := by omega
+      simpa only [hx,hy] using hQdirect
     have hsumOdd : ((4560+7512*h)+(205+340*h))%4=1 := by omega
     exact (BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
       (4560+7512*h) (205+340*h)
-      (by omega) (by omega) (by omega) hsumOdd hQdirect).elim
+      (by omega) (by omega) (by omega) hsumOdd hQdirect').elim
   · have hx : 2*(519+854*h)-2=1036+1708*h := by omega
     have hy :
         ((3326+5472*h)+2*(826+1360*h)-2*(519+854*h)-8)/2
@@ -168,14 +177,15 @@ theorem u5_q0_secondary_parent_reduction (h : Nat)
             obtain ⟨r,hrdepth⟩ : ∃ r : Nat, hdepth=2*r+1 := by omega
             by_cases hr0 : r=0
             · subst r
+              have hdepth1 : hdepth=1 := by omega
               have haEq : a=830+1368*h := by
-                rw [hrdepth] at hbounce
-                have hpow : (2:Nat)^(2*0+2)=4 := by decide
-                rw [hpow] at hbounce
-                dsimp [x,y,S] at hbounce
+                rw [hdepth1] at hbounce
+                norm_num at hbounce
+                dsimp [x,y] at hbounce
                 omega
               have hkEq : k=2071+3412*h := by
-                rw [hrdepth] at hcost
+                rw [hdepth1] at hcost
+                norm_num at hcost
                 dsimp [x,y] at hcost
                 omega
               have hparent : BB6.Agent3.CReach
@@ -209,8 +219,8 @@ theorem u5_q0_secondary_parent_reduction (h : Nat)
                     _ = 2^(2*r+2)*(2*q) := by rw [hrdepth,haq]
                     _ = 2^(2*r+3)*q := by
                       rw [Nat.pow_succ]
-                      ring
-                    _ = 8*(4^r*q) := by rw [hpow]; ring
+                      ac_rfl
+                    _ = 8*(4^r*q) := by rw [hpow]; ac_rfl
                 omega
               have haEq : a=2*q-2 := by omega
               have hkEq : k=2487+4096*h-q-3*r := by
