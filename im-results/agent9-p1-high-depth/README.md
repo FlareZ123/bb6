@@ -55,3 +55,6 @@ The same file now isolates the two source-coordinate reductions needed by that i
 
 
 Finally, restart_half_defect_lt formalizes the half-defect bound used by the wall identity: if the high-depth child satisfies source mass and its wall defect \(F=b_0+2m_0+2n+8-12P\) is positive, then odd \(d_0\) gives \(d_0-1=2x_{\rm half}\) with \(x_{\rm half}<P\). This is the arithmetic consequence of the deep-reset defect positivity already established in HighDepthRestartSource.lean.
+
+
+The Int-facing variant restart_half_defect_lt_of_int accepts the exact wallDefect expression used by HighDepthRestartSource.lean, so it can be applied directly to defect_deep_positive after transporting the child mass and oddness. It avoids an intermediate Nat subtraction/cast conversion.

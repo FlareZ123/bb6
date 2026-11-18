@@ -220,6 +220,26 @@ theorem restart_half_defect_lt
   · omega
   · omega
 
+theorem restart_half_defect_lt_of_int
+    (P n b d m : Nat)
+    (hP : P=2^n)
+    (hMass : b+d+2*m+2*n+13=14*P)
+    (hFpos : 0 < (b:Int)+2*(m:Int)+2*(n:Int)+8-12*(2:Int)^n)
+    (hdOdd : d%2=1) :
+    ∃ xhalf, d-1=2*xhalf ∧ xhalf<P := by
+  have hMassI : (b:Int)+(d:Int)+2*(m:Int)+2*(n:Int)+13=14*(P:Int) := by
+    exact_mod_cast hMass
+  have hPI : (P:Int)=(2:Int)^n := by exact_mod_cast hP
+  have hFposI : 0 < (b:Int)+2*(m:Int)+2*(n:Int)+8-12*(P:Int) := by
+    simpa [hPI] using hFpos
+  have hcoreI : (d:Int)-1 < 2*(P:Int) := by omega
+  have hd1 : 1≤d := by omega
+  have hcore : d-1 < 2*P := by omega
+  refine ⟨(d-1)/2, ?_, ?_⟩
+  · omega
+  · omega
+
+#print axioms restart_half_defect_lt_of_int
 #print axioms restart_half_defect_lt
 #print axioms source_edge_recurrence
 #print axioms source_wall_endpoint

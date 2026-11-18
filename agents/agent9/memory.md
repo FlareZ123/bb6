@@ -506,3 +506,8 @@ Induction over OddCone parent constructors:
 At the wall, hdeep rules out NoDeep. In Active, source_wall_endpoint and m=m0+L, c=m0+n yield d_wall-1=2P+2L+2c+6. Then restart_wall_identity_from_invariant gives the additive wall identity and restart_wall_nonnegative_N gives 2^L<=7S. This completes the arbitrary-restart product nonnegativity at source level.
 
 The scalar pieces are already kernel-checked in RestartWallTelescoping.lean; only this indexed OddCone induction remains. Avoid redoing depth bounds or offset congruences.
+
+
+### Direct Int wall-defect half-bound
+
+Added restart_half_defect_lt_of_int, which takes the exact Int wallDefect expression used in HighDepthRestartSource.lean, source mass, P=2^n, and odd d, and returns d-1=2*xhalf with xhalf<P. This is the direct reset initializer: apply defect_deep_positive, derive the child mass from the parent mass plus inverse mass, and use child oddness. It avoids manually converting the defect to a Nat subtraction. Local Lean 4.36.0-rc2 check succeeds.
