@@ -1,6 +1,6 @@
 # TM63 24-cycle source coverage after the M1 all-index bridge
 
-**Status — 17 November 2026.** This is an intermediate proof-graph audit, not a compiled theorem, halt proof, or BB(6) result. It updates the 14 November coverage table against the current exported source signatures.
+**Status — 18 November 2026.** This is an intermediate proof-graph audit, not a compiled theorem, halt proof, or BB(6) result. It updates the 17 November table to account for the new M2 residue-zero counted-source draft.
 
 ## 1. Exact 24-cycle
 
@@ -18,7 +18,7 @@ One increment changes `n` to `n-1` and marker `m` to `nextMarker m = (m+2)%3`. S
 | 5 | (3,2) | `m2Odd_counted_increment_source` |
 | 6 | (2,1) | `m1EvenValuation_counted_increment_source` |
 | 7 | (1,0) | `m0Odd_counted_increment_source` |
-| 8 | (0,2) | **M2 residue-zero all-q source missing** |
+| 8 | (0,2) | `m2Even_residue0_counted_increment_source` (full all-q draft; uncompiled) |
 | 9 | (7,1) | `m1EvenValuation_counted_increment_source` |
 | 10 | (6,0) | `m0EvenSix_counted_increment_source` |
 | 11 | (5,2) | `m2Odd_counted_increment_source` |
@@ -49,12 +49,12 @@ The current source-level coverage reduces to nine families:
 
 The nonzero-residue even wrappers accept quotient parameter q=0 (they require only their width bound and exponent positivity), so k=2,4,6 are included. The odd wrappers cover k=1,3,5,7. No separate small-index base theorem is needed for the one-step dispatcher.
 
-The two remaining branches are both residue zero:
+The two residue-zero rows are now at different stages:
 
-1. **(0,0), marker 0:** `M0EvenEightGenericSource.m0EvenEight_counted_increment_source` currently requires `q%2=1` for `n=8*q`; it therefore covers only `v₂(n)=3`. The all-q extension plan and helper modules are in [M0EvenEightValuationExtension.md](../agent48-counted-inc0/M0EvenEightValuationExtension.md), [M0EvenEightValuationEncoding.lean](../agent48-counted-inc0/M0EvenEightValuationEncoding.lean), [M0EvenEightValuationSuffix.lean](../agent48-counted-inc0/M0EvenEightValuationSuffix.lean), and [M0EvenEightValuationMacros.lean](../agent48-counted-inc0/M0EvenEightValuationMacros.lean). There is not yet a complete all-q counted source theorem.
-2. **(0,2), marker 2:** there is no complete all-q counted source theorem for `n=8*q`. `M2EvenResidueSixteen.m2Even_residue16_counted_increment_source` covers only `n=32*k+16`, equivalently `q=4*k+2` with `v₂(q)=1`. The broader source integration is documented in [M2EvenResidueZero-SourceIntegration-20261117.md](M2EvenResidueZero-SourceIntegration-20261117.md). It now has an exact factorization, source-side H-run input-word derivation, q4 cut word, right-shape/cost calculation, and uncompiled generic H-run left-facing/right-boundary lemma candidates. The complete all-q counted source theorem is still missing.
+1. **(0,0), marker 0 — still missing the all-q counted composition.** `M0EvenEightGenericSource.m0EvenEight_counted_increment_source` covers only `q%2=1` for `n=8*q`, hence only `v₂(n)=3`. The all-valuation helpers now include `m0EvenEight_valuation_q4_prefix_run` in [M0EvenEightValuationSource.lean](../agent48-counted-inc0/M0EvenEightValuationSource.lean), the all-q target-left identity in [M0EvenEightValuationSuffix.lean](../agent48-counted-inc0/M0EvenEightValuationSuffix.lean), and the factorization/binDec/cost identities in [M0EvenEightValuationEncoding.lean](../agent48-counted-inc0/M0EvenEightValuationEncoding.lean). What remains is the exact q4-cut left-facing word, q4 right shape and blank far tail for the valuation cut tape, followed by composition with the generic q4 suffix and counted drain to export a full all-q counted theorem.
+2. **(0,2), marker 2 — full all-q counted-source draft now exists.** `M2EvenResidueZeroCounted.lean` exports `m2Even_residue0_q4_reset_prefix_source` and `m2Even_residue0_counted_increment_source` for `n=8*q`, `q>0`, with target prefix cost `107+12*a+12*v₂(q)+3*b`. It composes the source-side H-run, q4 suffix and counted drain. Direct dependencies include `M2EvenResidueZeroSource`, `LBinDecHRunLeftFacing`, `Q4RightEndpoint`, and `S1CountedDrain`. The target file contains no explicit `sorry`, `axiom`, or `native_decide`, and has `#print axioms` declarations, but the exact import closure has not yet been compiled and the transitive axiom profiles have not been inspected. The existing manual workflow [agent8-m2-even-residue-zero-finite.yml](../../.github/workflows/agent8-m2-even-residue-zero-finite.yml) stages this counted module and its source dependencies; it must not be dispatched until local exact-source preflight succeeds.
 
-Accordingly, **22 of the 24 classes have current general counted-source theorem declarations**; the two unresolved classes are exactly `(0,0)` and `(0,2)`. The all-index M1 theorem is a substantive reduction from the older table: all eight marker-1 branches are covered by one theorem.
+Accordingly, **23 of the 24 classes now have a complete counted-source theorem declaration or full draft**. The only missing all-q counted composition is marker 0 at `(0,0)`; marker 2 at `(0,2)` has moved from missing to uncompiled full-draft status. This is source-draft coverage, not compiler acceptance.
 
 ## 3. Why both residue-zero rows must be generalized
 
@@ -63,7 +63,7 @@ Write `K=tm63RootMiddleK`, which is odd. The root-connected 24-cycle begins at m
 - Marker 2 at offset 8: `n=8*(K-1-3*j)`, so `q₂(j)=K-1-3*j`.
 - Marker 0 at offset 16: `n=8*(K-2-3*j)`, so `q₀(j)=K-2-3*j`.
 
-Since K is odd, `q₂(j)` is even for even j and odd for odd j; `q₀(j)` is odd for even j and even for odd j. The even quotients can have varying 2-adic valuation. Thus the existing q-odd M0 theorem covers the marker-0 residue-zero row only on even-numbered cycles, and the M2 `n=32*k+16` theorem covers only the `v₂(q₂)=1` subfamily. These are repeated countdown obligations, not a one-off first-cycle gap.
+Since K is odd, `q₂(j)` is even for even j and odd for odd j; `q₀(j)` is odd for even j and even for odd j. The new M2 all-q draft covers every positive `q₂(j)` at source-draft level, pending exact compilation. The existing q-odd M0 theorem still covers the marker-0 row only on even-numbered cycles; the all-valuation M0 prefix/suffix helpers do not yet provide the final counted composition. Thus the only remaining repeated countdown gap is the even-quotient subfamily of `q₀(j)`.
 
 ## 4. Conditional total dispatcher
 
@@ -71,7 +71,7 @@ The existing `SectionResultRunSource.sectionResult_run_of_source_macro` proves t
 
 `TM63SourceIncrementDispatcher.lean` now contains an uncompiled integration candidate:
 
-- `tm63_source_increment_dispatch` splits on `m%3` and `k%8`, dispatches the 22 covered classes, and leaves exactly two hypotheses for the all-q marker-0 and marker-2 residue-zero sources.
+- `tm63_source_increment_dispatch` splits on `m%3` and `k%8`, dispatches the 22 previously covered classes, and leaves two hypotheses for the all-q marker-0 and marker-2 residue-zero sources. The new M2 draft supplies a candidate for the marker-2 hypothesis once its exact closure is compiled and audited; the marker-0 hypothesis remains unfilled.
 - `sectionResult_run_of_two_zero_sources` applies the existing `sectionResult_run_of_source_macro` theorem to obtain the complete `sectionResult` run under those two hypotheses.
 
 The normalized zero-row hypotheses require `q>0`, `4≤L`, `8*q<2^L`, and `a>0`, with the exact original-machine counted-increment endpoints. The dispatcher source names, argument order, bounds, and target markers/exponents were manually cross-checked against the 22 imported declarations. The file has not been compiled.
@@ -82,9 +82,9 @@ The root arithmetic supplies `tm63Index1=8*K+7`, K odd, and `tm63Index1<2^L`; se
 
 ## 5. Exact next steps and validation boundary
 
-1. Complete **M0 (0,0)** by finishing the all-q extension. Its target reset-prefix cost is `99+12*a+12*v₂(q)+3*b`, from `resetPrefixCost 0 (8*q) a b`.
-2. Complete **M2 (0,2)** by formalizing the source/H-run composition in the linked integration note. Its target reset-prefix cost is `107+12*a+12*v₂(q)+3*b`, from `resetPrefixCost 2 (8*q) a b`.
-3. Compile the exact original-import closure for both zero-row sources, then compile and axiom-audit `TM63SourceIncrementDispatcher.lean`.
+1. Complete **M0 (0,0)** by finishing the all-q q4-cut tape shape and counted composition. Its target reset-prefix cost is `99+12*a+12*v₂(q)+3*b`, from `resetPrefixCost 0 (8*q) a b`.
+2. Compile the exact original-import closure of the existing **M2 (0,2)** draft and inspect every exported axiom profile. Its target reset-prefix cost is `107+12*a+12*v₂(q)+3*b`, from `resetPrefixCost 2 (8*q) a b`.
+3. Finish and compile the M0 all-q counted source theorem, then instantiate both zero-row hypotheses in `TM63SourceIncrementDispatcher.lean` and compile/axiom-audit the dispatcher.
 4. Apply the resulting `sectionResult` theorem at the authentic root parameters and connect its endpoint to the remaining terminal source itinerary.
 
-**Validation boundary:** this audit is based on current source signatures, mathematical derivations, and uncompiled proof drafts. It does not certify a combined dependency closure or transitive axiom profile. Do not mark a class accepted until the exact original-import Lean closure compiles and the exported theorem is checked for `sorryAx`. No CI run is claimed for the new dispatcher or H-run drafts.
+**Validation boundary:** this audit is based on current source signatures, mathematical derivations, and uncompiled proof drafts. It does not certify a combined dependency closure or transitive axiom profile. Do not mark a class accepted until the exact original-import Lean closure compiles and every exported `#print axioms` profile is inspected; reject `sorryAx`, `native_decide`, and custom axioms. Standard Lean axioms such as `propext`, `Classical.choice`, and `Quot.sound` are expected. No CI run is claimed for the M2 counted draft, the M0 valuation extension, or the dispatcher.
