@@ -248,6 +248,8 @@ The linear (2^z) terms cancel exactly. This is the cleanest expression of the fi
 
 The root source chain currently reaches an S1 configuration with marker 2 after the middle-34 prefix, then applies `outerLCInc_full_run` to an `outerLCIncPostludeTape`. The remaining root-side gap is the pointwise equality of that postlude tape with the intended canonical marker-1 S0/S1 configuration. Therefore the q4 initial-family identification is a target interface, not yet a proved root endpoint.
 
+The actual root length parameter is `tm63Length1`, and the repository proves `tm63Length1_even` in `im-results/agent42-outer-lcinc/TM63Length1Parity.lean`. Thus the intended root q4 family has even (L), but the marker-1 canonical endpoint equality remains an explicit unresolved dependency; even parity alone does not solve the (z>1) terminal cycles.
+
 If that equality identifies the post-reset target as
 `s1Config L 0 1 A (2^b-1) 0 h`, then by the S1 encoder definition and `binDec L 0 = d1pow L` it is exactly
 `s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) A (2^b-1) 0 h`.
