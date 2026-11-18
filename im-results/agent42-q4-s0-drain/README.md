@@ -169,3 +169,27 @@ h_1=3\cdot2^z+3z+7,\quad a_1=2^z-1.
 \]
 
 This was checked by direct simulation for (z=1,2,3), and by the predicted-drain splice plus direct postlude simulation for (z=4). In particular, for (z=4) the final run lengths are (0^3,1^{67},0^2,1^{98,304},0^4). This supplies a concrete right-tail target for the first-cycle postlude theorem.
+
+
+## Extended (z=5) structural test
+
+For (A=3,L=2,z=5), the first q4 checkpoint occurs at step 8,003. The exact short phases were checked directly:
+
+- (P(5)=169) reaches state 3 at head (h_1=118);
+- the left prefix is (d0^{31}), the right suffix is exactly `s0RightFacing 0`, and there are no further nonblank cells to the right;
+- the predicted drain output has a right unary interval of length (3\cdot2^{31}=6,442,450,944);
+- simulating (Q(5)=349) steps from that predicted output reaches state 4 at head 1, with the exact checkpoint-2 left frame and right RLE
+  \[
+  0^3\;1^{118}\;0^2\;1^{6,442,450,944}\;0^4.
+  \]
+
+The corresponding middle cost and total first-cycle cost, **predicted by the drain formula rather than directly simulated**, are
+
+\[
+D(5)=27,670,116,200,758,640,220,
+\]
+\[
+C_1(5)=27,670,116,200,758,640,738.
+\]
+
+This extends the short-phase and endpoint-splice checks through (z=5), without simulating the enormous middle drain.
