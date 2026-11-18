@@ -108,7 +108,7 @@ If the restart-shifted first profile time is \(T_1=m_0+n+6+3s\), this yields
 \[
 T_1\equiv t+s\pmod2.
 \]
-This may settle the parity-sensitive \(I_s=20\) branch once the allowable high-depth \(t\) values are sharpened.
+This may settle the parity-sensitive \(I_s=20\) branch once the allowable high-depth \(t\) values are sharpened. Since \(n\) is even in the P1 setting, \(m_0+n\equiv t\pmod2\) is equivalent to the \(m_0\equiv t\pmod2\) restriction already recorded in SourceWallToCarryDP.md §7.
 
 ## Boundary
 
