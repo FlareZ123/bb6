@@ -107,22 +107,22 @@ the actual TM2 run exactly:
    `s0Config_counted_drain_closed` theorem at width (z), since
    (2^z-1) is the all-ones value of that width.
 
-4. **Tail to q4 checkpoint 1 (not yet proved).**
-   [
-   S_0(\ell_1,z,0,2^z-1,3z+5)
-   \longrightarrow
-   \text{state-4/head-1 checkpoint}
-   ]
-   in exactly (9z+10) steps.
+4. **Tail via existing `q4S0Postlude_at`.**
+   Specialize the generic theorem in
+   `im-results/agent48-counted-inc0/Q4S0FirstCycleMacros.lean` with
+   `k=3*z+2` and start head `h=3*z+5`. The left-one hypothesis follows
+   from `d1pow z ++ [1,1]`; the right guard is the first zero of
+   `s0RightFacing (2^z-1)`. After the scan, the final-four guard is
+   `0,1,0,0`: these are the first four bits of `ell1` after its initial
+   `11`, and `s0LeftSweep_shift` leaves the new-head-left cells
+   unchanged. The theorem gives exactly `3*(3*z+2)+4=9*z+10) steps
+   and a `q4FrameAt` endpoint.
 
-The two S0 drain stages are existing theorem interfaces. The setup and
-tail are the remaining transition-proof obligations. Summing the four
-costs gives
-
-[
-T_{\mathrm{prefix}}(A,L,z)
-=D(z)+D(2^z-1)+12(A+L+z)+107.
-]
+The two S0 drain stages are existing theorem interfaces. The **setup
+macro** (stage 2) is the main remaining transition-proof obligation;
+stage 4 only needs its hypotheses packaged and its generic `q4FrameAt`
+endpoint identified pointwise with the explicit checkpoint tape. Summing
+the four costs gives
 
 The second-drain output has right suffix
 `s0RightFacing (2^z-1)`; the final tail turns it into
