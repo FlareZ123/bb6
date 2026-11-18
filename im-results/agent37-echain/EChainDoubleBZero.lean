@@ -76,15 +76,14 @@ theorem reset_k81_34_regular (s Q : Nat) :
       packet (8*k2+10) 0 p BB6.Agent35K4Shapes.marker :=
     BB6.Agent31PacketSource.b_packet k2 0 p
       BB6.Agent35K4Shapes.marker
-  have hmarkerTail :
-      BB6.Agent35K4Shapes.marker = oppairs 3 ++ [true,true] := by decide
   have hb0 :
       run (bZeroTime k3)
         (packet (3*k3+2) 0 p BB6.Agent35K4Shapes.marker) =
       regularSection (8*k3+9+p) 3 2 := by
-    dsimp [bZeroTime]
-    rw [BB6.Agent2PacketP2Reset.b_zero_any, hmarkerTail]
-    rfl
+    simpa [bZeroTime, BB6.Agent2BoundaryBZero.regularSection,
+      BB6.Agent35K4Shapes.marker, oppairs] using
+      (BB6.Agent2PacketP2Reset.b_zero_any k3 p
+        BB6.Agent35K4Shapes.marker)
   unfold reset_k81_34_time
   rw [run_add, hreset]
   rw [run_add, hchain]
