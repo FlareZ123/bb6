@@ -4,7 +4,7 @@
 
 ## 24-cycle source coverage
 
-The `sectionResult` countdown changes the index by (n\mapsto n-1) and the marker by (m\mapsto(m+2)\bmod 3). Its source dispatcher has 24 residue/marker classes because (mathrm{lcm}(8,3)=24). All **24 of 24 classes now have counted-source theorem declarations or complete source drafts**:
+The `sectionResult` countdown decreases n by one and updates m to `(m+2) mod 3`. Its source dispatcher has 24 residue/marker classes because `lcm(8,3)=24`. All **24 of 24 classes now have counted-source theorem declarations or complete source drafts**:
 
 - marker 1: `m1EvenValuation_counted_increment_source` covers all eight residues;
 - marker 0 and marker 2: the generic odd-index source theorems cover all four odd residues each;
@@ -12,7 +12,7 @@ The `sectionResult` countdown changes the index by (n\mapsto n-1) and the marker
 - marker 0, (n=8q): `m0EvenEight_valuation_counted_increment_source` is now a full all-valuation source draft in [M0EvenEightValuationCountedSource.lean](../agent48-counted-inc0/M0EvenEightValuationCountedSource.lean);
 - marker 2, (n=8q): `m2Even_residue0_counted_increment_source` is a full all-q source draft in [M2EvenResidueZeroCounted.lean](M2EvenResidueZeroCounted.lean).
 
-The two residue-zero counted-source closures remain uncompiled and unaudited. The 24/24 figure is source-draft coverage, not accepted proof coverage. The root-connected 24-cycle needs both all-q extensions on alternating cycles: with (K=tm63RootMiddleK) odd, cycle (j) has marker-2 quotient (q_2=K-1-3j) and marker-0 quotient (q_0=K-2-3j), whose parities alternate and whose even valuations are not fixed.
+The two residue-zero counted-source closures remain uncompiled and unaudited. The 24/24 figure is source-draft coverage, not accepted proof coverage. The root-connected 24-cycle needs both all-q extensions on alternating cycles: with `K=tm63RootMiddleK` odd, cycle `j` has marker-2 quotient `q2 = K-1-3j` and marker-0 quotient `q0 = K-2-3j`, whose parities alternate and whose even valuations are not fixed.
 
 ## Dispatcher composition
 
