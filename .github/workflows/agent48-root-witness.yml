@@ -2,15 +2,6 @@ name: Agent 48 TM63 blank-root to initial S1 bridge
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - ".github/workflows/agent48-root-witness.yml"
-      - "im-results/agent48-root-witness/**"
-      - "im-results/agent8-coverage-contract/Frontier.lean"
-      - "im-results/agent8-coverage-contract/Symmetry.lean"
-      - "im-results/agent8-coverage-contract/RootShift.lean"
-      - "im-results/agent48-champion-root/ChampionRootBridge.lean"
-      - "im-results/agent8-s1-encoder/S1Encoder.lean"
 
 permissions:
   contents: read
