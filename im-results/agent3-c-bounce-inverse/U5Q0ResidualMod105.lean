@@ -17,8 +17,8 @@ private theorem pow4_mod3 (r : Nat) : 4 ^ r % 3 = 1 := by
 private theorem pow2_mod3_of_odd (n : Nat) (hn : n % 2 = 1) : 2 ^ n % 3 = 2 := by
   have hdecomp : n = 2 * (n / 2) + 1 := by omega
   rw [hdecomp, Nat.pow_succ, Nat.pow_mul]
-  rw [show (2 : Nat) ^ 2 = 4 by norm_num, pow4_mod3]
-  norm_num [Nat.mul_mod]
+  rw [show (2 : Nat) ^ 2 = 4 by norm_num, Nat.mul_mod, pow4_mod3]
+  norm_num
 
 /-- The authentic U5 residual identity plus t=39+64h forces h=0 mod 3. -/
 theorem residual_h_mod3 (w s m t h : Nat)
