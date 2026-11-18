@@ -2,7 +2,6 @@
 
 The rho-38 subfamily has a conditional source-connected Lean theorem in [T0Rho38RootExclusion.lean](T0Rho38RootExclusion.lean), but CI [44204188359](https://github.com/FlareZ123/bb6/actions/runs/44204188359) failed on an earlier revision: the pinned upstream source and prerequisite modules built, while the theorem module failed on unavailable Mathlib tactics and left a sorryAx profile. The current main revision replaces those tactics with core Lean proofs and adjusts the modular/power rewrites, but has not been recompiled; no clean axiom profile is established. Parameter-existence and fatal-source identification links, the remaining rho-20 lift, the K≡3 mod6 sector, nonzero same-level reset depths, other #746 roots, and BB(6) remain open.
 
-**Research state (16 November 2026): the original-source inverse grammar and fixed-target nonreachability theorems remain the strongest root-facing results. A new special adjacent-level fatality reduction (odd child enters K+1) limits its valuation to t=0 or t=1, with exact root-source odd-part tests for both cases and no matches in the 100,000-transition prefix. The general child-level L≥K+2 even-tail equation and direct t≥2 branch remain open. The new Lean source theorem and the t=1 source-connected bridge are on PR #106 pending local compile; the genuine blank-start halt/nonhalt question remains open.** All closed forms, certificates, experiments and earlier verification entries are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
 
 
 ## 17-18 November 2026: t=0 q=0 phase-lift root exclusions
