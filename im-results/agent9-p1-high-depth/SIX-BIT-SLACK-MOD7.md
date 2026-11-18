@@ -162,7 +162,7 @@ At the exact shifted wall \(W=12P\), the affine energy is
 \[
 I_{\rm wall}=49W-588P-112B+384=-112B+384,
 \]
-which is always divisible by \(16\). After the last depth-\(\ge3\) edge, all remaining transitions have depths \(0,1,2\). Their exact scalar recurrences are
+which is always divisible by \(16\). After the last depth-\(\ge3\) edge, all remaining transitions have depths \(0,1,2\). The sign-dynamics lemma also forces at least one later shallow edge before the wall, because a depth-two-only suffix preserves positive defect. Thus the first-shallow profile is non-vacuous. Their exact scalar recurrences are
 \[
 \begin{array}{c|c|c}
 e & B' & \text{energy equation}\\ \hline
@@ -185,3 +185,8 @@ Combining \(T_1\equiv t+s\pmod2\) with the large-\(P\) intervals gives the follo
 
 In particular, the \((\delta,I_s)=(1,20)\) branch is eliminated: its interval gives \(t=3\), while \(s\) is odd, so \(T_1\) is even. The remaining \((2,20,5)\) and \((1,48,t\ge8)\) branches are the only cases left by this reduction, whether the terminal shallow edge has cost one or two.
 
+## Boundary
+
+The mod-\(7\) classification and low-suffix closure remain conditional on the high-depth restart equations, the positive restart-energy bound \(0<I_0<98P\), and the existence of a wall-reaching suffix with at most five shallow edges. The depth intervals and final two-case list use the appropriate cost-one or cost-two terminal bound and \(P\ge2^{83}\). The two Lean files formalize the scalar recurrence and parent-coordinate arithmetic, but do not certify the source restart wrapper or exclude either residual case. This is not a BB(6) result.
+
+The remaining mathematical task is to eliminate one of the two residual families using sharper constraints inherited from the original root and to connect the scalar suffix proof to the authentic source induction. Do not repeat the mod-\(7\) enumeration or the terminal-cost arithmetic.

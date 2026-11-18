@@ -11,7 +11,7 @@ The exact first-shallow profiles and the Lean-checked low-suffix argument remove
 - \(I_s=6,34\), since the only possible first shallow step produces odd energy;
 - \(I_s=20\) whenever \(T_1\) is even, since at most one further depth-zero step can follow and it produces odd energy.
 
-The scalar proof is in [Mod7SlackLeaf.lean](./Mod7SlackLeaf.lean). It models arbitrary finite suffixes of depths \(0,1,2\) and uses the exact affine wall energy. It has no original-source imports and is not itself a CountCone theorem.
+The scalar proof is in [Mod7SlackLeaf.lean](./Mod7SlackLeaf.lean). It models arbitrary finite suffixes of depths \(0,1,2\), uses the exact affine wall energy, and relies on the sign-dynamics lemma to ensure a shallow edge must eventually occur after the last high-depth reset. It has no original-source imports and is not itself a CountCone theorem.
 
 The source-parent depth bounds for both terminal shallow costs are in [RestartDepthBounds.lean](./RestartDepthBounds.lean). They formalize the parent mass equation, the restart defect identity, the inverse-depth equation, and the terminal cost bounds. With \(P\ge2^{83}\), the cost-one bounds give \(t=5\) or \(6\) for \((\delta,I_s)=(2,20)\), and \(t\ge8\) for \((1,48)\). The cost-two bounds give \(t=5\) for \((2,20)\), and \(t\ge8\) for \((1,48)\).
 
