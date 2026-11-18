@@ -210,3 +210,6 @@ See Marker1TerminalQ4Macro.md, Marker1TerminalArithmetic.lean, marker1_terminal_
 
 
 The sparse 64-cell-block C++ simulator marker1_terminal_q4_block_sim.cpp extends the positive-z checkpoint experiments to multi-billion-step limits while checking the complete left checkpoint frame. The revised nested event-count conjecture and the 7-billion-step z=2 observation are documented in Marker1TerminalQ4Macro.md.
+
+
+The sparse 64-cell-block C++ simulator marker1_terminal_q4_block_sim.cpp extends the positive-z checkpoint experiments to multi-billion-step limits while checking the complete left checkpoint frame. The revised nested event-count conjecture and the 7-billion-step z=2 observation are documented in Marker1TerminalQ4Macro.md.

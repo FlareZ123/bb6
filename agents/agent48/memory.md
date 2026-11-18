@@ -1448,3 +1448,12 @@ This falsifies the earlier event-count guess with exponent factor (2^j-1), which
 Measured cycle costs are close to drainCost(2*K_j+1), with residual frame overheads: z1,j1: 158 vs drainCost(1)=48 (residual 110); z1,j2: 202 vs 48 (154); z2,j1: 782 vs drainCost(3)=636 (146); z2,j2: 103810 vs drainCost(7)=103548 (262); z3,j1: 103754 vs 103548 (206). The exact overhead and the claimed drain subrun are unresolved.
 
 Correction to the earlier checkpoint table: for A=1,L=2,z=0 the first three checkpoint steps are 143, 229, 359 (not 347). The z=0 cycle-cost formula itself gives the correct 130-step second cycle because v2(28)=2.
+
+
+### 2026-11-18 correction — nested positive-z q4 event count
+
+The first positive-z event-count guess with factor (2^j-1) is falsified. The sparse 64-cell-block C++ simulator, now committed as marker1_terminal_q4_block_sim.cpp, ran the A=3,L=2,z=2 S0 instance for 7,000,000,000 steps. It verified the left checkpoint frame at j=1,2,3 (steps 503,1285,105095; q4 event indices 23,49,435), accumulated 102,895 q4/read-0 events, and did not reach checkpoint 4. Thus cycle j=3 has already seen 102,460 events without completing; the old formula predicted 98,306 and is contradicted.
+
+Revised conjecture: K_j(z)=(2^(z-1)-1)*(2^(2^(j-1))-1), E_j(z)=6*4^K_j(z)+2. It fits z1 j1,j2 (8,8), z2 j1,j2 (26,386), z3 j1 (386), and predicts 6,442,450,946 events for z2 j3. Still empirical, not a theorem. Measured cycle costs are close to drainCost(2K+1) plus overhead: z1j1 158 vs 48; z1j2 202 vs 48; z2j1 782 vs 636; z2j2 103810 vs 103548; z3j1 103754 vs 103548. Exact overheads and the drain subrun are unresolved.
+
+Correction to the earlier checkpoint table: for A=1,L=2,z=0 the first three checkpoint steps are 143,229,359 (not 347); v2(28)=2 makes the second ordinary cycle 130 steps.
