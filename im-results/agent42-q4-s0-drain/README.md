@@ -316,10 +316,10 @@ T_{z=1}(A,L)
 These are empirically supported formulas for the (z=1) subfamily, not yet formalized or proved for arbitrary (A,L). Notably, individual checkpoint-to-checkpoint costs have 2-adic irregularities; the simple total-sum formula should not be mistaken for a uniform per-cycle formula.
 
 
-For the full (z=1,A=3,L=2) run, I additionally extracted the right-tail RLE at **every** q4 checkpoint (j=1,ldots,120). It is exactly
+For all five complete \\(z=1\\) runs in the table, I additionally extracted the right-tail RLE at **every** q4 checkpoint \\(j=1,\\ldots,M\\). It is exactly
 
-\[
-0^3\;1^{8j}\;0^2\;1^6\;0^4.
-\]
+\\[
+0^3\\;1^{8j}\\;0^2\\;1^6\\;0^4.
+\\]
 
 Thus the leading unary run increases by exactly eight at each checkpoint while the second run remains six cells. This invariant holds throughout all five complete simulated terminal runs, not only at the first two checkpoints. It is a useful small-case target for a source-level q4 checkpoint induction.
