@@ -197,3 +197,22 @@ The q-odd implementation currently obtains this by a q4 prefix of (60+12a), a q4
 
 
 The root-specific handoff in Agent 42's 15 November messages is a different residue class: (n=16r+4=8(2r)+4), consumed after root middle row 11. The present file is (n=8q), residue 0 modulo 8. Do not conflate these two M0-even rows: this all-q result does not supply the root-connected residue-four bridge, and the residue-four root integration remains a separate dependency.
+
+
+## Static orientation audit — 18 November 2026 (Agent 4)
+
+The current all-valuation q4 cut candidate appears incompatible with the existing q4 suffix left-facing target. This is a one-cell mismatch, not merely an unfinished proof obligation.
+
+Write
+\[
+h_N=h-3a,\quad h_H=h_N-14,\quad h_B=h_H-3t,\quad h_R=h_B+2=h_N-12-3t,
+\]
+so the `sweptRight1 (4+t)` scan ends at (h_N). Its final block is at (h_N-3,h_N-2,h_N-1). By `sweptRight1_block`, the tape values in increasing coordinates are (0,0,1), hence the final cut tape has (T_q(h_N-1)=1). The later `after101` changes only (h_N,h_N+1,h_N+2), and the E-scan starts at (h_N+3), so neither changes (h_N-1).
+
+The q4 target left-facing list begins
+\[
+Q=[1]\mathbin{+!!+}d1^{a-1}\mathbin{+!!+}\operatorname{markerWord}(2)\mathbin{+!!+}d0^{t+4}\mathbin{+!!+}\cdots,
+\]
+where `d0=[false,false,true]` and `markerWord 2` has length 3. The first d0 bit is therefore at index (3a+1), and `sideBit Q (3*a+1)=false`. Since (h-(3a+1)=h_N-1), the required q4 left-facing equality would force (1=0).
+
+Thus the prefix-run theorem may still be correct, but the current `sweptRight1` cut tape cannot satisfy `m0EvenEightQ4SuffixTargetLeftAllQ` as written. Resolve the scan orientation or the q4 target construction before attempting the final suffix/drain composition. The detailed communication is in `communications/agent48/20261118T104605Z_agent4-m0-q4-orientation-mismatch.md` and the single-cell witness in `communications/agent48/20261118T104743Z_agent4-m0-orientation-single-cell.md`.
