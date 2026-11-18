@@ -17,7 +17,7 @@ are r=1,2,3 and every parent is excluded by exact source inverses.
 Intermediate proof draft pending exact local preflight and CI.
 -/
 
-namespace BB6.Agent3U5Q04609HighStop
+namespace BB6.Agent3U5Q0W4609HighStop
 
 open BB6.Agent3
 open BB6.Agent46
@@ -153,7 +153,7 @@ private theorem q1_parent_unreachable (p : Nat)
   · omega
 
 /-- The remaining y=3 terminal of the U5 M8 residual is
-unreachable on w=1 (mod 8192): q=0 uses the exact nested
+unreachable on w=4609 (mod 8192): q=0 uses the exact nested
 source fan and dyadic cone; q=1 uses the odd-right sum-two
 invariant, and q>=2 contradicts p=1 (mod 8). -/
 theorem blank_no_u5_residual_m8w_w4609_8192 (w s m : Nat)
@@ -230,7 +230,7 @@ theorem blank_no_u5_residual_m8w_w4609_8192 (w s m : Nat)
               omega
 
 /-- The B_s feeder of the authentic high m=0 stop is
-unreachable on w=1 (mod 8192). -/
+unreachable on w=4609 (mod 8192). -/
 theorem blank_no_u5_B_s_m8w_w4609_8192 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
@@ -247,7 +247,7 @@ theorem blank_no_u5_B_s_m8w_w4609_8192 (w s m : Nat)
   exact blank_no_u5_residual_m8w_w4609_8192 w s m hs hm hw hterminal'
 
 /-- Both exact source parents of A_s are excluded on
-w=1 (mod 8192). -/
+w=4609 (mod 8192). -/
 theorem blank_no_u5_A_s_m8w_w4609_8192 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
@@ -280,7 +280,7 @@ theorem blank_no_u5_A_s_m8w_w4609_8192 (w s m : Nat)
 
 /-- The authentic blank-root high m=0 stopping state j=39+64*s
 is excluded for the entire nonempty U5 residual cylinder
-w=1 (mod 8192). -/
+w=4609 (mod 8192). -/
 theorem blank_no_high_m0_u5_w4609_8192 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
     (hm : 32*s=32+840*w+m)
@@ -345,4 +345,4 @@ theorem w4609_8192_roots_pairwise_distinct
 #print axioms every_w4609_8192_residual_has_unreachable_root
 #print axioms w4609_8192_roots_pairwise_distinct
 
-end BB6.Agent3U5Q04609HighStop
+end BB6.Agent3U5Q0W4609HighStop
