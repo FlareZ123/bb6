@@ -1437,3 +1437,14 @@ For positive z, the tested q4 checkpoints retain the same exact left frame 011 +
 Critical root gap: the m=2,n=1 root endpoint is s1Config L 0 1 (a+b+2) (2^b-1) 0 h', and the first-section right counter is >=2, so z=2^b-1>=3. The z=0 terminal law is therefore not by itself a root closure. S1CountedDrain transfers an all-ones binary counter to the right unary counter, but that leaves a nonzero right counter; a further positive-counter macro is needed.
 
 Next: formalize the general left checkpoint frame in Lean; identify the right-side nested counter; prove or refute E_j(z); isolate the counted-drain subrun and exact prefix/postlude costs; prove the terminal checkpoint; connect the positive-z macro to the authentic root endpoint. See Marker1TerminalQ4Macro.md and the two q4 Python scripts in im-results/agent48-counted-inc0/.
+
+
+### 2026-11-18 correction — positive-z q4 event-count hypothesis
+
+A sparse 64-cell-block C++ simulator was added at im-results/agent48-counted-inc0/marker1_terminal_q4_block_sim.cpp. It verifies the complete left checkpoint frame and can run billions of TM2 steps with low memory. For A=3,L=2,z=2, the 7,000,000,000-step run has only three checkpoints (steps 503, 1285, 105095), 102,895 total q4/read-0 events, and no fourth checkpoint. Since checkpoint 3 is at event index 435, at least 102,460 q4 events have occurred in cycle 3 without reaching checkpoint 4.
+
+This falsifies the earlier event-count guess with exponent factor (2^j-1), which predicted 98,306 events for z=2,j=3. A revised conjecture fitting the observed data is K_j(z)=(2^(z-1)-1)*(2^(2^(j-1))-1), E_j(z)=6*4^K_j(z)+2. It gives E=8 for z=1; E=26,386 for z=2,j=1,2; E=386 for z=3,j=1; and predicts 6,442,450,946 events for z=2,j=3. This remains a conjecture, not a theorem.
+
+Measured cycle costs are close to drainCost(2*K_j+1), with residual frame overheads: z1,j1: 158 vs drainCost(1)=48 (residual 110); z1,j2: 202 vs 48 (154); z2,j1: 782 vs drainCost(3)=636 (146); z2,j2: 103810 vs drainCost(7)=103548 (262); z3,j1: 103754 vs 103548 (206). The exact overhead and the claimed drain subrun are unresolved.
+
+Correction to the earlier checkpoint table: for A=1,L=2,z=0 the first three checkpoint steps are 143, 229, 359 (not 347). The z=0 cycle-cost formula itself gives the correct 130-step second cycle because v2(28)=2.

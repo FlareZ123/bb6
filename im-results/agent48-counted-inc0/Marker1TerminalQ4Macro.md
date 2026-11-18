@@ -30,13 +30,13 @@ For `z=0,1,2,3`, the checkpoints tested satisfy the same exact finite-support le
 
 The right-facing word is not yet reduced to a comparably simple formula for general `z`; it carries a nested counter and its observed size/shape changes substantially as `z` grows. Do not extrapolate the `z=0` right frame to positive `z`.
 
-The independent checker `marker1_terminal_q4_checkpoint.py` verifies the entire left half of the finite-support tape at each sampled checkpoint, not just a bounded prefix. It records a right-window run-length encoding without asserting a general right-frame formula.
+The independent checkers `marker1_terminal_q4_checkpoint.py` and `marker1_terminal_q4_block_sim.cpp` verify the entire left half of the finite-support tape at each sampled checkpoint, not just a bounded prefix. The Python checker records a right-window run-length encoding without asserting a general right-frame formula. The C++ checker uses sparse 64-cell blocks and supports multi-billion-step runs.
 
 Checked checkpoint prefixes:
 
 | `A` | `L` | `z` | `M` | checkpoints checked | checkpoint steps |
 |---:|---:|---:|---:|---:|---|
-| 1 | 2 | 0 | 30 | 3 | 143, 229, 347 |
+| 1 | 2 | 0 | 30 | 3 | 143, 229, 359 |
 | 4 | 2 | 1 | 240 | 3 | 287, 445, 647 |
 | 3 | 2 | 2 | 120 | 3 | 503, 1285, 105095 |
 | 3 | 2 | 3 | 120 | 2 | 1031, 104785 |
@@ -141,7 +141,7 @@ K_j(z)=(2^{z-1}-1)(2^j-1),\qquad
 E_j(z)=6\cdot4^{K_j(z)}+2.
 \]
 
-This is **not proved** and has not been checked for all parameters. It is a useful target for an event-count theorem, not an established fact.
+This is **not proved** and has not been checked for all parameters. The earlier candidate with factor (2^j-1) is falsified: for A=3,L=2,z=2, a 7-billion-step run accumulates 102,460 q4/read-0 events after checkpoint j=3 without reaching checkpoint j=4, whereas that earlier candidate predicted only 98,306. The revised factor (2^{2^{j-1}}-1) predicts 6,442,450,946 events for that cycle and is consistent with the run, but remains a conjecture.
 
 Some measured cycle step costs:
 

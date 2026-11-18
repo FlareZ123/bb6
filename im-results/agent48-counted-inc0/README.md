@@ -207,3 +207,6 @@ The existing manual workflow `.github/workflows/agent42-counted-lbin-dec.yml` no
 ## Marker-1 even-L q4 checkpoint macro (intermediate)
 
 See Marker1TerminalQ4Macro.md, Marker1TerminalArithmetic.lean, marker1_terminal_q4_macro.py, and marker1_terminal_q4_checkpoint.py. The z=0 family has a full-tape simulator-checked checkpoint/cycle decomposition, and Lean proves the resulting valuation-sum and runtime arithmetic. Positive-z experiments retain the left binary-countdown frame but exhibit nested right-side counters and only conjectural event-count laws. The authentic m=2,n=1 root endpoint has z=2^b-1>=3, so the z=0 law is not yet a root closure. No BB(6) value or universal upper bound is claimed.
+
+
+The sparse 64-cell-block C++ simulator marker1_terminal_q4_block_sim.cpp extends the positive-z checkpoint experiments to multi-billion-step limits while checking the complete left checkpoint frame. The revised nested event-count conjecture and the 7-billion-step z=2 observation are documented in Marker1TerminalQ4Macro.md.
