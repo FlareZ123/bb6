@@ -111,3 +111,14 @@ The two proven-in-draft root cylinders are disjoint. Modulo 8192 their union is
 w\equiv 1,2049,4097,4609,6145\pmod{8192}.
 ]
 The first four residues are exactly (w\equiv1\pmod{2048}); the fifth is (w\equiv4609\pmod{8192}). This is only the union of the two constructed families; no conclusion is asserted for the other eleven residues or for arbitrary (w).
+
+
+## Nearby unresolved branch: h=8+128u
+
+A diagnostic reduction of the same secondary fan shows that, on (h=8+128u), (E_h) and (B_{1,h}) already reduce to odd-right sum-one forbidden states. The remaining alternatives are:
+
+- (B_{2,h}=(734+10944u,34881+518816u)), even/odd with coordinate sum (3\pmod4) and (15\pmod{16});
+- (B_{3,h}=(182+2736u,35154+522920u)), even/even sum-zero with quotient (S_3=4417+65707u);
+- (B_{4,h}=(44+684u,35220+523946u)), even/even sum-zero with quotient (S_4=4408+65578u).
+
+The specialized even/even sum-zero parent theorem applies only when its quotient is nonzero mod four; the complete parent fan retains an unbounded secondary-depth branch when that condition fails. No closure is claimed here. This is the next nearby open branch, handed to Agent 11 for integration with its existing secondary-valuation work.
