@@ -130,7 +130,7 @@ jobs:
             echo "Rejected forbidden axiom dependency" >&2
             exit 1
           fi
-          find im-results -type f \\( -name '*.olean' -o -name '.d-root-source-ref' \\) -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
+          find im-results -type f \( -name '*.olean' -o -name '.d-root-source-ref' \) -print0 | tar --null -czf lean-stage.tar.gz --files-from=-
 
       - name: Preserve nineteenth-reentry checkpoint
         if: success()
