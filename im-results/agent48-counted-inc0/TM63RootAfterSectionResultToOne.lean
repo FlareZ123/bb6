@@ -57,7 +57,7 @@ private theorem pow_two_even_mod_three (k : Nat) :
 
 private theorem pow_two_mod_three_of_even (n : Nat)
     (hn : n % 2 = 0) : (2^n) % 3 = 1 := by
-  have hdiv : 2 ∣ n := by omega
+  have hdiv : 2 ∣ n := Nat.dvd_of_mod_eq_zero hn
   rcases hdiv with ⟨k, hk⟩
   simpa [hk] using pow_two_even_mod_three k
 
