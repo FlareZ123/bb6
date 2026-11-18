@@ -80,25 +80,32 @@ Consequences when r>=4:
 This identifies a nested valuation mechanism: the main F spine reads v2(a0+3), while an S sibling at split j reads v2(j+4). It is a candidate well-founded descent on split indices, but the surviving j=6 E child and the j=12 (mod 16) recursive branch are not yet closed.
 
 
-## Closing two of the three earlier S-sibling sectors
+## Partial closure and nested side-branch cases
 
-The secondary valuation gives more than just a run length.
+The uniform result is the j=2 (mod 8) sector: its S child is (3,3) mod 8, and its F parent is positive even (0,6) mod 8, excluded by rooted_even_parity.
 
-**j=2 (mod 8).** The S child is (3,3) mod 8. Its only inverse is F, which reaches a positive-even state (0,6) mod 8. It is excluded immediately by rooted_even_parity.
+The other two surviving sectors require more care; the following calculations close only selected representatives and expose a nested branch.
 
-**j=6 (mod 8).** The S child is (7,3) mod 8. F reaches a positive-even state (2,2) mod 8, so E is the only next candidate. For j=6 exactly, write k=25 and q=2^r*t with t odd. The E child is
+**j=6 exactly.** The S child is (7,3) mod 8. F gives a positive-even (2,2) state, so E is forced. Here k=25. Write q=2^r*t with t odd. The E child is exactly
     A2 = ((10*2^k + 1)*q - 328)/8,
     B2 = ((6*2^k - 1)*q - 156)/4.
-Since a0=2^k*q-3, these formulas are exact. Modulo 8:
-- r=4: (A2,B2) is (1 or 5, 5);
-- r=5: (A2,B2) is (3,1);
-- r>=6: (A2,B2) is (7,1), excluded by Allowed.
-Thus this j=6 sibling can survive only in the terminal residual cases r=4 or 5.
+Modulo 8 it is (1 or 5, 5) for r=4, (3,1) for r=5, and (7,1) for r>=6. Thus the j=6 representative is excluded by Allowed for r>=6; only r=4,5 remain.
 
-**j=4 (mod 8).** Here A=a0+q/2-24, and
+For general j=8*s+6, the same E child is
+    A2 = ((10*2^k + 1)*q - 30*j - 148)/8,
+    B2 = ((6*2^k - 1)*q - 18*j - 48)/4.
+For r>=6 this reduces modulo 8 to
+    (A2,B2) = (-6*s-1, -4*s+1) (mod 8).
+This is killed by Allowed when s=0 (mod 4), but can survive for s=1,2,3 (mod 4). Hence the j=6 calculation does not close the whole j=6 (mod 8) sector.
+
+**j=4 exactly.** Put A=a0+q/2-24 for its S child. Then
     A+3 = [q*(2^(k+1)+1)-48]/2.
-If r>=5, v2(A+3)=3. After three F steps the first coordinate is even and the second is 0 mod 4, so the state is impossible by rooted_even_parity. If r=4, write q=16*t with t odd; then
+If r>=5, v2(A+3)=3. After three F steps the first coordinate is even and the second is 0 mod 4, so the branch is impossible. If r=4, write q=16*t with t odd; then
     (A+3)/8 = t*(2^(k+1)+1)-3
-is even, so after three F steps the first coordinate is still odd and the second is 2 mod 4. A new S split is available. This is the remaining nested exceptional branch.
+is even. After three F steps an odd state with second coordinate 2 mod 4 remains, and another S split is available.
 
-Consequently, for r>=5, the earlier S siblings at j=2,4,6 (mod 8) are all closed by the displayed finite arguments. For r=4, j=4 and j=6 remain; r=1,2,3 terminal tails of the main F spine are separate obligations. These are exact branch reductions, not a full q0 proof.
+For general j=8*s+4, the same formula gives
+    A+3 = [q*(2^(k+1)+1)-48*(s+1)]/2.
+If r>4+v2(s+1), then v2(A+3)=3+v2(s+1). In particular, when s is even and r>=5, the branch has a three-F run and then dies; when s is odd and the valuation is sufficiently large, the three-F run ends at another S split. This is a nested branch, not a closed sector.
+
+The correct conclusion is therefore limited: the j=2 (mod 8) siblings close uniformly; the j=4 and j=6 sectors contain nested residue-dependent branches. The exact j=4 and j=6 calculations above are useful terminal reductions but do not bound all earlier side branches. The main-spine terminal cases r=1,2,3,4 also remain separate obligations.
