@@ -166,13 +166,13 @@ theorem entry_not_root (a K : Nat)
     decide
   have h2K3 : (2*K)%3=1 := by
     rw [Nat.mul_mod,hK3]
-    norm_num
+    decide
   have hA3 : (B+2*K+1)%3=1 := by
     rw [Nat.add_mod,Nat.add_mod,hB3,h2K3]
-    norm_num
+    decide
   have h16p3 : (16*p)%3=1 := by
     rw [Nat.mul_mod,hp3]
-    norm_num
+    decide
   have hNmodEq := congrArg (fun z : Nat => z%3) hNadd
   rw [Nat.add_mod,h16p3,hA3] at hNmodEq
   have hNmod : N%3=0 := by omega
@@ -196,19 +196,19 @@ theorem entry_not_root (a K : Nat)
   have hB27 : B%27=20 := by
     dsimp [B]
     rw [Nat.mul_mod,hc27,hrp27]
-    norm_num
+    decide
   have h2B27 : (2*B)%27=13 := by
     rw [Nat.mul_mod,hB27]
-    norm_num
+    decide
   have h80p27 : (80*p)%27=23 := by
     rw [Nat.mul_mod,hp27]
-    norm_num
+    decide
   have h2K27 : (2*K)%27=22 := by
     rw [Nat.mul_mod,hK27]
-    norm_num
+    decide
   have hT27 : (80*p+2*K+13)%27=4 := by
     rw [Nat.add_mod,Nat.add_mod,h80p27,h2K27]
-    norm_num
+    decide
   have h3XmodEq := congrArg (fun z : Nat => z%27) h3Xeq
   rw [Nat.add_mod,h2B27,hT27] at h3XmodEq
   have h3Xmod : (3*X)%27=18 := by omega
@@ -260,8 +260,7 @@ theorem entry_not_root (a K : Nat)
   have hpK2 : 2^K=4*2^(K-2) := by
     have he : K=(K-2)+2 := by omega
     rw [he,Nat.pow_add]
-    norm_num
-    ring
+    simp [Nat.mul_comm]
   have hscaleK1 : 6*2^(K-1)=3*p := by
     dsimp [p]
     rw [hpK1]
