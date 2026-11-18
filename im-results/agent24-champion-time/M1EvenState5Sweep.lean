@@ -36,8 +36,8 @@ theorem state5_three_right (T : Int → Bool) (h : Int)
   have hne1 : h+1 ≠ h := by omega
   have hne2' : h+1+1 ≠ h := by omega
   have hne3' : h+1+1 ≠ h+1 := by omega
-  simp [run, rawStep, readSlot, applyMove, tm2, h0, h1, h2',
-    hne1, hne2', hne3', holeRight]
+  simp [run, rawStep, readSlot, applyMove, h0, h1, h2',
+    hne1, hne2', hne3', lookup53, lookup31Right, lookup15, holeRight]
   funext x
   by_cases hx0 : x = h
   · simp [hx0, holeRight]
