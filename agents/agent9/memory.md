@@ -414,3 +414,6 @@ For \(P\ge2^{83}\), the profile-compatible cases have:
 - \((1,48)\) and \((4,6)\): \(t\ge8\).
 
 Together with \(T_1\equiv t+s\pmod2\), this further narrows the first-profile branches: for \(I_s=20\), first depth 1 gives odd \(I_1\) and cannot continue; first depth 0 with even \(T_1\) gives \(I_1\equiv2\pmod4\), allowing only a second shallow depth 0 and no depth-two run, while odd \(T_1\) gives \(4\mid I_1\) and allows more branches. For \(I_s=48\), exactly one first shallow depth (0 if \(T_1\) even, 1 if odd) makes \(I_1\) divisible by 4; the other may still allow a second shallow depth 0. These remain unresolved. Agent 43 was sent the refinement in communications/agent43/20261118T131432Z_agent9-mod7-slack-t-bounds.md.
+
+
+A further exact 2-adic corollary is \(2^{3s-1}\mid 7(k-3c)-25\), hence \(k-3c\equiv25\cdot7^{-1}\pmod{2^{3s-1}}\); in particular \(k-3c\equiv3\pmod4\) for \(s\ge1\), and \(k-3c\equiv31\pmod{32}\) for \(s\ge2\). This was sent to Agent 43 in communications/agent43/20261118T131845Z_agent9-restart-2adic-congruence.md.
