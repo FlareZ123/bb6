@@ -122,9 +122,9 @@ theorem entry_not_root (a K : Nat)
   have hc3 : c%3=2 := by dsimp [c]; omega
   have hp27 : p%27=4 := by
     dsimp [p]
-    rw [pow_mod_eighteen K,hK18]
+    simpa [hK18] using pow_mod_eighteen K
   have hrp27 : 2^r%27=10 := by
-    rw [pow_mod_eighteen r,hr18]
+    simpa [hr18] using pow_mod_eighteen r
   have hc27 : c%27=2 := by dsimp [c]; omega
 
   have hpowK4 : 2^(K+4)=16*p := by
@@ -159,18 +159,18 @@ theorem entry_not_root (a K : Nat)
     dsimp [N]
     exact Nat.sub_add_cancel h16pB
   have hB3 : B%3=2 := by
-    dsimp [B]
-    rw [Nat.mul_mod,hc3,hrp3]
-    decide
+    change (c*2^r)%3=2
+    rw [Nat.mul_mod]
+    omega
   have h2K3 : (2*K)%3=1 := by
-    rw [Nat.mul_mod,hK3]
-    decide
+    rw [Nat.mul_mod]
+    omega
   have hA3 : (B+2*K+1)%3=1 := by
-    rw [Nat.add_mod,Nat.add_mod,hB3,h2K3]
-    decide
+    rw [Nat.add_mod,Nat.add_mod]
+    omega
   have h16p3 : (16*p)%3=1 := by
-    rw [Nat.mul_mod,hp3]
-    decide
+    rw [Nat.mul_mod]
+    omega
   have hNmodEq := congrArg (fun z : Nat => z%3) hNadd
   rw [Nat.add_mod,h16p3,hA3] at hNmodEq
   have hNmod : N%3=0 := by omega
@@ -192,21 +192,21 @@ theorem entry_not_root (a K : Nat)
     omega
 
   have hB27 : B%27=20 := by
-    dsimp [B]
-    rw [Nat.mul_mod,hc27,hrp27]
-    decide
+    change (c*2^r)%27=20
+    rw [Nat.mul_mod]
+    omega
   have h2B27 : (2*B)%27=13 := by
-    rw [Nat.mul_mod,hB27]
-    decide
+    rw [Nat.mul_mod]
+    omega
   have h80p27 : (80*p)%27=23 := by
-    rw [Nat.mul_mod,hp27]
-    decide
+    rw [Nat.mul_mod]
+    omega
   have h2K27 : (2*K)%27=22 := by
-    rw [Nat.mul_mod,hK27]
-    decide
+    rw [Nat.mul_mod]
+    omega
   have hT27 : (80*p+2*K+13)%27=4 := by
-    rw [Nat.add_mod,Nat.add_mod,h80p27,h2K27]
-    decide
+    rw [Nat.add_mod,Nat.add_mod]
+    omega
   have h3XmodEq := congrArg (fun z : Nat => z%27) h3Xeq
   rw [Nat.add_mod,h2B27,hT27] at h3XmodEq
   have h3Xmod : (3*X)%27=18 := by omega
