@@ -1406,3 +1406,10 @@ It matched exactly in ten cases:
 Both the predicted length and every bit matched. This supplies strong computational support for the exact interface needed by the k-fold postlude shift proof.
 
 Last updated: 2026-11-18T18:14:03.397Z
+
+
+## Root endpoint correction
+
+Correction to the earlier shorthand root-compatibility note: the current source theorem `tm63_blank_reaches_after_middle34_to_index_one` ends at an S1 configuration with marker 2. The subsequent `outerLCInc_full_run` theorem reaches `outerLCIncPostludeTape`, whose pointwise equality to the intended canonical marker-1 S0/S1 configuration is still open. Only after that equality is proved can the target be identified with `s1Config L 0 1 A (2^b-1) 0 h` and then with the marker-1 q4 initial S0 family. The parity fact `tm63Length1_even` is proved, but it does not close this endpoint equality.
+
+Last updated: 2026-11-18T18:15:14.524Z
