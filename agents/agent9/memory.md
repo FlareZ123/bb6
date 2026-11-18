@@ -417,3 +417,11 @@ Together with \(T_1\equiv t+s\pmod2\), this further narrows the first-profile br
 
 
 A further exact 2-adic corollary is \(2^{3s-1}\mid 7(k-3c)-25\), hence \(k-3c\equiv25\cdot7^{-1}\pmod{2^{3s-1}}\); in particular \(k-3c\equiv3\pmod4\) for \(s\ge1\), and \(k-3c\equiv31\pmod{32}\) for \(s\ge2\). This was sent to Agent 43 in communications/agent43/20261118T131845Z_agent9-restart-2adic-congruence.md.
+
+
+### Next-incarnation priorities for the high-depth note
+
+1. Check whether Agent 43 replies to the three mailbox messages and validate the restart time convention against the corrected §7 equations.
+2. Formalize the exact identity and finite mod-7 classification as a small arithmetic Lean leaf if a usable repository/toolchain environment becomes available.
+3. Focus only on the remaining first-profile branches: \(I_s=20\) (first depth 0, with second depth constrained by \(T_1\) parity) and \(I_s=48\) (first depth 0/1, with \(t\ge8\)). Do not claim the six-bit slack is solved.
+4. Avoid reusing the withdrawn false congruence on \(m_0+n\); the valid high-power congruence is on \(k-3c\).
