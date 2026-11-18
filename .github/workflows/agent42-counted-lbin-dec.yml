@@ -1,11 +1,27 @@
 name: Agent 42 counted TM63 LBinDec and M0-even 8q source proof
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Select the exact acceptance target"
+        required: true
+        type: choice
+        options:
+          - all
+          - counted-lbin-dec
+          - m0-valuation-prefix
+        default: all
   workflow_call:
+    inputs:
+      target:
+        required: false
+        type: string
+        default: all
 permissions:
   contents: read
 jobs:
   counted-lbin-dec:
+    if: ${{ inputs.target == 'all' || inputs.target == 'counted-lbin-dec' }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -120,3 +136,54 @@ jobs:
             exit 1
           fi
           echo 'Counted LInc H proof, uniform all-r S1 decrement, closed-form S1 drain, and generic M0-even 8q counted source increment compiled; no sorryAx or native_decide dependency detected.'
+
+  m0-valuation-prefix:
+    if: ${{ inputs.target == 'all' || inputs.target == 'm0-valuation-prefix' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile the exact all-q M0-even 8q q4-prefix source theorem
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/m0-valuation-prefix
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/m0-valuation-prefix/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/m0-valuation-prefix/
+          cp im-results/agent24-champion-time/{ChampionModular,CountPattern,CostRecurrence,CountedSweep,CountedOddBase}.lean /tmp/m0-valuation-prefix/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/m0-valuation-prefix/
+          cp im-results/agent8-counted-reset/CountedReset.lean /tmp/m0-valuation-prefix/
+          cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/m0-valuation-prefix/
+          cp im-results/agent48-counted-inc0/{M0EvenEightQ4Bridge,M0EvenEightQ4Prefix,M0EvenEightValuationSuffix,M0EvenEightValuationEncoding,M0EvenEightValuationFixedPrefix,M0EvenEightValuationMacros,M0EvenEightValuationSweepFacts,M0EvenEightValuationSource}.lean /tmp/m0-valuation-prefix/
+          cd /tmp/m0-valuation-prefix
+          export LEAN_PATH=.
+          lean --version
+          lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          lean -o ChampionModular.olean ChampionModular.lean
+          lean -o CountPattern.olean CountPattern.lean
+          lean -o CostRecurrence.olean CostRecurrence.lean
+          lean -o CountedSweep.olean CountedSweep.lean
+          lean -o CountedOddBase.olean CountedOddBase.lean
+          lean -o S1Encoder.olean S1Encoder.lean
+          lean -o CountedReset.olean CountedReset.lean
+          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean
+          lean -o M0EvenEightQ4Bridge.olean M0EvenEightQ4Bridge.lean
+          lean -o M0EvenEightQ4Prefix.olean M0EvenEightQ4Prefix.lean
+          lean -o M0EvenEightValuationSuffix.olean M0EvenEightValuationSuffix.lean
+          lean -o M0EvenEightValuationEncoding.olean M0EvenEightValuationEncoding.lean
+          lean -o M0EvenEightValuationFixedPrefix.olean M0EvenEightValuationFixedPrefix.lean
+          lean -o M0EvenEightValuationMacros.olean M0EvenEightValuationMacros.lean
+          lean -o M0EvenEightValuationSweepFacts.olean M0EvenEightValuationSweepFacts.lean
+          lean -o M0EvenEightValuationSource.olean M0EvenEightValuationSource.lean 2>&1 | tee m0-valuation-prefix-compile.log
+          if grep -qE 'sorryAx|native_decide' m0-valuation-prefix-compile.log; then
+            echo '::error::sorryAx or native_decide in the all-q M0-even q4-prefix source theorem'
+            exit 1
+          fi
+          echo 'All-q M0-even 8q q4-prefix source theorem compiled; no sorryAx or native_decide detected.'
