@@ -166,17 +166,17 @@ theorem entry_not_root (a K : Nat)
     exact Nat.sub_add_cancel h16pB
   have hB3 : B%3=2 := by
     change (c*2^r)%3=2
-    rw [Nat.mul_mod]
-    omega
+    rw [Nat.mul_mod,hc3,hrp3]
+    decide
   have h2K3 : (2*K)%3=1 := by
-    rw [Nat.mul_mod]
-    omega
+    rw [Nat.mul_mod,hK3]
+    decide
   have hA3 : (B+2*K+1)%3=1 := by
-    rw [Nat.add_mod,Nat.add_mod]
-    omega
+    rw [Nat.add_mod,Nat.add_mod,hB3,h2K3]
+    decide
   have h16p3 : (16*p)%3=1 := by
-    rw [Nat.mul_mod]
-    omega
+    rw [Nat.mul_mod,hp3]
+    decide
   have hNmodEq := congrArg (fun z : Nat => z%3) hNadd
   rw [Nat.add_mod,h16p3,hA3] at hNmodEq
   have hNmod : N%3=0 := by omega
@@ -194,25 +194,25 @@ theorem entry_not_root (a K : Nat)
   have hDplus : 3*D+16*p=B+2*K+1 := by omega
   have hDdouble : 6*D+32*p=2*B+4*K+2 := by omega
   have h3Xeq : 3*X+2*B=80*p+2*K+13 := by
-    dsimp [X,E]
+    change 3*(2*E+5)+2*B=80*p+2*K+13
     omega
 
   have hB27 : B%27=20 := by
     change (c*2^r)%27=20
-    rw [Nat.mul_mod]
-    omega
+    rw [Nat.mul_mod,hc27,hrp27]
+    decide
   have h2B27 : (2*B)%27=13 := by
-    rw [Nat.mul_mod]
-    omega
+    rw [Nat.mul_mod,hB27]
+    decide
   have h80p27 : (80*p)%27=23 := by
-    rw [Nat.mul_mod]
-    omega
+    rw [Nat.mul_mod,hp27]
+    decide
   have h2K27 : (2*K)%27=22 := by
-    rw [Nat.mul_mod]
-    omega
+    rw [Nat.mul_mod,hK27]
+    decide
   have hT27 : (80*p+2*K+13)%27=4 := by
-    rw [Nat.add_mod,Nat.add_mod]
-    omega
+    rw [Nat.add_mod,Nat.add_mod,h80p27,h2K27]
+    decide
   have h3XmodEq := congrArg (fun z : Nat => z%27) h3Xeq
   rw [Nat.add_mod,h2B27,hT27] at h3XmodEq
   have h3Xmod : (3*X)%27=18 := by omega
@@ -299,7 +299,7 @@ theorem entry_not_root (a K : Nat)
     omega
   have hAdd : h+4*p+K+4=2*d := by
     dsimp [h]
-    exact Nat.sub_add_cancel hsub
+    omega
   have h18dlo : 56*p+4*K+26≤18*d := by omega
   have hpGap : 5*K+10<2*p := by omega
   have h18dneed : 54*p+9*K+36<18*d := by omega
@@ -308,8 +308,6 @@ theorem entry_not_root (a K : Nat)
   have h18dneedHi : 18*d<63*p+9*K+27 := by omega
   have hhhi : h<3*p-1 := by omega
   have hmodEq := congrArg (fun z : Nat => z%3) hAdd
-  simp only [Nat.add_mod,Nat.mul_mod] at hmodEq
-  rw [hp3,hK3,hdmod3] at hmodEq
   have hmodh : h%3=0 := by omega
 
   have hNoParentH : ∀q, ¬ResetParent q h := by
@@ -317,11 +315,11 @@ theorem entry_not_root (a K : Nat)
     rcases hp with ⟨k,hband,heq⟩ | ⟨k,t,d',hd',hband,hout,heq⟩
     · by_cases hk : k<K-1
       · have hpow := pow_two_mono k (K-2) (by omega)
-        have hscale : 8*2^k≤2*p := by omega [hscaleK2]
+        have hscale : 8*2^k≤2*p := by omega
         have htop : 8*2^k-3≤2*p-3 := by omega
         omega
       · have hpow := pow_two_mono (K-1) k (by omega)
-        have hlow : 3*p-1≤6*2^k-1 := by omega [hscaleK1]
+        have hlow : 3*p-1≤6*2^k-1 := by omega
         omega
     · have hdiv : 3∣2*h+5 := by
         refine ⟨3^t*d', ?_⟩
@@ -364,7 +362,7 @@ theorem entry_not_root (a K : Nat)
       have hkEq : k=K-1 := by
         by_cases hkl : k<K-1
         · have hpow := pow_two_mono k (K-2) (by omega)
-          have hscale : 8*2^k≤2*p := by omega [hscaleK2]
+          have hscale : 8*2^k≤2*p := by omega
           have htop : d≤2*p-1 := by omega
           omega
         · by_cases hku : K-1<k
@@ -381,7 +379,7 @@ theorem entry_not_root (a K : Nat)
       have heq'' : 2*d=4*p+q+(K-1)+5 := by
         simpa only [Nat.pow_zero, one_mul] using heq
       rw [hscale] at heq''
-      omega [hAdd]
+      omega
 
   have hEne : E≠2 := by omega
   have hHne : h≠2 := by omega
