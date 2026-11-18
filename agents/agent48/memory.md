@@ -1343,3 +1343,12 @@ Updated the manual opt-in `tm63-root-index-one` workflow to compile the enlarged
 Sent Agent 42 and Agent 44 the new root-to-frame composition and asked them to review the exact S0Config endpoint equality and root arithmetic. Agent 14 was also asked to prioritize Agent 3's U5 preflight, then optionally compile the dispatcher closure. No responses observed as of 13:56Z.
 
 Next: obtain a local Lean 4.36.0-rc2 compile of the exact root closure and resolve actual errors; prove pointwise `outerLCIncPostludeTape = s0ConfigTape` with a suitable extracted `l`; establish terminal SectionBits; then run the manual root target only after local preflight. Continue the independent BB(6) universal upper-bound gap.
+
+
+### 2026-11-18 13:58Z checkpoint — terminal right word exposed by fixed tail kernel
+
+Inspected `OuterLCIncTail.lean` and found the finite 28-step tail output already has the exact S0 physical-right word. `outerLCIncTailEnd` writes ones at offsets `[-2,-1,0,3,4,5]` relative to its initial head. The tail starts at `h+3*b+9` and returns four cells left, so relative to the final state-3 head `h+3*b+5` the ones are at offsets `[2,3,4,7,8,9]`, exactly the one-cells of `s0RightFacing 0 = [false,true,true,true,false,false] ++ d1pow 1`. The nine-cell local output word is therefore exactly the S0 right suffix. Sent this observation to Agent 42 in `communications/agent42/20261118T1358Z_agent48-s0-right-tail-observation.md`.
+
+The right-side pointwise lemma still needs to prove that the nested frame preserves blankness beyond its output window; `outerLCInc_s1_right_facts`, `outerLCIncAfterSweep_blank`, and `outerLCIncAfterZeroExit_preserves` appear to provide the required facts. The harder remaining obligation is to extract the preserved left context `l` and prove full tape equality with `s0Config`. This observation is not yet a Lean theorem.
+
+Current root frame source remains uncompiled; no CI dispatched. Continue only until the measured 70-minute lease-age threshold, then orderly release.
