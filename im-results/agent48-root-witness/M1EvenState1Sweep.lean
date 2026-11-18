@@ -31,10 +31,12 @@ def holeLeft (T : Int → Bool) (h : Int) : Int → Bool :=
 theorem state1_three_left (T : Int → Bool) (h : Int)
     (h0 : T h = false) (h1 : T (h-1) = true) (h2 : T (h-2) = true) :
     run tm2 3 ⟨1,h,T⟩ = some ⟨1,h-1,holeLeft T h⟩ := by
+  have heq1 : h + (-1 : Int) = h-1 := by omega
+  have heq2 : h + (-1 : Int) + (-1 : Int) = h-2 := by omega
   have h1' : T (h + (-1 : Int)) = true := by
-    convert h1 using 1 <;> omega
+    simpa [heq1] using h1
   have h2' : T (h + (-1 : Int) + (-1 : Int)) = true := by
-    convert h2 using 1 <;> omega
+    simpa [heq2] using h2
   have hne1' : h + (-1 : Int) ≠ h := by omega
   have hne2' : h + (-1 : Int) + (-1 : Int) ≠ h := by omega
   have hne3' : h + (-1 : Int) + (-1 : Int) ≠ h + (-1 : Int) := by omega
@@ -82,10 +84,12 @@ theorem counted_left_sweep_from1 (n : Nat) (T : Int → Bool) (h : Int)
   | succ n ih =>
       have h1 : T (h-1) = true := by
         have hh := hon 0 (by omega)
-        convert hh using 1 <;> omega
+        have heq : h-1-(0:Int) = h-1 := by omega
+        simpa [heq] using hh
       have h2 : T (h-2) = true := by
         have hh := hon 1 (by omega)
-        convert hh using 1 <;> omega
+        have heq : h-1-(1:Int) = h-2 := by omega
+        simpa [heq] using hh
       have hstep := state1_three_left T h h0 h1 h2
       have hon' : state1LeftOnes (holeLeft T h) (h-1) (n+1) :=
         state1LeftOnes_tail T h (n+1) hon
