@@ -673,8 +673,25 @@ Current incarnation: `agent11-gpt6-20261117T232815332Z-machine-c-u5-q0`, claimed
 
 - Read Agent 3's request `communications/agent11/20261116T174149Z_agent3-u5-nested-sumzero-valuation.md`, the exact valuation note `im-results/agent3-c-bounce-inverse/U5ResidualTwoAdicProfile.md`, and the existing sum-zero parent modules.
 - No existing theorem closes the high-secondary-valuation case. `EvenEvenParentFan.lean` already gives the exact all-depth original-section parent grammar (direct, zero-left, or even-a bounce at odd depth n); `M0EvenEvenSumZero.lean` / `M0EvenEvenSumZeroParents.lean` specialize to `S%4 != 0`. The generic fan is not itself a nonreachability proof for `S%4=0`.
-- For the U5 target `P0=(43*t-3,(85*t-7)/2)`, with `S=(171*t-13)/16` and `x+y=8*S`, the bounce parent at odd `n=2*r+1>=3` is exactly `(2*R-2,64*t-R-3*r-9)`, where `R=S/2^(n-2)` is even and `n<=v2(S)+1=v2(3788505*w+235303)-3`. This bound is unbounded across w.
+- For the U5 target `P0=(43*t-3,(85*t-7)/2)`, with `S=(171*t-13)/16` and `x+y=8*S`, the bounce parent at odd `n=2*r+1>=3` is exactly `(2*Q-2,64*t-Q-3*r-9)`, where `Q=S/2^(n-1)=S/4^r` is a natural number and `n<=v2(S)+1=v2(3788505*w+235303)-3`. Equivalently, with `R=S/2^(n-2)=2*Q` (even), the parent is `(R-2,64*t-R/2-3*r-9)`. The prior memory formula `(2*R-2,64*t-R-...)` mixed these two definitions and was wrong; the correction was sent to Agent 3 in `communications/agent3/20261118T084644Z_agent11-u5-secondary-bounce-factor-correction.md`. Check: `t=39,S=416,n=3` gives parent `(206,2380)`. This bound is unbounded across w.
 - The zero-left alternative `S=2^n` is already uniformly ruled out for this target by `u5_q0_sum_quotient_not_power`.
 - New static reduction sent to Agent 3 in `communications/agent3/20261118T000156Z_agent11-u5-secondary-direct-branch-reduction.md`: when `S%4=0`, the direct parent `D=(8*S-2,(85*t-11)/4)` is itself an even/even sum-zero target `D_1+D_2=8*T`, with `342*T=427*S-134`, `T` odd and `T%8=(2*(S/4)+7)%8). Its direct parent `Q=(D_1+D_2-2,(D_2-2)/2)` has residues (6,4) mod 8; the sum-2 parent lemma forces Q's direct parent, which is odd-right and sum 1 mod 4, so Q is unreachable. Thus if D is reachable, only its depth-one bounce parent `E=(2*T-2,(D_1+2*D_2-2*T-8)/2)` remains. E has residues (0,4), (4,2), (0,0), or (4,6) mod 8 according as T≡1,3,5,7. This is a reduction, not a closure; no axiom/Lean claim.
 - The exact Lean extraction command from the user prompt was attempted through the local container, but the tool returned a concrete ClientError before executing. Python/container local execution had also failed earlier. Do not retry endlessly. Agent 6 has a targeted request for the full pinned source-only closure compile and axiom audit; wait for that response. Critic's gate still forbids dispatching CI before a clean focused local preflight.
 - No new residue cylinder was added and no result was promoted. Continue with source-to-root closure and the exact-source compile, not a new modular catalogue.
+
+
+### 2026-11-18 secondary fan residue refinement
+
+For w≡1 (mod 16), write t=39+64h and S=416+684h. The q=0 even/even parent P0 has complete parent fan alternatives: direct, zero-left, or even-a bounce at odd depth n. The zero-left branch is already excluded by the existing draft theorem `u5_q0_zero_left_branch_impossible` in `U5M8Q0Partial.lean`; do not rederive it. The n=1 bounce parent is also uniformly excluded: it is (830+1368h,2071+3412h), with odd right coordinate and sum 2901+4780h≡1 (mod 4), so `blank_no_odd_sum_one` applies.
+
+For n=2r+1 with r≥1, set Q=S/4^r. The corrected parent is
+`B_r=(2Q-2,2487+4096h-Q-3r)`.
+Its sum is Q+2485+4096h-3r, hence mod 4 it is Q+r+1; its right parity is 1+Q+r mod 2. This gives:
+- Q+r≡0 mod4: odd-right sum-one, excluded by the existing blank-image invariant.
+- Q+r≡1 mod4: even/even sum-two; its source parent is forced direct by the same argument as the private `even_even_sum_two_reach_implies_direct` in Agent 4's U5 source-only draft.
+- Q+r≡2 mod4: even/odd sum-three; if total mass is 3 mod8, `section_evenodd_sum3_inverse` gives the unique parent; if it is 7 mod8, an unbounded even-bounce fan remains.
+- Q+r≡3 mod4: even/even sum-zero; mass 4 mod8 forces a six-even-right inverse, while mass 0 mod8 yields another sum-zero fan.
+
+This split was sent to Agent 3 in `communications/agent3/20261118T085120Z_agent11-u5-secondary-bounce-residue-split.md`. It is a static source-grammar reduction, not a Lean-compiled exclusion. The direct P0 parent branch is separately reduced in the earlier Agent 3 message: its direct child Q is excluded by the sum-two/direct/odd-sum-one chain, leaving only the depth-one bounce child E. The residual targets are therefore (i) that E branch and (ii) the n≥3 bounce branches with even/odd sum-seven or recursively even/even sum-zero outputs. No new theorem is source-certified, and BB(6)/Machine C remain open.
+
+Local Python/container execution in this invocation returned concrete ClientError before command execution; no local Lean compile or CI run was obtained. Avoid repeating unchanged tool calls or another residue census. Next useful work is a source-exact uniform closure of the residual sum-seven/even-even sum-zero parent sectors, or an independent review from Agent 3 of the corrected parameterization.
