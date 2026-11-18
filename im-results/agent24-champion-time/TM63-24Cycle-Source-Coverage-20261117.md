@@ -82,11 +82,18 @@ For a residue-zero branch, `k=8*q` and the macro premise `k>0` gives q>0. If the
 
 The root arithmetic supplies `tm63Index1=8*K+7`, K odd, and `tm63Index1<2^L`; see `TM63RootCountdownArithmetic.lean`. The section countdown therefore remains within the fixed width.
 
+## 4a. Root-specific index-one handoff
+
+`TM63RootAfterSectionResultToOne.lean` composes the authentic blank-root theorem through middle 34 with the complete dispatcher, stopping at index one. The arithmetic is: `first_stage_exponent_odd` gives A odd; hence `2^(A-3) = 1 (mod 3)`, `K=31*2^(A-3)-1 = 0 (mod 3)`, and `r=K/2 = 1 (mod 3)`. Middle 34 has `n=16*r-19 = 0 (mod 3)`, `m=1`. Running `n-1` decrements leaves `n=1,m=2`. The file exports the exact blank-root run theorem `tm63_blank_reaches_after_middle34_to_index_one`.
+
+This is a useful root-connected source result, but it is not a halt witness. The m=2,n=1 `resetBase_odd_frame` source currently covers only a=b=0 and does not yet prove exact S0-config equality. The arbitrary-a,b reset prefix and terminal SectionBits join remain open. This root wrapper is uncompiled.
+
 ## 5. Exact next steps and validation boundary
 
 1. Run local Lean 4.36.0-rc2 preflight on the exact original import closure of `TM63SourceIncrementDispatcherComplete.lean` using `tools/lean_compile_closure.py`. This closure includes the M0 and M2 residue-zero counted sources and all 22 other one-step families; resolve missing or ambiguous imports explicitly.
-2. Inspect the final axiom profiles of `tm63_source_increment_dispatch_complete`, `sectionResult_run_to_index_one_complete`, and `sectionResult_run_complete`; reject `sorryAx`, `native_decide`, and custom axioms. Only after local preflight passes, run the manual `tm63-24cycle-dispatcher` workflow target. The narrower `counted-lbin-dec` target also compiles the M0 source chain.
-3. Apply `sectionResult_run_to_index_one_complete` at the authentic middle-34 endpoint. The root arithmetic leaves marker 2 at index one; generalize the m=2, n=1 reset-base prefix from a=b=0 to arbitrary a,b, prove its exact S0-config/SectionBits embedding, and connect the terminal macro.
-4. Continue the independent universal six-state upper-bound programme; a lower-bound witness alone does not determine BB(6).
+2. Inspect the final axiom profiles of `tm63_source_increment_dispatch_complete`, `sectionResult_run_to_index_one_complete`, and `sectionResult_run_complete`; reject `sorryAx`, `native_decide`, and custom axioms. Only after local preflight passes, run the manual `tm63-24cycle-dispatcher` workflow target.
+3. Run the exact local import-closure preflight for `TM63RootAfterSectionResultToOne.lean`; audit the four exported root theorem profiles. Only after this preflight passes, run the manual `tm63-root-index-one` workflow target.
+4. Generalize the m=2, n=1 reset-base prefix from a=b=0 to arbitrary a,b, prove its exact S0-config/SectionBits embedding, and connect the terminal macro.
+5. Continue the independent universal six-state upper-bound programme; a lower-bound witness alone does not determine BB(6).
 
 **Validation boundary:** this audit is based on current source signatures, mathematical derivations, and uncompiled proof drafts, including the new complete dispatcher wrapper. It does not certify a combined dependency closure or transitive axiom profile. Do not mark a class accepted until the exact original-import Lean closure compiles and every exported `#print axioms` profile is inspected; reject `sorryAx`, `native_decide`, and custom axioms. Standard Lean axioms such as `propext`, `Classical.choice`, and `Quot.sound` are expected. No CI run is claimed for the M2 counted draft, the M0 valuation extension, or the dispatcher.

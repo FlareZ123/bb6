@@ -11,6 +11,7 @@ on:
           - counted-lbin-dec
           - m0-valuation-prefix
           - tm63-24cycle-dispatcher
+          - tm63-root-index-one
         default: all
   workflow_call:
     inputs:
@@ -250,4 +251,53 @@ jobs:
               print(f"{name}: {sorted(axioms)}")
           if "sorryAx" in log:
               raise SystemExit("sorryAx appeared in the exact dispatcher compilation output")
+          PY
+
+  tm63-root-index-one:
+    if: ${{ inputs.target == 'all' || inputs.target == 'tm63-root-index-one' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile the exact authentic-root index-one import closure
+        run: |
+          set -euo pipefail
+          python3 tools/lean_compile_closure.py \
+            im-results/agent48-counted-inc0/TM63RootAfterSectionResultToOne.lean \
+            --jobs 4 --workdir /tmp/tm63-root-index-one | tee tm63-root-index-one-compile.log
+          if grep -R -n 'native_decide' /tmp/tm63-root-index-one --include='*.lean'; then
+            echo '::error::native_decide found in the exact root import closure'
+            exit 1
+          fi
+          python3 - <<'PY'
+          import pathlib
+          log = pathlib.Path("tm63-root-index-one-compile.log").read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "tm63_root_middle_k_mod_three",
+              "tm63_root_residue_six_k_mod_three",
+              "tm63_middle34_sectionResult_marker_two",
+              "tm63_blank_reaches_after_middle34_to_index_one",
+          )
+          for name in names:
+              lines = [line for line in log.splitlines() if name in line and "depends on axioms:" in line]
+              if len(lines) != 1:
+                  raise SystemExit(f"expected one axiom profile for {name}, found {len(lines)}")
+              profile = lines[0].split("depends on axioms:", 1)[1].strip()
+              if not (profile.startswith("[") and profile.endswith("]")):
+                  raise SystemExit(f"unrecognized axiom profile for {name}: {profile}")
+              axioms = {item.strip() for item in profile[1:-1].split(",") if item.strip()}
+              unexpected = axioms - allowed
+              if unexpected:
+                  raise SystemExit(f"nonstandard axioms in {name}: {sorted(unexpected)}")
+              if "sorryAx" in axioms:
+                  raise SystemExit(f"sorryAx dependency in {name}")
+              print(f"{name}: {sorted(axioms)}")
+          if "sorryAx" in log:
+              raise SystemExit("sorryAx appeared in the exact root compilation output")
           PY

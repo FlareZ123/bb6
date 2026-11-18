@@ -26,6 +26,18 @@ The last theorem states that, if the exact 24 one-step source families are accep
 
 The [24-cycle coverage audit](TM63-24Cycle-Source-Coverage-20261117.md) records the full rotated class table, theorem mapping, quotient formulas, and remaining root-integration boundary. Agent 48's [M0 even 8q derivation](../agent48-counted-inc0/M0EvenEightValuationExtension.md) records the valuation-bubble construction, finite probes, and corrected marker orientation. The [M2 residue-zero derivation](M2EvenResidueZero-SourceIntegration-20261117.md) records its separate H-run and q4 source proof.
 
+## Root-specific index-one handoff
+
+The [root continuation wrapper](../agent48-counted-inc0/TM63RootAfterSectionResultToOne.lean) composes the authentic blank-root run through middle 34 with `sectionResult_run_to_index_one_complete`. Its arithmetic derives:
+
+- the first-section exponent `A` is odd;
+- `K=31*2^(A-3)-1` is divisible by three;
+- the root half-quotient `r=K/2` is 1 modulo three;
+- middle 34 starts at `n=16*r-19`, marker 1, with `n` divisible by three;
+- after `n-1` source increments, the machine is at index one, marker two.
+
+The exported theorem `tm63_blank_reaches_after_middle34_to_index_one` is an authentic blank-root original-TM2 run to the m=2, n=1 reset input. This is not a halt witness. The existing `resetBase_odd_frame` only handles the finite-base case a=b=0 and leaves exact S0-config embedding open; the arbitrary-a,b m=2,n=1 reset prefix and terminal SectionBits join remain unproved. The root wrapper is also uncompiled.
+
 ## Acceptance boundary and next steps
 
 The existing manual-only [counted-source workflow](../../.github/workflows/agent42-counted-lbin-dec.yml) now has:
@@ -35,9 +47,10 @@ The existing manual-only [counted-source workflow](../../.github/workflows/agent
 Neither target has been dispatched. The exact local Lean 4.36.0-rc2 preflight must pass first. The next decisive work is:
 
 1. Compile `TM63SourceIncrementDispatcherComplete.lean` locally through the exact import-closure tool; resolve any ambiguous or missing module imports rather than weakening the closure.
-2. Inspect the full axiom profiles for both exported theorems; reject `sorryAx`, `native_decide`, and custom axioms. Only after local preflight passes should the manual workflow be run.
-3. Use `sectionResult_run_to_index_one_complete` at the authentic middle-34 root endpoint. The root arithmetic gives marker 2 at index one; generalize the m=2, n=1 reset-base prefix from a=b=0 to arbitrary a,b, prove its exact S0-config/SectionBits embedding, and then connect the terminal macro.
-4. Continue the independent universal six-state upper-bound programme. Even a completed champion lower-bound proof alone would not determine BB(6).
+2. Inspect the axiom profiles for `tm63_source_increment_dispatch_complete`, `sectionResult_run_to_index_one_complete`, and `sectionResult_run_complete`; reject `sorryAx`, `native_decide`, and custom axioms.
+3. Compile `TM63RootAfterSectionResultToOne.lean` locally through the exact import-closure tool and inspect all four exported axiom profiles. Only after both local preflights pass should the manual `tm63-root-index-one` workflow target be run.
+4. Generalize the m=2, n=1 reset-base prefix from a=b=0 to arbitrary a,b, prove its exact S0-config/SectionBits embedding, and connect the terminal macro.
+5. Continue the independent universal six-state upper-bound programme. Even a completed champion lower-bound proof alone would not determine BB(6).
 
 ## Historical development and established narrower results
 
