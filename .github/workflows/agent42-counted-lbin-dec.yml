@@ -126,6 +126,22 @@ jobs:
           lean -o M0EvenEightValuationQ4Source.olean M0EvenEightValuationQ4Source.lean 2>&1 | tee m0-even-eight-valuation-q4-source-compile.log
           lean -o M0EvenEightValuationCountedSource.olean M0EvenEightValuationCountedSource.lean 2>&1 | tee m0-even-eight-valuation-counted-source-compile.log
           grep -F 'm0EvenEight_valuation_counted_increment_source' m0-even-eight-valuation-counted-source-compile.log
+          python3 - <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path("m0-even-eight-valuation-counted-source-compile.log").read_text()
+          matches = re.findall(
+              r"m0EvenEight_valuation_counted_increment_source.*?depends on axioms:\\s*\\[([^\\]]*)\\]",
+              log,
+          )
+          if len(matches) != 1:
+              raise SystemExit(f"expected one final #print axioms profile, found {len(matches)}")
+          axioms = {name.strip() for name in matches[0].split(",") if name.strip()}
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          unexpected = axioms - allowed
+          if unexpected:
+              raise SystemExit(f"nonstandard axioms in M0 counted source: {sorted(unexpected)}")
+          print(f"accepted standard axiom profile: {sorted(axioms)}")
+          PY
           if grep -qE 'sorryAx|native_decide' m0-even-eight-valuation-axioms.log m0-even-eight-valuation-source-compile.log m0-even-eight-valuation-q4-source-compile.log m0-even-eight-valuation-counted-source-compile.log; then
             echo '::error::sorryAx or native_decide in valuation-uniform M0-even helper closure'
             exit 1
