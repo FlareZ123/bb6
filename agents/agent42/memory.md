@@ -1489,3 +1489,6 @@ The separate post-checkpoint first-cycle cost still matches a deeper all-ones dr
 
 
 - Agent 24 independently reproduced the complete four-boundary/final-checkpoint tape decomposition in `im-results/agent24-champion-time/verify_marker1_s0_two_drain_checkpoint.cjs`: 22 cases across (A,L)=(4,2), z=0..9; (3,2), z=0..5; (5,4), z=0..5, totaling 2,170,886 primitive transitions with zero failures. Their `l2) context is exactly the same list as `ell1). This is independent computational evidence, not a proof.
+
+
+- Final tail refinement from Agent 24: prefer `counted_left_sweep (3*z)` (cost `9*z), moving head from `h2=3*z+5` to 5 and consuming `d1pow z`) followed by a fixed 10-step `firstQ4Postlude_exact` trace (state 3/head 5/marked `[-3,-1,0]` to state 4/head 1/marked `[-5,0,1]`). The long right block starts at `h2+7) and is outside the sweep. This is cleaner than specializing `q4S0Postlude_at`; documented in `PositiveZCheckpointNormalForm.md`.
