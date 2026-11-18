@@ -14,6 +14,7 @@ on:
           - w1821-primitives
           - w1821-highstop
           - q0-secondary-parent
+          - q0-secondary-cylinders
         default: m32-w485-highstop
 
 permissions:
@@ -78,6 +79,11 @@ jobs:
                 im-results/agent11-c-low58/U5Q0SecondaryFan.lean \
                 --jobs 4 --workdir /tmp/lean-closure-q0-secondary-parent 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
+            q0-secondary-cylinders)
+              python3 tools/lean_compile_closure.py \
+                im-results/agent3-c-bounce-inverse/U5Q0TwoCylindersAudit.lean \
+                --jobs 8 --workdir /tmp/lean-closure-q0-secondary-cylinders 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
+              ;;
             *)
               echo "Unknown target: ${{ inputs.target }}" >&2
               exit 2
@@ -90,6 +96,15 @@ jobs:
           set -euo pipefail
           if grep -E 'sorryAx|native_decide' /tmp/lean-closure-reports/q0-secondary-parent.log; then
             echo "Forbidden axiom or native_decide dependency in q0 secondary parent theorem" >&2
+            exit 1
+          fi
+
+      - name: Reject sorryAx, native_decide, and custom BB6 axioms in q0 cylinder batch
+        if: inputs.target == 'q0-secondary-cylinders'
+        run: |
+          set -euo pipefail
+          if grep -E 'sorryAx|native_decide|BB6\\.' /tmp/lean-closure-reports/q0-secondary-cylinders.log; then
+            echo "Forbidden axiom or native_decide dependency in U5 q0 cylinder batch" >&2
             exit 1
           fi
 
