@@ -33,6 +33,14 @@ private theorem run_compose_local {n m : Nat} {c1 c2 c3 : Config}
   simp only [Option.bind_some]
   exact h2
 
+private theorem pow2_ge_four (n : Nat) (hn : 2 ≤ n) :
+    4 ≤ 2^n := by
+  obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le hn
+  rw [hk, Nat.pow_add]
+  norm_num
+  have hp : 0 < 2^k := Nat.pow_pos (by decide)
+  omega
+
 private theorem pow_two_even_mod_three (k : Nat) :
     (2^(2*k)) % 3 = 1 := by
   induction k with
@@ -70,6 +78,20 @@ theorem tm63_root_middle_k_mod_three :
   unfold tm63RootMiddleK
   omega
 
+/-- The root half-quotient is large enough that the index-one
+subtractions below are ordinary positive arithmetic, not truncated Nat
+subtractions. -/
+theorem tm63_root_residue_six_k_ge_61 :
+    61 ≤ tm63RootResidueSixK := by
+  have hA := tm63FirstSection_exponent_ge_five
+  have hpow : 4 ≤ 2^(tm63FirstSection.exponent-3) :=
+    pow2_ge_four (tm63FirstSection.exponent-3) (by omega)
+  have hK : 123 ≤ tm63RootMiddleK := by
+    unfold tm63RootMiddleK
+    omega
+  unfold tm63RootResidueSixK
+  omega
+
 /-- The half-quotient used by the middle-34 itinerary is 1 modulo 3. -/
 theorem tm63_root_residue_six_k_mod_three :
     tm63RootResidueSixK % 3 = 1 := by
@@ -86,6 +108,7 @@ theorem tm63_middle34_sectionResult_marker_two :
       tm63MiddleAfter34A tm63MiddleAfter34B).marker = 2 := by
   rw [sectionResult_marker]
   have hr := tm63_root_residue_six_k_mod_three
+  have hrge := tm63_root_residue_six_k_ge_61
   omega
 
 /-- The blank-root TM63 run reaches the exact S1 state with index one and
