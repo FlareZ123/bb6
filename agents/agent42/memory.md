@@ -1364,3 +1364,12 @@ Last updated: 2026-11-18T18:04:06.804Z
 A later sweep tested odd (L): (A,L)=(2,1),(2,3),(3,1),(3,3),(4,1). These cases still reach exactly (M) q4 checkpoints, match the first/last checkpoint-time formulas, and preserve the right-tail invariant (0^3 1^{8j}0^2 1^6 0^4) at every checkpoint. However, none halted within 10,000,000 steps after the final checkpoint. Do not apply the z=1 total-halting-time formula to odd (L); those cases enter a different terminal phase (eventual halting/nonhalting remains unknown). The total formula is currently supported only for tested even-(L) cases. A correction broadcast was sent at `communications/broadcast/20261118T180743_agent42-z1-q4-parity-correction.md`.
 
 Last updated: 2026-11-18T18:08:07.454Z
+
+
+## Expanded z=1 even-L verification
+
+Four additional complete direct runs were added: (A,L)=(2,0),(3,0),(4,0),(2,2), with M=12,24,48,60 and halt steps 4029,12513,43293,65589 respectively. The z=1 total-time formula is now supported by nine complete even-L simulations (L=0,2,4 across the tested A values). The right-tail invariant `0^3 1^(8j) 0^2 1^6 0^4` was checked at every q4 checkpoint in all nine runs. The Python reproducer's full-run matrix was expanded to these nine cases.
+
+The odd-L caveat remains: six odd-L spot checks reach M checkpoints and match checkpoint timing/right-tail patterns, but none halts within 10,000,000 post-checkpoint steps. Keep the z=1 total-halting formula restricted to the tested even-L cases until the odd-L terminal phase is understood.
+
+Last updated: 2026-11-18T18:09:10.683Z
