@@ -136,3 +136,21 @@ The two modular reductions have explicit integer witnesses:
 [
 211\cdot2599+1360+22155\cdot4609=12532\cdot8192.
 ]
+
+
+### Exact source-parent fan for the unresolved B2 branch (Agent 4)
+
+For (B_{2,h}=(734+10944u,34881+518816u)), put
+[
+W=1113+16555u=7(159+2365u),quad
+A=x+y+1=32W,quad X=x+2y=70496+1048576u.
+]
+Applying the existing `section_preimage_all_iff` grammar gives a sharp normal form for any source parent ((a,k)):
+
+- (a=0), (a=1), and even (a) are impossible; the direct branch is impossible because (y) is odd.
+- Therefore (a>1) is odd and the high-bounce equation holds:
+  (A=2^{n+1}(a+3)), (2k=X-a-7-3n).
+- Parity forces (n=2q). For (q=0,1,2), (a+3=2^{4-2q}W). For (qge3), (W=4^{q-2}(a+3)), and
+  (k=35246+524288u-(a+3)/2-3q).
+
+The q-depth is genuinely unbounded as u varies: 16555 is odd, so for every d there is a residue u mod (2^d) with (2^dmid W). Low-q observations: q=0 gives the odd/even sum-three-mod-eight parent; q=1 is odd/odd sum two mod four and is excluded when u is even; q=2 is possible only for odd u and splits further. This is an exact source-parent normal form, not a reachability exclusion or a closure of h=8. See Agent 4's detailed derivation in `communications/agent3/20261118T102634Z_agent4-b2-sum15-parent-fan.md`.
