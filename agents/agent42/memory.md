@@ -1460,3 +1460,22 @@ The 2026-11-18 review of `Marker1TerminalQ4Macro.md` confirmed its scope:
   by exactly `12*(2^z+z+6)+2`. This is a structural arithmetic match, not a transition proof. The q4 checkpoint's right nested counter must still be shown to produce that all-ones S0 input, and the event-count law remains unproved.
 - Corrected the dossier `im-results/agent42-outer-lcinc/README.md`: the old five-step/E-scan/sweep/H-run/tail obligations are now marked as addressed by the uncompiled source candidates; the real immediate gate is local compilation and axiom audit, followed by the still-open positive-z q4 macro.
 - The earlier mistaken claim that the z=0 prefix cost `107+12*(A+L)` applied to positive z was explicitly corrected in a separate broadcast to Agent 48 and in the README/memory. Do not repeat it.
+
+
+### 2026-11-18 major q4 checkpoint decomposition
+
+A direct JS simulation of the TM2 table now identifies the exact intermediate S0 configurations before the first marker-1 q4 checkpoint. The reproducible checker is `im-results/agent42-outer-lcinc/marker1_q4_checkpoint_sweep.js`; analysis is in `PositiveZCheckpointNormalForm.md`.
+
+Let
+- `ell0 = markerWord 1 ++ d0 ++ d1pow L ++ lh`;
+- `ell1(A,L) = 11 ++ (010)^(A+1) ++ 011 ++ 110 ++ (010)^L ++ 011 ++ 101 ++ 11`;
+- `D(n)=drainCost(n,0)`.
+
+Observed exact four-stage run:
+1. `s0Config ell0 A z 0 0 -> s0Config ell0 A 0 z 0` in `D(z)), existing `s0Config_counted_drain_general`.
+2. Setup (still unproved): `s0Config ell0 A 0 z 0 -> s0Config ell1 z (2^z-1) 0 (3*z+5)` in `12*(A+L)+3*z+97`.
+3. `s0Config ell1 z (2^z-1) 0 (3*z+5) -> s0Config ell1 z 0 (2^z-1) (3*z+5)` in `D(2^z-1)`, existing `s0Config_counted_drain_closed` at width z.
+4. Tail in `9*z+10) steps to first q4 checkpoint. This is already covered generically by Agent 48's `q4S0Postlude_at` with `k=3*z+2), start head `3*z+5). The left-one condition is `d1pow z ++ 11`; the right guard is the first zero of `s0RightFacing(2^z-1)`; the final-four guard is `0,1,0,0` from `ell1) after skipping its initial `11`, preserved by `s0LeftSweep_shift`. Remaining work is to package these guards and identify the resulting `q4FrameAt` tape pointwise with the explicit checkpoint.
+The total first-checkpoint time is `D(z)+D(2^z-1)+12*(A+L+z)+107). The q4 event count is `3*2^z+3*z+5), and the checkpoint right suffix is `0^3 1^(3*z+5) 0^2 1^(3*2^z) 0^4).
+
+All four intermediate tape configurations were checked for A=3,4,5,6; L=2,4; z=0,1,2,3. The checkpoint shape/time formula was checked through z=9 for A=4,L=2. The exact context ell1 was independently confirmed across A,L values. This is computational evidence, not a proof. The **only large missing transition macro in this prefix is Stage 2 setup**; the tail has an existing generic theorem. Do not conflate this pre-checkpoint decomposition with the separate post-checkpoint first-cycle drain at width K=2^z-1 documented in `PositiveZFirstCycleDrainBridge.md`.
