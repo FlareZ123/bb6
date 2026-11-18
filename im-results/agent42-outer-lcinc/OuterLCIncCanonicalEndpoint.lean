@@ -618,4 +618,51 @@ theorem outerLCIncPostludeTape_rightFacing_m2
       _ = sideBit (s0RightFacing 0) i := htarget.symm
 
 
+/--
+Canonical endpoint identification for the authentic m=2,n=1 branch.
+The two pointwise side lemmas identify the complete left and right streams;
+the existing target-counter identity then turns them into the canonical
+marker-1 S1/S0 configuration.
+-/
+theorem outerLCIncPostludeTape_eq_s1Config_m2
+    (L a b : Nat) (h : Int) (hL : 0 < L) :
+    outerLCIncPostludeTape
+        (outerLCIncSourceT3 (s1Config L 1 2 a 0 b h).tape h a 2 0)
+        h a 2 b =
+      (s1Config L 0 1 (a+b+2) (2^b-1) 0 (h+3*b+5)).tape := by
+  funext x
+  let H : Int := h+3*b+5
+  by_cases hx : x ≤ H
+  · let i : Nat := Int.toNat (H-x)
+    have hnat : (i:Int) = H-x := by
+      dsimp [i]
+      exact Int.toNat_of_nonneg (by omega)
+    have hcoord : x=H-(i:Int) := by omega
+    rw [hcoord]
+    have hleft := outerLCIncPostludeTape_leftFacing_m2 L a b h hL i
+    have hcell :=
+      s1Config_left_cell L 0 1 (a+b+2) (2^b-1) 0 H i
+    have hword :
+        s1LeftFacing L 0 1 (a+b+2) (2^b-1) =
+          d0pow b ++
+            (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh))) := by
+      simp [s1LeftFacing,outerLCInc_target_binary_prefix,
+        binDec_zero,List.append_assoc]
+    rw [hword] at hcell
+    exact hleft.trans hcell.symm
+  · let i : Nat := Int.toNat (x-H-1)
+    have hnat : (i:Int) = x-H-1 := by
+      dsimp [i]
+      exact Int.toNat_of_nonneg (by omega)
+    have hcoord : x=H+1+(i:Int) := by omega
+    rw [hcoord]
+    have hright := outerLCIncPostludeTape_rightFacing_m2 L a b h i
+    have hcell :=
+      s1Config_right_cell L 0 1 (a+b+2) (2^b-1) 0 H i
+    have hword : s1PhysicalRight 0 = s0RightFacing 0 := by
+      simp [s1PhysicalRight,s0PhysicalRight]
+    rw [hword] at hcell
+    simpa [H] using hright.trans hcell.symm
+
+
 end BB6Coverage.Agent42OuterLCInc
