@@ -9,8 +9,9 @@ set_option maxRecDepth 100000
 
 /-!
 Single-root exact-source preflight/axiom audit for the two new U5 q=0
-secondary cylinders. Importing this file forces compilation of all four
-proof modules and their complete transitive source dependency closure.
+secondary cylinders. Importing this file forces compilation of all four new
+proof modules, the existing W1821 baseline, and their complete transitive
+source dependency closure.
 This is an audit harness, not a mathematical result.
 -/
 
