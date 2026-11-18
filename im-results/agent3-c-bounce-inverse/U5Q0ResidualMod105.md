@@ -68,3 +68,28 @@ where \(q_r\) is the table entry for \(r\bmod6\). The pair of coordinates theref
 This removes arbitrary \(h\) from the q=0 secondary fan: only \(h\equiv84\pmod{105}\) can arise from the authentic U5 residual root. It also gives a uniform lower bound on the quotient \(q\) in every remaining \(r\ge1\) bounce branch and an explicit odd-modulus residue profile for those parents.
 
 It does **not** prove any \(B_{r,h}\) unreachable. In particular, it does not close the unresolved \(Q+r\pmod4\) branches (odd/even sum 7, or even/even sum zero) identified in the existing secondary-bounce analysis. The next useful step is to combine these fixed mod-105 residues with the exact source-parent grammar for those two residual sectors, rather than enumerate further isolated h-cylinders.
+
+
+## Additional source-grammar pruning modulo 3
+
+The mod-105 calculation contains a simpler consequence that applies directly to the complete source-preimage grammar of every remaining \(B_{r,h}\).
+
+Since \(h\equiv84\pmod{105}\), in particular \(h\equiv0\pmod3\). Thus
+\[
+S=416+684h\equiv2\pmod3.
+\]
+From \(4^r q=S\) and \(4^r\equiv1\pmod3\), we get
+\[
+q\equiv2\pmod3.
+\]
+For \(x=2q-2\) and \(y=2487+4096h-q-3r\), it follows that
+\[
+x+y=2485+4096h+q-3r\equiv0\pmod3.
+\]
+
+Now apply the exact all-preimage source grammar to a hypothetical incoming source state \((a,k)\) for \(B_{r,h}=(x,y)\):
+
+- The exceptional \(a=0\) branch requires \(x+y=8\cdot2^n\) and \(2k+9+3n=x+2y\). Since \(x\) and \(x+y\) are even, the cost equation forces \(n\) odd. The first equation then gives \(x+y\equiv8\cdot2^n\equiv1\pmod3\), contradicting \(x+y\equiv0\pmod3\).
+- The exceptional \(a=1\) branch requires \(x+y+1=16\cdot2^n\) and \(2k+5+3n=x+2y\). Here \(x\) is even and \(x+y+1\) is even, so \(y\) is odd; the cost equation again forces \(n\) odd. The first equation gives \(x+y+1\equiv16\cdot2^n\equiv2\pmod3\), whereas the left side is \(1\pmod3\), a contradiction.
+
+Therefore **neither exceptional zero-left nor one-left source branch can produce any \(B_{r,h}\)**. Every possible incoming source edge to a remaining secondary-bounce target must be in the direct branch or one of the nonexceptional odd/even bounce branches. This is a uniform source-grammar reduction for all \(r\ge1\), not a blank-reachability exclusion.
