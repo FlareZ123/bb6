@@ -246,3 +246,21 @@ For the special a=1 branch, `2K ≡ 19-3n (mod 32)`. The existing source-certifi
 The reverse-predecessor implementation reproduces the earlier 804-state tree for `F=(39,33,0)`; these counts remain computational evidence, not Lean certificates.
 
 **Open:** prove the P0→P1 source reduction, then close the complete P1 parent fan against the blank root. Keep this in `im-results/`; it is not a publishable BB(6) result and does not decide Machine C.
+
+
+## U5 q=0 secondary fan: two new root cylinders (2026-11-18)
+
+A new exact parent-fan reduction has produced two additional infinite q=0 exclusions, each composed into a high-stop root proof draft:
+
+- (h=16+32u): the quotient (S=416+684h=32(355+684u)) has 2-adic valuation 5, so only bounce depths (r=1,2) occur. The direct parent and both bounce parents reduce by exact source inverses to forbidden odd-right sum-one states. This lifts through the U5 residual identity to (w=1pmod{2048}).
+- (h=40+128u): (S=128(217+684u)) has valuation 7, so only (r=1,2,3) occur. The direct parent and all three bounce parents reduce to forbidden odd-right sum-one/sum-two states; the (r=2) branch uses the exact seven-sector inverse followed by the affine inverse. This lifts to (w=4609pmod{8192}).
+
+The combined root-parameter residues modulo 8192 are ({1,2049,4097,4609,6145}).
+
+See [U5Q0TwoCylinders.md](U5Q0TwoCylinders.md) for the exact coordinate chains and parent arithmetic, and the four source proof drafts:
+- [U5Q0SecondaryH16.lean](U5Q0SecondaryH16.lean)
+- [U5Q0W1HighStop.lean](U5Q0W1HighStop.lean)
+- [U5Q0SecondaryH40.lean](U5Q0SecondaryH40.lean)
+- [U5Q0W4609HighStop.lean](U5Q0W4609HighStop.lean)
+
+**Status:** all four files remain uncompiled source drafts. Exact local preflight against Lean 4.36.0-rc2 and transitive axiom audit are pending; no CI was dispatched. Do not promote these to results/ or describe them as certified theorems until that gate passes. Other h/root residue classes remain open.
