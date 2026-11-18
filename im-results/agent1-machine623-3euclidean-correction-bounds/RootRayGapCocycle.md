@@ -157,3 +157,40 @@ Consequently Agent32's \(W=9\ell+22\) is a conservative common terminal-window e
 ### Right-even baseline normalization (correction)
 
 The RE row above uses the initial evalA first counter \(2k+3\) as its baseline. If \(D\) is the total signed first-counter drop from that baseline, then \(B=2k+3-D\), so \(\beta=B-2-2k=1-D\). The exact weighted identity \(\delta+2\beta=2r+7\) then gives \(\delta=2D+2r+5\). This convention is preferable to measuring \(D\) from the shifted baseline \(2k+2\), because it makes \(D\) the actual initial-evalA drop plus the later drain drop and gives the uniform digit-depth bound \(|D|\le\ell+1\) when the two consumed ternary blocks are combined.
+
+
+## Sharpened exact predecessor strips from the two-statistic cocycle
+
+The drain normal form also gives a uniform depth bound for the statistics above. Let \(\ell\) be least with \(\tau(\ell)\ge q+3\), where \(q=m\) is the smaller current counter.
+- In LO/LE/RO, the drain block \(b\) satisfies \(b\le q+3\). Hence \(2b-1<3^\ell\). The parity-matched valuation length is at most \(\ell+1\); its ternary normal-form integer has fewer than \(3^{\ell+1}\) and at most \(\ell+1\) digits. Therefore \(|D|\le\ell+1\) and \(r\le\ell+1\).
+- In RE, let \(v\) be the initial low-order-1 run consumed by evalA. Its signed first-counter drop from baseline \(2k+3\) is \(v+1-2\varepsilon\), of absolute value at most \(v+1\). The remaining quotient has valuation length \(L_2\le\ell-v\): this follows from \(2q-1<3^\ell\) after removing the \(v+1\) consumed ternary positions, with at most one extra exponent for the parity match. Thus \(|D|\le v+1+L_2\le\ell+1\) and \(r\le L_2\le\ell+1\). The cone budget ensures the initial evalA run succeeds rather than taking its early-exit branch.
+
+Now suppose the output state is in the source terminal window. The TerminalRatio4 bounds with \(K=n+6\), translated to the old-ray distance, are:
+\[
+W_{\rm LO}=6n+44,\quad
+W_{\rm LE}=6n+31,\quad
+W_{\rm RO}=(6n+19)/2,\quad
+W_{\rm RE}=(9n+25)/2.
+\]
+Using the exact \(h'\) table, a left output gives a predecessor far residual \(u=g-9m\), while a right output gives a predecessor near residual \(v=4g+9m\). Substituting \(|D|,r\le\ell+1\) and \(\ell\le n+1\) gives:
+
+| Input sector | Output | Predecessor residual | Absolute bound |
+|---|---|---|---:|
+| LO | left | \(g-9m\) | \(23n+148\) |
+| LO | right | \(4g+9m\) | \(20n+137\) |
+| LE | left | \(g-9m\) | \(23n+104\) |
+| LE | right | \(4g+9m\) | \(20n+92\) |
+| RO | left | \(g-9m\) | \(20n+45\) |
+| RO | right | \(4g+9m\) | \(14n+53\) |
+| RE | left | \(g-9m\) | \(22n+75\) |
+| RE | right | \(4g+9m\) | \(17n+41\) |
+
+Thus every terminal event with canonical depth \(n\ge10\) has a predecessor in one of the two strips
+\[
+|g-9m|\le 23n+148
+\quad\text{or}\quad
+|4g+9m|\le 23n+148.
+\]
+This improves the common \(35n+120\) envelope in RootCancellationBudgetBridge.md for \(n\ge10\), since \(23n+148<35n+120\) whenever \(n\ge3\). The gain comes from keeping the exact sector-specific \(D,r\) coefficients instead of bounding the two bridge corrections independently.
+
+This is still a necessary-condition theorem, not an exclusion of the authentic root from these strips. It should be consumable by the existing root mass-corridor / checkpoint-gap method.
