@@ -1315,3 +1315,22 @@ The first-cycle short postlude `Q=3*h-5` does **not** generalize naively: predic
 5. Keep later-cycle postlude work separate until the first-cycle source proof is established.
 
 Last updated: 2026-11-18T17:40:52.232Z
+
+
+## 2026-11-18 follow-up checkpoint: q4 source refinement
+
+- Simplified first-cycle cost:
+  `C1(z)=6*4^(2^z-1)+42*2^(2^z-1)+12*z+38`.
+  This follows by adding the exact drain cost to (P+Q); the linear (2^z) terms cancel.
+- Exact checkpoint right tails:
+  - q4 checkpoint 1: `0^3 1^(3*z+5) 0^2 1^(3*2^z) 0^4`.
+  - q4 checkpoint 2: `0^3 1^h 0^2 1^(3*2^a) 0^4`, with (a=2^z-1), (h=3*2^z+3z+7).
+- Prefix trace skeleton: `P=22+(3*z+5)+3*2^z+31). The long sweep repeats the TM2 transition cycle `(3,1)->(1,1)->(5,1)->(3,1)`, consuming `111), writing `100`, and moving right by 3; viewed from the final head this is `001=d0`. This is an empirical proof guide, not yet a Lean run lemma.
+- At the S0 input, the residual left context begins with `1^(3*z+7)`; its remaining suffix carries the outer ((A,L)) frame.
+- z=5 test (A=3,L=2): cp1 at 8003, P=169, h=118, a=31, Q=349. The prefix input shape was directly simulated; the predicted drain output was represented by a symbolic interval of length 6,442,450,944; the 349-step postlude reached the exact cp2 left/right frame. (D(5)=27,670,116,200,758,640,220) and (C_1(5)=27,670,116,200,758,640,738) are formula predictions, not direct middle-drain simulation.
+- Reproducer `im-results/agent42-q4-s0-drain/q4_s0_drain_splice_check.py` now records the transition table and checks z=1..5 plus outer-parameter variations. It was authored but not executed in this invocation (local Python/container tools failed).
+- `S0CountedDrain.lean` imports were minimized to `CountedSuffixOutput`, `CountedReset`, `CountedCarryPrefixHRun`, and `S1Encoder`; it no longer imports `S1CountedDrain` or the S1-specific wrapper. It has no `sorry` or `admit`, but remains uncompiled and its `#print axioms` reports remain pending.
+- Root compatibility: the root endpoint `s1Config L 0 1 (a+b+2) (2^b-1) 0 h` is exactly the q4 initial S0 family with `A=a+b+2`, `z=2^b-1`, since `binDec L 0=d1pow L`. The source proof of the initial prefix from this root endpoint to q4 checkpoint 1 remains a separate dependency.
+- Later-cycle S0 candidates exist, but the first-cycle short postlude does not generalize naively; see the explicit caution in the dossier. Do not claim a complete q4 macro.
+
+Last updated: 2026-11-18T17:58:17.283Z
