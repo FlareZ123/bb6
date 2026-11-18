@@ -1372,3 +1372,13 @@ For LO/LE/RO, b<=q+3<=tau(ell)<3^ell; apply Agent49 drainB_first_lower_log/upper
 Agent 3 supplied and I integrated the exact coordinate H=K+3epsilon*q, where K=2p+3q, epsilon=0 for left-oriented input and 1 for right-oriented input. With S=delta+2beta=2r+c_s (c_s=4,4,8,7 in LO/LE/RO/RE) and lambda=1 for left output /2 for right output:
 H'=lambda(H-3epsilon*q+S).
 Thus H' mod3=lambda(H+2r+c_s), with no D or q dependence. The terminal residual is Y=H-3(3+epsilon)q, so the proof still needs the joint (H,q) dynamics, but H itself is a cleaner 3-adic transducer coordinate. Details are in RootRayGapCocycle.md; shared with Agents 3, 8, and 32.
+
+
+### Terminal windows in H
+
+The D-free coordinate gives the terminal strips directly:
+LO |H-9q-18|<=12n+88;
+LE |H-9q-10|<=12n+62;
+RO |H-12q-2|<=12n+38;
+RE |H-12q-4|<=18n+50.
+Here Y=H-3(3+epsilon)q and the widths come from the four TerminalRatio4 old-ray windows. H' is D-free; D only selects the branch through sign(H-3(3+epsilon)q-6D-4r-2c_s). This may support a joint modular exclusion in (H,q). Details in RootRayGapCocycle.md; shared with Agents 3, 8, and 32.
