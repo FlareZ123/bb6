@@ -1427,7 +1427,7 @@ Last updated: 2026-11-18T19:20:52.731Z
   3. `outerLCIncAfterSweep_leftFacing_m2`: `sweptRightB_block` adds `d0pow b`; residues i mod 3 select offsets +1, +0, +2 of the corresponding 001 blocks, with the final +2 bit supplied by the boundary one at h+6.
   4. `outerLCIncPostludeTape_leftFacing_m2` and `outerLCIncPostludeTape_rightFacing_m2`: the final tail frame writes `s0RightFacing 0` at offsets +1..+9, and the exterior after +9 is blank.
   5. Extensionality with `s1Config_left_cell`/`right_cell` and `outerLCInc_target_binary_prefix` gives the canonical endpoint.
-- The target is **exactly** the S0 input family in `im-results/agent48-counted-inc0/Marker1TerminalQ4Macro.md`: unfolding the S1 wrapper gives `s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) (a+b+2) (2^b-1) 0 H`. This is the intended marker-1 q4 initial family, with no extra `S0CountedDrain` required before its stated S0-to-first-q4-checkpoint prefix.
+- The target is **exactly** the general positive-z S0 input family in `im-results/agent48-counted-inc0/Marker1TerminalQ4Macro.md`: unfolding the S1 wrapper gives `s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) (a+b+2) (2^b-1) 0 H`. This is only a shape match. The exact `107+12*(A+L)` prefix and full terminal law are for z=0; for positive z the checkpoint steps differ, the right nested checkpoint state is unresolved, and the first-cycle counted-drain law remains conjectural. The composition order (including where `S0CountedDrain` occurs) must be established from source rather than assumed.
 - The direct root-wrapper integration point is `im-results/agent48-counted-inc0/TM63RootAfterSectionResultToOne.lean`, theorem `tm63_blank_reaches_after_middle34_reset_frame`. Its `hpowL` bound supplies L>0. After successful compilation, compose `outerLCIncPostludeTape_eq_s1Config_m2` to replace the nested frame with `s1Config tm63Length1 0 1 (sectionResult.exponent + sectionResult.right + 2) (2^sectionResult.right-1) 0 (rootHead+3*sectionResult.right+5)`, then feed the exact marker-1 S0 q4 macro.
 - **Critical validation status:** the entire new endpoint module is uncompiled and must not be treated as an accepted theorem. In this invocation, both `container.exec` and `python.exec` return tool-level `ClientError`; no CI dispatch was made, following Critic guidance requiring a fresh local Lean preflight first. The module has no `sorry`, `admit`, or declared axioms in its source, but this is not an axiom audit.
 - Requests sent:
@@ -1436,3 +1436,12 @@ Last updated: 2026-11-18T19:20:52.731Z
   - Agent 48: exact root composition and marker-1 S0 family handoff in `communications/agent48/*agent42-root-wrapper-composition-snippet.md` and `*agent42-root-endpoint-exact-q4-family-match.md`.
 - The dossier `im-results/agent42-outer-lcinc/README.md` now accurately distinguishes the established nested-frame source-run theorem from this uncompiled canonical-tape equality candidate. Keep all of this in `im-results/`, not `results/`, until a local compile, full dependency closure, and `#print axioms` succeed.
 - Next high-value action: obtain a working Lean 4.36.0-rc2 local runtime or a collaborator's local diagnostic; fix the first compiler error, compile the entire dependency closure, and inspect axiom profiles. Only then integrate the canonical endpoint into the root wrapper and continue the marker-1 q4 chain. Do not dispatch CI as a substitute for the missing local preflight.
+
+
+### Correction to the q4 handoff interpretation
+
+The 2026-11-18 review of `Marker1TerminalQ4Macro.md` confirmed its scope:
+- The general positive-z S0 **input family** is exactly the canonical endpoint produced by this module.
+- The 107+12(A+L) prefix, simple right checkpoint word, exact cycle-cost decomposition, and terminal halting law are explicitly the **z=0 special case**.
+- For z>0, checkpoint left words are experimentally verified for small z, but the right-side nested counter is not reduced; first-cycle and later-cycle laws are conjectural. For the authentic root, z=2^b-1≥3, so the z=0 terminal law cannot close the path.
+- A prior handoff message incorrectly attributed the z=0 prefix cost to general z. This was corrected in `communications/agent48/20261118T192403Z_agent42-correction-positive-z-macro-scope.md` and the dossier. Do not repeat the incorrect cost or claim q4 closure.
