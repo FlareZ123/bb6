@@ -300,10 +300,10 @@ def check_case(A: int, L: int, z: int) -> dict[str, object]:
 
 
 
-def check_z1_full_terminal_run() -> dict[str, object]:
-    machine, width, M = initial_machine(3, 2, 1)
+def check_z1_full_terminal_run(A: int, L: int) -> dict[str, object]:
+    machine, _width, M = initial_machine(A, L, 1)
     checkpoints: list[int] = []
-    for _ in range(1_000_000):
+    for _ in range(10_000_000):
         if (
             machine.state == 4
             and machine.head == 1
@@ -314,25 +314,36 @@ def check_z1_full_terminal_run() -> dict[str, object]:
             break
         machine.step()
     else:
-        raise RuntimeError("z=1 terminal run did not halt within limit")
+        raise RuntimeError(f"z=1 terminal run did not halt: A={A}, L={L}")
 
-    assert M == 120
+    popcount = (M - 1).bit_count()
+    expected_first = 12 * (A + L) + 215
+    cycle_sum = 16 * M * (M - 1) + 138 * (M - 1) - 12 * popcount
+    expected_last = expected_first + cycle_sum
+    final_tail = 8 * M + 12 * (A + L) + 76
+    expected_halt = (
+        16 * M * M + 130 * M + 24 * (A + L) + 153 - 12 * popcount
+    )
+
     assert len(checkpoints) == M
-    assert checkpoints[0] == 275
-    assert checkpoints[-1] == 245_105
-    assert machine.steps == 246_201
-    assert machine.state == 0 and machine.head == 967
-    assert machine.tape.read(machine.head) == 1
+    assert checkpoints[0] == expected_first
+    assert checkpoints[-1] == expected_last
+    assert machine.steps == expected_halt
+    assert machine.steps - checkpoints[-1] == final_tail
+    assert machine.state == 0 and machine.tape.read(machine.head) == 1
     return {
-        "A": 3,
-        "L": 2,
+        "A": A,
+        "L": L,
         "z": 1,
+        "M": M,
         "q4_checkpoints": len(checkpoints),
         "first_checkpoint": checkpoints[0],
         "last_checkpoint": checkpoints[-1],
+        "final_tail": final_tail,
         "halt_step": machine.steps,
         "halt_state": machine.state,
         "halt_head": machine.head,
+        "formula": "pass",
     }
 
 
@@ -342,7 +353,8 @@ def main() -> None:
     cases += [(4, 2, 5), (3, 4, 5), (5, 2, 5)]
     for A, L, z in cases:
         print(json.dumps(check_case(A, L, z), sort_keys=True))
-    print(json.dumps(check_z1_full_terminal_run(), sort_keys=True))
+    for A, L in [(3, 2), (4, 2), (2, 4), (3, 4), (5, 2)]:
+        print(json.dumps(check_z1_full_terminal_run(A, L), sort_keys=True))
 
 
 if __name__ == "__main__":
