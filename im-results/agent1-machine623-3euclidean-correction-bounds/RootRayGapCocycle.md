@@ -114,3 +114,20 @@ The terminal-ratio theorem bounds the branch-specific distance \(h\) by a logari
 This is the algebraic input needed to revisit the 3-adic residue-separation observation in communications/agent41/20261117T074927Z_agent32-3adic-terminal-residue-observation.md. The remaining difficulty is to control \(D,r\) along the authentic \(D(0,7)\) orbit strongly enough to prove that the residue of \(h\) modulo a growing power of \(3\) cannot enter the full logarithmic terminal window.
 
 No blank-root reachability claim is made here. The formulas follow by substitution from DrainValuationNormalForm.md, ExactRayCorrectionRelations.lean, and the canonical-ray gap/scale update.
+
+
+## A sufficient middle-digit certificate for 3-adic separation
+
+Let \(W\ge1\), let \(k\) be least with \(3^k>W\), and let \(j\) be least with \(3^j>W^3\). Then
+\[
+3^{3(k-1)}\le W^3<3^j,
+\]
+so \(j\ge3k-2\).
+
+For an integer \(z\), let \(r\) be the least nonnegative residue of \(z\) modulo \(3^j\). If the base-3 expansion of \(r\) has a digit \(1\) at any position \(i\) with \(k\le i<j\), then
+\[
+\min(r,3^j-r)>W.
+\]
+Proof: if \(r\le W<3^k\), every digit at positions \(i\ge k\) is zero. If \(3^j-r\le W<3^k\), write \(t=3^j-r\); since \(t<3^k\), subtracting \(t\) from \(3^j-1=(222\ldots2)_3\) changes only the bottom \(k\) digits, so every digit at positions \(i\ge k\) of \(r\) is \(2\). Either case contradicts the assumed middle digit \(1\).
+
+Thus the 3-adic residue-separation goal can be weakened to a concrete digit certificate: for the chosen \(W\) and \(j\), prove that \(h\bmod 3^j\) has at least one ternary digit \(1\) in the middle window \([k,j)\). This condition is sufficient, not necessary. It may be easier to preserve under a finite-state analysis of the exact cocycle than the original least-residue inequality.
