@@ -98,7 +98,7 @@ The existing residual nonvacuity and strict-monotonicity lemmas provide infinite
 
 ## Remaining work
 
-1. Exact local Lean 4.36.0-rc2 preflight for all four new files against the actual source closure.
+1. Compile U5Q0TwoCylindersAudit.lean locally against the actual source closure (four new files plus the W1821 baseline).
 2. Confirm every `#print axioms` output has no `sorryAx` or custom axioms.
 3. Only then run targeted CI and promote a polished theorem into `results/`.
 4. Continue beyond these two cylinders: they do not settle arbitrary (h), and do not determine BB(6).
