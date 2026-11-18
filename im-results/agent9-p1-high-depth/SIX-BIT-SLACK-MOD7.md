@@ -26,7 +26,7 @@ In particular \(I_0\equiv6\pmod7\). Also, \(8^s\mid I_0\) gives the stronger 2-a
 2^{3s-1}\mid 7(k-3c)-25,\qquad
 k-3c\equiv25\cdot7^{-1}\pmod{2^{3s-1}}.
 \]
-For example, \(s\ge1\) forces \(k-3c\equiv3\pmod4\), and \(s\ge2\) forces \(k-3c\equiv31\pmod{32}\).
+For example, \(s\ge1\) forces \(k-3c\equiv3\pmod4\), and \(s\ge2\) forces \(k-3c\equiv31\pmod{32}\). This is a congruence on the inverse parameters \(k,c\), not on \(m_0+n\); it does not reinstate the withdrawn false claim \(2^{3s-1}\mid(3-7(m_0+n))\) from the earlier restart draft.
 
 Assume the same candidate wall-reaching suffix hypotheses as Agent 43's HighDepthRestartPotential.md, including its established positive lower bound on \(I_0\) for a suffix with at most five shallow edges. Thus \(0<I_0<98P\). Suppose the suffix begins with \(s\) depth-two edges. Their energy recurrence gives \(8^s\mid I_0\). Write
 \[
