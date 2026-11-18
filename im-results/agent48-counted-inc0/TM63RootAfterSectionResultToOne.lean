@@ -1,5 +1,6 @@
 import TM63RootMiddle34
 import TM63SourceIncrementDispatcherComplete
+import ResetBaseM2Split
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -23,6 +24,7 @@ open BB6Coverage.Agent42RootResidueSix
 open BB6Coverage.Agent44TM63RootMiddle34
 open BB6Coverage.Agent44SectionResultRunSource
 open BB6Coverage.Agent24ChampionTime
+open BB6Coverage.Agent48ResetBaseM2Split
 open BB6ChampionArithmetic
 
 private theorem run_compose_local {n m : Nat} {c1 c2 c3 : Config}
@@ -171,5 +173,7 @@ theorem tm63_blank_reaches_after_middle34_to_index_one :
 #print axioms tm63_root_residue_six_k_mod_three
 #print axioms tm63_middle34_sectionResult_marker_two
 #print axioms tm63_blank_reaches_after_middle34_to_index_one
+#print axioms resetBase_m2_prefix27
+#print axioms resetBase_m2_suffix44
 
 end BB6Coverage.Agent48RootAfterSectionResult
