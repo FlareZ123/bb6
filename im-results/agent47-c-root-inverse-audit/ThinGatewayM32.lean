@@ -99,8 +99,16 @@ private theorem chain_predecessor (K C r : Nat)
       apply Prod.ext
       · omega
       · apply Prod.ext
-        · omega
-        · omega
+        ·
+          have hkEq : k = K-r-1 := by
+            rw [← hk]
+            simp
+          exact hkEq
+        ·
+          calc
+            d+4 = (d+3)+1 := by omega
+            _ = (C+r)+1 := by rw [hc]
+            _ = C+r+1 := rfl
 
 /-- The last high-chain point has either the even-a=0 terminal parent
     (which is unreachable), or the displayed c=0 parent. -/
@@ -147,10 +155,16 @@ private theorem last_chain_predecessor (K C : Nat)
       rcases h with ⟨ha,hk,hc⟩
       left
       apply Prod.ext
-      · omega
+      · calc
+          a+1 = (K-1)+1 := by rw [ha]
+          _ = K := Nat.sub_add_cancel (by omega)
       · apply Prod.ext
-        · omega
-        · omega
+        · have hk' : Nat.succ k = Nat.succ 0 := by simpa using hk
+          exact Nat.succ.inj hk'
+        · calc
+            d+4 = (d+3)+1 := by omega
+            _ = (C+K-1)+1 := by rw [hc]
+            _ = C+K := Nat.sub_add_cancel (by omega)
 
 /-- A blank-reachable state (0,K,C), for even K and C>=4, must have
     either its c=0 parent or its next even-a=0 parent reachable.  The
@@ -179,6 +193,9 @@ private theorem zeroA_reach_parent (K C : Nat)
           exact hstep
         by_cases hlast : r=K-1
         · subst r
+          have hKsub : K-(K-1)=1 := by omega
+          have hCadd : C+(K-1)=C+K-1 := by omega
+          rw [hKsub,hCadd] at hstep'
           rcases last_chain_predecessor K C hK hKe hC p hstep' with hterm | hQ
           · subst p
             exact False.elim (terminal_unreachable K C hK hKe hC hp)
@@ -211,7 +228,8 @@ private theorem no_parent_15_25 (n : Nat) :
         CCert.q_congr_big _ _ (by omega) (by omega) (by omega)
       _ = 25 := by decide
   have hs' : CCert.seen 15 25 0 = true := by
-    simpa [hqa,hqk,CCert.q] using hs
+    rw [← hqa, ← hqk]
+    exact hs
   have hnot : CCert.seen 15 25 0 = false := by decide
   rw [hnot] at hs'
   cases hs'
@@ -231,7 +249,8 @@ private theorem no_parent_13_38 (n : Nat) :
         CCert.q_congr_big _ _ (by omega) (by omega) (by omega)
       _ = 38 := by decide
   have hs' : CCert.seen 13 38 0 = true := by
-    simpa [hqa,hqk,CCert.q] using hs
+    rw [← hqa, ← hqk]
+    exact hs
   have hnot : CCert.seen 13 38 0 = false := by decide
   rw [hnot] at hs'
   cases hs'
@@ -251,7 +270,8 @@ private theorem no_parent_9_37 (n : Nat) :
         CCert.q_congr_big _ _ (by omega) (by omega) (by omega)
       _ = 37 := by decide
   have hs' : CCert.seen 9 37 0 = true := by
-    simpa [hqa,hqk,CCert.q] using hs
+    rw [← hqa, ← hqk]
+    exact hs
   have hnot : CCert.seen 9 37 0 = false := by decide
   rw [hnot] at hs'
   cases hs'
@@ -265,7 +285,10 @@ theorem thin_gateway_103_unreachable (n : Nat) :
     (4*(103+128*n)+10) (by omega) (by omega) (by omega) h
   rcases hp with hQ | hU
   · have hQ' : BB6CLine.Reach (207+256*n,313+384*n,0) := by
-      convert hQ.2 using 1 <;> omega
+      have hA : 2*(103+128*n)+1 = 207+256*n := by omega
+      have hK : (4*(103+128*n)+10 + 2*(103+128*n)-2)/2 = 313+384*n := by omega
+      rw [← hA, ← hK]
+      exact hQ.2
     exact no_parent_15_25 n hQ'
   · have hKmod : (2*(103+128*n))%4=2 := by omega
     omega
@@ -279,25 +302,40 @@ theorem thin_gateway_86_unreachable (n : Nat) :
     (4*(86+128*n)+10) (by omega) (by omega) (by omega) h
   rcases hp0 with hQ0 | hU0
   · have hQ0' : BB6CLine.Reach (173+256*n,262+384*n,0) := by
-      convert hQ0.2 using 1 <;> omega
+      have hA : 2*(86+128*n)+1 = 173+256*n := by omega
+      have hK : (4*(86+128*n)+10 + 2*(86+128*n)-2)/2 = 262+384*n := by omega
+      rw [← hA, ← hK]
+      exact hQ0.2
     exact no_parent_13_38 n hQ0'
   · have hU0' : BB6CLine.Reach (0,84+128*n,527+768*n) := by
-      convert hU0.2 using 1 <;> omega
+      have hK : (2*(86+128*n)-4)/2 = 84+128*n := by omega
+      have hC : 4*(86+128*n)+10 + 2*(86+128*n)+1 = 527+768*n := by omega
+      rw [← hK, ← hC]
+      exact hU0.2
     have hp1 := zeroA_reach_parent (84+128*n) (527+768*n)
       (by omega) (by omega) (by omega) hU0'
     rcases hp1 with hQ1 | hU1
     · have hodd : (527+768*n)%2=1 := by omega
       omega
     · have hU1' : BB6CLine.Reach (0,40+64*n,612+896*n) := by
-        convert hU1.2 using 1 <;> omega
+        have hK : (84+128*n-4)/2 = 40+64*n := by omega
+        have hC : 527+768*n + (84+128*n)+1 = 612+896*n := by omega
+        rw [← hK, ← hC]
+        exact hU1.2
       have hp2 := zeroA_reach_parent (40+64*n) (612+896*n)
         (by omega) (by omega) (by omega) hU1'
       rcases hp2 with hQ2 | hU2
       · have hQ2' : BB6CLine.Reach (41+64*n,325+480*n,0) := by
-          convert hQ2.2 using 1 <;> omega
+          have hA : 40+64*n+1 = 41+64*n := by omega
+          have hK : (612+896*n + (40+64*n)-2)/2 = 325+480*n := by omega
+          rw [← hA, ← hK]
+          exact hQ2.2
         exact no_parent_9_37 n hQ2'
       · have hU2' : BB6CLine.Reach (0,18+32*n,653+960*n) := by
-          convert hU2.2 using 1 <;> omega
+          have hK : (40+64*n-4)/2 = 18+32*n := by omega
+          have hC : 612+896*n + (40+64*n)+1 = 653+960*n := by omega
+          rw [← hK, ← hC]
+          exact hU2.2
         have hp3 := zeroA_reach_parent (18+32*n) (653+960*n)
           (by omega) (by omega) (by omega) hU2'
         rcases hp3 with hQ3 | hU3
