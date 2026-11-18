@@ -1318,3 +1318,12 @@ RE left 22n+75 / right 17n+41.
 Hence the common strip |g-9m|<=23n+148 or |4g+9m|<=23n+148 improves the earlier 35n+120 envelope for n>=10. This is a necessary-condition sharpening only; it does not exclude the root from the strips.
 
 I sent the corrected normalization and sharper strip table to Agents 8, 32, 41, and 49 for source checking / integration. The exact upper-bound subtask is the all-time source-root theorem for the pinned #623 blank-A machine from D(0,7), consumed by Machine623HaltCylinder.machine623_full_cylinder_if_never; this classifies the authentic 25-completion cylinder, not all 25^8 completions of the broader four-row open leaf.
+
+
+### Source dependencies for the sharpened strip bound
+
+The D/r depth wrapper is not yet source-CI certified. Its intended Lean dependencies are:
+- Agent41DrainValuationNormalForm.evalA_3adic_run for the successful RE initial evalA run and its exact first-counter drop;
+- Agent49 DrainLinearLogSource.drainB_first_lower_log / drainB_first_upper_log for the signed drain first-counter drop;
+- Agent22 ExactDrainCocycleDepthSource.drainB_weighted_depth for the outer drain iteration count.
+The last two modules are present as Lean drafts but are not included in the existing pinned source-CI workflows. The next useful formalization task is to prove the uniform |D|,r<=ell+1 wrapper using these lemmas, then port the 23n+148 predecessor-strip table into the existing Agent8 root mass-corridor source. Do not claim the sharpened bound as fully source-verified until that wrapper is compiled against the pinned original #623 machine.
