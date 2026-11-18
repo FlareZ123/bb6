@@ -36,16 +36,20 @@ theorem state5_three_right (T : Int → Bool) (h : Int)
   have hne1 : h+1 ≠ h := by omega
   have hne2' : h+1+1 ≠ h := by omega
   have hne3' : h+1+1 ≠ h+1 := by omega
+  have hne0 : h ≠ h+2 := by omega
+  have hne12 : h+1 ≠ h+2 := by omega
   simp [run, rawStep, readSlot, applyMove, h0, h1, h2',
-    hne1, hne2', hne3', lookup53, lookup31Right, lookup15, holeRight]
-  funext x
-  by_cases hx0 : x = h
-  · simp [hx0, holeRight]
-  · by_cases hx1 : x = h+1
-    · simp [hx0, hx1, holeRight, h1]
-    · by_cases hx2 : x = h+2
-      · simp [hx0, hx1, hx2, holeRight]
-      · simp [hx0, hx1, hx2, holeRight]
+    hne1, hne2', hne3', lookup53, lookup31Right, lookup15]
+  constructor
+  · omega
+  · funext x
+    by_cases hx0 : x = h
+    · simp [hx0, holeRight, hne0]
+    · by_cases hx1 : x = h+1
+      · simp [hx0, hx1, holeRight, h1, hne12]
+      · by_cases hx2 : x = h+2
+        · simp [hx0, hx1, hx2, holeRight, hne2']
+        · simp [hx0, hx1, hx2, holeRight]
 
 /-- The cells at and immediately right of the moving state-5 head are one. -/
 def state5RightOnes (T : Int → Bool) (h : Int) (n : Nat) : Prop :=
