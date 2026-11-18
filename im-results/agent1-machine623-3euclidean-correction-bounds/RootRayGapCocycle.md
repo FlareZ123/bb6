@@ -326,3 +326,44 @@ Here the four widths are \(2W_{\rm LO}\), \(2W_{\rm LE}\), \(4W_{\rm RO}\), and 
 H-3(3+\epsilon)q-6D-4r-2c_s.
 \]
 This separates the size update from the signed-drop statistic and may be useful for a joint modular exclusion of the four terminal strips.
+
+
+## 2026-11-18 normalization: one full-drain count
+
+The preceding derivation uses a split convention: in LO/LE/RO, (r) is the number of calls in the drain; in RE, (r) excludes the initial evaluator. The RE baseline for (D) is already the full initial evaluator input (2k+3), so (D) does include the initial evaluator's first-counter drop.
+
+For a uniform convention, define (R) to be the total number of evaluator calls in the complete drain. Then
+[
+R=rquad	ext{in LO/LE/RO},qquad R=r+1quad	ext{in RE}.
+]
+Thus the RE identities in the preceding sections must be rewritten by substituting (r=R-1). In particular,
+[
+eta=1-D,qquad
+delta=2D+2R+3,qquad
+S=delta+2eta=2R+5,
+]
+and
+[
+T=delta-eta=3D+2R+2.
+]
+The RE gap/scale updates become
+[
+egin{aligned}
+g'_L&=g-9m-9D-8R-11,\
+g'_R&=-4g-9m+6D+2R-1,\
+m'_L&=3m+2D+2R+3,\
+m'_R&=g+3m+1-D.
+end{aligned}
+]
+The sector constants in the uniform notation are therefore
+[
+S=2R+c_s,quad c_s=(4,4,8,5),
+qquad
+T=3D+2R+c_T,quad c_T=(19,10,-4,2)
+]
+in LO/LE/RO/RE respectively. In particular, the D-free coordinate update is now
+[
+H'=\lambda(H-3\epsilon q+2R+c_s).
+]
+
+The full-drain correction table in [SignedCoordinateNormalForm.md](SignedCoordinateNormalForm.md) uses this uniform (R) convention. Its RE constants differ from the split-(r) formulas above by exactly the substitution (r=R-1). The source-compiled right-even depth wrapper in Agent8's successful agent8-623-third-affine run packages the initial evaluator into the same drain call; this normalization does not, by itself, prove the root nonhalting theorem.
