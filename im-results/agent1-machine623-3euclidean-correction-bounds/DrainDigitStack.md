@@ -22,7 +22,7 @@ The complementary affine-buffer reduction isolates two one-parameter exceptional
 2. Odd offset-three: `D(d+3,d)` with odd d, whose next step is `drainB 1 (d+2) 3`.
 
 For the odd offset-three family, the first drain evaluator is
-`evalA 1 (d+1) (2*d+8)`. By the normal form, this first evaluator fails exactly when the low ternary digits of `d+1` begin with a 1 followed by 0 (or when d+1=1), equivalently
+`evalA 1 (d+1) (2*d+10)`. By the normal form, this first evaluator fails exactly when the low ternary digits of `d+1` begin with a 1 followed by 0 (or when d+1=1), equivalently
 
 `d+1 ≡ 1 (mod 9)`, i.e. `d ≡ 0 (mod 9)`.
 
