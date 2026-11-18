@@ -482,3 +482,8 @@ The exact source-edge recurrence is d_parent-1+14P=2^(t+1)*(d_child-1)+2*(m_pare
 ### Source-coordinate reductions formalized
 
 RestartWallTelescoping.lean now also proves source_edge_recurrence: source mass plus the doubled inverse-power equation yields d_parent-1+14P=2^(t+1)*(c+3)+2*(m_parent+n+3). It proves source_wall_endpoint: source mass plus the wall equation gives d_wall=2P+2m+2n+7. Together with restart_aggregate_step, these are the exact scalar ingredients for the source-level OddCone induction. Local Lean compilation succeeds with only propext and Quot.sound. Remaining gap: maintain/reset the aggregate over actual OddCone constructors, not more scalar algebra.
+
+
+### High-depth half-defect bound
+
+Added restart_half_defect_lt to RestartWallTelescoping.lean. From source mass, positive restart wall defect F=b+2m+2n+8-12P, and odd child d, it proves d-1=2*xhalf with xhalf<P. This is exactly the hypothesis needed by restart_wall_nonnegative_N; the source theorem HighDepthRestartSource already proves the defect positivity. The remaining source-level task is now entirely the aggregate reset/append induction over OddCone.

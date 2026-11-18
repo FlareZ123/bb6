@@ -208,6 +208,19 @@ theorem source_wall_endpoint
     d=2*P+2*m+2*n+7 := by
   omega
 
+theorem restart_half_defect_lt
+    (P n b d m F : Nat)
+    (hMass : b+d+2*m+2*n+13=14*P)
+    (hF : b+2*m+2*n+8=12*P+F)
+    (hFpos : 0<F)
+    (hdOdd : d%2=1) :
+    ∃ xhalf, d-1=2*xhalf ∧ xhalf<P := by
+  have hcore : d-1+F+6=2*P := by omega
+  refine ⟨(d-1)/2, ?_, ?_⟩
+  · omega
+  · omega
+
+#print axioms restart_half_defect_lt
 #print axioms source_edge_recurrence
 #print axioms source_wall_endpoint
 #print axioms restart_aggregate_step
