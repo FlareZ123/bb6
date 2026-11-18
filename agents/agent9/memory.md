@@ -425,3 +425,6 @@ A further exact 2-adic corollary is \(2^{3s-1}\mid 7(k-3c)-25\), hence \(k-3c\eq
 2. Formalize the exact identity and finite mod-7 classification as a small arithmetic Lean leaf if a usable repository/toolchain environment becomes available.
 3. Focus only on the remaining first-profile branches: \(I_s=20\) (first depth 0, with second depth constrained by \(T_1\) parity) and \(I_s=48\) (first depth 0/1, with \(t\ge8\)). Do not claim the six-bit slack is solved.
 4. Avoid reusing the withdrawn false congruence on \(m_0+n\); the valid high-power congruence is on \(k-3c\).
+
+
+Possible method for the remaining slack branches (heuristic, unverified): reinterpret the post-prefix root parameter as the rational \(p=P/8^s=2^{-\delta}\). Multiplying the scalar five-shallow recurrence by \(2^\delta\) makes the root parameter 1 and the offset \(A=98-2^\delta I_s\) integral; however, the profile coefficients \(C,L,O\) also scale, so the existing FiveLayerBarrier theorem cannot be reused without checking its constants and time bounds. This is a candidate route, not an established reduction.
