@@ -114,7 +114,57 @@ theorem secondCyclePrefix34_at (T : Int → Bool) (h : Int)
   · simpa [secondCyclePrefix34Start] using hp2
   · simpa [secondCyclePrefix34Start] using hp3
 
+/-- A generic two-sided tape with nearest-first left and right streams. -/
+def q4TapeFromSides (left right : List Bool) (h x : Int) : Bool :=
+  if x ≤ h then
+    sideBit left (Int.toNat (h-x))
+  else
+    sideBit right (Int.toNat (x-h-1))
+
+/-- The q4 checkpoint-2 side streams force the exact 34-step input window
+whenever the left stream begins 011,d1,d0 and the right stream begins 000. -/
+theorem secondCyclePrefix34_input_from_sides
+    (tailL tailR : List Bool) (h : Int) :
+    let T := q4TapeFromSides
+      ([false,true,true] ++ d1 ++ d0 ++ tailL)
+      ([false,false,false] ++ tailR) h
+    T (h-7) = false ∧
+    T (h-6) = false ∧
+    T (h-5) = true ∧
+    T (h-4) = true ∧
+    T (h-3) = true ∧
+    T (h-2) = true ∧
+    T (h-1) = true ∧
+    T h = false ∧
+    T (h+1) = false ∧
+    T (h+2) = false ∧
+    T (h+3) = false := by
+  simp [q4TapeFromSides,sideBit,d1,d0] <;> omega
+
+/-- Specialize the preceding window lemma to a BinDec value whose first
+two source digits are d1,d0. -/
+theorem secondCyclePrefix34_input_from_binDec
+    (w r : Nat) (hr : r < 2^w) (tailR : List Bool) (h : Int) :
+    let T := q4TapeFromSides
+      ([false,true,true] ++ binDec (w+2) (2*(2*r+1)))
+      ([false,false,false] ++ tailR) h
+    T (h-7) = false ∧
+    T (h-6) = false ∧
+    T (h-5) = true ∧
+    T (h-4) = true ∧
+    T (h-3) = true ∧
+    T (h-2) = true ∧
+    T (h-1) = true ∧
+    T h = false ∧
+    T (h+1) = false ∧
+    T (h+2) = false ∧
+    T (h+3) = false := by
+  simpa [binDec_twoDigit_d1d0 w r hr] using
+    secondCyclePrefix34_input_from_sides (binDec w r) tailR h
+
 #print axioms binDec_twoDigit_d1d0
+#print axioms secondCyclePrefix34_input_from_sides
+#print axioms secondCyclePrefix34_input_from_binDec
 
 #print axioms secondCyclePrefix34_exact
 #print axioms secondCyclePrefix34_heads
