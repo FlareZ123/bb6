@@ -60,9 +60,10 @@ private theorem firstCycleResidualLeft_boundary (z : Nat) (tail : List Bool) :
     unfold firstCycleResidualLeft
     rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
       (List.replicate m true) ([false,true,false,false] ++ tail) (m+j)
-      (by simp [List.length_replicate])]
+      (by simp [List.length_replicate]; omega)]
     have hidx : m+j-(List.replicate m true).length = j := by
       simp [List.length_replicate]
+      omega
     rw [hidx, sideBit_append]
     simp [hj, sideBit]
   refine ⟨?_,?_,?_,?_⟩
