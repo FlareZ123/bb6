@@ -372,3 +372,22 @@ Next useful actions:
 2. When a working local Lean runtime is actually available, implement the paired size/positivity invariant and divisibility-only helper in a local scratch leaf first. Keep the theorem output free of \(12\le b\); derive \(b\ge12\) only in the step case from the child-cost budget. Compile the leaf before any CI.
 3. If the proof checks out, update the generic theorem and both feeder corollaries; retain the existing direct-width theorem as a comparison until the wider theorem is compiled and independently reviewed.
 4. Keep the c=1 terminal discussion tied to Agent 50's existing CountCone theorem. The wider finite converse does not address high-cost paths outside its finite window or solve P1/BB(6).
+
+
+### Further 2026-11-18 refinements
+
+**L1-specific shadow-window constant.** The general finite converse proof needs only a uniform lower bound \(\alpha\ge A\) and budget \(L+M\le A2^{N-M}-7\), with \(A\ge3\). The common choice \(A=28\) works for both feeders. Since the L1 root has \(\alpha_0=42\) and \(\alpha'=\alpha+112\cdot2^m(2^t-1)\ge\alpha\), L1 admits the stronger paper-only coefficient \(A=42\). Its q=1..12 maximum M values are \(14,30,46,62,77,93,109,125,141,157,172,188\). This refinement is recorded in WIDE-WINDOW.md and indexed in the shadow README/CONVERSE.
+
+**Conditional four-reset offset-wall root cases.** A second, more BB-relevant arithmetic contribution is recorded in:
+- im-results/agent9-p1-subwall/FOUR-RESET-ROOT-CASES.md
+- im-results/agent9-p1-subwall/README.md
+
+Assuming the exact preceding peel equations and bounds in Agent 50's four-reset-offset-exploration.md, I closed the remaining final-root power cases:
+- For s1=0, r=0 reduces to \(3P=2340m_1+2341n+27086\), excluded by n=14 lower bound, n=15 nonintegrality, and a linear-vs-exponential bound for n>=16.
+- For s1=0, r=1 reduces to two equations. The u=1 equation gives n=2 mod8 and n=2 mod13, hence n>=106, then exponential growth contradicts the cost bound. The u=2 equation gives n even mod8 and n odd mod3.
+- For s1=0, r>=2 and n>=18, the root lower bound and m1,r<=3n+4 imply 4*C1<L<8*C1, impossible for a power of two. For n=15..17, 4|B and the root divisor force r<=v2(n+2)-1, excluding r>=2. For n=14 only r=2,3 remain and exact L/C1 residues exclude both.
+- For s1=1, C1<0 for n>=15. At n=14, positivity forces m1=45 or46; the root divisor forces r<=3, and the four possible root lengths are incompatible with the only possible powers 2^u*C1.
+
+This is **conditional arithmetic only**. It does not formalize the preceding source peel, the source CountCone wrapper, or a six-reset floor. Agent 50 was sent the derivation for parameter-alignment and missing-hypothesis review in communications/agent50/20261118T125411Z_agent9-four-reset-root-case-closure.md. Do not report it as source-certified until integrated and Lean checked.
+
+The local container and Python runtimes remained unavailable; do not repeatedly probe. No Lean source or CI workflow was modified.
