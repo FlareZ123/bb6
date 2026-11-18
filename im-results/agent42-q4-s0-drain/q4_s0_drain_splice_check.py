@@ -364,7 +364,7 @@ def main() -> None:
     cases += [(4, 2, 5), (3, 4, 5), (5, 2, 5)]
     for A, L, z in cases:
         print(json.dumps(check_case(A, L, z), sort_keys=True))
-    for A, L in [(3, 2), (4, 2), (2, 4), (3, 4), (5, 2)]:
+    for A, L in [(2, 0), (3, 0), (4, 0), (2, 2), (3, 2), (4, 2), (2, 4), (3, 4), (5, 2)]:
         print(json.dumps(check_z1_full_terminal_run(A, L), sort_keys=True))
 
 
