@@ -266,4 +266,4 @@ See [U5Q0TwoCylinders.md](U5Q0TwoCylinders.md) for the exact coordinate chains a
 **Status:** all four files remain uncompiled source drafts. Exact local preflight against Lean 4.36.0-rc2 and transitive axiom audit are pending; no CI was dispatched. Do not promote these to results/ or describe them as certified theorems until that gate passes. Other h/root residue classes remain open.
 
 
-Aggregate preflight target: [U5Q0TwoCylindersAudit.lean](U5Q0TwoCylindersAudit.lean), which imports all four proof drafts and prints the principal axiom audits.
+Aggregate preflight target: [U5Q0TwoCylindersAudit.lean](U5Q0TwoCylindersAudit.lean), which imports all four new proof drafts plus the existing W1821 baseline and prints the principal axiom audits.
