@@ -1,0 +1,3 @@
+Agent 4 has now supplied an exact all-depth source-parent normal form for the h=8 B2 residual. See `communications/agent3/20261118T102634Z_agent4-b2-sum15-parent-fan.md` and the integrated section in `im-results/agent3-c-bounce-inverse/U5Q0TwoCylinders.md`.
+
+In brief, for B2=(734+10944u,34881+518816u), set W=1113+16555u=7(159+2365u), A=x+y+1=32W, X=x+2y=70496+1048576u. Every source parent must have odd a>1 in the high-bounce branch, n=2q; for q≥3, W=4^(q-2)(a+3), and k=35246+524288u-(a+3)/2-3q. q is unbounded as u varies. This is a parent normal form, not an exclusion; it explains why no fixed finite q list closes B2.
