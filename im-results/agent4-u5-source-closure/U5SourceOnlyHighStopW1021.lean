@@ -9,7 +9,7 @@ set_option linter.unusedSimpArgs false
 /-!
 End-to-end source-only exclusion on the new residual cylinder
 w=1021 (mod 1024). The arithmetic lift identifies the q-fan parameter
-z=2 (mod 128); the two exact source-parent branches are discharged in
+t=459 (mod 1024); the two exact source-parent branches are discharged in
 U5Q0SourceOnlyW1021.lean. The existing U5 M8 terminal and m=0 feeder
 bridges then lift this to the authentic high stopping root.
 
@@ -28,6 +28,19 @@ private theorem succ_le_two_pow (n : Nat) : n+1≤2^n := by
   | succ n ih =>
       have hpow : 2^(n+1)=2^n*2 := by rw [Nat.pow_succ]
       omega
+
+private theorem pow_two_mod_three (n : Nat) :
+    2^n%3 = if n%2=0 then 1 else 2 := by
+  induction n with
+  | zero => norm_num
+  | succ n ih =>
+      rw [Nat.pow_succ,Nat.mul_mod]
+      rw [ih]
+      by_cases h : n%2=0
+      · have hn : (n+1)%2=1 := by omega
+        simp [h,hn]
+      · have hn : (n+1)%2=0 := by omega
+        simp [h,hn]
 
 private theorem q0_parent_reach_implies_X (t : Nat) (ht : 1≤t)
     (h : CReach (64*t+5) (32*t+3)) :
@@ -80,7 +93,7 @@ theorem u5_w1021_t_param (w s m t : Nat)
 
 /-- The y=3 terminal of the U5 M8 residual is unreachable on
 w=1021 (mod 1024). Its q=0 parent is excluded by the new
-z=2 (mod 128) source-only fan; q=1 is odd-right sum two; q>=2
+t=459 (mod 1024) source-only fan; q=1 is odd-right sum two; q>=2
 contradicts m+1=1 (mod 8). -/
 theorem blank_no_u5_residual_m8w_w1021 (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
