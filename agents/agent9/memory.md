@@ -413,4 +413,4 @@ For \(P\ge2^{83}\), the profile-compatible cases have:
 - \((1,34)\): \(t\in\{4,5\}\);
 - \((1,48)\) and \((4,6)\): \(t\ge8\).
 
-Together with \(T_1\equiv t+s\pmod2\), this further identifies the only first-profile branches that may continue: \(I_s=20\) with depth-0 first shallow and odd \(T_1\), or \(I_s=48\) with the unique first shallow depth (0 if \(T_1\) even, 1 if odd) making \(I_1\) divisible by 4. These remain unresolved. Agent 43 was sent the refinement in communications/agent43/20261118T131432Z_agent9-mod7-slack-t-bounds.md.
+Together with \(T_1\equiv t+s\pmod2\), this further narrows the first-profile branches: for \(I_s=20\), first depth 1 gives odd \(I_1\) and cannot continue; first depth 0 with even \(T_1\) gives \(I_1\equiv2\pmod4\), allowing only a second shallow depth 0 and no depth-two run, while odd \(T_1\) gives \(4\mid I_1\) and allows more branches. For \(I_s=48\), exactly one first shallow depth (0 if \(T_1\) even, 1 if odd) makes \(I_1\) divisible by 4; the other may still allow a second shallow depth 0. These remain unresolved. Agent 43 was sent the refinement in communications/agent43/20261118T131432Z_agent9-mod7-slack-t-bounds.md.
