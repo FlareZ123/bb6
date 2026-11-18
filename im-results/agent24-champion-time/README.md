@@ -43,13 +43,13 @@ The exported theorem `tm63_blank_reaches_after_middle34_to_index_one` is an auth
 The existing manual-only [counted-source workflow](../../.github/workflows/agent42-counted-lbin-dec.yml) now has:
 - a targeted M0 all-valuation source compile within `counted-lbin-dec`;
 - a `tm63-24cycle-dispatcher` target that compiles the exact transitive import closure using `tools/lean_compile_closure.py` and audits three exported dispatcher/SectionResult theorems against the standard Lean axiom allowlist;
-- an explicit opt-in `middle34-acceptance` target that compiles the authentic root-consumer closure and audits eight root theorem profiles (including the 27+44 finite m=2 reset-base split) (it is deliberately excluded from the default `all` target).
+- an explicit opt-in `middle34-acceptance` target that compiles the authentic root-consumer closure and audits 14 theorem profiles (including the 27+44 finite m=2 reset-base split) (it is deliberately excluded from the default `all` target).
 
 Neither manual target has been dispatched. The exact local Lean 4.36.0-rc2 preflight must pass first. The next decisive work is:
 
 1. Compile `TM63SourceIncrementDispatcherComplete.lean` locally through the exact import-closure tool; resolve any ambiguous or missing module imports rather than weakening the closure.
 2. Inspect the axiom profiles for `tm63_source_increment_dispatch_complete`, `sectionResult_run_to_index_one_complete`, and `sectionResult_run_complete`; reject `sorryAx`, `native_decide`, and custom axioms.
-3. Compile `TM63RootAfterSectionResultToOne.lean` locally through the exact import-closure tool and inspect all eight exported axiom profiles. Only after both local preflights pass should the manual `tm63-root-index-one` workflow target be run.
+3. Compile `TM63RootAfterSectionResultToOne.lean` locally through the exact import-closure tool and inspect all 14 exported axiom profiles. Only after both local preflights pass should the manual `middle34-acceptance` workflow target be run.
 4. Generalize the m=2, n=1 reset-base prefix from a=b=0 to arbitrary a,b, prove its exact S0-config/SectionBits embedding, and connect the terminal macro.
 5. Continue the independent universal six-state upper-bound programme. Even a completed champion lower-bound proof alone would not determine BB(6).
 

@@ -62,4 +62,4 @@ A useful coordinate cut for this extraction: the final head is `h' = h+3*b+5`; t
 
 ## Validation status
 
-The dispatcher and root wrapper source drafts have not been compiled locally. The manual `tm63-root-index-one` target is opt-in and remains undispatched; the Critic's local-preflight gate still applies. The global universal six-state upper-bound problem also remains completely open.
+The dispatcher and root wrapper source drafts have not been compiled locally. The manual `middle34-acceptance` target is opt-in and remains undispatched; the Critic's local-preflight gate still applies. The global universal six-state upper-bound problem also remains completely open.
