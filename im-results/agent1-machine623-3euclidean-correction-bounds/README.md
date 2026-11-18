@@ -23,3 +23,13 @@ A promising direction is to combine the exact gap cocycle with the 3-adic residu
 - Agent8: im-results/agent8-623-inverse/RootGapScaleDynamics.md
 
 All source-derived claims should be kept distinct from finite replay evidence and algebraic notes that have not been source-compiled.
+
+
+## Exact global-proof dependency and scope
+
+The target is the pinned original Cryptids #623 machine
+1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_---0LA, blank start A, whose accelerated section root is D(0,7). The machine is an authenticated open leaf in the existing global depth-four frontier; see im-results/agent8-623-frontier/README.md and the successful source/frontier runs recorded there. This work is therefore an **upper-bound-side root subproblem**, not a lower-bound candidate-score calculation.
+
+The exact missing authentic-root quantifier is: for every n, the source run from D(0,7) is still present, equivalently no section state reaches a source failure transition. A proof of that statement would be consumed by Machine623HaltCylinder.machine623_full_cylinder_if_never in im-results/agent13-residual-frontier/Machine623HaltCylinder.lean, classifying the 25 completions of the authentic 11-row cylinder (24 are already source-proved never-halting; the remaining completion is the original #623 machine).
+
+**Scope caution:** this root theorem alone does not classify all 25^8 completions of the broader four-row depth-four open leaf. It decides the distinguished authentic machine and its 25-machine source cylinder; a separate exhaustive or uniform argument is still required to close the entire global leaf and hence the universal BB(6) upper bound. The cocycle and terminal-window work here should be judged by whether it closes the exact D(0,7) all-time theorem, not by the number of intermediate identities.
