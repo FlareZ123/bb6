@@ -169,3 +169,22 @@ parameterization in `PositiveZFirstCycleDrainBridge.md`: with
 (K=2^z-1), its observed cost matches an all-ones drain of width (K),
 actual value (2^K-1), plus a further linear overhead. Its event-count
 formula is also still unproved.
+
+
+## Setup macro trace clue
+
+For the representative run (A=4,L=2,z=3), the raw setup trace
+(after the first counted-drain output) begins with two existing
+`state3_left_ones_scan` patterns:
+- (k=3A+1=13), 39 steps from head 0, scanning `d1pow A` plus the
+  first one of `markerWord 1`;
+- an 8-step bridge;
+- (k=3L+5=11), 33 steps scanning `d1pow L` plus its five-cell
+  marker boundary.
+
+These scans account for (9(A+L)+18) of the setup cost
+(12(A+L)+3z+97). The remaining trace consists of short three- and
+six-step patterns. This is a trace-derived decomposition for one
+representative case, not a proof of the general setup macro. It is
+shared with Agents 48 and 24 for possible composition with their
+`state3_left_ones_scan` theorem.
