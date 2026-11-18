@@ -385,18 +385,18 @@ The local container and Python runtimes remained unavailable; do not repeatedly 
 
 ### High-depth restart six-bit slack: new mod-7 reduction
 
-A new conditional arithmetic note is at `im-results/agent9-p1-high-depth/SIX-BIT-SLACK-MOD7.md`. It uses Agent 43's restart variables and assumes the existing candidate-wall suffix lower bound (I_0>0), together with (I_0<98P). For a depth-(tge3) edge with parent ((b_p,d_p,m_p)), inverse parameters ((k,c)), and restart child ((2k-4,c+4,m_p+t+1)), the mass and inverse-cost equations give the exact identity
-[
-I_0=98P-49d_0-14(m_0+n)+55=14k-42c-50.
-]
-Hence (I_0equiv6pmod7). If (s) depth-two edges follow, (8^smid I_0); with (delta=3s-n>0) and (I_s=I_0/8^s), we get (I_sequiv6pmod7) and (0<I_s<98/2^delta). Since (deltaequiv-npmod3), the six-bit slack cases reduce to:
-- (nequiv0): (delta=3,I_s=6) (or (delta=6), impossible);
-- (nequiv1): (delta=2,I_sin{6,13,20}) (or (delta=5), impossible);
-- (nequiv2): (delta=1,I_sin{6,13,20,27,34,41,48}), or (delta=4,I_s=6).
+A conditional arithmetic note is at im-results/agent9-p1-high-depth/SIX-BIT-SLACK-MOD7.md. It assumes Agent 43's candidate-wall suffix hypotheses, including 0 < I0 < 98P. For a depth-t>=3 parent edge with inverse parameters (k,c) and restart child (2k-4,c+4,mp+t+1), the mass and inverse-cost equations give the exact identity:
 
-This reduces the nominal six-bit slack to at most four bits and a tiny finite set of post-prefix energies. The first-shallow profile divisibility also immediately excludes (I_s=13), and for (I_s=6) only depth 0 is possible, with odd output energy independent of the first-profile time parity. For (I_s=20), depth 1 has odd output; depth 0 has output congruent 2 mod4 for even (T_1) and 0 mod4 for odd (T_1). The remaining cases are not solved. A parity relation (T_1equiv t+spmod2) is derived conditionally from the parent equations if the restart-shifted profile uses (T_1=m_0+n+6+3s).
+I0 = 98P - 49d0 - 14(m0+n) + 55 = 14k - 42c - 50.
 
-Sent the derivation to Agent 43 in communications/agent43/20261118T131059Z_agent9-mod7-sixbit-slack.md for review and possible integration. Do not report this as a high-depth exclusion, source theorem, or BB(6) result; the (delta=1) branch and the potentially continuing (I_s=20) branch remain open.
+Hence I0 is 6 mod 7. If s depth-two edges follow, 8^s divides I0. With delta=3s-n>0 and Is=I0/8^s, we get Is is 6 mod 7 and 0 < Is < 98/2^delta. Since delta is congruent to -n mod 3, the six-bit-slack cases reduce to:
+- n mod 3 = 0: delta=3, Is=6 (delta=6 impossible);
+- n mod 3 = 1: delta=2, Is in {6,13,20} (delta=5 impossible);
+- n mod 3 = 2: delta=1, Is in {6,13,20,27,34,41,48}, or delta=4, Is=6.
+
+This reduces the nominal six-bit slack to at most four bits and a tiny finite set of post-prefix energies. The first-shallow profile divisibility immediately excludes Is=13. For Is=6, only first depth 0 is possible and its output energy is odd, independent of T1. For Is=20, first depth 1 gives odd output; first depth 0 gives output 2 mod 4 for even T1 and 0 mod 4 for odd T1. Do not overstate this: when T1 is even, a second shallow depth 0 can still follow; when T1 is odd, more branches can follow. A parity relation T1 == t+s (mod 2) is derived conditionally from the parent equations if the restart-shifted profile uses T1=m0+n+6+3s.
+
+The derivation and t-bound refinement were sent to Agent 43 in communications/agent43/20261118T131059Z_agent9-mod7-sixbit-slack.md and communications/agent43/20261118T131432Z_agent9-mod7-slack-t-bounds.md. A 2-adic corollary, 2^(3s-1) divides 7(k-3c)-25, is in the note and was sent in communications/agent43/20261118T131845Z_agent9-restart-2adic-congruence.md. Do not report this as a high-depth exclusion, source theorem, or BB(6) result. The delta=1 branch and the potentially continuing Is=20 and Is=48 branches remain open.
 
 
 The mod-7 note was further extended with a high-depth-\(t\) interval. Under \(m_0+n<93P/128-3\), set \(A=98-2^\delta I_s\), so \(D_0=AP\). Then
