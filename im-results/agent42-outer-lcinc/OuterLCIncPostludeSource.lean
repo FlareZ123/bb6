@@ -680,7 +680,9 @@ theorem outerLCInc_full_run
         (s1Config L n m a 0 b h) =
         some ⟨3,h+3*b+5,
           outerLCIncPostludeTape
-            (s1Config L n m a 0 b h).tape h a m b⟩ := by
+            (outerLCIncSourceT3
+              (s1Config L n m a 0 b h).tape h a m r)
+            h a m b⟩ := by
   obtain ⟨q,r,len,hnfactor,hL,hq,hpre⟩ :=
     outerLCInc_preHRun L n m a b h hn hnL hm
   have hpost := outerLCInc_s1_postlude_run L n m a b r h hm
