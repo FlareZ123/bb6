@@ -1,292 +1,285 @@
-# Rho-20 phase: eight of nine K-lifts modulo 486 are root-excluded
+# Rho-20 phase: exact-valuation lifts and the full inverse-parent fan
 
-**Status:** exact paper-level arithmetic over the original-source ResetParent grammar. The first-reset inverse equivalence and blank-root ResetChain equivalence are source-certified in the existing Agent 10 workflow, but the new valuation-two/three lemmas below have not been formalized or Lean-compiled. This refines the sole phase left by the eight-of-nine table; it does not decide the final lift, machine #746, or BB(6).
+**Status (19 November 2026).** The exact identity, 3-adic lift law, valuation-sibling calculations, and logarithmic gap-density calculation below are valid. The previous conclusion that the rho-20 phase is root-excluded in 80 of 81 residue classes is withdrawn. The argument examined only the maximal 3-adic exponent \(t=v_3(X)-1\), but the source-exact odd-parent rule permits every smaller exponent too: it requires \(d\) odd, not \(3\nmid d\). In fact, every rho-20 candidate has an additional \(t=0\) odd parent at level \(K-1\). The higher-valuation calculations therefore classify individual parent choices; they do not exclude the candidate from the inverse tree.
 
-## Setup
+The eight non-rho-20 phases of the original eight-of-nine theorem are unaffected. The rho-20 phase remains open. A new construction below gives arbitrarily long same-level even-parent chains inside this rho-20 family, but does not establish blank-root reachability.
 
-Let a>=18 be even, K>=266, K≡2 mod6, and
+## 1. Setup and source-exact parent rule
+
+Let \(a\ge18\) be even, \(K\ge266\), \(K\equiv2\pmod6\), and
 \[
 x=\frac{2K+7}{2^a}\in\left[\frac{97}{64},\frac{13}{8}\right],
-\qquad \rho=K+6a\equiv20\pmod{54}.
-\]
-Put
-\[
-p=2^K,\quad c=2K+7,\quad r=K+4-a,\quad
-B=c2^r,\quad
-D=\frac{B-16p+2K+1}{3},\quad
-E=8p+K-D,\quad X=2E+5.
-\]
-These are the exact t=0, q=0 candidate parameters of [the eight-of-nine phase analysis](T0-EIGHT-OF-NINE-PHASES-ROOT-EXCLUSION.md). In particular, its modular table gives
-\[
-X\equiv0\pmod9,
-\]
-and its interval calculation gives
-\[
-\frac{14}{3}<\frac Ep<\frac{16}{3},
-\qquad 4p<E<6p-1.
-\tag{1}
-\]
-A direct rearrangement of the definitions gives
-\[
-3X+2B=80p+2K+13.
-\tag{2}
-\]
-It also gives
-\[
-\frac Xp=\frac{80-32x}{3}+\frac{2K+13}{3p}.
-\tag{3}
-\]
-The interval and K>=266 imply
-\[
-\frac{28}{3}<\frac Xp<\frac{65}{6}.
-\tag{4}
-\]
-
-## First lift: v3(X)=2 is parentless
-
-Fix a and let K'=K+54. Since 2^54≡1 mod81,
-\[
-2^{K'}\equiv2^K\pmod{81},
 \qquad
-2^{r+54}\equiv2^r\pmod{81}.
-\]
-Also c'=2K'+7=c+108≡c+27 mod81, so
-\[
-B(K')\equiv B(K)+27\cdot2^r\pmod{81}.
-\]
-Both K and a are even, hence r is even and 2^r≡1 mod3. Therefore
-\[
-2B(K')\equiv2B(K)+54\pmod{81}.
-\]
-Applying (2) at K' and K gives
-\[
-3X(K')\equiv3X(K)+108-54
-\equiv3X(K)+54\pmod{81},
-\]
-hence
-\[
-\boxed{X(K+54)\equiv X(K)+18\pmod{27}.}
-\tag{5}
-\]
-The three lifts K,K+54,K+108 of a fixed residue modulo 54 therefore give X residues 0,9,18 modulo 27 in some order, since rho=20 gives X≡0 mod9. Exactly two lifts have v3(X)=2; the unique remaining lift has 27|X.
-
-If v3(X)=2, any odd ResetParent of E must satisfy X=3^(t+1)d with d odd, so t=1 and d=X/9. Its source-band coordinate is
-\[
-P=2^td=\frac{2X}{9}.
-\]
-By (4),
-\[
-\frac{56}{27}<\frac Pp<\frac{65}{27},
-\qquad 2p<P<3p.
-\tag{6}
-\]
-An odd parent at source level L requires
-\[
-6\cdot2^L+1\le P\le8\cdot2^L-1.
-\tag{7}
-\]
-For L<=K-2 the upper endpoint is at most 2p-1; for L>=K-1 the lower endpoint is at least 3p+1. Thus E has no odd parent. By (1), it also has no even parent: even-parent target bands are [6*2^L-1,8*2^L-3], with levels L<=K-1 ending at most 4p-3 and levels L>=K starting at least 6p-1. Hence E is parentless whenever v3(X)=2.
-
-## Second lift: v3(X)=3 also has a parentless predecessor
-
-Now suppose v3(X)=3. Any odd parent of E must have t=2 and d=X/27, so its source-band coordinate is
-\[
-P=2^td=\frac{4X}{27}.
-\]
-Equation (4) gives
-\[
-\frac{112}{81}<\frac Pp<\frac{130}{81}<2.
-\tag{8}
-\]
-The only possible odd source band is therefore L=K-2, whose interval is [3p/2+1,2p-1]. If P is below that band, E has no odd parent and is already parentless by (1). Suppose instead that P lies in this band.
-
-Define
-\[
-\Delta=P-\frac32p.
-\]
-Using (3), an exact simplification gives
-\[
-\boxed{
-\Delta=\frac{p(397-256x)}{162}
-       +\frac{4(2K+13)}{81}.
-}
-\tag{9}
+\rho=K+6a\equiv20\pmod{54}.
 \]
 Write
 \[
-N=397\cdot2^a-256(2K+7).
+p=2^K,\quad r=K+4-a,\quad B=(2K+7)2^r,
 \]
-Since a>=18, 397*2^a and 512K are divisible by 512, while 1792≡256 mod512. Hence
 \[
-N\equiv256\pmod{512},
+D=\frac{B-16p+2K+1}{3},\quad E=8p+K-D,\quad X=2E+5.
 \]
-so N is nonzero and |N|>=256. Also 2^a<2K+7 by the x interval.
+The exact identity and interval estimate are
+\[
+3X+2B=80p+2K+13, \tag{1}
+\]
+\[
+\frac{28}{3}<\frac Xp<\frac{65}{6}. \tag{2}
+\]
+The rho-20 phase table gives \(9\mid X\).
 
-If N<0, (9) gives
+For an odd ResetParent of a target \(u\), the source-exact grammar permits any \(t\ge0\) and odd \(d\) satisfying
 \[
-\Delta\le-\frac{128p}{81\cdot2^a}
-              +\frac{4(2K+13)}{81}<0,
+2u+5=3^{t+1}d,\qquad
+6\cdot2^k+1\le 2^td\le8\cdot2^k-1,
 \]
-because 32p>(2K+7)(2K+13) for K>=266. This contradicts P>=3p/2+1. Therefore N>0. Then (9) gives
+with parent
 \[
-\Delta\ge\frac{128p}{81(2K+7)}>\frac K2,
+h=2^{t+1}d-8\cdot2^k-k-5.
 \]
-where the last inequality follows, for K>=266, from 256*2^K>81K(2K+7). Thus
-\[
-P>\frac32p+\frac K2.
-\tag{10}
-\]
+There is no condition \(3\nmid d\). Thus, if \(3^n\mid 2u+5\), all exponents \(0\le t<n\) must be considered. Restricting to the maximal exponent \(t=n-1\) does not enumerate all odd parents.
 
-The unique odd parent is at L=K-2 and has height
-\[
-h=2P-8\cdot2^{K-2}-(K-2)-5
- =2P-2p-K-3
- =p+2\Delta-K-3.
-\]
-By (10), h>p-3. By (8), P/p<130/81, so h/p<260/81-2=98/81. Since 98/81<3/2 and K>=266, h<98p/81<3p/2-1. Consequently
-\[
-\boxed{p-3<h<\frac32p-1.}
-\tag{11}
-\]
-No even-parent target band intersects (11): levels L<=K-3 end at p-3, while levels L>=K-2 start at 3p/2-1.
+## 2. A guaranteed \(t=0\) parent for every rho-20 candidate
 
-There is no odd parent of h either. Since P=4d, p≡1 mod3 and K≡2 mod3,
+Since \(9\mid X\), put \(P_0=X/3\). From (2),
 \[
-h=8d-2p-K-3\equiv2d+2\pmod3.
+\frac{28}{9}<\frac{P_0}{p}<\frac{65}{18}.
 \]
-Here 3 does not divide d because v3(X)=3, so h≡1 or 0 mod3. Every odd-parent target u must satisfy 2u+5≡0 mod3, hence u≡2 mod3. Thus h has no odd parent.
-
-So when P is in its only possible band, E has exactly one odd parent h and h is parentless. When P is outside the band, E itself is parentless. In either case, E is outside the genuine blank-root ResetChain.
-
-## Third lift: the unique surviving class has 81|X
-
-For the unique K class modulo 162 with 27|X, consider K'=K+162. The modular identity
+The endpoints satisfy \(3<28/9\) and \(65/18<4\), so
 \[
-2^{162}\equiv1\pmod{243}
+3p<P_0<4p.
 \]
-and c'=c+324≡c+81 mod243 give
+As \(P_0\) is an integer,
 \[
-B(K')\equiv B(K)+81\cdot2^r\pmod{243}.
+3p+1\le P_0\le4p-1.
 \]
-Again r is even, so 2^r≡1 mod3 and 2B(K')≡2B(K)+162 mod243. The term 2K increases by 324≡81 mod243. Applying (2),
+But this is exactly the odd-source band at level \(k=K-1\):
 \[
-3X(K')\equiv3X(K)+81-162
-\equiv3X(K)+162\pmod{243},
+6\cdot2^{K-1}+1=3p+1
+\le P_0\le
+4p-1=8\cdot2^{K-1}-1.
 \]
-which yields
+Also \(P_0\) is odd because \(X\) is odd. Define
 \[
-\boxed{X(K+162)\equiv X(K)+54\pmod{81}.}
-\tag{12}
+h_0=2P_0-4p-K-4.
 \]
-The three lifts K,K+162,K+324 of the surviving class modulo 162 therefore give X residues 0,27,54 modulo 81 in some order. Exactly two have v3(X)=3 and are excluded by the preceding argument; the unique remaining lift has 81|X and incoming odd valuation t>=3.
+Then
+\[
+2E+5=3P_0,\qquad
+2P_0=8\cdot2^{K-1}+h_0+(K-1)+5.
+\]
+Hence
+\[
+\operatorname{ResetParent}(h_0,E)
+\]
+holds with \(t=0\), \(d=P_0\), and \(k=K-1\), for **every** rho-20 candidate.
 
-## General 3-adic lift law and infinitely many higher-valuation gaps
+This is the omitted parent branch. In particular, the exact-valuation \(t=1\) gap for \(v_3(X)=2\), and the exact-valuation \(t=2\) leaf calculation for \(v_3(X)=3\), cannot make \(E\) parentless.
 
-The two explicit lift steps above are instances of a uniform Hensel-type rule. Let n>=2 and put
+The next odd-parent numerator is
+\[
+X_1=2h_0+5
+=4P_0-8p-2K-3
+=\frac{248p-8B-10K+25}{9}. \tag{3}
+\]
+It is itself divisible by \(3\). Indeed, \(P_0=X/3\) is divisible by \(3\), while \(p=2^K\equiv1\pmod3\) and \(K\equiv2\pmod3\); hence
+\[
+X_1=4P_0-8p-2K-3\equiv0\pmod3.
+\]
+So \(h_0\) is not an odd-parent leaf either. Whether one of its odd parents is admissible depends on the next source-band tests.
+
+There is also a useful exact location for \(h_0\). Since \(2K+7\) is odd whereas \(97\cdot2^{a-6}\) is even,
+\[
+x-\frac{97}{64}\ge2^{-a}.
+\]
+Using
+\[
+\frac Xp=\frac{80-32x}{3}+\frac{2K+13}{3p}
+\]
+and \(2K+13<32\cdot2^{K-a}\) for the present range gives \(X/p<21/2\). Together with (2), this yields
+\[
+\frac{28}{9}<\frac{P_0}{p}<\frac72.
+\]
+Consequently, for \(K\ge266\),
+\[
+2p<h_0<3p.
+\]
+The even-parent target bands adjacent to this interval are
+\[
+\left[\frac32p-1,\,2p-3\right]\quad(k=K-2),
+\qquad
+[3p-1,\,4p-3]\quad(k=K-1).
+\]
+Thus \(h_0\) has no even parent. Its unresolved continuation is entirely through its odd-parent fan, beginning with the numerator \(X_1\) in (3).
+
+The \(t=0\) parent of \(h_0\) at level \(K-2\), when it exists, is controlled by
+\[
+\frac{X_1}{3p}
+=\frac{248-128x}{27}+\frac{-10K+25}{27p}.
+\]
+It is admissible precisely when
+\[
+\frac32p+1\le\frac{X_1}{3}\le2p-1.
+\]
+Other exponents \(t>0\) must also be checked.
+
+## 3. What the exact-valuation lift calculations do prove
+
+For \(K\mapsto K+54\), the exact identity (1) and \(2^{54}\equiv1\pmod{81}\) give
+\[
+X(K+54)\equiv X(K)+18\pmod{27}. \tag{4}
+\]
+The three lifts of a rho-20 class modulo \(54\) therefore have \(X\)-residues \(0,9,18\pmod{27}\), in some order. Exactly two have \(v_3(X)=2\); one has \(27\mid X\).
+
+If \(v_3(X)=2\), the maximal-exponent source coordinate is
+\[
+P_1=\frac{2X}{9},
+\qquad
+\frac{56}{27}<\frac{P_1}{p}<\frac{65}{27}.
+\]
+It lies strictly between \(2p\) and \(3p\), so there is no odd parent with exponent \(t=1\). But \(P_0=(3/2)P_1\) lies in the \(t=0\) band \((3p,4p)\), giving the parent from Section 2. Thus the \(t=1\) gap is a branch-specific statement, not a root exclusion.
+
+For the unique lift with \(27\mid X\), the next shift satisfies
+\[
+X(K+162)\equiv X(K)+54\pmod{81}. \tag{5}
+\]
+Among its three lifts, one has \(81\mid X\), and two have \(v_3(X)=3\). For \(v_3(X)=3\), the maximal-exponent coordinate is
+\[
+P_2=\frac{4X}{27},
+\qquad
+\frac{112}{81}<\frac{P_2}{p}<\frac{130}{81}.
+\]
+When this coordinate lies in the \(k=K-2\) odd-source band, the corresponding \(t=2\) parent has no even parent and no odd parent of its own; that particular branch is a leaf. The \(t=1\) coordinate \((3/2)P_2\) lies in the gap \((2p,3p)\). Nevertheless,
+\[
+P_0=\frac X3=\frac94P_2
+\]
+lies in the \(k=K-1\) band \((3p,4p)\), so the \(t=0\) parent of \(E\) still exists. The \(t=2\) leaf does not exclude \(E\).
+
+More generally, for \(n\ge2\) put
 \[
 \Delta_n=2\cdot3^{n+1}.
 \]
-By LTE,
+LTE gives \(2^{\Delta_n}\equiv1\pmod{3^{n+2}}\). Substitution into (1) yields
 \[
-v_3(2^{\Delta_n}-1)
-=v_3(4^{3^{n+1}}-1)
-=v_3(4-1)+v_3(3^{n+1})
-=n+2,
+X(K+\Delta_n)-X(K)
+\equiv(4-8\cdot2^r)3^n\pmod{3^{n+1}}. \tag{6}
 \]
-so 2^{Delta_n}≡1 mod 3^{n+2}. For K'=K+Delta_n, p and 2^r are unchanged modulo 3^{n+2}, while c'=c+4*3^{n+1}. Therefore
-\[
-B(K')\equiv B(K)+4\cdot2^r\cdot3^{n+1}
-\pmod{3^{n+2}}.
-\]
-Using (2) gives
-\[
-3(X(K')-X(K))
-\equiv(4-8\cdot2^r)3^{n+1}
-\pmod{3^{n+2}},
-\]
-hence
-\[
-\boxed{
-X(K+2\cdot3^{n+1})-X(K)
-\equiv(4-8\cdot2^r)3^n
-\pmod{3^{n+1}}.
-}
-\tag{13}
-\]
-Since r is even, 4-8*2^r≡2 mod3, a unit. Thus, from any class K modulo 2*3^(n+1) with 3^n|X, its three lifts modulo 2*3^(n+2) give all three possible next ternary digits. Exactly one lift has 3^(n+1)|X; the other two have v3(X)=n. The rho-20 phase is the base case n=2. Iterating (13) gives a unique high-valuation branch and two exact-valuation siblings at every 3-adic stage.
+Since \(r\) is even, the coefficient is \(2\pmod3\), a unit. Thus every three-way lift of a class with \(3^n\mid X\) has one child with higher valuation and two exact-valuation siblings. This lift law is correct, but it describes the maximal-exponent branch only; it does not eliminate lower exponents.
 
-For a candidate with exact v3(X)=t+1, its odd-parent source coordinate is
+The interval
 \[
-P_t=\frac{2^tX}{3^{t+1}}.
-\]
-From (4), uniformly over the full x-interval,
-\[
-\boxed{
 \frac{28}{9}\left(\frac23\right)^t
-<\frac{P_t}{p}<
-\frac{65}{18}\left(\frac23\right)^t.
-}
-\tag{14}
+<
+\frac{P_t}{p}
+<
+\frac{65}{18}\left(\frac23\right)^t
 \]
-The normalized odd source bands are [6*2^(-m),8*2^(-m)] for integers m=K-L. Their intervening gaps are
+has logarithmic width \(\log_2(65/56)\). The phase
 \[
-G_m=\left(4\cdot2^{-m},6\cdot2^{-m}\right).
+\log_2(28/9)+t\log_2(2/3)\pmod1
 \]
-Whenever the whole interval in (14) lies inside one such gap, no odd source level L is possible. Since E has no even parent by (1), every candidate with that exact valuation is parentless.
+is equidistributed, so a proportion
+\[
+\log_2(84/65)\approx0.36995
+\]
+of valuation indices have their **maximal-exponent** source-coordinate interval wholly inside a dyadic gap. This is a density statement about exact-valuation source coordinates, not about parentless candidates: lower exponents \(s<t\) have
+\[
+P_s=\left(\frac32\right)^{t-s}P_t,
+\]
+and may land in other source bands. In the rho-20 family the \(s=0\) band is always present.
 
-This gap condition occurs for a positive natural density of valuation indices t. Let
+## 4. An explicit unbounded same-level even-parent chain
+
+The guaranteed \(t=0\) parent gives more than an omitted edge. It yields a family with arbitrarily many successive even parents at one fixed level.
+
+For each even \(a\ge18\), let
 \[
-y_t=\log_2(28/9)+t\log_2(2/3),
+K_{\min}=\frac{97\cdot2^{a-6}-6}{2},
+\]
+and choose the least \(\delta\in\{0,\ldots,53\}\) such that
+\[
+K_a=K_{\min}+\delta\equiv20-6a\pmod{54}.
+\]
+Then
+\[
+2K_a+7=97\cdot2^{a-6}+1+2\delta,
 \qquad
-w=\log_2(65/56),
-\qquad
-g=\log_2(3/2).
+x=\frac{97}{64}+\frac{1+2\delta}{2^a}.
 \]
-In log2 coordinates, each source-band gap has width g and repeats with period 1, while the interval (14) has width w. The whole interval fits inside a gap exactly when the fractional part of y_t lies in an interval of length g-w. The increment log2(2/3) is irrational (otherwise a nonzero power of 3 would equal a power of 2), so the fractional parts of y_t are equidistributed modulo 1. Consequently the set of such t has natural density
+For \(a\ge18\), this lies in the required \(x\)-interval, \(K_a\equiv2\pmod6\), and \(\rho=20\pmod{54}\).
+
+Write \(p=2^{K_a}\), and form \(E_0=E\), \(X_0=2E_0+5\). The \(t=0\) parent at level \(K_a-1\) is \(E_1=h_0\). Put \(X_1=2E_1+5\). Equation (3) becomes
 \[
-\boxed{
-g-w=\log_2(84/65)\approx0.36995.
-}
-\tag{15}
+\frac{X_1}{p}
+=
+6-\frac{128(1+2\delta)}{9\cdot2^a}
+-\frac{10K_a-25}{9p}.
 \]
-For each fixed t in this set, the lift law (13) supplies two residue classes with v3(X)=t+1. The K-interval has width 7*2^a/128, which exceeds the required modulus 2*3^(t+3) for all sufficiently large even a. Hence both sibling classes occur for infinitely many admissible parameter pairs (a,K), and every such candidate is parentless. The first gap valuations include t=1,4,6,11,13,16,...; t=2 is not a uniform gap, but was separately excluded by the parent-leaf argument above.
-
-The density in (15) is a density of integer valuation indices t for this arithmetic family. It is not a density of machines or of halting histories. The argument is paper-level and has not been Lean-formalized.
-
-## Combined residue-class scope
-
-For each even a>=18, the admissible K interval has width
+For \(a\ge18\), this lies strictly between \(5\) and \(6\). Therefore \(P_1=X_1/3\) lies in the odd-source band at level \(K_a-2\), giving a second \(t=0\) parent
 \[
-\frac{7\cdot2^a}{128}>486.
+y_0=2P_1-2p-K_a-3.
 \]
-It contains an integer in every residue class modulo 486. The nine K classes modulo 54 compatible with K≡2 mod6 each have nine lifts modulo 486.
-
-- The eight non-rho-20 phases are excluded by the existing eight-of-nine theorem: 8*9=72 classes.
-- In the rho-20 phase, (5)-(7) exclude six of its nine lifts with v3(X)=2.
-- The remaining three lifts are refined by (12); two have v3(X)=3 and are excluded by the second-valuation argument.
-
-Therefore **80 of the 81 candidate K-residue classes modulo 486 are root-excluded** for every even a>=18. This counts arithmetic parameter classes in one structured t=0, q=0 candidate family. It is not a density statement about machines, halting histories, or the full BB(6) table space.
-
-The unique remaining lift is characterized by
+Set \(L=K_a-2\) and \(D_0=2p-y_0\). Direct substitution gives
 \[
-81\mid X=2E+5,
+D_0=
+\frac{256(1+2\delta)2^{K_a-a}+47K_a+31}{27},
 \]
-so its incoming odd-parent valuation is at least t=3. This note does not resolve that lift. The K≡3 mod6 sector, nonzero same-level reset depths q>0, other fatal branches, and other #746 roots also remain open.
-
-## Exact regression witnesses
-
-For a=18, the rho-20 interval contains K=198686,198740,198794, the three lifts modulo 162. Exact BigInt arithmetic gives
+and hence
 \[
-X\bmod27=18,9,0,
-\qquad v_3(X)=2,2,3.
+D_0+L=
+\frac{256(1+2\delta)2^{K_a-a}+74K_a-23}{27}
+<1024\cdot2^{K_a-a}. \tag{7}
 \]
-The remaining v3=3 class has lifts K=198794,198956,199118 modulo 486, with
+The last inequality follows from \(\delta\le53\) and \(74K_a-23<2^{K_a-a}\) in this range.
+
+Now define
 \[
-X\bmod81=54,27,0,
-\qquad v_3(X)=3,3,4.
+D_{j+1}=2D_j+L,\qquad y_j=2p-D_j.
 \]
-At K=198794, P=4X/27 lies in the L=K-2 band and its parent h satisfies h/p=1.107699... and h mod3=0; at K=210944, v3(X)=3 but P/p=1.407365..., so no odd source band exists. These are finite sanity checks; the inequalities and modular lifts above supply the infinite statements.
+Then
+\[
+D_j=2^j(D_0+L)-L.
+\]
+For every \(0\le j\le a-11\), (7) gives
+\[
+D_j\le2^j(D_0+L)
+\le2^{a-11}\cdot1024\cdot2^{K_a-a}
+=2^{K_a-1}=\frac p2.
+\]
+Also \(D_j\ge D_0\ge3\). Thus
+\[
+\frac32p\le y_j\le2p-3,
+\]
+which is exactly inside the even-parent target band at level \(L=K_a-2\):
+\[
+6\cdot2^L-1\le y_j\le8\cdot2^L-3.
+\]
+Each \(y_j\) therefore has an even parent
+\[
+y_{j+1}=2y_j-2p-L.
+\]
+There are at least \(a-10\) successive same-level even-parent edges after the two initial odd \(t=0\) edges. Since \(a\) is unbounded, this gives arbitrarily deep finite inverse paths in the rho-20 family. It is a reverse-graph result, not a proof that any path reaches the blank root.
 
-## Next mathematical target
+Exact witnesses from the construction:
+- \(a=18\): \(K_a=198686\), \(\delta=33\), at least \(8\) same-level even edges.
+- \(a=20\): \(K_a=794672\), \(\delta=51\), at least \(10\) same-level even edges.
+- \(a=22\): \(K_a=3178544\), \(\delta=51\), at least \(12\) same-level even edges.
 
-Analyze valuation branches t>=3 whose uniform source-coordinate interval intersects an odd band, combining the next 3-adic lift with the exact even-parent chain of the resulting odd parent. The positive-density gap valuations are already excluded; the unresolved cases are precisely those where a source band can exist and its parent may continue.
+## 5. Finite exact parent-fan census at \(a=18\)
+
+A BigInt enumerator in rho20_parent_census.mjs checks every even and odd ResetParent choice for every rho-20 candidate in the \(a=18\) interval. It enumerates every odd exponent \(0\le t<v_3(2u+5)\), not only the maximal exponent, and uses the unique possible dyadic level determined by the source value's bit length.
+
+There are \(265\) candidate \(K\)-values. Their exact root numerators have valuation histogram
+\[
+v_3(X)=2:177,\quad3:59,\quad4:19,\quad5:7,\quad6:2,\quad10:1.
+\]
+All \(265\) computed parent graphs terminate without reaching \(2\); the maximum graph depth is \(12\), the maximum node count is \(18\), and \(90\) graphs contain a branching node. This is a finite census only, not a proof for other \(a\). The script is provided so future work can reproduce and extend it.
+
+## 6. Correct scope and next target
+
+- The original eight non-rho-20 phases remain paper-level root-leaf exclusions. In the modulo-\(486\) refinement they account for \(8\cdot9=72\) of the \(81\) residue classes.
+- The rho-20 phase is **not** excluded. Every candidate has the \(t=0\) parent at level \(K-1\) proved in Section 2. The previous 80/81 claim is withdrawn.
+- The exact-valuation lift law and gap-density calculation remain valid as statements about individual parent choices, but do not prove parentlessness.
+- The next mathematical task is the complete odd/even parent fan of \(h_0\), including the transitions out of the same-level even chain and the higher-exponent odd branches. The finite census and the unbounded-chain construction are useful guides, not substitutes for an all-parameter proof.
+
+Nothing here determines #746's all-time blank-root reachability or BB(6).
