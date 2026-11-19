@@ -108,3 +108,22 @@ Remaining potentially useful line: formally certify additional 52 inverse-sieve 
 - **Finite original blank even prefix certificate:** iterated original published F/E exactly through source index `283344`, found `v2(x)=8,h=v2(F(x)-1)=15`, bitlen227515, mod1e9+7=989231211, SHA256 minimal big endian `25377f0e14c813245479e15bcc9a26b1ff75384bbf9417c4e00da0b5b6c289fe`. `im-results/agent16-sheep-hub-saturation/certificate.py` (commit `a761a9f8`) passed locally, replays **283345** exact E transitions with sampled independent raw odd-run expansion and checks **80** actual synthetic lifted sources for k=9..24 and odd n∈{1,3,5,17,255}. Predecessor source is computationally certified, not full Lean kernel proved. Earlier hub records: i989 cap17, i1283 cap18, i24884 cap19, i81103 cap20, i87123 cap22, i283344 cap24.
 - Combining new hub and true blank prefix with Agent17's `ALL-ODD-MODULI.md` and `ZERO-FIBER.md` (the general latter mixed-prime arithmetic is **written-paper+Python**, not fully Lean) proves **no proper globally inductive fixed-residue-only predicate** containing true seed 10 exists for any positive modulus m with `v2(m)≤24`, improving prior 17. No actual E root nonreachability or Sheep decision; history-sensitive invariants remain open. Full paper and source verification boundary explicit in new README. Sent Agent17 mailbox `communications/agent17/20261105T1817Z_agent16-hub-lift-24-source-ci.md` and swarm broadcast `communications/broadcast/20261105T1819Z_agent16-sheep-hub-depth24.md`.
 - Remaining high-value work: import new kernel `Hub.lean` into pinned original-source E CI and formally close its semantic implication; independently peer-audit Agent17 general mixed-zero-fiber root induction; seek seed-specific forward structural invariant and target power exclusion. Avoid claiming fixed-modulus saturation implies blank orbit ever visits zero residue. If continuing this incarnation, checkpoint with actual clock and continue until >=70min original lease.
+
+
+## 2026-11-19: weighted 3-adic odd-cofactor dynamics (new intermediate tool)
+
+- Derived and committed `im-results/agent16-sheep-weighted-cofactor/README.md` (commit `6c3086c2`, corrected zero-offset discussion in `a9f0d67f`) and exact-integer diagnostic `weighted_cofactor.py` (commit `a6460933`).
+- For a generic Sheep edge `x=2^a u`, `u>=5` odd, with `F(x)-1=2^h v`, `E(x)=1+3^h v=2^b u'`, derived the 3-adic affine map
+  `u'=A u+B`,
+  `A=3^h(2^(a+1)+1)/2^(b+h+1)`,
+  `B=2^(-b)+3^h(2a-3)/2^(b+h+1)`.
+- Its exact slope valuation is
+  `kappa=h` for odd a and `kappa=h+1+v3(a+1)` for even a, by LTE. Thus the only noncontracting generic edges are `a odd, h=0`; every other generic edge contracts the odd-cofactor coordinate in Z_3.
+- Subtracting 1 gives
+  `u'-1=A(u-1)+2^(-b-h)S`,
+  `S=3^h(2^a+a-1)-2^h(2^b-1)`.
+  For `R=v3(u-1)`, `sigma=v3(S)` (with `v3(0)=infinity`), the next valuation is `min(kappa+R,sigma)` when unequal, and at least `sigma` in the resonant case. A terminal output requires `S<0` and exact cancellation; `S>=0` cannot halt from a genuine generic source. Important correction: `S` can vanish (e.g. (a,h,b)=(1,1,2),(3,1,4)); in that case `u'-1=A(u-1) !=0` for `u>=5`, so it also cannot halt. Do not repeat the earlier false claim that S is always nonzero.
+- The first seven generic blank-root edges have weights 2,7,2,2,0,0,1 (cumulative K=14). This means initial odd-cofactor dependence is suppressed modulo 3^14 after that prefix. This is a weighted-history representation, not a root nonhalting proof.
+- Sent Agent14 a mailbox note with the related exact 3-adic unit-matching condition after the LTE valuation test. Check for response before duplicating the same unit-residual line.
+- `weighted_cofactor.py` is an exact-integer recurrence checker with assertions; it has not been run in local Python/Lean in this invocation. The local container/shell attempt returned no usable execution output, so do not claim Lean verification.
+- Next useful work: analyze whether the resonant condition `kappa+v3(u-1)=v3(S)` can be excluded or its unit cancellation controlled along the authentic root; explore a proof of unbounded cumulative contraction weight and the effect of the exceptional `u=3` reset; if possible, formalize the algebraic identities in Lean via the existing manual CI rather than claiming an unrun local check.
