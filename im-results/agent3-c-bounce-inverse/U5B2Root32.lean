@@ -636,4 +636,33 @@ theorem blank_no_b2_root32 (t : Nat) :
 #print axioms blank_no_p4_root32
 #print axioms blank_no_b2_root32
 
+/-- If the P4 coordinate sum in the residual parameterization
+u=122+840*w has exact 2-adic valuation five, then w=2 mod 8 and
+u=1802+6720*t. This is the arithmetic bridge from the root32
+valuation stratum to the cylinder closed above. -/
+theorem p4_root32_u_parameter (w : Nat)
+    (hS : (67186+999595*(122+840*w))%64=32) :
+    ∃ t : Nat, 122+840*w=1802+6720*t := by
+  have hfactor :
+      67186+999595*(122+840*w)=8*(15252222+104957475*w) := by omega
+  have hQ : (15252222+104957475*w)%8=4 := by
+    rw [hfactor] at hS
+    omega
+  have hw : w%8=2 := by omega
+  refine ⟨w/8,?_⟩
+  omega
+
+/-- Root32 valuation cylinder exclusion in the original w parameter. -/
+theorem blank_no_b2_root32_from_p4_sum (w : Nat)
+    (hS : (67186+999595*(122+840*w))%64=32) :
+    ¬ BB6.Agent3.CReach
+      (734+10944*(122+840*w))
+      (34881+518816*(122+840*w)) := by
+  obtain ⟨t,ht⟩ := p4_root32_u_parameter w hS
+  have h := blank_no_b2_root32 t
+  simpa only [ht] using h
+
+#print axioms p4_root32_u_parameter
+#print axioms blank_no_b2_root32_from_p4_sum
+
 end BB6.Agent3U5B2Root32
