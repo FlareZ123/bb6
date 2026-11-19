@@ -1,4 +1,4 @@
-import Machine623DepthFiveSplit
+import Machine623D1Glider
 import Machine623RawLeafReduction
 
 namespace BB6Coverage
@@ -106,6 +106,9 @@ def machine623ParentAudit :
       else if h : t = some machine623D1ToCLeft1 then
         .certified (machine623D1Child t)
           (by simpa [h] using machine623D1ToCLeft1_cover)
+      else if h : t = some machine623D1ToDRight1 then
+        .certified (machine623D1Child t)
+          (by simpa [h] using machine623D1ToDRight1_cover)
       else if h : t = machine623 machine623D1Slot then
         h.symm ▸ machine623D1RootTailAudit
       else
@@ -125,14 +128,16 @@ theorem machine623ParentAudit_exhaustive (m : Machine)
     off-path sibling in the authentic branch. -/
 theorem machine623ParentAudit_report :
     machine623ParentAudit.report =
-      (6 * 25^7 + 24, 19 * 25^7 - 24) := by
+      (7 * 25^7 + 24, 18 * 25^7 - 24) := by
   decide
 
 theorem machine623ParentAudit_report_conserves :
     machine623ParentAudit.report.1 +
       machine623ParentAudit.report.2 = 25^8 := by
-  rw [machine623ParentAudit_report]
-  norm_num [Nat.pow_succ]
+  calc
+    _ = cylinderMass (machine623Prefix 4) :=
+      FrontierAudit.report_conserves machine623ParentAudit
+    _ = 25^8 := machine623_first_four_mass
 
 /-- The original #623 table is still in the open part of the parent audit.
     This is deliberately not a halting or nonhalting verdict. -/
@@ -148,7 +153,8 @@ theorem machine623ParentAudit_root_remains_open :
     machine623D1ToBLeft0, machine623D1ToCLeft0,
     machine623D1ToDLeft0, machine623D1ToDLeft1,
     machine623D1ToDRight0, machine623D1ToCLeft1,
-    machine623FinalSlotAudit, machine623HaltSlot, machine623]
+    machine623D1ToDRight1, machine623FinalSlotAudit,
+    machine623HaltSlot, machine623]
 
 #print axioms machine623ParentAudit_exhaustive
 #print axioms machine623ParentAudit_report
