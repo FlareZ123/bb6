@@ -9,8 +9,8 @@ open BB6.Agent46
 
 /-- For an even/even section target whose coordinate sum is not 0 mod 8,
     the complete original-source parent fan collapses to the direct parent.
-    The zero-left and even-a bounce branches both force the sum to be 0 mod 4. -/
-private theorem even_even_nonzero_sum_mod4_forces_direct
+    The zero-left and even-a bounce branches both force the sum to be 0 mod 8. -/
+private theorem even_even_nonzero_sum_mod8_forces_direct
     (a k x y : Nat)
     (hxpos : 0 < x) (hxe : x % 2 = 0)
     (hy6 : 6 ≤ y) (hye : y % 2 = 0)
@@ -73,7 +73,7 @@ theorem q0_w1_odd_z_target_unreachable (z : Nat) (hz : z % 2 = 1) :
     obtain ⟨a,k,hprev,hstep⟩ :=
       BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
         (1674+7224*z) (1654+7140*z) (by omega) hP
-    have hdirect := even_even_nonzero_sum_mod4_forces_direct
+    have hdirect := even_even_nonzero_sum_mod8_forces_direct
       a k (1674+7224*z) (1654+7140*z)
       (by omega) (by omega) (by omega) (by omega)
       (by omega) hstep
@@ -87,7 +87,7 @@ theorem q0_w1_odd_z_target_unreachable (z : Nat) (hz : z % 2 = 1) :
     obtain ⟨a,k,hprev,hstep⟩ :=
       BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
         (3326+14364*z) (826+3570*z) (by omega) hD
-    have hdirect := even_even_nonzero_sum_mod4_forces_direct
+    have hdirect := even_even_nonzero_sum_mod8_forces_direct
       a k (3326+14364*z) (826+3570*z)
       (by omega) (by omega) (by omega) (by omega)
       (by omega) hstep
