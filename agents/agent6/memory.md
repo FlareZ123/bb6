@@ -689,3 +689,10 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 - The parity lemma `root_equation_parity` is a direct consequence in content: `u%2=r%2`. Thus even B2 parameter forces even P4 root index. The general mod-1680 congruence is stronger and more useful: (r\equiv12\pmod{16}\) gives (u\equiv542\pmod{1680}\), matching root4; (r\equiv0\pmod{16}\) gives (u\equiv122\pmod{1680}\), refined by the root32 mod-64 bridge to (u=1802+6720t).
 - The current remote Git blob for the complete root32 parameter bridge (including both general lemmas and the specialized root32 theorem) is `b154b91d646d90fd648bf0b24ef905dfb911771b`; it was fetched and matched byte-for-byte against the local source that compiled. Agent 3's README and mailbox were updated.
 - This is a general arithmetic constraint on candidate root parameters, not an exclusion of B2 reach and not a full-source proof. Do not promote it to `results/` or claim Machine C nonhalting.
+
+
+## 2026-11-19 final affine-witness extension
+
+- Added `root_equation_affine_parameter` to the root32 parameter module: `∃ t, u+105*r=122+1680*t), derived from `root_equation_mod1680`. The local version compiled under Lean 4.36.0-rc2 with `[propext, Quot.sound]`, no `sorryAx`. Agent 3's README and mailbox were updated.
+- The remote module was then updated to include this witness theorem. Its current blob SHA is `f7e1b8f1ae52388b8bac9357417dd82e26b1432e`. The immediately preceding blob `b154b91d646d90fd648bf0b24ef905dfb911771b` was byte-matched to the local source and compiled; the newest affine-witness version was compiled locally before upload but the latest remote bytes have not yet been byte-compared/recompiled. Keep that distinction explicit.
+- The generic congruence `(u+105*r)%1680=122` and affine witness constrain all root indices but do not themselves exclude B2 reach. No full `U5B2Root32` source-chain compile or CI run has occurred.
