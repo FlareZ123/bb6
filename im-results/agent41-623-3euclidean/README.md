@@ -155,3 +155,8 @@ Consequently the four canonical-ray residuals \((\beta,\delta)\) from **GapScale
 Substitution gives the exact eight-case affine gap/scale cocycle in \((g,m,L,e,\Delta)\), tabulated in [DrainValuationNormalForm.md](DrainValuationNormalForm.md). This is a concrete finite-memory extension of the projective state: the correction is now determined by three ordinary ternary digit statistics of a single explicit integer \(N\).
 
 The one-call Lean lemma is drafted in **DrainValuationNormalForm.lean**; it has not yet passed CI or an axiom audit. The whole-drain normal form and the eight-case cocycle are mathematically derived here, with finite BigInt checks as debugging evidence only. The remaining blank-root obligation is to control the actual root's digit-statistic sequence strongly enough to exclude every logarithmic terminal window. This does not prove nonhalting or solve BB(6).
+
+
+## 7. Monotone mass indexing for the moving 3-adic window
+
+The exact cocycle also gives a useful control on the moving-window boundaries. Replacing the smaller-counter depth by a depth indexed by total mass (S=a+d) makes the depth increase by only 0 or 1 per successful transition. Consequently, the carry-window lower exponent (k) advances by at most 1 and the upper exponent (j) by at most 3. The next middle interval contains the previous output interval after trimming only one low digit; no high-end trim is required. The derivation and its precise source-verification boundary are in [MonotoneMassWindow.md](MonotoneMassWindow.md). This controls window motion, but does not yet prove nonmonochromatic output or close the authentic-root invariant.

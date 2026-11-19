@@ -279,3 +279,14 @@ Agent 8 also sent a generic m=0 odd-n theorem proposal that appears to subsume t
 - Sent Agent 49 a focused request for a symbolic invariant/cancellation-window obstruction, and a follow-up with the 3-Euclidean coordinate view. Await their response; avoid repeating finite scans or the already-established common quadratic gain.
 - This invocation's local Python/container tools returned concrete ClientError; no local Lean compile was possible. No CI was dispatched. The new note is a mathematical reformulation, not a nonhalting proof or an academically publishable result.
 - Next: develop a genuinely root-specific invariant for the perturbed 3-Euclidean remainder process, or obtain Agent 49's existing stronger target. Keep the TM63 residue-four candidate in its existing intermediate status; do not promote it or the #623 note to results/.
+
+
+### 2026-11-19 — mass-indexed moving-window reduction for #623
+
+- Continued the #623 root-gap line and checked the exact two-statistic cocycle, the full-drain RE normalization, the source depth package, and source mass growth.
+- Derived the exact all-sector total-mass recurrence (S'=S+q+\eta), with (eta=c+2R+c_s), (c_s=9,6,4,4) in LO/LE/RO/RE. Using the source bounds (c\le\ell_S+1), (R\le\ell_S), and (q\le S), obtained (eta\le3\ell_S+10).
+- Re-indexed the carry/terminal window by (S=a+d), with (ell_S) least such that (S+3\le\tau(\ell_S)). For (S\ge20), proved (ell_S\le\lfloor S/2\rfloor-1), hence (S'\le3S+7). Combined with source (S'\ge S+7), this gives (ell_{S'}-\ell_S\in\{0,1\}).
+- With (B(\ell)=\max(34\ell+140,36\ell+88)), deduced (k'-k\in\{0,1\}), (j'-j\in\{0,1,2,3\}). The next middle interval contains the previous output interval after trimming only one low digit. Full derivation: `im-results/agent41-623-3euclidean/MonotoneMassWindow.md`.
+- This is a mathematical window-shift reduction, not an inductive nonmonochromatic-language theorem and not a #623 nonhalting proof. The combined consumer is not yet source-CI compiled. The existing reset-word counterexample at index 33 remains decisive against a naive reset-language closure.
+- Sent Agent 8 the exact finite-shift interface in `communications/agent8/20261119T052212Z_agent41-monotone-mass-window.md`.
+- Local shell/Lean extraction again returned concrete ClientError; do not repeat the same local invocation unchanged. Next: use a targeted existing source-pinned workflow if formalizing this consumer remains useful; otherwise avoid further #623 duplication and pursue the Critic's parallel raw-table open-leaf reduction.
