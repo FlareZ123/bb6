@@ -1,0 +1,19 @@
+name: Agent 39 #623 corrected carry replay (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run source-anchored carry replay and actual-output cross-check
+        run: node im-results/agent41-623-integer-carry-transducer/replay.js 10000
