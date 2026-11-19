@@ -81,22 +81,30 @@ theorem firstCyclePrefix22_at (T : Int → Bool) (h : Int)
       x=(-4) ∨ x=(-3) ∨ x=(-2) ∨ x=(-1) ∨
       x=0 ∨ x=1 ∨ x=2 ∨ x=3 := by omega
   rcases hcases with hx4|hx3|hx2|hx1|hx0|hxp1|hxp2|hxp3
-  · have heq : h+(-4:Int)=h-4 := by omega
+  · subst x
+    have heq : h+(-4:Int)=h-4 := by omega
     rw [heq]
     simpa [firstCyclePrefix22Start] using h4
-  · have heq : h+(-3:Int)=h-3 := by omega
+  · subst x
+    have heq : h+(-3:Int)=h-3 := by omega
     rw [heq]
     simpa [firstCyclePrefix22Start] using h3
-  · have heq : h+(-2:Int)=h-2 := by omega
+  · subst x
+    have heq : h+(-2:Int)=h-2 := by omega
     rw [heq]
     simpa [firstCyclePrefix22Start] using h2
-  · have heq : h+(-1:Int)=h-1 := by omega
+  · subst x
+    have heq : h+(-1:Int)=h-1 := by omega
     rw [heq]
     simpa [firstCyclePrefix22Start] using h1
-  · simpa [firstCyclePrefix22Start] using h0
-  · simpa [firstCyclePrefix22Start] using hp1
-  · simpa [firstCyclePrefix22Start] using hp2
-  · simpa [firstCyclePrefix22Start] using hp3
+  · subst x
+    simpa [firstCyclePrefix22Start] using h0
+  · subst x
+    simpa [firstCyclePrefix22Start] using hp1
+  · subst x
+    simpa [firstCyclePrefix22Start] using hp2
+  · subst x
+    simpa [firstCyclePrefix22Start] using hp3
 
 /-! ## The two-zero setup before the state-1 triple scan -/
 
@@ -117,11 +125,13 @@ theorem firstCycleTwoZeroSetup (T : Int → Bool) (h : Int)
       some ⟨1,h+2,afterFirstCycleTwoZero T h⟩ := by
   have hback : h+1+(-1)=h := by omega
   have hne : h+1 ≠ h := by omega
-  simp [run,rawStep,readSlot,applyMove,h0,h1,hback,hne,
+  simp [run,rawStep,readSlot,applyMove,h0,h1,hne,
     lookup40,lookup00]
-  funext x
-  by_cases hx0 : x=h <;> by_cases hx1 : x=h+1 <;>
-    simp [afterFirstCycleTwoZero,hx0,hx1]
+  constructor
+  · omega
+  · funext x
+    by_cases hx0 : x=h <;> by_cases hx1 : x=h+1 <;>
+      simp [afterFirstCycleTwoZero,hx0,hx1]
 
 /-! ## The four-step post-drain Q(z) bridge -/
 
@@ -167,16 +177,20 @@ theorem firstCyclePostlude_at (T : Int → Bool) (h : Int)
     simpa [firstCyclePostludeInside] using hx
   have hcases : x=(-3) ∨ x=(-2) ∨ x=(-1) ∨ x=0 := by omega
   rcases hcases with hx3|hx2|hx1|hx0
-  · have heq : h+(-3:Int)=h-3 := by omega
+  · subst x
+    have heq : h+(-3:Int)=h-3 := by omega
     rw [heq]
     simpa [firstCyclePostludeStart] using h3
-  · have heq : h+(-2:Int)=h-2 := by omega
+  · subst x
+    have heq : h+(-2:Int)=h-2 := by omega
     rw [heq]
     simpa [firstCyclePostludeStart] using h2
-  · have heq : h+(-1:Int)=h-1 := by omega
+  · subst x
+    have heq : h+(-1:Int)=h-1 := by omega
     rw [heq]
     simpa [firstCyclePostludeStart] using h1
-  · simpa [firstCyclePostludeStart] using h0
+  · subst x
+    simpa [firstCyclePostludeStart] using h0
 
 /-- The left sweep leaves every cell strictly before its final moving-zero
 boundary unchanged. -/
@@ -240,6 +254,9 @@ theorem firstCyclePostlude_from_sweep
 /-- The exact post-drain cost for the first positive-z q4 cycle. -/
 theorem firstCyclePostlude_cost (z : Nat) :
     3*(3*(2^z-1)+3*z+7)+4 = 9*2^z+9*z+16 := by
+  have hpow : 1 ≤ 2^z := by
+    have hpos : 0 < 2^z := Nat.pow_pos (by decide)
+    omega
   omega
 
 /-- The Q(z) source macro, isolated from the preceding prefix and drain.
@@ -260,6 +277,12 @@ theorem firstCycleQ_from_S0Input
         (sweptLeft (3*(2^z-1)+3*z+7) T h) 3
         firstCyclePostludeInside firstCyclePostludeEnd) := by
   let k : Nat := 3*(2^z-1)+3*z+7
+  have hpow : 1 ≤ 2^z := by
+    have hpos : 0 < 2^z := Nat.pow_pos (by decide)
+    omega
+  have hsub : ((2^z - 1 : Nat) : Int) = (2^z : Int) - 1 := by
+    rw [Nat.cast_sub hpow]
+    rfl
   have hhead : h-(k:Int)=3 := by
     dsimp [k]
     rw [hh]
