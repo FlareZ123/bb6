@@ -36,7 +36,8 @@ set_option maxHeartbeats 4000000
 zeroes is arbitrary and is not inspected by the 73-step bridge. -/
 def p2ActualResidualLeft (m : Nat) (tail : List Bool) : List Bool :=
   List.replicate (m+2) true ++
-    ([false,true,false,true] ++ List.replicate 7 true ++ [false,false] ++ tail)
+    ([false,true,false,true] ++
+      (List.replicate 7 true ++ ([false,false] ++ tail)))
 
 private theorem sideBit_replicate_true_local (n i : Nat) (hi : i<n) :
     sideBit (List.replicate n true) i = true := by
@@ -72,8 +73,8 @@ private theorem p2ActualResidualLeft_prefix
   unfold p2ActualResidualLeft
   rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_left
     (List.replicate (m+2) true)
-    ([false,true,false,true] ++ List.replicate 7 true ++
-      [false,false] ++ tail) i (by simp; omega)]
+    ([false,true,false,true] ++
+      (List.replicate 7 true ++ ([false,false] ++ tail))) i (by simp; omega)]
   exact sideBit_replicate_true_local (m+2) i hi
 
 private theorem p2ActualResidualLeft_after_prefix
@@ -159,7 +160,11 @@ theorem p2ActualS0_to_state2
     have hcell := s0Config_left_cell ell a 0 (2^a-1) h i
     rw [hleftFacing] at hcell
     by_cases hsmall : i<3*a
-    · exact hcell.trans (sideBit_d1pow_true_local a i hsmall)
+    · have hsplit :=
+        BB6Coverage.Agent6Q4Prefix.sideBit_append_left
+          (d1pow a) ell i (by rw [d1pow_length]; exact hsmall)
+      rw [hsplit] at hcell
+      exact hcell.trans (sideBit_d1pow_true_local a i hsmall)
     · have hidx : i-3*a<m+2 := by dsimp [K] at hi; omega
       have hsplit :=
         BB6Coverage.Agent6Q4Prefix.sideBit_append_right
@@ -202,6 +207,7 @@ theorem p2ActualS0_to_state2
     have hidx :
         (3*a+(m+2+j))-(d1pow a).length=m+2+j := by
       rw [hlen]
+      omega
     rw [hidx] at hsplit
     calc
       S (3-(j:Int)) = T (3-(j:Int)) := by
@@ -230,6 +236,7 @@ theorem p2ActualS0_to_state2
           (List.replicate 7 true ++ [false,false] ++ tail)
           (4+i) (by simp)]
         have hidx : 4+i-([false,true,false,true] : List Bool).length=i := by simp
+      omega
         rw [hidx]
         rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_left
           (List.replicate 7 true) ([false,false] ++ tail) i
