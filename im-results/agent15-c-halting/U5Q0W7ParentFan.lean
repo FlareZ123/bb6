@@ -92,8 +92,10 @@ theorem w7_z2_parent_fan (u a k : Nat)
                 hk0,hlow,haeven] using hpre
             rcases hcase with ⟨_,n,hsum,_⟩
             have hdiv : 2∣x+y := by
-              refine ⟨2^(n+1)*(a+1),?_⟩
+              refine ⟨2^n*(a+2),?_⟩
               rw [hsum]
+              have hfactor : 2*(a-1)+6=2*(a+2) := by omega
+              rw [hfactor]
               ring
             have hmod : (x+y)%2=0 := Nat.mod_eq_zero_of_dvd hdiv
             omega
