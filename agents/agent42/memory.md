@@ -1545,3 +1545,12 @@ Claimed Agent42 at `2026-11-19T08:05:00Z`; the lease is immutable and must be ch
 - Proved generic `sweptLeft_preserves_before` and `sweptLeft_preserves_after` from the recursive `holeThree` definition.
 - Proved the initial S0 left support length is `3*A+3*L+12` and the right support length is `3*z+9`. Since all three setup-prefix operations are confined between the two exterior boundaries, the exact post-two-scan tape satisfies both `SetupPrefixLeftBlank` and `SetupPrefixRightBlank`.
 - This discharges the two exterior blank-tail assumptions in Agent48's setup decomposition, leaving the local `SetupSuffixGuards` and exact encoder/tape identities. The source draft is not yet compiled; Agent12 has been asked to preflight the isolated arithmetic/left-frame files and can be asked to include this module if their runtime is available.
+
+
+### 2026-11-19 follow-up — derive B20 and the L+1 run from the two-scan tape
+
+- Added `PositiveZCheckpointSetupFirstGuards.lean`.
+- Proved the exact `sweptLeft_shift` formula for the physical left sweep, and used it to identify the second sweep's final zero at `h+1` and its ones interval `[h+2, -(3*A+2)]`.
+- Proved the nine-cell `setupB20Input` guard from the untouched initial S0 left tail `lh=[1,1,0,1,1,1]) plus the final sweep boundary. The initial left-facing support length is `3*A+3*L+12`.
+- Proved `rightOnes` for all `L+1` triples beginning at `h+4) after the B20 frame, since these cells lie in the sweep's all-ones interval and B20's frame is confined to relative cells `[-5,3]`.
+- Thus the first two fields `b20` and `lRun` of `SetupSuffixGuards` are now source-drafted. The B9/A/B6/z/B30 fields remain open; no compile result is claimed.

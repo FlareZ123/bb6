@@ -489,3 +489,20 @@ This removes the exterior blank-tail obligations from the S0-specific
 setup proof, conditional only on the exact initial S0 input and the
 two-scan/B8 tape definition. The local suffix guards remain open.
 The source draft is not yet Lean-compiled.
+
+
+## First two setup-suffix guards from the two-scan prefix
+
+Added `PositiveZCheckpointSetupFirstGuards.lean`. It proves the exact
+`setupB20Input` nine-cell condition and the `rightOnes` premise for the
+following `L+1` triples. The key identity is the exact `sweptLeft`
+tape formula: after the second sweep, cell `h+1` is the cleared boundary
+and every cell from `h+2` through `-(3*A+2)` is true. The B20 frame
+does not touch cells at or beyond `h+4`, so the full L-sweep premise
+follows. The local B20 left pattern comes directly from the final six
+bits of the initial S0 left-facing word `lh=[1,1,0,1,1,1]`.
+
+This discharges the first two fields (`b20` and `lRun`) of
+Agent 48's `SetupSuffixGuards` for the exact two-scan tape. The
+remaining five fields (B9 input, A+1 run, B6 input, z run, B30 input)
+are still open. The source draft is not yet compiled.
