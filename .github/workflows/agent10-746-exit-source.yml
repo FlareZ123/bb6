@@ -14,6 +14,8 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reproduce rho-20 two-thirds residue table
+        run: node im-results/agent10-cascade/rho20_two_thirds_residue_table.mjs
       - name: Compile original copied source dependencies and downstream proofs
         run: |
           set -eu
@@ -42,6 +44,7 @@ jobs:
           lean -o "$b/FirstOutcome.olean" "$b/FirstOutcome.lean"
           lean -o "$b/FirstInverseComplete.olean" "$b/FirstInverseComplete.lean"
           lean -o "$b/ResetChain.olean" "$b/ResetChain.lean"
+          lean -o "$b/T0Rho20ResidueTable.olean" "$b/T0Rho20ResidueTable.lean"
           lean -o "$b/T0PhaseRootLeaf.olean" "$b/T0PhaseRootLeaf.lean"
           lean -o "$e/T0D0ZeroPhaseSource.olean" "$e/T0D0ZeroPhaseSource.lean"
           lean -o "$b/ResetParentStrict.olean" "$b/ResetParentStrict.lean"
