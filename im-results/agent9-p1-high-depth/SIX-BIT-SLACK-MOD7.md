@@ -79,30 +79,45 @@ so \(I_1\equiv2\pmod4\) when \(T_1\) is even and \(4\mid I_1\) when \(T_1\) is o
 
 For \(I_s=48\), exactly one first shallow depth can have output divisible by \(4\): depth \(0\) when \(T_1\) is even, and depth \(1\) when \(T_1\) is odd. The other first depth produces energy \(2\bmod4\) and cannot lead to the wall. This leaves one potentially continuing first-profile branch for either parity.
 
-## A useful parity link for the restart time
+## Corrected source parity gate (supersedes the withdrawn link)
 
-In the same source setup, \(b_p\equiv0\pmod4\), \(k\) is even, \(c\) is odd, and
+The earlier parity argument in this section is withdrawn. In particular, \(b_p\equiv0\pmod4\) only gives \(q=b_p/2\) even; together with the power equation it gives \(d_p+q\equiv1\pmod4\), not \(d_p\equiv1\pmod4\). The claimed implications \(c\equiv1\pmod4\) for odd \(t\), \(c\equiv3\pmod4\) for even \(t\), and \(M=m_0+n\equiv t\pmod2\) do not follow. Consequently, the earlier claim that parity removes the cost-one \(t=6\) case is not established and must not be used.
+
+There is a different valid congruence. Put \(D=c+3=d_0-1\) and \(M=m_0+n\). The exact restart identities are
 \[
-2^t(c+3)=d_p+b_p/2+3.
+I_0=14k-42c-50,\qquad
+D_0:=98P-I_0=49D+14M-6.
 \]
-For \(t\ge2\), this gives \(d_p\equiv1\pmod4\). The inverse cost equation then gives
+In every six-bit-slack case with \(s\ge1\), \(I_0=8^sI_s\), hence \(8\mid I_0\). Also \(P=2^n\) is divisible by \(4\). Since \(D_0=(98-2^\delta I_s)P\), reduction of the second identity modulo \(4\), using \(D=c+3\), gives
 \[
-c\equiv1\pmod4\quad(t\text{ odd}),\qquad
-c\equiv3\pmod4\quad(t\text{ even}).
+c+2M\equiv3\pmod4.
 \]
-In a slack case, \(D_0=(98-2^\delta I_s)P\) is divisible by 4. Since
+Reduction of the first identity modulo \(8\) gives
 \[
-D_0=49d_0+14(m_0+n)-55,\qquad d_0=c+4,
+3k-c-1\equiv0\pmod4,\qquad c\equiv-k-1\pmod4.
 \]
-reduction modulo 4 shows
+Combining these yields the correct relation
 \[
-m_0+n\equiv t\pmod2.
+\boxed{k\equiv2M\pmod4.}
 \]
-If the restart-shifted first profile time is \(T_1=m_0+n+6+3s\), this yields
+Equivalently, \(M\equiv k/2\pmod2\). This is a relation between the high-depth inverse left parameter and the restart time; it does not identify the restart-time parity with \(t\).
+
+This relation gives a potentially decisive source obstruction for the two branches whose first shallow edge has depth zero:
+
+- For \(I_s=20\), \(\delta=2\), so \(3s=n+2\). Since \(n\) is even in P1, \(s\) is even. The scalar leaf requires \(T_1\) odd, and \(T_1=M+6+3s\), so \(M\) is odd. Thus \(k\equiv2\pmod4\), and the restart child \(b_0=2k-4\) is divisible by \(8\).
+- For \(I_s=48\) with \(T_1\) even, \(\delta=1\), so \(3s=n+1\) and \(s\) is odd. Hence \(M\) is odd as well, and again \(b_0=2k-4\) is divisible by \(8\).
+
+In either case the scalar first-profile filter forces the first shallow edge to have depth \(0\). Let \(q_0=b_0/2\), so \(4\mid q_0\). For the source inverse parameters \((k_1,c_1)\) of that depth-zero edge, the exact power and inverse-mass equations are
 \[
-T_1\equiv t+s\pmod2.
+c_1=d_0+q_0,\qquad 2k_1+c_1+2=b_0+d_0=2q_0+d_0.
 \]
-This may settle the parity-sensitive \(I_s=20\) branch once the allowable high-depth \(t\) values are sharpened. Since \(n\) is even in the P1 setting, \(m_0+n\equiv t\pmod2\) is equivalent to the \(m_0\equiv t\pmod2\) restriction already recorded in SourceWallToCarryDP.md §7.
+Therefore \(2k_1+2=q_0\), so \(k_1\) is odd and the next child \(b_1=2k_1-4\) satisfies \(b_1\equiv2\pmod4\).
+
+But \(b_1\) must be divisible by \(4\): if another source edge follows, it is the parent counter and the next OddCone.parent constructor requires its mod-\(4\) guard; if no edge follows, it is the terminal wall counter and the wall equation itself forces \(b_1\equiv0\pmod4\). Thus this argument appears to eliminate both \(I_s=20\) and the even-\(T_1\) branch of \(I_s=48\).
+
+**Formalization boundary:** the arithmetic above is exact, but the current RestartPath stores the scalar RestartWalk without retaining the intermediate OddCone suffix proof. A source-level first-shallow split must preserve the next-parent guard (or terminal wall guard) before this is promoted to a theorem. RestartWallLowTrace.lean now proves the source-to-LowTrace algebraic bridge; extending RestartPath with its actual OddCone suffix is the natural next step.
+
+For the remaining \(I_s=48\), odd-\(T_1\) branch, \(s\) is odd and \(M\) is even, so the corrected congruence gives \(k\equiv0\pmod4\) and \(b_0=2k-4\equiv4\pmod8\). Its first shallow edge has depth \(1\); this is the only branch left by the corrected parity gate.
 
 ## Bounding the high-depth edge under both terminal costs
 
@@ -154,7 +169,7 @@ Both sets of inequalities and all four depth conclusions are checked in RestartD
 | \(1\) | \(t=5\) or \(6\) | \(t\ge8\) |
 | \(2\) | \(t=5\) | \(t\ge8\) |
 
-The parity argument below removes the cost-one \(t=6\) branch. Thus the two terminal-cost cases have the same final residual families.
+The previous parity argument removing the cost-one \(t=6\) branch is withdrawn; see the corrected source parity gate above. The terminal-cost bounds still give the displayed depth intervals, but the scalar and parent-coordinate files do not independently eliminate either value.
 
 ### First-shallow offset congruences
 
@@ -201,7 +216,7 @@ Combining \(T_1\equiv t+s\pmod2\) with the large-\(P\) intervals gives the follo
 - \((\delta,I_s,t)=(2,20,5)\). Here \(n\equiv1\pmod3\) and \(n\) is even, so \(s=(n+2)/3\) is even. Thus \(T_1\equiv t\pmod2\); \(t=6\) is excluded and \(t=5\) remains. Its first shallow edge must have depth \(0\).
 - \((\delta,I_s)=(1,48)\) with \(t\ge8\). Here \(n\equiv2\pmod3\) and \(n\) is even, so \(s=(n+1)/3\) is odd. If \(t\) is odd then \(T_1\) is even and the potentially continuing first shallow edge has depth \(0\); if \(t\) is even then \(T_1\) is odd and it has depth \(1\).
 
-In particular, the \((\delta,I_s)=(1,20)\) branch is eliminated: its interval gives \(t=3\), while \(s\) is odd, so \(T_1\) is even. The remaining \((2,20,5)\) and \((1,48,t\ge8)\) branches are the only cases left by this reduction, whether the terminal shallow edge has cost one or two.
+In particular, the scalar reduction leaves the \((\delta,I_s)=(2,20)\) branch with odd \(T_1\), and the \((\delta,I_s)=(1,48)\) branch with either parity. The corrected source parity gate above conditionally removes the former and the even-\(T_1\) half of the latter, pending formal preservation of the intermediate OddCone guard. The remaining candidate is \((\delta,I_s)=(1,48)\) with odd \(T_1\), first shallow depth one, and \(t\ge8\) under the terminal-cost bounds.
 
 ## Boundary
 
