@@ -34,10 +34,12 @@ set_option maxHeartbeats 4000000
 
 /-- The corrected residual left word.  The tail after the two explicit
 zeroes is arbitrary and is not inspected by the 73-step bridge. -/
+def p2ActualBoundaryResidual (tail : List Bool) : List Bool :=
+  [false,true,false,true] ++
+    (List.replicate 7 true ++ ([false,false] ++ tail))
+
 def p2ActualResidualLeft (m : Nat) (tail : List Bool) : List Bool :=
-  List.replicate (m+2) true ++
-    ([false,true,false,true] ++
-      (List.replicate 7 true ++ ([false,false] ++ tail)))
+  List.replicate (m+2) true ++ p2ActualBoundaryResidual tail
 
 private theorem sideBit_replicate_true_local (n i : Nat) (hi : i<n) :
     sideBit (List.replicate n true) i = true := by
@@ -73,16 +75,14 @@ private theorem p2ActualResidualLeft_prefix
   unfold p2ActualResidualLeft
   rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_left
     (List.replicate (m+2) true)
-    ([false,true,false,true] ++
-      (List.replicate 7 true ++ ([false,false] ++ tail))) i (by simp; omega)]
+    (p2ActualBoundaryResidual tail) i (by simp; omega)]
   exact sideBit_replicate_true_local (m+2) i hi
 
 private theorem p2ActualResidualLeft_after_prefix
     (m : Nat) (tail : List Bool) (j : Nat) :
     sideBit (p2ActualResidualLeft m tail) (m+2+j) =
       sideBit
-        ([false,true,false,true] ++ List.replicate 7 true ++
-          [false,false] ++ tail) j := by
+        (p2ActualBoundaryResidual tail) j := by
   unfold p2ActualResidualLeft
   rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
     (List.replicate (m+2) true)
@@ -189,8 +189,7 @@ theorem p2ActualS0_to_state2
   have hboundary (j : Nat) :
       S (3-(j:Int)) =
         sideBit
-          ([false,true,false,true] ++ List.replicate 7 true ++
-            [false,false] ++ tail) j := by
+          (p2ActualBoundaryResidual tail) j := by
     have hcell := s0Config_left_cell ell a 0 (2^a-1) h
       (3*a+(m+2+j))
     rw [hleftFacing] at hcell
@@ -215,8 +214,7 @@ theorem p2ActualS0_to_state2
       _ = sideBit (d1pow a ++ ell) (3*a+(m+2+j)) := hcell
       _ = sideBit ell (m+2+j) := hsplit
       _ = sideBit
-          ([false,true,false,true] ++ List.replicate 7 true ++
-            [false,false] ++ tail) j :=
+          (p2ActualBoundaryResidual tail) j :=
         p2ActualResidualLeft_after_prefix m tail j
 
   have hinput : p2ActualBoundaryInput S 3 := by
@@ -233,10 +231,9 @@ theorem p2ActualS0_to_state2
               [false,false] ++ tail) (4+i) = true := by
         rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
           ([false,true,false,true] : List Bool)
-          (List.replicate 7 true ++ [false,false] ++ tail)
+          (List.replicate 7 true ++ ([false,false] ++ tail))
           (4+i) (by simp)]
         have hidx : 4+i-([false,true,false,true] : List Bool).length=i := by simp
-      omega
         rw [hidx]
         rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_left
           (List.replicate 7 true) ([false,false] ++ tail) i
@@ -246,11 +243,10 @@ theorem p2ActualS0_to_state2
       simpa [hcoord,hbit] using hb
     have hzero11 :
         sideBit
-          ([false,true,false,true] ++ List.replicate 7 true ++
-            [false,false] ++ tail) 11 = false := by
+          (p2ActualBoundaryResidual tail) 11 = false := by
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,false,true] : List Bool)
-        (List.replicate 7 true ++ [false,false] ++ tail) 11 (by simp)]
+        (List.replicate 7 true ++ ([false,false] ++ tail)) 11 (by simp)]
       have hidx : 11-([false,true,false,true] : List Bool).length=7 := by simp
       rw [hidx]
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
@@ -258,11 +254,10 @@ theorem p2ActualS0_to_state2
       simp [sideBit]
     have hzero12 :
         sideBit
-          ([false,true,false,true] ++ List.replicate 7 true ++
-            [false,false] ++ tail) 12 = false := by
+          (p2ActualBoundaryResidual tail) 12 = false := by
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,false,true] : List Bool)
-        (List.replicate 7 true ++ [false,false] ++ tail) 12 (by simp)]
+        (List.replicate 7 true ++ ([false,false] ++ tail)) 12 (by simp)]
       have hidx : 12-([false,true,false,true] : List Bool).length=8 := by simp
       rw [hidx]
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
