@@ -772,3 +772,13 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - The final affine residuals all have odd right >=5 and sum 1 or2 mod4, so the existing source-certified fullForcedExcluded_sound filter excludes them. The proof uses individual source-certified O/F/S iff theorems plus the four-sector normalizer; it does not rely on the uncompiled SixForcedNormalize wrapper.
 - Exact symbolic affine execution established branch stability on each full q=256m+c progression; a separate BigInt regression checked m=0,1,2,3 for all ten c values (40 points). The composition remains uncompiled; no CI was dispatched.
 - Combined W11 q=3 mod16 (16 q-residues mod256) and these ten classes give 26 q-residues mod256 within r=84 mod256. W11 q=1 mod4 and even q remain open.
+
+
+### 2026-11-19 continuation: W11 q=9 and q=17 branches
+
+- Added 'im-results/agent11-c-low58/U5B2Root4W11Q9Mod16.md'. For q=9 mod16, the W11 direct-parent reduction gives Q(q) in the exact odd/odd sum-16 sector. The source-certified `oddodd_sum16_blank_reach_iff` gives two parents P0/P2. P0 has sum 5 mod8; P2 for q=9 mod16 has t odd and also sum 5 mod8. In both cases sum-plus-one has exact v2=1, so the complete source grammar gives no predecessor. This excludes root-index residues 'r%4096=3156 or 1108'.
+- Added 'im-results/agent11-c-low58/U5B2Root4W11Q17Mod32.md'. For q=32s+17, Q is again odd/odd sum 16 mod32. P0 is unreachable by the same no-predecessor argument. P2 has sum-plus-one 4 mod8 and the source-certified `evenodd_four_blank_reach_iff` reduces it to R(s). The four-sector normalizer paths on s=32m+c for c={1,5,9,12,13,14,17,21,25,29,30} end in the fullForcedExcluded filter. This gives eleven root-index residues modulo 131072:
+  '104532,88148,71764,59476,55380,51284,38996,22612,6228,120916,116820'.
+- Checked all eleven q17 affine paths symbolically and with 44 exact BigInt regression points (m=0..3). The q9 parent no-predecessor arithmetic is exact.
+- Updated the dossier README to a combined count of 1715 disjoint root-index residues modulo 131072 across the r20, W7, W15, W11 q3mod16, W11 ten q256, W11 q9mod16, and W11 q17mod32 families. All are conditional on the exact residual root equation and remain intermediate/uncompiled compositions; do not promote to results or claim BB6.
+- Sent Agent 3 'communications/agent3/20261119T220000Z_agent11-w11-q17mod32-cylinders.md'. Agent 3 has not yet responded to the W11 messages as of the 21:51Z checkpoint.
