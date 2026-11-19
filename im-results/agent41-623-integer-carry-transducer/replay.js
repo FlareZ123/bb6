@@ -122,13 +122,33 @@ function digitAndCarry(raw) {
   return [Number(digit), Number((raw - digit) / 3n)];
 }
 
+function euclideanMod(value, modulus) {
+  let residue = value % modulus;
+  if (residue < 0n) residue += modulus;
+  return residue;
+}
+
+function floorDiv(value, modulus) {
+  return (value - euclideanMod(value, modulus)) / modulus;
+}
+
+function coordinates(a, d) {
+  const left = a >= d;
+  const q = left ? d : a;
+  const p = left ? a - d : d - a;
+  const g = p - 3n * q;
+  const oddD = d % 2n === 1n;
+  const gamma = left ? (oddD ? 18n : 10n) : (oddD ? 2n : 4n);
+  return { x: 2n * g - gamma, y: 6n * q, q, left };
+}
+
 function nonmonochromaticExtremeBlock(digits) {
   // Excludes both the all-zero and all-two words; an all-one word is allowed.
   return digits.some((digit) => digit !== 0) &&
     digits.some((digit) => digit !== 2);
 }
 
-function outputXMiddleBlock(xDigits, yDigits, k, j, branch, initialXCarry, initialYCarry) {
+function outputMiddleDigits(xDigits, yDigits, k, j, branch, initialXCarry, initialYCarry) {
   let xCarry = initialXCarry;
   let yCarry = initialYCarry;
   const output = [];
@@ -146,14 +166,20 @@ function outputXMiddleBlock(xDigits, yDigits, k, j, branch, initialXCarry, initi
     }
 
     const [outputX, nextXCarry] = digitAndCarry(rawX);
-    const [, nextYCarry] = digitAndCarry(rawY);
+    const [outputY, nextYCarry] = digitAndCarry(rawY);
 
-    if (i >= k + 2) output.push(outputX);
+    if (i >= k + 2) output.push([outputX, outputY]);
     xCarry = nextXCarry;
     yCarry = nextYCarry;
   }
 
   return output;
+}
+
+function outputXMiddleBlock(xDigits, yDigits, k, j, branch, initialXCarry, initialYCarry) {
+  return outputMiddleDigits(
+    xDigits, yDigits, k, j, branch, initialXCarry, initialYCarry
+  ).map(([outputX]) => outputX);
 }
 
 function universallySafe(x, y, q, parameters) {
@@ -211,6 +237,10 @@ let carryCases = 0;
 let minBlockLength = Infinity;
 let maxBlockLength = 0;
 let firstFailure = null;
+let sourceCrosscheckStates = 0;
+let sourceCrosscheckDigitMismatches = 0;
+let sourceCarryBoundViolations = 0;
+let firstSourceMismatch = null;
 
 for (let index = 1; index <= transitions; index++) {
   const next = nextState(a, d);
@@ -218,6 +248,73 @@ for (let index = 1; index <= transitions; index++) {
     firstFailure = index;
     break;
   }
+
+  // Cross-check the exact source transition against the digit transducer.
+  // This covers 1,968 transitions: source indices 32 through 1,999.
+  if (index >= 33 && index <= 2000) {
+    const current = coordinates(a, d);
+    const future = coordinates(next[0], next[1]);
+    const parameters = blockParameters(current.q);
+    const { k, j } = parameters;
+    const branch = future.left ? "L" : "R";
+    const modulus = pow3(k);
+    const lowerModulus = pow3(k - 1);
+    const x0 = euclideanMod(current.x, modulus);
+    const x1 = euclideanMod(current.x, lowerModulus);
+    const y1 = euclideanMod(current.y, lowerModulus);
+
+    const linearX = branch === "L"
+      ? current.x - 3n * current.y
+      : -4n * current.x - 3n * current.y;
+    const linearY = branch === "L"
+      ? 3n * current.y
+      : 3n * current.x + 3n * current.y;
+    const correctionX = future.x - linearX;
+    const correctionY = future.y - linearY;
+
+    const lowX = branch === "L"
+      ? x0 - 3n * y1
+      : -x0 - 3n * x1 - 3n * y1;
+    const lowY = branch === "L"
+      ? 3n * y1
+      : 3n * x1 + 3n * y1;
+    const initialXCarry = Number(floorDiv(lowX + correctionX, modulus));
+    const initialYCarry = Number(floorDiv(lowY + correctionY, modulus));
+
+    const xDigits = ternaryDigits(current.x, j);
+    const yDigits = ternaryDigits(current.y, j);
+    const actualXDigits = ternaryDigits(future.x, j);
+    const actualYDigits = ternaryDigits(future.y, j);
+    const predicted = outputMiddleDigits(
+      xDigits, yDigits, k, j, branch, initialXCarry, initialYCarry
+    );
+
+    const xCarryInBounds = branch === "L"
+      ? initialXCarry >= -2 && initialXCarry <= 2
+      : initialXCarry >= -4 && initialXCarry <= 1;
+    if (!xCarryInBounds || initialYCarry < -2 || initialYCarry > 2) {
+      sourceCarryBoundViolations += 1;
+    }
+
+    for (let offset = 0; offset < predicted.length; offset++) {
+      const position = k + 2 + offset;
+      if (predicted[offset][0] !== actualXDigits[position] ||
+          predicted[offset][1] !== actualYDigits[position]) {
+        sourceCrosscheckDigitMismatches += 1;
+        if (firstSourceMismatch === null) {
+          firstSourceMismatch = {
+            transition: index,
+            position,
+            branch,
+            initialXCarry,
+            initialYCarry
+          };
+        }
+      }
+    }
+    sourceCrosscheckStates += 1;
+  }
+
   [a, d] = next;
 
   if (index < 33) continue;
@@ -267,5 +364,11 @@ console.log(JSON.stringify({
   carryCases,
   carryCasesPerState: 55,
   blockLength: { min: minBlockLength, max: maxBlockLength },
+  sourceCrosscheck: {
+    states: sourceCrosscheckStates,
+    digitMismatches: sourceCrosscheckDigitMismatches,
+    carryBoundViolations: sourceCarryBoundViolations,
+    firstMismatch: firstSourceMismatch
+  },
   firstFailure
 }, null, 2));
