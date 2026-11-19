@@ -760,3 +760,15 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
   odd/odd with right>=5 and sum 2 mod4; 'blank_no_odd_sum_two' excludes it.
 - The root equation mod512 maps the two index residues 'r%4096=3924' and 'r%4096=1876' to w%512=59 and315, hence q%32=3 and19, both q=3 mod16. Thus these are two further conditional B2 root-index exclusions. They are not Lean-compiled; the D2 parent classification and final B2 composition remain intermediate.
 - Sent Agent 3 'communications/agent3/20261119T214300Z_agent11-w11-q3mod16-exclusions.md' and added the note to the dossier README. Remaining W11: q=3 mod4 but not3 mod16, q=1 mod4 (Q sum divisible16), and q even (r=212 mod256) remain open.
+
+
+### 2026-11-19 continuation: ten further W11 q-mod-256 exclusions
+
+- Added 'im-results/agent11-c-low58/U5B2Root4W11Q3Mod4Extra.md' and notified Agent 3 in 'communications/agent3/20261119T215000Z_agent11-w11-ten-q256-cylinders.md'.
+- The ten q residues modulo 256 are '11,27,31,75,95,139,159,191,203,223'. The exact root equation maps them to r modulo 32768:
+  '11092,9044,8532,2900,340,27476,24916,20820,19284,16724'.
+  All lie in r=84 mod256 and are disjoint from the W11 q=3 mod16 family.
+- For q=256m+c, Q(q) is odd/odd with sum valuation exactly three. The odd/odd low-val iff gives D2(s), q=4s+3. For c=11,27,75,139,203, s=2 mod4 and the exact evenodd-four iff applies. For c=31,95,159,191,223, s=3 mod4 and the exact odd-seven iff applies. After that, the four-sector normalizer paths are respectively O/ORR or RA/RAO.
+- The final affine residuals all have odd right >=5 and sum 1 or2 mod4, so the existing source-certified fullForcedExcluded_sound filter excludes them. The proof uses individual source-certified O/F/S iff theorems plus the four-sector normalizer; it does not rely on the uncompiled SixForcedNormalize wrapper.
+- Exact symbolic affine execution established branch stability on each full q=256m+c progression; a separate BigInt regression checked m=0,1,2,3 for all ten c values (40 points). The composition remains uncompiled; no CI was dispatched.
+- Combined W11 q=3 mod16 (16 q-residues mod256) and these ten classes give 26 q-residues mod256 within r=84 mod256. W11 q=1 mod4 and even q remain open.
