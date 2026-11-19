@@ -46,9 +46,9 @@ Let (L) be the parity-adjusted ternary depth of the canonical drain input (b), a
 [
 N=\frac{2b-1+3^L}{4}.
 ]
-Write (R=n_1+n_2), (e=n_2), and (D=L-2e), as in the drain valuation normal form. Then
+Write (R=n_1+n_2), (e=n_2), and (D=\\ell-2e), as in the drain valuation normal form. Then
 [
-D+2R=L+2n_1.
+D+2R=\\ell+2n_1.
 	ag{3}
 ]
 
@@ -56,9 +56,9 @@ The exact residuals from that normal form give the following values of (\beta+\d
 
 | Input sector | (\beta) | (\delta) | (\beta+\delta) |
 |---|---:|---:|---:|
-| LO | (-D-5) | (2D+2R+14) | (D+2R+9=L+2n_1+9) |
-| LE | (-D-2) | (2D+2R+8) | (D+2R+6=L+2n_1+6) |
-| RO | (4-D) | (2D+2R) | (D+2R+4=L+2n_1+4) |
+| LO | (-D-5) | (2D+2R+14) | (D+2R+9=\\ell+2n_1+9) |
+| LE | (-D-2) | (2D+2R+8) | (D+2R+6=\\ell+2n_1+6) |
+| RO | (4-D) | (2D+2R) | (D+2R+4=\\ell+2n_1+4) |
 | RE | (1-D) | (2D+2R+3) | (D+2R+4=L+2n_1+4) |
 
 Consequently, for every positive canonical drain input,
