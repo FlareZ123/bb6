@@ -794,14 +794,14 @@ theorem q0_X_not_reach_t1707mod2048 (v : Nat) :
 SectionAllInverse grammar sends every possible parent into the forbidden
 odd/odd sum-two image. -/
 private theorem blank_no_sum7_target (x y : Nat)
-    (hy12 : 12≤y) (hxy8 : (x+y)%8=7)
+    (hx : 5<x) (hy12 : 12≤y) (hxy8 : (x+y)%8=7)
     (hS16 : (x+y+1)%16=8) (hS32 : (x+y+1)%32=24)
     (hx4 : x%4=3) (hy8 : y%8=4) :
     ¬ CReach x y := by
   intro hreach
   obtain ⟨a,b,hprev,hstep⟩ :=
     BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
-      x y (by omega) hreach
+      x y hx hreach
   have hpre : BB6.Agent46.sectionPreimageAll a b x y :=
     (BB6.Agent46.section_preimage_all_iff a b x y).mp hstep
   have himage := BB6.Agent19HighEvenRight.sum7_every_parent_odd_image
@@ -882,7 +882,7 @@ theorem q0_X_not_reach_t1547mod2048 (v : Nat) :
       simpa only [hx,hy] using hQ0run
     exact blank_no_sum7_target
       (82563+109312*v) (57716+76416*v)
-      (by omega) (by omega) (by omega) (by omega) (by omega) (by omega) hQ0
+      (by omega) (by omega) (by omega) (by omega) (by omega) (by omega) (by omega) hQ0
   · subst q
     have hU1 : 4*U=43*t-1 := by simpa using hpow.symm
     have hUval : U=16630+22016*v := by
