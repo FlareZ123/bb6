@@ -174,7 +174,7 @@ theorem typeC_right_guard_from_sides
     simp [right,sideBit]
   have hcell := (hright 2 (by omega)).trans hside
   have heq : h+1+(2:Int) = h+3 := by omega
-  simpa [heq] using hcell
+  simpa [T,right,heq] using hcell
 
 /-- Original-source 46-step transition for the complete M-4 checkpoint
 family, with arbitrary exterior right tail. -/
