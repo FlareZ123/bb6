@@ -40,3 +40,31 @@ nontrivial residual stopping families after the two small feeder exclusions.
 It does not prove that Machine C is nonhalting. The remaining reachability
 questions are open.
 
+
+
+## 2026-11-19: U5 q=0, w=7 source-parent reductions (intermediate)
+
+[Detailed derivation and exact parameter formulas](U5Q0W7SourceParentAnalysis.md).
+The q=0 target is
+(P_z=(3480+7224z,3439+7140z)), with the residual relation
+(5z-7s\equiv12\pmod{16}) for (w=7+8s). The note records:
+
+- a complete original-source parent normal form for the (z=2+4u)
+  parity sector, and a derived exclusion for (u\equiv1\pmod4);
+  this corresponds to (w\equiv119\pmod{128});
+- two uniquely forced odd-z parent chains for (z\equiv5,13\pmod{16}),
+  ending in the existing odd-right sum-two blank-image obstruction;
+  these correspond to (w\equiv95,31\pmod{128});
+- a further source-level q=1/odd-odd low-value chain for
+  (w\equiv439\pmod{512}), using the existing odd-right sum-one
+  obstruction.
+
+The candidate Lean source is
+[U5Q0W7ParentFan.lean](U5Q0W7ParentFan.lean). It is explicitly an
+**uncompiled draft**: local shell and Python execution returned runtime
+errors in this invocation, and no CI was dispatched without local
+preflight. The (w=439\pmod{512}) chain is currently documented
+mathematically but not yet formalized. None of these slices closes the
+full w=7 progression or proves Machine C nonhalting. The remaining
+odd-z parent cylinders, (z\equiv0\pmod4), and the unresolved
+(z\equiv2\pmod4) high-depth branches remain open.
