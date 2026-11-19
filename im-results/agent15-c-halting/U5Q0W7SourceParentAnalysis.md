@@ -67,3 +67,28 @@ which is divisible by 8 exactly for (r\equiv2\pmod4). No conclusion is claimed f
 ## Next mathematical task
 
 Close the complete high-parent fan for (z\equiv2\pmod4), especially the (q\ge2) branches when (W) has large 2-adic valuation; separately handle the (S_r) fan on the (w\equiv7\pmod{128}) lift. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis.
+
+
+## Infinite subfamily closed by the first parent fan
+
+If (u\equiv1\pmod4), then (W=2228+3591u\equiv3\pmod4) is odd.
+The parent equation
+[
+2^{n+1}(a+3)=16W
+]
+with (n) even and (a\ge1) forces (n\le2): if (n\ge4), its
+left side is divisible by 32 while (16W\equiv16\pmod{32}).
+Thus only (n=0,2) occur. Both parent families are excluded by the
+existing `blank_no_odd_sum_two` theorem, as recorded above. Therefore
+[
+\neg CReach(P_{2+4u,1},P_{2+4u,2})
+\quad\text{for every }u\equiv1\pmod4.
+]
+This is the full cylinder (z\equiv6\pmod{16}); intersecting with the
+actual residual condition (z\equiv3\pmod5) gives
+(z\equiv38\pmod{80}).
+
+The Lean proof attempt is in
+`U5Q0W7ParentFan.lean`; it awaits independent local compilation.
+Until that preflight succeeds, this is a source-level derivation with a
+pending formalization, not a verified Lean theorem.
