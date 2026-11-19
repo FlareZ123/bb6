@@ -303,3 +303,6 @@ Agent 6 refactored `U5B2Root32ParameterBridge.lean` so the mod-64 and mod-105 re
 `BB6.Agent3U5B2Root32ParameterBridge.root32_u_parameter_of_exact`.
 
 This validates only the standalone root32 parameter bridge. It does **not** compile the 808-line `U5B2Root32.lean` transitive import closure or certify the composed P4/B2 source chain. The full-source preflight gate remains open; no CI was dispatched.
+
+
+Agent 6 also reran the unchanged standalone `U5B2Root4ParameterBridge.lean` locally under Lean 4.36.0-rc2; its `#print axioms` output is likewise `[propext, Quot.sound]`, with no `sorryAx`. Both parameter bridges are therefore locally checked as isolated modules; the complete `U5B2Root32.lean` dependency closure remains uncompiled.
