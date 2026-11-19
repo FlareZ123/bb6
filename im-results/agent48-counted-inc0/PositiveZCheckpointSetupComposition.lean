@@ -763,6 +763,134 @@ theorem setupB6Config_preserves_prefix_blank (T : Int → Bool)
   rw [setupB6Config_eq_setupB20Config_before_L T h A L x (by omega)]
   exact setupB20Config_preserves_before T h x hx
 
+/-- The complete B6 left tail follows from the suffix guards and the
+blank prefix tail before B20. The two counted sweeps supply the two 100
+powers; B9 supplies the middle 111; B20 supplies the final 1110111. -/
+theorem setupB6LeftTail_of_guards_and_blank (T : Int → Bool) (h : Int)
+    (A L z : Nat) (g : SetupSuffixGuards T h A L z)
+    (hblank : SetupPrefixLeftBlank T h) :
+    SetupB6LeftTail T h A L := by
+  intro i
+  let b6 : Int := h+13+3*(L:Int)+3*(A:Int)
+  let hA : Int := h+10+3*(L:Int)
+  let hB9 : Int := h+7+3*(L:Int)
+  let hL : Int := h+4
+  rw [setupL2_sideBit]
+  have hb6 := setupB6Config_prefixBits T h A L
+  have hb9 := setupB9Config_endBits T h L
+  have hb20 := setupB20Config_endBits T h
+  have hAleft1 : (setupB9Config T h L).tape (hA-1)=false := by
+    have heq : hA-1=hB9+2 := by dsimp [hA,hB9]; omega
+    rw [heq]
+    exact hb9.1
+  have hAleft2 : (setupB9Config T h L).tape (hA-2)=false := by
+    have heq : hA-2=hB9+1 := by dsimp [hA,hB9]; omega
+    rw [heq]
+    exact hb9.2.1
+  have hLleft1 : (setupB20Config T h).tape (hL-1)=false := by
+    have heq : hL-1=h+3 := by dsimp [hL]; omega
+    rw [heq]
+    exact hb20.1
+  have hLleft2 : (setupB20Config T h).tape (hL-2)=false := by
+    have heq : hL-2=h+2 := by dsimp [hL]; omega
+    rw [heq]
+    exact hb20.2.1
+  have hAstream : ∀ j : Nat, j<3*(A+1) →
+      (setupAConfig T h L A).tape (b6-3-(j:Int)) =
+        sideBit (setupD100pow (A+1)) j := by
+    intro j hj
+    have hs := sweptRight_leftFacing_d100pow (A+1)
+      (setupB9Config T h L).tape hA g.aRun hAleft1 hAleft2 j hj
+    have heq : hA+3*((A+1):Int)-3-(j:Int)=b6-3-(j:Int) := by
+      dsimp [hA,b6]
+      omega
+    rw [← heq]
+    simpa [setupAConfig,hA] using hs
+  have hLstream : ∀ j : Nat, j<3*(L+1) →
+      (setupLConfig T h L).tape (hB9-3-(j:Int)) =
+        sideBit (setupD100pow (L+1)) j := by
+    intro j hj
+    have hs := sweptRight_leftFacing_d100pow (L+1)
+      (setupB20Config T h).tape hL g.lRun hLleft1 hLleft2 j hj
+    have heq : hL+3*((L+1):Int)-3-(j:Int)=hB9-3-(j:Int) := by
+      dsimp [hL,hB9]
+      omega
+    rw [← heq]
+    simpa [setupLConfig,hL] using hs
+  by_cases hi0 : i<3
+  · simp [hi0]
+    interval_cases i
+    · simpa [sideBit,b6] using hb6.1
+    · simpa [sideBit,b6] using hb6.2
+    · have hpres := setupB6Config_preserves_before T h A L (b6-2) (by omega)
+      rw [hpres]
+      have heq : b6-2=hA+3*(A:Int)+1 := by
+        dsimp [b6,hA]
+        omega
+      rw [heq]
+      have hclear := sweptRight_clears_second (A+1)
+        (setupB9Config T h L).tape hA A (by omega)
+      simpa [setupAConfig,hA] using hclear
+  · simp [hi0]
+    by_cases hi1 : i-3<3*(A+1)
+    · simp [hi1]
+      let j : Nat := i-3
+      have hj : j<3*(A+1) := by dsimp [j]; omega
+      have heq : b6-(i:Int)=b6-3-(j:Int) := by
+        dsimp [j]
+        omega
+      rw [heq]
+      rw [setupB6Config_preserves_before T h A L (b6-3-(j:Int)) (by omega)]
+      exact hAstream j hj
+    · simp [hi1]
+      by_cases hi2 : i-3-3*(A+1)<3
+      · simp [hi2]
+        let k : Nat := i-3-3*(A+1)
+        have hk : k<3 := by dsimp [k]; omega
+        have heq : b6-(i:Int)=hB9-(k:Int) := by
+          dsimp [k,b6,hB9]
+          omega
+        rw [heq]
+        rw [setupB6Config_eq_setupB9Config_before_A T h A L
+          (hB9-(k:Int)) (by dsimp [hA,hB9]; omega)]
+        interval_cases k
+        · simpa [sideBit] using hb9.2.2.1
+        · simpa [sideBit] using hb9.2.2.2.1
+        · simpa [sideBit] using hb9.2.2.2.2
+      · simp [hi2]
+        by_cases hi3 : i-3-3*(A+1)-3<3*(L+1)
+        · simp [hi3]
+          let j : Nat := i-3-3*(A+1)-3
+          have hj : j<3*(L+1) := by dsimp [j]; omega
+          have heq : b6-(i:Int)=hB9-3-(j:Int) := by
+            dsimp [j,b6,hB9]
+            omega
+          rw [heq]
+          rw [setupB6Config_eq_setupLConfig_before_L T h A L
+            (hB9-3-(j:Int)) (by omega)]
+          exact hLstream j hj
+        · simp [hi3]
+          let k : Nat := i-3-3*(A+1)-3-3*(L+1)
+          have heq : b6-(i:Int)=h+1-(k:Int) := by
+            dsimp [k,b6]
+            omega
+          rw [heq]
+          have hpres := setupB6Config_eq_setupB20Config_before_L T h A L
+            (h+1-(k:Int)) (by omega)
+          rw [hpres]
+          by_cases hk7 : k<7
+          · interval_cases k
+            · simpa [sideBit] using hb20.2.2.2.1
+            · simpa [sideBit] using hb20.2.2.2.2.1
+            · simpa [sideBit] using hb20.2.2.2.2.2
+            · simpa [sideBit] using hb20.2.2.2.2.2.1
+            · simpa [sideBit] using hb20.2.2.2.2.2.2
+            · simpa [sideBit] using hb20.2.2.2.2.2.2.1
+            · simpa [sideBit] using hb20.2.2.2.2.2.2.2
+          · have hx : h+1-(k:Int)<h-5 := by omega
+            rw [setupB20Config_preserves_before T h (h+1-(k:Int)) hx]
+            exact hblank (h+1-(k:Int)) hx
+
 theorem setupB30Config_leftFacing (T : Int → Bool) (h : Int)
     (A L z : Nat) (g : SetupSuffixGuards T h A L z)
     (hz : 2≤z) (htail : SetupB6LeftTail T h A L) :
