@@ -133,12 +133,13 @@ theorem p2ActualBoundary_end_right_ones
       T h p2ActualBoundaryInside p2ActualBoundaryEnd).tape (h+1) = true := by
   have hm : (h-1)-h = -1 := by omega
   have hneg : h+(-1:Int) = h-1 := by omega
+  have hneg' : (-1:Int)+h = h-1 := by omega
   have hz : h-h = 0 := by omega
   have hp : (h+1)-h = 1 := by omega
   simp [BB6Coverage.Agent6Q4Prefix.frameAt_state,
     BB6Coverage.Agent6Q4Prefix.frameAt_head,
     BB6Coverage.Agent6Q4Prefix.frameAt_tape,
-    p2ActualBoundaryInside,p2ActualBoundaryEnd,hm,hneg,hz,hp]
+    p2ActualBoundaryInside,p2ActualBoundaryEnd,hm,hneg,hneg',hz,hp]
 
 
 
