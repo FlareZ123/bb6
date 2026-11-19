@@ -25,7 +25,8 @@ theorem finiteMarkerRight_sound (c : FinRayCfg)
   change c.ones.contains x = decide (x-c.head=0)
   by_cases heq : x=c.head
   · subst x
-    simp [hpair.1]
+    have hmem : c.head ∈ c.ones := List.contains_iff_mem.mp hpair.1
+    simp [hmem]
   · have hnot : x ∉ c.ones := by
       intro hm
       have hle := hbounded x hm
