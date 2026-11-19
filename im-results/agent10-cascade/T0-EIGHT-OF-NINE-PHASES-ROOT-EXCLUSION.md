@@ -1,6 +1,6 @@
 # Eight-of-nine t=0 fatal-source phase classes are outside the blank-root chain
 
-**Status:** exact paper-level arithmetic over the repository's original-source ResetParent grammar. The modular and interval derivation below has not yet been formalized in Lean. The underlying first-reset equivalence and blank-root ResetChain equivalence are source-certified; this phase theorem is not. The rho=20 phase has since been refined in [T0-RHO20-TWO-OF-THREE-LIFTS.md](T0-RHO20-TWO-OF-THREE-LIFTS.md): two of its three K-lifts modulo 162 have valuation v3(X)=2, and two of the three lifts of the survivor modulo 486 have v3(X)=3 and are also root-excluded. For each even a>=18, this combines with the eight non-rho20 phases to exclude 80/81 candidate K residue classes modulo 486. This is a parameter-class statement, not a density of machines or a complete decision of #746 or BB(6). The same note proves a positive-density set of higher valuation indices with no odd source band, using a general 3-adic lift law and irrational rotation.
+**Status:** exact paper-level arithmetic over the repository's original-source ResetParent grammar; the modular and interval derivation has not yet been formalized in Lean. The eight non-rho-20 phases remain root-leaf exclusions. The later rho-20 lift-cascade claim of 80/81 exclusions is withdrawn: the source rule permits lower exponents even when the quotient d is divisible by 3, and every rho-20 candidate has an omitted t=0 parent at level K-1. The corrected parent fan, exact-valuation lift law, and unbounded same-level even-chain construction are documented in [T0-RHO20-TWO-OF-THREE-LIFTS.md](T0-RHO20-TWO-OF-THREE-LIFTS.md). The positive-density gap statement concerns maximal-exponent source coordinates only, not parentless candidates.
 
 ## Theorem
 
@@ -161,7 +161,7 @@ This is stronger than the two earlier t=0 q=0 subfamilies:
 
 The old notes remain useful worked derivations and are not deleted. Agent 7's separate \(K=1023,q=8\) seven-edge chain is a different candidate with nonzero same-level reset depth; it is not part of this q=0 family.
 
-The rho=20 phase is no longer wholly open. For each even a>=18, two of its three K-lifts modulo 162 have v3(X)=2, and two of the three lifts of the remaining class modulo 486 have v3(X)=3; both stages are root-excluded by the separate [rho-20 lift-cascade refinement](T0-RHO20-TWO-OF-THREE-LIFTS.md). The unique remaining lift has 81|X, hence incoming odd valuation t>=3; it is not resolved here. The K≡3 mod6 sector, nonzero same-level reset depths, higher fatal branches, and all other root families remain open. This result does not prove that #746 is nonhalting and does not determine BB(6).
+The rho-20 phase remains unresolved. Every candidate has the t=0 odd parent at level K-1, so the two v3(X)=2 lifts and two v3(X)=3 lifts are not root-excluded merely by their maximal-exponent branches. The 3-adic lift law remains valid, but the complete lower-exponent parent fan must be analyzed. The K≡3 mod6 sector, nonzero same-level reset depths, higher fatal branches, and all other root families remain open. This result does not prove that #746 is nonhalting and does not determine BB(6).
 
 ## Reproducer
 

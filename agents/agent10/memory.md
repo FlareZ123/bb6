@@ -103,46 +103,20 @@ PR #105 remains an open draft and PR #106 depends on it. This incarnation did no
 Current incarnation lease: `agents/agent10/.lease.json`, run_id=`agent10-gpt6-20261118T150921Z-t0-rho38`, claimed_at=`2026-11-18T15:09:21.633Z`. Do not refresh it; check actual system time after every checkpoint and release only at the 70-minute threshold.
 
 
-### 2026-11-18 addendum: rho-20 valuation-two lift exclusion
+### 2026-11-19 correction: rho-20 lower-exponent parent fan
 
-A new paper-level refinement is recorded in im-results/agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md. It advances the existing t=0, q=0 fatal-source family beyond the eight-of-nine phase table.
+The 2026-11-18 claim that 80/81 rho-20 K-residue classes are root-excluded is withdrawn. The exact-valuation lift calculations and the uniform 3-adic lift law are valid, but the inference to parentlessness was wrong: ResetParent requires d odd and does not require 3∤d. If v3(X)=n, every exponent 0<=t<n remains a possible odd-parent choice.
 
-For even a>=18, K>=266, K≡2 mod6, x=(2K+7)/2^a in [97/64,13/8], and rho=K+6a≡20 mod54, the existing phase table gives X=2E+5≡0 mod9. With p=2^K, r=K+4-a, B=(2K+7)2^r, the exact identity is 3X+2B=80p+2K+13. Since 2^54≡1 mod81, replacing K by K+54 changes B by 27*2^r mod81; r is even, so 2^r≡1 mod3, and hence X(K+54)≡X(K)+18 mod27. Thus the three lifts of the rho-20 class modulo 162 give X mod27 in {0,9,18}, in some order. Exactly two have v3(X)=2.
+For every rho-20 candidate, 9|X and (28/3)<X/p<(65/6), where p=2^K. Thus P0=X/3 satisfies 3p<P0<4p, so it lies in the odd-source band at level K-1. With h0=2P0-4p-K-4, the exact equations
+2E+5=3P0 and 2P0=8*2^(K-1)+h0+(K-1)+5
+give ResetParent(h0,E) with t=0. Hence all rho-20 candidates have an immediate parent. The t=1 gap for v3(X)=2 and the t=2 leaf calculation for v3(X)=3 concern other parent choices; neither excludes E.
 
-For those two lifts, any odd parent would have valuation t=1 and source parameter P=2X/9. The existing source interval gives 28/3<X/p<65/6, hence 56/27<P/p<65/27, so 2p<P<3p. No odd source band [6*2^L+1,8*2^L-1] intersects this gap: levels L<=K-2 end below 2p, while levels L>=K-1 start above 3p. The candidate E has no even parent because 4p<E<6p-1. Therefore these two lifts have no ResetParent and are outside the genuine blank-root ResetChain. Combined with the previous eight-of-nine result, 26/27 of the candidate K residue classes modulo 162 are excluded for each even a>=18. This is a residue-class statement about this structured candidate family, not a machine-density statement. The first-stage survivor has 27|X; the subsequent t=2 analysis below further reduces it to the unique mod486 lift with 81|X.
+The next numerator is
+X1=2h0+5=(248p-8B-10K+25)/9,
+and 3|X1. The exact source-band test for its t=0 parent at level K-2 is X1/3 in [3p/2+1,2p-1]; higher exponents must also be checked. The maximal-exponent gap-density log2(84/65) remains correct as a statement about P_t, but lower exponents s<t have P_s=(3/2)^(t-s)P_t and can lie in other bands.
 
-Exact BigInt regression at a=18 used K=198686,198740,198794 (all in the rho-20 interval and in the three lifts modulo 162); the corresponding X mod27 values were 18,9,0, with v3(X)=2,2,3. This is a sanity check, not the infinite proof. The proof remains paper-level and has not been Lean-compiled.
+A new construction: for every even a>=18 choose the least delta in [0,53] such that K_a=(97*2^(a-6)-6)/2+delta is congruent to 20-6a modulo54. This gives a valid rho-20 candidate. It has two successive t=0 odd-parent edges, followed by at least a-10 same-level even-parent edges at level K_a-2. The deficit recurrence is D_(j+1)=2D_j+(K_a-2), with D_0=(256(1+2delta)2^(K_a-a)+47K_a+31)/27. This proves unbounded finite synthetic inverse depth, not blank-root reachability. Exact witnesses: (a,K,delta,even edges)=(18,198686,33,8),(20,794672,51,10),(22,3178544,51,12).
 
-### 2026-11-18 checkpoint: CI and local-preflight status
+A full exact BigInt parent-fan census for a=18 checked all 265 rho-20 K values and every parent choice. All graphs terminate without reaching 2; maximum depth 12, maximum nodes 18, and 90 graphs branch. This is finite computation only. Reproducer: im-results/agent10-cascade/rho20_parent_census.mjs. The corrected derivation and full formulas are in im-results/agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md.
 
-Inspected failed workflow run 44204188359 using failed-job-only tail. The pinned upstream source build and prerequisite modules succeeded; the then-current T0Rho38RootExclusion.lean failed on Mathlib-only nlinarith/ring tactics and downstream unsolved goals, and its axiom print included sorryAx. The current main file revision (blob 06f78ed8dd061b461926d38df5751740987aba52) replaces those tactics with core Lean terms/tactics and changes the modular rewrite proofs, but has no successful compile or axiom audit. Do not claim the theorem verified or repeat the old failed run as evidence.
-
-The local container shell again returned ClientError on a basic file/Lean check. The uploaded Lean archive fragments were previously established to be truncated; do not repeat extraction. Agent 3 and Agent 4 requested exact local Lean 4.36.0-rc2 preflight for the U5 q=0 aggregate (H16, H40, W1, W1821, W4609); I reported that local preflight is unavailable. Per Critic's current gate, no CI was dispatched without a successful exact local preflight. No axiom profile is available for those drafts.
-
-**Next actions:** (1) obtain Agent 7's adversarial review of the rho-20 lift-cycle and dyadic-gap proof; (2) investigate the unique rho-20 lift with 27|X and incoming valuation t>=2, combining the exact 3-adic lift with the source band rather than repeating finite forward scans; (3) formalize the rho-20 valuation-two lemma against the exact ResetParent/ResetChain definitions when a confirmed Lean runtime is available; (4) recompile the current rho-38 theorem only after exact local preflight; (5) assist Agent 3/4's U5 batch only from a confirmed local Lean runtime. Keep all these intermediate results in im-results/; do not deepen PR #105/#106 or create a new workflow.
-
-### 2026-11-18 addendum: t=2 parent leaf and 80/81 rho-20 lift exclusion
-
-The rho-20 refinement in im-results/agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md now also resolves every candidate with v3(X)=3 (incoming odd-parent valuation t=2).
-
-For v3(X)=3, set d=X/27 and P=4d. The source interval gives 112/81<P/p<130/81, so only the odd source band at L=K-2 can occur. If P is outside that band, E is parentless. If P is inside it, its unique odd parent is h=2P-2p-K-3. Put Delta=P-3p/2. The exact expression is
-Delta = p(397-256x)/162 + 4(2K+13)/81.
-The integer N=397*2^a-256(2K+7) is 256 mod512, so it is nonzero and |N|>=256. If Delta>0 (necessary for P to be in the band), then N>0 and the bound 2^a<2K+7 yields Delta>K/2. Thus p-3<h<98p/81<3p/2-1. This gap excludes every even parent of h. Also h≡2d+2 mod3 is 0 or1 because 3 does not divide d, excluding every odd parent. Hence h is parentless and E is not in the blank-root chain. The proof handles both cases: P misses its only possible band, or E has a unique parent h which is a leaf.
-
-A second lift calculation uses 2^162≡1 mod243 and gives X(K+162)≡X(K)+54 mod81. Among the three lifts of the unique rho-20 class with 27|X modulo162, exactly one has 81|X; the other two have v3(X)=3 and are excluded by the t=2 argument. Since the K interval has width >486 for every even a>=18, all lifts occur. Combining the eight non-rho20 phases with these two rho20 stages excludes 80 of 81 K residue classes modulo486 for every even a>=18. The unique surviving class has 81|X and incoming valuation t>=3. This is still a parameter-class result for one t=0, q=0 candidate family, not a machine-density or BB(6) theorem, and remains paper-level.
-
-Exact a=18 checks: K=198794,198956,199118 give X mod81 =54,27,0 and v3(X)=3,3,4. At K=198794, P is in the K-2 band and h/p≈1.107699 with h mod3=0; at K=210944, v3(X)=3 but P/p≈1.407365, so no odd source band exists.
-
-**Next action:** analyze the unique rho-20 class with 81|X and incoming valuation t>=3; seek a general dyadic-gap or parent-leaf theorem for the higher 3-adic lifts. Do not repeat finite forward-orbit scans.
-
-### 2026-11-18 addendum: general 3-adic lift law and positive-density source-band gaps
-
-The rho-20 note now proves a uniform lift rule. For n>=2, shift K by Delta_n=2*3^(n+1). LTE gives 2^Delta_n≡1 mod3^(n+2); the exact identity 3X+2B=80p+2K+13 then yields
-X(K+Delta_n)-X(K) ≡ (4-8*2^r)*3^n mod3^(n+1).
-Since r is even, the coefficient is a 3-adic unit. Each three-way lift of a class with 3^n|X therefore has exactly one higher-valuation child and two siblings with v3(X)=n. The rho-20 class is the base n=2 case.
-
-For exact v3(X)=t+1, the odd source coordinate obeys
-(28/9)*(2/3)^t < P_t/p < (65/18)*(2/3)^t.
-The dyadic source-band gaps have log2 width log2(3/2); the interval has width log2(65/56). The phase log2(28/9)+t log2(2/3) is equidistributed mod 1 because log2(2/3) is irrational. Thus a positive natural density log2(84/65)≈0.36995 of valuation indices t have the whole source-coordinate interval inside a dyadic gap. For each such t, both exact-valuation sibling classes from the lift law occur for infinitely many admissible (a,K) pairs once the K interval width exceeds 2*3^(t+3), and E has no odd or even parent. This is an infinite higher-valuation parent-leaf family. The density is of valuation indices, not machines. First examples of gap t are 1,4,6,11,13,16,...; t=2 is separately excluded by the explicit parent-leaf lemma.
-
-The remaining work is now the higher t values whose P_t interval intersects a source band. Those candidates may have an odd parent whose own even-parent chain continues; the source-band gap argument alone does not resolve them. The new lift law, density argument, and t=2 leaf proof remain paper-level and are not Lean-certified.
+**Next actions:** (1) derive the complete odd/even parent fan of h0 and its successors, including lower-level transitions after the same-level even chain; (2) use the exact parent enumerator to identify which modular digits create alternate odd branches, then seek a uniform closure or a genuine root path; (3) ask Agents 7 and 44 to adversarially review the corrected parent analysis and adapt their Hensel/even-chain machinery; (4) keep all this in im-results until an all-parameter proof is established. Do not revive the 80/81 claim. Do not claim BB(6) is solved.
