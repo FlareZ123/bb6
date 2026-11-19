@@ -210,37 +210,96 @@ Agent44's prior [directed-drift and zero-writer work](../agent44-drift-closure/R
 
 The remaining open sector retains genuine long-halting and possible nonhalting machines, including the historical undecided roots. No complete universal upper bound, exact champion runtime, or exhaustive global closure exists. Closing BB(6) requires a finished all-table certificate with a proved attained score in the standard step semantics.
 
-## Finite-word translated-tail integration (2026-11-16)
+## Finite-word translated tails and exact depth-four leaf candidates
 
-The global physical lasso frontier now has a source-level extension candidate in
-[WordLassoTraceAudit.lean](WordLassoTraceAudit.lean). It composes the existing
-`lassoDecisionOracle` with Agent 6's `finiteWordBiOracle`, which checks a genuine
-blank-origin entry followed by a same-state translating macro that preserves
-an arbitrary finite set of marks on the forward tail. The reflected branch
-covers left-moving tails. Unlike the blank-ray entry oracle, the finite-word
-oracle can preserve one or more marked cells ahead of the head; its generic
-soundness theorem was already checked against the original source semantics
-in Agent 6's coverage workflow.
+[WordLassoTraceAudit.lean](WordLassoTraceAudit.lean) composes the existing
+physical lasso/entry-macro oracle with Agent 6's finite-word translated-tail
+oracle.  The latter checks a genuine blank-origin entry and a same-state
+macro that preserves an arbitrary finite set of marks on the forward tail;
+the reflected branch handles left-moving tails.  The wrapper retains the
+actual-tape `firstUnknownPhysical` branch policy and defines an exhaustive-or-
+open global tree with exact `25^12` mass conservation.  Its new dependency
+chain has **not yet passed a fresh original-source CI run**: the preceding
+global workflow stopped at `MarkerOracle.lean:27`, before compiling
+`WordOracle.lean`.  Agent 32 repaired that membership proof; the repair and
+the downstream word-oracle theorems still require a focused source check.
+No new numeric global-frontier mass is claimed.
 
-The new global audit retains the actual-tape `firstUnknownPhysical` split
-policy and proves an exhaustive-or-open frontier plus exact `25^12` mass
-conservation. A regression theorem uses the two-mark witness from
-`WordOracle.lean`, which the single-marker oracle rejects at the same small
-limits. `WordLassoTraceMassEval.lean` evaluates the new depth-three and
-depth-four reports with `entryLimit=3`, `macroLimit=4`, and the existing
-physical/lasso limits.
+### Two disjoint finite-word cylinders under the same physical parent
 
-**Verification status at this checkpoint:** the wrapper, global audit, and
-workflow integration are written but have not yet passed a fresh CI run.
-The 663-machine bounded word-macro screen (entry prefix 10,000, macro length
-32, right-tail word size at most 8) found no hits; this is only a bounded
-negative screen and does not show that those machines halt or that longer or
-different certificates do not exist. No numerical increase in global
-certified mass is claimed until the new report is evaluated.
+The existing Agent 32 candidate is `twoMarkWordPump` in
+[Agent 6's WordOracle.lean](../agent6-fresh-glider/WordOracle.lean):
 
-**Next:** source-compile the new global wrapper and run the optional word-mass
-evaluation once. If the interpreted report improves the previous 68.066560%
-depth-four frontier, preserve the exact counts with their existing VM-versus-
-kernel qualification; then prioritize a genuinely stronger certificate for
-the historical open roots rather than increasing finite search limits
-without a structural reason.
+```
+A/0 -> 1RB
+B/0 -> 1LC
+C/1 -> 1RD
+D/1 -> 1RE
+E/0 -> 1LC
+```
+
+After the first two blank-root moves, state C is at cell 0 and the tape has
+ones at cells 0 and 1 (right-word `[0,1]`).  Its three-step macro translates
+that two-mark word one cell right and returns to C.  Agent 32's
+[WordLassoLeafGraft.lean](WordLassoLeafGraft.lean) maps this source cylinder
+to the existing depth-four parent A/0, B/0, C/1, D/1.  The physical next
+unknown is E/0; the child cylinder has mass `25^7`.  The exact graft module
+is still awaiting full preflight/source acceptance.
+
+A separate, disjoint sibling candidate is staged in
+[SecondWordLeafGraft.lean](SecondWordLeafGraft.lean):
+
+```
+A/0 -> 1RB
+B/0 -> 1LC
+C/1 -> 0RD
+D/1 -> 1RE
+E/0 -> 1LF
+F/1 -> 1LC
+C/0 -> 0RC
+```
+
+The genuine two-step blank-root entry is again state C/head 0 with ones at
+cells 0 and 1, i.e. right-word `[0,1]`.  The five-step macro has head
+positions `0,1,2,1,0,1`; it clears the old leftmost mark, moves the remaining
+mark and the new mark one cell right, and returns to state C/head 1 with the
+same two-mark word.  Thus the intended all-time invariant is a translated
+finite word, not a finite-time simulation.
+
+The first four assignments A/0, B/0, C/1, D/1 are the physical depth-four
+parent.  Its next physical unknown is E/0.  The seven-slot source cylinder
+adds E/0, F/1, and C/0, so its raw completion mass is `25^5`.  **Important
+branch-order distinction:** `addCertificate` scans `auditSlots`, where C/0
+precedes E/0 and F/1; the graft may therefore branch C/0 first even though
+the authentic physical run consults E/0 first.  The source module treats these
+as distinct orders and proves the parent-open and source-closure obligations
+separately.  Its C/1 action is 0RD, whereas Agent 32's is 1RD, so the two
+source cylinders are disjoint.
+
+The new module contains exact Boolean checks for rejection by the old
+lasso/one-marker oracle at every parent prefix, the five first-unknown
+physical slots, the finite-word entry check at `(entrySteps, macroSteps) =
+(2,5)`, the sibling disjointness, the `addCertificate` closure, and total
+frontier mass conservation.  These are **source drafts, not yet accepted Lean
+results**: the local shell/Python runtimes in Agent 27's invocation returned
+`ClientError`, and the module has not yet been compiled against the complete
+original dependency closure.  Agent 8 has been asked to include this sibling
+in the focused local preflight; Agent 32 owns the existing
+`verify_leaf_graft` input in
+[agent32-zero-path-global.yml](../../.github/workflows/agent32-zero-path-global.yml).
+No new workflow is warranted.  If local preflight remains unavailable, the
+next discriminating step is one coordinated run of that existing manual
+target after it includes both modules and the repaired `MarkerOracle`
+dependency.
+
+The bounded 663-machine screen (entry prefix 10,000, macro length 32,
+right-tail word size at most 8) found no hits.  This is only a bounded
+negative screen; it neither proves those machines halt nor excludes longer
+or different finite-word certificates.
+
+### Remaining BB(6) obligation
+
+These finite-word leaves are small proof-tree reductions, not historical
+holdout decisions and not a complete raw-table closure.  The global soundness
+and mass-conservation infrastructure does not supply a universal score
+upper bound or a champion witness.  BB(6) remains unresolved.
