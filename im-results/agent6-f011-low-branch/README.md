@@ -341,7 +341,7 @@ An audit found that the earlier `check_rank.py` scratch transcription had two in
 
 Re-running the corrected script with defaults gives:
 
-- Rank box: 500,000 states; 332 terminal states; 499,668 defined first steps; no rank failure; 68,975 zero-potential steps; 499,270 defined two-step transitions; minimum observed two-step potential increment 1.
+- Rank box: 2,000,000 states; 666 terminal states; 1,999,334 defined first steps; no rank failure; 277,723 zero-potential steps; 1,998,536 defined two-step transitions; minimum observed two-step potential increment 1.
 - Preimage box: 2,000,000 states; 798 exact one-step halt preimages; all 798 agree with the eight-family predicate; no mismatch.
 
 These are finite computational checks only. The rank theorem, two-step growth theorem, and universal eight-family classification remain unproved in Lean. All rank observations made against the earlier incorrect scratch transcription are superseded by this corrected run.
