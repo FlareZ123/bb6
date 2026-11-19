@@ -16,6 +16,7 @@ namespace BB6Coverage.Agent48PositiveZSetupRootCycle
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent48PositiveZSetup
+open BB6Coverage.Agent48Q4S0Macros
 open BB6Coverage.Agent42PositiveZSetupBlanks
 open BB6Coverage.Agent42PositiveZSetupAllGuards
 open BB6Coverage.Agent48PositiveZSetupRootPrefix
