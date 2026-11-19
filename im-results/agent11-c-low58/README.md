@@ -4,6 +4,16 @@
 
 For the newest exact blank-root mathematics and all-parameter proof obligations, read **[Machine C sixth source-inverse and three independent m=0 stopping rays](M0SixSourceResearch.md)**. It links the complete six-sector recursive root normalizer, both low/high exact halting criteria, a generic four-edge stopping reduction, the strictly new high diagonal, all three separate infinite m=0 source exclusions, and a finite reproducible impact census. The first two m=0 ray source proofs, the updated diagonal and its full old-sieve admission, and the new third m=0 valuation-two ray source proof are certified by original-source Lean runs cited in that research note. A separate standalone proof now also certifies four m=0 even-even sum-zero high-stop exclusions; see M0EvenEvenSumZeroResidual.md and results/2026-11-13-machine-c-m0-sumzero-high-stop-exclusions.md. **The new six-sector recursive normalizer and complete combined stopping iff remain pending full source certification.** No BB(6) value or Machine C global nonhalt proof has been obtained.
 
+## U5 B2 root-index residual cylinders (2026-11-19)
+
+Three new intermediate reductions extend the even-ou B2-to-P4 branch. They are **paper-level derivations only**, not yet Lean-formalized or compiled against the full original-source closure:
+
+- [Root index r = 20 (mod 128)](U5B2Root4R20Mod128.md): the exact root equation forces the P4 parameter to (u=542+840w) with (w=3\pmod{16}). The P4 low-valuation inverse reduces to an even/odd target whose only source parent has a forced next predecessor in the blank-orbit forbidden odd-sum-two cylinder.
+- [Root4 w = 7 (mod 16) normalizer cylinders](U5B2Root4W7Normalizer.md): eleven root-index residues modulo 4096 are mapped to affine parents whose exact four-sector source normalizer terminates in the sound odd-right forbidden filter.
+- [Root4 w = 15 (mod 16) normalizer cylinders](U5B2Root4W15Normalizer.md): five further root-index residues modulo 4096 are excluded by the same source-certified normalizer/filter.
+
+Together these add 48 disjoint index residues modulo 4096 (32 from (r=20\pmod{128}), eleven from the W7 table, and five from the W15 table), conditional on the exact residual root equation. They do not cover all (r\equiv4\pmod{16}), let alone all B2 candidates. The four-sector normalizer/filter itself has original-source CI evidence (42366675885); the new D-parent and B2-to-P4 composition still depends on the uncompiled full `U5B2Root32.lean` closure. No CI was dispatched because exact-source local preflight was unavailable in the 19 November invocation. Do not promote these notes to `results/` or describe them as source-certified.
+
 The detailed sections below document earlier C58 and dyadic-depth work as of 7 November. Statements about manual CI still being pending refer to their historical state and may be superseded by newer, source-checked module information in the linked research report.
 
 ### New m=0 even-even sum-zero residual
