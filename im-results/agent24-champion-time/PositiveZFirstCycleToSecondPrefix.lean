@@ -1,6 +1,7 @@
 import PositiveZFirstCycleEndpoint
 import PositiveZSecondCyclePrefix
 import Q4S0FirstCycleMacros
+import Q4Suffix
 import S1Encoder
 import Lean.Elab.Tactic.Omega
 
@@ -20,6 +21,7 @@ open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8S1Encoder
+open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent48PositiveZFirstCycle
 open BB6Coverage.Agent42PositiveZFirstCycleS0Input
 open BB6Coverage.Agent48PositiveZFirstCycleEndpoint
