@@ -32,25 +32,56 @@ theorem setupPrefixAfterScans_eq (L A z : Nat) :
       sweptLeft (3*L+5) (setupPrefixAfterB8 L A z)
         (-(3*A+3:Int)) := rfl
 
+private theorem sweptLeft_shift_simple (n : Nat) (T : Int → Bool) (h x : Int) :
+    sweptLeft (n+1) T h x =
+      if x = h-(n:Int) then false
+      else if h-(n:Int)+1 ≤ x ∧ x ≤ h+1 then true
+      else T x := by
+  induction n generalizing T h with
+  | zero =>
+      have hne : h ≠ h+1 := by omega
+      have hne' : h+1 ≠ h := by omega
+      by_cases hx0 : x = h
+      · subst x
+        simp [sweptLeft,holeThree,hne,hne']
+      · by_cases hx1 : x = h+1
+        · subst x
+          simp [sweptLeft,holeThree,hne,hne']
+        · have hcond : ¬ (h+1 ≤ x ∧ x ≤ h+1) := by
+            intro hc
+            have hxeq : x = h+1 := le_antisymm hc.2 hc.1
+            exact hx1 hxeq
+          simp [sweptLeft,holeThree,hx0,hx1,hne,hne',hcond]
+  | succ n ih =>
+      change sweptLeft (n+1) (holeThree T h) (h-1) x = _
+      rw [ih (holeThree T h) (h-1)]
+      have h1 : h-1-(n:Int) = h-(n+1:Int) := by omega
+      have h3 : h-1+1 = h := by omega
+      have hcast : (n+1:Int) = (n:Int)+1 := by omega
+      rw [h1,h3,←hcast]
+      have hlow1 : h-(n+1:Int)+1 ≤ h+1 := by omega
+      have hlow0 : h-(n+1:Int)+1 ≤ h := by omega
+      by_cases hx1 : x = h+1
+      · subst x
+        have hneq : h+1 ≠ h-(n+1:Int) := by omega
+        simp [holeThree,hneq,hlow1]
+      · by_cases hx0 : x = h
+        · subst x
+          have hneq : h ≠ h-(n+1:Int) := by omega
+          simp [holeThree,hx1,hneq,hlow0] <;> omega
+        · have hupper : x ≤ h ↔ x ≤ h+1 := by omega
+          simp [holeThree,hx0,hx1,hupper]
+
 /-- Exact pointwise formula for the final left sweep. -/
 theorem sweptLeft_shift (n : Nat) (T : Int → Bool) (h x : Int) :
     sweptLeft (n+1) T h x =
       if x = h-(n+1:Int)+1 then false
       else if h-(n+1:Int)+2 ≤ x ∧ x ≤ h+1 then true
       else T x := by
-  induction n generalizing T h with
-  | zero =>
-      have h1 : h-1+1 = h := by omega
-      have h2 : h-1+2 = h+1 := by omega
-      simp [sweptLeft,holeThree,h1,h2]
-  | succ n ih =>
-      simp only [sweptLeft]
-      rw [ih (holeThree T h) (h-1)]
-      have h1 : (h-1)-(n+1:Int)+1 = h-(n+2:Int)+1 := by omega
-      have h2 : (h-1)-(n+1:Int)+2 = h-(n+2:Int)+2 := by omega
-      have h3 : (h-1)+1 = h := by omega
-      simp [holeThree,h1,h2,h3]
-      omega
+  have hclear : h-(n+1:Int)+1 = h-(n:Int) := by omega
+  have hlower : h-(n+1:Int)+2 = h-(n:Int)+1 := by omega
+  rw [hclear,hlower]
+  exact sweptLeft_shift_simple n T h x
 
 /-- The second sweep's zero boundary and rightward block, in absolute
 coordinates relative to the B20 head h=-(3*A+3*L+8). -/
