@@ -108,7 +108,7 @@ jobs:
             exit 1
           fi
       - name: Independently exhaust the six read-zero rows
-        if: ${{ !inputs.export_frontier }}
+        if: ${{ !inputs.export_frontier && !inputs.verify_leaf_graft }}
         run: |
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-all.cpp -o /tmp/zero-prefix-check
           /tmp/zero-prefix-check
@@ -175,7 +175,7 @@ jobs:
           retention-days: 30
 
   fresh-ray-entry-proof:
-    if: ${{ !inputs.export_frontier }}
+    if: ${{ !inputs.export_frontier && !inputs.verify_leaf_graft }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
