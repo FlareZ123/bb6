@@ -83,6 +83,30 @@ theorem sweptRight_clears_third (n : Nat) (T : Int → Bool)
           rw [heq]
           exact ih (afterRight3 T h) (h+3) i hi'
 
+theorem sweptRight_preserves_block_start (n : Nat) (T : Int → Bool)
+    (h : Int) (i : Nat) (hi : i<n) :
+    sweptRight n T h (h+3*(i:Int)) = T (h+3*(i:Int)) := by
+  induction n generalizing T h i with
+  | zero => omega
+  | succ n ih =>
+      cases i with
+      | zero =>
+          simp only [sweptRight]
+          have hp := sweptRight_preserves_before n (afterRight3 T h)
+            (h+3) h (by omega)
+          rw [hp]
+          simp [afterRight3]
+      | succ i =>
+          have hi' : i<n := by omega
+          have heq : h+3*((i+1:Int)) = (h+3)+3*(i:Int) := by omega
+          simp only [sweptRight]
+          rw [heq]
+          have hInd := ih (afterRight3 T h) (h+3) i hi'
+          rw [hInd]
+          have hneq1 : h+3+3*(i:Int) ≠ h+1 := by omega
+          have hneq2 : h+3+3*(i:Int) ≠ h+2 := by omega
+          simp [afterRight3, hneq1, hneq2]
+
 theorem run_append_some {n m : Nat} {c d e : Config}
     (h₁ : run tm2 n c = some d)
     (h₂ : run tm2 m d = some e) :
