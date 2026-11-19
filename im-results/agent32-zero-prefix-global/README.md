@@ -268,7 +268,9 @@ finite word, not a finite-time simulation.
 
 The first four assignments A/0, B/0, C/1, D/1 are the physical depth-four
 parent.  Its next physical unknown is E/0.  The seven-slot source cylinder
-adds E/0, F/1, and C/0, so its raw completion mass is `25^5`.  Here
+adds E/0, F/1, and C/0.  Its five free input rows are A/1, B/1, D/0, E/1,
+and F/0; each has 25 possible actions, so the raw completion mass is
+`25^5`.  Here
 `finiteBlank` means the standard blank tape with initial state A at head 0.
 The source proof retains this exact raw A-rooted representative: it does not
 quotient by, or multiply its mass by, the 5! state relabellings fixing A and
