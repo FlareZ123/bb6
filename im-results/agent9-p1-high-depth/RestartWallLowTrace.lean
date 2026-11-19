@@ -251,6 +251,35 @@ theorem restartPath_first_shallow
     (restart_path_has_shallow path hbound)
 
 
+/-- The absolute source mass propagates through a suffix rooted at
+    an arbitrary restart child.  The suffix cost is relative, while m0
+    records the absolute cost already spent before that child. -/
+theorem oddCone_mass_from_start
+    (n m0 b0 d0 b d L : Nat)
+    (h : OddCone b0 d0 b d L)
+    (hStartMass : b0+d0+2*m0+2*n+13=14*2^n) :
+    b+d+2*(m0+L)+2*n+13=14*2^n := by
+  induction h generalizing m0 with
+  | root =>
+      simpa using hStartMass
+  | @parent bp dp mp t k c hpre hb hb4 hd hi hk hc ih =>
+      have hpreMass := ih m0 hStartMass
+      have hsource :=
+        (inverseAt_iff_power_mass bp dp t k c (by omega) hb4 hd).mp hi
+      have hInvMass : 2*k+c+2*t+2=bp+dp := by omega
+      omega
+
+/-- The OddCone index m is exactly the sum of its original inverse costs
+    (depth+1). -/
+theorem oddCone_depths_cost
+    {b0 d0 b d m : Nat} (h : OddCone b0 d0 b d m) :
+    totalCost ((oddConeDepths h).map Nat.succ) = m := by
+  induction h with
+  | root =>
+      simp [oddConeDepths, totalCost]
+  | @parent bp dp mp t k c hpre hb hb4 hd hi hk hc ih =>
+      simp [oddConeDepths, totalCost, ih, Nat.add_assoc]
+
 /-- Split a source OddCone suffix at its first depth below two.  The
     output child is a valid OddCone parent state if the suffix continues,
     and is the endpoint otherwise; in either case the caller may supply its
@@ -319,6 +348,7 @@ theorem restartPath_first_shallow_source_split
       ∃ post : List Nat,
         (∀ u, u ∈ oddConeDepths pre → u=2) ∧
         path.es = (oddConeDepths pre).map Nat.succ ++ [t+1] ++ post.map Nat.succ ∧
+        bp+dp+2*(path.c+mp+6)+1=14*2^n ∧
         8 ≤ bp ∧ bp%4=0 ∧ dp%2=1 ∧
         t ≤ 1 ∧ inverseAt bp dp t = some (k,c) ∧
         2 ≤ k ∧ c%2=1 ∧ (2*k-4)%4=0 := by
@@ -341,7 +371,12 @@ theorem restartPath_first_shallow_source_split
   have hbWall : b%4=0 := by omega
   obtain ⟨bp,dp,mp,t,k,c,pre,post,hpre2,hEq,hb,hb4,hd,ht,hi,hk,hc,hguard⟩ :=
     oddCone_first_shallow_split path.suffix hLow hShallow hbWall
-  refine ⟨bp,dp,mp,t,k,c,pre,post,hpre2,?_,hb,hb4,hd,ht,hi,hk,hc,hguard⟩
+  have hMassAbs := oddCone_mass_from_start
+    n path.m0 path.b0 path.d0 bp dp mp pre path.hStartMass
+  have hMass : bp+dp+2*(path.c+mp+6)+1=14*2^n := by
+    rw [path.hBase]
+    omega
+  refine ⟨bp,dp,mp,t,k,c,pre,post,hpre2,?_,hMass,hb,hb4,hd,ht,hi,hk,hc,hguard⟩
   rw [path.hDepths,hEq]
   simp [List.map_append]
 
