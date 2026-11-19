@@ -11,7 +11,7 @@ a\equiv14\quad\text{or}\quad32\pmod{54}.
 Put
 [
 K=97\cdot2^{a-7}+48,\qquad
-p=2^K,\qquad q=2^{K-a},\qquad r=K+4-a,
+p=2^K,\qquad Q=2^{K-a},\qquad r=K+4-a,
 ]
 [
 B=(2K+7)2^r,\qquad
@@ -46,7 +46,7 @@ X=2E+5,\qquad h_0=\frac{2X}{3}-4p-K-4,qquad X_1=2h_0+5,
 and
 [
 A=4p+2K+1,qquad
-G=\frac{26368q+74K-23}{27}.
+G=\frac{26368Q+74K-23}{27}.
 ]
 The exact identities used below are
 [
@@ -60,9 +60,9 @@ h_2=\frac{8X}{27}-2p-K-3,qquad
 2h_2+5=\frac{16X}{27}-4p-2K-1.
 ]
 
-The modular table below is exact. The row parameter is (a\bmod162); (K_{243}) denotes (K\bmod243), and similarly for the other columns. Define (G_{\rm num}=26368q+74K-23).
+The modular table below is exact. The row parameter is (a\bmod162); (K_{243}) denotes (K\bmod243), and similarly for the other columns. Define (G_{\rm num}=26368Q+74K-23).
 
-| (a\bmod54) | (a\bmod162) | (K_{243}) | (K_{162}) | (r_{162}) | (p_{243}) | (q_{243}) | (2^r_{243}) | (B_{243}) | (3X_{243}) | (9X_{1,243}) | (A_9) | (G_{\rm num,243}) |
+| (a\bmod54) | (a\bmod162) | (K_{243}) | (K_{162}) | (r_{162}) | (p_{243}) | (Q_{243}) | (2^r_{243}) | (B_{243}) | (3X_{243}) | (9X_{1,243}) | (A_9) | (G_{\rm num,243}) |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | 14 | 14  | 71  | 152 | 142 | 229 | 73  | 196 | 44  | 162 | 108 | 6 | 189 |
 | 14 | 68  | 233 | 152 | 88  | 229 | 235 | 115 | 206 | 162 | 108 | 6 | 189 |
@@ -183,8 +183,8 @@ By (2), this is congruent to (2\pmod3) in phase (14) and (1\pmod3) in phase (32)
 
 Put (L=K-2) and (D_0=2p-y_0). Direct substitution gives
 [
-D_0=\frac{26368q+47K+31}{27},\qquad
-G:=D_0+L=\frac{26368q+74K-23}{27}. \tag{3}
+D_0=\frac{26368Q+47K+31}{27},\qquad
+G:=D_0+L=\frac{26368Q+74K-23}{27}. \tag{3}
 ]
 The modular table proves (G\in\mathbb N) and (G\equiv1\pmod3). Define
 [
@@ -202,7 +202,7 @@ and
 +\frac{2^j(74K-23)}{27p}-\frac Lp. \tag{4}
 ]
 
-We have (K<2^a) and (K\ge2a), so (q=2^{K-a}\ge2^a>K). From (3),
+We have (K<2^a) and (K\ge2a), so (Q=2^{K-a}\ge2^a>K). From (3),
 [
 D_0>3,qquad
 G<\frac{26368+74}{27}q<1024q.
@@ -225,7 +225,7 @@ At the next index, (4) gives
 +\frac{74K-23}{27648q}
 -\frac{K-2}{2^a q}.
 ]
-Both correction terms have absolute value below (1/100), using (q>K) and (a\ge32). Since
+Both correction terms have absolute value below (1/100), using (Q>K) and (a\ge32). Since
 [
 \frac{103}{108}-\frac1{100}>\frac{15}{16},
 \qquad
