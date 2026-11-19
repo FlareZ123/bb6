@@ -315,7 +315,7 @@ assert(tailAfterY !== null, "halt in one Y block");
 // Continue the exact BigInt Y-word action for 1,000 additional blocks.
 // A full-suffix event is the only place where the terminal quotient is formed;
 // its odd part equals 1 exactly when the original source gate halts.
-const Y_SCAN_ADDITIONAL_BLOCKS = 1000;
+const Y_SCAN_ADDITIONAL_BLOCKS = 10000;
 trackFullSuffixEvents = true;
 let yScanState = tailAfterY;
 let yScanHaltBlock = null;
