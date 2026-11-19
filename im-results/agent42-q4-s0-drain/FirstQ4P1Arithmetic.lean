@@ -1,4 +1,4 @@
-import Agent8S1Encoder
+import S1Encoder
 import Lean.Elab.Tactic.Omega
 
 /-!
