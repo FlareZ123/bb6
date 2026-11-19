@@ -648,6 +648,101 @@ theorem setupL2_sideBit (A L i : Nat) :
           (i-3-3*(A+1)-3-3*(L+1)) := by
   simp [setupL2, setup_sideBit_append, setupD100pow_length]
 
+theorem setupB6Config_preserves_before (T : Int → Bool) (h : Int)
+    (A L : Nat) (x : Int)
+    (hx : x < h+13+3*(L:Int)+3*(A:Int)-1) :
+    (setupB6Config T h L A).tape x =
+      (setupAConfig T h L A).tape x := by
+  rw [setupB6Config, q4FrameAt_tape]
+  have hnot : setupB6Inside
+      (x-(h+13+3*(L:Int)+3*(A:Int)))=false := by
+    simp [setupB6Inside]
+    omega
+  simp [hnot]
+
+theorem setupAConfig_preserves_before (T : Int → Bool) (h : Int)
+    (A L : Nat) (x : Int)
+    (hx : x < h+10+3*(L:Int)) :
+    (setupAConfig T h L A).tape x =
+      (setupB9Config T h L).tape x := by
+  simp only [setupAConfig]
+  exact sweptRight_preserves_before (A+1)
+    (setupB9Config T h L).tape (h+10+3*(L:Int)) x hx
+
+theorem setupB9Config_preserves_before (T : Int → Bool) (h : Int)
+    (L : Nat) (x : Int)
+    (hx : x < h+7+3*(L:Int)-2) :
+    (setupB9Config T h L).tape x =
+      (setupLConfig T h L).tape x := by
+  rw [setupB9Config, q4FrameAt_tape]
+  have hnot : setupB9Inside (x-(h+7+3*(L:Int)))=false := by
+    simp [setupB9Inside]
+    omega
+  simp [hnot]
+
+theorem setupLConfig_preserves_before (T : Int → Bool) (h : Int)
+    (L : Nat) (x : Int) (hx : x<h+4) :
+    (setupLConfig T h L).tape x =
+      (setupB20Config T h).tape x := by
+  simp only [setupLConfig]
+  exact sweptRight_preserves_before (L+1)
+    (setupB20Config T h).tape (h+4) x hx
+
+theorem setupB6Config_eq_setupB9Config_before_A
+    (T : Int → Bool) (h : Int) (A L : Nat) (x : Int)
+    (hx : x<h+10+3*(L:Int)) :
+    (setupB6Config T h L A).tape x =
+      (setupB9Config T h L).tape x := by
+  rw [setupB6Config_preserves_before T h A L x (by omega)]
+  exact setupAConfig_preserves_before T h A L x hx
+
+theorem setupB6Config_eq_setupLConfig_before_L
+    (T : Int → Bool) (h : Int) (A L : Nat) (x : Int)
+    (hx : x<h+7+3*(L:Int)-2) :
+    (setupB6Config T h L A).tape x =
+      (setupLConfig T h L).tape x := by
+  rw [setupB6Config_preserves_before T h A L x (by omega)]
+  rw [setupAConfig_preserves_before T h A L x (by omega)]
+  exact setupB9Config_preserves_before T h L x hx
+
+theorem setupB6Config_eq_setupB20Config_before_L
+    (T : Int → Bool) (h : Int) (A L : Nat) (x : Int)
+    (hx : x<h+4) :
+    (setupB6Config T h L A).tape x =
+      (setupB20Config T h).tape x := by
+  rw [setupB6Config_preserves_before T h A L x (by omega)]
+  rw [setupAConfig_preserves_before T h A L x (by omega)]
+  rw [setupB9Config_preserves_before T h L x (by omega)]
+  exact setupLConfig_preserves_before T h L x hx
+
+theorem setupB20Config_endBits (T : Int → Bool) (h : Int) :
+    (setupB20Config T h).tape (h+3)=false ∧
+    (setupB20Config T h).tape (h+2)=false ∧
+    (setupB20Config T h).tape (h+1)=true ∧
+    (setupB20Config T h).tape h=true ∧
+    (setupB20Config T h).tape (h-1)=true ∧
+    (setupB20Config T h).tape (h-2)=false ∧
+    (setupB20Config T h).tape (h-3)=true ∧
+    (setupB20Config T h).tape (h-4)=true ∧
+    (setupB20Config T h).tape (h-5)=true := by
+  simp [setupB20Config, q4FrameAt_tape, setupB20Inside, setupB20End]
+
+theorem setupB9Config_endBits (T : Int → Bool) (h : Int) (L : Nat) :
+    (setupB9Config T h L).tape (h+7+3*(L:Int)+2)=false ∧
+    (setupB9Config T h L).tape (h+7+3*(L:Int)+1)=false ∧
+    (setupB9Config T h L).tape (h+7+3*(L:Int))=true ∧
+    (setupB9Config T h L).tape (h+7+3*(L:Int)-1)=true ∧
+    (setupB9Config T h L).tape (h+7+3*(L:Int)-2)=true := by
+  simp [setupB9Config, q4FrameAt_tape, setupB9Inside, setupB9End]
+
+theorem setupB6Config_prefixBits (T : Int → Bool) (h : Int)
+    (A L : Nat) :
+    (setupB6Config T h L A).tape
+      (h+13+3*(L:Int)+3*(A:Int))=true ∧
+    (setupB6Config T h L A).tape
+      (h+13+3*(L:Int)+3*(A:Int)-1)=true := by
+  simp [setupB6Config, q4FrameAt_tape, setupB6Inside, setupB6End]
+
 theorem setupB30Config_leftFacing (T : Int → Bool) (h : Int)
     (A L z : Nat) (g : SetupSuffixGuards T h A L z)
     (hz : 2≤z) (htail : SetupB6LeftTail T h A L) :
