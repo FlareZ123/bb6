@@ -107,3 +107,32 @@ w\equiv119\pmod{128}.
 ]
 Therefore the source-only exclusion above removes the actual root-index
 cylinder (w\equiv119\pmod{128}) from the w=7 progression.
+
+
+## Two further odd-z cylinders
+
+For (z\equiv5\) or (13\pmod{16}), the first parent is uniquely
+(Q_z): (P_z) is even/odd and
+((P_{z,1}+P_{z,2}+1)\equiv4\pmod8), so
+`evenodd_four_parent_iff` applies. Here (z\equiv5\pmod8), so
+(Q_z) is odd/even with coordinate sum (3\pmod8); the exact
+`section_odd_even_iff_affine` theorem forces its unique parent
+[
+R_z=(6902+14343z,;(3445+7161z)/2).
+]
+This is odd/odd, its right coordinate is odd, and
+[
+R_{z,1}+R_{z,2}=(17249+35847z)/2\equiv2\pmod4.
+]
+The existing `blank_no_odd_sum_two` invariant therefore excludes
+(R_z), and hence (P_z), for both residue classes.
+
+The residual map (5z-7s\equiv12\pmod{16}), (w=7+8s), translates
+these two exclusions into
+[
+z\equiv5\pmod{16}\Rightarrow w\equiv95\pmod{128},\qquad
+z\equiv13\pmod{16}\Rightarrow w\equiv31\pmod{128}.
+]
+The corresponding Lean draft is
+`w7_q0_target_unreachable_z5or13mod16` in
+`U5Q0W7ParentFan.lean`; it also awaits independent local compilation.
