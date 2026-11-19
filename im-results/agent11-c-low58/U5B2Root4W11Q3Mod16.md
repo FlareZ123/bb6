@@ -58,17 +58,11 @@ D2_x+D2_y+1
 ]
 Its exact 2-adic valuation is two.
 
-## 3. Every D2 predecessor is forbidden
+## 3. The source-certified valuation-two inverse forces a forbidden parent
 
-Apply the complete original-source predecessor grammar to D2:
-- the zero-left branch would make the odd coordinate sum even;
-- the one-left finite branch has right coordinate at most seven, while D2's right coordinate is large;
-- the one-left high branch requires valuation at least four, impossible here;
-- the direct branch requires an even right coordinate;
-- the even-left bounce branch makes the odd coordinate sum even;
-- the only remaining odd-left high bounce has coefficient (2a+6) divisible by four, so valuation two forces bounce depth zero.
-
-The cost equation and depth zero force the unique possible parent
+For (t=4v), D2 is even/odd, its right coordinate is at least five, and
+`(D2_x+D2_y+1)%8=4`. Apply the existing source-certified theorem
+`BB6.Agent3.evenodd_four_blank_reach_iff`. It gives the exact all-time equivalence between D2 reachability and reachability of its unique parent
 [
 R(v)=
 (18665257983+80112005400v,\;
