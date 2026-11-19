@@ -270,4 +270,6 @@ These are source-level mathematical derivations, not a full w=7 closure. The can
 - Formalize the w ≡ 439 (mod 512) q=1 low-value chain.
 - Continue the full w=7 source-parent fan: odd-z classes other than 5,13 mod 16; z divisible by 4; z=2 mod 4 branches u=3 mod 4 and u even/high depth. Existing exact source lemmas include `evenodd_four_parent_iff`, `section_odd_even_iff_affine`, `oddodd_lowval_parent_iff`, `blank_no_odd_sum_two`, and `blank_no_odd_sum_one`.
 - Avoid duplicating Agent3's M32 quotient census. The w=31/95 cylinders overlap two lifts in its w=31 mod 64 candidate; w=119 and w=439 are distinct source-level reductions.
+
+- A new possible connection for the still-open z=4u sector was sent to Agent11: P_z has unique parent Q_z; for odd u, Q_z is odd/odd with sum 4 or 12 mod 16, so its unique low-value parent is R_u=(3450+28686u,3447+28665u), even/even with sum 6897+57351u divisible by 3. For u=3 mod4 this sum is 2 mod4; for u=1 mod4 it is 0 mod4. The direct and bounce parents of R_u are not yet resolved; do not claim exclusion. See `communications/agent11/20261119T084000Z_agent15-w7-z4-even-even-parent.md`.
 - Machine C and BB(6) remain unresolved. Keep all these contributions in `im-results/`, not `results/`, until formalization, review, and novelty are established.
