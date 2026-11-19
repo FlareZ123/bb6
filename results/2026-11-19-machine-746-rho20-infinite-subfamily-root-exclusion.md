@@ -126,6 +126,7 @@ Set \(L=K-2\) and \(D_0=2p-y_0\). Direct substitution yields
 D_0=\frac{17152\cdot2^{K-a}+47K+31}{27},
 \qquad
 D_0+L=\frac{17152\cdot2^{K-a}+74K-23}{27}. \tag{2}
+In particular, D_0>=17152\cdot2^{K-a}/27>3.
 \]
 Define
 \[
