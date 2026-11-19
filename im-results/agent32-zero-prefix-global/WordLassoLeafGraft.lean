@@ -80,24 +80,20 @@ private theorem lasso_open_step (p : PartialMachine) (d : Nat) (slot : Slot)
     subst actual
     rfl
 
-/-- Every completion of the five-slot word cylinder follows the same
-four-edge path through the existing depth-four tree and reaches its open
-parent leaf. -/
+/-- Every completion of the full four-slot depth-four parent cylinder
+follows the same four-edge blank-root path and reaches its open parent leaf.
+The fifth E/0 assignment is not assumed here. -/
 theorem twoMarkParent_open_all (m : Machine)
-    (hm : compatible twoMarkWordPump m) :
+    (hm : compatible twoMarkP4 m) :
     depth4ResidualAudit.open m := by
-  have hA : m twoMarkA0 = twoMarkA0Action := by
-    apply hm
-    simp [twoMarkWordPump, twoMarkA0, twoMarkA0Action]
-  have hB : m twoMarkB0 = twoMarkB0Action := by
-    apply hm
-    simp [twoMarkWordPump, twoMarkB0, twoMarkB0Action]
-  have hC : m twoMarkC1 = twoMarkC1Action := by
-    apply hm
-    simp [twoMarkWordPump, twoMarkC1, twoMarkC1Action]
-  have hD : m twoMarkD1 = twoMarkD1Action := by
-    apply hm
-    simp [twoMarkWordPump, twoMarkD1, twoMarkD1Action]
+  have hA : m twoMarkA0 = twoMarkA0Action :=
+    hm twoMarkA0 twoMarkA0Action (by decide)
+  have hB : m twoMarkB0 = twoMarkB0Action :=
+    hm twoMarkB0 twoMarkB0Action (by decide)
+  have hC : m twoMarkC1 = twoMarkC1Action :=
+    hm twoMarkC1 twoMarkC1Action (by decide)
+  have hD : m twoMarkD1 = twoMarkD1Action :=
+    hm twoMarkD1 twoMarkD1Action (by decide)
   have h4 :
       (lassoPhysicalTraceAudit twoMarkP4 6 6 12 12 2 4 0).open m := by
     simp [lassoPhysicalTraceAudit, twoMarkP4_old_oracle_false]
@@ -182,8 +178,15 @@ theorem twoMarkGraftedAudit_closes_source (m : Machine)
 
 theorem twoMark_leaf_closed (m : Machine)
     (hm : compatible twoMarkWordPump m) :
-    depth4ResidualAudit.open m ∧ ¬ twoMarkGraftedAudit.open m :=
-  ⟨twoMarkParent_open_all m hm, twoMarkGraftedAudit_closes_source m hm⟩
+    depth4ResidualAudit.open m ∧ ¬ twoMarkGraftedAudit.open m := by
+  have hchild : compatible
+      (refine twoMarkP4 twoMarkE0 twoMarkE0Action) m := by
+    simpa only [twoMarkWordPump_is_parent_child] using hm
+  have hparent : compatible twoMarkP4 m :=
+    ((compatible_refine_iff twoMarkP4 m twoMarkE0 (by decide)
+      twoMarkE0Action).mp hchild).1
+  exact ⟨twoMarkParent_open_all m hparent,
+    twoMarkGraftedAudit_closes_source m hm⟩
 
 theorem twoMarkGraftedAudit_exhaustive (m : Machine) :
     DecidedBelow 6 m ∨ twoMarkGraftedAudit.open m :=
