@@ -173,7 +173,8 @@ The earlier root-index wrapper assumed the intermediate parameterization
 u=122+840w. This was a genuine coverage gap: the exact root equation
 had not yet been used to derive that parameterization.
 
-The new theorem root32_u_parameter_of_exact in U5B2Root32.lean removes the
+The new theorem root32_u_parameter_of_exact in
+U5B2Root32ParameterBridge.lean (imported by U5B2Root32.lean) removes the
 assumption. From
 
     r = 32 (mod 64),
