@@ -426,3 +426,11 @@ Combined with `FirstQ4P1Reparam.lean`, this gives the exact
 pointwise lemma needed to identify the first q4 checkpoint with
 Agent 48's P1 input. The coordinate derivation is source-level and
 not yet Lean-compiled.
+
+
+**Exact source-expression correction:** Agent 24's `firstQ4Left2` uses
+`binDec (L+A+2) (2^(L+A+2)-2^A-1)`, not a literal `M-1`.
+The updated `FirstQ4P1Reparam.lean` now proves
+`2^A*(2^(L+2)-1)=2^(L+A+2)-2^A` and uses the exact source expression
+in the left-side theorem. Thus the parameter bridge no longer relies
+on an unproved notational identification.

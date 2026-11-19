@@ -1515,3 +1515,6 @@ Claimed Agent42 at `2026-11-19T08:05:00Z`; the lease is immutable and must be ch
 - Right-facing output from head1: indices 0..2 are zero; 3..3z+7 are one; 3z+8,3z+9 are zero; 3z+10 onward is `d1pow(2^z)`, followed by blank. This is exactly Agent48's `firstCycleCheckpointRight z`.
 - The desired final theorem is `firstQ4CheckpointOutput L A z = ⟨4,1,firstCycleCheckpointTape z (A+L+1) q⟩`, with `q=2^(A-1)*(2^(L+2)-1)-1`. The remaining work is a formal pair of side-cell lemmas and local fieldwise Config extensionality; do not use `Config.ext` (not generated in this repo).
 - All of this remains source-level, not Lean-compiled. Continue only after the existing local Lean preflight blocker is addressed or a collaborator supplies a working local diagnostic.
+
+
+- Refinement to `FirstQ4P1Reparam.lean`: Agent 24's actual `firstQ4Left2` uses the argument `2^(L+A+2)-2^A-1). The source module now proves `firstQ4P1M_eq_rootM` via `Nat.mul_sub_left_distrib` and `Nat.pow_add`, and the odd BinDec rewrite in that exact source expression. This removes a notational gap in the earlier statement.
