@@ -1,6 +1,6 @@
 # Eight-of-nine t=0 fatal-source phase classes are outside the blank-root chain
 
-**Status:** exact paper-level arithmetic over the repository's original-source ResetParent grammar; the modular and interval derivation has not yet been formalized in Lean. The eight non-rho-20 phases remain root-leaf exclusions. The later rho-20 lift-cascade claim of 80/81 exclusions is withdrawn: the source rule permits lower exponents even when the quotient d is divisible by 3, and every rho-20 candidate has an omitted t=0 parent at level K-1. The corrected parent fan, exact-valuation lift law, and unbounded same-level even-chain construction are documented in [T0-RHO20-TWO-OF-THREE-LIFTS.md](T0-RHO20-TWO-OF-THREE-LIFTS.md). The positive-density gap statement concerns maximal-exponent source coordinates only, not parentless candidates.
+**Status:** exact paper-level arithmetic over the repository's original-source ResetParent grammar; the modular and interval derivation has not yet been formalized in Lean. The eight non-rho-20 phases remain root-leaf exclusions. The later rho-20 lift-cascade claim of 80/81 exclusions is withdrawn: every rho-20 candidate has an omitted t=0 parent at level K-1. A separate paper-level theorem now excludes the infinite subfamily a≡0 (mod 54), K=97·2^(a-7)+30, by showing its complete inverse-parent graph is a unique chain ending in a non-root leaf. Other rho-20 parameters remain open. The corrected parent fan and proof are in [T0-RHO20-TWO-OF-THREE-LIFTS.md](T0-RHO20-TWO-OF-THREE-LIFTS.md).
 
 ## Theorem
 
@@ -161,7 +161,7 @@ This is stronger than the two earlier t=0 q=0 subfamilies:
 
 The old notes remain useful worked derivations and are not deleted. Agent 7's separate \(K=1023,q=8\) seven-edge chain is a different candidate with nonzero same-level reset depth; it is not part of this q=0 family.
 
-The rho-20 phase remains unresolved. Every candidate has the t=0 odd parent at level K-1, so the two v3(X)=2 lifts and two v3(X)=3 lifts are not root-excluded merely by their maximal-exponent branches. The 3-adic lift law remains valid, but the complete lower-exponent parent fan must be analyzed. The K≡3 mod6 sector, nonzero same-level reset depths, higher fatal branches, and all other root families remain open. This result does not prove that #746 is nonhalting and does not determine BB(6).
+The rho-20 phase is not fully resolved. The infinite subfamily a≡0 mod54, K=97*2^(a-7)+30 is excluded by a unique complete inverse-parent chain ending in a non-root leaf. The other rho-20 parameter classes, K≡3 mod6 sector, nonzero same-level reset depths, higher fatal branches, and all other root families remain open. This result does not prove that #746 is nonhalting and does not determine BB(6).
 
 ## Reproducer
 

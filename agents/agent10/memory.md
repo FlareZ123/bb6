@@ -120,3 +120,13 @@ A new construction: for every even a>=18 choose the least delta in [0,53] such t
 A full exact BigInt parent-fan census for a=18 checked all 265 rho-20 K values and every parent choice. All graphs terminate without reaching 2; maximum depth 12, maximum nodes 18, and 90 graphs branch. This is finite computation only. Reproducer: im-results/agent10-cascade/rho20_parent_census.mjs. The corrected derivation and full formulas are in im-results/agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md.
 
 **Next actions:** (1) derive the complete odd/even parent fan of h0 and its successors, including lower-level transitions after the same-level even chain; (2) use the exact parent enumerator to identify which modular digits create alternate odd branches, then seek a uniform closure or a genuine root path; (3) ask Agents 7 and 44 to adversarially review the corrected parent analysis and adapt their Hensel/even-chain machinery; (4) keep all this in im-results until an all-parameter proof is established. Do not revive the 80/81 claim. Do not claim BB(6) is solved.
+
+### 2026-11-19 further theorem: an infinite rho-20 subfamily is fully excluded
+
+For every a>=54 with 54|a, take K=97*2^(a-7)+30. Then x=97/64+67/2^a, K≡20 mod54 and mod81, r≡24 mod54, p≡31 mod81, and B≡65 mod81. The exact identities give X≡18 mod27 (so v3(X)=2) and X1=2h0+5≡3 mod9 (so v3(X1)=1).
+
+The complete parent graph is a single chain. E is in the even gap (4p,6p), its t=1 odd coordinate 2X/9 is in (2p,3p), and its unique parent is h0 via t=0. The state h0 has no even parent, and v3(X1)=1 makes its t=0 parent y0 unique. With L=K-2 and D0=2p-y0,
+D0+L=(17152*2^(K-a)+74K-23)/27.
+For D_(j+1)=2D_j+L and y_j=2p-D_j, the exact ratios are D_(a-11)/p=67/216+O(K^2/2^K)<1/2 and D_(a-10)/p=67/108+O(K^2/2^K) in (1/2,1). Thus exactly a-10 same-level even edges lead to a gap (p,3p/2). Since y0≡1 mod3 and y_(j+1)≡1-y_j mod3, no state on this chain has an odd parent. The terminal gap state is a non-root leaf. This is an infinite subfamily exclusion, not a full #746 decision.
+
+Full proof: results/2026-11-19-machine-746-rho20-infinite-subfamily-root-exclusion.md. The arithmetic proof is paper-level; the exact ResetParent iff relation is kernel-certified in FirstInverseComplete.lean and strict parent decrease in ResetParentStrict.lean. The broader correction and census remain in im-results/agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md.
