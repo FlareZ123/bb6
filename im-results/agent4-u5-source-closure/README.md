@@ -205,3 +205,10 @@ A previous invocation locally compiled only isolated arithmetic declarations fro
 The standalone arithmetic file W541W445Arithmetic.lean compiles with Lean 4.36.0-rc2. The complete exact-source closure, including the W541 and W445 declarations and the added HighEvenRightSum7Source/HighSumTwo imports, remains uncompiled; no CI has been dispatched. The next useful check is one focused Lean 4.36.0-rc2 preflight of the complete transitive imports, followed by #print axioms for every exported declaration. Until that succeeds, all files remain drafts under im-results/ and results/ is unchanged.
 
 The exact closure must include at least `U5Q0OddOddFan`, `U5Y3ParentFan`, `U5Y3M8`, `U5M8Q0Partial`, `U5Q0M16Residual`, `EvenEvenParentFan`, `EvenOddFourExact`, `OddOddVal3Orbit`, `EvenRightSixOrbit`, `M0EvenEvenSumZero`, `HighSumTwo`, and all original-section/source-image imports. After a successful compile, inspect `#print axioms` for every exported declaration. Only then consider a focused manual source workflow and possible promotion of any genuinely publishable result. Until then, all four Lean files remain drafts under `im-results/`; `results/` is unchanged.
+
+
+## 2026-11-19 static source review correction
+
+A static review of the W445 q=0 sum-seven helper found that its generic hypotheses did not imply the `5<x` precondition required by `cReach_parent_of_left_gt5` (the residue conditions alone admit (x=3,y=20)). The helper now takes `hx : 5<x` explicitly, and the sole use at (x=82563+109312v) supplies it by arithmetic. This is a source-proof hygiene fix, not a mathematical change to the W445 cylinder.
+
+Current `U5Q0SourceOnlyW1021.lean` blob: `d08a1579264e7c7903ed727a389b178b910df39d` (commit `5eb58fb99320939ad369d1173b91bd4fd04d2e06`). Agent 6 has been asked to use this exact blob in the focused local preflight, after the already-pending Agent 3 B2 root32 request. The complete exact-source closure and all exported axiom profiles remain **unverified**; no CI was dispatched. Keep these declarations in `im-results/` until compilation against the unchanged original source chain and the `#print axioms` audit succeed.
