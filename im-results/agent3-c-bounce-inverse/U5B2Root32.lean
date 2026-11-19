@@ -123,26 +123,112 @@ theorem odd_odd_three_divisible_parent (a k x y : Nat)
               rw [hpow] at hodd
               omega
 
+/-- Every even/odd target of sum divisible by three has only an
+odd-a, even-depth high-bounce predecessor in the complete source grammar. -/
+theorem even_odd_three_divisible_parent (a k x y : Nat)
+    (hx : x%2=0) (hy : y%2=1) (hy5 : 5≤y)
+    (h3 : (x+y)%3=0)
+    (hsec : secNext (a,k)=some (x,y)) :
+    ∃ n : Nat, a%2=1 ∧ n%2=0 ∧
+      x+y+1=2^n*(2*a+6) ∧ 2*k+a+7+3*n=x+2*y := by
+  have hp := (section_preimage_all_iff a k x y).mp hsec
+  by_cases ha0 : a=0
+  · by_cases hk0 : k=0
+    · simp [sectionPreimageAll,ha0,hk0] at hp
+    · by_cases hk1 : k=1
+      · simp [sectionPreimageAll,ha0,hk0,hk1] at hp <;> omega
+      · have hcase : 4≤y ∧ ∃ n : Nat,
+            x+y=2^n*8 ∧ (2*k+1)+8+3*n=x+2*y := by
+          simpa [sectionPreimageAll,ha0,hk0,hk1] using hp
+        rcases hcase with ⟨_,n,hxy,_⟩
+        have hsumOdd : (x+y)%2=1 := by omega
+        have hsumEven : (x+y)%2=0 := by
+          rw [hxy]
+          simp [Nat.mul_mod]
+        omega
+  · by_cases ha1 : a=1
+    · subst a
+      by_cases hk0 : k=0
+      · simp [sectionPreimageAll,hk0] at hp <;> omega
+      · by_cases hk1 : k=1
+        · simp [sectionPreimageAll,hk0,hk1] at hp <;> omega
+        · by_cases hk2 : k=2
+          · simp [sectionPreimageAll,hk0,hk1,hk2] at hp <;> omega
+          · by_cases hk3 : k=3
+            · simp [sectionPreimageAll,hk0,hk1,hk2,hk3] at hp <;> omega
+            · have hcase :
+                  (y=3 ∧ ∃ n : Nat, x+6=2^n*16 ∧
+                    (2*k-3)+16+3*n=x+10) ∨
+                  (5≤y ∧ ∃ n : Nat, x+y+1=2^n*16 ∧
+                    (2*k-3)+16+3*n=x+2*y+2) := by
+                simpa [sectionPreimageAll,hk0,hk1,hk2,hk3] using hp
+              rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hpow,hcost⟩
+              · omega
+              · have hnodd : n%2=1 := by omega
+                have hpowCycle := pow_two_mod_three n
+                have hpowmod : 2^n%3=2 := by
+                  simpa [hnodd] using hpowCycle
+                have hleft : (x+y+1)%3=1 := by omega
+                have hright : (2^n*16)%3=2 := by
+                  rw [Nat.mul_mod]
+                  have h16 : (16:Nat)%3=1 := by decide
+                  rw [h16,hpowmod]
+                  decide
+                rw [hpow] at hleft
+                rw [hright] at hleft
+                omega
+    · have ha2 : 2≤a := by omega
+      by_cases hk0 : k=0
+      · simp [sectionPreimageAll,ha0,ha1,hk0] at hp <;> omega
+      · by_cases hlow : 2*k≤a
+        · have hcase : x=a-2*k ∧ y=2*k+2 := by
+            simpa [sectionPreimageAll,ha0,ha1,hk0,hlow] using hp
+          rcases hcase with ⟨hxx,hyy⟩
+          omega
+        · by_cases haeven : a%2=0
+          · have hcase : 4≤y ∧ ∃ n : Nat,
+                x+y=2^n*(2*(a-1)+6) ∧
+                (2*k-a+3)+(2*(a-1)+6)+3*n=x+2*y := by
+              simpa [sectionPreimageAll,ha0,ha1,hk0,hlow,haeven] using hp
+            rcases hcase with ⟨_,n,hxy,_⟩
+            have hsumOdd : (x+y)%2=1 := by omega
+            have hsumEven : (x+y)%2=0 := by
+              rw [hxy]
+              simp [Nat.mul_mod]
+            omega
+          · have haodd : a%2=1 := by omega
+            have hcase :
+                (y=3 ∧ ∃ n : Nat, x+6=2^n*(2*(a-1)+8) ∧
+                  (2*k-a+3)+(2*(a-1)+8)+3*n=x+10) ∨
+                (5≤y ∧ ∃ n : Nat,
+                  x+y+1=2^n*(2*(a-1)+8) ∧
+                  (2*k-a+3)+(2*(a-1)+8)+3*n=x+2*y+2) := by
+              simpa [sectionPreimageAll,ha0,ha1,hk0,hlow,haeven] using hp
+            rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hpow,hcost⟩
+            · omega
+            · have hfac : 2*(a-1)+8=2*a+6 := by omega
+              rw [hfac] at hpow
+              have hcost' : 2*k+a+7+3*n=x+2*y := by omega
+              have hn : n%2=0 := by omega
+              exact ⟨n,haodd,hn,hpow,hcost'⟩
+
 /-- An even/odd target with sum divisible by three and sum-plus-one
 congruent to two modulo four has no genuine blank-rooted visit. -/
 theorem blank_no_even_odd_three_divisible (x y : Nat)
-    (hx : x%2=0) (hy : y%2=1) (hy5 : 5≤y)
+    (hxgt : 5<x) (hx : x%2=0) (hy : y%2=1) (hy5 : 5≤y)
     (h3 : (x+y)%3=0) (hbad : (x+y+1)%4=2) :
     ¬ BB6.Agent3.CReach x y := by
   intro hr
   obtain ⟨a,k,hprev,hstep⟩ :=
     BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
-      x y (by omega) hr
+      x y hxgt hr
   obtain ⟨n,ha,hn,hpow,hcost⟩ :=
-    (show ∃ n : Nat, a%2=1 ∧ n%2=0 ∧
-        x+y+1=2^n*(2*a+6) ∧ 2*k+a+7+3*n=x+2*y from ?_)
+    even_odd_three_divisible_parent a k x y hx hy hy5 h3 hstep
   have hfac : (2*a+6)%4=0 := by omega
   have hmod : (x+y+1)%4=0 := by
     rw [hpow,Nat.mul_mod,hfac]
     simp
   omega
-where
-  _dummy := 0
 
 /-- Complete source-parent reduction for the B2 family when u is even:
 only the two displayed odd-a high-bounce parents survive. -/
@@ -374,23 +460,9 @@ would force its sum-plus-one to be divisible by four, but it is 2 mod 4. -/
 theorem p4_r32_n2_parent_unreachable (t : Nat) :
     ¬ BB6.Agent3.CReach
       (225167170+839659800*t) (832218623+3103385460*t) := by
-  let x := 225167170+839659800*t
-  let y := 832218623+3103385460*t
-  intro hr
-  obtain ⟨a,k,hprev,hstep⟩ :=
-    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
-      x y (by dsimp [x]; omega) hr
-  have hparent :=
-    even_odd_three_divisible_parent a k x y
-      (by dsimp [x]; omega) (by dsimp [y]; omega)
-      (by dsimp [y]; omega) (by dsimp [x,y]; omega) hstep
-  rcases hparent with ⟨n,ha,hn,hpow,hcost⟩
-  have hfactor : (2*a+6)%4=0 := by omega
-  have hmod : (x+y+1)%4=0 := by
-    rw [hpow,Nat.mul_mod,hfactor]
-    simp
-  have hbad : (x+y+1)%4=2 := by dsimp [x,y]; omega
-  omega
+  exact blank_no_even_odd_three_divisible
+    (225167170+839659800*t) (832218623+3103385460*t)
+    (by omega) (by omega) (by omega) (by omega) (by omega) (by omega)
 
 /-- Exact source-parent fan for the remaining P4 target on the root-index
 r=32 (mod 64) cylinder has only depths n=0 and n=2. -/
