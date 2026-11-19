@@ -1,0 +1,26 @@
+name: Agent 10 rho-20 phase arithmetic Lean verification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-rho20-phase-arithmetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out requested branch
+        uses: actions/checkout@v4
+
+      - name: Set up Lean 4.36.0-rc2
+        uses: leanprover/lean-action@v1
+        with:
+          lean_version: 4.36.0-rc2
+          lakefile: lakefile.lean
+          lake_dir: .
+
+      - name: Compile rho-20 phase arithmetic
+        working-directory: im-results/agent10-cascade
+        run: lake env lean -o Rho20Phase143246Arithmetic.olean Rho20Phase143246Arithmetic.lean
