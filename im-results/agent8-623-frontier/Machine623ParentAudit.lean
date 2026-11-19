@@ -80,7 +80,7 @@ private def machine623D1RootTailAudit :
               (machine623P11_eq_prefix11.symm ▸ machine623FinalSlotAudit)))))
 
 /-- A complete parent-level refinement of the original depth-four #623
-    open cylinder.  Six D/1 children are certified by the existing ray and
+    open cylinder.  Seven D/1 children are certified by the existing ray and
     lasso witnesses.  In the authentic D/1 child, the six subsequent
     physical reads are split exhaustively, with off-path siblings left open;
     the final F/0 row certifies 24 total completions and leaves #623 open. -/
@@ -122,7 +122,7 @@ theorem machine623ParentAudit_exhaustive (m : Machine)
     DecidedBelow 6 m ∨ machine623ParentAudit.open m :=
   machine623ParentAudit.exhaustive m hm
 
-/-- Exact parent-level accounting.  Six whole D/1 children are certified,
+/-- Exact parent-level accounting.  Seven whole D/1 children are certified,
     plus 24 singleton F/0 completions inside the authentic D/1 branch.
     The residual open mass is 17 untouched D/1 siblings plus the
     off-path siblings in the authentic branch and the original #623 singleton. -/
@@ -139,11 +139,26 @@ theorem machine623ParentAudit_report_conserves :
       FrontierAudit.report_conserves machine623ParentAudit
     _ = 25^8 := machine623_first_four_mass
 
+private theorem machine623D1RootTailAudit_root_open :
+    machine623D1RootTailAudit.open machine623 := by
+  simp [machine623D1RootTailAudit, machine623ActualPathBranch,
+    FrontierAudit.open, machine623P11_eq_prefix11,
+    machine623FinalSlotAudit_root_remains_open]
+
 /-- The original #623 table is still in the open part of the parent audit.
     This is deliberately not a halting or nonhalting verdict. -/
 theorem machine623ParentAudit_root_remains_open :
     machine623ParentAudit.open machine623 := by
-  decide
+  have hB : machine623 machine623D1Slot ≠ some machine623D1ToBLeft0 := by decide
+  have hC : machine623 machine623D1Slot ≠ some machine623D1ToCLeft0 := by decide
+  have hD0 : machine623 machine623D1Slot ≠ some machine623D1ToDLeft0 := by decide
+  have hD1 : machine623 machine623D1Slot ≠ some machine623D1ToDLeft1 := by decide
+  have hDR0 : machine623 machine623D1Slot ≠ some machine623D1ToDRight0 := by decide
+  have hC1 : machine623 machine623D1Slot ≠ some machine623D1ToCLeft1 := by decide
+  have hDR1 : machine623 machine623D1Slot ≠ some machine623D1ToDRight1 := by decide
+  simp [machine623ParentAudit, FrontierAudit.open,
+    hB, hC, hD0, hD1, hDR0, hC1, hDR1,
+    machine623D1RootTailAudit_root_open]
 
 #print axioms machine623ParentAudit_exhaustive
 #print axioms machine623ParentAudit_report
