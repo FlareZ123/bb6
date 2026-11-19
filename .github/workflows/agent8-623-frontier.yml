@@ -20,7 +20,7 @@ jobs:
       - name: Prove original rooted #623 route through shared sparse scanner
         run: |
           set -eu
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent8-623-frontier"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent8-623-frontier:im-results/agent1-machine623-3euclidean-correction-bounds"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
@@ -50,3 +50,5 @@ jobs:
           echo "Compiling the depth-five D/1 raw-table split"
           lean -o im-results/agent8-623-frontier/Machine623DepthFiveSplit.olean im-results/agent8-623-frontier/Machine623DepthFiveSplit.lean
           lean -o im-results/agent8-623-frontier/Machine623ParentAudit.olean im-results/agent8-623-frontier/Machine623ParentAudit.lean
+          echo "Probing source-sound C/1 sibling certificates below the authentic D/1 child"
+          lean -o im-results/agent1-machine623-3euclidean-correction-bounds/C1SiblingExpansion.olean im-results/agent1-machine623-3euclidean-correction-bounds/C1SiblingExpansion.lean
