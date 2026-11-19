@@ -12,10 +12,10 @@ After converting to \(p'=|s|\), \(q'=\min(a',d')\), the first-threshold theorem 
 - odd far: \(3^{p'-5}\le2q'+5\);
 - odd near-right: \(3^{p'+4}\le2q'-3\);
 - even far: \(3^{p'-2}\le2q'+3\);
-- even right: \(3^{p'}\le2q'+1\) (including both initial evalA failure and a successful evalA followed by a fatal drain);
+- even right: \(3^{p'+1}\le2q'+1\) (including both initial evalA failure and a successful evalA followed by a fatal drain);
 - the remaining odd near-left and even diagonal cases have \(p'\le3\) and \(p'=2\).
 
-Using the existing joint-mass envelopes plus TerminalRatio4's predecessor bounds at \(K=n+6\), I get \(a'+d'\le6q+12n+28\), hence \(2q'+5<3^{n+2}\) for \(n\ge10\). Therefore the successor-gap bounds sharpen to \(p'\le n+6\) (odd far), \(p'\le n-3\) (odd right), \(p'\le n+3\) (even far), and \(p'\le n+1\) (even right), with the small exceptional cases as above. Uniformly this is \(p'\le n+6\), versus the generic \(n+10\) output-gap interface.
+Using the existing joint-mass envelopes plus TerminalRatio4's predecessor bounds at \(K=n+6\), I get \(a'+d'\le6q+12n+28\), hence \(2q'+5<3^{n+2}\) for \(n\ge10\). Therefore the successor-gap bounds sharpen to \(p'\le n+6\) (odd far), \(p'\le n-3\) (odd right), \(p'\le n+3\) (even far), and \(p'\le n\) (even right), with the small exceptional cases as above. Uniformly this is \(p'\le n+6\), versus the generic \(n+10\) output-gap interface.
 
 The combined pullback is not yet one Lean-checked consumer; its ingredients are existing source-verified modules. I recommend using the branch-sensitive bounds in the bridge-cancellation arithmetic rather than collapsing to the uniform maximum. This is not a root nonhalting result; the all-time \(D(0,7)\) avoidance problem remains.
 
