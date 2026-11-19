@@ -60,6 +60,9 @@ is
 
 The theorem `p2S0Drain_q4Postlude` packages the complete conditional
 S0-drain/Q composition and returns the exact state-4 frame at head 1.
+The companion `p2PostludeFrame_typeAWindow` proves that, when the unchanged
+tail begins `100`, the returned frame restores the type-A eight-cell local
+window `00110000` at head 1.
 
 ## What remains open
 
@@ -78,7 +81,7 @@ postlude without the invalid head-−3/four-zero route.
 
 The next source obligations are:
 1. prove the q4Tail-to-S0 tape identity from `PositiveZFirstCycleToSecondPrefix`;
-2. prove the output type-A window and right suffix
+2. prove the right suffix
    `0^3 ++ 1^H ++ 0^2 ++ 1^(3*2^a) ++ 0^4`;
 3. compose the generic `firstCyclePrefix_from_checkpoint` with the new
    checkpoint to establish the next A/P22 iteration.
