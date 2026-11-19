@@ -165,6 +165,39 @@ The first additional 3-adic digit cancels exactly when (PW+S_0\equiv0\pmod3). Th
 
 The 100,000-return BigInt replay had 29,211 nonzero resonant steps. Exactly 12,441 had (PW+S_0\equiv0\pmod3); the observed excess valuations (v_3(PW+S_0)) ranged up to 12, and none of the 29,211 sums was zero. This is finite diagnostic evidence, not an all-time root argument.
 
+### Calibration against an existing infinite terminal-source family
+
+The normalized sum is **not** nonzero for all generic sources. Agent14's [r29 Z-family construction](../agent14-sheep-r29-hensel-corridor/README.md) gives an explicit infinite family on which it vanishes identically.
+
+For every (k\ge0), put
+[
+j=507384+1102248k=162(3132+6804k),\qquad
+v=\frac{2^{j+4}-259}{3483},\qquad x=64v.
+]
+Agent14's source calculation gives a genuine generic edge with ((a,h,b)=(6,3,j)) and (E(x)=2^j). Here
+[
+t=v_3(2^7+1)=1,quad P=43,quad \kappa=4.
+]
+Since (j) is divisible by 162 and (operatorname{ord}_{243}(2)=162), we have (2^j\equiv1\pmod{243}). Thus
+[
+S=3^3(2^6+6-1)-2^3(2^j-1)=1871-8\cdot2^j
+]
+has (v_3(S)=4). Also
+[
+v-1=\frac{2^{j+4}-3742}{81\cdot43}\not\equiv0\pmod3,
+]
+so (R=v_3(v-1)=0) and the edge is resonant with (\sigma=\kappa+R=4).
+
+For (W=(v-1)/2) and (S_0=S/81), direct simplification gives
+[
+43W=\frac{2^{j+4}-3742}{162}
+=\frac{8\cdot2^j-1871}{81}
+=-S_0.
+]
+Hence (PW+S_0=0) for every member of this infinite family, exactly as the terminal-edge criterion requires.
+
+This is a useful calibration, not a blank-root hit: the family consists of synthetic ancestors constructed by Agent14. It shows that no claim of the form “the normalized resonant sum is nonzero for every generic source” can be true. The remaining question is specifically whether the authentic orbit from 10 can enter any such exact zero-sum source.
+
 ## 4. Blank-root prefix illustration
 
 The first generic root edges are

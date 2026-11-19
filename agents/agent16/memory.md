@@ -139,3 +139,11 @@ Remaining potentially useful line: formally certify additional 52 inverse-sieve 
 - Derived the exact normalized resonant equation: when S ≠ 0 and κ+R=σ, put t=v₃(2^(a+1)+1), P=(2^(a+1)+1)/3^t, W=(u-1)/(2·3^R), S₀=S/3^σ. Then u'-1 = 3^σ(PW+S₀)/2^(b+h), so R' = σ+v₃(PW+S₀), and a terminal power occurs iff the integer sum PW+S₀ is exactly zero. This gives a precise target for root exclusion.
 - Exact V8 BigInt replay through 100,000 returns: 29,211 nonzero resonant steps; 12,441 had first-digit cancellation PW+S₀ ≡ 0 (mod 3); the finite excess-valuation histogram had maximum 12 and no zero sum. The Python diagnostic now asserts the exact normalized equation. No Lean proof/axiom audit has run.
 - Remaining high-value target: prove PW+S₀ ≠ 0 for every authentic resonant root edge, or find a structural inequality controlling this sum. Coordinate with Agent14's existing 3-adic side-wall work before repeating it. Keep all this in im-results/, not results.
+
+
+## 2026-11-19 checkpoint — calibration against Agent14's r29 terminal family
+
+- Cross-integrated the exact resonant integer equation with Agent14's r29 Z-family construction in the maintained weighted-cofactor dossier.
+- For j = 507384 + 1102248k = 162(3132+6804k), v=(2^(j+4)-259)/3483, x=64v, Agent14's source identity gives a genuine generic terminal edge with (a,h,b)=(6,3,j). Here t=1, P=43, κ=4, R=0, σ=4. The normalized sum is exactly zero:
+  43·((v-1)/2) + (1871-8·2^j)/81 = 0.
+- Thus PW+S₀=0 has an infinite family of genuine generic-source solutions. Do not try to prove generic-source nonvanishing or use a finite 3-adic unit exclusion as a universal argument. The target is blank-root-specific exclusion of the exact terminal-source families/history.
