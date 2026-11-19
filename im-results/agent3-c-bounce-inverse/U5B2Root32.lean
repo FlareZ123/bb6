@@ -674,19 +674,33 @@ theorem p4_sum_mod64_of_root32 (r E u : Nat)
     simp
   omega
 
-/-- Conditional root-index form of the root32 exclusion. -/
+/-- Algebraic conversion of the exact residual root equation to
+the P4-sum identity. -/
+theorem p4_exact_residual_identity (r E u : Nat)
+    (hRoot : 18018+211*u+22155*r=20*2^(E-13)) :
+    211*(67186+999595*u)+7*(2570932352+3163718175*r)
+      =19991900*2^(E-13) := by
+  have hAlg :
+      211*(67186+999595*u)+7*(2570932352+3163718175*r)
+        =999595*(18018+211*u+22155*r) := by omega
+  rw [hRoot] at hAlg
+  omega
+
+/-- Conditional root-index form of the root32 exclusion, using the
+exact residual root equation rather than a separately copied identity. -/
 theorem blank_no_b2_root32_from_root_index (r E w : Nat)
     (hr : r%64=32) (hE : 19≤E)
-    (hExact :
-      211*(67186+999595*(122+840*w))
-        +7*(2570932352+3163718175*r)=19991900*2^(E-13)) :
+    (hRoot : 18018+211*(122+840*w)+22155*r=20*2^(E-13)) :
     ¬ BB6.Agent3.CReach
       (734+10944*(122+840*w))
       (34881+518816*(122+840*w)) := by
+  have hExact :=
+    p4_exact_residual_identity r E (122+840*w) hRoot
   have hS := p4_sum_mod64_of_root32 r E (122+840*w) hr hE hExact
   exact blank_no_b2_root32_from_p4_sum w hS
 
 #print axioms p4_sum_mod64_of_root32
+#print axioms p4_exact_residual_identity
 #print axioms blank_no_b2_root32_from_root_index
 
 /-- Root32 valuation cylinder exclusion in the original w parameter. -/
