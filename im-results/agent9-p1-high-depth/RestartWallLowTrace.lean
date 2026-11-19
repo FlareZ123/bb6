@@ -461,6 +461,52 @@ theorem restartPath_first_shallow_source_split
   rw [path.hDepths,hEq]
   simp [List.map_append]
 
+/-- The scalar RestartWalk prefix before the first shallow edge ends
+    at exactly the right counter carried by the source OddCone prefix. -/
+theorem restartPath_first_shallow_state
+    (n b d m : Nat) (path : RestartPath n b d m)
+    (hbound : 2^path.L ≤ 7*weightS 0 path.es)
+    (hwall : b+4*m+4*n+20=12*2^n) :
+    ∃ bp dp mp t k c,
+      ∃ pre : OddCone path.b0 path.d0 bp dp mp,
+      ∃ post : List Nat,
+        (∀ u, u ∈ oddConeDepths pre → u=2) ∧
+        path.es = (oddConeDepths pre).map Nat.succ ++ [t+1] ++ post.map Nat.succ ∧
+        bp+dp+2*(path.c+mp+6)+1=14*2^n ∧
+        8 ≤ bp ∧ bp%4=0 ∧ dp%2=1 ∧
+        t ≤ 1 ∧ inverseAt bp dp t = some (k,c) ∧
+        2 ≤ k ∧ c%2=1 ∧ (2*k-4)%4=0 ∧
+        ∃ xmid,
+          xmid=dp-1 ∧
+          RestartWalk (2^n) path.c path.x0 0
+            ((oddConeDepths pre).map Nat.succ) xmid ∧
+          RestartWalk (2^n) path.c xmid mp
+            ([t+1]++post.map Nat.succ) (d-1) := by
+  obtain ⟨bp,dp,mp,t,k,c,pre,post,hpre2,hEq,hMass,hb,hb4,hd,ht,hi,hk,hc,hguard⟩ :=
+    restartPath_first_shallow_source_split n b d m path hbound hwall
+  have hpreWalk0 := oddCone_to_restartWalk
+    n path.m0 path.b0 path.d0 bp dp mp pre path.hStartMass
+  have hpreWalk : RestartWalk (2^n) path.c path.x0 0
+      ((oddConeDepths pre).map Nat.succ) (dp-1) := by
+    simpa [path.hBase,path.hSuffixStart] using hpreWalk0
+  have hpreCost : totalCost ((oddConeDepths pre).map Nat.succ) = mp :=
+    oddCone_depths_cost pre
+  have hfull : RestartWalk (2^n) path.c path.x0 0
+      (((oddConeDepths pre).map Nat.succ) ++ ([t+1]++post.map Nat.succ))
+      (d-1) := by
+    simpa [hEq,List.append_assoc] using path.walk
+  obtain ⟨xmid,hprefix,htail⟩ := restartWalk_split
+    (2^n) path.c path.x0 0 (d-1)
+    ((oddConeDepths pre).map Nat.succ) ([t+1]++post.map Nat.succ) hfull
+  have hxmid : xmid=dp-1 :=
+    restartWalk_endpoint_unique (2^n) path.c path.x0 0
+      ((oddConeDepths pre).map Nat.succ) xmid (dp-1) hprefix hpreWalk
+  have htail' : RestartWalk (2^n) path.c xmid mp
+      ([t+1]++post.map Nat.succ) (d-1) := by
+    simpa [hpreCost] using htail
+  exact ⟨bp,dp,mp,t,k,c,pre,post,hpre2,hEq,hMass,hb,hb4,hd,ht,hi,hk,hc,hguard,
+    xmid,hxmid,hprefix,htail'⟩
+
 /-- In the Is=48, odd-offset branch, the first shallow edge has
     depth one.  With the correct inverse-mass constant (2t+2=4), its
     source equations force an even child parameter; no mod-four exclusion
