@@ -286,6 +286,8 @@ theorem firstCycleQ_from_S0Input
   have hhead : h-(k:Int)=3 := by
     dsimp [k]
     rw [hh]
+    simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_pow,
+      Nat.cast_ofNat, hsub]
     omega
   have hg3 : T (h-(k:Int)-3) = false := by
     simpa [hhead] using h0
