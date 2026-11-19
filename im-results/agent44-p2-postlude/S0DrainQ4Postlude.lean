@@ -237,21 +237,24 @@ theorem p2PostludeFrame_typeAWindow
     rw [Agent6Q4Prefix.sideBit_append_right (d1pow a) ell
       (K+4+j) (by rw [d1pow_length]; dsimp [K]; omega)] at hc
     rw [d1pow_length] at hc
+    have hidx1 : K+4+j-3*a = m+6+j := by
+      dsimp [K]
+      omega
+    rw [hidx1] at hc
     rw [p2ResidualLeft] at hc
     rw [Agent6Q4Prefix.sideBit_append_right
       (List.replicate (m+2) true)
       ([false,true,false,false] ++ tail) (m+6+j) (by simp; omega)] at hc
+    have hidx2 : m+6+j-(m+2) = 4+j := by omega
+    rw [hidx2] at hc
     rw [Agent6Q4Prefix.sideBit_append_right
       ([false,true,false,false] : List Bool) tail (4+j) (by simp; omega)] at hc
+    have hidx3 : 4+j-4 = j := by omega
+    rw [hidx3] at hc
     have hcoord : H-(K+4+j:Int) = -1-(j:Int) := by
       omega
     rw [hcoord] at hc
-    have hidx1 : K+4+j-3*a = m+6+j := by
-      dsimp [K]
-      omega
-    have hidx2 : m+6+j-(m+2) = 4+j := by omega
-    have hidx3 : 4+j-4 = j := by omega
-    simpa [hidx1,hidx2,hidx3] using hc
+    exact hc
   have hsweep (x : Int) (hx : x ≤ 3) :
       s0LeftSweep K T H x = T x := by
     rw [s0LeftSweep_shift]
