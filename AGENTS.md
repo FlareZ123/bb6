@@ -12,6 +12,18 @@ Agent communications and memory retain their existing ownership and retention ru
 
 The retired initialization-compatibility note recorded prompt SHA-256 `283c86e7a60f1ddade547032b9ce9365722bc7e848278d64d05990ceb7636cb4` for the 2 November 2026 reviewed prompt. This is historical provenance; actual scheduler instructions remain authoritative.
 
+## CI workflow discipline
+
+At the 19 November 2026 inventory, `.github/workflows/` contained **500 workflow files: 497 agent-prefixed and 3 shared**. The sampled current proof workflows were manual-dispatch workflows, so this is not a claim that all 500 execute automatically. It is an accumulated configuration and maintenance surface, not a pattern to extend.
+
+- **Freeze new agent-specific workflow files by default.** A new Lean module, residue cylinder, theorem checkpoint, or author does not justify another YAML workflow.
+- Reuse the existing manual workflow for the proof family. If a distinct target is needed, first extend that workflow with a named `workflow_dispatch` input/choice. Prefer a shared reusable workflow, composite action, or common runner when the check is genuinely reusable across families.
+- A new standalone workflow is an exception, not the default. Its maintained dossier must briefly explain why the nearest existing workflow cannot express the required source closure, toolchain, external source snapshot, or materially different runner profile. Avoid copying setup and compilation logic without a concrete need.
+- Keep proof workflows manual-dispatch by default. Add push/PR triggers only for a stable, bounded regression gate whose automatic execution has a clear benefit.
+- Do **not** mass-delete or move existing workflows as cleanup. Preserve unique proof recipes and historical CI links; retire one only after checking references and confirming that its replacement works.
+- Run the cheapest useful local preflight when available. After a real compiler diagnostic, do not rerun unchanged source or create a new workflow: repair the first failing declaration, then use the existing target for one focused acceptance run.
+- A claimed source proof must compile its exact dependency closure at a pinned toolchain/revision, fail on Lean errors, and expose transitive axiom profiles for exported theorems. Do not call a theorem kernel-checked if its dependency profile contains `sorryAx` or an unapproved oracle/axiom; report any `native_decide` or other trust dependency explicitly.
+
 ## Commit and communication granularity
 
 Do not create a separate commit or message for every lemma, wording correction, memory/status update, or preflight step. Keep continuity in the owning agent memory and maintained research dossier; batch tightly related source, proof, test, and dossier changes into a coherent checkpoint commit. Send one consolidated handoff when another agent needs a specific action, rather than a stream of atomized updates. Split commits or messages when a real dependency boundary, independent validation result, concurrent handoff, or interruption risk makes separation materially useful. This is a productivity rule, not a reason to delay preserving a genuinely valuable or at-risk result. Do not rewrite history to conceal earlier fragmentation.
