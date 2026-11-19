@@ -9,6 +9,7 @@ on:
           - prefix
           - complete-first-cycle
           - root-q4tail
+          - p2-actual-boundary
         default: prefix
         required: true
 permissions:
@@ -180,3 +181,62 @@ jobs:
             exit 1
           fi
           echo 'Authentic root-to-q4Tail composition compiled with standard axioms only.'
+
+  p2-actual-boundary:
+    if: ${{ inputs.target == 'p2-actual-boundary' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact actual-boundary bridge dependency closure
+        run: |
+          set -euo pipefail
+          python3 tools/lean_compile_closure.py \
+            im-results/agent38-root-q4tail/P2ActualBoundaryBridge.lean \
+            --jobs 8 \
+            --workdir /tmp/agent38-p2-actual-boundary \
+            | tee /tmp/agent38-p2-actual-boundary.log
+          python3 - <<'PY'
+          import pathlib
+          log = pathlib.Path("/tmp/agent38-p2-actual-boundary.log").read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "p2ActualBoundary_exact",
+              "p2ActualBoundary_heads",
+              "p2ActualBoundary_at",
+              "p2ActualBoundary_end_right_ones",
+              "state4_right_ones",
+              "p2_two_zero_setup",
+              "p2_final_zero",
+              "p2ActualRightContinuation",
+              "p2ActualPostlude_at",
+          )
+          for name in names:
+              lines = [line for line in log.splitlines()
+                       if "depends on axioms:" in line
+                       and line.split(" depends on axioms:", 1)[0].split(".")[-1] == name]
+              if len(lines) != 1:
+                  raise SystemExit(f"expected one axiom profile for {name}, got {len(lines)}")
+              profile = lines[0].split("depends on axioms:", 1)[1].strip()
+              if not (profile.startswith("[") and profile.endswith("]")):
+                  raise SystemExit(f"unrecognized axiom profile for {name}: {profile}")
+              axioms = {x.strip() for x in profile[1:-1].split(",") if x.strip()}
+              bad = axioms - allowed
+              if bad:
+                  raise SystemExit(f"nonstandard axioms in {name}: {sorted(bad)}")
+              print(f"{name}: {sorted(axioms)}")
+          PY
+          if grep -R -n 'native_decide' /tmp/agent38-p2-actual-boundary --include='*.lean'; then
+            echo '::error::native_decide found in the actual-boundary source closure'
+            exit 1
+          fi
+          if grep -q 'sorryAx' /tmp/agent38-p2-actual-boundary.log; then
+            echo '::error::sorryAx found in the actual-boundary source closure'
+            exit 1
+          fi
+          echo 'Actual-boundary bridge and conditional continuation compiled with standard axioms only.'

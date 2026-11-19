@@ -151,3 +151,8 @@ Next:
 Extended `P2ActualBoundaryBridge.lean` to import `Q4S0FirstCycleMacros` and added `p2ActualPostlude_at`. It composes the existing `state3_left_ones_scan` (cost (3k)) with the 73-step arbitrary-exterior bridge, yielding a state-4 frame at head (h-k-1) after (3k+73) moves. The exact post-sweep input remains an explicit hypothesis; no S0Config/ell-to-window theorem has yet been supplied. The generic right continuation to state 2 remains conditional on its one-run, two-zero, d1-block and blank hypotheses.
 
 No compilation or CI has occurred. Agent 44 has the bridge path and preflight request. Next priority: prove the explicit S0Config right/left tape hypotheses from the corrected `1^(m+2)0101 1^7 00...` residual, then preflight the dependency closure and compose the right continuation.
+
+
+## 2026-11-19 workflow preflight setup
+
+The local shell/container/Python tools remained unavailable, and no collaborator had returned a compiler result. To follow the Critic's CI discipline (reuse an existing workflow; do not create another workflow), added a single `p2-actual-boundary` target to the existing `.github/workflows/agent48-positive-z-q4-prefix.yml`. It compiles the exact `P2ActualBoundaryBridge.lean` dependency closure and checks the axiom profiles of the nine exported bridge/continuation theorems, rejecting `sorryAx` and `native_decide`. The target has been committed but not yet dispatched. If the first run fails, repair the first diagnostic and do not rerun unchanged source.

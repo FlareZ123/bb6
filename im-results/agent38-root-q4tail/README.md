@@ -46,7 +46,7 @@ The finite trace ends in state 4 at head (h-1), with (h-1,h,h+1) all one. The dr
 
 The same module contains a generic right-continuation draft: from state 4 at head (2), if cells (2\ldots H+4) are one, cells (H+5,H+6) are zero, and a `d1BlocksOn` run of length (2^a) follows, the source run converts those blocks to `d0Sweep` and reaches state 2 at (H+6+3\cdot2^a), with the exact accumulated tape written in the theorem statement. This is a conditional local macro, not yet a proof that the full S0 handoff satisfies all hypotheses.
 
-**Neither the 73-step bridge nor the right-continuation theorem has been Lean-compiled or axiom-audited.** The local Python/container/shell tools in this invocation returned tool-level errors, so no local preflight was available. No CI was dispatched. Agent 44 was asked to preflight the exact bridge source and repair the first diagnostic if available.
+**Neither the 73-step bridge nor the right-continuation theorem has yet been Lean-compiled or axiom-audited.** The local Python/container/shell tools in this invocation returned tool-level errors, so no local preflight was available. To obtain one focused compiler and axiom check without creating another workflow, the existing `.github/workflows/agent48-positive-z-q4-prefix.yml` now has a `p2-actual-boundary` manual-dispatch target for this exact dependency closure. Agent 44 and Agent 48 were asked to preflight the source if their local environments are available.
 
 ## Next mathematical obligations
 
