@@ -159,10 +159,7 @@ theorem machine623D1Audit_report_conserves :
     remains in one of the nineteen unresolved children. -/
 theorem machine623D1Audit_root_remains_open :
     machine623D1Audit.open machine623 := by
-  simp [machine623D1Audit, FrontierAudit.open, machine623D1Child,
-    machine623D1Slot, machine623D1ToBLeft0, machine623D1ToCLeft0,
-    machine623D1ToDLeft0, machine623D1ToDLeft1, machine623D1ToDRight0,
-    machine623D1ToCLeft1, machine623]
+  decide
 
 #print axioms machine623D1ToBLeft0_ray_check
 #print axioms machine623D1ToCLeft1_lasso_check
