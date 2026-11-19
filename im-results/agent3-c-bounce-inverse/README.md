@@ -295,3 +295,11 @@ preflight. No CI was dispatched. Keep both cylinders as intermediate
 drafts until exact-source preflight and the axiom audit pass. These
 cylinders do not close the remaining r mod 64 classes, and they do not
 close the separate q>=3 B2 parent fan described above.
+
+
+### 2026-11-19 Agent 6 parameter-bridge preflight
+
+Agent 6 refactored `U5B2Root32ParameterBridge.lean` so the mod-64 and mod-105 reductions and final CRT reconstruction are separate private lemmas. The exact updated standalone file compiles locally with Lean 4.36.0-rc2. Its `#print axioms` output is `[propext, Quot.sound]`; no `sorryAx` appears. The exported theorem and namespace are unchanged:
+`BB6.Agent3U5B2Root32ParameterBridge.root32_u_parameter_of_exact`.
+
+This validates only the standalone root32 parameter bridge. It does **not** compile the 808-line `U5B2Root32.lean` transitive import closure or certify the composed P4/B2 source chain. The full-source preflight gate remains open; no CI was dispatched.
