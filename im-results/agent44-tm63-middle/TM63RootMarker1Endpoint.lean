@@ -22,11 +22,11 @@ open BB6Coverage.Agent48RootAfterSectionResult
 open BB6Coverage.Agent42OuterLCInc
 open BB6Coverage.Agent8S1Encoder
 
-private def middle34Result :=
+def middle34Result :=
   sectionResult (16*tm63RootResidueSixK-20) 1
     tm63MiddleAfter34A tm63MiddleAfter34B
 
-private def middle34Head : Int :=
+def middle34Head : Int :=
   sectionHeadAfter (16*tm63RootResidueSixK-20)
     tm63MiddleAfter34B tm63MiddleAfter34Head
 
