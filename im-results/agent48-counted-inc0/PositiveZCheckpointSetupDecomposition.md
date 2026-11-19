@@ -28,11 +28,11 @@ After the first counted drain, the source configuration is
 2. Fixed 8-step bridge `B8`: head displacement `-2`.
 3. `state3_left_ones_scan (3*L+5)`: cost `9*L+15`.
 4. Fixed 20-step bridge `B20`: head displacement `+4`.
-5. `counted_right_sweep z`: cost `3*z`, head displacement `+3*z`.
+5. `counted_right_sweep (L+1)`: cost `3*(L+1)`, head displacement `+3*(L+1)`.
 6. Fixed 9-step bridge `B9`: head displacement `+3`.
 7. `counted_right_sweep (A+1)`: cost `3*(A+1)`, head displacement `+3*(A+1)`.
 8. Fixed 6-step bridge `B6`: head displacement `+4`.
-9. `counted_right_sweep (L+1)`: cost `3*(L+1)`, head displacement `+3*(L+1)`.
+9. `counted_right_sweep z`: cost `3*z`, head displacement `+3*z`.
 10. Fixed 30-step bridge `B30`: head displacement `-4`.
 
 The three right sweeps are instances of the existing theorem
@@ -42,8 +42,8 @@ one consecutive triple of ones per block and advances the head by three.
 
 The total cost is exactly
 ```
-(9*A+3) + 8 + (9*L+15) + 20 + 3*z + 9
-  + 3*(A+1) + 6 + 3*(L+1) + 30
+(9*A+3) + 8 + (9*L+15) + 20 + 3*(L+1) + 9
+  + 3*(A+1) + 6 + 3*z + 30
 = 12*(A+L) + 3*z + 97.
 ```
 The total head displacement from the post-drain start is
@@ -78,12 +78,14 @@ with `decide`, then lifted over arbitrary exterior tape with
 Let `h0=-(3*A+3*L+8)` be the head after the two left scans and B8.
 The bridge/sweep sequence places the right-sweep starts at:
 
-- `h0+4`, with `z` consecutive `111` blocks;
-- `h0+4+3*z+3`, with `A+1` consecutive `111` blocks;
-- `h0+4+3*z+3+3*(A+1)+4`, with `L+1` consecutive `111` blocks.
+- `h0+4`, with `L+1` consecutive `111` blocks;
+- `h0+4+3*(L+1)+3`, with `A+1` consecutive `111` blocks;
+- `h0+4+3*(L+1)+3+3*(A+1)+4`, with `z` consecutive `111` blocks.
 
-The corresponding block runs are the three separated unary regions exposed
-by the post-scan tape. The bridge windows do not touch the sweep suffixes.
+The first two runs come from the two left-context unary regions; the final
+run is the right unary counter. In particular, the final sweep starts at
+absolute cell 9 when the original S0 head is 0, independently of A and L.
+The bridge windows do not touch the sweep suffixes.
 The remaining proof obligations are to derive these three `rightOnes`
 predicates from the exact output of the preceding left scans/bridges and to
 show that the three `sweptRight` outputs plus B30 give the target
