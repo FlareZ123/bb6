@@ -457,3 +457,16 @@ after `3*2^z+3*z+58` further TM2 steps. This is conditional on the
 first q4 checkpoint's actual frame output having the side shape proved
 in `FirstQ4P1FrameCoordinates.md`; that pointwise frame identity is
 still the outstanding link.
+
+
+## Full first-cycle composition from the side-based root checkpoint
+
+The adapter now includes
+`firstQ4P1_sideCycle_to_secondFrame`. It reuses Agent 48's complete
+`positiveZFirstCycle_from_checkpoint` theorem, so the side-based root
+checkpoint runs through the P1 prefix, the all-ones S0 drain, and Q(z)
+to the next q4 frame with the exact source cost. No new transition
+macro was introduced. This is still conditional on the pointwise
+identification of the actual `firstQ4Checkpoint_run` output with the
+side-based tape; the frame-coordinate note gives the exact remaining
+lemma.

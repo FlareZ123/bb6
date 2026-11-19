@@ -65,4 +65,31 @@ theorem firstQ4P1_sidePrefix_to_s0DrainInput
 
 #print axioms firstQ4P1_sidePrefix_to_s0DrainInput
 
+
+/-- The entire existing P(z)+S0-drain+Q(z) source composition can be
+started from the root's *side-based* first q4 checkpoint after the
+parameter reindexing.  The remaining actual-run boundary is the
+pointwise equality between firstQ4Checkpoint_run's q4FrameAt output
+and firstQ4P1Tape. -/
+theorem firstQ4P1_sideCycle_to_secondFrame
+    (L A z : Nat) (hA : 0 < A) (hz : 1 ≤ z) :
+    run tm2
+      ((3*2^z+3*z+58) +
+        ((6*4^(2^z-1)+42*2^(2^z-1)-12*(2^z-1)-48) +
+          (9*2^z+9*z+16)))
+      ⟨4,1,firstQ4P1Tape L A z⟩ =
+    some (frameAt
+      (sweptLeft (3*(2^z-1)+3*z+7)
+        (firstCycleS0DrainOutput z
+          (List.replicate 4 true ++
+            binDec (firstQ4P1Width L A) (firstQ4P1Value L A) ++ lh)).tape
+        (3*2^z+3*z+7))
+      3 firstCyclePostludeInside firstCyclePostludeEnd) := by
+  rw [firstQ4P1Tape_eq_firstCycleCheckpointTape L A z hA]
+  exact positiveZFirstCycle_from_checkpoint z
+    (firstQ4P1Width L A) (firstQ4P1Value L A)
+    hz (firstQ4P1Value_lt L A hA)
+
+#print axioms firstQ4P1_sideCycle_to_secondFrame
+
 end BB6Coverage.Agent42FirstQ4P1Reparam

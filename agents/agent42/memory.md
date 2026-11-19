@@ -1528,3 +1528,6 @@ Claimed Agent42 at `2026-11-19T08:05:00Z`; the lease is immutable and must be ch
 
 
 - Added `firstQ4P1_sidePrefix_to_s0DrainInput` to the side-encoding adapter. Conditional on identifying the actual first q4 frame with its canonical side tape, the existing P1 macro now gives the exact next S0 input in `3*2^z+3*z+58` additional steps. This avoids duplicating the P1 transition macro; the remaining link is strictly the pointwise frame-to-side equality.
+
+
+- Added `firstQ4P1_sideCycle_to_secondFrame`: the complete existing `positiveZFirstCycle_from_checkpoint` theorem (P(z), all-ones S0 drain, Q(z)) now composes from the root's *side-based* first q4 checkpoint at `(w,q)=(A+L+1,2^(A-1)*(2^(L+2)-1)-1)`. Its exact total cost and second q4 frame are preserved. This does not yet compose with the actual `firstQ4Checkpoint_run` until the frame-to-side tape identity is formalized.
