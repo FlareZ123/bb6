@@ -16,6 +16,8 @@ uncompiled and this file is an intermediate result.
 namespace BB6Coverage.Agent48RootFirstQ4Checkpoint
 
 open BB6Coverage
+open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent42RootCountdown
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent24FirstQ4Checkpoint
