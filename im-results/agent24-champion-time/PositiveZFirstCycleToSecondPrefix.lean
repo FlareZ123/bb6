@@ -508,23 +508,23 @@ theorem positiveZFirstCycle_then_secondCyclePrefix
     intro i hi
     refine ⟨?_,?_,?_⟩
     · have hcoord : 1+4+(m:Int)+2+3*(i:Int) =
-          H+1+(6+3*i:Int) := by dsimp [H]; omega
-      rw [hcoord,hVafter (H+1+(6+3*(i:Int))) (by omega)]
+          H+1+((6+3*i : Nat):Int) := by dsimp [H]; push_cast; omega
+      rw [hcoord,hVafter (H+1+((6+3*i : Nat):Int)) (by omega)]
       have hcell := hSright (6+3*i)
       rw [show H+1+(6+3*(i:Int))=H+1+(6+3*i:Int) by norm_num] at hcell
       rw [hcell,s0RightFacing_after_six (2^a-1) (6+3*i) (by omega)]
       have hval := sideBit_d1pow_true (2^a) (3*i) (by omega)
       simpa [show (2^a-1)+1=2^a by omega] using hval
     · have hcoord : 1+4+(m:Int)+2+3*(i:Int)+1 =
-          H+1+(6+3*i+1:Int) := by dsimp [H]; omega
-      rw [hcoord,hVafter (H+1+(6+3*i+1:Int)) (by omega)]
+          H+1+((6+3*i+1 : Nat):Int) := by dsimp [H]; push_cast; omega
+      rw [hcoord,hVafter (H+1+((6+3*i+1 : Nat):Int)) (by omega)]
       have hcell := hSright (6+3*i+1)
       rw [hcell,s0RightFacing_after_six (2^a-1) (6+3*i+1) (by omega)]
       have hval := sideBit_d1pow_true (2^a) (3*i+1) (by omega)
       simpa [show (2^a-1)+1=2^a by omega] using hval
     · have hcoord : 1+4+(m:Int)+2+3*(i:Int)+2 =
-          H+1+(6+3*i+2:Int) := by dsimp [H]; omega
-      rw [hcoord,hVafter (H+1+(6+3*i+2:Int)) (by omega)]
+          H+1+((6+3*i+2 : Nat):Int) := by dsimp [H]; push_cast; omega
+      rw [hcoord,hVafter (H+1+((6+3*i+2 : Nat):Int)) (by omega)]
       have hcell := hSright (6+3*i+2)
       rw [hcell,s0RightFacing_after_six (2^a-1) (6+3*i+2) (by omega)]
       have hval := sideBit_d1pow_true (2^a) (3*i+2) (by omega)
