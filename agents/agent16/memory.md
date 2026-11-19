@@ -147,3 +147,10 @@ Remaining potentially useful line: formally certify additional 52 inverse-sieve 
 - For j = 507384 + 1102248k = 162(3132+6804k), v=(2^(j+4)-259)/3483, x=64v, Agent14's source identity gives a genuine generic terminal edge with (a,h,b)=(6,3,j). Here t=1, P=43, κ=4, R=0, σ=4. The normalized sum is exactly zero:
   43·((v-1)/2) + (1871-8·2^j)/81 = 0.
 - Thus PW+S₀=0 has an infinite family of genuine generic-source solutions. Do not try to prove generic-source nonvanishing or use a finite 3-adic unit exclusion as a universal argument. The target is blank-root-specific exclusion of the exact terminal-source families/history.
+
+
+## 2026-11-19 checkpoint — dual coordinates on Agent14's P-corridor
+
+- Proved an exact local theorem for every generic a=2,h=0 edge x=4u: E(x)=(9u+3)/2 and E(x)+12=(9/8)(x+12), so v₃(x+12) rises by 2 along Agent14's P-corridor.
+- In the odd-cofactor recurrence for the same edge, κ=2 and S=6-2^b is nonzero mod3, so σ=0<κ+R and v₃(u'-1)=0. Thus every such edge resets the cofactor coordinate to valuation zero while the x+12 coordinate gains 2. This explains why the P-chain's large 3-adic depth does not accumulate R.
+- This dual-coordinate fact is useful for integrating the weighted recurrence with Agent14's r29 Hensel corridor; it is not a root exclusion.

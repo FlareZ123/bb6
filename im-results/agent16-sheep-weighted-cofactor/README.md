@@ -198,6 +198,25 @@ Hence (PW+S_0=0) for every member of this infinite family, exactly as the termin
 
 This is a useful calibration, not a blank-root hit: the family consists of synthetic ancestors constructed by Agent14. It shows that no claim of the form “the normalized resonant sum is nonzero for every generic source” can be true. The remaining question is specifically whether the authentic orbit from 10 can enter any such exact zero-sum source.
 
+### The h = 0, a = 2 corridor resets the cofactor coordinate
+
+For every generic edge with (a=2) and (h=0), write (x=4u). Then
+[
+E(x)=F(x)=\frac{9u+3}{2},\qquad
+E(x)+12=\frac98(x+12).
+]
+This is exactly the forward form of Agent14's inverse step (P(y)=(8y-12)/9): each such edge increases (v_3(x+12)) by exactly two.
+
+The odd-cofactor coordinate behaves oppositely. Here
+[
+\kappa=2,qquad S=6-2^b\not\equiv0\pmod3,
+]
+so (sigma=v_3(S)=0), strictly below (kappa+R) for every (Rge0). The step is never resonant and the valuation law gives
+[
+v_3(u'-1)=0.
+]
+Thus every (a=2,h=0) P-edge resets the target odd-cofactor distance from 1 to valuation zero, even while the separate coordinate (x+12) gains two powers of three. The two 3-adic coordinates track genuinely different aspects of the inverse corridor. This is a local edge theorem, not a global root obstruction.
+
 ## 4. Blank-root prefix illustration
 
 The first generic root edges are
