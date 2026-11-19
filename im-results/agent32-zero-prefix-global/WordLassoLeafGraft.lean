@@ -11,6 +11,8 @@ physical frontier, and the source certificate is Agent 6's finite-word
 two-mark glider.
 -/
 
+/-- The raw A-rooted state labels are retained exactly; no state-permutation
+or tape-reflection quotient is applied to this physical path. -/
 def twoMarkA0 : Slot := (⟨0, by decide⟩, false)
 def twoMarkB0 : Slot := (⟨1, by decide⟩, false)
 def twoMarkC1 : Slot := (⟨2, by decide⟩, true)
