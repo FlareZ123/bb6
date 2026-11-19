@@ -1,7 +1,6 @@
 import ResidualFrontierManifest
 import IncrementalAudit
 import TranslatedThreeSlot
-import TranslatedFourSlot
 
 set_option maxRecDepth 12000
 set_option maxHeartbeats 0
@@ -112,18 +111,6 @@ theorem agent27Three_leaf_closed (m : Machine)
   exact ⟨agent27ThreeParent_open_all m hm,
     agent27Three_parent_closed_after_graft m hm⟩
 
-/-- The three-slot and four-slot cylinders are disjoint already at A/0. -/
-theorem agent27Three_disjoint_four (m : Machine) :
-    ¬ (compatible agent27ThreeP3 m ∧ compatible agent27FourP4 m) := by
-  intro h
-  have hthree :=
-    h.1 agent27ThreeA0 agent27ThreeA0Action (by decide)
-  have hfour :=
-    h.2 agent27FourA0 agent27FourA0Action (by decide)
-  have hEq : agent27ThreeA0Action = agent27FourA0Action :=
-    hthree.symm.trans hfour
-  simp [agent27ThreeA0Action, agent27FourA0Action] at hEq
-
 theorem agent27ThreeGraftedAudit_exhaustive (m : Machine) :
     DecidedBelow 6 m ∨ agent27ThreeGraftedAudit.open m :=
   agent27ThreeGraftedAudit.exhaustive m (empty_compatible m)
@@ -148,7 +135,6 @@ theorem agent27ThreeGraftedAudit_conserves :
 #print axioms agent27ThreeGraftedAudit_open_iff
 #print axioms agent27Three_parent_closed_after_graft
 #print axioms agent27Three_leaf_closed
-#print axioms agent27Three_disjoint_four
 #print axioms agent27ThreeGraftedAudit_exhaustive
 #print axioms agent27ThreeGraftedAudit_conserves
 
