@@ -155,7 +155,7 @@ The source draft now also includes the root-index bridge:
 - p4_sum_mod64_of_root32 takes \(r\bmod64=32\), \(E\ge19\), and the rearranged exact residual identity
   \[
   211S_4+7(2570932352+3163718175r)
-  =2855985\cdot2^{E-13},
+  =19991900\cdot2^{E-13},
   \]
   and proves \(S_4\bmod64=32\).
 - p4_root32_u_parameter then proves \(u=122+840w=1802+6720t\) for some \(t\), since \(S_4=8(15252222+104957475w)\) and \(S_4\bmod64=32\) forces \(w\bmod8=2\).
