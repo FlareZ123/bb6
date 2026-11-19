@@ -268,7 +268,12 @@ finite word, not a finite-time simulation.
 
 The first four assignments A/0, B/0, C/1, D/1 are the physical depth-four
 parent.  Its next physical unknown is E/0.  The seven-slot source cylinder
-adds E/0, F/1, and C/0, so its raw completion mass is `25^5`.  **Important
+adds E/0, F/1, and C/0, so its raw completion mass is `25^5`.  Here
+`finiteBlank` means the standard blank tape with initial state A at head 0.
+The source proof retains this exact raw A-rooted representative: it does not
+quotient by, or multiply its mass by, the 5! state relabellings fixing A and
+optional tape reflection.  Thus `25^5` is the count of compatible completions
+of this one representative, not a symmetry-orbit count.  **Important
 branch-order distinction:** `addCertificate` scans `auditSlots`, where C/0
 precedes E/0 and F/1; the graft may therefore branch C/0 first even though
 the authentic physical run consults E/0 first.  The source module treats these
