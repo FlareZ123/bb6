@@ -9,7 +9,10 @@ The earlier status above is superseded in one important respect: the source-run
 itself is now formalized. `OuterLCIncPostludeSource.lean` exports
 `outerLCInc_full_run`, a parameterized successful run from
 `s1Config L n m a 0 b h` to the exact nested
-`outerLCIncPostludeTape` frame, with cost
+`outerLCIncPostludeTape` frame over
+`outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r`,
+where the existential valuation (r=v_2(n)) is retained from
+`outerLCInc_preHRun`, with cost
 
 [
 12a+4m+63+12v_2(n)+3b.
@@ -17,8 +20,13 @@ itself is now formalized. `OuterLCIncPostludeSource.lean` exports
 
 This is stronger than the original finite-grid evidence: the machine execution
 and its primitive-step count are stated uniformly for positive valid source
-counters. The remaining gap is not the run trace; it is the pointwise
-identification of the nested output tape with the canonical S1/S0 encoder.
+counters. The pointwise identification of the nested output tape with the
+canonical S1/S0 encoder is drafted in `OuterLCIncCanonicalEndpoint.lean`.
+Agent 44 has also drafted
+`im-results/agent44-tm63-middle/TM63RootMarker1Endpoint.lean`, composing the
+blank-root middle-34 / SectionResult handoff with the marker-1 S0 tape
+identification. Both endpoint layers remain uncompiled and unaccepted; the
+root-side entry family is a source draft, not yet a checked theorem.
 
 For the root-relevant `m=2,n=1` branch, the exact cost is
 `12*a+71+3*b`, and the intended canonical endpoint is
@@ -81,8 +89,10 @@ This is only an entry-configuration match, not a q4 closure. The exact
 normal form, event count, and time decomposition are now computationally
 identified and independently reproduced; the remaining formal setup macro
 is still open. The post-checkpoint first-cycle counted-drain law remains
-conjectural. In particular, the authentic root has `z=2^b-1≥3`, so the
-z=0 terminal theorem cannot be applied. The positive-z nested q4 macro (or
+conjectural. In particular, the intended authentic root has `z=2^b-1`; the generic endpoint
+theorem proves `z < 2^A`, but the root-specific lower bound `b≥2`
+(hence `z≥3`) is not yet exported as a Lean lemma. The z=0 terminal theorem
+therefore cannot yet be applied to the root. The positive-z nested q4 macro (or
 an alternative route to the z=0,b=0 family) remains a major open obligation.
 
 **All declarations in the new endpoint module remain
