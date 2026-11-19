@@ -23,7 +23,7 @@ Then (K+6a\equiv20\pmod{54}), so (E) is the corresponding (t=0,q=0) rho-20 fatal
 E\notin\operatorname{ResetChain}(2).
 ]
 
-More precisely, the complete inverse-parent graph of (E) has exactly two first parents. One is a leaf. The other has a unique parent chain of (a-10) even edges, ending at a leaf. Neither branch reaches the blank-tape root.
+More precisely, the complete inverse-parent graph of (E) has exactly two first parents. One is a leaf. The other first has a unique parent (y_0) at (h_0), after which there are exactly (a-10) unique even-parent edges ending at a leaf. Neither branch reaches the blank-tape root.
 
 ## 1. Exact arithmetic and the modular certificate
 
@@ -69,7 +69,10 @@ The modular table below is exact. The row parameter is (a\bmod162); (K_{243}) de
 | 14 | 122 | 152 | 152 | 34  | 229 | 154 | 34  | 125 | 162 | 108 | 6 | 189 |
 | 32 | 32  | 44  | 44  | 16  | 67  | 208 | 169 | 17  | 81  | 27  | 6 | 108 |
 | 32 | 86  | 206 | 44  | 124 | 67  | 127 | 88  | 179 | 81  | 27  | 6 | 108 |
-| 32 | 140 | 125 | 44  | 70  | 67  | 46  | 7   | 98  | 81  | 27  | 6 | 108 |\n| 46 | 46  | 122 | 122 | 80  | 22  | 205 | 121 | 239 | 81  | 162 | 0 | 162 |\n| 46 | 100 | 41  | 122 | 26  | 22  | 124 | 40  | 158 | 81  | 162 | 0 | 162 |\n| 46 | 154 | 203 | 122 | 134 | 22  | 43  | 202 | 77  | 81  | 162 | 0 | 162 |
+| 32 | 140 | 125 | 44  | 70  | 67  | 46  | 7   | 98  | 81  | 27  | 6 | 108 |
+| 46 | 46  | 122 | 122 | 80  | 22  | 205 | 121 | 239 | 81  | 162 | 0 | 162 |
+| 46 | 100 | 41  | 122 | 26  | 22  | 124 | 40  | 158 | 81  | 162 | 0 | 162 |
+| 46 | 154 | 203 | 122 | 134 | 22  | 43  | 202 | 77  | 81  | 162 | 0 | 162 |
 
 Here (3X_{243}) means (3X\bmod243), and likewise for (9X_{1,243}). Consequently,
 [
