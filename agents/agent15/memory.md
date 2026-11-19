@@ -252,34 +252,22 @@ Current incarnation claimed Agent 15 at **2026-11-19T06:39:25.208Z**, run_id rec
 
 Main dossier: `im-results/agent15-c-halting/U5Q0W7SourceParentAnalysis.md`; index added to `im-results/agent15-c-halting/README.md`.
 
-The U5 q=0 target is
-[
-P_z=(3480+7224z,3439+7140z),\qquad t=81+168z.
-]
-The exact residuals include (z\equiv3\pmod5). For (w=7+8s), the modulo-128 relation gives (5z-7s\equiv12\pmod{16}). On the w=7 progression the exact modulo-512 relation is
-[
-t\equiv272+23w\equiv433+184s\pmod{512},
-]
-so (21z\equiv44+23s\pmod{64}) and (z\equiv60+59s\pmod{64}).
+The U5 q=0 target is `P_z=(3480+7224z,3439+7140z)`, with `t=81+168z`. The exact residuals include `z ≡ 3 (mod 5)`. For `w=7+8s`, the modulo-128 relation gives `5z-7s ≡ 12 (mod 16)`. On this progression, the exact modulo-512 relation is `t ≡ 272+23w ≡ 433+184s (mod 512)`, so `21z ≡ 44+23s (mod 64)` and `z ≡ 60+59s (mod 64)`.
 
 Source-level exclusions derived this invocation:
 
-1. **(w\equiv119\pmod{128})**: equivalently (z\equiv6\pmod{16}), (z=2+4u), (u\equiv1\pmod4). The complete `sectionPreimageAll` fan for (P_z) is parameterized by even depth (n):
-   [
-   2^{n+1}(a+3)=16W,quad 2k+a+7+3n=X_2,
-   ]
-   where (W=2228+3591u), (X_2=53366+86016u). q=0 and q=1 are the only depths because W is odd. Both parents have odd right coordinate and sum 2 mod4, excluded by Agent11's source theorem `blank_no_odd_sum_two`. A Lean draft for the complete fan and this exclusion is in `U5Q0W7ParentFan.lean`.
-2. **(w\equiv95\pmod{128}) and (w\equiv31\pmod{128})**: equivalently (z\equiv5,13\pmod{16}). The even/odd four-parent theorem forces (P_z\to Q_z); the odd/even sum-three theorem forces (Q_z\to R_z), where
-   (R_z=(6902+14343z,(3445+7161z)/2)).
-   R is odd/odd, has odd right coordinate and sum 2 mod4, so `blank_no_odd_sum_two` excludes it. The Lean draft includes `w7_q0_target_unreachable_z5or13mod16`.
-3. **(w\equiv439\pmod{512})**: the exact modulo-512 residual map gives (z\equiv46\pmod{64}); with (z\equiv3\pmod5), this is (z\equiv238\pmod{320}), i.e. (u=(z-2)/4\equiv59\pmod{80}). W is odd, so q=0,1 only. q=0 is excluded by sum-two. q=1 has a unique odd/odd low-value parent B with odd right coordinate and sum 1 mod4, excluded by Agent11's `blank_no_odd_sum_one`. This third cylinder is documented in Markdown but **not yet Lean-formalized**.
+1. **w ≡ 119 (mod 128)**: equivalently z ≡ 6 (mod 16), z=2+4u, u ≡ 1 (mod 4). The complete `sectionPreimageAll` fan for P_z is parameterized by even depth n:
+   `2^(n+1)*(a+3)=16W`, `2k+a+7+3n=X2`,
+   where W=2228+3591u and X2=53366+86016u. q=0 and q=1 are the only depths because W is odd. Both parents have odd right coordinate and sum 2 mod 4, excluded by Agent11's source theorem `blank_no_odd_sum_two`. A Lean draft for the complete fan and this exclusion is in `U5Q0W7ParentFan.lean`.
+2. **w ≡ 95 (mod 128) and w ≡ 31 (mod 128)**: equivalently z ≡ 5 or 13 (mod 16). The even/odd four-parent theorem forces P_z -> Q_z; the odd/even sum-three theorem forces Q_z -> R_z, where `R_z=(6902+14343z,(3445+7161z)/2)`. R is odd/odd, has odd right coordinate and sum 2 mod 4, so `blank_no_odd_sum_two` excludes it. The Lean draft includes `w7_q0_target_unreachable_z5or13mod16`.
+3. **w ≡ 439 (mod 512)**: the exact modulo-512 residual map gives z ≡ 46 (mod 64); with z ≡ 3 (mod 5), this is z ≡ 238 (mod 320), i.e. u=(z-2)/4 ≡ 59 (mod 80). W is odd, so q=0,1 only. q=0 is excluded by sum-two. q=1 has a unique odd/odd low-value parent B with odd right coordinate and sum 1 mod 4, excluded by Agent11's `blank_no_odd_sum_one`. This third cylinder is documented in Markdown but **not yet Lean-formalized**.
 
 These are source-level mathematical derivations, not a full w=7 closure. The candidate Lean file `U5Q0W7ParentFan.lean` is explicitly marked **uncompiled draft**. The local container and Python tools returned concrete ClientError/runtime failures in this invocation. No CI was dispatched without local preflight. Do not claim any new theorem as Lean-verified until an actual compile succeeds. Agent6, Agent7, and Agent46 were asked for local preflight/source grammar review; Agent11 for the high-depth/low-value chains; Agent3 and Agent4 were given the exact root-index cylinders and asked to integrate/review. No reply had arrived at last checkpoint.
 
 ### Remaining work
 
 - Obtain an actual Lean 4.36.0-rc2 preflight from an invocation with a working local runtime. If unavailable, preserve the draft as uncompiled; do not use CI as a substitute for the requested local preflight.
-- Formalize the (w\equiv439\pmod{512}) q=1 low-value chain.
-- Continue the full w=7 source-parent fan: odd-z classes other than 5,13 mod16; z divisible by4; z=2 mod4 branches u=3 mod4 and u even/high depth. Existing exact source lemmas include `evenodd_four_parent_iff`, `section_odd_even_iff_affine`, `oddodd_lowval_parent_iff`, `blank_no_odd_sum_two`, and `blank_no_odd_sum_one`.
-- Avoid duplicating Agent3's M32 quotient census. The w=31/95 cylinders overlap two lifts in its w=31 mod64 candidate; w=119 and w=439 are distinct source-level reductions.
+- Formalize the w ≡ 439 (mod 512) q=1 low-value chain.
+- Continue the full w=7 source-parent fan: odd-z classes other than 5,13 mod 16; z divisible by 4; z=2 mod 4 branches u=3 mod 4 and u even/high depth. Existing exact source lemmas include `evenodd_four_parent_iff`, `section_odd_even_iff_affine`, `oddodd_lowval_parent_iff`, `blank_no_odd_sum_two`, and `blank_no_odd_sum_one`.
+- Avoid duplicating Agent3's M32 quotient census. The w=31/95 cylinders overlap two lifts in its w=31 mod 64 candidate; w=119 and w=439 are distinct source-level reductions.
 - Machine C and BB(6) remain unresolved. Keep all these contributions in `im-results/`, not `results/`, until formalization, review, and novelty are established.
