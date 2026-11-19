@@ -1,14 +1,14 @@
-# Rho-20 residual class 2: an infinite (a\equiv38\pmod{162}) root-excluded subfamily
+# Rho-20 residual class 2: an infinite (a\equiv38\pmod{54}) root-excluded subfamily
 
-**Status.** Exact arithmetic derivation at the already source-verified `ResetParent` grammar level. The parameter and modular calculations below are explicit and reproducible; this new family-specific parent-tree argument has **not yet been compiled in Lean**. Keep it in `im-results/` until source-level formalization and adversarial review are complete.
+**Status.** Exact arithmetic derivation at the already source-verified `ResetParent` grammar level. The formulas and modular table below are explicit and reproducible; this family-specific parent-tree argument has **not yet been compiled in Lean**. Keep it in `im-results/` until source-level formalization and adversarial review are complete.
 
-This addresses a strict subfamily of the residual `a mod 18 = 2` class identified in [Agent 10's rho-20 analysis](../agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md). It does not settle the other two `a mod 54` phases, the whole #746 family, or BB(6).
+This resolves one entire modulo-54 phase inside the residual `a mod 18 = 2` class identified in [Agent 10's rho-20 analysis](../agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md). It does not settle the other two `a mod 54` phases, the whole #746 family, or BB(6).
 
 ## Theorem target
 
 For every
 [
-a=38+162n\quad(n\ge0),\qquad
+a=38+54n\quad(n\ge0),\qquad
 K=97\cdot2^{a-7}+48,
 ]
 put
@@ -164,26 +164,17 @@ and the final state is not the root (2). Therefore no `ResetChain` from (2) reac
 
 ## Exact modular certificate
 
-For (a=38+162n), the following congruences hold:
-[
-2^{a-7}\equiv65\pmod{243},
-\qquad
-2^{a-7}\equiv146\pmod{162}.
-]
-They follow from (2^{162}\equiv1\pmod{243}), (2^{162}\equiv82\pmod{162}), and (146\cdot82\equiv146\pmod{162}). Consequently
-[
-K\equiv35\pmod{243},
-\qquad K\equiv116\pmod{162},
-\qquad r\equiv82\pmod{162}.
-]
-The remaining powers and products are
-[
-2^K\equiv175\pmod{243},\
-2^{K-a}\equiv91\pmod{243},\
-2^r\equiv241\pmod{243},\
-B\equiv89\pmod{243}.
-]
-Substitution gives
+For (a=38+54n), (2^{a-7}\pmod{243}) has period (162), so (a\pmod{162}) cycles through (38,92,146). Also (2^{54}\equiv82\pmod{162}), (2^{31}\equiv146\pmod{162}), and (146\cdot82\equiv146\pmod{162}). Hence (2^{a-7}\equiv146\pmod{162}) and (K\equiv116\pmod{162}) throughout this entire class.
+
+The three residue rows are:
+
+| (a\bmod162) | (K\bmod243) | (r\bmod162) | (2^K\bmod243) | (q\bmod243) | (2^r\bmod243) | (B\bmod243) |
+|---:|---:|---:|---:|---:|---:|---:|
+| 38 | 35 | 82 | 175 | 91 | 241 | 89 |
+| 92 | 197 | 28 | 175 | 10 | 160 | 8 |
+| 146 | 116 | 136 | 175 | 172 | 79 | 170 |
+
+In all three rows, direct substitution gives the same decisive residues:
 [
 80p+2K+13-2B\equiv54\pmod{81},
 ]
@@ -197,15 +188,15 @@ A=4p+2K+1\equiv6\pmod9,
 ]
 and
 [
-26368\cdot2^{K-a}+74K-23\equiv0\pmod{243},
+26368q+74K-23\equiv0\pmod{243},
 ]
 so (G\equiv0\pmod9).
 
-The small modular certificate is reproduced by `rho20_class2_mod162.mjs`. The period argument, not a finite sample, establishes the congruences for every (n\ge0).
+The small modular certificate is reproduced by `rho20_class2_mod162.mjs`. The period argument and three-row residue table, not a finite sample, establish the congruences for every (n\ge0).
 
 ## Scope and next steps
 
-This is a new infinite subfamily inside residual `a mod 18 = 2`; it does **not** resolve the `a mod 54 = 2` or `20` subphases. The next useful work is:
+This resolves the entire `a mod 54 = 38` phase inside residual `a mod 18 = 2`; the `a mod 54 = 2` and `20` phases remain open. The next useful work is:
 
 1. Formalize the modular certificate and the (q>K) inequalities in Lean.
 2. Prove the unique-parent lemmas directly for `CascadeResetInverse.ResetParent`.
