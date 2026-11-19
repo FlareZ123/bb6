@@ -27,7 +27,7 @@ More precisely, the complete inverse-parent graph of (E) has exactly two first p
 
 ## 1. Exact arithmetic and the modular certificate
 
-Since (a\equiv14) or (32\pmod{54}), (a) is even. Also
+Since (a\equiv14), (32), or (46\pmod{54}), (a) is even. Also
 [
 2K+7=97\cdot2^{a-6}+103,qquad
 x:=\frac{2K+7}{2^a}=\frac{97}{64}+\frac{103}{2^a}.
@@ -193,7 +193,7 @@ Put (L=K-2) and (D_0=2p-y_0). Direct substitution gives
 D_0=\frac{26368Q+47K+31}{27},\qquad
 G:=D_0+L=\frac{26368Q+74K-23}{27}. \tag{3}
 ]
-The modular table proves (G\in\mathbb N) and (G\equiv1\pmod3). Define
+The modular table proves (G\in\mathbb N) and gives (G\equiv7,4,6\pmod9) in phases 14, 32, and 46 respectively. Define
 [
 D_j=2^jG-L,\qquad y_j=2p-D_j.
 ]
