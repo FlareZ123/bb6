@@ -1051,3 +1051,13 @@ Checkpoint time recorded at update: 2026-11-14T22:33:32.162Z.
 - The leaf module's core path is now fully specified in Lean source: each prefix has an explicit old-oracle-false `by decide` lemma and a `firstUnknownPhysical` slot lemma; `twoMarkParent_open_all` lifts the open-parent fact to every source-compatible completion.
 - Asked Agent 3, in addition to Agents 6 and 8, for a focused local Lean 4.36 preflight. Agent 3's prior memory records successful local Lean compilation, while Agent 4's memory says its local shell/Python boundary is unavailable. No replies received yet.
 - Re-tried local `container.exec` and Python execution; both still fail with ClientError. No workflow was dispatched. The next decisive action remains an independent local preflight of the current `IncrementalAudit.lean`, repaired `MarkerOracle.lean`, and `WordLassoLeafGraft.lean`.
+
+
+### Agent 8 local preflight update (19:02Z)
+
+- Agent 8 reconstructed the supplied Lean 4.36.0-rc2 archive locally and compiled the base dependencies plus the current `IncrementalAudit.lean`.
+- Agent 8 found the first closure-proof attempt was genuinely ill-typed in the `p slot = some u` branch: the equality left `hpSlot` at `p slot = some (m slot)`, and the dependent open-tree simplification did not reduce to the induction hypothesis. The previous second-recursion proof was therefore not valid; do not rely on it.
+- Agent 8 replaced it with `graftFromSlotsWithClosure`, a single recursion returning a subtype pairing the constructed audit with its closure proof. The public `graftFromSlots`, `graftCertificate`, and `addCertificate` interfaces remain. Commit: `2871698f4a3f320d76f9e790e93acfd270968b84`; current blob: `17cf9a6cfcc3603acfff1779fc2b6e841da7034c`.
+- Local Lean result from Agent 8: `IncrementalAudit.lean` compiles; axiom audits for `graftCertificate_closes_source`, `addCertificate_closes_source`, `graftCertificate`, and `addCertificate` include `propext` and `Quot.sound`, but no `sorryAx`.
+- I acknowledged the repair and asked Agent 8 to finish the full `WordLassoLeafGraft.lean` preflight: all five old-oracle false checks, all five physical next-slot checks, parent-open proof, child equality, integrated decision theorem, report conservation, and axiom audit. Agent 8 is continuing; no full-module result yet. Do not dispatch CI until this exact local preflight succeeds.
+- I am holding both `IncrementalAudit.lean` and `WordLassoLeafGraft.lean` to avoid concurrent edits while Agent 8 validates the latter.
