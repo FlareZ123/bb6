@@ -1,6 +1,8 @@
 import SectionAllInverse
 import M0EvenEvenSumZero
 import HighSumTwo
+import EvenOddFourExact
+import OddEvenUnique
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent15U5W7Source
@@ -195,6 +197,74 @@ theorem w7_q0_target_unreachable_u1mod4 (u : Nat) (hu : u%4=1) :
       omega
     have hbad := w7_z2_q1_parent_unreachable u hu
     exact hbad (by simpa [W,ha,hk] using hprev)
+
+
+/-- The odd-z lifts z=5,13 (mod 16) are also source-unreachable.
+    The even/odd four-parent theorem forces Q_z from P_z; the
+    odd/even sum-three theorem then forces an odd/odd parent with
+    right-odd sum 2 (mod 4), which is excluded by HighSumTwo. -/
+theorem w7_q0_target_unreachable_z5or13mod16 (z : Nat)
+    (hz : z%16=5 ∨ z%16=13) :
+    ¬ BB6.Agent3.CReach (3480+7224*z) (3439+7140*z) := by
+  let Px : Nat := 3480+7224*z
+  let Py : Nat := 3439+7140*z
+  let Qx : Nat := 3457+7182*z
+  let Qy : Nat := 3447+7161*z
+  let Rx : Nat := 6902+14343*z
+  let Ry : Nat := (3445+7161*z)/2
+  have hz8 : z%8=5 := by omega
+  have hz4 : z%4=1 := by omega
+  have hxP : Px%2=0 := by dsimp [Px]; omega
+  have hyP : Py%2=1 := by dsimp [Py]; omega
+  have hyP5 : 5≤Py := by dsimp [Py]; omega
+  have hPmod : (Px+Py+1)%8=4 := by dsimp [Px,Py]; omega
+  have hQx : Qx%2=1 := by dsimp [Qx]; omega
+  have hQy : Qy%2=0 := by dsimp [Qy]; omega
+  have hQy6 : 6≤Qy := by dsimp [Qy]; omega
+  have hQsum : (Qx+Qy)%8=3 := by dsimp [Qx,Qy]; omega
+  have hQlarge : 5<Qx := by dsimp [Qx]; omega
+  have hRy5 : 5≤Ry := by dsimp [Ry]; omega
+  have hRyOdd : Ry%2=1 := by dsimp [Ry]; omega
+  have hRsum : Rx+Ry=(17249+35847*z)/2 := by
+    dsimp [Rx,Ry]
+    omega
+  have hRsumMod : (Rx+Ry)%4=2 := by
+    rw [hRsum]
+    omega
+  intro hP
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      Px Py (by dsimp [Px]; omega) hP
+  have hparent :=
+    (BB6.Agent3.evenodd_four_parent_iff a k Px Py
+      hxP hyP hyP5 hPmod).mp hstep
+  rcases hparent with ⟨hsum,hcost⟩
+  have ha : a=Qx := by
+    dsimp [Px,Py,Qx] at hsum ⊢
+    omega
+  have hk : k=Qy := by
+    dsimp [Px,Py,Qy] at hcost ⊢
+    omega
+  have hQ : BB6.Agent3.CReach Qx Qy := by
+    rw [ha,hk] at hprev
+    exact hprev
+  obtain ⟨a2,k2,hprev2,hstep2⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      Qx Qy hQlarge hQ
+  have hparent2 :=
+    (BB6.Agent46.section_odd_even_iff_affine a2 k2 Qx Qy
+      hQx hQy hQy6 hQsum).mp hstep2
+  rcases hparent2 with ⟨ha2,hk2⟩
+  have haR : a2=Rx := by
+    dsimp [Rx,Qx,Qy] at ha2 ⊢
+    omega
+  have hkR : k2=Ry := by
+    dsimp [Ry,Qy] at hk2 ⊢
+    omega
+  rw [haR,hkR] at hprev2
+  exact BB6.Agent11High.blank_no_odd_sum_two Rx Ry hRy5 hRyOdd hRsumMod hprev2
+
+#print axioms w7_q0_target_unreachable_z5or13mod16
 
 #print axioms w7_z2_parent_fan
 #print axioms w7_z2_q0_parent_unreachable
