@@ -1,0 +1,38 @@
+name: Agent 42 positive-z setup suffix guard closure
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Exact positive-z setup suffix compile target"
+        required: true
+        type: choice
+        options:
+          - guards
+        default: guards
+permissions:
+  contents: read
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact dependency closure for all setup suffix guards
+        run: |
+          set -euo pipefail
+          python3 tools/lean_compile_closure.py \
+            im-results/agent42-q4-s0-drain/PositiveZCheckpointSetupAllGuards.lean \
+            --jobs 8 \
+            --workdir /tmp/positive-z-setup-suffix \
+            | tee /tmp/positive-z-setup-suffix.log
+          if grep -E 'sorryAx|native_decide' /tmp/positive-z-setup-suffix.log; then
+            echo '::error::sorryAx or native_decide appeared in the setup suffix dependency closure'
+            exit 1
+          fi
+          grep -F 'setupPrefixAfterScans_guards' /tmp/positive-z-setup-suffix.log
+          echo 'Positive-z setup suffix guard closure compiled without sorryAx or native_decide.'
