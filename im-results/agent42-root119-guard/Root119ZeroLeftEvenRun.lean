@@ -92,27 +92,20 @@ theorem zeroLeftPrefix_run (b : Conf)
 
   have hrun : shuttleRun 8 ⟨.B,h,t⟩ = some ⟨.F,h,t8⟩ := by
     simp [shuttleRun, hs1, hs2, hs3, hs4, hs5, hs6, hs7, hs8]
-  have htape : t8 = zeroLeftPrefixTape t h := by
+  have hcancel : t8 = t4 := by
     funext x
-    by_cases hx0 : x = h
+    by_cases hx1 : x = h-1
     · subst x
-      simp [t8, t7, t6, t5, t4, t3, t2, t1,
-        zeroLeftPrefixTape, setBit, h10, h20, h30, h21, h31, h32]
-    · by_cases hx1 : x = h-1
+      simp [t8, t7, t6, t5, t4, t3, t2, t1, setBit,
+        h10, h20, h30, h21, h31, h32]
+    · by_cases hx2 : x = h-2
       · subst x
-        simp [t8, t7, t6, t5, t4, t3, t2, t1,
-          zeroLeftPrefixTape, setBit, h10, h20, h30, h21, h31, h32]
-      · by_cases hx2 : x = h-2
-        · subst x
-          simp [t8, t7, t6, t5, t4, t3, t2, t1,
-            zeroLeftPrefixTape, setBit, h10, h20, h30, h21, h31, h32]
-        · by_cases hx3 : x = h-3
-          · subst x
-            simp [t8, t7, t6, t5, t4, t3, t2, t1,
-              zeroLeftPrefixTape, setBit, h10, h20, h30, h21, h31, h32]
-          · simp [t8, t7, t6, t5, t4, t3, t2, t1,
-              zeroLeftPrefixTape, setBit, h10, h20, h30, h21, h31, h32,
-              hx0, hx1, hx2, hx3]
+        simp [t8, t7, t6, t5, t4, t3, t2, t1, setBit,
+          h10, h20, h30, h21, h31, h32]
+      · simp [t8, t7, t6, t5, setBit, hx1, hx2]
+  have htape : t8 = zeroLeftPrefixTape t h := by
+    rw [hcancel]
+    simp [t4, t3, t2, t1, zeroLeftPrefixTape, setBit, hidx3]
   simpa [htape] using hrun
 
 /-- Exact output tape after the even D/F sweep and its D0/E0/A0 return. -/
