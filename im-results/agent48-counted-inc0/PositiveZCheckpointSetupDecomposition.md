@@ -138,6 +138,43 @@ The largest simulated setup was 4,861 steps. This is reproducible finite
 computational evidence for the decomposition, not a substitute for the
 universal Lean guard and tape-identity proofs.
 
+## Current formal reduction of the final tape
+
+The residual word has a simpler physical-order presentation, independently
+identified by Agent 24:
+
+```
+setupL2(A,L) =
+  110 ++ (100)^(A+1) ++ 111 ++ (100)^(L+1) ++ 1110111.
+```
+
+This is exactly the same list as the earlier shifted expression
+`ell1 = 11 ++ (010)^(A+1) ++ 011 ++ 110 ++ (010)^L ++ 011 ++ 101 ++ 11`.
+The Lean source now includes the pure list-rotation lemmas
+`setupShift10_short`, `setupShift11`, `setupShift10_long`, and
+`setupEll1_eq_setupL2` in
+`PositiveZCheckpointSetupComposition.lean`.
+
+The same module now contains the following conditional tape reduction:
+- `setupB30Config_d0_block`: each of the z left-facing blocks after B30 is
+  exactly `001`; the first z-1 blocks are the counted sweep output and the
+  final block is the B6 boundary frame.
+- `setupB30Config_preserves_b6_left`: the z sweep and B30 preserve every
+  cell in the B6 left tail.
+- `setupB30Config_leftFacing`: given the single B6-tail identity
+  `SetupB6LeftTail`, plus `SetupSuffixGuards` and z≥2, the final
+  left-facing word is `d0pow z ++ setupL2(A,L)).
+
+Thus the remaining z-independent tape obligation is sharply isolated:
+prove that after B6, reading left from its start head (absolute cell 5 in
+the S0 normalization) gives exactly `setupL2(A,L)). The final right-facing
+word is already specified by B30's finite end frame; only the blank tail
+outside that frame must be carried from the initial S0 tape.
+
+These are source-level proof drafts and remain **uncompiled** in this
+invocation because local Lean preflight was unavailable. The conditional
+run theorem and exact JS decomposition check remain as described above.
+
 ## Evidence and limits
 
 I extracted all bridge endpoints and head paths from the original 12-entry
