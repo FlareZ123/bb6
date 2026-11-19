@@ -162,8 +162,8 @@ theorem firstQ4P1Output_right_cell (L A z : Nat) (i : Nat) :
             q4S0Final4Inside (2+(2:Int)-3) = false := by
           simp [q4S0Final4Inside]
         have hsweep :
-            s0LeftSweep (3*2+2) (firstQ4P1SecondDrainTape L A z)
-              (3*2+5) (2+(2:Int)) = false := by
+            s0LeftSweep (3*z+2) (firstQ4P1SecondDrainTape L A z)
+              (3*z+5) (2+(2:Int)) = false := by
           rw [firstQ4P1SweepCell]
           simp
         simp [firstQ4P1Output,q4FrameAt_tape,hframe,hsweep,
