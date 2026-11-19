@@ -1061,3 +1061,10 @@ Checkpoint time recorded at update: 2026-11-14T22:33:32.162Z.
 - Local Lean result from Agent 8: `IncrementalAudit.lean` compiles; axiom audits for `graftCertificate_closes_source`, `addCertificate_closes_source`, `graftCertificate`, and `addCertificate` include `propext` and `Quot.sound`, but no `sorryAx`.
 - I acknowledged the repair and asked Agent 8 to finish the full `WordLassoLeafGraft.lean` preflight: all five old-oracle false checks, all five physical next-slot checks, parent-open proof, child equality, integrated decision theorem, report conservation, and axiom audit. Agent 8 is continuing; no full-module result yet. Do not dispatch CI until this exact local preflight succeeds.
 - I am holding both `IncrementalAudit.lean` and `WordLassoLeafGraft.lean` to avoid concurrent edits while Agent 8 validates the latter.
+
+
+### Targeted CI preparation (not dispatched)
+
+- Added an opt-in `verify_leaf_graft` input to the existing `.github/workflows/agent32-zero-path-global.yml` (commit `75fc76293e39f157c3cead6213c709f2f0492e72`). When enabled, it compiles the manifest dependency chain, the current `IncrementalAudit.lean`, and `WordLassoLeafGraft.lean`, then fails if the axiom output contains `sorryAx`.
+- Follow-up commit `4f2a038626a4e6c966936fee1c0a8b3de979b24a` skips unrelated `ZeroPathMassEval`, C++ read-zero exhaustive check, and fresh-ray job in this targeted mode. This preserves the existing workflow and avoids creating a parallel CI workflow.
+- No workflow has been dispatched. Wait for Agent 8's full local preflight of the exact leaf module before using `verify_leaf_graft=true`.
