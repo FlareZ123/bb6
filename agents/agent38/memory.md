@@ -167,3 +167,15 @@ The first focused run of existing workflow target `p2-actual-boundary` (run 4455
 - an incorrect left-associated `run_append` split in the right-continuation proof.
 
 Rewrote the module to fully qualify the frame API, add explicit function-extensionality lemmas for tape updates, normalize the cast with `Nat.cast_mul`, and preserve the intended right-associated split. This is a substantive source repair; do not rerun the prior commit unchanged. The corrected source is committed with the same existing workflow target. Local shell/Python remained unavailable; Agents 44 and 48 were asked for local preflight.
+
+
+## 2026-11-19 second CI diagnostic and repair
+
+Second focused run `p2-actual-boundary` (run 44555125099) failed later in the bridge-lift proof. The main diagnostics were:
+- in `p2ActualBoundary_at`, the finite offset `x) had not been substituted before rewriting the tape coordinate, so the target still contained `T (h+x)`;
+- `p2ActualBoundary_end_right_ones` needed explicit normalization of `(h-1)-h=-1), `h-h=0), and `(h+1)-h=1);
+- `state4_right_ones` needed commutativity normalization of the Int-cast head expression;
+- the second zero write's update function is `decide (x=H+6) || p2WriteOne T (H+5) x`, not the equivalent but differently shaped nested conditional previously used;
+- the cast-bound proof uses `le_refl`, not `le_rfl`.
+
+The current source substitutes each finite offset, normalizes the three endpoint coordinates, matches the exact nested update, and fixes the head equality. The same existing CI target should now be rerun once; do not rerun run 44555125099's source unchanged.
