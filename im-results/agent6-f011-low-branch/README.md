@@ -333,3 +333,15 @@ The standalone `HaltPreimageAudit.lean` has now been recompiled locally with Lea
 This validates the isolated copied-definition branch audit only. It is not an import-based proof of the upstream source chain, and it does not certify the complete eight-family preimage characterization or the root orbit. `HaltPreimageFamilies.lean` and `HaltPreimageRank.lean` remain uncompiled drafts: replacing Mathlib's `split_ifs` with core `split` has not yet discharged the resulting branch obligations. Earlier rank experiments must be rerun against the corrected exact transcription; an initial scratch copy had incorrect `p=true, r=0` outputs.
 
 A bounded Python comparison of the eight-family predicate against the copied transition map over all `p∈{false,true}`, `k,c<1000` (2,000,000 states) found no discrepancy. This is finite computational evidence, not a universal proof. No BB(6) or F011 halting-status conclusion follows.
+
+
+### Corrected bounded diagnostic (2026-11-19)
+
+An audit found that the earlier `check_rank.py` scratch transcription had two incorrect `p=true,r=0` outputs for `d=0,1`. The script has been corrected to match the exact pinned transition transcription in `HaltPreimageAudit.lean`, and now checks both the proposed rank and the eight halt-preimage families.
+
+Re-running the corrected script with defaults gives:
+
+- Rank box: 500,000 states; 332 terminal states; 499,668 defined first steps; no rank failure; 68,975 zero-potential steps; 499,270 defined two-step transitions; minimum observed two-step potential increment 1.
+- Preimage box: 2,000,000 states; 798 exact one-step halt preimages; all 798 agree with the eight-family predicate; no mismatch.
+
+These are finite computational checks only. The rank theorem, two-step growth theorem, and universal eight-family classification remain unproved in Lean. All rank observations made against the earlier incorrect scratch transcription are superseded by this corrected run.
