@@ -183,6 +183,13 @@ theorem twoMarkGraftedAudit_exhaustive (m : Machine) :
     DecidedBelow 6 m ∨ twoMarkGraftedAudit.open m :=
   twoMarkGraftedAudit.exhaustive m (empty_compatible m)
 
+theorem twoMarkGraftedAudit_decides_source (m : Machine)
+    (hm : compatible twoMarkWordPump m) :
+    DecidedBelow 6 m := by
+  rcases twoMarkGraftedAudit_exhaustive m with hgood | hopen
+  · exact hgood
+  · exact False.elim (twoMarkGraftedAudit_closes_source m hm hopen)
+
 theorem twoMarkGraftedAudit_conserves :
     twoMarkGraftedAudit.report.1 + twoMarkGraftedAudit.report.2 = 25^12 := by
   calc
@@ -194,6 +201,7 @@ theorem twoMarkGraftedAudit_conserves :
 #print axioms twoMarkGraftedAudit_closes_source
 #print axioms twoMark_leaf_closed
 #print axioms twoMarkGraftedAudit_exhaustive
+#print axioms twoMarkGraftedAudit_decides_source
 #print axioms twoMarkGraftedAudit_conserves
 
 end BB6Coverage
