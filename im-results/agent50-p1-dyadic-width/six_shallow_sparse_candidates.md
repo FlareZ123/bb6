@@ -160,3 +160,38 @@ The ceiling in \(r\) changes only the multiplicative constant. Hence
 - The argument uses the exact pair-carry residue formula and gap automaton, not a probabilistic independence assumption.
 
 **Validation status:** the inequalities and finite-state count above are a paper derivation. They have not yet been formalized in Lean or independently reviewed. Keep this in im-results until those steps are completed.
+
+
+## Fixed-\(k\) extension
+
+The same argument is not specific to five short gaps. For a fixed integer \(k\ge0\), let \(\mathcal W_{X,k}\) count parameters \(14\le n\le X\) admitting a subset with at most \(k\) gaps of length 1 or 2. Put
+\[
+\ell=\log_2\lambda,\qquad
+c_k=\frac{1}{2+k\ell},\qquad
+r_k=\lceil c_k\log_2X\rceil.
+\]
+At most \(k\) pair positions are bad, so there are at most \(k+1\) no-short runs. If \(n\ge2(k+1)r_k+2\), one run has length at least \(r_k\). Choosing the first such run gives a prefix of length
+\[
+r_k\le L\le k+k(r_k-1)+r_k=(k+1)r_k.
+\]
+The number of pair words of length \(L\) with at most \(k\) bad positions is \(O_k(L^k\lambda^L)\), by the same block decomposition. The fixed-word residue class still has modulus \(4^{L+1}\). Therefore
+\[
+|\mathcal W_{X,k}|
+=O_k\!\left(r_k^k\left[X(\lambda/4)^{r_k}
++\lambda^{(k+1)r_k}\right]\right).
+\]
+The choice of \(c_k\) balances the two powers of \(X\):
+\[
+1-c_k\log_2(4/\lambda)
+=(k+1)c_k\log_2\lambda
+=\beta_k,
+\qquad
+\beta_k=\frac{(k+1)\log_2\lambda}
+{2+k\log_2\lambda}<1.
+\]
+Thus, for every fixed \(k\),
+\[
+\boxed{|\mathcal W_{X,k}|
+=O_k\!\left(X^{\beta_k}(\log X)^k\right).}
+\]
+In particular every fixed shallow-gap budget defines a zero-density set of wall-congruence parameters. The constants depend on \(k\), and \(\beta_k\uparrow1\) as \(k\to\infty\); this is not uniform in a growing gap budget. The case \(k=5\) is the six-shallow bound above.
