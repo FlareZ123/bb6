@@ -433,7 +433,7 @@ theorem positiveZFirstCycle_then_secondCyclePrefix
       V 2 = false ∧
       V 3 = false ∧
       V 4 = false := by
-    norm_num at *
+    norm_num
     exact ⟨hVminus6,hVminus5,hVminus4,hVminus3,hVminus2,
       hVminus1,hV0,hV1,hV2,hV3,hV4⟩
 
