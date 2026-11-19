@@ -959,9 +959,6 @@ theorem setupB30Config_rightFacing (T : Int → Bool) (h : Int)
       sideBit setupRightWord i := by
   intro i
   let hb : Int := h+17+3*(L:Int)+3*(A:Int)+3*(z:Int)
-  have hfinal : h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)=hb-4 := by
-    dsimp [hb]
-    omega
   by_cases hi : i<9
   · interval_cases i
     all_goals
@@ -970,7 +967,7 @@ theorem setupB30Config_rightFacing (T : Int → Bool) (h : Int)
       simp [setupB30Config, q4FrameAt_tape, setupB30Inside,
         setupB30End, setupRightWord, sideBit, hb]
   · have hge : 9≤i := by omega
-    have hx : hb<x := by
+    have hx : hb<hb-3+(i:Int) := by
       dsimp [hb]
       omega
     have hcoord :
