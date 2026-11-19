@@ -173,3 +173,32 @@ depths, this excludes (P_z) on (w\equiv439\pmod{512}).
 This is an exact source derivation; it is not yet in the Lean file and
 awaits formalization/preflight. It does not close the other lifts of
 the (u\equiv3\pmod4) branch.
+
+
+## Complete 128-lift lookup for the w=7 progression
+
+For quick navigation, the residual map (z\equiv12+11s\pmod{16}),
+(w=7+8s), gives:
+
+| w (mod 128) | z (mod 16) | first-parent sector |
+|---:|---:|---|
+| 7 | 12 | z divisible by 4 |
+| 15 | 7 | z odd |
+| 23 | 2 | z=2 mod 4 |
+| 31 | 13 | z odd; excluded |
+| 39 | 8 | z divisible by 4 |
+| 47 | 3 | z odd |
+| 55 | 14 | z=2 mod 4 |
+| 63 | 9 | z odd |
+| 71 | 4 | z divisible by 4 |
+| 79 | 15 | z odd |
+| 87 | 10 | z=2 mod 4 |
+| 95 | 5 | z odd; excluded |
+| 103 | 0 | z divisible by 4 |
+| 111 | 11 | z odd |
+| 119 | 6 | z=2 mod 4; excluded |
+| 127 | 1 | z odd |
+
+The additional (w\equiv439\pmod{512}) closure is a deeper lift of
+the (w\equiv55\pmod{128}) row. This table is a routing aid, not a
+claim that the remaining rows are reachable or unreachable.
