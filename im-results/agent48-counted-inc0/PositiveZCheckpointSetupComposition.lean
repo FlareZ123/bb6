@@ -470,21 +470,21 @@ theorem setupB30Config_leftFacing (T : Int → Bool) (h : Int)
       have hj : j<z := by omega
       have hb := setupB30Config_d0_block T h A L z g hz j hj
       rw [setup_sideBit_append]
-      simp [hlen, hi, hiq, setupSideBit_d0pow_pattern, h0]
+      simp [hlen, hi, hiq, sideBit_d0pow_pattern, h0]
       simpa [hiq] using hb.1
     · let j : Nat := i/3
       have hiq : i=3*j+1 := by dsimp [j]; omega
       have hj : j<z := by omega
       have hb := setupB30Config_d0_block T h A L z g hz j hj
       rw [setup_sideBit_append]
-      simp [hlen, hi, hiq, setupSideBit_d0pow_pattern, h1]
+      simp [hlen, hi, hiq, sideBit_d0pow_pattern, h1]
       simpa [hiq] using hb.2.1
     · let j : Nat := i/3
       have hiq : i=3*j+2 := by dsimp [j]; omega
       have hj : j<z := by omega
       have hb := setupB30Config_d0_block T h A L z g hz j hj
       rw [setup_sideBit_append]
-      simp [hlen, hi, hiq, setupSideBit_d0pow_pattern, h2]
+      simp [hlen, hi, hiq, sideBit_d0pow_pattern, h2]
       simpa [hiq] using hb.2.2
   · have hge : 3*z≤i := by omega
     let j : Nat := i-3*z
