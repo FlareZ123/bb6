@@ -154,8 +154,6 @@ private theorem p2TwoWrite_update (T : Int → Bool) (H : Int) :
 
 /-- From q4 on the first of two zeroes, the source takes two moves to
 state 1 at the first cell of the following three-one blocks. -/
-/-- From q4 on the first of two zeroes, the source takes two moves to
-state 1 at the first cell of the following three-one blocks. -/
 theorem p2_two_zero_setup (T : Int → Bool) (H : Int)
     (h0 : T (H+5) = false) (h1 : T (H+6) = false) :
     run tm2 2 ⟨4,H+5,T⟩ =
@@ -184,8 +182,6 @@ theorem p2_two_zero_setup (T : Int → Bool) (H : Int)
 
 /-- The state-1 boundary after the final three-one block writes one and
 moves left into state 2. -/
-/-- The state-1 boundary after the final three-one block writes one and
-moves left into state 2. -/
 theorem p2_final_zero (T : Int → Bool) (h : Int)
     (hblank : T h = false) :
     run tm2 1 ⟨1,h,T⟩ =
@@ -196,10 +192,6 @@ theorem p2_final_zero (T : Int → Bool) (h : Int)
   · omega
   · exact p2WriteOne_update T h
 
-/-- Right continuation from the actual-boundary bridge's q4 output.
-The q4 state scans the long one-run, crosses two zeroes, converts the
-following d1-blocks to d0-blocks, and stops in state 2 at the next
-blank boundary. -/
 /-- Right continuation from the actual-boundary bridge's q4 output.
 The q4 state scans the long one-run, crosses two zeroes, converts the
 following d1-blocks to d0-blocks, and stops in state 2 at the next
