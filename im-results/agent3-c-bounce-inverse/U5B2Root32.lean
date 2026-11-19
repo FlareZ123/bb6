@@ -689,14 +689,16 @@ theorem p4_exact_residual_identity (r E u : Nat)
 /-- Conditional root-index form of the root32 exclusion, using the
 exact residual root equation rather than a separately copied identity. -/
 theorem blank_no_b2_root32_from_root_index (r E w : Nat)
-    (hr : r%64=32) (hE : 19≤E)
+    (hr : r%64=32)
+    (hE : E=201+3360*(6657+8192*r))
     (hRoot : 18018+211*(122+840*w)+22155*r=20*2^(E-13)) :
     ¬ BB6.Agent3.CReach
       (734+10944*(122+840*w))
       (34881+518816*(122+840*w)) := by
+  have hE19 : 19≤E := by omega
   have hExact :=
     p4_exact_residual_identity r E (122+840*w) hRoot
-  have hS := p4_sum_mod64_of_root32 r E (122+840*w) hr hE hExact
+  have hS := p4_sum_mod64_of_root32 r E (122+840*w) hr hE19 hExact
   exact blank_no_b2_root32_from_p4_sum w hS
 
 #print axioms p4_sum_mod64_of_root32
