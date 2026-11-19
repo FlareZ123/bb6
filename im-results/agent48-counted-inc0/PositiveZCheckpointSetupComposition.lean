@@ -107,6 +107,20 @@ theorem sweptRight_preserves_block_start (n : Nat) (T : Int → Bool)
           have hneq2 : h+3+3*(i:Int) ≠ h+2 := by omega
           simp [afterRight3, hneq1, hneq2]
 
+theorem sweptRight_block_pattern (n : Nat) (T : Int → Bool)
+    (h : Int) (i : Nat) (hi : i<n)
+    (hon : rightOnes T h n) :
+    sweptRight n T h (h+3*(i:Int)) = true ∧
+    sweptRight n T h (h+3*(i:Int)+1) = false ∧
+    sweptRight n T h (h+3*(i:Int)+2) = false := by
+  obtain ⟨h0, h1, h2⟩ := hon i hi
+  constructor
+  · rw [sweptRight_preserves_block_start n T h i hi]
+    exact h0
+  constructor
+  · exact sweptRight_clears_second n T h i hi
+  · exact sweptRight_clears_third n T h i hi
+
 theorem run_append_some {n m : Nat} {c d e : Config}
     (h₁ : run tm2 n c = some d)
     (h₂ : run tm2 m d = some e) :
