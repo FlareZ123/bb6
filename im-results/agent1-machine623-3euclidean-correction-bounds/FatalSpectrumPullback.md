@@ -134,7 +134,7 @@ In particular, every terminal successor has \(p'\le n+6\), improving the generic
 ## 5. What this does and does not establish
 
 The exact fatal-spectrum pullback and the logarithmic successor-gap bounds are source-derived consequences of:
-- Parity623Source.lean (drainB_safe_ones, exact evaluator failure congruence);\n- Agent 41's DrainValuationNormalForm.lean (the exact successful-evaluator 3-adic run decomposition);
+- Parity623Source.lean (drainB_safe_ones, exact evaluator failure congruence);\n- FatalSpectrumPullbackSource.lean (the recursive successful-evaluator/fatal-drain bound and branch-sensitive successor-gap corollaries);\n- Agent 41's DrainValuationNormalForm.lean (the exact successful-evaluator 3-adic run decomposition);
 - ExactOddSectorSource.lean and ExactEvenSectorSource.lean (complete one-step fatality predicates);
 - JointMassSource.lean (four joint-mass envelopes);
 - TerminalRatio4Source.lean (the four predecessor ratio windows).

@@ -150,5 +150,27 @@ jobs:
             echo 'sorryAx detected in terminal-to-budget source chain'
             exit 1
           fi
+      - name: Compile exact fatal-spectrum pullback and successor-gap bounds
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          cp "../im-results/agent49-parity623/FlatDrainSource.lean" Agent49FlatDrainSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49FlatDrainSource.olean Agent49FlatDrainSource.lean
+          cp "../im-results/agent49-parity623/FullFailureSpectrumSource.lean" Agent49FullFailureSpectrumSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49FullFailureSpectrumSource.olean Agent49FullFailureSpectrumSource.lean
+          cp "../im-results/agent49-parity623/FastFailureSpectrumSource.lean" Agent49FastFailureSpectrumSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49FastFailureSpectrumSource.olean Agent49FastFailureSpectrumSource.lean
+          cp "../im-results/agent49-parity623/ExactLeftSectorSource.lean" Agent49ExactLeftSectorSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49ExactLeftSectorSource.olean Agent49ExactLeftSectorSource.lean
+          cp "../im-results/agent49-parity623/ExactOddSectorSource.lean" Agent49ExactOddSectorSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49ExactOddSectorSource.olean Agent49ExactOddSectorSource.lean
+          cp "../im-results/agent49-parity623/ExactEvenSectorSource.lean" Agent49ExactEvenSectorSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49ExactEvenSectorSource.olean Agent49ExactEvenSectorSource.lean
+          cp "../im-results/agent1-machine623-3euclidean-correction-bounds/FatalSpectrumPullbackSource.lean" Agent1FatalSpectrumPullbackSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent1FatalSpectrumPullbackSource.olean Agent1FatalSpectrumPullbackSource.lean 2>&1 | tee fatal-spectrum-pullback.log
+          if grep -q 'sorryAx' fatal-spectrum-pullback.log; then
+            echo 'sorryAx detected in exact fatal-spectrum pullback'
+            exit 1
+          fi
       - name: Reproduce 10,000-state canonical ray terminal-window audit
         run: python "$GITHUB_WORKSPACE/im-results/agent49-parity623/canonical_ray_terminal_scan.py" --steps 10000
