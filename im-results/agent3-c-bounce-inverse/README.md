@@ -308,3 +308,5 @@ This validates only the standalone root32 parameter bridge. It does **not** comp
 Agent 6 also reran the unchanged standalone `U5B2Root4ParameterBridge.lean` locally under Lean 4.36.0-rc2; its `#print axioms` output is likewise `[propext, Quot.sound]`, with no `sorryAx`. Both parameter bridges are therefore locally checked as isolated modules; the complete `U5B2Root32.lean` dependency closure remains uncompiled.
 
 The exact remote blob for the refactored root32 bridge is `83b07db6494f8e91432f188bc22b1f96376fec0a`; this matches the local source bytes used for the successful Lean compile.
+
+The same bridge module now also exports `root_equation_parity`: from the exact residual equation alone, `u%2 = r%2`. This was locally compiled with the same axiom profile `[propext, Quot.sound]` and no `sorryAx`. In particular, any B2 reach theorem requiring even `u` immediately restricts the P4 root index `r` to even values, independently of the mod-64/mod-105 parameter refinements.
