@@ -895,6 +895,62 @@ theorem setupB6LeftTail_of_guards_and_blank (T : Int → Bool) (h : Int)
             rw [setupB20Config_preserves_before T h (h+1-(k:Int)) hx]
             exact hblank (h+1-(k:Int)) hx
 
+/-- Blank right tail beyond the last cell of the incoming z counter. -/
+def SetupPrefixRightBlank (T : Int → Bool) (h : Int)
+    (A L z : Nat) : Prop :=
+  ∀ x : Int,
+    h+17+3*(L:Int)+3*(A:Int)+3*(z:Int)<x → T x=false
+
+def setupRightWord : List Bool :=
+  [false,true,true,true,false,false,true,true,true]
+
+theorem setupZConfig_preserves_after (T : Int → Bool) (h : Int)
+    (A L z : Nat) (x : Int)
+    (hx : h+17+3*(L:Int)+3*(A:Int)+3*(z:Int)≤x) :
+    (setupZConfig T h L A z).tape x =
+      (setupB6Config T h L A).tape x := by
+  simp only [setupZConfig]
+  exact sweptRight_preserves_after z
+    (setupB6Config T h L A).tape
+    (h+17+3*(L:Int)+3*(A:Int)) x (by omega)
+
+theorem setupB30Config_rightFacing (T : Int → Bool) (h : Int)
+    (A L z : Nat) (hblank : SetupPrefixRightBlank T h A L z) :
+    ∀ i : Nat,
+      (setupB30Config T h L A z).tape
+        (h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)+1-(i:Int)) =
+      sideBit setupRightWord i := by
+  intro i
+  let hb : Int := h+17+3*(L:Int)+3*(A:Int)+3*(z:Int)
+  have hfinal : h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)=hb-4 := by
+    dsimp [hb]
+    omega
+  by_cases hi : i<9
+  · interval_cases i
+    all_goals
+      rw [show h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)+1-(i:Int)
+        = hb-3+(i:Int) by dsimp [hb]; omega]
+      simp [setupB30Config, q4FrameAt_tape, setupB30Inside,
+        setupB30End, setupRightWord, sideBit, hb]
+  · have hge : 9≤i := by omega
+    have hx : hb<x := by
+      dsimp [hb]
+      omega
+    have hcoord :
+        h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)+1-(i:Int)=
+          hb-3+(i:Int) := by
+      dsimp [hb]
+      omega
+    rw [hcoord]
+    rw [setupB30Config, q4FrameAt_tape]
+    have hnot : setupB30Inside (hb-3+(i:Int)-hb)=false := by
+      simp [setupB30Inside]
+      omega
+    simp [hnot]
+    rw [setupZConfig_preserves_after T h A L z
+      (hb-3+(i:Int)) (by omega)]
+    exact hblank (hb-3+(i:Int)) hx
+
 theorem setupB30Config_leftFacing (T : Int → Bool) (h : Int)
     (A L z : Nat) (g : SetupSuffixGuards T h A L z)
     (hz : 2≤z) (htail : SetupB6LeftTail T h A L) :
