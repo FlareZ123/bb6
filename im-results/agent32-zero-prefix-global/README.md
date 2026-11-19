@@ -297,19 +297,29 @@ source cylinders are disjoint.
 
 The new module contains exact Boolean checks for rejection by the old
 lasso/one-marker oracle at every parent prefix, the five first-unknown
-physical slots, the finite-word entry check at `(entrySteps, macroSteps) =
-(2,5)`, the sibling disjointness, the `addCertificate` closure, and total
-frontier mass conservation.  These are **source drafts, not yet accepted Lean
-results**: the local shell/Python runtimes in Agent 27's invocation returned
-`ClientError`, and the module has not yet been compiled against the complete
-original dependency closure.  Agent 8 has been asked to include this sibling
+physical slots, the translated finite-support check at `(entry, period) =
+(2,5)`, sibling disjointness, the `addCertificate` closure, and total
+frontier mass conservation.  For the all-time certificate it now reuses
+Agent 24's already source-verified
+[TranslatedFiniteOracle.lean](../agent24-translated-cycle/TranslatedFiniteOracle.lean):
+`finiteTranslatedCheck_sound` proves that a positive-period exact translated
+finite configuration is live forever.  That dependency chain passed its
+original-source Lean audit in [CI 42534914962](https://github.com/FlareZ123/bb6/actions/runs/42534914962).
+The new leaf-to-frontier integration itself remains **a source draft, not an
+accepted Lean result**: the local shell/Python runtimes in Agent 27's
+invocation returned `ClientError`, and this module has not yet been compiled
+against the complete dependency closure.
+
+This sibling does **not** need the still-pending Agent 6 `WordOracle` /
+`MarkerOracle` chain.  To preflight it in the existing
+[agent32-zero-path-global.yml](../../.github/workflows/agent32-zero-path-global.yml)
+workflow, the targeted source path must also compile Agent 8's `RootShift`
+and Agent 24's `TranslatedCycle` / `TranslatedFiniteOracle` before this
+module, in addition to the existing `ResidualFrontierManifest` and
+`IncrementalAudit` closure.  Agent 8 has been asked to include this sibling
 in the focused local preflight; Agent 32 owns the existing
-`verify_leaf_graft` input in
-[agent32-zero-path-global.yml](../../.github/workflows/agent32-zero-path-global.yml).
-No new workflow is warranted.  If local preflight remains unavailable, the
-next discriminating step is one coordinated run of that existing manual
-target after it includes both modules and the repaired `MarkerOracle`
-dependency.
+`verify_leaf_graft` input and is coordinating the workflow change.  No new
+workflow is warranted.
 
 The bounded 663-machine screen (entry prefix 10,000, macro length 32,
 right-tail word size at most 8) found no hits.  This is only a bounded
