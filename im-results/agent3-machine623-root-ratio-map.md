@@ -131,7 +131,73 @@ The one-sided derivatives at \(1/5\) are \(+25/12\) and \(-25/12\). Thus (8) is 
 
 Equations (5)--(7) show that the actual #623 root follows a logarithmically small \(O(\log S/S)\) perturbation of this map. The perturbation is not arbitrary: its denominator correction is the positive digit statistic in (4), while \(\beta\), \(\delta\), and \(T\) are explicit functions of the ternary digit counts.
 
-## 4. Terminality forces the preceding root state into the critical window
+## 4. A branch-independent quadratic cocycle and the 3-Euclidean conjugacy
+
+The ideal gap map has the common quadratic form
+\[
+Q(p,q)=p^2+3pq+3q^2.
+\]
+The exact corrected map retains a branch-independent quadratic update. Set
+\[
+x=p-3q+\beta-\delta,\qquad y=3q+\delta.
+\]
+The left output is \((p',q')=(x,y)\), while the right output is exactly \((p',q')=(-x,x+y)\). The involution \(U(x,y)=(-x,x+y)\) preserves \(Q\). Expanding \(Q(x,y)\) therefore gives, for either output branch,
+\[
+\boxed{
+Q'=Q+6q^2+(2\beta+\delta)g
++9q(\beta+\delta)+\beta^2+\beta\delta+\delta^2.
+}
+\tag{10}
+\]
+
+With \(R=n_1+n_2\), the two correction combinations are
+\[
+\eta:=\beta+\delta=\ell+2n_1+c_\eta,\qquad
+\sigma:=2\beta+\delta=2R+c_\sigma,
+\]
+where
+\[
+(c_\eta,c_\sigma)=
+\begin{cases}
+(9,4)&\mathrm{LO},\\
+(6,4)&\mathrm{LE},\\
+(4,8)&\mathrm{RO},\\
+(4,5)&\mathrm{RE}.
+\end{cases}
+\]
+Hence
+\[
+Q'=Q+6q^2+\sigma g+9q\eta+
+\underbrace{(\beta^2+\beta\delta+\delta^2)}_{\ge0}.
+\tag{11}
+\]
+The ideal common gain \(6q^2\) is accompanied by the positive term \(9q\eta\) and a positive-definite quadratic correction. The only sign-indefinite term is \(\sigma g\). Inside the source-supported preterminal window, \(|g|=O(\ell)\) and \(\sigma=O(\ell)\), so this term is \(O(\ell^2)\), whereas \(6q^2+9q\eta\) dominates for sufficiently large \(q\). Thus \(Q\) strictly increases at every sufficiently large preterminal-window state; this does not exclude such a state.
+
+The quadratic form is related to the normalized ratio by
+\[
+Q=S^2(1-\rho+\rho^2),\qquad
+\boxed{25Q-21S^2=(p-3q)(4p+3q)=g(4p+3q).}
+\tag{12}
+\]
+The critical ratio \(\rho=1/5\) is exactly the quadratic level \(Q/S^2=21/25\). Since \(4p+3q\) is comparable to \(S\) for \(p,q\ge0\), the source window \(|g|=O(\log S)\) is equivalently
+\[
+|25Q-21S^2|=O(S\log S).
+\]
+
+For \(q>0\), put \(u=g/q\). Then \(\rho=1/(u+5)\), and the ideal map (8) becomes
+\[
+u'=
+\begin{cases}
+(u-9)/3,&u>0,\\
+(-4u-9)/(u+3),&u<0.
+\end{cases}
+\tag{13}
+\]
+This is exactly the 3-Euclidean projective map in the existing root-gap analysis. Its two preimages of \(u=0\) are \(u=9\) and \(u=-9/4\), the two previously identified cancellation centres. In the \(\rho\) coordinate they are \(1/14\) and \(4/11\), the two inverse images of \(1/5\) under (8). Thus the tent-map critical point, the cancellation centres, and the source-supported preterminal ratio-four window describe the same projective geometry.
+
+For the exact source map, the branch boundary is \(g=T\), or \(u=T/q=O(\ell/q)\), rather than exactly zero. The exact digit corrections in (10)--(11) remain the obstacle to an all-time avoidance theorem.
+
+## 5. Terminality forces the preceding root state into the critical window
 
 The four source-certified TerminalRatio4 theorems apply when the output of a canonical drain is terminal. They therefore constrain the **input state of that drain**: the preceding state on the authentic root orbit, not the terminal output state itself.
 
@@ -144,30 +210,30 @@ Write that predecessor as \(D(a,d)\), with the same \(p,q,g,S\) as above. The fo
 | RO (odd near-right) | \(|4a-d|\le K+5n+12\) | \(6n+18\) |
 | RE (even near-right) | \(|4a-d|\le K+8n+17\) | \(9n+23\) |
 
-For LO/LE, \(g=a-4d\). For RO/RE, \(g=d-4a\). Thus every terminal output forces its predecessor into the common window
+For LO/LE, \(g=a-4d\). For RO/RE, \(g=d-4a\). Thus every terminal output forces its predecessor into
 \[
 |g|\le9n+23.
 \]
-Here \(n\le\ell\le n+1\), and \(\ell=O(\log(q+3))\). Since \(g=S-5q\), a terminal successor therefore requires its preceding root state to satisfy
+Here \(n\le\ell\le n+1\), and \(\ell=O(\log(q+3))\). Since \(g=S-5q\), a terminal successor requires its preceding root state to satisfy
 \[
-\boxed{\left|r-\frac15\right|
+\boxed{\left|\rho-\frac15\right|
 \le\frac{9n+23}{5S}
 =O(\log S/S).}
-\tag{9}
+\tag{14}
 \]
 
-This is a **preterminal** critical-window condition: it is the predecessor state that must approach \(r=1/5\), not the terminal output state. The first exceptional transition is \(D(0,7)\to D(6,14)\); from there the regular canonical-ray recurrence applies.
+This is a **preterminal** critical-window condition: it is the predecessor state that must approach \(\rho=1/5\), not the terminal output state. The first exceptional transition is \(D(0,7)\to D(6,14)\); from there the regular canonical-ray recurrence applies.
 
-The open root problem can therefore be stated precisely:
+The open root problem is therefore precise:
 
-> Prove that no state on the authentic blank-root orbit after the exceptional prefix enters the source-supported shrinking window (9). This would rule out every terminal successor.
+> Prove that no state on the authentic blank-root orbit after the exceptional prefix enters the source-supported shrinking window (14). This would rule out every terminal successor.
 
 The exact branch-selection boundary (7) lies at \(1/5+O(\log S/S)\) as well. Thus the same critical region controls both the output-side switch and the only source-certified predecessor region from which a terminal successor can arise.
 
-The critical point is preperiodic under the ideal map, with
+The critical point is preperiodic under the ideal map:
 \[
 1/5\longmapsto1/2\longmapsto0\longmapsto0.
 \]
 A proof might exploit the exact ternary digit-statistic corrections to rule out the corresponding short itineraries, or establish a uniform symbolic/Diophantine separation from the critical point.
 
-**Limitations.** The normalized map and the translation of the four TerminalRatio4 inequalities are algebraic consequences of the existing source cocycle and source-certified ratio bounds. No uniform critical-window avoidance theorem is proved here; no new root state is classified; and machine #623 remains unresolved. The note belongs in \`im-results/\`, not \`results/\`.
+**Limitations.** The normalized map, quadratic cocycle, and translation of the four TerminalRatio4 inequalities are algebraic consequences of the existing source cocycle and source-certified ratio bounds. No uniform critical-window avoidance theorem is proved here; no new root state is classified; and machine #623 remains unresolved. The note belongs in \`im-results/\`, not \`results/\`.
