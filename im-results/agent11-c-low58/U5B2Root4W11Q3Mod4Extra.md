@@ -1,6 +1,6 @@
 # U5 B2 root4: ten W11 q-mod-256 paths; one full parent closure
 
-**Status:** new conditional nonreachability derivation, 2026-11-19. The exact modular and affine arithmetic was checked, but the composed theorem has not been Lean-formalized or compiled. Keep in `im-results/`.
+**Status:** the Q(q) branch is excluded on all ten rows; the alternate A(q) branch is also excluded for c=95, while the other nine rows remain incomplete. These are paper-level derivations, not compiled B2 theorems. Keep in `im-results/`.
 
 ## Root-index cylinders and direct-parent Q paths
 
@@ -9,11 +9,7 @@ Assume the exact residual root equation
 E=201+3360(6657+8192r),\qquad
 18018+211u+22155r=20\cdot2^{E-13}.
 ]
-Then the B2 target is blank-unreachable whenever
-[
-r\bmod32768\in
-\{11092,9044,8532,2900,340,27476,24916,20820,19284,16724\}.
-]
+These are ten candidate root-index cylinders conditional on the exact residual root equation. The arithmetic below excludes P(q) for c=95 only; for the other nine rows it excludes Q(q) but leaves the alternate A(q) parent open. The B2-to-P4-to-P transfer also remains uncompiled in U5B2Root32.lean.
 
 These ten residues are all (84\pmod{256}), so they sit in the W11 odd-q sector from `U5B2Root4W11OddDirectParent.md).
 
