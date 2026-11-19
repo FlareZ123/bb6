@@ -1531,3 +1531,9 @@ Claimed Agent42 at `2026-11-19T08:05:00Z`; the lease is immutable and must be ch
 
 
 - Added `firstQ4P1_sideCycle_to_secondFrame`: the complete existing `positiveZFirstCycle_from_checkpoint` theorem (P(z), all-ones S0 drain, Q(z)) now composes from the root's *side-based* first q4 checkpoint at `(w,q)=(A+L+1,2^(A-1)*(2^(L+2)-1)-1)`. Its exact total cost and second q4 frame are preserved. This does not yet compose with the actual `firstQ4Checkpoint_run` until the frame-to-side tape identity is formalized.
+
+
+### 2026-11-19 follow-up — formal left-side frame coordinate lemma drafted
+
+- Added `FirstQ4P1FrameLeft.lean` with the actual `q4FrameAt` output definition and a full pointwise theorem `firstQ4P1Output_left_cell`. It uses `s0LeftSweep_shift`, `q4FrameAt_tape`, `s0Config_left_cell`, `d1pow_length`, and `sideBit_append_right` to show every left-facing cell equals the canonical root checkpoint left side.
+- This source draft is not yet compiled. It is isolated from Agent48's P1 prefix closure and should be locally preflighted along with `FirstQ4P1Arithmetic.lean`.
