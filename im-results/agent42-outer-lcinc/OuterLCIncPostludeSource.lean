@@ -683,16 +683,22 @@ theorem outerLCInc_full_run
             (outerLCIncSourceT3
               (s1Config L n m a 0 b h).tape h a m r)
             h a m b⟩ := by
-  obtain ⟨q,r,len,hnfactor,hL,hq,hpre⟩ :=
+  obtain ⟨q,r,len,hnfactor,hL,hq,hv2,hpre⟩ :=
     outerLCInc_preHRun L n m a b h hn hnL hm
+  have hpre' :
+      run tm2 (9*a+3*m+17+12*r+4)
+        (s1Config L n m a 0 b h) =
+      some ⟨1,outerLCIncH1 h a m+2,
+        outerLCIncSourceT3 (s1Config L n m a 0 b h).tape h a m r⟩ := by
+    simpa [hv2, outerLCIncSourceT3, outerLCIncSourceT2,
+      outerLCIncSourceT1, outerLCIncH1] using hpre
   have hpost := outerLCInc_s1_postlude_run L n m a b r h hm
   refine ⟨q,r,len,hnfactor,hL,hq,?_⟩
   have hcost :
       12*a+4*m+63+12*r+3*b =
         (9*a+3*m+17+12*r+4) + (3*a+42+m+3*b) := by omega
-  rw [hcost, ← run_add, hpre]
-  simpa [outerLCIncSourceT3, outerLCIncSourceT2,
-    outerLCIncSourceT1, outerLCIncH1] using hpost
+  rw [hcost, ← run_add, hpre']
+  exact hpost
 
 #print axioms outerLCInc_full_run
 
