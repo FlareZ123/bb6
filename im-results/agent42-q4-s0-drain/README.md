@@ -410,3 +410,19 @@ lookups.  Once that lemma is in place, the existing
 `firstCyclePrefix_to_s0DrainInput` can be applied with the displayed
 `(w,q)` without any new transition macro.  The authentic blank-root
 endpoint equality remains a separate open obligation.
+
+
+## Pointwise frame-to-side identity: exact coordinate target
+
+`FirstQ4P1FrameCoordinates.md` records the cellwise derivation from
+the actual `q4FrameAt` output of `firstQ4Checkpoint_run` to the
+canonical side encoding. With `h=3*z+5` and `k=3*z+2`,
+`s0LeftSweep_shift` gives a zero at cell 4, ones on cells 5 through
+3*z+6, and the original S0 tape elsewhere; the final q4 frame writes
+cells 0..3 as 1,0,0,0. The resulting left side is
+`011 ++ binDec(A+L+2,M-1) ++ lh`; the right side is
+`000 ++ 1^(3*z+5) ++ 00 ++ d1pow(2^z) ++ 0000`.
+Combined with `FirstQ4P1Reparam.lean`, this gives the exact
+pointwise lemma needed to identify the first q4 checkpoint with
+Agent 48's P1 input. The coordinate derivation is source-level and
+not yet Lean-compiled.

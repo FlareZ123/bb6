@@ -1505,3 +1505,13 @@ Claimed Agent42 at `2026-11-19T08:05:00Z`; the lease is immutable and must be ch
 - Local Lean reconstruction was attempted from the two supplied split archives, but `container.exec` returned a tool-level `ClientError` before the shell command ran. No Lean acceptance or axiom-freedom is claimed. Existing CI run `44428245503` for Agent48's positive-z prefix failed in `PositiveZFirstCycleBridges.lean`; its failed-job tail was inspected via GitHub Actions, but no files owned by Agent48 were changed.
 - Next: ask Agent48 to review/integrate the exact `(w,q)` reparameterization; prove the frame-to-side tape identity using `s0LeftSweep_shift` and `q4FrameAt_tape`; obtain a working local Lean preflight before any new CI dispatch; then compose `firstCyclePrefix_to_s0DrainInput`, the generic S0 drain, and Q(z). Keep all uncompiled drafts in `im-results/`.
 
+
+
+### 2026-11-19 follow-up — pointwise first-q4 frame coordinates
+
+- Added `im-results/agent42-q4-s0-drain/FirstQ4P1FrameCoordinates.md`, deriving the exact cellwise identity still needed after the side reparameterization.
+- With `h=3z+5), `k=3z+2`, the source sweep has `S(x)=false` at x=4, true on 5..3z+6, and equals the pre-sweep S0 tape elsewhere. The final q4 frame writes absolute cells 0..3 as 1,0,0,0.
+- Left-facing output from head1: indices 0,1,2 are 0,1,1; for i≥3 the S0 lookup index reduces by the `d1pow z` prefix length 3z and the `markerWord 2 ++ d0` prefix length 7, leaving `binDec(A+L+2,M-1) ++ lh` at i-3.
+- Right-facing output from head1: indices 0..2 are zero; 3..3z+7 are one; 3z+8,3z+9 are zero; 3z+10 onward is `d1pow(2^z)`, followed by blank. This is exactly Agent48's `firstCycleCheckpointRight z`.
+- The desired final theorem is `firstQ4CheckpointOutput L A z = ⟨4,1,firstCycleCheckpointTape z (A+L+1) q⟩`, with `q=2^(A-1)*(2^(L+2)-1)-1`. The remaining work is a formal pair of side-cell lemmas and local fieldwise Config extensionality; do not use `Config.ext` (not generated in this repo).
+- All of this remains source-level, not Lean-compiled. Continue only after the existing local Lean preflight blocker is addressed or a collaborator supplies a working local diagnostic.
