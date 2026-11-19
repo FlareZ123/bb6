@@ -19,49 +19,91 @@ def Potential (p : Bool) (k c : Nat) : Nat :=
 def ResidueTieBreak (k : Nat) : Nat :=
   if k % 3 = 2 then 1 else 0
 
-/--
-The lexicographic rank (Potential, floor(k/3), [k mod 3 = 2]).
-This relation is written out explicitly to keep the certificate independent
-of any library-specific lexicographic-order API.
--/
-def RankAdvances (p p' : Bool) (k c k' c' : Nat) : Prop :=
-  Potential p k c < Potential p' k' c' ∨
-  (Potential p k c = Potential p' k' c' ∧ k / 3 < k' / 3) ∨
-  (Potential p k c = Potential p' k' c' ∧ k / 3 = k' / 3 ∧
-    ResidueTieBreak k < ResidueTieBreak k')
+/-- Lexicographic order on the pair (Potential, ResidueTieBreak). -/
+def LexLt (a b : Nat × Nat) : Prop :=
+  a.1 < b.1 ∨ (a.1 = b.1 ∧ a.2 < b.2)
+
+def Rank (s : AuditState) : Nat × Nat :=
+  match s with
+  | .S p k c => (Potential p k c, ResidueTieBreak k)
+
+theorem lexLt_trans {a b c : Nat × Nat}
+    (hab : LexLt a b) (hbc : LexLt b c) : LexLt a c := by
+  rcases hab with hab | ⟨habEq, habSnd⟩
+  · rcases hbc with hbc | ⟨hbcEq, _⟩
+    · exact Or.inl (Nat.lt_trans hab hbc)
+    · exact Or.inl (by simpa [hbcEq] using hab)
+  · rcases hbc with hbc | ⟨hbcEq, hbcSnd⟩
+    · exact Or.inl (by simpa [habEq] using hbc)
+    · exact Or.inr ⟨habEq.trans hbcEq, Nat.lt_trans habSnd hbcSnd⟩
 
 /--
-Every defined transition strictly increases the lexicographic rank.
-In particular, Potential is globally nondecreasing; its zero-increment
-transitions either increase the quotient or move the residue tie-breaker
-from 0 to 1.
+Every defined transition strictly increases (W, 1_{k mod 3 = 2}).
+Thus W is nondecreasing, and every zero-W transition moves the tie-break
+coordinate from 0 to 1.
 -/
 theorem rank_strict (p p' : Bool) (k c k' c' : Nat)
     (h : auditHighLevelNext (.S p k c) = some (.S p' k' c')) :
-    RankAdvances p p' k c k' c' := by
+    LexLt (Rank (.S p k c)) (Rank (.S p' k' c')) := by
   have hdiv : k = 3 * (k / 3) + k % 3 := by omega
   have hmod : k % 3 < 3 := Nat.mod_lt k (by decide)
   have hdiv' : k' = 3 * (k' / 3) + k' % 3 := by omega
   have hmod' : k' % 3 < 3 := Nat.mod_lt k' (by decide)
   cases p <;>
-    simp [auditHighLevelNext, RankAdvances, Potential, ResidueTieBreak] at h ⊢ <;>
+    simp [auditHighLevelNext, Rank, LexLt, Potential, ResidueTieBreak] at h ⊢ <;>
     split_ifs <;> simp_all <;> omega
 
 /-- The first coordinate alone is a nondecreasing potential. -/
 theorem potential_monotone (p p' : Bool) (k c k' c' : Nat)
     (h : auditHighLevelNext (.S p k c) = some (.S p' k' c')) :
     Potential p k c ≤ Potential p' k' c' := by
-  rcases rank_strict p p' k c k' c' h with hlt | ⟨heq, hq⟩ | ⟨heq, hq, ht⟩ <;> omega
+  have hr := rank_strict p p' k c k' c' h
+  rcases hr with hlt | ⟨heq, htie⟩ <;> omega
 
-/-- There are no one-step fixed points of the copied high-level map. -/
-theorem no_self_loop (p : Bool) (k c : Nat) :
-    auditHighLevelNext (.S p k c) ≠ some (.S p k c) := by
+/-- Iteration stops if a transition returns none. -/
+def iterateHighLevel : Nat → AuditState → Option AuditState
+  | 0, s => some s
+  | n + 1, s => (auditHighLevelNext s).bind (iterateHighLevel n)
+
+theorem iterateHighLevel_rank_strict :
+    ∀ n s t, 0 < n → iterateHighLevel n s = some t → LexLt (Rank s) (Rank t) := by
+  intro n
+  induction n with
+  | zero =>
+    intro s t hn hrun
+    omega
+  | succ n ih =>
+    intro s t hn hrun
+    cases s with
+    | S p k c =>
+      simp only [iterateHighLevel] at hrun
+      cases hstep : auditHighLevelNext (.S p k c) with
+      | none =>
+        simp [hstep] at hrun
+      | some s1 =>
+        simp [hstep] at hrun
+        have hfirst : LexLt (Rank (.S p k c)) (Rank s1) := by
+          cases s1 with
+          | S p' k' c' => exact rank_strict p p' k c k' c' hstep
+        by_cases hn0 : n = 0
+        · subst n
+          simp [iterateHighLevel] at hrun
+          cases hrun
+          exact hfirst
+        · exact lexLt_trans hfirst (ih s1 t (by omega) hrun)
+
+/-- No positive-length defined orbit can return to its starting state. -/
+theorem no_positive_cycle (n : Nat) (s : AuditState) (hn : 0 < n) :
+    iterateHighLevel n s ≠ some s := by
   intro h
-  have hr := rank_strict p p k c k c h
-  simp [RankAdvances] at hr
+  have hr := iterateHighLevel_rank_strict n s s hn h
+  cases s with
+  | S p k c =>
+    simp [LexLt, Rank] at hr
 
 end F011
 
 #print axioms F011.rank_strict
 #print axioms F011.potential_monotone
-#print axioms F011.no_self_loop
+#print axioms F011.iterateHighLevel_rank_strict
+#print axioms F011.no_positive_cycle
