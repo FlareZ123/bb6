@@ -569,6 +569,7 @@ theorem blank_no_b2_root32 (t : Nat) :
   let x := 734+10944*u
   let y := 34881+518816*u
   have huEven : u%2=0 := by dsimp [u]; omega
+  have hu8 : u%8=2 := by dsimp [u]; omega
   intro hr
   obtain ⟨a,k,hprev,hstep⟩ :=
     BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
