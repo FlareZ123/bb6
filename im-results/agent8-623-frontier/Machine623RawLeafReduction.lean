@@ -71,48 +71,30 @@ theorem machine623FinalSlotAudit_exhaustive (m : Machine)
     DecidedBelow 6 m ∨ machine623FinalSlotAudit.open m :=
   machine623FinalSlotAudit.exhaustive m hm
 
-private theorem machine623FinalSlotAudit_open_iff_halt (m : Machine) :
-    machine623FinalSlotAudit.open m ↔
-      m machine623HaltSlot = none := by
-  cases h : m machine623HaltSlot <;>
-    simp [machine623FinalSlotAudit, FrontierAudit.open, h]
-
-/-- Within the 25-table cylinder, the only open child is the exact original
-    #623 machine.  No claim is made about whether that remaining machine
-    halts or how long its run lasts. -/
-theorem machine623FinalSlotAudit_open_iff_root (m : Machine)
-    (hm : compatible (machine623Prefix 11) m) :
-    machine623FinalSlotAudit.open m ↔ m = machine623 := by
-  rw [machine623FinalSlotAudit_open_iff_halt]
-  constructor
-  · intro hh
-    have hcompat :
-        compatible (freeHaltCylinder machine623 machine623HaltSlot) m := by
-      simpa [machine623_visited_eq_free_halt] using hm
-    exact one_halt_freedom_nontrivial_singleton machine623 m
-      machine623HaltSlot
-      ((machine623_halts_only_at_F0 machine623HaltSlot).2 rfl)
-      hcompat hh
-  · intro heq
-    subst m
-    exact (machine623_halts_only_at_F0 machine623HaltSlot).2 rfl
-
 /-- A concise exact statement of the reduction: every completion of this
-    cylinder is either all-time nonhalting or the original #623 table. -/
+    cylinder is either all-time nonhalting or the original #623 table.  The
+    proof splits directly on the unique free halt slot, avoiding a dependent
+    open-predicate rewrite. -/
 theorem machine623_depth11_only_root_remains (m : Machine)
     (hm : compatible (machine623Prefix 11) m) :
     NeverHalts m ∨ m = machine623 := by
-  cases h : m machine623HaltSlot with
-  | none =>
-      exact Or.inr
-        ((machine623FinalSlotAudit_open_iff_root m hm).mp
-          ((machine623FinalSlotAudit_open_iff_halt m).2 h))
-  | some mv =>
-      exact Or.inl
-        (machine623_ordinary_f0_extension_never mv m
-          ((compatible_refine_iff (machine623Prefix 11) m
-            machine623HaltSlot machine623_halt_slot_unassigned
-            (some mv)).mpr ⟨hm, h⟩))
+  by_cases hhalt : m machine623HaltSlot = none
+  · have hcompat :
+        compatible (freeHaltCylinder machine623 machine623HaltSlot) m := by
+      simpa [machine623_visited_eq_free_halt] using hm
+    exact Or.inr
+      (one_halt_freedom_nontrivial_singleton machine623 m
+        machine623HaltSlot
+        ((machine623_halts_only_at_F0 machine623HaltSlot).2 rfl)
+        hcompat hhalt)
+  · cases hvalue : m machine623HaltSlot with
+    | none => exact False.elim (hhalt hvalue)
+    | some mv =>
+        exact Or.inl
+          (machine623_ordinary_f0_extension_never mv m
+            ((compatible_refine_iff (machine623Prefix 11) m
+              machine623HaltSlot machine623_halt_slot_unassigned
+              (some mv)).mpr ⟨hm, hvalue⟩))
 
 /-- Exact terminal-cylinder accounting: 24 certified singleton tables,
     one open singleton table, and no omitted completion. -/
