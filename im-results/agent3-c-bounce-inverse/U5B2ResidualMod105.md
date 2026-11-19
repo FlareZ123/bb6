@@ -191,9 +191,9 @@ Let `S4=P4.x+P4.y=67186+999595u`. Substituting the same exact residual equation
 211*S4 = -7*(2570932352 + 3163718175*r)
          + 19991900*2^(E-13).
 ```
-The coefficient 19991900 has exact 2-adic valuation 2, so the second term has valuation E-11. Since the affine term is positive and below 2^(E-13), its valuation is at most E-14. Thus the two terms have distinct 2-adic valuations, and
+The coefficient 19991900 has exact 2-adic valuation 2, so the second term has valuation E-11. The affine term satisfies
 `0 < 2570932352+3163718175*r < 2^(E-13)`
-because the affine term is below `2^32*(r+1)≤2^(r+32)`, while `E-13=188+3360*w>r+32`. Since 7 and 211 are odd,
+because it is below `2^32*(r+1)≤2^(r+32)`, while `E-13=188+3360*w>r+32`. Hence its valuation is at most E-14, strictly below E-11; the two terms have distinct 2-adic valuations. Since 7 and 211 are odd,
 [
 \boxed{v_2(S4)=v_2(2570932352+3163718175r).}
 ]
