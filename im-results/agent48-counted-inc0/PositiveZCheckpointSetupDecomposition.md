@@ -93,6 +93,34 @@ show that the three `sweptRight` outputs plus B30 give the target
 stream. The final encoder identity uses
 `binDec z (2^z-1) = d0pow z`.
 
+## Final tape identity splits at cell 9
+
+After B6 the head is at absolute cell 9, independent of A and L. The
+left-facing stream beginning at cell 5 (four cells left of that head) is
+exactly `ell1(A,L)`. This is the z-independent tail of the target and is
+the remaining list identity to formalize from the two left scans, the L
+sweep, B9, the A sweep, and B6.
+
+B6's output frame sets cells 4,5,6 and clears cells 7,8. Thus the three
+left-facing cells 8,7,6 are `0,0,1`, the final `d0` block. The z-sweep
+starts at cell 9 and writes physical `100` blocks. Read backwards from the
+final head `3*z+5`, its first `z-1` blocks give `d0pow (z-1)`; together
+with cells 8,7,6 they give `d0pow z`. B30 moves the head from
+`9+3*z` back four cells to `3*z+5`, without disturbing this left prefix.
+
+At B30 entry, for z≥2, the ten cells at offsets -4 through +5 are exactly
+`0,1,0,0,1,0,0,0,0,0`: offset -4 is cleared by block z-2, offset -3 is
+the first cell of the final swept block, offsets -2 and -1 are cleared,
+offset 0 is the extra trailing one of the original right counter, and the
+five cells to its right are blank. The B30 output frame produces the
+right-facing word `[0,1,1,1,0,0,1,1,1]`, namely `s0RightFacing 0`.
+
+Consequently, the final tape proof can be split into two independent
+identities: the z-sweep/B30 frame gives `d0pow z` and the right-facing
+counter-zero word; the earlier prefix through B6 gives `ell1(A,L)` from
+cell 5 leftward. This is substantially smaller than proving the entire
+tape equality as one monolithic extensionality argument.
+
 ## Evidence and limits
 
 I extracted all bridge endpoints and head paths from the original 12-entry
