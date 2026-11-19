@@ -985,7 +985,7 @@ theorem setupB30Config_rightFacing (T : Int → Bool) (h : Int)
       (hb-3+(i:Int)) (by omega)]
     rw [setupB6Config_preserves_after_zEnd T h A L z
       (hb-3+(i:Int)) (by omega)]
-    exact hblank (hb-3+(i:Int)) hx
+    simpa [setupRightWord, sideBit, hge] using hblank (hb-3+(i:Int)) hx
 
 theorem setupB30Config_leftFacing (T : Int → Bool) (h : Int)
     (A L z : Nat) (g : SetupSuffixGuards T h A L z)
