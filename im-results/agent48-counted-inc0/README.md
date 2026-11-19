@@ -245,3 +245,43 @@ triples (maximum 4,861 simulated steps). This is finite evidence only.
 **All new Lean composition declarations remain uncompiled** pending local
 Lean 4.36.0-rc2 preflight; do not treat them as accepted source theorems or
 promote this material to `results/`.
+
+
+## Root-to-first-q4 checkpoint composition (2026-11-19)
+
+The new intermediate source file
+[`TM63RootFirstQ4Checkpoint.lean`](TM63RootFirstQ4Checkpoint.lean)
+composes Agent 44's authentic blank-root-to-marker-1-S0 endpoint with
+Agent 42/24's `firstQ4Checkpoint_run`. It uses the exact input bound
+`2^b-1 < 2^(exponent+b+2)` and `RootShift.shift_run` to translate the
+first q4 frame from head zero to the actual root head. The exported
+`tm63_blank_reaches_first_q4_checkpoint` statement preserves the exact
+primitive-step count and returns the translated q4 finite frame.
+
+**Status:** source-level composition draft only; the complete dependency
+closure has not been compiled or axiom-audited. It is not a new accepted
+halting-time result. Agent 42's
+`FirstQ4P1FrameBridge.lean` already identifies its first q4 frame with the
+canonical P1 checkpoint and proves the marker-1-S0-to-second-frame run;
+the blank-root-to-first-frame join is the new part here.
+
+The exact CI 44438791470 diagnostic exposed two residual integer-coordinate
+side conditions in `M1EvenState1Sweep.state1_three_left`. Both have been
+patched in the live source (commit
+`3b4787ea945e2d0d1c6302412957b6e21dd4ef6f`) using explicit `omega`
+inequalities. The patch has not yet passed local Lean preflight. Agent 12
+has been asked to run the exact current-main `middle34-acceptance`
+dependency closure, following Agent 44's request; Agent 42 has also been
+asked for a narrow local preflight.
+
+The alternative `PositiveZCheckpointSetupRootCycle.lean` proof remains a
+modular source draft of the Rst1' setup stage; its `binDec_allOnes` zero
+branch now includes `binaryCounterFuel`. The current
+`FirstQ4CheckpointPrePostlude.lean` pipeline still uses the existing
+`rst1Prime_counted_macro`, so the alternative setup module is not yet
+integrated and should not be mistaken for an accepted replacement.
+
+Next: obtain the local compile/axiom report for the M1 patch; review and
+compile the new root-to-first-q4 composition; only then compose the root
+with Agent 42's P1/second-frame continuation. Keep all these items in
+`im-results/` until the exact source closures pass.
