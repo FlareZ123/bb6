@@ -88,12 +88,94 @@ theorem small_factor_bound (r s : Nat) (hr : 2 ≤ r)
       Nat.mul_le_mul_left 4 hpow
     omega
 
+
+/-- The cut remainder is the positive Euclidean remainder of a-1, shifted by one. -/
+theorem cutRemainder_eq_mod (a s : Nat) (hs : 0 < s) :
+    cutRemainder a s = (a+s-1)%s+1 := by
+  unfold cutRemainder cutIndex
+  have h := Nat.mod_add_div (a+s-1) s
+  omega
+
+theorem cutRemainder_le (a s : Nat) (hs : 0 < s) :
+    cutRemainder a s ≤ s := by
+  rw [cutRemainder_eq_mod a s hs]
+  have h := Nat.mod_lt (a+s-1) hs
+  omega
+
+/-- The threshold lies strictly below the natural upper scale. -/
+theorem threshold_strict (r : Nat) (hr : 2 ≤ r) :
+    (2*r-1)*cancellation_threshold r < valuationA r := by
+  have hn0 : 3^(2*r-1) ≠ 0 := by positivity
+  have hpow : 3^(2*r-1) < 2^(4*r-3) := by
+    have hgap := three_pow_gap r hr
+    omega
+  have hlog : Nat.log2 (3^(2*r-1)) < 4*r-3 :=
+    (Nat.log2_lt hn0).mpr hpow
+  have hd : cancellation_threshold r ≤ 4*r-3 := by
+    dsimp [cancellation_threshold]
+    omega
+  have h9 := nine_pow_ge_sixteen_sq r hr
+  have h1 : 2*r-1 ≤ 2*r := by omega
+  have h2 : 4*r-3 ≤ 4*r := by omega
+  have hmul := Nat.mul_le_mul h1 h2
+  have hscale := Nat.mul_le_mul_left 2 hmul
+  have hnorm : 2*((2*r)*(4*r)) = 16*r*r := by
+    simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+  have hprod : (2*r-1)*(4*r-3)+1 ≤ valuationA r := by
+    rw [hnorm] at hscale
+    have hval := valuationA_double r
+    omega
+  have hthreshold := Nat.mul_le_mul_left (2*r-1) hd
+  omega
+
+/-- The quotient coefficient is small relative to the cut exponent whenever
+    that exponent is at least one above the logarithmic threshold. -/
+theorem small_factor_bound_wide (r s c : Nat) (hr : 2 ≤ r)
+    (hc : cancellation_threshold r ≤ c)
+    (hE : cancellation_threshold r+1 ≤
+      2*valuationA r-(2*r-2)*s-c) :
+    9^r+2*s < 4*2^(2*valuationA r-(2*r-2)*s-c) := by
+  let n := 3^(2*r-1)
+  let d := cancellation_threshold r
+  let E := 2*valuationA r-(2*r-2)*s-c
+  have h9 : 9^r=3*n := by
+    dsimp [n]
+    rw [show (9:Nat)=3^2 by decide, Nat.pow_mul]
+    rw [show 2*r=(2*r-1)+1 by omega, Nat.pow_succ]
+    simp [Nat.mul_comm]
+  have hval : 2*valuationA r=3*n+5 := by
+    rw [valuationA_double r, h9]
+  have hE0 : d+1≤E := by simpa [d,E,cancellation_threshold] using hE
+  have hE' : d+1+(2*r-2)*s+c≤2*valuationA r := by
+    dsimp [E] at hE0
+    omega
+  have hd : 1≤d := by dsimp [d,cancellation_threshold]; omega
+  have hcoeff : 2≤2*r-2 := by omega
+  have hmul : 2*s≤(2*r-2)*s := Nat.mul_le_mul_right s hcoeff
+  have h2s : 2*s≤3*n+2 := by omega
+  have hleft : 9^r+2*s≤6*n+2 := by rw [h9]; omega
+  have hgap := log2_gap_five r hr
+  have hpowD : n+5≤2^d := by
+    simpa [d,cancellation_threshold,n] using hgap
+  have hpowE : 2^(d+1)≤2^E := pow2_mono (d+1) E hE0
+  have hbase : 8*(n+5)≤4*2^(d+1) := by
+    calc
+      8*(n+5)≤8*2^d := Nat.mul_le_mul_left 8 hpowD
+      _=4*2^(d+1) := by rw [Nat.pow_succ]; omega
+  have hright : 8*n+40≤4*2^E := by
+    calc
+      8*n+40=8*(n+5) := by omega
+      _≤4*2^(d+1) := hbase
+      _≤4*2^E := Nat.mul_le_mul_left 4 hpowE
+  omega
+
 /-- A residue-dependent extension of the all-r cancellation-feeder parent band. -/
-theorem midband_no_parent_remainder (r s : Nat) (hr : 2 ≤ r)
+theorem midband_no_parent_remainder_general (r s : Nat) (hr : 2 ≤ r)
     (hs : cancellation_threshold r ≤ s)
     (hcase : valuationA r ≤ (2*r-1)*s)
-    (hupper : r*s ≤ valuationA r)
-    (hrem : cancellation_threshold r ≤ cutRemainder (valuationA r) s) :
+    (hrem : cancellation_threshold r ≤ cutRemainder (valuationA r) s)
+    (hE : cancellation_threshold r+1 ≤
+      2*valuationA r-(2*r-2)*s-cutRemainder (valuationA r) s) :
     ¬ (2^(valuationA r+s)+3) ∣
       (2^(valuationA r)*P (2^(valuationA r)) r+3-
         2*(valuationA r-1+s)) := by
@@ -104,6 +186,12 @@ theorem midband_no_parent_remainder (r s : Nat) (hr : 2 ≤ r)
   let S := geomSum t (2*r)
   let n := 3^(2*r-1)
   let u := a-1+s
+  let c := cutRemainder a s
+  let E := 2*a-(2*r-2)*s-c
+  have hEsmall : cancellation_threshold r+1 ≤ 2*a-(2*r-2)*s-c := by
+    simpa [a,c] using hE
+  have hEbound : cancellation_threshold r+1+(2*r-2)*s+c ≤ 2*a := by
+    omega
   let B := 2^(a+s)
   let D := B+3
   let N := A*P A r+3-2*u
@@ -114,8 +202,8 @@ theorem midband_no_parent_remainder (r s : Nat) (hr : 2 ≤ r)
   have haLin : 4*r+3≤a := by dsimp [a]; exact valuationA_linear r
   have ha4 : 4≤a := by omega
   have hsLeA : s≤a := by
-    have hmul : s≤r*s := Nat.mul_le_mul_right s (by omega : 1≤r)
-    dsimp [a] at hupper ⊢
+    have hcoef : 2≤2*r-2 := by omega
+    have hmul : 2*s≤(2*r-2)*s := Nat.mul_le_mul_right s hcoef
     omega
   have hA8 : 8≤A := by
     dsimp [A]
@@ -256,7 +344,6 @@ theorem midband_no_parent_remainder (r s : Nat) (hr : 2 ≤ r)
     have hpowdiv : 2^(a+s)∣3*(z+R) := by simpa [hMpow] using hM3
     simpa using pow_two_dvd_three_mul hpowdiv
   let L := cutIndex a s
-  let c := cutRemainder a s
   let Rlow := n*geomSum t (L+1)
   have hsPos : 0<s := by
     have h := hs
@@ -338,23 +425,10 @@ theorem midband_no_parent_remainder (r s : Nat) (hr : 2 ≤ r)
     have hweighted := geomSum_weighted_lt_general n t L ht2 hn2
     have hcoef : n+1≤2^c-4 := by omega
     exact lt_of_lt_of_le hweighted (Nat.mul_le_mul_right (t^L) hcoef)
-  let E := 2*a-(2*r-2)*s-c
-  have hEge : s≤E := by
-    have hcs : c+s≤2*s := by omega
-    have hcoeff : (2*r-2)+2=2*r := by omega
-    have hmul : (2*r-2)*s+2*s=2*r*s := by
-      rw [← Nat.add_mul]
-      rw [hcoeff]
-    have h2a : 2*r*s≤2*a := by
-      have h := Nat.mul_le_mul_left 2 hupper
-      simpa [Nat.mul_assoc] using h
-    dsimp [E]
-    omega
-  have hsmall := small_factor_bound r s hr hs hupper
+  have hsmall := small_factor_bound_wide r s c hr hrem hEsmall
   have hsmall' : 2*u-3<4*2^E := by
     rw [h2uEq]
-    have hpow := Nat.mul_le_mul_left 4 (pow2_mono s E hEge)
-    omega
+    simpa [E,a] using hsmall
   have hpowIdentity : 2^E*2^(2*r*s)=2^(a+s)*2^(L*s) := by
     have hcoeff : (2*r-2)+2=2*r := by omega
     have hmul : (2*r-2)*s+2*s=2*r*s := by
@@ -415,7 +489,49 @@ theorem midband_no_parent_remainder (r s : Nat) (hr : 2 ≤ r)
 #print axioms geomSum_weighted_lt_general
 #print axioms small_factor_bound
 #print axioms midband_no_parent_remainder
+#print axioms midband_no_parent_remainder_general
+#print axioms small_factor_bound_wide
 
+
+
+
+/-- The earlier r*s≤a residue band is a direct corollary of the wider
+    cut-exponent theorem. -/
+theorem midband_no_parent_remainder (r s : Nat) (hr : 2 ≤ r)
+    (hs : cancellation_threshold r ≤ s)
+    (hcase : valuationA r ≤ (2*r-1)*s)
+    (hupper : r*s ≤ valuationA r)
+    (hrem : cancellation_threshold r ≤ cutRemainder (valuationA r) s) :
+    ¬ (2^(valuationA r+s)+3) ∣
+      (2^(valuationA r)*P (2^(valuationA r)) r+3-
+        2*(valuationA r-1+s)) := by
+  let a := valuationA r
+  let c := cutRemainder a s
+  have hsPos : 0<s := by
+    have h := hs
+    dsimp [cancellation_threshold] at h
+    omega
+  have hcLe : c≤s := cutRemainder_le a s hsPos
+  have hstrict := threshold_strict r hr
+  have hds : cancellation_threshold r+1≤s := by
+    have hmul : (2*r-1)*cancellation_threshold r < (2*r-1)*s :=
+      lt_of_lt_of_le hstrict hcase
+    by_contra h
+    have hle : s≤cancellation_threshold r := by omega
+    have hmul' := Nat.mul_le_mul_left (2*r-1) hle
+    omega
+  have hcoeffEq : (2*r-2)+2=2*r := by omega
+  have hmul2 : (2*r-2)*s+2*s=2*r*s := by
+    rw [← Nat.add_mul]
+    rw [hcoeffEq]
+  have h2a : 2*r*s≤2*a := by
+    have h := Nat.mul_le_mul_left 2 hupper
+    simpa [Nat.mul_assoc] using h
+  have hE : cancellation_threshold r+1≤
+      2*a-(2*r-2)*s-c := by
+    omega
+  exact midband_no_parent_remainder_general r s hr hs hcase hrem
+    (by simpa [a,c] using hE)
 
 /-- Source-equation adapter for the residue-dependent extension. -/
 theorem midband_no_parent_remainder_source_equation
@@ -444,5 +560,37 @@ theorem midband_no_parent_remainder_source_equation
   simpa [A, ←hq] using hno
 
 #print axioms midband_no_parent_remainder_source_equation
+
+
+
+/-- Source-equation adapter for the wider residue-dependent cut-exponent band. -/
+theorem midband_no_parent_remainder_general_source_equation
+    (r s q : Nat) (hr : 2 ≤ r)
+    (hs : cancellation_threshold r ≤ s)
+    (hcase : valuationA r ≤ (2*r-1)*s)
+    (hrem : cancellation_threshold r ≤ cutRemainder (valuationA r) s)
+    (hE : cancellation_threshold r+1 ≤
+      2*valuationA r-(2*r-2)*s-cutRemainder (valuationA r) s)
+    (heq : (2^(valuationA r)+3)*(2*q+3)+9^r =
+      (2^(valuationA r))^(2*r)) :
+    ¬ (2^(valuationA r+s)+3) ∣
+      (2^(valuationA r)*(2*q+3)+3-2*(valuationA r-1+s)) := by
+  let A := 2^(valuationA r)
+  have hA : 3 ≤ A := by
+    have ha := valuationA_linear r
+    have hp := exp_mono 2 (valuationA r) (by omega)
+    dsimp [A]
+    omega
+  have he : (A+3)*P A r+9^r=A^(2*r) :=
+    CancellationNat.exact A r hA
+  change (A+3)*(2*q+3)+9^r=A^(2*r) at heq
+  have hm : (A+3)*(2*q+3)=(A+3)*P A r := by omega
+  have hq : 2*q+3=P A r :=
+    Nat.mul_left_cancel (by omega : 0<A+3) hm
+  have hno := midband_no_parent_remainder_general r s hr hs hcase hrem hE
+  simpa [A, ←hq] using hno
+
+#print axioms midband_no_parent_remainder_general
+#print axioms small_factor_bound_wide
 
 end BB6.Agent46.CancellationMidBandResidue
