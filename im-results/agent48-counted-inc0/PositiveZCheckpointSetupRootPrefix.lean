@@ -351,10 +351,11 @@ theorem positiveZSetupPrefix_run (L A z : Nat) :
     (setupPrefixInput_leftOnes L A z) (setupPrefixInput_rightZero L A z)
   have hB8 := setupB8_at (sweptLeft (3*A+1) T 0)
     (-(3*A+1:Int)) (setupPrefixFirstSweep_b8Input L A z)
+  have hB8Head : (-(3*A+1:Int)+(-2:Int)) = -(3*A+3:Int) := by omega
   have hB8' :
       run tm2 8 ⟨3,-(3*A+1:Int),sweptLeft (3*A+1) T 0⟩ =
         some ⟨3,-(3*A+3:Int),setupPrefixAfterB8 L A z⟩ := by
-    simpa [setupPrefixAfterB8,q4FrameAt,shiftConfig,embed,setupB8End] using hB8
+    simpa [T,setupPrefixAfterB8,q4FrameAt,shiftConfig,embed,setupB8End,hB8Head] using hB8
   have hfirstB8 := run_append_some hfirst hB8'
   have hsecond := counted_left_sweep (3*L+5)
     (setupPrefixAfterB8 L A z) (-(3*A+3:Int))
