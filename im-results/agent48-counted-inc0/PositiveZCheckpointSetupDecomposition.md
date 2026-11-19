@@ -175,6 +175,35 @@ These are source-level proof drafts and remain **uncompiled** in this
 invocation because local Lean preflight was unavailable. The conditional
 run theorem and exact JS decomposition check remain as described above.
 
+## Stronger B6-tail reduction
+
+The residual left tail is now reduced one step further in the Lean draft.
+A generic theorem `sweptRight_leftFacing_d100pow` shows that a counted
+right sweep, read leftward from three cells before its final head, gives
+`(100)^n` when the two cells immediately left of the sweep start are blank.
+The setup's boundary frames supply exactly those two blanks:
+- B9 supplies the two blank cells immediately before the A+1 sweep.
+- B20 supplies the two blank cells immediately before the L+1 sweep.
+
+The new theorem `setupB6LeftTail_of_guards_and_blank` derives
+`SetupB6LeftTail` from `SetupSuffixGuards` plus the single condition
+`SetupPrefixLeftBlank` (the tape is blank strictly left of B20's -5 frame
+boundary). Its proof decomposes the tail as:
+1. B6 frame: `110`;
+2. A+1 counted sweep: `(100)^(A+1)`;
+3. B9 frame: `111`;
+4. L+1 counted sweep: `(100)^(L+1)`;
+5. B20 frame: `1110111`;
+6. blank prefix inherited from the input.
+
+Together with `setupB30Config_leftFacing`, the final left-facing tape is
+therefore reduced to establishing only the S0-specific suffix guards and
+the blank-left-tail condition from the two scans' output. This is a
+substantially narrower target than a direct full-tape equality proof.
+
+The new Lean declarations are still uncompiled in this invocation; treat
+them as a formalization draft until a local preflight/CI run succeeds.
+
 ## Evidence and limits
 
 I extracted all bridge endpoints and head paths from the original 12-entry
