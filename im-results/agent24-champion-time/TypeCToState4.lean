@@ -34,20 +34,21 @@ theorem typeCPostSetup_heads :
   decide
 
 /-- Arbitrary-tape lift of the 11-step state-1 to state-4 bridge. -/
-theorem typeCPostSetup_at (T : Int → Bool) (h : Int)
-    (hones : ∀ i : Nat, i < 10 → T (h-7+(i:Int)) = true)
-    (hblank : T (h+3) = false) :
-    run tm2 11 ⟨1,h-7,T⟩ =
-      some (frameAt T (h-7) typeCPostSetupInside typeCPostSetupEnd) := by
-  apply bridgeAt T (h-7) typeCPostSetupInside
+theorem typeCPostSetup_at (T : Int → Bool) (k : Int)
+    (hones : ∀ i : Nat, i < 10 → T (k+(i:Int)) = true)
+    (hblank : T (k+10) = false) :
+    run tm2 11 ⟨1,k,T⟩ =
+      some (frameAt T k typeCPostSetupInside typeCPostSetupEnd) := by
+  apply bridgeAt T k typeCPostSetupInside
     typeCPostSetupStart typeCPostSetupEnd 11 rfl
     typeCPostSetup_exact typeCPostSetup_heads
   intro x hx
-  have hrange : 0 ≤ x ∧ x ≤ 10 := by
-    simpa [typeCPostSetupInside] using hx
   have hcases :
       x=0 ∨ x=1 ∨ x=2 ∨ x=3 ∨ x=4 ∨ x=5 ∨
-      x=6 ∨ x=7 ∨ x=8 ∨ x=9 ∨ x=10 := by omega
+      x=6 ∨ x=7 ∨ x=8 ∨ x=9 ∨ x=10 := by
+    have hrange : 0 ≤ x ∧ x ≤ 10 := by
+      simpa [typeCPostSetupInside] using hx
+    omega
   rcases hcases with hx0|hx1|hx2|hx3|hx4|hx5|hx6|hx7|hx8|hx9|hx10
   · subst x
     simpa [typeCPostSetupStart] using hones 0 (by omega)
@@ -70,7 +71,7 @@ theorem typeCPostSetup_at (T : Int → Bool) (h : Int)
   · subst x
     simpa [typeCPostSetupStart] using hones 9 (by omega)
   · subst x
-    have heq : h-7+(10:Int) = h+3 := by omega
+    have heq : k+(10:Int) = k+10 := by rfl
     rw [heq]
     simp [typeCPostSetupStart]
     exact hblank
@@ -85,7 +86,7 @@ theorem typeCPostSetupTape_ones (T : Int → Bool) (h : Int) :
       typeCPostSetupTape T h (h-7+(i:Int)) = true := by
   intro i hi
   have hne0 : h-7+(i:Int) ≠ h-9 := by omega
-  have hne1 : h-7+(i:Int) ≠ h-8 := by omega
+  have hne1 : h-7+(i:Int) ≠ h-9+1 := by omega
   have hcases :
       i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨
       i=5 ∨ i=6 ∨ i=7 ∨ i=8 ∨ i=9 := by omega
@@ -96,26 +97,16 @@ theorem typeCPostSetupTape_ones (T : Int → Bool) (h : Int) :
     simp [typeCInside]
     omega
   have hcoord : h-7+(i:Int)-h = -7+(i:Int) := by omega
-  have hframe :
-      (frameAt T h typeCInside typeCEnd).tape
-        (h-7+(i:Int)) = true := by
-    rw [frameAt_tape]
-    rw [hcoord]
-    simp [hinside,hmem]
-  simp [typeCPostSetupTape,afterFirstCycleTwoZero,hne0,hne1,hframe]
+  simp [typeCPostSetupTape,afterFirstCycleTwoZero,hne0,hne1,
+    frameAt_tape,hinside,hmem,hcoord]
 
 theorem typeCPostSetupTape_blank (T : Int → Bool) (h : Int)
     (h3 : T (h+3) = false) :
     typeCPostSetupTape T h (h+3) = false := by
-  have hne0 : h+3 ≠ h-9 := by omega
-  have hne1 : h+3 ≠ h-8 := by omega
+  have hcond : ¬ (h+3 = h-9 ∨ h+3 = h-9+1) := by omega
   have hcoord : h+3-h = 3 := by omega
-  have hframe :
-      (frameAt T h typeCInside typeCEnd).tape (h+3) = T (h+3) := by
-    rw [frameAt_tape]
-    rw [hcoord]
-    simp [typeCInside]
-  simp [typeCPostSetupTape,afterFirstCycleTwoZero,hne0,hne1,hframe,h3]
+  simp [typeCPostSetupTape,afterFirstCycleTwoZero,hcond,
+    frameAt_tape,typeCInside,hcoord,h3]
 
 /-- The complete 46-step Type-C prefix reaches state 4 at h+4. -/
 theorem typeC_to_state4 (T : Int → Bool) (h : Int)
@@ -126,8 +117,12 @@ theorem typeC_to_state4 (T : Int → Bool) (h : Int)
   have h35 := typeC_two_step_continuation T h hin
   have hones := typeCPostSetupTape_ones T h
   have hblank := typeCPostSetupTape_blank T h h3
+  have hblank' : typeCPostSetupTape T h ((h-7)+10) = false := by
+    have heq : (h-7)+10 = h+3 := by omega
+    rw [heq]
+    exact hblank
   have h11 := typeCPostSetup_at (typeCPostSetupTape T h)
-    (h-7) hones hblank
+    (h-7) hones hblank'
   calc
     run tm2 46 ⟨4,h,T⟩ =
         (run tm2 35 ⟨4,h,T⟩).bind (fun c => run tm2 11 c) := by
@@ -149,28 +144,26 @@ theorem typeC_to_state4_preserves_after
         typeCPostSetupInside typeCPostSetupEnd).tape x =
         typeCPostSetupTape T h x := by
     rw [frameAt_tape]
-    have hrel : 10 < x-(h-7) := by omega
-    simp [typeCPostSetupInside,hrel]
+    have houtside : typeCPostSetupInside (x-(h-7)) = false := by
+      simp [typeCPostSetupInside]
+      omega
+    simp [houtside]
   have hU : typeCPostSetupTape T h x = T x := by
-    unfold typeCPostSetupTape
-    have hne0 : x ≠ h-9 := by omega
-    have hne1 : x ≠ h-8 := by omega
-    simp [afterFirstCycleTwoZero,hne0,hne1]
-    rw [frameAt_tape]
-    have houtside : ¬ (-10 ≤ x-h ∧ x-h ≤ 2) := by omega
-    simp [typeCInside,houtside]
+    have hcond : ¬ (x = h-9 ∨ x = h-9+1) := by omega
+    have houtside : typeCInside (x-h) = false := by
+      simp [typeCInside]
+      omega
+    simp [typeCPostSetupTape,afterFirstCycleTwoZero,hcond,
+      frameAt_tape,houtside]
   exact hfinal.trans hU
 
 /-- The third right-side zero in the Type-C checkpoint is the blank
-needed by the 11-step continuation. -/
+needed by the 11-step continuation. The left side is arbitrary. -/
 theorem typeC_right_guard_from_sides
-    (tailL tailR : List Bool) (h : Int) :
-    (q4TapeFromSides
-      ([false,true,true] ++ d1 ++ d1 ++ d0 ++ tailL)
-      ([false,false,false] ++ tailR) h) (h+3) = false := by
+    (left tailR : List Bool) (h : Int) :
+    (q4TapeFromSides left ([false,false,false] ++ tailR) h) (h+3) = false := by
   let right : List Bool := [false,false,false] ++ tailR
-  let T : Int → Bool := q4TapeFromSides
-    ([false,true,true] ++ d1 ++ d1 ++ d0 ++ tailL) right h
+  let T : Int → Bool := q4TapeFromSides left right h
   have hright (i : Nat) (hi : i < 3) :
       T (h+1+(i:Int)) = sideBit right i := by
     have hgt : ¬ h+1+(i:Int) ≤ h := by omega
@@ -186,7 +179,7 @@ theorem typeC_right_guard_from_sides
 /-- Original-source 46-step transition for the complete M-4 checkpoint
 family, with arbitrary exterior right tail. -/
 theorem typeC_source_to_state4
-    (A L : Nat) (tailL tailR : List Bool) (h : Int)
+    (A L : Nat) (tailR : List Bool) (h : Int)
     (hA : 3 ≤ A) :
     let T := q4TapeFromSides
       ([false,true,true] ++
@@ -201,7 +194,8 @@ theorem typeC_source_to_state4
     ([false,false,false] ++ tailR) h
   have hin := typeC_input_from_binDec A L tailR h hA
   have h3 := typeC_right_guard_from_sides
-    (binDec (A+L+2) (2^A*(2^(L+2)-1)-4)) tailR h
+    ([false,true,true] ++
+      binDec (A+L+2) (2^A*(2^(L+2)-1)-4)) tailR h
   exact typeC_to_state4 T h hin h3
 
 #print axioms typeCPostSetup_exact
