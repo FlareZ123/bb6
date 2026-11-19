@@ -146,6 +146,7 @@ jobs:
             im-results/agent38-root-q4tail/TM63RootQ4Tail.lean \
             --jobs 8 \
             --workdir /tmp/agent38-root-q4tail \
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             | tee /tmp/agent38-root-q4tail.log
           python3 - <<'PY'
           import pathlib
