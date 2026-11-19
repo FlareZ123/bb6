@@ -57,14 +57,21 @@ theorem state1_three_left (T : Int → Bool) (h : Int)
       · subst x
         have hne0 : h-1 ≠ h := by omega
         have hne2 : h-1 ≠ h-2 := by omega
-        simp [holeLeft, heq1, heq2, heq3, hne0, hne2]
+        have hne3 : h-1 ≠ h-1 + (-1 : Int) := by omega
+        simp [holeLeft, heq1, heq2, heq3, hne0, hne2, hne3]
       · by_cases hx2 : x = h-2
         · subst x
           have hne0 : h-2 ≠ h := by omega
           have hne1 : h-2 ≠ h-1 := by omega
           have h2'' : T (h-2) = true := by simpa [heq2] using h2'
           simp [holeLeft, heq1, heq2, hne0, hne1, h2'']
-        · simp [holeLeft, heq1, heq2, heq3, hx0, hx1, hx2]
+        · have hx2' : x ≠ h - 1 + (-1 : Int) := by
+            intro hEq
+            apply hx2
+            calc
+              x = h - 1 + (-1 : Int) := hEq
+              _ = h - 2 := heq3
+          simp [holeLeft, heq1, heq2, heq3, hx0, hx1, hx2, hx2']
 
 /-- The cells immediately left of the moving blank are all one. -/
 def state1LeftOnes (T : Int → Bool) (h : Int) (n : Nat) : Prop :=
