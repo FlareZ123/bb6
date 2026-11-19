@@ -43,6 +43,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_translated_leaf_graft:
+        description: 'Compile and axiom-audit the translated finite-support sibling leaf graft without the unrelated WordOracle chain'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -61,20 +66,27 @@ jobs:
       - name: Check authentic six-state sparse semantics and zero-path frontier
         run: |
           set -eu
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent24-translated-cycle"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
           done
           lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean
+          if [[ "${{ inputs.verify_translated_leaf_graft }}" == "true" ]]; then
+            lean -o im-results/agent8-coverage-contract/RootShift.olean im-results/agent8-coverage-contract/RootShift.lean
+            lean -o im-results/agent24-translated-cycle/TranslatedCycle.olean im-results/agent24-translated-cycle/TranslatedCycle.lean
+            lean -o im-results/agent24-translated-cycle/TranslatedFiniteOracle.olean im-results/agent24-translated-cycle/TranslatedFiniteOracle.lean
+          fi
           lean -o im-results/agent6-fresh-glider/RayMacro.olean im-results/agent6-fresh-glider/RayMacro.lean
           lean -o im-results/agent6-fresh-glider/EntryMacroOracle.olean im-results/agent6-fresh-glider/EntryMacroOracle.lean
           lean -o im-results/agent6-fresh-glider/EntryMacroLeft.olean im-results/agent6-fresh-glider/EntryMacroLeft.lean
+          if [[ "${{ inputs.verify_leaf_graft }}" == "true" || "${{ inputs.verify_translated_leaf_graft }}" != "true" ]]; then
           lean -o im-results/agent6-fresh-glider/MarkerTailExample.olean im-results/agent6-fresh-glider/MarkerTailExample.lean
           lean -o im-results/agent6-fresh-glider/MarkerOracle.olean im-results/agent6-fresh-glider/MarkerOracle.lean
           lean -o im-results/agent6-fresh-glider/MarkerMirror.olean im-results/agent6-fresh-glider/MarkerMirror.lean
           lean -o im-results/agent6-fresh-glider/WordOracle.olean im-results/agent6-fresh-glider/WordOracle.lean
           lean -o im-results/agent6-fresh-glider/WordMirror.olean im-results/agent6-fresh-glider/WordMirror.lean
+          fi
           lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
           for m in ZeroMaskOracle FiniteDecision; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
@@ -82,7 +94,7 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
           lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
           lean -o im-results/agent32-zero-prefix-global/ZeroPathAudit.olean im-results/agent32-zero-prefix-global/ZeroPathAudit.lean
-          if [[ "${{ inputs.export_frontier }}" != "true" && "${{ inputs.verify_leaf_graft }}" != "true" ]]; then
+          if [[ "${{ inputs.export_frontier }}" != "true" && "${{ inputs.verify_leaf_graft }}" != "true" && "${{ inputs.verify_translated_leaf_graft }}" != "true" ]]; then
             lean im-results/agent32-zero-prefix-global/ZeroPathMassEval.lean
           fi
           lean -o im-results/agent32-zero-prefix-global/ControlPathAudit.olean im-results/agent32-zero-prefix-global/ControlPathAudit.lean
@@ -90,8 +102,10 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/PhysicalTraceAudit.olean im-results/agent32-zero-prefix-global/PhysicalTraceAudit.lean
           lean -o im-results/agent32-zero-prefix-global/FiniteLassoOracle.olean im-results/agent32-zero-prefix-global/FiniteLassoOracle.lean
           lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
+          if [[ "${{ inputs.verify_leaf_graft }}" == "true" || "${{ inputs.verify_translated_leaf_graft }}" != "true" ]]; then
           lean -o im-results/agent32-zero-prefix-global/WordLassoTraceAudit.olean im-results/agent32-zero-prefix-global/WordLassoTraceAudit.lean
           lean im-results/agent32-zero-prefix-global/ReadOneLeaf.lean
+          fi
       - name: Verify exact two-mark finite-word leaf graft (explicitly requested only)
         if: ${{ inputs.verify_leaf_graft }}
         run: |
@@ -107,8 +121,23 @@ jobs:
             echo "ERROR: two-mark leaf graft proof graph depends on sorryAx"
             exit 1
           fi
+      - name: Verify translated finite-support sibling leaf graft (explicitly requested only)
+        if: ${{ inputs.verify_translated_leaf_graft }}
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent24-translated-cycle"
+          lean -o im-results/agent4-coverage-smoke/FrontierExtract.olean im-results/agent4-coverage-smoke/FrontierExtract.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierUnique.olean im-results/agent4-coverage-smoke/FrontierUnique.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierManifestMass.olean im-results/agent4-coverage-smoke/FrontierManifestMass.lean
+          lean -o im-results/agent32-zero-prefix-global/ResidualFrontierManifest.olean im-results/agent32-zero-prefix-global/ResidualFrontierManifest.lean
+          lean -o im-results/agent8-coverage-contract/IncrementalAudit.olean im-results/agent8-coverage-contract/IncrementalAudit.lean
+          lean im-results/agent32-zero-prefix-global/SecondWordLeafGraft.lean | tee /tmp/bb6-translated-sibling-leaf.log
+          if grep -q 'sorryAx' /tmp/bb6-translated-sibling-leaf.log; then
+            echo "ERROR: translated sibling leaf graft proof graph depends on sorryAx"
+            exit 1
+          fi
       - name: Independently exhaust the six read-zero rows
-        if: ${{ !inputs.export_frontier && !inputs.verify_leaf_graft }}
+        if: ${{ !inputs.export_frontier && !inputs.verify_leaf_graft && !inputs.verify_translated_leaf_graft }}
         run: |
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-all.cpp -o /tmp/zero-prefix-check
           /tmp/zero-prefix-check
