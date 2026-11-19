@@ -23,6 +23,18 @@ open BB6Coverage.Agent48Champion
 
 set_option maxHeartbeats 4000000
 
+private theorem sideBit_replicate_true_local (n i : Nat) (hi : i<n) :
+    sideBit (List.replicate n true) i = true := by
+  induction n generalizing i with
+  | zero => omega
+  | succ n ih =>
+      cases i with
+      | zero => simp [sideBit]
+      | succ i =>
+          have hi' : i<n := by omega
+          simpa [sideBit] using ih i hi'
+
+
 /-- The exact residual context required by the corrected P2 postlude. -/
 def p2ResidualLeft (m : Nat) (tail : List Bool) : List Bool :=
   List.replicate (m+2) true ++ [false,true,false,false] ++ tail
@@ -68,6 +80,7 @@ theorem s0Config_allOnesDrain_q4Postlude
         rw [d1pow_length]
         omega)] at hcell
       have hidx : i-3*a < m := hj
+      rw [d1pow_length] at hcell
       exact hcell.trans (hprefix (i-3*a) hidx)
   have hright : T (H+1) = false := by
     have hcell := s0Config_right_cell ell a 0 (2^a-1) H 0
@@ -85,6 +98,7 @@ theorem s0Config_allOnesDrain_q4Postlude
     rw [hleft] at hc
     rw [Agent6Q4Prefix.sideBit_append_right (d1pow a) ell
       (3*a+m+j) (by rw [d1pow_length]; omega)] at hc
+    rw [d1pow_length] at hc
     have hidx : 3*a+m+j-3*a = m+j := by omega
     have hcoord : H-(3*a+m+j:Int) = h'-(j:Int) := by
       dsimp [h', K]
@@ -150,7 +164,7 @@ theorem p2S0Drain_q4Postlude
     rw [Agent6Q4Prefix.sideBit_append_left
       (List.replicate (m+2) true)
       ([false,true,false,false] ++ tail) i (by simp)]
-    exact sideBit_replicate_true (m+2) i hi
+    exact sideBit_replicate_true_local (m+2) i hi
   have h0 : sideBit (p2ResidualLeft m tail) (m+2) = false := by
     rw [Agent6Q4Prefix.sideBit_append_right
       (List.replicate (m+2) true)
