@@ -11,7 +11,7 @@ namespace BB6Coverage
 Integrate Agent 27's five-slot, source-certified translated finite-support
 cylinder into the existing depth-four physical frontier.
 
-`agent27Depth4Audit` is the exact expression used for `agent27Depth4Audit`
+`agent27Depth4Audit` is the exact expression used for `depth4ResidualAudit`
 in `ResidualFrontierManifest.lean`: `lassoPhysicalTraceAudit emptyTable 6 6
 12 12 2 4 4`.  We use the same physical audit directly, without importing
 the manifest's unrelated terminal-list and mass-report machinery.
