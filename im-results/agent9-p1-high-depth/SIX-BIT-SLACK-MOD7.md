@@ -115,9 +115,14 @@ Let \(q_s=b_s/2\). Since \(P\) is divisible by \(4\), these equations give the f
 - \(I_s=48\), \(T_1\) even: \(d_s\equiv3\pmod4\), \(q_s=3d_s-7\equiv2\pmod4\). The first shallow edge is depth \(0\). Again \(2k_1+2=q_s\), so \(k_1\) is even. This branch also survives the immediate child-mod-\(4\) test.
 - \(I_s=48\), \(T_1\) odd: \(d_s\equiv1\pmod4\), \(q_s=3d_s-7\equiv0\pmod4\). The first shallow edge is depth \(1\). Its source equations give \(c_1=2d_s-5\). Crucially, the inverse-mass equation is \(2k_1+c_1+4=b_s+d_s\), not the depth-zero equation with constant \(+2\). It follows that \(2k_1=5d_s-13\), hence \(k_1\) is even and the child counter is divisible by \(4\). This branch therefore survives the immediate child-mod-four test.
 
-**Formalization boundary:** the arithmetic above is exact, but the current RestartPath stores the scalar RestartWalk without retaining the intermediate OddCone suffix proof. A source-level first-shallow split must preserve the next-parent guard (or terminal wall guard) before the \(I_s=48\), odd-\(T_1\) exclusion is promoted to a theorem. RestartWallLowTrace.lean proves the source-to-LowTrace algebraic bridge; extending RestartPath with its actual OddCone suffix is the natural next step.
+**Formalization status:** RestartPath now retains the exact OddCone suffix, its inverse-depth/cost-list bridge, the absolute mass at the suffix root, and the equality between the RestartWalk origin and the suffix-root right counter. RestartWallLowTrace.lean now contains:
+- oddCone_mass_from_start and oddCone_to_restartWalk, which propagate the absolute mass and reconstruct the scalar walk from the source suffix;
+- oddCone_first_shallow_split and restartPath_first_shallow_source_split, which expose the actual first-shallow source parent, inverseAt guards, prefix-depth structure, and next-parent-or-wall child guard;
+- restartPath_first_shallow_state, which identifies the first-shallow source right counter with the endpoint of the corresponding scalar RestartWalk prefix.
 
-The corrected source gate therefore leaves two candidates: \(I_s=20\) with odd \(T_1\), and \(I_s=48\) with even \(T_1\). Both have first shallow depth \(0\). The former has \(\delta=2\) and even \(s\); the latter has \(\delta=1\) and odd \(s\). The valid congruence \(k\equiv2M\pmod4\) is useful for further analysis, but it does not yet distinguish these two surviving branches.
+These new Lean interfaces have not yet been compiled in this invocation; local execution tools failed at the tool boundary, and CI dispatch is frozen pending local preflight. The first-shallow parity arithmetic above does not eliminate any candidate.
+
+The remaining scalar candidates are all three branches: \(I_s=20\) with odd \(T_1\) (first shallow depth \(0\), \(\delta=2\), even \(s\)); and \(I_s=48\) with either parity of \(T_1\) (first shallow depth \(0\) when even, depth \(1\) when odd, \(\delta=1\), odd \(s\)). The valid congruence \(k\equiv2M\pmod4\) remains useful, but does not yet distinguish these cases.
 
 ## Bounding the high-depth edge under both terminal costs
 
