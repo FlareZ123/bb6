@@ -219,3 +219,29 @@ New positive-z first-cycle evidence: for z=1..4, the measured q4 cycle cost matc
 
 
 The positive-z first-cycle experiments now match a counted-drain law for z=1..4, including a verified 6,443,827,286-step first cycle at z=4. See Marker1TerminalQ4Macro.md for the formula, data, and the still-open source-level proof obligation.
+
+
+## Positive-z first-checkpoint setup composition (2026-11-19)
+
+A new intermediate setup decomposition is documented in
+[PositiveZCheckpointSetupDecomposition.md](PositiveZCheckpointSetupDecomposition.md).
+It formalizes the corrected suffix order
+`B20 ; sweep(L+1) ; B9 ; sweep(A+1) ; B6 ; sweep(z) ; B30`,
+with fixed bridge kernels in `PositiveZCheckpointSetupBridges.lean`
+and conditional tape-side composition in
+`PositiveZCheckpointSetupComposition.lean`.
+
+The residual context has the equivalent forms
+`11 ++ (010)^(A+1) ++ 011 ++ 110 ++ (010)^L ++ 011 ++ 101 ++ 11`
+and
+`110 ++ (100)^(A+1) ++ 111 ++ (100)^(L+1) ++ 1110111`.
+The new source drafts reduce the final left/right tape equality to the
+suffix guards and two blank exterior-tail conditions from the preceding
+S0 scans/B8 bridge.
+
+The dependency-free simulator
+`verify_positive_z_setup_decomposition.js` passes 1,047 finite parameter
+triples (maximum 4,861 simulated steps). This is finite evidence only.
+**All new Lean composition declarations remain uncompiled** pending local
+Lean 4.36.0-rc2 preflight; do not treat them as accepted source theorems or
+promote this material to `results/`.
