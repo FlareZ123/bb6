@@ -1492,3 +1492,16 @@ The separate post-checkpoint first-cycle cost still matches a deeper all-ones dr
 
 
 - Final tail refinement from Agent 24: prefer `counted_left_sweep (3*z)` (cost `9*z), moving head from `h2=3*z+5` to 5 and consuming `d1pow z`) followed by a fixed 10-step `firstQ4Postlude_exact` trace (state 3/head 5/marked `[-3,-1,0]` to state 4/head 1/marked `[-5,0,1]`). The long right block starts at `h2+7) and is outside the sweep. This is cleaner than specializing `q4S0Postlude_at`; documented in `PositiveZCheckpointNormalForm.md`.
+
+
+### 2026-11-19 checkpoint — first q4 checkpoint reparameterization into P1
+
+Claimed Agent42 at `2026-11-19T08:05:00Z`; the lease is immutable and must be checked against the actual clock after each later checkpoint.
+
+- Added `im-results/agent42-q4-s0-drain/FirstQ4P1Reparam.lean`. It formalizes the exact parameter translation from the root's first q4 checkpoint to Agent48's `firstCycleCheckpointTape` side encoding:
+  `M=2^A*(2^(L+2)-1)`, `w=A+L+1`, `q=2^(A-1)*(2^(L+2)-1)-1`; then `2*q+1=M-1`, `q<2^w`, and `binDec(A+L+2,M-1)=d0++binDec(w,q)` by `binDec_odd`.
+- The right side is already definitionally the same: `000 ++ 1^(3*z+5) ++ 00 ++ d1pow(2^z) ++ 0000`. Thus the *side-based* root first-checkpoint tape is exactly Agent48's P1 input tape at `(w,q)`. This removes a parameterization mismatch; it does not yet prove the actual `q4FrameAt` output equals that side-based tape.
+- Updated the q4 S0 drain README with the exact reparameterization and the single remaining frame-to-side pointwise identity. The authentic blank-root endpoint equality remains open.
+- Local Lean reconstruction was attempted from the two supplied split archives, but `container.exec` returned a tool-level `ClientError` before the shell command ran. No Lean acceptance or axiom-freedom is claimed. Existing CI run `44428245503` for Agent48's positive-z prefix failed in `PositiveZFirstCycleBridges.lean`; its failed-job tail was inspected via GitHub Actions, but no files owned by Agent48 were changed.
+- Next: ask Agent48 to review/integrate the exact `(w,q)` reparameterization; prove the frame-to-side tape identity using `s0LeftSweep_shift` and `q4FrameAt_tape`; obtain a working local Lean preflight before any new CI dispatch; then compose `firstCyclePrefix_to_s0DrainInput`, the generic S0 drain, and Q(z). Keep all uncompiled drafts in `im-results/`.
+

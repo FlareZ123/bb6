@@ -381,3 +381,32 @@ For (b\ge2), (z=2^b-1>0) and (z<2^A), so the positive-z q4 first-cycle hypothese
 
 
 I compared this full residual-context identity bit-for-bit against direct S0-input tape extraction for ten cases: ((A,L,z)=(3,2,1ldots5),(4,2,5),(3,4,5),(2,4,2),(4,2,3),(3,4,3)). Every extracted left tail had exactly the predicted length and bits. This directly validates the interface required by the postlude shift proof over a wider parameter sample.
+
+
+## Reparameterizing checkpoint 1 as Agent 48's P1 input
+
+The first q4 checkpoint side pair is
+`L_1 = 011 ++ binDec(A+L+2,M-1) ++ lh` and
+`R_1 = 000 ++ 1^(3z+5) ++ 00 ++ d1pow(2^z) ++ 0000`,
+where `M=2^A*(2^(L+2)-1)`.  Agent 48's P1 input uses
+`firstCycleCheckpointLeft w q = 011 ++ d0 ++ binDec(w,q) ++ lh`
+and the same right side.
+
+For every `A>0`, define
+`w=A+L+1` and
+`q=2^(A-1)*(2^(L+2)-1)-1`.  Then
+`2*q+1=M-1`, `q<2^w`, and the source encoder's exact
+`binDec_odd` identity gives
+`binDec(A+L+2,M-1)=d0 ++ binDec(w,q)`.  Therefore the two
+canonical side encodings are identical.  The source draft
+`FirstQ4P1Reparam.lean` formalizes this arithmetic/list-level
+reparameterization and proves equality of the side-based tapes.
+
+**Important boundary:** this does not yet prove that the actual
+`q4FrameAt` output of `firstQ4Checkpoint_run` equals the side-based
+tape.  The remaining lemma is pointwise tape extensionality using
+`s0LeftSweep_shift`, `q4FrameAt_tape`, and the S0 left/right cell
+lookups.  Once that lemma is in place, the existing
+`firstCyclePrefix_to_s0DrainInput` can be applied with the displayed
+`(w,q)` without any new transition macro.  The authentic blank-root
+endpoint equality remains a separate open obligation.
