@@ -1,4 +1,4 @@
-import ResidualFrontierManifest
+import LassoTraceAudit
 import IncrementalAudit
 import TranslatedFiveSlot
 
@@ -11,13 +11,23 @@ namespace BB6Coverage
 Integrate Agent 27's five-slot, source-certified translated finite-support
 cylinder into the existing depth-four physical frontier.
 
+`agent27Depth4Audit` is the exact expression used for `agent27Depth4Audit`
+in `ResidualFrontierManifest.lean`: `lassoPhysicalTraceAudit emptyTable 6 6
+12 12 2 4 4`.  We use the same physical audit directly, without importing
+the manifest's unrelated terminal-list and mass-report machinery.
+
 The four-slot parent is the exact A/0, B/0, C/1, D/1 path.  We prove
-directly that every completion of this parent is open in the existing
-physical audit, then use the generic exact open-set theorem for certificate
-grafts.  The resulting theorem says that the graft removes precisely the
-five-slot nonhalting cylinder from this parent and preserves every other
-open completion.
+directly that every completion of this parent is open in the physical audit,
+then use the generic exact open-set theorem for certificate grafts.  The
+resulting theorem says that the graft removes precisely the five-slot
+nonhalting cylinder from this parent and preserves every other open
+completion.
 -/
+
+/-- Same physical audit expression as `depth4ResidualAudit` in
+    `ResidualFrontierManifest.lean`. -/
+def agent27Depth4Audit : FrontierAudit (DecidedBelow 6) emptyTable :=
+  lassoPhysicalTraceAudit emptyTable 6 6 12 12 2 4 4
 
 theorem agent27P0_old_oracle_false :
     lassoDecisionOracle agent27P0 6 6 12 2 4 = false := by decide
@@ -64,7 +74,7 @@ private theorem agent27_lasso_open_step
     leaf of the existing physical lasso tree. -/
 theorem agent27Parent_open_all (m : Machine)
     (hm : compatible agent27P4 m) :
-    depth4ResidualAudit.open m := by
+    agent27Depth4Audit.open m := by
   have hA : m agent27A0 = agent27A0Action :=
     hm agent27A0 agent27A0Action (by decide)
   have hB : m agent27B0 = agent27B0Action :=
@@ -96,20 +106,20 @@ theorem agent27Parent_open_all (m : Machine)
     apply (agent27_lasso_open_step agent27P0 3 agent27A0
       agent27P0_old_oracle_false agent27P0_next m).2
     simpa [agent27P1, hA] using h1
-  simpa [depth4ResidualAudit, agent27P0] using h0
+  simpa [agent27Depth4Audit, agent27P0] using h0
 
 noncomputable def agent27GraftedAudit :
     FrontierAudit (DecidedBelow 6) emptyTable :=
-  addCertificate depth4ResidualAudit agent27WordPump
+  addCertificate agent27Depth4Audit agent27WordPump
     (agent27WordPump_cover 6)
 
 /-- Exact open-set semantics of the integrated five-slot graft. -/
 theorem agent27GraftedAudit_open_iff (m : Machine) :
     agent27GraftedAudit.open m ↔
-      depth4ResidualAudit.open m ∧
+      agent27Depth4Audit.open m ∧
         ¬ compatible agent27WordPump m := by
   simpa [agent27GraftedAudit] using
-    (addCertificate_open_iff depth4ResidualAudit agent27WordPump
+    (addCertificate_open_iff agent27Depth4Audit agent27WordPump
       (agent27WordPump_cover 6) m (empty_compatible m))
 
 /-- On the P4 parent, the grafted open set is exactly the complement of
@@ -140,7 +150,7 @@ theorem agent27WordPump_parent_compatible (m : Machine)
     the integrated source certificate. -/
 theorem agent27_leaf_closed (m : Machine)
     (hm : compatible agent27WordPump m) :
-    depth4ResidualAudit.open m ∧
+    agent27Depth4Audit.open m ∧
       ¬ agent27GraftedAudit.open m := by
   have hp := agent27WordPump_parent_compatible m hm
   refine ⟨agent27Parent_open_all m hp, ?_⟩
