@@ -13,6 +13,7 @@ on:
           - m32-w485-highstop
           - w1821-primitives
           - w1821-highstop
+          - b2-root32
           - q0-secondary-parent
           - q0-secondary-cylinders
         default: m32-w485-highstop
@@ -73,6 +74,11 @@ jobs:
               python3 tools/lean_compile_closure.py \
                 im-results/agent3-c-bounce-inverse/U5Q0W1821HighStop.lean \
                 --jobs 8 --workdir /tmp/lean-closure-w1821 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
+              ;;
+            b2-root32)
+              python3 tools/lean_compile_closure.py \
+                im-results/agent3-c-bounce-inverse/U5B2Root32.lean \
+                --jobs 8 --workdir /tmp/lean-closure-b2-root32 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
             q0-secondary-parent)
               python3 tools/lean_compile_closure.py \
