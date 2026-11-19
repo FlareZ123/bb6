@@ -136,3 +136,36 @@ z\equiv13\pmod{16}\Rightarrow w\equiv31\pmod{128}.
 The corresponding Lean draft is
 `w7_q0_target_unreachable_z5or13mod16` in
 `U5Q0W7ParentFan.lean`; it also awaits independent local compilation.
+
+
+## One higher-depth root cylinder: w=439 (mod 512)
+
+The remaining q=1 branch in (z\equiv2\pmod4) has a further exact
+source closure on (w\equiv439\pmod{512}). The residual congruence
+modulo 512 gives (z\equiv46\pmod{64}); intersecting with the exact
+(z\equiv3\pmod5) residual yields (z\equiv238\pmod{320}), hence
+(u=(z-2)/4\equiv59\pmod{80}).
+
+Write (u=59+80v). Then (W=2228+3591u) is odd, so the first-parent
+fan has only q=0 and q=1. The q=0 parent is already excluded. The q=1
+parent is
+[
+A_1=(428191+574560v,;2350053+3153360v).
+]
+Its coordinates are odd/odd and its sum is
+(2778244+3727920v\equiv4\pmod{16}). The unique odd/odd low-value
+parent is therefore
+[
+B=(1389120+1863960v,;1869585+2508660v).
+]
+The right coordinate of (B) is odd and
+[
+B_1+B_2=3258705+4372620v\equiv1\pmod4.
+]
+Thus `blank_no_odd_sum_one` excludes (B), hence (A_1), hence the
+q=1 branch. Together with q=0 exclusion and the absence of higher
+depths, this excludes (P_z) on (w\equiv439\pmod{512}).
+
+This is an exact source derivation; it is not yet in the Lean file and
+awaits formalization/preflight. It does not close the other lifts of
+the (u\equiv3\pmod4) branch.
