@@ -62,8 +62,26 @@ The candidate's kernel-reduced checker theorem is `agent27WordPump_translated_ch
 
 The C++ discovery script `search_translated.cpp` performs a deterministic bounded DFS from P4, with macro depth at most 8 and at most five newly assigned slots. It visited 2,398,734 nodes and found 3,428 distinct source tables; the five-slot/three-step candidate above was the smallest cylinder found. The Lean theorem, not the search, is the proof of nonhalting.
 
-## Integration boundary
+## Integration status (Agent 32, 2026-11-19)
 
-This file proves a nonhalting cylinder independently of the depth-four audit. It does **not** yet prove that the whole cylinder lies inside `depth4ResidualAudit.open`, nor does it update the interpreted global frontier report. The existing P4 parent-open argument is in `im-results/agent32-zero-prefix-global/SecondWordLeafGraft.lean`, but that module's full dependency closure has not yet passed local preflight. To integrate this stronger child, use the new generic `addCertificate_open_iff` theorem in `im-results/agent8-coverage-contract/IncrementalAudit.lean`, prove the P4-parent corollary, compile the exact full closure, and only then update the global dossier/workflow.
+A direct integration proof draft now exists at
+`im-results/agent32-zero-prefix-global/FiveSlotLeafGraft.lean`. It:
 
-This is a rigorously proved nonhalting family, not a BB(6) upper bound or exact solution.
+- uses the exact physical-audit expression `lassoPhysicalTraceAudit emptyTable 6 6 12 12 2 4 4`, which is the body of `depth4ResidualAudit` in `ResidualFrontierManifest.lean`;
+- proves every completion of P4 (A/0, B/0, C/1, D/1) is open in that audit, by the same finite-lasso and first-unknown-slot semantics;
+- uses `addCertificate_open_iff` to state the exact post-graft open set:
+  `agent27GraftedAudit.open m ↔ agent27Depth4Audit.open m ∧ ¬ compatible agent27WordPump m`;
+- proves the five-slot source cylinder was open before the graft and is closed afterward, while every source-incompatible completion of P4 remains open.
+
+The wrapper and an isolated manual target `verify_five_slot_leaf_graft` in
+`.github/workflows/agent32-zero-path-global.yml` are committed. The target
+skips the unrelated MarkerOracle/WordOracle branch and compiles the exact
+physical-audit, translated-cycle, incremental-audit, and wrapper dependencies.
+**The wrapper has not yet passed a full Lean compile.** No CI run has been
+dispatched; the local source checkout needed for this invocation's full
+preflight was unavailable. Do not report the global frontier mass as updated
+until the wrapper is compiled and the audit report is recomputed or its exact
+mass delta is proved.
+
+This remains a rigorously proved nonhalting family, not a BB(6) upper bound or
+exact solution.
