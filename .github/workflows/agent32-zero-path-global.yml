@@ -82,7 +82,7 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
           lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
           lean -o im-results/agent32-zero-prefix-global/ZeroPathAudit.olean im-results/agent32-zero-prefix-global/ZeroPathAudit.lean
-          if [[ "${{ inputs.export_frontier }}" != "true" ]]; then
+          if [[ "${{ inputs.export_frontier }}" != "true" && "${{ inputs.verify_leaf_graft }}" != "true" ]]; then
             lean im-results/agent32-zero-prefix-global/ZeroPathMassEval.lean
           fi
           lean -o im-results/agent32-zero-prefix-global/ControlPathAudit.olean im-results/agent32-zero-prefix-global/ControlPathAudit.lean
