@@ -69,8 +69,8 @@ theorem tm63_blank_reaches_second_q4_frame :
       rootMarker1Head, s0Config, firstQ4Left0_eq_marker1_d1pow] using
       tm63_blank_reaches_after_middle34_marker1_s0
 
-  have hz' : 1 ≤ rootMarker1Z := by
-    omega
+  have hz' : 1 ≤ rootMarker1Z :=
+    le_trans (by decide) rootMarker1Z_ge_three
 
   have hsecond :
       run tm2 rootSecondQ4Cost
