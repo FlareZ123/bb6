@@ -6,8 +6,9 @@ import OuterLCIncCanonicalEndpoint
 
 This module joins the existing source-level blank-root theorem through the
 middle-34 rows and outer-LC_Inc nested frame to the pointwise canonical
-marker-1 S0 tape identification.  It makes the right-counter terminal parameters explicit; the root-specific
-lower bound needed for the positive-z q4 macro remains a separate obligation.  It is a source draft until its complete dependency
+marker-1 S0 tape identification.  It makes the right-counter terminal parameters explicit and includes a
+source-level proof that the authentic root has b ≥ 2 (hence z ≥ 3). The
+complete dependency closure remains uncompiled.  It is a source draft until its complete dependency
 closure is compiled and its exported axiom profile is audited; it proves
 neither halting nor the exact champion score.
 -/
