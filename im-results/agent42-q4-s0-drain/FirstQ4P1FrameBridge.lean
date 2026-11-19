@@ -36,7 +36,7 @@ private theorem config_ext {c d : Config}
 /-- The actual final q4 frame configuration has state 4, head 1, and
 exactly the canonical P1 side tape. -/
 theorem firstQ4P1Output_eq_firstQ4P1Tape
-    (L A z : Nat) (hA : 0<A) :
+    (L A z : Nat) :
     firstQ4P1Output L A z = ⟨4,1,firstQ4P1Tape L A z⟩ := by
   have hs : (firstQ4P1Output L A z).state = 4 := by
     simp [firstQ4P1Output,q4FrameAt,q4Frame,shiftConfig,
@@ -94,7 +94,7 @@ theorem firstQ4Checkpoint_run_to_P1
           (firstQ4P1SecondDrainTape L A z) (3*z+5))
         3 q4S0Final4Inside q4S0Final4End =
       firstQ4P1Output L A z := rfl
-  rw [hframe,firstQ4P1Output_eq_firstQ4P1Tape L A z hA,
+  rw [hframe,firstQ4P1Output_eq_firstQ4P1Tape L A z,
     firstQ4P1Tape_eq_firstCycleCheckpointTape L A z hA] at hrun
   exact hrun
 
