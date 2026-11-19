@@ -280,6 +280,87 @@ theorem oddCone_depths_cost
   | @parent bp dp mp t k c hpre hb hb4 hd hi hk hc ih =>
       simp [oddConeDepths, totalCost, ih, Nat.add_assoc]
 
+/-- A restart walk with fixed start state and edge-cost word has a
+    unique endpoint. -/
+theorem restartWalk_endpoint_unique
+    (P c x s : Nat) (es : List Nat) (x1 x2 : Nat)
+    (h1 : RestartWalk P c x s es x1)
+    (h2 : RestartWalk P c x s es x2) :
+    x1=x2 := by
+  induction h1 generalizing x2 with
+  | nil x s =>
+      cases h2
+      rfl
+  | @cons x s e es xmid xend hstep hrest ih =>
+      cases h2 with
+      | @cons _ _ _ _ xmid' _ hstep' hrest' =>
+          have hmul : 2^e*xmid = 2^e*xmid' := by
+            apply Nat.add_right_cancel
+            exact hstep.symm.trans hstep'
+          have hxmid : xmid=xmid' :=
+            Nat.eq_of_mul_eq_mul_left (Nat.pow_pos (by decide : 0 < (2:Nat))) hmul
+          subst xmid'
+          exact ih hrest'
+
+/-- Split a RestartWalk after a chosen prefix word. -/
+theorem restartWalk_split
+    (P c x s xend : Nat) (pre post : List Nat)
+    (h : RestartWalk P c x s (pre++post) xend) :
+    ∃ xmid,
+      RestartWalk P c x s pre xmid ∧
+      RestartWalk P c xmid (s+totalCost pre) post xend := by
+  induction pre generalizing x s xend with
+  | nil =>
+      refine ⟨x, RestartWalk.nil x s, ?_⟩
+      simpa using h
+  | cons e pre ih =>
+      cases h with
+      | @cons x s e' es xmid xend hstep hrest =>
+          have htail : RestartWalk P c xmid (s+e) (pre++post) xend := by
+            simpa using hrest
+          obtain ⟨xmid',hpre,htail'⟩ := ih htail
+          refine ⟨xmid', RestartWalk.cons hstep hpre, ?_⟩
+          simpa [totalCost, Nat.add_assoc] using htail'
+
+/-- Reconstruct the restart walk directly from a source OddCone suffix,
+    retaining its absolute mass origin. -/
+theorem oddCone_to_restartWalk
+    (n m0 b0 d0 b d L : Nat)
+    (h : OddCone b0 d0 b d L)
+    (hStartMass : b0+d0+2*m0+2*n+13=14*2^n) :
+    RestartWalk (2^n) (m0+n) (d0-1) 0
+      ((oddConeDepths h).map Nat.succ) (d-1) := by
+  induction h generalizing m0 hStartMass with
+  | root =>
+      simpa [oddConeDepths] using (RestartWalk.nil (d0-1) 0)
+  | @parent bp dp mp t k c hpre hb hb4 hd hi hk hc ih =>
+      have hpreMass := oddCone_mass_from_start
+        n m0 b0 d0 bp dp mp hpre hStartMass
+      have hsource :=
+        (inverseAt_iff_power_mass bp dp t k c (by omega) hb4 hd).mp hi
+      have hpow : 2^(t+1)=2^t*2 := by rw [Nat.pow_succ]
+      have hInv2 : 2*dp+bp+6=2^(t+1)*(c+3) := by
+        calc
+          2*dp+bp+6 = 2*(dp+bp/2+3) := by omega
+          _ = 2*(2^t*(c+3)) := by rw [hsource.1]
+          _ = (2^t*2)*(c+3) := by ac_rfl
+          _ = 2^(t+1)*(c+3) := by rw [hpow]
+      have hStepSource := source_edge_recurrence
+        (2^n) n bp dp (m0+mp) t c hpreMass hInv2 (by omega)
+      have hpreCost := oddCone_depths_cost hpre
+      have hstep :
+          dp-1+14*2^n =
+            2^(t+1)*(c+3)+
+              2*((m0+n)+3+totalCost ((oddConeDepths hpre).map Nat.succ)) := by
+        rw [hStepSource, hpreCost]
+        omega
+      have hwalkPre := ih m0 hStartMass
+      have hwalk := restart_walk_snoc
+        (2^n) (m0+n) (d0-1) 0
+        ((oddConeDepths hpre).map Nat.succ) (dp-1) (t+1) (c+3)
+        hwalkPre hstep
+      simpa [oddConeDepths, List.map_append] using hwalk
+
 /-- Split a source OddCone suffix at its first depth below two.  The
     output child is a valid OddCone parent state if the suffix continues,
     and is the endpoint otherwise; in either case the caller may supply its
