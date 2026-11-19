@@ -35,7 +35,7 @@ K\equiv20\pmod{54},\qquad K\equiv20\pmod{81},
 \]
 and hence \(K\equiv2\pmod6\), \(K+6a\equiv20\pmod{54}\), and \(r\equiv24\pmod{54}\).
 
-The modular residues follow directly from \(2^{47}\equiv50\pmod{54}\), \(2^{47}\equiv50\pmod{81}\), and \(2^{54}\equiv1\pmod{81}\):
+For \(a=54m\), \(2^{a-7}=2^{47}(2^{54})^{m-1}\). Modulo \(54\), \(2^{54}\equiv28\) and \(28\cdot50\equiv50\); modulo \(81\), \(2^{54}\equiv1\). Since \(2^{47}\equiv50\) in both moduli, \(2^{a-7}\equiv50\) in both moduli. Thus:
 \[
 p=2^K\equiv2^{20}\equiv31\pmod{81},
 \]
@@ -114,7 +114,7 @@ Then
 \]
 so \(\operatorname{ResetParent}(h_0,E)\) holds.
 
-Also \(2p<h_0<3p\), so \(h_0\) has no even parent. Its odd numerator is \(X_1=2h_0+5\), and (1) gives \(v_3(X_1)=1\). Thus only \(t=0\) is possible at \(h_0\). Moreover,
+Also \(2p<h_0<3p\), so \(h_0\) has no even parent. Its odd numerator is \(X_1=2h_0+5\), and (1) gives \(v_3(X_1)=1\). Thus only \(t=0\) is possible at \(h_0\).
 For this bound, \(x=97/64+67/2^a\) gives
 \[
 \frac Xp=\frac{21}{2}-\frac{32\cdot67}{3\cdot2^a}+\frac{2K+13}{3p}<\frac{21}{2}.
@@ -129,6 +129,7 @@ The last inequality follows from \(2^a<2K+7\) and
 \]
 
 \[
+The exact expression for (X_1/p) is
 \frac{X_1}{p}
 =6-\frac{128\cdot67}{9\cdot2^a}-\frac{10K-25}{9p}
 \in(5,6).
@@ -146,7 +147,7 @@ D_0=\frac{17152\cdot2^{K-a}+47K+31}{27},
 \qquad
 D_0+L=\frac{17152\cdot2^{K-a}+74K-23}{27}. \tag{2}
 \]
-In particular, (D_0\ge17152\cdot2^{K-a}/27>3).
+In particular, \(D_0>3\).
 Define
 \[
 D_{j+1}=2D_j+L,\qquad y_j=2p-D_j.
