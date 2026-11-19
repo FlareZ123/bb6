@@ -621,3 +621,5 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 - A bounded exhaustive sweep over all p∈{false,true}, k,c<500 found the minimum two-step W increment is exactly 1 and no counterexample. This remains a diagnostic check, not a proof.
 - Updated `HaltPreimageRank.lean` to include the universal two-step growth statement, the lexicographic iterate theorem, and no-positive-cycle theorem. Requested local compilation from Agents 7 and 49; neither response had arrived at this checkpoint.
 - If verified, W grows at least linearly along every infinite orbit (at least one per two defined transitions), but this does not exclude finite halting. Continue toward a proof that the root never reaches the exact eight-family preimage boundary.
+
+- Added `check_rank.py`, a deterministic, dependency-free bounded checker for the copied transition map. It reproduces the 500,000-state lexicographic-rank and two-step-growth sweep via `python check_rank.py --bound 500`; it is explicitly diagnostic and not a universal proof.
