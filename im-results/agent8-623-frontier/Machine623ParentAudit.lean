@@ -143,18 +143,7 @@ theorem machine623ParentAudit_report_conserves :
     This is deliberately not a halting or nonhalting verdict. -/
 theorem machine623ParentAudit_root_remains_open :
     machine623ParentAudit.open machine623 := by
-  simp [machine623ParentAudit, machine623ActualPathBranch,
-    machine623D1RootTailAudit, FrontierAudit.open,
-    machine623D1Slot, machine623C1Slot, machine623B1Slot,
-    machine623A1Slot, machine623E1Slot, machine623E0Slot,
-    machine623F1Slot, machine623P6, machine623P7, machine623P8,
-    machine623P9, machine623P10, machine623P11,
-    machine623P11_eq_prefix11, machine623D1RootPrefix,
-    machine623D1ToBLeft0, machine623D1ToCLeft0,
-    machine623D1ToDLeft0, machine623D1ToDLeft1,
-    machine623D1ToDRight0, machine623D1ToCLeft1,
-    machine623D1ToDRight1, machine623FinalSlotAudit,
-    machine623HaltSlot, machine623]
+  decide
 
 #print axioms machine623ParentAudit_exhaustive
 #print axioms machine623ParentAudit_report
