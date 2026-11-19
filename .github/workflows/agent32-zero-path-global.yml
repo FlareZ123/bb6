@@ -38,6 +38,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_leaf_graft:
+        description: 'Compile and axiom-audit the two-mark finite-word graft into the existing depth-four physical frontier'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -87,6 +92,21 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
           lean -o im-results/agent32-zero-prefix-global/WordLassoTraceAudit.olean im-results/agent32-zero-prefix-global/WordLassoTraceAudit.lean
           lean im-results/agent32-zero-prefix-global/ReadOneLeaf.lean
+      - name: Verify exact two-mark finite-word leaf graft (explicitly requested only)
+        if: ${{ inputs.verify_leaf_graft }}
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
+          lean -o im-results/agent4-coverage-smoke/FrontierExtract.olean im-results/agent4-coverage-smoke/FrontierExtract.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierUnique.olean im-results/agent4-coverage-smoke/FrontierUnique.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierManifestMass.olean im-results/agent4-coverage-smoke/FrontierManifestMass.lean
+          lean -o im-results/agent32-zero-prefix-global/ResidualFrontierManifest.olean im-results/agent32-zero-prefix-global/ResidualFrontierManifest.lean
+          lean -o im-results/agent8-coverage-contract/IncrementalAudit.olean im-results/agent8-coverage-contract/IncrementalAudit.lean
+          lean im-results/agent32-zero-prefix-global/WordLassoLeafGraft.lean | tee /tmp/bb6-two-mark-leaf-graft.log
+          if grep -q 'sorryAx' /tmp/bb6-two-mark-leaf-graft.log; then
+            echo "ERROR: two-mark leaf graft proof graph depends on sorryAx"
+            exit 1
+          fi
       - name: Independently exhaust the six read-zero rows
         if: ${{ !inputs.export_frontier }}
         run: |
