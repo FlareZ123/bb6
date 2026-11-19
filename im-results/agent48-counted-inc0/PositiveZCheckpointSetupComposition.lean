@@ -133,7 +133,7 @@ theorem setupB30Config_head (T : Int → Bool) (h : Int)
       h + 3*((A+L+z:Int)) + 13 := by
   simp [setupB30Config, setupLConfig, setupB6Config,
     setupAConfig, setupB9Config, setupZConfig, setupB20Config,
-    q4FrameAt, shiftConfig]
+    q4FrameAt, q4Frame, q4CenterTape, shiftConfig, embed]
   omega
 
 /-- The suffix's total cost is the linear remainder 3*(A+L+z)+71. -/
