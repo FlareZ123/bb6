@@ -61,6 +61,8 @@ theorem b0_cphase_d1_r3_step (b : Conf) (hb : Reach b)
   change q = .B at hB
   subst q
   change t h = false at h0
+  change t (h-4) = false at hzeroC
+  change t (h-5) = true at honeD
   have hscan0 : t (h-1) = true := by
     simpa using hscan 0 (by omega)
   have hscan1 : t (h-2) = true := by
@@ -149,10 +151,18 @@ theorem b0_cphase_d1_r3_step (b : Conf) (hb : Reach b)
   have hrawRun : shuttleRun 10 ⟨.B,h,t⟩ = some rawBout := by
     simp [shuttleRun, hs1, hs2, hs3, hs4, hs5, hs6, hs7, hs8, hs9, hs10]
   have hBzero : BZero ⟨.B,h,t⟩ := ⟨rfl,h0⟩
+  have hzeroC' : t (h-1-(3:Int)) = false := by
+    have hidx : h-1-(3:Int) = h-4 := by omega
+    rw [hidx]
+    exact hzeroC
+  have honeD' : t (h-1-(4:Int)) = true := by
+    have hidx : h-1-(4:Int) = h-5 := by omega
+    rw [hidx]
+    exact honeD
   obtain ⟨sourceBout, hsourceRun, hsourceReach, hsourceBZero,
       hsourceHead, hsourceShield, _⟩ :=
     b0_cphase_d1_zero_wave_return ⟨.B,h,t⟩ 3 hb hBzero
-      (by omega) hscan hzeroC honeD hshield
+      (by omega) hscan hzeroC' honeD' hshield
   have hsourceRun10 : shuttleRun 10 ⟨.B,h,t⟩ = some sourceBout := by
     simpa using hsourceRun
   have heq : rawBout = sourceBout :=
@@ -217,10 +227,10 @@ theorem zeroLeftEvenOutTape_cphaseD1_corridor
       omega
     rw [hidx1,hidx2]
     by_cases hk0 : k = 0
-    · subst k
-      have hnpos : 0 < n := by omega
-      exact ⟨zeroLeftEvenOutTape_h_false n t h hnpos,
-        zeroLeftEvenOutTape_hm1 n t h⟩
+    · have hnpos : 0 < n := by omega
+      have hfalse := zeroLeftEvenOutTape_h_false n t h hnpos
+      have htrue := zeroLeftEvenOutTape_hm1 n t h
+      simpa [hk0] using And.intro hfalse htrue
     · have hkpos : 0 < k := by omega
       let j : Nat := k-1
       have hj : j < n := by dsimp [j]; omega
@@ -237,15 +247,19 @@ theorem zeroLeftEvenOutTape_cphaseD1_corridor
       have htermF2 : h+2*(k:Int) ≠ h+2*(n:Int)+1 := by omega
       have htermD1 : h+2*(k:Int)-1 ≠ h+2*(n:Int) := by omega
       have htermD2 : h+2*(k:Int)-1 ≠ h+2*(n:Int)+1 := by omega
+      have htermF1' : h+2*(k:Int) ≠ h+1+2*(n:Int) := by omega
+      have htermF2' : h+2*(k:Int) ≠ h+1+2*(n:Int)-1 := by omega
+      have htermD1' : h+2*(k:Int)-1 ≠ h+1+2*(n:Int) := by omega
+      have htermD2' : h+2*(k:Int)-1 ≠ h+1+2*(n:Int)-1 := by omega
       have hFout : zeroLeftEvenOutTape n t h (h+2*(k:Int)) =
           evenSweepTape n fTape (h+1) (h+2*(k:Int)) := by
         simp [zeroLeftEvenOutTape,evenSweepB0Tape,fTape,setBit,
-          htermF1,htermF2]
+          htermF1',htermF2']
       have hDout : zeroLeftEvenOutTape n t h (h+2*(k:Int)-1) =
           evenSweepTape n fTape (h+1) (h+2*(k:Int)-1) := by
         simp [zeroLeftEvenOutTape,evenSweepB0Tape,fTape,setBit,
-          htermD1,htermD2]
-      rw [hFout,hidxF,hDout,hidxD]
+          htermD1',htermD2']
+      rw [hFout,hDout,hidxF,hidxD]
       exact ⟨hF,hD⟩
 
 theorem cphaseD1_repeat (m : Nat) (b : Conf)
@@ -289,9 +303,11 @@ theorem cphaseD1_repeat (m : Nat) (b : Conf)
     intro b hb hBzero hscan hpairs hshield
     rcases hBzero with ⟨hB,h0⟩
     have hpair0 := hpairs 0 (by omega)
+    have hzeroC0 : b.tape (b.h-4) = false := by simpa using hpair0.1
+    have honeD0 : b.tape (b.h-5) = true := by simpa using hpair0.2
     obtain ⟨b1,hstep,hb1,hB1,hhead1,hshield1,
       hleft1,hleft2,hleft3,hright1,hright2,hpresLeft1,hpresRight1⟩ :=
-      b0_cphase_d1_r3_step b hb hB h0 hscan hpair0.1 hpair0.2 hshield
+      b0_cphase_d1_r3_step b hb hB h0 hscan hzeroC0 honeD0 hshield
     have hscan1 : ∀ i : Nat, i < 3 →
         b1.tape (b1.h-1-(i:Int)) = true := by
       intro i hi
@@ -354,19 +370,11 @@ theorem cphaseD1_repeat (m : Nat) (b : Conf)
           calc
             bout.tape (b.h-1) = b1.tape (b.h-1) :=
               hpresRight2 (b.h-1) (by rw [hhead1]; omega)
-            _ = b1.tape (b1.h+1) := by
-              congr 1
-              rw [hhead1]
-              omega
             _ = false := hright1
         · rw [hidx2]
           calc
             bout.tape b.h = b1.tape b.h :=
               hpresRight2 b.h (by rw [hhead1]; omega)
-            _ = b1.tape (b1.h+2) := by
-              congr 1
-              rw [hhead1]
-              omega
             _ = true := hright2
       · have hjlt : j < m := by omega
         exact hcorr2 j hjlt
@@ -481,7 +489,7 @@ theorem zeroLeftEven_full_return (n : Nat) (b : Conf)
       bout.tape x = d.tape x := hpresRight x hx'
       _ = b.tape x := by
         change zeroLeftEvenOutTape n b.tape b.h x = b.tape x
-        exact zeroLeftEvenOutTape_right n b.tape b.h x (by dsimp [d]; omega)
+        exact zeroLeftEvenOutTape_right n b.tape b.h x (by omega)
   have hcorrFinal : ∀ j : Nat, j ≤ n →
       bout.tape (b.h+1+2*(j:Int)) = false ∧
       bout.tape (b.h+2+2*(j:Int)) = true := by
