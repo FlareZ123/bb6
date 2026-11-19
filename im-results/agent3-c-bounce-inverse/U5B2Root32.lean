@@ -652,6 +652,43 @@ theorem p4_root32_u_parameter (w : Nat)
   refine ⟨w/8,?_⟩
   omega
 
+/-- The exact residual root equation transfers r=32 mod 64 to
+v2(P4.x+P4.y)=5. The hypothesis is the rearranged integer identity
+from the B2 residual reduction; E>=19 is more than enough for its
+power-of-two term to vanish modulo 64. -/
+theorem p4_sum_mod64_of_root32 (r E u : Nat)
+    (hr : r%64=32) (hE : 19≤E)
+    (hExact :
+      211*(67186+999595*u)+7*(2570932352+3163718175*r)
+        =2855985*2^(E-13)) :
+    (67186+999595*u)%64=32 := by
+  have hA : (2570932352+3163718175*r)%64=32 := by omega
+  have hpow : (2^(E-13))%64=0 := by
+    have hdiv : 64∣2^(E-13) := by
+      have h := Nat.pow_dvd_pow 2 (by omega)
+      simpa only [show (2:Nat)^6=64 by decide] using h
+    exact Nat.mod_eq_zero_of_dvd hdiv
+  have hsum :
+      (211*(67186+999595*u)+7*(2570932352+3163718175*r))%64=0 := by
+    rw [hExact,Nat.mul_mod,hpow]
+    simp
+  omega
+
+/-- Conditional root-index form of the root32 exclusion. -/
+theorem blank_no_b2_root32_from_root_index (r E w : Nat)
+    (hr : r%64=32) (hE : 19≤E)
+    (hExact :
+      211*(67186+999595*(122+840*w))
+        +7*(2570932352+3163718175*r)=2855985*2^(E-13)) :
+    ¬ BB6.Agent3.CReach
+      (734+10944*(122+840*w))
+      (34881+518816*(122+840*w)) := by
+  have hS := p4_sum_mod64_of_root32 r E (122+840*w) hr hE hExact
+  exact blank_no_b2_root32_from_p4_sum w hS
+
+#print axioms p4_sum_mod64_of_root32
+#print axioms blank_no_b2_root32_from_root_index
+
 /-- Root32 valuation cylinder exclusion in the original w parameter. -/
 theorem blank_no_b2_root32_from_p4_sum (w : Nat)
     (hS : (67186+999595*(122+840*w))%64=32) :
