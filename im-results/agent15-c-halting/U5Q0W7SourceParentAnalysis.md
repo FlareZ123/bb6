@@ -140,10 +140,15 @@ The corresponding Lean draft is
 
 ## One higher-depth root cylinder: w=439 (mod 512)
 
-The remaining q=1 branch in (z\equiv2\pmod4) has a further exact
-source closure on (w\equiv439\pmod{512}). The exact residual modulo 512 on w=7+8s is t ≡ 272+23w ≡ 433+184s (mod 512). With t=81+168z, division by 8 gives 21z ≡ 44+23s (mod 64), hence z ≡ 60+59s (mod 64). For w=439, s=54, so z ≡ 46 (mod 64); intersecting with the exact (z\equiv46\pmod{64}); intersecting with the exact
-(z\equiv3\pmod5) residual yields (z\equiv238\pmod{320}), hence
-(u=(z-2)/4\equiv59\pmod{80}).
+The remaining q=1 branch in (z\\equiv2\\pmod4) has a further exact
+source closure on (w\\equiv439\\pmod{512}). The exact residual modulo
+512 on w=7+8s is t \\equiv 272+23w \\equiv 433+184s \\pmod{512}.
+With t=81+168z, division by 8 gives
+21z \\equiv 44+23s \\pmod{64}, hence
+z \\equiv 60+59s \\pmod{64}. For w=439, s=54, so
+z \\equiv46\\pmod{64}; intersecting with the exact
+z \\equiv3\\pmod5 residual yields z \\equiv238\\pmod{320}, hence
+u=(z-2)/4 \\equiv59\\pmod{80).
 
 Write (u=59+80v). Then (W=2228+3591u) is odd, so the first-parent
 fan has only q=0 and q=1. The q=0 parent is already excluded. The q=1
