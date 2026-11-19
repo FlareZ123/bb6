@@ -57,9 +57,11 @@ theorem w7_z2_parent_fan (u a k : Nat)
                   hk0,hk1,hk2,hk3] using hpre
               rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hsum,hcost⟩
               · omega
-              · have hnodd : n%2=1 := by
+              · have hcostEven : (x+2*y+2)%2=0 := by
                   rw [hX2]
+                  dsimp [X2]
                   omega
+                have hnodd : n%2=1 := by omega
                 have hnEven : (n+1)%2=0 := by omega
                 have hscale : 2^(n+2)*4=16*W := by
                   have hp : 2^(n+2)=2^n*4 := by
@@ -122,9 +124,8 @@ theorem w7_z2_parent_fan (u a k : Nat)
               have hcost' : 2*k+a+7+3*n=X2 := by
                 rw [hX2]
                 omega
-              have hnEven : n%2=0 := by
-                rw [hX2] at hcost'
-                omega
+              have hX2even : X2%2=0 := by dsimp [X2]; omega
+              have hnEven : n%2=0 := by omega
               exact ⟨n,hnEven,hscale,hcost'⟩
 
 /-- The depth-zero parent of the w=7 z=2 (mod 4) target is
