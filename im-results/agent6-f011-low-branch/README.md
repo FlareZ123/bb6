@@ -1,6 +1,6 @@
 # F011 (#464): exact low-branch return map
 
-**Status:** intermediate mathematical result. This is an exact reduction of one branch of the accelerated orbit, not a proof that the machine halts or does not halt.
+**Status (19 November 2026): intermediate, not a machine decision.** The pinned accelerated map has an exact three-step low-branch return, an exact eight-family immediate-preimage classification for its two halt states, and the copied map admits the algebraic scalar potential below: every defined transition raises an integer rank by at least one. This proves acyclicity and linear escape for every infinite high-level orbit, but it does **not** exclude a finite hit of a halt state. The rank and eight-family Lean drafts are not yet verified against the original source: the rank draft currently fails its local Lean preflight, and the preimage draft has not been compiled. The BB(6) status is unchanged.
 
 ## Source and root
 
@@ -213,7 +213,94 @@ S(0,3q+2,q+3)\longmapsto S(0,4q+6,3).
 \]
 For \(q=0\), this is \(S(0,6,3)\), whose quotient/remainder are \((2,0)\), not the required residue \(2\). More generally, the output residue is \(2\) only when \(q=3m+2\); then its quotient is \(4m+4\) and its gap is \(3-(4m+4)=-4m-1<0\). Thus no state in this entire \(d=3\) branch is an immediate predecessor of either halt family.
 
-The standalone HaltPreimageAudit.lean file locally checks this whole \(p=0,r=2,d=3\) branch against a literal transcription of the pinned highLevelNext definition using Lean 4.36.0-rc2. Its three declarations have axiom reports containing only propext; there is no sorryAx or native_decide. This is a copied-definition audit, not an import-based source-chain certificate. The eight-family inversion above is drafted as `F011.highLevelNext_halt_preimage_iff` in `HaltPreimageFamilies.lean`, with `F011.highLevelNext_none_iff` tying the two target forms to `none`. A second draft, `HaltPreimageRank.lean`, defines \(W=3\lfloor k/3\rfloor+c+\lambda(p,k)\), where \(\lambda=0\) for phase false, 3 for phase true with \(k>0\), and 2 for phase true with \(k=0\). The proposed rank is the pair \((W,\mathbf 1_{k\bmod 3=2})\), asserted to strictly increase lexicographically on every defined transition. The file also attempts to prove \(W_{n+2}\ge W_n+1\) across any two defined transitions and to exclude all positive-length cycles. A bounded exhaustive sweep over 500,000 states found no counterexample, but that is diagnostic only. The bounded diagnostic can be reproduced with `python check_rank.py --bound 500` from this directory; it does not replace the Lean proof. A local Lean 4.36.0-rc2 preflight was attempted on `HaltPreimageRank.lean`. It currently fails: `split_ifs` is not available in the Lean-core environment (unknown tactic at the branch-splitting sites), leaving the rank and r=2 strictness goals unresolved; downstream two-step goals therefore also fail. `#print axioms` includes `sorryAx`, so none of these declarations is a verified theorem. `HaltPreimageFamilies.lean` has not yet been locally preflighted. Both files remain drafts over the literal transcription, not import-based proofs against the pinned upstream module. A trial replacement of `split_ifs` by core `split` also failed: `simp` hit the recursion-depth limit and the remaining `omega` goals were unresolved. Rewrite branch splitting with explicit `by_cases` / helper lemmas, then rerun Lean and check axioms before any CI or source-import claim. If confirmed, the two-step growth bound implies every infinite orbit has unbounded \(W\) and the no-cycle theorem excludes periodic orbits; neither result proves that the root avoids the halt set. The exact zero-W cases are: (i) phase false, r=0, q=3m with m≥1 and d≥1; (ii) phase false, r=1, q=3m+2 and d≥2; (iii) phase true, q=0,r=0; (iv) phase true, r=1, q=3m+2 and d≥2. Every one of these transitions lands at r'=2. Every defined transition out of r=2 strictly increases W, which is the local mechanism behind the two-step bound.
+The standalone HaltPreimageAudit.lean file has been locally compiled against a literal transcription of the pinned highLevelNext definition; its three declarations report only propext, with no sorryAx or native_decide. This is a copied-definition audit, not an import-based source-chain certificate. HaltPreimageFamilies.lean drafts the eight-family inversion but has not been locally preflighted. HaltPreimageRank.lean drafts the lexicographic pair rank and two-step growth theorem, but its current Lean 4.36.0-rc2 preflight fails because split_ifs is unavailable in the Lean-core environment; its downstream axiom reports include sorryAx. Replacing split_ifs by core split also failed. Consequently no rank or preimage theorem is presently Lean-verified, and no CI was dispatched: the repository's current acceptance gate requires a successful exact local preflight first.
+
+## Scalarization of the monotone potential
+
+The branch arithmetic gives a simpler integer rank than the lexicographic pair in HaltPreimageRank.lean. Write \(q=\lfloor k/3\rfloor\), \(r=k\bmod 3\), and \(d=c-q\). Define
+\[
+\lambda(p,k)=
+\begin{cases}
+0,&p=0,\\
+2,&p=1,\ k=0,\\
+3,&p=1,\ k>0,
+\end{cases}
+\qquad
+W(p,k,c)=3q+c+\lambda(p,k),
+\]
+and let \(\tau(k)=\mathbf 1_{r=2}\). The scalar rank is
+\[
+\boxed{R(p,k,c)=2W(p,k,c)+\tau(k).}
+\]
+
+On the low branch \(c<q\), direct substitution gives
+\[
+W'-W=
+\begin{cases}
+2,&r=0,\\
+2,&r=1,\\
+5,&r=2.
+\end{cases}
+\]
+For the outer branch \(c\ge q\), the following table gives the exact increment \(\Delta W=W'-W\). In each triple, entries correspond to \(q\equiv0,1,2\pmod3\), respectively. The exceptional \(q=0\) rows are separated because the source map has special branches.
+
+**Phase \(p=0\):**
+
+| Input residue \(r\) | Condition | \(q\equiv0\) | \(q\equiv1\) | \(q\equiv2\) |
+|---:|---|---:|---:|---:|
+| 0 | \(q=0,d=0\) | 3 | — | — |
+| 0 | \(q=0,d\ge1\) | 2 | — | — |
+| 0 | \(q\ge1,d=0\) | 4 | 7 | 6 |
+| 0 | \(q\ge1,d\ge1\) | 0 | 2 | 1 |
+| 1 | \(d=0\) | 3 | 3 | 3 |
+| 1 | \(d=1\) | 3 | 2 | 4 |
+| 1 | \(d\ge2\) | 2 | 1 | 0 |
+| 2 | \(d=0\) | 5 | 5 | 5 |
+| 2 | \(d=1\) | halt | halt | halt |
+| 2 | \(d=2\) | 4 | 3 | 2 |
+| 2 | \(d=3\) | 6 | 5 | 4 |
+| 2 | \(d\ge4\) | 2 | 4 | 3 |
+
+**Phase \(p=1\):**
+
+| Input residue \(r\) | Condition | \(q\equiv0\) | \(q\equiv1\) | \(q\equiv2\) |
+|---:|---|---:|---:|---:|
+| 0 | \(q=0\), any \(d\) | 0 | — | — |
+| 0 | \(q\ge1,d=0\) | \(4q+2\) | \(4q+1\) | \(4q\) |
+| 0 | \(q\ge1,d=1\) | 5 | 5 | 5 |
+| 0 | \(q\ge1,d=2\) | 5 | 7 | 6 |
+| 0 | \(q\ge1,d\ge3\) | 4 | 3 | 5 |
+| 1 | \(d=0\) | 4 | 4 | 4 |
+| 1 | \(d=1\) | 3 | 2 | 4 |
+| 1 | \(d\ge2\) | 2 | 1 | 0 |
+| 2 | \(d=0\) | 4 | 4 | 4 |
+| 2 | \(d=1\) | 5 | 5 | 5 |
+| 2 | \(d=2\) | halt | halt | halt |
+| 2 | \(d=3\) | 3 | 2 | 4 |
+| 2 | \(d=4\) | 5 | 4 | 6 |
+| 2 | \(d\ge5\) | 4 | 3 | 2 |
+
+Thus \(\Delta W\ge0\) on every defined transition. Its only zero cases are:
+1. \(p=0,r=0,q=3m\) with \(m\ge1\) and \(d\ge1\);
+2. \(p=0,r=1,q=3m+2\) with \(m\ge0\) and \(d\ge2\);
+3. \(p=1,r=0,q=0\), with arbitrary \(d\ge0\);
+4. \(p=1,r=1,q=3m+2\) with \(m\ge0\) and \(d\ge2\).
+
+In all four zero-increment cases the output has residue \(r'=2\), whereas the input has \(r\ne2\). Therefore
+\[
+R'-R=2(W'-W)+\tau'-\tau\ge1
+\]
+for every defined transition: if \(W'-W\ge1\), the worst possible tie-break change is \(-1\); if \(W'-W=0\), the tie-break increases by one. This is a complete algebraic case proof for the literal copied map; it still needs a Lean proof and an import-based transfer to the pinned upstream definition.
+
+For any defined orbit prefix \(s_0\to s_1\to\cdots\to s_n\), it follows that
+\[
+R(s_n)\ge R(s_0)+n.
+\]
+The blank-start high-level state is \(s_0=S(0,2,0)\), with \(R(s_0)=1\), so
+\[
+\boxed{W(s_n)\ge\lceil n/2\rceil.}
+\]
+Consequences: no positive-length cycle exists in the high-level map, and every infinite orbit escapes every bounded-\(W\) region. More quantitatively, a path from the root to \(H_0(Q)\) has at most \(8Q+2\) transitions, and a path to \(H_1(Q)\) has at most \(8Q+10\) transitions. These bounds are parameter-dependent; they do not bound \(Q\), and they do not prove that the root avoids all eight predecessor families. The unresolved problem remains an all-parameter root-to-halt-preimage exclusion.
 
 This is an exact backward reduction: the root orbit can halt only if it visits one of these eight affine predecessor families. It does not prove that the orbit avoids them; the remaining task is a forward-invariant or backward-reachability argument for the root \(S(0,2,0)\).
 
