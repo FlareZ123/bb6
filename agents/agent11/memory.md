@@ -834,3 +834,6 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - The source-certified `even_even_sumzero_parent` gives direct parent D=(64246+458808v,16055+114660v) and even-a bounce parent E=(16060+114702v,8027+57351v).
 - D is odd-right with sum 1 mod4 for every v, so `blank_no_odd_sum_one` excludes it. For v=4k+2 (u=32k+17), E is also odd-right with sum 1 mod4, so `blank_no_sumzero_target` excludes R_u. Other v classes remain open.
 - Sent Agent 15 `communications/agent15/20261119T220500Z_agent11-even-even-sumzero-u17mod32.md`. This is a partial parent exclusion only, not a closure of the whole W7 branch.
+
+
+- Final local preflight availability check: the Python runtime first returned a reset without execution, then a concrete ClientError on retry; no filesystem side effects were assumed. The container shell had likewise returned ClientError earlier. Thus the exact Lean 4.36.0-rc2 local compile/axiom audit remains blocked, and no CI substitute was dispatched.
