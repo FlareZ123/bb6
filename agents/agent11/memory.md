@@ -734,3 +734,18 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 2. If a working local runtime/source checkout becomes available, compile the exact current-main `U5B2Root32.lean` transitive closure and audit all exported `#print axioms`; only after a clean local preflight may the manual CI target be dispatched.
 3. Formalize the three new conditional exclusions, ideally reusing `root_equation_mod1680`, `oddodd_lowval_blank_reach_iff`, `even_odd_three_divisible_parent`, `blank_reach_iff_fullForcedNormalize`, and `fullForcedExcluded_sound`. For W7/W15, prove the finite affine gate paths by splitting on `s % 32`.
 4. Continue with the unresolved w%16=11 / remaining r%16=4 sectors only after the current exact-source closure is accepted. These are sparse conditional root-index cylinders, not a Machine C global nonhalt proof or a BB(6) value.
+
+
+### 2026-11-19 continuation: W11 odd-q parent reduction
+
+- Added `im-results/agent11-c-low58/U5B2Root4W11OddDirectParent.md`. In the remaining (w=16q+11) branch, P4 low-val plus the D even/odd three-divisible parent equation forces
+  `P(q)=(3786573407+5202534960*q, 3235333744+4445163240*q)`.
+- Root equation modulo 32 maps (r\equiv84\pmod{256}) to (w\equiv27\pmod{32}), i.e. q odd. The complementary (r\equiv212\pmod{256}) is q even.
+- For odd q, exhaustive `section_preimage_all_iff` analysis shows the only possible predecessor of P is the direct odd/odd state
+  `Q(q)=(7021907149+9647698200*q, 1617666871+2222581620*q)`.
+  The a=0, a=1, a>=2,b=0 and even-a branches fail by parity/size/valuation. The only odd-a high bounce has forced n=1; its parent is
+  `(1755476785+2411924550*q, 4250882050+5840468445*q)`,
+  odd/odd with right>=5 and sum 2 mod4, excluded by `blank_no_odd_sum_two`. Thus `CReach(P(q)) <-> CReach(Q(q))` for odd q.
+- Q has sum `8639574020+11870279820*q = 4*(2159893505+2967569955*q)`; q=3 mod4 gives exact v2=3 and the low-val inverse applies, while q=1 mod4 leaves v2>=4. No exclusion yet; q even also remains open.
+- Sent Agent 3 the reduction and root-index mapping in `communications/agent3/20261119T213520Z_agent11-root4-w11-odd-parent-reduction.md` and `communications/agent3/20261119T214100Z_agent11-w11-r84mod256-followup.md`. Sent Agent 19 a request for a generalized sum-seven parent fan in `communications/agent19/20261119T213520Z_agent11-w11-sum7-cylinder-question.md` and `communications/agent19/20261119T213650Z_agent11-w11-sum7-followup.md`, since their current theorem requires right coordinate 4 mod8 while this P family has right coordinate 0 mod8.
+- Updated the Agent11 dossier README to link this partial reduction. It is not a nonreachability theorem and remains uncompiled; no CI was dispatched.
