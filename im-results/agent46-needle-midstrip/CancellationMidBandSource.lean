@@ -301,6 +301,8 @@ theorem no_original_source_parent_in_remainder_band_wide
 
 #print axioms feeder_parent_not_in_remainder_band
 #print axioms no_original_source_parent_in_remainder_band
+#print axioms feeder_parent_not_in_remainder_band_wide
+#print axioms no_original_source_parent_in_remainder_band_wide
 
 #print axioms oddTower_injective
 #print axioms feeder_parent_not_in_midband
