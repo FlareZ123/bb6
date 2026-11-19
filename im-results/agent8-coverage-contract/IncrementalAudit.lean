@@ -169,8 +169,8 @@ theorem graftCertificate_closes_source {good : Machine → Prop}
       exact False.elim (hnot (auditSlots_complete s)))
     m hm hs
 
-/-- The generic `addCertificate` operation closes precisely the source
-cylinder wherever it meets an unresolved leaf of the pre-existing audit. -/
+/-- The generic `addCertificate` operation closes every source-compatible
+machine wherever the source cylinder meets an unresolved leaf of the audit. -/
 theorem addCertificate_closes_source {good : Machine → Prop}
     {p : PartialMachine} (audit : FrontierAudit good p)
     (src : PartialMachine) (cert : Cover good src) :
