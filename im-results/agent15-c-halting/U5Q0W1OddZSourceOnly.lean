@@ -46,11 +46,12 @@ private theorem even_even_nonzero_sum_mod8_forces_direct
     have hmod := Nat.mod_eq_zero_of_dvd hdiv
     omega
 
-/-- The q=0 U5 target X_t is blank-unreachable for the entire odd-z
-    half of t=39+168z.  Its unique odd/odd valuation-three parent is
-    even/even; two exact direct inverses then reach the source-forbidden
-    odd-right, sum-one-mod-four cylinder. -/
-theorem q0_w1_odd_z_target_unreachable (z : Nat) (hz : z % 2 = 1) :
+/-- Off-residual superset lemma only: for odd z, the q=0 target X_t is
+    blank-unreachable. The authentic w=1 residual also imposes
+    t=39+64*h and t=39+168*z, hence z is a multiple of 8; this theorem
+    therefore does not close any authentic w=1 root. Its source-parent
+    chain is retained as a reusable exact inverse calculation. -/
+theorem q0_w1_odd_z_off_residual_unreachable (z : Nat) (hz : z % 2 = 1) :
     ¬ BB6.Agent3.CReach
       (44*(39+168*z)-1) (42*(39+168*z)-1) := by
   let t : Nat := 39+168*z
