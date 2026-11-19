@@ -337,7 +337,12 @@ private theorem firstCyclePrefixTailFrame_leftFacing
     rw [hcoord]
     by_cases hj0 : j=0
     · subst j
-      simpa [firstCycleEndpointLeft,sideBit] using hlocal
+      have hvalue :
+          (firstCyclePrefixTailFrame z w q).tape (3*z+10) = true := by
+        simpa using hlocal
+      have htarget : sideBit (firstCycleEndpointLeft z w q) 0 = true := by
+        exact sideBit_replicate_true (3*z+7) 0 (by omega)
+      simpa using hvalue.trans htarget.symm
     · have hjpos : 0<j := by omega
       by_cases hjrun : j<3*z+7
       · by_cases hjlast : j=3*z+6
@@ -405,7 +410,7 @@ private theorem firstCyclePrefixTailFrame_leftFacing
                   ([false,true,true] ++ d0) ++ (binDec w q ++ lh) := by
               simp [firstCycleCheckpointLeft,List.append_assoc]
             rw [hprefix] at hcell
-            have hlen : ([false,true,true] ++ d0).length=6 := by rfl
+            have hlen : ([false,true,true] ++ d0).length=6 := by simp [d0]
             rw [Agent6Q4Prefix.sideBit_append_right
               ([false,true,true] ++ d0) (binDec w q ++ lh)
               (6+t) (by rw [hlen]; omega)] at hcell
