@@ -103,6 +103,26 @@ private theorem sideBit_middle (xs ys zs : List Bool) (i : Nat)
   rw [hidx]
   exact Agent6Q4Prefix.sideBit_append_left ys zs i hi
 
+private theorem firstCycleEndpointLeft_boundaryBit
+    (z w q i : Nat) (hi : i<4) :
+    sideBit (firstCycleEndpointLeft z w q) (3*z+7+i) =
+      sideBit [false,true,false,false] i := by
+  let xs := List.replicate (3*z+7) true
+  let zs := List.replicate 4 true ++ binDec w q ++ lh
+  have hlen : xs.length=3*z+7 := by simp [xs]
+  have h := sideBit_middle xs [false,true,false,false] zs i hi
+  simpa [firstCycleEndpointLeft,xs,zs,hlen] using h
+
+private theorem firstCycleEndpointLeft_fourOnes
+    (z w q i : Nat) (hi : i<4) :
+    sideBit (firstCycleEndpointLeft z w q) (3*z+11+i) = true := by
+  let xs := List.replicate (3*z+7) true ++ [false,true,false,false]
+  let zs := binDec w q ++ lh
+  have hlen : xs.length=3*z+11 := by simp [xs,List.length_replicate]
+  have h := sideBit_middle xs (List.replicate 4 true) zs i hi
+  exact (by simpa [firstCycleEndpointLeft,xs,zs,hlen] using
+    h.trans (sideBit_replicate_true 4 i hi))
+
 private theorem d1pow_length_local (n : Nat) : (d1pow n).length=3*n := by
   induction n with
   | zero => rfl
@@ -334,7 +354,7 @@ private theorem firstCyclePrefixTailFrame_leftFacing
           have htarget : sideBit
               (firstCycleEndpointLeft z w q) j = true := by
             rw [hjlast]
-            simp [firstCycleEndpointLeft,sideBit]
+            exact sideBit_replicate_true (3*z+7) (3*z+6) (by omega)
           have hvalue :
               (firstCyclePrefixTailFrame z w q).tape
                 ((3*z+10:Int)-(j:Int)) = true := by
@@ -434,7 +454,7 @@ private theorem firstCyclePrefixTailFrame_leftFacing
                 firstCyclePrefix22End] using hlocal7
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+7) = false := by
-              simp [firstCycleEndpointLeft,sideBit]
+              simpa using firstCycleEndpointLeft_boundaryBit z w q 0 (by omega)
             exact hvalue.trans htarget.symm
           · subst j
             have hlocal8 := hlocal
@@ -447,7 +467,7 @@ private theorem firstCyclePrefixTailFrame_leftFacing
                 firstCyclePrefix22End] using hlocal8
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+8) = true := by
-              simp [firstCycleEndpointLeft,sideBit]
+              simpa using firstCycleEndpointLeft_boundaryBit z w q 1 (by omega)
             exact hvalue.trans htarget.symm
           · subst j
             have hlocal9 := hlocal
@@ -460,7 +480,7 @@ private theorem firstCyclePrefixTailFrame_leftFacing
                 firstCyclePrefix22End] using hlocal9
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+9) = false := by
-              simp [firstCycleEndpointLeft,sideBit]
+              simpa using firstCycleEndpointLeft_boundaryBit z w q 2 (by omega)
             exact hvalue.trans htarget.symm
           · subst j
             have hlocal10 := hlocal
@@ -473,7 +493,7 @@ private theorem firstCyclePrefixTailFrame_leftFacing
                 firstCyclePrefix22End] using hlocal10
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+10) = false := by
-              simp [firstCycleEndpointLeft,sideBit]
+              simpa using firstCycleEndpointLeft_boundaryBit z w q 3 (by omega)
             exact hvalue.trans htarget.symm
           · subst j
             have hlocal11 := hlocal
@@ -486,7 +506,7 @@ private theorem firstCyclePrefixTailFrame_leftFacing
                 firstCyclePrefix22End] using hlocal11
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+11) = true := by
-              simp [firstCycleEndpointLeft,sideBit]
+              exact firstCycleEndpointLeft_fourOnes z w q 0 (by omega)
             exact hvalue.trans htarget.symm
           · subst j
             have hlocal12 := hlocal
@@ -499,7 +519,7 @@ private theorem firstCyclePrefixTailFrame_leftFacing
                 firstCyclePrefix22End] using hlocal12
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+12) = true := by
-              simp [firstCycleEndpointLeft,sideBit]
+              exact firstCycleEndpointLeft_fourOnes z w q 1 (by omega)
             exact hvalue.trans htarget.symm
           · subst j
             have hlocal13 := hlocal
@@ -512,7 +532,7 @@ private theorem firstCyclePrefixTailFrame_leftFacing
                 firstCyclePrefix22End] using hlocal13
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+13) = true := by
-              simp [firstCycleEndpointLeft,sideBit]
+              exact firstCycleEndpointLeft_fourOnes z w q 2 (by omega)
             exact hvalue.trans htarget.symm
           · subst j
             have hlocal14 := hlocal
@@ -527,7 +547,7 @@ private theorem firstCyclePrefixTailFrame_leftFacing
               simpa [hnothead,firstCyclePrefix22Inside,hsrc] using hlocal14
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+14) = true := by
-              simp [firstCycleEndpointLeft,sideBit]
+              exact firstCycleEndpointLeft_fourOnes z w q 3 (by omega)
             exact hvalue.trans htarget.symm
 
 /-- The right-facing tape of the P(z) endpoint is exactly s0RightFacing 0. -/
@@ -699,8 +719,7 @@ theorem firstCyclePrefix_to_s0DrainInput
         s0Config (firstCycleEndpointLeft z w q)
           (2^z-1) (2^(2^z-1)-1) 0 (firstCycleEndpointHead z) := by
     apply config_ext
-    · simp [firstCyclePrefixTailFrame,frameAt_state,q4TailEnd,
-        s0Config_state]
+    · simp [firstCyclePrefixTailFrame,frameAt_state,q4TailEnd,s0Config]
     · simp [firstCyclePrefixTailFrame,frameAt_head,q4TailEnd,
         firstCycleEndpointHead] <;> omega
     · funext x
@@ -739,8 +758,48 @@ theorem firstCyclePrefix_to_s0DrainInput
     exact hrun'
   rw [hrun,hframe]
 
+
+/-- One complete positive-z q4 cycle: P(z), the all-ones S0 drain,
+and Q(z), with exact source-level cost and an exact final frame. -/
+theorem positiveZFirstCycle_from_checkpoint
+    (z w q : Nat) (hz : 1≤z) (hq : q<2^w) :
+    run tm2
+      ((3*2^z+3*z+58) +
+        ((6*4^(2^z-1)+42*2^(2^z-1)-12*(2^z-1)-48) +
+          (9*2^z+9*z+16)))
+      ⟨4,1,firstCycleCheckpointTape z w q⟩ =
+    some (frameAt
+      (sweptLeft (3*(2^z-1)+3*z+7)
+        (firstCycleS0DrainOutput z
+          (List.replicate 4 true ++ binDec w q ++ lh)).tape
+        (3*2^z+3*z+7))
+      3 firstCyclePostludeInside firstCyclePostludeEnd) := by
+  let k := 2^z-1
+  let tail := List.replicate 4 true ++ binDec w q ++ lh
+  have hP := firstCyclePrefix_to_s0DrainInput z w q hz hq
+  have hbound : 2^k-1 < 2^k := by
+    exact Nat.sub_lt (Nat.pow_pos (by decide)) (by decide)
+  have hD := s0Config_counted_drain_closed
+    (firstCycleEndpointLeft z w q) k k (firstCycleEndpointHead z) hbound
+  have hD' :
+      run tm2 (6*4^k+42*2^k-12*k-48)
+        (s0Config (firstCycleEndpointLeft z w q) k (2^k-1) 0
+          (firstCycleEndpointHead z)) =
+      some (firstCycleS0DrainOutput z tail) := by
+    simpa [firstCycleS0DrainOutput,firstCycleResidualLeft,
+      firstCycleEndpointLeft,firstCycleEndpointHead,tail,k,
+      List.append_assoc] using hD
+  have hQ := firstCycleQ_from_drainedS0 z tail
+  rw [run_append,hP]
+  simp only [Option.bind_some]
+  rw [run_append,hD']
+  simp only [Option.bind_some]
+  simpa [k,tail] using hQ
+
+
 #print axioms firstCyclePrefix_to_s0DrainInput
 #print axioms firstCyclePrefixTailFrame_leftFacing
 #print axioms firstCyclePrefixTailFrame_rightFacing
+#print axioms positiveZFirstCycle_from_checkpoint
 
 end BB6Coverage.Agent48PositiveZFirstCycleEndpoint
