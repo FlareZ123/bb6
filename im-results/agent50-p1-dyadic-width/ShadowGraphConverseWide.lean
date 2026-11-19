@@ -130,6 +130,8 @@ theorem shadow_reach_lifts_to_odd_cone_of_wide_window
       have hmChild : m+t+1≤M := by omega
       obtain ⟨b,d,alpha,hcone,hb4,hd,haLo,haHi,hcoord⟩ :=
         ih hmParent
+      have hconeMass := odd_cone_mass b0 d0 b d m hcone
+      have hmass : b+d+2*m+2*L+3=56*2^N := by omega
       have hprevInv := shadow_reach_invariants L z0 m z hL8 hrootZ hw0 hprev
       rcases hprevInv with ⟨hz,hzmargin⟩
       have hprevSize :=
@@ -179,6 +181,7 @@ theorem shadow_reach_lifts_to_odd_cone_of_wide_window
           _ ≤alpha*2^(N-m) := hlarge1
           _ =b+4*w := henc.symm
       have hpowT1 : 1≤2^t := Nat.one_le_pow _ _ (by decide)
+      have hsafe : m+t+3≤N := by omega
       have h4w : 4*w+12≤2*A*2^(N-M) := by omega
       have hprodLower :
           2*A*2^(N-M)≤2*A*2^(N-M)*2^t := by
@@ -210,7 +213,7 @@ theorem shadow_reach_lifts_to_odd_cone_of_wide_window
         omega
       let s := d+b/2+3
       obtain ⟨Q,hQ⟩ := encoded_shift_divisible N L m t b d w z alpha
-        hrootMass hoff henc hbeven (by omega)
+        hmass hoff henc hbeven hsafe
       have hdivS : 2^t∣s := by
         have h1 : 2^t∣s+2*z := by
           refine ⟨4*Q,?_⟩
@@ -281,7 +284,6 @@ theorem shadow_reach_lifts_to_odd_cone_of_wide_window
       have hdepth : t=t' := wide_pow_two_injective t t' hpowEq
       subst t'
       have hk2 := inverseAt_left_ge_two b d t k c hb12 hb4 hi'
-      have ha28 : 28≤alpha := Nat.le_trans hA haLo
       have hpoly := original_odd_edge_polynomial N L m t b d w z alpha k c r zp b0 d0
         hcone hrootMass hoff hcoord (by omega) hb4 hd hi' hcodd hdiv hnext
       have hmargin := shadow_step_preserves_offset L m z t r zp hL8 hz hzmargin hdiv hnext
