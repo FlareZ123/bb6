@@ -957,14 +957,14 @@ theorem setupB30Config_rightFacing (T : Int → Bool) (h : Int)
     (A L z : Nat) (hblank : SetupPrefixRightBlank T h A L z) :
     ∀ i : Nat,
       (setupB30Config T h L A z).tape
-        (h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)+1-(i:Int)) =
+        (h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)+1+(i:Int)) =
       sideBit setupRightWord i := by
   intro i
   let hb : Int := h+17+3*(L:Int)+3*(A:Int)+3*(z:Int)
   by_cases hi : i<9
   · interval_cases i
     all_goals
-      rw [show h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)+1-(i:Int)
+      rw [show h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)+1+(i:Int)
         = hb-3+(i:Int) by dsimp [hb]; omega]
       simp [setupB30Config, q4FrameAt_tape, setupB30Inside,
         setupB30End, setupRightWord, sideBit, hb]
@@ -973,7 +973,7 @@ theorem setupB30Config_rightFacing (T : Int → Bool) (h : Int)
       dsimp [hb]
       omega
     have hcoord :
-        h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)+1-(i:Int)=
+        h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)+1+(i:Int)=
           hb-3+(i:Int) := by
       dsimp [hb]
       omega
