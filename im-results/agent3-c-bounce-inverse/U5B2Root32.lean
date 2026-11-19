@@ -5,6 +5,8 @@ import HighSumTwo
 import OddEvenUnique
 import EvenRightUnique
 import U5B2Root32ParameterBridge
+import U5B2Root4ParameterBridge
+import OddOddLowVal
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent3U5B2Root32
@@ -558,23 +560,53 @@ theorem blank_no_p4_root32 (t : Nat) :
       simpa only [hP2.1,hP2.2] using hprev
     exact p4_r32_n2_parent_unreachable t hP2reach
 
-/-- The B2 family corresponding to root indices 32 modulo 64 is absent
-from the genuine blank section orbit. This composes the complete B2
-source-parent fan, two forced odd/even inverses, the even-right inverse,
-and the exact P4 root-stratum closure. -/
-theorem blank_no_b2_root32 (t : Nat) :
+/-- The residual P4 target is blank-unreachable on the r=12 (mod 16)
+root-index cylinder: its unique low-valuation parent is an even/odd
+three-divisible state with no possible source predecessor. -/
+theorem blank_no_p4_root4_even_w (w : Nat) (hw : w%2=0) :
     ¬ BB6.Agent3.CReach
-      (734+10944*(1802+6720*t))
-      (34881+518816*(1802+6720*t)) := by
-  let u := 1802+6720*t
+      (63895+950614*(542+840*w))
+      (3291+48981*(542+840*w)) := by
+  let u := 542+840*w
+  let x := 63895+950614*u
+  let y := 3291+48981*u
+  have hxodd : x%2=1 := by dsimp [x,u]; omega
+  have hyodd : y%2=1 := by dsimp [y,u]; omega
+  have hy5 : 5≤y := by dsimp [y,u]; omega
+  have h4 : (x+y)%4=0 := by dsimp [x,y,u]; omega
+  have h16 : (x+y)%16≠0 := by dsimp [x,y,u]; omega
+  have hsize : 24≤x+y := by dsimp [x,y,u]; omega
+  have hxEq : (x+y-4)/2=270923836+419829900*w := by dsimp [x,y,u]; omega
+  have hyEq : (x+3*y-10)/4=148737413+230486970*w := by dsimp [x,y,u]; omega
+  have hD : ¬ BB6.Agent3.CReach
+      (270923836+419829900*w) (148737413+230486970*w) := by
+    apply blank_no_even_odd_three_divisible
+    · omega
+    · omega
+    · omega
+    · omega
+    · omega
+    · omega
+  intro hP4
+  have hDreach : BB6.Agent3.CReach
+      (270923836+419829900*w) (148737413+230486970*w) := by
+    have h := (BB6.Agent3.oddodd_lowval_blank_reach_iff
+      x y hxodd hyodd hy5 h4 h16 hsize).mp hP4
+    simpa only [hxEq,hyEq] using h
+  exact hD hDreach
+
+/-- For every even-u B2 target, blank reachability would force the
+corresponding P4 target to be blank-reachable. The other B2 parent is
+excluded by the original blank odd-sum-two theorem. -/
+theorem b2_even_reach_implies_p4_reach (u : Nat) (huEven : u%2=0)
+    (hB2 : BB6.Agent3.CReach (734+10944*u) (34881+518816*u)) :
+    BB6.Agent3.CReach (63895+950614*u) (3291+48981*u) := by
   let x := 734+10944*u
   let y := 34881+518816*u
-  have huEven : u%2=0 := by dsimp [u]; omega
-  have hu8 : u%8=2 := by dsimp [u]; omega
-  intro hr
-  obtain ⟨a,k,hprev,hstep⟩ :=
+  obtain ⟨a,k,hprev,hstep⟩ : ∃ a k,
+      BB6.Agent3.CReach a k ∧ secNext (a,k)=some (x,y) :=
     BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
-      x y (by dsimp [x,y,u]; omega) hr
+      x y (by dsimp [x,y]; omega) hB2
   rcases b2_even_parent_fan u a k huEven hstep with hP0|hP1
   · have hP0reach : BB6.Agent3.CReach
         (17805+264880*u) (26342+391848*u) := by
@@ -606,28 +638,43 @@ theorem blank_no_b2_root32 (t : Nat) :
           BB6.Agent8Section.run secNext time (some (5,1)) =
             some (57313+852652*u,6584+97962*u) := by
       simpa [BB6.Agent3.CReach] using hP3reach
-    have hP4run :=
+    have hP4run :
+        ∃ time : Nat,
+          BB6.Agent8Section.run secNext time (some (5,1)) =
+            some (63895+950614*u,3291+48981*u) :=
       (BB6.Agent15.blank_reach_iff_even_right
         (57313+852652*u) (6584+97962*u)
         (by omega) (by omega) (by omega) (by omega)).mp hP3run
-    have hP4reach : BB6.Agent3.CReach
-        (63895+950614*u) (3291+48981*u) := by
-      have hxEq :
-          (57313+852652*u)+(6584+97962*u)-2 =
-            63895+950614*u := by omega
-      have hyEq :
-          ((6584+97962*u)-2)/2=3291+48981*u := by omega
-      simpa [BB6.Agent3.CReach,hxEq,hyEq] using hP4run
-    exact (blank_no_p4_root32 t) (by simpa [u] using hP4reach)
+    have hxEq :
+        (57313+852652*u)+(6584+97962*u)-2 =
+          63895+950614*u := by omega
+    have hyEq :
+        ((6584+97962*u)-2)/2=3291+48981*u := by omega
+    simpa [BB6.Agent3.CReach,hxEq,hyEq] using hP4run
   · have hP1reach : BB6.Agent3.CReach
         (4449+66220*u) (33017+491178*u) := by
       simpa only [hP1.1,hP1.2] using hprev
     have hsum :
-        ((4449+66220*u)+(33017+491178*u))%4=2 := by
-      omega
-    exact BB6.Agent11High.blank_no_odd_sum_two
+        ((4449+66220*u)+(33017+491178*u))%4=2 := by omega
+    exact False.elim (BB6.Agent11High.blank_no_odd_sum_two
       (4449+66220*u) (33017+491178*u)
-      (by omega) (by omega) hsum hP1reach
+      (by omega) (by omega) hsum hP1reach)
+
+/-- The B2 family corresponding to root indices 32 modulo 64 is absent
+from the genuine blank section orbit. This composes the complete B2
+source-parent fan, two forced odd/even inverses, the even-right inverse,
+and the exact P4 root-stratum closure. -/
+theorem blank_no_b2_root32 (t : Nat) :
+    ¬ BB6.Agent3.CReach
+      (734+10944*(1802+6720*t))
+      (34881+518816*(1802+6720*t)) := by
+  let u := 1802+6720*t
+  have huEven : u%2=0 := by dsimp [u]; omega
+  have hP4 : ¬ BB6.Agent3.CReach
+      (63895+950614*u) (3291+48981*u) := by
+    simpa [u] using blank_no_p4_root32 t
+  intro hB2
+  exact hP4 (b2_even_reach_implies_p4_reach u huEven hB2)
 
 #print axioms odd_odd_three_divisible_parent
 #print axioms even_odd_three_divisible_parent
@@ -732,6 +779,29 @@ theorem blank_no_b2_root32_from_exact_root_index (r E u : Nat)
 
 #print axioms BB6.Agent3U5B2Root32ParameterBridge.root32_u_parameter_of_exact
 #print axioms blank_no_b2_root32_from_exact_root_index
+/-- The B2 root-index cylinder r=12 (mod 16) is absent from the
+genuine blank section orbit. -/
+theorem blank_no_b2_root4_r12_mod16 (r E u : Nat)
+    (hr16 : r%16=12)
+    (hE : E=201+3360*(6657+8192*r))
+    (hRoot : 18018+211*u+22155*r=20*2^(E-13)) :
+    ¬ BB6.Agent3.CReach (734+10944*u) (34881+518816*u) := by
+  have hr8 : r%8=4 := by omega
+  obtain ⟨w,hu,hw⟩ :
+      ∃ w : Nat, u=542+840*w ∧ w%2=0 :=
+    BB6.Agent3U5B2Root4ParameterBridge.root4_u_parameter_of_exact
+      r E u hr8 hr16 hE hRoot
+  have huEven : u%2=0 := by rw [hu]; omega
+  have hP4 : ¬ BB6.Agent3.CReach
+      (63895+950614*u) (3291+48981*u) := by
+    simpa only [hu] using blank_no_p4_root4_even_w w hw
+  intro hB2
+  exact hP4 (b2_even_reach_implies_p4_reach u huEven hB2)
+
+#print axioms blank_no_p4_root4_even_w
+#print axioms b2_even_reach_implies_p4_reach
+#print axioms blank_no_b2_root4_r12_mod16
+
 
 
 end BB6.Agent3U5B2Root32
