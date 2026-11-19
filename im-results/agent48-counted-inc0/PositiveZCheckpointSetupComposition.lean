@@ -473,6 +473,97 @@ theorem setupShift10_long (n : Nat) :
 
 /-- The original checkpoint-dossier word
 11 ++ (010)^(A+1) ++ 011 ++ 110 ++ (010)^L ++ 011 ++ 101 ++ 11. -/
+/-- Pointwise pattern of the physical-order 100 block power. -/
+theorem sideBit_setupD100pow_pattern (n i : Nat) (hi : i<3*n) :
+    sideBit (setupD100pow n) i = decide (i%3=0) := by
+  induction n generalizing i with
+  | zero => omega
+  | succ n ih =>
+      cases i with
+      | zero => simp [setupD100pow, sideBit]
+      | succ i =>
+          cases i with
+          | zero => simp [setupD100pow, sideBit]
+          | succ i =>
+              cases i with
+              | zero => simp [setupD100pow, sideBit]
+              | succ i =>
+                  have hi' : i<3*n := by omega
+                  have hmod : (i+3)%3=i%3 := by omega
+                  simpa [setupD100pow, sideBit, hmod] using ih i hi'
+
+/-- A counted right sweep, read backwards from three cells before its
+final head, is exactly the physical-order 100 block power. The two zero
+cells immediately to the left of the sweep complete its final block. -/
+theorem sweptRight_leftFacing_d100pow (n : Nat) (T : Int → Bool)
+    (h : Int) (hon : rightOnes T h n)
+    (hleft1 : T (h-1)=false) (hleft2 : T (h-2)=false) :
+    ∀ i : Nat, i<3*n →
+      sweptRight n T h (h+3*(n:Int)-3-(i:Int)) =
+        sideBit (setupD100pow n) i := by
+  intro i hi
+  have hmod : i%3=0 ∨ i%3=1 ∨ i%3=2 := by omega
+  rcases hmod with h0|h1|h2
+  · let q : Nat := i/3
+    let j : Nat := n-q-1
+    have hiq : i=3*q := by dsimp [q]; omega
+    have hj : j<n := by dsimp [j]; omega
+    have hcoord :
+        h+3*(n:Int)-3-(i:Int)=h+3*(j:Int) := by
+      dsimp [j]
+      rw [hiq]
+      omega
+    rw [hcoord, sweptRight_preserves_block_start n T h j hj]
+    rw [sideBit_setupD100pow_pattern n i hi]
+    simp [h0]
+    exact (hon j hj).1
+  · let q : Nat := i/3
+    let j : Nat := n-q-1
+    have hiq : i=3*q+1 := by dsimp [q]; omega
+    have hj : j<n := by dsimp [j]; omega
+    have hcoord :
+        h+3*(n:Int)-3-(i:Int)=h+3*(j:Int)-1 := by
+      dsimp [j]
+      rw [hiq]
+      omega
+    rw [hcoord, sideBit_setupD100pow_pattern n i hi]
+    simp [h1]
+    by_cases hj0 : j=0
+    · subst j
+      have hp := sweptRight_preserves_before n T h (h-1) (by omega)
+      rw [hp]
+      exact hleft1
+    · let k : Nat := j-1
+      have hk : k<n := by dsimp [k]; omega
+      have hcoord2 : h+3*(j:Int)-1=h+3*(k:Int)+2 := by
+        dsimp [k]
+        omega
+      rw [hcoord2]
+      exact sweptRight_clears_third n T h k hk
+  · let q : Nat := i/3
+    let j : Nat := n-q-1
+    have hiq : i=3*q+2 := by dsimp [q]; omega
+    have hj : j<n := by dsimp [j]; omega
+    have hcoord :
+        h+3*(n:Int)-3-(i:Int)=h+3*(j:Int)-2 := by
+      dsimp [j]
+      rw [hiq]
+      omega
+    rw [hcoord, sideBit_setupD100pow_pattern n i hi]
+    simp [h2]
+    by_cases hj0 : j=0
+    · subst j
+      have hp := sweptRight_preserves_before n T h (h-2) (by omega)
+      rw [hp]
+      exact hleft2
+    · let k : Nat := j-1
+      have hk : k<n := by dsimp [k]; omega
+      have hcoord2 : h+3*(j:Int)-2=h+3*(k:Int)+1 := by
+        dsimp [k]
+        omega
+      rw [hcoord2]
+      exact sweptRight_clears_second n T h k hk
+
 def setupEll1 (A L : Nat) : List Bool :=
   [true,true] ++ setupD010pow (A+1) ++
   [false,true,true,true,true,false] ++ setupD010pow L ++
