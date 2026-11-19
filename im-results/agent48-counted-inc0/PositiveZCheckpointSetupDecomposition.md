@@ -204,6 +204,27 @@ substantially narrower target than a direct full-tape equality proof.
 The new Lean declarations are still uncompiled in this invocation; treat
 them as a formalization draft until a local preflight/CI run succeeds.
 
+## Right-facing tape reduction
+
+The final B30 frame has right-facing output
+`011100111`, exactly the nine-cell S0 right suffix. The new Lean draft
+adds `setupB30Config_rightFacing`: assuming the prefix tape is blank
+strictly to the right of the last incoming z-counter cell, it proves the
+entire right-facing stream is this nine-bit word followed by blanks.
+The proof uses `sweptRight_preserves_after` and frame-exterior preservation
+to carry the blank tail through the earlier sweeps and bridges.
+
+The complete tape equality is now decomposed into:
+- the left-facing stream `d0pow z ++ setupL2(A,L)`, from suffix guards and
+  the blank-left-prefix condition;
+- the right-facing stream `011100111`, from the blank-right-prefix condition;
+- the final head at B30-start minus four.
+
+The remaining work is therefore concentrated in proving the local suffix
+guards and the two exterior blank-tail conditions from the explicit S0
+prefix configuration after the first scan, B8, and second scan. All newly
+added Lean composition declarations remain uncompiled drafts.
+
 ## Evidence and limits
 
 I extracted all bridge endpoints and head paths from the original 12-entry
