@@ -2,7 +2,7 @@
 
 **Status (19 November 2026).** The exact identity, 3-adic lift law, valuation-sibling calculations, and logarithmic gap-density calculation below are valid. The previous conclusion that the rho-20 phase is root-excluded in 80 of 81 residue classes is withdrawn. The argument examined only the maximal 3-adic exponent \(t=v_3(X)-1\), but the source-exact odd-parent rule permits every smaller exponent too: it requires \(d\) odd, not \(3\nmid d\). In fact, every rho-20 candidate has an additional \(t=0\) odd parent at level \(K-1\). The higher-valuation calculations therefore classify individual parent choices; they do not exclude the candidate from the inverse tree.
 
-The eight non-rho-20 phases of the original eight-of-nine theorem are unaffected. The rho-20 phase is not fully resolved: for every a divisible by 18, the selected K=97·2^(a-7)+30 has a unique complete inverse-parent chain ending in a non-root leaf, excluding an infinite subfamily of candidate fatal heights. The proof uses a three-case residue table for a mod 54; other rho-20 parameters remain open. The general construction below also gives arbitrarily long same-level even-parent chains.
+The eight non-rho-20 phases of the original eight-of-nine theorem are unaffected. The rho-20 phase is not fully resolved: for every a mod18 in {0,4,6,8,12,16}, with γ=67 on {0,6,12} and γ=103 on {4,8,16}, the selected K=97·2^(a-7)+(γ-7)/2 has a unique complete inverse-parent chain ending in a non-root leaf, excluding an infinite subfamily of candidate fatal heights. The proof uses an 18-row residue table modulo 81; other rho-20 parameters remain open. The general construction below also gives arbitrarily long same-level even-parent chains.
 
 ## 1. Setup and source-exact parent rule
 
@@ -267,42 +267,59 @@ Exact witnesses from the construction:
 
 ## 5. An infinite rho-20 subfamily has a unique parent chain
 
-A useful specialization makes the entire inverse fan, not just one branch, explicit. Let \(a\ge18\) be divisible by \(18\), and set
+A useful specialization makes the entire inverse fan, not just one branch, explicit. Let \(a\ge18\) with
 \[
-K=97\cdot2^{a-7}+30.
+a\bmod18\in\{0,4,6,8,12,16\},
+\]
+and define
+\[
+\gamma=\begin{cases}
+67,&a\bmod18\in\{0,6,12\},\\
+103,&a\bmod18\in\{4,8,16\},
+\end{cases}
+\qquad
+K=97\cdot2^{a-7}+\frac{\gamma-7}{2}.
 \]
 Then
 \[
-2K+7=97\cdot2^{a-6}+67,\qquad
-x=\frac{97}{64}+\frac{67}{2^a}.
+2K+7=97\cdot2^{a-6}+\gamma,\qquad
+x=\frac{97}{64}+\frac{\gamma}{2^a}.
 \]
-This lies in the required interval. Since \(a-7\equiv11\pmod{18}\), the congruences \(2^{11}\equiv50\pmod{54}\) and \(2^{18}\equiv28\pmod{54}\) imply \(2^{a-7}\equiv50\pmod{54}\). Thus
+This lies in the required interval. The 18 admissible classes \(a\bmod54\) give the following exact table:
 \[
-K\equiv20\pmod{54},\qquad \rho=K+6a\equiv20\pmod{54},
-\]
-so \(K\equiv2\pmod6\).
-
-For modulus \(81\), the cases \(a\bmod54=0,18,36\) give:
-\[
-\begin{array}{c|rrrrrr}
-a\bmod54 & K\bmod81 & r\bmod54 & 2^r\bmod81 & B\bmod81 &
-(80p+2K+13)\bmod81\\ \hline
-0  &20&24&10&65&22\\
-18 &74&6 &64&38&49\\
-36 &47&42&37&11&76
+\begin{array}{c|r|r|r|r|r|r|r|r}
+a\bmod54 & \gamma & K\bmod54 & K\bmod81 & r\bmod54 &
+p\bmod81 & B\bmod81 & 3X\bmod81 & 9X_1\bmod81\\ \hline
+0  &67 &20&20&24&31&65&54&27\\
+4  &103&50&50&50&76&32&54&54\\
+6  &67 &38&38&36&58&29&54&27\\
+8  &103&26&80&22&40&53&27&54\\
+12 &67 &2 &56&48&4 &74&54&27\\
+16 &103&32&59&20&49&68&27&27\\
+18 &67 &20&74&6 &31&38&54&27\\
+22 &103&50&23&32&76&5 &54&54\\
+24 &67 &38&11&18&58&2 &54&27\\
+26 &103&26&53&4 &40&26&27&54\\
+30 &67 &2 &29&30&4 &47&54&27\\
+34 &103&32&32&2 &49&41&27&27\\
+36 &67 &20&47&42&31&11&54&27\\
+40 &103&50&77&14&76&59&54&54\\
+42 &67 &38&65&0 &58&56&54&27\\
+44 &103&26&26&40&40&80&27&54\\
+48 &67 &2 &2 &12&4 &20&54&27\\
+52 &103&32&5 &38&49&14&27&27
 \end{array}
 \]
-In each case \(p=2^K\equiv31\pmod{81}\). Hence, using (1) and (3),
+Every row has \(K+6a\equiv20\pmod{54}\). The source identities
 \[
-3X=80p+2K+13-2B\equiv54\pmod{81},
-\qquad
-9X_1=248p-8B-10K+25\equiv27\pmod{81}.
+3X+2B=80p+2K+13,\qquad
+9X_1=248p-8B-10K+25
 \]
-Therefore
+give \(X\bmod27\in\{9,18\}\) and \(X_1\bmod9\in\{3,6\}\). Thus \(v_3(X)=2\) and \(v_3(X_1)=1\). Therefore
 \[
-X\equiv18\pmod{27},\quad v_3(X)=2,
+X\bmod27\in\{9,18\},\quad v_3(X)=2,
 \qquad
-X_1\equiv3\pmod9,\quad v_3(X_1)=1. \tag{8}
+X_1\bmod9\in\{3,6\},\quad v_3(X_1)=1. \tag{8}
 \]
 
 The target \(E\) has no even parent: from the definitions,
@@ -315,7 +332,7 @@ which lies strictly between \(4\) and \(6\). Its only possible odd exponents are
 The state \(h_0\) has no even parent by Section 2. By (8), its odd numerator \(X_1=2h_0+5\) has valuation exactly one, so only \(t=0\) is possible. Moreover,
 \[
 \frac{X_1}{p}
-=6-\frac{128\cdot67}{9\cdot2^a}-\frac{10K-25}{9p}
+=6-\frac{128\gamma}{9\cdot2^a}-\frac{10K-25}{9p}
 \]
 lies strictly between \(5\) and \(6\). Hence \(P_1=X_1/3\) lies in the odd-source band at level \(K-2\), and \(h_0\) has the unique parent
 \[
@@ -324,9 +341,9 @@ y_0=2P_1-2p-K-3.
 
 Put \(L=K-2\) and \(D_0=2p-y_0\). Exact substitution gives
 \[
-D_0=\frac{17152\cdot2^{K-a}+47K+31}{27},
+D_0=\frac{256\gamma\cdot2^{K-a}+47K+31}{27},
 \qquad
-D_0+L=\frac{17152\cdot2^{K-a}+74K-23}{27}. \tag{9}
+D_0+L=\frac{256\gamma\cdot2^{K-a}+74K-23}{27}. \tag{9}
 \]
 Define
 \[
@@ -339,33 +356,33 @@ D_j=2^j(D_0+L)-L,
 and for \(j\le a-10\),
 \[
 \frac{D_j}{p}
-=\frac{17152}{27\cdot2^{a-j}}
+=\frac{256\gamma}{27\cdot2^{a-j}}
 +\frac{2^j(74K-23)}{27p}-\frac Lp.
 \]
 The absolute value of the last two terms is less than \(K^2/2^K<1/100\): use \(2^a<2K+7\), \(j\le a-10\), and \(K\ge266\). In particular,
 \[
-\frac{D_{a-11}}p=\frac{67}{216}+\varepsilon_{a-11}<\frac12,
+\frac{D_{a-11}}p=\frac{\gamma}{216}+\varepsilon_{a-11}<\frac12,
 \qquad
-\frac{D_{a-10}}p=\frac{67}{108}+\varepsilon_{a-10}\in\left(\frac35,1\right),
+\frac{D_{a-10}}p=\frac{\gamma}{108}+\varepsilon_{a-10}\in\left(\frac35,1\right),
 \]
 where \(|\varepsilon_j|<1/100\). Also \(D_0\ge3\), and \(D_j\) increases with \(j\). Therefore, for \(0\le j\le a-11\),
 \[
 \frac32p\le y_j\le2p-3,
 \]
-so \(y_j\) has its even parent at level \(L\), namely
+so \(y_j\) lies in the level-\(L\) even-parent band. The preceding band's upper endpoint is \(p-3\) and the following band's lower endpoint is \(3p-1\), so no other even level can contain it; its unique even parent is
 \[
 y_{j+1}=2y_j-2p-L.
 \]
 There are exactly \(a-10\) such even-parent edges. At the next state,
 \[
-\frac{D_{a-10}}p>\frac{67}{108}-\frac1{100}>\frac35,
+\frac{D_{a-10}}p>\frac{\gamma}{108}-\frac1{100}>\frac35,
 \qquad \frac{D_{a-10}}p<1
 \]
 gives \(p<y_{a-10}<7p/5<3p/2-1\), since \(p>10\). This lies strictly between the level-\(L-1\) band's upper endpoint \(p-3\) and the level-\(L\) band's lower endpoint \(3p/2-1\), so \(y_{a-10}\) has no even parent.
 
-There are no odd parents anywhere on this even chain. From \(X_1\equiv3\pmod9\), \(P_1=X_1/3\equiv1\pmod3\), and therefore
+There are no odd parents anywhere on this even chain. From \(X_1\bmod9\in\{3,6\}\), \(P_1=X_1/3\equiv1\text{ or }2\pmod3\), and therefore
 \[
-y_0=2P_1-2p-K-3\equiv1\pmod3.
+y_0=2P_1-2p-K-3\equiv0\text{ or }1\pmod3.
 \]
 Since \(p\equiv1\pmod3\) and \(L=K-2\equiv0\pmod3\), the recurrence gives
 \[
@@ -388,7 +405,7 @@ All \(265\) computed parent graphs terminate without reaching \(2\); the maximum
 ## 7. Correct scope and next target
 
 - The original eight non-rho-20 phases remain paper-level root-leaf exclusions. In the modulo-\(486\) refinement they account for \(8\cdot9=72\) of the \(81\) residue classes.
-- The rho-20 phase is **not fully excluded**. Every candidate has the t=0 parent at level K-1, so the previous 80/81 claim is withdrawn. The infinite subfamily a≡0 (mod 18), K=97·2^(a-7)+30 is excluded by its unique inverse chain, but all other rho-20 parameter classes remain open.
+- The rho-20 phase is **not fully excluded**. Every candidate has the t=0 parent at level K-1, so the previous 80/81 claim is withdrawn. The infinite subfamily a mod18∈{0,4,6,8,12,16}, with γ=67 on {0,6,12} and γ=103 on {4,8,16}, K=97·2^(a-7)+(γ-7)/2, is excluded by its unique inverse chain, but all other rho-20 parameter classes remain open.
 - The exact-valuation lift law and gap-density calculation remain valid as statements about individual parent choices, but do not prove parentlessness.
 - The next mathematical task is the complete odd/even parent fan of \(h_0\), including the transitions out of the same-level even chain and the higher-exponent odd branches. The finite census and the unbounded-chain construction are useful guides, not substitutes for an all-parameter proof.
 
