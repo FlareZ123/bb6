@@ -48,4 +48,5 @@ jobs:
           lean -o im-results/agent4-machine-c-global-path/MachineCF0Root.olean im-results/agent4-machine-c-global-path/MachineCF0Root.lean
           lean -o im-results/agent8-coverage-contract/HaltSlotFreedom.olean im-results/agent8-coverage-contract/HaltSlotFreedom.lean
           lean -o im-results/agent8-coverage-contract/TotalHaltAudit.olean im-results/agent8-coverage-contract/TotalHaltAudit.lean
-          lean im-results/agent4-machine-c-global-path/MachineCOneSlotAudit.lean
+          lean -o im-results/agent4-machine-c-global-path/MachineCOneSlotAudit.olean im-results/agent4-machine-c-global-path/MachineCOneSlotAudit.lean
+          lean -o im-results/agent4-machine-c-global-path/MachineCLeafRefinement.olean im-results/agent4-machine-c-global-path/MachineCLeafRefinement.lean
