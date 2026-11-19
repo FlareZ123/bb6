@@ -394,13 +394,14 @@ theorem setupB30Config_preserves_b6_left (T : Int → Bool) (h : Int)
       (setupB6Config T h L A).tape (b6-(i:Int)) := by
     simp [setupZConfig, hs, b6, sweptRight_preserves_before
       z (setupB6Config T h L A).tape hs (b6-(i:Int)) (by omega)]
-  have hOutside : b6-(i:Int)<hb-4 := by
+  have hnot : setupB30Inside ((b6-(i:Int))-hb)=false := by
+    simp [setupB30Inside]
     dsimp [hb,hs,b6]
     omega
   rw [show h+13+3*(L:Int)+3*(A:Int)-(i:Int)=b6-(i:Int) by
     dsimp [b6]]
-  simp [setupB30Config, q4FrameAt_tape, setupB30Inside,
-    hb, hs, b6, hOutside, hSweep]
+  simp [setupB30Config, q4FrameAt_tape, hnot,
+    hb, hs, b6, hSweep]
 
 theorem setupSuffixCost_eq (A L z : Nat) :
     20+3*(L+1)+9+3*(A+1)+6+3*z+30 =
