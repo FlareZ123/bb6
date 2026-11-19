@@ -224,7 +224,7 @@ theorem p2ActualS0_to_state2
     have hones : ∀ i : Nat, i<7 → S (3-4-(i:Int))=true := by
       intro i hi
       have hb := hboundary (4+i)
-      have hbit : p2ActualBoundaryResidual tail (4+i)=true := by
+      have hbit : sideBit (p2ActualBoundaryResidual tail) (4+i)=true := by
         unfold p2ActualBoundaryResidual
         rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
           ([false,true,false,true] : List Bool)
@@ -259,6 +259,8 @@ theorem p2ActualS0_to_state2
       rw [hidx]
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         (List.replicate 7 true) ([false,false] ++ tail) 8 (by simp)]
+      have hlen7 : (List.replicate 7 true).length=7 := by simp
+      rw [hlen7]
       have hidx' : 8-7=1 := by omega
       rw [hidx']
       simp [sideBit]
