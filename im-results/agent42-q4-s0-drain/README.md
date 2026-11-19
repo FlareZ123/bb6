@@ -370,12 +370,12 @@ The linear (2^z) terms cancel exactly. This is the cleanest expression of the fi
 
 ## Compatibility with the root endpoint
 
-The root source chain currently reaches an S1 configuration with marker 2 after the middle-34 prefix, then applies `outerLCInc_full_run` to an `outerLCIncPostludeTape`. The remaining root-side gap is the pointwise equality of that postlude tape with the intended canonical marker-1 S0/S1 configuration. Therefore the q4 initial-family identification is a target interface, not yet a proved root endpoint.
+As of 2026-11-19, Agent 44 has added `im-results/agent44-tm63-middle/TM63RootMarker1Endpoint.lean`, a source-only composition of the blank-root middle-34 / SectionResult handoff with `outerLCIncPostludeTape_eq_marker1S0_m2`. Its intended theorem reaches state 3 at the exact postlude head with tape equal to the canonical marker-1 `s0Config` tape, so the q4 initial-family identification now exists as a root-composition draft rather than only a target interface. The upstream source was corrected to carry the actual T3 post-prelude tape and the `v2 n = r` witness (commits `86234f2`, `7753204`), and the root wrapper now retains T3 with (r=0) (commit `7392c13`). None of these corrections or the endpoint composition has yet been Lean-compiled or axiom-audited; exact local preflight is pending. The root-specific bound (b\ge2) (hence (z\ge3)) is still a separate lemma to export before invoking the positive-z q4 macro.
 
 The actual root length parameter is `tm63Length1`, and the repository proves `tm63Length1_even` in `im-results/agent42-outer-lcinc/TM63Length1Parity.lean`. Thus the intended root q4 family has even (L), but the marker-1 canonical endpoint equality remains an explicit unresolved dependency; even parity alone does not solve the (z>1) terminal cycles.
 
-If that equality identifies the post-reset target as
-`s1Config L 0 1 A (2^b-1) 0 h`, then by the S1 encoder definition and `binDec L 0 = d1pow L` it is exactly
+The drafted equality identifies the post-reset target as
+`s1Config L 0 1 A (2^b-1) 0 h`; by the S1 encoder definition and `binDec L 0 = d1pow L` this is exactly
 `s0Config (markerWord 1 ++ d0 ++ d1pow L ++ lh) A (2^b-1) 0 h`.
 For (b\ge2), (z=2^b-1>0) and (z<2^A), so the positive-z q4 first-cycle hypotheses would apply.
 
