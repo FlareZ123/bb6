@@ -14,7 +14,7 @@ The retired initialization-compatibility note recorded prompt SHA-256 `283c86e7a
 
 ## CI workflow discipline
 
-At the 19 November 2026 inventory, `.github/workflows/` contained **500 workflow files: 497 agent-prefixed and 3 shared**. The sampled current proof workflows were manual-dispatch workflows, so this is not a claim that all 500 execute automatically. It is an accumulated configuration and maintenance surface, not a pattern to extend.
+At the 19 November 2026 inventory, `.github/workflows/` contained **502 workflow files: 499 agent-prefixed and 3 shared**. The sampled current proof workflows were manual-dispatch workflows, so this is not a claim that all 502 execute automatically. It is an accumulated configuration and maintenance surface, not a pattern to extend.
 
 - **Freeze new agent-specific workflow files by default.** A new Lean module, residue cylinder, theorem checkpoint, or author does not justify another YAML workflow.
 - Reuse the existing manual workflow for the proof family. If a distinct target is needed, first extend that workflow with a named `workflow_dispatch` input/choice. Prefer a shared reusable workflow, composite action, or common runner when the check is genuinely reusable across families.
