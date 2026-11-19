@@ -497,15 +497,15 @@ theorem p4_r32_parent_fan (t a k : Nat)
     rw [hpow,hpoweq,hq]
     ac_rfl
   have hnlt : n<4 := by
-    by_contra hnot
-    have hnge : 4≤n := by omega
-    have h6pow : 64∣2^(n+2) := by
-      have h := Nat.pow_dvd_pow 2 (show 6≤n+2 by omega)
-      simpa only [show (2:Nat)^6=64 by decide] using h
-    have h64 : 64∣x+y := Nat.dvd_trans h6pow hpowdiv
-    have hmod : (x+y)%64=0 := Nat.mod_eq_zero_of_dvd h64
-    rw [hSmod64] at hmod
-    omega
+    by_cases hnge : 4≤n
+    · have h6pow : 64∣2^(n+2) := by
+        have h := Nat.pow_dvd_pow 2 (show 6≤n+2 by omega)
+        simpa only [show (2:Nat)^6=64 by decide] using h
+      have h64 : 64∣x+y := Nat.dvd_trans h6pow hpowdiv
+      have hmod : (x+y)%64=0 := Nat.mod_eq_zero_of_dvd h64
+      rw [hSmod64] at hmod
+      omega
+    · omega
   have hncase : n=0 ∨ n=2 := by omega
   rcases hncase with hn0|hn2
   · have hpow0 : x+y=2*a+4 := by simpa [hn0] using hpow
