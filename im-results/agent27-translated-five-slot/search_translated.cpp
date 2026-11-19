@@ -42,7 +42,7 @@ void dfs(int state, int head, uint64_t ones, int steps, int nnew,
 
   int bit = (ones >> (head + 32)) & 1ULL;
   int slot = state * 2 + bit;
-  auto run = [&](int a) {
+  auto run = [&](int a, int nextNew) {
     bool write = a >= 12;
     bool right = (a % 12) >= 6;
     int next = a % 6;
@@ -52,18 +52,18 @@ void dfs(int state, int head, uint64_t ones, int steps, int nnew,
     else nmask &= ~bitmask;
     int nh = head + (right ? 1 : -1);
     path.push_back(a);
-    dfs(next, nh, nmask, steps + 1, nnew, path);
+    dfs(next, nh, nmask, steps + 1, nextNew, path);
     path.pop_back();
   };
 
   if (tab[slot] >= 0) {
-    run(tab[slot]);
+    run(tab[slot], nnew);
     return;
   }
   if (nnew >= maxNew) return;
   for (int a = 0; a < 24; a++) {
     tab[slot] = a;
-    run(a);
+    run(a, nnew + 1);
     tab[slot] = -1;
   }
 }
