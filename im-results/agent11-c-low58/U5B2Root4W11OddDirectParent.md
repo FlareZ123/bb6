@@ -21,6 +21,14 @@ P(q)=(x,y)=
 ]
 It has (x) odd, (y) even, (x+y\equiv7\pmod8), (x\equiv3\pmod4), and (y\equiv0\pmod8).
 
+## Root-index form of the odd-q branch
+
+All W11 candidates have (r\equiv4\pmod{16}), so write (r=16R+4). The divided root equation modulo 32 is
+\[
+9+22R+11w\equiv0\pmod{32}.
+\]
+If (r\equiv84\pmod{256}), then (R\equiv5\pmod{16}), so (11w\equiv9\pmod{32}), hence (w\equiv27\pmod{32}). This is exactly (w=16q+11) with q odd. The complementary (r\equiv212\pmod{256}) gives (w\equiv11\pmod{32}), i.e. q even, which is not covered by the reduction below.
+
 ## Exact parent fan for P(q), q odd
 
 Suppose (P(q)) is blank-reachable. Since (x>5), it has a positive-length source predecessor ((a,b)). Apply the complete original-source grammar `section_preimage_all_iff`.
