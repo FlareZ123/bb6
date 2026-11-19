@@ -1,8 +1,8 @@
-# U5 B2 root4: ten W11 q-mod-256 Q-branch reductions
+# U5 B2 root4: ten W11 q-mod-256 paths; one full parent closure
 
 **Status:** new conditional nonreachability derivation, 2026-11-19. The exact modular and affine arithmetic was checked, but the composed theorem has not been Lean-formalized or compiled. Keep in `im-results/`.
 
-## Root-index cylinders for the Q branch only
+## Root-index cylinders and direct-parent Q paths
 
 Assume the exact residual root equation
 [
@@ -46,7 +46,7 @@ All ten c are 3 modulo four, but that is not enough to reduce P(q) to Q(q). The 
 A(q)=(1755476785+2411924550q,\;
      4250882050+5840468445q),
 \]
-whose coordinate sum is 2 modulo four only when q=1 modulo four. Here every c is 11 or 15 modulo 16, so the existing blank_no_odd_sum_two exclusion does not apply. The following exact path therefore concerns only the direct parent
+whose coordinate sum is 2 modulo four only when q=1 modulo four. Here every c is 11 or 15 modulo 16, so the existing blank_no_odd_sum_two exclusion does not apply. The Q path below is only one branch for nine of the ten c values. The exceptional c=95 alternate parent is handled separately in Section 3. The following exact path concerns the direct parent
 \[
 Q(q)=
 (7021907149+9647698200q,\;
@@ -84,8 +84,57 @@ After that exact step, the existing four-sector `blank_reach_iff_fullForcedNorma
 | 203 | 19284 | OFO | 972793359668 + 1222391153760m | 949157376761 + 1192690687440m | 1 |
 | 223 | 16724 | OSRA | 2644775339551 + 3026277418080m | 254095001219 + 290747555280m | 2 |
 
-In every row the final right coordinate is odd and at least five, and the sum is 1 or 2 modulo four. The source-certified fullForcedExcluded_sound filter excludes the final normalized state, so this chain excludes Q(q). It does **not** exclude P(q), P4, or the original B2 target until the alternate parent A(q) is also ruled out. For these ten c classes, q is 11 or 15 modulo 16; that alternate-parent problem remains open. Do not count these rows as root-index exclusions.
+In every row the final right coordinate is odd and at least five, and the sum is 1 or 2 modulo four. The source-certified fullForcedExcluded_sound filter excludes the final normalized state, so this chain excludes Q(q). For c=95, Section 3 also excludes A(q), hence P(q) is unreachable at the arithmetic level. For the other nine c values, A(q) remains unresolved; those rows do not yet exclude P(q), P4, or the original B2 target.
 
-## Validation boundary
+
+## 3. Alternate A(q) parent: the c=95 row is also closed
+
+Take q=256m+95. The second possible parent of P(q) is
+\[
+A(q)=
+(230888309035+617452684800m,\;
+ 559095384325+1495159921920m).
+\]
+Its coordinates are odd, its right coordinate is at least 64, and
+\[
+A_x+A_y=789983693360+2112612606720m\equiv16\pmod{32}.
+\]
+Apply the source-certified oddodd_sum16_blank_reach_iff. If A(q) were blank-reachable, at least one of
+\[
+P_0=
+(394991846678+1056306303360m,\;
+ 477043615500+1275733112640m)
+\]
+or
+\[
+P_2=
+(98747961668+264076575840m,\;
+ 625165558002+1671847976400m)
+\]
+would be blank-reachable.
+
+Both P0 and P2 have even right coordinate at least six. Their coordinate sums are respectively 2 and 6 modulo 8, so the source-certified six_even_right_blank_reach_iff applies to both. The forced parents are
+\[
+P_{0R}=
+(872035462176+2332039416000m,\;
+ 238521807749+637866556320m),
+\]
+and
+\[
+P_{2R}=
+(723913519668+1935924552240m,\;
+ 312582779000+835923988200m).
+\]
+The first has odd right coordinate at least five and coordinate sum 1 modulo 4, so the blank odd-image invariant excludes it. The second has even right coordinate at least six and coordinate sum 4 modulo 8, so one more six-even-right inverse gives
+\[
+P_{2RR}=
+(1036496298666+2771848540440m,\;
+ 156291389499+417961994100m).
+\]
+This also has odd right coordinate at least five and coordinate sum 1 modulo 4. Thus both alternatives are excluded, A(q) is unreachable, and the two-parent fan proves P(q) unreachable for every m≥0 on c=95.
+
+The Q(q) branch for c=95 is already excluded by the OSRA row in the table above. Hence this one q-mod-256 class has both possible P parents excluded. The other nine rows remain Q-branch-only.
+
+## 4. Validation boundary
 
 The component inverse theorems and the four-sector normalizer/filter have original-source CI evidence. The new ten-case residue mapping and composed path table are not Lean-compiled. The W11 parent reduction and the D-parent/B2-to-P4 implications remain in the uncompiled `U5B2Root32.lean` closure. No CI was dispatched because the current Critic gate requires exact-source local preflight first.
