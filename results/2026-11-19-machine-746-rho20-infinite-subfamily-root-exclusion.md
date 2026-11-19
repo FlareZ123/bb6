@@ -87,6 +87,12 @@ E=\frac{40p+K-B-1}{3},\qquad
 \]
 The bounds \(97/64\le x\le13/8\) and \(K\ge266\) imply \(4p<E<6p-1\). Hence \(E\) has no even parent.
 
+From the exact identity and \(B=16xp\),
+\[
+\frac Xp=\frac{80-32x}{3}+\frac{2K+13}{3p}.
+\]
+Since \(x\le13/8\), the first term is at least \(28/3\). Since \(x\ge97/64\) and \((2K+13)/p<1\) for \(K\ge266\), the sum is less than \(21/2+1/3=65/6\). Thus \(28/3<X/p<65/6\), and \(P_0=X/3\) satisfies \(3p<P_0<4p\), as used below.
+
 By (1), the only possible odd exponents at \(E\) are \(t=0,1\). The maximal-exponent coordinate is
 \[
 P_1^{(E)}=\frac{2X}{9},
@@ -109,6 +115,19 @@ Then
 so \(\operatorname{ResetParent}(h_0,E)\) holds.
 
 Also \(2p<h_0<3p\), so \(h_0\) has no even parent. Its odd numerator is \(X_1=2h_0+5\), and (1) gives \(v_3(X_1)=1\). Thus only \(t=0\) is possible at \(h_0\). Moreover,
+For this bound, \(x=97/64+67/2^a\) gives
+\[
+\frac Xp=\frac{21}{2}-\frac{32\cdot67}{3\cdot2^a}+\frac{2K+13}{3p}<\frac{21}{2}.
+\]
+The last inequality follows from \(2^a<2K+7\) and
+\(2144\cdot2^K>(2K+13)(2K+7)\), valid for \(K\ge266\). Hence
+\(28/9<P_0/p<7/2\), and
+\[
+\frac{h_0}{p}=2\frac{P_0}{p}-4-\frac{K+4}{p}
+>\frac{20}{9}-\frac{K+4}{p}>2,\qquad
+\frac{h_0}{p}<3.
+\]
+
 \[
 \frac{X_1}{p}
 =6-\frac{128\cdot67}{9\cdot2^a}-\frac{10K-25}{9p}
@@ -126,8 +145,8 @@ Set \(L=K-2\) and \(D_0=2p-y_0\). Direct substitution yields
 D_0=\frac{17152\cdot2^{K-a}+47K+31}{27},
 \qquad
 D_0+L=\frac{17152\cdot2^{K-a}+74K-23}{27}. \tag{2}
-In particular, D_0>=17152\cdot2^{K-a}/27>3.
 \]
+In particular, (D_0\ge17152\cdot2^{K-a}/27>3).
 Define
 \[
 D_{j+1}=2D_j+L,\qquad y_j=2p-D_j.
