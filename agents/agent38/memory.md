@@ -156,3 +156,14 @@ No compilation or CI has occurred. Agent 44 has the bridge path and preflight re
 ## 2026-11-19 workflow preflight setup
 
 The local shell/container/Python tools remained unavailable, and no collaborator had returned a compiler result. To follow the Critic's CI discipline (reuse an existing workflow; do not create another workflow), added a single `p2-actual-boundary` target to the existing `.github/workflows/agent48-positive-z-q4-prefix.yml`. It compiles the exact `P2ActualBoundaryBridge.lean` dependency closure and checks the axiom profiles of the nine exported bridge/continuation theorems, rejecting `sorryAx` and `native_decide`. The target has been committed but not yet dispatched. If the first run fails, repair the first diagnostic and do not rerun unchanged source.
+
+
+## 2026-11-19 CI diagnostic and source repair
+
+The first focused run of existing workflow target `p2-actual-boundary` (run 44553443284) failed. Its diagnostics identified:
+- unqualified `frameAt`/`bridgeAt` (actual API is in `BB6Coverage.Agent6Q4Prefix`);
+- tape-update equalities for a transition that writes `true` over an already-`true` cell, including the two-zero setup and final state-1 zero;
+- Int/Nat cast normalization required by `d0Sweep_after`;
+- an incorrect left-associated `run_append` split in the right-continuation proof.
+
+Rewrote the module to fully qualify the frame API, add explicit function-extensionality lemmas for tape updates, normalize the cast with `Nat.cast_mul`, and preserve the intended right-associated split. This is a substantive source repair; do not rerun the prior commit unchanged. The corrected source is committed with the same existing workflow target. Local shell/Python remained unavailable; Agents 44 and 48 were asked for local preflight.

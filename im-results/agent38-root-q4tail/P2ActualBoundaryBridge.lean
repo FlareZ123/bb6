@@ -63,9 +63,9 @@ def p2ActualBoundaryInput (T : Int → Bool) (h : Int) : Prop :=
 theorem p2ActualBoundary_at (T : Int → Bool) (h : Int)
     (hin : p2ActualBoundaryInput T h) :
     run tm2 73 ⟨3,h,T⟩ =
-      some (frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd) := by
+      some (BB6Coverage.Agent6Q4Prefix.frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd) := by
   rcases hin with ⟨h0,hm1,hm2,hm3,hones,hm11,hm12,hp1⟩
-  apply bridgeAt T h p2ActualBoundaryInside
+  apply BB6Coverage.Agent6Q4Prefix.bridgeAt T h p2ActualBoundaryInside
     p2ActualBoundaryStart p2ActualBoundaryEnd 73 rfl
     p2ActualBoundary_exact p2ActualBoundary_heads
   intro x hx
@@ -120,14 +120,15 @@ theorem p2ActualBoundary_at (T : Int → Bool) (h : Int)
 /-- The bridge ends in state 4 with its head and next two cells set to one. -/
 theorem p2ActualBoundary_end_right_ones
     (T : Int → Bool) (h : Int) :
-    (frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd).state = 4 ∧
-    (frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd).head = h-1 ∧
-    (frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd).tape (h-1) = true ∧
-    (frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd).tape h = true ∧
-    (frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd).tape (h+1) = true := by
-  simp [frameAt_state,frameAt_head,frameAt_tape,
+    (BB6Coverage.Agent6Q4Prefix.frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd).state = 4 ∧
+    (BB6Coverage.Agent6Q4Prefix.frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd).head = h-1 ∧
+    (BB6Coverage.Agent6Q4Prefix.frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd).tape (h-1) = true ∧
+    (BB6Coverage.Agent6Q4Prefix.frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd).tape h = true ∧
+    (BB6Coverage.Agent6Q4Prefix.frameAt T h p2ActualBoundaryInside p2ActualBoundaryEnd).tape (h+1) = true := by
+  simp [BB6Coverage.Agent6Q4Prefix.frameAt_state,BB6Coverage.Agent6Q4Prefix.frameAt_head,BB6Coverage.Agent6Q4Prefix.frameAt_tape,
     p2ActualBoundaryInside,p2ActualBoundaryEnd]
 
+/-- State 4 scans a contiguous rightward one-run without changing the tape. -/
 /-- State 4 scans a contiguous rightward one-run without changing the tape. -/
 theorem state4_right_ones (k : Nat) (T : Int → Bool) (h : Int)
     (hones : ∀ i : Nat, i<k → T (h+(i:Int)) = true) :
@@ -142,6 +143,11 @@ theorem state4_right_ones (k : Nat) (T : Int → Bool) (h : Int)
           run tm2 1 ⟨4,h,T⟩ = some ⟨4,h+1,T⟩ := by
         have htrans : tm2 ((4:Fin 6),true) = some ⟨true,true,4⟩ := rfl
         simp [run,rawStep,readSlot,applyMove,h0,htrans]
+        funext x
+        by_cases hx : x=h
+        · subst x
+          simp [h0]
+        · simp [hx]
       have htail : ∀ i : Nat, i<k → T (h+1+(i:Int)) = true := by
         intro i hi
         have hp := hones (i+1) (by omega)
@@ -149,17 +155,10 @@ theorem state4_right_ones (k : Nat) (T : Int → Bool) (h : Int)
         rw [heq]
         exact hp
       have hrun := ih T (h+1) htail
-      have hcost : k+1 = 1+k := by omega
-      rw [hcost,run_append,hstep]
-      simpa [Int.add_assoc] using hrun
-
-#print axioms p2ActualBoundary_exact
-#print axioms p2ActualBoundary_heads
-#print axioms p2ActualBoundary_at
-#print axioms p2ActualBoundary_end_right_ones
-#print axioms state4_right_ones
-
-
+      rw [show k+1 = 1+k by omega,run_append,hstep]
+      simp only [Option.bind_some]
+      have hhead : h+1+(k:Int) = h+((k+1:Int)) := by omega
+      simpa [hhead] using hrun
 
 /-- A single source transition that writes one cell. -/
 def p2WriteOne (T : Int → Bool) (h : Int) : Int → Bool :=
@@ -169,6 +168,29 @@ def p2WriteOne (T : Int → Bool) (h : Int) : Int → Bool :=
 def p2AfterTwoZeros (T : Int → Bool) (H : Int) : Int → Bool :=
   p2WriteOne (p2WriteOne T (H+5)) (H+6)
 
+private theorem p2WriteOne_update (T : Int → Bool) (h : Int) :
+    (fun x => decide (x=h) || T x) = p2WriteOne T h := by
+  funext x
+  by_cases hx : x=h
+  · subst x
+    simp [p2WriteOne]
+  · simp [p2WriteOne,hx]
+
+private theorem p2TwoWrite_update (T : Int → Bool) (H : Int) :
+    (fun x => if x=H+6 then true else decide (x=H+5) || T x) =
+      p2AfterTwoZeros T H := by
+  funext x
+  by_cases hx6 : x=H+6
+  · subst x
+    simp [p2AfterTwoZeros,p2WriteOne]
+  · by_cases hx5 : x=H+5
+    · subst x
+      simp [p2AfterTwoZeros,p2WriteOne,hx6]
+    · simp [p2AfterTwoZeros,p2WriteOne,hx6,hx5]
+
+
+/-- From q4 on the first of two zeroes, the source takes two moves to
+state 1 at the first cell of the following three-one blocks. -/
 /-- From q4 on the first of two zeroes, the source takes two moves to
 state 1 at the first cell of the following three-one blocks. -/
 theorem p2_two_zero_setup (T : Int → Bool) (H : Int)
@@ -179,20 +201,26 @@ theorem p2_two_zero_setup (T : Int → Bool) (H : Int)
       run tm2 1 ⟨4,H+5,T⟩ =
         some ⟨0,H+6,p2WriteOne T (H+5)⟩ := by
     have htrans : tm2 ((4:Fin 6),false) = some ⟨true,true,0⟩ := rfl
-    simp [run,rawStep,readSlot,applyMove,h0,htrans,p2WriteOne]
+    simp [run,rawStep,readSlot,applyMove,h0,htrans]
+    constructor
+    · omega
+    · exact p2WriteOne_update T (H+5)
   have hread1 : p2WriteOne T (H+5) (H+6) = false := by
-    simp [p2WriteOne]
-    exact h1
+    simp [p2WriteOne,show H+6 ≠ H+5 by omega,h1]
   have hstep1 :
       run tm2 1 ⟨0,H+6,p2WriteOne T (H+5)⟩ =
         some ⟨1,H+7,p2AfterTwoZeros T H⟩ := by
     have htrans : tm2 ((0:Fin 6),false) = some ⟨true,true,1⟩ := rfl
-    simp [run,rawStep,readSlot,applyMove,hread1,htrans,
-      p2WriteOne,p2AfterTwoZeros]
+    simp [run,rawStep,readSlot,applyMove,hread1,htrans]
+    constructor
+    · omega
+    · exact p2TwoWrite_update T H
   rw [show 2 = 1+1 by omega,run_append,hstep0]
   simp only [Option.bind_some]
   exact hstep1
 
+/-- The state-1 boundary after the final three-one block writes one and
+moves left into state 2. -/
 /-- The state-1 boundary after the final three-one block writes one and
 moves left into state 2. -/
 theorem p2_final_zero (T : Int → Bool) (h : Int)
@@ -200,8 +228,15 @@ theorem p2_final_zero (T : Int → Bool) (h : Int)
     run tm2 1 ⟨1,h,T⟩ =
       some ⟨2,h-1,p2WriteOne T h⟩ := by
   have htrans : tm2 ((1:Fin 6),false) = some ⟨true,false,2⟩ := rfl
-  simp [run,rawStep,readSlot,applyMove,hblank,htrans,p2WriteOne]
+  simp [run,rawStep,readSlot,applyMove,hblank,htrans]
+  constructor
+  · omega
+  · exact p2WriteOne_update T h
 
+/-- Right continuation from the actual-boundary bridge's q4 output.
+The q4 state scans the long one-run, crosses two zeroes, converts the
+following d1-blocks to d0-blocks, and stops in state 2 at the next
+blank boundary. -/
 /-- Right continuation from the actual-boundary bridge's q4 output.
 The q4 state scans the long one-run, crosses two zeroes, converts the
 following d1-blocks to d0-blocks, and stops in state 2 at the next
@@ -235,18 +270,39 @@ theorem p2ActualRightContinuation
   have hscan1 :=
     BB6Coverage.Agent8Q4Suffix.state1_d1_blocks_right
       (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7) hblocks
+  have hcast : ((3*2^a:Nat):Int) = 3*(2^a:Int) := by simp
+  have hx :
+      (H:Int)+7+((3*2^a:Nat):Int) ≤
+        (H:Int)+7+(3*(2^a:Int)) := by
+    rw [hcast]
+    exact le_rfl
   have hblank' :
       BB6Coverage.Agent8Q4Suffix.d0Sweep
         (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7)
         ((H:Int)+7+(3*(2^a:Int))) = false := by
-    rw [BB6Coverage.Agent8Q4Suffix.d0Sweep_after]
-    · exact hblank
-    · omega
+    rw [BB6Coverage.Agent8Q4Suffix.d0Sweep_after (2^a)
+      (p2AfterTwoZeros T (H:Int)) ((H:Int)+7)
+      ((H:Int)+7+(3*(2^a:Int))) hx]
+    exact hblank
   have hfinal :=
     p2_final_zero
       (BB6Coverage.Agent8Q4Suffix.d0Sweep
         (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7))
       ((H:Int)+7+(3*(2^a:Int))) hblank'
+  have hheadfinal :
+      (H:Int)+7+(3*(2^a:Int))-1 =
+        (H:Int)+6+(3*(2^a:Int)) := by omega
+  have hfinal' :
+      run tm2 1
+        ⟨1,(H:Int)+7+(3*(2^a:Int)),
+          BB6Coverage.Agent8Q4Suffix.d0Sweep
+            (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7)⟩ =
+      some ⟨2,(H:Int)+6+(3*(2^a:Int)),
+        p2WriteOne
+          (BB6Coverage.Agent8Q4Suffix.d0Sweep
+            (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7))
+          ((H:Int)+7+(3*(2^a:Int)))⟩ := by
+    simpa [hheadfinal] using hfinal
   have hrest :
       run tm2 (2+(3*2^a+1)) ⟨4,(H:Int)+5,T⟩ =
         some ⟨2,(H:Int)+6+(3*(2^a:Int)),
@@ -254,21 +310,15 @@ theorem p2ActualRightContinuation
             (BB6Coverage.Agent8Q4Suffix.d0Sweep
               (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7))
             ((H:Int)+7+(3*(2^a:Int)))⟩ := by
-    have hcost : 2+(3*2^a+1) = 2+(3*2^a)+1 := by omega
-    rw [hcost,run_append,hsetup]
+    rw [run_append,hsetup]
     simp only [Option.bind_some]
     rw [run_append,hscan1]
     simp only [Option.bind_some]
-    exact hfinal
+    exact hfinal'
   have hcost : H+6+3*2^a = (H+3)+(2+(3*2^a+1)) := by omega
   rw [hcost,run_append,hscan4]
   simp only [Option.bind_some]
   exact hrest
-
-#print axioms p2_two_zero_setup
-#print axioms p2_final_zero
-#print axioms p2ActualRightContinuation
-
 
 /-- Compose the existing counted state-3 left-one sweep with the new
 73-step bridge for the authentic 0101 boundary. This is the corrected
@@ -281,7 +331,7 @@ theorem p2ActualPostlude_at
     (hinput :
       p2ActualBoundaryInput (s0LeftSweep k T h) (h-(k:Int))) :
     run tm2 (3*k+73) ⟨3,h,T⟩ =
-      some (frameAt (s0LeftSweep k T h) (h-(k:Int))
+      some (BB6Coverage.Agent6Q4Prefix.frameAt (s0LeftSweep k T h) (h-(k:Int))
         p2ActualBoundaryInside p2ActualBoundaryEnd) := by
   have hscan := state3_left_ones_scan k T h hones hright
   have hbridge :=
