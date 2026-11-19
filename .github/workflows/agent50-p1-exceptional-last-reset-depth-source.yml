@@ -150,6 +150,18 @@ jobs:
             echo "Parametric source theorem depends on sorryAx" >&2
             exit 1
           fi
+          if lean -o "$AG50SUB/RightFiveEnergySharp.olean" "$AG50SUB/RightFiveEnergySharp.lean" > /tmp/agent50-right-five-sharp-axioms.txt; then
+            cat /tmp/agent50-right-five-sharp-axioms.txt
+          else
+            status=$?
+            cat /tmp/agent50-right-five-sharp-axioms.txt
+            exit "$status"
+          fi
+          grep -q "source_right_five_parametric_cost_gap_sharp" /tmp/agent50-right-five-sharp-axioms.txt
+          if grep -q "sorryAx" /tmp/agent50-right-five-sharp-axioms.txt; then
+            echo "Sharper parametric source theorem depends on sorryAx" >&2
+            exit 1
+          fi
           if lean -o "$AG50SUB/RightFiveNearDouble.olean" "$AG50SUB/RightFiveNearDouble.lean" > /tmp/agent50-right-five-near-double-axioms.txt; then
             cat /tmp/agent50-right-five-near-double-axioms.txt
           else
