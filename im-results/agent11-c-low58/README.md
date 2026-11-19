@@ -6,7 +6,7 @@ For the newest exact blank-root mathematics and all-parameter proof obligations,
 
 ## U5 B2 root-index residual cylinders (2026-11-19)
 
-Three new intermediate reductions extend the even-ou B2-to-P4 branch. They are **paper-level derivations only**, not yet Lean-formalized or compiled against the full original-source closure:
+Three new intermediate reductions extend the even-u B2-to-P4 branch. They are **paper-level derivations only**, not yet Lean-formalized or compiled against the full original-source closure:
 
 - [Root index r = 20 (mod 128)](U5B2Root4R20Mod128.md): the exact root equation forces the P4 parameter to (u=542+840w) with (w=3\pmod{16}). The P4 low-valuation inverse reduces to an even/odd target whose only source parent has a forced next predecessor in the blank-orbit forbidden odd-sum-two cylinder.
 - [Root4 w = 7 (mod 16) normalizer cylinders](U5B2Root4W7Normalizer.md): eleven root-index residues modulo 4096 are mapped to affine parents whose exact four-sector source normalizer terminates in the sound odd-right forbidden filter.
