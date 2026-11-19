@@ -55,9 +55,7 @@ theorem setupB30Config_as_s0Config
         (h+3*((A+L+z:Int))+13) := by
   let H : Int := h+3*((A+L+z:Int))+13
   have hhead : (setupB30Config T h L A z).head = H := by
-    rw [setupB30Config_head]
-    dsimp [H]
-    omega
+    simpa [H] using (setupB30Config_head T h A L z)
   have hcoordB30 :
       h+13+3*(L:Int)+3*(A:Int)+3*(z:Int) = H := by
     dsimp [H]
@@ -100,7 +98,8 @@ theorem setupB30Config_as_s0Config
       rw [hcoordB30] at hright
       rw [hcoord] at hright
       rw [hcoord] at hs0
-      rw [hs0,hwordRight]
+      rw [hs0]
+      rw [hwordRight] at hright
       exact hright
   exact setupConfig_ext hstate hhead htape
 
