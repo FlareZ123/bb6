@@ -74,8 +74,10 @@ theorem machine623FinalSlotAudit_exhaustive (m : Machine)
 private theorem machine623FinalSlotAudit_open_iff_halt (m : Machine) :
     machine623FinalSlotAudit.open m ↔
       m machine623HaltSlot = none := by
-  cases h : m machine623HaltSlot <;>
-    simp [machine623FinalSlotAudit, FrontierAudit.open, h]
+  change (match m machine623HaltSlot with
+    | none => True
+    | some _ => False) ↔ m machine623HaltSlot = none
+  cases h : m machine623HaltSlot <;> simp [h]
 
 /-- Within the 25-table cylinder, the only open child is the exact original
     #623 machine.  No claim is made about whether that remaining machine
@@ -131,8 +133,7 @@ theorem machine623FinalSlotAudit_report_conserves :
 theorem machine623_depth11_mass_ratio :
     cylinderMass (machine623Prefix 4) =
       25^7 * cylinderMass (machine623Prefix 11) := by
-  rw [machine623_first_four_mass, machine623_prefix_mass]
-  norm_num [Nat.pow_succ]
+  rw [machine623_first_four_mass, machine623_prefix_mass, Nat.pow_succ]
 
 #print axioms machine623_depth11_refines_depth4
 #print axioms machine623_ordinary_f0_extension_never
