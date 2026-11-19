@@ -26,7 +26,7 @@ set_option maxHeartbeats 4000000
 private theorem binDec_allOnes (k : Nat) :
     binDec k (2^k-1) = d0pow k := by
   induction k with
-  | zero => simp [binDec,d0pow]
+  | zero => simp [binDec,d0pow,binaryCounterFuel]
   | succ k ih =>
       have hpow : 2^(k+1)-1 = 2*(2^k-1)+1 := by
         rw [Nat.pow_succ]
