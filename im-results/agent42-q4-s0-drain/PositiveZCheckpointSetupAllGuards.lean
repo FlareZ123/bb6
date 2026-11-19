@@ -25,7 +25,9 @@ theorem setupPrefixInput_right_cell (L A z i : Nat) :
 theorem setupPrefixInput_right_d1pow_cell
     (L A z i : Nat) (hi : i < 3*(z+1)) :
     setupPrefixInputTape L A z (7+(i:Int)) = true := by
-  rw [setupPrefixInput_right_cell]
+  have hcell := setupPrefixInput_right_cell L A z (6+i)
+  have hcoord : (7:Int)+(i:Int) = 1+(6+i:Int) := by omega
+  rw [hcoord,hcell]
   have hside :
       sideBit (s0RightFacing z) (6+i) =
         sideBit (d1pow (z+1)) i := by
@@ -136,7 +138,7 @@ theorem setupPrefixAfterScans_at_B9Head_plus_one (L A z : Nat) :
   simp [hnot]
   have hfirst := sweptLeft_shift (3*A)
     (setupPrefixInputTape L A z) 0 (-(3*A:Int))
-  have hclear : (-(3*A:Int)) = (0:Int)-(3*A:Int)+1 := by omega
+  have hclear : (-(3*A:Int)) = (0:Int)-(3*A+1:Int)+1 := by omega
   simpa [hclear] using hfirst
 
 theorem setupPrefixAfterScans_at_B9Head_plus_two (L A z : Nat) :
