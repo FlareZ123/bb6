@@ -1,6 +1,6 @@
 import ResidualFrontierManifest
 import IncrementalAudit
-import WordOracle
+import TranslatedFiniteOracle
 
 set_option maxRecDepth 12000
 set_option maxHeartbeats 0
@@ -168,20 +168,31 @@ theorem secondWordWordPump_is_parent_child :
     secondWordWordPump =
       refine secondWordP6 secondWordC0 secondWordC0Action := rfl
 
-/-- Its two-step genuine blank-root entry has exactly two adjacent marks:
-    the finite right-word is [0,1] at C/head 0. -/
-theorem secondWordWordPump_entry_check :
-    finiteWordEntryCheck secondWordWordPump 2 5 = true := by decide
+/-- The exact blank-root entry after two moves and the five-step
+    translated finite-support macro are accepted by Agent 24's already
+    source-verified translated-cycle checker. -/
+theorem secondWordWordPump_translated_check :
+    finiteTranslatedCheck secondWordWordPump 2 5 = true := by decide
 
 theorem secondWordWordPump_cover (bound : Nat) :
     Cover (DecidedBelow bound) secondWordWordPump :=
-  finiteWordEntryCheck_sound secondWordWordPump 2 5 bound
-    (by decide) secondWordWordPump_entry_check
+  finiteTranslatedCheck_sound secondWordWordPump 2 5 bound
+    (by decide) secondWordWordPump_translated_check
 
-/-- The new cylinder diverges from Agent 32's twoMarkWordPump at C/1 and is
-    therefore pairwise disjoint from that candidate. -/
+/-- Agent 32's two-mark reference cylinder, written explicitly so this
+    module does not depend on the still-pending WordOracle import chain. -/
+def twoMarkReference : PartialMachine := fun s =>
+  if s = (0, false) then some (some ⟨true, true, 1⟩)
+  else if s = (1, false) then some (some ⟨true, false, 2⟩)
+  else if s = (2, true) then some (some ⟨true, true, 3⟩)
+  else if s = (3, true) then some (some ⟨true, true, 4⟩)
+  else if s = (4, false) then some (some ⟨true, false, 2⟩)
+  else none
+
+/-- The new cylinder diverges from Agent 32's two-mark reference at C/1 and
+    is therefore pairwise disjoint from that candidate. -/
 theorem secondWord_disjoint_twoMark (m : Machine) :
-    ¬ (compatible secondWordWordPump m ∧ compatible twoMarkWordPump m) := by
+    ¬ (compatible secondWordWordPump m ∧ compatible twoMarkReference m) := by
   intro h
   have hnew : m secondWordC1 = secondWordC1Action := by
     apply h.1
@@ -194,7 +205,7 @@ theorem secondWord_disjoint_twoMark (m : Machine) :
       secondWordC0Action, refine, emptyTable]
   have hold : m secondWordC1 = some ⟨true, true, 3⟩ := by
     apply h.2
-    simp [twoMarkWordPump, secondWordC1]
+    simp [twoMarkReference, secondWordC1]
   have heq : secondWordC1Action = some ⟨true, true, 3⟩ :=
     hnew.symm.trans hold
   simp [secondWordC1Action] at heq
@@ -237,7 +248,7 @@ theorem secondWordGraftedAudit_conserves :
     _ = cylinderMass emptyTable := secondWordGraftedAudit.report_conserves
     _ = 25^12 := by decide
 
-#print axioms secondWordWordPump_entry_check
+#print axioms secondWordWordPump_translated_check
 #print axioms secondWordWordPump_cover
 #print axioms secondWord_disjoint_twoMark
 #print axioms secondWordParent_open_all
