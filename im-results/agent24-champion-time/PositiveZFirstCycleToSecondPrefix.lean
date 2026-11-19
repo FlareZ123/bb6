@@ -298,8 +298,10 @@ theorem positiveZFirstCycle_then_secondCyclePrefix
       omega
     rw [hVoutside x hout]
     have hs := hshift x
+    have hneq : x≠H-(k:Int)+1 := by rw [hHk]; omega
+    have hnot : ¬(H-(k:Int)+2≤x ∧ x≤H+1) := by rw [hHk]; omega
     rw [hs]
-    simp [hbefore]
+    simp [hneq,hnot]
 
   have hV0 : V 0 = true := by
     simp [V,frameAt_tape,firstCyclePostludeInside,firstCyclePostludeEnd]
@@ -391,7 +393,7 @@ theorem positiveZFirstCycle_then_secondCyclePrefix
     rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
       (d1pow a) (firstCycleResidualLeft z tail) (m+5)
       (by rw [d1pow_length]; dsimp [m,a]; omega),hidx] at hcell
-    exact hcell.trans hbinbits.1
+    simpa [tail] using hcell.trans hbinbits.1
 
   have hVminus6 : V (-6) = false := by
     rw [hVleft (-6) (by omega)]
@@ -405,7 +407,7 @@ theorem positiveZFirstCycle_then_secondCyclePrefix
     rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
       (d1pow a) (firstCycleResidualLeft z tail) (m+6)
       (by rw [d1pow_length]; dsimp [m,a]; omega),hidx] at hcell
-    exact hcell.trans hbinbits.2
+    simpa [tail] using hcell.trans hbinbits.2
 
   have hinput34 :
       V (1-7) = false ∧
