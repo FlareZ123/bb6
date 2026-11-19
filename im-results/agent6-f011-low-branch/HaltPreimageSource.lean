@@ -44,4 +44,50 @@ theorem source_scalar_rank_strict
   unfold SourceScalarRank
   rcases hPair with hW | ⟨hW, hTie⟩ <;> omega
 
+
+/-- Iterate the original-source high-level transition exactly n times. -/
+def sourceIterate : Nat → HighLevelState → Option HighLevelState
+  | 0, s => some s
+  | n + 1, s => (highLevelNext s).bind (sourceIterate n)
+
+/-- Every defined n-step source orbit increases the scalar rank by at least n. -/
+theorem source_iterate_rank_growth :
+    ∀ n s t, sourceIterate n s = some t →
+      SourceScalarRank s + n ≤ SourceScalarRank t := by
+  intro n
+  induction n with
+  | zero =>
+      intro s t h
+      simp [sourceIterate] at h
+      cases h
+      simp
+  | succ n ih =>
+      intro s t h
+      cases s with
+      | S p k c =>
+          simp only [sourceIterate] at h
+          cases hstep : highLevelNext (.S p k c) with
+          | none =>
+              simp [hstep] at h
+          | some s1 =>
+              simp [hstep] at h
+              have hfirst : SourceScalarRank (.S p k c) + 1 ≤ SourceScalarRank s1 := by
+                cases s1 with
+                | S p' k' c' =>
+                    exact Nat.succ_le_iff.mpr
+                      (source_scalar_rank_strict p p' k c k' c' hstep)
+              have hrest := ih s1 t h
+              omega
+
+/-- No positive-length orbit of the original-source high-level map is cyclic. -/
+theorem source_no_positive_cycle (n : Nat) (s : HighLevelState) (hn : 0 < n) :
+    sourceIterate n s ≠ some s := by
+  intro h
+  have hg := source_iterate_rank_growth n s s h
+  omega
+
 end F011
+
+#print axioms F011.source_scalar_rank_strict
+#print axioms F011.source_iterate_rank_growth
+#print axioms F011.source_no_positive_cycle
