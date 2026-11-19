@@ -232,6 +232,14 @@ jobs:
             lake env lean -o "${module}.olean" "${module}.lean"
           done
 
+      - name: Verify Agent 5 nested S4 return-map reduction
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=.:${LEAN_PATH:-}
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-nested-return/S4NestedReturn.lean" S4NestedReturn.lean
+          lake env lean -o S4NestedReturn.olean S4NestedReturn.lean
+
       - name: Verify Agent 5 source-weighted two-gate moment lemma
         working-directory: /tmp/cryptids
         run: |
