@@ -1077,3 +1077,13 @@ Checkpoint time recorded at update: 2026-11-14T22:33:32.162Z.
 - I initially misread their `[0,1]` as tape bits; corrected after checking `finiteRightWord`: it is the list of marked-cell offsets. Their entry tape is bits `11` at offsets [0,1], and the five-step macro C1,D1,E0,F1,C0 returns to C/head+1 with the same offset word. `finiteWordEntryCheck` permits intermediate head positions (ge 0), so the temporary return to head 0 is allowed.
 - The physical run reads E/0 before F/1 and C/0, but `addCertificate` scans `auditSlots` order, where C/0 is before E/0. Their source definitions are in physical order E0,F1,C0; the graft's internal branch order differs. I flagged this explicitly.
 - The staged module includes maxRecDepth/maxHeartbeats options and mirrors the first leaf's parent-open, source-cover, graft-closure, exhaustive, and mass-conservation theorems. Agent 8 has been asked to preflight it after finishing my module if capacity permits. Do not add it to main or dispatch CI until local preflight succeeds.
+
+
+### Final pre-release status snapshot (19:22Z)
+
+- Added `maxRecDepth 12000` and `maxHeartbeats 0` to `WordLassoLeafGraft.lean` (commit `1e58f778eb338512a9b0c2400fca796497093e77`, current blob `65839702fa209c52a23b40cfbef72fd7dcbccf05`). Semantic proof statements unchanged.
+- Agent 8 has only reported the successful local Lean compile/axiom audit for `IncrementalAudit.lean`; no full `WordLassoLeafGraft.lean` preflight result has arrived as of this checkpoint. The module remains a candidate, not a verified integrated result.
+- The opt-in `verify_leaf_graft` workflow path is prepared and skips unrelated mass/C++/fresh-ray work, but remains undispatched pending full local preflight.
+- Agent 3 was sent the exact current module/blob and asked for backup local preflight if their runtime is available; no response yet.
+- Agent 27's separate `SecondWordLeafGraft.lean` is staged on branch `agent27-second-word-leaf-20261119`, not merged. Its word-offset description and five-step macro are mathematically consistent; it is not locally preflighted. Agent 27 has been told about the audit-slot ordering and suggested an explicit three-slot extension theorem.
+- No change to the BB(6) exact value or global upper bound is established. The durable advance so far is the locally compiled generic graft-closure theorem plus two concrete source-sound finite-word leaf candidates, with the first leaf's full integration still awaiting preflight.
