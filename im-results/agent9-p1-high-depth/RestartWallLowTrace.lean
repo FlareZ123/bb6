@@ -507,6 +507,91 @@ theorem restartPath_first_shallow_state
   exact ⟨bp,dp,mp,t,k,c,pre,post,hpre2,hEq,hMass,hb,hb4,hd,ht,hi,hk,hc,hguard,
     xmid,hxmid,hprefix,htail'⟩
 
+/-- Additivity of the scalar edge-cost sum. -/
+theorem totalCost_append (xs ys : List Nat) :
+    totalCost (xs++ys) = totalCost xs + totalCost ys := by
+  induction xs with
+  | nil => simp [totalCost]
+  | cons e xs ih => simp [totalCost, ih, Nat.add_assoc]
+
+/-- At an authentic source state, the scalar affine energy is exactly the
+    source-coordinate expression 7(b-6d)+146. -/
+theorem restartEnergy_source_coordinate
+    (P c s b d : Nat)
+    (hMass : b+d+2*(c+s+6)+1=14*P) :
+    restartEnergy P c s (d-1) =
+      7*(b:Int)-42*(d:Int)+146 := by
+  have hMassI : (b:Int)+(d:Int)+2*((c+s+6):Int)+1=14*(P:Int) := by
+    exact_mod_cast hMass
+  have hd : 1 ≤ d := by omega
+  have hsub : ((d-1:Nat):Int)=(d:Int)-1 := by omega
+  unfold restartEnergy
+  rw [hsub]
+  push_cast
+  omega
+
+/-- The first shallow source edge is now the first LowStep of the scalar
+    tail, and the remaining suffix is an actual LowTrace to the wall. -/
+theorem restartPath_first_shallow_lowTrace
+    (n b d m : Nat) (path : RestartPath n b d m)
+    (hbound : 2^path.L ≤ 7*weightS 0 path.es)
+    (hwall : b+4*m+4*n+20=12*2^n) :
+    ∃ bp dp mp t k c,
+      bp+dp+2*(path.c+mp+6)+1=14*2^n ∧
+      8 ≤ bp ∧ bp%4=0 ∧ dp%2=1 ∧
+      t ≤ 1 ∧ inverseAt bp dp t = some (k,c) ∧
+      2 ≤ k ∧ c%2=1 ∧ (2*k-4)%4=0 ∧
+      LowStep (2^n:Int)
+        (restartEnergy (2^n) path.c mp (dp-1))
+        (restartOffset path.c mp)
+        (restartEnergy (2^n) path.c (mp+(t+1)) 0)
+        (restartOffset path.c (mp+(t+1))) ∧
+      LowTrace (2^n:Int)
+        (restartEnergy (2^n) path.c (mp+(t+1)) 0)
+        (restartOffset path.c (mp+(t+1)))
+        (restartEnergy (2^n) path.c path.L (d-1))
+        (restartOffset path.c path.L) := by
+  obtain ⟨bp,dp,mp,t,k,c,pre,post,hpre2,hEq,hMass,hb,hb4,hd,ht,hi,hk,hc,hguard,
+    xmid,hxmid,hprefix,htail⟩ :=
+    restartPath_first_shallow_state n b d m path hbound hwall
+  subst xmid
+  have hpostPos : ∀ e, e ∈ post.map Nat.succ → 1 ≤ e := by
+    intro e he
+    have hmem : e ∈ path.es := by
+      rw [hEq]
+      simp [he]
+    exact path.hPos e hmem
+  have hpostLow : ∀ e, e ∈ post.map Nat.succ → e ≤ 3 := by
+    intro e he
+    have hmem : e ∈ path.es := by
+      rw [hEq]
+      simp [he]
+    exact path.hLow e hmem
+  cases htail with
+  | @cons _ _ _ _ x' _ hstep hrest =>
+      have hfirst := restartStep_lowStep
+        (2^n) path.c mp (dp-1) (t+1) x' hstep (by omega) (by omega)
+      have htailLow := restartWalk_toLowTrace
+        (2^n) path.c x' (mp+(t+1)) (d-1)
+        (post.map Nat.succ) hrest hpostPos hpostLow
+      have hpreCost : totalCost ((oddConeDepths pre).map Nat.succ)=mp :=
+        oddCone_depths_cost pre
+      have hcostAll : totalCost path.es =
+          mp+(t+1)+totalCost (post.map Nat.succ) := by
+        rw [hEq, totalCost_append, totalCost_append_singleton, hpreCost]
+        simp [totalCost, Nat.add_assoc]
+      have hFinalCost : mp+(t+1)+totalCost (post.map Nat.succ)=path.L := by
+        rw [← path.hTotal]
+        exact hcostAll
+      have htailFinal : LowTrace (2^n:Int)
+          (restartEnergy (2^n) path.c (mp+(t+1)) 0)
+          (restartOffset path.c (mp+(t+1)))
+          (restartEnergy (2^n) path.c path.L (d-1))
+          (restartOffset path.c path.L) := by
+        simpa [hFinalCost] using htailLow
+      exact ⟨bp,dp,mp,t,k,c,hMass,hb,hb4,hd,ht,hi,hk,hc,hguard,
+        by simpa using hfirst, by simpa using htailFinal⟩
+
 /-- In the Is=48, odd-offset branch, the first shallow edge has
     depth one.  With the correct inverse-mass constant (2t+2=4), its
     source equations force an even child parameter; no mod-four exclusion
