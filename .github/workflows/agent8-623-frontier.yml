@@ -49,6 +49,7 @@ jobs:
           lean -o im-results/agent8-623-frontier/Machine623RawLeafReduction.olean im-results/agent8-623-frontier/Machine623RawLeafReduction.lean
           echo "Compiling the depth-five D/1 raw-table split"
           lean -o im-results/agent8-623-frontier/Machine623DepthFiveSplit.olean im-results/agent8-623-frontier/Machine623DepthFiveSplit.lean
+          lean -o im-results/agent8-623-frontier/Machine623D1Glider.olean im-results/agent8-623-frontier/Machine623D1Glider.lean
           lean -o im-results/agent8-623-frontier/Machine623ParentAudit.olean im-results/agent8-623-frontier/Machine623ParentAudit.lean
           echo "Probing source-sound C/1 sibling certificates below the authentic D/1 child"
           lean -o im-results/agent1-machine623-3euclidean-correction-bounds/C1SiblingExpansion.olean im-results/agent1-machine623-3euclidean-correction-bounds/C1SiblingExpansion.lean
