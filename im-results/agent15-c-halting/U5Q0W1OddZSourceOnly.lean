@@ -7,14 +7,14 @@ namespace BB6.Agent15U5Q0W17SourceOnly
 
 open BB6.Agent46
 
-/-- For an even/even section target whose coordinate sum is not 0 mod 4,
+/-- For an even/even section target whose coordinate sum is not 0 mod 8,
     the complete original-source parent fan collapses to the direct parent.
     The zero-left and even-a bounce branches both force the sum to be 0 mod 4. -/
 private theorem even_even_nonzero_sum_mod4_forces_direct
     (a k x y : Nat)
     (hxpos : 0 < x) (hxe : x % 2 = 0)
     (hy6 : 6 ≤ y) (hye : y % 2 = 0)
-    (hsum : (x+y) % 4 ≠ 0)
+    (hsum : (x+y) % 8 ≠ 0)
     (hedge : secNext (a,k) = some (x,y)) :
     a = x+y-2 ∧ k = (y-2)/2 := by
   have hfan := BB6.Agent3ParentFan.even_even_parent_fan
@@ -22,8 +22,8 @@ private theorem even_even_nonzero_sum_mod4_forces_direct
   rcases hfan with hdirect | hzero | hbounce
   · exact hdirect
   · rcases hzero with ⟨_,_,n,hxy,_⟩
-    have hdiv : 4 ∣ x+y := by
-      refine ⟨2^n*2,?_⟩
+    have hdiv : 8 ∣ x+y := by
+      refine ⟨2^n,?_⟩
       rw [hxy]
       ring
     have hmod := Nat.mod_eq_zero_of_dvd hdiv
@@ -37,12 +37,12 @@ private theorem even_even_nonzero_sum_mod4_forces_direct
       omega
     rcases hpow4 with ⟨p,hp⟩
     rcases htwo with ⟨q,hq⟩
-    have hdiv : 4 ∣ x+y := by
-      refine ⟨2*p*q,?_⟩
+    have hdiv : 8 ∣ x+y := by
+      refine ⟨p*q,?_⟩
       calc
         x+y = 2^(n+1)*(a+2) := hxy
         _ = (4*p)*(2*q) := by rw [hp,hq]
-        _ = 4*(2*p*q) := by ring
+        _ = 8*(p*q) := by ring
     have hmod := Nat.mod_eq_zero_of_dvd hdiv
     omega
 
