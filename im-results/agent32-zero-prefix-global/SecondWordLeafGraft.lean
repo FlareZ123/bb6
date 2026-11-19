@@ -193,7 +193,11 @@ noncomputable def secondWordGraftedAudit :
 
 /-- Every completion of the new seven-slot cylinder is closed by the
     source-sound translated finite-support recurrence. The exhaustive and
-    mass-conservation theorems below retain the global partition. -/
+    mass-conservation theorems below retain total coverage and mass. The
+    constructor emits `.unresolved` children on source-slot mismatches, but
+    exact preservation of all source-incompatible open machines still needs
+    the generic `addCertificate_open_iff` theorem; exhaustiveness alone is not
+    an exclusive open-set statement. -/
 theorem secondWordGraftedAudit_closes_source (m : Machine)
     (hm : compatible secondWordWordPump m) :
     ¬ secondWordGraftedAudit.open m := by
