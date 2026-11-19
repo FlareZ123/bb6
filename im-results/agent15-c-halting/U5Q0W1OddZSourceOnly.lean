@@ -102,6 +102,6 @@ theorem q0_w1_odd_z_off_residual_unreachable (z : Nat) (hz : z % 2 = 1) :
     (4150+17934*z) (412+1785*z)
     (by omega) (by omega) (by omega) (by omega) hE
 
-#print axioms q0_w1_odd_z_target_unreachable
+#print axioms q0_w1_odd_z_off_residual_unreachable
 
 end BB6.Agent15U5Q0W17SourceOnly
