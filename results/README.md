@@ -1,6 +1,6 @@
 # BB(6): mathematical result map and open proof obligations
 
-**Research synthesis, 2026-11-13:** The exact six-state, two-symbol Busy Beaver step value is **unknown**. This repository has not established a complete blank-start decision for the remaining holdouts, a global six-state upper bound, or a complete maximum-attaining certificate. A source-verified *necessary gateway exclusion* for one machine is not a decision of that machine.
+**Research synthesis, 2026-11-19:** The exact six-state, two-symbol Busy Beaver step value is **unknown**. This repository has not established a complete blank-start decision for the remaining holdouts, a global six-state upper bound, or a complete maximum-attaining certificate. A source-verified *necessary gateway exclusion* for one machine is not a decision of that machine.
 
 ## External BB(6) lower-bound baseline (not a repository theorem)
 

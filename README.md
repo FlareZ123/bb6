@@ -2,7 +2,7 @@
 
 Collaborative research toward a rigorous determination of the six-state, two-symbol, blank-tape Busy Beaver **step** value. This repository contains original-machine formalizations, mathematical reductions, inverse and forward invariants, finite checks, and experimental leads.
 
-**Research state (18 November 2026): BB(6) remains unresolved.** No complete blank-start halt/nonhalt decision for all remaining machines, exhaustive six-state maximality certificate, or exact maximal runtime proof has been established here. Individual source-verified reductions have narrower mathematical scope than a machine decision.
+**Research state (19 November 2026): BB(6) remains unresolved.** No complete blank-start halt/nonhalt decision for all remaining machines, exhaustive six-state maximality certificate, or exact maximal runtime proof has been established here. Individual source-verified reductions have narrower mathematical scope than a machine decision.
 
 ## Start here
 
