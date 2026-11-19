@@ -34,9 +34,6 @@ theorem pow2_mod162_class (n : Nat) :
   | succ n ih =>
       have heq : 31 + 54*(n+1) = (31 + 54*n) + 54 := by omega
       rw [heq, Nat.pow_add, Nat.mul_mod, ih]
-      have h54 : 2^54 % 162 = 82 := by decide
-      rw [h54]
-      decide
 
 /-- The three residues of 2^(31+54n) modulo 243, indexed by n modulo 3. -/
 theorem pow2_mod243_class (n : Nat) :
@@ -52,17 +49,13 @@ theorem pow2_mod243_class (n : Nat) :
   have hcases : n%3 = 0 ∨ n%3 = 1 ∨ n%3 = 2 := by omega
   rcases hcases with h0 | h1 | h2
   · simp [h0]
-    decide
   · simp [h1]
-    decide
   · simp [h2]
-    decide
 
 theorem k_mod162 (n : Nat) : kParam n % 162 = 116 := by
   unfold kParam
   rw [a_sub7]
   rw [Nat.add_mod, Nat.mul_mod, pow2_mod162_class]
-  decide
 
 theorem k_mod243 (n : Nat) :
     kParam n % 243 =
@@ -73,21 +66,18 @@ theorem k_mod243 (n : Nat) :
   have hcases : n%3 = 0 ∨ n%3 = 1 ∨ n%3 = 2 := by omega
   rcases hcases with h0 | h1 | h2
   · simp [h0]
-    decide
   · simp [h1]
-    decide
   · simp [h2]
-    decide
 
 /-- Reducing an exponent modulo 162 is sound for powers of 2 modulo 243. -/
 theorem pow2_mod243_reduce (m : Nat) :
     2^m % 243 = 2^(m%162) % 243 := by
   have hdecomp : m%162 + 162*(m/162) = m := by omega
-  rw [← hdecomp]
-  exact pow2_mod243_period (m%162) (m/162)
+  have h := pow2_mod243_period (m%162) (m/162)
+  rw [hdecomp] at h
+  exact h
 
 theorem p_mod243 (n : Nat) : 2^(kParam n) % 243 = 175 := by
   rw [pow2_mod243_reduce, k_mod162]
-  decide
 
 end Agent7Rho20
