@@ -152,13 +152,17 @@ Consequently the whole \(u=1802+6720t\) B2 cylinder is excluded if the source dr
 
 
 The source draft now also includes the root-index bridge:
-- p4_sum_mod64_of_root32 takes \(r\bmod64=32\), \(E\ge19\), and the rearranged exact residual identity
+- p4_exact_residual_identity derives
   \[
   211S_4+7(2570932352+3163718175r)
-  =19991900\cdot2^{E-13},
+  =19991900\cdot2^{E-13}
   \]
-  and proves \(S_4\bmod64=32\).
+  from the exact residual root equation
+  \[
+  18018+211u+22155r=20\cdot2^{E-13}.
+  \]
+- p4_sum_mod64_of_root32 uses \(r\bmod64=32\) and \(E=201+3360(6657+8192r)\) to prove \(S_4\bmod64=32\).
 - p4_root32_u_parameter then proves \(u=122+840w=1802+6720t\) for some \(t\), since \(S_4=8(15252222+104957475w)\) and \(S_4\bmod64=32\) forces \(w\bmod8=2\).
-- blank_no_b2_root32_from_root_index composes this bridge with the B2 exclusion.
+- blank_no_b2_root32_from_root_index composes the exact root equation, valuation bridge, and B2 exclusion.
 
 The root-index theorem is currently conditional on the exact residual identity being supplied; the Lean draft has not yet been compiled. This separates the arithmetic root-index bridge from the source-orbit exclusion and makes the remaining formalization dependency explicit.
