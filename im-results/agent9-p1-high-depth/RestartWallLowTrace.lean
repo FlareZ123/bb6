@@ -259,7 +259,7 @@ theorem oddCone_mass_from_start
     (h : OddCone b0 d0 b d L)
     (hStartMass : b0+d0+2*m0+2*n+13=14*2^n) :
     b+d+2*(m0+L)+2*n+13=14*2^n := by
-  induction h generalizing m0 with
+  induction h generalizing m0 hStartMass with
   | root =>
       simpa using hStartMass
   | @parent bp dp mp t k c hpre hb hb4 hd hi hk hc ih =>
