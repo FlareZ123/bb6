@@ -627,6 +627,27 @@ theorem setup_sideBit_append (xs ys : List Bool) (i : Nat) :
 
 /-- Given the B6 left-tail identity, the z-sweep/B30 suffix produces the
 complete left-facing word d0pow(z) ++ setupL2(A,L). -/
+theorem setupD100pow_length (n : Nat) :
+    (setupD100pow n).length=3*n := by
+  induction n with
+  | zero => simp [setupD100pow]
+  | succ n ih => simp [setupD100pow, ih]
+
+/-- Exact piecewise tape-side indexing for the five pieces of setupL2. -/
+theorem setupL2_sideBit (A L i : Nat) :
+    sideBit (setupL2 A L) i =
+      if i<3 then sideBit [true,true,false] i
+      else if i-3<3*(A+1) then
+        sideBit (setupD100pow (A+1)) (i-3)
+      else if i-3-3*(A+1)<3 then
+        sideBit [true,true,true] (i-3-3*(A+1))
+      else if i-3-3*(A+1)-3<3*(L+1) then
+        sideBit (setupD100pow (L+1)) (i-3-3*(A+1)-3)
+      else
+        sideBit [true,true,true,false,true,true,true]
+          (i-3-3*(A+1)-3-3*(L+1)) := by
+  simp [setupL2, setup_sideBit_append, setupD100pow_length]
+
 theorem setupB30Config_leftFacing (T : Int → Bool) (h : Int)
     (A L z : Nat) (g : SetupSuffixGuards T h A L z)
     (hz : 2≤z) (htail : SetupB6LeftTail T h A L) :
