@@ -180,12 +180,18 @@ theorem w7_q0_target_unreachable_u1mod4 (u : Nat) (hu : u%4=1) :
   rcases hnCases with hn0 | hn2
   · subst n
     have ha : a=8*W-3 := by norm_num at hscale; omega
-    have hk : k=17769+28644*u := by dsimp [W,X2] at hcost; omega
+    have hk : k=17769+28644*u := by
+      rw [ha] at hcost
+      dsimp [W,X2] at hcost
+      omega
     have hbad := w7_z2_q0_parent_unreachable u
     exact hbad (by simpa [W,ha,hk] using hprev)
   · subst n
     have ha : a=2*W-3 := by norm_num at hscale; omega
-    have hk : k=24450+39417*u := by dsimp [W,X2] at hcost; omega
+    have hk : k=24450+39417*u := by
+      rw [ha] at hcost
+      dsimp [W,X2] at hcost
+      omega
     have hbad := w7_z2_q1_parent_unreachable u hu
     exact hbad (by simpa [W,ha,hk] using hprev)
 
