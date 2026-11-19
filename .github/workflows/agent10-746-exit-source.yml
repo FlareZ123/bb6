@@ -16,6 +16,8 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Reproduce rho-20 two-thirds residue table
         run: node im-results/agent10-cascade/rho20_two_thirds_residue_table.mjs
+      - name: Reproduce rho-20 class-2 mod-54 modular certificate
+        run: node im-results/agent7-746-even-parent/rho20_class2_mod162.mjs
       - name: Compile original copied source dependencies and downstream proofs
         run: |
           set -eu
@@ -25,6 +27,7 @@ jobs:
           export LEAN_PATH="$a:$b:$e"
           lean --version
           lean -o "$e/T0D0ZeroPhaseArithmetic.olean" "$e/T0D0ZeroPhaseArithmetic.lean"
+          lean -o "$e/Rho20Class2Arithmetic.olean" "$e/Rho20Class2Arithmetic.lean"
           for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
             lean -o "$a/$m.olean" "$a/$m.lean"
           done
