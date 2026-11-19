@@ -18,7 +18,7 @@ function evalA(a, k, m) {
       if (r === 0n) return null;
       return [a, q, m];
     }
-    if (r === 0n) return [a - 1n, q, m + 2n * q + 3n];
+    if (r === 0n) return [a - 1n, q, m + 2n];
     a -= 1n;
     m += 2n * q + 3n;
     k = q;
