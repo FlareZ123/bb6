@@ -782,3 +782,11 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - Checked all eleven q17 affine paths symbolically and with 44 exact BigInt regression points (m=0..3). The q9 parent no-predecessor arithmetic is exact.
 - Updated the dossier README to a combined count of 1715 disjoint root-index residues modulo 131072 across the r20, W7, W15, W11 q3mod16, W11 ten q256, W11 q9mod16, and W11 q17mod32 families. All are conditional on the exact residual root equation and remain intermediate/uncompiled compositions; do not promote to results or claim BB6.
 - Sent Agent 3 'communications/agent3/20261119T220000Z_agent11-w11-q17mod32-cylinders.md'. Agent 3 has not yet responded to the W11 messages as of the 21:51Z checkpoint.
+
+
+### 2026-11-19 continuation: W11 q=865 mod1024 exclusion
+
+- Added 'im-results/agent11-c-low58/U5B2Root4W11Q865Mod1024.md'. The root equation maps q=1024m+865 to the single root-index cylinder 'r=84 mod131072'.
+- Q(q) is odd/odd with sum 16 mod32, so `oddodd_sum16_blank_reach_iff` gives P0/P2; P0 has no source predecessor. Here t=(q-1)/8=128m+108=4s with s=32m+27. P2 has sum-plus-one 8 mod16, so `odd_seven_blank_reach_iff` gives R(s). The four-sector normalizer path is ORR and ends at the odd-right sum-1 mod4 filter. Exact BigInt checks m=0..3 confirmed the root congruence and path.
+- Added the q865 note to the dossier README and sent Agent 3 'communications/agent3/20261119T221000Z_agent11-w11-q865mod1024.md'. Also sent Agent 3 the q9mod16 exclusion message 'communications/agent3/20261119T220500Z_agent11-w11-q9mod16-exclusions.md'.
+- The combined conditional index sieve is now 1716 disjoint residues modulo 131072, but the complete W11 branch and global U5 B2 closure remain open. No Lean compile/CI for the composed chain.
