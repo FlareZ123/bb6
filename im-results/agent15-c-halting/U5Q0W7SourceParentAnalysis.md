@@ -148,7 +148,7 @@ With t=81+168z, division by 8 gives
 z \\equiv 60+59s \\pmod{64}. For w=439, s=54, so
 z \\equiv46\\pmod{64}; intersecting with the exact
 z \\equiv3\\pmod5 residual yields z \\equiv238\\pmod{320}, hence
-u=(z-2)/4 \\equiv59\\pmod{80).
+u=(z-2)/4 \\equiv59\\pmod{80}.
 
 Write (u=59+80v). Then (W=2228+3591u) is odd, so the first-parent
 fan has only q=0 and q=1. The q=0 parent is already excluded. The q=1
