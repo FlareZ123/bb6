@@ -124,8 +124,8 @@ theorem machine623ParentAudit_exhaustive (m : Machine)
 
 /-- Exact parent-level accounting.  Six whole D/1 children are certified,
     plus 24 singleton F/0 completions inside the authentic D/1 branch.
-    The residual open mass includes the other 18 D/1 children and every
-    off-path sibling in the authentic branch. -/
+    The residual open mass is 17 untouched D/1 siblings plus the
+    off-path siblings in the authentic branch and the original #623 singleton. -/
 theorem machine623ParentAudit_report :
     machine623ParentAudit.report =
       (7 * 25^7 + 24, 18 * 25^7 - 24) := by
