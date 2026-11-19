@@ -123,9 +123,9 @@ theorem machine623_depth11_mass_ratio :
 #print axioms machine623_depth11_refines_depth4
 #print axioms machine623_ordinary_f0_extension_never
 #print axioms machine623FinalSlotAudit_exhaustive
-#print axioms machine623FinalSlotAudit_open_iff_root
 #print axioms machine623_depth11_only_root_remains
 #print axioms machine623FinalSlotAudit_report
+#print axioms machine623FinalSlotAudit_report_conserves
 #print axioms machine623_depth11_mass_ratio
 
 end BB6Coverage
