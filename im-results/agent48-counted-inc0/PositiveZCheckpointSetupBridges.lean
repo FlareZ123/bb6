@@ -24,7 +24,7 @@ def setupB8Inside (x : Int) : Bool :=
 
 def setupB8Start : FConfig := ⟨3, 0, [-1]⟩
 
-def setupB8End : FConfig := ⟨3, -2, [-2,0]⟩
+def setupB8End : FConfig := ⟨3, -2, [-3,-2,0]⟩
 
 theorem setupB8_exact :
     fRun tm2 8 setupB8Start = some setupB8End := by
