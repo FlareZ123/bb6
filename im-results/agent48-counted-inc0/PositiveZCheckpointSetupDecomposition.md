@@ -101,8 +101,14 @@ checked against several other small triples, including (3,2,2), (4,2,2),
 (5,4,5), and (4,4,1). This is a trace decomposition, not a Lean proof or
 an independently established universal theorem.
 
-The decomposition is nevertheless a concrete proof route: it replaces the
-single opaque `12*(A+L)+3*z+97` setup run with two already-formalized
-left scans, three already-formalized right sweeps, and five fixed finite
-bridges. The missing work is now explicit tape algebra and the bridge/sweep
-composition, rather than discovering the transition trace.
+The displayed B30 kernel and the resulting `SetupSuffixGuards` composition
+apply uniformly for `z ≥ 2). At `z=1`, the cell four positions left of the
+B30 start is an unswept leading counter cell, so that boundary case needs a
+separate finite B30 frame. The root instance has `z=2^63-1`, safely in the
+uniform domain.
+
+The decomposition is a concrete proof route: it replaces the single opaque
+`12*(A+L)+3*z+97` setup run with two already-formalized left scans, three
+already-formalized right sweeps, and five fixed finite bridges. The missing
+work is now explicit tape algebra and the bridge/sweep composition, rather
+than discovering the transition trace.
