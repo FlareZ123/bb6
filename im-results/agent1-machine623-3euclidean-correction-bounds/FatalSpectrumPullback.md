@@ -77,19 +77,19 @@ Applying this to the table gives the following exact necessary inequalities:
 | odd, right | \(3^{p'+4}\le2q'-3\) |
 | even, left/far | \(3^{p'-2}\le2q'+3\) |
 | even, diagonal | \(p'=2\) |
-| even, right | \(3^{p'}\le2q'-1\) |
+| even, right | \(3^{p'}\le2q'+1\) |
 
 For the last row, the evaluator-failure alternative gives
-\(q'\ge\tau(p'+1)\), hence \(3^{p'}\le2q'-1\). If the evaluator succeeds, write its exact ternary decomposition as
+\(q'\ge\tau(p'+1)\), hence \(3^{p'}\le2q'+1\). If the evaluator succeeds, write its exact ternary decomposition as
 \[
-2q'-1=3^v(6b+1+4\varepsilon),\qquad
+2q'+1=3^v(6b+1+4\varepsilon),\qquad
 x=p'-v+2\varepsilon,\qquad \varepsilon\in\{0,1\}.
 \]
-If \(x=0\), then \(p'\le v\) and \(3^{p'}\le3^v\le2q'-1\).
+If \(x=0\), then \(p'\le v\) and \(3^{p'}\le3^v\le2q'+1\).
 If \(x>0\), the downstream fatality \(x\in E_b\) gives
 \(3^x\le2b-1\), whence
 \[
-3^{p'}\le3^{v+x}\le3^v(2b-1)<2q'-1.
+3^{p'}\le3^{v+x}\le3^v(2b-1)<2q'+1.
 \]
 Thus the even-right bound covers both failure mechanisms, not just the initial evaluator.
 

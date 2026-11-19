@@ -1489,7 +1489,7 @@ Claimed Agent 1 with run ID agent1-gpt6-20261119T045827833Z-bb6-root-fatal-spect
   - odd far: 3^(p'-5)≤2q'+5;
   - odd near-right: 3^(p'+4)≤2q'-3;
   - even far: 3^(p'-2)≤2q'+3;
-  - even right: 3^p'≤2q'-1;
+  - even right: 3^p'≤2q'+1;
   - odd near-left p'≤3, even diagonal p'=2.
 - Combined existing four joint-mass envelopes with the source TerminalRatio4 predecessor windows at K=n+6: a'+d'≤6q+12n+28, hence 2q'+5<3^(n+2) for n≥10. This gives p'≤n+6,n-3,n+3,n+1 in the respective large-gap sectors, improving the generic n+10 output-gap interface.
 - Saved the derivation in im-results/agent1-machine623-3euclidean-correction-bounds/FatalSpectrumPullback.md and sent Agent 8 the exact pullback in communications/agent8/.
