@@ -55,13 +55,13 @@ Q(q)=(7021907149+9647698200q,\;
 
 For q=3 mod4, (Q_x+Q_y\equiv8\pmod{16}), so the source-certified odd/odd low-valuation iff reduces Q to
 [
-D2(s)=(22125206738+23740559640t,\;
-       15205309233+16315443060t),
+D2(s)=(22125206738+23740559640s,\;
+       15205309233+16315443060s),
 \qquad q=4s+3.
 ]
 The ten q-residues split into two source-certified next-step gates:
-- c=11,27,75,139,203 give (t\equiv2\pmod4), hence ((D2_x+D2_y+1)\bmod8=4). Apply `evenodd_four_blank_reach_iff`.
-- c=31,95,159,191,223 give (t\equiv3\pmod4), hence ((D2_x+D2_y+1)\bmod16=8). Apply `odd_seven_blank_reach_iff`.
+- c=11,27,75,139,203 give `s ≡ 2 (mod 4)`, hence ((D2_x+D2_y+1)\bmod8=4). Apply `evenodd_four_blank_reach_iff`.
+- c=31,95,159,191,223 give `s ≡ 3 (mod 4)`, hence ((D2_x+D2_y+1)\bmod16=8). Apply `odd_seven_blank_reach_iff`.
 
 After that exact step, the existing four-sector `blank_reach_iff_fullForcedNormalize` applies. The gate paths below list the complete chain from Q:
 - O = `oddodd_lowval_blank_reach_iff`;
@@ -72,16 +72,16 @@ After that exact step, the existing four-sector `blank_reach_iff_fullForcedNorma
 
 | c | r mod 32768 | path | final normalized x(m) | final normalized y(m) | sum mod 4 |
 |---:|---:|:---:|---:|---:|---:|
-| 11 | 11092 | OFO | 55999994348 + 1222391153760t | 54639361181 + 1192690687440t | 1 |
-| 27 | 9044 | OFORR | 326173235172 + 3011427184920t | 32295632285 + 298172671860t | 1 |
-| 31 | 8532 | OSRA | 375067275991 + 3026277418080t | 36034334759 + 290747555280t | 2 |
-| 75 | 2900 | OFO | 361597782788 + 1222391153760t | 352812033041 + 1192690687440t | 1 |
-| 95 | 340 | OSRA | 1131636630511 + 3026277418080t | 108721223579 + 290747555280t | 2 |
-| 139 | 27476 | OFO | 667195571228 + 1222391153760t | 650984704901 + 1192690687440t | 1 |
-| 159 | 24916 | OSRA | 1888205985031 + 3026277418080t | 181408112399 + 290747555280t | 2 |
-| 191 | 20820 | OSRAO | 1242121109548 + 1658512486680t | 729936333177 + 974630020980t | 1 |
-| 203 | 19284 | OFO | 972793359668 + 1222391153760t | 949157376761 + 1192690687440t | 1 |
-| 223 | 16724 | OSRA | 2644775339551 + 3026277418080t | 254095001219 + 290747555280t | 2 |
+| 11 | 11092 | OFO | 55999994348 + 1222391153760m | 54639361181 + 1192690687440m | 1 |
+| 27 | 9044 | OFORR | 326173235172 + 3011427184920m | 32295632285 + 298172671860m | 1 |
+| 31 | 8532 | OSRA | 375067275991 + 3026277418080m | 36034334759 + 290747555280m | 2 |
+| 75 | 2900 | OFO | 361597782788 + 1222391153760m | 352812033041 + 1192690687440m | 1 |
+| 95 | 340 | OSRA | 1131636630511 + 3026277418080m | 108721223579 + 290747555280m | 2 |
+| 139 | 27476 | OFO | 667195571228 + 1222391153760m | 650984704901 + 1192690687440m | 1 |
+| 159 | 24916 | OSRA | 1888205985031 + 3026277418080m | 181408112399 + 290747555280m | 2 |
+| 191 | 20820 | OSRAO | 1242121109548 + 1658512486680m | 729936333177 + 974630020980m | 1 |
+| 203 | 19284 | OFO | 972793359668 + 1222391153760m | 949157376761 + 1192690687440m | 1 |
+| 223 | 16724 | OSRA | 2644775339551 + 3026277418080m | 254095001219 + 290747555280m | 2 |
 
 In every row the final right coordinate is odd and at least five, and the sum is 1 or 2 modulo four. The source-certified `fullForcedExcluded_sound` filter excludes the final normalized state. The chain of exact iff theorems therefore excludes Q, P, P4, and the original B2 target.
 
