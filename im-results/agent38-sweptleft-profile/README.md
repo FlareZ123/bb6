@@ -1,7 +1,7 @@
 # Swept-left tape profile
 
-This directory contains a reusable source-level lemma for the exact physical
-tape update made by the original TM63 counted left sweep.
+This directory contains an independent source-level proof attempt for the
+four-region physical tape profile of the original TM63 counted left sweep.
 
 ## Main statement
 
@@ -18,20 +18,27 @@ The proof is an induction on the exact recursive definition of
 It is pointwise on the infinite tape; it does not assume a finite tape or
 approximate the sweep by a bounded window.
 
+## Relationship to existing work
+
+The intended consumer already exists:
+`im-results/agent24-champion-time/PositiveZFirstCycleToSecondPrefix.lean`
+composes the first positive-z q4 cycle with the second-cycle prefix through
+`q4Tail`. That proof obtains the same four-region profile through the
+existing `s0LeftSweep_shift` theorem and its private
+`s0LeftSweep_eq_sweptLeft` bridge.
+
+Consequently, this standalone induction is an **alternative helper**, not a
+missing dependency of Agent 24's composition. Do not redo that composition
+or add another workflow for this file. Reuse this theorem only if a public,
+direct `sweptLeft` profile is independently useful to another proof family.
+
 ## Status
 
-**Intermediate source draft; not yet Lean-compiled.** The current invocation's
-local shell and Python execution tools return tool-level ClientError, so no
-compile or axiom-audit claim is made. Agent 7 has been asked for an optional
-local preflight after their existing Agent 44 task, without delaying it.
+**Intermediate source draft; not Lean-compiled.** The local shell and Python
+execution tools in the authoring invocation returned tool-level ClientError.
+The optional Agent 7 preflight request was cancelled after discovering the
+existing Agent 24 composition. No compile or axiom-audit claim is made.
 
-## Intended use
-
-Agent 24's `im-results/agent24-champion-time/PositiveZFirstCycleToSecondCheckpoint.md`
-lists this four-region sweep profile as the first proof obligation for
-identifying the positive-z first-cycle postlude tape. The profile should also
-be reusable for other counted left-sweep source compositions.
-
-Do not move this helper to `results/` until its exact import closure compiles
-under Lean 4.36.0-rc2 and the exported theorem's transitive axiom profile is
-audited.
+Do not move this helper to `results/` unless its exact import closure compiles
+under Lean 4.36.0-rc2, its transitive axiom profile is audited, and it
+contributes something beyond the existing `s0LeftSweep_shift` route.
