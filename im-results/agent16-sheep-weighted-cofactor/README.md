@@ -90,20 +90,15 @@ quad}
 ]
 The identity follows by collecting (A+B-1); it is exact over the rationals and hence in (mathbb Z_3).
 
-Moreover (S(a,h,b)\ne0) for all (a\ge1,h\ge0,b\ge1):
-- if (h\ge1), the first term is odd and the second is even;
-- if (h=0), equality would require (2^b=2^a+a), but (2^a<2^a+a<2^{a+1}).
+The residual `S` can vanish; for example `(a,h,b)=(1,1,2)` and `(3,1,4)` give `S=0`. No exhaustive classification of its zero set is asserted. If `S=0`, then `u'-1=A(u-1)`, which is nonzero for a genuine generic source `u≥5`, so this case cannot produce a terminal power. More generally, because `A>0` and `u-1>0`, any terminal transition requires `S<0`; if `S≥0`, then `u'-1>0`.
 
-Let (R=v_3(u-1)) and (sigma=v_3(S)). Since the factor (2^{-b-h}) is a 3-adic unit, the ultrametric valuation law gives
-[
-v_3(u'-1)=
-egin{cases}
-min(kappa(a,h)+R,,sigma),
-  &kappa(a,h)+R\nesigma,\
-ge\sigma,&kappa(a,h)+R=sigma.
-end{cases}
-]
-The equality case is the *resonant* case: the leading 3-adic units may cancel and the valuation can rise. A power-of-two hit requires exact cancellation (u'-1=0), not merely a large finite valuation.
+Let `R=v3(u-1)` and `σ=v3(S)`, with the convention `v3(0)=∞`. Since `2^(-b-h)` is a 3-adic unit, the ultrametric valuation law gives
+```
+v3(u'-1) =
+  min(κ(a,h)+R, σ),                         if κ(a,h)+R ≠ σ
+  at least σ,                               if κ(a,h)+R = σ.
+```
+When `S=0`, the first case reads `v3(u'-1)=κ(a,h)+R<∞`. When `S≠0` and the two valuations agree, the step is *resonant*: the leading 3-adic units may cancel and the valuation can rise. A power-of-two hit requires exact cancellation `u'-1=0`, not merely a large finite valuation.
 
 ## 4. Blank-root prefix illustration
 
