@@ -91,7 +91,10 @@ identified and independently reproduced; the remaining formal setup macro
 is still open. The post-checkpoint first-cycle counted-drain law remains
 conjectural. In particular, the intended authentic root has `z=2^b-1`; the generic endpoint
 theorem proves `z < 2^A`, but the root-specific lower bound `b≥2`
-(hence `z≥3`) is not yet exported as a Lean lemma. The z=0 terminal theorem
+(hence `z≥3`) is now source-drafted in
+`im-results/agent44-tm63-middle/TM63RootMarker1Endpoint.lean` as
+`tm63Middle34Result_right_ge_two` / `tm63Middle34Result_z_ge_three`; it
+remains uncompiled. The z=0 terminal theorem
 therefore cannot yet be applied to the root. The positive-z nested q4 macro (or
 an alternative route to the z=0,b=0 family) remains a major open obligation.
 
