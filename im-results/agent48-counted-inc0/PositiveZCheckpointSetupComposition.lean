@@ -18,6 +18,71 @@ open BB6Coverage.Agent48Q4S0Macros
 
 set_option maxHeartbeats 4000000
 
+theorem sweptRight_preserves_before (n : Nat) (T : Int → Bool)
+    (h x : Int) (hx : x < h) :
+    sweptRight n T h x = T x := by
+  induction n generalizing T h x with
+  | zero => rfl
+  | succ n ih =>
+      simp only [sweptRight]
+      have hx1 : x ≠ h+1 := by omega
+      have hx2 : x ≠ h+2 := by omega
+      have hx' : x < h+3 := by omega
+      simp [afterRight3, hx1, hx2, ih (afterRight3 T h) (h+3) x hx']
+
+theorem sweptRight_preserves_after (n : Nat) (T : Int → Bool)
+    (h x : Int) (hx : h+3*(n:Int) ≤ x) :
+    sweptRight n T h x = T x := by
+  induction n generalizing T h x with
+  | zero => rfl
+  | succ n ih =>
+      simp only [sweptRight]
+      have hx1 : x ≠ h+1 := by omega
+      have hx2 : x ≠ h+2 := by omega
+      have hx' : (h+3)+3*(n:Int) ≤ x := by omega
+      simpa [afterRight3, hx1, hx2] using
+        ih (afterRight3 T h) (h+3) x hx'
+
+theorem sweptRight_clears_second (n : Nat) (T : Int → Bool)
+    (h : Int) (i : Nat) (hi : i<n) :
+    sweptRight n T h (h+3*(i:Int)+1) = false := by
+  induction n generalizing T h i with
+  | zero => omega
+  | succ n ih =>
+      cases i with
+      | zero =>
+          simp only [sweptRight]
+          have hp := sweptRight_preserves_before n (afterRight3 T h)
+            (h+3) (h+1) (by omega)
+          rw [hp]
+          simp [afterRight3]
+      | succ i =>
+          have hi' : i<n := by omega
+          have heq : h+3*((i+1:Int))+1 = (h+3)+3*(i:Int)+1 := by omega
+          simp only [sweptRight]
+          rw [heq]
+          exact ih (afterRight3 T h) (h+3) i hi'
+
+theorem sweptRight_clears_third (n : Nat) (T : Int → Bool)
+    (h : Int) (i : Nat) (hi : i<n) :
+    sweptRight n T h (h+3*(i:Int)+2) = false := by
+  induction n generalizing T h i with
+  | zero => omega
+  | succ n ih =>
+      cases i with
+      | zero =>
+          simp only [sweptRight]
+          have hp := sweptRight_preserves_before n (afterRight3 T h)
+            (h+3) (h+2) (by omega)
+          rw [hp]
+          simp [afterRight3]
+      | succ i =>
+          have hi' : i<n := by omega
+          have heq : h+3*((i+1:Int))+2 = (h+3)+3*(i:Int)+2 := by omega
+          simp only [sweptRight]
+          rw [heq]
+          exact ih (afterRight3 T h) (h+3) i hi'
+
 theorem run_append_some {n m : Nat} {c d e : Config}
     (h₁ : run tm2 n c = some d)
     (h₂ : run tm2 m d = some e) :
