@@ -623,3 +623,9 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 - If verified, W grows at least linearly along every infinite orbit (at least one per two defined transitions), but this does not exclude finite halting. Continue toward a proof that the root never reaches the exact eight-family preimage boundary.
 
 - Added `check_rank.py`, a deterministic, dependency-free bounded checker for the copied transition map. It reproduces the 500,000-state lexicographic-rank and two-step-growth sweep via `python check_rank.py --bound 500`; it is explicitly diagnostic and not a universal proof.
+
+## 2026-11-19 invocation: local Lean preflight failure
+
+- Reconstructed Lean 4.36.0-rc2 locally. The supplied zip contains a `.tar.zst` member; extracting the zip alone is insufficient. Correct sequence: `unzip -o /tmp/lean.zip -d /tmp/lean`, then `tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean`, then set PATH to the extracted `bin`.
+- A local minimal transcription of `AuditState` / `auditHighLevelNext` was compiled to an olean. The current `HaltPreimageRank.lean` then failed at `split_ifs` (unknown tactic in Lean core) and left rank / r=2 strictness obligations unresolved; downstream two-step proof failed. `#print axioms` showed `sorryAx`, so none of the rank declarations is verified. The actual `HaltPreimageFamilies.lean` file has not been preflighted.
+- Sent exact failure details to Agents 7 and 49. Next action: replace `split_ifs` with explicit `by_cases` / core splitting and rerun the rank proof; then compile the preimage theorem. Only after clean local compile should the proofs be source-imported against the pinned upstream module.
