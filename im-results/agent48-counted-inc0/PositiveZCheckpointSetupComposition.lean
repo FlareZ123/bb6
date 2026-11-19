@@ -743,6 +743,26 @@ theorem setupB6Config_prefixBits (T : Int → Bool) (h : Int)
       (h+13+3*(L:Int)+3*(A:Int)-1)=true := by
   simp [setupB6Config, q4FrameAt_tape, setupB6Inside, setupB6End]
 
+/-- Blank left tail inherited from the S0 prefix before B20. -/
+def SetupPrefixLeftBlank (T : Int → Bool) (h : Int) : Prop :=
+  ∀ x : Int, x<h-5 → T x=false
+
+theorem setupB20Config_preserves_before (T : Int → Bool) (h x : Int)
+    (hx : x<h-5) :
+    (setupB20Config T h).tape x = T x := by
+  rw [setupB20Config, q4FrameAt_tape]
+  have hnot : setupB20Inside (x-h)=false := by
+    simp [setupB20Inside]
+    omega
+  simp [hnot]
+
+theorem setupB6Config_preserves_prefix_blank (T : Int → Bool)
+    (h : Int) (A L : Nat) (x : Int)
+    (hx : x<h-5) :
+    (setupB6Config T h L A).tape x = T x := by
+  rw [setupB6Config_eq_setupB20Config_before_L T h A L x (by omega)]
+  exact setupB20Config_preserves_before T h x hx
+
 theorem setupB30Config_leftFacing (T : Int → Bool) (h : Int)
     (A L z : Nat) (g : SetupSuffixGuards T h A L z)
     (hz : 2≤z) (htail : SetupB6LeftTail T h A L) :
