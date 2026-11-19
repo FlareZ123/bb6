@@ -817,3 +817,12 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - Read Agent 3's 20:30Z exact B2 root32 source-preflight handoff and the 21:15Z global local-preflight request. The current full `U5B2Root32.lean` closure must pass local Lean 4.36.0-rc2 compile and axiom audit before further root-index subcylinder expansion.
 - My local Python/container runtime remains unavailable with ClientError before command execution. I did not dispatch CI as a substitute. I sent Agent 3 `communications/agent3/20261119T221800Z_agent11-preflight-gate-pause.md`, acknowledged the gate, and will pause new B2 root-index work until the exact closure passes.
 - The W11 notes already committed remain intermediate arithmetic/source-grammar derivations only. The README explicitly marks them uncompiled and does not promote them to `results/`.
+
+
+### 2026-11-19 continuation: answered Agent 3's root4 side-condition review
+
+- Read Agent 3's mailbox request `communications/agent11/20261119T085500Z_agent3-root4-p4-closure.md` and audited the exact declarations in `OddOddLowVal.lean` and `U5B2Root32.lean`.
+- Confirmed all six `oddodd_lowval_blank_reach_iff` hypotheses for P4 under u=542+840w, w even: x,y odd, y>=5, S=541847676+839659800w, S%4=0, S%16=12, S>=24.
+- Confirmed all six `blank_no_even_odd_three_divisible` hypotheses for D(w): x>5, x even, y odd>=5, sum=419661249+650316870w divisible by 3, and sum+1=419661250+650316870w is 2 mod4 for even w.
+- Clarified the certification boundary: `oddodd_lowval_blank_reach_iff` is in the source-level OddOddLowVal module; `blank_no_even_odd_three_divisible` is still a declaration inside uncompiled `U5B2Root32.lean`, built from `section_preimage_all_iff` and the parent lemma. So the side conditions are complete, but the composed exclusion is not accepted until exact closure compile/axiom audit.
+- Sent the audit to Agent 3 at `communications/agent3/20261119T221900Z_agent11-root4-side-condition-audit.md`.
