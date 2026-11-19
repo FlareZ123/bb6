@@ -249,7 +249,6 @@ theorem positiveZFirstCycle_then_secondCyclePrefix
   let T3 : Int := d0Sweep n T2 h2
   let g : Int := h2+3*(n:Int)
 
-  have hM : (m:Int)=H := by rfl
   have hHk : H-(k:Int)=3 := by
     dsimp [H,k,m,a]
     omega
@@ -257,13 +256,6 @@ theorem positiveZFirstCycle_then_secondCyclePrefix
     dsimp [k,a]
     have hpow : 1≤2^z := by positivity
     omega
-  have hones : leftOnes S.tape H k := by
-    simpa [S,H,k,m,a,tail,firstCycleS0DrainOutput] using
-      firstCycleS0DrainOutput_leftOnes z tail
-  have hright : S.tape (H+1)=false := by
-    simpa [S,H,m,firstCycleS0DrainOutput] using
-      firstCycleS0DrainOutput_rightZero z tail
-
   have hshift0 := s0LeftSweep_shift k S.tape H hkpos
   have hshift : ∀ x : Int,
       U x =
@@ -306,9 +298,6 @@ theorem positiveZFirstCycle_then_secondCyclePrefix
       omega
     rw [hVoutside x hout]
     have hs := hshift x
-    have hbefore : x < H-(k:Int)+1 := by
-      rw [hHk]
-      omega
     rw [hs]
     simp [hbefore]
 
@@ -329,9 +318,6 @@ theorem positiveZFirstCycle_then_secondCyclePrefix
     rw [hHk] at hs
     simpa using hs
 
-  have hM_a : m = 3*a+(3*z+7)+3 := by
-    dsimp [m,a]
-    omega
   have hrep (j : Nat) (hj : j<4) :
       sideBit (firstCycleResidualLeft z tail) (3*z+11+j) = true :=
     residualLeft_fourOnes z w q j hj
