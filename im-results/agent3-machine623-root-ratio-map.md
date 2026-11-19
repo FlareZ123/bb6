@@ -131,31 +131,43 @@ The one-sided derivatives at \(1/5\) are \(+25/12\) and \(-25/12\). Thus (8) is 
 
 Equations (5)--(7) show that the actual #623 root follows a logarithmically small \(O(\log S/S)\) perturbation of this map. The perturbation is not arbitrary: its denominator correction is the positive digit statistic in (4), while \(\beta\), \(\delta\), and \(T\) are explicit functions of the ternary digit counts.
 
-## 4. The halting obstruction becomes a critical-window avoidance problem
+## 4. Terminality forces the preceding root state into the critical window
 
-The source terminal windows give the exact old-ray bounds
+The four source-certified TerminalRatio4 theorems apply when the output of a canonical drain is terminal. They therefore constrain the **input state of that drain**: the preceding state on the authentic root orbit, not the terminal output state itself.
+
+Write that predecessor as \(D(a,d)\), with the same \(p,q,g,S\) as above. The four TerminalRatio4 inequalities translate directly into bounds on \(g\):
+
+| Input sector | TerminalRatio4 inequality | Bound on \(|g|\), using \(K=n+6\) |
+|---|---|---:|
+| LO (odd far-left) | \(|4d-a|\le K+5n+29\) | \(6n+35\) |
+| LE (even far-left) | \(|4d-a|\le K+5n+20\) | \(6n+26\) |
+| RO (odd near-right) | \(|4a-d|\le K+5n+12\) | \(6n+18\) |
+| RE (even near-right) | \(|4a-d|\le K+8n+17\) | \(9n+23\) |
+
+For LO/LE, \(g=a-4d\). For RO/RE, \(g=d-4a\). Thus every terminal output forces its predecessor into the common window
 \[
-\begin{aligned}
-\mathrm{LO}:&\quad |g-9|\le6n+44,\\
-\mathrm{LE}:&\quad |g-5|\le6n+31,\\
-\mathrm{RO}:&\quad |g-1|\le6n+19,\\
-\mathrm{RE}:&\quad |g-2|\le9n+25.
-\end{aligned}
+|g|\le9n+23.
 \]
-Here \(n\) is the canonical band parameter and \(n\le\ell\le n+1\), with \(\ell=O(\log(q+3))\). Thus a terminal hit requires
+Here \(n\le\ell\le n+1\), and \(\ell=O(\log(q+3))\). Since \(g=S-5q\), a terminal successor therefore requires its preceding root state to satisfy
 \[
-|S-5q|=|g|=O(\log S),
-\]
-so
-\[
-\boxed{|r-1/5|=O(\log S/S).}
+\boxed{\left|r-\frac15\right|
+\le\frac{9n+23}{5S}
+=O(\log S/S).}
 \tag{9}
 \]
 
-The open root problem can therefore be stated as follows:
+This is a **preterminal** critical-window condition: it is the predecessor state that must approach \(r=1/5\), not the terminal output state. The first exceptional transition is \(D(0,7)\to D(6,14)\); from there the regular canonical-ray recurrence applies.
 
-> Prove that the exact digit-statistic perturbation of (8), starting from the authentic blank-root state \(D(0,7)\) and after its finite exceptional prefix, never enters the shrinking critical window (9).
+The open root problem can therefore be stated precisely:
 
-This is a sharper dynamical formulation of the root-gap problem. The critical point is preperiodic under the ideal map, so a close visit forces a characteristic short itinerary near \(1/5\to1/2\to0\). A proof might exploit the exact ternary digit-statistic corrections to rule out such itineraries, or establish a uniform symbolic/Diophantine separation from the critical point.
+> Prove that no state on the authentic blank-root orbit after the exceptional prefix enters the source-supported shrinking window (9). This would rule out every terminal successor.
 
-**Limitations.** The map reduction, positive scale increment, and critical-window equivalence are algebraic consequences of the existing source cocycle and digit-statistic formulas. No uniform critical-window avoidance theorem is proved here; no new root state is classified; and machine #623 remains unresolved. The note belongs in \`im-results/\`, not \`results/\`.
+The exact branch-selection boundary (7) lies at \(1/5+O(\log S/S)\) as well. Thus the same critical region controls both the output-side switch and the only source-certified predecessor region from which a terminal successor can arise.
+
+The critical point is preperiodic under the ideal map, with
+\[
+1/5\longmapsto1/2\longmapsto0\longmapsto0.
+\]
+A proof might exploit the exact ternary digit-statistic corrections to rule out the corresponding short itineraries, or establish a uniform symbolic/Diophantine separation from the critical point.
+
+**Limitations.** The normalized map and the translation of the four TerminalRatio4 inequalities are algebraic consequences of the existing source cocycle and source-certified ratio bounds. No uniform critical-window avoidance theorem is proved here; no new root state is classified; and machine #623 remains unresolved. The note belongs in \`im-results/\`, not \`results/\`.
