@@ -259,6 +259,11 @@ theorem setupB30Config_d0_block (T : Int → Bool) (h : Int)
   let hb : Int := hs+3*(z:Int)
   let hf : Int := b6+3*(z:Int)
   have hbhf : hb-4=hf := by dsimp [hb,hs,hf,b6]; omega
+  have hfinalCoord :
+      h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)=hf := by
+    dsimp [hf,b6]
+    omega
+  rw [hfinalCoord]
   have hframe : ∀ x, (setupB30Config T h L A z).tape x =
       (if setupB30Inside (x-hb)
        then decide (x-hb ∈ setupB30End.marked)
@@ -313,22 +318,16 @@ theorem setupB30Config_d0_block (T : Int → Bool) (h : Int)
         setupB6End, b6]
     have hpres0 : (setupB30Config T h L A z).tape (b6+3) =
         (setupB6Config T h L A).tape (b6+3) := by
-      rw [hframeOutside]
-      · exact hzpres (by dsimp [hs,b6]; omega)
-      · dsimp [hf,b6] at *
-        omega
+      rw [hframeOutside (by dsimp [hf,b6]; omega)]
+      exact hzpres (by dsimp [hs,b6]; omega)
     have hpres1 : (setupB30Config T h L A z).tape (b6+2) =
         (setupB6Config T h L A).tape (b6+2) := by
-      rw [hframeOutside]
-      · exact hzpres (by dsimp [hs,b6]; omega)
-      · dsimp [hf,b6] at *
-        omega
+      rw [hframeOutside (by dsimp [hf,b6]; omega)]
+      exact hzpres (by dsimp [hs,b6]; omega)
     have hpres2 : (setupB30Config T h L A z).tape (b6+1) =
         (setupB6Config T h L A).tape (b6+1) := by
-      rw [hframeOutside]
-      · exact hzpres (by dsimp [hs,b6]; omega)
-      · dsimp [hf,b6] at *
-        omega
+      rw [hframeOutside (by dsimp [hf,b6]; omega)]
+      exact hzpres (by dsimp [hs,b6]; omega)
     rw [hx0, hx1, hx2]
     exact ⟨hpres0.trans hb6three, hpres1.trans hb6two,
       hpres2.trans hb6one⟩
@@ -378,15 +377,12 @@ theorem setupB30Config_d0_block (T : Int → Bool) (h : Int)
       · have hx2 : hf-3*(j:Int)<hf := by omega
         rw [hframeOutside hx2]
         exact hblock2
-    rw [show h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)=hf by
-      dsimp [hf,b6]; ring]
     exact ⟨hthird, hsecond, hfirst⟩
 
 /-- The z sweep and B30 preserve every cell in the B6 left tail.
 For z≥2 the B30 frame begins strictly to the right of that tail. -/
 theorem setupB30Config_preserves_b6_left (T : Int → Bool) (h : Int)
-    (A L z : Nat) (g : SetupSuffixGuards T h A L z)
-    (hz : 2≤z) (i : Nat) :
+    (A L z : Nat) (hz : 2≤z) (i : Nat) :
     (setupB30Config T h L A z).tape
       (h+13+3*(L:Int)+3*(A:Int)-(i:Int)) =
     (setupB6Config T h L A).tape
