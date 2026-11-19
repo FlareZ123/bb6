@@ -204,7 +204,7 @@ jobs:
           retention-days: 30
 
   fresh-ray-entry-proof:
-    if: ${{ !inputs.export_frontier && !inputs.verify_leaf_graft }}
+    if: ${{ !inputs.export_frontier && !inputs.verify_leaf_graft && !inputs.verify_translated_leaf_graft }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
