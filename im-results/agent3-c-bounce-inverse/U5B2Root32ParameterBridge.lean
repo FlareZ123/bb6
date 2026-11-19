@@ -1,0 +1,76 @@
+import Lean.Elab.Tactic.Omega
+
+namespace BB6.Agent3U5B2Root32ParameterBridge
+
+/-- Powers of two with exponent divisible by twelve are one modulo 105. -/
+private theorem pow_two_mod105_12q (q : Nat) :
+    (2:Nat)^(12*q)%105=1 := by
+  rw [Nat.pow_mul, Nat.pow_mod]
+  have h12 : (2:Nat)^12%105=1 := by decide
+  rw [h12]
+  simp
+
+/-- The root exponent has the fixed residue needed modulo 105. -/
+private theorem pow_two_mod105_of_mod12 (n : Nat)
+    (hn : n%12=8) : (2:Nat)^n%105=46 := by
+  have hdecomp : n=12*(n/12)+8 := by omega
+  rw [hdecomp, Nat.pow_add, Nat.mul_mod]
+  rw [pow_two_mod105_12q]
+
+private theorem root32_exponent_facts (r E : Nat)
+    (hE : E=201+3360*(6657+8192*r)) :
+    6≤E-13 ∧ (E-13)%12=8 := by
+  have hE19 : 19≤E := by rw [hE]; omega
+  constructor
+  · omega
+  · have hEm : E-13=188+3360*(6657+8192*r) := by rw [hE]; omega
+    rw [hEm]
+    omega
+
+private theorem root32_u_mod64 (r u : Nat)
+    (hr : r%64=32)
+    (hmod : (18018+211*u+22155*r)%64=0) : u%64=10 := by omega
+
+private theorem root32_u_mod105 (r u : Nat)
+    (hmod : (18018+211*u+22155*r)%105=80) : u%105=17 := by omega
+
+private theorem root32_u_parameter_from_mods (u : Nat)
+    (hu64 : u%64=10) (hu105 : u%105=17) :
+    ∃ t : Nat, u=1802+6720*t := by
+  have hu8 : u%8=2 := by omega
+  have hu840 : u%840=122 := by omega
+  obtain ⟨w,hw⟩ : ∃ w, u=122+840*w := by
+    refine ⟨u/840,?_⟩
+    have h := Nat.mod_add_div u 840
+    omega
+  have hw8 : w%8=2 := by rw [hw] at hu64; omega
+  refine ⟨w/8,?_⟩
+  have h := Nat.mod_add_div w 8
+  rw [hw]
+  omega
+
+/-- The exact residual root equation on the root-index class r=32 (mod 64)
+forces the B2 parameter into u=1802+6720*t. -/
+theorem root32_u_parameter_of_exact (r E u : Nat)
+    (hr : r%64=32)
+    (hE : E=201+3360*(6657+8192*r))
+    (hRoot : 18018+211*u+22155*r=20*2^(E-13)) :
+    ∃ t : Nat, u=1802+6720*t := by
+  obtain ⟨h6,hmod12⟩ := root32_exponent_facts r E hE
+  have hdiv64 : 64∣2^(E-13) := by
+    have h := Nat.pow_dvd_pow 2 h6
+    simpa only [show (2:Nat)^6=64 by decide] using h
+  have hpow64 : (2^(E-13))%64=0 := Nat.mod_eq_zero_of_dvd hdiv64
+  have hmod64 : (18018+211*u+22155*r)%64=0 := by
+    rw [hRoot, Nat.mul_mod, hpow64]
+  have hpow105 : (2:Nat)^(E-13)%105=46 :=
+    pow_two_mod105_of_mod12 (E-13) hmod12
+  have hmod105 : (18018+211*u+22155*r)%105=80 := by
+    rw [hRoot, Nat.mul_mod, hpow105]
+  exact root32_u_parameter_from_mods u
+    (root32_u_mod64 r u hr hmod64)
+    (root32_u_mod105 r u hmod105)
+
+#print axioms root32_u_parameter_of_exact
+
+end BB6.Agent3U5B2Root32ParameterBridge
