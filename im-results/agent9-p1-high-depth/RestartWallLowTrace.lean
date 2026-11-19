@@ -266,8 +266,9 @@ theorem oddCone_first_shallow_split
       ∃ post : List Nat,
         (∀ u, u ∈ oddConeDepths pre → u=2) ∧
         oddConeDepths h = oddConeDepths pre ++ [t] ++ post ∧
+        8 ≤ bp ∧ bp%4=0 ∧ dp%2=1 ∧
         t ≤ 1 ∧ inverseAt bp dp t = some (k,c) ∧
-        (2*k-4)%4=0 := by
+        2 ≤ k ∧ c%2=1 ∧ (2*k-4)%4=0 := by
   induction h generalizing hLow hShallow hbWall with
   | root =>
       simp [oddConeDepths] at hShallow
@@ -276,9 +277,9 @@ theorem oddCone_first_shallow_split
         intro u hu
         exact hLow u (by simp [oddConeDepths, hu])
       by_cases hShallowPre : ∃ u, u ∈ oddConeDepths hpre ∧ u ≤ 1
-      · obtain ⟨bp',dp',mp',t',k',c',pre,post,hpre2,hEq,ht',hi',hguard⟩ :=
+      · obtain ⟨bp',dp',mp',t',k',c',pre,post,hpre2,hEq,hb',hb4',hd',ht',hi',hk',hc',hguard⟩ :=
           ih hLowPre hShallowPre hb4
-        refine ⟨bp',dp',mp',t',k',c',pre,post++[t],hpre2,?_,ht',hi',hguard⟩
+        refine ⟨bp',dp',mp',t',k',c',pre,post++[t],hpre2,?_,hb',hb4',hd',ht',hi',hk',hc',hguard⟩
         calc
           oddConeDepths h = oddConeDepths hpre ++ [t] := by
             simp [oddConeDepths]
@@ -302,7 +303,7 @@ theorem oddCone_first_shallow_split
           · simp at hlast
             subst u
             exact hu1
-        refine ⟨bp,dp,mp,t,k,c,hpre,[],hpre2,?_,ht,hi,? _⟩
+        refine ⟨bp,dp,mp,t,k,c,hpre,[],hpre2,?_,hb,hb4,hd,ht,hi,hk,hc,?_⟩
         · simp [oddConeDepths]
         · simpa using hbWall
 
@@ -318,8 +319,9 @@ theorem restartPath_first_shallow_source_split
       ∃ post : List Nat,
         (∀ u, u ∈ oddConeDepths pre → u=2) ∧
         path.es = (oddConeDepths pre).map Nat.succ ++ [t+1] ++ post.map Nat.succ ∧
+        8 ≤ bp ∧ bp%4=0 ∧ dp%2=1 ∧
         t ≤ 1 ∧ inverseAt bp dp t = some (k,c) ∧
-        (2*k-4)%4=0 := by
+        2 ≤ k ∧ c%2=1 ∧ (2*k-4)%4=0 := by
   have hLow : ∀ u, u ∈ oddConeDepths path.suffix → u ≤ 2 := by
     intro u hu
     have hmem : u+1 ∈ path.es := by
@@ -337,32 +339,32 @@ theorem restartPath_first_shallow_source_split
     have heq' : u+1=e := by simpa using heq
     omega
   have hbWall : b%4=0 := by omega
-  obtain ⟨bp,dp,mp,t,k,c,pre,post,hpre2,hEq,ht,hi,hguard⟩ :=
+  obtain ⟨bp,dp,mp,t,k,c,pre,post,hpre2,hEq,hb,hb4,hd,ht,hi,hk,hc,hguard⟩ :=
     oddCone_first_shallow_split path.suffix hLow hShallow hbWall
-  refine ⟨bp,dp,mp,t,k,c,pre,post,hpre2,?_,ht,hi,hguard⟩
+  refine ⟨bp,dp,mp,t,k,c,pre,post,hpre2,?_,hb,hb4,hd,ht,hi,hk,hc,hguard⟩
   rw [path.hDepths,hEq]
   simp [List.map_append]
 
-/-- In the Is=48, odd-offset branch, the first shallow source edge has
-    depth one.  Its exact inverse equations force an odd child parameter,
-    contradicting the source/wall mod-four guard on that child. -/
-theorem is48_odd_first_shallow_child_guard_impossible
+/-- In the Is=48, odd-offset branch, the first shallow edge has
+    depth one.  With the correct inverse-mass constant (2t+2=4), its
+    source equations force an even child parameter; no mod-four exclusion
+    follows at this level. -/
+theorem is48_odd_first_shallow_even_child
     (P b d T k c : Nat)
     (hP : P%4=0)
     (hcoord : b+14=6*d)
     (hmass : b+d+2*T+1=14*P)
     (hT : T%2=1)
     (hpow : 2*(c+3)=d+b/2+3)
-    (hInvMass : 2*k+c+2=b+d)
-    (hchild : (2*k-4)%4=0) :
-    False := by
+    (hInvMass : 2*k+c+4=b+d) :
+    d%4=1 ∧ (b/2)%4=0 ∧ k%2=0 := by
   have hd : d%4=1 := by omega
   have hq : b/2+7=3*d := by omega
   have hc : c+5=2*d := by omega
-  have hk : 2*k+11=5*d := by omega
-  have hkodd : k%2=1 := by omega
-  have hbad : (2*k-4)%4=2 := by omega
-  omega
+  have hk : 2*k+13=5*d := by omega
+  have hqmod : (b/2)%4=0 := by omega
+  have hkmod : k%2=0 := by omega
+  exact ⟨hd,hqmod,hkmod⟩
 
 /-- The two depth-zero branches surviving the first-shallow scalar filter
     have an even source inverse left parameter. -/
