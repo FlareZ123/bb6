@@ -50,7 +50,7 @@ theorem firstQ4P1Value_lt (L A : Nat) (hA : 0 < A) :
     rw [← Nat.pow_add]
     congr 1
     omega
-  exact lt_of_le_of_lt (Nat.sub_le _ _) (by simpa [hpow] using hprod)
+  exact Nat.lt_of_le_of_lt (Nat.sub_le _ _) (by simpa [hpow] using hprod)
 
 /-- The root checkpoint's odd BinDec argument is exactly 2*q+1. -/
 theorem firstQ4P1Value_odd (L A : Nat) (hA : 0 < A) :
@@ -58,7 +58,8 @@ theorem firstQ4P1Value_odd (L A : Nat) (hA : 0 < A) :
   have hpow2 : 4 ≤ 2^(L+2) := by
     have h := Nat.pow_le_pow_right (by decide : 0 < 2)
       (show 2 ≤ L+2 by omega)
-    norm_num at h
+    have hfour : (2:Nat)^2 = 4 := by decide
+    rw [hfour] at h
     exact h
   have hC : 1 ≤ 2^(L+2)-1 := by omega
   have hprod : 0 < 2^(A-1) * (2^(L+2)-1) :=
@@ -68,7 +69,9 @@ theorem firstQ4P1Value_odd (L A : Nat) (hA : 0 < A) :
         2^(A-1) * (2^(L+2)-1) :=
     Nat.sub_add_cancel (by omega)
   have hpowA : 2^A = 2^(A-1)*2 := by
-    rw [show A = (A-1)+1 by omega, Nat.pow_succ]
+    calc
+      2^A = 2^((A-1)+1) := by congr 1; omega
+      _ = 2^(A-1)*2 := by rw [Nat.pow_succ]
   have hmul :
       2 * (2^(A-1) * (2^(L+2)-1)) =
         2^A * (2^(L+2)-1) := by
@@ -79,10 +82,15 @@ theorem firstQ4P1Value_odd (L A : Nat) (hA : 0 < A) :
       _ = (2^(A-1)*2) * (2^(L+2)-1) := by
             rw [Nat.mul_comm 2 (2^(A-1))]
       _ = 2^A * (2^(L+2)-1) := by rw [← hpowA]
-  change
-    2 * (2^(A-1) * (2^(L+2)-1) - 1) + 1 =
-      2^A * (2^(L+2)-1) - 1
-  omega
+  have hcancel :
+      2 * (2^(A-1) * (2^(L+2)-1) - 1) + 1 =
+        2 * (2^(A-1) * (2^(L+2)-1)) - 1 := by omega
+  calc
+    2 * firstQ4P1Value L A + 1 =
+        2 * (2^(A-1) * (2^(L+2)-1) - 1) + 1 := rfl
+    _ = 2 * (2^(A-1) * (2^(L+2)-1)) - 1 := hcancel
+    _ = 2^A * (2^(L+2)-1) - 1 := by rw [hmul]
+    _ = firstQ4P1M L A - 1 := rfl
 
 /-- The same odd identity, in the exact argument form of firstQ4Left2. -/
 theorem firstQ4P1Value_odd_root (L A : Nat) (hA : 0 < A) :
@@ -106,8 +114,10 @@ def firstQ4P1Right (z : Nat) : List Bool :=
 theorem firstQ4P1BinDec_reparam (L A : Nat) (hA : 0 < A) :
     binDec (L+A+2) (2^(L+A+2)-2^A-1) =
       d0 ++ binDec (A+L+1) (firstQ4P1Value L A) := by
-  rw [show L+A+2 = (A+L+1)+1 by omega,
-    ← firstQ4P1Value_odd_root L A hA]
+  have hlen : L+A+2 = (A+L+1)+1 := by omega
+  have hodd := firstQ4P1Value_odd_root L A hA
+  rw [hlen] at hodd
+  rw [hlen, ← hodd]
   exact binDec_odd (A+L+1) (firstQ4P1Value L A)
     (firstQ4P1Value_lt L A hA)
 
