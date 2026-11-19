@@ -141,8 +141,7 @@ The corresponding Lean draft is
 ## One higher-depth root cylinder: w=439 (mod 512)
 
 The remaining q=1 branch in (z\equiv2\pmod4) has a further exact
-source closure on (w\equiv439\pmod{512}). The residual congruence
-modulo 512 gives (z\equiv46\pmod{64}); intersecting with the exact
+source closure on (w\equiv439\pmod{512}). The exact residual modulo 512 on w=7+8s is t ≡ 272+23w ≡ 433+184s (mod 512). With t=81+168z, division by 8 gives 21z ≡ 44+23s (mod 64), hence z ≡ 60+59s (mod 64). For w=439, s=54, so z ≡ 46 (mod 64); intersecting with the exact (z\equiv46\pmod{64}); intersecting with the exact
 (z\equiv3\pmod5) residual yields (z\equiv238\pmod{320}), hence
 (u=(z-2)/4\equiv59\pmod{80}).
 
