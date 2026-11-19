@@ -698,7 +698,7 @@ theorem outerLCInc_full_run
       12*a+4*m+63+12*r+3*b =
         (9*a+3*m+17+12*r+4) + (3*a+42+m+3*b) := by omega
   rw [hcost, ← run_add, hpre']
-  exact hpost
+  simpa only [Option.bind_some] using hpost
 
 #print axioms outerLCInc_full_run
 
