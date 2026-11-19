@@ -1,10 +1,20 @@
 name: Agent 48 positive-z q4 prefix and d0 counter proof audit
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Select the positive-z q4 acceptance target"
+        type: choice
+        options:
+          - prefix
+          - complete-first-cycle
+        default: prefix
+        required: true
 permissions:
   contents: read
 jobs:
   compile:
+    if: ${{ inputs.target == 'prefix' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -61,3 +71,58 @@ jobs:
             exit 1
           fi
           echo 'All positive-z q4 and Type-C continuation source modules compiled without sorryAx.'
+
+  complete-first-cycle:
+    if: ${{ inputs.target == 'complete-first-cycle' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact source closure of the complete positive-z first q4 cycle
+        run: |
+          set -euo pipefail
+          python3 tools/lean_compile_closure.py \
+            im-results/agent48-counted-inc0/PositiveZFirstCycleEndpoint.lean \
+            --jobs 8 \
+            --workdir /tmp/positive-z-first-cycle \
+            | tee /tmp/positive-z-first-cycle.log
+          python3 - <<'PY'
+          import pathlib
+          log = pathlib.Path("/tmp/positive-z-first-cycle.log").read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "s0Config_counted_decrement_anyValuation_hRun",
+              "s0Config_counted_drain_closed",
+              "firstCycleQ_from_drainedS0",
+              "firstCyclePrefix_to_s0DrainInput",
+              "positiveZFirstCycle_from_checkpoint",
+          )
+          for name in names:
+              lines = [line for line in log.splitlines()
+                       if "depends on axioms:" in line
+                       and line.split(" depends on axioms:", 1)[0].split(".")[-1] == name]
+              if len(lines) != 1:
+                  raise SystemExit(f"expected one axiom profile for {name}, got {len(lines)}")
+              profile = lines[0].split("depends on axioms:", 1)[1].strip()
+              if not (profile.startswith("[") and profile.endswith("]")):
+                  raise SystemExit(f"unrecognized axiom profile for {name}: {profile}")
+              axioms = {x.strip() for x in profile[1:-1].split(",") if x.strip()}
+              bad = axioms - allowed
+              if bad:
+                  raise SystemExit(f"nonstandard axioms in {name}: {sorted(bad)}")
+              print(f"{name}: {sorted(axioms)}")
+          PY
+          if grep -R -n 'native_decide' /tmp/positive-z-first-cycle --include='*.lean'; then
+            echo '::error::native_decide found in the positive-z first-cycle source closure'
+            exit 1
+          fi
+          if grep -q 'sorryAx' /tmp/positive-z-first-cycle.log; then
+            echo '::error::sorryAx found in the positive-z first-cycle source closure'
+            exit 1
+          fi
+          echo 'Complete positive-z first q4 cycle compiled with standard axioms only.'
