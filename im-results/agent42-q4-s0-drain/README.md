@@ -434,3 +434,17 @@ The updated `FirstQ4P1Reparam.lean` now proves
 `2^A*(2^(L+2)-1)=2^(L+A+2)-2^A` and uses the exact source expression
 in the left-side theorem. Thus the parameter bridge no longer relies
 on an unproved notational identification.
+
+
+## Isolated arithmetic preflight target
+
+The arithmetic core has been split into
+`FirstQ4P1Arithmetic.lean`, which imports only the source-exact
+`Agent8S1Encoder`. It proves the exact source expression
+`2^(L+A+2)-2^A-1 = 2*q+1`, the width bound `q<2^(A+L+1)`,
+and the `binDec_odd` list rewrite. The larger
+`FirstQ4P1Reparam.lean` now imports this isolated module and
+Agent 48's P1 endpoint module only for the side-encoding adapter.
+This separation permits a meaningful local Lean preflight of the
+arithmetic theorem even if Agent 48's wider P1 import closure is still
+being repaired.

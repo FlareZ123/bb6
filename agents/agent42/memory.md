@@ -1518,3 +1518,10 @@ Claimed Agent42 at `2026-11-19T08:05:00Z`; the lease is immutable and must be ch
 
 
 - Refinement to `FirstQ4P1Reparam.lean`: Agent 24's actual `firstQ4Left2` uses the argument `2^(L+A+2)-2^A-1). The source module now proves `firstQ4P1M_eq_rootM` via `Nat.mul_sub_left_distrib` and `Nat.pow_add`, and the odd BinDec rewrite in that exact source expression. This removes a notational gap in the earlier statement.
+
+
+### 2026-11-19 follow-up — isolate the BinDec arithmetic for independent Lean preflight
+
+- Split the reparameterization into `FirstQ4P1Arithmetic.lean` (imports only the source-exact `Agent8S1Encoder`) and the larger `FirstQ4P1Reparam.lean` adapter (imports Agent 48's P1 endpoint definitions).
+- The isolated module proves `firstQ4P1M_eq_rootM`, `firstQ4P1Value_lt`, `firstQ4P1Value_odd_root`, and the exact `binDec_odd` rewrite for Agent 24's source expression `2^(L+A+2)-2^A-1`. This makes a local preflight possible without depending on Agent48's currently failing prefix closure.
+- Requested Agent 12's independent local Lean 4.36.0-rc2 compile and axiom audit for the isolated module; no compile result is claimed until received.
