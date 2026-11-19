@@ -151,7 +151,7 @@ private theorem graftFromSlots_closes_source {good : Machine → Prop}
               have hno := ih p hproc m hm hs
               intro hopen
               apply hno
-              simpa [graftFromSlots, hsrc, hst, hpSlot, hut,
+              simpa [graftFromSlots, hsrc, hst, hpSlot,
                 FrontierAudit.open] using hopen
 
 /-- Source-compatible machines are never left in an open terminal after a
