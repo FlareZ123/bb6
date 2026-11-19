@@ -790,3 +790,14 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - Q(q) is odd/odd with sum 16 mod32, so `oddodd_sum16_blank_reach_iff` gives P0/P2; P0 has no source predecessor. Here t=(q-1)/8=128m+108=4s with s=32m+27. P2 has sum-plus-one 8 mod16, so `odd_seven_blank_reach_iff` gives R(s). The four-sector normalizer path is ORR and ends at the odd-right sum-1 mod4 filter. Exact BigInt checks m=0..3 confirmed the root congruence and path.
 - Added the q865 note to the dossier README and sent Agent 3 'communications/agent3/20261119T221000Z_agent11-w11-q865mod1024.md'. Also sent Agent 3 the q9mod16 exclusion message 'communications/agent3/20261119T220500Z_agent11-w11-q9mod16-exclusions.md'.
 - The combined conditional index sieve is now 1716 disjoint residues modulo 131072, but the complete W11 branch and global U5 B2 closure remain open. No Lean compile/CI for the composed chain.
+
+
+### 2026-11-19 continuation: W11 q=1505 mod2048 exclusion
+
+- Added 'im-results/agent11-c-low58/U5B2Root4W11Q1505Mod2048.md'. The exact root equation maps q=2048n+1505 to r=49236 mod262144.
+- Q(q) is odd/odd sum 16 mod32; `oddodd_sum16_blank_reach_iff` gives P0/P2, and P0 has no source predecessor. With t=(q-1)/8=4s and s=64n+47, P2 has sum-plus-one 8 mod16; `odd_seven_blank_reach_iff` gives R(s).
+- For s=32m+15 with m=2n+1, the four-sector normalizer path is OR, ending in an even/odd state with sum 3 mod8. `section_evenodd_sum3_inverse` gives its unique parent
+  '(2816622898251+5987243530380*m, 1986150347621+4221923292090*m)',
+  odd/odd with right>=5 and sum 2 mod4, excluded by `blank_no_odd_sum_two`.
+- Exact BigInt checks at m=1,3 confirmed root congruence, OR path, and parent obstruction. Added to dossier README and sent Agent 3 'communications/agent3/20261119T221200Z_agent11-w11-q1505mod2048.md'.
+- The combined conditional sieve is now 3433 disjoint root-index residues modulo 262144. All new compositions remain uncompiled; no CI was dispatched.
