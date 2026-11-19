@@ -159,6 +159,7 @@ theorem machine623D1Audit_report_conserves :
     remains in one of the nineteen unresolved children. -/
 theorem machine623D1Audit_root_remains_open :
     machine623D1Audit.open machine623 := by
+  classical
   have hB : machine623 machine623D1Slot ≠ some machine623D1ToBLeft0 := by decide
   have hC : machine623 machine623D1Slot ≠ some machine623D1ToCLeft0 := by decide
   have hD0 : machine623 machine623D1Slot ≠ some machine623D1ToDLeft0 := by decide
