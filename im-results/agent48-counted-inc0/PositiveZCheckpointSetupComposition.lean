@@ -779,22 +779,26 @@ theorem setupB6LeftTail_of_guards_and_blank (T : Int → Bool) (h : Int)
   have hb6 := setupB6Config_prefixBits T h A L
   have hb9 := setupB9Config_endBits T h L
   have hb20 := setupB20Config_endBits T h
+  rcases hb6 with ⟨hb6zero,hb6m1⟩
+  rcases hb9 with ⟨hb9p2,hb9p1,hb9zero,hb9m1,hb9m2⟩
+  rcases hb20 with ⟨hb20p3,hb20p2,hb20p1,hb20zero,hb20m1,
+    hb20m2,hb20m3,hb20m4,hb20m5⟩
   have hAleft1 : (setupB9Config T h L).tape (hA-1)=false := by
     have heq : hA-1=hB9+2 := by dsimp [hA,hB9]; omega
     rw [heq]
-    exact hb9.1
+    exact hb9p2
   have hAleft2 : (setupB9Config T h L).tape (hA-2)=false := by
     have heq : hA-2=hB9+1 := by dsimp [hA,hB9]; omega
     rw [heq]
-    exact hb9.2.1
+    exact hb9p1
   have hLleft1 : (setupB20Config T h).tape (hL-1)=false := by
     have heq : hL-1=h+3 := by dsimp [hL]; omega
     rw [heq]
-    exact hb20.1
+    exact hb20p3
   have hLleft2 : (setupB20Config T h).tape (hL-2)=false := by
     have heq : hL-2=h+2 := by dsimp [hL]; omega
     rw [heq]
-    exact hb20.2.1
+    exact hb20p2
   have hAstream : ∀ j : Nat, j<3*(A+1) →
       (setupAConfig T h L A).tape (b6-3-(j:Int)) =
         sideBit (setupD100pow (A+1)) j := by
@@ -820,8 +824,8 @@ theorem setupB6LeftTail_of_guards_and_blank (T : Int → Bool) (h : Int)
   by_cases hi0 : i<3
   · simp [hi0]
     interval_cases i
-    · simpa [sideBit,b6] using hb6.1
-    · simpa [sideBit,b6] using hb6.2
+    · simpa [sideBit,b6] using hb6zero
+    · simpa [sideBit,b6] using hb6m1
     · have hpres := setupB6Config_preserves_before T h A L (b6-2) (by omega)
       rw [hpres]
       have heq : b6-2=hA+3*(A:Int)+1 := by
@@ -854,9 +858,9 @@ theorem setupB6LeftTail_of_guards_and_blank (T : Int → Bool) (h : Int)
         rw [setupB6Config_eq_setupB9Config_before_A T h A L
           (hB9-(k:Int)) (by dsimp [hA,hB9]; omega)]
         interval_cases k
-        · simpa [sideBit] using hb9.2.2.1
-        · simpa [sideBit] using hb9.2.2.2.1
-        · simpa [sideBit] using hb9.2.2.2.2
+        · simpa [sideBit] using hb9zero
+        · simpa [sideBit] using hb9m1
+        · simpa [sideBit] using hb9m2
       · simp [hi2]
         by_cases hi3 : i-3-3*(A+1)-3<3*(L+1)
         · simp [hi3]
@@ -880,13 +884,13 @@ theorem setupB6LeftTail_of_guards_and_blank (T : Int → Bool) (h : Int)
           rw [hpres]
           by_cases hk7 : k<7
           · interval_cases k
-            · simpa [sideBit] using hb20.2.2.2.1
-            · simpa [sideBit] using hb20.2.2.2.2.1
-            · simpa [sideBit] using hb20.2.2.2.2.2
-            · simpa [sideBit] using hb20.2.2.2.2.2.1
-            · simpa [sideBit] using hb20.2.2.2.2.2.2
-            · simpa [sideBit] using hb20.2.2.2.2.2.2.1
-            · simpa [sideBit] using hb20.2.2.2.2.2.2.2
+            · simpa [sideBit] using hb20p1
+            · simpa [sideBit] using hb20zero
+            · simpa [sideBit] using hb20m1
+            · simpa [sideBit] using hb20m2
+            · simpa [sideBit] using hb20m3
+            · simpa [sideBit] using hb20m4
+            · simpa [sideBit] using hb20m5
           · have hx : h+1-(k:Int)<h-5 := by omega
             rw [setupB20Config_preserves_before T h (h+1-(k:Int)) hx]
             exact hblank (h+1-(k:Int)) hx
