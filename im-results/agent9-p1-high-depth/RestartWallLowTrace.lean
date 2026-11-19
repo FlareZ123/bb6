@@ -8,6 +8,8 @@ namespace BB6.Agent9RestartWallLowTrace
 open BB6.Agent9RestartWallSource
 open BB6.Agent9RestartWallTelescoping
 open BB6.Agent9Mod7Slack
+open BB6.Agent43HighDepthRestart
+open BB6.Agent1Quarter BB6.Agent47P1
 
 /-- The affine energy used by the mod-7 low-suffix leaf, expressed at an
     authentic restart state with absolute restart counter c and relative
@@ -247,5 +249,53 @@ theorem restartPath_first_shallow
       (∀ u, u ∈ pre → u=3) := by
   exact exists_first_shallow path.es path.hPos path.hLow
     (restart_path_has_shallow path hbound)
+
+
+/-- A wall-reaching original OddCone history containing a deep edge induces
+    an exact LowTrace from its last deep restart point to the shifted wall.
+    This is the source-authentic bridge to the scalar mod-7 leaf. -/
+theorem source_wall_restart_lowTrace
+    (n b d m : Nat) (hn : 14 ≤ n)
+    (h : OddCone (14*2^n-2*n-16) 3 b d m)
+    (hwall : b+4*m+4*n+20=12*2^n)
+    (hdeep : HasDeep (oddConeDepths h)) :
+    ∃ path : RestartPath n b d m,
+      LowTrace ((2^n : Nat) : Int)
+        (restartEnergy (2^n) path.c 0 path.x0)
+        (restartOffset path.c 0)
+        (-112*restartOffset path.c path.L+384)
+        (restartOffset path.c path.L) := by
+  obtain ⟨path, hbound⟩ :=
+    source_wall_restart_path n b d m hn h hwall hdeep
+  have hmass0 := odd_cone_mass _ _ b d m h
+  have hroot : (14*2^n-2*n-16)+3+2*n+13=14*2^n := by omega
+  have hmass : b+d+2*m+2*n+13=14*2^n := by omega
+  have htrace := restartPath_toLowTrace n b d m path
+  have hwallEnergy := restartPath_wall_energy n b d m path hmass hwall
+  exact ⟨path, by simpa [hwallEnergy] using htrace⟩
+
+/-- The first shallow edge of the source-authentic restart suffix is
+    preceded only by depth-two edges. -/
+theorem source_wall_first_shallow
+    (n b d m : Nat) (hn : 14 ≤ n)
+    (h : OddCone (14*2^n-2*n-16) 3 b d m)
+    (hwall : b+4*m+4*n+20=12*2^n)
+    (hdeep : HasDeep (oddConeDepths h)) :
+    ∃ path : RestartPath n b d m,
+      ∃ pre e post, path.es=pre++[e]++post ∧ 1≤e ∧ e≤2 ∧
+        (∀ u, u∈pre → u=3) := by
+  obtain ⟨path, hbound⟩ :=
+    source_wall_restart_path n b d m hn h hwall hdeep
+  exact ⟨path, restartPath_first_shallow n b d m path hbound⟩
+
+#print axioms restartStep_lowStep
+#print axioms restartWalk_toLowTrace
+#print axioms restartPath_toLowTrace
+#print axioms restartPath_wall_energy
+#print axioms restartPath_initial_mod7
+#print axioms restartPath_initial_upper
+#print axioms restartWalk_all_three_energy_scale
+#print axioms source_wall_restart_lowTrace
+#print axioms source_wall_first_shallow
 
 end BB6.Agent9RestartWallLowTrace
