@@ -1,4 +1,4 @@
-# Authentic TM63 root to q4Tail and the corrected P2 continuation
+# Authentic TM63 root to q4Tail and the corrected P2 S0 handoff
 
 ## Established source chain and scope
 
@@ -11,48 +11,54 @@ The wrapper extracts the exact C2 suffix from the shared C1 endpoint using `run_
 
 **The root wrapper and its dependencies remain uncompiled source drafts.** This does not establish a halt, an exact champion score, or a global BB(6) upper bound.
 
-## Corrected P2 residual boundary
+## Correct P2 residual boundary
 
-The proposed downstream interface in `im-results/agent44-p2-postlude/S0DrainQ4Postlude.lean` assumes a residual beginning `1^(m+2) ++ 0100 ++ tail`, with a `100` tail guard. That is incompatible with the current authentic second-cycle prefix.
+The earlier `P2ResidualBoundaryAudit.md` and the 73-step 0101 branch are superseded. They misread the semantics of `frameAt`.
+
+The authoritative lemma `frameAt_tape` in `im-results/agent6-q4-prefix/CountedQ4Prefix.lean` states that, inside the frame, the tape is `decide (x-h ∈ c.marked)`. Thus **every unmarked cell inside the frame is written blank**; it does not retain its input bit.
 
 For checkpoint head (h=1), put
 [
-m=3\cdot2^z+3z+7,\quad n=2^{2^z-1},\quad
-h_1=m+5,\quad h_2=m+7,\quad g=m+7+3n,
-\]
-and (H=g-5=m+2+3n), (a=n-1). The S0 counter `binDec a (2^a-1)=d0pow a` has length (3a), so the residual context after it begins at
+m=3cdot2^z+3z+7,quad n=2^{2^z-1},quad
+h_1=m+5,quad h_2=m+7,quad g=m+7+3n,
+]
+and (H=g-5=m+2+3n, a=n-1). The S0 counter `binDec a (2^a-1)=d0pow a` has length (3a), so the residual left context after that counter begins at
 [
 H-3a=m+5.
 ]
 
-The two-zero setup and E-scan contribute (m+1) consecutive ones from cells (m+5) through (5); the 34-step endpoint marks cell (4=h+3) as one, giving (m+2) leading ones. The exact `secondCyclePrefix34End` frame has marked offsets ([-7,-6,-5,-2,1,3]). With the stated input window, the next four cells (3,2,1,0) are therefore (0,1,0,1): offsets (+2,0) remain zero, (+1) is marked one, and offset (-1) is an unmarked input one. The later two-zero setup, d0 sweep and q4Tail frame do not touch cell (0=h-1).
+The two-zero setup writes cells (m+5,m+6) to one. The E-scan contributes the (m) ones at cells (5,ldots,m+4), and the 34-step frame marks cell (4) as one. These give the leading (1^{m+2}).
 
-The actual residual starts
+The 34-step frame has marked offsets ([-7,-6,-5,-2,1,3]) relative to (h=1). Because unmarked cells inside its window are blank, its next four cells at coordinates (3,2,1,0) are exactly
 [
-1^{m+2}\;0101\;1^7\;00\;\cdots,
+(0,1,0,0).
 ]
-not (1^{m+2}0100) with a (100) tail. In particular, the proposed S0/postlude target has the wrong bit at cell (0), and its tail guard is also false. Do not compose the current q4Tail theorem with that proposed target.
+Its next three cells at (-1,-2,-3) are exactly
+[
+(1,0,0).
+]
+Therefore the authentic residual has the form
+[
+1^{m+2};0100;	ext{tail},qquad 	ext{tail begins }100.
+]
 
-The full coordinate audit is in [P2ResidualBoundaryAudit.md](P2ResidualBoundaryAudit.md).
+This is the interface required by Agent 44's generic `S0DrainQ4Postlude.lean`. The next task is to prove the full q4Tail-to-`s0Config` tape identity, including the d0 counter and the right-facing `s0RightFacing 0` suffix. The residual prefix and the 100 tail guard are not by themselves a completed handoff.
 
-## Replacement finite continuation draft
+## Conditional 0101 branch
 
-`P2ActualBoundaryBridge.lean` records a finite 73-step bridge for the actual post-sweep window. Relative to the state-3 start head (h), its input is:
-- (T(h)=0), (T(h-1)=1), (T(h-2)=0), (T(h-3)=1);
-- (T(h-4),\ldots,T(h-10)=1);
-- (T(h-11)=T(h-12)=T(h+1)=0).
+`P2ActualBoundaryBridge.lean` is a valid finite 73-step bridge for its stated conditional input `0101 1^7 00`. It is **not** the authentic TM63 continuation and must not be composed with `rootSecondQ4TailFrame`.
 
-The finite trace ends in state 4 at head (h-1), with (h-1,h,h+1) all one. The draft includes the exact finite trace and head-bound checks by `decide`, and an arbitrary-exterior lift through `bridgeAt`.
+Agent 48's `P2ActualBoundaryComposition.lean` is likewise a conditional theorem for that different S0 input family. Preserve it as an independent finite-trace result, but do not describe it as an actual root continuation.
 
-The same module contains a generic right-continuation draft: from state 4 at head (2), if cells (2\ldots H+4) are one, cells (H+5,H+6) are zero, and a `d1BlocksOn` run of length (2^a) follows, the source run converts those blocks to `d0Sweep` and reaches state 2 at (H+6+3\cdot2^a), with the exact accumulated tape written in the theorem statement. This is a conditional local macro, not yet a proof that the full S0 handoff satisfies all hypotheses.
+## Toolchain / verification status
 
-**Neither the 73-step bridge nor the right-continuation theorem has yet been Lean-compiled or axiom-audited.** The local Python/container/shell tools in this invocation returned tool-level errors, so no local preflight was available. To obtain one focused compiler and axiom check without creating another workflow, the existing `.github/workflows/agent48-positive-z-q4-prefix.yml` now has a `p2-actual-boundary` manual-dispatch target for this exact dependency closure. Agent 44 and Agent 48 were asked to preflight the source if their local environments are available.
+The uploaded Lean archive is incomplete: concatenating the two supplied parts produces 526,200,098 bytes, while the ZIP directory requires 608,393,640 bytes (82,193,542 bytes are missing). The partial archive decompresses only part of the toolchain and contains no `bin/lean`. Thus the exact Lean 4.36.0-rc2 local preflight could not be run in this invocation. The source remains uncompiled and no axiom audit is claimed.
 
 ## Next mathematical obligations
 
-1. Preflight the exact `P2ActualBoundaryBridge.lean` dependency closure under Lean 4.36.0-rc2 and audit exported theorem axioms.
-2. Prove that the authentic S0 drain output, with the corrected (1^{m+2}0101,1^7 00) residual, satisfies the 73-step bridge's exact input window after the left sweep.
-3. Compose the bridge with the right one-run, two-zero transition and `d1BlocksOn` continuation; identify the resulting state-2 endpoint with a reusable S1/S0 section or derive its next exact macro.
-4. Only then continue the authentic root toward the terminal section and exact score.
+1. Prove the pointwise q4Tail-to-S0 identity for `rootSecondQ4TailFrame`: left-facing stream `d0pow (n-1) ++ p2ResidualLeft m tail`, right-facing stream `s0RightFacing 0`.
+2. Use the tail beginning `100` to apply Agent 44's `p2S0Drain_q4Postlude` and `p2PostludeFrame_typeAWindow`.
+3. Identify the resulting state-4 frame at head 1 with the next canonical checkpoint and compose the next P1/P22 iteration.
+4. Compile the ordered import closure under Lean 4.36.0-rc2 and audit exported theorem axioms when a complete local toolchain is available.
 
 All material here remains under `im-results/`. No result has been promoted to `results/`; BB(6) remains unresolved.
