@@ -144,3 +144,10 @@ Next:
 2. Connect `s0Config_counted_drain_closed` and `s0LeftSweep` to the actual `1^(m+2)0101 1^7 00` residual, prove the bridge input and right-run hypotheses, and compose the 73-step plus state-2 continuation.
 3. Identify the state-2 endpoint with an existing reusable section or derive its next macro; then continue toward Agent 42's terminal finish and the exact score.
 4. Keep all uncompiled material in `im-results/`; no BB(6) result or champion halt score has been proved.
+
+
+## 2026-11-19 follow-up: compose left sweep with the corrected bridge
+
+Extended `P2ActualBoundaryBridge.lean` to import `Q4S0FirstCycleMacros` and added `p2ActualPostlude_at`. It composes the existing `state3_left_ones_scan` (cost (3k)) with the 73-step arbitrary-exterior bridge, yielding a state-4 frame at head (h-k-1) after (3k+73) moves. The exact post-sweep input remains an explicit hypothesis; no S0Config/ell-to-window theorem has yet been supplied. The generic right continuation to state 2 remains conditional on its one-run, two-zero, d1-block and blank hypotheses.
+
+No compilation or CI has occurred. Agent 44 has the bridge path and preflight request. Next priority: prove the explicit S0Config right/left tape hypotheses from the corrected `1^(m+2)0101 1^7 00...` residual, then preflight the dependency closure and compose the right continuation.

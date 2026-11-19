@@ -1,4 +1,5 @@
 import ChampionRootBridge
+import Q4S0FirstCycleMacros
 import Q4Suffix
 import Lean.Elab.Tactic.Omega
 
@@ -20,6 +21,7 @@ namespace BB6Coverage.Agent38P2ActualBoundary
 
 open BB6Coverage
 open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent48Q4S0Macros
 
 /-- The 13-cell local window, relative to the state-3 head. -/
 def p2ActualBoundaryInside (x : Int) : Bool :=
@@ -266,5 +268,28 @@ theorem p2ActualRightContinuation
 #print axioms p2_two_zero_setup
 #print axioms p2_final_zero
 #print axioms p2ActualRightContinuation
+
+
+/-- Compose the existing counted state-3 left-one sweep with the new
+73-step bridge for the authentic 0101 boundary. This is the corrected
+replacement for the 4-step 0100 postlude entry; the S0 tape hypotheses
+still have to be proved from the upstream prefix. -/
+theorem p2ActualPostlude_at
+    (k : Nat) (T : Int → Bool) (h : Int)
+    (hones : s0LeftOnes T h k)
+    (hright : T (h+1) = false)
+    (hinput :
+      p2ActualBoundaryInput (s0LeftSweep k T h) (h-(k:Int))) :
+    run tm2 (3*k+73) ⟨3,h,T⟩ =
+      some (frameAt (s0LeftSweep k T h) (h-(k:Int))
+        p2ActualBoundaryInside p2ActualBoundaryEnd) := by
+  have hscan := state3_left_ones_scan k T h hones hright
+  have hbridge :=
+    p2ActualBoundary_at (s0LeftSweep k T h) (h-(k:Int)) hinput
+  rw [run_append,hscan]
+  simp only [Option.bind_some]
+  exact hbridge
+
+#print axioms p2ActualPostlude_at
 
 end BB6Coverage.Agent38P2ActualBoundary
