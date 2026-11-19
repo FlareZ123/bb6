@@ -86,8 +86,7 @@ private theorem p2ActualResidualLeft_after_prefix
   unfold p2ActualResidualLeft
   rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
     (List.replicate (m+2) true)
-    ([false,true,false,true] ++ List.replicate 7 true ++
-      [false,false] ++ tail) (m+2+j) (by simp)]
+    (p2ActualBoundaryResidual tail) (m+2+j) (by simp)]
   have hidx : m+2+j-(List.replicate (m+2) true).length = j := by simp
   rw [hidx]
 
@@ -218,17 +217,15 @@ theorem p2ActualS0_to_state2
         p2ActualResidualLeft_after_prefix m tail j
 
   have hinput : p2ActualBoundaryInput S 3 := by
-    have h0 : S 3=false := by simpa [sideBit] using hboundary 0
-    have h1 : S 2=true := by simpa [sideBit] using hboundary 1
-    have h2 : S 1=false := by simpa [sideBit] using hboundary 2
-    have h3 : S 0=true := by simpa [sideBit] using hboundary 3
+    have h0 : S 3=false := by simpa [p2ActualBoundaryResidual,sideBit] using hboundary 0
+    have h1 : S 2=true := by simpa [p2ActualBoundaryResidual,sideBit] using hboundary 1
+    have h2 : S 1=false := by simpa [p2ActualBoundaryResidual,sideBit] using hboundary 2
+    have h3 : S 0=true := by simpa [p2ActualBoundaryResidual,sideBit] using hboundary 3
     have hones : ∀ i : Nat, i<7 → S (3-4-(i:Int))=true := by
       intro i hi
       have hb := hboundary (4+i)
-      have hbit :
-          sideBit
-            ([false,true,false,true] ++ List.replicate 7 true ++
-              [false,false] ++ tail) (4+i) = true := by
+      have hbit : p2ActualBoundaryResidual tail (4+i)=true := by
+        unfold p2ActualBoundaryResidual
         rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
           ([false,true,false,true] : List Bool)
           (List.replicate 7 true ++ ([false,false] ++ tail))
@@ -242,8 +239,8 @@ theorem p2ActualS0_to_state2
       have hcoord : 3-(4+(i:Int))=3-4-(i:Int) := by omega
       simpa [hcoord,hbit] using hb
     have hzero11 :
-        sideBit
-          (p2ActualBoundaryResidual tail) 11 = false := by
+        sideBit (p2ActualBoundaryResidual tail) 11 = false := by
+      unfold p2ActualBoundaryResidual
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,false,true] : List Bool)
         (List.replicate 7 true ++ ([false,false] ++ tail)) 11 (by simp)]
@@ -253,8 +250,8 @@ theorem p2ActualS0_to_state2
         (List.replicate 7 true) ([false,false] ++ tail) 7 (by simp)]
       simp [sideBit]
     have hzero12 :
-        sideBit
-          (p2ActualBoundaryResidual tail) 12 = false := by
+        sideBit (p2ActualBoundaryResidual tail) 12 = false := by
+      unfold p2ActualBoundaryResidual
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,false,true] : List Bool)
         (List.replicate 7 true ++ ([false,false] ++ tail)) 12 (by simp)]
