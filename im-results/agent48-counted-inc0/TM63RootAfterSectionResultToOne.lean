@@ -192,7 +192,8 @@ theorem tm63_blank_reaches_after_middle34_reset_frame :
         3*(sectionResult (16*tm63RootResidueSixK-20) 1
           tm63MiddleAfter34A tm63MiddleAfter34B).right + 5,
       outerLCIncPostludeTape
-        (s1Config tm63Length1 1 2
+        (outerLCIncSourceT3
+          (s1Config tm63Length1 1 2
           (sectionResult (16*tm63RootResidueSixK-20) 1
             tm63MiddleAfter34A tm63MiddleAfter34B).exponent
           0
@@ -200,6 +201,12 @@ theorem tm63_blank_reaches_after_middle34_reset_frame :
             tm63MiddleAfter34A tm63MiddleAfter34B).right
           (sectionHeadAfter (16*tm63RootResidueSixK-20)
             tm63MiddleAfter34B tm63MiddleAfter34Head)).tape
+          (sectionHeadAfter (16*tm63RootResidueSixK-20)
+              tm63MiddleAfter34B tm63MiddleAfter34Head)
+          (sectionResult (16*tm63RootResidueSixK-20) 1
+              tm63MiddleAfter34A tm63MiddleAfter34B).exponent
+          2
+          0)
         (sectionHeadAfter (16*tm63RootResidueSixK-20)
           tm63MiddleAfter34B tm63MiddleAfter34Head)
         (sectionResult (16*tm63RootResidueSixK-20) 1
@@ -296,6 +303,7 @@ theorem tm63_blank_reaches_after_middle34_reset_frame :
           3*(sectionResult (16*tm63RootResidueSixK-20) 1
             tm63MiddleAfter34A tm63MiddleAfter34B).right + 5,
         outerLCIncPostludeTape
+          (outerLCIncSourceT3
           (s1Config tm63Length1 1 2
             (sectionResult (16*tm63RootResidueSixK-20) 1
               tm63MiddleAfter34A tm63MiddleAfter34B).exponent
@@ -304,6 +312,12 @@ theorem tm63_blank_reaches_after_middle34_reset_frame :
               tm63MiddleAfter34A tm63MiddleAfter34B).right
             (sectionHeadAfter (16*tm63RootResidueSixK-20)
               tm63MiddleAfter34B tm63MiddleAfter34Head)).tape
+          (sectionHeadAfter (16*tm63RootResidueSixK-20)
+              tm63MiddleAfter34B tm63MiddleAfter34Head)
+          (sectionResult (16*tm63RootResidueSixK-20) 1
+              tm63MiddleAfter34A tm63MiddleAfter34B).exponent
+          2
+          0)
           (sectionHeadAfter (16*tm63RootResidueSixK-20)
             tm63MiddleAfter34B tm63MiddleAfter34Head)
           (sectionResult (16*tm63RootResidueSixK-20) 1
