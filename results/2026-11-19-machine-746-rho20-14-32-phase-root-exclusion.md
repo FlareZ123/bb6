@@ -1,12 +1,12 @@
-# Machine 746: two further rho-20 phase families excluded from the blank-root reset cone
+# Machine 746: three further rho-20 phase families excluded from the blank-root reset cone
 
-**Status.** This is a paper-level arithmetic theorem over the original-source first-reset inverse grammar. The exact grammar and its equivalence with genuine source first resets are kernel-certified in [FirstInverseComplete.lean](../im-results/agent10-cascade/FirstInverseComplete.lean); strict decrease of every parent is kernel-certified in [ResetParentStrict.lean](../im-results/agent10-cascade/ResetParentStrict.lean). The arithmetic specialization below is not yet Lean-formalized. It excludes two complete lifts of the residual (a\equiv14\pmod{18}) class, not the whole machine.
+**Status.** This is a paper-level arithmetic theorem over the original-source first-reset inverse grammar. The exact grammar and its equivalence with genuine source first resets are kernel-certified in [FirstInverseComplete.lean](../im-results/agent10-cascade/FirstInverseComplete.lean); strict decrease of every parent is kernel-certified in [ResetParentStrict.lean](../im-results/agent10-cascade/ResetParentStrict.lean). The arithmetic specialization below is not yet Lean-formalized. It excludes two complete lifts of the residual (a\equiv14\pmod{18}) class and one lift of (a\equiv10\pmod{18}), not the whole machine.
 
 ## Theorem
 
 Let (a\ge32) be even and satisfy
 [
-a\equiv14\quad\text{or}\quad32\pmod{54}.
+a\equiv14,\ 32,\text{ or }46\pmod{54}.
 ]
 Put
 [
@@ -69,46 +69,58 @@ The modular table below is exact. The row parameter is (a\bmod162); (K_{243}) de
 | 14 | 122 | 152 | 152 | 34  | 229 | 154 | 34  | 125 | 162 | 108 | 6 | 189 |
 | 32 | 32  | 44  | 44  | 16  | 67  | 208 | 169 | 17  | 81  | 27  | 6 | 108 |
 | 32 | 86  | 206 | 44  | 124 | 67  | 127 | 88  | 179 | 81  | 27  | 6 | 108 |
-| 32 | 140 | 125 | 44  | 70  | 67  | 46  | 7   | 98  | 81  | 27  | 6 | 108 |
+| 32 | 140 | 125 | 44  | 70  | 67  | 46  | 7   | 98  | 81  | 27  | 6 | 108 |\n| 46 | 46  | 122 | 122 | 80  | 22  | 205 | 121 | 239 | 81  | 162 | 0 | 162 |\n| 46 | 100 | 41  | 122 | 26  | 22  | 124 | 40  | 158 | 81  | 162 | 0 | 162 |\n| 46 | 154 | 203 | 122 | 134 | 22  | 43  | 202 | 77  | 81  | 162 | 0 | 162 |
 
 Here (3X_{243}) means (3X\bmod243), and likewise for (9X_{1,243}). Consequently,
 [
 X\bmod81=
 \begin{cases}
 54,&a\equiv14\pmod{54},\\
-27,&a\equiv32\pmod{54},
+27,&a\equiv32\text{ or }46\pmod{54},
 \end{cases}
 \qquad
 X_1\bmod27=
 \begin{cases}
 12,&a\equiv14\pmod{54},\\
-3,&a\equiv32\pmod{54}.
+3,&a\equiv32\pmod{54},\\
+18,&a\equiv46\pmod{54},
 \end{cases}
 ]
 Thus
 [
-v_3(X)=3,\qquad v_3(X_1)=1. \tag{1}
+v_3(X)=3,\qquad
+v_3(X_1)=
+\begin{cases}
+1,&a\equiv14,32\pmod{54},\\
+2,&a\equiv46\pmod{54}.
+\end{cases}
 ]
 The table also gives
 [
-A\equiv6\pmod9,\qquad
+A\equiv
+\begin{cases}
+6\pmod9,&a\equiv14,32\pmod{54},\\
+0\pmod9,&a\equiv46\pmod{54},
+\end{cases}
+\qquad
 G\equiv
 \begin{cases}
 7\pmod9,&a\equiv14\pmod{54},\\
-4\pmod9,&a\equiv32\pmod{54},
+4\pmod9,&a\equiv32\pmod{54},\\
+6\pmod9,&a\equiv46\pmod{54},
 \end{cases}
-\]
+]
 and
 [
 \frac X{27}\equiv
 \begin{cases}
 2\pmod3,&a\equiv14\pmod{54},\\
-1\pmod3,&a\equiv32\pmod{54}.
+1\pmod3,&a\equiv32,46\pmod{54}.
 \end{cases} \tag{2}
 ]
-In particular (A\equiv0\pmod3), (G\equiv1\pmod3), (p\equiv1\pmod3), and (K\equiv2\pmod3).
+In all three phases (p\equiv1\pmod3) and (K\equiv2\pmod3). In phases 14 and 32, (A\equiv0\pmod3) and (G\equiv1\pmod3); in phase 46, (A\equiv0\pmod9) and (G\equiv6\pmod9).
 
-**Why the table covers every lift.** Modulo (243), (2^{162}\equiv1); modulo (162), (2^{54}\equiv82) and (82^2\equiv82). For phase (14), (2^7\equiv128\pmod{162}) and (128\cdot82\equiv128); for phase (32), (2^{25}\equiv20\pmod{162}) and (20\cdot82\equiv20). Hence (K\equiv152\pmod{162}) throughout the first phase and (K\equiv44\pmod{162}) throughout the second. The residue (a\bmod162) has the three displayed values, and the period (162) modulo (243) then gives exactly the six rows. All remaining columns follow by the displayed defining formulas. The six-row calculation is independently reproducible with [rho20-14-32-modular-certificate.mjs](../im-results/agent10-cascade/rho20-14-32-modular-certificate.mjs).
+**Why the table covers every lift.** Modulo (243), (2^{162}\equiv1); modulo (162), (2^{54}\equiv82) and (82^2\equiv82). For phase (14), (2^7\equiv128\pmod{162}) and (128\cdot82\equiv128); for phase (32), (2^{25}\equiv20\pmod{162}) and (20\cdot82\equiv20); for phase (46), (2^{39}\equiv116\pmod{162}) and (116\cdot82\equiv116). Hence (K\equiv152,44,122\pmod{162}) respectively throughout the three phases. The residue (a\bmod162) has the three displayed values in each phase, and the period (162) modulo (243) then gives exactly the nine rows. All remaining columns follow by the displayed defining formulas. The nine-row calculation is independently reproducible with [rho20-14-32-46-modular-certificate.mjs](../im-results/agent10-cascade/rho20-14-32-46-modular-certificate.mjs).
 
 ## 2. The root has exactly two parents
 
@@ -156,16 +168,11 @@ The first has the exact expression
 [
 h_0=3p-\frac{6592}{9\cdot2^a}p-\frac{5K+10}{9}.
 ]
-For (a\ge32), this gives (2p<h_0<3p). Also (h_0) is even. The adjacent even-parent bands end at (2p-3) and begin at (3p-1); hence (h_0) has no even parent. Its odd numerator is (X_1=2h_0+5), and (1) gives (v_3(X_1)=1), so only (t=0) is possible. Moreover,
+For (a\ge32), this gives (2p<h_0<3p). Also (h_0) is even. The adjacent even-parent bands end at (2p-3) and begin at (3p-1); hence (h_0) has no even parent. Its odd numerator is (X_1=2h_0+5). In phases 14 and 32, (v_3(X_1)=1), so only (t=0) is possible. In phase 46, (v_3(X_1)=2), so (t=1) is the only additional possibility; its source coordinate satisfies
 [
-\frac{X_1}{p}
-=6-\frac{13184}{9\cdot2^a}-\frac{10K-25}{9p}
-\in(5,6).
+\frac{2X_1}{9p}\in(10/9,4/3),
 ]
-Thus (X_1/3\in(5p/3,2p)), the unique odd-source band at level (K-2). The unique parent of (h_0) is
-[
-y_0=\frac{2X_1}{3}-2p-K-3.
-]
+which lies in the gap ((p,3p/2)). Thus only (t=0) is possible in every phase. Moreover,
 
 For the second parent,
 [
@@ -177,7 +184,7 @@ For (a\ge32), this lies strictly between (1) and (10/9), hence (p<h_2<3p/2-1), t
 [
 2h_2+5=\frac{16X}{27}-4p-2K-1.
 ]
-By (2), this is congruent to (2\pmod3) in phase (14) and (1\pmod3) in phase (32). It has no odd parent either. Therefore (h_2) is a leaf.
+By (2), this is congruent to (2\pmod3) in phase (14) and (1\pmod3) in phases (32) and (46). It has no odd parent either. Therefore (h_2) is a leaf.
 
 ## 3. The (h_0)-branch is a finite even chain ending at a leaf
 
@@ -239,15 +246,23 @@ p<y_{a-10}<\frac{17}{16}p.
 ]
 This lies strictly above the level-((L-1)) even band's upper endpoint (p-3) and strictly below the level-(L) band's lower endpoint (3p/2-1). Thus (y_{a-10}) has no even parent.
 
-There are no odd parents at any (y_j), including the terminal state. Indeed, with (A=4p+2K+1), the recurrence gives
+There are no odd parents at any (y_j), including the terminal state, but the reason depends on the phase. In phases 14 and 32, (A\equiv0\pmod3) and (G\equiv1\pmod3), so
 [
-2y_j+5=A-2^{j+1}G.
+2y_j+5=A-2^{j+1}G\equiv-2^{j+1}\not\equiv0\pmod3.
 ]
-We have (A\equiv0\pmod3) and (G\equiv1\pmod3). Hence
+In phase 46, (A\equiv0\pmod9) and (G\equiv6\pmod9), so
 [
-2y_j+5\equiv-2^{j+1}\not\equiv0\pmod3
+2y_j+5\equiv-6\cdot2^{j+1}\pmod9
 ]
-for every (j). The odd-parent divisibility condition already fails at its first factor of three.
+is always 3 or 6 modulo 9. Thus (v_3(2y_j+5)=1), and only (t=0) can be considered. For (j\le a-11), the established band (3p/2\le y_j\le2p-3) gives
+[
+p<\frac{2y_j+5}{3}<\frac43p,
+]
+which lies in the gap between the odd-source bands at levels (K-3) and (K-2). At the terminal state, (p<y_{a-10}<17p/16) gives
+[
+\frac23p<\frac{2y_{a-10}+5}{3}<\frac34p,
+]
+the gap between the odd-source bands at levels (K-4) and (K-3). Hence phase 46 also has no odd parent anywhere on the chain.
 
 We have now exhausted the entire parent graph:
 [
@@ -260,4 +275,4 @@ where every arrow after (h_0\leftarrow y_0) is the unique even parent, and (y_{a
 
 ## Scope and remaining work
 
-This removes the (a\equiv14,32\pmod{54}) lifts of the residual (a\equiv14\pmod{18}) rho-20 class. The (a\equiv50\pmod{54}) lift, the residual (a\equiv2,10\pmod{18}) classes, other fatal-source families, and other #746 halting gates remain open. This result does not prove #746 nonhalting and does not determine BB(6).
+This removes the (a\equiv14,32\pmod{54}) lifts of the residual (a\equiv14\pmod{18}) class and the (a\equiv46\pmod{54}) lift of the residual (a\equiv10\pmod{18}) class. The (a\equiv50\pmod{54}) lift, the (a\equiv10,28\pmod{54}) lifts, the residual (a\equiv2\pmod{18}) class, other fatal-source families, and other #746 halting gates remain open. This result does not prove #746 nonhalting and does not determine BB(6).
