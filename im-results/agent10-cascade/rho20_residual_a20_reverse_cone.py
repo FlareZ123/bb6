@@ -114,6 +114,8 @@ def main() -> None:
     assert len(edges) == 34
     assert len(leaf_ids) == 8
     assert max(depths) == 14
+    assert len(branch_ids) == 6
+    assert [depths[i] for i in branch_ids] == [2, 4, 4, 6, 8, 10]
     assert not root_reachable
     assert len({dst for _, dst, *_ in edges}) == len(nodes) - 1
 
