@@ -126,6 +126,16 @@ For a fixed episode start, there is at most one candidate \(n\): the difference 
 \]
 Thus each \(c<q\) episode can be tested by an exact monotone search rather than by iterating every low-branch transition.
 
+There is also an exact congruence filter for this episode equation. Put \(A=3c_0+5\), so \(\gcd(A,9)=1\). Reducing the halt equation modulo \(A\), using \(u_0=3q_0+c_0\) and \(3c_0\equiv-5\pmod A\), gives
+\[
+9n\equiv-3q_0-9+2r_0-3s\pmod A.
+\]
+Hence every possible halting block index belongs to the single residue class
+\[
+\boxed{n\equiv-9^{-1}(3q_0+9-2r_0+3s)\pmod{3c_0+5}.}
+\]
+Combining this arithmetic progression with the monotone crossing bound gives an exact finite candidate test for each episode; no assumption that \(n<A\) is needed. This is a necessary condition, not a root-wide exclusion.
+
 ## The generic outer branch is an affine 4/3 map
 
 Put \(w=u-c=3q\). In each of the six generic \(c\ge q\) cases (the cases beyond the small exceptional values of \(d\)), the source map has the form
