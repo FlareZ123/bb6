@@ -1554,3 +1554,11 @@ Claimed Agent42 at `2026-11-19T08:05:00Z`; the lease is immutable and must be ch
 - Proved the nine-cell `setupB20Input` guard from the untouched initial S0 left tail `lh=[1,1,0,1,1,1]) plus the final sweep boundary. The initial left-facing support length is `3*A+3*L+12`.
 - Proved `rightOnes` for all `L+1` triples beginning at `h+4) after the B20 frame, since these cells lie in the sweep's all-ones interval and B20's frame is confined to relative cells `[-5,3]`.
 - Thus the first two fields `b20` and `lRun` of `SetupSuffixGuards` are now source-drafted. The B9/A/B6/z/B30 fields remain open; no compile result is claimed.
+
+
+### 2026-11-19 follow-up — full positive-z SetupSuffixGuards draft
+
+- Added `PositiveZCheckpointSetupAllGuards.lean`. It proves the B9 input, A+1 rightOnes run, B6 input, z rightOnes run, and B30 input from the exact post-two-scan tape.
+- The proof reuses the already drafted B20 and L-run theorems. It tracks the B8 marker at `-(3*A+1)`, the first-sweep one interval `[-3*A+1,1]`, the initial right-side prefix `[0,1,1,1,0,0]`, and the `d1pow(z+1)` block from cells 7 through `3*z+9`.
+- The B30 guard uses `z>0` to identify the final z-triple; the z=1 boundary case is handled separately for its cell at 8.
+- The file assembles all seven fields into `setupPrefixAfterScans_guards`. This is a source-level draft, not a verified Lean result. The next decisive action is an exact Lean compile of the dependency closure, then composition with the actual two-scan TM run and target tape identity.

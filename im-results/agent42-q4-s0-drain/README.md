@@ -506,3 +506,26 @@ This discharges the first two fields (`b20` and `lRun`) of
 Agent 48's `SetupSuffixGuards` for the exact two-scan tape. The
 remaining five fields (B9 input, A+1 run, B6 input, z run, B30 input)
 are still open. The source draft is not yet compiled.
+
+
+## Complete SetupSuffixGuards source derivation
+
+Added `PositiveZCheckpointSetupAllGuards.lean`. It derives the remaining
+B9 input, A+1 run, B6 input, z run, and B30 input from the exact two-scan
+prefix tape. Together with `PositiveZCheckpointSetupFirstGuards.lean`,
+it constructs all seven fields of `SetupSuffixGuards` for `z>0).
+
+The coordinate structure is:
+- B9 reads the B8 marker and the first-sweep clear/one boundary after the
+  L+1 right sweep;
+- the A+1 run consists of the first sweep's remaining ones followed by
+  the first three ones of the initial right S0 word;
+- B6 reads the last cleared A-triple and the original cells 5–8;
+- the z run is the tail of the initial `d1pow(z+1)` block;
+- B30 reads the last z-triple, the extra final one, and the preserved
+  blank right exterior.
+
+This is a source-level proof draft only; it has not yet been Lean-compiled.
+If it compiles, it removes the principal local-guard bottleneck from the
+positive-z setup suffix. The actual two-scan run composition and final
+encoder identity remain separate.
