@@ -68,3 +68,6 @@ mathematically but not yet formalized. None of these slices closes the
 full w=7 progression or proves Machine C nonhalting. The remaining
 odd-z parent cylinders, (z\equiv0\pmod4), and the unresolved
 (z\equiv2\pmod4) high-depth branches remain open.
+
+
+Additional open z=4u lead: P_z has a unique Q_z parent; for odd u, Q_z has a unique odd/odd low-value parent R_u=(3450+28686u,3447+28665u), which is even/even with sum 6897+57351u divisible by 3. Its direct/bounce parent fan remains unresolved; see `communications/agent11/20261119T084000Z_agent15-w7-z4-even-even-parent.md`.
