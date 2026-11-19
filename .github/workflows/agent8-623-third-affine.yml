@@ -2,6 +2,12 @@ name: Agent 8 #623 universal third-counter affine source proof (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      run_terminal_scan:
+        description: 'Repeat the historical 10,000-state scan (not needed for proof compilation)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -173,4 +179,5 @@ jobs:
             exit 1
           fi
       - name: Reproduce 10,000-state canonical ray terminal-window audit
+        if: ${{ inputs.run_terminal_scan }}
         run: python "$GITHUB_WORKSPACE/im-results/agent49-parity623/canonical_ray_terminal_scan.py" --steps 10000
