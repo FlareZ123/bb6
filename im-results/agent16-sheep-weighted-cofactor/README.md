@@ -126,7 +126,7 @@ For the two exceptions, direct substitution finishes the proof. If (h,q) = (1,1)
 
 In both cases A is respectively 15/16 or 51/64, so v₃(A) = 1. Consequently every genuine S = 0 edge is nonhalting and satisfies the exact valuation update
 v₃(u' - 1) = v₃(u - 1) + 1.
-Thus the singular σ = v₃(S) = infinity case is not an unresolved branch: it consists of precisely these two contracting cylinders.
+Thus the singular σ = v₃(S) = infinity case is not an unresolved branch: it consists of precisely these two contracting cylinders. More generally, because A > 0 and u - 1 > 0, any terminal transition requires S < 0; if S ≥ 0 then u' > 1.
 
 A separate exact BigInt replay of the authentic even orbit through 100,000 returns found 3,389 zero-residual edges: 3,180 of type (1,1,2) and 209 of type (3,1,4). This is finite diagnostic evidence only; the proposition above is the all-parameter proof.
 
@@ -136,7 +136,34 @@ v3(u'-1) =
   min(κ(a,h)+R, σ),                         if κ(a,h)+R ≠ σ
   at least σ,                               if κ(a,h)+R = σ.
 ```
-When `S=0`, the first case reads `v3(u'-1)=κ(a,h)+R<∞`. When `S≠0` and the two valuations agree, the step is *resonant*: the leading 3-adic units may cancel and the valuation can rise. A power-of-two hit requires exact cancellation `u'-1=0`, not merely a large finite valuation.
+The zero-residual classification above shows that `S=0` always has `κ=1` and gives `R'=R+1`. When `S≠0` and the two valuations agree, the step is *resonant*: the leading 3-adic units may cancel and the valuation can rise. A power-of-two hit requires exact cancellation `u'-1=0`, not merely a large finite valuation.
+
+### Exact normalization of a nonzero resonant step
+
+Suppose (S\ne0) and (\kappa+R=\sigma). Define the integers
+[
+t=v_3(2^{a+1}+1),\qquad
+P=\frac{2^{a+1}+1}{3^t},\qquad
+W=\frac{u-1}{2\cdot3^R},\qquad
+S_0=\frac{S}{3^\sigma}.
+]
+Then (P) and (S_0) are 3-adic units, and the exact integer residual identity gives
+[
+\boxed{\quad
+u'-1=\frac{3^\sigma}{2^{b+h}}(PW+S_0).
+\quad}
+]
+Therefore
+[
+v_3(u'-1)=\sigma+v_3(PW+S_0),
+]
+with (v_3(0)=\infty). In particular, a terminal power is reached **if and only if**
+[
+PW+S_0=0.
+]
+The first additional 3-adic digit cancels exactly when (PW+S_0\equiv0\pmod3). This replaces the vague resonant-unit condition by one explicit integer sum; it also gives every finite valuation gain, not just a lower bound.
+
+The 100,000-return BigInt replay had 29,211 nonzero resonant steps. Exactly 12,441 had (PW+S_0\equiv0\pmod3); the observed excess valuations (v_3(PW+S_0)) ranged up to 12, and none of the 29,211 sums was zero. This is finite diagnostic evidence, not an all-time root argument.
 
 ## 4. Blank-root prefix illustration
 

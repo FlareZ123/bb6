@@ -66,6 +66,9 @@ def main() -> None:
     max_R = 0
     shown = []
     zero_residual_shapes = {}
+    resonant_unit_excess_hist = {}
+    resonant_unit_mod3_cancels = 0
+    terminal_resonant = 0
 
     for n in range(args.steps):
         edge = one_edge(x)
@@ -130,6 +133,25 @@ def main() -> None:
 
             if lhs == sigma:
                 resonant += 1
+                if S != 0:
+                    t = int(v3((1 << (a + 1)) + 1))
+                    P = ((1 << (a + 1)) + 1) // (3 ** t)
+                    W = (u - 1) // (2 * (3 ** R))
+                    S0 = S // (3 ** sigma)
+                    unit_sum = P * W + S0
+                    if unit_sum == 0:
+                        terminal_resonant += 1
+                        assert u_next == 1, (n, a, h, b, P, W, S0)
+                    else:
+                        excess = int(v3(unit_sum))
+                        assert R_next == sigma + excess, (
+                            n, a, h, b, R, sigma, R_next, unit_sum
+                        )
+                        resonant_unit_excess_hist[excess] = (
+                            resonant_unit_excess_hist.get(excess, 0) + 1
+                        )
+                    if unit_sum % 3 == 0:
+                        resonant_unit_mod3_cancels += 1
             max_R = max(max_R, R)
             cumulative_weight += kappa
 
@@ -157,6 +179,9 @@ def main() -> None:
     print(f"generic_edges_with_S_nonnegative={positive_or_zero_S}")
     print(f"maximum_source_v3(u-1)_observed={max_R}")
     print(f"zero_residual_shapes={zero_residual_shapes}")
+    print(f"resonant_unit_mod3_cancels={resonant_unit_mod3_cancels}")
+    print(f"resonant_unit_excess_hist={resonant_unit_excess_hist}")
+    print(f"terminal_resonant={terminal_resonant}")
     for row in shown:
         print(row)
 
