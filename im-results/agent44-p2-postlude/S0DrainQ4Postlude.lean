@@ -297,5 +297,6 @@ theorem p2PostludeFrame_typeAWindow
 
 #print axioms s0Config_allOnesDrain_q4Postlude
 #print axioms p2S0Drain_q4Postlude
+#print axioms p2PostludeFrame_typeAWindow
 
 end BB6Coverage.Agent44P2Postlude
