@@ -98,6 +98,11 @@ theorem machine623_depth11_only_root_remains (m : Machine)
 
 /-- Exact terminal-cylinder accounting: 24 certified singleton tables,
     one open singleton table, and no omitted completion. -/
+theorem machine623FinalSlotAudit_root_remains_open :
+    machine623FinalSlotAudit.open machine623 := by
+  simp [machine623FinalSlotAudit, FrontierAudit.open,
+    machine623, machine623HaltSlot]
+
 theorem machine623FinalSlotAudit_report :
     machine623FinalSlotAudit.report = (24, 1) := by
   decide
