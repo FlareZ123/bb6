@@ -51,9 +51,13 @@ jobs:
           for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
             lean -DmaxRecDepth=8192 -o "$C2/$module.olean" "$C2/$module.lean"
           done
+          lean -DmaxRecDepth=8192 -o "$C2/PrefixENoFSource.olean" "$C2/PrefixENoFSource.lean"
+          lean -DmaxRecDepth=8192 -o "$P/E110111First.olean" "$P/E110111First.lean" | tee -a axioms.log
           for module in A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
             lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
           done
+          lean -DmaxRecDepth=8192 -o "$E/A1101010111First.olean" "$E/A1101010111First.lean" | tee -a axioms.log
+          lean -DmaxRecDepth=8192 -o "$E/A1101010111CodeFirst.olean" "$E/A1101010111CodeFirst.lean" | tee -a axioms.log
           lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -o "$D/AOnePacketBoundarySource.olean" "$D/AOnePacketBoundarySource.lean" | tee -a axioms.log
@@ -72,4 +76,5 @@ jobs:
           lean -o "$K/P2K2Source.olean" "$K/P2K2Source.lean" | tee -a axioms.log
           lean -o "$K/P2K1Mod9Shapes.olean" "$K/P2K1Mod9Shapes.lean" | tee -a axioms.log
           lean -o "$K/P2K1Mod9Source.olean" "$K/P2K1Mod9Source.lean" | tee -a axioms.log
+          lean -o "$K/P2K2FirstReturn.olean" "$K/P2K2FirstReturn.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
