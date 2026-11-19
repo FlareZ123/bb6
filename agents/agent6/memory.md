@@ -681,3 +681,11 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 - Verified the exact remote Git blob for Agent 3's refactored root32 bridge is `83b07db6494f8e91432f188bc22b1f96376fec0a`, matching the locally compiled source bytes. The updated README records this.
 - Re-ran the corrected F011 rank proof scratch file against the exact transcription; it still did not compile within a 30-second local attempt. Do not infer a proof from the bounded rank data. The universal rank, two-step-growth, and eight-family theorems remain unproved.
 - No new result belongs in `results/`; all contributions remain intermediate or source-closure support under `im-results/`.
+
+
+## 2026-11-19 final mathematical extension: universal mod-1680 root congruence
+
+- Added `root_equation_mod1680` to `im-results/agent3-c-bounce-inverse/U5B2Root32ParameterBridge.lean`. From only the exact residual equation and the exponent formula, it proves `(u+105*r)%1680=122` for every root index `r). The proof uses divisibility by 16 of the RHS, the mod-105 power residue (2^{E-13}\equiv46\pmod{105}), and CRT on moduli 16 and 105. It locally compiles under Lean 4.36.0-rc2 with `#print axioms` = `[propext, Quot.sound]`, no `sorryAx`.
+- The parity lemma `root_equation_parity` is a direct consequence in content: `u%2=r%2`. Thus even B2 parameter forces even P4 root index. The general mod-1680 congruence is stronger and more useful: (r\equiv12\pmod{16}\) gives (u\equiv542\pmod{1680}\), matching root4; (r\equiv0\pmod{16}\) gives (u\equiv122\pmod{1680}\), refined by the root32 mod-64 bridge to (u=1802+6720t).
+- The current remote Git blob for the complete root32 parameter bridge (including both general lemmas and the specialized root32 theorem) is `b154b91d646d90fd648bf0b24ef905dfb911771b`; it was fetched and matched byte-for-byte against the local source that compiled. Agent 3's README and mailbox were updated.
+- This is a general arithmetic constraint on candidate root parameters, not an exclusion of B2 reach and not a full-source proof. Do not promote it to `results/` or claim Machine C nonhalting.
