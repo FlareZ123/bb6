@@ -56,6 +56,8 @@ structure RestartPath (n b d m : Nat) : Type where
   b0 : Nat
   d0 : Nat
   suffix : OddCone b0 d0 b d L
+  /-- The RestartWalk begins at the right counter of the suffix root. -/
+  hSuffixStart : x0=d0-1
   /-- Absolute source mass at the restart child (relative suffix cost 0). -/
   hStartMass : b0+d0+2*m0+2*n+13=14*2^n
   /-- Source inverse depths and scalar restart costs differ by one. -/
@@ -109,6 +111,7 @@ theorem restart_path_after_deep
     b0 := 2*k-4
     d0 := cInv+4
     suffix := OddCone.root
+    hSuffixStart := by omega
     hStartMass := hmassPost
     hDepths := by simp [oddConeDepths]
   }
@@ -158,6 +161,7 @@ theorem restart_path_extend
     b0 := path.b0
     d0 := path.d0
     suffix := OddCone.parent bp dp path.L t k cInv path.suffix hb hb4 hd hi hk hc
+    hSuffixStart := path.hSuffixStart
     hStartMass := path.hStartMass
     hDepths := by
       simp [oddConeDepths, List.map_append, path.hDepths]
