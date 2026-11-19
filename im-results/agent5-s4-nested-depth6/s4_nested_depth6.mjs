@@ -53,6 +53,12 @@ function prefixStep(p, c) {
   return p;
 }
 
+let trackFullSuffixEvents = false;
+let activeYBlock = 0;
+let activeYGate = -1;
+let activeYBlockMaxDepth = 0;
+const yFullSuffixEvents = [];
+
 function gate(c, xs) {
   const out = [];
   let a = xs.length === 0 ? c - 1n : xs[0] + c;
@@ -62,6 +68,28 @@ function gate(c, xs) {
     out.push(a / 2n);
     a = xs[i] + a / 2n + 1n;
     i++;
+  }
+
+  if (trackFullSuffixEvents) {
+    if (i > activeYBlockMaxDepth) activeYBlockMaxDepth = i;
+    if (i === xs.length) {
+      const numerator = weightedW(xs) + c;
+      const denominator = 1n << BigInt(Math.max(0, xs.length - 1));
+      assert(numerator % denominator === 0n,
+        "full-suffix carry did not give an integral terminal quotient");
+      const quotient = numerator / denominator;
+      let oddPart = quotient;
+      while (oddPart > 0n && oddPart % 2n === 0n) oddPart /= 2n;
+      yFullSuffixEvents.push({
+        block: activeYBlock,
+        gate: activeYGate,
+        offset: String(c),
+        length: xs.length,
+        quotient: String(quotient),
+        oddPart: String(oddPart),
+        halts: oddPart === 1n
+      });
+    }
   }
 
   if ((a & 1n) === 1n) {
@@ -84,7 +112,10 @@ function gate(c, xs) {
 
 function applyWord(word, xs) {
   let state = xs;
+  let index = 0;
   for (const c of word) {
+    if (trackFullSuffixEvents) activeYGate = index;
+    index++;
     state = gate(c, state);
     if (state === null) return null;
   }
@@ -281,6 +312,46 @@ yMass.headAdds = Ydata.adds;
 const tailAfterY = applyWord(Y, tailAfterX.slice(8));
 assert(tailAfterY !== null, "halt in one Y block");
 
+// Continue the exact BigInt Y-word action for 1,000 additional blocks.
+// A full-suffix event is the only place where the terminal quotient is formed;
+// its odd part equals 1 exactly when the original source gate halts.
+const Y_SCAN_ADDITIONAL_BLOCKS = 1000;
+trackFullSuffixEvents = true;
+let yScanState = tailAfterY;
+let yScanHaltBlock = null;
+let yScanLengthChanges = [];
+let yScanDepthRecords = [];
+let yScanMaxDepth = 0;
+for (let block = 2; block <= Y_SCAN_ADDITIONAL_BLOCKS + 1; block++) {
+  activeYBlock = block;
+  activeYGate = -1;
+  activeYBlockMaxDepth = 0;
+  const oldLength = yScanState.length;
+  yScanState = applyWord(Y, yScanState);
+  if (activeYBlockMaxDepth > yScanMaxDepth) {
+    yScanMaxDepth = activeYBlockMaxDepth;
+    yScanDepthRecords.push({ block, maxCarryDepth: yScanMaxDepth });
+  }
+  if (yScanState === null) {
+    yScanHaltBlock = block;
+    break;
+  }
+  if (yScanState.length !== oldLength)
+    yScanLengthChanges.push({ block, from: oldLength, to: yScanState.length });
+}
+trackFullSuffixEvents = false;
+const yBlockScan = {
+  additionalBlocks: Y_SCAN_ADDITIONAL_BLOCKS,
+  totalBlocksFromYStart: yScanHaltBlock ?? (Y_SCAN_ADDITIONAL_BLOCKS + 1),
+  haltBlock: yScanHaltBlock,
+  lengthChanges: yScanLengthChanges,
+  fullSuffixEvents: yFullSuffixEvents,
+  maxCarryDepthRecords: yScanDepthRecords,
+  finalLength: yScanState === null ? null : yScanState.length,
+  finalWeightedMass: yScanState === null ? null : String(weightedW(yScanState)),
+  finalLastFiveDigits: yScanState === null ? null : show(yScanState.slice(-5))
+};
+
 // The terminal-quotient experiment requested in the Critic's 14 November note.
 // This is a counterexample to the proposed (W mod 31, length mod 5) quotient,
 // not a halt on the authentic blank-root orbit.
@@ -305,7 +376,7 @@ assert(weightedW(terminalSyntheticTail) === terminalSyntheticW,
 assert(terminalSyntheticTail.length === tailAfter28.length &&
   weightedMod(terminalSyntheticTail, 31n) === terminalRootWmod31,
   "synthetic tail does not share the proposed quotient state");
-assert(mass(terminalSyntheticTail) + terminalFirstOffset === terminalPower,
+assert(weightedW(terminalSyntheticTail) + terminalFirstOffset === terminalPower,
   "synthetic terminal power equation failed");
 assert(gate(terminalFirstOffset, terminalSyntheticTail) === null,
   "source G did not halt on the constructed power gate");
@@ -359,6 +430,7 @@ console.log(JSON.stringify({
     W_sevenDigit: wCycle,
     X_eightDigit: xCycle
   },
+  yBlockScan,
   terminalQuotientObstruction,
   quotientNonClosure,
   states: {
