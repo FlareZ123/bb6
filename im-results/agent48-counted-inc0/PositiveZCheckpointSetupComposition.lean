@@ -422,6 +422,94 @@ def setupL2 (A L : Nat) : List Bool :=
   [true,true,true,false,true,true,true]
 
 /-- The sole z-independent left-tail identity still needed after B6. -/
+/-- Shifted 010-to-100 rotation identities used to reconcile the two
+presentations of the residual left context. -/
+def setupD010pow : Nat → List Bool
+  | 0 => []
+  | n+1 => [false,true,false] ++ setupD010pow n
+
+theorem setupShift10_short (n : Nat) :
+    [true,false] ++ setupD010pow n ++ [false,true,true] =
+    [true,false,false] ++ setupD100pow n ++ [true,true] := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      simp only [setupD010pow, setupD100pow, List.append_assoc]
+      change [true,false,false] ++
+          ([true,false] ++ setupD010pow n ++ [false,true,true]) =
+        [true,false,false] ++
+          ([true,false,false] ++ setupD100pow n ++ [true,true])
+      rw [ih]
+
+theorem setupShift11 (n : Nat) :
+    [true,true] ++ setupD010pow n ++ [false,true,true] =
+    [true,true,false] ++ setupD100pow n ++ [true,true] := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      simp only [setupD010pow, setupD100pow, List.append_assoc]
+      change [true,true,false] ++
+          ([true,false] ++ setupD010pow n ++ [false,true,true]) =
+        [true,true,false] ++
+          ([true,false,false] ++ setupD100pow n ++ [true,true])
+      rw [setupShift10_short n]
+
+theorem setupShift10_long (n : Nat) :
+    [true,false] ++ setupD010pow n ++
+        [false,true,true,true,false,true,true,true] =
+    [true,false,false] ++ setupD100pow n ++
+        [true,true,true,false,true,true,true] := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      simp only [setupD010pow, setupD100pow, List.append_assoc]
+      change [true,false,false] ++
+          ([true,false] ++ setupD010pow n ++
+            [false,true,true,true,false,true,true,true]) =
+        [true,false,false] ++
+          ([true,false,false] ++ setupD100pow n ++
+            [true,true,true,false,true,true,true])
+      rw [ih]
+
+/-- The original checkpoint-dossier word
+11 ++ (010)^(A+1) ++ 011 ++ 110 ++ (010)^L ++ 011 ++ 101 ++ 11. -/
+def setupEll1 (A L : Nat) : List Bool :=
+  [true,true] ++ setupD010pow (A+1) ++
+  [false,true,true,true,true,false] ++ setupD010pow L ++
+  [false,true,true,true,false,true,true,true]
+
+/-- Agent 24's 110/100 presentation is exactly the same residual word. -/
+theorem setupEll1_eq_setupL2 (A L : Nat) :
+    setupEll1 A L = setupL2 A L := by
+  unfold setupEll1 setupL2
+  simp only [List.append_assoc]
+  calc
+    [true,true] ++ setupD010pow (A+1) ++
+        ([false,true,true] ++ [true,true,false]) ++
+        setupD010pow L ++ [false,true,true,true,false,true,true,true]
+      =
+        ([true,true] ++ setupD010pow (A+1) ++ [false,true,true]) ++
+        ([true,true,false] ++ setupD010pow L ++
+          [false,true,true,true,false,true,true,true]) := by
+            simp [List.append_assoc]
+    _ =
+        ([true,true,false] ++ setupD100pow (A+1) ++ [true,true]) ++
+        ([true,true,false] ++ setupD010pow L ++
+          [false,true,true,true,false,true,true,true]) := by
+            rw [setupShift11 (A+1)]
+    _ =
+        [true,true,false] ++ setupD100pow (A+1) ++ [true,true,true] ++
+        ([true,false] ++ setupD010pow L ++
+          [false,true,true,true,false,true,true,true]) := by
+            simp [List.append_assoc]
+    _ =
+        [true,true,false] ++ setupD100pow (A+1) ++ [true,true,true] ++
+        ([true,false,false] ++ setupD100pow L ++
+          [true,true,true,false,true,true,true]) := by
+            rw [setupShift10_long L]
+    _ = setupL2 A L := by
+          simp [setupD100pow, List.append_assoc]
+
 def SetupB6LeftTail (T : Int → Bool) (h : Int) (A L : Nat) : Prop :=
   ∀ i : Nat,
     (setupB6Config T h L A).tape
