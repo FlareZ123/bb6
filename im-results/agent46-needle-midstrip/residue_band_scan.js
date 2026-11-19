@@ -1,8 +1,24 @@
 #!/usr/bin/env node
-// Exact enumeration of the residue-cut hypotheses (R) in RESIDUE-CUT-EXTENSION.md.
-// This checks range counts only; the all-r proof is the accompanying paper argument.
+// Exact BigInt enumeration of the old and wider residue-cut hypotheses.
+// This checks finite range counts only; the all-r arithmetic proof is in
+// CancellationMidBandResidue.lean and WIDE-CUT-EXPONENT.md.
 
 function ceilDiv(a, b) { return (a + b - 1n) / b; }
+
+function rangesOf(values) {
+  const ranges = [];
+  let start = null, previous = null;
+  for (const s of values) {
+    if (start === null) start = s;
+    else if (s !== previous + 1n) {
+      ranges.push([start.toString(), previous.toString()]);
+      start = s;
+    }
+    previous = s;
+  }
+  if (start !== null) ranges.push([start.toString(), previous.toString()]);
+  return ranges;
+}
 
 function scan(rNumber) {
   const r = BigInt(rNumber);
@@ -12,35 +28,45 @@ function scan(rNumber) {
 
   const lowerByCase = ceilDiv(a, 2n * r - 1n);
   const lower = lowerByCase > d ? lowerByCase : d;
-  const upper = a / r;
-  const oldUpper = (a - d) / (2n * r - 2n);
+  const oldUpper = a / r;
+  const oldMiddleUpper = (a - d) / (2n * r - 2n);
+  const wideUpper = (2n * a - 2n * d - 1n) / (2n * r - 2n);
 
-  const ranges = [];
-  let start = null, previous = null;
-  let count = 0n, extensionCount = 0n;
+  const oldValues = [];
+  const wideValues = [];
+  let oldNotWide = 0n;
 
-  for (let s = lower; s <= upper; s++) {
+  for (let s = lower; s <= wideUpper; s++) {
     const cut = (a + s - 1n) % s + 1n;
-    if (cut >= d) {
-      count++;
-      if (s > oldUpper) extensionCount++;
-      if (start === null) start = s;
-      previous = s;
-    } else if (start !== null) {
-      ranges.push([start.toString(), previous.toString()]);
-      start = null;
-      previous = null;
-    }
+    if (cut < d) continue;
+
+    if (r * s <= a) oldValues.push(s);
+
+    const E = 2n * a - (2n * r - 2n) * s - cut;
+    if (E >= d + 1n) wideValues.push(s);
   }
-  if (start !== null) ranges.push([start.toString(), previous.toString()]);
+
+  const wideSet = new Set(wideValues.map(String));
+  for (const s of oldValues) if (!wideSet.has(String(s))) oldNotWide++;
+
+  const additional = wideValues.filter(s => r * s > a);
+  const beyondOldMiddle = wideValues.filter(s => s > oldMiddleUpper);
 
   return {
-    r: rNumber, a: a.toString(), d: d.toString(),
-    sLower: lower.toString(), sUpper: upper.toString(),
-    oldUpper: oldUpper.toString(),
-    qualifyingCount: count.toString(),
-    newBeyondOldCount: extensionCount.toString(),
-    ranges
+    r: rNumber,
+    a: a.toString(),
+    d: d.toString(),
+    sLower: lower.toString(),
+    oldResidueUpper: oldUpper.toString(),
+    wideSearchUpper: wideUpper.toString(),
+    oldMiddleUpper: oldMiddleUpper.toString(),
+    oldResidueCount: oldValues.length.toString(),
+    wideResidueCount: wideValues.length.toString(),
+    additionalBeyondOldResidueAndMiddle: additional.length.toString(),
+    wideValuesBeyondOldMiddleEndpoint: beyondOldMiddle.length.toString(),
+    oldSubsetOfWide: oldNotWide === 0n,
+    wideRangeCount: rangesOf(wideValues).length,
+    wideRanges: rangesOf(wideValues).map(([lo, hi]) => [lo, hi])
   };
 }
 
