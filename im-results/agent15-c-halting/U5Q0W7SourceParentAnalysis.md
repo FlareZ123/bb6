@@ -35,7 +35,7 @@ Two branches are already eliminated by source blank-image invariants:
 - (q=0): ((a,k)=(8W-3,;17769+28644u)), whose right coordinate is odd and whose coordinate sum is (35590+57372u\equiv2\pmod4). Hence `blank_no_odd_sum_two` excludes it.
 - (q=1): ((a,k)=(2W-3,;24450+39417u)). If (u\equiv1\pmod4), it is odd/odd with sum (28903+46599u\equiv2\pmod4), so `blank_no_odd_sum_two` excludes it. The cases (u\equiv3\pmod4) and (u) even remain.
 
-Higher (q) occur only for even (u), when (W) has additional 2-adic valuation. They have not been closed.
+Higher (q) occur only when (u\\equiv0\\pmod4), since (W\\equiv3u\\pmod4); larger (q) impose the exact stronger condition (2^{2q-2}\\mid W). They have not been closed.
 
 ## One exact w=7 lift
 
