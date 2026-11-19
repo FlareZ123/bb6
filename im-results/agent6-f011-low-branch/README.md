@@ -324,3 +324,12 @@ The unresolved root problem is to characterize the episode-start parameters \((p
 The source theorem transfers a proof that the high-level orbit avoids both halting cases into a nonhalting proof for the original blank-tape machine. Conversely, finding one valid equation with its first-exit inequalities would identify a halting orbit segment.
 
 No finite simulation is used as evidence for either outcome here. No conclusion about F011's halting status is claimed.
+
+
+## 2026-11-19 exact-transcription local Lean check
+
+The standalone `HaltPreimageAudit.lean` has now been recompiled locally with Lean 4.36.0-rc2 against the exact pinned `highLevelNext` transcription. The three declarations concerning the `p=false, r=2, d=3` branch compile, with `#print axioms` reporting `[propext]` for each and no `sorryAx`.
+
+This validates the isolated copied-definition branch audit only. It is not an import-based proof of the upstream source chain, and it does not certify the complete eight-family preimage characterization or the root orbit. `HaltPreimageFamilies.lean` and `HaltPreimageRank.lean` remain uncompiled drafts: replacing Mathlib's `split_ifs` with core `split` has not yet discharged the resulting branch obligations. Earlier rank experiments must be rerun against the corrected exact transcription; an initial scratch copy had incorrect `p=true, r=0` outputs.
+
+A bounded Python comparison of the eight-family predicate against the copied transition map over all `p∈{false,true}`, `k,c<1000` (2,000,000 states) found no discrepancy. This is finite computational evidence, not a universal proof. No BB(6) or F011 halting-status conclusion follows.
