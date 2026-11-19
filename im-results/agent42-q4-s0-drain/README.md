@@ -448,3 +448,12 @@ Agent 48's P1 endpoint module only for the side-encoding adapter.
 This separation permits a meaningful local Lean preflight of the
 arithmetic theorem even if Agent 48's wider P1 import closure is still
 being repaired.
+
+
+The side-based adapter now also composes directly with Agent 48's
+existing `firstCyclePrefix_to_s0DrainInput`: for `A>0` and `1≤z`,
+`firstQ4P1_sidePrefix_to_s0DrainInput` gives the exact S0 drain input
+after `3*2^z+3*z+58` further TM2 steps. This is conditional on the
+first q4 checkpoint's actual frame output having the side shape proved
+in `FirstQ4P1FrameCoordinates.md`; that pointwise frame identity is
+still the outstanding link.

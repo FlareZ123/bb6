@@ -45,4 +45,24 @@ theorem firstQ4P1Tape_eq_firstCycleCheckpointTape
 #print axioms firstQ4P1Left_eq_firstCycleCheckpointLeft
 #print axioms firstQ4P1Tape_eq_firstCycleCheckpointTape
 
+
+/-- Once the root checkpoint has been identified with its canonical
+side-based tape, Agent 48's existing P1 prefix theorem applies directly.
+This is a transition theorem from the side encoding, not yet from the
+actual q4FrameAt output of firstQ4Checkpoint_run. -/
+theorem firstQ4P1_sidePrefix_to_s0DrainInput
+    (L A z : Nat) (hA : 0 < A) (hz : 1 ≤ z) :
+    run tm2 (3*2^z+3*z+58)
+      ⟨4,1,firstQ4P1Tape L A z⟩ =
+    some (s0Config
+      (firstCycleEndpointLeft z (firstQ4P1Width L A)
+        (firstQ4P1Value L A))
+      (2^z-1) (2^(2^z-1)-1) 0 (firstCycleEndpointHead z)) := by
+  rw [firstQ4P1Tape_eq_firstCycleCheckpointTape L A z hA]
+  exact firstCyclePrefix_to_s0DrainInput z
+    (firstQ4P1Width L A) (firstQ4P1Value L A)
+    hz (firstQ4P1Value_lt L A hA)
+
+#print axioms firstQ4P1_sidePrefix_to_s0DrainInput
+
 end BB6Coverage.Agent42FirstQ4P1Reparam
