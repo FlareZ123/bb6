@@ -450,6 +450,23 @@ arithmetic theorem even if Agent 48's wider P1 import closure is still
 being repaired.
 
 
+The first Lean 4.36.0-rc2 isolated preflight exposed four proof-script
+issues in this module (a namespace-qualified order lemma, a non-core
+normalization tactic, a rewrite that altered both sides of the exponent
+identity, and an exponent-associativity mismatch in the BinDec rewrite).
+These have been repaired in the current source. The corrected arithmetic
+module compiles in a local isolated harness using the verbatim source
+slice needed here: `d0`, `d1`, `lh`, `d1pow`, `binaryCounterFuel`,
+`binDec`, and the source `binDec_odd` theorem. The six exported axiom
+profiles are all exactly `[propext, Quot.sound]`.
+
+**Scope of this check:** the harness compiled the exact arithmetic
+proof against that verbatim encoder slice; it did not compile the full
+`S1Encoder.lean` / `ChampionRootBridge` import closure, nor
+`FirstQ4P1FrameLeft.lean`. Do not report the complete source module or
+the actual q4 frame-to-side bridge as accepted yet.
+
+
 The side-based adapter now also composes directly with Agent 48's
 existing `firstCyclePrefix_to_s0DrainInput`: for `A>0` and `1≤z`,
 `firstQ4P1_sidePrefix_to_s0DrainInput` gives the exact S0 drain input
