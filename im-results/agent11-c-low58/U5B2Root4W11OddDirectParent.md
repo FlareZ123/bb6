@@ -27,53 +27,68 @@ All W11 candidates have `r ≡ 4 (mod 16)`, so write `r=16R+4`. The divided root
 `9+22R+11w ≡ 0 (mod 32)`.
 If `r ≡ 84 (mod 256)`, then `R ≡ 5 (mod 16)`, so `11w ≡ 9 (mod 32)`, hence `w ≡ 27 (mod 32)`. This is exactly `w=16q+11` with q odd. The complementary `r ≡ 212 (mod 256)` gives `w ≡ 11 (mod 32)`, i.e. q even, which is not covered by the reduction below.
 
-## Exact parent fan for P(q), q odd
+## Exact parent fan for P(q): two candidates
 
-Suppose (P(q)) is blank-reachable. Since (x>5), it has a positive-length source predecessor ((a,b)). Apply the complete original-source grammar `section_preimage_all_iff`.
+Suppose P(q) is blank-reachable. Since x>5, it has a positive-length source predecessor (a,b). The complete original-source grammar section_preimage_all_iff leaves exactly two candidates:
 
-- The (a=0) recursive branch would make (x+y) divisible by eight, impossible because (x+y) is odd. Its exceptional (k=1) output is ((0,4)), not this target.
-- The (a=1) finite outputs have right coordinate at most seven, while (y\ge12). Its high branch requires (16\mid x+y+1). But
-  [
-  x+y+1=7021907152+9647698200q
-        =8(877738394+1205962275q).
-  ]
-  For odd (q), the factor in parentheses is odd, so this has exact valuation three; the (a=1) high branch is impossible.
-- The (a\ge2,b=0) branch has right output two, impossible.
-- The even-(a) bounce branch makes (x+y) even, impossible.
-- The odd-(a) bounce branch has a (y=3) exception, also impossible. In its high branch, (4\mid(2a+6)), so (2^{n+2}\mid x+y+1). The valuation-three identity gives (n\le1). The cost equation has odd right side (x+2y), while (2b+a+7+3n) has parity (n); hence (n) is odd and therefore (n=1).
+- the direct parent
+  \[
+  Q(q)=(x+y-2,(y-2)/2)
+      =(7021907149+9647698200q,\;
+        1617666871+2222581620q);
+  \]
+- the high odd-a bounce parent
+  \[
+  A(q)=(a,b)=
+  (1755476785+2411924550q,\;
+   4250882050+5840468445q).
+  \]
 
-For this sole possible odd-(a) bounce depth, the two source equations force
-[
-a=1755476785+2411924550q,
+The other branches are excluded as follows. The zero-left recursive branch makes x+y divisible by eight, impossible because x+y is odd; its exceptional output is (0,4). The one-left finite outputs have right coordinate at most seven, while y≥12. Its high branch requires 16 | x+y+1, but
+\[
+x+y+1=8(877738394+1205962275q)
 \]
-[
-b=4250882050+5840468445q.
-]
-For odd (q), (a) is odd, (b\ge5) is odd, and
-[
-a+b=6006358835+8252392995q\equiv2\pmod4.
-]
-This contradicts the source-certified blank-image obstruction `blank_no_odd_sum_two`.
+has exact 2-adic valuation three for odd q. The k=0 branch has right output two. The even-a bounce branch makes x+y even. In the odd-a bounce branch the y=3 exception is impossible; the high branch has 4 | (2a+6), so the same valuation-three identity forces n≤1. Its cost equation forces n odd, hence n=1, and the two source equations give exactly A(q) above.
 
-Consequently **every** possible predecessor of (P(q)) is the direct parent
-[
-Q(q)=(x+y-2,(y-2)/2)
-]
-with
-[
-Q(q)=
-(7021907149+9647698200q,\;
- 1617666871+2222581620q).
-]
-The direct edge (Q(q)\to P(q)) is genuine by the direct branch of `section_preimage_all_iff`. Thus the exact reduction is
-[
+The final exclusion of A(q) depends on q's residue; it is **not** valid for every odd q.
+
+- If \(q\equiv1\pmod4\), then
+  \[
+  a+b=6006358835+8252392995q\equiv2\pmod4.
+  \]
+  Since b is odd and at least five, the source-certified theorem blank_no_odd_sum_two excludes A(q).
+
+- If \(q\equiv3\pmod{16}\), write q=16v+3. Then
+  \[
+  A(q)=
+  (8991250435+38590792800v,\;
+   21772287385+93447495120v).
+  \]
+  Its coordinates are odd, its right coordinate is at least five, and
+  \[
+  A_x+A_y=30763537820+132038287920v\equiv12\pmod{16}.
+  \]
+  Thus the source-certified oddodd_lowval_blank_reach_iff applies and reduces A(q) to
+  \[
+  D_A(v)=
+  (15381768908+66019143960v,\;
+   18577028145+79733319540v).
+  \]
+  Here \(D_{A,y}\) is odd and at least five, while
+  \[
+  D_{A,x}+D_{A,y}
+  =33958797053+145752463500v\equiv1\pmod4.
+  \]
+  The source-certified theorem BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one excludes D_A(v), hence A(q) is unreachable.
+
+Consequently the exact reduction
+\[
 CReach(P(q))\iff CReach(Q(q))
-\qquad(q\text{ odd}).
-]
-
+\]
+is justified for \(q\equiv1\pmod4\) and, by the separate low-valuation argument above, for \(q\equiv3\pmod{16}\). It is **not established here** for q≡7, 11, or 15 (mod 16). In particular, oddness of q alone is insufficient.
 ## Remaining dyadic split
 
-The direct parent (Q(q)) is odd/odd and
+On the q-sectors where the alternate A(q) parent has been excluded (q≡1 mod4 or q≡3 mod16), the remaining direct parent Q(q) is odd/odd and
 [
 Q_x+Q_y=8639574020+11870279820q
        =4(2159893505+2967569955q).

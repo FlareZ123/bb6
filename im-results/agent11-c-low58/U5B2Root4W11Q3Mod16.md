@@ -30,17 +30,39 @@ The two rows are:
 | 3924 | 245 | 59 | 3 |
 | 1876 | 117 | 315 | 19 |
 
-Thus (w=16q+11) with (q\equiv3\pmod{16}). In particular q is odd, so the W11 direct-parent reduction applies:
-[
-CReach(P(q))\iff CReach(Q(q)),
-]
-where
-[
+Thus (w=16q+11) with (q\equiv3\pmod{16}). The complete source parent fan for P(q) has both the direct parent Q(q) and a high odd-a bounce parent A(q); the latter must be excluded before using the Q branch.
+
+## 2. The alternate high odd-a parent of P(q) is unreachable
+
+Write q=16v+3. The odd-a bounce equations force
+\[
+A(q)=(8991250435+38590792800v,\;
+      21772287385+93447495120v).
+\]
+Its coordinates are odd, its right coordinate is at least five, and
+\[
+A_x+A_y=30763537820+132038287920v\equiv12\pmod{16}.
+\]
+The source-certified oddodd_lowval_blank_reach_iff therefore reduces any blank reach of A(q) to
+\[
+D_A(v)=(15381768908+66019143960v,\;
+        18577028145+79733319540v).
+\]
+Here D_A has even left coordinate, odd right coordinate at least five, and
+\[
+D_{A,x}+D_{A,y}=33958797053+145752463500v\equiv1\pmod4.
+\]
+The source-certified BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one excludes D_A(v), hence A(q) is unreachable. The direct parent is therefore the only possible source parent of P(q), and
+\[
+CReach(P(q))\iff CReach(Q(q)).
+\]
+
+The direct parent is
+\[
 Q(q)=(7021907149+9647698200q,\;
       1617666871+2222581620q).
-]
-
-## 2. Q has a unique low-valuation parent D2
+\]
+## 3. Q has a unique low-valuation parent D2
 
 Write (q=4t+3). Since q is 3 modulo 16, (t\equiv0\pmod4). The Q coordinate sum is
 [
@@ -58,7 +80,7 @@ D2_x+D2_y+1
 ]
 Its exact 2-adic valuation is two.
 
-## 3. The source-certified valuation-two inverse forces a forbidden parent
+## 4. The source-certified valuation-two inverse forces a forbidden parent
 
 For (t=4v), D2 is even/odd, its right coordinate is at least five, and
 `(D2_x+D2_y+1)%8=4`. Apply the existing source-certified theorem
