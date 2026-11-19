@@ -210,37 +210,30 @@ Agent44's prior [directed-drift and zero-writer work](../agent44-drift-closure/R
 
 The remaining open sector retains genuine long-halting and possible nonhalting machines, including the historical undecided roots. No complete universal upper bound, exact champion runtime, or exhaustive global closure exists. Closing BB(6) requires a finished all-table certificate with a proved attained score in the standard step semantics.
 
-## Finite-word translated-tail integration (2026-11-16)
+## Finite-word translated-tail certificates and one exact depth-four leaf
 
-The global physical lasso frontier now has a source-level extension candidate in
-[WordLassoTraceAudit.lean](WordLassoTraceAudit.lean). It composes the existing
-`lassoDecisionOracle` with Agent 6's `finiteWordBiOracle`, which checks a genuine
-blank-origin entry followed by a same-state translating macro that preserves
-an arbitrary finite set of marks on the forward tail. The reflected branch
-covers left-moving tails. Unlike the blank-ray entry oracle, the finite-word
-oracle can preserve one or more marked cells ahead of the head; its generic
-soundness theorem was already checked against the original source semantics
-in Agent 6's coverage workflow.
+Agent 6's `WordOracle.lean` generalizes the existing fresh-ray certificate to an arbitrary finite word on the forward tail. `finiteWordEntryCheck_sound` connects a genuine blank-origin prefix to a finite-support right-tail configuration, then proves that a same-state macro with positive displacement and nonnegative intermediate head positions repeats forever. Marks behind the moving head are unconstrained. The reflected oracle covers the opposite direction. The generic theorem is source-semantic: it uses `finitePartialRun_sound` to connect the finite-support simulator to the original two-way infinite tape, and `entry_tail_pattern_never` for the all-time pumping argument.
 
-The new global audit retains the actual-tape `firstUnknownPhysical` split
-policy and proves an exhaustive-or-open frontier plus exact `25^12` mass
-conservation. A regression theorem uses the two-mark witness from
-`WordOracle.lean`, which the single-marker oracle rejects at the same small
-limits. `WordLassoTraceMassEval.lean` evaluates the new depth-three and
-depth-four reports with `entryLimit=3`, `macroLimit=4`, and the existing
-physical/lasso limits.
+A concrete two-mark witness fixes exactly these five original input rows:
 
-**Verification status at this checkpoint:** the wrapper, global audit, and
-workflow integration are written but have not yet passed a fresh CI run.
-The 663-machine bounded word-macro screen (entry prefix 10,000, macro length
-32, right-tail word size at most 8) found no hits; this is only a bounded
-negative screen and does not show that those machines halt or that longer or
-different certificates do not exist. No numerical increase in global
-certified mass is claimed until the new report is evaluated.
+| Input | Action | Conventional notation |
+| --- | --- | --- |
+| A/0 | write 1, move right, enter B | 1RB |
+| B/0 | write 1, move left, enter C | 1LC |
+| C/1 | write 1, move right, enter D | 1RD |
+| D/1 | write 1, move right, enter E | 1RE |
+| E/0 | write 1, move left, enter C | 1LC |
 
-**Next:** source-compile the new global wrapper and run the optional word-mass
-evaluation once. If the interpreted report improves the previous 68.066560%
-depth-four frontier, preserve the exact counts with their existing VM-versus-
-kernel qualification; then prioritize a genuinely stronger certificate for
-the historical open roots rather than increasing finite search limits
-without a structural reason.
+From the blank root, the first two moves enter C at head position 0 with the right-tail word `11`. The three-move macro C/1, D/1, E/0 returns to C at head position +1 and recreates the same word `11` relative to the new head. Its intermediate head offsets are 0, 1, 2, 1. Thus every compatible original machine repeats this translated finite-word macro forever; no transition outside the five listed rows is consulted. `twoMark_word_cover 6` is the source-level `Cover (DecidedBelow 6)` certificate for the five-slot cylinder.
+
+### Integration into the existing depth-four physical frontier
+
+`WordLassoLeafGraft.lean` grafts this certificate into the existing `depth4ResidualAudit`; it does not create another global classifier or change the audit's branch policy.
+
+- The exact four-slot parent is `twoMarkP4`: A/0=1RB, B/0=1LC, C/1=1RD, D/1=1RE. It has (25^8=152{,}587{,}890{,}625) compatible raw tables. The theorem `twoMarkParent_open_all` now quantifies over **every** completion of this parent, without assuming E/0, and proves that the authentic blank-root path reaches the existing depth-four open leaf.
+- The five-slot child adds E/0=1LC. It has (25^7=6{,}103{,}515{,}625) completions, exactly one of the 25 one-row refinements of the parent. The theorem `twoMarkWordPump_is_parent_child` proves this exact refinement relation.
+- `twoMarkGraftedAudit_closes_source` and `twoMarkGraftedAudit_decides_source` state that every completion of this child is closed by the augmented audit. `twoMarkGraftedAudit_exhaustive` keeps every other full table either certified or explicitly open, and `twoMarkGraftedAudit_conserves` preserves the exact total mass (25^{12}). The 24 unmatched E/0 outcomes are not discarded or assigned a verdict by this certificate.
+
+**Verification boundary:** the finite-word source theorem and the generic graft-closure interface have prior source-level Lean work; Agent 8 locally compiled the corrected `IncrementalAudit.lean` closure interface under Lean 4.36.0-rc2 with no `sorryAx`. However, the current exact `WordLassoLeafGraft.lean` integration (including the full-parent strengthening) has **not yet passed a local preflight or fresh CI**. The repaired `MarkerOracle.lean` membership proof is now on main (commit `8e77e697409bf288311402ceb0dfbd56642fa000`); the older failure in CI 44518351623 predates that repair. The existing manual `.github/workflows/agent32-zero-path-global.yml` has an opt-in `verify_leaf_graft` target. Do not dispatch it until a working local Lean 4.36.0-rc2 runtime has compiled the exact dependency closure and its exported axiom profiles have been inspected.
+
+This is a source-proof candidate for one precise (25^7)-table child, not yet an accepted new result, a numeric global-report increase, a machine decision beyond that cylinder, or a universal BB(6) upper bound. The 663-machine bounded word-macro screen (entry prefix 10,000, macro length 32, right-tail word size at most 8) found no hits; that finite negative screen remains auxiliary and does not constrain longer or different certificates.
