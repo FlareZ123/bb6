@@ -79,6 +79,18 @@ private theorem root32_u_parameter_from_mods (u : Nat)
   rw [hu]
   omega
 
+/-- The exact residual root equation forces the B2 and P4 root
+parameters to have the same parity. -/
+theorem root_equation_parity (r E u : Nat)
+    (hRoot : 18018+211*u+22155*r=20*2^(E-13)) :
+    u%2 = r%2 := by
+  have hdiv : 2 ∣ 18018+211*u+22155*r := by
+    refine ⟨10*2^(E-13), ?_⟩
+    rw [hRoot]
+    omega
+  rcases hdiv with ⟨n, hn⟩
+  omega
+
 /-- The exact residual root equation on the root-index class r=32 (mod 64)
 forces the B2 parameter into u=1802+6720*t. -/
 theorem root32_u_parameter_of_exact (r E u : Nat)
@@ -101,6 +113,7 @@ theorem root32_u_parameter_of_exact (r E u : Nat)
     (root32_u_mod64 r u hr hmod64)
     (root32_u_mod105 r u hmod105)
 
+#print axioms root_equation_parity
 #print axioms root32_u_parameter_of_exact
 
 end BB6.Agent3U5B2Root32ParameterBridge
