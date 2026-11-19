@@ -196,3 +196,45 @@ with no sorryAx. The full U5B2Root32.lean module, including its
 original-source parent-fan dependencies and final composed exclusion,
 has not yet been compiled. This is an intermediate result only; it does
 not close other root-index strata or decide Machine C / BB(6).
+
+## 19 November update — the r=12 (mod 16) branch
+
+The complementary low-valuation branch r=4 (mod 8) can be sharpened on
+the subcylinder r=12 (mod 16). The exact residual equation and exponent
+relation imply
+
+    u = 542 + 840*w,    w = 0 (mod 2).
+
+The proof uses the same exponent residue (E-13)=8 (mod 12): modulo 105
+the root equation gives u=17 (mod 105); modulo 8, together with
+r=4 (mod 8), it gives u=6 (mod 8). CRT gives u=542 (mod 840).
+Modulo 64, the root equation and r=12 (mod 16) then force w even.
+
+For this parameterization, P4 has the exact low-valuation conditions
+needed by OddOddLowVal: x,y are odd, y>=5, x+y=0 (mod 4), and
+x+y is not 0 (mod 16). Its unique blank-reachability predecessor is
+
+    D(w) = (270923836+419829900*w,
+            148737413+230486970*w).
+
+When w is even, D(w) is even/odd, its coordinate sum is divisible by
+three, and its sum-plus-one is 2 (mod 4). The existing
+blank_no_even_odd_three_divisible theorem therefore excludes D(w),
+and OddOddLowVal transfers that exclusion to P4.
+
+I factored the B2 source chain into b2_even_reach_implies_p4_reach:
+for every even u, a blank-reachable B2 target would force its P4 target
+to be blank-reachable. The second B2 parent is excluded by the existing
+odd-sum-two theorem. Composing this with the new root4 parameter bridge
+gives a draft all-time exclusion for the B2 root-index cylinder
+r=12 (mod 16), disjoint from the previously isolated r=32 (mod 64)
+cylinder and from the u=0 (mod 4) family.
+
+**Verification boundary:** U5B2Root4ParameterBridge.lean compiles locally
+with axiom profile [propext, Quot.sound], no sorryAx. The P4 reduction
+and final B2 composition were checked locally against explicit interface
+stubs for the already-established source lemmas and the factored B2
+reach-to-P4 implication; these checks are not original-source
+certification. U5B2Root32.lean now imports OddOddLowVal and the root4
+bridge, but the complete source dependency closure has not yet been
+compiled. Keep this result in im-results/ pending that audit.
