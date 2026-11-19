@@ -4,19 +4,25 @@ namespace BB6Coverage
 
 /-- Attach an authenticated partial-cylinder certificate to a fully open
 leaf, branching on source-assigned slots not already fixed by that leaf. -/
-private noncomputable def graftFromSlots {good : Machine → Prop}
+/-- Construct the graft and its source-closure proof together. Keeping the
+audit and closure invariant in one recursion avoids a fragile second
+unfolding of the dependent frontier tree. -/
+private noncomputable def graftFromSlotsWithClosure {good : Machine → Prop}
     (src : PartialMachine) (cert : Cover good src)
     (p : PartialMachine) (remaining : List Slot)
     (hprocessed : ∀ s, s ∉ remaining → ∀ t, src s = some t → p s = some t) :
-    FrontierAudit good p := by
+    { audit : FrontierAudit good p //
+      ∀ m, compatible p m → compatible src m → ¬ audit.open m } := by
+  classical
   induction remaining generalizing p with
   | nil =>
-      apply FrontierAudit.certified p
-      apply Cover.leaf p
-      intro full hm
-      apply cert.sound full
-      intro s t ht
-      exact hm s t (hprocessed s (by simp) t ht)
+      refine ⟨.certified p (.leaf p (by
+        intro full hm
+        apply cert.sound full
+        intro s t ht
+        exact hm s t (hprocessed s (by simp) t ht))), ?_⟩
+      intro m hm hs hopen
+      exact hopen
   | cons slot rest ih =>
       by_cases hsrc : src slot = none
       · have hproc : ∀ s, s ∉ rest → ∀ t, src s = some t → p s = some t := by
@@ -27,40 +33,59 @@ private noncomputable def graftFromSlots {good : Machine → Prop}
             contradiction
           · exact hprocessed s (by simp [heq, hs]) t ht
         exact ih p hproc
-      · cases ht : src slot with
+      · cases hst : src slot with
         | none => contradiction
         | some t =>
-            cases hp : p slot with
-            | none =>
-                apply FrontierAudit.branch p slot hp
-                intro u hu
+          cases hp : p slot with
+          | none =>
+              have hproc : ∀ s, s ∉ rest → ∀ v, src s = some v →
+                  refine p slot t s = some v := by
+                intro s hsNot v hv
+                by_cases heq : s = slot
+                · subst s
+                  have htv : t = v := Option.some.inj (hst.symm.trans hv)
+                  subst v
+                  simp [refine]
+                · have hOld := hprocessed s (by simp [heq, hsNot]) v hv
+                  simpa [refine, heq] using hOld
+              let child := ih (refine p slot t) hproc
+              refine ⟨.branch p slot hp (fun u hu => by
                 by_cases huEq : u = t
                 · subst u
-                  have hproc : ∀ s, s ∉ rest → ∀ v, src s = some v →
-                      refine p slot t s = some v := by
-                    intro s hs v hv
-                    by_cases heq : s = slot
-                    · subst s
-                      have heqt : t = v := Option.some.inj (ht.symm.trans hv)
-                      subst v
-                      simp [refine]
-                    · have hOld := hprocessed s (by simp [heq, hs]) v hv
-                      simpa [refine, heq] using hOld
-                  exact ih (refine p slot t) hproc
-                · exact FrontierAudit.unresolved (refine p slot u)
-            | some u =>
-                by_cases huEq : u = t
-                · subst u
-                  have hproc : ∀ s, s ∉ rest → ∀ v, src s = some v → p s = some v := by
-                    intro s hs v hv
-                    by_cases heq : s = slot
-                    · subst s
-                      have heqt : t = v := Option.some.inj (ht.symm.trans hv)
-                      subst v
-                      exact hp
-                    · exact hprocessed s (by simp [heq, hs]) v hv
-                  exact ih p hproc
-                · exact FrontierAudit.unresolved p
+                  exact child.1
+                · exact .unresolved (refine p slot u)), ?_⟩
+              intro m hm hs hopen
+              have hmt : m slot = t := hs slot t hst
+              cases hmt
+              have hchild : compatible (refine p slot (m slot)) m := by
+                rw [compatible_refine_iff p m slot hp (m slot)]
+                exact ⟨hm, rfl⟩
+              have hno := child.2 m hchild hs
+              apply hno
+              simpa [FrontierAudit.open] using hopen
+          | some u =>
+              by_cases huEq : u = t
+              · have hproc : ∀ s, s ∉ rest → ∀ v, src s = some v → p s = some v := by
+                  intro s hsNot v hv
+                  by_cases heq : s = slot
+                  · subst s
+                    have htv : t = v := Option.some.inj (hst.symm.trans hv)
+                    subst v
+                    simpa [huEq] using hp
+                  · exact hprocessed s (by simp [heq, hsNot]) v hv
+                exact ih p hproc
+              · refine ⟨.unresolved p, ?_⟩
+                intro m hm hs _
+                have hmu : m slot = u := hm slot u hp
+                have hmt : m slot = t := hs slot t hst
+                exact huEq (hmu.symm.trans hmt)
+
+private noncomputable def graftFromSlots {good : Machine → Prop}
+    (src : PartialMachine) (cert : Cover good src)
+    (p : PartialMachine) (remaining : List Slot)
+    (hprocessed : ∀ s, s ∉ remaining → ∀ t, src s = some t → p s = some t) :
+    FrontierAudit good p :=
+  (graftFromSlotsWithClosure src cert p remaining hprocessed).1
 
 /-- Every inserted proof remains valid for all compatible full tables;
 unmatched alternatives stay explicitly unresolved. -/
@@ -93,66 +118,8 @@ private theorem graftFromSlots_closes_source {good : Machine → Prop}
       (hprocessed : ∀ s, s ∉ remaining → ∀ t, src s = some t → p s = some t)
       (m : Machine), compatible p m → compatible src m →
       ¬ (graftFromSlots src cert p remaining hprocessed).open m := by
-  intro p remaining
-  induction remaining generalizing p with
-  | nil =>
-      intro hprocessed m hm hs
-      simp [graftFromSlots, FrontierAudit.open]
-  | cons slot rest ih =>
-      intro hprocessed m hm hs
-      by_cases hsrc : src slot = none
-      · have hproc : ∀ s, s ∉ rest → ∀ t, src s = some t → p s = some t := by
-          intro s hsNot t ht
-          by_cases heq : s = slot
-          · subst s
-            rw [hsrc] at ht
-            contradiction
-          · exact hprocessed s (by simp [heq, hsNot]) t ht
-        have hno := ih p hproc m hm hs
-        intro hopen
-        exact hno (by simpa [graftFromSlots, hsrc] using hopen)
-      · cases hst : src slot with
-        | none => contradiction
-        | some t =>
-          cases hpSlot : p slot with
-          | none =>
-              have hmt : m slot = t := hs slot t hst
-              have hchild : compatible (refine p slot t) m := by
-                rw [compatible_refine_iff p m slot hpSlot t]
-                exact ⟨hm, hmt⟩
-              have hproc : ∀ s, s ∉ rest → ∀ v, src s = some v →
-                  refine p slot t s = some v := by
-                intro s hsNot v hv
-                by_cases heq : s = slot
-                · subst s
-                  have htv : t = v := Option.some.inj (hst.symm.trans hv)
-                  subst v
-                  simp [refine]
-                · have hOld := hprocessed s (by simp [heq, hsNot]) v hv
-                  simpa [refine, heq] using hOld
-              have hno := ih (refine p slot t) hproc m hchild hs
-              intro hopen
-              apply hno
-              simpa [graftFromSlots, hsrc, hst, hpSlot,
-                FrontierAudit.open, hmt] using hopen
-          | some u =>
-              have hmu : m slot = u := hm slot u hpSlot
-              have hmt : m slot = t := hs slot t hst
-              have hut : u = t := hmu.symm.trans hmt
-              subst u
-              have hproc : ∀ s, s ∉ rest → ∀ v, src s = some v → p s = some v := by
-                intro s hsNot v hv
-                by_cases heq : s = slot
-                · subst s
-                  have htv : t = v := Option.some.inj (hst.symm.trans hv)
-                  subst v
-                  exact hpSlot
-                · exact hprocessed s (by simp [heq, hsNot]) v hv
-              have hno := ih p hproc m hm hs
-              intro hopen
-              apply hno
-              simpa [graftFromSlots, hsrc, hst, hpSlot,
-                FrontierAudit.open] using hopen
+  intro p remaining hprocessed m hm hs
+  exact (graftFromSlotsWithClosure src cert p remaining hprocessed).2 m hm hs
 
 /-- Source-compatible machines are never left in an open terminal after a
 certificate is grafted into an audit. Unmatched source outcomes remain
