@@ -34,7 +34,7 @@ def p2ActualBoundaryStart : FConfig :=
 
 /-- After 73 moves, state 4 is at the old head minus one. -/
 def p2ActualBoundaryEnd : FConfig :=
-  ⟨4, -1, [-12,-11,-10,-9,-8,-7,-4,-2,-1,0,1]⟩
+  ⟨4, -1, [-2,-4,-7,-8,-9,-1,0,1,-10,-11,-12]⟩
 
 theorem p2ActualBoundary_exact :
     fRun tm2 73 p2ActualBoundaryStart =
@@ -79,28 +79,40 @@ theorem p2ActualBoundary_at (T : Int → Bool) (h : Int)
   rcases hcases with
     hx12|hx11|hx10|hx9|hx8|hx7|hx6|hx5|hx4|hx3|hx2|hx1|hx0|hxp1
   · subst x
+    rw [show h + (-12:Int) = h-12 by omega]
     simpa [p2ActualBoundaryStart] using hm12
   · subst x
+    rw [show h + (-11:Int) = h-11 by omega]
     simpa [p2ActualBoundaryStart] using hm11
   · subst x
+    rw [show h + (-10:Int) = h-4-(6:Int) by omega]
     simpa [p2ActualBoundaryStart] using hones 6 (by omega)
   · subst x
+    rw [show h + (-9:Int) = h-4-(5:Int) by omega]
     simpa [p2ActualBoundaryStart] using hones 5 (by omega)
   · subst x
+    rw [show h + (-8:Int) = h-4-(4:Int) by omega]
     simpa [p2ActualBoundaryStart] using hones 4 (by omega)
   · subst x
+    rw [show h + (-7:Int) = h-4-(3:Int) by omega]
     simpa [p2ActualBoundaryStart] using hones 3 (by omega)
   · subst x
+    rw [show h + (-6:Int) = h-4-(2:Int) by omega]
     simpa [p2ActualBoundaryStart] using hones 2 (by omega)
   · subst x
+    rw [show h + (-5:Int) = h-4-(1:Int) by omega]
     simpa [p2ActualBoundaryStart] using hones 1 (by omega)
   · subst x
+    rw [show h + (-4:Int) = h-4-(0:Int) by omega]
     simpa [p2ActualBoundaryStart] using hones 0 (by omega)
   · subst x
+    rw [show h + (-3:Int) = h-3 by omega]
     simpa [p2ActualBoundaryStart] using hm3
   · subst x
+    rw [show h + (-2:Int) = h-2 by omega]
     simpa [p2ActualBoundaryStart] using hm2
   · subst x
+    rw [show h + (-1:Int) = h-1 by omega]
     simpa [p2ActualBoundaryStart] using hm1
   · subst x
     simpa [p2ActualBoundaryStart] using h0
@@ -120,12 +132,47 @@ theorem p2ActualBoundary_end_right_ones
     (BB6Coverage.Agent6Q4Prefix.frameAt
       T h p2ActualBoundaryInside p2ActualBoundaryEnd).tape (h+1) = true := by
   have hm : (h-1)-h = -1 := by omega
+  have hneg : h+(-1:Int) = h-1 := by omega
   have hz : h-h = 0 := by omega
   have hp : (h+1)-h = 1 := by omega
   simp [BB6Coverage.Agent6Q4Prefix.frameAt_state,
     BB6Coverage.Agent6Q4Prefix.frameAt_head,
     BB6Coverage.Agent6Q4Prefix.frameAt_tape,
-    p2ActualBoundaryInside,p2ActualBoundaryEnd,hm,hz,hp]
+    p2ActualBoundaryInside,p2ActualBoundaryEnd,hm,hneg,hz,hp]
+
+
+
+/-- State 4 scans a contiguous rightward one-run without changing the tape. -/
+theorem state4_right_ones (k : Nat) (T : Int → Bool) (h : Int)
+    (hones : ∀ i : Nat, i<k → T (h+(i:Int)) = true) :
+    run tm2 k ⟨4,h,T⟩ = some ⟨4,h+(k:Int),T⟩ := by
+  induction k generalizing T h with
+  | zero =>
+      simp [run]
+  | succ k ih =>
+      have h0 : T h = true := by
+        simpa using hones 0 (by omega)
+      have hstep :
+          run tm2 1 ⟨4,h,T⟩ = some ⟨4,h+1,T⟩ := by
+        have htrans : tm2 ((4:Fin 6),true) = some ⟨true,true,4⟩ := rfl
+        simp [run,rawStep,readSlot,applyMove,h0,htrans]
+        funext x
+        by_cases hx : x=h
+        · subst x
+          simp [h0]
+        · simp [hx]
+      have htail : ∀ i : Nat, i<k → T (h+1+(i:Int)) = true := by
+        intro i hi
+        have hp := hones (i+1) (by omega)
+        have heq : h+1+(i:Int) = h+((i+1:Int)) := by omega
+        rw [heq]
+        exact hp
+      have hrun := ih T (h+1) htail
+      rw [show k+1 = 1+k by omega,run_append,hstep]
+      simp only [Option.bind_some]
+      have hhead : (h+1)+(k:Int) = h+(k+1:Int) := by omega
+      rw [hhead] at hrun
+      exact hrun
 
 /-- A single source transition that writes one cell. -/
 def p2WriteOne (T : Int → Bool) (h : Int) : Int → Bool :=
