@@ -356,12 +356,12 @@ theorem b2_even_parent_fan (u a k : Nat) (hu : u%2=0)
               have hnlt : n<4 := by
                 by_contra hnot
                 have hnge : 4≤n := by omega
-                have h6pow : 2^6∣2^(n+2) :=
-                  Nat.pow_dvd_pow 2 (by omega)
-                have h64 : 64∣x+y+1 := by
-                  have h := Nat.dvd_trans h6pow hpowdiv
+                have h6pow : 64∣2^(n+2) := by
+                  have h := Nat.pow_dvd_pow 2 (show 6≤n+2 by omega)
                   simpa only [show (2:Nat)^6=64 by decide] using h
-                have hmod := Nat.mod_eq_zero_of_dvd h64
+                have h64 : 64∣x+y+1 := Nat.dvd_trans h6pow hpowdiv
+                have hmod : (x+y+1)%64=0 := Nat.mod_eq_zero_of_dvd h64
+                rw [hAmod64] at hmod
                 omega
               have hcost' : 2*k+a+7+3*n=x+2*y := by omega
               have hnEven : n%2=0 := by omega
@@ -499,11 +499,12 @@ theorem p4_r32_parent_fan (t a k : Nat)
   have hnlt : n<4 := by
     by_contra hnot
     have hnge : 4≤n := by omega
-    have h6pow : 2^6∣2^(n+2) := Nat.pow_dvd_pow 2 (by omega)
-    have h64 : 64∣x+y := by
-      have h := Nat.dvd_trans h6pow hpowdiv
+    have h6pow : 64∣2^(n+2) := by
+      have h := Nat.pow_dvd_pow 2 (show 6≤n+2 by omega)
       simpa only [show (2:Nat)^6=64 by decide] using h
-    have hmod := Nat.mod_eq_zero_of_dvd h64
+    have h64 : 64∣x+y := Nat.dvd_trans h6pow hpowdiv
+    have hmod : (x+y)%64=0 := Nat.mod_eq_zero_of_dvd h64
+    rw [hSmod64] at hmod
     omega
   have hncase : n=0 ∨ n=2 := by omega
   rcases hncase with hn0|hn2
@@ -592,6 +593,8 @@ theorem blank_no_p4_root4_even_w (w : Nat) (hw : w%2=0) :
       (270923836+419829900*w) (148737413+230486970*w) := by
     have h := (BB6.Agent3.oddodd_lowval_blank_reach_iff
       x y hxodd hyodd hy5 h4 h16 hsize).mp hP4
+    change (∃ n, BB6.Agent8Section.run secNext n (some (5,1)) =
+      some (270923836+419829900*w,148737413+230486970*w))
     simpa only [hxEq,hyEq] using h
   exact hD hDreach
 
@@ -638,10 +641,7 @@ theorem b2_even_reach_implies_p4_reach (u : Nat) (huEven : u%2=0)
           BB6.Agent8Section.run secNext time (some (5,1)) =
             some (57313+852652*u,6584+97962*u) := by
       simpa [BB6.Agent3.CReach] using hP3reach
-    have hP4run :
-        ∃ time : Nat,
-          BB6.Agent8Section.run secNext time (some (5,1)) =
-            some (63895+950614*u,3291+48981*u) :=
+    have hP4runRaw :=
       (BB6.Agent15.blank_reach_iff_even_right
         (57313+852652*u) (6584+97962*u)
         (by omega) (by omega) (by omega) (by omega)).mp hP3run
@@ -650,7 +650,12 @@ theorem b2_even_reach_implies_p4_reach (u : Nat) (huEven : u%2=0)
           63895+950614*u := by omega
     have hyEq :
         ((6584+97962*u)-2)/2=3291+48981*u := by omega
-    simpa [BB6.Agent3.CReach,hxEq,hyEq] using hP4run
+    have hP4run :
+        ∃ time : Nat,
+          BB6.Agent8Section.run secNext time (some (5,1)) =
+            some (63895+950614*u,3291+48981*u) := by
+      simpa only [hxEq,hyEq] using hP4runRaw
+    simpa [BB6.Agent3.CReach] using hP4run
   · have hP1reach : BB6.Agent3.CReach
         (4449+66220*u) (33017+491178*u) := by
       simpa only [hP1.1,hP1.2] using hprev
@@ -696,8 +701,20 @@ theorem p4_root32_u_parameter (w : Nat)
   have hQ : (15252222+104957475*w)%8=4 := by
     rw [hfactor] at hS
     omega
+  have hQ' : (6+3*(w%8))%8=4 := by
+    have hreduce :
+        (15252222+104957475*w)%8=(6+3*(w%8))%8 := by
+      simp only [Nat.add_mod, Nat.mul_mod,
+        show 15252222%8=6 by decide,
+        show 104957475%8=3 by decide]
+    rw [← hreduce]
+    exact hQ
   have hw : w%8=2 := by omega
+  have hdecomp : w=8*(w/8)+2 := by
+    have h := Nat.mod_add_div w 8
+    omega
   refine ⟨w/8,?_⟩
+  rw [hdecomp]
   omega
 
 /-- The exact residual root equation transfers r=32 mod 64 to
@@ -713,7 +730,8 @@ theorem p4_sum_mod64_of_root32 (r E u : Nat)
   have hA : (2570932352+3163718175*r)%64=32 := by omega
   have hpow : (2^(E-13))%64=0 := by
     have hdiv : 64∣2^(E-13) := by
-      have h := Nat.pow_dvd_pow 2 (by omega)
+      have h6 : 6≤E-13 := by omega
+      have h := Nat.pow_dvd_pow 2 h6
       simpa only [show (2:Nat)^6=64 by decide] using h
     exact Nat.mod_eq_zero_of_dvd hdiv
   have hsum :
