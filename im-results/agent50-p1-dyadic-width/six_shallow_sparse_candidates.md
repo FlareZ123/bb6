@@ -131,7 +131,7 @@ Therefore
 \le O(\log X)+
 C\sum_{L=r}^{6r}L^5\lambda^L\left(\frac{X}{4^L}+1\right).
 \]
-Since \(\lambda=43/20<4\), the two geometric sums are bounded by
+Since \(\lambda=21479/10000<4\), the two geometric sums are bounded by
 \[
 O\!\left(r^5X(\lambda/4)^r+r^5\lambda^{6r}\right).
 \]
