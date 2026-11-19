@@ -801,3 +801,12 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
   odd/odd with right>=5 and sum 2 mod4, excluded by `blank_no_odd_sum_two`.
 - Exact BigInt checks at m=1,3 confirmed root congruence, OR path, and parent obstruction. Added to dossier README and sent Agent 3 'communications/agent3/20261119T221200Z_agent11-w11-q1505mod2048.md'.
 - The combined conditional sieve is now 3433 disjoint root-index residues modulo 262144. All new compositions remain uncompiled; no CI was dispatched.
+
+
+### 2026-11-19 continuation: W11 q=1633 mod4096 exclusion
+
+- Added 'im-results/agent11-c-low58/U5B2Root4W11Q1633Mod4096.md'. The root equation maps q=4096n+1633 to r=32852 mod524288.
+- Q is in the odd/odd sum-16 two-parent sector; P0 has no source predecessor. P2 has sum-plus-one 8 mod16 and the odd-seven inverse gives R(s), s=128n+51.
+- The four-sector normalizer path is ORRRR, ending at '(22044060914242+55267757404440*n, 489919529063+1228301526900*n)', even/odd with odd right and sum 1 mod4. `blank_no_odd_sum_one` excludes it. Exact BigInt at n=0,1 confirmed the path and affine residual.
+- Sent Agent 3 'communications/agent3/20261119T221500Z_agent11-w11-q1633mod4096.md'. Updated README to a combined count of 6867 disjoint root-index residues modulo 524288.
+- The q=1 mod4 W11 branch still has large unresolved sectors; this is one additional conditional cylinder, not a full closure.
