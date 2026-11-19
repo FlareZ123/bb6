@@ -914,6 +914,43 @@ theorem setupZConfig_preserves_after (T : Int → Bool) (h : Int)
     (setupB6Config T h L A).tape
     (h+17+3*(L:Int)+3*(A:Int)) x (by omega)
 
+theorem setupB6Config_preserves_after_zEnd (T : Int → Bool)
+    (h : Int) (A L z : Nat) (x : Int)
+    (hx : h+17+3*(L:Int)+3*(A:Int)+3*(z:Int)<x) :
+    (setupB6Config T h L A).tape x = T x := by
+  let b6 : Int := h+13+3*(L:Int)+3*(A:Int)
+  let hA : Int := h+10+3*(L:Int)
+  let hB9 : Int := h+7+3*(L:Int)
+  let hL : Int := h+4
+  have hx6 : b6+3<x := by dsimp [b6]; omega
+  rw [setupB6Config, q4FrameAt_tape]
+  have hnot6 : setupB6Inside (x-b6)=false := by
+    simp [setupB6Inside]
+    omega
+  simp only [if_neg hnot6]
+  have hafterA : hA+3*((A+1):Int)≤x := by
+    dsimp [hA,b6]
+    omega
+  rw [setupAConfig]
+  rw [sweptRight_preserves_after (A+1)
+    (setupB9Config T h L).tape hA x hafterA]
+  rw [setupB9Config, q4FrameAt_tape]
+  have hnot9 : setupB9Inside (x-hB9)=false := by
+    simp [setupB9Inside]
+    omega
+  simp only [if_neg hnot9]
+  have hafterL : hL+3*((L+1):Int)≤x := by
+    dsimp [hL,hB9]
+    omega
+  rw [setupLConfig]
+  rw [sweptRight_preserves_after (L+1)
+    (setupB20Config T h).tape hL x hafterL]
+  rw [setupB20Config, q4FrameAt_tape]
+  have hnot20 : setupB20Inside (x-h)=false := by
+    simp [setupB20Inside]
+    omega
+  simp [hnot20]
+
 theorem setupB30Config_rightFacing (T : Int → Bool) (h : Int)
     (A L z : Nat) (hblank : SetupPrefixRightBlank T h A L z) :
     ∀ i : Nat,
@@ -948,6 +985,8 @@ theorem setupB30Config_rightFacing (T : Int → Bool) (h : Int)
       omega
     simp [hnot]
     rw [setupZConfig_preserves_after T h A L z
+      (hb-3+(i:Int)) (by omega)]
+    rw [setupB6Config_preserves_after_zEnd T h A L z
       (hb-3+(i:Int)) (by omega)]
     exact hblank (hb-3+(i:Int)) hx
 
