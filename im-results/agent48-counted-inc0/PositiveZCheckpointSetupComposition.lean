@@ -924,7 +924,8 @@ theorem setupB6Config_preserves_after_zEnd (T : Int → Bool)
   let hL : Int := h+4
   have hx6 : b6+3<x := by dsimp [b6]; omega
   rw [setupB6Config, q4FrameAt_tape]
-  have hnot6 : setupB6Inside (x-b6)=false := by
+  have hnot6 : setupB6Inside
+      (x-(h+13+3*(L:Int)+3*(A:Int)))=false := by
     simp [setupB6Inside]
     omega
   simp only [if_neg hnot6]
@@ -935,7 +936,8 @@ theorem setupB6Config_preserves_after_zEnd (T : Int → Bool)
   rw [sweptRight_preserves_after (A+1)
     (setupB9Config T h L).tape hA x hafterA]
   rw [setupB9Config, q4FrameAt_tape]
-  have hnot9 : setupB9Inside (x-hB9)=false := by
+  have hnot9 : setupB9Inside
+      (x-(h+7+3*(L:Int)))=false := by
     simp [setupB9Inside]
     omega
   simp only [if_neg hnot9]
@@ -977,8 +979,9 @@ theorem setupB30Config_rightFacing (T : Int → Bool) (h : Int)
       omega
     rw [hcoord]
     rw [setupB30Config, q4FrameAt_tape]
-    have hnot : setupB30Inside (hb-3+(i:Int)-hb)=false := by
-      simp [setupB30Inside]
+    have hnot : setupB30Inside
+        (hb-3+(i:Int)-(h+17+3*(L:Int)+3*(A:Int)+3*(z:Int)))=false := by
+      simp [setupB30Inside, hb]
       omega
     simp [hnot]
     rw [setupZConfig_preserves_after T h A L z
