@@ -591,8 +591,11 @@ theorem blank_no_p4_root4_even_w (w : Nat) (hw : w%2=0) :
   intro hP4
   have hDreach : BB6.Agent3.CReach
       (270923836+419829900*w) (148737413+230486970*w) := by
+    have hP4run :
+        ∃ n, BB6.Agent8Section.run secNext n (some (5,1)) = some (x,y) := by
+      simpa [BB6.Agent3.CReach] using hP4
     have h := (BB6.Agent3.oddodd_lowval_blank_reach_iff
-      x y hxodd hyodd hy5 h4 h16 hsize).mp hP4
+      x y hxodd hyodd hy5 h4 h16 hsize).mp hP4run
     change (∃ n, BB6.Agent8Section.run secNext n (some (5,1)) =
       some (270923836+419829900*w,148737413+230486970*w))
     simpa only [hxEq,hyEq] using h
@@ -696,8 +699,18 @@ valuation stratum to the cylinder closed above. -/
 theorem p4_root32_u_parameter (w : Nat)
     (hS : (67186+999595*(122+840*w))%64=32) :
     ∃ t : Nat, 122+840*w=1802+6720*t := by
+  have hconst : 67186+999595*122=8*15252222 := by decide
+  have hcoeff : 999595*840=8*104957475 := by decide
   have hfactor :
-      67186+999595*(122+840*w)=8*(15252222+104957475*w) := by omega
+      67186+999595*(122+840*w)=8*(15252222+104957475*w) := by
+    calc
+      67186+999595*(122+840*w)
+          = 67186 + (999595*122 + (999595*840)*w) := by
+              simp [Nat.mul_add, Nat.mul_assoc]
+      _ = (67186+999595*122)+(999595*840)*w := by omega
+      _ = (8*15252222)+(8*104957475)*w := by rw [hconst,hcoeff]
+      _ = 8*(15252222+104957475*w) := by
+            simp [Nat.mul_add, Nat.mul_assoc]
   have hQ : (15252222+104957475*w)%8=4 := by
     rw [hfactor] at hS
     omega
