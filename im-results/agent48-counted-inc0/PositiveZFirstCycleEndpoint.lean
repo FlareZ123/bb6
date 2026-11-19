@@ -287,26 +287,25 @@ private theorem firstCyclePrefixTailFrame_leftFacing
   by_cases hi : i < 3*k
   · have hscan := q4Tail_output_leftCounter n T2 (3*z+12) hn hleft i
       (by dsimp [k,n]; exact hi)
-    have hframe :
-        (frameAt T3 g q4TailInside q4TailEnd).tape
-            (H-(i:Int)) = T3 (H-(i:Int)) := by
-      rw [frameAt_tape]
-      have hnot : q4TailInside (H-(i:Int)-g) = false := by
-        simp [q4TailInside,H,g,firstCycleEndpointHead]
+    have hscan' :
+        (firstCyclePrefixTailFrame z w q).tape
+            (firstCycleEndpointHead z-(i:Int)) =
+          sideBit (d0pow k) i := by
+      change (frameAt T3 g q4TailInside q4TailEnd).tape
+        (H-(i:Int)) = sideBit (d0pow k) i
+      have hcoord : H-(i:Int) = g-5-(i:Int) := by
+        dsimp [H,g,firstCycleEndpointHead,n]
         omega
-      simp [hnot]
-    have hcoord : H-(i:Int) = g-5-(i:Int) := by
-      dsimp [H,g,firstCycleEndpointHead,n]
-      omega
+      rw [hcoord]
+      simpa [T3,n,k,g] using hscan
     have hlen : (d0pow k).length=3*k := d0pow_length_local k
     have htarget : sideBit (d0pow k ++ firstCycleEndpointLeft z w q) i =
         sideBit (d0pow k) i := by
-      rw [Agent6Q4Prefix.sideBit_append_left]
-      · rfl
-      · rw [hlen]
-        exact hi
-    rw [hframe,hcoord]
-    simpa [T3,n,k] using hscan.trans htarget.symm
+      exact Agent6Q4Prefix.sideBit_append_left
+        (d0pow k) (firstCycleEndpointLeft z w q) i (by
+          rw [hlen]
+          exact hi)
+    exact hscan'.trans htarget.symm
   · let j := i-3*k
     have hij : i=3*k+j := by dsimp [j]; omega
     have hcoord : H-(i:Int) = (3*z+10:Int)-(j:Int) := by
@@ -324,22 +323,23 @@ private theorem firstCyclePrefixTailFrame_leftFacing
       · by_cases hjlast : j=3*z+6
         · have houtside : firstCyclePrefix22Inside
               ((3*z+10:Int)-(j:Int)-1) = true := by
-            subst j
+            rw [hjlast]
             simp [firstCyclePrefix22Inside]
           have hmarked :
               decide (((3*z+10:Int)-(j:Int)-1) ∈
                 firstCyclePrefix22End.marked) = true := by
-            subst j
+            rw [hjlast]
             simp [firstCyclePrefix22End]
+          have hnothead : (3*z+10:Int)-(j:Int) ≠ 3*z+10 := by omega
           have htarget : sideBit
               (firstCycleEndpointLeft z w q) j = true := by
-            subst j
+            rw [hjlast]
             simp [firstCycleEndpointLeft,sideBit]
           have hvalue :
               (firstCyclePrefixTailFrame z w q).tape
                 ((3*z+10:Int)-(j:Int)) = true := by
             rw [hlocal]
-            simp [hjlast,houtside,hmarked]
+            simp [hnothead,houtside,hmarked]
           rw [hvalue]
           exact htarget.symm
         · have hjle : j≤3*z+5 := by omega
@@ -424,80 +424,111 @@ private theorem firstCyclePrefixTailFrame_leftFacing
               j=3*z+11 ∨ j=3*z+12 ∨ j=3*z+13 ∨ j=3*z+14 := by omega
           rcases hcases with h7|h8|h9|h10|h11|h12|h13|h14
           · subst j
+            have hlocal7 := hlocal
+            have hcoord7 : (3*z+10:Int)-(3*z+7:Int)=3 := by omega
+            rw [hcoord7] at hlocal7
+            have hnothead : (3:Int) ≠ 3*z+10 := by omega
             have hvalue :
                 (firstCyclePrefixTailFrame z w q).tape 3 = false := by
-              rw [hlocal]
-              simp [firstCyclePrefix22Inside,firstCyclePrefix22End]
+              simpa [hnothead,firstCyclePrefix22Inside,
+                firstCyclePrefix22End] using hlocal7
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+7) = false := by
               simp [firstCycleEndpointLeft,sideBit]
-            simpa using hvalue.trans htarget.symm
+            exact hvalue.trans htarget.symm
           · subst j
+            have hlocal8 := hlocal
+            have hcoord8 : (3*z+10:Int)-(3*z+8:Int)=2 := by omega
+            rw [hcoord8] at hlocal8
+            have hnothead : (2:Int) ≠ 3*z+10 := by omega
             have hvalue :
                 (firstCyclePrefixTailFrame z w q).tape 2 = true := by
-              rw [hlocal]
-              simp [firstCyclePrefix22Inside,firstCyclePrefix22End]
+              simpa [hnothead,firstCyclePrefix22Inside,
+                firstCyclePrefix22End] using hlocal8
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+8) = true := by
               simp [firstCycleEndpointLeft,sideBit]
-            simpa using hvalue.trans htarget.symm
+            exact hvalue.trans htarget.symm
           · subst j
+            have hlocal9 := hlocal
+            have hcoord9 : (3*z+10:Int)-(3*z+9:Int)=1 := by omega
+            rw [hcoord9] at hlocal9
+            have hnothead : (1:Int) ≠ 3*z+10 := by omega
             have hvalue :
                 (firstCyclePrefixTailFrame z w q).tape 1 = false := by
-              rw [hlocal]
-              simp [firstCyclePrefix22Inside,firstCyclePrefix22End]
+              simpa [hnothead,firstCyclePrefix22Inside,
+                firstCyclePrefix22End] using hlocal9
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+9) = false := by
               simp [firstCycleEndpointLeft,sideBit]
-            simpa using hvalue.trans htarget.symm
+            exact hvalue.trans htarget.symm
           · subst j
+            have hlocal10 := hlocal
+            have hcoord10 : (3*z+10:Int)-(3*z+10:Int)=0 := by omega
+            rw [hcoord10] at hlocal10
+            have hnothead : (0:Int) ≠ 3*z+10 := by omega
             have hvalue :
                 (firstCyclePrefixTailFrame z w q).tape 0 = false := by
-              rw [hlocal]
-              simp [firstCyclePrefix22Inside,firstCyclePrefix22End]
+              simpa [hnothead,firstCyclePrefix22Inside,
+                firstCyclePrefix22End] using hlocal10
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+10) = false := by
               simp [firstCycleEndpointLeft,sideBit]
-            simpa using hvalue.trans htarget.symm
+            exact hvalue.trans htarget.symm
           · subst j
+            have hlocal11 := hlocal
+            have hcoord11 : (3*z+10:Int)-(3*z+11:Int) = -1 := by omega
+            rw [hcoord11] at hlocal11
+            have hnothead : (-1:Int) ≠ 3*z+10 := by omega
             have hvalue :
                 (firstCyclePrefixTailFrame z w q).tape (-1) = true := by
-              rw [hlocal]
-              simp [firstCyclePrefix22Inside,firstCyclePrefix22End]
+              simpa [hnothead,firstCyclePrefix22Inside,
+                firstCyclePrefix22End] using hlocal11
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+11) = true := by
               simp [firstCycleEndpointLeft,sideBit]
-            simpa using hvalue.trans htarget.symm
+            exact hvalue.trans htarget.symm
           · subst j
+            have hlocal12 := hlocal
+            have hcoord12 : (3*z+10:Int)-(3*z+12:Int) = -2 := by omega
+            rw [hcoord12] at hlocal12
+            have hnothead : (-2:Int) ≠ 3*z+10 := by omega
             have hvalue :
                 (firstCyclePrefixTailFrame z w q).tape (-2) = true := by
-              rw [hlocal]
-              simp [firstCyclePrefix22Inside,firstCyclePrefix22End]
+              simpa [hnothead,firstCyclePrefix22Inside,
+                firstCyclePrefix22End] using hlocal12
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+12) = true := by
               simp [firstCycleEndpointLeft,sideBit]
-            simpa using hvalue.trans htarget.symm
+            exact hvalue.trans htarget.symm
           · subst j
+            have hlocal13 := hlocal
+            have hcoord13 : (3*z+10:Int)-(3*z+13:Int) = -3 := by omega
+            rw [hcoord13] at hlocal13
+            have hnothead : (-3:Int) ≠ 3*z+10 := by omega
             have hvalue :
                 (firstCyclePrefixTailFrame z w q).tape (-3) = true := by
-              rw [hlocal]
-              simp [firstCyclePrefix22Inside,firstCyclePrefix22End]
+              simpa [hnothead,firstCyclePrefix22Inside,
+                firstCyclePrefix22End] using hlocal13
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+13) = true := by
               simp [firstCycleEndpointLeft,sideBit]
-            simpa using hvalue.trans htarget.symm
+            exact hvalue.trans htarget.symm
           · subst j
+            have hlocal14 := hlocal
+            have hcoord14 : (3*z+10:Int)-(3*z+14:Int) = -4 := by omega
+            rw [hcoord14] at hlocal14
+            have hnothead : (-4:Int) ≠ 3*z+10 := by omega
             have hsrc : firstCycleCheckpointTape z w q (-4) = true := by
               have hcell := checkpointTape_left_cell z w q 5
               simpa [firstCycleCheckpointLeft,d0,sideBit] using hcell
             have hvalue :
                 (firstCyclePrefixTailFrame z w q).tape (-4) = true := by
-              rw [hlocal]
-              simp [firstCyclePrefix22Inside,hsrc]
+              simpa [hnothead,firstCyclePrefix22Inside,hsrc] using hlocal14
             have htarget :
                 sideBit (firstCycleEndpointLeft z w q) (3*z+14) = true := by
               simp [firstCycleEndpointLeft,sideBit]
-            simpa using hvalue.trans htarget.symm
+            exact hvalue.trans htarget.symm
 
 /-- The right-facing tape of the P(z) endpoint is exactly s0RightFacing 0. -/
 private theorem firstCyclePrefixTailFrame_rightFacing
@@ -512,6 +543,8 @@ private theorem firstCyclePrefixTailFrame_rightFacing
   let T3 := d0Sweep (2^z) T2 (3*z+12)
   let g : Int := 3*z+12+3*(2^z)
   let H : Int := firstCycleEndpointHead z
+  change (frameAt T3 g q4TailInside q4TailEnd).tape
+    (H+1+(i:Int)) = sideBit (s0RightFacing 0) i
   by_cases hi : i<9
   · have hinside : q4TailInside (H+1+(i:Int)-g) = true := by
       simp [q4TailInside,H,g,firstCycleEndpointHead]
@@ -613,7 +646,7 @@ theorem firstCyclePrefix_to_s0DrainInput
     refine ⟨?_,?_,?_,?_,?_,?_,?_,?_⟩
     · simpa using hL4.trans hleftBits.2.2.2.2
     · simpa using hL3.trans hleftBits.2.2.2.1
-    · simpa using hL2.trans hleftBits.2.1
+    · simpa using hL2.trans hleftBits.2.2.1
     · simpa using hL1.trans hleftBits.2.1
     · simpa using hL0.trans hleftBits.1
     · simpa [firstCycleCheckpointRight] using hR0
@@ -694,14 +727,16 @@ theorem firstCyclePrefix_to_s0DrainInput
           (2^(2^z-1)-1) 0 (firstCycleEndpointHead z) i
         rw [hcell]
         exact firstCyclePrefixTailFrame_rightFacing z w q hz i
-  have hcost := firstCyclePrefix_cost z
-  rw [run_append] at hprefix
-  -- The prefix theorem is already the complete P(z) run; only its
-  -- framed endpoint is rewritten to the canonical S0 configuration.
+  have hrun0 := hprefix
   have hrun :
       run tm2 (3*2^z+3*z+58) ⟨4,1,T⟩ =
         some (firstCyclePrefixTailFrame z w q) := by
-    simpa [m,n,firstCyclePrefixTailFrame,T] using hprefix
+    have hrun' :
+        run tm2 (22+(3*z+5)+2+3*(2^z)+29) ⟨4,1,T⟩ =
+          some (firstCyclePrefixTailFrame z w q) := by
+      simpa [m,n,firstCyclePrefixTailFrame,T] using hrun0
+    rw [firstCyclePrefix_cost z] at hrun'
+    exact hrun'
   rw [hrun,hframe]
 
 #print axioms firstCyclePrefix_to_s0DrainInput
