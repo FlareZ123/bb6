@@ -27,7 +27,7 @@ def firstQ4P1Output (L A z : Nat) : Config :=
     (s0LeftSweep (3*z+2) (firstQ4P1SecondDrainTape L A z) (3*z+5))
     3 q4S0Final4Inside q4S0Final4End
 
-private theorem firstQ4P1SweepCell (L A z : Nat) (x : Int) :
+theorem firstQ4P1SweepCell (L A z : Nat) (x : Int) :
     s0LeftSweep (3*z+2) (firstQ4P1SecondDrainTape L A z) (3*z+5) x =
       if x = 4 then false
       else if 5 ≤ x ∧ x ≤ 3*z+6 then true
