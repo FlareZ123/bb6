@@ -65,6 +65,22 @@ def rootFirstQ4Frame : Config :=
 def rootToFirstQ4Cost : Nat :=
   rootToMarker1S0Cost + rootFirstQ4Cost
 
+/-- The authentic root endpoint satisfies the positive-width precondition
+of the first q4 checkpoint macro. -/
+theorem rootMarker1A_pos : 0 < rootMarker1A := by
+  simpa [rootMarker1A] using
+    tm63_blank_reaches_after_middle34_marker1_s0_input_bounds.1
+
+/-- The authentic root endpoint satisfies the first q4 macro's binary
+counter capacity bound. -/
+theorem rootMarker1Z_lt_pow : rootMarker1Z < 2^rootMarker1A := by
+  simpa [rootMarker1A, rootMarker1Z] using
+    tm63_blank_reaches_after_middle34_marker1_s0_input_bounds.2
+
+/-- The authentic positive-z branch is genuinely entered: z is at least 3. -/
+theorem rootMarker1Z_ge_three : 3 ≤ rootMarker1Z := by
+  simpa [rootMarker1Z] using tm63Middle34Result_z_ge_three
+
 private theorem config_ext {c d : Config}
     (hs : c.state = d.state) (hh : c.head = d.head)
     (ht : c.tape = d.tape) : c = d := by
@@ -107,9 +123,8 @@ theorem tm63_blank_reaches_first_q4_checkpoint :
       rootMarker1Head, s0Config, firstQ4Left0_eq_marker1_d1pow] using
       tm63_blank_reaches_after_middle34_marker1_s0
 
-  have hz : rootMarker1Z < 2^rootMarker1A := by
-    simpa [rootMarker1A, rootMarker1Z] using
-      tm63_blank_reaches_after_middle34_marker1_s0_input_bounds.2
+  have hz : rootMarker1Z < 2^rootMarker1A :=
+    rootMarker1Z_lt_pow
 
   have hfirst :
       run tm2 rootFirstQ4Cost
