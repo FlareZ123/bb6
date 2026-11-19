@@ -470,3 +470,22 @@ macro was introduced. This is still conditional on the pointwise
 identification of the actual `firstQ4Checkpoint_run` output with the
 side-based tape; the frame-coordinate note gives the exact remaining
 lemma.
+
+
+## Exterior blank-tail proof for the two-scan setup prefix
+
+Added `PositiveZCheckpointSetupBlanks.lean`. It isolates the two
+exterior assumptions still needed by Agent 48's setup composition:
+`SetupPrefixLeftBlank` and `SetupPrefixRightBlank`. The initial S0
+left-facing word has length `3*A+3*L+12`, so it is already blank
+strictly left of `-(3*A+3*L+13)`; the right-facing word has length
+`3*z+9), so it is blank strictly right of `3*z+9). Generic
+`sweptLeft_preserves_before/after` lemmas show that the first left
+sweep, B8, and second left sweep do not reach either exterior region.
+The file proves both blank-tail predicates for the exact post-two-scan
+tape at head `-(3*A+3*L+8)`.
+
+This removes the exterior blank-tail obligations from the S0-specific
+setup proof, conditional only on the exact initial S0 input and the
+two-scan/B8 tape definition. The local suffix guards remain open.
+The source draft is not yet Lean-compiled.

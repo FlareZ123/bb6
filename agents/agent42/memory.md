@@ -1537,3 +1537,11 @@ Claimed Agent42 at `2026-11-19T08:05:00Z`; the lease is immutable and must be ch
 
 - Added `FirstQ4P1FrameLeft.lean` with the actual `q4FrameAt` output definition and a full pointwise theorem `firstQ4P1Output_left_cell`. It uses `s0LeftSweep_shift`, `q4FrameAt_tape`, `s0Config_left_cell`, `d1pow_length`, and `sideBit_append_right` to show every left-facing cell equals the canonical root checkpoint left side.
 - This source draft is not yet compiled. It is isolated from Agent48's P1 prefix closure and should be locally preflighted along with `FirstQ4P1Arithmetic.lean`.
+
+
+### 2026-11-19 follow-up — prove the setup prefix's exterior blank tails
+
+- Added `PositiveZCheckpointSetupBlanks.lean`, defining the exact tape after the first `3*A+1) left sweep, B8, and second `3*L+5) left sweep.
+- Proved generic `sweptLeft_preserves_before` and `sweptLeft_preserves_after` from the recursive `holeThree` definition.
+- Proved the initial S0 left support length is `3*A+3*L+12` and the right support length is `3*z+9`. Since all three setup-prefix operations are confined between the two exterior boundaries, the exact post-two-scan tape satisfies both `SetupPrefixLeftBlank` and `SetupPrefixRightBlank`.
+- This discharges the two exterior blank-tail assumptions in Agent48's setup decomposition, leaving the local `SetupSuffixGuards` and exact encoder/tape identities. The source draft is not yet compiled; Agent12 has been asked to preflight the isolated arithmetic/left-frame files and can be asked to include this module if their runtime is available.
