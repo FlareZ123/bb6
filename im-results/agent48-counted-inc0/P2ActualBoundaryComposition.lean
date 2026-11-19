@@ -4,22 +4,21 @@ import Q4S0FirstCycleMacros
 import Lean.Elab.Tactic.Omega
 
 /-!
-# S0 drain + corrected P2 boundary + right continuation
+# Conditional alternate 0101 boundary composition (not the authentic root)
 
-For the authentic residual family
-  1^(m+2) ++ 0101 ++ 1^7 ++ 00 ++ tail,
-the all-ones S0 drain exposes a left-facing d1 counter.  The state-3
-left sweep clears the cell immediately to the right of the 0101 boundary,
-so the exact 73-step arbitrary-exterior bridge applies.  The bridge
-restores the three-cell right run; the swept interval and the drained
-right counter then supply the long state-4 scan, two-zero setup, and
-state-1 d1-block scan.
+This module composes a separate conditional S0 input family
+1^(m+2) ++ 0101 ++ 1^7 ++ 00 ++ tail through the 73-step finite bridge.
+The input is not the authentic TM63 q4Tail residual: the actual frame
+semantics give 1^(m+2) ++ 0100 ++ tail, with the tail beginning 100.
+Therefore this file is preserved only as a conditional alternate finite-trace
+result. It must not be composed with TM63RootQ4Tail.lean or described as an
+authentic root continuation. The authentic handoff is being pursued against
+Agent 44's p2ResidualLeft interface in agent38-root-q4tail/.
 
-This is an intermediate source theorem.  It does not identify a concrete
-q4Tail output with this S0 family and is not a BB(6) halting result.
+This is an intermediate source theorem, not a BB(6) halting result.
 -/ 
 
-namespace BB6Coverage.Agent48P2ActualBoundaryComposition
+namespace BB6Coverage.Agent48P2Alternate0101BoundaryComposition
 
 open BB6Coverage
 open BB6Coverage.Agent48Champion
@@ -34,12 +33,12 @@ set_option maxHeartbeats 4000000
 
 /-- The corrected residual left word.  The tail after the two explicit
 zeroes is arbitrary and is not inspected by the 73-step bridge. -/
-def p2ActualBoundaryResidual (tail : List Bool) : List Bool :=
+def p2Alternate0101BoundaryResidual (tail : List Bool) : List Bool :=
   [false,true,false,true] ++
     (List.replicate 7 true ++ ([false,false] ++ tail))
 
-def p2ActualResidualLeft (m : Nat) (tail : List Bool) : List Bool :=
-  List.replicate (m+2) true ++ p2ActualBoundaryResidual tail
+def p2Alternate0101ResidualLeft (m : Nat) (tail : List Bool) : List Bool :=
+  List.replicate (m+2) true ++ p2Alternate0101BoundaryResidual tail
 
 private theorem sideBit_replicate_true_local (n i : Nat) (hi : i<n) :
     sideBit (List.replicate n true) i = true := by
@@ -69,33 +68,33 @@ private theorem sideBit_d1pow_true_local (n i : Nat) (hi : i<3*n) :
                   have hi' : i<3*n := by omega
                   simpa [d1pow,d1,sideBit] using ih i hi'
 
-private theorem p2ActualResidualLeft_prefix
+private theorem p2Alternate0101ResidualLeft_prefix
     (m : Nat) (tail : List Bool) (i : Nat) (hi : i<m+2) :
-    sideBit (p2ActualResidualLeft m tail) i = true := by
-  unfold p2ActualResidualLeft
+    sideBit (p2Alternate0101ResidualLeft m tail) i = true := by
+  unfold p2Alternate0101ResidualLeft
   rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_left
     (List.replicate (m+2) true)
-    (p2ActualBoundaryResidual tail) i (by simp; omega)]
+    (p2Alternate0101BoundaryResidual tail) i (by simp; omega)]
   exact sideBit_replicate_true_local (m+2) i hi
 
-private theorem p2ActualResidualLeft_after_prefix
+private theorem p2Alternate0101ResidualLeft_after_prefix
     (m : Nat) (tail : List Bool) (j : Nat) :
-    sideBit (p2ActualResidualLeft m tail) (m+2+j) =
+    sideBit (p2Alternate0101ResidualLeft m tail) (m+2+j) =
       sideBit
-        (p2ActualBoundaryResidual tail) j := by
-  unfold p2ActualResidualLeft
+        (p2Alternate0101BoundaryResidual tail) j := by
+  unfold p2Alternate0101ResidualLeft
   rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
     (List.replicate (m+2) true)
-    (p2ActualBoundaryResidual tail) (m+2+j) (by simp)]
+    (p2Alternate0101BoundaryResidual tail) (m+2+j) (by simp)]
   have hidx : m+2+j-(List.replicate (m+2) true).length = j := by simp
   rw [hidx]
 
 /-- The state-4 frame after the corrected 73-step bridge, starting from
 the drained S0 configuration and its left sweep. -/
-def p2ActualS0BridgeFrame (m n : Nat) (tail : List Bool) : Config :=
+def p2Alternate0101S0BridgeFrame (m n : Nat) (tail : List Bool) : Config :=
   let a := n-1
   let H : Int := (m+2+3*n : Int)
-  let ell := p2ActualResidualLeft m tail
+  let ell := p2Alternate0101ResidualLeft m tail
   let T := (s0Config ell a 0 (2^a-1) H).tape
   let K := 3*a+(m+2)
   let S := s0LeftSweep K T H
@@ -103,10 +102,10 @@ def p2ActualS0BridgeFrame (m n : Nat) (tail : List Bool) : Config :=
     p2ActualBoundaryInside p2ActualBoundaryEnd
 
 /-- Exact state-2 endpoint after the right continuation. -/
-def p2ActualS0State2Endpoint (m n : Nat) (tail : List Bool) : Config :=
+def p2Alternate0101S0State2Endpoint (m n : Nat) (tail : List Bool) : Config :=
   let a := n-1
   let H : Int := (m+2+3*n : Int)
-  let B := p2ActualS0BridgeFrame m n tail
+  let B := p2Alternate0101S0BridgeFrame m n tail
   ⟨2, H+6+(3*(2^a:Int)),
     p2WriteOne
       (BB6Coverage.Agent8Q4Suffix.d0Sweep (2^a)
@@ -125,20 +124,20 @@ private theorem config_ext_local {c d : Config}
 /-- A generic, exact original-TM2 continuation from the corrected P2
 S0 boundary to the state-2 edge after all 2^a right-hand d1 blocks have
 been converted.  The tail after the two explicit left zeroes is arbitrary. -/
-theorem p2ActualS0_to_state2
+theorem p2Alternate0101S0_to_state2
     (m n : Nat) (tail : List Bool) (hn : 2≤n) :
     run tm2
       ((6*4^(n-1)+42*2^(n-1)-12*(n-1)-48) +
         (3*(3*(n-1)+(m+2))+73) +
         ((m+2+3*n)+6+3*2^(n-1)))
-      (s0Config (p2ActualResidualLeft m tail) (n-1)
+      (s0Config (p2Alternate0101ResidualLeft m tail) (n-1)
         (2^(n-1)-1) 0 ((m+2+3*n:Int))) =
-      some (p2ActualS0State2Endpoint m n tail) := by
+      some (p2Alternate0101S0State2Endpoint m n tail) := by
   let a : Nat := n-1
   let H : Nat := m+2+3*n
   let h : Int := (H:Int)
   let K : Nat := 3*a+(m+2)
-  let ell : List Bool := p2ActualResidualLeft m tail
+  let ell : List Bool := p2Alternate0101ResidualLeft m tail
   let T : Int → Bool := (s0Config ell a 0 (2^a-1) h).tape
   let S : Int → Bool := s0LeftSweep K T h
   let B : Config :=
@@ -171,7 +170,7 @@ theorem p2ActualS0_to_state2
       have hlen : (d1pow a).length=3*a := by simp [d1pow_length]
       have hidx' : i-(d1pow a).length=i-3*a := by rw [hlen]
       rw [hidx'] at hsplit
-      have hbit := p2ActualResidualLeft_prefix m tail (i-3*a) hidx
+      have hbit := p2Alternate0101ResidualLeft_prefix m tail (i-3*a) hidx
       exact hcell.trans (hsplit.trans hbit)
 
   have hright : T (h+1)=false := by
@@ -188,7 +187,7 @@ theorem p2ActualS0_to_state2
   have hboundary (j : Nat) :
       S (3-(j:Int)) =
         sideBit
-          (p2ActualBoundaryResidual tail) j := by
+          (p2Alternate0101BoundaryResidual tail) j := by
     have hcell := s0Config_left_cell ell a 0 (2^a-1) h
       (3*a+(m+2+j))
     rw [hleftFacing] at hcell
@@ -213,19 +212,19 @@ theorem p2ActualS0_to_state2
       _ = sideBit (d1pow a ++ ell) (3*a+(m+2+j)) := hcell
       _ = sideBit ell (m+2+j) := hsplit
       _ = sideBit
-          (p2ActualBoundaryResidual tail) j :=
-        p2ActualResidualLeft_after_prefix m tail j
+          (p2Alternate0101BoundaryResidual tail) j :=
+        p2Alternate0101ResidualLeft_after_prefix m tail j
 
   have hinput : p2ActualBoundaryInput S 3 := by
-    have h0 : S 3=false := by simpa [p2ActualBoundaryResidual,sideBit] using hboundary 0
-    have h1 : S 2=true := by simpa [p2ActualBoundaryResidual,sideBit] using hboundary 1
-    have h2 : S 1=false := by simpa [p2ActualBoundaryResidual,sideBit] using hboundary 2
-    have h3 : S 0=true := by simpa [p2ActualBoundaryResidual,sideBit] using hboundary 3
+    have h0 : S 3=false := by simpa [p2Alternate0101BoundaryResidual,sideBit] using hboundary 0
+    have h1 : S 2=true := by simpa [p2Alternate0101BoundaryResidual,sideBit] using hboundary 1
+    have h2 : S 1=false := by simpa [p2Alternate0101BoundaryResidual,sideBit] using hboundary 2
+    have h3 : S 0=true := by simpa [p2Alternate0101BoundaryResidual,sideBit] using hboundary 3
     have hones : ∀ i : Nat, i<7 → S (3-4-(i:Int))=true := by
       intro i hi
       have hb := hboundary (4+i)
-      have hbit : sideBit (p2ActualBoundaryResidual tail) (4+i)=true := by
-        unfold p2ActualBoundaryResidual
+      have hbit : sideBit (p2Alternate0101BoundaryResidual tail) (4+i)=true := by
+        unfold p2Alternate0101BoundaryResidual
         rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
           ([false,true,false,true] : List Bool)
           (List.replicate 7 true ++ ([false,false] ++ tail))
@@ -239,8 +238,8 @@ theorem p2ActualS0_to_state2
       have hcoord : 3-(4+(i:Int))=3-4-(i:Int) := by omega
       simpa [hcoord,hbit] using hb
     have hzero11 :
-        sideBit (p2ActualBoundaryResidual tail) 11 = false := by
-      unfold p2ActualBoundaryResidual
+        sideBit (p2Alternate0101BoundaryResidual tail) 11 = false := by
+      unfold p2Alternate0101BoundaryResidual
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,false,true] : List Bool)
         (List.replicate 7 true ++ ([false,false] ++ tail)) 11 (by simp)]
@@ -250,8 +249,8 @@ theorem p2ActualS0_to_state2
         (List.replicate 7 true) ([false,false] ++ tail) 7 (by simp)]
       simp [sideBit]
     have hzero12 :
-        sideBit (p2ActualBoundaryResidual tail) 12 = false := by
-      unfold p2ActualBoundaryResidual
+        sideBit (p2Alternate0101BoundaryResidual tail) 12 = false := by
+      unfold p2Alternate0101BoundaryResidual
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,false,true] : List Bool)
         (List.replicate 7 true ++ ([false,false] ++ tail)) 12 (by simp)]
@@ -465,8 +464,8 @@ theorem p2ActualS0_to_state2
 
   rw [hcost,run_append,hafter]
   simp only [Option.bind_some]
-  simpa [p2ActualS0State2Endpoint,B,a,H,h] using hrightRun
+  simpa [p2Alternate0101S0State2Endpoint,B,a,H,h] using hrightRun
 
-#print axioms p2ActualS0_to_state2
+#print axioms p2Alternate0101S0_to_state2
 
-end BB6Coverage.Agent48P2ActualBoundaryComposition
+end BB6Coverage.Agent48P2Alternate0101BoundaryComposition
