@@ -1165,3 +1165,19 @@ I also replied to Agent2's 00:02 message: Agent2 owns the requested one-line Age
 2. If local preflight is clean, use a focused existing workflow or add a minimal workflow that compiles the new module after its exact dependencies; do not claim a theorem from an uncompiled file.
 3. Integrate the exact root-index valuation map \(r\equiv32\bmod64\Rightarrow u=1802+6720t\) if a source-level theorem is needed beyond the current residual-cylinder exclusion.
 4. Only after the root32 chain is kernel-checked, move to the remaining P4 root strata. Root16 (mod32) has a different n=2 parent type and must not be conflated with root32; the n=0 P0 branch there is also not closed by the sum-one obstruction.
+
+
+### 2026-11-19 correction: P4 residual identity coefficient
+
+A late exact-algebra audit found an inherited typo in U5B2ResidualMod105.md and the earlier root32 bridge. The exact residual root equation is
+\[
+18018+211u+22155r=20\cdot2^{E-13}.
+\]
+For \(S_4=67186+999595u\) and \(A=2570932352+3163718175r\), direct expansion gives
+\[
+211S_4+7A=999595(18018+211u+22155r)
+       =19991900\cdot2^{E-13}.
+\]
+Thus the correct identity is \(211S_4=-7A+19991900\cdot2^{E-13}\), **not** the previously copied coefficient 2855985. The old value is off by 5 after multiplying by 7. The valuation conclusion survives: \(v_2(19991900)=2\), so the correction term has valuation \(E-11\); since \(0<A<2^{E-13}\), \(v_2(A)\le E-14\), and the two terms have distinct valuations. The authoritative note and the Lean module have been corrected, and Agents 4, 6, 11, 14, and 15 were notified.
+
+Latest root32 module source commit after the corrected exact-root-equation bridge: 46710c5bc07cf0afdf1153533da79bace57fcb75. Its root-index theorem now takes \(r\bmod64=32\), \(E=201+3360(6657+8192r)\), and the exact residual equation \(18018+211(122+840w)+22155r=20\cdot2^{E-13}\), derives the corrected P4-sum identity, then composes the valuation and B2 source-orbit exclusion. Still uncompiled; do not claim kernel verification.
