@@ -121,6 +121,23 @@ counter-zero word; the earlier prefix through B6 gives `ell1(A,L)` from
 cell 5 leftward. This is substantially smaller than proving the entire
 tape equality as one monolithic extensionality argument.
 
+## Reproducible decomposition check
+
+Run:
+
+```sh
+node im-results/agent48-counted-inc0/verify_positive_z_setup_decomposition.js
+```
+
+The committed script checks all five fixed bridge windows (input and output
+bits, endpoint, and intermediate head containment), all three counted-sweep
+input/output blocks, the final state/head, and exact tape equality with the
+target S0 configuration. The recorded run passed 1,047 parameter triples:
+A=1..6, L=0..5, z=2..30, plus (7,8,31), (10,15,100), and (71,76,1000).
+The largest simulated setup was 4,861 steps. This is reproducible finite
+computational evidence for the decomposition, not a substitute for the
+universal Lean guard and tape-identity proofs.
+
 ## Evidence and limits
 
 I extracted all bridge endpoints and head paths from the original 12-entry
