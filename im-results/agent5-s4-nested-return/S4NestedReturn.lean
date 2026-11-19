@@ -383,6 +383,34 @@ theorem qReturnWhole (S : List Nat) :
   simpa [qReturnWord, qPending, qNorm, qPending_zero] using
     returnWhole qRootWord blockTail S hc hp qPending_zero
 
+theorem wholeWord_append (cs ds S : List Nat) :
+    S4Boundary.wholeWord (cs ++ ds) S =
+      (S4Boundary.wholeWord cs S).bind (S4Boundary.wholeWord ds) := by
+  induction cs generalizing S with
+  | nil => rfl
+  | cons c cs ih =>
+      simp [S4Boundary.wholeWord, ih, Option.bind_assoc]
+
+/-- Iterate an exact prefix return map without losing its suffix factorization. -/
+theorem wholeWord_repeat_return (base return prefix : List Nat)
+    (hReturn : ∀ S, S4Boundary.wholeWord base (prefix ++ S) =
+      (S4Boundary.wholeWord return S).map (prefix ++ ·)) :
+    ∀ n S, S4Boundary.wholeWord (repeatWord n base) (prefix ++ S) =
+      (S4Boundary.wholeWord (repeatWord n return) S).map (prefix ++ ·) := by
+  intro n
+  induction n with
+  | zero =>
+      intro S
+      simp [repeatWord, S4Boundary.wholeWord]
+  | succ n ih =>
+      intro S
+      rw [repeatWord_succ, wholeWord_append, hReturn]
+      cases h : S4Boundary.wholeWord return S with
+      | none =>
+          simp [h, repeatWord_succ, wholeWord_append]
+      | some T =>
+          simp [h, ih T, repeatWord_succ, wholeWord_append]
+
 theorem root18_return :
     S4Boundary.wholeWord (repeatWord 256 rootWord)
       (prefix9Start ++ tailAfter16) =
