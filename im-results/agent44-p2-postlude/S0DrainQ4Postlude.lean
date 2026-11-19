@@ -78,7 +78,7 @@ theorem s0Config_allOnesDrain_q4Postlude
     rw [s0LeftSweep_shift]
     simp [h', K, hx]
   have hcell (j : Nat) :
-      T (H-(3*a+m+j:Int)) = sideBit ell (m+j) := by
+      T (h'-(j:Int)) = sideBit ell (m+j) := by
     have hc := s0Config_left_cell ell a 0 (2^a-1) H (3*a+m+j)
     change T (H-(3*a+m+j:Int)) =
       sideBit (s0LeftFacing ell a 0) (3*a+m+j) at hc
@@ -86,18 +86,22 @@ theorem s0Config_allOnesDrain_q4Postlude
     rw [Agent6Q4Prefix.sideBit_append_right (d1pow a) ell
       (3*a+m+j) (by rw [d1pow_length]; omega)] at hc
     have hidx : 3*a+m+j-3*a = m+j := by omega
+    have hcoord : H-(3*a+m+j:Int) = h'-(j:Int) := by
+      dsimp [h', K]
+      omega
+    rw [hcoord] at hc
     simpa [hidx] using hc
   have hguard :
       q4S0Final4Input (s0LeftSweep K T H) h' := by
     refine ⟨?_,?_,?_,?_⟩
     · rw [hsweep (h'-3) (by omega)]
-      simpa [h', K] using (hcell 3).trans h3
+      simpa using (hcell 3).trans h3
     · rw [hsweep (h'-2) (by omega)]
-      simpa [h', K] using (hcell 2).trans h2
+      simpa using (hcell 2).trans h2
     · rw [hsweep (h'-1) (by omega)]
-      simpa [h', K] using (hcell 1).trans h1
+      simpa using (hcell 1).trans h1
     · rw [hsweep h' (by omega)]
-      simpa [h', K] using (hcell 0).trans h0
+      simpa using (hcell 0).trans h0
   have hQ := q4S0Postlude_at K T H hones hright hguard
   have hQ' :
       run tm2 (3*K+4) (s0Config ell a 0 (2^a-1) H) =
