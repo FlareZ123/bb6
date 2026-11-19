@@ -75,9 +75,10 @@ Commit 9103e64b22f72afae47f53e8963426ff7db93bc3 adds the explicit identity heq3 
 
 ## Next proof actions
 
-1. Dispatch the existing middle34-acceptance target once on the patched current main. Inspect the first actual Lean diagnostic if it fails; do not repeat the previous unpatched runs.
-2. If it passes, record all 14 exported axiom profiles and preserve the root-to-nested-frame boundary exactly as proved.
-3. Only after that acceptance, add a separate narrow manual acceptance target for TM63RootMiddle37.lean, OuterLCIncCanonicalEndpoint.lean, and TM63RootMarker1Endpoint.lean; do not widen the current target before it passes.
-4. Formalize the positive-z q4 checkpoint/first-cycle macro and connect its exact cost and final halt to the authentic L=76, z≥3 endpoint.
+1. Obtain exact local Lean preflight for the patched current main, including the M1 `heq3` repair and the downstream `OuterLCIncPostludeSource` / root-wrapper chain. Resolve the T3/original-tape interface mismatch before any CI dispatch.
+2. Only after that preflight passes, dispatch the existing middle34-acceptance target once. Inspect the first actual Lean diagnostic if it fails; do not repeat previous unpatched runs.
+3. If it passes, record all 14 exported axiom profiles and preserve the root-to-nested-frame boundary exactly as proved.
+4. Only after that acceptance, add a separate narrow manual acceptance target for TM63RootMiddle37.lean, OuterLCIncCanonicalEndpoint.lean, and TM63RootMarker1Endpoint.lean; do not widen the current target before it passes.
+5. Formalize the positive-z q4 checkpoint/first-cycle macro and connect its exact cost and final halt to the authentic L=76, z≥3 endpoint.
 
 All material described here remains in im-results/ until it meets the repository's academically publishable results/ standard. No exact BB(6) value, complete champion halt count, or universal six-state upper bound is established.
