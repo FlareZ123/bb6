@@ -115,7 +115,8 @@ theorem agent27Four_parent_closed_after_graft (m : Machine)
     (hm : compatible agent27FourP4 m) :
     ¬ agent27FourGraftedAudit.open m := by
   intro hopen
-  exact (agent27FourGraftedAudit_open_iff m).mp hopen |>.2 hm
+  have hpair := (agent27FourGraftedAudit_open_iff m).mp hopen
+  exact hpair.2 hm
 
 theorem agent27Four_leaf_closed (m : Machine)
     (hm : compatible agent27FourP4 m) :
