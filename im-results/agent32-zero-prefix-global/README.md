@@ -263,15 +263,15 @@ The genuine two-step blank-root entry is again state C/head 0 with ones at
 cells 0 and 1, i.e. right-word `[0,1]`.  The five-step macro has head
 positions `0,1,2,1,0,1`; its exact finite-support trace is:
 
-| Stage | State/head | Action | Marked cells after action |
-|---|---|---|---|
-| Entry | C/0 | — | `{0,1}` |
-| 1 | C/0 | 0RD | `{1}` |
-| 2 | D/1 | 1RE | `{1}` |
-| 3 | E/2 | 1LF | `{1,2}` |
-| 4 | F/1 | 1LC | `{1,2}` |
-| 5 | C/0 | 0RC | `{1,2}` |
-| End | C/1 | — | `{1,2}` |
+| Stage | State/input | Head before move | Action | Marked cells after action |
+|---|---|---:|---|---|
+| Entry | C/1 | 0 | — | `{0,1}` |
+| 1 | C/1 | 0 | 0RD | `{1}` |
+| 2 | D/1 | 1 | 1RE | `{1}` |
+| 3 | E/0 | 2 | 1LF | `{1,2}` |
+| 4 | F/1 | 1 | 1LC | `{1,2}` |
+| 5 | C/0 | 0 | 0RC | `{1,2}` |
+| End | C/1 | 1 | — | `{1,2}` |
 
 The end state is the entry state with the same two marked offsets relative
 to the new head.  It clears the old leftmost mark, moves the remaining mark
