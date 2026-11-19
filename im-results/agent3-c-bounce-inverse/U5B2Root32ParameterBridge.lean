@@ -79,6 +79,43 @@ private theorem root32_u_parameter_from_mods (u : Nat)
   rw [hu]
   omega
 
+private theorem root_equation_mod16 (u r : Nat)
+    (hmod : (18018+211*u+22155*r)%16=0) :
+    (u+105*r)%16=10 := by
+  omega
+
+private theorem root_equation_mod105 (u r : Nat)
+    (hmod : (18018+211*u+22155*r)%105=80) :
+    (u+105*r)%105=17 := by
+  omega
+
+private theorem root_equation_crt1680 (x : Nat)
+    (h16 : x%16=10) (h105 : x%105=17) : x%1680=122 := by
+  omega
+
+/-- The residual equation and exponent class determine one parameter
+congruence modulo 1680 for every root index, not only the special
+mod-16/mod-64 cylinders. -/
+theorem root_equation_mod1680 (r E u : Nat)
+    (hE : E=201+3360*(6657+8192*r))
+    (hRoot : 18018+211*u+22155*r=20*2^(E-13)) :
+    (u+105*r)%1680=122 := by
+  obtain ⟨h6,hmod12⟩ := root32_exponent_facts r E hE
+  have h4 : 4≤E-13 := by omega
+  have hdiv16 : 16∣2^(E-13) := by
+    have h := Nat.pow_dvd_pow 2 h4
+    simpa only [show (2:Nat)^4=16 by decide] using h
+  have hpow16 : (2^(E-13))%16=0 := Nat.mod_eq_zero_of_dvd hdiv16
+  have hmod16 : (18018+211*u+22155*r)%16=0 := by
+    rw [hRoot, Nat.mul_mod, hpow16]
+  have hpow105 : (2:Nat)^(E-13)%105=46 :=
+    pow_two_mod105_of_mod12 (E-13) hmod12
+  have hmod105 : (18018+211*u+22155*r)%105=80 := by
+    rw [hRoot, Nat.mul_mod, hpow105]
+  exact root_equation_crt1680 (u+105*r)
+    (root_equation_mod16 u r hmod16)
+    (root_equation_mod105 u r hmod105)
+
 /-- The exact residual root equation forces the B2 and P4 root
 parameters to have the same parity. -/
 theorem root_equation_parity (r E u : Nat)
@@ -113,6 +150,7 @@ theorem root32_u_parameter_of_exact (r E u : Nat)
     (root32_u_mod64 r u hr hmod64)
     (root32_u_mod105 r u hmod105)
 
+#print axioms root_equation_mod1680
 #print axioms root_equation_parity
 #print axioms root32_u_parameter_of_exact
 
