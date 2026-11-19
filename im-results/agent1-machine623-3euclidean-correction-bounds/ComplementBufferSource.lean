@@ -8,6 +8,24 @@ open BB6.Agent49TernaryBufferSource
 
 private abbrev next : HighLevelState → Option HighLevelState := highLevelNext
 
+/-- Zero-first-counter states always have a successful high-level successor.
+This local spelling keeps the theorem in the same `HighLevelState` alias as
+this file rather than relying on another module's private `State` alias. -/
+private theorem next_zero_total_local (d : Nat) :
+    ∃ aa dd, next (.D 0 d) = some (.D aa dd) := by
+  simp only [next, highLevelNext]
+  by_cases hodd : d % 2 = 1
+  · simp only [if_pos hodd]
+    by_cases h1 : d = 1
+    · subst d
+      exact ⟨0, 14, by decide +kernel⟩
+    · have hd : 3 ≤ d := by omega
+      have hg : 2 < d + 1 := by omega
+      obtain ⟨aa, dd, hr, _⟩ := drainB_safe_gap 2 (d + 1) 2 hg
+      exact ⟨aa, dd, hr⟩
+  · simp only [if_neg hodd]
+    exact ⟨d, 7, rfl⟩
+
 /-- Elementary lower bound used to embed the old linear cone into the
     sharp exponential cone. -/
 theorem ternaryOnes_ge_self : ∀ n : Nat, n ≤ ternaryOnes n := by
@@ -162,10 +180,18 @@ theorem complement_to_safe_right (a d b e : Nat)
           rcases hd4 with h5 | h7
           · subst a
             subst d
-            exact hnot (by decide)
+            have hcone : newAffineCone 4 5 := by
+              unfold newAffineCone
+              right; right; left
+              norm_num [ternaryOnes]
+            exact hnot hcone
           · subst a
             subst d
-            exact hnot (by decide)
+            have hcone : newAffineCone 4 7 := by
+              unfold newAffineCone
+              right; right; left
+              norm_num [ternaryOnes]
+            exact hnot hcone
         exact right_odd_to_safe_right
           a d b e ha ha0 hdodd hside hnotold hex hnext
   · have hdeven : d % 2 = 0 := by omega
@@ -201,25 +227,27 @@ theorem outside_old_predecessor_has_successor
     · rcases hx with ⟨rfl, hd⟩
       rcases hd with h5 | h7
       · subst d
-        have hval : next (.D 4 5) = some (.D 6 12) := by decide
+        have hval : next (.D 4 5) = some (.D 6 12) := by simp [next, highLevelNext, drainB, evalA]
         rw [hval] at hstep
         cases hstep
         exact next_safe_left_third_two 6 12 (by decide) (by decide) (by decide)
       · subst d
-        have hval : next (.D 4 7) = some (.D 8 12) := by decide
+        have hval : next (.D 4 7) = some (.D 8 12) := by simp [next, highLevelNext, drainB, evalA]
         rw [hval] at hstep
         cases hstep
         exact next_safe_left_third_two 8 12 (by decide) (by decide) (by decide)
     · have hsafe := newAffine_to_oldRight a d b e ha hn hnotold hx hstep
       by_cases hb0 : b = 0
-      · exact next_zero_total e
+      subst b
+      exact next_zero_total_local e
       · have hbpos : 0 < b := by omega
         have hdiv : b / 3 ≤ b := Nat.div_le_self _ _
         have hbudget : b + b / 3 + 1 ≤ e := by omega
         exact next_safe_left_third_two b e hbpos hsafe.1 hbudget
   · have hsafe := complement_to_safe_right a d b e ha ha0 hn hstep
     by_cases hb0 : b = 0
-    · exact next_zero_total e
+    subst b
+    exact next_zero_total_local e
     · have hbpos : 0 < b := by omega
       have hdiv : b / 3 ≤ b := Nat.div_le_self _ _
       have hbudget : b + b / 3 + 1 ≤ e := by omega
