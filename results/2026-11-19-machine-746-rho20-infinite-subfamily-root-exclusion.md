@@ -114,8 +114,8 @@ Then
 \]
 so \(\operatorname{ResetParent}(h_0,E)\) holds.
 
-Also \(2p<h_0<3p\), so \(h_0\) has no even parent. Its odd numerator is \(X_1=2h_0+5\), and (1) gives \(v_3(X_1)=1\). Thus only \(t=0\) is possible at \(h_0\).
-For this bound, \(x=97/64+67/2^a\) gives
+Its odd numerator is \(X_1=2h_0+5\), and (1) gives \(v_3(X_1)=1\). Thus only \(t=0\) is possible at \(h_0\).
+We also need to show that \(h_0\) has no even parent. For this bound, \(x=97/64+67/2^a\) gives
 \[
 \frac Xp=\frac{21}{2}-\frac{32\cdot67}{3\cdot2^a}+\frac{2K+13}{3p}<\frac{21}{2}.
 \]
@@ -128,8 +128,8 @@ The last inequality follows from \(2^a<2K+7\) and
 \frac{h_0}{p}<3.
 \]
 
+The exact expression for \(X_1/p\) is
 \[
-The exact expression for (X_1/p) is
 \frac{X_1}{p}
 =6-\frac{128\cdot67}{9\cdot2^a}-\frac{10K-25}{9p}
 \in(5,6).
