@@ -1,61 +1,79 @@
-# TM63 source rows 32–34 and authentic-root middle-34 continuation
+# TM63 source rows 32–37 and authentic-root middle-34 continuation
 
-**Research state (17 November 2026):** The repository now contains source-level Lean statements for (i) the generic marker-2 even increment at indices (n=8q+6), (ii) the marker-1 even increment for every positive bounded index, and (iii) the authentic blank-root TM63 continuation through middle row 34. The root theorem is now **unconditional at the source level**: it derives row 32 from the all-valuation M1 theorem, then composes rows 33 and 34. The combined dependency closure has **not yet passed Lean compilation or an axiom audit**. Treat all three new/changed modules as drafts until the existing manual acceptance target succeeds.
+**Status (2026-11-19):** The repository contains an unconditional source-level blank-root TM63 continuation through middle row 34, a source-level composition from that endpoint through the complete SectionResult dispatcher to index one and the outer-LC_Inc nested reset frame, and a separate direct row-by-row extension through row 37. None of these new root/endpoint chains is accepted by the focused Lean gate yet. The exact primitive-step count of the champion and a universal six-state upper bound remain open.
 
-## Generic marker-2 even row: (n=8q+6)
+## Generic source increments and the authentic root
 
-For (L,q,a,b\in\mathbb N), (h\in\mathbb Z), (3\le L), (8q+6<2^L), and (a>0), M2EvenSixGenericSource.lean proves the original-table reset-prefix run
-[
-\operatorname{run}\ tm2\ (\operatorname{resetPrefixCost}\ 2\ (8q+6)\ a\ b)\
-(s1Config\ L\ (8q+6)\ 2\ a\ 0\ b\ h)
-=
-\operatorname{some}(s1Config\ L\ (8q+5)\ 1\ (a+b+2)\ (2^b-1)\ 0\ (h+5+3b)).
-]
-The proof lifts the fixed (L=3,n=6) q4 prefix to arbitrary (q) by a finite-window frame. The source and target encodings have a common tail after the low three blocks; the proof identifies the finite region read by the prefix, preserves the q4 right guard, and proves the far-right blank tail.
-
-M2EvenSixGenericCounted.lean composes that prefix with the existing S1 counted drain. Its exported theorem m2EvenSix_generic_counted_increment_source proves
-[
-\operatorname{run}\ tm2\ (\operatorname{proposedIncrementCost}\ 2\ (8q+6)\ a\ b)\
-(s1Config\ L\ (8q+6)\ 2\ a\ 0\ b\ h)
-=
-\operatorname{some}(s1Config\ L\ (8q+5)\ 1\ (a+b+2)\ 0\ (2^b-1)\ (h+5+3b)).
-]
-This is a statement about the repository's original tm2 and infinite-tape run, not a copied transition system.
-
-## Authentic blank-root composition through middle row 34
-
-Let (R=\texttt{tm63RootResidueSixK}). The current root composition starts from the established authentic blank-root endpoint at middle 26 and uses the source increments for rows 27–34. The three decisive later rows are:
+Let \(R=\texttt{tm63RootResidueSixK}\). The maintained root module TM63RootMiddle34.lean composes rows 27–34. Its decisive rows are:
 
 | Row | Input marker | Input index | Source theorem |
 |---:|---:|---:|---|
-| 32 | 1 | (16R-16) | m1EvenValuation_counted_increment_source |
-| 33 | 0 | (16R-17) | m0Odd_counted_increment_source |
-| 34 | 2 | (16R-18=8(2R-3)+6) | m2EvenSix_generic_counted_increment_source |
+| 32 | 1 | \(16R-16\) | m1EvenValuation_counted_increment_source |
+| 33 | 0 | \(16R-17\) | m0Odd_counted_increment_source |
+| 34 | 2 | \(16R-18=8(2R-3)+6\) | m2EvenSix_generic_counted_increment_source |
 
-For row 32, M1EvenValuationSource.lean factors every positive (n<2^L) as ((2q+1)2^v) and proves the complete counted increment without a valuation side condition. The root arithmetic establishes (0<16R-16<2^{\texttt{tm63Length1}}) and a positive left counter, so the generic theorem applies directly. Row 33 is odd and uses the generic M0 odd theorem. Row 34 is the (n=8q+6) theorem above with (q=2R-3).
+The row-32 theorem factors every positive bounded index into an odd factor times a power of two and discharges the complete counted increment without a valuation side condition. Row 33 is the generic odd marker-0 increment. Row 34 is the all-parameter marker-2 even-six increment.
 
 TM63RootMiddle34.lean defines the exact accumulated cost tm63MiddleFirst34Moves and proves
-[
+
+\[
 \operatorname{run}\ tm2\ \texttt{tm63MiddleFirst34Moves}\ \texttt{blank}
 =
-\operatorname{some}(s1Config\ \texttt{tm63Length1}\ (16R-19)\ 1\
+\operatorname{some}\bigl(s1Config\ \texttt{tm63Length1}\ (16R-19)\ 1\
 \texttt{tm63MiddleAfter34A}\ 0\ \texttt{tm63MiddleAfter34B}\
-\texttt{tm63MiddleAfter34Head}).
-]
-The main theorem is tm63_blank_reaches_after_middle34; it has no extra row-32 hypothesis. The older theorem tm63_blank_reaches_after_middle34_of_m1even32 remains only as a backwards-compatible wrapper.
+\texttt{tm63MiddleAfter34Head}\bigr).
+\]
 
-This is a genuine source-level root-prefix candidate, not a halt witness. It neither closes the 24-class countdown nor proves the later itinerary, the champion's exact primitive-step count, or any global six-state upper bound.
+The main theorem is tm63_blank_reaches_after_middle34; it has no extra row-32 hypothesis. This is a source-level root-prefix statement, not a halt witness.
 
-## Verification and acceptance gate
+A separate direct extension, TM63RootMiddle37.lean, appends three more source increments:
 
-The existing manual workflow .github/workflows/agent42-champion-terminal-source.yml already has the focused workflow_dispatch target middle34-acceptance. It invokes tools/lean_compile_closure.py on exactly these three roots:
+| Row | Input marker | Input index | Source theorem |
+|---:|---:|---:|---|
+| 35 | 1 | \(16R-19=8(2R-3)+5\) | m1ResidueFive_counted_increment_source |
+| 36 | 0 | \(16R-20=8(2R-3)+4\) | m0Even_residue4_counted_increment_source |
+| 37 | 2 | \(16R-21\), odd | m2Odd_counted_increment_source |
 
-1. im-results/agent48-counted-inc0/M1EvenValuationSource.lean;
-2. im-results/agent44-tm63-middle/M2EvenSixGenericCounted.lean;
-3. im-results/agent44-tm63-middle/TM63RootMiddle34.lean.
+It states tm63_blank_reaches_after_middle37, ending at index \(16R-22\), marker 1. This direct row-35–37 extension is still an uncompiled draft and is not part of the current acceptance target.
 
-The closure compiler resolves and compiles their transitive project imports under Lean 4.36.0-rc2. The job extracts the three exported #print axioms lines for m1EvenValuation_counted_increment_source, m2EvenSix_generic_counted_increment_source, and tm63_blank_reaches_after_middle34, and rejects sorryAx or native_decide. This focused job is separate from the broad serial terminal-source job, so an unrelated earlier failure does not mask this target. **The focused job has not yet been dispatched or passed**; no source-certification claim is made here.
+## Index-one reset frame and the actual terminal boundary
 
-## Next useful action
+TM63RootAfterSectionResultToOne.lean takes the middle-34 root state through the complete 24-class SectionResult dispatcher to index one, marker two, then applies outerLCInc_full_run. Its theorem tm63_blank_reaches_after_middle34_reset_frame reaches state 3 with the exact nested outerLCIncPostludeTape. The current manual acceptance target includes this root module and audits its exported theorem profile.
 
-Run the existing middle34-acceptance target once on the current main revision, inspect the first compiler error if it fails, or record the three final axiom profiles if it succeeds. Do not add another workflow or widen this acceptance target before it passes. After acceptance, the next root step is marker 1 at index (16R-19=8(2R-3)+5), for which the separate M1OddResidueFive.lean source theorem is available; that next row is not part of the present acceptance claim.
+The next pointwise identification is drafted in im-results/agent42-outer-lcinc/OuterLCIncCanonicalEndpoint.lean. For \(n=1,m=2\), the exact source-run cost is \(12a+71+3b\), and the file proves at source level that the nested frame is the canonical marker-1 S1/S0 endpoint:
+
+\[
+s1Config\ L\ 0\ 1\ (a+b+2)\ (2^b-1)\ 0\ (h+3b+5),
+\]
+
+equivalently the S0 input with left word markerWord 1 ++ d0 ++ d1pow L ++ lh and positive right counter \(z=2^b-1\). The declarations outerLCIncPostludeTape_eq_s1Config_m2 and outerLCIncPostludeTape_eq_marker1S0_m2 are not yet in the acceptance closure and have not been Lean-compiled or axiom-audited.
+
+The current root wrapper has \(L=\texttt{tm63Length1}=76\): tm63FirstSection.exponent is nextExponent 2 6 63 = 71, and tm63Length1 = 3 + 71 + 2. The source lemma tm63Length1_even is in TM63Length1Parity.lean. The authentic endpoint also has \(z=2^b-1\ge3\), so the marker-1 experiments that set \(z=0\) do not directly close the root. In particular, the exact z=0 even-L terminal law is not a positive-z theorem. The positive-z q4 nested-counter macro, its cycle recurrence, and the final halt remain open.
+
+## Focused Lean acceptance
+
+The existing manual-only target middle34-acceptance in .github/workflows/agent42-champion-terminal-source.yml is the acceptance path. It reconstructs the authoritative terminal imports, then compiles the exact dependency closures of these five roots:
+
+1. im-results/agent48-counted-inc0/M1EvenValuationSource.lean
+2. im-results/agent44-tm63-middle/M2EvenSixGenericCounted.lean
+3. im-results/agent44-tm63-middle/TM63RootMiddle34.lean
+4. im-results/agent48-counted-inc0/TM63RootAfterSectionResultToOne.lean
+5. im-results/agent48-counted-inc0/Q4S0FirstCycleMacros.lean
+
+It audits 14 exported declarations, including the two generic counted increments, the middle-34 root theorem, the complete SectionResult dispatcher, the index-one marker-two theorem, the reset-base prefix/suffix, the nested-frame root theorem, and outerLCInc_target_binary_prefix. The accepted foundational axiom set is {propext, Classical.choice, Quot.sound}; sorryAx and native_decide are rejected. This is a focused manual job, not a per-commit workflow.
+
+Two current-main dispatches have failed on genuine Lean obligations:
+
+- Run 44424308953 (head f0b7edc…) exposed unresolved tape-extensionality goals in both M1EvenState1Sweep.lean and M1EvenState5Sweep.lean.
+- Run 44438791470 (head 95a3438…) compiled the state-5 sweep, but failed in M1EvenState1Sweep.lean at lines 56 and 66. The remaining goals were coordinate-normalization failures: Lean retained h - 1 + (-1) instead of identifying it with h - 2.
+
+Commit 9103e64b22f72afae47f53e8963426ff7db93bc3 adds the explicit identity heq3 : h - 1 + (-1 : Int) = h - 2 to the state-1 extensionality proof and supplies it to the two affected simp calls. This is the direct repair for the two observed goals, but it has **not yet been tested**. No acceptance or axiom-audit claim is made until a new run passes.
+
+## Next proof actions
+
+1. Dispatch the existing middle34-acceptance target once on the patched current main. Inspect the first actual Lean diagnostic if it fails; do not repeat the previous unpatched runs.
+2. If it passes, record all 14 exported axiom profiles and preserve the root-to-nested-frame boundary exactly as proved.
+3. Only after that acceptance, add a separate narrow manual acceptance target for TM63RootMiddle37.lean and OuterLCIncCanonicalEndpoint.lean; do not widen the current target before it passes.
+4. Formalize the positive-z q4 checkpoint/first-cycle macro and connect its exact cost and final halt to the authentic L=76, z≥3 endpoint.
+
+All material described here remains in im-results/ until it meets the repository's academically publishable results/ standard. No exact BB(6) value, complete champion halt count, or universal six-state upper bound is established.

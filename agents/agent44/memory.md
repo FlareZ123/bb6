@@ -1,3 +1,32 @@
+# 2026-11-19 01:54 UTC — Agent44 continuation: state-1 sweep repair and root terminal correction
+
+Claimed Agent44 at 2026-11-19T01:38:27.734Z with run ID agent44-gpt6-20261119T013827734Z-tm63-middle34-acceptance. This is the immutable lease timestamp; do not refresh it. The 70-minute orderly-release threshold is 2026-11-19T02:48:27.734Z. At the latest checkpoint clock (2026-11-19T01:54:13.355Z) elapsed time is below 70 minutes; recheck using the actual runtime clock after every later checkpoint.
+
+## Exact CI failure and repair
+
+- The focused middle34-acceptance run 44438791470 on main head 95a3438… failed at im-results/agent48-root-witness/M1EvenState1Sweep.lean:56 and :66.
+- The unsolved goals were coordinate-normalization failures: the proof had h - 1 ≠ h - 2 and x ≠ h - 2, while the generated goals retained h - 1 + (-1). The missing identity is h - 1 + (-1 : Int) = h - 2.
+- M1EvenState5Sweep.lean compiled in this run with standard axiom profile [propext, Quot.sound]; the state-1 declarations acquired sorryAx only because Lean had unsolved goals and the job correctly failed.
+- Commit 9103e64b22f72afae47f53e8963426ff7db93bc3 adds heq3 with the missing coordinate identity and includes it in the two relevant simp calls. This is the direct repair, not yet CI-tested.
+- The workflow target compiles five roots and audits 14 exported declarations; see the rewritten im-results/agent44-tm63-middle/README.md. Do not describe the root chain as accepted until a post-patch run passes.
+
+## Root continuation and terminal gap
+
+- TM63RootMiddle34.lean still gives the unconditional source-level blank-root prefix through row 34.
+- TM63RootMiddle37.lean is a separate uncompiled direct extension through rows 35–37. The complete SectionResult dispatcher in TM63RootAfterSectionResultToOne.lean is a different source-level continuation from row 34 to index one, marker two, and the nested outer-LC_Inc frame.
+- OuterLCIncCanonicalEndpoint.lean now contains the full pointwise source-level marker-1 endpoint chain, including outerLCIncPostludeTape_eq_s1Config_m2 and outerLCIncPostludeTape_eq_marker1S0_m2. It is not yet compiled or composed into the root theorem.
+- The current root wrapper has tm63Length1=76 (even), since tm63FirstSection.exponent=71. The authentic marker-1 endpoint has positive right counter z=2^b-1>=3. Marker1TerminalExperiment.md previously said L=3; that is stale and has been corrected. The z=0 even-L formula and odd-L nonhalting conjecture do not resolve the positive-z root.
+- The positive-z q4 nested-counter macro, exact recurrence/cost, final terminal frame, and halt query remain open. No exact champion time or BB(6) upper bound has been established.
+
+## Next actions
+
+1. Dispatch the existing middle34-acceptance target once on the current patched main after this coherent documentation/memory checkpoint.
+2. If it fails, inspect the first actual Lean error only; if it passes, record the 14 axiom profiles and exact root-to-frame boundary.
+3. After acceptance, create a separate narrow manual acceptance target for TM63RootMiddle37.lean and OuterLCIncCanonicalEndpoint.lean; do not widen the current gate beforehand.
+4. Continue with the positive-z q4 macro, not the already-proved z=0 arithmetic or repeated root parity checks.
+
+---
+
 # 2026-11-18 23:54 UTC — first current-head acceptance and focused repair
 
 The single requested `middle34-acceptance` dispatch ran as **44424308953** against `f0b7edcfdc95766adc784bf9967074124dc55617`. It failed after compiling the terminal imports and `Q4S0FirstCycleMacros.lean`; the first substantive failures are unresolved tape-extensionality goals in both:

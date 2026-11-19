@@ -16,7 +16,7 @@ where `A,L ≥ 1`, `binDec A 0 = d1pow A`, `binDec L 0 = d1pow L`, and the right
 s0RightFacing 0 = [0,1,1,1,0,0] ++ d1pow 1
 ```
 
-The marker-0 control is the already-proved terminal interface. The marker-1 case is the context arising from the m=2,n=1 reset endpoint: `l = markerWord 1 ++ d0 ++ binDec L 0 ++ lh`.
+The marker-0 control is the already-proved terminal interface. The marker-1 left word is the one arising from the m=2,n=1 reset endpoint, but these experiments set the right counter to z=0. The authentic root endpoint has positive right counter z=2^b-1, so the experiment is not itself a simulation of the root configuration.
 
 The simulator transcribes the 12 transitions of the original `tm2` table in `ChampionRootBridge.lean`. It uses a finite set of 1-cells and treats every unlisted cell as 0. A reported halt at step `s` means `s` successful transitions occurred and the next transition query is undefined.
 
@@ -77,7 +77,7 @@ The even-L halting times grow by factors approaching 4 per increment of A and 16
 
 1. Is there a quantified macro theorem for marker 1 and even L, with a recurrence explaining the observed growth?
 2. Does marker 1 with odd L enter a translating cycle or an infinite expanding orbit?
-3. Can the marker-1 root endpoint from the m=2,n=1 branch be classified using such a theorem? In particular, the authentic middle-34 root has L=3 in the current wrapper, so the odd-L case is the relevant one.
+3. Can the marker-1 root endpoint from the m=2,n=1 branch be classified using such a theorem? The current source wrapper has tm63Length1=76 (even), not L=3; however, its right counter is positive, so the z=0 even-L experiment still does not close the authentic root.
 4. Is there a simple invariant or quotient that proves nonhalting for odd L without simulating the full expanding tape?
 
 ## Evidence boundary
@@ -110,6 +110,18 @@ marker=1 and L odd:
   every reachable state-4 configuration reading 0 has a 0 immediately to its right.
 ```
 
-If proved, this invariant immediately implies nonhalting for all A and odd L. The even-L samples instead eventually produce one state-4/0/1 boundary, causing the unique halt query.
+If proved, this invariant immediately implies nonhalting for all A and odd L. The even-L z=0 samples instead eventually produce one state-4/0/1 boundary, causing the unique halt query. The authentic root uses even L=76 but positive z, so neither this odd-L invariant nor the z=0 even-L formula resolves it.
 
 The transition-level equivalence is proved directly from the table; the quantified odd-L invariant is **not** proved. The event counts are finite computational evidence only.
+
+
+## Root-parameter correction (2026-11-19)
+
+The earlier statement that the authentic middle-34 root has \(L=3\) is stale and incorrect for the current source wrapper. The definitions are
+
+\[
+\texttt{tm63FirstSection}=\texttt{sectionResult}\ 7\ 2\ 6\ 63,\qquad
+\texttt{tm63Length1}=3+\texttt{tm63FirstSection.exponent}+2.
+\]
+
+Since nextExponent 2 6 63 = 71, the current wrapper has \(L=76\), and TM63Length1Parity.lean contains the source-level theorem tm63Length1_even. The authentic marker-1 endpoint also has \(z=2^b-1\ge3\). Thus the root lies in the even-L, positive-z regime: the odd-L nonhalting conjecture is not the root case, and the z=0 even-L halting formula is not directly applicable. The positive-z q4 macro remains the relevant terminal obstacle.
