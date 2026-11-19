@@ -100,6 +100,17 @@ Observed result:
 
 This is stronger than checking only the actual branch and actual correction carry on the finite prefix. It is nevertheless finite computational evidence only.
 
+## Exact source-output cross-check
+
+As a separate finite consistency check, the transducer was compared with the actual next state of the corrected source-shaped map for indices 33 through 2,000 (1,968 transitions). Let (M=3^k), (M_-=3^{k-1}), (x_0=x\bmod M), (x_1=x\bmod M_-), and (y_1=y\bmod M_-). After computing the exact correction terms (C,F) from the source next state, the initial carries are:
+
+- L: (c_x=\lfloor(x_0-3y_1+C)/M\rfloor), (c_y=\lfloor(3y_1+F)/M\rfloor).
+- R: (c_x=\lfloor(-x_0-3x_1-3y_1+C)/M\rfloor), (c_y=\lfloor(3x_1+3y_1+F)/M\rfloor).
+
+The (k-1) truncation on shifted terms is essential: the digit at position (k-1) is consumed by the transducer at output position (k), not in the carry below (k). With this split, all 1,968 actual carry pairs lie inside the advertised 55-case rectangles, and every transducer output digit in positions (k+2,\ldots,j-3) agrees exactly with the corresponding digit of the actual next state's (x',y'). There were zero (x)-digit or (y)-digit mismatches.
+
+This is a finite source-consistency check, not an induction over all canonical states. The universal 55-carry test remains the stronger finite statement recorded above; the missing theorem is still closure of the blank-root history condition for all time.
+
 ## What this does not prove
 
 The universal-safety predicate has not been shown to be inductive over all canonical states. Arbitrary canonical states can fail to preserve it, so the root-history restriction is essential. The finite observation does not establish that all future root blocks remain safe.
