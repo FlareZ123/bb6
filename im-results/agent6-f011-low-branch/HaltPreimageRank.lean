@@ -99,6 +99,9 @@ theorem potential_two_step_growth
   · have hlt : Potential p k c < Potential p' k' c' := by omega
     omega
 
+/--
+The only zero-W transitions are: (p=false,r=0,q=3m,m>=1,d>=1), (p=false,r=1,q=3m+2,d>=2), (p=true,q=0,r=0), and (p=true,r=1,q=3m+2,d>=2). All land at r'=2; every defined transition from r=2 strictly raises W.
+-/
 /-- Iteration stops if a transition returns none. -/
 def iterateHighLevel : Nat → AuditState → Option AuditState
   | 0, s => some s
