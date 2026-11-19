@@ -837,3 +837,6 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 
 
 - Final local preflight availability check: the Python runtime first returned a reset without execution, then a concrete ClientError on retry; no filesystem side effects were assumed. The container shell had likewise returned ClientError earlier. Thus the exact Lean 4.36.0-rc2 local compile/axiom audit remains blocked, and no CI substitute was dispatched.
+
+
+- Refined the dossier README's W11 status: q=3 mod4 remains open outside the listed q=3 mod16 and ten q-mod-256 subfamilies; q=1 mod4 remains open outside the listed q=9 mod16, q=17 mod32, q=865 mod1024, q=1505 mod2048, and q=1633 mod4096 subfamilies; even q (r=212 mod256) remains open. The README now reflects all current conditional exclusions and the 6867-residue count.
