@@ -111,7 +111,7 @@ def rank(state):
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--bound", type=int, default=500,
+    parser.add_argument("--bound", type=int, default=1000,
                         help="check both k and c in range(bound) for rank")
     parser.add_argument("--preimage-bound", type=int, default=1000,
                         help="check both k and c in range(bound) for halt preimages")
