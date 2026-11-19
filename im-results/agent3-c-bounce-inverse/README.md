@@ -267,3 +267,31 @@ See [U5Q0TwoCylinders.md](U5Q0TwoCylinders.md) for the exact coordinate chains a
 
 
 Aggregate preflight target: [U5Q0TwoCylindersAudit.lean](U5Q0TwoCylindersAudit.lean), which imports all four new proof drafts plus the existing W1821 baseline and prints the principal axiom audits.
+
+## U5 B2 even-u root-index subcylinders (2026-11-19)
+
+The even-u B2 reduction in [U5B2P4DyadicParentFan.md](U5B2P4DyadicParentFan.md)
+reduces B2 reachability to the P4 state after excluding the other parent.
+Two exact root-index cylinders of the remaining u=2 (mod 4) branch now have
+parameter bridges and source-exclusion drafts:
+
+- r=32 (mod 64): the exact root equation forces u=1802+6720t; the P4
+  parent fan is reduced to the n=0 and n=2 parents and both are excluded.
+- r=12 (mod 16): the exact root equation forces u=542+840w with w even;
+  P4 has a unique low-valuation parent
+  D(w)=(270923836+419829900w,148737413+230486970w), excluded by the
+  even/odd three-divisible blank-image theorem.
+
+The B2 source chain is factored as b2_even_reach_implies_p4_reach in
+U5B2Root32.lean. The standalone arithmetic bridges
+[U5B2Root32ParameterBridge.lean](U5B2Root32ParameterBridge.lean) and
+[U5B2Root4ParameterBridge.lean](U5B2Root4ParameterBridge.lean) compile
+locally with Lean 4.36.0-rc2 and no sorryAx.
+
+**Status:** the complete U5B2Root32.lean source import closure (including
+the new OddOddLowVal dependency and the factored B2 source chain) has not
+been compiled. The P4/B2 compositions have only had interface-level local
+preflight. No CI was dispatched. Keep both cylinders as intermediate
+drafts until exact-source preflight and the axiom audit pass. These
+cylinders do not close the remaining r mod 64 classes, and they do not
+close the separate q>=3 B2 parent fan described above.
