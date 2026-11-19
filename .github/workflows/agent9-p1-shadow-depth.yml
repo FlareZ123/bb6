@@ -22,7 +22,8 @@ jobs:
           for m in GParity GInverse; do lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean" | tee -a /tmp/audit.log; done
           for m in P1FiniteInverse P1InverseLog; do lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean" | tee -a /tmp/audit.log; done
           for m in MassInverse OddConeMass; do lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean" | tee -a /tmp/audit.log; done
-          for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic ShadowDepthSource ShadowSourceTransport ShadowParitySource ShadowSourceStep ShadowConeLift ShadowFeederRoots ShadowGraphBridge ShadowGraphFeeders ShadowGraphConverse ShadowGraphConverseWide ShadowQ29Finite ShadowQ29No256 ShadowQ29Graph ShadowQ29DepthArithmetic ShadowQ29DepthSource ShadowFiniteInvariant ShadowNoExceptionalGeneral ShadowNoExceptionalSource ShadowQ29FullCone; do
+          for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic ShadowDepthSource ShadowSourceTransport ShadowParitySource ShadowSourceStep ShadowConeLift ShadowFeederRoots ShadowGraphBridge ShadowGraphFeeders ShadowGraphConverse ShadowQ29Finite ShadowQ29No256 ShadowQ29Graph ShadowQ29DepthArithmetic ShadowQ29DepthSource ShadowFiniteInvariant ShadowNoExceptionalGeneral ShadowNoExceptionalSource ShadowQ29FullCone; do
             lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean" | tee -a /tmp/audit.log
           done
+          lean -o "im-results/agent50-p1-dyadic-width/ShadowGraphConverseWide.olean" "im-results/agent50-p1-dyadic-width/ShadowGraphConverseWide.lean" | tee -a /tmp/audit.log
           if grep -Fq sorryAx /tmp/audit.log; then exit 1; fi
