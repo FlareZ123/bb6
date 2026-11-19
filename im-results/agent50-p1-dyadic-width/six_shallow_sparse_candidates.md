@@ -12,7 +12,7 @@ and having at most five consecutive-selected-position gaps of length 1 or 2.
 
 Then
 \[
-\boxed{|\mathcal W_X|=O\!\left(X^{0.8881}(\log X)^5\right).}
+\boxed{|\mathcal W_X|=O\!\left(X^{0.8807}(\log X)^5\right).}
 \]
 In particular, the set of six-shallow wall candidates has natural density zero, with a power saving. The same bound applies, up to a constant, to feeder parameters \(q\) with \(n=16q+14\).
 
@@ -66,19 +66,22 @@ with \(Q_0=(1,1,1)^T\).
 
 Take
 \[
-w=\left(\frac{233}{500},\frac{341}{500},1\right)^T,
-\qquad \lambda=\frac{43}{20}.
+\lambda=\frac{21479}{10000}=2.1479,\qquad
+w=\left(\frac{10000}{21479},\frac{314790000}{21479^2},1\right)^T.
 \]
-Direct rational arithmetic gives
+Exact rational arithmetic gives \(\mathbf1\le\lambda w\) componentwise and
 \[
-Mw=\left(1,\frac{733}{500},\frac{1074}{500}\right)^T
-\le \lambda w,
-\qquad
-\mathbf1\le\frac{500}{233}w.
+Mw=\left(1,\frac{31479}{21479},
+1+\frac{10000}{21479}+\frac{314790000}{21479^2}\right)^T
+\le\lambda w.
 \]
-Consequently
+The third-coordinate slack is exactly
 \[
-Q_L(g)\le\frac{500}{233}w_g\lambda^L\le3\lambda^L
+\lambda-(Mw)_3=\frac{7275239}{10000\cdot21479^2}>0,
+\]
+while the first two coordinates are equalities. Consequently
+\[
+Q_L(g)\le\lambda^{L+1}w_g\le3\lambda^L
 \]
 for every starting state \(g\) and every \(L\ge0\).
 
@@ -107,7 +110,8 @@ At most five short gaps imply at most five pair positions that create a short ga
 
 Set
 \[
-r=\left\lceil\frac18\log_2 X\right\rceil.
+c=\frac{1}{2+5\log_2\lambda},\qquad
+r=\lceil c\log_2 X\rceil.
 \]
 For \(n\ge12r+12\), at least one no-short run has length at least \(r\). Choose the **first** such run. Before it, there are at most five short pair positions and at most five no-short runs, each of length at most \(r-1\). The prefix ending after the first \(r\) transitions of the chosen run therefore has a length \(L\) satisfying
 \[
@@ -135,17 +139,16 @@ Since \(\lambda=21479/10000<4\), the two geometric sums are bounded by
 \[
 O\!\left(r^5X(\lambda/4)^r+r^5\lambda^{6r}\right).
 \]
-With \(r=\lceil(1/8)\log_2X\rceil\), the exponents of \(X\) in these terms are respectively
+With \(c=1/(2+5\log_2\lambda)\), the two exponents are balanced:
 \[
-1-\frac18\log_2\left(\frac4\lambda\right)
-=0.88804208\ldots,
-\qquad
-\frac34\log_2\lambda
-=0.82825249\ldots.
+1-c\log_2\left(\frac4\lambda\right)
+=6c\log_2\lambda
+=\frac{6\log_2\lambda}{2+5\log_2\lambda}
+=0.88062317\ldots.
 \]
-The first dominates, proving
+The ceiling in \(r\) changes only the multiplicative constant. Hence
 \[
-|\mathcal W_X|=O\!\left(X^{0.8881}(\log X)^5\right).
+|\mathcal W_X|=O\!\left(X^{0.8807}(\log X)^5\right).
 \]
 
 ## Consequences and limitations
