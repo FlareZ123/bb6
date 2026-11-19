@@ -438,18 +438,13 @@ theorem setup_d0pow_length (n : Nat) : (d0pow n).length=3*n := by
 theorem setup_sideBit_append (xs ys : List Bool) (i : Nat) :
     sideBit (xs++ys) i =
       if i<xs.length then sideBit xs i else sideBit ys (i-xs.length) := by
+  intro i
   induction xs generalizing i with
   | nil => simp [sideBit]
   | cons b xs ih =>
       cases i with
       | zero => simp [sideBit]
-      | succ i =>
-          simp only [List.cons_append, sideBit]
-          rw [ih]
-          by_cases hi : i<xs.length
-          · simp [hi]
-          · have hsub : i+1-(xs.length+1)=i-xs.length := by omega
-            simp [hi,hsub]
+      | succ i => simp [sideBit, ih]
 
 /-- Given the B6 left-tail identity, the z-sweep/B30 suffix produces the
 complete left-facing word d0pow(z) ++ setupL2(A,L). -/
