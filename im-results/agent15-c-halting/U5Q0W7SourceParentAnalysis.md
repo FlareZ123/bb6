@@ -92,3 +92,18 @@ The Lean proof attempt is in
 `U5Q0W7ParentFan.lean`; it awaits independent local compilation.
 Until that preflight succeeds, this is a source-level derivation with a
 pending formalization, not a verified Lean theorem.
+
+
+The same excluded cylinder has a direct root-index description. Write
+(w=7+8s). Combining the exact residual congruence
+(t\equiv16+23w\pmod{128}) with (t=81+168z) gives
+(5z-7s\equiv12\pmod{16}). Hence
+[
+z\equiv6\pmod{16}
+\quad\Longleftrightarrow\quad
+s\equiv14\pmod{16}
+\quad\Longleftrightarrow\quad
+w\equiv119\pmod{128}.
+]
+Therefore the source-only exclusion above removes the actual root-index
+cylinder (w\equiv119\pmod{128}) from the w=7 progression.
