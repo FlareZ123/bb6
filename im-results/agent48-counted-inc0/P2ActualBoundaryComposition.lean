@@ -35,8 +35,8 @@ set_option maxHeartbeats 4000000
 /-- The corrected residual left word.  The tail after the two explicit
 zeroes is arbitrary and is not inspected by the 73-step bridge. -/
 def p2ActualResidualLeft (m : Nat) (tail : List Bool) : List Bool :=
-  List.replicate (m+2) true ++ [false,true,false,true] ++
-    List.replicate 7 true ++ [false,false] ++ tail
+  List.replicate (m+2) true ++
+    ([false,true,false,true] ++ List.replicate 7 true ++ [false,false] ++ tail)
 
 private theorem sideBit_replicate_true_local (n i : Nat) (hi : i<n) :
     sideBit (List.replicate n true) i = true := by
@@ -44,10 +44,10 @@ private theorem sideBit_replicate_true_local (n i : Nat) (hi : i<n) :
   | zero => omega
   | succ n ih =>
       cases i with
-      | zero => simp [sideBit]
+      | zero => simp [sideBit, List.replicate]
       | succ i =>
           have hi' : i<n := by omega
-          simpa [sideBit] using ih i hi'
+          simpa [sideBit, List.replicate] using ih i hi'
 
 private theorem sideBit_d1pow_true_local (n i : Nat) (hi : i<3*n) :
     sideBit (d1pow n) i = true := by
@@ -147,7 +147,7 @@ theorem p2ActualS0_to_state2
   let D : Nat := 6*4^a+42*2^a-12*a-48
 
   have ha : 1≤a := by dsimp [a]; omega
-  have hpowpos : 0<2^a := by positivity
+  have hpowpos : 0<2^a := by exact Nat.pow_pos (by decide)
   have hK : 0<K := by dsimp [K]; omega
   have hHK : h-(K:Int)=3 := by dsimp [h,H,K,a]; omega
 
