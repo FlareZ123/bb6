@@ -166,3 +166,32 @@ The source draft now also includes the root-index bridge:
 - blank_no_b2_root32_from_root_index composes the exact root equation, valuation bridge, and B2 exclusion.
 
 The root-index theorem is currently conditional on the exact residual identity being supplied; the Lean draft has not yet been compiled. This separates the arithmetic root-index bridge from the source-orbit exclusion and makes the remaining formalization dependency explicit.
+
+## 19 November update — arbitrary-parameter root32 bridge
+
+The earlier root-index wrapper assumed the intermediate parameterization
+u=122+840w. This was a genuine coverage gap: the exact root equation
+had not yet been used to derive that parameterization.
+
+The new theorem root32_u_parameter_of_exact in U5B2Root32.lean removes the
+assumption. From
+
+    r = 32 (mod 64),
+    E = 201+3360(6657+8192r),
+    18018+211u+22155r = 20*2^(E-13),
+
+the two exact modular consequences are
+
+    u = 10 (mod 64),    u = 17 (mod 105).
+
+Their CRT gives u=1802+6720t. The stronger theorem
+blank_no_b2_root32_from_exact_root_index now composes this bridge with
+the existing conditional B2 exclusion, with no pre-parameterization
+assumption on u.
+
+**Verification boundary:** the standalone arithmetic bridge was compiled
+locally with Lean 4.36.0-rc2; its axiom profile is [propext, Quot.sound],
+with no sorryAx. The full U5B2Root32.lean module, including its
+original-source parent-fan dependencies and final composed exclusion,
+has not yet been compiled. This is an intermediate result only; it does
+not close other root-index strata or decide Machine C / BB(6).
