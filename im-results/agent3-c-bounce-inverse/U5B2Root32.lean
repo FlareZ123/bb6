@@ -730,7 +730,7 @@ theorem blank_no_b2_root32_from_exact_root_index (r E u : Nat)
   have h := blank_no_b2_root32 t
   simpa only [ht] using h
 
-#print axioms root32_u_parameter_of_exact
+#print axioms BB6.Agent3U5B2Root32ParameterBridge.root32_u_parameter_of_exact
 #print axioms blank_no_b2_root32_from_exact_root_index
 
 
