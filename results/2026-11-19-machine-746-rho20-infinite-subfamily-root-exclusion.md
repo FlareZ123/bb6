@@ -91,7 +91,7 @@ From the exact identity and \(B=16xp\),
 \[
 \frac Xp=\frac{80-32x}{3}+\frac{2K+13}{3p}.
 \]
-Since \(x\le13/8\), the first term is at least \(28/3\). Since \(x\ge97/64\) and \((2K+13)/p<1\) for \(K\ge266\), the sum is less than \(21/2+1/3=65/6\). Thus \(28/3<X/p<65/6\), and \(P_0=X/3\) satisfies \(3p<P_0<4p\), as used below.
+Since \(x\le13/8\), the first term is at least \(28/3\). Since \(x\ge97/64\) and \((2K+13)/p<1\) for \(K\ge266\), the sum is less than \(21/2+1/3=65/6\). Thus \(28/3<X/p<65/6\), and \(P_0=X/3\) satisfies \(3p<P_0<4p\), as used below. Since \(X\) is odd, \(P_0\) is odd.
 
 By (1), the only possible odd exponents at \(E\) are \(t=0,1\). The maximal-exponent coordinate is
 \[
@@ -115,7 +115,7 @@ Then
 so \(\operatorname{ResetParent}(h_0,E)\) holds.
 
 Its odd numerator is \(X_1=2h_0+5\), and (1) gives \(v_3(X_1)=1\). Thus only \(t=0\) is possible at \(h_0\).
-We also need to show that \(h_0\) has no even parent. For this bound, \(x=97/64+67/2^a\) gives
+We also need to show that \(h_0\) has no even parent. Since \(x=97/64+67/2^a\),
 \[
 \frac Xp=\frac{21}{2}-\frac{32\cdot67}{3\cdot2^a}+\frac{2K+13}{3p}<\frac{21}{2}.
 \]
@@ -134,7 +134,7 @@ The exact expression for \(X_1/p\) is
 =6-\frac{128\cdot67}{9\cdot2^a}-\frac{10K-25}{9p}
 \in(5,6).
 \]
-Therefore \(P_1=X_1/3\) lies in the odd-source band at level \(K-2\), and the unique parent of \(h_0\) is
+Therefore \(P_1=X_1/3\) is odd and lies in the odd-source band at level \(K-2\), and the unique parent of \(h_0\) is
 \[
 y_0=2P_1-2p-K-3.
 \]
