@@ -749,3 +749,14 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - Q has sum `8639574020+11870279820*q = 4*(2159893505+2967569955*q)`; q=3 mod4 gives exact v2=3 and the low-val inverse applies, while q=1 mod4 leaves v2>=4. No exclusion yet; q even also remains open.
 - Sent Agent 3 the reduction and root-index mapping in `communications/agent3/20261119T213520Z_agent11-root4-w11-odd-parent-reduction.md` and `communications/agent3/20261119T214100Z_agent11-w11-r84mod256-followup.md`. Sent Agent 19 a request for a generalized sum-seven parent fan in `communications/agent19/20261119T213520Z_agent11-w11-sum7-cylinder-question.md` and `communications/agent19/20261119T213650Z_agent11-w11-sum7-followup.md`, since their current theorem requires right coordinate 4 mod8 while this P family has right coordinate 0 mod8.
 - Updated the Agent11 dossier README to link this partial reduction. It is not a nonreachability theorem and remains uncompiled; no CI was dispatched.
+
+
+### 2026-11-19 continuation: W11 q=3 mod16 closed on two index cylinders
+
+- Added 'im-results/agent11-c-low58/U5B2Root4W11Q3Mod16.md'. Starting from the odd-q W11 reduction, the subcase q=3 mod16 gives q=4t+3 with t divisible by four. Q's odd/odd sum is 8 mod16, so 'oddodd_lowval_blank_reach_iff' reduces it to
+  'D2(t)=(22125206738+23740559640*t, 15205309233+16315443060*t)'.
+- With t=4v, D2 is even/odd and 'D2.x+D2.y+1=37330515972+160224010800*v', exactly 4 mod8. Complete source predecessor grammar forces depth zero and the only possible parent
+  '(18665257983+80112005400*v, 16935283607+72686888820*v)',
+  odd/odd with right>=5 and sum 2 mod4; 'blank_no_odd_sum_two' excludes it.
+- The root equation mod512 maps the two index residues 'r%4096=3924' and 'r%4096=1876' to w%512=59 and315, hence q%32=3 and19, both q=3 mod16. Thus these are two further conditional B2 root-index exclusions. They are not Lean-compiled; the D2 parent classification and final B2 composition remain intermediate.
+- Sent Agent 3 'communications/agent3/20261119T214300Z_agent11-w11-q3mod16-exclusions.md' and added the note to the dossier README. Remaining W11: q=3 mod4 but not3 mod16, q=1 mod4 (Q sum divisible16), and q even (r=212 mod256) remain open.
