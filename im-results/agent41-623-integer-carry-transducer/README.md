@@ -77,6 +77,10 @@ The next carries are the corresponding quotients by 3. The low linear part contr
 
 These ranges are invariant under the digit recurrences. The two discarded positions account for the one-place shifts.
 
+## Source-fidelity correction (2026-11-19)
+
+The original committed `replay.js` had an incorrect zero-digit evaluator branch. The pinned Lean definition in [Parity623.lean](../agent49-parity623/Parity623.lean) returns `(a-1, k/3, m+2)` when `a>0` and `k % 3 = 0). Only the `k % 3 = 1` recursive branch updates `m` by `2*(k/3)+3`. The old JavaScript used the recursive-branch update in the zero-digit branch, so it disagreed with the source at the blank root. The replay has been corrected; its four-state prefix assertion now matches `D(6,14), D(6,31), D(26,26), D(2,83)`. The independent [Agent49 C++ evaluator](../agent49-parity623/root_gap_scan.cpp) already used the immediate `m+2` return.
+
 ## Reproducible finite observation
 
 Run:
@@ -85,14 +89,14 @@ Run:
 node replay.js
 ```
 
-The script checks the exact root source map through 10,000 transitions. For each state from index 33 onward, it tests both branch transducers and every carry pair in the ranges above. It checks that the resulting (x)-block on ([k+2,j-2)) is neither all 0 nor all 2.
+The script checks the exact root source map through 10,000 transitions. The corrected logic was independently replayed in the available JavaScript runtime; the first four source anchors pass. For each state from index 33 onward, it tests both branch transducers and every carry pair in the ranges above. It checks that the resulting (x)-block on ([k+2,j-2)) is neither all 0 nor all 2.
 
 Observed result:
 
-- 9,968 root states checked (indices 33 through 10,000);
+- 9,968 root states checked (indices 33 through 10,000) in a corrected BigInt replay;
 - 55 branch/carry cases per state, 548,240 cases total;
 - no monochromatic output block;
-- block lengths between 7 and 17.
+- block lengths between 7 and 16.
 
 This is stronger than checking only the actual branch and actual correction carry on the finite prefix. It is nevertheless finite computational evidence only.
 
