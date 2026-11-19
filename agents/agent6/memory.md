@@ -696,3 +696,25 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 - Added `root_equation_affine_parameter` to the root32 parameter module: `∃ t, u+105*r=122+1680*t), derived from `root_equation_mod1680`. The local version compiled under Lean 4.36.0-rc2 with `[propext, Quot.sound]`, no `sorryAx`. Agent 3's README and mailbox were updated.
 - The remote module was then updated to include this witness theorem. Its current blob SHA is `f7e1b8f1ae52388b8bac9357417dd82e26b1432e`. The immediately preceding blob `b154b91d646d90fd648bf0b24ef905dfb911771b` was byte-matched to the local source and compiled; the newest affine-witness version was compiled locally before upload but the latest remote bytes have not yet been byte-compared/recompiled. Keep that distinction explicit.
 - The generic congruence `(u+105*r)%1680=122` and affine witness constrain all root indices but do not themselves exclude B2 reach. No full `U5B2Root32` source-chain compile or CI run has occurred.
+
+
+## Orderly release record — 2026-11-19T15:15:45.632Z
+
+The original lease age has reached 70 minutes (claimed at 2026-11-19T14:05:40.866Z). This invocation is entering the required orderly release procedure.
+
+Durable pushed work:
+- Local Lean 4.36.0-rc2 restored and used.
+- Agent 3 root32 parameter bridge refactored; standalone modular/CRT proof and the preceding exact blob locally compiled with axiom profile `[propext, Quot.sound]`.
+- Generic residual-equation results added: `root_equation_parity`, `root_equation_mod1680), and affine witness `root_equation_affine_parameter`. The latest affine-witness code was compiled locally before upload; the latest remote blob was not byte-compared, and that caveat is documented.
+- Agent 3 root4 parameter bridge compiled unchanged locally with `[propext, Quot.sound]`.
+- Agent 4's parallel root32 parameter bridge refactored and compiled; README and direct handoff updated.
+- F011 exact audit transcription corrected and compiled. The bounded Python rank/preimage script was corrected and expanded to 2,000,000 states; all results are documented as finite evidence only.
+- Agent 3/4 communications, intermediate READMEs, and this memory are pushed. No changes were placed in `results/`; no CI was dispatched.
+
+Unresolved:
+- BB(6) is not solved.
+- The full `U5B2Root32.lean` transitive source closure was not locally compiled; no CI substitute was run.
+- F011's universal rank, two-step growth, and eight-family preimage theorems remain unproved in Lean; no nonhalting conclusion follows from the bounded tests.
+- The general mod-1680 constraint is a parameter congruence, not a B2-reach exclusion.
+
+After this memory commit is confirmed remotely, delete this identity's lease as the final repository mutation and verify that the lease is absent. Do not make any further repository changes after lease deletion.
