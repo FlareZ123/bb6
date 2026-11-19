@@ -39,6 +39,16 @@ private theorem sideBit_replicate_true_local (n i : Nat) (hi : i<n) :
 def p2ResidualLeft (m : Nat) (tail : List Bool) : List Bool :=
   List.replicate (m+2) true ++ [false,true,false,false] ++ tail
 
+/-- The q4 frame produced by the corrected P2 S0 postlude. -/
+def p2PostludeFrame (m n : Nat) (tail : List Bool) : Config :=
+  let a := n-1
+  let H : Int := (m+2+3*n)
+  let K := 3*a+(m+2)
+  q4FrameAt
+    (s0LeftSweep K
+      (s0Config (p2ResidualLeft m tail) a 0 (2^a-1) H).tape H)
+    3 q4S0Final4Inside q4S0Final4End
+
 /-- A generic all-ones S0 drain followed by the existing q4/S0 postlude.
 The only residual-context hypotheses are the leading one-run and the
 four-bit 0100 boundary, in head-facing order. -/
@@ -149,11 +159,7 @@ theorem p2S0Drain_q4Postlude
       ((6*4^(n-1) + 42*2^(n-1) - 12*(n-1) - 48) + (3*H-5))
       (s0Config (p2ResidualLeft m tail) (n-1)
         (2^(n-1)-1) 0 (H:Int)) =
-    some (q4FrameAt
-      (s0LeftSweep K
-        (s0Config (p2ResidualLeft m tail) (n-1)
-          0 (2^(n-1)-1) (H:Int)).tape (H:Int))
-      3 q4S0Final4Inside q4S0Final4End) := by
+    some (p2PostludeFrame m n tail) := by
   dsimp
   let a := n-1
   let H : Nat := (m+2+3*n)
@@ -194,7 +200,97 @@ theorem p2S0Drain_q4Postlude
   have hrun := s0Config_allOnesDrain_q4Postlude
     (p2ResidualLeft m tail) a (m+2) (H:Int) hprefix h0 h1 h2 h3
   rw [hcost] at hrun
-  simpa [a,H,K,hcenter] using hrun
+  simpa [a,H,K,hcenter,p2PostludeFrame] using hrun
+
+/-- The P2 Q-postlude restores the type-A eight-cell local window at head 1,
+provided the unchanged tail begins 100.  In ascending tape coordinates the
+window is 00110000. -/
+theorem p2PostludeFrame_typeAWindow
+    (m n : Nat) (tail : List Bool) (hn : 1 ≤ n)
+    (ht0 : sideBit tail 0 = true)
+    (ht1 : sideBit tail 1 = false)
+    (ht2 : sideBit tail 2 = false) :
+    (p2PostludeFrame m n tail).tape (-3) = false ∧
+    (p2PostludeFrame m n tail).tape (-2) = false ∧
+    (p2PostludeFrame m n tail).tape (-1) = true ∧
+    (p2PostludeFrame m n tail).tape 0 = true ∧
+    (p2PostludeFrame m n tail).tape 1 = false ∧
+    (p2PostludeFrame m n tail).tape 2 = false ∧
+    (p2PostludeFrame m n tail).tape 3 = false ∧
+    (p2PostludeFrame m n tail).tape 4 = false := by
+  let a := n-1
+  let H : Int := (m+2+3*n)
+  let K := 3*a+(m+2)
+  let ell := p2ResidualLeft m tail
+  let T := (s0Config ell a 0 (2^a-1) H).tape
+  have hcenter : H-(K:Int)=3 := by
+    dsimp [H,K,a]
+    omega
+  have hleft : s0LeftFacing ell a 0 = d1pow a ++ ell := by
+    simp [s0LeftFacing, binDec_zero]
+  have hcellTail (j : Nat) :
+      T (-1-(j:Int)) = sideBit tail j := by
+    have hc := s0Config_left_cell ell a 0 (2^a-1) H (K+4+j)
+    change T (H-(K+4+j:Int)) =
+      sideBit (s0LeftFacing ell a 0) (K+4+j) at hc
+    rw [hleft] at hc
+    rw [Agent6Q4Prefix.sideBit_append_right (d1pow a) ell
+      (K+4+j) (by rw [d1pow_length]; dsimp [K]; omega)] at hc
+    rw [d1pow_length] at hc
+    rw [p2ResidualLeft] at hc
+    rw [Agent6Q4Prefix.sideBit_append_right
+      (List.replicate (m+2) true)
+      ([false,true,false,false] ++ tail) (m+6+j) (by simp; omega)] at hc
+    rw [Agent6Q4Prefix.sideBit_append_right
+      ([false,true,false,false] : List Bool) tail (4+j) (by simp; omega)] at hc
+    have hcoord : H-(K+4+j:Int) = -1-(j:Int) := by
+      omega
+    rw [hcoord] at hc
+    have hidx1 : K+4+j-3*a = m+6+j := by
+      dsimp [K]
+      omega
+    have hidx2 : m+6+j-(m+2) = 4+j := by omega
+    have hidx3 : 4+j-4 = j := by omega
+    simpa [hidx1,hidx2,hidx3] using hc
+  have hsweep (x : Int) (hx : x ≤ 3) :
+      s0LeftSweep K T H x = T x := by
+    rw [s0LeftSweep_shift]
+    simp [hcenter,hx]
+  have hminus1 : (p2PostludeFrame m n tail).tape (-1) = true := by
+    have hframe :
+        (p2PostludeFrame m n tail).tape (-1) =
+          s0LeftSweep K T H (-1) := by
+      simp [p2PostludeFrame,ell,T,a,H,K,q4FrameAt_tape,
+        q4S0Final4Inside]
+    rw [hframe,hsweep (-1) (by omega),hcellTail 0]
+    exact ht0
+  have hminus2 : (p2PostludeFrame m n tail).tape (-2) = false := by
+    have hframe :
+        (p2PostludeFrame m n tail).tape (-2) =
+          s0LeftSweep K T H (-2) := by
+      simp [p2PostludeFrame,ell,T,a,H,K,q4FrameAt_tape,
+        q4S0Final4Inside]
+    rw [hframe,hsweep (-2) (by omega),hcellTail 1]
+    exact ht1
+  have hminus3 : (p2PostludeFrame m n tail).tape (-3) = false := by
+    have hframe :
+        (p2PostludeFrame m n tail).tape (-3) =
+          s0LeftSweep K T H (-3) := by
+      simp [p2PostludeFrame,ell,T,a,H,K,q4FrameAt_tape,
+        q4S0Final4Inside]
+    rw [hframe,hsweep (-3) (by omega),hcellTail 2]
+    exact ht2
+  refine ⟨hminus3, hminus2, hminus1, ?_, ?_, ?_, ?_, ?_⟩
+  · simp [p2PostludeFrame,ell,T,a,H,K,q4FrameAt_tape,
+      q4S0Final4Inside,q4S0Final4End]
+  · simp [p2PostludeFrame,ell,T,a,H,K,q4FrameAt_tape,
+      q4S0Final4Inside,q4S0Final4End]
+  · simp [p2PostludeFrame,ell,T,a,H,K,q4FrameAt_tape,
+      q4S0Final4Inside,q4S0Final4End]
+  · simp [p2PostludeFrame,ell,T,a,H,K,q4FrameAt_tape,
+      q4S0Final4Inside,q4S0Final4End]
+  · simp [p2PostludeFrame,ell,T,a,H,K,q4FrameAt_tape,
+      q4S0Final4Inside,q4S0Final4End,s0LeftSweep_shift,hcenter]
 
 #print axioms s0Config_allOnesDrain_q4Postlude
 #print axioms p2S0Drain_q4Postlude
