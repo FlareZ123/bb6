@@ -156,7 +156,7 @@ theorem machine623D1Audit_report_conserves :
   decide
 
 /-- The authentic #623 transition at D/1 is 0LA, so the original root
-    remains in one of the eighteen unresolved children. -/
+    remains in one of the nineteen unresolved children. -/
 theorem machine623D1Audit_root_remains_open :
     machine623D1Audit.open machine623 := by
   simp [machine623D1Audit, FrontierAudit.open, machine623D1Child,
