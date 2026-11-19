@@ -242,6 +242,170 @@ theorem setupB30Config_head (T : Int → Bool) (h : Int)
   omega
 
 /-- The suffix's total cost is the linear remainder 3*(A+L+z)+71. -/
+/-- The B30 suffix exposes the complete d0 block prefix. Each block,
+read leftward from the final head, is 001: the first z-1 blocks come from
+the counted sweep and the final block is the B6 boundary frame. -/
+theorem setupB30Config_d0_block (T : Int → Bool) (h : Int)
+    (A L z : Nat) (g : SetupSuffixGuards T h A L z)
+    (hz : 2≤z) (j : Nat) (hj : j<z) :
+    (setupB30Config T h L A z).tape
+      (h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)-3*(j:Int)) = false ∧
+    (setupB30Config T h L A z).tape
+      (h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)-3*(j:Int)-1) = false ∧
+    (setupB30Config T h L A z).tape
+      (h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)-3*(j:Int)-2) = true := by
+  let b6 : Int := h+13+3*(L:Int)+3*(A:Int)
+  let hs : Int := b6+4
+  let hb : Int := hs+3*(z:Int)
+  let hf : Int := b6+3*(z:Int)
+  have hbhf : hb-4=hf := by dsimp [hb,hs,hf,b6]; omega
+  have hframe : ∀ x, (setupB30Config T h L A z).tape x =
+      (if setupB30Inside (x-hb)
+       then decide (x-hb ∈ setupB30End.marked)
+       else (setupZConfig T h L A z).tape x) := by
+    intro x
+    simp [setupB30Config, hb, hs, b6, q4FrameAt_tape]
+  have hzframe : ∀ x, (setupZConfig T h L A z).tape x =
+      sweptRight z (setupB6Config T h L A).tape hs x := by
+    intro x
+    simp [setupZConfig, hs, b6]
+  have hframeOutside {x : Int} (hx : x<hf) :
+      (setupB30Config T h L A z).tape x =
+        (setupZConfig T h L A z).tape x := by
+    rw [hframe]
+    have hnot : setupB30Inside (x-hb)=false := by
+      simp [setupB30Inside, hbhf]
+      omega
+    simp [hnot]
+  have hframeAtHead :
+      (setupB30Config T h L A z).tape hf = false := by
+    rw [hframe]
+    have hin : setupB30Inside (hf-hb)=true := by
+      simp [setupB30Inside, hbhf]
+    have hnotmem : hf-hb ∉ setupB30End.marked := by
+      have hEq : hf-hb = -4 := by omega
+      simp [hEq, setupB30End]
+    simp [hin, hnotmem]
+  have hzpres {x : Int} (hx : x<hs) :
+      (setupZConfig T h L A z).tape x =
+        (setupB6Config T h L A).tape x := by
+    rw [hzframe]
+    exact sweptRight_preserves_before z
+      (setupB6Config T h L A).tape hs x hx
+  by_cases hjlast : j=z-1
+  · have hx0 : hf-3*(j:Int)=b6+3 := by
+      dsimp [hf,b6]; omega
+    have hx1 : hf-3*(j:Int)-1=b6+2 := by
+      dsimp [hf,b6]; omega
+    have hx2 : hf-3*(j:Int)-2=b6+1 := by
+      dsimp [hf,b6]; omega
+    have hb6three :
+        (setupB6Config T h L A).tape (b6+3)=false := by
+      simp [setupB6Config, q4FrameAt_tape, setupB6Inside,
+        setupB6End, b6]
+    have hb6two :
+        (setupB6Config T h L A).tape (b6+2)=false := by
+      simp [setupB6Config, q4FrameAt_tape, setupB6Inside,
+        setupB6End, b6]
+    have hb6one :
+        (setupB6Config T h L A).tape (b6+1)=true := by
+      simp [setupB6Config, q4FrameAt_tape, setupB6Inside,
+        setupB6End, b6]
+    have hpres0 : (setupB30Config T h L A z).tape (b6+3) =
+        (setupB6Config T h L A).tape (b6+3) := by
+      rw [hframeOutside]
+      · exact hzpres (by dsimp [hs,b6]; omega)
+      · dsimp [hf,b6] at *
+        omega
+    have hpres1 : (setupB30Config T h L A z).tape (b6+2) =
+        (setupB6Config T h L A).tape (b6+2) := by
+      rw [hframeOutside]
+      · exact hzpres (by dsimp [hs,b6]; omega)
+      · dsimp [hf,b6] at *
+        omega
+    have hpres2 : (setupB30Config T h L A z).tape (b6+1) =
+        (setupB6Config T h L A).tape (b6+1) := by
+      rw [hframeOutside]
+      · exact hzpres (by dsimp [hs,b6]; omega)
+      · dsimp [hf,b6] at *
+        omega
+    rw [hx0, hx1, hx2]
+    exact ⟨hpres0.trans hb6three, hpres1.trans hb6two,
+      hpres2.trans hb6one⟩
+  · have hjlt : j<z-1 := by omega
+    let i : Nat := z-2-j
+    have hi : i<z := by dsimp [i]; omega
+    have hc0 : hs+3*(i:Int)=hf-3*(j:Int)-2 := by
+      dsimp [i,hs,hf,b6]; omega
+    have hc1 : hs+3*(i:Int)+1=hf-3*(j:Int)-1 := by
+      dsimp [i,hs,hf,b6]; omega
+    have hc2 : hs+3*(i:Int)+2=hf-3*(j:Int) := by
+      dsimp [i,hs,hf,b6]; omega
+    have hblock0 : (setupZConfig T h L A z).tape
+        (hf-3*(j:Int)-2) = true := by
+      rw [hzframe, ← hc0]
+      rw [sweptRight_preserves_block_start z
+        (setupB6Config T h L A).tape hs i hi]
+      exact (g.zRun i hi).1
+    have hblock1 : (setupZConfig T h L A z).tape
+        (hf-3*(j:Int)-1) = false := by
+      rw [hzframe, ← hc1]
+      exact sweptRight_clears_second z
+        (setupB6Config T h L A).tape hs i hi
+    have hblock2 : (setupZConfig T h L A z).tape
+        (hf-3*(j:Int)) = false := by
+      rw [hzframe, ← hc2]
+      exact sweptRight_clears_third z
+        (setupB6Config T h L A).tape hs i hi
+    have hx0 : hf-3*(j:Int)-2<hf := by omega
+    have hx1 : hf-3*(j:Int)-1<hf := by omega
+    have hpres0 := hframeOutside hx0
+    have hpres1 := hframeOutside hx1
+    have hfirst : (setupB30Config T h L A z).tape
+        (hf-3*(j:Int)-2)=true := by
+      rw [hpres0]
+      exact hblock0
+    have hsecond : (setupB30Config T h L A z).tape
+        (hf-3*(j:Int)-1)=false := by
+      rw [hpres1]
+      exact hblock1
+    have hthird : (setupB30Config T h L A z).tape
+        (hf-3*(j:Int))=false := by
+      by_cases hj0 : j=0
+      · have heq : hf-3*(j:Int)=hf := by simp [hj0]
+        rw [heq]
+        exact hframeAtHead
+      · have hx2 : hf-3*(j:Int)<hf := by omega
+        rw [hframeOutside hx2]
+        exact hblock2
+    rw [show h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)=hf by
+      dsimp [hf,b6]; ring]
+    exact ⟨hthird, hsecond, hfirst⟩
+
+/-- The z sweep and B30 preserve every cell in the B6 left tail.
+For z≥2 the B30 frame begins strictly to the right of that tail. -/
+theorem setupB30Config_preserves_b6_left (T : Int → Bool) (h : Int)
+    (A L z : Nat) (g : SetupSuffixGuards T h A L z)
+    (hz : 2≤z) (i : Nat) :
+    (setupB30Config T h L A z).tape
+      (h+13+3*(L:Int)+3*(A:Int)-(i:Int)) =
+    (setupB6Config T h L A).tape
+      (h+13+3*(L:Int)+3*(A:Int)-(i:Int)) := by
+  let b6 : Int := h+13+3*(L:Int)+3*(A:Int)
+  let hs : Int := b6+4
+  let hb : Int := hs+3*(z:Int)
+  have hSweep : (setupZConfig T h L A z).tape (b6-(i:Int)) =
+      (setupB6Config T h L A).tape (b6-(i:Int)) := by
+    simp [setupZConfig, hs, b6, sweptRight_preserves_before
+      z (setupB6Config T h L A).tape hs (b6-(i:Int)) (by omega)]
+  have hOutside : b6-(i:Int)<hb-4 := by
+    dsimp [hb,hs,b6]
+    omega
+  rw [show h+13+3*(L:Int)+3*(A:Int)-(i:Int)=b6-(i:Int) by
+    dsimp [b6]]
+  simp [setupB30Config, q4FrameAt_tape, setupB30Inside,
+    hb, hs, b6, hOutside, hSweep]
+
 theorem setupSuffixCost_eq (A L z : Nat) :
     20+3*(L+1)+9+3*(A+1)+6+3*z+30 =
       3*(A+L+z)+71 := by
