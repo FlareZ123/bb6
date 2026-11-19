@@ -90,7 +90,45 @@ quad}
 ]
 The identity follows by collecting (A+B-1); it is exact over the rationals and hence in (mathbb Z_3).
 
-The residual `S` can vanish; for example `(a,h,b)=(1,1,2)` and `(3,1,4)` give `S=0`. No exhaustive classification of its zero set is asserted. If `S=0`, then `u'-1=A(u-1)`, which is nonzero for a genuine generic source `u≥5`, so this case cannot produce a terminal power. More generally, because `A>0` and `u-1>0`, any terminal transition requires `S<0`; if `S≥0`, then `u'-1>0`.
+The zero set is in fact completely classifiable.
+
+### Complete classification of the zero residual
+
+**Proposition.** For integers a ≥ 1, h ≥ 0, and b ≥ 1,
+S(a,h,b) = 0 if and only if (a,h,b) = (1,1,2) or (3,1,4).
+
+**Proof.** Put M = 2^a + a - 1. The equation S = 0 is
+3^h M = 2^h (2^b - 1).
+Taking 2-adic valuations gives h = v₂(M). If a = 1, then M = 2, so h = 1 and the equation gives 2^b = 4, hence b = 2.
+
+Now let a ≥ 2. Since 2^a < M < 2^(a+1), we have h < a. Therefore M is congruent to a - 1 modulo 2^(h+1), so h = v₂(a - 1). Write a - 1 = 2^h q, with q a positive odd integer. Then
+2^b = 1 + 3^h(2^(a-h) + q)
+    = 3^h 2^(2^h q + 1 - h) + 3^h q + 1.
+
+If h = 0, this reduces to 2^b = 2^a + a, strictly between 2^a and 2^(a+1), impossible.
+
+Suppose h ≥ 1, and put A = 2^h q + 1 - h = a - h. Whenever
+3^h q + 1 < 2^A,
+the displayed equation gives
+3^h < 2^(b-A) < 3^h + 1,
+which is impossible because the middle term is an integer power of two.
+
+The inequality holds in all cases except two small pairs:
+- If h = 1 and q ≥ 3, then 3q + 1 < 2^(2q), by induction from q = 3.
+- If h = 2 and q ≥ 3, then 9q + 1 < 2^(4q-1), by induction from q = 3.
+- If h ≥ 3 and q ≥ 1, then 3^h q + 1 < 2^(2^h q + 1 - h). For q = 1, h = 3 this is 28 < 64; induction in q multiplies the right side by 2^(2^h), and induction in h at q = 1 multiplies it by 2^(2^h-1), while the left side grows by a factor less than three.
+
+For the two exceptions, direct substitution finishes the proof. If (h,q) = (1,1), then a = 3 and 2^b = 3·2^2 + 3 + 1 = 16, so b = 4. If (h,q) = (2,1), then a = 5 and 2^b = 9·2^3 + 9 + 1 = 82, not a power of two. Thus only the two stated triples occur. □
+
+**Exact source cylinders.** On a genuine generic source x = 2^a u, u ≥ 5 odd, these two cases have the following equivalent 2-adic descriptions:
+- a = 1: (h,b) = (1,2) if and only if u ≡ 1 (mod 32), and u' = (15u + 1)/16.
+- a = 3: (h,b) = (1,4) if and only if u ≡ 1 (mod 128), and u' = (51u + 13)/64.
+
+In both cases A is respectively 15/16 or 51/64, so v₃(A) = 1. Consequently every genuine S = 0 edge is nonhalting and satisfies the exact valuation update
+v₃(u' - 1) = v₃(u - 1) + 1.
+Thus the singular σ = v₃(S) = infinity case is not an unresolved branch: it consists of precisely these two contracting cylinders.
+
+A separate exact BigInt replay of the authentic even orbit through 100,000 returns found 3,389 zero-residual edges: 3,180 of type (1,1,2) and 209 of type (3,1,4). This is finite diagnostic evidence only; the proposition above is the all-parameter proof.
 
 Let `R=v3(u-1)` and `σ=v3(S)`, with the convention `v3(0)=∞`. Since `2^(-b-h)` is a 3-adic unit, the ultrametric valuation law gives
 ```
@@ -128,7 +166,7 @@ K_n=\sum_{i<n}\big(h_i+v_3(2^{a_i+1}+1)\big)
 ]
 for the authentic generic branch history. It is not a fixed-modulus invariant: the modulus grows with the actual branch history. It therefore provides a possible route around finite odd-modulus and bounded-history obstructions, but it does **not** by itself show that the root's odd cofactor differs from (1).
 
-The remaining root problem is to control the resonant steps
+The remaining generic root problem is to control only the nonzero resonant steps
 [
 \kappa(a_i,h_i)+v_3(u_i-1)=v_3(S(a_i,h_i,b_i))
 ]

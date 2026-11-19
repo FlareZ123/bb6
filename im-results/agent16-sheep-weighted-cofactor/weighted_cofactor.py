@@ -65,6 +65,7 @@ def main() -> None:
     positive_or_zero_S = 0
     max_R = 0
     shown = []
+    zero_residual_shapes = {}
 
     for n in range(args.steps):
         edge = one_edge(x)
@@ -113,6 +114,20 @@ def main() -> None:
                 positive_or_zero_S += 1
                 assert u_next > 1, (n, x, edge, S)
 
+            # The all-parameter proof in README classifies S=0 exactly.
+            if S == 0:
+                shape = (a, h, b)
+                zero_residual_shapes[shape] = zero_residual_shapes.get(shape, 0) + 1
+                assert shape in {(1, 1, 2), (3, 1, 4)}, (n, shape, x)
+                assert kappa == 1, (n, shape, kappa)
+                assert R_next == R + 1, (n, shape, R, R_next)
+                if shape == (1, 1, 2):
+                    assert u % 32 == 1
+                    assert u_next == (15 * u + 1) // 16
+                else:
+                    assert u % 128 == 1
+                    assert u_next == (51 * u + 13) // 64
+
             if lhs == sigma:
                 resonant += 1
             max_R = max(max_R, R)
@@ -141,6 +156,7 @@ def main() -> None:
     print(f"resonant_generic_edges={resonant}")
     print(f"generic_edges_with_S_nonnegative={positive_or_zero_S}")
     print(f"maximum_source_v3(u-1)_observed={max_R}")
+    print(f"zero_residual_shapes={zero_residual_shapes}")
     for row in shown:
         print(row)
 
