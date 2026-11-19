@@ -1,4 +1,5 @@
 import ChampionRootBridge
+import Q4Suffix
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -155,5 +156,115 @@ theorem state4_right_ones (k : Nat) (T : Int → Bool) (h : Int)
 #print axioms p2ActualBoundary_at
 #print axioms p2ActualBoundary_end_right_ones
 #print axioms state4_right_ones
+
+
+
+/-- A single source transition that writes one cell. -/
+def p2WriteOne (T : Int → Bool) (h : Int) : Int → Bool :=
+  fun x => if x = h then true else T x
+
+/-- The two zero cells following the long q4 one-run are written to one. -/
+def p2AfterTwoZeros (T : Int → Bool) (H : Int) : Int → Bool :=
+  p2WriteOne (p2WriteOne T (H+5)) (H+6)
+
+/-- From q4 on the first of two zeroes, the source takes two moves to
+state 1 at the first cell of the following three-one blocks. -/
+theorem p2_two_zero_setup (T : Int → Bool) (H : Int)
+    (h0 : T (H+5) = false) (h1 : T (H+6) = false) :
+    run tm2 2 ⟨4,H+5,T⟩ =
+      some ⟨1,H+7,p2AfterTwoZeros T H⟩ := by
+  have hstep0 :
+      run tm2 1 ⟨4,H+5,T⟩ =
+        some ⟨0,H+6,p2WriteOne T (H+5)⟩ := by
+    have htrans : tm2 ((4:Fin 6),false) = some ⟨true,true,0⟩ := rfl
+    simp [run,rawStep,readSlot,applyMove,h0,htrans,p2WriteOne]
+  have hread1 : p2WriteOne T (H+5) (H+6) = false := by
+    simp [p2WriteOne]
+    exact h1
+  have hstep1 :
+      run tm2 1 ⟨0,H+6,p2WriteOne T (H+5)⟩ =
+        some ⟨1,H+7,p2AfterTwoZeros T H⟩ := by
+    have htrans : tm2 ((0:Fin 6),false) = some ⟨true,true,1⟩ := rfl
+    simp [run,rawStep,readSlot,applyMove,hread1,htrans,
+      p2WriteOne,p2AfterTwoZeros]
+  rw [show 2 = 1+1 by omega,run_append,hstep0]
+  simp only [Option.bind_some]
+  exact hstep1
+
+/-- The state-1 boundary after the final three-one block writes one and
+moves left into state 2. -/
+theorem p2_final_zero (T : Int → Bool) (h : Int)
+    (hblank : T h = false) :
+    run tm2 1 ⟨1,h,T⟩ =
+      some ⟨2,h-1,p2WriteOne T h⟩ := by
+  have htrans : tm2 ((1:Fin 6),false) = some ⟨true,false,2⟩ := rfl
+  simp [run,rawStep,readSlot,applyMove,hblank,htrans,p2WriteOne]
+
+/-- Right continuation from the actual-boundary bridge's q4 output.
+The q4 state scans the long one-run, crosses two zeroes, converts the
+following d1-blocks to d0-blocks, and stops in state 2 at the next
+blank boundary. -/
+theorem p2ActualRightContinuation
+    (H a : Nat) (T : Int → Bool)
+    (hones : ∀ i : Nat, i < H+3 → T (2+(i:Int)) = true)
+    (hzero5 : T ((H:Int)+5) = false)
+    (hzero6 : T ((H:Int)+6) = false)
+    (hblocks :
+      BB6Coverage.Agent8Q4Suffix.d1BlocksOn
+        (p2AfterTwoZeros T (H:Int)) ((H:Int)+7) (2^a))
+    (hblank :
+      p2AfterTwoZeros T (H:Int)
+        ((H:Int)+7+(3*(2^a:Int))) = false) :
+    run tm2 (H+6+3*2^a) ⟨4,2,T⟩ =
+      some ⟨2,(H:Int)+6+(3*(2^a:Int)),
+        p2WriteOne
+          (BB6Coverage.Agent8Q4Suffix.d0Sweep
+            (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7))
+          ((H:Int)+7+(3*(2^a:Int)))⟩ := by
+  have hscan4raw :=
+    state4_right_ones (H+3) T 2 hones
+  have hhead4 : (2:Int)+((H+3:Int)) = (H:Int)+5 := by omega
+  have hscan4 :
+      run tm2 (H+3) ⟨4,2,T⟩ =
+        some ⟨4,(H:Int)+5,T⟩ := by
+    simpa [hhead4] using hscan4raw
+  have hsetup :=
+    p2_two_zero_setup T (H:Int) hzero5 hzero6
+  have hscan1 :=
+    BB6Coverage.Agent8Q4Suffix.state1_d1_blocks_right
+      (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7) hblocks
+  have hblank' :
+      BB6Coverage.Agent8Q4Suffix.d0Sweep
+        (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7)
+        ((H:Int)+7+(3*(2^a:Int))) = false := by
+    rw [BB6Coverage.Agent8Q4Suffix.d0Sweep_after]
+    · exact hblank
+    · omega
+  have hfinal :=
+    p2_final_zero
+      (BB6Coverage.Agent8Q4Suffix.d0Sweep
+        (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7))
+      ((H:Int)+7+(3*(2^a:Int))) hblank'
+  have hrest :
+      run tm2 (2+(3*2^a+1)) ⟨4,(H:Int)+5,T⟩ =
+        some ⟨2,(H:Int)+6+(3*(2^a:Int)),
+          p2WriteOne
+            (BB6Coverage.Agent8Q4Suffix.d0Sweep
+              (2^a) (p2AfterTwoZeros T (H:Int)) ((H:Int)+7))
+            ((H:Int)+7+(3*(2^a:Int)))⟩ := by
+    have hcost : 2+(3*2^a+1) = 2+(3*2^a)+1 := by omega
+    rw [hcost,run_append,hsetup]
+    simp only [Option.bind_some]
+    rw [run_append,hscan1]
+    simp only [Option.bind_some]
+    exact hfinal
+  have hcost : H+6+3*2^a = (H+3)+(2+(3*2^a+1)) := by omega
+  rw [hcost,run_append,hscan4]
+  simp only [Option.bind_some]
+  exact hrest
+
+#print axioms p2_two_zero_setup
+#print axioms p2_final_zero
+#print axioms p2ActualRightContinuation
 
 end BB6Coverage.Agent38P2ActualBoundary
