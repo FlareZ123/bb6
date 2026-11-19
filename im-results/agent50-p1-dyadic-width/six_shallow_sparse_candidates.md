@@ -20,7 +20,7 @@ This is not a uniform logarithmic bound on every no-short run: exceptional param
 
 ## 1. Exact residue class for a fixed pair word
 
-Use the paired carry recurrence from [no_short_pair_recurrence.md](no_short_pair_recurrence.md). At pair index \(k\), let \((x_k,y_k)\in\{0,1\}^2\) be the two selected bits, put
+For even n, the original carry condition forces \\(n\\equiv2\\pmod4\\), so \\(a_0=(n+2)/4\\) is integral. Do **not** assume \\(n\\equiv14\\pmod{16}\\): that stronger residue follows only when the first pair is itself no-short, whereas the prefix counted here may begin with one of the at most five short-gap pair positions.\n\nUse the paired carry recurrence from [no_short_pair_recurrence.md](no_short_pair_recurrence.md). At pair index \(k\), let \((x_k,y_k)\in\{0,1\}^2\) be the two selected bits, put
 \[
 \delta_k=x_k+2y_k,\qquad \gamma_k=y_k,
 \]
