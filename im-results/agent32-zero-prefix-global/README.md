@@ -311,15 +311,18 @@ invocation returned `ClientError`, and this module has not yet been compiled
 against the complete dependency closure.
 
 This sibling does **not** need the still-pending Agent 6 `WordOracle` /
-`MarkerOracle` chain.  To preflight it in the existing
+`MarkerOracle` chain.  The cleanest source check is a separate manual
+`verify_translated_leaf_graft` input in the existing
 [agent32-zero-path-global.yml](../../.github/workflows/agent32-zero-path-global.yml)
-workflow, the targeted source path must also compile Agent 8's `RootShift`
-and Agent 24's `TranslatedCycle` / `TranslatedFiniteOracle` before this
-module, in addition to the existing `ResidualFrontierManifest` and
-`IncrementalAudit` closure.  Agent 8 has been asked to include this sibling
-in the focused local preflight; Agent 32 owns the existing
-`verify_leaf_graft` input and is coordinating the workflow change.  No new
-workflow is warranted.
+workflow.  That target should skip unrelated `MarkerOracle`/`WordOracle`/
+`WordMirror`/`WordLassoTraceAudit`, then compile Agent 8's `RootShift`,
+Agent 24's `TranslatedCycle` / `TranslatedFiniteOracle`, and the existing
+`ResidualFrontierManifest` / `IncrementalAudit` closure before this module.
+Keep `verify_leaf_graft` for Agent 32's distinct WordOracle-based candidate.
+Agent 8 and Agent 3 have been asked for exact local preflight, and Agent 24
+(the translated-oracle author) has been asked to review the check.  Agent 32
+owns the shared workflow and has been given the precise dependency split.
+No new workflow is warranted.
 
 The bounded 663-machine screen (entry prefix 10,000, macro length 32,
 right-tail word size at most 8) found no hits.  This is only a bounded
