@@ -60,6 +60,45 @@ theorem potential_monotone (p p' : Bool) (k c k' c' : Nat)
   have hr := rank_strict p p' k c k' c' h
   rcases hr with hlt | ⟨heq, htie⟩ <;> omega
 
+/-- Every defined transition out of residue class 2 strictly raises W. -/
+theorem potential_strict_from_r2 (p p' : Bool) (k c k' c' : Nat)
+    (hr : k % 3 = 2)
+    (h : auditHighLevelNext (.S p k c) = some (.S p' k' c')) :
+    Potential p k c < Potential p' k' c' := by
+  have hdiv : k = 3 * (k / 3) + k % 3 := by omega
+  have hmod : k % 3 < 3 := Nat.mod_lt k (by decide)
+  have hdiv' : k' = 3 * (k' / 3) + k' % 3 := by omega
+  have hmod' : k' % 3 < 3 := Nat.mod_lt k' (by decide)
+  cases p <;>
+    simp [auditHighLevelNext, Potential] at h ⊢ <;>
+    split_ifs <;> simp_all <;> omega
+
+/--
+Across any two consecutive defined transitions, W rises by at least one.
+If the first transition leaves W unchanged, rank_strict forces its output
+to have residue 2, from which the next transition strictly raises W.
+-/
+theorem potential_two_step_growth
+    (p p' p'' : Bool) (k c k' c' k'' c'' : Nat)
+    (h1 : auditHighLevelNext (.S p k c) = some (.S p' k' c'))
+    (h2 : auditHighLevelNext (.S p' k' c') = some (.S p'' k'' c'')) :
+    Potential p k c + 1 ≤ Potential p'' k'' c'' := by
+  have hmono1 := potential_monotone p p' k c k' c' h1
+  have hmono2 := potential_monotone p' p'' k' c' k'' c'' h2
+  by_cases heq : Potential p k c = Potential p' k' c'
+  · have hrank := rank_strict p p' k c k' c' h1
+    have htie : ResidueTieBreak k < ResidueTieBreak k' := by
+      rcases hrank with hlt | ⟨_, htie⟩
+      · omega
+      · exact htie
+    have hr2 : k' % 3 = 2 := by
+      unfold ResidueTieBreak at htie
+      split_ifs at htie <;> omega
+    have hstrict := potential_strict_from_r2 p' p'' k' c' k'' c'' hr2 h2
+    omega
+  · have hlt : Potential p k c < Potential p' k' c' := by omega
+    omega
+
 /-- Iteration stops if a transition returns none. -/
 def iterateHighLevel : Nat → AuditState → Option AuditState
   | 0, s => some s
@@ -105,5 +144,7 @@ end F011
 
 #print axioms F011.rank_strict
 #print axioms F011.potential_monotone
+#print axioms F011.potential_strict_from_r2
+#print axioms F011.potential_two_step_growth
 #print axioms F011.iterateHighLevel_rank_strict
 #print axioms F011.no_positive_cycle

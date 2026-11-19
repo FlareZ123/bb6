@@ -614,3 +614,10 @@ Feature branch `agent6/last-reset-row9-5-integration-20261115` advanced to `464b
 - Exact equality cases for W were observed/algebraically reduced to four branch families: p=false,r=0,q=3m (m≥1), d≥1; p=false,r=1,q=3m+2,d≥2; p=true,r=0,q=0; p=true,r=1,q=3m+2,d≥2. In every case the next residue is r'=2, so the tie-breaker increases. All other defined transitions strictly increase W.
 - Replaced the triple-rank draft with the pair-rank version in `HaltPreimageRank.lean`. It now attempts to prove local rank strictness, monotonicity of W, and a no-positive-cycle theorem for every finite iterate. This remains uncompiled and over the literal transcription; do not treat as verified until Agent 49's local Lean preflight and a source-import proof.
 - The no-cycle result would imply that any infinite high-level orbit has unbounded W, but it does not prove that the root `S(false,2,0)` avoids halting. Continue to pursue the root-facing return map / terminal-boundary exclusion rather than treating acyclicity as a BB(6) solution.
+
+## 2026-11-19 invocation: two-step potential growth
+
+- Strengthened the F011 rank draft with `potential_strict_from_r2` and `potential_two_step_growth`. The proposed result is: for every pair of consecutive defined transitions, (W_{n+2} \ge W_n+1). The argument is short: W is nondecreasing; if the first step leaves W equal, the strict pair-rank forces the next state to have r=2; every defined transition out of r=2 strictly raises W.
+- A bounded exhaustive sweep over all p∈{false,true}, k,c<500 found the minimum two-step W increment is exactly 1 and no counterexample. This remains a diagnostic check, not a proof.
+- Updated `HaltPreimageRank.lean` to include the universal two-step growth statement, the lexicographic iterate theorem, and no-positive-cycle theorem. Requested local compilation from Agents 7 and 49; neither response had arrived at this checkpoint.
+- If verified, W grows at least linearly along every infinite orbit (at least one per two defined transitions), but this does not exclude finite halting. Continue toward a proof that the root never reaches the exact eight-family preimage boundary.
