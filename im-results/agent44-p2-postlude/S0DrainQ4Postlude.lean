@@ -91,13 +91,13 @@ theorem s0Config_allOnesDrain_q4Postlude
       q4S0Final4Input (s0LeftSweep K T H) h' := by
     refine ⟨?_,?_,?_,?_⟩
     · rw [hsweep (h'-3) (by omega)]
-      simpa [h', K] using hcell 3 |>.trans h3
+      simpa [h', K] using (hcell 3).trans h3
     · rw [hsweep (h'-2) (by omega)]
-      simpa [h', K] using hcell 2 |>.trans h2
+      simpa [h', K] using (hcell 2).trans h2
     · rw [hsweep (h'-1) (by omega)]
-      simpa [h', K] using hcell 1 |>.trans h1
+      simpa [h', K] using (hcell 1).trans h1
     · rw [hsweep h' (by omega)]
-      simpa [h', K] using hcell 0 |>.trans h0
+      simpa [h', K] using (hcell 0).trans h0
   have hQ := q4S0Postlude_at K T H hones hright hguard
   have hQ' :
       run tm2 (3*K+4) (s0Config ell a 0 (2^a-1) H) =
@@ -116,6 +116,7 @@ theorem s0Config_allOnesDrain_q4Postlude
     _ = some (q4FrameAt (s0LeftSweep K T H) h'
           q4S0Final4Inside q4S0Final4End) := by
             rw [hD]
+            simp only [Option.bind_some]
             exact hQ'
 
 /-- The corrected P2 S0 postlude: after the P2 prefix has produced the
@@ -124,20 +125,20 @@ the counted drain and q4/S0 postlude return to state 4 at head 1. -/
 theorem p2S0Drain_q4Postlude
     (m n : Nat) (tail : List Bool) (hn : 1 ≤ n) :
     let a := n-1
-    let H : Int := (m+2+3*n)
+    let H : Nat := (m+2+3*n)
     let K := 3*(n-1)+(m+2)
     run tm2
       ((6*4^(n-1) + 42*2^(n-1) - 12*(n-1) - 48) + (3*H-5))
       (s0Config (p2ResidualLeft m tail) (n-1)
-        (2^(n-1)-1) 0 H) =
+        (2^(n-1)-1) 0 (H:Int)) =
     some (q4FrameAt
       (s0LeftSweep K
         (s0Config (p2ResidualLeft m tail) (n-1)
-          0 (2^(n-1)-1) H).tape H)
+          0 (2^(n-1)-1) (H:Int)).tape (H:Int))
       3 q4S0Final4Inside q4S0Final4End) := by
   dsimp
   let a := n-1
-  let H : Int := (m+2+3*n)
+  let H : Nat := (m+2+3*n)
   let K := 3*a+(m+2)
   have hprefix : ∀ i : Nat, i<m+2 →
       sideBit (p2ResidualLeft m tail) i = true := by
@@ -166,14 +167,14 @@ theorem p2S0Drain_q4Postlude
       (List.replicate (m+2) true)
       ([false,true,false,false] ++ tail) (m+5) (by simp)]
     simp [sideBit]
-  have hcenter : H-(K:Int)=3 := by
+  have hcenter : (H:Int)-(K:Int)=3 := by
     dsimp [H,K,a]
     omega
   have hcost : 3*K+4 = 3*H-5 := by
     dsimp [H,K,a]
     omega
   have hrun := s0Config_allOnesDrain_q4Postlude
-    (p2ResidualLeft m tail) a (m+2) H hprefix h0 h1 h2 h3
+    (p2ResidualLeft m tail) a (m+2) (H:Int) hprefix h0 h1 h2 h3
   rw [hcost] at hrun
   simpa [a,H,K,hcenter] using hrun
 
