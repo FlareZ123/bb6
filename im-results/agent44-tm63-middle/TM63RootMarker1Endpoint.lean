@@ -250,5 +250,8 @@ theorem tm63Middle34Result_z_ge_three :
 
 #print axioms tm63_blank_reaches_after_middle34_marker1_s0
 #print axioms tm63_blank_reaches_after_middle34_marker1_s0_input_bounds
+#print axioms tm63MiddleAfter34B_ge_two
+#print axioms tm63Middle34Result_right_ge_two
+#print axioms tm63Middle34Result_z_ge_three
 
 end BB6Coverage.Agent44TM63RootMarker1Endpoint
