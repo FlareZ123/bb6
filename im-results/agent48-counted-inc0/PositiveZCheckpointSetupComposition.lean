@@ -1,5 +1,6 @@
 import PositiveZCheckpointSetupBridges
 import CountedSweep
+import D0SweepLeftFacing
 
 /-!
 # Compositional source theorem for the positive-z setup suffix
@@ -15,6 +16,9 @@ namespace BB6Coverage.Agent48PositiveZSetup
 open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent48Q4S0Macros
+open BB6Coverage.Agent8S1Encoder
+open BB6Coverage.Agent8Rst1Prime
+open BB6Coverage.Agent48D0SweepLeftFacing
 
 set_option maxHeartbeats 4000000
 
@@ -402,6 +406,98 @@ theorem setupB30Config_preserves_b6_left (T : Int → Bool) (h : Int)
     dsimp [b6]]
   simp [setupB30Config, q4FrameAt_tape, hnot,
     hb, hs, b6, hSweep]
+
+/-- Physical-order 100 block power used for the simpler residual word. -/
+def setupD100pow : Nat → List Bool
+  | 0 => []
+  | n+1 => [true,false,false] ++ setupD100pow n
+
+/-- Agent 24's equivalent residual-context normal form:
+110 ++ (100)^(A+1) ++ 111 ++ (100)^(L+1) ++ 1110111.
+This is the same list as the shifted 010-expression in the checkpoint
+dossier, but aligns directly with the counted sweep's physical output. -/
+def setupL2 (A L : Nat) : List Bool :=
+  [true,true,false] ++ setupD100pow (A+1) ++
+  [true,true,true] ++ setupD100pow (L+1) ++
+  [true,true,true,false,true,true,true]
+
+/-- The sole z-independent left-tail identity still needed after B6. -/
+def SetupB6LeftTail (T : Int → Bool) (h : Int) (A L : Nat) : Prop :=
+  ∀ i : Nat,
+    (setupB6Config T h L A).tape
+      (h+13+3*(L:Int)+3*(A:Int)-(i:Int)) =
+    sideBit (setupL2 A L) i
+
+/-- Length of the base-3 all-zero counter word. -/
+theorem setup_d0pow_length (n : Nat) : (d0pow n).length=3*n := by
+  induction n with
+  | zero => simp [d0pow]
+  | succ n ih => simp [d0pow, d0, ih]
+
+/-- Append decomposition for the tape-side indexing convention. -/
+theorem setup_sideBit_append (xs ys : List Bool) (i : Nat) :
+    sideBit (xs++ys) i =
+      if i<xs.length then sideBit xs i else sideBit ys (i-xs.length) := by
+  induction xs generalizing i with
+  | nil => simp [sideBit]
+  | cons b xs ih =>
+      cases i with
+      | zero => simp [sideBit]
+      | succ i =>
+          simp only [List.cons_append, sideBit]
+          rw [ih]
+          by_cases hi : i<xs.length
+          · simp [hi]
+          · have hsub : i+1-(xs.length+1)=i-xs.length := by omega
+            simp [hi,hsub]
+
+/-- Given the B6 left-tail identity, the z-sweep/B30 suffix produces the
+complete left-facing word d0pow(z) ++ setupL2(A,L). -/
+theorem setupB30Config_leftFacing (T : Int → Bool) (h : Int)
+    (A L z : Nat) (g : SetupSuffixGuards T h A L z)
+    (hz : 2≤z) (htail : SetupB6LeftTail T h A L) :
+    ∀ i : Nat,
+      (setupB30Config T h L A z).tape
+        (h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)-(i:Int)) =
+      sideBit (d0pow z ++ setupL2 A L) i := by
+  intro i
+  have hlen : (d0pow z).length=3*z := setup_d0pow_length z
+  by_cases hi : i<3*z
+  · have hmod : i%3=0 ∨ i%3=1 ∨ i%3=2 := by omega
+    rcases hmod with h0|h1|h2
+    · let j : Nat := i/3
+      have hiq : i=3*j := by dsimp [j]; omega
+      have hj : j<z := by omega
+      have hb := setupB30Config_d0_block T h A L z g hz j hj
+      rw [setup_sideBit_append]
+      simp [hlen, hi, hiq, setupSideBit_d0pow_pattern, h0]
+      simpa [hiq] using hb.1
+    · let j : Nat := i/3
+      have hiq : i=3*j+1 := by dsimp [j]; omega
+      have hj : j<z := by omega
+      have hb := setupB30Config_d0_block T h A L z g hz j hj
+      rw [setup_sideBit_append]
+      simp [hlen, hi, hiq, setupSideBit_d0pow_pattern, h1]
+      simpa [hiq] using hb.2.1
+    · let j : Nat := i/3
+      have hiq : i=3*j+2 := by dsimp [j]; omega
+      have hj : j<z := by omega
+      have hb := setupB30Config_d0_block T h A L z g hz j hj
+      rw [setup_sideBit_append]
+      simp [hlen, hi, hiq, setupSideBit_d0pow_pattern, h2]
+      simpa [hiq] using hb.2.2
+  · have hge : 3*z≤i := by omega
+    let j : Nat := i-3*z
+    have heq :
+        h+13+3*(L:Int)+3*(A:Int)+3*(z:Int)-(i:Int) =
+        h+13+3*(L:Int)+3*(A:Int)-(j:Int) := by
+      dsimp [j]
+      omega
+    rw [heq]
+    rw [setupB30Config_preserves_b6_left T h A L z hz j]
+    rw [setup_sideBit_append]
+    simp [hlen, hge, j]
+    exact htail j
 
 theorem setupSuffixCost_eq (A L z : Nat) :
     20+3*(L+1)+9+3*(A+1)+6+3*z+30 =
