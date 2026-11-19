@@ -95,7 +95,7 @@ private theorem config_ext {c d : Config}
       rfl
 
 /-- S0's absolute-coordinate encoder is equivariant under translation. -/
-private theorem s0Config_shift
+theorem s0Config_shift
     (l : List Bool) (a z b : Nat) (h : Int) :
     s0Config l a z b h = shiftConfig h (s0Config l a z b 0) := by
   apply config_ext
