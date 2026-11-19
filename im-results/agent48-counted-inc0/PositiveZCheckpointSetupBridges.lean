@@ -181,7 +181,7 @@ theorem setupB6_heads :
 def setupB6Input (T : Int → Bool) (h : Int) : Prop :=
   T (h + (-1:Int)) = false ∧
   T h = false ∧
-  T (h+1) = true ∧
+  T (h+1) = false ∧
   T (h+2) = true ∧
   T (h+3) = true
 
