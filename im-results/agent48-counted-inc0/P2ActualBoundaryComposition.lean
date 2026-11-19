@@ -186,7 +186,6 @@ theorem p2ActualS0_to_state2
         sideBit
           ([false,true,false,true] ++ List.replicate 7 true ++
             [false,false] ++ tail) j := by
-    rw [hsweep_before (3-(j:Int)) (by omega)]
     have hcell := s0Config_left_cell ell a 0 (2^a-1) h
       (3*a+(m+2+j))
     rw [hleftFacing] at hcell
@@ -272,10 +271,14 @@ theorem p2ActualS0_to_state2
       (by simpa [hzero11] using hboundary 11),
       (by simpa [hzero12] using hboundary 12),h4⟩
 
+  have hinput' : p2ActualBoundaryInput S (h-(K:Int)) := by
+    simpa [hHK] using hinput
+
   have hpost :
       run tm2 (3*K+73) ⟨3,h,T⟩ =
         some B := by
-    simpa [S,B] using p2ActualPostlude_at K T h hleftOnes hright hinput
+    simpa [S,B,hHK] using
+      p2ActualPostlude_at K T h hleftOnes hright hinput'
 
   have hBconfig : B=⟨4,2,B.tape⟩ := by
     apply config_ext_local
@@ -286,6 +289,9 @@ theorem p2ActualS0_to_state2
     · rfl
 
   have hBoutside (x : Int) (hx : 5≤x) : B.tape x=S x := by
+    change
+      (BB6Coverage.Agent6Q4Prefix.frameAt S 3
+        p2ActualBoundaryInside p2ActualBoundaryEnd).tape x = S x
     rw [BB6Coverage.Agent6Q4Prefix.frameAt_tape]
     have hnot : p2ActualBoundaryInside (x-3)=false := by
       simp [p2ActualBoundaryInside]
