@@ -69,7 +69,7 @@ function rootCandidate(K, a) {
 
 function parentGraph(root) {
   const rootKey = root.toString();
-  const nodes = new Map([[rootKey, { u: root, parents: [] }]);
+  const nodes = new Map([[rootKey, { u: root, parents: [] }]]);
   const queue = [rootKey];
   let edgeCount = 0;
 
