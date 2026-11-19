@@ -28,7 +28,7 @@ For (z\equiv2\pmod4), write (z=2+4u) and (W=2228+3591u), so (T=16W) and (P_1+2P_
 U=a+3=2^{3-2q}W\quad(\text{an even natural}),qquad
 k=\frac{53366+86016u-U-4-6q}{2}.
 ]
-Equivalently (q=0,1) always occur, and (q\ge2) is permitted only when (2^{2q-3}\mid W). The (a=1) exceptional case is included by (U=4) if it occurs.
+Equivalently (q=0,1) always occur, and (q\ge2) is permitted only when (2^{2q-2}\mid W). The (a=1) exceptional case is included by (U=4) if it occurs.
 
 Two branches are already eliminated by source blank-image invariants:
 
