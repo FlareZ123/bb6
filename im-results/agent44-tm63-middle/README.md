@@ -46,7 +46,7 @@ The next pointwise identification is drafted in im-results/agent42-outer-lcinc/O
 s1Config\ L\ 0\ 1\ (a+b+2)\ (2^b-1)\ 0\ (h+3b+5),
 \]
 
-equivalently the S0 input with left word markerWord 1 ++ d0 ++ d1pow L ++ lh and positive right counter \(z=2^b-1\). The declarations outerLCIncPostludeTape_eq_s1Config_m2 and outerLCIncPostludeTape_eq_marker1S0_m2 are not yet in the acceptance closure and have not been Lean-compiled or axiom-audited.
+equivalently the S0 tape encoding with left word markerWord 1 ++ d0 ++ d1pow L ++ lh and right counter \(z=2^b-1\). The generic endpoint theorem proves the width/value bound, but the root-specific lower bound \(b\ge2\) (hence \(z\ge3\)) is not yet exported as a Lean lemma; establish it before applying the positive-z q4 macro. The declarations outerLCIncPostludeTape_eq_s1Config_m2 and outerLCIncPostludeTape_eq_marker1S0_m2 are not yet in the acceptance closure and have not been Lean-compiled or axiom-audited.
 
 The new [TM63RootMarker1Endpoint.lean](TM63RootMarker1Endpoint.lean) composes `outerLCIncPostludeTape_eq_marker1S0_m2` with `tm63_blank_reaches_after_middle34_reset_frame`. Its theorem `tm63_blank_reaches_after_middle34_marker1_s0` states the resulting authentic blank-root run directly at the canonical marker-1 S0 input, with width (A=\texttt{middle34Result.exponent}+\texttt{middle34Result.right}+2), right counter (z=2^{\texttt{middle34Result.right}}-1), and the exact final head. It also imports the generic width/value bounds. This integration is **uncompiled source draft**; it does not establish halting or close the positive-(z) q4 macro.
 
@@ -79,6 +79,6 @@ Commit 9103e64b22f72afae47f53e8963426ff7db93bc3 adds the explicit identity heq3 
 2. Only after that preflight passes, dispatch the existing middle34-acceptance target once. Inspect the first actual Lean diagnostic if it fails; do not repeat previous unpatched runs.
 3. If it passes, record all 14 exported axiom profiles and preserve the root-to-nested-frame boundary exactly as proved.
 4. Only after that acceptance, add a separate narrow manual acceptance target for TM63RootMiddle37.lean, OuterLCIncCanonicalEndpoint.lean, and TM63RootMarker1Endpoint.lean; do not widen the current target before it passes.
-5. Formalize the positive-z q4 checkpoint/first-cycle macro and connect its exact cost and final halt to the authentic L=76, z≥3 endpoint.
+5. Formalize the root-specific bound `middle34Result.right ≥ 2` (hence `z ≥ 3`), then connect the positive-z q4 checkpoint/first-cycle macro's exact cost and final halt to the authentic L=76 endpoint.
 
 All material described here remains in im-results/ until it meets the repository's academically publishable results/ standard. No exact BB(6) value, complete champion halt count, or universal six-state upper bound is established.
