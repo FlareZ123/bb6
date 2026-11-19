@@ -150,3 +150,16 @@ The [wall modular obstruction](wall_modular_obstruction.md) extracts the exact c
 `sum_{s in A}(n+3+s)2^s = 1 (mod 2^n)` from the cumulative-cost wall identity and proves the necessary restriction `n = 2 or 14 (mod 16)`, independently of depth caps. It also records an unproved unrestricted six-shallow subset lemma and an exact carry DP scan through n=10000; the scan is evidence, not an unbounded theorem.
 
 The [finite low-index wall DP](small_index_wall_dp.md), with executable [JavaScript](small_index_wall_dp.js), exhaustively excludes the full arithmetic wall identity for every n=14,...,147 and arbitrary inverse depths. The modular prefix DP leaves only n=30; a second exact carry DP eliminates n=30 for all terminal costs. This is a finite exact computational result, not yet Lean-kernel checked. If integrated with Agent43's n>=83 source lift, it closes the finite low-index band for the six-shallow lower bound. It does not exclude wall paths for n>=83 and does not decide P1 or BB(6).
+
+
+## Power-saving sparsity of shallow wall candidates (19 November 2026)
+
+The [pair-carry counting argument](six_shallow_sparse_candidates.md) gives a new density-zero result for the wall congruence. For every fixed \(k\ge0\), the number of \(n\le X\) for which there exists a congruence witness subset with at most \(k\) gaps of length 1 or 2 is
+\[
+O_k\!\left(X^{\beta_k}(\log X)^k\right),\qquad
+\beta_k=\frac{(k+1)\log_2\lambda}{2+k\log_2\lambda}<1,
+\quad \lambda=\frac{21479}{10000}.
+\]
+For \(k=5\), this sharpens to \(O(X^{0.8807}(\log X)^5)\). Consequently, for density-one \(n\), the wall congruence forces at least six shallow gaps. The same power-saving applies to the feeder progression \(n=16q+14\).
+
+This is a **density-one** conclusion, not the unrestricted pointwise six-shallow lemma: an infinite exceptional zero-density subsequence may remain. The argument is a paper derivation from the exact pair recurrence and fixed-word residue classes; it has not yet been Lean-certified or externally reviewed. It does not decide P1 or BB(6).
