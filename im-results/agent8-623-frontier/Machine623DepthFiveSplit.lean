@@ -95,7 +95,7 @@ theorem machine623D1ToCLeft1_cover :
   finiteLassoCheck_sound _ 8 6 machine623D1ToCLeft1_lasso_check
 
 /-- A source-sound one-level expansion of the 25^8 depth-four raw-table
-    cylinder. Six children are proved all-time nonhalting; the other
+    cylinder. Six children are certified below score six; the other
     nineteen are deliberately retained as open cylinders. -/
 def machine623D1Audit : FrontierAudit (DecidedBelow 6) (machine623Prefix 4) :=
   .branch (machine623Prefix 4) machine623D1Slot machine623D1_unassigned
@@ -159,7 +159,14 @@ theorem machine623D1Audit_report_conserves :
     remains in one of the nineteen unresolved children. -/
 theorem machine623D1Audit_root_remains_open :
     machine623D1Audit.open machine623 := by
-  decide
+  have hB : machine623 machine623D1Slot ≠ some machine623D1ToBLeft0 := by decide
+  have hC : machine623 machine623D1Slot ≠ some machine623D1ToCLeft0 := by decide
+  have hD0 : machine623 machine623D1Slot ≠ some machine623D1ToDLeft0 := by decide
+  have hD1 : machine623 machine623D1Slot ≠ some machine623D1ToDLeft1 := by decide
+  have hDR0 : machine623 machine623D1Slot ≠ some machine623D1ToDRight0 := by decide
+  have hC1 : machine623 machine623D1Slot ≠ some machine623D1ToCLeft1 := by decide
+  simp [machine623D1Audit, FrontierAudit.open,
+    hB, hC, hD0, hD1, hDR0, hC1]
 
 #print axioms machine623D1ToBLeft0_ray_check
 #print axioms machine623D1ToCLeft1_lasso_check
