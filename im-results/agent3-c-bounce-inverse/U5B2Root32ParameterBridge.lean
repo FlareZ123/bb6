@@ -116,6 +116,20 @@ theorem root_equation_mod1680 (r E u : Nat)
     (root_equation_mod16 u r hmod16)
     (root_equation_mod105 u r hmod105)
 
+private theorem affine_of_mod1680 (x : Nat) (hx : x%1680=122) :
+    ∃ t : Nat, x=122+1680*t := by
+  refine ⟨x/1680,?_⟩
+  have h := Nat.mod_add_div x 1680
+  omega
+
+/-- The root equation therefore has the affine parameter form
+u+105*r = 122+1680*t for some natural t. -/
+theorem root_equation_affine_parameter (r E u : Nat)
+    (hE : E=201+3360*(6657+8192*r))
+    (hRoot : 18018+211*u+22155*r=20*2^(E-13)) :
+    ∃ t : Nat, u+105*r=122+1680*t := by
+  exact affine_of_mod1680 (u+105*r) (root_equation_mod1680 r E u hE hRoot)
+
 /-- The exact residual root equation forces the B2 and P4 root
 parameters to have the same parity. -/
 theorem root_equation_parity (r E u : Nat)
@@ -150,6 +164,7 @@ theorem root32_u_parameter_of_exact (r E u : Nat)
     (root32_u_mod64 r u hr hmod64)
     (root32_u_mod105 r u hmod105)
 
+#print axioms root_equation_affine_parameter
 #print axioms root_equation_mod1680
 #print axioms root_equation_parity
 #print axioms root32_u_parameter_of_exact
