@@ -1,3 +1,10 @@
+/-
+Status: source-level Lean draft; not yet compiled locally.
+Scope: the z=2 (mod 4) complete parent fan, its u=1 (mod 4)
+exclusion, and the odd-z z=5/13 (mod 16) exclusion. This is not a
+closure of the full w=7 progression.
+-/
+
 import SectionAllInverse
 import M0EvenEvenSumZero
 import HighSumTwo
