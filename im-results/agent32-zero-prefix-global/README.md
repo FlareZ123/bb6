@@ -212,7 +212,7 @@ The remaining open sector retains genuine long-halting and possible nonhalting m
 
 ## Finite-support translated leaf: current primary target
 
-Agent 24's `TranslatedFiniteOracle.lean` supplies a source-sound checker for a finite-support configuration that returns to the same state with its **entire finite set of marked cells translated**. Its generic theorem `finiteTranslatedCheck_sound` connects the finite sparse simulator to the original two-way infinite-tape machine and applies `translated_prefix_never`. The underlying checker passed the original-source Lean 4.36.0-rc2 workflow in [CI 42534914962](https://github.com/FlareZ123/bb6/actions/runs/42534914962). This is a stronger recurrence contract than a right-tail-only word pump.
+Agent 24's `TranslatedFiniteOracle.lean` supplies a source-sound checker for a finite-support configuration that returns to the same state with its **entire finite set of marked cells translated**. Its generic theorem `finiteTranslatedCheck_sound` connects the finite sparse simulator to the original two-way infinite-tape machine and applies `translated_prefix_never`. The underlying checker passed the original-source Lean 4.36.0-rc2 workflow in [CI 42534914962](https://github.com/FlareZ123/bb6/actions/runs/42534914962). The current main copies of `RootShift.lean`, `TranslatedCycle.lean`, and `TranslatedFiniteOracle.lean` are byte-identical to those at that successful run's head (`309e89005e5528f8bdcab681ff84bc3043f6506c`), so the imported translation layer has not drifted since that verification. This is a stronger recurrence contract than a right-tail-only word pump.
 
 ### Exact leaf in the existing depth-four physical tree
 
