@@ -4,7 +4,7 @@
 
 ## Theorem
 
-For every integer \(a\ge54\) divisible by \(54\), set
+For every integer \(a\ge18\) divisible by \(18\), set
 \[
 K=97\cdot2^{a-7}+30,\qquad
 p=2^K,\qquad
@@ -29,22 +29,28 @@ The chosen parameter satisfies
 2K+7=97\cdot2^{a-6}+67,\qquad
 x=\frac{2K+7}{2^a}=\frac{97}{64}+\frac{67}{2^a}.
 \]
-For \(a\ge54\), this lies in \([97/64,13/8]\). Since \(a\) is a multiple of \(54\),
+For \(a\ge18\), this lies in \([97/64,13/8]\). Since \(18\mid a\), the exponent \(a-7\) is congruent to \(11\pmod{18}\). The identities \(2^{11}\equiv50\pmod{54}\), \(2^{18}\equiv28\pmod{54}\), and \(50\cdot28\equiv50\pmod{54}\) give
 \[
-K\equiv20\pmod{54},\qquad K\equiv20\pmod{81},
+K\equiv20\pmod{54},\qquad K+6a\equiv20\pmod{54},
 \]
-and hence \(K\equiv2\pmod6\), \(K+6a\equiv20\pmod{54}\), and \(r\equiv24\pmod{54}\).
+so \(K\equiv2\pmod6\) and the candidate is in the rho-20 phase.
 
-For \(a=54m\), \(2^{a-7}=2^{47}(2^{54})^{m-1}\). Modulo \(54\), \(2^{54}\equiv28\) and \(28\cdot50\equiv50\); modulo \(81\), \(2^{54}\equiv1\). Since \(2^{47}\equiv50\) in both moduli, \(2^{a-7}\equiv50\) in both moduli. Thus:
+For the modulus \(81\), the three possibilities for \(a\pmod{54}\) give the following complete residue table (using \(2^{54}\equiv1\pmod{81}\)):
 \[
-p=2^K\equiv2^{20}\equiv31\pmod{81},
+\begin{array}{c|rrrrrr}
+a\bmod54 & K\bmod81 & r\bmod54 & 2^r\bmod81 & B\bmod81 &
+(80p+2K+13)\bmod81\\ \hline
+0  &20&24&10&65&22\\
+18 &74&6 &64&38&49\\
+36 &47&42&37&11&76
+\end{array}
 \]
+In all three rows \(p=2^K\equiv31\pmod{81}\). The table therefore gives
 \[
-2K+7\equiv47\pmod{81},\qquad
-2^r\equiv2^{24}\equiv10\pmod{81},
+3X=80p+2K+13-2B\equiv54\pmod{81},
+\qquad
+9X_1=248p-8B-10K+25\equiv27\pmod{81}.
 \]
-so \(B\equiv65\pmod{81}\).
-
 The exact source-family identity is
 \[
 3X+2B=80p+2K+13.
@@ -127,6 +133,7 @@ The last inequality follows from \(2^a<2K+7\) and
 >\frac{20}{9}-\frac{K+4}{p}>2,\qquad
 \frac{h_0}{p}<3.
 \]
+Since \(h_0\) is even, \(h_0<3p\) places it below the next even-parent band, which begins at \(3p-1\); the preceding band ends at \(2p-3\). Thus \(h_0\) has no even parent.
 
 The exact expression for \(X_1/p\) is
 \[
@@ -168,7 +175,7 @@ At the two decisive indices,
 \[
 \frac{D_{a-11}}p=\frac{67}{216}+\varepsilon_{a-11}<\frac12,
 \qquad
-\frac{D_{a-10}}p=\frac{67}{108}+\varepsilon_{a-10}\in\left(\frac12,1\right),
+\frac{D_{a-10}}p=\frac{67}{108}+\varepsilon_{a-10}\in\left(\frac35,1\right),
 \]
 with \(|\varepsilon_j|<1/100\). Since \(D_0\ge3\) and \(D_j\) increases, for every \(0\le j\le a-11\),
 \[
@@ -178,11 +185,15 @@ This is the even-parent target band at level \(L\), and its unique even parent i
 \[
 y_{j+1}=2y_j-2p-L.
 \]
-There are exactly \(a-10\) such edges. At the next state,
+There are exactly \(a-10\) such edges. At the next state, the stronger lower estimate
 \[
-p<y_{a-10}<\frac32p,
+\frac{D_{a-10}}p>\frac{67}{108}-\frac1{100}>\frac35
 \]
-which is the gap between the adjacent even-parent bands. Thus the chain has no even parent at its endpoint.
+and the upper estimate \(D_{a-10}/p<1\) give
+\[
+p<y_{a-10}<\frac75p<\frac32p-1
+\]
+because \(p>10\). This lies strictly above the level-\(L-1\) even band's upper endpoint \(p-3\) and strictly below the level-\(L\) band's lower endpoint \(3p/2-1\). Thus the chain has no even parent at its endpoint.
 
 There are no odd parents anywhere along this chain. From (1), \(X_1\equiv3\pmod9\), so \(P_1=X_1/3\equiv1\pmod3\), and
 \[

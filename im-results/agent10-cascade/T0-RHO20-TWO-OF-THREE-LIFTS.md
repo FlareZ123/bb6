@@ -2,7 +2,7 @@
 
 **Status (19 November 2026).** The exact identity, 3-adic lift law, valuation-sibling calculations, and logarithmic gap-density calculation below are valid. The previous conclusion that the rho-20 phase is root-excluded in 80 of 81 residue classes is withdrawn. The argument examined only the maximal 3-adic exponent \(t=v_3(X)-1\), but the source-exact odd-parent rule permits every smaller exponent too: it requires \(d\) odd, not \(3\nmid d\). In fact, every rho-20 candidate has an additional \(t=0\) odd parent at level \(K-1\). The higher-valuation calculations therefore classify individual parent choices; they do not exclude the candidate from the inverse tree.
 
-The eight non-rho-20 phases of the original eight-of-nine theorem are unaffected. The rho-20 phase is not fully resolved: for every a divisible by 54, a selected K has a unique complete inverse-parent chain ending in a non-root leaf, excluding an infinite subfamily of candidate fatal heights. Other rho-20 parameters remain open. The general construction below also gives arbitrarily long same-level even-parent chains.
+The eight non-rho-20 phases of the original eight-of-nine theorem are unaffected. The rho-20 phase is not fully resolved: for every a divisible by 18, the selected K=97·2^(a-7)+30 has a unique complete inverse-parent chain ending in a non-root leaf, excluding an infinite subfamily of candidate fatal heights. The proof uses a three-case residue table for a mod 54; other rho-20 parameters remain open. The general construction below also gives arbitrarily long same-level even-parent chains.
 
 ## 1. Setup and source-exact parent rule
 
@@ -110,7 +110,7 @@ The even-parent target bands adjacent to this interval are
 \qquad
 [3p-1,\,4p-3]\quad(k=K-1).
 \]
-Thus \(h_0\) has no even parent. Its unresolved continuation is entirely through its odd-parent fan, beginning with the numerator \(X_1\) in (3).
+Since \(h_0\) is even, \(h_0<3p\) implies \(h_0\le3p-2\), below the \(K-1\) band; and \(h_0>2p\) places it above the \(K-2\) band. Thus \(h_0\) has no even parent.
 
 The \(t=0\) parent of \(h_0\) at level \(K-2\), when it exists, is controlled by
 \[
@@ -267,7 +267,7 @@ Exact witnesses from the construction:
 
 ## 5. An infinite rho-20 subfamily has a unique parent chain
 
-A useful specialization makes the entire inverse fan, not just one branch, explicit. Let \(a\ge54\) be divisible by \(54\), and set
+A useful specialization makes the entire inverse fan, not just one branch, explicit. Let \(a\ge18\) be divisible by \(18\), and set
 \[
 K=97\cdot2^{a-7}+30.
 \]
@@ -276,24 +276,26 @@ Then
 2K+7=97\cdot2^{a-6}+67,\qquad
 x=\frac{97}{64}+\frac{67}{2^a}.
 \]
-This lies in the required interval. Direct modular arithmetic gives
+This lies in the required interval. Since \(a-7\equiv11\pmod{18}\), the congruences \(2^{11}\equiv50\pmod{54}\) and \(2^{18}\equiv28\pmod{54}\) imply \(2^{a-7}\equiv50\pmod{54}\). Thus
 \[
-K\equiv20\pmod{54},\qquad K\equiv20\pmod{81},
+K\equiv20\pmod{54},\qquad \rho=K+6a\equiv20\pmod{54},
 \]
-so \(K\equiv2\pmod6\) and \(\rho=K+6a\equiv20\pmod{54}\). Also
+so \(K\equiv2\pmod6\).
+
+For modulus \(81\), the cases \(a\bmod54=0,18,36\) give:
 \[
-r=K+4-a\equiv24\pmod{54}.
+\begin{array}{c|rrrrrr}
+a\bmod54 & K\bmod81 & r\bmod54 & 2^r\bmod81 & B\bmod81 &
+(80p+2K+13)\bmod81\\ \hline
+0  &20&24&10&65&22\\
+18 &74&6 &64&38&49\\
+36 &47&42&37&11&76
+\end{array}
 \]
-Consequently,
-\[
-p=2^K\equiv2^{20}\equiv31\pmod{81},\qquad
-B=(2K+7)2^r\equiv47\cdot2^{24}\equiv65\pmod{81}.
-\]
-Using (1) and (3),
+In each case \(p=2^K\equiv31\pmod{81}\). Hence, using (1) and (3),
 \[
 3X=80p+2K+13-2B\equiv54\pmod{81},
-\]
-\[
+\qquad
 9X_1=248p-8B-10K+25\equiv27\pmod{81}.
 \]
 Therefore
@@ -344,7 +346,7 @@ The absolute value of the last two terms is less than \(K^2/2^K<1/100\): use \(2
 \[
 \frac{D_{a-11}}p=\frac{67}{216}+\varepsilon_{a-11}<\frac12,
 \qquad
-\frac{D_{a-10}}p=\frac{67}{108}+\varepsilon_{a-10}\in\left(\frac12,1\right),
+\frac{D_{a-10}}p=\frac{67}{108}+\varepsilon_{a-10}\in\left(\frac35,1\right),
 \]
 where \(|\varepsilon_j|<1/100\). Also \(D_0\ge3\), and \(D_j\) increases with \(j\). Therefore, for \(0\le j\le a-11\),
 \[
@@ -356,11 +358,10 @@ y_{j+1}=2y_j-2p-L.
 \]
 There are exactly \(a-10\) such even-parent edges. At the next state,
 \[
-\frac{D_{a-10}}p\in(1/2,1)
-\quad\Longrightarrow\quad
-p<y_{a-10}<\frac32p.
+\frac{D_{a-10}}p>\frac{67}{108}-\frac1{100}>\frac35,
+\qquad \frac{D_{a-10}}p<1
 \]
-This is the gap between the adjacent even-parent bands, so \(y_{a-10}\) has no even parent.
+gives \(p<y_{a-10}<7p/5<3p/2-1\), since \(p>10\). This lies strictly between the level-\(L-1\) band's upper endpoint \(p-3\) and the level-\(L\) band's lower endpoint \(3p/2-1\), so \(y_{a-10}\) has no even parent.
 
 There are no odd parents anywhere on this even chain. From \(X_1\equiv3\pmod9\), \(P_1=X_1/3\equiv1\pmod3\), and therefore
 \[
@@ -387,7 +388,7 @@ All \(265\) computed parent graphs terminate without reaching \(2\); the maximum
 ## 7. Correct scope and next target
 
 - The original eight non-rho-20 phases remain paper-level root-leaf exclusions. In the modulo-\(486\) refinement they account for \(8\cdot9=72\) of the \(81\) residue classes.
-- The rho-20 phase is **not fully excluded**. Every candidate has the t=0 parent at level K-1, so the previous 80/81 claim is withdrawn. The infinite subfamily a≡0 (mod 54), K=97·2^(a-7)+30 is excluded by its unique inverse chain, but all other rho-20 parameter classes remain open.
+- The rho-20 phase is **not fully excluded**. Every candidate has the t=0 parent at level K-1, so the previous 80/81 claim is withdrawn. The infinite subfamily a≡0 (mod 18), K=97·2^(a-7)+30 is excluded by its unique inverse chain, but all other rho-20 parameter classes remain open.
 - The exact-valuation lift law and gap-density calculation remain valid as statements about individual parent choices, but do not prove parentlessness.
 - The next mathematical task is the complete odd/even parent fan of \(h_0\), including the transitions out of the same-level even chain and the higher-exponent odd branches. The finite census and the unbounded-chain construction are useful guides, not substitutes for an all-parameter proof.
 
