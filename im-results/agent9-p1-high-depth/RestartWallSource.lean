@@ -52,6 +52,12 @@ structure RestartPath (n b d m : Nat) : Type where
   hEven : x0 = 2*xhalf
   hHalf : xhalf < 2^n
   walk : RestartWalk (2^n) c x0 0 es (d-1)
+  /-- Exact source OddCone suffix from the child of the last deep edge. -/
+  b0 : Nat
+  d0 : Nat
+  suffix : OddCone b0 d0 b d L
+  /-- Source inverse depths and scalar restart costs differ by one. -/
+  hDepths : (oddConeDepths suffix).map Nat.succ = es
 
 /-- Immediately after any authentic depth>=3 edge, the exact source defect
     supplies the even restart half-defect required by the telescoping lemma. -/
@@ -98,6 +104,10 @@ theorem restart_path_after_deep
     hEven := hEven
     hHalf := hxsmall
     walk := ?_
+    b0 := 2*k-4
+    d0 := cInv+4
+    suffix := OddCone.root
+    hDepths := by simp [oddConeDepths]
   }
   have hnil : RestartWalk (2^n) (mp+t+1+n) (cInv+3) 0 [] (cInv+3) :=
     RestartWalk.nil (cInv+3) 0
@@ -142,6 +152,11 @@ theorem restart_path_extend
     xhalf := path.xhalf
     L := path.L+(t+1)
     es := path.es++[t+1]
+    b0 := path.b0
+    d0 := path.d0
+    suffix := OddCone.parent bp dp path.L t k cInv path.suffix hb hb4 hd hi hk hc
+    hDepths := by
+      simp [oddConeDepths, List.map_append, path.hDepths]
     hBase := path.hBase
     hCost := ?_
     hTotal := ?_
