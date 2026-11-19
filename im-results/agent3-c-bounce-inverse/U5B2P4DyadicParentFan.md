@@ -94,3 +94,58 @@ a_n=\frac{S}{2^{n+1}}-2,\quad
 k_n=\frac{x+2y-a_n-7-3n}{2}.
 \]
 The next step is to intersect these parent families with the already source-certified even/even parent grammars and blank-image restrictions. In particular, distinguish the \(n=0\) and \(n=2\) branches from the genuinely new \(n\ge4\) tail. Do not claim P4 unreachable, or promote this note to results/, until every admissible parent depth is closed by a source proof.
+
+
+## Root32 branch: exact two-parent closure candidate
+
+For \(r\equiv32\pmod{64}\), write \(u=1802+6720t\). Then
+\[
+S=67186+999595u
+ =32(56291793+209914950t),
+\]
+where the parenthesized factor is odd. Hence \(v_2(S)=5\), and the general parent fan forces \(n=0\) or \(n=2\).
+
+The corrected exact P4 parents are:
+\[
+\begin{aligned}
+P_0&=(900668686+3358639200t,\;
+      494467868+1843895760t),\\
+P_2&=(225167170+839659800t,\;
+      832218623+3103385460t).
+\end{aligned}
+\]
+The \(n=2\) coordinates include the required half-unit correction: they are obtained from \(w=2+8t\), \(z=w/2=1+4t\), with
+\[
+a_2=15252220+209914950z,\qquad
+k_2=56372258+775846365z.
+\]
+The earlier expression \(56372258+387923182w\) is incorrect and must not be reused.
+
+The two P4 parents now have a compact closure argument:
+- \(P_0\) is even/even with sum \(2\bmod4\). Its complete even/even source fan eliminates the zero-left and even-a bounce branches, leaving the direct parent
+  \[
+  D_0=(1395136552+5202534960t,\;
+       247233933+921947880t),
+  \]
+  which has odd right coordinate and sum \(1\bmod4\). The existing source-certified blank_no_odd_sum_one theorem excludes \(D_0\), hence \(P_0\).
+- \(P_2\) is even/odd, has \(3\mid x+y\), and
+  \[
+  x+y+1=1057385794+3943045260t\equiv2\pmod4.
+  \]
+  The complete source grammar forces every predecessor of an even/odd, three-divisible target into the odd-a high-bounce branch, which requires \(4\mid x+y+1\). Thus \(P_2\) has no source predecessor and cannot be blank-reachable.
+
+The corresponding B2 cylinder has an exact source-parent fan with only
+\[
+(17805+264880u,\;26342+391848u),\qquad
+(4449+66220u,\;33017+491178u)
+\]
+as possible parents. The second is odd/odd with right coordinate at least five and sum \(2\bmod4\), so blank_no_odd_sum_two excludes it. The first is odd/even with sum \(3\bmod8\), so two applications of section_odd_even_iff_affine and one application of blank_reach_iff_even_right force the chain
+\[
+(17805+264880u,26342+391848u)
+\to(44145+656728u,13170+195924u)
+\to(57313+852652u,6584+97962u)
+\to P_4(u).
+\]
+Consequently the whole \(u=1802+6720t\) B2 cylinder is excluded if the source draft's Lean proofs compile.
+
+**Formalization status:** U5B2Root32.lean now contains the attempted source proofs for both three-divisible parent lemmas, the corrected P4 parent fan, the P4 exclusion, and the composed B2 exclusion. It is an intermediate draft pending local Lean preflight; none of these new declarations should yet be cited as kernel-checked. Agent 6 has been asked for a focused local compile, and Agents 4 and 11 for independent mathematical review. Keep this work in im-results/ until the proof is compiled and its axiom profile checked.
