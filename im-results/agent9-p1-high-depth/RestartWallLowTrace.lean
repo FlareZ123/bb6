@@ -251,6 +251,158 @@ theorem restartPath_first_shallow
     (restart_path_has_shallow path hbound)
 
 
+/-- Split a source OddCone suffix at its first depth below two.  The
+    output child is a valid OddCone parent state if the suffix continues,
+    and is the endpoint otherwise; in either case the caller may supply its
+    mod-four guard. -/
+theorem oddCone_first_shallow_split
+    {b0 d0 b d m : Nat}
+    (h : OddCone b0 d0 b d m)
+    (hLow : ∀ t, t ∈ oddConeDepths h → t ≤ 2)
+    (hShallow : ∃ t, t ∈ oddConeDepths h ∧ t ≤ 1)
+    (hbWall : b%4=0) :
+    ∃ bp dp mp t k c,
+      ∃ pre : OddCone b0 d0 bp dp mp,
+      ∃ post : List Nat,
+        (∀ u, u ∈ oddConeDepths pre → u=2) ∧
+        oddConeDepths h = oddConeDepths pre ++ [t] ++ post ∧
+        t ≤ 1 ∧ inverseAt bp dp t = some (k,c) ∧
+        (2*k-4)%4=0 := by
+  induction h generalizing hLow hShallow hbWall with
+  | root =>
+      simp [oddConeDepths] at hShallow
+  | @parent bp dp mp t k c hpre hb hb4 hd hi hk hc ih =>
+      have hLowPre : ∀ u, u ∈ oddConeDepths hpre → u ≤ 2 := by
+        intro u hu
+        exact hLow u (by simp [oddConeDepths, hu])
+      by_cases hShallowPre : ∃ u, u ∈ oddConeDepths hpre ∧ u ≤ 1
+      · obtain ⟨bp',dp',mp',t',k',c',pre,post,hpre2,hEq,ht',hi',hguard⟩ :=
+          ih hLowPre hShallowPre hb4
+        refine ⟨bp',dp',mp',t',k',c',pre,post++[t],hpre2,?_,ht',hi',hguard⟩
+        calc
+          oddConeDepths h = oddConeDepths hpre ++ [t] := by
+            simp [oddConeDepths]
+          _ = (oddConeDepths pre ++ [t'] ++ post) ++ [t] := by
+            rw [hEq]
+          _ = oddConeDepths pre ++ [t'] ++ (post ++ [t]) := by
+            simp [List.append_assoc]
+      · have hpre2 : ∀ u, u ∈ oddConeDepths hpre → u=2 := by
+          intro u hu
+          have hle := hLowPre u hu
+          have hgt : 1 < u := by
+            by_contra hnot
+            exact hShallowPre ⟨u,hu,by omega⟩
+          omega
+        have ht : t ≤ 1 := by
+          rcases hShallow with ⟨u,hu,hu1⟩
+          have hu' : u ∈ oddConeDepths hpre ++ [t] := by
+            simpa [oddConeDepths] using hu
+          rcases List.mem_append.mp hu' with hpreMem | hlast
+          · exact False.elim (hShallowPre ⟨u,hpreMem,hu1⟩)
+          · simp at hlast
+            subst u
+            exact hu1
+        refine ⟨bp,dp,mp,t,k,c,hpre,[],hpre2,?_,ht,hi,? _⟩
+        · simp [oddConeDepths]
+        · simpa using hbWall
+
+/-- The RestartPath source suffix has the same edge-cost list as its
+    scalar walk, with each inverse depth increased by one.  This exposes the
+    actual first-shallow source parent and its mod-four child guard. -/
+theorem restartPath_first_shallow_source_split
+    (n b d m : Nat) (path : RestartPath n b d m)
+    (hbound : 2^path.L ≤ 7*weightS 0 path.es)
+    (hwall : b+4*m+4*n+20=12*2^n) :
+    ∃ bp dp mp t k c,
+      ∃ pre : OddCone path.b0 path.d0 bp dp mp,
+      ∃ post : List Nat,
+        (∀ u, u ∈ oddConeDepths pre → u=2) ∧
+        path.es = (oddConeDepths pre).map Nat.succ ++ [t+1] ++ post.map Nat.succ ∧
+        t ≤ 1 ∧ inverseAt bp dp t = some (k,c) ∧
+        (2*k-4)%4=0 := by
+  have hLow : ∀ u, u ∈ oddConeDepths path.suffix → u ≤ 2 := by
+    intro u hu
+    have hmem : u+1 ∈ path.es := by
+      rw [← path.hDepths]
+      exact List.mem_map.mpr ⟨u,hu,by omega⟩
+    have hle := path.hLow (u+1) hmem
+    omega
+  have hShallow : ∃ u, u ∈ oddConeDepths path.suffix ∧ u ≤ 1 := by
+    obtain ⟨e,he,he2⟩ := restart_path_has_shallow path hbound
+    have he' : e ∈ (oddConeDepths path.suffix).map Nat.succ := by
+      rw [path.hDepths]
+      exact he
+    rcases List.mem_map.mp he' with ⟨u,hu,heq⟩
+    refine ⟨u,hu,?_⟩
+    have heq' : u+1=e := by simpa using heq
+    omega
+  have hbWall : b%4=0 := by omega
+  obtain ⟨bp,dp,mp,t,k,c,pre,post,hpre2,hEq,ht,hi,hguard⟩ :=
+    oddCone_first_shallow_split path.suffix hLow hShallow hbWall
+  refine ⟨bp,dp,mp,t,k,c,pre,post,hpre2,?_,ht,hi,hguard⟩
+  rw [path.hDepths,hEq]
+  simp [List.map_append]
+
+/-- In the Is=48, odd-offset branch, the first shallow source edge has
+    depth one.  Its exact inverse equations force an odd child parameter,
+    contradicting the source/wall mod-four guard on that child. -/
+theorem is48_odd_first_shallow_child_guard_impossible
+    (P b d T k c : Nat)
+    (hP : P%4=0)
+    (hcoord : b+14=6*d)
+    (hmass : b+d+2*T+1=14*P)
+    (hT : T%2=1)
+    (hpow : 2*(c+3)=d+b/2+3)
+    (hInvMass : 2*k+c+2=b+d)
+    (hchild : (2*k-4)%4=0) :
+    False := by
+  have hd : d%4=1 := by omega
+  have hq : b/2+7=3*d := by omega
+  have hc : c+5=2*d := by omega
+  have hk : 2*k+11=5*d := by omega
+  have hkodd : k%2=1 := by omega
+  have hbad : (2*k-4)%4=2 := by omega
+  omega
+
+/-- The two depth-zero branches surviving the first-shallow scalar filter
+    have an even source inverse left parameter. -/
+theorem is20_odd_first_shallow_even_child
+    (P b d T k c : Nat)
+    (hP : P%4=0)
+    (hcoord : b+18=6*d)
+    (hmass : b+d+2*T+1=14*P)
+    (hT : T%2=1)
+    (hpow : c+3=d+b/2+3)
+    (hInvMass : 2*k+c+2=b+d) :
+    d%4=1 ∧ (b/2)%4=2 ∧ k%2=0 := by
+  have hd : d%4=1 := by omega
+  have hq : b/2+9=3*d := by omega
+  have hc : c+9=4*d := by omega
+  have hk : 2*k+2=b/2 := by omega
+  have hqmod : (b/2)%4=2 := by omega
+  have hkmod : k%2=0 := by omega
+  exact ⟨hd,hqmod,hkmod⟩
+
+/-- The even-offset Is=48 branch likewise has a depth-zero edge with
+    even source inverse left parameter. -/
+theorem is48_even_first_shallow_even_child
+    (P b d T k c : Nat)
+    (hP : P%4=0)
+    (hcoord : b+14=6*d)
+    (hmass : b+d+2*T+1=14*P)
+    (hT : T%2=0)
+    (hpow : c+3=d+b/2+3)
+    (hInvMass : 2*k+c+2=b+d) :
+    d%4=3 ∧ (b/2)%4=2 ∧ k%2=0 := by
+  have hd : d%4=3 := by omega
+  have hq : b/2+7=3*d := by omega
+  have hc : c+7=4*d := by omega
+  have hk : 2*k+2=b/2 := by omega
+  have hqmod : (b/2)%4=2 := by omega
+  have hkmod : k%2=0 := by omega
+  exact ⟨hd,hqmod,hkmod⟩
+
+
 /-- A wall-reaching original OddCone history containing a deep edge induces
     an exact LowTrace from its last deep restart point to the shifted wall.
     This is the source-authentic bridge to the scalar mod-7 leaf. -/
