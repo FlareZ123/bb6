@@ -102,6 +102,10 @@ The separate M2 residue-six branch still has theorem `m2Even_residue6_q4_reset_p
 and prefix cost `83+12a+3b`. Composing the generic all-ones drain would yield
 `S1(L,16k+5,1,a+b+2,0,2^b-1,h+5+3b)`; this separate branch remains uncompiled and should not be confused with the current middle-17 continuation.
 
+## Conditional 0101 boundary alternate (not an authentic root continuation)
+
+`P2ActualBoundaryComposition.lean` is retained as a conditional source theorem for the distinct input family `1^(m+2) ++ 0101 ++ 1^7 ++ 00 ++ tail`. Its internal namespace and theorem names now say `Alternate0101`; the file is not connected to the authentic TM63 root. The corrected `frameAt` semantics make the actual second q4Tail residual `1^(m+2) ++ 0100 ++ tail`, with the tail beginning `100`. The authentic q4Tail-to-S0 tape identity remains the open handoff documented in [Agent 38's root-q4tail dossier](../agent38-root-q4tail/README.md); only that interface may be composed with Agent 44's `p2S0Drain_q4Postlude`.
+
 ## Critical unresolved obligations
 
 1. Pass the full original-import Lean 4.36.0-rc2 compile and transitive `sorryAx` audit for `CountedCarryPrefixHRun.lean`, `S1CarryInc0.lean`, `S1CountedInc0.lean`, and `S1CountedDrain.lean`; in particular, audit the new all-valuation H-run and its left-output identity.
