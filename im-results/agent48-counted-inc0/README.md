@@ -285,3 +285,18 @@ Next: obtain the local compile/axiom report for the M1 patch; review and
 compile the new root-to-first-q4 composition; only then compose the root
 with Agent 42's P1/second-frame continuation. Keep all these items in
 `im-results/` until the exact source closures pass.
+
+
+### Extension through the second q4 frame
+
+`TM63RootSecondQ4Frame.lean` composes the same authentic root-to-marker-1-S0
+prefix directly with Agent 42's `firstQ4P1Root_to_secondFrame` theorem. It
+uses the root-derived bounds `0 < A`, `z < 2^A`, and `3 ≤ z`, then
+translates the full first-q4/P1 continuation to the absolute root head.
+The resulting `tm63_blank_reaches_second_q4_frame` theorem is a stronger
+source-level exact-run draft than the first-checkpoint theorem.
+
+**Status:** also uncompiled. It is a compositional trajectory result, not a
+proof that TM63 halts or a determination of BB(6). The first-q4 and
+second-q4 files should be compiled only as a later, narrow endpoint
+acceptance target after the current middle34/M1 gate passes.
