@@ -24,7 +24,7 @@ r'\equiv r+\delta_j\pmod 3,
 \]
 with representatives \(-2,-1,0\). Thus every transition that advances the high boundary advances this three-state clock by one modulo three; the \((1,1)\) case is precisely the wrap \(0\to-2\). The window-length change is \(w'-w=\delta_j-\delta_k\), so \((0,1)\) grows the word by one while \((1,1)\) preserves its length.
 
-For Agent 1's shifted product, the selected suffix copy is \(1+\delta_k\): copy 1 for both \((0,0)\) and \((0,1)\), copy 2 for \((1,1)\). The phase clock \(r\) and the selected offset are distinct pieces of finite state; the table gives their exact compatibility and also tells the consumer whether the target word has a new high digit.
+For Agent 1's shifted product, the selected suffix copy is \(1+\delta_k\): copy 1 for both \((0,0)\) and \((0,1)\), copy 2 for \((1,1)\). The selected copy can be recovered from the phase transition itself: copy 2 is selected exactly on the wrap \(r=0\to r'=-2\), and copy 1 on every other admissible transition. Thus a consumer that already records \((r,r')\) need not store \(\delta_k\) separately. The phase transition also tells the consumer whether the target word has a new high digit.
 
 This is an algebraic corollary of the universal shift theorem, not a finite-trace observation or a root-closure claim. It may be worth including \(r\) explicitly in the rolling product's control state rather than retaining all observed source/target \(r\)-pairs as independent labels.
 
