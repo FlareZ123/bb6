@@ -188,3 +188,65 @@ The constant \(54\) includes the \(+7\) champion-attainability
 correction. This is an exact algebraic simplification of the source
 score expression; it does not upgrade the uncompiled root/dispatcher
 composition to an accepted theorem.
+
+
+## One-dimensional exact score form
+
+The exponent and marker can also be eliminated from the cost sum.  This
+leaves only the independent right-counter recurrence, which is the
+quantity responsible for the tower growth.
+
+Put \(N=3k\), \(b_0=R\), and
+\[
+b_{j+1}=2^{b_j}-1.
+\]
+The marker sequence is \(m_j=0,2,1,0,2,1,\ldots\).  Let
+\(\epsilon_j=1\) when \(j\equiv0\pmod3\), and
+\(\epsilon_j=2\) otherwise.  Then
+\[
+a_i=U+\sum_{j=0}^{i-1}(b_j+\epsilon_j).
+\]
+In particular, the terminal exponent is
+\[
+E=a_N=U+\sum_{j=0}^{N-1}b_j+5k.
+\]
+
+Summing the intermediate exponents gives
+\[
+\sum_{i=0}^{N-1}a_i
+=NU+\sum_{j=0}^{N-2}(N-1-j)b_j
+ +\frac{15k^2-7k}{2}.
+\]
+For the last term, group the weighted marker increments in blocks of
+three. In block \(r=0,\ldots,k-1\), writing \(t=k-r\), the contribution
+is
+\[
+(3t-1)+2(3t-2)+2(3t-3)=15t-11.
+\]
+Summing \(t=1,\ldots,k\) gives \((15k^2-7k)/2\).
+
+Substituting these two identities into the preceding exact score formula
+and collecting the coefficients of each \(b_j\) yields the single-sum
+expression
+\[
+\boxed{
+\begin{aligned}
+S={}&C_{\rm root}
+ +6\cdot4^{n-1}+42\cdot2^{n-1}
+ -12n+54\\
+&+90k^2+111k+12(3k+1)U\\
+&+\sum_{j=0}^{3k-1}
+ \left(6\cdot4^{b_j}+42\cdot2^{b_j}
+       +(12(3k-j)-9)b_j\right),
+\end{aligned}}
+\]
+where
+\[
+b_0=R=2^{n-1}-1,\qquad b_{j+1}=2^{b_j}-1,\qquad
+U=K+n-1,\qquad K=2^z+z+3.
+\]
+All coefficients are explicit; no marker or exponent recurrence remains
+inside the sum. The formula is an algebraic consequence of the exact
+dispatcher-cost recurrence and the root score expression. Its use as an
+attained champion score remains conditional on acceptance of the
+uncompiled authentic-root and source-dispatcher composition.
