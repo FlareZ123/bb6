@@ -215,7 +215,7 @@ const e0Calls = [];
 const e2Calls = [];
 for (let call = 12; call <= 107; call++) {
   const row = trace[call - 1];
-  const inputN = BigInt(row.N) - 0n; // row.N is the post-call unary parameter
+  const inputState = { ...packetState };
   const priorN = BigInt(trace[call - 2].N);
   let nextState;
   let kind;
@@ -261,9 +261,7 @@ for (let call = 12; call <= 107; call++) {
   if (kind === "E0" || kind === "E2") {
     packetResets.push({
       call, kind,
-      input: kind === "E0"
-        ? { q: trace[call - 2].regular?.q, p: 0, tail: null }
-        : E2_RESETS.find(x => x.call === call).in,
+      input: inputState,
       output: packetState,
       unary: row.N,
     });
