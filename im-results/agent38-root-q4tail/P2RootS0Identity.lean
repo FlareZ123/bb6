@@ -130,7 +130,8 @@ private theorem sideBit_drop_local
       cases xs with
       | nil => simp [sideBit]
       | cons b xs =>
-          simpa [List.drop,sideBit] using ih xs
+          have hidx : k+1+i=(k+i)+1 := by omega
+          simpa [List.drop,sideBit,hidx] using ih xs
 
 private theorem p2ResidualLeft_ones_local
     (m : Nat) (tail : List Bool) (i : Nat) (hi : i<m+2) :
@@ -138,7 +139,7 @@ private theorem p2ResidualLeft_ones_local
   unfold p2ResidualLeft
   rw [Agent6Q4Prefix.sideBit_append_left
     (List.replicate (m+2) true)
-    ([false,true,false,false] ++ tail) i (by simp)]
+    ([false,true,false,false] ++ tail) i (by simpa using hi)]
   exact sideBit_replicate_true_local (m+2) i hi
 
 private theorem p2ResidualLeft_boundary_local
