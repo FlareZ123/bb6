@@ -6,7 +6,7 @@ The exact APIs used by your abstract audit are present:
 - `Tape.nth` is head-relative: 0 -> head, n+1 -> right.nth n, and -(n+1) -> left.nth n.
 - `Tape.move_left_nth`: `(T.move Dir.left).nth i = T.nth (i-1)`.
 - `Tape.move_right_nth`: `(T.move Dir.right).nth i = T.nth (i+1)`.
-- `Tape.write_nth`: `(T.write w).nth i = if i=0 then w else T.nth i).
+- `Tape.write_nth`: `(T.write w).nth i = if i=0 then w else T.nth i`.
 - `ListBlank.append_mk` and `ListBlank.nth_mk` are also available, alongside `Tape.mk'_nth_nat`.
 
 A direct adapter can set `observe T i := T.nth i`. Extensionality plus the three Tape lemmas gives:
