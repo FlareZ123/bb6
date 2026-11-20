@@ -73,3 +73,8 @@ The module also exports `fiveSlot_is_p4_child`,
 `p4_e0_unassigned`, and `fiveSlot_parent_compatible`, so the wrapper can
 reuse the exact P4-child relation and parent-compatibility implication without
 re-proving them.
+
+The phase formulas are exported explicitly as `run_cycle`,
+`run_phase_d`, and `run_phase_e`: they identify the exact configuration at
+each residue class modulo three after the two-step startup, not merely the
+existence of a run. The `run_exists` theorem then covers every finite time.
