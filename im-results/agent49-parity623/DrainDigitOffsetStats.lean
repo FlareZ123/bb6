@@ -284,6 +284,7 @@ theorem runStats_offset_AC_full (n q : Nat) (hq : q + 1 < 3 ^ n) :
 theorem parity_if_flip (n : Nat) (x y : DrainState) :
     (if n % 2 = 1 then x else y) =
       (if (n + 1) % 2 = 1 then y else x) := by
+  have hlt : n % 2 < 2 := Nat.mod_lt _ (by decide)
   by_cases hn : n % 2 = 1
   · have hnext : (n + 1) % 2 = 0 := by omega
     simp [hn, hnext]
