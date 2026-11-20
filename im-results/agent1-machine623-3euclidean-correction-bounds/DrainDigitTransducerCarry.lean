@@ -427,3 +427,32 @@ theorem drain_transducer_exact_canonical (L b : Nat)
     rw [pow3_eq_nat, ← hsub]
     exact hhiCast
   exact runStats_exact_of_bounds L b hpar hhiInt
+
+
+theorem runStats_finalState_eq (n b : Nat) (s : DrainState) :
+    (runStats n b s).finalState = (run n b s).2 := by
+  induction n generalizing b s with
+  | zero => simp [runStats, run]
+  | succ n ih =>
+      cases hst : step s (b % 3) with
+      | mk s' out => simp [runStats, run, hst, ih]
+
+/-- The terminal transducer phase is exactly the leading ternary digit high. -/
+theorem runStats_phase_of_decomposition (L low high : Nat)
+    (hlow : low < 3 ^ L) (hhigh : high ≤ 1)
+    (hpar : L % 2 = (low + high * 3 ^ L) % 2) :
+    phaseBit (runStats L low A).finalState = high := by
+  have hphase := run_phase L low A hlow
+  simp [phaseBit] at hphase
+  rw [runStats_finalState_eq]
+  have hodd := pow3_odd L
+  have hphase' : (L + low) % 2 = high := by
+    by_cases hzero : high = 0
+    · subst high
+      simp at hpar
+      omega
+    · have hone : high = 1 := by omega
+      subst high
+      omega
+  rw [hphase'] at hphase
+  exact hphase
