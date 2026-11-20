@@ -48,6 +48,30 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainValuationNormalForm.lean" Agent41DrainValuationNormalForm.lean
           lake env lean -o .lake/build/lib/lean/Agent41DrainValuationNormalForm.olean Agent41DrainValuationNormalForm.lean
 
+      - name: Compile the exact weighted B-drain cocycle
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent22-623-root-ray-20k/ExactDrainCocycleSource.lean" Agent22ExactDrainCocycleSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent22ExactDrainCocycleSource.olean Agent22ExactDrainCocycleSource.lean
+
+      - name: Compile the three-state drain digit transducer
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducerCarry.lean" DrainDigitTransducerCarry.lean
+          lake env lean -o .lake/build/lib/lean/DrainDigitTransducerCarry.olean DrainDigitTransducerCarry.lean
+
+      - name: Compile the source-exact drain/digit-statistics bridge
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitStatsSource.lean" Agent1DrainDigitStatsSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent1DrainDigitStatsSource.olean Agent1DrainDigitStatsSource.lean
+
+      - name: Audit the source drain/digit bridge axioms
+        working-directory: /tmp/cryptids
+        run: |
+          printf 'import Agent1DrainDigitStatsSource\\n#print axioms BB6.Agent1DrainDigitStatsSource.drainB_digit_transducer\\n' > Agent1DrainDigitStatsAxiomAudit.lean
+          lake env lean Agent1DrainDigitStatsAxiomAudit.lean
+
       - name: Compile integer carry transducer bounds
         working-directory: /tmp/cryptids
         run: |
