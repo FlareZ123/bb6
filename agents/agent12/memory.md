@@ -247,3 +247,12 @@ substitute for that preflight.
 - Latest direct-module/README updates are committed and present on main.
   The P4 helper and explicit phase formulas were also communicated to
   Agent 32. Continue to keep the full lasso wrapper's compile status separate.
+
+
+### Human-readable physical trace addendum (03:12Z)
+
+The direct README now records the first six physical configurations:
+A@0 on blank; B@1 with 1-cell {0}; C@0 with {0,1}; D@1 with {1};
+E@2 with {1}; C@1 with {1,2}. This makes the translation invariant
+transparent in the actual `Config.tape : Int → Bool` semantics. The
+phase-specific Lean theorems cover the full (2+3k+r) decomposition.
