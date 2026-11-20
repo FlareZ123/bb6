@@ -57,7 +57,7 @@ A=24956+3^{86}p_{\rm shift}.
 \]
 Thus the depth-three endpoint is exactly the inputLift of the base section \(L(24956,2,2)\) for the 86-step DRegular shift theorem.
 
-The existing candidate base trajectory is
+The base DRegular model trajectory is now kernel-checked locally:
 \[
 L(24956,2,2)\xrightarrow{86\ {\rm DRegular\ steps}}
 L(107283033157493534200791430928221345342090,5,1),
@@ -66,11 +66,27 @@ where the right-hand unary parameter is \(3K_{\rm exit}+4\) and
 \[
 K_{\rm exit}=35761011052497844733597143642740448447362.
 \]
-Under the 3-adic shift, the output becomes
+The exact base elapsed time is
+\[
+2511196189848405180808251215091282020771681398870051748082508810955840054369100891.
+\]
+The full shifted model time is the exact quadratic
+\[
+B+L\,p+Q\,p^2,\qquad p=3P(v),
+\]
+where
+\[
+L=21682955431020992450687592512031549428761789617393244525648556756170589602211578845156336539672418515126244544667539067
+\]
+and
+\[
+Q=46805438591799611693058414539191317390473422500977082336780432676265067156996244565519795950786187022640336620345338430295663495134566650263613298250975468.
+\]
+The exact base run, base time, and coefficients have no Lean axioms; the all-v shifted model run and time theorems in Seed24956ModelCheck.lean depend only on [propext, Classical.choice, Quot.sound], with no sorryAx. Under the 3-adic shift, the output becomes
 \[
 L(3(K_{\rm exit}+8^{86}P(v))+4,5,1).
 \]
-The q=5 safe-E canonical closure would then return to a canonical source section. The exact input/output shift identities are proved in the Lean file; the base 86-step DRegular certificate and ExceptionalESafeCanonical wrapper are still uncompiled candidates.
+The q=5 safe-E canonical closure would then return to a canonical source section. The model shift/time theorems are compiled; the original-source DRegular transport wrapper and ExceptionalESafeCanonical wrapper remain uncompiled candidates.
 
 Consequently, if those source dependencies pass the full local preflight and original-source audit, this gives an infinite second-return family of prepared P2 packets indexed by \(v\). It does not establish that any member is reached from the blank tape.
 
