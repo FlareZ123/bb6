@@ -101,7 +101,7 @@ Consequently, a source bounce depth `n=2*j` is divisibility-eligible exactly whe
 2^(2*j+1) divides 9*m+4.
 ```
 
-This is a much smaller arithmetic parameter than the enormous feeder coordinate. It also shows why a fixed-depth search cannot settle the whole halting family: for every fixed `j≥0`, the congruence `9*m+4 ≡ 0 (mod 2^(2*j+1))` has one residue class modulo `2^(2*j+1)`, since 9 is invertible modulo every power of two. Taking sufficiently large positive representatives in that class makes the source inequalities `a_j≥2`, `b_j>0`, and `a_j<2*b_j` hold, so actual parent branches of arbitrarily large even depth occur among these halting targets.
+This is a much smaller arithmetic parameter than the enormous feeder coordinate. It also shows why a fixed-depth search cannot settle the whole halting family: for every fixed `j≥0`, the congruence `9*m+4 ≡ 0 (mod 2^(2*j+1))` has one residue class modulo `2^(2*j+1)`, since 9 is invertible modulo every power of two. For fixed `j`, the corresponding `k) tends to infinity along that residue class. Since `a_j≤(3*k-3)/2`, its cost equation gives `2*b_j-a_j=4*k-2*a_j-6-6*j ≥ k-3-6*j`. Thus `k>6*j+3` guarantees `a_j<2*b_j`; for sufficiently large representatives `a_j≥2` as well, and then `b_j>0`. Hence actual parent branches of arbitrarily large even depth occur among these halting targets.
 
 For `m` odd, `9*m+4` is odd, so `v₂(3*k+1)=1` and the feeder has no source parent; this recovers the already-known `d ≡ 8 (mod 16)` exclusion. For even `m), the number and depth of possible parents are governed by the full valuation of `9*m+4`, not merely by `d mod 16`.
 
