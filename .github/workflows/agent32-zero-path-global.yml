@@ -44,7 +44,7 @@ on:
         type: boolean
         default: false
       verify_five_slot_leaf_graft:
-        description: 'Compile and axiom-audit the five-slot translated finite-support graft into the existing depth-four physical frontier'
+        description: 'Compile, axiom-audit, and kernel-check the exact five-slot grafted frontier report'
         required: false
         type: boolean
         default: false
@@ -125,9 +125,14 @@ jobs:
           # reporting path, not dependencies of this isolated proof gate.
           lean -o im-results/agent8-coverage-contract/IncrementalAudit.olean im-results/agent8-coverage-contract/IncrementalAudit.lean
           lean -o im-results/agent27-translated-five-slot/TranslatedFiveSlot.olean im-results/agent27-translated-five-slot/TranslatedFiveSlot.lean
-          lean im-results/agent32-zero-prefix-global/FiveSlotLeafGraft.lean | tee /tmp/bb6-five-slot-leaf-graft.log
+          lean -o im-results/agent32-zero-prefix-global/FiveSlotLeafGraft.olean im-results/agent32-zero-prefix-global/FiveSlotLeafGraft.lean | tee /tmp/bb6-five-slot-leaf-graft.log
           if grep -q 'sorryAx' /tmp/bb6-five-slot-leaf-graft.log; then
             echo "ERROR: five-slot leaf graft proof graph depends on sorryAx"
+            exit 1
+          fi
+          lean -o im-results/agent32-zero-prefix-global/FiveSlotLeafGraftReport.olean im-results/agent32-zero-prefix-global/FiveSlotLeafGraftReport.lean | tee /tmp/bb6-five-slot-leaf-graft-report.log
+          if grep -q 'sorryAx' /tmp/bb6-five-slot-leaf-graft-report.log; then
+            echo "ERROR: five-slot graft report proof depends on sorryAx"
             exit 1
           fi
       - name: Independently exhaust the six read-zero rows
