@@ -146,3 +146,8 @@ Independently rechecked Agent 44's six-class phase-50 modular table and period-1
 ## 2026-11-20: second phase-50 rho-20 cylinder
 
 Extended the a mod486=482 class to the infinite cylinder a ≡968 (mod 3,188,646). The complete h2-tree has the h3 even spine plus two side branches: h3 -> c0 -> c1, where c1 splits to c2 -> c3 -> c4 and c5; and y4 -> b6. The h0-branch is the same long chain as in the 158-cylinder proof. Exact residues and the reproducer are in im-results/agent10-cascade/PHASE50-482-968-CYLINDER-ROOT-EXCLUSION.md and im-results/agent10-cascade/phase50_482_968_chain_certificate.mjs. Scope remains one cylinder only; the 266 mod486 class and the other 6560 cylinders in each of 158 and 482 remain open. This is paper-level, not Lean-certified.
+
+
+## 2026-11-20: third phase-50 rho-20 cylinder
+
+Extended the remaining a mod486=266 class to the infinite cylinder a ≡1238 (mod 3,188,646). The first target E has exactly three odd parents: h0 (the established long chain), h2 (a leaf), and h5 (which has one even parent h6, a leaf). The exact certificate is in im-results/agent10-cascade/phase50_266_1238_chain_certificate.mjs and the proof is in im-results/agent10-cascade/PHASE50-266-1238-CYLINDER-ROOT-EXCLUSION.md. Together with the 158 and 968 cylinders, this gives one deeper exclusion inside each of the three residual phase-50 mod-486 classes. All other 6560 cylinders in each class remain open; no Lean certification is claimed.
