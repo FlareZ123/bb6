@@ -98,36 +98,51 @@ needed for this seed. Put \(p=4096s+3883\). Then
 \[
 L(12288s+11653,4,0)=L(3p+4,4,0).
 \]
-The already source-certified theorem
-DRegularELow.e_zero_suffix (all \(k,q\), physical ObsEq) gives
+The explicit source theorem DRegularELow.e_zero_suffix gives
 \[
 L(3p+4,4,0)
 \xrightarrow{\;12p^2+49p+66\;}
 L(8p+5,1,13)
 =L(32768s+31069,1,13).
 \]
-This is an original-machine source result, not a DRegular.next-only
+This is an original-machine physical ObsEq result, not a DRegular.next-only
 prediction.
 
-Now split \(s=3r+i\). The second source row is one of three already
-source-certified universal contracts:
+There is an even simpler uniform source dependency for composing the
+second step: the existing theorem
+BB6.ERemaining.source_contract : DRegularSource.SourceContract
+covers all eleven successful canonical DRegular rows, including the E,
+A, and B cases below. Its source audit succeeded in
+[CI run 41712102615](https://github.com/FlareZ123/bb6/actions/runs/41712102615),
+with only the standard axioms propext, Classical.choice, and Quot.sound.
+Thus every row can use the same contract; no separate ARegularFull,
+DRegularESource, or BRegularSource theorem invocation is needed.
 
-| \(i\) | Middle state | Source theorem | Resulting regular state |
+Split \(s=3r+i\). The second source row is:
+
+| \(i\) | Middle state | \(DRegular.next\) row | Resulting regular state |
 |---:|---|---|---|
-| 0 | \(L(3k_0+4,1,13)\), \(k_0=32768r+10355\) | DRegularESource.e_contract_many | \(L(262144r+82849,3,10)\) |
-| 1 | \(L(3k_1+3,1,13)\), \(k_1=32768r+21278\) | ARegularFull.original_A_positive_row | \(L(262144r+170263,1,5)\) |
-| 2 | \(L(3k_2+2,1,13)\), \(k_2=32768r+32201\) | BRegularSource.original_B_row | \(L(262144r+257631,0,0)\) |
+| 0 | \(L(3k_0+4,1,13)\), \(k_0=32768r+10355\) | E | \(L(262144r+82849,3,10)\) |
+| 1 | \(L(3k_1+3,1,13)\), \(k_1=32768r+21278\) | A | \(L(262144r+170263,1,5)\) |
+| 2 | \(L(3k_2+2,1,13)\), \(k_2=32768r+32201\) | B | \(L(262144r+257631,0,0)\) |
 
-The target indices follow directly from the corresponding DRegular.next
-rows: respectively \(8k_0+9\), \(8k_1+39\), and \(8k_2+23\). All three
-targets are canonical. The first E step and each second-row step are
-original-source results; BoundaryPadding.source_chain composes their
-physical ObsEq certificates and exact primitive times.
+The targets follow directly from the respective next rows:
+\(8k_0+9\), \(8k_1+39\), and \(8k_2+23\). In the A row,
+\(b+1=14\), \((b+1)/3=4\), and
+\(d=(q-1)+4((b+1)/3)=16\), giving \(8k_1+7+2d=8k_1+39\).
+All three targets are canonical.
+
+The universal SourceContract also covers the first transition, but
+DRegularELow.e_zero_suffix is retained because it exposes the exact
+first-step time \(12p^2+49p+66\). The composition is a direct application
+of BB6.BoundaryPadding.source_chain to the first ObsEq and the selected
+second-step SourceContract instance. The combined time is the first-step
+time plus DRegular.duration of the corresponding middle state.
 
 The arithmetic and source dependencies are recorded in
 [seed42-two-step-source-composition.md](seed42-two-step-source-composition.md).
-**Status:** the composition is a proof-ready derivation from existing
-source-certified modules, but a single Lean wrapper for all three branches
+**Status:** the composition is a proof-ready derivation from an existing
+universal source theorem, but a single Lean wrapper for all three branches
 has not yet been compiled or axiom-audited. Do not cite the composed theorem
 as kernel-checked until that wrapper passes local preflight and its
 transitive axiom audit.
