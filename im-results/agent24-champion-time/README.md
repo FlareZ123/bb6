@@ -32,30 +32,30 @@ The [24-cycle coverage audit](TM63-24Cycle-Source-Coverage-20261117.md) records 
 
 ## Preferred direct arbitrary-A q4Tail terminal route
 
-The earlier A=1/A=2 terminal branches and repeated q4Tail/P2 recurrence are no longer the preferred path. For any (A\ge2), (L\ge4), and (z\ge1), the exact q4Tail residual admits a direct S1 dispatcher encoding. Put
-[
-W=A+L+2,\qquad N=2^A(2^{L+2}-1)-3,
-\qquad K=2^z+z+3,\qquad n=2^{2^z-1}.
-]
+The earlier A=1/A=2 terminal branches and repeated q4Tail/P2 recurrence are no longer the preferred path. For any \(A\ge2\), \(L\ge4\), and \(z\ge1\), the exact q4Tail residual admits a direct S1 dispatcher encoding. Put
+\[
+W=A+L+2,\qquad N=2^A(2^{L+2}-1)-3,\qquad
+K=2^z+z+3,\qquad n=2^{2^z-1}.
+\]
 The source derivation in [Agent 44's reparameterization note](../agent44-tm63-middle/GeneralQ4TailDispatcherReparam.md) establishes
-[
-\operatorname{p2ResidualLeft}(m,\operatorname{q4TailS0Tail}(A+L+1,q))
-=d1pow(K)\; ++\; markerWord(0)\; ++\; d0\; ++\;
-\operatorname{binDec}(W,N)\; ++\; lh,
-]
-where (q=2^{A-1}(2^{L+2}-1)-1). Consequently the q4Tail S0 frame is exactly
-[
+\[
+\texttt{p2ResidualLeft}(m,\texttt{q4TailS0Tail}(A+L+1,q))
+=d1pow(K)\mathbin{+\!\!+}markerWord(0)\mathbin{+\!\!+}d0
+\mathbin{+\!\!+}\texttt{binDec}(W,N)\mathbin{+\!\!+}lh,
+\]
+where \(q=2^{A-1}(2^{L+2}-1)-1\). Consequently the q4Tail S0 frame is exactly
+\[
 S1(W,N,0,K+n-1,2^{n-1}-1,0,H).
-]
-The counted S1 drain transfers the right counter, and the complete 24-class SectionResult dispatcher executes all (N) decrements. If (L) is even, then (2^{L+2}\equiv1\pmod3), so (N\equiv0\pmod3) and the dispatcher ends at marker zero. The existing [terminal SectionBits bridge](../agent42-champion-terminal/TerminalEncoderBridge.lean) then applies.
+\]
+The counted S1 drain transfers the right counter, and the complete 24-class SectionResult dispatcher executes all \(N\) decrements. If \(L\) is even, then \(2^{L+2}\equiv1\pmod3\), so \(N\equiv0\pmod3\) and the dispatcher ends at marker zero. The existing [terminal SectionBits bridge](../agent42-champion-terminal/TerminalEncoderBridge.lean) then applies.
 
-For the authentic root, (L=76), (A=rootMarker1A\ge2), and (z=rootMarker1Z\ge3). The root-side source chain is [TM63RootQ4Tail.lean](../agent38-root-q4tail/TM63RootQ4Tail.lean) plus [P2RootS0FrameIdentity.lean](../agent38-root-q4tail/P2RootS0FrameIdentity.lean); the final composition is [TM63GeneralQ4TerminalComposition.lean](../agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean). It exports the source-draft theorems `tm63_blank_halts` and `tm63_blank_attainable`. The latter uses the six-step ChampionRootBridge transport, so its +7 is the six-transition TM1/TM2 root offset plus the final undefined-query step; the resulting score is for the actual TM1 champion. The exact symbolic cost is reduced to a one-dimensional (t_2) recurrence and a single weighted sum in [SectionResultThreeCycle.md](../agent42-q4-s0-drain/SectionResultThreeCycle.md). A conditional tetration-scale comparison is recorded in [DirectTerminalTetrationBound.md](DirectTerminalTetrationBound.md).
+For the authentic root, \(L=76\), \(A=\texttt{rootMarker1A}\ge2\), and \(z=\texttt{rootMarker1Z}\ge3\). The root-side source chain is [TM63RootQ4Tail.lean](../agent38-root-q4tail/TM63RootQ4Tail.lean) plus [P2RootS0FrameIdentity.lean](../agent38-root-q4tail/P2RootS0FrameIdentity.lean); the final composition is [TM63GeneralQ4TerminalComposition.lean](../agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean). It exports the source-draft theorems **tm63_blank_halts** and **tm63_blank_attainable**. The latter uses the six-step ChampionRootBridge transport, so its \(+7\) is the six-transition TM1/TM2 root offset plus the final undefined-query step; the resulting score is for the actual TM1 champion. The exact symbolic cost is reduced to a one-dimensional \(t_2\) recurrence and a single weighted sum in [SectionResultThreeCycle.md](../agent42-q4-s0-drain/SectionResultThreeCycle.md). A conditional tetration-scale comparison is recorded in [DirectTerminalTetrationBound.md](DirectTerminalTetrationBound.md).
 
-**Evidence boundary:** the arithmetic/reparameterization and root composition are source drafts, not accepted Lean theorems. The full authentic-root, q4Tail/S0, dispatcher, counted-drain and terminal import closure has not compiled together or passed a transitive axiom audit. The T3/original-tape mismatch is corrected in the current outer-LC_Inc source wrapper, but that correction is also uncompiled. Keep this route in `im-results/`; do not promote it to `results/` or claim a new verified BB(6) lower bound until the exact closure passes local Lean preflight and axiom inspection.
+**Evidence boundary:** the arithmetic/reparameterization and root composition are source drafts, not accepted Lean theorems. The full authentic-root, q4Tail/S0, dispatcher, counted-drain and terminal import closure has not compiled together or passed a transitive axiom audit. The T3/original-tape mismatch is corrected in the current outer-LC_Inc source wrapper, but that correction is also uncompiled. Keep this route in **im-results/**; do not promote it to **results/** or claim a new verified BB(6) lower bound until the exact closure passes local Lean preflight and axiom inspection.
 
 ## Root-specific index-one handoff
 
-The [root continuation wrapper](../agent48-counted-inc0/TM63RootAfterSectionResultToOne.lean) composes the authentic blank-root run through middle 34 with `sectionResult_run_to_index_one_complete`, then composes the outer-LC_Inc reset frame. The original source-level T3 correction is now carried end-to-end: `outerLCInc_full_run` returns the transformed T3 tape, and [TM63RootMarker1Endpoint.lean](../agent44-tm63-middle/TM63RootMarker1Endpoint.lean) applies the corresponding canonical endpoint theorem to that tape. This replaces the earlier false identification of T3 with the untransformed S1 tape. The canonical marker-1 S0 endpoint, root bounds (A\ge2), (z\ge3), second q4Tail prefix and q4Tail/S0 frame identity now have source-level compositions. None of these downstream modules has been compiled as a complete import closure; the old A=1/A=2 terminal-conversion branches are retained only as alternatives, not as prerequisites for the preferred arbitrary-A route.
+The [root continuation wrapper](../agent48-counted-inc0/TM63RootAfterSectionResultToOne.lean) composes the authentic blank-root run through middle 34 with \(\texttt{sectionResult\_run\_to\_index\_one\_complete}\), then composes the outer-LC_Inc reset frame. The original source-level T3 correction is now carried end-to-end: \(\texttt{outerLCInc\_full\_run}\) returns the transformed T3 tape, and [TM63RootMarker1Endpoint.lean](../agent44-tm63-middle/TM63RootMarker1Endpoint.lean) applies the corresponding canonical endpoint theorem to that tape. This replaces the earlier false identification of T3 with the untransformed S1 tape. The canonical marker-1 S0 endpoint, root bounds \(A\ge2\), \(z\ge3\), second q4Tail prefix and q4Tail/S0 frame identity now have source-level compositions. None of these downstream modules has been compiled as a complete import closure; the old A=1/A=2 terminal-conversion branches are retained only as alternatives, not as prerequisites for the preferred arbitrary-A route.
 
 The exact root-to-terminal candidate is therefore present as a composition, but it is not yet a verified halt theorem. The [24-cycle coverage audit](TM63-24Cycle-Source-Coverage-20261117.md) and the linked source dossiers retain the one-step class map and all dependencies.
 
@@ -64,13 +64,12 @@ The exact root-to-terminal candidate is therefore present as a composition, but 
 The direct arbitrary-A route is the preferred root-completion path. The existing manual-only [champion-terminal source workflow](../../.github/workflows/agent42-champion-terminal-source.yml) contains the middle34-acceptance gate; do not create a duplicate workflow. Its use remains gated by exact local Lean 4.36.0-rc2 preflight.
 
 1. Obtain a working local Lean runtime and source-complete checkout; compile the current-main import closure for the 24-class dispatcher and authentic middle-34/T3 root endpoint.
-2. Compile the frame-only [P2RootS0FrameIdentity.lean](../agent38-root-q4tail/P2RootS0FrameIdentity.lean), then the arbitrary-A chain: GeneralQ4TailArithmetic, GeneralQ4TailS1Reparam, GeneralQ4TailS1Config, and GeneralQ4TailTerminalComposition.
-3. Compile [TM63RootQ4Tail.lean](../agent38-root-q4tail/TM63RootQ4Tail.lean) and the authentic-root [TM63GeneralQ4TerminalComposition.lean](../agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean). Inspect transitive `#print axioms` for `tm63_blank_halts` and `tm63_blank_attainable`; reject any `sorryAx`.
+2. Compile the frame-only [P2RootS0FrameIdentity.lean](../agent38-root-q4tail/P2RootS0FrameIdentity.lean), then the arbitrary-A chain: **GeneralQ4TailArithmetic**, **GeneralQ4TailS1Reparam**, **GeneralQ4TailS1Config**, and **GeneralQ4TailTerminalComposition**.
+3. Compile [TM63RootQ4Tail.lean](../agent38-root-q4tail/TM63RootQ4Tail.lean) and the authentic-root [TM63GeneralQ4TerminalComposition.lean](../agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean). Inspect transitive **#print axioms** for **tm63_blank_halts** and **tm63_blank_attainable**; reject any **sorryAx**.
 4. Only after local preflight passes, run the existing manual acceptance gate and inspect only the relevant failed job logs if needed.
-5. If accepted, simplify the attained symbolic score and compare it with the published (2\uparrow\uparrow\uparrow5) lower-bound scale. The universal six-state upper bound remains independent and must still be proved.
+5. If accepted, simplify the attained symbolic score and compare it with the published \(2\uparrow\uparrow\uparrow5\) lower-bound scale. The universal six-state upper bound remains independent and must still be proved.
 
-Do not return to repeated q4Tail/P2 candidate searches or the branch-specific A=1/A=2 terminal conversions unless a concrete failure in the direct arbitrary-A route requires them. Keep all uncompiled source drafts and conditional inequalities in `im-results/`; the `results/` directory remains reserved for source-verified, academically publishable mathematical results.
-
+Do not return to repeated q4Tail/P2 candidate searches or the branch-specific A=1/A=2 terminal conversions unless a concrete failure in the direct arbitrary-A route requires them. Keep all uncompiled source drafts and conditional inequalities in **im-results/**; the **results/** directory remains reserved for source-verified, academically publishable mathematical results.
 
 ## Historical development and established narrower results
 
