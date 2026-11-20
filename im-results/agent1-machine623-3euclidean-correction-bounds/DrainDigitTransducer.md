@@ -236,7 +236,7 @@ If \(b_i,N_i\) are the low-\(i\)-digit input and output prefixes and \(s_i\) is 
 \]
 Starting in A, this is \(4N_i-2b_i+1=3^i\kappa(s_i)\).
 
-Now write the full input as \(b=b_0+h3^L\), with \(0\le b_0<3^L\) and \(h\in\{0,1\}\). The parity condition \(L\equiv b\pmod2\), together with \(3^L\equiv1\pmod2\), shows that the number of non-1 digits among the low L input digits is even when \(h=0\), and odd when \(h=1\). Since each input digit 0 or 2 toggles A versus the non-A states, while digit 1 leaves that phase unchanged:
+Now write the full input as \(b=b_0+h3^L\), with \(0\le b_0<3^L\) and \(h\in\{0,1\}\). The parity condition \(L\equiv b\pmod2\), together with \(3^i\equiv1\pmod2\), shows that the number of 1-digits among the low L digits has parity \(b_0\). Hence the number of non-1 digits has parity \(L+b_0\equiv h\pmod2\), so it is even when \(h=0\) and odd when \(h=1\). Since each input digit 0 or 2 toggles A versus the non-A states, while digit 1 leaves that phase unchanged:
 - \(h=0\) forces terminal state A;
 - \(h=1\) forces terminal state B or C.
 
@@ -261,6 +261,6 @@ The standalone Lean 4.36.0-rc2 proof is in [DrainDigitTransducerCarry.lean](Drai
 - the recursive carry invariant for every input word and every initial state;
 - the phase/parity invariant;
 - nonnegativity and the \(3^L\) output bound;
-- the exact drain formula under the parity and upper-size hypotheses.
+- the exact drain formula under the parity and upper-size hypotheses, including the direct theorem `drain_transducer_exact_of_bounds` that takes only the original length conditions.
 
 The file compiles locally with Lean 4.36.0-rc2 and uses only Lean's core imports; no Mathlib dependency is required.
