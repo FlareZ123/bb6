@@ -107,7 +107,20 @@ Applying Agent 42's adapter therefore gives
 [
  s0Config ell_C (n-1) (2^{n-1}-1) 0 H.
 ]
-This makes the A=1 Type-C route compatible with the same S0 drain/postlude interface. It exposes the remaining left word explicitly as tail_C; the terminal SectionBits continuation of d0pow(L+1)++lh is still open.
+This makes the A=1 Type-C route compatible with the same S0 drain/postlude interface.
+
+### Canonical terminal-marker factorization
+
+Let K=2^z+z+3, so m+2=3K and replicate(m+2,true)=d1pow K. The first five bits of 0100++tailC are markerWord(0)++d0; after those five bits, the remaining six bits before d0pow(L+1) are d0++d0. Therefore
+\[
+ ell_C=d1pow(K) ++ markerWord(0) ++ d0 ++ d0pow(L+3) ++ lh.
+\]
+
+The q4Tail adapter output has left-facing word d0pow(n-1)++ellC. Applying the standard counted S0 drain changes the counter to d1pow(n-1) and transfers the right counter to 2^(n-1)-1. Concatenating the adjacent one-block runs gives the exact reparameterized S0 endpoint
+\[
+ s0Config\ (markerWord(0) ++ d0 ++ d0pow(L+3) ++ lh)\ (n-1+K)\ 0\ (2^{n-1}-1)\ H.
+\]
+Compare this with Agent 42's `TerminalEncoderBridge.s0_reset_sectionBits`, whose residual must be markerWord(0)++d0++d1pow(L)++lh. Thus the A=1 Type-C path matches the terminal marker and every surrounding counter parameter; the remaining mathematical conversion is sharply isolated as d0pow(L+3) to d1pow(L) in the appropriate reset context. No source-run theorem for that conversion is claimed.
 
 ## Composition and limits
 
