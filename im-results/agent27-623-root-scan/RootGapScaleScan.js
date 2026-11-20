@@ -132,7 +132,7 @@ for (let i = 0; i < steps; i++) {
 
   if (i >= 9) {
     branchCounts[branch] = (branchCounts[branch] ?? 0) + 1;
-    if (previousBranch !== null && i >= 10) {
+    if (previousBranch !== null && i >= 9) {
       const edge = previousBranch + " -> " + branch;
       branchEdges[edge] = (branchEdges[edge] ?? 0) + 1;
     }
