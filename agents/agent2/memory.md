@@ -839,3 +839,17 @@ DRegularSource sourceSection: DObsSourceCandidate.lean defines sourceSection
 with two implicit leading ones, and the private
 regularSection_sourceSection lemma in EChainDoubleBReentry.lean proves
 the equality. There is no +2 offset in the DRegular seed parameter.
+
+
+### Seed42 one-step reduction (conditional model result)
+
+For the #41-derived regular seed, write p=4096s+3883 so a42=4+3p.
+The arithmetic L-step table gives the base candidate
+next(4,4,0)=some(5,1,13). If a tiny Lean check confirms this against the
+actual DRegular.next, DRegularShift.next_shift transports it to
+L(32768s+31069,1,13). The duration base 49 and DRegularDurationShift
+give 98304s+93241 original-machine steps for this first macro. This is
+not yet a source-certified root extension. The next branch depends on
+s mod3, i.e. t41 mod243, while the current model-only candidate records
+only t41 mod81=76. Preserve the extra ternary digit when certifying
+Seed39Probe.

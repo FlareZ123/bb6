@@ -91,6 +91,26 @@ L(8a_K+53,4,0)=L(4096t+3461,4,0)
 The first DRegular exceptional return from this seed has not yet been
 computed; this is the next root-specific arithmetic probe.
 
+
+A further one-step reduction is available from the existing 3-adic shift
+theorems. Write \(p=4096s+3883\); then the seed above has
+\(a_{42}=12288s+11653=4+3p\). The arithmetic L-step table predicts the
+base case
+\(\operatorname{next}(4,4,0)=\operatorname{some}(5,1,13)\). If this tiny
+base case is checked against the actual DRegular.next definition, the
+existing DRegularShift.next_shift theorem gives the next regular state
+\[
+L(5+8p,1,13)=L(32768s+31069,1,13).
+\]
+The duration base case is 49, so DRegularDurationShift predicts the
+corresponding original-machine segment length
+\(49+24p=98304s+93241\). This is a conditional one-step model reduction,
+not yet a source-certified root extension. The next branch depends on
+\(s\bmod3\), equivalently on \(t_{41}\bmod243\); the currently reported
+\(t_{41}\bmod81=76\) is insufficient. A checked Seed39Probe first-stop
+bound should preserve this extra ternary digit.
+
+
 ### Remaining p=2 source families
 
 The K=4 wrapper is deliberately narrower than the full k≡4 (mod 9)
