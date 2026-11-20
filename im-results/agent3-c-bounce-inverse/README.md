@@ -403,3 +403,6 @@ The final state is exactly the q=0 parent for `h=8+128*u`, since `39+64*h=551+81
 
 
 The source-equivalence hook is `BB6.Agent46.section_exact` in `FastSectionProof.lean`, relating the exactSection duration/output to the original `run` and `secNext` relation. The formal route is four exact affine evaluations plus four applications of `section_exact`; the remaining namespace compatibility with `U5Y3ParentFan`'s `SectionAllInverse.secNext` must be checked. See the "Source equivalence hook" section in [B2Q0FourStepPath.md](B2Q0FourStepPath.md).
+
+
+The source namespace connection has been checked: `U5Y3ParentFan.lean` imports `SectionAllInverse.lean` and opens `BB6.Agent46`, so its `secNext` is the same original section relation used by `FastSectionProof.section_exact`. Its q=0 parent theorem returns exactly `(8*(m+1)-3,4*(m+1)-1)`, which is the terminal Q(u) of the four-step B2 path. The remaining work is a Lean proof of the four affine exactSection evaluations and derivation of the residual/root-index premises for the same blank-start candidate.
