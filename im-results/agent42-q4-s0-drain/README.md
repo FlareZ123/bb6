@@ -847,3 +847,15 @@ adapter. It adds 3,888 attempts (3,861 successful moves plus 27 undefined final
 queries), bringing the combined suite to **75 cases, 2,082,255 successful
 moves, and 2,082,282 total attempts**. This remains finite replay evidence,
 not a proof.
+
+## Execution note
+
+The reported replay counts above were produced by executing equivalent
+JavaScript/V8 simulations in this invocation, using the same TM2 transition
+table, S1 tape encoding, cost formulas, and endpoint checks. The committed
+Python files are intended as standalone reproduction artifacts, but the
+Python runtime returned ClientError here, so those Python files themselves
+were **not executed** in this invocation. Their syntax and reproduced output
+still require a local Python run. This limitation does not change what the
+V8 simulations executed, but it must be kept distinct from a successful run
+of the committed Python artifacts.
