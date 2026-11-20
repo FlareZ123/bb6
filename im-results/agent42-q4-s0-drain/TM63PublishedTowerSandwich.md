@@ -315,8 +315,10 @@ that succeeds.
 
 ## Sharper leading-coefficient estimate
 
-The \(S_{\rm TM1}<9b_N^2\) estimate above is sufficient for the adjacent-tetration upper bound, but the exact dispatcher remainder and root-prefix costs give a sharper additive estimate:
+The \(S_{\rm TM1}<9b_N^2\) estimate above is sufficient for the adjacent-tetration upper bound, but the exact final dispatcher summand and the upper cost estimate give a sharper two-sided additive interval:
 \[
-6(b_N+1)^2\le S_{\rm TM1}<6(b_N+1)^2+49b_N,
+6(b_N+1)^2+42(b_N+1)+3b_{N-1}
+\le S_{\rm TM1}
+<6(b_N+1)^2+49b_N.
 \]
-with \(N=(2^{78}-1)2^A-3\ge256\). The relative excess over the final counted increment is below \(1.2\times10^{-78}\) for the authentic parameters. The derivation is isolated in [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md). This is still conditional on the same uncompiled authentic-root/dispatcher source composition.
+All work outside that final summand is fewer than \(7b_N\) additional steps; the relative excess over \(6(b_N+1)^2\) is below \(1.2\times10^{-78}\). The derivation is isolated in [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md). This is still conditional on the same uncompiled authentic-root/dispatcher source composition.
