@@ -31,8 +31,8 @@ theorem root_run_39 :
   decide
 
 def gap (a d : Nat) : Int :=
-  (if a >= d then (a - d : Nat) else (d - a : Nat) : Nat) -
-    3 * (min a d : Nat)
+  (if a >= d then Int.ofNat (a - d) else Int.ofNat (d - a)) -
+    3 * Int.ofNat (min a d)
 
 def gamma (a d : Nat) : Int :=
   if a >= d then
@@ -44,7 +44,7 @@ def gamma (a d : Nat) : Int :=
 def signedX (a d : Nat) : Int := 2 * gap a d - gamma a d
 
 /-- Agent 41's integer scale coordinate y=6 min(a,d). -/
-def signedY (a d : Nat) : Int := 6 * (min a d : Nat)
+def signedY (a d : Nat) : Int := 6 * Int.ofNat (min a d)
 
 theorem root38_signed_coordinates :
     signedX 44634 124427 = -108220 ∧
