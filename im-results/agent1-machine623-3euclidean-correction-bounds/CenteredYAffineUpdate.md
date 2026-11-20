@@ -65,22 +65,20 @@ The constant parts of \(\kappa_+\) and \(\kappa_-\), before the \(\mp6D\mp4r\) t
 \max_{s,s'}|-c_s-c_{s'}+2t_s|=28.
 \]
 
-If the source depth bounds \(|D|\le\ell+1\) and \(r\le\ell\) are available, then
-\[
-|\kappa_+|\le6(\ell+1)+4\ell+38=10\ell+44,
-\]
-\[
-|\kappa_-|\le6(\ell+1)+4\ell+28=10\ell+34.
-\]
-Consequently \(|\kappa|\le10\ell+44\). For the centered-Y width \(W_Y=4(9\ell+22)=36\ell+88\), this gives
-\[
-|\kappa|<W_Y<3^k
-\]
-when \(3^k>W_Y\). The algebraic update is exact independently of these bounds; the displayed uniform bound remains conditional until the combined \(D,r\) depth wrapper is source-CI certified.
+The source depth package RootRayDrainDepthSource.lean supplies, for each of the four root-ray boundary drains under its sector budget and power hypotheses, a full evaluator count R_full≤ell and signed first-counter drop -ell≤D≤ell+1. In RE the split count is r=R_full-1; in LO/LE/RO it is r=R_full. These bounds give |kappa_+|≤10ell+44 and |kappa_-|≤10ell+34, hence |kappa|≤10ell+44<W_Y=36ell+88<3^k. The D/r depth bounds are therefore available from the source package. The remaining formalization gap is that the compact root gap cocycle Y'=|Y-2T|-6q' and its sector/sign normalization are documented in RootRayGapCocycle.md but are not yet a Lean theorem. The displayed z' identity is an exact algebraic consequence of that documented cocycle, but is not yet source-formalized.
 
 ## Computational cross-check
 
 A deterministic BigInt replay of 9,967 root transitions \(D_{33}\to D_{10000}\), using the source-shaped drain summary and the split RE count, found **zero** failures of the two-branch identity. The largest observed \(|\kappa|\) was 9,604. This is a consistency check, not a substitute for the exact algebraic derivation or a source-compiled proof.
+
+## Scalar digit transducer (finite diagnostic)
+
+The affine update induces a digit transducer on pair symbols (z_i,q'_{i-1}). For sign sigma, its output digit and carry are
+\[
+d_i=(\sigma z_i-2q'_{i-1}+c_i)\bmod3,\qquad
+c_{i+1}=\left\lfloor\frac{\sigma z_i-2q'_{i-1}+c_i}{3}\right\rfloor.
+\]
+A conservative carry envelope [-4,2] covers the low-boundary carry; the actual carry range in the 9,967-transition replay was [-3,0]. For initial carries in [-4,2], there are 513 universal length-three words for each sign; every observed pair window contains a sign-specific universal triple. There are 361 length-three words universal for both signs, and 9,963 of the 9,967 observed pair windows contain one. A common universal length-four word occurs in all 9,967 windows, but the set is broad (5,329 of 6,561 words). The transducer output digits matched the actual target z' digits throughout the replay. These are finite computational observations; proving that every future root pair window contains a universal word remains open.
 
 ## Why this may help the buffered residue argument
 
