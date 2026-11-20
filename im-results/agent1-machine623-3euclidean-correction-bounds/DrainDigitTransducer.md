@@ -266,7 +266,7 @@ The module formalizes:
 - the phase/parity invariant;
 - nonnegativity and the \(3^L\) output bound;
 - the exact output formula, including the direct theorem drain_transducer_exact_of_bounds;
-- runStats, which retains the output-1 and output-2 counts and proves \(0\le n_2\le n_1+n_2\le L\). These give the weighted statistics \(E=n_2\), \(R=n_1+n_2\), and \(D=L-2E\) consumed by SignedCoordinateNormalForm.lean.
+- runStats, which retains the output-1 and output-2 counts and proves \(0\le n_2\le n_1+n_2\le L\). These give the weighted statistics \(E=n_2\), \(R=n_1+n_2\), and \(D=L-2E\) consumed by SignedCoordinateNormalForm.lean. The terminal phase is also exposed by runStats_phase_of_decomposition: under the same low/high decomposition and parity condition, phaseBit(finalState)=high.
 
 **Canonical-ray hypotheses.** In the source application, \(b\) is the positive drain parameter and \(L\) is the parity-adjusted ternary length. The canonical interval is
 \[
