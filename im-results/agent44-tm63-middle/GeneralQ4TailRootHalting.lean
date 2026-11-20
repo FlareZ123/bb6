@@ -40,8 +40,9 @@ def tm63GeneralTerminalRootHaltTime : Nat :=
     terminalMoves (q4TerminalWidth tm63Length1 rootMarker1A)
       (q4TerminalResult tm63Length1 rootMarker1A rootMarker1Z).exponent
 
-/-- The arbitrary-A direct dispatcher proves the authentic TM63 blank-root
-trajectory halts; no repeated outer-width q4Tail recurrence is required. -/
+/-- Source-level candidate: after the authentic root-prefix and complete
+24-class dispatcher closures are accepted, this composes to a HaltsAfter
+result without another outer-width q4Tail recurrence. -/
 theorem tm63_general_root_halts :
     HaltsAfter tm2 tm63GeneralTerminalRootHaltTime := by
   have hExpOdd : tm63FirstSection.exponent%2=1 :=
@@ -137,7 +138,8 @@ theorem tm63_general_root_halts :
       (s1Config finalWidth 0 0 finalResult.exponent 0 finalResult.right finalShiftedHead).tape
       finalShiftedHead hprefix' hsection
 
-/-- The same composition yields an explicit attainable BB(6) lower bound. -/
+/-- Source-level candidate for an explicit attainable BB(6) lower bound;
+not an accepted result until the complete import closure compiles. -/
 theorem tm63_general_root_attainable :
     Attainable (tm63GeneralTerminalRootHaltTime+7) := by
   have hExpOdd : tm63FirstSection.exponent%2=1 :=
