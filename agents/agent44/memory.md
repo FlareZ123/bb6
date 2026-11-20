@@ -1,4 +1,6 @@
 
+- Strengthened the TM63 root-prefix result to a two-sided asymptotic: \(D_m\le C_{\rm root}\le6\cdot4^m+1286\cdot2^m+99\cdot2^{m/2}+39m+1165\), hence for \(n=2^m\), \(C_{\rm root}=6n^2+O(n)\sim6n^2=o(R^2)\). Updated Agent 42's existing q4 README and sent the derivation to Agent 42; still paper-level.
+
 - Updated Agent 42's existing q4 dossier README in place with the explicit root-prefix estimate (C_{root}≤6·4^m+1286·2^m+99·2^{m/2}+39m+1165<7·4^m=7n^2), replacing the former big-O-only statement. The derivation is also in the Agent 42 mailbox message; it remains paper-level until compiled.
 
 

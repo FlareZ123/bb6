@@ -71,11 +71,12 @@ The dispatcher also admits an exact three-increment state map and a closed 2-adi
 6b_N^2+60b_N+(6N^2+57N-66)b_{N-1}
 +48N+90k^2+111k+12(N+1)U.
 \]
-Since \(b_{N-1}=\log_2(b_N+1)\), the remainder is \(o(b_N^2)\). A further paper-level root-prefix bound now gives the explicit estimate
+Since \(b_{N-1}=\log_2(b_N+1)\), the remainder is \(o(b_N^2)\). A further paper-level root-prefix analysis gives the two-sided estimate
 \[
-C_{\rm root}\le6\cdot4^m+1286\cdot2^m+99\cdot2^{m/2}+39m+1165<7\cdot4^m=7n^2,
+6n^2+42n-12m-48\le C_{\rm root}
+\le6n^2+1286n+99\sqrt n+39m+1165<7n^2,
 \]
-for \(B\le z\le m/2\), \(z\ge10\), \(m=2^z-1\), and \(n=2^m\). Thus \(C_{\rm root}=O(n^2)=o(R^2)\) for \(R=2^{n-1}-1\). The separate root drain is \(O(R^2)\), so the full conditional score has \(S_{\rm full}\sim6t_2(N,R)^2\) along this q4 parameter family. Using the exact first-section recurrence \(V_0=63,\ V_{j+1}=2^{V_j}-1\), the root gives \(A_0=18+\sum_{j=0}^6V_j\), \(M=496\cdot2^{14+\sum_{j=0}^6V_j}-36\), and terminal index \(N\ge N_0=(2^{78}-1)2^{V_7+\sum_{j=8}^{M+42}V_j+2}-3\). The exact dispatcher term \(D_N\ge6b_N^2\) then yields \(S_{\rm full}\ge6(T_{N_0}+2)^2\), with \(T_1=2,\ T_{j+1}=2^{T_j}\). These asymptotic refinements are not Lean-formalized; the authentic source composition remains uncompiled.
+where \(n=2^m\), \(m=2^z-1\), \(B\le z\le m/2\), and \(z\ge10\). The lower bound is the \(D_m\) summand; the upper bound is the explicit decomposition above. Hence \(C_{\rm root}=6n^2+O(n)\sim6n^2=o(R^2)\) for \(R=2^{n-1}-1\). The separate root drain is \(O(R^2)\), so the full conditional score has \(S_{\rm full}\sim6t_2(N,R)^2\) along this q4 parameter family. Using the exact first-section recurrence \(V_0=63,\ V_{j+1}=2^{V_j}-1\), the root gives \(A_0=18+\sum_{j=0}^6V_j\), \(M=496\cdot2^{14+\sum_{j=0}^6V_j}-36\), and terminal index \(N\ge N_0=(2^{78}-1)2^{V_7+\sum_{j=8}^{M+42}V_j+2}-3\). The exact dispatcher term \(D_N\ge6b_N^2\) then yields \(S_{\rm full}\ge6(T_{N_0}+2)^2\), with \(T_1=2,\ T_{j+1}=2^{T_j}\). These asymptotic refinements are not Lean-formalized; the authentic source composition remains uncompiled.
 
 **Evidence boundary:** this is a source-level integration candidate, not
 an accepted halt or lower-bound result. Lean 4.36.0-rc2 is now installed
