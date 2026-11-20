@@ -184,11 +184,76 @@ Each submitted segment proves a DRegular.run endpoint and DRegular.next = none a
 The artifact-reusing manual workflow [agent37-root-exceptions34-38.yml](../../.github/workflows/agent37-root-exceptions34-38.yml) consumes both the stage-5 d-root-seed31-audit artifact and the successful seed31-first-stop-certificate artifact, then compiles these two modules and checks for forbidden sorryAx/native_decide dependencies. It has no push trigger. Until that audit succeeds, these files and the five exact signatures are submitted candidates, not kernel-verified results. In particular, this finite conditional continuation neither authenticates the still-pending episodes 19–30 nor proves that the D machine is nonhalting.
 
 
-## November 20, 2026: compositional nineteenth checkpoint and general safe E-exit class
+## November 20, 2026: current D-root frontier
 
-The nineteenth-root tail no longer needs a second 512-block evaluator induction. The exact certificates already available are
-`run 4096 block19_1 = some block19_2` (`block19_2_exact`) and
-`run 1588 block19_2 = some ⟨9*t19+10,9,1⟩` (`terminal1588_exact`).
-The new [NineteenthTail5684.lean](NineteenthTail5684.lean) composes them with the unconditional `DRegularFast.run_add 4096 1588`; [NineteenthTerminalCertificate.lean](NineteenthTerminalCertificate.lean) composes `block19_1_exact` and `tail5684_exact` with `run_add 4096 5684`. Stage 4a deliberately skips its per-module axiom print to keep the tail compile small; stage 4b's `#print axioms terminal9780_exact` audits the complete composed endpoint transitively, including `tail5684_exact`. Agent 2 had already made this direct-composition split in commits [182c468](https://github.com/FlareZ123/bb6/commit/182c4685d83cb467150d9aa619731234ae959881) and [f31592b](https://github.com/FlareZ123/bb6/commit/f31592b2c6d490209e1473d150b42bbae710213d); my later duplicate edits were reverted to preserve that audit strategy. The source-level composition remains **not yet Lean/CI verified**. The earlier stage-4a runs [44681315050](https://github.com/FlareZ123/bb6/actions/runs/44681315050) and [44681991222](https://github.com/FlareZ123/bb6/actions/runs/44681991222) ended with runner shutdown (exit 143) and no Lean diagnostic; they do not falsify the endpoint. Re-run stage 4a from the successful `d-root-stage3b3` predecessor artifact with the current extension snapshot, after a successful local Lean preflight.
+### Episode 19: kernel-safe tail still required
 
-A separate source-closure generalization is in [ExceptionalESafeReentry.lean](ExceptionalESafeReentry.lean) and [ExceptionalESafeCanonical.lean](ExceptionalESafeCanonical.lean). Using `EExceptionalShift.e_source k (q-1)`, every source E exit `L(3*k+4,q,1)` with `q≥2` and `q % 3 ≠ 1` maps to the fixed-tail packet `M(8*k+5,0,2*q;0 1^6)`; the safe packet normalizer then returns it to a regular section. The canonical-strengthened version exposes the endpoint unary floor and `DRegular.Canon`, so it can feed another DRegular segment. These are **submitted Lean proof candidates, not yet compiled**. [ExceptionalEReentryClassification.lean](ExceptionalEReentryClassification.lean) combines the verified q=1,b=1 all-residue theorem with the new safe family, giving a single canonical-reentry statement for q=1 or q≥2 with q≠1 (mod 3); that wrapper is also not yet compiled. For canonical E inputs (q≥1, since q=0,b=1 is not `DRegular.Canon`), the general class outside this union is q≥4 with q≡1 (mod 3). This is not wholly open: `ExceptionalEPacketClosure.exceptional_EA_all_reentry` is a submitted source composition for the entire q≥2 family on the special unary slice `a=9*t+10`, including q≡1 via the AP2 p=2 boundary. The AP2 leaf itself compiled in CI 43315114860, but the full E/A wrapper audit remains pending; do not count that cylinder as fully verified yet. Other specialized E/A and E/E source theorems also provide narrower closures. What remains is the general `a=3*k+4`, q≥4, q≡1 P2-reset/E-chain continuation outside those source cylinders. In particular, the safe theorem specializes to the root-chain episode-20 input `L(27*u+16,5,1)` (k=9*u+4), which also has a separate EEE-to-P4 escape certificate; if the new canonical theorem compiles, it offers a direct canonical-reentry alternative for that q=5 branch.
+The current main-branch
+[NineteenthTail5684.lean](NineteenthTail5684.lean) uses a 32-step
+fastRunBlocksWith evaluator and native_decide. The preceding Agent 2
+incarnation locally compiled that exact source in 1.766 seconds against the
+pinned predecessor artifacts. That is a useful performance observation,
+but it is not an accepted kernel-only theorem: Lean's native-decision tactic
+introduces a dedicated axiom, and the stage-4b workflow rejects it. No CI
+run has tested the current fast32 source revision.
+
+The current
+[NineteenthTerminalCertificate.lean](NineteenthTerminalCertificate.lean)
+still composes the 4,096-step prefix and 5,684-step tail through
+run_add 4096 5684. Earlier direct run_add attempts ended in runner
+shutdown without a Lean diagnostic. A kernel-only replacement should use
+decide +kernel with either the current 32-step block helper or the
+reusable 64-step evaluator preserved on branch
+agent2-d-root-fast64-fixed (namespace BB6.Agent2Fast64). Prefer
+proving the full 9,780-step endpoint from seed19 directly with 64 blocks
+(152 blocks plus 52 steps) or 32 blocks (305 blocks plus 20 steps), rather
+than repeating the large run_add induction. Local preflight is mandatory;
+the current invocation's local shell/Python tools fail before trivial
+commands execute. Agent 6 has been asked to preflight alternatives, with
+no response yet. Do not dispatch CI as a substitute for local preflight.
+
+The source-root lift and episode-19 exceptional reentry files are prepared
+but not verified. The E/A packet issue is no longer a current proof defect:
+commit e7009d5 fixed the q−1 successor case, and CI run
+[43394857303](https://github.com/FlareZ123/bb6/actions/runs/43394857303)
+printed [propext, Quot.sound] for exceptional_EA_packet before the
+larger audit was externally shut down at the sixteenth root. The earlier
+43391359969 failure is from the pre-fix source. Run
+[44289702591](https://github.com/FlareZ123/bb6/actions/runs/44289702591)
+also ended in runner shutdown without a Lean diagnostic.
+
+### Conditional episode-41 packet closure
+
+The corrected conditional DRegular trace reaches
+\(L(9t_{41}+7,7,1)\), whose source-specific EEE escape yields the p=2
+packet \(M(512u_{41}+257,4,2;0\,1^6)\). With
+\(k_{41}=81s+76=27(3s+2)+22\) and \(q=7=3\cdot2+1\), this is covered by
+P2K4SourceReentry.close_one_regular_reentry. The wrapper and its
+root-prefix composition were kernel-audited in CI run
+[43391093227](https://github.com/FlareZ123/bb6/actions/runs/43391093227),
+with [propext, Quot.sound].
+
+Unfolding the q=7 endpoint normalizer gives the next regular seed
+\(L(4096t+3461,4,0)\), where \(t=3s+2\), equivalently
+\(L(12288s+11653,4,0)\). This closes the specific #41 packet candidate,
+not its blank-root reachability: the upstream episodes 19–38 remain
+unverified, and the first exceptional return from this new seed has not
+been computed.
+
+The broader p=2 classification remains incomplete. The K=4 wrapper covers
+only \(k=27t+22,\ q=3u+1\). The raw P2K7Source family covers
+\(k=27t+25\) across q mod 3 and compiled in CI run
+[42519761689](https://github.com/FlareZ123/bb6/actions/runs/42519761689),
+but its regular-section wrapper is not yet present. Other k≡4,7 (mod 9)
+subfamilies and deeper 3-adic cylinders remain; see the packet-shift
+dossier for the exact source families.
+
+### General safe E-exit candidate
+
+ExceptionalESafeReentry.lean and ExceptionalESafeCanonical.lean
+remain submitted proof candidates, not compiled theorems. The canonical
+file still needs its own e_output_packet helper because the helper in the
+other file is private. The q=5 episode-20 root input already has a separate
+EEE-to-P4 escape, so this general safe-E candidate is not a prerequisite
+for that particular root step.
+

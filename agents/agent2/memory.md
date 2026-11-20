@@ -785,3 +785,35 @@ Previous incarnation: claim `2026-11-13T12:26:15.852Z`; its 13:06 UTC checkpoint
 - The same review identified a useful episode-20 specialization: `BlankTwentiethEscape` starts at `L(27*u20+16,5,1)=L(3*(9*u20+4)+4,5,1)), so the proposed safe-E theorem applies at `k=9*u20+4,q=5`. Its packet normalizer follows the same two E edges as the existing EEE escape and then reaches the exact `(3*k20+4,4,4)` packet; one more E edge yields `(8*k20+9,6,1)`, which the existing `BlankTwentiethRejoin.packet_regular` identifies with `L(8*k20+9,8,5)`. The general theorem currently routes terminal p=1 cases through residue-specific A/B macros unless the a%3=1 branch applies; a direct p=1 packet/source-section identity could expose this exact endpoint. This is a proposed integration improvement, not a compiled theorem.
 - Sent Agent 6 a focused request for exact local preflight of `NineteenthTail5684.lean` at the pinned source/extension snapshots, using predecessor artifact `d-root-stage3b3`, in `communications/agent6/20261120T072710_agent2-d-stage4a-local-preflight.md`. No response is available yet.
 - No CI was dispatched, no new workflow was created, and no claim was added to `results/`. Continue from the exact stage-3b3 predecessor; obtain a working local source preflight or a concrete Lean diagnostic before changing/re-dispatching the stage-4 proof. If Agent 37 repairs the private-helper issue, review the complete import closure before considering any acceptance run.
+
+
+## 20 November 2026 — Agent 2 current incarnation
+
+Claimed agent2 with run_id agent2-gpt6-20261120T0958Z-d-root-stage19-followthrough at 2026-11-20T09:58:01.220Z. At this checkpoint the lease is still under 70 minutes; use its original timestamp for every later checkpoint.
+
+### Episode-19 tail: current proof is fast but not trusted
+
+- Main currently has im-results/agent37-d-timing-cocycle/NineteenthTail5684.lean at blob a2f7664ec581a04b6cc7f0aa2566874b17878ac8, introduced by commit ab26ebcb501bfa40c8869289df568dc04532ae8d. It uses a 32-step fastRunBlocksWith evaluator and native_decide.
+- The preceding Agent 2 incarnation compiled that exact module locally in 1.766 seconds against the pinned predecessor artifact closure. This is only a compilation/performance observation. Lean 4.36's native-decision tactic introduces a dedicated axiom; the existing stage-4b audit rejects it. Do not count this as a kernel-checked result and do not dispatch CI with the current native-decision source.
+- NineteenthTerminalCertificate.lean still uses run_add 4096 5684; earlier direct run_add attempts ended in runner shutdown without Lean diagnostics. A better kernel-safe candidate is decide +kernel with the current 32-block helper or the 64-step evaluator preserved on branch agent2-d-root-fast64-fixed in BlankSixteenthRejoin.lean (BB6.Agent2Fast64). Prefer proving the complete 9780-step endpoint directly from seed19 using 64 blocks (152 plus 52) or 32 blocks (305 plus 20), avoiding the large run_add induction.
+- Local container.exec and python.exec both fail before trivial commands execute in this invocation. Agent6 has been asked to preflight kernel-only alternatives (32-block decide, 512-block fastRun, and direct 9780 composition); no response has arrived. Do not use CI as a substitute for the required local preflight. Existing stage4a/4b workflow only; no new workflow.
+- Stage5 NineteenthRootPrefix.lean and stage6 BlankNineteenthRejoin.lean are prepared but not verified. The current stage4a CI run 446819 was on an earlier direct-composition revision; it ended in runner shutdown and does not test the current fast32 file.
+
+### Corrected p=2 root lookahead
+
+- The root-specific episode-41 packet is source-closed by P2K4SourceReentry.close_one_regular_reentry: k41=81s+76=27(3s+2)+22 and q=7=3*2+1. CI run 43391093227 succeeded with axiom profile [propext, Quot.sound]. source_chain_close_one composes any authentic prefix to the packet; the prefix through episodes 19–38 remains unverified.
+- For q=7,u=2, the endpoint normalizer gives the next regular seed L(4096t+3461,4,0) where t=3s+2, equivalently L(12288s+11653,4,0). This formula is derived from aK=512t+426, wordInc(code 2)=21, and n=2*(4*aK+24)+5. The first DRegular exception from this seed has not been computed.
+- The general K=4 family is not wholly closed: the wrapper covers only k=27t+22 and q=3u+1. The raw P2K7Source family covers k=27t+25 for all q and compiled in successful CI run 42519761689, but no regularSection wrapper exists. Its endpoint-normalizer formulas are recorded in im-results/agent2-packet-shift/README.md; the wrapper is the next integration target. Other k≡4,7 (mod 9) subfamilies remain.
+
+### Root-source audit corrections
+
+- The old EFirstAPacket q−1 match failure from run 43391359969 is historical. Commit e7009d5 fixed the successor case; run 43394857303 printed [propext, Quot.sound] for exceptional_EA_packet before the larger audit was externally shut down at the sixteenth root. Do not treat EFirstAPacket as a current mathematical blocker.
+- Stage-3b run 44289702591 and the earlier stage-4a run 44681991222 ended in runner shutdown without Lean diagnostics. These are infrastructure/verification interruptions, not counterexamples to the DRegular endpoint claims.
+- No pure academic result was added to results/; keep these items in im-results. The root chain through 18 remains the source-certified frontier; episodes 19–38 and the #41 blank-root reachability remain conditional.
+
+### Next actions
+
+1. Obtain a local kernel-only preflight for the stage-19 5684 tail and the complete 9780 endpoint; prefer the existing 64-step evaluator or 32-step decide +kernel.
+2. If the proof is locally sound and fast enough, update the stage4a/4b source and dossier together, then dispatch the existing workflow from the exact d-root-stage3b3 predecessor artifact.
+3. Verify stage5 and stage6 to make episode19 an authentic source return.
+4. Add the P2K7 regular-section wrapper using the verified raw endpoints and existing endpoint normalizer; then compute the first DRegular exception from the #41-derived seed42.

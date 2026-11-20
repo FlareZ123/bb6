@@ -34,31 +34,100 @@ The current block size is 512. This is an exact evaluator for the eleven-row DRe
 
 **BlankTwentyFirstRejoin.lean** now uses DRegularFast.fastRun for this long segment, and the manual root-chain workflow compiles DRegularFast.lean before it. The earlier root-chain run [42377931873](https://github.com/FlareZ123/bb6/actions/runs/42377931873) was cancelled at the verification step and predates this optimization; it is not a Lean failure report. A fresh manual source-only run is still required to certify the updated composition.
 
-## Corrected conditional root lookahead: first residual at exception 41
+## Conditional root lookahead and source-return status (20 November 2026)
 
-A second continuation pass now uses the **source-specific E7 branches** (EEE escape, E/E packet, and third-return cases), rather than applying the generic two-return arithmetic formula to every E7 state. This corrects the earlier exploratory claim of a clean lookahead through exception 100: that claim was invalid for E7 states with q >= 3 and must be disregarded.
+### Root-specific episode #41 is source-closed, conditionally
 
-Conditional on the existing root-20/21/22 reentries, the exact DRegular model reaches the first currently uncovered p=2 reset at exception **#41**:
+The corrected DRegular lookahead reaches the episode-41 candidate
+\(L(9t_{41}+7,7,1)\), with \(t_{41}\equiv76\pmod{81}\). Its source-specific
+EEE escape produces the p=2 packet
+\(M(512u_{41}+257,4,2;0\,1^6)\). Writing
+\(k_{41}=81s+76=27(3s+2)+22\) and \(q=7=3\cdot2+1\), the packet lies exactly
+in the family handled by
+[P2K4SourceReentry.lean](../agent2-packet-shift/P2K4SourceReentry.lean).
 
-- Exceptional section: L(9*t41+7, 7, 1), with t41 mod 81 = 76 (hence t41 mod 27 = 22).
-- The source-specific EEE escape uses u41=(t41-1)/3, with u41 mod 27 = 25 and u41 mod 9 = 7.
-- It produces the packet M(512*u41+257, 4, 2; 0 1^6). Its prefix is 1 mod 3, so this is an E,p=2 reset, not an A-packet closure.
-- The reset parameter is k41=(512*u41+257-4)/3, with k41 mod 81 = 76 and **k41 mod 9 = 4**.
-- The p=2 reset output has q=4 and p=14 in the reset marker, with the fixed marker word 01010111. The existing source families cover k mod 3 = 0, k mod 3 = 2, and k mod 9 = 1. They do not cover k mod 9 = 4.
+The theorem **close_one_regular_reentry** returns this packet to a physical
+regular section for every parameter in its family; **source_chain_close_one**
+composes that return with any already-proved source prefix. GitHub Actions
+run [43391093227](https://github.com/FlareZ123/bb6/actions/runs/43391093227)
+succeeded, with axiom profile [propext, Quot.sound] for both wrapper
+theorems. Thus the specific #41 packet candidate is no longer an
+unresolved source-return case.
 
-The first residual is therefore a **reachable k = 4 mod 9 p=2 marker**, conditional on the upstream blank-root chain. This is the next source-level target. The k=7 mod 9 class remains a separate general residual; this run has not established whether it is also reachable.
+This does **not** prove that the authentic blank-tape trajectory reaches
+#41. The upstream root chain through episodes 19–38 remains unverified, so
+the #41 lookahead and its source closure are still conditional on that
+prefix.
 
-The corrected arithmetic trace from exceptions 21 through 40 uses the already-developed B/A/E return families and the source-specific E7 packet normalization. The first 20 steps of that continuation contain no uncovered p=2 reset; exception 41 is the first one. These are model-level computations and proposed source compositions, not an original-source proof of the full blank-root chain. The upstream root-chain workflow [42377931873](https://github.com/FlareZ123/bb6/actions/runs/42377931873) was cancelled at its verification step and predates the DRegularFast optimization; a fresh manual source-only run is still needed.
+Unfolding the q=7, u=2 endpoint and the existing regular-endpoint normalizer
+gives the next regular seed explicitly. With \(t=3s+2\),
+\(a_K=512t+426\), and \(\operatorname{wordInc}(\operatorname{code}(2))=21\),
+the normalizer returns
+\[
+L(8a_K+53,4,0)=L(4096t+3461,4,0)
+              =L(12288s+11653,4,0).
+\]
+The first DRegular exceptional return from this seed has not yet been
+computed; this is the next root-specific arithmetic probe.
 
-The exact reset arithmetic can be reproduced from the DRegular model. Useful residues for adversarial checking are:
+### Remaining p=2 source families
 
-| Quantity | Exact residue |
-|---|---:|
-| t41 mod 81 | 76 |
-| u41 mod 27 | 25 |
-| (512*u41+257) mod 81 | 70 |
-| k41 mod 81 | 76 |
-| k41 mod 9 | **4** |
-| (8*k41+5) mod 81 | 46 |
+The K=4 wrapper is deliberately narrower than the full k≡4 (mod 9)
+residual: it handles \(k=27t+22\) and \(q=3u+1\). Other k≡4 (mod 9)
+subfamilies, including k≡4 or 13 (mod 27) and the other q residues at
+k≡22 (mod 27), remain open.
 
-Do not use the earlier #44/#45/#58/#64/#68/#78/#82/#90/#92/#93/#100 continuation table as evidence: it came from the incorrect E7 shortcut and has been superseded by this corrected branch analysis.
+The raw source module [P2K7Source.lean](../agent35-cryptid-code/P2K7Source.lean)
+handles \(k=27t+25\) for all q, with separate q mod 3 endpoints. It was
+compiled in successful workflow run
+[42519761689](https://github.com/FlareZ123/bb6/actions/runs/42519761689).
+No regular-section wrapper is present yet. Its three exact endpoints match
+the existing regular-endpoint normalizer; a wrapper using
+**EChainBEExit.regularEndpoint_reentry** is a concrete integration task.
+This covers the k≡25 (mod 27) subfamily of k≡7 (mod 9), not the entire
+k≡7 class. Other subfamilies and deeper 3-adic cylinders remain; see the
+[packet-shift dossier](../agent2-packet-shift/README.md).
+
+### Episode-19 proof and source-audit status
+
+The current main-branch
+[NineteenthTail5684.lean](../agent37-d-timing-cocycle/NineteenthTail5684.lean)
+uses a 32-step block evaluator and native_decide. The preceding Agent 2
+incarnation locally compiled that exact module in 1.766 seconds against the
+pinned predecessor artifacts, but this is **not an accepted kernel-only
+proof**: Lean's native-decision tactic introduces a dedicated axiom, and
+the stage-4b workflow explicitly rejects that dependency. There has been no
+CI run on this current fast32 source revision.
+
+[NineteenthTerminalCertificate.lean](../agent37-d-timing-cocycle/NineteenthTerminalCertificate.lean)
+still composes the 4,096-step prefix and 5,684-step tail with
+run_add 4096 5684; the earlier direct run_add attempts ended in runner
+shutdown without a Lean diagnostic. A better candidate is a kernel-only
+decide +kernel proof using the reusable 64-step evaluator preserved in
+branch agent2-d-root-fast64-fixed (namespace BB6.Agent2Fast64), or the
+current 32-step block helper. Prefer proving the complete 9,780-step
+endpoint directly from seed19 with 64 blocks (152 blocks plus 52 steps)
+or 32 blocks (305 blocks plus 20 steps), avoiding the large
+run_add 4096 5684 induction. These alternatives still require a local
+Lean preflight.
+
+The current invocation's local shell and Python tools fail before even
+trivial commands execute. Agent 6 has been asked to preflight kernel-only
+alternatives; no response has arrived yet. Do not dispatch CI as a
+substitute for local preflight, and do not count the current native-decide
+tail as a kernel-checked result.
+
+The old E/A packet proof issue is no longer current: commit e7009d5
+fixed the q−1 successor case in EFirstAPacket.lean, and run
+[43394857303](https://github.com/FlareZ123/bb6/actions/runs/43394857303)
+printed [propext, Quot.sound] for exceptional_EA_packet before the
+larger root audit was externally shut down at the sixteenth root. The
+earlier 43391359969 failure belongs to the pre-fix source. A later
+stage-3b attempt, [44289702591](https://github.com/FlareZ123/bb6/actions/runs/44289702591),
+also ended in runner shutdown without a Lean diagnostic.
+
+The source-certified D root currently reaches episode 18. Episodes 19–38
+remain a conditional continuation, despite the prepared arithmetic and
+source-return modules. Keep these distinctions explicit; no all-time
+nonhalting result follows from the finite chain.
+

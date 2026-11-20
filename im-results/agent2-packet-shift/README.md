@@ -83,7 +83,22 @@ Formal theorems: `e_two_reset`, `b_zero_any`, and `e_two_k0_regular`. The source
 
 ## Exact residual and relevance to the true blank root
 
-- For `p≡2 (mod3)`, rank normalization still terminates. It may exit through A, B with `q=0`, or E with `p=2`. The latter is source-normalized to a changed marker `01010111`. The fixed-tail E,p=2 reset family is now source-composed to regular L for all q in `k≡0 (mod3)`, `k≡2 (mod3)`, and `k≡1 (mod9)`, covering seven of nine k residue classes modulo nine. The remaining `k≡4,7 (mod9)` changed-tail dynamics and the authentic blank-root connection remain open.
+- For p≡2 (mod3), rank normalization still terminates. It may exit through A,
+  B with q=0, or E with p=2. The fixed-tail E,p=2 reset family is
+  source-composed to regular L for all q when k≡0 (mod3), k≡2 (mod3),
+  and k≡1 (mod9), covering seven of nine k residue classes modulo nine.
+  The remaining k≡4,7 (mod9) classes are now narrowed by additional
+  source work:
+  - The verified K=4 bridge covers k=27t+22 with q=3u+1. This closes
+    the specific conditional episode-41 candidate (k=81s+76, q=7),
+    but not every k≡4 (mod9) packet.
+  - P2K7Source provides raw, source-verified endpoints for k=27t+25
+    across all q mod 3. It compiled in successful CI run 42519761689.
+    A regularSection wrapper has not yet been formalized.
+  - Other k≡4,7 (mod9) subfamilies and deeper 3-adic cylinders remain.
+    EChainAExit and EChainBEExit close additional designated cylinders;
+    they do not yet give a complete p=2 classification.
+
 - Authentic blank-root Machine D exceptional returns are not yet covered by a global source-connected invariant. The current original-source twentieth return candidate is [`BlankTwentiethRejoin.lean`](../agent37-d-timing-cocycle/BlankTwentiethRejoin.lean). It uses one guarded E edge from `M(3k20+4,4,4;0 1^6)` to `L(8k20+9,8,5)`, with `k20=512*((u20-1)/3)+255`; `u20=3*((u20-1)/3)+1` by `t20%27=4`. This is **not source-certified**: run [42329147551](https://github.com/FlareZ123/bb6/actions/runs/42329147551) ended with its verification step cancelled after about 22 minutes; retry [42331004226](https://github.com/FlareZ123/bb6/actions/runs/42331004226) ended in failure after about 71 minutes while the verification step was still marked in progress. A later retry [42359852323](https://github.com/FlareZ123/bb6/actions/runs/42359852323) again ended with the verification step marked cancelled after about 23 minutes, despite no newer run of the same workflow appearing in the run list. The GitHub Actions log endpoint returned HTTP 404 for the earlier failed job; no Lean diagnostic is available for these cancellations, so no mathematical failure can be inferred. The workflow's declared timeout is 90 minutes. Manual probe [42359725968](https://github.com/FlareZ123/bb6/actions/runs/42359725968) evaluated `DRegular.run 2040` from `(a,q,b)=(2,0,0)` and returned `(q,b)=(0,0)`. This only rules out a naive substitution of base `a=2`: `DRegularShift.run_shift` preserves the endpoint control state only when the actual seed agrees modulo `3^2040`. The required residue of the 116,920-bit twentieth seed has not been computed, so the probe does not diagnose the root-chain bottleneck. Do **not** label twentieth true-blank reentry proved until full source chain succeeds without `sorryAx`.
 - Independent exact DRegular arithmetic predicts twenty-first and twenty-second exception inputs after the twentieth candidate. A twenty-second off-L endpoint is `M(512u+434,1,13;0 1^6)`, with `p=13≡1 (mod3)`, now covered by the **unconditional synthetic source** theorem. Connecting these later endpoints to the authentic blank trajectory requires the original-source root-chain proof, and further future exceptions may still enter p=2 cases.
 - **Next discriminating test:** prove either a source-backed finite-tail invariant routing every *authentic* p=2 reset back to a safe packet or L, or exhibit a literal original-machine fatal event from that reachable family. A bounded search or an arithmetic DRegular lookahead alone is not enough to decide Cryptid D.
@@ -164,6 +179,11 @@ audit reports `[propext, Quot.sound]` for both new theorems. The wrapper is
 therefore kernel-checked against the existing source modules; it does not by
 itself establish that the blank-root trajectory reaches the #41 packet.
 
-The root-prefix audit is separate. The current retry `43391359969` is testing
-the corrected `PacketP2ReentryOrE` tail normalization before it can reach
-`BlankThirtiethRejoin` and `Seed31Probe`.
+The root-prefix audit is separate. Run 43391359969 failed on the
+pre-fix EFirstAPacket q−1 match and is superseded by commit e7009d5.
+The subsequent audit run 43394857303 printed the accepted
+[propext, Quot.sound] profile for exceptional_EA_packet, then was
+externally shut down at the sixteenth root. It did not reach Seed31Probe.
+The later stage-3b run 44289702591 also ended in runner shutdown without
+a Lean diagnostic. The authentic blank-root prefix through episodes
+19–38 is therefore still unverified.
