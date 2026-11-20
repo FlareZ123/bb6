@@ -1714,3 +1714,8 @@ The 10:49 static-review note incorrectly called the marker-1 S0/T3 endpoint an a
 ### Notation correction to the full-score asymptotic
 
 In SectionResultThreeCycle.md, m denotes the second drain input 2^z−1. The q4Tail source prefix uses a different parameter p=3·2^z+3z+7, so its exact cost is 3n+p+65=3n+3·2^z+3z+72, not 3n+m+65. The asymptotic O(n)=O(4^m) is unchanged. This distinction was checked against TM63RootQ4Tail.lean.
+
+
+## 2026-11-20 stronger conditional tetration lower bound
+
+Using the root estimate A>T_65536 in Agent24's DirectTerminalTetrationBound.md and the exact dispatcher term D_N≥6b_N², derive N≥2^A≥2T_65537, hence N≥T_65537+1. Since b_j≥T_j+1 for T_1=2, T_{j+1}=2^{T_j}, we get b_N≥T_{T_65537+1}+1 and S_full≥6(T_{T_65537+1}+1)^2. This strictly strengthens the earlier 2↑↑↑5 comparison. Added as a conditional arithmetic corollary in SectionResultThreeCycle.md and README; still uncompiled and conditional on the root/dispatcher source composition.

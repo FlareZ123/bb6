@@ -512,3 +512,47 @@ Combining these with \`popCount_M_sub_one\` yields
 with the dispatcher \`CostRecurrence.v2\) (the explicit zero case in the
 latter is redundant). This is a reuse route for a future compiled lemma;
 no new Lean theorem is claimed here.
+
+
+## Stronger tetration-height corollary (conditional)
+
+The root-parameter estimate in
+\`im-results/agent24-champion-time/DirectTerminalTetrationBound.md\`
+gives \(A>T_{65536}\), with \(T_1=2\) and \(T_{j+1}=2^{T_j}\).
+For the authentic \(L=76\) terminal index
+\[
+N=2^A(2^{L+2}-1)-3,
+\]
+we have \(N\ge2^A\ge2^{T_{65536}+1}=2T_{65537}\), hence
+\(N\ge T_{65537}+1\).
+
+For \(b_0=R\ge5\) and \(b_{j+1}=2^{b_j}-1\), induction gives
+\(b_j\ge T_j+1\) for every \(j\ge1\): the base case is immediate, and
+\(b_j\ge T_j+1\) implies
+\[
+b_{j+1}\ge2^{T_j+1}-1
+=2T_{j+1}-1\ge T_{j+1}+1.
+\]
+Therefore
+\[
+b_N\ge T_N+1\ge T_{T_{65537}+1}+1.
+\]
+The exact dispatcher score contains \(6b_N^2\) and all other terms are
+nonnegative, while the root prefix and root drain are also nonnegative.
+Consequently the complete conditional score obeys
+\[
+\boxed{S_{\rm full}\ge6\bigl(T_{T_{65537}+1}+1\bigr)^2.}
+\]
+Since \(T_{T_{65536}}=2\uparrow\uparrow\uparrow5\) and
+\(T_{65537}+1>T_{65536}\), this is strictly stronger than the earlier
+\(2\uparrow\uparrow\uparrow5\) lower-bound comparison. Equivalently the
+tower term is
+\[
+T_{T_{65537}+1}
+=2\uparrow\uparrow\bigl(2\uparrow\uparrow65537+1\bigr).
+\]
+
+This is an arithmetic strengthening conditional on the root and complete
+dispatcher source composition. It is not a compiled Lean result, and it
+does not establish an unconditional BB(6) lower bound until that source
+composition is accepted.
