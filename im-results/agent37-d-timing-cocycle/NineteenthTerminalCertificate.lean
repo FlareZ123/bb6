@@ -1,22 +1,22 @@
 import NineteenthTail5684
 import DRegularFast
 
-set_option maxHeartbeats 100000000
-set_option maxRecDepth 55000
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 8192
 
 namespace BB6.Agent2NineteenthRoot
 
 open DRegular BB6.DRegularFast
 
-/-- Kernel-only exact 9,780-section endpoint. Reuse the generic 64-step
-    block evaluator directly, avoiding the large 4,096+5,684 run_add
-    induction used by the earlier candidate. -/
+/-- Exact 9,780-section endpoint, composed from the certified 4,096-step
+    prefix and the kernel-checked 5,684-step tail. The final axiom audit is
+    transitive through tail5684_exact. -/
 theorem terminal9780_exact :
     run 9780 seed19 = some ⟨9*t19+10,9,1⟩ := by
-  have hlen : 9780 = 64*152+52 := by decide
-  rw [hlen]
-  rw [BB6.DRegularFastSmall.run_blockedWith 64 152 52 seed19 seed19_canon]
-  decide
+  rw [show 9780 = 4096 + 5684 by norm_num]
+  rw [BB6.DRegularFast.run_add 4096 5684 seed19]
+  rw [block19_1_exact]
+  simpa only [Option.bind_some] using tail5684_exact
 
 theorem t19_mod27_exact : t19 % 27 = 12 :=
   t19_mod27

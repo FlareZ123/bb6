@@ -188,15 +188,20 @@ The artifact-reusing manual workflow [agent37-root-exceptions34-38.yml](../../.g
 
 ### Episode 19: 64-block kernel-only candidate; preflight pending
 
-The current NineteenthTail5684.lean and NineteenthTerminalCertificate.lean
-now use the generic 64-step block evaluator with kernel reduction:
-- Tail: 5684=64*88+52, via run_blockedWith 64 88 52 and decide.
-- Complete endpoint: 9780=64*152+52, via run_blockedWith 64 152 52 and decide.
+The current NineteenthTail5684.lean uses the generic 64-step block
+evaluator with kernel reduction: 5684=64*88+52, via
+run_blockedWith 64 88 52 and decide. It prints axioms for tail5684_exact,
+matching the stage-4a workflow's audit requirement.
+
+NineteenthTerminalCertificate.lean then uses the small compositional join:
+9780=4096+5684, DRegularFast.run_add 4096 5684 seed19,
+block19_1_exact, and tail5684_exact. The stage-4b #print axioms
+terminal9780_exact is the complete transitive audit, including the
+64-block tail proof. This avoids re-running the entire 9,780-step
+computation and makes the stage split meaningful.
 
 The previous 32-block tail used native_decide and is superseded; it is not
-acceptable as a kernel-only result. The terminal proof also no longer uses
-the large run_add 4096 5684 induction. The tail file now prints axioms for
-tail5684_exact, matching the stage-4a workflow's audit requirement.
+acceptable as a kernel-only result.
 
 CI run 44681991222 did not test either the previous fast32 candidate or
 this new 64-block candidate. Its pinned extension ref f31592b2c6d490209e1473d150b42bbae710213d still used the old direct
