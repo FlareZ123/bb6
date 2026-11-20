@@ -45,9 +45,9 @@ for (let b = 1n; b <= 10000n; b++) {
   if (4n * z.N !== 2n * b - 1n + 3n ** BigInt(z.L))
     throw new Error(`identity mismatch at b=${b}`);
   const expectedTerminal = b < 3n ** BigInt(z.L) ? 0 : 1;
-  if (z.state !== undefined && z.state !== expectedTerminal)
+  if (z.state !== expectedTerminal)
     throw new Error(`terminal state mismatch at b=${b}`);
-  if (lastOut === 0) throw new Error(`zero leading digit at b=${b}`);
+  if (z.lastOut === 0) throw new Error(`zero leading digit at b=${b}`);
   tested++;
   if (z.L > maxL) maxL = z.L;
 }
