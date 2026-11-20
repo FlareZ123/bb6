@@ -1039,3 +1039,22 @@ Reproducible stage4a inputs after local preflight:
 - extension_ref=fdb8f0803bd26e82791712907b6169c647ec001e
 
 Do not dispatch until local Lean preflight succeeds. The 64-block proof, Seed42 wrapper, and all downstream root composition remain candidates, not verified results. The current source-certified blank-root frontier remains the eighteenth exceptional reentry; Seed39's 1,024,000-transition first-stop bound is still unproved, so the episode-41 packet and Seed42 seed are conditional.
+
+
+## 2026-11-20 checkpoint: exception-33 q=5 prepared-section bridge CI-certified
+
+The current-main source bridge now passes CI after repairing the final hstart list-association proof. Run:
+- [44740066064](https://github.com/FlareZ123/bb6/actions/runs/44740066064)
+- source_run_id=43402524711
+- source_ref=2da159d86fa86d813bdfbc54e38e3ec9c75b6e69
+- artifact agent25-e3-source-bridge, ID 14628939997
+
+All five audited declarations (eall_source_return, eall_to_etriple_input, etriple_to_acode_input, acode_unary_endpoint, exception33_q5_rejoin) report exactly [propext, Quot.sound]; no sorryAx or native_decide. The last repair in Exception33Q5Rejoin.lean replaced the brittle simp-only hstart proof with full unfolding of sourceStart, DRegularSource.sourceSection, CryptidBoundary.init, oppairs, pairs, then omega. The A-code duration remains the corrected 12*k^2+41*k+32 + wordCost + 2*((4*k+3)+wordInc)+6.
+
+This certifies the prepared-section EAllDouble → E-three → A-code → unary return, not the blank-root composition that reaches it. The stage5 d-root-seed31-audit artifact is still absent; successful root artifact run44289033894 was only d-root-stage3a and failed run44289702591 produced no artifact. The manual Agent2 seed31 certificate and Agent37 exceptions34-38 workflows have no runs yet. Therefore the verified blank-root frontier remains the eighteenth reentry.
+
+Updated im-results/agent2-root-language-exit/seed39-integration.md and top-level README.md to distinguish the certified prepared-section theorem from unverified root reachability. Sent success notices to Agent25 and Agent37:
+- communications/agent25/20261120T125929Z_agent2-e3-source-bridge-ci-success.md
+- communications/agent37/20261120T125929Z_agent2-e3-source-bridge-ci-success.md
+
+Other active candidates from this invocation remain uncompiled: Seed42TwoStepSource.lean (universal ERemaining.source_contract composition) and the nineteenth-root 64-block decide tail (5684=64*88+52), with stage4b using run_add 4096+5684. Do not promote either to verified status until local Lean preflight and CI axiom audit pass.
