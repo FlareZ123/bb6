@@ -313,7 +313,7 @@ local Lean preflight; this paper derivation must remain in im-results until
 that succeeds.
 
 
-## Sharper leading-coefficient estimate
+## Polylogarithmic-error two-term score expansion
 
 The exact dispatcher sum and root-prefix bounds give a two-term asymptotic expansion with polylogarithmic error:
 \[
