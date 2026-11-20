@@ -220,6 +220,8 @@ L:\ C\le0\le F,\qquad R:\ F\le0\le C.
 The sign pattern is not a consequence of the cone hypotheses alone: the weighted formulas show that it depends on the root's digit statistics n_1,n_2. But it is now an explicit finite-state weighted condition on the same three-state drain scan. This is a direct interface for the boundary-carry closure: compute the digit weights, then the exact C,F, then the actual boundary carry pair.
 
 
+The inequalities above are now formalized by correction_count_bounds in SignedCoordinateNormalForm.lean, using the count relation \(E=n_2\le R=n_1+n_2\le L\). The companion theorem one_extra_digit_carry_bound_closed allows \(|c|\le K\), not merely \(|c|<K\). Therefore \(K=34L+122\) is sufficient for the correction-only carry bound even when \(C\) attains equality; an extra additive margin is unnecessary.
+
 ## 8. The valid-length terminal state and exact carry invariant
 
 There is a compact integer invariant behind the three-state machine. Assign
