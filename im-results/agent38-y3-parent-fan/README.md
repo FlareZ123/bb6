@@ -1,6 +1,6 @@
 # Exact source-parent fan for the residual (y=3, x\equiv10\pmod{16}) family
 
-**Status:** New all-time parent/reachability reduction, derived from the complete original-source `sectionPreimageAll` grammar. It is not a nonreachability proof: every finite-depth parent branch still has to be excluded or otherwise decided. This is an intermediate result and belongs in `im-results/`, not `results/`. No Lean compilation was possible in this invocation because the local Python and container runtimes returned tool-level `ClientError`; no CI substitute was used.
+**Status:** Independent exact derivation and side-condition audit of the multiple-depth parent fan already recorded in `M0EvenEvenSumZeroNextCandidates.md`. The same valuation formula and parent count are already present there; this note does not add a new residue cylinder or nonreachability result. Its incremental details are an explicit contiguous depth interval, the converse branch inequalities, a stronger `k_d≥5` bound, and an alternate proof that the exceptional `a=1` row is impossible. No Lean compilation was possible in this invocation because the local Python and container runtimes returned tool-level `ClientError`; no CI substitute was used.
 
 ## 1. The residual parameterization
 
@@ -120,7 +120,7 @@ which is finite for every ℓ but unbounded over the family.
 
 ## 3. What this does and does not settle
 
-This closes the *classification* gap identified in the earlier note as “the multiple even-depth (y=3) parent fan”. It does **not** close the remaining (u=5, r\equiv1\pmod4) branch: it replaces that target by an exact, finite-but-unbounded family of candidate parents.
+This does not close a new classification gap: the earlier `M0EvenEvenSumZeroNextCandidates.md` already records the same multiple even-depth fan, valuation, and parent count. This file independently derives the same family and makes the permitted depths exactly `0≤d≤D`, while checking the converse source-branch side conditions and strengthening the lower bound on the parent right coordinate to `k_d≥5`. The residual (u=5, r\equiv1\pmod4) reachability question remains open.
 
 For (d\ge2), writing (R_d=H/2^{2d-3}) gives the convenient form
 [
