@@ -256,14 +256,26 @@ Equivalently, \(\kappa(s_L)=1+2h\). Substitution into the carry identity yields 
 \]
 This proof uses only the transition identity, parity, the upper size bound, and nonnegativity of emitted digits; it does not assume the desired output formula in order to establish the terminal state.
 
-## 9. Lean formalization
+## 9. Lean formalization and exact interface
 
-The standalone Lean 4.36.0-rc2 proof is in [DrainDigitTransducerCarry.lean](DrainDigitTransducerCarry.lean). It formalizes:
+The standalone Lean 4.36.0-rc2 proof is in [DrainDigitTransducerCarry.lean](DrainDigitTransducerCarry.lean). It uses only Lean core imports; no Mathlib dependency is required.
+
+The module formalizes:
 - the nine one-step carry identities;
 - the recursive carry invariant for every input word and every initial state;
 - the phase/parity invariant;
 - nonnegativity and the \(3^L\) output bound;
-- the exact drain formula under the parity and upper-size hypotheses, including the direct theorem `drain_transducer_exact_of_bounds` that takes only the original length conditions;
-- `runStats`, which retains the output-1 and output-2 counts and proves (0\le n_2\le n_1+n_2\le L). These are the weighted statistics (E=n_2), (R=n_1+n_2), and (D=L-2E) consumed by `SignedCoordinateNormalForm.lean`.
+- the exact output formula, including the direct theorem drain_transducer_exact_of_bounds;
+- runStats, which retains the output-1 and output-2 counts and proves \(0\le n_2\le n_1+n_2\le L\). These give the weighted statistics \(E=n_2\), \(R=n_1+n_2\), and \(D=L-2E\) consumed by SignedCoordinateNormalForm.lean.
 
-The file compiles locally with Lean 4.36.0-rc2 and uses only Lean's core imports; no Mathlib dependency is required.
+**Canonical-ray hypotheses.** In the source application, \(b\) is the positive drain parameter and \(L\) is the parity-adjusted ternary length. The canonical interval is
+\[
+3^{L-1}\le 2b-1<3^{L+1},\qquad L\equiv b\pmod2.
+\]
+The theorem drain_transducer_exact_canonical accepts exactly these hypotheses and proves
+\[
+4N=2b-1+3^L,
+\]
+where \(N\) is the output from runStats on the low \(L\) ternary digits \(b\bmod 3^L\). The lower inequality records the canonical length choice; the stronger drain_transducer_exact_of_bounds theorem needs only the parity and upper inequality.
+
+**Scope boundary.** This interface proves the drain transducer identity and its weighted outputs for supplied \((b,L)\). It does not prove that a particular \((b,L)\) occurs on the authentic D(0,7) root orbit, nor does it determine the total boundary carry. The latter must include the base linear quotient as well as the additive correction quotient; see Agent 49's CarryBoundAudit.md.
