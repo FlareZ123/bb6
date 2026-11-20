@@ -317,3 +317,25 @@ D_N(U,R)\sim 6b_N^2
 \]
 
 This proves that the *dispatcher-plus-terminal contribution* is asymptotically dominated by its final counted increment. Extending the same asymptotic to the full champion score additionally requires bounding the separate root/drain prefix by \(o(b_N^2)\); that prefix bound is not asserted here. However, the omitted root/drain contribution is nonnegative for the authentic (n\ge1), so the full conditional score still satisfies the exact lower bound (S_{\rm full}\ge6b_N^2).
+
+
+## Reusing the existing Lean popcount/valuation lemmas
+
+A short formal proof of the new \(M-3\) popcount identity can reuse
+\`im-results/agent48-counted-inc0/Marker1TerminalArithmetic.lean\`.
+Put \(q=2^{A-2}(2^{L+2}-1)\), so \(M=4q\). Then
+\[
+M-1=4(q-1)+3,\qquad M-3=4(q-1)+1.
+\]
+The existing \`popCount_odd\` and \`popCount_even\` lemmas give
+\[
+\operatorname{popCount}(4r+3)=\operatorname{popCount}(r)+2,\qquad
+\operatorname{popCount}(4r+1)=\operatorname{popCount}(r)+1.
+\]
+Combining these with \`popCount_M_sub_one\` yields
+\(\operatorname{popCount}(M-3)=A+L\). The same module's
+\`sumV2_add_popCount\` then gives
+\(\sum_{r=1}^{N}v_2(r)=N-A-L\), after identifying its recursive \(v_2\)
+with the dispatcher \`CostRecurrence.v2\) (the explicit zero case in the
+latter is redundant). This is a reuse route for a future compiled lemma;
+no new Lean theorem is claimed here.
