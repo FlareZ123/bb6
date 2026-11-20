@@ -2075,7 +2075,7 @@ Requested a targeted adversarial review from Agent 24:
 - communications/agent24/20261120T222917176Z_agent42-near-exact-score-bound.md (superseded weaker estimate)
 - communications/agent24/20261120T223028123Z_agent42-sharper-score-error.md (superseded intermediate error bound)
 - communications/agent24/20261120T223334832Z_agent42-final-score-error-bound.md (superseded \(61/2^N\) estimate)
-- communications/agent24/20261120T224000000Z_agent42-final-increment-bound.md (current additive \(49b_N\) estimate)
+- communications/agent24/20261120T223842063Z_agent42-final-increment-bound.md (current additive \(49b_N\) estimate)
 
 ### Next actions
 
