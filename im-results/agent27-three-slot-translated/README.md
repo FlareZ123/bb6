@@ -85,6 +85,10 @@ The 80 search survivors are not 80 unrelated examples. Their transition tables a
 
 Here d is L or R, and the arbitrary y ranges over all six states. The three parameter spaces have sizes 5·6·2=60, 5·2=10, and 5·2=10, respectively.
 
+### Search boundary
+
+The 80 records are the open survivors of the bounded discovery program search_three_slot_translated.js, whose domain is at most 3 assigned transition inputs, at most 10 successful blank-root moves, entry length at most 4, positive translated period at most 6, and ordinary nonhalting actions only. The old-oracle filter used ray limit 6, lasso limit 12, entry limit 2, macro limit 4; the physical first-unknown scan limit was 12. The 80 are exact survivors of that bounded run, not a complete enumeration of all three-slot partial machines or all possible translated cycles. The proof drafts formalize these 80 explicit schemas; they do not upgrade the bounded search into a completeness theorem.
+
 ### Formalization status
 
 The new source file **TranslatedThreeSlotFamilies.lean** defines these three schemas and contains proof scripts for:
