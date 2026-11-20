@@ -229,28 +229,30 @@ estimate. Therefore the exact score decomposition gives
 \]
 ## Lower side and comparison with the published estimate
 
-The stronger lower bound in
+The stronger exact-V-index lower bound in
 [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md)
-gives, with \(H=T_{10}\),
+gives
 \[
 S_{\rm TM1}\ge
-6\bigl(T_{T_{H+1}+1}+2\bigr)^2
->T_{T_{T_{10}}}. \tag{13}
+6\bigl(T_{T_{M+46}+1}+2\bigr)^2
+>T_{T_{M+46}}. \tag{13}
 \]
-Combining (12)--(13),
+Here \(M=31\cdot2^{A_0}-36\) is the exact middle-dispatcher length.
+The upper-side estimate gives \(M+46<T_{11}\), while the first-section
+estimate gives \(M+46>T_{10}\). Combining (12)--(13),
 \[
-\boxed{\quad T_{T_{T_{10}}}
+\boxed{\quad T_{T_{M+46}}
  < S_{\rm TM1}
  < T_{T_{T_{11}}}.\quad} \tag{14}
 \]
-This is the exact \(T\)-notation form of the published mxdys interval
+This improves the published left endpoint because \(M+46>T_{10}\).
+For comparison, the published mxdys interval is
 \[
 2\uparrow\uparrow2\uparrow\uparrow2\uparrow\uparrow10
  < \text{time/score} <
 2\uparrow\uparrow2\uparrow\uparrow2\uparrow\uparrow11.
 \]
-The source-recurrence lower side (13) is stronger than the left endpoint
-of that coarse published interval. See the
+See the
 [BB(6) champion analysis](https://wiki.bbchallenge.org/wiki/1RB1RA_1RC1RZ_1LD0RF_1RA0LE_0LD1RC_1RA0RE)
 for the published estimate and the four-machine family comparison.
 
