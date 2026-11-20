@@ -80,7 +80,7 @@ Source drafts added under this directory:
 - GeneralQ4TailS1Config.lean — q4Tail frame equals the S1 dispatcher input.
 - GeneralQ4TailTerminalComposition.lean — counted drain, complete dispatcher, terminal SectionBits.
 - The authentic root wrapper is maintained by Agent 42 at `im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean`; it states `tm63_blank_halts` and `tm63_blank_attainable` using this directory's terminal theorem.
-- check_general_q4tail_reparam.py — 12 small exact-TM2 checks (L in {4,6}, A in {2,3,4}, z in {1,2}) of the S0/S1 tape identity and counted-drain endpoint.
+- check_general_q4tail_reparam.py — 18 exact-TM2 checks (L in {4,6,76}, A in {2,3,4}, z in {1,2}) of the S0/S1 tape identity and counted-drain endpoint.
 
 **Status:** all six artifacts are source drafts and have not been Lean-compiled or axiom-audited. The direct root theorem is therefore a promising composition target, not an established halting proof. The last middle34-acceptance run (44438791470) failed in an older M1EvenState1Sweep revision because it lacked the hne3 side condition; the current file was repaired later in commit 3b4787ea94 (2026-11-19T11:30Z), so that CI failure is stale. The repaired root prefix still needs a fresh accepted build. The direct route also continues to depend on the complete 24-class source dispatcher, including the M0 and M2 zero-row families. Local shell/Python/container execution failed with ClientError; do not substitute CI for the required local preflight. The existing positive-z P2 postlude route remains available as an alternate path until this route is accepted.
 
