@@ -240,13 +240,14 @@ S\ge6\bigl(T_{M+N+49}+2\bigr)^2
 This is stronger than the intermediate endpoint \(T_{T_{M+46}}\):
 indeed \(N\ge T_{M+46}+1\), so \(M+N+49>T_{M+46}\).
 
-The upper-side estimate in
+The sharper upper-side estimate in
 [TM63PublishedTowerSandwich.md](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md)
-gives \(M+N+50<X\), where \(X=T_{T_{11}-1}\). Hence
+gives \(M+N+50<T_J\), where
+\(J=2^{3\sqrt{T_{10}}/4+5}\). Hence
 \[
-T_{M+N+49}<T_{X+1},
+T_{M+N+49}<T_{T_J},
 \]
-which is the sharper conditional upper endpoint \(2^Y=T_{X+1}\).
+which is the current conditional upper endpoint.
 It also strictly exceeds the published left endpoint
 \(T_{T_{T_{10}}}\), since \(M+N+49>T_{M+46}>T_{T_{10}}\).
 
