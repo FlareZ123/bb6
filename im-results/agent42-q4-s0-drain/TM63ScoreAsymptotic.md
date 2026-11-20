@@ -15,7 +15,7 @@ D_N\le{}&6b^2+60b+(6N^2+57N-66)b_{N-1}\\
 &+48N+90k^2+111k+12(N+1)U+90,
 \end{aligned}
 \]
-where \(k\le N\), \(b_{N-1}<b\), and \(U\le b\). They also give
+where \(k\le N\), \(b_{N-1}<b\), and \(U\le R\). They also give
 \[
 C_{\rm root}<7\cdot4^m,\qquad
 D_{\rm root}\le7\cdot4^{n-1},
@@ -24,32 +24,36 @@ and, with \(R=2^{n-1}-1\),
 \[
 R^2>9\cdot4^m,\qquad R^2>\tfrac12\,4^{n-1},\qquad b\ge2^N R.
 \]
-For the authentic parameters, \(N=(2^{78}-1)2^A-3\ge256\), and \(b\ge2^N\).
+For the authentic parameters, \(N=(2^{78}-1)2^A-3\ge256\), \(R\ge63\), and \(b\ge2^N R\ge2^{256}\).
 
 ## Dispatcher remainder
 
-For \(N\ge2\), the preceding inequalities imply
+The recurrence is \(b_j=2^{b_{j-1}}-1\), so \(b=2^{b_{N-1}}-1\). Since \(b_{N-1}\ge R\ge63\), the elementary inequality \(x^4\le2^x-1\) for \(x\ge63\) gives
 \[
-D_N\le6b^2+E_N,
+b_{N-1}\le b^{1/4}.
 \]
-where
+Also \(N^4\le2^N\le b\) for \(N\ge256\), hence \(N\le b^{1/4}\).
+
+Write \(D_N\le6b^2+E_N\). Since \(6N^2+57N-66\le6N^2+57N\), \(k\le N\), and \(U\le R\le b/2^N\), the dispatcher formula gives
 \[
-E_N\le(6N^2+69N+72)b+90N^2+159N+90.
+\begin{aligned}
+E_N\le{}&60b
+ +(6N^2+57N)b_{N-1}
+ +90N^2+159N+90\\
+ &+12(N+1)R\\
+\le{}&60b
+ +6b^{3/4}+147b^{1/2}+159b^{1/4}+90
+ +12(N+1)2^{-N}b.
+\end{aligned}
 \]
-The two coefficients satisfy
+For \(N\ge256\), \(12(N+1)2^{-N}<1/100\). Since \(b\ge2^{256}\),
 \[
-6N^2+69N+72\le100N^2,
-\qquad
-90N^2+159N+90\le200N^2.
+6b^{3/4}+57b^{1/2}<\frac b4,\qquad
+90b^{1/2}+159b^{1/4}+90<\frac b4.
 \]
-Since \(b\ge2^N\ge1\),
+Therefore
 \[
-E_N\le300N^2b.
-\]
-Using \(b\ge2^N\), we obtain the sharper explicit remainder
-\[
-\boxed{E_N\le\frac{300N^2}{2^N}b^2,\qquad
-D_N\le\left(6+\frac{300N^2}{2^N}\right)b^2.}
+\boxed{E_N<61b,\qquad D_N<(6+61/2^N)b^2.}
 \tag{1}
 \]
 
@@ -65,9 +69,7 @@ Thus
 \[
 C_{\rm root}+D_{\rm root}
 <\frac{133}{9}R^2
-<15R^2
-\le15\,4^{-N}b^2
-=\frac{15}{4^N}b^2,
+\le\frac{133}{9\cdot4^N}b^2,
 \tag{2}
 \]
 where the non-strict step uses \(b\ge2^N R\).
@@ -75,7 +77,7 @@ where the non-strict step uses \(b\ge2^N R\).
 Combining (1) and (2) with the exact score split yields
 \[
 \boxed{
-S<\left(6+\frac{300N^2}{2^N}+\frac{15}{4^N}\right)b_N^2.
+S<\left(6+\frac{61}{2^N}+\frac{133}{9\cdot4^N}\right)b_N^2.
 }
 \tag{3}
 \]
@@ -85,22 +87,18 @@ S\ge6(b_N+1)^2>6b_N^2.
 \tag{4}
 \]
 
-Therefore the score is not merely bounded by \(9b_N^2\): conditional on the same source-cost identities, it satisfies the explicit near-equality
+Therefore the score satisfies the conditional near-equality
 \[
 \boxed{
 6b_N^2<S_{\rm TM1}
-<\left(6+\frac{300N^2}{2^N}+\frac{15}{4^N}\right)b_N^2,
+<\left(6+\frac{61}{2^N}+\frac{133}{9\cdot4^N}\right)b_N^2,
 \qquad
 1<\frac{S_{\rm TM1}}{6b_N^2}
-<1+\frac{50N^2}{2^N}+\frac{5}{2\cdot4^N}.
+<1+\frac{61}{6\cdot2^N}+\frac{133}{54\cdot4^N}.
 }
 \]
 
-The error coefficient \(300N^2/2^N+15/4^N\) decreases for \(N\ge3\); at \(N=256\) it is less than \(1.7\times10^{-70}\). Hence the authentic-root bound is already
-\[
-6b_N^2<S_{\rm TM1}<(6+1.7\times10^{-70})b_N^2,
-\]
-and its actual \(N\) makes the error much smaller still. The relative error is astronomically smaller than the previous factor-nine estimate. This does not improve the adjacent-tetration interval \(T_{q-1}<S<T_q\), but it identifies the exact leading coefficient of the primitive-step count with an explicit error term. It may be useful when comparing the champion's score with other long-running machines.
+The coefficient excess \(61/2^N+133/(9\cdot4^N)\) decreases for \(N\ge3\); at \(N=256\) it is less than \(5.3\times10^{-76}\). The relative excess is then less than \(8.9\times10^{-77}\), and the authentic \(N\) is much larger still. This does not improve the adjacent-tetration interval \(T_{q-1}<S<T_q\), but it pins down the leading coefficient of the primitive-step count with an explicit error term. It may be useful when comparing the champion's score with other long-running machines.
 
 ## Evidence boundary
 
