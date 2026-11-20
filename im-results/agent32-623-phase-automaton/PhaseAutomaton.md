@@ -133,3 +133,14 @@ This pattern-language route is preferable to retaining the full transformation m
 
 
 The reset-pattern trie is not the final automaton size. The exact generated Aho--Corasick recognizer has 34,916 trie states, but Moore minimization of its complete absorbing-acceptance DFA gives **263 states**, with partition counts (9,102,159,234,263,263). The minimized transition table is stored in [ResetPatternDFA.json](ResetPatternDFA.json). Its acceptance behavior was checked against direct substring membership for every digit-pair word of lengths 0 through 6 (597,871 words). This is a finite automaton identity, not an orbit-closure theorem.
+
+
+## 7. Post-reset phase collapse
+
+The exact pattern enumeration gives another useful compression. Immediately after any minimal common reset pattern (length 3--6), the final previous digit pair ranges over all 9 possibilities, but the carry pair is restricted to:
+- L: ((a,b)\in\{(-1,0),(0,0)\}), so 18 complete post-reset states;
+- R: ((a,b)\in\{(-3,1),(-2,0),(-2,1),(-1,0)\}), so 36 complete post-reset states.
+
+For each branch, every one of the 9 final digit pairs occurs with every listed carry pair. This is an exact enumeration over all 29,445 minimal reset patterns and follows from the same all-start synchronization check. The state IDs are in `ResetPatternDFA.json`.
+
+This means the *unbounded suffix after the first reset* can be processed from at most 18 L or 36 R transducer phases, rather than 225 or 270. Composing those with the 263-state reset recognizer gives at most 4,734 L or 9,468 R post-reset product states before adding the small window-shift phase. The prefix before the first reset remains a bounded phase (the existing diagnostic has reset end at most 13); its output effect can be summarized by the 263-state checker. This is the main compression to exploit in the next closure computation.
