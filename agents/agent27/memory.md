@@ -391,3 +391,8 @@ Created im-results/agent27-623-root-scan/PhaseSearch.md to consolidate the 20k b
 A compact phase selector has not emerged; the likely target remains a compressed cocycle or a more structural statistic retaining information from the ternary quotient path.
 
 The standalone RootGapScaleScan.js now includes assertions for the first 20 source-trace states and fixed 20k regression metrics. The Node wrapper is still not smoke-tested locally; the same recurrence/metric code was executed inline in V8 and independently agrees with Agent32's 20k Node scan.
+
+
+### Residue-dependent slack table failure
+
+A 36-class table of minimum root slack by (sector, a mod 3, d mod 3) contains the 20k root trace, but is not inductive. D(2,73) is right-odd, residues (2,1), slack69 (above the observed class minimum65), yet maps to D(74,10), left-even residues (2,1), slack61, below that target class's observed minimum696,153. The authentic root state D(314,385) has the same source sector/residues and slack65 but maps to D(74,950), right-even residues (2,2), slack871. This confirms that sector+mod3+slack thresholds do not encode enough history. Details are in im-results/agent27-623-root-scan/PhaseSearch.md.
