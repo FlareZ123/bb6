@@ -238,3 +238,23 @@ reach-to-P4 implication; these checks are not original-source
 certification. U5B2Root32.lean now imports OddOddLowVal and the root4
 bridge, but the complete source dependency closure has not yet been
 compiled. Keep this result in im-results/ pending that audit.
+
+
+## 20 November update — exact B2 residual-to-root-index composition
+
+The standalone arithmetic bridge in `U5B2Root32ParameterBridge.lean` now derives the exact root-index equation from the B2-parameterized residual identity, rather than requiring the root equation as a separate input:
+
+\[
+211(551+8192u)+1360+22155w=20\cdot2^{201+3360w}
+\]
+forces
+\[
+w\equiv6657\pmod{8192}.
+\]
+Writing \(w=6657+8192r\) and \(E=201+3360w\), the bridge obtains
+\[
+18018+211u+22155r=20\cdot2^{E-13}.
+\]
+On the subcylinder \((w/8192)\bmod64=32\), it then derives \(u=1802+6720t\), which is exactly the parameter form used by the existing root32 blank-reach exclusion.
+
+**Verification boundary:** the updated parameter-bridge blob was reconstructed byte-for-byte and compiled locally with Lean 4.36.0-rc2; its new declarations report only \([\text{propext},\text{Quot.sound}]\), with no \(\text{sorryAx}\). This verifies the arithmetic composition conditional on the exact residual identity and B2 parameterization. It does not yet connect those hypotheses to every authentic blank-start root candidate, and it does not compile the full `U5B2Root32.lean` import closure. The final source-orbit exclusion remains intermediate. No CI was dispatched; the Critic's exact-source acceptance gate remains open.
