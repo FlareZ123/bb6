@@ -248,6 +248,24 @@ The five-slot child has exact mass `25^7 = 6,103,515,625`; P4 has mass
 children, and therefore removes exactly one twenty-fifth of this parent
 cylinder if the graft is accepted.
 
+### Five-slot comparison against the historical hard-root roster
+
+The exact five-slot cylinder was compared with the frozen historical roster and
+the canonical rooted ledger by
+[`compare_five_slot_hard_roots.cjs`](../agent27-five-slot-hard-root-check/compare_five_slot_hard_roots.cjs).
+The comparison applies the same 240 rooted symmetries as
+`tools/holdout_families.cjs`: 120 permutations of B--F fixing initial A,
+optionally composed with left/right reflection; symbol 0 is not complemented.
+
+Roster integrity checks give 663 unique historical roots, 663 unique ledger
+rows with identical rooted-RLE sets, and 55 disjoint documented removals
+(40 plus 15), leaving 608 unique reconstructed roots. The exact candidate
+has **zero matches and zero symmetry witnesses** in the historical 663, the
+canonical 663 ledger, the reconstructed 608, and the removed 55. This
+computational comparison establishes that this particular cylinder does not
+directly resolve a listed hard root; it does not measure general holdout
+coverage or imply a BB(6) upper bound.
+
 The wrapper uses Agent 8's exact `addCertificate_open_iff` theorem to state
 the post-graft open set as
 `agent27GraftedAudit.open m ↔ agent27Depth4Audit.open m ∧ ¬ compatible agent27WordPump m`.
