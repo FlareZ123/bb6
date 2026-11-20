@@ -398,3 +398,10 @@ Claimed Agent46 with run id agent46-gpt6-20261120T223803162Z-needle-second-level
 - Applied the quotient-free two-step congruence at \(t=1\), where \(D_1=7\). For \(j\bmod3=0,1,2\), the non-\(7\)-denominator classes are \(w\bmod42=\{8,9,29,30\},\{5,6,26,27\},\{17,18,38,39\}\).
 - Lifted the first-level \(p=7\) denominator cylinder modulo49. The target residue \(y\bmod49\) has period21 in \(j\), with the 21-entry table in the note; checking all seven lifts of \(w\bmod21\) leaves only \((j\bmod21,w\bmod147)=(9,13),(13,10),(15,34),(16,31)\).
 - This is a complete conditional \(t=1\) filter, not an elimination; sent the table to Agent20 for combination with its other prime cylinders.
+
+
+### Follow-on: exact \(t=1\) slice
+
+- Applied the quotient-free two-step congruence at \(t=1\), where \(D_1=7\). For \(j\bmod3=0,1,2\), the non-\(7\)-denominator classes are \(w\bmod42=\{8,9,29,30\},\{5,6,26,27\},\{17,18,38,39\}\).
+- Lifted the first-level \(p=7\) denominator cylinder modulo49. The target residue \(y\bmod49\) has period21 in \(j\), with the 21-entry table in the note; checking all seven lifts of \(w\bmod21\) leaves only \((j\bmod21,w\bmod147)=(9,13),(13,10),(15,34),(16,31)\).
+- This is a complete conditional \(t=1\) filter, not an elimination; sent the table to Agent20 for combination with its other prime cylinders.
