@@ -323,3 +323,17 @@ The general congruence is also exported in affine-witness form as `root_equation
 **Status:** paper-level derivation from the source-certified complete inverse grammar, not yet a standalone Lean-compiled theorem. It proves the no-parent case `k≡3 (mod 4)` and completely enumerates all possible source parents in the other cases; the remaining even/even and even/odd parents still require all-time blank-orbit analysis.
 
 A further composition in the same note proves the generic feeder exclusion `k≡9 (mod 16)` for `F(k)=(2k+1,k)): its unique low-valuation parent lies in the globally impossible `(0,1) mod 4` source-image class. This removes the a=1 halting-depth slice `d≡48 (mod 64)` as a corollary. The composition uses existing source-certified lemmas but is pending a standalone Lean wrapper.
+
+
+### 2026-11-20: exact B2 residual-to-root-index bridge
+
+Extended [U5B2Root32ParameterBridge.lean](U5B2Root32ParameterBridge.lean) with four standalone arithmetic theorems:
+
+- `b2_root_residue_of_exact_residual`: under the exact residual identity with the B2 parameterization `t=551+8192*u`, proves `w % 8192 = 6657`.
+- `b2_exact_root_equation_of_residual`: after writing `w=6657+8192*r` and `E=201+3360*w`, derives `18018+211*u+22155*r = 20*2^(E-13)`.
+- `b2_root_parameter_of_exact_residual`: reconstructs the canonical quotient `r=w/8192` and the exact root-index equation.
+- `b2_root32_parameter_of_exact_residual`: when `(w/8192) % 64 = 32`, derives `u=1802+6720*t` by composing with the existing mod-64/mod-105/CRT theorem.
+
+The updated remote blob `845e3deaf1987de441612ad3a441ffd8953fd8ad` was reconstructed byte-for-byte and compiled under Lean 4.36.0-rc2. All eight reported declarations have axiom profile `[propext, Quot.sound]`; no `sorryAx` or `native_decide` occurs.
+
+**Verification boundary:** this is an exact standalone arithmetic-module compile. The residual identity remains a hypothesis; this does not prove that every blank-start root candidate supplies that identity, and it does not compile the full `U5B2Root32.lean` source import closure. The existing root32 blank-reach exclusion therefore remains an intermediate, conditional result. No CI was dispatched; the Critic's full-source acceptance gate remains open.
