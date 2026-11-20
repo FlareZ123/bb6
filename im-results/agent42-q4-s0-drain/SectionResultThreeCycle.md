@@ -516,54 +516,53 @@ no new Lean theorem is claimed here.
 
 ## Stronger tetration-height corollary (conditional)
 
-A strong root-countdown estimate follows directly from the seven-step
-first section \(\texttt{sectionResult}\ 7\ 2\ 6\ 63\). Let
-\(T_1=2\), \(T_{j+1}=2^{T_j}\). Its right counters start at \(b_0=63\),
-so \(b_0\ge T_3+1\); since \(b_{j+1}=2^{b_j}-1\), induction gives
-\(b_j\ge T_{j+3}+1\) for \(0\le j\le6\). The marker sequence is \(2,1,0,2,1,0,2\), so the exponent
-increments \(\epsilon_j\) are \(2,2,1,2,2,1,2\), with sum \(12\). Hence
+The source recurrences give a sharper exact parameterization than the
+coarse tetration-height estimate. Define
 \[
-A_0=a_7
-=6+\sum_{j=0}^{6}(b_j+\epsilon_j)
-\ge25+\sum_{j=3}^{9}T_j.
+V_0=63,\qquad V_{j+1}=2^{V_j}-1.
 \]
-Set \(S_9=\sum_{j=3}^{9}T_j\). The root residue arithmetic gives
+The first section is \(\texttt{sectionResult}\ 7\ 2\ 6\ 63\). Its marker
+sequence is \(2,1,0,2,1,0,2\), so its exponent increments are
+\(2,2,1,2,2,1,2\). Consequently its final exponent is exactly
 \[
-r=31\cdot2^{A_0-4}-1,\qquad M=16r-20,
+A_0=18+\sum_{j=0}^{6}V_j.
 \]
-and therefore
+The root residue and middle-34 length are therefore
 \[
-M\ge M_0:=496\cdot2^{S_9+21}-36.
+r=31\cdot2^{14+\sum_{j=0}^{6}V_j}-1,\qquad
+M=16r-20
+=496\cdot2^{14+\sum_{j=0}^{6}V_j}-36.
 \]
-The middle-34 SectionResult segment starts with right counter at least \(2\)
-and performs \(M\) updates \(b_{j+1}=2^{b_j}-1\), so its final right
-counter \(B\) satisfies
+
+After the first section, the reset applies one further right update, and
+the 34 middle rows apply 34 more. Thus the middle-34 entry has right
+counter \(V_{42}\). The long middle-34 SectionResult segment has length
+\(M\), so its final right counter is exactly
 \[
-B\ge T_M+1\ge T_{M_0}+1.
+B=V_{M+42}.
 \]
-The middle-34 exponent also satisfies
-\(a_M\ge b_{M-1}\ge T_{M-1}+1\), while
-\(B=b_M\ge T_M+1\). Thus the terminal exponent
-\(A=a_M+B+2\) obeys
+Its final exponent includes the last pre-update right counter, hence
 \[
-A\ge T_M+T_{M-1}+4
-\ge T_{M_0}+T_{M_0-1}+4.
+\texttt{middle34Result.exponent}\ge V_{M+41},\qquad
+A=\texttt{middle34Result.exponent}+B+2
+\ge V_{M+41}+V_{M+42}+2.
 \]
-For the authentic \(L=76\) terminal index,
+For the authentic \(L=76\) terminal index this gives
 \[
 N=2^A(2^{78}-1)-3
-\ge N_0:=(2^{78}-1)2^{T_{M_0}+T_{M_0-1}+4}-3.
+\ge N_0:=(2^{78}-1)2^{V_{M+41}+V_{M+42}+2}-3.
 \]
-The final dispatcher right counter starts at \(R\ge5\) and follows the
-same recurrence, so \(b_N\ge T_N+1\ge T_{N_0}+1\). The exact dispatcher
-score contains \(6b_N^2\), and all remaining dispatcher, root-drain, and
-root-prefix terms are nonnegative. Thus the complete conditional score
-obeys
+
+Let \(T_1=2\), \(T_{j+1}=2^{T_j}\). For the final dispatcher, whose
+initial right counter is \(R\ge5\), the recurrence
+\(b_{j+1}=2^{b_j}-1\) gives \(b_N\ge T_N+1\). The exact dispatcher score
+contains \(6b_N^2\), and all remaining dispatcher, root-drain, and
+root-prefix terms are nonnegative. Therefore
 \[
 \boxed{S_{\rm full}\ge6\bigl(T_{N_0}+1\bigr)^2.}
 \]
-This supersedes the weaker \(M_0=62T_{10}-36\) bound and the earlier
-\(2\uparrow\uparrow\uparrow5\) comparison.
+The simpler tower bounds in the earlier version follow from
+\(V_j\ge T_{j+3}+1\), but the displayed \(V\)-recurrence bound is stronger.
 
 This remains an arithmetic lower bound conditional on the authentic root
 and complete dispatcher source composition. It is not a compiled Lean
