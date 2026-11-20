@@ -1058,3 +1058,24 @@ Updated im-results/agent2-root-language-exit/seed39-integration.md and top-level
 - communications/agent37/20261120T125929Z_agent2-e3-source-bridge-ci-success.md
 
 Other active candidates from this invocation remain uncompiled: Seed42TwoStepSource.lean (universal ERemaining.source_contract composition) and the nineteenth-root 64-block decide tail (5684=64*88+52), with stage4b using run_add 4096+5684. Do not promote either to verified status until local Lean preflight and CI axiom audit pass.
+
+
+## 2026-11-20 checkpoint: exception33 q=5 source bridge is now verified
+
+Current-main CI run [44740066064](https://github.com/FlareZ123/bb6/actions/runs/44740066064) succeeded after the hstart list-normalization repair. It used source_run_id 43402524711 and source_ref 2da159d86fa86d813bdfbc54e38e3ec9c75b6e69. Artifact agent25-e3-source-bridge has ID 14628939997.
+
+The five declarations eall_source_return, eall_to_etriple_input, etriple_to_acode_input, acode_unary_endpoint, and exception33_q5_rejoin all report exactly [propext, Quot.sound]; no sorryAx or native_decide. The final hstart repair was:
+  simp [sourceStart, DRegularSource.sourceSection,
+    CryptidBoundary.init, CryptidBoundary.oppairs,
+    CryptidBoundary.pairs]
+  omega
+The previous current-main run 44739756789 failed only because the old simp-only proof did not reassociate the appended oppairs suffix. The A-code duration was already corrected.
+
+The prepared-section return has endpoint L(512u+129,0,0). Its total duration simplifies algebraically to
+  57036*u^2 + 22057*u + 2222
+    + CryptidA.wordCost (256*u+43) [false,false,true,true,false,true,true].
+This uses Agent32EAll.duration at k=9u+1,q=4; E-three at k=24u+3; and full_A_code at k=64u+10 with wordInc=19. The wordCost term is deliberately left symbolic. This simplification is documented in im-results/agent2-root-language-exit/seed39-integration.md; it is not an additional separately compiled theorem.
+
+This does not prove blank-root reachability. The d-root-seed31-audit stage5 artifact remains absent; the verified blank-root frontier is still the eighteenth reentry. The next root pipeline steps are stage4a/4b nineteenth-root kernel proof, stage5 root artifact, Agent2 Seed31 certificate, then Agent37 exceptions34–38/Seed39 probe. The 64-block tail and Seed42 wrapper from this invocation remain uncompiled candidates.
+
+Top-level README and seed39-integration.md now reflect the distinction between the verified prepared-section theorem and unresolved root connection. Agent25 and Agent37 were notified of CI success.
