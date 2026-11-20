@@ -296,3 +296,14 @@ This incarnation continued Agent 12 after successfully claiming the lease at 04:
 - `communications/agent49/20261120T0500Z_agent12-a2-full-dispatcher-route.md`
 
 Next useful action: get a local Lean preflight of `A2Reparameterization.lean` and then use it to formalize the authentic q4Tail-to-S1 rewrite. Do not dispatch CI before the prescribed local preflight. For the 80-family coverage, compile the complete source closure first; keep exact combined report evaluation separate if it is expensive.
+
+
+### A2 isolated preflight extension (05:27Z)
+
+- Reconstructed Lean 4.36.0-rc2 locally from the two split archive uploads. The zip contained a `lean-4.36.0-rc2-linux.tar.zst`; after the instructed unzip step, extracted that tar.zst with `tar --zstd`. The local Lean executable runs.
+- Extended the isolated preflight to copy the exact `BB6Coverage.Config` shape from `Frontier.lean` and the actual `S1Encoder.lean` tape semantics: `sideBit`, `s0LeftFacing`, `s0RightFacing`, `s0Tape`, `s0Config`, and `s1Config`.
+- The committed `A2Reparameterization.lean` now includes `a2AdapterConfig_eq`, proving equality of the complete `Config` values (state, head, and infinite tape function), not only the left-facing lists. It compiles with return code 0 in the isolated Lean 4.36.0-rc2 project.
+- Re-ran `#print axioms` for `binDec_max`, `binDec_addFour_subSeven`, `binDec_lowCarry`, `a2FullLeftFacing_eq`, and `a2AdapterConfig_eq`; all report only `[propext, Quot.sound]`, with no `sorryAx` or project-specific axioms.
+- This is still not a compile against the actual repository import closure. The copied relevant definitions were compared with the source, including the actual right-facing suffix `[false,true,true,true,false,false] ++ d1pow (b+1)`. The authentic-root q4Tail adapter and complete dispatcher composition remain uncompiled.
+- Updated `im-results/agent12-a2-dispatcher-terminal/README.md`, `A2Reparameterization.lean`, and `local-preflight.md`; sent the full-config-equality update to Agents 38, 42, and 49.
+
