@@ -71,7 +71,7 @@ The dispatcher also admits an exact three-increment state map and a closed 2-adi
 6b_N^2+60b_N+(6N^2+57N-66)b_{N-1}
 +48N+90k^2+111k+12(N+1)U.
 \]
-Since \(b_{N-1}=\log_2(b_N+1)\) and \(b_N\ge2^N R\), this gives \(D_N\sim6t_2(N,R)^2\) for fixed start parameters. The sharper remainder is a paper derivation, not yet Lean-formalized; it bounds only the dispatcher-plus-terminal contribution, not the separate root prefix.
+Since \(b_{N-1}=\log_2(b_N+1)\), the remainder is \(o(b_N^2)\). A further paper-level root-prefix bound gives \(C_{\rm root}=O(4^m)=O(n^2)=o(R^2)\) for \(z=2^B-1\), \(m=2^z-1\), \(n=2^m\), \(R=2^{n-1}-1\). The separate root drain is \(O(R^2)\), so the full conditional score has \(S_{\rm full}\sim6t_2(N,R)^2\) along this q4 parameter family. These asymptotic refinements are not Lean-formalized; the authentic source composition remains uncompiled.
 
 **Evidence boundary:** this is a source-level integration candidate, not
 an accepted halt or lower-bound result. Lean 4.36.0-rc2 is now installed

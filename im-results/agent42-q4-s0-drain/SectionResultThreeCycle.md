@@ -379,14 +379,114 @@ This is a sharper paper derivation than the earlier \(O(N^2b_N)\)
 remainder. It has not yet been added to the isolated Lean model, so it
 must not be described as Lean-checked.
 
-The dispatcher-plus-terminal contribution is asymptotically dominated by
-its final counted increment. Extending the same asymptotic to the full
-champion score additionally requires bounding the separate root/drain
-prefix by \(o(b_N^2)\); that prefix bound is not asserted here. For the
-authentic \(n\ge1\), the omitted root/drain contribution is nonnegative:
-\(C_{\rm root}\ge0\) and \(42\cdot2^{n-1}\ge12n\), hence
-\(6\cdot4^{n-1}+42\cdot2^{n-1}-12n+54>0\). Therefore the full
-conditional score satisfies \(S_{\rm full}\ge6(b_N+1)^2\).
+## Root-prefix domination and full-score asymptotic
+
+The preceding estimate can be extended from the dispatcher-plus-terminal
+part to the complete conditional score. The argument below is a paper
+derivation from the source cost recurrences; it is not yet Lean-formalized.
+
+First bound a general SectionResult segment. Let
+\[
+a_{i+1}=a_i+b_i+\epsilon_i,\qquad
+b_{i+1}=2^{b_i}-1,\qquad \epsilon_i\in\{1,2\},
+\]
+with \(a_0\le b_0\) and \(b_0\ge5\), and let \(B=b_M\) after \(M\ge1\)
+increments. Since \(2^b-1\ge2b\) and \(2b+2\le2^b-1\) for \(b\ge5\),
+induction gives
+\[
+b_{i+1}\ge2b_i,\qquad a_i\le b_i.
+\]
+In particular \(M\le B\), \(\sum_{i=0}^{M-1}a_i\le MB\le B^2\), and
+\[
+\sum_{r=1}^{M}v_2(r)=M-s_2(M)\le M\le B.
+\]
+For \(i\le M-2\), \(b_i\le b_{M-1}/2\), while
+\(B+1=2^{b_{M-1}}\). Thus
+\[
+\sum_{i=0}^{M-1}4^{b_i}
+\le (B+1)^2+(M-1)(B+1)
+\le2(B+1)^2,
+\qquad
+\sum_{i=0}^{M-1}2^{b_i}\le2(B+1)^2.
+\]
+Using \(m_i\le2\) in the exact one-step cost and dropping its nonpositive
+\(-9b_i\) term gives
+\[
+\begin{aligned}
+\sum_{i=0}^{M-1}c_i
+&\le6\sum_i4^{b_i}+42\sum_i2^{b_i}
+ +12\sum_i a_i+12\sum_{r=1}^{M}v_2(r)+23M\\
+&\le143(B+1)^2.
+\end{aligned}
+\]
+The terminal offset \(12a_M+8+63+3B\) is at most
+\(15B+71\le86(B+1)^2\).
+
+Apply this to the long middle-34 SectionResult segment, whose initial
+state satisfies \(a_0\le b_0\), \(b_0\ge5\), and whose final right counter
+is \(B=\texttt{middle34Result.right}\). The preceding root-to-middle-34
+prefix has a fixed finite number of source increments and drains, so its
+cost is \(O((B_0+1)^2)\), where
+\(B_0=\texttt{tm63MiddleAfter34B}\le B\). The preceding bound and the
+outer-LC postlude estimate therefore give
+\[
+\texttt{rootToMarker1S0Cost}=O((B+1)^2).
+\]
+The authentic parameters then satisfy
+\[
+z=2^B-1,\qquad m=2^z-1,\qquad n=2^m,\qquad
+A=\texttt{middle34Result.exponent}+B+2\le2B+2,
+\]
+so \(B\le z\le m\). The exact formula for
+\(\texttt{rootSecondQ4Cost}\) consists of closed drain terms of orders
+\(4^B,4^z,4^m\), together with terms linear in
+\(A,z,m,2^B,2^z\); hence it is \(O(4^m)\). The final q4-tail prefix cost
+is \(3n+m+65=O(n)=O(4^m)\). Since
+\(\texttt{rootToMarker1S0Cost}=O(B^2)=O(4^m)\), the complete root prefix
+obeys
+\[
+C_{\rm root}
+=\texttt{rootToSecondQ4Cost}
+ +\texttt{rootSecondQ4TailPrefixCost}
+=O(4^m)=O(n^2).
+\]
+
+The initial dispatcher parameters are
+\[
+U=K+n-1=n+m+z+3,\qquad
+R=2^{n-1}-1,\qquad K=2^z+z+3.
+\]
+For \(z\ge3\), \(m\ge7\), \(n=2^m\), so \(U\le R\). Also
+\(R^2\asymp4^{n-1}\), and \(4^m=o(R^2)\) because \(n=2^m\).
+Consequently \(C_{\rm root}=o(R^2)\).
+
+For the dispatcher term, the earlier upper bound and
+\(b_N\ge2^N R\), \(b_{N-1}\le b_N\), show uniformly when \(U\le R\) that
+\[
+D_N(U,R)=6b_N^2(1+o(1))
+\qquad(N\to\infty).
+\]
+Indeed, after division by \(b_N^2\), the remaining terms are bounded by
+\(O(N^2/b_N+N^2/b_N^2+N R/b_N^2)\), which tends to zero. The separate
+root-drain term in the exact score is
+\[
+D_{\rm rootDrain}
+=6\cdot4^{n-1}+42\cdot2^{n-1}-12n+54
+=O(R^2),
+\]
+and hence is also \(o(b_N^2)\), since \(b_N\ge2^N R\).
+Combining the three contributions gives the full conditional-score
+asymptotic
+\[
+\boxed{S_{\rm full}
+=C_{\rm root}+D_{\rm rootDrain}+D_N
+\sim6b_N^2=6\,t_2(N,R)^2.}
+\]
+
+This closes the root-prefix asymptotic gap for the q4 parameter family at
+the level of a paper derivation. It does **not** compile or certify the
+authentic root/dispatcher composition, and it is not an accepted BB(6)
+halt or score theorem.
 
 
 ## Relation to existing Lean popcount/valuation lemmas

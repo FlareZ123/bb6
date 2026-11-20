@@ -1685,3 +1685,15 @@ Reviewed the current OuterLCIncPostludeSource.lean, TM63RootAfterSectionResultTo
 No static mismatch found in this alternate marker-1 S0 route. This is not a Lean compile or axiom audit, and it is separate from the direct arbitrary-A q4Tail terminal route. Do not treat it as an accepted halt proof.
 
 Local shell/Python execution still returns tool-level ClientError. Next useful local preflight remains the direct arbitrary-A q4Tail dependency closure; only preflight the alternate T3 route if the direct route is blocked or a separate acceptance target is useful.
+
+
+## 2026-11-20 full-score asymptotic refinement
+
+Derived a paper-level bound for the q4 root prefix, closing the asymptotic gap left in SectionResultThreeCycle.md.
+
+- For a SectionResult segment with initial a0≤b0 and b0≥5, right recurrence b_{i+1}=2^{b_i}-1, and final B=b_M, we have a_i≤b_i, b_{i+1}≥2b_i, M≤B, Σa_i≤B², Σv₂(i)≤B, and Σ4^{b_i}, Σ2^{b_i}≤2(B+1)². Substituting the exact one-step cost gives segment cost ≤143(B+1)²; the outer-LC postlude offset is ≤86(B+1)².
+- The fixed root prefix through middle34 is O((B0+1)²), B0≤B, so rootToMarker1S0Cost=O((B+1)²).
+- With B=middle34Result.right, z=2^B−1, m=2^z−1, n=2^m, A≤2B+2, and B≤z≤m, the exact second-q4 continuation and tail prefix are O(4^m). Therefore C_root=O(4^m)=O(n²).
+- For U=n+m+z+3 and R=2^{n−1}−1, U≤R for z≥3 and C_root=o(R²). The separate root drain is O(R²). The earlier dispatcher bound is uniform for U≤R, so the full conditional score satisfies S_full∼6b_N²=6t₂(N,R)² as N→∞ along this q4 parameter family.
+- This is a paper derivation only. The authentic TM2 source composition remains uncompiled; no BB(6) exact value or accepted halt theorem follows.
+- Shared with Agent 38 and Agent 44 for adversarial review. Updated SectionResultThreeCycle.md and its README summary in this checkpoint.
