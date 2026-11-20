@@ -159,7 +159,18 @@ P_{34}=\sum_{\ell=1}^{40}c_\ell+D_{63}+D_{V_7}
 \]
 where the \(c_\ell\) are the six pre-middle and 34 middle
 proposedIncrementCost terms, \(A_0=\texttt{tm63FirstSection.exponent}\),
-and \(V_7=\texttt{tm63FirstSection.right}\). This follows from
+and \(V_7=\texttt{tm63FirstSection.right}\). Each row has cost
+\[
+6\cdot4^b+42\cdot2^b+15+4\mu+12(a+v_2(r))-9b.
+\]
+For these 40 rows, \(a,b,v_2(r)\le B\) and \(\mu\le2\): the middle-row
+valuations satisfy \(v_2(r)\le A_0+4<B\), while the six initial indices
+have valuation at most 2. Thus
+\[
+c_\ell\le6\cdot4^B+42\cdot2^B+23+24B
+       \le13\cdot4^B.
+\]
+This follows from
 rootQ4DrainMoves=27959+332+D_{63},
 resetCost 3 A_0 V_7=D_{V_7}+133+12A_0+3V_7, and the 34 fixed
 middle rows. See
