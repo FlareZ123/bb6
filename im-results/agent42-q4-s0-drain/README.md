@@ -826,10 +826,12 @@ the complete resulting configuration with the independently accumulated
 `sectionResult` recurrence, including the exact primitive-step total and
 head displacement.
 
-The test covers 36 combinations of cycle length (24 or 48), initial marker
-(0, 1, 2), inner width (1, 2, 3), and right counter (0, 1). Every run visits
-all 24 pairs `(marker, n mod 8)`; all complete endpoint comparisons pass,
-covering **822,744 simulated transitions** in total.
+The full-cycle portion covers 36 combinations of cycle length (24 or 48),
+initial marker (0, 1, 2), inner width (1, 2, 3), and right counter (0, 1).
+Every full-cycle run visits all 24 pairs `(marker, n mod 8)`. A further 12
+short-prefix cases test growing right counters (2 -> 3 -> 7 -> 127 and
+3 -> 7 -> 127), across all markers and inner widths 1 and 2. All complete
+endpoint comparisons pass, covering **2,078,394 simulated transitions**.
 
 This is still finite computational corroboration, not a proof of
 `sectionResult_run_complete`. The universal source theorem and the authentic
