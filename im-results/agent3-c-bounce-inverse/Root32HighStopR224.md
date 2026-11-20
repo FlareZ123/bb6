@@ -27,10 +27,8 @@ CReach(D_{0E}(t))\Longrightarrow CReach(E_7(t))
 For \(t\equiv1\pmod4\), the R target has even right coordinate and
 
 \[
-R_x(t)+R_y(t)=601? 
-\]
-
-More explicitly, its coordinate sum is \(6t+5\pmod8\), which is \(3\pmod8\) for both odd residue classes \(t\equiv1,5\pmod8\). The exact even-right inverse therefore forces the direct parent
+R_x(t)+R_y(t)\equiv6t+5\pmod8
+\] which is \(3\pmod8\) for both odd residue classes \(t\equiv1,5\pmod8\). The exact even-right inverse therefore forces the direct parent
 
 \[
 R'(t)=
@@ -62,11 +60,6 @@ A_0(t)=
 
 Its coordinates are odd and its sum is
 
-\[
-482? 
-\]
-
-More explicitly,
 \[
 A_{0,x}(t)+A_{0,y}(t)
 =4782507555t+1282499995
