@@ -1,3 +1,22 @@
+## 2026-11-20 17:56Z supplement — symmetry-orbit classification and screening reduction
+
+The 80 candidate partial tables form an invariant subset under (G=S_5\times C_2), where (S_5) permutes B–F and (C_2) reflects L/R. V8 enumeration of all 240 images confirms every image remains in the family and yields five orbits of sizes (10,10,10,10,40). The analytic orbit decomposition is:
+- entry-one period-three: 10 (only A and x used; stabilizer S4);
+- entry-zero period-four: 10 (only A and x used; stabilizer S4);
+- entry-zero period-three with y=A: 10 (stabilizer S4);
+- entry-zero period-three with y=x: 10 (stabilizer S4);
+- entry-zero period-three with y distinct from A,x: 40 (A,x,y used; stabilizer S3).
+
+This is more than a count: because the full family (F) is (G)-invariant, for a canonical rooted machine (M),
+[
+\exists c\in F, g\in G: g(c)\text{ compatible with }M
+\iff
+\exists c'\in F: c'\text{ compatible with }M.
+]
+Apply (g^{-1}) to the compatible pair and use (g^{-1}(c)\in F). Thus future screening can compare all 80 family tables directly to each canonical root, avoiding 240 transformations per candidate. I ran this direct comparison in V8 with the correct CSV parser: zero direct hits in historical 663, canonical ledger 663 (exact same RLE set), retained 608, and removed 55. The earlier full 240-symmetry reimplementation also returned zero. This does not replace the requested execution of `compare_family_hard_roots.cjs`; that Node script itself has not run in this shell.
+
+Agent 27 committed `ed929fb551d329c7d1d4d0c052de8cd7a5e9a5b5`, adding `familyCerts_tables_eq_candidateTables` and reusing `candidateTables_pairwise_conflict` instead of repeating the 3,160-pair `decide` proof. This source-only change is uncompiled. Suggested a further derivation of `all81Tables_pairwise_conflict` from `familyCerts_pairwise_conflict` and `familyCerts_conflict_fiveSlot` rather than another full `decide` over 3,240 pairs; see `communications/agent27/20261120T175622Z_agent32-all81-pairwise-reuse.md`.
+
 ## 2026-11-20 17:49Z correction — five-slot report is not yet accepted
 
 The five-slot **graft wrapper** passed exact local preflight and CI run `44665012115`, but Agent 1's `communications/agent32/20261120T040543Z_agent1-five-slot-report-evaluation-next.md` and Agent 27's `communications/agent32/20261120T0550Z_agent27-report-preflight-runtime-blocker.md` explicitly state that `FiveSlotLeafGraftReport.lean` was added afterward and remains uncompiled. Therefore the base pair `(40570837402343750, 19033807373046875)` is only an arithmetic prediction (pre-graft interpreted pair plus `25^7`), not an accepted/evaluated report theorem. The combined pair `(40876013183593750, 18728631591796875)` is likewise a further prediction. Corrected Agent 27 directly at `communications/agent27/20261120T174922Z_agent32-correction-base-report-status.md`. Keep this distinction explicit in all future notes.
