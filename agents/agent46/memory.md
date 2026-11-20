@@ -391,3 +391,10 @@ Claimed Agent46 with run id agent46-gpt6-20261120T223803162Z-needle-second-level
 - Starting from Agent20's necessary condition \(D_t\mid4b+21-10t\), derived \(D_t\mid R_{\rm odd}\) for \(t\le w\), with \(R_{\rm odd}=3\cdot2^{w-t+1}(2q+3)+10t-21\). Positivity and a size bound show \(2^{2t}<8y\), hence \(t\le ra+1\) for the cancellation family.
 - For \(t>w\), the exact odd-predecessor parent equation gives \(15q'\equiv-5t-12\pmod{2^{w+1}}\), yielding the residue window \(\sigma_{w,t}<y/2^{t+1}\).
 - Full proof added to the same two-step note and a follow-up sent to Agent20. This does not cover the longer odd-block families.
+
+
+### Follow-on: exact \(t=1\) slice
+
+- Applied the quotient-free two-step congruence at \(t=1\), where \(D_1=7\). For \(j\bmod3=0,1,2\), the non-\(7\)-denominator classes are \(w\bmod42=\{8,9,29,30\},\{5,6,26,27\},\{17,18,38,39\}\).
+- Lifted the first-level \(p=7\) denominator cylinder modulo49. The target residue \(y\bmod49\) has period21 in \(j\), with the 21-entry table in the note; checking all seven lifts of \(w\bmod21\) leaves only \((j\bmod21,w\bmod147)=(9,13),(13,10),(15,34),(16,31)\).
+- This is a complete conditional \(t=1\) filter, not an elimination; sent the table to Agent20 for combination with its other prime cylinders.

@@ -248,3 +248,56 @@ where \(15^{-1}\) is the inverse modulo \(2^{w+1}\). Then \(q'\ge\sigma_{w,t}\).
 \]
 
 This extension applies only to the one-step odd-block cases whose odd predecessor \(x\) then has an even predecessor. It does not dispose of the four mod-\(125\) families that can support longer odd blocks.
+
+
+## Exact low-valuation slice: the \(t=1\) predecessor
+
+The general two-step congruence also gives a concrete target-specific filter for an immediate predecessor of valuation \(t=1\). Here \(D_1=7\), and the second parent exists exactly when \(b\ge10\) and
+\[
+b\equiv3\pmod7.
+\]
+The target family has
+\[
+y\equiv
+\begin{cases}
+1\pmod7,&j\equiv0\pmod3,\\
+5\pmod7,&j\equiv1\pmod3,\\
+3\pmod7,&j\equiv2\pmod3.
+\end{cases}
+\]
+Reducing (2) modulo \(7\) gives the following necessary classes for \(w\) modulo \(21\):
+\[
+\begin{array}{c|c}
+j\bmod3 & w\bmod21\\ \hline
+0&8,9,13\\
+1&5,6,10\\
+2&1,17,18
+\end{array}
+\]
+The third class in each row is precisely the first-level \(p=7\) denominator cylinder \(w\equiv1\pmod3\); the other two classes have \(7\nmid D_w\) and lift to the exact \(w\bmod42\) classes
+\[
+\begin{array}{c|c}
+j\bmod3 & w\bmod42\\ \hline
+0&8,9,29,30\\
+1&5,6,26,27\\
+2&17,18,38,39.
+\end{array} \tag{13}
+\]
+
+The denominator cylinder needs a \(49\)-lift because \(7\mid D_w\). For completeness, the target residue modulo \(49\) has period \(21\) in \(j\). Indeed \(9^{110j+50}\pmod{42}\) cycles as \(39,9,15\), so \(a\bmod21\) cycles as \(1,7,10\), and \(A\bmod49\) cycles as \(2,30,44\). For
+\[
+T(A)=\begin{pmatrix}A^2&A-3\\0&9\end{pmatrix},
+\]
+one checks \(T(2)^{2310}=T(30)^{2310}=T(44)^{2310}=I\pmod{49}\). The resulting \(y\bmod49\) values for \(j=0,\ldots,20\) are
+\[
+(8,5,45,43,26,45,29,47,45,15,19,45,1,40,45,36,12,45,22,33,45).
+\]
+
+The first-level \(p=7\) cylinder fixes \(w\bmod21\) to \(13,10,1\) according as \(j\bmod3\) is \(0,1,2\). Testing its seven lifts \(w=w_0+21k\pmod{147}\), \(0\le k<7\), against the parent equation modulo \(49\) and then \(b\equiv3\pmod7\), leaves exactly
+\[
+\boxed{
+(j\bmod21,w\bmod147)\in
+\{(9,13),(13,10),(15,34),(16,31)\}.
+} \tag{14}
+\]
+For these classes the lift gives \(q\equiv1\pmod7\), so \(b\ge10\); thus the \(t=1\) parent condition is attained whenever the first-level parent itself exists. Equations (13)--(14) are a complete \(t=1\) residue filter, but they do not eliminate all such parents.
