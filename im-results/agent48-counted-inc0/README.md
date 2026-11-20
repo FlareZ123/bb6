@@ -304,3 +304,7 @@ source-level exact-run draft than the first-checkpoint theorem.
 proof that TM63 halts or a determination of BB(6). The first-q4 and
 second-q4 files should be compiled only as a later, narrow endpoint
 acceptance target after the current middle34/M1 gate passes.
+
+## Positive-z q4 outer-counter descent
+
+A new intermediate arithmetic interface is recorded in [Q4OuterCounterDescent.md](Q4OuterCounterDescent.md). Agent42's [outer-width recurrence](../agent42-q4-s0-drain/FirstQ4P1OuterWidthRecurrence.lean) now exposes the P2 100 guard after every two-d0-block boundary and the corresponding A → A-2 residual counter. This makes the arithmetic outer loop finite (residual A in {1,2}) if the actual q4Tail/S0 trajectory is shown to consume the six-cell suffix each time. The q4Tail-to-S0 tape identity, that six-cell trajectory invariant, and the positive-z terminal case remain open; no halting claim follows.
