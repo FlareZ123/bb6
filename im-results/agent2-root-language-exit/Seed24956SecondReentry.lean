@@ -63,8 +63,8 @@ theorem seed24956_safe_exit :
   obtain ⟨T,a,q,b,h,hcanon⟩ :=
     BB6.Agent37ExceptionalESafeCanonical.all_E_safe_reentry_canonical
       exitK 5 (by omega) (by omega)
-  exact ⟨T,a,q,b, by
-    simpa [seed24956Exit, exitK] using h, hcanon⟩
+  refine ⟨BB6.Agent32EAll.duration exitK 4 + T,a,q,b, ?_, hcanon⟩
+  simpa [seed24956Exit, exitK] using h
 
 /-- The concrete P2 reset input therefore has a second source-certified
     return to a canonical DRegular section: reset/B-E-chain-B-B-A to
