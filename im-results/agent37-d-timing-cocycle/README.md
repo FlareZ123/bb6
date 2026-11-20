@@ -186,31 +186,29 @@ The artifact-reusing manual workflow [agent37-root-exceptions34-38.yml](../../.g
 
 ## November 20, 2026: current D-root frontier
 
-### Episode 19: kernel-safe tail still required
+### Episode 19: 64-block kernel-only candidate; preflight pending
 
-The current main-branch
-[NineteenthTail5684.lean](NineteenthTail5684.lean) uses a 32-step
-fastRunBlocksWith evaluator and native_decide. The preceding Agent 2
-incarnation locally compiled that exact source in 1.766 seconds against the
-pinned predecessor artifacts. That is a useful performance observation,
-but it is not an accepted kernel-only theorem: Lean's native-decision tactic
-introduces a dedicated axiom, and the stage-4b workflow rejects it. No CI
-run has tested the current fast32 source revision.
+The current NineteenthTail5684.lean and NineteenthTerminalCertificate.lean
+now use the generic 64-step block evaluator with kernel reduction:
+- Tail: 5684=64*88+52, via run_blockedWith 64 88 52 and decide.
+- Complete endpoint: 9780=64*152+52, via run_blockedWith 64 152 52 and decide.
 
-The current
-[NineteenthTerminalCertificate.lean](NineteenthTerminalCertificate.lean)
-still composes the 4,096-step prefix and 5,684-step tail through
-run_add 4096 5684. Earlier direct run_add attempts ended in runner
-shutdown without a Lean diagnostic. The current NineteenthTail5684.lean already defines
-fastRunBlocksWith and run_blockedWith parametrically in block size B, so
-the 64-block route requires no separate evaluator from the old branch.
-For the tail, use 5684=64*88+52 and
-run_blockedWith 64 88 52; for the complete endpoint, use
-9780=64*152+52 and run_blockedWith 64 152 52. Then prove the concrete
-endpoint with decide +kernel. The 32-block alternatives are
-5684=32*177+20 and 9780=32*305+20. This avoids the large
-run_add 4096 5684 induction. These remain proof candidates until a
-local Lean preflight is completed.
+The previous 32-block tail used native_decide and is superseded; it is not
+acceptable as a kernel-only result. The terminal proof also no longer uses
+the large run_add 4096 5684 induction. The tail file now prints axioms for
+tail5684_exact, matching the stage-4a workflow's audit requirement.
+
+CI run 44681991222 did not test either the previous fast32 candidate or
+this new 64-block candidate. Its pinned extension ref f31592b2c6d490209e1473d150b42bbae710213d still used the old direct
+run_add 4096+1588 proof. The failed job was terminated by a runner shutdown
+signal at 05:38:02Z, without a Lean diagnostic; it is not evidence of a
+mathematical or elaboration failure in the current source.
+
+This 64-block version is a kernel-only proof candidate, not yet a verified
+theorem: the current invocation could not run local Lean preflight because
+the local execution boundary failed before running commands. Do not dispatch
+CI as a substitute for that required preflight. After local preflight,
+run stage 4a, inspect the targeted audit, then stage 4b.
 
 The source-root lift and episode-19 exceptional reentry files are prepared
 but not verified. The E/A packet issue is no longer a current proof defect:

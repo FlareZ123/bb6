@@ -50,15 +50,16 @@ namespace BB6.Agent2NineteenthRoot
 
 open DRegular BB6.DRegularFast BB6.DRegularFastSmall
 
-/-- Exact 5,684-section tail. The generic 32-step block evaluator reduces
-    the proof to 177 small blocks and a 20-step remainder; `native_decide`
-    certifies the resulting finite computation without expanding a 5,684-step
-    `run_add` induction. -/
+/-- Kernel-only exact 5,684-section tail. The generic 64-step block
+    evaluator reduces the computation to 88 blocks and a 52-step remainder;
+    `decide` checks the resulting finite computation in the kernel. -/
 theorem tail5684_exact :
     run 5684 block19_1 = some ⟨9*t19+10,9,1⟩ := by
-  have hlen : 5684 = 32*177+20 := by decide
+  have hlen : 5684 = 64*88+52 := by decide
   rw [hlen]
-  rw [run_blockedWith 32 177 20 block19_1 block19_1_canon]
-  native_decide
+  rw [run_blockedWith 64 88 52 block19_1 block19_1_canon]
+  decide
+
+#print axioms tail5684_exact
 
 end BB6.Agent2NineteenthRoot
