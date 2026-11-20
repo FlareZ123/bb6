@@ -516,27 +516,35 @@ no new Lean theorem is claimed here.
 
 ## Stronger tetration-height corollary (conditional)
 
-Use the root countdown arithmetic from
-\`im-results/agent24-champion-time/DirectTerminalTetrationBound.md\`.
-Let \(A_0=\texttt{tm63FirstSection.exponent}\ge71\). The root residue is
+A stronger root-countdown estimate is available directly from the
+seven-step first section. It is
+\(\texttt{sectionResult}\ 7\ 2\ 6\ 63\), so its right counters satisfy
+\(b_0=63\) and \(b_{j+1}=2^{b_j}-1\). With \(T_1=2\) and
+\(T_{j+1}=2^{T_j}\), we have \(b_0\ge T_3+1\), and induction gives
+\(b_j\ge T_{j+3}+1\). The final first-section exponent is
+\(A_0=a_7=a_6+b_6+\epsilon_6\ge b_6\), hence
 \[
-r=31\cdot2^{A_0-4}-1,
-\qquad M=16r-20.
+A_0\ge T_9+1.
+\]
+
+The root residue arithmetic gives
+\[
+r=31\cdot2^{A_0-4}-1,\qquad M=16r-20.
 \]
 Therefore
 \[
-M\ge M_0:=496\cdot2^{67}-36.
+M\ge M_0:=496\cdot2^{T_9-3}-36
+=62T_{10}-36.
 \]
 The middle-34 SectionResult segment starts with right counter at least \(2\)
-and performs \(M\) updates \(b_{j+1}=2^{b_j}-1\). With
-\(T_1=2\), \(T_{j+1}=2^{T_j}\), induction gives \(b_j\ge T_j+1\);
-hence its final right counter \(B\) satisfies
+and performs \(M\) updates \(b_{j+1}=2^{b_j}-1\), so its final right
+counter \(B\) satisfies
 \[
 B\ge T_M+1\ge T_{M_0}+1.
 \]
 The terminal exponent is
 \(A=\texttt{middle34Result.exponent}+B+2\), so
-\(A\ge B+2\ge T_{M_0}+3\).
+\(A\ge T_{M_0}+3\).
 
 For the authentic \(L=76\) terminal index,
 \[
@@ -554,8 +562,8 @@ obeys
 \]
 Equivalently, \(T_{N_0}=2\uparrow\uparrow N_0\), where
 \[
-N_0=(2^{78}-1)2^{T_{M_0}+3}-3,\qquad
-M_0=496\cdot2^{67}-36.
+M_0=62T_{10}-36,\qquad
+N_0=(2^{78}-1)2^{T_{M_0}+3}-3.
 \]
 This is much stronger than the earlier \(2\uparrow\uparrow\uparrow5\)
 comparison, which used only the coarse \(M\ge65536\) consequence.

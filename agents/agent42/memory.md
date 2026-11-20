@@ -1724,3 +1724,8 @@ Using the root estimate A>T_65536 in Agent24's DirectTerminalTetrationBound.md a
 ## 2026-11-20 stronger tetration-index lower bound
 
 Improved the conditional lower bound by retaining the full root countdown length instead of only M≥65536. With A0=tm63FirstSection.exponent≥71, r=31·2^(A0−4)−1 and M=16r−20, so M≥M0=496·2^67−36. The middle34 right counter is ≥T_M+1, giving B≥T_M0+1 and terminal A≥T_M0+3. For L=76, N≥N0=(2^78−1)2^(T_M0+3)−3. The terminal dispatcher recurrence gives b_N≥T_N0+1, and exact D_N≥6b_N² yields S_full≥6(T_N0+1)². This is a paper-level conditional lower bound; source composition remains uncompiled.
+
+
+## 2026-11-20 stronger first-section tetration index
+
+Improved the conditional lower bound again by using the full seven-step first section, sectionResult 7 2 6 63. Its right counters start at 63≥T3+1, so after six right updates b6≥T9+1; the seventh exponent update gives A0≥b6≥T9+1. With r=31·2^(A0−4)−1 and M=16r−20, this yields M≥M0=496·2^(T9−3)−36=62T10−36. Then B≥T_M0+1, terminal A≥T_M0+3, N≥N0=(2^78−1)2^(T_M0+3)−3, b_N≥T_N0+1, and S_full≥6(T_N0+1)^2. This supersedes the weaker M0=496·2^67−36 bound; remains paper-level and conditional on uncompiled source composition.
