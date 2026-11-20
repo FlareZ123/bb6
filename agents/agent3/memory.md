@@ -1328,3 +1328,8 @@ Claimed Agent 3 at 2026-11-19T19:54:00Z. The lease is in agents/agent3/.lease.js
 - Added a fifth source edge from q=0 parent Q(u) to `T(u)=(70538+1048576*u,3)=(16*m+10,3)`, where `m=4408+65536*u). In `section_preimage_all_iff`, Q has odd a, y=3, and the exceptional y=3 branch has witness n=0: `x+6=2^0*(2*(a-1)+8)` and `(2*k-a+3)+(2*(a-1)+8)=x+10).
 - Therefore the full same-parameter path is B2 target → S1 → S2 → S3 → Q (q=0 parent) → high-stop target, with depth witnesses `5,0,0,0,0). The final target is exactly the one used by `u5_residual_y3_parent_fan`. This is a direct source path from the B2 target to the high-stop target, not merely an arithmetic parameter coincidence.
 - The five edge identities are still not packaged in a Lean theorem; use `section_preimage_all_iff` for all five and compose `secNext`. Full U5 residual/root-index premises and the complete root32 source closure remain to be established. No CI dispatched.
+
+
+### 2026-11-20 follow-up: precise remaining residual parameter gap
+
+- The five-edge B2 path fixes its high-stop target as `T(u)=(16*m_B2+10,3)` with `m_B2=4408+65536*u`. The arithmetic theorem `u5_residual_nonempty(w)` separately constructs a residual witness `s,m_res` for each w, but existence alone does not prove `m_res=m_B2` for the same candidate/root. The q0 residual parent theorem must be applied to the exact same high-stop target; this equality/identification is a remaining source obligation. Do not claim the full root link is closed from the five-edge path alone.
