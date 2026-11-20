@@ -896,7 +896,7 @@ T_{T_{T_{10}}}<S_{\rm TM1}<T_{T_{T_{11}}}.
 The lower side strengthens the coarse published endpoint; the upper side is obtained by bounding the exact outer dispatcher and the finite root costs. This remains an intermediate result until the authentic Lean composition passes local compilation and its transitive axiom audit.
 
 
-## Near-exact leading coefficient for the conditional score
+## Polylogarithmic-error two-term expansion of the conditional score
 
 The exact dispatcher sum and root-prefix bounds sharpen this to a polylogarithmic-error two-term expansion:
 \[
