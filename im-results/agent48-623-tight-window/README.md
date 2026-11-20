@@ -19,7 +19,7 @@ Since the mass depth gives (L\le\ell_S), the carry buffer needs only
 B_{corr}(\ell_S)=34\ell_S+122.
 ]
 
-The former second term (36\ell_S+88) was used to turn central-block nonmonochromaticity into the branch-selection inequality. It is unnecessary for that implication. The existing source-backed branch data in `im-results/agent32-623-phase-automaton/BranchSelection.lean` give
+The former second term (36\ell_S+88) was used to turn central-block nonmonochromaticity into the branch-selection inequality. It is unnecessary for that implication. The current source-derived branch data in `im-results/agent32-623-phase-automaton/BranchSelection.lean` give
 
 [
 x=2g-\gamma,\quad |\gamma|\le18,\quad |T|\le5\ell_q+22,
@@ -51,7 +51,7 @@ For the output state's central coordinate (x=2h) in LO/LE and (x=4h) in RO/RE, a
 ]
 in LO, LE, RO, RE respectively. The largest is (18\ell_S+50<34\ell_S+122=B_{corr}). Thus a terminal successor would have (|x'|<B_{corr}), contradicting the central-block certificate (|x'|>B_{corr}). This is the sector-sensitive reason the uniform (36\ell_S+88=4(9\ell_S+22)) term can be dropped.
 
-Caveat: the combined D/r depth wrapper used in the terminal-window table is still an integration/CI obligation in the repository. Treat this terminal-strip refinement as conditional on that wrapper until it is compiled against the pinned source. The separate branch-selection inequality above uses the source-depth-backed BranchSelection interface.
+Caveat: the combined D/r depth wrapper used in the terminal-window table is still an integration/CI obligation in the repository. Treat this terminal-strip refinement as conditional on that wrapper until it is compiled against the pinned source. The branch-selection inequality and terminal h table both use the combined D/r depth wrapper; neither should be treated as source-CI certified until that wrapper is included in a successful pinned-source run.
 
 Exact source references:
 
