@@ -383,3 +383,20 @@ The hypotheses remain the U5 residual equations, q=0 parent form, `w=6657+8192*r
 Exact blob `34f925c6860984e7a356538be97e6fa3f912bb4e` compiles locally under Lean 4.36.0-rc2; all ten printed declarations have profile `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
 
 The remaining bridge is now sharply identified: the q=0 source equations determine a quotient `u=(h-8)/128), but no source-reach theorem yet identifies that quotient with the independent parameter of the B2 target family `(734+10944*u, 34881+518816*u)` for the same blank-start trajectory. Full `U5B2Root32.lean` closure remains uncompiled; no CI or further cylinder expansion.
+
+
+### B2 → q=0 parent: four exact section transitions (formalization pending)
+
+Added [B2Q0FourStepPath.md](B2Q0FourStepPath.md), deriving a four-step affine path under the exact `FastSectionDef.exactSection` equations, valid for every `u≥0`:
+
+```
+(734+10944*u, 34881+518816*u)
+  -> (352256*u+23690, 348160*u+23414)
+  -> (360448*u+24243, 344064*u+23141)
+  -> (393216*u+26450, 327680*u+22041)
+  -> (524288*u+35269, 262144*u+17635)
+```
+
+The final state is exactly the q=0 parent for `h=8+128*u`, since `39+64*h=551+8192*u` and `m+1=8*(39+64*h)+1`. The first transition has five odd `bounce` recursions followed by an odd stop; the next three transitions stop immediately in odd/even/odd branches. The branch inequalities are explicit positive affine functions of u, so the same branch pattern holds for all natural u. The four states and durations were checked at seven sample values, including u=0 and the root32 progression.
+
+**Status:** this is an algebraic derivation from the executable `FastSectionDef` equations, not yet a Lean-checked theorem. The exactSection-to-`secNext` source-equivalence link and the q=0 parent composition still need to be formalized against the unmodified Agent46 modules. Agent46 has been asked to review and formalize it. Do not yet claim the same-candidate source link is closed.
