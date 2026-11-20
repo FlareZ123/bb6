@@ -102,9 +102,21 @@ def all81Tables : List PartialMachine :=
 theorem all81Tables_length : all81Tables.length = 81 := by
   simp [all81Tables, familyCerts_length]
 
+theorem partialConflict_symm {p q : PartialMachine}
+    (h : partialConflict p q) : partialConflict q p := by
+  rcases h with ⟨s, hp, hq, hne⟩
+  exact ⟨s, hq, hp, Ne.symm hne⟩
+
 theorem all81Tables_pairwise_conflict :
     all81Tables.Pairwise partialConflict := by
-  decide
+  change List.Pairwise partialConflict
+    (agent27WordPump :: familyCerts.map FamilyLeafCert.table)
+  constructor
+  · intro t ht
+    rcases List.mem_map.mp ht with ⟨c, hc, hct⟩
+    subst t
+    exact partialConflict_symm c.disjointFiveSlot
+  · exact familyCerts_pairwise_conflict
 
 /-- Every new source cylinder remains open after the accepted five-slot
     graft, because the two source partial tables conflict. -/
