@@ -265,7 +265,7 @@ theorem A_tape_nth (n : Nat) (j : Int) :
           simp [getI_replicate, hpos, hbound]
   | negSucc j =>
       simp [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
-        Turing.Tape.nth, «1RB0RE_1LC0RA_1LA1LD_1LC0LB_1LE---».default_tail]
+        Turing.Tape.nth, «1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».default_tail]
 
 def ofA (n : Nat) (h : Int) : ExtCfg :=
   ⟨_root_.State.F, h, («1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A n []).2⟩
