@@ -308,3 +308,46 @@ theorem drain_transducer_exact (L low high : Nat)
     | C =>
         simp [hfinal, carry, pow3_eq_nat, Int.natCast_add] at hcarry hsize ⊢
         omega
+
+
+theorem pow3_pos (n : Nat) : 0 < pow3 n := by
+  induction n with
+  | zero => simp [pow3]
+  | succ n ih => simp [pow3]; omega
+
+/-- Exact formula directly from the length parity and upper-size conditions. -/
+theorem drain_transducer_exact_of_bounds (L b : Nat)
+    (hpar : L % 2 = b % 2)
+    (hsize : 2 * Int.ofNat b - 1 < pow3 (L + 1)) :
+    4 * (run L (b % 3 ^ L) A).1 =
+      2 * Int.ofNat b - 1 + pow3 L := by
+  have hpow : 0 < pow3 L := pow3_pos L
+  have hpowSucc : pow3 (L + 1) = 3 * pow3 L := by simp [pow3]
+  have hsize' : 2 * Int.ofNat b < 3 * pow3 L + 1 := by
+    rw [hpowSucc] at hsize
+    omega
+  have hlt : Int.ofNat b < 2 * pow3 L := by omega
+  have hNat : b < 2 * 3 ^ L := by
+    apply Int.ofNat_lt.mp
+    simpa [pow3_eq_nat] using hlt
+  have hk : 0 < 3 ^ L := Nat.pow_pos (by decide)
+  have hdiv : b / 3 ^ L < 2 :=
+    (Nat.div_lt_iff_lt_mul hk).2 (by simpa [Nat.mul_comm] using hNat)
+  have hhigh : b / 3 ^ L ≤ 1 := by omega
+  let low := b % 3 ^ L
+  let high := b / 3 ^ L
+  have hlow : low < 3 ^ L := by
+    dsimp [low]
+    exact Nat.mod_lt _ hk
+  have hdecomp : low + high * 3 ^ L = b := by
+    dsimp [low, high]
+    simpa [Nat.mul_comm] using Nat.mod_add_div b (3 ^ L)
+  have hpar' : L % 2 = (low + high * 3 ^ L) % 2 := by
+    rw [hdecomp]
+    exact hpar
+  have hsize'' : 2 * Int.ofNat (low + high * 3 ^ L) - 1 < pow3 (L + 1) := by
+    rw [hdecomp]
+    exact hsize
+  have hExact := drain_transducer_exact L low high hlow hhigh hpar' hsize''
+  rw [hdecomp] at hExact
+  exact hExact
