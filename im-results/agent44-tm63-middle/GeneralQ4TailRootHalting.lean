@@ -116,25 +116,25 @@ theorem tm63_general_root_halts :
 
   have hsection :
       TerminalFinish.SectionBits finalWidth finalResult.exponent
-        (shiftConfig rootMarker1Head finalConfig).tape finalShiftedHead := by
-    have h := s0_reset_sectionBits finalWidth finalResult.exponent
-      finalResult.right finalShiftedHead
-    rw [hshiftConfig]
-    simpa [s1Config] using h
+        (s1Config finalWidth 0 0 finalResult.exponent 0
+          finalResult.right finalShiftedHead).tape finalShiftedHead := by
+    simpa [s1Config] using
+      (s0_reset_sectionBits finalWidth finalResult.exponent
+        finalResult.right finalShiftedHead)
 
   have hprefix' :
       run tm2 (tm63GeneralTerminalRootSteps+suffixCost) blank =
-        some ⟨3,finalShiftedHead,
-          (shiftConfig rootMarker1Head finalConfig).tape⟩ := by
-    simpa [finalConfig,finalShiftedHead,s1Config,s0Config,shiftConfig] using
-      hprefix
+        some (s1Config finalWidth 0 0 finalResult.exponent 0
+          finalResult.right finalShiftedHead) := by
+    rw [hshiftConfig] at hprefix
+    exact hprefix
 
   simpa [tm63GeneralTerminalRootHaltTime,tm63GeneralTerminalRootSteps,
     suffixCost,finalResult,finalWidth] using
     tm2_halts_after_terminal_prefix
       (tm63GeneralTerminalRootSteps+suffixCost)
       finalWidth finalResult.exponent
-      (shiftConfig rootMarker1Head finalConfig).tape
+      (s1Config finalWidth 0 0 finalResult.exponent 0 finalResult.right finalShiftedHead).tape
       finalShiftedHead hprefix' hsection
 
 /-- The same composition yields an explicit attainable BB(6) lower bound. -/
@@ -205,23 +205,24 @@ theorem tm63_general_root_attainable :
     simpa [finalConfig,finalShiftedHead,hshiftDiff] using h
   have hsection :
       TerminalFinish.SectionBits finalWidth finalResult.exponent
-        (shiftConfig rootMarker1Head finalConfig).tape finalShiftedHead := by
-    have h := s0_reset_sectionBits finalWidth finalResult.exponent
-      finalResult.right finalShiftedHead
-    rw [hshiftConfig]
-    simpa [s1Config] using h
+        (s1Config finalWidth 0 0 finalResult.exponent 0
+          finalResult.right finalShiftedHead).tape finalShiftedHead := by
+    simpa [s1Config] using
+      (s0_reset_sectionBits finalWidth finalResult.exponent
+        finalResult.right finalShiftedHead)
+
   have hprefix' :
       run tm2 (tm63GeneralTerminalRootSteps+suffixCost) blank =
-        some ⟨3,finalShiftedHead,
-          (shiftConfig rootMarker1Head finalConfig).tape⟩ := by
-    simpa [finalConfig,finalShiftedHead,s1Config,s0Config,shiftConfig] using
-      hprefix
+        some (s1Config finalWidth 0 0 finalResult.exponent 0
+          finalResult.right finalShiftedHead) := by
+    rw [hshiftConfig] at hprefix
+    exact hprefix
   simpa [tm63GeneralTerminalRootHaltTime,tm63GeneralTerminalRootSteps,
     suffixCost,finalResult,finalWidth] using
     champion_attainable_after_terminal_prefix
       (tm63GeneralTerminalRootSteps+suffixCost)
       finalWidth finalResult.exponent
-      (shiftConfig rootMarker1Head finalConfig).tape
+      (s1Config finalWidth 0 0 finalResult.exponent 0 finalResult.right finalShiftedHead).tape
       finalShiftedHead hprefix' hsection
 
 #print axioms tm63_general_root_halts
