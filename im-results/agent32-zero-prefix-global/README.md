@@ -303,9 +303,11 @@ The wrapper's `#print axioms` output for `agent27Parent_open_all`,
 `agent27_leaf_closed`, `agent27GraftedAudit_exhaustive`, and
 `agent27GraftedAudit_conserves` is exactly
 `[propext, Classical.choice, Quot.sound]`; no `sorryAx` occurs. The
-manual-only `verify_five_slot_leaf_graft` workflow input remains available
-as an independent remote check, but no CI run has been dispatched. The
-current acceptance result is a successful local exact-source compile, not a
-new global cardinality evaluation.
+manual-only `verify_five_slot_leaf_graft` input was run after the local
+preflight and passed in [CI 44665012115](https://github.com/FlareZ123/bb6/actions/runs/44665012115).
+The target-specific step completed successfully; the unrelated terminal
+manifest and its expensive `#eval` export are excluded from this isolated
+verification path. This does not evaluate a new global report mass or change
+the BB(6) status.
 
 The 663-machine bounded word-macro screen (entry prefix 10,000, macro length 32, right-tail word size at most 8) found no hits; that finite negative screen remains auxiliary and does not constrain longer or different certificates. Neither leaf candidate changes the interpreted global frontier report yet. This is one exact source-proof candidate, not an accepted new global count, a universal upper bound, or a solution of BB(6).
