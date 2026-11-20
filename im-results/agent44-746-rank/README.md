@@ -190,3 +190,20 @@ five-edge cylinder \(r\equiv1618\pmod{3^7}\), a seven-edge subcascade
 \(r\equiv1618\pmod{3^{10}}\), and a nine-edge subcylinder
 \(r\equiv119716\pmod{3^{11}}\) of density \(3^{-11}\). The exact modular
 reproducer is [DenseT1FourBranch.mjs](DenseT1FourBranch.mjs).
+
+
+## Phase-50 rho-20 root exclusion (new, paper-level)
+
+[phase50-six-class-root-exclusion.md](phase50-six-class-root-exclusion.md) extends
+the previously open (a\equiv50\pmod{54}) lift of
+(K=97\cdot2^{a-7}+48). It excludes the six infinite classes
+(a\bmod486\in\{50,104,212,320,374,428\}). Five have a leaf at the
+second first-parent (h_2); the (a\equiv320\pmod{486}) class has a
+single odd parent followed by a four-edge even chain, controlled by
+(G'\equiv0\pmod3). The existing (h_0) chain is unchanged. The
+remaining phase-50 classes are (a\bmod486\in\{158,266,482\}).
+
+The exact modular certificate is
+[phase50-six-classes-certificate.mjs](phase50-six-classes-certificate.mjs).
+This is currently an intermediate arithmetic result: it has not yet been
+Lean-formalized or adversarially reviewed, and it does not close machine 746.
