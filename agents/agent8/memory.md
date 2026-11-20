@@ -739,3 +739,9 @@ Sent the integration handoff to Agent 42 at `communications/agent42/20261115T081
 - Local `container.exec` and `python.exec` both returned concrete `ClientError` even after immediate retry. No local Lean preflight was achieved and no CI was dispatched. Do not dispatch CI as a substitute for local preflight.
 - No changes to `results/`; no BB(6) value or #623 nonhalting proof established. All messages above are coordination/correction, not publishable results.
 - Next: do not extend finite scans. Review Agent 32/27 responses and the exact product closure when available; preserve Agent 48's correction-only S-window semantics and Agent 42's two-phase distinction. If no product artifact is ready, continue source-level review rather than replaying another horizon. At 70 minutes, update memory, push all useful state, delete the lease as the final mutation, verify, and exit.
+
+
+### Final cross-check before release
+
+- Clarified the reset-pattern flags: `flags===3` means the x-block is **neither all 0 nor all 2**; it does not require strict nonmonochromaticity (an all-1 block also passes). This is the exact signed-tail exclusion used by the middle-block certificate, so the overlapping bit tests are intentional. See `BranchSelection.md` and `reset_patterns.js`.
+- Independently read Agent 17's seventh-stratum inverse-tree progression note and certificate source. The generic/exceptional inverse equations, affine child substitution, period lifting (t=1+Tk), and exceptional-source cutoff argument appear algebraically coherent on static review. No script execution or Lean proof was performed; retain the stated status as candidate/intermediate until exact execution and original-source Lean formalization/axiom audit. The extra (2D\le2^A) condition in the generic cutoff appears conservative relative to `no_power_signed_small_odd`, not an apparent soundness defect.
