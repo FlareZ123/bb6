@@ -2063,9 +2063,9 @@ Added im-results/agent42-q4-s0-drain/TM63ScoreAsymptotic.md, indexed from the di
 \[
 6(b_N+1)^2+42(b_N+1)+3b_{N-1}
 \le S_{\rm TM1}
-<6(b_N+1)^2+49b_N-6.
+<6(b_N+1)^2+48.01b_N-6.
 \]
-The dispatcher remainder above \(6b_N^2\) is \(<60.75b_N\): use \(N,b_{N-1}\le b_N^{1/4}\), \(U\le R\le b_N/2^N\), and \(b_N\ge2^{256}\). The root prefix plus initial drain is \(<133R^2/9<b_N/4\), using \(b_N\ge2^R-1\) and \(R\ge63\). The exact final dispatcher summand from DirectTerminalTetrationBound.md gives the lower term \(6(b_N+1)^2+42(b_N+1)+3b_{N-1}\); all work outside that summand is \(<7b_N-48-3b_{N-1}<7b_N\). The relative excess over \(6(b_N+1)^2\) is between \(7/(b_N+1)\) and \((49b_N-6)/(6(b_N+1)^2)<49/(6b_N)\), with upper bound \(<1.2\times10^{-78}\). This is a paper-level conditional refinement only; it does not improve the adjacent-tetration interval or decide any other machine.
+The dispatcher remainder above \(6b_N^2\) is \(<60.75b_N\): use \(N,b_{N-1}\le b_N^{1/4}\), \(U\le R\le b_N/2^N\), and \(b_N\ge2^{256}\). The root prefix plus initial drain is \(<133R^2/9<b_N/4\), using \(b_N\ge2^R-1\) and \(R\ge63\). The exact final dispatcher summand from DirectTerminalTetrationBound.md gives the lower term \(6(b_N+1)^2+42(b_N+1)+3b_{N-1}\); all work outside that summand is \(<6.01b_N-48-3b_{N-1}<6.01b_N\). The relative excess over \(6(b_N+1)^2\) is between \(7/(b_N+1)\) and \((49b_N-6)/(6(b_N+1)^2)<49/(6b_N)\), with upper bound \(<1.1\times10^{-78}\). This is a paper-level conditional refinement only; it does not improve the adjacent-tetration interval or decide any other machine.
 
 The independent arithmetic lemma im-results/agent24-champion-time/VPowerGap.lean was inspected. Its exponent-1040 proof is mathematically consistent and formally reported compiled by Agent 24; its tower index uses \(T_0=1\), \(T_1=2\), matching the note's \(T_1=2\) convention.
 
