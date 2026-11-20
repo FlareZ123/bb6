@@ -203,3 +203,29 @@ The exact root relation `u+r≡2 (mod8)` means the remaining u≡2 (mod4) sector
 - r≡0 (mod8) gives u≡2 (mod8), hence v2(S4)≥3. The displayed affine valuation now determines whether the next exact gate is the valuation-three inverse, the sum-16 two-orbit inverse, or the deeper sum-zero parent fan.
 
 This supplies a second exact 2-adic coordinate for the residual even-u chain. It does not yet close P4; the source-parent branches after its applicable odd/odd inverse remain to be resolved and Lean-compiled.
+
+
+## 2026-11-20 formal source-equation composition
+
+The standalone `U5B2Root32ParameterBridge.lean` now includes `b2_root32_parameter_of_u5_q0_residual`. Its hypotheses are the U5 residual equations
+
+```lean
+211*s+129=5*2^(201+3360*w)
+32*s=32+840*w+m
+m+1=8*(39+64*h)+1
+h=8+128*u
+E=201+3360*w
+(w/8192)%64=32
+```
+
+The proof derives `39+64*h=551+8192*u`, then derives the exact residual identity
+
+```lean
+211*(551+8192*u)+1360+22155*w=20*2^(201+3360*w)
+```
+
+from the two U5 equations and the q=0 parent form, and composes with the root-index bridge to conclude `u=1802+6720*t`. This is the source-equation form of the residual reduction; it matches the arithmetic content of `U5Q0M16Residual.u5_m8_t_identity` without importing that larger source module into the standalone parameter bridge.
+
+The exact updated parameter-bridge blob `f08d837cd2c0afed92e040541410ffde8c330b53` compiles locally under Lean 4.36.0-rc2; all nine printed declarations have axiom profile `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
+
+**Remaining source gap:** this theorem still assumes that the same candidate supplies the U5 equations, the q=0 parent form, the B2 affine relation, and the root-index cylinder. It does not derive those premises from an arbitrary blank-start B2 reach, and it does not compile the full `U5B2Root32.lean` import closure. The root32 blank-start exclusion remains intermediate; no CI was dispatched.
