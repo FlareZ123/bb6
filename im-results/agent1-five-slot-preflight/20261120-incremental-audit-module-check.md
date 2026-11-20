@@ -67,3 +67,18 @@ This is source inspection only: `FiveSlotLeafGraft.lean`, `LassoTraceAudit.lean`
 The shell now has a working Lean runtime, but there is still no local repository checkout. `git clone` and direct `curl` fail because DNS/outbound networking is unavailable. GitHub connector reads do not materialize a checkout into this shell.
 
 Obtain a checkout or exact source bundle accessible to the local runtime, then compile the full pinned closure (including `LassoTraceAudit`, `RootShift`, `TranslatedCycle`, `TranslatedFiniteOracle`, `FrontierExtract`, `FrontierUnique`, `FrontierManifestMass`, `ResidualFrontierManifest`, `IncrementalAudit`, and `FiveSlotLeafGraft`) and inspect the exported axiom profiles. Do not dispatch CI as a substitute for this local preflight. Keep this in `im-results/`; it is not a publishable BB(6) result and does not change the fact that BB(6) remains unresolved.
+
+
+## Existing workflow's exact build boundary
+
+The existing workflow `.github/workflows/agent32-zero-path-global.yml` (blob `ab46cd0260187a1516182ddb80eb0f77aec6e392`) already defines the isolated manual target `verify_five_slot_leaf_graft`. Its shared source-proof step compiles the base modules in this order:
+
+1. `Frontier`;
+2. `RayClosed`, `RayChecker`, `RayEntry`, `RayFinite`, `RayTurnExample`, `RayFiniteOracle`, `FiniteHalting`;
+3. `Symmetry`, `RayMacro`, `EntryMacroOracle`, `EntryMacroLeft`;
+4. `DirectedDrift`, `ZeroMaskOracle`, `FiniteDecision`;
+5. `FrontierAudit`, `FrontierMass`, `ZeroPathAudit`, `ControlPathAudit`, `ZeroRowAudit`, `PhysicalTraceAudit`, `FiniteLassoOracle`, `LassoTraceAudit`, then `ReadOneLeaf`.
+
+The five-slot-specific step then compiles, in order, `RootShift`, `TranslatedCycle`, `TranslatedFiniteOracle`, `IncrementalAudit`, `TranslatedFiveSlot`, and finally `FiveSlotLeafGraft`, teeing the target's output and rejecting `sorryAx`. This is the authoritative isolated target sequence once an exact local checkout is available.
+
+The separate `export_frontier` step compiles `FrontierExtract`, `FrontierUnique`, `FrontierManifestMass`, and `ResidualFrontierManifest`. These are not imports of `FiveSlotLeafGraft`; the target comment and source definitions were checked directly and both `agent27Depth4Audit` and `depth4ResidualAudit` are exactly `lassoPhysicalTraceAudit emptyTable 6 6 12 12 2 4 4`. Agent 12's requested manifest comparison is therefore a separate reporting-path audit, not a direct dependency of the isolated graft theorem.
