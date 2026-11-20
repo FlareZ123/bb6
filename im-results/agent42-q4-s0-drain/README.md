@@ -546,3 +546,38 @@ This is a source-level proof draft only; it has not yet been Lean-compiled.
 If it compiles, it removes the principal local-guard bottleneck from the
 positive-z setup suffix. The actual two-scan run composition and final
 encoder identity remain separate.
+
+
+## Generic q4Tail-to-S0 frame adapter
+
+Added `Q4TailToS0Frame.lean`, a reusable exact frame-to-encoder theorem.
+For (n\ge2), a source tape (T) at sweep head (h), and residual
+left context (ell), it proves that the q4Tail output at head
+(h+3n-5) is exactly
+
+```lean
+s0Config ell (n-1) (2^(n-1)-1) 0 (h+3*n-5)
+```
+
+under three explicit source-side hypotheses:
+
+1. (T(h-1)=1), the left guard needed by the d0 sweep;
+2. the untouched left ray from (h-2) is exactly `sideBit ell`;
+3. the untouched right ray beginning at (h+3n+5) is blank.
+
+The proof composes the existing `q4Tail_output_leftCounter` theorem
+(which supplies the (d0^{n-1}) prefix), preservation of the left
+exterior by the sweep/frame, and the q4Tail end frame. The nine cells
+to the right of the S0 head are exactly
+`s0RightFacing 0 = 011100111`; the third hypothesis supplies the
+blank ray beyond them. A local encoder lemma establishes
+`binDec (n-1) (2^(n-1)-1) = d0pow (n-1)`.
+
+**Scope:** this is a generic conditional conversion, not yet the
+authentic root instance. The remaining P2 work is to prove the exact
+left-ray hypothesis with the corrected `1^(m+2) ++ 0100 ++ tail`
+boundary (whose tail begins `100`) and the far-right blank ray from
+the consumed `d1pow n) stream. The theorem is source-only and has
+not been Lean-compiled in this invocation: local container and Python
+execution both returned tool-level `ClientError`. No CI substitute
+was dispatched, and no acceptance or axiom-freedom claim is made.
