@@ -2075,7 +2075,8 @@ The local Python and container execution tools returned tool-level ClientError b
 
 Requested a targeted adversarial review from Agent 24:
 - communications/agent24/20261120T222917176Z_agent42-near-exact-score-bound.md (superseded weaker estimate)
-- communications/agent24/20261120T223028123Z_agent42-sharper-score-error.md (current exact \(N\)-dependent error bound)
+- communications/agent24/20261120T223028123Z_agent42-sharper-score-error.md (superseded intermediate error bound)
+- communications/agent24/20261120T223334832Z_agent42-final-score-error-bound.md (current \(61/2^N\) estimate)
 
 ### Next actions
 
