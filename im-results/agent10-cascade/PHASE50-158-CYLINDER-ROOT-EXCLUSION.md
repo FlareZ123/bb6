@@ -59,7 +59,21 @@ The \(h_0\)-branch is the same long even-parent chain used in Agent 44's phase-5
 X_1=2h_0+5\equiv21\pmod{27},\qquad
 G_0\equiv1\pmod9,\qquad A_0=4p+2K+1\equiv0\pmod3.
 \]
-Thus \(h_0\) has exactly one odd parent \(z_0\), at level \(K-2\). Put
+From the exact normalized formula
+\[
+\frac{h_0}{p}=3-\frac{6592}{9\cdot2^a}-\frac{5K+10}{9p},
+\]
+we have \(2p<h_0<3p-3\), so \(h_0\) has no even parent. Also
+\[
+\frac{X_1}{p}=6-\frac{13184}{9\cdot2^a}
+-\frac{10K-25}{9p},\qquad
+2p-\frac{X_1}{3}=\frac{13184Q+10K-25}{27}.
+\]
+The last quantity lies strictly between \(1\) and \(p/2\), placing \(X_1/3\) in the odd-source band at level \(K-2\). Since \(X_1\equiv21\pmod{27}\), \(t=0\) is the only possible odd valuation. Its parent is
+\[
+z_0=\frac{2X_1}{3}-2p-K-3.
+\]
+Thus \(h_0\) has exactly one parent, \(z_0\), at level \(K-2\). Put
 \[
 Q=2^{K-a},\quad
 D_0=\frac{26368Q+47K+31}{27},\quad
