@@ -123,7 +123,7 @@ The same numeric output has now been independently reproduced by the source-fait
 | zero ratio-four gaps | 0 |
 | maximum gap error per ternary digit | 102/4 = 25.5, index 11 |
 | maximum scale error per ternary digit | 24/4 = 6, index 11 |
-| minimum |g|/m | log2 = -12.960451552003178, index 6,899 |
+| minimum abs(g)/m | log2 = -12.960451552003178, index 6,899 |
 | minimum g^2/m | 4096/235, log2 = 4.123483053435001, index 16 |
 | minimum root gap slack | 65 at index 14, D(314,385), h=71, m=314 |
 
