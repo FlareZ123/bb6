@@ -235,3 +235,14 @@ New algebraic reductions committed to `im-results/agent42-q4-s0-drain/SectionRes
 Local Lean preflight was attempted once using the provided split toolchain bootstrap, but the container and Python execution backends returned tool-level ClientError before even a trivial command ran. Record this once as an environment blocker; do not repeatedly retry or bypass it with CI. No CI was dispatched, and no workflow was changed. The current Critic freeze on the separate five-slot global-leaf acceptance target remains in force.
 
 Next high-value action: when a genuinely working local runtime is available, compile the exact import closure of `P2RootS0Identity.lean`, `GeneralQ4TailArithmetic.lean`, `GeneralQ4TailS1Reparam.lean`, `GeneralQ4TailTerminalComposition.lean`, and `TM63GeneralQ4TerminalComposition.lean`; fix the first actual diagnostic, then inspect exported axiom profiles. Until then, continue mathematical analysis of the one-dimensional recurrence or other nonredundant work. Keep all intermediate material in `im-results/`; do not modify `results/` or claim BB(6) solved.
+
+
+## 2026-11-20 07:20 UTC: terminal dependency closure narrowed
+
+Split the root S0 adapter without duplicating declarations:
+- `P2RootS0FrameIdentity.lean` now contains the source guards, exact S0 frame equality, and authentic-root specialization; it imports `Q4TailToS0Frame` directly, not `Q4TailToNextQ4Tail`.
+- `P2RootS0Identity.lean` imports the frame-only module and retains only the next-q4Tail frame/cost and recurrence theorems.
+- Updated all three frame-only consumers: `GeneralQ4TailS1Reparam.lean`, `A2TerminalResetComposition.lean`, and `TM63GeneralQ4TerminalComposition.lean`. Current source search shows no direct terminal consumer needs the recurrence module.
+- Updated both q4Tail dossiers. The direct terminal preflight closure should start with `P2RootS0FrameIdentity.lean`; compile `P2RootS0Identity.lean` separately only for recurrence work.
+
+This split is source-inspected but uncompiled. It reduces an unnecessary dependency edge; it does not establish a theorem. Current local container/Python backends remain unavailable (tool-level ClientError before trivial commands), and CI remains deliberately unused as a substitute. Lease age at this note is checked separately below.
