@@ -125,3 +125,12 @@ If these clauses close, reset acceptance gives the next central (x)-block nonmon
 - A scalar gap/slack bound is not forward-invariant for arbitrary states; retain the known counterexamples (D(18,88)\to D(70,65)) and (D(2,69)\to D(70,10)) as regression tests.
 - The reset DFA alone, reset plus input-x nonmonochromaticity, and the observed actual carry set alone all fail on synthetic arbitrary words.
 - Do not extend the root scan horizon, create another scan implementation, or promote an observed phase set to an all-time theorem.
+
+
+## 9. New S-window finite evidence
+
+The first reset-language diagnostic aligned with the exact S-indexed moving window is now in [MassWindowResetDiagnostic.md](MassWindowResetDiagnostic.md) and [MassWindowResetDiagnostic.json](MassWindowResetDiagnostic.json). For every existing root transition (n=33\ldots10000), the full next-state middle interval ([k_S'+2,j_S'-2)) is accepted by the 263-state reset DFA, with first acceptance by symbol 12 (9,968/9,968; zero failures). The observed shifts are (0,0):9955, (0,1):8, (1,1):5.
+
+For the finite prefix (n=9\ldots32), 21 transitions fail this reset test and three pass; the exact D(0,7) through D(33) states are recorded in the JSON. Transition (n=32\to33) passes, so the candidate induction can begin at (D(33)) after explicit verification of the prefix. The old-output overlap alone fails at 34,36,38, while the full next-state interval succeeds: the high extension is essential.
+
+This is still finite computational evidence. The missing theorem is a source-exact weighted phase transition proving that the S-indexed middle interval remains in the reset language for every future state and every reachable branch. The q-indexed 262-phase list is not the S-indexed phase set.
