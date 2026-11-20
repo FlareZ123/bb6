@@ -1764,3 +1764,8 @@ The D_N defined in SectionResultThreeCycle.md is the complete dispatcher-plus-te
 ### Final-increment constant in tetration corollary
 
 The dispatcher-plus-terminal lower bound is D_N≥6(b_N+1)^2, not merely 6b_N^2. Since b_N≥T_N+1, the exact conditional score bound sharpens to S_full≥6(T_N0+2)^2. Updated note and README accordingly.
+
+
+### Root-prefix valuation-term bound
+
+The fixed 7+34 source-increment prefix has only finitely many K-dependent valuation terms v2(cK+d); these are O(log K), hence O(K), and K≤M+20≤B+20. All increment exponential terms are bounded by 4^V41=(V42+1)^2, and all reset drains have inputs ≤V42. This makes the O((B+1)^2) root-prefix estimate uniform in the q4 parameter rather than relying on the prefix being constant.

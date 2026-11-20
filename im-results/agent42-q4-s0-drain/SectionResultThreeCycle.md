@@ -424,11 +424,17 @@ The terminal offset \(12a_M+8+63+3B\) is at most
 
 Apply this to the long middle-34 SectionResult segment, whose initial
 state satisfies \(a_0\le b_0\), \(b_0\ge5\), and whose final right counter
-is \(B=\texttt{middle34Result.right}\). The preceding root-to-middle-34
-prefix has a fixed finite number of source increments and drains, so its
-cost is \(O((B_0+1)^2)\), where
-\(B_0=\texttt{tm63MiddleAfter34B}\le B\). The preceding bound and the
-outer-LC postlude estimate therefore give
+is \(B=\texttt{middle34Result.right}\). The preceding root-to-middle-34 prefix has a fixed number of source
+increments (the seven-step first section and 34 middle rows) and finitely
+many reset/drain blocks. Its largest pre-update right counter is \(V_{41}\),
+with \(B_0=\texttt{tm63MiddleAfter34B}=V_{42}=2^{V_{41}}-1\), so every
+increment's exponential terms are \(O((B_0+1)^2)\). Each intervening drain
+has input at most \(B_0\), hence cost \(O((B_0+1)^2)\) by the closed drain
+formula. The only parameter-dependent terms in this finite prefix are
+valuation terms \(v_2(cK+d)\) for fixed integers \(c,d\); each is
+\(O(\log K)\), and \(K\le M+20\le B+20\), so their total is \(O(B)\).
+Thus the whole prefix is \(O((B_0+1)^2+B)=O((B+1)^2)\). The outer-LC
+postlude offset has the same bound, giving
 \[
 \texttt{rootToMarker1S0Cost}=O((B+1)^2).
 \]
