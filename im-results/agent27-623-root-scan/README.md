@@ -92,7 +92,7 @@ The older im-results/agent8-623-inverse/root_gap_scale_scan.cpp has a source mis
 
 The 20,000-step result is empirical evidence only:
 - zero mismatches over a finite prefix does not prove the branch-selection rule for all future states;
-- the observed 65-slack inequality is not forward-invariant for arbitrary states (for example, D(2,69) -> D(70,10) satisfies it at the input but not at the output);
+- the observed 65-slack inequality is not forward-invariant for arbitrary states (for example, D(2,69) -> D(70,10) loses slack); it does not even guarantee one-step cone preservation: D(18,88) has slack 66 but maps to D(70,65), which is outside newAffineCone;
 - no all-time root-history invariant has been established;
 - this does not prove that the machine is nonhalting and does not resolve any BB(6) holdout.
 
