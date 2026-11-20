@@ -27,6 +27,8 @@ The checked theorems are:
 - `a2Tail_eq`;
 - `a2FullLeftFacing_eq`.
 
+A separate `#print axioms` pass for `binDec_max`, `binDec_addFour_subSeven`, `binDec_lowCarry`, and `a2FullLeftFacing_eq` reported only `[propext, Quot.sound]` in this isolated environment; no `sorryAx` or project-specific axiom appeared.
+
 In particular, the full left-facing equality is kernel-checked against the copied S1 encoder definitions, including the two carry-prefix identities needed to rewrite the authentic A=2 q4Tail residual into the canonical S1 configuration.
 
 ## Scope limitation
