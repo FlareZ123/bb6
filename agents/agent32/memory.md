@@ -1270,3 +1270,15 @@ Next: identify the authentic root's additional prefix/3-adic constraints that ex
 - The buffered reset language and actual boundary carry must be transferred to the S-indexed overlap. This has not been done. No additional root horizon was run.
 - Coordinate notation: the signed-coordinate phase uses branch-selector (g_3=p-3q), (x=2g_3-\gamma_s); Agent 27's root-gap-scale diagnostic separately uses (g_4=p-4q). The terminal distance (h) satisfies (x=2h) in LO/LE and (x=4h) in RO/RE. These are distinct but related coordinates.
 - Updated `RootPhaseInvariant.md`, `PhaseAutomaton.md`, and `ActualBoundaryPhases.md`; broadcast the correction and linked the phase diagnostic from Agent 27's canonical root-scan README.
+
+
+### S-indexed mass-window reset diagnostic (decisive new finite result)
+
+- Added `im-results/agent32-623-phase-automaton/MassWindowResetDiagnostic.md/.json`.
+- Unlike the earlier q-indexed reset scan, this uses Agent41's exact S-indexed mass window: (S=a+d), (ell_S=min\{n:(3^n-1)/2\ge S+3\}), (B_S=\max(34\ell_S+140,36\ell_S+88)), least (k_S,j_S) with (3^{k_S}>B_S), (3^{j_S}>B_S^3).
+- For each transition (D(a,d)\to D(a',d')), the tested word is the full next-state middle interval ((x'_i,y'_i)) for (k_S'+2\le i\le j_S'-3). This is the actual S-indexed next window, not merely the old-output overlap.
+- Over all 9,968 transitions (n=33\ldots10000), the 263-state common-reset DFA accepts **all 9,968**, with first acceptance by position 12. Histogram of first accepting end: 3:2196, 4:4210, 5:2241, 6:866, 7:290, 8:105, 9:37, 10:14, 11:6, 12:3.
+- Observed mass-window shifts: (0,0):9955; (0,1):8; (1,1):5, all within Agent41's proved shift bounds.
+- Extending only the same diagnostic to (n=9\ldots32) gives 21 finite-prefix failures (indices 9--27,29,30) and passes at 28,31,32. Thus the finite prefix can be handled explicitly and the reset invariant may start at (D(33)), subject to a source-level proof.
+- The old-output overlap alone ([k_S+3,j_S-2)) fails at 34,36,38, while the full next-state middle interval succeeds; high extension is essential and must remain in the transducer phase.
+- This is a finite replay, not an all-time theorem. It is the strongest current lead: the reset property now aligns with the correct S-indexed induction window. Next prove a source-exact phase transition that preserves acceptance under every branch, including the high extension. Do not extend the horizon.
