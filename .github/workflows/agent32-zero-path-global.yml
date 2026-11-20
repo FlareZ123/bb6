@@ -49,7 +49,7 @@ on:
         type: boolean
         default: false
       verify_three_slot_family:
-        description: 'Compile and axiom-audit the 80-member three-slot family graft composed with the accepted five-slot leaf'
+        description: 'Compile and axiom-audit the 80-member family graft and exact combined report, then screen pinned hard roots with the accepted five-slot leaf'
         required: false
         type: boolean
         default: false
