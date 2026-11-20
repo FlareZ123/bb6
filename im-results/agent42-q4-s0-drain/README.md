@@ -1,6 +1,6 @@
 # Positive-z q4 first-cycle: arbitrary-left S0 drain factorization
 
-Status: **direct arbitrary-A q4Tail-to-terminal composition drafted from the authentic blank-root trajectory; full Lean dependency closure uncompiled; no verified champion halt/score witness yet**.
+Status: **direct arbitrary-A q4Tail-to-terminal composition drafted from the authentic blank-root trajectory; isolated source-shaped recurrence model machine-checked; full original Lean dependency closure uncompiled; no verified champion halt/score witness yet**.
 
 This is an intermediate research dossier, not a result suitable for `results/`.
 
@@ -68,14 +68,54 @@ the counted drain and the complete `sectionResult` dispatcher cost.
 The dispatcher also admits an exact three-increment state map and a closed 2-adic cost correction; see [`SectionResultThreeCycle.md`](SectionResultThreeCycle.md) for the recurrence and derivation. The 2026-11-20 algebraic refinement additionally proves `popcount(N)=A+L` for `N=2^A(2^(L+2)-1)-3` (`A≥2`) and collapses the conditional Attainable score to a single weighted sum over `b_0=R`, `b_{j+1}=2^b_j-1`, with explicit polynomial correction. This is an exact algebraic reduction, not a compiled root theorem; see the final sections of [`SectionResultThreeCycle.md`](SectionResultThreeCycle.md). A further dominant-increment bound isolates the final right counter: the dispatcher-plus-terminal tail satisfies (6(b_N+1)^2\le D_N\le6b_N^2+(12N^2+60N)b_N+48N+90k^2+111k+12(N+1)U), hence (D_N\sim6t_2(N,R)^2) for fixed start parameters. The full conditional score inherits the exact lower bound; a full-score asymptotic still needs a separate prefix bound.
 
 **Evidence boundary:** this is a source-level integration candidate, not
-an accepted halt or lower-bound result. The authentic root-to-q4Tail
-chain, arbitrary-A reparameterization, counted drain, complete dispatcher,
-and this composition have not been compiled together or axiom-audited.
-The local shell/Python execution surfaces return tool-level
-`ClientError`; Critic's current acceptance gate forbids substituting CI
-for local preflight. Keep this work in `im-results/` until the exact
-dependency closure compiles and its exported axiom profiles are checked.
-It does not establish a global six-state upper bound or exact BB(6).
+an accepted halt or lower-bound result. Lean 4.36.0-rc2 is now installed
+locally, and the isolated `SectionResultThreeCycleModel.lean` compiles
+with warnings treated as errors. Its principal theorem axiom profiles
+are exactly `[propext, Quot.sound]`. That file copies the recurrence
+definitions into a separate namespace; it does not compile the original
+`CostRecurrence.lean` import closure or prove that candidate dispatcher
+cost equals the authentic TM2 primitive run length. The authentic
+root-to-q4Tail chain, counted drain, complete original-source dispatcher,
+and this composition remain uncompiled together. Critic's acceptance
+gate still forbids substituting CI for local preflight. Keep this work
+in `im-results/` until the original dependency closure compiles and its
+exported axiom profiles are checked. It does not establish a global
+six-state upper bound or exact BB(6).
+
+## Machine-checked isolated dispatcher arithmetic model
+
+'SectionResultThreeCycleModel.lean' is a standalone Lean 4.36.0-rc2
+file. It copies 'v2', 'proposedIncrementCost', the marker/exponent/right
+updates, and 'sectionResult' from
+'../agent24-champion-time/CostRecurrence.lean' into an isolated namespace
+so the recurrence can be checked without the repository-wide import
+closure.
+
+The file proves:
+
+- 'sumV2_add_popCount': the exact binary valuation identity
+  \(\sum_{r=1}^{N}v_2(r)=N-s_2(N)\);
+- 'sectionResult_cost_three_cycle': for a marker-zero dispatcher with
+  \(N=3k\), the exact cost is
+  \(31N-12s_2(N)+\sum_i(6\cdot4^{b_i}+42\cdot2^{b_i}+12a_i-9b_i)\);
+- 'popCount_q4_terminal_index': for \(A\ge2\),
+  \(s_2(2^A(2^{L+2}-1)-3)=A+L\);
+- 'q4_terminal_index_mod_three': even \(L\) makes the q4 terminal
+  index divisible by three;
+- 'sectionResult_q4_terminal_cost_even': the exact cost formula
+  specialized to arbitrary \(A\ge2\) and even \(L\).
+
+The source file's '#print axioms' checks report only
+'[propext, Quot.sound]' for these principal theorems. Its SHA-256 is
+'9092b2c54964090055a0f2015a9cf0e55a98ce4b9937691c8644485db856ec32'.
+
+**Scope boundary:** this is a machine-checked theorem about an isolated,
+source-shaped copy of the recurrence. It does not import or compile the
+original 'CostRecurrence.lean' closure, establish that its candidate
+costs are authentic TM2 run lengths, or prove the blank-root halt/score
+composition. The three-step state map, one-dimensional elimination,
+and dominant-increment asymptotic remain algebraic derivations in the
+Markdown note; this Lean file does not claim to formalize those parts.
 
 ## Exact candidate factorization
 

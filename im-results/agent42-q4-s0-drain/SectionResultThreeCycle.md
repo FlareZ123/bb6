@@ -2,9 +2,44 @@
 
 This note extracts the exact two-variable recurrence hidden inside
 `sectionResult` when the initial marker is zero and the number of
-dispatcher increments is divisible by three. It is an algebraic
-derivation from the definitions in [`CostRecurrence.lean`](../agent24-champion-time/CostRecurrence.lean), not a
-separate compiled Lean theorem.
+dispatcher increments is divisible by three. Its core cost and
+popcount identities are now machine-checked in
+[`SectionResultThreeCycleModel.lean`](SectionResultThreeCycleModel.lean),
+a self-contained Lean 4.36.0-rc2 model copying the recurrence definitions
+from [`CostRecurrence.lean`](../agent24-champion-time/CostRecurrence.lean).
+It does not import or compile the original source dependency closure.
+
+## Machine-checked model and scope
+
+The isolated Lean model proves the following exact statements:
+
+1. \(\sum_{r=1}^{N}v_2(r)=N-s_2(N)\), by a binary-increment
+   identity for the copied \(v_2\) and popcount recurrences.
+2. For \(N=3k\) and initial marker zero,
+   \[
+   C(N)=31N-12s_2(N)+
+   \sum_{i=0}^{N-1}
+   (6\cdot4^{b_i}+42\cdot2^{b_i}+12a_i-9b_i).
+   \]
+3. For \(A\ge2\),
+   \[
+   s_2(2^A(2^{L+2}-1)-3)=A+L.
+   \]
+4. If \(L\) is even, the same terminal index is divisible by three,
+   so the cost identity specializes directly to this q4 family.
+
+The model copies the definitions of 'v2', 'proposedIncrementCost',
+'nextMarker', 'nextExponent', 'nextRight', and 'sectionResult'
+from 'CostRecurrence.lean' into a fresh namespace. It compiles with
+warnings treated as errors; the principal theorem axiom profiles are
+'[propext, Quot.sound]'.
+
+This does **not** certify the original 'CostRecurrence.lean' module,
+its transitive imports, the three-step map \(F\), the one-dimensional
+score elimination, or the dominant-increment asymptotic. Most
+importantly, it does not prove that the proposed dispatcher cost is the
+authentic TM2 primitive run length. The authentic blank-root composition
+remains uncompiled and no BB(6) halt/score claim follows.
 
 ## One-step state and cost
 
@@ -319,7 +354,7 @@ D_N(U,R)\sim 6b_N^2
 This proves that the *dispatcher-plus-terminal contribution* is asymptotically dominated by its final counted increment. Extending the same asymptotic to the full champion score additionally requires bounding the separate root/drain prefix by \(o(b_N^2)\); that prefix bound is not asserted here. For the authentic \(n\ge1\), the omitted root/drain contribution is nonnegative: \(C_{\rm root}\ge0\) and \(42\cdot2^{n-1}\ge12n\), hence \(6\cdot4^{n-1}+42\cdot2^{n-1}-12n+54>0\). Therefore the full conditional score satisfies \(S_{\rm full}\ge6(b_N+1)^2\).
 
 
-## Reusing the existing Lean popcount/valuation lemmas
+## Relation to existing Lean popcount/valuation lemmas
 
 A short formal proof of the new \(M-3\) popcount identity can reuse
 \`im-results/agent48-counted-inc0/Marker1TerminalArithmetic.lean\`.
