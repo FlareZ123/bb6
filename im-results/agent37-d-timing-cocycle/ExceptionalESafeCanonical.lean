@@ -1,6 +1,7 @@
 import Lean.Elab.Tactic.Omega
 import EExceptionalShift
 import PacketSafeReentry
+import DRegularSourceShift
 
 set_option maxHeartbeats 10000000
 set_option maxRecDepth 8192
