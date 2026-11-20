@@ -498,59 +498,8 @@ theorem reset243_229_source_reentry (t Q : Nat) (hQ : 2 ≤ Q) :
 
 
 
-/-- k=243*t+16: one E, B, E, then the universal A-marker return.
-    This adds the k≡16 (mod243) cylinder inside the residual k≡7 (mod9)
-    P2-reset family; it is valid for every source counter Q. -/
-def time243_16 (t Q : Nat) : Nat :=
-  (eTwoTime (243*t+16) Q + chainTime 1 (162*t+11) 0) +
-    (bTime (1728*t+117) + eTime (4608*t+315) 1)
-
-theorem prefix243_16 (t Q : Nat) :
-    run (time243_16 t Q)
-      (packet (3*(243*t+16)+4) Q 2
-        (false :: List.replicate 6 true)) =
-      packet (3*(12288*t+843)+3) 3 (2*Q)
-        BB6.Agent35K4Shapes.marker := by
-  have hreset := reset_one_E (243*t+16) (162*t+11) Q
-    (by omega) (by omega)
-  have h1 : 1+32*(162*t+11)=3*(1728*t+117)+2 := by omega
-  have h2 : 8*(1728*t+117)+10=3*(4608*t+315)+1 := by omega
-  have h3 : 8*(4608*t+315)+9=3*(12288*t+843)+3 := by omega
-  have hb :
-      run (bTime (1728*t+117))
-        (packet (3*(1728*t+117)+2) 2 (2*Q+3)
-          BB6.Agent35K4Shapes.marker) =
-      packet (8*(1728*t+117)+10) 1 (2*Q+3)
-        BB6.Agent35K4Shapes.marker :=
-    BB6.Agent31PacketSource.b_packet (1728*t+117) 1 (2*Q+3)
-      BB6.Agent35K4Shapes.marker
-  have he :
-      run (eTime (4608*t+315) 1)
-        (packet (3*(4608*t+315)+4) 1 (2*Q+3)
-          BB6.Agent35K4Shapes.marker) =
-      packet (8*(4608*t+315)+9) 3 (2*Q)
-        BB6.Agent35K4Shapes.marker :=
-    BB6.Agent31PacketSource.e_packet (4608*t+315) 1 (2*Q)
-      BB6.Agent35K4Shapes.marker
-  unfold time243_16
-  rw [run_add,hreset,run_add,h1,hb,h2,he,h3]
-
-theorem reset243_16_source_reentry (t Q : Nat) :
-    ∃ (T a q b : Nat),
-      ObsEq
-        (run T (packet (3*(243*t+16)+4) Q 2
-          (false :: List.replicate 6 true)))
-        (DRegularSource.sourceSection ⟨a,q,b⟩) ∧
-      DRegular.Canon ⟨a,q,b⟩ := by
-  apply finish_A_to_source
-    (packet (3*(243*t+16)+4) Q 2
-      (false :: List.replicate 6 true))
-    (12288*t+843) 3 (2*Q)
-  exact ⟨time243_16 t Q,prefix243_16 t Q⟩
-
 #print axioms reset_one_E
 #print axioms finish_A_to_source
-#print axioms reset243_16_source_reentry
 #print axioms reset243_88_source_reentry
 #print axioms reset243_97_source_reentry
 #print axioms reset243_124_source_reentry
