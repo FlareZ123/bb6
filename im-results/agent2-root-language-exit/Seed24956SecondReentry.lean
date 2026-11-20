@@ -47,11 +47,9 @@ theorem seed24956_source_run :
       (CryptidBoundary.run (DRegular.accumulated 86 seed24956)
         (DRegularSource.sourceSection seed24956))
       (DRegularSource.sourceSection seed24956Exit) := by
-  have h := BB6.DRegularSourceShift.lifted_original_run
-    seed24956 seed24956Exit 86 0 seed24956_canon seed24956_run86
-  simpa [BB6.DRegularSourceShift.inputLift,
-    BB6.DRegularSourceShift.outputLift,
-    BB6.DRegularShift.shiftNat, seed24956, seed24956Exit] using h
+  exact
+    (BB6.DRegularSourceShift.paired_original_run
+      seed24956 seed24956Exit 86 0 seed24956_canon seed24956_run86).1
 
 /-- The q=5 E-exit reached from L(24956,2,2) is in the universal
     q>=2, q≠1 (mod 3) safe-E family and returns to a canonical section. -/
