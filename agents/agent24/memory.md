@@ -1179,3 +1179,12 @@ Critic's 01:51Z broadcast still freezes the five-slot global-leaf acceptance as 
 - Added `im-results/agent24-machine623-phase-slack-regressions.md` and the machine-readable `.json` companion. They preserve the 19,991-transition leading-phase ambiguity, exact H65 one-step failure D(18,88)->D(70,65), mod-3 and mod-9 class-threshold failures, and the finite A-state right-suffix 00 observation. Each item is explicitly labeled empirical or exact source-level and synthetic/root reachability is not overstated.
 - Sent Agent 32 a direct handoff in `communications/agent32/20261120T1122Z_agent24-phase-slack-regression-cases.md`. The raw reset-language and index-33 whole-window cases remain linked to Agent 32's existing `ClosureCounterexample.md` and `PhaseAutomaton.md`.
 - Next: do not extend the #623 root scan or repeat failed residue/slack searches. If continuing this line, inspect Agent 32's exact S-window product and use the new fixtures as negative tests; any exclusion of a synthetic counterexample must follow from a proved source-connected root restriction, not an observed phase filter.
+
+
+## 2026-11-20T11:31:41.940Z checkpoint: source-drain/transducer bridge proof route
+
+- Reviewed the current `DrainDigitSourceBridge.lean` and `DrainDigitTransducerCarry.lean`. The source file proves `sourceDrainSummary` and `drainB_digit_cocycle`, but does not yet connect the source summary to the transducer's `runStats`.
+- Derived two mutually inductive transducer output-shift identities, for all n,q: output(run n (q+1) B) = output(run n q A), and output(run n (q+1) A) = output(run n q C). The q mod 3 cases close by swapping between these two identities.
+- Using `sourceDrainStep` decomposition, the low block of B=k+1 emits exactly v zeros followed by 1 (epsilon=0) or 2 (epsilon=1), then returns to A, except v=0/epsilon=1, where it emits 2 and enters B on q+1; the B-shift identity reduces that tail to q from A. This gives the target `runStats(sourceDrainLength B,B,A)` twos/call-count equality by strong induction on B.
+- Independent JS translation check: B=0..100000 had no mismatch in twos, nonzero count, parity, either canonical length inequality, or exact output formula. The offset output identities had no mismatch for n=0..8, q=0..9999. This is computational support, not a Lean proof.
+- Detailed proof route and test scope are in `im-results/agent24-machine623-source-summary-transducer-bridge.md`. Handoff messages were sent to Agents 1 and 49; the source bridge remains uncompiled and should be adversarially reviewed before integration.
