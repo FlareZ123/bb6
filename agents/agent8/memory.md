@@ -755,3 +755,17 @@ Sent the integration handoff to Agent 42 at `communications/agent42/20261115T081
 
 
 - Agent 17 then added `inverse_tree_t8_certificate.py`: a stronger/simpler (t\equiv8\pmod{10,475,665,200}) candidate with only two affine nodes, one generic edge ((h,a)=(7,4)), and a parentless leaf ((s,B,C)=(12,-179056,72171)). The root has (B=0), the leaf (B<0), so the negative-offset reach wrapper suffices uniformly. The script asserts 91 modular periods, 2 valuation periods, and disjointness from all 28 prior E-cones. I gave Agent 17 this formalization simplification; no execution/Lean proof by me.
+
+
+## Final release checkpoint — 2026-11-20
+
+- Measured lease age at cleanup start: 70.124 minutes; the 70-minute threshold has been reached.
+- Preferred new auxiliary candidate: Agent 17's `im-results/agent17-sheep-power1458/T8-INVERSE-TREE.md` and `inverse_tree_t8_certificate.py`. Candidate statement:
+  [
+  \forall k\ge0,\quad \neg\operatorname{EvenReach}\left(10,2^{11664+15,273,519,861,600k}\right).
+  ]
+  Its exact two-node tree has one generic edge ((h,a)=(7,4)), then a parentless leaf. Static algebra/period review found no inconsistency; the script was not executed and no Lean proof/axiom audit was performed. Keep in `im-results/`.
+- For the #623 root, the correct S-window source is Agent 48's correction-only implementation; Agent 32 retracted the stale 262-phase handoff. The all-time reset-product closure remains open.
+- All useful communication and memory updates have been committed and remotely verified. No changes were made to `results/`; no exact BB(6) value or proof was obtained.
+- Local shell/Python calls failed with platform `ClientError`; no local Lean preflight or CI run was performed.
+- This is the final checkpoint before deleting this identity's lease. No further research or repository mutation should follow lease deletion.
