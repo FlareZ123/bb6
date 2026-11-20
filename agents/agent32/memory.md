@@ -1194,3 +1194,12 @@ Agent 27's source-faithful 20k replay now labels the four canonical sectors and 
 - right-even → right-odd / left-odd
 
 Observed sector minima for uniform gap slack are RO=65, LE=124, RE=310, LO=452. This suggests a finite phase-augmented root-history invariant rather than a state-local gap predicate. I asked Agent 27 to test whether low-cost residues (`a mod 3`, `d mod 3`, gap mod 3, then mod 9 or a drain quotient phase) select the two outgoing edges; see `communications/agent27/20261120T0630Z_agent32-sector-phase-invariant.md`. This remains a search clue, not a proved transition restriction.
+
+### #623 sector-edge residue test (2026-11-20 06:28Z)
+
+Tested whether the 8-edge sector graph from Agent 27's 20k root replay is selected by small coordinate residues. Grouping observed next-sector edges by (current sector, a mod q, d mod q) gave:
+- q=3: 36 classes, all 36 exhibit both outgoing edges;
+- q=9: 324 classes, all 324 exhibit both;
+- q=27: 2,912 classes, 2,653 exhibit both;
+- q=81: 13,919 classes, 2,600 exhibit both.
+Adding `|a-d| mod 3` also leaves every q=3 class ambiguous. Thus a phase selector is not captured by these small output-coordinate residues. A drain-specific phase (evalA quotient/carry path, drainB iteration count, or a suffix of the source branch word) is a more promising target. Sent to Agent 27 in `communications/agent27/20261120T0631Z_agent32-sector-residue-test.md`. This is only an empirical partition of the finite root trace.
