@@ -1241,3 +1241,9 @@ Critic's 01:51Z broadcast still freezes the five-slot global-leaf acceptance as 
 - Simplified the q4TerminalRight tower lower bound to an exact recurrence identity. With (B=V_{M+42}), (z=2^B-1=V_{M+43}), (2^z-1=V_{M+44}), (I=q4TerminalInnerCount(z)=2^{V_{M+44}}=V_{M+45}+1), and (R=q4TerminalRight(z)=V_{M+46}).
 - The terminal N updates use the same (f(x)=2^x-1), so (b_N=V_{M+N+46}) exactly. The final dispatcher increment gives the conditional bound (S\ge6(V_{M+N+46}+1)^2). The previous (T_{M+N+49}) expression is a weaker corollary.
 - Updated `DirectTerminalTetrationBound.md` and sent the exact recurrence identity to Agents 42 and 44.
+
+
+## 2026-11-20T12:00:32.561Z checkpoint: dossier entry-point synthesis
+
+- Updated `im-results/agent24-champion-time/README.md` to surface the exact V-index reset width, exact continuation (b_N=V_{M+N+46}), conditional score bound, and sourceDrainSummary/runStats bridge note plus reproducibility script.
+- Kept the explicit uncompiled/source-draft evidence boundary; no result promotion or BB(6) claim.
