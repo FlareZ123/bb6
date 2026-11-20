@@ -45,14 +45,14 @@ E_N\le{}&60b
  +12(N+1)2^{-N}b.
 \end{aligned}
 \]
-For \(N\ge256\), \(12(N+1)2^{-N}<1/4\). Since \(b\ge2^{256}\),
+For \(N\ge256\), \(12(N+1)2^{-N}<10^{-3}\). Since \(b\ge2^{256}\),
 \[
-6b^{3/4}+57b^{1/2}<\frac b4,\qquad
-90b^{1/2}+159b^{1/4}+90<\frac b4.
+6b^{3/4}+57b^{1/2}<10^{-3}b,\qquad
+90b^{1/2}+159b^{1/4}+90<10^{-3}b.
 \]
 Therefore
 \[
-\boxed{E_N<60.75b,\qquad D_N<6b^2+60.75b.}
+\boxed{E_N<60.003b,\qquad D_N<6b^2+60.003b.}
 \tag{1}
 \]
 
@@ -70,18 +70,18 @@ C_{\rm root}+D_{\rm root}<\frac{133}{9}R^2.
 \]
 Since \(b\ge2^R-1\), \(R\ge63\), and
 \[
-2^R-1>\frac{532}{9}R^2\qquad(R\ge63),
+2^R-1>\frac{133000}{9}R^2\qquad(R\ge63),
 \]
 we obtain
 \[
-\boxed{C_{\rm root}+D_{\rm root}<\frac b4.}
+\boxed{C_{\rm root}+D_{\rm root}<\frac b{1000}.}
 \tag{2}
-\]
+]
 (The displayed exponential inequality holds at \(R=63\), and \((2^R-1)/R^2\) is increasing for \(R\ge63\).)
 
 Combining (1) and (2) with the exact score split gives
 \[
-S<6b^2+61b.
+S<6b^2+60.004b<6b^2+60.01b.
 \]
 The exact final summand in the one-dimensional dispatcher-plus-terminal cost formula, derived in [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md), is
 \[
@@ -92,12 +92,12 @@ All other dispatcher summands and the root/drain prefix costs are nonnegative, s
 \[
 S\ge6(b+1)^2+42(b+1)+3b_{N-1}.
 \]
-Since \(6b^2+61b=6(b+1)^2+49b-6\), the full score satisfies the sharper two-sided additive estimate
+Since \(6b^2+60.01b=6(b+1)^2+48.01b-6\), the full score satisfies the sharper two-sided additive estimate
 \[
 \boxed{
 6(b_N+1)^2+42(b_N+1)+3b_{N-1}
 \le S_{\rm TM1}
-<6(b_N+1)^2+49b_N-6.
+<6(b_N+1)^2+48.01b_N-6.
 }
 \tag{3}
 \]
@@ -105,9 +105,9 @@ Equivalently,
 \[
 6b_N^2+54b_N+48+3b_{N-1}
 \le S_{\rm TM1}
-<6b_N^2+61b_N.
+<6b_N^2+60.01b_N.
 \]
-Thus the cost outside the exact final dispatcher summand is fewer than \(7b_N-48-3b_{N-1}<7b_N\) additional primitive steps.
+Thus the cost outside the exact final dispatcher summand is fewer than \(6.01b_N-48-3b_{N-1}<6.01b_N\) additional primitive steps.
 
 The relative excess over the quadratic final-increment term is pinned to a narrow interval:
 \[
