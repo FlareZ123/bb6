@@ -314,3 +314,10 @@ The same bridge module now also exports `root_equation_parity`: from the exact r
 A stronger general congruence is now exported as `root_equation_mod1680`: under the exact root equation and the exponent formula, `(u + 105*r) % 1680 = 122` for **every** root index `r`. Its proof combines the mod-16 consequence of the even RHS with the mod-105 power residue. It compiles with `[propext, Quot.sound]`, no `sorryAx`. The earlier parity lemma is an immediate corollary in content; this mod-1680 relation is more useful for classifying the remaining even root-index cylinders. For example, `r%16=12` gives `u%1680=542`, matching the root4 bridge, while `r%16=0` gives `u%1680=122`, which the root32 mod-64 refinement narrows to `u=1802+6720*t`.
 
 The general congruence is also exported in affine-witness form as `root_equation_affine_parameter`: there exists `t` with `u+105*r=122+1680*t`. This avoids carrying a remainder equation in downstream arithmetic and compiles with `[propext, Quot.sound]`, no `sorryAx`.
+
+## Affine feeder line: complete all-depth source-parent fan (2026-11-20)
+
+[AffineFeederParentFan.md](./AffineFeederParentFan.md) gives the exact finite source-parent fan for every odd `k≥5` on `F(k)=(2k+1,k)`, including all even bounce depths and the rank drop `7+3n`. It also specializes the `a=1), halt-depth-`0 mod 8` family: with `d=8m), its feeder parameter is `k=2^(8m+2)-6m-3` and
+`v₂(3k+1)=1+v₂(9m+4)`. Thus the possible source depths are controlled by divisibility of the small linear form `9m+4`; arbitrarily deep actual parent branches occur, so a fixed-depth inverse truncation cannot close this family.
+
+**Status:** paper-level derivation from the source-certified complete inverse grammar, not yet a standalone Lean-compiled theorem. It proves the no-parent case `k≡3 (mod 4)` and completely enumerates all possible source parents in the other cases; the remaining even/even and even/odd parents still require all-time blank-orbit analysis.
