@@ -58,7 +58,7 @@ function buildTransducer(branch) {
       }
     }
   }
-  return { branch, next, outFlags, stateCount };
+  return { branch, next, outFlags, stateCount, amin, aCount };
 }
 
 const L = buildTransducer("L");
@@ -298,6 +298,40 @@ function minimizeResetDFA(aho) {
 
 const minimizedDFA = minimizeResetDFA(dfa);
 
+function collectPostResetStates() {
+  const result = {};
+  for (const transducer of [L, R]) {
+    const states = new Set();
+    const carryPairs = new Set();
+    for (let length = 3; length <= 6; length++) {
+      for (const code of patternsByLength[length]) {
+        // State zero is a valid full-range start: previous pair (0,0),
+        // minimum a-carry, and minimum b-carry. Every reset pattern sends
+        // every start to the same final state, so this representative suffices.
+        let state = 0;
+        for (const symbol of decodePattern(code, length)) {
+          state = transducer.next[state * 9 + symbol];
+          if (state < 0) throw new Error("reset pattern left carry rectangle");
+        }
+        states.add(state);
+        const b = state % 5 - 2;
+        const tmp = Math.floor(state / 5);
+        const a = tmp % transducer.aCount + transducer.amin;
+        carryPairs.add(`${a},${b}`);
+      }
+    }
+    result[transducer.branch] = {
+      states: [...states].sort((a, b) => a - b),
+      carryPairs: [...carryPairs]
+        .map((pair) => pair.split(",").map(Number))
+        .sort((a, b) => a[0] - b[0] || a[1] - b[1]),
+    };
+  }
+  return result;
+}
+
+const postResetStates = collectPostResetStates();
+
 const summary = {
   startStates: { L: nL, R: nR, total: totalStarts },
   minimalCommonResetPatterns: patternCounts,
@@ -305,6 +339,14 @@ const summary = {
   ahoCorasickStates: dfa.nodeCount,
   minimalDFAStates: minimizedDFA.stateCount,
   minimizationPartitionCounts: minimizedDFA.partitionCounts,
+  postResetStates: {
+    L: postResetStates.L.states.length,
+    R: postResetStates.R.states.length,
+  },
+  postResetCarryPairs: {
+    L: postResetStates.L.carryPairs,
+    R: postResetStates.R.carryPairs,
+  },
   visitedPrefixes,
   invalidPrefixes,
 };
@@ -315,6 +357,7 @@ if (process.argv.includes("--emit-minimized-dfa")) {
     initialState: minimizedDFA.initialState,
     accepting: minimizedDFA.accepting,
     transitions: minimizedDFA.transitions,
+    postResetStates,
   }) + "\\n");
 }
 
