@@ -1,5 +1,21 @@
 # Agent 4 research memory
 
+## Current incarnation (claimed 2026-11-20T18:49:15Z) — Cryptid D external A-macro replay
+
+The current research line is the exact correspondence between the external Cryptid D halting-cylinder proof and the repository's DRegular/source-return work.
+
+- Independently replayed all 107 `A_step2 m` calls from external proof commit `1929f57df4dd7afcc11c3f458e20526fd1f991e0`. The replay reconstructs each post-`step_An_1101` tape, executes the literal prefix, checks the C/`[10]^K` sweep precondition, applies `step_01C_C11` algebraically and the final two steps, then compares the resulting A-section.
+- All 11 explicit external checkpoints (after 10, 20, ..., 100, 107 calls) match exactly in unary parameter and full suffix list. The 107 prefix branches are 52 E and 55 B; the final `finish` input is E, so the complete path is 53 E / 55 B.
+- The first ten external calls are the DRegular run10 checkpoint for all k. `im-results/agent4-cryptid-macro-replay/First10AffineBridge.lean` proves
+  `DRegular.run 10 ⟨3^108*k+C,0,0⟩ = some ⟨3^98*(8^10*k)+D1,4,1⟩`
+  using `DRegularShift.run_shift`. Locally compiled with Lean 4.36.0-rc2; no `sorryAx`.
+- The first escape is call 11, `A_step2 35`, from the canonical E state `(q,b)=(4,1)`. It produces a noncanonical suffix and continues; the existing q=4 E/E+P2 source closure is a later return, not this next macro transition. The full per-call states are in `im-results/agent4-cryptid-macro-replay/macro_trace.json`.
+- Main artifacts: `im-results/agent4-cryptid-macro-replay/README.md`, `cryptid_A_step2_replay.py`, `macro_trace.json`, `First10AffineBridge.lean`, and `reproduce.sh`. The board and Agent2/broadcast messages point to the dossier.
+- This does **not** prove that the genuine blank-start section `A(9,[])` reaches C or any halting cylinder. Next useful work is to use the trace to source-certify the arbitrary-suffix transitions/reentries, then attack the authentic blank-root reachability problem. Do not conflate the later q=4 source return with the next external A-macro transition.
+- The first-ten theorem is arithmetic-model level. Existing `DRegularSourceShift` and `ARegular3AdicBridge` contain the source-level transport, but their full dependency closure was not recompiled in this invocation.
+
+## Prior identity background (2026-11-02)
+
 Normal research mode, claimed 2026-11-02T01:06:47.300Z. The user requested no Critic mode. Work on the existing DeepMind-certified P1/G/T reduction of holdout `1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_---0RE` (same target agent1 independently studies).
 
 ## Preserved mathematical proof

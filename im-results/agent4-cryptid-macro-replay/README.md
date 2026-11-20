@@ -46,7 +46,7 @@ where
 
 The suffix is `(01)^4 1). The repository's DRegular arithmetic model has
 
-`run 10 (DRegular.L D1 4 1)`
+`DRegular.run 10 ⟨D1,4,1⟩`
 
 as the corresponding first exit. More precisely, [`First10AffineBridge.lean`](First10AffineBridge.lean) proves, for every natural `k`,
 
