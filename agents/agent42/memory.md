@@ -1864,3 +1864,32 @@ increment and +12 from `terminalMoves).
 As of this update, no replies had arrived in Agent16, Agent24, or Agent44
 mailboxes. Local shell remains unavailable (container ClientError); do not
 dispatch CI without the required local preflight.
+
+## 2026-11-20 — published tower-sandwich refinement
+
+Continued the TM63/q4 champion line. Added **im-results/agent42-q4-s0-drain/TM63PublishedTowerSandwich.md** and indexed it from the q4 dossier README. It is explicitly intermediate and source-conditional, not in results/.
+
+The note derives the following from the exact recurrence parameters already recorded in DirectTerminalTetrationBound.md:
+- \(V_0=63,\ V_{j+1}=2^{V_j}-1\), with \(T_{j+3}+1\le V_j<T_{j+4}\);
+- \(A_0=18+\sum_{0}^{6}V_j\), \(M=31\cdot2^{A_0}-36\);
+- \(B=V_{M+42}\), \(A=V_7+\sum_{8}^{M+42}V_j+(5M+176)/3\);
+- \(N=(2^{78}-1)2^A-3\), \(b_N=V_{M+N+46}\).
+
+Paper-level upper chain:
+\(A_0<T_{10}-6\), \(M<T_{11}/2\);
+\(A\le(M+36)B+2M+59<2^{B-1}\);
+\(N<T_{M+48}\);
+\(b_N<T_{T_{T_{11}-1}}\).
+The exact SectionResult cost bound then gives \(D_N<7b_N^2\); bounding the finite root prefix, counted root drain, terminal macro, and +7 correction by the remaining \(5b_N^2\) yields
+\[
+T_{T_{T_{10}}}<S_{\rm TM1}<T_{T_{T_{11}}}.
+\]
+This recovers the published mxdys two-sided tetration window, with the source-recurrence lower side stronger than the published left endpoint. It is only a bound on the one TM1 champion trajectory, not a BB(6) universal upper bound.
+
+Important unresolved check: adversarial review was requested from Agents24 and44 for the upper index chain and especially the coarse explicit root-prefix estimate \(C_{\rm root}\le10^6 4^m\). Do not promote the note or claim it kernel-checked until that review and a real Lean compile/axiom audit succeed. The cost estimate is intended to follow from the 34 fixed middle rows, the \(143(B+1)^2\) long-middle bound, the \(86(B+1)^2\) terminal offset, and the finite q4/P1 drains; re-expand if challenged.
+
+A convention cross-check: BBchallenge/BusyBeaverWiki's standard max-shift interpretation treats an undefined transition as the final \(1RZ\) halting transition, which counts as a step. This supports the repository's \(n+1\) Attainable adapter and the champion +7 offset (six root transitions plus the final halting transition). External context: https://wiki.bbchallenge.org/wiki/Definition and https://wiki.bbchallenge.org/wiki/1RB1RA_1RC1RZ_1LD0RF_1RA0LE_0LD1RC_1RA0RE.
+
+Environment: local container and Python calls still fail with ClientError before even a trivial command runs. Critic's focused-preflight gate says not to replace the local preflight with CI. Also check the repository's current Lean bootstrap instructions before retrying: the uploaded outer ZIP contains a nested tar.zst, so a one-stage unzip may be insufficient.
+
+Next useful actions: incorporate any concrete Agent24/44 review; if the local runtime becomes available, run the smallest source-closure preflight first and then the authentic root composition plus transitive axiom audit. Avoid repeating the already completed finite replay or static source scan.
