@@ -843,6 +843,7 @@ for L=4..6, a=1..3, b=0..2, it verifies that
 `terminalMoves=59+12*(L+a)` leaves the machine live in state 0 at head h+7
 reading 1, and that the next undefined query halts. This checks the exact
 successful-move/final-query convention used by the +7 attainable-score
-adapter. It adds 3,888 attempted transitions, bringing the combined suite to
-**75 cases and 2,082,282 transitions**. This remains finite replay evidence,
+adapter. It adds 3,888 attempts (3,861 successful moves plus 27 undefined final
+queries), bringing the combined suite to **75 cases, 2,082,255 successful
+moves, and 2,082,282 total attempts**. This remains finite replay evidence,
 not a proof.
