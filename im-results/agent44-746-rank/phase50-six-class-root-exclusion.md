@@ -50,10 +50,10 @@ $$
                  +\frac{2K+13}{3p}.
 $$
 In particular,
-$$
-4p<E<6p,\qquad 10.4p<X<10.6p.
-$$
-Thus (E) has no even parent: it lies in the gap between the even bands at levels (K-1) and (K).
+$
+4p<E<\frac{53}{10}p<6p-1,\qquad 10.4p<X<10.6p.
+$
+The sharper upper bound follows from $x>97/64$ and $K/p<2^{-a}$. Thus $E$ lies strictly above the even band at level $K-1$ and strictly below the even band at level $K$, so it has no even parent.
 
 For (P_t=2^tX/3^{t+1}), the size bounds place:
 - (P_0) in the odd band at level (K-1);
@@ -147,7 +147,7 @@ $$
 \frac{X_1}{p}
 =6-\frac{13184}{9\cdot2^a}-\frac{10K-25}{9p}.
 $$
-Thus (2p<h_0<3p), so (h_0) has no even parent. Since (v_3(X_1)=1), only (t=0) is possible at (h_0); the coordinate (X_1/3) lies in the odd band at level (K-2). Its unique parent is (y_0).
+Thus $2p<h_0<3p-3$: indeed $3p-h_0=6592Q/9+(5K+10)/9>3$. Hence $h_0$ lies strictly between the even bands at levels $K-2$ and $K-1$, and has no even parent. Since (v_3(X_1)=1), only (t=0) is possible at (h_0); the coordinate (X_1/3) lies in the odd band at level (K-2). Its unique parent is (y_0).
 
 Put (L=K-2) and (D_0=2p-y_0). Direct substitution gives
 $$
@@ -274,15 +274,15 @@ $$
 $$
 Each $y'_j$ is therefore in the even-parent band at level $L'$, with unique parent $y'_{j+1}$.
 
-At $j=4$,
-$$
-p/8<\Delta_4<p/5,
-$$
-so
-$$
-p/4<y'_4<3p/8.
-$$
-This is the gap between the even bands at levels $L'-1$ and $L'$, so the even chain ends at $y'_4$.
+At $j=4$, the lower bound improves to $\Delta_4>p/6$ because $16/82-2^{-a}>1/6$ for $a\ge50$. Thus
+$
+p/6<\Delta_4<p/5,
+$
+and
+$
+p/4<y'_4<p/3.
+$
+This lies strictly between the upper endpoint $p/4-3$ of the even band at level $L'-1$ and the lower endpoint $3p/8-1$ at level $L'$. Therefore the even chain ends at $y'_4$.
 
 There are no odd parents anywhere on this chain. Indeed,
 $$
