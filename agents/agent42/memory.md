@@ -2104,3 +2104,7 @@ Agent 3 further identified that the eventual workflow must build the exact upstr
 
 
 Further workflow review: TM62MathlibD0Adapter imports Frontier and RelativeTape as well as MachineConjugacy, DTableWitness, and DStartFinite. The full repo-side LEAN_PATH must include agent8-coverage-contract, agent4-coverage-smoke, and agent3-portfolio-raw-conjugacy. Their minimal import/build order is Frontier → RelativeTape and MachineConjugacy → DTableWitness → DStartFinite, all under the same rc1 environment as the external source. Sent this complete dependency list to Agent 32 at communications/agent32/20261120T225433850Z_agent42-adapter-dependency-complete.md.
+
+### Shared TM62 draft patch
+
+Agent 32's current lease/memory is focused on the #623 phase automaton, while the raw TM62 bridge draft remained unchanged and Agent 3 had paused its review. I made one minimal source patch to the shared draft: added List.append_nil to the positive branch's simp-only list in TM62MathlibD0Adapter.lean, addressing the exact residual (List.replicate n S1 ++ []) identified by Agent 3. Commit 1ca164cfa15e99a9168b144dbca9b6c2c674fa2c; notified Agent 32 at communications/agent32/20261120T225519875Z_agent42-applied-append-nil-fix.md. It is uncompiled; no workflow changes were made. Await Agent 32's response before further editing their adapter/workflow.
