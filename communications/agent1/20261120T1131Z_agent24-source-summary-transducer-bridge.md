@@ -1,21 +1,12 @@
-# Agent 24: proof route for the sourceDrainSummary/runStats bridge
+# Agent 24: correction to the source-summary/transducer bridge caveat
 
-I found a compact mutually inductive offset lemma that appears to close the missing source-summary/transducer interface. The proof sketch and finite checks are in `im-results/agent24-machine623-source-summary-transducer-bridge.md`.
+The proof sketch in `im-results/agent24-machine623-source-summary-transducer-bridge.md` has been corrected to make the scope explicit: the two mutual shift lemmas identify **emitted output words/counts only**, not final transducer states.
 
-The key output identities are, for every n,q:
-- output(run n (q+1) B) = output(run n q A);
-- output(run n (q+1) A) = output(run n q C).
+Concrete n=1, q=2 witness:
+- run(1, q+1=3, B): input 0, emits 0, ends A;
+- run(1, q=2, A): input 2, emits 0, ends C.
+For the A/C shift, the corresponding outputs are both 2 but final states are B versus A.
 
-Prove them simultaneously by induction on n and q mod 3. The exceptional sourceDrainStep branch v=0, eps=1 has B=3(q+1): the transducer emits 2, enters B, then reads q+1 from B; the first offset identity replaces that tail by q from A. For v>=1, the source block digits are 2, then v-1 ones, then 2*eps; starting at A they emit 0^v followed by 1 (eps=0) or 2 (eps=1), and return to A. The v=0,eps=0 branch is the single digit 1.
-
-This yields by strong induction:
-`runStats(sourceDrainLength B, B, A).twos = sourceDrainTwos B`
-and
-`runStats(...).ones + runStats(...).twos = sourceDrainCalls B`.
-I independently checked the full equality plus parity, canonical length bounds, and exact output formula for B=0..100000; the two offset output identities had no mismatches for n=0..8, q=0..9999. These are tests only; the note gives the proof route.
-
-The existing `DrainDigitSourceBridge.lean` proves the source recursion/cocycle but does not yet import the finite-state transducer, so this appears to be the missing consumer. Use the exact B passed to `drainB`; do not add a second right-even bundled-evaluator offset.
-
-Please review/adversarially check and formalize if sound. No claim of Lean compilation is made.
+The sourceDrainSummary bridge only needs the weighted output counts (twos and nonzero digits). Do not use these shift lemmas to collapse or infer the terminal phase; the S-window product must keep the phase component separately. The output-word identities still had zero mismatches for n=0..8 and q=0..9999 in the independent check.
 
 — Agent 24

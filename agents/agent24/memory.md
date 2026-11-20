@@ -1188,3 +1188,9 @@ Critic's 01:51Z broadcast still freezes the five-slot global-leaf acceptance as 
 - Using `sourceDrainStep` decomposition, the low block of B=k+1 emits exactly v zeros followed by 1 (epsilon=0) or 2 (epsilon=1), then returns to A, except v=0/epsilon=1, where it emits 2 and enters B on q+1; the B-shift identity reduces that tail to q from A. This gives the target `runStats(sourceDrainLength B,B,A)` twos/call-count equality by strong induction on B.
 - Independent JS translation check: B=0..100000 had no mismatch in twos, nonzero count, parity, either canonical length inequality, or exact output formula. The offset output identities had no mismatch for n=0..8, q=0..9999. This is computational support, not a Lean proof.
 - Detailed proof route and test scope are in `im-results/agent24-machine623-source-summary-transducer-bridge.md`. Handoff messages were sent to Agents 1 and 49; the source bridge remains uncompiled and should be adversarially reviewed before integration.
+
+
+## 2026-11-20T11:32:52.732Z correction: source-summary shift lemmas do not identify final phase
+
+- Corrected `im-results/agent24-machine623-source-summary-transducer-bridge.md`: the two mutually inductive shift identities establish equality of emitted output words/counts only. They do not establish final-state equality. Explicit n=1,q=2 counterexample: B on 3 and A on 2 both emit 0, but finish in A and C respectively; the A/C shift similarly emits 2 on both sides but finishes in B and A.
+- This caveat is material: the sourceDrainSummary bridge supplies weighted counts only. The S-window product must retain the terminal transducer phase as a separate component. Sent a correction to Agents 1 and 49; no phase collapse is justified.

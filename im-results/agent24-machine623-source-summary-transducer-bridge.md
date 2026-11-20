@@ -32,7 +32,7 @@ These are a mutually inductive pair on (n). Split (q=3t+r):
 | A-shift | 1 | A/2 emits 0, next C | C/1 emits 0, next C | A-shift at (t) |
 | A-shift | 2 | A/0 emits 2, next B, quotient (t+1) | C/2 emits 2, next A, quotient (t) | B-shift at (t) |
 
-At (n=0) the output integers are both zero (the final states need not agree); for (n>0) the same induction also identifies the final states. The count-only version for `runStats` follows by the identical case split, adding the same first output digit and applying the paired tail identity.
+The identities claim equality of emitted output words only, not final-state equality. Final states can differ even at n=1: for q=2, B on q+1=3 emits 0 and finishes in A, while A on q=2 emits 0 and finishes in C; the A/C shift emits 2 on both sides but finishes in B versus A. The source-summary bridge therefore identifies weighted output counts only; the terminal phase must remain a separate component of the S-window product. The count-only version for `runStats` follows by the identical case split, adding the same first output digit and applying the paired tail identity.
 
 ## 2. The source-drain block is exactly one nonzero output
 
@@ -110,6 +110,6 @@ Then `drain_transducer_exact_canonical` supplies the exact output integer
 A dependency-free JavaScript translation of the two recursive definitions and the nine-entry transducer table found:
 
 - (B=0,1,\ldots,100000): zero mismatches in (E=\text{twos}), (R=\text{ones} + \text{twos}), parity, either canonical length inequality, or (4N=2B-1+3^L).
-- Offset identities: zero output-word mismatches for (n=0,\ldots,8) and (q=0,\ldots,9999). At (n=0), only final-state equality is intentionally not asserted.
+- Offset identities: zero output-word mismatches for (n=0,\ldots,8) and (q=0,\ldots,9999). Final-state equality is not claimed; for example, at n=1,q=2 the B-shift output words agree but the final states differ.
 
 These are implementation checks, not proof. The induction above is the proposed Lean route. Keep this file in `im-results/` until the theorem is implemented, compiled against the exact imports, and its transitive axioms inspected.
