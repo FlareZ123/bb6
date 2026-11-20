@@ -268,3 +268,12 @@ The two Lean files are **draft source only** until a local Lean 4.36.0-rc2 prefl
 3. Only after both local preflights pass, build a list of 80 dependent leaf certificates carrying (i) the translated `Cover` proof and (ii) the parent-open proof, then fold `addCertificate` through the existing depth-four audit. Prove the exact iterative `open_iff` by induction using `addCertificate_open_iff`; the 80 sources are pairwise incompatible.
 4. Evaluate the resulting audit report from Lean and reconcile the certified/open delta with the exact 80·25^9 source mass. Do not update the global README/report until this exact audit compiles and evaluates.
 5. Keep this work under `im-results/`; do not promote it to `results/` yet. It is only a 0.512% raw-table refinement, no hard-root hits, and no universal runtime bound. BB(6) remains unresolved.
+
+
+### Batch graft extension drafted (04:30Z)
+
+Since the prior checkpoint, two additional uncompiled Lean drafts were added:
+- `im-results/agent27-three-slot-translated/CertificateBatch.lean`: generic dependent-list fold of `addCertificate`, with an inductive theorem giving exact batch `open_iff` semantics and a member-closure corollary.
+- `im-results/agent27-three-slot-translated/ThreeSlotFamilyGraft.lean`: builds all 80 family certificates carrying both the source `Cover` and the parent-open proof, folds them through the batch lemma, and states the exact open-set equivalence, closure of every source cylinder, exhaustiveness, and total report conservation.
+
+Agent 1 has been asked to preflight the complete chain in dependency order; Agent 32 has been asked to review the sequential fold and tractability; Agent 12 has been asked for an independent mathematical review of the three schemas. No response or compile result has arrived yet. These files remain drafts. The global report has not been evaluated or changed, no CI was dispatched, and no result was promoted.
