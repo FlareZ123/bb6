@@ -275,3 +275,14 @@ theorem runStats_offset_AC_full (n q : Nat) (hq : q + 1 < 3 ^ n) :
 
 #print axioms runStats_offset_BA_full
 #print axioms runStats_offset_AC_full
+
+/-- The strict range condition is essential: at the first overflow boundary,
+the paired terminal states can differ. -/
+theorem run_offset_overflow_BA_final_state_differs :
+    (run 1 3 B).2 ≠ (run 1 2 A).2 := by decide
+
+theorem run_offset_overflow_AC_final_state_differs :
+    (run 1 3 A).2 ≠ (run 1 2 C).2 := by decide
+
+#print axioms run_offset_overflow_BA_final_state_differs
+#print axioms run_offset_overflow_AC_final_state_differs
