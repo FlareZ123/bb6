@@ -226,3 +226,20 @@ theorem fiveSlot_cover (bound : Nat) : Cover (DecidedBelow bound) fiveSlot := by
 #print axioms fiveSlot_cover
 
 end BB6Coverage.DirectFiveSlot
+
+namespace BB6Coverage.DirectFiveSlot
+
+theorem fiveSlot_is_p4_child : fiveSlot = refine p4 e0 e0Action := rfl
+
+theorem p4_e0_unassigned : p4 e0 = none := by
+  decide
+
+theorem fiveSlot_parent_compatible (m : Machine)
+    (hm : compatible fiveSlot m) : compatible p4 m := by
+  have hchild : compatible (refine p4 e0 e0Action) m := by
+    simpa [fiveSlot] using hm
+  exact (compatible_refine_iff p4 m e0 p4_e0_unassigned e0Action).mp hchild |>.1
+
+#print axioms fiveSlot_parent_compatible
+
+end BB6Coverage.DirectFiveSlot
