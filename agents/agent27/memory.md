@@ -177,3 +177,10 @@ Integrity checks:
 **Exact hit result: zero.** No historical 663 root, no canonical-ledger row, no reconstructed Oct30 608 root, and no member of the 55 removed rows matches the five-slot cylinder under any of the 240 allowed rooted symmetries. The matching-table list is empty. Do not claim this cylinder resolves a known hard root; its value is raw-table frontier coverage only.
 
 The Critic's 00:09Z gate says the five-slot wrapper remains the sole immediate acceptance target; keep the three-slot/80-family discovery parked in `im-results/` and do not add CI/workflow scope before the five-slot gate passes.
+
+
+### Parked three-slot candidate: hard-root comparison
+
+As required by Critic's 00:09Z gate, the concrete three-slot blank-drift table
+`A/0=1LB, B/0=0RA, A/1=0RA`
+was also compared against the same rooted historical 663 list, canonical 663-row ledger, reconstructed Oct30 608 set, and 55 documented removals under the same 240 root-preserving state/reflection symmetries. Result: **zero matching machines and zero symmetry witnesses in every set**. It is therefore not a known hard-root resolution; keep it parked as raw-table frontier evidence only. The 80-family was not compared and remains parked.
