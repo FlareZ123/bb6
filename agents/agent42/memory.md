@@ -1749,3 +1749,8 @@ The final middle-34 exponent satisfies a_M≥b_{M−1}≥T_{M−1}+1, in additio
 ## 2026-11-20 exact V-recurrence tetration lower bound
 
 The source definitions yield an exact stronger parameterization. Let V0=63, V_{j+1}=2^{V_j}−1. The seven-step first section has marker sequence 2,1,0,2,1,0,2 and exponent increments 2,2,1,2,2,1,2, so A0=18+Σ_{j=0}^6V_j. Then r=31·2^(14+ΣV_j)−1 and M=16r−20=496·2^(14+ΣV_j)−36. The first reset plus 34 middle rows put the middle34 right counter at V42; after M more updates B=V_{M+42}. The final middle34 exponent is ≥V_{M+41}, so terminal A≥V_{M+41}+V_{M+42}+2 and N≥N0=(2^78−1)2^(V_{M+41}+V_{M+42}+2)−3. With terminal tetration T1=2, T_{j+1}=2^{T_j}, b_N≥T_N+1 and S_full≥6(T_N0+1)^2. This supersedes the weaker T-based M0 bounds. Paper-level, conditional, uncompiled.
+
+
+### Full middle-prefix exponent accumulation
+
+The S1 configuration after the first reset starts with exponent V7 and right counter V8. The 34 middle source increments add the pre-update counters V8 through V41; the M-step middle34Result adds V42 through V_{M+41}; the final root postlude adds the final right counter V_{M+42} plus 2. Thus A≥V7+Σ_{j=8}^{M+42}V_j+2, improving the previous two-term bound. README and note now use this full accumulated exponent.

@@ -541,16 +541,20 @@ counter \(V_{42}\). The long middle-34 SectionResult segment has length
 \[
 B=V_{M+42}.
 \]
-Its final exponent includes the last pre-update right counter, hence
+The S1 source configuration after the first reset has exponent \(V_7\)
+and right counter \(V_8\). The 34 middle rows therefore add
+\(V_8,\ldots,V_{41}\) to the exponent and leave right counter \(V_{42}\).
+The subsequent \(M\)-step middle-34 SectionResult segment adds
+\(V_{42},\ldots,V_{M+41}\) and leaves right counter \(V_{M+42}\).
+Consequently the terminal exponent obeys the stronger bound
 \[
-\texttt{middle34Result.exponent}\ge V_{M+41},\qquad
-A=\texttt{middle34Result.exponent}+B+2
-\ge V_{M+41}+V_{M+42}+2.
+A=\texttt{middle34Result.exponent}+V_{M+42}+2
+\ge V_7+\sum_{j=8}^{M+42}V_j+2.
 \]
 For the authentic \(L=76\) terminal index this gives
 \[
 N=2^A(2^{78}-1)-3
-\ge N_0:=(2^{78}-1)2^{V_{M+41}+V_{M+42}+2}-3.
+\ge N_0:=(2^{78}-1)2^{V_7+\sum_{j=8}^{M+42}V_j+2}-3.
 \]
 
 Let \(T_1=2\), \(T_{j+1}=2^{T_j}\). For the final dispatcher, whose
