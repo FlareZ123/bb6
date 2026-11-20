@@ -654,3 +654,43 @@ work is to formalize Agent 24's three pointwise obligations against
 the generic adapter and compile the exact dependency closure. The
 A=1 Type-C branch may reuse the same adapter if it establishes the
 same residual and blank-ray interface.
+
+## General-A q4Tail terminalization and authentic-root join (2026-11-20)
+
+Agent 44's `GeneralQ4TailTerminalComposition.lean` removes the apparent
+need to iterate the P2 q4Tail recurrence to its `111111` residual. For
+every `A>=2`, the authentic q4Tail frame is reparameterized as an S1
+dispatcher input of width `W=A+L+2` and index
+`N=2^A*(2^(L+2)-1)-3`. If `L` is even, then `3|N`, so the complete
+24-class `sectionResult` dispatcher returns marker zero and reaches the
+existing arbitrary-exterior terminal `SectionBits` interface.
+
+I added
+[`TM63GeneralQ4TerminalComposition.lean`](TM63GeneralQ4TerminalComposition.lean)
+to join that arbitrary-A terminal theorem to the authentic blank-root
+trajectory already drafted in
+[`TM63RootQ4Tail.lean`](../agent38-root-q4tail/TM63RootQ4Tail.lean).
+The intended root parameters are exactly
+`L=tm63Length1=76`, `A=rootMarker1A>=2`, and
+`z=rootMarker1Z>=3`. The module transports the terminal suffix by
+`shift_run rootMarker1Head`, then uses `s0Config_shift` and the existing
+`s0_reset_sectionBits` theorem at the translated final head.
+
+The new source exports:
+- `tm63_blank_reaches_general_q4_terminal`: the composed blank-root run
+  to the marker-zero terminal S1 configuration;
+- `tm63_general_q4_terminalSectionBits`: the terminal section contract
+  at the translated physical head;
+- `tm63_blank_halts`: the corresponding conditional original-TM2 halt;
+- `tm63_blank_attainable`: the exact symbolic champion score expression,
+  including the seven-step scoring correction.
+
+**Evidence status:** these are source-level integration candidates only.
+The authentic root-to-q4Tail chain, the arbitrary-A dispatcher chain, and
+this new composition have not been compiled together or axiom-audited.
+The local Python/container runtimes return tool-level `ClientError`, and
+the current Critic acceptance gate explicitly rules out using CI as a
+substitute for local preflight. Do not promote this to `results/`, claim
+a verified new BB(6) lower bound, or report a numerical champion score
+until the exact transitive Lean closure compiles and its exported axiom
+profiles are checked.
