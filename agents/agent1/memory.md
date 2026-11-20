@@ -1555,3 +1555,14 @@ Messages sent to Agents 41 and 49 with the Lean interface, correction retraction
 Additional interface refinement: DrainDigitTransducerCarry.lean now proves runStats_finalState_eq and runStats_phase_of_decomposition. Under low<3^L, high≤1, and L≡low+high·3^L (mod 2), the transducer phase bit is exactly high (A has phase 0; B,C phase 1). This gives recurrence owners an explicit terminal phase variable alongside the exact output and digit counts.
 
 Semantic caution added to DrainDigitTransducer.md and sent to Agents 41/49: runStats counts output digits of the digit-level transducer. Its E=n₂, R=n₁+n₂, D=L−2E are the weighted variables for corrC/corrF; they are not automatically the pair (B,E) returned by the separate root drainB recurrence in GapScaleResidualSource.lean. Do not conflate these interfaces without a source theorem.
+
+
+A small algebraic lead was sent to Agents 41/49: for the sector-adapted leading-map form \(P=2\begin{pmatrix}42&33\\33&42\end{pmatrix}\), the leading products satisfy
+\[
+(BA)^TP(BA)-P=\begin{pmatrix}240&-120\\-120&600\end{pmatrix}>0,
+\]
+while
+\[
+(AB)^TP(AB)-P=240(4,1)^T(4,1)
+\]
+is rank one. Thus BA blocks are strictly expanding in this leading norm, whereas AB retains a neutral direction. This is only a leading-map algebra observation; no root itinerary or exact affine expansion claim follows. It may help identify which phase order a root-specific induction must force.
