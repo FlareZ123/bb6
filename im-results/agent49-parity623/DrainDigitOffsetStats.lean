@@ -112,6 +112,99 @@ theorem runStatsData_offset_identities (n : Nat) :
           simpa [runStatsData, step, h2, hplusmod, hplusdiv, k] using
             congrArg (fun t : Int × Nat × Nat => (2 + 3 * t.1, t.2.1, t.2.2 + 1)) htail
 
+
+/--
+The same paired induction also preserves the exact terminal transducer
+state when the increment stays inside the n-digit range.  The exceptional
+carry across the n-digit boundary is excluded by `q+1<3^n`.
+-/
+theorem runFinalState_offset_identities (n : Nat) :
+    (∀ q, q + 1 < 3 ^ n →
+      (run n (q + 1) B).2 = (run n q A).2) ∧
+    (∀ q, q + 1 < 3 ^ n →
+      (run n (q + 1) A).2 = (run n q C).2) := by
+  induction n with
+  | zero =>
+      constructor <;> intro q hq <;> omega
+  | succ n ih =>
+      constructor
+      · intro q hq
+        let k := q / 3
+        have hmodlt : q % 3 < 3 := Nat.mod_lt _ (by decide)
+        have hcases : q % 3 = 0 ∨ q % 3 = 1 ∨ q % 3 = 2 := by omega
+        rcases hcases with h0 | h1 | h2
+        · have hplusmod : (q + 1) % 3 = 1 := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          have hplusdiv : (q + 1) / 3 = k := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          simp [run, step, h0, hplusmod, hplusdiv, k]
+        · have hplusmod : (q + 1) % 3 = 2 := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          have hplusdiv : (q + 1) / 3 = k := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          simp [run, step, h1, hplusmod, hplusdiv, k]
+        · have hplusmod : (q + 1) % 3 = 0 := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          have hplusdiv : (q + 1) / 3 = k + 1 := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          have htailBound : k + 1 < 3 ^ n := by
+            have hdecomp := Nat.mod_add_div q 3
+            rw [Nat.pow_succ] at hq
+            omega
+          have htail := ih.2 k htailBound
+          simpa [run, step, h2, hplusmod, hplusdiv, k] using htail
+      · intro q hq
+        let k := q / 3
+        have hmodlt : q % 3 < 3 := Nat.mod_lt _ (by decide)
+        have hcases : q % 3 = 0 ∨ q % 3 = 1 ∨ q % 3 = 2 := by omega
+        rcases hcases with h0 | h1 | h2
+        · have hplusmod : (q + 1) % 3 = 1 := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          have hplusdiv : (q + 1) / 3 = k := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          simp [run, step, h0, hplusmod, hplusdiv, k]
+        · have hplusmod : (q + 1) % 3 = 2 := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          have hplusdiv : (q + 1) / 3 = k := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          simp [run, step, h1, hplusmod, hplusdiv, k]
+        · have hplusmod : (q + 1) % 3 = 0 := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          have hplusdiv : (q + 1) / 3 = k + 1 := by
+            have hdecomp := Nat.mod_add_div q 3
+            omega
+          have htailBound : k + 1 < 3 ^ n := by
+            have hdecomp := Nat.mod_add_div q 3
+            rw [Nat.pow_succ] at hq
+            omega
+          have htail := ih.1 k htailBound
+          simpa [run, step, h2, hplusmod, hplusdiv, k] using htail
+
+theorem runStats_offset_finalState_BA (n q : Nat) (hq : q + 1 < 3 ^ n) :
+    (runStats n (q + 1) B).finalState = (runStats n q A).finalState := by
+  rw [runStats_finalState_eq n (q + 1) B, runStats_finalState_eq n q A]
+  exact (runFinalState_offset_identities n).1 q hq
+
+theorem runStats_offset_finalState_AC (n q : Nat) (hq : q + 1 < 3 ^ n) :
+    (runStats n (q + 1) A).finalState = (runStats n q C).finalState := by
+  rw [runStats_finalState_eq n (q + 1) A, runStats_finalState_eq n q C]
+  exact (runFinalState_offset_identities n).2 q hq
+
+#print axioms runFinalState_offset_identities
+#print axioms runStats_offset_finalState_BA
+#print axioms runStats_offset_finalState_AC
+
 theorem runStats_offset_BA (n q : Nat) (hq : q + 1 < 3 ^ n) :
     (runStats n (q + 1) B).output = (runStats n q A).output ∧
     (runStats n (q + 1) B).ones = (runStats n q A).ones ∧
