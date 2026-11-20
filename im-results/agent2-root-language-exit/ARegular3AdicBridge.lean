@@ -54,8 +54,10 @@ theorem synchronized_model (s t : DRegular.L) (k p : Nat)
 /-- Original-source version of the same 3-adic synchronization law, expressed
     in A(n,r) notation. For every canonical regular suffix and every p, the
     physical machine follows the same k-step DRegular itinerary from
-    A(a+3^k*p,r), ending at A(a'+8^k*p,r'). This proves the wiki's suggested
-    shift law on the regular suffix language, not for arbitrary r. -/
+    A(a+3^k*p,r), ending at A(a'+8^k*p,r'). This is the source-certified
+    3-adic shift analogue on the regular suffix language, not arbitrary r;
+    the exact first-return identification with the external A-macro is not
+    asserted here. -/
 theorem synchronized_source (s t : DRegular.L) (k p : Nat)
     (hc : DRegular.Canon s) (hr : DRegular.run k s = some t) :
     BB6.BoundaryPadding.ObsEq
