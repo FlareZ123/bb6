@@ -272,3 +272,48 @@ Thus the single-sum expression is an exact primitive-step cost refinement
 of the same \(t_2,s t_2\) recursion used in the published TM63 analysis.
 It does not introduce a new machine recurrence, and it does not by itself
 establish that the source-level root composition is accepted.
+
+
+## Dominance of the final counted increment
+
+For \(N=3k\), isolate the dispatcher-plus-terminal part of the score:
+\[
+D_N(U,R)=90k^2+111k+12(N+1)U+
+\sum_{j=0}^{N-1}\left(
+6\cdot4^{b_j}+42\cdot2^{b_j}
++(12(N-j)-9)b_j
+\right).
+\]
+Assume \(R\ge5\), \(U\ge0\), and \(b_0=R,\ b_{j+1}=2^{b_j}-1\).
+
+Since \(b_{j+1}+1=2^{b_j}\), the exponential part of each summand is exactly
+\[
+6\cdot4^{b_j}+42\cdot2^{b_j}
+=6b_{j+1}^2+54b_{j+1}+48.
+\]
+Also \(2^x-1\ge x^2\) for \(x\ge5\), so \(b_i^2\le b_{i+1}\le b_N\) for every \(i<N\). Consequently
+\[
+\sum_{i=1}^{N-1}b_i^2\le (N-1)b_N,\qquad
+\sum_{i=1}^{N}b_i\le Nb_N.
+\]
+Bounding the remaining weighted sum by
+\[
+\sum_{j=0}^{N-1}(12(N-j)-9)b_j
+\le 12N^2b_N
+\]
+gives the explicit two-sided estimate
+\[
+\boxed{
+6b_N^2\le D_N(U,R)\le
+6b_N^2+(12N^2+60N)b_N
++48N+90k^2+111k+12(N+1)U.
+}
+\]
+The lower bound is simply the final increment's \(6\cdot4^{b_{N-1}}=6(b_N+1)^2\) contribution. For fixed \(U,R\), \(b_N\ge2^N R\), so the displayed remainder is \(o(b_N^2)\). Therefore
+\[
+D_N(U,R)\sim 6b_N^2
+=6\,t_2(N,R)^2
+\qquad(N\to\infty).
+\]
+
+This proves that the *dispatcher-plus-terminal contribution* is asymptotically dominated by its final counted increment. Extending the same asymptotic to the full champion score additionally requires bounding the separate root/drain prefix by \(o(b_N^2)\); that prefix bound is not asserted here.
