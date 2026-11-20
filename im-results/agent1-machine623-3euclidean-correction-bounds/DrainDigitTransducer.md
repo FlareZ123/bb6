@@ -218,3 +218,23 @@ Thus the empirical root pattern (left output: first carry nonpositive, second no
 L:\ C\le0\le F,\qquad R:\ F\le0\le C.
 \]
 The sign pattern is not a consequence of the cone hypotheses alone: the weighted formulas show that it depends on the root's digit statistics n_1,n_2. But it is now an explicit finite-state weighted condition on the same three-state drain scan. This is a direct interface for the boundary-carry closure: compute the digit weights, then the exact C,F, then the actual boundary carry pair.
+
+
+## 8. The valid-length terminal state is only A or B
+
+The parity and size conditions defining L impose a further exact restriction on the transducer state after its L input digits.
+
+Let (b_L=\lfloor b/3^L\rfloor). Since (2b-1<3^{L+1}), one has (b_L\in\{0,1\}). Also (3^i\equiv1\pmod2), so the parity of the number of 1-digits among the low L input digits is (b-b_L\equiv L-b_L\pmod2). Therefore the number of low input digits different from 1 has parity (b_L).
+
+The state update toggles between A and a non-A state at every input digit 0 or 2, and leaves the state unchanged on input 1. Hence:
+- if (b_L=0), the terminal state is A;
+- if (b_L=1), the terminal state is B or C.
+
+But terminal state C is impossible for a valid L. If the last transition enters C, it is either A on input 2 or C on input 1; in either case its emitted top digit is 0. This contradicts (N\ge3^{L-1}), which says the L-digit output has a nonzero leading digit. Thus the terminal state is exactly
+\[
+\boxed{\text{state after L digits}=A\iff b<3^L,\qquad
+\text{state after L digits}=B\iff b\ge3^L.}
+\]
+In the second case the final output digit is 2, consistently with (N=(2b-1+3^L)/4\ge2\cdot3^{L-1}).
+
+This gives a one-bit terminal constraint on the weighted transducer, determined by the single high ternary digit of b. It can be included in a composed root/boundary automaton without enlarging the three-state interior machine.
