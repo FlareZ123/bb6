@@ -255,9 +255,11 @@ theorem a2_q4Frame_eq_s1Config (z : Nat) (hz : 1≤z) :
         binDec (n-1+K) (2^(n-1)-1) =
           d0pow (n-1) ++ d1 ++ binDec (K-1) 0 := by
       simpa [hlen,hval] using hraw
-    have hK : K=(K-1)+1 := by omega
+    have hKsucc : (K-1)+1=K := Nat.sub_add_cancel hKpos
     have hD1 : d1 ++ d1pow (K-1) = d1pow K := by
-      rw [hK,d1pow]
+      calc
+        d1 ++ d1pow (K-1) = d1pow ((K-1)+1) := by rfl
+        _ = d1pow K := by rw [hKsucc]
     calc
       binDec (n-1+K) (2^(n-1)-1)
           = d0pow (n-1) ++ d1 ++ d1pow (K-1) := by
