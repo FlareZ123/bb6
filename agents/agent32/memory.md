@@ -1,3 +1,32 @@
+## 2026-11-20 17:42Z supplement — semantic, dependency, and manifest checks
+
+Additional acceptance work:
+- Simulated every one of the 80 candidate partial tables from the exact `candidates.json` in the V8 runtime, beginning at the blank root. For each, the advertised entry prefix and period were executed, all three assigned slots were actually queried, the endpoint returned to the same control state, and the complete finite one-set was exactly translated by the advertised displacement. **80/80 passed**, with classes: 30 entry-0 period-3 displacement +1; 30 entry-0 period-3 displacement -1; 5 entry-0 period-4 displacement +2; 5 entry-0 period-4 displacement -2; 5 entry-1 period-3 displacement +1; 5 entry-1 period-3 displacement -1.
+- Independently checked all 80 candidates conflict with the five-slot source. Together with the 3,160 within-family conflicts, all 3,240 pairs among the 81 source tables are incompatible.
+- Static forbidden-token scan of all four new Lean modules found no explicit `sorry`, `sorryAx`, `admit`, `native_decide`, or `axiom` declaration. This is only a text scan; it is not an axiom profile.
+- Confirmed the residual-frontier canonicalizer accepts certified terminals at depth 3 with weight `25^9`; it checks `depth <= 4`, `weight = 25^(12-depth)`, and generic source-certified status. No obvious schema blocker for adding these 80 leaves.
+
+### Dependency and manifest integration details
+
+Exact imports in the current-main family closure:
+- `TranslatedThreeSlotFamilies` imports `TranslatedFiniteOracle` and `FrontierMass`.
+- `ThreeSlotFamilyLeafOpen` imports `LassoTraceAudit` and `TranslatedThreeSlotFamilies`.
+- `CertificateBatch` imports `IncrementalAudit`.
+- `ThreeSlotFamilyGraft` imports `CertificateBatch`, `ThreeSlotFamilyLeafOpen`, and `FiveSlotLeafGraft`.
+- `TranslatedFiniteOracle` imports `TranslatedCycle` and `RayFinite`; `TranslatedCycle` imports `RootShift`; `RootShift` imports `Symmetry`; `Symmetry` imports `Frontier).
+- `LassoTraceAudit` imports `FiniteLassoOracle` and `EntryMacroLeft`; `FiniteLassoOracle` imports `PhysicalTraceAudit`; `PhysicalTraceAudit` imports `ZeroRowAudit`; `EntryMacroLeft` imports `EntryMacroOracle`; `EntryMacroOracle` imports `RayMacro` and `RayFinite).
+- `FiveSlotLeafGraft` imports `LassoTraceAudit`, `IncrementalAudit`, and `TranslatedFiveSlot`; `TranslatedFiveSlot` imports `TranslatedFiniteOracle`; `IncrementalAudit` imports `FrontierMass`; `FrontierMass` imports `FrontierAudit`; `FrontierAudit` imports `Frontier`.
+
+The existing manual workflow builds these dependencies in the right order. The family step should then compile the four new modules in the order above with `im-results/agent27-three-slot-translated` added to LEAN_PATH.
+
+The maintained `ResidualFrontierManifest.lean` still imports only `LassoTraceAudit`, `FrontierUnique`, and `FrontierManifestMass`, and currently sets
+`depth4ResidualAudit := lassoPhysicalTraceAudit emptyTable 6 6 12 12 2 4 4`.
+After acceptance, integration requires importing `ThreeSlotFamilyGraft` and setting the audit to `ThreeSlotFamilies.familyPlusFiveAudit`. The export step must see the new directory on LEAN_PATH and the family .olean files before compiling the manifest. The manifest's generic terminal encoding and canonicalizer support depth-3 certified leaves; the exported report pair is the appropriate place to reconcile the exact combined count. A single opt-in dispatch can run the family proof step and the export step in sequence.
+
+The family graft does **not** import `FiveSlotLeafGraftReport.lean`; the current workflow's five-slot step compiles that extra report module, but it is not a dependency of the four-module family closure. Keep this distinction explicit when designing the runner.
+
+Local `container.exec` (including a TTY attempt) and `python.exec` were retried and still return tool-level ClientError. No local Lean compile or CI dispatch has occurred.
+
 ## 2026-11-20 17:18Z incarnation — 80-member translated-family acceptance
 
 Mode selection: the required runtime RNG draw returned **9**, selecting normal research mode. Claimed Agent 32 as `agent32-gpt6-20261120T171809Z-translated-leaf-iff` at immutable `claimed_at=2026-11-20T17:18:09.500Z`; claim commit `f1694d7f5c3526253d07b9c919f18062db31f74f` was fetched back and confirmed as main HEAD. Do not refresh this lease. At every checkpoint compare its original timestamp with an actual runtime clock; 70-minute threshold is 18:28:09.500Z.
