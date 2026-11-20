@@ -66,7 +66,7 @@ theorem odd_odd_three_divisible_parent (a k x y : Nat)
           · rw [h]
             decide
         rw [hxy] at h3
-        exact hprod h3
+        exact False.elim (hprod h3)
   · by_cases ha1 : a=1
     · subst a
       by_cases hk0 : k=0
@@ -176,7 +176,6 @@ theorem even_odd_three_divisible_parent (a k x y : Nat)
                   rw [Nat.mul_mod]
                   have h16 : (16:Nat)%3=1 := by decide
                   rw [h16,hpowmod]
-                  decide
                 rw [hpow] at hleft
                 rw [hright] at hleft
                 omega
@@ -347,22 +346,21 @@ theorem b2_even_parent_fan (u a k : Nat) (hu : u%2=0)
                 omega
               have hpoweq : 2^(n+2)=2^n*4 := by
                 rw [Nat.pow_add]
-                simp
               have hpowdiv : 2^(n+2)∣x+y+1 := by
                 rcases hfactor4 with ⟨q,hq⟩
                 refine ⟨q,?_⟩
                 rw [hpow,hpoweq,hq]
                 ac_rfl
               have hnlt : n<4 := by
-                by_contra hnot
-                have hnge : 4≤n := by omega
-                have h6pow : 64∣2^(n+2) := by
-                  have h := Nat.pow_dvd_pow 2 (show 6≤n+2 by omega)
-                  simpa only [show (2:Nat)^6=64 by decide] using h
-                have h64 : 64∣x+y+1 := Nat.dvd_trans h6pow hpowdiv
-                have hmod : (x+y+1)%64=0 := Nat.mod_eq_zero_of_dvd h64
-                rw [hAmod64] at hmod
-                omega
+                by_cases hnge : 4≤n
+                · have h6pow : 64∣2^(n+2) := by
+                    have h := Nat.pow_dvd_pow 2 (show 6≤n+2 by omega)
+                    simpa only [show (2:Nat)^6=64 by decide] using h
+                  have h64 : 64∣x+y+1 := Nat.dvd_trans h6pow hpowdiv
+                  have hmod : (x+y+1)%64=0 := Nat.mod_eq_zero_of_dvd h64
+                  rw [hAmod64] at hmod
+                  omega
+                · omega
               have hcost' : 2*k+a+7+3*n=x+2*y := by omega
               have hnEven : n%2=0 := by omega
               have hncase : n=0 ∨ n=2 := by omega
@@ -443,12 +441,13 @@ theorem p4_r32_n0_parent_unreachable (t : Nat) :
     have hdiv : 4∣x+y := by
       refine ⟨2^n*2,?_⟩
       rw [hxy]
-      ac_rfl
+      omega
     have hmod := Nat.mod_eq_zero_of_dvd hdiv
     omega
   · rcases hbounce with ⟨_,_,_,_,n,hn,hxy,_⟩
     have h4pow : 4∣2^(n+1) := by
-      have h := Nat.pow_dvd_pow 2 (by omega)
+      have hle : 2≤n+1 := by omega
+      have h : (2:Nat)^2∣2^(n+1) := Nat.pow_dvd_pow 2 hle
       simpa only [show (2:Nat)^2=4 by decide] using h
     have hdiv : 4∣x+y := by
       rcases h4pow with ⟨q,hq⟩
@@ -490,7 +489,6 @@ theorem p4_r32_parent_fan (t a k : Nat)
     omega
   have hpoweq : 2^(n+2)=2^n*4 := by
     rw [Nat.pow_add]
-    simp
   have hpowdiv : 2^(n+2)∣x+y := by
     rcases hfactor4 with ⟨q,hq⟩
     refine ⟨q,?_⟩
@@ -705,30 +703,76 @@ theorem p4_root32_u_parameter (w : Nat)
       67186+999595*(122+840*w)=8*(15252222+104957475*w) := by
     calc
       67186+999595*(122+840*w)
-          = 67186 + (999595*122 + (999595*840)*w) := by
-              simp [Nat.mul_add, Nat.mul_assoc]
+          = 67186 + (999595*122 + (999595*840)*w) := by omega
       _ = (67186+999595*122)+(999595*840)*w := by omega
       _ = (8*15252222)+(8*104957475)*w := by rw [hconst,hcoeff]
-      _ = 8*(15252222+104957475*w) := by
-            simp [Nat.mul_add, Nat.mul_assoc]
+      _ = 8*(15252222+104957475*w) := by omega
   have hQ : (15252222+104957475*w)%8=4 := by
     rw [hfactor] at hS
     omega
-  have hQ' : (6+3*(w%8))%8=4 := by
-    have hreduce :
-        (15252222+104957475*w)%8=(6+3*(w%8))%8 := by
-      simp only [Nat.add_mod, Nat.mul_mod,
-        show 15252222%8=6 by decide,
-        show 104957475%8=3 by decide]
-    rw [← hreduce]
-    exact hQ
-  have hw : w%8=2 := by omega
-  have hdecomp : w=8*(w/8)+2 := by
-    have h := Nat.mod_add_div w 8
+  have hmul : (104957475*w)%8 = (3*(w%8))%8 := by
+    rw [Nat.mul_mod]
+  have hreduce :
+      (15252222+104957475*w)%8 = (6+3*(w%8))%8 := by
+    calc
+      (15252222+104957475*w)%8
+          = ((15252222%8) + (104957475*w)%8)%8 := by rw [Nat.add_mod]
+      _ = ((6%8) + (3*(w%8))%8)%8 := by
+          rw [show 15252222%8=6 by decide, hmul]
+      _ = (6+3*(w%8))%8 := by
+          symm
+          rw [Nat.add_mod]
+  have hQ' : (6+3*(w%8))%8=4 := by rw [← hreduce]; exact hQ
+  generalize hvdef : w%8 = v at hQ'
+  have hv : v<8 := by
+    rw [← hvdef]
+    exact Nat.mod_lt _ (by decide)
+  have hmodv : (6+3*v)%8=4 := by simpa [hvdef] using hQ'
+  have hqexists : ∃ q : Nat, 6+3*v = 8*q+4 := by
+    refine ⟨(6+3*v)/8, ?_⟩
+    have hdivv : (6+3*v)%8 + 8*((6+3*v)/8) = 6+3*v :=
+      Nat.mod_add_div (6+3*v) 8
+    rw [hmodv] at hdivv
+    calc
+      6+3*v = 4+8*((6+3*v)/8) := hdivv.symm
+      _ = 8*((6+3*v)/8)+4 := by omega
+  rcases hqexists with ⟨q,hdecompv⟩
+  have hqbound : q<4 := by
+    clear hvdef
     omega
+  have hv2 : v=2 := by
+    clear hvdef
+    omega
+  have hw : w%8=2 := by rw [hvdef]; exact hv2
+  have hdivw : w%8 + 8*(w/8) = w := Nat.mod_add_div w 8
+  rw [hw] at hdivw
+  have hdecomp : w=8*(w/8)+2 := by
+    calc
+      w = 2 + 8*(w/8) := hdivw.symm
+      _ = 8*(w/8)+2 := by omega
   refine ⟨w/8,?_⟩
-  rw [hdecomp]
-  omega
+  calc
+    122+840*w = 122+840*(8*(w/8)+2) :=
+      congrArg (fun z => 122+840*z) hdecomp
+    _ = 122 + ((840*8)*(w/8) + 840*2) := by
+      rw [Nat.mul_add, Nat.mul_assoc]
+    _ = 1802+6720*(w/8) := by
+      calc
+        122 + ((840*8)*(w/8) + 840*2)
+            = 122 + (6720*(w/8) + 1680) := by simp
+        _ = 122 + (1680 + 6720*(w/8)) := by
+          rw [Nat.add_comm (6720*(w/8)) 1680]
+        _ = (122+1680) + 6720*(w/8) := by rw [Nat.add_assoc]
+        _ = 1802+6720*(w/8) := by
+          rw [show 122+1680=1802 by decide]
+
+/-- Small finite-modulus cancellation lemmas used in the P4 residual
+calculation. -/
+private theorem p4_mod64_add_cancel32 (x : Nat) (hx : x<64)
+    (h : (x+32)%64=0) : x=32 := by omega
+
+private theorem p4_mod64_mul19_inv (a : Nat) (ha : a<64)
+    (h : (19*a)%64=32) : a=32 := by omega
 
 /-- The exact residual root equation transfers r=32 mod 64 to
 v2(P4.x+P4.y)=5. The hypothesis is the rearranged integer identity
@@ -740,18 +784,55 @@ theorem p4_sum_mod64_of_root32 (r E u : Nat)
       211*(67186+999595*u)+7*(2570932352+3163718175*r)
         =19991900*2^(E-13)) :
     (67186+999595*u)%64=32 := by
-  have hA : (2570932352+3163718175*r)%64=32 := by omega
-  have hpow : (2^(E-13))%64=0 := by
-    have hdiv : 64∣2^(E-13) := by
-      have h6 : 6≤E-13 := by omega
-      have h := Nat.pow_dvd_pow 2 h6
-      simpa only [show (2:Nat)^6=64 by decide] using h
-    exact Nat.mod_eq_zero_of_dvd hdiv
-  have hsum :
-      (211*(67186+999595*u)+7*(2570932352+3163718175*r))%64=0 := by
-    rw [hExact,Nat.mul_mod,hpow]
-    simp
-  omega
+  let A := 67186+999595*u
+  have h6 : 6≤E-13 := by omega
+  have h64 : 64∣2^(E-13) := by
+    have h := Nat.pow_dvd_pow 2 h6
+    simpa only [show (2:Nat)^6=64 by decide] using h
+  have hRHS : (19991900*2^(E-13))%64=0 := by
+    apply Nat.mod_eq_zero_of_dvd
+    rcases h64 with ⟨k,hk⟩
+    refine ⟨19991900*k, ?_⟩
+    rw [hk]
+    omega
+  have hbase : (2570932352+3163718175*r)%64=32 := by
+    calc
+      (2570932352+3163718175*r)%64
+          = ((2570932352%64)+(3163718175*r)%64)%64 := by rw [Nat.add_mod]
+      _ = ((0%64)+((31*(r%64))%64))%64 := by
+          rw [show 2570932352%64=0 by decide, Nat.mul_mod,
+            show 3163718175%64=31 by decide]
+      _ = 32 := by rw [hr]
+  have hterm : (7*(2570932352+3163718175*r))%64=32 := by
+    rw [Nat.mul_mod, hbase]
+  have hExactA : 211*A+7*(2570932352+3163718175*r)
+      =19991900*2^(E-13) := by simpa [A] using hExact
+  have hsum : (211*A+7*(2570932352+3163718175*r))%64=0 := by
+    rw [hExactA]
+    exact hRHS
+  have hsumMod :
+      ((211*A)%64+(7*(2570932352+3163718175*r))%64)%64=0 := by
+    simpa [Nat.add_mod] using hsum
+  have h211A : (211*A)%64=32 := by
+    have hsumMod' : ((211*A)%64+32)%64=0 := by
+      simpa [hterm] using hsumMod
+    generalize hxdef : (211*A)%64 = x at hsumMod' ⊢
+    have hxlt : x<64 := by
+      rw [← hxdef]
+      exact Nat.mod_lt _ (by decide)
+    exact p4_mod64_add_cancel32 x hxlt hsumMod'
+  have hmul : (211*A)%64=(19*(A%64))%64 := by
+    rw [Nat.mul_mod, show 211%64=19 by decide]
+  have hAmod : (19*(A%64))%64=32 := by
+    rw [← hmul]
+    exact h211A
+  have hA : A%64=32 := by
+    generalize hadef : A%64 = a at hAmod ⊢
+    have halt : a<64 := by
+      rw [← hadef]
+      exact Nat.mod_lt _ (by decide)
+    exact p4_mod64_mul19_inv a halt hAmod
+  simpa [A] using hA
 
 /-- Algebraic conversion of the exact residual root equation to
 the P4-sum identity. -/
