@@ -97,7 +97,7 @@ for (let n=0;n<=maxStep;n++) {
   if (n===16) anchor16=[a.toString(),d.toString()];
   if (n>=33) {
     const {q,z}=stateData(a,d), ell=ellOf(q);
-    const B=Math.max(34*ell+140,36*ell+88);
+    const B=Math.max(34*ell+122,36*ell+88);
     let k=0,pow=1; while(pow<=B){pow*=3;k++;}
     let j=0; pow=1n; const target=BigInt(B)**3n; while(pow<=target){pow*=3n;j++;}
     const xd=digitsMod3(z,j), yd=digitsMod3(6n*q,j);
