@@ -263,12 +263,12 @@ S_{\rm TM1}\ge
 \]
 Here \(M=31\cdot2^{A_0}-36\) and \(N=(2^{78}-1)2^A-3\) are the
 authentic middle-dispatcher length and terminal index. The upper-side
-estimate gives \(M+N+50<X\), where \(X=T_{T_{11}-1}\), so
-\(M+N+49<X+1\) and the lower endpoint is below \(T_{X+1}\). Combining (12)--(13),
+estimate gives \(M+N+50<T_J\), so \(M+N+49<T_J\) and the lower
+endpoint is below \(T_{T_J}\). Combining (12)--(13),
 \[
 \boxed{\quad T_{M+N+49}
  < S_{\rm TM1}
- < T_{X+1}.\quad} \tag{14}
+ < T_{T_J}.\quad} \tag{14}
 \]
 This lower endpoint strictly improves the published left endpoint
 \(T_{T_{T_{10}}}\), because \(M+N+49>T_{M+46}>T_{T_{10}}\).
