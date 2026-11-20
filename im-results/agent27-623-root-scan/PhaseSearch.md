@@ -60,3 +60,12 @@ Therefore neither the 6-slack nor the 65-slack predicate is a generic forward in
 ## Research implication
 
 Do not repeat the small residue, scalar drain-count, short sector-history, or short quotient-suffix tests without a materially new feature. The evidence points toward a compressed cocycle retaining more of the full ternary quotient/remainder path, or a root-specific arithmetic relation that couples several transitions. Any proposed invariant must distinguish the authentic blank-root itinerary from synthetic states such as D(18,88), not merely restate the observed slack lower bound.
+
+
+## Residue-dependent slack table is not closed
+
+I computed the minimum slack observed in each of the 36 (sector, a mod 3, d mod 3) classes on the 20k root trace and used those minima as class-specific thresholds. This contains the entire scanned root prefix by construction, but it is not forward-invariant even on small states.
+
+Counterexample: D(2,73) is right-odd with residues (2,1), slack 69, exceeding the root-trace minimum 65 for that class. Its exact next state is D(74,10), which is left-even with residues (2,1) and slack 61, far below the root-trace minimum 696,153 for that target class. By contrast, the authentic root state D(314,385) has the same source sector/residue class (right-odd, (2,1)) and slack 65, but maps to D(74,950), whose target class is right-even (2,2) with slack 871.
+
+Thus even sector plus mod-3 residues plus a class-specific slack threshold does not encode enough of the root history. The quotient/drain path or a stronger arithmetic invariant is still needed.
