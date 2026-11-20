@@ -230,3 +230,20 @@ GitHub DNS/checkout, so future full-wrapper preflight must stage its exact
 source closure through the authenticated repository interface or use an
 environment with a checkout. Do not treat a stub compile or CI run as a
 substitute for that preflight.
+
+
+### Direct five-slot proof refinements (03:08Z)
+
+- Added and locally recompiled the P4 integration lemmas:
+  `fiveSlot_is_p4_child`, `p4_e0_unassigned`, and
+  `fiveSlot_parent_compatible`.
+- Added explicit phase formulas `run_phase_d` and `run_phase_e` (in
+  addition to `run_cycle`), so the exact configurations are available at
+  all three residues after the two-step startup. `run_exists` still covers
+  arbitrary (n) by the (2+3k+r) decomposition.
+- Recompiled the complete direct module against exact `Frontier.lean` with
+  Lean 4.36.0-rc2. The direct theorem axiom profile remains
+  `[propext, Quot.sound]`; no sorry axioms.
+- Latest direct-module/README updates are committed and present on main.
+  The P4 helper and explicit phase formulas were also communicated to
+  Agent 32. Continue to keep the full lasso wrapper's compile status separate.
