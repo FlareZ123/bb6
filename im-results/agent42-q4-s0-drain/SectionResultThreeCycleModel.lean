@@ -8,7 +8,7 @@ The definitions 'v2', 'proposedIncrementCost', 'nextMarker',
 are copied from 'im-results/agent24-champion-time/CostRecurrence.lean'
 into a fresh namespace so this file can be checked without the repository's
 full import closure. The theorems are machine-checked facts about this
-source-shaped recurrence model. They are **not** a compilation of the
+source-shaped recurrence model, including the one-dimensional cost form. They are **not** a compilation of the
 original source module, a proof that the candidate cost equals a TM2 run
 length, or an accepted blank-root halt/score theorem.
 
@@ -188,6 +188,116 @@ theorem sectionResult_cost_three_cycle (k a b : Nat) :
   have hmark := markerSum_three_cycle k
   have hval := sumV2_add_popCount (3*k)
   omega
+
+
+/-- The marker-dependent additive increment in the exponent recurrence. -/
+def epsilon (m : Nat) : Nat := if m%3=0 then 1 else 2
+
+def weightedEpsilonSum : Nat → Nat → Nat
+  | 0, _ => 0
+  | n+1, m => (n+1)*epsilon m + weightedEpsilonSum n (nextMarker m)
+
+/-- The one-dimensional right-counter sum, with coefficient determined by
+how many increments remain at the current stage. -/
+def oneDimSum : Nat → Nat → Nat
+  | 0, _ => 0
+  | n+1, b =>
+      6*4^b + 42*2^b + (12*(n+1)-9)*b + oneDimSum n (nextRight b)
+
+/-- Exact elimination of the intermediate exponent sequence, valid for
+any initial marker and any dispatcher length. -/
+theorem rawSum_add_terminalExponent (n m a b : Nat) :
+    rawSum n m a b + 12*(sectionResult n m a b).exponent =
+      12*(n+1)*a + oneDimSum n b + 12*weightedEpsilonSum n m := by
+  induction n generalizing m a b with
+  | zero => simp [rawSum, sectionResult, oneDimSum, weightedEpsilonSum]
+  | succ n ih =>
+    simp only [rawSum, oneDimSum, weightedEpsilonSum, sectionResult]
+    rw [Nat.add_assoc, ih (nextMarker m) (nextExponent m a b) (nextRight b)]
+    unfold rawTerm nextExponent epsilon
+    have hcoeff : 9 ≤ 12*(n+1) := by omega
+    have hbPow : b ≤ 2^b := nat_le_two_pow b
+    have hrawSub : 9*b ≤ 6*4^b + 42*2^b + 12*a := by omega
+    have hprod : 12*(n+1)*(a+b+(if m%3=0 then 1 else 2)) =
+        12*(n+1)*a + 12*(n+1)*b + 12*(n+1)*(if m%3=0 then 1 else 2) := by
+      simp [Nat.mul_add, Nat.add_assoc]
+    have hfactor : 12*(n+1+1)*a = 12*(n+1)*a + 12*a := by
+      calc
+        12*(n+1+1)*a = (12*(n+1)+12)*a := by congr 2 <;> omega
+        _ = 12*(n+1)*a + 12*a := by rw [Nat.add_mul]
+    have hcoeffEq : 12*(n+1)=12*n+12 := by omega
+    rw [hcoeffEq] at hprod hfactor
+    rw [hcoeffEq]
+    rw [hprod, hfactor]
+    have hepsCoeff : (12*n+12)*(if m%3=0 then 1 else 2) =
+        12*((n+1)*(if m%3=0 then 1 else 2)) := by
+      calc
+        (12*n+12)*(if m%3=0 then 1 else 2) =
+            (12*(n+1))*(if m%3=0 then 1 else 2) := by congr 1 <;> omega
+        _ = 12*((n+1)*(if m%3=0 then 1 else 2)) := by rw [Nat.mul_assoc]
+    have hcoeffBase : 9 ≤ 12*n+12 := by omega
+    have hbCoeff : (12*n+12)*b = (12*n+12-9)*b+9*b := by
+      have hle : 9*b ≤ (12*n+12)*b := Nat.mul_le_mul_right b hcoeffBase
+      calc
+        (12*n+12)*b = ((12*n+12)*b-9*b)+9*b := (Nat.sub_add_cancel hle).symm
+        _ = (12*n+12-9)*b+9*b := by rw [← Nat.sub_mul]
+    rw [hepsCoeff, hbCoeff, Nat.mul_add]
+    omega
+
+/-- Weighted marker increments over each 0,2,1 cycle. -/
+theorem weightedEpsilonSum_three_cycle (k : Nat) :
+    2*weightedEpsilonSum (3*k) 0 = 15*k^2+3*k := by
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+    have hstep : weightedEpsilonSum (3*k+3) 0 =
+        (3*k+3)*1 + (3*k+2)*2 + (3*k+1)*2 + weightedEpsilonSum (3*k) 0 := by
+      simp [weightedEpsilonSum, epsilon, nextMarker] <;> omega
+    have hsq : (k+1)^2 = k^2+2*k+1 := by
+      simp [Nat.pow_succ, Nat.mul_add, Nat.mul_comm] <;> omega
+    calc
+      2*weightedEpsilonSum (3*(k+1)) 0 =
+          2*weightedEpsilonSum (3*k+3) 0 := by congr 1 <;> omega
+      _ = 2*((3*k+3)*1 + (3*k+2)*2 + (3*k+1)*2 +
+          weightedEpsilonSum (3*k) 0) := by rw [hstep]
+      _ = 2*((3*k+3)*1 + (3*k+2)*2 + (3*k+1)*2) +
+          2*weightedEpsilonSum (3*k) 0 := by omega
+      _ = 2*((3*k+3)*1 + (3*k+2)*2 + (3*k+1)*2) +
+          (15*k^2+3*k) := by rw [ih]
+      _ = 15*(k+1)^2+3*(k+1) := by rw [hsq]; omega
+
+/-- One-dimensional exact form after adding the terminal 12E correction,
+12W with W=popcount(N)+2, and the fixed 59+7 terminal/attainability cost.
+The remaining sum depends only on the right-counter recurrence. -/
+theorem sectionResult_one_dimensional_cost (k U R : Nat) :
+    (sectionResult (3*k) 0 U R).cost +
+      12*(sectionResult (3*k) 0 U R).exponent +
+      12*(popCount (3*k)+2) + 66 =
+    90*k^2 + 111*k + 90 + 12*(3*k+1)*U + oneDimSum (3*k) R := by
+  have hcost := sectionResult_cost_three_cycle k U R
+  have hraw := rawSum_add_terminalExponent (3*k) 0 U R
+  have heps := weightedEpsilonSum_three_cycle k
+  have hpop := sumV2_add_popCount (3*k)
+  have hpopBound : popCount (3*k) ≤ 3*k := by omega
+  have hle : 12*popCount (3*k) ≤ 31*(3*k) := by omega
+  have heps' : 12*weightedEpsilonSum (3*k) 0 =
+      6*(15*k^2+3*k) := by omega
+  calc
+    (sectionResult (3*k) 0 U R).cost +
+        12*(sectionResult (3*k) 0 U R).exponent +
+        12*(popCount (3*k)+2) + 66 =
+      (31*(3*k)-12*popCount (3*k)+rawSum (3*k) 0 U R) +
+        12*(sectionResult (3*k) 0 U R).exponent +
+        12*(popCount (3*k)+2) + 66 := by rw [hcost]
+    _ = 31*(3*k) +
+        (rawSum (3*k) 0 U R + 12*(sectionResult (3*k) 0 U R).exponent) + 90 := by
+      omega
+    _ = 31*(3*k) +
+        (12*(3*k+1)*U + oneDimSum (3*k) R +
+          12*weightedEpsilonSum (3*k) 0) + 90 := by rw [hraw]
+    _ = 90*k^2 + 111*k + 90 + 12*(3*k+1)*U + oneDimSum (3*k) R := by
+      rw [heps']
+      omega
 
 /-- Powers of two have a single nonzero binary digit. -/
 theorem popCount_pow_two_sub_one (n : Nat) : popCount (2^n-1) = n := by
@@ -389,6 +499,9 @@ end BB6SectionResultModel
 
 #print axioms BB6SectionResultModel.sumV2_add_popCount
 #print axioms BB6SectionResultModel.sectionResult_cost_three_cycle
+#print axioms BB6SectionResultModel.rawSum_add_terminalExponent
+#print axioms BB6SectionResultModel.weightedEpsilonSum_three_cycle
+#print axioms BB6SectionResultModel.sectionResult_one_dimensional_cost
 #print axioms BB6SectionResultModel.popCount_q4_terminal_index
 #print axioms BB6SectionResultModel.q4_terminal_index_mod_three
 #print axioms BB6SectionResultModel.sectionResult_q4_terminal_cost

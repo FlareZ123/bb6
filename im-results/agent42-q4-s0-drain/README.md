@@ -98,6 +98,11 @@ The file proves:
 - 'sectionResult_cost_three_cycle': for a marker-zero dispatcher with
   \(N=3k\), the exact cost is
   \(31N-12s_2(N)+\sum_i(6\cdot4^{b_i}+42\cdot2^{b_i}+12a_i-9b_i)\);
+- 'sectionResult_one_dimensional_cost': after adding the terminal
+  \(12E\), \(12(s_2(N)+2)\), and fixed 66 correction, the exact
+  expression reduces to
+  \(90k^2+111k+90+12(3k+1)U+\operatorname{oneDimSum}(3k,R)\),
+  a sum depending only on the right-counter recurrence.
 - 'popCount_q4_terminal_index': for \(A\ge2\),
   \(s_2(2^A(2^{L+2}-1)-3)=A+L\);
 - 'q4_terminal_index_mod_three': even \(L\) makes the q4 terminal
@@ -107,15 +112,17 @@ The file proves:
 
 The source file's '#print axioms' checks report only
 '[propext, Quot.sound]' for these principal theorems. Its SHA-256 is
-'9092b2c54964090055a0f2015a9cf0e55a98ce4b9937691c8644485db856ec32'.
+'21af81f192d7b828274a7f89c888f740a3dee0bc365d99e09dcc1d8999a35ea8'.
 
 **Scope boundary:** this is a machine-checked theorem about an isolated,
 source-shaped copy of the recurrence. It does not import or compile the
 original 'CostRecurrence.lean' closure, establish that its candidate
 costs are authentic TM2 run lengths, or prove the blank-root halt/score
-composition. The three-step state map, one-dimensional elimination,
-and dominant-increment asymptotic remain algebraic derivations in the
-Markdown note; this Lean file does not claim to formalize those parts.
+composition. The one-dimensional dispatcher-plus-terminal elimination is now
+formalized for the stated correction terms. The three-step state map and
+dominant-increment asymptotic remain algebraic derivations in the Markdown
+note; the full root-prefix and counted-drain score composition is not
+formalized by this file.
 
 ## Exact candidate factorization
 

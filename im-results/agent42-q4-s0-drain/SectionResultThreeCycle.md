@@ -27,6 +27,12 @@ The isolated Lean model proves the following exact statements:
    \]
 4. If \(L\) is even, the same terminal index is divisible by three,
    so the cost identity specializes directly to this q4 family.
+5. 'sectionResult_one_dimensional_cost': after adding the terminal
+   \(12E\), \(12(s_2(N)+2)\), and fixed 66 correction, the cost becomes
+   \[
+   90k^2+111k+90+12(3k+1)U+\operatorname{oneDimSum}(3k,R),
+   \]
+   eliminating the intermediate exponent sequence and marker dependence.
 
 The model copies the definitions of 'v2', 'proposedIncrementCost',
 'nextMarker', 'nextExponent', 'nextRight', and 'sectionResult'
@@ -34,9 +40,11 @@ from 'CostRecurrence.lean' into a fresh namespace. It compiles with
 warnings treated as errors; the principal theorem axiom profiles are
 '[propext, Quot.sound]'.
 
-This does **not** certify the original 'CostRecurrence.lean' module,
-its transitive imports, the three-step map \(F\), the one-dimensional
-score elimination, or the dominant-increment asymptotic. Most
+The one-dimensional dispatcher-plus-terminal elimination above is
+formalized in the isolated model, but this does **not** certify the
+original 'CostRecurrence.lean' module or its transitive imports. The
+three-step map \(F\), dominant-increment asymptotic, root-prefix cost,
+and counted-drain composition remain outside this Lean proof. Most
 importantly, it does not prove that the proposed dispatcher cost is the
 authentic TM2 primitive run length. The authentic blank-root composition
 remains uncompiled and no BB(6) halt/score claim follows.
