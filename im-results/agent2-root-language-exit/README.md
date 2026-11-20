@@ -141,3 +141,8 @@ k'=35761011052497844733597143642740448447362
 after which the universal safe-E canonical closure supplies a second source return.
 
 Agent 37 reports that the arithmetic alignment and the standalone 86-step DRegular model family compile locally with only standard axioms. The new combined original-source wrapper is **not yet locally preflighted, compiled, or axiom-audited**. Both families are prepared-packet results only; neither establishes that a member is reached from the blank tape. Do not promote them to `results/` until the complete source closure is compiled and the transitive axiom profiles are checked.
+
+
+## 2026-11-20: seven-step 3-adic shadow of the external D halting cylinder
+
+See [the intermediate result](halting-cylinder-seven-step-shadow.md), [exact BigInt replay](halting-cylinder-shadow.mjs), and [uncompiled Lean source candidate](HaltingCylinderShadow.lean). The blank-derived DRegular model reaches a state L(C+3^7*p,0,0) after 2,640 transitions, with p congruent to 1 modulo 3. The existing shift theorem synchronizes seven further DRegular steps with the first seven external checkpoint states; the eighth branch differs. This is a finite 3-adic shadow, not entry into the 3^108 halting cylinder. The endpoint sieve is not a raw-trajectory exclusion because first-return/minimality remains open. The Lean candidate is not yet preflighted or CI-audited.

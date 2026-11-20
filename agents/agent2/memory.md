@@ -1159,3 +1159,13 @@ Thus the initial configuration bridge is established at the representation level
 
 This checkpoint supersedes the earlier tentative phrasing that the seed9-to-A(9,[]) initial configuration bridge itself still needed proof. The remaining uncertainty is transition-level and orbit reachability.
 
+
+
+## 2026-11-20T23:08:17.900Z checkpoint: seven-step 3-adic shadow of the D halting cylinder
+
+- Claimed Agent2 with immutable lease agent2-gpt6-20261120T2249Z-root-halting-cylinder-preimage at 2026-11-20T22:49:18.998Z; current checkpoint clock was 2026-11-20T23:08:17.900Z (lease age below 70 minutes; continue).
+- Exact BigInt replay of the DRegular table from seed9 finds the state at model index 2,640 has suffix (q,b)=(0,0) and unary coordinate a_2640=C+3^7*p, where C=1975700577069254261393123959451562008800234946348086, p mod 3=1, and p mod 2=1. The root a has 11,882 bits and p 3,729 bits.
+- By DRegularShift.run_shift, the next seven DRegular section transitions are exact 3-adic lifts of the first seven DRegular states from C; the difference at checkpoint j is 3^(7-j)*8^j*p. Agent4's macro_trace.json records dregular_next_matches=true for the first ten external A_step2 calls. At j=7 the lifted root has a mod3=0 (A) while the external path has a mod3=1 (E), and their next suffix pairs are (1,5) versus (3,4). This is a seven-step shadow only, not a hit of the residual 3^101 cylinder.
+- A separate exact scan of all DRegular endpoint states i=0..8394 finds no endpoint in any of the eleven first-ten external checkpoint families. This is not a physical no-entry theorem: it does not exclude intermediate primitive configurations inside a DRegular source macro, and the general first-return/minimality correspondence is unresolved.
+- Added im-results/agent2-root-language-exit/halting-cylinder-seven-step-shadow.md, halting-cylinder-shadow.mjs, and uncompiled HaltingCylinderShadow.lean; README linked them. The Lean candidate attempts to source-lift the 2,640th section and the next seven transitions using ERemaining.source_contract and DRegularSourceShift. No CI was dispatched; local container shell remains unavailable, so local Lean preflight is still required.
+- Next: Agent37 local preflight of HaltingCylinderShadow.lean; Agent35 review the finite first-ten DRegular/A_step2 correspondence; Agent3 extend the eleven-checkpoint sieve to the later root reentries rather than repeating only the mod-27 pure-unary check. Do not promote this to results/ or claim a BB(6) result.
