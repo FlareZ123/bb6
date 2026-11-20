@@ -24,6 +24,8 @@ with \(q\ge0\). Its shifted source counter is
 \[
 b=2^w(2q+3).
 \]
+The target \(y\) and source \(b\) are shifted counters (ordinary counter plus \(2\)). Since \(y\equiv0\pmod5\), valuation \(w=0\) would make (2) read \(y=5q+6\equiv1\pmod5\), impossible. Thus every parent has \(w\ge1\), and its source counter \(b\) is even.
+
 A direct expansion of (2) gives the useful identity
 \[
 D_w(b-1)=2^w(2y+1-2w)-3. \tag{3}
@@ -180,6 +182,11 @@ The exact finite CRT calculation is reproducible with the companion script, seco
 ## 5. Correction to the earlier CRT count
 
 The previous eleven-prime script treated \(13\) as an extra CRT coordinate while \(13\) was already included in \(M_0\), and it did not impose the forced \(w\equiv12\pmod{13}\) condition on the base residue. Its reported modulus and survivor count are therefore not valid for the single integer valuation \(w\). The corrected modulus, count, density, and script are recorded above. The eight-prime and separate \(11^2\) calculations use bases that do not already contain \(13\), so this particular normalization error does not apply to those calculations.
+
+
+## Upstream machine-level acceleration
+
+The original six-state machine and its single-counter high-level acceleration are kernel-checked upstream in the Google DeepMind [cryptids BB6 source](https://github.com/google-deepmind/cryptids/blob/main/BusyBeaver/BB6/M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD.lean), including theorems is_valid_highLevel_acceleration and isHalt_iff_highLevel_acceleration. The local source bridge in NeedleGeneralInverseSource.lean connects that original high-level transition to the exact oddTower parent enumeration used here. The present note concerns the arithmetic of that already source-linked inverse; it does not replace the machine-level acceleration proof.
 
 ## 6. Research significance and remaining gap
 
