@@ -223,34 +223,32 @@ N>2^{T_{M+45}}=T_{M+46},
 N\ge T_{M+46}+1.
 \]
 
-Now retain the exact final right-counter identity
-\(b_N=V_{M+N+46}\). Applying the same recurrence estimate again,
+Retain the exact final right-counter identity
+\(b_N=V_{M+N+46}\). Applying the same recurrence estimate directly,
 \[
-b_N\ge T_{M+N+49}+1
-    \ge T_{T_{M+46}+1}+1.
+b_N\ge T_{M+N+49}+1.
 \]
 The exact dispatcher-plus-terminal cost contains the final-increment
 contribution \(6(b_N+1)^2\), and every other term in the score is
-nonnegative. Therefore the conditional score satisfies
+nonnegative. Therefore
 \[
 \boxed{
-S\ge6\bigl(T_{T_{M+46}+1}+2\bigr)^2
-  >T_{T_{M+46}}.
+S\ge6\bigl(T_{M+N+49}+2\bigr)^2
+  >T_{M+N+49}.
 }
 \]
-This supersedes the weaker \(H\)-only consequence below the exact V-index
-formula. It uses both the exact \(M\)-step dispatcher length and the
-authentic \(V_{M+N+46}\) terminal index.
+This is stronger than the intermediate endpoint \(T_{T_{M+46}}\):
+indeed \(N\ge T_{M+46}+1\), so \(M+N+49>T_{M+46}\).
 
-For comparison with the earlier published-scale lower endpoint, recall
-\(H=T_{10}\) and \(M\ge62H-36\). Thus \(M+46\ge62H+10>H\), so
-\[
-T_{T_{M+46}}>T_{T_H}=T_{T_{T_{10}}}.
-\]
-The upper-bound analysis in
+The upper-side estimate in
 [TM63PublishedTowerSandwich.md](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md)
-also gives \(M+46<T_{11}\), so this stronger lower endpoint remains
-strictly below the conditional upper endpoint \(T_{T_{T_{11}}}\).
+gives \(M+N+50<T_{T_{11}-1}\). Hence
+\[
+T_{M+N+49}<T_{T_{T_{11}}},
+\]
+so this exact-V-index lower endpoint is compatible with the conditional
+upper bound. It also strictly exceeds the published left endpoint
+\(T_{T_{T_{10}}}\), since \(M+N+49>T_{M+46}>T_{T_{10}}\).
 
 ## What this does and does not establish
 
