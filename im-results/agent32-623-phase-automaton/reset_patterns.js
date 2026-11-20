@@ -225,14 +225,98 @@ for (let length = 3; length <= 6; length++) {
 }
 const dfa = buildResetDFA();
 
+function minimizeResetDFA(aho) {
+  const sink = aho.nodeCount;
+  const count = aho.nodeCount + 1;
+  const trans = Array.from({ length: count }, () => new Uint32Array(9));
+  const accepting = new Uint8Array(count);
+  accepting[sink] = 1;
+
+  for (let state = 0; state < aho.nodeCount; state++) {
+    accepting[state] = aho.outMinLength[state] ? 1 : 0;
+    for (let symbol = 0; symbol < 9; symbol++) {
+      const target = aho.go[state][symbol];
+      trans[state][symbol] =
+        accepting[state] || aho.outMinLength[target] ? sink : target;
+    }
+  }
+  trans[sink].fill(sink);
+
+  // Moore partition refinement: accepting/nonaccepting initially, then
+  // refine by the nine successor classes until the partition is stable.
+  let classes = new Uint32Array(count);
+  for (let state = 0; state < count; state++) {
+    classes[state] = accepting[state] ? 1 : 0;
+  }
+  const partitionCounts = [];
+  let previousCount = -1;
+  for (let iteration = 0; iteration < 32; iteration++) {
+    const signatures = new Map();
+    const nextClasses = new Uint32Array(count);
+    let nextCount = 0;
+    for (let state = 0; state < count; state++) {
+      const signature =
+        classes[state] + "," +
+        Array.from(trans[state], (target) => classes[target]).join(",");
+      let id = signatures.get(signature);
+      if (id === undefined) {
+        id = nextCount++;
+        signatures.set(signature, id);
+      }
+      nextClasses[state] = id;
+    }
+    classes = nextClasses;
+    partitionCounts.push(nextCount);
+    if (nextCount === previousCount) break;
+    previousCount = nextCount;
+  }
+
+  const classCount = partitionCounts[partitionCounts.length - 1];
+  const representatives = new Int32Array(classCount);
+  representatives.fill(-1);
+  for (let state = 0; state < count; state++) {
+    if (representatives[classes[state]] < 0) {
+      representatives[classes[state]] = state;
+    }
+  }
+  const minimizedTransitions = Array.from({ length: classCount }, (_, id) => {
+    const representative = representatives[id];
+    return Array.from(trans[representative], (target) => classes[target]);
+  });
+  const minimizedAccepting = Array.from(
+    representatives,
+    (representative) => accepting[representative] === 1,
+  );
+  return {
+    stateCount: classCount,
+    initialState: classes[0],
+    accepting: minimizedAccepting,
+    transitions: minimizedTransitions,
+    partitionCounts,
+  };
+}
+
+const minimizedDFA = minimizeResetDFA(dfa);
+
 const summary = {
   startStates: { L: nL, R: nR, total: totalStarts },
   minimalCommonResetPatterns: patternCounts,
   totalMinimalPatterns: patternCount,
   ahoCorasickStates: dfa.nodeCount,
+  minimalDFAStates: minimizedDFA.stateCount,
+  minimizationPartitionCounts: minimizedDFA.partitionCounts,
   visitedPrefixes,
   invalidPrefixes,
 };
+
+if (process.argv.includes("--emit-minimized-dfa")) {
+  process.stdout.write(JSON.stringify({
+    alphabet: "digit pairs encoded as 3*x+y",
+    initialState: minimizedDFA.initialState,
+    accepting: minimizedDFA.accepting,
+    transitions: minimizedDFA.transitions,
+  }) + "\\n");
+}
 
 if (process.argv.includes("--emit-patterns")) {
   for (let length = 3; length <= 6; length++) {
