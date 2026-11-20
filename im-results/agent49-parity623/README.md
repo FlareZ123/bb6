@@ -399,3 +399,13 @@ The source workflow now includes this module and its transducer dependency. This
 On the strict range `q+1<3^n`, a companion mutual induction proves exact terminal-state equality too, hence equality of the full `DrainStats` records. At the boundary `q+1=3^n`, the output and counts still agree but the terminal states can differ. The theorem `run_overflow_final_state_pairs` gives the exact alternating terminal-state pairs for every n, and the file includes n=1 counterexamples. This is the separate high-digit case that must be tracked. A direct exhaustive check for all `n≤12` found no counterexample. The Lean proof and boundary examples are included in the manual 4.36.0-rc2 workflow but have not yet been compiled.
 
 These identities are a possible interface for updating the next drain's weighted statistics when its input differs by one. The remaining task is to derive, from the four-sector root cocycle, exactly when the next drain input is one of these offsets and which initial transducer state applies. No root-level recurrence is claimed yet.
+
+
+### Mass-indexed source correction buffer
+
+Added `DrainDigitLengthBound.lean`. Its induction proves that every positive `drainDigitSummary b` has a nonzero leading ternary digit:
+`3^(L-1) ≤ N`, where `L` is the recursive word length and `N` its value. Combining this with `4N+1=2b+3^L` gives `3^(L-1)≤2b-1). Hence `b≤ternaryOnes(ell)` implies `L≤ell).
+
+The file then wraps `drainB_digit_source_correction_interface` to obtain the mass-indexed correction bound
+`|corrC|, |corrF| ≤ 34*ell+122`
+for every successful source drain whose input fits the `ell)-mass budget. This supplies the exact `L≤ell_S` step used in the monotone S-window buffer argument, conditional only on the corresponding source-drain and mass hypotheses. The new module is wired into the pinned source workflow after `DrainDigitStatsSource`, but has not been compiled.
