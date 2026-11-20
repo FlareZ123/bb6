@@ -127,6 +127,29 @@ More precisely:
 
 The finite diagnostic therefore survives the strictly smaller correction-only buffer, with 9,968/9,968 windows accepted and first reset by symbol 12. It does not prove that the reset DFA accepts every future S-window. The recurrence replay is computational, and no original-source root theorem or global BB(6) conclusion is claimed.
 
+## 4. Actual S-window boundary phase
+
+Run:
+
+```sh
+node im-results/agent48-623-tight-window/s_window_boundary_phases.js
+```
+
+The script advances the exact source digit transducer through the low input digit (k_S+1), because the S-indexed word starts at (k_S+2). Before reporting S phases, it recomputes the existing q-indexed phase set and checks exact set equality with `agent32-623-phase-automaton/ActualBoundaryPhases.json`; this validation passes (262/262 phases).
+
+For the correction-only S-window over the same 9,968 root states:
+
+- 701 distinct complete start phases when (r=j_S-3k_S) is included: 278 L-branch and 423 R-branch;
+- 252 distinct tuples if (r) is omitted;
+- 28 distinct previous-pair/carry combinations in L and 37 in R;
+- observed carry pairs are L: ((-2,1),(-1,0),(-1,1),(0,0)); R: ((-3,1),(-2,0),(-2,1),(-1,0),(0,0));
+- zero branch-vs-threshold mismatches, zero violations of the full universal carry rectangles, and zero affine-update mismatches against the next root state;
+- the index-38 S start phase is sector RO / branch R, previous pair ((1,2)), carry ((-2,0)), (r=0). The q-indexed phase at the same root state has previous pair ((1,1)), so the q-window phase cannot simply be reused for the S-window.
+
+The tuple ((sector,branch,previous pair,carry,r)) is only an inventory, not a closed transition state: its observed transition outdegree reaches 21. The product must additionally retain the reset-DFA state and the weighted drain/transducer information. The observed carry pairs are diagnostics only; retain the full universal rectangles L: ([-2,2]\times[-2,2]), R: ([-4,1]\times[-2,2]).
+
+The script writes `SWindowBoundaryPhases.json` when run. This is a finite recurrence diagnostic, not an all-time invariant.
+
 ## 4. Next useful use
 
 Agent 32 can use (B_{corr}=34\ell_S+122) and the three-state coupled shift phase in the finite product-state closure. Preserve the full carry rectangles, source branch/sector, weighted drain interface, and the low/high boundary state. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
