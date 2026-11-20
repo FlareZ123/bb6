@@ -1,6 +1,6 @@
 ## Status correction — 18 November 2026
 
-A full all-q counted-source theorem draft now exists in [M2EvenResidueZeroCounted.lean](M2EvenResidueZeroCounted.lean):
+A full all-q counted-source theorem draft now exists in [M2EvenResidueZeroCounted.lean](M2EvenResidueZeroCounted.lean). A static import-chain audit found `norm_num` and `interval_cases` in the Std/Omega-only dependencies `M2EvenResidueZeroSource.lean` and `LBinDecHRunLeftFacing.lean`; these have been replaced by `decide`, `omega`, and explicit finite disjunctions. This is a tactic-availability cleanup only, not a compiler result:
 - `m2Even_residue0_q4_reset_prefix_source`
 - `m2Even_residue0_counted_increment_source`
 

@@ -58,7 +58,9 @@ private theorem s1M2Setup_suffix (L k a : Nat)
         sideBit ([false,true] ++ d0 ++ d1pow 3) i := by
   have hmul := binDec_mulpow2 (L-3) k 3 hk
   have hlen : L-3+3=L := by omega
-  have hnum : k*2^3=8*k := by norm_num [Nat.mul_comm]
+  have hnum : k*2^3=8*k := by
+    rw [show (2:Nat)^3 = 8 by decide]
+    exact Nat.mul_comm _ _
   have hbin : binDec L (8*k) =
       d1pow 3 ++ binDec (L-3) k := by
     simpa [hlen,hnum] using hmul
@@ -79,7 +81,11 @@ private theorem s1M2Setup_suffix (L k a : Nat)
     simp [hnot,hsub]
   have hsecond :
       sideBit R (2+i) = sideBit ([false,true] ++ d0 ++ d1pow 3) i := by
-    interval_cases i <;>
+    have hcases :
+        i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 ∨ i=6 ∨
+        i=7 ∨ i=8 ∨ i=9 ∨ i=10 ∨ i=11 ∨ i=12 ∨ i=13 := by omega
+    rcases hcases with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 |
+      h8 | h9 | h10 | h11 | h12 | h13 <;> subst i <;>
       simp [R,sideBit_append,markerWord,d0,d1pow,d1,sideBit,d1pow_length]
   rw [hleft]
   simpa [R] using hfirst.trans hsecond
@@ -88,7 +94,12 @@ private theorem s1M2Setup_suffix (L k a : Nat)
 private theorem m2SetupBits_marker (i : Nat) (hi : i≤13) :
     sideBit ([false,true] ++ d0 ++ d1pow 3) i =
       decide (-(i:Int) ∈ m2ZeroSetupStart.marked) := by
-  interval_cases i <;> simp [sideBit,d0,d1pow,d1,m2ZeroSetupStart]
+  have hcases :
+      i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 ∨ i=6 ∨
+      i=7 ∨ i=8 ∨ i=9 ∨ i=10 ∨ i=11 ∨ i=12 ∨ i=13 := by omega
+  rcases hcases with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 |
+    h8 | h9 | h10 | h11 | h12 | h13 <;> subst i <;>
+    simp [sideBit,d0,d1pow,d1,m2ZeroSetupStart]
 
 /-- The first 3*a+2 cells read by the D-state left sweep are all ones:
 the unary d1^a followed by the first two ones of markerWord 2. -/

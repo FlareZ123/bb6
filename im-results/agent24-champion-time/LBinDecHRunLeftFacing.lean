@@ -244,7 +244,9 @@ private theorem sideBit_d1pow_true
       omega
   | succ n ih =>
       by_cases hsmall : i < 3
-      · interval_cases i <;> simp [d1pow,d1,sideBit]
+      · have hcases : i=0 ∨ i=1 ∨ i=2 := by omega
+        rcases hcases with h0 | h1 | h2 <;> subst i <;>
+          simp [d1pow,d1,sideBit]
       · have htail : i-3 < 3*n := by omega
         have hnot : ¬ i < d1.length := by simp [d1]; omega
         have happ := sideBit_append_exact d1 (d1pow n) i
