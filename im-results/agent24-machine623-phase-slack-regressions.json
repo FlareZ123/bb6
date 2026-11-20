@@ -1,0 +1,181 @@
+{
+  "schema": "bb6.machine623.phase-slack-regressions.v1",
+  "machine": "#623",
+  "purpose": "Adversarial regression data for reduced phase/slack invariants; not an all-time root theorem.",
+  "leading_phase": {
+    "evidence": "finite source-transcribed root scan",
+    "transitions_after_first_nine": 19991,
+    "terminal_state_check_steps": 5000,
+    "terminal_state_by_high_digit": {
+      "0": "A",
+      "1": "B"
+    },
+    "terminal_state_C_observed": false,
+    "observed_successors": {
+      "RO/0": [
+        "LE",
+        "RE"
+      ],
+      "RO/1": [
+        "LE",
+        "RE"
+      ],
+      "LE/0": [
+        "LE",
+        "RE"
+      ],
+      "LE/1": [
+        "LE",
+        "RE"
+      ],
+      "RE/0": [
+        "RO",
+        "LO"
+      ],
+      "RE/1": [
+        "RO",
+        "LO"
+      ],
+      "LO/0": [
+        "RO",
+        "LO"
+      ],
+      "LO/1": [
+        "RO",
+        "LO"
+      ]
+    },
+    "source": "communications/agent49/20261120T075819Z_agent24-high-phase-not-sufficient.md"
+  },
+  "slack_counterexamples": [
+    {
+      "id": "H65",
+      "evidence": "exact source-level one-step transition; root reachability not established",
+      "from": {
+        "state": [
+          18,
+          88
+        ],
+        "sector": "right-even",
+        "h": 70,
+        "m": 18,
+        "ceil_log3_2m_plus_1": 4,
+        "slack": 66
+      },
+      "to": {
+        "state": [
+          70,
+          65
+        ],
+        "h": 5,
+        "m": 65,
+        "slack": 0,
+        "in_newAffineCone": false
+      },
+      "source": "communications/broadcast/20261120T0630Z_agent27-h65-not-sufficient.md"
+    },
+    {
+      "id": "mod3-class-threshold",
+      "evidence": "exact source-level one-step transitions; first state synthetic, comparison state authentic-root",
+      "from": {
+        "state": [
+          2,
+          73
+        ],
+        "sector": "right-odd",
+        "residues": [
+          2,
+          1
+        ],
+        "slack": 69,
+        "source_class_minimum": 65
+      },
+      "to": {
+        "state": [
+          74,
+          10
+        ],
+        "sector": "left-even",
+        "residues": [
+          2,
+          1
+        ],
+        "slack": 61,
+        "target_class_minimum": 696153
+      },
+      "authentic_comparison": {
+        "from": [
+          314,
+          385
+        ],
+        "sector": "right-odd",
+        "residues": [
+          2,
+          1
+        ],
+        "slack": 65,
+        "to": [
+          74,
+          950
+        ],
+        "sector_to": "right-even",
+        "residues_to": [
+          2,
+          2
+        ],
+        "slack_to": 871
+      },
+      "source": "communications/agent32/20261120T0646Z_agent27-residue-slack-table-failure.md"
+    },
+    {
+      "id": "mod9-class-threshold",
+      "evidence": "exact source-level one-step transition; root reachability not established",
+      "from": {
+        "state": [
+          2,
+          105
+        ],
+        "sector": "right-odd",
+        "residues": [
+          2,
+          6
+        ],
+        "slack": 101,
+        "source_class_minimum": 96
+      },
+      "to": {
+        "state": [
+          106,
+          10
+        ],
+        "sector": "left-even",
+        "residues": [
+          1,
+          1
+        ],
+        "slack": 93,
+        "target_class_minimum": 309
+      },
+      "source": "communications/agent32/20261120T0650Z_agent27-mod9-slack-table-failure.md"
+    }
+  ],
+  "related_boundary": {
+    "id": "A-state-right-suffix-00",
+    "evidence": "finite exact-tape replay",
+    "step": 23,
+    "state": "A",
+    "head": -3,
+    "right_adjacent_bits": "00",
+    "rejects": "two-sided no-adjacent-00 suffix invariant",
+    "source": "im-results/agent24-machine623-macro-invariant.md"
+  },
+  "required_existing_cases": {
+    "raw_reset_language": "im-results/agent32-623-phase-automaton/ClosureCounterexample.md",
+    "index33_whole_window_suffix": "im-results/agent32-623-phase-automaton/PhaseAutomaton.md"
+  },
+  "warnings": [
+    "Do not treat empirical root traces as all-time invariants.",
+    "Do not treat synthetic one-step counterexamples as authentic-root reachability witnesses.",
+    "Do not shrink the full L/R carry rectangles based on observed phases alone."
+  ]
+}
