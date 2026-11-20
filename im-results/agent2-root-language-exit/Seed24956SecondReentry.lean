@@ -23,7 +23,10 @@ def seed24956Exit : DRegular.L :=
 def exitK : Nat := 35761011052497844733597143642740448447362
 
 theorem seed24956_canon : DRegular.Canon seed24956 := by
-  simp [DRegular.Canon, seed24956]
+  constructor
+  · dsimp [seed24956]
+    omega
+  · simp [seed24956]
 
 theorem seed24956_run86 :
     DRegular.run 86 seed24956 = some seed24956Exit := by
