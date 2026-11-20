@@ -123,7 +123,8 @@ The relative excess over the quadratic final-increment term is localized even mo
 =
 \frac{7}{b_N+1}+\varepsilon_N,\qquad
 0<\varepsilon_N<
-\frac{3\ell+10(1+\log_2\ell)\ell^2}{6(b_N+1)^2}.
+\frac{3\ell+10(1+\log_2\ell)\ell^2}{6(b_N+1)^2}
+<8\times10^{-149}.
 }
 \tag{9}
 \]
