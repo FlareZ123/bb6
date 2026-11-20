@@ -34,7 +34,8 @@ Here \(B\) is the right counter after the long middle-34 SectionResult; \(A\) is
 z=V_{M+43},\quad m=V_{M+44},\quad n=V_{M+45}+1=2^m,\quad
 R=V_{M+46}=2^{n-1}-1
 \]
-give the last line of (2).
+give the last line of (2). Moreover \(3\mid N\), since \(L=76\) is even and
+\(2^{78}-1\equiv0\pmod3\); put \(k=N/3\).
 
 ## Upper tower bound
 
@@ -101,9 +102,14 @@ D_N\le
 6b_N^2+60b_N+(6N^2+57N-66)b_{N-1}
  +48N+90k^2+111k+12(N+1)U. \tag{10}
 \]
-Here \(k\le2N\), \(b_{N-1}<b_N\), \(U\le R\le b_N\), and
+Here \(k=N/3\le N\), \(b_{N-1}<b_N\), \(U\le R\le b_N\), and
 \(b_N\ge2^N R\), so \(N\le\log_2 b_N\). For \(b_N\ge2^{64}\), the
-nonleading terms in (10) are less than \(b_N^2\), giving
+nonleading terms in (10) are less than \(b_N^2\): after the substitutions
+above they are bounded by
+\[
+(6N^2+69N+72)b_N+90N^2+159N<b_N^2.
+\]
+Thus
 \[
 D_N<7b_N^2. \tag{11}
 \]
@@ -111,15 +117,19 @@ D_N<7b_N^2. \tag{11}
 The remaining costs are each smaller than \(b_N^2\):
 
 - Unfolding the finite root-cost formulas gives the deliberately loose
-  bound \(C_{\rm root}\le10^6 4^m\). Since
-  \(R=2^{2^m-1}-1\), we have \(10^6 4^m<R^2\le b_N^2\) at the authentic
-  parameters. The finite bound uses the 34 fixed source rows, the
-  middle segment bound \(143(B+1)^2\), and the displayed reset/drain costs.
+  bound \(C_{\rm root}\le10^6 4^m\). For this bound, the 34 fixed middle
+  rows contribute at most \(O(4^B)\), the long middle segment contributes
+  at most \(143(B+1)^2\), its terminal offset at most \(86(B+1)^2\),
+  and the first-q4/P1 and q4-tail blocks contain only a fixed number of
+  drain-sized terms with logarithmic parameters at most \(m\). Since
+  \(B\le m\), the displayed constant is deliberately generous. Now
+  \(R=2^{2^m-1}-1\), so \(10^6 4^m<R^2\le b_N^2\) at the authentic
+  parameters.
 - The counted root drain is at most \(7\cdot4^{n-1}\), while
   \(R^2>(1/2)4^{n-1}\). Thus it is less than \(14R^2\); since
   \(b_N^2\ge4^N R^2\) and \(N\ge2\), it is less than \(b_N^2\).
 - The terminal macro is \(59+12(L+E)\), with
-  \(E=U+\sum_{j<N}b_j+5k\le U+Nb_N+10N\). Since
+  \(E=U+\sum_{j<N}b_j+5k\le U+Nb_N+5N\). Since
   \(N\le\log_2 b_N\), this cost is less than \(b_N^2\).
 - The champion-root and final-query correction is \(+7<b_N^2\).
 
