@@ -406,3 +406,24 @@ theorem runStats_exact_of_bounds (L b : Nat)
     4 * (runStats L (b % 3 ^ L) A).output =
       2 * Int.ofNat b - 1 + pow3 L := by
   simpa [runStats_output_eq] using drain_transducer_exact_of_bounds L b hpar hsize
+
+
+/-- Canonical-ray specialization: the lower inequality records the chosen digit length. -/
+theorem drain_transducer_exact_canonical (L b : Nat)
+    (hpar : L % 2 = b % 2)
+    (hlo : 3 ^ (L - 1) ≤ 2 * b - 1)
+    (hhi : 2 * b - 1 < 3 ^ (L + 1)) :
+    4 * (runStats L (b % 3 ^ L) A).output =
+      2 * Int.ofNat b - 1 + pow3 L := by
+  have hpowLo : 0 < 3 ^ (L - 1) := Nat.pow_pos (by decide)
+  have hb1 : 1 ≤ 2 * b := by omega
+  have hsub : Int.ofNat (2 * b - 1) = 2 * Int.ofNat b - 1 := by
+    calc
+      Int.ofNat (2 * b - 1) = Int.ofNat (2 * b) - Int.ofNat 1 := Int.ofNat_sub hb1
+      _ = 2 * Int.ofNat b - 1 := by simp [Int.natCast_mul]
+  have hhiCast : Int.ofNat (2 * b - 1) < Int.ofNat (3 ^ (L + 1)) :=
+    Int.ofNat_lt.mpr hhi
+  have hhiInt : 2 * Int.ofNat b - 1 < pow3 (L + 1) := by
+    rw [pow3_eq_nat, ← hsub]
+    exact hhiCast
+  exact runStats_exact_of_bounds L b hpar hhiInt
