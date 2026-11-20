@@ -1321,3 +1321,30 @@ runtime clock.
   Meanwhile, do not repeat finite replays or claim any BB(6) lower bound from
   the paper-level V-index calculation.
 
+## 2026-11-20 15:07Z checkpoint — corrected #623 S-window shift and product review
+
+The M0/M2 source cleanup and TM63 replay/interface audit are recorded above. A second useful line of work was an independent review of the #623 S-window reset approach.
+
+### Corrected S-window theorem
+
+- Agent 1's source results provide full-drain weights E=n2, R=n1+n2, D=L-2E, with 0<=E<=R<=L. The source theorem SignedCoordinateNormalForm.correction_buffer_closed gives |C|,|F|<=34L+122.
+- The exact four-sector TerminalRatio4 residual bounds give |x'|<=18n+50<=18ell+50<34ell+122. Thus the same correction-only buffer works for both carry and terminal-strip comparison: B(ell)=34ell+122, replacing the older wider envelope.
+- Existing source mass growth gives ell'-ell in {0,1}, hence B<=B'<=B+34. For S>=20, ell>=4 and B>=258. Since 5(B+34)<=7B, (B')^3<3B^3; also B'<3B.
+- Therefore both threshold shifts are in {0,1}. More strongly, (1,0) is impossible: if k'-k=1, then B'>=3^k>B, so B^3<3^(3k), j<=3k, and 3^j<=3^(3k)<=(B')^3, forcing j'-j=1. The exact shift set is {(0,0),(0,1),(1,1)}.
+- For window length w=j-k-4, w'-w is in {0,1}: the window never shrinks and grows by at most one symbol per step. Also 3^(k-1)<=B gives j>=3k-2, so w>=2k-6 and tends to infinity as source mass grows.
+- Commit 4fc4bba2d92a08f4d69363f77e57e54b25ffff08 updates im-results/agent41-623-3euclidean/MonotoneMassWindow.md and broadcasts the exact three-pair classification. This supersedes my earlier statement that (1,0) was still possible.
+
+### #623 product review boundary
+
+- Read the corrected Agent 48 S-window diagnostic: Bcorr=34ell+122, 1,318 observed transition phases, and 9,968/9,968 finite reset acceptances over the scanned authentic root transitions.
+- The stale RootPhaseInvariant.md still contains the withdrawn old envelope and old 262-phase/9,968 evidence. I sent Agent 32 a direct message identifying the affected sections; do not edit their active work without coordination.
+- Instrumented the corrected finite diagnostic in-memory. The 1,318 phase keys are transition labels, not a closed deterministic state set (observed successor outdegree reaches 16). Adding simple DFA suffix states alone does not close the product; the next source carry is recomputed from the next sector's weighted drain corrections, so the product must retain the weighted-drain interface. This agrees with the Critic's direction; it is not an all-time theorem.
+- The 263-state reset DFA has nonaccepting cycles on unrestricted input words. Therefore reset for authentic root windows must use root-specific arithmetic/weighted-drain constraints, not a universal word-length claim.
+
+### Next useful actions
+
+1. Formalize the corrected three-pair shift theorem as a single Lean consumer of the existing source mass, correction-buffer, and terminal-ratio modules; the combined consumer has not been kernel-checked.
+2. Use the one-digit high extension and nonshrinking window length in the weighted-drain/reset-DFA product.
+3. Ask Agent 32 to replace the stale RootPhaseInvariant sections; Agent 48 owns the corrected diagnostic.
+4. Keep the 1,318 phase inventory and finite scan as diagnostics only. The all-time authentic-root reset invariant, branch-complete root induction, and #623 nonhalting proof remain open.
+
