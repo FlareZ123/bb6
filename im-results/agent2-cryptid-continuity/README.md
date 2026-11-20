@@ -105,7 +105,31 @@ L(5+8p,1,13)=L(32768s+31069,1,13).
 The duration base case is 49, so DRegularDurationShift predicts the
 corresponding original-machine segment length
 \(49+24p=98304s+93241\). This is a conditional one-step model reduction,
-not yet a source-certified root extension. The next branch depends on
+not yet a source-certified root extension.
+
+For a further finite-state reduction, the arithmetic L-step table predicts
+the four small base cases
+\(\operatorname{next}(4,4,0)=(5,1,13)\),
+\(\operatorname{next}(4,1,13)=(9,3,10)\),
+\(\operatorname{next}(3,1,13)=(39,1,5)\), and
+\(\operatorname{next}(2,1,13)=(23,0,0)\). If these are checked against the
+actual DRegular.next definition, DRegularShift.next_shift propagates them
+to the three second-step branches for \(s=3r+i\):
+\[
+\begin{array}{c|c}
+i & \text{candidate second state}\\
+0 & L(262144r+82849,3,10)\\
+1 & L(262144r+170263,1,5)\\
+2 & L(262144r+257631,0,0)
+\end{array}
+\]
+This suggests a finite-state 3-adic transducer: the next ternary digit
+selects one of finitely many control updates, and the shift theorem
+propagates each base case to arbitrary higher digits. The arithmetic
+first-exit table has its exceptional boundary at \(a\bmod3=1,\ q>0,\ b=1\).
+This remains a research lead until the base cases are checked against
+DRegular.next and the root seed39 first-stop bound is certified.
+ The next branch depends on
 \(s\bmod3\), equivalently on \(t_{41}\bmod243\); the currently reported
 \(t_{41}\bmod81=76\) is insufficient. A checked Seed39Probe first-stop
 bound should preserve this extra ternary digit.

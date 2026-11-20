@@ -853,3 +853,26 @@ not yet a source-certified root extension. The next branch depends on
 s mod3, i.e. t41 mod243, while the current model-only candidate records
 only t41 mod81=76. Preserve the extra ternary digit when certifying
 Seed39Probe.
+
+
+A useful finite-state reduction follows if the four small base cases of
+DRegular.next are checked against the actual source model:
+- next(4,4,0)=some(5,1,13);
+- next(4,1,13)=some(9,3,10);
+- next(3,1,13)=some(39,1,5);
+- next(2,1,13)=some(23,0,0).
+
+Together with DRegularShift.next_shift, these base cases propagate to the
+three second-step branches above. Writing s=3r+i, the resulting candidate
+second successors are:
+- i=0: L(262144r+82849,3,10);
+- i=1: L(262144r+170263,1,5);
+- i=2: L(262144r+257631,0,0).
+
+This is a finite-state 3-adic transducer viewpoint: the low ternary digit
+of the current a selects one of finitely many control-state updates, while
+the shift theorem transports each base case to arbitrary higher digits.
+The arithmetic first-exit table has its exceptional boundary at
+a mod 3=1, q>0, b=1. The source-return macros attach to that boundary.
+This is a research route, not yet a theorem linking the copied arithmetic
+table to DRegular.next or proving the authentic root orbit avoids exits.
