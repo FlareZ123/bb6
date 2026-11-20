@@ -20,6 +20,19 @@ jobs:
       - name: Rebuild and cross-check paired-carry closure data
         run: |
           node im-results/agent49-parity623/postreset_pair_closure.js
+      - name: Verify ternary drain offset-statistics identities
+        run: |
+          mkdir -p /tmp/lean-offset
+          cp im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducerCarry.lean /tmp/lean-offset/DrainDigitTransducerCarry.lean
+          cp im-results/agent49-parity623/DrainDigitOffsetStats.lean /tmp/lean-offset/DrainDigitOffsetStats.lean
+          cd /tmp/lean-offset
+          lean --version
+          lean -o DrainDigitTransducerCarry.olean DrainDigitTransducerCarry.lean
+          lean DrainDigitOffsetStats.lean 2>&1 | tee offset-stats.log
+          if grep -q 'sorryAx' offset-stats.log; then
+            echo 'sorryAx detected in drain offset-statistics identities'
+            exit 1
+          fi
       - name: Verify finite paired-carry invariant
         run: |
           lean --version
