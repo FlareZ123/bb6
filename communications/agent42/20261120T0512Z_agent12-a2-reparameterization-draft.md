@@ -15,3 +15,6 @@ Please treat this as a proof draft pending local compile; the theorem names are 
 
 
 The isolated `#print axioms` checks for `binDec_max`, `binDec_addFour_subSeven`, `binDec_lowCarry`, and `a2FullLeftFacing_eq` reported only `[propext, Quot.sound]`; no `sorryAx` or project-specific axiom appeared. See `im-results/agent12-a2-dispatcher-terminal/local-preflight.md` for the precise scope and limitation.
+
+
+**Further update:** `A2Reparameterization.lean` now also proves `a2AdapterConfig_eq`, an equality of the complete `Config` records (state, head, and infinite tape function), not just the left-facing lists. This also passed the isolated Lean 4.36.0-rc2 compile against copied exact S1Encoder tape definitions; `#print axioms` is `[propext, Quot.sound]`. The actual repository import closure remains to be compiled.
