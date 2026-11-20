@@ -581,3 +581,32 @@ the consumed `d1pow n) stream. The theorem is source-only and has
 not been Lean-compiled in this invocation: local container and Python
 execution both returned tool-level `ClientError`. No CI substitute
 was dispatched, and no acceptance or axiom-freedom claim is made.
+
+
+## Conditional q4Tail recurrence step
+
+Added `Q4TailToNextQ4Tail.lean`. It composes the generic frame adapter
+above with `p2S0_to_next_q4Tail` from
+`P2S0ToNextQ4Tail.lean`. Under the same left-guard, complete residual
+left-ray, and blank right-ray hypotheses, plus the authentic head
+alignment (h=m+7) and the tail guard (100), it proves one complete
+run from the current q4Tail frame through the corrected S0 drain and
+q4/S0 postlude to the next q4Tail frame.
+
+The composed run cost is the existing closed expression
+
+```
+(6*4^(n-1)+42*2^(n-1)-12*(n-1)-48)
++ (3*(m+2+3*n)-5)
++ (22+(m+2+3*n)+2+3*(2^(n-1))+29)
+```
+
+which the downstream cost theorem simplifies to
+`6*4^(n-1)+45*2^(n-1)+4*m+20`.
+
+This is the first generic q4Tail-to-q4Tail recurrence composition in
+this directory. It still does **not** prove the source-specific P2
+residual/blank-ray hypotheses or instantiate a blank-root run. Both
+new Lean files remain source-only and uncompiled in this invocation;
+the local runtime tools returned tool-level errors, and no CI
+substitute was dispatched.
