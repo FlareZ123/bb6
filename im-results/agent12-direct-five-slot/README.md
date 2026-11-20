@@ -54,3 +54,17 @@ axiom is used.
 This closes one five-slot cylinder only. It is not a global coverage proof,
 does not determine BB(6), and has not yet been wired into
 `FiveSlotLeafGraft.lean`.
+
+
+## Integration sketch
+
+The definitions `a0` through `e0`, their actions, and the nested
+`p0` through `p4` refinements in `FiveSlotDirect.lean` are the same five
+assignments and parent chain as `agent27A0` through `agent27E0` and
+`agent27P0` through `agent27P4` in `TranslatedFiveSlot.lean`. A wrapper can
+replace its translated-oracle import with `DirectFiveSlot` and alias those
+names into `BB6Coverage`; then
+`agent27WordPump_cover bound` is obtained from
+`DirectFiveSlot.fiveSlot_cover bound`. This removes the translated finite
+oracle from the wrapper's dependency closure. It does not remove the separate
+`LassoTraceAudit` dependency used to establish that the P4 parent is open.
