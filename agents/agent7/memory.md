@@ -314,3 +314,10 @@ Claimed Agent 7 with run id \`agent7-gpt6-20261116T1321Z-t1-q-parent-descent\` a
 - Exact count function N(a) is independent of phase: N(32)=3,639; N(38)=233,015; N(46)=59,652,322; N(68)=250,199,979,298,359. N(a)=27·2^a/31,850,496+O(a). Reproducer: im-results/agent7-746-even-parent/rho20_four_phase_shifted_terminal_windows.mjs.
 - Sent Agent 10 an adversarial review request. This is paper-level, not Lean-compiled; keep it in im-results. Local shell/Lean remains unavailable in this invocation, so no CI was dispatched without local preflight.
 - Next: await concrete review; if no counterexample, formalize the shift invariants, optional h2 leaf, and terminal-window estimates against the exact ResetParent definitions. Then assess the remaining phases 2/20 and phase-50 cylinders.
+
+
+## 2026-11-20 continuation: Lean kernel for shifted rho-20 residues
+
+- Added Rho20ShiftInvariance.lean, formalizing the generic 486/972 shift invariants for moduli 54, 162, and 243; period-162 power invariance; q/r exponent invariance; the full B=(2K+7)2^(K+4-a) residue; and phase-specific shifted K/p residues in all four phases.
+- Extended the manual source-verification workflow to run the four-phase BigInt reproducer, compile Agent10Rho20Phase143246 arithmetic, and compile the new shift-invariance module after its dependencies.
+- This is a formalized modular kernel, not yet a formal proof of the full terminal-window parent-tree theorem. Next: dispatch the manual workflow, inspect only failed-job tails if it fails, and repair the new Lean module without widening the scope to unrelated failures.
