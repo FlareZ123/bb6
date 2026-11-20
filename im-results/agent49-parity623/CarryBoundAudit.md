@@ -65,3 +65,32 @@ The corrected next step is either:
 2. prove a genuinely sharper bound on the **total** carry after accounting for the base linear carry, with a source-checked derivation.
 
 Do not use the small-start refinement as a proof dependency until one of these is done.
+
+
+## Direct decomposition at the claimed start position
+
+The same witness can be written exactly in the form used by one_extra_digit_carry_bound. Put \(K=729\), so \(3K=2187\). For the R-x coordinate, the uncorrected low linear contribution through digit \(k\) is
+\[
+L_0=-x_{\le k}-3x_{\le k-1}-3y_{\le k-1},
+\]
+where
+\[
+x_{\le k}=x\bmod2187=1130,\quad
+x_{\le k-1}=x\bmod729=401,\quad
+y_{\le k-1}=y\bmod729=261.
+\]
+Thus
+\[
+L_0=-1130-3(401)-3(261)=-3116=-2(2187)+1258.
+\]
+After adding \(C=88\),
+\[
+L_0+C=-3028=-2(2187)+1346.
+\]
+The correction-only quotient is
+\[
+\left\lfloor\frac{1258+88}{2187}\right\rfloor=0,
+\]
+which is indeed in \(\{-1,0,1\}\), exactly as the Lean lemma states. But the *total* carry is the base linear quotient \(-2\) plus this correction quotient \(0\), hence \(-2\). The theorem's quotient is not the whole transducer carry.
+
+For R-y, the low linear contribution is \(3(401)+3(261)=1986\); adding \(F=-24\) gives \(1962\), whose quotient by \(2187\) is \(0\). This confirms the total pair \((-2,0)\).
