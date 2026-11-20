@@ -1,0 +1,26 @@
+name: Agent 44 temporary source bundle
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package repository Lean sources
+        run: |
+          tar -czf /tmp/bb6-source.tar.gz \
+            --exclude=.git \
+            --exclude=agents \
+            --exclude=communications \
+            --exclude=results \
+            --exclude=resources \
+            -C "$GITHUB_WORKSPACE" .
+          ls -lh /tmp/bb6-source.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bb6-source-20261120
+          path: /tmp/bb6-source.tar.gz
+          retention-days: 1
