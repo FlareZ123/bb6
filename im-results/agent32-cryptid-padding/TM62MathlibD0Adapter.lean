@@ -329,7 +329,7 @@ theorem A_tape_nth (n : Nat) (j : Int) :
       | succ j =>
           simp only [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
             Turing.Tape.nth, Turing.ListBlank.append_mk, Turing.ListBlank.nth_mk,
-            List.nil_append, singletonPow_replicate]
+            List.nil_append, List.append_nil, singletonPow_replicate]
           change (List.replicate n _root_.Symbol.S1).getI j =
             if 0 < (Int.ofNat (j + 1)) ∧ (Int.ofNat (j + 1)) ≤ (n : Int)
               then _root_.Symbol.S1 else _root_.Symbol.S0
