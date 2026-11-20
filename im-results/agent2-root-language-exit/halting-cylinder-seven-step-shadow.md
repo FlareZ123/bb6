@@ -29,7 +29,7 @@ with
 p\equiv1\pmod3,\qquad p\equiv1\pmod2.
 \]
 
-The computed a_2640 has 11,882 bits and p has 3,729 bits. The relation is exact, not a floating-point or bounded-integer approximation.
+The computed a_2640 has 3,740 bits and p has 3,729 bits. The 8,394th-return exit parameter has 11,882 bits. The relation is exact, not a floating-point or bounded-integer approximation.
 
 The existing theorem DRegularShift.run_shift then gives, for each \(0\le j\le7\),
 
