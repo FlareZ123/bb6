@@ -27,7 +27,7 @@ Conversely, any `n,a,b` satisfying these equations and inequalities is an actual
 CReach (2*k+1) k
   ↔ ∃ n a b,
       n % 2 = 0
-      ∧ 2 ≤ a ∧ 0 < b ∧ a < 2*b
+      ∧ a % 2 = 0 ∧ 2 ≤ a ∧ 0 < b ∧ a < 2*b
       ∧ 3*k+1 = 2^(n+1)*(a+2)
       ∧ 2*b+a+7+3*n = 4*k+1
       ∧ CReach a b.
@@ -45,7 +45,7 @@ The divisibility condition `2^(n+2) ∣ 3*k+1` follows because `a_n` is even. On
 Put `x=2*k+1`, `y=k`; then `x+y=3*k+1 ≡ 1 (mod 3)` and `x+2*y=4*k+1` is odd.
 
 - The `a=0`, `b≥2` row would give `3*k+1=8*2^m`. Modulo three forces `m` odd, while its cost equation `2*b+9+3*m=4*k+1` forces `m` even. The exceptional `a=0` rows have right coordinate below five.
-- The `a=1`, `b≥4` row would give `3*k+2=16*2^m`. Modulo three forces `m` even, while `2*b+11+3*m=4*k+1` forces `m` odd. Its exceptional rows have first coordinate zero or two, unlike `2*k+1≥11`.
+- The `a=1`, `b≥4` row would give `3*k+2=16*2^m`. Modulo three forces `m` odd, while `2*b+11+3*m=4*k+1` forces `m` even. Its exceptional rows have first coordinate zero or two, unlike `2*k+1≥11`.
 - The `a≥2,b=0` and direct rows have target right coordinate two or even, respectively, contradicting odd `k≥5`.
 - The odd-left bounce row has `3*k+2=2^m*(2*a+6)`; its left side is odd and its right side even.
 - The only remaining row is the even-left bounce displayed above. Its cost equation forces `n` even by parity.
