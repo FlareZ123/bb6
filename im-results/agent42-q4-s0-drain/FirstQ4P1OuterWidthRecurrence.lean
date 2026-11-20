@@ -158,6 +158,65 @@ theorem firstQ4P1Value_iterated (L A k : Nat) (hk : 2*k+1 ≤ A) :
               rw [hsub]
               ac_rfl
 
+
+/-- The initial P2 tail before the second-cycle frame: four fixed ones,
+the outer BinDec word, then the fixed left-history suffix. -/
+def firstQ4P1Tail0 (L A : Nat) : List Bool :=
+  List.replicate 4 true ++
+    (binDec (firstQ4P1Width L A) (firstQ4P1Value L A) ++ lh)
+
+private theorem d0pow_length (n : Nat) :
+    (d0pow n).length = 3*n := by
+  induction n with
+  | zero => simp [d0pow]
+  | succ n ih =>
+      simp [d0pow, ih, d0]
+      omega
+
+/-- Expose two further d0 blocks after the already-consumed 2k blocks. -/
+private theorem d0pow_twoBlocks_right (k : Nat) :
+    d0pow (2*(k+1)) = d0pow (2*k) ++ d0 ++ d0 := by
+  have harg : 2*(k+1) = 2*k+2 := by omega
+  rw [harg, d0pow_add]
+  simp [d0pow, List.append_assoc]
+
+/-- At every later P2 boundary, the next tail begins with the required
+100 guard, followed by the final 1 of the second d0 block and the residual
+outer counter with A reduced by two more. The offset 6+6k consists of the
+four fixed setup ones and 2k complete d0 blocks. This is an encoder/list
+identity, not a claim that the TM trajectory has performed those deletions. -/
+theorem firstQ4P1Tail0_dropSixPlusSixK
+    (L A k : Nat) (hk : 2*k+3 ≤ A) :
+    (firstQ4P1Tail0 L A).drop (6+6*k) =
+      [true,false,false,true] ++
+        binDec (firstQ4P1Width L (A-2*(k+1)))
+          (firstQ4P1Value L (A-2*(k+1))) ++ lh := by
+  have hiter := firstQ4P1BinDec_iterated L A (k+1) (by omega)
+  rw [firstQ4P1Tail0, hiter, d0pow_twoBlocks_right]
+  simp only [List.append_assoc]
+  let r := binDec (firstQ4P1Width L (A-2*(k+1)))
+    (firstQ4P1Value L (A-2*(k+1)))
+  change (List.replicate 4 true ++
+    (d0pow (2*k) ++ (d0 ++ (d0 ++ (r ++ lh))))).drop (6+6*k) =
+      [true,false,false,true] ++ r ++ lh
+  have hlarge : 4 ≤ 6+6*k := by omega
+  have hdropRep : (List.replicate 4 true).drop (6+6*k) = [] := by
+    simp [hlarge]
+  have hrepLen : (List.replicate 4 true).length = 4 := by simp
+  have hidx1 : 6+6*k-4 = 2+6*k := by omega
+  rw [List.drop_append]
+  simp only [List.length_replicate, hdropRep, hidx1, List.nil_append]
+  have hpowLen : (d0pow (2*k)).length = 6*k := by
+    rw [d0pow_length]
+    omega
+  have hdropPow : (d0pow (2*k)).drop (2+6*k) = [] := by
+    simp [hpowLen]
+  have hidx2 : 2+6*k-6*k = 2 := by omega
+  rw [List.drop_append]
+  simp only [hpowLen, hdropPow, hidx2, List.nil_append]
+  rw [List.drop_append]
+  simp [d0, r]
+
 #print axioms firstQ4P1Value_twoBit_step
 #print axioms firstQ4P1BinDec_twoD0
 #print axioms firstQ4P1BinDec_iterated
