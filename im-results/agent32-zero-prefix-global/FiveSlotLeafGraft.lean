@@ -11,9 +11,9 @@ namespace BB6Coverage
 Integrate Agent 27's five-slot, source-certified translated finite-support
 cylinder into the existing depth-four physical frontier.
 
-`agent27Depth4Audit` is the exact expression used for `depth4ResidualAudit`
-in `ResidualFrontierManifest.lean`: `lassoPhysicalTraceAudit emptyTable 6 6
-12 12 2 4 4`.  We use the same physical audit directly, without importing
+\`agent27Depth4Audit\` is the exact expression used for \`depth4ResidualAudit\`
+in \`ResidualFrontierManifest.lean\`: \`lassoPhysicalTraceAudit emptyTable 6 6
+12 12 2 4 4\`.  We use the same physical audit directly, without importing
 the manifest's unrelated terminal-list and mass-report machinery.
 
 The four-slot parent is the exact A/0, B/0, C/1, D/1 path.  We prove
@@ -24,8 +24,8 @@ nonhalting cylinder from this parent and preserves every other open
 completion.
 -/
 
-/-- Same physical audit expression as `depth4ResidualAudit` in
-    `ResidualFrontierManifest.lean`. -/
+/-- Same physical audit expression as \`depth4ResidualAudit\` in
+    \`ResidualFrontierManifest.lean\`. -/
 def agent27Depth4Audit : FrontierAudit (DecidedBelow 6) emptyTable :=
   lassoPhysicalTraceAudit emptyTable 6 6 12 12 2 4 4
 
@@ -85,27 +85,47 @@ theorem agent27Parent_open_all (m : Machine)
     hm agent27D1 agent27D1Action (by decide)
   have h4 :
       (lassoPhysicalTraceAudit agent27P4 6 6 12 12 2 4 0).open m := by
-    simp [lassoPhysicalTraceAudit, agent27P4_old_oracle_false]
+    simp [lassoPhysicalTraceAudit, agent27P4_old_oracle_false, FrontierAudit.open]
   have h3 :
       (lassoPhysicalTraceAudit agent27P3 6 6 12 12 2 4 1).open m := by
-    apply (agent27_lasso_open_step agent27P3 0 agent27D1
-      agent27P3_old_oracle_false agent27P3_next m).2
-    simpa [agent27P4, hD] using h4
+    have h4' :
+        (lassoPhysicalTraceAudit
+          (refine agent27P3 agent27D1 agent27D1Action)
+          6 6 12 12 2 4 0).open m := by
+      simpa [agent27P4] using h4
+    rw [← hD] at h4'
+    exact (agent27_lasso_open_step agent27P3 0 agent27D1
+      agent27P3_old_oracle_false agent27P3_next m).2 h4'
   have h2 :
       (lassoPhysicalTraceAudit agent27P2 6 6 12 12 2 4 2).open m := by
-    apply (agent27_lasso_open_step agent27P2 1 agent27C1
-      agent27P2_old_oracle_false agent27P2_next m).2
-    simpa [agent27P3, hC] using h3
+    have h3' :
+        (lassoPhysicalTraceAudit
+          (refine agent27P2 agent27C1 agent27C1Action)
+          6 6 12 12 2 4 1).open m := by
+      simpa [agent27P3] using h3
+    rw [← hC] at h3'
+    exact (agent27_lasso_open_step agent27P2 1 agent27C1
+      agent27P2_old_oracle_false agent27P2_next m).2 h3'
   have h1 :
       (lassoPhysicalTraceAudit agent27P1 6 6 12 12 2 4 3).open m := by
-    apply (agent27_lasso_open_step agent27P1 2 agent27B0
-      agent27P1_old_oracle_false agent27P1_next m).2
-    simpa [agent27P2, hB] using h2
+    have h2' :
+        (lassoPhysicalTraceAudit
+          (refine agent27P1 agent27B0 agent27B0Action)
+          6 6 12 12 2 4 2).open m := by
+      simpa [agent27P2] using h2
+    rw [← hB] at h2'
+    exact (agent27_lasso_open_step agent27P1 2 agent27B0
+      agent27P1_old_oracle_false agent27P1_next m).2 h2'
   have h0 :
       (lassoPhysicalTraceAudit agent27P0 6 6 12 12 2 4 4).open m := by
-    apply (agent27_lasso_open_step agent27P0 3 agent27A0
-      agent27P0_old_oracle_false agent27P0_next m).2
-    simpa [agent27P1, hA] using h1
+    have h1' :
+        (lassoPhysicalTraceAudit
+          (refine agent27P0 agent27A0 agent27A0Action)
+          6 6 12 12 2 4 3).open m := by
+      simpa [agent27P1] using h1
+    rw [← hA] at h1'
+    exact (agent27_lasso_open_step agent27P0 3 agent27A0
+      agent27P0_old_oracle_false agent27P0_next m).2 h1'
   simpa [agent27Depth4Audit, agent27P0] using h0
 
 noncomputable def agent27GraftedAudit :
