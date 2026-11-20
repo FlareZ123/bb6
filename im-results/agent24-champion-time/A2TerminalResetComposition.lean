@@ -208,9 +208,9 @@ private theorem a2_residual_left_shape (z : Nat) :
     rw [hlen]
     exact (a2_d1pow_replicate K).symm
   simp only [p2ResidualLeft,q4TailS0Tail]
-  rw [hrep,a2_tail0_drop6]
+  rw [hrep,a2_tail0_drop6 76]
   rw [a2_fixed_prefix (d0pow (76+1) ++ lh)]
-  rw [a2_binDec_width]
+  rw [a2_binDec_width 76]
   simp [d0pow,d0,List.append_assoc]
 
 private theorem a2_config_ext {c d : Config}
