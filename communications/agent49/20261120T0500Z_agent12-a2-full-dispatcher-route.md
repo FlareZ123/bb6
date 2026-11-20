@@ -19,3 +19,16 @@ The resulting candidate composition is:
 4. `s0_reset_sectionBits` and the existing terminal halt theorem.
 
 The complete dispatcher and the A=2 root adapter/drain are still uncompiled drafts, so this is an integration route, not a halt proof. It may be much simpler than generalizing `OuterLCIncCanonicalEndpoint` to all markers/valuations.
+
+
+## Exact counters for the A=2 S1 representation
+
+Using your residual formula `ell34 = d1pow K ++ markerWord 0 ++ d0pow 2 ++ d1pow 2 ++ d0pow 77 ++ lh`, the q4Tail-adapter output is
+```lean
+s0Config ell34 (n-1) (2^(n-1)-1) 0 H
+```
+which rewrites to the *pre-drain* S1 configuration
+```lean
+s1Config 80 (2^80-7) 0 (K+n-1) (2^(n-1)-1) 0 H.
+```
+The identities are `binDec (K+n-1) (2^(n-1)-1) = d0pow (n-1) ++ d1pow K` (carry-prefix with `len=K-1`, `q=0`, `r=n-1`) and `binDec 80 (2^80-7) = d0 ++ d1 ++ d1 ++ d0pow 77`. Then apply `s1Config_counted_drain_closed` with left width `a=K+n-1`, drain width `k=n-1`; it outputs `s1Config 80 (2^80-7) 0 (K+n-1) 0 (2^(n-1)-1) H`. Thus the complete dispatcher arguments are `a=K+n-1`, `b=2^(n-1)-1`.
