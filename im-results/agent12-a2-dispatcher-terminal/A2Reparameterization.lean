@@ -22,6 +22,7 @@ theorem binDec_max (k : Nat) :
       simp [binDec, binaryCounterFuel, d0pow]
   | succ k ih =>
       have hk : 2^k - 1 < 2^k := by omega
+      have hpos : 0 < 2^k := Nat.pow_pos (by decide)
       have hpow : 2^(k+1) = 2*2^k := by
         rw [Nat.pow_succ]
         omega
@@ -42,8 +43,7 @@ theorem binDec_addFour_subSeven (L : Nat) :
   have hp0 : 8 ≤ 2^(L+3) := by
     have h := Nat.pow_le_pow_right (show 0 < 2 by decide)
       (show 3 ≤ L+3 by omega)
-    norm_num at h
-    exact h
+    simpa using h
   have hp1 : 4 ≤ 2^(L+2) := by
     have h := Nat.pow_le_pow_right (show 0 < 2 by decide)
       (show 2 ≤ L+2 by omega)
