@@ -229,23 +229,25 @@ estimate. Therefore the exact score decomposition gives
 \]
 ## Lower side and comparison with the published estimate
 
-The stronger exact-V-index lower bound in
+The exact-V-index lower bound in
 [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md)
 gives
 \[
 S_{\rm TM1}\ge
-6\bigl(T_{T_{M+46}+1}+2\bigr)^2
->T_{T_{M+46}}. \tag{13}
+6\bigl(T_{M+N+49}+2\bigr)^2
+>T_{M+N+49}. \tag{13}
 \]
-Here \(M=31\cdot2^{A_0}-36\) is the exact middle-dispatcher length.
-The upper-side estimate gives \(M+46<T_{11}\), while the first-section
-estimate gives \(M+46>T_{10}\). Combining (12)--(13),
+Here \(M=31\cdot2^{A_0}-36\) and \(N=(2^{78}-1)2^A-3\) are the
+authentic middle-dispatcher length and terminal index. The upper-side
+estimate gives \(M+N+50<T_{T_{11}-1}\), so the lower endpoint remains
+below the conditional upper endpoint. Combining (12)--(13),
 \[
-\boxed{\quad T_{T_{M+46}}
+\boxed{\quad T_{M+N+49}
  < S_{\rm TM1}
  < T_{T_{T_{11}}}.\quad} \tag{14}
 \]
-This improves the published left endpoint because \(M+46>T_{10}\).
+This lower endpoint strictly improves the published left endpoint
+\(T_{T_{T_{10}}}\), because \(M+N+49>T_{M+46}>T_{T_{10}}\).
 For comparison, the published mxdys interval is
 \[
 2\uparrow\uparrow2\uparrow\uparrow2\uparrow\uparrow10
