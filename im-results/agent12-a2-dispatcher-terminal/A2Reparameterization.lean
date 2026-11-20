@@ -134,4 +134,33 @@ theorem a2FullLeftFacing_eq (L K n : Nat) (hK : 0 < K) (hn : 0 < n) :
           markerWord 0 ++ d0 ++ binDec (L+4) (2^(L+4)-7) ++ lh := by
               rw [binDec_lowCarry K n hK hn]
 
+
+theorem a2AdapterConfig_eq (L K n : Nat) (H : Int)
+    (hK : 0 < K) (hn : 0 < n) :
+    s0Config (a2Ell L K) (n-1) (2^(n-1)-1) 0 H =
+      s1Config (L+4) (2^(L+4)-7) 0 (K+n-1)
+        (2^(n-1)-1) 0 H := by
+  change
+    ({ state := (3 : Fin 6), head := H,
+       tape := s0Tape (a2Ell L K) (n-1) (2^(n-1)-1) 0 H } : Config)
+      =
+    ({ state := (3 : Fin 6), head := H,
+       tape := s0Tape
+         (markerWord 0 ++ d0 ++ binDec (L+4) (2^(L+4)-7) ++ lh)
+         (K+n-1) (2^(n-1)-1) 0 H } : Config)
+  have htape :
+      s0Tape (a2Ell L K) (n-1) (2^(n-1)-1) 0 H =
+      s0Tape
+        (markerWord 0 ++ d0 ++ binDec (L+4) (2^(L+4)-7) ++ lh)
+        (K+n-1) (2^(n-1)-1) 0 H := by
+    funext x
+    by_cases hx : x ≤ H
+    · simp [s0Tape, s0LeftFacing, hx,
+        a2FullLeftFacing_eq L K n hK hn]
+    · simp [s0Tape, s0RightFacing, hx]
+  exact congrArg
+    (fun t : Int → Bool =>
+      ({ state := (3 : Fin 6), head := H, tape := t } : Config))
+    htape
+
 end BB6Coverage.Agent12A2Reparam
