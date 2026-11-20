@@ -429,3 +429,22 @@ For \(t=1\), the denominator is extended by \(7\) to account for the \(p=7\) lif
 For \(t=2\), the resolved count excludes \(w\equiv2\pmod{10}\), the shared \(p=11\) cylinder. For \(t=3\), it excludes \(w\equiv3\pmod{18}\), the shared \(p=19\) cylinder; outside it, the second-parent condition fixes one of the 19 free residues. For \(t=4\), the resolved count excludes both \(w\equiv0\pmod4\) and \(w\equiv1\pmod3\), the shared \(p=5\) and \(p=7\) cylinders.
 
 The exact counting implementation is [low_t_parent_density.js](low_t_parent_density.js). It asserts agreement with Agent 20's published first-level count before producing the low-\(t\) splits. These results quantify the low-valuation branches only; they do not bound or eliminate \(t\ge5\), and they do not prove that any first-parent residue candidate is a genuine blank-root ancestor.
+
+
+### Valuations \(t=5\) and \(t=6\)
+
+The same weighted count extends one step further.
+
+For \(t=5\), \(D_5=67\). The target recurrence gives \(y\bmod67=(29,20,22)\) for \(j\bmod3=0,1,2\), and (15) becomes, with \(s=w\bmod66\),
+\[
+w\equiv y_j-2-21\cdot2^{-(s+2)}\pmod{67}.
+\]
+The denominator cylinder is \(s=5\). Its first-level forced residue is \(w\equiv y_j-32\pmod{67}\), which agrees with the \(t=5\) projection; the higher lift remains unresolved. Outside this cylinder the \(t=5\) condition fixes one of the 67 free residues. The exact weighted count is \(107\,665\,434\,405\,024\,210\) resolved candidates (1.491703% of \(B\)); the unresolved cylinder contributes \(4\,030\,055\,886\,606\,750\), giving an upper bound of 1.547540%.
+
+For \(t=6\), \(D_6=131\), \(\operatorname{ord}_{131}(2)=130\), and the denominator cylinder is
+\[
+w\equiv6\pmod{130},
+\]
+since \(2^7\equiv-3\pmod{131}\). Extend the first-level sieve by the new prime \(131\): outside this cylinder, the first-parent equation leaves 131 choices for \(w\bmod131\); inside it, the first-parent equation forces one. The \(t=6\) projection (15) fixes one of the 131 choices outside the cylinder, so the resolved count is \(7\,170\,304\,969\,989\,921\,375\). The cylinder contributes \(47\,309\,191\,033\,307\,445\) unresolved candidates. Relative to the extended first-level candidate count \(939\,357\,260\,259\,713\,007\,570\), this is 0.763320% resolved and at most 0.768356% including the cylinder.
+
+These are again weighted residue-class counts. The \(t=6\) cylinder needs a \(131\)-adic lift; the result is not a branch closure.
