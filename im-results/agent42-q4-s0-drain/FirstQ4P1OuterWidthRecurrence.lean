@@ -35,7 +35,8 @@ theorem firstQ4P1Value_twoBit_step (L A : Nat) (hA : 3 ≤ A) :
     calc
       2^(A-1) = 2^((A-3)+2) := by rw [hAeq]
       _ = 2^(A-3)*2^2 := by rw [Nat.pow_add]
-      _ = 4*2^(A-3) := by norm_num; ac_rfl
+      _ = 2^(A-3)*4 := by rw [show (2:Nat)^2 = 4 by decide]
+      _ = 4*2^(A-3) := Nat.mul_comm _ _
   have hmul :
       2^(A-1)*(2^(L+2)-1) =
         4*(2^(A-3)*(2^(L+2)-1)) := by
