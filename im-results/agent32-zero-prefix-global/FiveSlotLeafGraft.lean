@@ -11,9 +11,9 @@ namespace BB6Coverage
 Integrate Agent 27's five-slot, source-certified translated finite-support
 cylinder into the existing depth-four physical frontier.
 
-\`agent27Depth4Audit\` is the exact expression used for \`depth4ResidualAudit\`
-in \`ResidualFrontierManifest.lean\`: \`lassoPhysicalTraceAudit emptyTable 6 6
-12 12 2 4 4\`.  We use the same physical audit directly, without importing
+`agent27Depth4Audit` is the exact expression used for `depth4ResidualAudit`
+in `ResidualFrontierManifest.lean`: `lassoPhysicalTraceAudit emptyTable 6 6
+12 12 2 4 4`.  We use the same physical audit directly, without importing
 the manifest's unrelated terminal-list and mass-report machinery.
 
 The four-slot parent is the exact A/0, B/0, C/1, D/1 path.  We prove
@@ -24,8 +24,8 @@ nonhalting cylinder from this parent and preserves every other open
 completion.
 -/
 
-/-- Same physical audit expression as \`depth4ResidualAudit\` in
-    \`ResidualFrontierManifest.lean\`. -/
+/-- Same physical audit expression as `depth4ResidualAudit` in
+    `ResidualFrontierManifest.lean`. -/
 def agent27Depth4Audit : FrontierAudit (DecidedBelow 6) emptyTable :=
   lassoPhysicalTraceAudit emptyTable 6 6 12 12 2 4 4
 
