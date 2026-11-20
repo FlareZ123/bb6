@@ -103,7 +103,8 @@ private theorem a2_binDec_tail (L : Nat) :
       (show 1≤L+2 by omega)
     simpa using hp
   have hpow1 : 1 ≤ 2^(L+1) := by
-    exact Nat.one_le_iff_ne_zero.mpr (by positivity)
+    have hp : 0 < 2^(L+1) := Nat.pow_pos (by decide)
+    omega
   have hnum1 : 2^(L+3)-3 = 2*(2^(L+2)-2)+1 := by
     have hp : 2^(L+3) = 2^(L+2)*2 := by rw [Nat.pow_succ]
     omega
@@ -115,12 +116,15 @@ private theorem a2_binDec_tail (L : Nat) :
   calc
     binDec (L+3) (2^(L+3)-3)
         = binDec ((L+2)+1) (2*(2^(L+2)-2)+1) := by
-            rw [show L+3=(L+2)+1 by omega,hnum1]
+            rw [hnum1]
+            rw [show L+3=(L+2)+1 by omega]
     _ = d0 ++ binDec (L+2) (2^(L+2)-2) :=
           binDec_odd (L+2) (2^(L+2)-2) hbound1
     _ = d0 ++ d1 ++ binDec (L+1) (2^(L+1)-1) := by
-          rw [show L+2=(L+1)+1 by omega,hnum2]
-          rw [binDec_even (L+1) (2^(L+1)-1) hbound2]
+          rw [hnum2]
+          rw [show L+2=(L+1)+1 by omega]
+          exact congrArg (fun xs => d0 ++ xs)
+            (binDec_even (L+1) (2^(L+1)-1) hbound2)
     _ = d0 ++ d1 ++ d0pow (L+1) := by
           rw [a2_binDec_allOnes]
 
@@ -137,7 +141,8 @@ private theorem a2_binDec_width (L : Nat) :
       (show 1≤L+2 by omega)
     simpa using hp
   have hpow1 : 1 ≤ 2^(L+1) := by
-    exact Nat.one_le_iff_ne_zero.mpr (by positivity)
+    have hp : 0 < 2^(L+1) := Nat.pow_pos (by decide)
+    omega
   have hnum1 : 2^(L+4)-7 = 2*(2^(L+3)-4)+1 := by
     have hp : 2^(L+4) = 2^(L+3)*2 := by rw [Nat.pow_succ]
     omega
@@ -153,15 +158,20 @@ private theorem a2_binDec_width (L : Nat) :
   calc
     binDec (L+4) (2^(L+4)-7)
         = binDec ((L+3)+1) (2*(2^(L+3)-4)+1) := by
-            rw [show L+4=(L+3)+1 by omega,hnum1]
+            rw [hnum1]
+            rw [show L+4=(L+3)+1 by omega]
     _ = d0 ++ binDec (L+3) (2^(L+3)-4) :=
           binDec_odd (L+3) (2^(L+3)-4) hbound1
     _ = d0 ++ d1 ++ binDec (L+2) (2^(L+2)-2) := by
-          rw [show L+3=(L+2)+1 by omega,hnum2]
-          rw [binDec_even (L+2) (2^(L+2)-2) hbound2]
+          rw [hnum2]
+          rw [show L+3=(L+2)+1 by omega]
+          exact congrArg (fun xs => d0 ++ xs)
+            (binDec_even (L+2) (2^(L+2)-2) hbound2)
     _ = d0 ++ d1 ++ d1 ++ binDec (L+1) (2^(L+1)-1) := by
-          rw [show L+2=(L+1)+1 by omega,hnum3]
-          rw [binDec_even (L+1) (2^(L+1)-1) hbound3]
+          rw [hnum3]
+          rw [show L+2=(L+1)+1 by omega]
+          exact congrArg (fun xs => d0 ++ d1 ++ xs)
+            (binDec_even (L+1) (2^(L+1)-1) hbound3)
     _ = d0 ++ d1pow 2 ++ d0pow (L+1) := by
           rw [a2_binDec_allOnes]
           simp [d1pow,List.append_assoc]
@@ -236,8 +246,9 @@ theorem a2_q4Frame_eq_s1Config (z : Nat) (hz : 1≤z) :
   have hcarry :
       binDec (n-1+K) (2^(n-1)-1) =
         d0pow (n-1) ++ d1pow K := by
+    have hKpos : 1≤K := by dsimp [K,a2PrefixBlocks]; omega
     have hq : 0 < 2^(K-1) := Nat.pow_pos (by decide)
-    have hraw := binDec_sub_one_carryPrefix (K-1) 0 (n-1) (by omega)
+    have hraw := binDec_sub_one_carryPrefix (K-1) 0 (n-1) hq
     have hlen : (K-1)+1+(n-1) = n-1+K := by omega
     have hval : ((2*0+1)*2^(n-1))-1 = 2^(n-1)-1 := by simp
     have hraw' :
@@ -245,12 +256,14 @@ theorem a2_q4Frame_eq_s1Config (z : Nat) (hz : 1≤z) :
           d0pow (n-1) ++ d1 ++ binDec (K-1) 0 := by
       simpa [hlen,hval] using hraw
     have hK : K=(K-1)+1 := by omega
+    have hD1 : d1 ++ d1pow (K-1) = d1pow K := by
+      rw [hK,d1pow]
     calc
       binDec (n-1+K) (2^(n-1)-1)
           = d0pow (n-1) ++ d1 ++ d1pow (K-1) := by
               simpa [binDec_zero] using hraw'
       _ = d0pow (n-1) ++ d1pow K := by
-              rw [hK,d1pow]
+              rw [hD1]
   have hleft :
       s0LeftFacing (p2ResidualLeft m (q4TailS0Tail 79 (2^79-3)))
           (n-1) (2^(n-1)-1) =
