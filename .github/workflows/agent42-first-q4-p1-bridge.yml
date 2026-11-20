@@ -14,22 +14,26 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile exact source closure of actual q4 output bridge and first cycle
+      - name: Compile q4 output bridge, generic q4Tail-to-S0 adapter, and recurrence
         run: |
           set -euo pipefail
           python3 tools/lean_compile_closure.py \
             im-results/agent42-q4-s0-drain/FirstQ4P1FrameBridge.lean \
+            im-results/agent42-q4-s0-drain/Q4TailToS0Frame.lean \
+            im-results/agent42-q4-s0-drain/Q4TailToNextQ4Tail.lean \
             --jobs 8 \
-            --workdir /tmp/agent42-first-q4-p1-bridge \
-            | tee /tmp/agent42-first-q4-p1-bridge.log
+            --workdir /tmp/agent42-q4tail-s0-closure \
+            | tee /tmp/agent42-q4tail-s0-closure.log
           python3 - <<'PY'
           import pathlib
-          log = pathlib.Path("/tmp/agent42-first-q4-p1-bridge.log").read_text()
+          log = pathlib.Path("/tmp/agent42-q4tail-s0-closure.log").read_text()
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           names = (
               "firstQ4P1Output_eq_firstQ4P1Tape",
               "firstQ4Checkpoint_run_to_P1",
               "firstQ4P1Root_to_secondFrame",
+              "q4Tail_frame_eq_s0Config",
+              "q4Tail_to_next_q4Tail",
           )
           for name in names:
               lines = [line for line in log.splitlines()
@@ -46,12 +50,12 @@ jobs:
                   raise SystemExit(f"nonstandard axioms in {name}: {sorted(bad)}")
               print(f"{name}: {sorted(axioms)}")
           PY
-          if grep -R -n 'native_decide' /tmp/agent42-first-q4-p1-bridge --include='*.lean'; then
-            echo '::error::native_decide found in the first q4 -> P1 source closure'
+          if grep -R -n 'native_decide' /tmp/agent42-q4tail-s0-closure --include='*.lean'; then
+            echo '::error::native_decide found in the q4Tail-to-S0 source closure'
             exit 1
           fi
-          if grep -q 'sorryAx' /tmp/agent42-first-q4-p1-bridge.log; then
-            echo '::error::sorryAx found in the first q4 -> P1 source closure'
+          if grep -q 'sorryAx' /tmp/agent42-q4tail-s0-closure.log; then
+            echo '::error::sorryAx found in the q4Tail-to-S0 source closure'
             exit 1
           fi
-          echo 'Actual first q4 output bridge and complete first-cycle continuation compiled with standard axioms only.'
+          echo 'q4 output bridge, generic q4Tail-to-S0 adapter, and one-step q4Tail recurrence compiled with standard axioms only.'
