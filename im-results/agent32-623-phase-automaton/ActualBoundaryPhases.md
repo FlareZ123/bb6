@@ -37,3 +37,6 @@ Machine-readable phase list and counts: [ActualBoundaryPhases.json](ActualBounda
 The universal 225/270-state rectangles remain necessary for proving that a common reset word synchronizes every possible transducer start. The authentic root itself uses a much smaller observed boundary-phase subset. The raw nonclosure witnesses do not falsify the root orbit: their starting carries are absent from this observed subset, and their input words are unconstrained.
 
 This is a candidate phase set extracted from a finite interval. It is not yet proved invariant. The observed phase-to-phase relation has substantial branching, so sector + previous pair + actual carry is not enough. The next step is to compose the 263-state reset recognizer with the actual drain transducer phase and moving-window shift, then test whether that augmented state closes.
+
+
+**Coordinate convention:** this extraction uses the branch-selector coordinate (g=p-3q) from `RootRayGapCocycle.md), with (x=2g-\gamma_s). It is not using the separate ratio-four gap (p-4q) plotted in Agent 8's `RootGapScaleDynamics.md`. The terminal distance is (h=g-9,g-5,(g-1)/2,(g-2)/2) by sector, so (x=2h) on LO/LE and (x=4h) on RO/RE.
