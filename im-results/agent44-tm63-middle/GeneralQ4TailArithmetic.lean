@@ -60,6 +60,7 @@ theorem firstQ4P1Value_binDec_shape (L A : Nat) (hA : 1≤A) :
         rw [binDec_odd (A-1+L+1) (firstQ4P1Value L (A-1))
           (by simpa [firstQ4P1Width] using hbound)]
         rw [ih (A-1) hprevlt hprev]
+        rw [show A-1=(A-2)+1 by omega]
         simp [d0pow,List.append_assoc]
 
 /-- The general terminal index N=M-3 has a closed BinDec block form. -/
@@ -120,8 +121,15 @@ theorem q4TerminalIndex_binDec_shape (L A : Nat) (hA : 2≤A) :
     _ = d0 ++ d1 ++ d0pow (A-2) ++ d1 ++ d0pow (L+1) := by
           have hshape :=
             firstQ4P1Value_binDec_shape L (A-1) hprev
+          have hwidth : (A-1)+L+1=A+L := by omega
+          have hexp : (A-1)-1=A-2 := by omega
+          have hshape' :
+              binDec (A+L) (firstQ4P1Value L (A-1)) =
+                d0pow (A-2) ++ d1 ++ d0pow (L+1) := by
+            rw [← hwidth,← hexp]
+            exact hshape
           simpa [qprev] using
-            congrArg (fun xs => d0 ++ d1 ++ xs) hshape
+            congrArg (fun xs => d0 ++ d1 ++ xs) hshape'
 
 private theorem pow_two_even_mod_three (k : Nat) :
     (2^(2*k)) % 3 = 1 := by
