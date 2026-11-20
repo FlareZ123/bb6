@@ -1,15 +1,15 @@
 # Raw TM62-to-D0 transport for Cryptid D
 
-**Status:** source-level proof design and exact table comparison; the transport theorem below has not yet been added or kernel-checked in this repository. Keep this under `im-results/`. It is not a new halting result and does not establish blank-root reachability.
+**Status (20 November 2026):** a concrete Mathlib-facing adapter draft now exists at [TM62MathlibD0Adapter.lean](./TM62MathlibD0Adapter.lean). It is not yet compiled against the exact upstream/Mathlib dependency closure, and no repository theorem or new halting result is claimed. Keep this dossier under `im-results/`; it does not establish blank-root reachability.
 
 ## The useful simplification
 
 The pinned external proof does not need to be translated through the eleven-row `DRegular` return grammar. Its `A_step2` tactic proves ordinary finite runs of the raw six-state TM62. The entire 107-call path, including every arbitrary suffix, is already covered by that source proof. A single raw-step conjugacy to the repository's exact six-state model transfers the whole path at once.
 
 External source:
-- `int-y1/proofs`, commit `1929f57df4dd7afcc11c3f458e20526fd1f991e0`
+- `int-y1/proofs`, commit `b77dda5c79fb196d67ce35669e172ad632401c1b` (the current source pin used by the adapter draft)
 - `BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean`
-- fetched source blob: `3bdada95ae94bd1198c16bb3d32dfe724c59579c`
+- current upstream file: `BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean`
 
 Repository model:
 - `im-results/agent3-portfolio-raw-conjugacy/DTableWitness.lean`, definition `BB6.Portfolio.D0`
@@ -64,7 +64,7 @@ Map an external configuration ((q,T)), together with (h), to
 ]
 in `BB6.Portfolio.Cfg`.
 
-The exact Mathlib lemmas needed are in the external source's pinned Mathlib revision `713ead03620c1f6965f94050048e50e8d1878872`, `Mathlib/Computability/Tape.lean`:
+The exact Mathlib lemmas used by the adapter draft are in the upstream project's pinned Mathlib revision `dfbc15ea6605db241da9cfd0632bbaf69b67e513`, `Mathlib/Computability/TuringMachine/Tape.lean`:
 - `Tape.move_right_nth`: moving right changes relative coordinate (i) to old coordinate (i+1);
 - `Tape.move_left_nth`: moving left changes relative coordinate (i) to old coordinate (i-1);
 - `Tape.write_nth`: writing changes exactly relative coordinate zero.
@@ -101,11 +101,10 @@ It does not prove that the authentic orbit from `A(9,[])` reaches this cylinder.
 
 ## Acceptance boundary
 
-Before treating this as a repository theorem, add and locally preflight:
-1. the symbol/state encodings;
-2. the extended external configuration with absolute head coordinate;
-3. the exact one-step commuting theorem, including F/1 `none`;
-4. the finite-run/halting transport theorem;
-5. the `A(n,ls)` section identity and the `A(n,[])` specialization.
+## Concrete draft and validation boundary
 
-The table audit and this derivation are useful source-level guidance, not a substitute for the Lean kernel check. No claim is made here that this file has been compiled.
+`TM62MathlibD0Adapter.lean` now contains the state/symbol/direction encodings, exact table conjugacy, `Turing.Tape` absolute-coordinate observation, write-before-move lemma, extended configuration step, exact-n run transport, projection back to the external `stepNat`, and a conditional transfer of `halts_A_mod_3_pow_108` to `D0`'s `F0Pure` configurations. It also attempts the `A(n,[])` section identity by reducing `ListBlank.append_mk`/`nth_mk` to `List.getI` on `List.replicate`.
+
+The generic Option-run projection and halting equivalence was separately compiled in Lean 4.36.0-rc2 in a scratch file. This checks the run/halts glue only; it does **not** compile the Mathlib-facing adapter. The local runtime now has Lean 4.36.0-rc2, but no Mathlib checkout/cache or upstream Lake project, so the exact dependency closure cannot be locally preflighted here. No CI run has been dispatched as a substitute. Agents 3 and 4 have been asked to review the exact source-level adapter, especially `A_tape_nth`, `stepNat`/`haltsIn` signatures, and the `Tape.write`/`Tape.move` composition.
+
+Before treating this as a repository theorem, the exact file must compile against the pinned upstream/Mathlib closure, and its transitive `#print axioms D0_halts_on_A_cylinder` must be inspected. The table audit, generic scratch preflight, and source-level draft are not a kernel check of the concrete adapter.
