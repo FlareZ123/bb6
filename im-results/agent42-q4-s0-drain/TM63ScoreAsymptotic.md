@@ -64,18 +64,28 @@ The sum of the remaining linear coefficients is
 \[
 \sum_{j=0}^{N-2}(12(N-j)-9)=6N^2-3N-3\le6N^2.
 \]
-Using \(U\le R\), (3) and (4) therefore imply
+Using \(U\le R\), (3) and (4) imply
 \[
-\begin{aligned}
-\Delta
-&<15R^2+10N^2+85N+90+12(N+1)R\\
-&\quad+6N\ell^2+54N\ell+6N^2\ell\\
-&\le12\ell^3+91\ell^2+97\ell+90
-<13\ell^3.
-\end{aligned}
+\Delta<
+(6N+15)\ell^2+(6N^2+66N+12)\ell+10N^2+85N+90.
 \tag{5}
 \]
-The final inequality uses \(\ell\ge256\).
+Also \(k=\ell=b_{N-1}\ge2^{N-1}R\ge2^{N-1}\), so
+\(N\le1+\log_2\ell\). Put \(m=\log_2\ell\). Substitution of
+\(N\le m+1\) into (5) gives
+\[
+\Delta<
+(6m+21)\ell^2+(6m^2+78m+84)\ell
++10m^2+105m+185.
+\]
+For \(\ell\ge256\), \(m\ge8\), \(m\le\ell/16\), and \(\ell\ge m\).
+The three terms are respectively bounded by
+\(9(1+m)\ell^2\), \(84(1+m)\ell^2\), and
+\((1+m)\ell^2\). Therefore
+\[
+\boxed{0\le\Delta<94(1+m)\ell^2<100(1+\log_2\ell)\ell^2.}
+\tag{6}
+\]
 
 Consequently the exact score has the explicit two-term expansion
 \[
@@ -83,22 +93,22 @@ Consequently the exact score has the explicit two-term expansion
 S_{\rm TM1}
 =6b_N^2+54b_N+48+3\ell+\Delta,
 \qquad
-0\le\Delta<13\ell^3,\quad
+0\le\Delta<100(1+\log_2\ell)\ell^2,\quad
 \ell=\log_2(b_N+1).
 }
-\tag{6}
+\tag{7}
 \]
 In particular,
 \[
 54<
 \frac{S_{\rm TM1}-6b_N^2}{b_N}
 <
-54+\frac{48+3\ell+13\ell^3}{2^\ell-1}
+54+\frac{48+3\ell+100(1+\log_2\ell)\ell^2}{2^\ell-1}
 <
-54+2\times10^{-69}.
-\tag{7}
+54+6\times10^{-70},
+\tag{8}
 \]
-The last numerical inequality holds for integer \(\ell\ge256\); the displayed quotient is decreasing there and is already below \(2\times10^{-69}\) at \(\ell=256\).
+where the final numerical inequality holds for integer \(\ell\ge256\); the displayed quotient is decreasing there and is already below \(6\times10^{-70}\) at \(\ell=256\).
 
 The relative excess over the quadratic final-increment term is localized even more sharply:
 \[
@@ -107,11 +117,11 @@ The relative excess over the quadratic final-increment term is localized even mo
 =
 \frac{7}{b_N+1}+\varepsilon_N,\qquad
 0<\varepsilon_N<
-\frac{3\ell+13\ell^3}{6(b_N+1)^2}.
+\frac{3\ell+100(1+\log_2\ell)\ell^2}{6(b_N+1)^2}.
 }
-\tag{8}
+\tag{9}
 \]
-Thus the score is not merely dominated by the final counted increment: after its exact quadratic and linear terms are removed, the entire remaining cost is polylogarithmic in \(b_N\), bounded by \(13\log_2(b_N+1)^3\).
+Thus the score is not merely dominated by the final counted increment: after its exact quadratic and linear terms are removed, the entire remaining cost is \(O((\log b_N)^2\log\log b_N)\), with the explicit bound above.
 
 ## Evidence boundary
 
