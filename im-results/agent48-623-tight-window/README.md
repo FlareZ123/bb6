@@ -58,6 +58,8 @@ Exact source references:
 - `im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean`, theorems `correction_buffer_closed` and `one_extra_digit_carry_bound_closed`;
 - `im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducerCarry.lean`, which proves the three-state digit transducer and exact weighted output statistics;
 - `im-results/agent32-623-phase-automaton/BranchSelection.lean` and `.md`, for (x=2g-\gamma), the threshold (T), and the source-depth bound (|T|\le5\ell+22);
+- `im-results/agent49-parity623/TerminalRatio4Source.lean`, for the four original-source terminal-ratio branches;
+- `im-results/agent8-623-inverse/RootRayDrainDepthSource.lean`, for the unified full-drain depth package used to bound the terminal-window parameter.
 - `im-results/agent41-623-3euclidean/MonotoneMassWindow.md`, which proves (\ell_{S'}-\ell_S\in\{0,1\}).
 
 ## 2. Sharper moving-window shift
