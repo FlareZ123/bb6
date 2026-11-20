@@ -17,7 +17,7 @@ A temporary local `S1Encoder.lean` module was built from the relevant definition
 - `binaryCounterFuel`, `binDec`;
 - `binDec_even`, `binDec_odd`;
 - `binDec_sub_one_carryPrefix`, `binDec_zero`;
-- the exact `Config` record shape and S1 tape semantics used by the repository: `sideBit`, `s0LeftFacing`, `s0RightFacing`, `s0Tape`, `s0Config`, and `s1Config`.
+- the exact `BB6Coverage.Config` record from `im-results/agent8-coverage-contract/Frontier.lean` (`state : Fin 6`, `head : Int`, `tape : Int → Bool`), plus S1 tape semantics copied from `S1Encoder.lean`: `sideBit`, `s0LeftFacing`, `s0RightFacing`, `s0Tape`, `s0Config`, and `s1Config`.
 
 That isolated module compiled to `S1Encoder.olean`. Then the exact code now committed as `A2Reparameterization.lean` was compiled with `LEAN_PATH=/tmp/a2lean`. Lean exited with return code 0 and no diagnostics.
 
