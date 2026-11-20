@@ -1,0 +1,4765 @@
+{
+  "search": {
+    "maxAssignedSlots": 3,
+    "maxSuccessfulSteps": 10,
+    "maxEntry": 4,
+    "maxPeriod": 6,
+    "visitedNodes": null,
+    "translatedCandidates": 622,
+    "openCandidates": 80,
+    "translatedHistogram": {
+      "1": 2,
+      "2": 30,
+      "3": 590
+    }
+  },
+  "family": {
+    "pairwiseConflictingPairs": 3160,
+    "compatiblePairs": 0,
+    "cylinderMassEach": "25^9 = 3814697265625",
+    "disjointUnionMass": "305175781250000",
+    "fractionOfAllTables": "0.512%"
+  },
+  "candidates": [
+    {
+      "entry": 1,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "0LB",
+          "actionCode": 1
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "1RA",
+          "actionCode": 18
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0LB",
+          "actionCode": 1
+        }
+      ],
+      "path": [
+        "0LB",
+        "1RA",
+        "0LB",
+        "0LB"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 1,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "0LC",
+          "actionCode": 2
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "1RA",
+          "actionCode": 18
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0LC",
+          "actionCode": 2
+        }
+      ],
+      "path": [
+        "0LC",
+        "1RA",
+        "0LC",
+        "0LC"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 1,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "0LD",
+          "actionCode": 3
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "1RA",
+          "actionCode": 18
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0LD",
+          "actionCode": 3
+        }
+      ],
+      "path": [
+        "0LD",
+        "1RA",
+        "0LD",
+        "0LD"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 1,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "0LE",
+          "actionCode": 4
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "1RA",
+          "actionCode": 18
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0LE",
+          "actionCode": 4
+        }
+      ],
+      "path": [
+        "0LE",
+        "1RA",
+        "0LE",
+        "0LE"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 1,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "0LF",
+          "actionCode": 5
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "1RA",
+          "actionCode": 18
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0LF",
+          "actionCode": 5
+        }
+      ],
+      "path": [
+        "0LF",
+        "1RA",
+        "0LF",
+        "0LF"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 1,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "0RB",
+          "actionCode": 7
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "1LA",
+          "actionCode": 12
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0RB",
+          "actionCode": 7
+        }
+      ],
+      "path": [
+        "0RB",
+        "1LA",
+        "0RB",
+        "0RB"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 1,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "0RC",
+          "actionCode": 8
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "1LA",
+          "actionCode": 12
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0RC",
+          "actionCode": 8
+        }
+      ],
+      "path": [
+        "0RC",
+        "1LA",
+        "0RC",
+        "0RC"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 1,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "0RD",
+          "actionCode": 9
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "1LA",
+          "actionCode": 12
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0RD",
+          "actionCode": 9
+        }
+      ],
+      "path": [
+        "0RD",
+        "1LA",
+        "0RD",
+        "0RD"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 1,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "0RE",
+          "actionCode": 10
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "1LA",
+          "actionCode": 12
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0RE",
+          "actionCode": 10
+        }
+      ],
+      "path": [
+        "0RE",
+        "1LA",
+        "0RE",
+        "0RE"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 1,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "0RF",
+          "actionCode": 11
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "1LA",
+          "actionCode": 12
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0RF",
+          "actionCode": 11
+        }
+      ],
+      "path": [
+        "0RF",
+        "1LA",
+        "0RF",
+        "0RF"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LB",
+          "actionCode": 13
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LB",
+        "0RA",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 4,
+      "displacement": 2,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LB",
+          "actionCode": 13
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0RB",
+          "actionCode": 7
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LB",
+        "0RA",
+        "0RB",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LB",
+          "actionCode": 13
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0RB",
+          "actionCode": 7
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LB",
+        "0RB",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LB",
+          "actionCode": 13
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0RC",
+          "actionCode": 8
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LB",
+        "0RC",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LB",
+          "actionCode": 13
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0RD",
+          "actionCode": 9
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LB",
+        "0RD",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LB",
+          "actionCode": 13
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0RE",
+          "actionCode": 10
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LB",
+        "0RE",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LB",
+          "actionCode": 13
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0RF",
+          "actionCode": 11
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LB",
+        "0RF",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LC",
+          "actionCode": 14
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LC",
+        "0RA",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 4,
+      "displacement": 2,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LC",
+          "actionCode": 14
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0RC",
+          "actionCode": 8
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LC",
+        "0RA",
+        "0RC",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LC",
+          "actionCode": 14
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0RB",
+          "actionCode": 7
+        }
+      ],
+      "path": [
+        "1LC",
+        "0RB",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LC",
+          "actionCode": 14
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0RC",
+          "actionCode": 8
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LC",
+        "0RC",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LC",
+          "actionCode": 14
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0RD",
+          "actionCode": 9
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LC",
+        "0RD",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LC",
+          "actionCode": 14
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0RE",
+          "actionCode": 10
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LC",
+        "0RE",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LC",
+          "actionCode": 14
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0RF",
+          "actionCode": 11
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LC",
+        "0RF",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LD",
+          "actionCode": 15
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LD",
+        "0RA",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 4,
+      "displacement": 2,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LD",
+          "actionCode": 15
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0RD",
+          "actionCode": 9
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LD",
+        "0RA",
+        "0RD",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LD",
+          "actionCode": 15
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0RB",
+          "actionCode": 7
+        }
+      ],
+      "path": [
+        "1LD",
+        "0RB",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LD",
+          "actionCode": 15
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0RC",
+          "actionCode": 8
+        }
+      ],
+      "path": [
+        "1LD",
+        "0RC",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LD",
+          "actionCode": 15
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0RD",
+          "actionCode": 9
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LD",
+        "0RD",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LD",
+          "actionCode": 15
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0RE",
+          "actionCode": 10
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LD",
+        "0RE",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LD",
+          "actionCode": 15
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0RF",
+          "actionCode": 11
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LD",
+        "0RF",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LE",
+          "actionCode": 16
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LE",
+        "0RA",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 4,
+      "displacement": 2,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LE",
+          "actionCode": 16
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0RE",
+          "actionCode": 10
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LE",
+        "0RA",
+        "0RE",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LE",
+          "actionCode": 16
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0RB",
+          "actionCode": 7
+        }
+      ],
+      "path": [
+        "1LE",
+        "0RB",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LE",
+          "actionCode": 16
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0RC",
+          "actionCode": 8
+        }
+      ],
+      "path": [
+        "1LE",
+        "0RC",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LE",
+          "actionCode": 16
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0RD",
+          "actionCode": 9
+        }
+      ],
+      "path": [
+        "1LE",
+        "0RD",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LE",
+          "actionCode": 16
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0RE",
+          "actionCode": 10
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LE",
+        "0RE",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LE",
+          "actionCode": 16
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0RF",
+          "actionCode": 11
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LE",
+        "0RF",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LF",
+          "actionCode": 17
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LF",
+        "0RA",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 4,
+      "displacement": 2,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LF",
+          "actionCode": 17
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0RF",
+          "actionCode": 11
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LF",
+        "0RA",
+        "0RF",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LF",
+          "actionCode": 17
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0RB",
+          "actionCode": 7
+        }
+      ],
+      "path": [
+        "1LF",
+        "0RB",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LF",
+          "actionCode": 17
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0RC",
+          "actionCode": 8
+        }
+      ],
+      "path": [
+        "1LF",
+        "0RC",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LF",
+          "actionCode": 17
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0RD",
+          "actionCode": 9
+        }
+      ],
+      "path": [
+        "1LF",
+        "0RD",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LF",
+          "actionCode": 17
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0RA",
+          "actionCode": 6
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0RE",
+          "actionCode": 10
+        }
+      ],
+      "path": [
+        "1LF",
+        "0RE",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": 1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1LF",
+          "actionCode": 17
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0RF",
+          "actionCode": 11
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0RA",
+          "actionCode": 6
+        }
+      ],
+      "path": [
+        "1LF",
+        "0RF",
+        "0RA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RB",
+          "actionCode": 19
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RB",
+        "0LA",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 4,
+      "displacement": -2,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RB",
+          "actionCode": 19
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0LB",
+          "actionCode": 1
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RB",
+        "0LA",
+        "0LB",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RB",
+          "actionCode": 19
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0LB",
+          "actionCode": 1
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RB",
+        "0LB",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RB",
+          "actionCode": 19
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0LC",
+          "actionCode": 2
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RB",
+        "0LC",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RB",
+          "actionCode": 19
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0LD",
+          "actionCode": 3
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RB",
+        "0LD",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RB",
+          "actionCode": 19
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0LE",
+          "actionCode": 4
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RB",
+        "0LE",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RB",
+          "actionCode": 19
+        },
+        {
+          "slot": "B/0",
+          "slotIndex": 2,
+          "action": "0LF",
+          "actionCode": 5
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RB",
+        "0LF",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "B/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "B/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RC",
+          "actionCode": 20
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RC",
+        "0LA",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 4,
+      "displacement": -2,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RC",
+          "actionCode": 20
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0LC",
+          "actionCode": 2
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RC",
+        "0LA",
+        "0LC",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RC",
+          "actionCode": 20
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0LB",
+          "actionCode": 1
+        }
+      ],
+      "path": [
+        "1RC",
+        "0LB",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RC",
+          "actionCode": 20
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0LC",
+          "actionCode": 2
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RC",
+        "0LC",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RC",
+          "actionCode": 20
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0LD",
+          "actionCode": 3
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RC",
+        "0LD",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RC",
+          "actionCode": 20
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0LE",
+          "actionCode": 4
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RC",
+        "0LE",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RC",
+          "actionCode": 20
+        },
+        {
+          "slot": "C/0",
+          "slotIndex": 4,
+          "action": "0LF",
+          "actionCode": 5
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RC",
+        "0LF",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "C/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "C/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RD",
+          "actionCode": 21
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RD",
+        "0LA",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 4,
+      "displacement": -2,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RD",
+          "actionCode": 21
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0LD",
+          "actionCode": 3
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RD",
+        "0LA",
+        "0LD",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RD",
+          "actionCode": 21
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0LB",
+          "actionCode": 1
+        }
+      ],
+      "path": [
+        "1RD",
+        "0LB",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RD",
+          "actionCode": 21
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0LC",
+          "actionCode": 2
+        }
+      ],
+      "path": [
+        "1RD",
+        "0LC",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RD",
+          "actionCode": 21
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0LD",
+          "actionCode": 3
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RD",
+        "0LD",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RD",
+          "actionCode": 21
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0LE",
+          "actionCode": 4
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RD",
+        "0LE",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RD",
+          "actionCode": 21
+        },
+        {
+          "slot": "D/0",
+          "slotIndex": 6,
+          "action": "0LF",
+          "actionCode": 5
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RD",
+        "0LF",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "D/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "D/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RE",
+          "actionCode": 22
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RE",
+        "0LA",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 4,
+      "displacement": -2,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RE",
+          "actionCode": 22
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0LE",
+          "actionCode": 4
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RE",
+        "0LA",
+        "0LE",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RE",
+          "actionCode": 22
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0LB",
+          "actionCode": 1
+        }
+      ],
+      "path": [
+        "1RE",
+        "0LB",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RE",
+          "actionCode": 22
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0LC",
+          "actionCode": 2
+        }
+      ],
+      "path": [
+        "1RE",
+        "0LC",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RE",
+          "actionCode": 22
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0LD",
+          "actionCode": 3
+        }
+      ],
+      "path": [
+        "1RE",
+        "0LD",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RE",
+          "actionCode": 22
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0LE",
+          "actionCode": 4
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RE",
+        "0LE",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RE",
+          "actionCode": 22
+        },
+        {
+          "slot": "E/0",
+          "slotIndex": 8,
+          "action": "0LF",
+          "actionCode": 5
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RE",
+        "0LF",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "E/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "E/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RF",
+          "actionCode": 23
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RF",
+        "0LA",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 4,
+      "displacement": -2,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RF",
+          "actionCode": 23
+        },
+        {
+          "slot": "A/1",
+          "slotIndex": 1,
+          "action": "0LF",
+          "actionCode": 5
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RF",
+        "0LA",
+        "0LF",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "A/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "A/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RF",
+          "actionCode": 23
+        },
+        {
+          "slot": "B/1",
+          "slotIndex": 3,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0LB",
+          "actionCode": 1
+        }
+      ],
+      "path": [
+        "1RF",
+        "0LB",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "B/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "B/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RF",
+          "actionCode": 23
+        },
+        {
+          "slot": "C/1",
+          "slotIndex": 5,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0LC",
+          "actionCode": 2
+        }
+      ],
+      "path": [
+        "1RF",
+        "0LC",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "C/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "C/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RF",
+          "actionCode": 23
+        },
+        {
+          "slot": "D/1",
+          "slotIndex": 7,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0LD",
+          "actionCode": 3
+        }
+      ],
+      "path": [
+        "1RF",
+        "0LD",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "D/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "D/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RF",
+          "actionCode": 23
+        },
+        {
+          "slot": "E/1",
+          "slotIndex": 9,
+          "action": "0LA",
+          "actionCode": 0
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0LE",
+          "actionCode": 4
+        }
+      ],
+      "path": [
+        "1RF",
+        "0LE",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "E/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "E/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    },
+    {
+      "entry": 0,
+      "period": 3,
+      "displacement": -1,
+      "fixedSlots": 3,
+      "transitions": [
+        {
+          "slot": "A/0",
+          "slotIndex": 0,
+          "action": "1RF",
+          "actionCode": 23
+        },
+        {
+          "slot": "F/0",
+          "slotIndex": 10,
+          "action": "0LF",
+          "actionCode": 5
+        },
+        {
+          "slot": "F/1",
+          "slotIndex": 11,
+          "action": "0LA",
+          "actionCode": 0
+        }
+      ],
+      "path": [
+        "1RF",
+        "0LF",
+        "0LA"
+      ],
+      "firstUnknownOrder": [
+        "A/0",
+        "F/0",
+        "F/1"
+      ],
+      "fullScanNoUnknown": true,
+      "prefixes": [
+        {
+          "assigned": 0,
+          "oldOracle": false,
+          "firstUnknown": "A/0"
+        },
+        {
+          "assigned": 1,
+          "oldOracle": false,
+          "firstUnknown": "F/0"
+        },
+        {
+          "assigned": 2,
+          "oldOracle": false,
+          "firstUnknown": "F/1"
+        },
+        {
+          "assigned": 3,
+          "oldOracle": false,
+          "firstUnknown": null
+        }
+      ]
+    }
+  ]
+}
