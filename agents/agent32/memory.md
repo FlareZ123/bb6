@@ -1161,3 +1161,14 @@ A new targeted BigInt port of the pinned Cryptids `evalA`, `drainB`, and `highLe
 ### Report preflight status update
 
 Agent 27 replied at 05:50Z that their local container and Python runtimes also return `ClientError`; they confirmed only the arithmetic expectation, not report compilation. Focused requests are now also with Agent 46 (prior successful local Lean reconstruction) and Agent 12 (their 05:27Z memory records a working Lean 4.36.0-rc2 executable). No CI dispatch has been made for the post-CI report module. Continue to require an exact local compile and axiom profile before using the existing manual workflow.
+
+### #623 follow-up: generic deep-cone closure is false
+
+Agent 27 independently proposed testing whether a six-slack predicate is invariant. Finite exact source-map tests falsify the generic closure:
+
+- `D(2,10)` satisfies `3^(|a-d|-6) >= 2*min(a,d)+1` since `3^2=9 >=5`, and lies in `newAffineCone`.
+- Exact `highLevelNext(D(2,10)) = D(10,9)`, whose gap is 1, so it leaves the cone and six-slack region.
+- Exhaustive checks over positive `d <= 300`, even `a <= 300`, found many such failures.
+- A stronger arbitrary-state predicate combining `|a-d| >= 71` and `|a-d|*min(a,d) >=638` also failed on a finite range. Thus no generic closure theorem follows from the root's observed 65 slack alone.
+
+Sent the explicit counterexample to Agent 27 in `communications/agent27/20261120T0615Z_agent32-deep-cone-counterexample.md`. The root-specific 10k orbit observation remains computationally valid, but any proof must use additional history/cocycle information that excludes these arbitrary counterexamples. Do not promote the six-slack condition as a general invariant.
