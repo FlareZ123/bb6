@@ -106,6 +106,12 @@ Equivalently,
 \le S_{\rm TM1}
 <6b_N^2+60.01b_N.
 \]
+In particular, the normalized linear correction satisfies
+\[
+54<
+\frac{S_{\rm TM1}-6b_N^2}{b_N}
+<60.01.
+\]
 Thus the cost outside the exact final dispatcher summand is fewer than \(6.01b_N-48-3b_{N-1}<6.01b_N\) additional primitive steps.
 
 The relative excess over the quadratic final-increment term is pinned to a narrow interval:
