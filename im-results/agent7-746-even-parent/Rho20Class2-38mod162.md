@@ -1,10 +1,10 @@
-# Rho-20 residual class 2: an infinite (a\equiv38\pmod{54}) root-excluded subfamily
+# Rho-20 residual class 2: dyadic terminal-window root exclusions in a≡38 mod54
 
-**Status.** Exact arithmetic derivation at the already source-verified `ResetParent` grammar level. The formulas and modular table below are explicit and reproducible; this family-specific parent-tree argument has **not yet been compiled in Lean**. Keep it in `im-results/` until source-level formalization and adversarial review are complete.
+**Status.** The (m=0) chain below is an exact arithmetic derivation at the already source-verified `ResetParent` grammar level. The shifted dyadic terminal-window theorem added below extends it to at least (a-21) further (K)-values for every (a\equiv38\pmod{54}), with an exact count of 233,015 shifted values already at (a=38). Both arguments are paper-level and have **not yet been compiled in Lean**. Keep them in `im-results/` pending source-level formalization and adversarial review.
 
-This resolves one entire modulo-54 phase inside the residual `a mod 18 = 2` class identified in [Agent 10's rho-20 analysis](../agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md). It does not settle the other two `a mod 54` phases, the whole #746 family, or BB(6).
+These results resolve additional infinite subfamilies inside the residual (a\bmod18=2) class identified in [Agent 10's rho-20 analysis](../agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md). They do not settle the other two (a\bmod54) phases, the whole #746 family, or BB(6).
 
-## Theorem target
+## Baseline family (m=0)
 
 For every
 [
@@ -194,9 +194,198 @@ so (G\equiv0\pmod9).
 
 The small modular certificate is reproduced by `rho20_class2_mod162.mjs`. The period argument and three-row residue table, not a finite sample, establish the congruences for every (n\ge0).
 
+
+## Shifted dyadic terminal-window family
+
+The preceding family uses the single offset \(m=0\), hence \(g=103\). The same source-exact parent argument applies to a much larger set of \(K\)-values for each fixed \(a\).
+
+Let
+\[
+a\ge38,\quad a\equiv38\pmod{54},\qquad
+m\ge0,
+\]
+and put
+\[
+K=97\cdot2^{a-7}+48+486m,\qquad
+g=103+972m,\qquad
+p=2^K,\quad q=2^{K-a},\quad r=K+4-a.
+\]
+Then
+\[
+2K+7=97\cdot2^{a-6}+g,\qquad
+x=\frac{2K+7}{2^a}=\frac{97}{64}+\frac{g}{2^a}.
+\]
+Use the same \(B,D,E\) definitions as above. For an integer \(s\) with
+\[
+19\le s\le a-3,\qquad
+\frac{15}{16}<\theta_s:=\frac{256g}{27\cdot2^s}<\frac{31}{32}, \tag{10}
+\]
+the complete inverse-parent graph of \(E\) is again a single chain ending at a non-root leaf:
+\[
+E\leftarrow h_0\leftarrow y_0\leftarrow y_1
+\leftarrow\cdots\leftarrow y_{a-s}.
+\]
+There are exactly \(a-s\) same-level even-parent edges. In particular,
+\[
+\neg\,\operatorname{ResetChain}(2,E).
+\]
+
+### The modular phase survives every shift
+
+The three-row table in the preceding section is indexed by \(a\bmod162\in\{38,92,146\}\). Replacing the baseline \(K_0=97\cdot2^{a-7}+48\) by \(K=K_0+486m\) preserves:
+- \(K\bmod243\) and \(K\bmod162\);
+- \(2^K\bmod243\), \(2^{K-a}\bmod243\), and \(2^{K+4-a}\bmod243\), since \(486\) is a multiple of \(162\);
+- \((2K+7)\bmod243\), since \(972\) is a multiple of \(243\).
+
+Thus the table's decisive residues are unchanged for every \(m\ge0\). With
+\[
+X=2E+5,\quad X_1=2h_0+5,\quad
+A=4p+2K+1,\quad L=K-2,
+\]
+and
+\[
+G=\frac{256gq+74K-23}{27},
+\]
+we have, uniformly in \(a,m\),
+\[
+X\equiv18\pmod{27},\qquad
+X_1\equiv9\pmod{27},\qquad
+A\equiv6\pmod9,\qquad
+G\equiv0\pmod9. \tag{11}
+\]
+In particular \(v_3(X)=v_3(X_1)=2\).
+
+### The two initial odd parents remain unique
+
+Condition (10), together with \(a-s\ge3\), gives
+\[
+0<\frac{g}{2^a}
+<\frac{837}{65536}<\frac3{64},
+\qquad
+\frac{97}{64}<x<\frac{25}{16}.
+\]
+Also \(K<2^a\) and \(K\ge2a\), so \(q=2^{K-a}\ge2^a>K\).
+
+The exact identities are
+\[
+\frac Xp=\frac{21}{2}-\frac{32g}{3\cdot2^a}
++\frac{2K+13}{3p},
+\qquad
+\frac Ep=\frac{40-16x}{3}+\frac{K-1}{3p},
+\]
+\[
+\frac{X_1}{p}
+=6-\frac{128g}{9\cdot2^a}-\frac{10K-25}{9p}.
+\]
+Since \(x<25/16\), \(X/p>10\). Since \(q>K\) and \(g\ge103\), the final positive term in \(X/p\) is smaller than \(32g/(3\cdot2^a)\), so \(X/p<21/2\). Consequently
+\[
+\frac{10}{3}<\frac{X}{3p}<\frac72,
+\qquad
+\frac{20}{9}<\frac{2X}{9p}<\frac73.
+\]
+The first coordinate is in the odd-source band at level \(K-1\), while the second is in the gap \((2p,3p)\). Thus \(E\) has exactly the \(t=0\) parent
+\[
+h_0=\frac{2X}{3}-4p-K-4.
+\]
+Moreover \(5<E/p<6\), so \(E\) has no even parent. The bounds \(10<X/p<21/2\) also give \(2p<h_0<3p\), excluding every even parent of \(h_0\).
+
+From \(g/2^a<837/65536\) and \(q>K\),
+\[
+\frac{X_1}{p}
+>6-\frac{93}{512}-\frac1{1000}
+>\frac{29}{5},
+\qquad
+\frac{X_1}{p}<6.
+\]
+Therefore \(X_1/3\in(29p/15,2p)\) lies in the odd-source band at level \(K-2\), whereas \(2X_1/9\in(58p/45,4p/3)\) lies in the gap \((p,3p/2)\). Hence \(h_0\) has exactly the \(t=0\) parent
+\[
+y_0=\frac{2X_1}{3}-2p-K-3.
+\]
+The same bounds put \(y_0\) in the level-\(L\) even-child band. Direct substitution gives
+\[
+D_0:=2p-y_0=\frac{256gq+47K+31}{27},
+\qquad
+G:=D_0+L=\frac{256gq+74K-23}{27}. \tag{12}
+\]
+
+### The even spine terminates inside a strict parent gap
+
+Define
+\[
+D_j=2^jG-L,\qquad y_j=2p-D_j.
+\]
+Then \(D_{j+1}=2D_j+L\), and the even parent of \(y_j\), whenever admissible, is exactly \(y_{j+1}\) at level \(L\). For every \(j\le a-s\),
+\[
+\frac{D_j}{p}
+=\frac{256g}{27\cdot2^{a-j}}+\varepsilon_j,\qquad
+\varepsilon_j=
+\frac{2^j(74K-23)}{27p}-\frac{K-2}{p}.
+\]
+Using \(j\le a-s\), \(q>K\), \(s\ge19\), and \(a\ge38\),
+\[
+|\varepsilon_j|
+<
+\frac{74}{27\cdot2^{19}}+\frac1{2^{38}}
+<\frac1{1000}. \tag{13}
+\]
+At the terminal index \(j_*=a-s\), (10) and (13) imply
+\[
+\frac9{10}<\frac{D_{j_*}}p<\frac{49}{50}.
+\]
+At the preceding index,
+\[
+\frac{D_{j_*-1}}p
+<
+\frac{31}{64}+\frac1{1000}<\frac12.
+\]
+Since \(D_j\) is increasing and \(D_0>3\), every \(0\le j<j_*\) satisfies
+\[
+3< D_j<\frac p2,\qquad
+\frac{3p}{2}<y_j\le2p-3.
+\]
+Thus each such \(y_j\) has exactly the displayed even parent at level \(L\), with no other even level possible.
+
+For every spine state,
+\[
+X_j:=2y_j+5=A-2^{j+1}G\equiv6\pmod9
+\]
+by (11). Hence only the odd exponent \(t=0\) is possible. Its source coordinate lies in
+\[
+\frac{2y_j+5}{3}\in(p,4p/3),
+\]
+strictly between the adjacent odd-source bands at levels \(K-2\) and \(K-1\). There is no odd parent on the spine before the terminal state.
+
+At \(j_*\), the terminal bound gives
+\[
+p<y_{j_*}<\frac{11p}{10}.
+\]
+It is outside the adjacent even-child bands, whose gap here is \((p-3,3p/2-1)\). Its only possible odd source coordinate is
+\[
+\frac{2y_{j_*}+5}{3}\in(2p/3,3p/4),
+\]
+where the upper bound follows from \(p>100\). This is the strict gap between the odd-source bands at levels \(K-4\) and \(K-3\). So \(y_{j_*}\) has no parent at all.
+
+The exact source grammar in FirstInverseComplete.lean has only the two parent arms used above, and ResetChain.lean proves the equivalence between ResetChain and genuine blank-root reset reachability. The unique chain therefore cannot reach the root \(2\).
+
+### How many targets are covered?
+
+Condition (10) is equivalent to
+\[
+810\cdot2^s<8192(103+972m)<837\cdot2^s. \tag{14}
+\]
+For each \(s\ge19\), the corresponding open interval for \(g\) has width
+\[
+\frac{27\cdot2^s}{8192}\ge1728>972.
+\]
+It therefore contains at least one integer \(g\equiv103\pmod{972}\), and its lower endpoint is already greater than \(103\), so \(m\ge0\). The intervals for successive \(s\) are disjoint. Consequently, for every \(a\equiv38\pmod{54}\), \(a\ge38\), there are at least \(a-21\) distinct shifted \(K\)-values covered by this theorem (one for each \(19\le s\le a-3\)); each has a complete parent chain ending at a leaf. The number of choices grows exponentially with \(a\).
+
+For \(a=38\), exact integer interval counting gives \(233{,}015\) distinct \(m\)-values across \(s=19,\ldots,35\). The counts at the two ends are \(2\) for \(s=19\) and \(116{,}508\) for \(s=35\). The exact floor-count and modular-residue reproducer is rho20_class2_dyadic_terminal_windows.mjs.
+
+This is a paper-level extension of the \(m=0\) theorem, not a Lean-compiled theorem and not a decision of all rho-20 candidates. It is an additional large set of excluded fatal targets inside the residual \(a\equiv2\pmod{18}\) class.
+
 ## Scope and next steps
 
-This resolves the entire `a mod 54 = 38` phase inside residual `a mod 18 = 2`; the `a mod 54 = 2` and `20` phases remain open. The next useful work is:
+The baseline theorem resolves one explicit (K)-ray in the (a\bmod54=38) phase. The shifted terminal-window theorem above excludes at least (a-21) additional (K)-values for each (a\equiv38\pmod{54}), with (N(38)=233{,}015) exact shifted values. The (a\bmod54=2) and (20) phases remain open. The next useful work is:
 
 1. Formalize the modular certificate and the (q>K) inequalities in Lean.
 2. Prove the unique-parent lemmas directly for `CascadeResetInverse.ResetParent`.

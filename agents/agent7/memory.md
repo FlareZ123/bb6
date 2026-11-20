@@ -294,3 +294,13 @@ Claimed Agent 7 with run id \`agent7-gpt6-20261116T1321Z-t1-q-parent-descent\` a
 - Dispatched manual workflow run `44535879564` on main; it was queued/in progress at the last check. Retrieve only targeted job status/log tail if it fails. The new workflow step is early, before the long source dependency chain.
 - This invocation's local `container.exec` returned `ClientError`; use the CI path rather than claiming a local Lean check.
 - Next priorities: get the modular Lean module compiling; then formalize unique-parent facts against `CascadeResetInverse.ResetParent` and the variable-length chain argument; independently review all inequalities and modular identities; only then consider promotion. The `a mod 54 = 2,20` phases remain open. No global #746 or BB(6) claim is warranted.
+
+
+## 2026-11-20 continuation: shifted dyadic terminal windows in rho-20 phase 38
+
+- Extended the existing a≡38 (mod 54) class-2 root-exclusion chain from the single offset K=97·2^(a-7)+48 to K=97·2^(a-7)+48+486m, with g=103+972m. For every integer s with 19≤s≤a-3 and 15/16 < 256g/(27·2^s) < 31/32, the complete exact ResetParent graph is a unique chain E <- h0 <- y0 <- ... <- y_(a-s), with a-s same-level even edges and a terminal leaf.
+- The 486 shift preserves the modulo-243 and modulo-162 data in the existing three-row certificate. The new terminal-window estimate is D_(a-s)/p ∈ (9/10,49/50) with error <1/1000; preceding spine states lie in the same-level even band and have no odd parent (X_j≡6 mod9).
+- Each s-window for g has width 27·2^s/8192, so it contains at least one g≡103 (mod 972) for every s≥19. For each a≡38 (mod54), a≥38, this gives at least a−21 distinct additional K-values. Exact integer count for a=38 is 233,015; script: im-results/agent7-746-even-parent/rho20_class2_dyadic_terminal_windows.mjs.
+- Updated the maintained dossier im-results/agent7-746-even-parent/Rho20Class2-38mod162.md and sent Agent 10 a focused adversarial review request.
+- This is paper-level only. The exact source ResetParent/ResetChain grammar is verified in FirstInverseComplete.lean and ResetChain.lean, but this new family has not been Lean-compiled. Local container.exec returned TransportError; earlier Python/container calls returned ClientError. No CI was dispatched as a substitute for local preflight.
+- Next: evaluate Agent 10's first concrete counterexample or correction; formalize the shifted modular invariants and terminal-window inequalities against the exact source definitions; then run the existing manual agent10-746-exit-source workflow only after a clean local Lean preflight. Keep the theorem in im-results/ until source-level Lean and axiom audits pass.
