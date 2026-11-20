@@ -1,3 +1,35 @@
+## 2026-11-20 17:47Z supplement — hand proof of the 81 disjoint source cylinders
+
+A compact direct proof of the family, useful independently of the Lean draft:
+
+Let (d\in\{-1,+1\}) denote the first-move direction and (-d) its opposite.
+
+1. **Type I (60 tables):** choose (x\in\{B,C,D,E,F\}), (y\in\{A,B,C,D,E,F\}), and (d). Fix
+   (A/0\mapsto(1,d,x)), (x/0\mapsto(0,-d,y)), (y/1\mapsto(0,-d,A)).
+   From blank (A) at 0, the three moves write a 1 at 0, erase the blank at (d), then erase the 1 at 0 and return to blank (A) at (-d). Repeat by translation.
+2. **Type II (10 tables):** choose (x,d). Fix
+   (A/0\mapsto(1,d,x)), (x/0\mapsto(0,-d,A)), (A/1\mapsto(0,-d,x)).
+   Four moves return to blank (A) at (-2d).
+3. **Type III (10 tables):** choose (x,d). Fix
+   (A/0\mapsto(0,d,x)), (x/0\mapsto(1,-d,A)), (x/1\mapsto(0,d,x)).
+   The first move is a one-step entry to blank (x) at (d); the following three moves return to blank (x) at (2d).
+
+Every completion of each partial table follows only these three defined inputs forever, so all 80 cylinders are nonhalting. Counts are (5\cdot6\cdot2=60), (5\cdot2=10), and (5\cdot2=10).
+
+Pairwise incompatibility has a short case proof:
+- Type III conflicts with Types I/II at A/0 (write 0 versus write 1).
+- Within Type I, distinct (x,d) conflict at A/0; with (x,d) fixed, distinct (y) conflict at x/0.
+- Within Type II or III, A/0 uniquely determines (x,d).
+- Between Types I and II, if A/0 differs there is an immediate conflict. If it agrees, x,d agree; then y≠A conflicts at x/0, while y=A conflicts at A/1 because the next states are A versus x (and x≠A).
+- Against the five-slot source (A/0=1RB, B/0=1LC), Type III conflicts at A/0. Types I/II either conflict at A/0 or have x=B,d=R, in which case their B/0 writes 0 while the five-slot B/0 writes 1.
+Thus the 80 family and the five-slot source are 81 pairwise-disjoint cylinders. This hand argument is exact; the repository's current Lean proof uses finite `decide` checks, which still require the pending compiler/axiom audit.
+
+### Exact report-delta reasoning (not yet formalized in Lean)
+
+The batch open-iff theorem states that the combined audit's open set is exactly the old five-slot open set with the 80 source cylinders removed. Parent-open-after-five places each source cylinder inside that old open set; pairwise incompatibility makes their union disjoint; each has mass `25^9`. Since the audit report is the sum of terminal-cylinder masses and the terminal list is a unique partition, the expected report change is certified (+80\cdot25^9), open (-80\cdot25^9). A direct combined `familyPlusFiveAudit.report` theorem by `decide` is the simplest first attempt (the base five-slot report uses this pattern); if it is too expensive, a reusable `addCertificate_report_delta` lemma can prove the same measure identity structurally. Neither has been compiled or committed.
+
+Current local runtime blocker and no-CI-substitution rule remain unchanged.
+
 ## 2026-11-20 17:42Z supplement — semantic, dependency, and manifest checks
 
 Additional acceptance work:
