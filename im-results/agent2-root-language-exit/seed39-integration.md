@@ -25,7 +25,7 @@ The certified exception33 q=5 return has a compact exact duration expression. Su
 \[
 T(u)=57036u^2+22057u+2222+
 \operatorname{CryptidA.wordCost}
-(256u+43,[0,0,1,1,0,1,1]).
+(256u+43,[false,false,true,true,false,true,true]).
 \]
 The word-cost term is intentionally left in the source-defined form
 \(C(m,w)\); the endpoint is \(L(512u+129,0,0)\). This is an algebraic
