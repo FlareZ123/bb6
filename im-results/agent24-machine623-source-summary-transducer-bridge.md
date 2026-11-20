@@ -97,15 +97,45 @@ aa+L=a+2E,\
 ]
 where (E=\texttt{runStats.twos}) and (R=\texttt{runStats.ones}+\texttt{runStats.twos}). This is precisely the missing identification needed for the source `corrC/corrF) interface to consume the transducer weights rather than an unconnected digit statistic.
 
-A companion length lemma should prove, for (B\ge1),
-[
-L\equiv B\pmod2,\qquad
-3^{L-1}\le2B-1<3^{L+1}.
-]
-Then `drain_transducer_exact_canonical` supplies the exact output integer
-(4N=2B-1+3^L) for the same source-drain length.
+## 4. Canonical length conditions from the source recursion
 
-## 4. Independent finite checks
+For \(B>0\), let \((v,q,\epsilon)=\texttt{sourceDrainStep}(B-1)\). Its defining decomposition gives
+\[
+B=\frac{3^v+1}{2}+3^v(3q+2\epsilon),\qquad
+2B-1=3^v(6q+4\epsilon+1),
+\]
+and \(L(B)=v+1+L(q)\), where \(L=\texttt{sourceDrainLength}\). The quotient \(q\) is strictly smaller than \(B\), so the following simultaneous strong-induction invariants close:
+
+1. **Parity:** \(B\equiv v+1+q\pmod2\), because \((3^v+1)/2\equiv v+1\pmod2\). Thus \(L(B)=v+1+L(q)\equiv B\pmod2\) from the induction hypothesis.
+2. **Strong upper bound:** \(2B+3\le3^{L(B)+1}\). For \(B=0\), this is \(3\le3\). For \(B>0\), using \(\epsilon\le1\) and the induction hypothesis \(2q+3\le3^{L(q)+1}\),
+\[
+\begin{aligned}
+2B+3
+&=3^v(6q+4\epsilon+1)+4\\
+&\le3^v(6q+5)+4\\
+&=3^v(3(2q+3)-4)+4\\
+&\le3^v(3^{L(q)+2}-4)+4\\
+&=3^{L(B)+1}-4(3^v-1)\\
+&\le3^{L(B)+1}.
+\end{aligned}
+\]
+3. **Lower bound:** \(3^{L(B)-1}\le2B-1\). Since \(L(B)-1=v+L(q)\), this reduces to \(3^{L(q)}\le6q+4\epsilon+1\). If \(q=0\), this is \(1\le4\epsilon+1\). If \(q>0\), the induction lower bound \(3^{L(q)-1}\le2q-1\) gives \(3^{L(q)}\le6q-3\le6q+4\epsilon+1\).
+
+The strong upper bound implies \(2B-1<3^{L(B)+1}\). Hence the exact canonical hypotheses are obtained:
+\[
+L(B)\equiv B\pmod2,\qquad
+3^{L(B)-1}\le2B-1<3^{L(B)+1}.
+\]
+This supplies the hypotheses of \texttt{drain_transducer_exact_canonical}. The weaker pair (parity and upper bound) already suffices for \texttt{drain_transducer_exact_of_bounds} and for the high-bit bound needed by \texttt{runStats_phase_of_decomposition}.
+
+## 5. Separate terminal phase
+
+Do not derive final state from the output-shift identities. The existing theorem \texttt{runStats_phase_of_decomposition} in \texttt{DrainDigitTransducerCarry.lean} states
+\[
+\texttt{phaseBit}(\texttt{runStats}(L,\texttt{low},A).\texttt{finalState})=\texttt{high}
+\]
+when \texttt{low < 3^L}, \texttt{high ≤ 1}, and \(L\bmod2=(\texttt{low}+\texttt{high}\cdot3^L)\bmod2\). For a source drain, set \texttt{low=B \% 3^L}, \texttt{high=B / 3^L}: the low bound is \texttt{Nat.mod_lt}, the strong upper bound gives \texttt{high ≤ 1}, and the parity lemma gives the remaining hypothesis. Thus the source bridge can supply both weighted counts and a separately justified terminal phase bit, without collapsing the sector/carry/previous-pair state.
+## 6. Independent finite checks
 
 A dependency-free JavaScript translation of the two recursive definitions and the nine-entry transducer table found:
 

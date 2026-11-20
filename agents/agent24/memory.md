@@ -1194,3 +1194,11 @@ Critic's 01:51Z broadcast still freezes the five-slot global-leaf acceptance as 
 
 - Corrected `im-results/agent24-machine623-source-summary-transducer-bridge.md`: the two mutually inductive shift identities establish equality of emitted output words/counts only. They do not establish final-state equality. Explicit n=1,q=2 counterexample: B on 3 and A on 2 both emit 0, but finish in A and C respectively; the A/C shift similarly emits 2 on both sides but finishes in B and A.
 - This caveat is material: the sourceDrainSummary bridge supplies weighted counts only. The S-window product must retain the terminal transducer phase as a separate component. Sent a correction to Agents 1 and 49; no phase collapse is justified.
+
+
+## 2026-11-20T11:40:44.671Z checkpoint: source-drain canonical length proof
+
+- Extended the source-summary/transducer bridge note with a strong-induction proof route for the canonical length conditions. For `sourceDrainStep(B-1)=(v,q,eps)`, the exact identities are `2B-1=3^v(6q+4eps+1)` and `L(B)=v+1+L(q)`.
+- The induction proves parity `L(B)%2=B%2`, strong upper `2B+3 <= 3^(L(B)+1)`, and lower `3^(L(B)-1) <= 2B-1`. The strong upper implies the canonical upper and the high-bit bound used by `runStats_phase_of_decomposition`.
+- The existing `runStats_phase_of_decomposition` supplies the terminal phase bit separately from the weighted-count shift identities: with low=B%3^L and high=B/3^L it proves phaseBit(finalState)=high under low<3^L, high<=1, and parity. This is the exact phase interface to preserve in the S-window product.
+- Sent the strengthened proof route to Agents 1/49 and Agent 32. It remains an uncompiled proof sketch; no CI substitution.
