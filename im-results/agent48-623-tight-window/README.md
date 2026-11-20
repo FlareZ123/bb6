@@ -164,6 +164,14 @@ The new finite output interfaces are:
 - `post_reset_pair`: 395 DFA states, 54 labels, returning the common L/R post-reset transducer-state pair at the first reset;
 - `post_reset_pair_and_length`: 736 DFA states, 186 labels, returning the same pair together with the witness length. The witness's second symbol is recoverable from the rolling last-five buffer at index (6-L) when the witness length (L) is known.
 
+A buffer/event-relative quotient is also available at `im-results/agent48-623-tight-window/ResetPostStateDFA_BufferRelative.json`:
+- pair-only: **349 states / 8 labels**, where labels are the joint L/R carry profiles;
+- pair+length: **580 states / 30 labels**, where labels are joint carry profile plus witness length.
+
+This quotient drops `previous_pair). The output sink is absorbing, so at the first transition into an output state the current input symbol is exactly `previous_pair`; the consumer can recover it at that event. The pair+length interface also retains (L), so the second witness symbol is recovered from the rolling last-five history at index (6-L). Use these compressed interfaces only when the product retains the current symbol at the first output event (and the rolling history for pair+length); otherwise retain Agent 49's full 54/186-label machines. The quotient was checked against the original output machines on all 597,871 words of lengths 0–6: zero output mismatches and zero previous-pair recovery mismatches.
+
+Agent 49's factorization explains the quotient: the 54 full pair labels comprise 9 previous pairs and 8 global joint carry profiles; for each fixed previous x digit, exactly 6 profiles occur, independently of the previous y digit.
+
 I applied these output DFAs to the 9,968 correction-only S-window target words from the same root replay:
 - no word lacked an output label;
 - all 54 pair labels occurred;
@@ -178,8 +186,8 @@ Combining each 1,318-field S-window transition key with the post-reset label giv
 
 The witness-length refinement reduces observed branching, but neither product is a closed transition system: even the refined product has 914 observed nodes with multiple successors. The 1,318 transition keys and the post-reset label alone therefore do not constitute a Markov state. A proof still needs a finite abstraction of the weighted drain/root-language data that determines the next boundary phase.
 
-Reproducibility note: `s_window_boundary_phases.js` now reads Agent 49's `ResetPostStateDFA.json`, populates consecutive S-window phase and post-reset product graphs, and exports their node/edge counts, outdegree histograms, post-reset label distributions, and failure counts in `SWindowBoundaryPhases.json`. The script still records only edges observed along the finite root prefix; it does not enumerate all possible transitions and does not establish all-time closure.
+Reproducibility note: `s_window_boundary_phases.js` now reads Agent 49's `ResetPostStateDFA.json`, populates consecutive S-window phase and post-reset product graphs, and exports their node/edge counts, outdegree histograms, post-reset label distributions, and failure counts in `SWindowBoundaryPhases.json`. The script currently uses Agent 49's full output labels; the buffer-relative quotient is a separate artifact and has not yet been added to that script. It records only edges observed along the finite root prefix; it does not enumerate all possible transitions and does not establish all-time closure.
 
 ## 6. Next useful use
 
-Agent 32 can compose the 1,318 S-window transition inventory with Agent 49's 395-state/54-label or 736-state/186-label post-reset interface. Prefer the pair+length output when the second symbol must be recovered from the rolling buffer. Preserve the full universal carry rectangles and a finite weighted-drain/root-language interface. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
+Agent 32 can compose the 1,318 S-window transition inventory with either Agent 49's full 395-state/54-label or 736-state/186-label interface, or the buffer-relative 349-state/8-label and 580-state/30-label quotients. Prefer the compressed pair+length output when the product retains the current symbol at the first output event and the rolling last-five history; otherwise use the full pair+length interface. Preserve the full universal carry rectangles and a finite weighted-drain/root-language interface. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.

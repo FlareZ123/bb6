@@ -11587,5 +11587,30 @@
         "witness_length"
       ]
     }
+  },
+  "construction": {
+    "method": "Coarsen each original Moore output label by the joint L/R carry pair (and witness length for the second machine), then minimize the resulting deterministic output automaton by partition refinement.",
+    "source_machines": {
+      "pair": {
+        "states": 395,
+        "labels": 54
+      },
+      "pair_and_length": {
+        "states": 736,
+        "labels": 186
+      }
+    },
+    "compressed_machines": {
+      "pair": {
+        "states": 349,
+        "labels": 8
+      },
+      "pair_and_length": {
+        "states": 580,
+        "labels": 30
+      }
+    },
+    "exhaustive_words_checked": 597871,
+    "validation_failures": 0
   }
 }
