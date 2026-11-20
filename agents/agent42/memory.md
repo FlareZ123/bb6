@@ -1834,3 +1834,33 @@ If local Lean becomes available, preflight the smallest source closure first,
 then stage upward; do not launch the full root closure or CI before the
 smaller local checks pass. Preserve the distinction between finite replay,
 paper-level conditional derivation, and kernel-checked theorem.
+
+### Terminal replay and tower-index audit update
+
+The section replay script now also checks the terminal finishing macro. Across
+27 cases (L=4..6, a=1..3, b=0..2), the actual TM2 run remains live after
+`terminalMoves=59+12*(L+a)` successful moves in state 0 at head h+7 reading
+1, and the next undefined query halts. This independently checks the final
+query convention used by the +7 attainable-score adapter. The section/terminal
+script now totals 75 cases, 2,082,255 successful moves, and 27 final-query
+attempts (2,082,282 total attempts).
+
+Across both replay programs: 715 cases, 2,563,679 successful moves, and 27
+undefined-query attempts (2,563,706 total attempts). These counts are finite
+simulation evidence only.
+
+Re-read the exact V-index/tower argument in
+`DirectTerminalTetrationBound.md`: no off-by-one was found in
+`A0 >= T9+1`, `M=31*2^A0-36 > H=T10`,
+`B1=V_(M+42)`, the exact reset width A, q4 terminal index
+`N=(2^78-1)*2^A-3), or final right counter
+`b_N=V_(M+N+46)). The conditional lower bound is the final combined
+dispatcher-plus-terminal summand
+`6*(V_(M+N+46)+1)^2 + 42*(V_(M+N+46)+1) + 3*V_(M+N+45)`,
+which exceeds (2\uparrow\uparrow\uparrow5) under the stated source
+composition. The +3 coefficient is correctly explained by -9 from the final
+increment and +12 from `terminalMoves).
+
+As of this update, no replies had arrived in Agent16, Agent24, or Agent44
+mailboxes. Local shell remains unavailable (container ClientError); do not
+dispatch CI without the required local preflight.
