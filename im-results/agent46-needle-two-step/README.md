@@ -181,3 +181,70 @@ These are explicit restrictions on the even-predecessor branch. They complement,
 The congruence (2) and bounds (4)--(7) are necessary conditions on a two-edge synthetic ancestry. They do not prove that any candidate parent exists, do not decide the remaining \(t>w\) residue windows, do not establish genuine blank-root reachability or nonreachability, and do not determine BB(6).
 
 The derivation is paper-level in this note. No Lean compile or axiom audit is claimed. The local shell and Python execution tools returned platform ClientError in this invocation, so CI was not used as a substitute for the required local preflight.
+
+
+## Parallel bounds after a one-step odd block
+
+There is a related bound for the one-step odd-entry subcase in Agent 20's mod-\(25\)/mod-\(125\) partition. Assume \(b\equiv1\pmod5\), so its unique odd predecessor is
+\[
+x=\frac{2b+3}{5}.
+\]
+Suppose this \(x\) has an immediate predecessor at valuation \(t\ge1\):
+\[
+x=D_tq'+\beta_t.
+\]
+The exact equation is
+\[
+2b+3=5D_tq'+15\cdot2^t+5t+15.
+\]
+As in the existing forced-even reduction, it implies
+\[
+D_t\mid4b+21-10t. \tag{9}
+\]
+Eliminating the first parent quotient gives the further necessary congruence
+\[
+\boxed{
+D_t\mid
+2^{w+1}(4y-4w+27-10t)+63-30t.
+} \tag{10}
+\]
+
+If \(t\le w\), reduce (9) using \(2^{t+1}\equiv-3\pmod{D_t}\):
+\[
+D_t\mid R_{\rm odd},\qquad
+R_{\rm odd}:=
+3\cdot2^{w-t+1}(2q+3)+10t-21.
+\]
+This residue is positive for every \(t\ge1\). The same bound on \(2q+3\) used above gives
+\[
+0<R_{\rm odd}<
+\frac{3(2y+1)}{2^t}+10t-21.
+\]
+If \(2^{2t}\ge8y\), the right side is strictly less than \(D_t\): indeed it is bounded above by
+\[
+3\cdot2^{t-2}+\frac{3}{2^t}+10t-21,
+\]
+whose difference from \(D_t\) is
+\[
+5\cdot2^{t-2}+24-10t-\frac{3}{2^t}>0
+\]
+(the inequality is immediate for \(t=1,2\), and for \(t\ge3\) use \(5\cdot2^{t-2}\ge10t-20\)). Therefore
+\[
+\boxed{t\le w\quad\Longrightarrow\quad 2^{2t}<8y.} \tag{11}
+\]
+For the actual cancellation family, (8) yields \(t\le ra+1\).
+
+If \(t>w\), reducing the exact equation for \(x\) modulo \(2^{w+1}\) gives
+\[
+15q'\equiv-5t-12\pmod{2^{w+1}}.
+\]
+Let \(\sigma_{w,t}\) be the least nonnegative residue of
+\[
+-15^{-1}(5t+12)\pmod{2^{w+1}},
+\]
+where \(15^{-1}\) is the inverse modulo \(2^{w+1}\). Then \(q'\ge\sigma_{w,t}\). Since \(x=(2b+3)/5<y\) for \(y>1\), and \(q'<x/2^{t+1}\), we obtain the second dyadic window
+\[
+\boxed{\sigma_{w,t}<\frac{y}{2^{t+1}}.} \tag{12}
+\]
+
+This extension applies only to the one-step odd-block cases whose odd predecessor \(x\) then has an even predecessor. It does not dispose of the four mod-\(125\) families that can support longer odd blocks.

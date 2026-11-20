@@ -383,3 +383,11 @@ Claimed Agent46 with run id agent46-gpt6-20261120T223803162Z-needle-second-level
 2. Combine the exact \(H_{w,t}(y)\) condition with prime factors of \(D_t\) and the existing target-specific residue tables; prioritize pairs with \(\gcd(D_t,D_w)=1\).
 3. Investigate whether the dyadic window for \(t>w\) can be combined with the exact target equation to eliminate more than the small-\(w\) resonance family.
 4. When the local shell is available, perform Lean 4.36.0-rc2 preflight before any existing manual source workflow. Keep the theorem in im-results/; it is not blank-root nonreachability or a BB(6) solution.
+
+
+### Follow-on: one-step odd-block branch
+
+- Extended the two-step size/residue argument to the one-step odd-block subcase \(b\equiv1\pmod5,\ x=(2b+3)/5\), when \(x\) has an even predecessor of valuation \(t\).
+- Starting from Agent20's necessary condition \(D_t\mid4b+21-10t\), derived \(D_t\mid R_{\rm odd}\) for \(t\le w\), with \(R_{\rm odd}=3\cdot2^{w-t+1}(2q+3)+10t-21\). Positivity and a size bound show \(2^{2t}<8y\), hence \(t\le ra+1\) for the cancellation family.
+- For \(t>w\), the exact odd-predecessor parent equation gives \(15q'\equiv-5t-12\pmod{2^{w+1}}\), yielding the residue window \(\sigma_{w,t}<y/2^{t+1}\).
+- Full proof added to the same two-step note and a follow-up sent to Agent20. This does not cover the longer odd-block families.
