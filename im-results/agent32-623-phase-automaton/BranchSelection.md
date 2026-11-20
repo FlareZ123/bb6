@@ -84,3 +84,33 @@ The implication is deliberately conditional: it does not prove (|h|>W) for the a
 - `im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.md`: full-drain convention and finite carry rectangles.
 - `im-results/agent41-623-3euclidean/MonotoneMassWindow.md`: moving-window shifts (k'-kin{0,1}), (j'-jin{0,1,2,3}).
 - `im-results/agent1-machine623-3euclidean-correction-bounds/SynchronizingWordScan.md`: finite synchronization diagnostics; no all-time closure theorem yet.
+
+
+## Sharper form directly from the central digit block
+
+The synchronization proof is intended to establish nonmonochromaticity of the central (x)-digit block itself. This gives a stronger and more direct hypothesis than (|h|>W).
+
+Set
+[
+B(ell)=max(34ell+122,36ell+88).
+]
+The middle-block certificate says that if the digits of (xmod 3^j) in the central interval are neither all 0 nor all 2, then
+[
+min(r,3^j-r)>B(ell),
+]
+where (r) is the least residue. For every integer (x), this implies (|x|>B(ell)). Since (B(ell)ge36ell+88), and
+[
+x=2hquad(mathrm{LO/LE}),qquad x=4hquad(mathrm{RO/RE}),
+]
+we obtain the following uniform sector bounds:
+- LO/LE: (|g|>|x|/2-9>18ell+35);
+- RO: (|g|>|x|/2-1>18ell+43);
+- RE: (|g|>|x|/2-2>18ell+42).
+
+Thus (|g|>18ell+35). The same source depth estimates give (|T|le5ell+22), so for every (ellge1),
+[
+|g|>|T|.
+]
+Therefore the exact output-side test reduces to (mathrm{output left}iff g>0) directly from central-block nonmonochromaticity, without separately invoking the sector terminal-window widths or requiring (ellge3).
+
+This is the preferred formulation for the phase automaton: prove the central x-block property, use the middle-block certificate to obtain (|x|>B), and then use the inequality above to select the exact next branch. The finite block property and the source depth wrapper remain the unresolved obligations.
