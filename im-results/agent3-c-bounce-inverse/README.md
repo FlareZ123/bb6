@@ -367,3 +367,19 @@ Thus the B2-style quotient is recovered from the q=0 source residual equations a
 The updated exact blob `34f925c6860984e7a356538be97e6fa3f912bb4e` compiles locally with Lean 4.36.0-rc2; all ten printed declarations have axiom profile `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
 
 **Remaining source gap:** this still assumes the U5 residual equations, q=0 parent shape, root affine residue, and root-index class. It does not yet identify the quotient `u=(h-8)/128` with the parameter of the separate B2 target family or prove that the same blank-start candidate supplies all these premises. The full `U5B2Root32.lean` import closure remains uncompiled. No CI was dispatched and no additional root-index cylinders were explored.
+
+
+### Stronger q=0 root32 composition — exact root equation exposed
+
+A further strengthening of `u5_q0_root32_forces_h8_parameter` now returns not only the derived quotient and progression but also the exact root equation:
+
+```lean
+∃ u t, h=8+128*u ∧ u=1802+6720*t ∧
+  18018+211*u+22155*r=20*2^(E-13)
+```
+
+The hypotheses remain the U5 residual equations, q=0 parent form, `w=6657+8192*r`, exponent formula, and `r%64=32`. This provides the exact `hRoot` needed by `blank_no_b2_root32_from_exact_root_index` for the same quotient `u` and root index `r`.
+
+Exact blob `34f925c6860984e7a356538be97e6fa3f912bb4e` compiles locally under Lean 4.36.0-rc2; all ten printed declarations have profile `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
+
+The remaining bridge is now sharply identified: the q=0 source equations determine a quotient `u=(h-8)/128), but no source-reach theorem yet identifies that quotient with the independent parameter of the B2 target family `(734+10944*u, 34881+518816*u)` for the same blank-start trajectory. Full `U5B2Root32.lean` closure remains uncompiled; no CI or further cylinder expansion.
