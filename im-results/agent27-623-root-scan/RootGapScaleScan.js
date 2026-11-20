@@ -13,8 +13,8 @@
 // tuple as a completed D3 state is incorrect.
 
 const steps = Number(process.argv[2] ?? 20000);
-if (!Number.isSafeInteger(steps) || steps < 1) {
-  throw new Error("transition-count must be a positive safe integer");
+if (!Number.isSafeInteger(steps) || steps < 10) {
+  throw new Error("transition-count must be a safe integer >= 10");
 }
 
 const odd = x => (x & 1n) === 1n;
@@ -221,6 +221,37 @@ for (let i = 0; i < steps; i++) {
   ) {
     maxScaleError = scaleErr;
     maxScaleErrorAt = {index: i, error: scaleError.toString(), scale: m.toString(), ternaryDigits: digits.toString()};
+  }
+}
+
+const expectedTrace = [
+  ["0", "7"], ["6", "14"], ["6", "31"], ["26", "26"], ["2", "83"],
+  ["84", "10"], ["74", "38"], ["30", "138"], ["108", "101"], ["2", "321"],
+  ["322", "10"], ["312", "38"], ["268", "138"], ["122", "438"], ["314", "385"],
+  ["74", "950"], ["876", "235"], ["632", "735"], ["104", "1914"], ["1808", "329"]
+];
+if (steps >= 20) {
+  for (let i = 0; i < expectedTrace.length; i++) {
+    if (trace[i].a !== expectedTrace[i][0] || trace[i].d !== expectedTrace[i][1]) {
+      throw new Error(`root source-trace mismatch at index ${i}`);
+    }
+  }
+}
+if (steps === 20000) {
+  if (
+    mismatch !== 0 ||
+    zero !== 0 ||
+    minSlack !== 65n ||
+    minSlackAt.index !== 14 ||
+    minSquareGap.numerator !== 4096n ||
+    minSquareGap.denominator !== 235n ||
+    minRelativeGapAt.index !== 6899 ||
+    maxGapError.numerator !== 102n ||
+    maxGapError.denominator !== 4n ||
+    maxScaleError.numerator !== 24n ||
+    maxScaleError.denominator !== 4n
+  ) {
+    throw new Error("20,000-step diagnostic regression");
   }
 }
 
