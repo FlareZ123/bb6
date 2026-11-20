@@ -304,12 +304,12 @@ Bounding the remaining weighted sum by
 gives the explicit two-sided estimate
 \[
 \boxed{
-6b_N^2\le D_N(U,R)\le
+6(b_N+1)^2\le D_N(U,R)\le
 6b_N^2+(12N^2+60N)b_N
 +48N+90k^2+111k+12(N+1)U.
 }
 \]
-The lower bound is simply the final increment's \(6\cdot4^{b_{N-1}}=6(b_N+1)^2\) contribution. For fixed \(U,R\), \(b_N\ge2^N R\), so the displayed remainder is \(o(b_N^2)\). Therefore
+The lower bound is exactly the final increment's \(6\cdot4^{b_{N-1}}=6(b_N+1)^2\) contribution; every other term in \(D_N\) is nonnegative. For fixed \(U,R\), \(b_N\ge2^N R\), so the displayed remainder is \(o(b_N^2)\). Therefore
 \[
 D_N(U,R)\sim 6b_N^2
 =6\,t_2(N,R)^2
