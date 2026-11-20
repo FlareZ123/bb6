@@ -349,7 +349,7 @@ The quotient \(k\) and remainder \(s\) are uniquely determined by \(w\).
 \[
 a=k(w+1)+s,\qquad k\ge1,\quad s\ge0,
 \]
-with either \(k\ge2\) or \(s\ge1\). If
+If
 \[
 \boxed{a>(2rk+1)s+4rk^2+6k,} \tag{7}
 \]
@@ -378,13 +378,27 @@ Thus \(D\) divides
 R=16\cdot3^{2r}S+215-110w. \tag{9}
 \]
 
-Let \(Y=3^{k-1}2^s=|X|\). The hypothesis (7), after substituting \(a=k(w+1)+s\), is exactly
+The hypothesis (7), after substituting \(a=k(w+1)+s\), is exactly
 \[
 w>2rs+4rk+5. \tag{10}
 \]
-It implies \(w\ge14\). Also \(Y\ge2\): the only excluded case \(k=1,s=0\) is precisely the case \(Y=1\).
+In particular \(w\ge14\).
 
-The geometric-sum bound gives \(|S|\le2Y^{2r}\). Hence
+The boundary case \(k=1,s=0\) is now handled directly. Here \(w=a-1\) and \(D=2^a+3=A+3\), so \(A\equiv-3\pmod D\). The polynomial expansion gives
+\[
+AP\equiv 2r\,3^{2r}\pmod D.
+\]
+If a parent existed, (8) would therefore imply
+\[
+D\mid (32r-55)9^r+50.
+\]
+For \(r\ge2\), this integer is positive. Also \(9^r\ge10r+7\), so \(a=(9^r+5)/2\ge5r+6\). Since \(r<2^r\) and \(9^r<2^{4r}\),
+\[
+0<(32r-55)9^r+50<32r9^r+50<2^{5r+6}\le2^a<D,
+\]
+a contradiction.
+
+Hence assume \((k,s)\ne(1,0)\), and put \(Y=3^{k-1}2^s=|X|\). Now \(Y\ge2\). The geometric-sum bound gives \(|S|\le2Y^{2r}\). Hence
 \[
 |16\cdot3^{2r}S|
 \le32\cdot3^{2rk}2^{2rs}
@@ -418,7 +432,7 @@ s_{\max}(k):=
 \left\lfloor\frac{a-4rk^2-6k-1}{2rk+1}\right\rfloor,
 \qquad s\equiv a\pmod k.
 \]
-For \(k=1\), additionally omit \(s=0\). Since \(s\) advances in steps of \(k\), each nonempty quotient class gives a contiguous interval of excluded \(w=(a-s)/k-1\).
+The boundary \(k=1,s=0\) is included by the direct argument above. Since \(s\) advances in steps of \(k\), each nonempty quotient class gives a contiguous interval of excluded \(w=(a-s)/k-1\).
 
 For \(r=50\), the first two low-side bands are:
 \[
@@ -426,14 +440,14 @@ For \(r=50\), the first two low-side bands are:
 k=1:\quad&
 255137386500995708433891648398822412228766100005\\
 &\le w\le
-257688760366005665518230564882810636351053761001,\\[2mm]
+257688760366005665518230564882810636351053761002,\\[2mm]
 k=2:\quad&
 128203363366171972894642072081000316592564060202\\
 &\le w\le
 128844380183002832759115282441405318175526880500.
 \end{aligned}
 \]
-The \(k=1,s=0\) boundary \(w=a-1\) is not covered by this estimate. The high-side band in Section 3 begins at \(w=a+d+5\); the remaining narrow gap around \(a\) and the quotient classes not satisfying (7) still require separate treatment.
+The direct boundary argument closes the former one-valuation gap \(w=a-1\). For \(r=50\), the \(k=1\) low-side band now ends at \(a-1\), while the \(k=0\) large-remainder band in Section 5 begins at \(a\). Their union is therefore contiguous across \(a-1,a\). Middle-remainder quotient classes outside all bands still require separate treatment.
 
 ## 5. Large-remainder quotient bands
 
@@ -521,15 +535,19 @@ For the second-level target, the current exact restrictions are:
 1. \(w=0,3,4,5\) are impossible.
 2. \(w=1\) survives the necessary divisibility condition only when \(j\equiv2\pmod3\).
 3. \(w=2\) survives the necessary divisibility condition only when \(j\equiv7\pmod{11}\).
-The corrected eight-prime baseline leaves \(38.50383574\%\) of candidate valuation classes; adding \(37,79,101\) gives an eleven-prime density of \(36.51713603\%.
-The separate corrected \(11^2\) refinement leaves \(38.24667388\%\) of candidate valuation classes when \(j\equiv10\pmod{11}\); it has not been combined with the eleven-prime sieve.
-6. The high-side certificate plus the \(k=0\) large-remainder theorem exclude a contiguous interval beginning at \(w=a\) for \(r=50\), with the upper endpoint given in Section 5.
-7. Low-side small-remainder and large-remainder quotient bands exclude additional intervals on both sides of the quotient boundaries near \(a/2,a/3,\ldots\).
+4. The corrected eight-prime baseline leaves \(38.50383574\%\) of candidate valuation classes. Adding \(37,79,101\) gives an eleven-prime density of \(36.51713603\%\). The separate corrected \(11^2\) refinement leaves \(38.24667388\%\) when \(j\equiv10\pmod{11}\); it has not been combined with the eleven-prime sieve.
+5. The high-side certificate and the \(k=0\) large-remainder theorem exclude a contiguous interval beginning at \(w=a\) for \(r=50\). The low-side theorem now also excludes the boundary \(w=a-1\), so its \(k=1\) interval joins that \(k=0\) interval. The other low-/large-remainder bands meet near the quotient boundaries \(a/2,a/3,\ldots\). Middle-remainder classes outside these bands remain.
+6. The mod-5 odd-block filter leaves only \(4.04464726\%\) of all valuation classes whose parent source can have an odd predecessor. The mod-25 classification in [SecondLevelOddBlockFilter.md](SecondLevelOddBlockFilter.md) determines exactly which of those sources can have an odd block of length at least two. All other odd-entry candidates have an odd block of exactly one transition; their odd predecessor must itself have an even predecessor. If that predecessor has valuation \(t\ge1\), it must satisfy
+   \[
+   2^{t+1}+3\mid4b+21-10t.
+   \]
 
-These are necessary-condition results for one immediate predecessor only. They do **not** prove that the second-level target has no predecessor: middle-remainder classes outside the bands still survive. They also do not establish an upper bound for BB(6). The next high-value work is to obtain adversarial review and formalize the new parent lemmas in Lean, then attack the remaining middle-remainder zones rather than re-running the already settled first-level filters.
+These are necessary-condition results for the ancestry of the second-level target. They do **not** prove that every candidate parent is impossible, and they do not establish blank-root reachability or an upper bound for BB(6). The next high-value work is to exploit the forced-even divisibility condition above and attack the remaining middle-remainder quotient classes, rather than repeat the settled prime-cylinder filters.
 
 Relevant source components:
 - im-results/agent20-needle-coprime/CancellationParentTwoSource.lean
 - im-results/agent20-needle-coprime/NeedleGeneralInverse.lean
 - im-results/agent47-needle-cancellation-parent4/NeedleCancelMod35.lean
 - im-results/agent46-needle-midstrip/README.md
+- im-results/agent20-needle-coprime/SecondLevelOddBlockFilter.md
+

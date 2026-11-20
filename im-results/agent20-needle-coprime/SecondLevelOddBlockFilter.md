@@ -193,3 +193,153 @@ The original six-state machine and its single-counter high-level acceleration ar
 This is a root-history partition, not a nonhalting proof. It substantially narrows the possible odd-entry histories of the second-level target, but it does not decide whether any of the surviving candidate valuations actually satisfies the full parent equation. Nor does it resolve the even-predecessor branch.
 
 The next mathematical target is to exploit the forced even predecessor for the large complementary set, rather than merely append more prime cylinders. The small odd-entry set should be followed through its explicit odd predecessor and tested for a further structural obstruction. A kernel-checked Lean formalization of (4), (3), and (6) remains desirable; this note is an arithmetic derivation, not a claim that the new lemmas have already been compiled in Lean.
+
+## 3. Mod-125 lift of the second-level target
+
+The mod-25 target formula can be lifted one 5-adic digit. We prove
+\[
+\boxed{y\equiv5-15j\pmod{125}.} \tag{5}
+\]
+
+Let \(r=110j+50\), \(a=(9^r+5)/2\), and \(A=2^a\). Modulo \(1000\),
+\[
+9^{110j+50}\equiv 1+400j,
+\]
+so \(a\equiv3+200j\pmod{500}\). Since \(2^{100}\equiv376\pmod{625}\) and \(2^{200}\equiv126=1+125\pmod{625}\),
+\[
+A\equiv8(2^{200})^j\equiv8+375j\pmod{625}.
+\]
+Thus \(A\) ranges over the five residues \(8,383,133,508,258\) modulo \(625\). For each of these five residues, direct exact matrix powering gives
+\[
+T(A)^{50}\equiv
+N:=\begin{pmatrix}501&375\\0&126\end{pmatrix},
+\qquad
+T(A)^{110}\equiv
+M:=\begin{pmatrix}476&75\\0&276\end{pmatrix}
+\pmod{625},
+\]
+where
+\[
+T(A)=\begin{pmatrix}A^2&A-3\\0&9\end{pmatrix}.
+\]
+The upper-right entry of \(T(A)^{110j+50}=M^jN\) is
+\[
+P_r(A)\equiv375+75j\pmod{625}.
+\]
+Indeed, \(476=1+475\), \(276=1+275\), and all products of two of \(475,275\) vanish modulo \(625\); substituting the upper-triangular power formula yields the displayed linear expression. Consequently
+\[
+AP_r(A)\equiv(8+375j)(375+75j)
+\equiv500-25j\pmod{625}.
+\]
+Using \(55y=8AP_r(A)+25\), divide the resulting congruence by \(5\) to obtain
+\[
+11y\equiv55-40j\pmod{125}.
+\]
+Since \(11^{-1}\equiv91\pmod{125}\), this is exactly (5). The finite matrix residues and all subsequent residue-class calculations are reproduced by [second_level_mod25_history.js](second_level_mod25_history.js).
+
+## 4. Exact odd-block length refinement
+
+For an even shifted counter \(b\equiv1\pmod5\), its unique valuation-zero predecessor has shifted counter
+\[
+G(b)=\frac{2b+3}{5}.
+\]
+The identity
+\[
+G(b)-1=\frac{2(b-1)}5
+\]
+shows inductively that \(s\) consecutive odd inverse steps exist exactly when \(5^s\mid b-1\). Thus the maximal odd-block length ending at \(b\) is precisely \(v_5(b-1)\).
+
+Recall from Section 2 that an odd predecessor is possible only in the four valuation classes
+\[
+w\equiv1,2,15\pmod{20},
+\qquad\text{or}\qquad
+w\equiv64-40j\pmod{100}.
+\]
+For these classes, the exact parent equation (2), together with (5), gives the following mod-25 reductions.
+
+- If \(w=20m+1\), then
+  \[
+  b\equiv21+20j-15m\pmod{25}.
+  \]
+  Hence \(b\equiv1\pmod{25}\) exactly when \(m\equiv3j+3\pmod5\), equivalently
+  \[
+  w\equiv61-40j\pmod{100}.
+  \]
+
+- If \(w=20m+2\), then
+  \[
+  b\equiv1+5j-10m\pmod{25}.
+  \]
+  Hence \(b\equiv1\pmod{25}\) exactly when \(m\equiv3j\pmod5\), equivalently
+  \[
+  w\equiv2+60j\pmod{100}.
+  \]
+
+- If \(w=20m+15\), then
+  \[
+  b\equiv21+15j-5m\pmod{25}.
+  \]
+  Hence \(b\equiv1\pmod{25}\) exactly when \(m\equiv3j+4\pmod5\), equivalently
+  \[
+  w\equiv95-40j\pmod{100}.
+  \]
+
+- In the remaining class write \(w=64-40j+100m\). Here
+  \[
+  2^w\equiv116-25j\pmod{125},\qquad
+  \frac{D_w}{5}\equiv22-10j\pmod{25},
+  \]
+  and
+  \[
+  \frac{y-(3\cdot2^w+w+3)}5
+  \equiv18-5j-20m\pmod{25}.
+  \]
+  The parent equation therefore gives
+  \[
+  q\equiv(18-5j-20m)(22-10j)^{-1}\pmod{25},
+  \qquad
+  b\equiv16(2q+3)\pmod{25}.
+  \]
+  Thus \(b\equiv1\pmod{25}\) exactly when \(q\equiv4\pmod{25}\), or
+  \[
+  m\equiv4+3j\pmod5,
+  \]
+  equivalently
+  \[
+  w\equiv464+260j\pmod{500}.
+  \]
+
+Combining the four cases, among the odd-entry valuation classes, the parent source can have an odd block of length at least two exactly in the following four more restrictive classes:
+\[
+\boxed{
+\begin{aligned}
+w&\equiv61-40j\pmod{100},\\
+w&\equiv2+60j\pmod{100},\\
+w&\equiv95-40j\pmod{100},\\
+w&\equiv464+260j\pmod{500}.
+\end{aligned}}
+\tag{6}
+\]
+Every other odd-entry candidate has \(v_5(b-1)=1\), so its odd block has exactly one transition. Its odd predecessor
+\[
+x=\frac{2b+3}{5}
+\]
+then satisfies \(x\not\equiv1\pmod5\), and therefore cannot itself have an odd predecessor. Any actual ancestry of \(x\) must enter it through an even predecessor.
+
+## 5. The forced-even equation after a one-step odd block
+
+Suppose \(b\equiv1\pmod5\) but \(b\not\equiv1\pmod{25}\), so \(x=(2b+3)/5\) has no odd predecessor. If \(x\) has an even predecessor of valuation \(t\ge1\), write
+\[
+x=D_tq'+3\cdot2^t+t+3,\qquad D_t=2^{t+1}+3.
+\]
+Since \(5x=2b+3\), we have
+\[
+D_t\mid 2b+3-5(3\cdot2^t+t+3).
+\]
+Multiplying by \(2\) and using \(2^{t+1}\equiv-3\pmod{D_t}\) gives the necessary condition
+\[
+\boxed{D_t\mid4b+21-10t.} \tag{7}
+\]
+This is the exact arithmetic constraint for the forced even predecessor immediately before the one-step odd block. It is not yet an exclusion of all \(t\), and the four classes in (6) still permit longer odd blocks.
+
+The calculations in Sections 3–4 are paper-level exact modular arithmetic, not Lean-formalized. The script verifies the finite modular matrix and residue-class computations; it does not replace the displayed general derivations or establish that any candidate parent is reachable from the blank root.
