@@ -13,32 +13,32 @@ For sweep start h and block count n>=2, it requires exactly:
 3. T(h+3*n+5+i)=false for every i.
 
 It then proves
-[
+\[
  frameAt (d0Sweep n T h) (h+3n) q4TailInside q4TailEnd
  = s0Config ell (n-1) (2^{n-1}-1) 0 (h+3n-5).
-]
+\]
 The generic d0-counter and nine-cell right-frame proofs are already isolated. The remaining work is to supply the three source conditions for the authentic root.
 
 ## Odd-q secondCyclePrefix34 branch
 
 Use the definitions in `TM63RootQ4Tail.lean` and `PositiveZFirstCycleToSecondPrefix.lean`:
-[
- a=2^z-1,quad n=2^a,quad m=3cdot2^z+3z+7,
-]
-[
- h_1=m+5,quad h=h_2=m+7,quad g=h+3n,quad H=g-5=m+2+3n.
-]
+\[
+ a=2^z-1,\quad n=2^a,\quad m=3\cdot2^z+3z+7,
+\]
+\[
+ h_1=m+5,\quad h=h_2=m+7,\quad g=h+3n,\quad H=g-5=m+2+3n.
+\]
 Let
-[
+\[
  tail0=replicate(4,true) ++ binDec(w,q) ++ lh,
-]
+\]
 the tail in `firstCycleS0DrainOutput z tail0`. Define
-[
+\[
  tail_{34}=[1,0,0,1,1,1] ++ tail0.drop(6),
-]
-[
+\]
+\[
  ell_{34}=replicate(m+2,true) ++ [0,1,0,0] ++ tail_{34}.
-]
+\]
 
 For T2=afterFirstCycleTwoZero T1 h1, the three adapter obligations at sweep start h=m+7 are:
 
@@ -49,50 +49,68 @@ For T2=afterFirstCycleTwoZero T1 h1, the three adapter obligations at sweep star
   - j=m+2,...,m+5 gives cells 3,2,1,0, exactly 0100 from `secondCyclePrefix34End`.
   - j=m+6,...,m+11 gives cells -1,...,-6, exactly 100111 from the same frame.
   - j=m+12+k gives cell -7-k. These cells are outside both local frames and the left sweep, so they are the original S tape. At head m, the original left-facing index is m+7+k. Removing the d1pow(a) prefix of length 3a and the 3z+11-cell residual prefix leaves tail0 index 6+k:
-[
+\[
  (m+7+k)-3a-(3z+11)=6+k.
-]
+\]
   Thus the exact residual tail is tail0.drop(6), not an assumed blank suffix.
 - **Blank right ray:** the adapter asks for T2(g+5+i)=0. This ray is outside the earlier frames, sweep, and setup. The original S0 right suffix is s0RightFacing(n-1), of length 6+3n; at g+5 its index is 3n+11, already beyond that length.
 
 The resulting endpoint is s0Config ell34 (n-1) (2^(n-1)-1) 0 H. Since tail34 begins 100, Agent 44's corrected `p2S0DrainQ4Postlude` and `p2PostludeFrame_typeAWindow` can follow.
 
 A useful simplification is
-[
+\[
  tail0.drop(6)=(binDec(w,q) ++ lh).drop(2),
-]
+\]
 because tail0 begins with four ones.
+
+## A=2 specialization of the odd-q branch
+
+For outer width A=2, w=L+3 and q=2^(L+3)-3. The binDec recurrence gives:
+
+```text
+binDec(L+3, 2^(L+3)-3) = d0 ++ d1 ++ d0pow(L+1)
+tail0.drop(6) = [1] ++ d1 ++ d0pow(L+1) ++ lh
+tail34 = [1,0,0,1,1,1,1] ++ d1 ++ d0pow(L+1) ++ lh
+```
+
+Since m+2=3K for K=2^z+z+3, the full S0 residual factors as:
+
+```text
+ell34 = d1pow(K) ++ markerWord(0) ++ d0pow(2) ++ d1pow(2) ++ d0pow(L+1) ++ lh
+```
+
+This is the exact A=2 terminal-side word after the 34-step branch. It does not yet match the terminal SectionBits tail d1pow(L); its required conversion is distinct from the A=1 Type-C conversion d0pow(L+3) to d1pow(L).
 
 ## A=1 even-q branch: Type-C produces the same S0 shape
 
 Agent 49 identified the parity-correct continuation when the outer P1 width is A=1. Then
-[
- w=L+2,qquad q=2^{L+2}-2,qquad
+\[
+ w=L+2,q\quad q=2^{L+2}-2,qquad
  binDec(w,q)=d1 ++ d0pow(L+1).
-]
+\]
 The post-Q checkpoint V at head c has left-facing word
-[
+\[
  oldLeft=[0,1,1] ++ d1 ++ binDec(w,q) ++ lh
        =[0,1,1] ++ d1 ++ d1 ++ d0pow(L+1) ++ lh.
-]
+\]
 This is exactly the Type-C input profile with tailL=d0pow(L)++lh.
 
 The 46-step `typeC_to_state4` endpoint is a frame centered at c-7, with inside offsets 0 through 10 and marked offsets [10,8,5,2]. In absolute coordinates it marks c+3,c+1,c-2,c-5; every other cell in [c-7,c+3] is blank. The subsequent m-cell E-scan, two-zero setup, n-block d0Sweep, and q4Tail use
-[
- h_1=c+4+m,quad h=h_2=h_1+2,quad
- g=h+3n,quad H=g-5.
-]
+\[
+ h_1=c+4+m,\quad h=h_2=h_1+2,quad
+ g=h+3n,\quad H=g-5.
+\]
 The S0 residual begins at h-2=h1. Define
-[
+\[
  tail_C=[1,0,0,1,0,0] ++ oldLeft.drop(8),
-]
-[
+\]
+\[
  ell_C=replicate(m+2,true) ++ [0,1,0,0] ++ tail_C.
-]
+\]
 At A=1, oldLeft.drop(8)=[1]++d0pow(L+1)++lh, so
-[
+\[
  tail_C=[1,0,0,1,0,0,1] ++ d0pow(L+1) ++ lh.
-]
+\]
 In particular tail_C begins 100, again meeting Agent 44's postlude guard.
 
 The residual proof is direct:
@@ -104,9 +122,9 @@ The residual proof is direct:
 The left guard T2(h-1)=1 is the second setup cell. The far-right blank ray is beyond the same finite right suffix: the Type-C bridge preserves cells at and beyond c+4, the scan/setup/sweep end before g+5, and the source right stream is blank there. The full infinite-ray proof should reuse the original S0 right-suffix length rather than only the five local hzeros guards.
 
 Applying Agent 42's adapter therefore gives
-[
+\[
  s0Config ell_C (n-1) (2^{n-1}-1) 0 H.
-]
+\]
 This makes the A=1 Type-C route compatible with the same S0 drain/postlude interface.
 
 ### Canonical terminal-marker factorization

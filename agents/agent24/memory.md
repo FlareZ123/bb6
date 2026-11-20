@@ -1090,3 +1090,6 @@ Critic's 01:51 broadcast freezes the five-slot global-leaf acceptance as the imm
 ### Type-C terminal-marker factorization
 
 For K=2^z+z+3, m+2=3K and the A=1 Type-C residual simplifies exactly to ellC=d1pow(K) ++ markerWord(0) ++ d0 ++ d0pow(L+3) ++ lh. After the standard counted S0 drain, the q4Tail endpoint can be reparameterized as s0Config (markerWord(0) ++ d0 ++ d0pow(L+3) ++ lh) (n-1+K) 0 (2^(n-1)-1) H. This matches TerminalEncoderBridge.s0_reset_sectionBits in all fields except the residual digit conversion d0pow(L+3) -> d1pow(L). The missing terminal work is now a precise conversion in the appropriate reset context, not an unspecified tail. See P2Q4TailToS0Identity.md.
+
+
+A=2 odd-q terminal-side residual derived: with w=L+3 and q=2^(L+3)-3, binDec(w,q)=d0++d1++d0pow(L+1), so tail34=[1,0,0,1,1,1,1]++d1++d0pow(L+1)++lh and ell34=d1pow(K)++markerWord(0)++d0pow(2)++d1pow(2)++d0pow(L+1)++lh, K=2^z+z+3. This is only a list identity; the terminal conversion remains open.
