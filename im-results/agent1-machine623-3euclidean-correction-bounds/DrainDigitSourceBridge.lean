@@ -113,19 +113,19 @@ def sourceDrainCalls (b : Nat) : Nat := (sourceDrainSummary b).2.2
 theorem sourceDrainSummary_bounds (b : Nat) :
     sourceDrainTwos b ≤ sourceDrainCalls b ∧
     sourceDrainCalls b ≤ sourceDrainLength b := by
-  unfold sourceDrainTwos sourceDrainCalls sourceDrainLength
+  change (sourceDrainSummary b).2.1 ≤ (sourceDrainSummary b).2.2 ∧
+    (sourceDrainSummary b).2.2 ≤ (sourceDrainSummary b).1
   induction b using Nat.strongRecOn with
   | ind b ih =>
     cases b with
     | zero => simp [sourceDrainSummary]
     | succ b =>
       simp only [sourceDrainSummary]
-      let t := sourceDrainStep b
       have ht := sourceDrainStep_spec b
-      change t.2.2 ≤ 1 ∧ b =
-        ternaryOnes t.1 + 3^t.1*(3*t.2.1+2*t.2.2) at ht
-      have hi := ih t.2.1 (sourceDrainStep_q_lt b)
-      dsimp [t] at hi
+      change (sourceDrainStep b).2.2 ≤ 1 ∧ b =
+        ternaryOnes (sourceDrainStep b).1 + 3^(sourceDrainStep b).1 *
+          (3*(sourceDrainStep b).2.1+2*(sourceDrainStep b).2.2) at ht
+      have hi := ih (sourceDrainStep b).2.1 (sourceDrainStep_q_lt b)
       rcases ht with ⟨he,hk⟩
       rcases hi with ⟨hER,hRL⟩
       constructor <;> omega
