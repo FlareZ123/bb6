@@ -227,8 +227,8 @@ theorem runStats_offset_AC (n q : Nat) (hq : q + 1 ≤ 3 ^ n) :
       ((runStats n q C).output, (runStats n q C).ones, (runStats n q C).twos) := by
     simpa only [runStatsData_eq] using h
   exact ⟨congrArg Prod.fst h',
-    congrArg Prod.fst (congrArg Prod.snd h),
-    congrArg Prod.snd (congrArg Prod.snd h)⟩
+    congrArg Prod.fst (congrArg Prod.snd h'),
+    congrArg Prod.snd (congrArg Prod.snd h')⟩
 
 #print axioms runStatsData_offset_identities
 #print axioms runStats_offset_BA
