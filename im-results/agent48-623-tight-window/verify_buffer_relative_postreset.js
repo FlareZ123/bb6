@@ -41,10 +41,13 @@ function run(machine, word) {
 function runOriginalWithFirstOutput(machine, word) {
   let state = machine.initial_state;
   let first = null;
+  const buffer = [0, 0];
   for (let i = 0; i < word.length; i += 1) {
+    buffer.push(word[i]);
+    if (buffer.length > 5) buffer.shift();
     state = machine.transitions[state][word[i]];
     if (first === null && machine.outputs[state] !== null) {
-      first = {symbol: word[i], label: machine.output_labels[machine.outputs[state]]};
+      first = {index: i, symbol: word[i], label: machine.output_labels[machine.outputs[state]], buffer: buffer.slice()};
     }
   }
   const output = machine.outputs[state];
@@ -66,6 +69,7 @@ let wordsChecked = 0;
 let pairMismatches = 0;
 let pairLengthMismatches = 0;
 let previousPairRecoveryMismatches = 0;
+let secondSymbolRecoveryMismatches = 0;
 
 for (let length = 0; length <= 6; length += 1) {
   for (let code = 0; code < 9 ** length; code += 1) {
@@ -86,12 +90,21 @@ for (let length = 0; length <= 6; length += 1) {
     if (lengthOriginal.first !== null) {
       const [x, y] = lengthOriginal.first.label.L_final.previous_pair;
       if (lengthOriginal.first.symbol !== 3 * x + y) previousPairRecoveryMismatches += 1;
+      const witnessLength = lengthOriginal.first.label.witness_length;
+      const secondWordIndex = lengthOriginal.first.index - witnessLength + 2;
+      const bufferIndex = 6 - witnessLength;
+      if (
+        lengthOriginal.first.buffer.length !== 5 ||
+        bufferIndex < 0 || bufferIndex >= 5 ||
+        secondWordIndex < 0 || secondWordIndex >= word.length ||
+        lengthOriginal.first.buffer[bufferIndex] !== word[secondWordIndex]
+      ) secondSymbolRecoveryMismatches += 1;
     }
     wordsChecked += 1;
   }
 }
 
-if (pairMismatches || pairLengthMismatches || previousPairRecoveryMismatches) {
+if (pairMismatches || pairLengthMismatches || previousPairRecoveryMismatches || secondSymbolRecoveryMismatches) {
   throw new Error("finite-word quotient validation failed");
 }
 console.log(JSON.stringify({
@@ -100,5 +113,6 @@ console.log(JSON.stringify({
   wordsChecked,
   pairMismatches,
   pairLengthMismatches,
-  previousPairRecoveryMismatches
+  previousPairRecoveryMismatches,
+  secondSymbolRecoveryMismatches
 }, null, 2));

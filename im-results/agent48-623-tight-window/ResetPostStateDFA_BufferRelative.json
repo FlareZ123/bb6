@@ -14,7 +14,8 @@
     "words_checked": 597871,
     "pair_output_mismatches": 0,
     "pair_length_output_mismatches": 0,
-    "previous_pair_recovery_mismatches": 0
+    "previous_pair_recovery_mismatches": 0,
+    "second_symbol_recovery_mismatches": 0
   },
   "factorization": {
     "previous_pairs": 9,
