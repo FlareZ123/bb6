@@ -81,7 +81,7 @@ The 80 search survivors are not 80 unrelated examples. Their transition tables a
 
 1. **60 entry-zero, period-three tables.** Choose a non-A state x, an arbitrary state y, and a direction d. Set A/0 to write 1 and move in direction d to x; set x/0 to write 0 and move in direction -d to y; set y/1 to write 0 and move in direction -d to A. The blank configuration returns after three moves translated by one cell.
 2. **10 entry-zero, period-four tables.** Choose non-A x and direction d. Set A/0 to write 1 and move in direction d to x; set x/0 to write 0 and return in direction -d to A; set A/1 to write 0 and move in direction -d to x. The x/0 transition repeats, returning to a blank A configuration translated by two cells.
-3. **10 entry-one, period-three tables.** Choose non-A x and direction d. The entry A/0 writes 0 and moves in direction d to x; the cycle sets x/0 to write 1 and return to A in direction -d, then x/1 writes 0 and moves in direction d to x. The blank tape is restored and the x-configuration translates by one cell.
+3. **10 entry-one, period-three tables.** Choose non-A x and direction d. The entry A/0 writes 0 and moves in direction d to x. Starting from that x-configuration, the three-step cycle is x/0 → A/0 → x/1: x/0 writes 1 and returns to A in direction -d; the repeated A/0 writes 0 and moves in direction d back to x on the marked cell; x/1 erases the marker and moves in direction d to the next blank cell. The blank tape is restored and the x-configuration translates by one cell.
 
 Here d is L or R, and the arbitrary y ranges over all six states. The three parameter spaces have sizes 5·6·2=60, 5·2=10, and 5·2=10, respectively.
 
