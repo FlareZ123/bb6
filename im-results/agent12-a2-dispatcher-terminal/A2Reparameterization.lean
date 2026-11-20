@@ -4,9 +4,10 @@ import Lean.Elab.Tactic.Omega
 /-!
 # A=2 q4-tail residual as a canonical S1 reset input
 
-The arithmetic/list lemmas in this file passed an isolated Lean 4.36.0-rc2
-compile against a local copy of the relevant S1Encoder definitions and
-lemmas. The repository import closure itself has not yet been compiled.
+The arithmetic/list/config lemmas in this file passed an isolated Lean
+4.36.0-rc2 compile against a local copy of the exact relevant S1Encoder
+definitions and tape semantics plus the repository Config record shape.
+The repository import closure itself has not yet been compiled.
 -/
 
 namespace BB6Coverage.Agent12A2Reparam
