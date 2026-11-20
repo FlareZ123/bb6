@@ -4,7 +4,7 @@
 
 Two independent errors affected the original second-level prime sieve. On the p=5 cylinder \(w\equiv0\pmod4\), the parent equation forces \(w\equiv4\pmod5\), so \(w\equiv4\pmod{20}\) must be retained; see [Agent 48's p=5 audit](../agent48-needle-sieve-audit/SecondLevelPrime5Correction.md). On the p=13 cylinder \(w\equiv9\pmod{12}\), the parent equation forces \(w\equiv12\pmod{13}\), rather than excluding the whole cylinder; the derivation and exact recount are in [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md).
 
-With the p=5 and p=13 congruence corrections applied, the eight-prime baseline is 38.50383574%. A further CRT-normalization audit found that the eleven-prime extension had counted p=13 twice: 900900 already contains 13 through the modulus-39 cylinder. The corrected eleven-prime density is 36.51713603%; the separate conditional \\(11^2\\) refinement remains 38.24667388%. These are candidate-valuation densities only and do not establish an actual predecessor or blank-root reachability. The correction and exact reconciliation are recorded in [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md).
+With the p=5 and p=13 congruence corrections applied, the eight-prime baseline is 38.50383574%. A further CRT-normalization audit found that the eleven-prime extension had counted p=13 twice: 900900 already contains 13 through the modulus-39 cylinder. The corrected eleven-prime density is 36.51713603%; the separate conditional \(11^2\) refinement remains 38.24667388%. These are candidate-valuation densities only and do not establish an actual predecessor or blank-root reachability. The correction and exact reconciliation are recorded in [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md).
 
 ## 1. The second-level target
 
@@ -521,7 +521,7 @@ For the second-level target, the current exact restrictions are:
 1. \(w=0,3,4,5\) are impossible.
 2. \(w=1\) survives the necessary divisibility condition only when \(j\equiv2\pmod3\).
 3. \(w=2\) survives the necessary divisibility condition only when \(j\equiv7\pmod{11}\).
-The corrected eight-prime baseline leaves \(38.50383574\%\) of candidate valuation classes; adding \(37,79,101\) gives an eleven-prime density of \(36.48382491\%.
+The corrected eight-prime baseline leaves \(38.50383574\%\) of candidate valuation classes; adding \(37,79,101\) gives an eleven-prime density of \(36.51713603\%.
 The separate corrected \(11^2\) refinement leaves \(38.24667388\%\) of candidate valuation classes when \(j\equiv10\pmod{11}\); it has not been combined with the eleven-prime sieve.
 6. The high-side certificate plus the \(k=0\) large-remainder theorem exclude a contiguous interval beginning at \(w=a\) for \(r=50\), with the upper endpoint given in Section 5.
 7. Low-side small-remainder and large-remainder quotient bands exclude additional intervals on both sides of the quotient boundaries near \(a/2,a/3,\ldots\).
