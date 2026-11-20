@@ -36,15 +36,28 @@ For (S\ge20), (\ell_S\ge4), since (\tau(3)=13<S+3). Hence (B_{new}\ge B_{new}(4)
 (B')^3\le(B+36)^3\le\frac{125}{64}B^3<3B^3.
 ]
 
-As (3^j>B^3), this implies (3^{j+1}>3B^3>(B')^3), hence (j'\le j+1). Monotonicity (B'\ge B) gives (j'\ge j). The same (B'\le B+36<3B) argument gives (k'-k\in\{0,1\}). Therefore the actual moving-window shifts satisfy
+As (3^j>B^3), this implies (3^{j+1}>3B^3>(B')^3), hence (j'\le j+1). Monotonicity (B'\ge B) gives (j'\ge j). The same (B'\le B+36<3B) argument gives (k'-k\in\{0,1\}). Therefore
 
 [
-oxed{k'-k\in\{0,1\},\qquad j'-j\in\{0,1\}.}
+\boxed{k'-k\in\{0,1\},\qquad j'-j\in\{0,1\}.}
 ]
 
-This proof works for either (B_{new}) or (B_{old}). The product automaton needs at most one low-symbol shift and one high-symbol extension, not the previously allowed zero-to-three high extensions. Consequently the next interval ([k'+2,j'-2)) contains the old output subinterval ([k+3,j-2)) and can extend it by at most one high digit.
+There is a further coupling: (k'-k=1) forces (j'-j=1). Indeed, if (k'=k+1), minimality gives (B<3^k\le B'<3^{k+1}), so (B^3<3^{3k}\le(B')^3). Hence (j\le3k<j'). Since (j'\le j+1\le3k+1), necessarily (j=3k) and (j'=3k+1).
 
-This is a paper derivation from the cited source lemmas and the exact window definitions, not a new Lean theorem in this directory.
+Also, minimality of (k) gives (3^{k-1}\le B<3^k), hence
+[
+3^{3k-3}\le B^3<3^{3k}
+\quad\Longrightarrow\quad
+j\in\{3k-2,3k-1,3k\}.
+]
+Thus the phase (r=j-3k\in\{-2,-1,0\}) is a three-state window-index phase. Its only possible shift types are:
+
+- (r\mapsto r) or (r+1) when (k'=k);
+- (r=0\mapsto-2) when (k'=k+1) (then (j'=j+1)).
+
+The next required interval ([k'+2,j'-2)) contains the old output subinterval ([k+3,j-2)). It needs at most one low-symbol shift and one high-symbol extension, and the coupled shift phase has only three possible transition types: ((0,0),(0,1),(1,1)). This replaces the previous zero-to-three high-extension phase.
+
+These are paper derivations from the cited source lemmas and exact window definitions, not new Lean theorems in this directory.
 
 ## Finite diagnostic
 
@@ -70,6 +83,7 @@ More precisely:
 
 - The low exponent (k) is unchanged on all 9,968 states.
 - The high exponent (j) decreases by one only at indices 33, 34, and 35; it is unchanged at the other 9,965 states.
+- The observed shift histogram is ((0,0):9955,(0,1):8,(1,1):5), consistent with the proved three-type restriction.
 - The first-acceptance histogram is unchanged:
   `3:2196, 4:4210, 5:2241, 6:866, 7:290, 8:105, 9:37, 10:14, 11:6, 12:3`.
 - The three shorter windows at indices 33–35 still accept by symbol 4.
@@ -78,4 +92,4 @@ The finite diagnostic therefore survives the sharper correction buffer and saves
 
 ## Next useful use
 
-Agent 32 can use the smaller S-window envelope and the proven 0/1 high-shift bound in the finite product-state closure. Preserve the full carry rectangles, source branch/sector, weighted drain interface, and the low/high boundary state; these arithmetic tightenings do not remove the need to prove reset acceptance for every authentic root state.
+Agent 32 can use the smaller S-window envelope and the three-type coupled shift phase in the finite product-state closure. Preserve the full carry rectangles, source branch/sector, weighted drain interface, and the low/high boundary state; these arithmetic tightenings do not remove the need to prove reset acceptance for every authentic root state.
