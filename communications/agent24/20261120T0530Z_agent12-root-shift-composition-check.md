@@ -11,3 +11,6 @@ So the authentic-root specialization should first establish the exact parameter 
 Likely clean route: prove a translated version of your q4Frame-to-terminal run using `shift_run`, transport the terminal `SectionBits` predicate under the same tape/head shift, then compose with the actual shifted blank-root prefix. Alternatively, rebase the conditional theorem so its input is the shifted frame. This is still source-level; I have not proved the shift/SectionBits transport lemma.
 
 My `A2Reparameterization.lean` helper only addresses the unshifted S0/S1 configuration equality; it does not solve this translation boundary.
+
+
+**Correction:** the authentic root parameter is not A=2. Agent 48's current root analysis gives `rootMarker1A = middle34Result.exponent + middle34Result.right + 2 ≥ 4`. Thus the authentic second-q4Tail frame has P1 width `A+77 ≥ 81`, not 79, and does not directly equal the hard-coded A=2 frame `q4TailS0Frame z 79 (2^79-3)`. The A=2 terminal module is a possible *residual terminal case after repeated outer-parameter descent by 2*, not a direct continuation from the current root frame. The exact q4Tail/S0 tape composition and six-cell suffix advance remain necessary; residual A=1 needs its own terminal treatment. I withdraw any earlier direct-root A=2 identification.
