@@ -1,8 +1,80 @@
 # Positive-z q4 first-cycle: arbitrary-left S0 drain factorization
 
-Status: **computationally identified; source-level prefix/postlude proof open; generic S0 drain source module uncompiled**.
+Status: **direct arbitrary-A q4Tail-to-terminal composition drafted from the authentic blank-root trajectory; full Lean dependency closure uncompiled; no verified champion halt/score witness yet**.
 
 This is an intermediate research dossier, not a result suitable for `results/`.
+
+## Direct arbitrary-A q4Tail terminal path
+
+The shortest current route does **not** iterate the P2 q4Tail-to-q4Tail
+recurrence toward its `111111` residual. It sends the authentic second
+q4Tail frame directly through the complete S1 dispatcher.
+
+For the root instance, set
+`L=tm63Length1=76`, `A=rootMarker1A>=2`, and
+`z=rootMarker1Z>=3`. The general adapter uses
+
+[
+W=A+L+2,qquad M=2^A(2^{L+2}-1),qquad N=M-3.
+]
+
+Since (L) is even, (2^{L+2}equiv1pmod3), hence (3mid M) and
+(3mid N). The full 24-class dispatcher therefore exits with marker
+zero and produces the existing S1 reset configuration accepted by the
+arbitrary-exterior terminal `SectionBits` theorem.
+
+The authentic root draft supplies
+
+[
+operatorname{run};tm2;
+(	exttt{rootToSecondQ4Cost}+	exttt{rootSecondQ4TailPrefixCost});
+	exttt{blank}
+=
+operatorname{some}(
+	exttt{shiftConfig rootMarker1Head rootSecondQ4TailFrame}).
+]
+
+The exact frame identity rewrites
+`rootSecondQ4TailFrame` as
+`q4TailS0Frame z (A+L+1) (firstQ4P1Value L A)`. The general terminal
+suffix is transported to this translated frame by `shift_run`; the
+final S1 configuration is re-expressed at the translated physical head
+using `s0Config_shift`. The unrestricted terminal tape contract then
+follows from `s0_reset_sectionBits`.
+
+[`TM63GeneralQ4TerminalComposition.lean`](TM63GeneralQ4TerminalComposition.lean)
+packages this join. Its intended exports are:
+
+- `tm63_blank_reaches_general_q4_terminal`: the composed blank-root run
+  to the marker-zero terminal S1 configuration;
+- `tm63_general_q4_terminalSectionBits`: the terminal section contract
+  at the translated physical head;
+- `tm63_blank_halts`: the corresponding original-TM2 halt theorem;
+- `tm63_blank_attainable`: the exact symbolic champion score witness.
+
+The score expression is
+
+[
+S=C_{m root}+C_{m q4}+59+12(W+E)+7,
+]
+
+where (C_{m root}=	exttt{rootToSecondQ4Cost}+
+	exttt{rootSecondQ4TailPrefixCost}),
+(C_{m q4}=	exttt{q4TerminalPrefixCost};L;A;z), and
+(E=(	exttt{q4TerminalResult};L;A;z).	exttt{exponent}).
+The final (+7) is the existing six-step champion-root offset plus
+the final undefined-query scoring correction. The q4 prefix cost includes
+the counted drain and the complete `sectionResult` dispatcher cost.
+
+**Evidence boundary:** this is a source-level integration candidate, not
+an accepted halt or lower-bound result. The authentic root-to-q4Tail
+chain, arbitrary-A reparameterization, counted drain, complete dispatcher,
+and this composition have not been compiled together or axiom-audited.
+The local shell/Python execution surfaces return tool-level
+`ClientError`; Critic's current acceptance gate forbids substituting CI
+for local preflight. Keep this work in `im-results/` until the exact
+dependency closure compiles and its exported axiom profiles are checked.
+It does not establish a global six-state upper bound or exact BB(6).
 
 ## Exact candidate factorization
 
@@ -119,13 +191,28 @@ The file currently exports:
 
 ## Remaining proof obligations
 
-1. Prove the q4-checkpoint-1 prefix of length (P(z)) reaches the displayed arbitrary-left S0 configuration for all admissible (z,A,L).
-2. Compile and audit the arbitrary-left S0 drain module, including `#print axioms` for every exported theorem.
-3. Prove the q4-checkpoint-2 postlude of length (Q(z)) from the exact drain output.
-4. Compose the three source theorems and compare the resulting q4 cycle theorem against the independent checkpoint simulator.
-5. Keep the later-cycle conjectures separate; this dossier only addresses the first positive-z cycle.
+The preferred direct path has four acceptance requirements:
 
-No BB(6) value or global upper bound follows from this work yet.
+1. Compile the exact transitive closure of `TM63RootQ4Tail.lean`,
+   `P2RootS0Identity.lean`, `GeneralQ4TailTerminalComposition.lean`,
+   and `TM63GeneralQ4TerminalComposition.lean` with Lean 4.36.0-rc2.
+2. Repair concrete elaboration failures, then inspect the exported
+   `#print axioms` profiles for the root, dispatcher, terminal, halt, and
+   attainable theorems. Reject `sorryAx` and unapproved oracles.
+3. Only after successful local preflight, use the existing manual source
+   acceptance target; do not create a new workflow or substitute CI for
+   local compilation.
+4. Evaluate or otherwise present the exact symbolic score clearly, and
+   compare it with the published approximate halting-time analysis without
+   confusing primitive steps with sigma score.
+
+The arbitrary-left first-cycle S0 factorization above remains an alternate
+route. If that route is needed, its separate obligations are to prove the
+q4-checkpoint-1 prefix, compile and audit the generic S0 drain, prove the
+q4-checkpoint-2 postlude, and compare the composed cycle theorem with the
+independent simulator. Later-cycle extrapolations remain conjectural.
+
+No BB(6) value or global upper bound follows from the current source drafts.
 
 
 ## Later-cycle extrapolation: caution, not a theorem
@@ -612,7 +699,10 @@ the local runtime tools returned tool-level errors, and no CI
 substitute was dispatched.
 
 
-## Authentic TM63 root instance mapped
+## Alternative P2 q4Tail recurrence route
+
+This is the longer q4Tail-to-q4Tail continuation route. It is not required by the direct arbitrary-A terminal path above, but is retained as a fallback and as a reusable recurrence interface.
+
 
 Agent 24's coordinate derivation is now recorded in
 `im-results/agent24-champion-time/P2Q4TailToS0Identity.md`. It gives
@@ -654,43 +744,3 @@ work is to formalize Agent 24's three pointwise obligations against
 the generic adapter and compile the exact dependency closure. The
 A=1 Type-C branch may reuse the same adapter if it establishes the
 same residual and blank-ray interface.
-
-## General-A q4Tail terminalization and authentic-root join (2026-11-20)
-
-Agent 44's `GeneralQ4TailTerminalComposition.lean` removes the apparent
-need to iterate the P2 q4Tail recurrence to its `111111` residual. For
-every `A>=2`, the authentic q4Tail frame is reparameterized as an S1
-dispatcher input of width `W=A+L+2` and index
-`N=2^A*(2^(L+2)-1)-3`. If `L` is even, then `3|N`, so the complete
-24-class `sectionResult` dispatcher returns marker zero and reaches the
-existing arbitrary-exterior terminal `SectionBits` interface.
-
-I added
-[`TM63GeneralQ4TerminalComposition.lean`](TM63GeneralQ4TerminalComposition.lean)
-to join that arbitrary-A terminal theorem to the authentic blank-root
-trajectory already drafted in
-[`TM63RootQ4Tail.lean`](../agent38-root-q4tail/TM63RootQ4Tail.lean).
-The intended root parameters are exactly
-`L=tm63Length1=76`, `A=rootMarker1A>=2`, and
-`z=rootMarker1Z>=3`. The module transports the terminal suffix by
-`shift_run rootMarker1Head`, then uses `s0Config_shift` and the existing
-`s0_reset_sectionBits` theorem at the translated final head.
-
-The new source exports:
-- `tm63_blank_reaches_general_q4_terminal`: the composed blank-root run
-  to the marker-zero terminal S1 configuration;
-- `tm63_general_q4_terminalSectionBits`: the terminal section contract
-  at the translated physical head;
-- `tm63_blank_halts`: the corresponding conditional original-TM2 halt;
-- `tm63_blank_attainable`: the exact symbolic champion score expression,
-  including the seven-step scoring correction.
-
-**Evidence status:** these are source-level integration candidates only.
-The authentic root-to-q4Tail chain, the arbitrary-A dispatcher chain, and
-this new composition have not been compiled together or axiom-audited.
-The local Python/container runtimes return tool-level `ClientError`, and
-the current Critic acceptance gate explicitly rules out using CI as a
-substitute for local preflight. Do not promote this to `results/`, claim
-a verified new BB(6) lower bound, or report a numerical champion score
-until the exact transitive Lean closure compiles and its exported axiom
-profiles are checked.
