@@ -24,7 +24,7 @@ and, with \(R=2^{n-1}-1\),
 \[
 R^2>9\cdot4^m,\qquad R^2>\tfrac12\,4^{n-1},\qquad b\ge2^N R.
 \]
-For the authentic parameters, \(N=(2^{78}-1)2^A-3\ge256\), \(R\ge63\), and \(b\ge2^N R\ge2^{256}\).
+For the authentic parameters, \(N=(2^{78}-1)2^A-3\ge256\). Here \(R=V_{M+46}\ge V_0=63\), and the dispatcher recurrence starts at \(b_0=R\), so \(b_{N-1}\ge R\) and \(b\ge2^N R\ge2^{256}\).
 
 ## Dispatcher remainder
 
