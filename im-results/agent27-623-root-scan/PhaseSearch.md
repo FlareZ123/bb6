@@ -72,3 +72,19 @@ Thus even sector plus mod-3 residues plus a class-specific slack threshold does 
 
 
 A larger q=9 residue-dependent slack table (324 classes) also fails. D(2,105) is right-odd with residues (2,6), slack101, above the authentic-root minimum96 for that class, but maps to D(106,10), left-even residues (1,1), slack93, below the target-class minimum309. This shows that simply increasing the residue modulus from 3 to 9 does not repair the finite-table invariant.
+
+
+## Observed suffix lower envelope for the smaller counter
+
+A separate scan of m_n=min(a_n,d_n) gives a rapidly rising finite suffix minimum. Here each row is the minimum m_i over i>=n through the 20,000-state cutoff:
+
+| Suffix start n | Minimum m_i | Attaining index |
+|---:|---:|---:|
+| 20 | 454 | 21 |
+| 30 | 3,074 | 31 |
+| 50 | 224,996 | 68 |
+| 100 | 15,714,022,356 | 100 |
+| 200 | 9,573,501,947,519,077,830 | 200 |
+| 500 | 7,884,696,416,372,149,041,252,502,099,181,768,908,081,809,666 | 506 |
+
+This is only a finite lower-envelope observation, not an all-time growth theorem. It may be relevant to the root-mass/quadratic-potential line: after the early prefix, the orbit's smaller counter appears to acquire an exponentially growing floor.
