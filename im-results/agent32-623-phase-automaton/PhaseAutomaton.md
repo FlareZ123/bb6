@@ -108,3 +108,25 @@ The first computational task is **not** another root replay. Build the finite pr
 - Do not infer closure from the 20,000-state replay, the observed eight sector edges, or the reset-word frequency table.
 
 The existing 20k source-faithful replays are enough for debugging and prefix discovery. The proof target is a finite phase-graph closure theorem plus the exact source terminal-window bridge. A #623 decision would still classify only this difficult machine/cylinder, not by itself establish the universal BB(6) upper bound.
+
+
+## 6. A smaller reset-pattern automaton
+
+A more economical checker may use the finite pattern set
+[
+mathcal P={win({0,1,2}^2)^r:3le rle6, w
+	ext{ synchronizes both full-range branch transducers}}.
+]
+Here “synchronizes” includes all three conditions in Section 2: every start remains in range, every trajectory's x-output is nonmonochromatic (not all 0 and not all 2), and all final states coincide.
+
+If a word contains some (w\in\mathcal P) as a contiguous subword, then the *whole word* is synchronizing for both branches: before the reset subword, every trajectory is still in the admissible carry rectangle; the reset subword sends every possible previous-digit/carry state to the same state and has already set both nonmonochromatic output flags; the suffix preserves state equality and the flags. This explains why the common-reset-subword diagnostic is a sufficient certificate for the full-word synchronization property.
+
+The language of words containing a member of the finite set (mathcal P) is regular and can be recognized by an Aho--Corasick-style finite automaton. The phase-closure task can therefore be reduced to a product of:
+1. the exact current-branch digit-pair transducer;
+2. the reset-pattern recognizer for (mathcal P);
+3. the one-low-symbol / three-high-symbol sliding-window phase;
+4. the actual full-range boundary carry and sector phase.
+
+The existing full-range diagnostic found a common pattern of length 3--6 in every one of the 9,968 words checked, with earliest end at most 13. This does not establish that (mathcal P) is preserved by the authentic root update. In particular, a reset pattern in the old word need not survive in the old output suffix; the recognizer must process the *entire next window*, including its bounded high-end extension. The counterexample at root index 33 to naive reset-suffix closure remains a regression test.
+
+This pattern-language route is preferable to retaining the full transformation monoid of every checker state, provided the finite set (mathcal P) can be enumerated and minimized without losing the universal start-state quantifiers.
