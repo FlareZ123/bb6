@@ -18,6 +18,20 @@ These are conditional prepared-section/source compositions. They do not establis
 
 The Agent2 certificate workflow's timeout was raised to 45 minutes to accommodate the additional 9,276-step certificate. The Agent37 workflow has a 60-minute timeout. Both workflows are manual-only. The Agent25 E3 source-bridge job now succeeds on current main (run 44740066064, pinned stage-1 source run 43402524711). The q=5 prepared-section theorem is source-certified, but the downstream blank-root certificate artifact is still unavailable because the stage-5 d-root-seed31-audit artifact has not yet been produced.
 
+The certified exception33 q=5 return has a compact exact duration expression. Substituting
+\(k_E=9u+1\), \(q=4\) into Agent32EAll.duration,
+\(k_3=24u+3\) into the E-three duration, and
+\(k_A=64u+10\), \(d(aCodeWord)=19\) into the full A-code duration gives
+\[
+T(u)=57036u^2+22057u+2222+
+\operatorname{CryptidA.wordCost}
+(256u+43,[0,0,1,1,0,1,1]).
+\]
+The word-cost term is intentionally left in the source-defined form
+\(C(m,w)\); the endpoint is \(L(512u+129,0,0)\). This is an algebraic
+simplification of the duration definitions used in the CI-certified
+composition, not an additional independently compiled theorem.
+
 ## Exact status
 
 - q=1,b=1 all-residue prepared-section return: source CI success, run 43420030637.
