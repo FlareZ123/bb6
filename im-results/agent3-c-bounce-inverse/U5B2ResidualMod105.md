@@ -245,3 +245,17 @@ The key arithmetic step is that the exact residual identity with `t=39+64*h`, co
 Exact updated parameter-bridge blob: `34f925c6860984e7a356538be97e6fa3f912bb4e`. It compiles locally with Lean 4.36.0-rc2; all ten axiom reports are `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
 
 Remaining gap: this still assumes the same candidate's U5 residual equations, q=0 parent shape, affine root residue, and root-index class. It derives the q=0 quotient `u`, but no source theorem yet identifies that quotient with the parameter of the separate B2 target family. Full `U5B2Root32.lean` closure remains uncompiled.
+
+
+## 2026-11-20 correction: h=8 mod128 is now derived
+
+The stronger theorem `u5_q0_root32_forces_h8_parameter` no longer assumes `h=8+128*u`. From hs/hm, the q=0 parent form, `w=6657+8192*r`, the exponent relation, and `r%64=32`, it proves `h%128=8`, sets `u=h/128), and returns
+
+```lean
+∃ u t, h=8+128*u ∧ u=1802+6720*t ∧
+  18018+211*u+22155*r=20*2^(E-13)
+```
+
+The exact root equation is therefore available for the quotient extracted from the q=0 root itself. This is stronger than the previous theorem that assumed `h=8+128*u` and supersedes that assumption in the source-equation chain.
+
+The remaining identification is not arithmetic: the quotient `u=(h-8)/128` from the q=0 residual root must still be shown to be the same parameter indexing the separate B2 target state `(734+10944*u,34881+518816*u)` on the same blank-start trajectory. The current files do not yet establish this source-reach link. Full `U5B2Root32.lean` closure remains uncompiled.
