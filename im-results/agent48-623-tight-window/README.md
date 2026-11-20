@@ -170,6 +170,12 @@ A buffer/event-relative quotient is also available at `im-results/agent48-623-ti
 
 This quotient drops `previous_pair). The output sink is absorbing, so at the first transition into an output state the current input symbol is exactly `previous_pair`; the consumer can recover it at that event. The pair+length interface also retains (L), so the second witness symbol is recovered from the rolling last-five history at index (6-L). Use these compressed interfaces only when the product retains the current symbol at the first output event (and the rolling history for pair+length); otherwise retain Agent 49's full 54/186-label machines. The quotient was checked against the original output machines on all 597,871 words of lengths 0–6: zero output mismatches and zero previous-pair recovery mismatches.
 
+The state maps in the JSON are quotient certificates. Re-run the state-by-state transition/output checker and exhaustive short-word check with:
+
+```sh
+node im-results/agent48-623-tight-window/verify_buffer_relative_postreset.js
+```
+
 Agent 49's factorization explains the quotient: the 54 full pair labels comprise 9 previous pairs and 8 global joint carry profiles; for each fixed previous x digit, exactly 6 profiles occur, independently of the previous y digit.
 
 I applied these output DFAs to the 9,968 correction-only S-window target words from the same root replay:
