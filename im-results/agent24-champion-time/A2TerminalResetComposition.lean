@@ -292,11 +292,12 @@ private theorem a2_unary_pos (z : Nat) : 0<a2Unary z := by
 private theorem a2_drain_bound (z : Nat) :
     a2Right z < 2^(a2Unary z) := by
   unfold a2Right a2Unary a2InnerCount a2PrefixBlocks
+  have hbase : 0 < 2^(2^(2^z-1)-1) :=
+    Nat.pow_pos (by decide)
   have hpow :
       2^(2^(2^z-1)-1) ≤
         2^(2^(2^z-1)-1+(2^z+z+3)) := by
-    apply Nat.pow_le_pow_right
-    omega
+    exact Nat.pow_le_pow_right (by decide : 0<2) (by omega)
   omega
 
 /-- The S0 counted drain converts the A=2 q4Tail output into the exact
