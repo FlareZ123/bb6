@@ -40,6 +40,19 @@ so
 
 Thus the exact output-side test (g\ge T) reduces to the sign test (g>0), and its complement to (g<0), without requiring the extra (36\ell_S+88) term. The correction-only buffer is enough both for the source carry rectangle and for the conditional branch-selection step. This does not prove the central x-block property; that remains the core phase-invariant obligation.
 
+It also sharpens the terminal-strip contradiction. The sector-specific terminal h bounds in `RootRayGapCocycle.md` (from the TerminalRatio4 branches with K=n+6) are
+[
+|h|\le6n+44\ (LO),\quad |h|\le6n+31\ (LE),\quad
+|h|\le(6n+19)/2\ (RO),\quad |h|\le(9n+25)/2\ (RE).
+]
+For the output state's central coordinate (x=2h) in LO/LE and (x=4h) in RO/RE, and (n\le\ell_q\le\ell_S), these imply
+[
+|x'|\le12\ell_S+88,\ 12\ell_S+62,\ 12\ell_S+38,\ 18\ell_S+50
+]
+in LO, LE, RO, RE respectively. The largest is (18\ell_S+50<34\ell_S+122=B_{corr}). Thus a terminal successor would have (|x'|<B_{corr}), contradicting the central-block certificate (|x'|>B_{corr}). This is the sector-sensitive reason the uniform (36\ell_S+88=4(9\ell_S+22)) term can be dropped.
+
+Caveat: the combined D/r depth wrapper used in the terminal-window table is still an integration/CI obligation in the repository. Treat this terminal-strip refinement as conditional on that wrapper until it is compiled against the pinned source. The separate branch-selection inequality above uses the source-depth-backed BranchSelection interface.
+
 Exact source references:
 
 - `im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean`, theorems `correction_buffer_closed` and `one_extra_digit_carry_bound_closed`;
