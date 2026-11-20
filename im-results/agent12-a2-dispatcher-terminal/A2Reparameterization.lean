@@ -73,7 +73,7 @@ theorem binDec_addFour_subSeven (L : Nat) :
   calc
     binDec (L+4) (2^(L+4)-7)
         = d0 ++ binDec (L+3) (2^(L+3)-4) := by
-            rw [show L+4 = (L+3)+1 by omega, h0]
+            rw [h0, show L+4 = (L+3)+1 by omega]
             exact binDec_odd (L+3) (2^(L+3)-4) hb0
     _ = d0 ++ d1 ++ binDec (L+2) (2^(L+2)-2) := by
             rw [h1, show L+3 = (L+2)+1 by omega]
