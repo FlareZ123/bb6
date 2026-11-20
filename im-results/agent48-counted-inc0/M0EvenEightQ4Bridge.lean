@@ -67,20 +67,16 @@ theorem m0EvenEight_binDec_residue8 (L q : Nat)
       d1 ++ d1 ++ d1 ++ d0 ++ binDec (L-4) (q/2) := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
     rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
     rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show (2:Nat)^1 = 2 by decide, Nat.mul_comm]
   have hpow4 : 2^(L-3) = 2 * 2^(L-4) := by
     rw [show L-3 = (L-4)+1 by omega, Nat.pow_succ]
-    norm_num
-    ring
+    exact Nat.mul_comm _ _
   have hq : q < 2^(L-3) := by
     rw [hpow3] at hbound
     omega
@@ -119,20 +115,16 @@ theorem m0EvenEight_binDec_residue7 (L q : Nat)
       d0 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) (q/2) := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
     rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
     rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show (2:Nat)^1 = 2 by decide, Nat.mul_comm]
   have hpow4 : 2^(L-3) = 2 * 2^(L-4) := by
     rw [show L-3 = (L-4)+1 by omega, Nat.pow_succ]
-    norm_num
-    ring
+    exact Nat.mul_comm _ _
   have hq : q < 2^(L-3) := by
     rw [hpow3] at hbound
     omega

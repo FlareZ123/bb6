@@ -564,7 +564,7 @@ private theorem valuationQ4_cutTape_head_true
   let hN : Int := h-((3*a:Nat):Int)
   by_cases ha1 : a=1
   · subst a
-    have hcoord : h-((3*1:Nat):Int)+3=h := by norm_num
+    have hcoord : h-((3*1:Nat):Int)+3=h := by omega
     have hm := valuationQ4_cutTape_markerCells L q 1 b t h
     simpa [hcoord] using hm.1
   · have ha2 : 2 ≤ a := by omega
@@ -618,11 +618,15 @@ theorem m0EvenEight_valuation_q4_prefix_leftFacing
   have hpow3 : 2^(t+3) = 8*2^t := by
     calc
       2^(t+3) = 2^t * 2^3 := Nat.pow_add 2 t 3
-      _ = 8*2^t := by norm_num
+      _ = 8*2^t := by rw [show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
   have hnum : 8*q = (2*u+1)*2^(t+3) := by
     calc
       8*q = 8*((2*u+1)*2^t) := by rw [hfactor]
-      _ = (2*u+1)*(8*2^t) := by ring
+      _ = (2*u+1)*(8*2^t) := by
+        calc
+          8*((2*u+1)*2^t) = (8*(2*u+1))*2^t := by rw [← Nat.mul_assoc]
+          _ = ((2*u+1)*8)*2^t := by rw [Nat.mul_comm 8 (2*u+1)]
+          _ = (2*u+1)*(8*2^t) := by rw [Nat.mul_assoc]
       _ = (2*u+1)*2^(t+3) := by rw [← hpow3]
   have hbin : binDec L (8*q-1) =
       d0pow (t+3) ++ d1 ++ binDec len u := by
@@ -1008,11 +1012,15 @@ private theorem resetPrefixCost_valuation_factor
   have hpow3 : 2^(t+3) = 8*2^t := by
     calc
       2^(t+3) = 2^t * 2^3 := Nat.pow_add 2 t 3
-      _ = 8*2^t := by norm_num
+      _ = 8*2^t := by rw [show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
   have hnum : 8*q = (2*u+1)*2^(t+3) := by
     calc
       8*q = 8*((2*u+1)*2^t) := by rw [hfactor]
-      _ = (2*u+1)*(8*2^t) := by ring
+      _ = (2*u+1)*(8*2^t) := by
+        calc
+          8*((2*u+1)*2^t) = (8*(2*u+1))*2^t := by rw [← Nat.mul_assoc]
+          _ = ((2*u+1)*8)*2^t := by rw [Nat.mul_comm 8 (2*u+1)]
+          _ = (2*u+1)*(8*2^t) := by rw [Nat.mul_assoc]
       _ = (2*u+1)*2^(t+3) := by rw [← hpow3]
   have hv2 : v2 (8*q) = t+3 := by
     rw [hnum]
