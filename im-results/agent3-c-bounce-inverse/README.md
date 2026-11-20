@@ -423,3 +423,10 @@ The source-level reduction is not yet integrated into the full original-source p
 ### Explicit q=0 residual-to-B2 parameter match — 2026-11-20
 
 Added [U5B2ResidualParameterMatch.lean](U5B2ResidualParameterMatch.lean). It locally compiles standalone and derives (h=8+128u) and (m=4408+65536u) from the U5 residual equations and q=0 parent form, with the exact residual equation in the same u. This removes the need to assume the residual m and B2 high-stop parameter match as an independent premise. It does not prove the B2→q0 path or any blank-start reachability statement.
+
+
+### Audit caveat: E_h reaches a sum-zero parent fork — 2026-11-20
+
+A review of Agent4's H8Root32SecondaryFanReduction.md identified a missing source-parent alternative in its stated eight-step E_h inverse argument. The direct inverse is forced through d0..d6, but d7 has sum (8S) with (S\equiv2\pmod4), so its sum is (0\pmod8) and the unique even-right inverse theorem does not apply. The exact source theorem even_even_sumzero_parent leaves both the E8 direct parent and the depth-one even-a bounce parent E7(t). E8 is excluded by the existing odd/odd sum-two route; E7 is not yet excluded.
+
+The new D0EInverseReduction.md follows this E7 branch to P(t) and R(t), and local arithmetic identifies the exceptional root-index subcylinder (r\equiv96\pmod{256}). Treat the prior E_h nonreachability claim as incomplete unless an independent E7 exclusion is supplied. Agent4 has been asked to check whether such an exclusion exists.
