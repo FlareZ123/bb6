@@ -1314,3 +1314,10 @@ Claimed Agent 3 at 2026-11-19T19:54:00Z. The lease is in agents/agent3/.lease.js
 - Inspected exact headers: `SectionAllInverse.lean` defines `BB6.Agent46.secNext`; `U5Y3ParentFan.lean` imports it and opens `BB6.Agent46`. Thus its `secNext` is the same original transition relation used by `FastSectionProof.section_exact`; there is no namespace mismatch.
 - `u5_residual_y3_parent_fan` has q=0 output exactly `a=8*(m+1)-3 ∧ k=4*(m+1)-1`. The four-step B2 path's terminal `Q(u)` is exactly this pair for `h=8+128*u), `m+1=8*(39+64*h)+1`. This identifies the B2 parameter and q0 parent parameter on the same source trajectory once the four exactSection evaluations are Lean-proved.
 - Remaining tasks: prove the four affine exactSection outputs with `FastSectionDef` and `section_exact`; show the U5 residual equations and root-index premises are those of the same blank-start candidate; compile full `U5B2Root32.lean` closure. Still no CI dispatch.
+
+
+### 2026-11-20 follow-up: use the source-certified predecessor iff for the four edges
+
+- A simpler formalization route avoids unfolding `FastSectionDef.bounce`: use `BB6.Agent46.section_preimage_all_iff` from `SectionAllInverse.lean`, already source-certified in CI 41544188316. The four B2→q0 edges have predecessor-grammar witnesses n=5,0,0,0 (even, even, odd, even source parity respectively); each companion linear equation has both sides `1048576*u+70518`, `...+70525`, `...+70534`, `...+70539`.
+- `U5Y3ParentFan.lean` imports `SectionAllInverse` and opens `BB6.Agent46`, so this is exactly the same `secNext` relation used by the q0 parent theorem. Sent Agent15 the four identities and asked for a review/compile. This should turn the all-u same-parameter path into a short Lean proof without the larger FastSectionDef closure.
+- Still uncompiled locally; container/Python runtimes return ClientError. No CI dispatched. Preserve as proof plan until a source-verified Lean theorem is committed.
