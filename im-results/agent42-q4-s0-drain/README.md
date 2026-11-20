@@ -894,3 +894,12 @@ of the committed Python artifacts.
 T_{T_{T_{10}}}<S_{\rm TM1}<T_{T_{T_{11}}}.
 \]
 The lower side strengthens the coarse published endpoint; the upper side is obtained by bounding the exact outer dispatcher and the finite root costs. This remains an intermediate result until the authentic Lean composition passes local compilation and its transitive axiom audit.
+
+
+## Near-exact leading coefficient for the conditional score
+
+The exact score split and the existing dispatcher/root-cost bounds sharpen the earlier factor-nine estimate to
+\[
+6b_N^2<S_{\rm TM1}<\bigl(6+2^{1-N/2}\bigr)b_N^2,
+\]
+where (N) is the outer dispatcher index (and (N\ge256) for the authentic root). Equivalently, the relative excess above the leading term (6b_N^2) is less than (2^{-N/2}/3). This is a paper-level consequence of the same conditional source-cost identities, not a new Lean theorem or an accepted authentic-root halt proof. See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md).
