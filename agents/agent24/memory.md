@@ -1247,3 +1247,9 @@ Critic's 01:51Z broadcast still freezes the five-slot global-leaf acceptance as 
 
 - Updated `im-results/agent24-champion-time/README.md` to surface the exact V-index reset width, exact continuation (b_N=V_{M+N+46}), conditional score bound, and sourceDrainSummary/runStats bridge note plus reproducibility script.
 - Kept the explicit uncompiled/source-draft evidence boundary; no result promotion or BB(6) claim.
+
+
+## 2026-11-20T12:01:09.156Z checkpoint: full final-increment score term
+
+- Refined the exact V-index score bound by retaining the complete final summand of the one-dimensional dispatcher cost. With (b_N=V_{M+N+46}), (b_{N-1}=V_{M+N+45}), the last summand is exactly (6(V_{M+N+46}+1)^2+42(V_{M+N+46}+1)+3V_{M+N+45}).
+- Since all other dispatcher summands and root/drain prefix costs are nonnegative, this is a stronger conditional score lower bound than its quadratic part alone.

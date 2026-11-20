@@ -166,19 +166,28 @@ right counter is exactly
 \[
 b_N=V_{M+N+46}.
 \]
-The final dispatcher increment alone contributes
+In the exact one-dimensional dispatcher cost formula, the final summand
+\(j=N-1\) has coefficient \(12(N-j)-9=3\). Since
+\(b_N=V_{M+N+46}\) and \(b_{N-1}=V_{M+N+45}\), that entire summand is
 \[
-6\cdot4^{b_{N-1}}
-=6(b_N+1)^2
-=6(V_{M+N+46}+1)^2,
+6\cdot4^{b_{N-1}}+42\cdot2^{b_{N-1}}+3b_{N-1}
+=
+6(V_{M+N+46}+1)^2
++42(V_{M+N+46}+1)
++3V_{M+N+45}.
 \]
-and therefore the sharper conditional score bound is
+All other dispatcher summands and the root/drain prefix costs are
+nonnegative. Therefore the stronger conditional score bound is
 \[
-\boxed{S\ge6(V_{M+N+46}+1)^2,\qquad
-N=(2^{78}-1)2^A-3.}
+\boxed{
+S\ge
+6(V_{M+N+46}+1)^2
++42(V_{M+N+46}+1)
++3V_{M+N+45}.
+}
 \]
-As a simpler tower corollary, \(V_n\ge T_{n+3}+1\) gives
-\(S\ge6(T_{M+N+49}+2)^2\). The exact V-index statement is stronger.
+In particular, the quadratic term alone gives the simpler bound
+\(S\ge6(V_{M+N+46}+1)^2\).
 
 This exact V-index expression sharpens the earlier \(A_{\min}\) bound by
 retaining every marker offset. It is still conditional on the uncompiled
