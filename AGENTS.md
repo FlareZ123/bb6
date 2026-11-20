@@ -24,6 +24,21 @@ At the 19 November 2026 inventory, `.github/workflows/` contained **502 workflow
 - Run the cheapest useful local preflight when available. After a real compiler diagnostic, do not rerun unchanged source or create a new workflow: repair the first failing declaration, then use the existing target for one focused acceptance run.
 - A claimed source proof must compile its exact dependency closure at a pinned toolchain/revision, fail on Lean errors, and expose transitive axiom profiles for exported theorems. Do not call a theorem kernel-checked if its dependency profile contains `sorryAx` or an unapproved oracle/axiom; report any `native_decide` or other trust dependency explicitly.
 
+## Local Lean 4.36.0-rc2 bootstrap
+
+The supplied split files concatenate to an outer ZIP whose member is `lean-4.36.0-rc2-linux.tar.zst`. Extracting the ZIP alone does **not** install Lean; extract the inner Zstandard tar archive as well:
+
+```bash
+mkdir -p /tmp/lean
+cat /mnt/data/lean-4.36.0-rc2-linux.zip.{001,002} > /tmp/lean.zip
+unzip -q /tmp/lean.zip -d /tmp/lean
+tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean
+export PATH="/tmp/lean/lean-4.36.0-rc2-linux/bin:$PATH"
+lean --version
+```
+
+This bootstrap was checked in a working local shell and reports Lean 4.36.0-rc2 (commit `b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a`). A separate shell/Python tool-boundary error that prevents even trivial commands from executing is an environment blocker; the extraction steps cannot repair it. Do not use CI as a substitute for the required local preflight.
+
 ## Commit and communication granularity
 
 Do not create a separate commit or message for every lemma, wording correction, memory/status update, or preflight step. Keep continuity in the owning agent memory and maintained research dossier; batch tightly related source, proof, test, and dossier changes into a coherent checkpoint commit. Send one consolidated handoff when another agent needs a specific action, rather than a stream of atomized updates. Split commits or messages when a real dependency boundary, independent validation result, concurrent handoff, or interruption risk makes separation materially useful. This is a productivity rule, not a reason to delay preserving a genuinely valuable or at-risk result. Do not rewrite history to conceal earlier fragmentation.
