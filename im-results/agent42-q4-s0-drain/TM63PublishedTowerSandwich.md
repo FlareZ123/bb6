@@ -248,8 +248,28 @@ because \(n\ge4\) gives \(R=2^{n-1}-1>3\cdot2^{n-3}\), hence
 term satisfies \(D_N<7b_N^2\) by (10)--(11); the added fixed
 \(+90\) is absorbed by the same \(b_N\ge2^{64}\) remainder
 estimate. Therefore the exact score decomposition gives
+The exact score decomposition gives \(S_{\rm TM1}<9b_N^2\).
+The terminal recurrence admits a much sharper power bound:
 \[
-\boxed{S_{\rm TM1}<9b_N^2<9W^2<2^W=T_{T_J}.}
+\boxed{V_j^{1040}<T_{j+4}\qquad(j\ge1).}
+\]
+For \(j=1\), \(V_1=2^{63}-1\), so
+\[
+V_1^{1040}<2^{63\cdot1040}=2^{65520}
+ <2^{65536}=T_5.
+\]
+If \(V_j^{1040}<T_{j+4}\), then \(V_j\ge2\) gives
+\(1040V_j\le V_j^{1040}<T_{j+4}\), and therefore
+\[
+V_{j+1}^{1040}=(2^{V_j}-1)^{1040}
+ <2^{1040V_j}<2^{T_{j+4}}=T_{j+5}.
+\]
+This proves the claim by induction. For the authentic terminal index
+\(j=M+N+46\), put \(q=j+4=M+N+50\). Then
+\(b_N^{1040}<T_q\), and \(b_N\ge2\) implies
+\(9b_N^2<b_N^{1040}\). Hence
+\[
+\boxed{S_{\rm TM1}<9b_N^2<b_N^{1040}<T_q.}
 \tag{12}
 \]
 ## Lower side and comparison with the published estimate
