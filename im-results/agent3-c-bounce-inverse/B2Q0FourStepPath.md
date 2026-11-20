@@ -162,3 +162,15 @@ B_0(u)\to S_1(u)\to S_2(u)\to S_3(u)\to Q(u)\to T(u),
 \]
 
 with predecessor-grammar depth witnesses \((5,0,0,0,0)\). The first four edges are documented above; the fifth uses the odd-a/y=3 exceptional branch. This gives a direct B2-target-to-high-stop-target path, not merely a path to the q=0 parent. The five edge claims still await a Lean wrapper applying the existing source-certified iff; the arithmetic witnesses are explicit.
+
+
+## Important remaining parameter identification
+
+The five-edge path fixes the high-stop target parameter to
+
+\[
+m_{B2}=4408+65536u,
+\qquad T(u)=(16m_{B2}+10,3).
+\]
+
+The separate arithmetic theorem `u5_residual_nonempty(w)` constructs some residual witness \((s,m_{res})\) satisfying hs/hm for each w, but its existence statement alone does not establish \(m_{res}=m_{B2}\). The q=0 residual parent theorem must be applied to the same high-stop target, so this equality (or a theorem showing the residual witness is exactly the parameter of the reached high-stop target) remains an essential source-link obligation. Do not infer it merely from the fact that both parameter families exist.
