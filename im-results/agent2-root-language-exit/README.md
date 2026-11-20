@@ -8,7 +8,7 @@ The exact machine `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---` has two independen
 `A(3^108*k + C, [])` halts, where
 `C=1975700577069254261393123959451562008800234946348086`.
 
-The corresponding 108-step E/B word is recorded in the [resource note](../../resources/2026-11-20-cryptid-D-halting-cylinder.md). This is a proved halting target, not a proof that the orbit from `A(9, [])` reaches it. The wiki reports 2,728,570 simulated A-states with a closest 21/108 match and estimates a halting time around `10^10^38.1`; those are empirical/heuristic only. The repository's `DRegular` seed `L(9,0,0)` is intended to correspond to `A(9, [])`, but an exact original-source bridge, including the branch labels and suffix updates, is still required. Do not interpret a finite reentry chain as evidence of nonhalting.
+The corresponding 108-step E/B word is recorded in the [resource note](../../resources/2026-11-20-cryptid-D-halting-cylinder.md). This is a proved halting target, not a proof that the orbit from `A(9, [])` reaches it. The wiki reports 2,728,570 simulated A-states with a closest 21/108 match and estimates a halting time around `10^10^38.1`; those are empirical/heuristic only. The initial configuration correspondence is already established by the source encoding: `DRegularSource.sourceSection (9,0,0) = init (List.replicate 7 true)`, and `init` supplies the two leading unary bits, giving the same nine-one F-state section as `A(9,[])` after symbol/state encoding. The remaining bridge is transition-level: identify how each repository DRegular/source-reentry segment updates the arbitrary suffix `r` and matches the external E/B/A macro. Do not interpret a finite reentry chain as evidence of nonhalting.
 
 ## Mathematical object and exact statement
 
