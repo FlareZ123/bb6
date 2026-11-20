@@ -391,11 +391,11 @@ The source workflow now includes this module and its transducer dependency. This
 
 ### Ternary drain offset identities
 
-`DrainDigitOffsetStats.lean` contains a mutual induction proof draft for the two exact identities, valid whenever `q+1<3^n`:
+`DrainDigitOffsetStats.lean` contains a mutual induction proof draft for the two exact output/count identities, valid on the inclusive range `q+1≤3^n`:
 
-- the output integer and digit counts `(output,n₁,n₂)` of `runStats n (q+1) B` equal those of `runStats n q A`;
-- the output integer and digit counts of `runStats n (q+1) A` equal those of `runStats n q C`.
+- `(output,n₁,n₂)(runStats n (q+1) B) = (output,n₁,n₂)(runStats n q A)`;
+- `(output,n₁,n₂)(runStats n (q+1) A) = (output,n₁,n₂)(runStats n q C)`.
 
-A companion mutual induction now proves that the exact terminal states also agree under this strict bound, and hence so do the full `DrainStats` records. The overflow case `q+1=3^n` is excluded and can have a different terminal state; it must be handled as a separate high-digit case. A direct exhaustive check for all `n≤12` found no counterexample. The Lean proof and terminal-state corollaries are included in the manual 4.36.0-rc2 workflow but have not yet been compiled.
+On the strict range `q+1<3^n`, a companion mutual induction proves exact terminal-state equality too, hence equality of the full `DrainStats` records. At the boundary `q+1=3^n`, the output and counts still agree but the terminal states can differ (the file includes the n=1 counterexamples); this is the separate high-digit case that must be tracked. A direct exhaustive check for all `n≤12` found no counterexample. The Lean proof and boundary examples are included in the manual 4.36.0-rc2 workflow but have not yet been compiled.
 
 These identities are a possible interface for updating the next drain's weighted statistics when its input differs by one. The remaining task is to derive, from the four-sector root cocycle, exactly when the next drain input is one of these offsets and which initial transducer state applies. No root-level recurrence is claimed yet.
