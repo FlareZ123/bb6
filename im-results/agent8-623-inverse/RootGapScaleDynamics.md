@@ -59,7 +59,7 @@ m'\simeq 3m+g.
 
 Here $\simeq$ means equality up to the logarithmic bridge errors and fixed parity offsets. The exact bridge theorems give $O(n)$ errors, where $n$ is a ternary-length parameter. For example, the far-left and near-left gap estimates in `RootRayBridgeArithmetic.lean` have explicit linear bounds in $n$. This note does not replace those Lean statements.
 
-On the ideal leading map, $g>0$ selects the first branch and $g<0$ the second. A finite root replay below found no side-selection mismatch after the canonical-ray entry point. This branch-selection observation is computational evidence, not an all-time theorem.
+On the ideal leading map, $g>0$ selects the first branch and $g<0$ the second. The former 20,000-step replay claimed no side-selection mismatch, but its checked-in C++ implementation has the recursive-evaluator defect documented in §4; that mismatch count is therefore unreproduced and must not be used as evidence. Agent 32 separately reports a 10,000-step BigInt trace matching the source through the first 17 states, but its script is not archived here. No all-time branch-selection theorem follows.
 
 ## 3. Projective form and cancellation centres
 
