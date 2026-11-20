@@ -69,3 +69,6 @@ I computed the minimum slack observed in each of the 36 (sector, a mod 3, d mod 
 Counterexample: D(2,73) is right-odd with residues (2,1), slack 69, exceeding the root-trace minimum 65 for that class. Its exact next state is D(74,10), which is left-even with residues (2,1) and slack 61, far below the root-trace minimum 696,153 for that target class. By contrast, the authentic root state D(314,385) has the same source sector/residue class (right-odd, (2,1)) and slack 65, but maps to D(74,950), whose target class is right-even (2,2) with slack 871.
 
 Thus even sector plus mod-3 residues plus a class-specific slack threshold does not encode enough of the root history. The quotient/drain path or a stronger arithmetic invariant is still needed.
+
+
+A larger q=9 residue-dependent slack table (324 classes) also fails. D(2,105) is right-odd with residues (2,6), slack101, above the authentic-root minimum96 for that class, but maps to D(106,10), left-even residues (1,1), slack93, below the target-class minimum309. This shows that simply increasing the residue modulus from 3 to 9 does not repair the finite-table invariant.
