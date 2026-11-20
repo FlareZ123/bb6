@@ -1,0 +1,1 @@
+One last constant tightening: for \(m=\log_2\ell\ge8\), the explicit remainder polynomial is bounded termwise by \(8(1+m)\ell^2\), \((1+m)\ell^2\), and \((1+m)\ell^2\). Hence \(0\le\Delta<10(1+\log_2\ell)\ell^2\), and the normalized linear coefficient differs from 54 by \(<6\times10^{-71}\). Please review this current constant-10 statement alongside the root-prefix bound.
