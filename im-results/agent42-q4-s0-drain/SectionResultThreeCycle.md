@@ -3,7 +3,7 @@
 This note extracts the exact two-variable recurrence hidden inside
 `sectionResult` when the initial marker is zero and the number of
 dispatcher increments is divisible by three. It is an algebraic
-derivation from `agent24-champion-time/CostRecurrence.lean`, not a
+derivation from the definitions in [`CostRecurrence.lean`](../agent24-champion-time/CostRecurrence.lean), not a
 separate compiled Lean theorem.
 
 ## One-step state and cost
@@ -96,7 +96,7 @@ existing `proposedIncrementCost` lemmas.
 
 ## Specialization to the authentic q4Tail terminal route
 
-For the general q4Tail adapter, set
+For the general q4Tail adapter in [`GeneralQ4TailTerminalComposition.lean`](../agent44-tm63-middle/GeneralQ4TailTerminalComposition.lean), set
 
 [
 W=A+L+2,quad
