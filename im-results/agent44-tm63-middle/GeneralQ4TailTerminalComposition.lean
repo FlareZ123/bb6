@@ -16,6 +16,7 @@ and transitive axiom audit.
 namespace BB6Coverage.Agent44GeneralQ4TailTerminal
 
 open BB6Coverage
+open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent38RootQ4TailS0
 open BB6Coverage.Agent42FirstQ4P1Arithmetic
