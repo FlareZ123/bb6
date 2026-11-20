@@ -3265,5 +3265,14 @@
         1
       ]
     }
-  ]
+  ],
+  "window_convention": {
+    "type": "q-indexed diagnostic window, not the S-indexed inductive mass window",
+    "ell_q": "least ell with (3^ell-1)/2 >= q+3",
+    "B_q": "max(34*ell_q+122,36*ell_q+88)",
+    "k_q": "least k with 3^k > B_q",
+    "j_q": "least j with 3^j > B_q^3",
+    "boundary_digit": "k_q+1",
+    "note": "The exact monotone shift theorem applies to the separate S-indexed window from Agent41 MonotoneMassWindow.md. These 262 phases must not be treated as the S-window induction phase set."
+  }
 }
