@@ -70,6 +70,47 @@ The exact suffix updates and endpoint parameters remain those in Agent 4's trace
 D_1=35925965576050291197954676646168812866911688985763244505.
 ]
 
+## Root-shadow specialization: exact affine K parameters
+
+Agent 2's blank-root shadow starts from
+\[
+\operatorname{shiftNat}(\texttt{cylinderStart},3^7p),
+\qquad p\equiv1\pmod3.
+\]
+The already-proved DRegularShift.run_shift theorem gives, after \(j\le7\)
+steps,
+\[
+s_j(p)=\operatorname{shiftNat}
+\left(s_j(0),3^{7-j}8^j p\right).
+\]
+For the seven macro inputs \(i=1,\ldots,7\), take \(j=i-1\).
+The added unary amount is divisible by three, so the branch and
+canonical \((q,b)\) suffix are unchanged. The branch quotient in the
+K formula is therefore
+\[
+k_i(p)=k_i(0)+3^{7-i}8^{i-1}p.
+\]
+The exact base quotients and coefficients are:
+
+| Call | Branch | \(m_i\) | \((q,b)\) | \(k_i(0)\) | coefficient of \(p\) |
+|---:|:---:|---:|:---:|---:|---:|
+| 1 | E | 13 | (0,0) | 658566859023084753797707986483854002933411648782694 | 729 |
+| 2 | E | 21 | (1,5) | 1756178290728226010127221297290277341155764396753851 | 1944 |
+| 3 | B | 5 | (3,2) | 4683142108608602693672590126107406243082038391343605 | 5184 |
+| 4 | B | 5 | (2,2) | 12488378956289607183126907002953083314885435710249616 | 13824 |
+| 5 | E | 21 | (1,2) | 33302343883438952488338418674541555506361161893998978 | 36864 |
+| 6 | B | 5 | (2,0) | 88806250355837206635569116465444148016963098383997277 | 98304 |
+| 7 | E | 17 | (1,0) | 236816667615565884361517643907851061378568262357326074 | 262144 |
+
+This isolates the finite-trace obligation: prove the seven fixed-suffix
+intermediate configurations with \(K=4k_i+1\) for arbitrary \(k_i\),
+then instantiate \(k_i=k_i(p)\). The first seven branches are invariant
+because their lift increments are multiples of three. At the eighth
+input, the lift increment is \(8^7p\), which is \(2\bmod3\) when
+\(p\equiv1\bmod3\); the external E branch therefore changes to the
+root's A branch. The seven-step shadow cannot be extended to the
+external call-eight path.
+
 ## Exact scope boundary
 
 - **Branch labels:** external E/B/A are the (a\bmod3=1,2,0) branches respectively. The first ten calls use E and B only.
