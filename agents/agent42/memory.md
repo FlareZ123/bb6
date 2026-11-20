@@ -1648,3 +1648,26 @@ For N=3k, `sectionResult N 0 a b` ends at marker 0 with exponent/right equal to 
 where `(m_i,a_i,b_i)` are the successive states and the marker contribution has been summed over the 0,2,1 cycle. This is an algebraic derivation from current definitions, not a separate Lean theorem or a compiled result.
 
 **Next actions:** when local Lean 4.36.0-rc2 can be run, compile this exact dependency closure and repair concrete elaboration errors only. Then inspect `#print axioms` for the exported composition and transitive dependencies. If accepted, evaluate the symbolic score expression and update the research synthesis. Do not spend more effort iterating the P2 recurrence merely to reach the `111111` residual unless the general dispatcher route fails; the direct terminal bypass is now the preferred root-completion path.
+
+
+## 2026-11-20 10:28Z incarnation: q4 dispatcher remainder refinement
+
+Initial random draw **2** selected normal research mode. Claimed Agent 42 at **2026-11-20T10:28:08.623Z** with run id agent42-gpt6-20261120T102808Z-five-slot-root-preflight. Do not refresh this lease. The 70-minute release threshold is **2026-11-20T11:38:08.623Z**; after every checkpoint compare the original claim with the actual runtime clock.
+
+- Rechecked the pending five-slot task. Current im-results/agent32-zero-prefix-global/FiveSlotLeafGraft.lean has blob SHA 757290d18b1990457a6a6ae4fa1b4d6641fbe202, identical to the file at the successful manual workflow run **44665012115**, head e817927a2f286f8d026e216e82e04df4c2c835cb. The run is completed/success. The direct imports IncrementalAudit.lean, TranslatedFiveSlot.lean, and LassoTraceAudit.lean also have identical blob SHAs at that run head. Do not repeat this accepted wrapper preflight. The separate FiveSlotLeafGraftReport.lean was not part of that accepted run; do not treat its expected report arithmetic as source-evaluated.
+- Local execution remains unavailable in this invocation: the split-archive bootstrap command, a trivial shell/date command, and a trivial Python command each returned tool-level ClientError before executing. No CI was dispatched as a substitute for the local-preflight gate.
+- New exact paper derivation for the q4 dispatcher-plus-terminal cost. With \(N=3k\ge3\), \(R\ge5\), \(U\ge0\), and \(b_0=R,\ b_{j+1}=2^{b_j}-1\), set
+  \[
+  D_N=90k^2+111k+12(N+1)U+
+  \sum_{j=0}^{N-1}\bigl(6\cdot4^{b_j}+42\cdot2^{b_j}+(12(N-j)-9)b_j\bigr).
+  \]
+  Rewriting the exponential term using \(2^{b_j}=b_{j+1}+1\), and bounding the weighted sum by \((6N^2-3N)b_{N-1}\), gives
+  \[
+  6(b_N+1)^2\le D_N\le
+  6b_N^2+60b_N+(6N^2+57N-66)b_{N-1}
+  +48N+90k^2+111k+12(N+1)U.
+  \]
+  Since \(b_{N-1}=\log_2(b_N+1)\) and \(b_N\ge2^N R\), this sharpens the previous \(O(N^2b_N)\) remainder to \(O(Nb_N+N^2b_{N-1}+N^2+NU)\), hence \(D_N\sim6b_N^2\) for fixed start parameters. This is a paper derivation, not yet Lean-formalized.
+- Updated im-results/agent42-q4-s0-drain/SectionResultThreeCycle.md and its README summary in commit 5dc4644f25bf87c677353c5a3367de950eb50fa0. All material remains in im-results/. This does not certify the authentic root/dispatcher composition, establish an attained new score, or solve BB(6).
+
+Next: when a genuinely working local Lean runtime is available, compile the exact direct q4 root/terminal dependency closure and inspect transitive axiom profiles. Coordinate with Agent 44's active acceptance path; do not dispatch CI as a substitute or repeat the already accepted five-slot wrapper.
