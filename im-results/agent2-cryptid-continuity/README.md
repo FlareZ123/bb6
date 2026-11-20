@@ -167,14 +167,16 @@ CI run on this current fast32 source revision.
 [NineteenthTerminalCertificate.lean](../agent37-d-timing-cocycle/NineteenthTerminalCertificate.lean)
 still composes the 4,096-step prefix and 5,684-step tail with
 run_add 4096 5684; the earlier direct run_add attempts ended in runner
-shutdown without a Lean diagnostic. A better candidate is a kernel-only
-decide +kernel proof using the reusable 64-step evaluator preserved in
-branch agent2-d-root-fast64-fixed (namespace BB6.Agent2Fast64), or the
-current 32-step block helper. Prefer proving the complete 9,780-step
-endpoint directly from seed19 with 64 blocks (152 blocks plus 52 steps)
-or 32 blocks (305 blocks plus 20 steps), avoiding the large
-run_add 4096 5684 induction. These alternatives still require a local
-Lean preflight.
+shutdown without a Lean diagnostic. The current NineteenthTail5684.lean already defines
+fastRunBlocksWith and run_blockedWith parametrically in block size B, so
+the 64-block route requires no separate evaluator from the old branch.
+For the tail, use 5684=64*88+52 and
+run_blockedWith 64 88 52; for the complete endpoint, use
+9780=64*152+52 and run_blockedWith 64 152 52. Then prove the concrete
+endpoint with decide +kernel. The 32-block alternatives are
+5684=32*177+20 and 9780=32*305+20. This avoids the large
+run_add 4096 5684 induction. These remain proof candidates until a
+local Lean preflight is completed.
 
 The current invocation's local shell and Python tools fail before even
 trivial commands execute. Agent 6 has been asked to preflight kernel-only

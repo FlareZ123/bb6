@@ -876,3 +876,76 @@ The arithmetic first-exit table has its exceptional boundary at
 a mod 3=1, q>0, b=1. The source-return macros attach to that boundary.
 This is a research route, not yet a theorem linking the copied arithmetic
 table to DRegular.next or proving the authentic root orbit avoids exits.
+
+
+## 20 November 2026 — 70-minute release checkpoint
+
+The Agent 2 lease was claimed at 2026-11-20T09:58:01.220Z and reached
+the 70-minute release threshold during this checkpoint.
+
+### Durable findings
+
+- The source-certified blank-root D chain still ends at episode 18.
+  Episodes 19–38 are prepared source continuations but are not CI-verified.
+  The manual agent37-root-exceptions34-38 workflow has no runs.
+- The actual Seed39Probe seed is L(64*t38+49,6,0), with t38 mod27=13
+  in the prepared 37–38 module. Seed39Probe searches at most 1,024,000
+  regular transitions, but its soundness theorem requires the unproved
+  bound firstExceptionFromSeed39.1 < 1024000. Its reported #eval output
+  is not stored as a certificate. The reported L(9*t41+7,7,1),
+  t41 mod81=76 is therefore a model-only candidate. Do not confuse this
+  actual seed39 with the separate DRegularFirstExit toy seed L(39,0,0).
+- P2K4SourceReentry.close_one_regular_reentry and its source-prefix
+  composition were kernel-audited in CI run 43391093227 with axioms
+  [propext, Quot.sound]. It closes k=27t+22, q=3u+1; the episode-41
+  specialization is conditional on confirming the Seed39Probe candidate.
+  Its physical regularSection L(4096t+3461,4,0) is the same-parameter
+  DRegularSource.sourceSection; there is no +2 offset.
+- P2K7Source handles k=27t+25 for all q and compiled in successful CI
+  run 42519761689. Its regularSection wrapper remains pending; endpoint
+  formulas are in im-results/agent2-packet-shift/README.md.
+- The old EFirstAPacket q-1 successor defect is fixed by commit e7009d5;
+  run 43394857303 printed [propext, Quot.sound] for exceptional_EA_packet
+  before the larger root audit was externally shut down. Do not reopen
+  the pre-fix failure as a current blocker.
+- The episode-41-derived seed L(4096t+3461,4,0), t=3s+2, has
+  a=4+3p with p=4096s+3883. The arithmetic L-step table predicts
+  next(4,4,0)=some(5,1,13), hence candidate successor
+  L(32768s+31069,1,13) and duration 98304s+93241 if the base case is
+  confirmed against DRegular.next. Four small base cases and the
+  three second-step branches are recorded in the broadcast
+  communications/broadcast/20261120T1057Z_agent2-seed42-3adic-transducer.md
+  (commit fd79de2). This is a finite-state 3-adic transducer research
+  direction, not yet a theorem linking the copied arithmetic table to
+  DRegular.next or proving the root orbit avoids exits.
+
+### Episode-19 proof route
+
+The current NineteenthTail5684.lean already has a generic
+fastRunBlocksWith/run_blockedWith evaluator parameterized by block size B.
+The best immediate kernel-safe candidate is to use B=64 directly:
+5684=64*88+52 for the tail, and 9780=64*152+52 for the complete
+seed19 endpoint. The 32-block alternatives are 5684=32*177+20 and
+9780=32*305+20. Use decide +kernel after rewriting with the existing
+run_blockedWith theorem; this avoids copying the old branch evaluator
+and avoids the large run_add 4096 5684 induction. Local preflight is
+mandatory. In this invocation container.exec and python.exec failed
+with ClientError even on trivial commands, so no local Lean preflight
+was possible and no CI was dispatched as a substitute.
+
+### Next actions
+
+1. Restore a working local Lean runtime and preflight the B=64 tail and
+   full-endpoint decide +kernel proofs.
+2. If they pass locally, update stage4a/4b sources and run the existing
+   workflow only; require the axiom audit to show no native_decide or sorryAx.
+3. Verify the prepared episode19–38 source chain and prove the Seed39Probe
+   bound, preserving t41 mod243 rather than only mod81.
+4. Check the four small DRegular.next base cases and, ideally, prove
+   DRegularFirstExit.step agrees with the actual DRegular.next function.
+   Then formalize the finite-state 3-adic transducer.
+5. Add the P2K7 regularSection wrapper after local preflight.
+
+No pure academically publishable result was added to results/. All
+intermediate work remains in im-results; the updated research maps and
+the seed42 broadcast are on main.

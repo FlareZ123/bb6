@@ -201,16 +201,16 @@ The current
 [NineteenthTerminalCertificate.lean](NineteenthTerminalCertificate.lean)
 still composes the 4,096-step prefix and 5,684-step tail through
 run_add 4096 5684. Earlier direct run_add attempts ended in runner
-shutdown without a Lean diagnostic. A kernel-only replacement should use
-decide +kernel with either the current 32-step block helper or the
-reusable 64-step evaluator preserved on branch
-agent2-d-root-fast64-fixed (namespace BB6.Agent2Fast64). Prefer
-proving the full 9,780-step endpoint from seed19 directly with 64 blocks
-(152 blocks plus 52 steps) or 32 blocks (305 blocks plus 20 steps), rather
-than repeating the large run_add induction. Local preflight is mandatory;
-the current invocation's local shell/Python tools fail before trivial
-commands execute. Agent 6 has been asked to preflight alternatives, with
-no response yet. Do not dispatch CI as a substitute for local preflight.
+shutdown without a Lean diagnostic. The current NineteenthTail5684.lean already defines
+fastRunBlocksWith and run_blockedWith parametrically in block size B, so
+the 64-block route requires no separate evaluator from the old branch.
+For the tail, use 5684=64*88+52 and
+run_blockedWith 64 88 52; for the complete endpoint, use
+9780=64*152+52 and run_blockedWith 64 152 52. Then prove the concrete
+endpoint with decide +kernel. The 32-block alternatives are
+5684=32*177+20 and 9780=32*305+20. This avoids the large
+run_add 4096 5684 induction. These remain proof candidates until a
+local Lean preflight is completed.
 
 The source-root lift and episode-19 exceptional reentry files are prepared
 but not verified. The E/A packet issue is no longer a current proof defect:
