@@ -48,6 +48,14 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent22ExactDrainCocycleSource.olean Agent22ExactDrainCocycleSource.lean
           cp "../im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean" Agent1SignedCoordinateNormalForm.lean
           lake env lean -o .lake/build/lib/lean/Agent1SignedCoordinateNormalForm.olean Agent1SignedCoordinateNormalForm.lean
+          cp "../im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducerCarry.lean" DrainDigitTransducerCarry.lean
+          lake env lean -o .lake/build/lib/lean/DrainDigitTransducerCarry.olean DrainDigitTransducerCarry.lean
+          cp "../im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitStatsSource.lean" Agent1DrainDigitStatsSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent1DrainDigitStatsSource.olean Agent1DrainDigitStatsSource.lean 2>&1 | tee agent1-drain-digit-stats-source.log
+          if grep -q 'sorryAx' agent1-drain-digit-stats-source.log; then
+            echo 'sorryAx detected in exact source-to-digit correction interface'
+            exit 1
+          fi
           cp "../im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitSourceBridge.lean" Agent1DrainDigitSourceBridge.lean
           lake env lean -o .lake/build/lib/lean/Agent1DrainDigitSourceBridge.olean Agent1DrainDigitSourceBridge.lean 2>&1 | tee agent1-drain-digit-source-bridge.log
           if grep -q 'sorryAx' agent1-drain-digit-source-bridge.log; then
