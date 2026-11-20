@@ -16,12 +16,12 @@ These are conditional prepared-section/source compositions. They do not establis
 2. The Agent2 manual `agent2-seed31-first-stop-certificate.yml` workflow consumes that artifact, audits the Seed31 first stop and root reentries through seed33, and uploads `seed31-first-stop-certificate` containing `BlankThirtyThirdRejoin.olean` and `Exception33Q5Rejoin.olean`.
 3. The Agent37 manual `agent37-root-exceptions34-38.yml` workflow consumes both run IDs (`source_run_id` for stage5 and `certificate_run_id` for the Agent2 certificate) and compiles the two Agent37 continuation modules.
 
-The Agent2 certificate workflow's timeout was raised to 45 minutes to accommodate the additional 9,276-step certificate. The Agent37 workflow has a 60-minute timeout. Both workflows are manual-only. The Agent25 E3 source-bridge job is being rerun against current `main` after repairing its earlier proof-engineering failures; until that audit succeeds, the downstream certificate artifact cannot be treated as verified.
+The Agent2 certificate workflow's timeout was raised to 45 minutes to accommodate the additional 9,276-step certificate. The Agent37 workflow has a 60-minute timeout. Both workflows are manual-only. The Agent25 E3 source-bridge job now succeeds on current main (run 44740066064, pinned stage-1 source run 43402524711). The q=5 prepared-section theorem is source-certified, but the downstream blank-root certificate artifact is still unavailable because the stage-5 d-root-seed31-audit artifact has not yet been produced.
 
 ## Exact status
 
 - q=1,b=1 all-residue prepared-section return: source CI success, run 43420030637.
-- Exception33 q=5 prepared-section return: repaired draft, fresh source CI rerun pending.
+- Exception33 q=5 prepared-section return: CI-certified in [run 44740066064](https://github.com/FlareZ123/bb6/actions/runs/44740066064); all five declarations (eall_source_return, eall_to_etriple_input, etriple_to_acode_input, acode_unary_endpoint, exception33_q5_rejoin) have axioms [propext, Quot.sound], with no sorryAx or native_decide. Artifact agent25-e3-source-bridge is ID 14628939997.
 - Agent2 seed33→seed34 root composition: submitted, not yet kernel-audited.
 - Agent37 seed34→seed39 continuation: submitted, not yet kernel-audited.
 - Stage5 authentic blank-root episode17–30 artifact: still required.
