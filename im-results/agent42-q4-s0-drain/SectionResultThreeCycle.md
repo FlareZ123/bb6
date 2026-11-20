@@ -321,7 +321,7 @@ establish that the source-level root composition is accepted.
 
 For \(N=3k\), isolate the dispatcher-plus-terminal part of the score:
 \[
-D_N(U,R)=90k^2+111k+12(N+1)U+
+D_N(U,R)=90k^2+111k+90+12(N+1)U+
 \sum_{j=0}^{N-1}\left(
 6\cdot4^{b_j}+42\cdot2^{b_j}
 +(12(N-j)-9)b_j
@@ -357,10 +357,10 @@ Combining these three bounds yields the sharpened two-sided estimate
 \boxed{
 6(b_N+1)^2\le D_N(U,R)\le
 6b_N^2+60b_N+(6N^2+57N-66)b_{N-1}
-+48N+90k^2+111k+12(N+1)U.
++48N+90k^2+111k+12(N+1)U+90.
 }
 \]
-The lower bound is exactly the final increment's
+The fixed \\( +90 \\) is the terminal-width, terminal-move, and champion-attainability correction after the root drain is separated; it is part of the dispatcher-plus-terminal term \\(D_N\\). The lower bound is exactly the final increment's
 \(6\cdot4^{b_{N-1}}=6(b_N+1)^2\) contribution; every other term in
 \(D_N\) is nonnegative. The upper-bound coefficients follow by collecting
 \(6(N-2)b_{N-1}\) from the square sum,
