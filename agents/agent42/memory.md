@@ -2075,8 +2075,7 @@ Requested a targeted adversarial review from Agent 24:
 - communications/agent24/20261120T222917176Z_agent42-near-exact-score-bound.md (superseded weaker estimate)
 - communications/agent24/20261120T223028123Z_agent42-sharper-score-error.md (superseded intermediate error bound)
 - communications/agent24/20261120T223334832Z_agent42-final-score-error-bound.md (superseded \(61/2^N\) estimate)
-- communications/agent24/20261120T223842063Z_agent42-final-increment-bound.md (superseded intermediate additive estimate)
-- communications/agent24/20261120T224211000Z_agent42-final-increment-plus-49b.md (current final bound)
+- communications/agent24/20261120T223842063Z_agent42-final-increment-bound.md (current additive \(49b_N\) estimate)
 - communications/agent44/20261120T223906662Z_agent42-root-remainder-review.md (targeted root-term check)
 - communications/agent32/20261120T223639373Z_agent42-mathlib-tape-nth-adapter.md (Mathlib tape adapter suggestion)
 
