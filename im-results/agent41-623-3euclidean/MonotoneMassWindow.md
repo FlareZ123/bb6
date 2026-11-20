@@ -1,6 +1,6 @@
 # Monotone mass indexing for the #623 moving 3-adic window
 
-**Status:** exact algebraic window-shift lemma derived from the existing four-sector cocycle and source-verified depth/mass bounds. It does not establish the missing middle-digit language closure or prove #623 nonhalting.
+**Status:** exact algebraic window-shift lemma derived from the four-sector cocycle and source-verified depth/mass bounds. The corrected shared buffer is now \(B(\ell)=34\ell+122\), giving both low- and high-end shifts in \(\{0,1\}\). This does not establish the missing middle-digit language closure or prove #623 nonhalting.
 
 ## 1. Exact mass increment
 
@@ -74,40 +74,74 @@ Monotonicity of (	au) now yields the exact depth-shift bound
 ]
 The threshold (Sge20) is automatic after two successful returns from the blank start (D(0,7)), since the source mass theorem gives at least (+7) per return.
 
-## 3. Consequence for the moving ternary window
+## 3. Correction-only buffer and one-digit moving-window shifts
 
-Use the same unified correction/terminal envelope as the carry-transducer dossier:
-[
-B(ell)=max(34ell+140, 36ell+88).
-]
-The first term bounds the affine carry corrections; the second bounds the centered terminal residual. Since (ell_{S'}-ell_Sin{0,1}),
-[
-Ble B'le B+36<3B
-]
-(the uniform lower bound is (Bge140)).
+The earlier envelope
+\[
+B(\ell)=\max(34\ell+140,36\ell+88)
+\]
+is unnecessarily wide. Use the full-drain statistics from "DrainDigitTransducerCarry.lean": \(E=n_2\), \(R=n_1+n_2\), and
+\(D=L-2E\). The source theorem "runStats_weight_bounds" gives
+\(0\le E\le R\le L\), while
+"SignedCoordinateNormalForm.correction_buffer_closed" gives
+\[
+|C|\le34L+122,\qquad |F|\le34L+122.
+\]
+Since \(L\le\ell_S\), both affine corrections are bounded by
+\[
+\boxed{B(\ell_S)=34\ell_S+122.}
+\]
 
-Define (k,j) to be the least integers with
-[
-3^k>B,qquad 3^j>B^3.
-]
-For the next state define (k',j') from (B'). Then
-[
-oxed{k'-kin{0,1},qquad j'-jin{0,1,2,3}.}
-]
-The lower bounds follow from (B'ge B). For the upper bounds,
-(3^{k+1}>3B>B') and
-(3^{j+3}=27cdot3^j>27B^3>B'^3).
+This same buffer also dominates the exact terminal residual. The four
+"TerminalRatio4" bounds give
+\[
+|x'|\le\max(12n+88,12n+62,12n+38,18n+50)
+       =18n+50\le18\ell_S+50
+       <34\ell_S+122.
+\]
+Thus the correction-only buffer suffices both for the carry calculation
+and for the terminal-strip contradiction; the old \(36\ell+88\) term
+was only a loose terminal envelope.
 
-Thus the moving window advances only forward, by at most one low digit and three high digits per root transition. Since (kge5) and (jge3k-2), its interior remains nonempty.
+From Section 2, \(\ell_{S'}-\ell_S\in\{0,1\}\). Hence
+\[
+B\le B'\le B+34.
+\]
+For \(S\ge20\), \(\ell_S\ge4\), because
+\(\tau(3)=13<S+3\). Therefore \(B\ge34\cdot4+122=258\).
+In particular \(5(B+34)\le7B\), so
+\[
+(B')^3\le(B+34)^3
+\le\left(\frac75\right)^3B^3
+=\frac{343}{125}B^3
+<3B^3.
+\]
+Also \(B'\le B+34<3B\).
 
-In the transducer notation, the next state's required middle interval is
-([k'+2,j'-2)). It contains the old output subinterval
-[
-[k+3,j-2),
-]
-because (k'+2le k+3) and (j'-2ge j-2). Therefore **one low-end buffer digit is sufficient for window overlap; no high-end trimming is needed**. The current transducer can simply be run three positions farther at the high end to supply the next window.
+Let \(k,j\) be least with \(3^k>B\) and \(3^j>B^3\), and
+define \(k',j'\) from \(B'\). Monotonicity gives the lower bounds.
+For the upper bounds,
+\[
+3^{k+1}=3\cdot3^k>3B>B',
+\qquad
+3^{j+1}=3\cdot3^j>3B^3>(B')^3.
+\]
+Consequently the corrected source shift bound is
+\[
+\boxed{k'-k\in\{0,1\},\qquad j'-j\in\{0,1\}.}
+\]
+This improves the previous high-end bound \(j'-j\in\{0,1,2,3\}\):
+the next window needs at most one new high digit, not three.
 
-This is a useful reduction of the moving-boundary problem to a finite set of shifts. It does not prove that the output is nonmonochromatic on ([k+3,j-2)), so it does not by itself close the carry-language induction.
+The next required interval \([k'+2,j'-2)\) still contains the old
+output subinterval \([k+3,j-2)\), since \(k'\le k+1\) and \(j'\ge j\).
+The corrected finite diagnostic reports only shifts \((0,0),(0,1),(1,1)\);
+the source bound also permits \((1,0)\), which remains a possible
+transition until excluded by a stronger invariant.
+
+This is an algebraic improvement to the moving-boundary interface. It
+does not prove that the output is nonmonochromatic on the overlap interval
+or that the reset DFA accepts every future authentic root window.
 
 ## 4. Proof status and next obligation
 
