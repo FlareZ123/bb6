@@ -105,6 +105,32 @@ theorem reset_output_step_closed (s : State) (hs : s ∈ resetOutputLabels)
   apply (allowedStates_complete _).2
   exact allowed_step s (seed_subset_allowed s ((resetOutputLabels_are_seed s).1 hs)) x y
 
+
+/-- Apply a finite suffix of raw digit pairs to a paired carry state. -/
+def runWord (s : State) : List (Fin 3 × Fin 3) → State
+  | [] => s
+  | xy :: rest => runWord (step s xy.1 xy.2) rest
+
+/-- The 66-state invariant is closed under every finite suffix after reset. -/
+theorem allowed_runWord_closed (s : State) (h : Allowed s)
+    (word : List (Fin 3 × Fin 3)) : Allowed (runWord s word) := by
+  induction word generalizing s with
+  | nil => exact h
+  | cons xy rest ih =>
+      apply ih
+      exact allowed_step s h xy.1 xy.2
+
+/-- Any finite suffix after one of the 54 reset-output labels stays in the
+66-state paired carry closure. -/
+theorem reset_output_suffix_closed (s : State) (hs : s ∈ resetOutputLabels)
+    (word : List (Fin 3 × Fin 3)) : runWord s word ∈ allowedStates := by
+  apply (allowedStates_complete _).2
+  exact allowed_runWord_closed s
+    (seed_subset_allowed s ((resetOutputLabels_are_seed s).1 hs)) word
+
+#print axioms allowed_runWord_closed
+#print axioms reset_output_suffix_closed
+
 #print axioms allowed_step
 #print axioms reset_output_step_closed
 
