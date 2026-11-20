@@ -70,7 +70,7 @@ C_{\rm root}+D_{\rm root}
 =\frac{15}{4^N}b^2,
 \tag{2}
 \]
-where the final inequality is immediate for \(N\ge256\).
+where the non-strict step uses \(b\ge2^N R\).
 
 Combining (1) and (2) with the exact score split yields
 \[
