@@ -17,7 +17,6 @@ open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 open BB6.Agent49ParitySource
 open BB6.Agent22ExactDrainCocycleSource
 open BB6.Agent41DrainValuationNormalForm
-open DrainState
 
 /-- Split a low-order run of ternary ones, with enough fuel for every Nat input. -/
 def splitLowOnesFuel : Nat → Nat → Nat × Nat
