@@ -49,21 +49,21 @@ Also \(V_1<T_5,\ V_2<T_6,\ V_3<T_7,\ V_4<T_8\). Therefore
 \[
 A_0=18+\sum_{j=0}^6V_j
 \le75+T_5+T_6+T_7+T_8+T_9/2+\sqrt{T_{10}}/2
-<75+\frac92T_9+\frac12\sqrt{T_{10}}
-<\frac34\sqrt{T_{10}}. \tag{3}
+<75+\frac92T_9+\frac12\sqrt{T_{10}}.
 \]
-For the last inequality, \(T_9\) is even and at least 20, and
-\(2^{T_9/2-2}>\frac92T_9+75\).
-
 Set
 \[
-J=2^{3\sqrt{T_{10}}/4+5}.
+E=\frac12\sqrt{T_{10}}+\frac12T_9+T_8+T_7+T_6+T_5+80,
+\qquad J=2^E.
 \]
-The exponent is an integer because \(\sqrt{T_{10}}=2^{T_9/2}\) is
-divisible by four. From \(M=31\cdot2^{A_0}-36\) and (3),
+The exponent \(E\) is an integer because \(T_9\) is even and
+\(\sqrt{T_{10}}=2^{T_9/2}\) is even. Also \(E<T_{10}\), since
+\(T_{10}=2^{T_9}\) dominates the displayed lower-order terms, so
+\(J<T_{11}\). Finally \(A_0+5\le E\), and \(A_0\ge63\), whence
 \[
-M+49<31\cdot2^{3\sqrt{T_{10}}/4}+49
-     <32\cdot2^{3\sqrt{T_{10}}/4}=J. \tag{4}
+M+49=31\cdot2^{A_0}+13
+ <32\cdot2^{A_0}=2^{A_0+5}
+ \le2^E=J. \tag{4}
 \]
 
 Put \(B=V_{M+42}\). By (1),
