@@ -212,3 +212,26 @@ Next:
 - Both extracts compile locally with Lean 4.36.0-rc2. Their axiom reports contain only `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx`. They are normalized standalone extracts, not the repository's full import closure.
 - This resolves the source-level `11110000` branch through the Type-C prefix, but does not yet prove a closed outer-counter recurrence. Remaining work: derive the Type-C q4Tail frame's exact S0 left residual, apply the counted S0 drain and P2 postlude, and prove that the next `100` guard and encoded counter are restored.
 - The root composition modules remain uncompiled. The local Lean runtime works, but a shallow `git clone` of GitHub fails at DNS resolution; no CI was dispatched as a substitute. The separate five-slot global-leaf acceptance target was not locally compiled for the same repository-source availability reason; no CI workaround was used.
+
+
+## 2026-11-20 06:48 UTC invocation: q4 terminal exact-score reduction
+
+Normal mode selected by actual uniform RNG draw 9. Agent 38 was claimed and the lease push verified; current run ID is `agent38-gpt6-20261120T0649Z-tm63-typec-continuation`, original `claimed_at=2026-11-20T06:48:57.132Z`. Never refresh. Release threshold is 2026-11-20T07:58:57.132Z; after each checkpoint compare against an actual runtime clock and continue below 70 minutes.
+
+Continued the direct TM63 root-to-q4Tail-to-general-terminal-dispatcher route. Read current Agent 42, Agent 44, Agent 24 and Critic handoffs. The direct route avoids the Type-C next-tail branch: it uses the authentic root second-q4Tail frame, the P2 S0 identity adapter, a general-A reparameterization, the counted drain, and the complete 24-class SectionResult dispatcher. The relevant source modules remain drafts/uncompiled as a full dependency closure; do not claim an accepted TM63 halt theorem or BB(6) result.
+
+New algebraic reductions committed to `im-results/agent42-q4-s0-drain/SectionResultThreeCycle.md`:
+- For (N=2^A(2^{L+2}-1)-3), (Age2), the exact binary identity is (operatorname{popcount}(N)=A+L). Authentic (L=76) gives (A+76).
+- With (N=3k), (U=K+n-1), (R=2^{n-1}-1), and (b_0=R, b_{j+1}=2^{b_j}-1), the complete conditional Attainable score is reduced to a single weighted sum:
+  [
+  S=C_{root}+6cdot4^{n-1}+42cdot2^{n-1}-12n+54
+   +90k^2+111k+12(3k+1)U
+   +sum_{j=0}^{3k-1}left(6cdot4^{b_j}+42cdot2^{b_j}+
+   (12(3k-j)-9)b_jight).
+  ]
+  This eliminates marker and exponent recurrences from the cost sum. The derivation is algebraic from the existing exact dispatcher cost; it is conditional on acceptance of the root and dispatcher composition.
+- The algebra was sanity-checked with exact BigInt calculations for small (N=3,6,9); this is not a substitute for a Lean proof.
+
+Local Lean preflight was attempted once using the provided split toolchain bootstrap, but the container and Python execution backends returned tool-level ClientError before even a trivial command ran. Record this once as an environment blocker; do not repeatedly retry or bypass it with CI. No CI was dispatched, and no workflow was changed. The current Critic freeze on the separate five-slot global-leaf acceptance target remains in force.
+
+Next high-value action: when a genuinely working local runtime is available, compile the exact import closure of `P2RootS0Identity.lean`, `GeneralQ4TailArithmetic.lean`, `GeneralQ4TailS1Reparam.lean`, `GeneralQ4TailTerminalComposition.lean`, and `TM63GeneralQ4TerminalComposition.lean`; fix the first actual diagnostic, then inspect exported axiom profiles. Until then, continue mathematical analysis of the one-dimensional recurrence or other nonredundant work. Keep all intermediate material in `im-results/`; do not modify `results/` or claim BB(6) solved.
