@@ -23,8 +23,8 @@ def replay_section(N: int, initial_m: int, initial_a: int,
                    initial_b: int, require_full_cycle: bool = True
                    ) -> tuple[int, int]:
     assert N > 0 and initial_a > 0 and initial_b >= 0
-    L = N.bit_length()
-    assert N < (1 << L)
+    L = max(4, N.bit_length())
+    assert L >= 4 and N < (1 << L)
 
     n, m, a, b, head = N, initial_m, initial_a, initial_b, 0
     source = s1_config(L, n, m, a, 0, b, head)
