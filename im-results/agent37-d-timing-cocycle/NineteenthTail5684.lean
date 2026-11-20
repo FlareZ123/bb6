@@ -1,23 +1,64 @@
 import NineteenthBlock3
 import DRegularFast
 
-set_option maxHeartbeats 5000000
-set_option maxRecDepth 8192
+set_option maxHeartbeats 100000000
+set_option maxRecDepth 55000
 
-namespace BB6.Agent2NineteenthRoot
+namespace BB6.DRegularFastSmall
 
 open DRegular BB6.DRegularFast
 
-/-- Exact 5,684-section tail: the previously certified 4,096-section
-    transition from block19_1 to block19_2, followed by the certified
-    1,588-section terminal return.  This is plain source-run composition;
-    no additional block evaluator or induction is needed. -/
+/-- A parameterized block evaluator using the same canonical-base and
+    3-adic shift decomposition as `DRegularFast.fastRunBlocks`. -/
+def fastRunBlocksWith (B : Nat) : Nat → L → Option L
+  | 0, s => some s
+  | n+1, s =>
+      match run B (baseState s B) with
+      | none => none
+      | some t => fastRunBlocksWith B n
+          (BB6.DRegularShift.shiftNat t (8^B * liftParam s B))
+
+/-- Correctness with a residual tail, proved by induction on the number of
+    blocks rather than induction on the total number of source steps. -/
+theorem run_blockedWith (B n r : Nat) : ∀ s : L, Canon s →
+    run (B*n+r) s = (fastRunBlocksWith B n s).bind (run r) := by
+  induction n with
+  | zero =>
+      intro s hs
+      simp [fastRunBlocksWith, run]
+  | succ n ih =>
+      intro s hs
+      have hmul : B*(n+1)+r = B+(B*n+r) := by
+        rw [Nat.mul_succ]
+        omega
+      rw [hmul, BB6.DRegularFast.run_add]
+      rw [BB6.DRegularFast.run_block s B hs]
+      cases h : run B (baseState s B) with
+      | none => simp [fastRunBlocksWith, h]
+      | some t =>
+          let t' := BB6.DRegularShift.shiftNat t (8^B * liftParam s B)
+          have hrun : run B s = some t' := by
+            rw [BB6.DRegularFast.run_block s B hs, h]
+            rfl
+          have hcanon : Canon t' := BB6.DRegularFast.run_canon B s t' hs hrun
+          have ih' := ih t' hcanon
+          simpa [fastRunBlocksWith, h, t', Option.bind_assoc] using ih'
+
+end BB6.DRegularFastSmall
+
+namespace BB6.Agent2NineteenthRoot
+
+open DRegular BB6.DRegularFast BB6.DRegularFastSmall
+
+/-- Exact 5,684-section tail. The generic 32-step block evaluator reduces
+    the proof to 177 small blocks and a 20-step remainder; `native_decide`
+    certifies the resulting finite computation without expanding a 5,684-step
+    `run_add` induction. -/
 theorem tail5684_exact :
     run 5684 block19_1 = some ⟨9*t19+10,9,1⟩ := by
-  rw [show 5684 = 4096 + 1588 by norm_num]
-  rw [BB6.DRegularFast.run_add 4096 1588 block19_1]
-  rw [block19_2_exact]
-  simpa only [Option.bind_some] using terminal1588_exact
-
+  have hlen : 5684 = 32*177+20 := by decide
+  rw [hlen]
+  rw [run_blockedWith 32 177 20 block19_1 block19_1_canon]
+  native_decide
 
 end BB6.Agent2NineteenthRoot
