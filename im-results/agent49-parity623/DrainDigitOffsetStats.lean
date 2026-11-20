@@ -39,13 +39,13 @@ integer and the counts of output digits 1 and 2 unchanged.  The exact terminal
 state equality is proved separately by the companion mutual induction below.
 -/
 theorem runStatsData_offset_identities (n : Nat) :
-    (∀ q, q + 1 < 3 ^ n →
+    (∀ q, q + 1 ≤ 3 ^ n →
       runStatsData n (q + 1) B = runStatsData n q A) ∧
-    (∀ q, q + 1 < 3 ^ n →
+    (∀ q, q + 1 ≤ 3 ^ n →
       runStatsData n (q + 1) A = runStatsData n q C) := by
   induction n with
   | zero =>
-      constructor <;> intro q hq <;> omega
+      constructor <;> intro q hq <;> simp [runStatsData]
   | succ n ih =>
       constructor
       · intro q hq
@@ -73,7 +73,7 @@ theorem runStatsData_offset_identities (n : Nat) :
           have hplusdiv : (q + 1) / 3 = k + 1 := by
             have hdecomp := Nat.mod_add_div q 3
             omega
-          have htailBound : k + 1 < 3 ^ n := by
+          have htailBound : k + 1 ≤ 3 ^ n := by
             have hdecomp := Nat.mod_add_div q 3
             rw [Nat.pow_succ] at hq
             omega
@@ -210,7 +210,7 @@ theorem runStats_offset_BA (n q : Nat) (hq : q + 1 < 3 ^ n) :
     (runStats n (q + 1) B).output = (runStats n q A).output ∧
     (runStats n (q + 1) B).ones = (runStats n q A).ones ∧
     (runStats n (q + 1) B).twos = (runStats n q A).twos := by
-  have h := (runStatsData_offset_identities n).1 q hq
+  have h := (runStatsData_offset_identities n).1 q (by omega)
   rw [runStatsData_eq, runStatsData_eq] at h
   exact ⟨congrArg Prod.fst h,
     congrArg Prod.fst (congrArg Prod.snd h),
@@ -220,7 +220,7 @@ theorem runStats_offset_AC (n q : Nat) (hq : q + 1 < 3 ^ n) :
     (runStats n (q + 1) A).output = (runStats n q C).output ∧
     (runStats n (q + 1) A).ones = (runStats n q C).ones ∧
     (runStats n (q + 1) A).twos = (runStats n q C).twos := by
-  have h := (runStatsData_offset_identities n).2 q hq
+  have h := (runStatsData_offset_identities n).2 q (by omega)
   rw [runStatsData_eq, runStatsData_eq] at h
   exact ⟨congrArg Prod.fst h,
     congrArg Prod.fst (congrArg Prod.snd h),
