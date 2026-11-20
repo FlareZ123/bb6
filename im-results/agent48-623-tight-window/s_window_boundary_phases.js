@@ -232,8 +232,6 @@ function phaseForTransition(source, target) {
   const jShift = targetWindow.j - sourceWindow.j;
   const sourceR = sourceWindow.j - 3 * sourceWindow.k;
   const targetR = targetWindow.j - 3 * targetWindow.k;
-  const kShift = targetWindow.k - sourceWindow.k;
-  const jShift = targetWindow.j - sourceWindow.j;
   if (![0, 1].includes(kShift) || ![0, 1].includes(jShift) || (kShift === 1 && jShift !== 1)) {
     throw new Error("S-window shift violates the coupled 0/1 bound");
   }
