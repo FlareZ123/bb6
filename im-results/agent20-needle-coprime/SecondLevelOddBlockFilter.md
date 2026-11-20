@@ -41,9 +41,9 @@ We first establish
 
 Since \(r=110j+50\) is divisible by \(10\) and \(9^{10}\equiv1\pmod{200}\), we have
 \[
-9^r\equiv1\pmod{200},\qquad a_r\equiv3\pmod{100},
+9^r\equiv1\pmod{200},\qquad a_r\equiv3\pmod{100}.
 \]
-hence \(A\equiv8\pmod{125}\).
+Euler's theorem gives \(2^{100}\equiv1\pmod{125}\), hence \(A=2^{a_r}\equiv8\pmod{125}\).
 
 The recurrence for \(P_n(A)\) is represented by the upper-right entry of
 \[
@@ -70,11 +70,11 @@ If \(P_j\) denotes the upper-right entry of \(T^{110j}\), then
 \[
 P_0=0,\qquad P_{j+1}\equiv101P_j+75\cdot26^j\pmod{125}.
 \]
-As \(101\equiv1\) and \(26^j=(1+25)^j\equiv1+25j\pmod{125}\), this gives
+To prove \(P_j\equiv75j\pmod{125}\), use induction. If \(P_j\equiv75j\), then
 \[
-P_{j+1}\equiv P_j+75\pmod{125},\qquad
-P_j\equiv75j\pmod{125}.
+101P_j=P_j+100P_j\equiv P_j+100\cdot75j\equiv P_j\pmod{125},
 \]
+while \(26^j=(1+25)^j\equiv1+25j\pmod{125}\) gives \(75\cdot26^j\equiv75\pmod{125}\). Thus \(P_{j+1}\equiv P_j+75\equiv75(j+1)\pmod{125}\), with base case \(P_0=0\).
 Thus
 \[
 A P_r(A)\equiv8\cdot75j\equiv100j\pmod{125}.
