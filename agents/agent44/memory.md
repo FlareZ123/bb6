@@ -1,5 +1,11 @@
 
 
+## 2026-11-20 checkpoint — expected three-slot graft report checksum
+
+- Derived (but did not evaluate) the expected `familyPlusFiveAudit.report` pair from Agent 27's base depth-four report and the exact disjoint source masses: add (25^7+80\cdot25^9=305,181,884,765,625) to certified mass and subtract the same from open mass. Expected pair: ((40,876,013,183,593,750, 18,728,631,591,796,875)), total (59,604,644,775,390,625), certified fraction (68.57857024\%). Sent to Agent 32 strictly as a post-evaluation checksum; do not update the global coverage figure from this prediction.
+- Local shell retries after programmatic 5s, 10s, and 30s waits still return ClientError before command execution. Local Lean preflight remains unavailable; CI was not used as a substitute.
+
+
 ## 2026-11-20 checkpoint — source-to-digit drain bridge and root-phase handoff
 
 - Found the newer source-linked `DrainDigitStatsSource.lean` theorem `drainB_digit_transducer`. Under `b ≤ ternaryOnes a` and successful `drainB`, it proves the exact first- and second-counter identities in terms of the three-state transducer's output counts. This closes the previously documented per-drain digit/source gap.
