@@ -115,10 +115,14 @@ original-source certificates, not merely an arithmetic-model prediction.
 - Universal eleven-row contract: restored ERemaining.lean, produced by restore_e_regular.py, with the source definition in im-results/agent35-d-regular-certificate/DObsSourceCandidate.lean.
 - Composition: im-results/agent32-cryptid-padding/BoundaryPadding.lean, theorem source_chain.
 
-The next implementation task is a small Lean wrapper importing ERemaining and
-BoundaryPadding, proving the four concrete DRegular.next equations
-(first step plus three second-step residues), and invoking source_chain for
-each residue. The archived ERemaining module must be restored using the
+A first Lean wrapper candidate is now present at
+im-results/agent2-cryptid-continuity/Seed42TwoStepSource.lean. It defines a
+single source_step helper from ERemaining.source_contract, proves the first
+transition and all three second-step DRegular.next equations, and composes
+with BoundaryPadding.source_chain. The file is intentionally still marked
+as uncompiled: local Lean preflight was unavailable in this invocation.
+The next task is to compile it against the restored, SHA-pinned ERemaining
+source and repair any elaboration issues before accepting its axiom audit. The archived ERemaining module must be restored using the
 pinned restore script and exact source snapshot. The current invocation's
 local shell and Python execution tools failed before executing even trivial
 commands, so no local preflight was possible; no CI run is being substituted

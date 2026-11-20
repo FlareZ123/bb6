@@ -141,9 +141,11 @@ time plus DRegular.duration of the corresponding middle state.
 
 The arithmetic and source dependencies are recorded in
 [seed42-two-step-source-composition.md](seed42-two-step-source-composition.md).
-**Status:** the composition is a proof-ready derivation from an existing
-universal source theorem, but a single Lean wrapper for all three branches
-has not yet been compiled or axiom-audited. Do not cite the composed theorem
+**Status:** a candidate Lean wrapper now exists at
+Seed42TwoStepSource.lean. It applies the universal source contract to the
+first transition and each second-row residue, then composes with
+BoundaryPadding.source_chain. The wrapper has not yet been compiled or
+axiom-audited; do not cite its theorems as kernel-checked. Do not cite the composed theorem
 as kernel-checked until that wrapper passes local preflight and its
 transitive axiom audit.
 
