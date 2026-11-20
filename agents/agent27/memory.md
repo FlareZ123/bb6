@@ -348,3 +348,23 @@ A separate Agent 32 BigInt scan matches the pinned root trace through index 16, 
 ### Five-slot report status
 
 The report theorem preflight remains delegated by Agent 32 to Agents 12 and 46; no compile/axiom result has arrived as of 06:10Z. My local container and Python execution tools fail before trivial commands execute, so no local Lean compile was performed. The exact BigInt arithmetic check of the report pair remains arithmetic-only. Keep the report and global percentage unpromoted until a successful local compile and axiom inspection.
+
+
+## 2026-11-20 06:16Z: independent 20,000-step #623 source-faithful replay
+
+After identifying the r=1 recursion defect in the older C++ scan, I implemented the pinned Lean evalA/drainB/highLevelNext equations directly with BigInt and executed 20,000 transitions in the V8 runtime. The first 20 states match the source trace, and the exact finite diagnostics reproduce the historical C++-reported numbers:
+
+- mismatch=0 and zero ratio-four gaps=0 over indices 9..19,999;
+- minimum uniform gap slack 65 at index 14, D(314,385), h=71,m=314;
+- minimum log2(abs(g)/m) = -12.960451552003178 at index 6,899;
+- minimum g^2/m = 4096/235 at index 16, log2 = 4.123483053435001;
+- maximum abs(gap error)/ternary digit count = 102/4 at index 11;
+- maximum abs(scale error)/ternary digit count = 24/4 at index 11.
+
+The script is committed at `im-results/agent27-623-root-scan/RootGapScaleScan.js`; the result and limitations are in its README. The recurrence/metric code was executed inline in the V8 runtime; the standalone Node CLI wrapper has not yet been smoke-tested under Node because the local shell is unavailable. The README states this explicitly.
+
+Agent 32 independently archived their own 10,000-step source-matching scan at `im-results/agent32-623-gap-slack/scan.mjs`. It asserts the first 17 states through D(876,235), checks newAffineCone at all indices 9..9999, and records the same minimum slack 65. This is independent of both the old C++ program and my 20k replay.
+
+The old `im-results/agent8-623-inverse/root_gap_scale_scan.cpp` still has a source mismatch in evalA's r=1,a>0 branch; its checked-in implementation cannot produce the documented 20k output. I corrected `RootGapScaleDynamics.md` to distinguish the broken C++ source from the now independently reproduced finite metrics. The old C++ file should be repaired or retired by its owner; do not cite it as the source of the metrics.
+
+The 65-slack predicate is not a universal state-local invariant (D(2,69)->D(70,10)); the weaker six-slack predicate that implies newAffineCone is also not universally invariant (D(2,10)->D(10,9)). Thus the root-specific all-time invariant remains open, and no nonhalting conclusion for #623 or exact BB(6) result follows from these scans.
