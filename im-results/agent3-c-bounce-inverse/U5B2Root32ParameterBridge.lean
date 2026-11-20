@@ -275,6 +275,31 @@ theorem b2_root32_parameter_of_exact_residual (u w E : Nat)
   have hE' : E=201+3360*(6657+8192*r) := by rw [hw] at hE; exact hE
   exact root32_u_parameter_of_exact r E u hr' hE' hRoot
 
+/-- Compose the U5 source residual equations with the q=0 parent form
+and the B2 affine parameter h=8+128*u. On the r=32 (mod 64) root
+cylinder this already forces the same B2 parameter progression. -/
+theorem b2_root32_parameter_of_u5_q0_residual (u w E s m h : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m)
+    (hq0 : m+1=8*(39+64*h)+1)
+    (hB2 : h=8+128*u)
+    (hE : E=201+3360*w)
+    (hr : (w/8192)%64=32) :
+    ∃ t : Nat, u=1802+6720*t := by
+  have ht : 39+64*h=551+8192*u := by rw [hB2]; omega
+  have hp : m+1=8*(551+8192*u)+1 := by rw [ht] at hq0; exact hq0
+  have hid : 211*(m+1)+10669+22155*(8*w)=160*2^(201+3360*w) := by omega
+  have hidForT :
+      211*(8*(551+8192*u)+1)+10669+22155*(8*w)=
+        160*2^(201+3360*w) := by simpa [hp] using hid
+  have hlin :
+      211*(8*(551+8192*u)+1)+10669+22155*(8*w)=
+        8*(211*(551+8192*u)+1360+22155*w) := by omega
+  rw [hlin] at hidForT
+  have hres :
+      211*(551+8192*u)+1360+22155*w=20*2^(201+3360*w) := by omega
+  exact b2_root32_parameter_of_exact_residual u w E hE hres hr
+
 #print axioms root_equation_affine_parameter
 #print axioms root_equation_mod1680
 #print axioms root_equation_parity
@@ -283,5 +308,6 @@ theorem b2_root32_parameter_of_exact_residual (u w E : Nat)
 #print axioms b2_exact_root_equation_of_residual
 #print axioms b2_root_parameter_of_exact_residual
 #print axioms b2_root32_parameter_of_exact_residual
+#print axioms b2_root32_parameter_of_u5_q0_residual
 
 end BB6.Agent3U5B2Root32ParameterBridge
