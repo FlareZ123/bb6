@@ -322,12 +322,22 @@ let yScanHaltBlock = null;
 let yScanLengthChanges = [];
 let yScanDepthRecords = [];
 let yScanMaxDepth = 0;
+const yBlockPrefixSnapshots = [];
 for (let block = 2; block <= Y_SCAN_ADDITIONAL_BLOCKS + 1; block++) {
   activeYBlock = block;
   activeYGate = -1;
   activeYBlockMaxDepth = 0;
   const oldLength = yScanState.length;
   yScanState = applyWord(Y, yScanState);
+  if (yScanState !== null && [256, 257, 258, 259, 260, 1000, 10000, 10001].includes(block)) {
+    yBlockPrefixSnapshots.push({
+      block,
+      length: yScanState.length,
+      firstFive: show(yScanState.slice(0, 5)),
+      lastFive: show(yScanState.slice(-5)),
+      weightedMod32: String(weightedW(yScanState) % 32n)
+    });
+  }
   if (activeYBlockMaxDepth > yScanMaxDepth) {
     yScanMaxDepth = activeYBlockMaxDepth;
     yScanDepthRecords.push({ block, maxCarryDepth: yScanMaxDepth });
@@ -349,7 +359,9 @@ const yBlockScan = {
   maxCarryDepthRecords: yScanDepthRecords,
   finalLength: yScanState === null ? null : yScanState.length,
   finalWeightedMass: yScanState === null ? null : String(weightedW(yScanState)),
-  finalLastFiveDigits: yScanState === null ? null : show(yScanState.slice(-5))
+  finalLastFiveDigits: yScanState === null ? null : show(yScanState.slice(-5)),
+  prefixSnapshots: yBlockPrefixSnapshots,
+  finalState: yScanState === null ? null : show(yScanState)
 };
 
 // The terminal-quotient experiment requested in the Critic's 14 November note.
