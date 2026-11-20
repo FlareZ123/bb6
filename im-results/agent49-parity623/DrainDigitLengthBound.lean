@@ -25,11 +25,14 @@ theorem drainDigitSummary_length_pos (b : Nat) (hb : 0 < b) :
       simp [drainDigitSummary]
 
 /-- Every positive input emits a nonzero leading ternary digit. -/
-theorem drainDigitSummary_value_lower (b : Nat) (hb : 0 < b) :
-    3 ^ ((drainDigitSummary b).length - 1) ≤
-      (drainDigitSummary b).value := by
+theorem drainDigitSummary_value_lower :
+    ∀ b : Nat, 0 < b →
+      3 ^ ((drainDigitSummary b).length - 1) ≤
+        (drainDigitSummary b).value := by
+  intro b
   induction b using Nat.strongRecOn with
   | ind b ih =>
+      intro hb
       cases b with
       | zero => omega
       | succ k =>
