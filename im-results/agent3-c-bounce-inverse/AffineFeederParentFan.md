@@ -71,6 +71,40 @@ Two immediate facts:
    `(a_0,b_0) = (3*(k-1)/2, (5*k-9)/4)`.
    Higher even depths are additional alternatives whenever `2^(n+2) ∣ 3*k+1` and the source inequalities hold. In particular, `k ≡ 5 (mod 16)` can admit an `n=2` branch; following only the `n=0` parent is not an all-time reachability equivalence there.
 
+## Specialization to the actual `a=1), depth-`0 mod 8` halting family
+
+Let `d=8*m` be the `a=1` halting-level depth and let `K` be the right counter in the target `(1,K)). The closed form for `haltLevel` gives
+
+```text
+K = 2^(d+3) - (3*d+8)/2
+  = 2^(8*m+3) - 12*m - 4.
+```
+
+The exact one-left predecessor is `(K-1,K/2-1)`, hence it is `F(k)` with
+
+```text
+k = K/2 - 1 = 2^(8*m+2) - 6*m - 3.
+```
+
+Substitution gives the useful valuation identity
+
+```text
+3*k+1 = 2 * (3*2^(8*m+1) - (9*m+4))
+v₂(3*k+1) = 1 + v₂(9*m+4).
+```
+
+For the valuation equality, note that `0 < 9*m+4 < 2^(8*m+1)` for every `m≥1`; therefore the 2-adic valuation of `9*m+4` is strictly smaller than `8*m+1`, and the two terms in the difference have unequal valuations.
+
+Consequently, a source bounce depth `n=2*j` is divisibility-eligible exactly when
+
+```text
+2^(2*j+1) divides 9*m+4.
+```
+
+This is a much smaller arithmetic parameter than the enormous feeder coordinate. It also shows why a fixed-depth search cannot settle the whole halting family: for every fixed `j≥0`, the congruence `9*m+4 ≡ 0 (mod 2^(2*j+1))` has one residue class modulo `2^(2*j+1)`, since 9 is invertible modulo every power of two. Taking sufficiently large positive representatives in that class makes the source inequalities `a_j≥2`, `b_j>0`, and `a_j<2*b_j` hold, so actual parent branches of arbitrarily large even depth occur among these halting targets.
+
+For `m` odd, `9*m+4` is odd, so `v₂(3*k+1)=1` and the feeder has no source parent; this recovers the already-known `d ≡ 8 (mod 16)` exclusion. For even `m), the number and depth of possible parents are governed by the full valuation of `9*m+4`, not merely by `d mod 16`.
+
 ## What this does and does not settle
 
 This replaces the fixed-depth feeder discussion by a complete finite source-parent fan. It explains precisely why the existing `oddLowGate` normalizer is sufficient only when `v₂(3*k+1)` is two or three: in that range `n=0` is the sole possible even depth. At higher valuation, every admissible `n=0,2,4,…` branch must be retained.
