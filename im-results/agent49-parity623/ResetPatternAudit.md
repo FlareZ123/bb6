@@ -51,3 +51,12 @@ The 54 pair-output labels factor as 9 previous digit pairs times 6 carry profile
 | 2 | (-1,0)|(-2,0); (-1,0)|(-3,1); (0,0)|(-1,0); (0,0)|(-2,0); (0,0)|(-2,1); (0,0)|(-3,1) |
 
 The previous y-coordinate does not change the six carry profiles. Thus the 54 labels have the exact product structure (x,y,profile), with 3×3×6 possibilities. This is useful for reducing a subsequent phase product: the post-reset carry component has only six possibilities once the previous x digit is fixed.
+
+
+## 66-state paired carry closure
+
+The 54 reset-output labels generate a least closed subset of the paired L/R transducer state space under all nine raw digit-pair symbols. Breadth-first closure reaches exactly 66 paired states, adding 12 states; every one of the 66×9=594 transitions is valid and remains in the set. The L and R projections still have only 18 and 36 states, and both branches always carry the same previous digit pair.
+
+The closed set has a simple exact description. The L carry is either (-1,0) or (0,0). The R carry is one of (-1,0), (-2,0), (-2,1), (-3,1). Exclude (previous x=0, L=(0,0), R=(-3,1)) and (previous x=2, L=(-1,0), R=(-1,0)); previous y is unrestricted. This gives 9×8−6=66 states. For each previous pair, the allowed carry profiles are independent of previous y: there are 7 profiles when x=0, 8 when x=1, and 7 when x=2.
+
+`PostResetCarryPairClosure.json` stores the 66 states and all transitions. `postreset_pair_closure.js` reconstructs the least closure from the 54 output labels and checks all 594 transitions. This proves a universal post-synchronization invariant for arbitrary suffixes, not merely the observed four-symbol suffixes in the current S-window scan.
