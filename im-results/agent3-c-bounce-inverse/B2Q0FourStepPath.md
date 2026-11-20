@@ -94,3 +94,16 @@ run (secTime (a,k)) (some (a,k,0)) = (secNext (a,k)).map embed0
 ```
 
 A formal proof can establish each affine `exactSection` evaluation, then apply `section_exact` four times and compose the corresponding `run` segments. The final outstanding compatibility check is that the `secNext` relation used by `U5Y3ParentFan` (importing `SectionAllInverse`) is the same section transition as `BB6.Agent46.secNext`. Agent 46 has been sent the theorem name and the suggested composition. The existing manual workflow `.github/workflows/agent46-c-jump.yml` compiles the FastSection modules, but no CI was dispatched.
+
+
+## Connection to the U5 residual parent theorem
+
+The namespace check is resolved from the source headers: `SectionAllInverse.lean` defines `BB6.Agent46.secNext`, and `U5Y3ParentFan.lean` imports `SectionAllInverse` then opens `BB6.Agent46`. Its theorem `u5_residual_y3_parent_fan` states that, under the U5 residual equations and the high-stop successor condition, the q=0 branch is exactly
+
+```lean
+a=8*(m+1)-3 ∧ k=4*(m+1)-1
+```
+
+The terminal state Q(u) in the four-section path is precisely this `(a,k)) when `h=8+128*u` and `m+1=8*(39+64*h)+1`. Thus the all-u path, once formalized with `section_exact`, identifies the B2 target parameter with the q=0 parent parameter on the same `secNext` trajectory; the earlier concern about distinct `secNext` namespaces is not a blocker.
+
+The remaining work is now narrower: kernel-check the four exactSection evaluations, and establish that the residual equations `hs/hm`, root affine residue, and root-index class are the ones supplied by the same blank-start candidate. This does not yet certify the full `U5B2Root32.lean` import closure or a BB(6) upper bound.
