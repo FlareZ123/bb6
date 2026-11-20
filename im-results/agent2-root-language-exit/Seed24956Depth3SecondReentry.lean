@@ -161,8 +161,9 @@ theorem d3_reset_source_reentry (v : Nat) :
         8*familyKA v+27+1 = familyEndpoint v := by
       dsimp [familyEndpoint]
       omega
-    simpa [d3Endpoint,hN'] using
-      endpointZero_sourceSection (8*familyKA v+27)
+    have hsec := endpointZero_sourceSection (8*familyKA v+27)
+    rw [hN'] at hsec
+    simpa [d3Endpoint] using hsec
   have h01 := BB6.BoundaryPadding.source_chain
     (BB6.Agent2PacketP2Reset.eTwoTime (familyK v) 3)
     (BB6.Agent37EChain.chainTime 3 (familyH v) 0)
