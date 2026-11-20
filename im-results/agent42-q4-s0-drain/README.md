@@ -904,4 +904,4 @@ The exact score split and existing cost bounds sharpen the estimate further. The
 \le S_{\rm TM1}
 <6(b_N+1)^2+49b_N-6.
 \]
-All work outside that final summand contributes fewer than \(7b_N\) additional steps; the relative excess over \(6(b_N+1)^2\) is below \(1.2\times10^{-78}\). This is a paper-level consequence of the same conditional source-cost identities, not a new Lean theorem or an accepted authentic-root halt proof. See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md).
+All work outside that final summand contributes fewer than \(6.01b_N\) additional steps; the relative excess over \(6(b_N+1)^2\) is below \(1.1\times10^{-78}\). This is a paper-level consequence of the same conditional source-cost identities, not a new Lean theorem or an accepted authentic-root halt proof. See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md).
