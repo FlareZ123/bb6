@@ -1,6 +1,6 @@
 # B2-to-U5 q=0 path: exact parameter match and inverse-parent obstruction
 
-**Status: intermediate source-orbit reduction, not a Machine C nonhalting proof.** The same-parameter forward path and the q=0 residual parameter bridge are now explicit. The reverse source-parent analysis exposes two surviving predecessor families. The full integrated Lean theorem and the complete U5B2Root32.lean import closure have not been compiled.
+**Status: intermediate source-orbit reduction, not a Machine C nonhalting proof.** The same-parameter forward path and q=0 residual parameter bridge are explicit. The reverse source-parent analysis reduces T(u) reachability to D0E(t) or L(t). New exact source-parent compositions exclude the high-stop target on two infinite root-index progressions, r≡9568 and r≡10592 (mod 16384); see Sections 7 and the linked detailed dossiers. The other root-index classes remain open. The integrated Lean theorem and complete U5B2Root32.lean import closure have not been compiled.
 
 ## 1. The same-parameter forward path
 
@@ -290,17 +290,30 @@ Moreover \(K\ge22155j+3459\), so \(2^K\ge K+1\) gives \(N\ge j\). Set \(t=N-j\) 
 
 For fixed \(r\), the equation is linear in \(u\) with nonzero coefficient 211, so this \(u\) is unique.
 
-This is arithmetic feasibility only, not a blank-start execution. It means that further residue filtering of this exact root equation cannot eliminate any \(r=32+64j\); the remaining work must use the original transition system.
+This is arithmetic feasibility only, not a blank-start execution. The root equation alone cannot eliminate any \(r=32+64j\) by further congruence filtering. The two exclusions below instead use original-source parent fans and blank-image invariants; the remaining work must likewise use the transition system.
 
-## 7. Verification boundary and next decisive action
+## 7. Two composed high-stop exclusions
+
+The exact root equation is saturated, but the source-orbit residuals are not. Two disjoint infinite root-index progressions are now excluded by closing **both** alternatives in the implication \(T(u)\) reachable \(\Rightarrow D_{0E}(t)\) reachable or \(L(t)\) reachable.
+
+### 7.1. The progression r = 9568 (mod 16384)
+
+For \(t\equiv47\pmod{256}\), the exceptional R parameter \(q=(t-3)/4\) is \(3\pmod8\), so the complete R parent fan excludes the D0E/E7 branch. On the L branch, the exact P0/A0/Q chain reaches the even/odd Q' family; at \(t=256n+47\), Q' has sum-plus-one \(4\pmod8\), hence a unique odd-a depth-zero parent. Its even-right inverse is an odd/odd state with sum \(2\pmod4\), excluded by blank_no_odd_sum_two. Thus both D0E and L are unreachable.
+
+The root equation gives \(t+j\equiv196\pmod{256}\). Hence \(t\equiv47\) gives \(j\equiv149\) and \(r=32+64j\equiv9568\pmod{16384}\). The detailed source-parent composition is in [Root32HighStopR9568.md](Root32HighStopR9568.md).
+
+### 7.2. The progression r = 10592 (mod 16384)
+
+For \(t\equiv31\pmod{256}\), \(q=(t-3)/4\equiv7\pmod{64}\). The extended R parent fan excludes D0E/E7: its odd-a branch is forced to depth one and is excluded by blank_no_odd_sum_two; its direct branch passes through the even/even sum-zero fork, whose bounce parent is excluded by blank_no_odd_sum_one and whose direct parent is forced through a depth-zero odd-a parent and an even-right inverse to an odd/odd sum-two state. The L branch is forced through P0/A0/Q; Q has even right and sum \(6\pmod8\), so its unique parent is even/odd with sum \(1\pmod4\), excluded by blank_no_odd_sum_one.
+
+Thus both alternatives are unreachable. The root equation gives \(j\equiv165\pmod{256}\), hence \(r\equiv10592\pmod{16384}\). The detailed composition is in [Root32HighStopR10592.md](Root32HighStopR10592.md).
+
+The two progressions are nonempty and infinite by the exact-root saturation construction in Section 6. They are source-orbit exclusions, not mere congruence filters. All other root-index classes, and the global Machine C decision, remain open.
+
+## 8. Verification boundary and next decisive action
 
 - The five forward edges, the parameter identification, the q=0 parent reduction, and the S1 inverse-parent reduction are explicit algebraic derivations from the source-certified predecessor grammar and existing theorems.
-- The standalone U5B2Root32ParameterBridge.lean has previously been compiled locally under Lean 4.36.0-rc2. The combined theorem above has **not** been wrapped and compiled, and the full U5B2Root32.lean dependency closure remains uncompiled.
-- In this invocation, the local shell and Python runtimes returned ClientError before even trivial pwd and 1+1 commands executed. No CI was dispatched as a substitute for the missing local preflight.
+- The standalone U5B2Root32ParameterBridge.lean has previously been compiled locally under Lean 4.36.0-rc2. The two new composed high-stop exclusions have **not** been wrapped and compiled in a single Lean module, and the full U5B2Root32.lean dependency closure remains uncompiled.
+- No CI run is being treated as a substitute for the required local preflight.
 
-The next useful theorem is a single integrated original-source proof of
-\[
-T(u)\text{ reachable}\Longrightarrow
-D_0(u)\text{ reachable}\lor P_7(u)\text{ reachable},
-\]
-followed by exclusion of the remaining parent families displayed above. Do not spend more effort deriving additional root-index residue classes.
+The next decisive action is to compile and axiom-audit the exact compositions in Sections 7.1–7.2, then attack the remaining D0E/L parent families for other root indices. Do not spend effort on further root-equation-only congruence filtering.
