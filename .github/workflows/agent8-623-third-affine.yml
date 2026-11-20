@@ -39,7 +39,7 @@ jobs:
       - name: Prove evaluator bounds, joint drain mass, and root-ray bridge
         working-directory: cryptids
         run: |
-          set -eu
+          set -euo pipefail
           cp "../im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
           lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
           cp "../im-results/agent41-623-3euclidean/DrainValuationNormalForm.lean" Agent41DrainValuationNormalForm.lean
