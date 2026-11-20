@@ -94,9 +94,7 @@ The root transition selects the initial state from its phase edge:
 
 Run from the repository root:
 
-\`\`\`bash
-node im-results/agent24-machine623-shifted-reset-product/OffsetSelectedResetDFA.js
-\`\`\`
+    node im-results/agent24-machine623-shifted-reset-product/OffsetSelectedResetDFA.js
 
 This writes OffsetSelectedResetDFA.json beside the script. It is the smaller integration interface when the boundary phase edge is already known. It does not replace the 3,101-state simultaneous product when both offsets are required at once.
 
