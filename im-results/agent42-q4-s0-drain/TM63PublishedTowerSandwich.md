@@ -78,13 +78,16 @@ A\le(M+36)B+2M+59
  \le B^2+2B+59
  <2^{B-1}, \tag{6}
 \]
-since \(B\) is far above 16. From (6),
+since \(B\) is far above 16. For \(B\ge63\), (6) gives \(A+78<2^B\). Since
+\(B<T_{M+46}\), we have
+\(2^B<2^{T_{M+46}}=T_{M+47}\), and hence
 \[
-N<2^{A+78}<2^{2^B}<T_{M+48}. \tag{7}
+N<2^{A+78}<2^{2^B}<2^{T_{M+47}}=T_{M+48}. \tag{7}
 \]
-Since \(M+50<T_{M+48}\), (7) gives
+Also \(T_{M+48}\ge2^{M+48}>M+50\). Thus
 \[
-M+N+50<T_{M+49}. \tag{8}
+M+N+50<M+T_{M+48}+50
+ <2T_{M+48}<2^{T_{M+48}}=T_{M+49}. \tag{8}
 \]
 Combining (4) and (8), and using monotonicity of \(T_j\),
 \[
@@ -97,9 +100,9 @@ b_N=V_{M+N+46}<T_{M+N+50}=T_q
  \le T_{T_J-1}=:W. \tag{9}
 \]
 Thus \(b_N<W\), where \(W=T_{T_J-1}\) is enormous. The complete-score
-upper estimate below will use \(9W^2<2^W=T_{T_J}\). Also \(J<T_{11}\),
-so this upper endpoint is strictly below the published
-\(T_{T_{T_{11}}}\).
+upper estimate below will use \(9W^2<2^W=T_{T_J}\). Also \(J<T_{11}\), since
+\(3\sqrt{T_{10}}/4+5<T_{10}\), so this upper endpoint is strictly
+below the published \(T_{T_{T_{11}}}\).
 
 ## From the terminal counter to the complete score
 
