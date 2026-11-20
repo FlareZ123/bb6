@@ -73,3 +73,30 @@ The 20,000-step result is empirical evidence only. In particular:
 - this does not prove that the machine is nonhalting and does not resolve any BB(6) holdout.
 
 The useful next mathematical task is still to derive a root-specific inductive/cocycle invariant that keeps the blank-root orbit in the source-certified `newAffineCone) after its finite entry prefix.
+
+
+## Observed sector/phase structure
+
+The same 20,000-step source-faithful replay also gives the following branch distribution for root states at indices 9 through 19,999:
+
+| Sector | Visits | Minimum slack | State attaining minimum |
+|---|---:|---:|---|
+| right-odd | 5,878 | 65 | index 14, D(314,385) |
+| left-even | 4,013 | 124 | index 12, D(268,138) |
+| right-even | 5,877 | 310 | index 13, D(122,438) |
+| left-odd | 4,223 | 452 | index 20, D(1472,1013) |
+
+Across the 19,991 transitions from state index 8 to state index 19,999, only these branch-label edges occurred:
+
+| Edge | Count |
+|---|---:|
+| left-odd -> right-odd | 2,633 |
+| right-odd -> left-even | 2,581 |
+| left-even -> left-even | 1,432 |
+| left-even -> right-even | 2,580 |
+| right-even -> right-odd | 3,245 |
+| right-odd -> right-even | 3,297 |
+| right-even -> left-odd | 2,632 |
+| left-odd -> left-odd | 1,591 |
+
+This is a finite observed phase graph, not a proven transition restriction. The sector-specific slack minima are also only empirical; for example, the synthetic state D(2,69) is right-odd with slack 65 but maps to D(70,10), whose left-even slack is 57. The data may nevertheless help formulate a root-history invariant that distinguishes the blank-root orbit from arbitrary cone states.
