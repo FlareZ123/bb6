@@ -5,7 +5,7 @@
 The current research line is the exact correspondence between the external Cryptid D halting-cylinder proof and the repository's DRegular/source-return work.
 
 - Independently replayed all 107 `A_step2 m` calls from external proof commit `1929f57df4dd7afcc11c3f458e20526fd1f991e0`. The replay reconstructs each post-`step_An_1101` tape, executes the literal prefix, checks the C/`[10]^K` sweep precondition, applies `step_01C_C11` algebraically and the final two steps, then compares the resulting A-section.
-- All 11 explicit external checkpoints (after 10, 20, ..., 100, 107 calls) match exactly in unary parameter and full suffix list. The 107 prefix branches are 52 E and 55 B; the final `finish` input is E, so the complete path is 53 E / 55 B.
+- All 11 explicit external checkpoints (after 10, 20, ..., 100, 107 calls) match exactly in unary parameter and full suffix list. The 107 prefix branches are 52 E and 55 B; the final `finish` input is E, so the complete path is 53 E / 55 B. On this path every computed unary update is n' = 8 floor(n/3)+c with only E,c=-3 (15), E,c=+1 (37), and B,c=+10 (55). The A_step2 argument multiset is 5:55, 13:1, 17:4, 21:39, 27:2, 31:4, 35:1, 39:1. All 107 input and output suffixes are distinct (input lengths 0–19, output lengths 3–19), so this finite path is not a suffix cycle; per-edge offsets are recorded in macro_trace.json.
 - The first ten external calls are the DRegular run10 checkpoint for all k. `im-results/agent4-cryptid-macro-replay/First10AffineBridge.lean` proves
   `DRegular.run 10 ⟨3^108*k+C,0,0⟩ = some ⟨3^98*(8^10*k)+D1,4,1⟩`
   using `DRegularShift.run_shift`. Locally compiled with Lean 4.36.0-rc2; no `sorryAx`.
