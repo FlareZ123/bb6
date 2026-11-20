@@ -157,6 +157,7 @@ jobs:
             lean -o im-results/agent27-three-slot-translated/ThreeSlotFamilyLeafOpen.olean im-results/agent27-three-slot-translated/ThreeSlotFamilyLeafOpen.lean
             lean -o im-results/agent27-three-slot-translated/CertificateBatch.olean im-results/agent27-three-slot-translated/CertificateBatch.lean
             lean -o im-results/agent27-three-slot-translated/ThreeSlotFamilyGraft.olean im-results/agent27-three-slot-translated/ThreeSlotFamilyGraft.lean
+            lean -o im-results/agent27-three-slot-translated/ThreeSlotFamilyGraftReport.olean im-results/agent27-three-slot-translated/ThreeSlotFamilyGraftReport.lean
           } 2>&1 | tee /tmp/bb6-three-slot-family-graft.log
           if grep -q 'sorryAx' /tmp/bb6-three-slot-family-graft.log; then
             echo "ERROR: three-slot family graft proof graph depends on sorryAx"
