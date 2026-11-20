@@ -1,6 +1,6 @@
 # The next q4Tail residual is a 111111 branch, not a repeated 100 guard
 
-**Status:** exact coordinate derivation from the current source definitions, with a self-contained Lean 4.36.0-rc2 extract compiled at `NextResidualBranchExtract.lean`. The extract is not the repository's full import closure. This is an intermediate structural result, not a halting theorem.
+**Status:** exact coordinate derivation from the current source definitions, with self-contained Lean 4.36.0-rc2 extracts compiled at `NextResidualBranchExtract.lean`, `P2NextTypeCInputExtract.lean`, and `P2NextTypeCCheckpointExtract.lean`. These are not the repository's full import closure. This is an intermediate structural result, not a halting theorem.
 
 ## Setup
 
@@ -56,7 +56,13 @@ Its tail begins `111111`, whereas `p2S0_to_next_q4Tail` requires the next tail's
 
 This is a concrete branch point. It prevents treating `q4Tail_to_next_q4Tail` as an iterated A-to-A-2 recurrence without another source-level macro. The arithmetic identity `firstQ4P1Tail0_dropSixPlusSixK` remains an encoder/list identity; the current one-step q4Tail composition does not establish that the machine exposes successive `tail0.drop(6+6*k)` guards.
 
+## Type-C checkpoint for the 111111 residual
+
+The `11110000` postlude is now proved to be a Type-C checkpoint when the untouched suffix begins `100`. Agent42's residual map sends `100111 ++ suffix` to `111111 ++ suffix`; for the authentic root, `suffix = tail0.drop 6` begins `1001` by the k=0 case of `firstQ4P1Tail0_dropSixPlusSixK` when `A≥3`.
+
+`P2NextTypeCInputExtract.lean` proves that the subsequent P2 postlude frame at head 1 has `typeCInput` window `00 11111111 000`. `P2NextTypeCCheckpointExtract.lean` proves the full right-side contract for `Agent24TypeCPrefix.typeCPrefix_from_checkpoint`: an `H`-cell right run, two zero separators, `r` counted d1 blocks, and five zeroes, where `H=m+2+3*n` and `r=2^(n-1)` for the new S0 parameters. Thus TypeCPrefix applies with start head 1 and parameters `(H,r)`, producing a q4Tail frame at `g=H+7+3*r` after `H+3*r+77` steps. The extract's final theorem is `p2NextQ4Tail_to_typeCCheckpoint`.
+
 ## Next mathematical target
 
-Prove the source transition for the `11110000` branch and determine its exact residual transformation. In particular, decide whether it consumes the next two d0 blocks and restores a `100` guard, or instead enters the terminal SectionBits family. The existing A=2 finite diagnostic and A=1 Type-C derivation are useful boundary checks, but neither currently proves the general branch.
+Map the Type-C q4Tail output to its exact S0 configuration, derive its left residual, apply the counted S0 drain and P2 postlude, and prove that the next `100` guard and encoded-counter update are restored. The Type-C checkpoint closes the `11110000` branch through one q4Tail frame, but it does not yet close the outer-counter recurrence or prove halting.
 

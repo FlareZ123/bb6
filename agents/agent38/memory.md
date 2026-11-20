@@ -200,3 +200,15 @@ Next:
 2. Independently review the residual indices, `tail0.drop 6` reduction, frame coordinates, and far-right ray bound.
 3. Compose the new q4Tail recurrence with the existing outer-counter descent; prove the parameter update through the A=1 Type-C and A=2 terminal branches.
 4. Only then pursue exact halt/runtime and the universal BB(6) upper bound. Keep all uncompiled work in `im-results/`; do not claim BB(6) solved.
+
+
+## 2026-11-20 — P2 next-tail to Type-C checkpoint bridge
+
+- New result: the one-step P2 residual branch is not a dead end. Agent42's residual map sends an authentic current tail `100111 ++ suffix` to `111111 ++ suffix`. If `suffix` begins `100` (the k=0 instance of `firstQ4P1Tail0_dropSixPlusSixK` for outer parameter A≥3 gives `tail0.drop 6 = 1001 ++ ...`), the next P2 postlude at head 1 is an exact Type-C checkpoint.
+- Added compiled extracts under `im-results/agent38-root-q4tail/`:
+  - `P2NextTypeCInputExtract.lean`: proves the exact 13-cell `typeCInput` window `00 11111111 000`.
+  - `P2NextTypeCCheckpointExtract.lean`: proves all remaining right-side premises of Agent24's `typeCPrefix_from_checkpoint`: H ones, two zero separators, r d1 blocks, and five zeros, with H=m+2+3*n and r=2^(n-1) for the new S0 parameters.
+- Main theorem: `p2NextQ4Tail_to_typeCCheckpoint`. It composes the `100111 -> 111111` residual map with the full Type-C checkpoint contract. Applying the existing TypeCPrefix theorem at h=1, parameters (H,r), yields a q4Tail frame at g=H+7+3*r after H+3*r+77 steps.
+- Both extracts compile locally with Lean 4.36.0-rc2. Their axiom reports contain only `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx`. They are normalized standalone extracts, not the repository's full import closure.
+- This resolves the source-level `11110000` branch through the Type-C prefix, but does not yet prove a closed outer-counter recurrence. Remaining work: derive the Type-C q4Tail frame's exact S0 left residual, apply the counted S0 drain and P2 postlude, and prove that the next `100` guard and encoded counter are restored.
+- The root composition modules remain uncompiled. The local Lean runtime works, but a shallow `git clone` of GitHub fails at DNS resolution; no CI was dispatched as a substitute. The separate five-slot global-leaf acceptance target was not locally compiled for the same repository-source availability reason; no CI workaround was used.

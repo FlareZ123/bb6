@@ -2,7 +2,7 @@
 
 ## Status
 
-**The root-composition modules remain source-level drafts, not compiled or axiom-audited.** The authentic blank-root chain currently reaches the second q4Tail frame in `TM63RootQ4Tail.lean`. `P2RootS0Identity.lean` supplies the pointwise q4Tail-to-S0 interface and composes one further q4Tail recurrence. A separate self-contained coordinate extract, `NextResidualBranchExtract.lean`, has now compiled with Lean 4.36.0-rc2; it does not compile the root module's import closure. This is not an accepted full machine-run proof, not a halt proof, and not a BB(6) upper bound.
+**The root-composition modules remain source-level drafts, not compiled or axiom-audited.** The authentic blank-root chain currently reaches the second q4Tail frame in `TM63RootQ4Tail.lean`. `P2RootS0Identity.lean` supplies the pointwise q4Tail-to-S0 interface and composes one further q4Tail recurrence. Three self-contained coordinate extracts, `NextResidualBranchExtract.lean`, `P2NextTypeCInputExtract.lean`, and `P2NextTypeCCheckpointExtract.lean`, now compile with Lean 4.36.0-rc2; they do not compile the root module's import closure. This is not an accepted full machine-run proof, not a halt proof, and not a BB(6) upper bound.
 
 ## Exact source construction
 
@@ -46,9 +46,11 @@ The one-step recurrence is not closed under its own type-A guard. After the P2 S
 List.replicate 6 true ++ tail.drop 6
 ```
 
-The first three ones are written by the marked cells of `firstCyclePrefix22End`; the next three come from old `tail[3..5]`, which are `111` for the root tail beginning `100111`. All later cells are old `tail[j]`. Thus the next residual begins `111111`, not `100`, so the existing `p2S0_to_next_q4Tail` theorem cannot simply be reapplied. The next postlude window is `11110000`, not its `00110000` type-A window. See `NextResidualBranch.md` for the coordinate derivation and `NextResidualBranchExtract.lean` for the self-contained Lean proof.
+The first three ones are written by the marked cells of `firstCyclePrefix22End`; the next three come from old `tail[3..5]`, which are `111` for the root tail beginning `100111`. All later cells are old `tail[j]`. Thus the next residual begins `111111`, not `100`, so the existing `p2S0_to_next_q4Tail` theorem cannot simply be reapplied. The next postlude window is `11110000`, not its `00110000` type-A window.
 
-This also corrects the planned outer-counter integration: `firstQ4P1Tail0_dropSixPlusSixK` is an arithmetic list identity; the present one-step machine composition does not prove that the machine exposes successive `tail0.drop(6+6*k)` guards. A separate source-level `11110000` branch is required before claiming iterative A-to-A-2 progress.
+This is now connected to the existing Type-C prefix. For `suffix = tail0.drop 6`, the k=0 case of `firstQ4P1Tail0_dropSixPlusSixK` gives a leading `1001` whenever the outer parameter `A≥3`. Agent42's residual map sends `100111 ++ suffix` to `111111 ++ suffix`. The subsequent P2 postlude frame at head `h=1` therefore has the exact Type-C input window `00 11111111 000`. The new `P2NextTypeCInputExtract.lean` proves this window; `P2NextTypeCCheckpointExtract.lean` proves every right-side guard required by `Agent24TypeCPrefix.typeCPrefix_from_checkpoint`: with `H=m+2+3*n` and `r=2^(n-1)` for the new S0 parameters, there are `H` ones, two zeros, `r` d1 blocks, and five terminating zeros. Thus the existing Type-C prefix applies at `h=1`, with Type-C parameters `(H,r)`, and returns a q4Tail frame at `g=H+7+3*r` after `H+3*r+77` steps.
+
+The `11110000` branch is therefore no longer a dead end: it reaches the next q4Tail frame through the existing Type-C macro. The remaining gap is later in the cycle: identify that Type-C q4Tail frame's exact S0 left residual, apply the counted S0 drain and postlude, and prove that the next encoded `100` guard is exposed. Until that is proved, the arithmetic outer-counter identity is not yet an iterated machine recurrence, and no halting claim follows.
 
 ## Conditional material kept separate
 
@@ -56,13 +58,13 @@ This also corrects the planned outer-counter integration: `firstQ4P1Tail0_dropSi
 
 ## Toolchain and trust status
 
-Lean 4.36.0-rc2 was reconstructed locally from the concatenated split ZIP and used to compile `NextResidualBranchExtract.lean`. Its `#print axioms next_tail_cells` output is `[propext, Classical.choice, Quot.sound]` (no `sorryAx`). This is a self-contained extract with normalized copies of the relevant source definitions, not a full repository import-closure build. A direct `git clone` of the repository failed because DNS resolution for GitHub is unavailable in the local shell. No CI was dispatched as a substitute for full local preflight. `P2RootS0Identity.lean` and its full import closure remain uncompiled; its axiom reports have not been executed.
+Lean 4.36.0-rc2 was reconstructed locally from the concatenated split ZIP and used to compile `NextResidualBranchExtract.lean`, `P2NextTypeCInputExtract.lean`, and `P2NextTypeCCheckpointExtract.lean`. Their `#print axioms` reports contain only `[propext, Classical.choice, Quot.sound]` (no `sorryAx`). These are self-contained extracts with normalized copies of the relevant source definitions, not a full repository import-closure build. A direct shallow `git clone` of the repository failed because DNS resolution for GitHub is unavailable in the local shell. No CI was dispatched as a substitute for full local preflight. `P2RootS0Identity.lean` and its full import closure remain uncompiled; its axiom reports have not been executed.
 
 ## Next work
 
-1. When a local execution backend works, run the corrected Lean 4.36.0-rc2 bootstrap and compile the exact import closure of `P2RootS0Identity.lean`; fix the first compiler diagnostic, then inspect all exported theorem axiom reports.
-2. Independently review the residual indices and right-ray bound, especially the `tail0.drop 6` side-bit reduction and the frame-window coordinates.
-3. Prove the exact source transition for the `11110000` branch arising after the one-step recurrence. Determine whether it consumes the next encoded d0 blocks and restores a `100` guard, or enters a terminal SectionBits/Type-C family. Only then connect the arithmetic outer-counter descent to an actual trajectory.
+1. When repository source is available in the local shell, compile the exact import closure of `P2RootS0Identity.lean`; the local Lean 4.36.0-rc2 runtime now works, but a shallow GitHub clone is currently blocked by DNS. Then inspect all exported theorem axiom reports.
+2. Map the Type-C q4Tail output to its exact S0 configuration, derive the left residual, and apply `s0Config_counted_drain_closed` plus the P2 postlude.
+3. Prove that this drain/postlude exposes the next `100` guard and the corresponding encoded-counter update. Only then claim an iterated outer-counter descent.
 4. Prove the resulting trajectory halts and obtain its exact runtime; separately pursue the universal six-state upper bound.
 
 All work remains in `im-results/`. Nothing has been promoted to `results/`; BB(6) remains unresolved.
