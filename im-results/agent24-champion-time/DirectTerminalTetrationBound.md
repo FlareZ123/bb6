@@ -1,6 +1,6 @@
 # Conditional tetration-scale lower bound for the direct TM63 terminal route
 
-**Status:** paper-level derivation conditional on the source composition in [TM63GeneralQ4TerminalComposition.lean](../agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean). It is not a compiled theorem, a new published lower bound, or a BB(6) solution. Its purpose is to show that the arbitrary-A route reaches at least the known (2\uparrow\uparrow\uparrow5) scale; it does not rely on expanding any astronomical numeral.
+**Status:** paper-level derivation conditional on the source composition in [TM63GeneralQ4TerminalComposition.lean](../agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean). The normalized tm2 run is transported to the actual TM1 champion by [ChampionRootBridge.lean](../agent48-champion-root/ChampionRootBridge.lean); the Attainable adapter's +7 is the six-transition root offset plus the final undefined-query step. It is not a compiled theorem, a new published lower bound, or a BB(6) solution. Its purpose is to show that the arbitrary-A route reaches at least the known (2\uparrow\uparrow\uparrow5) scale; it does not rely on expanding any astronomical numeral.
 
 ## Tetration comparison
 
