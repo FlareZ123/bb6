@@ -40,7 +40,7 @@ Combining this p=13 condition with Agent 48's independently derived p=5 correcti
 | Filter | Surviving count | Full modulus | Exact surviving density |
 |---|---:|---:|---:|
 | Eight-prime sieve | 156,230,856,990 | 405,754,008,660 | \(2,189,027/5,685,218\approx38.50383574\%\) |
-| Eleven-prime sieve | 2,840,708,872,558,889,670 | 7,786,214,520,411,026,700 | \(9,185,206,688,521/25,176,106,704,210\approx36.48382491\%\) |
+| Eleven-prime sieve (corrected 20 Nov) | 218,715,580,637,067,540 | 598,939,578,493,155,900 | \(4,596,796,566,563/12,588,053,352,105\approx36.51713603\%\) |
 | \(11^2\) baseline | 1,718,539,426,890 | 4,463,294,095,260 | \(2,189,027/5,685,218\approx38.50383574\%\) |
 | \(11^2\), \(j\equiv10\pmod{11}\) | 1,707,061,536,960 | 4,463,294,095,260 | \(35,877,712/93,806,097\approx38.24667388\%\) |
 
@@ -48,9 +48,27 @@ The exact BigInt recount was independently evaluated across all \(j\bmod33\) for
 
 These are densities of candidate valuation residue classes only. They are not machine densities, sufficient predecessor tests, or blank-root reachability results. The p=13 correction does not alter the separate quotient-band theorems.
 
+## Further correction: p=13 was counted twice in the eleven-prime extension (20 November 2026)
+
+The eleven-prime extension uses base modulus \(M_0=900900\). This base already contains \(13\), because the \(p=79\) denominator cylinder is modulo \(39=3\cdot13\). The earlier eleven-prime script nevertheless treated \(13\) as an independent extra CRT factor and weighted the \(p=13\) cylinder separately. This loses the correlation between the \(p=13\) forced residue and the \(p=79\) cylinder, both of which depend on the same integer \(w\bmod13\).
+
+The correct procedure is to apply the \(p=13\) condition directly to each base residue:
+\[
+w\equiv9\pmod{12}\quad\Longrightarrow\quad w\equiv12\pmod{13},
+\]
+and to add only \(19,29,37,61,67,79,101\) as extra CRT factors. The correct full modulus is
+\[
+900900\cdot19\cdot29\cdot37\cdot61\cdot67\cdot79\cdot101
+=598939578493155900.
+\]
+The corrected exact count is \(218715580637067540\) for every \(j\bmod33\), giving density \(36.51713603\%\). The earlier eleven-prime count and modulus in the 14 November table are superseded. The eight-prime and \(11^2\) calculations are unaffected because their bases do not already contain \(13\).
+
+The corrected executable is second_level_eleven_prime_density.js. It checks the direct \(p=13\) base filter and the full \(j\bmod33\) period. It also includes the new odd-block-history intersection documented in SecondLevelOddBlockFilter.md.
+
+
 
 ## Reconciliation of the later p=5 recount (15 November 2026)
 
 Agent 48's p=5 congruence derivation is correct: on `w ≡ 0 (mod 4)`, the parent equation forces `w ≡ 4 (mod 5)`. However, the later `im-results/agent48-needle-sieve-audit/recount.js` rejects every `w ≡ 9 (mod 12)` valuation via `if (bad5(w) || w % 12 === 9) continue`. That discards the entire p=13 denominator cylinder, although the exact p=13 derivation above forces only `w ≡ 12 (mod 13)` on that cylinder. The recount also omits the factor 13 from each full modulus. Its lower reported densities are therefore undercounts, not corrected densities.
 
-I reproduced that audit script and separately reran the maintained Agent 20 BigInt scripts using the p=13 weight `w % 12 === 9 ? 1n : 13n`. The eight-prime and eleven-prime scripts check all 33 values of `j mod 33`; the prime-square script checks all 121 values of `j mod 121`. The maintained counts remain exactly those in the table above: 156,230,856,990 / 405,754,008,660; 2,840,708,872,558,889,670 / 7,786,214,520,411,026,700; and the conditional 11-squared count 1,707,061,536,960 / 4,463,294,095,260 (baseline 1,718,539,426,890 on the same modulus). A direct audit message was sent to Agent 48 requesting that the p=13 cylinder and its factor be restored. These figures remain necessary-condition valuation densities only.
+I reproduced that audit script and separately reran the maintained Agent 20 BigInt scripts. The p=13 weight \(w\bmod12=9\Rightarrow1\) or \(13\) remains correct for the eight-prime and \(11^2\) calculations, whose base moduli do not already contain \(13\). It is not correct for the eleven-prime extension, whose base \(900900\) already contains \(13\) through the modulus-39 cylinder; that extension now uses the direct forced-residue filter and the corrected count in the table above. The eight-prime count remains 156,230,856,990 / 405,754,008,660, and the conditional \(11^2\) count remains 1,707,061,536,960 / 4,463,294,095,260 (baseline 1,718,539,426,890 on the same modulus). These figures remain necessary-condition valuation densities only.
