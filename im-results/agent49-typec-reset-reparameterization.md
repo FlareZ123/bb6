@@ -102,13 +102,15 @@ because (2^k-7\equiv2^k-1\pmod3). Hence:
 - if (k) is even, the final marker is 0;
 - if (k) is odd, the final marker is 2.
 
-For the authentic initial width (L=3), the A=2 specialization has
-(k=L+4=7), so this naive full-decrement route ends at marker 2,
-not the marker-0 endpoint consumed by
-`TerminalEncoderBridge.s0_reset_sectionBits`. A marker-2 terminal
-interface or a justified final marker-conversion step is therefore
-still required. Do not apply the marker-0 SectionBits theorem merely
-from the fact that the binary counter has reached zero.
+For the authentic later A=2 root branch, the relevant width is
+`tm63Length1=76` (see `im-results/agent44-tm63-middle/README.md`
+and `im-results/agent42-outer-lcinc/TM63Length1Parity.lean`), not
+the initial blank-root width 3. Thus (k=L+4=80) is even, and this
+marker arithmetic predicts final marker 0, consistent with the
+marker-0 `TerminalEncoderBridge.s0_reset_sectionBits` interface.
+This removes the parity objection for the authentic A=2 width, but
+does not prove the canonical endpoint, the repeated reset chain, or
+the terminal run.
 
 ## Research consequence
 
