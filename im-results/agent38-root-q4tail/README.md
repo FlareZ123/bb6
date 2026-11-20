@@ -2,7 +2,7 @@
 
 ## Status
 
-**The root-composition modules remain source-level drafts, not compiled or axiom-audited.** The authentic blank-root chain currently reaches the second q4Tail frame in `TM63RootQ4Tail.lean`. `P2RootS0Identity.lean` supplies the pointwise q4Tail-to-S0 interface and composes one further q4Tail recurrence. Three self-contained coordinate extracts, `NextResidualBranchExtract.lean`, `P2NextTypeCInputExtract.lean`, and `P2NextTypeCCheckpointExtract.lean`, now compile with Lean 4.36.0-rc2; they do not compile the root module's import closure. This is not an accepted full machine-run proof, not a halt proof, and not a BB(6) upper bound.
+**The root-composition modules remain source-level drafts, not compiled or axiom-audited.** The authentic blank-root chain reaches the second q4Tail frame in `TM63RootQ4Tail.lean`. `P2RootS0FrameIdentity.lean` isolates the exact q4Tail-to-S0 frame identity and root specialization without importing the next-tail recurrence. `P2RootS0Identity.lean` is now a thin wrapper for the separate one-more-cycle recurrence. Independently, the direct terminal route in `im-results/agent42-q4-s0-drain/` bypasses the Type-C recurrence and has source-level `tm63_blank_halts` and `tm63_blank_attainable` theorem statements; its full import closure remains uncompiled. Three self-contained coordinate extracts, `NextResidualBranchExtract.lean`, `P2NextTypeCInputExtract.lean`, and `P2NextTypeCCheckpointExtract.lean`, previously compiled with Lean 4.36.0-rc2, but do not validate the root or terminal composition. None of this is an accepted full machine-run proof or a BB(6) upper bound.
 
 ## Exact source construction
 
@@ -27,16 +27,25 @@ For the far-right ray, the original S0 right-facing word has length `6+3*n`. The
 
 ## Draft theorem surface
 
-`P2RootS0Identity.lean` contains:
+`P2RootS0FrameIdentity.lean` contains:
 
-- `q4TailS0SourceGuards`: the three source obligations and the `100` tail guard, for every `z ≥ 1,w,q`;
+- `q4TailS0SourceGuards`: the three source obligations and the `100` tail guard, for every (zge1,w,q);
 - `q4TailS0Frame_eq_s0Config`: the generic frame identity
   `s0Config ell (n-1) (2^(n-1)-1) 0 (m+2+3*n)`;
-- `tm63_root_second_q4Tail_eq_s0Config`: the authentic-root specialization using the exact P1 width and value;
+- `tm63_root_second_q4Tail_eq_s0Config`: the authentic-root specialization using the exact P1 width and value.
+
+`P2RootS0Identity.lean` now contains only:
+
 - `q4TailS0Frame_to_nextQ4Tail`: one generic q4Tail-to-q4Tail recurrence with exact drain, P2 postlude, and next-prefix cost;
 - `tm63_blank_reaches_next_q4Tail`: composition of the authentic blank-root path through the second q4Tail frame and one further recurrence.
 
-The pointwise tape identity itself does not require oddness of `q`; oddness is used by the existing root trajectory theorem to establish that the authentic run reaches the second-prefix frame. The new recurrence then uses the corrected `100` tail guard.
+The pointwise tape identity itself does not require oddness of (q); oddness is used by the existing root trajectory theorem to establish that the authentic run reaches the second-prefix frame.
+
+## Direct terminal route (separate from the Type-C recurrence)
+
+The direct route uses the authentic second-q4Tail frame, the frame-only S0 identity, the general-A S1 reparameterization, the counted drain, and the complete 24-class SectionResult dispatcher. It then reaches the terminal reset. It does **not** need the next-q4Tail recurrence, so it avoids the `111111` Type-C branch described below.
+
+The source-level wrapper is `im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean`. Its theorem statements include `tm63_blank_halts` and `tm63_blank_attainable`. The exact conditional score has been reduced to a single weighted sum over the right-counter recurrence in `im-results/agent42-q4-s0-drain/SectionResultThreeCycle.md`. The arithmetic reductions are exact, but the root-to-terminal theorem composition and its full import closure remain uncompiled and unaudited.
 
 ## Iteration correction: the next residual is 111111
 
@@ -58,13 +67,14 @@ The `11110000` branch is therefore no longer a dead end: it reaches the next q4T
 
 ## Toolchain and trust status
 
-Lean 4.36.0-rc2 was reconstructed locally from the concatenated split ZIP and used to compile `NextResidualBranchExtract.lean`, `P2NextTypeCInputExtract.lean`, and `P2NextTypeCCheckpointExtract.lean`. Their `#print axioms` reports contain only `[propext, Classical.choice, Quot.sound]` (no `sorryAx`). These are self-contained extracts with normalized copies of the relevant source definitions, not a full repository import-closure build. A direct shallow `git clone` of the repository failed because DNS resolution for GitHub is unavailable in the local shell. No CI was dispatched as a substitute for full local preflight. `P2RootS0Identity.lean` and its full import closure remain uncompiled; its axiom reports have not been executed.
+Lean 4.36.0-rc2 was reconstructed locally from the concatenated split ZIP and used to compile `NextResidualBranchExtract.lean`, `P2NextTypeCInputExtract.lean`, and `P2NextTypeCCheckpointExtract.lean`. Their `#print axioms` reports contain only `[propext, Classical.choice, Quot.sound]` (no `sorryAx`). These are self-contained extracts with normalized copies of the relevant source definitions, not a full repository import-closure build. A direct shallow `git clone` of the repository failed because DNS resolution for GitHub is unavailable in the local shell. No CI was dispatched as a substitute for full local preflight. `P2RootS0FrameIdentity.lean` and the direct terminal composition remain uncompiled; their axiom reports have not been executed. The recurrence wrapper `P2RootS0Identity.lean` is also uncompiled.
 
 ## Next work
 
-1. When repository source is available in the local shell, compile the exact import closure of `P2RootS0Identity.lean`; the local Lean 4.36.0-rc2 runtime now works, but a shallow GitHub clone is currently blocked by DNS. Then inspect all exported theorem axiom reports.
-2. Map the Type-C q4Tail output to its exact S0 configuration, derive the left residual, and apply `s0Config_counted_drain_closed` plus the P2 postlude.
-3. Prove that this drain/postlude exposes the next `100` guard and the corresponding encoded-counter update. Only then claim an iterated outer-counter descent.
-4. Prove the resulting trajectory halts and obtain its exact runtime; separately pursue the universal six-state upper bound.
+1. When the local execution backend is available, compile `P2RootS0FrameIdentity.lean` first, then the exact direct terminal closure (`GeneralQ4TailS1Reparam.lean`, `GeneralQ4TailS1Config.lean`, `GeneralQ4TailTerminalComposition.lean`, and `TM63GeneralQ4TerminalComposition.lean`). Inspect all exported theorem axiom reports.
+2. If the direct terminal route validates, use its exact one-dimensional score formula as a rigorous lower-bound candidate; do not promote it until the full source closure is compiler-accepted.
+3. Compile `P2RootS0Identity.lean` separately only if the next-q4Tail recurrence is needed.
+4. For the Type-C iterative branch, map its q4Tail output to exact S0 configuration, derive the left residual, and prove that the drain/postlude exposes the next `100` guard.
+5. Independently pursue the universal six-state upper bound.
 
 All work remains in `im-results/`. Nothing has been promoted to `results/`; BB(6) remains unresolved.
