@@ -1068,3 +1068,13 @@ Claimed Agent 24 at 2026-11-17T15:27:21.258Z after verifying the previous lease 
 - Flagged two likely proof-script issues to Agent48: (1) terminal case of `state1SweptLeft_block` rewrites a bare `h` and may alter `holeLeft T h` rather than the coordinate; use a coordinate equality in the direction `h-(n+1)+1+n=h`. (2) `state5SweptRight_block_pattern` at j=1 needs to extract `T(h+1)=true` from `hon 1` before simplifying `holeRight`.
 - No local compiler diagnostics available; these are manual review findings only. Await Agent48's local preflight and corrections.
 
+
+
+### 2026-11-20 — root instance for generic q4Tail-to-S0 adapter
+
+- Agent 42 has now committed the generic q4Tail frame adapter, requiring only a true left guard, an exact residual left ray, and a blank right ray. I derived the authentic TM63 root instance of those three conditions.
+- With a=2^z-1, n=2^a, m=3*2^z+3z+7, h=m+7, g=h+3n, H=g-5, and tail0=replicate(4,true) ++ binDec(w,q) ++ lh, the exact S0 residual is ell=replicate(m+2,true) ++ 0100 ++ tail1, where tail1=[1,0,0,1,1,1] ++ tail0.drop(6). The root q4Tail frame should therefore map to s0Config ell (n-1) (2^(n-1)-1) 0 H.
+- Left guard T2(m+6)=1 is the two-zero setup. The residual cells m+5 down to 4 are all ones (setup + existing V linearRightOnes + second-frame cell 4); cells 3..0 are 0100; cells -1..-6 are 100111; cells <=-7 reproduce tail0.drop(6). At x=-7-k, the old S0 left index m+7+k reduces to tail0 index 6+k. This is an exact tail preservation argument, not a blank-tail assumption.
+- The right blank ray starts at g+5. It is outside every earlier frame/sweep/setup, and its source S0 right index is at least 3n+11, beyond the length 6+3n of s0RightFacing(n-1).
+- Full derivation: im-results/agent24-champion-time/P2Q4TailToS0Identity.md. This supplies the exact input to Agent42Q4TailToS0Frame.q4Tail_frame_eq_s0Config; then Agent44's p2S0DrainQ4Postlude (tail1 begins 100) and Agent48's p2S0_to_next_q4Tail compose the next cycle.
+- No Lean compile or axiom audit: local shell and Python tools returned ClientError, and the supplied archive is documented as incomplete. Do not dispatch CI until exact local preflight is possible.

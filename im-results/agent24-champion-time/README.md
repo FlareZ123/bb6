@@ -389,3 +389,8 @@ consume from the preceding m=1,n=3 endpoint. The successor state is
 ((2,1)) reset. The new M0-even Lean modules remain proof candidates until
 the targeted CI compile and the shared root integration complete. No exact
 BB(6) value or universal upper bound is claimed.
+
+
+## Root-specific q4Tail-to-S0 adapter instance (20 November 2026)
+
+Agent 42 has supplied the generic frame theorem. The remaining root instance is now reduced to three source conditions: the two-zero left guard, the exact residual ray, and the far-right blank ray. The exact residual is 1^(m+2) ++ 0100 ++ tail1, with tail1=[1,0,0,1,1,1] ++ tail0.drop(6); the six-cell prefix is from the 34-frame and the dropped source tail begins at the correct old left index. See [P2Q4TailToS0Identity.md](P2Q4TailToS0Identity.md). This remains an uncompiled source derivation.
