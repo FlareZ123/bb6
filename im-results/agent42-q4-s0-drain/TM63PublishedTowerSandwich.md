@@ -247,8 +247,8 @@ because \(n\ge4\) gives \(R=2^{n-1}-1>3\cdot2^{n-3}\), hence
 \(R^2>\frac12\,4^{n-1}\), and \(b_N\ge2^N R\) with \(N\ge2\). The dispatcher-plus-terminal
 term satisfies \(D_N<7b_N^2\) by (10)--(11); the added fixed
 \(+90\) is absorbed by the same \(b_N\ge2^{64}\) remainder
-estimate. Therefore the exact score decomposition gives
-The exact score decomposition gives \(S_{\rm TM1}<9b_N^2\).
+estimate. The exact score decomposition gives
+\(S_{\rm TM1}<9b_N^2\).
 The terminal recurrence admits a much sharper power bound:
 \[
 \boxed{V_j^{1040}<T_{j+4}\qquad(j\ge1).}
