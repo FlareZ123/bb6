@@ -1754,3 +1754,8 @@ The source definitions yield an exact stronger parameterization. Let V0=63, V_{j
 ### Full middle-prefix exponent accumulation
 
 The S1 configuration after the first reset starts with exponent V7 and right counter V8. The 34 middle source increments add the pre-update counters V8 through V41; the M-step middle34Result adds V42 through V_{M+41}; the final root postlude adds the final right counter V_{M+42} plus 2. Thus A≥V7+Σ_{j=8}^{M+42}V_j+2, improving the previous two-term bound. README and note now use this full accumulated exponent.
+
+
+## Full-score decomposition clarification
+
+The D_N defined in SectionResultThreeCycle.md is the complete dispatcher-plus-terminal contribution after eliminating the exponent sequence. It already incorporates terminalMoves(W,E)=59+12(W+E) and the final +7 champion correction; it is not merely q4TerminalResult.cost. The exact source composition has S_full=C_root+drainCost(R,0)+D_N, with C_root including the q4Tail prefix. The lower bound D_N≥6(b_N+1)^2 comes from the final counted increment and is valid for this complete contribution. This was cross-checked against q4TerminalFrame_blank_prefix_attainable in GeneralQ4TailTerminalComposition.lean.
