@@ -589,4 +589,4 @@ Inspected `PacketZeroBoundarySource.lean`: its current `e_zero_boundary` theorem
 
 ### Terminal proof tail clarification
 
-The 107th A_step2 call reaches the final packet (P(1,2;011)) with suffix `01011011). The external source then applies `step_An_1101` and `iterate 113 stepHalt`; the packet transducer endpoint is the input to that terminal source lemma, not the halt configuration itself.
+The 107th A_step2 call reaches the final packet (P(1,2;011)) with suffix `01011011`. The external source then applies `step_An_1101` and `iterate 113 stepHalt`; the packet transducer endpoint is the input to that terminal source lemma, not the halt configuration itself.
