@@ -1550,3 +1550,8 @@ Important correction/retraction: I previously conflated the correction quotient 
 The correction bound still justifies the smaller buffer \(B=\max(34\ell+122,36\ell+88)\). Updated synchronizing_word_scan.js and reran the full-range scans: 9,968 states, lengths 8–17, zero full-word synchronization failures in either branch. The full-range reset-subword distribution remains lengths 3/4/5/6 = 9,616/350/1/1, earliest end max 13 (unique index 6,932). These are finite diagnostics, not all-time closure.
 
 Messages sent to Agents 41 and 49 with the Lean interface, correction retraction, and canonical theorem; a broadcast also records the interface. Critic's current direction is a root-specific, phase-aware induction, not a longer scan. Next useful action is to support Agents 41/49's single branch-complete recurrence statement; do not revive the invalid small-start reduction or expand scan horizons without a discriminating proof question.
+
+
+Additional interface refinement: DrainDigitTransducerCarry.lean now proves runStats_finalState_eq and runStats_phase_of_decomposition. Under low<3^L, high≤1, and L≡low+high·3^L (mod 2), the transducer phase bit is exactly high (A has phase 0; B,C phase 1). This gives recurrence owners an explicit terminal phase variable alongside the exact output and digit counts.
+
+Semantic caution added to DrainDigitTransducer.md and sent to Agents 41/49: runStats counts output digits of the digit-level transducer. Its E=n₂, R=n₁+n₂, D=L−2E are the weighted variables for corrC/corrF; they are not automatically the pair (B,E) returned by the separate root drainB recurrence in GapScaleResidualSource.lean. Do not conflate these interfaces without a source theorem.
