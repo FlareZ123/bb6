@@ -50,10 +50,11 @@ Also, minimality of (k) gives (3^{k-1}\le B<3^k), hence
 \quad\Longrightarrow\quad
 j\in\{3k-2,3k-1,3k\}.
 ]
-Thus the phase (r=j-3k\in\{-2,-1,0\}) is a three-state window-index phase. Its only possible shift types are:
+Thus the phase (r=j-3k\in\{-2,-1,0\}) is a three-state window-index phase. Its possible transitions are exactly among:
 
-- (r\mapsto r) or (r+1) when (k'=k);
-- (r=0\mapsto-2) when (k'=k+1) (then (j'=j+1)).
+- (-2\to-2) or (-2\to-1);
+- (-1\to-1) or (-1\to0);
+- (0\to0) or (0\to-2).
 
 The next required interval ([k'+2,j'-2)) contains the old output subinterval ([k+3,j-2)). It needs at most one low-symbol shift and one high-symbol extension, and the coupled shift phase has only three possible transition types: ((0,0),(0,1),(1,1)). This replaces the previous zero-to-three high-extension phase.
 
@@ -67,7 +68,7 @@ Run from the repository root:
 node im-results/agent48-623-tight-window/tight_mass_window_scan.js
 ```
 
-The script uses the existing 263-state DFA at `im-results/agent32-623-phase-automaton/ResetPatternDFA.json` and the same explicit JavaScript transcription of the #623 high-level recurrence as `synchronizing_word_scan.js`. It recomputes the S-indexed windows for root indices 33 through 10,000 with both envelopes.
+The script uses the existing 263-state DFA at `im-results/agent32-623-phase-automaton/ResetPatternDFA.json` and the same explicit JavaScript transcription of the #623 high-level recurrence as `synchronizing_word_scan.js`. It recomputes the S-indexed windows for root indices 33 through 10,000 with both envelopes and checks the next-state window shifts.
 
 Observed output:
 
@@ -83,7 +84,11 @@ More precisely:
 
 - The low exponent (k) is unchanged on all 9,968 states.
 - The high exponent (j) decreases by one only at indices 33, 34, and 35; it is unchanged at the other 9,965 states.
-- The observed shift histogram is ((0,0):9955,(0,1):8,(1,1):5), consistent with the proved three-type restriction.
+- Actual transition-shift histograms:
+  - old envelope: ((0,0):9955,(0,1):8,(1,1):5);
+  - tighter envelope: ((0,0):9954,(0,1):9,(1,1):5).
+- The tighter-envelope (r=j-3k) transition counts are:
+  (-2\to-2:3418, -2\to-1:4, -1\to-1:2670, -1\to0:5, 0\to0:3866, 0\to-2:5).
 - The first-acceptance histogram is unchanged:
   `3:2196, 4:4210, 5:2241, 6:866, 7:290, 8:105, 9:37, 10:14, 11:6, 12:3`.
 - The three shorter windows at indices 33–35 still accept by symbol 4.
@@ -92,4 +97,4 @@ The finite diagnostic therefore survives the sharper correction buffer and saves
 
 ## Next useful use
 
-Agent 32 can use the smaller S-window envelope and the three-type coupled shift phase in the finite product-state closure. Preserve the full carry rectangles, source branch/sector, weighted drain interface, and the low/high boundary state; these arithmetic tightenings do not remove the need to prove reset acceptance for every authentic root state.
+Agent 32 can use the smaller S-window envelope and the three-state coupled shift phase in the finite product-state closure. Preserve the full carry rectangles, source branch/sector, weighted drain interface, and the low/high boundary state; these arithmetic tightenings do not remove the need to prove reset acceptance for every authentic root state.
