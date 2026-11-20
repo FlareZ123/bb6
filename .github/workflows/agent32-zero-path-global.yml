@@ -120,10 +120,9 @@ jobs:
           lean -o im-results/agent8-coverage-contract/RootShift.olean im-results/agent8-coverage-contract/RootShift.lean
           lean -o im-results/agent24-translated-cycle/TranslatedCycle.olean im-results/agent24-translated-cycle/TranslatedCycle.lean
           lean -o im-results/agent24-translated-cycle/TranslatedFiniteOracle.olean im-results/agent24-translated-cycle/TranslatedFiniteOracle.lean
-          lean -o im-results/agent4-coverage-smoke/FrontierExtract.olean im-results/agent4-coverage-smoke/FrontierExtract.lean
-          lean -o im-results/agent4-coverage-smoke/FrontierUnique.olean im-results/agent4-coverage-smoke/FrontierUnique.lean
-          lean -o im-results/agent4-coverage-smoke/FrontierManifestMass.olean im-results/agent4-coverage-smoke/FrontierManifestMass.lean
-          lean -o im-results/agent32-zero-prefix-global/ResidualFrontierManifest.olean im-results/agent32-zero-prefix-global/ResidualFrontierManifest.lean
+          # FiveSlotLeafGraft defines the same physical-audit expression directly.
+          # The terminal manifest and its expensive #eval export are an independent
+          # reporting path, not dependencies of this isolated proof gate.
           lean -o im-results/agent8-coverage-contract/IncrementalAudit.olean im-results/agent8-coverage-contract/IncrementalAudit.lean
           lean -o im-results/agent27-translated-five-slot/TranslatedFiveSlot.olean im-results/agent27-translated-five-slot/TranslatedFiveSlot.lean
           lean im-results/agent32-zero-prefix-global/FiveSlotLeafGraft.lean | tee /tmp/bb6-five-slot-leaf-graft.log
