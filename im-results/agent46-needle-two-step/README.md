@@ -354,3 +354,54 @@ The first-level \(p=7\) cylinder fixes \(w\bmod21\) to \(13,10,1\) according as 
 } \tag{14}
 \]
 For these classes the lift gives \(q\equiv1\pmod7\), so \(b\ge10\); thus the \(t=1\) parent condition is attained whenever the first-level parent itself exists. Equations (13)--(14) are a complete \(t=1\) residue filter, but they do not eliminate all such parents.
+
+
+## Fixed-\(t\) prime projection
+
+The quotient-free congruence (2) can be projected through any prime \(p\mid D_t\). Let \(m=\operatorname{ord}_p(2)\) and \(s=w\bmod m\). Since \(p\) is odd, (2) forces
+\[
+\boxed{
+w\equiv y+3-t+(9-6t)\,2^{-(s+2)}\pmod p.
+} \tag{15}
+\]
+Thus for each \(s\bmod m\), there is at most one residue \(w\bmod p\), giving at most \(m\) classes modulo \(pm\). When \(p\nmid D_w\), this is the exact \(p\)-component of the second-parent divisibility; when \(p\mid D_w\), it remains necessary but a higher \(p\)-adic lift may be needed. This is a reusable fixed-valuation sieve.
+
+Three small examples for the cancellation family:
+
+**Valuation \(t=2\), prime \(p=11\).** The target equation gives
+\[
+y\equiv2-j\pmod{11}.
+\]
+For example, \(9^{110j+50}\equiv1\pmod{220}\), hence \(a\equiv3\pmod{110}\) and \(A\equiv8\pmod{121}\). With
+\[
+T(8)=\begin{pmatrix}64&5\\0&9\end{pmatrix},
+\quad T(8)^{50}=\begin{pmatrix}78&7\\0&1\end{pmatrix},
+\quad T(8)^{110}=\begin{pmatrix}1&88\\0&1\end{pmatrix}
+\pmod{121},
+\]
+one gets \(P_r(A)\equiv7+88j\pmod{121}\), and then \(5y\equiv10+6j\pmod{11}\). Formula (15), with \(s=w\bmod10\), becomes
+\[
+w\equiv\alpha_s-j\pmod{11},\qquad
+(\alpha_0,\ldots,\alpha_9)=(5,4,9,6,10,1,2,8,0,7). \tag{16}
+\]
+The \(s=2\) class is the first-level \(p=11\) denominator cylinder; for the other nine values of \(s\), \(11\nmid D_w\), so (16) is the exact \(11\)-component of the \(t=2\) parent condition.
+
+**Valuation \(t=3\), prime \(p=19\).** Here \(a\equiv7\pmod{18}\), \(A\equiv14\pmod{19}\), and direct matrix reduction gives \(y\bmod19\), periodic in \(j\bmod9\), as
+\[
+(12,4,16,10,17,16,7,8,16).
+\]
+For \(s=w\bmod18\), the necessary classes are
+\[
+w\equiv y_j-9\cdot2^{-(s+2)}\pmod{19}. \tag{17}
+\]
+The exceptional denominator cylinder is \(s=3\), where \(19\mid D_w\).
+
+**Valuation \(t=4\), prime \(p=5\).** Since \(y\equiv0\pmod5\), (2) reduces to
+\[
+2^{w+2}(-w-1)\equiv0\pmod5,
+\]
+so every \(t=4\) second parent necessarily satisfies the particularly simple condition
+\[
+\boxed{w\equiv4\pmod5.} \tag{18}
+\]
+This applies whether or not \(5\mid D_w\); in the latter case it is only the first \(5\)-adic layer.

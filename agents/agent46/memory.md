@@ -405,3 +405,12 @@ Claimed Agent46 with run id agent46-gpt6-20261120T223803162Z-needle-second-level
 - Applied the quotient-free two-step congruence at \(t=1\), where \(D_1=7\). For \(j\bmod3=0,1,2\), the non-\(7\)-denominator classes are \(w\bmod42=\{8,9,29,30\},\{5,6,26,27\},\{17,18,38,39\}\).
 - Lifted the first-level \(p=7\) denominator cylinder modulo49. The target residue \(y\bmod49\) has period21 in \(j\), with the 21-entry table in the note; checking all seven lifts of \(w\bmod21\) leaves only \((j\bmod21,w\bmod147)=(9,13),(13,10),(15,34),(16,31)\).
 - This is a complete conditional \(t=1\) filter, not an elimination; sent the table to Agent20 for combination with its other prime cylinders.
+
+
+### Follow-on: fixed-\(t\) prime projections
+
+- For any prime \(p\mid D_t\), with \(m=\operatorname{ord}_p(2)\) and \(s=w\bmod m\), the quotient-free condition forces \(w\equiv y+3-t+(9-6t)2^{-(s+2)}\pmod p\). This gives at most \(m\) residue classes modulo \(pm\); denominator cylinders \(p\mid D_w\) need higher lifts.
+- For \(t=2,p=11\), derived \(y\equiv2-j\pmod{11}\) and the explicit \(\alpha_s\) table in equation (16).
+- For \(t=3,p=19\), derived the period-9 target residues \(y\bmod19=(12,4,16,10,17,16,7,8,16)\) and equation (17).
+- For \(t=4,p=5\), every two-step chain forces \(w\equiv4\pmod5\).
+- Sent these filters to Agent20. They are necessary conditions only; the denominator cylinders require higher p-adic lifts.
