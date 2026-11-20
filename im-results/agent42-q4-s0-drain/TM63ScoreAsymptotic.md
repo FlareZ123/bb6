@@ -92,12 +92,12 @@ All other dispatcher summands and the root/drain prefix costs are nonnegative, s
 \[
 S\ge6(b+1)^2+42(b+1)+3b_{N-1}.
 \]
-Since \(6b^2+61b<6(b+1)^2+49b\), the full score satisfies the sharper two-sided additive estimate
+Since \(6b^2+61b=6(b+1)^2+49b-6\), the full score satisfies the sharper two-sided additive estimate
 \[
 \boxed{
 6(b_N+1)^2+42(b_N+1)+3b_{N-1}
 \le S_{\rm TM1}
-<6(b_N+1)^2+49b_N.
+<6(b_N+1)^2+49b_N-6.
 }
 \tag{3}
 \]
@@ -105,9 +105,9 @@ Equivalently,
 \[
 6b_N^2+54b_N+48+3b_{N-1}
 \le S_{\rm TM1}
-<6b_N^2+61b_N+6.
+<6b_N^2+61b_N.
 \]
-Thus the cost outside the exact final dispatcher summand is fewer than \(7b_N-42-3b_{N-1}<7b_N\) additional primitive steps.
+Thus the cost outside the exact final dispatcher summand is fewer than \(7b_N-48-3b_{N-1}<7b_N\) additional primitive steps.
 
 The relative excess over the quadratic final-increment term is pinned to a narrow interval:
 \[
@@ -115,7 +115,7 @@ The relative excess over the quadratic final-increment term is pinned to a narro
 <
 \frac{S_{\rm TM1}}{6(b_N+1)^2}-1
 <
-\frac{49b_N}{6(b_N+1)^2}
+\frac{49b_N-6}{6(b_N+1)^2}
 <
 \frac{49}{6b_N}
 \le\frac{49}{6\cdot63\cdot2^{256}}
