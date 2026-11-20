@@ -11,7 +11,7 @@ This is finite computational corroboration, not a proof of the universal
 Lean theorem sectionResult_run_complete.
 """
 
-from m2_zero_residue_replay import Config, run, s1_config, same_config, v2
+from m2_zero_residue_replay import Config, run, s1_config, same_config, step, v2
 
 
 def proposed_increment_cost(m: int, n: int, a: int, b: int) -> int:
@@ -89,12 +89,41 @@ def check_growing_right_prefixes() -> tuple[int, int]:
     return cases, total_steps
 
 
+
+def check_terminal_finish() -> tuple[int, int]:
+    # Validate terminalMoves and the final undefined query on literal S1
+    # endpoints: state 0, head h+7, reading 1 after 59+12*(L+a) moves.
+    cases = 0
+    total_transitions = 0
+    for L in (4, 5, 6):
+        for a in (1, 2, 3):
+            for b in (0, 1, 2):
+                c = s1_config(L, 0, 0, a, 0, b, 0)
+                moves = 59 + 12 * (L + a)
+                run(c, moves)
+                if c.state != 0 or c.head != 7 or c.head not in c.ones:
+                    raise AssertionError(
+                        f"terminal live-state mismatch: L={L}, a={a}, b={b}; "
+                        f"got=({c.state},{c.head},read1={c.head in c.ones})"
+                    )
+                total_transitions += moves
+                if step(c):
+                    raise AssertionError(
+                        f"expected undefined final query: L={L}, a={a}, b={b}"
+                    )
+                total_transitions += 1
+                cases += 1
+    return cases, total_transitions
+
+
 if __name__ == "__main__":
     cycle_cases, cycle_steps = check_cycles()
     growth_cases, growth_steps = check_growing_right_prefixes()
-    cases = cycle_cases + growth_cases
-    steps = cycle_steps + growth_steps
-    print(f"TM63 section replay: PASS ({cases} cases)")
+    terminal_cases, terminal_steps = check_terminal_finish()
+    cases = cycle_cases + growth_cases + terminal_cases
+    steps = cycle_steps + growth_steps + terminal_steps
+    print(f"TM63 source/terminal replay: PASS ({cases} cases)")
     print(f"Full-cycle cases: {cycle_cases}; all 24 classes visited in each")
     print(f"Growing-right prefix cases: {growth_cases}; final right counter 127")
+    print(f"Terminal finish cases: {terminal_cases}; final undefined query checked")
     print(f"Exact simulated transitions: {steps}")
