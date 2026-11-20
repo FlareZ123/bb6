@@ -273,3 +273,49 @@ These are source-level mathematical derivations, not a full w=7 closure. The can
 
 - A new possible connection for the still-open z=4u sector was sent to Agent11: P_z has unique parent Q_z; for odd u, Q_z is odd/odd with sum 4 or 12 mod 16, so its unique low-value parent is R_u=(3450+28686u,3447+28665u), even/even with sum 6897+57351u divisible by 3. For u=3 mod4 this sum is 2 mod4; for u=1 mod4 it is 0 mod4. The direct and bounce parents of R_u are not yet resolved; do not claim exclusion. See `communications/agent11/20261119T084000Z_agent15-w7-z4-even-even-parent.md`.
 - Machine C and BB(6) remain unresolved. Keep all these contributions in `im-results/`, not `results/`, until formalization, review, and novelty are established.
+
+
+## 2026-11-20 invocation: q=0 parameter match and D0E inverse reduction
+
+Identity claim: run_id `agent15-gpt6-20261120T123759116Z-c-w7-source-preflight`, claimed_at `2026-11-20T12:37:59.116Z`. The lease was successfully pushed and verified. I initially resumed the W7 memory context, but the current Agent3 mailbox request concerned the B2/q=0 root32 composition, so I prioritized that dependency rather than duplicating W7 work.
+
+### Lean environment and source limits
+
+Reconstructed the uploaded split archive and installed Lean 4.36.0-rc2 locally at `/tmp/lean/lean-4.36.0-rc2-linux`. Local `lean` works. A shell `git clone` of FlareZ123/bb6 failed due the environment's network/DNS restriction. GitHub MCP can read and write repo files, but there is no local checkout or imported-source closure. Do not claim the full SectionAllInverse/U5B2Root32 closure was locally compiled; no CI was dispatched.
+
+### q=0 residual parameter identity
+
+Added `im-results/agent3-c-bounce-inverse/U5B2ResidualParameterMatch.lean`. It compiles locally under Lean 4.36.0-rc2 and proves, from the U5 residual equations, q=0 parent form, `w=6657+8192*r`, and exponent equation, that one and the same u satisfies:
+- `h=8+128*u`;
+- `m=4408+65536*u`;
+- `211*(551+8192*u)+1360+22155*w=20*2^E`.
+
+The theorem does not need `r%64=32`; that root32 class is needed only for the further progression `u=1802+6720*t`, which the existing `u5_q0_root32_forces_h8_parameter` already derives. The standalone theorem's axiom profile is `[propext, Quot.sound]`, no `sorryAx`. Notified Agent3 and Agent6.
+
+### D0E inverse-chain reduction
+
+Added:
+- `im-results/agent3-c-bounce-inverse/D0EInverseArithmetic.lean`
+- `im-results/agent3-c-bounce-inverse/D0EInverseReduction.md`
+
+The Lean arithmetic file compiles locally with `lean -o`; it certifies the eight affine direct-parent steps, profiles d0..d6 as even/even with sum 2 mod 4, the d7 direct/bounce fork, the d8 terminal parent, the E7→P→R affine formulas, and the root-index congruence `t+j ≡0 mod4` for `r=32+64*j`.
+
+Source-level reduction, still awaiting integration with the exact original-source grammar:
+1. At d0..d6, `cReach_parent_of_left_gt5` plus `even_even_parent_fan` forces the direct parent because sum is 2 mod4.
+2. At d7, `even_even_sumzero_parent` leaves d8 or E7.
+3. d8 is unreachable by `even_odd_three_divisible_parent` (depth forced to zero by `(sum+1)%8=4`) followed by `blank_no_odd_sum_two`.
+4. Thus D0E reachability implies E7 reachability, not yet a contradiction.
+5. E7 has unique direct parent P; P's complete source grammar forces odd-a depth-zero parent R(t), whose sum is `6*t+5 mod8`.
+6. The exact root equation gives `t+j ≡0 mod4`. The exceptional case `t%4=3` is exactly `j%4=1`, i.e. `r%256=96`. On the other three root-index classes, `blank_reach_iff_even_right` applies to R and forces its direct parent R'.
+
+The source-level composition has not been added to U5B2Root32.lean and is not source-compiled. Agent3 and Agent6 have been notified. The next useful work is the complete parent fan for R on `r ≡96 mod256`, plus continuing the even-right inverse chain on the other three classes. The independent L(t) residual also remains open.
+
+### Files and status
+
+- `U5B2ResidualParameterMatch.lean`: locally compiled standalone arithmetic certificate.
+- `D0EInverseArithmetic.lean`: locally compiled standalone arithmetic certificate.
+- `D0EInverseReduction.md`: paper-level source reduction, explicitly marked not a nonhalting proof.
+- `B2Q0FourStepPath.md`: existing five-edge B2→q0→high-stop path remains unformalized in the full source closure.
+- `U5B2Root32.lean`: full imported source closure still uncompiled; do not overstate any source-level integration.
+
+Keep these contributions in `im-results/`, not `results/`, until the source grammar composition is formally integrated and independently compiled. BB(6) remains unresolved.
