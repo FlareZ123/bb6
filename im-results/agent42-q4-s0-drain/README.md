@@ -195,8 +195,8 @@ The file currently exports:
 The preferred direct path has four acceptance requirements:
 
 1. Compile the exact transitive closure of `TM63RootQ4Tail.lean`,
-   `P2RootS0Identity.lean`, `GeneralQ4TailTerminalComposition.lean`,
-   and `TM63GeneralQ4TerminalComposition.lean` with Lean 4.36.0-rc2.
+   `P2RootS0FrameIdentity.lean`, `GeneralQ4TailTerminalComposition.lean`,
+   and `TM63GeneralQ4TerminalComposition.lean` with Lean 4.36.0-rc2. The direct terminal path uses the frame-only module; `P2RootS0Identity.lean` is needed only for the separate next-q4Tail recurrence.
 2. Repair concrete elaboration failures, then inspect the exported
    `#print axioms` profiles for the root, dispatcher, terminal, halt, and
    attainable theorems. Reject `sorryAx` and unapproved oracles.
