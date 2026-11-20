@@ -45,14 +45,14 @@ E_N\le{}&60b
  +12(N+1)2^{-N}b.
 \end{aligned}
 \]
-For \(N\ge256\), \(12(N+1)2^{-N}<1/100\). Since \(b\ge2^{256}\),
+For \(N\ge256\), \(12(N+1)2^{-N}<1/4\). Since \(b\ge2^{256}\),
 \[
 6b^{3/4}+57b^{1/2}<\frac b4,\qquad
 90b^{1/2}+159b^{1/4}+90<\frac b4.
 \]
 Therefore
 \[
-\boxed{E_N<60.51b,\qquad D_N<6b^2+60.51b.}
+\boxed{E_N<60.75b,\qquad D_N<6b^2+60.75b.}
 \tag{1}
 \]
 
@@ -62,32 +62,32 @@ The root bounds and the two lower bounds on \(R^2\) give
 \[
 C_{\rm root}<\frac79R^2,
 \qquad
-D_{\rm root}<14R^2.
+D_{\rm root}<14R^2,
 \]
-Thus
+so
 \[
 C_{\rm root}+D_{\rm root}<\frac{133}{9}R^2.
 \]
 Since \(b\ge2^R-1\), \(R\ge63\), and
 \[
-2^R-1>\frac{133000}{9}R^2\qquad(R\ge63),
+2^R-1>\frac{532}{9}R^2\qquad(R\ge63),
 \]
-we obtain the useful comparison
+we obtain
 \[
-\boxed{C_{\rm root}+D_{\rm root}<\frac b{1000}.}
+\boxed{C_{\rm root}+D_{\rm root}<\frac b4.}
 \tag{2}
 \]
-(The displayed exponential inequality is immediate at \(R=63\), and \((2^R-1)/R^2\) is increasing for \(R\ge63\).)
+(The displayed exponential inequality holds at \(R=63\), and \((2^R-1)/R^2\) is increasing for \(R\ge63\).)
 
 Combining (1) and (2) with the exact score split gives
 \[
-S<6b^2+60.511b.
+S<6b^2+61b.
 \]
 The exact final counted increment from [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md) is already a lower bound:
 \[
 S\ge6(b+1)^2=6b^2+12b+6.
 \]
-Since \(60.511b<61b+6\), the full score therefore satisfies the sharper additive estimate
+Since \(6b^2+61b<6(b+1)^2+49b\), the full score satisfies the sharper additive estimate
 \[
 \boxed{
 6(b_N+1)^2\le S_{\rm TM1}
@@ -106,7 +106,7 @@ The relative excess over the final counted increment is consequently bounded by
 \le\frac{49}{6\cdot63\cdot2^{256}}
 <1.2\times10^{-78}.
 \]
-This is a much sharper description than the earlier factor-nine estimate or the adjacent-tetration interval. It identifies the final counted increment as the score's leading term with a tiny explicit additive remainder. It may be useful when comparing the champion's score with other long-running machines.
+This identifies the final counted increment as the score's leading term with a tiny explicit additive remainder. It may be useful when comparing the champion's score with other long-running machines.
 
 ## Evidence boundary
 
