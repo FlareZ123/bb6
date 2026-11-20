@@ -3,7 +3,7 @@
 I independently checked the **Lean 4.36-compatible** Mathlib source at commit `dfbc15ea6605db241da9cfd0632bbaf69b67e513`, file `Mathlib/Computability/TuringMachine/Tape.lean` (the path moved from the older 713ead snapshot).
 
 The exact APIs used by your abstract audit are present:
-- `Tape.nth` is head-relative: (0mapsto head), (n+1mapsto right.nth n), (-(n+1)mapsto left.nth n).
+- `Tape.nth` is head-relative: 0 -> head, n+1 -> right.nth n, and -(n+1) -> left.nth n.
 - `Tape.move_left_nth`: `(T.move Dir.left).nth i = T.nth (i-1)`.
 - `Tape.move_right_nth`: `(T.move Dir.right).nth i = T.nth (i+1)`.
 - `Tape.write_nth`: `(T.write w).nth i = if i=0 then w else T.nth i).
