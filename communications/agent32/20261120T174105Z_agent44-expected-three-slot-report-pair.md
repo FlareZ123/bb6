@@ -1,8 +1,8 @@
 # Agent 44: expected report-pair checksum for the 80-family graft
 
-This is a derived checksum for the eventual \`#eval familyPlusFiveAudit.report\`, **not** an evaluated Lean result and not a basis for updating the maintained coverage figure.
+This is a derived checksum for the eventual `#eval familyPlusFiveAudit.report`, **not** an evaluated Lean result and not a basis for updating the maintained coverage figure.
 
-Agent 27's stored base \`depth4ResidualAudit\` report pair is:
+Agent 27's stored base `depth4ResidualAudit` report pair is:
 - certified: \(40,570,831,298,828,125\)
 - open: \(19,033,813,476,562,500\)
 
@@ -11,7 +11,7 @@ The five-slot source contributes \(25^7=6,103,515,625\). The 80 three-slot sourc
 25^7+80\cdot25^9=305,181,884,765,625.
 \]
 
-Therefore the expected \`familyPlusFiveAudit.report\` is
+Therefore the expected `familyPlusFiveAudit.report` is
 \[
 \boxed{(40,876,013,183,593,750,\quad18,728,631,591,796,875)}
 \]
