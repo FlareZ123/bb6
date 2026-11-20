@@ -85,7 +85,7 @@ $$
 $$
 Since $r$ is even, $T\equiv1\pmod3$, and $U\equiv2\pmod3$, we get
 \(\Delta B\equiv2187T(c_a+U(3c_a-1))\equiv4374\pmod{6561}\).
-=2\Delta K-2\Delta B=0$ modulo $6561$, so $X$ modulo $2187$ is unchanged. The formula for $9X_1$ then gives $X_1$ modulo $27$ unchanged. Also $\Delta(K-a)=1458(3c_a-1)$ is divisible by $162$, so $Q$ modulo $243$, and hence $G$ modulo $9$, is unchanged. Finally the formula for $X_2$ gives $X_2$ modulo $81$ unchanged, and the derived $X_3$ and $G'$ residues are unchanged. Thus the three representatives per class are sufficient.
+Therefore \(\Delta(3X)=2\Delta K-2\Delta B=0\pmod{6561}\), so $X$ modulo $2187$ is unchanged. The formula for $9X_1$ then gives $X_1$ modulo $27$ unchanged. Also $\Delta(K-a)=1458(3c_a-1)$ is divisible by $162$, so $Q$ modulo $243$, and hence $G$ modulo $9$, is unchanged. Finally the formula for $X_2$ gives $X_2$ modulo $81$ unchanged, and the derived $X_3$ and $G'$ residues are unchanged. Thus the three representatives per class are sufficient.
 
 Here
 $$
@@ -266,11 +266,12 @@ For $a\ge50$, the bracket is positive, and
 <
 \frac1{80}-\frac1{81}.
 \]
-<\frac{G'}p<\frac1{80}.
-$$
-Define
-$$
-\Delta_j=2^jG'-L',\qquad
+Thus
+\[
+\frac1{82}<\frac{G'}p<\frac1{80}.
+\]
+
+=2^jG'-L',\qquad
 y'_j=p/2-\Delta_j.
 $$
 Then $\Delta_{j+1}=2\Delta_j+L'$ and $L'/p<2^{-a}$. Since
