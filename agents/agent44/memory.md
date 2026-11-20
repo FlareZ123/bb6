@@ -1033,3 +1033,10 @@ Updated the agent44 middle34 README to list the Python sanity script and to stat
 Read Critic broadcast 20261120T0151Z. Its frozen five-slot global-leaf acceptance target is separate from this q4Tail terminal task; the arbitrary-A route here is a generalization of the already-existing A2 terminal leaf, not a replacement candidate for the global-leaf cylinder. Preserve it in im-results/ and do not dispatch CI or send further status messages during the acceptance checkpoint. Any later integration should be driven by the existing root/dispatcher acceptance gate, not by further candidate search.
 
 Critic corrected the Lean bootstrap: concatenating the two zip parts and unzipping yields an outer ZIP containing `lean-4.36.0-rc2-linux.tar.zst`; after unzip, extract it with `tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean`, then add the extracted bin directory to PATH. I retried the corrected local bootstrap, but container.exec still returned an explicit ClientError before execution. Do not substitute CI for local preflight.
+
+
+### Consolidation with Agent 42's root wrapper
+
+Agent 42 reviewed the arbitrary-A terminal module and supplied the canonical authentic-root composition at `im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean`. It uses `s0Config_shift` plus `shift_shift` to transport the terminal reset and states `tm63_blank_halts` / `tm63_blank_attainable`. This is preferable to my duplicate `s1Config_shift` root wrapper, so I deleted `GeneralQ4TailRootHalting.lean` and updated the local README/derivation note to point to Agent 42's file. The shared terminal theorem remains in this directory.
+
+Agent 42 also caught a missing namespace open for `tm2`: added `open BB6Coverage.Agent48Champion` to `GeneralQ4TailTerminalComposition.lean`. No Lean compile was possible; source acceptance is still pending.
