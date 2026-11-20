@@ -6,21 +6,20 @@ set_option maxRecDepth 55000
 
 namespace BB6.Agent2NineteenthRoot
 
-open DRegular
+open DRegular BB6.DRegularFast
 
-/-- Exact 9,780-section DRegular endpoint, assembled from the 4,096-section
-    first checkpoint and the independently checked 5,684-section tail. -/
+/-- Exact 9,780-section endpoint, composed through the 19 certified
+    512-section blocks and the final 52-section remainder. -/
 theorem terminal9780_exact :
     run 9780 seed19 = some ⟨9*t19+10,9,1⟩ := by
-  have hlen : 9780 = 4096+(4096+1588) := by omega
-  calc
-    run 9780 seed19 = run (4096+(4096+1588)) seed19 :=
-      congrArg (fun n => run n seed19) hlen
-    _ = (run 4096 seed19).bind (run (4096+1588)) :=
-      BB6.DRegularFast.run_add 4096 (4096+1588) seed19
-    _ = (some block19_1).bind (run (4096+1588)) := by rw [block19_1_exact]
-    _ = run (4096+1588) block19_1 := rfl
-    _ = some ⟨9*t19+10,9,1⟩ := tail5684_exact
+  have h := fastRunBlocks_tail_correct 19 52 seed19 seed19_canon
+  have hlen : blockSize*19+52 = 9780 := by norm_num [blockSize]
+  have hrun :
+      run 9780 seed19 =
+        (fastRunBlocks 19 seed19).bind (run 52) := by
+    simpa [hlen] using h
+  rw [blocks19_from_seed_exact, final52_exact] at hrun
+  exact hrun
 
 theorem t19_mod27_exact : t19 % 27 = 12 :=
   t19_mod27
