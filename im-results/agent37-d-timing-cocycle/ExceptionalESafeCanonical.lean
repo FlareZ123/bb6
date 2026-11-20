@@ -192,6 +192,8 @@ theorem one_terminal_regular_canonical
       rcases hpSmall with hzero | hone
       · omega
       · exact hone
+    let k : Nat := (d.a-4)/3
+    have ha' : d.a=3*k+4 := by dsimp [k]; omega
     have hfloor : 2 ≤ d.a := by omega
     refine ⟨0,d.a,d.q+2,5,?_,
       canon_nonzero_q d.a (d.q+2) 5 hfloor (by omega)⟩
@@ -203,7 +205,7 @@ theorem one_terminal_regular_canonical
       change ObsEq
         (packet d.a d.q d.p BB6.Agent2PacketOneReentry.fixedTail)
         (BB6.Agent2BoundaryBZero.regularSection d.a (d.q+2) 5)
-      rw [hp1]
+      rw [ha',hp1]
       rw [BB6.Agent2BoundaryBZero.e_one_regular]
       exact BB6.Padding.cfgEq_refl _
     simpa only [regularSection_sourceSection d.a (d.q+2) 5 hfloor] using hreg
