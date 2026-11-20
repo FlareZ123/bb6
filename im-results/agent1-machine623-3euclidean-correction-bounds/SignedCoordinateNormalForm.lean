@@ -200,3 +200,31 @@ theorem correction_buffer_strict (s : Sector) (b : Branch)
     corrF s b (L-2*E) R < 34*L+140 := by
   have h := correction_count_bounds s b L E R hE0 hER hRL
   omega
+
+
+/-- Closed-bound variant: equality |c| = K is allowed. -/
+theorem one_extra_digit_carry_bound_closed
+    (K r c q s : Int)
+    (hK : 0 < K)
+    (hr0 : 0 ≤ r) (hr1 : r < 3*K)
+    (hc0 : -K ≤ c) (hc1 : c ≤ K)
+    (hdiv : r + c = 3*K*q + s)
+    (hs0 : 0 ≤ s) (hs1 : s < 3*K) :
+    -1 ≤ q ∧ q ≤ 1 := by
+  constructor
+  · by_cases hq : q ≤ -2
+    · have hmul : 3*K*q ≤ (3*K)*(-2) :=
+        Int.mul_le_mul_of_nonneg_left hq (by omega)
+      have hmul' : 3*K*q ≤ -6*K := by omega
+      have hleft : -K ≤ r+c := by omega
+      have hright : 3*K*q+s < -3*K := by omega
+      omega
+    · omega
+  · by_cases hq : 2 ≤ q
+    · have hmul : (3*K)*2 ≤ 3*K*q :=
+        Int.mul_le_mul_of_nonneg_left hq (by omega)
+      have hmul' : 6*K ≤ 3*K*q := by omega
+      have hleft : r+c < 4*K := by omega
+      have hright : 6*K ≤ 3*K*q+s := by omega
+      omega
+    · omega
