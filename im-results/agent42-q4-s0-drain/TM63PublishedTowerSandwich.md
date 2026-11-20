@@ -173,7 +173,10 @@ P_{34}=\sum_{\ell=1}^{40}c_\ell+D_{63}+D_{V_7}
 \]
 where the \(c_\ell\) are the six pre-middle and 34 middle
 proposedIncrementCost terms, \(A_0=\texttt{tm63FirstSection.exponent}\),
-and \(V_7=\texttt{tm63FirstSection.right}\). Each row has cost
+and \(V_7=\texttt{tm63FirstSection.right}\). The inequalities
+\(A_0\le V_7\le B\) follow from
+\(A_0=18+\sum_{j=0}^6V_j\le18+7V_6<2^{V_6}-1=V_7\)
+and monotonicity of \(V_j\). Each row has cost
 \[
 6\cdot4^b+42\cdot2^b+15+4\mu+12(a+v_2(r))-9b.
 \]
