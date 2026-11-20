@@ -165,7 +165,7 @@ jobs:
             1) source_file="$T/NineteenthBlock1.lean"; audit_decl="block19_1_exact" ;;
             2) source_file="$T/NineteenthBlock2.lean"; audit_decl="block19_2_exact" ;;
             3) source_file="$T/NineteenthBlock3.lean"; audit_decl="terminal1588_exact" ;;
-            4a) source_file="$T/NineteenthTail5684.lean"; audit_decl="" ;;
+            4a) source_file="$T/NineteenthTail5684.lean"; audit_decl="tail5684_exact" ;;
             4b) source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
             5) source_file="$T/NineteenthRootPrefix.lean"; audit_decl="blank_nineteenth_exception" ;;
             6) source_file="$T/BlankNineteenthRejoin.lean"; audit_decl="blank_nineteenth_reentry" ;;
