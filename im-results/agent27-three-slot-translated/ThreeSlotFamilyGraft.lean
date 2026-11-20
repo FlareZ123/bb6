@@ -119,51 +119,6 @@ theorem FamilyLeafCert.parentOpenAfterFive (c : FamilyLeafCert)
       c.disjointFiveSlot m) ⟨hm, hFive⟩
   exact (agent27GraftedAudit_open_iff m).2 ⟨hOld, hNoFive⟩
 
-/-- Sequentially graft all 80 translated certificates into the exact
-    depth-four physical audit. -/
-noncomputable def familyGraftedAudit :
-    FrontierAudit (DecidedBelow 6) emptyTable :=
-  addCertificates familyDepth4Audit familyLeafCertificates
-
-/-- The resulting open set is exactly the old open set minus the union of
-    the 80 source cylinders. Source-incompatible machines are preserved. -/
-theorem familyGraftedAudit_open_iff (m : Machine) :
-    familyGraftedAudit.open m ↔
-      familyDepth4Audit.open m ∧
-        ∀ c ∈ familyLeafCertificates, ¬ compatible c.1 m :=
-  addCertificates_open_iff familyDepth4Audit familyLeafCertificates m
-    (empty_compatible m)
-
-/-- Every one of the 80 source cylinders was open before the batch graft
-    and is closed afterwards. -/
-theorem familyGraftedAudit_closes_candidate (c : FamilyLeafCert)
-    (hc : c ∈ familyCerts) (m : Machine)
-    (hm : compatible c.table m) :
-    familyDepth4Audit.open m ∧ ¬ familyGraftedAudit.open m := by
-  refine ⟨c.parentOpen m hm, ?_⟩
-  intro hopen
-  have hiff := (familyGraftedAudit_open_iff m).mp hopen
-  have hc' : toLeafCertificate c ∈ familyLeafCertificates := by
-    apply List.mem_map.mpr
-    exact ⟨c, hc, rfl⟩
-  exact hiff.2 (toLeafCertificate c) hc' hm
-
-theorem familyGraftedAudit_closes_union (m : Machine)
-    (h : ∃ c ∈ familyCerts, compatible c.table m) :
-    ¬ familyGraftedAudit.open m := by
-  rcases h with ⟨c, hc, hm⟩
-  exact (familyGraftedAudit_closes_candidate c hc m hm).2
-
-theorem familyGraftedAudit_exhaustive (m : Machine) :
-    DecidedBelow 6 m ∨ familyGraftedAudit.open m :=
-  familyGraftedAudit.exhaustive m (empty_compatible m)
-
-theorem familyGraftedAudit_conserves :
-    familyGraftedAudit.report.1 + familyGraftedAudit.report.2 = 25^12 := by
-  calc
-    _ = cylinderMass emptyTable := familyGraftedAudit.report_conserves
-    _ = 25^12 := by decide
-
 /-- The combined audit starts from the already accepted five-slot graft,
     then adds all 80 pairwise-disjoint three-slot certificates. -/
 noncomputable def familyPlusFiveAudit :
@@ -240,11 +195,6 @@ theorem combinedNewFraction :
 #print axioms familyCerts_pairwise_conflict
 #print axioms all81Tables_length
 #print axioms all81Tables_pairwise_conflict
-#print axioms familyGraftedAudit_open_iff
-#print axioms familyGraftedAudit_closes_candidate
-#print axioms familyGraftedAudit_closes_union
-#print axioms familyGraftedAudit_exhaustive
-#print axioms familyGraftedAudit_conserves
 #print axioms period3_conflicts_fiveSlot
 #print axioms period4_conflicts_fiveSlot
 #print axioms entryOne_conflicts_fiveSlot
