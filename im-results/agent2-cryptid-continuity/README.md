@@ -88,52 +88,55 @@ the normalizer returns
 L(8a_K+53,4,0)=L(4096t+3461,4,0)
               =L(12288s+11653,4,0).
 \]
-The first DRegular exceptional return from this seed has not yet been
-computed; this is the next root-specific arithmetic probe.
+This seed is still conditional on the upstream blank-root prefix and the
+unverified Seed39 first-stop bound.
 
+### Seed42 two-step original-source composition (wrapper pending)
 
-A further one-step reduction is available from the existing 3-adic shift
-theorems. Write \(p=4096s+3883\); then the seed above has
-\(a_{42}=12288s+11653=4+3p\). The arithmetic L-step table predicts the
-base case
-\(\operatorname{next}(4,4,0)=\operatorname{some}(5,1,13)\). If this tiny
-base case is checked against the actual DRegular.next definition, the
-existing DRegularShift.next_shift theorem gives the next regular state
+The earlier four-base-case / DRegularShift.next_shift route is not
+needed for this seed. Put \(p=4096s+3883\). Then
 \[
-L(5+8p,1,13)=L(32768s+31069,1,13).
+L(12288s+11653,4,0)=L(3p+4,4,0).
 \]
-The duration base case is 49, so DRegularDurationShift predicts the
-corresponding original-machine segment length
-\(49+24p=98304s+93241\). This is a conditional one-step model reduction,
-not yet a source-certified root extension.
-
-For a further finite-state reduction, the arithmetic L-step table predicts
-the four small base cases
-\(\operatorname{next}(4,4,0)=(5,1,13)\),
-\(\operatorname{next}(4,1,13)=(9,3,10)\),
-\(\operatorname{next}(3,1,13)=(39,1,5)\), and
-\(\operatorname{next}(2,1,13)=(23,0,0)\). If these are checked against the
-actual DRegular.next definition, DRegularShift.next_shift propagates them
-to the three second-step branches for \(s=3r+i\):
+The already source-certified theorem
+DRegularELow.e_zero_suffix (all \(k,q\), physical ObsEq) gives
 \[
-\begin{array}{c|c}
-i & \text{candidate second state}\\
-0 & L(262144r+82849,3,10)\\
-1 & L(262144r+170263,1,5)\\
-2 & L(262144r+257631,0,0)
-\end{array}
+L(3p+4,4,0)
+\xrightarrow{\;12p^2+49p+66\;}
+L(8p+5,1,13)
+=L(32768s+31069,1,13).
 \]
-This suggests a finite-state 3-adic transducer: the next ternary digit
-selects one of finitely many control updates, and the shift theorem
-propagates each base case to arbitrary higher digits. The arithmetic
-first-exit table has its exceptional boundary at \(a\bmod3=1,\ q>0,\ b=1\).
-This remains a research lead until the base cases are checked against
-DRegular.next and the root seed39 first-stop bound is certified.
- The next branch depends on
-\(s\bmod3\), equivalently on \(t_{41}\bmod243\); the currently reported
-\(t_{41}\bmod81=76\) is insufficient. A checked Seed39Probe first-stop
-bound should preserve this extra ternary digit.
+This is an original-machine source result, not a DRegular.next-only
+prediction.
 
+Now split \(s=3r+i\). The second source row is one of three already
+source-certified universal contracts:
+
+| \(i\) | Middle state | Source theorem | Resulting regular state |
+|---:|---|---|---|
+| 0 | \(L(3k_0+4,1,13)\), \(k_0=32768r+10355\) | DRegularESource.e_contract_many | \(L(262144r+82849,3,10)\) |
+| 1 | \(L(3k_1+3,1,13)\), \(k_1=32768r+21278\) | ARegularFull.original_A_positive_row | \(L(262144r+170263,1,5)\) |
+| 2 | \(L(3k_2+2,1,13)\), \(k_2=32768r+32201\) | BRegularSource.original_B_row | \(L(262144r+257631,0,0)\) |
+
+The target indices follow directly from the corresponding DRegular.next
+rows: respectively \(8k_0+9\), \(8k_1+39\), and \(8k_2+23\). All three
+targets are canonical. The first E step and each second-row step are
+original-source results; BoundaryPadding.source_chain composes their
+physical ObsEq certificates and exact primitive times.
+
+The arithmetic and source dependencies are recorded in
+[seed42-two-step-source-composition.md](seed42-two-step-source-composition.md).
+**Status:** the composition is a proof-ready derivation from existing
+source-certified modules, but a single Lean wrapper for all three branches
+has not yet been compiled or axiom-audited. Do not cite the composed theorem
+as kernel-checked until that wrapper passes local preflight and its
+transitive axiom audit.
+
+This advances the conditional seed by two original-source returns for every
+\(s\), without proving that the seed is reached from the blank tape. The
+actual root connection remains blocked by the Seed39 first-stop bound and
+the required extra ternary digit \(s\bmod3\) (equivalently the
+corresponding \(t_{41}\bmod243\) information).
 
 ### Remaining p=2 source families
 
