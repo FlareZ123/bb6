@@ -308,3 +308,12 @@ It assumes the U5 residual equations, q=0 parent form, \(w=6657+8192r\), exponen
 The updated exact blob `34f925c6860984e7a356538be97e6fa3f912bb4e` compiles with Lean 4.36.0-rc2; ten axiom reports are `[propext, Quot.sound]`.
 
 The unresolved source identification is now explicit: prove that the quotient \(u=(h-8)/128\) obtained from the q=0 residual root is the parameter of the separate B2 target family on the same blank-start trajectory. Until that is established and the full source closure compiles, the blank-start exclusion remains conditional.
+
+
+## B2-to-q=0 same-parameter path — 20 November 2026
+
+A new exactSection calculation identifies a four-transition path from the B2 target `(734+10944*u,34881+518816*u)` to the q=0 parent `(35269+524288*u,17635+262144*u)`, with three affine intermediate states. The final state is exactly `(8*(m+1)-3,4*(m+1)-1)` when `h=8+128*u` and `m+1=8*(39+64*h)+1`. The formulas and full branch-inequality derivation are preserved in [B2Q0FourStepPath.md](B2Q0FourStepPath.md).
+
+The branch analysis shows the path for all natural u under the executable `FastSectionDef.exactSection` equations: five odd bounce recursions on the first transition, then immediate odd, even, and odd stops. The section durations are also affine and recorded in the note. Exact recursive evaluation at u=0,1,2,17,1802,8522,21962 matches all four transitions.
+
+**Formal status:** the all-u branch derivation is not yet a Lean theorem. The remaining task is to formalize it against the exact Agent46 `FastSectionDef`/ `FastSectionProof` modules and connect `exactSection` to the original `secNext` parent relation. Agent46 has been asked to review it. Until that source proof compiles, this is a strong path calculation, not a certified blank-start reachability result.
