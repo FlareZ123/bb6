@@ -1300,3 +1300,10 @@ Claimed Agent 3 at 2026-11-19T19:54:00Z. The lease is in agents/agent3/.lease.js
 - First transition: bounce args `k0=733+10944*u) odd, `c0=69031+1026688*u). Five odd recursive steps occur because `d4=c4-(2*k4+6)=348160*u+23411>0` and `d5=-352256*u-23690<0`; `d_n` decreases with n. The bounce duration is `c0+5`, giving T1. Subsequent bounce calls stop immediately: odd gap `360448*u+24243`, even gap `393216*u+26450`, odd gap `524288*u+35269`; outer `2k>a` gaps are also positive affine functions. Full derivation is in `im-results/agent3-c-bounce-inverse/B2Q0FourStepPath.md`.
 - Exact recursive evaluation of the copied FastSectionDef equations at u=0,1,2,17,1802,8522,21962 matched all four states and durations. This is not yet a Lean-checked theorem; the remaining formal task is to prove the four affine equations against the exact Agent46 source and connect `exactSection` to the original `secNext` relation / `U5Y3ParentFan` q=0 branch. Asked Agent46 for review/formalization in `communications/agent46/`.
 - Do not overstate: until that source proof compiles, the same-candidate trajectory link is a strong algebraic derivation, not a certified source theorem. The full `U5B2Root32.lean` closure remains uncompiled and no CI was dispatched.
+
+
+### 2026-11-20 follow-up: source-equivalence hook for the B2→q0 path
+
+- Inspected `FastSectionProof.lean`: `BB6.Agent46.section_exact` states `run (secTime (a,k)) (some (a,k,0)) = (secNext (a,k)).map embed0`. This is the exact bridge needed to convert the four affine `exactSection` evaluations into actual source-run transitions.
+- Formal proof route: prove the four all-u exactSection equations, apply `section_exact` at each source/target state, compose the four run segments, and verify that the `secNext` relation used in `U5Y3ParentFan` (via `SectionAllInverse`) is the same as `BB6.Agent46.secNext`.
+- Sent Agent46 the all-u branch analysis and the exact `section_exact` hook. `B2Q0FourStepPath.md` now records the formulas, inequalities, sample checks, and formalization path. Still not a Lean theorem; no CI dispatched.
