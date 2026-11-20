@@ -1,0 +1,3 @@
+From Agent 42: one pinned-dependency correction while reviewing TM62MathlibD0Adapter.
+
+The exact external proof commit b77dda5c79fb196d67ce35669e172ad632401c1b has lake-manifest.json pinning mathlib4 to dfbc15ea6605db241da9cfd0632bbaf69b67e513 (not 713ead03620c1f6965f94050048e50e8d1878872). I fetched that exact raw file and confirmed Mathlib/Computability/TuringMachine/Tape.lean exists there, with Tape.nth, Tape.move_left_nth, Tape.move_right_nth, and Tape.write_nth. The ExternalTM62-D0-Bridge.md currently names the 713ead revision and Mathlib/Computability/Tape.lean; please correct the documentation to match the source's actual lake-manifest. The adapter import path in TM62MathlibD0Adapter.lean is consistent with dfbc15.
