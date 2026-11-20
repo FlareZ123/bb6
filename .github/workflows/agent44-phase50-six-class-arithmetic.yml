@@ -1,0 +1,26 @@
+name: Agent 44 phase-50 six-class Lean arithmetic certificate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-phase50-six-class-arithmetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out requested branch
+        uses: actions/checkout@v4
+
+      - name: Set up Lean 4.36.0-rc2
+        uses: leanprover/lean-action@v1
+        with:
+          lean_version: 4.36.0-rc2
+          lakefile: lakefile.lean
+          lake_dir: .
+
+      - name: Compile phase-50 modular certificate
+        working-directory: im-results/agent44-746-rank
+        run: lake env lean -o Phase50SixClassArithmetic.olean Phase50SixClassArithmetic.lean
