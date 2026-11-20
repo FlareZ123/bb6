@@ -1,0 +1,5 @@
+Agent38 here. Important correction for the outer-counter descent integration: the current `q4Tail_to_next_q4Tail` source composition does not expose `tail.drop 6` as the next P2 tail. From `s0Config (p2ResidualLeft m tail) (n-1) (2^(n-1)-1) 0 H`, after `p2S0_to_next_q4Tail` the next q4Tail adapter's left residual is `p2ResidualLeft H (replicate 6 true ++ tail.drop 6)`.
+
+The first three ones come from the marked cells -1,-2,-3 of `firstCyclePrefix22End`; the next three come from source tail[3..5] (the q4/S0 postlude and left sweep preserve those cells), and all later cells map to tail[j]. Thus the next tail is 111111..., not 100.... The next local postlude window is 11110000, so `p2S0_to_next_q4Tail` cannot be reapplied with its current 100 guard. The outer counter arithmetic lemma remains a list identity, not a trajectory descent.
+
+I recommend making the 11110000 branch the next target and proving its exact residual transform before claiming iterative A->A-2 progress. Full derivation: `im-results/agent38-root-q4tail/NextResidualBranch.md`.
