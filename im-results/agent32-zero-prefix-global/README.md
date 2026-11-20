@@ -287,20 +287,25 @@ its source cylinder has mass `25^5`, whereas this five-slot child has mass
 
 `WordLassoLeafGraft.lean` retains a second, mathematically coherent candidate with A/0=1RB, B/0=1LC, C/1=1RD, D/1=1RE, E/0=1LC. Its two-step entry creates the right-tail word 11 at C/head 0, and the C/1,D/1,E/0 macro recreates that word at head +1 while allowing older marks behind the head. It closes a larger (25^7) child of a (25^8) parent, but depends on the `MarkerOracle`/`WordOracle` import chain. It remains a backup, not the current acceptance target; no claim is made that it has passed a fresh source preflight.
 
-**Verification boundary:** Agent 27 reports that `TranslatedFiveSlot.lean`
-compiled locally with Lean 4.36.0-rc2 and has no `sorryAx`, `native_decide`,
-or custom axiom. Agent 8's `addCertificate_open_iff` is present in
-`IncrementalAudit.lean`, but the exact current theorem was committed later
-(22:06Z, commit `1a2f5bcc`) than Agent 8's 19:01Z local compile of the prior
-file version; that earlier compile does not preflight this theorem. The new
-`IncrementalAudit.lean` blob and `FiveSlotLeafGraft.lean` integration wrapper
-have **not yet passed a full local compile**. An isolated manual
-`verify_five_slot_leaf_graft` input has been added to the existing
-`.github/workflows/agent32-zero-path-global.yml`; it compiles the exact
-physical-audit, translated-cycle, incremental-audit, and wrapper dependencies,
-and skips the unrelated MarkerOracle/WordOracle branch. No CI run has been
-dispatched. The current local shell has Lean 4.36.0-rc2 but no repository
-checkout or dependency cache; a source-complete local preflight or a report
-from another identity with that workspace is still required before CI.
+**Verification boundary:** On 2026-11-20, the supplied split Lean
+4.36.0-rc2 archive was reconstructed locally and the complete current-main
+source closure for this target was materialized from GitHub. Every dependency
+source file was checked against its current Git blob SHA before compilation.
+The full dependency chain and the corrected `FiveSlotLeafGraft.lean` wrapper
+now compile locally with Lean 4.36.0-rc2. The first wrapper compile exposed
+two proof-script issues in `agent27Parent_open_all`: the depth-zero unresolved
+leaf needed explicit reduction of `FrontierAudit.open`, and each of the four
+parent-to-child transition equalities needed rewriting in the reverse
+direction. Both corrections are in the current wrapper.
+
+The wrapper's `#print axioms` output for `agent27Parent_open_all`,
+`agent27GraftedAudit_open_iff`, `agent27P4_exact_open_partition`,
+`agent27_leaf_closed`, `agent27GraftedAudit_exhaustive`, and
+`agent27GraftedAudit_conserves` is exactly
+`[propext, Classical.choice, Quot.sound]`; no `sorryAx` occurs. The
+manual-only `verify_five_slot_leaf_graft` workflow input remains available
+as an independent remote check, but no CI run has been dispatched. The
+current acceptance result is a successful local exact-source compile, not a
+new global cardinality evaluation.
 
 The 663-machine bounded word-macro screen (entry prefix 10,000, macro length 32, right-tail word size at most 8) found no hits; that finite negative screen remains auxiliary and does not constrain longer or different certificates. Neither leaf candidate changes the interpreted global frontier report yet. This is one exact source-proof candidate, not an accepted new global count, a universal upper bound, or a solution of BB(6).
