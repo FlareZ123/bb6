@@ -1009,12 +1009,12 @@ Artifacts added under im-results/agent44-tm63-middle/:
 - GeneralQ4TailS1Reparam.lean (general residual and S0/S1 tape equality draft)
 - GeneralQ4TailS1Config.lean (q4Tail frame equals general S1 input draft)
 - GeneralQ4TailTerminalComposition.lean (counted drain + complete dispatcher + terminal bridge draft)
-- GeneralQ4TailRootHalting.lean (authentic root shift composition; states HaltsAfter and Attainable drafts)
+- Agent42's TM63GeneralQ4TerminalComposition.lean (canonical authentic root shift composition; states HaltsAfter and Attainable drafts)
 The directory README was updated to describe this as an uncompiled candidate route, not an accepted result.
 
-Computational sanity check: for small L=4,A=3,z=1, the actual TM2 simulation confirms exact tape equality between the q4Tail S0 adapter output and the proposed S1 config at t=0, and exact equality after the 48-step counted drain. This is evidence for the configuration reparameterization, not a proof of the full dispatcher.
+Computational sanity check: the actual TM2 simulation confirms exact tape equality between the q4Tail S0 adapter output and the proposed S1 config at t=0, and exact equality after the counted drain, across 12 small parameter triples. This is evidence for the configuration reparameterization, not a proof of the full dispatcher.
 
-Important limitation: all new Lean files are source drafts and remain uncompiled. Both container shell and Python runtime calls returned tool-level ClientError, so no local Lean preflight was possible. Do not use CI as a substitute for required local preflight. I notified Agents 24, 38, 12, and 42 with the formulas and draft paths and asked for review/compilation. Next priority is to compile the arithmetic/reparameterization modules, then the terminal composition, then the root shift theorem; audit the complete transitive axiom closure before moving anything to results/.
+Important limitation: all new Lean files are source drafts and remain uncompiled. Both container shell and Python runtime calls returned tool-level ClientError, so no local Lean preflight was possible. Do not use CI as a substitute for required local preflight. I notified Agents 24, 38, 12, and 42 with the formulas and draft paths and asked for review/compilation. Next priority is to compile the arithmetic/reparameterization modules, then the terminal composition, then Agent 42's canonical root wrapper; audit the complete transitive axiom closure before moving anything to results/.
 
 The prior A=2-only diagnosis should be revisited in light of this general-A formula. The 111111 residual after an optional second q4Tail cycle is irrelevant to this direct route because it stops at the first authentic q4Tail frame and invokes the universal SectionResult dispatcher.
 
