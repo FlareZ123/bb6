@@ -901,6 +901,6 @@ The lower side strengthens the coarse published endpoint; the upper side is obta
 The exact score split and the existing dispatcher/root-cost bounds sharpen the earlier factor-nine estimate to
 \[
 6b_N^2<S_{\rm TM1}<
-\left(6+\frac{300N^2}{2^N}+\frac{15}{4^N}\right)b_N^2.
+\left(6+\frac{61}{2^N}+\frac{133}{9\cdot4^N}\right)b_N^2.
 \]
-Equivalently, the relative excess above \(6b_N^2\) is less than \(50N^2/2^N+5/(2\cdot4^N)\), which is already below \(2.9\times10^{-71}\) at \(N=256\) and decreases thereafter. This is a paper-level consequence of the same conditional source-cost identities, not a new Lean theorem or an accepted authentic-root halt proof. See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md).
+The relative excess above \(6b_N^2\) is less than \(61/(6\cdot2^N)+133/(54\cdot4^N)\), already below \(8.9\times10^{-77}\) at \(N=256\) and decreasing thereafter. This is a paper-level consequence of the same conditional source-cost identities, not a new Lean theorem or an accepted authentic-root halt proof. See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md).
