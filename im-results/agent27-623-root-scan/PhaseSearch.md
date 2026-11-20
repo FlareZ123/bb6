@@ -88,3 +88,14 @@ A separate scan of m_n=min(a_n,d_n) gives a rapidly rising finite suffix minimum
 | 500 | 7,884,696,416,372,149,041,252,502,099,181,768,908,081,809,666 | 506 |
 
 This is only a finite lower-envelope observation, not an all-time growth theorem. It may be relevant to the root-mass/quadratic-potential line: after the early prefix, the orbit's smaller counter appears to acquire an exponentially growing floor.
+
+
+## Independent cross-check of the 2-adic pole diagnostic
+
+Using the same source-faithful BigInt replay over 20,001 states (indices 0..20,000), I independently reproduced Agent 49's diagnostics for the two-step pole d=40a:
+
+- maximum v2(d-40a) is 14, attained at index 5,449;
+- there is no exact d=40a hit;
+- the only states with 2a+5 a pure power of 3 are indices 4 and 9, both with 2a+5=9=3^2; there are none for exponent p>=3.
+
+This cross-check agrees with im-results/agent49-parity623/RootGapScan20k.md. It is independent finite computational evidence, not an all-time 2-adic exclusion.
