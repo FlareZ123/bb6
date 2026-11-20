@@ -2,40 +2,31 @@
 
 **Status:** a proof architecture for the authentic (D(0,7)) orbit, not a theorem. It is intended to replace finite replay extension with a finite automaton closure test. Keep in `im-results/`.
 
-## 1. The central word and its exact moving-window update
+## 1. Two distinct windows: diagnostic versus inductive
 
-Use the signed coordinates
-[
-x=2g-gamma_s,qquad y=6q,
-]
-where (q=min(a,d)), (g=|a-d|-3q), and
-(gamma_s=(18,10,2,4)) in LO/LE/RO/RE.
+The existing synchronizing-word scan and the 263-state reset DFA use a **q-indexed diagnostic window**. Let \(\ell_q\) be least with
+\[
+\tau(\ell_q)=\frac{3^{\ell_q}-1}{2}\ge q+3,
+\\qquad B_q=\max(34\ell_q+122,36\ell_q+88).
+\]
+Let \(k_q\) and \(j_q\) be least with \(3^{k_q}>B_q\) and \(3^{j_q}>B_q^3\). The scanned word is
+\[
+W_q=((x_i,y_i))_{i=k_q+1}^{j_q-3}.
+\]
+The full-range scan found common reset subwords in all 9,968 such words. The actual boundary-phase list in `ActualBoundaryPhases.json` is also computed at (k_q+1). This is a diagnostic convention only: a targeted replay found (k_q'-k_q=-1) at seven transitions, so the monotone mass-window shift theorem does not apply to this q-indexed word.
 
-Let
-[
-B(ell)=max(34ell+122,36ell+88),quad
-3^{k}>B(ell),quad 3^{j}>B(ell)^3
-]
-with (k,j) least. The source-faithful diagnostic uses the digit-pair word
-[
-W_n=((x_i,y_i))_{i=k_n+1}^{j_n-3}.
-]
-The finite scan checks that (W_n) synchronizes both branch transducers over the *full* carry rectangles.
+For the **inductive moving window**, use Agent 41's source-verified S-indexed mass depth. Put (S=a+d), let \(\ell_S\) be least with \(\tau(\ell_S)\ge S+3\), and set
+\[
+B_S=\max(34\ell_S+140,36\ell_S+88),\qquad
+3^{k_S}>B_S,\quad 3^{j_S}>B_S^3
+\]
+with least exponents. The exact mass/depth theorem gives
+\[
+k_S'-k_S\in\{0,1\},\qquad j_S'-j_S\in\{0,1,2,3\}.
+\]
+The next required middle interval \([k_S'+2,j_S'-2)\) contains the old output subinterval \([k_S+3,j_S-2)\). Thus the correct closure target is a reset certificate in this buffered overlap, not merely anywhere in the q-indexed diagnostic word. The S-indexed boundary phase and reset-language acceptance have not yet been computed/proved.
 
-Agent 41's mass-indexed depth lemma gives
-[
-k_{n+1}-k_nin{0,1},qquad
-j_{n+1}-j_nin{0,1,2,3}.
-]
-If (U_n) is the output digit-pair word produced from (W_n) by the actual current branch, then the next word has the exact sliding-window form
-[
-W_{n+1}
-=
-operatorname{drop}_{delta_n}(U_n)
-mathbin{|}operatorname{append}_{eta_n}(U_n^{m high}),
-]
-where (delta_n=k_{n+1}-k_nin{0,1}), (eta_n=j_{n+1}-j_nin{0,1,2,3}), and (U_n^{m high}) is generated from at most three extra input digit pairs at positions (j_n-2,j_n-1,j_n). Thus only a one-symbol low shift and a three-symbol high lookahead are needed for the *full* word. The terminal middle subword beginning at (k_{n+1}+2) drops one additional low symbol, so its overlap with the old output begins at (k_n+3).
-
+Do not conflate (\ell_q,B_q,k_q,j_q) with (\ell_S,B_S,k_S,j_S). The q-indexed results are useful evidence and finite-state data, but the induction must be formulated on the S-indexed buffered interval.
 ## 2. Exact finite checker automata
 
 For each branch (bin{L,R}), define a deterministic digit transducer with state
@@ -66,13 +57,13 @@ A closure proof cannot treat the output word as an arbitrary string or the next 
 
 - the actual current branch and sector;
 - the actual previous digit pair and full initial carry at (k_n+1);
-- the one low digit pair needed when (k) shifts;
-- the three high input digit pairs at (j_n-2,j_n-1,j_n);
-- the two possible low-shift cases and four possible high-shift cases;
+- the one low digit pair needed when (k_S) shifts;
+- the three high input digit pairs at (j_S-2,j_S-1,j_S);
+- the two possible S-indexed low-shift cases and four possible high-shift cases;
 - the finite checker-automaton transformations for (W_n), and for the suffixes needed after dropping 0 or 1 low symbols;
 - the exact output carry/previous-pair phase at the end of (W_n).
 
-The actual start phase is needed for the first output symbols. A reset subword, when it occurs, makes the later output suffix independent of the initial phase. The finite scan reports full-range common reset subwords of length 3--6, with earliest end at most 13 over the scanned root states; this is diagnostic evidence only. The invalid small-start reset scan must not be used.
+The actual start phase is needed for the first output symbols; the current 262-phase list is q-indexed and must be recomputed for the S-indexed start. A reset subword, when it occurs, makes the later output suffix independent of the initial phase. The finite scan reports full-range common reset subwords of length 3--6, with earliest end at most 13 over the scanned root states; this is diagnostic evidence only. The invalid small-start reset scan must not be used.
 
 The high-end lookahead and low-end shift are bounded, so the transition from one checker phase to the next is finite-state. A product automaton can process (W_n), generate (U_n), trim the allowed low prefix, append the bounded high tail, and compute the next pair of checker states without storing the unbounded word itself.
 
