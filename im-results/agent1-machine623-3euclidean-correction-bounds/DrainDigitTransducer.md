@@ -220,21 +220,47 @@ L:\ C\le0\le F,\qquad R:\ F\le0\le C.
 The sign pattern is not a consequence of the cone hypotheses alone: the weighted formulas show that it depends on the root's digit statistics n_1,n_2. But it is now an explicit finite-state weighted condition on the same three-state drain scan. This is a direct interface for the boundary-carry closure: compute the digit weights, then the exact C,F, then the actual boundary carry pair.
 
 
-## 8. The valid-length terminal state is only A or B
+## 8. The valid-length terminal state and exact carry invariant
 
-The parity and size conditions defining L impose a further exact restriction on the transducer state after its L input digits.
-
-Let (b_L=\lfloor b/3^L\rfloor). Since (2b-1<3^{L+1}), one has (b_L\in\{0,1\}). Also (3^i\equiv1\pmod2), so the parity of the number of 1-digits among the low L input digits is (b-b_L\equiv L-b_L\pmod2). Therefore the number of low input digits different from 1 has parity (b_L).
-
-The state update toggles between A and a non-A state at every input digit 0 or 2, and leaves the state unchanged on input 1. Hence:
-- if (b_L=0), the terminal state is A;
-- if (b_L=1), the terminal state is B or C.
-
-But terminal state C is impossible for a valid L. If the last transition enters C, it is either A on input 2 or C on input 1; in either case its emitted top digit is 0. This contradicts (N\ge3^{L-1}), which says the L-digit output has a nonzero leading digit. Thus the terminal state is exactly
+There is a compact integer invariant behind the three-state machine. Assign
 \[
-\boxed{\text{state after L digits}=A\iff b<3^L,\qquad
-\text{state after L digits}=B\iff b\ge3^L.}
+\kappa(A)=1,\qquad \kappa(B)=3,\qquad \kappa(C)=-1.
 \]
-In the second case the final output digit is 2, consistently with (N=(2b-1+3^L)/4\ge2\cdot3^{L-1}).
+For every transition \(s\xrightarrow{d/n}s'\), the nine entries of the table satisfy
+\[
+\boxed{3\kappa(s')=\kappa(s)+4n-2d.}
+\]
+If \(b_i,N_i\) are the low-\(i\)-digit input and output prefixes and \(s_i\) is the state after those digits, induction gives
+\[
+4N_i-2b_i+\kappa(s_0)=3^i\kappa(s_i).
+\]
+Starting in A, this is \(4N_i-2b_i+1=3^i\kappa(s_i)\).
 
-This gives a one-bit terminal constraint on the weighted transducer, determined by the single high ternary digit of b. It can be included in a composed root/boundary automaton without enlarging the three-state interior machine.
+Now write the full input as \(b=b_0+h3^L\), with \(0\le b_0<3^L\) and \(h\in\{0,1\}\). The parity condition \(L\equiv b\pmod2\), together with \(3^L\equiv1\pmod2\), shows that the number of non-1 digits among the low L input digits is even when \(h=0\), and odd when \(h=1\). Since each input digit 0 or 2 toggles A versus the non-A states, while digit 1 leaves that phase unchanged:
+- \(h=0\) forces terminal state A;
+- \(h=1\) forces terminal state B or C.
+
+The C possibility is excluded by the upper size condition \(2b-1<3^{L+1}\). If the terminal state were C, the carry identity would give
+\[
+4N=2b-1-3^{L+1}<0,
+\]
+contradicting the nonnegative emitted integer. Thus the terminal state is exactly
+\[
+\boxed{\text{A if }b<3^L,\qquad \text{B if }b\ge3^L.}
+\]
+Equivalently, \(\kappa(s_L)=1+2h\). Substitution into the carry identity yields the exact formula
+\[
+\boxed{4N=2b-1+3^L.}
+\]
+This proof uses only the transition identity, parity, the upper size bound, and nonnegativity of emitted digits; it does not assume the desired output formula in order to establish the terminal state.
+
+## 9. Lean formalization
+
+The standalone Lean 4.36.0-rc2 proof is in [DrainDigitTransducerCarry.lean](DrainDigitTransducerCarry.lean). It formalizes:
+- the nine one-step carry identities;
+- the recursive carry invariant for every input word and every initial state;
+- the phase/parity invariant;
+- nonnegativity and the \(3^L\) output bound;
+- the exact drain formula under the parity and upper-size hypotheses.
+
+The file compiles locally with Lean 4.36.0-rc2 and uses only Lean's core imports; no Mathlib dependency is required.
