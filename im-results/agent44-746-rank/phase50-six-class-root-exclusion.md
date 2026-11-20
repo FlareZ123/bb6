@@ -271,9 +271,11 @@ Thus
 \frac1{82}<\frac{G'}p<\frac1{80}.
 \]
 
-=2^jG'-L',\qquad
+Define
+$
+\Delta_j=2^jG'-L',\qquad
 y'_j=p/2-\Delta_j.
-$$
+$
 Then $\Delta_{j+1}=2\Delta_j+L'$ and $L'/p<2^{-a}$. Since
 $$
 \Delta_0/p>1/82-2^{-a}>1/83,
