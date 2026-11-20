@@ -75,6 +75,7 @@ private theorem endpointZero_sourceSection (n : Nat) :
 theorem familyResetEndpoint_canon (r : Nat) :
     DRegular.Canon (familyResetEndpoint r) := by
   simp [DRegular.Canon, familyResetEndpoint]
+  omega
 
 /-- Every member of the k=81*r+61, Q=0 P2 reset cylinder returns
     source-observationally to the exact section L(32768*r+24956,2,2).
