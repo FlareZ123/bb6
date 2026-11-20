@@ -59,10 +59,16 @@ Extremal examples:
 | farthest last digit not 0 | 5497 | 202212000000000 | 9 |
 | farthest last digit not 2 | 6211 | 0002220022222222 | 8 |
 
-This suggests a potentially useful finite-prefix formulation: if one can prove that the first 11 digits after the low trim always contain both a nonzero and a non-2 digit, the entire middle-block nonmonochromaticity follows without inspecting the growing high end. The scan does **not** establish that prefix property for all indices.
+The bounded witness positions suggest a finite-prefix formulation: if one can prove that the first 11 digits after the low trim always contain both a nonzero and a non-2 digit, the entire middle-block condition follows without inspecting the growing high end.
+
+However, the observed 11-digit prefixes are nearly all distinct: there are **9,723** distinct prefixes across 9,968 states, including 9,334 distinct length-11 prefixes among the 9,578 windows of length at least 11. The most frequent prefix occurs only three times. A proof by cataloguing observed prefix strings is therefore not promising; the low-prefix property needs a structural modular invariant or a compact transducer on the joint \((H,q)\) data.
 
 ## Research consequence
 
-The centered-Y coordinate remains a promising candidate for excluding the terminal strip. The next mathematical step is not a larger empirical horizon; it is to derive a source-level recurrence for the first 11 ternary digits of \(z\) (or an equivalent pair of low residues) and prove its reachable-state closure from the finite prefix through index 32. The exact update \(Y'=|Y-2T|-6q'\) and the source drain statistics are the natural starting point.
+The centered-Y coordinate remains a promising candidate for excluding the terminal strip. The next mathematical step is not a larger empirical horizon; it is to derive a source-level recurrence for the first 11 ternary digits of \(z\) (or an equivalent pair of low residues), using
+\[
+Y'=|Y-2T|-6q',\qquad T=3D+2r+c_s,
+\]
+together with the D-free coordinate update for \(H\). The nearly injective observed prefix list argues against a raw prefix trie and in favor of an arithmetic/transducer invariant.
 
 This file is an intermediate computational result, not a publishable theorem and not evidence that the #623 machine is nonhalting.
