@@ -84,7 +84,8 @@ theorem q4TerminalIndex_binDec_shape (L A : Nat) (hA : 2≤A) :
     calc
       2^A = 2^((A-2)+2) := by congr 1 <;> omega
       _ = 2^(A-2)*2^2 := by rw [Nat.pow_add]
-      _ = 4*2^(A-2) := by norm_num [Nat.mul_comm]
+      _ = 4*2^(A-2) := by
+            rw [show (2:Nat)^2=4 by decide, Nat.mul_comm]
   have hterm :
       2^(A-2)*(2^(L+2)-1) =
         firstQ4P1Value L (A-1)+1 := by
@@ -134,7 +135,7 @@ theorem q4TerminalIndex_binDec_shape (L A : Nat) (hA : 2≤A) :
 private theorem pow_two_even_mod_three (k : Nat) :
     (2^(2*k)) % 3 = 1 := by
   induction k with
-  | zero => norm_num
+  | zero => decide
   | succ k ih =>
       calc
         (2^(2*(k+1))) % 3 = (2^(2*k+2)) % 3 := by
@@ -143,7 +144,7 @@ private theorem pow_two_even_mod_three (k : Nat) :
           rw [Nat.pow_add]
         _ = ((2^(2*k) % 3) * (2^2 % 3)) % 3 := by
           rw [Nat.mul_mod]
-        _ = 1 := by norm_num [ih]
+        _ = 1 := by simp [ih]
 
 private theorem pow_two_mod_three_of_even (n : Nat)
     (hn : n%2=0) : (2^n)%3=1 := by
@@ -172,10 +173,10 @@ theorem q4TerminalIndex_mod_three (L A : Nat)
     simpa using h
   have hC : 1≤2^(L+2)-1 := by omega
   have hmul := Nat.mul_le_mul hpowA hC
-  have hMge : 3≤firstQ4P1M L A := by
+  have hmul' : 4≤firstQ4P1M L A := by
     unfold firstQ4P1M
-    norm_num at hmul
-    exact le_trans (by decide) hmul
+    simpa using hmul
+  have hMge : 3≤firstQ4P1M L A := by omega
   omega
 
 #print axioms firstQ4P1Value_binDec_shape
