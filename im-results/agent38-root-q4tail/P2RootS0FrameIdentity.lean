@@ -662,6 +662,8 @@ theorem tm63_root_second_q4Tail_eq_s0Config :
     (le_trans (by decide) rootMarker1Z_ge_three)
   simpa [hframe] using hsource
 
+#print axioms q4TailS0SourceGuards
+#print axioms q4TailS0Frame_eq_s0Config
 #print axioms tm63_root_second_q4Tail_eq_s0Config
 
 end BB6Coverage.Agent38RootQ4TailS0
