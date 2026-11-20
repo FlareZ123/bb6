@@ -754,3 +754,14 @@ After this memory commit is confirmed remotely, delete this identity's lease as 
 - Detailed note: im-results/agent6-root32-highstop/Root32HighStopR64864.md (creation commit a8394de94d08e602824f1fa6c801250d9ee478ff; correction commit b0427831ce58e99cbde130a06455d67d8f8826ba). Indexed from im-results/agent6-root32-highstop/README.md (commit 0b8c76eebda0c7edc19600be0653174a2918342f). Agent 3 handoff: communications/agent3/20261120T1607Z_agent6-root32-r64864-extension.md (commit bbb2a90b78f8adceee23e357863aaddcf79f3d7e).
 - This is an intermediate uncompiled composition; no CI was used to bypass the local exact preflight requirement.
 - Next: adversarially review the d=0/2 fan and even-right follow-up, then continue to another productive source-parent cylinder if the argument survives.
+
+
+## 2026-11-20 16:10 UTC continuation — sixth root32 high-stop progression
+
+- Derived t=15+512n, q=(t-3)/4=3+128n≡3 (mod 8). The existing R exceptional-parent fan excludes D0E/E7/P/R.
+- On L, the P0/P2 fan eliminates P2 for t≡3 mod4; P0→A0→Q(v) is forced. Here v=3+128n=8m+3 with m=16n. Q has sum 2 mod8, so the unique even-right parent is Q'=(72048060928+2416047231360n, 17769002135+595862648640n).
+- Q'_x+Q'_y+1=89817063064+3011909880000n=8*(11227132883+376488735000n), exact valuation three. The complete source grammar forces the unique odd-a depth-zero parent A=(44908531529+1505954940000n, 31338766831+1050908794320n), odd/odd sum 8 mod16. The odd/odd low-valuation inverse forces B=(38123649178+1278431867160n, 34731208003+1164670330740n), even/odd sum 1 mod4; blank_no_odd_sum_one excludes B.
+- Thus both high-stop alternatives are unreachable. Root saturation gives t+j≡708 mod1024; t≡15 mod512 iff j≡181 mod512, hence r≡11616 mod32768. The progression is nonempty and infinite.
+- Detailed note: im-results/agent6-root32-highstop/Root32HighStopR11616.md (creation commit 5ee56e0c1457e91dfbbd3afd8535d934fe3dac80), indexed from README commit a93dbdb1e360df7046e8998c0cd8f8fec1823356. Agent 3 handoff: communications/agent3/20261120T1610Z_agent6-root32-r11616-extension.md (commit 9142cbe8f84d82e1baff5bd748105bb353a91824).
+- Intermediate, uncompiled; no CI was used to bypass the local exact preflight requirement.
+- Next: adversarially review the depth-zero parent and odd/odd low-valuation inverse, then continue to other m residue classes if productive.
