@@ -134,7 +134,7 @@ Run:
 node im-results/agent48-623-tight-window/s_window_boundary_phases.js
 ```
 
-For each source transition (D_n\to D_{n+1}), the tested word belongs to the target state and starts at (k'+2). The script computes the source carry entering (k+1), then consumes source input digits (k+1,\ldots,k'+1) (one or two digits) to obtain the actual transducer phase entering the target word at (k'+2). It validates the source carry convention by recomputing the q-indexed phases and checking exact set equality with `agent32-623-phase-automaton/ActualBoundaryPhases.json`: 262/262 phases match.
+For each source transition (D_n\to D_{n+1}), the tested word belongs to the target state and starts at (k'+2). The script computes the source carry entering (k+1), then consumes source input digits (k+1,\ldots,k'+1) (one or two digits) to obtain the actual transducer phase entering the target word at (k'+2). It validates the source carry convention by recomputing the q-indexed phases and checking exact set equality with `agent32-623-phase-automaton/ActualBoundaryPhases.json`: 262/262 **q-indexed diagnostic** phases match. This is not the S-window phase set; the S-indexed transition inventory below has 1,318 keys.
 
 For the correction-only S-window over the 9,968 source transitions (D_{33}\to D_{34},\ldots,D_{10000}\to D_{10001}):
 
@@ -148,6 +148,38 @@ For the correction-only S-window over the 9,968 source transitions (D_{33}\to D_
 
 The observed carry pairs are diagnostics only; retain the full universal rectangles L: ([-2,2]\times[-2,2]), R: ([-4,1]\times[-2,2]). The phase inventory is not a closure proof. A finite product still needs the reset-DFA state and the weighted drain/transducer interface. The script writes `SWindowBoundaryPhases.json` when run.
 
-## 5. Next useful use
+## 5. Post-reset output interface and S-window product diagnostic
 
-Agent 32 can use (B_{corr}=34\ell_S+122) and the three-state coupled shift phase in the finite product-state closure. Preserve the full carry rectangles, source branch/sector, weighted drain interface, and the low/high boundary state. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
+Agent 49's corrected reset-pattern construction is available at `im-results/agent49-parity623/ResetPostStateDFA.json` and `reset_poststate_dfa.js`.
+
+The corrected minimal common-reset language has **8,088** minimal words, by witness length:
+- length 3: 159;
+- length 4: 1,626;
+- length 5: 3,087;
+- length 6: 3,216.
+
+The earlier 29,445 count is withdrawn: it was an order-dependent DFS overcount with 21,357 redundant candidates. The 263-state recognizer's accepted language is unchanged. The corrected construction uses a 10,480-state Aho trie and validates all 8,088 patterns against 225 L-start and 270 R-start transducer states with zero failures. Direct first-witness selection was checked against all 597,871 words of lengths 0–6 with zero mismatches.
+
+The new finite output interfaces are:
+- `post_reset_pair`: 395 DFA states, 54 labels, returning the common L/R post-reset transducer-state pair at the first reset;
+- `post_reset_pair_and_length`: 736 DFA states, 186 labels, returning the same pair together with the witness length. The witness's second symbol is recoverable from the rolling last-five buffer at index (6-L) when the witness length (L) is known.
+
+I applied these output DFAs to the 9,968 correction-only S-window target words from the same root replay:
+- no word lacked an output label;
+- all 54 pair labels occurred;
+- first-witness length histogram: (3:5228, 4:3876, 5:761, 6:103).
+
+Combining each 1,318-field S-window transition key with the post-reset label gives the following **finite-trace** product diagnostics. Consecutive product keys are linked in the order of the root replay.
+
+| Output interface | Observed product pairs | Consecutive edges | Nodes with multiple successors | Maximum outdegree |
+| --- | ---: | ---: | ---: | ---: |
+| 395-state pair output | 8,091 | 9,948 | 1,450 | 8 |
+| 736-state pair+length output | 8,890 | 9,958 | 914 | 6 |
+
+The witness-length refinement reduces observed branching, but neither product is a closed transition system: even the refined product has 914 observed nodes with multiple successors. The 1,318 transition keys and the post-reset label alone therefore do not constitute a Markov state. A proof still needs a finite abstraction of the weighted drain/root-language data that determines the next boundary phase.
+
+Reproducibility note: `s_window_boundary_phases.js` currently declares `phaseTransitions` but does not populate it, so it does not export the adjacency graph or a meaningful outdegree histogram. The edge/product counts above came from an independent replay of the same source transition, window, carry, and phase-key formulas combined with Agent 49's output DFA. Do not treat these finite-trace edges as an all-time closure claim; the script should be extended to export them before relying on them as a reproducible artifact.
+
+## 6. Next useful use
+
+Agent 32 can compose the 1,318 S-window transition inventory with Agent 49's 395-state/54-label or 736-state/186-label post-reset interface. Prefer the pair+length output when the second symbol must be recovered from the rolling buffer. Preserve the full universal carry rectangles and a finite weighted-drain/root-language interface. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
