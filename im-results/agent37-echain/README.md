@@ -232,3 +232,12 @@ A concrete member is also certified: the reset packet at k=61,Q=0, followed by d
 The separate [canonical regular-E closure candidate](../agent37-d-timing-cocycle/ExceptionalESafeCanonical.lean) handles source inputs `L(3*k+4,q,1)` when q≥2 and q≢1 (mod 3), by mapping the first E return to a fixed-tail packet with p=2q and applying the safe packet normalizer. Its q=1 component is already covered by Agent 25's verified `q1b1_rejoins_regular`; the combined wrapper is in [ExceptionalEReentryClassification.lean](../agent37-d-timing-cocycle/ExceptionalEReentryClassification.lean). The new q≥2 source theorem and wrapper are **not yet compiled**, so treat this as a candidate reduction.
 
 For q≡1 (mod 3), the first E output has p≡2 (mod 3) and enters the marker P2-reset problem documented in this dossier. The regular-E closure does **not** close that marker-level reset recurrence; the remaining B-to-E/B-to-B residue classes and recursive P2 reset are still open.
+
+
+### Additional P2-reset cylinder (2026-11-20)
+
+Added `BB6.Agent37EChainBEEAReentry.reset243_16_source_reentry` in [EChainBEEAReentry.lean](EChainBEEAReentry.lean). For every `t,Q≥0`, the marker P2-reset packet with `k=243*t+16` follows the exact source path **P2 reset → E → B → E → A-marker return**, ending in a canonical `DRegularSource.sourceSection`. The parameter identities are:
+`1+32*(162*t+11)=3*(1728*t+117)+2`,
+`8*(1728*t+117)+10=3*(4608*t+315)+1`,
+`8*(4608*t+315)+9=3*(12288*t+843)+3`.
+The final A-marker closure is the existing arbitrary-counter `all_A_marker_returns_floor` bridge. This adds the `k≡16 (mod243)` cylinder inside the residual `k≡7 (mod9)` family. **The new theorem is not yet compiled or CI-audited**; keep it in `im-results/`.
