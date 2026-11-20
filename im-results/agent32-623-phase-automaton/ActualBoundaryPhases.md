@@ -40,3 +40,6 @@ This is a candidate phase set extracted from a finite interval. It is not yet pr
 
 
 **Coordinate convention:** this extraction uses the branch-selector coordinate (g=p-3q) from `RootRayGapCocycle.md), with (x=2g-\gamma_s). It is not using the separate ratio-four gap (p-4q) plotted in Agent 8's `RootGapScaleDynamics.md`. The terminal distance is (h=g-9,g-5,(g-1)/2,(g-2)/2) by sector, so (x=2h) on LO/LE and (x=4h) on RO/RE.
+
+
+**Window convention:** these 262 phases use the q-indexed diagnostic window from `synchronizing_word_scan.js`, with (ell_q) least such that (	au(ell_q)=(3^{ell_q}-1)/2ge q+3) and (B_q=max(34ell_q+122,36ell_q+88)). They are not the boundary phases for the source-verified S-indexed mass window in `agent41-623-3euclidean/MonotoneMassWindow.md`, which uses (ell_S), (B_S=max(34ell_S+140,36ell_S+88)), and the proven forward shifts. The 262-state list is therefore a diagnostic for the existing reset scan, not yet the induction phase set.
