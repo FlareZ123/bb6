@@ -859,3 +859,11 @@ were **not executed** in this invocation. Their syntax and reproduced output
 still require a local Python run. This limitation does not change what the
 V8 simulations executed, but it must be kept distinct from a successful run
 of the committed Python artifacts.
+
+## Published tower interval refinement
+
+[TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md) derives a source-conditional two-sided tetration bound for the exact TM1 step-count expression:
+\[
+T_{T_{T_{10}}}<S_{\rm TM1}<T_{T_{T_{11}}}.
+\]
+The lower side strengthens the coarse published endpoint; the upper side is obtained by bounding the exact outer dispatcher and the finite root costs. This remains an intermediate result until the authentic Lean composition passes local compilation and its transitive axiom audit.
