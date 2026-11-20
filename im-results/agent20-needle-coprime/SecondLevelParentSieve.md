@@ -4,7 +4,7 @@
 
 Two independent errors affected the original second-level prime sieve. On the p=5 cylinder \(w\equiv0\pmod4\), the parent equation forces \(w\equiv4\pmod5\), so \(w\equiv4\pmod{20}\) must be retained; see [Agent 48's p=5 audit](../agent48-needle-sieve-audit/SecondLevelPrime5Correction.md). On the p=13 cylinder \(w\equiv9\pmod{12}\), the parent equation forces \(w\equiv12\pmod{13}\), rather than excluding the whole cylinder; the derivation and exact recount are in [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md).
 
-With both corrections applied, the exact CRT counts are 38.50383574% (eight primes), 36.48382491% (eleven primes), and 38.24667388% for the conditional \(11^2\) refinement. These are candidate-valuation densities only. The corrected finite congruence sieve still does not establish an actual integer predecessor or blank-root reachability. Agent 48's later recount script drops the entire p=13 cylinder and omits its modulus factor; its lower percentages are undercounts. The exact reconciliation is recorded in [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md).
+With the p=5 and p=13 congruence corrections applied, the eight-prime baseline is 38.50383574%. A further CRT-normalization audit found that the eleven-prime extension had counted p=13 twice: 900900 already contains 13 through the modulus-39 cylinder. The corrected eleven-prime density is 36.51713603%; the separate conditional \\(11^2\\) refinement remains 38.24667388%. These are candidate-valuation densities only and do not establish an actual predecessor or blank-root reachability. The correction and exact reconciliation are recorded in [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md).
 
 ## 1. The second-level target
 
@@ -154,108 +154,21 @@ All base cylinders are determined by \(w\bmod13860\), where
 \[
 13860=\operatorname{lcm}(4,12,3,10,18,28,60,66).
 \]
-For each base residue \(b\bmod13860\), reject \(b\equiv0\pmod4\) only when \(b\not\equiv4\pmod5\), and reject \(b\equiv9\pmod{12}\) unless the \(p=13\) coordinate is \(b\equiv12\pmod{13}\). Apply the forced \(7\)- and \(11\)-residues whenever \(b\equiv1\pmod3\) and \(b\equiv2\pmod{10}\), respectively. For each remaining base residue, the number of choices modulo \(13,19,29,61,67\) is one or the full prime according as its corresponding divisibility cylinder is active or inactive. The Chinese remainder theorem then gives the exact count.
-
-The full valuation modulus is
+For each base residue \(b\bmod M_0\), apply the corrected p=5, p=7, and p=11 guards and impose the p=13 forced residue directly: if \(b\equiv9\pmod{12}\), require \(b\equiv12\pmod{13}\). This is a direct base-residue filter because 13 already divides \(M_0\) through the modulus-39 cylinder. Do not add a second independent factor of 13. Each active cylinder among \(19,29,37,61,67,79,101\) contributes one residue modulo its prime, otherwise all prime residues remain.
 \[
-L=13860\cdot13\cdot19\cdot29\cdot61\cdot67=405\,754\,008\,660.
-\]
-For every \(j\bmod33\), exactly
-\[
-156\,230\,856\,990
-\]
-residues modulo \(L\) survive. Thus the exact natural density of valuations not eliminated by these eight necessary filters is
-\[
-\boxed{\frac{156\,230\,856\,990}{31\,211\,846\,820}
-=\frac{2\,189\,027}{5\,685\,218}
-\approx0.3850383574.}
-\]
-Equivalently, the filters eliminate about \(61.49616\%\) of all valuations. This is a density of candidate valuations, not a probability of a machine or a proof that any surviving valuation is realizable.
-
-The accompanying second_level_cylinder_density.js reproduces the finite CRT count using only integer arithmetic.
-
-### Conditional prime-square refinement at \(11^2\)
-
-The eight-prime sieve can be sharpened on one parameter class by using \(121\), not merely \(11\).
-
-For \(r=110j+50\), \(9^r\equiv1\pmod{440}\), so \(v=(9^r+3)/2\equiv2\pmod{220}\), hence \(A\equiv8\) and \(2^v\equiv4\pmod{6655}\). The recurrence for \(P_r(A)\), now modulo \(6655=55\cdot121\), gives
-\[
-P_{r+110}\equiv3631P_r+2750,\qquad P_{50}\equiv2185.
-\]
-The affine recurrence has the exact solution
-\[
-P_{110j+50}\equiv2185+1540j\pmod{6655}.
-\]
-Indeed, substituting this expression into the recurrence reduces to
-\[
-3630\cdot2185+1210=1192\cdot6655,\qquad
-3630\cdot1540=840\cdot6655.
-\]
-Consequently
-\[
-B=4P\equiv2085-495j\pmod{6655},
-\qquad
-\boxed{y\equiv2-23j\pmod{121}.}
-\]
-
-Since \(2^{33}\equiv118=-3\pmod{121}\) and the order of \(2\) modulo \(121\) is \(110\), the cylinder \(121\mid D_w\) is exactly
-\[
-w\equiv32\pmod{110}.
-\]
-There \(2^w\equiv59\pmod{121}\), so the parent equation forces
-\[
-w\equiv y-59\equiv-57-23j\pmod{121}.
-\]
-The first-level \(11\)-filter already requires \(w\equiv9-j\pmod{11}\). The \(121\)-cylinder has \(w\equiv10\pmod{11}\), so it is automatically excluded unless \(j\equiv10\pmod{11}\). On that parameter class, write \(j=10+11t\); the additional forced residue is
-\[
-\boxed{w\equiv76-11t\pmod{121}.}
-\]
-
-This is a conditional prime-square refinement, not a replacement for the eight-prime baseline. The density numbers in this subsection are calculated against the eight-prime sieve alone; they are not combined with the later eleven-prime extension. The exact CRT count is parameter-dependent:
-- If \(j\not\equiv10\pmod{11}\), the eight-prime density is unchanged.
-- If \(j\equiv10\pmod{11}\), the surviving count modulo
-  \[
-  L_{121}=152460\cdot13\cdot19\cdot29\cdot61\cdot67=4\,463\,294\,095\,260
-  \]
-  is \(1\,707\,061\,536\,960\), giving
-  \[
-  \boxed{\frac{35\,877\,712}{93\,806\,097}\approx0.3824667388.}
-  \]
-The accompanying second_level_prime_power_refinement.js checks all \(j\bmod121\) by exact integer counting. For \(j\not\equiv10\pmod{11}\), its count is \(1\,718\,539\,426\,890\) modulo the same \(L_{121}\), exactly the baseline eight-prime density.
-
-
-### Eleven-prime extension
-
-The additional primes \(37,79,101\) give three more independent necessary cylinders:
-\[
-\begin{array}{c|c|c}
-p&\text{denominator cylinder}&\text{forced residue}\\
-37&w\equiv7\pmod{36}&w\equiv c_{37}(j)\pmod{37}\\
-79&w\equiv9\pmod{39}&w\equiv c_{79}(j)\pmod{79}\\
-101&w\equiv18\pmod{100}&w\equiv c_{101}(j)\pmod{101}.
-\end{array}
-\]
-The base modulus is now
-\[
-M_0=\operatorname{lcm}(4,12,3,10,18,28,36,39,60,66,100)=900900.
-\]
-For each base residue \(b\bmod M_0\), apply the corrected p=5 guard, force \(w\equiv12\pmod{13}\) on the p=13 cylinder \(w\equiv9\pmod{12}\), and apply the forced p=7 and p=11 residues; each active cylinder among \(19,29,37,61,67,79,101\) contributes one residue modulo its prime, otherwise all prime residues remain.
-\[
-L_{11}=900900\cdot13\cdot19\cdot29\cdot37\cdot61\cdot67\cdot79\cdot101
-=7\,786\,214\,520\,411\,026\,700
+L_{11}=900900\cdot19\cdot29\cdot37\cdot61\cdot67\cdot79\cdot101
+=598\,939\,578\,493\,155\,900
 \]
 and, for every \(j\bmod33\), exactly
 \[
-2\,840\,708\,872\,558\,889\,670
+218\,715\,580\,637\,067\,540
 \]
-surviving residues. Therefore the eleven-prime necessary sieve leaves
+surviving residues. Therefore the corrected eleven-prime necessary sieve leaves
 \[
-\boxed{\frac{9\,185\,206\,688\,521}{25\,176\,106\,704\,210}
-\approx0.3648382491.}
+\boxed{\frac{4\,596\,796\,566\,563}{12\,588\,053\,352\,105}
+\approx0.3651713603.}
 \]
-It eliminates about \(63.51618\%\) of valuation classes. Reproduction is in second_level_eleven_prime_density.js; the forced-residue and matrix-period certificates for the new primes are in second_level_extra_prime_tables.js.
-
-
+It eliminates about \(63.48286\%\) of valuation classes. The corrected CRT count and the additional odd-block history filter are reproducible in second_level_eleven_prime_density.js; the latter is derived in [SecondLevelOddBlockFilter.md](SecondLevelOddBlockFilter.md). The forced-residue and matrix-period certificates for the new primes are in second_level_extra_prime_tables.js.
 ## 3. A uniform high-side middle-band exclusion
 
 The prime cylinders leave many valuations. There is also a large contiguous interval, depending on \(r\), that can be excluded without any prime-specific residue table.
