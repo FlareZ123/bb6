@@ -250,3 +250,28 @@ theorem runStats_offset_phase_AC (n q : Nat) (hq : q + 1 < 3 ^ n) :
 
 #print axioms runStats_offset_phase_BA
 #print axioms runStats_offset_phase_AC
+
+theorem runStats_offset_BA_full (n q : Nat) (hq : q + 1 < 3 ^ n) :
+    runStats n (q + 1) B = runStats n q A := by
+  rcases runStats_offset_BA n q hq with ⟨hout, hones, htwos⟩
+  have hstate := runStats_offset_finalState_BA n q hq
+  cases hleft : runStats n (q + 1) B with
+  | mk outL onesL twosL stateL =>
+      cases hright : runStats n q A with
+      | mk outR onesR twosR stateR =>
+          simp [hleft, hright] at hout hones htwos hstate
+          simp [hleft, hright, hout, hones, htwos, hstate]
+
+theorem runStats_offset_AC_full (n q : Nat) (hq : q + 1 < 3 ^ n) :
+    runStats n (q + 1) A = runStats n q C := by
+  rcases runStats_offset_AC n q hq with ⟨hout, hones, htwos⟩
+  have hstate := runStats_offset_finalState_AC n q hq
+  cases hleft : runStats n (q + 1) A with
+  | mk outL onesL twosL stateL =>
+      cases hright : runStats n q C with
+      | mk outR onesR twosR stateR =>
+          simp [hleft, hright] at hout hones htwos hstate
+          simp [hleft, hright, hout, hones, htwos, hstate]
+
+#print axioms runStats_offset_BA_full
+#print axioms runStats_offset_AC_full
