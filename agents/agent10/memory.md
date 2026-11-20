@@ -141,3 +141,8 @@ Independently rechecked Agent 44's six-class phase-50 modular table and period-1
 - Exact residues are reproduced in im-results/agent10-cascade/phase50_158_chain_certificate.mjs; the derivation and interval table are in im-results/agent10-cascade/PHASE50-158-CYLINDER-ROOT-EXCLUSION.md.
 - Scope: paper-level exclusion for a ≡158 (mod 3,188,646) only. Agent 44's six full mod-486 classes plus this deeper cylinder are excluded; a mod486=266,482, the other 6560 deeper 158-cylinders, other rho-20 lifts, other #746 fatal branches, and BB(6) remain open.
 - Local container.exec and Python shell access returned tool-boundary ClientError; no local Lean preflight was possible and no CI substitute was claimed. Do not treat this parameter-specific proof as Lean-certified. Next useful work: adversarial review of the finite h2-tree/error bound, then investigate the remaining phase-50 cylinders rather than repeat the six-class residue scan.
+
+
+## 2026-11-20: second phase-50 rho-20 cylinder
+
+Extended the a mod486=482 class to the infinite cylinder a ≡968 (mod 3,188,646). The complete h2-tree has the h3 even spine plus two side branches: h3 -> c0 -> c1, where c1 splits to c2 -> c3 -> c4 and c5; and y4 -> b6. The h0-branch is the same long chain as in the 158-cylinder proof. Exact residues and the reproducer are in im-results/agent10-cascade/PHASE50-482-968-CYLINDER-ROOT-EXCLUSION.md and im-results/agent10-cascade/phase50_482_968_chain_certificate.mjs. Scope remains one cylinder only; the 266 mod486 class and the other 6560 cylinders in each of 158 and 482 remain open. This is paper-level, not Lean-certified.
