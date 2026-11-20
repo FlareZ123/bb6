@@ -1729,3 +1729,8 @@ Improved the conditional lower bound by retaining the full root countdown length
 ## 2026-11-20 stronger first-section tetration index
 
 Improved the conditional lower bound again by using the full seven-step first section, sectionResult 7 2 6 63. Its right counters start at 63≥T3+1, so after six right updates b6≥T9+1; the seventh exponent update gives A0≥b6≥T9+1. With r=31·2^(A0−4)−1 and M=16r−20, this yields M≥M0=496·2^(T9−3)−36=62T10−36. Then B≥T_M0+1, terminal A≥T_M0+3, N≥N0=(2^78−1)2^(T_M0+3)−3, b_N≥T_N0+1, and S_full≥6(T_N0+1)^2. This supersedes the weaker M0=496·2^67−36 bound; remains paper-level and conditional on uncompiled source composition.
+
+
+## 2026-11-20 sharpened first-section tetration index
+
+Strengthened A0 further from the full seven-step recurrence. With b0=63≥T3+1 and b_{j+1}=2^{b_j}−1, b_j≥T_{j+3}+1 for j≤6. Since a7=6+Σ_{j=0}^6(b_j+ε_j) and ε_j≥1, A0≥20+Σ_{j=3}^9 T_j. Thus S9=Σ_{j=3}^9T_j, M0=496·2^(S9+16)−36, N0=(2^78−1)2^(T_M0+3)−3, and S_full≥6(T_N0+1)^2. This supersedes M0=62T10−36. Still paper-level, conditional, and uncompiled.

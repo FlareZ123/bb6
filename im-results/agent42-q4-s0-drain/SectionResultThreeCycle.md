@@ -516,25 +516,24 @@ no new Lean theorem is claimed here.
 
 ## Stronger tetration-height corollary (conditional)
 
-A stronger root-countdown estimate is available directly from the
-seven-step first section. It is
-\(\texttt{sectionResult}\ 7\ 2\ 6\ 63\), so its right counters satisfy
-\(b_0=63\) and \(b_{j+1}=2^{b_j}-1\). With \(T_1=2\) and
-\(T_{j+1}=2^{T_j}\), we have \(b_0\ge T_3+1\), and induction gives
-\(b_j\ge T_{j+3}+1\). The final first-section exponent is
-\(A_0=a_7=a_6+b_6+\epsilon_6\ge b_6\), hence
+A strong root-countdown estimate follows directly from the seven-step
+first section \(\texttt{sectionResult}\ 7\ 2\ 6\ 63\). Let
+\(T_1=2\), \(T_{j+1}=2^{T_j}\). Its right counters start at \(b_0=63\),
+so \(b_0\ge T_3+1\); since \(b_{j+1}=2^{b_j}-1\), induction gives
+\(b_j\ge T_{j+3}+1\) for \(0\le j\le6\). The exponent update is
+\(a_{j+1}=a_j+b_j+\epsilon_j\) with \(\epsilon_j\ge1\), whence
 \[
-A_0\ge T_9+1.
+A_0=a_7
+=6+\sum_{j=0}^{6}(b_j+\epsilon_j)
+\ge20+\sum_{j=3}^{9}T_j.
 \]
-
-The root residue arithmetic gives
+Set \(S_9=\sum_{j=3}^{9}T_j\). The root residue arithmetic gives
 \[
-r=31\cdot2^{A_0-4}-1,\qquad M=16r-20.
+r=31\cdot2^{A_0-4}-1,\qquad M=16r-20,
 \]
-Therefore
+and therefore
 \[
-M\ge M_0:=496\cdot2^{T_9-3}-36
-=62T_{10}-36.
+M\ge M_0:=496\cdot2^{S_9+16}-36.
 \]
 The middle-34 SectionResult segment starts with right counter at least \(2\)
 and performs \(M\) updates \(b_{j+1}=2^{b_j}-1\), so its final right
@@ -560,13 +559,8 @@ obeys
 \[
 \boxed{S_{\rm full}\ge6\bigl(T_{N_0}+1\bigr)^2.}
 \]
-Equivalently, \(T_{N_0}=2\uparrow\uparrow N_0\), where
-\[
-M_0=62T_{10}-36,\qquad
-N_0=(2^{78}-1)2^{T_{M_0}+3}-3.
-\]
-This is much stronger than the earlier \(2\uparrow\uparrow\uparrow5\)
-comparison, which used only the coarse \(M\ge65536\) consequence.
+This supersedes the weaker \(M_0=62T_{10}-36\) bound and the earlier
+\(2\uparrow\uparrow\uparrow5\) comparison.
 
 This remains an arithmetic lower bound conditional on the authentic root
 and complete dispatcher source composition. It is not a compiled Lean
