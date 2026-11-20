@@ -206,21 +206,21 @@ theorem runStats_offset_finalState_AC (n q : Nat) (hq : q + 1 < 3 ^ n) :
 #print axioms runStats_offset_finalState_BA
 #print axioms runStats_offset_finalState_AC
 
-theorem runStats_offset_BA (n q : Nat) (hq : q + 1 < 3 ^ n) :
+theorem runStats_offset_BA (n q : Nat) (hq : q + 1 ≤ 3 ^ n) :
     (runStats n (q + 1) B).output = (runStats n q A).output ∧
     (runStats n (q + 1) B).ones = (runStats n q A).ones ∧
     (runStats n (q + 1) B).twos = (runStats n q A).twos := by
-  have h := (runStatsData_offset_identities n).1 q (by omega)
+  have h := (runStatsData_offset_identities n).1 q hq
   rw [runStatsData_eq, runStatsData_eq] at h
   exact ⟨congrArg Prod.fst h,
     congrArg Prod.fst (congrArg Prod.snd h),
     congrArg Prod.snd (congrArg Prod.snd h)⟩
 
-theorem runStats_offset_AC (n q : Nat) (hq : q + 1 < 3 ^ n) :
+theorem runStats_offset_AC (n q : Nat) (hq : q + 1 ≤ 3 ^ n) :
     (runStats n (q + 1) A).output = (runStats n q C).output ∧
     (runStats n (q + 1) A).ones = (runStats n q C).ones ∧
     (runStats n (q + 1) A).twos = (runStats n q C).twos := by
-  have h := (runStatsData_offset_identities n).2 q (by omega)
+  have h := (runStatsData_offset_identities n).2 q hq
   rw [runStatsData_eq, runStatsData_eq] at h
   exact ⟨congrArg Prod.fst h,
     congrArg Prod.fst (congrArg Prod.snd h),
@@ -253,7 +253,7 @@ theorem runStats_offset_phase_AC (n q : Nat) (hq : q + 1 < 3 ^ n) :
 
 theorem runStats_offset_BA_full (n q : Nat) (hq : q + 1 < 3 ^ n) :
     runStats n (q + 1) B = runStats n q A := by
-  rcases runStats_offset_BA n q hq with ⟨hout, hones, htwos⟩
+  rcases runStats_offset_BA n q (by omega) with ⟨hout, hones, htwos⟩
   have hstate := runStats_offset_finalState_BA n q hq
   cases hleft : runStats n (q + 1) B with
   | mk outL onesL twosL stateL =>
@@ -264,7 +264,7 @@ theorem runStats_offset_BA_full (n q : Nat) (hq : q + 1 < 3 ^ n) :
 
 theorem runStats_offset_AC_full (n q : Nat) (hq : q + 1 < 3 ^ n) :
     runStats n (q + 1) A = runStats n q C := by
-  rcases runStats_offset_AC n q hq with ⟨hout, hones, htwos⟩
+  rcases runStats_offset_AC n q (by omega) with ⟨hout, hones, htwos⟩
   have hstate := runStats_offset_finalState_AC n q hq
   cases hleft : runStats n (q + 1) A with
   | mk outL onesL twosL stateL =>
