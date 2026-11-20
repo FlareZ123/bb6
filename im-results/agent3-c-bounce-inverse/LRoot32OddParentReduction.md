@@ -161,7 +161,7 @@ The reduction is not a closure of \(L(t)\). Its surviving cases are now separate
 
 2. **\(t\equiv3\pmod4\):** only \(P_0(t)\) can survive. For \(t\equiv3\pmod{16}\) it is now excluded. For \(t\equiv11,15\pmod{16}\), the forced low-valuation parent \(Q(v)\) remains; the \(t\equiv15\pmod{16}\) subcase has even right coordinate and sum modulo eight in \(\{2,6\}\), so the even-right unique inverse applies. Two subfamilies of this \(t\equiv15\pmod{16}\) branch are now fully closed in the high-stop composition: \(t\equiv47\pmod{256}\) (see [Root32HighStopR9568.md](./Root32HighStopR9568.md)) and \(t\equiv31\pmod{256}\) (see [Root32HighStopR10592.md](./Root32HighStopR10592.md)). The other \(t\equiv15\pmod{16}\) cases remain open. For \(t\equiv7\pmod{16}\), \(H(t)\) is divisible by 16 and the higher-valuation odd/odd parent fan remains open.
 
-The useful next work is therefore the unbounded even-depth \(P_2\) branch for \(t\equiv1\pmod8\), and the high-valuation / forced-\(Q\) branches of \(P_0\) for \(t\equiv7,11,15\pmod{16}\). Do not treat the eliminated \(t\equiv3\pmod{16}\) cylinder as a full P7 or Machine C exclusion.
+The useful next work is therefore the unbounded even-depth \(P_2\) branch for \(t\equiv9\pmod{16}\), and the high-valuation / forced-\(Q\) branches of \(P_0\) for \(t\equiv7,11,15\pmod{16}\). Do not treat the eliminated \(t\equiv3\pmod{16}\) cylinder as a full P7 or Machine C exclusion.
 
 ## Verification boundary
 
