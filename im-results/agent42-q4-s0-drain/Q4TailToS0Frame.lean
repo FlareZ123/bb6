@@ -131,13 +131,16 @@ private theorem q4Tail_right_stream
   · have hcases :
         i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨
         i=5 ∨ i=6 ∨ i=7 ∨ i=8 := by omega
-    rcases hcases with h0|h1|h2|h3|h4|h5|h6|h7|h8 <;> subst i
+    rcases hcases with h0|h1|h2|h3|h4|h5|h6|h7|h8
     all_goals
       have hcoord : H+1+(i:Int) = g+(-4+(i:Int)) := by
         dsimp [H,g]
         omega
-      rw [hcoord, frameAt_tape]
-      simp [q4TailInside,q4TailEnd,s0RightFacing,d1pow,d1,sideBit]
+      rw [hcoord]
+      change (frameAt (d0Sweep n T h) g q4TailInside q4TailEnd).tape
+        (g+(-4+(i:Int))) = _
+      rw [frameAt_tape]
+      simp_all [q4TailInside,q4TailEnd,s0RightFacing,d1pow,d1,sideBit]
   · let j : Nat := i-9
     have hcoord : H+1+(i:Int) = g+5+(j:Int) := by
       dsimp [H,g,j]
@@ -199,7 +202,7 @@ theorem q4Tail_frame_eq_s0Config
     rw [binDec_allOnes_local]
   apply config_ext_local
   · rfl
-  · simp [U,H,g,frameAt,q4TailEnd,s0Config]
+  · simp [U,H,g,frameAt,q4TailEnd,s0Config] <;> omega
   · funext x
     by_cases hx : x ≤ H
     · let i : Nat := Int.toNat (H-x)
