@@ -585,3 +585,8 @@ Local shell and Python attempts returned concrete ClientError failures, so no lo
 ### Additional source audit
 
 Inspected `PacketZeroBoundarySource.lean`: its current `e_zero_boundary` theorem is specialized to tail (0,1^6), so it does not by itself prove the arbitrary-tail E-zero rule above. `CryptidBoundary.full_E_six` and `full_E_triple_pairs` do preserve arbitrary suffixes and may provide the right composition/re-encoding ingredients. The E-two reset list includes the non-fixed case (P(3,2;01)\to P(0,8;011111111)) at call 54. Agent 2 was sent this precise generalization target.
+
+
+### Terminal proof tail clarification
+
+The 107th A_step2 call reaches the final packet (P(1,2;011)) with suffix `01011011). The external source then applies `step_An_1101` and `iterate 113 stepHalt`; the packet transducer endpoint is the input to that terminal source lemma, not the halt configuration itself.
