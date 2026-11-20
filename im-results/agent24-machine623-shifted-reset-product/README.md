@@ -92,6 +92,12 @@ The stable partition counts are
 \]
 The script validates both initial-state choices on all 597,871 words of lengths 0–6 against the full post_reset_pair DFA; output/nullness, event-symbol/previous-pair, and carry-label mismatches are all zero.
 
+The wrapper semantics are exact for words of every finite length, not merely the checked prefix lengths. After reading a word \(w\):
+- from the offset-1 start, the first symbol moves skip1 to the base initial state, after which every symbol follows the base DFA;
+- from the offset-2 start, the first symbol moves skip2 to skip1, the second moves skip1 to the base initial state, and every later symbol follows the base DFA.
+
+Induction on \(|w|\) therefore gives the base-DFA state reached by the suffix \(w[1:]\) or \(w[2:]\), respectively (with the corresponding skip state retained when the word is shorter than the offset). The Moore output is consequently exactly the base carry label on the selected suffix, and the Mealy event bit records its first null-to-non-null transition. The finite length-0–6 check separately validates that this base output/event encoding agrees with the full post-reset-pair labels on all tested words.
+
 The root transition selects the initial state from its phase edge:
 - choose offset 2 exactly for \(r=0\to-2\);
 - choose offset 1 for every other admissible phase edge.
