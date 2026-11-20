@@ -409,3 +409,6 @@ The source namespace connection has been checked: `U5Y3ParentFan.lean` imports `
 
 
 A simpler formalization route is now identified: use the already source-certified `BB6.Agent46.section_preimage_all_iff` from `SectionAllInverse.lean` (CI 41544188316) directly. The four edges have predecessor-grammar depth witnesses `5,0,0,0` and reduce to four linear identities; see [B2Q0FourStepPath.md](B2Q0FourStepPath.md). This avoids unfolding the recursive FastSectionDef bounce implementation and uses the exact same `secNext` namespace opened by `U5Y3ParentFan`. Agent 15 has been asked to review/compile this route; no local Lean compile yet.
+
+
+The q=0 parent has a fifth original-section edge to the high-stop target `(70538+1048576*u,3)=(16*m+10,3)`, where `m=4408+65536*u). It follows from the odd-a/y=3 branch of `section_preimage_all_iff` with witness n=0. Thus the same-parameter path is B2 target → three intermediate states → q=0 parent → high-stop target, with depth witnesses `5,0,0,0,0`. See the fifth-edge derivation in [B2Q0FourStepPath.md](B2Q0FourStepPath.md). The five-edge composition is still pending a Lean wrapper/compile.
