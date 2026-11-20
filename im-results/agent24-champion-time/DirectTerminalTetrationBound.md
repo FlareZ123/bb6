@@ -243,7 +243,10 @@ indeed \(N\ge T_{M+46}+1\), so \(M+N+49>T_{M+46}\).
 The sharper upper-side estimate in
 [TM63PublishedTowerSandwich.md](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md)
 gives \(M+N+50<T_J\), where
-\(J=2^{3\sqrt{T_{10}}/4+5}\). Hence
+\[
+J=2^{\frac12\sqrt{T_{10}}+\frac12T_9+T_8+T_7+T_6+T_5+80}.
+\]
+Hence
 \[
 T_{M+N+49}<T_{T_J},
 \]
