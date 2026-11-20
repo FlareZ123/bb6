@@ -13,7 +13,7 @@ where
 \[
 M=31\cdot2^{A_0}-36,\qquad
 N=(2^{78}-1)2^A-3,\qquad
-J=2^{3\sqrt{T_{10}}/4+5}.
+J=2^{\frac12\sqrt{T_{10}}+\frac12T_9+T_8+T_7+T_6+T_5+80}.
 \]
 The lower bound follows from \(b_N=V_{M+N+46}\) and
 \(V_j\ge T_{j+3}+1\). The upper follows from the sharpened exact
