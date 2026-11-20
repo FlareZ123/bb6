@@ -110,3 +110,7 @@ Existing source modules already establish substantial cylinders:
 The remaining work is to compose these cylinders along the *actual marker-mutating orbit*, especially when a P2 reset is followed by a marker family for which another P2 source transition has not yet been established. The resource condition for an E chain must also be checked at each reset. No all-(k) termination theorem is asserted here.
 
 A productive next step is to take the exact root-reachable P2 index from the current blank-root chain, compute its residue-cylinder word only as far as needed, and discharge the corresponding source macro composition. Avoid promoting the branch-specific valuation identities to a global termination claim.
+
+## 5. Lean check
+
+The five affine identities and the three resource equations are formalized in [`IndexCocycle.lean`](IndexCocycle.lean). The file compiles locally with Lean 4.36.0-rc2. Its `#print axioms` output for all eight theorems is exactly `[propext, Quot.sound]`; there are no project-specific axioms, `sorryAx`, or classical-choice dependencies. This check validates the arithmetic identities only, not the source macro premises or the global orbit-termination question.
