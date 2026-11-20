@@ -109,7 +109,7 @@ Equivalently, for genuine blank-origin section reachability,
   2k_d-a_d
   = (2^{2d+1}-2)a_d+3\cdot2^{2d+1}-6d-5>0,
   ]
-  Thus the natural-subtraction side condition in the odd-(a), (y=3) source row holds. Substitution verifies both source equations, so every listed pair really is a predecessor.
+  Thus the branch condition `2*k_d > a_d` and the natural-subtraction side condition in the odd-(a), (y=3) source row both hold. Substitution verifies both source equations, so every listed pair really is a predecessor.
 - The target is not the blank seed ((5,1)). Therefore a genuine visit to ((x,3)) has a positive-time predecessor, and each listed source edge also transports reachability forward by one step. This gives the stated reachability iff.
 
 The exact parent count for a fixed ℓ is therefore
