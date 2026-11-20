@@ -37,7 +37,10 @@ theorem seed24956_exit_next_none :
   decide
 
 theorem seed24956_exit_canon : DRegular.Canon seed24956Exit := by
-  simp [DRegular.Canon, seed24956Exit]
+  constructor
+  · dsimp [seed24956Exit]
+    omega
+  · simp [seed24956Exit]
 
 theorem seed24956_exit_shape :
     seed24956Exit = (⟨3*exitK+4,5,1⟩ : DRegular.L) := by
