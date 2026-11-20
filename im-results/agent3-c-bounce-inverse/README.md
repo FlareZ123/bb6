@@ -351,3 +351,19 @@ together with the q=0 parent form `m+1=8*(39+64*h)+1`, the B2 affine parameter `
 This is the source-equation form of the earlier residual bridge and matches the arithmetic content of `U5Q0M16Residual.u5_m8_t_identity`; it deliberately keeps the parameter module standalone rather than adding another source import. The updated exact blob `f08d837cd2c0afed92e040541410ffde8c330b53` compiles locally under Lean 4.36.0-rc2. All nine printed declarations have axiom profile `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
 
 **Remaining boundary:** the theorem assumes the U5 residual equations, q=0 parent shape, and B2 affine parameter relation. It does not prove that every blank-start B2 candidate supplies those premises, and the full `U5B2Root32.lean` import closure remains uncompiled. No CI was dispatched; the Critic's exact-source gate remains open.
+
+
+### Stronger q=0 root32 composition — 2026-11-20
+
+The parameter bridge now exports `u5_q0_root32_forces_h8_parameter`. Unlike the earlier `b2_root32_parameter_of_u5_q0_residual`, it does **not** assume `h=8+128*u`. From the U5 residual equations `hs`, `hm`, the q=0 parent form `m+1=8*(39+64*h)+1`, the root affine residue `w=6657+8192*r`, the exponent formula, and `r%64=32`, it derives
+
+```lean
+∃ u t, h=8+128*u ∧ u=1802+6720*t ∧
+  18018+211*u+22155*r=20*2^(E-13)
+```
+
+Thus the B2-style quotient is recovered from the q=0 source residual equations and root32 cylinder, and the theorem returns the exact root-index equation as well as the parameter progression. This is a stronger arithmetic composition and supplies the exact `hRoot` input needed by the existing root32 exclusion for the same `r,u` pair.
+
+The updated exact blob `34f925c6860984e7a356538be97e6fa3f912bb4e` compiles locally with Lean 4.36.0-rc2; all ten printed declarations have axiom profile `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
+
+**Remaining source gap:** this still assumes the U5 residual equations, q=0 parent shape, root affine residue, and root-index class. It does not yet identify the quotient `u=(h-8)/128` with the parameter of the separate B2 target family or prove that the same blank-start candidate supplies all these premises. The full `U5B2Root32.lean` import closure remains uncompiled. No CI was dispatched and no additional root-index cylinders were explored.
