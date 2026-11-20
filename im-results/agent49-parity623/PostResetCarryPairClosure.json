@@ -2148,5 +2148,13 @@
     "invalid_transitions": 0,
     "outside_closure_transitions": 0,
     "closure_added_states": 12
+  },
+  "lean_data_validation": {
+    "all_states_count": 72,
+    "all_states_complete": true,
+    "seed_labels_count": 54,
+    "seed_labels_unique": true,
+    "seed_labels_match_json_in_order": true,
+    "missing_list_commas": false
   }
 }
