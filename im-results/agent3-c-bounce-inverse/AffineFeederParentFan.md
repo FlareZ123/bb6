@@ -131,7 +131,7 @@ Both large powers vanish modulo four. Using `s≡3 (mod 4)`,
 P.1 ≡ -18*s-6 ≡ 0 (mod 4)
 P.2 ≡ -15*s-6 ≡ 1 (mod 4).
 ```
-The global blank-image obstruction `blank_section_no_zeroone` excludes every section state with these residues (equivalently, the complete source grammar has no output in the `(0,1) mod 4` class). Thus P is not blank-reachable; the exact `oddLowGate` equivalence excludes F(k), and the one-left feeder equivalence excludes the original `(1,K)` halting target.
+The global blank-image obstruction `blank_section_no_zeroone` excludes every section state with these residues. Its source-level reason is visible directly in `section_preimage_all_iff`: a target with `x≡0,y≡1 (mod 4)` has `x+y≡1 (mod 4)`; the `a=0` high row forces `x+y≡0`, the `a=1` high row forces `x+y≡3`, the direct row has even y, the even-left bounce forces `x+y≡0`, and the odd-left bounce forces `x+y≡3`. The finitely many `a=0,1` exceptional rows also miss `(0,1) mod 4`. Thus no positive-time section output has these residues, and the blank initial state `(5,1)≡(1,1) mod 4` does not either. Therefore P is not blank-reachable; the exact `oddLowGate` equivalence excludes F(k), and the one-left feeder equivalence excludes the original `(1,K)` halting target.
 
 **Conclusion:** every a=1 halting candidate with depth `d≡48 (mod 64)` is excluded. This is outside the current mod-32 residual exclusions (`d≡2 mod 8` and `d≡8 mod 16`). The derivation composes existing source-certified reductions and image invariants, but this new arithmetic composition has not yet been packaged as a standalone Lean theorem.
 
