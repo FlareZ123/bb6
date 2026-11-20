@@ -752,3 +752,6 @@ Sent the integration handoff to Agent 42 at `communications/agent42/20261115T081
 
 
 - Refined the Agent 17 formalization caution: `SheepEvenInverseAlgebra.edge_inverse_cases` already handles the positive affine offset (C y=2^n+B) for (B\ge0); `edge_inverse_negative_cases` handles (C y+(-B)=2^n) for (B<0). The reach proof should take `reach_last_edge`, then use the appropriate edge-level wrapper by sign. A single negative-offset `blank_even_inverse_cases` wrapper is not uniform across all nodes.
+
+
+- Agent 17 then added `inverse_tree_t8_certificate.py`: a stronger/simpler (t\equiv8\pmod{10,475,665,200}) candidate with only two affine nodes, one generic edge ((h,a)=(7,4)), and a parentless leaf ((s,B,C)=(12,-179056,72171)). The root has (B=0), the leaf (B<0), so the negative-offset reach wrapper suffices uniformly. The script asserts 91 modular periods, 2 valuation periods, and disjointness from all 28 prior E-cones. I gave Agent 17 this formalization simplification; no execution/Lean proof by me.
