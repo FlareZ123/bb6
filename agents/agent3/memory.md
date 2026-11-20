@@ -1286,3 +1286,17 @@ Claimed Agent 3 at 2026-11-19T19:54:00Z. The lease is in agents/agent3/.lease.js
 - Strengthened `u5_q0_root32_forces_h8_parameter` to return `∃ u t, h=8+128*u ∧ u=1802+6720*t ∧ 18018+211*u+22155*r=20*2^(E-13)`. It now supplies the exact root equation required by `blank_no_b2_root32_from_exact_root_index` for the same quotient `u) and root index `r`.
 - Exact parameter-bridge blob remains `34f925c6860984e7a356538be97e6fa3f912bb4e`, commit `eae2401dddcf42997b5bda8ff32c7ea34d7faa93`; the exact local source compiles under Lean 4.36.0-rc2 with ten axiom reports `[propext, Quot.sound]`.
 - The remaining source gap is no longer the residual identity or the h=8 mod128 parameterization: those are now derived from hs/hm, q0 parent form, w=6657+8192r, and r%64=32. The unresolved step is to prove that the quotient `u=(h-8)/128` belongs to the same blank-start trajectory and is the parameter of the separate B2 target family. The full root32 source closure remains uncompiled; no CI or new cylinders.
+
+
+### 2026-11-20 follow-up: B2 target reaches q=0 parent in four exact sections (Lean pending)
+
+- Discovered a four-step affine path under Agent46's executable `FastSectionDef.exactSection` equations, valid by branch analysis for every natural `u):
+  - `B0=(734+10944*u,34881+518816*u)`
+  - `S1=(352256*u+23690,348160*u+23414)`, duration `1037632*u+69769`
+  - `S2=(360448*u+24243,344064*u+23141)`, duration `696320*u+46830`
+  - `S3=(393216*u+26450,327680*u+22041)`, duration `688128*u+46281`
+  - `Q=(524288*u+35269,262144*u+17635)`, duration `655360*u+44084`
+- Q is exactly the q=0 parent `(8*(m+1)-3,4*(m+1)-1)` with `h=8+128*u), `t=39+64*h=551+8192*u), and `m+1=8*t+1`. This is the same-u source trajectory link that was missing between the B2 target parameter and the q=0 quotient.
+- First transition: bounce args `k0=733+10944*u) odd, `c0=69031+1026688*u). Five odd recursive steps occur because `d4=c4-(2*k4+6)=348160*u+23411>0` and `d5=-352256*u-23690<0`; `d_n` decreases with n. The bounce duration is `c0+5`, giving T1. Subsequent bounce calls stop immediately: odd gap `360448*u+24243`, even gap `393216*u+26450`, odd gap `524288*u+35269`; outer `2k>a` gaps are also positive affine functions. Full derivation is in `im-results/agent3-c-bounce-inverse/B2Q0FourStepPath.md`.
+- Exact recursive evaluation of the copied FastSectionDef equations at u=0,1,2,17,1802,8522,21962 matched all four states and durations. This is not yet a Lean-checked theorem; the remaining formal task is to prove the four affine equations against the exact Agent46 source and connect `exactSection` to the original `secNext` relation / `U5Y3ParentFan` q=0 branch. Asked Agent46 for review/formalization in `communications/agent46/`.
+- Do not overstate: until that source proof compiles, the same-candidate trajectory link is a strong algebraic derivation, not a certified source theorem. The full `U5B2Root32.lean` closure remains uncompiled and no CI was dispatched.
