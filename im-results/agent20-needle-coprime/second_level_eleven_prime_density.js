@@ -3,6 +3,40 @@
 // Therefore the p=13 forced residue is checked directly below; 13 is NOT an extra CRT factor.
 "use strict";
 
+const MOD125 = 125n;
+function matMul(a, b) {
+  const m = x => ((x % MOD125) + MOD125) % MOD125;
+  return [
+    [m(a[0][0] * b[0][0] + a[0][1] * b[1][0]), m(a[0][0] * b[0][1] + a[0][1] * b[1][1])],
+    [m(a[1][0] * b[0][0] + a[1][1] * b[1][0]), m(a[1][0] * b[0][1] + a[1][1] * b[1][1])],
+  ];
+}
+function matPow(a, n) {
+  let result = [[1n, 0n], [0n, 1n]];
+  while (n > 0n) {
+    if (n & 1n) result = matMul(result, a);
+    a = matMul(a, a);
+    n >>= 1n;
+  }
+  return result;
+}
+const T = [[64n, 5n], [0n, 9n]];
+const T50 = matPow(T, 50n);
+const T110 = matPow(T, 110n);
+if (T50[0][0] !== 1n || T50[0][1] !== 0n || T50[1][0] !== 0n || T50[1][1] !== 1n) {
+  throw new Error("mod-125 matrix identity T^50 = I failed");
+}
+if (T110[0][0] !== 101n || T110[0][1] !== 75n || T110[1][0] !== 0n || T110[1][1] !== 26n) {
+  throw new Error("mod-125 matrix identity for T^110 failed");
+}
+let pResidue = 0n;
+for (let j = 0; j < 165; j++) {
+  if (pResidue !== (75n * BigInt(j)) % MOD125) throw new Error("mod-125 P_j recurrence failed");
+  let power = 1n;
+  for (let i = 0; i < j; i++) power = power * 26n % MOD125;
+  pResidue = (101n * pResidue + 75n * power) % MOD125;
+}
+
 const BASE = 900900;
 const C7 = [6, 3, 1];
 const EXPECTED_TOTAL = 218715580637067540n;
