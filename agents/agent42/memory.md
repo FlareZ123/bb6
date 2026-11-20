@@ -2005,3 +2005,37 @@ sharper conditional interval
 T_{M+N+49}<S_{\rm TM1}<T_{T_J}.
 ]
 Updated both research READMEs and DirectTerminalTetrationBound.md.
+
+
+## 2026-11-20 continuation checkpoint (2026-11-20T20:01:02.862Z)
+
+A stronger terminal-counter recurrence lemma supersedes the previous
+(T_{M+N+49}<S<T_{T_J}) bound.
+
+For every (j\ge1),
+[
+V_j^{1040}<T_{j+4}.
+]
+Base: (V_1=2^{63}-1), hence
+(V_1^{1040}<2^{63\cdot1040}=2^{65520}<2^{65536}=T_5).
+Induction: if (V_j^{1040}<T_{j+4}), then (V_j\ge2) gives
+(1040V_j\le V_j^{1040}<T_{j+4}), so
+[
+V_{j+1}^{1040}=(2^{V_j}-1)^{1040}
+ <2^{1040V_j}<2^{T_{j+4}}=T_{j+5}.
+]
+
+Set (q=M+N+50), so (b_N=V_{q-4}). Then
+(b_N^{1040}<T_q), and (b_N\ge2) gives
+(9b_N^2<b_N^{1040}). The already established complete-score upper
+(S_{m TM1}<9b_N^2) therefore yields (S_{m TM1}<T_q).
+The exact lower recurrence gives
+(S_{m TM1}\ge6(T_{q-1}+2)^2>T_{q-1}). Thus the current
+source-conditional interval is the adjacent-tower squeeze
+[
+\boxed{T_{q-1}<S_{\rm TM1}<T_q},qquad q=M+N+50.
+]
+The consolidated note also proves (q<T_{11}), so the upper endpoint
+is below the published right endpoint. This is the strongest result
+from this invocation; it remains conditional on authentic-root/source
+composition and still lacks a compiled dependency-closure/axiom audit.
