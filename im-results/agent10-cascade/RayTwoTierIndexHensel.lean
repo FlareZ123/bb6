@@ -92,14 +92,28 @@ theorem twoTierNumerator_shift_digit_mod (n j k r : Nat) (hr:r<3) :
     dsimp [M]
     rw [show (3:Int)^(k+3)=(3:Int)^(k+2)*3 by
       rw [Int.pow_succ]]
-    ring
+    calc
+      1 + r * (3:Int)^(k+2) * (depthCoeff (k+1):Int) +
+          (3:Int)^(k+2) * 3 * (depthError (k+1) r:Int) - 1 =
+        r * (3:Int)^(k+2) * (depthCoeff (k+1):Int) +
+          (3:Int)^(k+2) * 3 * (depthError (k+1) r:Int) := by omega
+      _ = (3:Int)^(k+2) *
+          (r*(depthCoeff (k+1):Int)+3*(depthError (k+1) r:Int)) := by
+        rw [Int.mul_add]
+        ac_rfl
   rcases hpowdiv with ⟨c,hc⟩
   have hpowadd:(2:Int)^n'=(2:Int)^n*(2:Int)^(r*D):=by
     dsimp [n']
     rw [Int.pow_add]
   have hpowdiff:(2:Int)^n'-(2:Int)^n=M*((2:Int)^n*c):=by
-    rw [hpowadd,hc]
-    ring
+    rw [hpowadd]
+    calc
+      (2:Int)^n*(2:Int)^(r*D)-(2:Int)^n =
+          (2:Int)^n*((2:Int)^(r*D)-1) := by
+            rw [Int.mul_sub]
+            simp
+      _ = (2:Int)^n*(M*c) := by rw [hc]
+      _ = M*((2:Int)^n*c) := by ac_rfl
   have hz:=signedZ_index_shift_digit_mod n j k r hr
   have hZmod:signedZ n' j%M=
       (signedZ n j-P*(4*((2:Int)^(j+1)-1)*r))%M:=by
@@ -112,7 +126,10 @@ theorem twoTierNumerator_shift_digit_mod (n j k r : Nat) (hr:r<3) :
     refine ⟨108*(2:Int)^n*c+36*r,?_⟩
     rw [hpowdiff]
     dsimp [M,D,depthPeriod]
-    ring
+    rw [show (3:Int)^(k+2)=(3:Int)^(k+1)*3 by rw [Int.pow_succ]]
+    simp only [Int.mul_add]
+    simp
+    ac_rfl
   have hAeq:twoTierNumerator n' j-
       (twoTierNumerator n j-P*
         (64*((2:Int)^(j+1)-1)*r)) =
@@ -120,7 +137,7 @@ theorem twoTierNumerator_shift_digit_mod (n j k r : Nat) (hr:r<3) :
         (signedZ n j-P*(4*((2:Int)^(j+1)-1)*r)))-
         9*(12*((2:Int)^n'-(2:Int)^n)+6*(r:Int)*D):=by
     simp [twoTierNumerator,n']
-    ring
+    omega
   rcases hZdiv with ⟨z,hzdiv⟩
   rcases hBdiv with ⟨b,hbdiv⟩
   have hdiv:M∣twoTierNumerator n' j-
@@ -128,7 +145,8 @@ theorem twoTierNumerator_shift_digit_mod (n j k r : Nat) (hr:r<3) :
         (64*((2:Int)^(j+1)-1)*r)):=by
     refine ⟨16*z-b,?_⟩
     rw [hAeq,hzdiv,hbdiv]
-    ring
+    rw [Int.mul_sub]
+    ac_rfl
   apply (Int.emod_eq_emod_iff_emod_sub_eq_zero).2
   exact Int.dvd_iff_emod_eq_zero.mp hdiv
 
@@ -179,12 +197,12 @@ theorem twoTierCoeff_mod_three (j:Nat) (hj:j%2=0) :
     exact_mod_cast hpNat
   have hminus:((2:Int)^(j+1)-1)%3=1:=by
     rw [Int.sub_emod,hpInt]
-    norm_num
+    decide
   calc
     (64*((2:Int)^(j+1)-1))%3 =
         ((64:Int)%3)*(((2:Int)^(j+1)-1)%3)%3:=by
           rw [Int.mul_emod]
-    _=1:=by rw [hminus]; norm_num
+    _=1:=by rw [hminus]; decide
 
 /-- Every surviving fatal sector starts the second-tier numerator in
 the zero class modulo three. -/
@@ -204,7 +222,8 @@ theorem twoTierNumerator_sector_mod_three (s h j:Nat)
     refine ⟨16*z-3*(12*(2:Int)^(s+6*h)+6*(s+6*h)+3),?_⟩
     dsimp [twoTierNumerator]
     rw [hz]
-    ring
+    rw [Int.mul_sub]
+    simp [Int.mul_assoc]
   exact Int.dvd_iff_emod_eq_zero.mp hdiv
 
 /-- Precisely one of the three next index digits lifts the second-tier
@@ -220,7 +239,7 @@ theorem twoTierNumerator_unique_lift (n j k:Nat)
   let d:=henselDigit q a
   have ha:a%3≠0:=by
     rw [show a%3=1 by simpa [a] using twoTierCoeff_mod_three j hj]
-    norm_num
+    decide
   have hd:d<3:=henselDigit_lt q a
   have hdiv:(3:Int)∣q-a*d:=by
     simpa [d] using henselDigit_divides q a ha
@@ -279,7 +298,7 @@ theorem twoTierIndexResidue_good (s j k:Nat)
       have hbase:(3:Int)^(k+1)∣twoTierNumerator (s+6*b) j:=ih
       have ha:a%3≠0:=by
         rw [show a%3=1 by simpa [a] using twoTierCoeff_mod_three j hj]
-        norm_num
+        decide
       have hd:d<3:=henselDigit_lt q a
       have hdiv:(3:Int)∣q-a*d:=by
         simpa [d] using henselDigit_divides q a ha
@@ -318,9 +337,12 @@ private theorem twoTierNumerator_step_divisible (n j k:Nat) :
   calc
     twoTierNumerator (n+depthPeriod (k+1)) j-twoTierNumerator n j =
         (twoTierNumerator (n+depthPeriod (k+1)) j-
-          (twoTierNumerator n j-P*a))-P*a:=by ring
+          (twoTierNumerator n j-P*a))-P*a:=by omega
     _=M*z-P*a:=by rw [hz]
-    _=P*(3*z-a):=by rw [hM]; ring
+    _=P*(3*z-a):=by
+      rw [hM]
+      rw [Int.mul_sub]
+      ac_rfl
 
 private theorem twoTierNumerator_period_mul (s j k h m:Nat) :
     twoTierNumerator (s+6*(h+m*3^k)) j%(3:Int)^(k+1)=
@@ -428,7 +450,7 @@ theorem twoTierIndexResidue_iff (s j k h:Nat)
             ((h%pn)/P) ht hbase).mp hshiftdiv
         have haunit:a%3≠0:=by
           rw [show a%3=1 by simpa [a] using twoTierCoeff_mod_three j hj]
-          norm_num
+          decide
         have hdigit:((h%pn)/P)=d:=
           henselDigit_div q a haunit ((h%pn)/P) ht
             (by simpa [q,a] using hcrit)
@@ -460,7 +482,8 @@ theorem twoTierNumerator_parent_identity (n j:Nat) (d q w:Int)
     have he:n=(n-2)+2:=by omega
     have hpow:(2:Int)^n=4*(2:Int)^(n-2):=by
       rw [he,Int.pow_add]
-      norm_num
+      rw [show (2:Int)^2=4 by decide]
+      ac_rfl
     omega
   dsimp [twoTierNumerator]
   rw [hz]
