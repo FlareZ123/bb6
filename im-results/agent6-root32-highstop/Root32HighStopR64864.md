@@ -60,7 +60,7 @@ The target Q' is even/odd with right coordinate at least five. By the complete s
 \[
 Q'_x+Q'_y+1=16\cdot2^n,
 \]
-which is impossible because the quotient by 16 is odd and greater than one. Only the high odd-a branch remains. Its depth d satisfies
+which is impossible: the exact valuation five would force n=1 and hence (Q'_x+Q'_y+1)/32=1, whereas the displayed quotient is greater than one. Only the high odd-a branch remains. Its depth d satisfies
 \[
 Q'_x+Q'_y+1=2^d(2a+6),\qquad
 2k+a+7+3d=Q'_x+2Q'_y.
