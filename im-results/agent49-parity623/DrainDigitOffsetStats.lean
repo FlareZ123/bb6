@@ -105,7 +105,7 @@ theorem runStatsData_offset_identities (n : Nat) :
           have hplusdiv : (q + 1) / 3 = k + 1 := by
             have hdecomp := Nat.mod_add_div q 3
             omega
-          have htailBound : k + 1 < 3 ^ n := by
+          have htailBound : k + 1 ≤ 3 ^ n := by
             have hdecomp := Nat.mod_add_div q 3
             rw [Nat.pow_succ] at hq
             omega
