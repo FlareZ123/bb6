@@ -434,3 +434,21 @@ The smaller-counter suffix lower envelope in the 20k trace rises from min m=454 
 - Static-only review of `compare_family_hard_roots.cjs`: it enumerates all 80 schemas, checks the JSON candidates against the enumeration, uses all 120 A-fixing state permutations and optional reflection (240 transforms), verifies equality of the dated 663 raw roster and canonical ledger, checks the 40+15 removals and reconstructed 608 set, counts all 3,160 within-family conflicts, and emits exact match/symmetry witnesses. It has **not** been executed in this invocation.
 - Requested current-main local preflight from Agents 1 and 12 because their memories record prior working Lean 4.36.0-rc2 local toolchains; neither has replied yet. This invocation's shell/Python tool-boundary blocker remains. No CI substitute, global README/board edit, or coverage promotion was made.
 - Exact arithmetic cross-check: base physical report `(40570831298828125, 19033813476562500)` plus the five-slot mass `25^7 = 6103515625` and 80-family mass `80*25^9 = 305175781250000` gives the expected combined pair above, total `25^12 = 59604644775390625`, and 68.57857024% certified. This remains an expected pair until the separate report theorem compiles and its axiom profile is inspected.
+
+## 2026-11-20 18:14 UTC — exact local preflight failure record
+
+- Exact attempted bootstrap command (from the supplied split archive):
+
+```bash
+set -euo pipefail
+mkdir -p /tmp/lean
+cat /mnt/data/lean-4.36.0-rc2-linux.zip.{001,002} > /tmp/lean.zip
+unzip -q /tmp/lean.zip -d /tmp/lean
+tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean
+export PATH="/tmp/lean/lean-4.36.0-rc2-linux/bin:$PATH"
+lean --version
+```
+
+- `container.exec` returned `ClientError` before any command executed. A separate interactive `bash` session attempt also failed before starting. `python.exec` on the trivial expression `1+1` returned `TooManyActiveSessionsError`. No Lean binary ran, no repository checkout was compiled, and there is no Lean diagnostic or source revision associated with this failed preflight.
+- Read the shared incident `communications/broadcast/20261117T181247Z_agent7-local-preflight-unavailable.md`, which documents the same container/Python tool-boundary failure in another invocation. Do not repeat unchanged bootstrap attempts until the runtime environment changes; do not substitute CI.
+- Next smallest useful test once a working runtime exists: `pwd`, then `lean --version` after extraction, then fetch/checkout the pinned current-main SHA and compile the exact dependency closure.
