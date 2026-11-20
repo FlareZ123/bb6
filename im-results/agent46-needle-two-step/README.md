@@ -405,3 +405,27 @@ so every \(t=4\) second parent necessarily satisfies the particularly simple con
 \boxed{w\equiv4\pmod5.} \tag{18}
 \]
 This applies whether or not \(5\mid D_w\); in the latter case it is only the first \(5\)-adic layer.
+
+
+## Low-\(t\) filters intersected with the existing 11-prime first-parent sieve
+
+I applied the \(t=1,2,3,4\) conditions above to the exact finite residue count in Agent 20's second_level_eleven_prime_density.js, rather than treating the new filters in isolation. The base modulus is \(900900\), the existing \(j\)-period is \(33\), and the seven additional prime cylinders are \(19,29,37,61,67,79,101\). The existing sieve's total is reproduced exactly: \(218715580637067540\) candidate residue classes per \(j\bmod33\), or
+\[
+B=7\,217\,614\,161\,023\,228\,820
+\]
+over the 33 \(j\)-classes.
+
+The counts below are weighted counts of first-parent sieve residue classes, not counts of actual reachable machines. A "resolved" count means the full \(D_t\)-divisibility is determined because \(\gcd(D_t,D_w)=1\); a denominator-cylinder contribution is left unresolved because \(D_t\) and \(D_w\) share a prime and the first-parent sieve has not supplied the necessary higher lift.
+
+| Second valuation | Resolved residue count | Unresolved shared-prime contribution | Share of first-parent candidates |
+|---|---:|---:|---:|
+| \(t=1\) | \(46\,696\,903\,278\,675\,056\,550\) | \(0\) after the \(49\)-lift | **13.203781% exactly** |
+| \(t=2\) | \(651\,242\,185\,016\,565\,285\) | \(53\,950\,125\,841\,010\,685\) (\(p=11\)) | 9.022956% resolved; at most 9.770435% including cylinder |
+| \(t=3\) | \(378\,352\,095\,619\,329\,480\) | \(28\,924\,344\,255\,968\,700\) (\(p=19\)) | 5.242065% resolved; at most 5.642812% including cylinder |
+| \(t=4\) | \(208\,465\,420\,664\,370\,870\) | \(90\,544\,934\,470\,213\,080\) (\(p=5\)); \(125\,916\,061\,965\,066\,945\) (\(p=7\)); \(47\,059\,538\,310\,176\,535\) (both) | 2.888287% resolved; at most 6.539362% including cylinders |
+
+For \(t=1\), the denominator is extended by \(7\) to account for the \(p=7\) lift; the corresponding first-level candidate denominator is \(49B\). The cylinder calculation uses the fact that among the seven \(j\bmod231\) lifts of a fixed \(j\bmod33\), exactly two are compatible with the surviving special \(j\bmod21\) classes when \(j\bmod3\in\{0,1\}\), and none when \(j\bmod3=2\).
+
+For \(t=2\), the resolved count excludes \(w\equiv2\pmod{10}\), the shared \(p=11\) cylinder. For \(t=3\), it excludes \(w\equiv3\pmod{18}\), the shared \(p=19\) cylinder; outside it, the second-parent condition fixes one of the 19 free residues. For \(t=4\), the resolved count excludes both \(w\equiv0\pmod4\) and \(w\equiv1\pmod3\), the shared \(p=5\) and \(p=7\) cylinders.
+
+The exact counting implementation is [low_t_parent_density.js](low_t_parent_density.js). It asserts agreement with Agent 20's published first-level count before producing the low-\(t\) splits. These results quantify the low-valuation branches only; they do not bound or eliminate \(t\ge5\), and they do not prove that any first-parent residue candidate is a genuine blank-root ancestor.

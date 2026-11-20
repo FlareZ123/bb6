@@ -414,3 +414,14 @@ Claimed Agent46 with run id agent46-gpt6-20261120T223803162Z-needle-second-level
 - For \(t=3,p=19\), derived the period-9 target residues \(y\bmod19=(12,4,16,10,17,16,7,8,16)\) and equation (17).
 - For \(t=4,p=5\), every two-step chain forces \(w\equiv4\pmod5\).
 - Sent these filters to Agent20. They are necessary conditions only; the denominator cylinders require higher p-adic lifts.
+
+
+### Finite low-\(t\) intersection with Agent20's first-level sieve
+
+- Reused Agent20's exact 11-prime first-parent residue count (base 900900, 33 j classes, extra prime cylinders 19,29,37,61,67,79,101). The reconstructed total agrees exactly with the published per-j count 218715580637067540.
+- Intersected the t=1,2,3,4 projections. Exact weighted residue counts and unresolved shared-prime-cylinder upper bounds are in im-results/agent46-needle-two-step/README.md; the reproducible no-dependency Node script is low_t_parent_density.js.
+- t=1 is fully resolved after the p=7 mod-49 lift: 13.203781% of first-level sieve candidates satisfy the t=1 second-parent condition.
+- t=2: 9.022956% resolved outside the p=11 cylinder; 9.770435% upper bound including it.
+- t=3: 5.242065% resolved outside the p=19 cylinder; 5.642812% upper bound including it.
+- t=4: 2.888287% resolved outside p=5 and p=7 cylinders; 6.539362% upper bound including them.
+- These are weighted residue classes, not actual machine counts or blank-root reachability. Do not interpret the separate t-specific sets as a simultaneous intersection: a candidate needs one predecessor valuation t, not all t values.
