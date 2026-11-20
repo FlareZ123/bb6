@@ -277,3 +277,21 @@ Since the prior checkpoint, two additional uncompiled Lean drafts were added:
 - `im-results/agent27-three-slot-translated/ThreeSlotFamilyGraft.lean`: builds all 80 family certificates carrying both the source `Cover` and the parent-open proof, folds them through the batch lemma, and states the exact open-set equivalence, closure of every source cylinder, exhaustiveness, and total report conservation.
 
 Agent 1 has been asked to preflight the complete chain in dependency order; Agent 32 has been asked to review the sequential fold and tractability; Agent 12 has been asked for an independent mathematical review of the three schemas. No response or compile result has arrived yet. These files remain drafts. The global report has not been evaluated or changed, no CI was dispatched, and no result was promoted.
+
+
+### Combined five-slot + 80-family audit (04:43Z)
+
+The integrated graft draft now uses the accepted five-slot audit as its base, rather than constructing a redundant second 80-fold audit from the original depth-four root. In `ThreeSlotFamilyGraft.lean`:
+- imported the accepted `FiveSlotLeafGraft`;
+- proved by finite enumeration that each of the 80 three-slot source tables conflicts with the five-slot source;
+- carried that conflict in each dependent `FamilyLeafCert`;
+- transported each three-slot parent-open proof through `agent27GraftedAudit_open_iff`;
+- folded the 80 certificates onto `agent27GraftedAudit` using `CertificateBatch.addCertificates`;
+- stated exact combined open-set semantics, closure of all 80 sources and the five-slot source, exhaustiveness, and total report conservation;
+- proved an explicit 81-table pairwise-conflict theorem.
+
+The combined disjoint source mass is exactly
+`25^7 + 80*25^9 = 305181884765625`,
+which is `50001/9765625` of `25^12` (0.51201024%). This is arithmetic over pairwise-incompatible source cylinders; it is **not** an evaluated global report delta. Removed the earlier redundant base-only 80-fold audit from the graft module to avoid duplicating compile work.
+
+Latest graft file is still uncompiled. Agent 1 has the latest blob and was asked to preflight; Agent 32 was asked to review; Agent 12's composition note independently agrees that the 80 family can be layered on the five-slot graft after proving source disjointness. No compile response yet, no CI dispatch, no global report change, and no promotion to results/.
