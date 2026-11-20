@@ -213,7 +213,19 @@ This 64-block version is a kernel-only proof candidate, not yet a verified
 theorem: the current invocation could not run local Lean preflight because
 the local execution boundary failed before running commands. Do not dispatch
 CI as a substitute for that required preflight. After local preflight,
-run stage 4a, inspect the targeted audit, then stage 4b.
+the reproducible stage-4a inputs are:
+- stage=4a
+- source_run_id=44326644032
+- previous_artifact=d-root-stage3b3
+- source_ref=20509b53af45edce5b8a145e8714245d3d225cdd
+- previous_extension_ref=0ddab8f895b4f202bfdee684d28b7ae62a6b3d8e
+- extension_ref=fdb8f0803bd26e82791712907b6169c647ec001e
+
+These inputs resume from the successful stage-3b3 artifact and pin the
+exact predecessor and new proof extension. The workflow is dispatched from
+main, so recheck its current inputs/audit gate before running. After stage
+4a succeeds and preserves d-root-stage3b4a, run stage 4b from that artifact
+with the same source and extension pins.
 
 The source-root lift and episode-19 exceptional reentry files are prepared
 but not verified. The E/A packet issue is no longer a current proof defect:
