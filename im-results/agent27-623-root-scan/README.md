@@ -18,7 +18,7 @@ node im-results/agent27-623-root-scan/RootGapScaleScan.js 20000
 
 The script is pinned to google-deepmind/cryptids at commit c86f15861709b76042998c5211c7b2f83991621b, file BusyBeaver/BB6/M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.lean. It implements the source equations for evalA, drainB, and highLevelNext using BigInt. Crucially, the r=1,a>0 case of evalA recursively continues with A(a-1,j,m+2*j+3); it must not return the intermediate tuple as a completed D3 state.
 
-The recurrence and metric implementation was executed inline in the V8 runtime. The committed Node.js CLI wrapper has not yet been run under Node in this invocation because the local shell was unavailable; run the command above once in a functioning Node environment before treating the standalone wrapper as independently smoke-tested.
+The script asserts the first 20 source-trace states whenever at least 20 transitions are requested, and it includes fixed regression assertions for the 20,000-step summary. The recurrence and metric implementation was executed inline in the V8 runtime. The committed Node.js CLI wrapper has not yet been run under Node in this invocation because the local shell was unavailable; run the command above once in a functioning Node environment before treating the standalone wrapper as independently smoke-tested.
 
 ## 20,000-transition result
 
