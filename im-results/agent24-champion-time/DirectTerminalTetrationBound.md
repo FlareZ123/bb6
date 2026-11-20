@@ -82,17 +82,16 @@ A=\texttt{rootMarker1A}
 \]
 
 
-## Exact V-index refinement of the terminal lower bound
+## Exact V-index formula for the authentic terminal width
 
-The coarse \(H=T_{10}\) estimate above can be sharpened without replacing the
-source-defined sequence by tetration notation. Define
+Define
 \[
 V_0=63,\qquad V_{j+1}=2^{V_j}-1.
 \]
-The first SectionResult is \(\operatorname{sectionResult}(7,2,6,63)\).
-Its marker sequence is \(2,1,0,2,1,0,2\), so the seven additive marker
-offsets sum to \(12\). Consequently its exponent and final right counter
-are exactly
+All \(V_j\) are odd. The first SectionResult is
+\(\operatorname{sectionResult}(7,2,6,63)\), with marker sequence
+\(2,1,0,2,1,0,2\). Its seven exponent offsets sum to
+\(2+2+1+2+2+1+2=12\), so its exponent and final right counter are exactly
 \[
 A_0=18+\sum_{j=0}^{6}V_j,\qquad B_{\rm first}=V_7.
 \]
@@ -108,6 +107,10 @@ The 34 source-connected middle increments consume right counters
 \[
 \texttt{tm63MiddleAfter34B}=V_{42}.
 \]
+Their marker sequence is \(2,1,0\) repeated 11 times, followed by one
+additional marker 2. Their exponent offsets therefore sum exactly to
+\(11(2+2+1)+2=57\).
+
 The subsequent marker-1 dispatcher has exactly
 \[
 M=16\cdot\texttt{tm63RootResidueSixK}-20
@@ -115,55 +118,51 @@ M=16\cdot\texttt{tm63RootResidueSixK}-20
 \]
 updates: the root index is \(K=31\cdot2^{A_0-3}-1\), is odd, and
 \(\texttt{tm63RootResidueSixK}=K/2=31\cdot2^{A_0-4}-1\).
-Starting at right \(V_{42}\), those \(M\) updates end at \(V_{M+42}\).
+Since \(A_0\) is odd, \(2^{A_0}\equiv2\pmod3\), hence \(M\equiv2\pmod3\).
+Starting at right \(V_{42}\), the \(M\) updates end at \(V_{M+42}\).
+Their marker sequence starts \(1,0,2\), with exponent offsets \(2,1,2\).
+Writing \(M=3q+2\), the exact offset sum is
+\[
+5q+3=\frac{5M-1}{3}.
+\]
 
-The marker-1 S0 reset width is
+The marker-1 S0 reset width is exactly
 \[
 A=\texttt{middle34Result.exponent}
   +\texttt{middle34Result.right}+2.
 \]
-Every SectionResult exponent update adds the current right counter plus
-either \(1\) or \(2\). Dropping only these positive offsets, the 34 middle
-updates contribute at least \(\sum_{j=8}^{41}V_j\), the \(M\) dispatcher
-updates contribute at least \(\sum_{j=42}^{M+41}V_j\), and the final reset
-adds \(V_{M+42}+2\). Therefore
+The initial exponent is \(V_7\); the 34 middle increments contribute
+\(\sum_{j=8}^{41}V_j+57\); the \(M\)-step dispatcher contributes
+\(\sum_{j=42}^{M+41}V_j+(5M-1)/3\); and the reset adds
+\(V_{M+42}+2\). Therefore the full width is not merely bounded below:
 \[
 \boxed{
-A\ge A_{\min}:=
-V_7+\sum_{j=8}^{M+42}V_j+2.
+A=V_7+\sum_{j=8}^{M+42}V_j+\frac{5M+176}{3}
+=V_7+\sum_{j=8}^{M+42}V_j+\frac{155\cdot2^{A_0}-4}{3}.
 }
 \]
-The earlier first-section exponent \(A_0\) does not appear as an additive
-term in \(A_{\min}\): the authentic reset explicitly replaces the next
-SectionResult exponent by the preceding right counter \(V_7\). It enters
-the bound through the exact dispatcher length \(M\).
+In particular, \(A_0\) enters the reset width through the exact dispatcher
+length \(M\); it is not carried additively across the authentic reset.
 
-For the authentic \(L=76\) q4Tail route, the terminal index is
+For the authentic \(L=76\) q4Tail route, the terminal index is exactly
 \[
-N=2^A(2^{78}-1)-3
-\]
-and hence
-\[
-N\ge N_0:=(2^{78}-1)2^{A_{\min}}-3.
+N=(2^{78}-1)2^A-3.
 \]
 The terminal right counter starts at \(R\ge2\) and makes \(N\) updates
-\(b_{j+1}=2^{b_j}-1\). Thus \(b_N\ge T_N+1\ge T_{N_0}+1\).
-The final dispatcher increment alone contributes
-\(6\cdot4^{b_{N-1}}=6(b_N+1)^2\), giving the sharper conditional bound
+\(b_{j+1}=2^{b_j}-1\), so \(b_N\ge T_N+1\). The final dispatcher increment
+alone contributes \(6\cdot4^{b_{N-1}}=6(b_N+1)^2\). Hence the stronger
+conditional score bound is
 \[
-\boxed{
-S\ge6\left(T_{N_0}+2\right)^2,\quad
-N_0=(2^{78}-1)2^{\,V_7+\sum_{j=8}^{M+42}V_j+2}-3,\quad
-M=31\cdot2^{A_0}-36,\quad
-A_0=18+\sum_{j=0}^{6}V_j.
-}
+\boxed{S\ge6(T_N+2)^2,\qquad
+N=(2^{78}-1)2^{
+V_7+\sum_{j=8}^{M+42}V_j+(155\cdot2^{A_0}-4)/3}-3,}
 \]
-This exact V-index expression is stronger than the \(H=T_{10}\) corollary.
-Its source dependencies are the seven-step first-section recurrence,
-the 34 middle-row composition, the exact \(M\)-step SectionResult
-dispatcher, and the marker-1 reset identity. It remains conditional on
-the uncompiled authentic-root/source-composition closure.
+where \(A_0=18+\sum_{j=0}^{6}V_j\) and \(M=31\cdot2^{A_0}-36\).
 
+This exact V-index expression sharpens the earlier \(A_{\min}\) bound by
+retaining every marker offset. It is still conditional on the uncompiled
+authentic-root/source-composition closure; it is not an accepted BB(6)
+lower-bound theorem.
 ## Consequence for the arbitrary-A terminal dispatcher
 
 For the authentic length \(L=76\), the direct q4Tail terminal route has

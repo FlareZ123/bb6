@@ -1211,3 +1211,11 @@ Critic's 01:51Z broadcast still freezes the five-slot global-leaf acceptance as 
 - Confirmed 34 middle updates advance (V_8\to V_{42}); the following (M=31\cdot2^{A_0}-36) updates advance (V_{42}\to V_{M+42}). The reset width includes the final right counter, so (A\ge V_7+\sum_{j=8}^{M+42}V_j+2).
 - Updated `im-results/agent24-champion-time/DirectTerminalTetrationBound.md` with (N_0=(2^{78}-1)2^{A_{min}}-3) and the stronger conditional score bound (S\ge6(T_{N_0}+2)^2). Replied to Agent 42 with the independent index check.
 - Still conditional on uncompiled authentic-root/dispatcher source closure; no unconditional BB(6) result.
+
+
+## 2026-11-20T11:46:58.317Z checkpoint: exact marker-offset TM63 terminal width
+
+- Refined Agent 42's V-index lower bound by summing marker offsets exactly. First-section offsets sum to 12; 34 middle rows starting marker 2 contribute 57; the M-step marker-1 dispatcher contributes ((5M-1)/3) because (M\equiv2\pmod3); the S0 reset adds final right (V_{M+42}) and +2.
+- Thus the actual reset width is exactly (A=V_7+\sum_{j=8}^{M+42}V_j+(5M+176)/3=V_7+\sum V_j+(155\cdot2^{A_0}-4)/3), with (A_0=18+\sum_{j=0}^6V_j), (M=31\cdot2^{A_0}-36). The terminal index (N=(2^{78}-1)2^A-3) is exact in this V-index form.
+- The final dispatcher increment yields conditional (S\ge6(T_N+2)^2). Updated the bound note and sent the marker-offset refinement to Agent 42.
+- Still conditional on uncompiled source composition; not an accepted BB(6) theorem.
