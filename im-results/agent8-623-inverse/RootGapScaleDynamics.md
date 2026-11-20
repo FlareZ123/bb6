@@ -91,39 +91,49 @@ must quantitatively exclude shrinking neighbourhoods of these two centres along 
 
 The ideal recurrence alone is insufficient: its integer dynamics can approach cancellation. Any proof must exploit the exact ternary-drain corrections or a stronger invariant encoding the root's history.
 
-## 4. Reproducible finite diagnostic — current source mismatch
+## 4. Source audit and reproducible finite diagnostic
 
-**Status: the checked-in C++ program is not currently a source-equivalent mirror.** Its historical output cannot be attributed to that C++ file; however, a separate source-faithful JavaScript BigInt replay now independently reproduces the same 20,000-transition metrics. See `im-results/agent27-623-root-scan/RootGapScaleScan.js` and its README. In `root_gap_scale_scan.cpp`, the final `evalA` branch (the `r=1,a>0` case) decrements `a`, updates `m,k`, and returns `true`. The pinned Lean definition instead recurses:
-[
-A(a,3j+1,m)=A(a-1,j,m+2j+3)qquad(age1).
-]
-The C++ function must continue evaluating that recursive state (e.g. `continue;` in its loop), not return it as a completed `D_3) state.
+**The checked-in C++ program is not source-equivalent.** Its historical output cannot be attributed to root_gap_scale_scan.cpp. However, a separate source-faithful JavaScript BigInt replay independently reproduces the same 20,000-transition metrics; see im-results/agent27-623-root-scan/RootGapScaleScan.js and its README.
 
-The discrepancy is visible on the first blank-root section transition. From the pinned source:
-[
-D(0,7)	ooperatorname{drainB}(8,2,2),qquad
-operatorname{evalA}(8,1,9)=operatorname{evalA}(7,0,12)=D_3(6,0,14),
-]
-so (operatorname{highLevelNext}(D(0,7))=D(6,14)). The checked-in C++ implementation returns the intermediate tuple ((7,0,12)), hence produces (D(7,12)); the next high-level transition halts because its first counter is odd. Therefore the checked-in program cannot produce the documented 20,000-visit output.
+The C++ defect is in the final evalA branch, the case r=1,a>0. The checked-in code decrements a, updates m,k, then returns true. The pinned Lean source instead recursively evaluates:
 
-The original output block is retained below for continuity. Its numeric values are now independently reproduced by the source-faithful JavaScript replay; they are supported as finite computational evidence by that script, **not by the checked-in C++ implementation**.
+~~~text
+A(a, 3*j+1, m) = A(a-1, j, m+2*j+3)    (a >= 1)
+~~~
 
-Historical output recorded with the original note:
-```text
-DONE steps=20000 mismatch=0 zero=0
-max |eg|/ternaryDigits log2=4.67243 index=11 error_bits=7 m_bits=6
-max |em|/ternaryDigits log2=2.58496 index=11 error_bits=5 m_bits=6
-min |g|/m log2=-12.9605 index=6899
-min g^2/m log2=4.12348 index=16
-```
+The C++ loop must continue on this branch (for example, use continue;), rather than returning the intermediate tuple as a completed D3 result.
 
-The associated historical interpretation was: maximum gap error 102 at the transition from (D(312,38)) to (D(268,138)); minimum square ratio (4096/235) at index 16, state (D(876,235)); and minimum relative gap at index 6899. These values are preserved for provenance only and are **unreproduced by the current checked-in source**.
+The discrepancy is visible on the first blank-root section transition:
 
-A separate 10,000-step BigInt scan reported by Agent 32 matches the pinned Lean root trace through
-[
-D(0,7),D(6,14),D(6,31),D(26,26),D(2,83),D(84,10),D(74,38),D(30,138),D(108,101),D(2,321),D(322,10),ldots
-]
-That is a different implementation and does not validate the C++ file above; preserve its exact script and cutoff separately before treating the longer scan as reproducible evidence.
+~~~text
+D(0,7) -> drainB(8,2,2)
+evalA(8,1,9) = evalA(7,0,12) = D3(6,0,14)
+highLevelNext(D(0,7)) = D(6,14)
+~~~
+
+The checked-in C++ implementation returns the intermediate tuple (7,0,12), hence produces D(7,12); the next high-level transition halts because its first counter is odd. Thus the checked-in C++ file cannot produce the documented 20,000-visit output.
+
+The same numeric output has now been independently reproduced by the source-faithful JavaScript BigInt replay, which implements the pinned evalA, drainB, and highLevelNext equations and emits the first 20 root states. The exact results are:
+
+| Diagnostic | Reproduced result |
+|---|---:|
+| transitions | 20,000 |
+| checked indices | 9 through 19,999 |
+| side-selection mismatches | 0 |
+| zero ratio-four gaps | 0 |
+| maximum gap error per ternary digit | 102/4 = 25.5, index 11 |
+| maximum scale error per ternary digit | 24/4 = 6, index 11 |
+| minimum |g|/m | log2 = -12.960451552003178, index 6,899 |
+| minimum g^2/m | 4096/235, log2 = 4.123483053435001, index 16 |
+| minimum root gap slack | 65 at index 14, D(314,385), h=71, m=314 |
+
+Here the root gap slack is h - ceil(log_3(2*m+1)), where h=|a-d| and m=min(a,d). The ceiling is computed exactly as the base-3 digit count of 2*m.
+
+The older output block and its state/index interpretation are therefore supported as finite computational evidence by the new JavaScript script, **not by the checked-in C++ implementation**. The C++ file should still be repaired or clearly retired; do not cite it as the implementation that produced these metrics.
+
+The 65-slack condition is not forward-invariant on arbitrary states: D(2,69) -> D(70,10) satisfies it at the input (h=67,m=2, 3^(h-65)=9>=5) but not at the output (h=60,m=10). The weaker six-slack condition that suffices to imply newAffineCone is also not a universal invariant: D(2,10) -> D(10,9). These exact counterexamples mean the 20,000-step root scan remains finite evidence only; a root-history/cocycle proof is still required.
+
+Agent 32 separately reports a 10,000-step BigInt scan matching the pinned root trace through index 16. That scan is independent of both the broken C++ file and the new 20,000-step JavaScript replay.
 
 ## 5. Research implications
 
