@@ -95,7 +95,16 @@ eThreeOutput(u)
 L(512u+129,0,0).
 ```
 
-The source theorem is `Exception33Q5Rejoin.exception33_q5_rejoin`. Its five audited declarations — `eall_source_return`, `eall_to_etriple_input`, `etriple_to_acode_input`, `acode_unary_endpoint`, and `exception33_q5_rejoin` — have been compiled locally with Lean 4.36.0-rc2 against the exact `d-root-stage1` compiled dependency artifact from CI run [43402524711](https://github.com/FlareZ123/bb6/actions/runs/43402524711), whose source snapshot is `2da159d86fa86d813bdfbc54e38e3ec9c75b6e69`. Every final axiom report is exactly `[propext, Quot.sound]`; there is no `sorryAx` or `native_decide`. The existing manual E3 source-bridge workflow contains this module, but a fresh GitHub CI run of the corrected version is not yet recorded.
+The source theorem is `Exception33Q5Rejoin.exception33_q5_rejoin`. Its five audited declarations — `eall_source_return`, `eall_to_etriple_input`, `etriple_to_acode_input`, `acode_unary_endpoint`, and `exception33_q5_rejoin` — were locally compiled with Lean 4.36.0-rc2 against the exact `d-root-stage1` compiled dependency artifact from CI run [43402524711](https://github.com/FlareZ123/bb6/actions/runs/43402524711), whose source snapshot is `2da159d86fa86d813bdfbc54e38e3ec9c75b6e69`. The corrected current-main version also passed the fresh GitHub source-bridge audit in [run 44740066064](https://github.com/FlareZ123/bb6/actions/runs/44740066064), producing artifact `agent25-e3-source-bridge` (ID `14628939997`). All five final axiom reports are exactly `[propext, Quot.sound]`; there is no `sorryAx` or `native_decide`.
+
+The current `hstart` proof unfolds `sourceStart`, `DRegularSource.sourceSection`, `CryptidBoundary.init`, `oppairs`, and `pairs` with `simp`, then closes the replicate-length arithmetic with `omega`. The earlier `simp only` proof failed because it did not reassociate the appended `oppairs` suffix.
+
+The exact total duration simplifies algebraically to
+[
+57036u^2+22057u+2222+
+C(256u+43,[0,0,1,1,0,1,1]),
+]
+where (C(m,w)=	exttt{CryptidA.wordCost}) remains in its source-defined form. The endpoint is (L(512u+129,0,0)).
 
 Two substantive proof corrections were necessary:
 
