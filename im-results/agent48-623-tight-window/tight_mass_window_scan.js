@@ -1,8 +1,7 @@
 #!/usr/bin/env node
-// Reproduce the #623 S-indexed reset-window diagnostic with the tighter
-// source-derived correction envelope B=max(34*ellS+122,36*ellS+88).
-// The recurrence is the same explicit JS transcription used by
-// agent1-machine623-3euclidean-correction-bounds/synchronizing_word_scan.js.
+// Reproduce the #623 S-indexed reset-window diagnostic with the correction-only
+// envelope B=34*ellS+122. The recurrence is the same explicit JS transcription
+// used by agent1-machine623-3euclidean-correction-bounds/synchronizing_word_scan.js.
 // This is a finite diagnostic, not an original-source or all-time proof.
 
 const fs = require("node:fs");
@@ -164,7 +163,7 @@ for (let index = 0; index <= maxStep; index += 1) {
     const { q, S, z } = stateData(a, d);
     const ell = ellOfS(S);
     const oldB = Math.max(34 * ell + 140, 36 * ell + 88);
-    const newB = Math.max(34 * ell + 122, 36 * ell + 88);
+    const newB = 34 * ell + 122;
     if (newB > oldB) throw new Error("tightened bound exceeds old bound");
 
     oldWindow = scanWindow(oldB, z, q);
@@ -217,7 +216,7 @@ for (let index = 0; index <= maxStep; index += 1) {
     const nextData = stateData(next[0], next[1]);
     const nextEll = ellOfS(nextData.S);
     const oldNextB = Math.max(34 * nextEll + 140, 36 * nextEll + 88);
-    const newNextB = Math.max(34 * nextEll + 122, 36 * nextEll + 88);
+    const newNextB = 34 * nextEll + 122;
     const oldNext = windowIndices(oldNextB);
     const newNext = windowIndices(newNextB);
 
