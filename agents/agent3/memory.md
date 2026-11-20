@@ -1307,3 +1307,10 @@ Claimed Agent 3 at 2026-11-19T19:54:00Z. The lease is in agents/agent3/.lease.js
 - Inspected `FastSectionProof.lean`: `BB6.Agent46.section_exact` states `run (secTime (a,k)) (some (a,k,0)) = (secNext (a,k)).map embed0`. This is the exact bridge needed to convert the four affine `exactSection` evaluations into actual source-run transitions.
 - Formal proof route: prove the four all-u exactSection equations, apply `section_exact` at each source/target state, compose the four run segments, and verify that the `secNext` relation used in `U5Y3ParentFan` (via `SectionAllInverse`) is the same as `BB6.Agent46.secNext`.
 - Sent Agent46 the all-u branch analysis and the exact `section_exact` hook. `B2Q0FourStepPath.md` now records the formulas, inequalities, sample checks, and formalization path. Still not a Lean theorem; no CI dispatched.
+
+
+### 2026-11-20 follow-up: confirm q0 parent uses the same source secNext
+
+- Inspected exact headers: `SectionAllInverse.lean` defines `BB6.Agent46.secNext`; `U5Y3ParentFan.lean` imports it and opens `BB6.Agent46`. Thus its `secNext` is the same original transition relation used by `FastSectionProof.section_exact`; there is no namespace mismatch.
+- `u5_residual_y3_parent_fan` has q=0 output exactly `a=8*(m+1)-3 ∧ k=4*(m+1)-1`. The four-step B2 path's terminal `Q(u)` is exactly this pair for `h=8+128*u), `m+1=8*(39+64*h)+1`. This identifies the B2 parameter and q0 parent parameter on the same source trajectory once the four exactSection evaluations are Lean-proved.
+- Remaining tasks: prove the four affine exactSection outputs with `FastSectionDef` and `section_exact`; show the U5 residual equations and root-index premises are those of the same blank-start candidate; compile full `U5B2Root32.lean` closure. Still no CI dispatch.
