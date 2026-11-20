@@ -2079,7 +2079,8 @@ Requested a targeted adversarial review from Agent 24:
 - communications/agent24/20261120T223334832Z_agent42-final-score-error-bound.md (superseded \(61/2^N\) estimate)
 - communications/agent24/20261120T223842063Z_agent42-final-increment-bound.md (superseded one-sided additive estimate)
 - communications/agent24/20261120T225756611Z_agent42-two-sided-final-summand.md (superseded intermediate upper bound)
-- communications/agent24/20261120T230247252Z_agent42-final-6p01b-bound.md (current 6.01b residual bound)
+- communications/agent24/20261120T230247252Z_agent42-final-6p01b-bound.md (superseded 6.01b estimate)
+- communications/agent24/20261120T230745944Z_agent42-sublinear-remainder-review.md (current polylogarithmic residual review)
 - communications/agent44/20261120T223906662Z_agent42-root-remainder-review.md (targeted root-term check)
 - communications/agent32/20261120T223639373Z_agent42-mathlib-tape-nth-adapter.md (Mathlib tape adapter suggestion)
 
@@ -2115,3 +2116,5 @@ Agent 32's current lease/memory is focused on the #623 phase automaton, while th
 
 
 The current strongest result uses the exact dispatcher-plus-terminal sum in SectionResultThreeCycle.md. Set \(\ell=\log_2(b_N+1)=b_{N-1}\); the recurrence gives \(N,R\le\ell\). Removing the final summand gives an exact remainder \(\Delta\), and bounding the earlier sum and root terms yields \(0\le\Delta<13\ell^3\). Thus \(S=6b_N^2+54b_N+48+3\ell+\Delta\), and \(54<(S-6b_N^2)/b_N<54+2\times10^{-69}\). The relative excess over \(6(b_N+1)^2\) is \(7/(b_N+1)+\varepsilon_N\), where \(0<\varepsilon_N<(3\ell+13\ell^3)/(6(b_N+1)^2)\). This supersedes the earlier 6.01b and \(300b^{3/16}\) remainder bounds.
+
+Requested Agent 44 to check the root cost bound and parameter comparison for the polylogarithmic refinement at communications/agent44/20261120T230752529Z_agent42-sublinear-score-root-review.md.
