@@ -83,10 +83,30 @@ theorem q4TerminalIndex_binDec_shape (L A : Nat) (hA : 2≤A) :
       2^A = 2^((A-2)+2) := by congr 1 <;> omega
       _ = 2^(A-2)*2^2 := by rw [Nat.pow_add]
       _ = 4*2^(A-2) := by norm_num [Nat.mul_comm]
-  have hN : firstQ4P1M L A-3 = 2*(2*qprev)+1 := by
-    dsimp [qprev]
-    unfold firstQ4P1M firstQ4P1Value
+  have hterm :
+      2^(A-2)*(2^(L+2)-1) =
+        firstQ4P1Value L (A-1)+1 := by
+    unfold firstQ4P1Value
+    rw [show (A-1)-1=A-2 by omega]
+    have hCpos : 0<2^(L+2)-1 := by
+      have hp : 0<2^(L+2) := Nat.pow_pos (by decide)
+      omega
+    have hprodpos :
+        0<2^(A-2)*(2^(L+2)-1) :=
+      Nat.mul_pos (Nat.pow_pos (by decide)) hCpos
+    omega
+  have hM :
+      firstQ4P1M L A =
+        4*(firstQ4P1Value L (A-1)+1) := by
+    unfold firstQ4P1M
     rw [hpow]
+    calc
+      (4*2^(A-2))*(2^(L+2)-1)
+          = 4*(2^(A-2)*(2^(L+2)-1)) := by rw [Nat.mul_assoc]
+      _ = 4*(firstQ4P1Value L (A-1)+1) := by rw [hterm]
+  have hN : firstQ4P1M L A-3 = 2*(2*qprev)+1 := by
+    rw [hM]
+    dsimp [qprev]
     omega
   calc
     binDec (A+L+2) (firstQ4P1M L A-3)
