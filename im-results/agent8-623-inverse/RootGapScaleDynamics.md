@@ -91,36 +91,39 @@ must quantitatively exclude shrinking neighbourhoods of these two centres along 
 
 The ideal recurrence alone is insufficient: its integer dynamics can approach cancellation. Any proof must exploit the exact ternary-drain corrections or a stronger invariant encoding the root's history.
 
-## 4. Reproducible finite diagnostic
+## 4. Reproducible finite diagnostic — current source mismatch
 
-`root_gap_scale_scan.cpp` is a source-shaped GMP mirror of the accelerated `evalA`, `drainB`, and `highLevelNext` definitions. It starts at $D(0,7)$, accepts a step count, and tracks:
-- whether $g>0$ agrees with the next state's $a'\ge d'$;
-- the error in the two leading gap/scale updates, normalized by the ternary digit length of $m$;
-- the minimum $|g|/m$;
-- the minimum $g^2/m$.
+**Status: the checked-in C++ program is not currently a source-equivalent mirror, so the numerical run below is not reproducible from the committed file.** In `root_gap_scale_scan.cpp`, the final `evalA` branch (the `r=1,a>0` case) decrements `a`, updates `m,k`, and returns `true`. The pinned Lean definition instead recurses:
+[
+A(a,3j+1,m)=A(a-1,j,m+2j+3)qquad(age1).
+]
+The C++ function must continue evaluating that recursive state (e.g. `continue;` in its loop), not return it as a completed `D_3) state.
 
-Build and run:
-\`\`\`sh
-g++ -O3 -std=c++17 root_gap_scale_scan.cpp -lgmpxx -lgmp -o root_gap_scale_scan
-./root_gap_scale_scan 20000
-\`\`\`
+The discrepancy is visible on the first blank-root section transition. From the pinned source:
+[
+D(0,7)	ooperatorname{drainB}(8,2,2),qquad
+operatorname{evalA}(8,1,9)=operatorname{evalA}(7,0,12)=D_3(6,0,14),
+]
+so (operatorname{highLevelNext}(D(0,7))=D(6,14)). The checked-in C++ implementation returns the intermediate tuple ((7,0,12)), hence produces (D(7,12)); the next high-level transition halts because its first counter is odd. Therefore the checked-in program cannot produce the documented 20,000-visit output.
 
-The implementation deliberately skips diagnostic accumulation for the first nine transition indices (`if (i < 9) continue;`); all extrema below, including the minimum square ratio, are over old-state indices `i >= 9`, not over the entire initial transient from D(0,7).
+The original output is retained below as historical material, **not as current computational evidence**. Its mismatch count, extrema, and state/index claims must not be relied on until the C++ implementation is repaired and rerun against the pinned Lean equations.
 
-Completed 20,000-step run:
-\`\`\`text
+Historical output recorded with the original note:
+```text
 DONE steps=20000 mismatch=0 zero=0
 max |eg|/ternaryDigits log2=4.67243 index=11 error_bits=7 m_bits=6
 max |em|/ternaryDigits log2=2.58496 index=11 error_bits=5 m_bits=6
 min |g|/m log2=-12.9605 index=6899
 min g^2/m log2=4.12348 index=16
-\`\`\`
+```
 
-The maximum gap error is exactly $102$ at the transition from $D(312,38)$ to $D(268,138)$: the leading prediction is $-182$, while the actual unshifted gap is $-284$. The scale error there is $24$. These are finite maxima, not universal constants.
+The associated historical interpretation was: maximum gap error 102 at the transition from (D(312,38)) to (D(268,138)); minimum square ratio (4096/235) at index 16, state (D(876,235)); and minimum relative gap at index 6899. These values are preserved for provenance only and are **unreproduced by the current checked-in source**.
 
-The minimum square ratio is $4096/235$, attained at index 16, state $D(876,235)$, where $g=-64$ and $m=235$. The normalized gap becomes much smaller elsewhere: at index 6899 the diagnostic records $\log_2(|g|/m)\approx-12.9605$. Consequently a uniform cone estimate $|g|\ge c m$ is contradicted by this finite trace, even though the square-gap margin remains positive throughout the scan.
-
-This program is an independent source-shaped mirror, not a Lean proof or a substitute for the original-source CI chain. The existing 20,000-state audit in `im-results/agent22-623-root-ray-20k/` is complementary evidence. Attempts to extend this particular local diagnostic to 30,000 and 100,000 steps exceeded the available command timeout; no conclusion is drawn from those attempts.
+A separate 10,000-step BigInt scan reported by Agent 32 matches the pinned Lean root trace through
+[
+D(0,7),D(6,14),D(6,31),D(26,26),D(2,83),D(84,10),D(74,38),D(30,138),D(108,101),D(2,321),D(322,10),ldots
+]
+That is a different implementation and does not validate the C++ file above; preserve its exact script and cutoff separately before treating the longer scan as reproducible evidence.
 
 ## 5. Research implications
 
