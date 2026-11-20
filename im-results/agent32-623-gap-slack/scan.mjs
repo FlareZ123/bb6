@@ -171,7 +171,7 @@ let minSlack = null;
 let minSlackAt = null;
 let maxBitLength = 0;
 
-for (let n = 0; n < 10000; n++) {
+for (let n = 0; n < 20000; n++) {
   if (n < expectedPrefix.length) {
     prefix.push([a.toString(), d.toString()]);
   }
@@ -220,6 +220,7 @@ assert(
 assert(firstHalt === null, "root halted within the scan window");
 assert(outOfConeAfterNine.length === 0, "root left newAffineCone after n=9");
 assert(minSlack === 65n, "unexpected minimum uniform gap slack");
+assert(maxBitLength === 6137, "unexpected maximum scanned state bit length");
 assert(
   minSlackAt !== null &&
     minSlackAt.n === 14 &&
@@ -237,7 +238,7 @@ assert(highLevelNext(d212.a, d212.d) === null, "D(2,12) should halt in two steps
 
 console.log(JSON.stringify({
   sourceCommit: "c86f15861709b76042998c5211c7b2f83991621b",
-  transitionsAttempted: 10000,
+  transitionsAttempted: 20000,
   firstHalt,
   sourcePrefix: prefix,
   outOfConeAfterNineCount: outOfConeAfterNine.length,
