@@ -28,6 +28,11 @@ on:
         required: true
         default: "main"
         type: string
+      previous_extension_ref:
+        description: "Extension commit recorded in the predecessor artifact; defaults to extension_ref"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -85,6 +90,7 @@ jobs:
           PREVIOUS_ARTIFACT: ${{ inputs.previous_artifact }}
           SOURCE_REF: ${{ inputs.source_ref }}
           EXTENSION_REF: ${{ inputs.extension_ref }}
+          PREVIOUS_EXTENSION_REF: ${{ inputs.previous_extension_ref }}
         run: |
           set -euo pipefail
           actual_source=$(git rev-parse HEAD)
@@ -106,8 +112,9 @@ jobs:
           fi
           if [[ -f im-results/.d-root-stage3b-extension-ref ]]; then
             prior_extension_ref=$(cat im-results/.d-root-stage3b-extension-ref)
-            if [[ "$prior_extension_ref" != "$actual_extension" ]]; then
-              echo "Nineteenth proof extension changed: $prior_extension_ref vs $actual_extension" >&2
+            expected_previous_extension="${PREVIOUS_EXTENSION_REF:-$actual_extension}"
+            if [[ "$prior_extension_ref" != "$expected_previous_extension" ]]; then
+              echo "Nineteenth proof extension mismatch: predecessor=$prior_extension_ref expected=$expected_previous_extension" >&2
               exit 1
             fi
           elif [[ "$STAGE" != "1" ]]; then
