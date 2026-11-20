@@ -85,6 +85,21 @@ The consecutive best matches at indices 2,640–2,647 are precisely the seven-st
 
 **Boundary of this screen:** it checks DRegular section endpoints, not every primitive configuration inside each source macro. Since a general first-return/minimality theorem identifying every DRegular.next with the external A_step2 macro is not established, this finite endpoint sieve does not exclude intermediate visits to an external checkpoint. It is a search discriminator, not a non-entry theorem.
 
+## Later source-certified reentry endpoints
+
+The authentic blank-root chain is source-certified through episode 18. Its seventeenth and eighteenth reentry endpoints also match two of the external checkpoint suffix shapes, but miss the corresponding checkpoint families already at the first ternary digit:
+
+| Root reentry | Source endpoint | Matching external checkpoint | Root parameter mod 3 | Required parameter mod 3 | Status |
+|---:|---|---:|---:|---:|---|
+| 17 | L(512*u17+119,3,2) | j=2, (3,2) | 0 | 2 | misses |
+| 18 | L(64*t18+23,1,5) | j=1, (1,5) | 0 | 1 | misses |
+
+For episode 17, the source arithmetic theorem gives t17 mod 27 = 6 and t17=3*u17, hence u17 mod 9 = 2 and (512*u17+119) mod 3 = 0. For episode 18, t18 mod 27 = 22, so (64*t18+23) mod 3 = 0. The external checkpoints have c2 mod 3 = 2 and c1 mod 3 = 1 respectively. The new candidate KnownCylinderReentryScreen.lean states the resulting non-membership in the full checkpoint families for every k.
+
+Episodes 14–16 also return to suffix (1,5). The independent arithmetic replay check_root17.py reports t14 mod 27 = 3, t15 mod 27 = 14, and t16 mod 27 = 26, giving root parameter residues 0,2,2 mod 3, all different from the external j=1 residue 1. These three residue claims remain script-level arithmetic evidence, not separate kernel theorems.
+
+This is an endpoint screen at the source-certified reentry times, not a proof that the orbit cannot pass through a checkpoint inside a preceding packet macro. It does not establish global non-entry or nonhalting.
+
 ## Source-proof route
 
 The repository already has the ingredients for a compact kernel certificate:
