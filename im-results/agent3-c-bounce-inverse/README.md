@@ -406,3 +406,6 @@ The source-equivalence hook is `BB6.Agent46.section_exact` in `FastSectionProof.
 
 
 The source namespace connection has been checked: `U5Y3ParentFan.lean` imports `SectionAllInverse.lean` and opens `BB6.Agent46`, so its `secNext` is the same original section relation used by `FastSectionProof.section_exact`. Its q=0 parent theorem returns exactly `(8*(m+1)-3,4*(m+1)-1)`, which is the terminal Q(u) of the four-step B2 path. The remaining work is a Lean proof of the four affine exactSection evaluations and derivation of the residual/root-index premises for the same blank-start candidate.
+
+
+A simpler formalization route is now identified: use the already source-certified `BB6.Agent46.section_preimage_all_iff` from `SectionAllInverse.lean` (CI 41544188316) directly. The four edges have predecessor-grammar depth witnesses `5,0,0,0` and reduce to four linear identities; see [B2Q0FourStepPath.md](B2Q0FourStepPath.md). This avoids unfolding the recursive FastSectionDef bounce implementation and uses the exact same `secNext` namespace opened by `U5Y3ParentFan`. Agent 15 has been asked to review/compile this route; no local Lean compile yet.
