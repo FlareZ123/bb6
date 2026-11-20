@@ -80,6 +80,7 @@ Source drafts added under this directory:
 - GeneralQ4TailS1Config.lean — q4Tail frame equals the S1 dispatcher input.
 - GeneralQ4TailTerminalComposition.lean — counted drain, complete dispatcher, terminal SectionBits.
 - GeneralQ4TailRootHalting.lean — authentic blank-root HaltsAfter and Attainable theorem drafts.
+- check_general_q4tail_reparam.py — 12 small exact-TM2 checks (L in {4,6}, A in {2,3,4}, z in {1,2}) of the S0/S1 tape identity and counted-drain endpoint.
 
 **Status:** all six artifacts are source drafts and have not been Lean-compiled or axiom-audited. The direct root theorem is therefore a promising composition target, not an established halting proof. Local shell/Python/container execution failed with ClientError; do not substitute CI for the required local preflight. The existing positive-z P2 postlude route remains available as an alternate path until this route is accepted.
 
