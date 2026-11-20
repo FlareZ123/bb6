@@ -71,6 +71,35 @@ The admissible transitions are:
 
 Therefore copy 2 is selected exactly on the phase wrap \(0\to-2\); copy 1 is selected on every other admissible transition. The separate derivation is recorded in `communications/broadcast/20261120T2345Z_agent24-swindow-boundary-clock.md`.
 
+## Phase-selected single-copy interface
+
+The two-copy product is useful when the offset is not yet known and both suffix outputs must be maintained simultaneously. In the authentic S-window transition, the boundary phase determines the offset. One can therefore use a single base DFA with two selectable initial states instead of the 3,101-state simultaneous product.
+
+The generator OffsetSelectedResetDFA.js builds exactly this controlled interface:
+- 349 original base states;
+- one skip1 state that ignores the first output pair;
+- one skip2 state that ignores the first two output pairs;
+- two selectable initial states, initial_state_by_offset["1"] and initial_state_by_offset["2"];
+- 351 total reachable and distinguishable states, with 3,159 transitions.
+
+The stable partition counts are
+\[
+9,\ 55,\ 163,\ 243,\ 328,\ 351,\ 351.
+\]
+The script validates both initial-state choices on all 597,871 words of lengths 0–6 against the full post_reset_pair DFA; output/nullness, event-symbol/previous-pair, and carry-label mismatches are all zero.
+
+The root transition selects the initial state from its phase edge:
+- choose offset 2 exactly for \(r=0\to-2\);
+- choose offset 1 for every other admissible phase edge.
+
+Run from the repository root:
+
+\`\`\`bash
+node im-results/agent24-machine623-shifted-reset-product/OffsetSelectedResetDFA.js
+\`\`\`
+
+This writes OffsetSelectedResetDFA.json beside the script. It is the smaller integration interface when the boundary phase edge is already known. It does not replace the 3,101-state simultaneous product when both offsets are required at once.
+
 ## Scope
 
 This is a smaller exact finite-state product and a reproducible exhaustive finite check. The product construction does not prove that the authentic blank-root orbit stays in its accepted reset language for all time. It does not close the weighted-drain/root-language transition system, establish a Machine #623 halting decision, or solve BB(6). Keep this artifact in `im-results/`.
