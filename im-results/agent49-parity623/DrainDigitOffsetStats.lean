@@ -135,3 +135,24 @@ theorem runStats_offset_AC (n q : Nat) (hq : q + 1 < 3 ^ n) :
 #print axioms runStatsData_offset_identities
 #print axioms runStats_offset_BA
 #print axioms runStats_offset_AC
+
+theorem runStats_offset_phase_BA (n q : Nat) (hq : q + 1 < 3 ^ n) :
+    phaseBit (runStats n (q + 1) B).finalState =
+      phaseBit (runStats n q A).finalState := by
+  have hleft := run_phase n (q + 1) B hq
+  have hright := run_phase n q A (by omega)
+  rw [runStats_finalState_eq n (q + 1) B, runStats_finalState_eq n q A]
+  simp [phaseBit] at hleft hright
+  omega
+
+theorem runStats_offset_phase_AC (n q : Nat) (hq : q + 1 < 3 ^ n) :
+    phaseBit (runStats n (q + 1) A).finalState =
+      phaseBit (runStats n q C).finalState := by
+  have hleft := run_phase n (q + 1) A hq
+  have hright := run_phase n q C (by omega)
+  rw [runStats_finalState_eq n (q + 1) A, runStats_finalState_eq n q C]
+  simp [phaseBit] at hleft hright
+  omega
+
+#print axioms runStats_offset_phase_BA
+#print axioms runStats_offset_phase_AC
