@@ -164,9 +164,124 @@ theorem root32_u_parameter_of_exact (r E u : Nat)
     (root32_u_mod64 r u hr hmod64)
     (root32_u_mod105 r u hmod105)
 
+private theorem mod_complement (x q : Nat)
+    (hx : x<8192) (hq : x+1535=8192*q) : x=6657 := by omega
+
+private theorem cancel_8192 (x y : Nat)
+    (h : 8192*x=8192*y) : x=y := by omega
+
+private theorem div_6657_add_mul (r : Nat) :
+    (6657+8192*r)/8192=r := by omega
+
+/-- On the B2 parameterization t=551+8192*u, the exact residual
+identity forces the affine root parameter w=6657 (mod 8192). -/
+theorem b2_root_residue_of_exact_residual (u w : Nat)
+    (hres : 211*(551+8192*u)+1360+22155*w =
+      20*2^(201+3360*w)) :
+    w%8192=6657 := by
+  have hdiv : 8192∣2^(201+3360*w) := by
+    refine ⟨2^(188+3360*w),?_⟩
+    have hexp : 201+3360*w=13+(188+3360*w) := by omega
+    rw [hexp,Nat.pow_add,show (2:Nat)^13=8192 by decide]
+  have hpowdiv : 8192∣20*2^(201+3360*w) := by
+    rcases hdiv with ⟨q,hq⟩
+    refine ⟨20*q,?_⟩
+    rw [hq]
+    omega
+  have hmod :
+      (211*(551+8192*u)+1360+22155*w)%8192=0 := by
+    rw [hres]
+    exact Nat.mod_eq_zero_of_dvd hpowdiv
+  have hmulmod :
+      (291*(211*(551+8192*u)+1360+22155*w))%8192=0 := by
+    rw [Nat.mul_mod,hmod]
+  have hexpand :
+      291*(211*(551+8192*u)+1360+22155*w) =
+        (w+5696*(8+128*u)+5119) +
+          8192*(787*w+479*(8+128*u)+340) := by omega
+  have hAm : (w+5696*(8+128*u)+5119)%8192=0 := by
+    rw [hexpand] at hmulmod
+    simpa [Nat.add_mod,Nat.mul_mod] using hmulmod
+  have hsplit :
+      w+5696*(8+128*u)+5119 = (w+1535)+8192*(89*u+6) := by omega
+  have hWm : (w+1535)%8192=0 := by
+    rw [hsplit] at hAm
+    simpa [Nat.add_mod,Nat.mul_mod] using hAm
+  have hmodW : (w%8192+1535)%8192=0 := by
+    simpa [Nat.add_mod] using hWm
+  have hdivW : 8192∣w%8192+1535 := Nat.dvd_of_mod_eq_zero hmodW
+  rcases hdivW with ⟨q,hq⟩
+  have hz : w%8192<8192 := Nat.mod_lt w (by decide : 0<8192)
+  exact mod_complement (w%8192) q hz hq
+
+/-- Reparameterizing the exact residual equation by w=6657+8192*r
+produces the exact root-index equation used by the source-orbit closure. -/
+theorem b2_exact_root_equation_of_residual (u r w E : Nat)
+    (hw : w=6657+8192*r)
+    (hE : E=201+3360*w)
+    (hres : 211*(551+8192*u)+1360+22155*w =
+      20*2^(201+3360*w)) :
+    18018+211*u+22155*r=20*2^(E-13) := by
+  have hleft :
+      211*(551+8192*u)+1360+22155*(6657+8192*r) =
+        8192*(18018+211*u+22155*r) := by omega
+  have hEminus : E-13=188+3360*(6657+8192*r) := by rw [hE,hw]; omega
+  have hpow : 2^E=8192*2^(E-13) := by
+    have hexp : E=13+(E-13) := by omega
+    rw [hexp,Nat.pow_add,show (2:Nat)^13=8192 by decide]
+    simp
+  have hE' : E=201+3360*(6657+8192*r) := by rw [hw] at hE; exact hE
+  have hEq :
+      8192*(18018+211*u+22155*r)=20*2^E := by
+    rw [hw,hleft] at hres
+    rw [← hE'] at hres
+    exact hres
+  rw [hpow] at hEq
+  have hmul : 20*(8192*2^(E-13))=8192*(20*2^(E-13)) := by
+    calc
+      20*(8192*2^(E-13)) = (20*8192)*2^(E-13) := by rw [← Nat.mul_assoc]
+      _ = (8192*20)*2^(E-13) := by rw [Nat.mul_comm 20 8192]
+      _ = 8192*(20*2^(E-13)) := by rw [Nat.mul_assoc]
+  rw [hmul] at hEq
+  exact cancel_8192 _ _ hEq
+
+/-- Every exact B2 residual solution has a canonical quotient r in the
+root affine parameterization, and satisfies the root-index equation. -/
+theorem b2_root_parameter_of_exact_residual (u w E : Nat)
+    (hE : E=201+3360*w)
+    (hres : 211*(551+8192*u)+1360+22155*w =
+      20*2^(201+3360*w)) :
+    ∃ r, w=6657+8192*r ∧
+      18018+211*u+22155*r=20*2^(E-13) := by
+  have hmod := b2_root_residue_of_exact_residual u w hres
+  let r := w/8192
+  have hw : w=6657+8192*r := by
+    dsimp [r]
+    have h := Nat.mod_add_div w 8192
+    omega
+  exact ⟨r,hw,b2_exact_root_equation_of_residual u r w E hw hE hres⟩
+
+/-- If the quotient root index is 32 modulo 64, the exact B2 residual
+identity alone forces the B2 parameter into u=1802+6720*t. -/
+theorem b2_root32_parameter_of_exact_residual (u w E : Nat)
+    (hE : E=201+3360*w)
+    (hres : 211*(551+8192*u)+1360+22155*w =
+      20*2^(201+3360*w))
+    (hr : (w/8192)%64=32) :
+    ∃ t : Nat, u=1802+6720*t := by
+  obtain ⟨r,hw,hRoot⟩ := b2_root_parameter_of_exact_residual u w E hE hres
+  have hquot : w/8192=r := by rw [hw]; exact div_6657_add_mul r
+  have hr' : r%64=32 := by rw [← hquot]; exact hr
+  have hE' : E=201+3360*(6657+8192*r) := by rw [hw] at hE; exact hE
+  exact root32_u_parameter_of_exact r E u hr' hE' hRoot
+
 #print axioms root_equation_affine_parameter
 #print axioms root_equation_mod1680
 #print axioms root_equation_parity
 #print axioms root32_u_parameter_of_exact
+#print axioms b2_root_residue_of_exact_residual
+#print axioms b2_exact_root_equation_of_residual
+#print axioms b2_root_parameter_of_exact_residual
+#print axioms b2_root32_parameter_of_exact_residual
 
 end BB6.Agent3U5B2Root32ParameterBridge
