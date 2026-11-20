@@ -23,6 +23,7 @@ theorem drainDigitSummary_length_pos (b : Nat) (hb : 0 < b) :
   | zero => omega
   | succ k =>
       simp [drainDigitSummary]
+      omega
 
 /-- Every positive input emits a nonzero leading ternary digit. -/
 theorem drainDigitSummary_value_lower :
@@ -108,8 +109,10 @@ theorem drainDigitSummary_length_le_of_budget
         4 * (drainDigitSummary b).value + 1 = 2 * b + 3 ^ L := by
       simpa [L] using drainDigitSummary_value_formula b
     have hpow : 3 ^ L = 3 * 3 ^ (L - 1) := by
-      have hEq : L = (L - 1) + 1 := by omega
-      rw [hEq, Nat.pow_succ, Nat.mul_comm]
+      calc
+        3 ^ L = 3 ^ ((L - 1) + 1) := by congr 1; omega
+        _ = 3 ^ (L - 1) * 3 := by rw [Nat.pow_succ]
+        _ = 3 * 3 ^ (L - 1) := by omega
     have hlow' : 4 * 3 ^ (L - 1) + 1 ≤ 2 * b + 3 ^ L := by
       have h := Nat.add_le_add_right (Nat.mul_le_mul_left 4 hlow) 1
       rw [hformula] at h
