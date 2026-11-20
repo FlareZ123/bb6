@@ -1,6 +1,6 @@
 # Suffix-extended halting cylinders from the external 108-step proof
 
-**Status:** the final E-tail computations and their finite-window transfer are now Lean-kernel checked in `TailWindowCore.lean` and `TailWindowResults.lean`. The 107-call suffix-parametric prefix endpoint is still a separate, unproved connection, so the full additional halting cylinders remain conditional. Keep this in `im-results/`; do not promote it to `results/` yet.
+**Status:** the final E-tail computations and their finite-window transfer are Lean-kernel checked in `TailWindowCore.lean` and `TailWindowResults.lean`. A source-level proof draft for the 107-call arbitrary-suffix prefix endpoint is now in `SuffixParametricPrefix.append.lean`; the existing manual workflow has been extended to compile it against the pinned upstream source, so that endpoint is not yet accepted until CI succeeds. The full additional halting cylinders remain conditional. Keep this in `im-results/`; do not promote it to `results/` yet.
 
 ## Reduction
 
@@ -13,7 +13,7 @@ The 107 `A_step2` calls are built from `step_An_1101` lemmas with an arbitrary s
 `P = [0,1,0,1,1,0,1,1]`.
 The suffix-preserving composition can be replayed with an arbitrary initial suffix `r`; the corresponding endpoint should be
 `A(3*8^107*k + C2, P ++ r)`.
-This parametric endpoint statement must be made explicit and kernel-checked before accepting the full generalization.
+The candidate proof is preserved in `SuffixParametricPrefix.append.lean`; it replaces the 11 intermediate `stepStar_halts` wrappers by `stepStar_trans` and carries the 107 existing `A_step2` calls unchanged. It states the arbitrary-suffix endpoint below. Its compile check is in the existing `agent32-cryptid-padding.yml` workflow, against upstream commit `b77dda5c79fb196d67ce35669e172ad632401c1b` and that source repository's Lean 4.36.0-rc1 toolchain.
 
 Since `C2 mod 3 = 1`, the final `step_An_1101` takes its E branch. Its endpoint has:
 - state E;
@@ -42,6 +42,17 @@ The wrappers `actual_empty_suffix_113`, `actual_suffix_01_127`, `actual_suffix_0
 The empty-suffix trace reproduces the external proof's 113-step tail exactly. The four extra cases are kernel-checked as final-tail lemmas for the explicit D0 table and actual left-stack shape.
 
 `#print axioms` reports only Lean's core `propext`, `Classical.choice`, and `Quot.sound`; there are no project-specific axioms, `sorry`, or unproved hypotheses in the finite-tail development.
+
+## Suffix-parametric prefix proof candidate
+
+The new appended theorem has the target
+[
+ A(3^{108}k+C,ls)\;\vdash^*\;
+ A(3\cdot8^{107}k+C_2,P++ls).
+]
+It reuses the upstream 107 `A_step2` invocations exactly; only the outer composition combinator changes from `stepStar_halts` to `stepStar_trans`, and the final halting tail is omitted. This is a direct source-level generalization because `step_An_1101`, the supporting lemmas, and `A_step2` all quantify over and preserve the arbitrary suffix. The source file is pinned to upstream commit `b77dda5c79fb196d67ce35669e172ad632401c1b`.
+
+The updated existing manual workflow appends this theorem to the pinned source file and compiles the complete file. A successful run will certify the arbitrary-suffix prefix endpoint; until then, treat it as a draft, not a theorem.
 
 ## Conditional full-cylinder consequence
 
@@ -77,7 +88,7 @@ A small simulation search over (0\le q\le20), (0\le b\le30), with a 2,000-step h
 
 ## Kernel-acceptance path for the full result
 
-1. State the suffix-parametric 107-call endpoint `A(...,P ++ r)` explicitly, using the existing `A_step2` composition rather than assuming it from the empty-suffix theorem.
+1. Obtain a successful compile of `SuffixParametricPrefix.append.lean` through the existing manual workflow, thereby accepting the arbitrary-suffix 107-call endpoint.
 2. Compose that endpoint with the appropriate `TailWindowResults.actual_suffix_...` theorem (or port the same window lemma into the external TM62 type).
 3. Compose the source TM62-to-D0 conjugacy/transport proof and audit the transitive axiom profile.
 4. Only then treat the four extended cylinders as formal halting results.
