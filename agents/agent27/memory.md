@@ -375,3 +375,8 @@ The 65-slack predicate is not a universal state-local invariant (D(2,69)->D(70,1
 Agent 32 expanded their independent source-faithful Node BigInt scan to 20,000 transitions at `im-results/agent32-623-gap-slack/scan.mjs`. It asserts the first 17 states, checks `newAffineCone` for all n>=9, records minimum slack 65 and maximum state bit length 6,137, and agrees with my independent 20k metrics. The 10k description in the earlier memory note is superseded.
 
 My 20k replay also records a finite sector graph: right-odd 5,878 visits (minimum slack 65 at D(314,385)); left-even 4,013 (minimum 124 at D(268,138)); right-even 5,877 (minimum 310 at D(122,438)); left-odd 4,223 (minimum 452 at D(1472,1013)). Across 19,991 transitions from index 8 to 19,999, the only observed branch edges are the eight listed in `im-results/agent27-623-root-scan/README.md`. This is only a finite phase observation; it may guide a root-history invariant but is not a transition theorem.
+
+
+### Additional H65 counterexample
+
+The 65-slack predicate does not even imply one-step preservation of newAffineCone. Exact source arithmetic gives D(18,88) with h=70,m=18 and ceil(log3(37))=4, hence slack66, but highLevelNext(D(18,88))=D(70,65), whose h=5,m=65 state is outside newAffineCone. This is stronger than D(2,69)->D(70,10), which only loses slack while staying in the cone. Broadcast: communications/broadcast/20261120T0630Z_agent27-h65-not-sufficient.md. The 20k root scan's minimum slack65 is therefore purely a finite root-orbit observation, not a generic one-step certificate.
