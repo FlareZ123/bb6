@@ -308,7 +308,13 @@ For \(t\equiv31\pmod{256}\), \(q=(t-3)/4\equiv7\pmod{64}\). The extended R paren
 
 Thus both alternatives are unreachable. The root equation gives \(j\equiv165\pmod{256}\), hence \(r\equiv10592\pmod{16384}\). The detailed composition is in [Root32HighStopR10592.md](Root32HighStopR10592.md).
 
-The two progressions are nonempty and infinite by the exact-root saturation construction in Section 6. They are source-orbit exclusions, not mere congruence filters. All other root-index classes, and the global Machine C decision, remain open.
+### 7.3. The progression r = 224 (mod 1024)
+
+For \(t\equiv1\pmod{16}\), D0E is excluded because \(t\equiv1\pmod4\): the R target has sum \(3\pmod8\), its even-right inverse is R', and R' has odd-right sum \(2\pmod4\). L is also excluded. Its P0 parent has a unique parent A0 with odd-right sum \(2\pmod4\); its P2 parent has \(P_{2,x}+P_{2,y}+1=40(1560681486n+123700079)\) for \(t=16n+1\), forcing the unique odd-a depth-zero parent A(n), which has odd-right sum \(2\pmod4\). Thus both alternatives in the T inverse reduction are impossible.
+
+The exact root equation gives \(t+j\equiv196\pmod{256}\). Hence \(t\equiv1\pmod{16}\) gives \(j\equiv3\pmod{16}\) and \(r=32+64j\equiv224\pmod{1024}\). See [Root32HighStopR224.md](Root32HighStopR224.md) for the full source-parent calculation.
+
+The three progressions are nonempty and infinite by the exact-root saturation construction in Section 6. They are source-orbit exclusions, not mere congruence filters. All other root-index classes, and the global Machine C decision, remain open.
 
 ## 8. Verification boundary and next decisive action
 

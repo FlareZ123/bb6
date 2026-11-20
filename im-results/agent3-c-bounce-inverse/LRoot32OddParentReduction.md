@@ -166,3 +166,8 @@ The useful next work is therefore the unbounded even-depth \(P_2\) branch for \(
 ## Verification boundary
 
 The calculations above are exact integer algebra, and the reachability transports use existing source-certified theorems. The new composed claims have not yet been compiled in one Lean module. Keep this dossier in im-results/; do not promote it to results/ until an exact Lean 4.36.0-rc2 import-closure compile and axiom audit succeed.
+
+
+### Additional P2 closure: t≡1 (mod 16)
+
+For t=16n+1, P2 has sum-plus-one (40(1560681486n+123700079)), with odd final factor. The complete source grammar forces the odd-a depth-zero parent ((31213629720n+2474001577,40764630900n+3231016773)), whose right coordinate is odd and coordinate sum is 2 mod4. The blank no-odd-sum-two invariant excludes it. Since P0 is already excluded for t≡1 mod4, L(t) is unreachable for t≡1 mod16. See [Root32HighStopR224.md](./Root32HighStopR224.md).
