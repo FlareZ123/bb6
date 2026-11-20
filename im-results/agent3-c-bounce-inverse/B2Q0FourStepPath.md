@@ -187,7 +187,62 @@ P_7(u)&:\quad
 \end{aligned}
 \]
 
-The direct parent of \(D_0\) is already excluded: its sum is \(961536u+64658\equiv2\pmod8\), so its forced even-right predecessor is \((961536u+64656,\;43520u+2925)\), an odd-right target with sum \(1005056u+67581\equiv1\pmod4\). The other parent of \(D_0\), and both displayed parents of \(P_7\), have not been excluded here. This is the actual remaining source-orbit obstruction. No conclusion that \(T(u)\) is unreachable is justified yet.
+The direct parent of \(D_0\) is already excluded: its sum is \(961536u+64658\equiv2\pmod8\), so its forced even-right predecessor is \((961536u+64656,\;43520u+2925)\), an odd-right target with sum \(1005056u+67581\equiv1\pmod4\). Thus reachability of \(D_0\) forces its bounce parent
+\[
+D_{0E}(u)=(218624u+14700,\;414976u+27902).
+\]
+
+The depth-seven parent \(P_7\) can be reduced further. Its bounce parent is
+\[
+P_{7E}(u)=(131414u+8830,\;458581u+30824).
+\]
+Write \(u=1802+6720t\). Two applications of the exact even-right reachability equivalence give
+
+\[
+\begin{aligned}
+P_{7E,1}(t)&=(3964766400t+1063210642,\;1540832160t+413196892),\\
+P_{7E,2}(t)&=(5505598560t+1476407532,\;770416080t+206598445).
+\end{aligned}
+\]
+
+The first target has even right coordinate and sum \(3964766400t+1063210644\equiv4\pmod8\); the second has even right coordinate and sum \(5505598560t+1476407534\equiv6\pmod8\). Hence both even-right equivalences apply. But for the final target,
+\[
+x+y+1=6276014640t+1683005978\equiv2\pmod4.
+\]
+Its right coordinate is odd. The complete source grammar section_preimage_all_iff rules out every possible predecessor: the even-a branch needs \(x+y\) divisible by four, the odd-a branch needs \(x+y+1\) divisible by four, the low branch needs even \(y\), and the \(a=0,1\) exceptional branches need the corresponding stronger divisibility. Therefore \(P_{7E}(u)\) is unreachable.
+
+The direct parent of \(P_7\) is
+\[
+P_{7D}(u)=(525656u+35334,\;261460u+17576).
+\]
+Its sum is \(787116u+52910\equiv6\pmod8\), so the even-right equivalence forces
+\[
+R_1(u)=(787116u+52908,\;130730u+8787).
+\]
+Here \(x+y+1=917846u+61696\) has exact 2-adic valuation two. Since \(x\) is even and \(y\) is odd, the complete source grammar leaves only the odd-a, depth-zero predecessor
+\[
+R_2(u)=\left(458923u+30845,\;\frac{589653u+39630}{2}\right).
+\]
+Substituting \(u=1802+6720t\),
+\[
+R_2(t)=(3083962560t+827010091,\;1981234080t+531297168).
+\]
+Its right coordinate is even and its coordinate sum is \(5065196640t+1358307259\equiv3\pmod8\), so another even-right equivalence forces
+\[
+L(t)=(5065196640t+1358307257,\;990617040t+265648583).
+\]
+This is odd/odd, with
+\[
+L_x+L_y=6055813680t+1623955840\equiv16t\pmod{32}.
+\]
+For odd \(t\), the existing oddodd_sum16_blank_reach_iff applies to \(L(t)\); for even \(t\), its sum is \(0\pmod{32}\), outside that theorem's current scope. Thus \(P_7\) reachability forces \(L(t)\) reachability, while the even-\(t\) high-valuation case remains open.
+
+Combining the parent fans gives the sharper paper-level reduction
+\[
+T(u)\text{ reachable}\quad\Longrightarrow\quad
+D_{0E}(t)\text{ reachable}\ \lor\ L(t)\text{ reachable}.
+\]
+This is not yet a Lean-compiled wrapper and does not prove \(T(u)\) unreachable. The two displayed affine families are the current residual source-orbit targets.
 
 ## 6. The exact root equation is saturated on the root32 cylinder
 

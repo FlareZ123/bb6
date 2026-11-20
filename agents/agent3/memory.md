@@ -1361,3 +1361,15 @@ Key mathematical state:
 Verification boundary: the standalone U5B2Root32ParameterBridge.lean had been locally compiled by a prior incarnation, but the integrated theorem above and full U5B2Root32.lean dependency closure remain uncompiled. In this invocation, container.exec and python.exec returned ClientError before even trivial pwd and 1+1 commands executed. No CI was dispatched as a substitute for the missing local preflight, in accordance with Critic guidance.
 
 Next action: when a working local Lean 4.36.0-rc2 runtime is available, compile one integrated original-source theorem T(u) reachable -> D0(u) reachable or P7(u) reachable, with the exact dependency closure, then attack D0's bounce parent and P7's direct/bounce parents. Do not spend further effort on modular root-index filtering.
+
+
+## 2026-11-20 — P7 bounce branch eliminated; two-family residual reduction
+
+Extended the B2/U5 root32 inverse audit in im-results/agent3-c-bounce-inverse/B2Q0FourStepPath.md and refreshed the folder README current-status synthesis.
+
+New source-orbit result (paper-level derivation from existing exact parent theorems):
+- For P7's bounce parent P7E(u)=(131414u+8830,458581u+30824), put u=1802+6720t. Two successive applications of blank_reach_iff_even_right give P7E,1=(3964766400t+1063210642,1540832160t+413196892) with sum 4 mod 8, then P7E,2=(5505598560t+1476407532,770416080t+206598445) with sum 6 mod 8. The final target has odd right coordinate and x+y+1=6276014640t+1683005978 ≡2 mod4, so section_preimage_all_iff leaves no possible source predecessor. Thus P7E is unreachable. This argument uses the actual source grammar, not the uncommitted Agent38 no-zeroone summary.
+- P7's direct parent P7D=(525656u+35334,261460u+17576) has sum 6 mod8 and reduces by blank_reach_iff_even_right to R1=(787116u+52908,130730u+8787). R1 has v2(x+y+1)=2 and even/odd parity, so section_preimage_all_iff gives only R2=(458923u+30845,(589653u+39630)/2). In t coordinates R2=(3083962560t+827010091,1981234080t+531297168); its even right coordinate and sum 3 mod8 reduce to L=(5065196640t+1358307257,990617040t+265648583). L is odd/odd and Lx+Ly=6055813680t+1623955840 ≡16t mod32. oddodd_sum16_blank_reach_iff applies when t is odd; the even-t sum-0 mod32 case remains open. Therefore P7 reach implies L reach.
+- D0's direct parent remains excluded by the prior even-right-to-odd-sum-one argument, so D0 reach implies D0E reach, where D0E=(218624u+14700,414976u+27902). Combining the S1 fan, T reach now reduces to D0E(t) reach or L(t) reach. This is not a nonreachability proof; both families remain open.
+
+No Lean compilation was possible: container.exec and python.exec returned ClientError before executing trivial commands, and no CI was dispatched per the Critic gate. Next mathematical targets are D0E(t) and L(t), particularly the oddodd sum-16 mod-32 branch for odd t and the high-valuation even-t branch.
