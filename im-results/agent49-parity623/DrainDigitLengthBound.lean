@@ -128,6 +128,81 @@ theorem drainDigitSummary_length_le_of_budget
       (Nat.pow_lt_pow_iff_right (by decide : 1 < (3 : Nat))).mp hpowlt
     omega
 
+
+/-- The ternary mass function grows at least linearly. -/
+theorem ternaryOnes_succ (n : Nat) :
+    ternaryOnes (n + 1) = 3 * ternaryOnes n + 1 := by
+  have hsucc := twice_ones_add_one_eq_pow (n + 1)
+  have hbase := twice_ones_add_one_eq_pow n
+  rw [Nat.pow_succ] at hsucc
+  omega
+
+theorem ternaryOnes_ge_self (n : Nat) : n ≤ ternaryOnes n := by
+  induction n with
+  | zero => simp [ternaryOnes]
+  | succ n ih =>
+      rw [ternaryOnes_succ]
+      omega
+
+theorem exists_ternaryOnes_mass_index (S : Nat) :
+    ∃ n, S + 3 ≤ ternaryOnes n := by
+  exact ⟨S + 3, ternaryOnes_ge_self (S + 3)⟩
+
+/-- Least ternary mass index ell_S with tau(ell_S) >= S+3. -/
+noncomputable def massIndex (S : Nat) : Nat :=
+  Nat.find (exists_ternaryOnes_mass_index S)
+
+theorem massIndex_spec (S : Nat) :
+    S + 3 ≤ ternaryOnes (massIndex S) :=
+  Nat.find_spec (exists_ternaryOnes_mass_index S)
+
+theorem massIndex_min (S n : Nat) (hn : n < massIndex S) :
+    ternaryOnes n < S + 3 := by
+  have hnot : ¬ S + 3 ≤ ternaryOnes n :=
+    Nat.find_min' (exists_ternaryOnes_mass_index S) hn
+  omega
+
+/--
+For a root-mass update S+7 <= S' <= 3*S+7, the least ternary mass index
+moves by zero or one.
+-/
+theorem massIndex_window_shift (S S' : Nat)
+    (hlo : S + 7 ≤ S') (hhi : S' ≤ 3 * S + 7) :
+    massIndex S ≤ massIndex S' ∧
+      massIndex S' ≤ massIndex S + 1 := by
+  constructor
+  · by_contra h
+    have hlt : massIndex S' < massIndex S := by omega
+    have hmin := massIndex_min S (massIndex S') hlt
+    have hspec := massIndex_spec S'
+    omega
+  · by_contra h
+    have hlt : massIndex S + 1 < massIndex S' := by omega
+    have hmin := massIndex_min S' (massIndex S + 1) hlt
+    have hspec := massIndex_spec S
+    have hsucc := ternaryOnes_succ (massIndex S)
+    have hbound : S' + 3 ≤ ternaryOnes (massIndex S + 1) := by
+      rw [hsucc]
+      omega
+    omega
+
+/-- Uniform correction buffer attached to the least mass index. -/
+noncomputable def correctionBuffer (S : Nat) : Nat :=
+  34 * massIndex S + 122
+
+theorem correctionBuffer_window_shift (S S' : Nat)
+    (hlo : S + 7 ≤ S') (hhi : S' ≤ 3 * S + 7) :
+    correctionBuffer S' ≤ correctionBuffer S + 34 := by
+  have h := massIndex_window_shift S S' hlo hhi
+  unfold correctionBuffer
+  omega
+
+/-- Any sector drain input b <= q+3 is inside the S-mass budget when q<=S. -/
+theorem rootDrainInput_mass_bound (q S b : Nat)
+    (hqS : q ≤ S) (hb : b ≤ q + 3) :
+    b ≤ ternaryOnes (massIndex S) := by
+  exact le_trans hb (le_trans (Nat.add_le_add_right hqS 3) (massIndex_spec S))
+
 /--
 A source drain whose input also fits the ell-th ternary mass has both
 signed-coordinate corrections bounded by 34*ell+122.  This is the
@@ -174,6 +249,9 @@ theorem drainB_digit_source_correction_interface_mass
 #print axioms drainDigitSummary_length_pos
 #print axioms drainDigitSummary_value_lower
 #print axioms drainDigitSummary_length_le_of_budget
+#print axioms massIndex_window_shift
+#print axioms correctionBuffer_window_shift
+#print axioms rootDrainInput_mass_bound
 #print axioms drainB_digit_source_correction_interface_mass
 
 end BB6.Agent49DrainDigitLengthBound
