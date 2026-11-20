@@ -179,6 +179,27 @@ theorem root32_t_mod4 (t j E r : Nat)
     simpa [Nat.add_mod,h17300] using hmod
   omega
 
+/-- Exact root32 saturation after substituting r=32+64*j and
+u=1802+6720*t: the combined index t+j is fixed by the exponent. -/
+theorem root32_tj_exact (t j E r : Nat)
+    (hr : r=32+64*j)
+    (hroot : 18018+211*(1802+6720*t)+22155*r=20*2^(E-13))
+    (hE : 17≤E) :
+    17300+22155*(t+j)=5*2^(E-17) := by
+  have hroot' :
+      18018+211*(1802+6720*t)+22155*(32+64*j)=20*2^(E-13) := by
+    simpa [hr] using hroot
+  have hfactor :
+      18018+211*(1802+6720*t)+22155*(32+64*j)=
+        64*(17300+22155*(t+j)) := by omega
+  rw [hfactor] at hroot'
+  have hpow : 20*2^(E-13)=64*(5*2^(E-17)) := by
+    have hexp : E-13=4+(E-17) := by omega
+    rw [hexp,Nat.pow_add,show (2:Nat)^4=16 by decide]
+    omega
+  rw [hpow] at hroot'
+  exact Nat.mul_left_cancel (by omega) hroot'
+
 theorem d0e_exceptional_root_class (t j r : Nat)
     (hr : r=32+64*j)
     (htj : (t+j)%4=0)
@@ -195,6 +216,7 @@ theorem e7_R_even_right_conditions (t : Nat) (ht : t%4≠3) :
 #print axioms d0e_intermediate_profile
 #print axioms e7_parent_profile
 #print axioms root32_t_mod4
+#print axioms root32_tj_exact
 #print axioms d0e_exceptional_root_class
 #print axioms e7_R_even_right_conditions
 
