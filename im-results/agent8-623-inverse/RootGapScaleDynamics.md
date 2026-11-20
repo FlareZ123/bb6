@@ -133,7 +133,7 @@ The older output block and its state/index interpretation are therefore supporte
 
 The 65-slack condition is not forward-invariant on arbitrary states: D(2,69) -> D(70,10) satisfies it at the input (h=67,m=2, 3^(h-65)=9>=5) but not at the output (h=60,m=10). The weaker six-slack condition that suffices to imply newAffineCone is also not a universal invariant: D(2,10) -> D(10,9). These exact counterexamples mean the 20,000-step root scan remains finite evidence only; a root-history/cocycle proof is still required.
 
-Agent 32 separately reports a 10,000-step BigInt scan matching the pinned root trace through index 16. That scan is independent of both the broken C++ file and the new 20,000-step JavaScript replay.
+Agent 32 separately archived a 20,000-step Node BigInt scan at im-results/agent32-623-gap-slack/scan.mjs. It asserts the first 17 root states through D(876,235), checks newAffineCone membership at every state from index 9 onward, computes the same minimum slack 65, and asserts generic six-slack counterexamples. It is independent of both the broken C++ file and the new 20,000-step JavaScript replay; the two Node implementations agree on the reported root metrics.
 
 ## 5. Research implications
 
