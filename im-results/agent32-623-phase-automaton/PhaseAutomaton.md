@@ -80,7 +80,7 @@ The high-end lookahead and low-end shift are bounded, so the transition from one
 
 The root affine update is source-shaped:
 [
-x'=x-3y+C_L,quad y'=y+F_L
+x'=x-3y+C_L,quad y'=3y+F_L
 ]
 on L, and
 [
