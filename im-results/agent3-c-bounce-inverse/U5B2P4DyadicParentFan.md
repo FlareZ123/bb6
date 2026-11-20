@@ -293,3 +293,18 @@ and also returns the exact root equation
 This removes the earlier explicit `h=8+128*u` premise and exposes the exact root equation needed by the existing root32 exclusion. The exact updated blob `34f925c6860984e7a356538be97e6fa3f912bb4e` compiles under Lean 4.36.0-rc2 with ten clean axiom reports `[propext, Quot.sound]`.
 
 The theorem remains conditional on the U5 residual equations, q=0 parent shape, root affine residue, and root-index class. The quotient \(u=(h-8)/128\) has not yet been identified with the parameter of the separate B2 target family by a source-reach theorem. Full `U5B2Root32.lean` source closure is still uncompiled; keep the blank-start exclusion intermediate pending exact-source acceptance.
+
+
+## 20 November strengthening — return the exact root equation
+
+The theorem `u5_q0_root32_forces_h8_parameter` now returns the exact root-index equation alongside its parameter conclusions:
+\[
+\exists u,t:\quad h=8+128u,\quad u=1802+6720t,\quad
+18018+211u+22155r=20\cdot2^{E-13}.
+\]
+
+It assumes the U5 residual equations, q=0 parent form, \(w=6657+8192r\), exponent relation, and \(r\equiv32\pmod{64}\). In particular, it derives \(h\equiv8\pmod{128}\) rather than taking the B2 affine parameterization as a premise. The returned equation is exactly the input required by `blank_no_b2_root32_from_exact_root_index` for this same \(u,r\) pair.
+
+The updated exact blob `34f925c6860984e7a356538be97e6fa3f912bb4e` compiles with Lean 4.36.0-rc2; ten axiom reports are `[propext, Quot.sound]`.
+
+The unresolved source identification is now explicit: prove that the quotient \(u=(h-8)/128\) obtained from the q=0 residual root is the parameter of the separate B2 target family on the same blank-start trajectory. Until that is established and the full source closure compiles, the blank-start exclusion remains conditional.
