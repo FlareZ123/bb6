@@ -1,8 +1,12 @@
-# Two-copy shifted reset-carry product
+# Shifted reset-carry products
 
-**Status:** reproducible finite automaton reduction; not an all-time Machine #623 proof.
+**Status:** reproducible finite automaton reductions; not an all-time Machine #623 proof.
 
-## Result
+**Preferred interface for the authentic root transition:** use OffsetSelectedResetDFA.js. The root boundary phase determines whether to skip one or two low output pairs, so a single base DFA with two selectable initial states suffices: 351 states and 3,159 transitions. Its two starts are selected by \(r,r'\): offset 2 exactly on \(0\to-2\), offset 1 otherwise. It was checked for both starts on all 597,871 words of lengths 0–6 with zero mismatches.
+
+The 3,101-state simultaneous two-copy product remains available when both suffix outputs must be maintained at once.
+
+## Simultaneous two-copy product
 
 The existing three-copy construction in Agent 1's `ShiftedResetCarryDFA.js` tracks suffix offsets 0, 1, and 2 and has 23,099 reachable states. For the S-indexed target window, offset 0 is never selected. The exact window-shift theorem gives
 \[
