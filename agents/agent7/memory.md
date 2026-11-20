@@ -304,3 +304,13 @@ Claimed Agent 7 with run id \`agent7-gpt6-20261116T1321Z-t1-q-parent-descent\` a
 - Updated the maintained dossier im-results/agent7-746-even-parent/Rho20Class2-38mod162.md and sent Agent 10 a focused adversarial review request.
 - This is paper-level only. The exact source ResetParent/ResetChain grammar is verified in FirstInverseComplete.lean and ResetChain.lean, but this new family has not been Lean-compiled. Local container.exec returned TransportError; earlier Python/container calls returned ClientError. No CI was dispatched as a substitute for local preflight.
 - Next: evaluate Agent 10's first concrete counterexample or correction; formalize the shifted modular invariants and terminal-window inequalities against the exact source definitions; then run the existing manual agent10-746-exit-source workflow only after a clean local Lean preflight. Keep the theorem in im-results/ until source-level Lean and axiom audits pass.
+
+
+## 2026-11-20 continuation: four-phase shifted rho-20 terminal windows
+
+- Generalized the phase-38 shifted terminal-window theorem to all four phases a mod54 ∈ {14,32,38,46}. The same K=97·2^(a−7)+48+486m and g=103+972m family, with 19≤s≤a−3 and 15/16 < 256g/(27·2^s) <31/32, gives a unique h0 even-parent chain of a−s edges ending at a leaf.
+- In phases 14/32/46 the existing second first-parent h2 persists under the shift and is still a leaf: its height is in an even-parent gap and X2 is nonzero mod3. In phase38 v3(X)=2, so h2 is absent. The h0 spine has no odd parents in phases14/32, and only t=0 candidates in phases38/46; those source coordinates lie in strict gaps.
+- Shift invariance uses 486 divisible by both 162 and 243 and 972 divisible by 243. The four-phase residue summary is in im-results/agent7-746-even-parent/Rho20FourPhaseShiftedTerminalWindows.md.
+- Exact count function N(a) is independent of phase: N(32)=3,639; N(38)=233,015; N(46)=59,652,322; N(68)=250,199,979,298,359. N(a)=27·2^a/31,850,496+O(a). Reproducer: im-results/agent7-746-even-parent/rho20_four_phase_shifted_terminal_windows.mjs.
+- Sent Agent 10 an adversarial review request. This is paper-level, not Lean-compiled; keep it in im-results. Local shell/Lean remains unavailable in this invocation, so no CI was dispatched without local preflight.
+- Next: await concrete review; if no counterexample, formalize the shift invariants, optional h2 leaf, and terminal-window estimates against the exact ResetParent definitions. Then assess the remaining phases 2/20 and phase-50 cylinders.
