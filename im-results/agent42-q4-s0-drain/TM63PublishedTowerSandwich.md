@@ -107,8 +107,10 @@ Here \(k=N/3\le N\), \(b_{N-1}<b_N\), \(U\le R\le b_N\), and
 nonleading terms in (10) are less than \(b_N^2\): after the substitutions
 above they are bounded by
 \[
-(6N^2+69N+72)b_N+90N^2+159N+90<b_N^2.
+(6N^2+69N+72)b_N+90N^2+159N+90
+\le147b_N^{3/2}+339b_N^{1/2}<b_N^2,
 \]
+where \(N\le\log_2 b_N\le b_N^{1/4}\) for \(b_N\ge2^{64}\).
 Thus
 \[
 D_N<7b_N^2. \tag{11}
