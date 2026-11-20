@@ -298,7 +298,8 @@ theorem q4TailS0SourceGuards
       have hcases :
           x=(m:Int)+2 ∨ x=(m:Int)+3 ∨ x=(m:Int)+4 := by omega
       rcases hcases with h2|h3|h4
-      · rw [h2] at hVx
+      · rw [h2]
+        rw [h2] at hVx
         have hu : U ((m:Int)+2) = S.tape ((m:Int)+2) := by
           rw [hshift]
           have hneq : (m:Int)+2≠4 := by omega
@@ -308,7 +309,8 @@ theorem q4TailS0SourceGuards
           V ((m:Int)+2) = U ((m:Int)+2) := hVx
           _ = S.tape ((m:Int)+2) := hu
           _ = true := hSrightOne 1 (by omega)
-      · rw [h3] at hVx
+      · rw [h3]
+        rw [h3] at hVx
         have hu : U ((m:Int)+3) = S.tape ((m:Int)+3) := by
           rw [hshift]
           have hneq : (m:Int)+3≠4 := by omega
@@ -318,7 +320,8 @@ theorem q4TailS0SourceGuards
           V ((m:Int)+3) = U ((m:Int)+3) := hVx
           _ = S.tape ((m:Int)+3) := hu
           _ = true := hSrightOne 2 (by omega)
-      · rw [h4] at hVx
+      · rw [h4]
+        rw [h4] at hVx
         have hu : U ((m:Int)+4) = S.tape ((m:Int)+4) := by
           rw [hshift]
           have hneq : (m:Int)+4≠4 := by omega
