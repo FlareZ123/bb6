@@ -227,4 +227,14 @@ The resulting double_B_to_A_source_reentry theorem composes the two corrected B 
 The module is added to the manual agent37-p2-k13.yml kernel audit immediately after EChainDoubleBExit. It is a submitted source-level candidate until that workflow succeeds; no BB(6) conclusion follows from this local closure alone.
 
 
-The same module also adds reset_double_B_to_A_source_reentry: it composes the existing P2 eTwo_reset theorem, the arbitrary-depth E chain, the two B pa
+The same module also adds reset_double_B_to_A_source_reentry: it composes the P2 e_two_reset theorem, the arbitrary-depth E chain, two B packets, and the marker-A closure. Its hypotheses are the exact 3-adic reset identity, the E-to-BB index identity, and the E-chain resource bound. This remains a submitted source-level candidate until the existing manual audit succeeds.
+
+## Depth-three P2 cylinder aligned with L(24956,2,2)
+
+D3SecondReturnAlignment.lean kernel-checks an explicit depth-three arithmetic alignment. For every v≥0, set s=s₀+3⁸⁷v, k=729s+310, Q=3, h=54s+23, t=4096s+1744, and k_A=64t+45. The P2 reset, three E steps, two B edges, and A marker have the exact endpoint index
+
+A=8*k_A+28=24956+3^87*(1315608+2^21*v).
+
+This is the 86-step input lift of L(24956,2,2) with shift parameter 3*(1315608+2^21*v). The existing L(24956,2,2) → q=5 E-exit trajectory and the general safe-E canonical closure would therefore yield an infinite second-return family if their current candidate wrappers pass the full-source compile and axiom audit. The arithmetic file was compiled locally with Lean 4.36.0-rc2; its audited declarations have only [propext, Quot.sound], with no sorryAx. The reset/E/B/B/A source composition, the 86-step DRegular run, and the safe-E wrapper remain uncompiled. This is prepared-packet progress, not blank-root reachability.
+
+The same congruence construction appears to extend to every odd E-chain depth d: take Q=3(d−1)/2 and h_d=41,23,5 for d≡1,3,5 (mod 6), respectively, then choose s in the unique residue class modulo 3^87 aligning the A endpoint with 24956. The explicit general formula and its current proof status are in D3SecondReturnAlignment.md; only d=3 has a checked Lean arithmetic artifact at present.
