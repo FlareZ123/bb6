@@ -6,6 +6,8 @@ set_option maxRecDepth 8192
 
 namespace BB6.Agent37ExceptionalEReentryClassification
 
+open CryptidBoundary BB6.BoundaryPadding
+
 /-- A source-canonical closure for every E exit except the q≡1 (mod 3),
     q≥4 P2-reset family: q=1 is covered by Agent 25's verified all-residue
     q1b1 theorem, while q≥2 and q≠1 mod 3 are covered by the uniform
