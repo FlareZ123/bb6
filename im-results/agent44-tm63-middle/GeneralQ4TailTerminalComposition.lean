@@ -27,6 +27,7 @@ open BB6Coverage.Agent44GeneralQ4TailReparam
 open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent42TerminalJoin
 open BB6Coverage.Agent44SectionResultRunSource
+open BB6Coverage.Agent24ChampionTime
 open BB6ChampionArithmetic
 
 /-- The outer SectionResult width obtained from an arbitrary-A q4Tail. -/
