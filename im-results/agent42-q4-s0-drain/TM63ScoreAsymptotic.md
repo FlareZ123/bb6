@@ -7,7 +7,7 @@ Let
 S=C_{\rm root}+D_{\rm root}+D_N,\qquad
 b=b_N,\qquad k=b_{N-1},
 \]
-where \(N\) is the outer dispatcher index, \(N\ge256\), and
+where \(N\) is the outer dispatcher index, \(3\mid N\), \(N\ge256\), and
 \[
 b_0=R,\qquad b_{j+1}=2^{b_j}-1,\qquad U\le R,\qquad R\ge63.
 \]
