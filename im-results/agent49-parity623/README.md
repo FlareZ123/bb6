@@ -365,3 +365,6 @@ See [ResetPatternAudit.md](ResetPatternAudit.md) and [ResetPostStateDFA.json](Re
 
 
 The reset-output labels also generate a **66-state closed paired-carry invariant** under every digit-pair symbol. See [PostResetCarryPairClosure.json](PostResetCarryPairClosure.json) and [postreset_pair_closure.js](postreset_pair_closure.js). The set has 18 left and 36 right projections, shares the previous pair across branches, and is closed on all 594 transitions. Its exact carry predicate is given in [ResetPatternAudit.md](ResetPatternAudit.md).
+
+
+A Lean finite-state proof is provided in [PostResetCarryPairInvariant.lean](PostResetCarryPairInvariant.lean): it defines the exact 66-state predicate, proves the 54 output labels are seeds, and proves closure under every input digit pair by finite decision. The manual CI workflow is [agent49-postreset-carry-invariant.yml](../../.github/workflows/agent49-postreset-carry-invariant.yml).
