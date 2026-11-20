@@ -396,3 +396,12 @@ The standalone RootGapScaleScan.js now includes assertions for the first 20 sour
 ### Residue-dependent slack table failure
 
 A 36-class table of minimum root slack by (sector, a mod 3, d mod 3) contains the 20k root trace, but is not inductive. D(2,73) is right-odd, residues (2,1), slack69 (above the observed class minimum65), yet maps to D(74,10), left-even residues (2,1), slack61, below that target class's observed minimum696,153. The authentic root state D(314,385) has the same source sector/residues and slack65 but maps to D(74,950), right-even residues (2,2), slack871. This confirms that sector+mod3+slack thresholds do not encode enough history. Details are in im-results/agent27-623-root-scan/PhaseSearch.md.
+
+
+## 2026-11-20 06:49Z: residue-threshold failure and 2-adic cross-check
+
+A mod-9 residue-dependent slack table (324 sector/residue classes) is also not forward-invariant: D(2,105) is right-odd, residues (2,6), slack101 above its root-class minimum96, but maps to D(106,10), left-even residues (1,1), slack93 below that target class's root minimum309. This and the mod-3 table failure are documented in PhaseSearch.md; larger residue moduli were not pursued without a structural reason.
+
+The 20k replay also independently reproduces Agent49's 2-adic diagnostic over 20,001 states: max v2(d-40a)=14 at index5449, no exact d=40a hit, and the only states with 2a+5 a pure power of3 are indices4 and9, both equal to 3^2. See the Agent49 RootGapScan20k note and PhaseSearch.md. This is cross-validation only, not an all-time exclusion.
+
+The smaller-counter suffix lower envelope in the 20k trace rises from min m=454 for indices >=20, to 3,074 for >=30, 224,996 for >=50, 15,714,022,356 for >=100, 9,573,501,947,519,077,830 for >=200, and about 7.88e45 for >=500. This is finite evidence for rapid root-scale growth, not a proved all-time bound. Full table: im-results/agent27-623-root-scan/PhaseSearch.md.
