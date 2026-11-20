@@ -610,3 +610,47 @@ residual/blank-ray hypotheses or instantiate a blank-root run. Both
 new Lean files remain source-only and uncompiled in this invocation;
 the local runtime tools returned tool-level errors, and no CI
 substitute was dispatched.
+
+
+## Authentic TM63 root instance mapped
+
+Agent 24's coordinate derivation is now recorded in
+`im-results/agent24-champion-time/P2Q4TailToS0Identity.md`. It gives
+the exact instantiation of the generic adapter for the q-odd second
+prefix:
+
+- (a=2^z-1), (n=2^a), (m=3\cdot2^z+3z+7);
+- (h=m+7), (g=h+3n), (H=g-5=m+2+3n);
+- (tail0=1^4\Vert binDec(w,q)\Vert lh);
+- (tail1=100111\Vert tail0.drop(6));
+- (ell=1^{m+2}\Vert0100\Vert tail1).
+
+The three generic adapter hypotheses now have an explicit coordinate
+proof target:
+
+1. (T2(h-1)=1) follows immediately from the two-zero setup.
+2. (T2(h-2-i)=sideBit(ell,i)) for every (i): the residual cells
+   partition into the setup/E-scan/frame ones, the exact (0100)
+   boundary, the (100111) six-cell tail prefix, and the untouched
+   original S0 tape from cell (-7) leftward. The remaining source
+   list is exactly (tail0.drop(6)); no far-left blank-tail assumption
+   is needed.
+3. (T2(g+5+i)=0) for every (i): the source right index is
+   (3n+11+i), beyond the (6+3n)-cell word
+   (s0RightFacing(n-1)), and all preceding operations preserve this
+   ray.
+
+With these three facts, `q4Tail_frame_eq_s0Config` applies with
+`ell = p2ResidualLeft m tail1`. Since `tail1` begins `100`, the
+corrected P2 S0 drain/postlude and Agent 48's next-prefix theorem apply.
+The new `Q4TailToNextQ4Tail.lean` packages that composition: one
+q4Tail-to-q4Tail recurrence step, with
+`m' = H = m+2+3*n` and `n' = 2^(n-1)`, at cost
+`6*4^(n-1)+45*2^(n-1)+4*m+20`.
+
+This is a source-level coordinate derivation plus a conditional Lean
+composition, not yet a compiled root theorem. The remaining decisive
+work is to formalize Agent 24's three pointwise obligations against
+the generic adapter and compile the exact dependency closure. The
+A=1 Type-C branch may reuse the same adapter if it establishes the
+same residual and blank-ray interface.
