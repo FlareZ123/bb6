@@ -837,3 +837,12 @@ endpoint comparisons pass, covering **2,078,394 simulated transitions**.
 This is still finite computational corroboration, not a proof of
 `sectionResult_run_complete`. The universal source theorem and the authentic
 blank-root composition still require Lean 4.36.0-rc2 compilation.
+
+A final 27-case terminal-finish check is also included in the same script:
+for L=4..6, a=1..3, b=0..2, it verifies that
+`terminalMoves=59+12*(L+a)` leaves the machine live in state 0 at head h+7
+reading 1, and that the next undefined query halts. This checks the exact
+successful-move/final-query convention used by the +7 attainable-score
+adapter. It adds 3,888 attempted transitions, bringing the combined suite to
+**75 cases and 2,082,282 transitions**. This remains finite replay evidence,
+not a proof.
