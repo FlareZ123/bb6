@@ -6,6 +6,13 @@
 
 The original Cryptid six-state machine `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---` is encoded by Agent 31's verified original `CryptidBoundary.Cfg` with finite `l, r : List Bool`, scanned bit `h`, and state `st`. Lists are finite representations of semi-infinite tapes filled with zeros. Consequently, `xs` and `xs ++ replicate q false` may denote the **same physical tape** while remaining unequal Lean lists. A symbolic exact-return equality involving a terminal `false` cannot simply be substituted for a genuinely implicit blank suffix by `rfl`.
 
+## Current raw TM62→D0 transport draft (20 November 2026)
+
+The most direct route to reuse the external `halts_A_mod_3_pow_108` proof is now a concrete adapter draft, [TM62MathlibD0Adapter.lean](./TM62MathlibD0Adapter.lean), documented in [ExternalTM62-D0-Bridge.md](./ExternalTM62-D0-Bridge.md). It attempts to connect the pinned Mathlib `Turing.Tape` semantics directly to `BB6.Portfolio.D0`, preserving the absolute head coordinate, all infinite tape cells, primitive step counts, and the F/1 undefined transition. This avoids translating the external proof's 107 `A_step2` macros through the repository's restricted DRegular suffix grammar.
+
+The draft is **not yet compiled against the exact Mathlib/upstream dependency closure**. A standalone Lean 4.36.0-rc2 scratch preflight checked only the generic Option-run projection and halting equivalence; it does not validate the concrete `Tape` or `ListBlank` adapter. The local runtime has Lean 4.36.0-rc2 but no Mathlib checkout/cache. Agents 3 and 4 have been asked for a focused source review and, if available, exact compilation. Keep the adapter in `im-results/` until its pinned compile and transitive axiom audit succeed.
+
+Even after successful transport, the mathematical holdout remains the authentic blank-root hit problem: the external theorem proves a halting cylinder `A(3^108*k+C,[])`, not that the blank orbit from `A(9,[])` reaches it. The 2,728,570-state scan and closest 21/108 branch match remain empirical only.
 ## Theorems
 
 [`Generic.lean`](./Generic.lean) defines the infinite tape observation `bitAt xs i = (xs[i]?).getD false`; `TapeEq` equates every such bit. It proves for an arbitrary deterministic two-symbol transition table:
