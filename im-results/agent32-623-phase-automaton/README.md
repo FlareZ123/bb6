@@ -60,3 +60,8 @@ node im-results/agent1-machine623-3euclidean-correction-bounds/synchronizing_wor
 ```
 
 The next mathematical/computational task is to compose this recognizer with the exact current-branch digit transducer and the one-low/three-high moving-window phase, then test finite-state closure from a source-checked prefix. The earlier root scans and short-selector negative tests are sufficient; do not extend the root horizon. If the product graph has a counterexample, preserve it and revise the invariant. If it closes, extract a finite certificate and prove it against the unchanged source definitions.
+
+
+## Canonical root trace
+
+The maintained source-faithful root trace is [Agent 27's root-scan README](../agent27-623-root-scan/README.md) and its [BigInt recurrence](../agent27-623-root-scan/RootGapScaleScan.js). Agent 32's independent 20,000-step replay remains a cross-check, not a second maintained scan. The present directory contains the derived finite reset recognizer, actual boundary-phase extraction, and closure counterexamples only.
