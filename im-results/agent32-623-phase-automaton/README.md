@@ -29,6 +29,12 @@ The current exact finite enumeration gives:
 
 The Aho--Corasick trie has **34,916 states**, but Moore minimization reduces the complete absorbing-acceptance DFA to **263 states** (partition counts 9, 102, 159, 234, 263, 263). The minimization is exact for the finite trie automaton. The minimized DFA was compared against direct substring membership on all **597,871** digit-pair words of lengths 0 through 6, with no mismatch. The pattern generator visits 98,398 word prefixes. The full carry rectangles are invariant under every digit-pair input; the generator nevertheless checks every transition and fails closed if a carry exits its rectangle.
 
+A common reset pattern also leaves a very small *post-reset transducer phase*. Across all minimal patterns, the final state has an arbitrary last digit pair (all 9 possibilities), but only:
+- L carries `(a,b)\in\{(-1,0),(0,0)\}`, hence **18** complete states;
+- R carries `(a,b)\in\{(-3,1),(-2,0),(-2,1),(-1,0)\}`, hence **36** complete states.
+
+Every one of the 9 final digit pairs occurs with every listed carry pair. These are the states immediately after the reset pattern, before processing the remaining suffix. This reduces the post-reset suffix product with the 263-state checker to at most 9,468 states per branch. The exact state IDs and carry pairs are recorded in `ResetPatternDFA.json`.
+
 These are exact finite automaton-construction counts, not a root-orbit theorem. A word containing one of these patterns is synchronizing for both branch transducers, because the pattern collapses every admissible state and sets both nonmonochromatic-output flags; the suffix then preserves those facts.
 
 ## Reproduction and next step
