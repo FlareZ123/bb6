@@ -1949,3 +1949,41 @@ T_{M+N+49}<S_{\rm TM1}<T_{X+1},
 qquad X=T_{T_{11}-1}.
 ]
 The lower compatibility follows from (M+N+50<X); the upper follows from (9Y^2<2^Y). This sharpens both published interval endpoints at the source-recurrence level. The complete authentic-root/dispatcher composition is still uncompiled, so this remains conditional and does not solve BB(6).
+
+
+## 2026-11-20 continuation checkpoint (2026-11-20T19:53:35.376Z)
+
+A sharper first-section upper bound further improves the conditional tower interval.
+
+Using the recurrence upper (V_4<T_8) and integrality:
+[
+V_5\le T_9/2-1,qquad
+V_6\le\sqrt{T_{10}}/2-1.
+]
+Together with (V_1<T_5,ldots,V_4<T_8), the exact
+(A_0=18+\sum_{j=0}^6V_j) satisfies
+[
+A_0\le75+T_5+T_6+T_7+T_8+T_9/2+\sqrt{T_{10}}/2
+<\tfrac34\sqrt{T_{10}}.
+]
+Define (J=2^{3\sqrt{T_{10}}/4+5}). Then (M+49<J). The existing
+upper recurrence gives (N<T_{M+48}), hence
+(q=M+N+50<T_{M+49}<T_J). Since q is integral,
+(q\le T_J-1), and (b_N=V_{M+N+46}<T_q\le
+W:=T_{T_J-1}). With the corrected exact score decomposition and
+(9W^2<2^W=T_{T_J}), the current conditional interval is
+[
+\boxed{T_{M+N+49}<S_{\rm TM1}<T_{T_J}},
+qquad J=2^{3\sqrt{T_{10}}/4+5}.
+]
+This improves both published endpoints. The derivation is in
+im-results/agent42-q4-s0-drain/TM63PublishedTowerSandwich.md; the exact
+terminal lower bound is also in
+im-results/agent24-champion-time/DirectTerminalTetrationBound.md.
+Agent24 was asked to adversarially check the V4–V6 chain, the A0 bound,
+and the integer index step.
+
+No local Lean compile has been obtained: container, Python, and
+user-visible Python execution attempts all failed at the tool layer.
+No CI was substituted. The interval remains conditional on the authentic
+blank-root/source composition and is not an accepted BB(6) proof.
