@@ -510,3 +510,73 @@ Claimed Agent 37 at `2026-11-20T05:58:33.744Z`; this is the original lease times
 
 - Follow-up model verification: added Seed24956ModelCheck.lean. It proves the base 86-step DRegular trajectory and exact elapsed time, evaluates and proves the linear/quadratic shift coefficients, and proves the complete depth-three family reaches the q=5 exit in the DRegular model for every v. The family time is B+L*p+Q*p^2 with p=3*(1315608+2^21*v); exact B,L,Q are recorded in the file and derivation note. The base trajectory/time/coefficient theorems have no axioms; the all-v shifted run/time theorems use only propext, Classical.choice, and Quot.sound, with no sorryAx.
 - The DRegular model source archive hash was checked against the tracked restore script, and the three tracked DRegular shift/timing source files were confirmed byte-for-byte against their Git blob SHAs before local compilation. This verifies the model computation, not its original-TM transport.
+
+
+---
+
+## 2026-11-20 invocation (claimed 18:29Z): external A_step2 packet transducer
+
+### Work completed
+
+Read and replayed the pinned external proof at `int-y1/proofs` commit `1929f57df4dd7afcc11c3f458e20526fd1f991e0`, file `BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean`.
+
+Created `im-results/agent37-echain/Astep2BoundaryReplay.mjs`. It contains the exact 107 `A_step2` arguments and transition table. Its sparse boundary representation tracks the signed head displacement (d=\#R-\#L) and alternating-block marker
+[
+M=e+2m+1+d=2m'.
+]
+After the (n)-step finite tail, (z) is the leading-one count in the right tape *after* the head, and the next A-section is
+[
+N'=2+M+z,qquad r'=\operatorname{drop}_z(\text{right side after head}).
+]
+The replay checks the final C/current-1 state, marker parity, and the entire region the finite tail can disturb, plus a boundary margin. It reproduces all 11 unary/suffix checkpoints and the 107-letter branch word. The call-50 source list has one trailing blank zero; the script canonicalizes this under ListBlank.
+
+The first ten outputs have regular suffix parameters
+[
+(1,5),(3,2),(2,2),(1,2),(2,0),(1,0),(1,7),(3,4),(2,4),(4,1).
+]
+The tenth is the exceptional E,((q,b)=(4,1)) DRegular exit. Call 11 (E, (n=35)) outputs packet (P(0,8;F_7)), (F_7=0111111).
+
+### Canonical packet transducer
+
+Created:
+- `im-results/agent37-echain/Astep2BoundaryReplay.md`
+- `im-results/agent37-echain/Astep2PacketExitTrace.md`
+- `im-results/agent37-echain/Astep2PacketTransducer.md`
+- Updated `im-results/agent37-echain/README.md`.
+
+Use (P(q,p;Y)=(01)^q0,1^pY), with canonical (Y) empty or beginning in 0. The 96 calls after call 11 are all checked by a compact packet transducer:
+
+1. B edge for (q>0): ((q,p,Y)\mapsto(q-1,p,Y)), unary (a'=8(a-2)/3+10).
+2. E edge for (p\ge3): ((q,p,Y)\mapsto(q+2,p-3,Y)), unary (a'=8(a-4)/3+9). These are the existing PacketRank.advance rules.
+3. Seven E-zero resets satisfy the same exact observed formula:
+   [
+   P(q,0;01Y)\mapsto P(0,2q+7;Y),quad a'=8(a-4)/3+5,
+   ]
+   at calls 24, 32, 47, 67, 75, 91, 99.
+4. Five E-two resets (all with the same unary update (a'=8(a-4)/3+5)) are:
+   - call 18: (P(0,2;0111111)\to P(0,6;01010111));
+   - call 42: (P(0,2;0111)\to P(0,6;0101));
+   - call 54: (P(3,2;01)\to P(0,8;011111111));
+   - call 61: (P(0,2;011111111)\to P(0,6;0101011111));
+   - call 85: (P(0,2;011111)\to P(0,6;0101011)).
+
+The final packet after call 107 is (P(1,2;011)), suffix `01011011`, unary parameter
+`7488166283129708930486796847462680979065226437987146331898837006603604720521272903526417758309106`.
+The updated replay script asserts every canonical packet state, all ordinary unary recurrences, all seven E-zero instances, all five E-two cases, and the final packet. The same transition loop was executed in the JS tool runtime; all 107 calls passed.
+
+### Coordination and qualifications
+
+Sent the boundary recurrence, regular B/E formulas, packet trace, and canonical transducer to Agent 2. Sent the canonical packet source-lemma targets to Agent 4.
+
+Agent 4 clarified that raw-time equality between the external A_step2 macro path and DRegular's source witness is not required. `ARegular3AdicBridge.synchronized_source` proves an original-source run between the same ASection endpoints using DRegular.accumulated 10; keep that endpoint reachability claim separate from the external macro itinerary. Agent 4 is preparing the small first-ten source wrapper. Do not claim the external A_step2 durations equal the DRegular accumulated duration.
+
+The first P2 reset's quotient (k=(N_{17}-4)/3) satisfies (k\equiv169\pmod{243}), outside the currently encoded EChainBEEAReentry residue corridors. The packet transducer shows how this particular external cylinder proceeds, but it does not bridge the authentic blank-tape orbit into the cylinder.
+
+### Next actions
+
+1. Formalize the E-zero source lemma (P(q,0;01Y)\to P(0,2q+7;Y)) for arbitrary admissible tail (Y).
+2. Generalize the E-two reset to a theorem parameterized by ((q,Y)); the q=3, (Y=01) case at call 54 is not covered by the fixed-tail reset alone.
+3. Coordinate with Agent 4's `synchronized_source` first-ten wrapper; preserve the distinction between source endpoint reachability and raw external macro timing.
+4. Return to the decisive missing task: a certified blank-tape prefix/root-reachability bridge into a halting cylinder. No BB(6) exact value or universal upper bound was established in this invocation.
+
+Local shell and Python attempts returned concrete ClientError failures, so no local Lean compilation was performed. No Lean CI run was launched for these new intermediate artifacts. All work is in `im-results/`; no new claim was placed in `results/`.
