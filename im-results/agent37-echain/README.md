@@ -207,7 +207,7 @@ that the authentic blank-root orbit reaches the q=4 cylinder.
 ## Remaining obligations
 
 - Establish the missing blank-root prefix to the q=4 source-section cylinder, or prove it is not on the blank-root orbit.
-- Audit the corrected double-B-to-A residue cylinder and close the remaining B-to-E/B-to-B residue classes with source-exact proofs.
+- Audit the corrected double-B-to-A residue cylinder and close the remaining B-to-E/B-to-B residue classes with source-exact proofs. A separate, uncompiled canonical regular-E closure candidate in [ExceptionalESafeCanonical.lean](../agent37-d-timing-cocycle/ExceptionalESafeCanonical.lean) covers DRegular inputs `L(3*k+4,q,1)` for q=1 (via Agent 25's verified `q1b1_rejoins_regular`) or q≥2 with q≢1 (mod 3); its wrapper is [ExceptionalEReentryClassification.lean](../agent37-d-timing-cocycle/ExceptionalEReentryClassification.lean). This does not close the marker-level P2 reset: q≡1 (mod 3) sends the first E output to p≡2 (mod 3), and the recursive reset/B-to-E/B-to-B obligations remain open.
 - Integrate the conditional return cylinders into a complete physical blank-root invariant or produce a genuine blank-root witness.
 - Determine all remaining six-state machines and prove the exact maximum primitive step count. Nothing in this dossier supplies a universal BB(6) upper bound or an exact champion score.
 
@@ -221,14 +221,4 @@ The resulting double_B_to_A_source_reentry theorem composes the two corrected B 
 The module is added to the manual agent37-p2-k13.yml kernel audit immediately after EChainDoubleBExit. It is a submitted source-level candidate until that workflow succeeds; no BB(6) conclusion follows from this local closure alone.
 
 
-The same module also adds reset_double_B_to_A_source_reentry: it composes the existing P2 eTwo_reset theorem, the arbitrary-depth E chain, the two B packets, and the A-marker closure, returning a canonical DRegularSource section directly from the original P2 reset packet. This removes the regularEndpoint-only stopping point for the reset cylinder as well.
-
-
-A concrete member is also certified: the reset packet at k=61,Q=0, followed by d=1,h=41,t=48 and the p=3 double-B/A closure, reaches the exact canonical section L(24972,2,2). Its complete composed time is defined as concreteResetTime in EChainDoubleBReentry.lean. This is a source-level exact reentry from the P2 reset packet, not yet a blank-root prefix.
-
-
-## Cross-dossier relation: regular E exits versus marker P2 resets
-
-The separate [canonical regular-E closure candidate](../agent37-d-timing-cocycle/ExceptionalESafeCanonical.lean) handles source inputs `L(3*k+4,q,1)` when q≥2 and q≢1 (mod 3), by mapping the first E return to a fixed-tail packet with p=2q and applying the safe packet normalizer. Its q=1 component is already covered by Agent 25's verified `q1b1_rejoins_regular`; the combined wrapper is in [ExceptionalEReentryClassification.lean](../agent37-d-timing-cocycle/ExceptionalEReentryClassification.lean). The new q≥2 source theorem and wrapper are **not yet compiled**, so treat this as a candidate reduction.
-
-For q≡1 (mod 3), the first E output has p≡2 (mod 3) and enters the marker P2-reset problem documented in this dossier. The regular-E closure does **not** close that marker-level reset recurrence; the remaining B-to-E/B-to-B residue classes and recursive P2 reset are still open.
+The same module also adds reset_double_B_to_A_source_reentry: it composes the existing P2 eTwo_reset theorem, the arbitrary-depth E chain, the two B pa
