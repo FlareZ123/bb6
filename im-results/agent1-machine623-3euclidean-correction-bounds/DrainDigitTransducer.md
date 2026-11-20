@@ -275,7 +275,7 @@ The module formalizes:
 
 It does **not** import the original evalA/drainB definitions or prove that \(R_{\rm dig}\) equals the full source evaluator-call count. Nor does it prove that the source first-counter drop is \(L-2E_{\rm dig}\) for the authentic bundled canonical ray. Those are the remaining source-bridge obligations.
 
-The arithmetic correction lemmas correction_buffer_from_depth and correction_buffer_by_depth are in SignedCoordinateNormalForm.lean. They are self-contained integer proofs; I locally compiled their exact definitions and proof terms with Lean 4.36.0-rc2. The former uses the actual source depth bounds; the latter is conditional on the digit formula for D.
+The arithmetic correction lemmas correction_buffer_from_depth and correction_buffer_by_depth are in SignedCoordinateNormalForm.lean. They are self-contained integer proofs; I locally compiled their exact definitions and proof terms with Lean 4.36.0-rc2. The former uses the source depth bounds as hypotheses; their combined original-source wrapper remains pending pinned CI. The latter is additionally conditional on the digit formula for D.
 
 **Canonical-ray hypotheses.** For a supplied positive drain parameter \(b\), the transducer accepts \(L\) under
 \[
