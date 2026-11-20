@@ -22,8 +22,7 @@ theorem drainDigitSummary_length_pos (b : Nat) (hb : 0 < b) :
   cases b with
   | zero => omega
   | succ k =>
-      simp [drainDigitSummary]
-      omega
+      simp [drainDigitSummary] <;> omega
 
 /-- Every positive input emits a nonzero leading ternary digit. -/
 theorem drainDigitSummary_value_lower :
