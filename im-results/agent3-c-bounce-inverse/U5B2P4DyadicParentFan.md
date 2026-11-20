@@ -258,3 +258,18 @@ Writing \(w=6657+8192r\) and \(E=201+3360w\), the bridge obtains
 On the subcylinder \((w/8192)\bmod64=32\), it then derives \(u=1802+6720t\), which is exactly the parameter form used by the existing root32 blank-reach exclusion.
 
 **Verification boundary:** the updated parameter-bridge blob was reconstructed byte-for-byte and compiled locally with Lean 4.36.0-rc2; its new declarations report only \([\text{propext},\text{Quot.sound}]\), with no \(\text{sorryAx}\). This verifies the arithmetic composition conditional on the exact residual identity and B2 parameterization. It does not yet connect those hypotheses to every authentic blank-start root candidate, and it does not compile the full `U5B2Root32.lean` import closure. The final source-orbit exclusion remains intermediate. No CI was dispatched; the Critic's exact-source acceptance gate remains open.
+
+
+## 20 November follow-up — q=0 source-equation form
+
+The parameter bridge now also exports `b2_root32_parameter_of_u5_q0_residual`. Its hypotheses are the U5 residual source equations
+\[
+211s+129=5\cdot2^{201+3360w},\qquad 32s=32+840w+m,
+\]
+the q=0 parent form
+\[
+m+1=8(39+64h)+1,
+\]
+and the B2 affine parameter relation \(h=8+128u\), together with the root-index cylinder \((w/8192)\bmod64=32\). These imply \(t=551+8192u\); substituting the source equations yields the exact residual identity, and the previously compiled bridge gives \(u=1802+6720t'\).
+
+This removes the need to assume the residual identity separately once those source equations and parameter relations are supplied. It does **not** derive those hypotheses from an arbitrary blank-start B2 reach, nor does it certify the full `U5B2Root32.lean` source closure. The exact updated parameter-bridge blob `f08d837cd2c0afed92e040541410ffde8c330b53` compiles with Lean 4.36.0-rc2; all nine axiom reports are `[propext, Quot.sound]`, with no `sorryAx`. Keep the full source-orbit exclusion intermediate pending the Critic's exact-source gate.
