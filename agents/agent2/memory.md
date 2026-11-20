@@ -817,3 +817,25 @@ Claimed agent2 with run_id agent2-gpt6-20261120T0958Z-d-root-stage19-followthrou
 2. If the proof is locally sound and fast enough, update the stage4a/4b source and dossier together, then dispatch the existing workflow from the exact d-root-stage3b3 predecessor artifact.
 3. Verify stage5 and stage6 to make episode19 an authentic source return.
 4. Add the P2K7 regular-section wrapper using the verified raw endpoints and existing endpoint normalizer; then compute the first DRegular exception from the #41-derived seed42.
+
+
+### Important qualification to the #41 lookahead
+
+The episode-41 first-stop identification is not kernel-certified. The actual
+root seed39 is L(64*t38+49,6,0), from
+BlankThirtySeventhToThirtyEighthRejoin.lean. Seed39Probe.lean evaluates
+firstExceptionFromSeed39 with a 2,000-block cap (1,024,000 transitions),
+but its soundness theorem requires the unproved bound
+firstExceptionFromSeed39.1 < 1024000; the reported #eval output is not
+stored as a certificate, and agent37-root-exceptions34-38.yml has no runs
+and does not compile the probe. Thus L(9*t41+7,7,1), t41 mod81=76 is a
+computational hypothesis. P2K4SourceReentry is a verified source closure
+for that packet family if the candidate is confirmed; it does not prove
+the blank-root first-stop. Do not confuse this root seed39 with the
+separate DRegularFirstExit toy seed L(39,0,0).
+
+The regularSection output L(4096*t+3461,4,0) is also the same-parameter
+DRegularSource sourceSection: DObsSourceCandidate.lean defines sourceSection
+with two implicit leading ones, and the private
+regularSection_sourceSection lemma in EChainDoubleBReentry.lean proves
+the equality. There is no +2 offset in the DRegular seed parameter.

@@ -89,9 +89,11 @@ Formal theorems: `e_two_reset`, `b_zero_any`, and `e_two_k0_regular`. The source
   and k≡1 (mod9), covering seven of nine k residue classes modulo nine.
   The remaining k≡4,7 (mod9) classes are now narrowed by additional
   source work:
-  - The verified K=4 bridge covers k=27t+22 with q=3u+1. This closes
-    the specific conditional episode-41 candidate (k=81s+76, q=7),
-    but not every k≡4 (mod9) packet.
+  - The verified K=4 bridge covers k=27t+22 with q=3u+1. It source-closes
+    the conditional episode-41 packet candidate (k=81s+76, q=7), if the
+    model-only Seed39Probe first-stop identification is confirmed; it does
+    not establish that the blank-root trajectory reaches that packet and
+    does not close every k≡4 (mod 9) packet.
   - P2K7Source provides raw, source-verified endpoints for k=27t+25
     across all q mod 3. It compiled in successful CI run 42519761689.
     A regularSection wrapper has not yet been formalized.
@@ -178,6 +180,14 @@ the blank-root chain.
 audit reports `[propext, Quot.sound]` for both new theorems. The wrapper is
 therefore kernel-checked against the existing source modules; it does not by
 itself establish that the blank-root trajectory reaches the #41 packet.
+
+The episode-41 identification is not itself source-certified. The
+actual root seed39 is \(L(64t_{38}+49,6,0)\), and Seed39Probe.lean only
+contains a bounded first-stop computation with a conditional soundness
+theorem; the required bound is not proved and no workflow compiles the
+probe. The reported \(L(9t_{41}+7,7,1)\) residue is therefore a
+computational candidate, not a theorem. The DRegularFirstExit toy
+seed39 \(L(39,0,0)\) is a different starting state.
 
 The root-prefix audit is separate. Run 43391359969 failed on the
 pre-fix EFirstAPacket q−1 match and is superseded by commit e7009d5.

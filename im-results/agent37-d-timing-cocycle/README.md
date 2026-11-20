@@ -233,6 +233,26 @@ root-prefix composition were kernel-audited in CI run
 [43391093227](https://github.com/FlareZ123/bb6/actions/runs/43391093227),
 with [propext, Quot.sound].
 
+
+Evidence status: the #41 first-stop identification is still a model-only
+computational candidate, not a kernel-certified first-stop theorem.
+The actual seed39 used by Seed39Probe.lean is
+\(L(64t_{38}+49,6,0)\), supplied by
+BlankThirtySeventhToThirtyEighthRejoin.lean. Seed39Probe evaluates
+firstExceptionFromSeed39 using firstStopBlocks with a 2,000-block cap
+(1,024,000 regular transitions). Its soundness theorem is conditional on
+the bound firstExceptionFromSeed39.1 < 1024000; that bound is not proved
+in the file, and the reported #eval output is not stored as a certificate.
+The manual workflow agent37-root-exceptions34-38.yml has no runs and does
+not compile Seed39Probe. Therefore the reported residue
+\(L(9t_{41}+7,7,1)\), \(t_{41}\equiv76\pmod{81}\), must be treated as a
+computational hypothesis. The source closure below is a verified
+conditional implication for that packet if the candidate is confirmed.
+
+Do not confuse this actual root seed39 with
+DRegularFirstExit.seed39_exception, which starts from the separate toy
+state \(L(39,0,0)\).
+
 Unfolding the q=7 endpoint normalizer gives the next regular seed
 \(L(4096t+3461,4,0)\), where \(t=3s+2\), equivalently
 \(L(12288s+11653,4,0)\). This closes the specific #41 packet candidate,
