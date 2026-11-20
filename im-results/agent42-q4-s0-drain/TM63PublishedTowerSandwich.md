@@ -321,4 +321,4 @@ S_{\rm TM1}
 =6b_N^2+54b_N+48+3\ell+\Delta,\qquad
 0\le\Delta<10(1+\log_2\ell)\ell^2,\quad \ell=\log_2(b_N+1).
 \]
-In particular, \(54<(S_{\rm TM1}-6b_N^2)/b_N<54+6\times10^{-71}\), and the relative excess over \(6(b_N+1)^2\) is \(7/(b_N+1)+\varepsilon_N\) with \(0<\varepsilon_N<(3\ell+100(1+\log_2\ell)\ell^2)/(6(b_N+1)^2)\). The derivation is isolated in [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md). This is still conditional on the same uncompiled authentic-root/dispatcher source composition.
+In particular, \(54<(S_{\rm TM1}-6b_N^2)/b_N<54+6\times10^{-71}\), and the relative excess over \(6(b_N+1)^2\) is \(7/(b_N+1)+\varepsilon_N\) with \(0<\varepsilon_N<(3\ell+10(1+\log_2\ell)\ell^2)/(6(b_N+1)^2)<8\times10^{-149}\). The derivation is isolated in [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md). This is still conditional on the same uncompiled authentic-root/dispatcher source composition.
