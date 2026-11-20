@@ -387,3 +387,15 @@ as `drainB_digit_source_correction_interface`. It is intended to package, for an
 The source workflow now includes this module and its transducer dependency. This is **not yet Lean-compiled** in the current invocation; local shell/Python execution failed at the tool boundary, and no CI substitute was dispatched. The source-to-digit theorem should be reviewed and compiled before use as a certified premise.
 
 **Research boundary:** the 66-state set is a post-reset suffix invariant only. It is not a valid replacement for the full S-window start-carry rectangles, and it does not prove that every authentic S-window contains a reset. The 1,318 observed boundary phases are still a finite trace inventory, not a Markov-closed product. The next mathematical target is a root-restricted transition interface carrying the weighted drain statistics and recognizer states for the 0/1/2-symbol low-shifted suffixes.
+
+
+### Ternary drain offset identities
+
+`DrainDigitOffsetStats.lean` contains a mutual induction proof draft for the two exact identities, valid whenever `q+1<3^n`:
+
+- the output integer and digit counts `(output,n₁,n₂)` of `runStats n (q+1) B` equal those of `runStats n q A`;
+- the output integer and digit counts of `runStats n (q+1) A` equal those of `runStats n q C`.
+
+The terminal states are deliberately excluded: they need not be equal. Their terminal phase bits are equal in each paired identity, by the existing phase theorem. A direct exhaustive check for all `n≤12` found no counterexample; the Lean proof and its phase corollaries are now included in the manual 4.36.0-rc2 workflow but have not yet been compiled.
+
+These identities are a possible interface for updating the next drain's weighted statistics when its input differs by one. The remaining task is to derive, from the four-sector root cocycle, exactly when the next drain input is one of these offsets and which initial transducer state applies. No root-level recurrence is claimed yet.
