@@ -1,0 +1,27 @@
+name: Agent 17 Sheep inverse-tree arithmetic certificates (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check certificate syntax
+        run: |
+          python -m py_compile \
+            im-results/agent17-sheep-power1458/inverse_tree_44_classes_certificate.py \
+            im-results/agent17-sheep-power1458/inverse_tree_h1a3_h3a6_certificate.py
+      - name: Verify the 44 two-node progressions
+        run: python im-results/agent17-sheep-power1458/inverse_tree_44_classes_certificate.py
+      - name: Verify the 26 seven-node and 22 three-node progressions
+        run: python im-results/agent17-sheep-power1458/inverse_tree_h1a3_h3a6_certificate.py
