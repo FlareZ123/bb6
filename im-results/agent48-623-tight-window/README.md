@@ -94,7 +94,7 @@ Thus the next required interval ([k'+2,j'-2)) contains the old output subinterva
 
 These are paper derivations from the cited source lemmas and exact window definitions, not new Lean theorems in this directory.
 
-## 3. Finite diagnostic
+## 3. Finite next-state diagnostic
 
 Run from the repository root:
 
@@ -102,32 +102,31 @@ Run from the repository root:
 node im-results/agent48-623-tight-window/tight_mass_window_scan.js
 ```
 
-The script uses the existing 263-state DFA at `im-results/agent32-623-phase-automaton/ResetPatternDFA.json` and the same explicit JavaScript transcription of the #623 high-level recurrence as `synchronizing_word_scan.js`. It recomputes the S-indexed windows for root indices 33 through 10,000 using both the old envelope and (B_{corr}), and checks next-state shifts.
-
-Observed output:
+The script replays source transitions (D_n\to D_{n+1}) for (n=33,\ldots,10000), and tests the **next-state** S-indexed word (x',y') on ([k_{S'}+2,j_{S'}-2)). DFA acceptance means that an accepting state was visited at least once; the final DFA state need not itself be accepting. The old-envelope first-hit histogram matches the existing `MassWindowResetDiagnostic.md`, which validates the transition indexing.
 
 | Quantity | Old envelope | Correction-only buffer |
 | --- | ---: | ---: |
-| States checked | 9,968 | 9,968 |
-| DFA failures | 0 | 0 |
+| Source transitions checked | 9,968 | 9,968 |
+| Next-state DFA failures | 0 | 0 |
 | Minimum word length | 8 | 7 |
 | Maximum word length | 16 | 16 |
 | First reset end | 3–12 | 3–12 |
 
 More precisely:
 
-- Relative to the old envelope, (k) decreases by one on 723 states and (j) decreases by one on 1,550 states.
-- Actual transition-shift histograms:
+- Relative to the old envelope, target (k) decreases by one on 723 transitions and target (j) decreases by one on 1,549 transitions. The old-minus-new histograms are (k: 0\mapsto9245,1\mapsto723) and (j:0\mapsto8419,1\mapsto1549).
+- Source-to-target transition-shift histograms:
   - old envelope: ((0,0):9955,(0,1):8,(1,1):5);
   - correction-only buffer: ((0,0):9954,(0,1):9,(1,1):5).
-- The correction-only (r=j-3k) transition counts are:
+- The correction-only target (r'=j'-3k') histogram is (-2:3027,-1:2844,0:4097).
+- The correction-only (r\to r') transition counts are:
   (-2\to-2:3022, -2\to-1:4, -1\to-1:2840, -1\to0:5, 0\to0:4092, 0\to-2:5).
 - The first-acceptance histogram for the correction-only buffer is:
   `3:2176, 4:4215, 5:2255, 6:860, 7:298, 8:102, 9:39, 10:14, 11:6, 12:3`.
 
-The finite diagnostic therefore survives the strictly smaller correction-only buffer, with 9,968/9,968 windows accepted and first reset by symbol 12. It does not prove that the reset DFA accepts every future S-window. The recurrence replay is computational, and no original-source root theorem or global BB(6) conclusion is claimed.
+The finite prefix transitions (n=9,\ldots,32) have the same pass/fail set under both envelopes: passes at 28, 31, 32; failures at 9–27, 29, 30. The main diagnostic therefore establishes 9,968/9,968 next-state windows accepted, with first reset by symbol 12. It does not prove acceptance for every future S-window. The recurrence replay is computational; no original-source root theorem or global BB(6) conclusion is claimed.
 
-## 4. Actual S-window boundary phase
+## 4. Actual next-state S-window boundary phases
 
 Run:
 
@@ -135,21 +134,20 @@ Run:
 node im-results/agent48-623-tight-window/s_window_boundary_phases.js
 ```
 
-The script advances the exact source digit transducer through the low input digit (k_S+1), because the S-indexed word starts at (k_S+2). Before reporting S phases, it recomputes the existing q-indexed phase set and checks exact set equality with `agent32-623-phase-automaton/ActualBoundaryPhases.json`; this validation passes (262/262 phases).
+For each source transition (D_n\to D_{n+1}), the tested word belongs to the target state and starts at (k'+2). The script computes the source carry entering (k+1), then consumes source input digits (k+1,\ldots,k'+1) (one or two digits) to obtain the actual transducer phase entering the target word at (k'+2). It validates the source carry convention by recomputing the q-indexed phases and checking exact set equality with `agent32-623-phase-automaton/ActualBoundaryPhases.json`: 262/262 phases match.
 
-For the correction-only S-window over the same 9,968 root states:
+For the correction-only S-window over the 9,968 source transitions (D_{33}\to D_{34},\ldots,D_{10000}\to D_{10001}):
 
-- 701 distinct complete start phases when (r=j_S-3k_S) is included: 278 L-branch and 423 R-branch;
-- 252 distinct tuples if (r) is omitted;
+- 1,318 distinct transition boundary phases, keyed by source sector/branch, target sector/branch, previous input pair, carry, source/target (r), and the ((k,j)) shift;
 - 28 distinct previous-pair/carry combinations in L and 37 in R;
-- observed carry pairs are L: ((-2,1),(-1,0),(-1,1),(0,0)); R: ((-3,1),(-2,0),(-2,1),(-1,0),(0,0));
-- zero branch-vs-threshold mismatches, zero violations of the full universal carry rectangles, and zero affine-update mismatches against the next root state;
-- the index-38 S start phase is sector RO / branch R, previous pair ((1,2)), carry ((-2,0)), (r=0). The q-indexed phase at the same root state has previous pair ((1,1)), so the q-window phase cannot simply be reused for the S-window.
+- observed start carries are L: ((-2,1),(-1,0),(-1,1),(0,0)); R: ((-3,1),(-2,0),(-2,1),(-1,0),(0,0));
+- source sector/branch counts: RO/R 1,643; RE/L 1,304; LO/R 1,304; RE/R 1,632; RO/L 1,293; LE/R 1,293; LO/L 775; LE/L 724;
+- target (r') counts: (-2:3027,-1:2844,0:4097);
+- zero branch-vs-threshold mismatches, zero violations of the full universal carry rectangles, zero affine-update mismatches, zero transducer digit mismatches on the tested target interval, and zero reset-DFA failures;
+- the (D_{38}\to D_{39}) sample has source RO/R, target RE/R, previous pair ((1,2)), carry ((-2,0)), (r=r'=0), and shift ((0,0)). Its drain data are (b=44633,L=11,n_1=5,n_2=1,C=88,F=-24,T=35).
 
-The tuple ((sector,branch,previous pair,carry,r)) is only an inventory, not a closed transition state: its observed transition outdegree reaches 21. The product must additionally retain the reset-DFA state and the weighted drain/transducer information. The observed carry pairs are diagnostics only; retain the full universal rectangles L: ([-2,2]\times[-2,2]), R: ([-4,1]\times[-2,2]).
+The observed carry pairs are diagnostics only; retain the full universal rectangles L: ([-2,2]\times[-2,2]), R: ([-4,1]\times[-2,2]). The phase inventory is not a closure proof. A finite product still needs the reset-DFA state and the weighted drain/transducer interface. The script writes `SWindowBoundaryPhases.json` when run.
 
-The script writes `SWindowBoundaryPhases.json` when run. This is a finite recurrence diagnostic, not an all-time invariant.
-
-## 4. Next useful use
+## 5. Next useful use
 
 Agent 32 can use (B_{corr}=34\ell_S+122) and the three-state coupled shift phase in the finite product-state closure. Preserve the full carry rectangles, source branch/sector, weighted drain interface, and the low/high boundary state. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
