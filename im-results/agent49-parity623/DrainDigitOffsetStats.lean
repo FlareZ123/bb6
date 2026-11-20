@@ -276,6 +276,54 @@ theorem runStats_offset_AC_full (n q : Nat) (hq : q + 1 < 3 ^ n) :
 #print axioms runStats_offset_BA_full
 #print axioms runStats_offset_AC_full
 
+
+/--
+At the overflow boundary q+1=3^n, the paired output/count data still agree,
+but the terminal states alternate through the indicated two-state pairs.
+-/
+theorem run_overflow_final_state_pairs (n : Nat) :
+    (run n (3 ^ n) B).2 = (if n % 2 = 1 then A else B) ∧
+    (run n (3 ^ n - 1) A).2 = (if n % 2 = 1 then C else A) ∧
+    (run n (3 ^ n) A).2 = (if n % 2 = 1 then B else A) ∧
+    (run n (3 ^ n - 1) C).2 = (if n % 2 = 1 then A else C) := by
+  induction n with
+  | zero =>
+      simp [run]
+  | succ n ih =>
+      rcases ih with ⟨hBAleft, hBAright, hACleft, hACright⟩
+      have hpow : 3 ^ (n + 1) = 3 * 3 ^ n := by
+        simp [Nat.pow_succ, Nat.mul_comm]
+      have hpos : 0 < 3 ^ n := by positivity
+      have hsub : 3 ^ (n + 1) - 1 = 3 * (3 ^ n - 1) + 2 := by
+        rw [hpow]
+        omega
+      have hmod0 : (3 * 3 ^ n) % 3 = 0 := by omega
+      have hdiv0 : (3 * 3 ^ n) / 3 = 3 ^ n := by omega
+      have hmod2 : (3 * (3 ^ n - 1) + 2) % 3 = 2 := by omega
+      have hdiv2 : (3 * (3 ^ n - 1) + 2) / 3 = 3 ^ n - 1 := by omega
+      have hparityFlip : (n + 1) % 2 = (if n % 2 = 1 then 0 else 1) := by
+        have hlt : n % 2 < 2 := Nat.mod_lt _ (by decide)
+        omega
+      constructor
+      · rw [hpow]
+        simp [run, step, hmod0, hdiv0]
+        rw [hACleft]
+        simp [hparityFlip]
+      · constructor
+        · rw [hsub]
+          simp [run, step, hmod2, hdiv2]
+          rw [hACright]
+          simp [hparityFlip]
+        · constructor
+          · rw [hpow]
+            simp [run, step, hmod0, hdiv0]
+            rw [hBAleft]
+            simp [hparityFlip]
+          · rw [hsub]
+            simp [run, step, hmod2, hdiv2]
+            rw [hBAright]
+            simp [hparityFlip]
+
 /-- The strict range condition is essential: at the first overflow boundary,
 the paired terminal states can differ. -/
 theorem run_offset_overflow_BA_final_state_differs :
