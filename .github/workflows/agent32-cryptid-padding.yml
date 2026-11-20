@@ -49,4 +49,20 @@ jobs:
           lake exe cache get
           lake build BusyLean.BB62 BusyLean.TMAcceleration
           cat "$GITHUB_WORKSPACE/im-results/agent32-cryptid-padding/SuffixParametricPrefix.append.lean" >> BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
-          lake env lean BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
+          lake env lean -o BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.olean BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
+
+      - name: Compile pinned Mathlib Tape to exact D0 transport
+        run: |
+          cd /tmp/proofs
+          lake env bash -c '
+            set -euo pipefail
+            ROOT="$GITHUB_WORKSPACE"
+            export LEAN_PATH="$ROOT/im-results/agent8-coverage-contract:$ROOT/im-results/agent4-coverage-smoke:$ROOT/im-results/agent3-portfolio-raw-conjugacy:/tmp/proofs:$LEAN_PATH"
+            lean --version
+            lean -o "$ROOT/im-results/agent8-coverage-contract/Frontier.olean" "$ROOT/im-results/agent8-coverage-contract/Frontier.lean"
+            lean -o "$ROOT/im-results/agent4-coverage-smoke/RelativeTape.olean" "$ROOT/im-results/agent4-coverage-smoke/RelativeTape.lean"
+            lean -o "$ROOT/im-results/agent3-portfolio-raw-conjugacy/MachineConjugacy.olean" "$ROOT/im-results/agent3-portfolio-raw-conjugacy/MachineConjugacy.lean"
+            lean -o "$ROOT/im-results/agent3-portfolio-raw-conjugacy/DTableWitness.olean" "$ROOT/im-results/agent3-portfolio-raw-conjugacy/DTableWitness.lean"
+            lean -o "$ROOT/im-results/agent3-portfolio-raw-conjugacy/DStartFinite.olean" "$ROOT/im-results/agent3-portfolio-raw-conjugacy/DStartFinite.lean"
+            lean -o "$ROOT/im-results/agent32-cryptid-padding/TM62MathlibD0Adapter.olean" "$ROOT/im-results/agent32-cryptid-padding/TM62MathlibD0Adapter.lean"
+          '
