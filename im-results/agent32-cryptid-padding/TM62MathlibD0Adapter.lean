@@ -210,7 +210,7 @@ theorem extHaltsAt_iff_external (c : ExtCfg) (n : Nat) :
   constructor
   · rintro ⟨last, hr, hs⟩
     refine ⟨project last, ?_, ?_⟩
-    · simpa [hr] using extRun_project n c
+    · simpa [hr] using (extRun_project n c).symm
     · exact (extStep_none_iff last).mp hs
   · rintro ⟨last, hr, hs⟩
     have hp := extRun_project n c
