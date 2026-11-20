@@ -83,7 +83,7 @@ Combining (1) and (2) with the exact score split gives
 \[
 S<6b^2+60.511b.
 \]
-The exact final counted increment is already a lower bound:
+The exact final counted increment from [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md) is already a lower bound:
 \[
 S\ge6(b+1)^2=6b^2+12b+6.
 \]
