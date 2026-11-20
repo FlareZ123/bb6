@@ -239,3 +239,32 @@ theorem correction_buffer_closed (s : Sector) (b : Branch)
     corrF s b (L-2*E) R ≤ 34*L+122 := by
   have h := correction_count_bounds s b L E R hE0 hER hRL
   omega
+
+/-- A depth-only correction bound using the actual full-drain statistics.
+    Here D is the signed first-counter drop and R is the full evaluator-call
+    count; no digit-count identification is assumed. -/
+theorem correction_buffer_from_depth (s : Sector) (b : Branch)
+    (D R ell : Int)
+    (hDlo : -ell ≤ D) (hDhi : D ≤ ell+1)
+    (hRlo : 0 ≤ R) (hRhi : R ≤ ell) :
+    -(34*ell+140) ≤ corrC s b D R ∧
+    corrC s b D R ≤ 34*ell+140 ∧
+    -(24*ell+96) ≤ corrF s b D R ∧
+    corrF s b D R ≤ 24*ell+96 := by
+  cases s <;> cases b <;> simp [corrC, corrF] <;> omega
+
+/-- Refined correction bound if the source drain is linked to the digit
+    normal form D=L-2E. R remains the independent full-drain call count;
+    no assumption E≤R or R≤L is needed. -/
+theorem correction_buffer_by_depth (s : Sector) (b : Branch)
+    (L E R ell : Int)
+    (hE0 : 0 ≤ E) (hEL : E ≤ L)
+    (hR0 : 0 ≤ R) (hRell : R ≤ ell) (hLell : L ≤ ell) :
+    -(34*ell+122) ≤ corrC s b (L-2*E) R ∧
+    corrC s b (L-2*E) R ≤ 34*ell+122 ∧
+    -(24*ell+84) ≤ corrF s b (L-2*E) R ∧
+    corrF s b (L-2*E) R ≤ 24*ell+84 := by
+  cases s <;> cases b <;> simp [corrC, corrF] <;> omega
+
+#print axioms correction_buffer_from_depth
+#print axioms correction_buffer_by_depth

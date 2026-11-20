@@ -124,55 +124,50 @@ The useful next composition is with the existing two-coordinate carry transducer
 This may make the authentic-root boundary-carry closure a smaller finite-state problem. It does **not** establish that the root orbit avoids the terminal strips; the all-time root-history invariant remains open.
 
 
-## 6. A compact state-offset and weighted form
+## 6. Compact state-offset and weighted form
 
 Assign the state offsets
 \[
 s_A=2,\qquad s_B=0,\qquad s_C=1.
 \]
-The output digit in every transition is simply
+The output digit in every transition is
 \[
 n_i\equiv s_i-b_i\pmod3,
 \]
-with its representative in \(\{0,1,2\}\). The state update can be read directly from the table: an input 1 leaves the state unchanged; an input 0 or 2 toggles between A and a non-A state, with the non-A state recording whether the last such input was 0 (B) or 2 (C). Equivalently, A occurs after an even number of non-1 input digits; B/C occurs after an odd number, with the most recent non-1 digit distinguishing B from C.
+with its representative in \(\{0,1,2\}\). The state update is the finite three-state rule in Section 2.
 
-This gives immediate interpretations of the digit statistics:
+Use distinct names for the digit statistics:
 \[
-R=\#\{i:b_i\ne s_i\},\qquad
-e=\#\{i:b_i\equiv s_i+1\pmod3\}.
+R_{\rm dig}=n_1+n_2,\qquad E_{\rm dig}=n_2,\qquad
+\Delta=n_1-n_2=R_{\rm dig}-2E_{\rm dig}.
 \]
-The mass and branch-threshold corrections have especially simple per-digit weights. If \(\mu(n)=2\) for \(n=1\) and 0 otherwise, and
-\[
-\theta(0)=0,\quad\theta(1)=2,\quad\theta(2)=-4,
-\]
-then, with the sector constants \(c_s=(9,6,4,4)\) and \(c_T=(19,10,-4,2)\) in LO/LE/RO/RE,
-\[
-\boxed{\eta=\beta+\delta=L+c_s+\sum_i\mu(n_i)}
-\]
-and
-\[
-\boxed{T=3D+2R+c_T=3L+c_T+\sum_i\theta(n_i).}
-\]
-Thus the same three-state pass computes both the exact total-mass increment and the exact output-side threshold.
+These are computed by the transducer; its theorem runStats_weight_bounds proves
+\(0\le E_{\rm dig}\le R_{\rm dig}\le L\).
 
-There is also a small sharpening of the mass-indexed window bound. If \(\ell_S\) is least with \(S+3\le\tau(\ell_S)\), then \(q+3\le S+3\le\tau(\ell_S)\). Each canonical drain parameter satisfies \(b\le q+3\), so
+The digit-side expressions are
 \[
-2b-1<3^{\ell_S}.
+\eta_{\rm dig}=L+c_s+2n_1,\qquad
+T_{\rm dig}=3L+c_T+2n_1-4n_2,
 \]
-The defining lower bound \(3^{L-1}\le2b-1\) therefore gives \(L\le\ell_S\). Since \(\sum_i\mu(n_i)\le2L\) and \(c_s\le9\),
+where \(c_s=(9,6,4,4)\) and \(c_T=(19,10,-4,2)\) in LO/LE/RO/RE. These are finite-state weighted outputs of the transducer.
+
+**Source-statistic distinction.** The original-root cocycle in RootRayGapCocycle.md and SignedCoordinateNormalForm.lean uses \(R_{\rm full}\), the actual number of evaluator calls in the complete drain; in RE it includes the initial evaluator. Its exact threshold is
 \[
-\eta\le3L+9\le3\ell_S+9.
+T_{\rm full}=3D+2R_{\rm full}+c_T.
 \]
-Using \(q\le S/2\) and the existing \(\ell_S\le S/2-1\) estimate for \(S\ge20\), the exact mass recurrence \(S'=S+q+\eta\) improves the previous coarse upper bound to
+The equalities \(D=L-2E_{\rm dig}\) and \(R_{\rm full}=R_{\rm dig}\) are the intended bridge from the digit transducer to the source drain. The valuation expansion in DrainValuationNormalForm.md derives them on paper, including one nonzero digit per drain iteration, but the complete original-source bridge has not yet been compiled as a theorem. Until it is, \(T_{\rm dig}\) and \(\eta_{\rm dig}\) are candidate source expressions, not source-certified root-cocycle values. In particular, do not use runStats_weight_bounds as a proof about \(R_{\rm full}\).
+
+The mass estimate \(\eta_{\rm dig}\le3L+9\) follows immediately from \(n_1\le L\). If the source bridge is established, then with \(L\le\ell_S\), \(q\le S/2\), and the existing \(\ell_S\le S/2-1\) estimate for \(S\ge20\), the source mass recurrence gives the candidate bound
 \[
-\boxed{S'\le3S+6.}
+S'\le3S+6.
 \]
-This does not change the established \(\ell_{S'}-\ell_S\in\{0,1\}\) conclusion, but gives a sharper source-independent growth envelope.
+The last recurrence application remains conditional on the source bridge.
 
+## 7. Exact affine carry corrections and depth buffers
 
-## 7. Exact affine carry corrections from the same digit stream
+The source-checked signed-coordinate table takes two **source** parameters: the signed first-counter drop \(D\), and \(R_{\rm full}\), the full number of evaluator calls. Its corrC and corrF definitions must not silently receive \(R_{\rm dig}=n_1+n_2\) unless the source bridge in Section 6 has been proved.
 
-The source-checked SignedCoordinateNormalForm.lean gives the affine corrections C,F in the integer coordinates x=2g-gamma_s, y=6q. Substituting D=L-2e, R=n_1+n_2, where n_j is the number of output digits equal to j, turns those corrections into the following weighted digit sums.
+If the bridge \(D=L-2E_{\rm dig}\), \(R_{\rm full}=R_{\rm dig}\) holds, substitution gives the weighted digit formulas:
 
 For a left output:
 \[
@@ -184,7 +179,7 @@ For a right output:
 C=12L+4n_1-20n_2+c_C,\qquad
 F=-6L+12n_2+c_F.
 \]
-The sector/output constants are exactly:
+The sector/output constants remain:
 
 | Sector | Output | c_C | c_F |
 |---|---|---:|---:|
@@ -197,30 +192,38 @@ The sector/output constants are exactly:
 | RO | R | -44 | 30 |
 | RE | R | -20 | 18 |
 
-These formulas are obtained directly from corrC and corrF in SignedCoordinateNormalForm.lean; no simulation is involved. Since n_1,n_2 >= 0 and n_1+n_2 <= L, they imply the uniform bounds
+The following two arithmetic theorems separate what is already available from what still needs the digit/source bridge:
+
+1. **correction_buffer_from_depth** assumes only the actual full-drain bounds
+   \[
+   -\ell\le D\le\ell+1,\qquad 0\le R_{\rm full}\le\ell,
+   \]
+   and proves
+   \[
+   |C|\le34\ell+140,\qquad |F|\le24\ell+96.
+   \]
+   This is the conservative buffer justified by the existing source depth package, without identifying digit counts with source evaluator calls.
+
+2. **correction_buffer_by_depth** assumes
+   \[
+   D=L-2E_{\rm dig},\quad 0\le E_{\rm dig}\le L\le\ell,
+   \quad 0\le R_{\rm full}\le\ell,
+   \]
+   and proves
+   \[
+   |C|\le34\ell+122,\qquad |F|\le24\ell+84.
+   \]
+   Crucially, this theorem does **not** require \(E_{\rm dig}\le R_{\rm full}\) or \(R_{\rm full}\le L\). It avoids the overloaded-\(R\) inference in the earlier note. The remaining condition is the exact source identity \(D=L-2E_{\rm dig}\).
+
+The source depth wrapper in RootRayDrainDepthSource.lean supplies \(R_{\rm full}\le\ell\) and \(D\in[-\ell,\ell+1]\); the size inequality gives \(L\le\ell\), and the transducer gives \(0\le E_{\rm dig}\le L\). Thus the conservative \(34\ell+140\) correction bound is available from the source depth package. The sharper \(34\ell+122\) bound is conditional on the uncompiled digit/source identity for \(D\).
+
+Agent 48's sector-specific terminal-window estimates give output-coordinate bounds
 \[
-|C|\le34L+122,\qquad |F|\le24L+84.
+12\ell+88,\quad12\ell+62,\quad12\ell+38,\quad18\ell+50
 \]
-For the q-depth ell used by the carry scan, b <= q+3 <= tau(ell), so L <= ell; the same argument gives L <= ell_S for the mass depth. Thus the correction-only scan buffer can be reduced to 34 ell+122. If the centered terminal window is also included, the combined scan parameter becomes
-\[
-B_{new}=\max(34\ell_S+122,\ 36\ell_S+88),
-\]
-instead of the previous max(34 ell_S+140,36 ell_S+88). The combined bound is strictly smaller than the previous one for ell < 26 and agrees with it for ell >= 26.
+in LO/LE/RO/RE. Each is below \(34\ell+140\) for \(\ell\ge0\). Consequently the separate \(36\ell+88\) terminal term is unnecessary if that terminal-window wrapper is accepted; the presently safe combined buffer is \(B_{\rm safe}=34\ell+140\). Use \(34\ell+122\) only after the source digit bridge is proved. The S-window diagnostic must be rerun with the chosen buffer; the earlier 9,968/9,968 result for the smaller conditional buffer does not establish acceptance for \(B_{\rm safe}\).
 
-There is a useful interpretation of the observed actual-boundary-carry rectangles. If the low residue lies in [0,3K) and |C|,|F|<K, then:
-- C <= 0 forces the first carry into {-1,0};
-- C >= 0 forces the first carry into {0,1};
-- F >= 0 forces the second carry into {0,1};
-- F <= 0 forces the second carry into {-1,0}.
-
-Thus the empirical root pattern (left output: first carry nonpositive, second nonnegative; right output: first nonnegative, second nonpositive) is exactly the sign pattern
-\[
-L:\ C\le0\le F,\qquad R:\ F\le0\le C.
-\]
-The sign pattern is not a consequence of the cone hypotheses alone: the weighted formulas show that it depends on the root's digit statistics n_1,n_2. But it is now an explicit finite-state weighted condition on the same three-state drain scan. This is a direct interface for the boundary-carry closure: compute the digit weights, then the exact C,F, then the actual boundary carry pair.
-
-
-The inequalities above are now formalized by correction_count_bounds and correction_buffer_closed in SignedCoordinateNormalForm.lean, using \(E=n_2\le R=n_1+n_2\le L\). The companion theorem one_extra_digit_carry_bound_closed allows \(|c|\le K\), not merely \(|c|<K\). Therefore \(K=34L+122\) bounds both corrections and is sufficient for the correction-only carry bound even when \(C\) attains equality; an extra additive margin is unnecessary. This controls only the additive correction quotient, not the total boundary carry: the base residue quotient must be combined before asserting an actual start-carry rectangle (see Agent 49's CarryBoundAudit.md, root index 38).
+Finally, one_extra_digit_carry_bound_closed bounds only the **additional correction quotient**. It does not bound the total carry after the base linear quotient is included. Agent 49's authentic root-index-38 carry \((-2,0)\) remains a counterexample to the small \([-1,1]^2\) start set. Keep the full justified carry rectangles: L \([-2,2]\times[-2,2]\), R \([-4,1]\times[-2,2]\).
 
 ## 8. The valid-length terminal state and exact carry invariant
 
@@ -258,24 +261,30 @@ This proof uses only the transition identity, parity, the upper size bound, and 
 
 ## 9. Lean formalization and exact interface
 
-The standalone Lean 4.36.0-rc2 proof is in [DrainDigitTransducerCarry.lean](DrainDigitTransducerCarry.lean). It uses only Lean core imports; no Mathlib dependency is required. An axiom audit of the principal theorems reports only Lean core axioms (propext, Quot.sound, Classical.choice); there is no sorryAx dependency.
+The standalone Lean 4.36.0-rc2 proof is in DrainDigitTransducerCarry.lean. It uses only Lean core imports; no Mathlib dependency is required. The principal arithmetic theorems have only standard Lean core axioms and no sorryAx.
 
 The module formalizes:
 - the nine one-step carry identities;
 - the recursive carry invariant for every input word and every initial state;
 - the phase/parity invariant;
 - nonnegativity and the \(3^L\) output bound;
-- the exact output formula, including the direct theorem drain_transducer_exact_of_bounds;
-- runStats, which retains the output-1 and output-2 counts and proves \(0\le n_2\le n_1+n_2\le L\). These give the weighted statistics \(E=n_2\), \(R=n_1+n_2\), and \(D=L-2E\) consumed by SignedCoordinateNormalForm.lean. The Lean definitions weightedE, weightedR, weightedD and theorem runStats_weight_bounds expose the exact nonnegative count inequalities required by correction_buffer_closed. The terminal phase is also exposed by runStats_phase_of_decomposition: under the same low/high decomposition and parity condition, phaseBit(finalState)=high. Here E is the output-2 digit count used in the affine correction formulas; it is not the second counter E returned by the separate root drainB recurrence in GapScaleResidualSource.lean. Likewise runStats is the digit transducer interface, not a replacement for the root's drainB.
+- the exact output formula, including drain_transducer_exact_of_bounds;
+- runStats, which proves only the digit-statistic inequalities
+  \(0\le E_{\rm dig}\le R_{\rm dig}\le L\), with
+  \(E_{\rm dig}=n_2\) and \(R_{\rm dig}=n_1+n_2\).
 
-**Canonical-ray hypotheses.** In the source application, \(b\) is the positive drain parameter and \(L\) is the parity-adjusted ternary length. The canonical interval is
-\[
-3^{L-1}\le 2b-1<3^{L+1},\qquad L\equiv b\pmod2.
-\]
-The theorem drain_transducer_exact_canonical accepts exactly these hypotheses and proves
-\[
-4N=2b-1+3^L,
-\]
-where \(N\) is the output from runStats on the low \(L\) ternary digits \(b\bmod 3^L\). The lower inequality records the canonical length choice; the stronger drain_transducer_exact_of_bounds theorem needs only the parity and upper inequality.
+It does **not** import the original evalA/drainB definitions or prove that \(R_{\rm dig}\) equals the full source evaluator-call count. Nor does it prove that the source first-counter drop is \(L-2E_{\rm dig}\) for the authentic bundled canonical ray. Those are the remaining source-bridge obligations.
 
-**Scope boundary.** This interface proves the drain transducer identity and its weighted outputs for supplied \((b,L)\). It does not prove that a particular \((b,L)\) occurs on the authentic D(0,7) root orbit, nor does it determine the total boundary carry. The latter must include the base linear quotient as well as the additive correction quotient; see Agent 49's CarryBoundAudit.md.
+The arithmetic correction lemmas correction_buffer_from_depth and correction_buffer_by_depth are in SignedCoordinateNormalForm.lean. They are self-contained integer proofs; I locally compiled their exact definitions and proof terms with Lean 4.36.0-rc2. The former uses the actual source depth bounds; the latter is conditional on the digit formula for D.
+
+**Canonical-ray hypotheses.** For a supplied positive drain parameter \(b\), the transducer accepts \(L\) under
+\[
+3^{L-1}\le2b-1<3^{L+1},\qquad L\equiv b\pmod2,
+\]
+and proves its output integer \(N\) satisfies
+\[
+4N=2b-1+3^L.
+\]
+This is an arithmetic statement about supplied \((b,L)\), not a theorem that the authentic root's source drain has the same \(D,R\) statistics.
+
+**Scope boundary.** The transducer identity, digit weights, and correction bounds do not prove that a particular \((b,L)\) occurs on the authentic \(D(0,7)\) orbit, nor do they bound the total boundary carry. The latter must include the base linear quotient as well as the additive correction quotient; see Agent 49's CarryBoundAudit.md.
