@@ -1,3 +1,10 @@
+// WARNING: INVALID AS A ROOT-HISTORY CERTIFICATE.
+// This diagnostic assumes initial carries in [-1,1]^2. That assumption is false
+// for the total boundary carry: CarryBoundAudit.md exhibits root index 38 with
+// actual total carry pair (-2,0). The correction-only bound controls only the
+// additive correction quotient, not the base quotient plus correction.
+// Use synchronizing_reset_subwords.cpp for valid full-range finite scans.
+// This file is retained only to preserve the superseded diagnostic experiment.
 #include <bits/stdc++.h>
 using namespace std; using Word=vector<pair<int,int>>;
 int mod3(int x){int r=x%3;return r<0?r+3:r;}
