@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Reproduce the #623 S-indexed reset-window diagnostic with the correction-only
-// envelope B=34*ellS+122. The recurrence is the same explicit JS transcription
-// used by agent1-machine623-3euclidean-correction-bounds/synchronizing_word_scan.js.
-// This is a finite diagnostic, not an original-source or all-time proof.
+// Reproduce the #623 S-indexed reset-window diagnostic for source transitions
+// D_n -> D_{n+1}. The DFA is tested on the NEXT-state word, on
+// [k_{n+1}+2, j_{n+1}-2). Acceptance means the DFA visited an accepting state
+// at least once; its final state need not itself be accepting.
 
 const fs = require("node:fs");
 const path = require("node:path");
@@ -14,13 +14,14 @@ const dfaPath = path.join(
 const dfa = JSON.parse(fs.readFileSync(dfaPath, "utf8"));
 const transitions = dfa.transitions;
 const accepting = new Set(dfa.accepting_states);
+const initialState = dfa.initial_state;
 
 function evalA(a, k, m) {
   while (true) {
     if (k % 3n === 2n) return [a + 1n, k / 3n, m];
     if (a === 0n) return k % 3n === 0n ? null : [0n, k / 3n, m];
     if (k % 3n === 0n) return [a - 1n, k / 3n, m + 2n];
-    k = k / 3n;
+    k /= 3n;
     m += 2n * k + 3n;
     a -= 1n;
   }
@@ -36,12 +37,9 @@ function drainB(a, b, d) {
 }
 
 function highLevelNext(a, d) {
-  if (a === 0n)
-    return d % 2n === 1n ? drainB(d + 1n, 2n, 2n) : [d, 7n];
-  if (d % 2n === 1n && a >= d + 5n)
-    return drainB(a - d - 5n, d + 3n, 5n);
-  if (d % 2n === 0n && a >= d + 3n)
-    return drainB(a - d - 2n, d + 2n, 2n);
+  if (a === 0n) return d % 2n === 1n ? drainB(d + 1n, 2n, 2n) : [d, 7n];
+  if (d % 2n === 1n && a >= d + 5n) return drainB(a - d - 5n, d + 3n, 5n);
+  if (d % 2n === 0n && a >= d + 3n) return drainB(a - d - 2n, d + 2n, 2n);
   if (a % 2n === 1n) return null;
   if (a === d + 2n) return drainB(0n, a, 2n);
   if (d % 2n === 1n) return drainB(d + 4n - a, a - 1n, 3n);
@@ -108,7 +106,7 @@ function scanWindow(B, z, q) {
   const { k, j } = windowIndices(B);
   const xDigits = digitsMod3(z, j);
   const yDigits = digitsMod3(6n * q, j);
-  let state = dfa.initial_state;
+  let state = initialState;
   let firstAcceptEnd = null;
   let wordLength = 0;
 
@@ -125,7 +123,7 @@ function scanWindow(B, z, q) {
     j,
     wordLength,
     firstAcceptEnd,
-    accepted: accepting.has(state),
+    accepted: firstAcceptEnd !== null,
   };
 }
 
@@ -156,18 +154,21 @@ let newRHistogram = {};
 let newRTransitions = {};
 
 for (let index = 0; index <= maxStep; index += 1) {
-  let oldWindow = null;
-  let newWindow = null;
+  const next = highLevelNext(a, d);
+  if (index >= 33 && next !== null) {
+    const source = stateData(a, d);
+    const target = stateData(next[0], next[1]);
+    const sourceEll = ellOfS(source.S);
+    const targetEll = ellOfS(target.S);
+    const oldSourceB = Math.max(34 * sourceEll + 140, 36 * sourceEll + 88);
+    const newSourceB = 34 * sourceEll + 122;
+    const oldTargetB = Math.max(34 * targetEll + 140, 36 * targetEll + 88);
+    const newTargetB = 34 * targetEll + 122;
 
-  if (index >= 33) {
-    const { q, S, z } = stateData(a, d);
-    const ell = ellOfS(S);
-    const oldB = Math.max(34 * ell + 140, 36 * ell + 88);
-    const newB = 34 * ell + 122;
-    if (newB > oldB) throw new Error("tightened bound exceeds old bound");
-
-    oldWindow = scanWindow(oldB, z, q);
-    newWindow = scanWindow(newB, z, q);
+    const oldSourceWindow = windowIndices(oldSourceB);
+    const newSourceWindow = windowIndices(newSourceB);
+    const oldWindow = scanWindow(oldTargetB, target.z, target.q);
+    const newWindow = scanWindow(newTargetB, target.z, target.q);
 
     if (!oldWindow.accepted) {
       oldFailures += 1;
@@ -180,7 +181,6 @@ for (let index = 0; index <= maxStep; index += 1) {
 
     if (oldWindow.k !== newWindow.k) changedK += 1;
     if (oldWindow.j !== newWindow.j) changedJ += 1;
-
     increment(oldMinusNewK, String(oldWindow.k - newWindow.k));
     increment(oldMinusNewJ, String(oldWindow.j - newWindow.j));
 
@@ -191,7 +191,23 @@ for (let index = 0; index <= maxStep; index += 1) {
 
     increment(oldFirstEndHistogram, String(oldWindow.firstAcceptEnd ?? "none"));
     increment(newFirstEndHistogram, String(newWindow.firstAcceptEnd ?? "none"));
-    increment(newRHistogram, String(newWindow.j - 3 * newWindow.k));
+
+    const oldDk = oldWindow.k - oldSourceWindow.k;
+    const oldDj = oldWindow.j - oldSourceWindow.j;
+    const newDk = newWindow.k - newSourceWindow.k;
+    const newDj = newWindow.j - newSourceWindow.j;
+    increment(oldTransitionShifts, oldDk + "," + oldDj);
+    increment(newTransitionShifts, newDk + "," + newDj);
+
+    const sourceR = newSourceWindow.j - 3 * newSourceWindow.k;
+    const targetR = newWindow.j - 3 * newWindow.k;
+    increment(newRHistogram, String(targetR));
+    increment(newRTransitions, String(sourceR) + "->" + String(targetR));
+
+    if (newDk < 0 || newDk > 1 || newDj < 0 || newDj > 1 ||
+        (newDk === 1 && newDj !== 1)) {
+      throw new Error("correction-only window shift violates coupled 0/1 bound at " + index);
+    }
 
     if (
       firstChanged.length < 10 &&
@@ -200,40 +216,16 @@ for (let index = 0; index <= maxStep; index += 1) {
         !newWindow.accepted)
     ) {
       firstChanged.push({
-        index,
-        ell,
-        oldB,
-        newB,
+        sourceIndex: index,
+        targetIndex: index + 1,
+        ell: targetEll,
+        oldB: oldTargetB,
+        newB: newTargetB,
         oldWindow,
         newWindow,
       });
     }
     states += 1;
-  }
-
-  const next = highLevelNext(a, d);
-  if (index >= 33 && oldWindow !== null && newWindow !== null && next !== null) {
-    const nextData = stateData(next[0], next[1]);
-    const nextEll = ellOfS(nextData.S);
-    const oldNextB = Math.max(34 * nextEll + 140, 36 * nextEll + 88);
-    const newNextB = 34 * nextEll + 122;
-    const oldNext = windowIndices(oldNextB);
-    const newNext = windowIndices(newNextB);
-
-    increment(
-      oldTransitionShifts,
-      String(oldNext.k - oldWindow.k) + "," + String(oldNext.j - oldWindow.j)
-    );
-    const dk = newNext.k - newWindow.k;
-    const dj = newNext.j - newWindow.j;
-    increment(newTransitionShifts, String(dk) + "," + String(dj));
-
-    const r = newWindow.j - 3 * newWindow.k;
-    const rNext = newNext.j - 3 * newNext.k;
-    increment(newRTransitions, String(r) + "->" + String(rNext));
-    if (dk < 0 || dk > 1 || dj < 0 || dj > 1 || (dk === 1 && dj !== 1)) {
-      throw new Error("window shift violates the proved 0/1 coupled bound at " + index);
-    }
   }
 
   if (index === maxStep) break;
@@ -242,8 +234,9 @@ for (let index = 0; index <= maxStep; index += 1) {
 }
 
 const summary = {
-  maxStep,
-  states,
+  sourceTransitionRange: [33, maxStep],
+  testedOutputStateRange: [34, maxStep + 1],
+  transitionsChecked: states,
   oldFailures,
   firstOldFailure,
   newFailures,
@@ -258,8 +251,8 @@ const summary = {
   newFirstAcceptEndHistogram: newFirstEndHistogram,
   oldTransitionShiftHistogram: oldTransitionShifts,
   newTransitionShiftHistogram: newTransitionShifts,
-  newWindowRHistogram: newRHistogram,
-  newWindowRTransitionHistogram: newRTransitions,
+  newTargetRHistogram: newRHistogram,
+  newRTransitionHistogram: newRTransitions,
   firstChanged,
 };
 
