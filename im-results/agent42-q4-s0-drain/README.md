@@ -898,10 +898,10 @@ The lower side strengthens the coarse published endpoint; the upper side is obta
 
 ## Near-exact leading coefficient for the conditional score
 
-The exact dispatcher sum and root-prefix bounds sharpen this to a two-term asymptotic expansion:
+The exact dispatcher sum and root-prefix bounds sharpen this to a polylogarithmic-error two-term expansion:
 \[
 S_{\rm TM1}
-=6b_N^2+54b_N+48+3b_{N-1}+\Delta,\qquad
-0\le\Delta<300b_N^{3/16}.
+=6b_N^2+54b_N+48+3\ell+\Delta,\qquad
+0\le\Delta<13\ell^3,\quad \ell=\log_2(b_N+1).
 \]
-Thus \(54<(S_{\rm TM1}-6b_N^2)/b_N<54+9\times10^{-61}\), and the relative excess over \(6(b_N+1)^2\) lies between \(7/(b_N+1)\) and \(7.01/b_N\). This is a paper-level consequence of the exact conditional source-cost identity, not a new Lean theorem or an accepted authentic-root halt proof. See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md).
+Thus \(54<(S_{\rm TM1}-6b_N^2)/b_N<54+2\times10^{-69}\), and the relative excess over \(6(b_N+1)^2\) is \(7/(b_N+1)+\varepsilon_N\) with \(0<\varepsilon_N<(3\ell+13\ell^3)/(6(b_N+1)^2)\). This is a paper-level consequence of the exact conditional source-cost identity, not a new Lean theorem or an accepted authentic-root halt proof. See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md).
