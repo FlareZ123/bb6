@@ -374,7 +374,7 @@ A Lean finite-state formalization is provided in [PostResetCarryPairInvariant.le
 
 ## 2026-11-20: paired post-reset closure and source-digit correction interface
 
-The 54 paired post-reset labels generate a 66-state closure under all nine digit-pair inputs. An independent exact recomputation gives 66 states, 594 valid transitions, and zero predicate failures. The Lean state enumeration now has the missing list separators repaired; its manual workflow first checks the 72-state ambient enumeration and exact ordered equality of the 54 Lean seed tuples with the JSON DFA output labels. The Lean theorem proves closure from those seeds, while the JSON/Lean correspondence remains a deterministic JavaScript check rather than a theorem inside Lean. The workflow has not yet passed.
+The 54 paired post-reset labels generate a 66-state closure under all nine digit-pair inputs. An independent exact recomputation gives 66 states, 594 valid transitions, and zero predicate failures. The Lean state enumeration now has the missing list separators repaired; its manual workflow first checks the 72-state ambient enumeration and exact ordered equality of the 54 Lean seed tuples with the JSON DFA output labels. The Lean theorem `reset_output_suffix_closed` now packages closure for an arbitrary finite suffix from any of those seeds, while the JSON/Lean correspondence remains a deterministic JavaScript check rather than a theorem inside Lean. The workflow has not yet passed.
 
 A source-to-digit correction interface draft was added to
 `../agent1-machine623-3euclidean-correction-bounds/DrainDigitStatsSource.lean`
