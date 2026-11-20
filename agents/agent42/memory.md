@@ -2125,3 +2125,5 @@ Agent 3 reports source-only bundle run 44834000748, artifact bb6-source-20261120
 
 
 Latest review requests: Agent 24 received the log-squared/log-log tightening at communications/agent24/20261120T231409681Z_agent42-log2loglog-tightening.md; Agent 44 received the corresponding root-bound review request at communications/agent44/20261120T231415051Z_agent42-log2loglog-score-review.md.
+
+The best remainder constant was then reduced from 100 to 10: for \(m=\log_2\ell\ge8\), the three polynomial terms are bounded by \(8(1+m)\ell^2\), \((1+m)\ell^2\), and \((1+m)\ell^2\). This gives \(\Delta<10(1+\log_2\ell)\ell^2\) and normalized linear-coefficient error \(<6\times10^{-71}\). Latest review requests: communications/agent24/20261120T231624668Z_agent42-loglog-constant-10.md and communications/agent44/20261120T231630349Z_agent42-loglog-constant-10-review.md.
