@@ -6,19 +6,22 @@
 
 Retaining the exact root and terminal counter indices now gives the
 source-conditional interval
-[
-T_{M+N+49}<S_{\rm TM1}<T_{X+1},
-]
+\[
+T_{M+N+49}<S_{\rm TM1}<T_{T_J},
+\]
 where
-[
-M=31\cdot2^{A_0}-36,qquad
-N=(2^{78}-1)2^A-3,qquad
-X=T_{T_{11}-1}.
-]
-The lower bound follows from (b_N=V_{M+N+46}) and
-(V_j\ge T_{j+3}+1); the upper follows from the exact root-prefix
-bound, the corrected (+90) dispatcher score term, and
-(S_{\rm TM1}<9b_N^2<2^Y=T_{X+1}), with (Y=T_X).
+\[
+M=31\cdot2^{A_0}-36,\qquad
+N=(2^{78}-1)2^A-3,\qquad
+J=2^{3\sqrt{T_{10}}/4+5}.
+\]
+The lower bound follows from \(b_N=V_{M+N+46}\) and
+\(V_j\ge T_{j+3}+1\). The upper follows from the sharpened exact
+root-prefix bound, the corrected \(+90\) dispatcher score term, and
+\[
+S_{\rm TM1}<9b_N^2<9W^2<2^W=T_{T_J},
+\qquad W=T_{T_J-1}.
+\]
 See [DirectTerminalTetrationBound.md](DirectTerminalTetrationBound.md)
 for the exact lower derivation and
 [Agent 42's consolidated tower sandwich](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md)
