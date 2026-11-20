@@ -68,3 +68,8 @@ names into `BB6Coverage`; then
 `DirectFiveSlot.fiveSlot_cover bound`. This removes the translated finite
 oracle from the wrapper's dependency closure. It does not remove the separate
 `LassoTraceAudit` dependency used to establish that the P4 parent is open.
+
+The module also exports `fiveSlot_is_p4_child`,
+`p4_e0_unassigned`, and `fiveSlot_parent_compatible`, so the wrapper can
+reuse the exact P4-child relation and parent-compatibility implication without
+re-proving them.
