@@ -107,3 +107,26 @@ a=8*(m+1)-3 ∧ k=4*(m+1)-1
 The terminal state Q(u) in the four-section path is precisely this `(a,k)) when `h=8+128*u` and `m+1=8*(39+64*h)+1`. Thus the all-u path, once formalized with `section_exact`, identifies the B2 target parameter with the q=0 parent parameter on the same `secNext` trajectory; the earlier concern about distinct `secNext` namespaces is not a blocker.
 
 The remaining work is now narrower: kernel-check the four exactSection evaluations, and establish that the residual equations `hs/hm`, root affine residue, and root-index class are the ones supplied by the same blank-start candidate. This does not yet certify the full `U5B2Root32.lean` import closure or a BB(6) upper bound.
+
+
+## Preferred formal proof route: SectionAllInverse iff
+
+There is a simpler route than unfolding `FastSectionDef.bounce`. The already source-certified theorem `BB6.Agent46.section_preimage_all_iff` in `SectionAllInverse.lean` characterizes every original `secNext` edge (source-verified in CI 41544188316). The four transitions above follow directly from its arithmetic witness branches:
+
+| edge | source parity | predecessor-grammar branch | witness depth |
+|---|---|---|---:|
+| B0 → S1 | even | `x+y=2^n*(2*(a-1)+6)` | 5 |
+| S1 → S2 | even | `x+y=2^n*(2*(a-1)+6)` | 0 |
+| S2 → S3 | odd | `x+y+1=2^n*(2*(a-1)+8)` | 0 |
+| S3 → Q | even | `x+y=2^n*(2*(a-1)+6)` | 0 |
+
+The companion linear equations in `sectionPreimageAll` reduce to the following exact equalities (both sides of the second equation):
+
+- B0 → S1: `1048576*u+70518`.
+- S1 → S2: `1048576*u+70525`.
+- S2 → S3: `1048576*u+70534`.
+- S3 → Q: `1048576*u+70539`.
+
+The first sum identity is `x+y=700416*u+47104=32*(1472+21888*u)`; the next three are respectively `704512*u+47384=2*(352256*u+23692)`, `720896*u+48492=2*(360448*u+24246)`, and `786432*u+52904=2*(393216*u+26452)`. All side conditions are linear parity/positivity facts. This should allow a short Lean proof using four applications of `section_preimage_all_iff` and `omega), without importing the recursive FastSectionDef closure.
+
+Since `U5Y3ParentFan.lean` imports `SectionAllInverse` and opens `BB6.Agent46`, the source relation is exactly the same `secNext` used by the q=0 parent theorem. Agent 15 has been asked to review/compile this direct proof route. It remains pending a kernel compile.
