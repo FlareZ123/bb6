@@ -243,3 +243,26 @@ theorem fiveSlot_parent_compatible (m : Machine)
 #print axioms fiveSlot_parent_compatible
 
 end BB6Coverage.DirectFiveSlot
+
+namespace BB6Coverage.DirectFiveSlot
+
+theorem run_phase_d (m : Machine) (hm : compatible fiveSlot m) (k : Nat) :
+    run m ((2+3*k)+1) blank = some (dConfig k) := by
+  calc
+    run m ((2+3*k)+1) blank =
+        (run m (2+3*k) blank).bind (fun d => run m 1 d) :=
+          run_compose m blank (2+3*k) 1
+    _ = some (dConfig k) := by rw [run_cycle m hm k]; exact run_c_1 m hm k
+
+theorem run_phase_e (m : Machine) (hm : compatible fiveSlot m) (k : Nat) :
+    run m ((2+3*k)+2) blank = some (eConfig k) := by
+  calc
+    run m ((2+3*k)+2) blank =
+        (run m (2+3*k) blank).bind (fun d => run m 2 d) :=
+          run_compose m blank (2+3*k) 2
+    _ = some (eConfig k) := by rw [run_cycle m hm k]; exact run_c_2 m hm k
+
+#print axioms run_phase_d
+#print axioms run_phase_e
+
+end BB6Coverage.DirectFiveSlot
