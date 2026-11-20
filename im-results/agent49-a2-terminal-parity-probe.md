@@ -1,0 +1,47 @@
+# A=2 terminal diagnostic: odd-width gap
+
+**Status:** targeted deterministic simulation only; not a proof of non-halting or of a terminal failure.
+
+The current z=1 diagnostic `im-results/agent48-counted-inc0/a2_terminal_basecase_z1.js`
+restricts (L\in\{2,4,6\}), so every tested (L) is even. Its marker-0
+terminal formula is
+[
+ a_{term}=\frac{2^{L+7}-35}{3},\qquad L_{term}=L+4.
+]
+The numerator is divisible by 3 exactly when (L) is even. This leaves
+the odd-width case untested.
+
+The authentic root starts from the S1 checkpoint
+`S1(3,7,2,6,0,63)`. The first-Q4 outer-width recurrence keeps its
+parameter (L) fixed while replacing (A) by (A-2)
+(`FirstQ4P1OuterWidthRecurrence.lean`). Thus the authentic A=2
+specialization still has (L=3), not one of the even values in the
+z=1 diagnostic.
+
+I replayed the same sparse-tape A=2 q4Tail-to-S0 input with (z=1,L=3):
+- (m=16,n=2,K=6,H=24);
+- initial state 3 at head 24, with left side
+  (d_0\Vert d_1^6\Vert markerWord(0)\Vert d_0^2\Vert d_1^2
+    \Vert d_0^4\Vert lh), and right side (s0RightFacing(0));
+- 20,000,000 deterministic TM steps;
+- 61 visits to the state-4/head-1 window `11110000`, first at
+  steps 337, 913, 1593, 2413, 3349 and last at 206601, 213937,
+  221413, 229005, 236749, 244597, 252585, 260689;
+- no halt within the limit; at the limit the machine is in state 3,
+  head 6336, with 3020 nonblank cells.
+
+For (L=3), the marker-0 formula gives
+[
+(2^{10}-35)/3=989/3,
+]
+so it does not define an integer terminal unary parameter. The simulation
+does not prove that the machine never halts, and it does not rule out a
+different marker-2 terminal pattern. It does show that the even-(L)
+z=1 diagnostic cannot be cited as validation of the authentic (L=3)
+A=2 case.
+
+The executable replay is
+`agent49-a2-terminal-parity-probe.js`. The immediate mathematical
+question is whether the authentic A=2 route has a marker-2 terminal
+interface (or an additional marker conversion), rather than the
+marker-0 SectionBits pattern used by the even-(L) diagnostic.
