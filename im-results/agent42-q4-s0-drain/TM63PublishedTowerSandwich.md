@@ -57,8 +57,9 @@ E=\frac12\sqrt{T_{10}}+\frac12T_9+T_8+T_7+T_6+T_5+80,
 \qquad J=2^E.
 \]
 The exponent \(E\) is an integer because \(T_9\) is even and
-\(\sqrt{T_{10}}=2^{T_9/2}\) is even. Also \(E<T_{10}\), since
-\(T_{10}=2^{T_9}\) dominates the displayed lower-order terms, so
+\(\sqrt{T_{10}}=2^{T_9/2}\) is even. Also \(T_9\ge20\), so
+\(\frac12\sqrt{T_{10}}=2^{T_9/2-1}<T_{10}/4\) and
+\(\frac92T_9+80<T_{10}/4\); hence \(E<T_{10}/2<T_{10}\) and
 \(J<T_{11}\). Finally \(A_0+5\le E\), and \(A_0\ge63\), whence
 \[
 M+49=31\cdot2^{A_0}+13
