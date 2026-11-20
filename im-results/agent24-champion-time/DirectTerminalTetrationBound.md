@@ -240,17 +240,15 @@ S\ge6\bigl(T_{M+N+49}+2\bigr)^2
 This is stronger than the intermediate endpoint \(T_{T_{M+46}}\):
 indeed \(N\ge T_{M+46}+1\), so \(M+N+49>T_{M+46}\).
 
-The sharper upper-side estimate in
+The consolidated
 [TM63PublishedTowerSandwich.md](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md)
-gives \(M+N+50<T_J\), where
+proves the matching upper \(S_{\rm TM1}<T_q\) from the terminal
+power-gap lemma \(V_j^{1040}<T_{j+4}\), where \(q=M+N+50\).
+Thus the source-conditional score is squeezed between consecutive
+tetration values:
 \[
-J=2^{\frac12\sqrt{T_{10}}+\frac12T_9+T_8+T_7+T_6+T_5+80}.
+T_{q-1}<S_{\rm TM1}<T_q.
 \]
-Hence
-\[
-T_{M+N+49}<T_{T_J},
-\]
-which is the current conditional upper endpoint.
 It also strictly exceeds the published left endpoint
 \(T_{T_{T_{10}}}\), since \(M+N+49>T_{M+46}>T_{T_{10}}\).
 
