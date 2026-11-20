@@ -322,4 +322,4 @@ The general congruence is also exported in affine-witness form as `root_equation
 
 **Status:** paper-level derivation from the source-certified complete inverse grammar, not yet a standalone Lean-compiled theorem. It proves the no-parent case `k≡3 (mod 4)` and completely enumerates all possible source parents in the other cases; the remaining even/even and even/odd parents still require all-time blank-orbit analysis.
 
-A further composition in the same note excludes the previously residual a=1 halting depths `d≡48 (mod 64)`: the feeder's unique low-valuation parent lies in the globally impossible `(0,1) mod 4` source-image class. This is a paper-level composition of existing certified lemmas, pending a standalone Lean wrapper.
+A further composition in the same note proves the generic feeder exclusion `k≡9 (mod 16)` for `F(k)=(2k+1,k)): its unique low-valuation parent lies in the globally impossible `(0,1) mod 4` source-image class. This removes the a=1 halting-depth slice `d≡48 (mod 64)` as a corollary. The composition uses existing source-certified lemmas but is pending a standalone Lean wrapper.
