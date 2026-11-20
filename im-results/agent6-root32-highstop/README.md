@@ -76,7 +76,7 @@ P_1=
 It is even/even, its right coordinate is at least six, and
 \[
 P_{1,x}+P_{1,y}=8S_0,\qquad
-S_0=100006313225+642981356640n\equiv1\pmod4.
+S_0=100006309225+642981356640n\equiv1\pmod4.
 \]
 The exact eveneven_sumzero_blank_reach_parent theorem from M0EvenEvenSumZeroParents.lean therefore leaves exactly two possible parents:
 
