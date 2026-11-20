@@ -97,3 +97,10 @@ theorem; (2) locally preflight and compile the safe-E dependency; (3)
 audit the transitive axioms of the composed theorem. This is a prepared
 packet result only, not a blank-tape reachability claim.
 
+## Infinite 3-adic second-return subfamily (uncompiled)
+
+The candidate [`Seed24956FamilySecondReentry.lean`](Seed24956FamilySecondReentry.lean) strengthens the concrete reset instance to an infinite family. For every r≥0, the P2 reset packet with k=81r+61 and Q=0 source-returns to the exact regular section L(32768r+24956,2,2). The parameter identities are explicit: the P2 reset yields M(648r+493,0,6); the d=1 E-chain with h=54r+41 yields M(1728r+1313,2,3); two B edges with t=64r+48 yield M(12288r+9354,0,3); and the A marker with ka=4096r+3117 and quotient 1 yields endpointZero(32768r+24955), hence L(32768r+24956,2,2).
+
+For the second return, choose r=3^87 s. The DRegular source-shift theorem transports the 86-step base run with shift parameter p=32768·3s: the input shift is 3^86 p=32768·3^87 s, while the output shift is 8^86 p=3·8^86·32768s. Thus the output remains an E exit of the form L(3k'+4,5,1), with k'=35761011052497844733597143642740448447362+8^86·32768s. The universal q=5 safe-E canonical closure then gives a second return to a canonical DRegular section for every s≥0.
+
+This is a strong **candidate** infinite subfamily, not an accepted result: the family file and its dependencies have not been compiled or axiom-audited. It remains a prepared-packet theorem and does not establish that any member is reached from the blank tape.
