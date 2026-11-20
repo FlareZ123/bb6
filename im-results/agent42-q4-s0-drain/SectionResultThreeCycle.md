@@ -516,43 +516,51 @@ no new Lean theorem is claimed here.
 
 ## Stronger tetration-height corollary (conditional)
 
-The root-parameter estimate in
-\`im-results/agent24-champion-time/DirectTerminalTetrationBound.md\`
-gives \(A>T_{65536}\), with \(T_1=2\) and \(T_{j+1}=2^{T_j}\).
-For the authentic \(L=76\) terminal index
+Use the root countdown arithmetic from
+\`im-results/agent24-champion-time/DirectTerminalTetrationBound.md\`.
+Let \(A_0=\texttt{tm63FirstSection.exponent}\ge71\). The root residue is
 \[
-N=2^A(2^{L+2}-1)-3,
-\]
-we have \(N\ge2^A\ge2^{T_{65536}+1}=2T_{65537}\), hence
-\(N\ge T_{65537}+1\).
-
-For \(b_0=R\ge5\) and \(b_{j+1}=2^{b_j}-1\), induction gives
-\(b_j\ge T_j+1\) for every \(j\ge1\): the base case is immediate, and
-\(b_j\ge T_j+1\) implies
-\[
-b_{j+1}\ge2^{T_j+1}-1
-=2T_{j+1}-1\ge T_{j+1}+1.
+r=31\cdot2^{A_0-4}-1,
+\qquad M=16r-20.
 \]
 Therefore
 \[
-b_N\ge T_N+1\ge T_{T_{65537}+1}+1.
+M\ge M_0:=496\cdot2^{67}-36.
 \]
-The exact dispatcher score contains \(6b_N^2\) and all other terms are
-nonnegative, while the root prefix and root drain are also nonnegative.
-Consequently the complete conditional score obeys
+The middle-34 SectionResult segment starts with right counter at least \(2\)
+and performs \(M\) updates \(b_{j+1}=2^{b_j}-1\). With
+\(T_1=2\), \(T_{j+1}=2^{T_j}\), induction gives \(b_j\ge T_j+1\);
+hence its final right counter \(B\) satisfies
 \[
-\boxed{S_{\rm full}\ge6\bigl(T_{T_{65537}+1}+1\bigr)^2.}
+B\ge T_M+1\ge T_{M_0}+1.
 \]
-Since \(T_{T_{65536}}=2\uparrow\uparrow\uparrow5\) and
-\(T_{65537}+1>T_{65536}\), this is strictly stronger than the earlier
-\(2\uparrow\uparrow\uparrow5\) lower-bound comparison. Equivalently the
-tower term is
-\[
-T_{T_{65537}+1}
-=2\uparrow\uparrow\bigl(2\uparrow\uparrow65537+1\bigr).
-\]
+The terminal exponent is
+\(A=\texttt{middle34Result.exponent}+B+2\), so
+\(A\ge B+2\ge T_{M_0}+3\).
 
-This is an arithmetic strengthening conditional on the root and complete
-dispatcher source composition. It is not a compiled Lean result, and it
-does not establish an unconditional BB(6) lower bound until that source
-composition is accepted.
+For the authentic \(L=76\) terminal index,
+\[
+N=2^A(2^{78}-1)-3
+\ge N_0:=(2^{78}-1)2^{T_{M_0}+3}-3
+=8(2^{78}-1)T_{M_0+1}-3.
+\]
+The final dispatcher right counter starts at \(R\ge5\) and follows the
+same recurrence, so \(b_N\ge T_N+1\ge T_{N_0}+1\). The exact dispatcher
+score contains \(6b_N^2\), and all remaining dispatcher, root-drain, and
+root-prefix terms are nonnegative. Thus the complete conditional score
+obeys
+\[
+\boxed{S_{\rm full}\ge6\bigl(T_{N_0}+1\bigr)^2.}
+\]
+Equivalently, \(T_{N_0}=2\uparrow\uparrow N_0\), where
+\[
+N_0=(2^{78}-1)2^{T_{M_0}+3}-3,\qquad
+M_0=496\cdot2^{67}-36.
+\]
+This is much stronger than the earlier \(2\uparrow\uparrow\uparrow5\)
+comparison, which used only the coarse \(M\ge65536\) consequence.
+
+This remains an arithmetic lower bound conditional on the authentic root
+and complete dispatcher source composition. It is not a compiled Lean
+result, and it does not establish an unconditional BB(6) lower bound
+until that source composition is accepted.

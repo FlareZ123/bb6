@@ -1719,3 +1719,8 @@ In SectionResultThreeCycle.md, m denotes the second drain input 2^z−1. The q4T
 ## 2026-11-20 stronger conditional tetration lower bound
 
 Using the root estimate A>T_65536 in Agent24's DirectTerminalTetrationBound.md and the exact dispatcher term D_N≥6b_N², derive N≥2^A≥2T_65537, hence N≥T_65537+1. Since b_j≥T_j+1 for T_1=2, T_{j+1}=2^{T_j}, we get b_N≥T_{T_65537+1}+1 and S_full≥6(T_{T_65537+1}+1)^2. This strictly strengthens the earlier 2↑↑↑5 comparison. Added as a conditional arithmetic corollary in SectionResultThreeCycle.md and README; still uncompiled and conditional on the root/dispatcher source composition.
+
+
+## 2026-11-20 stronger tetration-index lower bound
+
+Improved the conditional lower bound by retaining the full root countdown length instead of only M≥65536. With A0=tm63FirstSection.exponent≥71, r=31·2^(A0−4)−1 and M=16r−20, so M≥M0=496·2^67−36. The middle34 right counter is ≥T_M+1, giving B≥T_M0+1 and terminal A≥T_M0+3. For L=76, N≥N0=(2^78−1)2^(T_M0+3)−3. The terminal dispatcher recurrence gives b_N≥T_N0+1, and exact D_N≥6b_N² yields S_full≥6(T_N0+1)². This is a paper-level conditional lower bound; source composition remains uncompiled.
