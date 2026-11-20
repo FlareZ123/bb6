@@ -491,3 +491,6 @@ Claimed Agent 37 at `2026-11-20T05:58:33.744Z`; this is the original lease times
 ### 3-adic E-chain identity (useful structural reduction)
 - For an E-state `a=3*k+4`, the E macro outputs `a'=8*k+9`. If the output is again E, write `a'=3*k'+4`; then `3*(k'+1)=8*(k+1)`. Since 8 is a 3-adic unit and the next-E condition is `k≡2 (mod3)`, each consecutive E transition decreases `v₃(k+1)` by exactly one.
 - For a P2 reset from parameter `k₀`, the first reset output has `a=8*k₀+5`. If it is an E state, its parameter is `k₁=(8*k₀+1)/3), and `k₁+1=4*(2*k₀+1)/3`; hence the subsequent E-chain depth is controlled by `v₃(2*k₀+1)-1`. This explains the E-only depth formulas already used in `EChainSource`. The B-to-E transition does not preserve this simple valuation and remains the difficult branch.
+
+
+- A useful E-only potential follows: on an E→E step, `p' = p-3` and `v₃(k'+1)=v₃(k+1)-1), so the integer quantity `p-3*v₃(k+1)` is invariant along any consecutive E→E chain (when the valuation is defined and the E transition is legal). This may be a useful starting point for a Lyapunov/potential analysis of the P2 reset loop; B→E/B→B steps are where it must be extended.
