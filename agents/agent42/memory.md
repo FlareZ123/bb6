@@ -1739,3 +1739,8 @@ Strengthened A0 further from the full seven-step recurrence. With b0=63≥T3+1 a
 ### Exact marker-increment refinement
 
 For the seven-step first section, nextMarker(m)=(m+2)%3 gives marker sequence 2,1,0,2,1,0,2. Since nextExponent adds 2 for nonzero marker and 1 for marker zero, the seven exponent increments sum to 12, not merely at least 7. This sharpens A0≥20+ΣT_j to A0≥25+ΣT_j, and M0 from 496·2^(S9+16)−36 to 496·2^(S9+21)−36. The note/README now use the exact marker cycle.
+
+
+### Middle-34 exponent lower-bound refinement
+
+The final middle-34 exponent satisfies a_M≥b_{M−1}≥T_{M−1}+1, in addition to B=b_M≥T_M+1. Hence terminal A=a_M+B+2≥T_M+T_{M−1}+4, improving N0 from (2^78−1)2^(T_M0+3)−3 to (2^78−1)2^(T_M0+T_(M0−1)+4)−3. The README and note now use this stronger index.

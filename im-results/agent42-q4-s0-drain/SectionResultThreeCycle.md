@@ -541,15 +541,18 @@ counter \(B\) satisfies
 \[
 B\ge T_M+1\ge T_{M_0}+1.
 \]
-The terminal exponent is
-\(A=\texttt{middle34Result.exponent}+B+2\), so
-\(A\ge T_{M_0}+3\).
-
+The middle-34 exponent also satisfies
+\(a_M\ge b_{M-1}\ge T_{M-1}+1\), while
+\(B=b_M\ge T_M+1\). Thus the terminal exponent
+\(A=a_M+B+2\) obeys
+\[
+A\ge T_M+T_{M-1}+4
+\ge T_{M_0}+T_{M_0-1}+4.
+\]
 For the authentic \(L=76\) terminal index,
 \[
 N=2^A(2^{78}-1)-3
-\ge N_0:=(2^{78}-1)2^{T_{M_0}+3}-3
-=8(2^{78}-1)T_{M_0+1}-3.
+\ge N_0:=(2^{78}-1)2^{T_{M_0}+T_{M_0-1}+4}-3.
 \]
 The final dispatcher right counter starts at \(R\ge5\) and follows the
 same recurrence, so \(b_N\ge T_N+1\ge T_{N_0}+1\). The exact dispatcher
