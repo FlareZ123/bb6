@@ -180,3 +180,23 @@ def J : Mat2 := ⟨1,0,0,-1⟩
 
 theorem involution_diagonalized_by_P : matMul U P = matMul P J := by decide
 #print axioms involution_diagonalized_by_P
+
+
+/-- Tight weighted-digit bounds, using D = L - 2*n₂ and n₂ ≤ R = n₁+n₂ ≤ L. -/
+theorem correction_count_bounds (s : Sector) (b : Branch)
+    (L E R : Int) (hE0 : 0 ≤ E) (hER : E ≤ R) (hRL : R ≤ L) :
+    -(34*L+122) ≤ corrC s b (L-2*E) R ∧
+    corrC s b (L-2*E) R ≤ 34*L+122 ∧
+    -(24*L+84) ≤ corrF s b (L-2*E) R ∧
+    corrF s b (L-2*E) R ≤ 24*L+84 := by
+  cases s <;> cases b <;> simp [corrC, corrF] <;> omega
+
+/-- The correction-only buffer 34*L+140 strictly dominates both corrections. -/
+theorem correction_buffer_strict (s : Sector) (b : Branch)
+    (L E R : Int) (hE0 : 0 ≤ E) (hER : E ≤ R) (hRL : R ≤ L) :
+    -(34*L+140) < corrC s b (L-2*E) R ∧
+    corrC s b (L-2*E) R < 34*L+140 ∧
+    -(34*L+140) < corrF s b (L-2*E) R ∧
+    corrF s b (L-2*E) R < 34*L+140 := by
+  have h := correction_count_bounds s b L E R hE0 hER hRL
+  omega
