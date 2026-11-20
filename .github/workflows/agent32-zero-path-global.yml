@@ -64,7 +64,7 @@ permissions:
 
 jobs:
   source-bundle:
-    if: \${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[source-bundle]') }}
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[source-bundle]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -89,7 +89,7 @@ jobs:
           printf '%s\n' 'Lean 4.36.0-rc2' > "$out/LEAN_VERSION.txt"
       - uses: actions/upload-artifact@v4
         with:
-          name: bb6-three-slot-source-closure-\${{ github.sha }}
+          name: bb6-three-slot-source-closure-${{ github.sha }}
           path: /tmp/bb6-three-slot-source-closure/
           retention-days: 1
 
@@ -177,7 +177,7 @@ jobs:
             exit 1
           fi
       - name: Verify the 80-member three-slot translated family graft (explicitly requested only)
-        if: \${{ inputs.verify_three_slot_family || (github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-three-slot-family]')) }}
+        if: ${{ inputs.verify_three_slot_family || (github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-three-slot-family]')) }}
         run: |
           set -euo pipefail
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent24-translated-cycle:im-results/agent27-translated-five-slot:im-results/agent27-three-slot-translated"
@@ -198,7 +198,7 @@ jobs:
             exit 1
           fi
       - name: Compare the 80 family members with pinned historical hard-root rosters
-        if: \${{ inputs.verify_three_slot_family || (github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-three-slot-family]')) }}
+        if: ${{ inputs.verify_three_slot_family || (github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-three-slot-family]')) }}
         run: |
           set -euo pipefail
           node im-results/agent27-three-slot-translated/compare_family_hard_roots.cjs
