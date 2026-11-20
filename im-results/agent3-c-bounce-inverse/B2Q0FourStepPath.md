@@ -1,188 +1,251 @@
-# B2 target to q=0 parent: exact four-section path (Lean formalization pending)
+# B2-to-U5 q=0 path: exact parameter match and inverse-parent obstruction
 
-## Statement suggested by the exact section map
+**Status: intermediate source-orbit reduction, not a Machine C nonhalting proof.** The same-parameter forward path and the q=0 residual parameter bridge are now explicit. The reverse source-parent analysis exposes two surviving predecessor families. The full integrated Lean theorem and the complete U5B2Root32.lean import closure have not been compiled.
 
-For every natural parameter \(u\), define
+## 1. The same-parameter forward path
+
+For every natural number \(u\), define
 
 \[
-B_0(u)=(734+10944u,\;34881+518816u).
+\begin{aligned}
+B_0(u)&=(734+10944u,\;34881+518816u),\\
+S_1(u)&=(352256u+23690,\;348160u+23414),\\
+S_2(u)&=(360448u+24243,\;344064u+23141),\\
+S_3(u)&=(393216u+26450,\;327680u+22041),\\
+Q(u)&=(524288u+35269,\;262144u+17635),\\
+T(u)&=(1048576u+70538,\;3).
+\end{aligned}
 \]
 
-The executable `BB6.Agent46.exactSection` definition in `im-results/agent46-c-jump/FastSectionDef.lean` gives the following four-step path:
+The source-certified equivalence **BB6.Agent46.section_preimage_all_iff** gives the following five original-section edges. The displayed depth is the witness \(n\) in its predecessor grammar.
 
-| transition | target state | section duration |
-|---|---|---|
-| 1 | \(S_1(u)=(352256u+23690,\;348160u+23414)\) | \(1037632u+69769\) |
-| 2 | \(S_2(u)=(360448u+24243,\;344064u+23141)\) | \(696320u+46830\) |
-| 3 | \(S_3(u)=(393216u+26450,\;327680u+22041)\) | \(688128u+46281\) |
-| 4 | \(Q(u)=(524288u+35269,\;262144u+17635)\) | \(655360u+44084\) |
+| Edge | Source branch | Depth | Sum identity | Companion cost identity |
+|---|---|---:|---|---|
+| \(B_0\to S_1\) | even \(a\) | 5 | \(700416u+47104=32(1472+21888u)\) | \(x+2y=1048576u+70518\) |
+| \(S_1\to S_2\) | even \(a\) | 0 | \(704512u+47384=2(352256u+23692)\) | \(x+2y=1048576u+70525\) |
+| \(S_2\to S_3\) | odd \(a\) | 0 | \(720896u+48492=2(360448u+24246)\), using \(x+y+1\) | \(x+2y=1048576u+70532\) |
+| \(S_3\to Q\) | even \(a\) | 0 | \(786432u+52904=2(393216u+26452)\) | \(x+2y=1048576u+70539\) |
+| \(Q\to T\) | odd \(a\), exceptional \(y=3\) | 0 | \(x+6=1048576u+70544=2a+6\) | \(x+10=1048576u+70548\) |
 
-The final state is exactly the q=0 parent in `U5Y3ParentFan`. With \(h=8+128u\),
+For the fifth edge, \(a=524288u+35269\), \(k=262144u+17635\), and \(2k=a+1\). The exceptional \(y=3\) branch of the complete predecessor grammar gives \(T(u)\).
+
+The first four transitions also have the following exact FastSectionDef.exactSection durations, derived in the earlier branch calculation:
+
+| Edge | Section duration |
+|---|---:|
+| \(B_0\to S_1\) | \(1037632u+69769\) |
+| \(S_1\to S_2\) | \(696320u+46830\) |
+| \(S_2\to S_3\) | \(688128u+46281\) |
+| \(S_3\to Q\) | \(655360u+44084\) |
+
+The source relation is the same one used by U5Y3ParentFan: SectionAllInverse.lean defines BB6.Agent46.secNext, and U5Y3ParentFan.lean imports it and opens that namespace. The five arithmetic witnesses are explicit, but the five-edge composition has not yet been wrapped in and compiled as one Lean theorem.
+
+## 2. The residual parameter really is the B2 parameter
+
+The standalone bridge theorem BB6.Agent3U5B2Root32ParameterBridge.u5_q0_root32_forces_h8_parameter assumes the original U5 residual equations
 
 \[
-39+64h=551+8192u,
-\qquad m+1=8(39+64h)+1,
+211s+129=5\cdot2^{201+3360w},\qquad
+32s=32+840w+m,
+\]
+
+the q=0 parent equation
+
+\[
+m+1=8(39+64h)+1,
+\]
+
+and \(w=6657+8192r\), \(E=201+3360w\), \(r\equiv32\pmod{64}\). It derives
+
+\[
+h=8+128u,\qquad
+u=1802+6720t,\qquad
+18018+211u+22155r=20\cdot2^{E-13}.
+\]
+
+Consequently,
+
+\[
+m+1=8(39+64(8+128u))+1=4409+65536u,
 \]
 so
-
 \[
-(8(m+1)-3,\;4(m+1)-1)=Q(u).
+m=4408+65536u,\qquad T(u)=(16m+10,3).
 \]
 
-Thus the B2 target and q=0 parent share the *same* parameter \(u\), if the exactSection transition is identified with the source `secNext` relation.
+This resolves the earlier parameter-identification gap: the q=0 residual parent, the high-stop target, and the B2 path all use the same \(u\). The existing theorem blank_no_b2_root32_from_exact_root_index excludes \(B_0(u)\) under the exact root equation and root32 residue. It does **not** yet exclude \(T(u)\), because reachability cannot be transported backwards along a merely possible predecessor edge.
 
-## Branch derivation from FastSectionDef
+## 3. What reachability of the high-stop target forces
 
-For the first transition, the outer exactSection branch has
-
-\[
-a=734+10944u,\quad k=34881+518816u,
-\]
-with \(a>1\), \(k>0\), and
+Suppose \(T(u)\) is reached and the U5 residual equations above hold. The original source predecessor theorem u5_residual_y3_parent_fan gives either the q=0 parent \(Q(u)\), or a branch with \(q\ge1\) and
 
 \[
-2k-a=69028+1026688u>0.
+2^{2q-2}\mid m+1,\quad
+a+3=2U,\quad
+k+3q+1=U(2^{2q+1}-1).
 \]
-The `bounce` call is
+
+But \(m+1=4409+65536u\) is odd. Thus \(q\ge2\) is impossible, and the only possible nonzero branch is \(q=1\). Its parent is
 
 \[
-k_0=a-1=733+10944u,\quad c_0=2k-a+3=69031+1026688u.
+(2m-1,\;7m+3),
 \]
-Here \(k_0\) is odd. Every odd recursive step sends \(k\mapsto2k+3\), \(c\mapsto c-(2k+3)\), and adds \(2k+4\) to the duration. Put \(A=736+10944u=k_0+3\). After \(n\) recursive steps,
+whose coordinate sum is
+\[
+9m+2=39674+589824u\equiv2\pmod4.
+\]
+Its right coordinate is odd and at least five, so the existing all-time exclusion BB6.Agent11High.blank_no_odd_sum_two rules it out. Therefore
 
 \[
-k_n=2^nA-3,\qquad c_n=c_0-(2^{n+1}-2)A+3n.
+T(u)\text{ reachable}\quad\Longrightarrow\quad Q(u)\text{ reachable}.
 \]
-The odd-stop gap is
+
+This is the correct reverse-direction use of the U5 parent fan. It is stronger than observing the forward edge \(Q(u)\to T(u)\), but it still does not imply that \(B_0(u)\) was reached.
+
+## 4. The unique inverse chain from Q to S1
+
+For \(u=1802+6720t\), we have \(u\equiv2\pmod8\).
+
+1. \(Q(u)\) is odd/odd, and
+   \[
+   Q_x+Q_y=786432u+52904\equiv8\pmod{16}.
+   \]
+   The existing oddodd_lowval_blank_reach_iff therefore transports reachability to its unique source parent \(S_3(u)\).
+
+2. \(S_3(u)\) is even/odd, and
+   \[
+   S_{3,x}+S_{3,y}+1
+   =720896u+48492
+   =4(180224u+12123),
+   \]
+   where the final factor is odd. Hence its 2-adic valuation is exactly two. The complete section_preimage_all_iff grammar leaves only the odd-a, depth-zero parent \(S_2(u)\).
+
+3. \(S_2(u)\) is odd/odd, with
+   \[
+   S_{2,x}+S_{2,y}=704512u+47384\equiv8\pmod{16}.
+   \]
+   A second application of oddodd_lowval_blank_reach_iff transports reachability to \(S_1(u)\).
+
+Thus \(T(u)\) reachable forces \(S_1(u)\) reachable.
+
+## 5. The S1 parent fan: two surviving families
+
+For \(S_1\),
 
 \[
-d_n=c_n-(2k_n+6)=c_0-(2^{n+2}-2)A+3n.
+S_{1,x}+S_{1,y}
+=700416u+47104
+=8(87552u+5888)
+=8\cdot256(342u+23).
 \]
-For \(n=0,\ldots,4\), the gaps are positive; the minimum is
+
+Since \(u\) is even, \(342u+23\) is odd and greater than one. Hence the quotient has exact 2-adic valuation eight, and the total sum has valuation eleven.
+
+The complete even_even_parent_fan gives:
+- the direct parent
+  \[
+  D_0(u)=(700416u+47102,\;174080u+11706);
+  \]
+- the \(a=0\) branch, which would require \(87552u+5888\) to be a power of two and is impossible because it equals \(256(342u+23)\);
+- an even-a bounce parent at odd depth \(n\). The valuation bound gives \(n\in\{1,3,5,7,9\}\).
+
+The five bounce parents are:
+
+| Depth | Parent |
+|---:|---|
+| 1 | \(P_1=(175104u+11774,\;436736u+29367)\) |
+| 3 | \(P_3=(43776u+2942,\;502400u+33780)\) |
+| 5 | \(B_0(u)=(734+10944u,\;34881+518816u)\) |
+| 7 | \(P_7=(2736u+182,\;522920u+35154)\) |
+| 9 | \(P_9=(684u+44,\;523946u+35220)\) |
+
+Four depths are excluded:
+
+- \(P_1\) has odd right coordinate and sum \(611840u+41141\equiv1\pmod4\), so blank_no_odd_sum_one excludes it.
+- \(P_3\) has even right coordinate and sum \(546176u+36722\equiv2\pmod8\). blank_reach_iff_even_right forces its direct parent \((546176u+36720,\;251200u+16889)\), whose right coordinate is odd and whose sum is \(797376u+53609\equiv1\pmod4\). Hence \(P_3\) is excluded.
+- \(B_0(u)\) is excluded by blank_no_b2_root32_from_exact_root_index.
+- \(P_9\) has even right coordinate and sum \(524630u+35264\equiv4\pmod8\). Its forced direct parent is \((524630u+35262,\;261973u+17609)\), with odd right coordinate and sum \(786603u+52871\equiv1\pmod4\). Hence \(P_9\) is excluded.
+
+The \(n=7\) parent \(P_7\) and the direct parent \(D_0\) remain. Therefore the current paper-level inverse reduction is
 
 \[
-d_4=348160u+23411>0.
+T(u)\text{ reachable}\quad\Longrightarrow\quad
+D_0(u)\text{ reachable}\ \lor\ P_7(u)\text{ reachable}.
 \]
-At \(n=5\),
+
+Both are even/even sum-zero targets with quotient congruent to three modulo four, so blank_no_sumzero_target applies if both of their own source parents can be excluded. Their exact two-parent fans are:
 
 \[
-d_5=-352256u-23690<0.
+\begin{aligned}
+D_0(u)&:\quad
+(874496u+58806,\;87040u+5852),\\
+&\quad (218624u+14700,\;414976u+27902);
+\\[2mm]
+P_7(u)&:\quad
+(525656u+35334,\;261460u+17576),\\
+&\quad (131414u+8830,\;458581u+30824).
+\end{aligned}
 \]
-Moreover \(d_{n+1}-d_n=-2^{n+2}A+3<0\). Hence there are exactly five odd recursive steps followed by the odd stop. The final bounce state is \(S_1(u)\); the accumulated bounce duration is \(c_0+5\), so the exactSection duration is \(a-1+c_0+5=1037632u+69769\).
 
-The remaining transitions stop immediately in their respective parity branches:
+The direct parent of \(D_0\) is already excluded: its sum is \(961536u+64658\equiv2\pmod8\), so its forced even-right predecessor is \((961536u+64656,\;43520u+2925)\), an odd-right target with sum \(1005056u+67581\equiv1\pmod4\). The other parent of \(D_0\), and both displayed parents of \(P_7\), have not been excluded here. This is the actual remaining source-orbit obstruction. No conclusion that \(T(u)\) is unreachable is justified yet.
 
-- From \(S_1\): bounce arguments \(k=352256u+23689\) (odd), \(c=344064u+23141\), with \(2k+6-c=360448u+24243>0\). The odd-stop output is \(S_2\), duration \(696320u+46830\).
-- From \(S_2\): bounce arguments \(k=360448u+24242\) (even), \(c=327680u+22042\), with \(2k+8-c=393216u+26450>0\). The even-stop output is \(S_3\), duration \(688128u+46281\).
-- From \(S_3\): bounce arguments \(k=393216u+26449\) (odd), \(c=262144u+17635\), with \(2k+6-c=524288u+35269>0\). The odd-stop output is \(Q\), duration \(655360u+44084\).
+## 6. The exact root equation is saturated on the root32 cylinder
 
-The outer condition \(2k>a\) holds at these three states with positive gaps respectively \(344064u+23138\), \(327680u+22039\), and \(262144u+17632\). All inequalities hold for every \(u\ge0\).
+The root equation itself supplies no further modular exclusion within \(r\equiv32\pmod{64}\). In fact, for every \(j\ge0\), there is exactly one natural \(u\) satisfying it.
 
-## Verification status and next step
-
-The formulas were evaluated with the exact recursive equations at \(u=0,1,2,17,1802,8522,21962\); all four states and durations matched. The all-\(u\) branch inequalities above are an algebraic derivation from the copied `FastSectionDef` equations, but this note is **not yet a Lean-checked theorem** and does not by itself certify source reachability.
-
-The next formal step is to prove the four equations using the exact `FastSectionDef` module and its `FastSectionProof` source-equivalence theorem, then connect the final `exactSection` output to `U5Y3ParentFan.secNext` and the q=0 parent branch. Agent 46 has been asked to review/formalize this exact path. Do not claim the same-candidate source link closed until that proof compiles against the unmodified source modules.
-
-
-## Source equivalence hook
-
-The exact source bridge is `BB6.Agent46.section_exact` in `im-results/agent46-c-jump/FastSectionProof.lean`:
-
-```lean
-run (secTime (a,k)) (some (a,k,0)) = (secNext (a,k)).map embed0
-```
-
-A formal proof can establish each affine `exactSection` evaluation, then apply `section_exact` four times and compose the corresponding `run` segments. The final outstanding compatibility check is that the `secNext` relation used by `U5Y3ParentFan` (importing `SectionAllInverse`) is the same section transition as `BB6.Agent46.secNext`. Agent 46 has been sent the theorem name and the suggested composition. The existing manual workflow `.github/workflows/agent46-c-jump.yml` compiles the FastSection modules, but no CI was dispatched.
-
-
-## Connection to the U5 residual parent theorem
-
-The namespace check is resolved from the source headers: `SectionAllInverse.lean` defines `BB6.Agent46.secNext`, and `U5Y3ParentFan.lean` imports `SectionAllInverse` then opens `BB6.Agent46`. Its theorem `u5_residual_y3_parent_fan` states that, under the U5 residual equations and the high-stop successor condition, the q=0 branch is exactly
-
-```lean
-a=8*(m+1)-3 ∧ k=4*(m+1)-1
-```
-
-The terminal state Q(u) in the four-section path is precisely this `(a,k)) when `h=8+128*u` and `m+1=8*(39+64*h)+1`. Thus the all-u path, once formalized with `section_exact`, identifies the B2 target parameter with the q=0 parent parameter on the same `secNext` trajectory; the earlier concern about distinct `secNext` namespaces is not a blocker.
-
-The remaining work is now narrower: kernel-check the four exactSection evaluations, and establish that the residual equations `hs/hm`, root affine residue, and root-index class are the ones supplied by the same blank-start candidate. This does not yet certify the full `U5B2Root32.lean` import closure or a BB(6) upper bound.
-
-
-## Preferred formal proof route: SectionAllInverse iff
-
-There is a simpler route than unfolding `FastSectionDef.bounce`. The already source-certified theorem `BB6.Agent46.section_preimage_all_iff` in `SectionAllInverse.lean` characterizes every original `secNext` edge (source-verified in CI 41544188316). The four transitions above follow directly from its arithmetic witness branches:
-
-| edge | source parity | predecessor-grammar branch | witness depth |
-|---|---|---|---:|
-| B0 → S1 | even | `x+y=2^n*(2*(a-1)+6)` | 5 |
-| S1 → S2 | even | `x+y=2^n*(2*(a-1)+6)` | 0 |
-| S2 → S3 | odd | `x+y+1=2^n*(2*(a-1)+8)` | 0 |
-| S3 → Q | even | `x+y=2^n*(2*(a-1)+6)` | 0 |
-
-The companion linear equations in `sectionPreimageAll` reduce to the following exact equalities (both sides of the second equation):
-
-- B0 → S1: `1048576*u+70518`.
-- S1 → S2: `1048576*u+70525`.
-- S2 → S3: `1048576*u+70534`.
-- S3 → Q: `1048576*u+70539`.
-
-The first sum identity is `x+y=700416*u+47104=32*(1472+21888*u)`; the next three are respectively `704512*u+47384=2*(352256*u+23692)`, `720896*u+48492=2*(360448*u+24246)`, and `786432*u+52904=2*(393216*u+26452)`. All side conditions are linear parity/positivity facts. This should allow a short Lean proof using four applications of `section_preimage_all_iff` and `omega), without importing the recursive FastSectionDef closure.
-
-Since `U5Y3ParentFan.lean` imports `SectionAllInverse` and opens `BB6.Agent46`, the source relation is exactly the same `secNext` used by the q=0 parent theorem. Agent 15 has been asked to review/compile this direct proof route. It remains pending a kernel compile.
-
-
-## Fifth edge: q=0 parent to the high-stop target
-
-The q=0 parent Q(u) also has a direct original-section edge to the high-stop target
+Put
 
 \[
-T(u)=(70538+1048576u,3).
+r=32+64j,\qquad
+E=201+3360(6657+8192r),\qquad K=E-17.
 \]
 
-In `section_preimage_all_iff`, Q has odd left coordinate, positive right coordinate, and \(2k=a+1>a\), so use the odd-a exceptional `y=3` branch with witness depth n=0:
+Then
 
 \[
-x+6=2^0(2(a-1)+8)=2a+6=70544+1048576u,
+K=903171544+1761607680j
+=184+3360(6657+8192r).
 \]
 
-and
+Direct modular arithmetic gives
 
 \[
-(2k-a+3)+(2(a-1)+8)=4+(70544+1048576u)
-=70548+1048576u=x+10.
+2^{210}\equiv1\pmod{4431},\qquad
+2^{184}\equiv3460\pmod{4431}.
 \]
 
-Thus `secNext Q(u)=some (70538+1048576*u,3)`. Since \(m+1=4409+65536u\), we have \(m=4408+65536u\) and \(16m+10=70538+1048576u\). Therefore T(u) is exactly the high-stop target `(16*m+10,3)` used by `u5_residual_y3_parent_fan`.
-
-The same-parameter source path is now five original-section edges:
+Since \(3360=16\cdot210\), it follows that \(2^K\equiv3460\pmod{4431}\). Therefore
 
 \[
-B_0(u)\to S_1(u)\to S_2(u)\to S_3(u)\to Q(u)\to T(u),
+N=\frac{5\cdot2^K-17300}{22155}
 \]
+is an integer, because \(22155=5\cdot4431\).
 
-with predecessor-grammar depth witnesses \((5,0,0,0,0)\). The first four edges are documented above; the fifth uses the odd-a/y=3 exceptional branch. This gives a direct B2-target-to-high-stop-target path, not merely a path to the q=0 parent. The five edge claims still await a Lean wrapper applying the existing source-certified iff; the arithmetic witnesses are explicit.
-
-
-## Important remaining parameter identification
-
-The five-edge path fixes the high-stop target parameter to
+Moreover \(K\ge22155j+3459\), so \(2^K\ge K+1\) gives \(N\ge j\). Set \(t=N-j\) and \(u=1802+6720t\). Substitution yields
 
 \[
-m_{B2}=4408+65536u,
-\qquad T(u)=(16m_{B2}+10,3).
+\begin{aligned}
+18018+211u+22155r
+&=64\bigl(17300+22155(t+j)\bigr)\\
+&=64(17300+22155N)\\
+&=320\cdot2^K\\
+&=20\cdot2^{E-13}.
+\end{aligned}
 \]
 
-The separate arithmetic theorem `u5_residual_nonempty(w)` constructs some residual witness \((s,m_{res})\) satisfying hs/hm for each w, but its existence statement alone does not establish \(m_{res}=m_{B2}\). The q=0 residual parent theorem must be applied to the same high-stop target, so this equality (or a theorem showing the residual witness is exactly the parameter of the reached high-stop target) remains an essential source-link obligation. Do not infer it merely from the fact that both parameter families exist.
+For fixed \(r\), the equation is linear in \(u\) with nonzero coefficient 211, so this \(u\) is unique.
 
+This is arithmetic feasibility only, not a blank-start execution. It means that further residue filtering of this exact root equation cannot eliminate any \(r=32+64j\); the remaining work must use the original transition system.
 
-## Residual witness parameter is forced to match the B2 path
+## 7. Verification boundary and next decisive action
 
-The remaining arithmetic equality `m_res=m_B2` can be derived from hs/hm and the root residue, rather than assumed. From `hm`, `m=8t). Combining hs and hm yields `211*t+1360+22155*w=20*2^(201+3360*w)`. Multiplying by 291 gives the exact identity
+- The five forward edges, the parameter identification, the q=0 parent reduction, and the S1 inverse-parent reduction are explicit algebraic derivations from the source-certified predecessor grammar and existing theorems.
+- The standalone U5B2Root32ParameterBridge.lean has previously been compiled locally under Lean 4.36.0-rc2. The combined theorem above has **not** been wrapped and compiled, and the full U5B2Root32.lean dependency closure remains uncompiled.
+- In this invocation, the local shell and Python runtimes returned ClientError before even trivial pwd and 1+1 commands executed. No CI was dispatched as a substitute for the missing local preflight.
 
-```
-291*(211*t+1360+22155*w)
- = (w+4057*t+2544) + 8192*(787*w+7*t+48)
-```
-
-With `w=6657+8192*r`, divisibility by 8192 forces `4057*t+9201 ≡0 (mod8192)`. As `4057*105=1+52*8192`, we get `t≡551 (mod8192)`, hence `t=551+8192*u`, `m=4408+65536*u), and `h=8+128*u`. Therefore the residual high-stop parameter is exactly the one in the B2 five-edge path. This is an algebraic derivation; it still needs a Lean theorem and the same-candidate root residue premise.
+The next useful theorem is a single integrated original-source proof of
+\[
+T(u)\text{ reachable}\Longrightarrow
+D_0(u)\text{ reachable}\lor P_7(u)\text{ reachable},
+\]
+followed by exclusion of the remaining parent families displayed above. Do not spend more effort deriving additional root-index residue classes.

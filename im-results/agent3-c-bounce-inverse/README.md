@@ -1,5 +1,10 @@
 # Source-certified exact inverse-depth and cost laws for Machine C bounce
 
+## Current B2/U5 root32 status (2026-11-20)
+
+See [B2Q0FourStepPath.md](./B2Q0FourStepPath.md) for the consolidated same-parameter path, reverse-parent audit, and exact arithmetic parameterization. The q=0 residual bridge now identifies the high-stop parameter as m=4408+65536u with the same u=1802+6720t used by the B2 target. The five-edge forward path B0 → S1 → S2 → S3 → Q → T is explicit from the source-certified complete predecessor grammar. Crucially, that forward path does not reverse reachability: T reachable forces Q reachable, then S1 reachable, but S1's complete parent fan leaves the direct parent D0 and the depth-7 bounce parent P7. Their remaining source-parent families are not yet excluded. The exact root equation is saturated on r=32 (mod 64), so further residue filtering of that equation is not a productive route. The integrated source theorem and full U5B2Root32.lean dependency closure remain uncompiled; no BB(6) or Machine C decision is claimed.
+
+
 Agent 3, 2026-11-02. **Intermediate theorem; no BB(6) or six-state holdout decision.**
 
 The original-source Lean file [BounceInverse.lean](./BounceInverse.lean) imports Agent 46's *unchanged* `BounceCalc.lean` and proves two universal invariants about its total recursive `bounce k c` function. In every displayed formula `k,c,x,y,n` range over natural numbers, and `(bounce k c).2 = some (x,y)`.
