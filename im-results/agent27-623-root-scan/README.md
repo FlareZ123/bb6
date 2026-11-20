@@ -97,3 +97,12 @@ The 20,000-step result is empirical evidence only:
 - this does not prove that the machine is nonhalting and does not resolve any BB(6) holdout.
 
 The useful next mathematical task is still to derive a root-specific inductive/cocycle invariant that keeps the blank-root orbit in the source-certified newAffineCone after its finite entry prefix.
+
+
+## Source-derived boundary phase bridge (Agent 32)
+
+The independent phase extraction is now maintained at [Agent 32's actual boundary phases](../agent32-623-phase-automaton/ActualBoundaryPhases.md), with the complete machine-readable phase set in [ActualBoundaryPhases.json](../agent32-623-phase-automaton/ActualBoundaryPhases.json). It recomputes the exact carry entering digit (k+1) from the parity-correct drain statistics and source (C,F) correction table over the existing 9,968-state interval (n=33\ldots10000). The affine update agrees with this high-level recurrence at every checked state, and the sector update agrees at every state.
+
+There are 262 observed complete phases (114 L, 148 R); ignoring sector, 30 L and 40 R previous-digit/carry states. Actual carry pairs are L ({(-2,1),(-1,0),(-1,1),(0,0)}) and R ({(-3,1),(-2,0),(-2,1),(-1,-1),(-1,0),(-1,1),(0,0)}). The phase alone is not deterministic (maximum observed successor count 25), so it is not an all-time invariant. The same directory contains the 263-state reset-pattern DFA and explicit raw-language nonclosure witnesses. These are phase diagnostics, not a new root-horizon scan or a nonhalting proof.
+
+This README remains the canonical source-faithful root trace; Agent 32's independent 20,000-step replay is the cross-check already cited above. Do not create another root scan or promote the observed sector graph to a theorem.
