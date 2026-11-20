@@ -39,7 +39,9 @@ private theorem binDec_allOnes_local (k : Nat) :
   | succ k ih =>
       have hp : 0 < 2^k := Nat.pow_pos (by decide)
       have hbound : 2^k-1 < 2^k := by omega
-      have hpow : 2^(k+1)-1 = 2*(2^k-1)+1 := by omega
+      have hpow : 2^(k+1)-1 = 2*(2^k-1)+1 := by
+        rw [Nat.pow_succ]
+        omega
       calc
         binDec (k+1) (2^(k+1)-1) =
             binDec (k+1) (2*(2^k-1)+1) := by rw [hpow]
