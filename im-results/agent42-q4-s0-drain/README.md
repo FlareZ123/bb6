@@ -65,6 +65,7 @@ where (C_{m root}=	exttt{rootToSecondQ4Cost}+
 The final (+7) is the existing six-step champion-root offset plus
 the final undefined-query scoring correction. The q4 prefix cost includes
 the counted drain and the complete `sectionResult` dispatcher cost.
+The dispatcher also admits an exact three-increment state map and a closed 2-adic cost correction; see [`SectionResultThreeCycle.md`](SectionResultThreeCycle.md) for the recurrence and derivation.
 
 **Evidence boundary:** this is a source-level integration candidate, not
 an accepted halt or lower-bound result. The authentic root-to-q4Tail
