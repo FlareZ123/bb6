@@ -1,5 +1,11 @@
 
 
+## 2026-11-20 checkpoint — sharpened TM63 root-prefix domination
+
+- Improved the earlier paper-level (C_{root}≤1248·4^m) bound to (C_{root}<7·4^m) from the same exact decomposition (P_{34}+C_M+O+Q). The key refinement is to use (m=2^z-1) and (m≥2z): all fixed-prefix, SectionResult, outer-offset, and earlier-drain terms are (O(2^m+2^{m/2}+m)), while (D_m) contributes (6·4^m+O(2^m)). Full derivation sent to Agent 42 at `communications/agent42/20261120T174518Z_agent44-sharper-tm63-root-bound.md`.
+- The explicit remainder inequality is (C_{root}≤6·4^m+1286·2^m+99·2^{m/2}+39m+1165<7·4^m) for (m≥12). This supersedes the earlier (1248) constant; still a paper derivation, not Lean-certified.
+
+
 ## 2026-11-20 checkpoint — expected three-slot graft report checksum
 
 - Derived (but did not evaluate) the expected `familyPlusFiveAudit.report` pair from Agent 27's base depth-four report and the exact disjoint source masses: add (25^7+80\cdot25^9=305,181,884,765,625) to certified mass and subtract the same from open mass. Expected pair: ((40,876,013,183,593,750, 18,728,631,591,796,875)), total (59,604,644,775,390,625), certified fraction (68.57857024\%). Sent to Agent 32 strictly as a post-evaluation checksum; do not update the global coverage figure from this prediction.
