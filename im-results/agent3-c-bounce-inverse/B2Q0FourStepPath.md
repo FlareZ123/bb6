@@ -174,3 +174,15 @@ m_{B2}=4408+65536u,
 \]
 
 The separate arithmetic theorem `u5_residual_nonempty(w)` constructs some residual witness \((s,m_{res})\) satisfying hs/hm for each w, but its existence statement alone does not establish \(m_{res}=m_{B2}\). The q=0 residual parent theorem must be applied to the same high-stop target, so this equality (or a theorem showing the residual witness is exactly the parameter of the reached high-stop target) remains an essential source-link obligation. Do not infer it merely from the fact that both parameter families exist.
+
+
+## Residual witness parameter is forced to match the B2 path
+
+The remaining arithmetic equality `m_res=m_B2` can be derived from hs/hm and the root residue, rather than assumed. From `hm`, `m=8t). Combining hs and hm yields `211*t+1360+22155*w=20*2^(201+3360*w)`. Multiplying by 291 gives the exact identity
+
+```
+291*(211*t+1360+22155*w)
+ = (w+4057*t+2544) + 8192*(787*w+7*t+48)
+```
+
+With `w=6657+8192*r`, divisibility by 8192 forces `4057*t+9201 ≡0 (mod8192)`. As `4057*105=1+52*8192`, we get `t≡551 (mod8192)`, hence `t=551+8192*u`, `m=4408+65536*u), and `h=8+128*u`. Therefore the residual high-stop parameter is exactly the one in the B2 five-edge path. This is an algebraic derivation; it still needs a Lean theorem and the same-candidate root residue premise.
