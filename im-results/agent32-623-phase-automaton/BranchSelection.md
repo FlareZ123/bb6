@@ -75,25 +75,39 @@ For (ellge3), (9ell+13>5ell+22). Hence (|g|>|T|), so (g-T) has the same strict s
 ## Lean check
 
 'BranchSelection.lean' formalizes the four sector relations, exact threshold
-offsets, and the conditional sign reduction. It proves:
+offsets, and conditional sign reduction. It proves:
 
-- 'g_far_of_h_far': the four sector definitions and the outside-window
-  hypothesis imply \(|g|>9\ell+13\);
-- 'threshold_bounds': the depth package implies \(|T|\le5\ell+22\);
-- 'output_left_iff_positive_g' and 'output_right_iff_negative_g': under
-  those hypotheses, the exact test \(g\ge T\) is equivalent to \(g>0\),
-  and its complementary branch to \(g<0\).
+- 'g_far_of_h_far': the sector relations and outside-window hypothesis
+  imply \(g>9\ell+13\) or \(g<-(9\ell+13)\);
+- 'threshold_bounds': the depth package implies
+  \(|3D+2R+c_T|\le5\ell+22\);
+- 'output_left_iff_positive_g' and 'output_right_iff_negative_g':
+  under those hypotheses, the exact branch test \(g\ge T\) is equivalent
+  to \(g>0\), and its complementary branch to \(g<0\).
 
-The file compiles with Lean 4.36.0-rc2 and warnings treated as errors.
-The principal theorem axiom profiles are exactly
-'[propext, Quot.sound]'. The offset bound is proved by computation.
+The file now imports the repository's
+'../agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducerCarry.lean'.
+The new 'sourceDepth_bounds' theorem defines
+\(D=L-2E\) and \(R=n_1+n_2\) from that module's 'runStats' output and
+discharges \(|D|\le L+1\), \(0\le R\le L\) from
+'runStats_weight_bounds'. The source-imported corollaries
+'output_left_iff_positive_g_from_drain' and
+'output_right_iff_negative_g_from_drain' no longer take D/R bounds as
+free hypotheses.
 
-**Boundary:** the hypotheses \(\ell\ge3\), \(|h|>9\ell+22\),
-\(|D|\le\ell+1\), and \(0\le R\le\ell\) are assumptions in this
-module. It does not source-import the cocycle/depth wrapper or prove these
-conditions along the authentic root orbit. Thus the branch-choice
-simplification is formalized conditionally, but the phase invariant and
-#623 nonhalting claim remain open.
+Local Lean 4.36.0-rc2 preflight succeeds with warnings treated as errors
+against a source-compatible local copy of the drain module. The source
+workflow compiles the exact repository module and this import closure.
+The standalone arithmetic branch lemmas have axiom profiles
+'[propext, Quot.sound]'; the source-derived wrapper inherits
+'[propext, Classical.choice, Quot.sound]' from 'runStats_weight_bounds'.
+
+**Boundary:** the hypotheses \(\ell\ge3\), the sector relation, and the
+outside-window condition \(h>9\ell+22\) or \(h<-(9\ell+22)\) remain
+assumptions. This module does not prove them along the authentic root
+orbit or establish the buffered phase invariant. Thus the branch-choice
+simplification is source-depth-backed but conditional; it is not a #623
+nonhalting theorem.
 
 ## Research consequence
 

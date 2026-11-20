@@ -1,4 +1,5 @@
 import Lean
+import DrainDigitTransducerCarry
 
 /-
 # Conditional #623 output-branch reduction
@@ -119,9 +120,73 @@ theorem output_right_iff_negative_g (s : Sector) (ell g h D R : Int)
       exact hnotpos (hleft.mp hleft')
     omega
 
+
+/-- The exact depth statistics produced by the imported drain transducer. -/
+def sourceDepthStats (L b : Nat) : DrainStats :=
+  runStats L (b % 3^L) DrainState.A
+
+def sourceDepthD (L b : Nat) : Int :=
+  weightedD L (sourceDepthStats L b)
+
+def sourceDepthR (L b : Nat) : Int :=
+  weightedR (sourceDepthStats L b)
+
+/-- Source-derived wrapper: |D|≤L+1 and 0≤R≤L follow from the imported
+runStats_weight_bounds theorem, rather than being free hypotheses. -/
+theorem sourceDepth_bounds (L b : Nat) :
+    -(Int.ofNat L+1) ≤ sourceDepthD L b ∧
+    sourceDepthD L b ≤ Int.ofNat L+1 ∧
+    0 ≤ sourceDepthR L b ∧
+    sourceDepthR L b ≤ Int.ofNat L := by
+  let stats := sourceDepthStats L b
+  have h := runStats_weight_bounds L (b % 3^L) DrainState.A
+  change 0 ≤ weightedE stats ∧ weightedE stats ≤ weightedR stats ∧
+    weightedR stats ≤ Int.ofNat L at h
+  change -(Int.ofNat L+1) ≤ weightedD L stats ∧
+    weightedD L stats ≤ Int.ofNat L+1 ∧
+    0 ≤ weightedR stats ∧ weightedR stats ≤ Int.ofNat L
+  simp only [weightedD, weightedE, weightedR] at h ⊢
+  omega
+
+/-- Branch selection with the depth bounds discharged by the imported
+three-state drain transducer. The outside-window and sector-phase
+hypotheses remain root-orbit obligations. -/
+theorem output_left_iff_positive_g_from_drain (s : Sector) (L b : Nat)
+    (g h : Int)
+    (hL : 3 ≤ L)
+    (hrel : sectorRelation s g h)
+    (hfar : h > 9*Int.ofNat L+22 ∨ h < -(9*Int.ofNat L+22)) :
+    (g ≥ 3*sourceDepthD L b+2*sourceDepthR L b+thresholdOffset s) ↔
+      (g > 0) := by
+  have hd := sourceDepth_bounds L b
+  have hLInt : 3 ≤ Int.ofNat L := by
+    have hcast := Int.ofNat_le.mpr hL
+    simpa using hcast
+  exact output_left_iff_positive_g s (Int.ofNat L) g h
+    (sourceDepthD L b) (sourceDepthR L b) hLInt hrel hfar
+    hd.1 hd.2.1 hd.2.2.1 hd.2.2.2
+
+theorem output_right_iff_negative_g_from_drain (s : Sector) (L b : Nat)
+    (g h : Int)
+    (hL : 3 ≤ L)
+    (hrel : sectorRelation s g h)
+    (hfar : h > 9*Int.ofNat L+22 ∨ h < -(9*Int.ofNat L+22)) :
+    (g < 3*sourceDepthD L b+2*sourceDepthR L b+thresholdOffset s) ↔
+      (g < 0) := by
+  have hd := sourceDepth_bounds L b
+  have hLInt : 3 ≤ Int.ofNat L := by
+    have hcast := Int.ofNat_le.mpr hL
+    simpa using hcast
+  exact output_right_iff_negative_g s (Int.ofNat L) g h
+    (sourceDepthD L b) (sourceDepthR L b) hLInt hrel hfar
+    hd.1 hd.2.1 hd.2.2.1 hd.2.2.2
+
 #print axioms thresholdOffset_bounds
 #print axioms output_left_iff_positive_g
 #print axioms output_right_iff_negative_g
+#print axioms sourceDepth_bounds
+#print axioms output_left_iff_positive_g_from_drain
+#print axioms output_right_iff_negative_g_from_drain
 
 end BB6Root623BranchSelection
 
