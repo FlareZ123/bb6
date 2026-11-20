@@ -366,7 +366,8 @@ theorem u5_q0_root32_forces_h8_parameter (w E s m h r : Nat)
     (hw : w=6657+8192*r)
     (hE : E=201+3360*w)
     (hr : r%64=32) :
-    ∃ u t : Nat, h=8+128*u ∧ u=1802+6720*t := by
+    ∃ u t : Nat, h=8+128*u ∧ u=1802+6720*t ∧
+      18018+211*u+22155*r=20*2^(E-13) := by
   have hid : 211*(m+1)+10669+22155*(8*w)=160*2^(201+3360*w) := by omega
   have hlin :
       211*(m+1)+10669+22155*(8*w)=
@@ -389,7 +390,8 @@ theorem u5_q0_root32_forces_h8_parameter (w E s m h r : Nat)
   have hq : w/8192=r := by rw [hw]; exact div_6657_add_mul r
   have hr' : (w/8192)%64=32 := by rw [hq]; exact hr
   obtain ⟨t,hu⟩ := b2_root32_parameter_of_exact_residual u w E hE hresB2 hr'
-  exact ⟨u,t,hparam,hu⟩
+  have hRoot := b2_exact_root_equation_of_residual u r w E hw hE hresB2
+  exact ⟨u,t,hparam,hu,hRoot⟩
 
 #print axioms root_equation_affine_parameter
 #print axioms root_equation_mod1680
