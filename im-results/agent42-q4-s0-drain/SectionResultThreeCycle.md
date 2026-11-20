@@ -440,8 +440,11 @@ A=\texttt{middle34Result.exponent}+B+2\le2B+2,
 so \(B\le z\le m\). The exact formula for
 \(\texttt{rootSecondQ4Cost}\) consists of closed drain terms of orders
 \(4^B,4^z,4^m\), together with terms linear in
-\(A,z,m,2^B,2^z\); hence it is \(O(4^m)\). The final q4-tail prefix cost
-is \(3n+m+65=O(n)=O(4^m)\). Since
+\(A,z,m,2^B,2^z\); hence it is \(O(4^m)\). Let \(p=3\cdot2^z+3z+7\) be the q4Tail prefix parameter (distinct from \(m=2^z-1\)). The exact final q4-tail prefix cost is
+\[
+3n+p+65=3n+3\cdot2^z+3z+72=O(n)=O(4^m),
+\]
+because \(2^z=m+1\), \(z\le m\), and \(n=2^m\). Since
 \(\texttt{rootToMarker1S0Cost}=O(B^2)=O(4^m)\), the complete root prefix
 obeys
 \[
