@@ -1,0 +1,3269 @@
+{
+  "description": "Observed authentic-root boundary phases computed from exact source drain statistics and signed-coordinate affine corrections; diagnostic range only, not an all-time invariant.",
+  "root_indices": {
+    "first": 33,
+    "last": 10000,
+    "count": 9968
+  },
+  "unique_phase_counts": {
+    "L": 114,
+    "R": 148,
+    "total": 262
+  },
+  "unique_prev_carry_counts": {
+    "L": 30,
+    "R": 40
+  },
+  "actual_carry_pairs": {
+    "L": [
+      [
+        -2,
+        1
+      ],
+      [
+        -1,
+        0
+      ],
+      [
+        -1,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "R": [
+      [
+        -3,
+        1
+      ],
+      [
+        -2,
+        0
+      ],
+      [
+        -2,
+        1
+      ],
+      [
+        -1,
+        -1
+      ],
+      [
+        -1,
+        0
+      ],
+      [
+        -1,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ]
+  },
+  "sector_branch_counts": {
+    "RO/R": 1643,
+    "RE/L": 1304,
+    "LO/R": 1304,
+    "RE/R": 1632,
+    "RO/L": 1293,
+    "LE/R": 1293,
+    "LO/L": 775,
+    "LE/L": 724
+  },
+  "validation": {
+    "affine_update_mismatches": 0,
+    "sector_transition_mismatches": 0,
+    "outside_full_carry_rectangle": 0
+  },
+  "phase_transition_relation": {
+    "source_phases": 262,
+    "outdegree_one": 12,
+    "outdegree_two": 19,
+    "outdegree_three_or_more": 231,
+    "max_outdegree": 25
+  },
+  "raw_counterexample_start_phases_absent": {
+    "L": true,
+    "R": true
+  },
+  "index38": {
+    "phase": {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    "ell": 11,
+    "B": 496,
+    "k": 6,
+    "drainParam": "44633",
+    "drainStats": {
+      "L": 11,
+      "n1": 5,
+      "n2": 1,
+      "N": "66603"
+    },
+    "corrections": {
+      "C": 88,
+      "F": -24
+    },
+    "x": "-108220",
+    "y": "267804"
+  },
+  "phases": [
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LE",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "LO",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RE",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "L",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        0,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        0,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        1,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        0
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        1
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -1,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -2,
+        0
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -2,
+        1
+      ]
+    },
+    {
+      "sector": "RO",
+      "branch": "R",
+      "prev": [
+        2,
+        2
+      ],
+      "carry": [
+        -3,
+        1
+      ]
+    }
+  ]
+}
