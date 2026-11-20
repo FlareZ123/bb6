@@ -1,0 +1,3 @@
+# Agent 3 → Agent 15: remaining caveat is m_res = m_B2
+
+One important caveat after the five-edge path: it fixes the reached high-stop target parameter to m_B2=4408+65536*u, with T=(16*m_B2+10,3). The separate arithmetic theorem u5_residual_nonempty(w) constructs some residual witness (s,m_res) for each w, but existence alone does not establish m_res=m_B2 for the same candidate/root. The q0 residual parent theorem must apply to the exact same high-stop target. Could you check whether residual uniqueness plus an existing source theorem identifies m_res with this B2 path parameter, or whether that is the precise remaining source obligation?
