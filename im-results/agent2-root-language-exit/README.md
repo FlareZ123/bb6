@@ -97,10 +97,31 @@ theorem; (2) locally preflight and compile the safe-E dependency; (3)
 audit the transitive axioms of the composed theorem. This is a prepared
 packet result only, not a blank-tape reachability claim.
 
-## Infinite 3-adic second-return subfamily (uncompiled)
+## Infinite 3-adic second-return families (source composition uncompiled)
 
-The candidate [`Seed24956FamilySecondReentry.lean`](Seed24956FamilySecondReentry.lean) strengthens the concrete reset instance to an infinite family. For every r≥0, the P2 reset packet with k=81r+61 and Q=0 source-returns to the exact regular section L(32768r+24956,2,2). The parameter identities are explicit: the P2 reset yields M(648r+493,0,6); the d=1 E-chain with h=54r+41 yields M(1728r+1313,2,3); two B edges with t=64r+48 yield M(12288r+9354,0,3); and the A marker with ka=4096r+3117 and quotient 1 yields endpointZero(32768r+24955), hence L(32768r+24956,2,2).
+The candidate [`Seed24956FamilySecondReentry.lean`](Seed24956FamilySecondReentry.lean) strengthens the concrete reset instance to an infinite depth-one family. For every r≥0, the P2 reset packet with k=81r+61 and Q=0 source-returns to the exact regular section L(32768r+24956,2,2). The parameter identities are explicit: the P2 reset yields M(648r+493,0,6); the d=1 E-chain with h=54r+41 yields M(1728r+1313,2,3); two B edges with t=64r+48 yield M(12288r+9354,0,3); and the A marker with ka=4096r+3117 and quotient 1 yields endpointZero(32768r+24955), hence L(32768r+24956,2,2).
 
 For the second return, choose r=3^87 s. The DRegular source-shift theorem transports the 86-step base run with shift parameter p=32768·3s: the input shift is 3^86 p=32768·3^87 s, while the output shift is 8^86 p=3·8^86·32768s. Thus the output remains an E exit of the form L(3k'+4,5,1), with k'=35761011052497844733597143642740448447362+8^86·32768s. The universal q=5 safe-E canonical closure then gives a second return to a canonical DRegular section for every s≥0.
 
-This is a strong **candidate** infinite subfamily, not an accepted result: the family file and its dependencies have not been compiled or axiom-audited. It remains a prepared-packet theorem and does not establish that any member is reached from the blank tape.
+A separate depth-three family is now composed in [`Seed24956Depth3SecondReentry.lean`](Seed24956Depth3SecondReentry.lean), using Agent 37's [`D3SecondReturnAlignment.lean`](../agent37-echain/D3SecondReturnAlignment.lean). Put
+\[
+s=202789636786509251933665269483979866281743+3^{87}v,\quad
+k=729s+310,\quad Q=3.
+\]
+The exact source path is P2 reset → three guarded E calls → B → B → A, with
+\[
+h=54s+23,\quad t=4096s+1744,\quad k_A=64t+45.
+\]
+Its endpoint is
+\[
+L(8k_A+28,2,2)
+ =L(24956+3^{87}(1315608+2^{21}v),2,2).
+\]
+This is exactly the 86-step input lift of L(24956,2,2) with shift parameter p=3(1315608+2^21v). The lifted DRegular orbit reaches the q=5 safe-E class with exit parameter
+\[
+k'=35761011052497844733597143642740448447362
+   +8^{86}(1315608+2^{21}v),
+\]
+after which the universal safe-E canonical closure supplies a second source return.
+
+Agent 37 reports that the arithmetic alignment and the standalone 86-step DRegular model family compile locally with only standard axioms. The new combined original-source wrapper is **not yet locally preflighted, compiled, or axiom-audited**. Both families are prepared-packet results only; neither establishes that a member is reached from the blank tape. Do not promote them to `results/` until the complete source closure is compiled and the transitive axiom profiles are checked.
