@@ -4,7 +4,7 @@
     "maxSuccessfulSteps": 10,
     "maxEntry": 4,
     "maxPeriod": 6,
-    "visitedNodes": null,
+    "visitedNodes": 22783,
     "translatedCandidates": 622,
     "openCandidates": 80,
     "translatedHistogram": {
