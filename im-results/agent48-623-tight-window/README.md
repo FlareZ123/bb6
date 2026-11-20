@@ -51,9 +51,9 @@ For the output state's central coordinate (x=2h) in LO/LE and (x=4h) in RO/RE, a
 ]
 in LO, LE, RO, RE respectively. The largest is (18\ell_S+50<34\ell_S+122=B_{corr}). Thus a terminal successor would have (|x'|<B_{corr}), contradicting the central-block certificate (|x'|>B_{corr}). This is the sector-sensitive reason the uniform (36\ell_S+88=4(9\ell_S+22)) term can be dropped.
 
-**Verification update (2026-11-20):** `RootRayDrainDepthSource.lean` is included in the pinned-source workflow at the 2026-11-19 run head `581b7a88d034c17030301cef0216529126073c3c` and compiled before that run failed later in `Agent1ComplementBufferSource.lean` (unsynthesized `Decidable` instances and downstream `sorryAx`). Thus the four-sector full-drain D/R depth package itself has source-CI compile evidence at that revision; the overall workflow was not green.
+**Verification status (2026-11-20):** The pinned-source run `44603152399` failed in `Agent1ComplementBufferSource.lean` before reaching the later `RootRayDrainDepthSource.lean` step. Therefore that run does **not** certify the four-sector full-drain D/R depth package. The combined mass-indexed S-window shift in `MonotoneMassWindow.md` remains an algebraic derivation, not a single source-imported Lean theorem; the depth wrapper and combined consumer still need a successful pinned-source compile.
 
-The **combined mass-indexed S-window shift** in `MonotoneMassWindow.md` is still an algebraic derivation, not a single source-imported Lean theorem. The S-window phase inventory and reset-product closure also remain finite diagnostics. Do not treat the complete moving-window/reset argument or authentic-root nonhalting as proved.
+The S-window phase inventory and reset-product closure also remain finite diagnostics. Do not treat the complete moving-window/reset argument or authentic-root nonhalting as proved.
 
 Exact source references:
 
