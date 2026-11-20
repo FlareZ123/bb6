@@ -32,15 +32,15 @@ private theorem source_step {s t : DRegular.L}
     (hcanon : DRegular.Canon s)
     (hnext : DRegular.next s = some t) :
     ObsEq
-      (run (DRegular.duration s) (BB6.DRegularSource.sourceSection s))
-      (BB6.DRegularSource.sourceSection t) :=
+      (run (DRegular.duration s) (DRegularSource.sourceSection s))
+      (DRegularSource.sourceSection t) :=
   BB6.ERemaining.source_contract s t hcanon hnext
 
 theorem seed42_first (s : Nat) :
     ObsEq
       (run (DRegular.duration (seed42Input s))
-        (BB6.DRegularSource.sourceSection (seed42Input s)))
-      (BB6.DRegularSource.sourceSection (seed42Middle s)) := by
+        (DRegularSource.sourceSection (seed42Input s)))
+      (DRegularSource.sourceSection (seed42Middle s)) := by
   apply source_step
   · simp [DRegular.Canon, seed42Input] <;> omega
   · have hmod : (12288*s+11653)%3=1 := by omega
@@ -51,8 +51,8 @@ theorem seed42_first (s : Nat) :
 theorem seed42_second_mod0 (r : Nat) :
     ObsEq
       (run (DRegular.duration (seed42Middle (3*r)))
-        (BB6.DRegularSource.sourceSection (seed42Middle (3*r))))
-      (BB6.DRegularSource.sourceSection (seed42Out0 r)) := by
+        (DRegularSource.sourceSection (seed42Middle (3*r))))
+      (DRegularSource.sourceSection (seed42Out0 r)) := by
   apply source_step
   · simp [DRegular.Canon, seed42Middle] <;> omega
   · have hmod :
@@ -69,8 +69,8 @@ theorem seed42_second_mod0 (r : Nat) :
 theorem seed42_second_mod1 (r : Nat) :
     ObsEq
       (run (DRegular.duration (seed42Middle (3*r+1)))
-        (BB6.DRegularSource.sourceSection (seed42Middle (3*r+1))))
-      (BB6.DRegularSource.sourceSection (seed42Out1 r)) := by
+        (DRegularSource.sourceSection (seed42Middle (3*r+1))))
+      (DRegularSource.sourceSection (seed42Out1 r)) := by
   apply source_step
   · simp [DRegular.Canon, seed42Middle] <;> omega
   · have hmod :
@@ -89,8 +89,8 @@ theorem seed42_second_mod1 (r : Nat) :
 theorem seed42_second_mod2 (r : Nat) :
     ObsEq
       (run (DRegular.duration (seed42Middle (3*r+2)))
-        (BB6.DRegularSource.sourceSection (seed42Middle (3*r+2))))
-      (BB6.DRegularSource.sourceSection (seed42Out2 r)) := by
+        (DRegularSource.sourceSection (seed42Middle (3*r+2))))
+      (DRegularSource.sourceSection (seed42Out2 r)) := by
   apply source_step
   · simp [DRegular.Canon, seed42Middle] <;> omega
   · have hmod :
@@ -108,14 +108,14 @@ theorem seed42_two_step_mod0 (r : Nat) :
     ObsEq
       (run (DRegular.duration (seed42Input (3*r)) +
             DRegular.duration (seed42Middle (3*r)))
-        (BB6.DRegularSource.sourceSection (seed42Input (3*r))))
-      (BB6.DRegularSource.sourceSection (seed42Out0 r)) := by
+        (DRegularSource.sourceSection (seed42Input (3*r))))
+      (DRegularSource.sourceSection (seed42Out0 r)) := by
   exact BB6.BoundaryPadding.source_chain
     (DRegular.duration (seed42Input (3*r)))
     (DRegular.duration (seed42Middle (3*r)))
-    (BB6.DRegularSource.sourceSection (seed42Input (3*r)))
-    (BB6.DRegularSource.sourceSection (seed42Middle (3*r)))
-    (BB6.DRegularSource.sourceSection (seed42Out0 r))
+    (DRegularSource.sourceSection (seed42Input (3*r)))
+    (DRegularSource.sourceSection (seed42Middle (3*r)))
+    (DRegularSource.sourceSection (seed42Out0 r))
     (seed42_first (3*r))
     (seed42_second_mod0 r)
 
@@ -123,14 +123,14 @@ theorem seed42_two_step_mod1 (r : Nat) :
     ObsEq
       (run (DRegular.duration (seed42Input (3*r+1)) +
             DRegular.duration (seed42Middle (3*r+1)))
-        (BB6.DRegularSource.sourceSection (seed42Input (3*r+1))))
-      (BB6.DRegularSource.sourceSection (seed42Out1 r)) := by
+        (DRegularSource.sourceSection (seed42Input (3*r+1))))
+      (DRegularSource.sourceSection (seed42Out1 r)) := by
   exact BB6.BoundaryPadding.source_chain
     (DRegular.duration (seed42Input (3*r+1)))
     (DRegular.duration (seed42Middle (3*r+1)))
-    (BB6.DRegularSource.sourceSection (seed42Input (3*r+1)))
-    (BB6.DRegularSource.sourceSection (seed42Middle (3*r+1)))
-    (BB6.DRegularSource.sourceSection (seed42Out1 r))
+    (DRegularSource.sourceSection (seed42Input (3*r+1)))
+    (DRegularSource.sourceSection (seed42Middle (3*r+1)))
+    (DRegularSource.sourceSection (seed42Out1 r))
     (seed42_first (3*r+1))
     (seed42_second_mod1 r)
 
@@ -138,14 +138,14 @@ theorem seed42_two_step_mod2 (r : Nat) :
     ObsEq
       (run (DRegular.duration (seed42Input (3*r+2)) +
             DRegular.duration (seed42Middle (3*r+2)))
-        (BB6.DRegularSource.sourceSection (seed42Input (3*r+2))))
-      (BB6.DRegularSource.sourceSection (seed42Out2 r)) := by
+        (DRegularSource.sourceSection (seed42Input (3*r+2))))
+      (DRegularSource.sourceSection (seed42Out2 r)) := by
   exact BB6.BoundaryPadding.source_chain
     (DRegular.duration (seed42Input (3*r+2)))
     (DRegular.duration (seed42Middle (3*r+2)))
-    (BB6.DRegularSource.sourceSection (seed42Input (3*r+2)))
-    (BB6.DRegularSource.sourceSection (seed42Middle (3*r+2)))
-    (BB6.DRegularSource.sourceSection (seed42Out2 r))
+    (DRegularSource.sourceSection (seed42Input (3*r+2)))
+    (DRegularSource.sourceSection (seed42Middle (3*r+2)))
+    (DRegularSource.sourceSection (seed42Out2 r))
     (seed42_first (3*r+2))
     (seed42_second_mod2 r)
 
