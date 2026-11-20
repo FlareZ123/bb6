@@ -18,6 +18,11 @@ const dfa = JSON.parse(fs.readFileSync(
 const priorQ = JSON.parse(fs.readFileSync(
   path.join(root, "im-results/agent32-623-phase-automaton/ActualBoundaryPhases.json"), "utf8"
 ));
+const postReset = JSON.parse(fs.readFileSync(
+  path.join(root, "im-results/agent49-parity623/ResetPostStateDFA.json"), "utf8"
+));
+const postResetPair = postReset.post_reset_pair;
+const postResetPairLength = postReset.post_reset_pair_and_length;
 const transitions = dfa.transitions;
 const accepting = new Set(dfa.accepting_states);
 const initialState = dfa.initial_state;
@@ -299,6 +304,43 @@ function firstResetEnd(state, target, branch, C, F, sourceWindow, targetWindow) 
   return { first, length: xDigits.length };
 }
 
+function postResetOutput(machine, target, targetWindow) {
+  let state = machine.initial_state;
+  for (let i = targetWindow.k + 2; i < targetWindow.j - 2; i += 1) {
+    const symbol = digitAt(target.x, i) * 3 + digitAt(target.y, i);
+    state = machine.transitions[state][symbol];
+  }
+  const output = machine.outputs[state];
+  return output === null ? null : machine.output_labels[output];
+}
+
+function addEdge(graph, from, to) {
+  if (!graph.has(from)) graph.set(from, new Set());
+  graph.get(from).add(to);
+}
+
+function graphSummary(graph, allNodes) {
+  const outdegreeHistogram = {};
+  let edgeCount = 0;
+  let multiSuccessorNodes = 0;
+  let maxOutdegree = 0;
+  for (const targets of graph.values()) {
+    const degree = targets.size;
+    increment(outdegreeHistogram, String(degree));
+    edgeCount += degree;
+    if (degree > 1) multiSuccessorNodes += 1;
+    maxOutdegree = Math.max(maxOutdegree, degree);
+  }
+  return {
+    nodes: allNodes.size,
+    nodesWithSuccessors: graph.size,
+    edges: edgeCount,
+    multiSuccessorNodes,
+    maxOutdegree,
+    outdegreeHistogram,
+  };
+}
+
 function verifyTransducer(source, target, branch, C, F, sourceWindow, targetWindow) {
   let carry = sourceCarry(source, branch, C, F, sourceWindow.k);
   let prev = [digitAt(source.x, sourceWindow.k), digitAt(source.y, sourceWindow.k)];
@@ -347,6 +389,18 @@ function collect() {
   const qPhases = new Set();
   const phases = new Map();
   const phaseTransitions = new Map();
+  const pairProductTransitions = new Map();
+  const pairLengthProductTransitions = new Map();
+  const phaseNodes = new Set();
+  const pairProductNodes = new Set();
+  const pairLengthProductNodes = new Set();
+  const postResetPairLabels = {};
+  const postResetWitnessLengths = {};
+  let previousPhaseKey = null;
+  let previousPairProductKey = null;
+  let previousPairLengthProductKey = null;
+  let postResetPairFailures = 0;
+  let postResetPairLengthFailures = 0;
   const sectorBranchCounts = {};
   const rHistogram = {};
   const shiftHistogram = {};
@@ -381,6 +435,9 @@ function collect() {
       const result = phaseForTransition(source, target);
       const p = result.phase;
       const key = result.key;
+      phaseNodes.add(key);
+      if (previousPhaseKey !== null) addEdge(phaseTransitions, previousPhaseKey, key);
+      previousPhaseKey = key;
       if (!phases.has(key)) phases.set(key, { key, count: 0, firstIndex: n, phase: p });
       phases.get(key).count += 1;
 
@@ -422,6 +479,27 @@ function collect() {
         maxFirstAcceptEnd = Math.max(maxFirstAcceptEnd, reset.first);
       }
 
+      const pairLabel = postResetOutput(postResetPair, target, result.targetWindow);
+      const pairLengthLabel = postResetOutput(postResetPairLength, target, result.targetWindow);
+      if (pairLabel === null) {
+        postResetPairFailures += 1;
+      } else {
+        increment(postResetPairLabels, pairLabel.key);
+        const productKey = key + "||" + pairLabel.key;
+        pairProductNodes.add(productKey);
+        if (previousPairProductKey !== null) addEdge(pairProductTransitions, previousPairProductKey, productKey);
+        previousPairProductKey = productKey;
+      }
+      if (pairLengthLabel === null) {
+        postResetPairLengthFailures += 1;
+      } else {
+        increment(postResetWitnessLengths, String(pairLengthLabel.witness_length));
+        const productKey = key + "||" + pairLengthLabel.key;
+        pairLengthProductNodes.add(productKey);
+        if (previousPairLengthProductKey !== null) addEdge(pairLengthProductTransitions, previousPairLengthProductKey, productKey);
+        previousPairLengthProductKey = productKey;
+      }
+
       if (n === 38) index38Sample = p;
       transitionsChecked += 1;
     }
@@ -437,8 +515,9 @@ function collect() {
   const qExactMatch = existingQ.size === qPhases.size &&
     [...existingQ].every(k => qPhases.has(k));
 
-  const outdegreeHistogram = {};
-  for (const targets of phaseTransitions.values()) increment(outdegreeHistogram, String(targets.size));
+  const phaseGraph = graphSummary(phaseTransitions, phaseNodes);
+  const pairProductGraph = graphSummary(pairProductTransitions, pairProductNodes);
+  const pairLengthProductGraph = graphSummary(pairLengthProductTransitions, pairLengthProductNodes);
 
   const byBranch = { L: 0, R: 0 };
   for (const entry of phases.values()) byBranch[entry.phase.sourceBranch] += 1;
@@ -473,6 +552,26 @@ function collect() {
       affine_update_mismatches: affineUpdateMismatches,
       transducer_digit_mismatches: transducerDigitMismatches,
     },
+    phase_transition_graph: phaseGraph,
+    post_reset_output: {
+      construction: postReset.construction,
+      pair: {
+        dfa_states: postResetPair.transitions.length,
+        labels: postResetPair.output_labels.length,
+        observed_labels: Object.keys(postResetPairLabels).length,
+        label_histogram: postResetPairLabels,
+        failures: postResetPairFailures,
+        product_graph: pairProductGraph,
+      },
+      pair_and_length: {
+        dfa_states: postResetPairLength.transitions.length,
+        labels: postResetPairLength.output_labels.length,
+        observed_witness_lengths: Object.keys(postResetWitnessLengths).length,
+        witness_length_histogram: postResetWitnessLengths,
+        failures: postResetPairLengthFailures,
+        product_graph: pairLengthProductGraph,
+      },
+    },
     phase_summary: {
       unique_transition_phases: phases.size,
       unique_by_source_branch: byBranch,
@@ -492,11 +591,12 @@ function collect() {
       R: { a: [-4, 1], b: [-2, 2] },
     },
     phases: [...phases.values()].sort((x, y) => x.key.localeCompare(y.key)),
-    interpretation: "The phase inventory is finite-prefix evidence only. It includes source/target sector and branch, both r phases, the low-shift pair, and the actual target-window start carry. A proof still needs a closed product with the reset-DFA state and finite weighted drain/transducer interface; never replace the universal carry rectangles by the observed subsets.",
+    interpretation: "The phase and post-reset product graphs are finite-prefix evidence only, not all-time transition relations. The post-reset output DFA supplies a compact common L/R transducer-state interface; a proof still needs a closed product with a finite weighted drain/root-language interface. Never replace the universal carry rectangles by observed subsets.",
   };
 
   if (!qExactMatch) throw new Error("q-window validation did not match ActualBoundaryPhases.json");
-  if (branchMismatches || carryRectangleViolations || affineUpdateMismatches || transducerDigitMismatches || acceptFailures) {
+  if (branchMismatches || carryRectangleViolations || affineUpdateMismatches || transducerDigitMismatches ||
+      acceptFailures || postResetPairFailures || postResetPairLengthFailures) {
     throw new Error("one or more source/scan checks failed");
   }
 
@@ -508,6 +608,8 @@ function collect() {
     qWindowValidation: output.q_window_validation,
     result: output.result,
     phaseSummary: output.phase_summary,
+    phaseTransitionGraph: output.phase_transition_graph,
+    postResetOutput: output.post_reset_output,
   }, null, 2));
 }
 
