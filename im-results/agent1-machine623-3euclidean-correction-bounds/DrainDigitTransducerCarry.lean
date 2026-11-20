@@ -351,3 +351,58 @@ theorem drain_transducer_exact_of_bounds (L b : Nat)
   have hExact := drain_transducer_exact L low high hlow hhigh hpar' hsize''
   rw [hdecomp] at hExact
   exact hExact
+
+
+structure DrainStats where
+  output : Int
+  ones : Nat
+  twos : Nat
+  finalState : DrainState
+  deriving Repr
+
+/-- Run the transducer while retaining the counts of output digits 1 and 2. -/
+def runStats : Nat → Nat → DrainState → DrainStats
+  | 0, _, s => ⟨0, 0, 0, s⟩
+  | n + 1, b, s =>
+      let (s', out) := step s (b % 3)
+      let tail := runStats n (b / 3) s'
+      ⟨out + 3 * tail.output,
+       tail.ones + (if out = 1 then 1 else 0),
+       tail.twos + (if out = 2 then 1 else 0),
+       tail.finalState⟩
+
+theorem runStats_output_eq (n b : Nat) (s : DrainState) :
+    (runStats n b s).output = (run n b s).1 := by
+  induction n generalizing b s with
+  | zero => simp [runStats, run]
+  | succ n ih =>
+      cases hst : step s (b % 3) with
+      | mk s' out =>
+        simp [runStats, run, hst, ih]
+
+/-- At most one nonzero output digit is counted at each transducer step. -/
+theorem runStats_count_bounds (n b : Nat) (s : DrainState) :
+    (runStats n b s).twos ≤ (runStats n b s).ones + (runStats n b s).twos ∧
+    (runStats n b s).ones + (runStats n b s).twos ≤ n := by
+  induction n generalizing b s with
+  | zero => simp [runStats]
+  | succ n ih =>
+      cases hst : step s (b % 3) with
+      | mk s' out =>
+        have hout := step_output_bounds s (b % 3)
+        simp [hst] at hout
+        have htail := ih (b / 3) s'
+        simp only [runStats, hst]
+        have hdigit : (if out = 1 then 1 else 0) + (if out = 2 then 1 else 0) ≤ 1 := by
+          by_cases h1 : out = 1 <;> by_cases h2 : out = 2 <;> simp [h1, h2] at * <;> omega
+        constructor
+        · omega
+        · omega
+
+/-- Exact output theorem with the weighted digit counts retained. -/
+theorem runStats_exact_of_bounds (L b : Nat)
+    (hpar : L % 2 = b % 2)
+    (hsize : 2 * Int.ofNat b - 1 < pow3 (L + 1)) :
+    4 * (runStats L (b % 3 ^ L) A).output =
+      2 * Int.ofNat b - 1 + pow3 L := by
+  simpa [runStats_output_eq] using drain_transducer_exact_of_bounds L b hpar hsize
