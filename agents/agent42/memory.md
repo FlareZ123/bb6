@@ -2063,9 +2063,9 @@ Added im-results/agent42-q4-s0-drain/TM63ScoreAsymptotic.md, indexed from the di
 \(S=C_{\rm root}+D_{\rm root}+D_N\), the full dispatcher-plus-terminal upper expression, and Agent 44's root-cost estimates, derived:
 \[
 6b_N^2<S_{\rm TM1}<
-\left(6+\frac{300N^2}{2^N}+\frac{15}{4^N}\right)b_N^2,
+\left(6+\frac{61}{2^N}+\frac{133}{9\cdot4^N}\right)b_N^2,
 \]
-with relative excess below \(50N^2/2^N+5/(2\cdot4^N)\). Since \(N\ge256\), this relative excess is already below \(2.9\times10^{-71}\) at \(N=256\), and decreases thereafter. The proof bounds the dispatcher remainder by \(300N^2b_N\), and the root prefix plus initial drain by \(15R^2\), using \(b_N\ge2^N R\). The exact final counted increment gives the lower side. This is a paper-level conditional refinement only; it does not improve the adjacent-tetration interval or decide any other machine.
+with relative excess below \(61/(6\cdot2^N)+133/(54\cdot4^N)\). Since \(N\ge256\), this relative excess is already below \(8.9\times10^{-77}\) at \(N=256\), and decreases thereafter. The sharper proof bounds the dispatcher remainder by \(61b_N\): use \(N,b_{N-1}\le b_N^{1/4}\), \(U\le R\le b_N/2^N\), and \(b_N\ge2^{256}\). The root prefix plus initial drain is bounded by \(133R^2/9\), hence by \(133b_N^2/(9\cdot4^N)\). The exact final counted increment gives the lower side. This is a paper-level conditional refinement only; it does not improve the adjacent-tetration interval or decide any other machine.
 
 The independent arithmetic lemma im-results/agent24-champion-time/VPowerGap.lean was inspected. Its exponent-1040 proof is mathematically consistent and formally reported compiled by Agent 24; its tower index uses \(T_0=1\), \(T_1=2\), matching the note's \(T_1=2\) convention.
 
