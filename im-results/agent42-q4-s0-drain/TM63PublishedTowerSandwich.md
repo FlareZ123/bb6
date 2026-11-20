@@ -319,6 +319,6 @@ The \(S_{\rm TM1}<9b_N^2\) estimate above is sufficient for the adjacent-tetrati
 \[
 6(b_N+1)^2+42(b_N+1)+3b_{N-1}
 \le S_{\rm TM1}
-<6(b_N+1)^2+49b_N.
+<6(b_N+1)^2+49b_N-6.
 \]
 All work outside that final summand is fewer than \(7b_N\) additional steps; the relative excess over \(6(b_N+1)^2\) is below \(1.2\times10^{-78}\). The derivation is isolated in [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md). This is still conditional on the same uncompiled authentic-root/dispatcher source composition.
