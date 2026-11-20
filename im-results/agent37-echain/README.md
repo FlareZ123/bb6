@@ -215,7 +215,7 @@ that the authentic blank-root orbit reaches the q=4 cylinder.
 
 The intermediate replay in [Astep2BoundaryReplay.mjs](Astep2BoundaryReplay.mjs), documented in [Astep2BoundaryReplay.md](Astep2BoundaryReplay.md), reproduces the pinned external proof's 107 A_step2 calls, branch word, eleven unary/suffix checkpoints, and all finite-tail alternating-block checks. It is a computational cross-check, not a new Lean proof.
 
-The first ten outputs lie in the regular `(01)^q1^b` language and end at the exceptional E,`(q,b)=(4,1)` exit. [Astep2PacketExitTrace.md](Astep2PacketExitTrace.md) records the packet path after that exit: call 11 yields `P(0,8;F7)); calls 12–17 follow PacketRank B/E updates and the P2 reset; calls 18–23 follow the E-chain marker `Y3=01010111); call 24 changes the tail to `T7=1010111`. The exact residue at the first P2 reset is `k≡169 (mod 243)`, outside the currently encoded EChain B/E/A corridors.
+The first ten outputs lie in the regular `(01)^q1^b` language and end at the exceptional E,`(q,b)=(4,1)` exit. [Astep2PacketExitTrace.md](Astep2PacketExitTrace.md) records the packet path after that exit: call 11 yields `P(0,8;F7)); calls 12–17 follow PacketRank B/E updates and the P2 reset; calls 18–23 follow the E-chain marker `Y3=01010111); call 24 canonically maps `P(1,0;Y3)` to `P(0,9;U6=010111)`. The exact residue at the first P2 reset is `k≡169 (mod 243)`, outside the currently encoded EChain B/E/A corridors.
 
 The next source-proof target is the general marker transformation at call 24 and its later analogues. This work does not establish a blank-root prefix to the external halting cylinder, a universal BB(6) upper bound, or the exact value of BB(6).
 
