@@ -128,22 +128,16 @@ The unique depth-13 case is index 6,932. Since a reset subword sends every admis
 This suggests a possible route to a deterministic high-digit recurrence: enlarge the low buffer by a fixed 13 symbols, so the remaining output digits no longer depend on the low carry. It is not yet a closure proof: the synchronized output suffix need not itself contain a reset subword, and the authentic root's changing digit-window boundaries still have to be controlled.
 
 
-## Refinement using the Lean one-extra-digit carry bound
+## Boundary-carry audit: the small-start reduction is invalid
 
-At the start of this word (position k+1), the Lean lemma in SignedCoordinateNormalForm.lean proves both initial carry coordinates lie in [-1,1], because the correction magnitudes are below (3^k). Subsequent carries remain in the original branch-invariant ranges (L: a in [-2,2]; R: a in [-4,1]; both b in [-2,2]).
+The correction bounds in SignedCoordinateNormalForm.lean control only the additive correction quotient. They do **not** bound the total boundary carry by \([-1,1]^2\): the base quotient from the low residue must also be included.
 
-The refined checker synchronizing_reset_subwords_small_start.cpp therefore quantifies over only 9 previous digit pairs and 9 initial carry pairs per branch, while retaining the original invariant ranges for intermediate carries. The common correction buffer and closed carry bound are formalized by correction_buffer_closed and one_extra_digit_carry_bound_closed in SignedCoordinateNormalForm.lean. Across all 9,968 words:
-- minimum common reset length 3: 9,895;
-- minimum common reset length 4: 73;
-- no longer reset word is needed;
-- the earliest reset ends by position 12 (exclusive), rather than 13.
+Agent 49's CarryBoundAudit.md gives a concrete root-history counterexample at index 38: the total x-carry is \(-2\), with actual initial carry pair \((-2,0)\). Thus synchronizing_reset_subwords_small_start.cpp, which quantifies only over initial carries \([-1,1]^2\), is not a valid root-history certificate. Its reported 9,895/73 split and end-by-12 statistic must not be used as evidence for the BB(6) root trajectory. The source is retained only as a diagnostic experiment and must not be used for proof or future scans.
 
-The refined earliest-end distribution is: 3: 3,423; 4: 3,710; 5: 1,842; 6: 679; 7: 207; 8: 65; 9: 26; 10: 12; 11: 2; 12: 2.
+The valid finite evidence is the full-range checker synchronizing_reset_subwords.cpp. It quantifies over the branch-specific initial rectangles (L: \(a\in[-2,2]\); R: \(a\in[-4,1]\); both: \(b\in[-2,2]\)). Re-running it with the tightened buffer \(B=\max(34\ell+122,36\ell+88)\) reproduces the full-range distributions in Sections 5–6 exactly:
+- common reset-subword lengths 3, 4, 5, 6 occur 9,616, 350, 1, 1 times respectively;
+- the maximum earliest reset end remains 13 (unique at index 6,932).
 
-Reproduce:
-```bash
-g++ -O3 -std=c++17 synchronizing_reset_subwords_small_start.cpp -o /tmp/reset-small
-node synchronizing_word_scan.js 10000 --emit-blocks | /tmp/reset-small
-```
+The full-word synchronization scan also remains valid under the tightened buffer: 9,968 states, word lengths 8–17, and zero failures in either branch. These are finite computational observations only. They do not establish invariance of the reset-word language under the authentic root transition, nor an all-time boundary-carry closure.
 
-This is a stronger finite observation justified by a general Lean carry bound, but the reset-word language is still not proved invariant under the authentic root transition.
+The correct interface is therefore: use correction_buffer_closed to bound the additive correction, combine it with the actual base quotient to obtain the full branch-specific start rectangle, and then apply the full-range synchronizing-word checker. Do not infer the total carry rectangle from the correction-only bound.
