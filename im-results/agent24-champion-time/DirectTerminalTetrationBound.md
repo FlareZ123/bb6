@@ -176,6 +176,13 @@ In the exact one-dimensional dispatcher cost formula, the final summand
 +42(V_{M+N+46}+1)
 +3V_{M+N+45}.
 \]
+The coefficient (3) is for the **combined dispatcher-plus-terminal score**,
+not the isolated last increment: the last increment contributes
+(-9b_{N-1}), while the terminal macro
+\(\texttt{terminalMoves}=59+12(L+E)\), with
+\(E=U+\sum_{j=0}^{N-1}b_j+5k\), contributes
+\(+12b_{N-1}\). Their sum is (+3b_{N-1}).
+
 All other dispatcher summands and the root/drain prefix costs are
 nonnegative. Therefore the stronger conditional score bound is
 \[
