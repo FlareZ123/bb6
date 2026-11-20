@@ -73,11 +73,17 @@ h_2=8X/27-2p-K-3.
 
 For each class (c\in\{50,104,212,320,374,428\}), it suffices to compute (a=c,c+486,c+972). The derived residues used below have period (1458) in (a), so these three representatives cover all nine lifts modulo (4374) of each class modulo (486).
 
-The period reduction is exact. One has
-[
-2^{1458}\equiv2188=1+2187\pmod{6561}.
-]
-Writing (c_a=97\cdot2^{a-8}\equiv1\pmod3), the change (a\mapsto a+1458) changes (K) by (4374c_a) modulo (6561), and changes (r) by (1458(3c_a-1)). Substitution in (B=(2K+7)2^r) gives (3X\pmod{6561}) unchanged; consequently (X\pmod{2187}) is unchanged. The same identities give (X_1\pmod{27}), (X_2\pmod{81}), and (G\pmod9) unchanged. Thus the three representatives per class are sufficient.
+The period reduction is exact. One has $2^{1458}=2188=1+2187$ modulo $6561$, $2^{4374}=1$ modulo $6561$, and $2^{162}=1$ modulo $243$. Put $c_a=97\cdot2^{a-8}$, so $c_a=1$ modulo $3$ because $a$ is even. Under $a\mapsto a+1458$,
+$$
+\Delta K=4374c_a,\qquad \Delta r=1458(3c_a-1).
+$$
+Thus $p=2^K$ is unchanged modulo $6561$. If $U=2K+7$ and $T=2^r$, then
+$$
+\Delta U=2187c_a,\qquad
+\Delta T=2187(3c_a-1)T
+\quad (\bmod 6561).
+$$
+Since $U=2$ and $T=1$ modulo $3$, this gives $\Delta B=4374$ modulo $6561$. Therefore $\Delta(3X)=2\Delta K-2\Delta B=0$ modulo $6561$, so $X$ modulo $2187$ is unchanged. The formula for $9X_1$ then gives $X_1$ modulo $27$ unchanged. Also $\Delta(K-a)=1458(3c_a-1)$ is divisible by $162$, so $Q$ modulo $243$, and hence $G$ modulo $9$, is unchanged. Finally the formula for $X_2$ gives $X_2$ modulo $81$ unchanged, and the derived $X_3$ and $G'$ residues are unchanged. Thus the three representatives per class are sufficient.
 
 Here
 [
@@ -201,11 +207,12 @@ Its odd numerator is
 [
 X_2=\frac{16X}{27}-4p-2K-1.
 ]
-The bounds on (h_2/p) imply
-[
-\frac{2}{3}p<\frac{X_2}{3}<\frac{20}{27}p,
-]
-which is a gap between odd bands at levels (K-4) and (K-3). Therefore the (t=0) odd parent is impossible.
+Since $X_2=2h_2+5$ and $1<h_2/p<10/9$, for $p>2000$,
+$$
+\frac{2p}{3}<\frac{X_2}{3}
+<\frac{20p}{27}+\frac53<\frac{3p}{4}.
+$$
+This is a gap between odd bands at levels $K-4$ and $K-3$. Therefore the $t=0$ odd parent is impossible.
 
 ### 4.1 Five residue classes: (h_2) is a leaf
 
@@ -213,24 +220,22 @@ For (a\bmod486\in\{50,104,212,374,428\}), the table gives (v_3(X_2)=1). Thus (t=
 
 ### 4.2 The (a\equiv320\pmod{486}) class: one odd parent and a four-edge even chain
 
-Here (v_3(X_2)=2), so only (t=0,1) can occur at (h_2). The (t=0) coordinate is in the gap above. The (t=1) coordinate
-[
-P_1=2X_2/9
-]
-satisfies
-[
-\frac49p<P_1<\frac{40}{81}p,
-]
-which is strictly inside the odd band at level (K-4). Hence (h_2) has exactly one odd parent,
+Here (v_3(X_2)=2), so only (t=0,1) can occur at (h_2). The (t=0) coordinate is in the gap above. The $t=1$ coordinate $P_1=2X_2/9$ satisfies, for $p>2000$,
+$$
+\frac{4p}{9}<P_1<
+\left(\frac{40}{81}+\frac{10}{9p}\right)p
+<\frac{99p}{200}.
+$$
+This is strictly inside the odd band at level $K-4$. Hence $h_2$ has exactly one odd parent,
 [
 h_3=2P_1-p/2-K-1
 =\frac{4X_2}{9}-\frac p2-K-1.
 ]
-The same bounds show
-[
-\frac{7}{18}p-o(p)<h_3<\frac{79}{162}p,
-]
-so (h_3) lies strictly inside the even-parent band at level (K-4). The table gives (2h_3+5\not\equiv0\pmod3), so it has no odd parent.
+The same bounds and $(K+1)/p<1/1000$ show
+$$
+\frac{19p}{50}<h_3<\frac{49p}{100},
+$$
+so $h_3$ lies strictly inside the even-parent band at level $K-4$. \not\equiv0\pmod3), so it has no odd parent.
 
 Put (L'=K-4), (Delta_0=p/2-h_3), and (G'=\Delta_0+L'). Then
 [
@@ -255,7 +260,11 @@ Define
 \Delta_j=2^jG'-L',\qquad
 y'_j=p/2-\Delta_j.
 ]
-Then (Delta_{j+1}=2Delta_j+L'), and (L'/p<2^{-a}). For (0\le j\le3),
+Then $\Delta_{j+1}=2\Delta_j+L'$ and $L'/p<2^{-a}$. Since
+$$
+\Delta_0/p>1/82-2^{-a}>1/83,
+$$
+we have $\Delta_j>p/83>3$ for every $j\ge0$. For $0\le j\le3$, For (0\le j\le3),
 [
 3<\Delta_j<2^j p/80\le p/10<p/8,
 ]
