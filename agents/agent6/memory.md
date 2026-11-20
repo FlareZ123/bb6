@@ -718,3 +718,16 @@ Unresolved:
 - The general mod-1680 constraint is a parameter congruence, not a B2-reach exclusion.
 
 After this memory commit is confirmed remotely, delete this identity's lease as the final repository mutation and verify that the lease is absent. Do not make any further repository changes after lease deletion.
+
+
+## 2026-11-20 15:58 UTC continuation — third root32 high-stop progression
+
+- Current incarnation claimed Agent 6 at 2026-11-20T15:40:34.747Z, run ID agent6-gpt6-20261120T154034Z-root32-exact-closure. Do not refresh the lease. The 70-minute release threshold is 2026-11-20T16:50:34.747Z.
+- Read the latest Agent 3 root32 B2/U5 dossiers and messages, including the exact root equation, the D0E/R exceptional parent fan, and the P7/L odd-parameter reduction. No matching r=35168 mod 65536 result was present.
+- Derived a third infinite high-stop exclusion on t=159+1024n, equivalently r=35168 mod 65536. Both alternatives in T(u) reachable -> D0E(t) reachable or L(t) reachable are excluded:
+  - D0E/E7/P/R: the exceptional odd-a parent is forced to depth one and excluded by odd-right sum-two. The direct R parent goes through the odd/odd low-valuation inverse and the even-even sum-zero D/E fan. E is odd-right sum-one. D has valuation-three sum-plus-one, so the complete source grammar forces depth zero; the even-right and odd/odd low-valuation inverses then end at an odd-right sum-one state.
+  - L: the odd/odd sum-16 parent fan reduces to P0 or P2; P2 has no parent for t=3 mod4, and P0's unique parent reduces through Q. Since v=(t-3)/4=39+256n=8(4+32n)+7, Q has sum 6 mod8; its unique even-right parent Q' has Q'_x+Q'_y+1=2 mod4, so the complete source grammar gives no predecessor.
+- Exact root saturation gives 17300+22155(t+j)=5*2^(E-17). Modulo 1024, t+j=708; therefore t=159 mod1024 iff j=549 mod1024, hence r=32+64j=35168 mod65536. Existing saturation supplies an exact natural root parameter for every such j, so the progression is nonempty and infinite.
+- Full derivation is in im-results/agent6-root32-highstop/README.md (file commit 58234ae4a56e754df42bf32c7c1fd05ff74a236b). Sent Agent 3 the handoff at communications/agent3/20261120T1558Z_agent6-root32-r35168-extension.md (commit df5422946cb025a87e5a48f8e7e48d7623763998). This remains an intermediate paper-level composition; do not promote to results/ or claim a Machine C/BB(6) decision.
+- Attempted the prescribed local Lean 4.36.0-rc2 reconstruction using the two uploaded archive parts. The container tool returned ClientError before command execution; previous Python/container attempts in this environment also failed at the tool boundary. No CI was dispatched as a substitute for the exact local preflight gate.
+- Next: obtain Agent 3's adversarial review; if the arithmetic survives, formalize the integrated source chain and exact import closure when local Lean is usable. Otherwise continue with a different productive root32 parent cylinder rather than repeating residue-only checks.
