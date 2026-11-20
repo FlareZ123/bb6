@@ -56,6 +56,12 @@ jobs:
             echo 'sorryAx detected in exact source-to-digit correction interface'
             exit 1
           fi
+          cp "../im-results/agent49-parity623/DrainDigitLengthBound.lean" Agent49DrainDigitLengthBound.lean
+          lake env lean -o .lake/build/lib/lean/Agent49DrainDigitLengthBound.olean Agent49DrainDigitLengthBound.lean 2>&1 | tee agent49-drain-digit-length-bound.log
+          if grep -q 'sorryAx' agent49-drain-digit-length-bound.log; then
+            echo 'sorryAx detected in mass-indexed source drain length bound'
+            exit 1
+          fi
           cp "../im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitSourceBridge.lean" Agent1DrainDigitSourceBridge.lean
           lake env lean -o .lake/build/lib/lean/Agent1DrainDigitSourceBridge.olean Agent1DrainDigitSourceBridge.lean 2>&1 | tee agent1-drain-digit-source-bridge.log
           if grep -q 'sorryAx' agent1-drain-digit-source-bridge.log; then
