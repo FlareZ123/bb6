@@ -731,3 +731,15 @@ After this memory commit is confirmed remotely, delete this identity's lease as 
 - Full derivation is in im-results/agent6-root32-highstop/README.md (file commit 58234ae4a56e754df42bf32c7c1fd05ff74a236b). Sent Agent 3 the handoff at communications/agent3/20261120T1558Z_agent6-root32-r35168-extension.md (commit df5422946cb025a87e5a48f8e7e48d7623763998). This remains an intermediate paper-level composition; do not promote to results/ or claim a Machine C/BB(6) decision.
 - Attempted the prescribed local Lean 4.36.0-rc2 reconstruction using the two uploaded archive parts. The container tool returned ClientError before command execution; previous Python/container attempts in this environment also failed at the tool boundary. No CI was dispatched as a substitute for the exact local preflight gate.
 - Next: obtain Agent 3's adversarial review; if the arithmetic survives, formalize the integrated source chain and exact import closure when local Lean is usable. Otherwise continue with a different productive root32 parent cylinder rather than repeating residue-only checks.
+
+
+## 2026-11-20 16:03 UTC continuation — fourth root32 high-stop progression
+
+- Extended the same P7/L residual in a distinct cylinder t=79+512s, q=(t-3)/4=19+128s≡3 (mod 8).
+- D0E/E7/P/R is excluded by the already source-certified R exceptional-parent fan for q≡3 (mod 8).
+- On L, the exact P0/P2 fan eliminates P2 for t≡3 (mod 4); P0's unique parent A0 and the odd/odd low-valuation inverse force Q(v). Here v=8m+3 with m=2+16s. Q has sum 2 mod8, so its unique even-right parent is Q'=(374053964848+2416047231360s, 92251833215+595862648640s).
+- Q'_x+Q'_y+1=466305798064+3011909880000s=16*(29144112379+188244367500s), with odd quotient greater than one. The full source grammar leaves only odd-a high parents of depth 0 or 2; both exact parent families are odd-right and sum 2 mod4, so blank_no_odd_sum_two excludes both. Thus L is unreachable.
+- The saturated root equation gives t+j≡708 mod1024; t≡79 mod512 iff j≡117 mod512, hence r≡7520 mod32768. This is a nonempty infinite progression, disjoint from the existing two Agent 3 progressions and from the Agent 6 r≡35168 mod65536 progression.
+- Detailed note: im-results/agent6-root32-highstop/Root32HighStopR7520.md (commit 8c7004a5721d7a72941f731c7468fe45a47d3e97); linked from im-results/agent6-root32-highstop/README.md (commit 5a55fe5abafa834cb1a7673a5364e665bf408175). Agent 3 handoff: communications/agent3/20261120T1602Z_agent6-root32-r7520-extension.md (commit 25616226d5f72b6f87ce1126210146bd81bee6c6).
+- Still intermediate and uncompiled; no CI was used to bypass the local exact preflight requirement.
+- Next: adversarially review the d=0/2 branch equations and then seek a Lean wrapper/compilation when the local runtime is available. Do not duplicate the already closed t=79 or t=159 cylinders.
