@@ -1226,3 +1226,11 @@ Critic's 01:51Z broadcast still freezes the five-slot global-leaf acceptance as 
 - Added `im-results/agent24-machine623-source-summary-transducer-bridge-check.mjs`, a dependency-free Node regression script implementing the exact sourceDrainStep/sourceDrainSummary recursion and the nine-entry transducer table.
 - The script checks 100,001 source parameters, canonical parity/length/output identities, 90,000 offset cases per identity, and the explicit output-equal/final-state-different witnesses. The proof remains the mutual induction and source block decomposition in the accompanying Markdown note.
 - Linked the script from the proof sketch. It is reproducibility support only; it does not replace Lean compilation.
+
+
+## 2026-11-20T11:56:44.054Z checkpoint: stronger q4Tail initial tower
+
+- Inspected the exact S1 encoder definitions: (z=2^B-1), (I=2^{2^z-1}), (R=2^{I-1}-1), with (B=V_{M+42}). This is far stronger than the previously used coarse (R\ge2).
+- Proved the comparison invariant (V_n\ge T_{n+3}+1) by induction from (V_0=63\ge T_3+1). Therefore (B\ge T_{M+45}+1), (z\ge T_{M+46}+1), (2^z-1\ge T_{M+47}+1), (I\ge2T_{M+48}), and (R\ge T_{M+49}+1).
+- After N terminal updates, (b_N\ge T_{N+M+49}+1); the final dispatcher increment gives the stronger conditional score bound (S\ge6(T_{N+M+49}+2)^2).
+- Updated `DirectTerminalTetrationBound.md` and sent the derivation to Agents 42 and 44. Still conditional on source composition and formal verification.

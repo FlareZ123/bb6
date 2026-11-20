@@ -148,16 +148,45 @@ For the authentic \(L=76\) q4Tail route, the terminal index is exactly
 \[
 N=(2^{78}-1)2^A-3.
 \]
-The terminal right counter starts at \(R\ge2\) and makes \(N\) updates
-\(b_{j+1}=2^{b_j}-1\), so \(b_N\ge T_N+1\). The final dispatcher increment
-alone contributes \(6\cdot4^{b_{N-1}}=6(b_N+1)^2\). Hence the stronger
-conditional score bound is
+The exact q4Tail S1 encoding gives a much stronger initial right-counter
+bound than \(R\ge2\). Put \(B=V_{M+42}=\texttt{middle34Result.right}\).
+The authentic endpoint has \(z=2^B-1\), and the S1 configuration definitions
+give
 \[
-\boxed{S\ge6(T_N+2)^2,\qquad
-N=(2^{78}-1)2^{
-V_7+\sum_{j=8}^{M+42}V_j+(155\cdot2^{A_0}-4)/3}-3,}
+I=\texttt{q4TerminalInnerCount}(z)=2^{2^z-1},\qquad
+R=\texttt{q4TerminalRight}(z)=2^{I-1}-1.
 \]
-where \(A_0=18+\sum_{j=0}^{6}V_j\) and \(M=31\cdot2^{A_0}-36\).
+With \(T_0=1\), \(T_{n+1}=2^{T_n}\), the V recurrence satisfies
+\[
+V_n\ge T_{n+3}+1
+\]
+for every \(n\): the base is \(V_0=63\ge T_3+1\), and
+\(V_{n+1}=2^{V_n}-1\ge2^{T_{n+3}+1}-1
+=2T_{n+4}-1\ge T_{n+4}+1\).
+Therefore
+\[
+B=V_{M+42}\ge T_{M+45}+1,\quad
+z\ge T_{M+46}+1,\quad
+2^z-1\ge T_{M+47}+1,
+\]
+so \(I\ge2T_{M+48}\), \(I-1\ge T_{M+48}+1\), and finally
+\[
+R\ge T_{M+49}+1.
+\]
+The terminal SectionResult makes \(N\) updates \(b_{j+1}=2^{b_j}-1\).
+Induction from this stronger initial condition gives
+\[
+b_N\ge T_{N+M+49}+1.
+\]
+The final dispatcher increment alone contributes
+\(6\cdot4^{b_{N-1}}=6(b_N+1)^2\). Hence the sharpened conditional score bound is
+\[
+\boxed{
+S\ge6(T_{N+M+49}+2)^2,\qquad
+N=(2^{78}-1)2^A-3,
+}
+\]
+where \(A\) and \(M\) are the exact V-index expressions above.
 
 This exact V-index expression sharpens the earlier \(A_{\min}\) bound by
 retaining every marker offset. It is still conditional on the uncompiled
