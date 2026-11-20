@@ -19,6 +19,5 @@ theorem tail5684_exact :
   rw [block19_2_exact]
   simpa only [Option.bind_some] using terminal1588_exact
 
-#print axioms tail5684_exact
 
 end BB6.Agent2NineteenthRoot
