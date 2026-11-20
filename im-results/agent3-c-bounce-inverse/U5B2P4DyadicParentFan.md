@@ -273,3 +273,23 @@ m+1=8(39+64h)+1,
 and the B2 affine parameter relation \(h=8+128u\), together with the root-index cylinder \((w/8192)\bmod64=32\). These imply \(t=551+8192u\); substituting the source equations yields the exact residual identity, and the previously compiled bridge gives \(u=1802+6720t'\).
 
 This removes the need to assume the residual identity separately once those source equations and parameter relations are supplied. It does **not** derive those hypotheses from an arbitrary blank-start B2 reach, nor does it certify the full `U5B2Root32.lean` source closure. The exact updated parameter-bridge blob `f08d837cd2c0afed92e040541410ffde8c330b53` compiles with Lean 4.36.0-rc2; all nine axiom reports are `[propext, Quot.sound]`, with no `sorryAx`. Keep the full source-orbit exclusion intermediate pending the Critic's exact-source gate.
+
+
+## Stronger q=0 root32 composition — 20 November 2026
+
+The latest standalone parameter-bridge theorem is `u5_q0_root32_forces_h8_parameter`. It takes the U5 residual equations
+\[
+211s+129=5\cdot2^{201+3360w},\qquad 32s=32+840w+m,
+\]
+the q=0 parent form \(m+1=8(39+64h)+1\), the root affine residue \(w=6657+8192r\), the exponent formula, and \(r\equiv32\pmod{64}\). It derives, rather than assumes, a quotient \(u\) satisfying
+\[
+h=8+128u,\qquad u=1802+6720t,
+\]
+and also returns the exact root equation
+\[
+18018+211u+22155r=20\cdot2^{E-13}.
+\]
+
+This removes the earlier explicit `h=8+128*u` premise and exposes the exact root equation needed by the existing root32 exclusion. The exact updated blob `34f925c6860984e7a356538be97e6fa3f912bb4e` compiles under Lean 4.36.0-rc2 with ten clean axiom reports `[propext, Quot.sound]`.
+
+The theorem remains conditional on the U5 residual equations, q=0 parent shape, root affine residue, and root-index class. The quotient \(u=(h-8)/128\) has not yet been identified with the parameter of the separate B2 target family by a source-reach theorem. Full `U5B2Root32.lean` source closure is still uncompiled; keep the blank-start exclusion intermediate pending exact-source acceptance.
