@@ -226,16 +226,18 @@ theorem all_safe_packets_canonical
   obtain ⟨T,hraw⟩ :=
     BB6.Agent2PacketNormalizeSource.normalized_original_source c ha
       BB6.Agent2PacketOneReentry.fixedTail
+  have hraw' :
+      run T (packet c.a c.q c.p
+        BB6.Agent2PacketOneReentry.fixedTail) =
+      packet d.a d.q d.p BB6.Agent2PacketOneReentry.fixedTail := by
+    simpa [d,physical,toState,packet,word] using hraw
   have hfirst :
       ObsEq
         (run T (packet c.a c.q c.p
           BB6.Agent2PacketOneReentry.fixedTail))
         (packet d.a d.q d.p
           BB6.Agent2PacketOneReentry.fixedTail) := by
-    change run T
-      (packet c.a c.q c.p BB6.Agent2PacketOneReentry.fixedTail) =
-      packet d.a d.q d.p BB6.Agent2PacketOneReentry.fixedTail at hraw
-    rw [hraw]
+    rw [hraw']
     exact BB6.Padding.cfgEq_refl _
   have hb :
       d.a % 3 = 0 ∨
