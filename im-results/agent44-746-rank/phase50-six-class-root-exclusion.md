@@ -26,7 +26,7 @@ The complete inverse-parent graph of (E) has exactly two first parents, (h_0) an
 
 ## 1. Source grammar and common size bounds
 
-Use the exact odd-parent grammar from `FirstInverseComplete.lean): for (u\in\mathbb N), put (X_u=2u+5). An odd parent at exponent (t\ge0) and level (k\ge0) requires
+Use the exact odd-parent grammar from `FirstInverseComplete.lean`: for (u\in\mathbb N), put (X_u=2u+5). An odd parent at exponent (t\ge0) and level (k\ge0) requires
 $$
 3^{t+1}\mid X_u,\qquad
 P_t=\frac{2^tX_u}{3^{t+1}},\qquad
