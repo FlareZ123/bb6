@@ -370,3 +370,20 @@ The reset-output labels also generate a **66-state closed paired-carry invariant
 A Lean finite-state formalization is provided in [PostResetCarryPairInvariant.lean](PostResetCarryPairInvariant.lean): it defines the 66-state predicate, checks the 72-state ambient enumeration, lists the 54 reset-output seeds, and proves closure under every input digit pair by finite decision. The workflow [agent49-postreset-carry-invariant.yml](../../.github/workflows/agent49-postreset-carry-invariant.yml) now runs [postreset_pair_closure.js](postreset_pair_closure.js) first; that deterministic audit checks the Lean seed list against the JSON DFA outputs in exact order before compiling Lean.
 
 **Formal boundary:** the Lean theorem proves suffix closure from the listed seeds. The JSON/Lean seed correspondence is checked by the JavaScript audit, not yet proved inside Lean. The invariant applies only after a common reset; it does not prove that every authentic S-window contains a reset, nor does it by itself preserve reset witnesses after dropping one or two low symbols. The corrected Lean source and strengthened workflow have not yet had a successful run; do not call this formalization kernel-verified until that workflow passes.
+
+
+## 2026-11-20: paired post-reset closure and source-digit correction interface
+
+The 54 paired post-reset labels generate a 66-state closure under all nine digit-pair inputs. An independent exact recomputation gives 66 states, 594 valid transitions, and zero predicate failures. The Lean state enumeration now has the missing list separators repaired; its manual workflow first checks the 72-state ambient enumeration and exact ordered equality of the 54 Lean seed tuples with the JSON DFA output labels. The Lean theorem proves closure from those seeds, while the JSON/Lean correspondence remains a deterministic JavaScript check rather than a theorem inside Lean. The workflow has not yet passed.
+
+A source-to-digit correction interface draft was added to
+`../agent1-machine623-3euclidean-correction-bounds/DrainDigitStatsSource.lean`
+as `drainB_digit_source_correction_interface`. It is intended to package, for an actual successful source `drainB` call under its source budget:
+
+- signed first-counter drop `D=L-2n₂`;
+- full evaluator-call count `R_full=n₁+n₂` (so RE's bundled initial evaluator is included);
+- correction bounds `|C|≤34L+122` and `|F|≤24L+84`.
+
+The source workflow now includes this module and its transducer dependency. This is **not yet Lean-compiled** in the current invocation; local shell/Python execution failed at the tool boundary, and no CI substitute was dispatched. The source-to-digit theorem should be reviewed and compiled before use as a certified premise.
+
+**Research boundary:** the 66-state set is a post-reset suffix invariant only. It is not a valid replacement for the full S-window start-carry rectangles, and it does not prove that every authentic S-window contains a reset. The 1,318 observed boundary phases are still a finite trace inventory, not a Markov-closed product. The next mathematical target is a root-restricted transition interface carrying the weighted drain statistics and recognizer states for the 0/1/2-symbol low-shifted suffixes.
