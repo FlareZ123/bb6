@@ -105,6 +105,36 @@ This is a much smaller arithmetic parameter than the enormous feeder coordinate.
 
 For `m` odd, `9*m+4` is odd, so `v₂(3*k+1)=1` and the feeder has no source parent; this recovers the already-known `d ≡ 8 (mod 16)` exclusion. For even `m), the number and depth of possible parents are governed by the full valuation of `9*m+4`, not merely by `d mod 16`.
 
+## New a=1 residual slice: halt depth `d ≡ 48 (mod 64)`
+
+The valuation specialization above gives a further all-time exclusion beyond the current mod-32 residual.
+
+Write `d=16*s` with `s≡3 (mod 4)`, so `d≡48 (mod 64)` and `s≥3`. The a=1 halting target has
+
+```text
+K = 2^(16*s+3) - 24*s - 4
+k = K/2 - 1 = 2^(16*s+2) - 12*s - 3.
+```
+
+For its feeder `F(k)`,
+```text
+3*k+1 = 2 * (3*2^(16*s+1) - (18*s+4)).
+```
+Since `s≡3 (mod 4)`, `18*s+4≡2 (mod 8)`, so `v₂(18*s+4)=1`. The other term is divisible by `2^(16*s+1)), hence `v₂(3*k+1)=2`. The exact odd/odd low-valuation inverse (`oddLowGate`) therefore has the unique parent
+```text
+P = (3*(k-1)/2, (5*k-9)/4)
+  = (3*2^(16*s+1)-18*s-6, 5*2^(16*s)-15*s-6).
+```
+
+Both large powers vanish modulo four. Using `s≡3 (mod 4)`,
+```text
+P.1 ≡ -18*s-6 ≡ 0 (mod 4)
+P.2 ≡ -15*s-6 ≡ 1 (mod 4).
+```
+The global blank-image obstruction `blank_section_no_zeroone` excludes every section state with these residues (equivalently, the complete source grammar has no output in the `(0,1) mod 4` class). Thus P is not blank-reachable; the exact `oddLowGate` equivalence excludes F(k), and the one-left feeder equivalence excludes the original `(1,K)` halting target.
+
+**Conclusion:** every a=1 halting candidate with depth `d≡48 (mod 64)` is excluded. This is outside the current mod-32 residual exclusions (`d≡2 mod 8` and `d≡8 mod 16`). The derivation composes existing source-certified reductions and image invariants, but this new arithmetic composition has not yet been packaged as a standalone Lean theorem.
+
 ## What this does and does not settle
 
 This replaces the fixed-depth feeder discussion by a complete finite source-parent fan. It explains precisely why the existing `oddLowGate` normalizer is sufficient only when `v₂(3*k+1)` is two or three: in that range `n=0` is the sole possible even depth. At higher valuation, every admissible `n=0,2,4,…` branch must be retained.
