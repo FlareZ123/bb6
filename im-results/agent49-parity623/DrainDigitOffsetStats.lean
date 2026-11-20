@@ -281,6 +281,17 @@ theorem runStats_offset_AC_full (n q : Nat) (hq : q + 1 < 3 ^ n) :
 #print axioms runStats_offset_AC_full
 
 
+theorem parity_if_flip (n : Nat) (x y : DrainState) :
+    (if n % 2 = 1 then x else y) =
+      (if (n + 1) % 2 = 1 then y else x) := by
+  by_cases hn : n % 2 = 1
+  · have hnext : (n + 1) % 2 = 0 := by omega
+    simp [hn, hnext]
+  · have hnext : (n + 1) % 2 = 1 := by omega
+    simp [hn, hnext]
+
+#print axioms parity_if_flip
+
 /--
 At the overflow boundary q+1=3^n, the paired output/count data still agree,
 but the terminal states alternate through the indicated two-state pairs.
@@ -305,28 +316,25 @@ theorem run_overflow_final_state_pairs (n : Nat) :
       have hdiv0 : (3 * 3 ^ n) / 3 = 3 ^ n := by omega
       have hmod2 : (3 * (3 ^ n - 1) + 2) % 3 = 2 := by omega
       have hdiv2 : (3 * (3 ^ n - 1) + 2) / 3 = 3 ^ n - 1 := by omega
-      have hparityFlip : (n + 1) % 2 = (if n % 2 = 1 then 0 else 1) := by
-        have hlt : n % 2 < 2 := Nat.mod_lt _ (by decide)
-        omega
       constructor
       · rw [hpow]
         simp [run, step, hmod0, hdiv0]
         rw [hACleft]
-        simp [hparityFlip]
+        exact parity_if_flip n B A
       · constructor
         · rw [hsub]
           simp [run, step, hmod2, hdiv2]
           rw [hACright]
-          simp [hparityFlip]
+          exact parity_if_flip n A C
         · constructor
           · rw [hpow]
             simp [run, step, hmod0, hdiv0]
             rw [hBAleft]
-            simp [hparityFlip]
+            exact parity_if_flip n A B
           · rw [hsub]
             simp [run, step, hmod2, hdiv2]
             rw [hBAright]
-            simp [hparityFlip]
+            exact parity_if_flip n C A
 
 /-- The strict range condition is essential: at the first overflow boundary,
 the paired terminal states can differ. -/
