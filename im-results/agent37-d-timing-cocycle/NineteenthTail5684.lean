@@ -15,6 +15,5 @@ theorem tail5684_exact :
   rw [BB6.DRegularFast.run_add 4096 1588 block19_1, block19_2_exact]
   exact terminal1588_exact
 
-#print axioms tail5684_exact
 
 end BB6.Agent2NineteenthRoot
