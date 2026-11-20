@@ -67,7 +67,7 @@ C_{\rm root}+D_{\rm root}
 <\frac{133}{9}R^2
 <15R^2
 \le15\,4^{-N}b^2
-<\frac{15}{4^N}b^2,
+=\frac{15}{4^N}b^2,
 \tag{2}
 \]
 where the final inequality is immediate for \(N\ge256\).
@@ -96,7 +96,11 @@ Therefore the score is not merely bounded by \(9b_N^2\): conditional on the same
 }
 \]
 
-The relative error is astronomically smaller than the previous factor-nine estimate. This does not improve the adjacent-tetration interval \(T_{q-1}<S<T_q\), but it identifies the exact leading coefficient of the primitive-step count with an explicit error term. It may be useful when comparing the champion's score with other long-running machines.
+The error coefficient \(300N^2/2^N+15/4^N\) decreases for \(N\ge3\); at \(N=256\) it is less than \(1.7\times10^{-70}\). Hence the authentic-root bound is already
+\[
+6b_N^2<S_{\rm TM1}<(6+1.7\times10^{-70})b_N^2,
+\]
+and its actual \(N\) makes the error much smaller still. The relative error is astronomically smaller than the previous factor-nine estimate. This does not improve the adjacent-tetration interval \(T_{q-1}<S<T_q\), but it identifies the exact leading coefficient of the primitive-step count with an explicit error term. It may be useful when comparing the champion's score with other long-running machines.
 
 ## Evidence boundary
 
