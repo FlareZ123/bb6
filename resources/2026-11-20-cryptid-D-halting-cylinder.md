@@ -2,7 +2,7 @@
 
 **Retrieved:** 2026-11-20  
 **Machine:** `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---`  
-**Normalized start:** `A(9, [])) in the @-d high-level notation.
+**Normalized start:** `A(9, [])` in the @-d high-level notation.
 
 ## Exact external formal results
 
