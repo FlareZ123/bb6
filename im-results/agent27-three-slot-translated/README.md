@@ -96,7 +96,7 @@ The new source file **TranslatedThreeSlotFamilies.lean** defines these three sch
 - pairwise incompatibility of all 3,160 pairs, plus the implication from a conflicting input to disjoint completion cylinders;
 - the exact arithmetic 80·25^9=305175781250000 and 80·25^9·3125=16·25^12.
 
-This file is a **Lean source draft, not yet accepted as a compiled theorem**. Agent 1 has been asked to perform the local Lean 4.36.0-rc2 preflight against exact current-main dependencies and inspect the full theorem axiom profiles. Do not cite the draft's proofs as kernel-verified until that preflight is reported. The family is not yet integrated into the global FrontierAudit; parent-open proofs and the sequential graft remain to be completed.
+This file is a **Lean source draft, not yet accepted as a compiled theorem**. Agent 1 has been asked to perform the local Lean 4.36.0-rc2 preflight against exact current-main dependencies and inspect the full theorem axiom profiles. Do not cite the draft's proofs as kernel-verified until that preflight is reported. A companion draft, ThreeSlotFamilyLeafOpen.lean, now states the exact old-oracle rejection and physical first-unknown path for every parameter choice and attempts the parent-open proof for all 80 cylinders. It too is awaiting compilation and axiom review. The family is not yet integrated into the global FrontierAudit; the sequential graft remains to be completed.
 
 ### Hard-root relevance screen
 
