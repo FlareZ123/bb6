@@ -107,7 +107,7 @@ Here \(k=N/3\le N\), \(b_{N-1}<b_N\), \(U\le R\le b_N\), and
 nonleading terms in (10) are less than \(b_N^2\): after the substitutions
 above they are bounded by
 \[
-(6N^2+69N+72)b_N+90N^2+159N<b_N^2.
+(6N^2+69N+72)b_N+90N^2+159N+90<b_N^2.
 \]
 Thus
 \[
@@ -206,9 +206,11 @@ For \(m\ge12\), the remainder divided by \(4^m\) is
 <\frac13+\frac1{1000}+\frac1{1000}<1;
 \]
 the three ratios decrease thereafter. This proves the strict bound at
-the authentic parameters. Since
-\(n=2^m\) and \(R=2^{n-1}-1\), we have
-\(R^2>9\cdot4^m\); also \(b_N\ge R\). Thus
+the authentic parameters. Since \(2^m-1\ge m+2\), \(n=2^m\), and \(R=2^{n-1}-1\),
+\[
+R=2^{2^m-1}-1\ge2^{m+2}-1>3\cdot2^m,
+\]
+so \(R^2>9\cdot4^m\); also \(b_N\ge R\). Thus
 \[
 C_{\rm root}<7\cdot4^m<R^2\le b_N^2.
 \]
@@ -219,7 +221,8 @@ The root drain satisfies
 \[
 D_{\rm root}\le7\cdot4^{n-1}<14R^2<b_N^2,
 \]
-because \(b_N\ge2^N R\) and \(N\ge2\). The dispatcher-plus-terminal
+because \(n\ge4\) gives \(R=2^{n-1}-1>3\cdot2^{n-3}\), hence
+\(R^2>\frac12\,4^{n-1}\), and \(b_N\ge2^N R\) with \(N\ge2\). The dispatcher-plus-terminal
 term satisfies \(D_N<7b_N^2\) by (10)--(11); the added fixed
 \(+90\) is absorbed by the same \(b_N\ge2^{64}\) remainder
 estimate. Therefore the exact score decomposition gives
