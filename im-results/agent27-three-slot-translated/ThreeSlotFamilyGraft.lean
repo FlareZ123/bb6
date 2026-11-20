@@ -94,6 +94,18 @@ theorem familyCerts_conflict_fiveSlot (c : FamilyLeafCert)
     partialConflict c.table agent27WordPump :=
   c.disjointFiveSlot
 
+/-- The five-slot source together with the 80 new sources forms an
+    81-element pairwise-incompatible family. -/
+def all81Tables : List PartialMachine :=
+  agent27WordPump :: familyCerts.map FamilyLeafCert.table
+
+theorem all81Tables_length : all81Tables.length = 81 := by
+  simp [all81Tables, familyCerts_length]
+
+theorem all81Tables_pairwise_conflict :
+    all81Tables.Pairwise partialConflict := by
+  decide
+
 /-- Every new source cylinder remains open after the accepted five-slot
     graft, because the two source partial tables conflict. -/
 theorem FamilyLeafCert.parentOpenAfterFive (c : FamilyLeafCert)
@@ -185,6 +197,23 @@ theorem familyPlusFiveAudit_closes_union (m : Machine)
   rcases h with ⟨c, hc, hm⟩
   exact (familyPlusFiveAudit_closes_candidate c hc m hm).2
 
+theorem familyPlusFiveAudit_closes_fiveSlot (m : Machine)
+    (hm : compatible agent27WordPump m) :
+    agent27Depth4Audit.open m ∧ ¬ familyPlusFiveAudit.open m := by
+  have hFive := agent27_leaf_closed m hm
+  refine ⟨hFive.1, ?_⟩
+  intro hopen
+  have hiff := (familyPlusFiveAudit_open_iff m).mp hopen
+  exact hFive.2 hiff.1
+
+theorem familyPlusFiveAudit_closes_all81 (m : Machine)
+    (h : compatible agent27WordPump m ∨
+      ∃ c ∈ familyCerts, compatible c.table m) :
+    ¬ familyPlusFiveAudit.open m := by
+  rcases h with hFive | hFamily
+  · exact (familyPlusFiveAudit_closes_fiveSlot m hFive).2
+  · exact familyPlusFiveAudit_closes_union m hFamily
+
 theorem familyPlusFiveAudit_exhaustive (m : Machine) :
     DecidedBelow 6 m ∨ familyPlusFiveAudit.open m :=
   familyPlusFiveAudit.exhaustive m (empty_compatible m)
@@ -209,6 +238,8 @@ theorem combinedNewFraction :
 
 #print axioms familyCerts_length
 #print axioms familyCerts_pairwise_conflict
+#print axioms all81Tables_length
+#print axioms all81Tables_pairwise_conflict
 #print axioms familyGraftedAudit_open_iff
 #print axioms familyGraftedAudit_closes_candidate
 #print axioms familyGraftedAudit_closes_union
@@ -221,6 +252,8 @@ theorem combinedNewFraction :
 #print axioms familyPlusFiveAudit_open_iff
 #print axioms familyPlusFiveAudit_closes_candidate
 #print axioms familyPlusFiveAudit_closes_union
+#print axioms familyPlusFiveAudit_closes_fiveSlot
+#print axioms familyPlusFiveAudit_closes_all81
 #print axioms familyPlusFiveAudit_exhaustive
 #print axioms familyPlusFiveAudit_conserves
 #print axioms combinedNewMass
