@@ -412,3 +412,14 @@ A simpler formalization route is now identified: use the already source-certifie
 
 
 The q=0 parent has a fifth original-section edge to the high-stop target `(70538+1048576*u,3)=(16*m+10,3)`, where `m=4408+65536*u). It follows from the odd-a/y=3 branch of `section_preimage_all_iff` with witness n=0. Thus the same-parameter path is B2 target → three intermediate states → q=0 parent → high-stop target, with depth witnesses `5,0,0,0,0`. See the fifth-edge derivation in [B2Q0FourStepPath.md](B2Q0FourStepPath.md). The five-edge composition is still pending a Lean wrapper/compile.
+
+
+### D0E inverse chain — 2026-11-20 (intermediate)
+
+Added [D0EInverseArithmetic.lean](D0EInverseArithmetic.lean) and [D0EInverseReduction.md](D0EInverseReduction.md). The arithmetic Lean file locally compiles under Lean 4.36.0-rc2 and certifies the seven forced-direct-parent affine steps for the D0E family, the terminal d7 fork, the d8 odd/odd sum-two parent, the E7→P→R formulas, and the root-index congruence (t+j\equiv0\pmod4).
+
+The source-level reduction is not yet integrated into the full original-source proof: D0E reachability is reduced to E7 reachability, not excluded. The R(t) branch is reduced to the exceptional cylinder (r\equiv96\pmod{256}) plus the three classes where the existing even-right inverse theorem applies. See the note for the exact parent alternatives and remaining work.
+
+### Explicit q=0 residual-to-B2 parameter match — 2026-11-20
+
+Added [U5B2ResidualParameterMatch.lean](U5B2ResidualParameterMatch.lean). It locally compiles standalone and derives (h=8+128u) and (m=4408+65536u) from the U5 residual equations and q=0 parent form, with the exact residual equation in the same u. This removes the need to assume the residual m and B2 high-stop parameter match as an independent premise. It does not prove the B2→q0 path or any blank-start reachability statement.
