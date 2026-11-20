@@ -46,10 +46,10 @@ Since \(b\ge2^N\ge1\),
 \[
 E_N\le300N^2b.
 \]
-For every \(N\ge256\), \(300N^2\le2^{N/2}\). Consequently
+Using \(b\ge2^N\), we obtain the sharper explicit remainder
 \[
-\boxed{E_N\le2^{-N/2}b^2,\qquad
-D_N\le(6+2^{-N/2})b^2.}
+\boxed{E_N\le\frac{300N^2}{2^N}b^2,\qquad
+D_N\le\left(6+\frac{300N^2}{2^N}\right)b^2.}
 \tag{1}
 \]
 
@@ -67,7 +67,7 @@ C_{\rm root}+D_{\rm root}
 <\frac{133}{9}R^2
 <15R^2
 \le15\,4^{-N}b^2
-<2^{-N/2}b^2,
+<\frac{15}{4^N}b^2,
 \tag{2}
 \]
 where the final inequality is immediate for \(N\ge256\).
@@ -75,7 +75,7 @@ where the final inequality is immediate for \(N\ge256\).
 Combining (1) and (2) with the exact score split yields
 \[
 \boxed{
-S<\bigl(6+2^{1-N/2}\bigr)b_N^2.
+S<\left(6+\frac{300N^2}{2^N}+\frac{15}{4^N}\right)b_N^2.
 }
 \tag{3}
 \]
@@ -89,10 +89,10 @@ Therefore the score is not merely bounded by \(9b_N^2\): conditional on the same
 \[
 \boxed{
 6b_N^2<S_{\rm TM1}
-<\bigl(6+2^{1-N/2}\bigr)b_N^2,
+<\left(6+\frac{300N^2}{2^N}+\frac{15}{4^N}\right)b_N^2,
 \qquad
 1<\frac{S_{\rm TM1}}{6b_N^2}
-<1+\frac{2^{-N/2}}{3}.
+<1+\frac{50N^2}{2^N}+\frac{5}{2\cdot4^N}.
 }
 \]
 
