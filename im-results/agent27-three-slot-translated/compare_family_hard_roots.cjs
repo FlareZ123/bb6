@@ -160,6 +160,63 @@ function pairwiseConflictCount(candidates) {
 
 const source = JSON.parse(fs.readFileSync(candidatePath, "utf8"));
 const candidates = source.candidates;
+
+const letters = "ABCDEF";
+const schemaCandidates = [];
+for (let x = 1; x < 6; x++) {
+  for (const right of [false, true]) {
+    const direction = right ? "R" : "L";
+    const opposite = right ? "L" : "R";
+    for (let y = 0; y < 6; y++) {
+      schemaCandidates.push({
+        entry: 0,
+        period: 3,
+        displacement: right ? -1 : 1,
+        transitions: [
+          { slot: "A/0", action: "1" + direction + letters[x] },
+          { slot: letters[x] + "/0", action: "0" + opposite + letters[y] },
+          { slot: letters[y] + "/1", action: "0" + opposite + "A" }
+        ]
+      });
+    }
+    schemaCandidates.push({
+      entry: 0,
+      period: 4,
+      displacement: right ? -2 : 2,
+      transitions: [
+        { slot: "A/0", action: "1" + direction + letters[x] },
+        { slot: letters[x] + "/0", action: "0" + opposite + "A" },
+        { slot: "A/1", action: "0" + opposite + letters[x] }
+      ]
+    });
+    schemaCandidates.push({
+      entry: 1,
+      period: 3,
+      displacement: right ? 1 : -1,
+      transitions: [
+        { slot: "A/0", action: "0" + direction + letters[x] },
+        { slot: letters[x] + "/0", action: "1" + opposite + "A" },
+        { slot: letters[x] + "/1", action: "0" + direction + letters[x] }
+      ]
+    });
+  }
+}
+function candidateKey(candidate) {
+  return JSON.stringify({
+    entry: candidate.entry,
+    period: candidate.period,
+    displacement: candidate.displacement,
+    transitions: candidate.transitions
+      .map(row => ({ slot: row.slot, action: row.action }))
+      .sort((a, b) => a.slot.localeCompare(b.slot) || a.action.localeCompare(b.action))
+  });
+}
+const schemaSet = new Set(schemaCandidates.map(candidateKey));
+const jsonSet = new Set(candidates.map(candidateKey));
+assert.equal(schemaCandidates.length, 80);
+assert.equal(schemaSet.size, 80);
+assert.equal(jsonSet.size, 80);
+assert.deepEqual(schemaSet, jsonSet);
 assert.equal(candidates.length, 80);
 assert.equal(new Set(candidates.map(c => c.transitions
   .map(row => row.slot + "=" + row.action).sort().join("|"))).size, 80);
