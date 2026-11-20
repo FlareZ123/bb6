@@ -85,7 +85,10 @@ theorem q4TerminalIndex_binDec_shape (L A : Nat) (hA : 2≤A) :
       2^A = 2^((A-2)+2) := by congr 1 <;> omega
       _ = 2^(A-2)*2^2 := by rw [Nat.pow_add]
       _ = 4*2^(A-2) := by
-            rw [show (2:Nat)^2=4 by decide, Nat.mul_comm]
+            calc
+              2^(A-2)*2^2 = 2^(A-2)*4 := by
+                rw [show (2:Nat)^2=4 by decide]
+              _ = 4*2^(A-2) := by exact Nat.mul_comm _ _
   have hterm :
       2^(A-2)*(2^(L+2)-1) =
         firstQ4P1Value L (A-1)+1 := by
