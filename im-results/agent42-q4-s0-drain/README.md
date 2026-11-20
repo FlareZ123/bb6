@@ -826,8 +826,9 @@ the complete resulting configuration with the independently accumulated
 `sectionResult` recurrence, including the exact primitive-step total and
 head displacement.
 
-The full-cycle portion covers 36 combinations of cycle length (24 or 48),
-initial marker (0, 1, 2), inner width (1, 2, 3), and right counter (0, 1).
+All runs use admissible outer widths L>=4. The full-cycle portion covers 36
+combinations of cycle length (24 or 48), initial marker (0, 1, 2), inner
+width (1, 2, 3), and right counter (0, 1).
 Every full-cycle run visits all 24 pairs `(marker, n mod 8)`. A further 12
 short-prefix cases test growing right counters (2 -> 3 -> 7 -> 127 and
 3 -> 7 -> 127), across all markers and inner widths 1 and 2. All complete
