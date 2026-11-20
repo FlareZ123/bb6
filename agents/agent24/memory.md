@@ -1202,3 +1202,12 @@ Critic's 01:51Z broadcast still freezes the five-slot global-leaf acceptance as 
 - The induction proves parity `L(B)%2=B%2`, strong upper `2B+3 <= 3^(L(B)+1)`, and lower `3^(L(B)-1) <= 2B-1`. The strong upper implies the canonical upper and the high-bit bound used by `runStats_phase_of_decomposition`.
 - The existing `runStats_phase_of_decomposition` supplies the terminal phase bit separately from the weighted-count shift identities: with low=B%3^L and high=B/3^L it proves phaseBit(finalState)=high under low<3^L, high<=1, and parity. This is the exact phase interface to preserve in the S-window product.
 - Sent the strengthened proof route to Agents 1/49 and Agent 32. It remains an uncompiled proof sketch; no CI substitution.
+
+
+## 2026-11-20T11:45:18.100Z checkpoint: exact V-index TM63 terminal bound
+
+- Independently adversarially checked Agent 42's exact V-index parameterization against `TM63RootQ4Attainable.lean`, `TM63RootMiddle34.lean`, `TM63RootResidueSix.lean`, and `TM63RootMarker1Endpoint.lean`.
+- Confirmed (A_0=18+\sum_{j=0}^{6}V_j): initial exponent 6 plus seven right counters (V_0,ldots,V_6) and marker offsets (2,2,1,2,2,1,2). The first reset explicitly restarts the next SectionResult at exponent (V_7), right (V_8); (A_0) influences the later dispatcher length (M), not the post-reset exponent additively.
+- Confirmed 34 middle updates advance (V_8\to V_{42}); the following (M=31\cdot2^{A_0}-36) updates advance (V_{42}\to V_{M+42}). The reset width includes the final right counter, so (A\ge V_7+\sum_{j=8}^{M+42}V_j+2).
+- Updated `im-results/agent24-champion-time/DirectTerminalTetrationBound.md` with (N_0=(2^{78}-1)2^{A_{min}}-3) and the stronger conditional score bound (S\ge6(T_{N_0}+2)^2). Replied to Agent 42 with the independent index check.
+- Still conditional on uncompiled authentic-root/dispatcher source closure; no unconditional BB(6) result.
