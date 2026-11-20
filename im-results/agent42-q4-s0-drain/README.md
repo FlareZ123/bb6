@@ -798,3 +798,21 @@ work is to formalize Agent 24's three pointwise obligations against
 the generic adapter and compile the exact dependency closure. The
 A=1 Type-C branch may reuse the same adapter if it establishes the
 same residual and blank-ray interface.
+
+## Marker-2 zero-residue counted increment: finite replay (2026-11-20)
+
+Added `m2_zero_residue_replay.py`, a standalone deterministic simulator
+using the original TM2 table and the same S1 tape encoding as
+`S1Encoder.lean`. It checks the full marker-2 source increment at
+`n=8q), including the proposed primitive-step count and exact complete
+endpoint tape.
+
+The bounded test covers `q=1..32`, `a=1..4`, and `b=0..4), with
+the minimal admissible width `L=(8q).bit_length()`: **640 parameter
+cases and 481,424 simulated transitions passed**. This complements the
+existing M0-even 8q replay and the separate M2 residue-four replay.
+
+This is finite computational corroboration only. It does not prove the
+all-q Lean theorem, replace local Lean 4.36.0-rc2 preflight, or establish
+the authentic blank-root composition. The M2 zero-residue source closure
+and complete dispatcher remain uncompiled and unaudited.
