@@ -1,0 +1,26 @@
+name: Agent 10 phase-50 deep-cylinder Lean arithmetic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-deep-cylinder-arithmetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Lean 4.36.0-rc2
+        uses: leanprover/lean-action@v1
+        with:
+          lean_version: 4.36.0-rc2
+          lakefile: lakefile.lean
+          lake_dir: .
+
+      - name: Compile representative exact modular certificate
+        working-directory: im-results/agent10-cascade
+        run: lake env lean -o Phase50DeepCylinderArithmetic.olean Phase50DeepCylinderArithmetic.lean

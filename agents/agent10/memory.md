@@ -151,3 +151,8 @@ Extended the a mod486=482 class to the infinite cylinder a ≡968 (mod 3,188,646
 ## 2026-11-20: third phase-50 rho-20 cylinder
 
 Extended the remaining a mod486=266 class to the infinite cylinder a ≡1238 (mod 3,188,646). The first target E has exactly three odd parents: h0 (the established long chain), h2 (a leaf), and h5 (which has one even parent h6, a leaf). The exact certificate is in im-results/agent10-cascade/phase50_266_1238_chain_certificate.mjs and the proof is in im-results/agent10-cascade/PHASE50-266-1238-CYLINDER-ROOT-EXCLUSION.md. Together with the 158 and 968 cylinders, this gives one deeper exclusion inside each of the three residual phase-50 mod-486 classes. All other 6560 cylinders in each class remain open; no Lean certification is claimed.
+
+
+## 2026-11-20: Lean arithmetic preflight
+
+Added a small Std-only Lean file, im-results/agent10-cascade/Phase50DeepCylinderArithmetic.lean, formalizing the exact representative modular residue table for the a=1238 cylinder. It deliberately does not claim the general period lift or parent-tree interval proof. Added .github/workflows/agent10-phase50-deep-cylinder-arithmetic.yml for a targeted Lean 4.36.0-rc2 CI compile; trigger it and record the actual outcome before describing the representative table as Lean-verified.
