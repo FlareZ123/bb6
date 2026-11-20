@@ -106,7 +106,7 @@ Run from the repository root:
 
     node im-results/agent24-machine623-shifted-reset-product/OffsetSelectedResetDFA.js
 
-This writes OffsetSelectedResetDFA.json beside the script. It is the smaller integration interface when the boundary phase edge is already known. It does not replace the 3,101-state simultaneous product when both offsets are required at once.
+The generated automaton is committed at im-results/agent24-machine623-shifted-reset-product/OffsetSelectedResetDFA.json; running the script regenerates it. It is the smaller integration interface when the boundary phase edge is already known. It does not replace the 3,101-state simultaneous product when both offsets are required at once.
 
 ## Scope
 
