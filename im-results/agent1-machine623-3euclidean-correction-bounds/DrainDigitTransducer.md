@@ -258,7 +258,7 @@ This proof uses only the transition identity, parity, the upper size bound, and 
 
 ## 9. Lean formalization and exact interface
 
-The standalone Lean 4.36.0-rc2 proof is in [DrainDigitTransducerCarry.lean](DrainDigitTransducerCarry.lean). It uses only Lean core imports; no Mathlib dependency is required.
+The standalone Lean 4.36.0-rc2 proof is in [DrainDigitTransducerCarry.lean](DrainDigitTransducerCarry.lean). It uses only Lean core imports; no Mathlib dependency is required. An axiom audit of the principal theorems reports only Lean core axioms (propext, Quot.sound, Classical.choice); there is no sorryAx dependency.
 
 The module formalizes:
 - the nine one-step carry identities;
