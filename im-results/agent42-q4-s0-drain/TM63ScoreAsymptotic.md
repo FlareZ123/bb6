@@ -1,133 +1,137 @@
-# Near-exact final-increment bound for the TM63 champion score
+# Two-term asymptotic expansion of the TM63 champion score
 
-**Status:** new paper-level inequality, conditional on the existing TM63 source-cost decomposition. It does not certify the uncompiled authentic-root/dispatcher composition and does not establish a BB(6) upper bound.
+**Status:** new paper-level consequence of the existing exact cost decomposition. It does not certify the uncompiled authentic-root/dispatcher composition and does not establish a BB(6) upper bound.
 
 Let
 \[
-S=C_{\rm root}+D_{\rm root}+D_N,
-\qquad b=b_N,
+S=C_{\rm root}+D_{\rm root}+D_N,\qquad
+b=b_N,\qquad k=b_{N-1},
 \]
-be the exact score split in [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md), and let \(N\) be the outer dispatcher index. The existing source-level bounds give
+where \(N\) is the outer dispatcher index, \(N\ge256\), and
 \[
-\begin{aligned}
-D_N\le{}&6b^2+60b+(6N^2+57N-66)b_{N-1}\\
-&+48N+90k^2+111k+12(N+1)U+90,
-\end{aligned}
+b_0=R,\qquad b_{j+1}=2^{b_j}-1,\qquad U\le R,\qquad R\ge63.
 \]
-where \(k\le N\), \(b_{N-1}<b\), and \(U\le R\). They also give
+The exact score split and root-prefix bounds are recorded in [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md). The exact dispatcher-plus-terminal cost identity is recorded in [SectionResultThreeCycle.md](SectionResultThreeCycle.md):
 \[
-C_{\rm root}<7\cdot4^m,\qquad
-D_{\rm root}\le7\cdot4^{n-1},
-\]
-and, with \(R=2^{n-1}-1\),
-\[
-R^2>9\cdot4^m,\qquad R^2>\tfrac12\,4^{n-1},\qquad b\ge2^N R.
-\]
-For the authentic parameters, \(N=(2^{78}-1)2^A-3\ge256\). Here \(R=V_{M+46}\ge V_0=63\), and the dispatcher recurrence starts at \(b_0=R\), so \(b_{N-1}\ge R\), \(b\ge2^N R\), and \(b\ge2^{256}\).
-
-## Dispatcher remainder
-
-The recurrence is \(b_j=2^{b_{j-1}}-1\), so \(b=2^{b_{N-1}}-1\). Since \(b_{N-1}\ge R\ge63\), the elementary inequality \(x^4\le2^x-1\) for \(x\ge63\) gives
-\[
-b_{N-1}\le b^{1/4}.
-\]
-Also \(N^4\le2^N\le b\) for \(N\ge256\), hence \(N\le b^{1/4}\).
-
-Write \(D_N\le6b^2+E_N\). Since \(6N^2+57N-66\le6N^2+57N\), \(k\le N\), and \(U\le R\le b/2^N\), the dispatcher formula gives
-\[
-\begin{aligned}
-E_N\le{}&60b
- +(6N^2+57N)b_{N-1}
- +90N^2+159N+90\\
- &+12(N+1)R\\
-\le{}&60b
- +6b^{3/4}+147b^{1/2}+159b^{1/4}+90
- +12(N+1)2^{-N}b.
-\end{aligned}
-\]
-For \(N\ge256\), \(12(N+1)2^{-N}<10^{-3}\). Since \(b\ge2^{256}\),
-\[
-6b^{3/4}+57b^{1/2}<10^{-3}b,\qquad
-90b^{1/2}+159b^{1/4}+90<10^{-3}b.
-\]
-Therefore
-\[
-\boxed{E_N<60.003b,\qquad D_N<6b^2+60.003b.}
+D_N
+=10N^2+37N+90+12(N+1)U
++\sum_{j=0}^{N-1}
+\left(6\cdot4^{b_j}+42\cdot2^{b_j}+
+(12(N-j)-9)b_j\right).
 \tag{1}
 \]
-
-## Root-prefix and initial-drain remainder
-
-The root bounds and the two lower bounds on \(R^2\) give
+The exact final summand, also isolated in [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md), is
 \[
-C_{\rm root}<\frac79R^2,
-\qquad
-D_{\rm root}<14R^2,
-\]
-so
-\[
-C_{\rm root}+D_{\rm root}<\frac{133}{9}R^2.
-\]
-Since \(b\ge2^R-1\), \(R\ge63\), and
-\[
-2^R-1>\frac{133000}{9}R^2\qquad(R\ge63),
-\]
-we obtain
-\[
-\boxed{C_{\rm root}+D_{\rm root}<\frac b{1000}.}
+L_N=6\cdot4^{k}+42\cdot2^{k}+3k
+=6(b+1)^2+42(b+1)+3k
+=6b^2+54b+48+3k.
 \tag{2}
-(The displayed exponential inequality holds at \(R=63\), and \((2^R-1)/R^2\) is increasing for \(R\ge63\).)
+\]
+All other terms in the score split are nonnegative. Thus \(S=L_N+\Delta\), with \(\Delta\ge0\).
 
-Combining (1) and (2) with the exact score split gives
+## Bounding the remainder after the exact final summand
+
+Removing the \(j=N-1\) term from (1) gives the exact remainder
 \[
-S<6b^2+60.004b<6b^2+60.01b.
+\begin{aligned}
+\Delta={}&C_{\rm root}+D_{\rm root}
++10N^2+37N+90+12(N+1)U\\
+&+\sum_{j=0}^{N-2}
+\left(6\cdot4^{b_j}+42\cdot2^{b_j}
++(12(N-j)-9)b_j\right).
+\end{aligned}
+\tag{3}
 \]
-The exact final summand in the one-dimensional dispatcher-plus-terminal cost formula, derived in [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md), is
+The root-prefix estimates give
 \[
-6\cdot4^{b_{N-1}}+42\cdot2^{b_{N-1}}+3b_{N-1}
-=6(b+1)^2+42(b+1)+3b_{N-1}.
+C_{\rm root}+D_{\rm root}<\frac{133}{9}R^2<15R^2.
+\tag{4}
 \]
-All other dispatcher summands and the root/drain prefix costs are nonnegative, so
+For \(j\le N-2\), monotonicity of the \(b_j\) and
+\(2^{b_j}=b_{j+1}+1\) give
 \[
-S\ge6(b+1)^2+42(b+1)+3b_{N-1}.
+6\cdot4^{b_j}+42\cdot2^{b_j}
+=6b_{j+1}^2+54b_{j+1}+48
+\le6k^2+54k+48.
 \]
-Since \(6b^2+60.01b=6(b+1)^2+48.01b-6\), the full score satisfies the sharper two-sided additive estimate
+The sum of the remaining linear coefficients is
+\[
+\sum_{j=0}^{N-2}(12(N-j)-9)=6N^2-3N-3\le6N^2.
+\]
+Using \(U\le R\), (3) and (4) therefore imply
+\[
+\Delta<
+15R^2+10N^2+85N+90+12(N+1)R
++6Nk^2+54Nk+6N^2k.
+\tag{5}
+\]
+
+We next bound all three parameters by \(b^{1/16}\). Since
+\(b\ge2^N R\), \(N\ge256\), and \(N^{16}\le2^N\) for \(N\ge256\),
+\[
+N\le b^{1/16}.
+\]
+If \(R\le256\), then \(b\ge2^{256}\), so \(R\le b^{1/16}\); if
+\(R\ge257\), use \(b\ge2^R-1\ge R^{16}\). The same split applies to
+\(k\): if \(k\le256\), use \(b\ge2^{256}\); if \(k\ge257\), use
+\(b=2^k-1\ge k^{16}\). The elementary inequalities
+\(x^{16}\le2^x-1\) for integer \(x\ge257\) follow at \(257\) and
+then by monotonicity of \(2^x/x^{16}\). Hence
+\[
+N,R,k\le b^{1/16}.
+\tag{6}
+\]
+Substituting (6) into (5), and using \(b\ge1\), gives
+\[
+\Delta<
+(15+10+85+90+24+6+54+6)b^{3/16}
+=290b^{3/16}<300b^{3/16}.
+\]
+Consequently the exact score lies in the narrow interval
 \[
 \boxed{
 6(b_N+1)^2+42(b_N+1)+3b_{N-1}
 \le S_{\rm TM1}
-<6(b_N+1)^2+48.01b_N-6.
+<
+6(b_N+1)^2+42(b_N+1)+3b_{N-1}
++300b_N^{3/16}.
 }
-\tag{3}
+\tag{7}
 \]
 Equivalently,
 \[
-6b_N^2+54b_N+48+3b_{N-1}
-\le S_{\rm TM1}
-<6b_N^2+60.01b_N.
+S_{\rm TM1}
+=6b_N^2+54b_N+48+3b_{N-1}+\Delta,
+\qquad 0\le\Delta<300b_N^{3/16}.
+\tag{8}
 \]
-In particular, the normalized linear correction satisfies
+In particular, the normalized linear correction is pinned to \(54\):
 \[
 54<
 \frac{S_{\rm TM1}-6b_N^2}{b_N}
-<60.01.
+<
+54+351b_N^{-13/16}
+<
+54+9\times10^{-61},
+\tag{9}
 \]
-Thus the cost outside the exact final dispatcher summand is fewer than \(6.01b_N-48-3b_{N-1}<6.01b_N\) additional primitive steps.
+where the final numerical inequality uses \(b_N\ge2^{256}\).
 
-The relative excess over the quadratic final-increment term is pinned to a narrow interval:
+The relative excess over the quadratic term is also sharply localized:
 \[
 \frac{7}{b_N+1}
 <
 \frac{S_{\rm TM1}}{6(b_N+1)^2}-1
 <
-\frac{48.01b_N-6}{6(b_N+1)^2}
-<
-\frac{48.01}{6b_N}
-\le\frac{48.01}{6\cdot63\cdot2^{256}}
-<1.1\times10^{-78}.
+\frac{7.01}{b_N}.
+\tag{10}
 \]
-This identifies not only the quadratic leading term but also its linear correction to within fewer than \(6.01b_N\) steps. It may be useful when comparing the champion's score with other long-running machines.
+For the upper inequality, use \(k\le b^{1/16}\),
+\(\Delta<300b^{3/16}\), and \(b\ge2^{256}\) to obtain
+\(42+3b^{1/16}+300b^{3/16}<0.06b\).
+
+Thus the score is not merely dominated by the final counted increment: after its exact quadratic and linear terms are removed, the entire remaining cost is less than \(300b_N^{3/16}\). This is a two-term asymptotic expansion with an explicit sublinear error, conditional on the existing source-cost identities.
 
 ## Evidence boundary
 
-This derivation uses only the paper-level inequalities and exact cost split already recorded in the linked sandwich note. It introduces no new simulation claim and no new Lean theorem. The complete authentic TM63 source composition and its transitive axiom audit remain unaccepted; keep this result in im-results/ until that gate passes. In particular, (3) is not an unconditional lower-bound certificate for BB(6), and it says nothing about the remaining six-state machines.
+This derivation uses the exact symbolic dispatcher cost identity and existing root-prefix bounds. It introduces no new simulation claim and no new Lean theorem. The authentic TM63 source composition and its transitive axiom audit remain unaccepted; keep this result in im-results/ until that gate passes. It is not an unconditional lower-bound certificate for BB(6), and it says nothing about the remaining six-state machines.
