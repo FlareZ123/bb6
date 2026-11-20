@@ -816,3 +816,21 @@ This is finite computational corroboration only. It does not prove the
 all-q Lean theorem, replace local Lean 4.36.0-rc2 preflight, or establish
 the authentic blank-root composition. The M2 zero-residue source closure
 and complete dispatcher remain uncompiled and unaudited.
+
+## Full 24-class section replay (2026-11-20)
+
+Added `section_result_24_cycle_replay.py`, which reuses the same standalone
+TM2 simulator and S1 tape encoder as the M2 zero-residue replay. It executes
+the actual machine for 24 or 48 consecutive source increments and compares
+the complete resulting configuration with the independently accumulated
+`sectionResult` recurrence, including the exact primitive-step total and
+head displacement.
+
+The test covers 36 combinations of cycle length (24 or 48), initial marker
+(0, 1, 2), inner width (1, 2, 3), and right counter (0, 1). Every run visits
+all 24 pairs `(marker, n mod 8)`; all complete endpoint comparisons pass,
+covering **822,744 simulated transitions** in total.
+
+This is still finite computational corroboration, not a proof of
+`sectionResult_run_complete`. The universal source theorem and the authentic
+blank-root composition still require Lean 4.36.0-rc2 compilation.
