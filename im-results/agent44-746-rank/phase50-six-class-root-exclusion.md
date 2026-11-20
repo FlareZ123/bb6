@@ -83,11 +83,9 @@ $$
 \Delta T=2187(3c_a-1)T
 \quad (\bmod 6561).
 $$
-Since $r$ is even, $T\equiv1\pmod3$, and $U\equiv2\pmod3$. Therefore
-$
-\Delta B\equiv2187T\big(c_a+U(3c_a-1)\big)
-\equiv4374\pmod{6561}.
-$ Therefore $\Delta(3X)=2\Delta K-2\Delta B=0$ modulo $6561$, so $X$ modulo $2187$ is unchanged. The formula for $9X_1$ then gives $X_1$ modulo $27$ unchanged. Also $\Delta(K-a)=1458(3c_a-1)$ is divisible by $162$, so $Q$ modulo $243$, and hence $G$ modulo $9$, is unchanged. Finally the formula for $X_2$ gives $X_2$ modulo $81$ unchanged, and the derived $X_3$ and $G'$ residues are unchanged. Thus the three representatives per class are sufficient.
+Since $r$ is even, $T\equiv1\pmod3$, and $U\equiv2\pmod3$, we get
+\(\Delta B\equiv2187T(c_a+U(3c_a-1))\equiv4374\pmod{6561}\).
+=2\Delta K-2\Delta B=0$ modulo $6561$, so $X$ modulo $2187$ is unchanged. The formula for $9X_1$ then gives $X_1$ modulo $27$ unchanged. Also $\Delta(K-a)=1458(3c_a-1)$ is divisible by $162$, so $Q$ modulo $243$, and hence $G$ modulo $9$, is unchanged. Finally the formula for $X_2$ gives $X_2$ modulo $81$ unchanged, and the derived $X_3$ and $G'$ residues are unchanged. Thus the three representatives per class are sufficient.
 
 Here
 $$
@@ -205,9 +203,9 @@ $$
  -\frac{26368}{81\cdot2^a}
  -\frac{65K+139}{81p}.
 $$
-For (a\ge50), this lies strictly between (1) and (10/9). Hence (h_2) is in the gap between the even bands at levels (K-3) and (K-2), and has no even parent.
+For $a\ge50$, the two subtracted terms have sum below $1/9$, so $1<h_2/p<10/9$. Hence $h_2$ lies in the gap between the even bands at levels $K-3$ and $K-2$, and has no even parent.
 
-Its odd numerator is
+
 $$
 X_2=\frac{16X}{27}-4p-2K-1.
 $$
@@ -256,7 +254,7 @@ $$
  +\frac{702K-621}{243p}.
 $$
 For $a\ge50$, the bracket is positive, and
-$
+\[
 0<
 \frac{64}{243}\left(
      \frac{3296}{3\cdot2^a}
@@ -267,10 +265,8 @@ $
 \frac{64\cdot3296/729+702/243}{2^a}
 <
 \frac1{80}-\frac1{81}.
-$
-Thus
-$$
-\frac1{82}<\frac{G'}p<\frac1{80}.
+\]
+<\frac{G'}p<\frac1{80}.
 $$
 Define
 $$
@@ -281,7 +277,7 @@ Then $\Delta_{j+1}=2\Delta_j+L'$ and $L'/p<2^{-a}$. Since
 $$
 \Delta_0/p>1/82-2^{-a}>1/83,
 $$
-we have $\Delta_j>p/83>3$ for every $j\ge0$. For $0\le j\le3$, For (0\le j\le3),
+we have $\Delta_j>p/83>3$ for every $j\ge0$. For $0\le j\le3$,
 $$
 3<\Delta_j<2^j p/80\le p/10<p/8,
 $$
