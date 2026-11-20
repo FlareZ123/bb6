@@ -104,3 +104,10 @@ j\equiv1\pmod4,
 \]
 
 This is the next concrete target: analyze the complete source-parent fan for \(R(t)\) on the exceptional root-index cylinder \(r\equiv96\pmod{256}\), while continuing the even-right inverse chain for the other three classes. The Lean file certifies the affine arithmetic and modular identities only; it does not import or re-prove the original source grammar.
+
+
+The local Lean certificate has since been strengthened from the mod-4 consequence to the exact saturation identity
+\[
+17300+22155(t+j)=5\cdot2^{E-17}.
+\]
+This follows by substituting (u=1802+6720t) and (r=32+64j) into the exact root equation and cancelling 64. The congruence (t+j\equiv0\pmod4) and the exceptional cylinder (r\equiv96\pmod{256}) are immediate consequences. The exact identity is now proved as root32_tj_exact in D0EInverseArithmetic.lean.
