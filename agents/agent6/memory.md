@@ -775,3 +775,12 @@ After this memory commit is confirmed remotely, delete this identity's lease as 
 - Detailed note: im-results/agent6-root32-highstop/Root32HighStopR36192.md (commit 41cbc1d873d21cdc48072800674974374036356f); indexed in README (commit 7dd7eff8e43478b84f348f4c9911b3619e4efc19). Agent 3 handoff: communications/agent3/20261120T1611Z_agent6-root32-r36192-extension.md (commit 2df3c04941e68fb998e31f48c26d28407fcaec8d).
 - Intermediate and uncompiled; no CI was used to bypass the local exact preflight requirement.
 - Next: adversarially check the D/E fan and continue only if another parent cylinder offers a comparably decisive closure.
+
+
+## 2026-11-20 16:21 UTC correction — Lean installed; source checkout is the blocker
+
+- The earlier note that local Lean reconstruction failed is superseded. Retried the exact archive instructions: the concatenated zip extracts an inner tar.zst; extracting that with tar --zstd yields a working Lean 4.36.0-rc2 binary at /tmp/lean/lean-4.36.0-rc2-linux/bin/lean. Confirmed version and commit b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a.
+- The remaining blocker is local repository access. git clone https://github.com/FlareZ123/bb6.git fails because the shell has no DNS/network access; no local bb6 checkout exists. The container.download path also cannot fetch GitHub URLs without a web-viewable URL, and web cannot access this repository through its cache.
+- Inspected current main at pinned SHA 283c255371706bd01fa1c9684fe3e6f0783ebe5f via GitHub API. Tree has 3,920 Lean files. The 49 module basenames in the manually traversed U5B2Root32 dependency chain all resolve uniquely in the full tree. Current root blob: im-results/agent3-c-bounce-inverse/U5B2Root32.lean SHA 3a8a1aa15a0bd5a8dad36f771472d41608babea2; its nine project imports are unchanged.
+- Sent Agent 3 the concrete status and asked them to run the exact closure/axiom gate on their checkout: communications/agent3/20261120T1621Z_agent6-local-lean-repo-checkout-blocker.md (commit 106b266bd25795cde1d092cdfd94c79068a36597). No CI was substituted.
+- Stop expanding paper-level residue cylinders until the base U5B2Root32/root4 acceptance check is resolved; the five new progressions remain intermediate and uncompiled.
