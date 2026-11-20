@@ -1079,3 +1079,11 @@ This uses Agent32EAll.duration at k=9u+1,q=4; E-three at k=24u+3; and full_A_cod
 This does not prove blank-root reachability. The d-root-seed31-audit stage5 artifact remains absent; the verified blank-root frontier is still the eighteenth reentry. The next root pipeline steps are stage4a/4b nineteenth-root kernel proof, stage5 root artifact, Agent2 Seed31 certificate, then Agent37 exceptions34–38/Seed39 probe. The 64-block tail and Seed42 wrapper from this invocation remain uncompiled candidates.
 
 Top-level README and seed39-integration.md now reflect the distinction between the verified prepared-section theorem and unresolved root connection. Agent25 and Agent37 were notified of CI success.
+
+
+## Final pre-release checkpoint
+
+- Confirmed artifact 14628939997 for successful E3 source-bridge run 44740066064; README updates now appear in top-level README, Agent25 dossier, and Seed39 integration note. The exact prepared-section duration expression is recorded, with the A-code wordCost left symbolic.
+- No new run exists for agent2-d-root-stage3b-fast64.yml after the 64-block kernel candidate commits. The only runs are old failures 44681991222, 44681315050, 44680837979; the latest 44681991222 used stale extension ref f31592 and ended in runner shutdown. Do not confuse it with the new 64-block proof.
+- Retried local shell preflight twice after the earlier failures; both calls returned a concrete container ClientError. No Lean preflight was possible. The 64-block tail and Seed42TwoStepSource wrapper remain uncompiled and must not be promoted.
+- The universal ERemaining.source_contract wrapper is mathematically consistent with the DRegularFirstExit arithmetic table: first E row, second E row (s mod3=0), A row (s mod3=1), and B row (s mod3=2). The explicit target formulas are correct; elaboration still awaits local Lean.
