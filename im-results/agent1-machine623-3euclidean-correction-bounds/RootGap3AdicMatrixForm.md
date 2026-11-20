@@ -120,7 +120,7 @@ the right branch has a nontrivial unit multiplier congruent to 2 mod 3.
 
 The source depth bounds used by the centered-Y analysis are
 \[
-|D|\le \ell+1,\qquad 0\le r\le\ell,\qquad
+-\ell\le D\le\ell+1,\qquad 0\le r\le\ell,\qquad
 W_Y=36\ell+88<3^k.
 \]
 The table above gives, uniformly in the sector,
