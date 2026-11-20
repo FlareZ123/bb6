@@ -122,3 +122,49 @@ The useful next composition is with the existing two-coordinate carry transducer
 3. the parity-adjusted digit length (L).
 
 This may make the authentic-root boundary-carry closure a smaller finite-state problem. It does **not** establish that the root orbit avoids the terminal strips; the all-time root-history invariant remains open.
+
+
+## 6. A compact state-offset and weighted form
+
+Assign the state offsets
+\[
+s_A=2,\qquad s_B=0,\qquad s_C=1.
+\]
+The output digit in every transition is simply
+\[
+n_i\equiv s_i-b_i\pmod3,
+\]
+with its representative in \(\{0,1,2\}\). The state update can be read directly from the table: an input 1 leaves the state unchanged; an input 0 or 2 toggles between A and a non-A state, with the non-A state recording whether the last such input was 0 (B) or 2 (C). Equivalently, A occurs after an even number of non-1 input digits; B/C occurs after an odd number, with the most recent non-1 digit distinguishing B from C.
+
+This gives immediate interpretations of the digit statistics:
+\[
+R=\#\{i:b_i\ne s_i\},\qquad
+e=\#\{i:b_i\equiv s_i+1\pmod3\}.
+\]
+The mass and branch-threshold corrections have especially simple per-digit weights. If \(\mu(n)=2\) for \(n=1\) and 0 otherwise, and
+\[
+\theta(0)=0,\quad\theta(1)=2,\quad\theta(2)=-4,
+\]
+then, with the sector constants \(c_s=(9,6,4,4)\) and \(c_T=(19,10,-4,2)\) in LO/LE/RO/RE,
+\[
+\boxed{\eta=\beta+\delta=L+c_s+\sum_i\mu(n_i)}
+\]
+and
+\[
+\boxed{T=3D+2R+c_T=3L+c_T+\sum_i\theta(n_i).}
+\]
+Thus the same three-state pass computes both the exact total-mass increment and the exact output-side threshold.
+
+There is also a small sharpening of the mass-indexed window bound. If \(\ell_S\) is least with \(S+3\le\tau(\ell_S)\), then \(q+3\le S+3\le\tau(\ell_S)\). Each canonical drain parameter satisfies \(b\le q+3\), so
+\[
+2b-1<3^{\ell_S}.
+\]
+The defining lower bound \(3^{L-1}\le2b-1\) therefore gives \(L\le\ell_S\). Since \(\sum_i\mu(n_i)\le2L\) and \(c_s\le9\),
+\[
+\eta\le3L+9\le3\ell_S+9.
+\]
+Using \(q\le S/2\) and the existing \(\ell_S\le S/2-1\) estimate for \(S\ge20\), the exact mass recurrence \(S'=S+q+\eta\) improves the previous coarse upper bound to
+\[
+\boxed{S'\le3S+6.}
+\]
+This does not change the established \(\ell_{S'}-\ell_S\in\{0,1\}\) conclusion, but gives a sharper source-independent growth envelope.
