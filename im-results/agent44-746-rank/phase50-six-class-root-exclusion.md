@@ -301,10 +301,10 @@ p/4<y'_4<p/3.
 This lies strictly between the upper endpoint \(p/4-3\) of the even band at level \(L'-1\) and the lower endpoint \(3p/8-1\) at level \(L'\). Therefore the even chain ends at \(y'_4\).
 
 There are no odd parents anywhere on this chain. Indeed,
-$
+\[
 2y'_j+5=A'-2^{j+1}G',
 \qquad A'=p+2L'+5=p+2K-3.
-$$
+\]
 Since $p\\equiv1\\pmod3$, $K\\equiv2\\pmod3$, and $G'\\equiv0\\pmod3$, we have $A'\\equiv2\\pmod3$, so $2y'_j+5\\equiv2\\pmod3$ for every $j$.
 
 ## 5. Exhaustion and scope
