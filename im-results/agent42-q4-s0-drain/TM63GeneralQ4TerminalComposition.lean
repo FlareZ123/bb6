@@ -159,7 +159,7 @@ theorem tm63_blank_reaches_general_q4_terminal :
       _ = run tm2 (q4TerminalPrefixCost tm63Length1 rootMarker1A rootMarker1Z)
             (shiftConfig rootMarker1Head rootSecondQ4TailFrame) := by
               rw [tm63_blank_reaches_second_q4_tail]
-              rfl
+              simp only [Option.bind_some]
       _ = some (shiftConfig rootMarker1Head
             (s1Config (q4TerminalWidth tm63Length1 rootMarker1A) 0 0
               (q4TerminalResult tm63Length1 rootMarker1A rootMarker1Z).exponent
@@ -208,7 +208,7 @@ theorem tm63_blank_halts :
       tm63GeneralQ4TerminalHead).tape
     tm63GeneralQ4TerminalHead
     (by
-      simpa [s1Config] using tm63_blank_reaches_general_q4_terminal)
+      simpa [s1Config, s0Config] using tm63_blank_reaches_general_q4_terminal)
     tm63_general_q4_terminalSectionBits
 
 /-- An exact attainable lower-bound expression for the six-state champion,
