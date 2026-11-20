@@ -61,7 +61,7 @@ private theorem q4TerminalIndex_lt (L A : Nat) :
       _ = 2^(A+L+2) := by congr 1 <;> omega
   have hM : firstQ4P1M L A < 2^(A+L+2) := by
     unfold firstQ4P1M
-    rw [hpow]
+    rw [← hpow]
     exact hmul
   unfold q4TerminalIndex q4TerminalWidth
   exact Nat.lt_of_le_of_lt (Nat.sub_le _ _) hM
