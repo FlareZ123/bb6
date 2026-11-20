@@ -63,7 +63,7 @@ Substitution gives the following exact identities with the corresponding source-
 | 9 | B | (3,4) | 5 | 1 | (12k^2+49k+40) |
 | 10 | E | (2,4) | 27 | 1 | (12k^2+49k+64) |
 
-For E with (q=0), the constant is (m+37=50). For E with (q>0,b=0), the external argument is (m=4q+13), giving (m+37=50+4q). For E with (q>0,b\ge2) on this path, (m=6q+15), giving (m+37=52+6q). For B on this path, (m=5), giving (m+35=40). These are exactly the corresponding DRegular duration formulas. The table is a BigInt arithmetic audit of the first ten concrete trace states; the symbolic (K=4k+1) inference is the remaining small proof obligation if this calculation is promoted into Lean.
+For E with (q=0), the constant is (m+37=50). For E with (q>0,b=0), the external argument is (m=4q+13), giving (m+37=50+4q). For E with (q>0,b\ge2) on this path, (m=6q+15), giving (m+37=52+6q). For B on this path, (m=5), giving (m+35=40). These are exactly the corresponding DRegular duration formulas. The table is a BigInt arithmetic audit of the first ten concrete trace states at outer cylinder parameter zero. The displayed polynomial duration identities are conditional on the symbolic (K=4k_i+1) extraction; that is the remaining small proof obligation before calling the first-ten timed bridge formal.
 
 The exact suffix updates and endpoint parameters remain those in Agent 4's trace and `First10AffineBridge`. The first ten calls end at (L(D_1,4,1)), with
 [
