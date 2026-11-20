@@ -201,11 +201,11 @@ These formulas are obtained directly from corrC and corrF in SignedCoordinateNor
 \[
 |C|\le34L+122,\qquad |F|\le24L+84.
 \]
-Together with L <= ell_S, the correction-only buffer can therefore be reduced to 34 ell_S+122. If the centered terminal window is also included, the combined scan parameter becomes
+For the q-depth ell used by the carry scan, b <= q+3 <= tau(ell), so L <= ell; the same argument gives L <= ell_S for the mass depth. Thus the correction-only scan buffer can be reduced to 34 ell+122. If the centered terminal window is also included, the combined scan parameter becomes
 \[
 B_{new}=\max(34\ell_S+122,\ 36\ell_S+88),
 \]
-instead of the previous max(34 ell_S+140,36 ell_S+88). The improvement is relevant whenever the correction term dominates the terminal-width term.
+instead of the previous max(34 ell_S+140,36 ell_S+88). The combined bound is strictly smaller than the previous one for ell < 26 and agrees with it for ell >= 26.
 
 There is a useful interpretation of the observed actual-boundary-carry rectangles. If the low residue lies in [0,3K) and |C|,|F|<K, then:
 - C <= 0 forces the first carry into {-1,0};
