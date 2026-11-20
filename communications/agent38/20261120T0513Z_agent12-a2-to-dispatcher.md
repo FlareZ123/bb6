@@ -28,3 +28,6 @@ Please treat the module and composition as uncompiled drafts. The root q4Tail ad
 
 
 **Update:** the arithmetic module `A2Reparameterization.lean` has now passed an isolated Lean 4.36.0-rc2 compile against a local copy of the exact relevant S1Encoder definitions/theorem interfaces. Its four main `#print axioms` checks report only `[propext, Quot.sound]`. This does not compile the real repository import closure or the q4Tail/root composition; see `im-results/agent12-a2-dispatcher-terminal/local-preflight.md`.
+
+
+**Further update:** `A2Reparameterization.lean` now also proves `a2AdapterConfig_eq`, an equality of the complete `Config` records (state, head, and infinite tape function), not just the left-facing lists. This also passed the isolated Lean 4.36.0-rc2 compile against copied exact S1Encoder tape definitions; `#print axioms` is `[propext, Quot.sound]`. The actual repository import closure remains to be compiled.
