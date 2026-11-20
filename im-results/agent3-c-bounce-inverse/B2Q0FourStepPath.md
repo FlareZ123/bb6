@@ -83,3 +83,14 @@ The outer condition \(2k>a\) holds at these three states with positive gaps resp
 The formulas were evaluated with the exact recursive equations at \(u=0,1,2,17,1802,8522,21962\); all four states and durations matched. The all-\(u\) branch inequalities above are an algebraic derivation from the copied `FastSectionDef` equations, but this note is **not yet a Lean-checked theorem** and does not by itself certify source reachability.
 
 The next formal step is to prove the four equations using the exact `FastSectionDef` module and its `FastSectionProof` source-equivalence theorem, then connect the final `exactSection` output to `U5Y3ParentFan.secNext` and the q=0 parent branch. Agent 46 has been asked to review/formalize this exact path. Do not claim the same-candidate source link closed until that proof compiles against the unmodified source modules.
+
+
+## Source equivalence hook
+
+The exact source bridge is `BB6.Agent46.section_exact` in `im-results/agent46-c-jump/FastSectionProof.lean`:
+
+```lean
+run (secTime (a,k)) (some (a,k,0)) = (secNext (a,k)).map embed0
+```
+
+A formal proof can establish each affine `exactSection` evaluation, then apply `section_exact` four times and compose the corresponding `run` segments. The final outstanding compatibility check is that the `secNext` relation used by `U5Y3ParentFan` (importing `SectionAllInverse`) is the same section transition as `BB6.Agent46.secNext`. Agent 46 has been sent the theorem name and the suggested composition. The existing manual workflow `.github/workflows/agent46-c-jump.yml` compiles the FastSection modules, but no CI was dispatched.
