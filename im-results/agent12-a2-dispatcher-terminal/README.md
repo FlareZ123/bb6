@@ -42,7 +42,7 @@ because
 `d0pow(n-1) ++ d1pow K` is the S1 left-counter encoding, while
 `d0 ++ binDec 80 (2^80-7) = d0pow 2 ++ d1pow 2 ++ d0pow (L+1)`.
 
-The authentic-root q4Tail adapter draft is `im-results/agent38-root-q4tail/P2RootS0Identity.lean`; the A=2 list reparameterization is currently documented in the Agent 49 note, not yet a compiled root theorem.
+The authentic-root q4Tail adapter draft is `im-results/agent38-root-q4tail/P2RootS0Identity.lean`. The generic A=2 list identities and the complete S0/S1 `Config` equality are now formalized in [`A2Reparameterization.lean`](A2Reparameterization.lean): `a2FullLeftFacing_eq` and `a2AdapterConfig_eq`. They passed an isolated Lean 4.36.0-rc2 compile against a local copy of the exact relevant S1Encoder definitions and tape semantics, with axiom profile `[propext, Quot.sound]`. The actual repository import closure and the authentic-root instantiation of K/n have not yet been compiled.
 
 ## Counted S0/S1 drain
 
@@ -127,7 +127,7 @@ This composition avoids the separate general-`m=0` canonical endpoint problem in
 ## Required acceptance work
 
 1. Prove the authentic blank-root run to the A=2 q4Tail frame and compile the full `P2RootS0Identity.lean` import closure.
-2. Formalize the A=2 list equality `ell34 = d1pow K ++ markerWord 0 ++ d0pow 2 ++ d1pow 2 ++ d0pow 77 ++ lh`, the two `binDec` identities, and the root parameter arithmetic `tm63Length1=76`, `k=80`, `n0=2^80-7`.
+2. Instantiate `a2FullLeftFacing_eq` / `a2AdapterConfig_eq` in the authentic root adapter by proving its exact `ell34` residual and identifying K and n; check `tm63Length1=76`, `k=80`, `n0=2^80-7` in Lean. The generic BinDec identities are already proved in `A2Reparameterization.lean`.
 3. Compose the q4Tail adapter output with `s1Config_counted_drain_closed`, using `a=K+n-1` and `k=n-1`.
 4. Preflight the full `TM63SourceIncrementDispatcherComplete.lean` dependency closure, then check its declared axiom profiles.
 5. Prove the marker-0 arithmetic in Lean and compose with `s0_reset_sectionBits` / `champion_attainable_after_terminal_prefix`.
