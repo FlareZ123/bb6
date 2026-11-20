@@ -170,3 +170,23 @@ The resulting product-state closure problem has finite components:
 - sector/branch phase.
 
 First test the strongest useful closure statement (all full-range start phases and all allowed shifts). If it fails, preserve the shortest counterexample and restrict only with source-derived root-phase constraints. If it closes, the finite reachable phase graph is the proof certificate. The index-33 output-suffix counterexample must remain in the test suite: closure is for the *whole next window*, not an arbitrary suffix.
+
+
+## 9. Sector transition once the central-block bridge is available
+
+The source parity table is:
+- LO input gives odd output second counter;
+- LE input gives even;
+- RO input gives even;
+- RE input gives odd.
+
+By the conditional branch-selection lemma, output orientation is left iff (g>0). Combining orientation with parity gives the exact sector transition table outside the terminal window:
+
+| Current sector | (g>0) (left output) | (g<0) (right output) |
+|---|---|---|
+| LO | LO | RO |
+| LE | LE | RE |
+| RO | LE | RE |
+| RE | LO | RO |
+
+Thus the sector phase is only a four-state component; the output-side decision is the sign bit of (g), and the parity update is fixed by the current sector. This recovers the eight possible sector edges without a drain-statistic comparison. It does not determine the next sign (g'); that remains part of the joint root phase and the digit transducer.
