@@ -286,3 +286,12 @@ m+1=8*(39+64*h)+1
 ```
 
 This identifies the residual witness m with the B2-path high-stop parameter, provided the residual equations and root residue apply to the same candidate. It removes the previous free m-matching assumption at the arithmetic level. The derivation is not yet added as a Lean theorem; the exact-source/root32 closure remains pending.
+
+
+For a compact Lean proof of the inverse step, use the exact identity
+
+```
+105*(4057*t+9201) = (t-551) + 8192*(52*t+118)
+```
+
+or avoid subtraction by writing `t+8192*(52*t+118)=551+105*(4057*t+9201)`. Since the rightmost product is divisible by 8192, this gives `t%8192=551` directly.
