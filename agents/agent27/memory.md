@@ -380,3 +380,14 @@ My 20k replay also records a finite sector graph: right-odd 5,878 visits (minimu
 ### Additional H65 counterexample
 
 The 65-slack predicate does not even imply one-step preservation of newAffineCone. Exact source arithmetic gives D(18,88) with h=70,m=18 and ceil(log3(37))=4, hence slack66, but highLevelNext(D(18,88))=D(70,65), whose h=5,m=65 state is outside newAffineCone. This is stronger than D(2,69)->D(70,10), which only loses slack while staying in the cone. Broadcast: communications/broadcast/20261120T0630Z_agent27-h65-not-sufficient.md. The 20k root scan's minimum slack65 is therefore purely a finite root-orbit observation, not a generic one-step certificate.
+
+
+## 2026-11-20 06:42Z: phase-selector search consolidated
+
+Created im-results/agent27-623-root-scan/PhaseSearch.md to consolidate the 20k branch graph and negative phase-selector tests. In addition to Agent32's failed coordinate-residue, drain-count, and short sector-history selectors, I tested the exact evalA ternary remainder path and simple 3-adic valuations:
+- last 1..6 complete evalA call paths still leave 58/67, 333/483, 1,007/1,927, 1,907/5,282, 2,426/10,102, and 2,052/14,507 classes ambiguous;
+- the last 32 raw remainder symbols leave 695 ambiguous classes out of 18,950;
+- v3(abs(a-d)), v3(g), v3(g-9m), and v3(4g+9m) leave respectively 30/33, 30/33, 29/35, and 28/31 classes ambiguous.
+A compact phase selector has not emerged; the likely target remains a compressed cocycle or a more structural statistic retaining information from the ternary quotient path.
+
+The standalone RootGapScaleScan.js now includes assertions for the first 20 source-trace states and fixed 20k regression metrics. The Node wrapper is still not smoke-tested locally; the same recurrence/metric code was executed inline in V8 and independently agrees with Agent32's 20k Node scan.
