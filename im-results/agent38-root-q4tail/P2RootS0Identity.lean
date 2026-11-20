@@ -283,6 +283,7 @@ theorem q4TailS0SourceGuards
     let x : Int := 5+(j:Int)
     have hx : 5≤x := by dsimp [x]; omega
     have hVx : V x = U x := by
+      change (frameAt U 3 firstCyclePostludeInside firstCyclePostludeEnd).tape x = U x
       rw [frameAt_tape]
       have hnot : firstCyclePostludeInside (x-3)=false := by
         simp [firstCyclePostludeInside]
@@ -297,7 +298,7 @@ theorem q4TailS0SourceGuards
       have hcases :
           x=(m:Int)+2 ∨ x=(m:Int)+3 ∨ x=(m:Int)+4 := by omega
       rcases hcases with h2|h3|h4
-      · rw [h2]
+      · rw [h2] at hVx
         have hu : U ((m:Int)+2) = S.tape ((m:Int)+2) := by
           rw [hshift]
           have hneq : (m:Int)+2≠4 := by omega
@@ -307,7 +308,7 @@ theorem q4TailS0SourceGuards
           V ((m:Int)+2) = U ((m:Int)+2) := hVx
           _ = S.tape ((m:Int)+2) := hu
           _ = true := hSrightOne 1 (by omega)
-      · rw [h3]
+      · rw [h3] at hVx
         have hu : U ((m:Int)+3) = S.tape ((m:Int)+3) := by
           rw [hshift]
           have hneq : (m:Int)+3≠4 := by omega
@@ -317,7 +318,7 @@ theorem q4TailS0SourceGuards
           V ((m:Int)+3) = U ((m:Int)+3) := hVx
           _ = S.tape ((m:Int)+3) := hu
           _ = true := hSrightOne 2 (by omega)
-      · rw [h4]
+      · rw [h4] at hVx
         have hu : U ((m:Int)+4) = S.tape ((m:Int)+4) := by
           rw [hshift]
           have hneq : (m:Int)+4≠4 := by omega
@@ -329,6 +330,7 @@ theorem q4TailS0SourceGuards
           _ = true := hSrightOne 3 (by omega)
 
   have hT1outside (x : Int) (hx : 5≤x) : T1 x = V x := by
+    change (frameAt V 1 secondCyclePrefix34Inside secondCyclePrefix34End).tape x = V x
     rw [frameAt_tape]
     have hnot : secondCyclePrefix34Inside (x-1)=false := by
       simp [secondCyclePrefix34Inside]
@@ -336,6 +338,7 @@ theorem q4TailS0SourceGuards
     simp [hnot]
 
   have hT1leftOutside (x : Int) (hx : x≤-7) : T1 x = V x := by
+    change (frameAt V 1 secondCyclePrefix34Inside secondCyclePrefix34End).tape x = V x
     rw [frameAt_tape]
     have hnot : secondCyclePrefix34Inside (x-1)=false := by
       simp [secondCyclePrefix34Inside]
@@ -343,6 +346,7 @@ theorem q4TailS0SourceGuards
     simp [hnot]
 
   have hVleftOutside (x : Int) (hx : x≤-7) : V x = U x := by
+    change (frameAt U 3 firstCyclePostludeInside firstCyclePostludeEnd).tape x = U x
     rw [frameAt_tape]
     have hnot : firstCyclePostludeInside (x-3)=false := by
       simp [firstCyclePostludeInside]
@@ -565,6 +569,7 @@ theorem q4TailS0SourceGuards
         (by dsimp [h1]; omega)
     have hframe2 : T1 x=V x := hT1outside x (by omega)
     have hframe1 : V x=U x := by
+      change (frameAt U 3 firstCyclePostludeInside firstCyclePostludeEnd).tape x = U x
       rw [frameAt_tape]
       have hnot : firstCyclePostludeInside (x-3)=false := by
         simp [firstCyclePostludeInside]
@@ -646,12 +651,31 @@ theorem q4TailS0Frame_eq_s0Config
 
 /-- The authentic blank-root q4Tail frame is the generic source frame
 with the root's exact positive-z parameters. -/
-theorem tm63_root_second_q4Tail_eq_s0Config :
+theorem tm63_root_second_q4Tail_eq_q4TailS0Frame :
     rootSecondQ4TailFrame =
       q4TailS0Frame rootMarker1Z
         (firstQ4P1Width tm63Length1 rootMarker1A)
         (firstQ4P1Value tm63Length1 rootMarker1A) := by
   rfl
+
+/-- Direct root-specialized statement of the authentic q4Tail-to-S0
+identity. -/
+theorem tm63_root_second_q4Tail_eq_s0Config :
+    let z := rootMarker1Z
+    let w := firstQ4P1Width tm63Length1 rootMarker1A
+    let q := firstQ4P1Value tm63Length1 rootMarker1A
+    let a : Nat := 2^z-1
+    let n : Nat := 2^a
+    let m : Nat := 3*2^z+3*z+7
+    rootSecondQ4TailFrame =
+      s0Config (p2ResidualLeft m (q4TailS0Tail w q))
+        (n-1) (2^(n-1)-1) 0 (m+2+3*n) := by
+  have hframe := tm63_root_second_q4Tail_eq_q4TailS0Frame
+  have hsource := q4TailS0Frame_eq_s0Config rootMarker1Z
+    (firstQ4P1Width tm63Length1 rootMarker1A)
+    (firstQ4P1Value tm63Length1 rootMarker1A)
+    (le_trans (by decide) rootMarker1Z_ge_three)
+  simpa [hframe] using hsource
 
 /-- One full source-level q4Tail-to-q4Tail recurrence from the authentic
 second q4Tail frame. -/
@@ -692,7 +716,7 @@ theorem tm63_blank_reaches_next_q4Tail :
   have hz : 1≤rootMarker1Z :=
     le_trans (by decide) rootMarker1Z_ge_three
   have hroot := tm63_blank_reaches_second_q4_tail
-  have hframe := tm63_root_second_q4Tail_eq_s0Config
+  have hframe := tm63_root_second_q4Tail_eq_q4TailS0Frame
   have hstep := q4TailS0Frame_to_nextQ4Tail rootMarker1Z w q hz
   have hstepRoot :
       run tm2 (q4TailS0NextCost rootMarker1Z) rootSecondQ4TailFrame =
