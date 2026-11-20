@@ -97,8 +97,8 @@ Thus the current source-conditional score interval is
 See [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md) for
 the complete root/score upper proof and
 [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md)
-for the exact terminal lower bound. The index comparison \(q<T_J<T_{11}\)
-also places the upper endpoint below the published right endpoint.
+for the exact terminal lower bound. The consolidated note also proves \(q<T_{11}\), so
+\(T_q<T_{T_{11}}\), below the published right endpoint.
 
 **Evidence boundary:** this is a source-level integration candidate, not
 an accepted halt or lower-bound result. Lean 4.36.0-rc2 is now installed
