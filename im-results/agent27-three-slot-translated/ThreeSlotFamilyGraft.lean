@@ -78,9 +78,16 @@ theorem familyLeafCertificates_length : familyLeafCertificates.length = 80 := by
 /-- The dependent certificate list retains the 80-way pairwise conflict
     property. This is a kernel-checked finite proof over the explicit
     parameter lists, not a claim inferred from the search log. -/
+theorem familyCerts_tables_eq_candidateTables :
+    (familyCerts.map FamilyLeafCert.table) = candidateTables := by
+  simp [familyCerts, period3FamilyCerts, period4FamilyCerts,
+    entryOneFamilyCerts, period3Tables, period4Tables, entryOneTables,
+    candidateTables]
+
 theorem familyCerts_pairwise_conflict :
     (familyCerts.map FamilyLeafCert.table).Pairwise partialConflict := by
-  decide
+  rw [familyCerts_tables_eq_candidateTables]
+  exact candidateTables_pairwise_conflict
 
 theorem familyCerts_pairwise_disjoint (c d : FamilyLeafCert)
     (h : partialConflict c.table d.table) :
@@ -217,6 +224,7 @@ theorem all81SourceFraction :
   exact combinedNewFraction
 
 #print axioms familyCerts_length
+#print axioms familyCerts_tables_eq_candidateTables
 #print axioms familyCerts_pairwise_conflict
 #print axioms all81Tables_length
 #print axioms all81Tables_pairwise_conflict
