@@ -50,12 +50,12 @@ $$
                  +\frac{2K+13}{3p}.
 $$
 In particular,
-$
+\[
 4p<E<\frac{53}{10}p<6p-1,\qquad 10.4p<X<10.6p.
-$
-The sharper upper bound follows from $x>97/64$ and $K/p<2^{-a}$. Thus $E$ lies strictly above the even band at level $K-1$ and strictly below the even band at level $K$, so it has no even parent.
+\]
+The sharper upper bound follows from \(x>97/64\) and \(K/p<2^{-a}\). Thus \(E\) lies strictly above the even band at level \(K-1\) and strictly below the even band at level \(K\), so it has no even parent.
 
-For (P_t=2^tX/3^{t+1}), the size bounds place:
+2^tX/3^{t+1}), the size bounds place:
 - (P_0) in the odd band at level (K-1);
 - (P_1) in the gap ((2p,3p));
 - (P_2) in the odd band at level (K-2);
@@ -274,17 +274,17 @@ $$
 $$
 Each $y'_j$ is therefore in the even-parent band at level $L'$, with unique parent $y'_{j+1}$.
 
-At $j=4$, the lower bound improves to $\Delta_4>p/6$ because $16/82-2^{-a}>1/6$ for $a\ge50$. Thus
-$
+At \(j=4\), the lower bound improves to \(\Delta_4>p/6\) because \(16/82-2^{-a}>1/6\) for \(a\ge50\). Thus
+\[
 p/6<\Delta_4<p/5,
-$
+\]
 and
-$
+\[
 p/4<y'_4<p/3.
-$
-This lies strictly between the upper endpoint $p/4-3$ of the even band at level $L'-1$ and the lower endpoint $3p/8-1$ at level $L'$. Therefore the even chain ends at $y'_4$.
+\]
+This lies strictly between the upper endpoint \(p/4-3\) of the even band at level \(L'-1\) and the lower endpoint \(3p/8-1\) at level \(L'\). Therefore the even chain ends at \(y'_4\).
 
-There are no odd parents anywhere on this chain. Indeed,
+ Indeed,
 $$
 2y'_j+5=A'-2^{j+1}G',
 \qquad A'=p+2L'+5=p+2K-3.
