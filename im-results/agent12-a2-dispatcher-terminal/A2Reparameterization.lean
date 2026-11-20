@@ -4,25 +4,23 @@ import Lean.Elab.Tactic.Omega
 /-!
 # A=2 q4-tail residual as a canonical S1 reset input
 
-Source-only draft. This module proves the two BinDec factorizations and
-the resulting full left-facing list equality used in
-`im-results/agent12-a2-dispatcher-terminal/README.md`.
-It has not been compiled in this invocation.
+The arithmetic/list lemmas in this file passed an isolated Lean 4.36.0-rc2
+compile against a local copy of the relevant S1Encoder definitions and
+lemmas. The repository import closure itself has not yet been compiled.
 -/
 
 namespace BB6Coverage.Agent12A2Reparam
 
 open BB6Coverage.Agent8S1Encoder
 
-/-- The maximal counter value is encoded by a full run of d0 blocks. -/
 theorem binDec_max (k : Nat) :
     binDec k (2^k - 1) = d0pow k := by
   induction k with
   | zero =>
       simp [binDec, binaryCounterFuel, d0pow]
   | succ k ih =>
-      have hk : 2^k - 1 < 2^k := by omega
       have hpos : 0 < 2^k := Nat.pow_pos (by decide)
+      have hk : 2^k - 1 < 2^k := by omega
       have hpow : 2^(k+1) = 2*2^k := by
         rw [Nat.pow_succ]
         omega
@@ -36,7 +34,6 @@ theorem binDec_max (k : Nat) :
         _ = d0pow (k+1) := by
               simp [d0pow, ih]
 
-/-- The width-(L+4) encoding of 2^(L+4)-7 has the A=2 carry prefix. -/
 theorem binDec_addFour_subSeven (L : Nat) :
     binDec (L+4) (2^(L+4)-7) =
       d0 ++ d1 ++ d1 ++ d0pow (L+1) := by
@@ -86,7 +83,6 @@ theorem binDec_addFour_subSeven (L : Nat) :
     _ = d0 ++ d1 ++ d1 ++ d0pow (L+1) := by
             rw [binDec_max]
 
-/-- Carry-prefix identity for the q4 sweep's all-ones low counter. -/
 theorem binDec_lowCarry (K n : Nat) (hK : 0 < K) (hn : 0 < n) :
     binDec (K+n-1) (2^(n-1)-1) =
       d0pow (n-1) ++ d1pow K := by
@@ -102,24 +98,22 @@ theorem binDec_lowCarry (K n : Nat) (hK : 0 < K) (hn : 0 < n) :
             omega)
     _ = d0pow (n-1) ++ d1pow K := by
           rw [binDec_zero]
-          have hK' : K = (K-1)+1 := by omega
-          rw [hK']
-          rfl
+          have hK' : (K-1)+1 = K := by omega
+          calc
+            d0pow (n-1) ++ d1 ++ d1pow (K-1)
+                = d0pow (n-1) ++ d1pow ((K-1)+1) := by simp [d1pow]
+            _ = d0pow (n-1) ++ d1pow K := by rw [hK']
 
-/-- The exact A=2 S1 context after the two low d0/d1 blocks. -/
-theorem a2Context_eq (L : Nat) :
-    markerWord 0 ++ d0 ++ binDec (L+4) (2^(L+4)-7) ++ lh =
-      markerWord 0 ++ d0pow 2 ++ d1pow 2 ++ d0pow (L+1) ++ lh := by
+theorem a2Tail_eq (L : Nat) :
+    d0pow 2 ++ d1pow 2 ++ d0pow (L+1) ++ lh =
+      d0 ++ binDec (L+4) (2^(L+4)-7) ++ lh := by
   rw [binDec_addFour_subSeven]
   simp [d0pow, d1pow, List.append_assoc]
 
-/-- The A=2 residual list before the q4 sweep counter is prepended. -/
 def a2Ell (L K : Nat) : List Bool :=
   d1pow K ++ markerWord 0 ++ d0pow 2 ++ d1pow 2
     ++ d0pow (L+1) ++ lh
 
-/-- Full left-facing equality: the q4Tail S0 frame is a canonical
-S1 configuration with width L+4 and outer index 2^(L+4)-7. -/
 theorem a2FullLeftFacing_eq (L K n : Nat) (hK : 0 < K) (hn : 0 < n) :
     binDec (n-1) (2^(n-1)-1) ++ a2Ell L K =
       binDec (K+n-1) (2^(n-1)-1) ++
@@ -131,11 +125,13 @@ theorem a2FullLeftFacing_eq (L K n : Nat) (hK : 0 < K) (hn : 0 < n) :
               simp [a2Ell, binDec_max, List.append_assoc]
     _ = d0pow (n-1) ++ d1pow K ++ markerWord 0
           ++ d0 ++ binDec (L+4) (2^(L+4)-7) ++ lh := by
-              rw [← a2Context_eq L]
-              simp [List.append_assoc]
+              simpa [List.append_assoc] using
+                congrArg
+                  (fun xs : List Bool =>
+                    d0pow (n-1) ++ d1pow K ++ markerWord 0 ++ xs)
+                  (a2Tail_eq L)
     _ = binDec (K+n-1) (2^(n-1)-1) ++
           markerWord 0 ++ d0 ++ binDec (L+4) (2^(L+4)-7) ++ lh := by
               rw [binDec_lowCarry K n hK hn]
-              simp [List.append_assoc]
 
 end BB6Coverage.Agent12A2Reparam
