@@ -83,7 +83,11 @@ $$
 \Delta T=2187(3c_a-1)T
 \quad (\bmod 6561).
 $$
-Since $U\equiv2$ and $T\equiv1$ modulo $3$, this gives $\Delta B=4374$ modulo $6561$. Therefore $\Delta(3X)=2\Delta K-2\Delta B=0$ modulo $6561$, so $X$ modulo $2187$ is unchanged. The formula for $9X_1$ then gives $X_1$ modulo $27$ unchanged. Also $\Delta(K-a)=1458(3c_a-1)$ is divisible by $162$, so $Q$ modulo $243$, and hence $G$ modulo $9$, is unchanged. Finally the formula for $X_2$ gives $X_2$ modulo $81$ unchanged, and the derived $X_3$ and $G'$ residues are unchanged. Thus the three representatives per class are sufficient.
+Since $r$ is even, $T\equiv1\pmod3$, and $U\equiv2\pmod3$. Therefore
+$
+\Delta B\equiv2187T\big(c_a+U(3c_a-1)\big)
+\equiv4374\pmod{6561}.
+$ Therefore $\Delta(3X)=2\Delta K-2\Delta B=0$ modulo $6561$, so $X$ modulo $2187$ is unchanged. The formula for $9X_1$ then gives $X_1$ modulo $27$ unchanged. Also $\Delta(K-a)=1458(3c_a-1)$ is divisible by $162$, so $Q$ modulo $243$, and hence $G$ modulo $9$, is unchanged. Finally the formula for $X_2$ gives $X_2$ modulo $81$ unchanged, and the derived $X_3$ and $G'$ residues are unchanged. Thus the three representatives per class are sufficient.
 
 Here
 $$
@@ -251,7 +255,20 @@ $$
    \right)
  +\frac{702K-621}{243p}.
 $$
-For (a\ge50), the correction terms are positive and less than (1/80-1/81). Thus
+For $a\ge50$, the bracket is positive, and
+$
+0<
+\frac{64}{243}\left(
+     \frac{3296}{3\cdot2^a}
+     -\frac{2K+13}{3p}
+   \right)
+ +\frac{702K-621}{243p}
+<
+\frac{64\cdot3296/729+702/243}{2^a}
+<
+\frac1{80}-\frac1{81}.
+$
+Thus
 $$
 \frac1{82}<\frac{G'}p<\frac1{80}.
 $$
