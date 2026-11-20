@@ -1,6 +1,6 @@
 # Conditional branch-selection reduction for the #623 root cocycle
 
-**Status:** exact conditional algebraic lemma derived from the existing two-statistic cocycle and terminal-window bounds. It is not an all-time root invariant, and it does not decide machine #623. Keep in `im-results/`.
+**Status:** the conditional algebraic lemma is now machine-checked in `BranchSelection.lean`. It remains a standalone, non-source-imported conditional result, not an all-time root invariant, and it does not decide machine #623. Keep in `im-results/`.
 
 ## Definitions
 
@@ -71,6 +71,29 @@ le 3(ell+1)+2ell+19
 ]
 
 For (ellge3), (9ell+13>5ell+22). Hence (|g|>|T|), so (g-T) has the same strict sign as (g). The exact output-side criterion therefore becomes the claimed sign test. (square)
+
+## Lean check
+
+'BranchSelection.lean' formalizes the four sector relations, exact threshold
+offsets, and the conditional sign reduction. It proves:
+
+- 'g_far_of_h_far': the four sector definitions and the outside-window
+  hypothesis imply \(|g|>9\ell+13\);
+- 'threshold_bounds': the depth package implies \(|T|\le5\ell+22\);
+- 'output_left_iff_positive_g' and 'output_right_iff_negative_g': under
+  those hypotheses, the exact test \(g\ge T\) is equivalent to \(g>0\),
+  and its complementary branch to \(g<0\).
+
+The file compiles with Lean 4.36.0-rc2 and warnings treated as errors.
+The principal theorem axiom profiles are exactly
+'[propext, Quot.sound]'. The offset bound is proved by computation.
+
+**Boundary:** the hypotheses \(\ell\ge3\), \(|h|>9\ell+22\),
+\(|D|\le\ell+1\), and \(0\le R\le\ell\) are assumptions in this
+module. It does not source-import the cocycle/depth wrapper or prove these
+conditions along the authentic root orbit. Thus the branch-choice
+simplification is formalized conditionally, but the phase invariant and
+#623 nonhalting claim remain open.
 
 ## Research consequence
 
