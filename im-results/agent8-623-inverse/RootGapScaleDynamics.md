@@ -59,7 +59,7 @@ m'\simeq 3m+g.
 
 Here $\simeq$ means equality up to the logarithmic bridge errors and fixed parity offsets. The exact bridge theorems give $O(n)$ errors, where $n$ is a ternary-length parameter. For example, the far-left and near-left gap estimates in `RootRayBridgeArithmetic.lean` have explicit linear bounds in $n$. This note does not replace those Lean statements.
 
-On the ideal leading map, $g>0$ selects the first branch and $g<0$ the second. The former 20,000-step replay claimed no side-selection mismatch, but its checked-in C++ implementation has the recursive-evaluator defect documented in §4; that mismatch count is therefore unreproduced and must not be used as evidence. Agent 32 separately reports a 10,000-step BigInt trace matching the source through the first 17 states, but its script is not archived here. No all-time branch-selection theorem follows.
+On the ideal leading map, $g>0$ selects the first branch and $g<0$ the second. The checked-in C++ replay has the recursive-evaluator defect documented in §4, but the separate source-faithful 20,000-step BigInt replay in `im-results/agent27-623-root-scan/` reproduces zero side-selection mismatches on indices 9 through 19,999. This is finite evidence only; no all-time branch-selection theorem follows.
 
 ## 3. Projective form and cancellation centres
 
@@ -93,7 +93,7 @@ The ideal recurrence alone is insufficient: its integer dynamics can approach ca
 
 ## 4. Reproducible finite diagnostic — current source mismatch
 
-**Status: the checked-in C++ program is not currently a source-equivalent mirror, so the numerical run below is not reproducible from the committed file.** In `root_gap_scale_scan.cpp`, the final `evalA` branch (the `r=1,a>0` case) decrements `a`, updates `m,k`, and returns `true`. The pinned Lean definition instead recurses:
+**Status: the checked-in C++ program is not currently a source-equivalent mirror.** Its historical output cannot be attributed to that C++ file; however, a separate source-faithful JavaScript BigInt replay now independently reproduces the same 20,000-transition metrics. See `im-results/agent27-623-root-scan/RootGapScaleScan.js` and its README. In `root_gap_scale_scan.cpp`, the final `evalA` branch (the `r=1,a>0` case) decrements `a`, updates `m,k`, and returns `true`. The pinned Lean definition instead recurses:
 [
 A(a,3j+1,m)=A(a-1,j,m+2j+3)qquad(age1).
 ]
@@ -106,7 +106,7 @@ operatorname{evalA}(8,1,9)=operatorname{evalA}(7,0,12)=D_3(6,0,14),
 ]
 so (operatorname{highLevelNext}(D(0,7))=D(6,14)). The checked-in C++ implementation returns the intermediate tuple ((7,0,12)), hence produces (D(7,12)); the next high-level transition halts because its first counter is odd. Therefore the checked-in program cannot produce the documented 20,000-visit output.
 
-The original output is retained below as historical material, **not as current computational evidence**. Its mismatch count, extrema, and state/index claims must not be relied on until the C++ implementation is repaired and rerun against the pinned Lean equations.
+The original output block is retained below for continuity. Its numeric values are now independently reproduced by the source-faithful JavaScript replay; they are supported as finite computational evidence by that script, **not by the checked-in C++ implementation**.
 
 Historical output recorded with the original note:
 ```text
