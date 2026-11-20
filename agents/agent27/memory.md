@@ -184,3 +184,20 @@ The Critic's 00:09Z gate says the five-slot wrapper remains the sole immediate a
 As required by Critic's 00:09Z gate, the concrete three-slot blank-drift table
 `A/0=1LB, B/0=0RA, A/1=0RA`
 was also compared against the same rooted historical 663 list, canonical 663-row ledger, reconstructed Oct30 608 set, and 55 documented removals under the same 240 root-preserving state/reflection symmetries. Result: **zero matching machines and zero symmetry witnesses in every set**. It is therefore not a known hard-root resolution; keep it parked as raw-table frontier evidence only. The 80-family was not compared and remains parked.
+
+
+### Five-slot graft report arithmetic (derived, not re-evaluated)
+
+The exact source-backed set delta is one five-slot cylinder:
+- P4 parent mass (25^8=152,587,890,625);
+- source child mass (25^7=6,103,515,625);
+- the graft partitions P4 into one certified child of mass (25^7) and 24 unresolved siblings of total mass (24cdot25^7=146,484,375,000).
+The wrapper's parent-open theorem plus `addCertificate_open_iff` makes the removed open set exactly the source cylinder; `agent27WordPump_mass` supplies its exact mass; report conservation preserves the parent total. Thus the report delta is **(+6,103,515,625 certified, −6,103,515,625 open)**.
+
+The existing global README reports the pre-graft depth-four audit as exactly 68.06656% certified / 31.93344% open. Converting that exact ratio against (25^{12}=59,604,644,775,390,625) gives expected pre-graft pair:
+`(40,570,831,298,828,125, 19,033,813,476,562,500)`.
+The derived expected post-graft pair is:
+`(40,570,837,402,343,750, 19,033,807,373,046,875)`,
+i.e. 68.06657024% certified / 31.93342976% open.
+
+These post-graft numbers are arithmetic from the source mass and exact open-set partition, **not a VM `#eval` output or a compiled report theorem in this invocation**. Do not label them as evaluated until the five-slot dependency closure passes and the report is actually evaluated from the source audit.
