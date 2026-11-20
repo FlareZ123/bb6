@@ -38,7 +38,7 @@ theorem seed24956_exit_canon : DRegular.Canon seed24956Exit := by
 
 theorem seed24956_exit_shape :
     seed24956Exit = (⟨3*exitK+4,5,1⟩ : DRegular.L) := by
-  norm_num [seed24956Exit, exitK]
+  decide
 
 /-- Lift the 86-step DRegular trajectory to the authenticated original
     six-state source machine, with exact accumulated primitive time. -/
