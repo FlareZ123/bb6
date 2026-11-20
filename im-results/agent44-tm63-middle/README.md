@@ -98,12 +98,12 @@ The existing manual-only target middle34-acceptance in .github/workflows/agent42
 
 It audits 14 exported declarations, including the two generic counted increments, the middle-34 root theorem, the complete SectionResult dispatcher, the index-one marker-two theorem, the reset-base prefix/suffix, the nested-frame root theorem, and outerLCInc_target_binary_prefix. The accepted foundational axiom set is {propext, Classical.choice, Quot.sound}; sorryAx and native_decide are rejected. This is a focused manual job, not a per-commit workflow.
 
-Two current-main dispatches have failed on genuine Lean obligations:
+Two historical current-main dispatches failed on genuine Lean obligations:
 
 - Run 44424308953 (head f0b7edc…) exposed unresolved tape-extensionality goals in both M1EvenState1Sweep.lean and M1EvenState5Sweep.lean.
 - Run 44438791470 (head 95a3438…) compiled the state-5 sweep, but failed in M1EvenState1Sweep.lean at lines 56 and 66. The remaining goals were coordinate-normalization failures: Lean retained h - 1 + (-1) instead of identifying it with h - 2.
 
-Commit 9103e64b22f72afae47f53e8963426ff7db93bc3 adds the explicit identity heq3 : h - 1 + (-1 : Int) = h - 2 to the state-1 extensionality proof and supplies it to the two affected simp calls. This is the direct repair for the two observed goals, but it has **not yet been tested**. No acceptance or axiom-audit claim is made until a new run passes.
+Commit 9103e64b22f72afae47f53e8963426ff7db93bc3 added the explicit identity heq3 : h - 1 + (-1 : Int) = h - 2. A later repair, commit 3b4787ea945e2d0d1c6302412957b6e21dd4ef6f (2026-11-19T11:30Z), adds the missing hne3 inequality to the two affected simp calls. The current M1EvenState1Sweep.lean contains these repairs, so run 44438791470 predates the current file. The repaired source has **not yet been tested in a fresh acceptance run**. No acceptance or axiom-audit claim is made until a new run passes.
 
 ## Next proof actions
 
@@ -111,6 +111,6 @@ Commit 9103e64b22f72afae47f53e8963426ff7db93bc3 adds the explicit identity heq3 
 2. Only after that preflight passes, dispatch the existing middle34-acceptance target once. Inspect the first actual Lean diagnostic if it fails; do not repeat previous unpatched runs.
 3. If it passes, record all 14 exported axiom profiles and preserve the root-to-nested-frame boundary exactly as proved.
 4. Only after that acceptance, add a separate narrow manual acceptance target for TM63RootMiddle37.lean, OuterLCIncCanonicalEndpoint.lean, and TM63RootMarker1Endpoint.lean; do not widen the current target before it passes.
-5. Formalize the root-specific bound `middle34Result.right ≥ 2` (hence `z ≥ 3`), then connect the positive-z q4 checkpoint/first-cycle macro's exact cost and final halt to the authentic L=76 endpoint.
+5. Formalize the root-specific bound `middle34Result.right ≥ 2` (hence `z ≥ 3`), then compile and axiom-audit the arbitrary-A terminal route in `GeneralQ4TailArithmetic.lean`, `GeneralQ4TailS1Reparam.lean`, `GeneralQ4TailS1Config.lean`, `GeneralQ4TailTerminalComposition.lean`, and Agent 42's `TM63GeneralQ4TerminalComposition.lean`. After `tm63_blank_reaches_second_q4_tail`, this route needs no further q4Tail/P2 recurrence.
 
 All material described here remains in im-results/ until it meets the repository's academically publishable results/ standard. No exact BB(6) value, complete champion halt count, or universal six-state upper bound is established.
