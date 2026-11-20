@@ -211,18 +211,22 @@ theorem runStats_offset_BA (n q : Nat) (hq : q + 1 ≤ 3 ^ n) :
     (runStats n (q + 1) B).ones = (runStats n q A).ones ∧
     (runStats n (q + 1) B).twos = (runStats n q A).twos := by
   have h := (runStatsData_offset_identities n).1 q hq
-  rw [runStatsData_eq, runStatsData_eq] at h
-  exact ⟨congrArg Prod.fst h,
-    congrArg Prod.fst (congrArg Prod.snd h),
-    congrArg Prod.snd (congrArg Prod.snd h)⟩
+  have h' : ((runStats n (q + 1) B).output, (runStats n (q + 1) B).ones, (runStats n (q + 1) B).twos) =
+      ((runStats n q A).output, (runStats n q A).ones, (runStats n q A).twos) := by
+    simpa only [runStatsData_eq] using h
+  exact ⟨congrArg Prod.fst h',
+    congrArg Prod.fst (congrArg Prod.snd h'),
+    congrArg Prod.snd (congrArg Prod.snd h')⟩
 
 theorem runStats_offset_AC (n q : Nat) (hq : q + 1 ≤ 3 ^ n) :
     (runStats n (q + 1) A).output = (runStats n q C).output ∧
     (runStats n (q + 1) A).ones = (runStats n q C).ones ∧
     (runStats n (q + 1) A).twos = (runStats n q C).twos := by
   have h := (runStatsData_offset_identities n).2 q hq
-  rw [runStatsData_eq, runStatsData_eq] at h
-  exact ⟨congrArg Prod.fst h,
+  have h' : ((runStats n (q + 1) A).output, (runStats n (q + 1) A).ones, (runStats n (q + 1) A).twos) =
+      ((runStats n q C).output, (runStats n q C).ones, (runStats n q C).twos) := by
+    simpa only [runStatsData_eq] using h
+  exact ⟨congrArg Prod.fst h',
     congrArg Prod.fst (congrArg Prod.snd h),
     congrArg Prod.snd (congrArg Prod.snd h)⟩
 
