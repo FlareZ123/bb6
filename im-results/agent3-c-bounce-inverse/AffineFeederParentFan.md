@@ -105,35 +105,34 @@ This is a much smaller arithmetic parameter than the enormous feeder coordinate.
 
 For `m` odd, `9*m+4` is odd, so `v₂(3*k+1)=1` and the feeder has no source parent; this recovers the already-known `d ≡ 8 (mod 16)` exclusion. For even `m), the number and depth of possible parents are governed by the full valuation of `9*m+4`, not merely by `d mod 16`.
 
-## New a=1 residual slice: halt depth `d ≡ 48 (mod 64)`
+## A generic feeder exclusion: `k ≡ 9 (mod 16)`
 
-The valuation specialization above gives a further all-time exclusion beyond the current mod-32 residual.
-
-Write `d=16*s` with `s≡3 (mod 4)`, so `d≡48 (mod 64)` and `s≥3`. The a=1 halting target has
+There is a cleaner all-time corollary that does not need the special halting parameterization. Let `k≥9` be odd with `k≡9 (mod 16)), say `k=16*t+9`. Then
 
 ```text
-K = 2^(16*s+3) - 24*s - 4
-k = K/2 - 1 = 2^(16*s+2) - 12*s - 3.
+3*k+1 ≡ 12 (mod 16),
+v₂(3*k+1) = 2.
 ```
 
-For its feeder `F(k)`,
-```text
-3*k+1 = 2 * (3*2^(16*s+1) - (18*s+4)).
-```
-Since `s≡3 (mod 4)`, `18*s+4≡2 (mod 8)`, so `v₂(18*s+4)=1`. The other term is divisible by `2^(16*s+1)), hence `v₂(3*k+1)=2`. The exact odd/odd low-valuation inverse (`oddLowGate`) therefore has the unique parent
+So `F(k)` is in the exact odd/odd low-valuation gate, whose unique parent is
 ```text
 P = (3*(k-1)/2, (5*k-9)/4)
-  = (3*2^(16*s+1)-18*s-6, 5*2^(16*s)-15*s-6).
+  = (24*t+12, 20*t+9)
+  ≡ (0,1) (mod 4).
 ```
+The global `blank_section_no_zeroone` source-image obstruction excludes P. Hence
 
-Both large powers vanish modulo four. Using `s≡3 (mod 4)`,
 ```text
-P.1 ≡ -18*s-6 ≡ 0 (mod 4)
-P.2 ≡ -15*s-6 ≡ 1 (mod 4).
+k ≥ 9 ∧ k odd ∧ k ≡ 9 (mod 16)
+  → ¬ CReach (2*k+1) k.
 ```
-The global blank-image obstruction `blank_section_no_zeroone` excludes every section state with these residues. Its source-level reason is visible directly in `section_preimage_all_iff`: a target with `x≡0,y≡1 (mod 4)` has `x+y≡1 (mod 4)`; the `a=0` high row forces `x+y≡0`, the `a=1` high row forces `x+y≡3`, the direct row has even y, the even-left bounce forces `x+y≡0`, and the odd-left bounce forces `x+y≡3`. The finitely many `a=0,1` exceptional rows also miss `(0,1) mod 4`. Thus no positive-time section output has these residues, and the blank initial state `(5,1)≡(1,1) mod 4` does not either. Therefore P is not blank-reachable; the exact `oddLowGate` equivalence excludes F(k), and the one-left feeder equivalence excludes the original `(1,K)` halting target.
 
-**Conclusion:** every a=1 halting candidate with depth `d≡48 (mod 64)` is excluded. This is outside the current mod-32 residual exclusions (`d≡2 mod 8` and `d≡8 mod 16`). The derivation composes existing source-certified reductions and image invariants, but this new arithmetic composition has not yet been packaged as a standalone Lean theorem.
+### Consequence for the a=1 halting basin
+
+For halt depth `d=8*m`, the one-left feeder parameter is
+`k=2^(8*m+2)-6*m-3`. If `m≡6 (mod 8)` (equivalently `d≡48 (mod 64)`), then `k≡9 (mod 16)`. The generic feeder exclusion therefore rules out every a=1 halting candidate with `d≡48 (mod 64)`.
+
+This class is outside the current mod-32 residual exclusions (`d≡2 mod 8` and `d≡8 mod 16`). The argument composes existing source-certified reductions and image invariants, but this new composition has not yet been packaged as a standalone Lean theorem.
 
 ## What this does and does not settle
 
