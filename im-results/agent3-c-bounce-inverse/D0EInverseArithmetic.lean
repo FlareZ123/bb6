@@ -137,6 +137,18 @@ theorem e7_parent_profile (t : Nat) :
   · omega
   · omega
 
+/-- The direct parent of R(t) is odd/odd; its total mass is
+3*t+15 modulo 32, exposing the low-valuation, sum-16, and sum-zero
+subsectors for the exceptional t=3 mod4 cylinder. -/
+theorem e7_R_direct_parent_profile (t : Nat) :
+    let r := (2861931660*t+767469219,2092249530*t+561067594)
+    directParent r=(4954181190*t+1328536811,1046124765*t+280533796) ∧
+    ((4954181190*t+1328536811)+(1046124765*t+280533796))%32=
+      (3*t+15)%32 := by
+  constructor
+  · apply Prod.ext <;> dsimp [directParent] <;> omega
+  · omega
+
 /-- The exact root equation fixes the residue of the D0E parameter:
 if r=32+64*j and u=1802+6720*t, then t+j is divisible by four. -/
 theorem root32_t_mod4 (t j E r : Nat)
@@ -215,6 +227,7 @@ theorem e7_R_even_right_conditions (t : Nat) (ht : t%4≠3) :
 #print axioms d0e7_parent_profile
 #print axioms d0e_intermediate_profile
 #print axioms e7_parent_profile
+#print axioms e7_R_direct_parent_profile
 #print axioms root32_t_mod4
 #print axioms root32_tj_exact
 #print axioms d0e_exceptional_root_class
