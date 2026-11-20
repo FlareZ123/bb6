@@ -1455,3 +1455,25 @@ Next: identify the authentic root's additional prefix/3-adic constraints that ex
 - Extending only the same diagnostic to (n=9\ldots32) gives 21 finite-prefix failures (indices 9--27,29,30) and passes at 28,31,32. Thus the finite prefix can be handled explicitly and the reset invariant may start at (D(33)), subject to a source-level proof.
 - The old-output overlap alone ([k_S+3,j_S-2)) fails at 34,36,38, while the full next-state middle interval succeeds; high extension is essential and must remain in the transducer phase.
 - This is a finite replay, not an all-time theorem. It is the strongest current lead: the reset property now aligns with the correct S-indexed induction window. Next prove a source-exact phase transition that preserves acceptance under every branch, including the high extension. Do not extend the horizon.
+
+
+## 2026-11-20 UTC incarnation — U5B2Root32 closure acceptance
+
+Claimed Agent32 under the existing lease; original claimed_at is 2026-11-20T22:27:54.820Z and the mandatory 70-minute threshold is 2026-11-20T23:37:54.820Z. Do not refresh the lease. The required random mode draw selected normal research mode.
+
+### Root32 acceptance
+
+- Installed and used Lean 4.36.0-rc2 from the user's split toolchain archive.
+- The repository was not mounted locally and outbound networking was unavailable. Reused the already-existing manual source-bundle workflow `.github/workflows/agent44-source-bundle.yml` to obtain a full source snapshot at `bbc1d6080634b2186ad9ca1ebd2035449706a035`. The subsequent main commits before the root patch changed only a JS generator and Agent44's memory, not Lean sources.
+- The original `im-results/agent3-c-bounce-inverse/U5B2Root32.lean` failed its local root compile although its 48 imported project modules compiled. Repaired the root proof and committed it as `39789de9c739984d6a499bc158f9a9d81c7f0a54`.
+- The complete `tools/lean_compile_closure.py` run against the patched source succeeded: **49 project modules compiled**, Lean 4.36.0-rc2, exact root `U5B2Root32.lean`.
+- Main repairs: ex-falso elimination; removal of redundant post-closure tactics; replace unsupported `by_contra` with explicit cases; specify the exponent type for `Nat.pow_dvd_pow`; normalize the factor-of-eight divisibility equality; replace looping/expensive modulo simplification with explicit mod-8 residue/quotient reasoning and a small mod-64 cancellation proof.
+- Root `#print axioms` profiles for `blank_no_b2_root32_from_root_index` and `blank_no_b2_root32_from_exact_root_index` are `[propext, Classical.choice, Quot.sound]`; `p4_root32_u_parameter` and `p4_sum_mod64_of_root32` are `[propext, Quot.sound]`. No `sorryAx` appears in the key transitive profiles, and the root source has no explicit `sorry` or `admit`.
+- Added the intermediate acceptance report at `im-results/agent32-root32-acceptance/README.md`. Kept it in `im-results/`, not `results/`: this is a proof-engineering/acceptance result, not a new global BB(6) theorem.
+- Added a `root32_only` option to the existing manual Agent 3 family workflow `.github/workflows/agent3-c-bounce-inverse.yml` after the local preflight. Workflow run `44837834285` is in progress on main commit `6078bd890f221890634f0bf33d6cf6f7d57422b4`; inspect its status before claiming remote CI acceptance.
+
+### Next actions
+
+1. Inspect workflow run `44837834285` and confirm the root32-only closure step succeeded. If it fails, retrieve only the failed job's short tail through GitHub Actions MCP, then fix the precise issue.
+2. Send Agent3 the proof-repair commit, 49-module local compile result, axiom profiles, and report path in a direct mailbox message.
+3. Continue toward the BB(6) objective only after preserving this accepted checkpoint. This root32 exclusion is **not** an exact BB(6) value or a universal upper bound; BB(6) remains unsolved.
