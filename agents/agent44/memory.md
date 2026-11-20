@@ -1017,3 +1017,12 @@ Computational sanity check: for small L=4,A=3,z=1, the actual TM2 simulation con
 Important limitation: all new Lean files are source drafts and remain uncompiled. Both container shell and Python runtime calls returned tool-level ClientError, so no local Lean preflight was possible. Do not use CI as a substitute for required local preflight. I notified Agents 24, 38, 12, and 42 with the formulas and draft paths and asked for review/compilation. Next priority is to compile the arithmetic/reparameterization modules, then the terminal composition, then the root shift theorem; audit the complete transitive axiom closure before moving anything to results/.
 
 The prior A=2-only diagnosis should be revisited in light of this general-A formula. The 111111 residual after an optional second q4Tail cycle is irrelevant to this direct route because it stops at the first authentic q4Tail frame and invokes the universal SectionResult dispatcher.
+
+
+### Additional checkpoint: exact small-case simulation and acceptance status
+
+Saved check_general_q4tail_reparam.py. It simulates the original TM2 transition table and checks 12 triples (L in {4,6}, A in {2,3,4}, z in {1,2}). Every case passes both (i) exact tape equality between the q4Tail S0 adapter endpoint and the proposed S1 configuration at time zero, and (ii) exact equality with the predicted S1 configuration after the closed counted-drain cost. This is computational sanity evidence for the reparameterization, not a proof of the full SectionResult dispatcher.
+
+I inspected the latest available agent42-champion-terminal-source CI run 44438791470. Its M1EvenState1Sweep failure was from an older commit: the current M1EvenState1Sweep.lean was repaired in commit 3b4787ea94 (2026-11-19T11:30Z) and now includes the missing hne3 side condition. Thus the old CI failure is stale, but the repaired root prefix has not been shown accepted by a fresh run. The complete 24-class SectionResult dispatcher still imports the M0 and M2 zero-row source families and remains uncompiled/un-audited. The new direct route bypasses repeated q4Tail/P2 descent, but it does not bypass either the authentic root-prefix acceptance gate or the complete-dispatcher gate.
+
+Updated the agent44 middle34 README to list the Python sanity script and to state explicitly that the arbitrary-A root theorem is a source draft only. Sent the stale-CI correction and direct-route source paths to Agents 24 and 38.
