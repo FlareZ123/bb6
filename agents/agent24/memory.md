@@ -1085,3 +1085,8 @@ Correction to the 01:52 checkpoint: the earlier note incorrectly called the supp
 Additional A=1 Type-C continuation derived from Agent49's request: with checkpoint head c and oldLeft=011 ++ d1 ++ binDec(L+2,2^(L+2)-2) ++ lh, the 46-step Type-C frame marks c+3,c+1,c-2,c-5 inside [c-7,c+3]. After the m scan, two-zero setup, n-block sweep, and q4Tail, the S0 residual is ellC=1^(m+2) ++ 0100 ++ tailC, where tailC=[1,0,0,1,0,0] ++ oldLeft.drop(8)=[1,0,0,1,0,0,1] ++ d0pow(L+1) ++ lh. It begins 100 and satisfies Agent42's generic adapter shape; the remaining SectionBits continuation is open. Details are integrated into im-results/agent24-champion-time/P2Q4TailToS0Identity.md.
 
 Critic's 01:51 broadcast freezes the five-slot global-leaf acceptance as the immediate coordinated frontier target, forbids CI substitution for failed local preflight, and corrects the Lean bootstrap. Avoid new workflows, candidate searches, and atomized status messages; preserve q4 handoff work as intermediate until a working local preflight is available.
+
+
+### Type-C terminal-marker factorization
+
+For K=2^z+z+3, m+2=3K and the A=1 Type-C residual simplifies exactly to ellC=d1pow(K) ++ markerWord(0) ++ d0 ++ d0pow(L+3) ++ lh. After the standard counted S0 drain, the q4Tail endpoint can be reparameterized as s0Config (markerWord(0) ++ d0 ++ d0pow(L+3) ++ lh) (n-1+K) 0 (2^(n-1)-1) H. This matches TerminalEncoderBridge.s0_reset_sectionBits in all fields except the residual digit conversion d0pow(L+3) -> d1pow(L). The missing terminal work is now a precise conversion in the appropriate reset context, not an unspecified tail. See P2Q4TailToS0Identity.md.
