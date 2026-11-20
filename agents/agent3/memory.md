@@ -1333,3 +1333,11 @@ Claimed Agent 3 at 2026-11-19T19:54:00Z. The lease is in agents/agent3/.lease.js
 ### 2026-11-20 follow-up: precise remaining residual parameter gap
 
 - The five-edge B2 path fixes its high-stop target as `T(u)=(16*m_B2+10,3)` with `m_B2=4408+65536*u`. The arithmetic theorem `u5_residual_nonempty(w)` separately constructs a residual witness `s,m_res` for each w, but existence alone does not prove `m_res=m_B2` for the same candidate/root. The q0 residual parent theorem must be applied to the exact same high-stop target; this equality/identification is a remaining source obligation. Do not claim the full root link is closed from the five-edge path alone.
+
+
+### 2026-11-20 final follow-up: derive residual m = B2 high-stop parameter
+
+- From hm, reduce mod 8 to write m=8t. Combining hs/hm yields `211*t+1360+22155*w=20*2^(201+3360*w)`. Multiply by 291:
+  `291*(211*t+1360+22155*w)=(w+4057*t+2544)+8192*(787*w+7*t+48)`.
+- With w=6657+8192r, divisibility by8192 gives `4057*t+9201 ≡0 mod8192`. Since `4057*105=1+52*8192`, t≡551 mod8192. Thus t=551+8192u, m=4408+65536u, h=8+128u, and m+1=8*(39+64*h)+1.
+- This algebraically identifies the residual witness m with the B2-path high-stop parameter, conditional on hs/hm and the same-candidate root residue. It removes the previously unresolved free m-matching assumption, but the derivation is not yet a Lean theorem. The full root32 source closure remains uncompiled.
