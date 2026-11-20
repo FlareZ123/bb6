@@ -23,9 +23,28 @@ The exact references are:
 
 - `im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean`, theorems `correction_buffer_closed` and `one_extra_digit_carry_bound_closed`;
 - `im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducerCarry.lean`, which proves the three-state digit transducer and exact weighted output statistics;
-- `im-results/agent41-623-3euclidean/MonotoneMassWindow.md`, which proves (\ell_{S'}-\ell_S\in\{0,1\}) and the one-low/three-high window shift for the old envelope.
+- `im-results/agent41-623-3euclidean/MonotoneMassWindow.md`, which proves (\ell_{S'}-\ell_S\in\{0,1\}).
 
-The same shift proof applies to (B_{new}): each affine term increases by at most 36 when `ell` increases by one, so (B'_{new}\le B_{new}+36). For (S\ge20), (\ell_S\ge3), hence (B_{new}\ge196) and (B'_{new}<3B_{new}). Therefore the same bounds (k'-k\in\{0,1\}), (j'-j\in\{0,1,2,3\}) follow. This is a paper derivation from the cited source lemmas, not a new Lean theorem in this directory.
+### Sharper moving-window shift
+
+The old proof bounded (j'-j\le3) using only (B'\le B+36<3B). The same facts give a much stronger bound.
+
+For (S\ge20), (\ell_S\ge4), since (\tau(3)=13<S+3). Hence (B_{new}\ge B_{new}(4)=258>144). From (\ell_{S'}-\ell_S\in\{0,1\}), each affine term increases by at most 36, so (B'\le B+36). Since (B\ge144),
+
+[
+4(B+36)\le5B,qquad
+(B')^3\le(B+36)^3\le\frac{125}{64}B^3<3B^3.
+]
+
+As (3^j>B^3), this implies (3^{j+1}>3B^3>(B')^3), hence (j'\le j+1). Monotonicity (B'\ge B) gives (j'\ge j). The same (B'\le B+36<3B) argument gives (k'-k\in\{0,1\}). Therefore the actual moving-window shifts satisfy
+
+[
+oxed{k'-k\in\{0,1\},\qquad j'-j\in\{0,1\}.}
+]
+
+This proof works for either (B_{new}) or (B_{old}). The product automaton needs at most one low-symbol shift and one high-symbol extension, not the previously allowed zero-to-three high extensions. Consequently the next interval ([k'+2,j'-2)) contains the old output subinterval ([k+3,j-2)) and can extend it by at most one high digit.
+
+This is a paper derivation from the cited source lemmas and the exact window definitions, not a new Lean theorem in this directory.
 
 ## Finite diagnostic
 
@@ -59,4 +78,4 @@ The finite diagnostic therefore survives the sharper correction buffer and saves
 
 ## Next useful use
 
-Agent 32 can use (B_{new}) as the smaller S-window envelope when building the finite product-state closure. Preserve the full carry rectangles, source branch/sector, weighted drain interface, one-symbol low shift, and zero-to-three high extensions; the tighter buffer does not remove those obligations.
+Agent 32 can use the smaller S-window envelope and the proven 0/1 high-shift bound in the finite product-state closure. Preserve the full carry rectangles, source branch/sector, weighted drain interface, and the low/high boundary state; these arithmetic tightenings do not remove the need to prove reset acceptance for every authentic root state.
