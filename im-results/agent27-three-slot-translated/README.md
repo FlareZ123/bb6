@@ -74,3 +74,43 @@ or **0.512%** of all `25^12` raw tables. This aggregate is currently computation
 ## Interpretation
 
 This is a new translated-blank drift certificate, not an exact finite-configuration lasso: the control state and tape return, but the head moves. It is also not captured by the existing fresh-ray macro because the three-step witness initially moves left before moving right. It closes neither all BB(6) machines nor any universal runtime bound.
+
+## Parameterized 80-cylinder family (2026-11-20)
+
+The 80 search survivors are not 80 unrelated examples. Their transition tables are exactly the union of three finite schemas, with state names A fixed as the blank-root state:
+
+1. **60 entry-zero, period-three tables.** Choose a non-A state x, an arbitrary state y, and a direction d. Set A/0 to write 1 and move in direction d to x; set x/0 to write 0 and move in direction -d to y; set y/1 to write 0 and move in direction -d to A. The blank configuration returns after three moves translated by one cell.
+2. **10 entry-zero, period-four tables.** Choose non-A x and direction d. Set A/0 to write 1 and move in direction d to x; set x/0 to write 0 and return in direction -d to A; set A/1 to write 0 and move in direction -d to x. The x/0 transition repeats, returning to a blank A configuration translated by two cells.
+3. **10 entry-one, period-three tables.** Choose non-A x and direction d. The entry A/0 writes 0 and moves in direction d to x; the cycle sets x/0 to write 1 and return to A in direction -d, then x/1 writes 0 and moves in direction d to x. The blank tape is restored and the x-configuration translates by one cell.
+
+Here d is L or R, and the arbitrary y ranges over all six states. The three parameter spaces have sizes 5·6·2=60, 5·2=10, and 5·2=10, respectively.
+
+### Formalization status
+
+The new source file **TranslatedThreeSlotFamilies.lean** defines these three schemas and contains proof scripts for:
+
+- the exact finiteTranslatedCheck predicate for every parameter choice (60 + 10 + 10 cases);
+- all-completions Cover and NeverHalts theorems for each schema;
+- exact cylinder mass 25^9 for every parameter choice;
+- an explicit 80-element table list;
+- pairwise incompatibility of all 3,160 pairs, plus the implication from a conflicting input to disjoint completion cylinders;
+- the exact arithmetic 80·25^9=305175781250000 and 80·25^9·3125=16·25^12.
+
+This file is a **Lean source draft, not yet accepted as a compiled theorem**. Agent 1 has been asked to perform the local Lean 4.36.0-rc2 preflight against exact current-main dependencies and inspect the full theorem axiom profiles. Do not cite the draft's proofs as kernel-verified until that preflight is reported. The family is not yet integrated into the global FrontierAudit; parent-open proofs and the sequential graft remain to be completed.
+
+### Hard-root relevance screen
+
+A separate V8 execution in the 2026-11-20 invocation reconstructed all 80 schemas and confirmed exact set equality with candidates.json, checked all 3,160 pairwise conflicts, and compared every candidate against:
+
+- the frozen 663-row historical rooted roster;
+- the 663-row canonical ledger (whose rooted set was checked equal to the raw roster);
+- the reconstructed Oct30 608-row roster;
+- the 55 rows removed between the 663, 623, and 608 snapshots.
+
+The comparison used the same 120 state permutations fixing A and optional left/right reflection (240 symmetries total); blank symbol 0 was not complemented. **There were zero candidate hits and zero symmetry witnesses in every roster.** This is a finite computational screen, not a proof about machines outside those snapshots and not a hard-root resolution.
+
+The script **compare_family_hard_roots.cjs** has been added to reproduce the schema equality, roster integrity checks, pairwise-conflict count, and hard-root comparison using Node.js. The script itself has not yet been run in Node or CI in this invocation; the zero-hit statement above records the independent in-session computation.
+
+### Scope boundary
+
+The proposed union mass is 0.512% of all 25^12 raw transition tables, not 0.512% of the difficult rooted holdouts. Even after a successful source preflight and exact frontier graft, this would be a partial raw-table frontier refinement only. It supplies no universal runtime bound and no exact BB(6) value.
