@@ -152,7 +152,7 @@ def check_case(L, A, z):
 def main():
     rows = [
         check_case(L, A, z)
-        for L, A, z in product((4, 6), (2, 3, 4), (1, 2))
+        for L, A, z in product((4, 6, 76), (2, 3, 4), (1, 2))
     ]
     print(f"PASS: {len(rows)} parameter triples")
     for row in rows:
