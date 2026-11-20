@@ -38,7 +38,7 @@ For (m\ge50), the elementary inequalities
 [
 0<A<2^{4m+6},\qquad 5\cdot2^{4m+6}>212A
 ]
-hold. Thus (H>A), and because the two terms (5\cdot2^{4m+6}) and (A) have different 2-adic valuations,
+hold. For completeness, (2^m\ge m^3) for (m\ge10) by induction, so (2^{4m+6}\ge64m^3); also (A<214m) and (320m^3>212\cdot214m) for (m\ge50). Thus the displayed inequalities follow. In particular (H>A), and because the two terms (5\cdot2^{4m+6}) and (A) have different 2-adic valuations,
 [
 \nu:=v_2(H)=v_2(A)=v_2(10669+22155\ell).
 ]
