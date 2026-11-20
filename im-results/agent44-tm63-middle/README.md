@@ -71,7 +71,7 @@ After the existing q4Tail-to-S0 adapter and carry-prefix rewrite, the authentic 
 `s1Config W N 0 (K+n-1) (2^(n-1)-1) 0 H`.
 The existing counted drain and complete 24-class SectionResult dispatcher then apply. If L is even, N is divisible by 3, so the dispatcher returns to marker zero and the terminal SectionBits macro applies.
 
-For the root, L=tm63Length1=76 is even and A=rootMarker1A>=2, so W=rootMarker1A+78 and N=firstQ4P1M 76 rootMarker1A-3. This is a direct arbitrary-A route; it does not require reducing A to 2 or re-entering the q4Tail recurrence after the tail has changed to 111111.
+For the root, L=tm63Length1=76 is even and A=rootMarker1A>=2, so W=rootMarker1A+78 and N=firstQ4P1M 76 rootMarker1A-3. This is a direct arbitrary-A route; it does not require reducing A to 2 or re-entering the q4Tail recurrence after the tail has changed to 111111. At A=2 it specializes to W=80 and N=2^80-7, recovering the existing A2 terminal instance.
 
 Source drafts added under this directory:
 - GeneralQ4TailDispatcherReparam.md — derivation and exact implementation target.
