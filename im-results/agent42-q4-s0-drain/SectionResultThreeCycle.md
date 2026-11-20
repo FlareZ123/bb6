@@ -250,3 +250,25 @@ inside the sum. The formula is an algebraic consequence of the exact
 dispatcher-cost recurrence and the root score expression. Its use as an
 attained champion score remains conditional on acceptance of the
 uncompiled authentic-root and source-dispatcher composition.
+
+
+## Direct correspondence with the BusyCoq \(t_2,s t_2\) notation
+
+The right-counter sequence is exactly the published recursion, not merely
+an asymptotically similar one. With
+\[
+t_2(0,R)=R,\qquad t_2(j+1,R)=2^{t_2(j,R)}-1,
+\]
+we have \(b_j=t_2(j,R)\). If
+\[
+s t_2(q,R)=\sum_{j=0}^{q}t_2(j,R)
+\]
+(the inclusive convention used in the BusyCoq analysis), then the terminal
+exponent simplifies to
+\[
+E=U+s t_2(N-1,R)+5k.
+\]
+Thus the single-sum expression is an exact primitive-step cost refinement
+of the same \(t_2,s t_2\) recursion used in the published TM63 analysis.
+It does not introduce a new machine recurrence, and it does not by itself
+establish that the source-level root composition is accepted.
