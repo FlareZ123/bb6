@@ -78,12 +78,18 @@ Also \(k=\ell=b_{N-1}\ge2^{N-1}R\ge2^{N-1}\), so
 (6m+21)\ell^2+(6m^2+78m+84)\ell
 +10m^2+105m+185.
 \]
-For \(\ell\ge256\), \(m\ge8\), \(m\le\ell/16\), and \(\ell\ge m\).
-The three terms are respectively bounded by
-\(9(1+m)\ell^2\), \(84(1+m)\ell^2\), and
-\((1+m)\ell^2\). Therefore
+For \(m\ge8\), the first term is at most
+\(8(1+m)\ell^2\), since \(6m+21\le8(m+1)\). For the second,
 \[
-\boxed{0\le\Delta<94(1+m)\ell^2<100(1+\log_2\ell)\ell^2.}
+6m^2+78m+84\le20m^2\le(m+1)2^m=(m+1)\ell,
+\]
+using \(20m\le2^m\) for \(m\ge8\). For the third,
+\[
+10m^2+105m+185\le30m^2\le(m+1)4^m=(m+1)\ell^2.
+\]
+Therefore
+\[
+\boxed{0\le\Delta<10(1+m)\ell^2=10(1+\log_2\ell)\ell^2.}
 \tag{6}
 \]
 
@@ -93,7 +99,7 @@ Consequently the exact score has the explicit two-term expansion
 S_{\rm TM1}
 =6b_N^2+54b_N+48+3\ell+\Delta,
 \qquad
-0\le\Delta<100(1+\log_2\ell)\ell^2,\quad
+0\le\Delta<10(1+\log_2\ell)\ell^2,\quad
 \ell=\log_2(b_N+1).
 }
 \tag{7}
@@ -103,9 +109,9 @@ In particular,
 54<
 \frac{S_{\rm TM1}-6b_N^2}{b_N}
 <
-54+\frac{48+3\ell+100(1+\log_2\ell)\ell^2}{2^\ell-1}
+54+\frac{48+3\ell+10(1+\log_2\ell)\ell^2}{2^\ell-1}
 <
-54+6\times10^{-70},
+54+6\times10^{-71},
 \tag{8}
 \]
 where the final numerical inequality holds for integer \(\ell\ge256\); the displayed quotient is decreasing there and is already below \(6\times10^{-70}\) at \(\ell=256\).
