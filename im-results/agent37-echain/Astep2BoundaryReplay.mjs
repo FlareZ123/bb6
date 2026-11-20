@@ -52,16 +52,13 @@ const CHECKPOINTS = [
 
 const F7 = "0" + "1".repeat(6);
 const Y3 = "01010111";
-const T7 = "1010111";
-const PACKET_EXPECTATIONS = [
-  [11,0,8,F7],[12,2,5,F7],[13,1,5,F7],[14,0,5,F7],
-  [15,2,2,F7],[16,1,2,F7],[17,0,2,F7],
-  [18,0,6,Y3],[19,2,3,Y3],[20,1,3,Y3],[21,0,3,Y3],
-  [22,2,0,Y3],[23,1,0,Y3],
-  [24,0,8,T7],[25,2,5,T7],[26,1,5,T7],[27,0,5,T7],
-  [28,2,2,T7],[29,1,2,T7],[30,0,2,T7],
+const E2_RESETS = [
+  { call: 18, in: [0,2,F7], out: [0,6,Y3] },
+  { call: 42, in: [0,2,"0111"], out: [0,6,"0101"] },
+  { call: 54, in: [3,2,"01"], out: [0,8,"011111111"] },
+  { call: 61, in: [0,2,"011111111"], out: [0,6,"0101011111"] },
+  { call: 85, in: [0,2,"011111"], out: [0,6,"0101011"] },
 ];
-
 function branchOf(N) {
   const r = Number(N % 3n);
   return ["A", "E", "B"][r];
@@ -82,18 +79,9 @@ function regularSuffixParameters(s) {
 }
 
 
-function parsePacketSuffix(s, tail) {
-  if (!s.endsWith(tail)) return null;
-  const prefixPart = s.slice(0, -tail.length);
-  for (let q = 0; q <= Math.floor(prefixPart.length / 2); q++) {
-    const prefix = "01".repeat(q) + "0";
-    if (!prefixPart.startsWith(prefix)) continue;
-    const ones = prefixPart.slice(prefix.length);
-    if (/^1*$/.test(ones)) return { q, p: ones.length };
-  }
-  return null;
+function packetSuffix(q, p, tail) {
+  return "01".repeat(q) + "0" + "1".repeat(p) + tail;
 }
-
 function runAstep2(N, suffix, n) {
   const residue = Number(N % 3n);
   const q = N / 3n;
@@ -215,29 +203,81 @@ for (let i = 0; i < ARGS.length; i++) {
 
 
 const packetTrace = [];
-for (const [call,q,p,tail] of PACKET_EXPECTATIONS) {
-  const parsed = parsePacketSuffix(trace[call - 1].suffix, tail);
-  if (!parsed || parsed.q !== q || parsed.p !== p) {
-    throw new Error(`packet parse mismatch at call ${call}`);
-  }
-  packetTrace.push({ call, q, p, tail, suffix: trace[call - 1].suffix });
+const packetResets = [];
+const e2ByCall = new Map(E2_RESETS.map(x => [x.call, x]));
+let packetState = { q: 0, p: 8, tail: F7 };
+if (trace[10].suffix !== packetSuffix(packetState.q, packetState.p, packetState.tail)) {
+  throw new Error("call 11 did not produce the initial packet P(0,8;F7)");
 }
-function assertUnaryTransition(fromCall, toCall, kind) {
-  const fromN = BigInt(trace[fromCall - 1].N);
-  const toN = BigInt(trace[toCall - 1].N);
-  const quotient = (fromN - (kind === "B" ? 2n : 4n)) / 3n;
-  const add = kind === "E" ? 9n : kind === "B" ? 10n : 5n;
-  const expected = 8n * quotient + add;
-  if (toN !== expected) {
-    throw new Error(`packet unary recurrence mismatch ${fromCall}->${toCall} (${kind})`);
-  }
-}
-for (const [from,to,kind] of [
-  [11,12,"E"],[12,13,"B"],[13,14,"B"],[14,15,"E"],[15,16,"B"],[16,17,"B"],
-  [17,18,"P2"],[18,19,"E"],[19,20,"B"],[20,21,"B"],[21,22,"E"],[22,23,"B"],
-  [23,24,"P2"],[24,25,"E"],[25,26,"B"],[26,27,"B"],[27,28,"E"],[28,29,"B"],[29,30,"B"],
-]) assertUnaryTransition(from,to,kind);
+packetTrace.push({ call: 11, ...packetState, suffix: trace[10].suffix });
 
+const e0Calls = [];
+const e2Calls = [];
+for (let call = 12; call <= 107; call++) {
+  const row = trace[call - 1];
+  const inputN = BigInt(row.N) - 0n; // row.N is the post-call unary parameter
+  const priorN = BigInt(trace[call - 2].N);
+  let nextState;
+  let kind;
+  let expectedN;
+
+  if (row.branch === "B" && packetState.q > 0) {
+    nextState = { q: packetState.q - 1, p: packetState.p, tail: packetState.tail };
+    kind = "B";
+    expectedN = 8n * ((priorN - 2n) / 3n) + 10n;
+  } else if (row.branch === "E" && packetState.p >= 3) {
+    nextState = { q: packetState.q + 2, p: packetState.p - 3, tail: packetState.tail };
+    kind = "E";
+    expectedN = 8n * ((priorN - 4n) / 3n) + 9n;
+  } else if (row.branch === "E" && packetState.p === 0 && packetState.q > 0) {
+    if (!packetState.tail.startsWith("01")) {
+      throw new Error(`E0 input tail lacks 01 at call ${call}`);
+    }
+    nextState = { q: 0, p: 2 * packetState.q + 7, tail: packetState.tail.slice(2) };
+    kind = "E0";
+    expectedN = 8n * ((priorN - 4n) / 3n) + 5n;
+    e0Calls.push(call);
+  } else if (row.branch === "E" && packetState.p === 2) {
+    const reset = e2ByCall.get(call);
+    if (!reset || reset.in[0] !== packetState.q || reset.in[1] !== packetState.p || reset.in[2] !== packetState.tail) {
+      throw new Error(`unclassified E2 reset at call ${call}`);
+    }
+    nextState = { q: reset.out[0], p: reset.out[1], tail: reset.out[2] };
+    kind = "E2";
+    expectedN = 8n * ((priorN - 4n) / 3n) + 5n;
+    e2Calls.push(call);
+  } else {
+    throw new Error(`unclassified packet boundary at call ${call}`);
+  }
+
+  if (BigInt(row.N) !== expectedN) {
+    throw new Error(`packet unary recurrence mismatch at call ${call} (${kind})`);
+  }
+  if (row.suffix !== packetSuffix(nextState.q, nextState.p, nextState.tail)) {
+    throw new Error(`packet suffix mismatch at call ${call} (${kind})`);
+  }
+  packetState = nextState;
+  packetTrace.push({ call, ...packetState, kind, suffix: row.suffix });
+  if (kind === "E0" || kind === "E2") {
+    packetResets.push({
+      call, kind,
+      input: kind === "E0"
+        ? { q: trace[call - 2].regular?.q, p: 0, tail: null }
+        : E2_RESETS.find(x => x.call === call).in,
+      output: packetState,
+      unary: row.N,
+    });
+  }
+}
+if (JSON.stringify(e0Calls) !== JSON.stringify([24,32,47,67,75,91,99])) {
+  throw new Error("unexpected E0 reset call sequence");
+}
+if (JSON.stringify(e2Calls) !== JSON.stringify([18,42,54,61,85])) {
+  throw new Error("unexpected E2 reset call sequence");
+}
+if (packetState.q !== 1 || packetState.p !== 2 || packetState.tail !== "011") {
+  throw new Error("unexpected final packet state");
+}
 if (ARGS.length !== 107) throw new Error("expected 107 macro calls");
 if (branchWord !== EXPECTED_BRANCH_WORD) throw new Error("branch word mismatch");
 if (branchOf(N) !== EXPECTED_FINAL_BRANCH) throw new Error("final branch mismatch");
@@ -249,6 +289,8 @@ const result = {
   finalBranch: branchOf(N),
   checkpoints: CHECKPOINTS,
   packetTrace,
+  packetResets,
+  finalPacket: packetTrace[packetTrace.length - 1],
   firstEleven: trace.slice(0, 11),
   finalN: N.toString(),
   finalSuffix: bitsToString(suffix),
