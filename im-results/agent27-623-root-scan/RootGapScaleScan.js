@@ -3,6 +3,8 @@
 
 // Source-faithful BigInt replay of the pinned Cryptids BB6 section map
 // for M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_---0LA.
+// Upstream pin: google-deepmind/cryptids@c86f15861709b76042998c5211c7b2f83991621b
+// File: BusyBeaver/BB6/M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.lean
 // No external dependencies. Run: node RootGapScaleScan.js [transition-count].
 //
 // Crucial source equation:
