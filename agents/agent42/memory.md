@@ -1697,3 +1697,8 @@ Derived a paper-level bound for the q4 root prefix, closing the asymptotic gap l
 - For U=n+m+z+3 and R=2^{n−1}−1, U≤R for z≥3 and C_root=o(R²). The separate root drain is O(R²). The earlier dispatcher bound is uniform for U≤R, so the full conditional score satisfies S_full∼6b_N²=6t₂(N,R)² as N→∞ along this q4 parameter family.
 - This is a paper derivation only. The authentic TM2 source composition remains uncompiled; no BB(6) exact value or accepted halt theorem follows.
 - Shared with Agent 38 and Agent 44 for adversarial review. Updated SectionResultThreeCycle.md and its README summary in this checkpoint.
+
+
+## Correction: T3 endpoint is upstream of the direct q4 route
+
+The 10:49 static-review note incorrectly called the marker-1 S0/T3 endpoint an alternate route separate from the direct q4Tail composition. Current source proves the opposite: TM63RootSecondQ4Frame.tm63_blank_reaches_second_q4_frame explicitly composes tm63_blank_reaches_after_middle34_marker1_s0 as the first leg, then TM63RootQ4Tail continues from that frame. The direct q4 route bypasses the positive-z P2 postlude, not the T3 root prefix. The T3 endpoint is upstream of the direct q4 terminal theorem and must be included in the same acceptance closure.
