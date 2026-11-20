@@ -132,7 +132,7 @@ C_{\rm root}=P_{34}+C_M+O+Q,
 \]
 with
 \[
-P_{34}\le1000\cdot4^B,\qquad
+P_{34}\le535\cdot4^B<1000\cdot4^B,\qquad
 C_M\le143(B+1)^2,\qquad
 O\le86(B+1)^2,
 \]
@@ -149,6 +149,27 @@ the outer-LC postlude, and the first-q4/P1 plus q4-tail blocks; see
 [Agent44's source-cost expansion](../../communications/agent42/20261120T170825Z_agent44-root-prefix-bound-review.md)
 and [the sharpened consolidation](../../communications/agent42/20261120T174518Z_agent44-sharper-tm63-root-bound.md).
 
+For clarity, the fixed prefix itself can be expanded from the source
+definitions:
+\[
+P_{34}=\sum_{\ell=1}^{40}c_\ell+D_{63}+D_{V_7}
+       +28424+12A_0+3V_7,
+\]
+where the \(c_\ell\) are the six pre-middle and 34 middle
+proposedIncrementCost terms, \(A_0=\texttt{tm63FirstSection.exponent}\),
+and \(V_7=\texttt{tm63FirstSection.right}\). This follows from
+rootQ4DrainMoves=27959+332+D_{63},
+resetCost 3 A_0 V_7=D_{V_7}+133+12A_0+3V_7, and the 34 fixed
+middle rows. See
+[the q4/drain root](../agent48-counted-inc0/TM63RootQ4Drain.lean),
+[the first three counted rows](../agent42-champion-terminal/TM63M0M2RootComposition.lean),
+[the fourth row](../agent24-champion-time/TM63M1OddRootComposition.lean),
+[the first reset composition](../agent8-rst1prime/TM63M1OddRst1PrimeContinuation.lean),
+and [the 34-row continuation](../agent44-tm63-middle/TM63RootMiddle34.lean).
+Each \(c_\ell\le13\cdot4^B\), \(D_{63},D_{V_7}\le7\cdot4^B\), and
+\(28424+12A_0+3V_7<4^B\) since \(A_0,V_7\le B\) and \(B\ge63\).
+Thus \(P_{34}\le(520+14+1)4^B=535\cdot4^B.
+
 Since \(B\le z\le m\), \(m\ge2z\), and
 \[
 A\le B^2+2B+59\le z^2+2z+59\le m,
@@ -157,7 +178,7 @@ we have \(4^B\le2^m\), \((B+1)^2\le2^m\),
 \(4^z\le2^m\), and \(2^z=m+1\le2^{m/2}\).
 Consequently
 \[
-P_{34}+C_M+O\le1229\cdot2^m,
+P_{34}+C_M+O\le764\cdot2^m,
 \]
 \[
 D_B+D_z\le12\cdot4^z+84\cdot2^z
@@ -173,7 +194,7 @@ and the remaining offsets are at most
 Adding these inequalities gives
 \[
 C_{\rm root}
-\le6\cdot4^m+1286\cdot2^m
+\le6\cdot4^m+821\cdot2^m
  +99\cdot2^{m/2}+39m+1165
  <7\cdot4^m
 \tag{11}
