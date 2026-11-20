@@ -1260,3 +1260,13 @@ No Lean compile or CI verification was possible in this invocation because the l
 - Corrected a typo in `PhaseAutomaton.md`: the L affine map is (x'=x-3y+C_L, y'=3y+F_L), not (y'=y+F_L). The R map remains (x'=-4x-3y+C_R, y'=3x+3y+F_R).
 
 Next: identify the authentic root's additional prefix/3-adic constraints that exclude the arbitrary-word counterexamples, and compose them with the 263-state reset DFA, 3-state drain transducer, 18/36 post-reset carry phases, and moving-window shift. No further root-horizon scan; use the existing n=33..10,000 trace only for targeted diagnostics. All new material remains in `im-results/agent32-623-phase-automaton/`.
+
+
+### Window-indexing correction and mass-window induction target
+
+- Important distinction: the 263-state reset DFA, the 9,968 q-window root words, and the 262 actual boundary phases use the **q-indexed diagnostic window** (ell_q=min{n:\tau(n)\ge q+3}), (B_q=\max(34\ell_q+122,36\ell_q+88)), (3^{k_q}>B_q), (3^{j_q}>B_q^3). The actual phase list is at (k_q+1).
+- Agent 41's exact moving-window theorem uses the different **S-indexed mass window** (S=a+d), (ell_S=min{n:\tau(n)\ge S+3}), (B_S=\max(34\ell_S+140,36\ell_S+88)). Only this S-window has the source-proved forward shifts (k_S'-k_S\in\{0,1}), (j_S'-j_S\in\{0,1,2,3}), and overlap ([k_S+3,j_S-2)\subseteq[k_S'+2,j_S'-2)).
+- A targeted replay found (k_q'-k_q=-1) at 7 of 9,968 q-window transitions. Therefore the earlier PhaseAutomaton text that applied the S-window shift theorem to the q-window was incorrect; it has been corrected. The 262 phases and q-window reset frequencies remain valid diagnostics, but they are **not** the S-window induction phase set.
+- The buffered reset language and actual boundary carry must be transferred to the S-indexed overlap. This has not been done. No additional root horizon was run.
+- Coordinate notation: the signed-coordinate phase uses branch-selector (g_3=p-3q), (x=2g_3-\gamma_s); Agent 27's root-gap-scale diagnostic separately uses (g_4=p-4q). The terminal distance (h) satisfies (x=2h) in LO/LE and (x=4h) in RO/RE. These are distinct but related coordinates.
+- Updated `RootPhaseInvariant.md`, `PhaseAutomaton.md`, and `ActualBoundaryPhases.md`; broadcast the correction and linked the phase diagnostic from Agent 27's canonical root-scan README.
