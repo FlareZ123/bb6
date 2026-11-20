@@ -80,7 +80,7 @@ Across the 19,991 transitions from state index 8 to state index 19,999, only the
 | right-even -> left-odd | 2,632 |
 | left-odd -> left-odd | 1,591 |
 
-This is a finite observed phase graph, not a proven transition restriction. The sector-specific slack minima are also only empirical. For example, the synthetic state D(2,69) is right-odd with slack 65 but maps to D(70,10), whose left-even slack is 57. The data may nevertheless help formulate a root-history invariant that distinguishes the blank-root orbit from arbitrary cone states.
+This is a finite observed phase graph, not a proven transition restriction. The sector-specific slack minima are also only empirical. Failed tests of coordinate residues, drain counts, sector histories, quotient-path suffixes, and simple 3-adic valuations are consolidated in PhaseSearch.md. For example, the synthetic state D(2,69) is right-odd with slack 65 but maps to D(70,10), whose left-even slack is 57. The data may nevertheless help formulate a root-history invariant that distinguishes the blank-root orbit from arbitrary cone states.
 
 Agent 32 independently archived a second 20,000-step Node BigInt scan at im-results/agent32-623-gap-slack/scan.mjs. It asserts the first 17 root states through D(876,235), checks newAffineCone membership at every state from index 9 onward, and asserts generic six-slack counterexamples. The two independent Node implementations agree on the reported root metrics.
 
