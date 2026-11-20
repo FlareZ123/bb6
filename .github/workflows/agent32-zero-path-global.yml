@@ -1,11 +1,6 @@
 name: Agent 32 global zero-prefix frontier (manual)
 
 on:
-  push:
-    paths:
-      - '.github/workflows/agent32-zero-path-global.yml'
-      - 'im-results/agent27-three-slot-translated/*.lean'
-      - 'im-results/agent27-three-slot-translated/README.md'
   workflow_dispatch:
     inputs:
       evaluate_mass:
@@ -63,38 +58,8 @@ permissions:
   contents: read
 
 jobs:
-  source-bundle:
-    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[source-bundle]') }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - name: Stage the exact three-slot Lean and roster dependency closure
-        run: |
-          set -euo pipefail
-          out=/tmp/bb6-three-slot-source-closure
-          mkdir -p "$out"
-          for dir in im-results/agent8-coverage-contract im-results/agent44-drift-closure im-results/agent4-coverage-smoke im-results/agent32-zero-prefix-global im-results/agent6-fresh-glider im-results/agent24-translated-cycle im-results/agent27-translated-five-slot im-results/agent27-three-slot-translated; do
-            mkdir -p "$out/$dir"
-            find "$dir" -maxdepth 1 -type f -name '*.lean' -exec cp {} "$out/$dir/" \;
-          done
-          mkdir -p "$out/tools" "$out/resources" "$out/im-results/holdout-family-coverage" "$out/im-results/agent4-dated-roster" "$out/.github/workflows"
-          cp tools/holdout_families.cjs "$out/tools/"
-          cp resources/BB6_holdouts_663_2026-10-16.txt "$out/resources/"
-          cp -R im-results/holdout-family-coverage/. "$out/im-results/holdout-family-coverage/"
-          cp -R im-results/agent4-dated-roster/. "$out/im-results/agent4-dated-roster/"
-          cp -R im-results/agent27-three-slot-translated/. "$out/im-results/agent27-three-slot-translated/"
-          cp .github/workflows/agent32-zero-path-global.yml "$out/.github/workflows/"
-          printf '%s\n' "$GITHUB_SHA" > "$out/SOURCE_COMMIT.txt"
-          printf '%s\n' 'Lean 4.36.0-rc2' > "$out/LEAN_VERSION.txt"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: bb6-three-slot-source-closure-${{ github.sha }}
-          path: /tmp/bb6-three-slot-source-closure/
-          retention-days: 1
-
   source-proof:
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-three-slot-family]')) }}
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -177,7 +142,7 @@ jobs:
             exit 1
           fi
       - name: Verify the 80-member three-slot translated family graft (explicitly requested only)
-        if: ${{ inputs.verify_three_slot_family || (github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-three-slot-family]')) }}
+        if: ${{ inputs.verify_three_slot_family }}
         run: |
           set -euo pipefail
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent24-translated-cycle:im-results/agent27-translated-five-slot:im-results/agent27-three-slot-translated"
@@ -198,7 +163,7 @@ jobs:
             exit 1
           fi
       - name: Compare the 80 family members with pinned historical hard-root rosters
-        if: ${{ inputs.verify_three_slot_family || (github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-three-slot-family]')) }}
+        if: ${{ inputs.verify_three_slot_family }}
         run: |
           set -euo pipefail
           node im-results/agent27-three-slot-translated/compare_family_hard_roots.cjs
