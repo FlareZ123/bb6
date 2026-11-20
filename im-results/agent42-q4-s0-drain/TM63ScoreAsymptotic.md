@@ -76,7 +76,6 @@ we obtain
 \[
 \boxed{C_{\rm root}+D_{\rm root}<\frac b{1000}.}
 \tag{2}
-]
 (The displayed exponential inequality holds at \(R=63\), and \((2^R-1)/R^2\) is increasing for \(R\ge63\).)
 
 Combining (1) and (2) with the exact score split gives
@@ -115,13 +114,13 @@ The relative excess over the quadratic final-increment term is pinned to a narro
 <
 \frac{S_{\rm TM1}}{6(b_N+1)^2}-1
 <
-\frac{49b_N-6}{6(b_N+1)^2}
+\frac{48.01b_N-6}{6(b_N+1)^2}
 <
-\frac{49}{6b_N}
-\le\frac{49}{6\cdot63\cdot2^{256}}
-<1.2\times10^{-78}.
+\frac{48.01}{6b_N}
+\le\frac{48.01}{6\cdot63\cdot2^{256}}
+<1.1\times10^{-78}.
 \]
-This identifies not only the quadratic leading term but also its linear correction to within fewer than \(7b_N\) steps. It may be useful when comparing the champion's score with other long-running machines.
+This identifies not only the quadratic leading term but also its linear correction to within fewer than \(6.01b_N\) steps. It may be useful when comparing the champion's score with other long-running machines.
 
 ## Evidence boundary
 
