@@ -1097,3 +1097,80 @@ Critic corrected the Lean bootstrap: concatenating the two zip parts and unzippi
 Agent 42 reviewed the arbitrary-A terminal module and supplied the canonical authentic-root composition at `im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean`. It uses `s0Config_shift` plus `shift_shift` to transport the terminal reset and states `tm63_blank_halts` / `tm63_blank_attainable`. This is preferable to my duplicate `s1Config_shift` root wrapper, so I deleted `GeneralQ4TailRootHalting.lean` and updated the local README/derivation note to point to Agent 42's file. The shared terminal theorem remains in this directory.
 
 Agent 42 also caught a missing namespace open for `tm2`: added `open BB6Coverage.Agent48Champion` to `GeneralQ4TailTerminalComposition.lean`. No Lean compile was possible; source acceptance is still pending.
+
+
+## 2026-11-20 checkpoint — TM63 root absorption and Cryptid-D seven-step bridge
+
+### TM63 root-side score absorption
+
+- Agent 42 requested an exact check of
+  \(C_{\rm root}+D_{\rm root}<133R^2/9<b_N/1000\) and whether the
+  score split omits any root-side term.
+- For \(R=2^{n-1}-1\), the counted-drain identity gives
+  \[
+  D_{\rm root}=\operatorname{drainCost}(R,0)
+  =6\cdot4^{n-1}+42\cdot2^{n-1}-12n-36.
+  \]
+  For authentic \(n=2^m\ge7\), \(D_{\rm root}<7\cdot4^{n-1}<14R^2\).
+  Together with \(C_{\rm root}<7\cdot4^m\) and
+  \(R^2>9\cdot4^m\), this yields
+  \(C_{\rm root}+D_{\rm root}<133R^2/9<15R^2\).
+- Since \(b_N\ge2^R-1\), \(R\ge63\), and
+  \(2^{r-1}/r^2\) increases for \(r\ge3\), with
+  \(2^{62}>15{,}000\cdot63^2\), the requested
+  \(C_{\rm root}+D_{\rm root}<b_N/1000\) follows.
+- Exact cost partition: \(C_{\rm root}\) is
+  rootToSecondQ4Cost + rootSecondQ4TailPrefixCost;
+  \(D_{\rm root}\) is the counted drain; \(D_N\) is dispatcher cost
+  plus terminalMoves plus 7. No root-side step lies outside
+  \(C_{\rm root}+D_{\rm root}\). The +7 is the six-step TM1/TM2
+  offset plus final undefined-query correction, appended post-root.
+  The +90 in \(D_N\) combines with the drain's -36 to give +54 in
+  the fully expanded score; do not count +54 as a separate drain
+  while retaining +90 in \(D_N\).
+- Reviewed Agent 42's current
+  \(\Delta<10(1+\log_2\ell)\ell^2\) estimate. The coefficient sum
+  and substitutions \(N\le1+\log_2\ell\), \(R,U\le\ell\) check out.
+  This is algebraic review only; no Lean compile or acceptance of the
+  underlying root/dispatcher source composition.
+- Shared the root comparison and accounting with Agent 42. The exact
+  drain formula and absorption proof are recorded in the
+  agent42-q4-s0-drain score synthesis.
+
+### Cryptid-D first-seven timed bridge
+
+- Agent 2 asked whether the external A_step2 \(K=4k+1\) extraction
+  had been resolved. It has **not** been proved or compiled; the
+  concrete \(k=0\) replay is not a symbolic proof.
+- Exact missing lemma: after step_An_1101 and the fixed \(m_i\)-step
+  prefix, expose a C-state with left alternating block length
+  \(4k_i+1\), then apply step_01C_C11 with that explicit K. For E,
+  \(P_E(k)=12k^2+41k+33\); for B,
+  \(P_B(k)=12k^2+41k+31\). First seven branch/m data:
+  E13, E21, B5, B5, E21, B5, E17.
+- DRegularShift.run_shift gives after \(j\le7\) steps the root lift
+  shift \(3^{7-j}8^j p\). For calls \(i=1,\ldots,7\),
+  \(k_i(p)=k_i(0)+3^{7-i}8^{i-1}p\). Exact base quotients and
+  coefficients are in
+  im-results/agent44-d-macro-time-bridge/README.md.
+- At call 8 the shift is \(8^7p\equiv2\pmod3\) for
+  \(p\equiv1\pmod3\), explaining the root A / external E divergence.
+  Sent Agent 2 the exact intermediate lemma, the affine lift formulas,
+  and an explicit-K macro strategy. The K lemma remains separate from
+  the TM62/CryptidBoundary transition conjugacy and does not itself
+  reach the halting cylinder.
+- No further finite screening was repeated; this is an exact affine
+  consequence of the existing run_shift theorem and macro trace.
+
+### Runtime and next actions
+
+- Local container and Python tool calls return ClientError before
+  executing even trivial commands. The Lean archive bootstrap and
+  lean --version therefore remain blocked in this invocation.
+  Do not repeat the same unchanged tool-boundary attempts. Agent 1
+  has been asked whether their working local Lean runtime can help
+  assemble the exact TM63 dependency closure.
+- Next: check Agent 1/2 replies; if Agent 2 wants the K lemma pursued,
+  prototype A_step2K with explicit \(K=4k_i(p)+1\) for the first
+  seven fixed suffixes. For TM63, obtain a working local runtime and
+  compile the exact current-main dependency closure before using CI.
