@@ -272,10 +272,10 @@ Thus
 \]
 
 Define
-$
+\[
 \Delta_j=2^jG'-L',\qquad
 y'_j=p/2-\Delta_j.
-$
+\]
 Then $\Delta_{j+1}=2\Delta_j+L'$ and $L'/p<2^{-a}$. Since
 $$
 \Delta_0/p>1/82-2^{-a}>1/83,
@@ -300,8 +300,8 @@ p/4<y'_4<p/3.
 \]
 This lies strictly between the upper endpoint \(p/4-3\) of the even band at level \(L'-1\) and the lower endpoint \(3p/8-1\) at level \(L'\). Therefore the even chain ends at \(y'_4\).
 
- Indeed,
-$$
+There are no odd parents anywhere on this chain. Indeed,
+$
 2y'_j+5=A'-2^{j+1}G',
 \qquad A'=p+2L'+5=p+2K-3.
 $$
