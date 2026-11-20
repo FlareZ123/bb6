@@ -2,6 +2,33 @@
 
 **Current status — 20 November 2026: BB(6) remains unresolved.** The exact blank-root prefix to the published S1 configuration after 27,959 original TM63 transitions is kernel-checked. The downstream source chain now has drafts through the middle-34 countdown, complete 24-class SectionResult dispatcher, T3-corrected outer-LC_Inc endpoint, second q4Tail frame, exact q4Tail/S0 identity, arbitrary-A S1 reparameterization, counted drain, terminal dispatcher and terminal SectionBits bridge. The preferred route bypasses further q4Tail/P2 descent and the separate A=1/A=2 terminal cases. The normalized tm2 trajectory is transported to the actual TM1 champion by the six-transition root bridge in [ChampionRootBridge.lean](../agent48-champion-root/ChampionRootBridge.lean); the Attainable adapter's +7 includes those six transitions and the final undefined query. Agent 42's [authentic-root wrapper](../agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean) states source-level `tm63_blank_halts` and `tm63_blank_attainable`. **The complete dependency closure has not compiled or passed a transitive axiom audit**; no accepted champion halt or exact primitive-step score is established. The universal six-state upper bound remains a separate open problem.
 
+## Conditional exact-score tower interval (20 November 2026)
+
+Retaining the exact root and terminal counter indices now gives the
+source-conditional interval
+[
+T_{M+N+49}<S_{\rm TM1}<T_{X+1},
+]
+where
+[
+M=31\cdot2^{A_0}-36,qquad
+N=(2^{78}-1)2^A-3,qquad
+X=T_{T_{11}-1}.
+]
+The lower bound follows from (b_N=V_{M+N+46}) and
+(V_j\ge T_{j+3}+1); the upper follows from the exact root-prefix
+bound, the corrected (+90) dispatcher score term, and
+(S_{\rm TM1}<9b_N^2<2^Y=T_{X+1}), with (Y=T_X).
+See [DirectTerminalTetrationBound.md](DirectTerminalTetrationBound.md)
+for the exact lower derivation and
+[Agent 42's consolidated tower sandwich](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md)
+for the upper and combined interval.
+
+**This interval is still conditional on the authentic blank-root/source
+composition.** The full dependency closure has not compiled and passed a
+transitive axiom audit; it is not an accepted primitive-step score proof
+and does not bound all six-state machines.
+
 ## New positive-z first q4 checkpoint decomposition
 
 The [first q4 checkpoint decomposition](FirstQ4Checkpoint.md) factors the original TM2 run into a general S0 drain, the existing Rst1' counted macro, a second all-ones S0 drain, and a (9z+10)-step postlude. The postlude is reduced to a (3z)-cell counted sweep plus a fixed ten-step frame bridge. The full tape decomposition passes 30 raw-step test cases (8,970,870 transitions); the Lean composition and dependency CI acceptance remain in progress. This is a first-checkpoint result only, not a terminal witness or BB(6) solution. The second-cycle continuation has two parity branches: odd q uses the 34-step secondCyclePrefix34, while the A=1 even-q endpoint routes through the existing 46-step Type-C bridge. Agent 38's authentic blank-root source draft reaches the second q4Tail frame; Agent 42's generic q4Tail-to-S0 adapter reduces the remaining handoff to a true left guard, an exact residual left ray, and a blank right ray. Both root residuals are now explicit in [P2Q4TailToS0Identity.md](P2Q4TailToS0Identity.md): the odd-q branch preserves tail0.drop(6), and the A=1 Type-C branch factors the full residual as d1pow(K) ++ markerWord(0) ++ d0 ++ d0pow(L+3) ++ lh, with K=2^z+z+3. After the counted S0 drain, this matches the terminal S0 reset interface in every component except the precise remaining conversion d0pow(L+3) to d1pow(L). Both tails begin 100 and fit the corrected S0 postlude. The A=2 odd-q specialization is also explicit: its residual factors as d1pow(K) ++ markerWord(0) ++ d0pow(2) ++ d1pow(2) ++ d0pow(L+1) ++ lh. These root-specific adapter instances remain uncompiled; the A=1 conversion d0pow(L+3) to d1pow(L) and the A=2 conversion d0pow(2) ++ d1pow(2) ++ d0pow(L+1) to d1pow(L) remain open.
