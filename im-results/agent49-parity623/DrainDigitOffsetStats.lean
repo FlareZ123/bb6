@@ -326,6 +326,8 @@ theorem run_overflow_final_state_pairs (n : Nat) :
 
 /-- The strict range condition is essential: at the first overflow boundary,
 the paired terminal states can differ. -/
+#print axioms run_overflow_final_state_pairs
+
 theorem run_offset_overflow_BA_final_state_differs :
     (run 1 3 B).2 ≠ (run 1 2 A).2 := by decide
 
