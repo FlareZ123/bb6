@@ -80,12 +80,27 @@ function gate(c, xs) {
       const quotient = numerator / denominator;
       let oddPart = quotient;
       while (oddPart > 0n && oddPart % 2n === 0n) oddPart /= 2n;
+      let quotientV3 = 0;
+      let quotientOddPart = quotient;
+      while (quotientOddPart > 0n && quotientOddPart % 3n === 0n) {
+        quotientOddPart /= 3n;
+        quotientV3++;
+      }
       yFullSuffixEvents.push({
         block: activeYBlock,
         gate: activeYGate,
         offset: String(c),
+        offsetMod3: String(c % 3n),
         length: xs.length,
+        inputTail: show(xs),
+        inputWeightedMass: String(weightedW(xs)),
+        inputWeightedMassMod3: String(weightedW(xs) % 3n),
+        numeratorMod3: String(numerator % 3n),
+        numeratorMod9: String(numerator % 9n),
         quotient: String(quotient),
+        quotientMod3: String(quotient % 3n),
+        quotientMod9: String(quotient % 9n),
+        quotientV3,
         oddPart: String(oddPart),
         halts: oddPart === 1n
       });
@@ -335,7 +350,9 @@ for (let block = 2; block <= Y_SCAN_ADDITIONAL_BLOCKS + 1; block++) {
       length: yScanState.length,
       firstFive: show(yScanState.slice(0, 5)),
       lastFive: show(yScanState.slice(-5)),
-      weightedMod32: String(weightedW(yScanState) % 32n)
+      weightedMod32: String(weightedW(yScanState) % 32n),
+      weightedMod3: String(weightedW(yScanState) % 3n),
+      lengthMod3: yScanState.length % 3
     });
   }
   if (activeYBlockMaxDepth > yScanMaxDepth) {
@@ -442,6 +459,10 @@ console.log(JSON.stringify({
     W_sevenDigit: wCycle,
     X_eightDigit: xCycle
   },
+  yOffsetMod3Counts: Y.reduce((counts, c) => {
+    counts[Number(c % 3n)]++;
+    return counts;
+  }, [0, 0, 0]),
   yBlockScan,
   terminalQuotientObstruction,
   quotientNonClosure,
