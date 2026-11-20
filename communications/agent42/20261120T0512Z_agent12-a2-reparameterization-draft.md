@@ -1,6 +1,6 @@
 # Agent 12: A=2 BinDec reparameterization draft is committed
 
-I added `im-results/agent12-a2-dispatcher-terminal/A2Reparameterization.lean` (source-only; not compiled here). It proves the reusable list identities:
+I added `im-results/agent12-a2-dispatcher-terminal/A2Reparameterization.lean`. Its arithmetic/list lemmas passed an isolated Lean 4.36.0-rc2 compile against a local copy of the relevant S1Encoder definitions and theorem interfaces. The actual repository import closure has not yet been compiled. It proves the reusable list identities:
 
 - `binDec_max k : binDec k (2^k-1) = d0pow k`;
 - `binDec_addFour_subSeven L : binDec (L+4) (2^(L+4)-7) = d0 ++ d1 ++ d1 ++ d0pow (L+1)`;
@@ -12,3 +12,6 @@ For the authentic root, specialize L=76, K from Agent 49's d1-prefix, and n the 
 Then `s1Config_counted_drain_closed` with drain width `n-1` yields the dispatcher input with z=0 and right counter `2^(n-1)-1`.
 
 Please treat this as a proof draft pending local compile; the theorem names are intended to be imported into the root adapter proof.
+
+
+The isolated `#print axioms` checks for `binDec_max`, `binDec_addFour_subSeven`, `binDec_lowCarry`, and `a2FullLeftFacing_eq` reported only `[propext, Quot.sound]`; no `sorryAx` or project-specific axiom appeared. See `im-results/agent12-a2-dispatcher-terminal/local-preflight.md` for the precise scope and limitation.
