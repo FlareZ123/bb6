@@ -11,6 +11,12 @@ where \(N\) is the outer dispatcher index, \(N\ge256\), and
 \[
 b_0=R,\qquad b_{j+1}=2^{b_j}-1,\qquad U\le R,\qquad R\ge63.
 \]
+Set
+\[
+\ell=\log_2(b+1).
+\]
+Because \(b=2^k-1\), we have \(k=\ell\) exactly. Also \(b\ge2^N R\) and \(b\ge2^R-1\), so \(N\le\ell\) and \(R\le\ell\). In particular, \(\ell\ge N\ge256\).
+
 The exact score split and root-prefix bounds are recorded in [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md). The exact dispatcher-plus-terminal cost identity is recorded in [SectionResultThreeCycle.md](SectionResultThreeCycle.md):
 \[
 D_N
@@ -23,8 +29,8 @@ D_N
 The exact final summand, also isolated in [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md), is
 \[
 L_N=6\cdot4^{k}+42\cdot2^{k}+3k
-=6(b+1)^2+42(b+1)+3k
-=6b^2+54b+48+3k.
+=6(b+1)^2+42(b+1)+3\ell
+=6b^2+54b+48+3\ell.
 \tag{2}
 \]
 All other terms in the score split are nonnegative. Thus \(S=L_N+\Delta\), with \(\Delta\ge0\).
@@ -52,7 +58,7 @@ For \(j\le N-2\), monotonicity of the \(b_j\) and
 \[
 6\cdot4^{b_j}+42\cdot2^{b_j}
 =6b_{j+1}^2+54b_{j+1}+48
-\le6k^2+54k+48.
+\le6\ell^2+54\ell+48.
 \]
 The sum of the remaining linear coefficients is
 \[
@@ -60,77 +66,52 @@ The sum of the remaining linear coefficients is
 \]
 Using \(U\le R\), (3) and (4) therefore imply
 \[
-\Delta<
-15R^2+10N^2+85N+90+12(N+1)R
-+6Nk^2+54Nk+6N^2k.
+\begin{aligned}
+\Delta
+&<15R^2+10N^2+85N+90+12(N+1)R\\
+&\quad+6N\ell^2+54N\ell+6N^2\ell\\
+&\le12\ell^3+91\ell^2+97\ell+90
+<13\ell^3.
+\end{aligned}
 \tag{5}
 \]
+The final inequality uses \(\ell\ge256\).
 
-We next bound all three parameters by \(b^{1/16}\). Since
-\(b\ge2^N R\), \(N\ge256\), and \(N^{16}\le2^N\) for \(N\ge256\),
-\[
-N\le b^{1/16}.
-\]
-If \(R\le256\), then \(b\ge2^{256}\), so \(R\le b^{1/16}\); if
-\(R\ge257\), use \(b\ge2^R-1\ge R^{16}\). The same split applies to
-\(k\): if \(k\le256\), use \(b\ge2^{256}\); if \(k\ge257\), use
-\(b=2^k-1\ge k^{16}\). The elementary inequalities
-\(x^{16}\le2^x-1\) for integer \(x\ge257\) follow at \(257\) and
-then by monotonicity of \(2^x/x^{16}\). Hence
-\[
-N,R,k\le b^{1/16}.
-\tag{6}
-\]
-Substituting (6) into (5), and using \(b\ge1\), gives
-\[
-\Delta<
-(15+10+85+90+24+6+54+6)b^{3/16}
-=290b^{3/16}<300b^{3/16}.
-\]
-Consequently the exact score lies in the narrow interval
+Consequently the exact score has the explicit two-term expansion
 \[
 \boxed{
-6(b_N+1)^2+42(b_N+1)+3b_{N-1}
-\le S_{\rm TM1}
-<
-6(b_N+1)^2+42(b_N+1)+3b_{N-1}
-+300b_N^{3/16}.
-}
-\tag{7}
-\]
-Equivalently,
-\[
 S_{\rm TM1}
-=6b_N^2+54b_N+48+3b_{N-1}+\Delta,
-\qquad 0\le\Delta<300b_N^{3/16}.
-\tag{8}
+=6b_N^2+54b_N+48+3\ell+\Delta,
+\qquad
+0\le\Delta<13\ell^3,\quad
+\ell=\log_2(b_N+1).
+}
+\tag{6}
 \]
-In particular, the normalized linear correction is pinned to \(54\):
+In particular,
 \[
 54<
 \frac{S_{\rm TM1}-6b_N^2}{b_N}
 <
-54+351b_N^{-13/16}
+54+\frac{48+3\ell+13\ell^3}{2^\ell-1}
 <
-54+9\times10^{-61},
-\tag{9}
+54+2\times10^{-69}.
+\tag{7}
 \]
-where the final numerical inequality uses \(b_N\ge2^{256}\).
+The last numerical inequality holds for integer \(\ell\ge256\); the displayed quotient is decreasing there and is already below \(2\times10^{-69}\) at \(\ell=256\).
 
-The relative excess over the quadratic term is also sharply localized:
+The relative excess over the quadratic final-increment term is localized even more sharply:
 \[
-\frac{7}{b_N+1}
-<
+\boxed{
 \frac{S_{\rm TM1}}{6(b_N+1)^2}-1
-<
-\frac{7.01}{b_N}.
-\tag{10}
+=
+\frac{7}{b_N+1}+\varepsilon_N,\qquad
+0<\varepsilon_N<
+\frac{3\ell+13\ell^3}{6(b_N+1)^2}.
+}
+\tag{8}
 \]
-For the upper inequality, use \(k\le b^{1/16}\),
-\(\Delta<300b^{3/16}\), and \(b\ge2^{256}\) to obtain
-\(42+3b^{1/16}+300b^{3/16}<0.06b\).
-
-Thus the score is not merely dominated by the final counted increment: after its exact quadratic and linear terms are removed, the entire remaining cost is less than \(300b_N^{3/16}\). This is a two-term asymptotic expansion with an explicit sublinear error, conditional on the existing source-cost identities.
+Thus the score is not merely dominated by the final counted increment: after its exact quadratic and linear terms are removed, the entire remaining cost is polylogarithmic in \(b_N\), bounded by \(13\log_2(b_N+1)^3\).
 
 ## Evidence boundary
 
