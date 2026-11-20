@@ -1,13 +1,14 @@
 /-!
-# Draft: actual Mathlib Tape adapter for external TM62 → repository D0
+# Draft: Mathlib TM62 → BB6.Bridge → repository D0 adapter
 
-This file is intentionally kept under im-results until the complete pinned
-upstream/Mathlib dependency closure has been compiled and its axiom profile
-inspected. The abstract function-tape square is already kernel-checked in
-Agent 4's HeadRelativeFunctionAudit.lean; this file is the concrete
-Turing.Tape integration, not a new blank-root result.
+This version reuses the already kernel-checked BB6.Bridge relative/absolute
+tape transport rather than duplicating its Int → Bool function-tape proof.
+It remains in im-results until the exact pinned Mathlib/upstream closure is
+compiled and the transitive axiom profile is inspected.
 -/
 
+import Frontier
+import RelativeTape
 import Mathlib.Computability.TuringMachine.Tape
 import MachineConjugacy
 import DTableWitness
@@ -40,7 +41,20 @@ def encodeDir : ExtDir → BB6.Portfolio.Dir
   | .left => .L
   | .right => .R
 
-/-- The eleven live source entries agree with the repository's exact six-state D0 table;
+def externalMove (w : ExtSymbol) (d : ExtDir) (s : ExtState) : BB6Coverage.Move :=
+  { write := encodeSymbol w
+    right := match d with | .left => false | .right => true
+    next := encodeState s }
+
+def toMove : BB6.Portfolio.Instruction → BB6Coverage.Move
+  | (w, .L, s) => { write := w, right := false, next := s }
+  | (w, .R, s) => { write := w, right := true, next := s }
+
+/-- The repository's D0 table, viewed in the BB6Coverage raw-step interface. -/
+def d0Coverage : BB6Coverage.Machine :=
+  fun slot => (BB6.Portfolio.D0 slot.1 slot.2).map toMove
+
+/-- The eleven live source entries agree with the repository's exact D0 table;
 F/1 is undefined in both. -/
 theorem table_conjugate (q : ExtState) (b : ExtSymbol) :
     BB6.Portfolio.D0 (encodeState q) (encodeSymbol b) =
@@ -48,182 +62,241 @@ theorem table_conjugate (q : ExtState) (b : ExtSymbol) :
         (fun (w, d, s) => (encodeSymbol w, encodeDir d, encodeState s)) := by
   cases q <;> cases b <;> rfl
 
-structure ExtCfg where
+theorem table_conjugate_coverage (q : ExtState) (b : ExtSymbol) :
+    d0Coverage (encodeState q, encodeSymbol b) =
+      (ExternalTM (q, b)).map (fun (w, d, s) => externalMove w d s) := by
+  unfold d0Coverage
+  rw [table_conjugate]
+  simp [toMove, externalMove, encodeDir]
+
+/-- Direct representation of a Mathlib tape in the existing relative-tape
+bridge: the current cell, cells to the left, and cells to the right. -/
+def tapeToRelative (T : ExtTape) : BB6.Bridge.Tape :=
+  ⟨encodeSymbol (T.nth 0),
+    fun n => encodeSymbol (T.nth (Int.negSucc n)),
+    fun n => encodeSymbol (T.nth (Int.ofNat (n + 1)))⟩
+
+theorem tapeToRelative_symbol (T : ExtTape) (i : Int) :
+    BB6.Bridge.symbol (tapeToRelative T) i = encodeSymbol (T.nth i) := by
+  cases i with
+  | ofNat n =>
+      cases n with
+      | zero => rfl
+      | succ n => rfl
+  | negSucc n => rfl
+
+/-- Mathlib's write-then-move-right operation is exactly BB6.Bridge.goRight. -/
+theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
+    tapeToRelative (Turing.Tape.move .right (Turing.Tape.write w T)) =
+      BB6.Bridge.goRight (tapeToRelative T) (encodeSymbol w) := by
+  cases T with
+  | mk a L R =>
+      apply BB6.Bridge.Tape.ext
+      · simp [tapeToRelative, BB6.Bridge.goRight,
+          Turing.Tape.move_right_nth, Turing.Tape.write_nth]
+      · funext n
+        cases n with
+        | zero =>
+            simp [tapeToRelative, BB6.Bridge.goRight,
+              Turing.Tape.move_right_nth, Turing.Tape.write_nth]
+        | succ n =>
+            simp [tapeToRelative, BB6.Bridge.goRight,
+              Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
+      · funext n
+        simp [tapeToRelative, BB6.Bridge.goRight,
+          Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
+
+/-- Mathlib's write-then-move-left operation is exactly BB6.Bridge.goLeft. -/
+theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
+    tapeToRelative (Turing.Tape.move .left (Turing.Tape.write w T)) =
+      BB6.Bridge.goLeft (tapeToRelative T) (encodeSymbol w) := by
+  cases T with
+  | mk a L R =>
+      apply BB6.Bridge.Tape.ext
+      · simp [tapeToRelative, BB6.Bridge.goLeft,
+          Turing.Tape.move_left_nth, Turing.Tape.write_nth]
+      · funext n
+        simp [tapeToRelative, BB6.Bridge.goLeft,
+          Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
+      · funext n
+        cases n with
+        | zero =>
+            simp [tapeToRelative, BB6.Bridge.goLeft,
+              Turing.Tape.move_left_nth, Turing.Tape.write_nth]
+        | succ n =>
+            simp [tapeToRelative, BB6.Bridge.goLeft,
+              Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
+
+structure Positioned where
   state : ExtState
   head : Int
   tape : ExtTape
 
-def project (c : ExtCfg) : ExtState × ExtTape := (c.state, c.tape)
+def project (p : Positioned) : ExtState × ExtTape := (p.state, p.tape)
 
-/-- Absolute-coordinate view of a head-relative Mathlib tape. -/
-def absTape (T : ExtTape) (h : Int) : Int → Bool :=
-  fun i => encodeSymbol (T.nth (i - h))
+def toRelative (p : Positioned) : BB6.Bridge.Cfg :=
+  ⟨encodeState p.state, p.head, tapeToRelative p.tape⟩
 
-def absCfg (c : ExtCfg) : BB6.Portfolio.Cfg :=
-  ⟨encodeState c.state, c.head, absTape c.tape c.head⟩
-
-/-- External TM.step writes the new symbol before moving the tape. -/
-def extStep (c : ExtCfg) : Option ExtCfg :=
-  match ExternalTM (c.state, c.tape.nth 0) with
+/-- External TM62 step with the absolute head position retained. -/
+def step (p : Positioned) : Option Positioned :=
+  match ExternalTM (p.state, p.tape.nth 0) with
   | none => none
   | some (w, d, s) =>
-      some ⟨s, c.head + (encodeDir d).dx,
-        Turing.Tape.move d (Turing.Tape.write w c.tape)⟩
+      some ⟨s, p.head + (encodeDir d).dx,
+        Turing.Tape.move d (Turing.Tape.write w p.tape)⟩
 
-/-- The actual Mathlib write/move adapter, with the absolute head updated
-by the same direction as the source machine. -/
-theorem absTape_write_move (T : ExtTape) (h : Int) (w : ExtSymbol) (d : ExtDir) :
-    absTape (Turing.Tape.move d (Turing.Tape.write w T))
-        (h + (encodeDir d).dx) =
-      BB6.Portfolio.updateTape (absTape T h) h (encodeSymbol w) := by
-  funext i
-  cases d with
-  | left =>
-      have hidx : i - (h + -1) - 1 = i - h := by omega
-      simp only [absTape, encodeDir, BB6.Portfolio.Dir.dx, Turing.Tape.move_left_nth]
-      rw [hidx]
-      by_cases hp : i = h
-      · subst i
-        simp [BB6.Portfolio.updateTape, Turing.Tape.write_nth, encodeSymbol]
-      · have hneq : i - h ≠ 0 := by omega
-        simp [BB6.Portfolio.updateTape, Turing.Tape.write_nth, encodeSymbol, hp, hneq]
-  | right =>
-      have hidx : i - (h + 1) + 1 = i - h := by omega
-      simp only [absTape, encodeDir, BB6.Portfolio.Dir.dx, Turing.Tape.move_right_nth]
-      rw [hidx]
-      by_cases hp : i = h
-      · subst i
-        simp [BB6.Portfolio.updateTape, Turing.Tape.write_nth, encodeSymbol]
-      · have hneq : i - h ≠ 0 := by omega
-        simp [BB6.Portfolio.updateTape, Turing.Tape.write_nth, encodeSymbol, hp, hneq]
-
-/-- One source transition commutes with the repository's raw D0 step,
-including the shared undefined F/1 transition. -/
-theorem absStep_commute (c : ExtCfg) :
-    BB6.Portfolio.step BB6.Portfolio.D0 (absCfg c) =
-      (extStep c).map absCfg := by
-  simp only [BB6.Portfolio.step, absCfg, absTape, Int.sub_self, Turing.Tape.nth_zero]
-  rw [table_conjugate]
-  cases h : ExternalTM (c.state, c.tape.nth 0) with
+/-- Concrete Mathlib-tape step commutation into the already-proved
+relative-tape bridge. -/
+theorem step_toRelative (p : Positioned) :
+    BB6.Bridge.step d0Coverage (toRelative p) =
+      (step p).map toRelative := by
+  simp only [BB6.Bridge.step, step, toRelative, tapeToRelative]
+  rw [table_conjugate_coverage]
+  cases h : ExternalTM (p.state, p.tape.nth 0) with
   | none =>
-      simp [extStep, h]
+      simp [h]
   | some instr =>
       rcases instr with ⟨w, d, s⟩
-      simp [extStep, h, encodeDir, BB6.Portfolio.Dir.dx, absTape_write_move]
+      cases d with
+      | left =>
+          simp [h, externalMove, encodeDir, BB6.Portfolio.Dir.dx,
+            tapeToRelative_write_move_left]
+      | right =>
+          simp [h, externalMove, encodeDir, BB6.Portfolio.Dir.dx,
+            tapeToRelative_write_move_right]
 
-theorem absStep_halts_iff (c : ExtCfg) :
-    BB6.Portfolio.step BB6.Portfolio.D0 (absCfg c) = none ↔ extStep c = none := by
-  rw [absStep_commute]
-  cases h : extStep c <;> simp [h]
-
-/-- Extended external run, retaining the absolute head coordinate. -/
-def extRun : Nat → Option ExtCfg → Option ExtCfg
-  | 0, c => c
-  | n + 1, c => (extRun n c).bind extStep
-
-/-- Exact-n run transport into the repository's infinite-tape D0 model. -/
-theorem run_transport (n : Nat) (initial : Option ExtCfg) :
-    BB6.Portfolio.run BB6.Portfolio.D0 n (initial.map absCfg) =
-      (extRun n initial).map absCfg := by
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-      simp only [BB6.Portfolio.run, extRun, ih]
-      cases h : extRun n initial with
-      | none => simp
-      | some c => simp [absStep_commute]
-
-def ExtHaltsAt (c : ExtCfg) (n : Nat) : Prop :=
-  ∃ last, extRun n (some c) = some last ∧ extStep last = none
-
-def D0HaltsAt (c : BB6.Portfolio.Cfg) (n : Nat) : Prop :=
-  ∃ last,
-    BB6.Portfolio.run BB6.Portfolio.D0 n (some c) = some last ∧
-    BB6.Portfolio.step BB6.Portfolio.D0 last = none
-
-theorem haltsAt_transport (c : ExtCfg) (n : Nat) :
-    ExtHaltsAt c n ↔ D0HaltsAt (absCfg c) n := by
-  constructor
-  · rintro ⟨last, hr, hs⟩
-    have hrun := run_transport n (some c)
-    simp only [Option.map_some, hr] at hrun
-    exact ⟨absCfg last, hrun, (absStep_halts_iff last).2 hs⟩
-  · rintro ⟨last, hr, hs⟩
-    have hrun := run_transport n (some c)
-    have hmap : (extRun n (some c)).map absCfg = some last := hrun.symm.trans hr
-    cases he : extRun n (some c) with
-    | none => simp [he] at hmap
-    | some lastExt =>
-        have hlast : absCfg lastExt = last := by simpa [he] using hmap
-        refine ⟨lastExt, he, ?_⟩
-        exact (absStep_halts_iff lastExt).mp (by simpa [hlast] using hs)
-
-/-- Forgetting the absolute head coordinate recovers the external source step. -/
-theorem extStep_project (c : ExtCfg) :
-    (extStep c).map project = _root_.step ExternalTM (project c) := by
-  cases c with
+theorem step_project (p : Positioned) :
+    (step p).map project = _root_.step ExternalTM (project p) := by
+  cases p with
   | mk q h T =>
       cases T with
       | mk a L R =>
           cases ht : ExternalTM (q, a) with
-          | none => simp [extStep, project, _root_.step, ht]
+          | none => simp [step, project, _root_.step, ht]
           | some instr =>
               rcases instr with ⟨w, d, s⟩
-              simp [extStep, project, _root_.step, ht,
+              simp [step, project, _root_.step, ht,
                 Turing.Tape.write, Turing.Tape.move]
 
-theorem extStep_none_iff (c : ExtCfg) :
-    extStep c = none ↔ _root_.step ExternalTM (project c) = none := by
-  cases c with
-  | mk q h T =>
-      cases T with
-      | mk a L R =>
-          cases ht : ExternalTM (q, a) <;>
-            simp [extStep, project, _root_.step, ht]
+theorem step_none_iff (p : Positioned) :
+    step p = none ↔ _root_.step ExternalTM (project p) = none := by
+  rw [← step_project p]
+  cases step p <;> simp
+
+def run : Nat → Positioned → Option Positioned
+  | 0, p => some p
+  | n + 1, p => (run n p).bind step
 
 theorem external_stepNat_succ (n : Nat) (c : ExtState × ExtTape) :
     _root_.stepNat ExternalTM (n + 1) c =
       (_root_.stepNat ExternalTM n c).bind (_root_.step ExternalTM) := by
   simp [_root_.stepNat, Nat.repeat]
 
-/-- The extended run projects to the source's own stepNat, with no time offset. -/
-theorem extRun_project (n : Nat) (c : ExtCfg) :
-    (extRun n (some c)).map project = _root_.stepNat ExternalTM n (project c) := by
+/-- The positioned run projects to the source's own stepNat, preserving
+the exact primitive transition count. -/
+theorem run_project (n : Nat) (p : Positioned) :
+    (run n p).map project = _root_.stepNat ExternalTM n (project p) := by
   induction n with
   | zero => rfl
   | succ n ih =>
-      change Option.map project ((extRun n (some c)).bind extStep) =
-        _root_.stepNat ExternalTM (n + 1) (project c)
+      change Option.map project ((run n p).bind step) =
+        _root_.stepNat ExternalTM (n + 1) (project p)
       rw [Option.map_bind, external_stepNat_succ]
-      cases he : extRun n (some c) with
+      cases he : run n p with
       | none =>
-          have hs : _root_.stepNat ExternalTM n (project c) = none := by
+          have hs : _root_.stepNat ExternalTM n (project p) = none := by
             simpa [he] using ih.symm
           simp [he, hs]
-      | some c' =>
-          have hs : _root_.stepNat ExternalTM n (project c) = some (project c') := by
+      | some q =>
+          have hs : _root_.stepNat ExternalTM n (project p) = some (project q) := by
             simpa [he] using ih.symm
-          simp [he, hs, extStep_project]
+          simp [he, hs, step_project]
 
-theorem extHaltsAt_iff_external (c : ExtCfg) (n : Nat) :
-    ExtHaltsAt c n ↔ _root_.haltsIn ExternalTM (project c) n := by
-  constructor
-  · rintro ⟨last, hr, hs⟩
-    refine ⟨project last, ?_, ?_⟩
-    · simpa [hr] using (extRun_project n c).symm
-    · exact (extStep_none_iff last).mp hs
-  · rintro ⟨last, hr, hs⟩
-    have hp := extRun_project n c
-    rw [hr] at hp
-    cases he : extRun n (some c) with
-    | none => simp [he] at hp
-    | some lastExt =>
-        have hlast : project lastExt = last := by simpa [he] using hp
-        refine ⟨lastExt, he, ?_⟩
-        exact (extStep_none_iff lastExt).mpr (by simpa [hlast] using hs)
+def ExtHaltsAt (p : Positioned) (n : Nat) : Prop :=
+  ∃ last, run n p = some last ∧ step last = none
 
-/-- The source section A(n,[]) has exactly n ones to the right of its
-blank scanned cell, and is blank at every nonpositive relative coordinate. -/
+theorem extHaltsAt_of_external (p : Positioned) (n : Nat)
+    (h : _root_.haltsIn ExternalTM (project p) n) : ExtHaltsAt p n := by
+  rcases h with ⟨last, hr, hs⟩
+  have hp := run_project n p
+  rw [hr] at hp
+  cases he : run n p with
+  | none => simp [he] at hp
+  | some lastExt =>
+      have hlast : project lastExt = last := by simpa [he] using hp
+      exact ⟨lastExt, he,
+        (step_none_iff lastExt).mpr (by simpa [hlast] using hs)⟩
+
+def toPortfolioCfg (c : BB6Coverage.Config) : BB6.Portfolio.Cfg :=
+  ⟨c.state, c.head, c.tape⟩
+
+/-- The raw BB6Coverage step for d0Coverage is exactly Portfolio.step D0
+under the field-for-field configuration conversion. -/
+theorem rawStep_toPortfolio (c : BB6Coverage.Config) :
+    (BB6Coverage.rawStep d0Coverage c).map toPortfolioCfg =
+      BB6.Portfolio.step BB6.Portfolio.D0 (toPortfolioCfg c) := by
+  cases h : BB6.Portfolio.D0 c.state (c.tape c.head) with
+  | none =>
+      simp [BB6Coverage.rawStep, BB6Coverage.readSlot, d0Coverage,
+        BB6.Portfolio.step, h]
+  | some instr =>
+      rcases instr with ⟨w, d, s⟩
+      cases d <;>
+        simp [BB6Coverage.rawStep, BB6Coverage.readSlot, d0Coverage,
+          BB6Coverage.applyMove, BB6.Portfolio.step, h, toMove,
+          toPortfolioCfg, BB6.Portfolio.updateTape, BB6.Portfolio.Dir.dx]
+
+def toPortfolioAbs (p : Positioned) : BB6.Portfolio.Cfg :=
+  toPortfolioCfg (BB6.Bridge.toAbsolute (toRelative p))
+
+/-- One external transition commutes all the way to the repository's D0
+absolute-tape semantics. -/
+theorem step_toPortfolio (p : Positioned) :
+    BB6.Portfolio.step BB6.Portfolio.D0 (toPortfolioAbs p) =
+      (step p).map toPortfolioAbs := by
+  calc
+    BB6.Portfolio.step BB6.Portfolio.D0 (toPortfolioAbs p) =
+        (BB6Coverage.rawStep d0Coverage
+          (BB6.Bridge.toAbsolute (toRelative p))).map toPortfolioCfg :=
+      (rawStep_toPortfolio (BB6.Bridge.toAbsolute (toRelative p))).symm
+    _ = (BB6.Bridge.step d0Coverage (toRelative p)).map
+          (toPortfolioCfg ∘ BB6.Bridge.toAbsolute) := by
+      rw [BB6.Bridge.step_absolute]
+    _ = ((step p).map toRelative).map
+          (toPortfolioCfg ∘ BB6.Bridge.toAbsolute) := by
+      rw [step_toRelative]
+    _ = (step p).map toPortfolioAbs := by
+      simp [toPortfolioAbs, Function.comp_def, Option.map_map]
+
+/-- Exact-n run transport from the external positioned TM to Portfolio.D0. -/
+theorem run_toPortfolio (n : Nat) (p : Positioned) :
+    BB6.Portfolio.run BB6.Portfolio.D0 n (some (toPortfolioAbs p)) =
+      (run n p).map toPortfolioAbs := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      simp only [BB6.Portfolio.run, run, ih]
+      cases h : run n p with
+      | none => simp [h]
+      | some q => simp [h, step_toPortfolio]
+
+def D0HaltsAt (c : BB6.Portfolio.Cfg) (n : Nat) : Prop :=
+  ∃ last,
+    BB6.Portfolio.run BB6.Portfolio.D0 n (some c) = some last ∧
+    BB6.Portfolio.step BB6.Portfolio.D0 last = none
+
+theorem haltsAt_transport (p : Positioned) (n : Nat)
+    (h : ExtHaltsAt p n) : D0HaltsAt (toPortfolioAbs p) n := by
+  rcases h with ⟨last, hr, hs⟩
+  have hrun : BB6.Portfolio.run BB6.Portfolio.D0 n (some (toPortfolioAbs p)) =
+      some (toPortfolioAbs last) := by
+    simpa [hr] using run_toPortfolio n p
+  have hhalt : BB6.Portfolio.step BB6.Portfolio.D0 (toPortfolioAbs last) = none := by
+    simpa [hs] using step_toPortfolio last
+  exact ⟨toPortfolioAbs last, hrun, hhalt⟩
+
+/-- The source section A(n,[]) has n ones to the right of its blank
+scanned cell and is blank at every nonpositive relative coordinate. -/
 theorem singletonPow_replicate (n : Nat) :
     ([_root_.Symbol.S1] : List _root_.Symbol) ^ n =
       List.replicate n _root_.Symbol.S1 := by
@@ -267,28 +340,30 @@ theorem A_tape_nth (n : Nat) (j : Int) :
       simp [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
         Turing.Tape.nth, «1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».default_tail]
 
-def ofA (n : Nat) (h : Int) : ExtCfg :=
+def ofA (n : Nat) (h : Int) : Positioned :=
   ⟨_root_.State.F, h, («1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A n []).2⟩
 
 theorem project_ofA (n : Nat) (h : Int) :
     project (ofA n h) = «1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A n [] := by
   rfl
 
-theorem absCfg_ofA (n : Nat) (h : Int) :
-    absCfg (ofA n h) = BB6.Portfolio.F0Pure n h := by
-  simp only [absCfg, ofA, encodeState, absTape, BB6.Portfolio.F0Pure,
-    BB6.Portfolio.Cfg.mk.injEq]
+theorem toPortfolioAbs_ofA (n : Nat) (h : Int) :
+    toPortfolioAbs (ofA n h) = BB6.Portfolio.F0Pure n h := by
+  simp only [toPortfolioAbs, toPortfolioCfg, BB6.Bridge.toAbsolute,
+    toRelative, encodeState, BB6.Portfolio.F0Pure, BB6.Portfolio.Cfg.mk.injEq]
   refine ⟨rfl, rfl, ?_⟩
-  funext i
-  rw [A_tape_nth n (i - h)]
-  by_cases hp : h < i ∧ i ≤ h + (n : Int)
-  · have hq : 0 < i - h ∧ i - h ≤ (n : Int) := by omega
+  funext x
+  rw [tapeToRelative_symbol]
+  rw [A_tape_nth n (x - h)]
+  by_cases hp : h < x ∧ x ≤ h + (n : Int)
+  · have hq : 0 < x - h ∧ x - h ≤ (n : Int) := by omega
     simp [encodeSymbol, hp, hq]
-  · have hq : ¬ (0 < i - h ∧ i - h ≤ (n : Int)) := by omega
+  · have hq : ¬ (0 < x - h ∧ x - h ≤ (n : Int)) := by omega
     simp [encodeSymbol, hp, hq]
 
-/-- D0 inherits the external conditional halting cylinder at exactly the
-same primitive halting time. This does not assert that the blank root reaches it. -/
+/-- The external halting cylinder transfers to the exact repository D0
+configuration at the same primitive halting time. This is not a blank-root
+reachability theorem. -/
 theorem D0_halts_on_A_cylinder (k : Nat) (h : Int) :
     ∃ n, D0HaltsAt
       (BB6.Portfolio.F0Pure
@@ -297,20 +372,24 @@ theorem D0_halts_on_A_cylinder (k : Nat) (h : Int) :
   obtain ⟨n, hn⟩ :=
     «1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».halts_A_mod_3_pow_108 k
   have hext : ExtHaltsAt (ofA m h) n := by
-    apply (extHaltsAt_iff_external (ofA m h) n).2
+    apply extHaltsAt_of_external
     simpa [project_ofA] using hn
-  have hd0 := (haltsAt_transport (ofA m h) n).mp hext
-  simpa [m, absCfg_ofA] using hd0
+  have hd0 := haltsAt_transport (ofA m h) n hext
+  simpa [m, toPortfolioAbs_ofA] using hd0
 
 #print axioms table_conjugate
-#print axioms absTape_write_move
-#print axioms absStep_commute
-#print axioms run_transport
-#print axioms haltsAt_transport
-#print axioms extStep_project
-#print axioms extRun_project
+#print axioms table_conjugate_coverage
+#print axioms tapeToRelative_symbol
+#print axioms tapeToRelative_write_move_right
+#print axioms tapeToRelative_write_move_left
+#print axioms step_toRelative
+#print axioms step_project
+#print axioms run_project
+#print axioms rawStep_toPortfolio
+#print axioms step_toPortfolio
+#print axioms run_toPortfolio
 #print axioms A_tape_nth
-#print axioms absCfg_ofA
+#print axioms toPortfolioAbs_ofA
 #print axioms D0_halts_on_A_cylinder
 
 end BB6.CryptidD0Bridge
