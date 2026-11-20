@@ -311,3 +311,13 @@ upper bound: all other six-state machines remain to be decided. The source
 composition and its transitive axiom profile still require the prescribed
 local Lean preflight; this paper derivation must remain in im-results until
 that succeeds.
+
+
+## Sharper leading-coefficient estimate
+
+The \(S_{\rm TM1}<9b_N^2\) estimate above is sufficient for the adjacent-tetration upper bound, but it is not the best available multiplicative estimate. The exact dispatcher remainder and the root-prefix bounds give the sharper conditional inequality
+\[
+6b_N^2<S_{\rm TM1}<
+\left(6+\frac{300N^2}{2^N}+\frac{15}{4^N}\right)b_N^2,
+\]
+with \(N=(2^{78}-1)2^A-3\ge256\). The relative excess above \(6b_N^2\) is already below \(2.9\times10^{-71}\) at \(N=256\). The derivation is isolated in [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md). This is still conditional on the same uncompiled authentic-root/dispatcher source composition.
