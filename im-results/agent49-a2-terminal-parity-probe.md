@@ -28,7 +28,7 @@ I replayed the same sparse-tape A=2 q4Tail-to-S0 input with (z=1,L=3):
   steps 337, 913, 1593, 2413, 3349 and last at 206601, 213937,
   221413, 229005, 236749, 244597, 252585, 260689;
 - no halt within the limit; at the limit the machine is in state 3,
-  head 6336, with 3020 nonblank cells.
+  head 6336, with 5791 nonblank cells.
 
 For (L=3), the marker-0 formula gives
 [
