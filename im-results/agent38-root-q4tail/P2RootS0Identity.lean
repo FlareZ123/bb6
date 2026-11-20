@@ -308,7 +308,11 @@ theorem q4TailS0SourceGuards
         calc
           V ((m:Int)+2) = U ((m:Int)+2) := hVx
           _ = S.tape ((m:Int)+2) := hu
-          _ = true := hSrightOne 1 (by omega)
+          _ = true := by
+            have hs := hSrightOne 1 (by omega)
+            have hc : (m:Int)+1+(1:Int)=(m:Int)+2 := by omega
+            rw [hc] at hs
+            exact hs
       · rw [h3]
         rw [h3] at hVx
         have hu : U ((m:Int)+3) = S.tape ((m:Int)+3) := by
@@ -319,7 +323,11 @@ theorem q4TailS0SourceGuards
         calc
           V ((m:Int)+3) = U ((m:Int)+3) := hVx
           _ = S.tape ((m:Int)+3) := hu
-          _ = true := hSrightOne 2 (by omega)
+          _ = true := by
+            have hs := hSrightOne 2 (by omega)
+            have hc : (m:Int)+1+(2:Int)=(m:Int)+3 := by omega
+            rw [hc] at hs
+            exact hs
       · rw [h4]
         rw [h4] at hVx
         have hu : U ((m:Int)+4) = S.tape ((m:Int)+4) := by
@@ -330,7 +338,11 @@ theorem q4TailS0SourceGuards
         calc
           V ((m:Int)+4) = U ((m:Int)+4) := hVx
           _ = S.tape ((m:Int)+4) := hu
-          _ = true := hSrightOne 3 (by omega)
+          _ = true := by
+            have hs := hSrightOne 3 (by omega)
+            have hc : (m:Int)+1+(3:Int)=(m:Int)+4 := by omega
+            rw [hc] at hs
+            exact hs
 
   have hT1outside (x : Int) (hx : 5≤x) : T1 x = V x := by
     change (frameAt V 1 secondCyclePrefix34Inside secondCyclePrefix34End).tape x = V x
