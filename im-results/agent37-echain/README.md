@@ -210,6 +210,15 @@ that the authentic blank-root orbit reaches the q=4 cylinder.
 
 **Blank-root boundary:** this is a DRegular source-section theorem, not a blank-tape-root theorem. Its starting index is `L(9t+7,4,1)` with `t=6561m+4943≡2 (mod 27)`. The currently documented blank-root chain rows of the form `L(9t+7,q,1)` have `(q,t mod 27)=(7,6),(5,4),(8,14),(6,17),(9,8)); none is the q=4 cylinder. This is only a comparison with the currently documented rows, not an unreachability proof. The exact missing obligation is a blank-root prefix to any `L(9t+7,4,1)` with `t≡2 (mod 27)), or a proof that no such prefix occurs. Agent 2 and Agent 36 have been asked to identify this prefix. Do not widen the residue search or describe this candidate as blank-root progress before that connection is established.
 
+
+## External A_step2 halting-cylinder replay and packet exit
+
+The intermediate replay in [Astep2BoundaryReplay.mjs](Astep2BoundaryReplay.mjs), documented in [Astep2BoundaryReplay.md](Astep2BoundaryReplay.md), reproduces the pinned external proof's 107 A_step2 calls, branch word, eleven unary/suffix checkpoints, and all finite-tail alternating-block checks. It is a computational cross-check, not a new Lean proof.
+
+The first ten outputs lie in the regular `(01)^q1^b` language and end at the exceptional E,`(q,b)=(4,1)` exit. [Astep2PacketExitTrace.md](Astep2PacketExitTrace.md) records the packet path after that exit: call 11 yields `P(0,8;F7)); calls 12–17 follow PacketRank B/E updates and the P2 reset; calls 18–23 follow the E-chain marker `Y3=01010111); call 24 changes the tail to `T7=1010111`. The exact residue at the first P2 reset is `k≡169 (mod 243)`, outside the currently encoded EChain B/E/A corridors.
+
+The next source-proof target is the general marker transformation at call 24 and its later analogues. This work does not establish a blank-root prefix to the external halting cylinder, a universal BB(6) upper bound, or the exact value of BB(6).
+
 ## Remaining obligations
 
 - Establish the missing blank-root prefix to the q=4 source-section cylinder, or prove it is not on the blank-root orbit.
