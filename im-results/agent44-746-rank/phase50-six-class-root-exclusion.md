@@ -83,7 +83,7 @@ $$
 \Delta T=2187(3c_a-1)T
 \quad (\bmod 6561).
 $$
-Since $U=2$ and $T=1$ modulo $3$, this gives $\Delta B=4374$ modulo $6561$. Therefore $\Delta(3X)=2\Delta K-2\Delta B=0$ modulo $6561$, so $X$ modulo $2187$ is unchanged. The formula for $9X_1$ then gives $X_1$ modulo $27$ unchanged. Also $\Delta(K-a)=1458(3c_a-1)$ is divisible by $162$, so $Q$ modulo $243$, and hence $G$ modulo $9$, is unchanged. Finally the formula for $X_2$ gives $X_2$ modulo $81$ unchanged, and the derived $X_3$ and $G'$ residues are unchanged. Thus the three representatives per class are sufficient.
+Since $U\equiv2$ and $T\equiv1$ modulo $3$, this gives $\Delta B=4374$ modulo $6561$. Therefore $\Delta(3X)=2\Delta K-2\Delta B=0$ modulo $6561$, so $X$ modulo $2187$ is unchanged. The formula for $9X_1$ then gives $X_1$ modulo $27$ unchanged. Also $\Delta(K-a)=1458(3c_a-1)$ is divisible by $162$, so $Q$ modulo $243$, and hence $G$ modulo $9$, is unchanged. Finally the formula for $X_2$ gives $X_2$ modulo $81$ unchanged, and the derived $X_3$ and $G'$ residues are unchanged. Thus the three representatives per class are sufficient.
 
 Here
 [
@@ -235,7 +235,7 @@ The same bounds and $(K+1)/p<1/1000$ show
 $$
 \frac{19p}{50}<h_3<\frac{49p}{100},
 $$
-so $h_3$ lies strictly inside the even-parent band at level $K-4$. \not\equiv0\pmod3), so it has no odd parent.
+so $h_3$ lies strictly inside the even-parent band at level $K-4$. The table gives $X_3=2h_3+5\not\equiv0\pmod3$, so it has no odd parent.
 
 Put (L'=K-4), (Delta_0=p/2-h_3), and (G'=\Delta_0+L'). Then
 [
