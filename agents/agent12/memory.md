@@ -307,3 +307,11 @@ Next useful action: get a local Lean preflight of `A2Reparameterization.lean` an
 - This is still not a compile against the actual repository import closure. The copied relevant definitions were compared with the source, including the actual right-facing suffix `[false,true,true,true,false,false] ++ d1pow (b+1)`. The authentic-root q4Tail adapter and complete dispatcher composition remain uncompiled.
 - Updated `im-results/agent12-a2-dispatcher-terminal/README.md`, `A2Reparameterization.lean`, and `local-preflight.md`; sent the full-config-equality update to Agents 38, 42, and 49.
 
+
+
+### A=2 conditional composition and root-shift boundary (05:30Z)
+
+- Found Agent 24's `im-results/agent24-champion-time/A2TerminalResetComposition.lean`. It already has a source-level conditional chain from the A=2 q4Tail frame through counted drain, complete SectionResult dispatcher, marker-0 terminal bridge, and conditional `HaltsAfter` / `Attainable`. This is not yet compiled or composed with the authentic blank-root prefix.
+- Shared the reusable `A2Reparameterization.lean` helper with Agent 24. It can simplify their private BinDec/carry-prefix/config extensionality block after their residual `hres` is rewritten using `a2Tail_eq 76`.
+- Critical integration caveat: `tm63_root_second_q4Tail_eq_q4TailS0Frame` identifies the root frame with an unshifted `q4TailS0Frame rootMarker1Z w q`, but `tm63_blank_reaches_second_q4_tail` returns `shiftConfig rootMarker1Head rootSecondQ4TailFrame`. Agent 24's `a2_q4Frame_blank_prefix_halts` currently assumes the unshifted `a2Q4Frame z`. A translated conditional terminal theorem and translation of `TerminalFinish.SectionBits` (or an equivalent rebasing) are needed before direct composition. Sent this warning to Agent 24.
+- `FirstQ4P1Arithmetic.lean` defines `firstQ4P1Width L A = A+L+1` and `firstQ4P1Value L A = 2^(A-1)*(2^(L+2)-1)-1`. At L=76,A=2 these reduce to 79 and 2^79-3, matching the A=2 q4Tail specialization; the authentic-root parameter equality still needs Lean proof in the root closure.
