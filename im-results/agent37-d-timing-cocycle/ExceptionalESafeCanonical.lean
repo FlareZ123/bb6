@@ -303,7 +303,8 @@ theorem all_E_safe_reentry_canonical
           (DRegularSource.sourceSection ⟨3*k+4,q,1⟩))
         (packet c.a c.q c.p
           BB6.Agent2PacketOneReentry.fixedTail) := by
-    simpa [c] using hshape ▸ hE1
+    rw [hshape] at hE1
+    simpa [c] using hE1
   have ha : c.a ≥ 4 := by dsimp [c]; omega
   have hp : c.p % 3 ≠ 2 := by dsimp [c]; omega
   obtain ⟨S,a,q',b,hpacket,hcanon⟩ :=
