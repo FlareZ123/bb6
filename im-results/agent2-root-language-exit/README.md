@@ -69,7 +69,7 @@ The previous q=4 instructions remain relevant only for a root path that actually
 
 The concrete double-B/A marker route in the Agent 37 dossier has intended
 endpoint `L(24956,2,2)`: the two B edges preserve the suffix budget
-`p=3), so the A-marker quotient is `r=1`. The currently submitted
+`p=3`, so the A-marker quotient is `r=1`. The currently submitted
 `EChainDoubleBReentry.lean` proof contains inconsistent p=9/r=3 terms
 and needs correction before its source theorem can be accepted. Do not
 use the separate `L(24972,2,2)` arithmetic experiment as its continuation.
@@ -78,7 +78,7 @@ An exact-table simulation of the DRegular orbit from the intended
 `L(24956,2,2)` endpoint gives, after 86 regular transitions,
 `L(107283033157493534200791430928221345342090,5,1)`. Its unary
 parameter is congruent to 23638 modulo 59049 and to 4 modulo 9, so it is
-`L(3k+4,5,1)) with
+`L(3k+4,5,1)` with
 `k=35761011052497844733597143642740448447362`. Since q=5 is at least
 2 and is not 1 modulo 3, the submitted
 `ExceptionalESafeCanonical.all_E_safe_reentry_canonical` theorem is the
