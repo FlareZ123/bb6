@@ -2,6 +2,7 @@ import Agent49ParitySource
 import Agent22ExactDrainCocycleSource
 import Agent41DrainValuationNormalForm
 import DrainDigitTransducerCarry
+import Agent1SignedCoordinateNormalForm
 
 /-!
 # Source-exact bridge from the #623 B-drain to the three-state digit transducer.
@@ -17,6 +18,7 @@ open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 open BB6.Agent49ParitySource
 open BB6.Agent22ExactDrainCocycleSource
 open BB6.Agent41DrainValuationNormalForm
+open BB6.Agent1SignedCoordinateNormalForm
 
 /-- Split a low-order run of ternary ones, with enough fuel for every Nat input. -/
 def splitLowOnesFuel : Nat → Nat → Nat × Nat
@@ -590,5 +592,72 @@ theorem drainB_digit_transducer (b a d aa dd : Nat)
     exact htarget
 
 #print axioms drainB_digit_transducer
+
+/-- The actual source drain's signed first-counter drop and full evaluator-call
+count are exactly the weighted digit statistics used by the carry automaton.
+The count is the complete `drainB` iteration count: when the RE high-level
+branch bundles its initial evaluator into the `drainB` argument, that
+evaluator is counted here too. -/
+def drainDigitStats (b : Nat) : DrainStats :=
+  runStats (drainDigitSummary b).length
+    (b % 3 ^ (drainDigitSummary b).length) A
+
+theorem drainB_digit_source_correction_interface
+    (b a d aa dd : Nat) (s : Sector) (br : Branch)
+    (hbudget : b ≤ ternaryOnes a)
+    (hdrain : drainB a b d = some (.D aa dd)) :
+    (a : Int) - (aa : Int) =
+      ((drainDigitSummary b).length : Int) -
+        2 * ((drainDigitStats b).twos : Int) ∧
+    ∃ r : Nat,
+      2 * aa + dd = 2 * a + d + 3 * b + 2 * r ∧
+      r = (drainDigitStats b).ones + (drainDigitStats b).twos ∧
+      -(34 * ((drainDigitSummary b).length : Int) + 122) ≤
+        corrC s br ((a : Int) - (aa : Int)) (r : Int) ∧
+      corrC s br ((a : Int) - (aa : Int)) (r : Int) ≤
+        34 * ((drainDigitSummary b).length : Int) + 122 ∧
+      -(24 * ((drainDigitSummary b).length : Int) + 84) ≤
+        corrF s br ((a : Int) - (aa : Int)) (r : Int) ∧
+      corrF s br ((a : Int) - (aa : Int)) (r : Int) ≤
+        24 * ((drainDigitSummary b).length : Int) + 84 := by
+  let L := (drainDigitSummary b).length
+  let stats := drainDigitStats b
+  have htrans := drainB_digit_transducer b a d aa dd hbudget hdrain
+  have hfirst : aa + L = a + 2 * stats.twos := by
+    simpa [L, stats, drainDigitStats] using htrans.1
+  have hsecond :
+      dd + 4 * stats.twos =
+        d + 3 * b + 2 * L + 2 * (stats.ones + stats.twos) := by
+    simpa [L, stats, drainDigitStats] using htrans.2
+  have hdrop : (a : Int) - (aa : Int) =
+      (L : Int) - 2 * (stats.twos : Int) := by omega
+  obtain ⟨r, hweighted⟩ :=
+    drainB_weighted_exact b a d aa dd hbudget hdrain
+  have hcount : r = stats.ones + stats.twos := by omega
+  have hweights := runStats_weight_bounds L (b % 3 ^ L) A
+  have hE0 : 0 ≤ (stats.twos : Int) := by
+    simpa [weightedE, stats, drainDigitStats, L] using hweights.1
+  have hER : (stats.twos : Int) ≤ ((stats.ones + stats.twos : Nat) : Int) := by
+    simpa [weightedE, weightedR, stats, drainDigitStats, L] using hweights.2.1
+  have hRL : ((stats.ones + stats.twos : Nat) : Int) ≤ (L : Int) := by
+    simpa [weightedR, stats, drainDigitStats, L] using hweights.2.2
+  have hbound := correction_count_bounds s br (L : Int)
+    (stats.twos : Int) ((stats.ones + stats.twos : Nat) : Int)
+    hE0 hER hRL
+  have hRInt : (r : Int) = ((stats.ones + stats.twos : Nat) : Int) := by omega
+  have hbound' :
+      -(34 * (L : Int) + 122) ≤
+        corrC s br ((a : Int) - (aa : Int)) (r : Int) ∧
+      corrC s br ((a : Int) - (aa : Int)) (r : Int) ≤
+        34 * (L : Int) + 122 ∧
+      -(24 * (L : Int) + 84) ≤
+        corrF s br ((a : Int) - (aa : Int)) (r : Int) ∧
+      corrF s br ((a : Int) - (aa : Int)) (r : Int) ≤
+        24 * (L : Int) + 84 := by
+    simpa [hdrop, hRInt] using hbound
+  exact ⟨hdrop, r, hweighted, hcount,
+    hbound'.1, hbound'.2.1, hbound'.2.2.1, hbound'.2.2.2⟩
+
+#print axioms drainB_digit_source_correction_interface
 
 end BB6.Agent1DrainDigitStatsSource
