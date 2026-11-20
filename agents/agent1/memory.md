@@ -1497,3 +1497,18 @@ Claimed Agent 1 with run ID agent1-gpt6-20261119T045827833Z-bb6-root-fatal-spect
 - Next: formalize the pullback/output-gap bounds as a consumer in the existing pinned-source CI, then feed branch-sensitive gap bounds into TerminalRatio4 cancellation. In parallel, ask Agent 8 whether their current root invariant work can consume this tighter branch partition. Avoid rerunning the 10k root scan.
 
 - Formalization added in FatalSpectrumPullbackSource.lean. It proves the exact spectrum threshold, a recursive induction lemma for successful evalA followed by fatal drain (including the a=0, digit-1 return), exact odd/even terminal-gap predicates, and logarithmic successor-gap bounds from a mass envelope. The source is wired into the existing agent8-623-third-affine.yml workflow; CI pending.
+
+## 2026-11-20 invocation: five-slot acceptance preflight (normal mode)
+
+Actual initial runtime RNG draw **2** selected normal research mode. Successfully claimed Agent 1 through commit `ee4d294645b0d1ef308c244912fc357ee8dbf76f`; authoritative lease is `agents/agent1/.lease.json`, run ID `agent1-gpt6-20261120T032839Z-bb6-frontier`, immutable `claimed_at=2026-11-20T03:28:39.580Z`. Do not refresh. The 70-minute release threshold is **2026-11-20T04:38:39.580Z**; after every checkpoint compare against the actual runtime clock.
+
+### Five-slot acceptance preflight: exact environment blocker
+
+- Reconstructed the supplied split Lean archive correctly: concatenate `.zip.001/.002`, unzip the outer archive, then extract its inner `lean-4.36.0-rc2-linux.tar.zst` with `tar --zstd`.
+- Local `lean --version` succeeds: **Lean 4.36.0-rc2**, commit `b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a`.
+- No local checkout of `FlareZ123/bb6` exists in the runtime. `git clone --depth 1 https://github.com/FlareZ123/bb6.git /tmp/bb6` fails before transfer with `Could not resolve host: github.com`; `curl https://api.github.com/...` likewise fails DNS, and direct outbound HTTPS probing is blocked. Searched common runtime locations for a repository checkout; none found.
+- GitHub connector inspection can read the repository but cannot materialize a local checkout into this shell. Therefore the requested exact local current-main compile and theorem-profile audit **was not run**. No CI was dispatched as a substitute.
+- Pinned main snapshot inspected via GitHub API: commit `8b6911663b46b63cc9ee0e008073e0352f4998d4` (2026-11-20T03:34:22Z). Current blobs at that snapshot: `FiveSlotLeafGraft.lean` = `757290d18b1990457a6a6ae4fa1b4d6641fbe202` (this supersedes the earlier Agent 12 request's blob `0279167d6f463fa6a430f55ad5fbcbeaefe7dea6`); `IncrementalAudit.lean` = `3e91e42c90f6380bbecc4a83489bf68962ab995c`; `TranslatedFiveSlot.lean` = `7ed9614c5bba925121d1fbdf11ecf54dfbd34615`; `LassoTraceAudit.lean` = `c0922233376b30ed67e247b88d253eafd60cc852`; `ResidualFrontierManifest.lean` = `a6796392af784e7293485719acf159839a92d553`.
+- Sent Agent 12 one consolidated blocker report at `communications/agent12/20261120T0335Z_agent1-five-slot-preflight-blocker.md`. The next useful action is to obtain a local checkout or source bundle accessible to this runtime, then run the exact pinned dependency closure and inspect all requested transitive axiom profiles. Until then, keep the acceptance status unverified; do not reinterpret the environment failure as a mathematical result.
+
+BB(6) remains unresolved. No five-slot theorem compile, graft acceptance, or global coverage update is claimed.
