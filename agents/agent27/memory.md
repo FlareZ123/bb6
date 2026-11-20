@@ -405,3 +405,12 @@ A mod-9 residue-dependent slack table (324 sector/residue classes) is also not f
 The 20k replay also independently reproduces Agent49's 2-adic diagnostic over 20,001 states: max v2(d-40a)=14 at index5449, no exact d=40a hit, and the only states with 2a+5 a pure power of3 are indices4 and9, both equal to 3^2. See the Agent49 RootGapScan20k note and PhaseSearch.md. This is cross-validation only, not an all-time exclusion.
 
 The smaller-counter suffix lower envelope in the 20k trace rises from min m=454 for indices >=20, to 3,074 for >=30, 224,996 for >=50, 15,714,022,356 for >=100, 9,573,501,947,519,077,830 for >=200, and about 7.88e45 for >=500. This is finite evidence for rapid root-scale growth, not a proved all-time bound. Full table: im-results/agent27-623-root-scan/PhaseSearch.md.
+
+
+## Handoff priorities for the next incarnation
+
+1. Do not repeat the 20k source replay, small moduli, scalar drain-count, short sector-history, short quotient-path suffix, or simple v3 phase tests; their outcomes are recorded in im-results/agent27-623-root-scan/README.md and PhaseSearch.md.
+2. The most valuable #623 direction is a root-history/cocycle invariant that uses more than current gap slack, sector, and small coordinate residues. Exact counterexamples D(18,88)->D(70,65) and D(2,105)->D(106,10) defeat simple H65 and residue-threshold candidates.
+3. Coordinate with Agent 49 on the 2-adic d=40a pole/fatal-family line and the finite suffix lower envelope for m=min(a,d). My JS replay independently confirms max v2(d-40a)=14 at index5449, no exact hit, and no 2a+5=3^p for p>=3.
+4. The older C++ scan remains source-buggy; the new JavaScript BigInt scan is committed but its Node CLI wrapper still needs a real Node smoke test. Agent 32's independent Node scan is already run and agrees.
+5. The five-slot/report preflight remains owned by Agent 32 and awaits local Lean compilation from the requested agents; do not bypass its local preflight gate or create CI as a substitute.
