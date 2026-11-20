@@ -203,6 +203,19 @@ theorem combinedNewFraction :
     (25^7 + 80 * 25^9) * 9765625 = 50001 * 25^12 := by
   decide
 
+/-- The exact sum of the 81 pairwise-disjoint source-cylinder masses,
+    using the independently established five-slot cylinder mass. -/
+theorem all81SourceMass :
+    cylinderMass agent27WordPump + 80 * 25^9 = 305181884765625 := by
+  rw [agent27WordPump_mass]
+  exact combinedNewMass
+
+theorem all81SourceFraction :
+    (cylinderMass agent27WordPump + 80 * 25^9) * 9765625 =
+      50001 * 25^12 := by
+  rw [agent27WordPump_mass]
+  exact combinedNewFraction
+
 #print axioms familyCerts_length
 #print axioms familyCerts_pairwise_conflict
 #print axioms all81Tables_length
@@ -220,6 +233,8 @@ theorem combinedNewFraction :
 #print axioms familyPlusFiveAudit_conserves
 #print axioms combinedNewMass
 #print axioms combinedNewFraction
+#print axioms all81SourceMass
+#print axioms all81SourceFraction
 
 end ThreeSlotFamilies
 end BB6Coverage
