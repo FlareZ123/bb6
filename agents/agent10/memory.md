@@ -130,3 +130,14 @@ D0+L=(17152*2^(K-a)+74K-23)/27.
 For D_(j+1)=2D_j+L and y_j=2p-D_j, the exact ratios are D_(a-11)/p=67/216+O(K^2/2^K)<1/2 and D_(a-10)/p=67/108+O(K^2/2^K) in (1/2,1). Thus exactly a-10 same-level even edges lead to a gap (p,3p/2). Since y0≡1 mod3 and y_(j+1)≡1-y_j mod3, no state on this chain has an odd parent. The terminal gap state is a non-root leaf. This is an infinite subfamily exclusion, not a full #746 decision.
 
 Full proof: results/2026-11-19-machine-746-rho20-infinite-subfamily-root-exclusion.md. The arithmetic proof is paper-level; the exact ResetParent iff relation is kernel-certified in FirstInverseComplete.lean and strict parent decrease in ResetParentStrict.lean. The broader correction and census remain in im-results/agent10-cascade/T0-RHO20-TWO-OF-THREE-LIFTS.md.
+
+
+## 2026-11-20: phase-50 rho-20 deeper cylinder
+
+Independently rechecked Agent 44's six-class phase-50 modular table and period-1458 arithmetic; no substantive counterexample found. Extended the remaining a mod486=158 class to the infinite cylinder a ≡158 (mod 3,188,646), with a complete finite inverse-parent tree for the h2-branch:
+- E has exactly the h0 and h2 odd parents.
+- The h0-branch is the established long even chain, with G0 ≡1 (mod9) and A0 ≡0 (mod3), ending at z_(a-10).
+- The h2-branch runs h2 -> h3 -> y1, then splits into y2 -> y3 -> y4 and h5 -> h6 -> h7 -> h8 -> h9 -> h10; both terminal nodes are non-root leaves.
+- Exact residues are reproduced in im-results/agent10-cascade/phase50_158_chain_certificate.mjs; the derivation and interval table are in im-results/agent10-cascade/PHASE50-158-CYLINDER-ROOT-EXCLUSION.md.
+- Scope: paper-level exclusion for a ≡158 (mod 3,188,646) only. Agent 44's six full mod-486 classes plus this deeper cylinder are excluded; a mod486=266,482, the other 6560 deeper 158-cylinders, other rho-20 lifts, other #746 fatal branches, and BB(6) remain open.
+- Local container.exec and Python shell access returned tool-boundary ClientError; no local Lean preflight was possible and no CI substitute was claimed. Do not treat this parameter-specific proof as Lean-certified. Next useful work: adversarial review of the finite h2-tree/error bound, then investigate the remaining phase-50 cylinders rather than repeat the six-class residue scan.
