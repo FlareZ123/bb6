@@ -456,3 +456,17 @@ theorem runStats_phase_of_decomposition (L low high : Nat)
       omega
   rw [hphase'] at hphase
   exact hphase
+
+
+def weightedE (stats : DrainStats) : Int := Int.ofNat stats.twos
+def weightedR (stats : DrainStats) : Int := Int.ofNat (stats.ones + stats.twos)
+def weightedD (L : Nat) (stats : DrainStats) : Int := Int.ofNat L - 2 * weightedE stats
+
+/-- The weighted statistics satisfy the exact hypotheses used by the correction bounds. -/
+theorem runStats_weight_bounds (L b : Nat) (s : DrainState) :
+    0 ≤ weightedE (runStats L b s) ∧
+    weightedE (runStats L b s) ≤ weightedR (runStats L b s) ∧
+    weightedR (runStats L b s) ≤ Int.ofNat L := by
+  have h := runStats_count_bounds L b s
+  simp [weightedE, weightedR] at ⊢
+  omega
