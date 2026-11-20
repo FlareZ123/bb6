@@ -144,3 +144,29 @@ The exact pattern enumeration gives another useful compression. Immediately afte
 For each branch, every one of the 9 final digit pairs occurs with every listed carry pair. This is an exact enumeration over all 29,445 minimal reset patterns and follows from the same all-start synchronization check. The state IDs are in `ResetPatternDFA.json`.
 
 This means the *unbounded suffix after the first reset* can be processed from at most 18 L or 36 R transducer phases, rather than 225 or 270. Composing those with the 263-state reset recognizer gives at most 4,734 L or 9,468 R post-reset product states before adding the small window-shift phase. The prefix before the first reset remains a bounded phase (the existing diagnostic has reset end at most 13); its output effect can be summarized by the 263-state checker. This is the main compression to exploit in the next closure computation.
+
+
+## 8. The bounded-prefix induction target
+
+The useful root invariant is not “the entire word is reset”; it is the bounded-prefix property
+[
+\mathsf{Reset}_{13}(W)
+\quad\Longleftrightarrow\quad
+\text{the 263-state DFA accepts the first }\min(13,|W|)\text{ symbols of }W.
+]
+The existing full-range root diagnostic has this property at every scanned state: the first common reset pattern ends by position 13. The root word lengths in that diagnostic range from 8 to 17.
+
+To prove induction, compose the actual branch transducer with two copies of the 263-state DFA:
+- an input checker, which recognizes (mathsf{Reset}_{13}(W_n));
+- an output checker, which reads the next-window word after the exact low shift (delta\in\{0,1\}).
+
+Once the input checker sees a common reset pattern, the transducer state has collapsed to one of the 18 L or 36 R post-reset states from Section 7. Only the first 13 output symbols matter for (mathsf{Reset}_{13}(W_{n+1})). Thus the unbounded suffix is unnecessary: after the first reset, at most (13-p+\delta) more input symbols are needed, where (p\le13) is the reset end position. If the next word is shorter than 13, include its actual bounded high extension (at most three symbols); saturate the word-length phase at 14 so the one-symbol low shift is handled exactly.
+
+The resulting product-state closure problem has finite components:
+- pre-reset full carry state and the input/output DFA states;
+- post-reset carry state from the 18/36 sets and the output DFA state;
+- a prefix-position counter capped at 13/14;
+- low-shift bit and high-extension count (0--3);
+- sector/branch phase.
+
+First test the strongest useful closure statement (all full-range start phases and all allowed shifts). If it fails, preserve the shortest counterexample and restrict only with source-derived root-phase constraints. If it closes, the finite reachable phase graph is the proof certificate. The index-33 output-suffix counterexample must remain in the test suite: closure is for the *whole next window*, not an arbitrary suffix.
