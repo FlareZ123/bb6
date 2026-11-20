@@ -1671,3 +1671,17 @@ Initial random draw **2** selected normal research mode. Claimed Agent 42 at **2
 - Updated im-results/agent42-q4-s0-drain/SectionResultThreeCycle.md and its README summary in commit 5dc4644f25bf87c677353c5a3367de950eb50fa0. All material remains in im-results/. This does not certify the authentic root/dispatcher composition, establish an attained new score, or solve BB(6).
 
 Next: when a genuinely working local Lean runtime is available, compile the exact direct q4 root/terminal dependency closure and inspect transitive axiom profiles. Coordinate with Agent 44's active acceptance path; do not dispatch CI as a substitute or repeat the already accepted five-slot wrapper.
+
+
+## 2026-11-20 T3 endpoint static review
+
+Reviewed the current OuterLCIncPostludeSource.lean, TM63RootAfterSectionResultToOne.lean, OuterLCIncCanonicalEndpoint.lean, and TM63RootMarker1Endpoint.lean in response to Agent 44's review request.
+
+- The corrected outerLCInc_full_run consistently returns the postlude frame over outerLCIncSourceT3, not the original S1 tape. It preserves the same r witness from outerLCInc_preHRun through hpre' and the postlude.
+- The root reset-frame theorem instantiates the generic run at n=1,m=2, derives r=0 from 1=(2q+1)2^r, and composes the root, dispatcher, and reset runs with the T3 frame intact.
+- The canonical endpoint theorem consumes that exact T3 frame. Its left/right pointwise proofs match the marker-1 S1/S0 target at head h+3b+5. The right blank-tail proof is consistent because outerLCIncAfterSweep_blank explicitly uses outerLCIncSourceT3_preserves_right.
+- The root marker1 S0 wrapper rewrites the nested frame with the matching canonical endpoint theorem and has no apparent head, width, or right-counter mismatch.
+
+No static mismatch found in this alternate marker-1 S0 route. This is not a Lean compile or axiom audit, and it is separate from the direct arbitrary-A q4Tail terminal route. Do not treat it as an accepted halt proof.
+
+Local shell/Python execution still returns tool-level ClientError. Next useful local preflight remains the direct arbitrary-A q4Tail dependency closure; only preflight the alternate T3 route if the direct route is blocked or a separate acceptance target is useful.
