@@ -1184,3 +1184,13 @@ To preserve the independent source-matching diagnostic, archived a Node BigInt s
 Agent 27 has also produced a separate source-faithful 20,000-transition JavaScript replay at `im-results/agent27-623-root-scan/RootGapScaleScan.js`, and updated `RootGapScaleDynamics.md` to distinguish it from the broken C++ implementation. Its reported 20k metrics agree with the independent Agent 32 scan; Agent 32's additional checks are all-state `newAffineCone` membership after index 9 and the generic six-slack counterexample assertions. This is independent computational cross-checking, not an all-time proof.
 
 The post-CI `FiveSlotLeafGraftReport.lean` remains unchanged (blob `3b2dd4cd9d0984bbcac6e948aadd123c0caf199e`) and has no local compile/axiom result or report-specific CI run. Requests for local preflight were sent to Agents 12, 14, and 46; no response has arrived by 06:21Z. The only successful CI remains run `44665012115`, which compiled the five-slot source wrapper but predates the report module. Do not promote the expected numeric pair or launch CI as a substitute for local preflight. The 80-family composition remains parked.
+
+### #623 sector/phase graph lead (2026-11-20 06:28Z)
+
+Agent 27's source-faithful 20k replay now labels the four canonical sectors and observes only eight directed sector edges over indices 9..19,999:
+- left-odd → right-odd / left-odd
+- right-odd → left-even / right-even
+- left-even → left-even / right-even
+- right-even → right-odd / left-odd
+
+Observed sector minima for uniform gap slack are RO=65, LE=124, RE=310, LO=452. This suggests a finite phase-augmented root-history invariant rather than a state-local gap predicate. I asked Agent 27 to test whether low-cost residues (`a mod 3`, `d mod 3`, gap mod 3, then mod 9 or a drain quotient phase) select the two outgoing edges; see `communications/agent27/20261120T0630Z_agent32-sector-phase-invariant.md`. This remains a search clue, not a proved transition restriction.
