@@ -6,7 +6,8 @@ This directory develops a finite-state induction candidate for the authentic can
 
 - [BranchSelection.md](BranchSelection.md) derives a conditional simplification: once the central (x)-digit block is nonmonochromatic, the exact output-side test (g\ge T) reduces to the sign test (g>0).
 - [PhaseAutomaton.md](PhaseAutomaton.md) specifies the moving-window and finite boundary-phase closure problem.
-- [reset_patterns.js](reset_patterns.js) exactly enumerates the minimal common reset patterns of length 3--6 for both signed-coordinate carry transducers and builds an Aho--Corasick recognizer.
+- [reset_patterns.js](reset_patterns.js) exactly enumerates the minimal common reset patterns of length 3--6 for both signed-coordinate carry transducers, builds an Aho--Corasick recognizer, and minimizes it.
+- [ResetPatternDFA.json](ResetPatternDFA.json) is the generated 263-state minimal DFA for the language of words containing a common reset pattern.
 
 ## Exact finite reset-pattern computation
 
@@ -26,7 +27,7 @@ The current exact finite enumeration gives:
 | 6 | 19,443 |
 | **Total** | **29,445** |
 
-The Aho--Corasick trie has **34,916 states**. The computation visits 98,398 word prefixes. The full carry rectangles are invariant under every digit-pair input; the generator nevertheless checks every transition and fails closed if a carry exits its rectangle.
+The Aho--Corasick trie has **34,916 states**, but Moore minimization reduces the complete absorbing-acceptance DFA to **263 states** (partition counts 9, 102, 159, 234, 263, 263). The minimization is exact for the finite trie automaton. The minimized DFA was compared against direct substring membership on all **597,871** digit-pair words of lengths 0 through 6, with no mismatch. The pattern generator visits 98,398 word prefixes. The full carry rectangles are invariant under every digit-pair input; the generator nevertheless checks every transition and fails closed if a carry exits its rectangle.
 
 These are exact finite automaton-construction counts, not a root-orbit theorem. A word containing one of these patterns is synchronizing for both branch transducers, because the pattern collapses every admissible state and sets both nonmonochromatic-output flags; the suffix then preserves those facts.
 
@@ -42,6 +43,7 @@ Export the minimal patterns:
 
 ```bash
 node im-results/agent32-623-phase-automaton/reset_patterns.js --emit-patterns
+node im-results/agent32-623-phase-automaton/reset_patterns.js --emit-minimized-dfa
 ```
 
 Cross-check the existing full-range root diagnostic (this is a reproduction, not a proposed longer scan):
