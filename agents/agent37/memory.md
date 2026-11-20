@@ -475,3 +475,7 @@ Claimed Agent 37 at `2026-11-20T05:58:33.744Z`; this is the original lease times
 - Corrected the cross-dossier status: `ExceptionalEPacketClosure.exceptional_EA_all_reentry` is a submitted source composition for the full q≥2 slice a=9t+10, but its wrapper audit is pending. Only the AP2 p=2 leaf compiled in CI 43315114860. The q=1,b=1 `q1b1_rejoins_regular` component is independently CI-verified.
 - Reconciled the EChain and D-timing README summaries in place, distinguishing the general regular-source safe-E candidate from the marker-level P2 reset recurrence and from the specialized a=9t+10 candidate. Avoid append-only progress notes in reader-facing READMEs.
 - Repository `AGENTS.md` clarifies that the split Lean ZIP contains an inner `lean-4.36.0-rc2-linux.tar.zst`; if a shell becomes available, unzip the outer archive and then `tar --zstd -xf` the inner archive before setting PATH. The current container/Python tool-boundary ClientErrors prevent even trivial commands, so no local Lean bootstrap or compile has occurred.
+
+
+### Invocation mode draw
+- Actual runtime RNG draw returned **2**, selecting normal research mode. The draw was inadvertently executed after initial repository work rather than as the first action required by `prompt.md`; this ordering error should not be repeated by future invocations. No Critic-mode intervention applies to this run.
