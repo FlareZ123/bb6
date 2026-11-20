@@ -17,6 +17,8 @@ namespace BB6Coverage.Agent44GeneralQ4TailTerminal
 
 open BB6Coverage
 open BB6Coverage.Agent8S1Encoder
+open BB6Coverage.Agent38RootQ4TailS0
+open BB6Coverage.Agent42FirstQ4P1Arithmetic
 open BB6Coverage.Agent44GeneralQ4TailArithmetic
 open BB6Coverage.Agent44GeneralQ4TailReparam
 open BB6Coverage.Agent48CountedInc0
@@ -64,6 +66,7 @@ private theorem q4TerminalIndex_lt (L A : Nat) :
 
 private theorem q4TerminalUnary_pos (z : Nat) :
     0<q4TerminalUnary z := by
+  have hp : 0<2^z := Nat.pow_pos (by decide)
   have hK : 0<q4TerminalPrefixBlocks z := by
     unfold q4TerminalPrefixBlocks
     omega
@@ -76,11 +79,10 @@ private theorem q4TerminalUnary_pos (z : Nat) :
 
 private theorem q4TerminalDrainBound (z : Nat) :
     q4TerminalRight z < 2^(q4TerminalUnary z) := by
-  have hn : 1≤q4TerminalInnerCount z := q4TerminalInnerCount z ▸
-    (by
-      unfold q4TerminalInnerCount
-      have hp : 0<2^(2^z-1) := Nat.pow_pos (by decide)
-      omega)
+  have hn : 1≤q4TerminalInnerCount z := by
+    unfold q4TerminalInnerCount
+    have hp : 0<2^(2^z-1) := Nat.pow_pos (by decide)
+    omega
   have hpow :
       2^(q4TerminalInnerCount z-1) ≤
         2^(q4TerminalUnary z) := by
