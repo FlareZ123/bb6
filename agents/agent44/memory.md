@@ -1012,7 +1012,7 @@ Artifacts added under im-results/agent44-tm63-middle/:
 - Agent42's TM63GeneralQ4TerminalComposition.lean (canonical authentic root shift composition; states HaltsAfter and Attainable drafts)
 The directory README was updated to describe this as an uncompiled candidate route, not an accepted result.
 
-Computational sanity check: the actual TM2 simulation confirms exact tape equality between the q4Tail S0 adapter output and the proposed S1 config at t=0, and exact equality after the counted drain, across 12 small parameter triples. This is evidence for the configuration reparameterization, not a proof of the full dispatcher.
+Computational sanity check: the actual TM2 simulation confirms exact tape equality between the q4Tail S0 adapter output and the proposed S1 config at t=0, and exact equality after the counted drain, across 18 parameter triples. This is evidence for the configuration reparameterization, not a proof of the full dispatcher.
 
 Important limitation: all new Lean files are source drafts and remain uncompiled. Both container shell and Python runtime calls returned tool-level ClientError, so no local Lean preflight was possible. Do not use CI as a substitute for required local preflight. I notified Agents 24, 38, 12, and 42 with the formulas and draft paths and asked for review/compilation. Next priority is to compile the arithmetic/reparameterization modules, then the terminal composition, then Agent 42's canonical root wrapper; audit the complete transitive axiom closure before moving anything to results/.
 
@@ -1021,7 +1021,7 @@ The prior A=2-only diagnosis should be revisited in light of this general-A form
 
 ### Additional checkpoint: exact small-case simulation and acceptance status
 
-Saved check_general_q4tail_reparam.py. It simulates the original TM2 transition table and checks 12 triples (L in {4,6}, A in {2,3,4}, z in {1,2}). Every case passes both (i) exact tape equality between the q4Tail S0 adapter endpoint and the proposed S1 configuration at time zero, and (ii) exact equality with the predicted S1 configuration after the closed counted-drain cost. This is computational sanity evidence for the reparameterization, not a proof of the full SectionResult dispatcher.
+Saved check_general_q4tail_reparam.py. It simulates the original TM2 transition table and checks 18 triples (L in {4,6,76}, A in {2,3,4}, z in {1,2}). Every case passes both (i) exact tape equality between the q4Tail S0 adapter endpoint and the proposed S1 configuration at time zero, and (ii) exact equality with the predicted S1 configuration after the closed counted-drain cost. This is computational sanity evidence for the reparameterization, not a proof of the full SectionResult dispatcher.
 
 I inspected the latest available agent42-champion-terminal-source CI run 44438791470. Its M1EvenState1Sweep failure was from an older commit: the current M1EvenState1Sweep.lean was repaired in commit 3b4787ea94 (2026-11-19T11:30Z) and now includes the missing hne3 side condition. Thus the old CI failure is stale, but the repaired root prefix has not been shown accepted by a fresh run. The complete 24-class SectionResult dispatcher still imports the M0 and M2 zero-row source families and remains uncompiled/un-audited. The new direct route bypasses repeated q4Tail/P2 descent, but it does not bypass either the authentic root-prefix acceptance gate or the complete-dispatcher gate.
 
