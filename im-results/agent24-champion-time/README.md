@@ -4,26 +4,26 @@
 
 ## Conditional exact-score tower interval (20 November 2026)
 
-Retaining the exact root and terminal counter indices now gives the
-source-conditional interval
+Retaining the exact root and terminal counter indices, and using the
+power-gap lemma \(V_j^{1040}<T_{j+4}\), gives the source-conditional
+adjacent-tower interval
 \[
-T_{M+N+49}<S_{\rm TM1}<T_{T_J},
+\boxed{T_{q-1}<S_{\rm TM1}<T_q},
+\qquad q=M+N+50,
 \]
 where
 \[
 M=31\cdot2^{A_0}-36,\qquad
-N=(2^{78}-1)2^A-3,\qquad
-J=2^{\frac12\sqrt{T_{10}}+\frac12T_9+T_8+T_7+T_6+T_5+80}.
+N=(2^{78}-1)2^A-3.
 \]
-The lower bound follows from \(b_N=V_{M+N+46}\) and
-\(V_j\ge T_{j+3}+1\). The upper follows from the sharpened exact
-root-prefix bound, the corrected \(+90\) dispatcher score term, and
-\[
-S_{\rm TM1}<9b_N^2<9W^2<2^W=T_{T_J},
-\qquad W=T_{T_J-1}.
-\]
+The lower bound is
+\(S_{\rm TM1}\ge6(T_{q-1}+2)^2>T_{q-1}\), from
+\(b_N=V_{q-4}\ge T_{q-1}+1\). For the upper, the exact score split gives
+\(S_{\rm TM1}<9b_N^2\), while
+\(b_N^{1040}<T_q\) and \(b_N\ge2\) imply
+\(9b_N^2<b_N^{1040}<T_q\).
 See [DirectTerminalTetrationBound.md](DirectTerminalTetrationBound.md)
-for the exact lower derivation and
+for the lower derivation and
 [Agent 42's consolidated tower sandwich](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md)
 for the upper and combined interval.
 
