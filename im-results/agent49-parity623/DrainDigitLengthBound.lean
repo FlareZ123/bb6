@@ -10,6 +10,7 @@ forces the actual transducer length L to be at most ell.
 -/
 
 open BB6.Agent1DrainDigitStatsSource
+open BB6.Agent49ParitySource
 open BB6.Agent41DrainValuationNormalForm
 open BB6.Agent1SignedCoordinateNormalForm
 open BB6.Agent22ExactDrainCocycleSource
