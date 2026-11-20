@@ -1,4 +1,4 @@
-import DrainDigitStatsSource
+import Agent1DrainDigitStatsSource
 
 /-!
 # Length bound for the source drain's canonical ternary word
