@@ -7,7 +7,7 @@
 The existing synchronizing-word scan and the 263-state reset DFA use a **q-indexed diagnostic window**. Let \(\ell_q\) be least with
 \[
 \tau(\ell_q)=\frac{3^{\ell_q}-1}{2}\ge q+3,
-\\qquad B_q=\max(34\ell_q+122,36\ell_q+88).
+\qquad B_q=\max(34\ell_q+122,36\ell_q+88).
 \]
 Let \(k_q\) and \(j_q\) be least with \(3^{k_q}>B_q\) and \(3^{j_q}>B_q^3\). The scanned word is
 \[
