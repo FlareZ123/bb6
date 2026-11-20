@@ -259,3 +259,30 @@ The stronger theorem `u5_q0_root32_forces_h8_parameter` no longer assumes `h=8+1
 The exact root equation is therefore available for the quotient extracted from the q=0 root itself. This is stronger than the previous theorem that assumed `h=8+128*u` and supersedes that assumption in the source-equation chain.
 
 The remaining identification is not arithmetic: the quotient `u=(h-8)/128` from the q=0 residual root must still be shown to be the same parameter indexing the separate B2 target state `(734+10944*u,34881+518816*u)` on the same blank-start trajectory. The current files do not yet establish this source-reach link. Full `U5B2Root32.lean` closure remains uncompiled.
+
+
+## 2026-11-20: residual equations force the B2 high-stop parameter
+
+A stronger arithmetic bridge removes the unresolved `m_res=m_B2` premise. From `hm : 32*s=32+840*w+m`, reduce modulo 8 to get `m=8*t). Combining hs/hm gives
+
+```
+211*t+1360+22155*w = 20*2^(201+3360*w)
+```
+
+When `w=6657+8192*r`, the right side is divisible by 8192. The exact multiplier identity is
+
+```
+291*(211*t+1360+22155*w)
+ = (w+4057*t+2544) + 8192*(787*w+7*t+48)
+```
+
+so `4057*t+9201 ≡ 0 (mod 8192)`. Since `4057*105 = 1+52*8192`, the inverse is 105 and `t ≡ 551 (mod 8192)`. Hence
+
+```
+t=551+8192*u
+m=4408+65536*u
+h=8+128*u
+m+1=8*(39+64*h)+1
+```
+
+This identifies the residual witness m with the B2-path high-stop parameter, provided the residual equations and root residue apply to the same candidate. It removes the previous free m-matching assumption at the arithmetic level. The derivation is not yet added as a Lean theorem; the exact-source/root32 closure remains pending.
