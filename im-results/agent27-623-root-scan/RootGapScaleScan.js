@@ -52,6 +52,16 @@ function drainB(a, b, d) {
   return [a, d];
 }
 
+function classifyBranch(a, d) {
+  if (a === 0n) return odd(d) ? "zero-odd" : "zero-even";
+  if (odd(d) && a >= d + 5n) return "left-odd";
+  if (!odd(d) && a >= d + 3n) return "left-even";
+  if (odd(a)) return "halt";
+  if (a === d + 2n) return "near-even";
+  if (odd(d)) return "right-odd";
+  return "right-even";
+}
+
 function highLevelNext(a, d) {
   if (a === 0n) {
     if (odd(d)) return drainB(d + 1n, 2n, 2n);
@@ -103,17 +113,31 @@ let maxGapError = null;
 let maxGapErrorAt = null;
 let maxScaleError = null;
 let maxScaleErrorAt = null;
+const branchCounts = {};
+const sectorMinSlack = {};
+const branchEdges = {};
+let previousBranch = null;
 
 for (let i = 0; i < steps; i++) {
   if (i < 20) trace.push({index: i, a: a.toString(), d: d.toString()});
 
   const oldA = a;
   const oldD = d;
+  const branch = classifyBranch(oldA, oldD);
   const next = highLevelNext(a, d);
   if (next === null) {
     throw new Error(`halt/failed section step at index ${i}, D(${a},${d})`);
   }
   [a, d] = next;
+
+  if (i >= 9) {
+    branchCounts[branch] = (branchCounts[branch] ?? 0) + 1;
+    if (previousBranch !== null && i >= 10) {
+      const edge = previousBranch + " -> " + branch;
+      branchEdges[edge] = (branchEdges[edge] ?? 0) + 1;
+    }
+  }
+  previousBranch = branch;
 
   if (i < 9) continue;
 
@@ -134,6 +158,17 @@ for (let i = 0; i < steps; i++) {
   // For m > 0, ceil(log_3(2*m+1)) is exactly the number of base-3
   // digits of 2*m. Thus this slack computation is integer-exact.
   const slack = h - BigInt((2n * m).toString(3).length);
+  if (
+    sectorMinSlack[branch] === undefined ||
+    slack < sectorMinSlack[branch].value
+  ) {
+    sectorMinSlack[branch] = {
+      value: slack,
+      index: i,
+      a: oldA.toString(),
+      d: oldD.toString()
+    };
+  }
   if (minSlack === null || slack < minSlack) {
     minSlack = slack;
     minSlackAt = {
@@ -200,6 +235,14 @@ const output = {
     value: minSlack.toString(),
     state: minSlackAt
   },
+  branchCounts,
+  sectorMinSlack: Object.fromEntries(
+    Object.entries(sectorMinSlack).map(([branch, item]) => [
+      branch,
+      {...item, value: item.value.toString()}
+    ])
+  ),
+  branchEdges,
   minRelativeGap: {
     log2: log2Ratio(minRelativeGap.numerator, minRelativeGap.denominator),
     index: minRelativeGapAt.index
