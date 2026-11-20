@@ -1569,3 +1569,6 @@ is rank one. Thus BA blocks are strictly expanding in this leading norm, whereas
 
 
 Axiom audit: the principal drain-transducer theorems (step_carry, run_carry, runStats_exact_of_bounds, drain_transducer_exact_canonical, runStats_phase_of_decomposition) depend only on Lean core axioms propext, Quot.sound, and (for the exact formula's arithmetic conversions) Classical.choice; no sorryAx appears. The correction-bound and closed carry lemmas likewise have no sorryAx.
+
+
+Final interface addition: DrainDigitTransducerCarry.lean now defines weightedE(stats)=n₂, weightedR(stats)=n₁+n₂, weightedD(L,stats)=L−2n₂, and proves runStats_weight_bounds: \(0\le E\le R\le L\). This directly supplies the count hypotheses used by correction_buffer_closed. A final broadcast records this source-checkable interface and its strict scope boundary.
