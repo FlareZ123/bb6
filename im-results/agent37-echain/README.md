@@ -225,3 +225,10 @@ The same module also adds reset_double_B_to_A_source_reentry: it composes the ex
 
 
 A concrete member is also certified: the reset packet at k=61,Q=0, followed by d=1,h=41,t=48 and the p=3 double-B/A closure, reaches the exact canonical section L(24972,2,2). Its complete composed time is defined as concreteResetTime in EChainDoubleBReentry.lean. This is a source-level exact reentry from the P2 reset packet, not yet a blank-root prefix.
+
+
+## Cross-dossier relation: regular E exits versus marker P2 resets
+
+The separate [canonical regular-E closure candidate](../agent37-d-timing-cocycle/ExceptionalESafeCanonical.lean) handles source inputs `L(3*k+4,q,1)` when q≥2 and q≢1 (mod 3), by mapping the first E return to a fixed-tail packet with p=2q and applying the safe packet normalizer. Its q=1 component is already covered by Agent 25's verified `q1b1_rejoins_regular`; the combined wrapper is in [ExceptionalEReentryClassification.lean](../agent37-d-timing-cocycle/ExceptionalEReentryClassification.lean). The new q≥2 source theorem and wrapper are **not yet compiled**, so treat this as a candidate reduction.
+
+For q≡1 (mod 3), the first E output has p≡2 (mod 3) and enters the marker P2-reset problem documented in this dossier. The regular-E closure does **not** close that marker-level reset recurrence; the remaining B-to-E/B-to-B residue classes and recursive P2 reset are still open.
