@@ -245,11 +245,12 @@ theorem all_safe_packets_canonical
       (BB6.Agent2PacketSafe.normalize_safe_exit c ha (by omega))
   have hamin : d.a ≥ 4 := by
     simpa [d] using BB6.Agent2PacketSafe.normalize_amin c ha
-  have hpmod := BB6.Agent2PacketSafe.normalize_pmod c
+  have hpmodEq : d.p % 3 = c.p % 3 := by
+    simpa [d] using BB6.Agent2PacketSafe.normalize_pmod c
   by_cases hzero : c.p % 3 = 0
   · have hp0 : d.p % 3 = 0 := by
-      dsimp [d]
-      omega
+      rw [hpmodEq]
+      exact hzero
     obtain ⟨S,a,q,b,hboundary,hcanon⟩ :=
       zero_terminal_regular_canonical d hamin hp0 hb
     exact ⟨T+S,a,q,b,
@@ -260,7 +261,7 @@ theorem all_safe_packets_canonical
         hfirst hboundary,
       hcanon⟩
   · have hp1 : d.p % 3 = 1 := by
-      dsimp [d]
+      rw [hpmodEq]
       omega
     obtain ⟨S,a,q,b,hboundary,hcanon⟩ :=
       one_terminal_regular_canonical d hamin hp1 hb
