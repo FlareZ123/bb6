@@ -217,6 +217,90 @@ theorem firstQ4P1Tail0_dropSixPlusSixK
   rw [List.drop_append]
   simp [d0, r]
 
+
+/-- At the terminal outer widths, the residual BinDec word has only one
+nonzero digit block. This is the exact arithmetic boundary left after the
+two-d0-block descent; it is not a TM terminal-run theorem. -/
+private theorem binDec_allZeroBits (len : Nat) :
+    binDec len (2^len-1) = d0pow len := by
+  induction len with
+  | zero => simp [binDec,d0pow,binaryCounterFuel]
+  | succ len ih =>
+      have hpow : 2^(len+1) = 2*2^len := by
+        rw [Nat.pow_succ]
+        ac_rfl
+      have hvalue : 2^(len+1)-1 = 2*(2^len-1)+1 := by
+        rw [hpow]
+        have hp0 : 0 < 2^len := Nat.pow_pos (by decide)
+        have hp : 1 ≤ 2^len := by omega
+        omega
+      have hbound : 2^len-1 < 2^len := by
+        have hp : 0 < 2^len := Nat.pow_pos (by decide)
+        omega
+      rw [hvalue, binDec_odd len (2^len-1) hbound, ih]
+      simp [d0pow]
+
+/-- When A=1, the residual outer counter is one d1 block followed by
+L+1 zero-digit blocks. -/
+theorem firstQ4P1BinDec_A1 (L : Nat) :
+    binDec (firstQ4P1Width L 1) (firstQ4P1Value L 1) =
+      d1 ++ d0pow (L+1) := by
+  have hwidth : firstQ4P1Width L 1 = (L+1)+1 := by
+    dsimp [firstQ4P1Width]
+    omega
+  have hpow : 2^(L+2) = 2*2^(L+1) := by
+    rw [Nat.pow_succ]
+    ac_rfl
+  have hvalue : firstQ4P1Value L 1 = 2*(2^(L+1)-1) := by
+    simp [firstQ4P1Value]
+    rw [hpow]
+    have hp0 : 0 < 2^(L+1) := Nat.pow_pos (by decide)
+    have hp : 1 ≤ 2^(L+1) := by omega
+    omega
+  have hbound : 2^(L+1)-1 < 2^(L+1) := by
+    have hp : 0 < 2^(L+1) := Nat.pow_pos (by decide)
+    omega
+  rw [hwidth,hvalue,binDec_even (L+1) (2^(L+1)-1) hbound]
+  rw [binDec_allZeroBits]
+
+/-- When A=2, the residual outer counter is d0, then d1, then L+1
+zero-digit blocks. -/
+theorem firstQ4P1BinDec_A2 (L : Nat) :
+    binDec (firstQ4P1Width L 2) (firstQ4P1Value L 2) =
+      d0 ++ d1 ++ d0pow (L+1) := by
+  have hwidth : firstQ4P1Width L 2 = (L+2)+1 := by
+    dsimp [firstQ4P1Width]
+    omega
+  have hvalue : firstQ4P1Value L 2 = 2*(2^(L+2)-2)+1 := by
+    simp [firstQ4P1Value]
+    have hpowle := Nat.pow_le_pow_right (by decide : 0<2)
+      (show 2 ≤ L+2 by omega)
+    have hfour : (2:Nat)^2 = 4 := by decide
+    rw [hfour] at hpowle
+    have hp : 2 ≤ 2^(L+2) := by omega
+    omega
+  have hbound : 2^(L+2)-2 < 2^(L+2) := by
+    have hp : 2 ≤ 2^(L+2) := by
+      have hpowle := Nat.pow_le_pow_right (by decide : 0<2)
+        (show 2 ≤ L+2 by omega)
+      have hfour : (2:Nat)^2 = 4 := by decide
+      rw [hfour] at hpowle
+      omega
+    omega
+  rw [hwidth,hvalue,binDec_odd (L+2) (2^(L+2)-2) hbound]
+  have hw : firstQ4P1Width L 1 = L+2 := by
+    simp [firstQ4P1Width]
+    omega
+  have hv : firstQ4P1Value L 1 = 2^(L+2)-2 := by
+    simp [firstQ4P1Value]
+    omega
+  have hA1 : binDec (L+2) (2^(L+2)-2) =
+      d1 ++ d0pow (L+1) := by
+    rw [← hv, ← hw]
+    exact firstQ4P1BinDec_A1 L
+  rw [hA1]
+  simp [List.append_assoc]
+
 #print axioms firstQ4P1Value_twoBit_step
 #print axioms firstQ4P1BinDec_twoD0
 #print axioms firstQ4P1BinDec_iterated
