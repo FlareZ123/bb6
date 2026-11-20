@@ -390,3 +390,30 @@ consume from the preceding m=1,n=3 endpoint. The successor state is
 the targeted CI compile and the shared root integration complete. No exact
 BB(6) value or universal upper bound is claimed.
 
+
+
+## A=2 q4Tail terminal leaf (source-only composition)
+
+`A2TerminalResetComposition.lean` records a conditional composition from the
+A=2 q4Tail frame
+`q4TailS0Frame z 79 (2^79-3)` to the existing marker-zero terminal
+`SectionBits` interface.
+
+For width 80, the q4Tail adapter residual factors as
+
+```lean
+d1pow (2^z+z+3) ++ markerWord 0 ++ d0 ++
+  binDec 80 (2^80-7) ++ lh
+```
+
+Reparameterizing the q4Tail's left counter and applying the S1 counted drain
+gives the input to `sectionResult_run_complete`. Its final marker is zero
+because `2^80-7` is divisible by three. The existing
+`s0_reset_sectionBits` and terminal-prefix theorems then give an exact
+conditional halting witness.
+
+**Scope limitation:** this does not prove that the authentic blank-root run
+reaches this A=2 q4Tail frame. The still-open transition into the A=2
+checkpoint, including the next-tail guard issue, is not discharged here.
+The Lean file is a source-level draft and has not been locally preflighted;
+do not treat it as a compiled or publishable result.
