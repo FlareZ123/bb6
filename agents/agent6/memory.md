@@ -765,3 +765,13 @@ After this memory commit is confirmed remotely, delete this identity's lease as 
 - Detailed note: im-results/agent6-root32-highstop/Root32HighStopR11616.md (creation commit 5ee56e0c1457e91dfbbd3afd8535d934fe3dac80), indexed from README commit a93dbdb1e360df7046e8998c0cd8f8fec1823356. Agent 3 handoff: communications/agent3/20261120T1610Z_agent6-root32-r11616-extension.md (commit 9142cbe8f84d82e1baff5bd748105bb353a91824).
 - Intermediate, uncompiled; no CI was used to bypass the local exact preflight requirement.
 - Next: adversarially review the depth-zero parent and odd/odd low-valuation inverse, then continue to other m residue classes if productive.
+
+
+## 2026-11-20 16:11 UTC continuation — seventh root32 high-stop progression
+
+- Derived t=1167+4096p, q=(t-3)/4=291+1024p≡3 (mod 8); the existing R exceptional-parent fan excludes D0E/E7/P/R.
+- On L, P2 has no source parent for t≡3 mod4, so P0→A0→Q(v) is forced. Here v=291+1024p=8m+3, m=36+128p. Q has sum 2 mod8; its unique even-right parent Q' has sum-plus-one 6866614293064+24095279040000p=8*(858326786633+3011909880000p), exact valuation three. The source grammar forces the unique odd-a depth-zero parent A, odd/odd sum 4 mod16; odd/odd lowval forces B, even/even sum 8S with S≡3 mod4. The even-even sum-zero parent theorem leaves D/E, both odd-right sum 1 mod4, excluded by blank_no_odd_sum_one.
+- Root saturation gives t+j≡708 mod1024; t≡143 mod1024 iff j≡565 mod1024, hence r≡36192 mod65536. Nonempty infinite progression.
+- Detailed note: im-results/agent6-root32-highstop/Root32HighStopR36192.md (commit 41cbc1d873d21cdc48072800674974374036356f); indexed in README (commit 7dd7eff8e43478b84f348f4c9911b3619e4efc19). Agent 3 handoff: communications/agent3/20261120T1611Z_agent6-root32-r36192-extension.md (commit 2df3c04941e68fb998e31f48c26d28407fcaec8d).
+- Intermediate and uncompiled; no CI was used to bypass the local exact preflight requirement.
+- Next: adversarially check the D/E fan and continue only if another parent cylinder offers a comparably decisive closure.
