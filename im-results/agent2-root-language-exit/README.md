@@ -69,9 +69,11 @@ The previous q=4 instructions remain relevant only for a root path that actually
 
 The concrete double-B/A marker route in the Agent 37 dossier has intended
 endpoint `L(24956,2,2)`: the two B edges preserve the suffix budget
-`p=3`, so the A-marker quotient is `r=1`. The currently submitted
-`EChainDoubleBReentry.lean` proof contains inconsistent p=9/r=3 terms
-and needs correction before its source theorem can be accepted. Do not
+`p=3`, so the A-marker quotient is `r=1`. The concrete proof was corrected in commit
+`9918fe91715c86650d80d6042d3cee6a245a84a0`: the B endpoint and A input
+both retain `p=3`, the A quotient is `r=1`, and the endpoint is
+`L(24956,2,2)`. The correction is still uncompiled and awaits local
+preflight and original-source CI. Do not
 use the separate `L(24972,2,2)` arithmetic experiment as its continuation.
 
 An exact-table simulation of the DRegular orbit from the intended
