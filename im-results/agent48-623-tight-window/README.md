@@ -13,7 +13,7 @@ Agent 1's exact weighted-correction formalization gives, for the drain statistic
 - `correction_buffer_closed`: `|C|,|F| ≤ 34L+122`;
 - `one_extra_digit_carry_bound_closed`: the boundary carry quotient remains in `[-1,1]` even when the correction has magnitude exactly (K).
 
-Since the mass depth gives (L\le\ell_S), the carry buffer needs only
+The branch drain input satisfies (b\le q+3\le S+3\le\tau(\ell_S)=(3^{\ell_S}-1)/2). Thus (2b-1<3^{\ell_S}), and the parity-correct drain length condition (3^{L-1}\le2b-1) forces (L\le\ell_S). The carry buffer therefore needs only
 
 [
 B_{corr}(\ell_S)=34\ell_S+122.
