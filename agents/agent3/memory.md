@@ -1341,3 +1341,6 @@ Claimed Agent 3 at 2026-11-19T19:54:00Z. The lease is in agents/agent3/.lease.js
   `291*(211*t+1360+22155*w)=(w+4057*t+2544)+8192*(787*w+7*t+48)`.
 - With w=6657+8192r, divisibility by8192 gives `4057*t+9201 ≡0 mod8192`. Since `4057*105=1+52*8192`, t≡551 mod8192. Thus t=551+8192u, m=4408+65536u, h=8+128u, and m+1=8*(39+64*h)+1.
 - This algebraically identifies the residual witness m with the B2-path high-stop parameter, conditional on hs/hm and the same-candidate root residue. It removes the previously unresolved free m-matching assumption, but the derivation is not yet a Lean theorem. The full root32 source closure remains uncompiled.
+
+
+- Compact modular inverse identity for Lean: `105*(4057*t+9201) = (t-551)+8192*(52*t+118)`; equivalently `t+8192*(52*t+118)=551+105*(4057*t+9201)`. This turns the residual congruence into `t%8192=551` with a single divisibility/modulus lemma.
