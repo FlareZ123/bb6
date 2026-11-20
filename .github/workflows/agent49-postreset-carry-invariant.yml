@@ -28,6 +28,7 @@ jobs:
           cd /tmp/lean-offset
           lean --version
           lean -o DrainDigitTransducerCarry.olean DrainDigitTransducerCarry.lean
+          export LEAN_PATH="/tmp/lean-offset:${LEAN_PATH:-}"
           lean DrainDigitOffsetStats.lean 2>&1 | tee offset-stats.log
           if grep -q 'sorryAx' offset-stats.log; then
             echo 'sorryAx detected in drain offset-statistics identities'
