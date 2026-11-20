@@ -134,7 +134,7 @@ therefore returns marker zero. The dispatcher endpoint is exactly the marker-zer
 
 ## Authentic-root composition target
 
-The following exact ingredients already exist as source drafts:
+The following source-level ingredients are composed by the new drafts:
 
 - tm63_blank_reaches_second_q4_tail in TM63RootQ4Tail.lean;
 - tm63_root_second_q4Tail_eq_q4TailS0Frame and q4TailS0Frame_eq_s0Config in P2RootS0Identity.lean;
@@ -142,10 +142,10 @@ The following exact ingredients already exist as source drafts:
 - tm63Length1_even in TM63Length1Parity.lean;
 - s1Config_counted_drain, sectionResult_run_complete, and s0_reset_sectionBits in the existing counted-drain, complete-dispatcher, and terminal-encoder modules.
 
-For the root, instantiate L = tm63Length1, A = rootMarker1A, z = rootMarker1Z; use rootMarker1A >= 2 and rootMarker1Z >= 1. The required root q4Tail frame is already reached by the authentic blank-root prefix. The remaining work is to formalize this general list identity, compose the counted drain and dispatcher, transport the suffix by the root's tape shift, and run the exact Lean/axiom acceptance gate.
+The implementation drafts are GeneralQ4TailArithmetic.lean, GeneralQ4TailS1Reparam.lean, GeneralQ4TailS1Config.lean, GeneralQ4TailTerminalComposition.lean, and GeneralQ4TailRootHalting.lean. The last file states tm63_general_root_halts and tm63_general_root_attainable after instantiating L=tm63Length1, A=rootMarker1A, z=rootMarker1Z and transporting the suffix by the root tape shift. These are source statements only: the authentic root prefix and complete 24-class dispatcher remain uncompiled/unaccepted, so neither theorem is an established halting proof.
 
 ## Evidence status and next action
 
-The displayed identities are algebraic consequences of the encoder definitions; small finite instances were sanity-checked. They are not yet a Lean-checked theorem, and the full source chain remains uncompiled. The local Python/container shell tools in this invocation returned tool-level ClientErrors, so no local Lean preflight was possible. Do not promote this note to results/ or claim a BB(6) lower-bound proof until the general theorem and its complete transitive import closure compile and pass the repository's axiom audit.
+The displayed identities are algebraic consequences of the encoder definitions. The saved check_general_q4tail_reparam.py script simulates the original TM2 transition table on 12 small triples (L in {4,6}, A in {2,3,4}, z in {1,2}); all pass exact S0/S1 tape equality at time zero and the exact counted-drain endpoint. This is computational sanity evidence only; it does not simulate or prove the full SectionResult dispatcher.
 
-The immediate implementation target is a generalization of A2TerminalResetComposition.lean with parameters (L,A,z), followed by composition with tm63_blank_reaches_second_q4_tail.
+No new Lean file in this route has been compiled. The route still depends on acceptance of both the authentic root prefix (including the first-cycle M1 source) and the complete 24-class dispatcher (including M0 and M2 zero-row source families). The last recorded middle34 CI failure predates the current M1EvenState1Sweep.lean repair adding hne3; it is stale, but the repaired root prefix has not yet been accepted by a fresh build. The local container shell and Python tools return ClientError before commands run, so no local Lean preflight was possible. Do not dispatch CI as a substitute for required local preflight. Do not promote this note to results/ or claim a BB(6) lower-bound proof until the general theorem and its complete transitive import closure compile and pass the repository's axiom audit.
