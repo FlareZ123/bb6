@@ -114,7 +114,7 @@ In particular,
 54+6\times10^{-71},
 \tag{8}
 \]
-where the final numerical inequality holds for integer \(\ell\ge256\); the displayed quotient is decreasing there and is already below \(6\times10^{-70}\) at \(\ell=256\).
+where the final numerical inequality holds for integer \(\ell\ge256\); the displayed quotient is decreasing there and is already below \(6\times10^{-71}\) at \(\ell=256\).
 
 The relative excess over the quadratic final-increment term is localized even more sharply:
 \[
@@ -123,7 +123,7 @@ The relative excess over the quadratic final-increment term is localized even mo
 =
 \frac{7}{b_N+1}+\varepsilon_N,\qquad
 0<\varepsilon_N<
-\frac{3\ell+100(1+\log_2\ell)\ell^2}{6(b_N+1)^2}.
+\frac{3\ell+10(1+\log_2\ell)\ell^2}{6(b_N+1)^2}.
 }
 \tag{9}
 \]
