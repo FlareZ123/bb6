@@ -20,6 +20,8 @@ The script is pinned to `google-deepmind/cryptids@c86f15861709b76042998c5211c7b2
 
 ## 20,000-transition result
 
+The recurrence and metric implementation was executed inline in the V8 runtime. The committed Node.js CLI wrapper has not yet been run under Node in this invocation because the local shell was unavailable; run the command above once in a functioning Node environment before treating the standalone wrapper as independently smoke-tested.
+
 The 20,000-step run in the V8 runtime used for this invocation produced:
 
 | Diagnostic | Exact/observed result |
