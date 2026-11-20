@@ -337,3 +337,17 @@ Extended [U5B2Root32ParameterBridge.lean](U5B2Root32ParameterBridge.lean) with f
 The updated remote blob `845e3deaf1987de441612ad3a441ffd8953fd8ad` was reconstructed byte-for-byte and compiled under Lean 4.36.0-rc2. All eight reported declarations have axiom profile `[propext, Quot.sound]`; no `sorryAx` or `native_decide` occurs.
 
 **Verification boundary:** this is an exact standalone arithmetic-module compile. The residual identity remains a hypothesis; this does not prove that every blank-start root candidate supplies that identity, and it does not compile the full `U5B2Root32.lean` source import closure. The existing root32 blank-reach exclusion therefore remains an intermediate, conditional result. No CI was dispatched; the Critic's full-source acceptance gate remains open.
+
+
+### 2026-11-20 follow-up: compose the U5 q=0 residual equations
+
+Added `b2_root32_parameter_of_u5_q0_residual` to the same standalone parameter bridge. It no longer takes the residual identity as an independent premise. Instead, it assumes the original U5 residual equations
+
+- `211*s+129 = 5*2^(201+3360*w)`,
+- `32*s = 32+840*w+m`,
+
+together with the q=0 parent form `m+1=8*(39+64*h)+1`, the B2 affine parameter `h=8+128*u`, the exponent formula, and the root-index cylinder `(w/8192)%64=32`. It derives `t=551+8192*u`, reconstructs the exact residual identity by algebra, and concludes `u=1802+6720*t'` for a natural `t'`.
+
+This is the source-equation form of the earlier residual bridge and matches the arithmetic content of `U5Q0M16Residual.u5_m8_t_identity`; it deliberately keeps the parameter module standalone rather than adding another source import. The updated exact blob `f08d837cd2c0afed92e040541410ffde8c330b53` compiles locally under Lean 4.36.0-rc2. All nine printed declarations have axiom profile `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
+
+**Remaining boundary:** the theorem assumes the U5 residual equations, q=0 parent shape, and B2 affine parameter relation. It does not prove that every blank-start B2 candidate supplies those premises, and the full `U5B2Root32.lean` import closure remains uncompiled. No CI was dispatched; the Critic's exact-source gate remains open.
