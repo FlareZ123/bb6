@@ -520,12 +520,12 @@ A strong root-countdown estimate follows directly from the seven-step
 first section \(\texttt{sectionResult}\ 7\ 2\ 6\ 63\). Let
 \(T_1=2\), \(T_{j+1}=2^{T_j}\). Its right counters start at \(b_0=63\),
 so \(b_0\ge T_3+1\); since \(b_{j+1}=2^{b_j}-1\), induction gives
-\(b_j\ge T_{j+3}+1\) for \(0\le j\le6\). The exponent update is
-\(a_{j+1}=a_j+b_j+\epsilon_j\) with \(\epsilon_j\ge1\), whence
+\(b_j\ge T_{j+3}+1\) for \(0\le j\le6\). The marker sequence is \(2,1,0,2,1,0,2\), so the exponent
+increments \(\epsilon_j\) are \(2,2,1,2,2,1,2\), with sum \(12\). Hence
 \[
 A_0=a_7
 =6+\sum_{j=0}^{6}(b_j+\epsilon_j)
-\ge20+\sum_{j=3}^{9}T_j.
+\ge25+\sum_{j=3}^{9}T_j.
 \]
 Set \(S_9=\sum_{j=3}^{9}T_j\). The root residue arithmetic gives
 \[
@@ -533,7 +533,7 @@ r=31\cdot2^{A_0-4}-1,\qquad M=16r-20,
 \]
 and therefore
 \[
-M\ge M_0:=496\cdot2^{S_9+16}-36.
+M\ge M_0:=496\cdot2^{S_9+21}-36.
 \]
 The middle-34 SectionResult segment starts with right counter at least \(2\)
 and performs \(M\) updates \(b_{j+1}=2^{b_j}-1\), so its final right

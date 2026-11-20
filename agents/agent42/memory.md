@@ -1734,3 +1734,8 @@ Improved the conditional lower bound again by using the full seven-step first se
 ## 2026-11-20 sharpened first-section tetration index
 
 Strengthened A0 further from the full seven-step recurrence. With b0=63≥T3+1 and b_{j+1}=2^{b_j}−1, b_j≥T_{j+3}+1 for j≤6. Since a7=6+Σ_{j=0}^6(b_j+ε_j) and ε_j≥1, A0≥20+Σ_{j=3}^9 T_j. Thus S9=Σ_{j=3}^9T_j, M0=496·2^(S9+16)−36, N0=(2^78−1)2^(T_M0+3)−3, and S_full≥6(T_N0+1)^2. This supersedes M0=62T10−36. Still paper-level, conditional, and uncompiled.
+
+
+### Exact marker-increment refinement
+
+For the seven-step first section, nextMarker(m)=(m+2)%3 gives marker sequence 2,1,0,2,1,0,2. Since nextExponent adds 2 for nonzero marker and 1 for marker zero, the seven exponent increments sum to 12, not merely at least 7. This sharpens A0≥20+ΣT_j to A0≥25+ΣT_j, and M0 from 496·2^(S9+16)−36 to 496·2^(S9+21)−36. The note/README now use the exact marker cycle.
