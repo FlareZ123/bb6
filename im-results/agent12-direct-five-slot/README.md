@@ -96,3 +96,8 @@ first drift cycle (the listed set is the set of cells containing 1):
 The Lean proof uses the repository's physical configuration semantics
 (`Config.tape : Int → Bool` and `applyMove`), not a finite-word simulator.
 Thus the drift statement is proved directly for the unbounded blank tape.
+
+The cylinder fixes five of the twelve table entries, leaving seven free
+entries. Since each free entry has 25 possible outcomes, this is a
+(25^7)-machine nonhalting branch, exactly one (1/25) child of the
+(25^8)-machine P4 parent.
