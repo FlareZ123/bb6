@@ -148,45 +148,37 @@ For the authentic \(L=76\) q4Tail route, the terminal index is exactly
 \[
 N=(2^{78}-1)2^A-3.
 \]
-The exact q4Tail S1 encoding gives a much stronger initial right-counter
-bound than \(R\ge2\). Put \(B=V_{M+42}=\texttt{middle34Result.right}\).
-The authentic endpoint has \(z=2^B-1\), and the S1 configuration definitions
-give
+The q4Tail S1 encoding is exactly four more applications of the same
+right-counter map \(f(x)=2^x-1\). With \(B=V_{M+42}\), its definitions give
 \[
-I=\texttt{q4TerminalInnerCount}(z)=2^{2^z-1},\qquad
-R=\texttt{q4TerminalRight}(z)=2^{I-1}-1.
+z=2^B-1=V_{M+43},\qquad
+I=\texttt{q4TerminalInnerCount}(z)=2^{2^z-1}.
 \]
-With \(T_0=1\), \(T_{n+1}=2^{T_n}\), the V recurrence satisfies
+But \(2^z-1=V_{M+44}\), so
 \[
-V_n\ge T_{n+3}+1
+I=2^{V_{M+44}}=V_{M+45}+1,\qquad
+R=\texttt{q4TerminalRight}(z)=2^{I-1}-1=V_{M+46}.
 \]
-for every \(n\): the base is \(V_0=63\ge T_3+1\), and
-\(V_{n+1}=2^{V_n}-1\ge2^{T_{n+3}+1}-1
-=2T_{n+4}-1\ge T_{n+4}+1\).
-Therefore
+Thus the terminal dispatcher does not merely start above a tower lower
+bound: its initial right counter is exactly the next V-sequence term
+\(V_{M+46}\). Since its N updates also use \(f(x)=2^x-1\), the final
+right counter is exactly
 \[
-B=V_{M+42}\ge T_{M+45}+1,\quad
-z\ge T_{M+46}+1,\quad
-2^z-1\ge T_{M+47}+1,
-\]
-so \(I\ge2T_{M+48}\), \(I-1\ge T_{M+48}+1\), and finally
-\[
-R\ge T_{M+49}+1.
-\]
-The terminal SectionResult makes \(N\) updates \(b_{j+1}=2^{b_j}-1\).
-Induction from this stronger initial condition gives
-\[
-b_N\ge T_{N+M+49}+1.
+b_N=V_{M+N+46}.
 \]
 The final dispatcher increment alone contributes
-\(6\cdot4^{b_{N-1}}=6(b_N+1)^2\). Hence the sharpened conditional score bound is
 \[
-\boxed{
-S\ge6(T_{N+M+49}+2)^2,\qquad
-N=(2^{78}-1)2^A-3,
-}
+6\cdot4^{b_{N-1}}
+=6(b_N+1)^2
+=6(V_{M+N+46}+1)^2,
 \]
-where \(A\) and \(M\) are the exact V-index expressions above.
+and therefore the sharper conditional score bound is
+\[
+\boxed{S\ge6(V_{M+N+46}+1)^2,\qquad
+N=(2^{78}-1)2^A-3.}
+\]
+As a simpler tower corollary, \(V_n\ge T_{n+3}+1\) gives
+\(S\ge6(T_{M+N+49}+2)^2\). The exact V-index statement is stronger.
 
 This exact V-index expression sharpens the earlier \(A_{\min}\) bound by
 retaining every marker offset. It is still conditional on the uncompiled
