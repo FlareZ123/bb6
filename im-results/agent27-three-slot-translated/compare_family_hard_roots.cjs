@@ -176,7 +176,8 @@ for (let x = 1; x < 6; x++) {
           { slot: "A/0", action: "1" + direction + letters[x] },
           { slot: letters[x] + "/0", action: "0" + opposite + letters[y] },
           { slot: letters[y] + "/1", action: "0" + opposite + "A" }
-        ]
+        ],
+        firstUnknownOrder: ["A/0", letters[x] + "/0", letters[y] + "/1"]
       });
     }
     schemaCandidates.push({
@@ -187,7 +188,8 @@ for (let x = 1; x < 6; x++) {
         { slot: "A/0", action: "1" + direction + letters[x] },
         { slot: letters[x] + "/0", action: "0" + opposite + "A" },
         { slot: "A/1", action: "0" + opposite + letters[x] }
-      ]
+      ],
+      firstUnknownOrder: ["A/0", letters[x] + "/0", "A/1"]
     });
     schemaCandidates.push({
       entry: 1,
@@ -197,7 +199,8 @@ for (let x = 1; x < 6; x++) {
         { slot: "A/0", action: "0" + direction + letters[x] },
         { slot: letters[x] + "/0", action: "1" + opposite + "A" },
         { slot: letters[x] + "/1", action: "0" + direction + letters[x] }
-      ]
+      ],
+      firstUnknownOrder: ["A/0", letters[x] + "/0", letters[x] + "/1"]
     });
   }
 }
@@ -217,6 +220,14 @@ assert.equal(schemaCandidates.length, 80);
 assert.equal(schemaSet.size, 80);
 assert.equal(jsonSet.size, 80);
 assert.deepEqual(schemaSet, jsonSet);
+const schemaByKey = new Map(schemaCandidates.map(candidate => [candidateKey(candidate), candidate]));
+for (const candidate of candidates) {
+  const schema = schemaByKey.get(candidateKey(candidate));
+  assert.deepEqual(candidate.firstUnknownOrder, schema.firstUnknownOrder);
+  assert(candidate.prefixes.every(prefix => prefix.oldOracle === false));
+  assert.equal(candidate.prefixes.at(-1).firstUnknown, null);
+  assert.equal(candidate.fullScanNoUnknown, true);
+}
 assert.equal(candidates.length, 80);
 assert.equal(new Set(candidates.map(c => c.transitions
   .map(row => row.slot + "=" + row.action).sort().join("|"))).size, 80);
@@ -275,6 +286,13 @@ for (const [name, rles] of Object.entries(rosters)) {
 const output = {
   candidateFamily: {
     count: candidates.length,
+    schemaEnumeration: {
+      count: schemaCandidates.length,
+      exactlyMatchesSearchJSON: true,
+      allPrefixOracleRejections: true,
+      allFirstUnknownPathsMatch: true,
+      allEndpointsNoUnknown: true
+    },
     entryHistogram: candidates.reduce((acc, c) => {
       acc[c.entry] = (acc[c.entry] || 0) + 1;
       return acc;
