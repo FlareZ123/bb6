@@ -82,3 +82,27 @@ The existing workflow `.github/workflows/agent32-zero-path-global.yml` (blob `ab
 The five-slot-specific step then compiles, in order, `RootShift`, `TranslatedCycle`, `TranslatedFiniteOracle`, `IncrementalAudit`, `TranslatedFiveSlot`, and finally `FiveSlotLeafGraft`, teeing the target's output and rejecting `sorryAx`. This is the authoritative isolated target sequence once an exact local checkout is available.
 
 The separate `export_frontier` step compiles `FrontierExtract`, `FrontierUnique`, `FrontierManifestMass`, and `ResidualFrontierManifest`. These are not imports of `FiveSlotLeafGraft`; the target comment and source definitions were checked directly and both `agent27Depth4Audit` and `depth4ResidualAudit` are exactly `lassoPhysicalTraceAudit emptyTable 6 6 12 12 2 4 4`. Agent 12's requested manifest comparison is therefore a separate reporting-path audit, not a direct dependency of the isolated graft theorem.
+
+
+## Superseding acceptance update (2026-11-20T04:06Z)
+
+The earlier environment blocker is superseded for the *graft proof gate* by Agent 27's later exact-source local preflight report and successful manual CI run:
+
+- Agent 27 reported materializing the current-main dependency closure, checking each source blob SHA, and compiling the complete target closure locally.
+- Manual workflow run `44665012115` completed successfully at commit `e817927a2f286f8d026e216e82e04df4c2c835cb`. Its `source-proof` job step **6**, “Verify five-slot translated finite-support leaf graft,” succeeded. The two-mark, mass-export, and report-evaluation steps were skipped.
+- The targeted job log was retrieved. It includes all theorem axiom profiles and the `sorryAx` guard. In particular, `agent27WordPump_translated_check`, `agent27WordPump_cover`, `agent27WordPump_never`, `agent27GraftedAudit_open_iff`, `agent27P4_exact_open_partition`, `agent27_leaf_closed`, `agent27GraftedAudit_exhaustive`, and `agent27GraftedAudit_conserves` all depend only on `[propext, Classical.choice, Quot.sound]`. The graft helper theorems `graftCertificate_open_iff`, `addCertificate_open_iff`, and `addCertificate_closes_source` depend only on `[propext, Quot.sound]`. The run log contains no `sorryAx`; the job and run conclusions are both `success`.
+- I compared the full set of **42 Lean source blobs** in the workflow's compile sequence between the CI head commit and current main head `304a18af1e98e3016d22222ea767f7fce01c935f`; all paths and blob SHAs match exactly. Thus the successful target compile applies to the current-main target closure, not merely a superseded wrapper.
+- My own runtime still lacks a repository checkout; I did not personally reproduce Agent 27's local preflight. The earlier module-level check of exact `IncrementalAudit.lean` remains a separate partial verification.
+
+### Remaining report gate
+
+The graft proof gate is accepted as a **partial frontier refinement**, not a BB(6) solution. The workflow did not evaluate `agent27GraftedAudit.report`; the report/export steps were skipped. Agent 12's report note gives the derived expected post-graft pair:
+
+- certified: 40,570,837,402,343,750
+- open: 19,033,807,373,046,875
+- total: 59,604,644,775,390,625 = 25^12
+- certified fraction: 68.06657024%
+
+This pair follows arithmetically from the recorded pre-graft pair and the (25^7) source-cylinder mass, but is **not** yet a Lean-evaluated report or a separately kernel-proved report-count theorem. Do not update the dossier headline percentage until a targeted evaluation or report-delta proof confirms it. The separate `ResidualFrontierManifest` export path was not compiled by run 44665012115; its audit expression matches the target definition, but its reporting/export job remains a separate check.
+
+A tiny importing report module should first try `#reduce agent27GraftedAudit.report` (the declaration is noncomputable, so `#eval` may be rejected). A local Lean toy test confirmed that `#reduce` can normalize noncomputable definitions whose data branches are decidable. If the real reduction is intractable, use a computable report companion or prove a generic report-delta theorem. Keep all report changes in `im-results/` until this gate passes; do not claim an exact BB(6) upper bound.
