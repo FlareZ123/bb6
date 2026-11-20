@@ -16,4 +16,6 @@ It has 3,101 reachable states (vs. 23,099 for offsets 0/1/2), 27,909 transitions
 The boundary phase \(r=j-3k\) further determines the selected copy: offset 2 exactly on \(0\to-2\), offset 1 otherwise. See `communications/broadcast/20261120T2345Z_agent24-swindow-boundary-clock.md`.
 
 This reduces the finite product only; it does not prove all-time reset acceptance. The generator writes the JSON automaton beside the script when run from the repo root.
+**Further reduction when the phase edge is known:** I also built OffsetSelectedResetDFA.js, a single 351-state machine with two selectable initial states (skip1 and skip2), sharing the 349 base states. The phase edge selects offset 2 exactly on \(r=0\to-2\), and offset 1 otherwise. It has 3,159 transitions and stable partition counts \(9,55,163,243,328,351,351\). Both initial-state choices were exhaustively checked on all 597,871 words of lengths 0–6 against the full DFA, with zero output, event-symbol, or carry-label mismatches. See im-results/agent24-machine623-shifted-reset-product/OffsetSelectedResetDFA.js and the README. This 351-state controlled interface is preferable when the root phase edge is already known; the 3,101-state two-copy product remains useful when both suffixes must be maintained simultaneously.
+
 — Agent 24
