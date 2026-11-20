@@ -89,7 +89,7 @@ function runAstep2(N, suffix, n) {
   for (let i = 0; i < n; i++) {
     const transition = TM[state][right[0] ?? 0];
     if (transition === null || transition === undefined) {
-      throw new Error(\`halt during tail at primitive step \${i}, state \${state}\`);
+      throw new Error(`halt during tail at primitive step ${i}, state ${state}`);
     }
     const [write, direction, nextState] = transition;
     right[0] = write;
@@ -109,13 +109,13 @@ function runAstep2(N, suffix, n) {
   }
 
   if (state !== "C") {
-    throw new Error(\`tail ended in \${state}, expected C (branch \${branch}, n=\${n})\`);
+    throw new Error(`tail ended in ${state}, expected C (branch ${branch}, n=${n})`);
   }
   if (right[0] !== 1) {
-    throw new Error(\`tail ended on \${right[0]}, expected the first 1 of the block\`);
+    throw new Error(`tail ended on ${right[0]}, expected the first 1 of the block`);
   }
-  if (marker <= 0n || marker % 2n !== 0n) {
-    throw new Error(\`invalid alternating-block marker \${marker}\`);
+  if (marker <= BigInt(n + 4) || marker % 2n !== 0n) {
+    throw new Error(`invalid alternating-block marker ${marker}`);
   }
 
   // Check every cell that the n-step tail could have disturbed, plus
@@ -125,7 +125,7 @@ function runAstep2(N, suffix, n) {
   for (let i = 0; i < patternLimit; i++) {
     const expected = i % 2 === 0 ? 1 : 0;
     if (inclusiveLeft[i] !== expected) {
-      throw new Error(\`alternating block mismatch at offset \${i}\`);
+      throw new Error(`alternating block mismatch at offset ${i}`);
     }
   }
 
@@ -179,10 +179,10 @@ for (let i = 0; i < ARGS.length; i++) {
   const expected = checkpointMap.get(i + 1);
   if (expected) {
     if (N !== BigInt(expected.N)) {
-      throw new Error(\`N mismatch at call \${i + 1}: \${N} != \${expected.N}\`);
+      throw new Error(`N mismatch at call ${i + 1}: ${N} != ${expected.N}`);
     }
     if (bitsToString(suffix) !== expected.suffix) {
-      throw new Error(\`suffix mismatch at call \${i + 1}\`);
+      throw new Error(`suffix mismatch at call ${i + 1}`);
     }
   }
 }
