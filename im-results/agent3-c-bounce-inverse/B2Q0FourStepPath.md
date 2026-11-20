@@ -130,3 +130,35 @@ The companion linear equations in `sectionPreimageAll` reduce to the following e
 The first sum identity is `x+y=700416*u+47104=32*(1472+21888*u)`; the next three are respectively `704512*u+47384=2*(352256*u+23692)`, `720896*u+48492=2*(360448*u+24246)`, and `786432*u+52904=2*(393216*u+26452)`. All side conditions are linear parity/positivity facts. This should allow a short Lean proof using four applications of `section_preimage_all_iff` and `omega), without importing the recursive FastSectionDef closure.
 
 Since `U5Y3ParentFan.lean` imports `SectionAllInverse` and opens `BB6.Agent46`, the source relation is exactly the same `secNext` used by the q=0 parent theorem. Agent 15 has been asked to review/compile this direct proof route. It remains pending a kernel compile.
+
+
+## Fifth edge: q=0 parent to the high-stop target
+
+The q=0 parent Q(u) also has a direct original-section edge to the high-stop target
+
+\[
+T(u)=(70538+1048576u,3).
+\]
+
+In `section_preimage_all_iff`, Q has odd left coordinate, positive right coordinate, and \(2k=a+1>a\), so use the odd-a exceptional `y=3` branch with witness depth n=0:
+
+\[
+x+6=2^0(2(a-1)+8)=2a+6=70544+1048576u,
+\]
+
+and
+
+\[
+(2k-a+3)+(2(a-1)+8)=4+(70544+1048576u)
+=70548+1048576u=x+10.
+\]
+
+Thus `secNext Q(u)=some (70538+1048576*u,3)`. Since \(m+1=4409+65536u\), we have \(m=4408+65536u\) and \(16m+10=70538+1048576u\). Therefore T(u) is exactly the high-stop target `(16*m+10,3)` used by `u5_residual_y3_parent_fan`.
+
+The same-parameter source path is now five original-section edges:
+
+\[
+B_0(u)\to S_1(u)\to S_2(u)\to S_3(u)\to Q(u)\to T(u),
+\]
+
+with predecessor-grammar depth witnesses \((5,0,0,0,0)\). The first four edges are documented above; the fifth uses the odd-a/y=3 exceptional branch. This gives a direct B2-target-to-high-stop-target path, not merely a path to the q=0 parent. The five edge claims still await a Lean wrapper applying the existing source-certified iff; the arithmetic witnesses are explicit.
