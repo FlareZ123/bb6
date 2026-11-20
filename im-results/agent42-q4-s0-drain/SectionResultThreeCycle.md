@@ -329,37 +329,64 @@ D_N(U,R)=90k^2+111k+12(N+1)U+
 \]
 Assume \(R\ge5\), \(U\ge0\), and \(b_0=R,\ b_{j+1}=2^{b_j}-1\).
 
-Since \(b_{j+1}+1=2^{b_j}\), the exponential part of each summand is exactly
+Since \(b_0=R\ge5\), every \(b_i\ge5\), and
 \[
 6\cdot4^{b_j}+42\cdot2^{b_j}
 =6b_{j+1}^2+54b_{j+1}+48.
 \]
-Also \(2^x-1\ge x^2\) for \(x\ge5\), so \(b_i^2\le b_{i+1}\le b_N\) for every \(i<N\). Consequently
+For \(x\ge5\), \(2^x-1\ge x^2\), so \(b_i^2\le b_{i+1}\); the sequence
+is increasing. For \(N\ge2\), this gives the sharper estimates
 \[
-\sum_{i=1}^{N-1}b_i^2\le (N-1)b_N,\qquad
-\sum_{i=1}^{N}b_i\le Nb_N.
+\sum_{i=1}^{N}b_i^2
+\le b_N^2+b_N+(N-2)b_{N-1},
+\qquad
+\sum_{i=1}^{N}b_i
+\le b_N+(N-1)b_{N-1}.
 \]
-Bounding the remaining weighted sum by
+All coefficients \(12(N-j)-9\) are positive, and
+\[
+\sum_{j=0}^{N-1}(12(N-j)-9)=6N^2-3N.
+\]
+As \(b_j\le b_{N-1}\) for \(j<N\), the remaining weighted term obeys
 \[
 \sum_{j=0}^{N-1}(12(N-j)-9)b_j
-\le 12N^2b_N
+\le(6N^2-3N)b_{N-1}.
 \]
-gives the explicit two-sided estimate
+Combining these three bounds yields the sharpened two-sided estimate
 \[
 \boxed{
 6(b_N+1)^2\le D_N(U,R)\le
-6b_N^2+(12N^2+60N)b_N
+6b_N^2+60b_N+(6N^2+57N-66)b_{N-1}
 +48N+90k^2+111k+12(N+1)U.
 }
 \]
-The lower bound is exactly the final increment's \(6\cdot4^{b_{N-1}}=6(b_N+1)^2\) contribution; every other term in \(D_N\) is nonnegative. For fixed \(U,R\), \(b_N\ge2^N R\), so the displayed remainder is \(o(b_N^2)\). Therefore
+The lower bound is exactly the final increment's
+\(6\cdot4^{b_{N-1}}=6(b_N+1)^2\) contribution; every other term in
+\(D_N\) is nonnegative. The upper-bound coefficients follow by collecting
+\(6(N-2)b_{N-1}\) from the square sum,
+\(54(N-1)b_{N-1}\) from the linear sum, and
+\((6N^2-3N)b_{N-1}\) from the weighted sum.
+
+Because \(b_N=2^{b_{N-1}}-1\), we have
+\(b_{N-1}=\log_2(b_N+1)\). Also \(b_N\ge2^N R\) for \(R\ge5\).
+For fixed \(U,R\), the remainder above is therefore
+\(O(Nb_N+N^2\log b_N+N^2+NU)=o(b_N^2)\), and
 \[
-D_N(U,R)\sim 6b_N^2
-=6\,t_2(N,R)^2
+D_N(U,R)\sim6b_N^2=6\,t_2(N,R)^2
 \qquad(N\to\infty).
 \]
+This is a sharper paper derivation than the earlier \(O(N^2b_N)\)
+remainder. It has not yet been added to the isolated Lean model, so it
+must not be described as Lean-checked.
 
-This proves that the *dispatcher-plus-terminal contribution* is asymptotically dominated by its final counted increment. Extending the same asymptotic to the full champion score additionally requires bounding the separate root/drain prefix by \(o(b_N^2)\); that prefix bound is not asserted here. For the authentic \(n\ge1\), the omitted root/drain contribution is nonnegative: \(C_{\rm root}\ge0\) and \(42\cdot2^{n-1}\ge12n\), hence \(6\cdot4^{n-1}+42\cdot2^{n-1}-12n+54>0\). Therefore the full conditional score satisfies \(S_{\rm full}\ge6(b_N+1)^2\).
+The dispatcher-plus-terminal contribution is asymptotically dominated by
+its final counted increment. Extending the same asymptotic to the full
+champion score additionally requires bounding the separate root/drain
+prefix by \(o(b_N^2)\); that prefix bound is not asserted here. For the
+authentic \(n\ge1\), the omitted root/drain contribution is nonnegative:
+\(C_{\rm root}\ge0\) and \(42\cdot2^{n-1}\ge12n\), hence
+\(6\cdot4^{n-1}+42\cdot2^{n-1}-12n+54>0\). Therefore the full
+conditional score satisfies \(S_{\rm full}\ge6(b_N+1)^2\).
 
 
 ## Relation to existing Lean popcount/valuation lemmas

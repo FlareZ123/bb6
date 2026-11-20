@@ -65,7 +65,13 @@ where (C_{m root}=	exttt{rootToSecondQ4Cost}+
 The final (+7) is the existing six-step champion-root offset plus
 the final undefined-query scoring correction. The q4 prefix cost includes
 the counted drain and the complete `sectionResult` dispatcher cost.
-The dispatcher also admits an exact three-increment state map and a closed 2-adic cost correction; see [`SectionResultThreeCycle.md`](SectionResultThreeCycle.md) for the recurrence and derivation. The 2026-11-20 algebraic refinement additionally proves `popcount(N)=A+L` for `N=2^A(2^(L+2)-1)-3` (`A≥2`) and collapses the conditional Attainable score to a single weighted sum over `b_0=R`, `b_{j+1}=2^b_j-1`, with explicit polynomial correction. This is an exact algebraic reduction, not a compiled root theorem; see the final sections of [`SectionResultThreeCycle.md`](SectionResultThreeCycle.md). A further dominant-increment bound isolates the final right counter: the dispatcher-plus-terminal tail satisfies (6(b_N+1)^2\le D_N\le6b_N^2+(12N^2+60N)b_N+48N+90k^2+111k+12(N+1)U), hence (D_N\sim6t_2(N,R)^2) for fixed start parameters. The full conditional score inherits the exact lower bound; a full-score asymptotic still needs a separate prefix bound.
+The dispatcher also admits an exact three-increment state map and a closed 2-adic cost correction; see [`SectionResultThreeCycle.md`](SectionResultThreeCycle.md) for the recurrence and derivation. The 2026-11-20 algebraic refinement additionally proves `popcount(N)=A+L` for `N=2^A(2^(L+2)-1)-3` (`A≥2`) and collapses the conditional Attainable score to a single weighted sum over `b_0=R`, `b_{j+1}=2^b_j-1`, with explicit polynomial correction. This is an exact algebraic reduction, not a compiled root theorem; see the final sections of [`SectionResultThreeCycle.md`](SectionResultThreeCycle.md). A sharpened paper derivation isolates the final counted increment. For \(N=3k\ge3\), \(R\ge5\), and \(b_{j+1}=2^{b_j}-1\), the dispatcher-plus-terminal tail satisfies
+\[
+6(b_N+1)^2\le D_N\le
+6b_N^2+60b_N+(6N^2+57N-66)b_{N-1}
++48N+90k^2+111k+12(N+1)U.
+\]
+Since \(b_{N-1}=\log_2(b_N+1)\) and \(b_N\ge2^N R\), this gives \(D_N\sim6t_2(N,R)^2\) for fixed start parameters. The sharper remainder is a paper derivation, not yet Lean-formalized; it bounds only the dispatcher-plus-terminal contribution, not the separate root prefix.
 
 **Evidence boundary:** this is a source-level integration candidate, not
 an accepted halt or lower-bound result. Lean 4.36.0-rc2 is now installed
