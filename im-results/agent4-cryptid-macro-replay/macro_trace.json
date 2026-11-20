@@ -81,7 +81,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 2,
@@ -134,7 +135,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 3,
@@ -185,7 +187,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 4,
@@ -230,7 +233,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 5,
@@ -274,7 +278,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 6,
@@ -316,7 +321,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 7,
@@ -363,7 +369,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 8,
@@ -422,7 +429,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 9,
@@ -479,7 +487,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 10,
@@ -536,7 +545,8 @@
         1,
         1
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "1"
     },
     {
       "step": 11,
@@ -603,7 +613,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 12,
@@ -678,7 +689,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 13,
@@ -751,7 +763,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 14,
@@ -818,7 +831,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 15,
@@ -884,7 +898,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 16,
@@ -948,7 +963,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 17,
@@ -1006,7 +1022,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 18,
@@ -1067,7 +1084,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 19,
@@ -1139,7 +1157,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 20,
@@ -1210,7 +1229,8 @@
         1,
         1
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "10"
     },
     {
       "step": 21,
@@ -1274,7 +1294,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 22,
@@ -1337,7 +1358,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 23,
@@ -1398,7 +1420,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 24,
@@ -1462,7 +1485,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 25,
@@ -1537,7 +1561,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 26,
@@ -1610,7 +1635,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 27,
@@ -1677,7 +1703,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 28,
@@ -1743,7 +1770,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 29,
@@ -1807,7 +1835,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 30,
@@ -1866,7 +1895,8 @@
         1,
         1
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "10"
     },
     {
       "step": 31,
@@ -1923,7 +1953,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 32,
@@ -1987,7 +2018,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 33,
@@ -2062,7 +2094,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 34,
@@ -2135,7 +2168,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 35,
@@ -2202,7 +2236,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 36,
@@ -2268,7 +2303,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 37,
@@ -2332,7 +2368,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 38,
@@ -2390,7 +2427,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 39,
@@ -2447,7 +2485,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 40,
@@ -2503,7 +2542,8 @@
         1,
         1
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "10"
     },
     {
       "step": 41,
@@ -2552,7 +2592,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 42,
@@ -2604,7 +2645,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 43,
@@ -2667,7 +2709,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 44,
@@ -2728,7 +2771,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 45,
@@ -2783,7 +2827,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 46,
@@ -2837,7 +2882,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 47,
@@ -2898,7 +2944,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 48,
@@ -2970,7 +3017,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 49,
@@ -3040,7 +3088,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 50,
@@ -3105,7 +3154,8 @@
         1,
         0
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "10"
     },
     {
       "step": 51,
@@ -3168,7 +3218,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 52,
@@ -3229,7 +3280,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 53,
@@ -3289,7 +3341,8 @@
         0,
         1,
         0
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 54,
@@ -3358,7 +3411,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 55,
@@ -3439,7 +3493,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 56,
@@ -3518,7 +3573,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 57,
@@ -3591,7 +3647,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 58,
@@ -3663,7 +3720,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 59,
@@ -3733,7 +3791,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 60,
@@ -3798,7 +3857,8 @@
         1,
         1
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "10"
     },
     {
       "step": 61,
@@ -3865,7 +3925,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 62,
@@ -3943,7 +4004,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 63,
@@ -4019,7 +4081,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 64,
@@ -4089,7 +4152,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 65,
@@ -4158,7 +4222,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 66,
@@ -4225,7 +4290,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 67,
@@ -4295,7 +4361,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 68,
@@ -4376,7 +4443,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 69,
@@ -4455,7 +4523,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 70,
@@ -4529,7 +4598,8 @@
         1,
         1
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "10"
     },
     {
       "step": 71,
@@ -4601,7 +4671,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 72,
@@ -4671,7 +4742,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 73,
@@ -4735,7 +4807,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 74,
@@ -4798,7 +4871,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 75,
@@ -4868,7 +4942,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 76,
@@ -4949,7 +5024,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 77,
@@ -5028,7 +5104,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 78,
@@ -5101,7 +5178,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 79,
@@ -5173,7 +5251,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 80,
@@ -5244,7 +5323,8 @@
         1,
         1
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "10"
     },
     {
       "step": 81,
@@ -5308,7 +5388,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 82,
@@ -5371,7 +5452,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 83,
@@ -5432,7 +5514,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 84,
@@ -5487,7 +5570,8 @@
         1,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 85,
@@ -5545,7 +5629,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 86,
@@ -5614,7 +5699,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 87,
@@ -5681,7 +5767,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 88,
@@ -5742,7 +5829,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 89,
@@ -5802,7 +5890,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 90,
@@ -5861,7 +5950,8 @@
         1,
         1
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "10"
     },
     {
       "step": 91,
@@ -5922,7 +6012,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 92,
@@ -5994,7 +6085,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 93,
@@ -6064,7 +6156,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 94,
@@ -6128,7 +6221,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 95,
@@ -6191,7 +6285,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 96,
@@ -6252,7 +6347,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 97,
@@ -6307,7 +6403,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 98,
@@ -6361,7 +6458,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 99,
@@ -6422,7 +6520,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "-3"
     },
     {
       "step": 100,
@@ -6495,7 +6594,8 @@
         1,
         1
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "1"
     },
     {
       "step": 101,
@@ -6565,7 +6665,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 102,
@@ -6629,7 +6730,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 103,
@@ -6692,7 +6794,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 104,
@@ -6753,7 +6856,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 105,
@@ -6808,7 +6912,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "10"
     },
     {
       "step": 106,
@@ -6862,7 +6967,8 @@
         0,
         1,
         1
-      ]
+      ],
+      "affine_offset_c": "1"
     },
     {
       "step": 107,
@@ -6915,7 +7021,33 @@
         1,
         1
       ],
-      "checkpoint_matches_external_proof": true
+      "checkpoint_matches_external_proof": true,
+      "affine_offset_c": "10"
     }
+  ],
+  "affine_offset_distribution": {
+    "E:-3": 15,
+    "E:1": 37,
+    "B:10": 55
+  },
+  "argument_distribution": {
+    "5": 55,
+    "13": 1,
+    "17": 4,
+    "21": 39,
+    "27": 2,
+    "31": 4,
+    "35": 1,
+    "39": 1
+  },
+  "unique_input_suffixes": 107,
+  "unique_output_suffixes": 107,
+  "input_suffix_length_range": [
+    0,
+    19
+  ],
+  "output_suffix_length_range": [
+    3,
+    19
   ]
 }

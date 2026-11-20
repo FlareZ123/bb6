@@ -26,7 +26,7 @@ The proof applies 107 A_step2 macros (ten groups of ten, then seven), followed b
 
 **All 11 explicit external checkpoints match exactly:** after 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, and 107 macros. Both the enormous unary parameter and the complete suffix list match. This is an independent computational replay, not a replacement for the external kernel proof.
 
-Across the 107 A_step2 invocations the intermediate step_An_1101 branch counts are 52 E and 55 B, with no A branch. The final input to finish has parameter congruent to 1 mod 3, so its final branch is E: 53 E and 55 B in total.
+Across the 107 A_step2 invocations the intermediate step_An_1101 branch counts are 52 E and 55 B, with no A branch. The final input to finish has parameter congruent to 1 mod 3, so its final branch is E: 53 E and 55 B in total. On this 107-step path, every computed unary update has the affine form n' = 8 floor(n/3) + c, with only three offsets: E,c=-3 occurs 15 times; E,c=1 occurs 37 times; B,c=10 occurs 55 times. All 107 input suffixes and all 107 output suffixes are distinct; input lengths range from 0 to 19 and output lengths from 3 to 19. The A_step2 argument distribution is 5:55, 13:1, 17:4, 21:39, 27:2, 31:4, 35:1, 39:1.
 
 ## Exact first-ten DRegular bridge
 

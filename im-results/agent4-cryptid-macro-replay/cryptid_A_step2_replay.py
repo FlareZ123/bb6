@@ -188,6 +188,7 @@ def main():
             "prefix_head":info["head"], "right_after_prefix":info["right_after_prefix"],
             "leading_ones_absorbed":info["leading_ones"],
             "output_n":str(n), "output_suffix":suffix,
+            "affine_offset_c":str(n-8*(before_n//3)),
         }
         if i in CHECKPOINTS:
             expected_n, expected_suffix = CHECKPOINTS[i]
@@ -203,12 +204,28 @@ def main():
     assert all(x["dregular_next_matches"] is True for x in trace[:10])
     assert trace[10]["dregular_next_matches"] is False
 
+    offset_counts = {}
+    argument_counts = {}
+    for item in trace:
+        key = item["branch"] + ":" + item["affine_offset_c"]
+        offset_counts[key] = offset_counts.get(key, 0) + 1
+        mkey = str(item["a_step2_argument"])
+        argument_counts[mkey] = argument_counts.get(mkey, 0) + 1
+    unique_inputs = len({tuple(item["input_suffix"]) for item in trace})
+    unique_outputs = len({tuple(item["output_suffix"]) for item in trace})
+    input_lengths = [len(item["input_suffix"]) for item in trace]
+    output_lengths = [len(item["output_suffix"]) for item in trace]
     result = {
         "external_source_commit":"1929f57df4dd7afcc11c3f458e20526fd1f991e0",
         "external_source_file":"BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean",
         "initial":{"n":"1975700577069254261393123959451562008800234946348086","suffix":[]},
         "a_step2_count":107, "checkpoint_steps":sorted(CHECKPOINTS),
         "branch_counts":counts,
+        "affine_offset_distribution":offset_counts,
+        "argument_distribution":argument_counts,
+        "unique_input_suffixes":unique_inputs,"unique_output_suffixes":unique_outputs,
+        "input_suffix_length_range":[min(input_lengths),max(input_lengths)],
+        "output_suffix_length_range":[min(output_lengths),max(output_lengths)],
         "total_branch_counts_including_finish":{"A":0,"E":53,"B":55},
         "final_before_finish":{"n":str(n),"suffix":suffix,"n_mod3":n%3},
         "steps":trace,
@@ -218,6 +235,8 @@ def main():
     print("ALL 11 CHECKPOINTS MATCH")
     print("A_step2 branch counts:", counts)
     print("Including final finish:", result["total_branch_counts_including_finish"])
+    print("Affine offsets:", offset_counts)
+    print("Unique input/output suffixes:", unique_inputs, unique_outputs)
     print("Final pre-finish section:", result["final_before_finish"])
     print("Trace written:", path)
 
