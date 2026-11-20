@@ -229,3 +229,19 @@ from the two U5 equations and the q=0 parent form, and composes with the root-in
 The exact updated parameter-bridge blob `f08d837cd2c0afed92e040541410ffde8c330b53` compiles locally under Lean 4.36.0-rc2; all nine printed declarations have axiom profile `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
 
 **Remaining source gap:** this theorem still assumes that the same candidate supplies the U5 equations, the q=0 parent form, the B2 affine relation, and the root-index cylinder. It does not derive those premises from an arbitrary blank-start B2 reach, and it does not compile the full `U5B2Root32.lean` import closure. The root32 blank-start exclusion remains intermediate; no CI was dispatched.
+
+
+## 2026-11-20 stronger root32 composition
+
+The standalone bridge now derives the B2-style affine quotient instead of assuming it. From the U5 residual equations, the q=0 parent form, `w=6657+8192*r`, and `r%64=32`, theorem `u5_q0_root32_forces_h8_parameter` proves
+
+```lean
+∃ u t, h=8+128*u ∧ u=1802+6720*t ∧
+  18018+211*u+22155*r=20*2^(E-13)
+```
+
+The key arithmetic step is that the exact residual identity with `t=39+64*h`, combined with `w=6657+8192*r`, forces `h%128=8`. Taking `u=h/128` then gives `t=551+8192*u`; the exact root equation and the existing modulo-64/modulo-105 bridge yield the progression. The theorem therefore no longer assumes `h=8+128*u` as an input.
+
+Exact updated parameter-bridge blob: `34f925c6860984e7a356538be97e6fa3f912bb4e`. It compiles locally with Lean 4.36.0-rc2; all ten axiom reports are `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
+
+Remaining gap: this still assumes the same candidate's U5 residual equations, q=0 parent shape, affine root residue, and root-index class. It derives the q=0 quotient `u`, but no source theorem yet identifies that quotient with the parameter of the separate B2 target family. Full `U5B2Root32.lean` closure remains uncompiled.
