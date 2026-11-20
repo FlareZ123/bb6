@@ -272,9 +272,11 @@ the post-graft open set as
 On P4, `agent27P4_exact_open_partition` reduces this to the complement of
 the five-slot source cylinder. `agent27_leaf_closed` states that every
 source-compatible machine was open in the old physical audit and is closed
-by the graft, while source-incompatible completions remain open. The wrapper
-also retains the audit's exhaustive decided/open contract and total mass
-conservation.
+by the graft; within this P4 parent, every source-incompatible completion
+remains open. Globally, the exact equivalence above preserves every
+source-incompatible completion that was already open in the old audit. The
+wrapper also retains the audit's exhaustive decided/open contract and total
+mass conservation.
 
 The older seven-slot `SecondWordLeafGraft.lean` remains useful as a
 distinct translated-cycle sibling, but is no longer the primary target:
