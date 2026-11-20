@@ -128,3 +128,63 @@ This form exposes the complete dispatcher as a three-step recurrence
 plus an explicit valuation correction. It does not by itself prove the
 authentic root prefix, compile the Lean dependency closure, or establish
 a universal BB(6) upper bound.
+
+
+## Exact popcount of the authentic terminal index
+
+The valuation correction in the dispatcher cost can be made explicit for
+this entire q4Tail family. For \(A\ge2\), write
+\[
+N=2^A(2^{L+2}-1)-3
+  =(2^{L+2}-2)2^A+(2^A-3).
+\]
+The lower block satisfies
+\[
+2^A-3=1+\sum_{j=2}^{A-1}2^j,
+\]
+so it has exactly \(A-1\) one-bits (the sum is empty when \(A=2\)).
+The upper block satisfies
+\[
+2^{L+2}-2=\sum_{j=1}^{L+1}2^j,
+\]
+so its shift by \(A\) has exactly \(L+1\) one-bits, all above the lower
+\(A\)-bit block. There is no carry or overlap. Therefore
+\[
+\boxed{s_2(N)=A+L.}
+\]
+For the authentic root \(L=76\), this is \(s_2(N)=A+76\), independently
+of the enormous value of \(A=\texttt{rootMarker1A}\).
+
+Consequently, with \(a_0=U\), \(b_0=R\), and
+\[
+m_{i+1}=(m_i+2)\bmod3,\qquad
+a_{i+1}=a_i+b_i+\begin{cases}1&m_i=0,\\2&m_i\ne0,\end{cases}
+\qquad b_{i+1}=2^{b_i}-1,
+\]
+the complete dispatcher cost is exactly
+\[
+C_{\rm dispatch}
+=31N-12(A+L)
+ +\sum_{i=0}^{N-1}
+   (6\cdot4^{b_i}+42\cdot2^{b_i}+12a_i-9b_i).
+\]
+Here \(m_0=0\), \(U=K+n-1\), \(R=2^{n-1}-1\), and \(E=a_N\).
+
+Using the closed all-ones drain cost and
+\(\operatorname{terminalMoves}(W,E)=59+12(W+E)\), the conditional
+Attainable score from the authentic root simplifies further to
+\[
+S=C_{\rm root}
+ +6\cdot4^{n-1}+42\cdot2^{n-1}
+ +31N
+ +\sum_{i=0}^{N-1}
+   (6\cdot4^{b_i}+42\cdot2^{b_i}+12a_i-9b_i)
+ +12E-12n+54,
+\]
+where \(W=A+L+2\) and
+\(C_{\rm root}=\texttt{rootToSecondQ4Cost}
+ +\texttt{rootSecondQ4TailPrefixCost}\).
+The constant \(54\) includes the \(+7\) champion-attainability
+correction. This is an exact algebraic simplification of the source
+score expression; it does not upgrade the uncompiled root/dispatcher
+composition to an accepted theorem.
