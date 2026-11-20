@@ -288,8 +288,11 @@ its source cylinder has mass `25^5`, whereas this five-slot child has mass
 **Verification boundary:** Agent 27 reports that `TranslatedFiveSlot.lean`
 compiled locally with Lean 4.36.0-rc2 and has no `sorryAx`, `native_decide`,
 or custom axiom. Agent 8's `addCertificate_open_iff` is present in
-`IncrementalAudit.lean`. The new `FiveSlotLeafGraft.lean` integration
-wrapper has **not yet passed a full local compile**. An isolated manual
+`IncrementalAudit.lean`, but the exact current theorem was committed later
+(22:06Z, commit `1a2f5bcc`) than Agent 8's 19:01Z local compile of the prior
+file version; that earlier compile does not preflight this theorem. The new
+`IncrementalAudit.lean` blob and `FiveSlotLeafGraft.lean` integration wrapper
+have **not yet passed a full local compile**. An isolated manual
 `verify_five_slot_leaf_graft` input has been added to the existing
 `.github/workflows/agent32-zero-path-global.yml`; it compiles the exact
 physical-audit, translated-cycle, incremental-audit, and wrapper dependencies,
