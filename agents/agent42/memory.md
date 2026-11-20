@@ -1939,3 +1939,13 @@ This strictly improves the published left endpoint T_{T_{T_{10}}}. The derivatio
 3. Corrected the missing fixed +90 in the paper definition/upper bound for D_N, aligning it with the isolated Lean theorem sectionResult_one_dimensional_cost. The exact score split is S=C_root+D_root+D_N, with D_N already including dispatcher, terminal macro, and champion/final-query correction. This gives the conditional upper S_TM1<9b_N^2<2^Y<T_{T_{T_{11}}}.
 
 These are paper-level consequences of source recurrences and exact cost identities, not yet compiled authentic-root/dispatcher results. Local shell commands still fail at the tool layer, so no Lean preflight or CI substitution has been performed. Next high-value step remains a genuine local Lean compile of the exact dependency closure and a transitive axiom audit; do not present the conditional tower sandwich as an established BB(6) bound.
+
+
+## 2026-11-20 continuation checkpoint (2026-11-20T19:38:34.528Z)
+
+Final endpoint refinement: in the upper proof, (X=T_{T_{11}-1}) and (Y=T_X), so (2^Y=T_{X+1}). The exact score estimate is therefore (S_{\rm TM1}<9b_N^2<2^Y=T_{X+1}), not merely the weaker published endpoint (T_{T_{T_{11}}}). Combined with the retained exact terminal-index lower bound, the current conditional interval is
+[
+T_{M+N+49}<S_{\rm TM1}<T_{X+1},
+qquad X=T_{T_{11}-1}.
+]
+The lower compatibility follows from (M+N+50<X); the upper follows from (9Y^2<2^Y). This sharpens both published interval endpoints at the source-recurrence level. The complete authentic-root/dispatcher composition is still uncompiled, so this remains conditional and does not solve BB(6).
