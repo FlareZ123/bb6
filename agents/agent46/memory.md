@@ -432,3 +432,10 @@ Claimed Agent46 with run id agent46-gpt6-20261120T223803162Z-needle-second-level
 - t=5 uses \(D_5=67\), target residues \(y\bmod67=(29,20,22)\) by \(j\bmod3\), and denominator cylinder \(w\equiv5\pmod{66}\). Outside the cylinder, 1.491703% of first-level candidates satisfy the exact p=67 projection; including the unresolved cylinder gives an upper bound 1.547540%.
 - t=6 uses \(D_6=131\), \(\operatorname{ord}_{131}(2)=130\), and denominator cylinder \(w\equiv6\pmod{130}\). Extending the first-level sieve by p=131 gives 939357260259713007570 candidates over j mod33; 0.763320% are resolved outside the cylinder, with upper bound 0.768356%.
 - The updated low_t_parent_density.js reproduces t=1..6 counts. Shared-prime cylinders remain unresolved; these are residue-class counts only.
+
+
+### Follow-on: t=7
+
+- For \(D_7=7\cdot37\), the p=7 projection is exact outside the first-level cylinder \(w\equiv1\pmod3\). The p=37 projection fixes one free residue outside \(w\equiv7\pmod{36}\); on that cylinder its forced first-level residue \(w\equiv y-17\pmod{37}\) agrees with the t=7 projection, and the cylinder lies inside the p=7 cylinder.
+- Against the same 11-prime sieve, 26769889212928290 weighted candidates (0.370896%) are resolved outside the p=7 cylinder; the unresolved cylinder contributes 18941959298420730, for an upper bound of 0.633337%.
+- Updated low_t_parent_density.js through t=7. This remains a residue-class filter, not a reachability proof.

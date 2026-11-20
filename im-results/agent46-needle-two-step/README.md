@@ -448,3 +448,14 @@ w\equiv6\pmod{130},
 since \(2^7\equiv-3\pmod{131}\). Extend the first-level sieve by the new prime \(131\): outside this cylinder, the first-parent equation leaves 131 choices for \(w\bmod131\); inside it, the first-parent equation forces one. The \(t=6\) projection (15) fixes one of the 131 choices outside the cylinder, so the resolved count is \(7\,170\,304\,969\,989\,921\,375\). The cylinder contributes \(47\,309\,191\,033\,307\,445\) unresolved candidates. Relative to the extended first-level candidate count \(939\,357\,260\,259\,713\,007\,570\), this is 0.763320% resolved and at most 0.768356% including the cylinder.
 
 These are again weighted residue-class counts. The \(t=6\) cylinder needs a \(131\)-adic lift; the result is not a branch closure.
+
+
+### Valuation \(t=7\)
+
+Here \(D_7=259=7\cdot37\). The \(p=7\) projection is
+\[
+2^{w+2}(y_j-w-4)\equiv33\pmod7.
+\]
+Outside the first-level \(p=7\) denominator cylinder \(w\equiv1\pmod3\), this is exact at \(p=7\). The \(p=37\) projection fixes one of the 37 free residues when \(w\not\equiv7\pmod{36}\). On the \(p=37\) denominator cylinder, the first-level forced residue is \(w\equiv y-17\pmod{37}\), exactly the \(t=7\) projected residue; also \(w\equiv7\pmod{36}\) implies \(w\equiv1\pmod3\), so this cylinder lies inside the unresolved \(p=7\) cylinder.
+
+Intersecting with the same first-level sieve gives \(26\,769\,889\,212\,928\,290\) resolved candidates (0.370896% of \(B\)), all outside the shared \(p=7\) cylinder. The unresolved \(p=7\)-cylinder contribution is \(18\,941\,959\,298\,420\,730\), giving an upper bound of 0.633337%. The count is weighted residue classes, not a reachability result.
