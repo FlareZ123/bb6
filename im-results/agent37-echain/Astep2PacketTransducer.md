@@ -65,7 +65,7 @@ The E-two reset is therefore not one fixed-tail case: it includes a \(q=3\), sho
 
 ## Complete packet lifecycle
 
-The full 107-call chain after call 11 is parsed by:
+The 96 calls after call 11 are parsed by:
 1. B edges for \(q>0\);
 2. E edges for \(p\ge3\);
 3. the E-zero rule above;
