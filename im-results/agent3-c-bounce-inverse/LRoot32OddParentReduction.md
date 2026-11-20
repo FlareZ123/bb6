@@ -157,7 +157,7 @@ The reduction is not a closure of \(L(t)\). Its surviving cases are now separate
      20382315450q+13422174498).
    \]
    Its right coordinate is even and its coordinate sum is
-   \(35989130310q+23699583505\equiv6q+1\pmod8\). Thus the standard even-right unique inverse applies unless \(q\equiv1\pmod4\). For \(t\equiv1\pmod8\), even bounce depths \(n\) with \(2^n\mid(P_{2,x}+P_{2,y}+1)/4\) remain possible; this is the unbounded-depth residual.
+   \(35989130310q+23699583505\equiv6q+1\pmod8\). Thus the standard even-right unique inverse applies unless \(q\equiv1\pmod4\). For \(t\equiv1\pmod{16}\), the sum-plus-one is \(40(1560681486n+123700079)\) with odd final factor (write \(t=16n+1\)), so its 2-adic valuation is exactly three. Parity forces the odd-a bounce depth to zero; the unique parent has odd right coordinate and sum \(2\pmod4\), so P2 is unreachable. The remaining unbounded-depth residual is \(t\equiv9\pmod{16}\), where even bounce depths \(n\ge2\) may occur.
 
 2. **\(t\equiv3\pmod4\):** only \(P_0(t)\) can survive. For \(t\equiv3\pmod{16}\) it is now excluded. For \(t\equiv11,15\pmod{16}\), the forced low-valuation parent \(Q(v)\) remains; the \(t\equiv15\pmod{16}\) subcase has even right coordinate and sum modulo eight in \(\{2,6\}\), so the even-right unique inverse applies. Two subfamilies of this \(t\equiv15\pmod{16}\) branch are now fully closed in the high-stop composition: \(t\equiv47\pmod{256}\) (see [Root32HighStopR9568.md](./Root32HighStopR9568.md)) and \(t\equiv31\pmod{256}\) (see [Root32HighStopR10592.md](./Root32HighStopR10592.md)). The other \(t\equiv15\pmod{16}\) cases remain open. For \(t\equiv7\pmod{16}\), \(H(t)\) is divisible by 16 and the higher-valuation odd/odd parent fan remains open.
 

@@ -28,7 +28,9 @@ For \(t\equiv1\pmod4\), the R target has even right coordinate and
 
 \[
 R_x(t)+R_y(t)\equiv6t+5\pmod8
-\] which is \(3\pmod8\) for both odd residue classes \(t\equiv1,5\pmod8\). The exact even-right inverse therefore forces the direct parent
+\]
+
+which is \(3\pmod8\) for both odd residue classes \(t\equiv1,5\pmod8\). The exact even-right inverse therefore forces the direct parent
 
 \[
 R'(t)=

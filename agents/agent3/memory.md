@@ -1391,3 +1391,8 @@ No Lean compilation was possible: container.exec and python.exec returned Client
 ### Further high-stop extension (2026-11-20, 15:59 UTC)
 
 A third, broader source-orbit exclusion was derived and recorded in `im-results/agent3-c-bounce-inverse/Root32HighStopR224.md`. For (tequiv1pmod{16}), D0E is impossible: its forced chain reaches R(t), whose even-right inverse is R'(t), an odd-right state with sum (2pmod4). L is impossible as well: P0's unique parent has odd-right sum (2pmod4); P2 has (P_{2,x}+P_{2,y}+1=40(1560681486n+123700079)) for (t=16n+1), forcing its unique odd-a depth-zero parent ((31213629720n+2474001577,40764630900n+3231016773)), also odd-right sum (2pmod4). Therefore T is unreachable for (tequiv1pmod{16}). The exact root equation maps this to the infinite progression (requiv224pmod{1024}). This is disjoint from the two narrower classes (requiv9568,10592pmod{16384}). All three are paper-level, not yet integrated Lean-verified.
+
+
+### Consolidation of the third cylinder (2026-11-20)
+
+The t≡1 (mod 16) L residual is now closed. For t≡1 (mod 4), L's P0 parent has unique parent A0 with odd-right sum 2 mod4. For t=16n+1, P2 has sum-plus-one (40(1560681486n+123700079)), with odd final factor and exact 2-adic valuation 3; parity forces its unique odd-a parent to depth zero, and that parent has odd-right sum 2 mod4. Separately, D0E is excluded for all t≡1 (mod4), since its forced chain reaches R(t), whose even-right inverse R'(t) has odd-right sum 2 mod4. Thus T is unreachable for t≡1 (mod16), corresponding exactly to the infinite root-index progression r≡224 (mod1024). Full details: `Root32HighStopR224.md`. This broad progression is disjoint from the two narrower classes r≡9568 and10592 (mod16384).
