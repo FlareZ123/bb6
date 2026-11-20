@@ -76,7 +76,7 @@ both retain `p=3`, the A quotient is `r=1`, and the endpoint is
 preflight and original-source CI. Do not
 use the separate `L(24972,2,2)` arithmetic experiment as its continuation.
 
-An exact-table simulation of the DRegular orbit from the intended
+An independent simulation of the DRootL arithmetic step table from the intended
 `L(24956,2,2)` endpoint gives, after 86 regular transitions,
 `L(107283033157493534200791430928221345342090,5,1)`. Its unary
 parameter is congruent to 23638 modulo 59049 and to 4 modulo 9, so it is
