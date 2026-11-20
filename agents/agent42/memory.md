@@ -1759,3 +1759,8 @@ The S1 configuration after the first reset starts with exponent V7 and right cou
 ## Full-score decomposition clarification
 
 The D_N defined in SectionResultThreeCycle.md is the complete dispatcher-plus-terminal contribution after eliminating the exponent sequence. It already incorporates terminalMoves(W,E)=59+12(W+E) and the final +7 champion correction; it is not merely q4TerminalResult.cost. The exact source composition has S_full=C_root+drainCost(R,0)+D_N, with C_root including the q4Tail prefix. The lower bound D_N≥6(b_N+1)^2 comes from the final counted increment and is valid for this complete contribution. This was cross-checked against q4TerminalFrame_blank_prefix_attainable in GeneralQ4TailTerminalComposition.lean.
+
+
+### Final-increment constant in tetration corollary
+
+The dispatcher-plus-terminal lower bound is D_N≥6(b_N+1)^2, not merely 6b_N^2. Since b_N≥T_N+1, the exact conditional score bound sharpens to S_full≥6(T_N0+2)^2. Updated note and README accordingly.

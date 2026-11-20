@@ -559,11 +559,11 @@ N=2^A(2^{78}-1)-3
 
 Let \(T_1=2\), \(T_{j+1}=2^{T_j}\). For the final dispatcher, whose
 initial right counter is \(R\ge5\), the recurrence
-\(b_{j+1}=2^{b_j}-1\) gives \(b_N\ge T_N+1\). The exact dispatcher score
-contains \(6b_N^2\), and all remaining dispatcher, root-drain, and
+\(b_{j+1}=2^{b_j}-1\) gives \(b_N\ge T_N+1\). The exact dispatcher-plus-terminal score contains the final increment term
+\(6(b_N+1)^2\), and all remaining dispatcher, root-drain, and
 root-prefix terms are nonnegative. Therefore
 \[
-\boxed{S_{\rm full}\ge6\bigl(T_{N_0}+1\bigr)^2.}
+\boxed{S_{\rm full}\ge6\bigl(T_{N_0}+2\bigr)^2.}
 \]
 The simpler tower bounds in the earlier version follow from
 \(V_j\ge T_{j+3}+1\), but the displayed \(V\)-recurrence bound is stronger.
