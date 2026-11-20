@@ -263,6 +263,7 @@ The standalone Lean 4.36.0-rc2 proof is in [DrainDigitTransducerCarry.lean](Drai
 - the recursive carry invariant for every input word and every initial state;
 - the phase/parity invariant;
 - nonnegativity and the \(3^L\) output bound;
-- the exact drain formula under the parity and upper-size hypotheses, including the direct theorem `drain_transducer_exact_of_bounds` that takes only the original length conditions.
+- the exact drain formula under the parity and upper-size hypotheses, including the direct theorem `drain_transducer_exact_of_bounds` that takes only the original length conditions;
+- `runStats`, which retains the output-1 and output-2 counts and proves (0\le n_2\le n_1+n_2\le L). These are the weighted statistics (E=n_2), (R=n_1+n_2), and (D=L-2E) consumed by `SignedCoordinateNormalForm.lean`.
 
 The file compiles locally with Lean 4.36.0-rc2 and uses only Lean's core imports; no Mathlib dependency is required.
