@@ -89,6 +89,9 @@ private theorem q4TerminalDrainBound (z : Nat) :
     apply Nat.pow_le_pow_right (by decide : 0<2)
     unfold q4TerminalUnary q4TerminalPrefixBlocks
     omega
+  have hpos :
+      0<2^(q4TerminalInnerCount z-1) :=
+    Nat.pow_pos (by decide)
   unfold q4TerminalRight
   omega
 
