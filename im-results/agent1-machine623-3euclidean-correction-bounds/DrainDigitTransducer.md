@@ -238,7 +238,7 @@ If \(b_i,N_i\) are the low-\(i\)-digit input and output prefixes and \(s_i\) is 
 \]
 Starting in A, this is \(4N_i-2b_i+1=3^i\kappa(s_i)\).
 
-Now write the full input as \(b=b_0+h3^L\), with \(0\le b_0<3^L\) and \(h\in\{0,1\}\). The parity condition \(L\equiv b\pmod2\), together with \(3^i\equiv1\pmod2\), shows that the number of 1-digits among the low L digits has parity \(b_0\). Hence the number of non-1 digits has parity \(L+b_0\equiv h\pmod2\), so it is even when \(h=0\) and odd when \(h=1\). Since each input digit 0 or 2 toggles A versus the non-A states, while digit 1 leaves that phase unchanged:
+The upper size condition \(2b-1<3^{L+1}\), together with \(3^L\ge1\), implies \(b<2\cdot3^L\); hence the leading ternary digit \(h=\lfloor b/3^L\rfloor\) is in \(\{0,1\}\). Now write the full input as \(b=b_0+h3^L\), with \(0\le b_0<3^L\). The parity condition \(L\equiv b\pmod2\), together with \(3^i\equiv1\pmod2\), shows that the number of 1-digits among the low L digits has parity \(b_0\). Hence the number of non-1 digits has parity \(L+b_0\equiv h\pmod2\), so it is even when \(h=0\) and odd when \(h=1\). Since each input digit 0 or 2 toggles A versus the non-A states, while digit 1 leaves that phase unchanged:
 - \(h=0\) forces terminal state A;
 - \(h=1\) forces terminal state B or C.
 
