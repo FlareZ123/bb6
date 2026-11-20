@@ -83,30 +83,45 @@ Combining (1) and (2) with the exact score split gives
 \[
 S<6b^2+61b.
 \]
-The exact final counted increment from [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md) is already a lower bound:
+The exact final summand in the one-dimensional dispatcher-plus-terminal cost formula, derived in [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md), is
 \[
-S\ge6(b+1)^2=6b^2+12b+6.
+6\cdot4^{b_{N-1}}+42\cdot2^{b_{N-1}}+3b_{N-1}
+=6(b+1)^2+42(b+1)+3b_{N-1}.
 \]
-Since \(6b^2+61b<6(b+1)^2+49b\), the full score satisfies the sharper additive estimate
+All other dispatcher summands and the root/drain prefix costs are nonnegative, so
+\[
+S\ge6(b+1)^2+42(b+1)+3b_{N-1}.
+\]
+Since \(6b^2+61b<6(b+1)^2+49b\), the full score satisfies the sharper two-sided additive estimate
 \[
 \boxed{
-6(b_N+1)^2\le S_{\rm TM1}
+6(b_N+1)^2+42(b_N+1)+3b_{N-1}
+\le S_{\rm TM1}
 <6(b_N+1)^2+49b_N.
 }
 \tag{3}
 \]
-Equivalently, all work before and outside the final counted increment contributes fewer than \(49b_N\) additional primitive steps.
-
-The relative excess over the final counted increment is consequently bounded by
+Equivalently,
 \[
-0\le
+6b_N^2+54b_N+48+3b_{N-1}
+\le S_{\rm TM1}
+<6b_N^2+61b_N+6.
+\]
+Thus the cost outside the exact final dispatcher summand is fewer than \(7b_N-42-3b_{N-1}<7b_N\) additional primitive steps.
+
+The relative excess over the quadratic final-increment term is pinned to a narrow interval:
+\[
+\frac{7}{b_N+1}
+<
 \frac{S_{\rm TM1}}{6(b_N+1)^2}-1
-<\frac{49b_N}{6(b_N+1)^2}
-<\frac{49}{6b_N}
+<
+\frac{49b_N}{6(b_N+1)^2}
+<
+\frac{49}{6b_N}
 \le\frac{49}{6\cdot63\cdot2^{256}}
 <1.2\times10^{-78}.
 \]
-This identifies the final counted increment as the score's leading term with a tiny explicit additive remainder. It may be useful when comparing the champion's score with other long-running machines.
+This identifies not only the quadratic leading term but also its linear correction to within fewer than \(7b_N\) steps. It may be useful when comparing the champion's score with other long-running machines.
 
 ## Evidence boundary
 
