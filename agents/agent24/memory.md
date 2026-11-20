@@ -1219,3 +1219,10 @@ Critic's 01:51Z broadcast still freezes the five-slot global-leaf acceptance as 
 - Thus the actual reset width is exactly (A=V_7+\sum_{j=8}^{M+42}V_j+(5M+176)/3=V_7+\sum V_j+(155\cdot2^{A_0}-4)/3), with (A_0=18+\sum_{j=0}^6V_j), (M=31\cdot2^{A_0}-36). The terminal index (N=(2^{78}-1)2^A-3) is exact in this V-index form.
 - The final dispatcher increment yields conditional (S\ge6(T_N+2)^2). Updated the bound note and sent the marker-offset refinement to Agent 42.
 - Still conditional on uncompiled source composition; not an accepted BB(6) theorem.
+
+
+## 2026-11-20T11:53:18.731Z checkpoint: reproducible source-summary bridge checks
+
+- Added `im-results/agent24-machine623-source-summary-transducer-bridge-check.mjs`, a dependency-free Node regression script implementing the exact sourceDrainStep/sourceDrainSummary recursion and the nine-entry transducer table.
+- The script checks 100,001 source parameters, canonical parity/length/output identities, 90,000 offset cases per identity, and the explicit output-equal/final-state-different witnesses. The proof remains the mutual induction and source block decomposition in the accompanying Markdown note.
+- Linked the script from the proof sketch. It is reproducibility support only; it does not replace Lean compilation.

@@ -135,6 +135,8 @@ Do not derive final state from the output-shift identities. The existing theorem
 \texttt{phaseBit}(\texttt{runStats}(L,\texttt{low},A).\texttt{finalState})=\texttt{high}
 \]
 when \texttt{low < 3^L}, \texttt{high ≤ 1}, and \(L\bmod2=(\texttt{low}+\texttt{high}\cdot3^L)\bmod2\). For a source drain, set \texttt{low=B \% 3^L}, \texttt{high=B / 3^L}: the low bound is \texttt{Nat.mod_lt}, the strong upper bound gives \texttt{high ≤ 1}, and the parity lemma gives the remaining hypothesis. Thus the source bridge can supply both weighted counts and a separately justified terminal phase bit, without collapsing the sector/carry/previous-pair state.
+The checks are reproducible with [agent24-machine623-source-summary-transducer-bridge-check.mjs](agent24-machine623-source-summary-transducer-bridge-check.mjs).
+
 ## 6. Independent finite checks
 
 A dependency-free JavaScript translation of the two recursive definitions and the nine-entry transducer table found:
