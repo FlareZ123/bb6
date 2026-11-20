@@ -20,12 +20,13 @@ function transduce(b) {
   const L = depth(b);
   let state = 0; // A
   let x = b, N = 0n, place = 1n;
-  let R = 0, e = 0, Delta = 0;
+  let R = 0, e = 0, Delta = 0, lastOut = -1;
   for (let i = 0; i < L; i++) {
     const digit = Number(x % 3n);
     x /= 3n;
     const [out, next] = table[state][digit];
     state = next;
+    lastOut = out;
     N += BigInt(out) * place;
     place *= 3n;
     if (out !== 0) R++;
@@ -33,7 +34,7 @@ function transduce(b) {
     if (out === 1) Delta++;
     if (out === 2) Delta--;
   }
-  return {L, N, R, e, Delta};
+  return {L, N, R, e, Delta, state, lastOut};
 }
 
 let tested = 0, maxL = 0;
@@ -43,6 +44,10 @@ for (let b = 1n; b <= 10000n; b++) {
   if (z.N !== expected) throw new Error(`N mismatch at b=${b}`);
   if (4n * z.N !== 2n * b - 1n + 3n ** BigInt(z.L))
     throw new Error(`identity mismatch at b=${b}`);
+  const expectedTerminal = b < 3n ** BigInt(z.L) ? 0 : 1;
+  if (z.state !== undefined && z.state !== expectedTerminal)
+    throw new Error(`terminal state mismatch at b=${b}`);
+  if (lastOut === 0) throw new Error(`zero leading digit at b=${b}`);
   tested++;
   if (z.L > maxL) maxL = z.L;
 }
