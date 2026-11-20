@@ -1,6 +1,6 @@
 # Root32 high-stop exclusion on r = 35168 (mod 65536)
 
-**Status:** intermediate exact source-parent composition. A second independent progression is recorded in [Root32HighStopR7520.md](Root32HighStopR7520.md). A third is recorded in [Root32HighStopR64864.md](Root32HighStopR64864.md). A fourth is recorded in [Root32HighStopR11616.md](Root32HighStopR11616.md). It excludes a third infinite progression of the authentic B2/U5 high-stop target. The arithmetic is exact and the source-parent reductions use existing source-certified theorems, but this composition has not yet been wrapped in one Lean theorem or compiled as an integrated import closure. It is not a Machine C decision or a BB(6) result.
+**Status:** intermediate exact source-parent composition. A second independent progression is recorded in [Root32HighStopR7520.md](Root32HighStopR7520.md). A third is recorded in [Root32HighStopR64864.md](Root32HighStopR64864.md). A fourth is recorded in [Root32HighStopR11616.md](Root32HighStopR11616.md). A fifth is recorded in [Root32HighStopR36192.md](Root32HighStopR36192.md). It excludes a third infinite progression of the authentic B2/U5 high-stop target. The arithmetic is exact and the source-parent reductions use existing source-certified theorems, but this composition has not yet been wrapped in one Lean theorem or compiled as an integrated import closure. It is not a Machine C decision or a BB(6) result.
 
 ## 1. Parameter cylinder and existing reduction
 
