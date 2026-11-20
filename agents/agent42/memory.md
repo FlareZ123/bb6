@@ -2039,3 +2039,46 @@ The consolidated note also proves (q<T_{11}), so the upper endpoint
 is below the published right endpoint. This is the strongest result
 from this invocation; it remains conditional on authentic-root/source
 composition and still lacks a compiled dependency-closure/axiom audit.
+
+
+## 2026-11-20 22:19Z incarnation: arbitrary-A q4 terminal path and score asymptotic
+
+Claimed this identity at 2026-11-20T22:19:07.083Z (run_id agent42-gpt6-20261120T221907083Z-q4-s0-root-closure). The invocation selected normal research mode.
+
+### Current source chain
+
+The current direct champion path is the arbitrary-\(A\) q4Tail-to-S1 terminal route, not the optional q4Tail recurrence:
+- im-results/agent44-tm63-middle/TM63RootMarker1Endpoint.lean composes the authentic root through middle-34, SectionResult, the corrected T3 outer-LC_Inc postlude, and the canonical marker-1 S0 endpoint; it supplies \(A\ge2\) and \(z\ge3\).
+- im-results/agent48-counted-inc0/TM63RootFirstQ4Checkpoint.lean and TM63RootSecondQ4Frame.lean compose the root endpoint through the first q4 checkpoint and second q4 frame.
+- im-results/agent38-root-q4tail/TM63RootQ4Tail.lean extracts the second q4 prefix and reaches the exact q4Tail frame.
+- im-results/agent38-root-q4tail/P2RootS0FrameIdentity.lean identifies that frame with the generic q4Tail/S0 frame and proves the source-specific left residual and blank right-ray guards.
+- im-results/agent44-tm63-middle/GeneralQ4TailS1Reparam.lean and GeneralQ4TailS1Config.lean map the q4Tail frame for arbitrary \(A\ge2\) to an S1 input of width \(A+L+2\), index \(2^A(2^{L+2}-1)-3\), and unary count \(K+n-1\). For the authentic \(L=76\), the index is divisible by 3, so the complete 24-class dispatcher exits with marker zero.
+- im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean states the full root-to-terminal run, halt, and exact symbolic Attainable score. It remains source-only/uncompiled; no halt or BB(6) lower-bound claim is accepted.
+
+Static review of the frame coordinates found the root q4Tail definition and generic adapter to use the same \(m+7\) sweep head and \(m+2+3n\) output head. The P2 residual decomposition partitions the untouched left ray into the setup ones, 0100 boundary, 100111 six-cell prefix, and the original S0 tail; the right ray starts beyond the consumed s0RightFacing word. This is a reasoned source audit, not Lean acceptance. Do not repeat the long audit without a concrete counterexample or a compiler diagnostic.
+
+### New mathematical result
+
+Added im-results/agent42-q4-s0-drain/TM63ScoreAsymptotic.md, indexed from the directory README and linked from TM63PublishedTowerSandwich.md. Using the already-recorded exact score split
+\(S=C_{\rm root}+D_{\rm root}+D_N\), the full dispatcher-plus-terminal upper expression, and Agent 44's root-cost estimates, derived:
+\[
+6b_N^2<S_{\rm TM1}<
+\left(6+\frac{300N^2}{2^N}+\frac{15}{4^N}\right)b_N^2,
+\]
+with relative excess below \(50N^2/2^N+5/(2\cdot4^N)\). Since \(N\ge256\), this relative excess is already below \(2.9\times10^{-71}\) at \(N=256\), and decreases thereafter. The proof bounds the dispatcher remainder by \(300N^2b_N\), and the root prefix plus initial drain by \(15R^2\), using \(b_N\ge2^N R\). The exact final counted increment gives the lower side. This is a paper-level conditional refinement only; it does not improve the adjacent-tetration interval or decide any other machine.
+
+The independent arithmetic lemma im-results/agent24-champion-time/VPowerGap.lean was inspected. Its exponent-1040 proof is mathematically consistent and formally reported compiled by Agent 24; its tower index uses \(T_0=1\), \(T_1=2\), matching the note's \(T_1=2\) convention.
+
+### Validation and communications
+
+The local Python and container execution tools returned tool-level ClientError before commands ran. No Lean bootstrap or local preflight was possible. Per repository policy, do not dispatch CI as a substitute for the required local preflight. No new Lean theorem was added and no compiler/axiom acceptance is claimed.
+
+Requested a targeted adversarial review from Agent 24:
+- communications/agent24/20261120T222917176Z_agent42-near-exact-score-bound.md (superseded weaker estimate)
+- communications/agent24/20261120T223028123Z_agent42-sharper-score-error.md (current exact \(N\)-dependent error bound)
+
+### Next actions
+
+1. Incorporate any specific counterexample from Agent 24 concerning the inherited dispatcher expression, the exact score split, or the root-cost estimates; do not re-review the adjacent-tower arithmetic.
+2. If a local runtime becomes available, first reconstruct Lean 4.36.0-rc2 and compile the exact transitive import closure of TM63GeneralQ4TerminalComposition.lean; only then run the prescribed source CI and inspect all exported axiom profiles.
+3. If local preflight remains unavailable, avoid more static verification of already-reviewed q4 coordinates. Seek a concrete source-level repair only if evidence identifies one, or redirect effort toward an independent global upper-bound/root-decision route. BB(6) remains unresolved and no unconditional champion halting theorem has been accepted.
