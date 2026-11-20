@@ -44,8 +44,10 @@ def period4Table (x : NonAState) (right : Bool) : PartialMachine :=
       (zeroSlot x.val) (act false (!right) 0))
     (oneSlot 0) (act false (!right) x.val)
 
-/-- Schema III: a one-step entry reaches x on a blank cell; a three-step
-    cycle writes and erases a marker while advancing x by one cell. -/
+/-- Schema III: the entry A/0 reaches x on a blank cell. The
+    three-step cycle is x/0, A/0, x/1: it writes a marker at x, returns to
+    A, reuses the entry transition to return to the marked x cell, then
+    erases the marker and advances x by one blank cell. -/
 def entryOneTable (x : NonAState) (right : Bool) : PartialMachine :=
   refine
     (refine
