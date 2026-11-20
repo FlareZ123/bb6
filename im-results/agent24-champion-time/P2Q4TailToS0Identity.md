@@ -1,134 +1,122 @@
-# Root-specific q4Tail-to-S0 adapter obligations
+# Root-specific q4Tail-to-S0 adapter instances
 
-**Status:** source-level coordinate derivation, not Lean-compiled or CI-accepted. This note supplies the authentic root instance for Agent 42's newly committed generic adapter, rather than duplicating that adapter's counter/right-frame proof.
+**Status:** source-level coordinate derivations, not Lean-compiled or CI-accepted. This note supplies authentic TM63 instances for Agent 42's generic adapter. It does not prove halting or determine BB(6).
 
-## Existing generic adapter
+## Generic adapter
 
 Agent 42 committed `im-results/agent42-q4-s0-drain/Q4TailToS0Frame.lean`, theorem
 `BB6Coverage.Agent42Q4TailToS0Frame.q4Tail_frame_eq_s0Config`.
 
-For a source tape T, sweep start h, and block count n, it requires exactly:
-
-1. hleft: T(h-1)=true;
-2. hres: for every i, T(h-2-i)=sideBit ell i;
-3. hright: for every i, T(h+3*n+5+i)=false.
+For sweep start h and block count n>=2, it requires exactly:
+1. T(h-1)=true;
+2. T(h-2-i)=sideBit ell i for every i;
+3. T(h+3*n+5+i)=false for every i.
 
 It then proves
 [
  frameAt (d0Sweep n T h) (h+3n) q4TailInside q4TailEnd
  = s0Config ell (n-1) (2^{n-1}-1) 0 (h+3n-5).
 ]
+The generic d0-counter and nine-cell right-frame proofs are already isolated. The remaining work is to supply the three source conditions for the authentic root.
 
-The generic counter proof and the nine-cell right suffix are therefore already isolated. The missing task is to establish these three source conditions for the authentic TM63 second-cycle input.
-
-## Root parameters and exact residual
+## Odd-q secondCyclePrefix34 branch
 
 Use the definitions in `TM63RootQ4Tail.lean` and `PositiveZFirstCycleToSecondPrefix.lean`:
-
 [
  a=2^z-1,quad n=2^a,quad m=3cdot2^z+3z+7,
 ]
 [
  h_1=m+5,quad h=h_2=m+7,quad g=h+3n,quad H=g-5=m+2+3n.
 ]
-
 Let
 [
- tail0 = replicate(4,true) ++ binDec(w,q) ++ lh.
+ tail0=replicate(4,true) ++ binDec(w,q) ++ lh,
 ]
-This is the tail passed to `firstCycleS0DrainOutput z tail0`. Define
+the tail in `firstCycleS0DrainOutput z tail0`. Define
 [
- tail1=[1,0,0,1,1,1] ++ tail0.drop(6),
+ tail_{34}=[1,0,0,1,1,1] ++ tail0.drop(6),
 ]
 [
- ell=replicate(m+2,true) ++ [0,1,0,0] ++ tail1.
+ ell_{34}=replicate(m+2,true) ++ [0,1,0,0] ++ tail_{34}.
 ]
 
-Equivalently, because tail0 starts with four ones,
+For T2=afterFirstCycleTwoZero T1 h1, the three adapter obligations at sweep start h=m+7 are:
+
+- **Left guard:** T2(h-1)=T2(m+6)=1 by the two-zero setup.
+- **Residual ray:** for residual index j, the target cell is h-2-j=m+5-j.
+  - j=0 is m+5, written 1 by setup.
+  - j=1,...,m+1 covers m+4 down to 4. The existing proof's `linearRightOnes V 5 m` supplies cells 5 through m+4; the second-cycle frame marks cell 4.
+  - j=m+2,...,m+5 gives cells 3,2,1,0, exactly 0100 from `secondCyclePrefix34End`.
+  - j=m+6,...,m+11 gives cells -1,...,-6, exactly 100111 from the same frame.
+  - j=m+12+k gives cell -7-k. These cells are outside both local frames and the left sweep, so they are the original S tape. At head m, the original left-facing index is m+7+k. Removing the d1pow(a) prefix of length 3a and the 3z+11-cell residual prefix leaves tail0 index 6+k:
 [
- tail1=[1,0,0,1,1,1] ++ (binDec(w,q) ++ lh).drop(2).
+ (m+7+k)-3a-(3z+11)=6+k.
 ]
-In particular tail1 begins with 100, exactly the guard required by Agent 44's corrected `p2S0DrainQ4Postlude`.
+  Thus the exact residual tail is tail0.drop(6), not an assumed blank suffix.
+- **Blank right ray:** the adapter asks for T2(g+5+i)=0. This ray is outside the earlier frames, sweep, and setup. The original S0 right suffix is s0RightFacing(n-1), of length 6+3n; at g+5 its index is 3n+11, already beyond that length.
 
-The intended root-specific application is
+The resulting endpoint is s0Config ell34 (n-1) (2^(n-1)-1) 0 H. Since tail34 begins 100, Agent 44's corrected `p2S0DrainQ4Postlude` and `p2PostludeFrame_typeAWindow` can follow.
+
+A useful simplification is
 [
- q4Tail_frame_eq_s0Config n ell T2 h,
+ tail0.drop(6)=(binDec(w,q) ++ lh).drop(2),
 ]
-where T2 is the tape after `afterFirstCycleTwoZero T1 h1`, and h=m+7. Its output head is H.
+because tail0 begins with four ones.
 
-## The three obligations
+## A=1 even-q branch: Type-C produces the same S0 shape
 
-### 1. Left guard
-
+Agent 49 identified the parity-correct continuation when the outer P1 width is A=1. Then
 [
- T2(h-1)=T2(m+6)=1.
+ w=L+2,qquad q=2^{L+2}-2,qquad
+ binDec(w,q)=d1 ++ d0pow(L+1).
 ]
-This is immediate from `afterFirstCycleTwoZero`, which writes h1=m+5 and h1+1=m+6 to one.
-
-### 2. Entire residual left ray
-
-For every j>=0, the target cell is
+The post-Q checkpoint V at head c has left-facing word
 [
- h-2-j=m+5-j.
+ oldLeft=[0,1,1] ++ d1 ++ binDec(w,q) ++ lh
+       =[0,1,1] ++ d1 ++ d1 ++ d0pow(L+1) ++ lh.
 ]
-The exact list ell is obtained by the following partition:
+This is exactly the Type-C input profile with tailL=d0pow(L)++lh.
 
-| Residual index j | Absolute cell | Source |
-|---|---:|---|
-| 0 | m+5 | two-zero setup writes 1 |
-| 1,...,m+1 | m+4,...,4 | the existing `linearRightOnes V 5 m` fact supplies cells 5 through m+4; the second-cycle frame marks cell 4 |
-| m+2,...,m+5 | 3,2,1,0 | `secondCyclePrefix34End` writes 0100 |
-| m+6,...,m+11 | -1,-2,-3,-4,-5,-6 | the same frame writes 100111 |
-| m+12+k, k>=0 | -7-k | unchanged original S0 tape; this is tail0 index 6+k |
-
-For the last row, the original S0 head is m. At x=-7-k its left-facing index is m+7+k. The original left stream is
+The 46-step `typeC_to_state4` endpoint is a frame centered at c-7, with inside offsets 0 through 10 and marked offsets [10,8,5,2]. In absolute coordinates it marks c+3,c+1,c-2,c-5; every other cell in [c-7,c+3] is blank. The subsequent m-cell E-scan, two-zero setup, n-block d0Sweep, and q4Tail use
 [
- d1pow(a) ++ firstCycleResidualLeft(z,tail0),
+ h_1=c+4+m,quad h=h_2=h_1+2,quad
+ g=h+3n,quad H=g-5.
 ]
-where the first two lengths are 3a and 3z+11 (the latter includes the leading 1-run and 0100 boundary). Thus the index into tail0 is
+The S0 residual begins at h-2=h1. Define
 [
- (m+7+k)-3a-(3z+11)=6+k,
+ tail_C=[1,0,0,1,0,0] ++ oldLeft.drop(8),
 ]
-using a=2^z-1 and m=3*2^z+3z+7. Therefore the exact remaining source list is tail0.drop(6). No assumption that the distant left tape is blank, and no separate inequality such as 2^z>w, is needed.
-
-The support check is straightforward: the first-cycle postlude frame is supported on absolute cells 0 through 3; the second-cycle 34-frame is supported on -6 through 4; the left sweep changes cells only from 4 through m+1; the two-zero setup changes m+5,m+6; and the later d0 sweep begins at m+7. Consequently all cells <=-7 retain the original S tape.
-
-The one sublemma worth factoring out of the existing proof is the right-one run on V: for 5<=x<=m+4, V(x)=true. The current proof already establishes this as `hfirst : linearRightOnes V 5 m`, using `s0LeftSweep_shift` on 5..m+1 and the first three one-cells of `s0RightFacing (2^a-1)` on m+2..m+4. The second-cycle frame separately gives T1(4)=true.
-
-### 3. Blank right ray
-
-For every i>=0, the required cell is
 [
- h+3n+5+i=g+5+i=m+12+3n+i.
+ ell_C=replicate(m+2,true) ++ [0,1,0,0] ++ tail_C.
 ]
-It is beyond every operation before the q4Tail frame:
-- first-cycle postlude frame: absolute support 0..3;
-- second-cycle 34-frame: absolute support -6..4;
-- left sweep: at most m+1;
-- two-zero setup: m+5,m+6;
-- d0 sweep: m+7 through g-1.
-
-So T2 at this coordinate is the original S tape. Its right-facing suffix is `s0RightFacing (n-1)`, of length 6+3n. The source-side index is
+At A=1, oldLeft.drop(8)=[1]++d0pow(L+1)++lh, so
 [
- (g+5+i)-m-1=3n+11+i,
+ tail_C=[1,0,0,1,0,0,1] ++ d0pow(L+1) ++ lh.
 ]
-strictly beyond that length. Hence the cell is blank for every i.
+In particular tail_C begins 100, again meeting Agent 44's postlude guard.
 
-## Composition unlocked
+The residual proof is direct:
+- j=0,...,m+1 gives h1 down through c+3: the setup cell h1, the m E-scan ones at c+4,...,c+m+3, and the Type-C frame's marked cell c+3;
+- j=m+2,...,m+5 gives c+2,c+1,c,c-1 = 0100;
+- j=m+6,...,m+11 gives c-2,...,c-7 = 100100 from the Type-C frame;
+- j=m+12+k gives c-8-k, outside the Type-C frame, hence oldLeft index 8+k. This is exactly oldLeft.drop(8).
 
-These three facts give the exact input to Agent 42's generic adapter. The resulting configuration is
+The left guard T2(h-1)=1 is the second setup cell. The far-right blank ray is beyond the same finite right suffix: the Type-C bridge preserves cells at and beyond c+4, the scan/setup/sweep end before g+5, and the source right stream is blank there. The full infinite-ray proof should reuse the original S0 right-suffix length rather than only the five local hzeros guards.
+
+Applying Agent 42's adapter therefore gives
 [
- s0Config ell (n-1) (2^{n-1}-1) 0 H.
+ s0Config ell_C (n-1) (2^{n-1}-1) 0 H.
 ]
-Because ell is exactly `p2ResidualLeft m tail1` and tail1 begins 100, Agent 44's `p2S0DrainQ4Postlude` and `p2PostludeFrame_typeAWindow` can be applied directly. Agent 48's `p2S0_to_next_q4Tail` then supplies the next q4Tail cycle, with
-[
- m'=H=m+2+3n,qquad n'=2^{n-1}.
-]
+This makes the A=1 Type-C route compatible with the same S0 drain/postlude interface. It exposes the remaining left word explicitly as tail_C; the terminal SectionBits continuation of d0pow(L+1)++lh is still open.
 
-This joins the existing authentic blank-root-to-second-q4Tail theorem (Agent 38) to the generic S0 adapter (Agent 42), the corrected postlude (Agent 44), and the next-cycle prefix (Agent 48). It makes the two-d0-block outer-width descent usable without inventing a blank far-left tail.
+## Composition and limits
 
-The terminal positive-z cases A=1 and A=2 remain open. No halt, exact champion score, or universal six-state upper bound follows yet.
+The odd-q branch and A=1 Type-C branch now have explicit candidate residuals for the same generic q4Tail-to-S0 adapter. After the adapter, Agent 44's S0 drain/postlude can apply because both residual tails begin 100; Agent 48's next-cycle prefix is the intended continuation. This links Agent 38's authentic blank-root-to-second-q4Tail run to the generic S0 adapter and the outer-width recurrence.
+
+The A=1 tail formula does not finish the terminal SectionBits proof. The A=2 terminal case also remains to be closed. No halt, exact champion score, or universal six-state upper bound follows from these handoffs.
 
 ## Verification boundary
 
-The derivation is source-level and not Lean-compiled. The local shell and Python execution tools returned ClientError in this invocation, and the repository's root-q4Tail dossier records that the supplied split Lean archive is incomplete. Do not dispatch CI as a substitute for exact local preflight. The next useful action is to formalize the three root obligations against Agent 42's adapter, factor the existing `hfirst` lemma if needed, and compile the exact dependency closure once a complete local Lean 4.36.0-rc2 toolchain is available.
+The supplied split files concatenate to an outer ZIP containing `lean-4.36.0-rc2-linux.tar.zst`. Extracting the ZIP alone does not install Lean; the additional step is:
+`tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean`.
+This is recorded in `AGENTS.md`. In this invocation, the local shell and Python tools returned ClientError before executing even trivial commands, so no local preflight was possible. The archive is not incomplete; the blocker is the tool boundary. Do not dispatch CI as a substitute for local preflight. All source-specific adapter instances above remain uncompiled.

@@ -1,10 +1,10 @@
 # TM63 champion reset arithmetic and counted source coverage
 
-**Current status — 18 November 2026: BB(6) remains unresolved.** The exact blank-root prefix to the published S1 configuration after 27,959 original TM63 transitions is kernel-checked in the Agent 48 root dossier. The subsequent TM63 middle countdown now has a complete **source-draft** dispatcher, but the complete import closure has not passed exact Lean compilation and no terminal blank-root continuation is established. No universal six-state upper bound or exact maximal-runtime proof exists.
+**Current status — 20 November 2026: BB(6) remains unresolved.** The exact blank-root prefix to the published S1 configuration after 27,959 original TM63 transitions remains kernel-checked in the Agent 48 root dossier. The subsequent TM63 middle countdown has a complete **source-draft** dispatcher, and an authentic blank-root source composition now reaches the second q4Tail frame. Agent 42's generic q4Tail-to-S0 adapter is committed as source; root-specific residuals have been derived for both the odd-q 34-step branch and the A=1 Type-C branch. These new root handoffs and the complete TM63 import closure remain uncompiled. The terminal A=1/A=2 continuation and the universal six-state upper bound remain open; no exact maximal-runtime proof exists.
 
 ## New positive-z first q4 checkpoint decomposition
 
-The [first q4 checkpoint decomposition](FirstQ4Checkpoint.md) factors the original TM2 run into a general S0 drain, the existing Rst1' counted macro, a second all-ones S0 drain, and a (9z+10)-step postlude. The postlude is reduced to a (3z)-cell counted sweep plus a fixed ten-step frame bridge. The full tape decomposition passes 30 raw-step test cases (8,970,870 transitions); the Lean composition and dependency CI acceptance remain in progress. This is a first-checkpoint result only, not a terminal witness or BB(6) solution.
+The [first q4 checkpoint decomposition](FirstQ4Checkpoint.md) factors the original TM2 run into a general S0 drain, the existing Rst1' counted macro, a second all-ones S0 drain, and a (9z+10)-step postlude. The postlude is reduced to a (3z)-cell counted sweep plus a fixed ten-step frame bridge. The full tape decomposition passes 30 raw-step test cases (8,970,870 transitions); the Lean composition and dependency CI acceptance remain in progress. This is a first-checkpoint result only, not a terminal witness or BB(6) solution. The second-cycle continuation has two parity branches: odd q uses the 34-step secondCyclePrefix34, while the A=1 even-q endpoint routes through the existing 46-step Type-C bridge. Agent 38's authentic blank-root source draft reaches the second q4Tail frame; Agent 42's generic q4Tail-to-S0 adapter reduces the remaining handoff to a true left guard, an exact residual left ray, and a blank right ray. Both root residuals are now explicit in [P2Q4TailToS0Identity.md](P2Q4TailToS0Identity.md): the odd-q branch preserves tail0.drop(6), and the A=1 Type-C branch exposes [1,0,0,1,0,0,1] ++ d0pow(L+1) ++ lh. Both tails begin 100 and fit the corrected S0 postlude. These root-specific adapter instances remain uncompiled; the A=1 terminal SectionBits continuation and A=2 case remain open.
 
 ## 24-cycle source coverage
 
@@ -390,7 +390,3 @@ consume from the preceding m=1,n=3 endpoint. The successor state is
 the targeted CI compile and the shared root integration complete. No exact
 BB(6) value or universal upper bound is claimed.
 
-
-## Root-specific q4Tail-to-S0 adapter instance (20 November 2026)
-
-Agent 42 has supplied the generic frame theorem. The remaining root instance is now reduced to three source conditions: the two-zero left guard, the exact residual ray, and the far-right blank ray. The exact residual is 1^(m+2) ++ 0100 ++ tail1, with tail1=[1,0,0,1,1,1] ++ tail0.drop(6); the six-cell prefix is from the 34-frame and the dropped source tail begins at the correct old left index. See [P2Q4TailToS0Identity.md](P2Q4TailToS0Identity.md). This remains an uncompiled source derivation.
