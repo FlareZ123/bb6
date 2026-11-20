@@ -1,6 +1,6 @@
 # Monotone mass indexing for the #623 moving 3-adic window
 
-**Status:** exact algebraic window-shift lemma derived from the four-sector cocycle and source-verified depth/mass bounds. The corrected shared buffer is now \(B(\ell)=34\ell+122\), giving both low- and high-end shifts in \(\{0,1\}\). This does not establish the missing middle-digit language closure or prove #623 nonhalting.
+**Status:** exact algebraic window-shift lemma derived from the four-sector cocycle and source-verified depth/mass bounds. The corrected shared buffer is \(B(\ell)=34\ell+122\); the only possible shifts are \((0,0),(0,1),(1,1)\), so the window never shrinks and grows by at most one symbol per transition. This does not establish the missing middle-digit language closure or prove #623 nonhalting.
 
 ## 1. Exact mass increment
 
@@ -133,11 +133,38 @@ Consequently the corrected source shift bound is
 This improves the previous high-end bound \(j'-j\in\{0,1,2,3\}\):
 the next window needs at most one new high digit, not three.
 
+The pair \((1,0)\) is in fact impossible. If \(k'-k=1\), then
+\(B'\ge3^k\), since \(k\) is no longer sufficient for \(B'\).
+But \(3^k>B\), so \(B^3<3^{3k}\), whence \(j\le3k\). Therefore
+\[
+3^j\le3^{3k}\le(B')^3,
+\]
+which forces \(j'\ge j+1\). The already-proved bound \(j'-j\le1\)
+then gives \(j'-j=1\). Thus the exact threshold-shift set is
+\[
+\boxed{(k'-k,j'-j)\in\{(0,0),(0,1),(1,1)\}.}
+\]
+Equivalently, writing \(w=j-k-4\) for the S-window length,
+\[
+w'-w=(j'-j)-(k'-k)\in\{0,1\}.
+\]
+The window length never decreases and increases by at most one symbol.
+
 The next required interval \([k'+2,j'-2)\) still contains the old
 output subinterval \([k+3,j-2)\), since \(k'\le k+1\) and \(j'\ge j\).
-The corrected finite diagnostic reports only shifts \((0,0),(0,1),(1,1)\);
-the source bound also permits \((1,0)\), which remains a possible
-transition until excluded by a stronger invariant.
+The corrected finite diagnostic reports exactly the same three shift
+pairs, but the threshold argument now proves that no other pair is
+possible.
+
+The window length is also unbounded along the authentic root. Minimality
+of \(k\) gives \(3^{k-1}\le B\), hence
+\(B^3\ge3^{3k-3}\), so \(j\ge3k-2\) and
+\[
+w=j-k-4\ge2k-6.
+\]
+Since the source mass grows by at least seven per transition,
+\(\ell_S\to\infty\), hence \(B\to\infty\), \(k\to\infty\),
+and \(w\to\infty\).
 
 This is an algebraic improvement to the moving-boundary interface. It
 does not prove that the output is nonmonochromatic on the overlap interval
