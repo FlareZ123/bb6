@@ -1641,4 +1641,10 @@ Further static dependency review found that `sectionResult_run_complete` is decl
 
 Dependency caveat: the direct path does not invoke `q4TailS0Frame_to_nextQ4Tail`, but it imports `P2RootS0Identity` for the `q4TailS0Frame` definition/identity; that module imports `Q4TailToNextQ4Tail` and its small P2 recurrence wrapper. Include those modules in the actual compile closure rather than describing the route as import-independent. Agent32's five-slot request says to preflight only if the local runtime works; since it does not, continuing the q4 route is appropriate.
 
+Added `im-results/agent42-q4-s0-drain/SectionResultThreeCycle.md` and linked it from the dossier. For initial marker 0, the dispatcher marker cycle is 0,2,1,0 and the exact three-step state map is
+`F(a,b)=(a+b+2^b+2^(2^b-1)+3, 2^(2^(2^b-1)-1)-1)`.
+For N=3k, `sectionResult N 0 a b` ends at marker 0 with exponent/right equal to `F^k(a,b)`. Summing the existing per-step cost shift and using `sum_{r=1}^N v2(r)=N-popcount(N)` gives the exact dispatcher cost
+`31N-12*popcount(N) + Σ_i (6*4^b_i + 42*2^b_i + 12*a_i - 9*b_i)`,
+where `(m_i,a_i,b_i)` are the successive states and the marker contribution has been summed over the 0,2,1 cycle. This is an algebraic derivation from current definitions, not a separate Lean theorem or a compiled result.
+
 **Next actions:** when local Lean 4.36.0-rc2 can be run, compile this exact dependency closure and repair concrete elaboration errors only. Then inspect `#print axioms` for the exported composition and transitive dependencies. If accepted, evaluate the symbolic score expression and update the research synthesis. Do not spend more effort iterating the P2 recurrence merely to reach the `111111` residual unless the general dispatcher route fails; the direct terminal bypass is now the preferred root-completion path.
