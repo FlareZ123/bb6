@@ -30,18 +30,22 @@ U_R=(21,12,10).
 \]
 The reset DFA rejects this output. The word 00 01 00 is also a common reset pattern for both full start rectangles and has the same synchronized final state \((0,0,-1,0)\).
 
-## Full-length moving-window counterexamples
+## Eight-symbol moving-window counterexamples
 
-The induction diagnostic uses seven-symbol windows from D33 onward. The following witnesses extend the length-three reset patterns to seven-symbol input windows, keep both the input and target x-blocks nonmonochromatic, and stay inside the full universal carry rectangle at every step. They cover all three algebraically allowed S-window shifts \((k'-k,j'-j)\in\{(0,0),(0,1),(1,1)\}\).
+Using the conservative source buffer
+\[
+B_S=\max(34\ell_S+140,\ 36\ell_S+88),
+\]
+the finite root scan from \(D_{33}\) through \(D_{10000}\) has S-window lengths 8--16. The following witnesses therefore match the **minimum observed safe-window length**, while covering all three algebraically allowed shifts \((k'-k,j'-j)\in\{(0,0),(0,1),(1,1)\}\).
 
 | Branch / sector label | Shift | Input window | High extension | Target output window |
 |---|---:|---|---|---|
-| L / LO | (0,0) | 00 02 00 10 20 00 20 | — | 11 22 01 00 20 00 20 |
-| L / LO | (0,1) | 00 02 00 10 20 00 20 | 00 | 11 22 01 00 20 00 20 00 |
-| L / LO | (1,1) | 00 02 00 02 00 00 10 | 00 | 22 01 20 02 20 00 00 |
-| R / RO | (0,0) | 00 01 00 20 10 20 00 | — | 21 12 10 00 22 11 22 |
-| R / RO | (0,1) | 00 01 00 20 10 20 00 | 10 | 21 12 10 00 22 11 22 00 |
-| R / RO | (1,1) | 00 01 00 20 00 00 20 | 00 | 12 10 00 02 20 00 02 |
+| L / LO | (0,0) | 00 02 00 10 20 00 20 00 | — | 11 22 01 00 20 00 20 00 |
+| L / LO | (0,1) | 00 02 00 10 20 00 20 00 | 00 | 11 22 01 00 20 00 20 00 00 |
+| L / LO | (1,1) | 00 02 00 00 00 00 00 10 | 00 | 22 01 20 20 20 20 00 00 |
+| R / RO | (0,0) | 00 01 00 20 10 20 00 10 | — | 21 12 10 00 22 11 22 00 |
+| R / RO | (0,1) | 00 01 00 20 10 20 00 10 | 00 | 21 12 10 00 22 11 22 00 11 |
+| R / RO | (1,1) | 00 01 00 20 00 00 20 00 | 00 | 12 10 00 02 20 00 02 20 |
 
 Each input window contains a common reset pattern by symbol 3. Every listed input and output x-block contains at least one digit different from 0 and at least one digit different from 2. The output window contains **no** common reset pattern. All intermediate carries remain within L's \([-2,2]\times[-2,2]\) or R's \([-4,1]\times[-2,2]\) rectangle.
 
