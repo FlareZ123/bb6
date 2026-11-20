@@ -126,4 +126,4 @@ if __name__ == "__main__":
     print(f"Full-cycle cases: {cycle_cases}; all 24 classes visited in each")
     print(f"Growing-right prefix cases: {growth_cases}; final right counter 127")
     print(f"Terminal finish cases: {terminal_cases}; final undefined query checked")
-    print(f"Exact simulated transitions: {steps}")
+    print(f"Successful moves plus final-query attempts: {steps}")
