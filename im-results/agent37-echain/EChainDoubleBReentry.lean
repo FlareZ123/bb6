@@ -370,8 +370,8 @@ theorem concrete_reset_double_B_to_A_source_reentry :
       2*((4*3117+3)+CryptidA.wordInc
         (BB6.Agent35MarkerA.code 0 1))+5 = 24955 := by decide
   have hARaw :
-      CryptidBoundary.run (BB6.Agent35MarkerA.aTime0 3117 0 3)
-        (BB6.Agent31PacketSource.packet 9354 0 9
+      CryptidBoundary.run (BB6.Agent35MarkerA.aTime0 3117 0 1)
+        (BB6.Agent31PacketSource.packet 9354 0 3
           BB6.Agent35K4Shapes.marker) = endpointZero 24955 := by
     have h := BB6.Agent35MarkerA.close_zero 3117 0 3
     simpa [endpointZero,hn] using h
@@ -395,15 +395,15 @@ theorem concrete_reset_double_B_to_A_source_reentry :
       (CryptidBoundary.run (bTwiceTime 48)
         (BB6.Agent31PacketSource.packet 1313 2 3
           BB6.Agent35K4Shapes.marker))
-      (BB6.Agent31PacketSource.packet 9354 0 9
+      (BB6.Agent31PacketSource.packet 9354 0 3
         BB6.Agent35K4Shapes.marker) := by
     rw [hBRaw]
     exact BB6.Padding.cfgEq_refl _
   have hA : ObsEq
-      (CryptidBoundary.run (BB6.Agent35MarkerA.aTime0 3117 0 3)
-        (BB6.Agent31PacketSource.packet 9354 0 9
+      (CryptidBoundary.run (BB6.Agent35MarkerA.aTime0 3117 0 1)
+        (BB6.Agent31PacketSource.packet 9354 0 3
           BB6.Agent35K4Shapes.marker))
-      (DRegularSource.sourceSection ⟨24972,2,2⟩) := by
+      (DRegularSource.sourceSection ⟨24956,2,2⟩) := by
     rw [hARaw]
     exact endpointZero_sourceSection 24955
   have h12 := BB6.BoundaryPadding.source_chain
@@ -424,18 +424,18 @@ theorem concrete_reset_double_B_to_A_source_reentry :
       (false::List.replicate 6 true))
     (BB6.Agent31PacketSource.packet 1313 2 3
       BB6.Agent35K4Shapes.marker)
-    (BB6.Agent31PacketSource.packet 9354 0 9
+    (BB6.Agent31PacketSource.packet 9354 0 3
       BB6.Agent35K4Shapes.marker)
     h12 hB
   have h1234 := BB6.BoundaryPadding.source_chain
     (BB6.Agent2PacketP2Reset.eTwoTime 61 0 +
       BB6.Agent37EChain.chainTime 1 41 0 + bTwiceTime 48)
-    (BB6.Agent35MarkerA.aTime0 3117 0 3)
+    (BB6.Agent35MarkerA.aTime0 3117 0 1)
     (BB6.Agent31PacketSource.packet 187 0 2
       (false::List.replicate 6 true))
-    (BB6.Agent31PacketSource.packet 9354 0 9
+    (BB6.Agent31PacketSource.packet 9354 0 3
       BB6.Agent35K4Shapes.marker)
-    (DRegularSource.sourceSection ⟨24972,2,2⟩)
+    (DRegularSource.sourceSection ⟨24956,2,2⟩)
     h123 hA
   simpa [concreteResetTime,Nat.add_assoc] using h1234
 
