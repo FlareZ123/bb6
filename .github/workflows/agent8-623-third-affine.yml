@@ -42,6 +42,18 @@ jobs:
           set -eu
           cp "../im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
           lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
+          cp "../im-results/agent41-623-3euclidean/DrainValuationNormalForm.lean" Agent41DrainValuationNormalForm.lean
+          lake env lean -o .lake/build/lib/lean/Agent41DrainValuationNormalForm.olean Agent41DrainValuationNormalForm.lean
+          cp "../im-results/agent22-623-root-ray-20k/ExactDrainCocycleSource.lean" Agent22ExactDrainCocycleSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent22ExactDrainCocycleSource.olean Agent22ExactDrainCocycleSource.lean
+          cp "../im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean" Agent1SignedCoordinateNormalForm.lean
+          lake env lean -o .lake/build/lib/lean/Agent1SignedCoordinateNormalForm.olean Agent1SignedCoordinateNormalForm.lean
+          cp "../im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitSourceBridge.lean" Agent1DrainDigitSourceBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent1DrainDigitSourceBridge.olean Agent1DrainDigitSourceBridge.lean 2>&1 | tee agent1-drain-digit-source-bridge.log
+          if grep -q 'sorryAx' agent1-drain-digit-source-bridge.log; then
+            echo 'sorryAx detected in exact source drain/correction interface'
+            exit 1
+          fi
           cp "../im-results/agent49-parity623/TernaryShiftSource.lean" Agent49TernaryShiftSource.lean
           lake env lean -o .lake/build/lib/lean/Agent49TernaryShiftSource.olean Agent49TernaryShiftSource.lean
           cp "../im-results/agent8-623-inverse/ThirdCounterAffineSource.lean" Agent8ThirdCounterAffineSource.lean
