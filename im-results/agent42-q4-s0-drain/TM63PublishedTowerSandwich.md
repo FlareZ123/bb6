@@ -94,19 +94,10 @@ Combining (4) and (8), and using monotonicity of \(T_j\),
 \[
 q:=M+N+50<T_{M+49}<T_J.
 \]
-As \(q\) is an integer, \(q\le T_J-1\). Applying (1) to the exact
-terminal right counter,
-\[
-b_N=V_{M+N+46}<T_{M+N+50}=T_q
- \le T_{T_J-1}=:W. \tag{9}
-\]
-Thus \(b_N<W\), where \(W=T_{T_J-1}>16\). For every integer
-\(w\ge16\), \(9w^2<2^w\): it holds at 16, and doubling the left
-exponential factor preserves the inequality since \(2w^2>(w+1)^2\).
-The complete-score upper estimate below will use
-\(9W^2<2^W=T_{T_J}\). Also \(J<T_{11}\), since
-\(3\sqrt{T_{10}}/4+5<T_{10}\), so this upper endpoint is strictly
-below the published \(T_{T_{T_{11}}}\).
+Thus \(q<T_J<T_{11}\), and consequently
+\(T_q<T_{T_{11}}<T_{T_{T_{11}}}\). This supplies a comparison with
+the published upper endpoint; a sharper score upper is established
+below directly from the terminal-counter recurrence.
 
 ## From the terminal counter to the complete score
 
