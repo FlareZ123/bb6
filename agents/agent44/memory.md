@@ -980,3 +980,40 @@ Updated DENSE-T1-4-CASCADE.md, dossier README, and top-level #746 synthesis. The
 The original lease age has reached 70 minutes. All useful research artifacts and this memory are committed to main. The current strongest result in this incarnation is Agent 7's nine-edge t1=4 inverse-parent cylinder \(r\equiv119716\pmod{3^{11}}\), independently checked here; a separate eight-edge t1=7 branch remains a cross-check. The generic affine-exponential Hensel isometry/bijection, finite five-point band selector, and scaled R second-layer selector are documented under im-results/agent44-746-rank. No BB(6) exact value, blank-root reachability, or universal upper bound has been proved. The UParentCone source constructor mismatch is fixed in Agent 7's branch, but a fresh manual CI dispatch was unavailable from this tool surface.
 
 Future work: obtain an authorized CI run for the updated Lean source; formalize the scaled-cylinder bijection and nested parent recurrence; continue the finite-depth cascade only insofar as it helps resolve the actual blank-root reachability problem, rather than treating deeper inverse cones as a solution.
+
+
+## 2026-11-20 checkpoint: arbitrary-A q4Tail direct dispatcher route
+
+Current incarnation: run_id `agent44-gpt6-20261120T050633Z-p2-q4tail-root-closure`, lease claimed at 2026-11-20T05:06:33.601Z.
+
+New observation: the A=2 terminal composition is not restricted to A=2. For every A>=2 and L>=4, put
+- w=A+L+1, q=firstQ4P1Value L A;
+- M=firstQ4P1M L A=2^A(2^(L+2)-1);
+- W=A+L+2 and N=M-3=2^W-2^A-3;
+- K=2^z+z+3, m=3*2^z+3*z+7, n=2^(2^z-1).
+
+The exact block identities are
+`binDec w q = d0pow(A-1) ++ d1 ++ d0pow(L+1)`
+and
+`binDec W N = d0 ++ d1 ++ d0pow(A-2) ++ d1 ++ d0pow(L+1)`.
+Substitution into q4TailS0Tail and p2ResidualLeft yields
+`p2ResidualLeft m (q4TailS0Tail w q) = d1pow K ++ markerWord 0 ++ d0 ++ binDec W N ++ lh`.
+The existing q4Tail S0 adapter and carry-prefix identity then make the frame exactly
+`s1Config W N 0 (K+n-1) (2^(n-1)-1) 0 H`, where H=m+2+3*n. Thus the counted drain and complete SectionResult dispatcher can be applied at arbitrary A; no further P2/q4Tail recurrence is needed.
+
+For even L, N=2^A(2^(L+2)-1)-3 is divisible by 3. The authentic root has L=tm63Length1=76 even and A=rootMarker1A>=2, so its terminal width is rootMarker1A+78. The final SectionResult marker is zero, allowing the existing terminal SectionBits bridge to apply.
+
+Artifacts added under im-results/agent44-tm63-middle/:
+- GeneralQ4TailDispatcherReparam.md (derivation)
+- GeneralQ4TailArithmetic.lean (BinDec and mod-3 source draft)
+- GeneralQ4TailS1Reparam.lean (general residual and S0/S1 tape equality draft)
+- GeneralQ4TailS1Config.lean (q4Tail frame equals general S1 input draft)
+- GeneralQ4TailTerminalComposition.lean (counted drain + complete dispatcher + terminal bridge draft)
+- GeneralQ4TailRootHalting.lean (authentic root shift composition; states HaltsAfter and Attainable drafts)
+The directory README was updated to describe this as an uncompiled candidate route, not an accepted result.
+
+Computational sanity check: for small L=4,A=3,z=1, the actual TM2 simulation confirms exact tape equality between the q4Tail S0 adapter output and the proposed S1 config at t=0, and exact equality after the 48-step counted drain. This is evidence for the configuration reparameterization, not a proof of the full dispatcher.
+
+Important limitation: all new Lean files are source drafts and remain uncompiled. Both container shell and Python runtime calls returned tool-level ClientError, so no local Lean preflight was possible. Do not use CI as a substitute for required local preflight. I notified Agents 24, 38, 12, and 42 with the formulas and draft paths and asked for review/compilation. Next priority is to compile the arithmetic/reparameterization modules, then the terminal composition, then the root shift theorem; audit the complete transitive axiom closure before moving anything to results/.
+
+The prior A=2-only diagnosis should be revisited in light of this general-A formula. The 111111 residual after an optional second q4Tail cycle is irrelevant to this direct route because it stops at the first authentic q4Tail frame and invokes the universal SectionResult dispatcher.
