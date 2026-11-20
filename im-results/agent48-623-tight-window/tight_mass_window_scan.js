@@ -88,7 +88,7 @@ function digitsMod3(x, length) {
   return digits;
 }
 
-function scanWindow(B, z, q) {
+function windowIndices(B) {
   let k = 0;
   let power = 1;
   while (power <= B) {
@@ -102,7 +102,11 @@ function scanWindow(B, z, q) {
     power3 *= 3n;
     j += 1;
   }
+  return { k, j };
+}
 
+function scanWindow(B, z, q) {
+  const { k, j } = windowIndices(B);
   const xDigits = digitsMod3(z, j);
   const yDigits = digitsMod3(6n * q, j);
   let state = dfa.initial_state;
@@ -126,6 +130,10 @@ function scanWindow(B, z, q) {
   };
 }
 
+function increment(map, key) {
+  map[key] = (map[key] || 0) + 1;
+}
+
 const maxStep = Number(process.argv[2] || 10000);
 let a = 0n;
 let d = 7n;
@@ -143,8 +151,15 @@ let newFirstEndHistogram = {};
 let oldLength = [Infinity, 0];
 let newLength = [Infinity, 0];
 let firstChanged = [];
+let oldTransitionShifts = {};
+let newTransitionShifts = {};
+let newRHistogram = {};
+let newRTransitions = {};
 
 for (let index = 0; index <= maxStep; index += 1) {
+  let oldWindow = null;
+  let newWindow = null;
+
   if (index >= 33) {
     const { q, S, z } = stateData(a, d);
     const ell = ellOfS(S);
@@ -152,8 +167,8 @@ for (let index = 0; index <= maxStep; index += 1) {
     const newB = Math.max(34 * ell + 122, 36 * ell + 88);
     if (newB > oldB) throw new Error("tightened bound exceeds old bound");
 
-    const oldWindow = scanWindow(oldB, z, q);
-    const newWindow = scanWindow(newB, z, q);
+    oldWindow = scanWindow(oldB, z, q);
+    newWindow = scanWindow(newB, z, q);
 
     if (!oldWindow.accepted) {
       oldFailures += 1;
@@ -167,20 +182,17 @@ for (let index = 0; index <= maxStep; index += 1) {
     if (oldWindow.k !== newWindow.k) changedK += 1;
     if (oldWindow.j !== newWindow.j) changedJ += 1;
 
-    const dk = String(oldWindow.k - newWindow.k);
-    const dj = String(oldWindow.j - newWindow.j);
-    oldMinusNewK[dk] = (oldMinusNewK[dk] || 0) + 1;
-    oldMinusNewJ[dj] = (oldMinusNewJ[dj] || 0) + 1;
+    increment(oldMinusNewK, String(oldWindow.k - newWindow.k));
+    increment(oldMinusNewJ, String(oldWindow.j - newWindow.j));
 
     oldLength[0] = Math.min(oldLength[0], oldWindow.wordLength);
     oldLength[1] = Math.max(oldLength[1], oldWindow.wordLength);
     newLength[0] = Math.min(newLength[0], newWindow.wordLength);
     newLength[1] = Math.max(newLength[1], newWindow.wordLength);
 
-    const oldEnd = String(oldWindow.firstAcceptEnd ?? "none");
-    const newEnd = String(newWindow.firstAcceptEnd ?? "none");
-    oldFirstEndHistogram[oldEnd] = (oldFirstEndHistogram[oldEnd] || 0) + 1;
-    newFirstEndHistogram[newEnd] = (newFirstEndHistogram[newEnd] || 0) + 1;
+    increment(oldFirstEndHistogram, String(oldWindow.firstAcceptEnd ?? "none"));
+    increment(newFirstEndHistogram, String(newWindow.firstAcceptEnd ?? "none"));
+    increment(newRHistogram, String(newWindow.j - 3 * newWindow.k));
 
     if (
       firstChanged.length < 10 &&
@@ -200,8 +212,32 @@ for (let index = 0; index <= maxStep; index += 1) {
     states += 1;
   }
 
-  if (index === maxStep) break;
   const next = highLevelNext(a, d);
+  if (index >= 33 && oldWindow !== null && newWindow !== null && next !== null) {
+    const nextData = stateData(next[0], next[1]);
+    const nextEll = ellOfS(nextData.S);
+    const oldNextB = Math.max(34 * nextEll + 140, 36 * nextEll + 88);
+    const newNextB = Math.max(34 * nextEll + 122, 36 * nextEll + 88);
+    const oldNext = windowIndices(oldNextB);
+    const newNext = windowIndices(newNextB);
+
+    increment(
+      oldTransitionShifts,
+      String(oldNext.k - oldWindow.k) + "," + String(oldNext.j - oldWindow.j)
+    );
+    const dk = newNext.k - newWindow.k;
+    const dj = newNext.j - newWindow.j;
+    increment(newTransitionShifts, String(dk) + "," + String(dj));
+
+    const r = newWindow.j - 3 * newWindow.k;
+    const rNext = newNext.j - 3 * newNext.k;
+    increment(newRTransitions, String(r) + "->" + String(rNext));
+    if (dk < 0 || dk > 1 || dj < 0 || dj > 1 || (dk === 1 && dj !== 1)) {
+      throw new Error("window shift violates the proved 0/1 coupled bound at " + index);
+    }
+  }
+
+  if (index === maxStep) break;
   if (next === null) break;
   [a, d] = next;
 }
@@ -221,6 +257,10 @@ const summary = {
   newWindowLengthRange: newLength,
   oldFirstAcceptEndHistogram: oldFirstEndHistogram,
   newFirstAcceptEndHistogram: newFirstEndHistogram,
+  oldTransitionShiftHistogram: oldTransitionShifts,
+  newTransitionShiftHistogram: newTransitionShifts,
+  newWindowRHistogram: newRHistogram,
+  newWindowRTransitionHistogram: newRTransitions,
   firstChanged,
 };
 
