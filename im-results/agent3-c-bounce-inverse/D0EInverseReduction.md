@@ -50,7 +50,7 @@ d_{8,x}+d_{8,y}+1\equiv4\pmod8.
 \]
 even_odd_three_divisible_parent forces an odd-a, even-depth parent. Since the sum-plus-one has exact 2-adic valuation two, that depth is zero, and the unique parent is
 \[
-(3517768800t+943341635,\;1764330960t+2921149).
+(3517768800t+943341635,\;1764330960t+473131391).
 \]
 Both counters are odd, the right counter is at least five, and their sum is \(2\pmod4\). blank_no_odd_sum_two excludes it. Hence
 \[
