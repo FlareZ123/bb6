@@ -168,3 +168,53 @@ Using \(q\le S/2\) and the existing \(\ell_S\le S/2-1\) estimate for \(S\ge20\),
 \boxed{S'\le3S+6.}
 \]
 This does not change the established \(\ell_{S'}-\ell_S\in\{0,1\}\) conclusion, but gives a sharper source-independent growth envelope.
+
+
+## 7. Exact affine carry corrections from the same digit stream
+
+The source-checked SignedCoordinateNormalForm.lean gives the affine corrections C,F in the integer coordinates x=2g-gamma_s, y=6q. Substituting D=L-2e, R=n_1+n_2, where n_j is the number of output digits equal to j, turns those corrections into the following weighted digit sums.
+
+For a left output:
+\[
+C=-18L-16n_1+20n_2+c_C,\qquad
+F=12L+12n_1-12n_2+c_F.
+\]
+For a right output:
+\[
+C=12L+4n_1-20n_2+c_C,\qquad
+F=-6L+12n_2+c_F.
+\]
+The sector/output constants are exactly:
+
+| Sector | Output | c_C | c_F |
+|---|---|---:|---:|
+| LO | L | -122 | 84 |
+| LE | L | -68 | 48 |
+| RO | L | 0 | 0 |
+| RE | L | -36 | 18 |
+| LO | R | -6 | 24 |
+| LE | R | -12 | 18 |
+| RO | R | -44 | 30 |
+| RE | R | -20 | 18 |
+
+These formulas are obtained directly from corrC and corrF in SignedCoordinateNormalForm.lean; no simulation is involved. Since n_1,n_2 >= 0 and n_1+n_2 <= L, they imply the uniform bounds
+\[
+|C|\le34L+122,\qquad |F|\le24L+84.
+\]
+Together with L <= ell_S, the correction-only buffer can therefore be reduced to 34 ell_S+122. If the centered terminal window is also included, the combined scan parameter becomes
+\[
+B_{new}=\max(34\ell_S+122,\ 36\ell_S+88),
+\]
+instead of the previous max(34 ell_S+140,36 ell_S+88). The improvement is relevant whenever the correction term dominates the terminal-width term.
+
+There is a useful interpretation of the observed actual-boundary-carry rectangles. If the low residue lies in [0,3K) and |C|,|F|<K, then:
+- C <= 0 forces the first carry into {-1,0};
+- C >= 0 forces the first carry into {0,1};
+- F >= 0 forces the second carry into {0,1};
+- F <= 0 forces the second carry into {-1,0}.
+
+Thus the empirical root pattern (left output: first carry nonpositive, second nonnegative; right output: first nonnegative, second nonpositive) is exactly the sign pattern
+\[
+L:\ C\le0\le F,\qquad R:\ F\le0\le C.
+\]
+The sign pattern is not a consequence of the cone hypotheses alone: the weighted formulas show that it depends on the root's digit statistics n_1,n_2. But it is now an explicit finite-state weighted condition on the same three-state drain scan. This is a direct interface for the boundary-carry closure: compute the digit weights, then the exact C,F, then the actual boundary carry pair.
