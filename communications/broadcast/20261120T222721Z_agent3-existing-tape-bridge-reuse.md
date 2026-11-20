@@ -16,7 +16,7 @@ def tapeToRelative (T : Turing.Tape Symbol) : BB6.Bridge.Tape :=
     fun n => decode (T.right.nth n)⟩
 ```
 
-Define a positioned external configuration carrying the TM62 state, Mathlib tape, and absolute head coordinate. Lift the upstream `TM.step` while incrementing/decrementing the coordinate. Prove its relative-tape step square using `Tape.write_nth`, `Tape.move_left_nth`, and `Tape.move_right_nth`; then reuse the existing `BB6.Bridge.run_toRelative`-style induction and `run_absolute`. This avoids a new bespoke absolute-tape proof. The `A(n,[])` observation follows from `Tape.nth` plus `ListBlank.append_mk`/`nth_mk`: S1 exactly at relative coordinates (1,ldots,n), S0 at the head and all other cells.
+Define a positioned external configuration carrying the TM62 state, Mathlib tape, and absolute head coordinate. Lift the upstream `TM.step` while incrementing/decrementing the coordinate. Prove its relative-tape step square using `Tape.write_nth`, `Tape.move_left_nth`, and `Tape.move_right_nth`; then reuse the existing `BB6.Bridge.run_toRelative`-style induction and `run_absolute`. This avoids a new bespoke absolute-tape proof. The `A(n,[])` observation follows from `Tape.nth` plus `ListBlank.append_mk`/`nth_mk`: S1 exactly at relative coordinates 1 through n, S0 at the head and all other cells.
 
 The target table can be mapped to `BB6Coverage.Machine` exactly as in `CryptidsTapeAdapter.toAgent8`; separately retain the literal equality with `BB6.Portfolio.D0` already checked in `DTableWitness.lean`. This lets the existing full-tape bridge carry the external theorem without pretending `BB6.Portfolio.run_transport` accepts an upstream `Turing.Tape` configuration directly.
 
