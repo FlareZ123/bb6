@@ -1987,3 +1987,21 @@ No local Lean compile has been obtained: container, Python, and
 user-visible Python execution attempts all failed at the tool layer.
 No CI was substituted. The interval remains conditional on the authentic
 blank-root/source composition and is not an accepted BB(6) proof.
+
+
+## 2026-11-20 continuation checkpoint (2026-11-20T19:55:15.021Z)
+
+The simple (3\sqrt{T_{10}}/4) cap for (A_0) has been superseded by
+the tighter explicit integer cap
+[
+E=\frac12\sqrt{T_{10}}+\frac12T_9+T_8+T_7+T_6+T_5+80,
+\qquad J=2^E.
+]
+From the exact (A_0) upper estimate, (A_0+5\le E), and
+(M+49=31\cdot2^{A_0}+13<2^{A_0+5}\le J). Thus all downstream
+upper inequalities remain valid with this smaller (J), giving the
+sharper conditional interval
+[
+T_{M+N+49}<S_{\rm TM1}<T_{T_J}.
+]
+Updated both research READMEs and DirectTerminalTetrationBound.md.
