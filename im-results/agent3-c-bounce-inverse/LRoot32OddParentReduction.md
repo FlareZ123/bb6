@@ -140,7 +140,7 @@ For \(v\equiv0\pmod4\), this target has even first coordinate, odd second coordi
 \boxed{t\equiv3\pmod{16}\Longrightarrow\neg CReach(L(t)).}
 \]
 
-This removes one sixteenth of the odd parameter line of the P7 direct-parent residual.
+This removes one sixteenth of all natural t, equivalently one eighth of the odd parameter line of the P7 direct-parent residual.
 
 ## 5. Remaining branches and next exact targets
 
