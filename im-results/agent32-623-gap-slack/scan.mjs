@@ -133,6 +133,15 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+const evalARegression = evalA(8n, 1n, 9n);
+assert(
+  evalARegression !== null &&
+    evalARegression.a === 6n &&
+    evalARegression.k === 0n &&
+    evalARegression.m === 14n,
+  "Lean evalA r=1 recursive branch regression"
+);
+
 const expectedPrefix = [
   ["0", "7"],
   ["6", "14"],
