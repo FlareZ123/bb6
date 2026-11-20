@@ -78,3 +78,21 @@ The phase formulas are exported explicitly as `run_cycle`,
 `run_phase_d`, and `run_phase_e`: they identify the exact configuration at
 each residue class modulo three after the two-step startup, not merely the
 existence of a run. The `run_exists` theorem then covers every finite time.
+
+## Initial physical trace
+
+The invariant is established by these first two ordinary moves and the
+first drift cycle (the listed set is the set of cells containing 1):
+
+| Moves | State | Head | 1-cells |
+|---:|:---:|---:|:---|
+| 0 | A | 0 | `{}` |
+| 1 | B | 1 | `{0}` |
+| 2 | C | 0 | `{0,1}` |
+| 3 | D | 1 | `{1}` |
+| 4 | E | 2 | `{1}` |
+| 5 | C | 1 | `{1,2}` |
+
+The Lean proof uses the repository's physical configuration semantics
+(`Config.tape : Int → Bool` and `applyMove`), not a finite-word simulator.
+Thus the drift statement is proved directly for the unbounded blank tape.
