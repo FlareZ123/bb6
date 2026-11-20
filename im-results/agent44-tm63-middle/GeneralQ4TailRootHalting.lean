@@ -21,6 +21,7 @@ open BB6Coverage.Agent38RootQ4Tail
 open BB6Coverage.Agent38RootQ4TailS0
 open BB6Coverage.Agent44GeneralQ4TailTerminal
 open BB6Coverage.Agent42RootAttainable
+open BB6Coverage.Agent42FirstQ4P1Arithmetic
 open BB6Coverage.Agent42OuterLCInc
 open BB6Coverage.Agent44TM63RootMarker1Endpoint
 open BB6Coverage.Agent48RootFirstQ4Checkpoint
