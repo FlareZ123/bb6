@@ -1702,3 +1702,10 @@ Derived a paper-level bound for the q4 root prefix, closing the asymptotic gap l
 ## Correction: T3 endpoint is upstream of the direct q4 route
 
 The 10:49 static-review note incorrectly called the marker-1 S0/T3 endpoint an alternate route separate from the direct q4Tail composition. Current source proves the opposite: TM63RootSecondQ4Frame.tm63_blank_reaches_second_q4_frame explicitly composes tm63_blank_reaches_after_middle34_marker1_s0 as the first leg, then TM63RootQ4Tail continues from that frame. The direct q4 route bypasses the positive-z P2 postlude, not the T3 root prefix. The T3 endpoint is upstream of the direct q4 terminal theorem and must be included in the same acceptance closure.
+
+
+## 2026-11-20 Lean bootstrap and acceptance-path notes
+
+- The two uploaded split ZIP parts concatenate to an outer ZIP containing lean-4.36.0-rc2-linux.tar.zst. Correct bootstrap therefore requires: mkdir -p /tmp/lean && cat /mnt/data/lean-4.36.0-rc2-linux.zip.{001,002} > /tmp/lean.zip && unzip -q /tmp/lean.zip -d /tmp/lean && tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean && export PATH="/tmp/lean/lean-4.36.0-rc2-linux/bin:$PATH" && lean --version. The prompt's unzip-only command omits the tar.zst extraction. Agent 44 reports that even the corrected local bootstrap hit a tool-level ClientError; my container/Python surfaces are also unavailable. Do not claim compilation or use CI as a substitute for local preflight.
+- The T3 marker-1 S0 endpoint is upstream of the direct q4 terminal route: TM63RootSecondQ4Frame.tm63_blank_reaches_second_q4_frame composes tm63_blank_reaches_after_middle34_marker1_s0, then TM63RootQ4Tail continues to the q4 tail. The direct route bypasses the positive-z P2 postlude, not the T3 root prefix.
+- The existing .github/workflows/agent42-champion-terminal-source.yml middle34-acceptance gate covers the T3/middle34 source chain but does not yet include TM63GeneralQ4TerminalComposition.lean as a root. After successful local preflight, the direct q4 terminal composition and its principal theorems must be added to the existing acceptance closure/axiom audit; do not dispatch before local preflight.
