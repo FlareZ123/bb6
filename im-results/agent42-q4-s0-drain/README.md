@@ -65,7 +65,7 @@ where (C_{m root}=	exttt{rootToSecondQ4Cost}+
 The final (+7) is the existing six-step champion-root offset plus
 the final undefined-query scoring correction. The q4 prefix cost includes
 the counted drain and the complete `sectionResult` dispatcher cost.
-The dispatcher also admits an exact three-increment state map and a closed 2-adic cost correction; see [`SectionResultThreeCycle.md`](SectionResultThreeCycle.md) for the recurrence and derivation.
+The dispatcher also admits an exact three-increment state map and a closed 2-adic cost correction; see [`SectionResultThreeCycle.md`](SectionResultThreeCycle.md) for the recurrence and derivation. The 2026-11-20 algebraic refinement additionally proves `popcount(N)=A+L` for `N=2^A(2^(L+2)-1)-3` (`A≥2`) and collapses the conditional Attainable score to a single weighted sum over `b_0=R`, `b_{j+1}=2^b_j-1`, with explicit polynomial correction. This is an exact algebraic reduction, not a compiled root theorem; see the final sections of [`SectionResultThreeCycle.md`](SectionResultThreeCycle.md).
 
 **Evidence boundary:** this is a source-level integration candidate, not
 an accepted halt or lower-bound result. The authentic root-to-q4Tail
