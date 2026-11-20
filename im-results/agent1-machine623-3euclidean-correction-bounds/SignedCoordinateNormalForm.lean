@@ -228,3 +228,14 @@ theorem one_extra_digit_carry_bound_closed
       have hright : 6*K ≤ 3*K*q+s := by omega
       omega
     · omega
+
+
+/-- The same K bounds both affine corrections, with equality permitted. -/
+theorem correction_buffer_closed (s : Sector) (b : Branch)
+    (L E R : Int) (hE0 : 0 ≤ E) (hER : E ≤ R) (hRL : R ≤ L) :
+    -(34*L+122) ≤ corrC s b (L-2*E) R ∧
+    corrC s b (L-2*E) R ≤ 34*L+122 ∧
+    -(34*L+122) ≤ corrF s b (L-2*E) R ∧
+    corrF s b (L-2*E) R ≤ 34*L+122 := by
+  have h := correction_count_bounds s b L E R hE0 hER hRL
+  omega
