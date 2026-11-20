@@ -20,8 +20,9 @@ def proposed_increment_cost(m: int, n: int, a: int, b: int) -> int:
 
 
 def replay_section(N: int, initial_m: int, initial_a: int,
-                   initial_b: int) -> tuple[int, int]:
-    assert N > 0 and initial_a > 0 and initial_b in (0, 1)
+                   initial_b: int, require_full_cycle: bool = True
+                   ) -> tuple[int, int]:
+    assert N > 0 and initial_a > 0 and initial_b >= 0
     L = N.bit_length()
     assert N < (1 << L)
 
@@ -42,7 +43,7 @@ def replay_section(N: int, initial_m: int, initial_a: int,
         n -= 1
         head += 5 + 3 * old_b
 
-    if len(visited_classes) != 24:
+    if require_full_cycle and len(visited_classes) != 24:
         raise AssertionError(
             f"expected all 24 (marker,residue) classes, got "
             f"{len(visited_classes)} for N={N}, m={initial_m}"
@@ -73,8 +74,27 @@ def check_cycles() -> tuple[int, int]:
     return cases, total_steps
 
 
+def check_growing_right_prefixes() -> tuple[int, int]:
+    # b=2 produces 2 -> 3 -> 7 -> 127; b=3 produces 3 -> 7 -> 127.
+    # Stop before attempting the next, astronomically larger increment.
+    cases = 0
+    total_steps = 0
+    for m in range(3):
+        for a in (1, 2):
+            for b, N in ((2, 3), (3, 2)):
+                steps, _ = replay_section(N, m, a, b,
+                                          require_full_cycle=False)
+                cases += 1
+                total_steps += steps
+    return cases, total_steps
+
+
 if __name__ == "__main__":
-    cases, steps = check_cycles()
-    print(f"TM63 24-class section replay: PASS ({cases} cases)")
-    print(f"All 24 (marker, n mod 8) classes visited in every case")
+    cycle_cases, cycle_steps = check_cycles()
+    growth_cases, growth_steps = check_growing_right_prefixes()
+    cases = cycle_cases + growth_cases
+    steps = cycle_steps + growth_steps
+    print(f"TM63 section replay: PASS ({cases} cases)")
+    print(f"Full-cycle cases: {cycle_cases}; all 24 classes visited in each")
+    print(f"Growing-right prefix cases: {growth_cases}; final right counter 127")
     print(f"Exact simulated transitions: {steps}")
