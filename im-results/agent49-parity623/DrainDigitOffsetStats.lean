@@ -6,9 +6,10 @@ open DrainState
 # Offset identities for the three-state drain transducer
 
 The two paired runs below read the same ternary suffix after their first
-symbol.  Their output digit counts agree, although their terminal states
-need not agree.  This is the finite-state offset interface needed when a
-root-sector drain input changes by one.
+symbol.  Their output digit counts and, under the strict n-digit bound, their
+exact terminal states agree.  The excluded overflow case q+1=3^n can have a
+different terminal state.  This is the finite-state offset interface needed
+when a root-sector drain input changes by one.
 -/
 
 /-- Output and digit counts, deliberately omitting the terminal phase. -/
@@ -34,8 +35,8 @@ theorem runStatsData_eq (n b : Nat) (s : DrainState) :
 /--
 Mutual offset identities.  For every n-digit suffix q, incrementing q by
 one and changing the initial transducer state B→A or A→C leaves the emitted
-integer and the counts of output digits 1 and 2 unchanged.  The terminal
-state is intentionally not included in this equality.
+integer and the counts of output digits 1 and 2 unchanged.  The exact terminal
+state equality is proved separately by the companion mutual induction below.
 -/
 theorem runStatsData_offset_identities (n : Nat) :
     (∀ q, q + 1 < 3 ^ n →
