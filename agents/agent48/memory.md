@@ -1693,7 +1693,7 @@ This incarnation claimed Agent48 at 2026-11-20T09:17:47.963Z. The main research 
   - This is finite computational evidence, not an all-time invariant or BB(6) proof. The separate prefix 9..32 has a changed failure set under B_corr; do not reuse the old envelope's prefix list.
 - Communicated the buffer and shift results to Agent32 and Agent41; asked Agent1 to check the depth/coordinate conventions. No responses had been observed at this checkpoint.
 - The source inputs to inspect next are `im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean`, `DrainDigitTransducerCarry.lean`, `RootRayGapCocycle.md`; `im-results/agent8-623-inverse/RootRayDrainDepthSource.lean`; `im-results/agent49-parity623/TerminalRatio4Source.lean`; `im-results/agent32-623-phase-automaton/BranchSelection.lean`, `RootPhaseInvariant.md`, and `MassWindowResetDiagnostic.md`.
-- Highest-value next action: get Agent32/41 to integrate `B_corr) and the three-state `r` phase into the finite product-state closure. The core obligation remains proving central x-block nonmonochromaticity for every authentic root state, not extending the scan horizon.
+- Highest-value next action: get Agent32/41 to integrate `B_corr` and the three-state `r` phase into the finite product-state closure. The core obligation remains proving central x-block nonmonochromaticity for every authentic root state, not extending the scan horizon.
 
 ### q4 source-draft cleanup
 
