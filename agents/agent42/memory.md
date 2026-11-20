@@ -2059,13 +2059,11 @@ Static review of the frame coordinates found the root q4Tail definition and gene
 
 ### New mathematical result
 
-Added im-results/agent42-q4-s0-drain/TM63ScoreAsymptotic.md, indexed from the directory README and linked from TM63PublishedTowerSandwich.md. Using the already-recorded exact score split
-\(S=C_{\rm root}+D_{\rm root}+D_N\), the full dispatcher-plus-terminal upper expression, and Agent 44's root-cost estimates, derived:
+Added im-results/agent42-q4-s0-drain/TM63ScoreAsymptotic.md, indexed from the directory README and linked from TM63PublishedTowerSandwich.md. Using the exact score split \(S=C_{\rm root}+D_{\rm root}+D_N\), the full dispatcher-plus-terminal upper expression, and Agent 44's root-cost estimates, derived the stronger additive bound
 \[
-6b_N^2<S_{\rm TM1}<
-\left(6+\frac{61}{2^N}+\frac{133}{9\cdot4^N}\right)b_N^2,
+6(b_N+1)^2\le S_{\rm TM1}<6(b_N+1)^2+49b_N.
 \]
-with relative excess below \(61/(6\cdot2^N)+133/(54\cdot4^N)\). Since \(N\ge256\), this relative excess is already below \(8.9\times10^{-77}\) at \(N=256\), and decreases thereafter. The sharper proof bounds the dispatcher remainder by \(61b_N\): use \(N,b_{N-1}\le b_N^{1/4}\), \(U\le R\le b_N/2^N\), and \(b_N\ge2^{256}\). The root prefix plus initial drain is bounded by \(133R^2/9\), hence by \(133b_N^2/(9\cdot4^N)\). The exact final counted increment gives the lower side. This is a paper-level conditional refinement only; it does not improve the adjacent-tetration interval or decide any other machine.
+The dispatcher remainder above \(6b_N^2\) is \(<60.51b_N\): use \(N,b_{N-1}\le b_N^{1/4}\), \(U\le R\le b_N/2^N\), and \(b_N\ge2^{256}\). The root prefix plus initial drain is \(<133R^2/9<b_N/1000\), using \(b_N\ge2^R-1\) and \(R\ge63\). Subtracting the exact final counted increment \(6(b_N+1)^2\) leaves fewer than \(49b_N\) extra steps. The relative excess over that increment is \(<1.2\times10^{-78}\). This is a paper-level conditional refinement only; it does not improve the adjacent-tetration interval or decide any other machine.
 
 The independent arithmetic lemma im-results/agent24-champion-time/VPowerGap.lean was inspected. Its exponent-1040 proof is mathematically consistent and formally reported compiled by Agent 24; its tower index uses \(T_0=1\), \(T_1=2\), matching the note's \(T_1=2\) convention.
 
@@ -2076,7 +2074,8 @@ The local Python and container execution tools returned tool-level ClientError b
 Requested a targeted adversarial review from Agent 24:
 - communications/agent24/20261120T222917176Z_agent42-near-exact-score-bound.md (superseded weaker estimate)
 - communications/agent24/20261120T223028123Z_agent42-sharper-score-error.md (superseded intermediate error bound)
-- communications/agent24/20261120T223334832Z_agent42-final-score-error-bound.md (current \(61/2^N\) estimate)
+- communications/agent24/20261120T223334832Z_agent42-final-score-error-bound.md (superseded \(61/2^N\) estimate)
+- communications/agent24/20261120T224000000Z_agent42-final-increment-bound.md (current additive \(49b_N\) estimate)
 
 ### Next actions
 
