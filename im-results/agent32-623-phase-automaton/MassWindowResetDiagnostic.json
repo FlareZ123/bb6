@@ -1,0 +1,81 @@
+{
+  "status": "finite exact-source diagnostic, not an all-time proof",
+  "root_indices": {
+    "first": 33,
+    "last": 10000,
+    "transitions": 9968
+  },
+  "window": {
+    "type": "S-indexed mass window",
+    "ell": "least ell with (3^ell-1)/2 >= S+3, S=a+d",
+    "B": "max(34*ell+140,36*ell+88)",
+    "k": "least k with 3^k > B",
+    "j": "least j with 3^j > B^3",
+    "tested_word": "next-state digit pairs (x_i,y_i) for k+2 <= i <= j-3"
+  },
+  "result": {
+    "accepted": 9968,
+    "failures": 0,
+    "max_first_accepting_end": 12,
+    "first_accepting_end_histogram": {
+      "3": 2196,
+      "4": 4210,
+      "5": 2241,
+      "6": 866,
+      "7": 290,
+      "8": 105,
+      "9": 37,
+      "10": 14,
+      "11": 6,
+      "12": 3
+    }
+  },
+  "observed_mass_window_shifts": {
+    "0,0": 9955,
+    "0,1": 8,
+    "1,1": 5
+  },
+  "early_prefix": {
+    "transitions_checked": 24,
+    "from_indices": "9 through 32",
+    "failures": 21,
+    "pass_indices": [
+      28,
+      31,
+      32
+    ],
+    "failure_indices": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      29,
+      30
+    ]
+  },
+  "old_output_overlap_only": {
+    "failures": 3,
+    "indices": [
+      34,
+      36,
+      38
+    ],
+    "note": "The full next-state middle interval succeeds at these states although the old-output overlap alone does not; high-end extension can be essential."
+  },
+  "caveat": "The scan covers the existing finite root trace only. A proof must derive reset acceptance from a closed source-level phase/invariant and prove all branches."
+}
