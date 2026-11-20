@@ -100,7 +100,7 @@ The exact one-dimensional dispatcher formula in
 \[
 D_N\le
 6b_N^2+60b_N+(6N^2+57N-66)b_{N-1}
- +48N+90k^2+111k+12(N+1)U. \tag{10}
+ +48N+90k^2+111k+12(N+1)U+90. \tag{10}
 \]
 Here \(k=N/3\le N\), \(b_{N-1}<b_N\), \(U\le R\le b_N\), and
 \(b_N\ge2^N R\), so \(N\le\log_2 b_N\). For \(b_N\ge2^{64}\), the
@@ -114,31 +114,91 @@ Thus
 D_N<7b_N^2. \tag{11}
 \]
 
-The remaining costs are each smaller than \(b_N^2\):
-
-- Unfolding the finite root-cost formulas gives the deliberately loose
-  bound \(C_{\rm root}\le10^6 4^m\). For this bound, the 34 fixed middle
-  rows contribute at most \(O(4^B)\), the long middle segment contributes
-  at most \(143(B+1)^2\), its terminal offset at most \(86(B+1)^2\),
-  and the first-q4/P1 and q4-tail blocks contain only a fixed number of
-  drain-sized terms with logarithmic parameters at most \(m\). Since
-  \(B\le m\), the displayed constant is deliberately generous. Now
-  \(R=2^{2^m-1}-1\), so \(10^6 4^m<R^2\le b_N^2\) at the authentic
-  parameters.
-- The counted root drain is at most \(7\cdot4^{n-1}\), while
-  \(R^2>(1/2)4^{n-1}\). Thus it is less than \(14R^2\); since
-  \(b_N^2\ge4^N R^2\) and \(N\ge2\), it is less than \(b_N^2\).
-- The terminal macro is \(59+12(L+E)\), with
-  \(E=U+\sum_{j<N}b_j+5k\le U+Nb_N+5N\). Since
-  \(N\le\log_2 b_N\), this cost is less than \(b_N^2\).
-- The champion-root and final-query correction is \(+7<b_N^2\).
-
-Combining these bounds with (11), the complete conditional champion score
-satisfies
+The exact score split is
 \[
-S_{\rm TM1}<12b_N^2<T_{T_{T_{11}}}. \tag{12}
+S_{\rm TM1}=C_{\rm root}+D_{\rm root}+D_N(U,R),
+\]
+where \(D_{\rm root}=\operatorname{drainCost}(R,0)\), and
+\(D_N\) includes the complete dispatcher, terminal macro, and the
+champion/final-query correction. In particular, those terminal terms are
+already included in \(D_N\) and must not be added a second time.
+
+### Explicit root-prefix bound
+
+Put \(B=V_{M+42}\), \(z=2^B-1\), and \(m=2^z-1\).
+Unfolding the exact source cost definitions gives
+\[
+C_{\rm root}=P_{34}+C_M+O+Q,
+\]
+with
+\[
+P_{34}\le1000\cdot4^B,\qquad
+C_M\le143(B+1)^2,\qquad
+O\le86(B+1)^2,
+\]
+and
+\[
+Q=D_B+D_z+D_m+1165+12A+27z+15\cdot2^z+3\cdot2^m,
+\quad D_t=6\cdot4^t+42\cdot2^t-12t-48.
+\]
+Here \(D_B=\operatorname{drainCost}(2^B-1,0)\),
+\(D_z=\operatorname{drainCost}(2^z-1,0)\), and
+\(D_m=\operatorname{drainCost}(2^m-1,0)\). The decomposition is
+obtained from the 34-row fixed prefix, the long middle SectionResult,
+the outer-LC postlude, and the first-q4/P1 plus q4-tail blocks; see
+[Agent44's source-cost expansion](../../communications/agent42/20261120T170825Z_agent44-root-prefix-bound-review.md)
+and [the sharpened consolidation](../../communications/agent42/20261120T174518Z_agent44-sharper-tm63-root-bound.md).
+
+Since \(B\le z\le m\), \(m\ge2z\), and
+\[
+A\le B^2+2B+59\le z^2+2z+59\le m,
+\]
+we have \(4^B\le2^m\), \((B+1)^2\le2^m\),
+\(4^z\le2^m\), and \(2^z=m+1\le2^{m/2}\).
+Consequently
+\[
+P_{34}+C_M+O\le1229\cdot2^m,
+\]
+\[
+D_B+D_z\le12\cdot4^z+84\cdot2^z
+ \le12\cdot2^m+84\cdot2^{m/2},
+\]
+\[
+D_m\le6\cdot4^m+42\cdot2^m,
+\]
+and the remaining offsets are at most
+\[
+1165+39m+15\cdot2^{m/2}+3\cdot2^m.
+\]
+Adding these inequalities gives
+\[
+C_{\rm root}
+\le6\cdot4^m+1286\cdot2^m
+ +99\cdot2^{m/2}+39m+1165
+ <7\cdot4^m
+\tag{11}
+\]
+for \(m\ge12\), which holds at the authentic parameters. Since
+\(n=2^m\) and \(R=2^{n-1}-1\), we have
+\(R^2>9\cdot4^m\); also \(b_N\ge R\). Thus
+\[
+C_{\rm root}<7\cdot4^m<R^2\le b_N^2.
 \]
 
+### Remaining score terms
+
+The root drain satisfies
+\[
+D_{\rm root}\le7\cdot4^{n-1}<14R^2<b_N^2,
+\]
+because \(b_N\ge2^N R\) and \(N\ge2\). The dispatcher-plus-terminal
+term satisfies \(D_N<7b_N^2\) by (10)--(11); the added fixed
+\(+90\) is absorbed by the same \(b_N\ge2^{64}\) remainder
+estimate. Therefore the exact score decomposition gives
+\[
+\boxed{S_{\rm TM1}<9b_N^2<2^Y<T_{T_{T_{11}}}.}
+\tag{12}
+\]
 ## Lower side and comparison with the published estimate
 
 The stronger lower bound in
