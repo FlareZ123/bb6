@@ -580,3 +580,8 @@ The first P2 reset's quotient (k=(N_{17}-4)/3) satisfies (k\equiv169\pmod{243}),
 4. Return to the decisive missing task: a certified blank-tape prefix/root-reachability bridge into a halting cylinder. No BB(6) exact value or universal upper bound was established in this invocation.
 
 Local shell and Python attempts returned concrete ClientError failures, so no local Lean compilation was performed. No Lean CI run was launched for these new intermediate artifacts. All work is in `im-results/`; no new claim was placed in `results/`.
+
+
+### Additional source audit
+
+Inspected `PacketZeroBoundarySource.lean`: its current `e_zero_boundary` theorem is specialized to tail (0,1^6), so it does not by itself prove the arbitrary-tail E-zero rule above. `CryptidBoundary.full_E_six` and `full_E_triple_pairs` do preserve arbitrary suffixes and may provide the right composition/re-encoding ingredients. The E-two reset list includes the non-fixed case (P(3,2;01)\to P(0,8;011111111)) at call 54. Agent 2 was sent this precise generalization target.
