@@ -39,59 +39,67 @@ give the last line of (2). Moreover \(3\mid N\), since \(L=76\) is even and
 
 ## Upper tower bound
 
-First, (1) gives \(V_5<T_9\), hence
+The exact first-section recurrence gives a much sharper upper bound on
+\(A_0\) than the coarse \(A_0<T_{10}-6\). From (1), \(V_4<T_8\), so
 \[
-V_6=2^{V_5}-1\le 2^{T_9-1}-1=T_{10}/2-1.
+V_5\le2^{T_8-1}-1=T_9/2-1,\qquad
+V_6\le2^{T_9/2-1}-1=\sqrt{T_{10}}/2-1.
 \]
-Since \(V_0,\ldots,V_5<T_9\),
+Also \(V_1<T_5,\ V_2<T_6,\ V_3<T_7,\ V_4<T_8\). Therefore
 \[
-A_0<18+6T_9+T_{10}/2<T_{10}-6,
+A_0=18+\sum_{j=0}^6V_j
+\le75+T_5+T_6+T_7+T_8+T_9/2+\sqrt{T_{10}}/2
+<75+\frac92T_9+\frac12\sqrt{T_{10}}
+<\frac34\sqrt{T_{10}}. \tag{3}
 \]
-where the final inequality is immediate for \(T_9\ge16\). Therefore
+For the last inequality, \(T_9\) is even and at least 20, and
+\(2^{T_9/2-2}>\frac92T_9+75\).
+
+Set
 \[
-M<31\,2^{T_{10}-6}=\frac{31}{64}T_{11}<T_{11}/2. \tag{3}
+J=2^{3\sqrt{T_{10}}/4+5}.
 \]
-In particular, \(M+49<T_{11}-1\).
+The exponent is an integer because \(\sqrt{T_{10}}=2^{T_9/2}\) is
+divisible by four. From \(M=31\cdot2^{A_0}-36\) and (3),
+\[
+M+49<31\cdot2^{3\sqrt{T_{10}}/4}+49
+     <32\cdot2^{3\sqrt{T_{10}}/4}=J. \tag{4}
+\]
 
 Put \(B=V_{M+42}\). By (1),
 \[
-B<T_{M+46}. \tag{4}
+T_{M+45}+1\le B<T_{M+46}. \tag{5}
 \]
-There are exactly \(M+36\) terms in the expression for \(A\) in (2), and each is at most \(B\). Also \(B\ge T_{M+45}+1\), so \(M+36\le B\) and \(2M+59\le2B+59\). Consequently
+There are exactly \(M+36\) terms in the expression for \(A\) in (2),
+and each is at most \(B\). Also \(B\ge T_{M+45}+1\), so
+\(M+36\le B\) and \(2M+59\le2B+59\). Consequently
 \[
-A\le (M+36)B+2M+59
-  \le B^2+2B+59
-  <2^{B-1}, \tag{5}
+A\le(M+36)B+2M+59
+ \le B^2+2B+59
+ <2^{B-1}, \tag{6}
 \]
-since \(B\) is far above 16. From (4)--(5),
+since \(B\) is far above 16. From (6),
 \[
-A+78<2^B,\qquad
-N<2^{A+78}<2^{2^B}<T_{M+48}. \tag{6}
+N<2^{A+78}<2^{2^B}<T_{M+48}. \tag{7}
 \]
-The last inequality uses \(2^B<2^{T_{M+46}}=T_{M+47}\).
-
-Since \(M+50<T_{M+48}\), (6) implies
+Since \(M+50<T_{M+48}\), (7) gives
 \[
-M+N+50<T_{M+49}<T_{T_{11}-1}, \tag{7}
+M+N+50<T_{M+49}. \tag{8}
 \]
-where (3) gives \(M+49<T_{11}-1\). Applying (1) once more,
+Combining (4) and (8), and using monotonicity of \(T_j\),
 \[
-b_N=V_{M+N+46}
- <T_{M+N+50}
- <T_{T_{T_{11}-1}}. \tag{8}
+q:=M+N+50<T_{M+49}<T_J.
 \]
-To compare (8) with the next published tower endpoint, put
+As \(q\) is an integer, \(q\le T_J-1\). Applying (1) to the exact
+terminal right counter,
 \[
-X=T_{T_{11}-1},\qquad Y=T_X.
+b_N=V_{M+N+46}<T_{M+N+50}=T_q
+ \le T_{T_J-1}=:U. \tag{9}
 \]
-Then \(b_N<Y\), while \(T_{T_{11}}=2^X\), and hence
-\[
-T_{T_{T_{11}}}=T_{2^X}>T_{X+1}=2^{T_X}=2^Y.
-\]
-As \(Y\) is enormous, \(12Y^2<2^Y\). Therefore
-\[
-12b_N^2<T_{T_{T_{11}}}. \tag{9}
-\]
+Thus \(b_N<U\), where \(U=T_{T_J-1}\) is enormous. The complete-score
+upper estimate below will use \(9U^2<2^U=T_{T_J}\). Also \(J<T_{11}\),
+so this upper endpoint is strictly below the published
+\(T_{T_{T_{11}}}\).
 
 ## From the terminal counter to the complete score
 
