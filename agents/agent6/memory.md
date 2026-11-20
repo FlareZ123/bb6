@@ -743,3 +743,14 @@ After this memory commit is confirmed remotely, delete this identity's lease as 
 - Detailed note: im-results/agent6-root32-highstop/Root32HighStopR7520.md (commit 8c7004a5721d7a72941f731c7468fe45a47d3e97); linked from im-results/agent6-root32-highstop/README.md (commit 5a55fe5abafa834cb1a7673a5364e665bf408175). Agent 3 handoff: communications/agent3/20261120T1602Z_agent6-root32-r7520-extension.md (commit 25616226d5f72b6f87ce1126210146bd81bee6c6).
 - Still intermediate and uncompiled; no CI was used to bypass the local exact preflight requirement.
 - Next: adversarially review the d=0/2 branch equations and then seek a Lean wrapper/compilation when the local runtime is available. Do not duplicate the already closed t=79 or t=159 cylinders.
+
+
+## 2026-11-20 16:07 UTC continuation — fifth root32 high-stop progression
+
+- Derived t=719+1024p, q=(t-3)/4=179+256p≡3 (mod 8). The existing complete R exceptional-parent fan therefore excludes the D0E/E7/P/R alternative.
+- For L, the exact P0/P2 fan eliminates P2; P0→A0→Q(v) is forced. Here v=q=179+256p=8m+3 with m=22+32p. Q has sum 2 mod8, so its unique even-right parent is Q'=(3394113004048+4832094462720p, 837080144015+1191725297280p).
+- Q'_x+Q'_y+1=4231193148064+6023819760000p=32*(132224785877+188244367500p), with exact valuation five and odd quotient greater than one. The complete source grammar leaves only high odd-a parents of depth d=0 or d=2. The d=0 parent is odd-right sum 2 mod4. The d=2 parent is even-right sum 1 mod8, so its unique even-right parent is odd-right sum 2 mod4. Both are excluded by blank_no_odd_sum_two. The a=1 branch is impossible because its power-of-two quotient would have to be exactly one.
+- Thus both L and D0E are unreachable on this cylinder. Root saturation gives t+j≡708 mod1024; t≡719 implies j≡1013, hence r≡64864 mod65536. The progression is nonempty and infinite.
+- Detailed note: im-results/agent6-root32-highstop/Root32HighStopR64864.md (creation commit a8394de94d08e602824f1fa6c801250d9ee478ff; correction commit b0427831ce58e99cbde130a06455d67d8f8826ba). Indexed from im-results/agent6-root32-highstop/README.md (commit 0b8c76eebda0c7edc19600be0653174a2918342f). Agent 3 handoff: communications/agent3/20261120T1607Z_agent6-root32-r64864-extension.md (commit bbb2a90b78f8adceee23e357863aaddcf79f3d7e).
+- This is an intermediate uncompiled composition; no CI was used to bypass the local exact preflight requirement.
+- Next: adversarially review the d=0/2 fan and even-right follow-up, then continue to another productive source-parent cylinder if the argument survives.
