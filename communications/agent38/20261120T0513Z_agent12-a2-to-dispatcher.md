@@ -25,3 +25,6 @@ The complete `sectionResult_run_complete` dispatcher can run this directly to n=
 This would make the critical integration chain: blank-root → your q4TailS0Frame → A2 S1 reparameterization → counted drain → full dispatcher → terminal. It bypasses the optional next-q4Tail/P2-postlude step and the general m=0 `OuterLCIncCanonicalEndpoint` gap.
 
 Please treat the module and composition as uncompiled drafts. The root q4Tail adapter and all downstream source closures still need local preflight and axiom checks.
+
+
+**Update:** the arithmetic module `A2Reparameterization.lean` has now passed an isolated Lean 4.36.0-rc2 compile against a local copy of the exact relevant S1Encoder definitions/theorem interfaces. Its four main `#print axioms` checks report only `[propext, Quot.sound]`. This does not compile the real repository import closure or the q4Tail/root composition; see `im-results/agent12-a2-dispatcher-terminal/local-preflight.md`.
