@@ -54,6 +54,37 @@ The new [TM63RootMarker1Endpoint.lean](TM63RootMarker1Endpoint.lean) composes `o
 
 The current root wrapper has \(L=\texttt{tm63Length1}=76\): tm63FirstSection.exponent is nextExponent 2 6 63 = 71, and tm63Length1 = 3 + 71 + 2. The source lemma tm63Length1_even is in TM63Length1Parity.lean. The authentic endpoint also has \(z=2^b-1\ge3\), so the marker-1 experiments that set \(z=0\) do not directly close the root. In particular, the exact z=0 even-L terminal law is not a positive-z theorem. The positive-z q4 nested-counter macro, its cycle recurrence, and the final halt remain open.
 
+## Direct arbitrary-A q4Tail-to-terminal dispatcher (new source draft)
+
+A new route appears to bypass the positive-z P2 postlude and the repeated q4Tail outer-width recurrence. It generalizes the A=2 terminal reparameterization to every A>=2.
+
+For the authentic q4Tail input, set
+- w=A+L+1 and q=firstQ4P1Value L A;
+- W=A+L+2 and N=firstQ4P1M L A-3=2^W-2^A-3;
+- K=2^z+z+3, n=2^(2^z-1), and H=3*2^z+3*z+9+3*n.
+
+The residual identity is
+`p2ResidualLeft m (q4TailS0Tail w q) = d1pow K ++ markerWord 0 ++ d0 ++ binDec W N ++ lh`,
+with
+`binDec W N = d0 ++ d1 ++ d0pow(A-2) ++ d1 ++ d0pow(L+1)`.
+After the existing q4Tail-to-S0 adapter and carry-prefix rewrite, the authentic q4Tail frame is exactly
+`s1Config W N 0 (K+n-1) (2^(n-1)-1) 0 H`.
+The existing counted drain and complete 24-class SectionResult dispatcher then apply. If L is even, N is divisible by 3, so the dispatcher returns to marker zero and the terminal SectionBits macro applies.
+
+For the root, L=tm63Length1=76 is even and A=rootMarker1A>=2, so W=rootMarker1A+78 and N=firstQ4P1M 76 rootMarker1A-3. This is a direct arbitrary-A route; it does not require reducing A to 2 or re-entering the q4Tail recurrence after the tail has changed to 111111.
+
+Source drafts added under this directory:
+- GeneralQ4TailDispatcherReparam.md — derivation and exact implementation target.
+- GeneralQ4TailArithmetic.lean — arbitrary-A BinDec shape and mod-3 lemmas.
+- GeneralQ4TailS1Reparam.lean — residual and S0/S1 tape reparameterization.
+- GeneralQ4TailS1Config.lean — q4Tail frame equals the S1 dispatcher input.
+- GeneralQ4TailTerminalComposition.lean — counted drain, complete dispatcher, terminal SectionBits.
+- GeneralQ4TailRootHalting.lean — authentic blank-root HaltsAfter and Attainable theorem drafts.
+
+**Status:** all six artifacts are source drafts and have not been Lean-compiled or axiom-audited. The direct root theorem is therefore a promising composition target, not an established halting proof. Local shell/Python/container execution failed with ClientError; do not substitute CI for the required local preflight. The existing positive-z P2 postlude route remains available as an alternate path until this route is accepted.
+
+Immediate priority: compile the short arithmetic and S0/S1 reparameterization modules, then the counted-drain/dispatcher composition, then the root shift composition. Audit the complete transitive closure for only the repository's accepted axioms; do not move this material into results/ before that gate passes.
+
 ## Focused Lean acceptance
 
 The existing manual-only target middle34-acceptance in .github/workflows/agent42-champion-terminal-source.yml is the acceptance path. It reconstructs the authoritative terminal imports, then compiles the exact dependency closures of these five roots:
