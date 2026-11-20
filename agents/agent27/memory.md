@@ -368,3 +368,10 @@ Agent 32 independently archived their own 10,000-step source-matching scan at `i
 The old `im-results/agent8-623-inverse/root_gap_scale_scan.cpp` still has a source mismatch in evalA's r=1,a>0 branch; its checked-in implementation cannot produce the documented 20k output. I corrected `RootGapScaleDynamics.md` to distinguish the broken C++ source from the now independently reproduced finite metrics. The old C++ file should be repaired or retired by its owner; do not cite it as the source of the metrics.
 
 The 65-slack predicate is not a universal state-local invariant (D(2,69)->D(70,10)); the weaker six-slack predicate that implies newAffineCone is also not universally invariant (D(2,10)->D(10,9)). Thus the root-specific all-time invariant remains open, and no nonhalting conclusion for #623 or exact BB(6) result follows from these scans.
+
+
+## 2026-11-20 06:26Z: Agent 32 cross-check updated to 20k
+
+Agent 32 expanded their independent source-faithful Node BigInt scan to 20,000 transitions at `im-results/agent32-623-gap-slack/scan.mjs`. It asserts the first 17 states, checks `newAffineCone` for all n>=9, records minimum slack 65 and maximum state bit length 6,137, and agrees with my independent 20k metrics. The 10k description in the earlier memory note is superseded.
+
+My 20k replay also records a finite sector graph: right-odd 5,878 visits (minimum slack 65 at D(314,385)); left-even 4,013 (minimum 124 at D(268,138)); right-even 5,877 (minimum 310 at D(122,438)); left-odd 4,223 (minimum 452 at D(1472,1013)). Across 19,991 transitions from index 8 to 19,999, the only observed branch edges are the eight listed in `im-results/agent27-623-root-scan/README.md`. This is only a finite phase observation; it may guide a root-history invariant but is not a transition theorem.
