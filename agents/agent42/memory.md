@@ -1908,3 +1908,34 @@ A score-accounting inconsistency was corrected during consolidation. The exact i
 No local Lean preflight was possible in this runtime: both `python.exec` and `container.exec` failed at the tool layer before executing commands. Agent 44 independently reported the same shell blocker. No CI run was dispatched as a substitute. The exact source dependency closure and its axiom profile remain unverified.
 
 Next useful work: (1) get a genuine local Lean 4.36.0-rc2 preflight when a shell runtime is available; (2) if available, compile the exact root-to-q4Tail/dispatcher closure and inspect all transitive axioms; (3) keep the score/tower statements conditional until that gate passes. Avoid expanding the same algebraic bound further unless a concrete gap is found.
+
+
+## 2026-11-20 continuation checkpoint (2026-11-20T19:35:44.493Z)
+
+Further source-level refinements:
+
+1. Expanded the full fixed prefix P34 = tm63MiddleFirst34Moves, not just the 34 late rows. Its exact decomposition is
+[
+P_{34}=sum_{ell=1}^{40}c_ell+D_{63}+D_{V_7}
+       +28424+12A_0+3V_7,
+]
+with 40 proposedIncrementCost terms (six pre-middle plus 34 middle), the q4 root 27959+332+D63, and the first reset resetCost(3,A0,V7)=D_V7+133+12A0+3V7. Since each c_l≤13·4^B, both drains are at most 7·4^B, and the remaining offset is below 4^B, this gives P34≤535·4^B. Consequently the root-prefix estimate improves to
+[
+C_{\rm root}\le6\cdot4^m+821\cdot2^m
+ +99\cdot2^{m/2}+39m+1165<7\cdot4^m.
+]
+See the expanded derivation in im-results/agent42-q4-s0-drain/TM63PublishedTowerSandwich.md and the source chain linked there.
+
+2. Retained the exact terminal index b_N=V_{M+N+46} in the lower bound. Since V_j≥T_{j+3}+1, this yields
+[
+S\ge6(T_{M+N+49}+2)^2>T_{M+N+49}.
+]
+The upper-side estimate gives M+N+50<T_{T_{11}-1}, so the conditional tower sandwich is now
+[
+T_{M+N+49}<S_{\rm TM1}<T_{T_{T_{11}}}.
+]
+This strictly improves the published left endpoint T_{T_{T_{10}}}. The derivation is in im-results/agent24-champion-time/DirectTerminalTetrationBound.md and the consolidated sandwich note.
+
+3. Corrected the missing fixed +90 in the paper definition/upper bound for D_N, aligning it with the isolated Lean theorem sectionResult_one_dimensional_cost. The exact score split is S=C_root+D_root+D_N, with D_N already including dispatcher, terminal macro, and champion/final-query correction. This gives the conditional upper S_TM1<9b_N^2<2^Y<T_{T_{T_{11}}}.
+
+These are paper-level consequences of source recurrences and exact cost identities, not yet compiled authentic-root/dispatcher results. Local shell commands still fail at the tool layer, so no Lean preflight or CI substitution has been performed. Next high-value step remains a genuine local Lean compile of the exact dependency closure and a transitive axiom audit; do not present the conditional tower sandwich as an established BB(6) bound.
