@@ -155,17 +155,26 @@ where \(c_s=(9,6,4,4)\) and \(c_T=(19,10,-4,2)\) in LO/LE/RO/RE. These are finit
 \[
 T_{\rm full}=3D+2R_{\rm full}+c_T.
 \]
-The equalities \(D=L-2E_{\rm dig}\) and \(R_{\rm full}=R_{\rm dig}\) are the intended bridge from the digit transducer to the source drain. The valuation expansion in DrainValuationNormalForm.md derives them on paper, including one nonzero digit per drain iteration, but the complete original-source bridge has not yet been compiled as a theorem. Until it is, \(T_{\rm dig}\) and \(\eta_{\rm dig}\) are candidate source expressions, not source-certified root-cocycle values. In particular, do not use runStats_weight_bounds as a proof about \(R_{\rm full}\).
-
-The mass estimate \(\eta_{\rm dig}\le3L+9\) follows immediately from \(n_1\le L\). If the source bridge is established, then with \(L\le\ell_S\), \(q\le S/2\), and the existing \(\ell_S\le S/2-1\) estimate for \(S\ge20\), the source mass recurrence gives the candidate bound
+The source-linked companion `DrainDigitStatsSource.lean` imports the unchanged original `evalA`/`drainB` definitions and proves `drainB_digit_transducer`. For every `b ≤ ternaryOnes a` and successful `drainB a b d = some (.D aa dd)`, it gives
 \[
-S'\le3S+6.
+aa+L=a+2E_{\\rm dig},\qquad
+dd+4E_{\\rm dig}=d+3b+2L+2R_{\\rm dig},
 \]
-The last recurrence application remains conditional on the source bridge.
+where (L) is the transducer length, (E_{\\rm dig}) counts output 2-digits, and (R_{\\rm dig}) counts nonzero output digits. Thus the signed first-counter drop is (D=L-2E_{\\rm dig}). Moreover, Agent 22's source theorem `drainB_weighted_exact` supplies the actual evaluator-call count (R_{\\rm full}) through
+\[
+2aa+dd=2a+d+3b+2R_{\\rm full}.
+\]
+Combining this with the two displayed digit identities yields (R_{\\rm full}=R_{\\rm dig}) by cancellation. This last equality is an immediate corollary but is not yet packaged as a named theorem in the source file. `DrainDigitSourceBridge.lean` also gives an independent recursive-summary formulation. These results apply to each successful budgeted drain; the authentic-root proof must still discharge the budget on every reachable branch and compose the weights with the moving-window phase. The theorem source contains `#print axioms`; a pinned local compile and transitive axiom audit remain necessary.
+
+The mass estimate \\(\\eta_{\\rm dig}\\le3L+9\\) follows immediately from \\(n_1\\le L\\). Since the source bridge now identifies \\(D=L-2E_{\\rm dig}\\) and \\(R_{\\rm full}=R_{\\rm dig}\\) under the same budgeted-success hypotheses, the digit-side \\(\\eta\\) and \\(T\\) expressions are source-derived for those drains. The source mass recurrence therefore gives the candidate bound
+\[
+S'\\le3S+6
+\]
+whenever the existing size/depth hypotheses \\(L\\le\\ell_S\\), \\(q\\le S/2\\), and \\(\\ell_S\\le S/2-1\\) for \\(S\\ge20\\) are available. This is a per-transition recurrence, not an all-time root bound.
 
 ## 7. Exact affine carry corrections and depth buffers
 
-The source-checked signed-coordinate table takes two **source** parameters: the signed first-counter drop \(D\), and \(R_{\rm full}\), the full number of evaluator calls. Its corrC and corrF definitions must not silently receive \(R_{\rm dig}=n_1+n_2\) unless the source bridge in Section 6 has been proved.
+The source-checked signed-coordinate table takes two **source** parameters: the signed first-counter drop (D), and (R_{\\rm full}), the full number of evaluator calls. The new `drainB_digit_transducer` theorem supplies (D=L-2E_{\\rm dig}); combining its second-counter identity with `drainB_weighted_exact` supplies (R_{\\rm full}=R_{\\rm dig}). Therefore the weighted digit formulas below are source-derived for every successful drain for which the source budget (b\le\operatorname{ternaryOnes}(a)) is established.
 
 If the bridge \(D=L-2E_{\rm dig}\), \(R_{\rm full}=R_{\rm dig}\) holds, substitution gives the weighted digit formulas:
 
@@ -192,30 +201,30 @@ The sector/output constants remain:
 | RO | R | -44 | 30 |
 | RE | R | -20 | 18 |
 
-The following two arithmetic theorems separate what is already available from what still needs the digit/source bridge:
+The following two arithmetic theorems separate the conservative source-depth bound from the sharper digit-assisted bound:
 
 1. **correction_buffer_from_depth** assumes only the actual full-drain bounds
    \[
-   -\ell\le D\le\ell+1,\qquad 0\le R_{\rm full}\le\ell,
+   -\\ell\\le D\\le\\ell+1,\\qquad 0\\le R_{\\rm full}\\le\\ell,
    \]
    and proves
    \[
-   |C|\le34\ell+140,\qquad |F|\le24\ell+96.
+   |C|\\le34\\ell+140,\\qquad |F|\\le24\\ell+96.
    \]
-   This is the conservative buffer justified by the existing source depth package, without identifying digit counts with source evaluator calls.
+   This remains the conservative buffer justified directly by the source depth package.
 
 2. **correction_buffer_by_depth** assumes
    \[
-   D=L-2E_{\rm dig},\quad 0\le E_{\rm dig}\le L\le\ell,
-   \quad 0\le R_{\rm full}\le\ell,
+   D=L-2E_{\\rm dig},\\quad 0\\le E_{\\rm dig}\\le L\\le\\ell,
+   \quad 0\\le R_{\\rm full}\\le\\ell,
    \]
    and proves
    \[
-   |C|\le34\ell+122,\qquad |F|\le24\ell+84.
+   |C|\\le34\\ell+122,\\qquad |F|\\le24\\ell+84.
    \]
-   Crucially, this theorem does **not** require \(E_{\rm dig}\le R_{\rm full}\) or \(R_{\rm full}\le L\). It avoids the overloaded-\(R\) inference in the earlier note. The remaining condition is the exact source identity \(D=L-2E_{\rm dig}\).
+   It does not require (E_{\\rm dig}\\le R_{\\rm full}) or (R_{\\rm full}\\le L). The new source bridge supplies (D=L-2E_{\\rm dig}); `runStats_weight_bounds` supplies (0\\le E_{\\rm dig}\\le L), and the existing size/depth lemmas supply (L\\le\\ell) and (R_{\\rm full}\\le\\ell). Thus the sharper bound is now justified for every successful budgeted drain.
 
-The source depth wrapper in RootRayDrainDepthSource.lean supplies \(R_{\rm full}\le\ell\) and \(D\in[-\ell,\ell+1]\); the size inequality gives \(L\le\ell\), and the transducer gives \(0\le E_{\rm dig}\le L\). Thus the conservative \(34\ell+140\) correction bound is available from the source depth package. The sharper \(34\ell+122\) bound is conditional on the uncompiled digit/source identity for \(D\).
+The existing S-indexed mass-window theorem and 9,968/9,968 reset diagnostic were computed with the conservative buffer (B_S=\\max(34\\ell+140,36\\ell+88)); they remain valid as stated. Any reduction of that buffer requires rechecking the mass-window shift theorem and recomputing the S-window diagnostic.
 
 Agent 48's sector-specific terminal-window estimates give output-coordinate bounds
 \[
@@ -273,7 +282,7 @@ The module formalizes:
   \(0\le E_{\rm dig}\le R_{\rm dig}\le L\), with
   \(E_{\rm dig}=n_2\) and \(R_{\rm dig}=n_1+n_2\).
 
-It does **not** import the original evalA/drainB definitions or prove that \(R_{\rm dig}\) equals the full source evaluator-call count. Nor does it prove that the source first-counter drop is \(L-2E_{\rm dig}\) for the authentic bundled canonical ray. Those are the remaining source-bridge obligations.
+The standalone arithmetic module itself does not import the original `evalA`/`drainB` definitions. Its source-linked companion `DrainDigitStatsSource.lean` does and proves `drainB_digit_transducer`; together with `drainB_weighted_exact`, this gives the exact per-drain source identities (D=L-2E_{\\rm dig}) and (R_{\\rm full}=R_{\\rm dig}) under the budgeted-success hypotheses. The companion's `#print axioms` commands still need to be run in the pinned build, and the root proof must discharge those hypotheses on every reachable branch.
 
 The arithmetic correction lemmas correction_buffer_from_depth and correction_buffer_by_depth are in SignedCoordinateNormalForm.lean. They are self-contained integer proofs; I locally compiled their exact definitions and proof terms with Lean 4.36.0-rc2. The former uses the source depth bounds as hypotheses; their combined original-source wrapper remains pending pinned CI. The latter is additionally conditional on the digit formula for D.
 
@@ -285,6 +294,6 @@ and proves its output integer \(N\) satisfies
 \[
 4N=2b-1+3^L.
 \]
-This is an arithmetic statement about supplied \((b,L)\), not a theorem that the authentic root's source drain has the same \(D,R\) statistics.
+The source-linked theorem now connects every successful budgeted source drain to these transducer statistics. It does not prove that a particular \\((b,L)\\) occurs on the authentic \\(D(0,7)\\) orbit or discharge the budget on every reachable root branch.
 
 **Scope boundary.** The transducer identity, digit weights, and correction bounds do not prove that a particular \((b,L)\) occurs on the authentic \(D(0,7)\) orbit, nor do they bound the total boundary carry. The latter must include the base linear quotient as well as the additive correction quotient; see Agent 49's CarryBoundAudit.md.

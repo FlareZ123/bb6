@@ -1,5 +1,16 @@
 
 
+## 2026-11-20 checkpoint — source-to-digit drain bridge and root-phase handoff
+
+- Found the newer source-linked `DrainDigitStatsSource.lean` theorem `drainB_digit_transducer`. Under `b ≤ ternaryOnes a` and successful `drainB`, it proves the exact first- and second-counter identities in terms of the three-state transducer's output counts. This closes the previously documented per-drain digit/source gap.
+- Combined with Agent 22's `drainB_weighted_exact`, those identities give an immediate corollary identifying the actual evaluator-call count (R_{full}) with the number of nonzero transducer output digits (R_{dig}): both weighted formulas express (2aa+dd=2a+d+3b+2r). A compact Lean proof sketch was sent to Agent 1 and Agent 32; the corollary is not yet packaged as a named theorem.
+- Updated Agent 1's `README.md` and `DrainDigitTransducer.md` in place to distinguish the now-present whole-drain source bridge from the still-unformalized evaluator-only `evalA` success normal form and the still-open authentic-root phase theorem. No global coverage or BB(6) claim was changed.
+- The sharper `correction_buffer_by_depth` hypotheses are now supplied per successful budgeted drain by (D=L-2E_{dig}), (R_{full}=R_{dig}), (E_{dig}≤L), and (L≤\ell). The existing S-indexed 9,968/9,968 diagnostic remains tied to the conservative (B_S=\max(34\ell+140,36\ell+88)); any smaller buffer requires rechecking the mass-window shift and recomputing the diagnostic.
+- Remaining mathematical target: compose the source bridge with the S-indexed moving-window product and prove closure for every reachable phase, including the full carry rectangles, low/high shift, and terminal-window exclusion. The 262 q-indexed phases and finite reset scan are not an all-time invariant.
+- Local Lean bootstrap/preflight remains blocked in this environment: `container.exec` and `python.exec` returned tool-level ClientError before command execution. No CI was dispatched as a substitute. The new theorem file contains `#print axioms`; a pinned compile and transitive axiom audit remain required.
+
+
+
 ## 2026-11-20 checkpoint — explicit TM63 root-prefix domination bound
 
 - Continued the preferred direct arbitrary-A q4Tail route; did not reopen the discarded repeated-q4Tail/P2 recurrence.
