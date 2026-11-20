@@ -12,7 +12,7 @@ function leanTuples(name,nextName){
   const end=leanSource.indexOf("def "+nextName,start);
   if(start<0||end<0)throw Error("Lean tuple list not found: "+name);
   const block=leanSource.slice(start,end);
-  return [...block.matchAll(/⟨\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*⟩/g)]
+  return [...block.matchAll(/⟨\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*⟩/g)]
     .map(m=>m.slice(1).map(Number));
 }
 const leanAllStates=leanTuples("allStates","resetOutputLabels");
@@ -35,7 +35,7 @@ const leanDataValidation={
   seed_labels_count:leanSeedLabels.length,
   seed_labels_unique:new Set(leanSeedLabels.map(x=>x.join(","))).size===leanSeedLabels.length,
   seed_labels_match_json_in_order:JSON.stringify(leanSeedLabels)===JSON.stringify(expectedLeanSeeds),
-  missing_list_commas:/⟩\\s*\\n\\s*⟨/.test(leanSource)
+  missing_list_commas:/⟩\s*\n\s*⟨/.test(leanSource)
 };
 if(!leanDataValidation.all_states_complete||
    leanDataValidation.seed_labels_count!==54||
