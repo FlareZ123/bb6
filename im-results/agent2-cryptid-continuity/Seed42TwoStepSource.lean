@@ -6,7 +6,7 @@ set_option maxRecDepth 8192
 
 namespace BB6.Agent2Seed42TwoStep
 
-open CryptidBoundary
+open CryptidBoundary BB6.BoundaryPadding
 
 def seed42Input (s : Nat) : DRegular.L :=
   ⟨12288*s+11653,4,0⟩
