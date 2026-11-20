@@ -301,6 +301,38 @@ theorem firstQ4P1BinDec_A2 (L : Nat) :
   rw [hA1]
   simp [List.append_assoc]
 
+
+/-- The terminal marker-1 q4 family uses M(A,L)=2^A*(2^(L+2)-1)
+and width A+L+2. -/
+def firstQ4P1TerminalM (A L : Nat) : Nat :=
+  2^A * (2^(L+2)-1)
+
+def firstQ4P1TerminalWidth (A L : Nat) : Nat :=
+  A+L+2
+
+/-- Reindexing the outer counter A as terminal parameter A-1 preserves
+the encoded width. -/
+theorem firstQ4P1Width_terminal (L A : Nat) (hA : 0 < A) :
+    firstQ4P1Width L A = firstQ4P1TerminalWidth (A-1) L := by
+  unfold firstQ4P1Width firstQ4P1TerminalWidth
+  omega
+
+/-- The outer value q(L,A) is exactly M(A-1,L)-1, the j=1
+left-counter value in the terminal q4 checkpoint family. -/
+theorem firstQ4P1Value_terminal (L A : Nat) :
+    firstQ4P1Value L A = firstQ4P1TerminalM (A-1) L - 1 := by
+  rfl
+
+/-- The outer BinDec word is exactly the inner left counter of the
+terminal q4 checkpoint at j=1, after reindexing A to A-1. -/
+theorem firstQ4P1BinDec_terminalCheckpointLeft
+    (L A : Nat) (hA : 0 < A) :
+    binDec (firstQ4P1Width L A) (firstQ4P1Value L A) =
+      binDec (firstQ4P1TerminalWidth (A-1) L)
+        (firstQ4P1TerminalM (A-1) L - 1) := by
+  rw [firstQ4P1Width_terminal L A hA,
+    firstQ4P1Value_terminal L A]
+
 #print axioms firstQ4P1Value_twoBit_step
 #print axioms firstQ4P1BinDec_twoD0
 #print axioms firstQ4P1BinDec_iterated
