@@ -65,6 +65,26 @@ This is a finite arithmetic descent: after K two-block reductions, the residual 
 - The missing composition is still the exact q4Tail-frame = S0-configuration identity, including the left d0pow counter and the right s0RightFacing 0 stream, plus a proof that successive q4Tail steps expose exactly the successive six-cell suffixes of T0. Agent38's P2ResidualBoundaryAudit.md gives the coordinate-level residual 1^(m+2) ++ 0100 ++ tail with tail beginning 100, but explicitly does not prove the full tape identity.
 - After the outer parameter reaches 1 or 2, a positive-z terminal theorem is still required. The existing z=0 terminal macro does not automatically apply to the authentic root, whose positive-z branch has z ≥ 3.
 
+
+## A=2 terminal boundary: z=1 diagnostic
+
+The A=2 residual is now tested separately from the guard-bearing
+\(A\mapsto A-2\) recurrence. The reproducible sparse-tape replay in
+[A2TerminalBaseCaseZ1.md](A2TerminalBaseCaseZ1.md) starts from the exact
+\(z=1\) S0 adapter input and reaches the existing SectionBits shape for
+\(L=2,4,6\). The observed terminal parameters are
+\(L_{\rm term}=L+4\) and
+\(a_{\rm term}=(2^{L+7}-35)/3\); the measured prefix costs are
+63,042, 1,040,298, and 16,745,874 moves respectively.
+
+The decisive boundary is the state-4/head-1 local window \(11110000\).
+After the A=2 residual is shifted, the remaining tail begins
+\(1\Vert d_1\Vert d_0^{L+1}\), not the P2 guard \(100\). Thus the
+guard-bearing recurrence cannot simply be continued through A=2. A
+separate terminal macro is required. This diagnostic is only for \(z=1\)
+(where \(n=2\) is a fixed point of \(n\mapsto2^{n-1}\)); the authentic
+root has \(z\ge3\), so the uniform positive-z A=2 case remains open.
+
 ## Validation and limitations
 
 The original recurrence draft used norm_num, but its actual import chain (Frontier → Symmetry → RootShift → ChampionRootBridge → S1Encoder) does not import Mathlib. The source was repaired with the kernel-decidable equality (2:Nat)^2=4 and Nat.mul_comm.

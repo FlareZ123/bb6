@@ -1649,3 +1649,20 @@ Claimed Agent48 at `2026-11-19T11:28:01.819Z`; do not refresh the lease. At the 
 - Root context: L=76; A=rootMarker1A=middle34Result.exponent+middle34Result.right+2. The root endpoint source has middle34Result.right≥2, hence A≥4, but those root modules remain uncompiled. The P2S0ToNextQ4Tail source theorem gives the conditional S0→next-q4Tail run and cost 6*4^(n-1)+45*2^(n-1)+4m+20.
 - The central missing theorem remains the exact q4Tail-frame = S0-config tape identity and proof that each real q4Tail cycle advances the old tail0 by six cells. The final residual A=1 or 2 still needs a positive-z terminal proof; the existing z=0 terminal macro is not enough.
 - Next: give Agent38 the guard theorem as a direct interface for their pointwise q4Tail→S0 proof; ask Agent42 to run the exact import-closure CI; then focus on the A=1/2 terminal branch rather than repeating the root setup.
+
+
+## 2026-11-20 — A=2 terminal-boundary diagnostic
+
+Claimed Agent48 at 2026-11-20T02:39:45.745Z; this incarnation is pursuing the distinct A=2 terminal branch, not redoing the generic guard-bearing A→A−2 arithmetic.
+
+- Used Agent24's exact residual
+  \`ell34 = d1pow K ++ markerWord 0 ++ d0pow 2 ++ d1pow 2 ++ d0pow (L+1) ++ lh\`
+  with z=1, m=16, n=2, K=6, H=24. The simulated input is
+  \`s0Config ell34 1 1 0 24\`, including left stream d0++ell34 and right stream 011100111.
+- Added \`im-results/agent48-counted-inc0/a2_terminal_basecase_z1.js\` and
+  \`A2TerminalBaseCaseZ1.md\`. The sparse infinite-tape replay uses the original TM2 table and checks the exact SectionBits predicate before continuing to halt.
+- For L=2,4,6, terminal outputs are respectively (Lterm,a)=(6,159),(8,671),(10,2719), at 63,042 / 1,040,298 / 16,745,874 moves; halt totals are 65,081 / 1,048,505 / 16,778,681. The observed laws are Lterm=L+4, a=(2^(L+7)-35)/3, prefix cost 16N^2+194N-12L+24 for N=2^(L+4)-7, and 2^(L+3)-4 q4/head-1 events with local window 11110000.
+- The important boundary diagnosis: after the A=2 six-cell shift the remaining tail begins 1++d1++d0pow(L+1), so the generic P2 100 guard fails. The next state-4/head-1 window is 11110000. A separate terminal macro is required; the generic q4Tail recurrence must not be extrapolated through this boundary.
+- This is only z=1 evidence. Since n=2 is fixed by n↦2^(n−1), it does not establish the authentic root's positive-z case (z≥3), nor any BB(6) halt claim.
+- Local \`container.exec\` and \`python.exec\` still return ClientError on trivial preflight commands; no Lean compile was run and no CI was dispatched. Do not bypass the local preflight gate.
+- Next: derive the uniform positive-z A=2 terminal macro from the 11110000 checkpoint, then connect its exact output/cost to \`TerminalEncoderBridge.s0_reset_sectionBits\`. Relevant context: \`im-results/agent24-champion-time/P2Q4TailToS0Identity.md\`, \`im-results/agent42-q4-s0-drain/FirstQ4P1OuterWidthRecurrence.lean\`, \`im-results/agent44-p2-postlude/S0DrainQ4Postlude.lean\`, and \`im-results/agent42-champion-terminal/TerminalEncoderBridge.lean\`.
