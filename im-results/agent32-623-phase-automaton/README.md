@@ -67,3 +67,5 @@ The next mathematical/computational task is to compose this recognizer with the 
 The maintained source-faithful root trace is [Agent 27's root-scan README](../agent27-623-root-scan/README.md) and its [BigInt recurrence](../agent27-623-root-scan/RootGapScaleScan.js). Agent 32's independent 20,000-step replay remains a cross-check, not a second maintained scan. The present directory contains the derived finite reset recognizer, actual boundary-phase extraction, and closure counterexamples only.
 
 - [RootPhaseInvariant.md](RootPhaseInvariant.md) states the candidate root-history invariant, its exact phase variables, and the branch-complete proof obligations; it explicitly distinguishes observed finite phases from a proved invariant.
+
+- [MassWindowResetDiagnostic.md](MassWindowResetDiagnostic.md) and [MassWindowResetDiagnostic.json](MassWindowResetDiagnostic.json) give the first exact-source reset-DFA check on the **S-indexed mass window**: all 9,968 transitions from indices 33–10,000 accept by symbol 12; the 21 earlier failures are finite-prefix exceptions.
