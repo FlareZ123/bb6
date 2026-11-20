@@ -13,7 +13,7 @@ For a canonical root state (D(a,d)), write
 
 Let \(\ell\) be the least integer with \((3^\ell-1)/2\ge q+3\), and put
 \[
-B=\max(34\ell+140,36\ell+88).
+B=\max(34\ell+122,36\ell+88).
 \]
 Choose the least \(k,j\) such that \(3^k>B\) and \(3^j>B^3\). Define the digit-pair word
 \[
@@ -59,6 +59,8 @@ Thus the finite run checks
 9968\times(225+270)=4,934,160
 \]
 carry trajectories. For every scanned root state, both branch transducers map all admissible initial previous-digit/carry states to a single final carry pair, while producing a nonmonochromatic x-output word.
+
+This scan was rerun after tightening the correction buffer from \(34\ell+140\) to the formally justified \(34\ell+122\), so the current script uses \(B=\max(34\ell+122,36\ell+88)\). The 9,968-state full-word result is unchanged: word lengths remain 8–17 and both branches still have zero failures. The small-start reset-subword pass is also unchanged: 9,895 words have a length-3 common reset subword and 73 have length 4; the earliest-end distribution below is identical.
 
 ## Why this may matter
 
@@ -130,7 +132,7 @@ This suggests a possible route to a deterministic high-digit recurrence: enlarge
 
 At the start of this word (position k+1), the Lean lemma in SignedCoordinateNormalForm.lean proves both initial carry coordinates lie in [-1,1], because the correction magnitudes are below (3^k). Subsequent carries remain in the original branch-invariant ranges (L: a in [-2,2]; R: a in [-4,1]; both b in [-2,2]).
 
-The refined checker synchronizing_reset_subwords_small_start.cpp therefore quantifies over only 9 previous digit pairs and 9 initial carry pairs per branch, while retaining the original invariant ranges for intermediate carries. Across all 9,968 words:
+The refined checker synchronizing_reset_subwords_small_start.cpp therefore quantifies over only 9 previous digit pairs and 9 initial carry pairs per branch, while retaining the original invariant ranges for intermediate carries. The common correction buffer and closed carry bound are formalized by correction_buffer_closed and one_extra_digit_carry_bound_closed in SignedCoordinateNormalForm.lean. Across all 9,968 words:
 - minimum common reset length 3: 9,895;
 - minimum common reset length 4: 73;
 - no longer reset word is needed;
