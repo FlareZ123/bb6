@@ -373,7 +373,7 @@ theorem concrete_reset_double_B_to_A_source_reentry :
       CryptidBoundary.run (BB6.Agent35MarkerA.aTime0 3117 0 1)
         (BB6.Agent31PacketSource.packet 9354 0 3
           BB6.Agent35K4Shapes.marker) = endpointZero 24955 := by
-    have h := BB6.Agent35MarkerA.close_zero 3117 0 3
+    have h := BB6.Agent35MarkerA.close_zero 3117 0 1
     simpa [endpointZero,hn] using h
   have hreset : ObsEq
       (CryptidBoundary.run (BB6.Agent2PacketP2Reset.eTwoTime 61 0)
