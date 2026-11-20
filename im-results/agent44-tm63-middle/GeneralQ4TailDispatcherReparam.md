@@ -142,7 +142,7 @@ The following source-level ingredients are composed by the new drafts:
 - tm63Length1_even in TM63Length1Parity.lean;
 - s1Config_counted_drain, sectionResult_run_complete, and s0_reset_sectionBits in the existing counted-drain, complete-dispatcher, and terminal-encoder modules.
 
-The implementation drafts are GeneralQ4TailArithmetic.lean, GeneralQ4TailS1Reparam.lean, GeneralQ4TailS1Config.lean, GeneralQ4TailTerminalComposition.lean, and GeneralQ4TailRootHalting.lean. The last file states tm63_general_root_halts and tm63_general_root_attainable after instantiating L=tm63Length1, A=rootMarker1A, z=rootMarker1Z and transporting the suffix by the root tape shift. These are source statements only: the authentic root prefix and complete 24-class dispatcher remain uncompiled/unaccepted, so neither theorem is an established halting proof.
+The implementation drafts in this directory are GeneralQ4TailArithmetic.lean, GeneralQ4TailS1Reparam.lean, GeneralQ4TailS1Config.lean, and GeneralQ4TailTerminalComposition.lean. Agent 42 added the canonical authentic-root wrapper at im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean; it states tm63_blank_halts and tm63_blank_attainable after composing tm63_blank_reaches_second_q4_tail, the root shift, and q4TerminalFrame_to_terminalConfig. These are source statements only: the authentic root prefix and complete 24-class dispatcher remain uncompiled/unaccepted, so neither theorem is an established halting proof.
 
 ## Evidence status and next action
 
