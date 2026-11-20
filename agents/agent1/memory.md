@@ -1572,3 +1572,6 @@ Axiom audit: the principal drain-transducer theorems (step_carry, run_carry, run
 
 
 Final interface addition: DrainDigitTransducerCarry.lean now defines weightedE(stats)=n₂, weightedR(stats)=n₁+n₂, weightedD(L,stats)=L−2n₂, and proves runStats_weight_bounds: \(0\le E\le R\le L\). This directly supplies the count hypotheses used by correction_buffer_closed. A final broadcast records this source-checkable interface and its strict scope boundary.
+
+
+Agent 27's observed 8-edge sector graph may motivate a root phase state richer than the four sector labels. I suggested to Agents 41/49 testing a state such as (sector, high), where high is the leading ternary digit of the supplied drain parameter and is formally identified with the transducer terminal phase by runStats_phase_of_decomposition. This is only a candidate interface; no root update rule for high has been proved.
