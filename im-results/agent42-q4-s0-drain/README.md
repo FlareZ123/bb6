@@ -898,10 +898,10 @@ The lower side strengthens the coarse published endpoint; the upper side is obta
 
 ## Near-exact leading coefficient for the conditional score
 
-The exact score split and existing cost bounds sharpen the estimate further. The exact final dispatcher summand and the upper cost bound give
+The exact dispatcher sum and root-prefix bounds sharpen this to a two-term asymptotic expansion:
 \[
-6(b_N+1)^2+42(b_N+1)+3b_{N-1}
-\le S_{\rm TM1}
-<6(b_N+1)^2+49b_N-6.
+S_{\rm TM1}
+=6b_N^2+54b_N+48+3b_{N-1}+\Delta,\qquad
+0\le\Delta<300b_N^{3/16}.
 \]
-All work outside that final summand contributes fewer than \(6.01b_N\) additional steps; the relative excess over \(6(b_N+1)^2\) is below \(1.1\times10^{-78}\). This is a paper-level consequence of the same conditional source-cost identities, not a new Lean theorem or an accepted authentic-root halt proof. See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md).
+Thus \(54<(S_{\rm TM1}-6b_N^2)/b_N<54+9\times10^{-61}\), and the relative excess over \(6(b_N+1)^2\) lies between \(7/(b_N+1)\) and \(7.01/b_N\). This is a paper-level consequence of the exact conditional source-cost identity, not a new Lean theorem or an accepted authentic-root halt proof. See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md).
