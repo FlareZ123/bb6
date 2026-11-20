@@ -1,64 +1,56 @@
-# Authentic TM63 root to q4Tail and the corrected P2 S0 handoff
+# Authentic TM63 root: second q4Tail to S0 and one further recurrence
 
-## Established source chain and scope
+## Status
 
-`TM63RootQ4Tail.lean` is an intermediate composition of two existing source drafts:
+**Source-level Lean draft; not compiled or axiom-audited.** The authentic blank-root chain currently reaches the second q4Tail frame in the existing source draft `TM63RootQ4Tail.lean`. The new `P2RootS0Identity.lean` supplies the missing pointwise q4Tail-to-S0 interface and composes one further q4Tail recurrence. This is a substantive proof draft, not an accepted Lean result, not a halt proof, and not a BB(6) upper bound.
 
-1. Agent 48's `tm63_blank_reaches_second_q4_frame`, from the authentic blank root to the first-cycle q4 endpoint;
-2. Agent 24's `positiveZFirstCycle_then_secondCyclePrefix`, from that canonical q4 checkpoint through the first cycle and the second-cycle prefix to `q4Tail`.
+## Exact source construction
 
-The wrapper extracts the exact C2 suffix from the shared C1 endpoint using `run_append`, then transports it to the authentic root coordinate with `shift_run`. The only new arithmetic side condition is oddness of `firstQ4P1Value`, supplied by the existing BinDec capacity and root-`z` bounds.
+For arbitrary `z ≥ 1`, `w`, and `q`, put
 
-**The root wrapper and its dependencies remain uncompiled source drafts.** This does not establish a halt, an exact champion score, or a global BB(6) upper bound.
+- `a = 2^z - 1`,
+- `n = 2^a`,
+- `m = 3*2^z + 3*z + 7`,
+- `tail0 = replicate 4 true ++ binDec w q ++ lh`,
+- `tail = [1,0,0,1,1,1] ++ tail0.drop 6`,
+- `ell = replicate (m+2) true ++ [0,1,0,0] ++ tail`.
 
-## Correct P2 residual boundary
+The source tape `T2` is the authentic S0 drain output after the left sweep, the first four-step postlude frame, the 34-step second-cycle frame at head 1, and the two-zero setup at head `m+5`. The new source module states the three obligations required by Agent 42's generic `q4Tail_frame_eq_s0Config`:
 
-The earlier `P2ResidualBoundaryAudit.md` and the 73-step 0101 branch are superseded. They misread the semantics of `frameAt`.
+1. `T2 (m+6) = true` (the second zero of the setup);
+2. `T2 (m+5-i) = sideBit ell i` for every `i`;
+3. `T2 (m+12+3*n+i) = false` for every `i`.
 
-The authoritative lemma `frameAt_tape` in `im-results/agent6-q4-prefix/CountedQ4Prefix.lean` states that, inside the frame, the tape is `decide (x-h ∈ c.marked)`. Thus **every unmarked cell inside the frame is written blank**; it does not retain its input bit.
+The residual decomposition is exact. The setup writes `m+5,m+6`; the E-scan and first left sweep give ones on `5..m+1); the S0 right stream supplies `m+2..m+4); and the 34-step frame marks `4`. The frame's in-window unmarked cells are blank, so cells `3,2,1,0` are `0100` and cells `-1..-6` are `100111`. For `x=-7-j`, the preceding frames and sweep preserve the original S0 left stream, whose side index reduces to `tail0[6+j]`; hence the remaining tail is exactly `tail0.drop 6`.
 
-For checkpoint head (h=1), put
-[
-m=3cdot2^z+3z+7,quad n=2^{2^z-1},quad
-h_1=m+5,quad h_2=m+7,quad g=m+7+3n,
-]
-and (H=g-5=m+2+3n, a=n-1). The S0 counter `binDec a (2^a-1)=d0pow a` has length (3a), so the residual left context after that counter begins at
-[
-H-3a=m+5.
-]
+For the far-right ray, the original S0 right-facing word has length `6+3*n`. The first untouched cell after the q4Tail window has source index `3*n+11`, already beyond that finite word; all intervening frames, the two-zero setup, and the left sweep are local or preserve this ray. This gives the required blank right side.
 
-The two-zero setup writes cells (m+5,m+6) to one. The E-scan contributes the (m) ones at cells (5,ldots,m+4), and the 34-step frame marks cell (4) as one. These give the leading (1^{m+2}).
+## Draft theorem surface
 
-The 34-step frame has marked offsets ([-7,-6,-5,-2,1,3]) relative to (h=1). Because unmarked cells inside its window are blank, its next four cells at coordinates (3,2,1,0) are exactly
-[
-(0,1,0,0).
-]
-Its next three cells at (-1,-2,-3) are exactly
-[
-(1,0,0).
-]
-Therefore the authentic residual has the form
-[
-1^{m+2};0100;	ext{tail},qquad 	ext{tail begins }100.
-]
+`P2RootS0Identity.lean` contains:
 
-This is the interface required by Agent 44's generic `S0DrainQ4Postlude.lean`. The next task is to prove the full q4Tail-to-`s0Config` tape identity, including the d0 counter and the right-facing `s0RightFacing 0` suffix. The residual prefix and the 100 tail guard are not by themselves a completed handoff.
+- `q4TailS0SourceGuards`: the three source obligations and the `100` tail guard, for every `z ≥ 1,w,q`;
+- `q4TailS0Frame_eq_s0Config`: the generic frame identity
+  `s0Config ell (n-1) (2^(n-1)-1) 0 (m+2+3*n)`;
+- `tm63_root_second_q4Tail_eq_s0Config`: the authentic-root specialization using the exact P1 width and value;
+- `q4TailS0Frame_to_nextQ4Tail`: one generic q4Tail-to-q4Tail recurrence with exact drain, P2 postlude, and next-prefix cost;
+- `tm63_blank_reaches_next_q4Tail`: composition of the authentic blank-root path through the second q4Tail frame and one further recurrence.
 
-## Conditional 0101 branch
+The pointwise tape identity itself does not require oddness of `q`; oddness is used by the existing root trajectory theorem to establish that the authentic run reaches the second-prefix frame. The new recurrence then uses the corrected `100` tail guard.
 
-`P2ActualBoundaryBridge.lean` is a valid finite 73-step bridge for its stated conditional input `0101 1^7 00`. It is **not** the authentic TM63 continuation and must not be composed with `rootSecondQ4TailFrame`.
+## Conditional material kept separate
 
-Agent 48's `P2ActualBoundaryComposition.lean` is likewise a conditional theorem for that different S0 input family. Preserve it as an independent finite-trace result, but do not describe it as an actual root continuation.
+`P2ActualBoundaryBridge.lean` and the 73-step `0101 1^7 00` branch concern a different conditional input family. They are preserved as independent finite-trace drafts and are **not** composed with `rootSecondQ4TailFrame`.
 
-## Toolchain / verification status
+## Toolchain and trust status
 
-The uploaded Lean archive is incomplete: concatenating the two supplied parts produces 526,200,098 bytes, while the ZIP directory requires 608,393,640 bytes (82,193,542 bytes are missing). The partial archive decompresses only part of the toolchain and contains no `bin/lean`. Thus the exact Lean 4.36.0-rc2 local preflight could not be run in this invocation. The source remains uncompiled and no axiom audit is claimed.
+No local Lean command ran in this invocation: the available Python/container execution calls failed at the tool boundary before executing commands. The latest Critic handoff corrects the archive recipe: the concatenated split ZIP contains an inner `lean-4.36.0-rc2-linux.tar.zst`; after unzipping, extract it with `tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean`, then add the extracted `bin` directory to `PATH`. This correction is reported from another working shell and was not independently tested here. No CI was dispatched as a substitute for local preflight. The source and its full import closure remain uncompiled; the `#print axioms` commands in the file have not been executed.
 
-## Next mathematical obligations
+## Next work
 
-1. Prove the pointwise q4Tail-to-S0 identity for `rootSecondQ4TailFrame`: left-facing stream `d0pow (n-1) ++ p2ResidualLeft m tail`, right-facing stream `s0RightFacing 0`.
-2. Use the tail beginning `100` to apply Agent 44's `p2S0Drain_q4Postlude` and `p2PostludeFrame_typeAWindow`.
-3. Identify the resulting state-4 frame at head 1 with the next canonical checkpoint and compose the next P1/P22 iteration.
-4. Compile the ordered import closure under Lean 4.36.0-rc2 and audit exported theorem axioms when a complete local toolchain is available.
+1. When a local execution backend works, run the corrected Lean 4.36.0-rc2 bootstrap and compile the exact import closure of `P2RootS0Identity.lean`; fix the first compiler diagnostic, then inspect all exported theorem axiom reports.
+2. Independently review the residual indices and right-ray bound, especially the `tail0.drop 6` side-bit reduction and the frame-window coordinates.
+3. Integrate the next q4Tail frame with the existing outer-counter descent. Determine and prove the updated residual parameterization until the A=1 Type-C and A=2 terminal cases are reached.
+4. Prove the resulting trajectory halts and obtain its exact runtime; separately pursue the universal six-state upper bound.
 
-All material here remains under `im-results/`. No result has been promoted to `results/`; BB(6) remains unresolved.
+All work remains in `im-results/`. Nothing has been promoted to `results/`; BB(6) remains unresolved.

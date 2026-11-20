@@ -179,3 +179,24 @@ Second focused run `p2-actual-boundary` (run 44555125099) failed later in the br
 - the cast-bound proof uses `le_refl`, not `le_rfl`.
 
 The current source substitutes each finite offset, normalizes the three endpoint coordinates, matches the exact nested update, and fixes the head equality. The same existing CI target should now be rerun once; do not rerun run 44555125099's source unchanged.
+
+
+## 2026-11-20: authentic q4Tail-to-S0 identity and one recurrence
+
+Claimed Agent 38 at 2026-11-20T02:49:04.754Z. Read the Agent 38 mailbox and current q4Tail handoffs. Agent 42 supplied the corrected second-prefix frame semantics and the generic q4Tail-to-S0 adapter; Agent 24 supplied the root coordinate decomposition. The important correction is that `frameAt` overwrites every unmarked cell inside its window with blank. The authentic second-cycle residual is `1^(m+2) ++ 0100 ++ 100111 ++ tail0.drop 6`, not the obsolete 0101/0100-mixed interpretation. The conditional 73-step 0101 bridge is for a different input and must not be composed with the root frame.
+
+Added `im-results/agent38-root-q4tail/P2RootS0Identity.lean`. It defines the general positive-z second q4Tail source frame and attempts to prove:
+- the three source hypotheses of Agent 42's `q4Tail_frame_eq_s0Config` (left guard, complete residual left ray, blank far-right ray), plus the tail's first three bits 100;
+- the generic q4Tail-frame equality with `s0Config (p2ResidualLeft m tail) (n-1) (2^(n-1)-1) 0 (m+2+3*n)`;
+- the exact authentic-root specialization;
+- one further generic q4Tail-to-q4Tail recurrence and a composed blank-root theorem reaching that next frame.
+
+Parameters: `a=2^z-1`, `n=2^a`, `m=3*2^z+3*z+7`, `tail0=1111 ++ binDec w q ++ lh`, `tail=100111 ++ tail0.drop 6`. The left-ray proof uses the exact `s0LeftSweep_shift` profile with `m-k=3), the two finite frames' actual marked sets, and `s0Config_left_cell`; the right-ray proof uses the source S0 right word's length `6+3*n` and the first untouched source index `3*n+11). The pointwise tape identity is formulated for arbitrary `w,q`; q odd is needed only by the existing root trajectory theorem to reach the second-prefix frame.
+
+This is a **source-only draft**, not a Lean-checked result. The local Python/container execution calls failed at the tool boundary before any command ran, so no local Lean command or archive extraction was executed. Critic's latest message corrects the bootstrap: the split ZIP contains an inner `lean-4.36.0-rc2-linux.tar.zst`; after `unzip`, run `tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean`, then add the extracted `bin` to `PATH`. This was verified by Critic in another working shell, not by this invocation. No CI was dispatched; do not use CI as a substitute for the required local preflight.
+
+Next:
+1. Compile the exact import closure of `P2RootS0Identity.lean` locally when a working execution backend is available; fix the first diagnostic and inspect all exported `#print axioms` output.
+2. Independently review the residual indices, `tail0.drop 6` reduction, frame coordinates, and far-right ray bound.
+3. Compose the new q4Tail recurrence with the existing outer-counter descent; prove the parameter update through the A=1 Type-C and A=2 terminal branches.
+4. Only then pursue exact halt/runtime and the universal BB(6) upper bound. Keep all uncompiled work in `im-results/`; do not claim BB(6) solved.
