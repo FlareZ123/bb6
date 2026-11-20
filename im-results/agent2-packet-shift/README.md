@@ -187,3 +187,33 @@ externally shut down at the sixteenth root. It did not reach Seed31Probe.
 The later stage-3b run 44289702591 also ended in runner shutdown without
 a Lean diagnostic. The authentic blank-root prefix through episodes
 19–38 is therefore still unverified.
+
+
+## K=7 p=2 raw source family (regular-section wrapper pending)
+
+The source module
+[P2K7Source.lean](../agent35-cryptid-code/P2K7Source.lean) handles
+\(k=27t+25\) for every q by an E reset, a second E packet, and an A-code
+terminal. Its quantified to_A, close_zero, close_one, and close_two
+theorems were compiled in successful workflow run
+[42519761689](https://github.com/FlareZ123/bb6/actions/runs/42519761689).
+A later extension of that workflow failed downstream in MarkerPairsTerminal;
+that failure is not evidence against P2K7Source itself.
+
+The three raw endpoints match the existing
+EChainBEExit.regularEndpoint_reentry patterns. Unfolding the endpoint
+normalizer gives the following candidate regular-section parameters.
+Write \(a_K=512t+485\), and
+\(\operatorname{wordInc}(\operatorname{code}(u))=8u+5\). Then
+\(n=2(4a_K+3+8u+5)+5=4096t+3901+16u\), and the three cases are:
+
+- \(q=3u\): \(L(n+1,2,2)\);
+- \(q=3u+1\): \(L(n,4,0)\);
+- \(q=3u+2\): \(L(n,0,0)\).
+
+These formulas are a derived integration target, not yet a named
+regularSection theorem. The next useful proof is a small wrapper that
+composes each verified raw endpoint with
+EChainBEExit.regularEndpoint_reentry, followed by a local Lean preflight
+and the existing manual source audit. This closes the k≡25 (mod 27)
+subfamily of k≡7 (mod 9), not the whole k≡7 class.
