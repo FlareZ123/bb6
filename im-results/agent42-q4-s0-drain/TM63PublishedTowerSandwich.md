@@ -94,10 +94,10 @@ As \(q\) is an integer, \(q\le T_J-1\). Applying (1) to the exact
 terminal right counter,
 \[
 b_N=V_{M+N+46}<T_{M+N+50}=T_q
- \le T_{T_J-1}=:U. \tag{9}
+ \le T_{T_J-1}=:W. \tag{9}
 \]
-Thus \(b_N<U\), where \(U=T_{T_J-1}\) is enormous. The complete-score
-upper estimate below will use \(9U^2<2^U=T_{T_J}\). Also \(J<T_{11}\),
+Thus \(b_N<W\), where \(W=T_{T_J-1}\) is enormous. The complete-score
+upper estimate below will use \(9W^2<2^W=T_{T_J}\). Also \(J<T_{11}\),
 so this upper endpoint is strictly below the published
 \(T_{T_{T_{11}}}\).
 
@@ -248,7 +248,7 @@ term satisfies \(D_N<7b_N^2\) by (10)--(11); the added fixed
 \(+90\) is absorbed by the same \(b_N\ge2^{64}\) remainder
 estimate. Therefore the exact score decomposition gives
 \[
-\boxed{S_{\rm TM1}<9b_N^2<2^Y=T_{X+1}<T_{T_{T_{11}}}.}
+\boxed{S_{\rm TM1}<9b_N^2<9W^2<2^W=T_{T_J}.}
 \tag{12}
 \]
 ## Lower side and comparison with the published estimate
