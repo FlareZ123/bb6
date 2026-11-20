@@ -18,36 +18,36 @@ P(0,8;F_7),qquad F_7=0,1^6,
 
 i.e. suffix `0111111110111111`.
 
-## Exact packet trace
+## Exact packet trace (canonical form)
 
-The subsequent suffixes parse exactly as follows:
+Use \(P(q,p;Y)=(01)^q0\,1^pY\), with canonical tail \(Y\) empty or beginning with 0. Absorb any leading ones of a proposed tail into \(p\). The suffixes after calls 11–30 parse as:
 
-| Call | Branch | ((q,p)) | Tail |
+| Call | Branch | \((q,p)\) | Tail |
 |---:|:---:|:---:|---|
-| 11 | E | (0,8) | (F_7=0111111) |
-| 12 | E | (2,5) | (F_7) |
-| 13 | B | (1,5) | (F_7) |
-| 14 | B | (0,5) | (F_7) |
-| 15 | E | (2,2) | (F_7) |
-| 16 | B | (1,2) | (F_7) |
-| 17 | B | (0,2) | (F_7) |
-| 18 | E | (0,6) | (Y_3=01010111) |
-| 19 | E | (2,3) | (Y_3) |
-| 20 | B | (1,3) | (Y_3) |
-| 21 | B | (0,3) | (Y_3) |
-| 22 | E | (2,0) | (Y_3) |
-| 23 | B | (1,0) | (Y_3) |
-| 24 | E | (0,8) | (T_7=1010111) |
-| 25 | E | (2,5) | (T_7) |
-| 26 | B | (1,5) | (T_7) |
-| 27 | B | (0,5) | (T_7) |
-| 28 | E | (2,2) | (T_7) |
-| 29 | B | (1,2) | (T_7) |
-| 30 | B | (0,2) | (T_7) |
+| 11 | E | (0,8) | \(F_7=0111111\) |
+| 12 | E | (2,5) | \(F_7\) |
+| 13 | B | (1,5) | \(F_7\) |
+| 14 | B | (0,5) | \(F_7\) |
+| 15 | E | (2,2) | \(F_7\) |
+| 16 | B | (1,2) | \(F_7\) |
+| 17 | B | (0,2) | \(F_7\) |
+| 18 | E | (0,6) | \(Y_3=01010111\) |
+| 19 | E | (2,3) | \(Y_3\) |
+| 20 | B | (1,3) | \(Y_3\) |
+| 21 | B | (0,3) | \(Y_3\) |
+| 22 | E | (2,0) | \(Y_3\) |
+| 23 | B | (1,0) | \(Y_3\) |
+| 24 | E | (0,9) | \(U_6=010111\) |
+| 25 | E | (2,6) | \(U_6\) |
+| 26 | B | (1,6) | \(U_6\) |
+| 27 | B | (0,6) | \(U_6\) |
+| 28 | E | (2,3) | \(U_6\) |
+| 29 | B | (1,3) | \(U_6\) |
+| 30 | B | (0,3) | \(U_6\) |
 
-The B steps decrement (q) by one and preserve (p,Y). The E steps with (p\ge3) add two to (q), subtract three from (p), and preserve (Y). These are exactly the `PacketRank.advance` updates. Call 17 is the P2 leaf; call 18 is the original-source `e_two_reset` output, and calls 19–23 continue with the new marker (Y_3).
+The B steps decrement \(q\) by one and preserve \(p,Y\). The E steps with \(p\ge3\) add two to \(q\), subtract three from \(p\), and preserve \(Y\). These are exactly the PacketRank.advance updates. Call 17 is the P2 leaf; call 18 is the e_two_reset output, and calls 19–23 continue with \(Y_3\).
 
-Call 24 is a second exceptional E-zero boundary: it changes (P(1,0;Y_3)) to (P(0,8;T_7)). The suffix is exact, but this marker change has not yet been aligned with an existing source theorem. Calls 25–30 again follow the ordinary B/E packet-rank updates with (T_7) preserved.
+Call 24 is an E-zero boundary. In canonical form it maps \(P(1,0;Y_3)\) to \(P(0,9;U_6)\), where \(U_6=Y_3\) with its leading \(01\) removed. Calls 25–30 again follow the ordinary B/E packet-rank updates with \(U_6\) preserved.
 
 ## The uncovered P2 residue
 
