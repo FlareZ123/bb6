@@ -1253,3 +1253,71 @@ Critic's 01:51Z broadcast still freezes the five-slot global-leaf acceptance as 
 
 - Refined the exact V-index score bound by retaining the complete final summand of the one-dimensional dispatcher cost. With (b_N=V_{M+N+46}), (b_{N-1}=V_{M+N+45}), the last summand is exactly (6(V_{M+N+46}+1)^2+42(V_{M+N+46}+1)+3V_{M+N+45}).
 - Since all other dispatcher summands and root/drain prefix costs are nonnegative, this is a stronger conditional score lower bound than its quadratic part alone.
+
+## 2026-11-20 14:42Z checkpoint — TM63 source-interface audit and tactic cleanup
+
+Claimed Agent 24 at `2026-11-20T14:30:10.399Z`, run ID
+`agent24-gpt6-20261120T143010399Z-tm63-source-replay-audit`. Do not refresh
+the lease. The measured 70-minute release threshold is
+`2026-11-20T15:40:10.399Z`; after every checkpoint compare it with an actual
+runtime clock.
+
+### Source-interface review
+
+- Compared Agent 42's `m2_zero_residue_replay.py` and
+  `section_result_24_cycle_replay.py` against the original source modules.
+- The Python TM table matches all 12 transitions of
+  `BB6Coverage.Agent48Champion.tm2` in
+  `im-results/agent48-champion-root/ChampionRootBridge.lean`.
+- The replay's complemented `bin_dec` and S1 tape blocks match
+  `S1Encoder.binDec` / the source encoder. The replay cost is exactly
+  `proposedIncrementCost` from `CostRecurrence.lean`.
+- `m2Even_residue0_counted_increment_source` has exactly the complete
+  dispatcher interface target:
+  `s1Config L (8*q-1) 1 (a+b+2) 0 (2^b-1) (h+5+3*b)`.
+  The reset-prefix intermediate intentionally has `r=2^b-1,b=0`;
+  counted drain moves that counter into the final `b) field.
+- The 24-cycle finite replay covers all (marker, n mod 8) classes for N=24
+  and 48 because the combined period is lcm(3,8)=24. This is finite
+  corroboration only; it is not the all-parameter source proof.
+- Rechecked the exact conditional V-index derivation in
+  `DirectTerminalTetrationBound.md`: with V0=63, V(j+1)=2^Vj-1,
+  A0=18+sum(V0..V6), M=31*2^A0-36, the 34-step middle ends at V42,
+  the M-step dispatcher at V(M+42), the q4 terminal right counter at
+  V(M+46), and the final N-step terminal dispatcher at V(M+N+46).
+  The combined dispatcher-plus-terminal final cost term is
+  6(V(M+N+46)+1)^2 + 42(V(M+N+46)+1) + 3V(M+N+45).
+  This remains conditional on the uncompiled root/dispatcher closure.
+
+### Static source cleanup
+
+- Commit `b4a29965b8d1043e4a4cca9c9381d05a64f4964d` removed non-core
+  `norm_num`/`ring` uses from the M0 all-valuation source chain:
+  `M0EvenEightQ4Bridge.lean`,
+  `M0EvenEightValuationEncoding.lean`,
+  `M0EvenEightValuationQ4Source.lean`. The status paragraph in
+  `M0EvenEightValuationExtension.md` records that this is cleanup only.
+- Commit `b30da2d2607326d770594756540774aa4b6d1741` removed
+  `norm_num`/`interval_cases` from the M2 zero-residue chain:
+  `M2EvenResidueZeroSource.lean` and
+  `LBinDecHRunLeftFacing.lean`; the M2 integration note was updated.
+- Sent Agent 42 the replay/source-interface audit
+  (`5a693eea7aa0bcadc84797d597701a4c0034a566`), broadcast the M0 tactic
+  cleanup (`81369a42959241461d8937e860b2d8256785d6ea`), and sent Agent 42
+  the M2 cleanup handoff (`b1fffe405f6728ce748635a08475ac19c52ecaf5`).
+
+### Verification boundary and next work
+
+- Both local `container.exec` and Python execution previously failed at the
+  tool boundary before running even trivial commands. No Lean command ran.
+  No CI was dispatched, consistent with the repository's no-CI-substitute
+  local-preflight rule.
+- The M0 and M2 all-q source declarations, the 24-class dispatcher, and the
+  arbitrary-A q4 terminal composition remain uncompiled and unaudited.
+- Next useful acceptance action when a working local runtime exists: compile
+  the exact M0/M2 counted-source import closures and then
+  `TM63SourceIncrementDispatcherComplete.lean`, inspect transitive axiom
+  profiles, and only then run the existing focused manual workflow.
+  Meanwhile, do not repeat finite replays or claim any BB(6) lower bound from
+  the paper-level V-index calculation.
+
