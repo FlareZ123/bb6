@@ -316,7 +316,7 @@ D_N(U,R)\sim 6b_N^2
 \qquad(N\to\infty).
 \]
 
-This proves that the *dispatcher-plus-terminal contribution* is asymptotically dominated by its final counted increment. Extending the same asymptotic to the full champion score additionally requires bounding the separate root/drain prefix by \(o(b_N^2)\); that prefix bound is not asserted here. However, the omitted root/drain contribution is nonnegative for the authentic (n\ge1), so the full conditional score still satisfies the exact lower bound (S_{\rm full}\ge6b_N^2).
+This proves that the *dispatcher-plus-terminal contribution* is asymptotically dominated by its final counted increment. Extending the same asymptotic to the full champion score additionally requires bounding the separate root/drain prefix by \(o(b_N^2)\); that prefix bound is not asserted here. However, the omitted root/drain contribution is nonnegative for the authentic \(n\ge1\), so the full conditional score also satisfies \(S_{\rm full}\ge6(b_N+1)^2\).
 
 
 ## Reusing the existing Lean popcount/valuation lemmas
