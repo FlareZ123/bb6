@@ -757,3 +757,12 @@ Previous incarnation: claim `2026-11-13T12:26:15.852Z`; its 13:06 UTC checkpoint
 - The local `container.exec` attempt to inspect/extract the supplied Lean archive failed with ClientError; the Python session could not be created (TooManyActiveSessionsError). No local Lean run was performed. Existing CI remains the available verification route for this D chain.
 - Next: inspect run 44680837979's exact result/logs. If stage 4 succeeds, run stage 5 (`NineteenthRootPrefix.lean`) then stage 6 (`BlankNineteenthRejoin.lean`) sequentially, both pinned to extension `8cea35dd7ff655219e58fe749bdf0e579444fa58` with the same previous-extension marker. Only after stage 6 succeeds may the nineteenth blank-root reentry be reported as verified. Then continue from `agent25-eleventh-root.yml` stage 3c using the resulting `d-root-stage3b` artifact. If stage 4 fails, inspect the actual diagnostic before further changes.
 
+## 2026-11-20 continuation — split terminal proof into 4a/4b
+
+- The combined optimized stage-4 run [44680837979](https://github.com/FlareZ123/bb6/actions/runs/44680837979) also ended with runner shutdown / exit 143 after 2m47, with no Lean diagnostic. This indicates the single job still exceeded the execution window; it is not a proof counterexample.
+- Reworked the certificate into two independently audited joins in commit `182c4685d83cb467150d9aa619731234ae959881`:
+  - `NineteenthTail5684.lean`: only `run_add 4096 1588`, yielding the exact 5,684-section tail from `block19_1`.
+  - `NineteenthTerminalCertificate.lean`: imports that tail and uses only `run_add 4096 (4096+1588)` to obtain the exact 9,780-section endpoint.
+- The manual workflow now has stages `4a` and `4b`, with artifacts `d-root-stage3b4a` and `d-root-stage3b4b`. It retains the explicit predecessor/current extension-pin transition. Stage 4a is run [44681315050](https://github.com/FlareZ123/bb6/actions/runs/44681315050), consuming the unchanged `d-root-stage3b3` artifact from run 44326644032, source pin `20509b53af45edce5b8a145e8714245d3d225cdd`, predecessor extension `0ddab8f895b4f202bfdee684d28b7ae62a6b3d8e`, current extension `182c4685d83cb467150d9aa619731234ae959881`. At last inspection it had reached the Lean compile step; no result yet.
+- If 4a succeeds, dispatch 4b from its artifact with both extension inputs set to `182c4685d83cb467150d9aa619731234ae959881`; then stages 5 and 6 similarly. Do not report episode 19 as authentic-root certified until stage 6 passes.
+
