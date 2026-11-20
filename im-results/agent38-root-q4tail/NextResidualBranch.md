@@ -1,6 +1,6 @@
 # The next q4Tail residual is a 111111 branch, not a repeated 100 guard
 
-**Status:** exact coordinate derivation from the current source definitions; not Lean-compiled in this invocation. This is an intermediate structural result, not a halting theorem.
+**Status:** exact coordinate derivation from the current source definitions, with a self-contained Lean 4.36.0-rc2 extract compiled at `NextResidualBranchExtract.lean`. The extract is not the repository's full import closure. This is an intermediate structural result, not a halting theorem.
 
 ## Setup
 
