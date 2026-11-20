@@ -272,8 +272,10 @@ dossier for the exact source families.
 
 ExceptionalESafeReentry.lean and ExceptionalESafeCanonical.lean
 remain submitted proof candidates, not compiled theorems. The canonical
-file still needs its own e_output_packet helper because the helper in the
-other file is private. The q=5 episode-20 root input already has a separate
-EEE-to-P4 escape, so this general safe-E candidate is not a prerequisite
-for that particular root step.
+module now contains its own private `e_output_packet` shape lemma, removing
+the known unresolved identifier from the source. This is a source-level
+repair only: no Lean compile or axiom audit has been completed because the
+local runtime is unavailable. The q=5 episode-20 root input already has a
+separate EEE-to-P4 escape, so this general safe-E candidate is not a
+prerequisite for that particular root step.
 

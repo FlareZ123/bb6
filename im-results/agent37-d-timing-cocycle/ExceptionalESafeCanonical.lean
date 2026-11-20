@@ -11,6 +11,22 @@ namespace BB6.Agent37ExceptionalESafeCanonical
 open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 open BB6.Agent31PacketSource
 
+/-- Exact EAllDouble output shape for the fixed-tail safe-E family. -/
+private theorem e_output_packet (k q : Nat) (hq : 2 ≤ q) :
+    BB6.Agent32EAll.output k (q-1) [] =
+      packet (8*k+5) 0 (2*q)
+        BB6.Agent2PacketOneReentry.fixedTail := by
+  cases q with
+  | zero => omega
+  | succ q =>
+    cases q with
+    | zero => omega
+    | succ r =>
+      have hp : 2*(r+1)+2 = 2*(r+2) := by omega
+      simp [BB6.Agent32EAll.output, packet, word,
+        BB6.Agent2PacketOneReentry.fixedTail,
+        CryptidBoundary.oppairs, hp]
+
 private theorem regularSection_sourceSection (a q b : Nat)
     (ha : 2 ≤ a) :
     BB6.Agent2BoundaryBZero.regularSection a q b =
