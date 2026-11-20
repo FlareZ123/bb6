@@ -2,6 +2,18 @@
 
 **Status:** intermediate exact source-parent composition. A second independent progression is recorded in [Root32HighStopR7520.md](Root32HighStopR7520.md). A third is recorded in [Root32HighStopR64864.md](Root32HighStopR64864.md). A fourth is recorded in [Root32HighStopR11616.md](Root32HighStopR11616.md). A fifth is recorded in [Root32HighStopR36192.md](Root32HighStopR36192.md). It excludes a third infinite progression of the authentic B2/U5 high-stop target. The arithmetic is exact and the source-parent reductions use existing source-certified theorems, but this composition has not yet been wrapped in one Lean theorem or compiled as an integrated import closure. It is not a Machine C decision or a BB(6) result.
 
+## Index of excluded root-index progressions
+
+| Parameter cylinder | Exact root-index class | Detailed derivation |
+|---|---|---|
+| t≡159 (mod 1024) | r≡35168 (mod 65536) | This file |
+| t≡79 (mod 512) | r≡7520 (mod 32768) | [Root32HighStopR7520.md](Root32HighStopR7520.md) |
+| t≡719 (mod 1024) | r≡64864 (mod 65536) | [Root32HighStopR64864.md](Root32HighStopR64864.md) |
+| t≡15 (mod 512) | r≡11616 (mod 32768) | [Root32HighStopR11616.md](Root32HighStopR11616.md) |
+| t≡1167 (mod 4096) | r≡36192 (mod 65536) | [Root32HighStopR36192.md](Root32HighStopR36192.md) |
+
+All five are intermediate source-parent compositions, not yet integrated Lean theorems. They are pairwise disjoint and disjoint from the previously recorded r≡9568 and 10592 (mod 16384) classes. Their shared reduction and root-saturation equations are given below; each child note records the additional inverse-parent arithmetic.
+
 ## 1. Parameter cylinder and existing reduction
 
 Use the existing B2/U5 root32 parameterization
