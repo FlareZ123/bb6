@@ -188,3 +188,97 @@ Next targets:
 4. On \(r\equiv1376\pmod{2048}\), attack the remaining L-side Q' family rather than claiming the high-stop target is closed.
 
 Keep this work in im-results/. Do not promote it to results/ until the composed source theorem is compiled and independently reviewed.
+
+
+## 6. A second exceptional exclusion: q = 7 mod 64
+
+A further cylinder can be closed using the even/even sum-zero parent theorem. Put
+
+\[
+q=64m+7,\qquad t=3+4q=256m+31.
+\]
+
+The odd-\(a\) bounce branch of R is already excluded: q is odd, so \(W(q)\) is odd, the valuation bound forces \(n=1\), and the parent A(q) has odd right coordinate and sum \(2\pmod4\).
+
+For the direct branch, the odd/odd low-valuation inverse of R'(t) gives
+
+\[
+P_1=
+(768039162240m+93809277604,\;
+ 517923551040m+63259839556).
+\]
+
+This is even/even, with sum \(8S_0\), where
+
+\[
+S_0=160745339160m+19633639645\equiv1\pmod4.
+\]
+
+The source-certified even_even_sumzero_blank_reach_iff theorem gives exactly two possible parents:
+
+\[
+\begin{aligned}
+D&=(1285962713280m+157069117158,\;
+     258961775520m+31629919777),\\
+E&=(321490678320m+39267279288,\;
+     741197793000m+90530838709).
+\end{aligned}
+\]
+
+The E parent has odd right coordinate and coordinate sum
+
+\[
+1062688471320m+129798117997\equiv1\pmod4,
+\]
+
+so blank_no_odd_sum_one excludes it.
+
+For D, its sum-plus-one is
+
+\[
+D_x+D_y+1
+=8(193115561100m+23587379617),
+\]
+
+with the quotient odd. D is even/odd, so the complete source grammar leaves only its odd-\(a\) high branch; parity forces its bounce depth to be even, while the exact valuation bound forces depth zero. The unique parent is
+
+\[
+A=(772462244400m+94349518465,\;
+   515712009960m+62989719120).
+\]
+
+A has even right coordinate and sum
+
+\[
+1288174254360m+157339237585\equiv1\pmod8.
+\]
+
+The even-right unique inverse therefore forces
+
+\[
+X=(1288174254360m+157339237583,\;
+   257856004980m+31494859559).
+\]
+
+X has odd right coordinate and sum
+
+\[
+1546030259340m+188834097142\equiv2\pmod4,
+\]
+
+so blank_no_odd_sum_two excludes it. Thus D is unreachable, then P1, then R'(t).
+
+Both parent types of R have now been excluded, proving
+
+\[
+\boxed{q\equiv7\pmod{64}\Longrightarrow
+       \neg CReach(R(3+4q)).}
+\]
+
+Equivalently \(t\equiv31\pmod{256}\). The exact root equation \(t+j\equiv196\pmod{256}\) then gives \(j\equiv165\pmod{256}\) and
+
+\[
+r=32+64j\equiv10592\pmod{16384}.
+\]
+
+This removes the D0E/E7 alternative on a second infinite root-index progression. It is still only the D0E branch; the L alternative must be handled separately before excluding T.
