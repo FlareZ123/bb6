@@ -199,7 +199,14 @@ C_{\rm root}
  <7\cdot4^m
 \tag{11}
 \]
-for \(m\ge12\), which holds at the authentic parameters. Since
+For \(m\ge12\), the remainder divided by \(4^m\) is
+\[
+\frac{821}{2^m}+\frac{99}{2^{3m/2}}+\frac{39m+1165}{4^m}
+\le\frac{821}{4096}+\frac{99}{2^{18}}+\frac{1633}{4^{12}}
+<\frac13+\frac1{1000}+\frac1{1000}<1;
+\]
+the three ratios decrease thereafter. This proves the strict bound at
+the authentic parameters. Since
 \(n=2^m\) and \(R=2^{n-1}-1\), we have
 \(R^2>9\cdot4^m\); also \(b_N\ge R\). Thus
 \[
