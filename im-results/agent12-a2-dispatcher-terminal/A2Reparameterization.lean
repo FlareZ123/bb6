@@ -48,12 +48,10 @@ theorem binDec_addFour_subSeven (L : Nat) :
     have h := Nat.pow_le_pow_right (show 0 < 2 by decide)
       (show 2 ≤ L+2 by omega)
     simpa using h
-    exact h
   have hp2 : 2 ≤ 2^(L+1) := by
     have h := Nat.pow_le_pow_right (show 0 < 2 by decide)
       (show 1 ≤ L+1 by omega)
     simpa using h
-    exact h
   have h0pow : 2^(L+4) = 2*2^(L+3) := by
     rw [show L+4 = (L+3)+1 by omega, Nat.pow_succ]
     omega
@@ -89,7 +87,7 @@ theorem binDec_addFour_subSeven (L : Nat) :
             rw [binDec_max]
 
 /-- Carry-prefix identity for the q4 sweep's all-ones low counter. -/
-theorem binDec_lowCarry (K n : Nat) (hK : 0 < K) :
+theorem binDec_lowCarry (K n : Nat) (hK : 0 < K) (hn : 0 < n) :
     binDec (K+n-1) (2^(n-1)-1) =
       d0pow (n-1) ++ d1pow K := by
   have hwidth : K+n-1 = (K-1)+1+(n-1) := by omega
@@ -122,7 +120,7 @@ def a2Ell (L K : Nat) : List Bool :=
 
 /-- Full left-facing equality: the q4Tail S0 frame is a canonical
 S1 configuration with width L+4 and outer index 2^(L+4)-7. -/
-theorem a2FullLeftFacing_eq (L K n : Nat) (hK : 0 < K) :
+theorem a2FullLeftFacing_eq (L K n : Nat) (hK : 0 < K) (hn : 0 < n) :
     binDec (n-1) (2^(n-1)-1) ++ a2Ell L K =
       binDec (K+n-1) (2^(n-1)-1) ++
         markerWord 0 ++ d0 ++ binDec (L+4) (2^(L+4)-7) ++ lh := by
@@ -137,7 +135,7 @@ theorem a2FullLeftFacing_eq (L K n : Nat) (hK : 0 < K) :
               simp [List.append_assoc]
     _ = binDec (K+n-1) (2^(n-1)-1) ++
           markerWord 0 ++ d0 ++ binDec (L+4) (2^(L+4)-7) ++ lh := by
-              rw [binDec_lowCarry K n hK]
+              rw [binDec_lowCarry K n hK hn]
               simp [List.append_assoc]
 
 end BB6Coverage.Agent12A2Reparam
