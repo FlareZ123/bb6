@@ -178,7 +178,7 @@ Combining each 1,318-field S-window transition key with the post-reset label giv
 
 The witness-length refinement reduces observed branching, but neither product is a closed transition system: even the refined product has 914 observed nodes with multiple successors. The 1,318 transition keys and the post-reset label alone therefore do not constitute a Markov state. A proof still needs a finite abstraction of the weighted drain/root-language data that determines the next boundary phase.
 
-Reproducibility note: `s_window_boundary_phases.js` currently declares `phaseTransitions` but does not populate it, so it does not export the adjacency graph or a meaningful outdegree histogram. The edge/product counts above came from an independent replay of the same source transition, window, carry, and phase-key formulas combined with Agent 49's output DFA. Do not treat these finite-trace edges as an all-time closure claim; the script should be extended to export them before relying on them as a reproducible artifact.
+Reproducibility note: `s_window_boundary_phases.js` now reads Agent 49's `ResetPostStateDFA.json`, populates consecutive S-window phase and post-reset product graphs, and exports their node/edge counts, outdegree histograms, post-reset label distributions, and failure counts in `SWindowBoundaryPhases.json`. The script still records only edges observed along the finite root prefix; it does not enumerate all possible transitions and does not establish all-time closure.
 
 ## 6. Next useful use
 

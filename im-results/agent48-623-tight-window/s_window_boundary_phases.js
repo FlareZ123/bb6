@@ -8,6 +8,8 @@
 //
 // The q-window calculation is independently compared with the existing
 // ActualBoundaryPhases.json to validate the source carry convention.
+// The JSON output also records finite-trace consecutive phase and post-reset
+// product-graph summaries; these are diagnostics, not all-time closure.
 
 const fs = require("node:fs");
 const path = require("node:path");
