@@ -1321,3 +1321,10 @@ Claimed Agent 3 at 2026-11-19T19:54:00Z. The lease is in agents/agent3/.lease.js
 - A simpler formalization route avoids unfolding `FastSectionDef.bounce`: use `BB6.Agent46.section_preimage_all_iff` from `SectionAllInverse.lean`, already source-certified in CI 41544188316. The four B2→q0 edges have predecessor-grammar witnesses n=5,0,0,0 (even, even, odd, even source parity respectively); each companion linear equation has both sides `1048576*u+70518`, `...+70525`, `...+70534`, `...+70539`.
 - `U5Y3ParentFan.lean` imports `SectionAllInverse` and opens `BB6.Agent46`, so this is exactly the same `secNext` relation used by the q0 parent theorem. Sent Agent15 the four identities and asked for a review/compile. This should turn the all-u same-parameter path into a short Lean proof without the larger FastSectionDef closure.
 - Still uncompiled locally; container/Python runtimes return ClientError. No CI dispatched. Preserve as proof plan until a source-verified Lean theorem is committed.
+
+
+### 2026-11-20 follow-up: extend the same-u path to the high-stop target
+
+- Added a fifth source edge from q=0 parent Q(u) to `T(u)=(70538+1048576*u,3)=(16*m+10,3)`, where `m=4408+65536*u). In `section_preimage_all_iff`, Q has odd a, y=3, and the exceptional y=3 branch has witness n=0: `x+6=2^0*(2*(a-1)+8)` and `(2*k-a+3)+(2*(a-1)+8)=x+10).
+- Therefore the full same-parameter path is B2 target → S1 → S2 → S3 → Q (q=0 parent) → high-stop target, with depth witnesses `5,0,0,0,0). The final target is exactly the one used by `u5_residual_y3_parent_fan`. This is a direct source path from the B2 target to the high-stop target, not merely an arithmetic parameter coincidence.
+- The five edge identities are still not packaged in a Lean theorem; use `section_preimage_all_iff` for all five and compose `secNext`. Full U5 residual/root-index premises and the complete root32 source closure remain to be established. No CI dispatched.
