@@ -200,52 +200,57 @@ This exact V-index expression sharpens the earlier \(A_{\min}\) bound by
 retaining every marker offset. It is still conditional on the uncompiled
 authentic-root/source-composition closure; it is not an accepted BB(6)
 lower-bound theorem.
-## Consequence for the arbitrary-A terminal dispatcher
+## Stronger consequence from retaining the exact V-index
 
-For the authentic length \(L=76\), the direct q4Tail terminal route has
+The recurrence estimate can be started at the actual \(V_0=63\), rather
+than at an arbitrary \(x_0\ge2\). Since \(63\ge T_3+1\), induction gives
 \[
-N=2^A(2^{78}-1)-3.
+V_j\ge T_{j+3}+1\qquad(j\ge0).
 \]
-Since \(2^{78}-1\ge3\), \(N>2^A\). Since \(A> T_H\),
+The exact width formula above contains its final summand
+\(B=V_{M+42}\), so
 \[
-N>2^{T_H}=T_{H+1}.
+A\ge B\ge T_{M+45}+1.
 \]
-Hence \(N\ge T_{H+1}+1\).
+For the authentic terminal index
+\[
+N=(2^{78}-1)2^A-3,
+\]
+the coefficient \(2^{78}-1\ge3\) gives \(N>2^A\). Hence
+\[
+N>2^{T_{M+45}}=T_{M+46},
+\qquad
+N\ge T_{M+46}+1.
+\]
 
-The q4Tail inner parameter satisfies \(z=\texttt{rootMarker1Z}\ge3\), so
+Now retain the exact final right-counter identity
+\(b_N=V_{M+N+46}\). Applying the same recurrence estimate again,
 \[
-n=2^{2^z-1}\ge2^7=128,\qquad
-R=2^{n-1}-1\ge2.
+b_N\ge T_{M+N+49}+1
+    \ge T_{T_{M+46}+1}+1.
 \]
-The terminal SectionResult starts with right counter \(R\) and performs \(N\)
-updates \(b_{j+1}=2^{b_j}-1\). Therefore
-\[
-b_N\ge T_N+1
-\ge T_{\,T_{H+1}+1}+1.
-\]
-
-The exact dispatcher-cost expression in
-[SectionResultThreeCycle.md](../agent42-q4-s0-drain/SectionResultThreeCycle.md)
-contains the final increment contribution
-\[
-6\cdot4^{b_{N-1}}
-=6(2^{b_{N-1}})^2
-=6(b_N+1)^2,
-\]
-and all other terms in the displayed summed cost are nonnegative. The root prefix,
-counted drain, terminal macro, and champion-attainability correction are also
-nonnegative. Consequently, **conditional on the authentic-root and complete
-dispatcher source composition being valid**, the attained TM1 champion score
-satisfies the stronger bound
+The exact dispatcher-plus-terminal cost contains the final-increment
+contribution \(6(b_N+1)^2\), and every other term in the score is
+nonnegative. Therefore the conditional score satisfies
 \[
 \boxed{
-S\ge6\left(T_{\,T_{\,H+1}+1}+2\right)^2,
-\qquad H=T_{10}.
+S\ge6\bigl(T_{T_{M+46}+1}+2\bigr)^2
+  >T_{T_{M+46}}.
 }
 \]
-Because \(H=T_{10}>T_4=65536\), this is strictly stronger than the coarse
-\(2\uparrow\uparrow\uparrow5\) comparison. It uses the full seven-step first
-SectionResult, rather than only its first exponent update.
+This supersedes the weaker \(H\)-only consequence below the exact V-index
+formula. It uses both the exact \(M\)-step dispatcher length and the
+authentic \(V_{M+N+46}\) terminal index.
+
+For comparison with the earlier published-scale lower endpoint, recall
+\(H=T_{10}\) and \(M\ge62H-36\). Thus \(M+46\ge62H+10>H\), so
+\[
+T_{T_{M+46}}>T_{T_H}=T_{T_{T_{10}}}.
+\]
+The upper-bound analysis in
+[TM63PublishedTowerSandwich.md](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md)
+also gives \(M+46<T_{11}\), so this stronger lower endpoint remains
+strictly below the conditional upper endpoint \(T_{T_{T_{11}}}\).
 
 ## What this does and does not establish
 
