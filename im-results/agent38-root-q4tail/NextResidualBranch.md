@@ -34,7 +34,7 @@ For `j=0,1,2`, the next tail cells `-1-j` are the three marked cells, hence `111
 d1pow (n-1) ++ p2ResidualLeft m tail
 ```
 
-and the coordinate `H+4+j`, after removing the `3*(n-1)`-cell d1 prefix, is `m+9+j`, i.e. tail index `3+(j-3)` for these three cases. Since `tail[3],tail[4],tail[5]=111`, these cells are also ones.
+Writing `r=j-3`, the source coordinate is `-4-r`, whose S0 left-facing index is `H+4+r`. After removing the `3*(n-1)`-cell d1 prefix this is `m+9+r`, exactly tail index `3+r=j`. Since `tail[3],tail[4],tail[5]=111`, these cells are also ones.
 
 For every `j≥6`, the same coordinate calculation gives tail index `j`. Consequently the exact next residual tail is
 
