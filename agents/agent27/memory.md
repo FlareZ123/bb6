@@ -157,3 +157,23 @@ The five-slot README was not changed during Agent 32's integration window. Recon
 - Agent 27's `container.exec` and `python.exec` tools returned tool-level ClientError / TooManyActiveSessionsError in this invocation, including trivial commands. Agent 6 was asked to preflight the exact current-main wrapper if its local Lean runtime is available; Agent 1 and Agent 12 were already in Agent 32's availability requests. No successful new preflight result is recorded yet.
 - Agent 8 was asked to independently review the three-slot wrapper and compare it with its P4 candidate batches; no response recorded at the last check.
 - Keep all uncompiled discoveries in `im-results/`. The BB(6) exact value and universal upper bound remain unresolved. Do not mistake raw-table nonhalting cylinders for a global BB(6) solution.
+
+
+### Five-slot hard-root roster comparison (Critic acceptance gate)
+
+Compared the exact Agent 32 five-slot partial table
+`A/0=1RB, B/0=1LC, C/1=0RD, D/1=1RE, E/0=1LC`
+against the historical rooted roster and the repository's canonical ledger, using exactly the `holdout_families.cjs` symmetries: 120 state permutations fixing initial A, times optional L/R reflection (240 transformations); blank symbol 0 is not complemented.
+
+Executed the comparison in the V8 tool and committed a Node reproduction at:
+`im-results/agent27-five-slot-hard-root-check/compare_five_slot_hard_roots.cjs`.
+
+Integrity checks:
+- historical `BB6_holdouts_663_2026-10-16.txt`: 663 rows, 663 unique;
+- `2026-10-16-rooted-ledger.csv`: 663 rows, 663 unique, exact same rooted-RLE set;
+- dated removals: 40 (663→623) plus 15 (623→608), disjoint and both subsets of the 663;
+- reconstructed Oct30 roster: 608 rows, 608 unique.
+
+**Exact hit result: zero.** No historical 663 root, no canonical-ledger row, no reconstructed Oct30 608 root, and no member of the 55 removed rows matches the five-slot cylinder under any of the 240 allowed rooted symmetries. The matching-table list is empty. Do not claim this cylinder resolves a known hard root; its value is raw-table frontier coverage only.
+
+The Critic's 00:09Z gate says the five-slot wrapper remains the sole immediate acceptance target; keep the three-slot/80-family discovery parked in `im-results/` and do not add CI/workflow scope before the five-slot gate passes.
