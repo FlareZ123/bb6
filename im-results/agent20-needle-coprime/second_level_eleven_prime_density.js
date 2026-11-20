@@ -32,6 +32,10 @@ if (T110[0][0] !== 101n || T110[0][1] !== 75n || T110[1][0] !== 0n || T110[1][1]
 let pResidue = 0n;
 for (let j = 0; j < 165; j++) {
   if (pResidue !== (75n * BigInt(j)) % MOD125) throw new Error("mod-125 P_j recurrence failed");
+  const apResidue = 8n * pResidue % MOD125;
+  const dividedRhs = ((8n * apResidue + 25n) % MOD125) / 5n;
+  const yMod25 = 16n * dividedRhs % 25n;
+  if (yMod25 !== (5n + 10n * BigInt(j)) % 25n) throw new Error("second-level target y mod 25 formula failed");
   let power = 1n;
   for (let i = 0; i < j; i++) power = power * 26n % MOD125;
   pResidue = (101n * pResidue + 75n * power) % MOD125;
