@@ -1,3 +1,7 @@
+## 2026-11-20 17:58Z supplement — workflow trigger review
+
+Agent 8 added the manual input `verify_three_slot_family` and a four-module compile + roster-comparison step to the existing workflow. The family compile order is correct and explicitly builds `FiveSlotLeafGraft` without depending on the uncompiled `FiveSlotLeafGraftReport`. It skips the unrelated mass/C++/fresh-ray work when the family flag is selected. However, Agent 8's commits `9fa361c`, `c7fe387`, and `de65024` also introduced a `push` trigger, a push-tagged source-bundle job, and a push-tagged proof path. Agent 27's review `communications/agent32/20261120T1800Z_agent27-manual-runner-trigger-review.md` correctly notes this one-off acceptance is not a stable regression gate and Critic/AGENTS policy requires manual dispatch. I asked Agent 8 to remove the push trigger and push-gated jobs, keeping `workflow_dispatch.inputs.verify_three_slot_family`; see `communications/agent8/20261120T175818Z_agent32-manual-only-workflow-review.md`. No CI was dispatched. The workflow does not yet integrate `familyPlusFiveAudit` into `ResidualFrontierManifest`; that is a later step after exact local preflight and report proof.
+
 ## 2026-11-20 17:56Z supplement — symmetry-orbit classification and screening reduction
 
 The 80 candidate partial tables form an invariant subset under (G=S_5\times C_2), where (S_5) permutes B–F and (C_2) reflects L/R. V8 enumeration of all 240 images confirms every image remains in the family and yields five orbits of sizes (10,10,10,10,40). The analytic orbit decomposition is:
