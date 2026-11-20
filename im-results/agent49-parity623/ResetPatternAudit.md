@@ -40,3 +40,14 @@ Run node reset_poststate_dfa.js from this directory. It reads the existing 263-s
 ## Relevance to the induction
 
 The ordinary 263-state recognizer forgets which reset word synchronized the transducer. The output automaton retains exactly the common post-reset boundary state, which is the state needed to continue a branch-specific carry computation after the first reset. It is a reusable finite-state component for the S-window product, not yet a proof that the authentic root's next S-window remains in the reset language.
+## Post-reset label factorization
+
+The 54 pair-output labels factor as 9 previous digit pairs times 6 carry profiles. For every fixed previous pair (x,y), exactly six joint carry pairs occur; the six-profile set depends on x but is independent of y. The L carry is always either (-1,0) or (0,0). The R carry is always one of (-1,0), (-2,0), (-2,1), (-3,1).
+
+| Previous x | Six joint carry profiles (L carry | R carry) |
+|---:|---|
+| 0 | (-1,0)|(-1,0); (-1,0)|(-2,0); (-1,0)|(-2,1); (-1,0)|(-3,1); (0,0)|(-1,0); (0,0)|(-2,1) |
+| 1 | (-1,0)|(-2,0); (-1,0)|(-2,1); (-1,0)|(-3,1); (0,0)|(-1,0); (0,0)|(-2,0); (0,0)|(-2,1) |
+| 2 | (-1,0)|(-2,0); (-1,0)|(-3,1); (0,0)|(-1,0); (0,0)|(-2,0); (0,0)|(-2,1); (0,0)|(-3,1) |
+
+The previous y-coordinate does not change the six carry profiles. Thus the 54 labels have the exact product structure (x,y,profile), with 3×3×6 possibilities. This is useful for reducing a subsequent phase product: the post-reset carry component has only six possibilities once the previous x digit is fixed.
