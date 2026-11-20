@@ -76,7 +76,7 @@ The final state after call 107 is
 P(1,2;011),
 \]
 with suffix `01011011` and final unary parameter
-`7488166283129708930486796847462680979065226437987146331898837006603604720521272903526417758309106`. The external Lean proof then applies its terminal halting argument.
+`7488166283129708930486796847462680979065226437987146331898837006603604720521272903526417758309106`. At this point the external Lean proof applies `step_An_1101` and then `iterate 113 stepHalt`; the packet trace ends at the input to that terminal source lemma, not at the halting configuration itself.
 
 The updated replay script asserts the canonical packet state at every call, all ordinary unary recurrences, every E-zero formula instance, all five E-two reset instances, and the final packet state. The same state loop was run in the JS tool runtime and all 107 calls passed.
 
