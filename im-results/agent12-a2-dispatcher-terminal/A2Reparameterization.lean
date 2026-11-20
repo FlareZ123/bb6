@@ -47,12 +47,12 @@ theorem binDec_addFour_subSeven (L : Nat) :
   have hp1 : 4 ≤ 2^(L+2) := by
     have h := Nat.pow_le_pow_right (show 0 < 2 by decide)
       (show 2 ≤ L+2 by omega)
-    norm_num at h
+    simpa using h
     exact h
   have hp2 : 2 ≤ 2^(L+1) := by
     have h := Nat.pow_le_pow_right (show 0 < 2 by decide)
       (show 1 ≤ L+1 by omega)
-    norm_num at h
+    simpa using h
     exact h
   have h0pow : 2^(L+4) = 2*2^(L+3) := by
     rw [show L+4 = (L+3)+1 by omega, Nat.pow_succ]
