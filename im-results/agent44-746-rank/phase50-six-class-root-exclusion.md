@@ -289,7 +289,7 @@ $$
 2y'_j+5=A'-2^{j+1}G',
 \qquad A'=p+2L'+5=p+2K-3.
 $$
-Since (p\equiv1\pmod3), (K\equiv2\pmod3), and (G'\equiv0\pmod3), we have (A'\equiv2\pmod3), so (2y'_j+5\equiv2\pmod3) for every (j).
+Since $p\\equiv1\\pmod3$, $K\\equiv2\\pmod3$, and $G'\\equiv0\\pmod3$, we have $A'\\equiv2\\pmod3$, so $2y'_j+5\\equiv2\\pmod3$ for every $j$.
 
 ## 5. Exhaustion and scope
 
