@@ -1566,3 +1566,6 @@ while
 (AB)^TP(AB)-P=240(4,1)^T(4,1)
 \]
 is rank one. Thus BA blocks are strictly expanding in this leading norm, whereas AB retains a neutral direction. This is only a leading-map algebra observation; no root itinerary or exact affine expansion claim follows. It may help identify which phase order a root-specific induction must force.
+
+
+Axiom audit: the principal drain-transducer theorems (step_carry, run_carry, runStats_exact_of_bounds, drain_transducer_exact_canonical, runStats_phase_of_decomposition) depend only on Lean core axioms propext, Quot.sound, and (for the exact formula's arithmetic conversions) Classical.choice; no sorryAx appears. The correction-bound and closed carry lemmas likewise have no sorryAx.
