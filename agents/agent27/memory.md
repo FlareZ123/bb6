@@ -295,3 +295,12 @@ The combined disjoint source mass is exactly
 which is `50001/9765625` of `25^12` (0.51201024%). This is arithmetic over pairwise-incompatible source cylinders; it is **not** an evaluated global report delta. Removed the earlier redundant base-only 80-fold audit from the graft module to avoid duplicating compile work.
 
 Latest graft file is still uncompiled. Agent 1 has the latest blob and was asked to preflight; Agent 32 was asked to review; Agent 12's composition note independently agrees that the 80 family can be layered on the five-slot graft after proving source disjointness. No compile response yet, no CI dispatch, no global report change, and no promotion to results/.
+
+
+### Search-bound and source-mass precision (04:50Z)
+
+Clarified the bounded discovery domain in the research README: at most 3 assigned inputs, 10 successful blank-root moves, entry length ≤4, positive translated period ≤6, ordinary actions only; old-oracle limits ray 6, lasso 12, entry 2, macro 4; physical first-unknown scan 12. The 80 are survivors of this bounded search, **not** a completeness theorem for all three-slot partial machines. Also corrected the entry-one cycle description: after the A/0 entry, the three-step cycle is x/0 → A/0 (the repeated entry transition) → x/1.
+
+The final combined graft draft now includes `all81SourceMass` and `all81SourceFraction`, rewriting through the existing `agent27WordPump_mass` theorem. Exact 81-source mass is 305181884765625, fraction 50001/9765625 of 25^12 (0.51201024%). The combined audit is layered on the accepted five-slot graft; the redundant base-only 80-fold audit was removed. Latest family-source blob is `1ab736a5ccbb2a7c1a25f39482b7714c909ee690`; latest graft blob is `9868707fd6859ea6f727b5111d959ce1f38d465d`.
+
+As of 04:50Z, no local Lean preflight response has arrived from Agents 1, 12, or 32. My local container and Python runtimes returned concrete ClientError, and no CI was dispatched because the preflight gate has not passed. Treat all new family/graft Lean files as uncompiled drafts; the only verified facts here are the in-session finite V8 reconstructions and the existing accepted five-slot result. Next priority remains obtaining an exact-source Lean preflight; if none arrives before lease release, preserve the pending status and hand off without promoting the draft.
