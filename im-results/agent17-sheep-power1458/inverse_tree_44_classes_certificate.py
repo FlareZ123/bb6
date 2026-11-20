@@ -278,9 +278,12 @@ def certify() -> None:
 
     # The common period freezes every one of the 110 modular tests.
     all_moduli = (*mods2, *mods4)
+    valuation_moduli = (*vals2, *vals4)
     assert len(mods2) == 89 and len(mods4) == 91
+    assert len(all_moduli) == 180 and len(set(all_moduli)) == 110
+    assert len(set(valuation_moduli)) == 3
     assert all(pow(2, J * T2, N) == 1 for N in all_moduli)
-    assert all(pow(2, J * T2, M) == 1 for M in (*vals2, *vals4))
+    assert all(pow(2, J * T2, M) == 1 for M in valuation_moduli)
 
     # Every base class is disjoint from the 28 prior E progressions, and T2
     # preserves this disjointness for all subsequent t in the same class.
@@ -293,8 +296,10 @@ def certify() -> None:
     verify_cutoffs()
 
     # Check the unique first-parent cofactors at the smallest bases.
-    v2 = (2 ** (J * min(R2) + 8) - 2443) // 19683
-    v4 = (2 ** (J * min(R4) + 8) - 11191) // 72171
+    n2 = 2 ** (J * min(R2) + 8) - 2443
+    n4 = 2 ** (J * min(R4) + 8) - 11191
+    assert n2 % 19683 == 0 and n4 % 72171 == 0
+    v2, v4 = n2 // 19683, n4 // 72171
     assert v2 >= 5 and v2 % 2 == 1
     assert v4 >= 5 and v4 % 2 == 1
 
@@ -306,10 +311,10 @@ def certify() -> None:
 
     print(f"PASS: T2={T2:,}, T4={T4:,}, T2=3*T4")
     print(f"PASS: 17 h7a2 classes + 27 lifted h7a4 classes = {len(residues)}")
-    print(f"PASS: {len(mods2)} h7a2 and {len(mods4)} h7a4 modular rows")
+    print(f"PASS: {len(mods2) + len(mods4)} period rows across {len(set(all_moduli))} distinct moduli")
     print("PASS: all 44 classes have exactly one genuine first parent")
     print("PASS: all 44 intermediate nodes have v3(Y-1)=0 and no generic parent")
-    print("PASS: all 110 modular periods and all three valuation periods divide T2")
+    print("PASS: all 110 distinct moduli and all three valuation moduli divide T2")
     print("PASS: exceptional parents excluded by the 9 generic/special cutoff pairs")
     print("PASS: all 44 classes disjoint from the 28 prior E-cone progressions")
     print(f"PASS: density among exponent indices = 1/{density_denominator:,}")
