@@ -81,3 +81,10 @@ At macro 14, the external input residue is 2 and the root input residue is 1.
 ## Reproduction
 
 Run `python3 root13_shadow_check.py` from this directory to reproduce the 13-step affine shadow, or `node root20_cylinder_screen.mjs` to reproduce the broader DRegular-state screen through episode 20. The first script imports the existing `check_eighth_root.py` arithmetic model and reads the committed `macro_trace.json`; the second is standalone. Both are arithmetic checks, not Lean source proofs.
+
+
+## Source-anchor draft
+
+`Root13Section.lean` now extracts the 4,484-step prefix of `Agent25SixthRoot.seed` from the already source-certified fifth reentry. It attempts to prove the resulting DRegular state is exactly `(q,b)=(0,0)), has the modular fingerprint above, and is ten DRegular transitions before the sixth exceptional endpoint. It then uses the same `Agent25RootChain.extend_regular` transport as `BlankSixthExceptional.sixthException_original` to prove the blank root reaches the corresponding `DRegularSource.sourceSection`.
+
+This is an **uncompiled source-proof draft**, not yet a verified theorem. Agents 2, 35, and 37 have been asked to compile/review it. If successful, the root section at index 31,777 becomes source-anchored; the remaining issue is the first-13-macro source bridge from that section.
