@@ -31,7 +31,11 @@ A(m)=
  3839719204110+4638643663290m),
 \qquad n=2m+1.
 \]
-Its right coordinate is even and at least six. The exact even-right inverse therefore forces
+Its right coordinate is even and at least six. The even-right inverse theorem also requires the target sum not to be \(0\) or \(7\pmod8\). Here
+\[
+A_x+A_y=8105870470657+9792446451270m,
+\]
+which is \(3\pmod8\) when \(m=3\pmod4\) (the \(n=7\pmod8\) case) and \(5\pmod8\) when \(m=6\pmod8\) (the \(n=13\pmod{16}\) case). Thus both additional even-right side conditions hold. The exact even-right inverse therefore forces
 \[
 B(m)=
 (8105870470655+9792446451270m,\;
@@ -76,7 +80,11 @@ Put \(n=13+16p\), so \(m=6+8p\). The same affine parent \(B(m)\) satisfies
 \[
 B_x\equiv3\pmod4,\qquad B_y\equiv4\pmod8.
 \]
-In particular, \(B_y\) is even and at least six. If \(B(m)\) were reachable, the exact even-right inverse would force
+In particular, \(B_y\equiv4\pmod8\) is even and at least six. The even-right inverse's sum side conditions also hold, since
+\[
+B_x+B_y=10025730072709+12111768282915m\equiv3\pmod8
+\]
+for \(m=6\pmod8\). If \(B(m)\) were reachable, the exact even-right inverse would force
 \[
 C(m)=\left(B_x+B_y-2,\frac{B_y-2}{2}\right).
 \]
