@@ -23,7 +23,7 @@ and
 \alpha_j=2^{\,T_j^{\,\alpha_{j-2}+1}-T_j}-2
 \quad(j\ge7).
 \]
-and the upper denominator sequence by
+For the upper denominator sequence, define
 \[
 d_2=65473,\qquad D_k=2^{d_k},\qquad
  d_{k+1}=T_{k+3}-2^{T_{k+2}-d_k}-1\quad(k\ge2),
@@ -109,7 +109,7 @@ For \(j\ge7\), the induction hypothesis at index \(j-2\) gives
 \[
 V_{j-2}>T_{j+1}^{\,T_j^{\,\alpha_{j-2}}}.
 \]
-Since \(V_{j-2}=2^{V_{j-3}}-1\), taking logarithms yields
+Since \(2^{V_{j-3}}=V_{j-2}+1>T_{j+1}^{\,T_j^{\,\alpha_{j-2}}}\), taking logarithms yields
 \[
 V_{j-3}>
 \log_2\!\left(T_{j+1}^{\,T_j^{\,\alpha_{j-2}}}\right)
@@ -119,7 +119,7 @@ The exact lift therefore applies, and the defined exponent
 \[
 \alpha_j=2^{\,T_j^{\,\alpha_{j-2}+1}-T_j}-2
 \]
-is no larger than \(2^{V_{j-3}-T_j}-2\). This proves the lower inequality for all \(j\ge3.
+is no larger than \(2^{V_{j-3}-T_j}-2\). This proves the lower inequality for all \(j\ge3\).
 
 ### Upper inequality
 
