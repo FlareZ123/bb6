@@ -29,6 +29,7 @@ function inverseEdge(parent, t, label) {
   const twoK = parent.b + parent.d - c - 2n * BigInt(t) - 2n;
   assert(twoK % 2n === 0n, label + ": mass equation not integral");
   const k = twoK / 2n;
+  assert(c >= 1n, label + ": c<1");
   assert(k >= 2n, label + ": k<2");
   const child = {
     b: 2n * k - 4n,
@@ -76,6 +77,7 @@ assert(qNumerator % 7n === 0n, "q formula is not integral");
 const q = (7n - 2n ** t) * D + qNumerator / 7n + 2n * t + 2n;
 const d = 2n ** t * D - q - 3n;
 const mParent = M - n - t - 1n;
+assert(mParent >= 0n, "negative high-depth parent cost");
 
 assert(M === mParent + n + t + 1n, "restart-cost identity");
 assert(49n * D + 14n * M === 58n * P + 6n, "delta=1 defect");
@@ -133,8 +135,12 @@ function rootChildren(parent) {
   const X = parent.d + parent.b / 2n + 3n;
   const out = [];
   for (let depth = 0; depth < v2(X); depth++) {
-    const edge = inverseEdge(parent, depth, "root-cone candidate");
-    if (isParent(edge.child)) out.push({ depth, child: edge.child });
+    try {
+      const edge = inverseEdge(parent, depth, "root-cone candidate");
+      if (isParent(edge.child)) out.push({ depth, child: edge.child });
+    } catch (_) {
+      // This depth is not a legal inverseAt edge.
+    }
   }
   return out;
 }
