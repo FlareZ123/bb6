@@ -1,4 +1,5 @@
 import M1EvenValuationBridge
+import M1EvenValuationBridgeFootprint
 import M1EvenQ4Prefix
 import M1EvenQ4Suffix
 import Q4RightEndpoint
@@ -724,103 +725,11 @@ private theorem m1EvenValuationBridgeLeftFacing
                   (N+3) = true := by
               simpa [N] using htarget
             exact hval.trans htarget'.symm
-          · by_cases hiN4 : i=N+4
-            · subst i
-              have hcoord : h-((N+4):Int)=x-4 := by simp [x]
-              have hleftPres := state1SweptLeft_preserves_left
-                N T h (x-4) (by omega)
-              have hsetup : Tsetup (x-4) = Tleft (x-4) := by
-                have hne0 : x-4 ≠ x := by omega
-                have hne1 : x-4 ≠ x-1 := by omega
-                have hne2 : x-4 ≠ x-2 := by omega
-                have hne3 : x-4 ≠ x-3 := by omega
-                simp [Tsetup,valuationSetupTape,hne0,hne1,hne2,hne3]
-              have hinput := hleft (N+4)
-              have hinputBit := sideBit_m1BridgeInputD0Last v tail
-              have hT : T (x-4) = true := by
-                have hinput' : T (x-4) =
-                    sideBit ([false,true,true,true,true] ++ d1pow v ++ d0 ++ tail)
-                      (N+4) := by
-                  simpa [x,N] using hinput
-                rw [hinputBit] at hinput'
-                exact hinput'
-              have hpres := state5SweptRight_preserves_left
-                (v+1) Tsetup (x+1) (x-4) (by omega)
-              have htarget := sideBit_m1BridgeTargetD1 v 2 tail (by omega)
-              have hval :
-                  m1EvenValuationBridgeTape v T h (h-((N+4):Int)) = true := by
-                calc
-                  m1EvenValuationBridgeTape v T h (h-((N+4):Int)) =
-                      state5SweptRight (v+1) Tsetup (x+1)
-                        (h-((N+4):Int)) := hbridge (N+4)
-                  _ = Tsetup (x-4) := by
-                    rw [hcoord]
-                    exact hpres
-                  _ = Tleft (x-4) := hsetup
-                  _ = T (x-4) := hleftPres
-                  _ = true := hT
-              have htarget' :
-                  sideBit ([false,true] ++ d0 ++ d0pow v ++ d1 ++ tail)
-                    (N+4) = true := by
-                simpa [N] using htarget
-              exact hval.trans htarget'.symm
-            · have hiN5 : N+5≤i := by omega
-              let k : Nat := i-(N+5)
-              have hcoord : h-(i:Int) = x-((k+5):Int) := by
-                dsimp [x,k,N]
-                omega
-              have hleftPres := state1SweptLeft_preserves_left
-                N T h (x-((k+5):Int)) (by dsimp [x,N,k]; omega)
-              have hsetup : Tsetup (x-((k+5):Int)) =
-                  Tleft (x-((k+5):Int)) := by
-                have hne0 : x-((k+5):Int) ≠ x := by omega
-                have hne1 : x-((k+5):Int) ≠ x-1 := by omega
-                have hne2 : x-((k+5):Int) ≠ x-2 := by omega
-                have hne3 : x-((k+5):Int) ≠ x-3 := by omega
-                simp [Tsetup,valuationSetupTape,hne0,hne1,hne2,hne3]
-              have hpres := state5SweptRight_preserves_left
-                (v+1) Tsetup (x+1) (x-((k+5):Int)) (by omega)
-              have hinput : T (x-((k+5):Int)) =
-                  sideBit ([false,true,true,true,true] ++ d1pow v ++ d0 ++ tail) i := by
-                simpa [hcoord] using hleft i
-              have hlenIn :
-                  ([false,true,true,true,true] ++ d1pow v ++ d0).length =
-                    N+5 := by
-                simp [d1pow_length,d0,N]
-                omega
-              have hInTail :
-                  sideBit ([false,true,true,true,true] ++ d1pow v ++ d0 ++ tail) i =
-                    sideBit tail k := by
-                have hs := sideBit_append_after_local
-                  ([false,true,true,true,true] ++ d1pow v ++ d0) tail i
-                  (by rw [hlenIn]; dsimp [k]; omega)
-                simpa [List.append_assoc,k,hlenIn] using hs
-              have hlenOut :
-                  ([false,true] ++ d0 ++ d0pow v ++ d1).length =
-                    N+5 := by
-                simp [d0,d0pow_length,d1,N]
-                omega
-              have hOutTail :
-                  sideBit ([false,true] ++ d0 ++ d0pow v ++ d1 ++ tail) i =
-                    sideBit tail k := by
-                have hs := sideBit_append_after_local
-                  ([false,true] ++ d0 ++ d0pow v ++ d1) tail i
-                  (by rw [hlenOut]; dsimp [k]; omega)
-                simpa [List.append_assoc,k,hlenOut] using hs
-              calc
-                m1EvenValuationBridgeTape v T h (h-(i:Int)) =
-                    state5SweptRight (v+1) Tsetup (x+1) (h-(i:Int)) :=
-                  hbridge i
-                _ = state5SweptRight (v+1) Tsetup (x+1)
-                      (x-((k+5):Int)) := by rw [hcoord]
-                _ = Tsetup (x-((k+5):Int)) := hpres
-                _ = Tleft (x-((k+5):Int)) := hsetup
-                _ = T (x-((k+5):Int)) := hleftPres
-                _ = sideBit ([false,true,true,true,true] ++ d1pow v ++ d0 ++ tail) i :=
-                  hinput
-                _ = sideBit tail k := hInTail
-                _ = sideBit ([false,true] ++ d0 ++ d0pow v ++ d1 ++ tail) i :=
-                  hOutTail.symm
+          · have hiTail : 3*(v+1)+4 ≤ i := by
+              dsimp [N] at *
+              omega
+            exact BB6Coverage.Agent8M1EvenValuationBridgeFootprint.m1EvenValuationBridgeLeftFacing_tail_exact_parent_type
+              v T h tail i hleft hiTail
 
 /-- The exact left-facing stream at the generalized M1 q4 cut. -/
 def m1EvenValuationQ4LeftFacing (L n a : Nat) : List Bool :=
