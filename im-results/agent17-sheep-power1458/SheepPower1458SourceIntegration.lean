@@ -125,7 +125,35 @@ theorem evenReach_parent_closed {P : Nat → Prop}
   | refl x => exact hy
   | @cons x y z edge tail ih => exact hclosed (ih hy) edge
 
+/-- A node-wise predecessor classifier induces reverse closure of the
+finite affine basin. -/
+theorem affineBasin_parent_closed
+    {t : Nat} {nodes : List AffineNode}
+    (hnode : ∀ node, node ∈ nodes →
+      ∀ {x y}, affineNodeValue t node y →
+        SheepEven.EvenEdge x y → affineBasin t nodes x) :
+    ∀ {x y}, affineBasin t nodes y →
+      SheepEven.EvenEdge x y → affineBasin t nodes x := by
+  intro x y hy hedge
+  rcases hy with ⟨node,hmem,hval⟩
+  exact hnode node hmem hval hedge
+
+/-- Once the affine basin is reverse-closed and excludes 10, no node in it
+can be reached from the blank even root. -/
+theorem no_evenReach_of_affineBasin
+    {t y : Nat} {nodes : List AffineNode}
+    (hclosed : ∀ {x y}, affineBasin t nodes y →
+      SheepEven.EvenEdge x y → affineBasin t nodes x)
+    (hnot10 : ¬ affineBasin t nodes 10)
+    (hroot : affineBasin t nodes y) :
+    ¬ SheepEven.EvenReach 10 y := by
+  intro hreach
+  have h10 := evenReach_parent_closed hclosed hreach hroot
+  exact hnot10 h10
+
 #print axioms blank_even_inverse_cases_pos
 #print axioms evenReach_parent_closed
+#print axioms affineBasin_parent_closed
+#print axioms no_evenReach_of_affineBasin
 
 end SheepPower1458
