@@ -33,3 +33,8 @@ The same 20,000-section replay encounters three `E_pairs_1100` transitions at in
 This is a useful target for a source-level composition theorem, not evidence that the authentic blank root reaches section 13,233. The existing `ARegular3AdicBridge.lean` explicitly does not identify the A-step2 macro endpoints with all DRegular first returns. To promote this observation to a theorem, one must prove the relevant A-step2/source-family transitions and compose their `ObsEq` runs from the authentic blank-root prefix. The three `E_pairs_1100` transitions should be checked against the exact hypotheses of `EAllDouble.lean` and the corresponding source-family lemmas; no unproved residue generalization should be inferred from the interpreter.
 
 The separate [`HaltingCylinderShadowFast.lean`](./HaltingCylinderShadowFast.lean) candidate concerns the DRegular source-connected 2,640-step, seven-branch shadow. It is a different path and remains uncompiled.
+
+
+## Relation to prior root scans
+
+The existing `im-results/agent37-root-language-pilot/README.md` already reports a separate 2.7-million-section root scan with a best 21/108 prefix match. This 20,000-section observation does **not** improve that record. Its value is the compact, reproducible index-13,233 checkpoint and its exact (3)-adic valuation, which can serve as a small regression target for a future formal source interpreter.
