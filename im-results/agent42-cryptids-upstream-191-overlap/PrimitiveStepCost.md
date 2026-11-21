@@ -60,32 +60,37 @@ The `execute n` tactic in `HaltShared.lean` iterates the primitive `step` tactic
 | `C_one_succ` | 6 |
 | `C_add_two_halt` | 3 |
 
-Several reusable cost recurrences follow by adding the costs in the corresponding `stepStar_trans` proofs. Let
+Several reusable cost recurrences follow by adding the primitive costs in the corresponding `stepStar_trans` proofs. Let
 
-`S(segs) = Σ (r,c)∈segs, c(6r+30)`.
+`S(segs) = Σ_{(r,c)∈segs} c(6r+30)`.
 
-Then the source proof structure gives these exact costs or safe upper bounds:
+The fixed composite rules satisfy:
+- `rule_C_bot_four(bot)`: `4bot+12`;
+- `rule_DR0_bot(k)`: `6k+14`;
+- `rule_BR_blkR_one(r)`: `2r+15`.
 
-1. `rule_C_one_prefix(c)` costs at most `4c+10`; hence `rule_C_r_add_three(r)` costs at most `4r+15), and `rule_C_blkL_pow(c,r)` costs at most `c(4r+15)).
-2. `rule_BR_blkR_clean(c,r)` costs `c(2r+15)).
-3. `clean_sweep_core(segs,bot)` costs `6bot+26+S(segs)`: the empty-segment case costs `6bot+26`, and each segment `(r,c)` contributes `c(6r+30)).
-4. `clean_DR0_one(c0,segs,bot)` costs `6c0+6bot+31+S(segs)).
+The clean-mode recurrences then give the following exact costs or safe upper bounds:
+
+1. `rule_C_one_prefix(c)` costs at most `4c+10`; hence `rule_C_r_add_three(r)` costs at most `4r+15`, and `rule_C_blkL_pow(c,r)` costs at most `c(4r+15)`.
+2. `rule_BR_blkR_clean(c,r)` costs `c(2r+15)`.
+3. `clean_sweep_core(segs,bot)` costs `6bot+41+S(segs)`: the empty-segment case is `rule_C_bot_four(bot)` followed by `rule_DR0_bot(0)` and `rule_BR_blkR_one(bot)`, and each segment `(r,c)` contributes `c(6r+30)`.
+4. `clean_DR0_one(c0,segs,bot)` costs `6c0+6bot+46+S(segs)`.
 5. `clean_DR0_zeros(q,c0,segs,bot)` costs
-   `6q(c0+bot)+15q²+26q+qS(segs)`.
-6. `clean_RNIL_one(c0,segs,bot)` costs at most `6c0+6bot+46+S(segs)).
+   `6q(c0+bot)+15q²+41q+qS(segs)`.
+6. `clean_RNIL_one(c0,segs,bot)` costs at most `6c0+6bot+61+S(segs)`.
 7. `clean_RNIL_zero_pow(q,segs,bot)` costs at most
-   `6q bot+21q²+31q+qS(segs)`; the `30i` increase in `S` from each `pushSeg 0 1` must be included.
-8. `clean_P1_one(r,segs,bot)` costs at most `10r+6bot+60+S(segs)).
+   `6q bot+18q²+49q+qS(segs)`; the `30i` increase in `S` from each `pushSeg 0 1` is included.
+8. `clean_P1_one(r,segs,bot)` costs at most `10r+6bot+75+S(segs)`.
 9. `clean_P1_pow(q,r,segs,bot)` costs at most
-   `q(10r+6bot+6q+60+S(segs)) +(6r+42)q(q-1)/2`.
+   `q(10r+6bot+6q+75+S(segs)) +(6r+42)q(q-1)/2`.
 10. `clean_P2_one(r,segs,bot)` is bounded by
-    `15r²+6r bot+98r+12bot+135+(r+2)S(segs)`.
+    `15r²+6r bot+113r+12bot+165+(r+2)S(segs)`.
 11. Consequently `clean_P2_pow(q,r,segs,bot)` is bounded by
-    `q(15r²+98r+135)`
+    `q(15r²+113r+165)`
     `+(6r+12)(q bot +(r+1)q(q+1)/2)`
     `+(r+2)(qS(segs)+(24r+48)q(q-1)/2)`.
 
-These formulas are obtained directly from the displayed inductions in `HaltShared.lean`: `clean_DR0_zeros`, `clean_RNIL_zero_pow`, `clean_P1_pow`, and `clean_P2_pow) repeatedly call their one-block lemmas while increasing the packed segment weight. In particular, simply multiplying the one-block cost by `q` is not sound unless the growth of `S(segs)` is included.
+These formulas are obtained directly from the displayed inductions in `HaltShared.lean`: `clean_DR0_zeros`, `clean_RNIL_zero_pow`, `clean_P1_pow`, and `clean_P2_pow` repeatedly call their one-block lemmas while increasing the packed segment weight. In particular, simply multiplying the one-block cost by `q` is not sound unless the growth of `S(segs)` is included.
 
 ## Cost-indexed engine that would close the gap
 
