@@ -158,7 +158,7 @@ theorem affine_node_hidden_bound
       (node.C-node.b+node.c) (1458*T) k hm
       (by simpa [m] using hperiod) (by simpa [m] using hbase)
   have hexp : 1458*t+node.s =
-      (1458*r0+node.s)+(1458*T)*k := by rw [ht]; omega
+      (1458*r0+node.s)+(1458*T)*k := by rw [ht]; ring
   rw [hexp] at hmod
   exact hno hmod
 

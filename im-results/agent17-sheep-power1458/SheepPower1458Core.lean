@@ -36,9 +36,6 @@ theorem only_class (m base shift C cycle good t v : Nat) (hm : 1 < m) (hq : 0 < 
     rw [←reduce_hit m base shift cycle t hm hq hp, ←heq]
     exact Nat.mul_add_mod_self_left _ _ _
   exact hc ⟨t%cycle, Nat.mod_lt t hq⟩ hh
-/-- A progression-specific modular obstruction. Unlike `no_generic`, this
-lemma needs only the one base residue of the progression: the exponent advances
-by an arbitrary period P for which 2^P = 1 modulo m. -/
 /-- A fixed-progression non-hit: one base residue and one exponent
 period suffice to exclude the entire arithmetic progression. -/
 theorem no_hit_fixed_period (m base target period k : Nat)

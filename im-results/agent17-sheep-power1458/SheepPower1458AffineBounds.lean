@@ -103,8 +103,8 @@ theorem no_special_affine (D S a N : Nat)
         rw [heq]
         exact hpowmod
       have hLmod : (D*(a+2)+S) % 2^a = 0 := by
-        rw [Nat.add_mod, hmulmod, zero_add] at hsum
-        exact hsum
+        rw [Nat.add_mod, hmulmod] at hsum
+        simpa [Nat.mod_mod] using hsum
       have hLzero : D*(a+2)+S = 0 := by
         rw [Nat.mod_eq_of_lt hlinear.2] at hLmod
         exact hLmod
