@@ -136,3 +136,10 @@ The inline JavaScript runtime reproduction passed **1,152 cases**:
 The exact prefix cost checked was (12a+12v_2(n)+67+3b=(12a+12v_2(n)+32)+(35+3b)). The counted drain cost was (6\cdot4^b+42\cdot2^b-12b-48). Every case matched the complete nonblank tape support, state, and head at both endpoints.
 
 The 1,152 cases were executed as an inline JavaScript runtime reproduction in this invocation. The committed Node script itself has not been run as a standalone file here because the local shell surfaces returned tool-level `ClientError`. This is finite simulation evidence, not a formal proof; the exact `M1EvenValuationSource.lean` import closure and transitive axiom profile remain uncompiled.
+
+
+### Experimental a=0 extension (not in current Lean theorem)
+
+Agent 8 proposed removing the current `a>0` hypothesis by replacing `resetDrainBound` with an unconditional width lemma, since `resetDelta m\in\{1,2\}). An inline BigInt runtime reproduction passed **384 additional a=0 full-source cases**: n=1..64, b=0,1,2, and both minimal admissible L and L+8. Every case matched the same q4-prefix and counted-drain endpoint configurations.
+
+The committed `M1EvenValuationSourceProbe.mjs` now includes these 384 cases in a separately labelled `a0ExtensionCases` array. The current Lean theorem still assumes a>0; these cases are only computational support for the proposed generalization. Do not count them as formal source coverage until the unconditional drain-bound lemma and exact M1 closure compile.
