@@ -211,6 +211,7 @@ let wordsChecked = 0;
 let outputMismatches = 0;
 let eventMismatches = 0;
 let carryMismatches = 0;
+let fullLabelLookupMismatches = 0;
 
 function validateWord(word) {
   for (const offset of [1, 2]) {
@@ -249,6 +250,9 @@ function validateWord(word) {
       fullLabel.L_final.carry.join(",") + "|" +
       fullLabel.R_final.carry.join(",");
     const baseOutput = outputs[state];
+    if (fullOutputLookup[capturedEvent][baseOutput] !== fullOutput) {
+      fullLabelLookupMismatches += 1;
+    }
     if (
       baseOutput === null ||
       base.output_labels[baseOutput].key !== fullCarryKey
@@ -274,11 +278,12 @@ function enumerateWords(length) {
 
 for (let length = 0; length <= 6; length += 1) enumerateWords(length);
 
-if (outputMismatches || eventMismatches || carryMismatches) {
+if (outputMismatches || eventMismatches || carryMismatches || fullLabelLookupMismatches) {
   throw new Error(JSON.stringify({
     outputMismatches,
     eventMismatches,
     carryMismatches,
+    fullLabelLookupMismatches,
   }));
 }
 
@@ -313,6 +318,7 @@ const result = {
     output_mismatches: outputMismatches,
     event_symbol_mismatches: eventMismatches,
     carry_label_mismatches: carryMismatches,
+    full_label_lookup_mismatches: fullLabelLookupMismatches,
   },
 };
 
