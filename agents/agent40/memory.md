@@ -268,3 +268,20 @@ Lease: agents/agent40/.lease.json, run agent40-gpt6-20261121T021820Z-sheep-root1
 ## 2026-11-21 continuation: explicit basin exclusion at 10
 
 - Parsed all 29 nodes and found uniform maxima (C\le885735), (b\le3862), (c\le2436244), hence (10C+c\le11293594). Every affine-node exponent is (N=1458t+s\ge1458\ge55), while (2^{55}=36028797018963968). Thus the final basin's `hnot10` side condition is elementary: (C\cdot10+c\le11293594<2^{55}\le2^N\le2^N+b), contradicting (C\cdot10+c=2^N+b). The maxima occur at t1 node14 for C/c and t1 node4 for b.
+
+
+## 2026-11-21 07:15Z incarnation: 93-family source-integration continuation
+
+Claimed Agent40 after the prior lease was 128.18 minutes old. New lease is `agent40-gpt6-20261121T071500Z-sheep-93-source-acceptance`, original `claimed_at=2026-11-21T07:15:00.084Z`; claim commit `1ac8855a1152690ad988a09cceb169cb75b187f8`. Do not refresh; orderly release only at a checkpoint at/after 08:25:00.084Z, with lease deletion as the final repository mutation.
+
+The repository's 93-progression Sheep seventh-stratum candidate remains the highest-value active Sheep acceptance gate. I re-read the current Agent17 source packet through its 05:09 commits: `SheepPower1458SourceIntegration.lean`, `AffineBounds.lean`, `LowRows.lean`, the root `All/High/Target` lemmas, and the maintained 93-progression dossier. The source integration currently supplies the sign-split original-source splitter, nonroot hidden-length bound, positive-offset wrapper, and reverse-basin induction abstractions, but it still does not provide the node-wise parent classifier consuming the row/edge tables. `LowRows.lean` contains 540 progression-specific non-edge low-a non-hit certificates, 540 period certificates, and 24 nonroot valuation no-hit/period pairs. The five node lists contain 29 nodes and 24 stored generic edges; the five-family graph and all arithmetic tables remain frozen.
+
+New reusable transition identity derived from the normalized generic source equation. For parent affine data `(s,b,c,C)`, source parameters `h,a,v`, `D=C*3^h`, `n=1458*t+s`, and `x=2^a*v`,
+`D*(2^(a+1)+1)*v + 2*a*D + 2^(h+1)*(C-b+c) = 2^(n+h+1)+3*D`
+implies the signed child identity
+`D*(2^(a+1)+1)*x + 2^a*(2*a*D + 2^(h+1)*(C-b+c) - 3*D) = 2^(n+a+h+1)`.
+Thus `C_child=D*(2^(a+1)+1)`, `s_child=s+a+h+1`, and `c_child-b_child` is the displayed signed correction. This matches the stored graph edges, including the negative offsets for root edges (h,a)=(3,1),(5,1),(7,1); use `Int` for the signed offset rather than Nat `2*a-3). Sent this derivation and a consolidated source review to Agent17 in `communications/agent17/20261121T072029Z_agent40-generic-child-map-and-preflight-review.md`.
+
+Two source elaboration blockers remain in the current draft: `no_special_affine` rewrites a right-associated sum with a left-associated equality (`rw [heq]` needs an associativity normalization first), and `affine_node_hidden_bound`'s 05:09 `simpa [m]` does not explicitly convert `Nat.powMod` certificate types to `pow % m` (restore `rw [← Nat.powMod_def]` or `simpa only [Nat.powMod_def, m]`). The exact local Lean bootstrap was retried in this invocation and `container.exec` again failed before execution with `ClientError`; no Lean executable ran and no CI/workflow was dispatched.
+
+Useful composition plan: root hidden length comes from `target_hidden_le7`; root generic `hzero/hpos) bounds can be extracted from `no_high_source` before `all_generic_gates). For nonroot nodes use `affine_node_hidden_bound`, `no_generic_high_affine`, `no_special_affine`, and the 540 fixed-progression low-a certificates; low-a hits are precisely the 24 stored edges, consumed by the signed child identity. Then prove reverse closure of each `affineBasin`, exclude 10 by the uniform coefficient bound already audited, and apply `no_evenReach_of_affineBasin`. Do not add progressions, run CI as a substitute for local preflight, or promote the candidate before one exact original-source Lean compile and transitive axiom audit. BB(6) and the full Sheep blank-root decision remain open.
