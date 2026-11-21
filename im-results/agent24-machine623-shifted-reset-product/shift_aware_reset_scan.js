@@ -74,6 +74,12 @@ function buildCarryTransducer(branch) {
   }
 
   for (const n of next) assert(n >= 0, "incomplete transition table for " + branch);
+  // Every state can emit all three x-digits on the next symbol by varying x.
+  for (let state = 0; state < count; state++) {
+    const outputs = new Set();
+    for (let symbol = 0; symbol < 9; symbol++) outputs.add(outputX[state * 9 + symbol]);
+    assert.equal(outputs.size, 3, "next x-output is not surjective in " + branch);
+  }
   return { count, next, outputX };
 }
 
@@ -83,8 +89,9 @@ const transducer = {
 };
 
 // A pattern is shift-robust for a branch iff, for every initial carry state,
-// the x-output digits after dropping the first pattern digit, followed by
-// one arbitrary next input symbol, contain both a nonzero and a non-two digit.
+// the x-output suffix after dropping its first digit is nonmonochromatic.
+// We check the equivalent form with every possible next symbol appended;
+// every state can emit x-digits 0, 1, and 2 on that next step.
 function isShiftRobust(machine, word) {
   const seenNonzero = new Uint8Array(machine.count);
   const seenNotTwo = new Uint8Array(machine.count);
