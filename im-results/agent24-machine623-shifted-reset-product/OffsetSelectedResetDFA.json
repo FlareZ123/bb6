@@ -9519,5 +9519,15 @@
     "event_symbol_mismatches": 0,
     "carry_label_mismatches": 0,
     "event_transition_count": 1179
+  },
+  "projection_validation": {
+    "full_states_checked": 395,
+    "base_states": 349,
+    "mapped_base_states": 349,
+    "full_transitions_checked": 3555,
+    "full_output_labels_checked": 54,
+    "transition_projection_mismatches": 0,
+    "output_projection_mismatches": 0,
+    "first_reset_event_symbol_mismatches": 0
   }
 }
