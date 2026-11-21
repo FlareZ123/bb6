@@ -86,61 +86,104 @@ theorem root32_highstop_index_map (t j E : Nat)
     (hj : coveredJ j) :
     coveredT t := by
   have hN := root32_tj_mod8192 t j E hE hroot
-  rcases hj with h | h | h | h | h | h | h | h | h
+  rcases hj with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9
   · left
     have hN16 := reduce_modulus (t+j) 16 (by decide) hN
+    norm_num at hN16
     have hsplit : (t+j)%16 = (t%16+j%16)%16 :=
       Nat.add_mod t j 16
-    rw [h] at hsplit
+    rw [h1] at hsplit
     omega
-  · exact Or.inr (Or.inl (by
-      have hN256 := reduce_modulus (t+j) 256 (by decide) hN
-      have hsplit : (t+j)%256 = (t%256+j%256)%256 :=
-        Nat.add_mod t j 256
-      rw [h] at hsplit
-      omega))
-  · exact Or.inr (Or.inr (Or.inl (by
-      have hN256 := reduce_modulus (t+j) 256 (by decide) hN
-      have hsplit : (t+j)%256 = (t%256+j%256)%256 :=
-        Nat.add_mod t j 256
-      rw [h] at hsplit
-      omega))
-  · exact Or.inr (Or.inr (Or.inr (Or.inl (by
-      have hN512 := reduce_modulus (t+j) 512 (by decide) hN
-      have hsplit : (t+j)%512 = (t%512+j%512)%512 :=
-        Nat.add_mod t j 512
-      rw [h] at hsplit
-      omega)))
-  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (by
-      have hN512 := reduce_modulus (t+j) 512 (by decide) hN
-      have hsplit : (t+j)%512 = (t%512+j%512)%512 :=
-        Nat.add_mod t j 512
-      rw [h] at hsplit
-      omega))))
-  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (by
-      have hN1024 := reduce_modulus (t+j) 1024 (by decide) hN
-      have hsplit : (t+j)%1024 = (t%1024+j%1024)%1024 :=
-        Nat.add_mod t j 1024
-      rw [h] at hsplit
-      omega))))))
-  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (by
-      have hN1024 := reduce_modulus (t+j) 1024 (by decide) hN
-      have hsplit : (t+j)%1024 = (t%1024+j%1024)%1024 :=
-        Nat.add_mod t j 1024
-      rw [h] at hsplit
-      omega)))))))
-  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (by
-      have hN4096 := reduce_modulus (t+j) 4096 (by decide) hN
-      have hsplit : (t+j)%4096 = (t%4096+j%4096)%4096 :=
-        Nat.add_mod t j 4096
-      rw [h] at hsplit
-      omega))))))))
-  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (by
-      have hN8192 := hN
-      have hsplit : (t+j)%8192 = (t%8192+j%8192)%8192 :=
-        Nat.add_mod t j 8192
-      rw [h] at hsplit
-      omega))))))))
+  · right
+    left
+    have hN256 := reduce_modulus (t+j) 256 (by decide) hN
+    norm_num at hN256
+    have hsplit : (t+j)%256 = (t%256+j%256)%256 :=
+      Nat.add_mod t j 256
+    rw [h2] at hsplit
+    omega
+  · right
+    right
+    left
+    have hN256 := reduce_modulus (t+j) 256 (by decide) hN
+    norm_num at hN256
+    have hsplit : (t+j)%256 = (t%256+j%256)%256 :=
+      Nat.add_mod t j 256
+    rw [h3] at hsplit
+    omega
+  · right
+    right
+    right
+    left
+    have hN512 := reduce_modulus (t+j) 512 (by decide) hN
+    norm_num at hN512
+    have hsplit : (t+j)%512 = (t%512+j%512)%512 :=
+      Nat.add_mod t j 512
+    rw [h4] at hsplit
+    omega
+  · right
+    right
+    right
+    right
+    left
+    have hN512 := reduce_modulus (t+j) 512 (by decide) hN
+    norm_num at hN512
+    have hsplit : (t+j)%512 = (t%512+j%512)%512 :=
+      Nat.add_mod t j 512
+    rw [h5] at hsplit
+    omega
+  · right
+    right
+    right
+    right
+    right
+    left
+    have hN1024 := reduce_modulus (t+j) 1024 (by decide) hN
+    norm_num at hN1024
+    have hsplit : (t+j)%1024 = (t%1024+j%1024)%1024 :=
+      Nat.add_mod t j 1024
+    rw [h6] at hsplit
+    omega
+  · right
+    right
+    right
+    right
+    right
+    right
+    left
+    have hN1024 := reduce_modulus (t+j) 1024 (by decide) hN
+    norm_num at hN1024
+    have hsplit : (t+j)%1024 = (t%1024+j%1024)%1024 :=
+      Nat.add_mod t j 1024
+    rw [h7] at hsplit
+    omega
+  · right
+    right
+    right
+    right
+    right
+    right
+    right
+    left
+    have hN4096 := reduce_modulus (t+j) 4096 (by decide) hN
+    norm_num at hN4096
+    have hsplit : (t+j)%4096 = (t%4096+j%4096)%4096 :=
+      Nat.add_mod t j 4096
+    rw [h8] at hsplit
+    omega
+  · right
+    right
+    right
+    right
+    right
+    right
+    right
+    right
+    have hN8192 := hN
+    have hsplit : (t+j)%8192 = (t%8192+j%8192)%8192 :=
+      Nat.add_mod t j 8192
+    rw [h9] at hsplit
+    omega
 
 #print axioms root32_tj_mod8192
 #print axioms root32_highstop_index_map
