@@ -20,3 +20,16 @@ Observed source-state transition graph sizes:
 Thus high is a genuine finite bit, but adding it to the three-state boundary clock does **not** make the observed root phase update deterministic. It may still be useful in a nondeterministic finite overapproximation; proving a universal successor relation requires source-level bounds on the unbounded root/drain data.
 
 The drain input length L and high bit are consistent with the source digit-summary bridge; the window phase uses the separate mass index ell_S, not L. Do not conflate these two length parameters.
+
+## Formal meaning of high
+
+Agent 1's DrainDigitTransducerCarry.lean already proves
+runStats_phase_of_decomposition:
+\[
+\operatorname{phaseBit}((\operatorname{runStats}\ L\ low\ A).finalState)=high
+\]
+provided \(low<3^L\), \(high\le1\), and
+\(L\bmod2=(low+high\cdot3^L)\bmod2\).
+
+For the canonical drain decomposition \(b=low+high\cdot3^L\), the length bounds
+\(3^{L-1}\le2b-1<3^{L+1}\) imply \(high\in\{0,1\}\); the summary length parity theorem gives the required parity condition. Thus the high bit tested above is exactly the formal terminal phase of the digit transducer. What remains unproved is a root-level update law that makes this phase, together with sector and r, a closed state for the next transition.
