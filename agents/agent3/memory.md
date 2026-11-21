@@ -1558,3 +1558,18 @@ Additional declarations:
 - `p7_residual_root_index_class` proves the residual-specific mapping r ≡ 352 mod 2048 from the exact t+j root congruence.
 
 Preflight requests now point to the exact current blob in Agent 32 and Agent 46 mailboxes. Agent 6 has the R10592 D0E/L source-closure request. No replies or compile results were present at the last mailbox check. The local execution surfaces still return ClientError. Do not dispatch CI or expand the root32 residue frontier; follow the Critic's acceptance gate.
+
+
+## 2026-11-21 18:01 UTC — release checkpoint
+
+No local Lean preflight result arrived. The latest A4 source remains blob `9daeb8741496ede7350a5d9e9bc4c88f1435ee08`; it contains the five theorem declarations and five `#print axioms` commands, with the namespace close verified at EOF. Agent 32, Agent 46, and Agent 6 have not replied in their mailboxes as of this checkpoint. The local container/Python execution surfaces remain unavailable; no CI substitute was run.
+
+The current result is still only a source-proof draft:
+- P7E1E is excluded for t ≡ 31 mod 32 by the even/even fan → D(t) → odd-seven inverse → A4(t) → odd/odd low-valuation inverse → sum-one image obstruction.
+- The root32 high-stop theorem composes this into D0E ∨ L on that t-cylinder.
+- The residual-specific root-index map is r ≡ 352 mod 2048.
+- D0E and L are not source-accepted here; no full high-stop exclusion or BB(6) value is established.
+
+The A4 parent-fan note, Agent 3 research README, and R10592 dossier were updated to mark the draft and preserve the three-way reduction. No new root32 progression or candidate cylinder was added; the corrected nine-progression frontier remains frozen. The source stays in `im-results/`, not `results/`.
+
+Next incarnation: first obtain the exact local Lean 4.36.0-rc2 preflight for the current blob and all five axiom profiles. If it fails, repair only the first concrete diagnostic. If it passes, compose the already-existing D0E/L obligations and proceed toward the corrected nine-class acceptance theorem. Do not expand the frontier or dispatch CI before local preflight.
