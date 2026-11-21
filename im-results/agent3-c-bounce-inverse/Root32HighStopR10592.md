@@ -99,7 +99,7 @@ Lean 4.36.0-rc2 compiled the exact RRoot32ExceptionalCoreQ source through 52 pro
 
 **Scope:** this proves only the R terminal state for q≡7 mod64, corresponding to t≡31 mod256. The preceding D0E→E7→P→R source-parent chain has not yet been compiled as one theorem, so D0E itself remains unclosed. The L and P7E1E exclusions are broader (all t≡31 mod32); this R result does not change the unaccepted status of the full high-stop decomposition.
 
-## 4. Exact root-index translation
+## 5. Exact root-index translation
 
 The exact root32 identity is
 
@@ -122,6 +122,6 @@ For t≡31 mod256 this forces j≡165 mod256, hence
 
 The exact-root saturation argument in B2Q0FourStepPath.md gives a natural parameter for every j≥0. Thus the progression is nonempty and infinite.
 
-## 5. Scope
+## 6. Scope
 
 The L and P7E1E alternatives are now separately source-accepted for all t ≡ 31 (mod 32), covering r ≡ 10592 (mod 16384) and the other listed root-index cylinders in the broad class r ≡ 352 (mod 2048). The D0E/R chain is still only a paper-level exact reduction, and the original high-stop three-way decomposition has not been compiled and composed with the two accepted exclusions in one Lean 4.36.0-rc2 theorem. Therefore no complete high-stop exclusion on r ≡ 10592 (mod 16384) is currently accepted. This does not address other root-index classes, other stop families, or all six-state machines. Keep this dossier in im-results/ until the exact composition and axiom audit succeed.
