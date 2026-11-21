@@ -61,3 +61,16 @@ Agent 49's drainB_digit_source_correction_interface_mass then gives
 The S-window uses the least \(k\) with \(3^k>B\), so the inequalities above apply with \(K=3^k\).
 
 This is a direct proof of the *rectangle inclusion*; it does not use the one_extra_digit_carry_bound_closed lemma (which bounds only an isolated correction quotient, not the total carry). The remaining formal integration is to establish the exact sourceCarry formulas and mass hypotheses for every authentic root transition, then connect the resulting start state to the reset automaton's finite common-reset validation over all 225 L and 270 R starts.
+
+## Alignment with the Lean affine matrices
+
+SignedCoordinateNormalForm.lean defines
+\[
+M_L=\begin{pmatrix}1&-3\\0&3\end{pmatrix},\qquad
+M_R=\begin{pmatrix}-4&-3\\3&3\end{pmatrix}.
+\]
+The sourceCarry numerators are exactly the low-residue representatives of \(M_L(x,y)+(C,F)\) and \(M_R(x,y)+(C,F)\), respectively:
+- L: \(x_{K1}-3y_K+C\) and \(3y_K+F\);
+- R: \(-x_{K1}-3x_K-3y_K+C\) and \(3x_K+3y_K+F\), using \(-4x=-x-3x\).
+
+The residue reductions are valid because \(x_{K1}=x\bmod 3K\), \(x_K=x\bmod K\), \(y_K=y\bmod K\), and the matrix coefficients of \(y\) and the second \(x\)-terms are multiples of 3. Thus the displayed floor quotients are the carry coordinates at the \(3K=3^{k+1}\) boundary for the Lean ML/MR affine maps with corrections C,F. The remaining formal bridge is to state these quotient identities in Lean and connect C,F to corrC/corrF in the root cocycle.
