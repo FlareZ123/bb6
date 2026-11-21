@@ -6,7 +6,7 @@
 
 This acceptance does **not** exclude the high-stop target \(T(u)\) on the whole root32 stratum. The forward B2-to-\(T\) path does not make B2 a unique predecessor of T; the complete reverse analysis leaves the distinct \(D_{0E}(t)\) and \(L(t)\) alternatives.
 
-**Current paper-level high-stop coverage (not yet integrated/compiled).** Eight disjoint exact source-parent dossiers cover these root-index progressions, where \(r=32+64j\):
+**Current paper-level high-stop coverage (not yet integrated/compiled).** Ten disjoint exact source-parent dossiers cover these root-index progressions, where \(r=32+64j\):
 
 | \(j\)-cylinder | Root-index cylinder | Dossier |
 |---|---|---|
@@ -18,19 +18,17 @@ This acceptance does **not** exclude the high-stop target \(T(u)\) on the whole 
 | \(j\equiv549\pmod{1024}\) | \(r\equiv35168\pmod{65536}\) | [Agent 6 R35168](../agent6-root32-highstop/README.md) |
 | \(j\equiv565\pmod{1024}\) | \(r\equiv36192\pmod{65536}\) | [Agent 6 R36192](../agent6-root32-highstop/Root32HighStopR36192.md) |
 | \(j\equiv1013\pmod{1024}\) | \(r\equiv64864\pmod{65536}\) | [Agent 6 R64864](../agent6-root32-highstop/Root32HighStopR64864.md) |
+| \(j\equiv4133\pmod{8192}\) | \(r\equiv264544\pmod{524288}\) | [R2400 subfamilies](./Root32HighStopR2400Subfamilies.md) |
+| \(j\equiv14373\pmod{16384}\) | \(r\equiv919904\pmod{1048576}\) | [R2400 subfamilies](./Root32HighStopR2400Subfamilies.md) |
 
-The eight cylinders are pairwise disjoint. Modulo \(1024\), they cover \(79\) of the \(1024\) possible \(j\)-residues, leaving \(945/1024\) of the root32 index line not covered by these dossiers. The catalogued complement is exactly
+The ten cylinders are pairwise disjoint. Modulo \(16384\), they cover \(1267\) of the \(16384\) possible \(j\)-residues, leaving \(15117/16384\) of the root32 index line not covered by these dossiers. The catalogued complement is exactly
 \[
-j\bmod1024\notin
-\{3\bmod16,\ 149,165\bmod256,\ 117,181\bmod512,\ 549,565,1013\bmod1024\}.
+j\bmod16384\notin
+\{3\bmod16,\ 149,165\bmod256,\ 117,181\bmod512,\ 549,565,1013\bmod1024,\ 4133\bmod8192,\ 14373\bmod16384\}.
 \]
-This is a description of current coverage, **not** a theorem that the remaining candidates halt or that their high-stop targets are reachable. All eight high-stop compositions still need an integrated Lean wrapper, exact transitive source-closure compilation, and exported axiom audits; keep them in im-results/.
+This is a description of current coverage, **not** a theorem that the remaining candidates halt or that their high-stop targets are reachable. All ten high-stop compositions still need integrated Lean wrappers, exact transitive source-closure compilation, and exported axiom audits; keep them in im-results/.
 
-The attempted widening in [Root32HighStopR2400.md](./Root32HighStopR2400.md) is explicitly corrected: it does **not** add an exclusion. It removes the L and odd-a R alternatives on \(j\equiv37\pmod{1024}\), but leaves the direct-R residual
-\[
-(2026954872744+3092060518680n,\ 1351544872375+2061742269300n)
-\]
-for \(r\equiv2400\pmod{65536}\). That residual is a concrete next target, not a closed case.
+The attempted widening in [Root32HighStopR2400.md](./Root32HighStopR2400.md) is explicitly corrected: it does **not** close all of \(r\equiv2400\pmod{32768}\). It reduces the \(j\equiv37\pmod{1024}\) residual to an explicit affine family \(Y(n)\). The follow-up [Root32HighStopR2400Subfamilies.md](./Root32HighStopR2400Subfamilies.md) excludes only \(n\equiv7\pmod8\) and \(n\equiv13\pmod{16}\), yielding the two additional root-index cylinders in the table. The rest of \(r\equiv2400\pmod{65536}\) remains open.
 
 No Machine C halting/nonhalting decision or BB(6) value is claimed. The exact root equation is saturated on \(r\equiv32\pmod{64}\), so root-equation-only filtering is unproductive; progress must come from closing the remaining source-parent alternatives.
 
