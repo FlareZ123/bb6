@@ -189,32 +189,67 @@ This proves the upper inequality for every \(j\ge3\).
 
 ## Conditional score consequence
 
-Use the source-dossier notation
+Use the source-dossier identities
 \[
-b_N=V_{q-4}.
+b_N=V_{q-4},\qquad
+\ell=\log_2(b_N+1)=V_{q-5}.
 \]
-For \(q\ge7\), the recurrence theorem gives
+For \(q\ge8\), put
 \[
-T_{q-1}^{\,T_{q-2}^{\,\alpha_{q-4}}}
-<b_N,
+L_b=T_{q-1}^{\,T_{q-2}^{\,\alpha_{q-4}}},
 \qquad
-b_N^{\,T_{q-2}^{\,\gamma_{q-4}}}<T_q.
+L_\ell=T_{q-2}^{\,T_{q-3}^{\,\alpha_{q-5}}},
 \]
-The existing exact terminal-summand estimates are
 \[
-S\ge6(b_N+1)^2,\qquad S<9b_N^2.
+E=T_{q-2}^{\,\gamma_{q-4}},
+\qquad
+D=D_{q-5},
+\qquad
+H=2^{\,T_{q-2}/D},
+\qquad
+U=2^H.
 \]
-Thus, writing \(E=T_{q-2}^{\gamma_{q-4}}\),
+The lower recurrence inequalities at \(j=q-4\) and \(j=q-5\) give
+\[
+L_b<b_N,\qquad L_\ell<\ell.
+\]
+For the upper side, the \(j=q-4\) exponent identity gives
+\[
+E=T_{q-2}^{\gamma_{q-4}}
+=2^{T_{q-2}-T_{q-2}/D},
+\qquad
+\frac{T_{q-1}}{E}=2^{T_{q-2}/D}=H.
+\]
+All exponents are integers by the divisibility invariant for \(D_{q-5}\). Hence
+\[
+U^E=2^{HE}=2^{T_{q-1}}=T_q.
+\]
+The upper recurrence inequality \(b_N^E<T_q\) therefore gives
+\[
+b_N<U,\qquad b_N+1\le U,\qquad \ell\le H.
+\]
+
+The exact source-conditional score expansion in
+[TM63ScoreAsymptotic.md](../agent42-q4-s0-drain/TM63ScoreAsymptotic.md) is
+\[
+S_{\rm TM1}
+=6(b_N+1)^2+42(b_N+1)+3\ell+\Delta,
+\]
+where
+\[
+0\le\Delta<10(1+\log_2\ell)\ell^2.
+\]
+Substituting the moving lower and upper bounds yields the sharper conditional interval
 \[
 \boxed{
-6\bigl(T_{q-1}^{\,T_{q-2}^{\,\alpha_{q-4}}}+1\bigr)^2
-<S<
-9T_q^{\,2/E}.
+6(L_b+1)^2+42(L_b+1)+3L_\ell
+<
+S_{\rm TM1}
+<
+6U^2+42U+3H+10(1+\log_2 H)H^2.
 }
 \]
-Here \(E\ge4\), and \(T_q^{1/2}>9\), so the upper endpoint is strictly below \(T_q\). This is a substantially tighter moving-exponent sandwich than the earlier constant-exponent form.
-
-The score consequence remains conditional on the authentic source-to-terminal composition and the exact score decomposition. It is not an unconditional statement about \(S(6)\).
+This retains the exact final counted-increment linear term and the explicit polylogarithmic remainder, rather than replacing the score by the coarser \(6b_N^2<S_{\rm TM1}<9b_N^2\). The entire interval remains conditional on the authentic root/dispatcher source composition and the exact score decomposition; neither has passed the full local compile/axiom gate.
 
 ## Stronger explicit lower tower from the outer index
 
