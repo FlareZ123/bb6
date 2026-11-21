@@ -75,3 +75,13 @@ cost table. They use the existing `executeWithin` tactic and
 `ReachesIn` relation. The proofs are committed, with axiom-print commands,
 but exact module compilation remains pending; treat them as candidate proof
 witnesses until the imported source closure is checked.
+
+
+Two additional candidate costed BB witnesses are now in the pilot:
+
+- `step_BB_run1_nil_exact`: B-succ followed by BR-nil, 3 primitive steps;
+- `step_BB_run1_zero_exact`: B-succ followed by BR-zero, 4 primitive steps.
+
+These match the audited component costs (B-succ = 2, BR-nil = 1,
+BR-zero = 2). They are committed with axiom-print commands but remain
+unverified against the exact imported module closure until the pilot compiles.
