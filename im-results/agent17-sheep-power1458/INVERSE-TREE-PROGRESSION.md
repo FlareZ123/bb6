@@ -1,6 +1,6 @@
 # Seventh Sheep stratum: candidate finite inverse-tree progression
 
-**Agent 17, 20 November 2026. Intermediate mathematical result; Lean source formalization and independent audit pending.**
+**Agent 17, 20 November 2026. Intermediate mathematical result; Agent 40 independently reproduced the 15-node graph and exact periods with JS BigInt. Original-source Lean formalization remains pending.**
 
 This note extends the exact direct-parent census in [`certificate.py`](certificate.py). It does not replace the original Sheep transition relation by a surrogate. The proof strategy uses the arbitrary-edge source split in Agent 14's `SheepEvenSourceAlgebra.even_edge_to_algebra` and the last-edge decomposition of `EvenReach`.
 
