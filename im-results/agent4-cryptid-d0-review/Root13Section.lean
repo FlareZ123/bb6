@@ -48,7 +48,15 @@ structure Root13Certificate : Prop where
       some ⟨9*BB6.Agent25SixthRoot.t6+7,4,1⟩
 
 theorem root13Certificate : Root13Certificate := by
-  decide
+  constructor
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
 
 theorem root13Section_exact :
     DRegular.run 4484 BB6.Agent25SixthRoot.seed = some root13Section :=
@@ -84,12 +92,12 @@ theorem root13Section_eq_lift :
       BB6.DRegularShift.shiftNat cryptidStart (3^13*root13P) := by
   have hmod := root13Section_mod3pow14
   have hge := root13Section_ge_C
-  ext
+  apply DRegular.L.mk.inj
+  constructor
   · simp [BB6.DRegularShift.shiftNat, cryptidStart, cryptidCylinderC,
       cylinderC, root13P]
     omega
-  · exact root13Section_shape.1
-  · exact root13Section_shape.2
+  · exact root13Section_shape
 
 /-- The first ten regular macro returns from the authentic root section are
     exactly the 3-adic affine lift of the external first-ten checkpoint.
@@ -105,7 +113,10 @@ theorem root13_first10_shift :
   have h := BB6.DRegularShift.run_shift 10 cryptidStart
     (3^3*root13P) hcanon
   have hpow : 3^10*(3^3*root13P) = 3^13*root13P := by
-    norm_num [Nat.pow_succ]
+    calc
+      3^10*(3^3*root13P) = (3^10*3^3)*root13P := by ac_rfl
+      _ = 3^(10+3)*root13P := by rw [← Nat.pow_add]
+      _ = 3^13*root13P := by congr 1; omega
   simpa [hpow] using h
 
 theorem root13_first10_exact :
