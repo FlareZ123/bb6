@@ -196,7 +196,30 @@ These existing source-connected results already classify substantial parts of th
 
 These are conditional local reductions, not yet a proved exhaustion of every side branch along the complete (u_j) spine. The new t=0 embedding identifies the terminal main-spine branch; the next task is to compose the existing Ray reductions with the exact (u_j) indices, account for the terminal weak-margin window, and state precisely which branches/phase cases remain uncovered. Reimplementing these modules would be redundant.
 
-## 7. Scope and remaining work
+### Exact length of the terminal weak-margin tail in the current x-window
+
+The high-margin hypothesis used by `RayTwoTierSelector.lean` is
+[
+2048\,\operatorname{deficit}(n,j)+16384n+16384\le2^n,
+\quad \operatorname{deficit}(n,j)=(2n+3)2^j-(n-1).
+]
+Here (J=K+2-a=n-a) and (c2^J=x2^n). At (j=J-12), the left side is exactly
+[
+(x/2)2^n+14336n+18432,
+]
+which is at most (2^n) for (x\le13/8) and (n\ge257). At (j=J-11), it is
+[
+x2^n+14336n+18432>2^n
+]
+because (x\ge97/64>1). The expression is increasing in (j), so the high-margin condition holds for every (j\le J-12) and fails for every (j\ge J-11).
+
+Therefore, for the current x-window, the high-margin Ray reductions cover the spine through (J-12), and the terminal weak-margin tail consists of exactly the twelve indices
+[
+J-11,J-10,\ldots,J.
+]
+This gives a concrete finite target for composing `RayNoSeam`, `RayNoSeamWalk`, the two-tier Hensel selectors, and the terminal t=0 entry (E(a,K)). The BigInt checks at ((K,a)=(387,9),(800,10),(399,9),(806,10)) independently found this exact 12-index split; the algebra above explains it uniformly.
+
+## 8. Scope and remaining work
 
 This identity connects the auxiliary entry family to the actual #746 halting targets. It proves that (E(a,K)) is an ancestor on **one** inverse-parent branch of (U_{K+2}). It does **not** prove that every root path to (U_{K+2}) passes through (E(a,K)). Other odd-parent side branches can leave intermediate spine nodes; a root path could in principle enter through one of them.
 
