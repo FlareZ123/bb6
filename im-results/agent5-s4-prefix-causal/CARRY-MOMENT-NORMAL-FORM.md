@@ -85,6 +85,8 @@ Several exact consequences follow immediately.
   \]
   Thus the gate has an exact hierarchy of moment-transfer identities, not only the unweighted mass law.
 
+A further corollary is strict monotonicity of the first positional moment. If r=0, then t_0=m is odd and greater than one, so 2ΔD=t_0-1≥2. If r≥1, all t_i≥1, hence 2ΔD≥(r+1)+4r-1=5r and ΔD≥⌈5r/2⌉≥3. Therefore every successful positive-offset gate strictly increases D; every successful three-gate P return increases D by at least 3. If a known prefix forces at least r_0 initial even carries with r_0≥1, the stronger lower bound ΔD≥⌈5r_0/2⌉ follows without knowing the deeper suffix.
+
 The first-moment formula is particularly useful because \(D\) is a statistic of the **whole** stack. A fixed prefix and total mass do not determine it.
 
 ## 3. Convex tail interval from prefix, mass, and positional moment
