@@ -2134,4 +2134,161 @@ theorem iterStep_stepPure_within (n : Nat)
 #print axioms iterStep_stepPure_within
 
 
+
+
+theorem iterStep_stepPure_within_eq (n : Nat)
+    (s t : SymMode × List SymTok × List SymTok)
+    (h : (evalSym target_tm) (iterStep stepPure n s) =
+      (evalSym target_tm) t) :
+    ReachesWithin
+      (50 * n * (pilotStateFieldMax s + n + 1))
+      ((evalSym target_tm) s)
+      ((evalSym target_tm) t) := by
+  simpa [h] using iterStep_stepPure_within n s
+
+theorem pilot_stateA_field_growth (m k d : Nat) (R_tail : List SymTok) :
+    pilotStateFieldMax (stateA (m + 1) k d R_tail) ≤
+      pilotStateFieldMax (stateA m (k + 1) (d + 6) R_tail) + 1 := by
+  simp [stateA, pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+  omega
+
+theorem pilot_stateC_field_growth (p k d2 : Nat) (R_tail : List SymTok) :
+    pilotStateFieldMax (stateC (p + 2) (k + 3) (d2 + 2) R_tail) ≤
+      pilotStateFieldMax (stateC (p + 3) (k + 1) d2 R_tail) + 2 := by
+  simp [stateC, pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+  omega
+
+theorem ruleA_step_within (m k d : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 66 * (pilotStateFieldMax (stateA m (k + 1) (d + 6) R_tail) + 67))
+      ((evalSym target_tm) (stateA m (k + 1) (d + 6) R_tail))
+      ((evalSym target_tm) (stateA (m + 1) k d R_tail)) := by
+  exact iterStep_stepPure_within_eq 66
+    (stateA m (k + 1) (d + 6) R_tail)
+    (stateA (m + 1) k d R_tail)
+    (ruleA_step_eq m k d R_tail)
+
+theorem ruleC_step_within (p k d2 : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 46 * (pilotStateFieldMax (stateC (p + 3) (k + 1) d2 R_tail) + 47))
+      ((evalSym target_tm) (stateC (p + 3) (k + 1) d2 R_tail))
+      ((evalSym target_tm) (stateC (p + 2) (k + 3) (d2 + 2) R_tail)) := by
+  exact iterStep_stepPure_within_eq 46
+    (stateC (p + 3) (k + 1) d2 R_tail)
+    (stateC (p + 2) (k + 3) (d2 + 2) R_tail)
+    (ruleC_step_eq p k d2 R_tail)
+
+theorem ruleA_iter_within (n m k d : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 66 * n *
+        (pilotStateFieldMax (stateA m (k + n) (d + 6 * n) R_tail) + n + 67))
+      ((evalSym target_tm) (stateA m (k + n) (d + 6 * n) R_tail))
+      ((evalSym target_tm) (stateA (m + n) k d R_tail)) := by
+  induction n generalizing m k d with
+  | zero =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [stateA] using pilot_reachesIn_refl
+      ((evalSym target_tm) (stateA m k d R_tail))
+  | succ n ih =>
+    have h1eq : k + (n + 1) = (k + n) + 1 := by omega
+    have h2eq : d + 6 * (n + 1) = (d + 6 * n) + 6 := by omega
+    have h3eq : m + (n + 1) = (m + 1) + n := by omega
+    rw [h1eq, h2eq, h3eq]
+    have h1 := ruleA_step_within m (k + n) (d + 6 * n) R_tail
+    have h2 := ih (m + 1) k d
+    have hM := pilot_stateA_field_growth m (k + n) (d + 6 * n) R_tail
+    let M := pilotStateFieldMax (stateA m (k + n + 1) (d + 6 * (n + 1)) R_tail)
+    have h1Budget :
+        50 * 66 * (pilotStateFieldMax
+          (stateA m (k + n + 1) (d + 6 * (n + 1)) R_tail) + 67) ≤
+          50 * 66 * (M + n + 68) := by
+      apply Nat.mul_le_mul_left (50 * 66)
+      omega
+    have h2Factor :
+        pilotStateFieldMax (stateA (m + 1) (k + n) (d + 6 * n) R_tail) + n + 67 ≤
+          M + n + 68 := by
+      simpa [M, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+        Nat.add_le_add_right hM (n + 67)
+    have h2Budget :
+        50 * 66 * n *
+          (pilotStateFieldMax (stateA (m + 1) (k + n) (d + 6 * n) R_tail) + n + 67) ≤
+          50 * 66 * n * (M + n + 68) :=
+      Nat.mul_le_mul_left (50 * 66 * n) h2Factor
+    have hcomp := reachesWithin_trans
+      (reachesWithin_mono h1Budget h1)
+      (reachesWithin_mono h2Budget h2)
+    have htotal :
+        50 * 66 * (M + n + 68) +
+          50 * 66 * n * (M + n + 68) ≤
+            50 * 66 * (n + 1) * (M + n + 68) := by
+      have heq :
+          50 * 66 * (M + n + 68) +
+            50 * 66 * n * (M + n + 68) =
+              50 * 66 * (n + 1) * (M + n + 68) := by ring
+      omega
+    have hfinal := reachesWithin_mono htotal hcomp
+    simpa [M, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using hfinal
+
+theorem ruleC_iter_within (n p k d2 : Nat) (R_tail : List SymTok)
+    (hk : 1 ≤ k) :
+    ReachesWithin
+      (50 * 46 * n *
+        (pilotStateFieldMax (stateC (p + n + 2) k d2 R_tail) + 2 * n + 47))
+      ((evalSym target_tm) (stateC (p + n + 2) k d2 R_tail))
+      ((evalSym target_tm) (stateC (p + 2) (k + 2 * n) (d2 + 2 * n) R_tail)) := by
+  induction n generalizing p k d2 with
+  | zero =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [stateC] using pilot_reachesIn_refl
+      ((evalSym target_tm) (stateC (p + 2) k d2 R_tail))
+  | succ n ih =>
+    obtain ⟨k0, rfl⟩ : ∃ k0, k = k0 + 1 := ⟨k - 1, by omega⟩
+    have h1eq : p + (n + 1) + 2 = (p + n) + 3 := by omega
+    have h2eq : k0 + 1 + 2 * (n + 1) = (k0 + 3) + 2 * n := by omega
+    have h3eq : d2 + 2 * (n + 1) = (d2 + 2) + 2 * n := by omega
+    rw [h1eq, h2eq, h3eq]
+    have h1 := ruleC_step_within (p + n) k0 d2 R_tail
+    have h2 := ih p (k0 + 3) (d2 + 2) (by omega)
+    have hM := pilot_stateC_field_growth (p + n) k0 d2 R_tail
+    let M := pilotStateFieldMax (stateC ((p + n) + 3) (k0 + 1) d2 R_tail)
+    have h1Budget :
+        50 * 46 * (pilotStateFieldMax
+          (stateC ((p + n) + 3) (k0 + 1) d2 R_tail) + 47) ≤
+          50 * 46 * (M + 2 * n + 49) := by
+      apply Nat.mul_le_mul_left (50 * 46)
+      omega
+    have h2Factor :
+        pilotStateFieldMax (stateC (p + n + 2) (k0 + 3) (d2 + 2) R_tail) +
+            2 * n + 47 ≤ M + 2 * n + 49 := by
+      simpa [M, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+        Nat.add_le_add_right hM (2 * n + 47)
+    have h2Budget :
+        50 * 46 * n *
+          (pilotStateFieldMax (stateC (p + n + 2) (k0 + 3) (d2 + 2) R_tail) +
+            2 * n + 47) ≤
+          50 * 46 * n * (M + 2 * n + 49) :=
+      Nat.mul_le_mul_left (50 * 46 * n) h2Factor
+    have hcomp := reachesWithin_trans
+      (reachesWithin_mono h1Budget h1)
+      (reachesWithin_mono h2Budget h2)
+    have htotal :
+        50 * 46 * (M + 2 * n + 49) +
+          50 * 46 * n * (M + 2 * n + 49) ≤
+            50 * 46 * (n + 1) * (M + 2 * n + 49) := by
+      have heq :
+          50 * 46 * (M + 2 * n + 49) +
+            50 * 46 * n * (M + 2 * n + 49) =
+              50 * 46 * (n + 1) * (M + 2 * n + 49) := by ring
+      omega
+    have hfinal := reachesWithin_mono htotal hcomp
+    simpa [M, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using hfinal
+
+#print axioms ruleA_step_within
+#print axioms ruleC_step_within
+#print axioms ruleA_iter_within
+#print axioms ruleC_iter_within
+
+
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
