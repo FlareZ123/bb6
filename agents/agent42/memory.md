@@ -2558,3 +2558,39 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 - Fresh local `container.exec` and `python.exec` probes still fail with tool-level `ClientError` before commands execute. No Lean compile was run and no CI was dispatched as a substitute. The focused manual-only M1 workflow is a narrower one-module/five-export diagnostic; `middle34-acceptance` remains the later five-root integration gate. Do not create more workflows.
 - Static reread of `P2RootS0FrameIdentity.lean`, `TM63RootQ4Tail.lean`, and `TM63GeneralQ4TerminalComposition.lean` found no new concrete mathematical discrepancy; Agent 38/48 already performed the detailed frame-coordinate review. Do not duplicate that audit. The root source draft still exposes `tm63_blank_halts` and `tm63_blank_attainable`, but the ~192-module closure and all four exported profiles remain unaccepted. BB(6) remains unsolved; no universal upper bound exists in this repository state.
 - Next: await Agent 8's response; if a working RC2 runtime is available, compile the exact current-main `M1EvenValuationSource.lean` closure and report all five axiom profiles. Otherwise preserve the runtime blocker and move to the next nonredundant root-proof action without dispatching CI. After M1 acceptance, the direct root gates remain `P2RootS0FrameIdentity.lean` then `TM63GeneralQ4TerminalComposition.lean`, with any transitive `native_decide` dependencies explicitly reported.
+
+
+## 2026-11-21 checkpoint: F289 rooted-RLE primitive-time candidate
+
+Investigated the upstream Cryptids halt proof at commit `3647718b5df22e1a61462dec0376bd204526285a`, module `BusyBeaver/BB6/Halt/M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH.lean`. This corresponds only to the first local F289 row, rooted RLE `1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA---`; the local overlap ledger reuses family label F289 for a different RLE too. Do not transfer this result to that other row.
+
+### New computational result
+
+- The upstream RLE engine proves `IsHalt` through existential `ReflTransGen` paths, which erase primitive step counts and cannot directly populate local `DecidedBelow`.
+- Derived cost recurrences from the `execute n` proofs in `HaltShared.lean` for `clean_sweep_core`, `clean_DR0_zeros`, `clean_RNIL_zero_pow`, `clean_P1_pow`, `clean_P2_pow`, plus raw/clean dispatch costs. Main formulas are in `im-results/agent42-cryptids-upstream-191-overlap/PrimitiveStepCost.md`.
+- A JS/BigInt port of the RLE state update was run inline from `ckpt0`. It matched `ckpt5`, `ckpt10`, and `ckpt15` exactly after 100/200/300 batches, and the final 80-batch chunk reached `halted=true`.
+- Accumulating the manually derived branch bounds on the actual 9,500-transition run yielded:
+  `N=1003448704258405241756955830449585121679083838719 < 2^160`.
+  Chunk bounds: `153233965714336055848900074`, `21420259195008061453530364129891259`, `124842490278774511382713615548623788982769809`, `1003323861768105046986224874806868631470122277577`.
+- This is a computational candidate, not a theorem. The state port is validated against the checkpoint literals; branch-cost soundness is not formalized. If sound, it would yield a local `DecidedBelow (2^160)` leaf (there is ample slack for the `n+1≤B` convention).
+
+### Persistent artifacts and transfer path
+
+- `im-results/agent42-cryptids-upstream-191-overlap/PrimitiveStepCost.md`: recurrences, dispatch bounds, candidate, proof plan.
+- `im-results/agent42-cryptids-upstream-191-overlap/check_cost_formulas.js`: deterministic BigInt summation checker (11,520 inline checks passed; persisted script itself not run).
+- `im-results/agent42-cryptids-upstream-191-overlap/simulate_f289_rle.js`: preserved full state/cost port, intended to run with Node against the exact upstream proof file. The inline simulation was executed; this persisted script was not independently executed or syntax-checked.
+- Existing upstream `BusyBeaver/Bridge.lean` theorem `multiStep_toBB M c n` gives exact n-step transfer from `multiStep M.toBB` to the n-fold `ConjectureMachines.step M` iteration.
+- Existing local `im-results/agent4-coverage-smoke/CryptidsHaltIff.lean` theorem `BB6.ConjectureBridge.source_halts_after_iff_agent8_halts_after m n` transfers exact source-run halting at n to `BB6Coverage.HaltsAfter (toAgent8 m) n`. Thus no new absolute-tape adapter is needed.
+
+### Next decisive work
+
+1. Get an adversarial review of the branch-cost formulas (messages sent to Agent32 and Agent4).
+2. Formalize a `ReachWithin M c c' B := ∃ n≤B, multiStep M c n = some c'` relation with additive transitivity.
+3. Prove a bounded analogue of `stateHalts_of_stepStar`: `StateHaltsWithin s B` propagates backwards through each `rleStep`, adding the branch cost. This mirrors existing `rleStep_halts`.
+4. Add exact/bounded variants of primitive `rule_*` certificates from their `execute n` proof bodies; do not try to recover lengths from `ReflTransGen`/StepPlus after the fact.
+5. Prove the final source run condition and apply the existing exact adapter, then establish `N+1≤2^160`.
+6. Run `simulate_f289_rle.js` with Node and compile the Lean cost proof when a local shell is available.
+
+### Environment note
+
+The local `container.exec` and `python.exec` tools both returned ClientError when testing the advertised local shell/Lean runtime. No Lean compilation was performed and no CI run was dispatched; do not treat the computational candidate as formally verified.
