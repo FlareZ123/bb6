@@ -228,6 +228,34 @@ Here \(R_{1,x}\equiv5\pmod8\), \(R_{1,y}\equiv2\pmod8\), and
 
 Thus the q=0 A4 lift on \(t\equiv719\pmod{1024}\) is reduced exactly to \(R_0(s)\); it is **not** excluded by this analysis. Do not promote this to results/.
 
+
+### Odd-depth parent fan of the R0 residual
+
+The remaining \(R_0(s)\) family itself has a useful complete source-preimage classification. Write \(x=R_{0,x}(s)\), \(y=R_{0,y}(s)\), and \(H=x+y+1\). Then
+\[
+H=4228794328432+6020404634160s
+ =16(264299645527+376275289635s).
+\]
+The bracket is always \(2\pmod3\). Also \(x\) is odd and \(y\) is even. Applying the complete section-preimage grammar:
+
+- The zero-left and even-\(a\) high branches are impossible because \(x+y\) is odd.
+- The low/direct branch gives exactly \(R_1(s)=(x+y-2,(y-2)/2)\).
+- The exceptional \(a=1\) branch would require \(H=16\cdot2^m\). Its cost equation forces \(m\) even, while \(H/16\equiv2\pmod3\) would force \(2^m\equiv2\pmod3\), hence \(m\) odd. So this branch is impossible.
+- Every remaining predecessor is an odd-\(a\) high-bounce parent with
+\[
+a=H/2^{n+1}-3,\qquad
+k=(x+2y-H/2^{n+1}-4-3n)/2,
+\]
+subject to the exact source guards \(a\ge3,\ k>0,\ a<2k\). The cost equation forces \(n\) odd; since \(a+3\) is even, \(n\le v_2(H)-2\).
+
+For even \(s\), \(H/16\) is odd, so \(v_2(H)=4\) and the only possible odd depth is \(n=1\). The existing sum-seven root theorem removes this bounce competitor, leaving precisely \(R_1(s)\).
+
+For odd \(s\), \(H/16\) is even, so \(v_2(H)\ge5\) and the remaining high-bounce fan has odd depths
+\[
+n=1,3,5,\ldots\le v_2(H)-2.
+\]
+The number of possible depths depends on the 2-adic valuation of \(264299645527+376275289635s\). This is an exact, unbounded parent classification, not a finite-depth truncation; the odd-\(s\) fan is still unresolved. It is the natural next target for generalizing the sum-seven inverse beyond the \(H\equiv16\pmod{32}\) case.
+
 ### The t = 79 + 512s family
 
 The q=0 parent of A4 is
