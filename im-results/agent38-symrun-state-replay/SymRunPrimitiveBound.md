@@ -91,7 +91,7 @@ The independent replay matches every literal upstream checkpoint and reaches the
 | F424 | 70,511 (<2^{17}) | 12,464,561,897,144,001,482,331,935,594,779,263,804,489,570,179,353,031,112,091,137 | 203 | (<2^{443}) |
 | F412 | 21,383 (<2^{15}) | 412,597,277,036,535,862,786 | 69 | (<2^{173}) |
 
-The initial `runElemFast` prefixes, including their entry paths, cost exactly 164,386 (F424) and 145,982 (F412) according to the source-derived replay in [the prefix-cost dossier](README.md). The terminal `step_DL_zero_halt` transition is part of the final `stepSym` transition and is covered by the per-transition bound above.
+The initial `runElemFast` prefixes, including their entry paths, cost exactly 164,386 (F424) and 145,982 (F412) according to the source-derived replay in [the prefix-cost dossier](../agent38-symrun-prefix-cost/README.md). The terminal `step_DL_zero_halt` transition is part of the final `stepSym` transition and is covered by the per-transition bound above.
 
 Conditional on the per-transition cost lemma and kernel-checked trace maxima, the complete primitive halting times would therefore satisfy:
 
