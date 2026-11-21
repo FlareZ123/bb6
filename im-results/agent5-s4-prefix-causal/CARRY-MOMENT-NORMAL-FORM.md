@@ -152,16 +152,28 @@ The following exact-integer examples use states from the finite source-shaped si
 | first full-suffix event, \(G_{219}\) | 18 | 15 | 219 | 31,892,458 | 454,971,535 | 6,578,056 | [5,648,913, 18,169,406] | [6,569,273, 7,029,452] |
 | second full-suffix event, \(G_{290}\) | 22 | 18 | 290 | 957,270,726 | 18,038,129,200 | 283,561,618 | [108,322,778, 817,226,728] | [270,817,160, 416,050,215] |
 
-The mass-only intervals still contain powers of two: four in the return-5774 case, two in the first full-suffix event, and three in the second. After adding the first positional moment \(D\), each interval still contains the actual quotient but contains **no** power of two. Thus \(D\) contributes genuine discriminatory information beyond prefix, length, and total mass in all three finite examples. This is not yet a root-reachable invariant: the next step is to derive an exact or interval return law for \(D\), rather than assume that it is known at arbitrary future times.
+The mass-only intervals still contain powers of two: four in the return-5774 case, two in the first full-suffix event, and three in the second. After adding the first positional moment \(D\), each interval still contains the actual quotient but contains **no** power of two. Thus \(D\) contributes genuine discriminatory information beyond prefix, length, and total mass in all three finite examples.
+
+There is also a source-rooted lower return law for \(D\), requiring no suffix reconstruction. For a gate whose nine-digit prefix has \(v_2(W(\text{prefix})+c)<9\), the true carry depth and its \(D\)-increment are determined exactly by that prefix. If the prefix value is divisible by \(2^9\), the true carry depth is at least 9, and the moment identity gives the lower bound
+\[
+\Delta D\ge\frac{\sum_{i=0}^{8}t_i+36}{2}.
+\]
+Summing these per-gate lower bounds over the source-aligned 81,920-return nine-digit projection gives 754,974,720 = 9,216\cdot81,920. The centered partial sums have minimum -237,910 at phase 20,629. From the source-certified return-5457 stack, \(M_0=5,590,215\) and \(D_0=66,584,055\), this yields, for every surviving P-return state after \(n\) returns,
+\[
+D_n\ge D_0+9,216n-237,910
+\quad\Longrightarrow\quad
+\boxed{D_n\ge 9M_n+16,034,210.}
+\]
+The exact finite sum and phase minimum are reproducible in [ninth_moment_drift.py](ninth_moment_drift.py). This is a genuine root-history lower bound, conditional on survival. It is not yet tight enough by itself to eliminate all terminal powers: the remaining task is an upper bound or tighter interval for \(D\), or a complementary tail functional.
 
 ## 5. What remains to prove
 
-The carry-polynomial identity and convex interval lemma are general exact mathematics. The examples show that the first positional moment can materially sharpen the terminal-quotient test. The missing step is a **root-reachable return law for \(D\)** (or a sufficiently tight interval for \(D\)) under the existing Q/R/V/W/X/Y/Z/F suffix words.
+The carry-polynomial identity and convex interval lemma are general exact mathematics. The examples show that the first positional moment can materially sharpen the terminal-quotient test. The missing step is a **tight root-reachable interval for \(D\)** under the existing Q/R/V/W/X/Y/Z/F suffix words: the nine-prefix cycle now supplies a uniform affine lower bound, but not a matching upper bound.
 
 The update
 \[
 2\Delta D=\sum_{i=0}^{r}t_i+4r-1
 \]
-expresses the change through the carry polynomial at \(z=1\). The next productive target is to accumulate or bound this quantity across a return word, using its already-extracted prefix phases, and then apply the convex tail interval at the remaining candidate gates. If this closes, it would turn the finite 386/703 candidate-phase lists into a root-history-sensitive obstruction without merely extending the prefix depth again.
+expresses the change through the carry polynomial at \(z=1\). The next productive target is to obtain a useful upper bound for the same carry-polynomial sum across a return word, using its already-extracted prefix phases, then apply the convex tail interval at the remaining candidate gates. The source-rooted lower bound is already available in ninth_moment_drift.py. If this closes, it would turn the finite 386/703 candidate-phase lists into a root-history-sensitive obstruction without merely extending the prefix depth again.
 
 **Verification boundary:** the algebraic identities and convexity proof are given here on paper; no new Lean module has been compiled. The prescribed local shell/Python tool boundary returned only "Skipped 1 message" with no stdout or exit status on preflight, matching the previously recorded environment blocker. Per the repository rule, no CI run was substituted for the unavailable local Lean preflight. This note is intermediate work in im-results/, not a claim of a publishable BB(6) solution.
