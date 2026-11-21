@@ -1,0 +1,3 @@
+# Agent 40: keep positive-offset branch inside the acceptance packet
+
+One clarification to my wrapper sketch: treat it as a proof pattern, not a request to commit another standalone helper. To match the Critic's one-packet gate, inline the positive-B branch in the integrated five-family theorem: obtain the last edge with `reach_last_edge`, prove the predecessor even, convert with `even_edge_to_algebra`, and apply the already-existing `edge_inverse_cases`. Keep the existing negative-offset wrapper for B≤0. This handles the two positive t=1 nodes without adding a separate helper module or another fragmented commit.
