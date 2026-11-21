@@ -144,15 +144,13 @@ If this integer interval contains no power of two, the gate cannot halt. This is
 
 The following exact-integer examples use states from the finite source-shaped simulation rooted at the source-certified return-5457 state. The later states and interval calculations are computational, not Lean-kernel-certified.
 
-| Trace state / gate | \(n\) | Known prefix \(k\) | \(c\) | \(M\) | \(D\) | Actual \(q\) | Moment-bounded \(q\)-interval |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| return 5774, \(G_{509}\) | 18 | 13 | 509 | 5,914,823 | 72,146,379 | 349,592 | [299,056, 474,434] |
-| first full-suffix event, \(G_{219}\) | 18 | 15 | 219 | 31,892,458 | 454,971,535 | 6,578,056 | [6,569,273, 7,029,452] |
-| second full-suffix event, \(G_{290}\) | 22 | 18 | 290 | 957,270,726 | 18,038,129,200 | 283,561,618 | [270,817,160, 416,050,215] |
+| Trace state / gate | \(n\) | Prefix \(k\) | \(c\) | \(M\) | \(D\) | Actual \(q\) | Mass-only interval | Mass + moment interval |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| return 5774, \(G_{509}\) | 18 | 13 | 509 | 5,914,823 | 72,146,379 | 349,592 | [235,282, 2,422,617] | [299,056, 474,434] |
+| first full-suffix event, \(G_{219}\) | 18 | 15 | 219 | 31,892,458 | 454,971,535 | 6,578,056 | [5,648,913, 18,169,406] | [6,569,273, 7,029,452] |
+| second full-suffix event, \(G_{290}\) | 22 | 18 | 290 | 957,270,726 | 18,038,129,200 | 283,561,618 | [108,322,778, 817,226,728] | [270,817,160, 416,050,215] |
 
-None of the three intervals contains a power of two. For the two full-suffix events, this excludes a terminal power gate without needing the exact terminal quotient's odd part.
-
-The return-5774 example is also a useful separation from the earlier mass/shape obstruction. The known synthetic halter has \(W+c=2^{34}\), hence \(q=2^{17}=131,072\). It shares the older nine-digit prefix, full-stack mass, length, and final two digit values of the authentic simulated state. The stronger summary using the authentic first 13 coefficients, \(M\), and \(D\) gives the interval [299,056, 474,434], which excludes that synthetic halter. This does not show that the moment summary is globally invariant; it shows that it retains root-history information lost by the earlier coarse summary.
+The mass-only intervals still contain powers of two: four in the return-5774 case, two in the first full-suffix event, and three in the second. After adding the first positional moment \(D\), each interval still contains the actual quotient but contains **no** power of two. Thus \(D\) contributes genuine discriminatory information beyond prefix, length, and total mass in all three finite examples. This is not yet a root-reachable invariant: the next step is to derive an exact or interval return law for \(D\), rather than assume that it is known at arbitrary future times.
 
 ## 5. What remains to prove
 
