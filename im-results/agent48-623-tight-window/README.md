@@ -254,17 +254,19 @@ This is independent of whether the exact output-side threshold is simplified to 
 
 ## 7. Arbitrary-word actual affine output bridge
 
-`SourceCarryAffineBridge.lean` now contains a generic x-digit interface for arbitrary source-pair word lengths, rather than only the fixed 01,00,00 example:
+`SourceCarryAffineBridge.lean` now contains a generic interface for arbitrary source-pair word lengths, not only the fixed 01,00,00 example:
 
 - `leftSourcePairs` and `rightSourcePairs` describe the source digit-pair stream at an arbitrary boundary. The L stream accounts for the one-place y offset; the R stream retains the previous x/y pair.
-- `leftCarryXOutput` and `rightCarryXOutput` are the corresponding carry-transducer x-output recursions.
-- `left_carry_x_output_matches_affine` and `right_carry_x_output_matches_affine` identify every finite output prefix with the Euclidean ternary digits of the corresponding affine x-tail.
-- `left_actual_affine_carry_xdigits` and `right_actual_affine_carry_xdigits` specialize this to the actual successor coordinates using the existing boundary quotient identities.
-- `left_actual_affine_drop_first_nonmono` and `right_actual_affine_drop_first_nonmono` transfer the shift-aware condition (a nonzero digit and a digit different from 2 after dropping the first output symbol) to the actual successor x-coordinate.
+- `leftCarryOutputPairs` and `rightCarryOutputPairs` are the full pair-output recursions of the L/R carry transducers.
+- `left_carry_output_pairs_matches_affine` and `right_carry_output_pairs_matches_affine` identify every finite pair-output prefix with the Euclidean ternary digit pairs of the corresponding affine output tails.
+- `left_actual_affine_carry_pairdigits` and `right_actual_affine_carry_pairdigits` specialize this to the actual successor coordinates using the existing boundary quotient identities. This is the pair-stream bridge needed to feed the *actual* successor window into the next reset recognizer.
+- The x-only projections `leftCarryXOutput`/`rightCarryXOutput`, together with `left_actual_affine_drop_first_nonmono`/`right_actual_affine_drop_first_nonmono`, transfer the shift-aware nonmonochromatic-suffix condition to the actual successor x-coordinate.
 
-The length parameter is arbitrary, so reset words of lengths 3--6 are covered; any shifted reset offset is handled by using the corresponding larger boundary scale (K_s=3^sK). This is the missing algebraic bridge between a transducer's drop-first output certificate and the actual successor coordinate.
+The length parameter is arbitrary, so reset words of lengths 3--6 are covered; any shifted reset offset is handled by using the corresponding larger boundary scale (K_s=3^sK). The L source-pair alignment is deliberately offset: the initial previous-y digit is (Y\bmod3), while the first current pair is ((X\bmod3,(Y/3)\bmod3)). R starts with previous pair ((X_0\bmod3,Y_0\bmod3)), with (X_0/3=X) from nested Euclidean division.
 
-**Proof status:** these are source-level Lean additions, not yet compile-verified. The local shell/Python tool boundary failed even for trivial commands in this invocation, and the repository's local-preflight rule forbids substituting CI. Do not cite these new declarations as kernel-checked until another run compiles the exact file and dependency closure at the pinned Lean version. The remaining glue is to identify the finite automaton's emitted x-output list with `leftCarryXOutput`/`rightCarryXOutput` on the corresponding `leftSourcePairs`/`rightSourcePairs`, then import the finite robust-reset certificate.
+**Finite arithmetic regression (not proof):** 5,000 deterministic pseudorandom signed cases per branch, with (K\in[1,2000]), (x,y\in[-200000,200000]), (C,F\in[-2000,2000]), and prefix length 1--16, produced zero mismatches between the full pair transducer stream and the direct affine quotient digits. Seed: `0x51a7babe`.
+
+**Proof status:** these are source-level Lean additions, not yet compile-verified. The local shell/Python tool boundary failed even for trivial commands in this invocation, and the repository's local-preflight rule forbids substituting CI. Do not cite these new declarations as kernel-checked until another run compiles the exact file and dependency closure at the pinned Lean version. The remaining glue is to identify the finite automaton's emitted pair-output list with `leftCarryOutputPairs`/`rightCarryOutputPairs` on the corresponding source-pair word, then import the finite robust-reset certificate and prove the all-time shifted-window closure.
 
 ## 8. Next useful use
 
