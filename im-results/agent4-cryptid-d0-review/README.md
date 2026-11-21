@@ -60,3 +60,34 @@ The printed axiom profiles contain no `sorryAx`. The checked transport theorems 
 ## Scope boundary
 
 The upstream theorem proves halting from `A(3^108*k + C, [])`, where `C = 1975700577069254261393123959451562008800234946348086`. It does not prove that the authentic blank orbit reaches this cylinder. The separate `reach_9_nil` result reaches `A(9,[])`; the authentic-root hit problem remains open. This audit only removes the raw-step semantic translation as a source of uncertainty.
+
+
+---
+
+## 2026-11-21: A-row first-return drafts and 13-step authentic-root shadow
+
+The following work is intermediate and **not yet kernel-checked**.
+
+### A-zero/A-one first-return draft
+
+`AZeroOneFirstReturn.lean` attempts strict no-intermediate-F lemmas for:
+- `AZeroSource.full_A_zero`, the canonical q=b=0 row;
+- `AOneSource.full_A_one`, the q>0,b=0 row.
+
+It composes `PrefixNoF.prefixA_positive_noF`, `BoundaryPadding.source_init_pad`, the exact A-zero/A-one short macros, and `A1100First.sweepD_noF`. If compiled, these are stronger than physical first-return. They may fill two cases in a complete DRegular first-return partition; this coverage still needs review.
+
+### 13-step root shadow
+
+`Root13Shadow.md` records a new exact-arithmetic shadow of the external halting-cylinder path. At authentic-root DRegular section index 31,777, the state is `L(a,0,0)) and:
+
+- `a-C ≡ 3^13 (mod 3^14)`;
+- `p=(a-C)/3^13 ≡205 (mod 2187));
+- `a ≡2863782241 (mod 3^20));
+- the first 13 external A_step2 branch/argument/suffix updates match;
+- the paths diverge at macro 14 because the next input residues are 1 (root) and 2 (external).
+
+The exact arithmetic is reproducible with `root13_shadow_check.py`; `root20_cylinder_screen.mjs` screens DRegular states and explicit reentry endpoints through the episode-20 arithmetic lookahead. It found no exact (3^{108})-cylinder hit in that finite model screen and a unique maximum (v_3(a-C)=13) at index 31,777. It does not scan every primitive configuration inside exceptional packets.
+
+`Root13Section.lean` is a source-anchor draft: it extracts the 4,484-step prefix of the already source-certified fifth reentry seed, then attempts to use `Agent25RootChain.extend_regular` to prove the blank root reaches the index-31,777 section. It also attempts the exact modular fingerprint and ten-step link to the sixth exceptional endpoint. This file is **uncompiled**.
+
+The main remaining task is to compile `Root13Section.lean` and then source-certify the first 13 external A_step2 macros from that physical section, including calls 11–13 after the suffix leaves the regular DRegular language. This is not a BB(6) solution or a proof of nonhalting.
