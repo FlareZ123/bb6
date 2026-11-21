@@ -203,6 +203,8 @@ Run from the repository root:
 
 The generated automaton is committed at im-results/agent24-machine623-shifted-reset-product/OffsetSelectedResetDFA.json; running the script regenerates it. It is the smaller integration interface when the boundary phase edge is already known. It does not replace the 3,101-state simultaneous product when both offsets are required at once.
 
+A plausible next finite composition is the branch-specific source carry/previous-pair digit transducer (225 L states or 270 R states) crossed with the 351-state selected-offset reset DFA. This gives at most 78,975 L states or 94,770 R states before reachability reduction. Each source pair updates the carry transducer, its emitted pair advances the reset DFA, and the phase edge fixes skip1/skip2. This is a proposed architecture only; it has not been built or shown closed.
+
 ## Scope
 
 This is a smaller exact finite-state product and a reproducible exhaustive finite check. The product construction does not prove that the authentic blank-root orbit stays in its accepted reset language for all time. It does not close the weighted-drain/root-language transition system, establish a Machine #623 halting decision, or solve BB(6). Keep this artifact in `im-results/`.
