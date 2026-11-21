@@ -1589,4 +1589,25 @@ theorem sweepBB_counter_sum_le_570M2280 (L R : List SymTok)
 #print axioms sweepBB_counter_sum_le_570M2280
 
 
+
+/-- Compose the 94-token CB sweep/fallback bound with the 570-token BB sweep bound. -/
+theorem cb_fallback_then_bb_counter_sum (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94)
+    (hBB : (stepElemCB (sweepCB L R).1 (sweepCB L R).2).1 = .BB) :
+    symStateCounterSum (sweepBB
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2) ≤
+      570 * stateFieldMax (.BB,
+        (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1,
+        (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2) + 2280 := by
+  have h570 := stepElemCB_after_sweep_570 L R hT hBB
+  have h570' :
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1.length +
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2.length ≤ 570 := by
+    simpa [symPairLen] using h570
+  exact sweepBB_counter_sum_le_570M2280 _ _ h570'
+
+#print axioms cb_fallback_then_bb_counter_sum
+
+
 end BusyBeaver.SymRunAudit
