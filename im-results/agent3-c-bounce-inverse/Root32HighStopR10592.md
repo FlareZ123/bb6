@@ -1,6 +1,6 @@
 # Root32 high-stop exclusion on r = 10592 (mod 16384)
 
-**Status:** the D0E/R and L branch analyses below are paper-level exact reductions, and the corrected P7E1E alternative now has a separate source-proof draft on this cylinder. The corrected three-way high-stop composition has not been compiled as one Lean 4.36.0-rc2 theorem; this is not yet an accepted high-stop exclusion, a global Machine C result, or a BB(6) result.
+**Status:** the D0E/R and L branch analyses below are paper-level exact reductions, and the corrected P7E1E alternative is now source-accepted on this cylinder. The corrected three-way high-stop composition has not been compiled as one Lean 4.36.0-rc2 theorem; this is not yet an accepted high-stop exclusion, a global Machine C result, or a BB(6) result.
 
 ## 1. Parameter cylinder
 
@@ -85,15 +85,15 @@ Both alternatives in the high-stop inverse reduction are now excluded, so
 
 ## 3. The corrected P7E1E alternative
 
-For this cylinder, t ≡ 31 (mod 256), hence t ≡ 31 (mod 32). The source-proof draft in `Root32HighStopA4.lean` establishes
+For this cylinder, t ≡ 31 (mod 256), hence t ≡ 31 (mod 32). The locally compiled source-connected core in `Root32HighStopA4Core.lean` proves
 
 ```
 ¬ RunReach(P7E1E(t))
 ```
 
-on the entire t ≡ 31 (mod 32) cylinder. Its proof uses the complete even/even parent fan to force D(t), the exact odd-seven inverse to force A4(t), and the odd/odd low-valuation inverse to force the parent (p,q) with q odd and p+q ≡ 1 (mod 4), excluded by `run_no_odd_sum_one`.
+on the entire t ≡ 31 (mod 32) cylinder. Its proof uses the complete even/even parent fan to force D(t), the exact odd-seven inverse to force A4(t), and the odd/odd low-valuation inverse to force the parent (p,q) with q odd and p+q ≡ 1 (mod 4), excluded by `run_no_odd_sum_one`. The 52-module Lean 4.36.0-rc2 closure compiled locally; all 51 imported source blobs match current main and the audited declarations have no `sorryAx`.
 
-This closes the third alternative on t ≡ 31 (mod 256) at the level of a source-proof draft. It remains uncompiled locally with Lean 4.36.0-rc2 and is not an accepted theorem yet.
+This closes the third alternative on t ≡ 31 (mod 256), at the residual level only. D0E and L remain paper-level here, and no full high-stop theorem is accepted.
 
 ## 4. Exact root-index translation
 
@@ -120,4 +120,4 @@ The exact-root saturation argument in B2Q0FourStepPath.md gives a natural parame
 
 ## 5. Scope
 
-The exact paper-level D0E and L analyses, together with the new P7E1E source-proof draft, cover all three alternatives on t ≡ 31 (mod 256). However, the D0E/L chains and the new P7 draft have not yet been compiled and composed in one Lean 4.36.0-rc2 theorem. Therefore no complete high-stop exclusion on r ≡ 10592 (mod 16384) is currently accepted. This does not address other root-index classes, other stop families, or all six-state machines. Keep this dossier in im-results/ until the exact composition and axiom audit succeed.
+The exact paper-level D0E and L analyses, together with the locally source-accepted P7E1E residual exclusion, cover all three alternatives on t ≡ 31 (mod 256) at the level of separate arguments. The D0E/L chains have not yet been compiled and composed with the P7E1E theorem in one Lean 4.36.0-rc2 theorem. Therefore no complete high-stop exclusion on r ≡ 10592 (mod 16384) is currently accepted. This does not address other root-index classes, other stop families, or all six-state machines. Keep this dossier in im-results/ until the exact composition and axiom audit succeed.
