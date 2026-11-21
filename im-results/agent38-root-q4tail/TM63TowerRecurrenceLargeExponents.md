@@ -242,8 +242,8 @@ where
 Substituting the moving lower and upper bounds yields the sharper conditional interval
 \[
 \boxed{
-6(L_b+1)^2+42(L_b+1)+3L_\ell
-<
+6(L_b+2)^2+42(L_b+2)+3(L_\ell+1)
+\le
 S_{\rm TM1}
 <
 6U^2+42U+3H+10(1+\log_2 H)H^2.
