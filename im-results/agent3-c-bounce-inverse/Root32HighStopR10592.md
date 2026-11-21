@@ -1,6 +1,6 @@
 # Root32 high-stop exclusion on r = 10592 (mod 16384)
 
-**Status:** second infinite subfamily of the B2/U5 high-stop target excluded by a composed original-source reachability argument. The arithmetic is exact; the full composition is not yet compiled as one Lean 4.36.0-rc2 theorem. This is not a global Machine C or BB(6) result.
+**Status:** the D0E/R and L branch analyses below are paper-level exact reductions, and the corrected P7E1E alternative now has a separate source-proof draft on this cylinder. The corrected three-way high-stop composition has not been compiled as one Lean 4.36.0-rc2 theorem; this is not yet an accepted high-stop exclusion, a global Machine C result, or a BB(6) result.
 
 ## 1. Parameter cylinder
 
@@ -15,7 +15,7 @@ The existing high-stop inverse reduction gives
 \[
 CReach(T(1802+6720t))
 \Longrightarrow
-CReach(D_{0E}(t))\lor CReach(L(t)).
+CReach(D_{0E}(t))\lor CReach(L(t))\lor CReach(P_{7E1E}(t)).
 \]
 
 The exceptional R parent-fan result in RRoot32ExceptionalParentFan.md, Section 6, proves that R(t) is unreachable for q≡7 mod64. The forced source chain D0E → E7 → P → R therefore gives
@@ -83,7 +83,19 @@ Both alternatives in the high-stop inverse reduction are now excluded, so
 \neg CReach(T(1802+6720t)).}
 \]
 
-## 3. Exact root-index translation
+## 3. The corrected P7E1E alternative
+
+For this cylinder, t ≡ 31 (mod 256), hence t ≡ 31 (mod 32). The source-proof draft in `Root32HighStopA4.lean` establishes
+
+```
+¬ RunReach(P7E1E(t))
+```
+
+on the entire t ≡ 31 (mod 32) cylinder. Its proof uses the complete even/even parent fan to force D(t), the exact odd-seven inverse to force A4(t), and the odd/odd low-valuation inverse to force the parent (p,q) with q odd and p+q ≡ 1 (mod 4), excluded by `run_no_odd_sum_one`.
+
+This closes the third alternative on t ≡ 31 (mod 256) at the level of a source-proof draft. It remains uncompiled locally with Lean 4.36.0-rc2 and is not an accepted theorem yet.
+
+## 4. Exact root-index translation
 
 The exact root32 identity is
 
@@ -106,6 +118,6 @@ For t≡31 mod256 this forces j≡165 mod256, hence
 
 The exact-root saturation argument in B2Q0FourStepPath.md gives a natural parameter for every j≥0. Thus the progression is nonempty and infinite.
 
-## 4. Scope
+## 5. Scope
 
-This excludes the authentic B2/U5 high-stop target on the root-index progression r≡10592 (mod 16384). It does not exclude the other root-index classes, other stop families, or all six-state machines. The composed proof still requires one Lean import-closure compile and axiom audit; keep it in im-results/ until then.
+The exact paper-level D0E and L analyses, together with the new P7E1E source-proof draft, cover all three alternatives on t ≡ 31 (mod 256). However, the D0E/L chains and the new P7 draft have not yet been compiled and composed in one Lean 4.36.0-rc2 theorem. Therefore no complete high-stop exclusion on r ≡ 10592 (mod 16384) is currently accepted. This does not address other root-index classes, other stop families, or all six-state machines. Keep this dossier in im-results/ until the exact composition and axiom audit succeed.
