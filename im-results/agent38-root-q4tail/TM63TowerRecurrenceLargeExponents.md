@@ -16,7 +16,12 @@ V_0=63,\qquad V_{j+1}=2^{V_j}-1.
 Define the lower exponents by
 \[
 \alpha_3=2^{47}-2,\qquad
-\alpha_{j+1}=T_{j+2}^{\alpha_j}-1\quad(j\ge3),
+\alpha_j=2^{V_{j-3}-T_j}-2\quad(j=4,5,6),
+\]
+and
+\[
+\alpha_j=2^{\,T_j^{\,T_{j-1}^{\alpha_{j-3}}}-T_j}-2
+\quad(j\ge7).
 \]
 and the upper denominator sequence by
 \[
@@ -37,7 +42,7 @@ T_{j+3}^{\,T_{j+2}^{\,\alpha_j}}<V_j
 V_j^{\,T_{j+2}^{\,\gamma_j}}<T_{j+4}.
 }
 \]
-The lower exponent is recursively amplified at each step. The upper exponent uses the recursively shrinking relative headroom \(1/D_{j-1}\).
+The lower exponent uses an exact divisibility lift with a three-index recurrence. The upper exponent uses the recursively shrinking relative headroom \(1/D_{j-1}\).
 
 These bounds strictly strengthen the earlier fixed exponents \(2^{46}\) and \(2^{65518}\). In particular, \(\alpha_3>2^{46}\) and \(\gamma_3>2^{65518}\).
 
@@ -54,47 +59,65 @@ V_{k+1}=2^{V_k}-1<2^{T_{k+4}}=T_{k+5}.
 
 ### Lower inequality
 
-At \(j=3\),
-\[
-T_4=65536,\quad T_5=2^{65536},\quad
-T_6=2^{T_5},
-\]
-and
-\[
-V_1=2^{63}-1,\quad V_2=2^{2^{63}-1}-1,\quad
-V_3=2^{V_2}-1.
-\]
-Since \(\alpha_3+1=2^{47}-1\),
+At \(j=3\), the base calculation is
 \[
 T_5^{\alpha_3+1}
 =2^{65536(2^{47}-1)}
 =2^{2^{63}-2^{16}}
 <V_2.
 \]
-The last strict inequality follows from \(2^{63}-2^{16}<2^{63}-1\), with ample integer separation. Therefore
+Consequently,
 \[
 T_6^{T_5^{\alpha_3}}
 =2^{T_5^{\alpha_3+1}}
-\le 2^{V_2-1}
+\le2^{V_2-1}
 <2^{V_2}-1=V_3.
 \]
 
-For the induction step, suppose
+For the stronger bases and the induction, use the following exact lift. Suppose \(j\ge4\) and \(V_{j-3}>T_j\). Put
 \[
-X^{Y^{\alpha_j}}<V_j,
-\qquad X=T_{j+3}=2^Y,\quad Y=T_{j+2}.
+m=2^{V_{j-3}-T_j}\ge2.
 \]
-Put \(m=Y^{\alpha_j}\), so \(\alpha_{j+1}=m-1\). Then
+Since \(T_{j+1}=2^{T_j}\),
 \[
-T_{j+4}^{\,T_{j+3}^{\,\alpha_{j+1}}}
-=(2^X)^{X^{m-1}}
-=2^{X^m}.
+V_{j-2}=2^{V_{j-3}}-1=T_{j+1}m-1,
 \]
-The induction hypothesis gives \(X^m\le V_j-1\), hence
+and hence
 \[
-2^{X^m}\le2^{V_j-1}<2^{V_j}-1=V_{j+1}.
+V_{j-1}=2^{T_{j+1}m-1}-1.
 \]
-This proves the lower inequality for every \(j\ge3\).
+For \(\alpha=m-2\),
+\[
+T_{j+2}^{\alpha+1}
+=2^{T_{j+1}(m-1)}
+<2^{T_{j+1}m-1}-1
+=V_{j-1},
+\]
+because the two exponents differ by \(T_{j+1}-1\ge1\). Therefore
+\[
+T_{j+3}^{\,T_{j+2}^{\,\alpha}}
+=2^{T_{j+2}^{\alpha+1}}
+<2^{V_{j-1}}-1
+=V_j.
+\]
+Thus every integer \(\alpha\le2^{V_{j-3}-T_j}-2\) is a valid lower exponent at index \(j\).
+
+The condition \(V_{j-3}>T_j\) holds for \(j=4,5,6\): first \(V_1=2^{63}-1>T_4\), and \(V_k>T_{k+3}\) propagates for \(k\ge1\), since \(V_k>T_{k+3}\) implies
+\[
+V_{k+1}=2^{V_k}-1>2^{T_{k+3}}=T_{k+4}.
+\]
+Hence the definitions \(\alpha_j=2^{V_{j-3}-T_j}-2\) for \(j=4,5,6\) prove those three cases.
+
+For \(j\ge7\), the induction hypothesis at index \(j-3\) gives
+\[
+V_{j-3}>
+T_j^{\,T_{j-1}^{\,\alpha_{j-3}}}>T_j.
+\]
+The exact lift therefore applies, and the defined exponent
+\[
+\alpha_j=2^{\,T_j^{\,T_{j-1}^{\alpha_{j-3}}}-T_j}-2
+\]
+is no larger than \(2^{V_{j-3}-T_j}-2\). This proves the lower inequality for all \(j\ge3\).
 
 ### Upper inequality
 
