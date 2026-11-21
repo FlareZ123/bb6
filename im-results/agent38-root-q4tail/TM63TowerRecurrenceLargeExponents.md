@@ -21,7 +21,7 @@ Define the lower exponents by
 and the upper exponents by
 \[
 \gamma_3=2^{65520}-2^{47},\qquad
-\gamma_j=2^{T_{j+1}-T_j}-2^{T_{j+1}-T_j-65473}\quad(j\ge4).
+\gamma_j=2^{T_{j+1}-T_j}-2^{T_{j+1}-T_j-d_{j-1}}\quad(j\ge4).
 \]
 All these exponents are positive integers.
 
@@ -33,7 +33,7 @@ T_{j+3}^{\,T_{j+2}^{\,\alpha_j}}<V_j
 V_j^{\,T_{j+2}^{\,\gamma_j}}<T_{j+4}.
 }
 \]
-The lower exponent is recursively amplified at each step. The upper exponent also grows with the tower index. For \(j\ge4\), it leaves only a relative \(2^{-65473}\) headroom in the upper product comparison.
+The lower exponent is recursively amplified at each step. The upper exponent grows with the tower index and uses a recursively shrinking relative headroom \(1/D_{j-1}\), where \(D_k=2^{d_k}\) grows by an explicit recurrence.
 
 These bounds strictly strengthen the earlier fixed exponents \(2^{46}\) and \(2^{65518}\). In particular, \(\alpha_3>2^{46}\), \(\gamma_3>2^{65518}\), and both moving exponents subsequently grow.
 
@@ -120,27 +120,62 @@ V_3^{T_5^{\gamma_3}}
 
 ### Upper inequality: all \(j\ge4\)
 
-Put \(D=2^{65473}\). First prove the auxiliary estimate
+Set
 \[
-V_k<T_{k+4}^{1/D}\qquad(k\ge2).
+d_2=65473,\qquad D_k=2^{d_k},
+\]
+and recursively define
+\[
+d_{k+1}=T_{k+3}-2^{T_{k+2}-d_k}-1
+\qquad(k\ge2).
+\]
+We first establish
+\[
+1\le d_k\le T_{k+2}-T_{k+1}\qquad(k\ge2).
+\]
+The base case is \(65473\le T_4-T_3=65520\). If the bound holds at \(k\), then
+\[
+T_{k+2}-d_k\ge T_{k+1},
+\]
+so
+\[
+T_{k+2}\le2^{T_{k+2}-d_k}\le2^{T_{k+2}-1}=T_{k+3}/2.
+\]
+Substitution in the definition of \(d_{k+1}\) gives
+\[
+1\le d_{k+1}\le T_{k+3}-T_{k+2}.
+\]
+In particular, \(D_k\) divides \(T_{k+3}\), and \(D_{k+1}\) divides \(T_{k+4}\).
+
+Next prove the auxiliary bound
+\[
+V_k<T_{k+4}^{1/D_k}\qquad(k\ge2).
 \]
 At \(k=2\),
 \[
-T_6^{1/D}
+T_6^{1/D_2}
 =2^{\,2^{65536}/2^{65473}}
 =2^{2^{63}}
 >V_2.
 \]
-For the induction, let \(t=T_{k+4}\). We have \(t\ge T_6>D^2\), hence
+For the induction, put \(t=T_{k+4}=2^{T_{k+3}}\). Divisibility gives
 \[
-t^{1/D}<t/D.
+t^{1/D_k}=2^{T_{k+3}/D_k}
+=2^{2^{T_{k+2}-d_k}}.
 \]
-If \(V_k<t^{1/D}\), then
+By the definition of \(d_{k+1}\),
+\[
+t/D_{k+1}
+=2^{T_{k+3}-d_{k+1}}
+=2^{2^{T_{k+2}-d_k}+1}
+=2t^{1/D_k}.
+\]
+Thus, if \(V_k<t^{1/D_k}\), then
 \[
 V_{k+1}=2^{V_k}-1
-<2^{t^{1/D}}
-<2^{t/D}
-=T_{k+5}^{1/D}.
+<2^{t^{1/D_k}}
+<2^{t/D_{k+1}}
+=T_{k+5}^{1/D_{k+1}}.
 \]
 This proves the auxiliary estimate.
 
@@ -150,27 +185,29 @@ Y=T_{j+1}=2^{T_j},\qquad X=T_{j+2}=2^Y.
 \]
 Since \(j-1\ge2\), the auxiliary estimate gives
 \[
-V_{j-1}<T_{j+3}^{1/D}=2^{X/D}.
+V_{j-1}<T_{j+3}^{1/D_{j-1}}=2^{X/D_{j-1}}.
 \]
-By the definition of \(\gamma_j\),
+The invariant on \(d_{j-1}\) ensures that the following exponent is a nonnegative integer:
 \[
-\begin{aligned}
+\gamma_j
+=2^{Y-T_j}-2^{Y-T_j-d_{j-1}}.
+\]
+It satisfies
+\[
 Y\gamma_j
-&=2^{T_j}\left(2^{Y-T_j}-2^{Y-T_j-65473}\right)\\
-&=2^Y-2^{Y-65473}\\
-&=X-X/D.
-\end{aligned}
+=2^Y-2^{Y-d_{j-1}}
+=X-X/D_{j-1},
 \]
-Consequently,
+and therefore
 \[
-X^{\gamma_j}=2^{X-X/D}.
+X^{\gamma_j}=2^{X-X/D_{j-1}}.
 \]
 Using \(V_j<2^{V_{j-1}}\), we obtain
 \[
 \begin{aligned}
 V_j^{X^{\gamma_j}}
 &<2^{V_{j-1}X^{\gamma_j}}\\
-&<2^{\,2^{X/D}\,2^{X-X/D}}\\
+&<2^{\,2^{X/D_{j-1}}\,2^{X-X/D_{j-1}}}\\
 &=2^{2^X}
 =T_{j+4}.
 \end{aligned}
