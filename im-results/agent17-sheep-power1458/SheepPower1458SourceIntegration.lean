@@ -95,7 +95,7 @@ theorem affine_node_hidden_bound
     (ht : t = r0+T*k)
     (hb : node.b ≤ node.C)
     (hval : affineNodeValue t node y)
-    (hydef : y=1+3^h*u)
+    (hydef : y=1+3^h*u) (huodd : u%2=1)
     (hC : 3^node.v3C ∣ node.C)
     (hbase :
       2^(1458*r0+node.s) % 3^(node.r+node.v3C+1) ≠
@@ -107,9 +107,9 @@ theorem affine_node_hidden_bound
   have hh : node.r+1 ≤ h := by omega
   have hyminus : y-1=3^h*u := by
     rw [hydef]
-    have hpos : 0 < 3^h*u := by
-      have hp : 0 < 3^h := Nat.pow_pos (by decide)
-      omega
+    have huPos : 0 < u := by omega
+    have hpos : 0 < 3^h*u :=
+      Nat.mul_pos (Nat.pow_pos (by decide)) huPos
     omega
   have hY : 3^(node.r+1) ∣ y-1 := by
     refine ⟨3^(h-node.r-1)*u, ?_⟩
@@ -154,9 +154,18 @@ theorem affine_node_hidden_bound
         _ ≤ 3^(node.r+node.v3C+1) :=
           Nat.pow_le_pow_right (by decide) hexp
     omega
+  have hp' : 2^(1458*T)%m=1 := by
+    dsimp [m]
+    rw [←Nat.powMod_def]
+    exact hperiod
+  have hc' :
+      2^(1458*r0+node.s)%m ≠
+        (node.C-node.b+node.c)%m := by
+    dsimp [m]
+    rw [←Nat.powMod_def]
+    exact hbase
   have hno := no_hit_fixed_period m (1458*r0+node.s)
-      (node.C-node.b+node.c) (1458*T) k hm
-      (by simpa [m] using hperiod) (by simpa [m] using hbase)
+      (node.C-node.b+node.c) (1458*T) k hm hp' hc'
   have hexp : 1458*t+node.s =
       (1458*r0+node.s)+(1458*T)*k := by rw [ht]; ring
   rw [hexp] at hmod

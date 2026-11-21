@@ -116,6 +116,7 @@ theorem no_special_affine (D S a N : Nat)
         have h3D : 3 ≤ 3*D := by omega
         calc
           2^N < 3*2^(N+1) := by
+            have hpowpos : 0 < 2^N := Nat.pow_pos (by decide)
             rw [Nat.pow_succ]
             omega
           _ ≤ 3*2^a := Nat.mul_le_mul_left 3 hpow
