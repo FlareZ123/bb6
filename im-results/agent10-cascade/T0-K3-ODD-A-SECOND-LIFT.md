@@ -136,4 +136,6 @@ Thus \(g\) is in the unique odd source band at scale \(K-2\), but its parent \(G
 
 There are nine allowed residues modulo \(54\), each with three lifts modulo \(162\), for 27 classes total. The first theorem excludes all three lifts of seven phases (21 classes). The table and gap arguments exclude two lifts in each of the remaining two phases (four more classes). Thus 25 of 27 classes are excluded, leaving exactly the two high-valuation classes in (4).
 
-The result does not decide those two classes: one has \(27\mid X\), the other \(9\mid2h+5\). Nor does it exclude other odd branches leaving earlier spine nodes or prove the fatal target unreachable. The accompanying t0_odd_a_k3_second_lift.mjs checks the exact 27-row modular table; the inequalities and parent-chain proofs are separate exact arguments.
+The result does not decide those two classes: one has \(27\mid X\), the other \(9\mid2h+5\). Nor does it exclude other odd branches leaving earlier spine nodes or prove the fatal target unreachable.
+
+A third-lift continuation uses the exact shift laws \(X(K+162)\equiv X(K)+54\pmod{81}\) and \(Y(K+162)\equiv Y(K)+18\pmod{27}\) to exclude two of the three K-mod-486 lifts of each remaining class. For odd \(a\ge15\), this sharpens the count to 79 of 81 K-mod-486 phases excluded; see [the third-lift theorem](T0-K3-ODD-A-THIRD-LIFT.md) and [its reproducer](t0_odd_a_k3_third_lift.mjs). The accompanying t0_odd_a_k3_second_lift.mjs checks the exact 27-row K-mod-162 table; the inequalities and parent-chain proofs are separate exact arguments.
