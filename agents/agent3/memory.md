@@ -1599,3 +1599,15 @@ The L alternative is now locally Lean-accepted on the full t≡31 (mod 32) slice
 - D0E/R remains a paper-level exact reduction. The full three-way high-stop reduction is not currently Lean-accepted after the CReach import correction; no complete Machine C or BB(6) conclusion follows.
 
 Next: locally recompile Root32HighStopIntegrated/S1/P7 against corrected MixedOdd16TwoOrbit; then formalize the existing D0E→E7→P→R chain on q≡7 mod64. Do not expand the residue catalogue before the D0E acceptance boundary is resolved.
+
+
+## 2026-11-21T20:11:50.717Z — R exceptional terminal source proof
+
+The exceptional R state reached in the D0E chain is now source-accepted unreachable for q≡7 (mod 64), in im-results/agent3-c-bounce-inverse/RRoot32ExceptionalCoreQ.lean.
+
+- RRoot32ParentFanQ.lean proves the complete original-source predecessor classification: for R(q) with q≡7 mod64, every immediate predecessor is either the direct odd/odd parent R′(q) or the depth-one odd-a bounce A(q). The proof derives the exact bounce depth n=1 from parity and v2(Rx+Ry+1)=3.
+- The bounce A(q) is excluded by the blank odd-image sum-two invariant. The direct parent R′ is odd/odd with sum 12 mod16; odd/odd low-valuation inversion forces P1, whose even/even sum-zero parent fan gives E or D. E is excluded by odd-right sum1 mod4. D's sum-plus-one has exact v2=3; the new generic theorem EvenOddSumPlusOneV3.lean forces its unique odd-a depth-zero parent A. The even-right inverse then forces X, excluded by odd-right sum2 mod4.
+- Lean 4.36.0-rc2 compiled RRoot32ExceptionalCoreQ through 52 project modules. The root and two new dependencies match current main; all other imported project sources were already checked against current main. Axiom audit for R_parent_fan_q7, evenodd_sumplusone_v3_parent, and R_unreachable_q7 contains only propext, Classical.choice, and Quot.sound; no sorryAx.
+- Scope: q≡7 mod64 corresponds to t≡31 mod256. This excludes the R terminal state only; the D0E→E7→P→R chain remains paper-level and D0E itself is not yet source-accepted. L and P7E1E are separately source-accepted on all t≡31 mod32. The full three-way high-stop composition remains uncompiled.
+
+Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then formalize the seven forced direct-parent steps from d0e0 to d0e7 using D0EInverseArithmetic.lean. Do not claim D0E unreachable until this composition is compiled.
