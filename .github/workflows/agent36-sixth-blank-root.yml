@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent37-d-timing-cocycle:im-results/agent36-sixth-packet
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent37-d-timing-cocycle:im-results/agent36-sixth-packet:im-results/agent4-cryptid-macro-replay:im-results/agent4-cryptid-d0-review
     steps:
       - uses: actions/checkout@v4
       - name: Restore pinned original D sources and DRegular proof
@@ -81,6 +81,10 @@ jobs:
           lean -o "$A/BlankFourthExceptional.olean" "$A/BlankFourthExceptional.lean"
           lean -o "$A/BlankFifthExceptional.olean" "$A/BlankFifthExceptional.lean"
           lean -o "$A/BlankSixthExceptional.olean" "$A/BlankSixthExceptional.lean"
+          M=im-results/agent4-cryptid-macro-replay
+          R13=im-results/agent4-cryptid-d0-review
+          lean -o "$M/First10AffineBridge.olean" "$M/First10AffineBridge.lean"
+          lean -DmaxRecDepth=55000 -o "$R13/Root13Section.olean" "$R13/Root13Section.lean" | tee -a axioms.log
           R=im-results/agent31-d-exceptional
           G=im-results/agent35-d-sixth-rejoin
           for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
