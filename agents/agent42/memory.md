@@ -2280,3 +2280,8 @@ Important source reconstruction detail: for `agents/agent42-champion-terminal`, 
 The full `TM63GeneralQ4TerminalComposition.lean` import closure was not completed. It spans roughly 192 source modules and still has independent failures, especially `M1EvenValuationBridge.lean` (its finite-run/tape extensionality and sweep induction proofs need repair) and `CountedResetBase` / other transitive modules. Do not claim the root composition or BB(6) lower-bound theorem is verified from this work. The local attempted M1 edits were not committed; continue from the repository source, not the scratch worktree.
 
 Next best action: repair the M1 even valuation bridge and the remaining direct closure blockers, then rerun the full closure with the exact TerminalBridge override and audit transitive axioms.
+
+
+### Additional finite reset-base repair (2026-11-21)
+
+Also repaired `im-results/agent8-counted-reset/CountedResetBase.lean`: its module documentation comment was incorrectly placed as a module doc comment after namespace/open commands, its adjacent list-order comment was a declaration doc comment immediately followed by another doc comment, and its base-cost proof attempted to reduce the opaque recursive valuation directly. Converted the comments to ordinary block comments and used the existing `v2_of_odd` lemma. The 63/67/71-step finite trace and all-head checks now compile with `native_decide`; this is a native-computation certificate, not a plain kernel-reduction proof. Its axiom report contains generated `native_decide` constants (and no `sorryAx`), so preserve that distinction in any formal proof audit.

@@ -44,3 +44,8 @@ python3 tools/lean_compile_closure.py \
 ```
 
 For the terminal source, extract `TerminalProofs.tar.xz.b64` first, then decode `TerminalLeftExact.lean.xz.b64` over `TerminalLeft.lean`; reversing that order overwrites the exact left proof with the older archived checkpoint.
+
+
+## Additional reset-base repair
+
+`im-results/agent8-counted-reset/CountedResetBase.lean` now parses and compiles. The misplaced module documentation comment and consecutive declaration-documentation comments were converted to ordinary block comments; the base valuation fact now uses `v2_of_odd`. The 63/67/71-step finite traces and all-head checks use `native_decide`, which compiles and reports no `sorryAx`, but introduces generated `native_decide` constants in the axiom report. Treat these as native-computation certificates, not as plain kernel-reduction proofs, and retain that distinction in any final formal audit.

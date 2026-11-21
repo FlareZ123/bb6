@@ -1,3 +1,4 @@
+import Lean
 import CountedReset
 import CountedOddBase
 import CountedOneZeroUnary
@@ -7,7 +8,7 @@ namespace BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 
-/-!
+/-
 A finite, source-authentic base family for the Rst0/Rst1/Rst2 pre-drain
 prefix.  These are local framed traces for the a=b=0, odd-outer-counter
 boundary pattern.  The surrounding infinite tape is arbitrary outside the
@@ -34,7 +35,7 @@ def resetBaseInput1 : FConfig :=
 def resetBaseInput2 : FConfig :=
   ⟨3, 0, [-6, -3, -1, 0, 2, 3, 4, 7, 8, 9]⟩
 
-/-- The marked lists below deliberately retain `fMove`'s exact insertion/filter order.
+/- The marked lists below deliberately retain `fMove`'s exact insertion/filter order.
 Do not sort them: `FConfig` equality is ordered-list equality. -/
 /-- Local output tape after the marker-zero base trace. -/
 def resetBaseOutput0 : FConfig :=
@@ -67,17 +68,17 @@ theorem resetBase_exact (m : Nat) (hm : m < 3) :
   have hcases : m=0 ∨ m=1 ∨ m=2 := by omega
   rcases hcases with h|h|h
   · subst m
-    decide
+    native_decide
   · subst m
-    decide
+    native_decide
   · subst m
-    decide
+    native_decide
 
 /-- The local odd-base trace length agrees with the candidate reset-prefix
 cost at n=1, a=b=0. -/
 theorem resetBase_cost_eq (m : Nat) :
     63 + 4*m = resetPrefixCost m 1 0 0 := by
-  have hv : BB6ChampionArithmetic.v2 1 = 0 := by decide
+  have hv : BB6ChampionArithmetic.v2 1 = 0 := v2_of_odd 1 (by decide)
   simp [resetPrefixCost,hv]
 
 /-- In the b=0 base cases the source head advances exactly five cells. -/
@@ -105,11 +106,11 @@ theorem resetBase_heads (m : Nat) (hm : m < 3) :
     have hcases : m=0 ∨ m=1 ∨ m=2 := by omega
     rcases hcases with h|h|h
     · subst m
-      decide
+      native_decide
     · subst m
-      decide
+      native_decide
     · subst m
-      decide
+      native_decide
   exact even_finite_heads tm2 (resetBaseInside m) (resetBaseInput m)
     (63 + 4*m) hcheck
 
