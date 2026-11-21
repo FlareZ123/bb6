@@ -233,16 +233,24 @@ The same generating-function identity also gives a discounted potential
 \[
 Q(S)=P_S(1/2)=\sum_i x_i2^{-i}.
 \]
-A direct substitution of the carry recurrence yields
+Using \(t_i=x_i+t_{i-1}/2\) with \(t_{-1}=2c\), put \(T(1/2)=\sum_{i=0}^{r}t_i2^{-i}\). Summing the recurrence gives
 \[
-\Delta Q=\frac{c-P_{\le r}(1/2)}2+\frac{t_r+9}{2^{r+2}}.
+T(1/2)=\frac43\left(P_{\le r}(1/2)+c-\frac{t_r}{2^{r+2}}\right).
 \]
-When the carry passes a known k-digit prefix (r≥k), this can be rewritten as
+Substitution into the generating-function identity yields the corrected exact formula
 \[
-Q(U)=\frac{Q(S)}2+\frac c2+\epsilon,\qquad
-0\le\epsilon\le\frac{2M(S)+c+9}{2^{k+2}}.
+\boxed{\Delta Q=\frac{2c-P_{\le r}(1/2)}3+\frac{t_r+27}{3\cdot2^{r+2}}.}
 \]
-Thus long carries act as explicit half-contractions on Q, while carries stopping inside the known prefix give an exact update. This may provide a more tractable interval return map than D.
+In particular, if the carry passes the entire current stack, then \(P_{\le r}(1/2)=Q(S)\) and
+\[
+Q(U)=\frac23Q(S)+\frac23c+\frac{t_r+27}{3\cdot2^{r+2}}.
+\]
+More generally, for \(r\ge k\), write \(Q_{>r}=\sum_{i>r}x_i2^{-i}\). Then
+\[
+Q(U)=\frac23Q(S)+\frac23c+\eta,\qquad
+\eta=\frac13Q_{>r}+\frac{t_r+27}{3\cdot2^{r+2}},
+\]
+and \(0\le\eta\le(3M(S)+c+27)/(3\cdot2^{k+2})\), using \(Q_{>r}\le M(S)/2^{r+1}\) and \(t_r\le M(S)+c\). Thus the correct long-carry contraction factor is **\(2/3\), not \(1/2\)**. The earlier half-contraction formula was an algebraic error and must not be used. Carries stopping inside the known prefix still have an exact update.
 
 There is also a complementary tail bound from Q. For the tail excesses z_j=x_{k+j}-1, let R_0=Σz_j and Q_0=Σ2^{-j}z_j. Cauchy-Schwarz and the endpoint chord for 1/y on y∈[2^{-(L-1)},1] give
 \[
