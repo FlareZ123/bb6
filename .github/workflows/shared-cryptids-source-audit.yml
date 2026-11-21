@@ -13,6 +13,11 @@ on:
         required: false
         type: string
         default: ''
+      expose_solution_declarations:
+        description: 'Expose declarations in each original Solution namespace for exact external audits; definition bodies remain unchanged'
+        required: false
+        type: boolean
+        default: false
       dependency_path:
         description: 'Repo-relative standalone Lean dependency to compile first'
         required: true
@@ -54,6 +59,7 @@ jobs:
     env:
       ORIGINAL_MODULE: ${{ inputs.original_module }}
       EXTRA_ORIGINAL_MODULE: ${{ inputs.extra_original_module }}
+      EXPOSE_SOLUTION_DECLARATIONS: ${{ inputs.expose_solution_declarations }}
       DEPENDENCY_PATH: ${{ inputs.dependency_path }}
       BRIDGE_PATH: ${{ inputs.bridge_path }}
       EXTRA_DEPENDENCY_PATH: ${{ inputs.extra_dependency_path }}
@@ -121,6 +127,34 @@ jobs:
         working-directory: /tmp/cryptids
         shell: bash
         run: lake exe cache get
+      - name: Expose original private solution declarations
+        if: env.EXPOSE_SOLUTION_DECLARATIONS == 'true'
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          for module in "$ORIGINAL_MODULE" "$EXTRA_ORIGINAL_MODULE"; do
+            [[ -n "$module" ]] || continue
+            source_path="${module//.//}.lean"
+            python3 - "$source_path" <<'PY'
+          import pathlib, sys
+          path = pathlib.Path(sys.argv[1])
+          source = path.read_text()
+          marker = "namespace Solution\\n"
+          if source.count(marker) != 1:
+              raise SystemExit(f"expected one Solution namespace in {path}")
+          start = source.index(marker) + len(marker)
+          if source[start:].startswith("@[expose] public section\\n"):
+              raise SystemExit(f"already exposed: {path}")
+          end_marker = "\\nend Solution\\n"
+          end = source.find(end_marker, start)
+          if end < 0:
+              raise SystemExit(f"missing end Solution in {path}")
+          source = source[:start] + "@[expose] public section\\n" + source[start:end] + "\\nend" + source[end:]
+          path.write_text(source)
+          print(f"exposed Solution declarations in {path}; definitions unchanged")
+          PY
+          done
       - name: Compile original raw-TM acceleration
         working-directory: /tmp/cryptids
         shell: bash
