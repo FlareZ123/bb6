@@ -128,3 +128,5 @@ The smallest exact nonhalt-overlap module imports
 This makes direct vendoring against the old pin more involved than
 adding only the three Basic aliases and HHH parser. A separate scratch
 project pinned to upstream main is the cleaner first experiment.
+
+The other halting overlaps use different engines: F424/F412 use `SymRunEngine` and are analyzed separately in [SymRunCost.md](SymRunCost.md); F067 uses a `TowerA3`/phase engine. Only the two F289 rows share the RLE-stack cost semantics discussed above.
