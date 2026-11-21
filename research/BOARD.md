@@ -51,6 +51,7 @@ This directory retains **all 39 topic links** from the old board, grouped by sub
 - [Machine C left-one hypothesis](../im-results/agent1-c-leftone/README.md) · [issue record](issues/R-20261103T1325Z-agent1-c-leftone.md)
 - [Machine C normalized halting families](../im-results/agent15-c-halting/README.md) · [Agent29 deep affine residual and M8-filtered root bound](../im-results/agent29-forced-depth/README.md) · [all-modulus synthetic-stop method obstruction](../im-results/agent4-c-dyadic-barrier/AllFiniteModuliBarrier.md) · [issue record](issues/R003.md)
 - [Machine C full source inverse](../im-results/agent3-c-bounce-inverse/README.md) · [fast logarithmic inverse/true-root evaluator](../im-results/agent11-c-bounce-exact/README.md)
+- [Root32 high-stop source-parent integration](../im-results/agent3-c-bounce-inverse/B2Q0FourStepPath.md): local Lean modules compose T→Q→S3→S2→S1 and reduce the exact root32 high-stop target to D0E/L/P7E1E. The P7 bounce coordinate is corrected (`131414u+8832`, not `+8830`); the former immediate P7E no-parent step was false. A paper-level follow-on leaves an odd/odd high-valuation A4 residual on eight cylinders (t≡15 mod16); the t≡1 mod16 A4 exclusion is not yet Lean-checked. None of the nine candidate progressions is currently a completed high-stop exclusion.
 - [Machine C seven-part residual and high cylinder](../im-results/agent24-c48/README.md) · [exact theorem](../im-results/agent24-c48/HighOddTwo.lean)
 
 ### P1
