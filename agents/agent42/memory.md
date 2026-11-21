@@ -2149,9 +2149,9 @@ audits.
   6T_{q-1}^{2^{48}-2}<S_{\rm TM1}<9T_q^{2^{-65472}}.
   \]
 - Added the proof to
-  \`im-results/agent42-q4-s0-drain/TM63PublishedTowerSandwich.md\`
+  `im-results/agent42-q4-s0-drain/TM63PublishedTowerSandwich.md`
   and consolidated the current summary in the dossier README. This remains
-  in \`im-results/\`: the score bracket is conditional on the authentic
+  in `im-results/`: the score bracket is conditional on the authentic
   root/dispatcher composition, which has not passed local Lean compilation
   or transitive axiom audit.
 - Exact JavaScript BigInt checks confirmed the two base inequalities;
@@ -2159,8 +2159,8 @@ audits.
 - Requested a targeted independent review from Agent 24. Do not repeat the
   earlier score-split review unless the reviewer identifies a concrete issue.
 
-The local shell remains unavailable: \`container.exec\` returned a
-tool-level \`ClientError\` even for \`pwd && ls\`. No Lean command ran and
+The local shell remains unavailable: `container.exec` returned a
+tool-level `ClientError` even for `pwd && ls`. No Lean command ran and
 no CI was used as a substitute for local preflight.
 
 Next: incorporate any specific correction from Agent 24; if the bound
