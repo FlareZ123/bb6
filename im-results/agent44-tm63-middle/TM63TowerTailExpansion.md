@@ -1,4 +1,4 @@
-# Tower-tail domination and a four-scale TM63 score expansion
+# Quadratic tower-tail bound and four-scale TM63 score expansion
 
 **Status:** paper-level algebraic consequence of the existing exact, source-conditional score decomposition. It does not compile the authentic TM63 itinerary, certify an unconditional Lean Attainable witness, or establish a BB(6) upper bound.
 
@@ -35,47 +35,71 @@ Define
 T_j=6b_{j+1}^2+54b_{j+1}+48
  +(12(N-j)-9)b_j.
 \]
-Then \(D_N=10N^2+37N+90+12(N+1)U+\sum_{j=0}^{N-1}T_j\).
+Then
+\[
+D_N=10N^2+37N+90+12(N+1)U+\sum_{j=0}^{N-1}T_j.
+\]
 
-## General tail-domination lemma
+## General quadratic tail-domination lemma
 
 For any integer \(r\) with
 \[
 2\le r\le N,\qquad N\le b_{r-1},
 \]
-separate the high-index summands \(T_{r-1},\ldots,T_{N-1}\) and put
+retain the high-index summands \(T_{r-1},\ldots,T_{N-1}\), and put
 \[
 E_r=C_{\rm root}+D_{\rm root}
  +10N^2+37N+90+12(N+1)U
  +\sum_{j=0}^{r-2}T_j.
 \]
-Then
+Then the stronger bound is
 \[
-\boxed{0\le E_r<\frac{b_r^2}{100}.}
+\boxed{0\le E_r<45b_{r-1}^2.}
 \]
 
-**Proof.** Put \(x=b_{r-1}\). For \(j\le r-2\), monotonicity gives \(b_{j+1},b_j\le x\), and \(r-1\le N\le x\). The exponential part of each omitted summand satisfies
+**Proof.** Put \(x=b_{r-1}\). Since \(b_0=R\ge63\) and \(b_{j+1}=2^{b_j}-1\ge2b_j\), the sequence at least doubles at each step. Thus
+\[
+\sum_{j=0}^{r-2}b_{j+1}\le2x,\qquad
+\sum_{j=0}^{r-2}b_{j+1}^2\le\frac43x^2,\qquad
+\sum_{j=0}^{r-2}b_j\le x,\qquad R\le\frac{x}{2}.
+\]
+There are \(r-1\le N\le x\) omitted summands.
+
+Using
 \[
 6\cdot4^{b_j}+42\cdot2^{b_j}
-=6(b_{j+1}+1)^2+42(b_{j+1}+1)
-\le48(x+1)^2\le192x^2.
+=6b_{j+1}^2+54b_{j+1}+48,
 \]
-There are at most \(x\) such summands, so their exponential parts total at most \(192x^3\). The sum of their positive linear coefficients is less than \(6N^2\); since \(b_j\le x\), their linear parts total less than \(6x^3\).
+their exponential parts total at most
+\[
+6\cdot\frac43x^2+54\cdot2x+48x
+=8x^2+156x<11x^2
+\]
+because \(x\ge63\).
 
-For \(N\ge256\),
+Each positive linear coefficient \(12(N-j)-9\) is less than \(12N\le12x\). Hence all omitted linear parts total less than
 \[
-10N^2+37N+90<11N^2\le11x^2.
+12x\sum_{j=0}^{r-2}b_j\le12x^2.
 \]
-Also \(U\le R\le x\), so \(12(N+1)U\le12(x+1)x\le24x^2\), and the root contribution is less than \(15R^2\le15x^2\). Hence
+The remaining terms satisfy
 \[
-0\le E_r<198x^3+50x^2<248x^3.
+10N^2+37N+90<11x^2,
 \]
-Since \(x\ge R\ge63\), \(b_r=2^x-1\ge2^{x-1}\), and
 \[
-248x^3<\frac{4^{x-1}}{100}
-\le\frac{b_r^2}{100}.
+12(N+1)U\le12(x+1)\frac{x}{2}\le7x^2,
 \]
-The first inequality holds for \(x\ge63\) (indeed from \(x=16\) onward, because \(4^{x-1}/x^3\) is increasing there). This proves the claim. \(\square\)
+and
+\[
+C_{\rm root}+D_{\rm root}<15R^2
+\le\frac{15}{4}x^2<4x^2.
+\]
+Adding the five bounds gives
+\[
+0\le E_r<(11+12+11+7+4)x^2=45x^2.
+\]
+This proves the lemma. \(\square\)
+
+The earlier cubic comparison \(E_r< b_r^2/100\) follows immediately but is substantially weaker: the residual is quadratic in the largest omitted tower variable \(b_{r-1}\), not merely small relative to the next tower \(b_r\).
 
 ## Four-scale expansion at the authentic index
 
@@ -110,13 +134,13 @@ S={}&6b_N^2+54b_N
  &+39b_{N-4}+192+E_4,
 \end{aligned}}
 \]
-where
+with the sharpened remainder
 \[
-\boxed{0\le E_4<\frac{b_{N-3}^2}{100}.}
+\boxed{0\le E_4<45b_{N-4}^2.}
 \]
-Equivalently, with \(u=b_{N-3}\), the entire root cost, polynomial correction, and all dispatcher summands below the four displayed summands contribute less than one percent of \(u^2\).
+The former \(E_4<b_{N-3}^2/100\) estimate is an immediate, much weaker corollary because \(b_{N-3}=2^{b_{N-4}}-1\).
 
-For comparison, applying the same lemma with \(r=N-2\) gives the earlier three-scale corollary with remainder below \(b_{N-2}^2/100\). The four-scale statement is strictly sharper. Since \(t=2^u-1\), \(u=2^v-1\), and \(\ell=2^t-1\), the expansion exposes successive levels of the tower rather than absorbing them into the previous coarse \(O((\log\ell)\ell^2)\) bound.
+More generally, the same lemma permits any cutoff \(r\) satisfying \(N\le b_{r-1}\): retain every summand from \(T_{r-1}\) through \(T_{N-1}\), and the complete remaining root/polynomial/low-index tail is less than \(45b_{r-1}^2\). This gives a tunable tower expansion rather than a single fixed truncation.
 
 ## Evidence boundary
 

@@ -7,7 +7,7 @@ Run: agent44-gpt6-20261121T0308Z-tm63-root-closure; original lease claim: 2026-1
 
 - Continued the authentic TM63 champion route: Agent 38's 03:06Z static review found no frame, parameter, or cost mismatch in the arbitrary-A q4 terminal join. This is a static review only; the root/dispatcher chain remains uncompiled and unaudited.
 - The local Lean bootstrap was attempted once in this invocation and container.exec returned an explicit tool-level ClientError before executing the command. Do not repeat unchanged shell attempts or use CI as a substitute for the required local preflight.
-- Derived the general tower-tail lemma and four-scale score expansion in im-results/agent44-tm63-middle/TM63TowerTailExpansion.md. It is conditional on the existing exact score identity and root-cost bound; no new Lean theorem or unconditional score is claimed.
+- Derived the general tower-tail lemma and four-scale score expansion in im-results/agent44-tm63-middle/TM63TowerTailExpansion.md. Agent 38 independently verified the algebra and sharpened the general residual to E_r<45*b_(r-1)^2 by geometric sums; I independently checked the five contributions and coefficient accounting. The result remains conditional on the existing exact score identity and root-cost bound; no new Lean theorem or unconditional score is claimed.
 - Updated this dossier README and the TM1 row in research/BOARD.md; sent the full derivation to Agent 42 in communications/agent42/20261121T031814Z_agent44-tm63-tower-tail-expansion.md.
 - Next: obtain exact local preflight only if the shell environment becomes available; otherwise continue useful source-level analysis of the already-identified root/dispatcher dependencies, without repeating the q4 parameter audit or dispatching CI blindly.
 

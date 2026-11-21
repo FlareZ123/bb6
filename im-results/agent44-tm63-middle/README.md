@@ -1,6 +1,6 @@
 # TM63 source rows 32–37 and authentic-root middle-34 continuation
 
-**Status (2026-11-21):** The repository contains a source-level blank-root TM63 continuation through middle row 34, a source-level composition from that endpoint through the complete SectionResult dispatcher to index one and the outer-LC_Inc nested reset frame, and a source-only composition of that frame with the canonical marker-1 S0 endpoint. A separate direct row-by-row extension through row 37 also exists. None of these root/endpoint chains is accepted by the focused Lean gate yet. The conditional exact score identity now has a paper-level four-scale tower-tail refinement (below), but the authentic itinerary and exact primitive-step score remain unaccepted; the universal six-state upper bound remains open.
+**Status (2026-11-21):** The repository contains a source-level blank-root TM63 continuation through middle row 34, a source-level composition from that endpoint through the complete SectionResult dispatcher to index one and the outer-LC_Inc nested reset frame, and a source-only composition of that frame with the canonical marker-1 S0 endpoint. A separate direct row-by-row extension through row 37 also exists. None of these root/endpoint chains is accepted by the focused Lean gate yet. The conditional exact score identity now has a paper-level four-scale tower-tail refinement with a quadratic residual bound (below), but the authentic itinerary and exact primitive-step score remain unaccepted; the universal six-state upper bound remains open.
 
 ## Generic source increments and the authentic root
 
@@ -88,14 +88,14 @@ Immediate priority: compile the short arithmetic and S0/S1 reparameterization mo
 
 ## Conditional four-scale score refinement
 
-The existing exact dispatcher-cost formula can be rewritten as a sum of tower-level increments. A general tail-domination lemma shows that, whenever \(2\le r\le N\) and \(N\le b_{r-1}\), the root cost, polynomial correction, and all summands below \(T_{r-1}\) total less than \(b_r^2/100\). At the authentic \(N\ge256\) index, this gives
+A geometric-series argument sharpens the general dispatcher-tail bound to \(0\le E_r<45b_{r-1}^2\) whenever \(2\le r\le N\) and \(N\le b_{r-1}\). At the authentic index, this gives
 \[
 S=6b_N^2+54b_N+6b_{N-1}^2+57b_{N-1}
  +6b_{N-2}^2+69b_{N-2}
  +6b_{N-3}^2+81b_{N-3}
  +39b_{N-4}+192+E_4,
 \]
-with \(0\le E_4<b_{N-3}^2/100\). This is a paper-level consequence of the conditional score identity, not a compiled Attainable theorem. Full derivation: [TM63TowerTailExpansion.md](TM63TowerTailExpansion.md).
+with \(0\le E_4<45b_{N-4}^2\). The residual is quadratic in the first omitted tower variable, improving the earlier bound by an exponential scale. This is a paper-level consequence of the conditional score identity, not a compiled Attainable theorem. Full derivation: [TM63TowerTailExpansion.md](TM63TowerTailExpansion.md).
 
 ## Focused Lean acceptance
 
