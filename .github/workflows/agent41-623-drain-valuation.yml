@@ -84,6 +84,19 @@ jobs:
           printf 'import Agent1DrainDigitSourceBridge\n#print axioms BB6.Agent1DrainDigitSourceBridge.sourceDrainLength_le_of_two_mul_lt_pow\n#print axioms BB6.Agent1DrainDigitSourceBridge.sourceDrainLength_le_of_mass_index\n' > Agent1DrainLengthAxiomAudit.lean
           lake env lean Agent1DrainLengthAxiomAudit.lean
 
+      - name: Compile source-derived reset and affine carry bridge
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent24-machine623-shifted-reset-product/SourceDerivedReset.lean" SourceDerivedReset.lean
+          lake env lean -o .lake/build/lib/lean/SourceDerivedReset.olean SourceDerivedReset.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-623-tight-window/SourceCarryAffineBridge.lean" Agent48SourceCarryAffineBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent48SourceCarryAffineBridge.olean Agent48SourceCarryAffineBridge.lean 2>&1 | tee agent48-source-carry-affine-bridge.log
+          if grep -q 'sorryAx' agent48-source-carry-affine-bridge.log; then
+            echo 'sorryAx detected in affine source-carry bridge'
+            exit 1
+          fi
+
       - name: Audit the source drain/digit bridge axioms
         working-directory: /tmp/cryptids
         run: |
