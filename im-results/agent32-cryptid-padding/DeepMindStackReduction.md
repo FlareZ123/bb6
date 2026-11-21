@@ -48,3 +48,29 @@ encRightNat (a :: L) = 1^(a+1) 0 encRightNat L
 and `encLeft ((d,b)::R)` is (1^{d+1}0^{1+b\bmod1}encLeft(R)=1^{d+1}0encLeft(R)). Thus the token lists are run-length encodings of unary blocks separated by single zeros. `encTokens` stores left-side token runs before the pair-stack tail; `encRightNat` stores right-side run lengths. This is structurally close to the alternating ((01)^q1^b) suffix language used by the external A-section model.
 
 A plausible bridge is therefore a run-length map from an A-section's left alternating block and finite right suffix to the ((K,R3,L)) data of `tok_CR`, `tok_DR`, or `tok_EL`. The correspondence must account for the scanned cell and whether the separator zero belongs to the head or to the encoded side; simply matching the visible strings is insufficient. Proving that head-boundary convention is the key prerequisite before translating the 108-step cylinder.
+
+
+## First token checkpoint from the blank-root stack entry
+
+The #490 module's `init_reaches_nontrivial` target is
+`evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`.
+Because `evalStackCfg` swaps the list arguments for the `DR_n_n` constructor, the corresponding #85-oriented `cfg_DR_n_n L R` has
+[
+L=[(1,0)],\qquad R=[(0,0),(0,0)].
+]
+In the first applicable branch of `mode_DR_n_n_closed`, the proof takes a three-step `texecute 3` prefix to
+[
+\operatorname{tok\_CR}([1,0],[(0,0)],[0]).
+]
+This is an exact token-system checkpoint in the closure proof for the authentic blank-root entry. It is not an inferred simulation.
+
+The external halting-cylinder input has a separate local token representation: for (C\equiv1\pmod3), (m=4(C/3)-1), its first `step_An_1101` E-state is
+[
+\operatorname{tok\_EL}([0,0]\; ++\; \operatorname{replicate}(m,1),[(1,0)],[]).
+]
+The generic `tok_EL_0_cons` lemma moves this to
+[
+\operatorname{tok\_CR}([1]\; ++\; \operatorname{replicate}(m,1),[(1,0)],[]).
+]
+
+Thus the blank-root reduction and the external halting-cylinder proof both enter the same DeepMind token subsystem, but at very different token states. A precise reachability problem is now visible: determine whether the root's closed-stack/token evolution from `tok_CR [1,0] [(0,0)] [0]` ever reaches the halting token state associated with the cylinder (or another halting token state). No such reachability is established here.
