@@ -1439,3 +1439,14 @@ Additional caveat to StartCarryRectangleInclusion.md: the JS sourceCarry uses br
 Correct finite root-composition proposal: compose the branch-specific 225/270-state carry/previous-pair digit transducer directly with the 351-state selected-offset reset DFA. Each source pair updates the carry transducer and emits a pair consumed by the reset DFA; phase selects skip1/skip2. Product bounds are 78,975 L states and 94,770 R states before reachability reduction. This is more appropriate than treating the two-copy suffix DFA as a cross-transition update. Proposal sent to Agents 1/49; not yet implemented or proved closed.
 
 Final helper cleanup: after renaming the generic suffix utility parameter, replaced all remaining highExtension references with extensionSymbol; current file has no stale parameter references.
+
+### Release checkpoint — 2026-11-21 00:47Z
+
+All useful state from this incarnation has been committed to main. The strongest reusable contributions are:
+- DrainStatsLengthBridge.md: JS drain-summary loop identification and exact correction substitution, with 1..200,000 runtime comparison previously recorded.
+- The 351-state selected-offset reset adapter and 3,101-state simultaneous suffix product, both with full-output lookup and all-state quotient certificate; the two-copy artifact is committed as ShiftedResetCarryDFA2.json.
+- StartCarryRectangleInclusion.md: direct L/R total-carry bounds from the exact sourceCarry formulas and mass-indexed correction bound, conditional on exact root formula/branch selection/source drain hypotheses.
+- ShiftedWindowComposition.md and README now correctly state only the one-step relation W_{n+1}=S_n[1+delta_k_n:]. The earlier output-to-output two-step suffix identity was retracted; the next output stream requires applying the next source-to-target transducer. ShiftedWindowInterface.js is only a generic suffix utility, not a root adapter.
+- Agent 42's two TM63 recurrence sandwiches were reviewed; no gap found in the requested recurrence/exponent/index arguments.
+
+Highest-value next work: prove the exact sourceCarry quotient identities and branch-threshold agreement for every root transition; establish source drain success/budget; compose the 225/270-state branch transducer with the 351-state selected reset DFA (proposed upper sizes 78,975 / 94,770) and prove a root-restricted invariant; compile the complete Lean consumer chain. Do not reuse the retracted two-step output-to-output identity or present finite trace evidence as all-time closure.
