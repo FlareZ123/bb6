@@ -102,3 +102,18 @@ This is a strict source-level reduction of the remaining parameter domain. It do
 - (j=128t+71).
 
 Their exact source modules are [M0Mod16Two.lean](M0Mod16Two.lean) and [M0AdditionalForcedFamilies.lean](M0AdditionalForcedFamilies.lean). The universal old-sieve admission and blank-unreachability statements are committed. Corrected original-source CI is pending in [run 42401719081](https://github.com/FlareZ123/bb6/actions/runs/42401719081). The finite scan over (j\le2000) reports 642 prior-sieve-admitted m=0 full-forced exclusions; the seven progressions account for 609 distinct examples. The remaining 33 finite examples require further symbolic analysis. The scan count is computational evidence, not a complete classification.
+
+
+## W11 q=11 mod128: both source-parent branches closed (21 November 2026)
+
+The new intermediate derivation [U5B2Root4W11Q11Mod128.md](U5B2Root4W11Q11Mod128.md) proves the exact paper-level family
+\[
+\neg CReach(P(128s+11))\qquad(s\in\mathbb N).
+\]
+It closes both parents in the existing W11 fan: Q reduces by odd/odd low valuation, even/odd valuation-four, then odd/odd low valuation to an odd-right sum-one forbidden state; A reduces by odd/odd low valuation, even/odd valuation-four, then unique even-right inversion to an odd-right sum-two forbidden state.
+
+The exact root equation identifies this W11 cylinder with
+\[
+r\equiv11092\pmod{16384}.
+\]
+The component source theorems already exist, but the combined parent-fan/root-index/B2 implication is **not Lean-compiled**. Keep this in im-results/ pending one exact-source composition and axiom audit. Local shell/Python preflight was unavailable in the 21 November invocation, so no CI substitute or new workflow was used.
