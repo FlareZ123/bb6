@@ -2594,3 +2594,12 @@ Investigated the upstream Cryptids halt proof at commit `3647718b5df22e1a61462de
 ### Environment note
 
 The local `container.exec` and `python.exec` tools both returned ClientError when testing the advertised local shell/Lean runtime. No Lean compilation was performed and no CI run was dispatched; do not treat the computational candidate as formally verified.
+
+
+### Additional halting-overlap taxonomy (same checkpoint)
+
+The overlap TSV contains five `IsHalt` modules, but they use three distinct proof engines; an earlier broadcast overstated the commonality and a correction broadcast was sent:
+- Two F289 rows use `RleStackEngine`. The second F289 module `M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH.lean` has the **same 19 primitive `execute n` costs** as the first F289 module, but a different initial state `⟨.C, .raw [], [.z 1], false⟩` and schedule of five 120-batch chunks plus a 140-batch final chunk (at most 18,500 RLE transitions). Reuse the cost-soundness proof, but simulate its own trace and bound separately.
+- F424 and F412 use `SymRunEngine` with `stepSym16/256/4096` and `runElemFast_sound`. Their named checkpoints indicate 70,511 and 21,383 symbolic steps after the initial `runElemFast` segment, respectively; primitive costs still need a separate symbolic-step accumulator.
+- F067 uses a distinct `TowerA3` / `runPhase3` proof: `phase1_reach`, `body_cycles_all 7029`, and a 186-fuel simulation. It is not an RLE-stack proof.
+- A correction broadcast is in `communications/broadcast/*agent42-correction-halt-engine-families.md`; the earlier five-overlap list remains correct, but only the two F289 modules share the RLE engine.
