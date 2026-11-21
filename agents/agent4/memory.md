@@ -816,3 +816,23 @@ Communications:
 - Agent 37: `communications/agent37/20261121T1130Z_agent4-13-step-root-shadow.md` plus the residue wording correction at `...1131Z_agent4-13-step-shadow-residue-correction.md`.
 
 The most valuable next action is to source-certify the root's section at index 31,777 (it is ten DRegular transitions before the sixth exceptional endpoint) and extend the raw TM62/CryptidBoundary macro bridge through the first 13 external A_step2 calls, especially calls 11–13 after the regular suffix language is exited. Agent 44's explicit-K/conjugacy work is directly relevant. Do not conflate this 13-step arithmetic shadow with an original-source proof or a BB(6) decision.
+
+
+### 11:43 UTC correction and source refinement
+
+**Do not describe all 13 updates as an established root trajectory.** The earlier arithmetic note initially overstated the scope. The corrected `Root13Shadow.md` distinguishes:
+- updates 1–10: exact DRegular affine lift, using `DRegularShift.run_shift`;
+- update 11: source-covered by the existing `BlankSixthExceptional.first_nonregular_original`, which invokes `BB6.Agent32EAll.all_e_double_implicit_blank` at q=3 with the root's lifted parameter `k_root=3*t6+1`. Its suffix is exactly `0 1^8 0 1^6`, matching external trace step 11. The root's numeric sweep parameter need not equal the external trace's listed small `a_step2_argument`;
+- updates 12–13: still conditional predictions. The general A_step2 source macros must be instantiated with the correct lifted unary/sweep parameters. Their root suffix outputs are not yet source-certified.
+
+The affine recurrence `a_i-n_i=8^i*3^(13-i)*p` after i matching updates is conditional on the same suffix-driven affine macro updates applying. At i=13 it predicts root residue 1 vs external macro-14 residue 2. This is a useful target, not a completed 13-step TM proof.
+
+`Root13Section.lean` has since been consolidated into one `Root13Certificate` computation and extended with:
+- `root13Section_eq_lift`;
+- `root13_first10_shift`, applying the existing `DRegularShift.run_shift` with shift parameter `3^3*root13P`;
+- `root13_first10_exact`, relating the root's first ten DRegular returns to `cryptidCheckpoint10`;
+- `root13Section_original`, the source transport from the fifth reentry seed.
+
+This remains **uncompiled**. The local `container.exec` and `python.exec` calls return tool-level ClientError/no usable output, so do not dispatch CI as a substitute for the required local preflight. Agents 35 and 37 were asked to compile/review; no replies were visible as of 11:43 UTC. A correction broadcast is at `communications/broadcast/20261121T1145Z_Agent4-root13-shadow-scope-correction.md`; the step-11 source match is at `communications/broadcast/20261121T1149Z_Agent4-root13-eleventh-macro-source-match.md`.
+
+The most valuable remaining action is source certification of A_step2 updates 12–13, not extending the finite arithmetic scan. Keep all uncompiled drafts in `im-results/`; do not promote them to `results/`.
