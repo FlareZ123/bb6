@@ -1,7 +1,16 @@
-name: Agent 32 Cryptid infinite-tape padding (manual)
+name: Agent 32 Cryptid source checks (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Run the raw TM62-to-D0 acceptance gate, or the preserved legacy padding/107-call check"
+        type: choice
+        options:
+          - raw_d0_bridge
+          - legacy_padding_107_call
+        default: raw_d0_bridge
+        required: true
 
 permissions:
   contents: read
@@ -12,16 +21,22 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
-      - name: Restore original source with SHA verification
+
+      - name: Restore original source with SHA verification (legacy only)
+        if: inputs.target == 'legacy_padding_107_call'
         run: |
           python3 -m pip install --quiet filelock
           python3 im-results/agent31-cryptid-boundary/unpack.py
-      - name: Install pinned Lean 4.36.0-rc2
+
+      - name: Install pinned Lean 4.36.0-rc2 (legacy only)
+        if: inputs.target == 'legacy_padding_107_call'
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile exact source model and padding theorem
+
+      - name: Compile original-source padding checks (legacy only)
+        if: inputs.target == 'legacy_padding_107_call'
         env:
           LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-padding:im-results/agent32-cryptid-third:im-results/agent35-cryptid-code
         run: |
@@ -38,7 +53,8 @@ jobs:
           lean im-results/agent32-cryptid-padding/EAllDouble.lean
           lean im-results/agent32-cryptid-padding/ETripleZero.lean
 
-      - name: Compile arbitrary-suffix 107-step endpoint in pinned upstream source
+      - name: Compile preserved arbitrary-suffix 107-call extension (legacy only)
+        if: inputs.target == 'legacy_padding_107_call'
         run: |
           git init /tmp/proofs
           cd /tmp/proofs
@@ -51,7 +67,37 @@ jobs:
           cat "$GITHUB_WORKSPACE/im-results/agent32-cryptid-padding/SuffixParametricPrefix.append.lean" >> BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
           lake env lean -o BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.olean BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
 
-      - name: Compile pinned Mathlib Tape to exact D0 transport
+      - name: Prepare exact pinned TM62 and Mathlib dependencies (raw bridge only)
+        if: inputs.target == 'raw_d0_bridge'
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc1
+          export PATH="$HOME/.elan/bin:$PATH"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+          git init /tmp/proofs
+          cd /tmp/proofs
+          git remote add origin https://github.com/int-y1/proofs.git
+          git fetch --depth=1 origin b77dda5c79fb196d67ce35669e172ad632401c1b
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "b77dda5c79fb196d67ce35669e172ad632401c1b"
+          python3 - <<'PY'
+          import json
+          manifest = json.load(open("lake-manifest.json"))
+          mathlib = next(p for p in manifest["packages"] if p["name"] == "mathlib")
+          expected = "dfbc15ea6605db241da9cfd0632bbaf69b67e513"
+          assert mathlib["rev"] == expected, (mathlib["rev"], expected)
+          print("External proof revision:", "b77dda5c79fb196d67ce35669e172ad632401c1b")
+          print("Mathlib revision:", mathlib["rev"])
+          PY
+          lean --version
+          lake exe cache get
+          lake build BusyLean.BB62 BusyLean.TMAcceleration
+          lake env lean -o BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.olean BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
+
+      - name: Compile exact Mathlib Tape-to-D0 adapter (raw bridge only)
+        if: inputs.target == 'raw_d0_bridge'
         run: |
           cd /tmp/proofs
           lake env bash -c '
@@ -64,5 +110,9 @@ jobs:
             lean -o "$ROOT/im-results/agent3-portfolio-raw-conjugacy/MachineConjugacy.olean" "$ROOT/im-results/agent3-portfolio-raw-conjugacy/MachineConjugacy.lean"
             lean -o "$ROOT/im-results/agent3-portfolio-raw-conjugacy/DTableWitness.olean" "$ROOT/im-results/agent3-portfolio-raw-conjugacy/DTableWitness.lean"
             lean -o "$ROOT/im-results/agent3-portfolio-raw-conjugacy/DStartFinite.olean" "$ROOT/im-results/agent3-portfolio-raw-conjugacy/DStartFinite.lean"
-            lean -o "$ROOT/im-results/agent32-cryptid-padding/TM62MathlibD0Adapter.olean" "$ROOT/im-results/agent32-cryptid-padding/TM62MathlibD0Adapter.lean"
+            lean -o "$ROOT/im-results/agent32-cryptid-padding/TM62MathlibD0Adapter.olean" "$ROOT/im-results/agent32-cryptid-padding/TM62MathlibD0Adapter.lean" 2>&1 | tee /tmp/tm62-d0-adapter.log
+            if grep -q "sorryAx" /tmp/tm62-d0-adapter.log; then
+              echo "Forbidden sorryAx dependency in raw TM62-to-D0 adapter"
+              exit 1
+            fi
           '

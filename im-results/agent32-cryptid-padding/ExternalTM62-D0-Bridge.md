@@ -1,27 +1,23 @@
 # Raw TM62-to-D0 transport for Cryptid D
 
-**Status (20 November 2026):** a concrete Mathlib-facing adapter draft now exists at [TM62MathlibD0Adapter.lean](./TM62MathlibD0Adapter.lean). It is not yet compiled against the exact upstream/Mathlib dependency closure, and no repository theorem or new halting result is claimed. Keep this dossier under `im-results/`; it does not establish blank-root reachability.
+**Status (21 November 2026): intermediate.** The concrete Mathlib-facing adapter exists at [TM62MathlibD0Adapter.lean](./TM62MathlibD0Adapter.lean), but it has not yet been compiled against the exact pinned upstream/Mathlib closure. The external halting theorem is not yet a repository theorem, and this bridge does not establish that the authentic blank root reaches its halting cylinder.
 
-## The useful simplification
-
-The pinned external proof does not need to be translated through the eleven-row `DRegular` return grammar. Its `A_step2` tactic proves ordinary finite runs of the raw six-state TM62. The entire 107-call path, including every arbitrary suffix, is already covered by that source proof. A single raw-step conjugacy to the repository's exact six-state model transfers the whole path at once.
+## Pinned source and target semantics
 
 External source:
-- `int-y1/proofs`, commit `b77dda5c79fb196d67ce35669e172ad632401c1b` (the current source pin used by the adapter draft)
-- `BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean`
-- current upstream file: `BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean`
+- Repository: [int-y1/proofs](https://github.com/int-y1/proofs)
+- Exact commit: `b77dda5c79fb196d67ce35669e172ad632401c1b`
+- Source module: `BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean`
+- Toolchain: Lean 4.36.0-rc1
+- Exact Mathlib revision from the pinned `lake-manifest.json`: `dfbc15ea6605db241da9cfd0632bbaf69b67e513`
 
-Repository model:
+Repository target:
 - `im-results/agent3-portfolio-raw-conjugacy/DTableWitness.lean`, definition `BB6.Portfolio.D0`
-- `im-results/agent3-portfolio-raw-conjugacy/MachineConjugacy.lean`, especially `step`, `run`, and `run_transport`
+- `im-results/agent3-portfolio-raw-conjugacy/MachineConjugacy.lean`, definitions `step`, `run`, and `run_transport`
+- `im-results/agent3-portfolio-raw-conjugacy/DStartFinite.lean`, definition `F0Pure`
+- `im-results/agent4-coverage-smoke/RelativeTape.lean`, the already proved whole-tape relative/absolute transport
 
-## Exact transition-table comparison
-
-Encode external states by
-`A↦0, B↦1, C↦2, D↦3, E↦4, F↦5`,
-and symbols by `S0↦false, S1↦true`.
-
-The external TM62 table and `D0` agree on all eleven live entries:
+The external machine and D0 use the same six live states A–F ↔ 0–5 and symbols S0/S1 ↔ false/true. Their eleven live entries are:
 
 | External | Read | Write | Move | Next |
 |---|---:|---:|---|---:|
@@ -37,74 +33,90 @@ The external TM62 table and `D0` agree on all eleven live entries:
 | E | 1 | 0 | L | B |
 | F | 0 | 1 | L | E |
 
-Both external TM62 and `D0` leave F/1 undefined. This is the exact standard six-state halting convention.
+Both tables return `none` exactly at F/1. This is the standard six-state halting convention.
 
-There is one separate encoding distinction: `CryptidBoundary`/ `BoundaryPadding.delta` represents F/1 by a transition to frozen state 6. Therefore:
-- in the external TM62 and `D0` semantics, the machine halts at F/1 after its final live transition count (t);
-- in `CryptidBoundary.run`, the same physical configuration takes one additional transition into state 6, so the corresponding frozen-state index is (t+1).
+The separate `CryptidBoundary`/ `BoundaryPadding.delta` encoding instead sends F/1 into frozen state 6. Thus a `CryptidBoundary.run` sink index is one greater than the final live-transition count. That +1 must not appear in a theorem about `BB6.Portfolio.D0`.
 
-Do not conflate the `D0` exact six-state semantics with the seven-state sink encoding.
+## Whole-tape coordinate map
 
-## A one-step transport that handles every suffix
-
-The external proof uses Mathlib's `Turing.Tape Symbol`, whose `nth` coordinate is relative to the current head:
+Mathlib's `Turing.Tape Symbol` is head-relative:
 - `Tape.nth 0` is the scanned cell;
-- positive indices are cells to the right;
-- negative indices are cells to the left.
+- positive coordinates are to the right;
+- negative coordinates are to the left.
 
-Use an absolute head coordinate (h:mathbb Z). Define the absolute tape represented by an external tape (T) as
-[
-  operatorname{absTape}(T,h)(i)
-  = operatorname{decodeSymbol}(T.nth(i-h)).
-]
-Map an external configuration ((q,T)), together with (h), to
-[
-  operatorname{absCfg}(q,T,h)
-  = langle operatorname{encodeState}(q), h,       operatorname{absTape}(T,h)angle
-]
-in `BB6.Portfolio.Cfg`.
+For an external tape T and an absolute head coordinate h, the represented absolute tape is
 
-The exact Mathlib lemmas used by the adapter draft are in the upstream project's pinned Mathlib revision `dfbc15ea6605db241da9cfd0632bbaf69b67e513`, `Mathlib/Computability/TuringMachine/Tape.lean`:
-- `Tape.move_right_nth`: moving right changes relative coordinate (i) to old coordinate (i+1);
-- `Tape.move_left_nth`: moving left changes relative coordinate (i) to old coordinate (i-1);
+```lean
+absTape T h i := decodeSymbol (T.nth (i - h))
+```
+
+and the positioned configuration maps to
+
+```lean
+absCfg (q, T, h) : BB6.Portfolio.Cfg :=
+  ⟨encodeState q, h, absTape T h⟩
+```
+
+The pinned Mathlib module is `Mathlib/Computability/TuringMachine/Tape.lean`. Its relevant lemmas are:
+- `Tape.move_right_nth`: after a right move, relative coordinate i observes old coordinate i+1;
+- `Tape.move_left_nth`: after a left move, relative coordinate i observes old coordinate i-1;
 - `Tape.write_nth`: writing changes exactly relative coordinate zero.
 
-Consequently:
-1. If the external head moves right and (h' = h+1), then (operatorname{absTape}(T.move R,h')=operatorname{absTape}(T,h)).
-2. If it moves left and (h' = h-1), the same equality holds.
-3. Writing (w) before the move changes the absolute tape exactly by `updateTape absTape h (decodeSymbol w)`.
-4. The state/symbol transition instruction is exactly `D0` by the table comparison above.
+If the head coordinate changes by h'=h+1 on R or h'=h-1 on L, these identities show that the move itself preserves every absolute tape cell. The preceding write changes exactly the old absolute cell h. Therefore the full write-before-move square is equality of the entire infinite tape, not a bounded-window simulation.
 
-Thus the commuting equation is
-[
-  operatorname{absCfg}(operatorname{TM62.step}(q,T),h')
-  = operatorname{D0.step}(operatorname{absCfg}(q,T,h))
-]
-whenever the external step is live, with the same `none` result on F/1. Package ((q,T,h)) as an extended external configuration so (h') is updated by the direction; then prove the finite-run theorem by induction. The existing `BB6.Portfolio.run_transport` is the right pattern for the induction.
+## Adapter and exact step accounting
 
-This relation is over the *entire* infinite tape, so no finite suffix grammar, explicit blank padding convention, or terminal-zero normalization is needed. The external proof's arbitrary `ls` suffix is preserved automatically.
+The concrete adapter:
+1. imports the actual upstream `tm`, rather than proving only against a copied table;
+2. defines a positioned external configuration `(state, absoluteHead, MathlibTape)`;
+3. maps `Mathlib.Tape.nth` to `BB6.Bridge.Tape` using the same signed integer coordinates;
+4. proves the right- and left-write/move equations from the pinned Mathlib lemmas;
+5. proves the external positioned step commutes with `BB6.Bridge.step`, then with `BB6.Portfolio.step D0`;
+6. proves exact-n run transport and the equivalence of the undefined next-step condition.
 
-## Initial sections and the remaining open problem
+The external `stepNat n` is `n.repeat (fun oc => oc.bind (step tm)) (some c)`. Its `haltsIn n` means exactly n live transitions followed by an undefined next transition. The adapter's `run_project`, `ExtHaltsAt`, `run_toPortfolio`, and `haltsAt_transport` preserve the same n. There is no time shift in D0 semantics.
 
-The external definition is
-`A(n,ls) := 0^∞ <F 1^n 0 ls 0^∞`.
-Under `absCfg`, this is exactly the `D0` configuration with state F (index 5), head (h), scanned zero, and right-hand tape (1^n) followed by `ls`. In particular, `A(n,[])` maps to `BB6.Portfolio.F0Pure n h` from `DStartFinite.lean`.
+## Section identity and external halting cylinder
 
-The external `c₀` is the blank A-state start, which maps to `BB6.Portfolio.blank 0`. Its `reach_9_nil` is therefore compatible with the repository's already proved `DAllStarts.every_blank_reaches_unary` (for state 0, seed 9, head offset -6); the head offset is just the accumulated absolute coordinate, not a different tape.
+The external section is
 
-Once the one-step transport is formalized, the external `halts_A_mod_3_pow_108` theorem transfers to the `D0` six-state semantics with no change in halting time. Its 107 `A_step2` macros and final halting tail transfer wholesale. If a result is instead stated through `CryptidBoundary`, account for the extra +1 sink transition described above.
+```lean
+A n ls := default <{{F}} [S1]^n +> ls +> default
+```
 
-**What this does not solve:** the external theorem proves that every
-`A(3^108*k + C, [])` halts, with
-`C = 1975700577069254261393123959451562008800234946348086`.
-It does not prove that the authentic orbit from `A(9,[])` reaches this cylinder. The wiki's 2,728,570-state scan and closest 21/108 branch match are finite empirical evidence only. After the raw semantic transport, the decisive mathematical task is solely the authentic-root hit problem (or a genuine invariant excluding all certified halting classes), not another DRegular-to-A macro reconstruction.
+For `ls=[]`, the scanned cell is blank, cells 1 through n to the right are one, and every other cell is blank. Under the absolute map this is exactly
 
-## Acceptance boundary
+```lean
+BB6.Portfolio.F0Pure n h
+```
 
-## Concrete draft and validation boundary
+where `F0Pure n h` has ones precisely at h < i ≤ h+n.
 
-`TM62MathlibD0Adapter.lean` now contains the state/symbol/direction encodings, exact table conjugacy, `Turing.Tape` absolute-coordinate observation, write-before-move lemma, extended configuration step, exact-n run transport, projection back to the external `stepNat`, and a conditional transfer of `halts_A_mod_3_pow_108` to `D0`'s `F0Pure` configurations. It also attempts the `A(n,[])` section identity by reducing `ListBlank.append_mk`/`nth_mk` to `List.getI` on `List.replicate`.
+The pinned external theorem `halts_A_mod_3_pow_108` proves that every
 
-The generic Option-run projection and halting equivalence was separately compiled in Lean 4.36.0-rc2 in a scratch file. This checks the run/halts glue only; it does **not** compile the Mathlib-facing adapter. The local runtime now has Lean 4.36.0-rc2, but no Mathlib checkout/cache or upstream Lake project, so the exact dependency closure cannot be locally preflighted here. No CI run has been dispatched as a substitute. Agent 3 identified the reusable relative-tape infrastructure; Agents 3 and 4 have been asked to review the replacement adapter, especially the two Mathlib move lemmas, `step_toRelative`, `rawStep_toPortfolio`, `A_tape_nth`, and the exact `stepNat`/`haltsIn` signatures.
+```
+A(C + 3^108*k, [])
+C = 1975700577069254261393123959451562008800234946348086
+```
 
-Before treating this as a repository theorem, the exact file must compile against the pinned upstream/Mathlib closure, and its transitive `#print axioms D0_halts_on_A_cylinder` must be inspected. The table audit, generic scratch preflight, and source-level draft are not a kernel check of the concrete adapter.
+halts. The adapter contains the conditional transfer theorem `D0_halts_on_A_cylinder`, which would place the same halting cylinder in repository D0 semantics with the same primitive halting time once the exact adapter compiles.
+
+The authentic blank start is already identified by the repository's `DAllStarts.every_blank_reaches_unary` theorem:
+
+```lean
+run D0 36 (some (blank 0)) = some (F0Pure 9 (-6))
+```
+
+The external source also has `reach_9_nil`, but the repository's existing 36-step theorem is the root prefix to reuse. Do not spend another proof checkpoint rebuilding this correspondence.
+
+## Validation boundary
+
+Agent 4's independent abstract [HeadRelativeFunctionAudit.lean](../agent4-cryptid-d0-review/HeadRelativeFunctionAudit.lean) has been compiled locally with Lean 4.36.0-rc2. It checks a copied external table against D0, proves the full-tape write/move square, and transports exact finite runs and halting times. Its transport declarations have axiom profile `[propext, Quot.sound]`; the initial empty-section observation additionally uses `Classical.choice`. This is useful adversarial mathematical evidence, but it does not import Mathlib's quotient tape or the external theorem.
+
+The local Lean 4.36.0-rc2 preflight also compiled the repository-side modules `Frontier`, `RelativeTape`, `MachineConjugacy`, `DTableWitness`, and `DStartFinite`. The exact external project uses Lean 4.36.0-rc1 and its Mathlib checkout/cache is not present in the local runtime, so the actual `TM62MathlibD0Adapter.lean` remains uncompiled. Agent 3 identified a missing `List.append_nil` simplification in the positive branch of `A_tape_nth`; Agent 42 applied that minimal source fix. It has not yet been kernel checked.
+
+The manual workflow [agent32-cryptid-padding.yml](../../.github/workflows/agent32-cryptid-padding.yml) now defaults to `raw_d0_bridge`: it checks out the exact b77/dfbc dependency closure and compiles the original external module without appending the optional 107-call suffix extension. That legacy extension remains available only as an explicit opt-in. **No raw-bridge CI run has been dispatched.** Do not describe this adapter or the external theorem as a repository result until the concrete compile and transitive `#print axioms D0_halts_on_A_cylinder` audit pass.
+
+## Remaining mathematical target
+
+Even after the bridge is accepted, the difficult question remains whether the authentic orbit from `F0Pure 9 (-6)` reaches any `F0Pure (C + 3^108*k) h`, or whether a genuine invariant excludes all such halting cylinders. The external theorem alone, the finite 2,728,570-state scan, and the closest 21/108 branch match do not answer that root-reachability question.
