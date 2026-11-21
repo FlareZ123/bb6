@@ -229,8 +229,8 @@ theorem m8OddDepth_scaled (v d : Nat) (hv : v%4=2) :
           ((3*v*2^(d+1)-2)-2)/2=3*v*2^d-2 := by
         rw [hfactor]
         omega
-      rw [BB6.Agent15.oddDepth, dif_pos ⟨hkpos,hkmod⟩, hstep]
-      exact ih
+      rw [BB6.Agent15.oddDepth, dif_pos ⟨hkpos,hkmod⟩, hstep, ih]
+      omega
 
 /-- An explicit infinite family of authentic second-family stopping inputs
     is excluded by the original-source M8 quotient theorem. -/
@@ -290,6 +290,9 @@ theorem m8SharpFamily_unreachable (r : Nat) (hr : 2≤r) :
     Nat.mul_le_mul hvpos hdpos
   have hmulD3 : 2≤3*m8SharpV r*2^(m8SharpD r) := by
     have h := Nat.mul_le_mul_left 3 hmulD
+    have heq : 3*(m8SharpV r*2^(m8SharpD r)) =
+        3*m8SharpV r*2^(m8SharpD r) := by ac_rfl
+    rw [heq] at h
     omega
   have hscaleFamily : 2^d*(3*v)=k+2 := by
     dsimp [k,d,v,m8SharpK,m8SharpD,m8SharpV]
