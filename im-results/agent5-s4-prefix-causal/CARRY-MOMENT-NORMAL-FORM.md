@@ -267,6 +267,6 @@ and the Cauchy-Schwarz/chord bounds then give
 \[
 123,903,222\le q\le742,649,644.
 \]
-This still contains \(2^{27},2^{28},2^{29}\). The exact-Q interval above is substantially narrower, but requires the full finite stack. Thus the corrected Q recurrence is algebraically valid, but the straightforward 18-prefix interval propagation is **not** a decisive obstruction; it needs a sharper bound on the carry remainder or a joint moment argument. This finite diagnostic is recorded to avoid repeating the same coarse propagation.
+This still contains \(2^{27},2^{28},2^{29}\). The exact-Q interval above is substantially narrower, but requires the full finite stack. Thus the corrected Q recurrence is algebraically valid, but the straightforward 18-prefix interval propagation is **not** a decisive obstruction; it needs a sharper bound on the carry remainder or a joint moment argument. This finite diagnostic is recorded to avoid repeating the same coarse propagation; it is reproducible with [s4_q_prefix_interval.mjs](s4_q_prefix_interval.mjs).
 
 **Verification boundary:** the algebraic identities and convexity proof are given here on paper; no new Lean module has been compiled. The prescribed local shell/Python tool boundary returned only "Skipped 1 message" with no stdout or exit status on preflight, matching the previously recorded environment blocker. Per the repository rule, no CI run was substituted for the unavailable local Lean preflight. This note is intermediate work in im-results/, not a claim of a publishable BB(6) solution.
