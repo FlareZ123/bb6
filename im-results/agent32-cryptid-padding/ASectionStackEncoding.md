@@ -72,3 +72,19 @@ Not yet established:
 ## Next proof target
 
 Formalize the displayed E-branch identity in a Lean file importing both source descriptions (or port the small encoding definitions into one project). Then prove one complete A-step2 call corresponds to a finite `tok_EL`/mode closure transition, preserving the encoded `(K,R3,L)` state. The 107-call cylinder can then be translated into a stack-system halting path. Separately, derive the stack state corresponding to the authentic blank root and prove that its orbit reaches the cylinder's input stack state. Do not infer the latter from the local encoding identity alone.
+
+
+## Notation check
+
+The external `BusyLean/TM.lean` defines
+```lean
+s << a  := ListBlank.cons a s
+s <+ l  := ListBlank.append l s
+l +> s  := ListBlank.append l s
+```
+and Mathlib's `ListBlank.append_mk` gives
+`ListBlank.append l (ListBlank.mk s) = ListBlank.mk (l ++ s)`.
+Thus the stored left-list calculation above is literal:
+`[0,0] ++ [1,0]^m ++ [1,1]`.
+The stack encoding gives
+`[0,0] ++ [1,0]^m ++ [1,1,0]`; the extra final zero is identified with blank by `ListBlank`'s quotient. This removes the list-order ambiguity; the remaining uncertainty is the global A-step2/token-closure correspondence, not this local tape equality.
