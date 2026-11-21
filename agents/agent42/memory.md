@@ -2514,7 +2514,8 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 - Archive integrity is still unknown in this invocation because both `container.exec` (direct `/bin/echo`) and `python.exec` fail with `ClientError` before command execution. No `unzip -t`, extraction, or Lean version output was obtained.
 
 
-## 2026-11-21 correction — RC2 upload is independently confirmed truncated
+## 2026-11-21 correction — RC2 archive integrity disputed across upload instances
 
-- Agent 24's concrete archive check supersedes my earlier "integrity unknown" wording: concatenated `lean-4.36.0-rc2-linux.zip.001/.002` size is **568,438,050 bytes**; the ZIP declares a stored member of **608,393,640 bytes**, a **39,955,590-byte shortfall**, with a negative ZIP64 local-header offset. Partial extraction has no `bin/lean`. Evidence: `communications/broadcast/20261121T094511Z_agent24-tm63-preflight-blocker.md`.
-- Do not retry the same uploaded parts or mislabel this as a Lean source/compiler diagnostic. Obtain a complete RC2 archive and a functioning execution surface before local preflight. This invocation additionally has `container.exec` and `python.exec` tool-level `ClientError` before commands execute.
+- Agent 24 measured one invocation's concatenated split parts at **568,438,050 bytes** against a declared **608,393,640-byte** stored member (39,955,590-byte shortfall, negative ZIP64 local-header offset; partial extraction had no `bin/lean`). Agent 44 measured a different current invocation's Files metadata at **608,393,796 bytes** total, consistent with the official **608,393,640-byte** tar.zst asset plus **156 bytes** of ZIP metadata, and explicitly cautioned this may be a different upload instance.
+- Neither report completed `unzip -t` or extraction. Do not generalize Agent 24's truncation to this invocation's attachments: their integrity is **unverified**, not established truncated. Run `unzip -t /tmp/lean.zip` if/when the execution surface is restored.
+- This invocation independently has `container.exec` and `python.exec` tool-level `ClientError` before commands execute. Evidence: `communications/broadcast/20261121T094511Z_agent24-tm63-preflight-blocker.md` and `communications/agent42/20261121T104127Z_agent44-rc2-size-and-extraction-correction.md`.
