@@ -27,9 +27,27 @@ Key fixes:
 
 Five direct/transitive importers used `import Agent6Q4Prefix`, although the source module is `CountedQ4Prefix.lean` and retains namespace `BB6Coverage.Agent6Q4Prefix`. Those imports were changed to `CountedQ4Prefix`.
 
-## Remaining blockers
+## Remaining blockers and next acceptance gate
 
-The full root import closure was not compiled. The closure contains about 192 Lean modules; further transitive source failures remain, notably in `M1EvenValuationBridge.lean`, `CountedResetBase`, and additional valuation/sweep modules. The attempted local M1 edits were not included in the patch. No claim is made here that `TM63GeneralQ4TerminalComposition` compiles, that its transitive axiom profile is clean, or that the full TM63 blank-start run has been proved.
+The full root import closure for `TM63GeneralQ4TerminalComposition.lean` remains uncompiled. It spans approximately 192 modules; the current root theorem declarations and their transitive axiom profiles have not been accepted. The first actionable leaf remains `M1EvenValuationBridge.lean`, followed by its parent `M1EvenValuationSource.lean` and the remaining valuation/sweep modules.
+
+The direct import slice of the current `M1EvenValuationBridge.lean` has already been reduced to:
+
+- `ChampionRootBridge`
+- `M1EvenState1Sweep`
+- `M1EvenState5Sweep`
+- `CountedSweep`
+- `Lean.Elab.Tactic.Omega`
+
+The former `CountedQ4Prefix` import and `Agent6Q4Prefix` namespace opening are absent from the current source. `E_scan` is supplied by `CountedSweep`, in the already-open `BB6Coverage.Agent48Champion` namespace. The smallest useful first preflight is therefore this target and its direct import closure, not the full 192-module root composition.
+
+The next wrapper, `M1EvenValuationSource.lean`, additionally imports `M1EvenQ4Prefix`, `M1EvenQ4Suffix`, `Q4RightEndpoint`, `S1Encoder`, `S1CountedDrain`, and `CountedReset`. Once the bridge is accepted, compile this wrapper and then resume the exact root closure. Preserve the eight individually compiled modules listed above; do not repeat their unchanged checks.
+
+`CountedResetBase.lean` has separately compiled with finite-trace `native_decide` certificates. Any final exported-axiom/trust report must expose those generated `native_decide` dependencies explicitly; absence of `sorryAx` alone does not make them plain kernel-reduction proofs.
+
+**Local runtime blocker (2026-11-21 10:34 UTC).** An invocation of `container.exec` with the trivial command `echo runtime-check && ls -l /mnt/data/lean-4.36.0-rc2-linux.zip.001 /mnt/data/lean-4.36.0-rc2-linux.zip.002 && date -u` returned a tool-level `ClientError` before producing any shell output. The earlier `python.exec` attempt in this invocation also returned `ClientError`. No Lean executable/version check or Lean compiler diagnostic was obtained. This is an execution-environment failure, not evidence of a Lean source error. No CI was dispatched as a substitute.
+
+Until a working local shell is available, do not expand the score derivations or claim source acceptance. The next action is to reconstruct and verify Lean 4.36.0-rc2 locally, compile the narrow M1 bridge slice above, print its exported axiom profiles, then continue through the parent and exact root closure.
 
 ## Reproduction details
 
