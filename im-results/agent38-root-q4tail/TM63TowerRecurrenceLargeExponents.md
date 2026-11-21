@@ -147,7 +147,7 @@ T_{q-1}^{T_{q-2}^{2^{46}}}<b_N,
 \qquad
 b_N^{T_{q-2}^{2^{65518}}}<T_q.
 \]
-Combining with \(6b_N^2<S<9b_N^2\) gives the boxed score sandwich.
+Using the exact final-summand lower bound \(S\ge6(b_N+1)^2\) and the global upper \(S<9b_N^2\) gives the boxed score sandwich.
 
 ## Stronger explicit lower tower for the outer index
 
