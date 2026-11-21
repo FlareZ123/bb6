@@ -139,6 +139,18 @@ The selected-offset artifact also reconstructs the **full** post-reset-pair outp
 
 All 54 entries are collision-free and present. Thus after the selected wrapper finishes, its base carry output plus captured event symbol decode the exact full post_reset_pair label.
 
+## Two-step overlap composition
+
+The simultaneous two-copy product is also the right primitive for a sliding-window update. If S_n is the source-to-target output on [k_n+1,j_{n+1}-2), then
+\[
+S_{n+1}=S_n[\delta k_n:]\Vert h_{n+1},
+\]
+where h is the optional high-extension symbol. The next target window is
+\[
+W_{n+2}=S_n[1+\delta k_n+\delta k_{n+1}:]\Vert h_{n+1}.
+\]
+The boundary clock forces delta_k_n=1 to be followed by delta_k_{n+1}=0, so the total suffix offset is always 1 or 2. The 3,101-state product tracks both possibilities simultaneously; append the optional high symbol to both copies and select the required one. This is the exact index/phase reason offset 3 is unnecessary. Full derivation: ShiftedWindowComposition.md.
+
 ## Phase-selected single-copy interface
 
 The two-copy product is useful when the offset is not yet known and both suffix outputs must be maintained simultaneously. In the authentic S-window transition, the boundary phase determines the offset. One can therefore use a single base DFA with two selectable initial states instead of the 3,101-state simultaneous product.
