@@ -22,16 +22,11 @@ and
 \alpha_j=2^{\,T_j^{\,\alpha_{j-2}+1}-T_j+1}-2
 \quad(j\ge7).
 \]
-For the upper denominator sequence, define
+Define the upper exponents by
 \[
-d_2=65473,\qquad D_k=2^{d_k},\qquad
- d_{k+1}=T_{k+3}-2^{T_{k+2}-d_k}-1\quad(k\ge2),
+\gamma_j=2^{T_{j+1}-T_j}-2^{V_{j-3}-T_j}\quad(j\ge3).
 \]
-with upper exponents
-\[
-\gamma_j=2^{T_{j+1}-T_j}-2^{T_{j+1}-T_j-d_{j-1}}\quad(j\ge3).
-\]
-In particular, \(\gamma_3=2^{65520}-2^{47}\). All these exponents are positive integers.
+The lower inequality establishes \(V_{j-3}>T_j\), while the elementary upper comparison gives \(V_{j-3}<T_{j+1}\); hence these are positive integers. In particular, \(\gamma_3=2^{65520}-2^{47}\).
 
 For every \(j\ge3\),
 \[
@@ -41,7 +36,7 @@ T_{j+3}^{\,T_{j+2}^{\,\alpha_j}}<V_j
 V_j^{\,T_{j+2}^{\,\gamma_j}}<T_{j+4}.
 }
 \]
-The lower exponent uses an exact divisibility lift with a two-index recurrence. The upper exponent uses the recursively shrinking relative headroom \(1/D_{j-1}\).
+The lower exponent uses an exact divisibility lift with a two-index recurrence. The upper exponent is the exact congruence-limited exponent obtained from \(V_{j-2}=2^{V_{j-3}}-1\).
 
 These bounds strictly strengthen the earlier fixed exponents \(2^{46}\) and \(2^{65518}\). In particular, \(\alpha_3>2^{46}\) and \(\gamma_3>2^{65518}\).
 
@@ -110,94 +105,39 @@ is no larger than \(2^{V_{j-3}-T_j}-2\). Also \(T_j^{\alpha_{j-2}+1}\ge T_j^2\),
 
 ### Upper inequality
 
-We first establish
-\[
-1\le d_k\le T_{k+2}-T_{k+1}\qquad(k\ge2).
-\]
-The base case is \(65473\le T_4-T_3=65520\). If the bound holds at \(k\), then
-\[
-T_{k+2}-d_k\ge T_{k+1},
-\]
-so
-\[
-T_{k+2}\le2^{T_{k+2}-d_k}\le2^{T_{k+2}-1}=T_{k+3}/2.
-\]
-Substitution in the definition of \(d_{k+1}\) gives
-\[
-1\le d_{k+1}\le T_{k+3}-T_{k+2}.
-\]
-Moreover,
-\[
-d_{k+1}\ge T_{k+3}/2-1>T_{k+2}>d_k,
-\]
-so \(D_k\) strictly increases. In particular, \(D_k\) divides \(T_{k+3}\), and \(D_{k+1}\) divides \(T_{k+4}\).
-
-Next prove the auxiliary bound
-\[
-V_k<T_{k+4}^{1/D_k}\qquad(k\ge2).
-\]
-At \(k=2\),
-\[
-T_6^{1/D_2}
-=2^{\,2^{65536}/2^{65473}}
-=2^{2^{63}}
->V_2.
-\]
-For the induction, put \(t=T_{k+4}=2^{T_{k+3}}\). Divisibility gives
-\[
-t^{1/D_k}=2^{T_{k+3}/D_k}
-=2^{2^{T_{k+2}-d_k}}.
-\]
-By the definition of \(d_{k+1}\),
-\[
-t/D_{k+1}
-=2^{T_{k+3}-d_{k+1}}
-=2^{2^{T_{k+2}-d_k}+1}
-=2t^{1/D_k}.
-\]
-Thus, if \(V_k<t^{1/D_k}\), then
-\[
-V_{k+1}=2^{V_k}-1
-<2^{t^{1/D_k}}
-<2^{t/D_{k+1}}
-=T_{k+5}^{1/D_{k+1}}.
-\]
-This proves the auxiliary estimate.
-
-Now fix any \(j\ge3\), and put
+Fix \(j\ge3\), and put
 \[
 Y=T_{j+1}=2^{T_j},\qquad X=T_{j+2}=2^Y.
 \]
-Since \(j-1\ge2\), the auxiliary estimate gives
-\[
-V_{j-1}<T_{j+3}^{1/D_{j-1}}=2^{X/D_{j-1}}.
-\]
-The invariant on \(d_{j-1}\) ensures that the exponent in
+The lower inequality gives \(V_{j-3}>T_j\), and the elementary upper comparison gives \(V_{j-3}<T_{j+1}=Y\). Thus \(2^{V_{j-3}}\) is divisible by \(Y\), and
 \[
 \gamma_j
-=2^{Y-T_j}-2^{Y-T_j-d_{j-1}}
+=2^{Y-T_j}-2^{V_{j-3}-T_j}
+=\frac{X-2^{V_{j-3}}}{Y}
 \]
-is a nonnegative integer. It satisfies
+is a positive integer. In particular,
 \[
-Y\gamma_j
-=2^Y-2^{Y-d_{j-1}}
-=X-X/D_{j-1},
+X^{\gamma_j}=2^{Y\gamma_j}
+=2^{X-2^{V_{j-3}}}.
 \]
-and therefore
+
+The recurrence gives
 \[
-X^{\gamma_j}=2^{X-X/D_{j-1}}.
+V_{j-2}=2^{V_{j-3}}-1,\qquad
+V_{j-1}=2^{\,2^{V_{j-3}}-1}-1
+<2^{\,2^{V_{j-3}}}.
 \]
 Using \(V_j<2^{V_{j-1}}\), we obtain
 \[
 \begin{aligned}
 V_j^{X^{\gamma_j}}
 &<2^{V_{j-1}X^{\gamma_j}}\\
-&<2^{\,2^{X/D_{j-1}}\,2^{X-X/D_{j-1}}}\\
+&<2^{\,2^{2^{V_{j-3}}}\,2^{X-2^{V_{j-3}}}}\\
 &=2^{2^X}
 =T_{j+4}.
 \end{aligned}
 \]
-This proves the upper inequality for every \(j\ge3\).
+This proves the upper inequality for every \(j\ge3\). The exponent is maximal for this integer product-budget argument: the bound \(V_{j-1}<2^{2^{V_{j-3}}}\) leaves \(X-2^{V_{j-3}}\) as the largest multiple of \(Y\) available for \(Y\gamma_j\).
 
 ## Conditional score consequence
 
@@ -215,9 +155,7 @@ L_\ell=T_{q-2}^{\,T_{q-3}^{\,\alpha_{q-5}}},
 \[
 E=T_{q-2}^{\,\gamma_{q-4}},
 \qquad
-D=D_{q-5},
-\qquad
-H=2^{\,T_{q-2}/D},
+H=2^{\,2^{V_{q-7}}},
 \qquad
 U=2^H.
 \]
@@ -228,15 +166,12 @@ L_b<b_N,\qquad L_\ell<\ell.
 For the upper side, the \(j=q-4\) exponent identity gives
 \[
 E=T_{q-2}^{\gamma_{q-4}}
-=2^{T_{q-2}-T_{q-2}/D},
+=2^{T_{q-2}-2^{V_{q-7}}},
 \qquad
-\frac{T_{q-1}}{E}=2^{T_{q-2}/D}=H.
+\frac{T_{q-1}}{E}
+=2^{2^{V_{q-7}}}=H.
 \]
-All exponents are integers by the divisibility invariant for \(D_{q-5}\). Hence
-\[
-U^E=2^{HE}=2^{T_{q-1}}=T_q.
-\]
-The upper recurrence inequality \(b_N^E<T_q\) therefore gives
+Thus \(U^E=2^{HE}=2^{T_{q-1}}=T_q\). The upper recurrence inequality \(b_N^E<T_q\) therefore gives
 \[
 b_N<U,\qquad b_N+1\le U,\qquad \ell\le H.
 \]
