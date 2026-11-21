@@ -16,12 +16,10 @@ if (!proofPath) throw new Error('pass the upstream F289 Lean proof file path');
 const source = fs.readFileSync(proofPath, 'utf8');
 const lines = source.split(/\r?\n/);
 
-function checkpoint(name, nextName) {
+function checkpoint(name) {
   const i = lines.findIndex(x => x.startsWith('def ' + name + ' : RleFullState'));
   if (i < 0) throw new Error('missing checkpoint ' + name);
-  const j = nextName
-    ? lines.findIndex((x,k) => k > i && x.startsWith('def ' + nextName + ' : RleFullState'))
-    : lines.length;
+  const j = lines.findIndex((x,k) => k > i && /^(def|theorem) /.test(x));
   return lines.slice(i, j < 0 ? lines.length : j).join('\n').split(':=').slice(1).join(':=').trim();
 }
 const tokenRE = /⟨|⟩|\[|\]|\(|\)|,|\.DR0|\.BR|\.B|\.C|\.raw|\.clean|\.z|\.d|\.k|false|true|\d+/g;
@@ -450,9 +448,9 @@ function runBatches(b,s) {
 }
 const stable = s => JSON.stringify(s,(k,v)=>typeof v==='bigint'?v.toString():v);
 const ckpt0 = {mode:'B',ls:{t:'raw',items:[z(1n)]},R:[],halted:false};
-const ckpt5=parseState(checkpoint('ckpt5','ckpt10'));
-const ckpt10=parseState(checkpoint('ckpt10','ckpt15'));
-const ckpt15=parseState(checkpoint('ckpt15',null));
+const ckpt5=parseState(checkpoint('ckpt5'));
+const ckpt10=parseState(checkpoint('ckpt10'));
+const ckpt15=parseState(checkpoint('ckpt15'));
 let state=ckpt0,total=0n;
 const chunks=[];
 for (const [b,target] of [[100,ckpt5],[100,ckpt10],[100,ckpt15],[80,null]]) {
