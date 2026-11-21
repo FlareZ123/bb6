@@ -179,14 +179,31 @@ The parity sectors align with both original gate residues:
 
 The odd-a, (K\equiv3\pmod6) entry-parent classification remains open.
 
-## 5. Scope and remaining work
+## 6. Existing Ray reductions to compose, not duplicate
+
+The spine formula above is the same canonical even ray used by the repository's `Ray*` modules:
+[
+u_j=4\cdot2^n-\big((2n+3)2^j-(n-1)\big),\qquad n=K+2.
+]
+These existing source-connected results already classify substantial parts of the odd-parent side-branch problem:
+
+- `RayPacketHigh.lean` and `RayTwoTierSelector.lean` reduce rooted odd forks on the high-margin ray to (t\ge2) or exceptional (t=1) congruence gates.
+- `RayOddForkExtended.lean` and `RayForkStripSelect.lean` handle high-margin (t=0) exclusion and (t=1) fork selection.
+- `RayTThreePacket.lean`, `RayTThreeHighRoot.lean`, `RayTThreeLowRoot.lean`, `RayTThreeDoubleSelector.lean`, and `RayThirdGate.lean` cover (t=3) and related two-gate branches under their stated hypotheses.
+- `RayNoSeam.lean`, `RayNoSeamRoot.lean`, and `RayNoSeamResidue.lean` address weak-margin/no-seam and second-tier (t=1) cases.
+- `RayTwoTierDepthHensel.lean` and `RayTwoTierIndexHensel.lean` give exact 3-adic divisibility selectors and unique Hensel lifts.
+- `FatalOddFeederCriterion.lean` and `RayTwoGateExact.lean` give additional (t=1) odd-feeder and off-ray reductions.
+
+These are conditional local reductions, not yet a proved exhaustion of every side branch along the complete (u_j) spine. The new t=0 embedding identifies the terminal main-spine branch; the next task is to compose the existing Ray reductions with the exact (u_j) indices, account for the terminal weak-margin window, and state precisely which branches/phase cases remain uncovered. Reimplementing these modules would be redundant.
+
+## 7. Scope and remaining work
 
 This identity connects the auxiliary entry family to the actual #746 halting targets. It proves that (E(a,K)) is an ancestor on **one** inverse-parent branch of (U_{K+2}). It does **not** prove that every root path to (U_{K+2}) passes through (E(a,K)). Other odd-parent side branches can leave intermediate spine nodes; a root path could in principle enter through one of them.
 
 The following are still required for a global #746 conclusion:
 
 1. Formalize the chain identity against the exact `ResetParent` and `ResetChain` definitions in Lean.
-2. Classify the (t\ge1) odd-parent side branches leaving the intermediate (u_j).
+2. Compose the existing Ray reductions listed above with every (t\ge1) side branch leaving the intermediate (u_j), and prove the hypotheses exhaust the full spine (or identify the uncovered cases).
 3. Extend the E-parent exclusions beyond the current narrow x-window and across the remaining parity/phase sectors.
 4. Combine the branch classifications with `OriginalAlgorithmicGate.lean` to exclude every (n\ge257) with (n\bmod6\in\{4,5\}).
 
