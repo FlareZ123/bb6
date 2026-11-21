@@ -208,6 +208,8 @@ K\equiv48-3a\pmod{54}.
 \]
 The first has \(9\mid X\), so higher odd valuations remain possible. The second has \(X\equiv3\pmod9\): its unique first odd parent has residue \(2\bmod3\), so the parentless argument above does not apply.
 
+A second-lift analysis narrows both exceptions. In the \(X\equiv0\pmod9\) phase, 18 of the 27 odd \(a\bmod54\) lifts have \(v_3(X)=2\), and the unique possible \(t=1\) source parameter lies in the dyadic gap \((2p,3p)\). In the \(X\equiv3\pmod9\) phase, for 18 of the 27 odd \(a\bmod54\) lifts and the subwindow \(803/512\le x\le415/256-1/1024\), the first parent has a unique \(t=0\) parent whose own height lies in an even-parent gap. The exact lift tables and proof are in [the second-lift theorem](T0-K3-ODD-A-SECOND-LIFT.md) and [its reproducer](t0_odd_a_k3_second_lift.mjs). In particular, for 12 of the 27 odd \(a\bmod54\) classes, all nine t=0 K phases are root-excluded throughout that subwindow.
+
 This is a seven-of-nine exclusion for the t=0 auxiliary branch in the \(K\equiv3\pmod6\), odd-\(a\) sector. It is not a proof that the fatal target \(F_{K+2}\) is unreachable: other odd branches at earlier spine nodes, the high-valuation exceptional classes, and the terminal weak-margin ray indices remain to be handled. In particular, it does not decide #746 or BB(6).
 
 ## Reproducer and next proof obligations
