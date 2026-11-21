@@ -1,8 +1,39 @@
 # Source-certified exact inverse-depth and cost laws for Machine C bounce
 
-## Current B2/U5 root32 status (2026-11-20)
+## Current B2/U5 root32 status (2026-11-21)
 
-See [B2Q0FourStepPath.md](./B2Q0FourStepPath.md) for the consolidated same-parameter path and reverse-parent audit. The q=0 residual bridge identifies m=4408+65536u with the B2 parameter u=1802+6720t. The five-edge forward path B0 → S1 → S2 → S3 → Q → T is explicit from the complete predecessor grammar. In the reverse direction, T reachable forces Q and then S1 reachable. S1's parent fan leaves D0 and P7; D0's direct parent is excluded, while P7's bounce parent is excluded by two even-right inverse steps followed by a source-grammar no-predecessor contradiction. D0's surviving bounce parent reduces to E7(t) → P(t) → R(t), with an exceptional source-parent fan at r≡96 (mod 256). The new [RRoot32ExceptionalParentFan.md](./RRoot32ExceptionalParentFan.md) classifies that fan and excludes R(t) for q=(t−3)/4≡3 (mod 8) and q≡7 (mod 64), removing the D0E/E7 branch on the corresponding root-index cylinders. P7's surviving direct parent reduces to L(t). The [LRoot32OddParentReduction.md](./LRoot32OddParentReduction.md) splits odd t into disjoint P0/P2 branches, excludes L(t) when t≡3 or 1 (mod 16), and supplies the further Q/Q' reductions used to close L on t≡47 and 31 (mod 256). The high-stop target T is now excluded on three infinite root-index progressions: r≡224 (mod 1024), r≡9568 (mod 16384), and r≡10592 (mod 16384); all other root-index classes remain open. The broad r≡224 cylinder is detailed in [Root32HighStopR224.md](./Root32HighStopR224.md). No Machine C or BB(6) decision is claimed. The exact root equation is saturated on r=32 (mod 64), so root-equation-only filtering is unproductive. The three progressions above are excluded by composed source-orbit arguments. All other high-stop root-index classes remain open. The integrated source theorem and full U5B2Root32.lean dependency closure remain uncompiled.
+**Base source acceptance.** The B2 root32 exclusion is no longer an uncompiled draft. The exact U5B2Root32.lean dependency closure compiled **49 project modules** locally with Lean 4.36.0-rc2; the same closure passed the manual root32_only workflow [44837834285](https://github.com/FlareZ123/bb6/actions/runs/44837834285). See the [Agent 32 acceptance report](../agent32-root32-acceptance/README.md). The key theorems blank_no_b2_root32_from_root_index and blank_no_b2_root32_from_exact_root_index have axiom profiles [propext, Classical.choice, Quot.sound], with no sorryAx. This certifies the base B2-family exclusion on the exact root32 parameter cylinder.
+
+This acceptance does **not** exclude the high-stop target \(T(u)\) on the whole root32 stratum. The forward B2-to-\(T\) path does not make B2 a unique predecessor of T; the complete reverse analysis leaves the distinct \(D_{0E}(t)\) and \(L(t)\) alternatives.
+
+**Current paper-level high-stop coverage (not yet integrated/compiled).** Eight disjoint exact source-parent dossiers cover these root-index progressions, where \(r=32+64j\):
+
+| \(j\)-cylinder | Root-index cylinder | Dossier |
+|---|---|---|
+| \(j\equiv3\pmod{16}\) | \(r\equiv224\pmod{1024}\) | [R224](./Root32HighStopR224.md) |
+| \(j\equiv149\pmod{256}\) | \(r\equiv9568\pmod{16384}\) | [R9568](./Root32HighStopR9568.md) |
+| \(j\equiv165\pmod{256}\) | \(r\equiv10592\pmod{16384}\) | [R10592](./Root32HighStopR10592.md) |
+| \(j\equiv117\pmod{512}\) | \(r\equiv7520\pmod{32768}\) | [Agent 6 R7520](../agent6-root32-highstop/Root32HighStopR7520.md) |
+| \(j\equiv181\pmod{512}\) | \(r\equiv11616\pmod{32768}\) | [Agent 6 R11616](../agent6-root32-highstop/Root32HighStopR11616.md) |
+| \(j\equiv549\pmod{1024}\) | \(r\equiv35168\pmod{65536}\) | [Agent 6 R35168](../agent6-root32-highstop/README.md) |
+| \(j\equiv565\pmod{1024}\) | \(r\equiv36192\pmod{65536}\) | [Agent 6 R36192](../agent6-root32-highstop/Root32HighStopR36192.md) |
+| \(j\equiv1013\pmod{1024}\) | \(r\equiv64864\pmod{65536}\) | [Agent 6 R64864](../agent6-root32-highstop/Root32HighStopR64864.md) |
+
+The eight cylinders are pairwise disjoint. Modulo \(1024\), they cover \(79\) of the \(1024\) possible \(j\)-residues, leaving \(945/1024\) of the root32 index line not covered by these dossiers. The catalogued complement is exactly
+\[
+j\bmod1024\notin
+\{3\bmod16,\ 149,165\bmod256,\ 117,181\bmod512,\ 549,565,1013\bmod1024\}.
+\]
+This is a description of current coverage, **not** a theorem that the remaining candidates halt or that their high-stop targets are reachable. All eight high-stop compositions still need an integrated Lean wrapper, exact transitive source-closure compilation, and exported axiom audits; keep them in im-results/.
+
+The attempted widening in [Root32HighStopR2400.md](./Root32HighStopR2400.md) is explicitly corrected: it does **not** add an exclusion. It removes the L and odd-a R alternatives on \(j\equiv37\pmod{1024}\), but leaves the direct-R residual
+\[
+(2026954872744+3092060518680n,\ 1351544872375+2061742269300n)
+\]
+for \(r\equiv2400\pmod{65536}\). That residual is a concrete next target, not a closed case.
+
+No Machine C halting/nonhalting decision or BB(6) value is claimed. The exact root equation is saturated on \(r\equiv32\pmod{64}\), so root-equation-only filtering is unproductive; progress must come from closing the remaining source-parent alternatives.
+
 
 ## Exact quantified theorems
 
