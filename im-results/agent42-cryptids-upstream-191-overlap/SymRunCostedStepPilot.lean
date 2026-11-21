@@ -1228,4 +1228,91 @@ theorem stepPure_iter_within_2pow38
 #print axioms stepPure_iter_within
 #print axioms stepPure_iter_within_2pow38
 
+
+
+/-! A compact arithmetic lemma for charging one bounded sweep step plus a
+    recursively processed suffix. -/
+
+theorem pilot_budget_cons (M M' n c : Nat)
+    (hM : M' ≤ M) (hc : c ≤ 50 * (M + 1)) :
+    c + 50 * (M' + 1) * (n + 1) ≤ 50 * (M + 1) * (n + 2) := by
+  have hfactor : 50 * (M' + 1) ≤ 50 * (M + 1) :=
+    Nat.mul_le_mul_left 50 (Nat.add_le_add_right hM 1)
+  have hrest :
+      50 * (M' + 1) * (n + 1) ≤ 50 * (M + 1) * (n + 1) :=
+    Nat.mul_le_mul_right (n + 1) hfactor
+  calc
+    c + 50 * (M' + 1) * (n + 1) ≤
+        50 * (M + 1) + 50 * (M + 1) * (n + 1) :=
+      Nat.add_le_add hc hrest
+    _ = 50 * (M + 1) * (n + 2) := by ring
+
+theorem pilot_budget_cons2 (M M' n c : Nat)
+    (hM : M' ≤ M) (hc : c ≤ 50 * (M + 1)) :
+    c + 50 * (M' + 1) * (n + 1) ≤ 50 * (M + 1) * (n + 3) := by
+  have h := pilot_budget_cons M M' n c hM hc
+  calc
+    c + 50 * (M' + 1) * (n + 1) ≤ 50 * (M + 1) * (n + 2) := h
+    _ ≤ 50 * (M + 1) * (n + 3) :=
+      Nat.mul_le_mul_left (50 * (M + 1)) (by omega)
+
+/-- BB element processing has a uniform 9-step bound, independent of fields. -/
+theorem stepElemBB_within9 (L R : List SymTok) :
+    ReachesWithin 9
+      ((evalSym target_tm) (.BB, L, R))
+      ((evalSym target_tm) (stepElemBB L R)) := by
+  unfold ReachesWithin
+  cases L with
+  | nil =>
+    refine ⟨1, by omega, ?_⟩
+    simpa only [stepElemBB, strictList_eq, evalSym, evalM, encSymL, encSymR_bumpSymR] using
+      step_BB_nil_exact (encSymR R)
+  | cons t L1 =>
+    cases t with
+    | item x =>
+      cases x with
+      | zero =>
+        refine ⟨1, by omega, ?_⟩
+        simpa only [stepElemBB, strictList_eq, evalSym, evalM, encSymL, encSymR_bumpSymR] using
+          step_BB_zero_exact (encSymL L1) (encSymR R)
+      | run d =>
+        rcases d with _ | _ | _ | _ | d
+        · refine ⟨8, by omega, ?_⟩
+          simpa only [stepElemBB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymR_bumpSymR] using
+            step_BB_run0_exact (encSymL L1) (encSymR R)
+        · refine ⟨3, by omega, ?_⟩
+          simpa only [stepElemBB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymR_bumpSymR] using
+            step_BB_run1_exact (encSymL L1) (encSymR R)
+        · refine ⟨5, by omega, ?_⟩
+          simpa only [stepElemBB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymR_bumpSymR] using
+            step_BB_run2_exact (encSymL L1) (encSymR R)
+        · refine ⟨9, by omega, ?_⟩
+          simpa only [stepElemBB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymR_bumpSymR] using
+            step_BB_run3_exact (encSymL L1) (encSymR R)
+        · refine ⟨9, by omega, ?_⟩
+          simpa only [stepElemBB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymR_bumpSymR] using
+            step_BB_run_ge4_exact d (encSymL L1) (encSymR R)
+    | repB1 k =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemBB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.BB, .repB1 k :: L1, R))
+    | rep2 p =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemBB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.BB, .rep2 p :: L1, R))
+    | rep12 m =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemBB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.BB, .rep12 m :: L1, R))
+
+#print axioms pilot_budget_cons
+#print axioms pilot_budget_cons2
+#print axioms stepElemBB_within9
+
+
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
