@@ -18,7 +18,7 @@ with the right side unchanged. Under the external `ListBlank` notation, this fin
 ]
 up to the usual blank-extension equivalence.
 
-**Important state correction:** the external machine is #490, whereas the DeepMind token lemmas are written for #85. The DeepMind state map sends #85 (B\mapsto)#490 (E), so this E-state is a #85 B-state, not a `tok_EL) state. Do not apply `tok_EL_0_cons` to it.
+**Important state correction:** the external machine is #490, whereas the DeepMind token lemmas are written for #85. The DeepMind state map sends #85 (B\mapsto)#490 (E), so this E-state is a #85 B-state, not a `tok_EL` state. Do not apply `tok_EL_0_cons` to it.
 
 For the cylinder input (C\) the suffix is empty, so the scanned symbol is blank (0). The #490 transition E0 is `0LC`: it writes 0, moves left, and enters C. After this one raw step, the left list is
 [
