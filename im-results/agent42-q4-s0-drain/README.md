@@ -911,24 +911,24 @@ This is substantially sharper than the earlier adjacent-tetration bracket and th
 
 The exact dispatcher recurrence makes the pre-final quadratic costs
 geometrically decreasing, so their sum is bounded independently of the
-dispatcher length. Using the exact root drain formula also sharpens the
-root contribution. The resulting paper-level expansion is
+dispatcher length. Moreover, \(\ell=b_{N-1}\ge2^{N-1}R\), making the
+root and polynomial corrections negligible on the \(\ell^2\) scale.
+The resulting paper-level expansion is
 \[
 S_{\rm TM1}
 =6b_N^2+54b_N+48+3\ell+\Delta,\qquad
-0\le\Delta<16\ell^2,\quad
+0\le\Delta<\frac{13}{2}\ell^2,\quad
 \ell=\log_2(b_N+1).
 \]
 Thus the entire error after the exact quadratic and linear terms is
-\(O((\log b_N)^2)\), improving the previous
-\(O((\log b_N)^2\log\log b_N)\) estimate. The relative excess over
-\(6(b_N+1)^2\) is
+\(O((\log b_N)^2)\), with an explicit constant below \(6.5\). The
+relative excess over \(6(b_N+1)^2\) is
 \[
 \frac{7}{b_N+1}+\varepsilon_N,\qquad
 0<\varepsilon_N<
-\frac{3\ell+16\ell^2}{6(b_N+1)^2}<8\times10^{-149}.
+\frac{3\ell+\frac{13}{2}\ell^2}{6(b_N+1)^2}<8\times10^{-149}.
 \]
 This is a paper-level consequence of the exact conditional source-cost
 identity, not a new Lean theorem or an accepted authentic-root halt proof.
 See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md) for the geometric
-series, exact root-drain comparison, and full inequalities.
+series, the \(2^{N-1}R\) separation, and the full inequalities.
