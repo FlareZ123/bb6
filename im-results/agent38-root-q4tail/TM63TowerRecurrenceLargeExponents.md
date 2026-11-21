@@ -151,7 +151,22 @@ Consequently
 \]
 since \(Y-T_j-1\ge T_5-T_4-1=2^{65536}-65537>65518\). The case \(j=3\) is the explicit value \(\gamma_3=2^{65520}-2^{47}>2^{65518}\).
 
-This proves the upper inequality for every \(j\ge3\). The exponent is maximal for this integer product-budget argument: the bound \(V_{j-1}<2^{2^{V_{j-3}}}\) leaves \(X-2^{V_{j-3}}\) as the largest multiple of \(Y\) available for \(Y\gamma_j\).
+This proves the upper inequality for every \(j\ge3\). In fact, \(\gamma_j\) is the largest integer exponent for which that inequality holds. To see that \(\gamma_j+1\) fails, note that
+\[
+V_{j-1}-1=2^{2^{V_{j-3}}-1}-2>2^{2^{V_{j-3}}-2}
+\]
+and
+\[
+X^{\gamma_j+1}=2^{X-2^{V_{j-3}}+Y}.
+\]
+Since \(V_j>2^{V_{j-1}-1}\),
+\[
+V_j^{X^{\gamma_j+1}}
+>2^{(V_{j-1}-1)X^{\gamma_j+1}}
+>2^{\,2^{X+Y-2}}
+>T_{j+4},
+\]
+where \(Y\ge T_4=65536\) ensures \(X+Y-2>X\).
 
 ## Conditional score consequence
 
