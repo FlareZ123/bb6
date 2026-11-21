@@ -148,15 +148,17 @@ For transition n, the target window W_{n+1} is exactly the suffix of the source-
 
 ## Two-step root adapter
 
-ShiftedWindowInterface.js exports classifyNextTargetWindow(r0,r1,r2,stream,highExtension). Here stream is S_n on [k_n+1,j_{n+1}-2), and highExtension is null when delta_j_{n+1}=0 or the single digit pair at j_{n+1}-2 when delta_j_{n+1}=1. The adapter computes offset \(1+\delta k_n+\delta k_{n+1}\) from the two phase edges, feeds S_n and the optional high symbol through the 3,101-state product, selects the required suffix copy, and decodes the exact full post_reset_pair label.
+ShiftedWindowInterface.js exports classifySuffixAfterTwoPhaseEdges(r0,r1,r2,stream,extensionSymbol). It computes the generic suffix offset \(1+\delta k_0+\delta k_1\), appends the optional extension symbol when the second phase edge has \(\delta j_1=1\), and decodes the full reset label for that suffix. This is only a generic suffix operation; it is not a root-transition adapter. The old classifyNextTargetWindow name remains as a compatibility alias but should not be used to imply a root-window update.
 
-Example from the sibling Agent 48 directory:
+Example:
 
-    const { classifyNextTargetWindow } =
+    const { classifySuffixAfterTwoPhaseEdges } =
       require("../agent24-machine623-shifted-reset-product/ShiftedWindowInterface.js");
-    const result = classifyNextTargetWindow(
-      r_n, r_n1, r_n2, sourceToTargetStream, highExtension
+    const result = classifySuffixAfterTwoPhaseEdges(
+      r0, r1, r2, suppliedStream, optionalExtensionSymbol
     );
+
+Do not interpret optionalExtensionSymbol as the next root transducer's high digit unless that transducer has actually generated it. The next root output stream must be computed by applying the next source-to-target transducer to the current target window before running the reset recognizer.
 
 The generic phase/suffix logic was separately tested against the full DFA on 450,241 cases: all 12 valid three-phase paths, every stream of length 0–4, and either no high extension or each of the nine possible high symbols according to the second edge. There were zero mismatches. See ShiftedWindowComposition.md. This remains finite regression, not a root-transition proof.
 
