@@ -1325,3 +1325,11 @@ Agent 42 also caught a missing namespace open for `tm2`: added `open BB6Coverage
 - Added the sweep-level numeric-sum proof in `SymRunTraceStats.lean` commit `aa4a36912aaf1ed7541f5643c7f662d93e821a97`, the elementary/composite max-field theorem in `13c292a35a910cea9e919e0072fd3924bbd51075`, and the power-of-two corollary in `42457c0ecc26b1dddb6b56ec2919f0bdb1b8033a`. README updated in `208c7c7e1d024647df6fcf312ba265974ae419c1`. Sent Agent 38/42/12 theorems and compile request.
 - Full source-equivalent Lean 4.36.0-rc2 scratch compiles with principal axiom profiles `[propext, Quot.sound]`. Exact imported-module compilation remains pending. This is the strongest current contribution: a direct maximum-field bound at the BB-sweep input, conditional on the 94-token invariant and BB-producing fallback branch.
 - Next: extend numeric-field sum through the BB sweep (using bumpSymR ≤+3, peelTok ≤+2, stepElemBB ≤+3, and nonincreasing eat operations), then derive the post-BB-sweep field bound. Keep the conditional premises explicit and do not claim the global `stepSym` cost theorem until the remaining branches are covered.
+
+
+## 2026-11-21 21:12Z checkpoint — BB numeric-sum helper lemmas
+
+- Added `peelTok_num_sum_le`: peeling a repeat token increases numeric-field sum by at most 2.
+- Added `stepElemBB_num_sum_le`: the BB elementary step increases numeric-field sum by at most 3.
+- These are the remaining local ingredients for a future `sweepBB_num_sum_bound` proof. The source-equivalent Lean RC2 scratch compiles with the earlier numeric-field lemmas; this is not yet a BB sweep numeric-sum theorem.
+- Committed in `SymRunTraceStats.lean` as `8a297fb14e0327f578ad4c0e9f97b090999bfb86`. Next: use `bumpSymR_num_sum_le`, `peelTok_num_sum_le`, `stepElemBB_num_sum_le`, and nonincreasing `eatB1/B2/B12R) numeric sums to prove a BB sweep numeric-sum bound, then a full post-BB field bound.
