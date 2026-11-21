@@ -10,7 +10,7 @@
 | t≡79 (mod 512) | r≡7520 (mod 32768) | [Root32HighStopR7520.md](Root32HighStopR7520.md) |
 | t≡719 (mod 1024) | r≡64864 (mod 65536) | [Root32HighStopR64864.md](Root32HighStopR64864.md) |
 | t≡15 (mod 512) | r≡11616 (mod 32768) | [Root32HighStopR11616.md](Root32HighStopR11616.md) |
-| t≡1167 (mod 4096) | r≡167264 (mod 262144) | [Root32HighStopR36192.md](Root32HighStopR36192.md) |
+| t≡1167 (mod 4096) | r≡167264 (mod 262144) | [corrected R167264](Root32HighStopR36192.md)(Root32HighStopR36192.md) |
 
 All five are intermediate source-parent compositions, not yet integrated Lean theorems. They are pairwise disjoint and disjoint from the previously recorded r≡9568 and 10592 (mod 16384) classes. Their shared reduction and root-saturation equations are given below; each child note records the additional inverse-parent arithmetic.
 
