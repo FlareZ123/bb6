@@ -491,3 +491,12 @@ give another W interval from Q.
 Exact-Q finite checks: return5774 q interval [263,698,615,791] still contains 524,288; event1 [6,163,349,7,480,849] excludes powers; event2 [229,282,800,549,298,395] still contains 2^28 and 2^29. So Q is a plausible complementary return functional, but D is stronger in the second event. Neither Q nor D has yet been propagated as a complete root-reachable interval. Details are in the updated CARRY-MOMENT-NORMAL-FORM.md.
 
 Current next research action: seek a D upper/tight interval or propagate Q's half-contractive interval through the suffix return words; do not repeat the nine-prefix lower-bound census or extend prefix depth without a specific payoff.
+
+
+### Finite 18-prefix D-bound test (insufficient by itself)
+
+A separate exact-integer prefix projection from the source-certified s5457 18-digit seed, run for 929,375 P-returns, gives a stronger D lower bound at the second full-suffix event:
+- D lower from 18-prefix carry bounds: 16,983,063,297.
+- Actual simulated D: 18,038,129,200.
+- Trivial mass+18-prefix D upper bound: 19,413,591,530.
+Using this D interval in the convex tail bound still gives q in [108,322,728, 817,226,728], containing 2^27, 2^28, and 2^29. Thus a lower bound alone—even a fairly close one—is insufficient. Do not repeat this exact test; the useful next step is a tighter D upper bound, more moment constraints, or a propagated Q interval.
