@@ -154,3 +154,9 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent22-623-root-ray-20k/GlobalQuadraticLyapunovSource.lean" Agent22GlobalQuadraticLyapunovSource.lean
           lake env lean -o .lake/build/lib/lean/Agent22GlobalQuadraticLyapunovSource.olean Agent22GlobalQuadraticLyapunovSource.lean
+
+      - name: Verify Agent1 raw-state parity shield on the unmodified #623 source
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/StateParityShieldSource.lean" Agent1StateParityShieldSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent1StateParityShieldSource.olean Agent1StateParityShieldSource.lean
