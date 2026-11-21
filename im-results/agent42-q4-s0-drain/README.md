@@ -920,7 +920,8 @@ S_{\rm TM1}
 &0\le E_p<45u_p^2.
 \end{aligned}
 \]
-The p=2 split isolates only the final two dispatcher summands. The terminal macro, final counted halt transition, +7 correction, raw initial drain, and root prefix remain in the non-summand tail, so they are counted exactly once. The proof uses \(N<R\), geometric decay of the earlier quadratic
+The p=2 split isolates only the final two dispatcher summands. The terminal macro, final counted halt transition, +7 correction, raw initial drain, and root prefix remain in the non-summand tail, so they are counted exactly once. The proof establishes \(N<R\) using the full source parameter
+\(A=\sum_{j=7}^{M+42}V_j+(5M+176)/3\), then uses geometric decay of the earlier quadratic
 dispatcher costs, and the root/polynomial bounds. The \(p=2\)
 specialization is
 \[

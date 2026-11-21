@@ -213,15 +213,24 @@ the three-term formula (12) is the stronger statement.
 
 The same decomposition can be peeled to any fixed depth, not only the
 last two increments. First note that the authentic source parameters
-satisfy \(N<R\). Indeed,
+satisfy \(N<R\). The exact root parameter is
 \[
-A=\sum_{j=7}^{M+42}V_j<2V_{M+42}.
+A=\sum_{j=7}^{M+42}V_j+\frac{5M+176}{3},
+\qquad x=V_{M+42}\ge63.
 \]
-Writing \(x=V_{M+42}\ge63\), we have
+Since \(V_{j+1}=2^{V_j}-1\ge4V_j\) for \(V_j\ge63\),
 \[
-N=(2^{78}-1)2^A-3<2^{2x+78},
+\sum_{j=7}^{M+42}V_j
+<x\left(1+\frac14+\frac1{4^2}+\cdots\right)
+=\frac43x.
 \]
-whereas \(2^x-1>2x+78\) and monotonicity of \(V\) give
+Also \(x\ge2^{M+42}\), and \(2^{M+43}>5M+176\) for \(M\ge0\);
+hence \((5M+176)/3<2x/3\). Therefore \(A<2x\), and
+\[
+N=(2^{78}-1)2^A-3<2^{2x+78}.
+\]
+On the other hand, \(2^x-1>2x+78\) for \(x\ge63\), and monotonicity
+of \(V\) gives
 \[
 R=V_{M+46}=2^{V_{M+45}}-1
 >2^{2x+78}-1\ge N.
