@@ -2127,3 +2127,44 @@ Agent 3 reports source-only bundle run 44834000748, artifact bb6-source-20261120
 Latest review requests: Agent 24 received the log-squared/log-log tightening at communications/agent24/20261120T231409681Z_agent42-log2loglog-tightening.md; Agent 44 received the corresponding root-bound review request at communications/agent44/20261120T231415051Z_agent42-log2loglog-score-review.md.
 
 The best remainder constant was then reduced from 100 to 10: for \(m=\log_2\ell\ge8\), the three polynomial terms are bounded by \(8(1+m)\ell^2\), \((1+m)\ell^2\), and \((1+m)\ell^2\). This gives \(\Delta<10(1+\log_2\ell)\ell^2\) and normalized linear-coefficient error \(<6\times10^{-71}\). Latest review requests: communications/agent24/20261120T231624668Z_agent42-loglog-constant-10.md and communications/agent44/20261120T231630349Z_agent42-loglog-constant-10-review.md.
+
+## 2026-11-21T00:15:51.602Z continuation — refined TM63 terminal-counter scale
+
+Derived and recorded a stronger paper-level scale estimate for the TM63
+champion score, without repeating the prior root-coordinate or dispatcher
+audits.
+
+- Let \(T_1=2,\ T_{r+1}=2^{T_r}\) and \(V_0=63,\ V_{j+1}=2^{V_j}-1\).
+  With \(C=2^{47}-1\) and \(P=2^{65473}\), proved by induction that
+  \(T_{j+3}^{C}<V_j\) and \(V_j^P<T_{j+4}\) for every \(j\ge2\).
+- The lower base case uses
+  \(65536C=2^{63}-2^{16}<V_1=2^{63}-1\). The upper base case uses
+  \(PV_1=2^{65536}-2^{65473}<T_5=2^{65536}\). Both inductions are
+  monotone and preserve the stated indices.
+- With \(q=M+N+50\), \(b_N=V_{q-4}\), and \(q-4\ge2\), this gives
+  \(T_{q-1}^{2^{47}-1}<b_N\) and \(b_N^{2^{65473}}<T_q\).
+  Combining with the existing paper-level score bracket
+  \(6b_N^2<S_{\rm TM1}<9b_N^2\) yields
+  \[
+  6T_{q-1}^{2^{48}-2}<S_{\rm TM1}<9T_q^{2^{-65472}}.
+  \]
+- Added the proof to
+  \`im-results/agent42-q4-s0-drain/TM63PublishedTowerSandwich.md\`
+  and consolidated the current summary in the dossier README. This remains
+  in \`im-results/\`: the score bracket is conditional on the authentic
+  root/dispatcher composition, which has not passed local Lean compilation
+  or transitive axiom audit.
+- Exact JavaScript BigInt checks confirmed the two base inequalities;
+  the proof itself is the displayed induction, not the finite check.
+- Requested a targeted independent review from Agent 24. Do not repeat the
+  earlier score-split review unless the reviewer identifies a concrete issue.
+
+The local shell remains unavailable: \`container.exec\` returned a
+tool-level \`ClientError\` even for \`pwd && ls\`. No Lean command ran and
+no CI was used as a substitute for local preflight.
+
+Next: incorporate any specific correction from Agent 24; if the bound
+survives, consider a small isolated Lean formalization when a working
+local Lean 4.36.0-rc2 runtime is available. The main blocker remains
+acceptance of the authentic root-to-q4Tail, counted-drain, and original
+dispatcher dependency closure. BB(6) remains unresolved.
