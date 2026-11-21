@@ -448,7 +448,7 @@ function runBatches(b,s) {
   return [s,cost];
 }
 const stable = s => JSON.stringify(s,(k,v)=>typeof v==='bigint'?v.toString():v);
-const machineMatch=source.match(/load_rle_machine%\\s+"([^"]+)"/);
+const machineMatch=source.match(/load_rle_machine%\s+"([^"]+)"/);
 if (!machineMatch) throw new Error('could not identify source machine RLE');
 const machineRLE=machineMatch[1];
 const allowedRLEs=[
@@ -456,7 +456,7 @@ const allowedRLEs=[
   '1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH'
 ];
 assert.ok(allowedRLEs.includes(machineRLE),'this cost table is only checked for the two F289 RLE modules');
-const executeCounts=[...source.matchAll(/\\bexecute\\s+(\\d+)/g)].map(m=>Number(m[1]));
+const executeCounts=[...source.matchAll(/\bexecute\s+(\d+)/g)].map(m=>Number(m[1]));
 assert.deepEqual(executeCounts,[1,4,2,1,2,4,5,3,4,3,1,3,5,17,4,5,7,6,3],
   'machine-specific primitive execute-count signature changed');
 
@@ -465,11 +465,11 @@ const ckpt0=hasCkpt0
   ? parseState(checkpoint('ckpt0'))
   : {mode:'B',ls:{t:'raw',items:[z(1n)]},R:[],halted:false};
 const chunks=lines.flatMap(line=>{
-  const id=line.match(/^theorem chunk_(\\d+)\\b/);
+  const id=line.match(/^theorem chunk_(\d+)\b/);
   if(!id) return [];
-  const normal=line.match(/runBatches\\s+(\\d+)\\s+(ckpt\\d+)\\s*=\\s*(ckpt\\d+)/);
+  const normal=line.match(/runBatches\s+(\d+)\s+(ckpt\d+)\s*=\s*(ckpt\d+)/);
   if(normal) return [{index:Number(id[1]),batches:Number(normal[1]),from:normal[2],to:normal[3]}];
-  const final=line.match(/\\(runBatches\\s+(\\d+)\\s+(ckpt\\d+)\\)\\.halted\\s*=\\s*true/);
+  const final=line.match(/\(runBatches\s+(\d+)\s+(ckpt\d+)\)\.halted\s*=\s*true/);
   if(final) return [{index:Number(id[1]),batches:Number(final[1]),from:final[2],to:null}];
   throw new Error('unrecognized chunk theorem: '+line);
 }).sort((a,b)=>a.index-b.index);
