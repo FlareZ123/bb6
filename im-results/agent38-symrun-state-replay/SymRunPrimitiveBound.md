@@ -139,3 +139,29 @@ Two independent obligations remain:
 2. Kernel-check the maximum-field bounds over every intermediate state, not merely the checkpoint endpoints. The replay already computes the exact maxima; a Lean fold over each 4096-step chunk can certify the bound using the same deterministic transition function.
 
 The source modules currently live only in the pinned upstream Cryptids tree (Lean 4.35.0-rc4), while the local BB6 project uses Lean 4.36.0-rc2 and does not contain HaltShared.lean. The local shell preflight in this invocation failed with a tool-level ClientError, so no CI compile was attempted. Until the exact dependency closure is available and the cost lemma and range fold compile, this remains an intermediate candidate rather than a publishable result.
+
+
+### Concrete range-fold sketch
+
+The max-field obligation can be isolated from the final-state theorem. In the same namespace as SymRunEngine, define a maximum over all numeric token fields and fold it over a fixed number of transitions:
+
+    def symTokMax : SymTok → Nat
+      | .item .zero => 0
+      | .item (.run n) => n
+      | .repB1 n => n
+      | .rep2 n => n
+      | .rep12 n => n
+
+    def symStateMax (s : SymMode × List SymTok × List SymTok) : Nat :=
+      ((s.2.1 ++ s.2.2).map symTokMax).foldl Nat.max 0
+
+    def symTraceMax : Nat → (SymMode × List SymTok × List SymTok) → Nat
+      | 0, s => symStateMax s
+      | n + 1, s => max (symStateMax s) (symTraceMax n (stepSym s))
+
+Then certify each 4096-step chunk from its known checkpoint start, for example:
+
+    theorem symChk4096_range : symTraceMax 4096 initSymCyc3 < 2^203 := by
+      decide +kernel
+
+The actual bound and start state differ by machine/chunk. The JS replay already records the exact maxima per full trajectory; this Lean fold is the proposed kernel-checking route, not yet executed.
