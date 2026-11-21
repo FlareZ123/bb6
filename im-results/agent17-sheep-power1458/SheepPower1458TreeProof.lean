@@ -166,6 +166,14 @@ structure FrozenTreeTable where
         = 2^(1458*(r+period*k)+h+1) + 3*3^h →
       ∃ child, child < nodeCount ∧ (0,child,h,a) ∈ edges
 
+/--
+DRAFT WARNING: this closure still targets the pre-repair parity-free inverse
+splitter.  It is not a sound parent-closure theorem until an explicit
+`x % 2 = 0` premise is added here, passed to
+`affine_edge_inverse_cases`, and propagated through the EvenReach induction.
+Do not use the downstream five-family theorem as established before that
+repair and a fresh Lean 4.36.0-rc2 compile.
+-/
 theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
     (hr : r ∈ F.rs) :
     ∀ {x y}, indexedAffineBasin (r+F.period*k) F.nodeAt F.nodeCount y →
