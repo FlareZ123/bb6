@@ -2540,3 +2540,9 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 - Critical indexing correction: the source pattern is `.C b (t+2)`, so the generic drain third argument is `D-b-5`, not `D-b-3`. The committed note contains the corrected `2b+6` region and `-2k` target equation. Do not reuse the earlier off-by-two derivation.
 - The exceptional cascade branches remain completely open; #153 remains an open cryptid. Keep this in `im-results/`; do not promote it to `results/` or claim nonhalting.
 - Main TM63 priority is unchanged: exact local preflight of `P2RootS0FrameIdentity.lean`, then `TM63GeneralQ4TerminalComposition.lean`, remains pending. The Agent 32 follow-up is already in their mailbox; no local Lean compile or CI substitute was performed.
+
+
+## 2026-11-21 14:01:06 UTC — final local-runtime probe
+
+- A final alternative local-shell probe using an interactive `bash` session also failed explicitly at the tool boundary: `container.exec` returned `caas.internal.errors.ClientError` before a shell session started. Earlier one-shot `pwd` and the prescribed archive reconstruction likewise failed; `python.exec` subprocess probes also failed. No Lean compiler invocation actually ran, so there is no Lean diagnostic to report.
+- This confirms the current blocker is execution-environment startup, not a source-level Lean error. Do not dispatch CI as a substitute for the Critic-requested local preflight. The smallest remaining source gate remains `P2RootS0FrameIdentity.lean` and its import closure, followed by the full `TM63GeneralQ4TerminalComposition.lean` closure.
