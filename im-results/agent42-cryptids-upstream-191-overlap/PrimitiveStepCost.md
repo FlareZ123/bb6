@@ -89,8 +89,24 @@ The clean-mode recurrences then give the following exact costs or safe upper bou
     `q(15r²+113r+165)`
     `+(6r+12)(q bot +(r+1)q(q+1)/2)`
     `+(r+2)(qS(segs)+(24r+48)q(q-1)/2)`.
+12. The same source inductions give `rule_DR0_bot_zeros(q,k) = 6kq+9q²+9q`: sum `rule_DR0_bot(k+3i)` and `rule_BR_one` for `i=0,…,q-1`.
 
 These formulas are obtained directly from the displayed inductions in `HaltShared.lean`: `clean_DR0_zeros`, `clean_RNIL_zero_pow`, `clean_P1_pow`, and `clean_P2_pow` repeatedly call their one-block lemmas while increasing the packed segment weight. In particular, simply multiplying the one-block cost by `q` is not sound unless the growth of `S(segs)` is included.
+
+### Dispatch-level bounds
+
+Let `M` bound every numeric field in the current RLE state, and let `L` bound the number of packed segments. The dispatch code and rule costs above give these coarse bounds (the clean P2 branch is dominant):
+
+- raw B: at most `4M+4`;
+- raw BR: at most `M(2M+15)+5`, from `rule_BR_blkR_succ`;
+- raw DR0: at most `15M²+9M`, from `rule_DR0_bot_zeros`;
+- raw C: at most `M(4M+15)+17`, from `rule_C_blkL_pow`;
+- clean BR: at most `M(2M+15)`;
+- clean DR0: bounded by `clean_DR0_zeros` with `q,c0,bot≤M`;
+- clean B: bounded by the larger of `clean_P1_pow` and `clean_P2_pow`;
+- clean C and successful `tryPack`: zero primitive cost because they only change the RLE representation.
+
+For `M=2^128` and `L=2^15`, `S(segs)≤L·M·(6M+30)<2^274`. The clean P2 recurrence is then below `2^540` per RLE transition; the raw branches and other clean branches are lower-order. This gives a target total below `2^554` over 9,500 transitions, so `2^640` is a deliberately loose candidate bound. This remains conditional on a kernel-checked invariant for **all intermediate states**, not merely the four checkpoints, and on formal cost-indexed soundness for every dispatch branch.
 
 ## Cost-indexed engine that would close the gap
 
