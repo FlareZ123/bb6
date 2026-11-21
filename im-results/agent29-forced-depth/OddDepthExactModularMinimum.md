@@ -1,6 +1,6 @@
 # Exact finite modular minimization for odd-depth Machine C high stopping residuals
 
-**Status (21 November 2026):** The exact finite modular minimization, logarithmic cutoff, uniform sharp envelope, root-sensitive dyadic gap, and M8-filtered logarithmic bound below have paper proofs. The new arithmetic compositions are **not yet Lean-certified**. The underlying original-source stopping, normalization, and M8 quotient-filter modules are separately kernel-checked; no complete Machine C or BB(6) decision is asserted.
+**Status (21 November 2026):** The exact finite modular minimization, logarithmic cutoff, uniform sharp envelope, root-sensitive dyadic gap, and M8-filtered logarithmic bound below have paper proofs. The new arithmetic compositions are **not yet Lean-certified**. The original-source stopping/normalization chain is source-certified. The M8 quotient-filter module's compile step completed in existing source workflow run 42367962614, but its transitive axiom profile has not yet been explicitly audited here; the new arithmetic compositions are paper-level. No complete Machine C or BB(6) decision is asserted.
 
 Let m≥1 be odd, j,k,d,Y natural, and suppose
 
@@ -213,7 +213,7 @@ If the first case holds, the solution `v=v_t` would put the actual normalized st
 Y >= 3*min_(0<=t<2*L) vhat_t - 2.
 ```
 
-This is a necessary bound using the source-certified `affineQuotientExcluded_sound` filter. It is not a complete root decision: the other source constraints may exclude more.
+This is a necessary bound using the existing `affineQuotientExcluded_sound` filter theorem; its transitive axiom audit is still pending. It is not a complete root decision: the other source constraints may exclude more.
 
 #### The M8-filtered minimum also has a logarithmic cutoff
 
