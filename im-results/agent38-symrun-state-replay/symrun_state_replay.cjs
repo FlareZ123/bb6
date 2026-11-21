@@ -372,6 +372,7 @@ const run = async function(fetchText) {
     })).sort((a,b)=>a.step-b.step);
     let state=parseState(lines,"initSymCyc3"),step=0,haltAt=null;
     const maxima={maxField:0n,repeatSum:0n,expandedTapeLength:0n,symTokenCount:0n};
+    let maxFieldStep=0;
     const checkpointResults=[];
     for (const cp of checkpoints) {
       let chunkMaxField=measure(state).maxField;
@@ -381,7 +382,7 @@ const run = async function(fetchText) {
         if (state[0]==="HALT" && haltAt===null) haltAt=step;
         const q=measure(state);
         if (q.maxField>chunkMaxField) chunkMaxField=q.maxField;
-        for (const k of Object.keys(maxima)) if (q[k]>maxima[k]) maxima[k]=q[k];
+        for (const k of Object.keys(maxima)) if (q[k]>maxima[k]) { maxima[k]=q[k]; if (k==="maxField") maxFieldStep=step; }
       }
       const matches=sameState(state,cp.state);
       checkpointResults.push({
@@ -402,6 +403,7 @@ const run = async function(fetchText) {
       checkpointResults,
       maxima:Object.fromEntries(Object.entries(maxima).map(([k,v])=>[k,v.toString()])),
       maxZeroExpansion:maxZeroExpansion.toString(),
+      maxFieldStep,
       finalMode:state[0]
     };
   }
