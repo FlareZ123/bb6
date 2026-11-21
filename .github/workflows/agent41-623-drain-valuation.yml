@@ -60,11 +60,29 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducerCarry.lean" DrainDigitTransducerCarry.lean
           lake env lean -o .lake/build/lib/lean/DrainDigitTransducerCarry.olean DrainDigitTransducerCarry.lean
 
+      - name: Compile signed coordinate correction normal form
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean" Agent1SignedCoordinateNormalForm.lean
+          lake env lean -o .lake/build/lib/lean/Agent1SignedCoordinateNormalForm.olean Agent1SignedCoordinateNormalForm.lean
+
       - name: Compile the source-exact drain/digit-statistics bridge
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitStatsSource.lean" Agent1DrainDigitStatsSource.lean
           lake env lean -o .lake/build/lib/lean/Agent1DrainDigitStatsSource.olean Agent1DrainDigitStatsSource.lean
+
+      - name: Compile the source-drain mass-index bridge
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitSourceBridge.lean" Agent1DrainDigitSourceBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent1DrainDigitSourceBridge.olean Agent1DrainDigitSourceBridge.lean
+
+      - name: Audit source-drain mass-index theorem axioms
+        working-directory: /tmp/cryptids
+        run: |
+          printf 'import Agent1DrainDigitSourceBridge\n#print axioms BB6.Agent1DrainDigitSourceBridge.sourceDrainLength_le_of_two_mul_lt_pow\n#print axioms BB6.Agent1DrainDigitSourceBridge.sourceDrainLength_le_of_mass_index\n' > Agent1DrainLengthAxiomAudit.lean
+          lake env lean Agent1DrainLengthAxiomAudit.lean
 
       - name: Audit the source drain/digit bridge axioms
         working-directory: /tmp/cryptids
