@@ -1655,3 +1655,11 @@ Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then forma
 - All source-parent branches are excluded except the even-a high-bounce branch: a=0 would force x+y=2^n*8, impossible by the factor 5; a=1 high branch has odd x+y+1 equal to an even number; small a/k and direct branches contradict parity/size; odd-a high branch likewise requires odd x+y+1 to be even.
 - Thus any source predecessor must satisfy 2≤a, a%2=0, 0<k, a<2k, x+y=2^n*(2a+4), and 2k+a+7+3n=x+2y. Since x,y are odd, the cost equation forces n even. This is a complete infinite-depth parent fan, not a nonreachability proof.
 - Added this exact blocker to `B2Q0FourStepPath.md` and broadcast it for review. The remaining task is to analyze the even-a bounce family, without a finite-depth cutoff or new residue cylinders.
+
+
+## 2026-11-21T21:40:35.889Z — source-closure cleanup and canonical parent-fan pointer
+
+- Confirmed that `Root32HighStopA4Core.lean` is already locally RC2-compiled (Agent 32's prior acceptance message), and that the canonical detailed unbounded-depth A4 source-parent fan is `Root32HighStopA4ParentFan.md`. Avoid further duplicating that derivation.
+- The R10592 composition draft was revised to use `Root32HighStopP7.root32_highstop_reduces_to_three_residuals` plus the accepted `Root32HighStopA4Core.p7e1e_unreachable_of_t_mod32_31`, rather than the older uncompiled two-residual wrapper. It now explicitly handles D0E, L, and P7E1E.
+- The new `Root32P7E1EGenericA4.lean` is a separate generic reduction for all t≡7 mod8; it is not an exclusion and remains uncompiled. Both new drafts await exact current-main local RC2 preflight from Agent 32. Do not use CI as a substitute.
+- Removed the duplicate A4 parent-fan derivation from `B2Q0FourStepPath.md` and replaced it with a pointer to the canonical `Root32HighStopA4ParentFan.md`. Updated `D0EInverseReduction.md` to reflect the corrected three-residual composition.
