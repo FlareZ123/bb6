@@ -166,6 +166,8 @@ Under the existing root-index congruence \(t+j\equiv3780\pmod{8192}\), this t-cy
 
 
 
+
+
 ## Secondary source-parent fans for the q=0 lift (t ≡ 719 and 79)
 
 This goes one source edge deeper than the A4 parent fan above. It is an exact inverse-grammar reduction, but has **not** been Lean-compiled in this invocation. Write Reach(x,y) for true blank-origin section reachability.
@@ -192,26 +194,30 @@ For a source predecessor \((a,k)\) of \(T_0\), the exact section-preimage gramma
 a=H/2^{n+1}-3,\qquad
 k=(X_0+2Y_0-H/2^{n+1}-4-3n)/2.
 \]
-Because \(a\) is odd, \(a+3\) is even, so \(n\le3\). All four values \(n=0,1,2,3\) give valid positive source parents; there are no other parents.
+The cost equation forces \(n\) even: its left side has parity \(n\), while \(X_0+2Y_0+2\) is even. Since \(a\) is odd, \(a+3\) is even, so \(n\le3\). Therefore **only \(n=0,2\)** are possible, and both give valid positive source parents.
 
-| \(n\) | first coordinate \(a_n(s)\) | second coordinate \(k_n(s)\) | source-level disposition |
-|---:|---|---|---|
-| 0 | \(1710357437517+2434983364800s\) | \(1678957927278+2390280846240s\) | \(a\equiv5,\ k\equiv6\pmod8\), so \(a+k\equiv3\pmod8\); the exact six-even-right inverse forces the residual \(R_0(s)\) below |
-| 1 | \(855178718757+1217491682400s\) | \(2106547286656+2999026687440s\) | \(a\equiv1\pmod4,\ k\equiv0\pmod8\); excluded by blank_section_no_one8 |
-| 2 | \(427589359377+608745841200s\) | \(2320341966345+3303399608040s\) | both coordinates odd and \(a+k\equiv2\pmod4\); excluded by the original-source odd-right image theorem |
-| 3 | \(213794679687+304372920600s\) | \(2427239306188+3455586068340s\) | \(a\equiv7\pmod8\), while \(k\equiv4+4s\pmod8\); for even \(s\) the six-even-right inverse reaches an odd-right sum-two state, but for odd \(s\) this parent has sum \(7\pmod8\) and remains open |
+\[
+\begin{aligned}
+P_0(s)&=(1710357437517+2434983364800s,\;
+          1678957927278+2390280846240s),\\
+P_2(s)&=(427589359377+608745841200s,\;
+          2320341966345+3303399608040s).
+\end{aligned}
+\]
 
-For \(n=0\), the six-even-right parent is
+The \(P_2\) coordinates are both odd and their sum is \(2\pmod4\), so the original-source odd-right image theorem excludes \(P_2\). The \(P_0\) coordinates satisfy \(P_{0,x}\equiv5,\ P_{0,y}\equiv6\pmod8\), hence their sum is \(3\pmod8\). The exact six-even-right inverse therefore gives the single predecessor
 \[
 R_0(s)=
 (3389315364793+4825264211040s,\;
  839478963638+1195140423120s).
 \]
-It satisfies \(R_{0,x}\equiv1\pmod8\), \(R_{0,y}\equiv6\pmod8\), and
+It follows that the q=0 parent is reachable **iff** \(R_0(s)\) is reachable.
+
+The residual satisfies \(R_{0,x}\equiv1\pmod8\), \(R_{0,y}\equiv6\pmod8\), and
 \[
 (R_{0,x}+R_{0,y}+1)\equiv16+16s\pmod{32}.
 \]
-Consequently, for even \(s\), sumseven_forced_root_iff gives the exact next reduction to
+For even \(s\), sumseven_forced_root_iff gives the exact next reduction to
 \[
 R_1(s)=
 (4228794328429+6020404634160s,\;
@@ -220,15 +226,7 @@ R_1(s)=
 Here \(R_{1,x}\equiv5\pmod8\), \(R_{1,y}\equiv2\pmod8\), and
 \((R_{1,x}+R_{1,y}+1)\equiv8\pmod{16}\), so mod16_seven_blank_reach_iff gives its exact two-parent split. This split has not yet been closed. For odd \(s\), \(R_0\) has sum-plus-one \(0\pmod{32}\), outside the cited sum-seven root theorem.
 
-Thus the exact secondary reduction is
-\[
-\operatorname{Reach}(T_0(s))
-\iff
-\operatorname{Reach}(R_0(s))
-\ \lor\
-\bigl(s\text{ odd}\ \land\operatorname{Reach}(P_3(s))\bigr),
-\]
-where \(P_3(s)\) is the \(n=3\) parent in the table. In particular, the q=0 lift is **not** excluded: the unresolved pieces are the \(R_0\) family and the odd-\(s\) \(P_3\) family. Do not promote this to results/.
+Thus the q=0 A4 lift on \(t\equiv719\pmod{1024}\) is reduced exactly to \(R_0(s)\); it is **not** excluded by this analysis. Do not promote this to results/.
 
 ### The t = 79 + 512s family
 
@@ -242,21 +240,18 @@ For \(H=X_0+Y_0+1\),
 \[
 H=376985669040+2434983364800s,\qquad v_2(H)=4.
 \]
-The same exact source-grammar argument leaves precisely the three odd-\(a\), high-bounce parents \(n=0,1,2\):
+The same exact source-grammar argument leaves only even bounce exponents \(n=0,2\), since the cost equation forces \(n\) even and \(a+3\) even:
 \[
 \begin{aligned}
 P_0(s)&=(188492834517+1217491682400s,\;
           185032398378+1195140423120s),\\
-P_1(s)&=(94246417257+608745841200s,\;
-          232155607006+1499513343720s),\\
 P_2(s)&=(47123208627+304372920600s,\;
           255717211320+1651699804020s).
 \end{aligned}
 \]
 Their useful residues and existing source gates are:
 - \(P_0\): \(x\equiv5,\ y\equiv2\pmod8\), \(x+y+1\equiv16s\pmod{32}\), and \((5x+9y)\equiv35+48s\pmod{128}\). The second_sumseven_forced_root_iff gate applies on \(s\equiv7\pmod8\).
-- \(P_1\): \(x\equiv1,\ y\equiv6\pmod8\), \(x+y+1\equiv8+24s\pmod{32}\). The sumseven_forced_root_iff gate applies on \(s\equiv3\pmod4\).
-- \(P_2\): \(x\equiv3\pmod8\), \(y\equiv4s\pmod8\), and \(x+y+1\equiv12+12s\pmod{32}\). The sum7_high_blank_unreachable gate applies on \(s\equiv1\pmod8\).
+- \(P_2\): \(x\equiv3\pmod8\), \(y\equiv4s\pmod8\), and \(x+y+1\equiv12+12s\pmod{32}\). The sum7_high_blank_unreachable gate applies on \(s\equiv1\pmod8\). For even \(s\), \(P_2\) instead lies in the six-even-right inverse gate (its sum is \(3\pmod8\)); this only transfers reachability to its direct parent and is not yet a full exclusion.
 
 These are only subfamily reductions; the other parameter residues remain open. In particular, the t=79 q=0 lift is not excluded by this analysis.
 
