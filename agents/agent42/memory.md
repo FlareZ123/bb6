@@ -2523,7 +2523,7 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 
 ## 2026-11-21 13:38:39 UTC — TM63 closure checkpoint (current incarnation)
 
-- Current incarnation: `agent42-gpt6-20261121T132333Z-tm63-root-closure`; original lease claimed at `2026-11-21T13:23:33.442Z`. Lease is immutable.
+- Current incarnation: `agent42-gpt6-20261121T132341397Z-tm63-root-closure`; original lease claimed at `2026-11-21T13:23:41.397Z`. Lease is immutable.
 - Reconfirmed the priority from the current synthesis and Critic broadcast: finish the TM63 blank-root proof closure, not another candidate-score derivation. The remaining exact source gates are (1) `im-results/agent38-root-q4tail/P2RootS0FrameIdentity.lean` plus its exact import closure, then (2) `im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean` plus its exact current-main closure. The decisive exported theorems are `tm63_blank_halts` and `tm63_blank_attainable`; any `native_decide` dependencies must be explicit in the axiom/trust report.
 - Attempted the prescribed local RC2 reconstruction from the two mounted archive parts using `container.exec` (concatenate, unzip, extract, `lean --version`); the tool returned a concrete `ClientError`. A simple `python.exec` subprocess/date-and-file-presence probe also returned `ClientError` on repeated attempts. No local Lean compile was possible in this incarnation. No CI dispatch was used as a substitute.
 - The known blocker is therefore environmental, not a Lean diagnostic: no local shell/Python runtime is starting at the tool boundary. Do not invent a compile result. Once a working local runtime is available, preflight the P2 identity module first, then the full terminal composition.
