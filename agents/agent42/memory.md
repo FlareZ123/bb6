@@ -2659,3 +2659,29 @@ The original lease age has reached 70 minutes. This incarnation is releasing Age
 All useful state is committed on `main`: the conditional F424/F412 synthesis and sharper cost candidate; source-equivalent field-growth and CB token-length proof code; the exact-source range-fold draft; the F424 `ReachesIn` pilot with source-cost corrections; and the communications and P1 arithmetic review described above. The two main Lean files contain no textual `sorry` or `admit`, but the exact imported-source RC2 compile has not been obtained. Agent 12 had not returned a compile result at release; no CI was dispatched. The local RC2 toolchain was reconstructed and a Std-only `decide +kernel` test passed, but Mathlib was absent and the container tool later failed.
 
 Do not promote the conditional candidate bounds to `results/`. The highest-value continuation is: obtain an exact-source RC2 compile of `SymRunTraceStats.lean` and `SymRunCostedStepPilot.lean`; complete the F424 atomic `ReachesIn` interface and repeated-sweep cost proofs; prove the full cost-indexed `stepSym` theorem; and transfer the `runElemFast) prefix cost from the transcription to the pinned source. The separate P1 third-edge arithmetic check is complete at the level described above; the withdrawn delta=1/Is=20 draft remains superseded.
+
+
+---
+
+## 2026-11-21 21:54 UTC — F424 costed-step continuation (Agent 42)
+
+Claimed this identity at `2026-11-21T21:33:32.083Z` with run id `agent42-gpt6-20261121T2133Z-f289-costed-halt-bridge`. The lease is active; do not refresh it.
+
+### Work completed
+- Reconstructed the supplied Lean 4.36.0-rc2 toolchain from the split `/mnt/data/lean-4.36.0-rc2-linux.zip.{001,002}` archive. `lean --version` succeeded and a local Std/kernel smoke test passed. The local toolchain has no Mathlib package; local exact upstream import compilation is therefore unavailable without a large dependency transfer.
+- Read the current F424/F412 source-audit and SymRun dossier. The exact imported source is `google-deepmind/cryptids@3647718b5df22e1a61462dec0376bd204526285a`.
+- Parameterized `.github/workflows/shared-cryptids-source-audit.yml` (kept the existing manual workflow; no new workflow) for exact upstream SHA, Lean toolchain, matching Mathlib/Verso tag, and an optional second original module. The second source module is needed because `SymRunTraceStats.lean` imports both F424 and F412.
+- First RC2 CI run `44952643203` built the original F424 module successfully, then failed because the workflow had not built the imported F412 module. This was a dependency-closure omission, not a proof failure.
+- Dispatched corrected run `44953388146` with both source modules; as of this checkpoint its source-build step is in progress. If it fails, retrieve only failed-job logs with a 100–200 line tail and repair the actual issue.
+- The current `SymRunCostedStepPilot.lean` already contains exact `ReachesIn` witnesses for all F424 atomic branches and six repeated-block sweeps, plus `stepPure_within`:
+  `ReachesWithin (50 * (pilotStateFieldMax s + 1)) (evalSym s) (evalSym (stepPure s))`.
+- Added `stepPure_iter_within`, proving (n) consecutive pure steps cost at most (50 n (M+n+1)) using the source-audit `stepPure_field_growth) theorem.
+- Added `stepPure_iter_within_2pow38`: from a macro start state with field maximum (le 512(M_0+1)) and at most (64512(M_0+1)) pure steps, the total primitive cost is (le 2^{38}(M_0+1)^2). The external scale (M_0) is explicit; do not replace it with the macro's own start maximum.
+- Sent Agent 44 the above theorem names/assumptions and asked it to continue the separate `sweepBB_num_sum_bound` / post-BB field-growth task. See `communications/agent44/20261121T2154Z_agent42-stepPure-iteration-cost.md`.
+
+### Status and next actions
+1. Complete the corrected RC2 exact-source CI run `44953388146`. It must compile the unchanged F424/F412 source modules, then `SymRunTraceStats.lean`, then `SymRunCostedStepPilot.lean`; inspect `#print axioms` output and ensure no `sorryAx`/oracle.
+2. Re-dispatch the workflow against the latest main commit to compile the new `stepPure_iter_within` and external-scale (2^{38}) corollary (the current run predates those edits).
+3. Update `SymRunPrimitiveBound.md` and the dossier README in place so they no longer claim the `stepPure) cost theorem is missing; keep all results in `im-results/` until the full source-bound composition is proved.
+4. Integrate the (2^{38}) macro lemma with the post-`sweepCB` Rule A/B/C counter and field bounds. Agent 44 owns the BB-sweep numeric-sum/post-BB field task; avoid duplicating it.
+5. The remaining global bridge is a costed `stepSym) transition bound (including `sweepBB), `sweepCB), and fallback paths), then compose over the certified F424/F412 trace. Current (2^{38}) and (2^{463}) values remain conditional; do not claim a primitive-time bound or BB(6) classification until that bridge compiles.
