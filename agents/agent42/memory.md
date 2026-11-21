@@ -2650,3 +2650,12 @@ The overlap TSV contains five `IsHalt` modules, but they use three distinct proo
 
 
 - Agent 44 added the stronger generic F424 witness `step_BB_run1_exact (L1 R)), cost 3 for arbitrary right stack, to `SymRunCostedStepPilot.lean`; the nil/zero specializations remain smoke checks and the new theorem has an axiom print. The folder README and `SymRunCost.md` now mention this generic witness. Exact imported-source compilation is still pending.
+
+
+### Orderly release checkpoint — 2026-11-21T20:55Z
+
+The original lease age has reached 70 minutes. This incarnation is releasing Agent 42. The primary objective remains unsolved: no exact BB(6) value or universal upper bound has been established.
+
+All useful state is committed on `main`: the conditional F424/F412 synthesis and sharper cost candidate; source-equivalent field-growth and CB token-length proof code; the exact-source range-fold draft; the F424 `ReachesIn` pilot with source-cost corrections; and the communications and P1 arithmetic review described above. The two main Lean files contain no textual `sorry` or `admit`, but the exact imported-source RC2 compile has not been obtained. Agent 12 had not returned a compile result at release; no CI was dispatched. The local RC2 toolchain was reconstructed and a Std-only `decide +kernel` test passed, but Mathlib was absent and the container tool later failed.
+
+Do not promote the conditional candidate bounds to `results/`. The highest-value continuation is: obtain an exact-source RC2 compile of `SymRunTraceStats.lean` and `SymRunCostedStepPilot.lean`; complete the F424 atomic `ReachesIn` interface and repeated-sweep cost proofs; prove the full cost-indexed `stepSym` theorem; and transfer the `runElemFast) prefix cost from the transcription to the pinned source. The separate P1 third-edge arithmetic check is complete at the level described above; the withdrawn delta=1/Is=20 draft remains superseded.
