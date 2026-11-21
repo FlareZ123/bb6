@@ -86,9 +86,10 @@ where M is the maximum numeric field in the outer symbolic state. This replaces 
 The corrected argument uses:
 - after `sweepCB`, the total repeat-counter sum is at most (94M+376\le512(M+1)), since there are at most 94 fuel-4 merges and each can add at most four literal-block units (merging an existing repeat counter conserves the total);
 - the `sweepCB` token count is at most (6T\le564), using (|bumpSymL(L)|\le|L|+5) and charging the run-zero tokens prepended by the sweep against the right tokens it consumes;
+- these inequalities are now formalized in `SymRunTraceStats.lean` as `sweepCB_length_bound`, `sweepCB_length_le_564`, `stepElemCB_BB_length_bound`, and `stepElemCB_after_sweep_570`. Agent 44 reports a Lean 4.36.0-rc2 source-equivalent compile with principal axiom profiles `[propext, Quot.sound]`; exact imported-source compilation remains pending;
 - a BB-producing `stepElemCB` fallback has net total-token growth at most six, so fallback `sweepBB` scans at most (564+6=570) tokens; the parameter-sized `prependZeroSym` branch remains in CB mode and does not invoke `sweepBB`;
 - Rule B/C repeat counts are at most (512(M+1)), so every successful Rule A/B/C macro uses fewer than (2^{16}(M+1)) `stepPure` calls;
-- `stepPure_field_growth` and its n-step corollary are now included in `SymRunTraceStats.lean): (M(stepPure(s))\le M(s)+1) and (M(stepPureIter(n,s))\le M(s)+n). Agent 44 reports a Lean 4.36.0-rc2 compile of the same proof with source-equivalent copied definitions and axiom profiles `[propext, Quot.sound]`; exact imported-source compilation is still pending;
+- `stepPure_field_growth` and its n-step corollary are now included in `SymRunTraceStats.lean`: (M(stepPure(s))\le M(s)+1) and (M(stepPureIter(n,s))\le M(s)+n). Agent 44 reports a Lean 4.36.0-rc2 compile of the same proof with source-equivalent copied definitions and axiom profiles `[propext, Quot.sound]`; exact imported-source compilation is still pending;
 - each `stepPure` transition costs at most (50(X+1)) at current maximum field (X); hence every macro-internal field is below (2^{16}(M+1)), each `stepPure` costs below (2^{22}(M+1)), and the macro costs below (2^{38}(M+1)^2);
 - all non-macro sweep/fallback work is below (2^{25}(M+1)), using the 570-token fallback scan and the outer CB sweep.
 
