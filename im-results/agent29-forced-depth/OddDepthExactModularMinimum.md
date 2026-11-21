@@ -264,11 +264,13 @@ actually gives
 \[
 zn\ge 10-20/2^s,
 \]
-because the concave function
-\(f(n)=2n-n(n-1)/2^s\) has endpoint values
-\(f(5)=10-20/2^s\) and
-\(f(2^s-1)=2^s+1-2/2^s\), with the latter no smaller for
-\(s\ge4\). The large-t bound is therefore
+Indeed, for \(5\le n\le2^s-1\),
+\[
+\left(2n-\frac{n(n-1)}{2^s}\right)
+-\left(10-\frac{20}{2^s}\right)
+=(n-5)\left(2-\frac{n+4}{2^s}\right)\ge0,
+\]
+because \(n+4\le2^s+3\le2^{s+1}\). The large-t bound is therefore
 \[
 Av_s\ge(10-20/2^s)Q-2m.
 \]
