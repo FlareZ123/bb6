@@ -24,3 +24,5 @@ Addendum: the sourceCarry numerators align exactly with the Lean matrices ML and
 - ML(x,y)=(x-3y,3y), giving xK1-3yK+C and 3yK+F;
 - MR(x,y)=(-4x-3y,3x+3y), with -4x=-x-3x, giving -xK1-3xK-3yK+C and 3xK+3yK+F.
 The mod reductions are valid at denominator 3K because xK1=x mod3K and xK,yK are modK. Thus the JS sourceCarry formulas are exactly the boundary quotients of the Lean affine matrices plus corrC/corrF. I added this derivation to StartCarryRectangleInclusion.md; the remaining formal step is a Lean quotient identity connecting the matrix map to these carry coordinates.
+
+One additional caveat to the rectangle proof: the sourceCarry script uses branch=(g>0), while the formal root/source branch is selected by the threshold test. The all-time inclusion is conditional on proving these agree on every authentic root transition (the finite script reports zero mismatches only on the observed prefix). I added this explicitly to StartCarryRectangleInclusion.md; do not omit branch-selection correctness from the formal bridge.
