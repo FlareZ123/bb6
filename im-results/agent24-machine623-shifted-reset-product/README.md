@@ -154,6 +154,20 @@ W_{n+2}=S_n[1+\delta k_n+\delta k_{n+1}:]\Vert h_{n+1}.
 \]
 The boundary clock forces delta_k_n=1 to be followed by delta_k_{n+1}=0, so the total suffix offset is always 1 or 2. The 3,101-state product tracks both possibilities simultaneously; append the optional high symbol to both copies and select the required one. This is the exact index/phase reason offset 3 is unnecessary. Full derivation: ShiftedWindowComposition.md.
 
+## Two-step root adapter
+
+ShiftedWindowInterface.js exports classifyNextTargetWindow(r0,r1,r2,stream,highExtension). Here stream is S_n on [k_n+1,j_{n+1}-2), and highExtension is null when delta_j_{n+1}=0 or the single digit pair at j_{n+1}-2 when delta_j_{n+1}=1. The adapter computes offset \(1+\delta k_n+\delta k_{n+1}\) from the two phase edges, feeds S_n and the optional high symbol through the 3,101-state product, selects the required suffix copy, and decodes the exact full post_reset_pair label.
+
+Example from the sibling Agent 48 directory:
+
+    const { classifyNextTargetWindow } =
+      require("../agent24-machine623-shifted-reset-product/ShiftedWindowInterface.js");
+    const result = classifyNextTargetWindow(
+      r_n, r_n1, r_n2, sourceToTargetStream, highExtension
+    );
+
+The adapter checks the phase edges and rejects any offset other than 1 or 2. It does not certify that sourceToTargetStream or highExtension is authentic, nor that the source carry lies in the full reset rectangles; those remain caller obligations.
+
 ## Phase-selected single-copy interface
 
 The two-copy product is useful when the offset is not yet known and both suffix outputs must be maintained simultaneously. In the authentic S-window transition, the boundary phase determines the offset. One can therefore use a single base DFA with two selectable initial states instead of the 3,101-state simultaneous product.
