@@ -2,7 +2,7 @@
 
 This note connects the initial blank-root witness to the exact `m1,n1` source specialized by Agent 48's terminal wrapper. It is an integration derivation from the Coq TM63 proof, not yet a Lean proof of the complete itinerary.
 
-Source: `ccz181078/busycoq`, commit `3f302b87f5fb933c46e97672ffbb6907f373fb6e`, `verify/SOBCv5.v`, TM63 module lines 10266–10783 (`init` at line 10507; `halt` at lines 10750–10781).
+Source: `ccz181078/busycoq`, commit `3f302b87f5fb933c46e97672ffbb6907f373fb6e`, `verify/SOBCv5.v`, TM63 module lines 10748–11283 (`init` at line 11000; `halt` at lines 11249–11281).
 
 ## 1. Blank-root entry
 

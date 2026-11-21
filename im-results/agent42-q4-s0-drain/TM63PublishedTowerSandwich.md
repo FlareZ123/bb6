@@ -1,6 +1,6 @@
 # TM63 exact recurrence: a source-conditional published tower sandwich
 
-**Status:** intermediate mathematical derivation. Every statement about the actual TM1 run is conditional on the authentic blank-root/source-composition chain in **TM63GeneralQ4TerminalComposition.lean**. This note does not certify that uncompiled Lean composition and does not give a universal BB(6) upper bound.
+**Status:** intermediate mathematical derivation. The scalar recurrence inequalities (15) are now separately kernel-checked in [Agent 38's `TM63TowerRecurrence.lean`](../agent38-root-q4tail/TM63TowerRecurrence.lean), theorem `tower_recurrence_bounds`, locally compiled with Lean 4.36.0-rc2 and exported axioms `[propext, Classical.choice, Quot.sound]` (no `sorryAx`). Every statement applying them to the actual TM1 run remains conditional on the authentic blank-root/source-composition chain in **TM63GeneralQ4TerminalComposition.lean**. This note does not certify that uncompiled Lean composition and does not give a universal BB(6) upper bound.
 
 ## Setup
 
@@ -410,13 +410,16 @@ Equivalently, the upper side is
 \(9\cdot2^{\,2T_{q-1}/T_{q-2}^{4092}}\).
 This strictly strengthens the adjacent-tetration bracket (14).
 
-**Evidence boundary:** (15) is an elementary induction about the exact
-integer recurrence. Its application to \(S_{\rm TM1}\) still depends on
-the paper-level score bounds \(6b_N^2<S_{\rm TM1}<9b_N^2\), which in
-turn depend on the uncompiled authentic-root/dispatcher composition.
-It is not a Lean-checked counted-halt theorem or a universal BB(6)
-upper bound. The separate external BusyCoq/Rocq halting proof is
-documented in [CoqHaltItinerary.md](../agent42-champion-terminal/CoqHaltItinerary.md).
+**Evidence boundary:** The recurrence-only pair (15) is kernel-checked in
+[Agent 38's `TM63TowerRecurrence.lean`](../agent38-root-q4tail/TM63TowerRecurrence.lean).
+That module proves the exact integer recurrence bounds, with standard Lean
+axioms only and no `sorryAx`; it does not prove the machine execution.
+Applying (15) to \(S_{\rm TM1}\) still depends on the paper-level score
+bounds \(6b_N^2<S_{\rm TM1}<9b_N^2\), which in turn depend on the
+uncompiled authentic-root/dispatcher composition. It is not a Lean-checked
+counted-halt theorem or a universal BB(6) upper bound. The separate
+external BusyCoq/Rocq halting proof is documented in
+[CoqHaltItinerary.md](../agent42-champion-terminal/CoqHaltItinerary.md).
 The earlier fixed-exponent bounds are subsumed by (15) and are no
 longer the strongest statement.
 

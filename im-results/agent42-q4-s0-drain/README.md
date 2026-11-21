@@ -7,14 +7,23 @@ This is an intermediate research dossier, not a result suitable for `results/`.
 **External halting baseline.** The pinned BusyCoq/Rocq source at
 ccz181078/busycoq@3f302b87f5fb933c46e97672ffbb6907f373fb6e,
 verify/SOBCv5.v, defines the same literal TM63 table and proves
-TM63.halt : halts tm c0 (the module begins at line 10266 and the
-theorem is at line 10750). See
+TM63.halt : halts tm c0 (the module begins at line 10748, `init` is
+at line 11000, and `halt` is at lines 11249–11281). See
 [CoqHaltItinerary.md](../agent42-champion-terminal/CoqHaltItinerary.md)
 and [Agent 48's root/table bridge](../agent48-champion-root/README.md).
 That external theorem establishes halting, but not an exact primitive
 step count and is not imported into Lean here. This dossier's remaining
 purpose is the counted source itinerary and exact score, not rediscovery
 of the already-formalized halting fact.
+
+**Recurrence proof status.** The moving-exponent inequalities used below
+are separately kernel-checked in
+[Agent 38's `TM63TowerRecurrence.lean`](../agent38-root-q4tail/TM63TowerRecurrence.lean),
+whose `tower_recurrence_bounds` theorem was compiled locally with Lean
+4.36.0-rc2 and has exported axioms `[propext, Classical.choice, Quot.sound]`
+with no `sorryAx`. This certifies only the scalar recurrence inequalities;
+it does not validate the TM63 source itinerary or the conditional score
+bounds.
 
 
 ## Direct arbitrary-A q4Tail terminal path
@@ -99,7 +108,7 @@ With \(q=M+N+50\), \(b_N=V_{q-4}\), and the existing source-conditional score br
 \[
 \boxed{6T_{q-1}^{2T_{q-2}^{23/8}}<S_{\rm TM1}<9T_q^{2/T_{q-2}^{4092}}.}
 \]
-This supersedes the earlier fixed-exponent estimate and strictly sharpens the adjacent-tetration bracket. The recurrence proof is paper-level; the score interpretation remains conditional on the uncompiled authentic-root and dispatcher composition. See [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md) for the proof and [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md) for the exact terminal lower bound. The consolidated note also proves \(q<T_{11}\), so
+This supersedes the earlier fixed-exponent estimate and strictly sharpens the adjacent-tetration bracket. The recurrence-only inequalities are now formalized in Agent 38's standalone Lean module; the score interpretation remains conditional on the uncompiled authentic-root and dispatcher composition. See [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md) for the proof and [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md) for the exact terminal lower bound. The consolidated note also proves \(q<T_{11}\), so
 \(T_q<T_{T_{11}}\), below the published right endpoint.
 
 **Evidence boundary:** this is a source-level integration candidate, not
@@ -896,7 +905,7 @@ of the committed Python artifacts.
 6T_{q-1}^{2T_{q-2}^{23/8}}<S_{\rm TM1}<9T_q^{2/T_{q-2}^{4092}},
 \qquad q=M+N+50.
 \]
-This is substantially sharper than the earlier adjacent-tetration bracket and the published interval. Agent 24 independently reviewed the moving-exponent induction and found no gap in its integrality, base cases, induction steps, or q-4 substitution. This is a mathematical review, not a Lean proof. The result remains intermediate until the authentic Lean composition passes local compilation and its transitive axiom audit; it is not a universal BB(6) upper bound.
+This is substantially sharper than the earlier adjacent-tetration bracket and the published interval. Agent 24 independently reviewed the moving-exponent induction and found no gap in its integrality, base cases, induction steps, or q-4 substitution. Agent 38 subsequently formalized the recurrence-only inequalities in `TM63TowerRecurrence.lean`, locally compiled under Lean 4.36.0-rc2 with only `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. The result remains intermediate until the authentic Lean composition passes local compilation and its transitive axiom audit; it is not a universal BB(6) upper bound.
 
 ## Polylogarithmic-error two-term expansion of the conditional score
 
