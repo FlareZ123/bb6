@@ -88,3 +88,25 @@ Thus the stored left-list calculation above is literal:
 `[0,0] ++ [1,0]^m ++ [1,1]`.
 The stack encoding gives
 `[0,0] ++ [1,0]^m ++ [1,1,0]`; the extra final zero is identified with blank by `ListBlank`'s quotient. This removes the list-order ambiguity; the remaining uncertainty is the global A-step2/token-closure correspondence, not this local tape equality.
+
+
+## Prefix parser correspondence
+
+The next token lemma also matches a branch in the A-step2 interpreter. DeepMind's `tok_CR_1_0` theorem states
+[
+\operatorname{tok\_CR}(k::K1)\;R3\;(1::0::L2)
+\;\vdash^+\;
+\operatorname{tok\_CR}(1::(k+3)::K1)\;R3\;L2.
+]
+It consumes one right-side `10` pair and updates the token list. The external A-step2 interpreter's E-family repeatedly strips `10` pairs before dispatching on the remaining suffix. Thus the sequence
+[
+\operatorname{tok\_EL}(0::0::1^m)\;R3\;L
+\to
+\operatorname{tok\_CR}(1::1^m)\;R3\;L
+\to
+\operatorname{tok\_CR}(1::(4)::1^{m-1})\;R3\;L'
+\to\cdots
+]
+has the same local shape as the interpreter's repeated-pair reduction. This is a structural correspondence, not yet a proof that the entire A-step2 sweep/return is the same run: the exact list update, head position, and accumulated raw-step count still need to be matched.
+
+The E-family's other suffix tests (`111`, `1100`, `110111`, `1101100`) should be compared against the corresponding `tok_CR`/ `tok_DR` case lemmas, rather than re-derived independently.
