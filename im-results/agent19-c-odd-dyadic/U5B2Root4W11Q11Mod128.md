@@ -84,8 +84,11 @@ where
 \[
 E(t)=305330998761+450971566080t.
 \]
-Set \(A=45373440=2^{11}\cdot3\cdot5\cdot7\cdot211\) and \(C=34877440\). For every \(t\),
+Set \(A=45373440=2^{11}\cdot3\cdot5\cdot7\cdot211\) and \(C=34877440\). Because \(3360\) is divisible by \(2,3,4,210\), for every \(t\),
 \[
+E(t)-14\equiv187\pmod2,\quad
+E(t)-14\equiv187\pmod3,\quad
+E(t)-14\equiv187\pmod4,\quad
 E(t)-14\equiv187\pmod{210}.
 \]
 The two sides \(5\cdot2^{E(t)-14}\) and \(C\) agree modulo every prime-power factor of \(A\):
@@ -99,7 +102,11 @@ The factors are pairwise coprime, hence \(A\) divides \(5\cdot2^{E(t)-14}-C\). T
 \[
 s(t)=\frac{5\cdot2^{E(t)-14}-C}{A}-t
 \]
-is an integer. It is nonnegative for every \(t\): already \(5\cdot2^{E(0)-14}>A+C\), and the numerator's power-of-two term grows by the factor \(2^{450971566080}\) at each increment of \(t\). Therefore every \(t\in\mathbb N\) gives an exact residual-equation solution in this cylinder, with \(s=s(t)\).
+is an integer. It is nonnegative for every \(t\). Put \(K=450971566080\), so \(E(t)=E(0)+Kt\), with \(E(0)-14>27\) and \(A+C<2^{27}\). Since \(2^{Kt}\ge t+1\),
+\[
+5\cdot2^{E(t)-14}\ge5\cdot2^{E(0)-14}(t+1)>(A+C)(t+1)\ge At+C.
+\]
+Hence \(s(t)>0\). Therefore every \(t\in\mathbb N\) gives an exact residual-equation solution in this cylinder, with \(s=s(t)\).
 
 Consequently the source-side B2 exclusion above rules out an infinite, explicitly nonempty family of exact residual-equation candidates.
 
