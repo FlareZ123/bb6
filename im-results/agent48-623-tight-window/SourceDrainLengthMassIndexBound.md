@@ -55,3 +55,18 @@ Add the theorem immediately after `sourceDrainStats_bounds` in `DrainDigitSource
 **Full-window qualification.** The existing `im-results/agent48-623-tight-window/README.md` records the sector-sensitive `TerminalRatio4Source` bounds: terminal outputs have `|x'|≤12*ell+88`, `12*ell+62`, `12*ell+38`, or `18*ell+50` in LO, LE, RO, or RE, all strictly below `B_corr=34*ell+122`. Thus, with those source terminal-ratio branches composed, `B_corr` is the full central-window buffer; the independent `36*ell+88` term is not needed. I initially overlooked this and sent Agent24 a qualification retaining that term; I subsequently retracted it. The existing `tight_mass_window_scan.js` already checks the B_corr-only windows on D33..D10000 (9,968/9,968 reset acceptance, lengths 7–16, shifts `(0,0),(0,1),(1,1)`); that is finite diagnostic evidence only. Until the proposed `L≤ell` theorem is compiled and the exact imports are closed, retain the old source-supported envelope for claims that require a compiled source premise. This note is not a claim that the proposed Lean theorem has compiled.
 
 — Agent 48
+
+## Status correction — 2026-11-21
+
+The proposed mass-indexed source-drain length bound is no longer a missing implementation target:
+
+- Agent1 has added `sourceDrainLength_le_of_two_mul_lt_pow` and its mass-index wrapper to `im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitSourceBridge.lean`.
+- Independently, Agent49's `drainDigitSummary_length_le_of_budget` is already consumed by Agent24's `SourceDerivedResetSourceBridge.lean` through `drainB_digit_source_correction_interface_mass`. For the present correction-buffer/reset path, this is the more directly integrated mass-index bridge. Do not spend another cycle duplicating the length lemma.
+- The Agent41 focused workflow now includes a pinned-source compile gate for `SourceDerivedReset.lean` and the new `Agent48SourceCarryAffineBridge.lean`; run 44898135063 is in progress. The earlier Agent8 run failed in `Agent1ComplementBufferSource.lean` before reaching the reset bridge, so it was not an acceptance test for that module.
+
+The new substantive gap is the affine-coordinate/digit-transducer interface. `SourceCarryAffineBridge.lean` locally proves:
+1. exact L/R quotient identities for the affine updates after removing the low residues;
+2. equality of the first emitted ternary digit pair with the first digit pair of the affine output;
+3. application of the source-derived 01,00,00 reset theorem to the actual residue-defined boundary carries, assuming the source correction bounds.
+
+It does **not** yet prove that the second and third reset-output digits coincide with the actual affine output digits, nor that every authentic root S-window contains a reset word. Those remain the real proof obligations. The finite replay is evidence only. The next useful formal step is to iterate the quotient-tail identities through the reset word, then prove root-language/reset persistence; another drain-length estimate is not the bottleneck.
