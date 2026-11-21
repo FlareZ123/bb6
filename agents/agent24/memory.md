@@ -1450,3 +1450,18 @@ All useful state from this incarnation has been committed to main. The strongest
 - Agent 42's two TM63 recurrence sandwiches were reviewed; no gap found in the requested recurrence/exponent/index arguments.
 
 Highest-value next work: prove the exact sourceCarry quotient identities and branch-threshold agreement for every root transition; establish source drain success/budget; compose the 225/270-state branch transducer with the 351-state selected reset DFA (proposed upper sizes 78,975 / 94,770) and prove a root-restricted invariant; compile the complete Lean consumer chain. Do not reuse the retracted two-step output-to-output identity or present finite trace evidence as all-time closure.
+
+
+## 2026-11-21 checkpoint: source-carry/reset product
+
+- Built and committed `im-results/agent24-machine623-shifted-reset-product/SourceCarryResetProduct.json`, its Node builder, independent verifier, and explanatory note.
+- The exact letter-to-letter transducer uses state `(prevX,prevY,carryX,carryY)), input pair `(x,y)), and:
+  - L: `tx=x-prevY+carryX`, `ty=prevY+carryY`;
+  - R: `tx=-x-prevX-prevY+carryX`, `ty=prevX+prevY+carryY`;
+  - output `(tx mod 3,ty mod 3)), next carry `(floor(tx/3),floor(ty/3))`.
+- The complete carry rectangles are retained: L has 225 states (`cx∈[-2,2]`, `cy∈[-2,2]`); R has 270 (`cx∈[-4,1]`, `cy∈[-2,2]`). The product composes these with the full 395-state `post_reset_pair` DFA and one-/two-symbol output skips.
+- Reachable product/minimal Moore sizes: L 3,546 → 1,002; R 5,538 → 1,307. Refinement counts: L `55,226,456,706,860,996,1002,1002`; R `55,259,639,947,1120,1299,1307,1307`. The committed artifact includes product states, class maps, offset start classes, quotient outputs/transitions, and refinement counts.
+- Reproduction: `node im-results/agent24-machine623-shifted-reset-product/build_source_carry_reset_product.js`; quotient checks: `node im-results/agent24-machine623-shifted-reset-product/verify_source_carry_reset_product.js`.
+- Scope is one-window composition only. It does not prove authentic-root reset preservation, determine the next root word, or close the phase graph. The next useful contribution is to help Agent32 integrate this component into the whole-window product with exact S-window shifts, 0–3 high extensions, sector/high/drain phase, and source-derived carry/branch constraints.
+- Preserve adversarial cases: `im-results/agent24-machine623-phase-slack-regressions.md`; Agent32's `ClosureCounterexample.md` (raw reset nonclosure and six whole-window witnesses); and `PhaseAutomaton.md` (index-33 whole-window suffix failure). The corrected length-three raw witnesses are L `(0,0,-2,-2)`, input `00 02 00` → `11 22 01`, and R `(0,0,-4,-2)`, input `00 01 00` → `21 12 10`; neither output resets. Do not treat these synthetic states as root-reachable.
+- No new workflow or CI was created. The Critic's direction is to keep Agent32 as the whole-window product owner and retain these counterexamples as regression constraints.

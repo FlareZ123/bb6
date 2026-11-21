@@ -70,3 +70,14 @@ It does **not** prove that the authentic blank-root orbit remains in a reset-acc
 4. prove the resulting root-specific reachable set is closed (or find a counterexample and refine the invariant).
 
 Keep this as an intermediate result in `im-results/`; it is not yet suitable for `results/`.
+
+
+## Adversarial regression constraints
+
+The product must remain separate from the known counterexamples; it does not justify unrestricted reset preservation. Keep these cases in every proposed root-closure test:
+
+- `im-results/agent24-machine623-phase-slack-regressions.md`: leading-phase ambiguity, the exact H65 failure `D(18,88) → D(70,65)`, mod-3/mod-9 slack-class failures, and the withdrawn two-sided no-`00` suffix condition.
+- `im-results/agent32-623-phase-automaton/ClosureCounterexample.md`: raw reset-language nonclosure and the six eight-symbol whole-window counterexamples covering all three allowed shifts.
+- `im-results/agent32-623-phase-automaton/PhaseAutomaton.md`: the index-33 output-suffix counterexample. Closure must be checked on the entire next S-window, including its bounded high-end extension, not on an arbitrary suffix.
+
+In particular, the corrected length-three raw witnesses are L start `(prevX,prevY,cx,cy)=(0,0,-2,-2)), input `00 02 00`, output `11 22 01`; and R start `(0,0,-4,-2)), input `00 01 00`, output `21 12 10`. Both inputs are common reset patterns and both outputs are rejected. These are synthetic full-rectangle witnesses, not authentic-root states.

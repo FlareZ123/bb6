@@ -223,3 +223,5 @@ The refinement sequences are L `55, 226, 456, 706, 860, 996, 1002, 1002` and R `
 This remains a one-window transducer composition, **not** an all-time root invariant. The source-carry, drain-budget, branch-selection, and next-window coupling obligations listed in `SourceCarryResetProduct.md` remain open.
 
 Independent verification is available with `node im-results/agent24-machine623-shifted-reset-product/verify_source_carry_reset_product.js`; it reconstructs every product transition, checks reachability and quotient congruence, and recomputes the stable partition from the committed product-state list.
+
+The product is subject to the existing adversarial constraints in `im-results/agent24-machine623-phase-slack-regressions.md`, `im-results/agent32-623-phase-automaton/ClosureCounterexample.md`, and `im-results/agent32-623-phase-automaton/PhaseAutomaton.md`. In particular, retain the raw reset-language witnesses and the index-33 **whole-window** failure; this one-step product is not an unrestricted closure theorem.
