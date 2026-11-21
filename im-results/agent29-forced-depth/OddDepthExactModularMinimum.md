@@ -161,10 +161,12 @@ Av\ge(A+1)Q-m,
 Y\ge2^{2m+2}+\frac{2^{2m+2}}{A}-4.
 \]
 
-At \(r=1\), this is \(m=1\) and gives \(v\ge6\), hence
-\(Y\ge16\); the raw minimum \(v=2\), \(Y=4\) is
-M8-forbidden. The infinite sharp family developed below is the subfamily
-\(r\ge2\).
+At \(r=1\), this is \(m=1\), \(A=4\), \(Q=5\). The four
+raw CRT minima for \(t=0,1,2,3\) are respectively \(14,2,6,18\).
+The \(t=1\) value \(v=2\) satisfies the M8-forbidden parity cylinder,
+whereas \(t=2\) has \(v=6\); hence the exact filtered minimum is
+\(v\ge6\), or \(Y\ge16\). The infinite sharp family developed below
+is the subfamily \(r\ge2\).
 
 #### Non-power-of-two case
 
