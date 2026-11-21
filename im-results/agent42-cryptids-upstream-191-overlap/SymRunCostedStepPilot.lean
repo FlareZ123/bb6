@@ -178,6 +178,26 @@ theorem step_CB_run0_run_pos_exact (d2 : Nat) (L R2 : List MItem) :
   have hfin := reachesIn_trans h12 h3
   convert hfin using 1 <;> omega
 
+
+/-- The C-zero / nil case exits directly to BB in three primitive steps. -/
+theorem step_CB_run0_nil_exact (L : List MItem) :
+    ReachesIn target_tm 3 (cfgCB target_tm L [.run 0])
+      (cfgBB target_tm (.run 0 :: bumpM L) []) := by
+  unfold cfgCB cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM L]
+  executeWithin 3
+
+/-- The C-zero / zero case exits directly to BB in five primitive steps. -/
+theorem step_CB_run0_zero_exact (L R2 : List MItem) :
+    ReachesIn target_tm 5 (cfgCB target_tm L (.run 0 :: .zero :: R2))
+      (cfgBB target_tm (.run 0 :: bumpM L) R2) := by
+  unfold cfgCB cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM L]
+  executeWithin 5
+
+
 #print axioms reachesWithin_mono
 #print axioms reachesWithin_trans
 #print axioms reachesWithin_of_exact
