@@ -1715,4 +1715,170 @@ theorem cb_fallback_then_bb_counter_sum_le_pow12 (L R : List SymTok)
 #print axioms cb_fallback_then_bb_counter_sum_le_pow12
 
 
+
+/-!
+## Numeric-field sum groundwork
+
+Unlike repeat-counter sum, numeric-field sum also counts literal run lengths.
+The bump operations can increase this measure by at most three, while each
+fuel-eat operation does not increase it because every matched block contains
+at least one unit of literal run length. These lemmas are groundwork for a
+direct maximum-field bound through the sweeps; that sweep-level theorem is
+not claimed here.
+-/
+
+def tokNumSum : SymTok → Nat
+  | .item .zero => 0
+  | .item (.run d) => d
+  | .repB1 k => k
+  | .rep2 p => p
+  | .rep12 m => m
+
+def listNumSum : List SymTok → Nat
+  | [] => 0
+  | t :: xs => tokNumSum t + listNumSum xs
+
+theorem listNumSum_append (xs ys : List SymTok) :
+    listNumSum (xs ++ ys) = listNumSum xs + listNumSum ys := by
+  induction xs with
+  | nil => simp [listNumSum]
+  | cons t xs ih => simp [listNumSum, ih, Nat.add_assoc]
+
+theorem bumpSymL_num_sum_le (xs : List SymTok) :
+    listNumSum (bumpSymL xs) ≤ listNumSum xs + 3 := by
+  induction xs with
+  | nil => simp [bumpSymL, listNumSum, tokNumSum]
+  | cons t xs ih =>
+    cases t with
+    | item x => cases x <;> simp [bumpSymL, listNumSum, tokNumSum] <;> omega
+    | repB1 k =>
+      cases k with
+      | zero => simpa [bumpSymL, listNumSum, tokNumSum] using Nat.le_trans ih (by omega)
+      | succ k =>
+        cases k with
+        | zero => simp [bumpSymL, listNumSum, tokNumSum] <;> omega
+        | succ k => simp [bumpSymL, listNumSum, tokNumSum, strictNat_eq] <;> omega
+    | rep2 p =>
+      cases p with
+      | zero => simpa [bumpSymL, listNumSum, tokNumSum] using Nat.le_trans ih (by omega)
+      | succ p => simp [bumpSymL, listNumSum, tokNumSum, strictNat_eq] <;> omega
+    | rep12 m =>
+      cases m with
+      | zero => simpa [bumpSymL, listNumSum, tokNumSum] using Nat.le_trans ih (by omega)
+      | succ m => simp [bumpSymL, listNumSum, tokNumSum, strictNat_eq] <;> omega
+
+theorem bumpSymR_num_sum_le (xs : List SymTok) :
+    listNumSum (bumpSymR xs) ≤ listNumSum xs + 3 := by
+  induction xs with
+  | nil => simp [bumpSymR, listNumSum, tokNumSum]
+  | cons t xs ih =>
+    cases t with
+    | item x => cases x <;> simp [bumpSymR, listNumSum, tokNumSum] <;> omega
+    | repB1 k =>
+      cases k with
+      | zero => simpa [bumpSymR, listNumSum, tokNumSum] using Nat.le_trans ih (by omega)
+      | succ k =>
+        cases k with
+        | zero => simp [bumpSymR, listNumSum, tokNumSum] <;> omega
+        | succ k => simp [bumpSymR, listNumSum, tokNumSum, strictNat_eq] <;> omega
+    | rep2 p =>
+      cases p with
+      | zero => simpa [bumpSymR, listNumSum, tokNumSum] using Nat.le_trans ih (by omega)
+      | succ p => simp [bumpSymR, listNumSum, tokNumSum, strictNat_eq] <;> omega
+    | rep12 m =>
+      cases m with
+      | zero => simpa [bumpSymR, listNumSum, tokNumSum] using Nat.le_trans ih (by omega)
+      | succ m => simp [bumpSymR, listNumSum, tokNumSum, strictNat_eq] <;> omega
+
+theorem eatStep_num_sum_le (blk : List SymTok) (getRep : SymTok → Option Nat)
+    (hblk : 1 ≤ listNumSum blk)
+    (hget : ∀ x k2, getRep x = some k2 → tokNumSum x = k2)
+    (k k' : Nat) (xs rest : List SymTok)
+    (h : eatStep blk getRep k xs = some (k', rest)) :
+    k' + listNumSum rest ≤ k + listNumSum xs := by
+  cases xs with
+  | nil => simp [eatStep] at h
+  | cons x xs1 =>
+    unfold eatStep at h
+    cases hg : getRep x with
+    | some k2 =>
+      simp [hg] at h
+      rcases h with ⟨rfl, rfl⟩
+      simp [listNumSum, hget x k2 hg]
+      omega
+    | none =>
+      cases hs : stripPrefixSym blk (x :: xs1) with
+      | none => simp [hg, hs] at h
+      | some rest2 =>
+        simp [hg, hs] at h
+        rcases h with ⟨rfl, rfl⟩
+        have hprefix := stripPrefixSym_some blk (x :: xs1) rest2 hs
+        rw [hprefix, listNumSum_append]
+        omega
+
+theorem eatFuel_num_sum_le (blk : List SymTok) (mkRep : Nat → SymTok)
+    (getRep : SymTok → Option Nat)
+    (hblk : 1 ≤ listNumSum blk)
+    (hMk : ∀ k, tokNumSum (mkRep k) = k)
+    (hget : ∀ x k2, getRep x = some k2 → tokNumSum x = k2)
+    (fuel k : Nat) (xs : List SymTok) :
+    listNumSum (eatFuel blk mkRep getRep fuel k xs) ≤ k + listNumSum xs := by
+  induction fuel generalizing k xs with
+  | zero => simp [eatFuel, listNumSum, hMk]
+  | succ fuel ih =>
+    cases hs : eatStep blk getRep k xs with
+    | none => simp [eatFuel, hs, listNumSum, hMk]
+    | some pair =>
+      rcases pair with ⟨k', rest⟩
+      have hstep := eatStep_num_sum_le blk getRep hblk hget k k' xs rest hs
+      have hrec := ih k' rest
+      simp [eatFuel, hs, strictNat_eq]
+      exact Nat.le_trans hrec hstep
+
+theorem getRepB1_num (x : SymTok) (k : Nat) (h : getRepB1 x = some k) :
+    tokNumSum x = k := by
+  cases x with
+  | item x => simp [getRepB1] at h
+  | repB1 n => simp [getRepB1] at h; simpa [tokNumSum] using h
+  | rep2 p => simp [getRepB1] at h
+  | rep12 m => simp [getRepB1] at h
+
+theorem getRep2_num (x : SymTok) (k : Nat) (h : getRep2 x = some k) :
+    tokNumSum x = k := by
+  cases x with
+  | item x => simp [getRep2] at h
+  | repB1 n => simp [getRep2] at h
+  | rep2 p => simp [getRep2] at h; simpa [tokNumSum] using h
+  | rep12 m => simp [getRep2] at h
+
+theorem getRep12_num (x : SymTok) (k : Nat) (h : getRep12 x = some k) :
+    tokNumSum x = k := by
+  cases x with
+  | item x => simp [getRep12] at h
+  | repB1 n => simp [getRep12] at h
+  | rep2 p => simp [getRep12] at h
+  | rep12 m => simp [getRep12] at h; simpa [tokNumSum] using h
+
+theorem eatB1_num_sum_le (k : Nat) (xs : List SymTok) :
+    listNumSum (eatB1 k xs) ≤ k + listNumSum xs := by
+  simpa [eatB1] using
+    (eatFuel_num_sum_le [.item (.run 0), .item (.run 1)] .repB1 getRepB1
+      (by simp [listNumSum, tokNumSum]) (by intro n; simp [tokNumSum])
+      getRepB1_num 4 k xs)
+
+theorem eatC2_num_sum_le (k : Nat) (xs : List SymTok) :
+    listNumSum (eatC2 k xs) ≤ k + listNumSum xs := by
+  simpa [eatC2] using
+    (eatFuel_num_sum_le [.item (.run 1), .item (.run 0), .item (.run 1)] .rep2 getRep2
+      (by simp [listNumSum, tokNumSum]) (by intro n; simp [tokNumSum])
+      getRep2_num 4 k xs)
+
+theorem eatC12_num_sum_le (k : Nat) (xs : List SymTok) :
+    listNumSum (eatC12 k xs) ≤ k + listNumSum xs := by
+  simpa [eatC12] using
+    (eatFuel_num_sum_le [.item (.run 1), .item (.run 0), .item (.run 1), .item (.run 0), .item (.run 1)] .rep12 getRep12
+      (by simp [listNumSum, tokNumSum]) (by intro n; simp [tokNumSum])
+      getRep12_num 4 k xs)
+
+
 end BusyBeaver.SymRunAudit
