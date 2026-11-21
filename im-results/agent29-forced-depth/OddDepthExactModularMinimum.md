@@ -1,6 +1,6 @@
 # Exact finite modular minimization for odd-depth Machine C high stopping residuals
 
-**Status (21 November 2026):** The exact finite modular minimization, logarithmic cutoff, uniform sharp envelope, and the root-sensitive dyadic gap below have paper proofs. The new arithmetic compositions are **not yet Lean-certified**. The underlying original-source stopping, normalization, and M8 quotient-filter modules are separately kernel-checked; no complete Machine C or BB(6) decision is asserted.
+**Status (21 November 2026):** The exact finite modular minimization, logarithmic cutoff, uniform sharp envelope, root-sensitive dyadic gap, and M8-filtered logarithmic bound below have paper proofs. The new arithmetic compositions are **not yet Lean-certified**. The underlying original-source stopping, normalization, and M8 quotient-filter modules are separately kernel-checked; no complete Machine C or BB(6) decision is asserted.
 
 Let m≥1 be odd, j,k,d,Y natural, and suppose
 
@@ -183,6 +183,93 @@ Sample quotient lower bounds (before rounding `Y` to `4 mod 12`):
 | 21 | exceptional, root-reachable | 1,099,511,627,775 | 183,251,937,962 (M8-excluded) |
 
 These bounds sharpen the residual frontier but still leave the general blank-root classification open.
+
+### M8-filtered logarithmic lower bound for blank-root candidates
+
+The M8 quotient cylinder gives a general source-sensitive correction to the modular minimum. In the deep sector, put `v=(Y+2)/3` and `t=d mod (2*L)`. Since `2*L` is even, `d%2=t%2`. The source mass identity is
+
+```
+x+2*Y+4*d = 2*j+3+2*k.
+```
+
+Together with `j+m=3 (mod 4)`, `k+2=3*v*2^d`, and `Y=3*v-2`, it gives the exact equivalence
+
+```
+(x%8=7 and Y%8=4)  <->  (v%8=2 and 2*t = m+1 (mod 4)).
+```
+
+Indeed, `Y%8=4` is equivalent to `v%8=2`; in that case `2*Y=0 (mod 8)` and `2*k=4 (mod 8)` for every `d>=1`. If `m%4=1`, then `j%4=2` and the mass identity gives `x%8=7` exactly when `d` is odd. If `m%4=3`, then `j%4=0` and it gives `x%8=7` exactly when `d` is even. These are precisely `2*d=m+1 (mod 4)`, hence `2*t=m+1 (mod 4)`. Because `Y%12=4`, the other three cylinders in `affineQuotientCondition` (whose right coordinates are 2, 15, or 7 modulo 16) cannot apply; M8 is the only quotient cylinder relevant here.
+
+For each modular exponent residue `t`, let `v_t` be the exact CRT minimum from (★), and define
+
+```
+vhat_t = v_t+4*Q,  if (v_t%8=2 and 2*t=m+1 (mod 4)),
+         v_t,      otherwise.
+```
+
+If the first case holds, the solution `v=v_t` would put the actual normalized state in the source-forbidden M8 cylinder, so it cannot be blank-root reachable. The next solution in that CRT class is `v_t+4*Q`; hence every blank-root-reachable input satisfies `v>=vhat_t` for its exponent residue. Therefore
+
+```
+Y >= 3*min_(0<=t<2*L) vhat_t - 2.
+```
+
+This is a necessary bound using the source-certified `affineQuotientExcluded_sound` filter. It is not a complete root decision: the other source constraints may exclude more.
+
+#### The M8-filtered minimum also has a logarithmic cutoff
+
+Let `t0=floor(log2(3*m))`. Both `t0` and `t0+1` lie in `0..2*L-2`, and they have opposite parity. At `t0`, `0<n_t0<2^t0`, so `v_t0<Q`. At `t0+1`, the raw residue is `n=2^(t0+2)-3*m` and
+
+```
+v_(t0+1) = 2*Q-(3*m*Q+m)/2^(t0+1) <= 3*Q/2-1/6,
+```
+
+because `2^(t0+1)<=6*m`. Exactly one of these two consecutive residues fails the M8 parity condition `2*t=m+1 (mod 4)`; that candidate is not M8-excluded. Thus the M8-filtered minimum is at most `3*Q/2-1/6`.
+
+For `t<=2*L-2` with `2^t>6*m`, the raw-residue formula gives `v_t=2*Q-(3*m*Q+m)/2^t >3*Q/2-1/6`, so such a residue cannot minimize `vhat_t`. The endpoint `t=2*L-1` is even larger: its quotient congruence gives `v_t>=4*Q-(6*m*Q+2*m)/2^(2*L)>3*Q`. Therefore the M8-filtered minimum is attained among only
+
+```
+0 <= t <= floor(log2(6*m)).
+```
+
+So the source-filtered residual lower bound is still computable in `O(log m)` exact power-of-two residue operations.
+
+An exact evaluator is:
+
+```python
+def m8_filtered_lower_bound(m: int) -> tuple[int, int]:
+    assert m >= 1 and m % 2 == 1
+    L = m + 1
+    Q = (2 ** (2 * L) - 1) // 3
+    candidates = []
+    t = 0
+    while 2 ** t <= 6 * m:
+        modulus = 2 ** (t + 2)
+        n = (2 ** (t + 1) - 3 * m) % modulus
+        numerator = n * Q - m
+        assert numerator % (2 ** t) == 0
+        v = numerator // (2 ** t)
+        assert v % 4 == 2
+        m8 = (v % 8 == 2) and ((2 * t - (m + 1)) % 4 == 0)
+        vhat = v + 4 * Q if m8 else v
+        candidates.append((3 * vhat - 2, t))
+        t += 1
+    return min(candidates)
+```
+
+Sample exact lower bounds:
+
+| `m` | raw modular minimum `v` | M8-filtered minimum `vhat` | lower bound on `Y` |
+|---:|---:|---:|---:|
+| 1 | 2 | 6 | 16 |
+| 3 | 74 | 74 | 220 |
+| 5 | 170 | 1,450 | 4,348 |
+| 7 | 15,018 | 16,382 | 49,144 |
+| 9 | 109,226 | 109,226 | 327,676 |
+| 11 | 5,417,642 | 5,417,642 | 16,252,924 |
+| 13 | 22,369,618 | 22,369,618 | 67,108,852 |
+| 21 | 183,251,937,962 | 5,955,687,983,786 | 17,867,063,951,356 |
+
+These are lower bounds after applying the M8 cylinder only; they do not claim that the minimizing filtered residue is itself reachable.
 
 ### Relation to the exact finite minimum
 
