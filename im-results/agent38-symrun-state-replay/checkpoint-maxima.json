@@ -121,7 +121,9 @@
           "maxFieldInChunk": "12464561897144001482331935594779263804489570179353031112091137",
           "maxFieldAtCheckpoint": "10387134914286667901943279662316053170407975149460859260070043"
         }
-      ]
+      ],
+      "finalMode": "HALT",
+      "stepSymTransitions": 70511
     },
     "F412": {
       "maxFieldStep": 21275,
@@ -169,7 +171,9 @@
           "maxFieldInChunk": "412597277036535862786",
           "maxFieldAtCheckpoint": "343831064197113217107"
         }
-      ]
+      ],
+      "finalMode": "HALT",
+      "stepSymTransitions": 21383
     }
   }
 }
