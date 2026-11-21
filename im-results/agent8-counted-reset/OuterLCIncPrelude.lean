@@ -459,8 +459,10 @@ theorem outerLCInc_preHRun
       have hrest : d1pow r ++ d0 ++ binDec len q ++ lh =
           d1pow r ++ (d0 ++ binDec len q ++ lh) := by
         simp [List.append_assoc]
-      rw [hrest,← d1pow_length r,outer_sideBit_append_shift]
-      simp [d0,sideBit]
+      rw [hrest, ← d1pow_length r]
+      have hshift := outer_sideBit_append_shift
+        (d1pow r) (d0 ++ binDec len q ++ lh) 0
+      simpa [d0, sideBit] using hshift
     calc
       T2 (h1-(3*r:Int)) = T (h1-(3*r:Int)) := hp
       _ = sideBit (d1pow r ++ d0 ++ binDec len q ++ lh) (3*r) := by
@@ -495,6 +497,9 @@ theorem outerLCInc_preHRun
   simp only [Option.bind_some]
   rw [run_append,hbridge']
   simp only [Option.bind_some]
+  have hhead : h-(3*a:Int)-(m+5:Int)+2 =
+      h-(3*a+m+5:Int)+2 := by omega
+  rw [← hhead]
   simpa [T,T1,T2,h0,h1] using hhrun
 
 #print axioms markerBridge_finite
