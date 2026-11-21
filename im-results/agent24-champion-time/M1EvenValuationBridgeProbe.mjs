@@ -162,6 +162,8 @@ function checkCase({ L, v, qOdd, a, b }) {
 }
 
 const cases = [];
+
+// Original 480-case interior grid.
 for (let v = 1; v <= 8; v++) {
   for (const qOdd of [1, 3, 5, 7, 9]) {
     for (const a of [0, 1, 2, 5, 10, 20]) {
@@ -172,6 +174,27 @@ for (let v = 1; v <= 8; v++) {
     }
   }
 }
-console.log(`PASS: ${cases.length} cases; v=1..8, q odd in {1,3,5,7,9}, a in {0,1,2,5,10,20}, b in {0,2}; every phase endpoint and total cost matched.`);
+
+// Boundary family q=0: pure powers of two, including n=1 and the
+// maximum valuation v=15 for L=16.  The source theorem requires a>0.
+for (let v = 0; v <= 15; v++) {
+  for (const a of [1, 2, 5, 10, 20]) {
+    for (const b of [0, 2]) {
+      cases.push(checkCase({ L: 16, v, qOdd: 0, a, b }));
+    }
+  }
+}
+
+// Boundary valuation v=0 with positive odd quotients, including q=0
+// in the previous loop and n=1 here.
+for (const qOdd of [1, 3, 5, 7, 9]) {
+  for (const a of [1, 2, 5, 10, 20]) {
+    for (const b of [0, 2]) {
+      cases.push(checkCase({ L: 16, v: 0, qOdd, a, b }));
+    }
+  }
+}
+
+console.log(`PASS: ${cases.length} cases; original 480-case grid plus 160 q=0 pure powers (v=0..15) and 50 v=0 odd-quotient cases; every phase endpoint, q4 cut, and total cost matched.`);
 console.log("First case:", cases[0]);
 console.log("Last case:", cases[cases.length - 1]);
