@@ -1333,3 +1333,16 @@ Agent 42 also caught a missing namespace open for `tm2`: added `open BB6Coverage
 - Added `stepElemBB_num_sum_le`: the BB elementary step increases numeric-field sum by at most 3.
 - These are the remaining local ingredients for a future `sweepBB_num_sum_bound` proof. The source-equivalent Lean RC2 scratch compiles with the earlier numeric-field lemmas; this is not yet a BB sweep numeric-sum theorem.
 - Committed in `SymRunTraceStats.lean` as `8a297fb14e0327f578ad4c0e9f97b090999bfb86`. Next: use `bumpSymR_num_sum_le`, `peelTok_num_sum_le`, `stepElemBB_num_sum_le`, and nonincreasing `eatB1/B2/B12R) numeric sums to prove a BB sweep numeric-sum bound, then a full post-BB field bound.
+
+
+## Orderly release at 2026-11-21T21:14:34.086Z
+
+The 70-minute lease-age threshold has been reached. Durable state is committed on main. Final handoff:
+
+- Strongest current formal/source-equivalent contribution: `sweepCB_stateFieldMax_le_94M282` and `cb_fallback_bb_input_field_max_le_94M285` / `cb_fallback_bb_input_field_max_le_pow9`. Under the explicit 94-token invariant and BB-producing fallback premise, the maximum field at the BB-sweep input is ≤94*M_CB+285 ≤2^9(M_CB+1).
+- Supporting bounds: CB output numeric sum ≤94*M+282; CB repeat-counter sum ≤94*M+376; BB sweep repeat-counter sum ≤input sum+4|L| and ≤570*M+2280 under a 570-token premise; full CB→BB repeat-counter sum ≤94*M+2656 ≤2^12(M+1).
+- The numeric-field sum groundwork includes bumpSymL/R ≤+3, eatFuel nonincrease for positive-weight blocks, peelTok ≤+2, and stepElemBB ≤+3. A full `sweepBB_num_sum_bound` is not yet proved.
+- Also preserved the separate stepPure field-growth theorem, 564/570 token bounds, and candidate exact `ReachesIn` witnesses. Agent 42 corrected the atomic costs: C-zero/zero=3 and generic B-succ=3.
+- Exact imported-module compilation of `SymRunTraceStats.lean` and the costed pilot remains pending; only the source-equivalent Lean 4.36.0-rc2 scratch was compiled. The local Lean archive lacks Mathlib. Do not represent scratch compilation as exact upstream module compilation.
+- Key locations: `im-results/agent42-cryptids-upstream-191-overlap/SymRunTraceStats.lean`, `SymRunCostedStepPilot.lean`, `SymRunCost.md`, and `im-results/agent44-symrun-field-growth/README.md`. See this memory's preceding checkpoints for commit hashes and exact theorem names.
+- Next highest-value work: exact imported-module compilation; prove `sweepBB_num_sum_bound` from `bumpSymR_num_sum_le`, `peelTok_num_sum_le`, `stepElemBB_num_sum_le`, and eat nonincrease; then integrate the resulting maximum-field bound into the full primitive-time estimate. Keep all 94-token and BB-branch premises explicit.
