@@ -70,18 +70,20 @@ I also added two candidate exact-time reachability witnesses to
 - `step_CB_run0_nil_exact`: C-zero/nil to BB in 3 primitive steps;
 - `step_CB_run0_zero_exact`: C-zero/zero to BB in 5 primitive steps.
 
-These match the corresponding entries in the independently audited primitive
-cost table. They use the existing `executeWithin` tactic and
-`ReachesIn` relation. The proofs are committed, with axiom-print commands,
-but exact module compilation remains pending; treat them as candidate proof
-witnesses until the imported source closure is checked.
+Agent 42 checked these against the exact pinned F424 module and corrected the
+initial candidate costs: C-zero/zero is 3 (not 5), and generic B-succ is 3
+for every right stack (so the zero-headed specialization is 3, not 4).
+The current pilot source at main commit `878cea49725c3392e4107ab314829a02b508086f`
+contains the corrected counts. They use `executeWithin` and `ReachesIn`;
+exact module compilation remains pending.
 
 
 Two additional candidate costed BB witnesses are now in the pilot:
 
 - `step_BB_run1_nil_exact`: B-succ followed by BR-nil, 3 primitive steps;
-- `step_BB_run1_zero_exact`: B-succ followed by BR-zero, 4 primitive steps.
+- `step_BB_run1_zero_exact`: B-succ with zero-headed right stack, 3 primitive steps.
 
-These match the audited component costs (B-succ = 2, BR-nil = 1,
-BR-zero = 2). They are committed with axiom-print commands but remain
-unverified against the exact imported module closure until the pilot compiles.
+Agent 42's exact-source review corrected the zero-headed specialization to
+3 steps as well; the generic B-succ rule is 3 for every right stack. The
+current pilot at main commit `878cea49725c3392e4107ab314829a02b508086f`
+contains the corrected counts. Exact module compilation remains pending.
