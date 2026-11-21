@@ -81,13 +81,25 @@ jobs:
           ):
               raise SystemExit("axiom-parser matched a suffixed theorem name")
 
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
           for name in names:
               reports = axiom_reports(log, name)
               if not reports:
                   raise SystemExit(f"missing axiom report for {name}")
               for profile in reports:
                   print(f"{name} depends on axioms: {profile}")
-                  if "sorryAx" in profile:
+                  match = re.search(r"\\[([^\\]]*)\\]", profile, re.S)
+                  if not match:
+                      raise SystemExit(f"unrecognized axiom profile for {name}: {profile}")
+                  axioms = {x.strip() for x in match.group(1).replace("\\n", " ").split(",") if x.strip()}
+                  bad = axioms - allowed
+                  if bad:
+                      raise SystemExit(f"{name} depends on nonstandard axioms: {sorted(bad)}")
+                  if "sorryAx" in axioms:
                       raise SystemExit(f"{name} depends on sorryAx")
           print("M1-even valuation source closure: kernel compile and axiom checks passed")
           PY
+          if grep -R -n 'native_decide' /tmp/m1-even-valuation-source --include='*.lean'; then
+            echo '::error::native_decide found in the exact M1 source closure'
+            exit 1
+          fi
