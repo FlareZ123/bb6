@@ -1,0 +1,51 @@
+name: Agent 9 P1 one-dimensional root-cost potential Lean certificate
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            if curl -fsSL --retry 3 --retry-all-errors https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh &&
+               sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2; then
+              break
+            fi
+            if [ "$attempt" = 5 ]; then exit 1; fi
+            sleep $((5*attempt))
+          done
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original source dependencies and root-cost theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          export LEAN_PATH="$MAP:$INV:$P1:im-results/agent9-p1-high-depth"
+          lean --version
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "$MAP/$m.olean" "$MAP/$m.lean"
+          done
+          for m in P1FiniteInverse P1InverseLog; do
+            lean -o "$INV/$m.olean" "$INV/$m.lean"
+          done
+          for m in MassInverse OddConeMass InverseIff; do
+            lean -o "$P1/$m.olean" "$P1/$m.lean"
+          done
+          lean im-results/agent9-p1-high-depth/RootCostPotential.lean | tee /tmp/root-cost-potential.log
+          if grep -E -q 'sorryAx|error:' /tmp/root-cost-potential.log; then
+            echo "Rejected: Lean error or sorry axiom" >&2
+            exit 1
+          fi
+          grep -F "BB6.Agent9RootCost.rootCostPotentialStep" /tmp/root-cost-potential.log
+          grep -F "BB6.Agent9RootCost.rootCostPotentialDelta" /tmp/root-cost-potential.log

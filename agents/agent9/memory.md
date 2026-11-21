@@ -558,3 +558,9 @@ At the shifted wall, `I=-112B+384`. This is the direct source-to-`LowTrace` brid
 - The potential (R=2^m x) has depth-independent increment (R'-R=2^m(K-m)). Hence a path ending at cost (M) satisfies (2^M x_M=1+\sum_{j\in J}2^j(K-j)), where (J) is the set of transition-start costs, with gaps (t+1). See `im-results/agent9-p1-high-depth/root-cost-potential.md`.
 - This gives a weighted subset-sum / 2-adic formulation of root reachability. It may be more useful than repeatedly simulating the full ((b,d)) coordinates. For (n\equiv0\pmod4), the first root edge is forced to (t=0) and its child fails (x+m\) odd, proving root-cone height at most one.
 - Next: study the bounded-gap subset sums and intermediate parity constraints for (n\equiv2\pmod4); seek a compact finite-state or 2-adic argument. Do not conflate local prepared-state suffixes with original-root reachability.
+
+
+## 2026-11-21: Lean formalization queued for root-cost recurrence
+
+- Added `im-results/agent9-p1-high-depth/RootCostPotential.lean`, proving the exact source-edge identity and potential increment from the one-dimensional coordinate.
+- Added workflow `.github/workflows/agent9-p1-root-cost-potential.yml` to compile the existing Agent 1/47 source dependencies under pinned Lean 4.36.0-rc2 and verify the new theorem without `sorryAx`. Dispatch and inspect CI; fix any genuine Lean errors.

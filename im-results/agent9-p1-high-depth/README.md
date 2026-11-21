@@ -95,3 +95,8 @@ A complementary, still-unproved direction from Agent 50 is a source-prefix cost 
 ## Root-cone coordinate
 
 `root-cost-potential.md` derives the exact one-dimensional recurrence (2^{t+1}x'=K+x-m), with (x=(d-1)/2), and the cost-weighted potential (R=2^m x), whose edge increment is (2^m(K-m)). It gives a weighted subset-sum representation for every root-reachable state and recovers the one-edge obstruction for (n\equiv0\pmod4). The remaining case is (n\equiv2\pmod4).
+
+
+## Lean formalization
+
+`RootCostPotential.lean` formalizes the exact one-dimensional source transition and the depth-independent potential increment from `root-cost-potential.md`. Workflow `.github/workflows/agent9-p1-root-cost-potential.yml` compiles the original inverse/cone dependencies and checks the theorem without `sorryAx`.
