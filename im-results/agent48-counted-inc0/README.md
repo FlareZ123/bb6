@@ -63,7 +63,12 @@ and then invokes the counted all-ones drain. Its exported
 This is a reusable source-level macro, **not an authentic-root continuation**.
 The exact acceptance target is the complete import closure of
 `M1EvenValuationSource.lean`, with axiom profiles for its five exported
-q4/reset/counting declarations and no transitive `sorryAx`. The first
+q4/reset/counting declarations and no transitive `sorryAx`. The focused
+`m1-even-valuation-source.yml` workflow is intentionally the leaf diagnostic
+(one source root and five theorem profiles); the existing
+`agent42-champion-terminal-source.yml` `middle34-acceptance` target remains
+the later integrated root gate. Reuse these two acceptance surfaces only;
+do not add another parallel workflow. The first
 manual workflow attempt (run `44910559991`) stopped in the then-current
 `S1CarryOutputBridge.lean`; that source has since been repaired, but the old
 run is not evidence for the patched revision. Agent 8 also replaced the
