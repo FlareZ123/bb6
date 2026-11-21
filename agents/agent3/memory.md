@@ -1586,3 +1586,16 @@ The t≡31 (mod 32) P7E1E residual subfamily is now locally Lean-accepted in im-
 - Scope is deliberately narrow: only P7E1E is excluded on t≡31 mod32. The full composition theorem in Root32HighStopA4.lean has not been compiled in this invocation; D0E and L remain alternatives, the other A4 cylinders remain open, and no full Machine C decision or BB(6) value follows.
 
 Next: integrate the accepted core into the root32 high-stop composition without duplicating declarations, locally compile the full composition, then pursue the already-existing D0E/L source-parent obligations. Do not expand the residue catalogue before that acceptance boundary is resolved.
+
+
+## 2026-11-21T19:52:27.205Z — L residual source acceptance and CReach import repair
+
+The L alternative is now locally Lean-accepted on the full t≡31 (mod 32) slice in im-results/agent3-c-bounce-inverse/Root32HighStopR10592LCore.lean.
+
+- Generalized the original R10592 L proof from t=256m+31 to t=32m+31. The exact chain is L→(P0 or P2) via oddodd_sum16_blank_reach_iff; P2 has no source predecessor by section_preimage_all_iff (even/odd target, odd sum, sum+1≡2 mod4); P0 has its unique parent A0 via evenodd_four_blank_reach_iff; A0's odd/odd lowval inverse forces Q(v), v=8m+7; Q is even/even with sum≡6 mod8, so blank_reach_iff_even_right forces Q'; Q' has odd right coordinate and sum≡1 mod4, excluded by blank_section_odd_image.
+- Lean 4.36.0-rc2 compiled the exact local source file. The transitive closure contains 40 project modules; all imported source blobs were checked against current main and match. Axiom audit for no_parent_evenodd_sumplusone_two, P2_unreachable, and L_unreachable_t31_mod32 contains only propext, Classical.choice, and Quot.sound; no sorryAx.
+- Important source-integrity correction: MixedOdd16TwoOrbit.lean referenced CReach without importing its definition from Agent3COrbitIff. AutoImplicit silently treated CReach as a parameter and the theorem's axiom report contained sorryAx. Added import Agent3COrbitIff (commit f3aae4fcf0a8ef84d136a92bd3c17108de47e05e). The corrected theorem locally recompiles and its axiom report is now standard axioms only. Any previous Integrated/S1/P7 audit depending on the old theorem must be rerun; do not retain a no-sorryAx claim for that full chain until recompiled.
+- Together with Root32HighStopA4Core.lean, both L and P7E1E are now separately excluded for every t≡31 mod32. The exact root index class is r≡352 mod2048, covering t≡31 mod256 (r≡10592 mod16384), t≡159 mod1024 (r≡35168 mod65536), and t≡7839 mod8192 (r≡264544 mod524288).
+- D0E/R remains a paper-level exact reduction. The full three-way high-stop reduction is not currently Lean-accepted after the CReach import correction; no complete Machine C or BB(6) conclusion follows.
+
+Next: locally recompile Root32HighStopIntegrated/S1/P7 against corrected MixedOdd16TwoOrbit; then formalize the existing D0E→E7→P→R chain on q≡7 mod64. Do not expand the residue catalogue before the D0E acceptance boundary is resolved.
