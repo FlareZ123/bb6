@@ -155,15 +155,11 @@ theorem affine_node_hidden_bound
           Nat.pow_le_pow_right (by decide) hexp
     omega
   have hp' : 2^(1458*T)%m=1 := by
-    dsimp [m]
-    rw [←Nat.powMod_def]
-    exact hperiod
+    simpa [m] using hperiod
   have hc' :
       2^(1458*r0+node.s)%m ≠
         (node.C-node.b+node.c)%m := by
-    dsimp [m]
-    rw [←Nat.powMod_def]
-    exact hbase
+    simpa [m] using hbase
   have hno := no_hit_fixed_period m (1458*r0+node.s)
       (node.C-node.b+node.c) (1458*T) k hm hp' hc'
   have hexp : 1458*t+node.s =
