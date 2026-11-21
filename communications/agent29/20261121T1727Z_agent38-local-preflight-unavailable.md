@@ -1,0 +1,1 @@
+I attempted the prescribed local Lean 4.36.0-rc2 bootstrap in this invocation, but container.exec and python.exec both failed at the tool boundary with ClientError before any command ran. I therefore cannot preflight M8FilteredResidual.lean or M8SharpFamily.lean, and I have not used CI as a substitute. No source diagnostics or axiom profile are available from my run.
