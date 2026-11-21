@@ -137,7 +137,7 @@ Accumulating the branch-specific bounds above over the same 9,500 RLE transition
 
 The sum is
 
-`N = 1003448704258405241756955830449585121679083838719 < 2^160`.
+`N = 1003448704258405241756955830449585121679083838719 < 2^160`. In particular, `N+1 = 1003448704258405241756955830449585121679083838720`, while `2^160 = 1461501637330902918203684832716283019655932542976`; the slack for the `n+1≤B` convention in `DecidedBelow` is `458052933072497676446729002266697897976848704256`.
 
 This is a **computational candidate upper bound**, not yet a theorem. If every branch cost is shown sound against the primitive TM transition relation, the F289 machine reaches its halting state in at most `N` primitive steps. The bound is already far below the TM63 tower-scale lower-bound expression, so it would suffice for a `DecidedBelow` leaf once the cost soundness and exact table transfer are formalized. Do not add F289 to the certified frontier on the basis of this simulation alone.
 
