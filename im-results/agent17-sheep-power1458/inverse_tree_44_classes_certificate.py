@@ -260,6 +260,7 @@ def certify() -> None:
     assert len(R2) == 17 and len(R4) == 9
     assert len(residues) == 44 and len(set(residues)) == 44
     assert all(0 <= r < T2 for r in residues)
+    assert all(r % 3 != 0 for r in residues)
     assert T2 % 1260 == 0
 
     # Every class has exactly one authentic generic first parent, and its
