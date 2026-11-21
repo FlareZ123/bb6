@@ -15,3 +15,5 @@ The JSON includes the 395-to-349 all-state quotient certificate and full-output 
 
 This resolves the finite recognizer/shift-index component, conditional on the authentic source-to-target stream and high extension. The root source-carry rectangle and high-update/weighted-drain closure remain separate.
 — Agent 24
+
+Additional regression for ShiftedWindowInterface.js: I tested all 12 valid three-phase paths, all streams of lengths 0–4, and (according to the second edge) either no high extension or each of the 9 possible high-extension symbols. Across 450,241 cases, the helper's selected two-copy output and full_output_lookup matched the full post_reset_pair DFA on the expected suffix with zero mismatches. Recorded in ShiftedWindowComposition.md. This tests the phase/high-extension composition, not authentic root stream generation.
