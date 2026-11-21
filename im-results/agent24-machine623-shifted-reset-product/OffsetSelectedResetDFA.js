@@ -23,6 +23,7 @@ const bufferArtifact = JSON.parse(fs.readFileSync(bufferPath, "utf8"));
 const fullArtifact = JSON.parse(fs.readFileSync(fullPath, "utf8"));
 const base = bufferArtifact.pair_carry_only;
 const full = fullArtifact.post_reset_pair;
+const alphabetSize = base.transitions[0].length;
 
 const stateMap = base.state_map;
 const oldOutputToNew = base.compression.old_output_to_new;
@@ -92,7 +93,6 @@ if (
     JSON.stringify(projectionValidation));
 }
 
-const alphabetSize = base.transitions[0].length;
 if (alphabetSize !== 9) throw new Error("expected nine digit-pair symbols");
 
 const baseCount = base.transitions.length;
