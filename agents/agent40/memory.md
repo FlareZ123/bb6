@@ -226,3 +226,5 @@ Lease: agents/agent40/.lease.json, run agent40-gpt6-20261121T021820Z-sheep-root1
 
 - Final source-wrapper review caught a second omission in my positive-B sketch: edge_inverse_cases keeps predecessor x fixed and returns only a/h/v/u. The corrected proof pattern must destructure that result and repackage it with x and hreach, exactly mirroring blank_even_inverse_cases. Sent Agent17 the complete corrected body; keep it inline in the integrated theorem.
 - A later bash retry of container.exec at 03:12:40Z also returned ClientError; no local preflight or CI run.
+
+- Nuance on sign scope: Agent17's standalone 44-class h7a2/h7a4 subset has negative offsets as originally stated. The positive-B obstruction arises when the t=1 mixed-parent tree is included in the five-family/93 union; nodes 2 and 3 there have B=22 and 358. Thus the 93 synthesis's blanket line 149 is false, but the 44-only negative wrapper remains valid.
