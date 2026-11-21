@@ -178,6 +178,9 @@ theorem step_CB_run0_run_pos_exact (d2 : Nat) (L R2 : List MItem) :
   have hfin := reachesIn_trans h12 h3
   convert hfin using 1 <;> omega
 
+#print axioms reachesWithin_mono
+#print axioms reachesWithin_trans
+#print axioms reachesWithin_of_exact
 #print axioms step_BB_nil_exact
 #print axioms step_BB_run0_exact
 #print axioms cyc_R_A_exact
