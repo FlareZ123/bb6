@@ -81,3 +81,25 @@ What changes is the phase sequence and its observed edge relation. The S-indexed
 - q/S window definitions: `im-results/agent41-623-3euclidean/MonotoneMassWindow.md`
 - Signed correction formulas: `im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean`
 - Boundary carry formulas: `im-results/agent24-machine623-shifted-reset-product/StartCarryRectangleInclusion.md`
+
+
+## The three slowest S-window reset witnesses
+
+I independently replayed the next-state S-window against Agent32's 263-state `ResetPatternDFA.json`. The acceptance-end histogram matches `MassWindowResetDiagnostic.md` exactly:
+[
+3:2196,\ 4:4210,\ 5:2241,\ 6:866,\ 7:290,\ 8:105,\ 9:37,\ 10:14,\ 11:6,\ 12:3.
+]
+The only three windows whose first accepting end position is 12 are:
+
+| Transition index | S-boundary phase of tested next state | First 12 digit pairs |
+|---:|---|---|
+| 3383 | `RE|R|0,1|-2,1` | `10 10 20 20 20 00 10 00 20 10 12 20` |
+| 6931 | `LE|L|1,1|0,0` | `22 02 20 21 12 12 10 01 12 21 12 02` |
+| 8643 | `LE|R|0,2|-1,0` | `21 02 02 20 11 11 11 11 20 02 00 21` |
+
+Their DFA state paths (including the initial state 0 and accepting state 3) are respectively:
+- 3383: `0,18,54,151,222,119,200,133,208,220,160,41,3`
+- 6931: `0,36,127,85,34,105,87,103,140,11,17,33,3`
+- 8643: `0,31,124,169,176,179,199,227,175,226,244,41,3`
+
+Across the finite trace, 253 of the 262 boundary phases occur with more than one first-acceptance position. Thus the phase key alone does not determine the reset deadline; these three late cases are not isolated phase states. The exact 12-symbol words above are useful regression targets for any stronger root-prefix automaton.
