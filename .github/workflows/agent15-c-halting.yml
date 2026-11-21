@@ -201,4 +201,8 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent29-forced-depth/DeepSecondFinal.lean" .
           lean -o DeepSecondFinal.olean DeepSecondFinal.lean
           cp "$GITHUB_WORKSPACE/im-results/agent29-forced-depth/M8FilteredResidual.lean" .
-          lean M8FilteredResidual.lean
+          lean -o M8FilteredResidual.olean M8FilteredResidual.lean
+          # Explicit dyadic sharp family and its source-normalized M8 cylinder.
+          # This step is intended to run only after local RC2 preflight.
+          cp "$GITHUB_WORKSPACE/im-results/agent29-forced-depth/M8SharpFamily.lean" .
+          lean -o M8SharpFamily.olean M8SharpFamily.lean
