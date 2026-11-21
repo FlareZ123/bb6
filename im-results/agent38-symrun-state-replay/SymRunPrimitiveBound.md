@@ -133,7 +133,23 @@ def ReachWithin (M : Machine Γ Λ) (c c' : Cfg Γ Λ) (B : Nat) : Prop :=
   ∃ n, n ≤ B ∧ multiStep M c n = some c'
 ```
 
-and prove additive composition directly with `multiStep_trans`. Then add a cost-indexed parallel to the existing `stepPure_sound`, `sweepBB_sound`, `sweepCB_sound`, `tryRuleA_sound`, `tryRuleB_sound`, and `tryRuleBC_sound` proofs. Do not try to extract a Nat from their existing `ReflTransGen` proofs in `Prop`.
+and prove additive composition directly with `multiStep_trans`:
+
+```lean
+def ReachWithin (M : Machine Γ Λ) (c c' : Cfg Γ Λ) (B : Nat) : Prop :=
+  ∃ n, n ≤ B ∧ multiStep M c n = some c'
+
+theorem ReachWithin.trans
+    (h1 : ReachWithin M c₁ c₂ B₁)
+    (h2 : ReachWithin M c₂ c₃ B₂) :
+    ReachWithin M c₁ c₃ (B₁ + B₂) := by
+  rcases h1 with ⟨n, hn, hstep⟩
+  rcases h2 with ⟨m, hm, hstep'⟩
+  refine ⟨n + m, Nat.add_le_add hn hm, ?_⟩
+  exact multiStep_trans hstep hstep'
+```
+
+Then add a cost-indexed parallel to the existing `stepPure_sound`, `sweepBB_sound`, `sweepCB_sound`, `tryRuleA_sound`, `tryRuleB_sound`, and `tryRuleBC_sound` proofs. Do not try to extract a Nat from their existing `ReflTransGen` proofs in `Prop`.
 
 Two independent obligations remain:
 
