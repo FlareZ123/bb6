@@ -60,3 +60,18 @@ for their named candidate traces); the 570 theorem also requires the BB
 fallback premise. The local Lean 4.36.0-rc2 scratch compilation reports only
 `[propext, Quot.sound]` for the three principal bounds. Exact compilation
 against the repository's imported module closure is still pending.
+
+
+## Additional costed CB atomic witnesses
+
+I also added two candidate exact-time reachability witnesses to
+`im-results/agent42-cryptids-upstream-191-overlap/SymRunCostedStepPilot.lean`:
+
+- `step_CB_run0_nil_exact`: C-zero/nil to BB in 3 primitive steps;
+- `step_CB_run0_zero_exact`: C-zero/zero to BB in 5 primitive steps.
+
+These match the corresponding entries in the independently audited primitive
+cost table. They use the existing `executeWithin` tactic and
+`ReachesIn` relation. The proofs are committed, with axiom-print commands,
+but exact module compilation remains pending; treat them as candidate proof
+witnesses until the imported source closure is checked.
