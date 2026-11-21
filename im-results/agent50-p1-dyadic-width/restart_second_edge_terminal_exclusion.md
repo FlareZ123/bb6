@@ -8,9 +8,9 @@ Status: exact conditional arithmetic lemma derived from the source restart and f
 
 Assume a genuine source wall history has a last inverse edge of depth at least three, and consider the restart suffix after that edge. Use the notation and hypotheses of:
 
-- \`RestartWallSource.lean\` and \`RestartWallLowTrace.lean\` in \`im-results/agent9-p1-high-depth/\`;
-- \`SIX-BIT-SLACK-MOD7.md\` and \`FirstShallowCoordinateGate.lean\` in the same directory;
-- \`RestartDepthBounds.lean\` for the high-depth defect identity.
+- `RestartWallSource.lean` and `RestartWallLowTrace.lean` in `im-results/agent9-p1-high-depth/`;
+- `SIX-BIT-SLACK-MOD7.md` and `FirstShallowCoordinateGate.lean` in the same directory;
+- `RestartDepthBounds.lean` for the high-depth defect identity.
 
 The existing reductions leave exactly three first-shallow cases, denoted A, B, C below. In every case, the first-shallow child is not the wall endpoint. The result here is that the child of the *next* low-depth edge is also not the wall endpoint.
 
@@ -51,7 +51,7 @@ The first-shallow child coordinates, obtained from the source inverse power and 
 | B | \(6P-12u-16\) | \(8P-16u-7\) |
 | C | \(10P-20u-12\) | \(4P-8u+1\) |
 
-The already-proved first-child terminal exclusions in \`FirstShallowCoordinateGate.lean\` show that this child is not the wall endpoint. Hence a next edge exists. Since this is the suffix after the last depth-\(\ge3\) edge, its depth \(r\) is one of \(0,1,2\).
+The already-proved first-child terminal exclusions in `FirstShallowCoordinateGate.lean` show that this child is not the wall endpoint. Hence a next edge exists. Since this is the suffix after the last depth-\(\ge3\) edge, its depth \(r\) is one of \(0,1,2\).
 
 ## Eliminate a wall endpoint after that next edge
 
@@ -77,7 +77,7 @@ Substituting the three coordinate rows into (2) yields the following necessary e
 | Case | \(r=0\) | \(r=1\) | \(r=2\) |
 |---|---|---|---|
 | A | \(9P=50u+12\) | \(7P=78u+24\) | \(3P=134u+52\) |
-| B | \(9P=50u+30\) | \(7P=78u+28\) | \(3P=134u+68\) |
+| B | \(9P=50u+30\) | \(7P=78u+52\) | \(3P=134u+100\) |
 | C | \(7P=46u+8\) | \(5P=74u+18\) | \(P=130u+42\) |
 
 Every entry is impossible:
@@ -93,19 +93,19 @@ Every entry is impossible:
 - \(r=0\): modulo \(25\), \(P\equiv20\), again impossible for even \(n\).
 - \(r=1\): the equation gives
   \[
-  u=(7P-28)/78,\qquad
-  M=14u-n+3=(49P-39n-79)/39.
+  u=(7P-52)/78,\qquad
+  M=14u-n+3=(49P-39n-247)/39.
   \]
   Hence
   \[
-  M-P/7=(304P-273n-553)/273>0
+  M-P/7=(304P-273n-1729)/273>0
   \]
   for \(n\ge83\), since \(P=2^n\ge2n\). But (1) and \(D\ge4\) imply
   \[
   14M\le2P+6-196=2P-190,
   \]
   so \(M<P/7\), a contradiction.
-- \(r=2\): modulo \(67\), \(P\equiv45=2^{27}\). Since the order is \(66\), \(n\equiv27\pmod{66}\), contradicting that \(n\) is even.
+- \(r=2\): modulo \(67\), \(P\equiv11=2^{59}\). Since the order is \(66\), \(n\equiv59\pmod{66}\), contradicting that \(n\) is even.
 
 ### Case C
 
@@ -121,4 +121,4 @@ This closes the next terminal case in the high-depth restart analysis: a genuine
 
 The next unresolved case is a third or later low-depth transition. In particular, the argument does not exclude a suffix in which the second edge has depth two and is followed by a longer depth-two tail, nor does it bound the number of later shallow edges. It is therefore not the unrestricted six-shallow lemma, a P1 nonhalting proof, or a BB(6) upper bound.
 
-The derivation is source-conditional through the cited restart and first-shallow theorems. The modular case checks above are elementary; the complete statement should be formalized in Lean and composed with \`source_wall_restart_suffix_shape\` before being promoted beyond \`im-results/\`.
+The derivation is source-conditional through the cited restart and first-shallow theorems. The modular case checks above are elementary; the complete statement should be formalized in Lean and composed with `source_wall_restart_suffix_shape` before being promoted beyond `im-results/`.
