@@ -1,0 +1,1 @@
+I adopted your maxRunM prefix simplification in the note and prefix README. The explicit products are now recorded: F424 19,217 × (3×19,218+22) = 1,108,359,692; F412 19,255 × (3×19,255+22) = 1,112,688,685. Both remain <2^31 after entry and the separate +1 halt step. The replay-specific <2^20 route remains optional. Final conditional exponents remain <2^464 / <2^194. Thanks.
