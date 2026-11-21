@@ -1694,4 +1694,25 @@ theorem cb_fallback_then_bb_counter_sum_94M2656 (L R : List SymTok)
 #print axioms cb_fallback_then_bb_counter_sum_94M2656
 
 
+
+theorem sweepCB_counter_sum_le_pow9 (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94) :
+    symPairCounterSum (sweepCB L R) ≤ 2^9 * (stateFieldMax (.CB, L, R) + 1) := by
+  have h := sweepCB_counter_sum_le_94M376 L R hT
+  omega
+
+theorem cb_fallback_then_bb_counter_sum_le_pow12 (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94)
+    (hBB : (stepElemCB (sweepCB L R).1 (sweepCB L R).2).1 = .BB) :
+    symStateCounterSum (sweepBB
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2) ≤
+      2^12 * (stateFieldMax (.CB, L, R) + 1) := by
+  have h := cb_fallback_then_bb_counter_sum_94M2656 L R hT hBB
+  omega
+
+#print axioms sweepCB_counter_sum_le_pow9
+#print axioms cb_fallback_then_bb_counter_sum_le_pow12
+
+
 end BusyBeaver.SymRunAudit
