@@ -170,10 +170,10 @@ theorem m8SharpStop (r : Nat) (hr : 2≤r) :
     have h := m8SharpV_mod_eight r hr
     omega
   have htpos : 1≤2^(m8SharpT r) := by
-    have h := Nat.pow_pos (by decide : 0 < (2:Nat)) (m8SharpT r)
+    have h := Nat.pow_pos (by decide : 0 < (2:Nat))
     omega
   have hdpos : 1≤2^(m8SharpD r) := by
-    have h := Nat.pow_pos (by decide : 0 < (2:Nat)) (m8SharpD r)
+    have h := Nat.pow_pos (by decide : 0 < (2:Nat))
     omega
   have hj : m8SharpJ r+3 =
       3*m8SharpV r*2^(m8SharpT r)+1 := by
@@ -212,7 +212,7 @@ theorem m8OddDepth_scaled (v d : Nat) (hv : v%4=2) :
   | succ d ih =>
       have hv2 : 2≤v := by omega
       have hpowPos : 1≤2^d := by
-        have hp := Nat.pow_pos (by decide : 0 < (2:Nat)) d
+        have hp := Nat.pow_pos (by decide : 0 < (2:Nat))
         omega
       have hpow2 : 2≤2^(d+1) := by
         rw [Nat.pow_succ]
@@ -304,7 +304,7 @@ theorem m8SharpFamily_data (r : Nat) (hr : 2≤r) :
     have h := m8SharpV_mod_eight r hr
     omega
   have hdpos : 1≤2^(m8SharpD r) := by
-    have h := Nat.pow_pos (by decide : 0 < (2:Nat)) (m8SharpD r)
+    have h := Nat.pow_pos (by decide : 0 < (2:Nat))
     omega
   have hmulD : 2≤m8SharpV r*2^(m8SharpD r) :=
     Nat.mul_le_mul hvpos hdpos
@@ -319,7 +319,7 @@ theorem m8SharpFamily_data (r : Nat) (hr : 2≤r) :
     rw [Nat.sub_add_cancel hmulD3]
     ac_rfl
   have hY : p.2+2=3*v := by
-    apply Nat.mul_left_cancel (Nat.pow_pos (by decide : 0 < (2:Nat)) d)
+    apply Nat.mul_left_cancel (Nat.pow_pos (by decide : 0 < (2:Nat)))
     calc
       2^d*(p.2+2)=k+2 := hscale'
       _ =2^d*(3*v) := hscaleFamily.symm
