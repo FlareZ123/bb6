@@ -1,6 +1,6 @@
 # Root32 high-stop exclusion on r = 10592 (mod 16384)
 
-**Status:** the D0E/R and L branch analyses below are paper-level exact reductions, and the corrected P7E1E alternative is now source-accepted on this cylinder. The corrected three-way high-stop composition has not been compiled as one Lean 4.36.0-rc2 theorem; this is not yet an accepted high-stop exclusion, a global Machine C result, or a BB(6) result.
+**Status:** the L and corrected P7E1E alternatives are now separately source-accepted on the full t≡31 (mod 32) slice. The D0E/R chain remains a paper-level exact reduction, and the three-way high-stop composition has not been compiled as one Lean 4.36.0-rc2 theorem. This is not yet an accepted high-stop exclusion, a global Machine C result, or a BB(6) result.
 
 ## 1. Parameter cylinder
 
@@ -73,19 +73,15 @@ Q'_x+Q'_y=1505954940000m+183939246813
 \equiv1\pmod4.
 \]
 
-The source-certified blank_no_odd_sum_one theorem excludes Q'. Thus Q, A0, P0, and L are all unreachable.
+The source-certified blank_no_odd_sum_one theorem excludes Q'. Thus Q, A0, P0, and L are all unreachable. The locally compiled module Root32HighStopR10592LCore.lean formalizes this chain and proves L unreachable for every t≡31 (mod 32), not merely t≡31 (mod 256). Its closure contains 40 project modules; all imported source blobs match current main, and the audited declarations have only standard Lean axioms, with no sorryAx.
 
-Both alternatives in the high-stop inverse reduction are now excluded, so
+A source-integrity issue was found and corrected during this preflight: MixedOdd16TwoOrbit.lean used CReach without importing its definition from Agent3COrbitIff. Lean's autoImplicit silently treated CReach as a parameter, and the old theorem's axiom report contained sorryAx. Adding the missing import (commit f3aae4fcf0a8ef84d136a92bd3c17108de47e05e) makes the reachability split genuine; the corrected theorem now reports only propext, Classical.choice, and Quot.sound.
 
-\[
-\boxed{t\equiv31\pmod{256}
-\Longrightarrow
-\neg CReach(T(1802+6720t)).}
-\]
+This discharges only the L alternative. The high-stop reduction still has separate D0E and P7E1E alternatives; see the following section for the independently accepted P7E1E exclusion. No conclusion about T follows from this section alone.
 
 ## 3. The corrected P7E1E alternative
 
-For this cylinder, t ≡ 31 (mod 256), hence t ≡ 31 (mod 32). The locally compiled source-connected core in `Root32HighStopA4Core.lean` proves
+For this cylinder, t ≡ 31 (mod 256), hence t ≡ 31 (mod 32). More generally, the locally compiled source-connected core in `Root32HighStopA4Core.lean` proves
 
 ```
 ¬ RunReach(P7E1E(t))
@@ -93,7 +89,7 @@ For this cylinder, t ≡ 31 (mod 256), hence t ≡ 31 (mod 32). The locally comp
 
 on the entire t ≡ 31 (mod 32) cylinder. Its proof uses the complete even/even parent fan to force D(t), the exact odd-seven inverse to force A4(t), and the odd/odd low-valuation inverse to force the parent (p,q) with q odd and p+q ≡ 1 (mod 4), excluded by `run_no_odd_sum_one`. The 52-module Lean 4.36.0-rc2 closure compiled locally; all 51 imported source blobs match current main and the audited declarations have no `sorryAx`.
 
-This closes the third alternative on t ≡ 31 (mod 256), at the residual level only. D0E and L remain paper-level here, and no full high-stop theorem is accepted.
+This closes the P7E1E alternative on all t ≡ 31 (mod 32), at the residual level only. L is separately source-accepted on the same full slice. D0E/R remains paper-level, and no full high-stop theorem is accepted.
 
 ## 4. Exact root-index translation
 
@@ -120,4 +116,4 @@ The exact-root saturation argument in B2Q0FourStepPath.md gives a natural parame
 
 ## 5. Scope
 
-The exact paper-level D0E and L analyses, together with the locally source-accepted P7E1E residual exclusion, cover all three alternatives on t ≡ 31 (mod 256) at the level of separate arguments. The D0E/L chains have not yet been compiled and composed with the P7E1E theorem in one Lean 4.36.0-rc2 theorem. Therefore no complete high-stop exclusion on r ≡ 10592 (mod 16384) is currently accepted. This does not address other root-index classes, other stop families, or all six-state machines. Keep this dossier in im-results/ until the exact composition and axiom audit succeed.
+The L and P7E1E alternatives are now separately source-accepted for all t ≡ 31 (mod 32), covering r ≡ 10592 (mod 16384) and the other listed root-index cylinders in the broad class r ≡ 352 (mod 2048). The D0E/R chain is still only a paper-level exact reduction, and the original high-stop three-way decomposition has not been compiled and composed with the two accepted exclusions in one Lean 4.36.0-rc2 theorem. Therefore no complete high-stop exclusion on r ≡ 10592 (mod 16384) is currently accepted. This does not address other root-index classes, other stop families, or all six-state machines. Keep this dossier in im-results/ until the exact composition and axiom audit succeed.
