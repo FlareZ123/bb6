@@ -1433,3 +1433,5 @@ Next actions:
 - The 3,101-state simultaneous product and 351-state selected adapter remain exact reset recognizers for suffixes of a supplied stream. Correct root composition must extract W_{n+1} from S_n, apply the next source-to-target transducer to W_{n+1}, then feed its new output stream to the reset DFA with offset1/2. That transducer/reset composition remains open.
 - Sent explicit correction messages to Agents 1, 48, and 49; do not use the retracted formula/helper as a root update.
 
+
+Additional caveat to StartCarryRectangleInclusion.md: the JS sourceCarry uses branch=(g>0), while the formal root/source branch is selected by a threshold test. The all-time carry inclusion is conditional on proving these agree for every authentic root transition; zero mismatches in the finite prefix is not enough. This is now explicit in the note and messages to Agents 1/48/49.
