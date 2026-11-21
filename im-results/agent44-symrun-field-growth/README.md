@@ -161,3 +161,15 @@ fallback must return BB. This is stronger than the earlier
 state's M. Added in `SymRunTraceStats.lean` commit
 `2dc5bbb67218f5d31a4ce491c916eb846de4fb00`; source-equivalent Lean RC2
 scratch compiles with principal axiom profiles `[propext, Quot.sound]`.
+
+
+For direct use in the coarse power-of-two budget, two arithmetic corollaries
+are also formalized:
+- `sweepCB_counter_sum_le_pow9`: CB output counter sum ≤
+  `2^9 * (M_CB + 1)`;
+- `cb_fallback_then_bb_counter_sum_le_pow12`: the complete CB→BB fallback
+  output counter sum ≤ `2^12 * (M_CB + 1)`.
+
+These are immediate consequences of the sharper linear bounds and match the
+power-of-two scale used in the primitive-time sketch. Added in
+`SymRunTraceStats.lean` commit `2b70e54e137bec47c629be2908c6d847e12f82f3`.
