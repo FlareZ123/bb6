@@ -52,7 +52,7 @@ The script `symrun_prefix_cost.mjs`:
 
 Both final-state checks pass. The F424/F412 prefixes reach the same left symbolic tape (including the `repB1 46` expansion); their right tapes differ by one trailing `.run 1`, exactly as in the two source declarations.
 
-The replay also records the maximum run parameter and decoded list length seen during this initial phase. Those are finite-prefix observations only; they are not bounds for the later `stepSym` trajectories.
+The replay also records the maximum run parameter (85) and decoded list length seen during this initial phase. The only variable-cost branches have maxD0 = 0 and maxD2 = 6; all other branches cost at most 9, so the replay supports a coarse per-stepElemM bound of 39 (F424) / 37 (F412). Multiplying by at most 19,255 iterations and adding the entry cost gives a prefix target below 2^20. These are finite-prefix observations only and require a kernel-checked cost fold; they are not bounds for the later `stepSym` trajectories.
 
 Run with:
 
