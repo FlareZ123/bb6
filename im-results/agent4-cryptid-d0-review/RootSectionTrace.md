@@ -104,6 +104,14 @@ const maxSteps = Number(process.argv[2] ?? 300000000);
 console.log(JSON.stringify(trace(9, maxSteps), null, 2));
 ```
 
+## Cross-check against the DRegular source-section model
+
+Under the repository's exact section encoding `ASection(a,r)=init(replicate (a-2) true ++ r)` and `regularSuffix(L(a,q,b))=(01)^q1^b`, the nine observed sections are exactly the first eight DRegular states:
+
+`L(9,0,0) -> L(27,0,0) -> L(75,0,0) -> L(203,0,0) -> L(545,0,0) -> L(1457,0,0) -> L(3889,0,0) -> L(10365,1,5) -> L(27659,0,0)`.
+
+In particular, `(01)^1 1^5 = 0111111`, so the nonempty suffix observed at the eighth section is exactly the DRegular `(q,b)=(1,5)` state, and the next raw return consumes it to `(0,0)`. This is an independent raw-table simulation cross-check of the first eight arithmetic section transitions and their physical endpoints; it is not a replacement for the existing Lean source-contract proof. The cumulative observed duration from `A(9,[])` to `L(27659,0,0)` is 166,999,700 primitive steps. Compare this with `DRegular.accumulated 8 (⟨9,0,0⟩)` when the archived source module is available.
+
 ## Interpretation and next mathematical task
 
 This trace is useful for checking the initial raw-machine section path against the source-certified DRegular return model. It does not cover the later 2,640th DRegular state or the 108-level halting cylinder. The next useful result is a universal, source-certified section transducer that tracks both the unary parameter and the suffix, then compares the authentic root itinerary with the external halting-cylinder checkpoints. A scalar recurrence in n alone is demonstrably inadequate.
