@@ -192,3 +192,30 @@ which would complement the repeat-counter-sum theorems above. No sweep-level
 numeric-field-sum theorem is claimed yet. The lemmas are in
 `SymRunTraceStats.lean` commit `68e4e1b91678b14d8bea7bfc3a5c75c4a8621757`;
 source-equivalent Lean RC2 scratch compilation passes.
+
+
+## Numeric-field sum now bounds the BB fallback input field
+
+The numeric-field measure has been propagated through the CB sweep and its
+BB-producing elementary fallback:
+
+- `sweepCB_num_sum_bound`: CB sweep numeric-field sum ≤ input numeric-field
+  sum + `3*|R|`.
+- `sweepCB_num_sum_le_94M282`: under the 94-token premise, CB sweep output
+  numeric-field sum ≤ `94*M_CB + 282`.
+- `sweepCB_stateFieldMax_le_94M282`: consequently, the maximum numeric field
+  after the CB sweep is ≤ `94*M_CB + 282`.
+- `stepElemCB_BB_num_sum_le`: if the elementary CB fallback returns BB, it
+  increases numeric-field sum by at most 3.
+- `cb_fallback_bb_input_field_max_le_94M285`: the maximum field at the
+  subsequent BB-sweep input is ≤ `94*M_CB + 285`.
+- `cb_fallback_bb_input_field_max_le_pow9`: equivalently, it is ≤
+  `2^9*(M_CB+1)`.
+
+This gives a direct maximum-field bound at the BB-sweep input, rather than
+only a repeat-counter-sum bound. It is conditional on the 94-token invariant
+and the BB-producing fallback branch. Added in
+`SymRunTraceStats.lean` commits `aa4a36912aaf1ed7541f5643c7f662d93e821a97`,
+`13c292a35a910cea9e919e0072fd3924bbd51075`, and
+`42457c0ecc26b1dddb6b56ec2919f0bdb1b8033a`; source-equivalent Lean RC2
+scratch compiles with principal axiom profiles `[propext, Quot.sound]`.
