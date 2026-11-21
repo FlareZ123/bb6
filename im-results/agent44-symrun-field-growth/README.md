@@ -34,3 +34,29 @@ the exact imported `SymRunTraceStats.lean` closure. Exact-source compilation
 and axiom audit remain required before acceptance. The theorem is for
 `stepPure`; it does not by itself establish a bound for `stepSym` or a
 complete machine-run bound.
+
+
+## CB sweep token bound (independent check of 564/570)
+
+The same proof harness now also proves the following source-level inequalities:
+
+- `sweepCB_length_bound`:
+  `|sweepCB(L,R)| ≤ |L| + |R| + 5|R| = |L| + 6|R|`.
+  The proof uses strong induction on `|R|`; every recursive sweep call
+  consumes at least one right token. Each run-triggered call adds at most
+  five tokens via `bumpSymL`; each repeat-eating call adds at most one
+  token via `eatFuel`, while consuming the right-side repeat token.
+- `sweepCB_length_le_564`: if the input total token count is at most 94,
+  the CB sweep output has at most 564 tokens.
+- `stepElemCB_BB_length_bound`: whenever `stepElemCB` returns mode BB,
+  its output has at most the input total plus six tokens.
+- `stepElemCB_after_sweep_570`: if the CB-sweep input has at most 94 tokens
+  and the subsequent `stepElemCB` fallback returns BB, the state passed to
+  the ensuing BB sweep has at most 570 tokens.
+
+These are conditional bounds. The 94-token premise must be supplied by the
+appropriate trace invariant (the existing `traceStats` theorems establish it
+for their named candidate traces); the 570 theorem also requires the BB
+fallback premise. The local Lean 4.36.0-rc2 scratch compilation reports only
+`[propext, Quot.sound]` for the three principal bounds. Exact compilation
+against the repository's imported module closure is still pending.
