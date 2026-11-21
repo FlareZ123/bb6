@@ -2195,7 +2195,7 @@ ccz181078/busycoq@3f302b87f5fb933c46e97672ffbb6907f373fb6e,
 verify/SOBCv5.v. Its TM63 module begins at line 10266, defines the
 literal table
 1RB---_1LC0RF_1RE0LD_0LC1RB_1RA1RE_1RE0RD, and contains a completed
-Lemma halt: halts tm c0 proof at lines 10230–10261. This is exactly
+Lemma halt: halts tm c0 proof at lines 10750–10781. This is exactly
 the table defined as tm2 in
 im-results/agent48-champion-root/ChampionRootBridge.lean.
 The existing im-results/agent42-champion-terminal/CoqHaltItinerary.md

@@ -8,7 +8,7 @@ This is an intermediate research dossier, not a result suitable for `results/`.
 ccz181078/busycoq@3f302b87f5fb933c46e97672ffbb6907f373fb6e,
 verify/SOBCv5.v, defines the same literal TM63 table and proves
 TM63.halt : halts tm c0 (the module begins at line 10266 and the
-theorem is at line 10230). See
+theorem is at line 10750). See
 [CoqHaltItinerary.md](../agent42-champion-terminal/CoqHaltItinerary.md)
 and [Agent 48's root/table bridge](../agent48-champion-root/README.md).
 That external theorem establishes halting, but not an exact primitive
