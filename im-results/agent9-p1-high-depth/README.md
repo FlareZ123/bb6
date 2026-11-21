@@ -15,13 +15,16 @@ The scalar proof is in [Mod7SlackLeaf.lean](./Mod7SlackLeaf.lean). It models arb
 
 The source-parent depth bounds for both terminal shallow costs are in [RestartDepthBounds.lean](./RestartDepthBounds.lean). They formalize the parent mass equation, the restart defect identity, the inverse-depth equation, and the terminal cost bounds. With \(P\ge2^{83}\), the cost-one bounds give \(t=5\) or \(6\) for \((\delta,I_s)=(2,20)\), and \(t\ge8\) for \((1,48)\). The cost-two bounds give \(t=5\) for \((2,20)\), and \(t\ge8\) for \((1,48)\).
 
-Combining these with \(T_1\equiv t+s\pmod2\) leaves the same two families for either terminal cost. The Offset namespace in RestartDepthBounds.lean additionally proves the first-shallow offset congruences modulo 14: 5 for Is=20, and 10 (even T1) or 3 (odd T1) for Is=48:
-1. \((\delta,I_s,t)=(2,20,5)\), with odd \(T_1\) and first shallow depth \(0\);
-2. \((\delta,I_s)=(1,48)\), with \(t\ge8\); the first shallow depth is \(0\) for even \(T_1\), \(1\) for odd \(T_1\).
+The prior two-family reduction using \(T_1\equiv t+s\pmod2\) is withdrawn: it depended on the unsupported \(M\equiv t\pmod2\) claim. The valid congruence \(k\equiv2M\pmod4\) does not identify \(t\) with \(M\). The current first-shallow residual profiles are therefore:
+1. \(I_s=20\), odd \(T_1\), first shallow depth \(0\), with \(\delta=1\) or \(2\) still possible (respectively \(n\equiv2\) or \(1\pmod3\));
+2. \(I_s=48\), even \(T_1\), first shallow depth \(0\), \(\delta=1\);
+3. \(I_s=48\), odd \(T_1\), first shallow depth \(1\), \(\delta=1\).
 
-Both formal files are arithmetic certificates under the displayed source-coordinate hypotheses, not original-source CountCone proofs. Neither residual family has been excluded; BB(6) remains unresolved. See the detailed derivation, hypotheses, and next target in [SIX-BIT-SLACK-MOD7.md](./SIX-BIT-SLACK-MOD7.md).
+The specialized depth bounds in RestartDepthBounds.lean establish \(t=5\) or \(6\) only for \((\delta,I_s)=(2,20)\), and \(t\ge8\) for \((1,48)\); they do not close \((1,20)\). A locally source-legal prepared-state witness for \((\delta,I_s)=(1,20)\) at \(n=182\) is documented below, but its high-depth parent is not root-reachable.
 
-**New second-edge reduction.** The source first-shallow split has three branches: \((I_s,T)=(20,14u+5)\), \((48,14u+10)\), and \((48,14u+3)\). The new [FirstShallowCoordinateGate.lean](./FirstShallowCoordinateGate.lean) gives exact first-child coordinates, proves that the first-shallow child cannot itself be the wall, and derives necessary residue conditions for the next edge after including the odd-counter and child-mod-four guards:
+The Offset namespace in RestartDepthBounds.lean proves the first-shallow offset congruences modulo 14: 5 for Is=20, and 10 (even T1) or 3 (odd T1) for Is=48. These formal files are arithmetic certificates under the displayed source-coordinate hypotheses, not original-source CountCone proofs. None of the three residual profiles has been excluded from the root cone; BB(6) remains unresolved. See the detailed derivation, hypotheses, and next target in [SIX-BIT-SLACK-MOD7.md](./SIX-BIT-SLACK-MOD7.md).
+
+**New second-edge reduction.** The source first-shallow split has three branches: \((I_s,T)=(20,14u+5)\), \((48,14u+10)\), and \((48,14u+3)\). The [FirstShallowCoordinateGate.lean](./FirstShallowCoordinateGate.lean) gives exact first-child coordinates and derives necessary residue conditions for the next edge after including the odd-counter and child-mod-four guards. Its immediate-terminal exclusions cover delta=2, Is=20 and delta=1, Is=48; the delta=1, Is=20 immediate-terminal case remains open:
 
 | First-shallow branch | Next depth 0 | Next depth 1 | Next depth 2 |
 |---|---|---|---|
@@ -90,6 +93,8 @@ A complementary, still-unproved direction from Agent 50 is a source-prefix cost 
 
 
 **Root-reachability clarification:** for this (n=808\equiv0\pmod4), the actual root cone has height at most one: the root's source power is (2\pmod4), forcing its only possible edge to depth 0, and that child's left counter is (2\pmod4), so it cannot be a parent. Thus the prepared parent in the local witness is definitively not root-reachable. The witness is a counterexample only to blanket local-suffix exclusion, not an actual P1 halting path. The same one-edge root obstruction holds for every (n\ge4) divisible by 4; the (n\equiv2\pmod4) cases remain the relevant root-cone problem.
+
+A second local witness, [prepared_state_delta1_Is20_n182.md](./prepared_state_delta1_Is20_n182.md) with executable check [prepared_state_delta1_Is20_n182.mjs](./prepared_state_delta1_Is20_n182.mjs), realizes the previously unclosed delta=1, Is=20 A(0,0) branch: one depth-4 edge, 61 depth-2 edges, then three depth-0 edges to the wall. The root cone for n=182 has height exactly two (word (0,0), then dead), so this is again not a root path. It demonstrates that local suffix arithmetic alone cannot eliminate this branch; the missing ingredient is root reachability. The cost caps 93P/128 and 77P/256 require at least one depth-2 edge after the last shallow edge (r>=1) and must not be applied to an endpoint immediately after a shallow edge (r=0).
 
 
 ## Root-cone coordinate
