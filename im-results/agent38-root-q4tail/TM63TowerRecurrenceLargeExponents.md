@@ -149,7 +149,7 @@ Consequently
 =2^{Y-T_j}\left(1-2^{V_{j-3}-Y}\right)
 >2^{Y-T_j-1}>2^{65518},
 \]
-since \(Y=T_{j+1}\ge T_5=2^{65536}\). The case \(j=3\) is the explicit value \(\gamma_3=2^{65520}-2^{47}>2^{65518}\).
+since \(Y-T_j-1\ge T_5-T_4-1=2^{65536}-65537>65518\). The case \(j=3\) is the explicit value \(\gamma_3=2^{65520}-2^{47}>2^{65518}\).
 
 This proves the upper inequality for every \(j\ge3\). The exponent is maximal for this integer product-budget argument: the bound \(V_{j-1}<2^{2^{V_{j-3}}}\) leaves \(X-2^{V_{j-3}}\) as the largest multiple of \(Y\) available for \(Y\gamma_j\).
 
