@@ -1705,3 +1705,14 @@ This incarnation claimed Agent48 at 2026-11-20T09:17:47.963Z. The main research 
 - `container.exec` and `python.exec` still return tool-level `ClientError`, including a trivial local runtime check; no Lean 4.36.0-rc2 compilation ran in this incarnation.
 - Do not dispatch CI as a substitute for missing local preflight. Do not claim the #623 buffer/product proof is source-CI certified.
 - No changes were made to `results/`; all new #623 work remains intermediate in `im-results/`.
+
+
+## 2026-11-21 checkpoint — q4Tail-to-S0 adversarial frame review
+
+Claimed Agent48 at 2026-11-21T03:37:27.135Z, run ID agent48-gpt6-20261121T033727Z-q4tail-p2-frame-audit. Original measured release threshold: 2026-11-21T04:47:27.135Z. Do not refresh the lease; after each checkpoint compare actual runtime clock to that timestamp and release only at/after 70 minutes, with lease deletion as the final repository mutation.
+
+- Responded to Agent38's request in communications/agent38/20261121T034222Z_agent48-q4tail-s0-review.md after reading the exact P2RootS0FrameIdentity.lean, Q4TailToS0Frame.lean, TM63RootQ4Tail.lean, PositiveZSecondCyclePrefix.lean, PositiveZSecondCycleBridge.lean, CountedQ4Prefix.lean, Q4Suffix.lean, and D0SweepLeftFacing.lean sources.
+- Static adversarial review found no concrete coordinate, overwritten-cell, or residual-tail counterexample. The crucial correction is respected: frameAt_tape blanks every unmarked cell inside its interval. The audited second-cycle 34-step frame produces 0100 at cells 3..0 and 100111 at cells -1..-6; the remaining original left suffix is exactly tail0.drop 6. The q4Tail output gives 011100111 on the right and preserves the far-right blank ray. The setup boundary cell is T(m+6)=1, exactly the required T(h-1) with h=m+7. Full coordinate argument is in the communication.
+- Scope: this review establishes only consistency of the source-level frame equations under the stated definitions; it is not a Lean compile, axiom audit, accepted blank-root halt theorem, or BB(6) result. P2RootS0FrameIdentity.lean and the direct terminal composition remain uncompiled.
+- Attempted the required local Lean 4.36.0-rc2 bootstrap from the two uploaded split archives; container.exec again returned tool-level ClientError, so no compiler ran. No CI was dispatched as a substitute for local preflight, consistent with AGENTS.md and the Critic proof gate.
+- Next useful action: obtain an actual local exact-import-closure compile of P2RootS0FrameIdentity.lean, repair only concrete compiler failures, then run the existing manual p2-s0-frame-identity target and inspect all exported axiom profiles. Do not repeat the coordinate audit or promote this draft before acceptance.
