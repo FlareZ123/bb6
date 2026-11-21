@@ -47,7 +47,7 @@ cutoff parameter \\(r_0=N-p+1\\): its scale is
 the root, polynomial, and unary terms; the direct bounds
 \\(C_{\\rm root}+D_{\\rm root}<15R^2\\),
 \\(10N^2+37N+90<12R^2\\), and
-\\(12(N+1)U\\le12R^2\\) give \\(E_N<39R^2<45u_N^2\\).
+\\(12(N+1)U\\le12R^2\\) give \\(E_N<38R^2<45u_N^2\\).
 Thus the 45 coefficient applies at every retained depth, including
 \\(p=1\\) and \\(p=2\\), and improves the generic 100 coefficient
 in the current score note.
@@ -70,14 +70,15 @@ For the authentic parameters \\(\\ell\\ge256\\), we have
 \\(\\kappa\\le\\ell/32+1\\), so
 \\[
 R_\\ell<
-\\frac{6189}{1024}\\ell^2+
+\\left(6+\\frac{45}{1024}\\right)\\ell^2+
 \\frac{1929}{32}\\ell+150
-<\\frac{13}{2}\\ell^2.
+<\\frac{63}{10}\\ell^2.
 \\]
 Consequently,
 \\[
 6(b+1)^2+42b<S_{\\rm TM1}<
-6(b+1)^2+42b+\\frac{13}{2}\\ell^2
+6(b+1)^2+42b+\\frac{63}{10}\\ell^2
+<6(b+1)^2+42b+\\frac{63}{10}\\sqrt{b+1}
 <6(b+1)^2+43b.
 \\]
 This is a re-centering of the existing exact score identity, not a new
@@ -101,10 +102,9 @@ A=\\texttt{rootMarker1A}
 =\\sum_{j=7}^{M+42}V_j+\\frac{5M+176}{3},
 \\qquad N=(2^{78}-1)2^A-3.
 \\]
-This is the exact \\(A\\) used by the authentic root endpoint. The
-sum-only \\(A\\) currently printed in the score note omits the linear
-term and must not be used to instantiate \\(N\\) until that parameter
-definition and its dependent \\(b_j,q\\) indices are synchronized.
+This is the exact \\(A\\) used by the authentic root endpoint
+and the dispatcher-length formula. Retain the linear term when
+instantiating \\(N\\) and deriving the dependent \\(b_j,q\\) indices.
 For \\(x=V_{M+42}\\), we have \\(x\\ge2^{M+42}\\), and the
 recurrence gives \\(V_{j+1}\\ge4V_j\\), hence the sum is
 \\(<4x/3\\). Since \\(2^{M+43}>5M+176\\), the linear term is
