@@ -464,7 +464,7 @@ assert.ok(total < (1n<<160n),'candidate bound is not below 2^160');
 console.log(JSON.stringify({
   checkpointMatches:[true,true,true],
   finalHalted:state.halted,
-  rleTransitions:380*25,
+  rleTransitionsUpperBound:380*25,
   chunkBounds:chunks.map(String),
   primitiveStepUpperBound:String(total),
   boundBits:total.toString(2).length,
