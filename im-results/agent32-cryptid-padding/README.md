@@ -148,3 +148,16 @@ Output configurations are exactly `BB6.Agent32EAll.output k q y`. The conclusion
 **Authenticated original-source [GitHub Actions CI 41741789045](https://github.com/FlareZ123/bb6/actions/runs/41741789045) passed** for all three modules on Lean 4.36.0-rc2. Each printed theorem uses only `[propext, Quot.sound]`; there is no `sorryAx`. Reproduce with [manual-only workflow agent32-e-all-double-first.yml](../../.github/workflows/agent32-e-all-double-first.yml).
 
 The q=5 E section is independently known (from the existing `BlankExceptional.exceptional_section` source certificate) to occur after the certified 8394-section regular prefix of the genuine blank orbit, modulo `ObsEq`. The universal first-return theorem and `ObsEq` invariance now provide the ingredients to establish that the following E return is the actual **next** physical return. A combined rooted theorem is under [separate manual source audit](../../.github/workflows/agent32-blank-exceptional-first.yml); until that audit succeeds, this rooted strengthening remains a candidate. This is still an intermediate advance, not a global six-state BB proof.
+
+
+## 21 November 2026 — raw bridge, root shadows, and independent stack reduction
+
+The current invocation added three intermediate research threads:
+
+- [`HaltingCylinderShadowFast.lean`](./HaltingCylinderShadowFast.lean) is an **uncompiled** fast-evaluator candidate for the source-connected DRegular root shadow at 2,640 sections. It uses `DRegularFast.fastRun` plus `fastRun_correct` to avoid direct 2,640-step reduction, and composes the existing original-source contract through the seven-step (3^7)-lift. It is not yet a checked theorem.
+- [`RootNearHit13233.md`](./RootNearHit13233.md) and [`halting-cylinder-root-shadow.py`](./halting-cylinder-root-shadow.py) record a 20,000-section exact-integer replay of the existing Agent37 A-step2 interpreter. It finds an 8/108 prefix match at index 13,233, but does not prove the composed source run. The repository's earlier 2.7-million-section scan already reports a stronger 21/108 match; this is only a compact regression target.
+- [`DeepMindStackReduction.md`](./DeepMindStackReduction.md) records the independent Google DeepMind Cryptids closed-stack reduction for the same #490 machine, including its seven-raw-step blank entry into `DR_n_n [(0,0),(0,0)] [(1,0)]`. The external project uses Lean 4.35.0-rc4 and Mathlib revision `7c2f1a3e3c2e0c7a5b11aefc28fbcab5a7f24f5b`, so it is a reference rather than a directly importable dependency.
+
+The separate raw TM62→D0 adapter remains uncompiled against its exact external dependency closure. Its pinned upstream project uses Lean 4.36.0-rc1 and Mathlib revision `dfbc15ea6605db241da9cfd0632bbaf69b67e513`; the supplied local Lean archive is 4.36.0-rc2. The local shell and Python execution tools returned concrete `ClientError` failures in this invocation, so no local preflight or new CI dispatch was possible. No claim of successful compilation is made.
+
+The main unresolved mathematical question is unchanged: prove that the authentic blank-root orbit reaches a halting cylinder (or another halting set), or establish a rigorous invariant excluding it. The external halting cylinder, finite root scans, and closed-stack reduction do not by themselves settle that orbit question.
