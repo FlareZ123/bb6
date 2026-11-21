@@ -49,7 +49,7 @@ RLE semantics. This is an intermediate method, not yet formalized or
 accepted.
 
 The F289 row with rooted RLE `1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA---` now has a checkpoint-matched JavaScript/BigInt state port and a candidate primitive-step bound below `2^160`, conditional on formal branch-cost soundness. The family label F289 occurs on another distinct RLE row; this candidate does not cover that second machine. See [the simulator](simulate_f289_rle.js) and the
-computational caveats in [PrimitiveStepCost.md](PrimitiveStepCost.md).
+computational caveats in [PrimitiveStepCost.md](PrimitiveStepCost.md). The exact n-step bridge is already present upstream as `multiStep_toBB` in `BusyBeaver/Bridge.lean`, and the local exact halting adapter is `BB6.ConjectureBridge.source_halts_after_iff_agent8_halts_after`; the remaining proof gap is branchwise cost soundness.
 
 ## Critical dependency constraint
 
