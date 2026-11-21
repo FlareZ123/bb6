@@ -190,3 +190,19 @@ binDec(tm63Length1,n_{32}-1)
  \mathbin{++}d1\mathbin{++}d0pow(4).
 ]
 This is an exact algebraic specialization of the existing source encoding, not an independent Lean-accepted source theorem. The current root wrapper still calls the general valuation-parametric theorem; use the explicit factorized instance only if it materially simplifies the root proof or its trust profile. No local Lean compile was available in the 2026-11-21 invocation.
+
+
+The same factorization exposes the next row-34 input word. Put (q=31\cdot2^{A-6}-1) as above. Then
+[
+16R-18
+=2\bigl((2q+1)2^4-1\bigr),
+\qquad
+(2q+1)2^4-1=8R-9.
+]
+Using `binDec_even` for the outer factor 2 and `binDec_sub_one_carryPrefix` with (r=4) for the inner decrement gives
+[
+binDec(tm63Length1,16R-18)
+=d1\mathbin{++}d0pow(4)\mathbin{++}d1
+ \mathbin{++}d0pow(A-6)\mathbin{++}d1\mathbin{++}d0pow(4).
+]
+Here (tm63Length1=A+5). This is the exact head-facing binary counter word entering row 34 (the M2-even-six macro), not merely its parity/valuation class. The identity follows from the preceding row-32 word formula and the source encoder's two carry-prefix lemmas; it has not yet been added as a Lean theorem or locally compiled.
