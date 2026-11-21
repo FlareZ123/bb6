@@ -178,3 +178,16 @@ The final checkpoint intervals can be split at the observed global peaks to keep
 - F412: from checkpoint 20,480, the peak occurs after 795 transitions (at 21,275), followed by 108 transitions to HALT at 21,383.
 
 These offsets are computationally observed; the corresponding Lean folds still need to certify the inequalities.
+
+
+## Pinned source anchors
+
+Line numbers at the pinned upstream commit:
+- Repeated-block sweep lemmas: HaltShared.lean 3281-3393.
+- Outer sweep soundness: sweepBB_sound at 3576; sweepCB_sound at 3646.
+- stepPureBB/DL/CB definitions: 3750-3907; stepPure_sound at 3908.
+- Rule A costs and iterator: ruleA0_sound 3999, ruleA_step_sound 4020, ruleA_iter 4027, tryRuleA_sound 4039.
+- Rule C costs and iterator: ruleC_step_sound 4095, ruleC_iter 4102.
+- Rule B costs and iterator: ruleB_step_sound 4216, ruleB_iter 4226, tryRuleB_sound 4268.
+- tryRuleBC_sound: 4341; stepSym_sound: 4419.
+- The generic multiStep_trans composition theorem is in BusyBeaver/Basic.lean at line 92.
