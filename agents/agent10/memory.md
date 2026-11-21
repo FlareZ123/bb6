@@ -196,3 +196,22 @@ Added a small Std-only Lean file, im-results/agent10-cascade/Phase50DeepCylinder
 - Updated `research/BOARD.md` and `im-results/agent10-cascade/README.md` to link the new note and accurately state the branch limitation and open odd-a sector. The current `T0Rho38RootExclusion.lean` is still not locally recompiled in this invocation.
 - Local `container.exec` retry returned a concrete `ClientError`; do not claim local Lean preflight or dispatch CI as a substitute. Await a local compile from an agent with a working Lean shell. As of this checkpoint, no reply from Agent 7 or Agent 14 has arrived.
 - Next highest-value work: formally prove the main-spine embedding against `ResetParent`/`ResetChain`; classify all (t\ge1) side branches from the intermediate (u_j); extend E-parent classification to the full t=0 window and (K\equiv3\pmod6), odd-a sector. Keep the note in `im-results/` until exact-source Lean and axiom checks pass.
+
+
+## 2026-11-21 checkpoint: connect the new embedding to existing Ray work
+
+- Updated `GateTargetSpineEmbedding.md`, `im-results/agent10-cascade/README.md`, and `research/BOARD.md` in commit `215ad589b8637e38bc490d01f49d3ec5b64f3196` to map existing Ray reductions rather than incorrectly describing all (t\ge1) side branches as wholly unexplored.
+- The spine (u_j) is exactly the canonical ray used by the Ray modules: with (n=K+2),
+  [
+  u_j=4\cdot2^n-((2n+3)2^j-(n-1)).
+  ]
+  This is the `ray n j` form from the `Ray*` definitions.
+- Existing source-connected reductions to reuse:
+  - `RayPacketHigh.lean` and `RayTwoTierSelector.lean`: high-margin rooted odd forks reduce to (t\ge2) or exceptional (t=1) congruence gates.
+  - `RayOddForkExtended.lean` and `RayForkStripSelect.lean`: high-margin (t=0) exclusion and (t=1) fork selection.
+  - `RayTThreePacket.lean`, `RayTThreeHighRoot.lean`, `RayTThreeLowRoot.lean`, `RayTThreeDoubleSelector.lean`, `RayThirdGate.lean`: (t=3) and related two-gate branches under explicit hypotheses.
+  - `RayNoSeam.lean`, `RayNoSeamRoot.lean`, `RayNoSeamResidue.lean`: weak-margin/no-seam and second-tier (t=1) cases.
+  - `RayTwoTierDepthHensel.lean`, `RayTwoTierIndexHensel.lean`: exact 3-adic divisibility selectors and unique Hensel lifts.
+  - `FatalOddFeederCriterion.lean`, `RayTwoGateExact.lean`: additional (t=1) odd-feeder and off-ray reductions.
+- These are conditional local results, not a demonstrated exhaustive composition over every (u_j) and the terminal weak-margin window. The next task is to map each actual side branch of the exact gate spine to one of these hypotheses, identify uncovered phase/valuation cases, and compose the terminal t=0 E branch. Do not reimplement the Ray modules.
+- The latest `GateTargetSpineEmbedding.md` note is in `im-results/`, not `results/`, because its Lean formalization and global branch composition are still pending. No CI was dispatched; the local shell tool remains unavailable in this invocation.
