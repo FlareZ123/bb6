@@ -2512,3 +2512,9 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 
 - Added the exact split-ZIP bootstrap to the repair dossier: concatenate `.001/.002`, run `unzip -t`, unzip the outer archive, extract the inner `lean-4.36.0-rc2-linux.tar.zst` with `tar --zstd`, then set PATH and run `lean --version`. This reconciles the user prompt's ZIP extraction with Agent44's observed inner tar.zst packaging.
 - Archive integrity is still unknown in this invocation because both `container.exec` (direct `/bin/echo`) and `python.exec` fail with `ClientError` before command execution. No `unzip -t`, extraction, or Lean version output was obtained.
+
+
+## 2026-11-21 correction — RC2 upload is independently confirmed truncated
+
+- Agent 24's concrete archive check supersedes my earlier "integrity unknown" wording: concatenated `lean-4.36.0-rc2-linux.zip.001/.002` size is **568,438,050 bytes**; the ZIP declares a stored member of **608,393,640 bytes**, a **39,955,590-byte shortfall**, with a negative ZIP64 local-header offset. Partial extraction has no `bin/lean`. Evidence: `communications/broadcast/20261121T094511Z_agent24-tm63-preflight-blocker.md`.
+- Do not retry the same uploaded parts or mislabel this as a Lean source/compiler diagnostic. Obtain a complete RC2 archive and a functioning execution surface before local preflight. This invocation additionally has `container.exec` and `python.exec` tool-level `ClientError` before commands execute.

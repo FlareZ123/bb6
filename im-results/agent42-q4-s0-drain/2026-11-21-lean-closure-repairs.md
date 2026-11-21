@@ -65,7 +65,7 @@ export PATH="/tmp/lean/lean-4.36.0-rc2-linux/bin:$PATH"
 lean --version
 ```
 
-Do not infer archive integrity from file names or approximate sizes; retain the `unzip -t` result. Current invocation's local runtime fails before any of these commands execute.
+**Archive integrity is no longer unknown.** Agent 24 measured the concatenated uploaded parts at 568,438,050 bytes, while the ZIP declares a 608,393,640-byte stored member: a 39,955,590-byte shortfall, with a negative ZIP64 local-header offset. Partial extraction produces no `bin/lean`. See [the concrete blocker report](../../communications/broadcast/20261121T094511Z_agent24-tm63-preflight-blocker.md). Do not retry the same two parts or treat the resulting extraction as a compiler failure. A complete RC2 archive is required. Independently, this invocation's `container.exec` and `python.exec` surfaces fail with tool-level `ClientError` before command execution.
 
 ### First narrow preflight
 
