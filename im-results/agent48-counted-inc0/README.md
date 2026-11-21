@@ -51,14 +51,14 @@ The source module, the generic prefix-then-drain adapters, and their axiom gates
 
 ### Marker-1 even-valuation source increment
 
-\`M1EvenValuationSource.lean\` states a general original-table source macro for
+`M1EvenValuationSource.lean` states a general original-table source macro for
 every \(0<n<2^L\) and positive left counter \(a\). It factors
 \(n=(2q+1)2^v\), proves the S1-to-q4 prefix run at cost
 \(12a+12v+32\), composes the q4 suffix/reset prefix at cost \(35+3b\),
 and then invokes the counted all-ones drain. Its exported
-\`m1EvenValuation_counted_increment_source\` has the exact
-\`proposedIncrementCost 1 n a b\` run type and ends at
-\`s1Config L (n-1) 0 (a+b+2) 0 (2^b-1) (h+5+3*b)\`.
+`m1EvenValuation_counted_increment_source` has the exact
+`proposedIncrementCost 1 n a b` run type and ends at
+`s1Config L (n-1) 0 (a+b+2) 0 (2^b-1) (h+5+3*b)`.
 
 For marker 1, the declared cost unfolds to
 \(6\cdot4^b+42\cdot2^b+19+12(a+v_2(n))-9b\).
@@ -67,23 +67,29 @@ This theorem is a reusable source-level macro, **not itself a blank-root theorem
 It is already consumed by `TM63RootMiddle34.lean` for authentic-root row 32
 and by `TM63SourceIncrementDispatcher.lean` for the general marker-1 branch.
 Those compositions remain intermediate until their exact closures compile and
-their axiom profiles pass; no halting claim follows. The exact acceptance target is the complete import closure of
-\`M1EvenValuationSource.lean\`, with axiom profiles for its five exported
-q4/reset/counting declarations and no transitive \`sorryAx\`. The focused
-\`m1-even-valuation-source.yml\` workflow is intentionally the leaf diagnostic
-(one source root and five theorem profiles); the existing
-\`agent42-champion-terminal-source.yml\` \`middle34-acceptance\` target remains
-the later integrated root gate. Reuse these two acceptance surfaces only;
-do not add another parallel workflow. The first
-manual workflow attempt (run \`44910559991\`) stopped in the then-current
-\`S1CarryOutputBridge.lean\`; that source has since been repaired, but the old
-run is not evidence for the patched revision. Agent 8 also replaced the
-hand-written \(N+4\)/far-tail branch in the private left-facing proof with the
-exact-parent-type footprint lemma in
-\`M1EvenValuationBridgeFootprint.lean\` (commit
-\`dbef928d34d8887328a880c80a05e7e48bf6f6e4\`). The integrated source closure
+their axiom profiles pass; no halting claim follows.
+
+The exact acceptance target is the complete import closure of
+`M1EvenValuationSource.lean`, with axiom profiles for its five exported
+q4/reset/counting declarations and no transitive `sorryAx`. The focused
+`m1-even-valuation-source.yml` workflow remains a leaf diagnostic (one root,
+five M1 profiles) that isolates this module if another root fails. The existing
+`agent42-champion-terminal-source.yml` `middle34-acceptance` target now also
+checks the same five M1 profiles plus the M2/root declarations, enforces the
+standard axiom allowlist, and rejects `native_decide` in the exact closure.
+It is the strict integrated acceptance gate. The standalone workflow currently
+checks only `sorryAx`, so treat it as diagnostic rather than final trust
+acceptance; consolidate it into the existing family workflow after the
+replacement has been validated. Reuse these two surfaces only; do not add
+another parallel workflow. The first manual workflow attempt (run
+`44910559991`) stopped in the then-current `S1CarryOutputBridge.lean`; that
+source has since been repaired, but the old run is not evidence for the patched
+revision. Agent 8 also replaced the hand-written \(N+4\)/far-tail branch in
+the private left-facing proof with the exact-parent-type footprint lemma in
+`M1EvenValuationBridgeFootprint.lean` (commit
+`dbef928d34d8887328a880c80a05e7e48bf6f6e4`). The integrated source closure
 has **not** been recompiled after these changes, so this remains intermediate
-work in \`im-results/\`; do not promote it or treat its theorem as accepted.
+work in `im-results/`; do not promote it or treat its theorem as accepted.
 
 ### Generic all-odd m=0 increment
 
