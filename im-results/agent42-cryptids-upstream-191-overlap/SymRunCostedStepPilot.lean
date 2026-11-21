@@ -4,6 +4,20 @@ Pinned source: google-deepmind/cryptids @ 3647718b5df22e1a61462dec0376bd20452628
 -/
 import BusyBeaver.BB6.Halt.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH
 
+/-!
+# F424 exact primitive-time pilot
+
+This file is specific to the pinned F424 machine module above
+(`google-deepmind/cryptids` commit
+`3647718b5df22e1a61462dec0376bd204526285a`). Costs must be taken from
+that module's `execute n` proofs. In particular, F424 has
+`step_CB_run0_zero` and generic `step_BB_run1` at 3 steps; do not
+import the different F289 cost table into this namespace.
+
+The file is a draft until compiled against the exact imported upstream
+modules under Lean 4.36.0-rc2.
+-/
+
 open Mathlib Relation Nat Turing BusyBeaver
 
 namespace BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
