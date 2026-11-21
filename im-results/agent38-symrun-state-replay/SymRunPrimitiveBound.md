@@ -140,9 +140,9 @@ def ReachWithin (M : Machine Γ Λ) (c c' : Cfg Γ Λ) (B : Nat) : Prop :=
   ∃ n, n ≤ B ∧ multiStep M c n = some c'
 
 theorem ReachWithin.trans
-    (h1 : ReachWithin M c₁ c₂ B₁)
-    (h2 : ReachWithin M c₂ c₃ B₂) :
-    ReachWithin M c₁ c₃ (B₁ + B₂) := by
+    (h1 : ReachWithin M c1 c2 B1)
+    (h2 : ReachWithin M c2 c3 B2) :
+    ReachWithin M c1 c3 (B1 + B2) := by
   rcases h1 with ⟨n, hn, hstep⟩
   rcases h2 with ⟨m, hm, hstep'⟩
   refine ⟨n + m, Nat.add_le_add hn hm, ?_⟩
