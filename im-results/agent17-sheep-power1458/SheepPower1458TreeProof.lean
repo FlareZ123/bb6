@@ -355,7 +355,7 @@ def t1TreeTable : FrozenTreeTable where
     simp [residues_t1] at hr
     omega
   periodMod3 := by
-    decidet1]
+    decide
   lowComplete := by
     intro n h a hn hnN hh ha ha'
     simpa [lowRowKeys_t1] using
