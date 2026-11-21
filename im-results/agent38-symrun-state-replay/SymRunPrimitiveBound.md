@@ -115,12 +115,13 @@ The repository's external champion baseline is S(6) > 2↑↑↑5, which is much
 
 The upstream BusyBeaver/Basic.lean API has multiStep_trans. Define
 
+    variable {Γ Λ : Type*} [Inhabited Γ] [Inhabited Λ]
+
     def ReachWithin (M : Machine Γ Λ) (c c' : Cfg Γ Λ) (B : Nat) : Prop :=
       ∃ n, n ≤ B ∧ multiStep M c n = some c'
 
-and prove additive composition directly with multiStep_trans:
-
     theorem ReachWithin.trans
+        {M : Machine Γ Λ} {c1 c2 c3 : Cfg Γ Λ} {B1 B2 : Nat}
         (h1 : ReachWithin M c1 c2 B1)
         (h2 : ReachWithin M c2 c3 B2) :
         ReachWithin M c1 c3 (B1 + B2) := by
