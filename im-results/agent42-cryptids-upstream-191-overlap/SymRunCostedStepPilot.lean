@@ -916,8 +916,7 @@ theorem stepElemDL_within (L R : List SymTok) :
                 refine ⟨3 * d0 + 22, ?_, ?_⟩
                 · have hd : d0 ≤
                       pilotStateFieldMax (.DL, .item (.run 2) :: L1, .item (.run d0) :: R1) := by
-                    simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
-                    omega
+                    simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
                   omega
                 · simpa only [stepElemDL, strictList_eq, evalSym, evalM, encSymL, encSymR,
                     encSymL_prependZeroSym] using
@@ -983,8 +982,7 @@ theorem stepElemCB_run0_within (L R1 : List SymTok) :
         · refine ⟨3 * d2 + 21, ?_, ?_⟩
           · have hd : d2 ≤ pilotStateFieldMax
                 (.CB, L, .item (.run 0) :: .item (.run (d2 + 1)) :: R2) := by
-              simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
-              omega
+              simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
             omega
           · simpa only [stepElemCB_run0, strictList_eq, evalSym, evalM, encSymL, encSymR,
               encSymL_bumpSymL, encSymL_prependZeroSym] using
@@ -1102,7 +1100,7 @@ theorem stepPureBB_within (L R : List SymTok) :
         rw [hR]
         unfold ReachesWithin
         refine ⟨14 * p, ?_, ?_⟩
-        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
         · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append]
           exact sweep_BB_C2_exact p (encSymL L1) (encSymR R2)
       | none =>
@@ -1125,7 +1123,7 @@ theorem stepPureBB_within (L R : List SymTok) :
         rw [hR]
         unfold ReachesWithin
         refine ⟨25 * m, ?_, ?_⟩
-        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
         · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append]
           exact sweep_BB_C12_exact m (encSymL L1) (encSymR R2)
       | none =>
@@ -1193,7 +1191,7 @@ theorem stepPureCB_within (L R : List SymTok) :
         rw [hL]
         unfold ReachesWithin
         refine ⟨21 * k, ?_, ?_⟩
-        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
         · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append,
             repBlock_succ_right, List.append_assoc]
           exact sweep_CB_B1_exact k (.run 0 :: .run 1 :: encSymL L2) (encSymR R1)
@@ -1204,7 +1202,7 @@ theorem stepPureCB_within (L R : List SymTok) :
           rw [hL]
           unfold ReachesWithin
           refine ⟨21 * k, ?_, ?_⟩
-          · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+          · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
           · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append]
             exact sweep_CB_B1_exact k (encSymL L1) (encSymR R1)
         | none =>
@@ -1221,7 +1219,7 @@ theorem stepPureCB_within (L R : List SymTok) :
         rw [hL]
         unfold ReachesWithin
         refine ⟨24 * p, ?_, ?_⟩
-        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
         · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append,
             repBlock_succ_right, List.append_assoc]
           exact sweep_CB_B2_exact p (.run 1 :: .run 0 :: .run 1 :: encSymL L2) (encSymR R1)
@@ -1232,7 +1230,7 @@ theorem stepPureCB_within (L R : List SymTok) :
           rw [hL]
           unfold ReachesWithin
           refine ⟨24 * p, ?_, ?_⟩
-          · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+          · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
           · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append]
             exact sweep_CB_B2_exact p (encSymL L1) (encSymR R1)
         | none =>
@@ -1248,7 +1246,7 @@ theorem stepPureCB_within (L R : List SymTok) :
         rw [hL]
         unfold ReachesWithin
         refine ⟨45 * m, ?_, ?_⟩
-        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
         · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append]
           exact sweep_CB_B12R_exact m (encSymL L1) (encSymR R1)
       | none =>
