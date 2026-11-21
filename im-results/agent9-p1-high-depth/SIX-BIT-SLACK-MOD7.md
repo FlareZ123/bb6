@@ -226,7 +226,7 @@ The source first-shallow split has **three** residual branches, not two:
 - \((\delta,I_s)=(1,48)\), even \(T_1\), first shallow depth zero;
 - \((\delta,I_s)=(1,48)\), odd \(T_1\), first shallow depth one.
 
-The odd-\(T_1\) \(I_s=48\) branch is **not** eliminated by the first-child mod-four guard: \`is48_odd_first_shallow_even_child\` proves that its child parameter is even, so the child satisfies the required mod-four condition. Keep it as a separate residual branch. The new second-shallow gate below refines all three branches. The terminal-cost bounds give \(t=5\) or \(6\) for the \((2,20)\) family and \(t\ge8\) for the \((1,48)\) family, subject to their stated cap hypotheses.
+The odd-\(T_1\) \(I_s=48\) branch is **not** eliminated by the first-child mod-four guard: `is48_odd_first_shallow_even_child` proves that its child parameter is even, so the child satisfies the required mod-four condition. Keep it as a separate residual branch. The new second-shallow gate below refines all three branches. The terminal-cost bounds give \(t=5\) or \(6\) for the \((2,20)\) family and \(t\ge8\) for the \((1,48)\) family, subject to their stated cap hypotheses.
 
 ## Second-shallow source gate (new arithmetic reduction)
 
@@ -260,7 +260,7 @@ If the first-shallow child were already the wall, its wall equation \(b_1+4B_1=1
 \[
 22u+4=3P,\qquad 22u+12=3P,\qquad 18u+2=P.
 \]
-Each terminal equation contradicts the corresponding restart defect equation and \(D\ge4\), provided \(2n\le P\). This elementary inequality holds in the target range \(P=2^n,\ n\ge83\). Thus the first-shallow child is not the wall: a further source edge must follow.
+Each terminal equation contradicts the corresponding restart defect equation and \(D\ge4\), provided \(2n\le P\). The Lean lemma `target_power_bound` proves this in the target range \(P=2^n,\ n\ge83\). Thus the first-shallow child is not the wall: a further source edge must follow.
 
 ### Exact next-edge residue gate
 
