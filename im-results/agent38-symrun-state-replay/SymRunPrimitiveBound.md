@@ -73,7 +73,7 @@ The field-growth proof can be split into three list lemmas:
 - `max(bumpSymR(xs)) ≤ max(xs)+1`;
 - `max(peelPureTok(t,xs)) ≤ max(t::xs)`.
 
-Then inspect the four `stepPure` modes. BB uses at most one `bumpSymR` after optional non-increasing peeling; DL uses non-increasing peeling followed by one `stepElemDL`; CB uses at most one `bumpSymL), except the two explicit repeat-counter branches, which increment exactly one counter by one; HALT is unchanged. The soundness cases `stepPureBB_sound`, `stepPureDL_sound`, and `stepPureCB_sound` (HaltShared lines 3780–3906) likewise use at most one repeated-block sweep or one atomic rule per branch.
+Then inspect the four `stepPure` modes. BB uses at most one `bumpSymR` after optional non-increasing peeling; DL uses non-increasing peeling followed by one `stepElemDL`; CB uses at most one `bumpSymL`, except the two explicit repeat-counter branches, which increment exactly one counter by one; HALT is unchanged. The soundness cases `stepPureBB_sound`, `stepPureDL_sound`, and `stepPureCB_sound` (HaltShared lines 3780–3906) likewise use at most one repeated-block sweep or one atomic rule per branch.
 
 The field-growth statement now has `stepPure_field_growth` and an n-step corollary in `SymRunTraceStats.lean`. Agent 44 reports a successful Lean 4.36.0-rc2 source-equivalent compile with axiom profiles `[propext, Quot.sound]`; exact imported-source compilation remains pending. The primitive-cost bound per `stepPure` transition is still not Lean-certified.
 
