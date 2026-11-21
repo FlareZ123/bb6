@@ -228,6 +228,28 @@ Sample quotient lower bounds (before rounding `Y` to `4 mod 12`):
 
 These bounds sharpen the residual frontier but still leave the general blank-root classification open.
 
+#### The dyadic family survives the maintained parameter-only high sieve
+
+The infinite family above is not already removed by Agent 19's current
+`highAllowed` predicate. Its exact identities give
+```
+j+3*m+3 = 2^(2*L),
+j%4=2,  j%8=6,  m%4=1,  m%8=5.
+```
+Moreover, `m%32=5` when `r=2`, and `m%32=21` for every `r>=3`;
+similarly `j%32=14` when `r=2`, and `j%32=30` for every `r>=3`.
+Thus `(j+m)%32=19` in every case. These residues defeat all five
+`jointHighAllowed` clauses and the additional `m%32=5, j%32=12`
+rectangle. The four Agent 19 odd-special filters all require
+`j%8∈{7,3,5,1}`, whereas this family has `j%8=6`. Finally, for every
+`n` admitted by the all-depth guard's range `n+4<=2*m+2=2*L`,
+`j+3*m+3=2^(2*L)` has residue zero modulo `2^(n+4)`, not the required
+`2^(n+2)`. Hence the whole family satisfies the current parameter-only
+`highAllowed) predicate while its actual normalized state is in the
+source-forbidden M8 cylinder. This is a concrete, infinite nonredundancy
+witness for adding the normalized M8 test to the high branch; it does not
+decide any of the remaining parameters.
+
 ### M8-filtered logarithmic lower bound for blank-root candidates
 
 The M8 quotient cylinder gives a general source-sensitive correction to the modular minimum. In the deep sector, put `v=(Y+2)/3` and `t=d mod (2*L)`. Since `2*L` is even, `d%2=t%2`. The source mass identity is
