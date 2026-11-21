@@ -42,18 +42,24 @@ Equivalently,
 S_{\rm TM1}=6(b+1)^2+42b+
 \underbrace{6\ell^2+57\ell+90+15\kappa+\Delta_2}_{R_\ell}.
 \]
-For the authentic parameters \(\ell\ge256\), \(m<\ell\), and
-\(\kappa\le m+1\), so \(R_\ell<88\ell^2+72\ell+105
-<161\,2^{\ell/2}=161\sqrt{b+1}\). Thus the displayed source-conditional
-formula implies
-\[
-6(b+1)^2+42b<S_{\rm TM1}<
-6(b+1)^2+42b+161\sqrt{b+1},
-\]
+For the authentic parameters \\(\\ell\\ge256\\), the elementary
+bounds \\(m\\le\\ell/32\\) and \\(\\kappa\\le\\ell/32+1\\) give
+\\[
+R_\\ell<
+\\frac{3113}{512}\\ell^2+\\frac{1839}{32}\\ell+105
+<\\frac{13}{2}\\ell^2.
+\\]
+Thus the displayed source-conditional formula implies the sharper
+two-sided enclosure
+\\[
+6(b+1)^2+42b<S_{\\rm TM1}<
+6(b+1)^2+42b+\\frac{13}{2}\\ell^2,
+\\]
 and in particular the simpler upper bound
-\(S_{\rm TM1}<6(b+1)^2+43b\). This is a re-centering of the existing
-exact score identity, not a new simulation or a separately accepted theorem;
-it does not change the uncompiled source-composition boundary.
+\\(S_{\\rm TM1}<6(b+1)^2+43b\\), since \\(b=2^\\ell-1\\).
+This is a re-centering of the existing exact score identity, not a new
+simulation or a separately accepted theorem; it does not change the
+uncompiled source-composition boundary.
 
 **This interval is still conditional on the authentic blank-root/source
 composition.** The full dependency closure has not compiled and passed a
