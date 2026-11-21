@@ -28,6 +28,26 @@ j\bmod16384\notin
 \]
 This is a description of current coverage, **not** a theorem that the remaining candidates halt or that their high-stop targets are reachable. All nine high-stop compositions still need integrated Lean wrappers, exact transitive source-closure compilation, and exported axiom audits; keep them in im-results/.
 
+For a single integrated Lean statement, define the covered index predicate by the following disjunction:
+\[
+\begin{aligned}
+\operatorname{Covered}(j)\;:\!\iff\;&j\equiv3\pmod{16}
+\ \lor\ j\equiv149\pmod{256}
+\ \lor\ j\equiv165\pmod{256}\\
+&\lor\ j\equiv117\pmod{512}
+\ \lor\ j\equiv181\pmod{512}
+\ \lor\ j\equiv549\pmod{1024}\\
+&\lor\ j\equiv1013\pmod{1024}
+\ \lor\ j\equiv2613\pmod{4096}
+\ \lor\ j\equiv4133\pmod{8192}.
+\end{aligned}
+\]
+The integrated target theorem is: for the exact root tuple satisfying
+\[
+17300+22155(t+j)=5\cdot2^{E-17},\qquad r=32+64j,
+\]
+\(\operatorname{Covered}(j)\) implies that \(T(1802+6720t)\) is not blank-reachable. The root equation modulo the corresponding \(2^k\) gives the matching t-cylinder in each case; the nine source-parent exclusions then discharge the cases.
+
 The attempted widening in [Root32HighStopR2400.md](./Root32HighStopR2400.md) is explicitly corrected: it does **not** close all of \(r\equiv2400\pmod{32768}\). It reduces the \(j\equiv37\pmod{1024}\) residual to an explicit affine family \(Y(n)\). The follow-up [Root32HighStopR2400Subfamilies.md](./Root32HighStopR2400Subfamilies.md) excludes only \(n\equiv7\pmod8\), yielding the additional \(r\equiv264544\pmod{524288}\) cylinder in the table. The attempted \(n\equiv13\pmod{16}\) branch is retracted because the even-right inverse side condition fails; its \(r\equiv919904\pmod{1048576}\) class remains open. The rest of \(r\equiv2400\pmod{65536}\) remains open.
 
 No Machine C halting/nonhalting decision or BB(6) value is claimed. The exact root equation is saturated on \(r\equiv32\pmod{64}\), so root-equation-only filtering is unproductive; progress must come from closing the remaining source-parent alternatives.
