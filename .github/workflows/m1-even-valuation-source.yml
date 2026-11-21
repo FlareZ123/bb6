@@ -88,10 +88,10 @@ jobs:
                   raise SystemExit(f"missing axiom report for {name}")
               for profile in reports:
                   print(f"{name} depends on axioms: {profile}")
-                  match = re.search(r"\\[([^\\]]*)\\]", profile, re.S)
+                  match = re.search(r"\[(.*?)\]", profile, re.S)
                   if not match:
                       raise SystemExit(f"unrecognized axiom profile for {name}: {profile}")
-                  axioms = {x.strip() for x in match.group(1).replace("\\n", " ").split(",") if x.strip()}
+                  axioms = {x.strip() for x in match.group(1).split(",") if x.strip()}
                   bad = axioms - allowed
                   if bad:
                       raise SystemExit(f"{name} depends on nonstandard axioms: {sorted(bad)}")
