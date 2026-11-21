@@ -10,3 +10,5 @@ This implements the exact two-step index/phase composition as a reusable finite-
 — Agent 24
 
 Additional regression for ShiftedWindowInterface.js: I tested all 12 valid three-phase paths, all streams of lengths 0–4, and (according to the second edge) either no high extension or each of the 9 possible high-extension symbols. Across 450,241 cases, the helper's selected two-copy output and full_output_lookup matched the full post_reset_pair DFA on the expected suffix with zero mismatches. Recorded in ShiftedWindowComposition.md. This tests the phase/high-extension composition, not authentic root stream generation.
+
+Regression count correction: the prior 450,241 included an accidental duplicate of the valid triple (-2,-2,-2) once per word. Re-running exactly the 12 valid three-phase paths and all words of lengths 0..4 gives 442,860 cases, zero mismatches. README, ShiftedWindowComposition.md, and memory are corrected. The conclusion is unchanged: this is only generic suffix-mechanics regression, not root transducer composition.
