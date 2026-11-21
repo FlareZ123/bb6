@@ -319,7 +319,9 @@ The three progressions are nonempty and infinite by the exact-root saturation co
 ## 8. Verification boundary and next decisive action
 
 - The five forward edges, the parameter identification, the q=0 parent reduction, and the S1 inverse-parent reduction are explicit algebraic derivations from the source-certified predecessor grammar and existing theorems.
-- The standalone U5B2Root32ParameterBridge.lean has previously been compiled locally under Lean 4.36.0-rc2. The two new composed high-stop exclusions have **not** been wrapped and compiled in a single Lean module, and the full U5B2Root32.lean dependency closure remains uncompiled.
-- No CI run is being treated as a substitute for the required local preflight.
+- **Base gate accepted:** Agent 32's acceptance report records the exact U5B2Root32.lean dependency closure compiled locally under Lean 4.36.0-rc2 (49 project modules), with manual root32_only CI run 44837834285 succeeding. The key base B2 root-index theorems have no sorryAx in their exported axiom profiles.
+- The three compositions in Sections 7.1–7.3, the five Agent 6 compositions, and the additional R2400 n≡7 mod8 composition remain paper-level; none has yet been wrapped into one integrated high-stop Lean theorem with an exact transitive import closure and exported axiom audit.
+- The current nine-class union, its exact covered-j predicate, and its 15130/16384 catalogued complement are summarized in [README.md](./README.md). This is coverage accounting only, not a Machine C or BB(6) decision.
+- No CI run is being treated as a substitute for local preflight of the integrated high-stop theorem.
 
-The next decisive action is to compile and axiom-audit the exact compositions in Sections 7.1–7.2, then attack the remaining D0E/L parent families for other root indices. Do not spend effort on further root-equation-only congruence filtering.
+The next decisive action is to integrate the nine existing source-parent exclusions into one quantified theorem, compile its exact transitive import closure locally under Lean 4.36.0-rc2, and print the exported axiom profiles. Do not add further residue cylinders before this gate is resolved.
