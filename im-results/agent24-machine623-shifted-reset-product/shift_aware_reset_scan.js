@@ -210,7 +210,7 @@ function sourceDrainStats(a, d) {
     result = drainBStats(...first);
   }
   if (result === null) return null;
-  return { sector, D: initialA - result.a, r: result.r };
+  return { sector, D: initialA - result.a, R: result.r + (sector === "RE" ? 1 : 0) };
 }
 
 
@@ -351,7 +351,7 @@ const summary = {
   signThresholdDisagreements: 0,
   drainStatBoundFailures: 0,
   DRange: { min: Infinity, max: -Infinity },
-  rRange: { min: Infinity, max: -Infinity }
+  RRange: { min: Infinity, max: -Infinity }
 };
 
 let a = 0n;
@@ -364,19 +364,19 @@ for (let index = 0; index <= 10000; index++) {
     const drainStats = sourceDrainStats(a, d);
     assert(drainStats !== null, "missing source drain statistics at transition " + index);
     assert.equal(drainStats.sector, current.sector, "source sector/statistics mismatch at transition " + index);
-    const thresholdOffset = { LO: 19n, LE: 10n, RO: -4n, RE: 4n }[drainStats.sector];
-    const threshold = 3n * drainStats.D + 2n * BigInt(drainStats.r) + thresholdOffset;
+    const thresholdOffset = { LO: 19n, LE: 10n, RO: -4n, RE: 2n }[drainStats.sector];
+    const threshold = 3n * drainStats.D + 2n * BigInt(drainStats.R) + thresholdOffset;
     // Exact source output-side decision from RootRayGapCocycle.md:
     // left iff g >= 3D + 2r + c_T. The sign(g) simplification is not used.
     const branch = current.g >= threshold ? "L" : "R";
     if ((current.g > 0n ? "L" : "R") !== branch) summary.signThresholdDisagreements++;
     const ell = BigInt(ellOfS(current.S));
     const absD = drainStats.D < 0n ? -drainStats.D : drainStats.D;
-    if (absD > ell + 1n || BigInt(drainStats.r) > ell) summary.drainStatBoundFailures++;
+    if (absD > ell + 1n || BigInt(drainStats.R) > ell) summary.drainStatBoundFailures++;
     summary.DRange.min = Math.min(summary.DRange.min, Number(drainStats.D));
     summary.DRange.max = Math.max(summary.DRange.max, Number(drainStats.D));
-    summary.rRange.min = Math.min(summary.rRange.min, drainStats.r);
-    summary.rRange.max = Math.max(summary.rRange.max, drainStats.r);
+    summary.RRange.min = Math.min(summary.RRange.min, drainStats.R);
+    summary.RRange.max = Math.max(summary.RRange.max, drainStats.R);
     const transducer = machine[branch];
 
     const B = windowBound(current.S);
