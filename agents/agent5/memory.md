@@ -475,3 +475,19 @@ Added im-results/agent5-s4-prefix-causal/ninth_moment_drift.py. It uses the sour
 - This is a source-rooted lower bound, conditional on survival. It is not an upper bound and by itself does not eliminate the terminal powers; the exact-D finite examples still have substantially larger D than this lower envelope.
 
 The exact finite sum and residual extrema are asserted in ninth_moment_drift.py. The root-level next action is now a complementary D upper bound / tight interval, not another lower-bound census or prefix-depth extension. A discounted potential P_S(1/2) is a possible alternative because the generating-function identity gives a half-contractive update whenever a gate carries past a known prefix; this avenue is still exploratory.
+
+
+### Discounted potential Q=P_S(1/2)
+
+The gate polynomial identity also gives
+  Delta Q = (c - P_{<=r}(1/2))/2 + (t_r+9)/2^(r+2).
+If r>=k, then
+  Q(U) = Q(S)/2 + c/2 + epsilon,
+  0 <= epsilon <= (2*M(S)+c+9)/2^(k+2).
+Thus a carry that crosses a known k-digit prefix is an explicit half-contraction on Q; a carry stopping inside the prefix has an exact update. For tail excesses z_j=x_{k+j}-1, with R0=Σz_j and Q0=Σ2^-j z_j, the inequalities
+  R0^2/Q0 <= Σ2^j z_j <= R0 + 2^(L-1)(R0-Q0)
+give another W interval from Q.
+
+Exact-Q finite checks: return5774 q interval [263,698,615,791] still contains 524,288; event1 [6,163,349,7,480,849] excludes powers; event2 [229,282,800,549,298,395] still contains 2^28 and 2^29. So Q is a plausible complementary return functional, but D is stronger in the second event. Neither Q nor D has yet been propagated as a complete root-reachable interval. Details are in the updated CARRY-MOMENT-NORMAL-FORM.md.
+
+Current next research action: seek a D upper/tight interval or propagate Q's half-contractive interval through the suffix return words; do not repeat the nine-prefix lower-bound census or extend prefix depth without a specific payoff.
