@@ -194,7 +194,7 @@ theorem affine_node_hidden_bound
       rw [ht, Nat.mul_add, Nat.mul_assoc]
       omega
     rw [hexp] at hmod
-    exact hno hmod
+    exact False.elim (hno hmod)
 
 /-- Positive-offset counterpart of blank_even_inverse_cases. It uses the
 original EvenReach last edge and the source-checked positive-offset algebra
