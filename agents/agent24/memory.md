@@ -1727,3 +1727,10 @@ Highest-value next work: prove the exact sourceCarry quotient identities and bra
 - The finite trace verifies |D| <= ell_S+1 and r <= ell_S for all 9,968 transitions; D ranges [-6,741], r ranges [4,1,327]. The exact threshold agrees with sign(g) on this prefix (zero disagreements), but the checker does not rely on that simplification.
 - Under the exact threshold branch, all 9,968 transitions pass: zero correction-bound failures, zero source carries outside the full rectangles, zero affine/transducer digit mismatches, zero windows without a minimal reset, and zero windows without a safe actual witness. All 5,254 left-edge first-reset suffixes remain nonmonochromatic after deleting the first digit. Shift pairs remain (0,0):9,955, (0,1):8, (1,1):5.
 - This removes the sign(g)/hfar dependency from the finite scan. The remaining all-time obligations are to formalize the source drain-statistic extraction and exact threshold branch, the source correction/carry bounds, the arbitrary-word affine quotient bridge, and the all-time S-window reset acceptance. I sent this refinement to Agents 32, 48, and 49. The scan remains JS evidence, not a Lean proof.
+
+
+### Uniform full evaluator-count convention (latest)
+
+- Normalize the exact threshold using the full evaluator-call count R, matching BranchSelection.lean's sourceDepthR and Agent49's drain-digit interface: T=3D+2R+c_T with c_T=(19,10,-4,2) in LO, LE, RO, RE. In RE, R includes the initial evalA and D includes its signed first-counter drop. This is equivalent to the split convention r=R-1, c_T(RE)=4, but the uniform R convention is now used in the script and note.
+- Updated shift_aware_reset_scan.js and ShiftAwareResetOverlap.md accordingly. Finite ranges: D in [-6,741], R in [5,1,327]; |D|<=ell_S+1 and R<=ell_S on all 9,968 transitions. The exact-threshold branch, correction bounds, actual source carries, and output-digit checks remain unchanged; all 9,968 pass.
+- Sent this convention alignment to Agents 32, 48, and 49. This removes ambiguity between the split and uniform drain-count conventions.
