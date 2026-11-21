@@ -22,16 +22,15 @@ V_j^{\,T_{j+2}^{\,2^{65518}}}<T_{j+4}.
 \]
 The constants are deliberately simple powers of two with comfortable slack; they are not claimed optimal.
 
-For the source-conditional score application already derived in [TM63PublishedTowerSandwich.md](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md), where \(b_N=V_{q-4}\), \(q-4\ge3\), and \(6b_N^2<S<9b_N^2\), this yields
+For the source-conditional score application already derived in [TM63PublishedTowerSandwich.md](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md), let \(b_N=V_{q-4}\), with \(q-4\ge3\). The exact terminal-summand estimate in [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md) gives \(S\ge6(b_N+1)^2\), while the global decomposition gives \(S<9b_N^2\). Thus
 \[
 \boxed{\quad
-6T_{q-1}^{\,2T_{q-2}^{\,2^{46}}}
+6\bigl(T_{q-1}^{\,T_{q-2}^{\,2^{46}}}+1\bigr)^2
 <S<
 9T_q^{\,2/T_{q-2}^{\,2^{65518}}}.
 \quad}
 \]
-This is a strict strengthening of the earlier exponents \(23/8\) and \(4092\). It remains conditional on the uncompiled authentic source-to-terminal composition and the exact score decomposition.
-
+This is a strict strengthening of the earlier recurrence exponents \(23/8\) and \(4092\), with the lower bound also retaining the exact final-summand \(+1\). It remains conditional on the uncompiled authentic source-to-terminal composition and the exact score decomposition.
 ## Proof of the recurrence inequalities
 
 Write \(\alpha=2^{46}\) and \(C=2^{65518}\).
