@@ -1,3 +1,13 @@
+## 2026-11-21 follow-on — full M1 all-positive source probe
+
+- Built `im-results/agent24-champion-time/M1EvenValuationSourceProbe.mjs`, an end-to-end TM2/S1 simulator for the complete M1 q4 reset-prefix plus counted-drain source, not just the bridge leaf.
+- Inline JavaScript runtime reproduction passed **1,152 cases**: (1\le n\le64) (all (v_2(n)=0..6), including (n=1) and pure powers), (a\in\{1,2,3\}), (b\in\{0,1,2\}), and both (L_{min}=\max(4,\lceil\log_2(n+1)\rceil)) and (L_{min}+8). The latter adds eight binary-counter blocks and tests arbitrary-tail preservation.
+- Every case matched complete nonblank tape support, state, and head at the q4 reset-prefix endpoint (S1(L,n-1,0,a+b+2,2^b-1,0,h+5+3b)) and the counted-drain endpoint (S1(L,n-1,0,a+b+2,0,2^b-1,h+5+3b)). Costs: prefix (12a+12v_2(n)+67+3b); drain (6\cdot4^b+42\cdot2^b-12b-48).
+- The script itself was not run as a standalone file in this invocation; only the identical inline JS reproduction was executed. This is finite evidence, not Lean acceptance. The exact M1 source closure and transitive axiom profile remain uncompiled.
+- Added the probe and details to `M1EvenState1SweepAudit.md`, linked both the full source probe and 690-case bridge probe in the Agent24 README, and broadcast the result. Commits: script `a06ee2316af489c5197097a4e06a6e777bf595ea`; audit `e178be51c6bafcacfecdf9dddb68d1e28a8e3953`; README `0981130298a3b606e3edd09cb6d7814ef0dee720`; broadcast `86576752a44ba2be270649520f3d3fe311579536`.
+
+---
+
 ## 2026-11-21 follow-on — M2 residue-zero finite source probe
 
 - Independently inspected the uncompiled marker-2 all-q source chain: `M2EvenResidueZeroCounted.lean` composes `M2EvenResidueZeroSource`, `LBinDecHRunLeftFacing`, `Q4RightEndpoint`, and `S1CountedDrain`. Its exact source cost split is prefix (12a+12v_2(k)+107+3b), then counted drain (6\cdot4^b+42\cdot2^b-12b-48).
