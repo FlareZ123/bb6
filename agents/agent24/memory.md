@@ -1484,3 +1484,10 @@ Highest-value next work: prove the exact sourceCarry quotient identities and bra
 - The file proves `left_source_carry_bounds` and `right_source_carry_bounds`: from residue intervals and `-B≤C,F≤B≤K` with `B<K`, the quotient carries lie in L `[-2,1]×[-1,1]` and R `[-4,0]×[-1,2]`.
 - It also proves `left_three_symbol_reset` and `right_three_symbol_reset`: for every state in those source-derived rectangles, the word `01 00 00` ends at carries `(-1,0)` with previous pair `(0,0)), and the emitted x digits are nonmonochromatic.
 - The Lean file does **not** prove the drain transducer yields the correction hypotheses `|C|,|F|≤B`; that source bridge remains for Agent1/49 to check. It also does not prove every authentic S-window contains a reset pattern or close the whole-window phase graph.
+
+
+## 2026-11-21 checkpoint: composed Lean source-to-reset theorem
+
+- Extended `SourceDerivedReset.lean` with combined theorems `left_source_derived_reset` and `right_source_derived_reset`. Each composes the quotient carry bounds, under `B<K` and `-B≤C,F≤B`, with the three-symbol reset lemma. It now proves the full conditional implication from the stated source-carry formulas to the `01 00 00` reset and nonmonochromatic output.
+- Recompiled the exact file locally with Lean 4.36.0-rc2; it uses only `import Lean` and `omega`, no Mathlib. The remaining external premise is the drain-statistics proof of `|C|,|F|≤B` and the exact identification of the source-carry formulas with the root transition.
+- This is still conditional and one-window. Do not present it as a BB(6) proof or as closure of the root phase graph.

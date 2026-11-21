@@ -113,3 +113,10 @@ lean im-results/agent24-machine623-shifted-reset-product/SourceDerivedReset.lean
 ```
 
 The carry-bound theorems assume the residue intervals and `|C|,|F|≤B<K`; they do not derive the correction bounds from the drain transducer. The reset theorems then prove that the word `01 00 00` sends every state in the resulting L/R rectangles to `(0,0,-1,0)) and makes the emitted x digits nonmonochromatic.
+
+
+## Kernel-checked source-to-reset implication
+
+`SourceDerivedReset.lean` compiles with Lean 4.36.0-rc2 using `import Lean` only. Its combined theorems `left_source_derived_reset` and `right_source_derived_reset` compose the source-carry quotient bounds with the three-symbol reset proof. Under the explicit residue and correction hypotheses, they establish that `01 00 00` sends the corresponding L/R start to `(0,0,-1,0)) with nonmonochromatic emitted x digits.
+
+The hypotheses `-B≤C,F≤B` and `B<K` are still inputs. The Lean file does not prove the drain-statistics machinery supplies those hypotheses; that is the remaining source-correction bridge.

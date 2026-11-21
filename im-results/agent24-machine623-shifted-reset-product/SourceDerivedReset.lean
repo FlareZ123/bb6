@@ -114,4 +114,56 @@ theorem right_source_carry_bounds
   · apply (Int.ediv_le_iff_le_mul hden).2
     omega
 
+/-- L source-carry formulas plus the correction hypotheses imply the 01,00,00 reset. -/
+theorem left_source_derived_reset
+    (K B xK1 yK C F py a b a1 b1 a2 b2 : Int)
+    (hK : 0 < K) (hBK : B < K)
+    (hClo : -B ≤ C) (hChi : C ≤ B)
+    (hFlo : -B ≤ F) (hFhi : F ≤ B)
+    (hx0 : 0 ≤ xK1) (hx3 : xK1 < 3 * K)
+    (hy0 : 0 ≤ yK) (hyK : yK < K)
+    (hpy0 : 0 ≤ py) (hpy2 : py ≤ 2)
+    (haDef : a = (xK1 - 3 * yK + C) / (3 * K))
+    (hbDef : b = (3 * yK + F) / (3 * K))
+    (ha1def : a1 = (a - py) / 3)
+    (hb1def : b1 = (py + b) / 3)
+    (ha2def : a2 = (a1 - 1) / 3)
+    (hb2def : b2 = (1 + b1) / 3) :
+    a2 / 3 = -1 ∧ b2 / 3 = 0 ∧
+      NonMono ((a - py) % 3) ((a1 - 1) % 3) (a2 % 3) := by
+  have hBounds := left_source_carry_bounds K B xK1 yK C F hK hBK hClo hChi hFlo hFhi hx0 hx3 hy0 hyK
+  rcases hBounds with ⟨ha0, haHi, hb0, hbHi⟩
+  have haLo : -2 ≤ a := by rw [haDef]; exact ha0
+  have haUpper : a ≤ 1 := by rw [haDef]; exact haHi
+  have hbLo : -1 ≤ b := by rw [hbDef]; exact hb0
+  have hbUpper : b ≤ 1 := by rw [hbDef]; exact hbHi
+  exact left_three_symbol_reset py a b a1 b1 a2 b2 hpy0 hpy2 haLo haUpper hbLo hbUpper ha1def hb1def ha2def hb2def
+
+/-- R source-carry formulas plus the correction hypotheses imply the 01,00,00 reset. -/
+theorem right_source_derived_reset
+    (K B xK1 xK yK C F px py a b a1 b1 a2 b2 : Int)
+    (hK : 0 < K) (hBK : B < K)
+    (hClo : -B ≤ C) (hChi : C ≤ B)
+    (hFlo : -B ≤ F) (hFhi : F ≤ B)
+    (hx10 : 0 ≤ xK1) (hx13 : xK1 < 3 * K)
+    (hx0 : 0 ≤ xK) (hxK : xK < K)
+    (hy0 : 0 ≤ yK) (hyK : yK < K)
+    (hpx0 : 0 ≤ px) (hpx2 : px ≤ 2)
+    (hpy0 : 0 ≤ py) (hpy2 : py ≤ 2)
+    (haDef : a = (-xK1 - 3 * xK - 3 * yK + C) / (3 * K))
+    (hbDef : b = (3 * xK + 3 * yK + F) / (3 * K))
+    (ha1def : a1 = (a - px - py) / 3)
+    (hb1def : b1 = (px + py + b) / 3)
+    (ha2def : a2 = (a1 - 1) / 3)
+    (hb2def : b2 = (1 + b1) / 3) :
+    a2 / 3 = -1 ∧ b2 / 3 = 0 ∧
+      NonMono ((a - px - py) % 3) ((a1 - 1) % 3) (a2 % 3) := by
+  have hBounds := right_source_carry_bounds K B xK1 xK yK C F hK hBK hClo hChi hFlo hFhi hx10 hx13 hx0 hxK hy0 hyK
+  rcases hBounds with ⟨ha0, haHi, hb0, hbHi⟩
+  have haLo : -4 ≤ a := by rw [haDef]; exact ha0
+  have haUpper : a ≤ 0 := by rw [haDef]; exact haHi
+  have hbLo : -1 ≤ b := by rw [hbDef]; exact hb0
+  have hbUpper : b ≤ 2 := by rw [hbDef]; exact hbHi
+  exact right_three_symbol_reset px py a b a1 b1 a2 b2 hpx0 hpx2 hpy0 hpy2 haLo haUpper hbLo hbUpper ha1def hb1def ha2def hb2def
+
 end BB6.SourceDerivedReset
