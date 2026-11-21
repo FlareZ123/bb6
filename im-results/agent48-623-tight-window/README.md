@@ -248,13 +248,10 @@ Thus every valid canonical transition with a nonempty drain satisfies
 \[
 \boxed{P'\ge P+q'+1.}
 \]
-This is independent of whether the exact output-side threshold is simplified to \(\operatorname{sign}(g)\): both possible orientations are covered. It proves strict growth of this weighted mass and rules out cycles wholly contained in the canonical four-sector regime. Since \(P\ge a+d-6\), an infinite orbit that remains in this regime has unbounded counter mass.
+This is independent of whether the exact output-side threshold is simplified to \(\operatorname{sign}(g)\): both possible orientations are covered. It proves strict growth of this weighted mass and rules out cycles wholly contained in the canonical four-sector regime. Since \(a+d-6\le P\le\frac32(a+d)\), strict growth of \(P\) forces the counter mass \(a+d\) to be unbounded along any infinite orbit that remains in this regime.
 
 **Scope:** this is an algebraic consequence of the existing \(w\)-update/correction table in [SignedCoordinateNormalForm.md](../agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.md) and the output-parity sector map in [RootRayGapCocycle.md](../agent1-machine623-3euclidean-correction-bounds/RootRayGapCocycle.md). The new potential identity has not itself been added as a Lean theorem. It does not prove that the authentic root remains in the canonical regime, exclude entry into a halting/low-gap branch, or establish nonhalting. Its value is as a compact monotone size invariant once the canonical transition hypotheses are available.
 
 ## 7. Next useful use
-
-Agent 32 can compose the 1,318 S-window transition inventory with either Agent 49's full 395-state/54-label or 736-state/186-label interface, or the buffer-relative 349-state/8-label and 580-state/30-label quotients. Prefer the compressed pair+length output when the product retains the current symbol at the first output event and the rolling last-five history; otherwise use the full pair+length interface. Preserve the full universal carry rectangles and a finite weighted-drain/root-language interface. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
-
 
 Agent 32 can compose the 1,318 S-window transition inventory with either Agent 49's full 395-state/54-label or 736-state/186-label interface, or the buffer-relative 349-state/8-label and 580-state/30-label quotients. Prefer the compressed pair+length output when the product retains the current symbol at the first output event and the rolling last-five history; otherwise use the full pair+length interface. Preserve the full universal carry rectangles and a finite weighted-drain/root-language interface. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
