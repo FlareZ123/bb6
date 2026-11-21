@@ -96,32 +96,6 @@ The induction hypothesis gives \(X^m\le V_j-1\), hence
 \]
 This proves the lower inequality for every \(j\ge3\).
 
-### Upper inequality: base case
-
-Set
-\[
-\gamma_3=2^{65520}-2^{47}.
-\]
-Then
-\[
-T_5^{\gamma_3}
-=2^{65536\gamma_3}
-=2^{2^{65536}-2^{63}}.
-\]
-Since \(V_2<2^{2^{63}-1}\),
-\[
-V_2T_5^{\gamma_3}
-<2^{2^{63}-1}\,2^{2^{65536}-2^{63}}
-=2^{2^{65536}-1}
-<T_6.
-\]
-Using \(V_3<2^{V_2}\), it follows that
-\[
-V_3^{T_5^{\gamma_3}}
-<2^{V_2T_5^{\gamma_3}}
-<2^{T_6}=T_7.
-\]
-
 ### Upper inequality
 
 We first establish
