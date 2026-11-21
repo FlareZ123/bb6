@@ -136,6 +136,8 @@ int main(int argc, char** argv) {
     if (argc > 1 && std::string(argv[1]) == "--scan-terminal-50000") {
         Tail state = actualTail;
         uint64_t fullEvents = 0, residueCandidates31 = 0, residueCandidates = 0, exactPowers = 0;
+        uint64_t oddPartMod21Eq2 = 0;
+        std::array<uint64_t, 21> oddPartMod21Histogram{};
         uint64_t maxLen = state.size();
         for (uint64_t n = 0; n < 50000; ++n) {
             for (size_t i = 0; i < offsets.size(); ++i) {
@@ -153,11 +155,19 @@ int main(int argc, char** argv) {
                         r127 == 1 || r127 == 2 || r127 == 4 ||
                         r127 == 8 || r127 == 16 || r127 == 32 || r127 == 64;
                     const bool qPower = q != 0 && (q & (q - 1)) == 0;
+                    if (q == 0) return 11;
+                    uint64_t oddPart = q, v2 = 0;
+                    while ((oddPart & 1) == 0) { oddPart >>= 1; ++v2; }
+                    const uint64_t odd21 = oddPart % 21;
+                    oddPartMod21Eq2 += (odd21 == 2);
+                    ++oddPartMod21Histogram[odd21];
                     residueCandidates31 += candidate31;
                     residueCandidates += candidate127;
                     exactPowers += qPower;
                     std::cout << "event block=" << n << " gate=" << i
                               << " length=" << state.size() << " q=" << q
+                              << " v2=" << v2 << " q_odd=" << oddPart
+                              << " q_odd_mod21=" << odd21
                               << " q_mod31=" << r31 << " q_mod127=" << r127
                               << " candidate31=" << candidate31
                               << " candidate127=" << candidate127
@@ -182,9 +192,14 @@ int main(int argc, char** argv) {
                   << " candidate31=" << residueCandidates31
                   << " candidate127=" << residueCandidates
                   << " exact_power2=" << exactPowers
+                  << " odd_part_mod21_eq2=" << oddPartMod21Eq2
                   << " max_length=" << maxLen
                   << " final_length=" << state.size()
                   << " final_mass=" << totalMass << "\n";
+        std::cout << "odd_part_mod21_hist=";
+        for (size_t residue = 0; residue < oddPartMod21Histogram.size(); ++residue)
+            std::cout << residue << ":" << oddPartMod21Histogram[residue] << ",";
+        std::cout << "\n";
     }
 
     if (argc > 1 && std::string(argv[1]) == "--print-offsets") {

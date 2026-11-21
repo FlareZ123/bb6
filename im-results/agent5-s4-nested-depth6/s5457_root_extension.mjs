@@ -158,7 +158,8 @@ for(let r=0;r<4*BLOCK;r++){
         relativeReturn:r,stage:j,offset:String(c),oldLength:beforeLength,
         newLength:next.length,W:String(W(state)),potential:String(potential),
         terminalQuotient:String(q),v2:Number(f.v),oddPart:String(f.odd),
-        quotientMod31:String(q%31n),discountedQUpdate,momentCertificate
+        quotientMod31:String(q%31n),oddPartMod21:String(f.odd%21n),
+        discountedQUpdate,momentCertificate
       });
     }
     state=next;
@@ -184,6 +185,8 @@ assert(events[0].discountedQUpdate.carryDepth===20&&
   events[1].discountedQUpdate.carryDepth===22&&
   events.every(e=>e.discountedQUpdate.matches),
   "corrected discounted-Q identity changed");
+assert(events.every(e=>e.oddPartMod21==="2"),
+  "observed odd-part residue mod 21 changed");
 console.log(JSON.stringify({
   sourceCertifiedStartReturn:5457,
   reducedPReturns:4*BLOCK,
