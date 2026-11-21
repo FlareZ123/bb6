@@ -21,6 +21,7 @@ const run = async function(fetchText) {
   const B1 = n => ({t:"b1",n});
   const R2 = n => ({t:"r2",n});
   const R12 = n => ({t:"r12",n});
+  let maxZeroExpansion = 0n;
   const eqTok = (a,b) => a.t===b.t && (a.t==="i" ? a.v===b.v : a.n===b.n);
   const strip = (pre,xs) =>
     pre.length<=xs.length && pre.every((t,i)=>eqTok(t,xs[i])) ? xs.slice(pre.length) : null;
@@ -116,6 +117,7 @@ const run = async function(fetchText) {
     return [I(1),I(1),I(0),I(1),I(1),R12(t.n-1n),...xs];
   }
   function prependZeroSym(n,acc) {
+    if (n>maxZeroExpansion) maxZeroExpansion=n;
     if (n>1000000n) throw new Error("unexpected large zero expansion: "+n);
     return [...Array(Number(n)).fill(0).map(()=>I(-1)),...acc];
   }
@@ -360,6 +362,7 @@ const run = async function(fetchText) {
   }
 
   async function replayOne(path,label) {
+    maxZeroExpansion=0n;
     const source=await fetchText(base+path);
     const lines=source.split("\n");
     const names=lines.map(x=>x.match(/^def (symChk\d+) /)?.[1]).filter(Boolean);
@@ -394,6 +397,7 @@ const run = async function(fetchText) {
       firstHaltAtStepSym:haltAt,
       checkpointResults,
       maxima:Object.fromEntries(Object.entries(maxima).map(([k,v])=>[k,v.toString()])),
+      maxZeroExpansion:maxZeroExpansion.toString(),
       finalMode:state[0]
     };
   }
