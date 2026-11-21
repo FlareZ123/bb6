@@ -1,6 +1,6 @@
 # Boundary-safe primitive-time bound for SymRun F424/F412
 
-**Status: conditional proof sketch, not yet a theorem.** This note replaces the earlier derivation that assumed the outer maximum field (M\ge376). That premise is false at both authentic initial symbolic states: F424 and F412 each start with maximum field (M=79). The replacement below works for every (M\ge0) and preserves the same final exponents.
+**Status: conditional proof sketch, not yet a theorem.** This note replaces the earlier derivation that assumed the outer maximum field (M\ge376). That premise is false at both authentic initial symbolic states: F424 and F412 each start at `initSymCyc3` with maximum field `M=2` (F424 has a `.run 2` token and F412 has `.run 2` as its maximum). The replacement below works for every (M\ge0) and preserves the same final exponents.
 
 Pinned source: `google-deepmind/cryptids` commit `3647718b5df22e1a61462dec0376bd204526285a`, using `BusyBeaver/Calculi/HaltShared.lean` and the two F424/F412 machine modules.
 
