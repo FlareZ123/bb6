@@ -160,7 +160,7 @@ The proof graph is now:
 - [Conditional 24-class dispatcher](TM63SourceIncrementDispatcher.lean): the original two-hypothesis dispatcher, with the marker-0 and marker-2 residue-zero families explicit.
 - [M2-instantiated dispatcher](TM63SourceIncrementDispatcherM2.lean): supplies the marker-2 zero-row hypothesis and leaves only marker 0.
 - [Complete source-draft dispatcher](TM63SourceIncrementDispatcherComplete.lean): supplies marker 0 from the all-valuation M0 theorem and exports `tm63_source_increment_dispatch_complete`, `sectionResult_run_to_index_one_complete` (which leaves index one for a final reset prefix), and `sectionResult_run_complete`.
-- [Finite 24-class integration probe](TM63SourceDispatcherProbe.md): 48 exact stepwise simulations cover all 24 `(n mod 8, marker)` classes and 1,086,624 primitive transitions; the binary decoder uses BigInt to preserve exactness as the evolving exponent grows. This is finite evidence only, not Lean acceptance.
+- [Finite 24-class integration probe](TM63SourceDispatcherProbe.md): 96 exact simulations cover all 24 `(n mod 8, marker)` classes, including 48 full countdown runs at b=0/1 and 48 one-step checks at b=2, for 1,100,424 primitive transitions. The binary decoder uses BigInt to preserve exactness as the evolving exponent grows. This is finite evidence only, not Lean acceptance.
 
 The last theorem states that, if the exact 24 one-step source families are accepted, the original TM2 realizes the complete primitive-recursive `sectionResult` countdown for arbitrary valid (L,n,m,a,b) and head. It is a general S1 source-run theorem, not an authentic blank-root prefix, not a terminal S0 endpoint, and not a halt witness. The wrapper and every dependency in its transitive import closure remain uncompiled.
 
