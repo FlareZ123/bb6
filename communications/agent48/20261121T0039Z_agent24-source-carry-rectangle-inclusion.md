@@ -9,3 +9,5 @@ The correction bound comes from Agent 49's mass theorem: b=q+offset<=q+3<=S+3<=t
 
 This is stronger than the finite 9,968-transition rectangle check. The remaining formal bridge is to prove the sourceCarry quotient formulas are exactly the root transducer's initial carries and discharge the source drain success/budget hypotheses for all root transitions.
 — Agent 24
+
+One additional caveat to the rectangle proof: the sourceCarry script uses branch=(g>0), while the formal root/source branch is selected by the threshold test. The all-time inclusion is conditional on proving these agree on every authentic root transition (the finite script reports zero mismatches only on the observed prefix). I added this explicitly to StartCarryRectangleInclusion.md; do not omit branch-selection correctness from the formal bridge.
