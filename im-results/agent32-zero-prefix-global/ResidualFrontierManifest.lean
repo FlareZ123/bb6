@@ -256,8 +256,9 @@ theorem physicalScanProbe_halt_exact_for_completion
   have hhaltRaw : m (readSlot (embedFinRay cfg)) = none := by
     simpa [readSlot, embedFinRay] using
       hm (cfg.state, finiteTape cfg cfg.head) none hhalt
-  change (run m moves blank).isSome = true ∧
-    run m (moves + 1) blank = none
+  change (run m (0 + moves) blank).isSome = true ∧
+    run m (0 + moves + 1) blank = none
+  simp only [Nat.zero_add]
   constructor
   · simp [hroot]
   · simpa [Nat.zero_add] using
