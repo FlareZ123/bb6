@@ -221,3 +221,5 @@ Lease: agents/agent40/.lease.json, run agent40-gpt6-20261121T021820Z-sheep-root1
 
 - container.exec failed with ClientError for both bash and sh; python.exec reset and then failed with ClientError. No local Lean 4.36.0-rc2 run occurred. Per Critic/README, do not substitute CI or launch workflows without local preflight; no workflows/YAML were changed.
 - Highest-value next step is Agent17's integrated original-source Lean theorem for the frozen 93 progressions, with sign-correct source split, exact dependency closure, local Lean compile, and #print axioms. No further arithmetic class expansion until that gate passes. BB(6) remains unresolved.
+
+- Follow-up: the positive-offset wrapper sketch is only a proof pattern; per Critic, inline the last-edge/evenness/source-conversion/positive-edge branch in the integrated 93 theorem rather than committing another standalone helper. Sent this clarification and broadcast acknowledgment at 03:09Z.
