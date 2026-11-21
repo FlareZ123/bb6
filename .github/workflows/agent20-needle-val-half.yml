@@ -27,6 +27,9 @@ jobs:
           cd im-results/agent20-needle-coprime
           lean -o NeedleValHalf.olean NeedleValHalf.lean
           lean -o NeedleInverseComplete.olean NeedleInverseComplete.lean
+          lean -o NeedleGrowth.olean NeedleGrowth.lean
+          lean -o TwoStepParent.olean TwoStepParent.lean
+          lean EdgeTwoStep.lean
           lean NeedleGeneralInverse.lean
           lean -o NeedleCubicBound.olean NeedleCubicBound.lean
           lean -o NeedleCubicEnumerate.olean NeedleCubicEnumerate.lean
