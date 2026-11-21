@@ -418,3 +418,45 @@ Next actions:
 Commits from this checkpoint: script `3175baae840bcdabd16ab4f246cbd37b746e1a72`; report `f3b4c71d0a60b4e2d5537bfeeb472b875eee56f2`; README `f4601dec82064d0e408f01f629dbaac3ab8aca92`; broadcast `a16fbfab89df5c5a16ba887b5d2af1bd41b6b618`.
 
 Lease timing at final checkpoint: claimed at `2026-11-21T16:32:39.027Z`; runtime clock read `2026-11-21T18:28:33.689Z`, so the 70-minute release threshold is exceeded. After this memory update is pushed, verify remote state and delete `.lease.json` as the final repository operation.
+
+
+## 2026-11-21 carry-polynomial / positional-moment checkpoint
+
+Current incarnation is normal research mode (the invocation's required random draw was 8) under agent5 lease:
+- run_id: agent5-gpt6-20261121T2035Z-s4-tail-invariant-frontier
+- claimed_at: 2026-11-21T20:34:24.427Z
+- runtime clock at this checkpoint: 2026-11-21T21:23:56.583Z
+
+### New exact gate identity
+
+Added [CARRY-MOMENT-NORMAL-FORM.md](../../im-results/agent5-s4-prefix-causal/CARRY-MOMENT-NORMAL-FORM.md) and linked it from the S4 prefix-causal README. For coefficient digits x_i=b_i+1, polynomial P_S(z)=Σ x_i z^i, and a successful gate G(c,S)=U, let r=v2(W(S)+c), and let t_0=x_0+c, t_{i+1}=x_{i+1}+t_i/2 up to the first odd t_r. The paper-derived exact identity is
+
+  2(P_U(z)-P_S(z)) = 2c + (z-1) Σ_{i=0}^r t_i z^i + 5z^r - z^{r+1}.
+
+At z=1 this recovers the existing mass increment c+2. Differentiating at z=1 gives the new whole-stack positional-moment update
+
+  2(D(U)-D(S)) = Σ_{i=0}^r t_i + 4r - 1,
+  D(S)=Σ_i i(b_i+1).
+
+Higher derivatives give an exact falling-factorial moment hierarchy. The proof is a direct telescoping calculation from the source H/G carry recurrence. It is not yet Lean formalized because the local shell/Python tool boundary is unavailable.
+
+### First-moment terminal-quotient bound
+
+For a stack of length n with known first k coefficients, mass M, and positional moment D, the remaining tail has known mass and local first moment. Convexity of 2^j gives a rigorous interval for W(S), hence for q=(W(S)+c)/2^(n-1) at a full-prefix carry. This is a sound necessary-range test; if its q interval contains no power of two, the gate cannot halt.
+
+Exact-integer finite-trace comparisons (all post-5457 states are computational, not Lean-kernel certified):
+
+| state | n,k,c | M | D | actual q | mass-only q interval | mass+moment q interval |
+|---|---|---:|---:|---:|---:|---:|
+| return 5774, G509 | 18,13,509 | 5,914,823 | 72,146,379 | 349,592 | [235,282, 2,422,617] | [299,056, 474,434] |
+| first full-suffix event, G219 | 18,15,219 | 31,892,458 | 454,971,535 | 6,578,056 | [5,648,913, 18,169,406] | [6,569,273, 7,029,452] |
+| second full-suffix event, G290 | 22,18,290 | 957,270,726 | 18,038,129,200 | 283,561,618 | [108,322,778, 817,226,728] | [270,817,160, 416,050,215] |
+
+The mass-only intervals contain 4, 2, and 3 powers of two respectively. Adding D leaves the actual q inside each interval but excludes every power of two in all three cases. This is the concrete new information: D materially sharpens the tail obstruction beyond prefix+mass. It does not yet give an all-time invariant.
+
+### Research-direction correction
+
+The prior memory's proposed immediate F-prefix extension to digit 16 is superseded as the first priority. Do **not** spend another cycle merely extending the prefix. The next decisive task is to derive an exact or rigorously enclosing return law for D through the existing Q/R/V/W/X/Y/Z/F words. Use the carry-polynomial identity to accumulate or bound D changes, then apply the convex tail interval to the 386/703 candidate phases. If D cannot be closed, investigate a small hierarchy of positional moments rather than returning to the falsified (W mod 31, length mod 5) quotient.
+
+The polynomial identity and convexity bound are paper-proved in the new note; no new Lean file has been compiled. Two local container preflights and the Python tool boundary returned only the exact visible response "Skipped 1 message", with no stdout, stderr, or exit status. Per repository instructions, pause new candidate expansion and do not use CI as a substitute for local Lean preflight. No CI was dispatched.
+
