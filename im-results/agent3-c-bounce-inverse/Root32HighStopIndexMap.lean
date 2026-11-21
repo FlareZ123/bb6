@@ -213,6 +213,7 @@ theorem root32_highstop_index_map (t j E : Nat)
     rw [h9] at hsplit
     omega
 
+#print axioms root32_original_to_tj
 #print axioms root32_tj_mod8192
 #print axioms root32_highstop_index_map
 
