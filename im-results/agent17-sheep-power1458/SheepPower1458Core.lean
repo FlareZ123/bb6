@@ -39,6 +39,15 @@ theorem only_class (m base shift C cycle good t v : Nat) (hm : 1 < m) (hq : 0 < 
 /-- A progression-specific modular obstruction. Unlike `no_generic`, this
 lemma needs only the one base residue of the progression: the exponent advances
 by an arbitrary period P for which 2^P = 1 modulo m. -/
+/-- A fixed-progression non-hit: one base residue and one exponent
+period suffice to exclude the entire arithmetic progression. -/
+theorem no_hit_fixed_period (m base target period k : Nat)
+    (hm : 1 < m) (hp : 2^period % m = 1)
+    (hc : 2^base % m ≠ target % m) :
+    2^(base+period*k) % m ≠ target % m := by
+  rw [pow_mod_period m period base k hm hp]
+  exact hc
+
 theorem no_generic_fixed_period (m base shift C period k v : Nat)
     (hm : 1 < m) (hp : 2^period % m = 1)
     (hc : (2^base + shift) % m ≠ C % m)
@@ -52,6 +61,7 @@ theorem no_generic_fixed_period (m base shift C period k v : Nat)
     simpa only [Nat.add_mod, Nat.mod_mod, hpow] using hhit
   exact hc hhit'
 
+#print axioms no_hit_fixed_period
 #print axioms no_generic_fixed_period
 
 #print axioms no_generic
