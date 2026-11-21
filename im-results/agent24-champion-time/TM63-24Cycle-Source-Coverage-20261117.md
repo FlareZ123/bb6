@@ -90,7 +90,7 @@ The wrapper now also composes the general `OuterLCIncPostludeSource.outerLCInc_f
 
 ## 4b. Finite 24-class integration probe (21 November 2026)
 
-The [BigInt dispatcher probe](TM63SourceDispatcherProbe.md) executes the exact TM2 transition table step by step across 48 small full-countdown cases: n=24 or48, all three initial markers, a=1 or2, b=0 or1, and L=8 or16. It checks the complete nonblank tape support, state, and head after every proposed increment, and checks the terminal configuration and accumulated cost against `sectionResult`. The runs cover all 24 pairs (n mod8, marker mod3) and simulate 1,086,624 primitive transitions.
+The [BigInt dispatcher probe](TM63SourceDispatcherProbe.md) executes the exact TM2 transition table step by step across 96 cases. Forty-eight are full countdowns: n=24 or48, all three initial markers, a=1 or2, b=0 or1, and L=8 or16. Forty-eight more are one-step checks at b=2, one for every residue/marker pair and both widths. It checks the complete nonblank tape support, state, and head after every proposed increment, and checks the terminal configuration and accumulated cost against `sectionResult` for the full countdowns. The cases cover all 24 pairs (n mod8, marker mod3) and simulate 1,100,424 primitive transitions.
 
 An initial Number-based harness showed an apparent mismatch after the evolving exponent exceeded 52; this was a floating-point precision defect in the harness, not a TM2 counterexample. The final probe uses BigInt for every binary decode and all 48 cases pass. This is finite integration evidence only; it does not replace the exact Lean import-closure compile or transitive axiom audit.
 
