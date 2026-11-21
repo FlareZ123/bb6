@@ -169,3 +169,37 @@ Still to formalize:
 5. the `happend` list identity, reset-prefix cost equality, and final counted-drain composition.
 
 The candidate all-q theorem remains `m2Even_residue0_reset_prefix_source` with cost `107+12*a+12*v2(k)+3*b`. This document establishes the intended exact word-level proof path, not its Lean acceptance.
+
+
+---
+
+# Finite end-to-end probe (21 November 2026)
+
+Added [`M2EvenResidueZeroProbe.mjs`](M2EvenResidueZeroProbe.mjs), a finite simulator for the exact TM2 table and S1 source encoding. It checks both the all-q q4 reset-prefix endpoint and the subsequent counted-drain endpoint, comparing the complete nonblank tape support, state, and head.
+
+The inline JavaScript runtime reproduction passed **144 cases**:
+- (1\le k\le16), covering (v_2(k)=0,1,2,3,4) and both odd and pure-power quotients;
+- (a\in\{1,2,3\});
+- (b\in\{0,1,2\});
+- (L=\max(4,\lceil\log_2(8k+1)\rceil)), so every case satisfies (8k<2^L).
+
+The tested prefix cost was
+[
+12a+12v_2(k)+107+3b
+=(9a+6)+(44+(12v_2(k)+4)+14)+3a+(39+3b),
+]
+and the counted drain cost was
+[
+6\cdot4^b+42\cdot2^b-12b-48.
+]
+Every case reached exactly
+[
+S1(L,8k-1,1,a+b+2,2^b-1,0,h+5+3b)
+]
+at the q4 reset-prefix boundary, then exactly
+[
+S1(L,8k-1,1,a+b+2,0,2^b-1,h+5+3b)
+]
+after the counted drain.
+
+This is finite simulation evidence only. The 144 cases were run as an inline JavaScript reproduction in the current invocation; the committed Node script has not been run as a standalone file here. The full Lean import closure and transitive axiom profile for `M2EvenResidueZeroCounted.lean` remain unaccepted. In particular, this probe does not replace the arbitrary-context H-run proof or establish the all-q theorem.
