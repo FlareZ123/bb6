@@ -300,3 +300,382 @@ theorem treeNoEvenReach (F : FrozenTreeTable) (r k : Nat)
   simpa [t] using hno
 
 end SheepPower1458
+
+def t1TreeTable : FrozenTreeTable where
+  rs := residues_t1
+  period := period_t1
+  nodeCount := 15
+  nodeAt := nodeAt_t1
+  lowRows := lowRows_t1
+  nonrootEdgeKeys := nonrootEdgeKeys_t1
+  cutoff := cutoff_t1
+  highCerts := highCerts_t1
+  valCerts := valCerts_t1
+  edges := edges_t1
+  rootNodeEq := by rfl
+  nodeCountPos := by decide
+  residuePos := by
+    intro r hr
+    simp [residues_t1] at hr
+    omega
+  residueMod3 := by
+    intro r hr
+    simp [residues_t1] at hr
+    omega
+  periodMod3 := by
+    norm_num [period_t1]
+  lowComplete := by
+    intro n h a hn hnN hh ha ha'
+    simpa [lowRowKeys_t1] using
+      lowRowKey_complete_t1 n h a hn hnN hh ha ha'
+  highCutoffComplete := by
+    intro n h hn hnN hh
+    exact highCertCutoff_complete_t1 n h hn hnN hh
+  valComplete := by
+    intro n hn hnN
+    simpa [valCertKeys_t1] using valCertKey_complete_t1 n hn hnN
+  edgeKeySound := by
+    intro n h a hk
+    simp [nonrootEdgeKeys_t1] at hk
+    rcases hk with ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩
+    · exact ⟨6, by decide, by simp [edges_t1]⟩
+    · exact ⟨7, by decide, by simp [edges_t1]⟩
+    · exact ⟨8, by decide, by simp [edges_t1]⟩
+    · exact ⟨9, by decide, by simp [edges_t1]⟩
+    · exact ⟨10, by decide, by simp [edges_t1]⟩
+    · exact ⟨11, by decide, by simp [edges_t1]⟩
+    · exact ⟨12, by decide, by simp [edges_t1]⟩
+    · exact ⟨13, by decide, by simp [edges_t1]⟩
+    · exact ⟨14, by decide, by simp [edges_t1]⟩
+
+  edgeShape := by
+    intro n child h a he
+    simp [edges_t1] at he
+    rcases he with ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩
+    all_goals norm_num [nodeAt_t1]
+
+  nodeProps := by
+    intro n hn
+    interval_cases n <;> norm_num [nodeAt_t1]
+  specialBounds := by
+    intro n hn h hh
+    interval_cases n <;> interval_cases h <;> norm_num [nodeAt_t1] at *
+  nodeTenBound := by
+    intro n hn
+    interval_cases n <;> norm_num [nodeAt_t1]
+  rootGate := by
+    intro r k h a v hr hh ha hzero hpos heq
+    have hg : RootGenericGate h a (r+period_t1*k) :=
+      all_generic_gates h a (r+period_t1*k) v hh ha hzero hpos heq
+    have ht : ∃ r' ∈ residues_t1, ∃ k', r+period_t1*k = r'+period_t1*k' :=
+      ⟨r,hr,k,rfl⟩
+    obtain ⟨child,hmem⟩ :=
+      rootGate_child_t1 (r+period_t1*k) h a ht hg
+    have hEdge : (0,child,h,a) ∈ edges_t1 :=
+      rootEdgeSpec_mem_edges_t1 hmem
+    have hchild : child < 15 := by
+      simp [rootEdgeSpecs_t1] at hmem
+      omega
+    exact ⟨child,hchild,hEdge⟩
+
+def h1a3TreeTable : FrozenTreeTable where
+  rs := residues_h1a3
+  period := period_h1a3
+  nodeCount := 7
+  nodeAt := nodeAt_h1a3
+  lowRows := lowRows_h1a3
+  nonrootEdgeKeys := nonrootEdgeKeys_h1a3
+  cutoff := cutoff_h1a3
+  highCerts := highCerts_h1a3
+  valCerts := valCerts_h1a3
+  edges := edges_h1a3
+  rootNodeEq := by rfl
+  nodeCountPos := by decide
+  residuePos := by
+    intro r hr
+    simp [residues_h1a3] at hr
+    omega
+  residueMod3 := by
+    intro r hr
+    simp [residues_h1a3] at hr
+    omega
+  periodMod3 := by
+    norm_num [period_h1a3]
+  lowComplete := by
+    intro n h a hn hnN hh ha ha'
+    simpa [lowRowKeys_h1a3] using
+      lowRowKey_complete_h1a3 n h a hn hnN hh ha ha'
+  highCutoffComplete := by
+    intro n h hn hnN hh
+    exact highCertCutoff_complete_h1a3 n h hn hnN hh
+  valComplete := by
+    intro n hn hnN
+    simpa [valCertKeys_h1a3] using valCertKey_complete_h1a3 n hn hnN
+  edgeKeySound := by
+    intro n h a hk
+    simp [nonrootEdgeKeys_h1a3] at hk
+    rcases hk with ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl⟩
+    · exact ⟨2, by decide, by simp [edges_h1a3]⟩
+    · exact ⟨3, by decide, by simp [edges_h1a3]⟩
+    · exact ⟨4, by decide, by simp [edges_h1a3]⟩
+    · exact ⟨5, by decide, by simp [edges_h1a3]⟩
+    · exact ⟨6, by decide, by simp [edges_h1a3]⟩
+
+  edgeShape := by
+    intro n child h a he
+    simp [edges_h1a3] at he
+    rcases he with ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩
+    all_goals norm_num [nodeAt_h1a3]
+
+  nodeProps := by
+    intro n hn
+    interval_cases n <;> norm_num [nodeAt_h1a3]
+  specialBounds := by
+    intro n hn h hh
+    interval_cases n <;> interval_cases h <;> norm_num [nodeAt_h1a3] at *
+  nodeTenBound := by
+    intro n hn
+    interval_cases n <;> norm_num [nodeAt_h1a3]
+  rootGate := by
+    intro r k h a v hr hh ha hzero hpos heq
+    have hg : RootGenericGate h a (r+period_h1a3*k) :=
+      all_generic_gates h a (r+period_h1a3*k) v hh ha hzero hpos heq
+    have ht : ∃ r' ∈ residues_h1a3, ∃ k', r+period_h1a3*k = r'+period_h1a3*k' :=
+      ⟨r,hr,k,rfl⟩
+    obtain ⟨child,hmem⟩ :=
+      rootGate_child_h1a3 (r+period_h1a3*k) h a ht hg
+    have hEdge : (0,child,h,a) ∈ edges_h1a3 :=
+      rootEdgeSpec_mem_edges_h1a3 hmem
+    have hchild : child < 7 := by
+      simp [rootEdgeSpecs_h1a3] at hmem
+      omega
+    exact ⟨child,hchild,hEdge⟩
+
+def h3a6TreeTable : FrozenTreeTable where
+  rs := residues_h3a6
+  period := period_h3a6
+  nodeCount := 3
+  nodeAt := nodeAt_h3a6
+  lowRows := lowRows_h3a6
+  nonrootEdgeKeys := nonrootEdgeKeys_h3a6
+  cutoff := cutoff_h3a6
+  highCerts := highCerts_h3a6
+  valCerts := valCerts_h3a6
+  edges := edges_h3a6
+  rootNodeEq := by rfl
+  nodeCountPos := by decide
+  residuePos := by
+    intro r hr
+    simp [residues_h3a6] at hr
+    omega
+  residueMod3 := by
+    intro r hr
+    simp [residues_h3a6] at hr
+    omega
+  periodMod3 := by
+    norm_num [period_h3a6]
+  lowComplete := by
+    intro n h a hn hnN hh ha ha'
+    simpa [lowRowKeys_h3a6] using
+      lowRowKey_complete_h3a6 n h a hn hnN hh ha ha'
+  highCutoffComplete := by
+    intro n h hn hnN hh
+    exact highCertCutoff_complete_h3a6 n h hn hnN hh
+  valComplete := by
+    intro n hn hnN
+    simpa [valCertKeys_h3a6] using valCertKey_complete_h3a6 n hn hnN
+  edgeKeySound := by
+    intro n h a hk
+    simp [nonrootEdgeKeys_h3a6] at hk
+    rcases hk with ⟨rfl,rfl,rfl⟩
+    · exact ⟨2, by decide, by simp [edges_h3a6]⟩
+
+  edgeShape := by
+    intro n child h a he
+    simp [edges_h3a6] at he
+    rcases he with ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩
+    all_goals norm_num [nodeAt_h3a6]
+
+  nodeProps := by
+    intro n hn
+    interval_cases n <;> norm_num [nodeAt_h3a6]
+  specialBounds := by
+    intro n hn h hh
+    interval_cases n <;> interval_cases h <;> norm_num [nodeAt_h3a6] at *
+  nodeTenBound := by
+    intro n hn
+    interval_cases n <;> norm_num [nodeAt_h3a6]
+  rootGate := by
+    intro r k h a v hr hh ha hzero hpos heq
+    have hg : RootGenericGate h a (r+period_h3a6*k) :=
+      all_generic_gates h a (r+period_h3a6*k) v hh ha hzero hpos heq
+    have ht : ∃ r' ∈ residues_h3a6, ∃ k', r+period_h3a6*k = r'+period_h3a6*k' :=
+      ⟨r,hr,k,rfl⟩
+    obtain ⟨child,hmem⟩ :=
+      rootGate_child_h3a6 (r+period_h3a6*k) h a ht hg
+    have hEdge : (0,child,h,a) ∈ edges_h3a6 :=
+      rootEdgeSpec_mem_edges_h3a6 hmem
+    have hchild : child < 3 := by
+      simp [rootEdgeSpecs_h3a6] at hmem
+      omega
+    exact ⟨child,hchild,hEdge⟩
+
+def h7a2TreeTable : FrozenTreeTable where
+  rs := residues_h7a2
+  period := period_h7a2
+  nodeCount := 2
+  nodeAt := nodeAt_h7a2
+  lowRows := lowRows_h7a2
+  nonrootEdgeKeys := nonrootEdgeKeys_h7a2
+  cutoff := cutoff_h7a2
+  highCerts := highCerts_h7a2
+  valCerts := valCerts_h7a2
+  edges := edges_h7a2
+  rootNodeEq := by rfl
+  nodeCountPos := by decide
+  residuePos := by
+    intro r hr
+    simp [residues_h7a2] at hr
+    omega
+  residueMod3 := by
+    intro r hr
+    simp [residues_h7a2] at hr
+    omega
+  periodMod3 := by
+    norm_num [period_h7a2]
+  lowComplete := by
+    intro n h a hn hnN hh ha ha'
+    simpa [lowRowKeys_h7a2] using
+      lowRowKey_complete_h7a2 n h a hn hnN hh ha ha'
+  highCutoffComplete := by
+    intro n h hn hnN hh
+    exact highCertCutoff_complete_h7a2 n h hn hnN hh
+  valComplete := by
+    intro n hn hnN
+    simpa [valCertKeys_h7a2] using valCertKey_complete_h7a2 n hn hnN
+  edgeKeySound := by
+    intro n h a hk
+    simp [nonrootEdgeKeys_h7a2] at hk
+
+  edgeShape := by
+    intro n child h a he
+    simp [edges_h7a2] at he
+    rcases he with ⟨rfl,rfl,rfl,rfl⟩
+    all_goals norm_num [nodeAt_h7a2]
+
+  nodeProps := by
+    intro n hn
+    interval_cases n <;> norm_num [nodeAt_h7a2]
+  specialBounds := by
+    intro n hn h hh
+    interval_cases n <;> interval_cases h <;> norm_num [nodeAt_h7a2] at *
+  nodeTenBound := by
+    intro n hn
+    interval_cases n <;> norm_num [nodeAt_h7a2]
+  rootGate := by
+    intro r k h a v hr hh ha hzero hpos heq
+    have hg : RootGenericGate h a (r+period_h7a2*k) :=
+      all_generic_gates h a (r+period_h7a2*k) v hh ha hzero hpos heq
+    have ht : ∃ r' ∈ residues_h7a2, ∃ k', r+period_h7a2*k = r'+period_h7a2*k' :=
+      ⟨r,hr,k,rfl⟩
+    obtain ⟨child,hmem⟩ :=
+      rootGate_child_h7a2 (r+period_h7a2*k) h a ht hg
+    have hEdge : (0,child,h,a) ∈ edges_h7a2 :=
+      rootEdgeSpec_mem_edges_h7a2 hmem
+    have hchild : child < 2 := by
+      simp [rootEdgeSpecs_h7a2] at hmem
+      omega
+    exact ⟨child,hchild,hEdge⟩
+
+def h7a4TreeTable : FrozenTreeTable where
+  rs := residues_h7a4
+  period := period_h7a4
+  nodeCount := 2
+  nodeAt := nodeAt_h7a4
+  lowRows := lowRows_h7a4
+  nonrootEdgeKeys := nonrootEdgeKeys_h7a4
+  cutoff := cutoff_h7a4
+  highCerts := highCerts_h7a4
+  valCerts := valCerts_h7a4
+  edges := edges_h7a4
+  rootNodeEq := by rfl
+  nodeCountPos := by decide
+  residuePos := by
+    intro r hr
+    simp [residues_h7a4] at hr
+    omega
+  residueMod3 := by
+    intro r hr
+    simp [residues_h7a4] at hr
+    omega
+  periodMod3 := by
+    norm_num [period_h7a4]
+  lowComplete := by
+    intro n h a hn hnN hh ha ha'
+    simpa [lowRowKeys_h7a4] using
+      lowRowKey_complete_h7a4 n h a hn hnN hh ha ha'
+  highCutoffComplete := by
+    intro n h hn hnN hh
+    exact highCertCutoff_complete_h7a4 n h hn hnN hh
+  valComplete := by
+    intro n hn hnN
+    simpa [valCertKeys_h7a4] using valCertKey_complete_h7a4 n hn hnN
+  edgeKeySound := by
+    intro n h a hk
+    simp [nonrootEdgeKeys_h7a4] at hk
+
+  edgeShape := by
+    intro n child h a he
+    simp [edges_h7a4] at he
+    rcases he with ⟨rfl,rfl,rfl,rfl⟩
+    all_goals norm_num [nodeAt_h7a4]
+
+  nodeProps := by
+    intro n hn
+    interval_cases n <;> norm_num [nodeAt_h7a4]
+  specialBounds := by
+    intro n hn h hh
+    interval_cases n <;> interval_cases h <;> norm_num [nodeAt_h7a4] at *
+  nodeTenBound := by
+    intro n hn
+    interval_cases n <;> norm_num [nodeAt_h7a4]
+  rootGate := by
+    intro r k h a v hr hh ha hzero hpos heq
+    have hg : RootGenericGate h a (r+period_h7a4*k) :=
+      all_generic_gates h a (r+period_h7a4*k) v hh ha hzero hpos heq
+    have ht : ∃ r' ∈ residues_h7a4, ∃ k', r+period_h7a4*k = r'+period_h7a4*k' :=
+      ⟨r,hr,k,rfl⟩
+    obtain ⟨child,hmem⟩ :=
+      rootGate_child_h7a4 (r+period_h7a4*k) h a ht hg
+    have hEdge : (0,child,h,a) ∈ edges_h7a4 :=
+      rootEdgeSpec_mem_edges_h7a4 hmem
+    have hchild : child < 2 := by
+      simp [rootEdgeSpecs_h7a4] at hmem
+      omega
+    exact ⟨child,hchild,hEdge⟩
+
+
+theorem noEvenReachFiveFamilies :
+    (∀ r ∈ residues_t1, ∀ k,
+      ¬ EvenReach 10 (2^(1458*(r+period_t1*k)))) ∧
+    (∀ r ∈ residues_h1a3, ∀ k,
+      ¬ EvenReach 10 (2^(1458*(r+period_h1a3*k)))) ∧
+    (∀ r ∈ residues_h3a6, ∀ k,
+      ¬ EvenReach 10 (2^(1458*(r+period_h3a6*k)))) ∧
+    (∀ r ∈ residues_h7a2, ∀ k,
+      ¬ EvenReach 10 (2^(1458*(r+period_h7a2*k)))) ∧
+    (∀ r ∈ residues_h7a4, ∀ k,
+      ¬ EvenReach 10 (2^(1458*(r+period_h7a4*k)))) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · intro r hr k
+    exact treeNoEvenReach t1TreeTable r k hr
+  · intro r hr k
+    exact treeNoEvenReach h1a3TreeTable r k hr
+  · intro r hr k
+    exact treeNoEvenReach h3a6TreeTable r k hr
+  · intro r hr k
+    exact treeNoEvenReach h7a2TreeTable r k hr
+  · intro r hr k
+    exact treeNoEvenReach h7a4TreeTable r k hr
+
+#print axioms noEvenReachFiveFamilies
