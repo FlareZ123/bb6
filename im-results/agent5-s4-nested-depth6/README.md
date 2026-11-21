@@ -2,7 +2,7 @@
 
 **Status:** intermediate computational result. This does not prove S4 nonhalting and does not determine BB(6).
 
-This folder contains the exact Q/R/V/W/X/Y suffix-word hierarchy and a further Y/Z/F return-map analysis. The newest result is documented in [DEEPER-RETURN-PERIODS.md](DEEPER-RETURN-PERIODS.md): the first 15 digits of the reduced stack reach a witnessed period of 25,600 Y blocks after a 25-Y-block preperiod witness.
+This folder contains the exact Q/R/V/W/X/Y suffix-word hierarchy and a further Y/Z/F return-map analysis. The newest result is documented in [DEEPER-RETURN-PERIODS.md](DEEPER-RETURN-PERIODS.md): the first 15 digits of the reduced stack reach a witnessed period of 25,600 Y blocks after a 25-Y-block preperiod witness. A separate finite root replay now uses the second positional moment to reconstruct the first three-digit terminal tail exactly and confine the second four-digit terminal quotient to [283,510,228, 296,203,294], excluding powers of two at that event; this is a finite-state certificate, not an all-time invariant (see [ROOT-EXTENSION-1310720.md](ROOT-EXTENSION-1310720.md)).
 
 Run the deterministic reproduction with:
 
@@ -111,8 +111,8 @@ The modeled section tail and R word remain conditional on the numeric prefix-cyc
 
 ## Highest-value next work
 
-1. Prove the 18-prefix cycle and Q-word extraction in Lean, then formalize the Y/Z/F finite word and prefix-cycle certificates.
-2. Extend the F-prefix period scan to the 16th and later digits, determine the recurrence rather than assuming it, and seek an inductive mixed-radix description.
+1. Derive a root-propagated interval for the first and second positional moments through the Q/R/V/W/X/Y/Z/F return words; the new four-digit moment fibre is useful only once its moment inputs are bounded along the genuine root.
+2. Prove the 18-prefix cycle and Q-word extraction in Lean, then formalize the Y/Z/F finite word and prefix-cycle certificates.
 3. Connect prefix-period growth to a root-reachable monotone tail-growth or nonhalting invariant; the simple mod-31/length-5 quotient is not viable.
 4. Use further finite scans only when they test a new period law or invariant, not merely to increase a scan count.
 

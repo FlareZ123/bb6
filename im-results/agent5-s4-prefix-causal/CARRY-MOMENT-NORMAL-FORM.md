@@ -166,7 +166,60 @@ D_n\ge D_0+9,216n-237,910
 \]
 The exact finite sum and gate-boundary residual extrema are reproducible in [ninth_moment_drift.py](ninth_moment_drift.py). This is a genuine root-history lower bound, conditional on survival. It is not yet tight enough by itself to eliminate all terminal powers: the remaining task is an upper bound or tighter interval for \(D\), or a complementary tail functional.
 
-## 5. What remains to prove
+## 5. Second positional moment and short-tail reconstruction
+
+Let
+\[
+F_2(S)=\sum_i i(i-1)x_i=E_2(S)-D(S),
+\qquad E_2(S)=\sum_i i^2x_i.
+\]
+The second derivative of the carry-polynomial identity gives
+\[
+\Delta F_2=\sum_{i=0}^{r}i t_i+2r^2-3r.
+\]
+Eliminating the carry sum with \(t_i=x_i+t_{i-1}/2\) gives the exact alternative
+\[
+\boxed{
+\Delta F_2
+=2\sum_{i=0}^{r} i x_i
++2\left(\sum_{i=0}^{r}x_i+c\right)
+-(r+2)t_r+2r^2-3r.
+}
+\]
+For a full-stack carry, the two input sums are \(D\) and \(M\), and \(t_r\) is the odd part of the terminal quotient. This identity makes the second moment a natural companion to \(D\), although no all-time second-moment bound has yet been derived.
+
+There is a particularly simple exact tail fibre when only four coefficients remain after a known prefix. Let \(z_j=x_{k+j}-1\ge0\), \(0\le j<4\), and let
+\[
+R=\sum z_j,\qquad J=\sum jz_j,\qquad K=\sum j^2z_j.
+\]
+Put \(A=(K-J)/2\) and \(t=z_3\). Then every feasible integer tail, and only such a tail, has
+\[
+z_2=A-3t,\qquad z_1=J-2A+3t,\qquad z_0=R-J+A-t,
+\]
+with
+\[
+\max\!\left(0,\left\lceil\frac{2A-J}{3}\right\rceil\right)
+\le t\le
+\min\!\left(\left\lfloor\frac A3\right\rfloor,R-J+A\right).
+\]
+Its weighted excess is the affine function
+\[
+\sum_{j=0}^{3}2^jz_j=R+J+A+t.
+\]
+Thus the second moment turns the terminal quotient into an exact integer interval, rather than the much wider mass-only or first-moment convex envelope. For a three-digit tail, \(R,J,K\) determine all three coefficients uniquely:
+\[
+z_2=(K-J)/2,\quad z_1=2J-K,\quad z_0=R+(K-3J)/2.
+\]
+
+The finite S4 root replay gives two concrete checks. At the first full-suffix event (relative return 25,685, \(G(219)\)), the three-digit tail is reconstructed exactly as \((13,047,686,3,611,172,35,134)\), with quotient \(6,578,056\). At the second event (relative return 929,375, \(G(290)\)), the four-digit moment fibre gives
+\[
+283,510,228\le q\le296,203,294,
+\]
+which excludes all powers of two and contains the replayed quotient \(283,561,618\). The reproducible exact-integer computation is in [s5457_root_extension.mjs](../agent5-s4-nested-depth6/s5457_root_extension.mjs) and the event-level derivation is in [ROOT-EXTENSION-1310720.md](../agent5-s4-nested-depth6/ROOT-EXTENSION-1310720.md).
+
+**Evidence boundary:** the tail-fibre inequalities are exact mathematics, but the particular \(E_2\) values and later root states are from finite BigInt simulation, not a Lean-certified all-time root invariant. This closes no future event and does not prove S4 nonhalting.
+
+## 6. What remains to prove
 
 The carry-polynomial identity and convex interval lemma are general exact mathematics. The examples show that the first positional moment can materially sharpen the terminal-quotient test. The missing step is a **tight root-reachable interval for \(D\)** under the existing Q/R/V/W/X/Y/Z/F suffix words: the nine-prefix cycle now supplies a uniform affine lower bound, but not a matching upper bound.
 
