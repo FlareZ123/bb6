@@ -220,10 +220,10 @@ Sample quotient lower bounds (before rounding `Y` to `4 mod 12`):
 
 | `m` | case | lower bound on `v` | exact modular minimum `v` |
 |---:|---|---:|---:|
-| 3 | nonexceptional | 43 | 74 |
+| 3 | nonexceptional | 74 | 74 |
 | 5 | exceptional, root-reachable | 1,450 | 170 (M8-excluded) |
-| 7 | nonexceptional | 4,965 | 15,018 |
-| 9 | nonexceptional | 62,415 | 109,226 |
+| 7 | nonexceptional | 8,690 | 15,018 |
+| 9 | nonexceptional | 109,226 | 109,226 |
 | 21 | exceptional, root-reachable | 5,955,687,983,786 | 183,251,937,962 (M8-excluded) |
 
 These bounds sharpen the residual frontier but still leave the general blank-root classification open.
