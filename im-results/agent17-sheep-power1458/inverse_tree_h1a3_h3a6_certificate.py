@@ -4,7 +4,7 @@ This file certifies:
   * 26 h=1,a=3 classes with a seven-node finite inverse tree;
   * 22 h=3,a=6 classes with a three-node finite inverse tree.
 
-Together with inverse_tree_44_classes_certificate.py, this gives 92
+Together with inverse_tree_certificate.py and inverse_tree_44_classes_certificate.py, this gives 93
 progression classes in the combined presentation (the h=7,a=4 nine classes
 lift to 27 classes modulo T2).
 
