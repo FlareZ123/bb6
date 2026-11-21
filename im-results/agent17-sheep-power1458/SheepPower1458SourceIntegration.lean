@@ -132,10 +132,15 @@ theorem affine_node_hidden_bound
     have hY : 3^(node.r+1) ∣ y-1 := by
       refine ⟨3^(h-node.r-1)*u, ?_⟩
       have hsplit : h = (node.r+1)+(h-node.r-1) := by omega
+      have hpowEq : 3^h = 3^(node.r+1)*3^(h-node.r-1) := by
+        calc
+          3^h = 3^((node.r+1)+(h-node.r-1)) := by
+            congr 1
+            exact hsplit
+          _ = 3^(node.r+1)*3^(h-node.r-1) := by rw [Nat.pow_add]
       calc
         y-1 = 3^h*u := hyminus
-        _ = (3^(node.r+1)*3^(h-node.r-1))*u := by
-          rw [hsplit, Nat.pow_add]
+        _ = (3^(node.r+1)*3^(h-node.r-1))*u := by rw [hpowEq]
         _ = 3^(node.r+1)*(3^(h-node.r-1)*u) := by ac_rfl
     have hprod : 3^(node.r+node.v3C+1) ∣ node.C*(y-1) := by
       rcases hC with ⟨c0,hc0⟩
