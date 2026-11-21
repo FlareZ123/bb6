@@ -136,7 +136,6 @@ theorem affine_node_hidden_bound
         calc
           3^h = 3^((node.r+1)+(h-node.r-1)) := by
             congr 1
-            exact hsplit
           _ = 3^(node.r+1)*3^(h-node.r-1) := by rw [Nat.pow_add]
       calc
         y-1 = 3^h*u := hyminus
