@@ -75,6 +75,24 @@ The admissible transitions are:
 
 Therefore copy 2 is selected exactly on the phase wrap \(0\to-2\); copy 1 is selected on every other admissible transition. The separate derivation is recorded in `communications/broadcast/20261120T2345Z_agent24-swindow-boundary-clock.md`.
 
+## Root-transition adapter
+
+SelectedResetInterface.js exports selectOffset(sourceR,targetR) and classifyTargetWindow(sourceR,targetR,lowOutputs,targetWord). The phase-edge table is:
+- -2 -> -2, -1 -> -1, 0 -> 0, -2 -> -1, -1 -> 0: offset 1;
+- 0 -> -2: offset 2.
+
+The adapter checks that lowOutputs has exactly the selected length, validates all digit pairs, feeds lowOutputs followed by targetWord through the selected DFA start, and decodes the exact full output label. It returns reset=false if the target window has no reset; otherwise it returns the event symbol, previous pair, base label, full label ID, and complete full label.
+
+For use from the sibling Agent 48 directory:
+
+    const { classifyTargetWindow } =
+      require("../agent24-machine623-shifted-reset-product/SelectedResetInterface.js");
+    const result = classifyTargetWindow(
+      sourceR, targetR, lowOutputs, targetWord
+    );
+
+Here lowOutputs is the source-to-target output on k+1 through k'+1, and targetWord is the target digit-pair sequence on [k'+2,j'-2). This adapter is designed to replace a direct full-DFA scan in the finite S-window diagnostic while preserving the exact full label.
+
 ## All-state quotient certificate
 
 The base pair-carry DFA is not merely empirically compatible with the full post-reset-pair DFA on short words. The buffer-relative artifact includes a state projection from all 395 full states onto the 349 base states and an output-label projection from all 54 full labels onto the 8 carry labels. The committed OffsetSelectedResetDFA.json records the following exhaustive check:
