@@ -216,7 +216,8 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/FrontierExtract.olean im-results/agent4-coverage-smoke/FrontierExtract.lean
           lean -o im-results/agent4-coverage-smoke/FrontierUnique.olean im-results/agent4-coverage-smoke/FrontierUnique.lean
           lean -o im-results/agent4-coverage-smoke/FrontierManifestMass.olean im-results/agent4-coverage-smoke/FrontierManifestMass.lean
-          lean im-results/agent32-zero-prefix-global/ResidualFrontierManifest.lean | tee /tmp/bb6-residual-frontier-lean.log
+          lean -o im-results/agent32-zero-prefix-global/ResidualFrontierManifest.olean im-results/agent32-zero-prefix-global/ResidualFrontierManifest.lean
+          lean im-results/agent32-zero-prefix-global/ResidualFrontierExport.lean | tee /tmp/bb6-residual-frontier-lean.log
           if grep -q 'sorryAx' /tmp/bb6-residual-frontier-lean.log; then
             echo "ERROR: residual-frontier proof graph depends on sorryAx"
             exit 1
