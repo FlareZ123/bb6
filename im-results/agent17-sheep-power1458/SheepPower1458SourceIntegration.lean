@@ -140,13 +140,22 @@ theorem affine_node_hidden_bound
     calc
       2^(1458*t+node.s)%m =
           (node.C*(y-1)+(node.C-node.b+node.c))%m := by rw [hnum]
-      _ = (node.C*(y-1))%m + (node.C-node.b+node.c)%m := by
+      _ = ((node.C*(y-1))%m + (node.C-node.b+node.c)%m)%m := by
           rw [Nat.add_mod]
       _ = (node.C-node.b+node.c)%m := by
           rw [Nat.mod_eq_zero_of_dvd hprod]
           simp
+  have hm : 1 < m := by
+    dsimp [m]
+    have hexp : 1 ≤ node.r+node.v3C+1 := by omega
+    have hpow : 3 ≤ 3^(node.r+node.v3C+1) := by
+      calc
+        3 = 3^1 := by norm_num
+        _ ≤ 3^(node.r+node.v3C+1) :=
+          Nat.pow_le_pow_right (by decide) hexp
+    omega
   have hno := no_hit_fixed_period m (1458*r0+node.s)
-      (node.C-node.b+node.c) (1458*T) k (by dsimp [m]; omega)
+      (node.C-node.b+node.c) (1458*T) k hm
       (by simpa [m] using hperiod) (by simpa [m] using hbase)
   have hexp : 1458*t+node.s =
       (1458*r0+node.s)+(1458*T)*k := by rw [ht]; omega
