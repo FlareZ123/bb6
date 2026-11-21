@@ -349,6 +349,7 @@ const summary = {
   selectedWitness: { atLeft: 0, later: 0 },
   shiftOneCases: [],
   signThresholdDisagreements: 0,
+  drainStatBoundFailures: 0,
   DRange: { min: Infinity, max: -Infinity },
   rRange: { min: Infinity, max: -Infinity }
 };
@@ -369,6 +370,9 @@ for (let index = 0; index <= 10000; index++) {
     // left iff g >= 3D + 2r + c_T. The sign(g) simplification is not used.
     const branch = current.g >= threshold ? "L" : "R";
     if ((current.g > 0n ? "L" : "R") !== branch) summary.signThresholdDisagreements++;
+    const ell = BigInt(ellOfS(current.S));
+    const absD = drainStats.D < 0n ? -drainStats.D : drainStats.D;
+    if (absD > ell + 1n || BigInt(drainStats.r) > ell) summary.drainStatBoundFailures++;
     summary.DRange.min = Math.min(summary.DRange.min, Number(drainStats.D));
     summary.DRange.max = Math.max(summary.DRange.max, Number(drainStats.D));
     summary.rRange.min = Math.min(summary.rRange.min, drainStats.r);
@@ -488,6 +492,8 @@ for (let index = 0; index <= 10000; index++) {
 
 assert.equal(summary.minimalPatterns, 8088, "unexpected minimal reset language size");
 assert.equal(summary.testedTransitions, 9968, "unexpected root trace length");
+assert.equal(summary.signThresholdDisagreements, 0, "sign(g) and exact threshold disagree on finite trace");
+assert.equal(summary.drainStatBoundFailures, 0, "source drain statistics exceed their proved bounds on finite trace");
 assert.equal(summary.correctionBoundFailures, 0, "source correction bound failed on finite trace");
 assert.equal(summary.carryRectangleFailures, 0, "actual source carry escaped full rectangle");
 assert.equal(summary.affineDigitMismatches, 0, "transducer output disagrees with actual successor x-digits");
