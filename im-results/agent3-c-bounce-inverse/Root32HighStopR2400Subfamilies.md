@@ -1,8 +1,8 @@
-# Two further high-stop exclusions inside the \(r\equiv2400\pmod{65536}\) residual
+# One additional high-stop exclusion inside the \(r\equiv2400\pmod{65536}\) residual
 
-**Status:** exact paper-level source-parent compositions, not yet integrated into Lean or compiled. These close two infinite subfamilies of the explicit \(Y(n)\) residual isolated in [Root32HighStopR2400.md](./Root32HighStopR2400.md). They do not close the whole \(r\equiv2400\pmod{65536}\) class.
+**Correction:** only the \(n\equiv7\pmod8\) subfamily below is established. An earlier draft also claimed \(n\equiv13\pmod{16}\), but that argument applied the even-right inverse when its required sum-mod-8 side condition fails: the intermediate target has sum \(7\pmod8\). That second exclusion is withdrawn. The \(n\equiv13\pmod{16}\) root-index class is recorded as an unresolved target, not as a result.
 
-## 1. Starting residual and its complete source-parent reduction
+## 1. Starting residual and its complete source-parent reduction for odd n
 
 The corrected R2400 analysis reduces the remaining high-stop possibility, for
 \[
@@ -31,11 +31,11 @@ A(m)=
  3839719204110+4638643663290m),
 \qquad n=2m+1.
 \]
-Its right coordinate is even and at least six. The even-right inverse theorem also requires the target sum not to be \(0\) or \(7\pmod8\). Here
+Its right coordinate is even and at least six. The even-right inverse theorem requires the target sum to be neither \(0\) nor \(7\pmod8\). Here
 \[
-A_x+A_y=8105870470657+9792446451270m,
+A_x+A_y=8105870470657+9792446451270m.
 \]
-which is \(3\pmod8\) when \(m=3\pmod4\) (the \(n=7\pmod8\) case) and \(5\pmod8\) when \(m=6\pmod8\) (the \(n=13\pmod{16}\) case). Thus both additional even-right side conditions hold. The exact even-right inverse therefore forces
+This is \(3\pmod8\) when \(m=3\pmod4\), and \(5\pmod8\) when \(m=6\pmod8\). Thus the additional even-right side conditions hold in both subfamilies considered below. The exact even-right inverse forces
 \[
 B(m)=
 (8105870470655+9792446451270m,\;
@@ -43,7 +43,7 @@ B(m)=
 \]
 Consequently, for odd \(n\), \(Y(n)\) is reachable only if \(B(m)\) is reachable.
 
-## 2. First subfamily: \(n\equiv7\pmod8\)
+## 2. Established subfamily: \(n\equiv7\pmod8\)
 
 Put \(n=7+8p\), so \(m=(n-1)/2=3+4p\). From the affine formula for \(B\),
 \[
@@ -74,53 +74,33 @@ With \(r=32+64j\), this is the infinite root-index progression
 \boxed{r\equiv264544\pmod{524288}.}
 \]
 
-## 3. Second subfamily: \(n\equiv13\pmod{16}\)
+## 3. Unresolved attempted subfamily: \(n\equiv13\pmod{16}\)
 
 Put \(n=13+16p\), so \(m=6+8p\). The same affine parent \(B(m)\) satisfies
 \[
 B_x\equiv3\pmod4,\qquad B_y\equiv4\pmod8.
 \]
-In particular, \(B_y\equiv4\pmod8\) is even and at least six. The even-right inverse's sum side conditions also hold, since
+However, the exact sum is
 \[
-B_x+B_y=10025730072709+12111768282915m\equiv3\pmod8
+B_x+B_y=10025730072709+12111768282915m
+\equiv7\pmod8
 \]
-for \(m=6\pmod8\). If \(B(m)\) were reachable, the exact even-right inverse would force
+when \(m\equiv6\pmod8\). The source-certified even-right inverse theorem blank_reach_iff_even_right explicitly requires \((x+y)\not\equiv7\pmod8\). It therefore cannot be applied to \(B(m)\). The earlier attempted step to
 \[
-C(m)=\left(B_x+B_y-2,\frac{B_y-2}{2}\right).
+\left(B_x+B_y-2,\frac{B_y-2}{2}\right)
 \]
-Because \(B_y\equiv4\pmod8\),
-\[
-C_y=\frac{B_y-2}{2}\equiv1\pmod4,
-\]
-so \(C_y\) is odd and at least five. Also
-\[
-C_x+C_y
-=B_x+\frac{3B_y-6}{2}
-\equiv3+3\equiv2\pmod4.
-\]
-The source-certified blank_no_odd_sum_two theorem excludes \(C(m)\). Therefore \(B(m)\), \(Y(n)\), and the high-stop target are unreachable for every \(n\equiv13\pmod{16}\).
+was unjustified; the full source grammar may have exceptional parent branches at this residue. No exclusion of \(B(m)\) or \(Y(n)\) follows here.
 
-Here
+The parameter class would translate as follows:
 \[
 t=671+1024(13+16p)=13983+16384p.
 \]
-Reducing the exact root equation modulo \(16384\), with
-\(22155^{-1}\equiv8483\pmod{16384}\), gives
-\[
-t+j\equiv11972\pmod{16384},
-\qquad j\equiv14373\pmod{16384}.
-\]
-Thus
-\[
-\boxed{r\equiv919904\pmod{1048576}.}
-\]
+Modulo \(16384\), the exact root equation gives \(t+j\equiv11972\), hence \(j\equiv14373\pmod{16384}\) and \(r\equiv919904\pmod{1048576}\). This is an **unresolved** root-index progression and must not be counted among the exclusions.
 
-## 4. Scope and residual
+## 4. Scope
 
-Both progressions lie inside the previously unresolved \(r\equiv2400\pmod{65536}\) class:
+The only new high-stop exclusion established by this note is
 \[
-264544\equiv919904\equiv2400\pmod{65536}.
+\boxed{r\equiv264544\pmod{524288}.}
 \]
-They are disjoint (their \(j\)-classes are \(4133\pmod{8192}\) and \(14373\pmod{16384}\)). They are also disjoint from all eight previously catalogued high-stop cylinders.
-
-The result is a pair of new infinite high-stop exclusions obtained by continuing the exact Y(n) source-parent analysis, not a closure of the entire residual. The other odd-\(n\) residues and all even-\(n\) cases remain open. The derivation uses the existing complete source grammar, even-right unique inverse, and blank_no_odd_sum_two; it still needs a Lean wrapper, exact transitive source-closure compile, and axiom audit. Keep it in im-results/.
+The \(r\equiv919904\pmod{1048576}\) class remains open, as do the other odd-\(n\) residues and all even-\(n\) cases. This derivation is paper-level and still needs an integrated Lean wrapper, exact transitive source-closure compilation, and axiom audit. Keep it in im-results/.
