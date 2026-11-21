@@ -1,6 +1,6 @@
 # Primitive-time extraction for the SymRunEngine halt proofs
 
-Status: research lead only; no primitive-step bound has been proved or computed.
+Status: research lead with a reproducible computational replay and a conditional primitive-time bound candidate; no cost-indexed Lean theorem or accepted below-champion classification yet.
 
 Pinned upstream source: `google-deepmind/cryptids` commit `3647718b5df22e1a61462dec0376bd204526285a`, `BusyBeaver/Calculi/HaltShared.lean`.
 
@@ -64,3 +64,30 @@ The final two invocations are the initial entry proof and `step_DL_zero_halt`: `
 4. Add the fixed initial and final costs (`18+1` for F424, `1+1` for F412), then transfer exact `multiStep` counts via upstream `multiStep_toBB` and the local `source_halts_after_iff_agent8_halts_after` adapter.
 
 The checkpoint names and arithmetic above are established from the upstream proof source; no primitive-step upper bound is asserted here.
+
+
+## Agent 38 replay and conditional bound candidate
+
+The independent state replay and cost analysis are now in:
+- ../agent38-symrun-state-replay/README.md
+- ../agent38-symrun-state-replay/symrun_state_replay.cjs
+- ../agent38-symrun-state-replay/checkpoint-maxima.json
+- ../agent38-symrun-state-replay/SymRunPrimitiveBound.md
+- Prefix replay: ../agent38-symrun-prefix-cost/README.md and symrun_prefix_cost.mjs
+
+The replay matches every literal upstream checkpoint (F424 18/18, F412 6/6) and reaches abstract HALT after the 70,511 / 21,383 stepSym transitions. The source theorem then applies the separate concrete step_DL_zero_halt primitive transition (+1). The prefix branch-cost replay totals are 164,386 / 145,982 including entry; these are computational sums, not Lean-certified.
+
+The corrected source-structural candidate is:
+
+    C_stepSym(s) ≤ 2^40 * M(s)^2
+
+where M is the maximum numeric field in the outer symbolic state. Its derivation accounts for eatFuel counter aggregation (post-sweep counters <128M), post-sweep token growth (≤1024), Rule B/C iteration counts (≤128M), internal fields (≤1024M), and at most 16,128M stepPure calls per successful macro. Combined with the replay maxima, it gives stepSym-phase bounds F424 <2^463 and F412 <2^193. A kernel-friendly prefix proof from maxRunM growth gives prefix cost <2^31; including prefix and the separate final +1 yields complete conditional bounds F424 <2^464 and F412 <2^194, both below the published S(6)>2↑↑↑5 baseline.
+
+This is still conditional. Required kernel obligations:
+1. Prove the cost-indexed stepSym soundness bound above from the source branches.
+2. Fold both maximum numeric field and symbolic-token count over every intermediate state in every checkpoint chunk; the L≤94 premise is not accepted from endpoint states alone.
+3. Prove maxRunM(stepElemM s) ≤ maxRunM(s)+1 and the resulting runElemFast prefix bound <2^31.
+4. Preserve the separate final step_DL_zero_halt cost +1.
+5. Transfer through the exact local machine identity and existing halting adapter under Lean 4.36.0-rc2, with axiom audit.
+
+The earlier machine-specific rule arrays and checkpoint arithmetic above remain the source anchors; the Agent 38 dossier supplies the replay and cost-bound candidate rather than a competing account.
