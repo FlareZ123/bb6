@@ -1,4 +1,5 @@
 import BlankSixthExceptional
+import First10AffineBridge
 
 /-!
 # Source-certified root section at the 13-step shadow
@@ -77,6 +78,43 @@ theorem root13_to_sixth_exception :
       some ⟨9*BB6.Agent25SixthRoot.t6+7,4,1⟩ :=
   root13Certificate.to_sixth_exception
 
+/-- The root section is the 3^13-unary lift of the external cylinder start. -/
+theorem root13Section_eq_lift :
+    root13Section =
+      BB6.DRegularShift.shiftNat cryptidStart (3^13*root13P) := by
+  have hmod := root13Section_mod3pow14
+  have hge := root13Section_ge_C
+  ext
+  · simp [BB6.DRegularShift.shiftNat, cryptidStart, cryptidCylinderC,
+      root13P]
+    omega
+  · exact root13Section_shape.1
+  · exact root13Section_shape.2
+
+/-- The first ten regular macro returns from the authentic root section are
+    exactly the 3-adic affine lift of the external first-ten checkpoint.
+    The suffix is unchanged by the lift. -/
+theorem root13_first10_shift :
+    DRegular.run 10 root13Section =
+      (DRegular.run 10 cryptidStart).map
+        (fun t => BB6.DRegularShift.shiftNat t
+          (8^10*(3^3*root13P))) := by
+  rw [root13Section_eq_lift]
+  have hcanon : DRegular.Canon cryptidStart := by
+    simp [DRegular.Canon, cryptidStart, cryptidCylinderC]
+  have h := BB6.DRegularShift.run_shift 10 cryptidStart
+    (3^3*root13P) hcanon
+  have hpow : 3^10*(3^3*root13P) = 3^13*root13P := by
+    norm_num [Nat.pow_succ]
+  simpa [hpow] using h
+
+theorem root13_first10_exact :
+    DRegular.run 10 root13Section =
+      some (BB6.DRegularShift.shiftNat cryptidCheckpoint10
+        (8^10*(3^3*root13P))) := by
+  rw [root13_first10_shift, cryptid_first10_base]
+  rfl
+
 /-- The section really is ten DRegular transitions before the already
     source-certified sixth exceptional endpoint. -/
 theorem root13Section_original :
@@ -101,6 +139,7 @@ theorem root13Section_original :
 #print axioms root13Certificate
 #print axioms root13Section_mod3pow14
 #print axioms root13P_mod2187
+#print axioms root13_first10_exact
 #print axioms root13_to_sixth_exception
 #print axioms root13Section_original
 
