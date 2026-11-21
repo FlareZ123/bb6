@@ -20,7 +20,7 @@ All checkpoint comparisons pass:
 | F424 | 70,511 | 18 / 18 | 70,511 |
 | F412 | 21,383 | 6 / 6 | 21,383 |
 
-The final symbolic state is `.HALT` in both cases, matching the final upstream checkpoint.
+The final symbolic state is `.HALT` in both cases, matching the final upstream checkpoint. At the pinned Cryptids revision, repository searches for `initSymCyc3` and `symChk4096` return exactly these two BB6/Halt machine modules; `stepSym4096` appears in those two modules and the shared engine. Thus this replay covers both machine modules using this SymRun checkpoint signature.
 
 ## Maximum encoded-state sizes over the complete replay
 
