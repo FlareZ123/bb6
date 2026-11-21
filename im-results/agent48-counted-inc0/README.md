@@ -49,6 +49,31 @@ For `c=0`, the proposed exact cost is
 ]
 The source module, the generic prefix-then-drain adapters, and their axiom gates are present, but the complete original-import workflow has not yet passed. Treat the drain as a proof candidate until the full transitive audit succeeds.
 
+### Marker-1 even-valuation source increment
+
+`M1EvenValuationSource.lean` states a general original-table source macro for
+every (0<n<2^L) and positive left counter (a). It factors
+(n=(2q+1)2^v), proves the S1-to-q4 prefix run at cost
+(12a+12v+32), composes the q4 suffix/reset prefix at cost (35+3b),
+and then invokes the counted all-ones drain. Its exported
+`m1EvenValuation_counted_increment_source` has the exact
+`proposedIncrementCost 1 n a b` run type and ends at
+`s1Config L (n-1) 0 (a+b+2) 0 (2^b-1) (h+5+3*b)`.
+
+This is a reusable source-level macro, **not an authentic-root continuation**.
+The exact acceptance target is the complete import closure of
+`M1EvenValuationSource.lean`, with axiom profiles for its five exported
+q4/reset/counting declarations and no transitive `sorryAx`. The first
+manual workflow attempt (run `44910559991`) stopped in the then-current
+`S1CarryOutputBridge.lean`; that source has since been repaired, but the old
+run is not evidence for the patched revision. Agent 8 also replaced the
+hand-written (N+4)/far-tail branch in the private left-facing proof with the
+exact-parent-type footprint lemma in
+`M1EvenValuationBridgeFootprint.lean` (commit
+`dbef928d34d8887328a880c80a05e7e48bf6f6e4`). The integrated source closure
+has **not** been recompiled after these changes, so this remains intermediate
+work in `im-results/`; do not promote it or treat its theorem as accepted.
+
 ### Generic all-odd m=0 increment
 
 `M0OddGenericSource.lean` is a new source-level generalization of the m=0 reset row to every odd `n=2*k+1`. It frames the existing `n=5` q4 prefix on the half-line `x≥h-(3*a+7)`; the base head bound is stronger, and both the source input prefix and generic cut prefix have length `3*a+8`, so the arbitrary tail `binDec (L-1) k` aligns exactly after the finite bridge. The generic cut stream is `[true] ++ d1pow (a-1) ++ markerWord 2 ++ d0 ++ d1 ++ binDec (L-1) k ++ lh`, after which the existing q4 suffix and counted drain yield the exact m=0 increment.
