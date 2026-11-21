@@ -276,3 +276,28 @@ The proof is the complement identity
 Since (r-1<2^k\le2^A), the low (k) bits are exactly (r-1), bits (k,\ldots,A-1) are zero, bit (A) is one, and bits (A+1,\ldots,A+4) are zero; the top bit (A+5) is the implicit terminator of `binDec`. The `binDec_even`/`binDec_odd` recurrences map these bits to the stated (d1/d0) blocks.
 
 For (k=6), this gives a common tail (Q_A=d0pow(A-6)++d1++d0pow(4)) for the first 64 counters; rows 27–37 are the specific instances used by the current source composition. For (k=A), it gives the same final five blocks (d1++d0pow(4)) across a window of (2^A) consecutive counters, with the first (A) blocks encoding the row number. This is an exact source-encoding identity, not by itself a proof that all corresponding machine transitions have been composed.
+
+
+### Formalization route via a low-block prefix lemma
+
+For a Lean proof using the existing `binDec_even`/`binDec_odd` recurrences, set (B=A-k),
+[
+q_B=31\cdot2^B-1,\qquad s=2^k-r.
+]
+Then
+[
+n_r=q_B\cdot2^k+s,\qquad 0\le s<2^k,
+\qquad L-k=B+5.
+]
+A generic lemma of the form
+[
+binDec((B+5)+k, q_B2^k+s)
+=\operatorname{lowBlocks}_k(s)\mathbin{++}binDec(B+5,q_B)
+]
+follows by (k) applications of `binDec_even`/`binDec_odd). Since (s=2^k-1-(r-1)), its low-block code is exactly (E_k(r-1)). The remaining tail is a one-line carry-prefix instance:
+[
+binDec(B+5,31\cdot2^B-1)
+=d0pow(B)\mathbin{++}d1\mathbin{++}binDec(4,15)
+=d0pow(B)\mathbin{++}d1\mathbin{++}d0pow(4),
+]
+using `binDec_sub_one_carryPrefix 4 15 B` and `binDec_max 4`. This gives a reusable formalization path that avoids reasoning directly about the complemented integer's bit positions.
