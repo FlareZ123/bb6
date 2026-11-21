@@ -24,7 +24,15 @@ Suppose \(n\) is odd. Then \(H(n)\) is odd, so
 \[
 v_2(Y_x+Y_y+1)=2.
 \]
-Apply the complete original source grammar to a predecessor of \(Y(n)\). The target has even left coordinate, odd right coordinate, and odd coordinate sum, with (Y_yge1{,}351{,}544{,}872{,}375>7). Thus the zero-left and even-(a) high branches (which require an even sum) and the low branch (which requires even right coordinate) are impossible. The finite (a=1) cases have right coordinate (1,3,5,) or (7), and its (y=3) high branch is also impossible. The remaining (a=1) high branch requires (16mid Y_x+Y_y+1), impossible at exact valuation two. In the remaining odd-\(a\) high branch, the cost equation forces the bounce depth \(d\) even, while \(2a+6\) is divisible by four, so \(d\le v_2(Y_x+Y_y+1)-2=0\). Hence \(d=0\) and the only possible source parent is
+Apply the complete original source grammar to a predecessor of \(Y(n)\). The target has even left coordinate, odd right coordinate, and odd coordinate sum, with
+\[
+Y_y\ge1{,}351{,}544{,}872{,}375>7.
+\]
+Thus the zero-left and even-\(a\) high branches (which require an even sum) are impossible. The finite \(a=0\) case has right coordinate \(4\); the finite \(a=1\) cases have right coordinate \(1,3,5,\) or \(7\); and the \(a>1,k=0\) case has right coordinate \(2\). All are impossible because \(Y_y\) is enormous. The low branch requires even right coordinate and is impossible. In the \(a=1\) high branch, its \(y=3\) case is impossible, while the remaining case requires \(16\mid Y_x+Y_y+1\), impossible at exact valuation two. In the remaining odd-\(a\) high branch, the cost equation forces the bounce depth \(d\) even, while \(2a+6\) is divisible by four, so
+\[
+d\le v_2(Y_x+Y_y+1)-2=0.
+\]
+Hence \(d=0\) and the only possible source parent is
 \[
 A(m)=
 (4266151266547+5153802787980m,\;
@@ -50,11 +58,12 @@ Put \(n=7+8p\), so \(m=(n-1)/2=3+4p\). From the affine formula for \(B\),
 B_x\equiv3+2m\equiv1\pmod4,\qquad
 B_y\equiv2+m\equiv1\pmod4.
 \]
-Thus (B_y) is odd and (B_yge1{,}919{,}859{,}602{,}054>5), while
-[
-B_x+B_yequiv2pmod4.
-]
-All hypotheses of the source-certified blank_no_odd_sum_two theorem hold, so it excludes (B(m)). Therefore \(Y(n)\), and hence the original high-stop target, is unreachable for every \(n\equiv7\pmod8\).
+Thus \(B_y\) is odd and
+\[
+B_y\ge1{,}919{,}859{,}602{,}054>5,
+\qquad B_x+B_y\equiv2\pmod4.
+\]
+All hypotheses of the source-certified blank_no_odd_sum_two theorem hold, so it excludes \(B(m)\). Therefore \(Y(n)\), and hence the original high-stop target, is unreachable for every \(n\equiv7\pmod8\).
 
 Here
 \[
@@ -87,7 +96,7 @@ The complete source grammar still gives a useful reduction. The low branch would
 \[
 C(m)=\left(B_x+B_y-2,\frac{B_y-2}{2}\right).
 \]
-Since \(B_y\equiv4\pmod8\), \(C_y=(B_y-2)/2\) is odd and at least \(7{,}917{,}895{,}295{,}961>5\); direct arithmetic gives \(C_x+C_y\equiv2\pmod4\). The source-certified blank_no_odd_sum_two theorem therefore excludes this low branch. The zero-left and even-\(a\) high branches require even target sum and are impossible. The finite \(a=0\) case has right coordinate (4); the finite \(a=1\) cases have right coordinate (1,3,5,) or (7); and the (a>1,k=0) case has right coordinate (2). These are all impossible because (B_y) is enormous. The remaining \(a=1\) high branch would require \(B_x+B_y+1\) to be a pure power of two, but
+Since \(B_y\equiv4\pmod8\), \(C_y=(B_y-2)/2\) is odd and at least \(7{,}917{,}895{,}295{,}961>5\); direct arithmetic gives \(C_x+C_y\equiv2\pmod4\). The source-certified blank_no_odd_sum_two theorem therefore excludes this low branch. The zero-left and even-\(a\) high branches require even target sum and are impossible. The finite \(a=0\) case has right coordinate \(4\); the finite \(a=1\) cases have right coordinate \(1,3,5,\) or \(7\); and the \(a>1,k=0\) case has right coordinate \(2\). These are all impossible because \(B_y\) is enormous. The remaining \(a=1\) high branch would require \(B_x+B_y+1\) to be a pure power of two, but
 \[
 B_x+B_y+1
 =8Q(p),\qquad
