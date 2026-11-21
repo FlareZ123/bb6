@@ -782,6 +782,146 @@ theorem right_actual_affine_drop_first_nonmono
     at hnm
   exact hnm
 
+
+/-!
+## Full pair-output bridge
+
+The reset automaton consumes digit *pairs*, not only x digits.  The
+following stronger interface identifies the complete L/R transducer output
+pair stream with the actual affine successor pair digits at every finite
+length.
+-/
+
+/-- First n Euclidean ternary digit pairs of two integer tails. -/
+def intDigitPairsFrom (x y : Int) : Nat → List (Int × Int)
+  | 0 => []
+  | n+1 => (x%3, y%3) :: intDigitPairsFrom (x/3) (y/3) n
+
+/-- Full L carry-transducer output pair stream on an arbitrary pair word. -/
+def leftCarryOutputPairs (prevY carryX carryY : Int) :
+    List (Int × Int) → List (Int × Int)
+  | [] => []
+  | (u,v)::xs =>
+      let tx := u - prevY + carryX
+      let ty := prevY + carryY
+      (tx%3, ty%3) ::
+        leftCarryOutputPairs v (tx/3) (ty/3) xs
+
+/-- Full R carry-transducer output pair stream on an arbitrary pair word. -/
+def rightCarryOutputPairs
+    (prevX prevY carryX carryY : Int) :
+    List (Int × Int) → List (Int × Int)
+  | [] => []
+  | (u,v)::xs =>
+      let tx := -u - prevX - prevY + carryX
+      let ty := prevX + prevY + carryY
+      (tx%3, ty%3) ::
+        rightCarryOutputPairs u v (tx/3) (ty/3) xs
+
+/-- Every finite L output pair stream is exactly the affine pair-tail digit
+    stream (X-Y+a, Y+b). -/
+theorem left_carry_output_pairs_matches_affine
+    (X Y a b : Int) (n : Nat) :
+    leftCarryOutputPairs (Y%3) a b (leftSourcePairs X Y n) =
+      intDigitPairsFrom (X-Y+a) (Y+b) n := by
+  induction n generalizing X Y a b with
+  | zero => rfl
+  | succ n ih =>
+      let tx : Int := X%3 - Y%3 + a
+      let ty : Int := Y%3 + b
+      have hstep := left_tail_step X Y (X%3) (Y%3) a b rfl rfl
+      change (tx%3, ty%3) ::
+          leftCarryOutputPairs ((Y/3)%3) (tx/3) (ty/3)
+            (leftSourcePairs (X/3) (Y/3) n) =
+        ((X-Y+a)%3, (Y+b)%3) ::
+          intDigitPairsFrom ((X-Y+a)/3) ((Y+b)/3) n
+      rw [hstep.1, hstep.2.1]
+      rw [ih (X/3) (Y/3) (tx/3) (ty/3)]
+      rw [← hstep.2.2.1, ← hstep.2.2.2]
+
+/-- Every finite R output pair stream is exactly the affine pair-tail digit
+    stream (-X-X0-Y0+a, X0+Y0+b). -/
+theorem right_carry_output_pairs_matches_affine
+    (X X0 Y0 a b : Int) (n : Nat)
+    (hcompat : X0/3 = X) :
+    rightCarryOutputPairs (X0%3) (Y0%3) a b
+      (rightSourcePairs X X0 Y0 n) =
+        intDigitPairsFrom (-X-X0-Y0+a) (X0+Y0+b) n := by
+  induction n generalizing X X0 Y0 a b with
+  | zero => rfl
+  | succ n ih =>
+      let tx : Int := -X%3 - X0%3 - Y0%3 + a
+      let ty : Int := X0%3 + Y0%3 + b
+      have hstep :=
+        right_tail_step X X0 Y0 (X%3) (X0%3) (Y0%3) a b rfl rfl rfl
+      have hcompat' : (X0/3)/3 = X/3 := by rw [hcompat]
+      have hprev : (X0/3)%3 = X%3 := by rw [hcompat]
+      change (tx%3, ty%3) ::
+          rightCarryOutputPairs (X%3) ((Y0/3)%3) (tx/3) (ty/3)
+            (rightSourcePairs (X/3) (X0/3) (Y0/3) n) =
+        ((-X-X0-Y0+a)%3, (X0+Y0+b)%3) ::
+          intDigitPairsFrom ((-X-X0-Y0+a)/3) ((X0+Y0+b)/3) n
+      rw [hstep.1, hstep.2.1]
+      have hrec :=
+        ih (X/3) (X0/3) (Y0/3) (tx/3) (ty/3) hcompat'
+      rw [hprev] at hrec
+      rw [hrec]
+      rw [← hstep.2.2.1, ← hstep.2.2.2]
+
+/-- Actual L successor pair digits are the full L transducer output, for
+    every finite length. -/
+theorem left_actual_affine_carry_pairdigits
+    (K x y C F x' y' : Int) (n : Nat)
+    (hK : 0 < K)
+    (hxout : x' = x - 3*y + C)
+    (hyout : y' = 3*y + F) :
+    leftCarryOutputPairs ((y/K)%3)
+      (leftCarryX K (x%(3*K)) (y%K) C)
+      (leftCarryY K (y%K) F)
+      (leftSourcePairs (x/(3*K)) (y/K) n) =
+        intDigitPairsFrom (x'/(3*K)) (y'/(3*K)) n := by
+  have hquot :=
+    left_actual_affine_boundary_quotients K x y C F x' y' hK hxout hyout
+  calc
+    _ = intDigitPairsFrom
+        (x/(3*K) - y/K +
+          leftCarryX K (x%(3*K)) (y%K) C)
+        (y/K + leftCarryY K (y%K) F) n :=
+      left_carry_output_pairs_matches_affine
+        (x/(3*K)) (y/K)
+        (leftCarryX K (x%(3*K)) (y%K) C)
+        (leftCarryY K (y%K) F) n
+    _ = intDigitPairsFrom (x'/(3*K)) (y'/(3*K)) n := by
+      rw [← hquot.1, ← hquot.2]
+
+/-- Actual R successor pair digits are the full R transducer output, for
+    every finite length. -/
+theorem right_actual_affine_carry_pairdigits
+    (K x y C F x' y' : Int) (n : Nat)
+    (hK : 0 < K)
+    (hxout : x' = -4*x - 3*y + C)
+    (hyout : y' = 3*x + 3*y + F) :
+    rightCarryOutputPairs ((x/K)%3) ((y/K)%3)
+      (rightCarryX K (x%(3*K)) (x%K) (y%K) C)
+      (rightCarryY K (x%K) (y%K) F)
+      (rightSourcePairs (x/(3*K)) (x/K) (y/K) n) =
+        intDigitPairsFrom (x'/(3*K)) (y'/(3*K)) n := by
+  have hquot :=
+    right_actual_affine_boundary_quotients K x y C F x' y' hK hxout hyout
+  have hcompat : (x/K)/3 = x/(3*K) := ediv_div_three x K hK
+  calc
+    _ = intDigitPairsFrom
+        (-(x/(3*K)) - x/K - y/K +
+          rightCarryX K (x%(3*K)) (x%K) (y%K) C)
+        (x/K + y/K +
+          rightCarryY K (x%K) (y%K) F) n :=
+      right_carry_output_pairs_matches_affine
+        (x/(3*K)) (x/K) (y/K)
+        (rightCarryX K (x%(3*K)) (x%K) (y%K) C)
+        (rightCarryY K (x%K) (y%K) F) n hcompat
+    _ = intDigitPairsFrom (x'/(3*K)) (y'/(3*K)) n := by
+      rw [← hquot.1, ← hquot.2]
+
 #print axioms left_affine_boundary_quotients
 #print axioms right_affine_boundary_quotients
 #print axioms left_source_reset_from_affine_correction
