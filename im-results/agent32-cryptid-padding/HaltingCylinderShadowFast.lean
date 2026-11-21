@@ -1,4 +1,4 @@
-import ARegular3AdicBridge
+import DRegularSourceShift
 import DRegularFast
 import Lean.Elab.Tactic.Omega
 
@@ -8,7 +8,6 @@ set_option maxRecDepth 180000
 namespace BB6.Agent32HaltingCylinderShadowFast
 
 open CryptidBoundary BB6.BoundaryPadding BB6.Padding
-open BB6.Agent2ARegular3AdicBridge
 open BB6.DRegularFast
 
 def seed9 : DRegular.L := ⟨9,0,0⟩
