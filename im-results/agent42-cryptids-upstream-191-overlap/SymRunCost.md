@@ -77,12 +77,22 @@ The independent state replay and cost analysis are now in:
 
 The replay matches every literal upstream checkpoint (F424 18/18, F412 6/6) and reaches abstract HALT after the 70,511 / 21,383 stepSym transitions. The source theorem then applies the separate concrete step_DL_zero_halt primitive transition (+1). The prefix branch-cost replay totals are 164,386 / 145,982 including entry; these are computational sums, not Lean-certified.
 
-The corrected source-structural candidate is:
+The boundary-safe source-structural candidate is:
 
-    C_stepSym(s) ≤ 2^40 * M(s)^2
+    C_stepSym(s) < 2^40 * (M(s)+1)^2
 
-where M is the maximum numeric field in the outer symbolic state. Its derivation accounts for eatFuel counter aggregation (post-sweep counters <128M), post-sweep token growth (≤1024), Rule B/C iteration counts (≤128M), internal fields (≤1024M), and at most 16,128M stepPure calls per successful macro. Combined with the replay maxima, it gives stepSym-phase bounds F424 <2^463 and F412 <2^193. A kernel-friendly prefix proof from maxRunM growth gives prefix cost <2^31; including prefix and the separate final +1 yields complete conditional bounds F424 <2^464 and F412 <2^194, both below the published S(6)>2↑↑↑5 baseline.
+where M is the maximum numeric field in the outer symbolic state. This replaces the earlier (2^{40}M^2) estimate: the old derivation assumed (M\ge376), but both authentic initial states have (M=79). The replacement works for every (M\ge0).
 
+The corrected argument uses:
+- after `sweepCB), the total repeat-counter sum is at most (94M+376\le512(M+1)), since there are at most 94 fuel-4 merges and each can add at most four literal-block units (merging an existing repeat counter conserves the total);
+- the `sweepCB` token count is at most 752, and the fallback `stepElemThenBB` adds at most eight tokens before `sweepBB`, so the fallback scan is bounded by 1024 tokens;
+- Rule B/C repeat counts are at most (512(M+1)), so every successful Rule A/B/C macro uses fewer than (2^{16}(M+1)) `stepPure` calls;
+- the source `stepPure` transition increases the maximum numeric field by at most one, and each such transition costs at most (50(X+1)) when the current maximum field is (X); hence every macro-internal field is below (2^{16}(M+1)), each `stepPure` costs below (2^{22}(M+1)), and the macro costs below (2^{38}(M+1)^2);
+- all non-macro sweep/fallback work is below (2^{26}(M+1)).
+
+Thus (C_{stepSym}(s)<2^{40}(M(s)+1)^2). The detailed derivation and remaining proof obligations are in [SymRunPrimitiveBound.md](../agent38-symrun-state-replay/SymRunPrimitiveBound.md).
+
+Combined with the replay maxima, this gives stepSym-phase bounds F424 <2^463 and F412 <2^193. A kernel-friendly prefix proof from maxRunM growth gives prefix cost <2^31; including the prefix and the separate final +1 yields complete conditional bounds F424 <2^464 and F412 <2^194, both below the published S(6)>2↑↑↑5 baseline.
 This is still conditional. Required kernel obligations:
 1. Prove the cost-indexed stepSym soundness bound above from the source branches.
 2. Fold both maximum numeric field and symbolic-token count over every intermediate state in every checkpoint chunk; the L≤94 premise is not accepted from endpoint states alone.
