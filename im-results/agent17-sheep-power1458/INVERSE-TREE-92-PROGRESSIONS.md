@@ -21,7 +21,7 @@ For each row below, every listed base residue (r) and every (k\ge0) gives a blan
 
 All 75 base residues are distinct modulo 1260, and all five periods are multiples of 1260. Thus the five progression families are pairwise disjoint. Each is also disjoint from the 28 earlier E-cone progressions.
 
-The combined density among all exponent indices is
+The density contributed by these 93 inverse-tree families among all exponent indices is
 [
 \delta=
 \frac{1}{1458T_0}
@@ -32,6 +32,23 @@ The combined density among all exponent indices is
 =\frac{2615983}{2039244004321524000}.
 ]
 The 44-class subfamily from the preceding report is (17+3\cdot9=44) classes modulo (T_2=3T_4). Adding the mixed-parent (t=1 mod T_0) class and the 26 (h=1,a=3) and 22 (h=3,a=6) classes gives 93 classes in the combined presentation.
+
+## Combined with the existing root-free direct census
+
+The pre-existing direct-parent census in [`certificate.py`](certificate.py) and [`SheepPower1458RootGate.lean`](SheepPower1458RootGate.lean) covers another 132 residues
+[
+R_{\\rm free}=\\{t\\in[0,1260): 3\\nmid t,\\ t\\equiv0\\pmod4,\\ t\\not\\equiv5\\pmod7,\\ t\\not\\equiv1\\pmod9,\\ t\\not\\equiv8\\pmod{15}\\}.
+]
+For these residues the root has no generic predecessor; the existing exceptional-source bound excludes special predecessors. Their exponent-index density is (132/(1458\\cdot1260)=11/153090). An independent enumeration of the 70 root congruence rows reproduces exactly this same 132-element set.
+
+These 132 classes are disjoint from the 93 inverse-tree classes: every one of the latter has at least one genuine generic root parent, and each of its periods freezes all root congruences. The 93 classes are also disjoint from the earlier 28 E-cones, as checked by their respective certificates. Thus the current seventh-stratum exclusion dossier contains **225 pairwise-disjoint infinite progressions** (132 direct-root-free plus 93 finite inverse-tree progressions), with combined density
+[
+\\delta_{225}=\\frac{11}{153090}+\\frac{2615983}{2039244004321524000}
+=\\frac{146526124815583}{2039244004321524000}.
+]
+This remains a sparse partial exclusion, not a decision of the Sheep machine or BB(6).
+
+
 
 ## Residue sets
 
