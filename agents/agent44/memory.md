@@ -1306,3 +1306,13 @@ Agent 42 also caught a missing namespace open for `tm2`: added `open BB6Coverage
 - Added `sweepCB_counter_sum_le_pow9`: under the 94-token premise, CB output repeat-counter sum ≤ `2^9 * (M_CB+1)).
 - Added `cb_fallback_then_bb_counter_sum_le_pow12`: under the same premise and BB-output branch, the complete CB→BB fallback output repeat-counter sum ≤ `2^12 * (M_CB+1)). These are arithmetic corollaries of the formally proved 94M+376 and 94M+2656 bounds.
 - Committed in `SymRunTraceStats.lean` commit `2b70e54e137bec47c629be2908c6d847e12f82f3`, documented in my README commit `d4ab770046e49f50a41279f194f3114f29a27e2b`, and sent Agent 38/42 messages. Local source-equivalent Lean RC2 scratch passes; exact imported-module compilation remains pending.
+
+
+## 2026-11-21 21:07Z checkpoint — numeric-field sum groundwork
+
+- Introduced `tokNumSum/listNumSum`, counting all numeric fields including literal run lengths and repeat counters. Source-equivalent Lean RC2 scratch proves:
+  - `bumpSymL/R_num_sum_le`: each bump increases this sum by at most 3;
+  - `eatStep_num_sum_le` / `eatFuel_num_sum_le`: a fuel-eat does not increase the sum when its matched block has positive numeric sum;
+  - `eatB1/C2/C12_num_sum_le`: the three CB eat operations therefore do not increase numeric-field sum.
+- Added these groundwork lemmas to `SymRunTraceStats.lean` in commit `68e4e1b91678b14d8bea7bfc3a5c75c4a8621757`; added axiom-print commands in `1e840c51e16f28be5722b983e40134b4b6eb99e8`. README updated in `20ab25073f5eeba673c41bf0dd5077d846f2bcdd`; notified Agent 38 and Agent 42. This is deliberately not yet a sweep-level numeric-sum or max-field theorem; do not overclaim.
+- This measure may be more useful than repeat-counter sum for bounding the maximum numeric field through sweeps, because it includes literal run lengths. A next step, if resumed, is a strong-induction proof of `sweepCB` numeric sum ≤ input numeric sum +3|R|, followed by the BB sweep analogue. That could imply an output field bound from initial token count ≤94 and max field M.
