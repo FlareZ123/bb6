@@ -94,8 +94,9 @@ The checkpoint names and arithmetic above are established from the upstream proo
 - `stepPureBB_within`, `stepPureDL_within`, `stepPureCB_within`, and `stepPure_within` under the same budget, where `M` is a local recursive maximum of all numeric fields in the symbolic state.
 - `sweepBB_within` with budget `50*(M_L+1)*(|L|+1)`, where `M_L` is the maximum numeric field in the left stack; and `sweepCB_within` with budget `50*(M_R+1)*(|R|+1)`, where `M_R` is the maximum numeric field in the right stack. The CB proof charges only parameters on the consumed right side; the BB proof charges only parameters on the consumed left side.
 - The existing `SymRunTraceStats` field-growth theorem is reused through `stepPure_iter_within`, giving an n-iteration budget `50*n*(M+n+1)`.
-- `ruleA_step_within` and `ruleA_iter_within` cost the source 66-step A-block and its n-fold iteration; `ruleC_step_within` and `ruleC_iter_within` do the same for the 46-step C-block. The iteration proofs use explicit symbolic-state field-growth bounds for `stateA` and `stateC`.
-- Rule B's branch-specific blocks and the full `tryRuleA`/`tryRuleB`/`tryRuleBC` dispatch composition remain open.
+- `ruleA_step_within` and `ruleA_iter_within` cost the source 66-step A-block and its n-fold iteration; `ruleC_step_within` and `ruleC_iter_within` do the same for the 46-step C-block.
+- Rule B's four exact blocks (126, 118, 106, and 98 `stepPure` iterations for AA, AB, BA, and BB separators) now have costed witnesses, with `ruleB_step_within` and `ruleB_iter_within` using the uniform 126-step envelope. Its iteration proof uses a `+4` field-growth bound per block.
+- All three rule-family iteration theorems are now present. The remaining gap is the full `tryRuleA`/`tryRuleB`/`tryRuleBC` dispatch composition and the `afterSweepCB` / `stepElemThenBB` wrapper.
 
 The derivation is structural: variable atomic costs are `3d+22` (DL) and `3d+21` (CB); the largest repeated sweep is `45m`; fixed atomic costs are at most 9. All are bounded by `50*(M+1)` when the relevant repeat/run parameter is at most M. Peel-only branches use the fact that `peelPureTok` does not increase the local maximum field.
 
