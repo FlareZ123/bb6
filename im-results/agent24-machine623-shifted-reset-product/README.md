@@ -221,3 +221,5 @@ Using the full 395-state `post_reset_pair` DFA plus two skip states, the reachab
 The refinement sequences are L `55, 226, 456, 706, 860, 996, 1002, 1002` and R `55, 259, 639, 947, 1120, 1299, 1307, 1307`. The generator `build_source_carry_reset_product.js` checks the quotient output and all nine successor classes for every reachable product state. This realizes the proposed one-step composition, with a much smaller reachable product than the naive Cartesian bounds.
 
 This remains a one-window transducer composition, **not** an all-time root invariant. The source-carry, drain-budget, branch-selection, and next-window coupling obligations listed in `SourceCarryResetProduct.md` remain open.
+
+Independent verification is available with `node im-results/agent24-machine623-shifted-reset-product/verify_source_carry_reset_product.js`; it reconstructs every product transition, checks reachability and quotient congruence, and recomputes the stable partition from the committed product-state list.
