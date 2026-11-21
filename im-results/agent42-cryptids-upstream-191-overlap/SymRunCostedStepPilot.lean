@@ -18,7 +18,13 @@ macro "stepWithin" : tactic => `(tactic| (
     encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head, cons_one_encM_cons_run_tail]
   apply BusyBeaver.ReachesIn.step_left
   · rfl
-  ·
+  · simp only [BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
+      pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
+      listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
+      Turing.ListBlank.tail_cons, Tape.write, zero_cons_default, default_head,
+      default_tail, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
+      cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
+      encM_cons_run_head, cons_one_encM_cons_run_tail]
 ))
 
 macro "finishWithin" : tactic => `(tactic| (
