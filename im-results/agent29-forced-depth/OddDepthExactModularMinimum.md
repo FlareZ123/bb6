@@ -258,6 +258,35 @@ so it also satisfies the bound. Since every actual \(v\) is at
 least its corresponding \(v_t\), the uniform inequality follows
 for all non-power-of-two \(A\).
 
+For \(m\ge7\), this proof retains a sharper parameter-dependent
+coefficient. Here \(s\ge4\), and the endpoint calculation above
+actually gives
+\[
+zn\ge 10-20/2^s,
+\]
+because the concave function
+\(f(n)=2n-n(n-1)/2^s\) has endpoint values
+\(f(5)=10-20/2^s\) and
+\(f(2^s-1)=2^s+1-2/2^s\), with the latter no smaller for
+\(s\ge4\). The large-t bound is therefore
+\[
+Av_s\ge(10-20/2^s)Q-2m.
+\]
+The small-t cases satisfy the same inequality: the \(n_t=3\) and
+\(n_t\ge5\) bounds dominate it using \(Q\ge7m\); for \(n_t=1\),
+compare \(10(Q-m)\) with the target, whose difference is
+\((20/2^s)Q-8m\ge0\). Indeed \(2^s\le A\) and the elementary
+induction \(4^{m+1}\ge18m^2+6m+1\) for \(m\ge3\) give
+\(Q\ge2Am\), so this difference is at least \(32m\).
+Thus for every odd non-dyadic \(m\ge7\),
+\[
+Av\ge\left(10-\frac{20}{2^s}\right)Q-2m,
+\qquad
+s=\min\{q:2^q>A/2\}.
+\]
+The coefficient approaches 10 as \(m\) grows; the uniform \(35/4\)
+wall is the smallest closed-form corollary across all odd \(m\ge3\).
+
 #### Exceptional dyadic case and M8 exclusion
 
 Now let \(A=2^{2r}\), \(r\ge2\), so
