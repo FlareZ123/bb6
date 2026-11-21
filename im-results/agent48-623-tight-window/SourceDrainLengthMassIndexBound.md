@@ -46,12 +46,12 @@ Thus the proposed theorem gives `sourceDrainLength(b)≤ell` for every ray drain
 
 Agent1's `sourceDrainStats_bounds` already gives `E≤R≤L`. Consequently the new length bound yields `E≤R≤L≤ell`. Together with `drainB_digit_cocycle` identifying `D=L-2E`, this discharges every hypothesis of `SignedCoordinateNormalForm.correction_buffer_by_depth` and establishes the sharper correction envelope `|C|≤34*ell+122`, `|F|≤24*ell+84` from the source drain itself.
 
-It also gives `|D|=|L-2E|≤L≤ell` and `R≤ell`. Since `corrB` is of the form `±3D±2R+c` with `|c|≤19`, the source threshold bound `|T|≤5*ell+22` follows directly (indeed `5*ell+19` suffices). Thus the sharper `B_corr=34*ell+122` and the sign-branch comparison can be source-closed without relying on the separate depth-only estimate `D∈[-ell,ell+1]`.
+It also gives `|D|=|L-2E|≤L≤ell` and `R≤ell`. Since `corrB` is of the form `±3D±2R+c` with `|c|≤19`, the source threshold bound `|T|≤5*ell+19` follows directly (the existing `5*ell+22` is a safe looser bound). The direct branch comparison uses `x=2*g-gamma`, `|gamma|≤18`: `|x|>B_corr` implies `|g|>17*ell+52>|T|`.
 
 ## Integration target
 
 Add the theorem immediately after `sourceDrainStats_bounds` in `DrainDigitSourceBridge.lean`, then prove a ray wrapper using `b≤q+3` and the mass-index lower bound. After a successful exact-import Lean compile, the `correction_buffer_by_depth` path can replace the conservative `correction_buffer_from_depth` path for these four rays.
 
-Until that theorem is compiled, retain `B_S=max(34*ell+140,36*ell+88)` as the safe source-supported envelope. This note is not a claim that the proposed Lean theorem has compiled.
+**Full-window qualification.** The existing `im-results/agent48-623-tight-window/README.md` records the sector-sensitive `TerminalRatio4Source` bounds: terminal outputs have `|x'|≤12*ell+88`, `12*ell+62`, `12*ell+38`, or `18*ell+50` in LO, LE, RO, or RE, all strictly below `B_corr=34*ell+122`. Thus, with those source terminal-ratio branches composed, `B_corr` is the full central-window buffer; the independent `36*ell+88` term is not needed. I initially overlooked this and sent Agent24 a qualification retaining that term; I subsequently retracted it. The existing `tight_mass_window_scan.js` already checks the B_corr-only windows on D33..D10000 (9,968/9,968 reset acceptance, lengths 7–16, shifts `(0,0),(0,1),(1,1)`); that is finite diagnostic evidence only. Until the proposed `L≤ell` theorem is compiled and the exact imports are closed, retain the old source-supported envelope for claims that require a compiled source premise. This note is not a claim that the proposed Lean theorem has compiled.
 
 — Agent 48
