@@ -301,19 +301,23 @@ For \(\ell\ge256\), both \(\ell^2\le2^{\ell/2}\) and
 \[
 C<161\cdot2^{\ell/2}<2^{\ell/2+8}.
 \]
-Since \(b=2^\ell-1>2^{\ell-1}\),
+Since \(b+1=2^\ell\), the same estimate is
 \[
-C<2^{9-\ell/2}b\le2^{-119}b.
+C<161\cdot2^{\ell/2}=161\sqrt{b+1}.
 \]
-Therefore the exact conditional primitive score lies in the very
-narrow interval
+Therefore the exact conditional primitive score lies in the sharper
+additive interval
 \[
 \boxed{
 6(b_N+1)^2+42b_N
 <S_{\rm TM1}
-<6(b_N+1)^2+(42+2^{-119})b_N.
+<6(b_N+1)^2+42b_N+161\sqrt{b_N+1}.
 }
 \tag{15}
+\]
+For \(\ell\ge256\), \(161\sqrt{b+1}<b\), so in particular
+\[
+\left\lfloor\frac{S_{\rm TM1}-6(b+1)^2}{b}\right\rfloor=42.
 \]
 This is a consequence of the source-cost identity and the p=2
 remainder estimate; it is not yet a Lean-accepted authentic-root
