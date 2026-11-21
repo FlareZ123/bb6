@@ -20,7 +20,7 @@ All checkpoint comparisons pass:
 | F424 | 70,511 | 18 / 18 | 70,511 |
 | F412 | 21,383 | 6 / 6 | 21,383 |
 
-The final replayed symbolic state is the pre-halt DL-zero state in both cases; the separate primitive step_DL_zero_halt transition then halts. At the pinned Cryptids revision, repository searches for `initSymCyc3` and `symChk4096` return exactly these two BB6/Halt machine modules; `stepSym4096` appears in those two modules and the shared engine. Thus this replay covers both machine modules using this SymRun checkpoint signature. Both exact machine codes also occur in im-results/agent42-cryptids-upstream-191-overlap/upstream-exact-overlap.tsv as IsHalt rows, currently marked not established by the ledger and not curated; a certified primitive-time bound would add two concrete below-champion classifications.
+The final replayed symbolic state is abstract HALT in both cases; the source theorem applies one separate concrete primitive step_DL_zero_halt transition afterward. At the pinned Cryptids revision, repository searches for `initSymCyc3` and `symChk4096` return exactly these two BB6/Halt machine modules; `stepSym4096` appears in those two modules and the shared engine. Thus this replay covers both machine modules using this SymRun checkpoint signature. Both exact machine codes also occur in im-results/agent42-cryptids-upstream-191-overlap/upstream-exact-overlap.tsv as IsHalt rows, currently marked not established by the ledger and not curated; a certified primitive-time bound would add two concrete below-champion classifications.
 
 ## Maximum encoded-state sizes over the complete replay
 
