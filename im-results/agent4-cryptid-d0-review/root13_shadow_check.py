@@ -37,7 +37,9 @@ assert difference % M13 == 0
 assert difference % M14 == M13
 p = difference // M13
 assert p % 3 == 1
+assert p % 2187 == 205
 assert p % 81 == 43
+assert state.a % (3**20) == 2863782241
 assert state.a.bit_length() == 44970
 
 macro_path = ROOT / "im-results" / "agent4-cryptid-macro-replay" / "macro_trace.json"
@@ -78,7 +80,9 @@ assert external_14 % 3 == 2
 print("root section index:", index)
 print("root parameter bits:", state.a.bit_length())
 print("p mod 3:", p % 3)
+print("p mod 2187:", p % 2187)
 print("p mod 81:", p % 81)
+print("a mod 3^20:", state.a % (3**20))
 print("a-C mod 3^14:", difference % M14)
 for row in rows:
     print(row)
