@@ -26,7 +26,7 @@ The nine cylinders are pairwise disjoint. Modulo \(16384\), their lift counts ar
 j\bmod16384\notin
 \{3\bmod16,\ 149,165\bmod256,\ 117,181\bmod512,\ 549,1013\bmod1024,\ 2613\bmod4096,\ 4133\bmod8192\}.
 \]
-This is a description of current coverage, **not** a theorem that the remaining candidates halt or that their high-stop targets are reachable. All nine high-stop compositions still need integrated Lean wrappers, exact transitive source-closure compilation, and exported axiom audits; keep them in im-results/.
+This is a description of candidate parameter coverage, **not** a theorem that the high-stop targets are unreachable. The common inverse reduction to \\(D_{0E}(t)\\lor L(t)\\lor P_{7E1E}(t)\\) is now Lean-checked in `Root32HighStopIntegrated.lean`, `Root32HighStopS1.lean`, and `Root32HighStopP7.lean`, with no `sorryAx` in the audited dependencies. The former immediate P7E no-parent claim was wrong: the corrected P7E1 sum-zero fan leaves P7E1E. A paper-level follow-on gives an odd/odd high-valuation target A4(t) on the eight cylinders with \\(t\\equiv15\\pmod{16}\\); these remain unresolved. The \\(t\\equiv1\\pmod{16}\\) cylinder has a further paper-level A4 exclusion, but it is not Lean-formalized. Thus **none of the nine progressions is currently a completed high-stop exclusion**. The exact transitive source-closure build and branch-specific closures remain outstanding; keep these dossiers in im-results/.
 
 For a single integrated Lean statement, define the covered index predicate by the following disjunction:
 \[
@@ -42,7 +42,7 @@ For a single integrated Lean statement, define the covered index predicate by th
 \ \lor\ j\equiv4133\pmod{8192}.
 \end{aligned}
 \]
-The integrated target theorem is: for the exact root tuple
+The intended integrated target theorem (not yet established) is: for the exact root tuple
 \[
 r=32+64j,\qquad E=201+3360(6657+8192r),\qquad
 17300+22155(t+j)=5\cdot2^{E-17},
