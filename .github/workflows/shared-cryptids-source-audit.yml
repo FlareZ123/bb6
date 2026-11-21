@@ -127,7 +127,7 @@ jobs:
         working-directory: /tmp/cryptids
         shell: bash
         run: lake exe cache get
-      - name: Expose original private solution declarations and imports
+      - name: Expose original private target and solution declarations and imports
         if: env.EXPOSE_SOLUTION_DECLARATIONS == 'true'
         working-directory: /tmp/cryptids
         shell: bash
@@ -145,10 +145,17 @@ jobs:
           if source.count(private_import) != 1:
               raise SystemExit(f"expected one private HaltShared import in {path}")
           source = source.replace(private_import, public_import, 1)
+          target_marker = "abbrev target_tm : Machine (Fin 2) (Fin 6) := target\n"
+          if source.count(target_marker) != 1:
+              raise SystemExit(f"expected one target_tm abbreviation in {path}")
+          target_start = source.index(target_marker)
+          source = source[:target_start] + "@[expose] public section\n" + source[target_start:]
           marker = "namespace Solution\n"
           if source.count(marker) != 1:
               raise SystemExit(f"expected one Solution namespace in {path}")
-          start = source.index(marker) + len(marker)
+          solution_start = source.index(marker, target_start)
+          source = source[:solution_start] + "end\n\n" + source[solution_start:]
+          start = solution_start + len("end\n\n") + len(marker)
           if source[start:].startswith("@[expose] public section\n"):
               raise SystemExit(f"already exposed: {path}")
           end_marker = "\nend Solution\n"
