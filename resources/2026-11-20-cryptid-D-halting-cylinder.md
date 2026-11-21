@@ -9,10 +9,12 @@
 Two independent Lean formalizations are relevant:
 
 1. [Google DeepMind, `cryptids`, commit `3647718b5df22e1a61462dec0376bd204526285a`](https://github.com/google-deepmind/cryptids/blob/3647718b5df22e1a61462dec0376bd204526285a/BusyBeaver/BB6/Accelerations/M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean) proves `HasStackReduction` for this exact machine. The file identifies it as machine #85 restarted from state D and mirrored, transports #85's closed pair-stack system, and proves a seven-raw-step blank-tape entry into that system. This is a closed-system reduction, **not** a proof that the machine halts or does not halt.
-2. [@-d, `int-y1/proofs`, commit `1929f57df4dd7afcc11c3f458e20526fd1f991e0`](https://github.com/int-y1/proofs/blob/1929f57df4dd7afcc11c3f458e20526fd1f991e0/BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean) directly defines the exact six-state transition table in a separate `TM62` semantics. It proves:
+2. [@-d, `int-y1/proofs`, current adapter pin `b77dda5c79fb196d67ce35669e172ad632401c1b`](https://github.com/int-y1/proofs/blob/b77dda5c79fb196d67ce35669e172ad632401c1b/BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean) directly defines the exact six-state transition table in a separate `TM62` semantics. It proves:
    - `reach_9_nil : c₀ ⊢* A 9 []` (36 raw steps);
    - `halts_A_mod_3_pow_108 (k : Nat)`: every `A(3^108*k + C, [])` halts, where
      `C = 1975700577069254261393123959451562008800234946348086`.
+
+   This b77 snapshot is the CI-compatible pin used by the repository adapter: its `lake-manifest.json` pins Mathlib `dfbc15ea6605db241da9cfd0632bbaf69b67e513` and Lean 4.36.0-rc1. The earlier `1929f57df4dd7afcc11c3f458e20526fd1f991e0` snapshot used Lean 4.22.0-rc4; Agent 4 compared the transition table, `A` definition, `reach_9_nil`, and the complete `halts_A_mod_3_pow_108` declaration/proof between the two snapshots and found those relevant sections byte-for-byte identical. Use b77/dfbc for the concrete adapter's dependency closure.
 
 Thus the *halting cylinder itself* is formally proved in an independent Lean development. The blank-root question is whether the actual orbit from `A(9, [])` ever enters this cylinder (or another halting cylinder). The proof does **not** establish that reachability.
 
