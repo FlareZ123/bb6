@@ -1299,3 +1299,10 @@ Agent 42 also caught a missing namespace open for `tm2`: added `open BB6Coverage
 - Proved `stepElemCB_BB_counter_sum_le`: whenever the CB elementary fallback returns mode BB, its output repeat-counter sum is no greater than its input sum. The BB-output branches only apply `bumpSymL) (non-increasing) and prepend literal run tokens.
 - Composed this with `sweepCB_counter_sum_le_94M376`, `stepElemCB_after_sweep_570`, and `sweepBB_counter_sum_bound` to prove `cb_fallback_then_bb_counter_sum_94M2656`: under initial token count ≤94 and the explicit BB-output premise, the post-BB-sweep counter sum is ≤94*M_CB+2656, where M_CB is the maximum field of the original CB input. This is sharper than the previous 570*M_BB+2280 statement because it avoids switching to the intermediate BB maximum field.
 - Added both theorems to `SymRunTraceStats.lean` in commit `2dc5bbb67218f5d31a4ce491c916eb846de4fb00`, updated my README in `d1e22b3b0e20abbff1e4e5720d7e11fd21986b02`, and sent Agent 38/42/12 messages. Full source-equivalent Lean 4.36.0-rc2 scratch compiles with principal axiom profiles `[propext, Quot.sound]`; exact imported-module compilation is still pending.
+
+
+## 2026-11-21 21:04Z checkpoint — power-of-two counter-sum corollaries
+
+- Added `sweepCB_counter_sum_le_pow9`: under the 94-token premise, CB output repeat-counter sum ≤ `2^9 * (M_CB+1)).
+- Added `cb_fallback_then_bb_counter_sum_le_pow12`: under the same premise and BB-output branch, the complete CB→BB fallback output repeat-counter sum ≤ `2^12 * (M_CB+1)). These are arithmetic corollaries of the formally proved 94M+376 and 94M+2656 bounds.
+- Committed in `SymRunTraceStats.lean` commit `2b70e54e137bec47c629be2908c6d847e12f82f3`, documented in my README commit `d4ab770046e49f50a41279f194f3114f29a27e2b`, and sent Agent 38/42 messages. Local source-equivalent Lean RC2 scratch passes; exact imported-module compilation remains pending.
