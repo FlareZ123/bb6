@@ -108,7 +108,7 @@ The independent replay matches every literal upstream checkpoint and reaches the
 | F424 | 70,511 (< 2^17) | 12,464,561,897,144,001,482,331,935,594,779,263,804,489,570,179,353,031,112,091,137 | 203 | < 2^463 |
 | F412 | 21,383 (< 2^15) | 412,597,277,036,535,862,786 | 69 | < 2^193 |
 
-The initial runElemFast prefixes, including their entry paths, cost exactly 164,386 (F424) and 145,982 (F412) according to the source-derived replay in ../agent38-symrun-prefix-cost/README.md. The terminal step_DL_zero_halt transition is part of the final stepSym transition and is covered by the per-transition bound above.
+The initial runElemFast prefix replay, including entry paths, computes branch-cost totals 164,386 (F424) and 145,982 (F412), documented in ../agent38-symrun-prefix-cost/README.md. These are reproducible computational sums, not a Lean theorem; formalization must certify a prefix cost bound. A coarse bound below 2^21 for either prefix is sufficient. The replay ends at the pre-halt DL-zero state after 70,511/21,383 stepSym transitions; the final step_DL_zero_halt is one separate primitive transition, so add 1 outside the stepSym bound.
 
 Conditional on the per-transition cost lemma and kernel-checked trace maxima, the complete primitive halting times would therefore satisfy:
 
@@ -142,7 +142,7 @@ Then add a cost-indexed parallel to the existing stepPure_sound, sweepBB_sound, 
 Two independent obligations remain:
 
 1. Prove the source-structural 2^40 M^2 per-stepSym cost lemma.
-2. Kernel-check the maximum-field bounds over every intermediate state, not merely the checkpoint endpoints. The replay records both each chunk peak and its endpoint maximum; chunk peaks often exceed their endpoints even though endpoint maxima are monotone. A Lean fold over each 4096-step chunk can certify the bound using the same deterministic transition function.
+2. Kernel-check both the maximum-field bound and the symbolic-token-count bound over every intermediate state, not merely checkpoint endpoints. The replay records chunk peaks and endpoint maxima; chunk peaks often exceed their endpoints. A Lean fold over each 4096-step chunk can certify both bounds using the same deterministic transition function. The L ≤ 94 premise in the cost argument depends on the token-count theorem.
 
 The source modules currently live only in the pinned upstream Cryptids tree (Lean 4.35.0-rc4), while the local BB6 project uses Lean 4.36.0-rc2 and does not contain HaltShared.lean. The local shell preflight in this invocation failed with a tool-level ClientError, so no CI compile was attempted. Until the exact dependency closure is available and the cost lemma and range fold compile, this remains an intermediate candidate rather than a publishable result.
 
@@ -160,6 +160,13 @@ The max-field obligation can be isolated from the final-state theorem. In the sa
 
     def symStateMax (s : SymMode × List SymTok × List SymTok) : Nat :=
       ((s.2.1 ++ s.2.2).map symTokMax).foldl Nat.max 0
+
+    def symStateTokenCount (s : SymMode × List SymTok × List SymTok) : Nat :=
+      s.2.1.length + s.2.2.length
+
+    def symTraceTokenMax : Nat → (SymMode × List SymTok × List SymTok) → Nat
+      | 0, s => symStateTokenCount s
+      | n + 1, s => max (symStateTokenCount s) (symTraceTokenMax n (stepSym s))
 
     def symTraceMax : Nat → (SymMode × List SymTok × List SymTok) → Nat
       | 0, s => symStateMax s
