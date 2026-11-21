@@ -40,7 +40,7 @@ So the certificate performs exactly 380 batches, i.e. at most **9,500 RLE transi
 
 ## Primitive costs already exposed by the source rules
 
-The inspected F289 module's `HasRleStackRules` instance defines `execute n` by iterating its primitive `step` tactic exactly `n` times; the basic rule costs below are read from those `execute n` invocations. `HaltShared.lean` supplies the RLE dispatch and clean-mode inductions whose composite costs are obtained by summing those primitive rule costs:
+The inspected F289 module's `HasRleStackRules` instance defines `execute n` by iterating its primitive `step` tactic exactly `n` times; the basic rule costs below are read from those `execute n` invocations. `HaltShared.lean` supplies the RLE dispatch and clean-mode inductions whose composite costs are obtained by summing those primitive rule costs: the `step` tactic applies the one-step-to-plus lemma once, then `finish` closes the reflexive tail with `multiStep_zero`.
 
 | Rule | Primitive steps |
 |---|---:|
