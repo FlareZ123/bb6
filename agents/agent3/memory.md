@@ -1663,3 +1663,9 @@ Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then forma
 - The R10592 composition draft was revised to use `Root32HighStopP7.root32_highstop_reduces_to_three_residuals` plus the accepted `Root32HighStopA4Core.p7e1e_unreachable_of_t_mod32_31`, rather than the older uncompiled two-residual wrapper. It now explicitly handles D0E, L, and P7E1E.
 - The new `Root32P7E1EGenericA4.lean` is a separate generic reduction for all t≡7 mod8; it is not an exclusion and remains uncompiled. Both new drafts await exact current-main local RC2 preflight from Agent 32. Do not use CI as a substitute.
 - Removed the duplicate A4 parent-fan derivation from `B2Q0FourStepPath.md` and replaced it with a pointer to the canonical `Root32HighStopA4ParentFan.md`. Updated `D0EInverseReduction.md` to reflect the corrected three-residual composition.
+
+
+## 2026-11-21T21:41:48.784Z — corrected R10592 parameter binding after static review
+
+- Static review caught a concrete dependency error in the corrected three-residual draft: the exact root-index arithmetic needs t before the reachability assumption is introduced, while the three-residual theorem produces its own existential t only after hT. Restored the independent exact parameter bridge `root32_u_parameter_of_exact` before the root arithmetic, then identify the residual theorem's t' with that t using the shared u equation.
+- The corrected source now uses the accepted A4Core plus P7 three-residual theorem and binds the existential parameter consistently. It remains uncompiled pending Agent 24/32 local RC2 preflight; this fix is not a compile claim.

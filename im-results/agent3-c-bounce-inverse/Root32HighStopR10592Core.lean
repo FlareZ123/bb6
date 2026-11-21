@@ -254,6 +254,9 @@ theorem root32_highstop_r10592_unreachable
     (hr10592 : r%16384=10592) :
     ¬ RunReach (1048576*u+70538) 3 := by
   have hr64 : r%64=32 := by omega
+  obtain ⟨t,hu⟩ :=
+    BB6.Agent3U5B2Root32ParameterBridge.root32_u_parameter_of_exact
+      r E u hr64 hE hRoot
   let j := r/64
   have hrj : r=32+64*j := by
     dsimp [j]
@@ -299,7 +302,9 @@ theorem root32_highstop_r10592_unreachable
   have hres3 :=
     BB6.Agent3Root32HighStopP7.root32_highstop_reduces_to_three_residuals
       r E u hr64 hE hRoot hT
-  rcases hres3 with ⟨t, _hu, hbranches⟩
+  rcases hres3 with ⟨t',hu',hbranches⟩
+  have htEq : t'=t := by omega
+  subst t'
   rcases hbranches with hD0 | hL | hP7
   · have hD0x : 1469153280*t+393975148=
         (d0e0 (1802+6720*t)).1 := by
