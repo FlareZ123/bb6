@@ -124,6 +124,18 @@ Add a parallel cost semantics rather than trying to extract a number from a `Ref
 
 A direct function from the existing `ReflTransGen` proof to a Nat is not available: `ReflTransGen` is a proposition and proof irrelevance erases its witness length. A separate cost-indexed semantics is the correct interface.
 
+## Prefer an evaluated cost accumulator over a global invariant
+
+The previous coarse argument's hardest obligation is proving `M≤2^128` and `L≤2^15` for every intermediate state. A better implementation is to evaluate a branch-specific cost bound alongside the actual deterministic run:
+
+1. Define `rleStepBound(s)` by the same dispatch as `rleStep(s)`. It returns 0 for `tryPack` and clean-C representation changes; the raw branches return the relevant fixed/zero-run or block-run formula; the clean branches return the corresponding `clean_*_pow` or `clean_DR0_zeros` recurrence.
+2. Define `runStepsInnerBound(n,s)` to return `(finalState,totalBound)`, adding `rleStepBound(s)` before recursing on `rleStep(s)`. Define `runBatchesBound` analogously, preserving the existing 25-step batch structure.
+3. Prove a bounded-step relation for each branch, e.g. `∃ n ≤ rleStepBound(s), multiStep target_tm (evalRle s) n = some (evalRle (rleStep s))`. Compose these bounds additively through `runStepsInnerBound` and `runBatchesBound`.
+4. At the final halted state, combine the bounded trace with `StateHalts` to obtain `HaltsAfter` at some `n≤runBatchesBound 380 ckpt0`.
+5. Evaluate the concrete `runBatchesBound 380 ckpt0` with `native_decide` (or kernel reduction if tractable) and prove it is below the champion bound. This computes over the actual intermediate states, so no separate guessed maximum-counter invariant is required.
+
+This is the preferred route: the deterministic state path is already executable and checkpointed by the upstream proof. The only new proof burden is the branchwise cost soundness. The global `M,L` argument below is a fallback if evaluating the accumulator is too expensive.
+
 ## Coarse-bound strategy (conjectural until proved)
 
 The checkpoint literals in the inspected F289 proof have numeric fields below roughly `2^73`; that observation alone does **not** bound intermediate RLE states. A future source proof should expose every intermediate state in the 9,500-step deterministic trace and kernel-check a bound such as:
