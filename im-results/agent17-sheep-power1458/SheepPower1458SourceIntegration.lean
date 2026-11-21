@@ -22,6 +22,71 @@ def affineNodeValue (t : Nat) (node : AffineNode) (y : Nat) : Prop :=
 def affineBasin (t : Nat) (nodes : List AffineNode) (y : Nat) : Prop :=
   ∃ node, node ∈ nodes ∧ affineNodeValue t node y
 
+/-- Normalized generic source case for either sign of the affine offset. -/
+def GenericAffineSourceCase (d b c n x y : Nat) : Prop :=
+  ∃ a h v u : Nat,
+    1 ≤ a ∧ 5 ≤ v ∧ v%2=1 ∧ u%2=1 ∧
+    x=2^a*v ∧ y=1+3^h*u ∧
+    (d*3^h)*(2^(a+1)+1)*v + 2*a*(d*3^h) +
+      2^(h+1)*(d-b+c) =
+      2^(n+h+1)+3*(d*3^h)
+
+/-- Normalized exceptional source case for either sign of the affine offset. -/
+def SpecialAffineSourceCase (d b c n x y : Nat) : Prop :=
+  ∃ a h u : Nat,
+    1 ≤ a ∧ u%2=1 ∧ x=3*2^a ∧ y=1+3^h*u ∧
+    (d*3^h)*(3*2^a+a+2) + 2^h*(d-b+c) = 2^(n+h)
+
+/-- One source splitter for every affine node C*y+c=2^n+b with b≤C and
+one-sided offset. It normalizes both the positive and negative original-source
+equations to the common C-B term used by the inverse-tree certificates. -/
+theorem affine_edge_inverse_cases
+    {x y d b c n : Nat} (hedge : SheepEven.EvenEdge x y)
+    (hb : b ≤ d) (hsign : b=0 ∨ c=0)
+    (hpower : d*y+c=2^n+b) :
+    GenericAffineSourceCase d b c n x y ∨
+    SpecialAffineSourceCase d b c n x y := by
+  have hx : x%2=0 := SheepEven.even_edge_even hedge
+  have hEdge := SheepEvenSourceAlgebra.even_edge_to_algebra hx hedge
+  rcases hsign with hb0 | hc0
+  · subst b
+    rcases SheepEvenSourceAlgebra.original_even_edge_inverse_cases hx hedge hpower with
+      ⟨a,h,v,u,ha,hv,hvodd,huodd,hxdef,hydef,hEq⟩ |
+      ⟨a,h,u,ha,huodd,hxdef,hydef,hEq⟩
+    · apply Or.inl
+      refine ⟨a,h,v,u,ha,hv,hvodd,huodd,hxdef,hydef,?_⟩
+      have hmul :
+          2^(h+1)*d + 2^(h+1)*c = 2^(h+1)*(d+c) := by
+        rw [←Nat.mul_add]
+      rw [hmul] at hEq
+      simpa using hEq
+    · apply Or.inr
+      refine ⟨a,h,u,ha,huodd,hxdef,hydef,?_⟩
+      have hmul :
+          2^h*d + 2^h*c = 2^h*(d+c) := by
+        rw [←Nat.mul_add]
+      rw [hmul] at hEq
+      simpa using hEq
+  · subst c
+    rcases SheepEvenInverseAlgebra.edge_inverse_cases x y d n b hEdge hpower with
+      hg | hs
+    · rcases hg with ⟨a,h,v,u,ha,hv,hvodd,huodd,hxdef,hydef,hEq⟩
+      apply Or.inl
+      refine ⟨a,h,v,u,ha,hv,hvodd,huodd,hxdef,hydef,?_⟩
+      have hmul :
+          2^(h+1)*d = 2^(h+1)*(d-b) + 2^(h+1)*b := by
+        rw [←Nat.mul_add, Nat.sub_add_cancel hb]
+      rw [hmul] at hEq
+      omega
+    · rcases hs with ⟨a,h,u,ha,huodd,hxdef,hydef,hEq⟩
+      apply Or.inr
+      refine ⟨a,h,u,ha,huodd,hxdef,hydef,?_⟩
+      have hmul :
+          2^h*d = 2^h*(d-b) + 2^h*b := by
+        rw [←Nat.mul_add, Nat.sub_add_cancel hb]
+      rw [hmul] at hEq
+      omega
+
 /-- Positive-offset counterpart of blank_even_inverse_cases. It uses the
 original EvenReach last edge and the source-checked positive-offset algebra
 split, and is uniform in b (hence covers all positive nodes in the mixed tree). -/
