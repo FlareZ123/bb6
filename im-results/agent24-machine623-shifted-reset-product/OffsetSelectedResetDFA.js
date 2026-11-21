@@ -82,6 +82,7 @@ const projectionValidation = {
   transition_projection_mismatches: transitionProjectionMismatches,
   output_projection_mismatches: outputProjectionMismatches,
   first_reset_event_symbol_mismatches: eventProjectionMismatches,
+  full_label_lookup_entries: fullOutputLookupEntries,
 };
 if (
   mappedBaseStates.size !== base.transitions.length ||
@@ -94,6 +95,32 @@ if (
 }
 
 if (alphabetSize !== 9) throw new Error("expected nine digit-pair symbols");
+
+
+const fullOutputLookup = Array.from(
+  { length: 9 },
+  () => Array(base.output_labels.length).fill(null)
+);
+let fullOutputLookupEntries = 0;
+for (let fullLabelId = 0; fullLabelId < full.output_labels.length; fullLabelId += 1) {
+  const label = full.output_labels[fullLabelId];
+  const pair = label.L_final.previous_pair;
+  if (
+    JSON.stringify(label.R_final.previous_pair) !== JSON.stringify(pair)
+  ) {
+    throw new Error("left/right previous-pair labels disagree");
+  }
+  const symbol = 3 * pair[0] + pair[1];
+  const baseLabelId = oldOutputToNew[fullLabelId];
+  if (fullOutputLookup[symbol][baseLabelId] !== null) {
+    throw new Error("full output label is not uniquely decoded by pair and carry");
+  }
+  fullOutputLookup[symbol][baseLabelId] = fullLabelId;
+  fullOutputLookupEntries += 1;
+}
+if (fullOutputLookupEntries !== full.output_labels.length) {
+  throw new Error("not every full output label has a pair/carry lookup entry");
+}
 
 const baseCount = base.transitions.length;
 const skip1 = baseCount;
@@ -269,6 +296,8 @@ const result = {
   transitions,
   outputs,
   event_masks: eventMasks,
+  full_output_lookup: fullOutputLookup,
+  full_output_labels: full.output_labels,
   projection_validation: projectionValidation,
   minimization: {
     method: "reachable Moore/Mealy partition refinement",
