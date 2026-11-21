@@ -100,9 +100,9 @@ T_{j+3}^{\,T_{j+2}^{\,\alpha}}
 <2^{V_{j-1}}-1
 =V_j.
 \]
-Thus every integer \(\alpha\le2^{V_{j-3}-T_j}-2\) is a valid lower exponent at index \(j\).
+Thus every integer \(\alpha\le2^{V_{j-3}-T_j}-2\) is a valid lower exponent at index \(j\). The next integer \(\alpha=m-1\) fails, since \(T_{j+2}^{m}=2^{T_{j+1}m}>2^{T_{j+1}m-1}-1=V_{j-1}\). Hence \(m-2\) is the maximal exponent permitted by this exact congruence lift.
 
-The condition \(V_{j-3}>T_j\) holds for \(j=4,5,6\): in fact \(V_k>T_{k+3}+47\) for every \(k\ge1\). The base is \(V_1=2^{63}-1>T_4+47\), and the implication follows immediately from \(V_{k+1}=2^{V_k}-1\). Thus the three direct bases have \(\alpha_j>2^{47}-2>2^{46}\). For \(j\ge7\), the displayed lower bound for \(V_{j-3}\) is at least \(T_j^2\), so again \(\alpha_j>2^{46}\).
+The condition \(V_{j-3}>T_j\) holds for \(j=4,5,6\): in fact \(V_k>T_{k+3}+47\) for every \(k\ge1\). The base is \(V_1=2^{63}-1>T_4+47\). If \(V_k>T_{k+3}+47\), integrality gives \(V_k\ge T_{k+3}+48\), whence \(V_{k+1}=2^{V_k}-1\ge2^{T_{k+3}+48}-1>T_{k+4}+47\). Thus the three direct bases have \(\alpha_j>2^{47}-2>2^{46}\). For \(j\ge7\), the displayed lower bound for \(V_{j-3}\) is at least \(T_j^2\), so again \(\alpha_j>2^{46}\).
 Hence the definitions \(\alpha_j=2^{V_{j-3}-T_j}-2\) for \(j=4,5,6\) prove those three cases.
 
 For \(j\ge7\), the induction hypothesis at index \(j-3\) gives
