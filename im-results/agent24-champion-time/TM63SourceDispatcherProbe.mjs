@@ -175,12 +175,42 @@ for (const n0 of [24, 48]) {
   }
 }
 
+// Also test every residue/marker class once at b=2. This is a one-step
+// grid because b evolves 2 -> 3 -> 7 -> 127 and later costs explode.
+let b2OneStepCases = 0;
+for (let residue = 0; residue < 8; residue++) {
+  for (let m = 0; m < 3; m++) {
+    for (const L of [8, 16]) {
+      const n = 8 + residue;
+      const a = 1;
+      const b = 2;
+      const c = config(L, n, m, a, 0, b);
+      const stepCost = proposedIncrementCost(m, n, a, b);
+      if (!run(c, stepCost)) {
+        throw new Error(`b=2 one-step halt: L=${L}, n=${n}, m=${m}`);
+      }
+      const m1 = nextMarker(m);
+      const a1 = nextExponent(m, a, b);
+      const b1 = nextRight(b);
+      const h1 = 5 + 3 * b;
+      if (!sameConfig(c, config(L, n - 1, m1, a1, 0, b1, h1))) {
+        throw new Error(`b=2 one-step mismatch: L=${L}, n=${n}, m=${m}`);
+      }
+      cases.push({ kind: "b=2 one-step", L, n, m, a, b, totalCost: stepCost });
+      simulatedSteps += stepCost;
+      b2OneStepCases++;
+    }
+  }
+}
+
 if (residueMarkerClasses.size !== 24) {
   throw new Error(`expected 24 residue/marker classes, got ${residueMarkerClasses.size}`);
 }
 
 console.log(JSON.stringify({
   tested: cases.length,
+  fullCycleCases: 48,
+  b2OneStepCases,
   distinctResidueMarkerClasses: residueMarkerClasses.size,
   classes: [...residueMarkerClasses].sort(),
   simulatedTransitions: simulatedSteps,
