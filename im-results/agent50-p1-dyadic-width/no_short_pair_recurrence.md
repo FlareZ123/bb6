@@ -1,6 +1,6 @@
 # Exact pair-carry recurrence for the six-shallow subset condition
 
-**Status:** exact reduction; the resulting logarithmic no-short-run bound is a conjectural target, not proved here.
+**Status:** exact reduction plus a paper-level periodic-factor anti-repetition theorem; the logarithmic bound for arbitrary no-short runs remains unproved.
 
 This note develops the modular condition
 \[
@@ -204,11 +204,89 @@ A pure \(0^r\) return segment instead divides \(a\) by \(4^r\) each time, so it 
 
 This rigorously rules out long blocks of a *fixed identical return segment*. It does **not** bound switching among different values of \(r\) or among the three selected return types. Controlling those switches is still necessary for the desired logarithmic bound on an arbitrary no-short run.
 
-## 8. Suggested next step
+## 8. A periodic-factor bound for arbitrary no-short words
+
+The fixed-return-segment estimate above extends to **every periodic factor** of a valid no-short run, including mixed patterns of return segments.
+
+Let \(V\) be a primitive no-short pair word of length \(r\). Encode its pair at position \(j\) by \(\delta_j\in\{0,1,2\}\), corresponding to \(00,10,01\), and put \(\gamma_j=1\) exactly when \(\delta_j=2\). For a carry state \((a,H)\), the recurrence is
+\[
+a_{j+1}=\frac{a_j+\delta_j H_j+\gamma_j}{4},
+\qquad H_{j+1}=H_j+1.
+\]
+The affine map for one copy of \(V\) is
+\[
+F_V(a,H)=\left(\frac{a+AH+B}{4^r},\,H+r\right),
+\quad
+A=\sum_{j=0}^{r-1}\delta_j4^j,\quad
+B=\sum_{j=0}^{r-1}(j\delta_j+\gamma_j)4^j.
+\]
+Its unique invariant affine line is \(\ell(H)=\alpha H+\beta\), where
+\[
+\alpha=\frac{A}{4^r-1},\qquad
+\beta=\frac{B-\alpha 4^r r}{4^r-1}.
+\]
+If \(e=a-\ell(H)\), one copy sends \(e\) to \(e/4^r\).
+
+Because \(V\) is primitive, the purely periodic base-4 expansion of \(\alpha\) has least period \(r\). If \(\alpha=p/q\) is reduced, then \(q\) is odd and
+\[
+r=\operatorname{ord}_q(4)\le\varphi(q)\le q-1.
+\]
+In particular \(q>r\), so \(\alpha r\notin\mathbb Z\). Also \(q\le4^r-1\).
+
+Suppose \(V\) occurs \(K\) consecutive times in a valid no-short run. At the start of copy \(i\), write \(H_i=H_0+ir\) and \(e_i=a_i-\ell(H_i)\). The carry at the end of that copy is also an integer, and the two line values differ by \(\alpha r\):
+\[
+\ell(H_i+r)-\ell(H_i)=\alpha r.
+\]
+Writing \(\|x\|=\operatorname{dist}(x,\mathbb Z)\), the triangle inequality gives
+\[
+\max\bigl(\|\ell(H_i)\|,\|\ell(H_i+r)\|\bigr)
+\ge \frac12\|\alpha r\|
+\ge\frac1{2q}.
+\]
+The integer carries at phases \(0\) and \(r\) differ from these line values by \(e_i\) and \(e_i/4^r\), respectively. Hence
+\[
+|e_i|\ge
+\max\bigl(\|\ell(H_i)\|,\,4^r\|\ell(H_i+r)\|\bigr)
+\ge\frac1{2q}.
+\]
+Since \(e_i=e_0/4^{ir}\), this implies
+\[
+4^{ir}\le2q|e_0|<2\cdot4^r|e_0|,
+\qquad
+ir<r+\log_4(2|e_0|).
+\]
+Taking \(i=K-1\),
+\[
+Kr<2r+\log_4(2|e_0|). \tag{8.1}
+\]
+
+For the P1 root carry, \(0\le a_0,H_0\le n+1\) at every pair position. This follows by induction from \(a_0=(n+2)/4\), \(H_k=n/2+k+2\), and the four pair updates, since their numerator is at most \(a+3H+1\). Moreover \(A\le2(4^r-1)/3\), so \(0\le\alpha\le2/3\). The constant term satisfies
+\[
+0\le B\le\frac{(2r-1)(4^r-1)}3,\qquad
+|\beta|\le\frac{2r-1}{3}+\frac{8r}{9}<2r.
+\]
+As \(r\le(n-2)/2\), these estimates give
+\[
+|e_0|\le a_0+\alpha H_0+|\beta|
+\le\frac53(n+1)+2r
+\le3(n+1).
+\]
+Substitution into (8.1) proves the explicit bound
+\[
+\boxed{\quad Kr<2r+\log_4\!\bigl(6(n+1)\bigr).\quad} \tag{8.2}
+\]
+
+The all-\(00\) word is the zero-slope exception: each copy divides \(a\) by \(4^r\), so \(4^{Kr}\mid a_0\le n+1\), giving the stronger \(Kr\le\log_4(n+1)\).
+
+**Interpretation.** Any periodic factor of primitive period \(r\) in a valid no-short run has total length less than \(2r+\log_4(6(n+1))\). In particular, the number of complete copies of a fixed mixed return-segment pattern is controlled by its primitive period, not merely by the length of one return segment. This closes the periodic-switching case left open in §7.
+
+It does **not** prove the desired bound for arbitrary no-short runs: a long aperiodic sequence of return segments need not contain a long periodic factor. The remaining obstruction is therefore the genuinely aperiodic switching case.
+
+## 9. Suggested next step
 
 
 Prove or refute the following focused statement:
 
 > There is an absolute constant \(C\) such that every consecutive no-short run in the pair recurrence has length at most \(C\log_2(n+2)\).
 
-A useful proof will likely need to exploit the *joint* base-4 divisibility conditions across 10/01 transitions, not just the size bound on \(a_k\). A counterexample family would be equally valuable: it would identify whether the six-shallow subset lemma needs a different route.
+The periodic-factor theorem in §8 rules out long repeated patterns, including mixed return-segment cycles. The remaining task is to control aperiodic switching: either prove that the coupled divisibility conditions force a periodic factor of forbidden length, or construct an arbitrarily long aperiodic family. A counterexample family would show that the pointwise six-shallow lemma needs a different route.
