@@ -119,3 +119,31 @@ and is not itself a complete `stepSym` cost theorem. The new lemmas are in
 `SymRunTraceStats.lean` commit `5ef4ccefa8b534ab17af8b95b769bd2894574529`;
 the source-equivalent Lean 4.36.0-rc2 scratch axiom profile is
 `[propext, Quot.sound]`. Exact imported-module compilation is still pending.
+
+
+## Formal BB sweep counter-sum bound and CB→BB composition
+
+The same counter-sum accounting has now been carried through the BB sweep:
+
+- `stepElemBB_counter_sum_le`: the BB elementary step does not increase
+  repeat-counter sum.
+- `peelTok_counter_sum_le`: peeling a repeat token does not increase the
+  counter sum.
+- `sweepBB_counter_sum_bound`: BB sweep output counter sum is at most input
+  counter sum plus `4 * |L|`.
+- `sweepBB_counter_sum_le_570M2280`: for a BB-sweep input with at most 570
+  tokens and maximum field M, output counter sum is at most `570*M + 2280`.
+- `cb_fallback_then_bb_counter_sum`: composes the 94-token CB sweep,
+  BB-producing elementary fallback, and 570-token BB sweep bounds. Under the
+  explicit 94-token and BB-branch premises, the post-BB-sweep counter sum is
+  at most `570*M_BB + 2280`, where M_BB is the field maximum at the BB-sweep
+  input.
+
+These results formalize the repeat-counter accounting across the full
+CB-to-BB fallback path. They remain conditional on the stated token and branch
+premises; they do not yet prove the global `stepSym` primitive-time theorem.
+The Lean source is in `SymRunTraceStats.lean`, commits
+`52c13f58bbff5e2664c98277f4ee233796dcc6a1` and
+`bfd0796912ef25c0cc84b54671dd5d3e7942eb0e`. Source-equivalent Lean 4.36.0-rc2
+scratch compilation passes with principal axiom profiles
+`[propext, Quot.sound]`; exact imported-module compilation remains pending.
