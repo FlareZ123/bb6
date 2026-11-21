@@ -206,3 +206,25 @@ binDec(tm63Length1,16R-18)
  \mathbin{++}d0pow(A-6)\mathbin{++}d1\mathbin{++}d0pow(4).
 ]
 Here (tm63Length1=A+5). This is the exact head-facing binary counter word entering row 34 (the M2-even-six macro), not merely its parity/valuation class. The identity follows from the preceding row-32 word formula and the source encoder's two carry-prefix lemmas; it has not yet been added as a Lean theorem or locally compiled.
+
+
+## Six-row root residue pattern (rows 32–37)
+
+The same (R=tm63RootResidueSixK) identity explains the exact source-class sequence used by the middle continuation. Since (R=31\cdot2^{A-4}-1) is odd and (v_2(R-1)=1), the six consecutive input counters are:
+
+| Row | Counter | Exact 2-adic class | Marker/source class |
+|---:|---:|---:|---|
+| 32 | (16R-16) | (v_2=5) | M1, even valuation |
+| 33 | (16R-17) | odd | M0, odd |
+| 34 | (16R-18) | (v_2=1), residue (6\pmod8) | M2, even-six |
+| 35 | (16R-19) | odd, residue (5\pmod8) | M1, odd-residue-five |
+| 36 | (16R-20) | (v_2=2), residue (4\pmod8) | M0, even-residue-four |
+| 37 | (16R-21) | odd | M2, odd |
+
+The valuations are immediate:
+[
+16R-16=2^5(31\cdot2^{A-5}-1),\
+16R-18=2(8R-9),\
+16R-20=4(4R-5),
+]
+and each displayed odd factor is odd. The intervening counters are odd. This gives a compact arithmetic explanation for why the root proof uses the sequence M1-even / M0-odd / M2-even-six / M1-odd-five / M0-even-four / M2-odd. It is a parameter-level source classification, not a replacement for the six Lean run theorems.
