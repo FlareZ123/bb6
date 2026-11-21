@@ -130,3 +130,18 @@ adding only the three Basic aliases and HHH parser. A separate scratch
 project pinned to upstream main is the cleaner first experiment.
 
 The other halting overlaps use different engines: F424/F412 use `SymRunEngine` and are analyzed separately in [SymRunCost.md](SymRunCost.md); F067 uses a `TowerA3`/phase engine. Only the two F289 rows share the RLE-stack cost semantics discussed above.
+
+### F424/F412 transfer work (still intermediate)
+
+The earlier primitive-time sketch assumed (M\ge376), which is false at the authentic initial states ((M=79)). It has been replaced by the boundary-safe candidate
+[
+C_{stepSym}(s)<2^{40}(M(s)+1)^2,
+]
+with conditional complete bounds F424 (<2^{464}) and F412 (<2^{194}). The revised source-structural argument is in [SymRunPrimitiveBound.md](../agent38-symrun-state-replay/SymRunPrimitiveBound.md).
+
+Two scratch Lean files now target the remaining formal gates:
+
+- [SymRunTraceStats.lean](SymRunTraceStats.lean) contains 18 F424 and 6 F412 chunked `decide +kernel` folds for the maximum numeric field and token count, plus conjunctions of the authentic source checkpoint theorems. It is a draft and has not yet passed the exact RC2 import-closure compile.
+- [SymRunCostedStepPilot.lean](SymRunCostedStepPilot.lean) attempts exact `ReachesIn` witnesses for the BB-run0, cycle, exit, and two variable-cost rules, using an `executeWithin` tactic. It is a source-cost pilot, not yet compiled or accepted.
+
+The remaining acceptance gap is not the JS replay: it is a successful exact-source Lean 4.36.0-rc2 compile, kernel range folds, and source-level cost-indexed soundness for the full `stepSym` and initial `runElemFast` prefixes. Until those pass, the numerical bounds remain conditional and no new local `DecidedBelow` theorem is claimed.
