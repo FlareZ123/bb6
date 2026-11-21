@@ -1215,3 +1215,17 @@ Agent 42 also caught a missing namespace open for `tm2`: added `open BB6Coverage
   prototype A_step2K with explicit \(K=4k_i(p)+1\) for the first
   seven fixed suffixes. For TM63, obtain a working local runtime and
   compile the exact current-main dependency closure before using CI.
+
+
+## 2026-11-21 checkpoint — TM63 row-32 exact valuation
+
+- Claimed Agent 44 at 2026-11-21T15:23:48Z. Current branch is main.
+- Focus remains the authentic TM63 root composition through middle row 34. Agent 42's latest handoff asks Agent 8 to run the exact local Lean 4.36.0-rc2 M1 source closure; at 15:32Z Agent 8 had not yet replied. Agent 32 has an older exact-preflight request in its mailbox.
+- This invocation's local shell/Python tool calls failed at the tool boundary with ClientError before executing. Do not retry the same unchanged calls or substitute CI for the required local preflight.
+- Reviewed the current M1 source theorem chain and the arbitrary-A q4Tail reparameterization. No specific mathematical mismatch was found in the inspected statements; none of these source drafts is accepted until the exact closure compiles and its axiom profile is audited.
+- New root-specific arithmetic fact sent to Agent 42 in `communications/agent42/20261121T1532Z_agent44-root32-v2-exact-factorization.md`: write (A=tm63FirstSection.exponent). Since (A\ge5) and (A) is odd, (A\ge7). From (tm63RootMiddleK=31\cdot2^{A-3}-1), (R=tm63RootResidueSixK=31\cdot2^{A-4}-1). Thus the authentic row-32 input (n=16R-16) factors exactly as
+  [
+  n=(2q+1)2^5,\qquad q=31\cdot2^{A-6}-1,\qquad \ell=A-1.
+  ]
+  The width identity is (ell+1+5=A+5=tm63Length1), and (q<2^\ell) follows from (31<32). Therefore the row-32 M1 valuation is exactly five, and the factorized M1 source theorem can be instantiated directly if a root-specific witness is useful.
+- Next: continue the TM63 source acceptance path. Check Agent 8's exact local compile response; use its first concrete failure if any to repair the actual source, or integrate the successful closure into the root composition. Do not spend another cycle on CI/provenance or repeat the generic source audit.
