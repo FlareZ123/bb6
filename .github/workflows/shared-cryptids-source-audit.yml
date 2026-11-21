@@ -18,6 +18,21 @@ on:
         required: false
         type: string
         default: ''
+      upstream_sha:
+        description: 'Exact google-deepmind/cryptids commit to check out'
+        required: true
+        type: string
+        default: 'c86f15861709b76042998c5211c7b2f83991621b'
+      lean_toolchain:
+        description: 'Exact Lean toolchain, e.g. leanprover/lean4:v4.36.0-rc2'
+        required: true
+        type: string
+        default: 'leanprover/lean4:v4.35.0-rc4'
+      dependency_version:
+        description: 'Matching Mathlib/Verso tag used by the upstream Lake project'
+        required: true
+        type: string
+        default: 'v4.35.0-rc4'
       bridge_path:
         description: 'Repo-relative Lean source proof importing original module and dependency'
         required: true
@@ -36,7 +51,9 @@ jobs:
       DEPENDENCY_PATH: ${{ inputs.dependency_path }}
       BRIDGE_PATH: ${{ inputs.bridge_path }}
       EXTRA_DEPENDENCY_PATH: ${{ inputs.extra_dependency_path }}
-      UPSTREAM_SHA: c86f15861709b76042998c5211c7b2f83991621b
+      UPSTREAM_SHA: ${{ inputs.upstream_sha }}
+      LEAN_TOOLCHAIN: ${{ inputs.lean_toolchain }}
+      DEPENDENCY_VERSION: ${{ inputs.dependency_version }}
     steps:
       - uses: actions/checkout@v4
       - name: Validate manual inputs
@@ -44,6 +61,9 @@ jobs:
         run: |
           set -euo pipefail
           [[ "$ORIGINAL_MODULE" =~ ^[A-Za-z0-9_.]+$ ]]
+          [[ "$UPSTREAM_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$LEAN_TOOLCHAIN" =~ ^leanprover/lean4:v[0-9]+\\.[0-9]+\\.[0-9]+-rc[0-9]+$ ]]
+          [[ "$DEPENDENCY_VERSION" =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+-rc[0-9]+$ ]]
           for p in "$DEPENDENCY_PATH" "$BRIDGE_PATH"; do
             [[ "$p" =~ ^im-results/[A-Za-z0-9_./-]+\.lean$ ]]
             [[ "$p" != *..* ]]
@@ -61,7 +81,7 @@ jobs:
         shell: bash
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          sh /tmp/elan-init.sh -y --default-toolchain "$LEAN_TOOLCHAIN"
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Clone exact upstream source
         shell: bash
@@ -75,6 +95,18 @@ jobs:
           df -h
           sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
           df -h
+      - name: Align upstream Lake dependencies with selected Lean toolchain
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\\n' "$LEAN_TOOLCHAIN" > lean-toolchain
+          if [[ "$DEPENDENCY_VERSION" != "v4.35.0-rc4" ]]; then
+            sed -i "s/v4.35.0-rc4/$DEPENDENCY_VERSION/g" lakefile.toml
+            rm -f lake-manifest.json
+            lake update
+          fi
+          test "$(cat lean-toolchain)" = "$LEAN_TOOLCHAIN"
       - name: Restore upstream cache
         working-directory: /tmp/cryptids
         shell: bash
@@ -92,10 +124,26 @@ jobs:
           bridge_base="$(basename "$BRIDGE_PATH")"
           cp "$GITHUB_WORKSPACE/$DEPENDENCY_PATH" "$dependency_base"
           cp "$GITHUB_WORKSPACE/$BRIDGE_PATH" "$bridge_base"
-          lake env lean -o ".lake/build/lib/lean/${dependency_base%.lean}.olean" "$dependency_base"
+          mkdir -p /tmp/cryptids-source-audit
+          dep_log="/tmp/cryptids-source-audit/$dependency_base.log"
+          lake env lean -o ".lake/build/lib/lean/${dependency_base%.lean}.olean" "$dependency_base" 2>&1 | tee "$dep_log"
+          if grep -qE 'sorryAx|native_decide' "$dep_log"; then
+            echo "::error::forbidden axiom or native_decide in $dependency_base"
+            exit 1
+          fi
           if [[ -n "$EXTRA_DEPENDENCY_PATH" ]]; then
             extra_base="$(basename "$EXTRA_DEPENDENCY_PATH")"
             cp "$GITHUB_WORKSPACE/$EXTRA_DEPENDENCY_PATH" "$extra_base"
-            lake env lean -o ".lake/build/lib/lean/${extra_base%.lean}.olean" "$extra_base"
+            extra_log="/tmp/cryptids-source-audit/$extra_base.log"
+            lake env lean -o ".lake/build/lib/lean/${extra_base%.lean}.olean" "$extra_base" 2>&1 | tee "$extra_log"
+            if grep -qE 'sorryAx|native_decide' "$extra_log"; then
+              echo "::error::forbidden axiom or native_decide in $extra_base"
+              exit 1
+            fi
           fi
-          lake env lean "$bridge_base"
+          bridge_log="/tmp/cryptids-source-audit/$bridge_base.log"
+          lake env lean -o ".lake/build/lib/lean/${bridge_base%.lean}.olean" "$bridge_base" 2>&1 | tee "$bridge_log"
+          if grep -qE 'sorryAx|native_decide' "$bridge_log"; then
+            echo "::error::forbidden axiom or native_decide in $bridge_base"
+            exit 1
+          fi
