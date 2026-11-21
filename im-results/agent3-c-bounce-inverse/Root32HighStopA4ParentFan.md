@@ -1,0 +1,121 @@
+# Root32 P7E1E → A4: exact all-depth source-parent fan
+
+**Agent 3 · 2026-11-21T12:39:42.610Z · intermediate mathematical result.** This is a source-grammar reduction, not yet a Lean-certified theorem and not a nonreachability proof.
+
+## 1. Reduction to A4
+
+For odd t with t ≡ 15 (mod 16), the corrected P7E1E residual is
+
+```
+P7E1E(t) = (1376399640*t + 369101882,
+            2835015540*t + 760251268).
+```
+
+Its target coordinates are even-even and their sum is 2 (mod 8). The even-even parent fan therefore leaves only the direct parent
+
+```
+D(t) = (4211415180*t + 1129353148,
+        1417507770*t + 380125633).
+```
+
+For this D(t), the exact congruence is
+
+```
+(D_x + D_y + 1) % 16 = 8.
+```
+
+The odd-seven inverse forces its parent to be
+
+```
+A4(t) = (2814461475*t + 754739388,
+         (4231969245*t + 1134865019)/2).
+```
+
+Thus P7E1E(t) reachability implies A4(t) reachability. The formulas above are exact affine identities, not fitted numerical data.
+
+## 2. A4 arithmetic
+
+Put x=A4_x(t), y=A4_y(t), S=x+y. Direct expansion gives
+
+```
+S = (9860892195*t + 2644343795)/2
+  = (5/2)*(1972178439*t + 528868759),
+
+x + 2*y = 7046430720*t + 1889604407.
+```
+
+For odd t, the bracket in the factorization is even. Hence 5 divides S, and S>8 for every positive t in these root cylinders.
+
+## 3. Exact source-parent fan
+
+Consider a source transition from (a,k) to (x,y), with x,y odd and y≥5.
+
+The complete section-preimage cases reduce as follows:
+
+- The low branch is impossible because its output right coordinate is even.
+- The a=1 high branch is impossible because it requires S+1 to be even, whereas S is even.
+- The odd-a high branch is impossible for the same parity reason.
+- The a=0 high branch requires S=8*2^m. This is impossible because 5 divides S and S>8.
+- Only the even-a high-bounce branch remains.
+
+In that branch, the cost equation and parity force the bounce depth n to be even. Write n=2q and U=a+2. The exact parent equations become
+
+```
+S = 2 * 4^q * U,
+U >= 4,
+U % 2 = 0,
+a = U - 2,
+2*k + U + 6*q = x + 2*y - 5,
+2*k > a.
+```
+
+Conversely, any q,U,k satisfying these equations and inequalities gives the corresponding even-a source transition. Therefore this is an exact all-depth parent characterization, subject only to the stated source-region inequality.
+
+The factor 5 now gives a useful constraint on every possible parent:
+
+```
+U % 5 = 0,
+U % 2 = 0,
+therefore U % 10 = 0 and a % 10 = 8.
+```
+
+Reducing the cost equation modulo 5 and using x+2y ≡ 2 (mod 5) gives
+
+```
+2*k + q ≡ 2 (mod 5),
+therefore k ≡ 2*q + 1 (mod 5).
+```
+
+These congruences hold for every admissible depth, not just the shallow parents.
+
+## 4. Depth ranges on the current root32 cylinders
+
+The table uses the corrected S formula above. The v2 values are constant across each indicated cylinder except the last, where only a lower bound is uniform.
+
+| t cylinder | v2(S) | possible q |
+|---|---:|---|
+| 31 mod 256 | 3 | 0 |
+| 47 mod 256 | 4 | 0, 1 |
+| 79 mod 512 | 5 | 0, 1 |
+| 15 mod 512 | at least 8 | 0 through floor((v2(S)-2)/2) |
+| 159 mod 1024 | 3 | 0 |
+| 719 mod 1024 | 5 | 0, 1 |
+| 1167 mod 4096 | 6 | 0, 1, 2 |
+| 7839 mod 8192 | 3 | 0 |
+
+In particular, the A4 fan is finite with at most three candidate depths on seven of the eight cylinders. The t ≡ 15 (mod 512) family has a genuinely unbounded depth range as t varies.
+
+## 5. What this does and does not establish
+
+Established algebraically:
+1. P7E1E reachability reduces to A4 reachability on the relevant t ≡ 15 (mod 16) cylinders.
+2. Every possible A4 source parent lies in the explicit even-bounce fan above.
+3. Every such parent satisfies U ≡ 0 (mod 10) and k ≡ 2q+1 (mod 5).
+4. The finite/infinite depth ranges in the table follow from exact 2-adic valuations.
+
+Not established:
+- No entire A4 cylinder has been proved unreachable by this fan alone.
+- The exceptional parent states still require source-level exclusion.
+- This file has not yet been compiled with Lean 4.36.0-rc2. The local Python/shell execution tools returned ClientError during this invocation, so no uncompiled claim is being promoted into results/.
+
+The next useful step is to formalize the A4 fan as a source theorem, then attack the surviving parent family using the simultaneous mod-10/mod-5 constraints. Do not infer whole-cylinder exclusion from representative t values: deeper inverse steps can depend on higher bits of t.
