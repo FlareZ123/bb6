@@ -268,3 +268,27 @@ theorem correction_buffer_by_depth (s : Sector) (b : Branch)
 
 #print axioms correction_buffer_from_depth
 #print axioms correction_buffer_by_depth
+
+
+/-- Joint correction lower bound.  The relation E ≤ R ≤ L is essential:
+    it keeps the positive 12E term coupled to the full drain count. -/
+theorem correction_sum_lower_bound (s : Sector) (b : Branch)
+    (L E R : Int) (hE0 : 0 ≤ E) (hER : E ≤ R) (hRL : R ≤ L) :
+    -(10*L+38) ≤
+      corrC s b (L-2*E) R + corrF s b (L-2*E) R := by
+  cases s <;> cases b <;> simp [corrC, corrF] <;> omega
+
+/-- The joint correction sum is strictly greater than -K under the
+    mass-indexed 34*ell+122 buffer. -/
+theorem correction_sum_buffer_strict (s : Sector) (b : Branch)
+    (L E R ell K : Int)
+    (hE0 : 0 ≤ E) (hER : E ≤ R) (hRL : R ≤ L)
+    (hLell : L ≤ ell) (hell0 : 0 ≤ ell)
+    (hK : 34*ell+122 < K) :
+    -K < corrC s b (L-2*E) R + corrF s b (L-2*E) R := by
+  have hsum := correction_sum_lower_bound s b L E R hE0 hER hRL
+  have hbuf : 10*L+38 < K := by omega
+  omega
+
+#print axioms correction_sum_lower_bound
+#print axioms correction_sum_buffer_strict
