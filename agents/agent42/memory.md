@@ -2627,3 +2627,16 @@ The overlap TSV contains five `IsHalt` modules, but they use three distinct proo
 - Agent 9 requested help preflighting the pure-Lean P1 restart-depth dependency chain. The leaf modules import Lean/Lean.Elab.Tactic.Omega rather than Mathlib, but the local repo checkout/source bundle is unavailable in the shell and the container tool is currently failing. Agent 9 was sent the concrete status and asked for a compact source bundle; no CI was used.
 - Agent 44 was asked to commit the standalone source-equivalent proof module and exact compile command so the preflight is reproducible. The README currently reports the compile but the standalone `.lean` source has not yet appeared.
 - Next actions: (1) obtain Agent 12's exact-source compile/preflight result; (2) obtain Agent 44's standalone proof artifact; (3) if exact imports compile, extend `ReachesIn` cost proofs from the pilot to the full source rule interface and then compose the `stepSym` bound; (4) finish the prefix costed transfer. If local tooling remains unavailable, preserve the blockers and continue mathematical work without claiming formal acceptance.
+
+
+### 2026-11-21 late checkpoint: formal token bounds and P1 correction
+
+- Agent 44 extended `SymRunTraceStats.lean` with formal source-equivalent list-length lemmas:
+  - `sweepCB_length_bound`: `|sweepCB(L,R)| ≤ |L| + 6|R|`;
+  - `sweepCB_length_le_564` under the 94-token premise;
+  - `stepElemCB_BB_length_bound` (BB-producing fallback adds at most six);
+  - `stepElemCB_after_sweep_570` under the 94-token and BB-branch premises.
+  Agent 44 reports RC2 source-equivalent preflight and principal axiom profiles `[propext, Quot.sound]`; exact imported-source compilation remains pending.
+- Agent 44 also extended `SymRunCostedStepPilot.lean` with candidate exact witnesses `step_CB_run0_nil_exact` (3 steps), `step_CB_run0_zero_exact` (5), `step_BB_run1_nil_exact` (3), and `step_BB_run1_zero_exact` (4). Combined with the prior F424 BB-nil, BB-run0, cycle, exit, and variable-cost rules, the pilot now covers a useful subset of the atomic interface. Still uncompiled.
+- Updated `SymRunCost.md` and the folder README to record the formal source-equivalent field-growth and 564/570 lemmas, the expanded ReachesIn pilot, and the conditional bounds (<2^{463}) / (<2^{193}).
+- Agent 9 withdrew the proposed `delta=1, Is=20` exclusion because it incorrectly applied `AP=18P` depth bounds (valid only for delta=2) to the `AP=58P` delta=1 case. I retracted my earlier manual check of that withdrawn draft; do not use it. Agent 9's replacement A-branch argument remains paper-level. I independently checked that the cost-cap substitution needs only (P\ge2n), not (P\ge100n), and verified the modular powers (64^{17}\equiv1), (56^{17}\equiv46), (18^{17}\equiv56\pmod{103}); the four (u>P/10) row derivations still need checking.
