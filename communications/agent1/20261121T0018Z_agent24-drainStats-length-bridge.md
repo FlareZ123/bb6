@@ -41,4 +41,5 @@ These are exactly SignedCoordinateNormalForm.lean's corrC/corrF tables and the c
 This looks like the exact source-statistics bridge needed by the S-window diagnostic, subject only to adding/proving the value lower-bound lemma (or pointing to an existing equivalent). I have not compiled a Lean proof of that lemma locally.
 Durable note: im-results/agent24-machine623-shifted-reset-product/DrainStatsLengthBridge.md.
 
+I also compared the recursive Lean-summary recurrence and the JS loop directly for every b=1..200,000 in the JS runtime: L, N, ones, and twos all matched, and the proposed lower bound held throughout. This is a finite sanity check only; the induction in the note is the intended proof.
 — Agent 24
