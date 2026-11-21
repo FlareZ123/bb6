@@ -1,6 +1,6 @@
 # Root32 high-stop exclusion on r = 10592 (mod 16384)
 
-**Status:** the L and corrected P7E1E alternatives are now separately source-accepted on the full t≡31 (mod 32) slice. The D0E/R chain remains a paper-level exact reduction, and the three-way high-stop composition has not been compiled as one Lean 4.36.0-rc2 theorem. This is not yet an accepted high-stop exclusion, a global Machine C result, or a BB(6) result.
+**Status:** the L and corrected P7E1E alternatives are now separately source-accepted on the full t≡31 (mod 32) slice. The R terminal state is now source-accepted for q≡7 (mod 64), but the D0E→E7→P→R chain that reaches it remains a paper-level exact reduction. The three-way high-stop composition has not been compiled as one Lean 4.36.0-rc2 theorem. This is not yet an accepted high-stop exclusion, a global Machine C result, or a BB(6) result.
 
 ## 1. Parameter cylinder
 
@@ -90,6 +90,14 @@ For this cylinder, t ≡ 31 (mod 256), hence t ≡ 31 (mod 32). More generally, 
 on the entire t ≡ 31 (mod 32) cylinder. Its proof uses the complete even/even parent fan to force D(t), the exact odd-seven inverse to force A4(t), and the odd/odd low-valuation inverse to force the parent (p,q) with q odd and p+q ≡ 1 (mod 4), excluded by `run_no_odd_sum_one`. The 52-module Lean 4.36.0-rc2 closure compiled locally; all 51 imported source blobs match current main and the audited declarations have no `sorryAx`.
 
 This closes the P7E1E alternative on all t ≡ 31 (mod 32), at the residual level only. L is separately source-accepted on the same full slice. D0E/R remains paper-level, and no full high-stop theorem is accepted.
+
+## 4. Source-accepted R exceptional terminal
+
+The R state in the D0E chain is now separately excluded for q≡7 (mod 64) by RRoot32ExceptionalCoreQ.lean. RRoot32ParentFanQ.lean formalizes the complete original-source parent fan: only the direct odd/odd parent R′(q) and the depth-one odd-a bounce parent A(q) can occur. The bounce parent has odd right coordinate and sum 2 mod4, so the global blank odd-image sum-two invariant excludes it. The direct parent is odd/odd with sum 12 mod16; the low-valuation inverse forces P1, whose even/even sum-zero parent fan yields E or D. E is excluded by odd-right sum 1 mod4. D has sum-plus-one of exact 2-adic valuation three, and the new generic evenodd_sumplusone_v3_parent theorem forces its unique parent A; the even-right inverse then forces X, whose odd right coordinate and sum 2 mod4 are excluded.
+
+Lean 4.36.0-rc2 compiled the exact RRoot32ExceptionalCoreQ source through 52 project modules. All imported project-source blobs match current main. The audited R_parent_fan_q7, evenodd_sumplusone_v3_parent, and R_unreachable_q7 declarations have only standard Lean axioms (propext, Classical.choice, Quot.sound), with no sorryAx.
+
+**Scope:** this proves only the R terminal state for q≡7 mod64, corresponding to t≡31 mod256. The preceding D0E→E7→P→R source-parent chain has not yet been compiled as one theorem, so D0E itself remains unclosed. The L and P7E1E exclusions are broader (all t≡31 mod32); this R result does not change the unaccepted status of the full high-stop decomposition.
 
 ## 4. Exact root-index translation
 
