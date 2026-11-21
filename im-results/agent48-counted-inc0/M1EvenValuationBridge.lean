@@ -1,7 +1,7 @@
 import ChampionRootBridge
 import M1EvenState1Sweep
 import M1EvenState5Sweep
-import CountedQ4Prefix
+import CountedSweep
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -22,7 +22,6 @@ namespace BB6Coverage.Agent48M1EvenValuationBridge
 
 open BB6Coverage
 open BB6Coverage.Agent48Champion
-open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent48M1EvenValuationSweep
 open BB6Coverage.Agent24M1EvenValuationBridge
 
