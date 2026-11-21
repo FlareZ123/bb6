@@ -27,10 +27,10 @@ A sharper BB-sweep time bound follows directly from the exact F424 cost table:
 - each repeat token costs at most `25q` (the BB coefficients are 11, 14, 25);
 - each non-repeat token costs at most 9 by `stepElemBB_within9`;
 - each repeat parameter `q` is at most the BB-sweep input field maximum `94M+285`;
-- the BB sweep scans at most 570 tokens.
+- the BB sweep receives at most 570 left tokens, and the recursive definition can make one additional terminal `stepElemBB` call; charge at most 571 events.
 
 Therefore its primitive cost is at most
-`570 * (25 * (94M + 285) + 9) = 1,339,500M + 4,066,380`,
+`571 * (25 * (94M + 285) + 9) = 1,341,850M + 4,073,514`,
 which is strictly below `2^22 * (M+1)` for every natural M. This is an arithmetic consequence of the existing exact branch costs and field/token bounds; it is not yet packaged as a Lean theorem. The current generic `sweepBB_within` theorem uses coefficient 50, so a dedicated coefficient-25 version would make the improvement explicit in Lean.
 
 Combining this with the existing outer CB-sweep bound `<2^13(M+1)` and the one fallback `stepElemCB` cost `≤25(M+1)`, the non-macro fallback path is below `2^23(M+1)`. The macro path still dominates the stated `2^39(M+1)^2` whole-`stepSym` estimate.
