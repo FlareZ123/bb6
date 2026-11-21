@@ -20,7 +20,7 @@ Define the lower exponents by
 \]
 and
 \[
-\alpha_j=2^{\,T_j^{\,T_{j-1}^{\alpha_{j-3}}}-T_j}-2
+\alpha_j=2^{\,T_j^{\,\alpha_{j-2}+1}-T_j}-2
 \quad(j\ge7).
 \]
 and the upper denominator sequence by
@@ -42,7 +42,7 @@ T_{j+3}^{\,T_{j+2}^{\,\alpha_j}}<V_j
 V_j^{\,T_{j+2}^{\,\gamma_j}}<T_{j+4}.
 }
 \]
-The lower exponent uses an exact divisibility lift with a three-index recurrence. The upper exponent uses the recursively shrinking relative headroom \(1/D_{j-1}\).
+The lower exponent uses an exact divisibility lift with a two-index recurrence. The upper exponent uses the recursively shrinking relative headroom \(1/D_{j-1}\).
 
 These bounds strictly strengthen the earlier fixed exponents \(2^{46}\) and \(2^{65518}\). In particular, \(\alpha_3>2^{46}\) and \(\gamma_3>2^{65518}\).
 
@@ -105,16 +105,21 @@ Thus every integer \(\alpha\le2^{V_{j-3}-T_j}-2\) is a valid lower exponent at i
 The condition \(V_{j-3}>T_j\) holds for \(j=4,5,6\): in fact \(V_k>T_{k+3}+47\) for every \(k\ge1\). The base is \(V_1=2^{63}-1>T_4+47\). If \(V_k>T_{k+3}+47\), integrality gives \(V_k\ge T_{k+3}+48\), whence \(V_{k+1}=2^{V_k}-1\ge2^{T_{k+3}+48}-1>T_{k+4}+47\). Thus the three direct bases have \(\alpha_j>2^{47}-2>2^{46}\). For \(j\ge7\), the displayed lower bound for \(V_{j-3}\) is at least \(T_j^2\), so again \(\alpha_j>2^{46}\).
 Hence the definitions \(\alpha_j=2^{V_{j-3}-T_j}-2\) for \(j=4,5,6\) prove those three cases.
 
-For \(j\ge7\), the induction hypothesis at index \(j-3\) gives
+For \(j\ge7\), the induction hypothesis at index \(j-2\) gives
+\[
+V_{j-2}>T_{j+1}^{\,T_j^{\,\alpha_{j-2}}}.
+\]
+Since \(V_{j-2}=2^{V_{j-3}}-1\), taking logarithms yields
 \[
 V_{j-3}>
-T_j^{\,T_{j-1}^{\,\alpha_{j-3}}}>T_j.
+\log_2\!\left(T_{j+1}^{\,T_j^{\,\alpha_{j-2}}}\right)
+=T_j^{\,\alpha_{j-2}+1}>T_j.
 \]
 The exact lift therefore applies, and the defined exponent
 \[
-\alpha_j=2^{\,T_j^{\,T_{j-1}^{\alpha_{j-3}}}-T_j}-2
+\alpha_j=2^{\,T_j^{\,\alpha_{j-2}+1}-T_j}-2
 \]
-is no larger than \(2^{V_{j-3}-T_j}-2\). This proves the lower inequality for all \(j\ge3\).
+is no larger than \(2^{V_{j-3}-T_j}-2\). This proves the lower inequality for all \(j\ge3.
 
 ### Upper inequality
 
