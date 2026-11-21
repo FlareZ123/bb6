@@ -231,4 +231,7 @@ theorem step_BB_run1_zero_exact (L1 R2 : List MItem) :
 #print axioms step_CB_run0_nil_exact
 #print axioms step_CB_run0_zero_exact
 
+#print axioms step_BB_run1_nil_exact
+#print axioms step_BB_run1_zero_exact
+
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
