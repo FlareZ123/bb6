@@ -907,12 +907,28 @@ of the committed Python artifacts.
 \]
 This is substantially sharper than the earlier adjacent-tetration bracket and the published interval. Agent 24 independently reviewed the moving-exponent induction and found no gap in its integrality, base cases, induction steps, or q-4 substitution. Agent 38 subsequently formalized the recurrence-only inequalities in `TM63TowerRecurrence.lean`, locally compiled under Lean 4.36.0-rc2 with only `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. The result remains intermediate until the authentic Lean composition passes local compilation and its transitive axiom audit; it is not a universal BB(6) upper bound.
 
-## Polylogarithmic-error two-term expansion of the conditional score
+## Quadratic-error two-term expansion of the conditional score
 
-The exact dispatcher sum and root-prefix bounds sharpen this to a polylogarithmic-error two-term expansion:
+The exact dispatcher recurrence makes the pre-final quadratic costs
+geometrically decreasing, so their sum is bounded independently of the
+dispatcher length. Using the exact root drain formula also sharpens the
+root contribution. The resulting paper-level expansion is
 \[
 S_{\rm TM1}
 =6b_N^2+54b_N+48+3\ell+\Delta,\qquad
-0\le\Delta<10(1+\log_2\ell)\ell^2,\quad \ell=\log_2(b_N+1).
+0\le\Delta<16\ell^2,\quad
+\ell=\log_2(b_N+1).
 \]
-Thus \(54<(S_{\rm TM1}-6b_N^2)/b_N<54+6\times10^{-71}\), and the relative excess over \(6(b_N+1)^2\) is \(7/(b_N+1)+\varepsilon_N\) with \(0<\varepsilon_N<(3\ell+10(1+\log_2\ell)\ell^2)/(6(b_N+1)^2)<8\times10^{-149}\). This is a paper-level consequence of the exact conditional source-cost identity, not a new Lean theorem or an accepted authentic-root halt proof. See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md).
+Thus the entire error after the exact quadratic and linear terms is
+\(O((\log b_N)^2)\), improving the previous
+\(O((\log b_N)^2\log\log b_N)\) estimate. The relative excess over
+\(6(b_N+1)^2\) is
+\[
+\frac{7}{b_N+1}+\varepsilon_N,\qquad
+0<\varepsilon_N<
+\frac{3\ell+16\ell^2}{6(b_N+1)^2}<8\times10^{-149}.
+\]
+This is a paper-level consequence of the exact conditional source-cost
+identity, not a new Lean theorem or an accepted authentic-root halt proof.
+See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md) for the geometric
+series, exact root-drain comparison, and full inequalities.

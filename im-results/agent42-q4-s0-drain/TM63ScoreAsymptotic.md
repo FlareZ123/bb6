@@ -35,7 +35,7 @@ L_N=6\cdot4^{k}+42\cdot2^{k}+3k
 \]
 All other terms in the score split are nonnegative. Thus \(S=L_N+\Delta\), with \(\Delta\ge0\).
 
-## Bounding the remainder after the exact final summand
+## Geometric remainder bound after the exact final summand
 
 Removing the \(j=N-1\) term from (1) gives the exact remainder
 \[
@@ -48,87 +48,143 @@ Removing the \(j=N-1\) term from (1) gives the exact remainder
 \end{aligned}
 \tag{3}
 \]
-The root-prefix estimates give
+
+The earlier estimate bounded each quadratic summand by the final one and
+paid a factor \(N\). The recurrence makes that unnecessary: because
+\(b_0=R\ge63\) and \(b_{j+1}=2^{b_j}-1\), we have
+\(b_{j+1}\ge2b_j\) for every \(j\). Put
 \[
-C_{\rm root}+D_{\rm root}<\frac{133}{9}R^2<15R^2.
+f(x)=6\cdot4^x+42\cdot2^x.
+\]
+For \(x\ge3\),
+\[
+f(x)\le\frac{45}{4}4^x,\qquad
+f(2x)\ge6\cdot16^x,
+\]
+and hence
+\[
+\frac{f(x)}{f(2x)}
+\le\frac{15}{8\cdot4^x}
+\le\frac{15}{512}<\frac1{32}.
+\]
+Thus \(f(b_j)<f(b_{j+1})/32\), and the entire pre-final quadratic sum
+is geometrically dominated:
+\[
+\sum_{j=0}^{N-2}f(b_j)
+<\frac{32}{31}f(b_{N-2}).
+\]
+Since \(2^{b_{N-2}}=b_{N-1}+1=\ell+1\),
+\[
+f(b_{N-2})=6(\ell+1)^2+42(\ell+1)
+=6\ell^2+54\ell+48.
+\]
+For \(\ell\ge256\), \(54/\ell+48/\ell^2<1/4\), so
+\[
+\boxed{\sum_{j=0}^{N-2}f(b_j)
+<\frac{200}{31}\ell^2<\frac{13}{2}\ell^2.}
 \tag{4}
 \]
-For \(j\le N-2\), monotonicity of the \(b_j\) and
-\(2^{b_j}=b_{j+1}+1\) give
+
+The linear sum is also dominated by its last counter. From
+\(b_{j+1}\ge2b_j\),
 \[
-6\cdot4^{b_j}+42\cdot2^{b_j}
-=6b_{j+1}^2+54b_{j+1}+48
-\le6\ell^2+54\ell+48.
+\sum_{j=0}^{N-2}b_j<2b_{N-2}.
 \]
-The sum of the remaining linear coefficients is
+Writing \(m=\log_2\ell\), we have
+\(b_{N-2}=\log_2(\ell+1)\le m+1\) and \(N\le m+1\). Therefore
 \[
-\sum_{j=0}^{N-2}(12(N-j)-9)=6N^2-3N-3\le6N^2.
-\]
-Using \(U\le R\), (3) and (4) imply
-\[
-\Delta<
-(6N+15)\ell^2+(6N^2+66N+12)\ell+10N^2+85N+90.
+\begin{aligned}
+\sum_{j=0}^{N-2}(12(N-j)-9)b_j
+&<24N b_{N-2}\\
+&\le24(m+1)^2
+\le\frac{\ell^2}{16},
+\end{aligned}
 \tag{5}
 \]
-Also \(k=\ell=b_{N-1}\ge2^{N-1}R\ge2^{N-1}\), so
-\(N\le1+\log_2\ell\). Put \(m=\log_2\ell\). Substitution of
-\(N\le m+1\) into (5) gives
+where the last inequality holds for \(m\ge8\).
+
+The root contribution can be sharpened using the exact all-ones drain
+rather than its previous coarse comparison with \(R^2\). The existing
+root-prefix bound gives \(C_{\rm root}<R^2\). With
+\(R=2^{n-1}-1\), the exact drain identity gives
 \[
-\Delta<
-(6m+21)\ell^2+(6m^2+78m+84)\ell
-+10m^2+105m+185.
+D_{\rm root}=\operatorname{drainCost}(R,0)
+=6\cdot4^{n-1}+42\cdot2^{n-1}-12n-36.
 \]
-For \(m\ge8\), the first term is at most
-\(8(1+m)\ell^2\), since \(6m+21\le8(m+1)\). For the second,
+For the authentic \(n\ge7\),
 \[
-6m^2+78m+84\le20m^2\le(m+1)2^m=(m+1)\ell,
+7R^2-D_{\rm root}
+=4^{n-1}-28\cdot2^n+12n+43>0,
 \]
-using \(20m\le2^m\) for \(m\ge8\). For the third,
+since \(4^{n-1}\ge32\cdot2^n\). Consequently
 \[
-10m^2+105m+185\le30m^2\le(m+1)4^m=(m+1)\ell^2.
-\]
-Therefore
-\[
-\boxed{0\le\Delta<10(1+m)\ell^2=10(1+\log_2\ell)\ell^2.}
+\boxed{C_{\rm root}+D_{\rm root}<8R^2\le8\ell^2.}
 \tag{6}
 \]
 
-Consequently the exact score has the explicit two-term expansion
+Finally, using \(N\le m+1\) and \(U\le R\le\ell\), the remaining
+polynomial terms satisfy
+\[
+10N^2+37N+90\le20m^2\le\frac{\ell^2}{32},
+\]
+and
+\[
+12(N+1)U\le12(m+2)\ell\le\frac{\ell^2}{2}
+\]
+for \(m\ge8\). Their sum is therefore below \(17\ell^2/32<\ell^2\).
+Combining this with (4)--(6) yields
+\[
+\Delta<
+\left(8+\frac{13}{2}+\frac1{16}+\frac{17}{32}\right)\ell^2
+=\frac{483}{32}\ell^2
+<16\ell^2.
+\]
+Thus the stronger explicit remainder estimate is
+\[
+\boxed{0\le\Delta<16\ell^2.}
+\tag{7}
+\]
+
+The exact score consequently has the quadratic-error expansion
 \[
 \boxed{
 S_{\rm TM1}
-=6b_N^2+54b_N+48+3\ell+\Delta,
-\qquad
-0\le\Delta<10(1+\log_2\ell)\ell^2,\quad
+=6b_N^2+54b_N+48+3\ell+\Delta,\qquad
+0\le\Delta<16\ell^2,\quad
 \ell=\log_2(b_N+1).
 }
-\tag{7}
+\tag{8}
 \]
 In particular,
 \[
 54<
 \frac{S_{\rm TM1}-6b_N^2}{b_N}
 <
-54+\frac{48+3\ell+10(1+\log_2\ell)\ell^2}{2^\ell-1}
+54+\frac{48+3\ell+16\ell^2}{2^\ell-1}
 <
 54+6\times10^{-71},
-\tag{8}
+\tag{9}
 \]
-where the final numerical inequality holds for integer \(\ell\ge256\); the displayed quotient is decreasing there and is already below \(6\times10^{-71}\) at \(\ell=256\).
+where the final numerical bound remains valid for integer
+\(\ell\ge256\).
 
-The relative excess over the quadratic final-increment term is localized even more sharply:
+Likewise, the relative excess over the quadratic final-increment term is
 \[
 \boxed{
 \frac{S_{\rm TM1}}{6(b_N+1)^2}-1
 =
 \frac{7}{b_N+1}+\varepsilon_N,\qquad
 0<\varepsilon_N<
-\frac{3\ell+10(1+\log_2\ell)\ell^2}{6(b_N+1)^2}
+\frac{3\ell+16\ell^2}{6(b_N+1)^2}
 <8\times10^{-149}.
 }
-\tag{9}
+\tag{10}
 \]
-Thus the score is not merely dominated by the final counted increment: after its exact quadratic and linear terms are removed, the entire remaining cost is \(O((\log b_N)^2\log\log b_N)\), with the explicit bound above.
+The last numerical bound is inherited from the weaker previous estimate.
+The substantive improvement is that the full remainder is now
+\(O(\ell^2)=O((\log b_N)^2)\), rather than
+\(O(\ell^2\log\ell)\): the pre-final quadratic costs are geometrically
+dominated by the final pre-final increment, not by \(N\) copies of it.
 
 ## Evidence boundary
 
