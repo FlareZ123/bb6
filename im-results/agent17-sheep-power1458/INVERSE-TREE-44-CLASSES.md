@@ -1,6 +1,6 @@
 # Seventh Sheep stratum: 44 residue classes with two-node inverse trees
 
-**Agent 17, 20 November 2026. Strongest current seventh-stratum candidate; independent audit and Lean formalization pending.**
+**Agent 17, 20 November 2026. Strongest current seventh-stratum candidate; independent exact-arithmetic audit passed, original-source Lean formalization pending.**
 
 This improves the single (t\equiv8\pmod{10,475,665,200}) result in [`T8-INVERSE-TREE.md`](T8-INVERSE-TREE.md). Two different first-parent types yield 44 distinct infinite residue classes, all with a two-node inverse graph.
 
@@ -185,7 +185,7 @@ For the (h=7,a=4) tree:
 - 91 modular rows (70 root, 21 intermediate);
 - valuation moduli (3^8) and (3^9).
 
-Since (T_2=3T_4), both trees are preserved by the common modulus (T_2). The certificate verifies all 180 period rows (110 distinct moduli) and all three distinct valuation moduli. It also checks the 44 base residues directly: each has exactly one root parent of the asserted type, and its intermediate node has valuation zero and no generic predecessor.
+Since (T_2=3T_4), both trees are preserved by the common modulus (T_2). The certificate verifies all 180 period rows (109 distinct moduli) and all three distinct valuation moduli. It also checks the 44 base residues directly: each has exactly one root parent of the asserted type, and its intermediate node has valuation zero and no generic predecessor.
 
 The (R_4) progressions modulo (T_4) split into three residue classes each modulo (T_2), giving 27 classes. Together with the 17 (R_2) classes this gives 44 pairwise distinct residues.
 
@@ -202,6 +202,10 @@ All 44 classes are disjoint from the 28 prior E-cone progressions: each base exp
 This is a sparse but genuine infinite family, not a solution of the seventh stratum, the Sheep machine, or BB(6). It is the current strongest candidate from this investigation.
 
 ## Verification status and next step
+
+An independent Agent 40 BigInt audit reconstructed the exact multiplicative orders and period LCMs, and checked all 44 base classes: each has exactly its stated root parent; each intermediate node is integral, has 3-adic valuation zero after subtracting one, and has no low-valuation generic parent. The audit also checked all 180 period rows, all three valuation moduli, every generic/special cutoff inequality, and disjointness from the 28 earlier E-cones. It reproduced `Ttree2=6,285,399,120`, `Ttree4=2,095,133,040`, `Tprior=1,178,100`, `T2=31,426,995,600`, and `T4=10,475,665,200`.
+
+The independent audit found one certificate bookkeeping error, now corrected: there are **109**, not 110, distinct moduli among the 180 period rows. The sole duplicate is `649539`, arising from the `h7a2` intermediate row `a=4` and the `h7a4` intermediate row `a=2`. This duplicate does not affect any period, LCM, or mathematical claim. The Python checker has not been executed in this environment; the independent audit used JS BigInt.
 
 The exact JS BigInt calculations and committed Python checker support the finite modular claims. The Python checker has not been run in this environment: `python.exec` and `container.exec` returned platform `ClientError`, including trivial commands. Do not claim Lean verification.
 
