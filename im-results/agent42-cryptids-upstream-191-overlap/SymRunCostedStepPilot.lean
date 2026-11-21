@@ -1058,4 +1058,223 @@ theorem stepElemCB_within (L R : List SymTok) :
 #print axioms stepElemCB_within
 
 
+
+
+theorem pilotTokFieldMax_le_state_left (mode : SymMode) (t : SymTok)
+    (L R : List SymTok) :
+    pilotTokFieldMax t ≤ pilotStateFieldMax (mode, t :: L, R) := by
+  simp [pilotStateFieldMax, pilotListFieldMax]
+
+theorem pilotTokFieldMax_le_state_right (mode : SymMode) (L : List SymTok)
+    (t : SymTok) (R : List SymTok) :
+    pilotTokFieldMax t ≤ pilotStateFieldMax (mode, L, t :: R) := by
+  simp [pilotStateFieldMax, pilotListFieldMax]
+
+theorem pilotStateFieldMax_peel_left_mono (mode : SymMode) (t : SymTok)
+    (L R : List SymTok) :
+    pilotStateFieldMax (mode, peelPureTok t L, R) ≤
+      pilotStateFieldMax (mode, t :: L, R) := by
+  apply pilotStateFieldMax_left_mono
+  simpa [pilotListFieldMax] using pilot_peelPureTok_field_growth t L
+
+theorem stepPureBB_within (L R : List SymTok) :
+    ReachesWithin (50 * (pilotStateFieldMax (.BB, L, R) + 1))
+      ((evalSym target_tm) (.BB, L, R))
+      ((evalSym target_tm) (stepPureBB L R)) := by
+  cases L with
+  | nil =>
+    simpa [stepPureBB] using stepElemBB_within [] R
+  | cons t L1 =>
+    cases t with
+    | item x =>
+      simpa [stepPureBB] using stepElemBB_within (.item x :: L1) R
+    | repB1 k =>
+      unfold ReachesWithin
+      refine ⟨11 * k, ?_, ?_⟩
+      · have hk := pilotTokFieldMax_le_state_left .BB (.repB1 k) L1 R
+        omega
+      · exact sweep_BB_B1_exact k (encSymL L1) (encSymR R)
+    | rep2 p =>
+      simp only [stepPureBB]
+      cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)] R with
+      | some R2 =>
+        have hR := stripPrefixSym_some _ R R2 hs
+        rw [hR]
+        unfold ReachesWithin
+        refine ⟨14 * p, ?_, ?_⟩
+        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+        · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append]
+          exact sweep_BB_C2_exact p (encSymL L1) (encSymR R2)
+      | none =>
+        have heq : (evalSym target_tm) (.BB, .rep2 p :: L1, R) =
+            (evalSym target_tm) (.BB, peelPureTok (.rep2 p) L1, R) := by
+          simp only [evalSym, encSymL_peelPureTok]
+        rw [heq]
+        have hm := pilotStateFieldMax_peel_left_mono .BB (.rep2 p) L1 R
+        have hstep := stepElemBB_within (peelPureTok (.rep2 p) L1) R
+        have hB :
+            50 * (pilotStateFieldMax (.BB, peelPureTok (.rep2 p) L1, R) + 1) ≤
+              50 * (pilotStateFieldMax (.BB, .rep2 p :: L1, R) + 1) :=
+          Nat.mul_le_mul_left 50 (Nat.add_le_add_right hm 1)
+        exact reachesWithin_mono hB hstep
+    | rep12 m =>
+      simp only [stepPureBB]
+      cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)] R with
+      | some R2 =>
+        have hR := stripPrefixSym_some _ R R2 hs
+        rw [hR]
+        unfold ReachesWithin
+        refine ⟨25 * m, ?_, ?_⟩
+        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+        · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append]
+          exact sweep_BB_C12_exact m (encSymL L1) (encSymR R2)
+      | none =>
+        have heq : (evalSym target_tm) (.BB, .rep12 m :: L1, R) =
+            (evalSym target_tm) (.BB, peelPureTok (.rep12 m) L1, R) := by
+          simp only [evalSym, encSymL_peelPureTok]
+        rw [heq]
+        have hm := pilotStateFieldMax_peel_left_mono .BB (.rep12 m) L1 R
+        have hstep := stepElemBB_within (peelPureTok (.rep12 m) L1) R
+        have hB :
+            50 * (pilotStateFieldMax (.BB, peelPureTok (.rep12 m) L1, R) + 1) ≤
+              50 * (pilotStateFieldMax (.BB, .rep12 m :: L1, R) + 1) :=
+          Nat.mul_le_mul_left 50 (Nat.add_le_add_right hm 1)
+        exact reachesWithin_mono hB hstep
+
+theorem stepPureDL_within (L R : List SymTok) :
+    ReachesWithin (50 * (pilotStateFieldMax (.DL, L, R) + 1))
+      ((evalSym target_tm) (.DL, L, R))
+      ((evalSym target_tm) (stepPureDL L R)) := by
+  cases L with
+  | nil =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [stepPureDL] using pilot_reachesIn_refl ((evalSym target_tm) (.DL, [], R))
+  | cons t L1 =>
+    have heq : (evalSym target_tm) (.DL, t :: L1, R) =
+        (evalSym target_tm) (.DL, peelPureTok t L1, R) := by
+      simp only [evalSym, encSymL_peelPureTok]
+    rw [heq]
+    have hm := pilotStateFieldMax_peel_left_mono .DL t L1 R
+    have hstep := stepElemDL_within (peelPureTok t L1) R
+    have hB :
+        50 * (pilotStateFieldMax (.DL, peelPureTok t L1, R) + 1) ≤
+          50 * (pilotStateFieldMax (.DL, t :: L1, R) + 1) :=
+      Nat.mul_le_mul_left 50 (Nat.add_le_add_right hm 1)
+    simpa [stepPureDL] using reachesWithin_mono hB hstep
+
+theorem stepPureCB_within (L R : List SymTok) :
+    ReachesWithin (50 * (pilotStateFieldMax (.CB, L, R) + 1))
+      ((evalSym target_tm) (.CB, L, R))
+      ((evalSym target_tm) (stepPureCB L R)) := by
+  cases R with
+  | nil =>
+    simpa [stepPureCB] using stepElemCB_within L []
+  | cons t R1 =>
+    cases t with
+    | item it =>
+      cases it with
+      | zero =>
+        simpa [stepPureCB] using stepElemCB_within L (.item .zero :: R1)
+      | run d =>
+        rcases d with _ | _ | _ | d
+        · simpa [stepPureCB] using stepElemCB_run0_within L R1
+        · simpa [stepPureCB] using stepElemCB_within L (.item (.run 1) :: R1)
+        · simpa [stepPureCB] using stepElemCB_within L (.item (.run 2) :: R1)
+        · unfold ReachesWithin
+          refine ⟨5, by omega, ?_⟩
+          simpa only [stepPureCB, evalSym, evalM, encSymR, encSymL_bumpSymL] using
+            step_CB_run_ge3_exact d (encSymL L) (encSymR R1)
+    | repB1 k =>
+      simp only [stepPureCB]
+      cases hs2 : stripPrefixSym [.item (.run 0), .item (.run 0), .item (.run 1)] L with
+      | some L2 =>
+        have hL := stripPrefixSym_some _ L L2 hs2
+        rw [hL]
+        unfold ReachesWithin
+        refine ⟨21 * k, ?_, ?_⟩
+        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+        · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append,
+            repBlock_succ_right, List.append_assoc]
+          exact sweep_CB_B1_exact k (.run 0 :: .run 1 :: encSymL L2) (encSymR R1)
+      | none =>
+        cases hs1 : stripPrefixSym [.item (.run 0)] L with
+        | some L1 =>
+          have hL := stripPrefixSym_some _ L L1 hs1
+          rw [hL]
+          unfold ReachesWithin
+          refine ⟨21 * k, ?_, ?_⟩
+          · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+          · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append]
+            exact sweep_CB_B1_exact k (encSymL L1) (encSymR R1)
+        | none =>
+          unfold ReachesWithin
+          refine ⟨0, by omega, ?_⟩
+          simpa [stepPureCB, hs2, hs1] using
+            pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .repB1 k :: R1))
+    | rep2 p =>
+      simp only [stepPureCB]
+      cases hs2 : stripPrefixSym
+          [.item (.run 0), .item (.run 1), .item (.run 0), .item (.run 1)] L with
+      | some L2 =>
+        have hL := stripPrefixSym_some _ L L2 hs2
+        rw [hL]
+        unfold ReachesWithin
+        refine ⟨24 * p, ?_, ?_⟩
+        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+        · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append,
+            repBlock_succ_right, List.append_assoc]
+          exact sweep_CB_B2_exact p (.run 1 :: .run 0 :: .run 1 :: encSymL L2) (encSymR R1)
+      | none =>
+        cases hs1 : stripPrefixSym [.item (.run 0)] L with
+        | some L1 =>
+          have hL := stripPrefixSym_some _ L L1 hs1
+          rw [hL]
+          unfold ReachesWithin
+          refine ⟨24 * p, ?_, ?_⟩
+          · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+          · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append]
+            exact sweep_CB_B2_exact p (encSymL L1) (encSymR R1)
+        | none =>
+          unfold ReachesWithin
+          refine ⟨0, by omega, ?_⟩
+          simpa [stepPureCB, hs2, hs1] using
+            pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .rep2 p :: R1))
+    | rep12 m =>
+      simp only [stepPureCB]
+      cases hs1 : stripPrefixSym [.item (.run 0)] L with
+      | some L1 =>
+        have hL := stripPrefixSym_some _ L L1 hs1
+        rw [hL]
+        unfold ReachesWithin
+        refine ⟨45 * m, ?_, ?_⟩
+        · simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+        · simp only [evalSym, evalM, encSymL, encSymR, List.cons_append, List.nil_append]
+          exact sweep_CB_B12R_exact m (encSymL L1) (encSymR R1)
+      | none =>
+        unfold ReachesWithin
+        refine ⟨0, by omega, ?_⟩
+        simpa [stepPureCB, hs1] using
+          pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .rep12 m :: R1))
+
+theorem stepPure_within (s : SymMode × List SymTok × List SymTok) :
+    ReachesWithin (50 * (pilotStateFieldMax s + 1))
+      ((evalSym target_tm) s)
+      ((evalSym target_tm) (stepPure s)) := by
+  rcases s with ⟨mode, L, R⟩
+  cases mode with
+  | BB => simpa [stepPure] using stepPureBB_within L R
+  | DL => simpa [stepPure] using stepPureDL_within L R
+  | CB => simpa [stepPure] using stepPureCB_within L R
+  | HALT =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [stepPure] using pilot_reachesIn_refl ((evalSym target_tm) (.HALT, L, R))
+
+#print axioms stepPureBB_within
+#print axioms stepPureDL_within
+#print axioms stepPureCB_within
+#print axioms stepPure_within
+
+
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
