@@ -79,6 +79,12 @@ Therefore copy 2 is selected exactly on the phase wrap \(0\to-2\); copy 1 is sel
 
 A separate source bridge identifies the JS drainStats(b) length and weighted counts with the Lean drainB source interface. Agent 49 has formalized the needed lower bound N_s >= 3^(L_s-1) in im-results/agent49-parity623/DrainDigitLengthBound.lean as drainDigitSummary_value_ge_pow. The JS C,F formulas reduce exactly to corrC/corrF. See DrainStatsLengthBridge.md for the derivation and remaining integration obligations. The complete S-window consumer chain has not been compiled in this invocation.
 
+The adapter classifies the digit-pair stream; it does not itself certify the source carry supplied to the digit transducer. The caller must establish that the source start lies in the full branch rectangle used by reset_poststate_dfa.js:
+- L: previous pair arbitrary in {0,1,2}² and carries in [-2,2] × [-2,2] (225 starts);
+- R: previous pair arbitrary in {0,1,2}² and carries in [-4,1] × [-2,2] (270 starts).
+
+Do not replace these by [-1,1]². The authentic index-38 R carry (-2,0) is a counterexample to that smaller set. The reset-pattern construction validates its common reset words over the full rectangles, and this adapter preserves that recognizer; proving every authentic source carry stays in the full rectangles remains a separate root obligation.
+
 ## Root-transition adapter
 
 SelectedResetInterface.js exports selectOffset(sourceR,targetR) and classifyTargetWindow(sourceR,targetR,lowOutputs,targetWord). The phase-edge table is:
