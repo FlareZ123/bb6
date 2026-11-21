@@ -260,4 +260,259 @@ theorem step_BB_run1_exact (L1 R : List MItem) :
 #print axioms step_BB_run1_nil_exact
 #print axioms step_BB_run1_zero_exact
 
+
+
+/-- The F424 C-run1 rule has an exact three-step realization. -/
+theorem step_CB_run1_exact (L R1 : List MItem) :
+    ReachesIn target_tm 3 (cfgCB target_tm L (.run 1 :: R1))
+      (cfgCB target_tm (.run 0 :: bumpM L) R1) := by
+  unfold cfgCB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [encM_cons_run]
+  rw [← encM_bumpM]
+  executeWithin 3
+
+/-- The two-token BB transfer costs 8+3 = 11 primitive steps. -/
+theorem step_BB_r0_r1_exact (L R : List MItem) :
+    ReachesIn target_tm 11
+      (cfgBB target_tm (.run 0 :: .run 1 :: L) R)
+      (cfgBB target_tm L (.run 0 :: .run 1 :: R)) := by
+  have h1 := step_BB_run0_exact (.run 1 :: L) R
+  have h2 := step_BB_run1_exact L (.run 0 :: R)
+  simpa [bumpM] using reachesIn_trans h1 h2
+
+/-- The BB commutation transfer costs 3+8+3 = 14 primitive steps. -/
+theorem step_BB_r1_r0_r1_comm_exact (L R : List MItem) :
+    ReachesIn target_tm 14
+      (cfgBB target_tm (.run 1 :: .run 0 :: .run 1 :: L) (.run 0 :: .run 1 :: R))
+      (cfgBB target_tm L
+        (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 1 :: R)) := by
+  have h1 := step_BB_run1_exact (.run 0 :: .run 1 :: L) (.run 0 :: .run 1 :: R)
+  have h1' :
+      ReachesIn target_tm 3
+        (cfgBB target_tm (.run 1 :: .run 0 :: .run 1 :: L) (.run 0 :: .run 1 :: R))
+        (cfgBB target_tm (.run 0 :: .run 1 :: L)
+          (.run 0 :: .run 1 :: .run 1 :: R)) := by
+    simpa [bumpM] using h1
+  have h2 := step_BB_run0_exact (.run 1 :: L) (.run 0 :: .run 1 :: .run 1 :: R)
+  have h3 := step_BB_run1_exact L (.run 0 :: .run 0 :: .run 1 :: .run 1 :: R)
+  have h3' :
+      ReachesIn target_tm 3
+        (cfgBB target_tm (.run 1 :: L) (.run 0 :: .run 0 :: .run 1 :: .run 1 :: R))
+        (cfgBB target_tm L
+          (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 1 :: R)) := by
+    simpa [bumpM] using h3
+  simpa using reachesIn_trans (reachesIn_trans h1' h2) h3'
+
+/-- F424 BB/B1 sweep: exactly 11 primitive steps per repeated block. -/
+theorem sweep_BB_B1_exact (k : Nat) (L R : List MItem) :
+    ReachesIn target_tm (11 * k)
+      (cfgBB target_tm (repBlock [.run 0, .run 1] k ++ L) R)
+      (cfgBB target_tm L (repBlock [.run 0, .run 1] k ++ R)) := by
+  induction k generalizing R with
+  | zero =>
+      change multiStep target_tm _ 0 = some _
+      simp only [multiStep_zero]
+      rfl
+  | succ k ih =>
+    have h_eq : repBlock [.run 0, .run 1] (k + 1) ++ R =
+        repBlock [.run 0, .run 1] k ++ (.run 0 :: .run 1 :: R) := by
+      rw [repBlock_succ_right, List.append_assoc]
+      rfl
+    rw [h_eq]
+    have h1 := step_BB_r0_r1_exact (repBlock [.run 0, .run 1] k ++ L) R
+    have h2 := ih (.run 0 :: .run 1 :: R)
+    convert reachesIn_trans h1 h2 using 1 <;> omega
+
+/-- F424 BB/C2 sweep: exactly 14 primitive steps per repeated block. -/
+theorem sweep_BB_C2_exact (p : Nat) (L R : List MItem) :
+    ReachesIn target_tm (14 * p)
+      (cfgBB target_tm (repBlock [.run 1, .run 0, .run 1] p ++ L)
+        (.run 0 :: .run 1 :: R))
+      (cfgBB target_tm L
+        (.run 0 :: .run 1 :: repBlock [.run 0, .run 1, .run 1] p ++ R)) := by
+  induction p generalizing R with
+  | zero =>
+      change multiStep target_tm _ 0 = some _
+      simp only [multiStep_zero]
+      rfl
+  | succ p ih =>
+    have h_eq :
+        (.run 0 :: .run 1 :: repBlock [.run 0, .run 1, .run 1] (p + 1) ++ R) =
+        (.run 0 :: .run 1 :: repBlock [.run 0, .run 1, .run 1] p ++
+          (.run 0 :: .run 1 :: .run 1 :: R)) := by
+      simp only [repBlock_succ_right, List.cons_append, List.nil_append, List.append_assoc]
+    rw [h_eq]
+    have h1 := step_BB_r1_r0_r1_comm_exact (repBlock [.run 1, .run 0, .run 1] p ++ L) R
+    have h2 := ih (.run 0 :: .run 1 :: .run 1 :: R)
+    convert reachesIn_trans h1 h2 using 1 <;> omega
+
+/-- F424 BB/C12 sweep: exactly 25 primitive steps per repeated block. -/
+theorem sweep_BB_C12_exact (m : Nat) (L R : List MItem) :
+    ReachesIn target_tm (25 * m)
+      (cfgBB target_tm
+        (repBlock [.run 1, .run 0, .run 1, .run 0, .run 1] m ++ L)
+        (.run 0 :: .run 1 :: R))
+      (cfgBB target_tm L
+        (.run 0 :: .run 1 ::
+          repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R)) := by
+  induction m generalizing R with
+  | zero =>
+      change multiStep target_tm _ 0 = some _
+      simp only [multiStep_zero]
+      rfl
+  | succ m ih =>
+    have h_eq :
+        (.run 0 :: .run 1 ::
+          repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] (m + 1) ++ R) =
+        (.run 0 :: .run 1 ::
+          repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++
+          (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 1 :: R)) := by
+      simp only [repBlock_succ_right, List.cons_append, List.nil_append, List.append_assoc]
+    rw [h_eq]
+    have h1 := step_BB_r1_r0_r1_comm_exact
+      (.run 0 :: .run 1 ::
+        (repBlock [.run 1, .run 0, .run 1, .run 0, .run 1] m ++ L)) R
+    have h2 := step_BB_r0_r1_exact
+      (repBlock [.run 1, .run 0, .run 1, .run 0, .run 1] m ++ L)
+      (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 1 :: R)
+    have h3 := ih (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 1 :: R)
+    have h12 := reachesIn_trans h1 h2
+    convert reachesIn_trans h12 h3 using 1 <;> omega
+
+/-- F424 CB/B1 sweep: exactly 21 primitive steps per repeated block. -/
+theorem sweep_CB_B1_exact (k : Nat) (L R : List MItem) :
+    ReachesIn target_tm (21 * k)
+      (cfgCB target_tm (.run 0 :: L)
+        (repBlock [.run 0, .run 1] k ++ R))
+      (cfgCB target_tm (.run 0 :: repBlock [.run 0, .run 1] k ++ L) R) := by
+  induction k generalizing L with
+  | zero =>
+      change multiStep target_tm _ 0 = some _
+      simp only [multiStep_zero]
+      rfl
+  | succ k ih =>
+    have h_eq :
+        (.run 0 :: repBlock [.run 0, .run 1] (k + 1) ++ L) =
+        (.run 0 :: repBlock [.run 0, .run 1] k ++ (.run 0 :: .run 1 :: L)) := by
+      simp only [repBlock_succ_right, List.cons_append, List.nil_append, List.append_assoc]
+    rw [h_eq]
+    have h1 := step_CB_run0_run_pos_exact 0 (.run 0 :: L)
+      (repBlock [.run 0, .run 1] k ++ R)
+    have h2 := ih (.run 0 :: .run 1 :: L)
+    convert reachesIn_trans h1 h2 using 1 <;> omega
+
+/-- F424 CB/B2 sweep: exactly 24 primitive steps per repeated block. -/
+theorem sweep_CB_B2_exact (p : Nat) (L R : List MItem) :
+    ReachesIn target_tm (24 * p)
+      (cfgCB target_tm (.run 0 :: L)
+        (repBlock [.run 0, .run 1, .run 1] p ++ R))
+      (cfgCB target_tm
+        (.run 0 :: repBlock [.run 1, .run 0, .run 1] p ++ L) R) := by
+  induction p generalizing L with
+  | zero =>
+      change multiStep target_tm _ 0 = some _
+      simp only [multiStep_zero]
+      rfl
+  | succ p ih =>
+    have h_eq :
+        (.run 0 :: repBlock [.run 1, .run 0, .run 1] (p + 1) ++ L) =
+        (.run 0 :: repBlock [.run 1, .run 0, .run 1] p ++
+          (.run 1 :: .run 0 :: .run 1 :: L)) := by
+      simp only [repBlock_succ_right, List.cons_append, List.nil_append, List.append_assoc]
+    rw [h_eq]
+    have h1 :
+        ReachesIn target_tm 21
+          (cfgCB target_tm (.run 0 :: L)
+            (.run 0 :: .run 1 :: .run 1 ::
+              (repBlock [.run 0, .run 1, .run 1] p ++ R)))
+          (cfgCB target_tm (.run 0 :: .run 0 :: .run 1 :: L)
+            (.run 1 :: (repBlock [.run 0, .run 1, .run 1] p ++ R))) := by
+      simpa [bumpM] using
+        step_CB_run0_run_pos_exact 0 (.run 0 :: L)
+          (.run 1 :: (repBlock [.run 0, .run 1, .run 1] p ++ R))
+    have h2 :
+        ReachesIn target_tm 3
+          (cfgCB target_tm (.run 0 :: .run 0 :: .run 1 :: L)
+            (.run 1 :: (repBlock [.run 0, .run 1, .run 1] p ++ R)))
+          (cfgCB target_tm (.run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
+            (repBlock [.run 0, .run 1, .run 1] p ++ R)) := by
+      simpa [bumpM] using
+        step_CB_run1_exact (.run 0 :: .run 0 :: .run 1 :: L)
+          (repBlock [.run 0, .run 1, .run 1] p ++ R)
+    have h3 := ih (.run 1 :: .run 0 :: .run 1 :: L)
+    have h12 := reachesIn_trans h1 h2
+    convert reachesIn_trans h12 h3 using 1 <;> omega
+
+/-- F424 CB/B12R sweep: exactly 45 primitive steps per repeated block. -/
+theorem sweep_CB_B12R_exact (m : Nat) (L R : List MItem) :
+    ReachesIn target_tm (45 * m)
+      (cfgCB target_tm (.run 0 :: L)
+        (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R))
+      (cfgCB target_tm
+        (.run 0 :: repBlock [.run 1, .run 0, .run 1, .run 0, .run 1] m ++ L) R) := by
+  induction m generalizing L with
+  | zero =>
+      change multiStep target_tm _ 0 = some _
+      simp only [multiStep_zero]
+      rfl
+  | succ m ih =>
+    have h_eq :
+        (.run 0 :: repBlock [.run 1, .run 0, .run 1, .run 0, .run 1] (m + 1) ++ L) =
+        (.run 0 :: repBlock [.run 1, .run 0, .run 1, .run 0, .run 1] m ++
+          (.run 1 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)) := by
+      simp only [repBlock_succ_right, List.cons_append, List.nil_append, List.append_assoc]
+    rw [h_eq]
+    have h1 :
+        ReachesIn target_tm 21
+          (cfgCB target_tm (.run 0 :: L)
+            (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 1 ::
+              (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R)))
+          (cfgCB target_tm (.run 0 :: .run 0 :: .run 1 :: L)
+            (.run 0 :: .run 1 :: .run 1 ::
+              (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R))) := by
+      simpa [bumpM] using
+        step_CB_run0_run_pos_exact 0 (.run 0 :: L)
+          (.run 0 :: .run 1 :: .run 1 ::
+            (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R))
+    have h2 :
+        ReachesIn target_tm 21
+          (cfgCB target_tm (.run 0 :: .run 0 :: .run 1 :: L)
+            (.run 0 :: .run 1 :: .run 1 ::
+              (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R)))
+          (cfgCB target_tm (.run 0 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
+            (.run 1 ::
+              (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R))) := by
+      simpa [bumpM] using
+        step_CB_run0_run_pos_exact 0 (.run 0 :: .run 0 :: .run 1 :: L)
+          (.run 1 ::
+            (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R))
+    have h3 :
+        ReachesIn target_tm 3
+          (cfgCB target_tm
+            (.run 0 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
+            (.run 1 ::
+              (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R)))
+          (cfgCB target_tm
+            (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
+            (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R)) := by
+      simpa [bumpM] using
+        step_CB_run1_exact
+          (.run 0 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
+          (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R)
+    have h3' := ih (.run 1 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
+    have h12 := reachesIn_trans (reachesIn_trans h1 h2) h3
+    convert reachesIn_trans h12 h3' using 1 <;> omega
+
+#print axioms step_CB_run1_exact
+#print axioms step_BB_r0_r1_exact
+#print axioms step_BB_r1_r0_r1_comm_exact
+#print axioms sweep_BB_B1_exact
+#print axioms sweep_BB_C2_exact
+#print axioms sweep_BB_C12_exact
+#print axioms sweep_CB_B1_exact
+#print axioms sweep_CB_B2_exact
+#print axioms sweep_CB_B12R_exact
+
+
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
