@@ -50,7 +50,7 @@ v >= 2*(Q-m)/(3*m+1),
 Y >= 3*ceil(2*(Q-m)/(3*m+1))-2.
 ```
 
-This is a `4^m/m`-scale lower bound, stronger than the previously source-certified `2^(m+2)-6*m-1` bound throughout the odd positive range. It is still a necessary condition on the normalized residual, not a blank-root decision.
+This is a `4^m/m`-scale lower bound. On the source-certified deep sector, where `Y%12=4`, it strictly strengthens the earlier source-certified `2^(m+2)-6*m-1` bound for every odd `m>=1`. It is still a necessary condition on the normalized residual, not a blank-root decision.
 
 ### Proof of the envelope
 
@@ -134,7 +134,17 @@ The `r=1` case is the existing right-four tower; `r=2` shows that the exact `m=5
 
 ### Relation to the exact finite minimum
 
-The finite minimizer (★) remains sharper for many individual `m`; the new envelope is a closed-form bound valid uniformly for every odd `m` and is exactly sharp on the infinite sequence above. For the sample values already tabulated, its lower bounds on `Y` are 4, 49, 508, 5,956, 74,896, 986,893, and 13,421,770 for `m=1,3,5,7,9,11,13`, respectively. The exact finite minima remain 4, 220, 508, 45,052, 327,676, 16,252,924, and 67,108,852.
+The finite minimizer (★) remains sharper for many individual `m`; the new envelope is a closed-form bound valid uniformly for every odd `m` and is exactly sharp on the infinite sequence above. For the sample values already tabulated:
+
+| `m` | raw envelope bound on `Y` | after `Y%12=4` | exact finite minimum |
+|---:|---:|---:|---:|
+| 1 | 4 | 4 | 4 |
+| 3 | 49 | 52 | 220 |
+| 5 | 508 | 508 | 508 |
+| 7 | 5,956 | 5,956 | 45,052 |
+| 9 | 74,896 | 74,896 | 327,676 |
+| 11 | 986,893 | 986,896 | 16,252,924 |
+| 13 | 13,421,770 | 13,421,776 | 67,108,852 |
 
 ## Reproducible exact minimization
 
