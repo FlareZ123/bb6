@@ -246,3 +246,21 @@ Split the root S0 adapter without duplicating declarations:
 - Updated both q4Tail dossiers. The direct terminal preflight closure should start with `P2RootS0FrameIdentity.lean`; compile `P2RootS0Identity.lean` separately only for recurrence work.
 
 This split is source-inspected but uncompiled. It reduces an unnecessary dependency edge; it does not establish a theorem. Current local container/Python backends remain unavailable (tool-level ClientError before trivial commands), and CI remains deliberately unused as a substitute. Lease age at this note is checked separately below.
+
+
+## 2026-11-21 01:08 UTC: formalized the moving-exponent tower sandwich
+
+Claimed Agent 38 with run ID `agent38-gpt6-20261121T004827677Z-tm63-terminal-composition`, original lease `2026-11-21T00:48:27.677Z`. Do not refresh it. The 70-minute release threshold is `2026-11-21T01:58:27.677Z`; after each checkpoint, compare against an actual runtime clock.
+
+Read Agent 42's current q4/S0 dossier and `TM63PublishedTowerSandwich.md`. To turn a useful, already-derived recurrence estimate into a kernel-checked sublemma rather than repeat finite residue work, created `im-results/agent38-root-q4tail/TM63TowerRecurrence.lean`. It is standalone (only `import Lean`) and uses paper indexing `tower n = T_(n+1)`, `T_1=2`, and `V_0=63, V_(j+1)=2^V_j-1`.
+
+Main theorem `TM63TowerRecurrence.tower_recurrence_bounds` proves, for every `j≥2`, exactly
+
+- `T_(j+3)^(T_(j+2)^(23/8)) < V_j`;
+- `V_j^(T_(j+2)^4092) < T_(j+4)`.
+
+The lower rational exponent is encoded as an exact integer: `eight_dvd_tower` and `tower_succ_eq_eighth_root_pow` prove that `T_(j+2)` has an integer eighth root for j≥2, and `lowerExp_eq_eighth_root_pow` represents the 23/8 power as the root's 23rd power. The proof is coupled induction: the lower estimate supplies the large multiplicative gap needed to propagate the upper estimate, while the 4092 exponent gives enough room to absorb the next 4092nd power. This is the recurrence bound in Agent42's paper note, not a proof that TM63 actually follows this recurrence.
+
+Reconstructed Lean 4.36.0-rc2 locally from the split toolchain ZIP and compiled the new file with `lean -o ...`. Compilation succeeded. The `#print axioms` reports for `tower_recurrence_bounds` and `tower_recurrence_step` are `[propext, Classical.choice, Quot.sound]`; no `sorryAx`, `unsafe`, or `native_decide` occurs in the source. This does not validate the uncompiled root/terminal import closure. A shallow local GitHub clone still fails at DNS resolution; no CI was used as a substitute for local preflight.
+
+Updated `im-results/agent38-root-q4tail/README.md` with the theorem and trust boundary. Sent Agent 42 the module for comparison against the paper derivation. Next high-value work: (1) have Agent42 adversarially compare the exponent/index translation; (2) formalize the resulting A0/M/B/q tower-index inequalities if that will reduce the remaining score-bound gap; (3) when local repository sources are obtainable, compile `P2RootS0FrameIdentity.lean` and the direct terminal closure locally before any CI dispatch. Do not claim a TM63 halt proof or a BB(6) solution.
