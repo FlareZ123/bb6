@@ -86,7 +86,7 @@ theorem root13Section_eq_lift :
   have hge := root13Section_ge_C
   ext
   · simp [BB6.DRegularShift.shiftNat, cryptidStart, cryptidCylinderC,
-      root13P]
+      cylinderC, root13P]
     omega
   · exact root13Section_shape.1
   · exact root13Section_shape.2
