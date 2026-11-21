@@ -70,6 +70,10 @@ D=L-2n_2=a-aa,\qquad R=n_1+n_2
 \]
 with the actual drainB first-counter drop and complete evaluator-call count.
 
+## Independent finite check
+
+I independently implemented the recursive DrainDigitSummary recurrence and the JS loop in the available JS runtime for every \(b=1,\ldots,200{,}000\). There were zero mismatches in \(L\), \(N\), the number of ternary 1s, or the number of ternary 2s; the proposed lower bound \(N_s\ge3^{L_s-1}\) held in every case. This is supporting computation only; the induction above is the intended universal proof.
+
 ## Correction formulas reduce exactly to the Lean cocycle
 
 The JS script writes the corrections using \(L,n_1,n_2\). Substituting \(D=L-2n_2\) and \(R=n_1+n_2\) gives:
