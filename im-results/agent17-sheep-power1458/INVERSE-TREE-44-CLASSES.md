@@ -64,6 +64,8 @@ There is no power-target hypothesis on (y), so the same source theorem applies t
 
 ## Root classification
 
+Every residue in (R_2) is (1 \\pmod3), every residue in (R_4) is (2 \\pmod3), and (T_2,T_4) are divisible by 3. Thus every progression has (3 \\nmid t), so LTE gives (v_3(2^{1458t}-1)=7); this justifies the complete root hidden-length range (0 \\le h \\le7).
+
 The root is (Y_0(t)=2^{1458t}). Its complete generic low-valuation range is (0\le h\le7), with cutoffs (A_h):
 
 | (h) | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
