@@ -27,63 +27,88 @@ for the lower derivation and
 [Agent 42's consolidated tower sandwich](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md)
 for the upper and combined interval.
 
-The same exact score split also gives a sharper additive normalization. Put
-\(b=b_N=2^{\ell}-1\), \(\ell=b_{N-1}\),
-\(\kappa=b_{N-2}=\log_2(\ell+1)\), and \(m=\log_2\ell\).
-The current three-term derivation in
-[TM63ScoreAsymptotic.md](../agent42-q4-s0-drain/TM63ScoreAsymptotic.md)
-gives
-\[
-S_{\rm TM1}=6b^2+54b+6\ell^2+57\ell+96+15\kappa+\Delta_2,
-\qquad 0\le\Delta_2<82m^2.
-\]
-Equivalently,
-\[
-S_{\rm TM1}=6(b+1)^2+42b+
-\underbrace{6\ell^2+57\ell+90+15\kappa+\Delta_2}_{R_\ell}.
-\]
-For the authentic parameters \\(\\ell\\ge256\\), the elementary
-bounds \\(m\\le\\ell/32\\) and \\(\\kappa\\le\\ell/32+1\\) give
+The exact score identity admits an arbitrary-depth expansion. Put
+\\(u_r=b_{N-r}\\), so \\(u_0=b_N\\) and
+\\(u_{r-1}=2^{u_r}-1\\). For every \\(1\\le p\\le N\\),
+\\[
+S_{\\rm TM1}
+=\\sum_{r=1}^{p}
+\\left(6(u_{r-1}+1)^2+42(u_{r-1}+1)+(12r-9)u_r\\right)
++E_p,
+\\]
+with the uniform tail estimate
+\\[
+0\\le E_p<45u_p^2.
+\\]
+For \\(p<N\\), this is Agent 44's quadratic tower-tail lemma with
+cutoff parameter \\(r_0=N-p+1\\): its scale is
+\\(b_{r_0-1}=u_p\\), and \\(N\\le u_p\\) follows from
+\\(u_p=b_{N-p}\\ge b_0=R>N\\). For \\(p=N\\), the tail is just
+the root, polynomial, and unary terms; the direct bounds
+\\(C_{\\rm root}+D_{\\rm root}<15R^2\\),
+\\(10N^2+37N+90<12R^2\\), and
+\\(12(N+1)U\\le12R^2\\) give \\(E_N<39R^2<45u_N^2\\).
+Thus the 45 coefficient applies at every retained depth, including
+\\(p=1\\) and \\(p=2\\), and improves the generic 100 coefficient
+in the current score note.
+
+For \\(p=2\\), write \\(b=b_N\\),
+\\(\\ell=b_{N-1}\\), and
+\\(\\kappa=b_{N-2}=\\log_2(\\ell+1)\\). Then
+\\[
+S_{\\rm TM1}=6b^2+54b+6\\ell^2+57\\ell+96
++15\\kappa+\\Delta_2,
+\\qquad 0\\le\\Delta_2<45\\kappa^2.
+\\]
+Re-centering at \\(6(b+1)^2\\) gives
+\\[
+S_{\\rm TM1}=6(b+1)^2+42b+
+R_\\ell,\\qquad
+R_\\ell=6\\ell^2+57\\ell+90+15\\kappa+\\Delta_2.
+\\]
+For the authentic parameters \\(\\ell\\ge256\\), we have
+\\(\\kappa\\le\\ell/32+1\\), so
 \\[
 R_\\ell<
-\\frac{3113}{512}\\ell^2+\\frac{1839}{32}\\ell+105
+\\frac{6189}{1024}\\ell^2+
+\\frac{1929}{32}\\ell+150
 <\\frac{13}{2}\\ell^2.
 \\]
-Thus the displayed source-conditional formula implies the sharper
-two-sided enclosure
+Consequently,
 \\[
 6(b+1)^2+42b<S_{\\rm TM1}<
-6(b+1)^2+42b+\\frac{13}{2}\\ell^2,
+6(b+1)^2+42b+\\frac{13}{2}\\ell^2
+<6(b+1)^2+43b.
 \\]
-and in particular the simpler upper bound
-\\(S_{\\rm TM1}<6(b+1)^2+43b\\), since \\(b=2^\\ell-1\\).
 This is a re-centering of the existing exact score identity, not a new
-simulation or a separately accepted theorem; it does not change the
-uncompiled source-composition boundary.
+simulation or a separately accepted theorem.
 
-A stronger arbitrary-depth version is recorded in
-[TM63ScoreAsymptotic.md](../agent42-q4-s0-drain/TM63ScoreAsymptotic.md)
-(“Arbitrary-depth iterated-log expansion”): for every fixed
-\\(1\\le p\\le N\\), the last \\(p\\) dispatcher increments are retained
-exactly and the remaining nonnegative tail satisfies
-\\(0\\le E_p<100u_p^2\\), where \\(u_p=b_{N-p}\\). The displayed
-\\(p=2\\) three-term expansion and its sharper \\(13\\ell^2/2\\) remainder
-are the most useful low-depth specialization. This remains conditional
-on the exact source-cost identity and uncompiled authentic-root closure.
+The \\(p=4\\) specialization is the explicit four-scale expansion
+from [TM63TowerTailExpansion.md](../agent44-tm63-middle/TM63TowerTailExpansion.md).
+With \\(\\tau=b_{N-3}\\) and \\(v=b_{N-4}\\), it reads
+\\[
+\\begin{aligned}
+S_{\\rm TM1}={}&6b^2+54b
++6\\ell^2+57\\ell
++6\\kappa^2+69\\kappa\\\\
+&+6\\tau^2+81\\tau+39v+192+E_4,
+\\end{aligned}
+\\qquad 0\\le E_4<45v^2.
+\\]
+The root-scale comparison used above must include the full exponent
+\\[
+A=\\sum_{j=7}^{M+42}V_j+\\frac{5M+176}{3}.
+\\]
+For \\(x=V_{M+42}\\), the recurrence gives
+\\(V_{j+1}\\ge4V_j\\), hence the sum is
+\\(<4x/3\\); also \\((5M+176)/3<2x/3\\), so
+\\(A<2x\\). This proves \\(N<R\\) and validates
+\\(N\\le u_p\\) for the uniform tail estimate. The additive term in
+\\(A\\) should be retained explicitly in any restatement of that proof.
 
-For the strongest general tail bound, see
-[TM63TowerTailExpansion.md](../agent44-tm63-middle/TM63TowerTailExpansion.md).
-Its lemma gives \\(E_p<45u_p^2\\) for every \\(p\\ge2\\): the required
-\\(N\\le b_{p-1}\\) follows from \\(N<R<b_1\\) and monotonicity of the
-\\(b_j\\) sequence. In proving \\(N<R\\), use the full root exponent
-\\(A=\\sum_{j=7}^{M+42}V_j+(5M+176)/3\\): with \\(x=V_{M+42}\\),
-\\(V_{j+1}\\ge4V_j\\) gives the sum \\( <4x/3\\), while
-\\((5M+176)/3<2x/3\\), so \\(A<2x\\). Thus the four-scale expansion
-is the \\(p=4\\) instance, and the 45 coefficient improves the generic
-100 coefficient at every depth \\(p\\ge3\\). The specialized \\(p=2\\) bound
-\\(\\Delta_2<82(\\log_2\\ell)^2\\) remains sharper at depth two.
-All of these are paper-level consequences of the conditional exact score
-identity, not a compiled authentic-root theorem.
+All these expansions are paper-level consequences of the conditional
+exact source-cost identity. They do not constitute a compiled
+authentic-root halting-time theorem.
 
 **This interval is still conditional on the authentic blank-root/source
 composition.** The full dependency closure has not compiled and passed a
