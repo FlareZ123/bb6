@@ -1,6 +1,6 @@
 # Seventh Sheep stratum: 92 inverse-tree progressions
 
-**Agent 17, 20 November 2026. Expanded candidate; independent review and Lean formalization pending.**
+**Agent 17, 20 November 2026. Expanded candidate; independent exact-arithmetic audit passed, original-source Lean formalization pending.**
 
 The 44-class two-node result in [`INVERSE-TREE-44-CLASSES.md`](INVERSE-TREE-44-CLASSES.md) is now joined by two further finite inverse-tree families. There are four disjoint families of root exponents (2^{1458t}), with 74 base residue classes across four periods. Since (T_2=3T_4), the (h=7,a=4) nine classes lift to 27 classes modulo (T_2); in that presentation the total is 92 progression classes.
 
@@ -153,9 +153,15 @@ The checker computes the exact multiplicative order of 2 modulo (N) and the expo
 | (h=7,a=2) | 6,285,399,120 | 1,178,100 | 31,426,995,600 | 89 |
 | (h=7,a=4) | 2,095,133,040 | 1,178,100 | 10,475,665,200 | 91 |
 
-The new checker is [`inverse_tree_h1a3_h3a6_certificate.py`](inverse_tree_h1a3_h3a6_certificate.py). The (h=7) families are checked by [`inverse_tree_44_classes_certificate.py`](inverse_tree_44_classes_certificate.py). The latter verifies 180 order-period rows across 110 distinct moduli and three distinct valuation moduli. The new checker verifies each graph at all 48 base residues and computes the corresponding exact periods.
+The new checker is [`inverse_tree_h1a3_h3a6_certificate.py`](inverse_tree_h1a3_h3a6_certificate.py). The (h=7) families are checked by [`inverse_tree_44_classes_certificate.py`](inverse_tree_44_classes_certificate.py). The latter verifies 180 order-period rows across 109 distinct moduli and three distinct valuation moduli. The new checker verifies each graph at all 48 base residues and computes the corresponding exact periods.
 
-All 74 base residues are pairwise distinct modulo 1260. All four periods are multiples of 1260, and each base residue is disjoint from every old E-cone class. Thus the four new families are mutually disjoint and do not overlap the 28 prior progressions.
+All 74 base residues are pairwise distinct modulo 1260. Every base residue is nonzero modulo 3, while all four periods are divisible by 3; hence every progression keeps 3∤t and LTE gives v₃(2^(1458t)−1)=7. This justifies the root hidden-length bound h≤7 used in every tree. All four periods are multiples of 1260, and each base residue is disjoint from every old E-cone class. Thus the four new families are mutually disjoint and do not overlap the 28 prior progressions.
+
+## Independent exact-arithmetic audit
+
+Agent 40 independently reconstructed the four inverse graphs and their exact modular periods using JS BigInt. The h1a3 tree has 7 nodes/6 edges, 163 rows/160 distinct moduli, four valuation moduli, tree LCM 80,313,433,200, and final period 80,313,433,200. The h3a6 tree has 3 nodes/2 edges, 107 rows/105 distinct moduli, three valuation moduli, tree LCM 30,030,240,240, and final period 150,151,201,200. The 44-class h7a2/h7a4 subfamily was independently checked separately; its 180 rows have 109 distinct moduli (the duplicated modulus 649539 is shared by h7a2 node a=4 and h7a4 node a=2).
+
+The audit reproduced all six h1a3 edges and both h3a6 edges, all 26 and 22 base-residue graphs, every listed cutoff, every low-a exceptional bound at the minimum base, the exact tree/prior LCMs, all period and valuation freezes, disjointness from the 28 old E-cones, pairwise distinctness of all 74 base residues modulo 1260, and the exact combined density 14533/11329133357341800. It also verified 3∤t throughout all four families, so the root valuation is exactly 7. This is an independent arithmetic reproduction, not a Python execution or Lean proof.
 
 ## Status and next action
 
