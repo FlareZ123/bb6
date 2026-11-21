@@ -74,8 +74,8 @@ theorem lowRow_no_generic_progression {rs T nodeAt}
     simpa only [Nat.powMod_def, Nat.add_mod, Nat.mod_mod] using row.nohit r hr
   have hexp : row.base+1458*t =
       (1458*r+row.base)+(1458*T)*k := by
-    rw [ht]
-    ring
+    rw [ht, Nat.mul_add, Nat.mul_assoc]
+    omega
   have heq' := heq
   rw [hexp] at heq'
   exact no_generic_fixed_period row.modulus (1458*r+row.base)
@@ -1798,12 +1798,22 @@ def cutoff_t1 (n h : Nat) : Nat :=
   | _, _ => 0
 
 
+theorem lowRowKey_complete_fin_t1 :
+    ∀ n : Fin 15, 1 ≤ n.val →
+      ∀ h : Fin ((nodeAt_t1 n.val).r+1),
+        ∀ a : Fin (cutoff_t1 n.val h.val),
+          1 ≤ a.val →
+          (n.val,h.val,a.val) ∈ lowRowKeys_t1 ∨
+            (n.val,h.val,a.val) ∈ nonrootEdgeKeys_t1 := by
+  decide
+
+
 theorem lowRowKey_complete_t1 (n h a : Nat)
     (hn : 1 ≤ n) (hn' : n < 15)
     (hh : h ≤ (nodeAt_t1 n).r)
     (ha : 1 ≤ a) (ha' : a < cutoff_t1 n h) :
     (n,h,a) ∈ lowRowKeys_t1 ∨ (n,h,a) ∈ nonrootEdgeKeys_t1 := by
-  interval_cases n <;> interval_cases h <;> interval_cases a <;> decide
+  exact lowRowKey_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h,by omega⟩ ⟨a,ha'⟩ ha
 
 
 def highCerts_t1 : List (HighCert nodeAt_t1) :=
@@ -1858,11 +1868,18 @@ def highCerts_t1 : List (HighCert nodeAt_t1) :=
 def highCertKeys_t1 : List (Nat × Nat) := highCerts_t1.map highCertKey
 
 
+theorem highCertKey_complete_fin_t1 :
+    ∀ n : Fin 15, 1 ≤ n.val →
+      ∀ h : Fin ((nodeAt_t1 n.val).r+1),
+        (n.val,h.val) ∈ highCertKeys_t1 := by
+  decide
+
+
 theorem highCertKey_complete_t1 (n h : Nat)
     (hn : 1 ≤ n) (hn' : n < 15)
     (hh : h ≤ (nodeAt_t1 n).r) :
     (n,h) ∈ highCertKeys_t1 := by
-  interval_cases n <;> interval_cases h <;> decide
+  exact highCertKey_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h,by omega⟩
 
 
 def valCerts_t1 : List (ValCert residues_t1 period_t1 nodeAt_t1) :=
@@ -1913,10 +1930,15 @@ def valCerts_t1 : List (ValCert residues_t1 period_t1 nodeAt_t1) :=
 def valCertKeys_t1 : List Nat := valCerts_t1.map valCertKey
 
 
+theorem valCertKey_complete_fin_t1 :
+    ∀ n : Fin 15, 1 ≤ n.val → n.val ∈ valCertKeys_t1 := by
+  decide
+
+
 theorem valCertKey_complete_t1 (n : Nat)
     (hn : 1 ≤ n) (hn' : n < 15) :
     n ∈ valCertKeys_t1 := by
-  interval_cases n <;> decide
+  exact valCertKey_complete_fin_t1 ⟨n,hn'⟩ hn
 
 
 def lowRows_h1a3 : List (LowRowCert residues_h1a3 period_h1a3 nodeAt_h1a3) :=
@@ -2291,12 +2313,22 @@ def cutoff_h1a3 (n h : Nat) : Nat :=
   | _, _ => 0
 
 
+theorem lowRowKey_complete_fin_h1a3 :
+    ∀ n : Fin 7, 1 ≤ n.val →
+      ∀ h : Fin ((nodeAt_h1a3 n.val).r+1),
+        ∀ a : Fin (cutoff_h1a3 n.val h.val),
+          1 ≤ a.val →
+          (n.val,h.val,a.val) ∈ lowRowKeys_h1a3 ∨
+            (n.val,h.val,a.val) ∈ nonrootEdgeKeys_h1a3 := by
+  decide
+
+
 theorem lowRowKey_complete_h1a3 (n h a : Nat)
     (hn : 1 ≤ n) (hn' : n < 7)
     (hh : h ≤ (nodeAt_h1a3 n).r)
     (ha : 1 ≤ a) (ha' : a < cutoff_h1a3 n h) :
     (n,h,a) ∈ lowRowKeys_h1a3 ∨ (n,h,a) ∈ nonrootEdgeKeys_h1a3 := by
-  interval_cases n <;> interval_cases h <;> interval_cases a <;> decide
+  exact lowRowKey_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h,by omega⟩ ⟨a,ha'⟩ ha
 
 
 def highCerts_h1a3 : List (HighCert nodeAt_h1a3) :=
@@ -2317,11 +2349,18 @@ def highCerts_h1a3 : List (HighCert nodeAt_h1a3) :=
 def highCertKeys_h1a3 : List (Nat × Nat) := highCerts_h1a3.map highCertKey
 
 
+theorem highCertKey_complete_fin_h1a3 :
+    ∀ n : Fin 7, 1 ≤ n.val →
+      ∀ h : Fin ((nodeAt_h1a3 n.val).r+1),
+        (n.val,h.val) ∈ highCertKeys_h1a3 := by
+  decide
+
+
 theorem highCertKey_complete_h1a3 (n h : Nat)
     (hn : 1 ≤ n) (hn' : n < 7)
     (hh : h ≤ (nodeAt_h1a3 n).r) :
     (n,h) ∈ highCertKeys_h1a3 := by
-  interval_cases n <;> interval_cases h <;> decide
+  exact highCertKey_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h,by omega⟩
 
 
 def valCerts_h1a3 : List (ValCert residues_h1a3 period_h1a3 nodeAt_h1a3) :=
@@ -2348,10 +2387,15 @@ def valCerts_h1a3 : List (ValCert residues_h1a3 period_h1a3 nodeAt_h1a3) :=
 def valCertKeys_h1a3 : List Nat := valCerts_h1a3.map valCertKey
 
 
+theorem valCertKey_complete_fin_h1a3 :
+    ∀ n : Fin 7, 1 ≤ n.val → n.val ∈ valCertKeys_h1a3 := by
+  decide
+
+
 theorem valCertKey_complete_h1a3 (n : Nat)
     (hn : 1 ≤ n) (hn' : n < 7) :
     n ∈ valCertKeys_h1a3 := by
-  interval_cases n <;> decide
+  exact valCertKey_complete_fin_h1a3 ⟨n,hn'⟩ hn
 
 
 def lowRows_h3a6 : List (LowRowCert residues_h3a6 period_h3a6 nodeAt_h3a6) :=
@@ -2514,12 +2558,22 @@ def cutoff_h3a6 (n h : Nat) : Nat :=
   | _, _ => 0
 
 
+theorem lowRowKey_complete_fin_h3a6 :
+    ∀ n : Fin 3, 1 ≤ n.val →
+      ∀ h : Fin ((nodeAt_h3a6 n.val).r+1),
+        ∀ a : Fin (cutoff_h3a6 n.val h.val),
+          1 ≤ a.val →
+          (n.val,h.val,a.val) ∈ lowRowKeys_h3a6 ∨
+            (n.val,h.val,a.val) ∈ nonrootEdgeKeys_h3a6 := by
+  decide
+
+
 theorem lowRowKey_complete_h3a6 (n h a : Nat)
     (hn : 1 ≤ n) (hn' : n < 3)
     (hh : h ≤ (nodeAt_h3a6 n).r)
     (ha : 1 ≤ a) (ha' : a < cutoff_h3a6 n h) :
     (n,h,a) ∈ lowRowKeys_h3a6 ∨ (n,h,a) ∈ nonrootEdgeKeys_h3a6 := by
-  interval_cases n <;> interval_cases h <;> interval_cases a <;> decide
+  exact lowRowKey_complete_fin_h3a6 ⟨n,hn'⟩ hn ⟨h,by omega⟩ ⟨a,ha'⟩ ha
 
 
 def highCerts_h3a6 : List (HighCert nodeAt_h3a6) :=
@@ -2532,11 +2586,18 @@ def highCerts_h3a6 : List (HighCert nodeAt_h3a6) :=
 def highCertKeys_h3a6 : List (Nat × Nat) := highCerts_h3a6.map highCertKey
 
 
+theorem highCertKey_complete_fin_h3a6 :
+    ∀ n : Fin 3, 1 ≤ n.val →
+      ∀ h : Fin ((nodeAt_h3a6 n.val).r+1),
+        (n.val,h.val) ∈ highCertKeys_h3a6 := by
+  decide
+
+
 theorem highCertKey_complete_h3a6 (n h : Nat)
     (hn : 1 ≤ n) (hn' : n < 3)
     (hh : h ≤ (nodeAt_h3a6 n).r) :
     (n,h) ∈ highCertKeys_h3a6 := by
-  interval_cases n <;> interval_cases h <;> decide
+  exact highCertKey_complete_fin_h3a6 ⟨n,hn'⟩ hn ⟨h,by omega⟩
 
 
 def valCerts_h3a6 : List (ValCert residues_h3a6 period_h3a6 nodeAt_h3a6) :=
@@ -2551,10 +2612,15 @@ def valCerts_h3a6 : List (ValCert residues_h3a6 period_h3a6 nodeAt_h3a6) :=
 def valCertKeys_h3a6 : List Nat := valCerts_h3a6.map valCertKey
 
 
+theorem valCertKey_complete_fin_h3a6 :
+    ∀ n : Fin 3, 1 ≤ n.val → n.val ∈ valCertKeys_h3a6 := by
+  decide
+
+
 theorem valCertKey_complete_h3a6 (n : Nat)
     (hn : 1 ≤ n) (hn' : n < 3) :
     n ∈ valCertKeys_h3a6 := by
-  interval_cases n <;> decide
+  exact valCertKey_complete_fin_h3a6 ⟨n,hn'⟩ hn
 
 
 def lowRows_h7a2 : List (LowRowCert residues_h7a2 period_h7a2 nodeAt_h7a2) :=
@@ -2648,12 +2714,22 @@ def cutoff_h7a2 (n h : Nat) : Nat :=
   | _, _ => 0
 
 
+theorem lowRowKey_complete_fin_h7a2 :
+    ∀ n : Fin 2, 1 ≤ n.val →
+      ∀ h : Fin ((nodeAt_h7a2 n.val).r+1),
+        ∀ a : Fin (cutoff_h7a2 n.val h.val),
+          1 ≤ a.val →
+          (n.val,h.val,a.val) ∈ lowRowKeys_h7a2 ∨
+            (n.val,h.val,a.val) ∈ nonrootEdgeKeys_h7a2 := by
+  decide
+
+
 theorem lowRowKey_complete_h7a2 (n h a : Nat)
     (hn : 1 ≤ n) (hn' : n < 2)
     (hh : h ≤ (nodeAt_h7a2 n).r)
     (ha : 1 ≤ a) (ha' : a < cutoff_h7a2 n h) :
     (n,h,a) ∈ lowRowKeys_h7a2 ∨ (n,h,a) ∈ nonrootEdgeKeys_h7a2 := by
-  interval_cases n <;> interval_cases h <;> interval_cases a <;> decide
+  exact lowRowKey_complete_fin_h7a2 ⟨n,hn'⟩ hn ⟨h,by omega⟩ ⟨a,ha'⟩ ha
 
 
 def highCerts_h7a2 : List (HighCert nodeAt_h7a2) :=
@@ -2664,11 +2740,18 @@ def highCerts_h7a2 : List (HighCert nodeAt_h7a2) :=
 def highCertKeys_h7a2 : List (Nat × Nat) := highCerts_h7a2.map highCertKey
 
 
+theorem highCertKey_complete_fin_h7a2 :
+    ∀ n : Fin 2, 1 ≤ n.val →
+      ∀ h : Fin ((nodeAt_h7a2 n.val).r+1),
+        (n.val,h.val) ∈ highCertKeys_h7a2 := by
+  decide
+
+
 theorem highCertKey_complete_h7a2 (n h : Nat)
     (hn : 1 ≤ n) (hn' : n < 2)
     (hh : h ≤ (nodeAt_h7a2 n).r) :
     (n,h) ∈ highCertKeys_h7a2 := by
-  interval_cases n <;> interval_cases h <;> decide
+  exact highCertKey_complete_fin_h7a2 ⟨n,hn'⟩ hn ⟨h,by omega⟩
 
 
 def valCerts_h7a2 : List (ValCert residues_h7a2 period_h7a2 nodeAt_h7a2) :=
@@ -2680,10 +2763,15 @@ def valCerts_h7a2 : List (ValCert residues_h7a2 period_h7a2 nodeAt_h7a2) :=
 def valCertKeys_h7a2 : List Nat := valCerts_h7a2.map valCertKey
 
 
+theorem valCertKey_complete_fin_h7a2 :
+    ∀ n : Fin 2, 1 ≤ n.val → n.val ∈ valCertKeys_h7a2 := by
+  decide
+
+
 theorem valCertKey_complete_h7a2 (n : Nat)
     (hn : 1 ≤ n) (hn' : n < 2) :
     n ∈ valCertKeys_h7a2 := by
-  interval_cases n <;> decide
+  exact valCertKey_complete_fin_h7a2 ⟨n,hn'⟩ hn
 
 
 def lowRows_h7a4 : List (LowRowCert residues_h7a4 period_h7a4 nodeAt_h7a4) :=
@@ -2785,12 +2873,22 @@ def cutoff_h7a4 (n h : Nat) : Nat :=
   | _, _ => 0
 
 
+theorem lowRowKey_complete_fin_h7a4 :
+    ∀ n : Fin 2, 1 ≤ n.val →
+      ∀ h : Fin ((nodeAt_h7a4 n.val).r+1),
+        ∀ a : Fin (cutoff_h7a4 n.val h.val),
+          1 ≤ a.val →
+          (n.val,h.val,a.val) ∈ lowRowKeys_h7a4 ∨
+            (n.val,h.val,a.val) ∈ nonrootEdgeKeys_h7a4 := by
+  decide
+
+
 theorem lowRowKey_complete_h7a4 (n h a : Nat)
     (hn : 1 ≤ n) (hn' : n < 2)
     (hh : h ≤ (nodeAt_h7a4 n).r)
     (ha : 1 ≤ a) (ha' : a < cutoff_h7a4 n h) :
     (n,h,a) ∈ lowRowKeys_h7a4 ∨ (n,h,a) ∈ nonrootEdgeKeys_h7a4 := by
-  interval_cases n <;> interval_cases h <;> interval_cases a <;> decide
+  exact lowRowKey_complete_fin_h7a4 ⟨n,hn'⟩ hn ⟨h,by omega⟩ ⟨a,ha'⟩ ha
 
 
 def highCerts_h7a4 : List (HighCert nodeAt_h7a4) :=
@@ -2801,11 +2899,18 @@ def highCerts_h7a4 : List (HighCert nodeAt_h7a4) :=
 def highCertKeys_h7a4 : List (Nat × Nat) := highCerts_h7a4.map highCertKey
 
 
+theorem highCertKey_complete_fin_h7a4 :
+    ∀ n : Fin 2, 1 ≤ n.val →
+      ∀ h : Fin ((nodeAt_h7a4 n.val).r+1),
+        (n.val,h.val) ∈ highCertKeys_h7a4 := by
+  decide
+
+
 theorem highCertKey_complete_h7a4 (n h : Nat)
     (hn : 1 ≤ n) (hn' : n < 2)
     (hh : h ≤ (nodeAt_h7a4 n).r) :
     (n,h) ∈ highCertKeys_h7a4 := by
-  interval_cases n <;> interval_cases h <;> decide
+  exact highCertKey_complete_fin_h7a4 ⟨n,hn'⟩ hn ⟨h,by omega⟩
 
 
 def valCerts_h7a4 : List (ValCert residues_h7a4 period_h7a4 nodeAt_h7a4) :=
@@ -2817,10 +2922,15 @@ def valCerts_h7a4 : List (ValCert residues_h7a4 period_h7a4 nodeAt_h7a4) :=
 def valCertKeys_h7a4 : List Nat := valCerts_h7a4.map valCertKey
 
 
+theorem valCertKey_complete_fin_h7a4 :
+    ∀ n : Fin 2, 1 ≤ n.val → n.val ∈ valCertKeys_h7a4 := by
+  decide
+
+
 theorem valCertKey_complete_h7a4 (n : Nat)
     (hn : 1 ≤ n) (hn' : n < 2) :
     n ∈ valCertKeys_h7a4 := by
-  interval_cases n <;> decide
+  exact valCertKey_complete_fin_h7a4 ⟨n,hn'⟩ hn
 
 
 #print axioms lowRow_no_generic_progression
