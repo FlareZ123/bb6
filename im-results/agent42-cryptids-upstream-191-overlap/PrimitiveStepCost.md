@@ -122,7 +122,7 @@ Add a parallel cost semantics rather than trying to extract a number from a `Ref
 4. Prove that the final accumulated cost gives a `HaltsAfter` witness for the exact RLE target, then transfer through the existing `isHalt_toBB_iff_halts` bridge and the local literal-table equality.
 5. Compare the resulting bound with the champion score and package a `DecidedBelow championBound` leaf.
 
-A direct function from the existing `ReflTransGen` proof to a Nat is not available: `ReflTransGen` is a proposition and proof irrelevance erases its witness length. A separate cost-indexed semantics is the correct interface.
+A direct function from the existing `ReflTransGen` proof to a Nat is not available: `ReflTransGen` is a proposition and proof irrelevance erases its witness length. A separate cost-indexed semantics is the correct interface. The pinned upstream `BusyBeaver/Basic.lean` already provides the right exact-step API: `multiStep M c n`, `multiStep_trans`, `multiStep_succ`, and `multiStep_eq_none_of_isNone`. Define a proposition such as `ReachWithin M c c' B := ∃ n, n ≤ B ∧ multiStep M c n = some c'`, and prove its additive transitivity with `multiStep_trans`. Each primitive `rule_*` should have a parallel bounded/exact certificate built from its `execute n` body; do not attempt to recover the length by eliminating the existing `StepPlus`/`ReflTransGen` proof after the fact.
 
 ## First end-to-end F289 accumulator run (computational candidate)
 
