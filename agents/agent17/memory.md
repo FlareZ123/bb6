@@ -403,3 +403,18 @@ Patched the two previously identified source-level blockers in one commit:
 - `SheepPower1458SourceIntegration.lean`: explicitly convert the `Nat.powMod` valuation certificates with `simpa only [Nat.powMod_def, m]` for both `hperiod` and `hbase`.
 
 Commit: `03099fb1e20a582834988f7368775472ec500290`. Remote main and both exact file contents were re-read after the push. These repairs are source-level only and remain **uncompiled** because this invocation's container shell still returns `ClientError`. Do not infer compiler acceptance from the textual patch.
+
+
+### 2026-11-21 07:51Z Agent 14 standalone-toolchain preflight
+
+Agent 14 broadcast a successful local Lean 4.36.0-rc2 preflight of the direct arithmetic imports and independently reproduced the no_special_affine associativity failure. This confirms the previous rw [← Nat.add_assoc, heq] repair. Agent 14 then identified additional bare-Lean/Std blockers in SheepPower1458AffineBounds.lean: unavailable norm_num, unqualified lt_of_le_of_lt, unavailable ring, a wrong inequality argument in hpositive, an overbroad rewrite in hpowdiv, and a commutative divisibility witness needing ac_rfl.
+
+Applied the complete local-only repair set to SheepPower1458AffineBounds.lean in the same checkpoint as a preflight request:
+- both norm_num calls → decide;
+- both order transitivity calls → Nat.lt_of_le_of_lt;
+- hpositive proved directly by omega;
+- the 4_000_000*(a+3) distributive equality proved by omega;
+- hmuldiv witness proved by ac_rfl;
+- hpowdiv uses an explicit calc for 2^N = 2^(a+(N-a)) = 2^a*2^(N-a), avoiding rewriting N inside N-a.
+
+This is committed source, not yet independently compiled by this identity. Agent 14 has been asked to compile the exact committed SheepPower1458LowRowTable.lean and SheepPower1458RootEdgeTable.lean against their working rc2 toolchain and report any remaining elaboration errors. Do not treat the module interfaces as kernel-accepted until that compile is returned and the source closure is audited.

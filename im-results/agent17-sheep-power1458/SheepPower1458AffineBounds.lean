@@ -43,9 +43,9 @@ theorem no_special_affine (D S a N : Nat)
       exact Nat.add_le_add (Nat.add_le_add hterm1 hterm2) hS
     have hsmall :
         12_000_000*2^31 + 4_000_000*33 + 4_000_000 < 2^55 := by
-      norm_num
+      decide
     have hleft : 3*D*2^a + D*(a+2) + S < 2^55 :=
-      lt_of_le_of_lt hbound hsmall
+      Nat.lt_of_le_of_lt hbound hsmall
     have hpowN : 2^55 ≤ 2^N :=
       Nat.pow_le_pow_right (by decide) hN
     omega
@@ -54,7 +54,7 @@ theorem no_special_affine (D S a N : Nat)
       have hseq : ∀ k : Nat, 4_000_000*(k+35) < 2^(k+32) := by
         intro k
         induction k with
-        | zero => norm_num
+        | zero => decide
         | succ k ih =>
           have hpow : 2^(k+1+32) = 2*2^(k+32) := by
             calc
@@ -65,7 +65,7 @@ theorem no_special_affine (D S a N : Nat)
               4_000_000*(k+1+35) =
                 4_000_000*(k+35)+4_000_000 := by omega
           have hpositive : 4_000_000 ≤ 4_000_000*(k+35) := by
-            exact Nat.mul_le_mul_left 4_000_000 (by omega)
+            omega
           rw [hlin, hpow]
           omega
       have hk := hseq (a-32)
@@ -80,22 +80,23 @@ theorem no_special_affine (D S a N : Nat)
         calc
           D*(a+2)+S ≤ 4_000_000*(a+2)+4_000_000 :=
             Nat.add_le_add hterm hS
-          _ = 4_000_000*(a+3) := by ring
+          _ = 4_000_000*(a+3) := by omega
       have hpos : 0 < D*(a+2)+S := by
         have hmul : 0 < D*(a+2) :=
           Nat.mul_pos hDpos (by omega)
         omega
-      exact ⟨hpos, lt_of_le_of_lt hbound hpow⟩
+      exact ⟨hpos, Nat.lt_of_le_of_lt hbound hpow⟩
     by_cases han : a ≤ N
     · have hpowdiv : 2^a ∣ 2^N := by
         refine ⟨2^(N-a), ?_⟩
-        have hEq : N = a+(N-a) := by omega
-        rw [hEq, Nat.pow_add]
+        calc
+          2^N = 2^(a+(N-a)) := by congr 1; omega
+          _ = 2^a * 2^(N-a) := by rw [Nat.pow_add]
       have hpowmod : 2^N % 2^a = 0 :=
         Nat.mod_eq_zero_of_dvd hpowdiv
       have hmuldiv : 2^a ∣ 3*D*2^a := by
         refine ⟨3*D, ?_⟩
-        ring
+        ac_rfl
       have hmulmod : (3*D*2^a) % 2^a = 0 :=
         Nat.mod_eq_zero_of_dvd hmuldiv
       have hsum :
