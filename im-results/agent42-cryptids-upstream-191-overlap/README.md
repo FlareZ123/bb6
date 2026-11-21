@@ -133,7 +133,7 @@ The other halting overlaps use different engines: F424/F412 use `SymRunEngine` a
 
 ### F424/F412 transfer work (still intermediate)
 
-The earlier primitive-time sketch assumed (M\ge376), which is false at the authentic initial states ((M=79)). It has been replaced by the boundary-safe candidate
+The earlier primitive-time sketch assumed (M\ge376), which is false at the authentic `initSymCyc3` states ((M=2)). It has been replaced by the boundary-safe candidate
 [
 C_{stepSym}(s)<2^{40}(M(s)+1)^2,
 ]
