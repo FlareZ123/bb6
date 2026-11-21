@@ -87,7 +87,7 @@ The complete source grammar still gives a useful reduction. The low branch would
 \[
 C(m)=\left(B_x+B_y-2,\frac{B_y-2}{2}\right).
 \]
-Since \(B_y\equiv4\pmod8\), \(C_y\) is odd, and direct arithmetic gives \(C_x+C_y\equiv2\pmod4\). The source-certified blank_no_odd_sum_two theorem therefore excludes this low branch. The zero-left and even-\(a\) high branches require even target sum and are impossible. The finite \(a=0\) case has right coordinate (4); the finite \(a=1\) cases have right coordinate (1,3,5,) or (7); and the (a>1,k=0) case has right coordinate (2). These are all impossible because (B_y) is enormous. The remaining \(a=1\) high branch would require \(B_x+B_y+1\) to be a pure power of two, but
+Since \(B_y\equiv4\pmod8\), \(C_y=(B_y-2)/2\) is odd and at least \(7{,}917{,}895{,}295{,}961>5\); direct arithmetic gives \(C_x+C_y\equiv2\pmod4\). The source-certified blank_no_odd_sum_two theorem therefore excludes this low branch. The zero-left and even-\(a\) high branches require even target sum and are impossible. The finite \(a=0\) case has right coordinate (4); the finite \(a=1\) cases have right coordinate (1,3,5,) or (7); and the (a>1,k=0) case has right coordinate (2). These are all impossible because (B_y) is enormous. The remaining \(a=1\) high branch would require \(B_x+B_y+1\) to be a pure power of two, but
 \[
 B_x+B_y+1
 =8Q(p),\qquad
