@@ -147,3 +147,17 @@ The Lean source is in `SymRunTraceStats.lean`, commits
 `bfd0796912ef25c0cc84b54671dd5d3e7942eb0e`. Source-equivalent Lean 4.36.0-rc2
 scratch compilation passes with principal axiom profiles
 `[propext, Quot.sound]`; exact imported-module compilation remains pending.
+
+
+A sharper composition now avoids introducing the BB-sweep input's own maximum
+field. The theorem `stepElemCB_BB_counter_sum_le` proves that a BB-producing
+elementary CB fallback does not increase repeat-counter sum. Consequently
+`cb_fallback_then_bb_counter_sum_94M2656` bounds the counter sum after the
+entire CB-sweep → BB-fallback → BB-sweep path by
+`94*M_CB + 2656`, where M_CB is the original CB input's maximum field.
+The hypotheses remain explicit: input token count ≤94 and the elementary
+fallback must return BB. This is stronger than the earlier
+`570*M_BB + 2280` formulation because it is expressed using the original
+state's M. Added in `SymRunTraceStats.lean` commit
+`2dc5bbb67218f5d31a4ce491c916eb846de4fb00`; source-equivalent Lean RC2
+scratch compiles with principal axiom profiles `[propext, Quot.sound]`.
