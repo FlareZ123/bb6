@@ -221,10 +221,66 @@ Combining \(T_1\equiv t+s\pmod2\) with the large-\(P\) intervals gives the follo
 - \((\delta,I_s,t)=(2,20,5)\). Here \(n\equiv1\pmod3\) and \(n\) is even, so \(s=(n+2)/3\) is even. Thus \(T_1\equiv t\pmod2\); \(t=6\) is excluded and \(t=5\) remains. Its first shallow edge must have depth \(0\).
 - \((\delta,I_s)=(1,48)\) with \(t\ge8\). Here \(n\equiv2\pmod3\) and \(n\) is even, so \(s=(n+1)/3\) is odd. If \(t\) is odd then \(T_1\) is even and the potentially continuing first shallow edge has depth \(0\); if \(t\) is even then \(T_1\) is odd and it has depth \(1\).
 
-In particular, after the corrected source gate, the remaining scalar candidates are \((\delta,I_s)=(2,20)\) with odd \(T_1\), and \((\delta,I_s)=(1,48)\) with even \(T_1\). Both have first shallow depth zero. The \(I_s=48\), odd-\(T_1\) branch is conditionally excluded by the source child-mod-four argument, pending formal preservation of the intermediate OddCone guard. The terminal-cost bounds give \(t=5\) or \(6\) for the first family and \(t\ge8\) for the second, subject to their stated cap hypotheses.
+The source first-shallow split has **three** residual branches, not two:
+- \((\delta,I_s)=(2,20)\), odd \(T_1\), first shallow depth zero;
+- \((\delta,I_s)=(1,48)\), even \(T_1\), first shallow depth zero;
+- \((\delta,I_s)=(1,48)\), odd \(T_1\), first shallow depth one.
+
+The odd-\(T_1\) \(I_s=48\) branch is **not** eliminated by the first-child mod-four guard: \`is48_odd_first_shallow_even_child\` proves that its child parameter is even, so the child satisfies the required mod-four condition. Keep it as a separate residual branch. The new second-shallow gate below refines all three branches. The terminal-cost bounds give \(t=5\) or \(6\) for the \((2,20)\) family and \(t\ge8\) for the \((1,48)\) family, subject to their stated cap hypotheses.
+
+## Second-shallow source gate (new arithmetic reduction)
+
+Let \(P=2^n\). In the three first-shallow branches write the first-shallow parent offset as \(T\), and set \(T=14u+5\), \(14u+10\), or \(14u+3\), respectively. Solving the source-wall mass equation together with the mod-seven source-coordinate relation gives the following first-shallow parent and child coordinates:
+
+| Branch | Parent \((b,d)\) | First-shallow child \((b_1,d_1)\) | \(X_1=d_1+b_1/2+3\) |
+|---|---|---|---|
+| \(I_s=20,\ T=14u+5\) | \((12P-24u-12,\ 2P-4u+1)\) | \((6P-12u-12,\ 8P-16u-1)\) | \(11P-22u-4\) |
+| \(I_s=48,\ T=14u+10\) | \((12P-24u-20,\ 2P-4u-1)\) | \((6P-12u-16,\ 8P-16u-7)\) | \(11P-22u-12\) |
+| \(I_s=48,\ T=14u+3\) | \((12P-24u-8,\ 2P-4u+1)\) | \((10P-20u-12,\ 4P-8u+1)\) | \(9P-18u-2\) |
+
+Here \(X_1\) is the source coordinate for the next inverse edge. The child source coordinate identity is \(X_1=c+k+5\), where the first-shallow inverse parameters are \(k,c\). The child parameter \(k\) is even in all three branches.
+
+### The first-shallow child cannot itself be the wall
+
+Write \(M\) for the restart offset before the depth-two prefix and \(D\) for the even restart defect parameter. The restart defect equations are
+\[
+49D+14M=18P+6\quad(I_s=20),\qquad
+49D+14M=2P+6\quad(I_s=48),
+\]
+with \(D\ge4\). The prefix length gives
+\[
+M+n+3=14u\quad(I_s=20),
+\]
+\[
+M+n=14u+3\quad(I_s=48,\ T\text{ even}),
+\qquad
+M+n+4=14u\quad(I_s=48,\ T\text{ odd}).
+\]
+If the first-shallow child were already the wall, its wall equation \(b_1+4B_1=12P+4\), with \(B_1=T+1\) or \(T+2\), would give respectively
+\[
+22u+4=3P,\qquad 22u+12=3P,\qquad 18u+2=P.
+\]
+Each terminal equation contradicts the corresponding restart defect equation and \(D\ge4\), provided \(2n\le P\). This elementary inequality holds in the target range \(P=2^n,\ n\ge83\). Thus the first-shallow child is not the wall: a further source edge must follow.
+
+### Exact next-edge residue gate
+
+For that next edge, let its depth be \(t\in\{0,1,2\}\), with inverse parameters \(k,c\). The source equations and child guards are
+\[
+2^t(c+3)=X_1,\qquad c\equiv1\pmod2,\qquad
+2k+c+2t+2=b_1+d_1,\qquad k\equiv0\pmod2.
+\]
+The last condition is exactly the next child's required \(b\equiv0\pmod4\). Lean proves the following necessary residue conditions:
+
+| First-shallow branch | Next depth \(t=0\) | Next depth \(t=1\) | Next depth \(t=2\) |
+|---|---|---|---|
+| \(I_s=20,\ T=14u+5\) | \(u\equiv0\pmod2\) | \(u\equiv0\pmod4\) | \(u\equiv2\pmod8\) |
+| \(I_s=48,\ T=14u+10\) | \(u\equiv1\pmod2\) | \(u\equiv2\pmod4\) | \(u\equiv2\pmod8\) |
+| \(I_s=48,\ T=14u+3\) | \(u\equiv0\pmod2\) | \(u\equiv3\pmod4\) | \(u\equiv3\pmod8\) |
+
+These are necessary conditions, not sufficient existence criteria: the remaining inverseAt lower bounds and source-history conditions still apply. The arithmetic is formalized in [FirstShallowCoordinateGate.lean](./FirstShallowCoordinateGate.lean), compiled locally with Lean 4.36.0-rc2 using only the Lean core. It is not yet composed into a single theorem over the original RestartPath witness.
 
 ## Boundary
 
-The mod-\(7\) classification and low-suffix closure remain conditional on the high-depth restart equations, the positive restart-energy bound \(0<I_0<98P\), and the existence of a wall-reaching suffix with at most five shallow edges. The depth intervals and final two-case list use the appropriate cost-one or cost-two terminal bound and \(P\ge2^{83}\). The two Lean files formalize the scalar recurrence and parent-coordinate arithmetic, but do not certify the source restart wrapper or exclude either residual case. This is not a BB(6) result.
+The mod-\(7\) classification and low-suffix closure remain conditional on the high-depth restart equations, the positive restart-energy bound \(0<I_0<98P\), and the existence of a wall-reaching suffix with at most five shallow edges. The depth intervals and three first-shallow branches use the appropriate cost-one or cost-two terminal bound and \(P\ge2^{83}\). The scalar recurrence and arithmetic leaves formalize necessary conditions, but the source restart wrapper is not yet compiled and no residual branch has been excluded. This is not a BB(6) result.
 
-The remaining mathematical task is to eliminate one of the two residual families using sharper constraints inherited from the original root and to connect the scalar suffix proof to the authentic source induction. Do not repeat the mod-\(7\) enumeration or the terminal-cost arithmetic.
+The remaining mathematical task is to compose the second-edge residue gate with the authentic RestartPath witness and propagate it through the next low-depth transitions, or to prove a stronger source-prefix cost bound. Do not repeat the mod-\(7\) enumeration or terminal-cost arithmetic.
