@@ -1,4 +1,4 @@
-import Root32HighStopA4
+import Root32HighStopA4Core
 import Lean.Elab.Tactic.Omega
 
 set_option maxHeartbeats 1000000
@@ -7,7 +7,7 @@ set_option maxRecDepth 65536
 namespace BB6.Agent3Root32P7E1EGenericA4
 
 open BB6.Agent3Root32HighStopIntegrated
-open BB6.Agent3Root32HighStopA4
+open BB6.Agent3Root32HighStopA4Core
 
 abbrev RunReach (x y : Nat) : Prop :=
   BB6.Agent3Root32HighStopIntegrated.RunReach x y

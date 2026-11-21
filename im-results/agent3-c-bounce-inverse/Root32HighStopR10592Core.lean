@@ -1,4 +1,5 @@
-import Root32HighStopA4
+import Root32HighStopP7
+import Root32HighStopA4Core
 import Root32HighStopR10592LCore
 import RRoot32ExceptionalCoreQ
 import D0EInverseArithmetic
@@ -269,9 +270,6 @@ theorem root32_highstop_r10592_unreachable
     dsimp [q]
     omega
   have hj : j%256=165 := by rw [hjExact]; omega
-  obtain ⟨t,hu⟩ :=
-    BB6.Agent3U5B2Root32ParameterBridge.root32_u_parameter_of_exact
-      r E u hr64 hE hRoot
   have hE17 : 17≤E := by rw [hE]; omega
   have hTj : 17300+22155*(t+j)=5*2^(E-17) :=
     root32_tj_exact t j E r hrj hRoot hE17
@@ -298,10 +296,11 @@ theorem root32_highstop_r10592_unreachable
   have ht256 : t%256=31 := by omega
   have ht32 : t%32=31 := by omega
   intro hT
-  have hres2 :=
-    BB6.Agent3Root32HighStopA4.root32_highstop_t31_reduces_to_two_residuals
-      r E u t hr64 hE hRoot hT hu ht32
-  rcases hres2 with hD0 | hL
+  have hres3 :=
+    BB6.Agent3Root32HighStopP7.root32_highstop_reduces_to_three_residuals
+      r E u hr64 hE hRoot hT
+  rcases hres3 with ⟨t, _hu, hbranches⟩
+  rcases hbranches with hD0 | hL | hP7
   · have hD0x : 1469153280*t+393975148=
         (d0e0 (1802+6720*t)).1 := by
       dsimp [d0e0]
@@ -330,6 +329,8 @@ theorem root32_highstop_r10592_unreachable
       have h := BB6.Agent3Root32HighStopR10592LCore.L_unreachable_t31_mod32 m
       simpa [htDecomp] using h
     exact hLnot hLReach
+  · exact (BB6.Agent3Root32HighStopA4Core.p7e1e_unreachable_of_t_mod32_31
+      t ht32) hP7
 
 #print axioms d0e0_reach_forces_d0e7
 #print axioms d0e7_reach_fork
