@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Exact finite check of the modulo-81 second-lift tables in
+// Exact finite check of the K mod 162 second-lift table in
 // T0-K3-ODD-A-SECOND-LIFT.md. This checks residue arithmetic only;
 // the dyadic interval and ResetParent gap proofs are in the Markdown note.
 
@@ -18,73 +18,54 @@ function pow2Mod(exponent, modulus) {
   return Number(value);
 }
 
-const expectedX0 = {
-  0: [3, 5, 7, 15, 27, 35, 37, 47, 49],
-  9: [9, 17, 19, 29, 31, 39, 41, 43, 51],
-  18: [1, 11, 13, 21, 23, 25, 33, 45, 53]
-};
-const expectedH3 = {
-  2: [1, 3, 5, 17, 31, 33, 43, 45, 47],
-  5: [7, 9, 11, 19, 21, 23, 35, 49, 51],
-  8: [13, 15, 25, 27, 29, 37, 39, 41, 53]
-};
+function xMod27(a, K) {
+  const p81 = pow2Mod(K, 81);
+  const b81 = mod(
+    (2 * K + 7) * pow2Mod(mod(K + 4 - a, 54), 81),
+    81
+  );
+  const numerator81 = mod(80 * p81 + 2 * K + 13 - 2 * b81, 81);
+  if (numerator81 % 3 !== 0) {
+    throw new Error("The numerator defining X is not divisible by 3.");
+  }
+  return mod(numerator81 / 3, 27);
+}
 
-const actualX0 = { 0: [], 9: [], 18: [] };
-const actualH3 = { 2: [], 5: [], 8: [] };
-
+const rows = [];
 for (let a = 1; a < 54; a += 2) {
   const a18 = a % 18;
-
-  // X == 0 (mod 9) phase: K == 12 - 3a (mod 54).
   const k0 = mod(12 - 3 * a18, 54);
-  const p0 = pow2Mod(k0, 81);
-  const b0 = mod(
-    (2 * k0 + 7) * pow2Mod(mod(k0 + 4 - a, 54), 81),
-    81
+  const x0 = [];
+  for (let m = 0; m < 3; m++) x0.push(xMod27(a, k0 + 54 * m));
+  if (x0.slice().sort((u, v) => u - v).join(",") !== "0,9,18") {
+    throw new Error("X0 lifts are not a permutation of 0,9,18.");
+  }
+  const m0 = x0.indexOf(0);
+
+  const k1 = mod(48 - 3 * a18, 54);
+  const h3 = [];
+  for (let m = 0; m < 3; m++) {
+    const K = k1 + 54 * m;
+    const x27 = xMod27(a, K);
+    if (!(x27 === 3 || x27 === 12 || x27 === 21)) {
+      throw new Error("X3 lift is not 3,12,21 modulo 27.");
+    }
+    const d9 = mod(x27 / 3, 9);
+    const h9 = mod(2 * d9 - 4 * pow2Mod(K, 9) - K - 4, 9);
+    h3.push(h9);
+  }
+  if (h3.slice().sort((u, v) => u - v).join(",") !== "2,5,8") {
+    throw new Error("h lifts are not a permutation of 2,5,8.");
+  }
+  const m1 = h3.indexOf(2);
+  rows.push({ a, k0, x0, m0, k1, h3, m1 });
+}
+
+console.log("a | K0 | X mod 27 on K0+54m | m0 | K1 | h mod 9 on K1+54m | m1");
+for (const r of rows) {
+  console.log(
+    [r.a, r.k0, "(" + r.x0.join(",") + ")", r.m0,
+      r.k1, "(" + r.h3.join(",") + ")", r.m1].join(" | ")
   );
-  const t0 = mod(80 * p0 + 2 * k0 + 13 - 2 * b0, 81);
-  if (t0 % 3 !== 0) throw new Error("X0 numerator is not divisible by 3");
-  const x27 = mod(t0 / 3, 27);
-  if (!(x27 === 0 || x27 === 9 || x27 === 18)) {
-    throw new Error("X0 lift is not 0, 9, or 18 modulo 27");
-  }
-  actualX0[x27].push(a);
-
-  // X == 3 (mod 9) phase: K == 48 - 3a (mod 54).
-  const k3 = mod(48 - 3 * a18, 54);
-  const p3_81 = pow2Mod(k3, 81);
-  const b3 = mod(
-    (2 * k3 + 7) * pow2Mod(mod(k3 + 4 - a, 54), 81),
-    81
-  );
-  const t3 = mod(80 * p3_81 + 2 * k3 + 13 - 2 * b3, 81);
-  if (t3 % 3 !== 0) throw new Error("X3 numerator is not divisible by 3");
-  const x3_27 = mod(t3 / 3, 27);
-  if (!(x3_27 === 3 || x3_27 === 12 || x3_27 === 21)) {
-    throw new Error("X3 lift is not 3, 12, or 21 modulo 27");
-  }
-  const d9 = mod(x3_27 / 3, 9);
-  const p3_9 = pow2Mod(k3, 9);
-  const h9 = mod(2 * d9 - 4 * p3_9 - k3 - 4, 9);
-  if (!(h9 === 2 || h9 === 5 || h9 === 8)) {
-    throw new Error("h lift is not 2, 5, or 8 modulo 9");
-  }
-  actualH3[h9].push(a);
 }
-
-for (const key of [0, 9, 18]) {
-  if (actualX0[key].join(",") !== expectedX0[key].join(",")) {
-    throw new Error("Unexpected X0 lift set for residue " + key);
-  }
-}
-for (const key of [2, 5, 8]) {
-  if (actualH3[key].join(",") !== expectedH3[key].join(",")) {
-    throw new Error("Unexpected h lift set for residue " + key);
-  }
-}
-
-console.log("X == 0 (mod 9) phase, X mod 27:");
-for (const key of [0, 9, 18]) console.log(key + ": " + actualX0[key].join(", "));
-console.log("X == 3 (mod 9) phase, h mod 9:");
-for (const key of [2, 5, 8]) console.log(key + ": " + actualH3[key].join(", "));
-console.log("PASS: all 27 odd a-residues in both second-lift tables.");
+console.log("PASS: all 27 a residues and all 162 second-lift entries.");
