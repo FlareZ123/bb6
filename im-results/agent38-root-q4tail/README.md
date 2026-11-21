@@ -89,7 +89,7 @@ Lean 4.36.0-rc2 was reconstructed locally from the concatenated split ZIP and us
 
 ## Next work
 
-1. When the local execution backend is available, compile `P2RootS0FrameIdentity.lean` first, then the exact direct terminal closure (`GeneralQ4TailS1Reparam.lean`, `GeneralQ4TailS1Config.lean`, `GeneralQ4TailTerminalComposition.lean`, and `TM63GeneralQ4TerminalComposition.lean`). Inspect all exported theorem axiom reports.
+1. Obtain a successful exact local preflight of `P2RootS0FrameIdentity.lean`; the focused acceptance target is now consolidated as `p2-s0-frame-identity` in `.github/workflows/agent48-positive-z-q4-prefix.yml` (do not dispatch it as a substitute for local preflight). Then compile the exact direct terminal closure (`GeneralQ4TailS1Reparam.lean`, `GeneralQ4TailS1Config.lean`, `GeneralQ4TailTerminalComposition.lean`, and `TM63GeneralQ4TerminalComposition.lean`) and inspect all exported theorem axiom reports.
 2. If the direct terminal route validates, use its exact one-dimensional score formula as a rigorous lower-bound candidate; do not promote it until the full source closure is compiler-accepted.
 3. Compile `P2RootS0Identity.lean` separately only if the next-q4Tail recurrence is needed.
 4. For the Type-C iterative branch, map its q4Tail output to exact S0 configuration, derive the left residual, and prove that the drain/postlude exposes the next `100` guard.
