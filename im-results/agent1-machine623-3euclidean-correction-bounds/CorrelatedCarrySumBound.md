@@ -2,44 +2,50 @@
 
 **Status:** intermediate source-arithmetic lemma plus a finite counterexample to a proposed universal closure property. This is not a blank-root result.
 
-## 1. A sharper correlation than the rectangular carry bounds
+## 1. Exact joint correction bound
 
-Use the exact correction formulas in `DrainDigitTransducer.md`. Write (L) for the drain digit length and (n_1,n_2) for the counts of output digits 1 and 2, so (n_1+n_2\le L). For every one of the eight sector/output rows, direct addition of the displayed (C,F) formulas gives:
+Use the formal `corrC` and `corrF` definitions in `SignedCoordinateNormalForm.lean). Write (L) for the drain digit length and (n_1,n_2) for the counts of output digits 1 and 2. The drain-statistics identity gives
+[
+D=L-2n_2,\qquad R_{\mathrm{full}}=R_{\mathrm{dig}}=n_1+n_2,\qquad n_1+n_2\le L.
+]
+Substituting these into the eight sector/output correction rows gives:
 
 | Sector/output | (C+F) | Lower bound |
-|---|---|---:|
+|---|---:|---:|
 | LO/L | (-6L-4n_1+8n_2-38) | (-10L-38) |
 | LE/L | (-6L-4n_1+8n_2-20) | (-10L-20) |
-| RO/L | (0) | (0) |
-| RE/L | (-24L-4n_1+8n_2-18) | (-28L-18) |
+| RO/L | (-6L-4n_1+8n_2) | (-10L) |
+| RE/L | (-6L-4n_1+8n_2-18) | (-10L-18) |
 | LO/R | (6L+4n_1-8n_2+18) | (18-2L) |
 | LE/R | (6L+4n_1-8n_2+6) | (6-2L) |
 | RO/R | (6L+4n_1-8n_2-14) | (-14-2L) |
 | RE/R | (6L+4n_1-8n_2-2) | (-2-2L) |
 
-Consequently, uniformly over all rows,
+Therefore, uniformly over all rows,
 [
-C+F\ge -28L-38.
+C+F\ge -10L-38.
 ]
 If (L\le\ell) and (K=3^k>34\ell+122), then
 [
-28L+38\le28\ell+38<34\ell+122<K,
+10L+38\le10\ell+38<34\ell+122<K,
 ]
-hence
+so
 [
-oxed{C+F>-K.}
+\boxed{C+F>-K.}
 ]
 
-This uses the exact *joint* correction formulas; it is stronger than separately applying (|C|,|F|<K).
+**RO/L clarification:** the constants table in `DrainDigitTransducer.md` gives (c_C=c_F=0) for RO/L. These are only the additive constants. The full corrections are (C=-18D-16R_{\mathrm{full}}) and (F=12D+12R_{\mathrm{full}}), as specified by `SignedCoordinateNormalForm.lean).
 
-## 2. Consequence for the actual boundary carries
+This is a joint bound and is stronger than separately applying (|C|,|F|<K).
+
+## 2. Consequence for the boundary carries
 
 With the source-carry formulas and denominator (3K) from `StartCarryRectangleInclusion.md), put
 [
-egin{aligned}
+\begin{aligned}
 A_L&=x_{K1}-3y_K+C,&B_L&=3y_K+F,\\
 A_R&=-x_{K1}-3x_K-3y_K+C,&B_R&=3x_K+3y_K+F.
-end{aligned}
+\end{aligned}
 ]
 Then
 [
@@ -51,12 +57,12 @@ A_R+B_R=-x_{K1}+C+F>-4K
 ]
 because (x_{K1}<3K).
 
-For integer floors, (lfloor u/N\rfloor+\lfloor v/N\rfloor\ge\lfloor(u+v)/N\rfloor-1). Taking (N=3K) yields the correlated carry restrictions
+For integer floors, (lfloor u/N\rfloor+\lfloor v/N\rfloor\ge\lfloor(u+v)/N\rfloor-1). Taking (N=3K) yields
 [
-oxed{c_0+c_1\ge-2\quad(L),\qquad c_0+c_1\ge-3\quad(R).}
+\boxed{c_0+c_1\ge-2\quad(L),\qquad c_0+c_1\ge-3\quad(R).}
 ]
 
-Thus the 108 L source-derived rectangle starts reduce to 99 necessary starts, and the 180 R starts reduce to 153. These are necessary conditions derived from the exact correction formulas and the existing mass-index buffer; they do not yet encode the full dependence on the root's low residues.
+Thus the 108 L source-derived rectangle starts reduce to 99 necessary starts, and the 180 R starts reduce to 153. These are necessary conditions from the exact correction formulas and existing mass-index buffer; they do not encode the full dependence on the root's low residues.
 
 ## 3. The reset language is still not closed under this stronger start restriction
 
@@ -74,18 +80,18 @@ A concrete L/offset-1 witness is:
 - initial transducer state ((p_x,p_y,c_0,c_1)=(0,0,-2,0)), which lies in the source-derived L rectangle and satisfies (c_0+c_1=-2);
 - input word
   [
-  (00)^9, 01, 10, 10, 00, 00
+  (00)^9,\ 01,\ 10,\ 10,\ 00,\ 00
   ]
   (14 digit pairs);
 - the input reset DFA first accepts at position 12; the substring (00,01,10,10) is a reset witness;
 - both input coordinate blocks contain 0 and 1, so neither is all-0 nor all-2;
 - the L transducer output is
   [
-  10, (20)^9, 21, 00, 00, 00;
+  10,\ (20)^9,\ 21,\ 00,\ 00,\ 00;
   ]
 - after dropping offset 1, the 13-symbol target prefix is
   [
-  (20)^9, 21, 00, 00, 00,
+  (20)^9,\ 21,\ 00,\ 00,\ 00,
   ]
   whose source-derived reset-DFA state is 189, not the accepting state 3.
 
@@ -95,9 +101,8 @@ This is a counterexample to closure of the **current finite over-approximation**
 
 The next useful object is the authentic root prefix language: the relation among (x_K,y_K), the boundary digit pair, the weighted drain statistics ((L,n_1,n_2)), sector, and the phase-selected offset. Further arbitrary-word reset products over the same rectangular starts will not close this gap. The finite witness above should be retained as a regression against any proposed universal closure theorem.
 
-Correction-table note: the RO/L row in the constants table of `DrainDigitTransducer.md` gives only the constant terms `c_C=c_F=0`; it does not mean the full corrections `C,F` vanish. The full RO/L terms are `C=-18D-16R_full`, `F=12D+12R_full`, as formalized in `SignedCoordinateNormalForm.lean`.
-
 Relevant existing source:
+- `im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean`
 - `im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducer.md`
 - `im-results/agent24-machine623-shifted-reset-product/StartCarryRectangleInclusion.md`
 - `im-results/agent24-machine623-shifted-reset-product/SourceDerivedResetProduct.json`
