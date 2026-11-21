@@ -21,7 +21,7 @@ Define the lower exponents by
 and the upper exponents by
 \[
 \gamma_3=2^{65520}-2^{47},\qquad
-\gamma_j=2^{T_{j+1}-T_j-1}-1\quad(j\ge4).
+\gamma_j=2^{T_{j+1}-T_j}-2^{T_{j+1}-T_j-65473}\quad(j\ge4).
 \]
 All these exponents are positive integers.
 
@@ -33,7 +33,7 @@ T_{j+3}^{\,T_{j+2}^{\,\alpha_j}}<V_j
 V_j^{\,T_{j+2}^{\,\gamma_j}}<T_{j+4}.
 }
 \]
-The lower exponent is recursively amplified at each step. The upper exponent is also allowed to grow with the tower index; for \(j\ge4\), it nearly saturates the elementary product budget used in the upper comparison.
+The lower exponent is recursively amplified at each step. The upper exponent also grows with the tower index. For \(j\ge4\), it leaves only a relative \(2^{-65473}\) headroom in the upper product comparison.
 
 These bounds strictly strengthen the earlier fixed exponents \(2^{46}\) and \(2^{65518}\). In particular, \(\alpha_3>2^{46}\), \(\gamma_3>2^{65518}\), and both moving exponents subsequently grow.
 
@@ -120,33 +120,57 @@ V_3^{T_5^{\gamma_3}}
 
 ### Upper inequality: all \(j\ge4\)
 
-Fix \(j\ge4\), and put
+Put \(D=2^{65473}\). First prove the auxiliary estimate
+\[
+V_k<T_{k+4}^{1/D}\qquad(k\ge2).
+\]
+At \(k=2\),
+\[
+T_6^{1/D}
+=2^{\,2^{65536}/2^{65473}}
+=2^{2^{63}}
+>V_2.
+\]
+For the induction, let \(t=T_{k+4}\). We have \(t\ge T_6>D^2\), hence
+\[
+t^{1/D}<t/D.
+\]
+If \(V_k<t^{1/D}\), then
+\[
+V_{k+1}=2^{V_k}-1
+<2^{t^{1/D}}
+<2^{t/D}
+=T_{k+5}^{1/D}.
+\]
+This proves the auxiliary estimate.
+
+Now fix \(j\ge4\), and put
 \[
 Y=T_{j+1}=2^{T_j},\qquad X=T_{j+2}=2^Y.
 \]
-The elementary comparison gives \(V_{j-3}<Y\). Since all quantities are integers,
+Since \(j-1\ge2\), the auxiliary estimate gives
 \[
-V_{j-2}<2^{Y-1}=X/2,
-\qquad
-V_{j-1}<2^{X/2}.
+V_{j-1}<T_{j+3}^{1/D}=2^{X/D}.
 \]
 By the definition of \(\gamma_j\),
 \[
+\begin{aligned}
 Y\gamma_j
-=2^{T_j}\bigl(2^{Y-T_j-1}-1\bigr)
-=2^{Y-1}-Y
-<X/2.
+&=2^{T_j}\left(2^{Y-T_j}-2^{Y-T_j-65473}\right)\\
+&=2^Y-2^{Y-65473}\\
+&=X-X/D.
+\end{aligned}
 \]
 Consequently,
 \[
-X^{\gamma_j}=2^{Y\gamma_j}<2^{X/2}.
+X^{\gamma_j}=2^{X-X/D}.
 \]
-Now \(V_j<2^{V_{j-1}}\), so
+Using \(V_j<2^{V_{j-1}}\), we obtain
 \[
 \begin{aligned}
 V_j^{X^{\gamma_j}}
 &<2^{V_{j-1}X^{\gamma_j}}\\
-&<2^{\,2^{X/2}\,2^{X/2}}\\
+&<2^{\,2^{X/D}\,2^{X-X/D}}\\
 &=2^{2^X}
 =T_{j+4}.
 \end{aligned}
