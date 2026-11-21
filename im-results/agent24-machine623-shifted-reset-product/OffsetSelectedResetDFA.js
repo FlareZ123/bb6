@@ -23,6 +23,75 @@ const bufferArtifact = JSON.parse(fs.readFileSync(bufferPath, "utf8"));
 const fullArtifact = JSON.parse(fs.readFileSync(fullPath, "utf8"));
 const base = bufferArtifact.pair_carry_only;
 const full = fullArtifact.post_reset_pair;
+
+const stateMap = base.state_map;
+const oldOutputToNew = base.compression.old_output_to_new;
+if (stateMap.length !== full.transitions.length) {
+  throw new Error("state projection has the wrong source-state count");
+}
+if (oldOutputToNew.length !== full.output_labels.length) {
+  throw new Error("output projection has the wrong source-label count");
+}
+
+let transitionProjectionMismatches = 0;
+let outputProjectionMismatches = 0;
+let eventProjectionMismatches = 0;
+const mappedBaseStates = new Set();
+
+for (let source = 0; source < full.transitions.length; source += 1) {
+  const baseSource = stateMap[source];
+  mappedBaseStates.add(baseSource);
+
+  const fullOutput = full.outputs[source];
+  const expectedBaseOutput =
+    fullOutput === null ? null : oldOutputToNew[fullOutput];
+  if (base.outputs[baseSource] !== expectedBaseOutput) {
+    outputProjectionMismatches += 1;
+  }
+
+  for (let symbol = 0; symbol < alphabetSize; symbol += 1) {
+    const fullTarget = full.transitions[source][symbol];
+    const baseTarget = base.transitions[baseSource][symbol];
+    if (stateMap[fullTarget] !== baseTarget) {
+      transitionProjectionMismatches += 1;
+    }
+
+    if (fullOutput === null && full.outputs[fullTarget] !== null) {
+      const label = full.output_labels[full.outputs[fullTarget]];
+      const eventPair = [
+        Math.floor(symbol / 3),
+        symbol % 3,
+      ];
+      if (
+        JSON.stringify(label.L_final.previous_pair) !== JSON.stringify(eventPair) ||
+        JSON.stringify(label.R_final.previous_pair) !== JSON.stringify(eventPair)
+      ) {
+        eventProjectionMismatches += 1;
+      }
+    }
+  }
+}
+
+const projectionValidation = {
+  full_states_checked: full.transitions.length,
+  base_states: base.transitions.length,
+  mapped_base_states: mappedBaseStates.size,
+  full_transitions_checked: full.transitions.length * alphabetSize,
+  full_output_labels_checked: full.output_labels.length,
+  transition_projection_mismatches: transitionProjectionMismatches,
+  output_projection_mismatches: outputProjectionMismatches,
+  first_reset_event_symbol_mismatches: eventProjectionMismatches,
+};
+if (
+  mappedBaseStates.size !== base.transitions.length ||
+  transitionProjectionMismatches ||
+  outputProjectionMismatches ||
+  eventProjectionMismatches
+) {
+  throw new Error("all-state base/full projection check failed: " +
+    JSON.stringify(projectionValidation));
+}
+
 const alphabetSize = base.transitions[0].length;
 if (alphabetSize !== 9) throw new Error("expected nine digit-pair symbols");
 
@@ -200,6 +269,7 @@ const result = {
   transitions,
   outputs,
   event_masks: eventMasks,
+  projection_validation: projectionValidation,
   minimization: {
     method: "reachable Moore/Mealy partition refinement",
     partition_counts: partitionCounts,
