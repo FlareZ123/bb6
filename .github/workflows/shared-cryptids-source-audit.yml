@@ -8,6 +8,11 @@ on:
         required: true
         type: string
         default: 'BusyBeaver.BB6.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA'
+      extra_original_module:
+        description: 'Optional second original upstream Lean module required by the dependency closure'
+        required: false
+        type: string
+        default: ''
       dependency_path:
         description: 'Repo-relative standalone Lean dependency to compile first'
         required: true
@@ -48,6 +53,7 @@ jobs:
     timeout-minutes: 45
     env:
       ORIGINAL_MODULE: ${{ inputs.original_module }}
+      EXTRA_ORIGINAL_MODULE: ${{ inputs.extra_original_module }}
       DEPENDENCY_PATH: ${{ inputs.dependency_path }}
       BRIDGE_PATH: ${{ inputs.bridge_path }}
       EXTRA_DEPENDENCY_PATH: ${{ inputs.extra_dependency_path }}
@@ -61,6 +67,10 @@ jobs:
         run: |
           set -euo pipefail
           [[ "$ORIGINAL_MODULE" =~ ^[A-Za-z0-9_.]+$ ]]
+          if [[ -n "$EXTRA_ORIGINAL_MODULE" ]]; then
+            [[ "$EXTRA_ORIGINAL_MODULE" =~ ^[A-Za-z0-9_.]+$ ]]
+            test "$EXTRA_ORIGINAL_MODULE" != "$ORIGINAL_MODULE"
+          fi
           [[ "$UPSTREAM_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$LEAN_TOOLCHAIN" =~ ^leanprover/lean4:v[0-9]+\.[0-9]+\.[0-9]+-rc[0-9]+$ ]]
           [[ "$DEPENDENCY_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-rc[0-9]+$ ]]
@@ -114,7 +124,12 @@ jobs:
       - name: Compile original raw-TM acceleration
         working-directory: /tmp/cryptids
         shell: bash
-        run: lake build "$ORIGINAL_MODULE"
+        run: |
+          set -euo pipefail
+          lake build "$ORIGINAL_MODULE"
+          if [[ -n "$EXTRA_ORIGINAL_MODULE" ]]; then
+            lake build "$EXTRA_ORIGINAL_MODULE"
+          fi
       - name: Prove against unchanged source definitions and audit axioms
         working-directory: /tmp/cryptids
         shell: bash
