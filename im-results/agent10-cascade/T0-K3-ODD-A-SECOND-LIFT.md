@@ -106,7 +106,7 @@ h=2d-4p-K-4.
 \]
 The preceding theorem proves that \(E\) has no even parent and has exactly one odd parent, namely \(h\) at scale \(K-1\). In this phase \(h\equiv2\pmod3\), so an odd parent of \(h\) is arithmetically possible.
 
-To determine its next valuation, compute \(X\) modulo \(27\) from the numerator in (7) modulo \(81\). The order of \(2\) modulo \(81\) is \(54\), so the answer depends on \(a\bmod54\). The resulting exact table, expressed as a partition, is
+To determine its next valuation, compute \(X\) modulo \(27\) from the numerator of its defining expression modulo \(81\). The order of \(2\) modulo \(81\) is \(54\), so the answer depends on \(a\bmod54\). The resulting exact table, expressed as a partition, is
 \[
 \begin{array}{c|l}
 h\bmod9 & a\bmod54\\ \hline
@@ -127,7 +127,11 @@ so \(v_3(Y)=1\). Its only possible odd-parent parameter is
 \[
 g=Y/3.
 \]
-Substitution from (7) and (9) gives the exact normalized expression
+From the defining expression for \(X\), this phase's \(d=X/3\) satisfies
+\[
+\frac dp=\frac{80-32x+(2K+13)/p}{9}.
+\]
+Substituting this identity and (9) into \(g=(2h+5)/3\) gives the exact normalized expression
 \[
 \frac gp=\frac{248-128x}{27}+\frac{25-10K}{27p}.
 \tag{11}
