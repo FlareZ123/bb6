@@ -158,13 +158,13 @@ There is also a source-rooted lower return law for \(D\), requiring no suffix re
 \[
 \Delta D\ge\frac{\sum_{i=0}^{8}t_i+36}{2}.
 \]
-Summing these per-gate lower bounds over the source-aligned 81,920-return nine-digit projection gives 754,974,720 = 9,216\cdot81,920. The centered partial sums have minimum -237,910 at phase 20,629. From the source-certified return-5457 stack, \(M_0=5,590,215\) and \(D_0=66,584,055\), this yields, for every surviving P-return state after \(n\) returns,
+Summing these per-gate lower bounds over the source-aligned 81,920-return nine-digit projection gives 754,974,720 = 9,216\cdot81,920, exactly nine times the period's mass drift. Tracking the residual after **each of the three gates**, not only at P-return boundaries, gives minimum -237,910 (phase 20,629, after gate 3) and maximum 385,701 (phase 26,422, after gate 3). From the source-certified return-5457 stack, \(M_0=5,590,215\) and \(D_0=66,584,055\), this yields, at **every surviving gate boundary** along the root,
 \[
 D_n\ge D_0+9,216n-237,910
 \quad\Longrightarrow\quad
 \boxed{D_n\ge 9M_n+16,034,210.}
 \]
-The exact finite sum and phase minimum are reproducible in [ninth_moment_drift.py](ninth_moment_drift.py). This is a genuine root-history lower bound, conditional on survival. It is not yet tight enough by itself to eliminate all terminal powers: the remaining task is an upper bound or tighter interval for \(D\), or a complementary tail functional.
+The exact finite sum and gate-boundary residual extrema are reproducible in [ninth_moment_drift.py](ninth_moment_drift.py). This is a genuine root-history lower bound, conditional on survival. It is not yet tight enough by itself to eliminate all terminal powers: the remaining task is an upper bound or tighter interval for \(D\), or a complementary tail functional.
 
 ## 5. What remains to prove
 
