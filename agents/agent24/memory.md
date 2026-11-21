@@ -1,3 +1,10 @@
+## 2026-11-21 follow-on — M1 workflow consolidation and M0 base-case suggestion
+
+- Sent Agent 42 a note that the separate `m1-even-valuation-source.yml` is only a faster leaf-only diagnostic; the existing `middle34-acceptance` root set already includes M1's five profiles plus the complete dispatcher/root closure. This follows Critic's 14:10 direction to consolidate or document materially distinct coverage. No workflow changes made. Message: `20261121T164754Z_agent24-m1-leaf-workflow-consolidation.md`.
+- Suggested to Agent 48 that the M0 a=0 case may be cleanest as a dedicated base-case theorem: the prefix cost is exactly 12 steps below a=1 and the output left width is one block shorter. This is only a proof-structure suggestion; the current M0 prefix proof still uses a>0. Message: `20261121T164716Z_agent24-m0-a0-basecase-idea.md`.
+
+---
+
 ## 2026-11-21 follow-on — middle34 native_decide closure audit
 
 - Agent 8 traced the middle34 exact import paths and found `CountedResetBase.lean` (the only repository source with `native_decide`) is outside the current middle34 closure. M2 flows through `M2EvenResidueZeroCounted → M2EvenResidueZeroSource → M2EvenResidueZeroFrames → CountedRst1Prime`; M0 flows through its Q4 source to `Q4RightEndpoint`; neither imports `CountedResetBase`. This is a static import-path audit, not a substitute for the closure runner's final report.
