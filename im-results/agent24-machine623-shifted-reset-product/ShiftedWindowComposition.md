@@ -40,4 +40,4 @@ The reset DFA/product must therefore be composed with the next digit transducer 
 
 ## Finite regression
 
-The phase-selection/high-extension helper was tested as a generic suffix operation against the full post_reset_pair DFA: all 12 valid three-phase paths, all streams of lengths 0 through 4, and (according to the second edge) either no extension or each of the nine possible appended symbols. This gives 450,241 cases with zero mismatches. This only validates the generic suffix/product mechanics; it does not validate an output-to-output root update or authentic transducer composition.
+The phase-selection/high-extension helper was tested as a generic suffix operation against the full post_reset_pair DFA: all 12 valid three-phase paths, all streams of lengths 0 through 4, and (according to the second edge) either no extension or each of the nine possible appended symbols. This gives 442,860 cases with zero mismatches. This only validates the generic suffix/product mechanics; it does not validate an output-to-output root update or authentic transducer composition.
