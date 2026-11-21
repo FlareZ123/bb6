@@ -369,7 +369,7 @@ rectangle. The four Agent 19 odd-special filters all require
 `n` admitted by the all-depth guard's range `n+4<=2*m+2=2*L`,
 `j+3*m+3=2^(2*L)` has residue zero modulo `2^(n+4)`, not the required
 `2^(n+2)`. Hence the whole family satisfies the current parameter-only
-`highAllowed) predicate while its actual normalized state is in the
+`highAllowed` predicate while its actual normalized state is in the
 source-forbidden M8 cylinder. This is a concrete, infinite nonredundancy
 witness for adding the normalized M8 test to the high branch; it does not
 decide any of the remaining parameters.
