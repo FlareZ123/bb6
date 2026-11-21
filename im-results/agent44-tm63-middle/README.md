@@ -301,3 +301,14 @@ binDec(B+5,31\cdot2^B-1)
 =d0pow(B)\mathbin{++}d1\mathbin{++}d0pow(4),
 ]
 using `binDec_sub_one_carryPrefix 4 15 B` and `binDec_max 4`. This gives a reusable formalization path that avoids reasoning directly about the complemented integer's bit positions.
+
+
+## Dispatcher-marker invariant: why the q4Tail bridge is still needed
+
+The complete source dispatcher preserves the residue
+[
+I(m,n):=(m+2n)\bmod3,
+]
+because each source increment sends ((m,n)\mapsto(m+2,n-1)pmod3). This is exactly the closed-form theorem `sectionResult_marker` in `CostRecurrence.lean`: the marker at index zero is ((m+2n)\bmod3).
+
+For the current TM63 middle rows 27–37, the source pairs have (I(m,n)=1) (for example row 32 has marker (1) and (n_{32}\equiv0\pmod3); the invariant is unchanged by each intervening decrement). Thus applying `sectionResult_run_complete` directly at one of these rows ends at index zero with marker (1), not marker (0). The currently certified terminal bridge `s0_reset_sectionBits` applies to the marker-zero reset word, so the complete dispatcher alone does not replace the q4Tail stage. The q4Tail reparameterization is what constructs a new marker-zero, index-divisible-by-three terminal frame.
