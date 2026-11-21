@@ -49,8 +49,8 @@ def A0x (t : Nat) : Nat := 2518584390*t+675395581
 def A0y (t : Nat) : Nat := 2263923165*t+607104414
 def Qx (v : Nat) : Nat := 9565015110*v+7815011328
 def Qy (v : Nat) : Nat := 9310353885*v+7606942617
-def Qpx (m : Nat) : Nat := 1208023615680*m+147549536908
-def Qpy (m : Nat) : Nat := 297931324320*m+36389709905
+def Qpx (m : Nat) : Nat := 151002951960*m+147549536908
+def Qpy (m : Nat) : Nat := 37241415540*m+36389709905
 
 theorem no_parent_evenodd_sumplusone_two (x y : Nat)
     (hx5 : 5<x) (hx : x%2=0) (hy : y%2=1) (hy5 : 5≤y)
@@ -132,26 +132,26 @@ theorem no_parent_evenodd_sumplusone_two (x y : Nat)
               omega
 
 theorem P2_unreachable (m : Nat) :
-    ¬ RunReach (P2x (256*m+31)) (P2y (256*m+31)) := by
+    ¬ RunReach (P2x (32*m+31)) (P2y (32*m+31)) := by
   intro hr
-  have hx5 : 5<P2x (256*m+31) := by dsimp [P2x]; omega
-  have hx : P2x (256*m+31)%2=0 := by dsimp [P2x]; omega
-  have hy : P2y (256*m+31)%2=1 := by dsimp [P2y]; omega
-  have hy5 : 5≤P2y (256*m+31) := by dsimp [P2y]; omega
-  have hsum : (P2x (256*m+31)+P2y (256*m+31))%2=1 := by
+  have hx5 : 5<P2x (32*m+31) := by dsimp [P2x]; omega
+  have hx : P2x (32*m+31)%2=0 := by dsimp [P2x]; omega
+  have hy : P2y (32*m+31)%2=1 := by dsimp [P2y]; omega
+  have hy5 : 5≤P2y (32*m+31) := by dsimp [P2y]; omega
+  have hsum : (P2x (32*m+31)+P2y (32*m+31))%2=1 := by
     dsimp [P2x,P2y]
     omega
-  have hplus : (P2x (256*m+31)+P2y (256*m+31)+1)%4=2 := by
+  have hplus : (P2x (32*m+31)+P2y (32*m+31)+1)%4=2 := by
     dsimp [P2x,P2y]
     omega
   obtain ⟨a,k,hprev,hstep⟩ :=
-    run_parent_of_left_gt5 (P2x (256*m+31)) (P2y (256*m+31)) hx5 hr
+    run_parent_of_left_gt5 (P2x (32*m+31)) (P2y (32*m+31)) hx5 hr
   exact no_parent_evenodd_sumplusone_two
-    (P2x (256*m+31)) (P2y (256*m+31)) hx5 hx hy hy5 hsum hplus ⟨a,k,hstep⟩
+    (P2x (32*m+31)) (P2y (32*m+31)) hx5 hx hy hy5 hsum hplus ⟨a,k,hstep⟩
 
-theorem L_unreachable_t31_mod256 (m : Nat) :
-    ¬ RunReach (Lx (256*m+31)) (Ly (256*m+31)) := by
-  let t := 256*m+31
+theorem L_unreachable_t31_mod32 (m : Nat) :
+    ¬ RunReach (Lx (32*m+31)) (Ly (32*m+31)) := by
+  let t := 32*m+31
   have hx : Lx t%2=1 := by dsimp [Lx]; omega
   have hy : Ly t%2=1 := by dsimp [Ly]; omega
   have hy64 : 64≤Ly t := by dsimp [Ly]; omega
@@ -185,7 +185,7 @@ theorem L_unreachable_t31_mod256 (m : Nat) :
   have hA0sum4 : (A0x t+A0y t)%4=0 := by dsimp [A0x,A0y]; omega
   have hA0sum16 : (A0x t+A0y t)%16=8 := by dsimp [A0x,A0y]; omega
   have hA0size : 24≤A0x t+A0y t := by dsimp [A0x,A0y]; omega
-  let v := 64*m+7
+  let v := 8*m+7
   have hQ : RunReach (Qx v) (Qy v) := by
     have hiff := BB6.Agent3.oddodd_lowval_blank_reach_iff
       (A0x t) (A0y t) hA0x hA0y hA0y5 hA0sum4 (by omega) hA0size
@@ -213,6 +213,6 @@ theorem L_unreachable_t31_mod256 (m : Nat) :
 
 #print axioms no_parent_evenodd_sumplusone_two
 #print axioms P2_unreachable
-#print axioms L_unreachable_t31_mod256
+#print axioms L_unreachable_t31_mod32
 
 end BB6.Agent3Root32HighStopR10592LCore
