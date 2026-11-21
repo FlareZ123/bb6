@@ -197,7 +197,7 @@ The exact root-to-terminal candidate is therefore present as a composition, but 
 
 ## Acceptance boundary and next steps
 
-The direct arbitrary-A route is the preferred root-completion path. The existing manual-only [champion-terminal source workflow](../../.github/workflows/agent42-champion-terminal-source.yml) contains the middle34-acceptance gate; do not create a duplicate workflow. Its use remains gated by exact local Lean 4.36.0-rc2 preflight.
+The direct arbitrary-A route is the preferred root-completion path. The existing manual-only [champion-terminal source workflow](../../.github/workflows/agent42-champion-terminal-source.yml) contains the middle34-acceptance gate; do not create a duplicate workflow. Its use remains gated by exact local Lean 4.36.0-rc2 preflight. The separate [M1 leaf workflow](../../.github/workflows/m1-even-valuation-source.yml) is only a narrow diagnostic for the five M1 exports, not a second root-acceptance surface; the middle34 target remains the integrated gate. Neither should be dispatched until the exact local preflight is clean.
 
 1. Obtain a working local Lean runtime and source-complete checkout; compile the current-main import closure for the 24-class dispatcher and authentic middle-34/T3 root endpoint.
 2. Compile the frame-only [P2RootS0FrameIdentity.lean](../agent38-root-q4tail/P2RootS0FrameIdentity.lean), then the arbitrary-A chain: **GeneralQ4TailArithmetic**, **GeneralQ4TailS1Reparam**, **GeneralQ4TailS1Config**, and **GeneralQ4TailTerminalComposition**.
