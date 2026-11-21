@@ -303,87 +303,120 @@ See the
 [BB(6) champion analysis](https://wiki.bbchallenge.org/wiki/1RB1RA_1RC1RZ_1LD0RF_1RA0LE_0LD1RC_1RA0RE)
 for the published estimate and the four-machine family comparison.
 
-## Refined scale inside the adjacent-tower interval
+## Coupled moving-exponent bounds for the terminal counter
 
-The bracket (14) can be sharpened substantially by using the exact first
-two terms of the terminal-counter recurrence. Define
+The first two recurrence values give a much stronger scale estimate than
+fixed powers of the tetration sequence. For every \(j\ge2\),
 \[
-C=2^{47}-1,\qquad P=2^{65473}.
-\]
-Then, for every \(j\ge2\),
-\[
-\boxed{T_{j+3}^{C}<V_j,\qquad V_j^{P}<T_{j+4}.}
+\boxed{
+T_{j+3}^{\,T_{j+2}^{23/8}}<V_j,\qquad
+V_j^{\,T_{j+2}^{4092}}<T_{j+4}.
+}
 \tag{15}
 \]
+The exponents are integers: for \(j\ge2\),
+\(T_{j+2}=2^{T_{j+1}}\) with \(8\mid T_{j+1}\), so
+\(T_{j+2}^{23/8}=2^{23T_{j+1}/8}\in\mathbb N\).
 
-For the lower base case, \(V_1=2^{63}-1\), \(T_4=2^{16}\), and
-\(T_5=2^{65536}\). Since
+### Base case \(j=2\)
+
+Here
 \[
-65536C=2^{16}(2^{47}-1)=2^{63}-2^{16}<2^{63}-1=V_1,
+T_4=2^{16}=65536,\quad T_5=2^{65536},\quad
+T_6=2^{T_5},\quad V_1=2^{63}-1.
 \]
-we have
+Since \(T_4^{23/8}=2^{46}\),
 \[
-V_2=2^{V_1}-1>2^{65536C}=T_5^C.
+T_5^{T_4^{23/8}}=2^{65536\cdot2^{46}}=2^{2^{62}}
+<2^{V_1}-1=V_2.
 \]
-For the upper base case,
+For the upper inequality, \(T_4^{4092}=2^{65472}\) and
 \[
-PV_1=2^{65473}(2^{63}-1)
-=2^{65536}-2^{65473}<2^{65536}=T_5,
+T_4^{4092}V_1
+=2^{65472}(2^{63}-1)
+=2^{65535}-2^{65472}<2^{65536}=T_5.
 \]
-and hence
+Consequently
 \[
-V_2^P=(2^{V_1}-1)^P<2^{PV_1}<2^{T_5}=T_6.
+V_2^{T_4^{4092}}
+=(2^{V_1}-1)^{T_4^{4092}}
+<2^{T_4^{4092}V_1}
+<2^{T_5}=T_6.
 \]
 
-For the lower induction, put \(T=T_{j+3}\). Since \(T\ge T_5>C+1\)
-and \(C\ge2\),
+### Coupled induction
+
+Assume both inequalities hold at \(j\ge2\), and write
+\(X=T_{j+3}=2^Y\), \(Y=T_{j+2}\). Then \(Y\ge T_4=65536\),
+\(T_{j+4}=2^X\), and \(T_{j+5}=2^{T_{j+4}}\).
+
+For the lower inequality, \(Y^{23/8}>31/8+1\), so
+\(X^{Y^{23/8}}>X^{31/8}+1\). Therefore
 \[
-T^C\ge T^2>(C+1)T>CT+1.
+\begin{aligned}
+V_{j+1}
+&=2^{V_j}-1
+>2^{X^{Y^{23/8}}}-1\\
+&>2^{X^{31/8}}
+=(2^X)^{X^{23/8}}
+=T_{j+4}^{T_{j+3}^{23/8}}.
+\end{aligned}
 \]
-Thus, from \(V_j>T^C\),
+
+For the upper inequality, the lower bound at \(j\) gives
 \[
-V_{j+1}=2^{V_j}-1>2^{T^C}-1>2^{CT}=T_{j+4}^C.
+V_j^{Y^{4092}-1}
+>X^{Y^{23/8}(Y^{4092}-1)}
+>X^{4092}.
 \]
-For the upper induction, \(V_j\ge2\) gives
-\(P\le2^{P-1}\le V_j^{P-1}\), so
-\(PV_j\le V_j^P<T_{j+4}\). Therefore
+Hence
 \[
-V_{j+1}^P=(2^{V_j}-1)^P
-<2^{PV_j}<2^{T_{j+4}}=T_{j+5}.
+X^{4092}V_j
+<V_j^{Y^{4092}}
+<T_{j+4}.
+\]
+It follows that
+\[
+\begin{aligned}
+V_{j+1}^{X^{4092}}
+&=(2^{V_j}-1)^{X^{4092}}\\
+&<2^{X^{4092}V_j}
+<2^{T_{j+4}}
+=T_{j+5}.
+\end{aligned}
 \]
 This proves (15).
 
+### Consequence for the conditional TM63 score
+
 For the authentic index, \(q=M+N+50\) and
-\(b_N=V_{M+N+46}=V_{q-4}\), with \(q-4\ge2\). Consequently
+\(b_N=V_{M+N+46}=V_{q-4}\), with \(q-4\ge2\). Thus
 \[
-T_{q-1}^{2^{47}-1}<b_N,\qquad
-b_N^{2^{65473}}<T_q.
+T_{q-1}^{T_{q-2}^{23/8}}<b_N,\qquad
+b_N^{T_{q-2}^{4092}}<T_q.
 \]
-The existing exact score decomposition gives
-\(6b_N^2<S_{\rm TM1}<9b_N^2\). Combining the inequalities yields
+The existing source-conditional score decomposition gives
+\(6b_N^2<S_{\rm TM1}<9b_N^2\). Therefore
 \[
 \boxed{
-6T_{q-1}^{\,2^{48}-2}
+6T_{q-1}^{\,2T_{q-2}^{23/8}}
 <S_{\rm TM1}
-<9T_q^{\,2^{-65472}}
-=9\cdot2^{T_{q-1}/2^{65472}},
+<9T_q^{\,2/T_{q-2}^{4092}},
 \qquad q=M+N+50.
 }
 \tag{16}
 \]
-This is a strict refinement of (14): the lower endpoint is a very
-large fixed power of \(T_{q-1}\), while the upper endpoint is only a
-\(2^{-65472}\)-power of \(T_q\). The exponents come directly from the
-exact base value \(V_1=2^{63}-1\); no numerical simulation or
-asymptotic approximation is used.
+Equivalently, the upper side is
+\(9\cdot2^{\,2T_{q-1}/T_{q-2}^{4092}}\).
+This strictly strengthens the adjacent-tetration bracket (14).
 
-**Evidence boundary:** (15) is an elementary paper proof about the
+**Evidence boundary:** (15) is an elementary induction about the exact
 integer recurrence. Its application to \(S_{\rm TM1}\) still depends on
-the existing source-conditional inequalities \(6b_N^2<S_{\rm TM1}<9b_N^2\),
-which in turn depend on the uncompiled authentic-root/dispatcher
-composition. This does not establish an accepted champion halt or a
-universal BB(6) upper bound. An independent review of the recurrence
-exponents and index substitution has been requested.
+the paper-level score bounds \(6b_N^2<S_{\rm TM1}<9b_N^2\), which in
+turn depend on the uncompiled authentic-root/dispatcher composition.
+It is not a Lean-checked theorem, an accepted champion halt, or a
+universal BB(6) upper bound. The earlier fixed-exponent bounds are
+subsumed by (15) and are no longer the strongest statement.
 
 ## Scope
 

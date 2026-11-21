@@ -2128,43 +2128,54 @@ Latest review requests: Agent 24 received the log-squared/log-log tightening at 
 
 The best remainder constant was then reduced from 100 to 10: for \(m=\log_2\ell\ge8\), the three polynomial terms are bounded by \(8(1+m)\ell^2\), \((1+m)\ell^2\), and \((1+m)\ell^2\). This gives \(\Delta<10(1+\log_2\ell)\ell^2\) and normalized linear-coefficient error \(<6\times10^{-71}\). Latest review requests: communications/agent24/20261120T231624668Z_agent42-loglog-constant-10.md and communications/agent44/20261120T231630349Z_agent42-loglog-constant-10-review.md.
 
-## 2026-11-21T00:15:51.602Z continuation — refined TM63 terminal-counter scale
+## 2026-11-21T00:25:38.906Z continuation — coupled moving-exponent terminal-counter scale
 
-Derived and recorded a stronger paper-level scale estimate for the TM63
-champion score, without repeating the prior root-coordinate or dispatcher
-audits.
+The earlier fixed-exponent \(2^{47}-1,\ 2^{65473}\) refinement is now
+superseded by a stronger coupled induction. The work remains
+paper-level and source-conditional.
 
-- Let \(T_1=2,\ T_{r+1}=2^{T_r}\) and \(V_0=63,\ V_{j+1}=2^{V_j}-1\).
-  With \(C=2^{47}-1\) and \(P=2^{65473}\), proved by induction that
-  \(T_{j+3}^{C}<V_j\) and \(V_j^P<T_{j+4}\) for every \(j\ge2\).
-- The lower base case uses
-  \(65536C=2^{63}-2^{16}<V_1=2^{63}-1\). The upper base case uses
-  \(PV_1=2^{65536}-2^{65473}<T_5=2^{65536}\). Both inductions are
-  monotone and preserve the stated indices.
-- With \(q=M+N+50\), \(b_N=V_{q-4}\), and \(q-4\ge2\), this gives
-  \(T_{q-1}^{2^{47}-1}<b_N\) and \(b_N^{2^{65473}}<T_q\).
-  Combining with the existing paper-level score bracket
-  \(6b_N^2<S_{\rm TM1}<9b_N^2\) yields
+- With \(T_1=2,\ T_{r+1}=2^{T_r}\) and
+  \(V_0=63,\ V_{j+1}=2^{V_j}-1\), proved for every \(j\ge2\):
   \[
-  6T_{q-1}^{2^{48}-2}<S_{\rm TM1}<9T_q^{2^{-65472}}.
+  T_{j+3}^{T_{j+2}^{23/8}}<V_j,\qquad
+  V_j^{T_{j+2}^{4092}}<T_{j+4}.
   \]
-- Added the proof to
-  `im-results/agent42-q4-s0-drain/TM63PublishedTowerSandwich.md`
-  and consolidated the current summary in the dossier README. This remains
-  in `im-results/`: the score bracket is conditional on the authentic
-  root/dispatcher composition, which has not passed local Lean compilation
-  or transitive axiom audit.
+- Base lower: \(T_4^{23/8}=2^{46}\), so
+  \(T_5^{T_4^{23/8}}=2^{2^{62}}<V_2\), since
+  \(V_1=2^{63}-1>2^{62}\).
+- Base upper: \(T_4^{4092}=2^{65472}\) and
+  \(T_4^{4092}V_1=2^{65535}-2^{65472}<T_5\), giving
+  \(V_2^{T_4^{4092}}<T_6\).
+- Coupled induction: the lower inequality at \(j\) raises
+  \(V_{j+1}=2^{V_j}-1\) above
+  \(T_{j+4}^{T_{j+3}^{23/8}}\). Combining that lower inequality with
+  the upper one gives
+  \(T_{j+3}^{4092}V_j<V_j^{T_{j+2}^{4092}}<T_{j+4}\), which propagates
+  the upper inequality to \(j+1\).
+- For \(q=M+N+50\) and \(b_N=V_{q-4}\), the authentic index has
+  \(q-4\ge2\). Thus
+  \(T_{q-1}^{T_{q-2}^{23/8}}<b_N\) and
+  \(b_N^{T_{q-2}^{4092}}<T_q\). Combining with the existing
+  source-conditional \(6b_N^2<S_{\rm TM1}<9b_N^2\) gives
+  \[
+  6T_{q-1}^{2T_{q-2}^{23/8}}
+  <S_{\rm TM1}<
+  9T_q^{2/T_{q-2}^{4092}}.
+  \]
+- Replaced the weaker fixed-exponent section in
+  `im-results/agent42-q4-s0-drain/TM63PublishedTowerSandwich.md`,
+  consolidated the dossier README, and updated the TM1 row in
+  `research/BOARD.md`. The board continues to mark the root/dispatcher
+  composition uncompiled and BB(6) unresolved.
 - Exact JavaScript BigInt checks confirmed the two base inequalities;
-  the proof itself is the displayed induction, not the finite check.
-- Requested a targeted independent review from Agent 24. Do not repeat the
-  earlier score-split review unless the reviewer identifies a concrete issue.
+  the induction above is the proof. Updated the existing targeted review
+  request to Agent 24 rather than creating another message.
+- Local shell remains unavailable: `container.exec` and
+  `python.exec` returned tool-level `ClientError`. No Lean command ran
+  and no CI was used as a substitute for local preflight.
 
-The local shell remains unavailable: `container.exec` returned a
-tool-level `ClientError` even for `pwd && ls`. No Lean command ran and
-no CI was used as a substitute for local preflight.
-
-Next: incorporate any specific correction from Agent 24; if the bound
-survives, consider a small isolated Lean formalization when a working
-local Lean 4.36.0-rc2 runtime is available. The main blocker remains
-acceptance of the authentic root-to-q4Tail, counted-drain, and original
-dispatcher dependency closure. BB(6) remains unresolved.
+Next: obtain Agent 24's targeted review of the coupled induction and
+\(q-4\) substitution. If valid, formalize this small recurrence lemma
+when a working local Lean 4.36.0-rc2 runtime is available. The primary
+acceptance blocker remains the authentic root-to-q4Tail, counted-drain,
+and original dispatcher dependency closure. BB(6) remains unresolved.

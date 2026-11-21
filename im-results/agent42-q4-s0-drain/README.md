@@ -78,19 +78,15 @@ Since \(b_{N-1}=\log_2(b_N+1)\), the remainder is \(o(b_N^2)\). A further paper-
 \]
 where \(n=2^m\), \(m=2^z-1\), \(B\le z\le m/2\), and \(z\ge10\). The lower bound is the \(D_m\) summand; the upper bound is the explicit decomposition above. Hence \(C_{\rm root}=6n^2+O(n)\sim6n^2=o(R^2)\) for \(R=2^{n-1}-1\). The separate root drain is \(O(R^2)\), so the full conditional score has \(S_{\rm full}\sim6t_2(N,R)^2\) along this q4 parameter family. The exact score split \(S=C_{\rm root}+D_{\rm root}+D_N\), together
 with the explicit root-prefix and dispatcher bounds, gives
-\(S_{\rm TM1}<9b_N^2\). The terminal-counter recurrence gives a much sharper scale bound after its first step. Put \(C=2^{47}-1\) and \(P=2^{65473}\). For every \(j\ge2\),
+\(S_{\rm TM1}<9b_N^2\). A coupled induction on the terminal-counter recurrence now gives a moving-exponent scale bound. For every \(j\ge2\),
 \[
-T_{j+3}^{C}<V_j,\qquad V_j^{P}<T_{j+4}.
+T_{j+3}^{T_{j+2}^{23/8}}<V_j,\qquad V_j^{T_{j+2}^{4092}}<T_{j+4}.
 \]
-With \(q=M+N+50\) and \(b_N=V_{q-4}\), this gives
+With \(q=M+N+50\), \(b_N=V_{q-4}\), and the existing source-conditional score bracket \(6b_N^2<S_{\rm TM1}<9b_N^2\), this yields
 \[
-T_{q-1}^{2^{47}-1}<b_N,\qquad b_N^{2^{65473}}<T_q.
+\boxed{6T_{q-1}^{2T_{q-2}^{23/8}}<S_{\rm TM1}<9T_q^{2/T_{q-2}^{4092}}.}
 \]
-Combining these with the source-conditional score bounds \(6b_N^2<S_{\rm TM1}<9b_N^2\) yields
-\[
-\boxed{6T_{q-1}^{2^{48}-2}<S_{\rm TM1}<9T_q^{2^{-65472}}.}
-\]
-This strictly sharpens the earlier adjacent-tetration bracket. The recurrence argument is paper-level; the score interpretation remains conditional on the uncompiled authentic-root and dispatcher composition. See [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md) for the proof and [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md) for the exact terminal lower bound. The consolidated note also proves \(q<T_{11}\), so
+This supersedes the earlier fixed-exponent estimate and strictly sharpens the adjacent-tetration bracket. The recurrence proof is paper-level; the score interpretation remains conditional on the uncompiled authentic-root and dispatcher composition. See [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md) for the proof and [DirectTerminalTetrationBound.md](../agent24-champion-time/DirectTerminalTetrationBound.md) for the exact terminal lower bound. The consolidated note also proves \(q<T_{11}\), so
 \(T_q<T_{T_{11}}\), below the published right endpoint.
 
 **Evidence boundary:** this is a source-level integration candidate, not
@@ -884,7 +880,7 @@ of the committed Python artifacts.
 
 [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md) now derives the source-conditional scale estimate
 \[
-6T_{q-1}^{2^{48}-2}<S_{\rm TM1}<9T_q^{2^{-65472}},
+6T_{q-1}^{2T_{q-2}^{23/8}}<S_{\rm TM1}<9T_q^{2/T_{q-2}^{4092}},
 \qquad q=M+N+50.
 \]
 This is substantially sharper than the earlier adjacent-tetration bracket and the published interval. It remains an intermediate result until the authentic Lean composition passes local compilation and its transitive axiom audit; it is not a universal BB(6) upper bound.
