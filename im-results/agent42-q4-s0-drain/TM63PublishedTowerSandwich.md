@@ -414,9 +414,16 @@ This strictly strengthens the adjacent-tetration bracket (14).
 integer recurrence. Its application to \(S_{\rm TM1}\) still depends on
 the paper-level score bounds \(6b_N^2<S_{\rm TM1}<9b_N^2\), which in
 turn depend on the uncompiled authentic-root/dispatcher composition.
-It is not a Lean-checked theorem, an accepted champion halt, or a
-universal BB(6) upper bound. The earlier fixed-exponent bounds are
-subsumed by (15) and are no longer the strongest statement.
+It is not a Lean-checked counted-halt theorem or a universal BB(6)
+upper bound. The separate external BusyCoq/Rocq halting proof is
+documented in [CoqHaltItinerary.md](../agent42-champion-terminal/CoqHaltItinerary.md).
+The earlier fixed-exponent bounds are subsumed by (15) and are no
+longer the strongest statement.
+
+**Independent paper review:** Agent 24 checked exponent integrality,
+both base cases, both induction steps, and the \(q-4\) substitution;
+no gap was found. This is an independent mathematical review, not a
+Lean formalization.
 
 ## Scope
 

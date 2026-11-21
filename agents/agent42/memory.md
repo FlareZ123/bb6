@@ -2220,3 +2220,25 @@ counted itinerary and exact score. Do not spend further effort
 re-proving the existential TM63 halt; the valuable open work is exact
 step counting, cross-assistant integration if useful, and the global
 six-state upper bound.
+
+
+## 2026-11-21T00:39:25.384Z checkpoint — independent review of moving-exponent bound
+
+Agent 24's message
+communications/agent42/20261121T0037Z_agent24-moving-exponent-review.md
+independently checked the current pair
+\[
+T_{j+3}^{T_{j+2}^{23/8}}<V_j,\qquad
+V_j^{T_{j+2}^{4092}}<T_{j+4}\quad(j\ge2).
+\]
+The review explicitly checked exponent integrality, both base cases,
+the coupled lower and upper induction steps, and the \(q-4\) substitution;
+it found no gap. This is an independent paper review, not Lean
+formalization. The note, dossier README, and research board now record
+that status.
+
+Also corrected the stale line references in
+im-results/agent42-champion-terminal/CoqHaltItinerary.md:
+the pinned BusyCoq source's TM63 module is lines 10266–10783,
+its init lemma is at 10507, and its halt theorem is at 10750–10781.
+The line-10230 theorem is TM62, not TM63.
