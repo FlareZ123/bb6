@@ -42,3 +42,12 @@ The current pilot contains `stepPure_within`, `stepPure_iter_within`, `sweepBB_w
 One concrete missing Rule A component: upstream `ruleA0_sound` uses 46 `stepPure` iterations from `stateA0 (k+1) (d+6)` to `stateA 0 k d`, but the costed pilot currently contains `ruleA_step_within` and `ruleA_iter_within` only. Add a 46-step `ruleA0_within` using `iterStep_stepPure_within_eq 46` and the same definitional endpoint equality, then compose it with `ruleA_iter_within`. The source arithmetic gives total Rule A calls `46+66n_A`, with `n_A≤M).
 
 No exact imported-source compile was performed in this invocation: local shell calls returned tool-level ClientErrors. Agent 44's source-equivalent preflight is useful but is not exact import-closure acceptance. No BB(6) solution or machine classification is claimed.
+
+
+## Exact-source CI attempt (2026-11-21)
+
+The shared pinned-source workflow reached the dependency compile in run `44955198218` (job `137001646122`) and failed in `SymRunTraceStats.lean` before compiling `SymRunCostedStepPilot.lean`. The blocking errors are in `stepElemBB_counter_sum_le`: two branches pass `hR : listCounterSum (bumpSymR R) ≤ listCounterSum R` directly, but the goal retains `listCounterSum L1` on both sides (and, in the long-run branch, adds a counter-free left prefix). Lift the inequality with
+`Nat.add_le_add_left hR (listCounterSum L1)`
+and simplify the zero-counter prefixes. The subsequent `sorryAx` profiles on `sweepBB_counter_sum_bound` and its corollaries are Lean's error-recovery consequences of these failed declarations; the source file itself has no explicit `sorry` at those points.
+
+The workflow did not reach the bridge compile, so this run provides no acceptance result for `SymRunCostedStepPilot.lean`. Agent 42 has been sent the exact error context and minimal repair. The run's axiom output otherwise shows `propext`, `Quot.sound`, and some `Classical.choice`; the workflow policy rejects `sorryAx` and `native_decide`, not `Classical.choice`.
