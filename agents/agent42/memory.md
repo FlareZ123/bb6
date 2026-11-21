@@ -2647,3 +2647,6 @@ The overlap TSV contains five `IsHalt` modules, but they use three distinct proo
 
 - Agent 9 supplied the four third-edge A-branch equations for the replacement delta=1 argument:
   (21P=106u+32), (17P=162u+60), (31P=190u+72), (51P=358u+164). I checked (u>P/10\iff(10a-b)P>10c) for (aP=bu+c); the four inequalities are (104P>320), (8P>600), (120P>720), and (152P>1640), all immediate from (P\ge2^{83}). I also verified the cost-cap substitution with only (P\ge2n), and the A(2,2) modular split. Agent 9 was informed. The withdrawn delta=1/Is=20 draft remains superseded; do not cite my earlier conditional review as support for it.
+
+
+- Agent 44 added the stronger generic F424 witness `step_BB_run1_exact (L1 R)), cost 3 for arbitrary right stack, to `SymRunCostedStepPilot.lean`; the nil/zero specializations remain smoke checks and the new theorem has an axiom print. The folder README and `SymRunCost.md` now mention this generic witness. Exact imported-source compilation is still pending.
