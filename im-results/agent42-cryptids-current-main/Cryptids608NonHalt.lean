@@ -1,4 +1,5 @@
 import CryptidsTapeAdapter
+import BusyBeaver.Bridge
 import IncrementalAudit
 import ResidualFrontierManifest
 import BusyBeaver.BB6.NonHalt.M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF
@@ -31,6 +32,13 @@ open BB6Coverage BB6.ConjectureBridge
 set_option maxRecDepth 12000
 set_option maxHeartbeats 0
 
+private theorem upstream_is_not_halt_to_agent8
+    (source : ConjectureMachines.Machine 6 2)
+    (hnot : BusyBeaver.IsNotHalt source.toBB) :
+    NeverHalts (toAgent8 source) :=
+  not_halts_to_agent8 source
+    ((ConjectureMachines.isNotHalt_toBB_iff_not_halts source).mp hnot)
+
 def source_r1 : ConjectureMachines.Machine 6 2 := BusyBeaver.M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF.machine
 def original_r1 : Machine := toAgent8 source_r1
 def expectedRLE_r1 : Machine := fun slot =>
@@ -55,7 +63,8 @@ theorem original_r1_eq_expectedRLE : original_r1 = expectedRLE_r1 := by
   fin_cases q <;> cases b <;> rfl
 
 theorem original_r1_never : NeverHalts original_r1 :=
-  not_halts_to_agent8 source_r1 BusyBeaver.M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF.is_not_halt
+  upstream_is_not_halt_to_agent8 source_r1
+    (by simpa [source_r1] using BusyBeaver.M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF.is_not_halt)
 
 theorem literal_r1_never : NeverHalts expectedRLE_r1 := by
   rw [← original_r1_eq_expectedRLE]
@@ -71,6 +80,10 @@ theorem cover_r1 (bound : Nat) : Cover (DecidedBelow bound) cylinder_r1 := by
     exact hm slot (expectedRLE_r1 slot) rfl
   rw [heq]
   exact Or.inl literal_r1_never
+
+local instance depth4ResidualOpenDecidable (m : Machine) :
+    Decidable (depth4ResidualAudit.open m) :=
+  FrontierAudit.openDecidable depth4ResidualAudit m
 
 theorem oldOpen_r1 : depth4ResidualAudit.open expectedRLE_r1 := by
   decide
@@ -101,7 +114,8 @@ theorem original_r2_eq_expectedRLE : original_r2 = expectedRLE_r2 := by
   fin_cases q <;> cases b <;> rfl
 
 theorem original_r2_never : NeverHalts original_r2 :=
-  not_halts_to_agent8 source_r2 BusyBeaver.M_1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA.is_not_halt
+  upstream_is_not_halt_to_agent8 source_r2
+    (by simpa [source_r2] using BusyBeaver.M_1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA.is_not_halt)
 
 theorem literal_r2_never : NeverHalts expectedRLE_r2 := by
   rw [← original_r2_eq_expectedRLE]
@@ -147,7 +161,8 @@ theorem original_r3_eq_expectedRLE : original_r3 = expectedRLE_r3 := by
   fin_cases q <;> cases b <;> rfl
 
 theorem original_r3_never : NeverHalts original_r3 :=
-  not_halts_to_agent8 source_r3 BusyBeaver.M_1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_HHH1RA.is_not_halt
+  upstream_is_not_halt_to_agent8 source_r3
+    (by simpa [source_r3] using BusyBeaver.M_1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_HHH1RA.is_not_halt)
 
 theorem literal_r3_never : NeverHalts expectedRLE_r3 := by
   rw [← original_r3_eq_expectedRLE]
@@ -193,7 +208,8 @@ theorem original_r4_eq_expectedRLE : original_r4 = expectedRLE_r4 := by
   fin_cases q <;> cases b <;> rfl
 
 theorem original_r4_never : NeverHalts original_r4 :=
-  not_halts_to_agent8 source_r4 BusyBeaver.M_1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0REHHH.is_not_halt
+  upstream_is_not_halt_to_agent8 source_r4
+    (by simpa [source_r4] using BusyBeaver.M_1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0REHHH.is_not_halt)
 
 theorem literal_r4_never : NeverHalts expectedRLE_r4 := by
   rw [← original_r4_eq_expectedRLE]
@@ -239,7 +255,8 @@ theorem original_r5_eq_expectedRLE : original_r5 = expectedRLE_r5 := by
   fin_cases q <;> cases b <;> rfl
 
 theorem original_r5_never : NeverHalts original_r5 :=
-  not_halts_to_agent8 source_r5 BusyBeaver.M_1RB1RA_0LC0RA_1RC1LD_0LB1LE_1LF0RC_HHH0LD.is_not_halt
+  upstream_is_not_halt_to_agent8 source_r5
+    (by simpa [source_r5] using BusyBeaver.M_1RB1RA_0LC0RA_1RC1LD_0LB1LE_1LF0RC_HHH0LD.is_not_halt)
 
 theorem literal_r5_never : NeverHalts expectedRLE_r5 := by
   rw [← original_r5_eq_expectedRLE]
@@ -285,7 +302,8 @@ theorem original_r6_eq_expectedRLE : original_r6 = expectedRLE_r6 := by
   fin_cases q <;> cases b <;> rfl
 
 theorem original_r6_never : NeverHalts original_r6 :=
-  not_halts_to_agent8 source_r6 BusyBeaver.M_1RB1RA_1RC1LB_0LD0RA_1RF1LE_HHH1LF_1LC0LF.is_not_halt
+  upstream_is_not_halt_to_agent8 source_r6
+    (by simpa [source_r6] using BusyBeaver.M_1RB1RA_1RC1LB_0LD0RA_1RF1LE_HHH1LF_1LC0LF.is_not_halt)
 
 theorem literal_r6_never : NeverHalts expectedRLE_r6 := by
   rw [← original_r6_eq_expectedRLE]
@@ -326,7 +344,7 @@ theorem cryptids608GraftedAudit_open_iff (m : Machine) :
       ¬ compatible cylinder_r1 m ∧ ¬ compatible cylinder_r2 m ∧
       ¬ compatible cylinder_r3 m ∧ ¬ compatible cylinder_r4 m ∧
       ¬ compatible cylinder_r5 m ∧ ¬ compatible cylinder_r6 m := by
-  simp [cryptids608GraftedAudit, addCertificate_open_iff, empty_compatible]
+  simp [cryptids608GraftedAudit, addCertificate_open_iff, empty_compatible, and_assoc]
 
 theorem cryptids608GraftedAudit_exhaustive (m : Machine) :
     DecidedBelow 6 m ∨ cryptids608GraftedAudit.open m :=
@@ -392,6 +410,7 @@ theorem closes_r6 : ¬ cryptids608GraftedAudit.open expectedRLE_r6 := by
     exact Option.some.inj (by simpa [cylinder_r6] using ht)
   exact h.2.2.2.2.2.2 hc
 
+#print axioms upstream_is_not_halt_to_agent8
 #print axioms cryptids608GraftedAudit
 #print axioms cryptids608GraftedAudit_open_iff
 #print axioms cryptids608GraftedAudit_exhaustive

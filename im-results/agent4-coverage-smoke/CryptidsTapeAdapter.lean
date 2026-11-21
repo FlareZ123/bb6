@@ -182,7 +182,31 @@ theorem reachable_live_implies_never (m : ConjectureMachines.Machine 6 2)
   rw [blank_run_toAbsolute, hp]
   rfl
 
+private theorem reachable_source (m : ConjectureMachines.Machine 6 2)
+    {c : ConjectureMachines.Cfg 6 2} (h : Reachable m c) :
+    StateTransition.Reaches (ConjectureMachines.step m) ConjectureMachines.init c := by
+  induction h with
+  | root => exact Relation.ReflTransGen.refl
+  | next ha hs ih => exact Relation.ReflTransGen.tail ih hs
+
+/-- Transfers source-semantic nonhalting through the exact tape simulation
+into this repository's absolute-tape semantics. -/
+theorem not_halts_to_agent8 (m : ConjectureMachines.Machine 6 2)
+    (hnot : ¬ ConjectureMachines.Halts m) :
+    BB6Coverage.NeverHalts (toAgent8 m) := by
+  apply reachable_live_implies_never m
+  intro c hreach
+  cases hs : ConjectureMachines.step m c with
+  | some cfg => rfl
+  | none =>
+    exfalso
+    apply hnot
+    unfold ConjectureMachines.Halts
+    rw [Part.dom_iff_mem]
+    exact ⟨c, (ConjectureMachines.mem_eval').mpr ⟨reachable_source m hreach, hs⟩⟩
+
 #print axioms reachable_live_implies_never
+#print axioms not_halts_to_agent8
 #print axioms initial_toRelative
 #print axioms blank_run_toAbsolute
 #print axioms run_toRelative

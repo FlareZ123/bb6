@@ -21,6 +21,19 @@ def FrontierAudit.open {good : Machine → Prop} {p : PartialMachine}
   | .branch _ slot _ children =>
       (children (m slot) (choices_complete (m slot))).open m
 
+/-- Decide whether a concrete machine follows an open terminal of a finite
+    audit tree. The recursion follows only the actual transition selected by
+    the machine at each branch; unresolved leaves are true and certified
+    leaves are false. -/
+def FrontierAudit.openDecidable {good : Machine → Prop} {p : PartialMachine}
+    (audit : FrontierAudit good p) (m : Machine) :
+    Decidable (audit.open m) := by
+  induction audit with
+  | certified _ _ => exact isFalse (by simp [FrontierAudit.open])
+  | unresolved _ => exact isTrue (by simp [FrontierAudit.open])
+  | branch _ slot _ children ih =>
+      exact ih (m slot) (choices_complete (m slot))
+
 /-- Every compatible machine either has a sound certified leaf or lies in a
 recorded open cylinder. No other disposition is permitted. -/
 theorem FrontierAudit.exhaustive {good : Machine → Prop} {p : PartialMachine}
