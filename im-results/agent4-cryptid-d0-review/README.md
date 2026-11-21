@@ -78,7 +78,7 @@ It composes `PrefixNoF.prefixA_positive_noF`, `BoundaryPadding.source_init_pad`,
 
 ### 13-step root shadow
 
-`Root13Shadow.md` records a new exact-arithmetic shadow of the external halting-cylinder path. At authentic-root DRegular section index 31,777, the state is `L(a,0,0)) and:
+`Root13Shadow.md` records a new exact-arithmetic shadow of the external halting-cylinder path. At authentic-root DRegular section index 31,777, the state is `L(a,0,0)` and:
 
 - `a-C ≡ 3^13 (mod 3^14)`;
 - `p=(a-C)/3^13 ≡205 (mod 2187));
@@ -90,4 +90,7 @@ The exact arithmetic is reproducible with `root13_shadow_check.py`; `root20_cyli
 
 `Root13Section.lean` is a source-anchor draft: it extracts the 4,484-step prefix of the already source-certified fifth reentry seed, then attempts to use `Agent25RootChain.extend_regular` to prove the blank root reaches the index-31,777 section. It also attempts the exact modular fingerprint and ten-step link to the sixth exceptional endpoint. This file is **uncompiled**.
 
-The main remaining task is to compile `Root13Section.lean` and then source-certify the first 13 external A_step2 macros from that physical section, including calls 11–13 after the suffix leaves the regular DRegular language. This is not a BB(6) solution or a proof of nonhalting.
+The main remaining task is to compile `Root13Section.lean` and then source-certify calls 11–13 of the external A_step2 path from the physical q=4,b=1 section. The numeric sweep parameters for the lifted root need not equal the external trace's small arguments; the general macro must be instantiated with the correct lifted unary length. This is not a BB(6) solution or a proof of nonhalting.
+
+
+**Scope correction (11:40 UTC):** the arithmetic script verifies the affine parameter recurrence for the external offset sequence, but it does not independently execute the raw A_step2 macros on the lifted root. Only the first ten DRegular updates are currently backed by `DRegularShift.run_shift` (in the uncompiled `Root13Section.lean` draft). The claimed matching suffixes and branch/offset updates for calls 11–13 are conditional on proving that the general A_step2 source macro applies to the lifted q=4,b=1 suffix with its correct lifted sweep parameter. Do not describe the full 13-step path as source-established until that proof is composed.
