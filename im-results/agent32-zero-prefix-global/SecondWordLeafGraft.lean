@@ -113,27 +113,31 @@ theorem secondWordParent_open_all (m : Machine)
     hm secondWordD1 secondWordD1Action (by decide)
   have h4 :
       (lassoPhysicalTraceAudit secondWordP4 6 6 12 12 2 4 0).open m := by
-    simp [lassoPhysicalTraceAudit, secondWordP4_old_oracle_false]
+    simp [lassoPhysicalTraceAudit, FrontierAudit.open, secondWordP4_old_oracle_false]
   have h3 :
       (lassoPhysicalTraceAudit secondWordP3 6 6 12 12 2 4 1).open m := by
     apply (secondWord_lasso_open_step secondWordP3 0 secondWordD1
       secondWordP3_old_oracle_false secondWordP3_next m).2
-    simpa [secondWordP4, hD] using h4
+    rw [hD]
+    simpa [secondWordP4] using h4
   have h2 :
       (lassoPhysicalTraceAudit secondWordP2 6 6 12 12 2 4 2).open m := by
     apply (secondWord_lasso_open_step secondWordP2 1 secondWordC1
       secondWordP2_old_oracle_false secondWordP2_next m).2
-    simpa [secondWordP3, hC] using h3
+    rw [hC]
+    simpa [secondWordP3] using h3
   have h1 :
       (lassoPhysicalTraceAudit secondWordP1 6 6 12 12 2 4 3).open m := by
     apply (secondWord_lasso_open_step secondWordP1 2 secondWordB0
       secondWordP1_old_oracle_false secondWordP1_next m).2
-    simpa [secondWordP2, hB] using h2
+    rw [hB]
+    simpa [secondWordP2] using h2
   have h0 :
       (lassoPhysicalTraceAudit secondWordP0 6 6 12 12 2 4 4).open m := by
     apply (secondWord_lasso_open_step secondWordP0 3 secondWordA0
       secondWordP0_old_oracle_false secondWordP0_next m).2
-    simpa [secondWordP1, hA] using h1
+    rw [hA]
+    simpa [secondWordP1] using h1
   simpa [depth4ResidualAudit, secondWordP0] using h0
 
 /-- The seven fixed slots define the distinct sibling word pump. -/
@@ -193,16 +197,35 @@ noncomputable def secondWordGraftedAudit :
 
 /-- Every completion of the new seven-slot cylinder is closed by the
     source-sound translated finite-support recurrence. The exhaustive and
-    mass-conservation theorems below retain total coverage and mass. The
-    constructor emits `.unresolved` children on source-slot mismatches, but
-    exact preservation of all source-incompatible open machines still needs
-    the generic `addCertificate_open_iff` theorem; exhaustiveness alone is not
-    an exclusive open-set statement. -/
+    mass-conservation theorems below retain total coverage and mass; the
+    exact open-set semantics are established by
+    `secondWordGraftedAudit_open_iff` immediately below. -/
 theorem secondWordGraftedAudit_closes_source (m : Machine)
     (hm : compatible secondWordWordPump m) :
     ¬ secondWordGraftedAudit.open m := by
   exact addCertificate_closes_source depth4ResidualAudit secondWordWordPump
     (secondWordWordPump_cover 6) m (empty_compatible m) hm
+
+/-- Exact open-set semantics: the graft removes precisely the old-open
+    completions matching the seven-slot translated pump. -/
+theorem secondWordGraftedAudit_open_iff (m : Machine) :
+    secondWordGraftedAudit.open m ↔
+      depth4ResidualAudit.open m ∧
+        ¬ compatible secondWordWordPump m := by
+  simp [secondWordGraftedAudit, addCertificate_open_iff, empty_compatible]
+
+/-- Exact partition of the four-slot parent: every completion is open in the
+    old depth-four audit, and after grafting it remains open exactly when it
+    misses the seven-slot pump cylinder. -/
+theorem secondWordParent_open_partition (m : Machine)
+    (hm : compatible secondWordP4 m) :
+    secondWordGraftedAudit.open m ↔
+      ¬ compatible secondWordWordPump m := by
+  rw [secondWordGraftedAudit_open_iff]
+  constructor
+  · exact fun h => h.2
+  · intro h
+    exact ⟨secondWordParent_open_all m hm, h⟩
 
 theorem secondWord_leaf_closed (m : Machine)
     (hm : compatible secondWordWordPump m) :
@@ -239,6 +262,8 @@ theorem secondWordGraftedAudit_conserves :
     _ = cylinderMass emptyTable := secondWordGraftedAudit.report_conserves
     _ = 25^12 := by decide
 
+#print axioms secondWordGraftedAudit_open_iff
+#print axioms secondWordParent_open_partition
 #print axioms secondWordWordPump_translated_check
 #print axioms secondWordWordPump_cover
 #print axioms secondWord_disjoint_twoMark
