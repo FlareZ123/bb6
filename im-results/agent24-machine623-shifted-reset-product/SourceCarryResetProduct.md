@@ -81,3 +81,8 @@ The product must remain separate from the known counterexamples; it does not jus
 - `im-results/agent32-623-phase-automaton/PhaseAutomaton.md`: the index-33 output-suffix counterexample. Closure must be checked on the entire next S-window, including its bounded high-end extension, not on an arbitrary suffix.
 
 In particular, the corrected length-three raw witnesses are L start `(prevX,prevY,cx,cy)=(0,0,-2,-2)), input `00 02 00`, output `11 22 01`; and R start `(0,0,-4,-2)), input `00 01 00`, output `21 12 10`. Both inputs are common reset patterns and both outputs are rejected. These are synthetic full-rectangle witnesses, not authentic-root states.
+
+
+## Source-derived specialization
+
+The arithmetic start-set restriction and its new three-symbol reset are documented in [SourceDerivedResetPatternDFA.md](SourceDerivedResetPatternDFA.md), with data in [SourceDerivedResetProduct.json](SourceDerivedResetProduct.json). Keep the full-rectangle product and all counterexamples above as the universal baseline; use the source-derived specialization only after the `B<K` source-carry hypotheses are discharged.

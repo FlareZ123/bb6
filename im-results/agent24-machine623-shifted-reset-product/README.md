@@ -225,3 +225,10 @@ This remains a one-window transducer composition, **not** an all-time root invar
 Independent verification is available with `node im-results/agent24-machine623-shifted-reset-product/verify_source_carry_reset_product.js`; it reconstructs every product transition, checks reachability and quotient congruence, and recomputes the stable partition from the committed product-state list.
 
 The product is subject to the existing adversarial constraints in `im-results/agent24-machine623-phase-slack-regressions.md`, `im-results/agent32-623-phase-automaton/ClosureCounterexample.md`, and `im-results/agent32-623-phase-automaton/PhaseAutomaton.md`. In particular, retain the raw reset-language witnesses and the index-33 **whole-window** failure; this one-step product is not an unrestricted closure theorem.
+
+
+## Source-derived reset specialization
+
+A second, explicitly source-restricted recognizer/product is now available in [SourceDerivedResetPatternDFA.md](SourceDerivedResetPatternDFA.md) and [SourceDerivedResetProduct.json](SourceDerivedResetProduct.json). It uses the arithmetic source-carry start rectangles L `[-2,1]×[-1,1]` and R `[-4,0]×[-1,2]`, while retaining the full L/R transducer transition spaces and the full-rectangle products above.
+
+The source-derived recognizer has 252 states (versus 263 for the full-rectangle recognizer) and adds the common reset word `01 00 00`. The source-derived carry products have L 1,818 reachable / 635 minimized states and R 2,604 reachable / 813 minimized states. This specialization is conditional on the source-carry inclusion proof; it does not replace the full-rectangle automaton or its adversarial counterexamples.

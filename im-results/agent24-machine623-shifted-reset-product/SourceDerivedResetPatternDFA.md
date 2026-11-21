@@ -91,3 +91,14 @@ Do not replace or delete the full-rectangle automaton. The raw full-rectangle re
 - `im-results/agent32-623-phase-automaton/PhaseAutomaton.md`
 
 Keep this result in `im-results/` until the source-carry bridge and whole-window induction are integrated.
+
+
+## Reproduction
+
+Run from the repository root:
+
+```bash
+node im-results/agent24-machine623-shifted-reset-product/build_source_derived_reset_product.js
+node im-results/agent24-machine623-shifted-reset-product/build_source_derived_reset_product.js --verify
+node im-results/agent24-machine623-shifted-reset-product/verify_source_derived_reset_product.js
+```
