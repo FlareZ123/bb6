@@ -141,7 +141,7 @@ This proves the upper inequality for every \(j\ge3\). The exponent is maximal fo
 
 ## Conditional score consequence
 
-Use the source-dossier identities
+Here \(q=M+N+50\) is the source-dossier index, with the linked score expansion's hypotheses \(N\ge256\), \(3\mid N\), and root parameter \(R\ge63\). Use the source-dossier identities
 \[
 b_N=V_{q-4},\qquad
 \ell=\log_2(b_N+1)=V_{q-5},
@@ -203,7 +203,7 @@ T_{M+45}^{\,T_{M+44}^{\,\alpha_{M+42}}}.
 Also \(N>2^A\) and \(q-1>N\). Since the conditional score lower bound gives \(S_{\rm TM1}>T_{q-1}\), monotonicity of \(T\) yields
 \[
 \boxed{
-S>
+S_{\rm TM1}>
 T_{\,
 2^{\,T_{M+45}^{\,T_{M+44}^{\,\alpha_{M+42}}}}
 }.
@@ -216,4 +216,4 @@ This strictly improves the earlier fixed-\(2^{46}\) outer-tower endpoint because
 - The displayed inequalities are mathematical derivations about the scalar recurrence \(V_{j+1}=2^{V_j}-1\), with explicit base cases and induction/direct comparison arguments.
 - The existing TM63TowerRecurrence.lean checks the weaker fixed-exponent \(23/8,4092\) sandwich. This moving-exponent result has **not** yet been encoded or compiled.
 - The score substitution depends on the source-level TM63 route and exact score decomposition. The existing theorem sectionResult_run_complete has an exact run tm2 (sectionResult.cost) result type, assembled from the per-class source run theorems. If its full import closure compiles and passes the transitive axiom audit, it proves that proposedIncrementCost is the primitive TM2 run length for the complete countdown. Until that acceptance gate passes, the authentic blank-root orbit and exact score remain conditional.
-- Next formalization target: encode the three-index lower exponent lift, recursive denominator sequence \(d_k\), and unified \(\gamma_j\) in a separate module importing TM63TowerRecurrence. Then obtain a local Lean 4.36.0-rc2 preflight of the exact source closure and inspect exported axiom profiles before updating any score synthesis.
+- Next formalization target: encode the exact congruence lower lift and the V-dependent upper exponent \(\gamma_j=2^{T_{j+1}-T_j}-2^{V_{j-3}-T_j}\) in a separate module importing TM63TowerRecurrence. Then obtain a local Lean 4.36.0-rc2 preflight of the exact source closure and inspect exported axiom profiles before updating any score synthesis.
