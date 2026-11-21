@@ -8,7 +8,7 @@ necessary parameterization, not a decision of BB(6).
 -/
 
 import JointAllRoot
-import M8FilteredResidual
+import M8SharpFamily
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent29Depth
@@ -47,6 +47,31 @@ def deepM8Condition (j m : Nat) : Prop :=
 def highAllowedM8 (j m : Nat) : Prop :=
   BB6.Agent19Joint.highAllowed j m ∧
     (¬(j%2=0 ∧ m%2=1 ∧ (j+m)%4=3) ∨ ¬deepM8Condition j m)
+
+/-- The explicit dyadic sharp family is rejected by the new M8 clause,
+    independently of the older parameter-only high restrictions. -/
+theorem m8SharpFamily_not_highAllowedM8 (r : Nat) (hr : 2≤r) :
+    ¬ highAllowedM8 (BB6.Agent29Depth.m8SharpJ r)
+      (BB6.Agent29Depth.m8SharpM r) := by
+  rcases BB6.Agent29Depth.m8SharpFamily_data r hr with
+    ⟨hstop,hj,hm,hs,hfirst,hsecond⟩
+  have hk :
+      BB6.Agent29Depth.m8SharpK r =
+        2^(2*BB6.Agent29Depth.m8SharpM r+2)*
+          (BB6.Agent29Depth.m8SharpJ r+3)-
+          (BB6.Agent29Depth.m8SharpJ r+
+            3*BB6.Agent29Depth.m8SharpM r+5) := by
+    omega
+  have hcond :
+      deepM8Condition (BB6.Agent29Depth.m8SharpJ r)
+        (BB6.Agent29Depth.m8SharpM r) := by
+    dsimp [deepM8Condition]
+    rw [← hk]
+    exact ⟨hfirst,hsecond⟩
+  intro hallowed
+  rcases hallowed.2 with hnotDeep | hnotM8
+  · exact hnotDeep ⟨hj,hm,hs⟩
+  · exact hnotM8 hcond
 
 private theorem deepM8Clause_of_root (j m : Nat)
     (hroot : BB6.Agent3.mixedFastRootDecision (2*j+3)
@@ -90,5 +115,6 @@ theorem blank_halts_iff_combined_parametric_m8 :
     · exact Or.inl hlow
     · exact Or.inr ⟨j,m,hallowed,hroot⟩
 
+#print axioms m8SharpFamily_not_highAllowedM8
 #print axioms blank_halts_iff_combined_parametric_m8
 end BB6.Agent29Depth
