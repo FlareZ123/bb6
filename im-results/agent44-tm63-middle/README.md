@@ -228,3 +228,23 @@ The valuations are immediate:
 16R-20=4(4R-5),
 ]
 and each displayed odd factor is odd. The intervening counters are odd. This gives a compact arithmetic explanation for why the root proof uses the sequence M1-even / M0-odd / M2-even-six / M1-odd-five / M0-even-four / M2-odd. It is a parameter-level source classification, not a replacement for the six Lean run theorems.
+
+
+## Common-tail normal form for all six row inputs
+
+The row-32/34 identities factor further. Set
+[
+Q_A:=d0pow(A-6)\mathbin{++}d1\mathbin{++}d0pow(4).
+]
+For (L=tm63Length1=A+5), the six consecutive input counters have the following exact `binDec` words:
+[
+\begin{array}{c|l}
+32 & d1pow(5)\mathbin{++}d0\mathbin{++}Q_A\\
+33 & d0pow(5)\mathbin{++}d1\mathbin{++}Q_A\\
+34 & d1\mathbin{++}d0pow(4)\mathbin{++}d1\mathbin{++}Q_A\\
+35 & d0\mathbin{++}d1\mathbin{++}d0pow(3)\mathbin{++}Q_A\\
+36 & d1pow(2)\mathbin{++}d0pow(3)\mathbin{++}Q_A\\
+37 & d0pow(2)\mathbin{++}d1\mathbin{++}d0pow(2)\mathbin{++}Q_A
+\end{array}
+]
+These follow by applying `binDec_even`, `binDec_odd`, and the carry-prefix identities to the six arithmetic counters above; the shared tail (Q_A) is unchanged throughout the block. This is a compact normal form for the complete row-32–37 source segment and explains why the existing generic source lemmas fit the root parameters. The table is a derived synthesis; the existing per-row Lean theorems remain the formal run evidence.
