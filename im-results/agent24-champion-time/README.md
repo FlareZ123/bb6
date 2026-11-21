@@ -145,7 +145,7 @@ The [first q4 checkpoint decomposition](FirstQ4Checkpoint.md) factors the origin
 
 The `sectionResult` countdown decreases n by one and updates m to `(m+2) mod 3`. Its source dispatcher has 24 residue/marker classes because `lcm(8,3)=24`. All **24 of 24 classes now have counted-source theorem declarations or complete source drafts**:
 
-- marker 1: `m1EvenValuation_counted_increment_source` covers all eight residues;
+- marker 1: `m1EvenValuation_counted_increment_source` covers all eight residues. Its 690-case finite probe includes q=0 pure powers and v=0 odd inputs; see [M1EvenValuationBridgeProbe.mjs](M1EvenValuationBridgeProbe.mjs) and [M1EvenState1SweepAudit.md](M1EvenState1SweepAudit.md). This is computational evidence only, not Lean acceptance;
 - marker 0 and marker 2: the generic odd-index source theorems cover all four odd residues each;
 - markers 0 and 2: the even-residue-2, -4 and -6 source theorems cover the six nonzero even residues;
 - marker 0, (n=8q): `m0EvenEight_valuation_counted_increment_source` is now a full all-valuation source draft in [M0EvenEightValuationCountedSource.lean](../agent48-counted-inc0/M0EvenEightValuationCountedSource.lean);
