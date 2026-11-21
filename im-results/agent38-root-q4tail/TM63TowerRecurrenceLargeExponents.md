@@ -178,7 +178,7 @@ S>
 T_{\,2^{\,T_{M+45}^{\,T_{M+44}^{\,2^{46}}}}}.
 }
 \]
-This is a stronger human-readable tower lower bound than the previous coarse \(T_{T_{T_{10}}}\) endpoint, conditional on the same authentic source itinerary and exact score decomposition. The exact \(q\)-indexed sandwich remains stronger and should be preferred when its source hypotheses are available.
+The existing source arithmetic gives \(M\ge62T_{10}-36\), hence \(M+45>T_{10}\). Thus \(X=T_{M+45}^{T_{M+44}^{2^{46}}}>T_{T_{10}}\), so \(2^X>T_{T_{10}}\) and \(T_{2^X}>T_{T_{T_{10}}}\). This is therefore a stronger human-readable tower lower bound than the previous coarse \(T_{T_{T_{10}}}\) endpoint, conditional on the same authentic source itinerary and exact score decomposition. The exact \(q\)-indexed sandwich remains stronger and should be preferred when its source hypotheses are available.
 
 ## Validation boundary and next action
 
