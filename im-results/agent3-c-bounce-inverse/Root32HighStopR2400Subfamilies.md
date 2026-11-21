@@ -78,24 +78,35 @@ With \(r=32+64j\), this is the infinite root-index progression
 
 Put \(n=13+16p\), so \(m=6+8p\). The same affine parent \(B(m)\) satisfies
 \[
-B_x\equiv3\pmod4,\qquad B_y\equiv4\pmod8.
+B_x\equiv3\pmod4,\qquad B_y\equiv4\pmod8,
+\qquad B_x+B_y\equiv7\pmod8.
 \]
-However, the exact sum is
-\[
-B_x+B_y=10025730072709+12111768282915m
-\equiv7\pmod8
-\]
-when \(m\equiv6\pmod8\). The source-certified even-right inverse theorem blank_reach_iff_even_right explicitly requires \((x+y)\not\equiv7\pmod8\). It therefore cannot be applied to \(B(m)\). The earlier attempted step to
-\[
-\left(B_x+B_y-2,\frac{B_y-2}{2}\right)
-\]
-was unjustified; the full source grammar may have exceptional parent branches at this residue. No exclusion of \(B(m)\) or \(Y(n)\) follows here.
+The even-right inverse theorem cannot be applied to \(B(m)\), because its required \(hseven\) side condition fails.
 
-The parameter class would translate as follows:
+The complete source grammar still gives a useful reduction. The low branch would force the parent
+\[
+C(m)=\left(B_x+B_y-2,\frac{B_y-2}{2}\right).
+\]
+Since \(B_y\equiv4\pmod8\), \(C_y\) is odd, and direct arithmetic gives \(C_x+C_y\equiv2\pmod4\). The source-certified blank_no_odd_sum_two theorem therefore excludes this low branch. The zero-left and even-\(a\) high branches require even target sum and are impossible; the finite \(a=1\) cases and the \(y=3\) branches are impossible because \(B_y\) is enormous. The remaining \(a=1\) high branch would require \(B_x+B_y+1\) to be a pure power of two, but
+\[
+B_x+B_y+1
+=8Q(p),\qquad
+Q(p)=10337042471275+12111768282915p,
+\]
+and \(Q(p)\) is divisible by five, so this branch is impossible as well.
+
+Thus only the \(a>1\), odd-\(a\) high branch remains. Its cost equation forces the bounce depth \(d\) to be odd. The valuation of \(Q(p)\) is:
+- \(v_2(Q)=0\) for \(p\equiv0,2\pmod4\), hence \(v_2(B_x+B_y+1)=3\) and \(d=1\);
+- \(v_2(Q)=1\) for \(p\equiv1\pmod4\), hence \(v_2(B_x+B_y+1)=4\) and \(d=1\);
+- \(v_2(Q)\ge2\) for \(p\equiv3\pmod4\), leaving odd depths \(d=1,3,\ldots\) up to the valuation bound.
+
+This remaining odd-\(a\) high branch has not been excluded. Therefore no nonreachability result for the \(n\equiv13\pmod{16}\) family follows.
+
+The parameter class translates to a root-index class, but it is **unresolved**:
 \[
 t=671+1024(13+16p)=13983+16384p.
 \]
-Modulo \(16384\), the exact root equation gives \(t+j\equiv11972\), hence \(j\equiv14373\pmod{16384}\) and \(r\equiv919904\pmod{1048576}\). This is an **unresolved** root-index progression and must not be counted among the exclusions.
+Modulo \(16384\), the exact root equation gives \(t+j\equiv11972\), hence \(j\equiv14373\pmod{16384}\) and \(r\equiv919904\pmod{1048576}\). This class is not part of the exclusion union.
 
 ## 4. Scope
 
