@@ -1498,3 +1498,10 @@ Highest-value next work: prove the exact sourceCarry quotient identities and bra
 - Replayed the exact `highLevelNext` root recurrence from D(0,7), source indices 33–10000, and scanned each entire target word `[k'+2,j'-2)` with both the full 263-state reset DFA and the source-derived 252-state DFA.
 - Both recognized all 9,968 target windows (D34 through D10001); maximum first accepting position was 12. No target window in this finite trace was accepted only by the source-derived DFA. At source index 33, target D34 has x=57468, y=46704, S=67656, k'=6, j'=17, length 7; both DFAs first accept after 4 symbols.
 - This is a finite diagnostic only. It does not remove the index-33 suffix-closure counterexample: that concerns a reset in the old word failing to persist in an arbitrary output suffix. The replay scans the whole target window, as required. Keep the index-33 regression and all whole-window/high-extension constraints.
+
+
+## 2026-11-21 checkpoint: formal sector correction bounds
+
+- Extended `SourceDerivedReset.lean` with the exact eight sector/branch correction rows from `s_window_boundary_phases.js`: LO/LE/RO/RE × L/R. It proves `sector_correction_bounds` and `source_correction_bounds_from_drain_counts`.
+- The latter derives `|C|,|F|≤34*ell+122` from `D=L-2*n2`, `R=n1+n2`, `-ell≤D≤ell`, and `0≤R≤ell`; `drain_DR_bounds` obtains those from `L≤ell`, `n1,n2≥0`, and `n1+n2≤L`.
+- The exact Lean file compiles with Lean 4.36.0-rc2. Thus the arithmetic chain from the sector/branch correction table to the source-derived reset is formal, conditional only on the simple drain-count facts and exact source formula identification. The remaining external work is to prove those count facts from the drain loop and match its boundary corrections to the table.

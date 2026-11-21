@@ -166,4 +166,82 @@ theorem right_source_derived_reset
   have hbUpper : b ≤ 2 := by rw [hbDef]; exact hbHi
   exact right_three_symbol_reset px py a b a1 b1 a2 b2 hpx0 hpx2 hpy0 hpy2 haLo haUpper hbLo hbUpper ha1def hb1def ha2def hb2def
 
+/-- The four affine correction terms are bounded by the common mass buffer. -/
+theorem correction_bounds_from_DR
+    (ell D R cC cF : Int)
+    (hDlo : -ell ≤ D) (hDhi : D ≤ ell)
+    (hRlo : 0 ≤ R) (hRhi : R ≤ ell)
+    (hcClo : -122 ≤ cC) (hcChi : cC ≤ 122)
+    (hcFlo : -84 ≤ cF) (hcFhi : cF ≤ 84) :
+    -(34 * ell + 122) ≤ -18 * D - 16 * R + cC ∧
+      -18 * D - 16 * R + cC ≤ 34 * ell + 122 ∧
+      -(34 * ell + 122) ≤ 12 * D + 12 * R + cF ∧
+      12 * D + 12 * R + cF ≤ 34 * ell + 122 ∧
+      -(34 * ell + 122) ≤ 12 * D + 4 * R + cC ∧
+      12 * D + 4 * R + cC ≤ 34 * ell + 122 ∧
+      -(34 * ell + 122) ≤ -6 * D + cF ∧
+      -6 * D + cF ≤ 34 * ell + 122 := by
+  omega
+
+/-- Drain-count constraints imply the D,R bounds used by the correction estimate. -/
+theorem drain_DR_bounds
+    (ell L n1 n2 : Int)
+    (hLell : L ≤ ell)
+    (hn10 : 0 ≤ n1) (hn20 : 0 ≤ n2)
+    (hnSum : n1 + n2 ≤ L) :
+    -ell ≤ L - 2 * n2 ∧ L - 2 * n2 ≤ ell ∧
+      0 ≤ n1 + n2 ∧ n1 + n2 ≤ ell := by
+  omega
+
+inductive SectorBranch where
+  | LO_L | LE_L | RO_L | RE_L
+  | LO_R | LE_R | RO_R | RE_R
+  deriving DecidableEq
+
+def sourceCorrectionC (s : SectorBranch) (D R : Int) : Int :=
+  match s with
+  | .LO_L => -18 * D - 16 * R - 122
+  | .LE_L => -18 * D - 16 * R - 68
+  | .RO_L => -18 * D - 16 * R
+  | .RE_L => -18 * D - 16 * R - 36
+  | .LO_R => 12 * D + 4 * R - 6
+  | .LE_R => 12 * D + 4 * R - 12
+  | .RO_R => 12 * D + 4 * R - 44
+  | .RE_R => 12 * D + 4 * R - 20
+
+def sourceCorrectionF (s : SectorBranch) (D R : Int) : Int :=
+  match s with
+  | .LO_L => 12 * D + 12 * R + 84
+  | .LE_L => 12 * D + 12 * R + 48
+  | .RO_L => 12 * D + 12 * R
+  | .RE_L => 12 * D + 12 * R + 18
+  | .LO_R => -6 * D + 24
+  | .LE_R => -6 * D + 18
+  | .RO_R => -6 * D + 30
+  | .RE_R => -6 * D + 18
+
+/-- The eight branch/sector correction constants satisfy |cC|≤122 and |cF|≤84. -/
+theorem sector_correction_bounds
+    (ell D R : Int) (s : SectorBranch)
+    (hDlo : -ell ≤ D) (hDhi : D ≤ ell)
+    (hRlo : 0 ≤ R) (hRhi : R ≤ ell) :
+    -(34 * ell + 122) ≤ sourceCorrectionC s D R ∧
+      sourceCorrectionC s D R ≤ 34 * ell + 122 ∧
+      -(34 * ell + 122) ≤ sourceCorrectionF s D R ∧
+      sourceCorrectionF s D R ≤ 34 * ell + 122 := by
+  cases s <;> simp [sourceCorrectionC, sourceCorrectionF] <;> omega
+
+/-- The mass-indexed drain inequalities are enough to supply the D,R hypotheses. -/
+theorem source_correction_bounds_from_drain_counts
+    (ell L n1 n2 : Int) (s : SectorBranch)
+    (hLell : L ≤ ell)
+    (hn10 : 0 ≤ n1) (hn20 : 0 ≤ n2)
+    (hnSum : n1 + n2 ≤ L) :
+    -(34 * ell + 122) ≤ sourceCorrectionC s (L - 2 * n2) (n1 + n2) ∧
+      sourceCorrectionC s (L - 2 * n2) (n1 + n2) ≤ 34 * ell + 122 ∧
+      -(34 * ell + 122) ≤ sourceCorrectionF s (L - 2 * n2) (n1 + n2) ∧
+      sourceCorrectionF s (L - 2 * n2) (n1 + n2) ≤ 34 * ell + 122 := by
+  have hDR := drain_DR_bounds ell L n1 n2 hLell hn10 hn20 hnSum
+  exact sector_correction_bounds ell (L - 2 * n2) (n1 + n2) s hDR.1 hDR.2.1 hDR.2.2.1 hDR.2.2.2
+
 end BB6.SourceDerivedReset

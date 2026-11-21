@@ -238,3 +238,5 @@ The source-derived specialization now also has a kernel-checked Lean proof in `S
 The source-derived specialization now has a Lean proof (`SourceDerivedReset.lean`) of the full conditional implication from the source-carry quotient formulas and `B<K`, through the L/R carry envelopes, to the `01 00 00` reset. It compiles with Lean 4.36.0-rc2 and core `omega`; the drain-statistics derivation of the correction hypotheses remains separate.
 
 A finite replay of the exact root recurrence checked all 9,968 target S-windows D34–D10001: both the 263-state full DFA and 252-state source-derived DFA accepted every whole window (maximum first acceptance at position 12). This is diagnostic only and does not resolve the separate index-33 arbitrary-suffix closure counterexample; always scan the entire next window.
+
+The Lean proof now also encodes the eight exact sector/branch correction constants and proves `|C|,|F|≤34*ell+122` from `D=L-2*n2`, `R=n1+n2`, `|D|≤ell`, and `0≤R≤ell`. The remaining drain interface is to establish `L≤ell`, `n1,n2≥0`, and `n1+n2≤L` from the actual drain loop.

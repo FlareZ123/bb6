@@ -133,3 +133,24 @@ I replayed the exact `highLevelNext` root recurrence from `D(0,7)` through sourc
 - At source index 33, the target D34 window has `x=57468`, `y=46704`, `S=67656`, `k'=6`, `j'=17`, length 7; both DFAs first accept after 4 symbols.
 
 This does **not** remove the index-33 suffix-closure counterexample in `PhaseAutomaton.md`: that counterexample concerns assuming a reset in the old word survives in an arbitrary output suffix. The diagnostic above scans the whole next target window. The whole-window/extension requirement and the index-33 regression must remain.
+
+
+## 6. Formal drain-correction interface
+
+The sector/branch correction table in `s_window_boundary_phases.js` is now encoded in `SourceDerivedReset.lean`. With
+
+- `D = L - 2*n2`,
+- `R = n1 + n2`,
+- `-ell ≤ D ≤ ell`,
+- `0 ≤ R ≤ ell),
+
+the theorem `source_correction_bounds_from_drain_counts` proves `|C|,|F| ≤ 34*ell+122` for all eight sector/branch rows. The exact constants encoded are:
+
+| Sector | L: (cC,cF) | R: (cC,cF) |
+|---|---:|---:|
+| LO | (-122, 84) | (-6, 24) |
+| LE | (-68, 48) | (-12, 18) |
+| RO | (0, 0) | (-44, 30) |
+| RE | (-36, 18) | (-20, 18) |
+
+The theorem reduces the remaining drain-statistics obligation to `L≤ell`, `n1,n2≥0`, and `n1+n2≤L`, plus exact identification of the source's `D,R` and sector/branch. It does not itself prove those count facts from the drain loop. Once those are established, the already-proved source-carry and reset theorems apply with `Bcorr=34*ell+122`. Since the window buffer is `max(34*ell+122,36*ell+88)`, its choice of `K` larger than that buffer also gives `Bcorr<K`.
