@@ -185,3 +185,43 @@ theorem p7e1e_unreachable_of_t_mod32_31 (t : Nat) (ht : t%32=31) :
 #print axioms p7e1e_unreachable_of_t_mod32_31
 
 end BB6.Agent3Root32HighStopA4
+
+
+/-- On the t ≡ 31 (mod 32) slice, the accepted three-way root32
+    reduction loses its P7E1E alternative and therefore leaves only
+    the already-documented D0E and L obligations. -/
+theorem root32_highstop_t31_reduces_to_two_residuals
+    (r E u t : Nat)
+    (hr64 : r%64=32)
+    (hE : E=201+3360*(6657+8192*r))
+    (hRoot : 18018+211*u+22155*r=20*2^(E-13))
+    (hT : RunReach (1048576*u+70538) 3)
+    (hu : u=1802+6720*t)
+    (ht : t%32=31) :
+    RunReach (1469153280*t+393975148) (2788638720*t+747814654) ∨
+    RunReach (5065196640*t+1358307257) (990617040*t+265648583) := by
+  obtain ⟨t',hu',hres⟩ :=
+    BB6.Agent3Root32HighStopP7.root32_highstop_reduces_to_three_residuals
+      r E u hr64 hE hRoot hT
+  have hEq : t'=t := by omega
+  rcases hres with hD0 | hL | hP7
+  · exact Or.inl (by simpa [hEq] using hD0)
+  · exact Or.inr (by simpa [hEq] using hL)
+  · have hP7t : RunReach (p7e1eX t) (p7e1eY t) := by
+      simpa [hEq] using hP7
+    exact False.elim ((p7e1e_unreachable_of_t_mod32_31 t ht) hP7t)
+
+/-- The root32 index congruence maps t ≡ 31 (mod 32) to
+    r ≡ 352 (mod 2048). This labels the P7E1E residual exclusion only. -/
+theorem p7_residual_root_index_class
+    (r E t j : Nat)
+    (hE : 30≤E)
+    (hr : r=32+64*j)
+    (hroot : 17300+22155*(t+j)=5*2^(E-17))
+    (ht : t%32=31) :
+    r%2048=352 := by
+  have hmod :=
+    BB6.Agent3Root32HighStopIndexMap.root32_tj_mod8192 t j E hE hroot
+  have hj : j%32=5 := by omega
+  rw [hr]
+  omega
