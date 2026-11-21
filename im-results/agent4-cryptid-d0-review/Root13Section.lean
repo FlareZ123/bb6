@@ -9,8 +9,8 @@ which is the root section at section index 31,777 (the sixth exceptional
 endpoint is index 31,787), and records its exact 3-adic residue.
 
 **Compilation status:** uncompiled draft. The current invocation's local
-Python/container tools fail with ClientError; do not treat the declarations
-below as kernel-checked until the exact source closure compiles.
+Python/container tools fail with tool-level ClientError; do not treat the
+declarations below as kernel-checked until the exact source closure compiles.
 -/
 
 set_option maxHeartbeats 100000000
@@ -28,41 +28,57 @@ private def cylinderC : Nat :=
 def root13Section : DRegular.L :=
   (DRegular.run 4484 BB6.Agent25SixthRoot.seed).getD ⟨0,0,0⟩
 
-theorem root13Section_exact :
-    DRegular.run 4484 BB6.Agent25SixthRoot.seed = some root13Section := by
-  decide
-
-theorem root13Section_shape :
-    root13Section.q = 0 ∧ root13Section.b = 0 := by
-  decide
-
-theorem root13Section_mod3pow14 :
-    (root13Section.a - cylinderC) % 3^14 = 3^13 := by
-  decide
-
-theorem root13Section_ge_C :
-    root13Section.a ≥ cylinderC := by
-  decide
-
 def root13P : Nat := (root13Section.a-cylinderC)/3^13
 
-theorem root13P_mod2187 : root13P % 2187 = 205 := by
+/-- One computational certificate shares the expensive 4,484-step reduction
+    across all modular, shape, and endpoint obligations. -/
+structure Root13Certificate : Prop where
+  run_exact :
+    DRegular.run 4484 BB6.Agent25SixthRoot.seed = some root13Section
+  q_zero : root13Section.q = 0
+  b_zero : root13Section.b = 0
+  ge_C : root13Section.a ≥ cylinderC
+  mod3pow14 :
+    (root13Section.a-cylinderC) % 3^14 = 3^13
+  p_mod2187 : root13P % 2187 = 205
+  mod3pow20 : root13Section.a % 3^20 = 2863782241
+  to_sixth_exception :
+    DRegular.run 10 root13Section =
+      some ⟨9*BB6.Agent25SixthRoot.t6+7,4,1⟩
+
+theorem root13Certificate : Root13Certificate := by
   decide
 
+theorem root13Section_exact :
+    DRegular.run 4484 BB6.Agent25SixthRoot.seed = some root13Section :=
+  root13Certificate.run_exact
+
+theorem root13Section_shape :
+    root13Section.q = 0 ∧ root13Section.b = 0 :=
+  ⟨root13Certificate.q_zero, root13Certificate.b_zero⟩
+
+theorem root13Section_mod3pow14 :
+    (root13Section.a-cylinderC) % 3^14 = 3^13 :=
+  root13Certificate.mod3pow14
+
+theorem root13Section_ge_C :
+    root13Section.a ≥ cylinderC :=
+  root13Certificate.ge_C
+
+theorem root13P_mod2187 : root13P % 2187 = 205 :=
+  root13Certificate.p_mod2187
+
 theorem root13Section_mod3pow20 :
-    root13Section.a % 3^20 = 2863782241 := by
-  decide
+    root13Section.a % 3^20 = 2863782241 :=
+  root13Certificate.mod3pow20
+
+theorem root13_to_sixth_exception :
+    DRegular.run 10 root13Section =
+      some ⟨9*BB6.Agent25SixthRoot.t6+7,4,1⟩ :=
+  root13Certificate.to_sixth_exception
 
 /-- The section really is ten DRegular transitions before the already
     source-certified sixth exceptional endpoint. -/
-theorem root13_to_sixth_exception :
-    DRegular.run 10 root13Section =
-      some ⟨9*BB6.Agent25SixthRoot.t6+7,4,1⟩ := by
-  decide
-
-/-- The blank-root orbit physically reaches this section. This reuses the
-    existing fifth-reentry source theorem and the same original-source
-    DRegular extension theorem as the sixth-exception proof. -/
 theorem root13Section_original :
     ObsEq
       (run
@@ -82,7 +98,7 @@ theorem root13Section_original :
   · exact root13Section_exact
   · exact BB6.Agent25FifthRoot.fifthReentry_original
 
-#print axioms root13Section_exact
+#print axioms root13Certificate
 #print axioms root13Section_mod3pow14
 #print axioms root13P_mod2187
 #print axioms root13_to_sixth_exception
