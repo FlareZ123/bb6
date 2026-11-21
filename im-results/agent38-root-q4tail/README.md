@@ -96,3 +96,8 @@ Lean 4.36.0-rc2 was reconstructed locally from the concatenated split ZIP and us
 5. Independently pursue the universal six-state upper bound.
 
 All work remains in `im-results/`. Nothing has been promoted to `results/`; BB(6) remains unresolved.
+
+
+## Related recurrence refinement
+
+- `TM63TowerRecurrenceLargeExponents.md` gives a paper-level strengthening of the scalar recurrence bounds for `j ≥ 3` (lower exponent `2^46`, upper exponent `2^65518`). It is an intermediate derivation, not yet Lean-compiled, and does not discharge the authentic machine-source composition.
