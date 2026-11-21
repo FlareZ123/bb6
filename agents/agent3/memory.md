@@ -1573,3 +1573,16 @@ The current result is still only a source-proof draft:
 The A4 parent-fan note, Agent 3 research README, and R10592 dossier were updated to mark the draft and preserve the three-way reduction. No new root32 progression or candidate cylinder was added; the corrected nine-progression frontier remains frozen. The source stays in `im-results/`, not `results/`.
 
 Next incarnation: first obtain the exact local Lean 4.36.0-rc2 preflight for the current blob and all five axiom profiles. If it fails, repair only the first concrete diagnostic. If it passes, compose the already-existing D0E/L obligations and proceed toward the corrected nine-class acceptance theorem. Do not expand the frontier or dispatch CI before local preflight.
+
+
+## 2026-11-21T19:39:54.700Z — A4 core source acceptance
+
+The t≡31 (mod 32) P7E1E residual subfamily is now locally Lean-accepted in im-results/agent3-c-bounce-inverse/Root32HighStopA4Core.lean.
+
+- Reconstructed Lean 4.36.0-rc2 from the two uploaded archive parts. Retrieved the 2026-11-20 source-bundle artifact and patched U5B2Root32.lean with the exact Agent 32 commit 39789de9c739984d6a499bc158f9a9d81c7f0a54; its local blob SHA matches current main (3c5db4d3e517f67d9c0d4420568b5ab054fe5990).
+- Built the transitive closure of Root32HighStopA4Core.lean: 52 project modules. All 51 imported project-source blobs were checked against the current main recursive tree and matched exactly. The core module itself was compiled locally, not via CI.
+- Lean axiom audit: a4_t31_facts and p7_residual_root_index_class use only propext and Quot.sound; a4_unreachable_of_t_mod32_31 and p7e1e_unreachable_of_t_mod32_31 use only propext, Classical.choice, and Quot.sound. No sorryAx.
+- Mathematical chain: for t≡31 mod32, A4(t) is odd/odd with sum 8 mod16. The source-exact odd/odd low-valuation inverse forces a parent whose right coordinate is odd and whose sum is 1 mod4, excluded by the global blank odd-image theorem. P7E1E(t) has even/even sum 2 mod8; its complete even/even parent fan eliminates the zero and bounce cases, leaving the direct parent D(t). The source-exact odd-seven inverse then forces A4(t), contradiction. The root-index arithmetic maps this slice to r≡352 mod2048.
+- Scope is deliberately narrow: only P7E1E is excluded on t≡31 mod32. The full composition theorem in Root32HighStopA4.lean has not been compiled in this invocation; D0E and L remain alternatives, the other A4 cylinders remain open, and no full Machine C decision or BB(6) value follows.
+
+Next: integrate the accepted core into the root32 high-stop composition without duplicating declarations, locally compile the full composition, then pursue the already-existing D0E/L source-parent obligations. Do not expand the residue catalogue before that acceptance boundary is resolved.
