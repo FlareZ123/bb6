@@ -200,6 +200,24 @@ Together with `j+m=3 (mod 4)`, `k+2=3*v*2^d`, and `Y=3*v-2`, it gives the exact 
 
 Indeed, `Y%8=4` is equivalent to `v%8=2`; in that case `2*Y=0 (mod 8)` and `2*k=4 (mod 8)` for every `d>=1`. If `m%4=1`, then `j%4=2` and the mass identity gives `x%8=7` exactly when `d` is odd. If `m%4=3`, then `j%4=0` and it gives `x%8=7` exactly when `d` is even. These are precisely `2*d=m+1 (mod 4)`, hence `2*t=m+1 (mod 4)`. Because `Y%12=4`, the other three cylinders in `affineQuotientCondition` (whose right coordinates are 2, 15, or 7 modulo 16) cannot apply; M8 is the only quotient cylinder relevant here.
 
+#### A small-residue parity shortcut for the M8 test
+
+For every candidate in the logarithmic search when `m>=3`, `t+3<=2*L`, so `3*Q=2^(2*L)-1` is `-1` modulo `2^(t+3)`. Write the least positive CRT residue as
+
+```
+n_t = 2^(t+1)-3*m + q_t*2^(t+2),
+q_t = max(0, ceil((3*m-2^(t+1))/2^(t+2))).
+```
+
+From `v_t*2^t+m=Q*n_t`, multiplying by 3 and reducing modulo `2^(t+3)` gives
+
+```
+3*v_t = -2-4*q_t (mod 8),
+v_t = 2+4*q_t (mod 8).
+```
+
+Thus the M8 test `v_t%8=2` is equivalent simply to `q_t` being even. The full exclusion test in the logarithmic range can be evaluated as `q_t%2=0` and `2*t=m+1 (mod 4)`, without reducing the large integer `v_t` modulo 8. This is a useful simplification for a Lean implementation.
+
 For each modular exponent residue `t`, let `v_t` be the exact CRT minimum from (★), and define
 
 ```
