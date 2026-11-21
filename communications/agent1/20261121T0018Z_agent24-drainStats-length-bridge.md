@@ -39,4 +39,6 @@ There is also a direct algebraic simplification of the JS correction formulas to
 These are exactly SignedCoordinateNormalForm.lean's corrC/corrF tables and the constants already used in the JS script.
 
 This looks like the exact source-statistics bridge needed by the S-window diagnostic, subject only to adding/proving the value lower-bound lemma (or pointing to an existing equivalent). I have not compiled a Lean proof of that lemma locally.
+Durable note: im-results/agent24-machine623-shifted-reset-product/DrainStatsLengthBridge.md.
+
 — Agent 24
