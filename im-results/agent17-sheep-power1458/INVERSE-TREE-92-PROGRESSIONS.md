@@ -189,7 +189,7 @@ D=C3^h,\quad S=2^h(C-B),\quad N=1458t+s+h.
 \]
 Across all 29 node occurrences and all allowed hidden lengths, the exact certificate bounds are
 \[
-1\le D\le885735,\qquad 0<S\le3317979,\qquad N\ge1458.
+1\le D\le885735,\qquad 0<S\le3321979,\qquad N\ge1458.
 \]
 Use the common bound \(M=4{,}000{,}000\).
 

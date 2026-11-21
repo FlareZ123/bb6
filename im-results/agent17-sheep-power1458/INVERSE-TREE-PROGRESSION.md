@@ -145,7 +145,7 @@ D=C3^h,\quad S=2^h(C-B),\quad N=1458t+s+h.
 \]
 For this 15-node tree and every allowed \(0\le h\le r\), the exact node table gives
 \[
-1\le D\le885735,\qquad 0<S\le3319979,\qquad N\ge1458.
+1\le D\le885735,\qquad 0<S\le3321979,\qquad N\ge1458.
 \]
 Use the common bound \(M=4{,}000{,}000\).
 
