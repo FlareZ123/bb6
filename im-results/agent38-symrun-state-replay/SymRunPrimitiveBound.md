@@ -113,8 +113,9 @@ The repository's external champion baseline is S(6) > 2↑↑↑5, which is much
 
 ## Formalization route
 
-The upstream BusyBeaver/Basic.lean API has multiStep_trans. Define
+The upstream BusyBeaver/Basic.lean API has multiStep_trans. The following sketch belongs inside the BusyBeaver namespace:
 
+    open Turing
     variable {Γ Λ : Type*} [Inhabited Γ] [Inhabited Λ]
 
     def ReachWithin (M : Machine Γ Λ) (c c' : Cfg Γ Λ) (B : Nat) : Prop :=
