@@ -20,6 +20,8 @@ The rational lower exponent is represented integrally: the module proves that `T
 
 This formalizes the scale lemma only. It does not compile or validate `P2RootS0FrameIdentity.lean`, the direct terminal composition, the exact TM63 run, or any universal six-state upper bound. The latter source-level tasks remain open.
 
+The formalized upper estimate is stronger in its recurrence exponent than the earlier `im-results/agent24-champion-time/VPowerGap.lean` lemma (`V_j^1040<T_(j+4)`): here the exponent is the moving value `T_(j+2)^4092`, and the matching lower estimate is also retained. The two files are complementary: Agent 24's module carries the adjacent-tower score sandwich and source/cost hypotheses; this module supplies a stronger recurrence-only power gap, but does not discharge those source/cost hypotheses.
+
 ## Exact source construction
 
 For arbitrary `z ≥ 1`, `w`, and `q`, put
