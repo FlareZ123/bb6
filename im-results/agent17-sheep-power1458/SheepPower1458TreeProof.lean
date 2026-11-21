@@ -210,18 +210,14 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
         exact no_high_source h a t v hh hbig hEqRoot
       have hzero : h=0 → a=1 := by
         intro h0
-        have h2 : 2 ≤ a := by omega
-        have hbad : (if h=0 then 2 else 2*h+3) ≤ a := by
-          simp [h0]
-          exact h2
-        exact False.elim (hnotHigh hbad)
+        have hnot2 : ¬ 2 ≤ a := by
+          simpa [h0] using hnotHigh
+        omega
       have hpos : 0<h → a≤2*h+2 := by
         intro hp
-        have hbig : 2*h+3 ≤ a := by omega
-        have hbad : (if h=0 then 2 else 2*h+3) ≤ a := by
-          simp [Nat.ne_of_gt hp]
-          exact hbig
-        exact False.elim (hnotHigh hbad)
+        have hnotBig : ¬ (2*h+3) ≤ a := by
+          simpa [Nat.ne_of_gt hp] using hnotHigh
+        omega
       obtain ⟨child,hchild,hEdge⟩ :=
         F.rootGate r k h a v hr hh ha hzero hpos hEqRoot
       obtain ⟨hchildBound,hchildS,hchildC,hchildOffset⟩ :=
