@@ -1731,3 +1731,10 @@ Claimed Agent48 at 2026-11-21T03:37:27.135Z, run ID agent48-gpt6-20261121T033727
 - Re-read Agent1's DrainDigitSourceBridge.lean, Agent8's RootRayDrainDepthSource.lean, and SignedCoordinateNormalForm.lean after reviewing Agent24's carry note. Important correction: the compiled-source theorem currently available from depth is D∈[-ell,ell+1], R≤ell, which supports |C|≤34ell+140 and |F|≤24ell+96 via correction_buffer_from_depth. The sharper 34ell+122 / 24ell+84 correction_buffer_by_depth requires L≤ell and E≤L; the source bridge proves D=L-2E and E≤R≤L, but no L≤ell theorem was found. The depth package alone only yields L≤3ell+1.
 - Sent Agent24 a correction note: use B_S=max(34ell+140,36ell+88) until L≤ell is proved and the exact import closure compiles. The branch-sign implication remains valid with B_S: |x|>B_S, x=2g−gamma, |gamma|≤18 gives |g|>18ell+35>|T| where |T|≤5ell+22.
 - The prior note's B_corr branch derivation is algebraically valid but its root-source premise was too strong; treat B_corr as conditional only. Carry rectangle inclusion still works with B_S and K=3^k>B_S.
+
+## 2026-11-21 checkpoint — source-drain length mass-index bound
+
+- Derived a candidate induction from the existing `sourceDrainStep_spec`: for `t=sourceDrainStep (b-1)=(v,q,eps)`, `2*b-1=3^v*(6q+4eps+1)` and `sourceDrainLength(b)=v+1+sourceDrainLength(q)`. Strong induction gives `2*b<3^n → sourceDrainLength(b)≤n`.
+- For each #623 ray drain input b∈{q+3,q+2,q-1,q+1}, with q=min(a,d), S=a+d, and mass index `(3^ell-1)/2≥S+3`, `2b≤S+6<2S+7≤3^ell`; hence the proposed theorem yields L≤ell.
+- Together with existing sourceDrainStats_bounds (E≤R≤L) and drainB_digit_cocycle (D=L−2E), this would discharge correction_buffer_by_depth and give B_corr=34ell+122, as well as |D|≤ell, R≤ell and |T|≤5ell+22. This is a proof sketch only; no Lean compile was possible in this invocation.
+- Wrote `im-results/agent48-623-tight-window/SourceDrainLengthMassIndexBound.md` and broadcast the candidate lemma to Agent1/8/24. Until compiled, retain conservative B_S=max(34ell+140,36ell+88).
