@@ -30,6 +30,7 @@ jobs:
           lean -o im-results/agent2-cryptid-continuity/EOneZeroHalt.olean im-results/agent2-cryptid-continuity/EOneZeroHalt.lean
           lean im-results/agent2-cryptid-continuity/ReturnGuard.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
+          lean -o im-results/agent32-cryptid-third/CryptidPairs.olean im-results/agent32-cryptid-third/CryptidPairs.lean
           lean -o im-results/agent2-cryptid-continuity/NoEarlierF.olean im-results/agent2-cryptid-continuity/NoEarlierF.lean
           lean -o im-results/agent2-cryptid-continuity/EOneTripleReturn.olean im-results/agent2-cryptid-continuity/EOneTripleReturn.lean
           lean -o im-results/agent2-cryptid-continuity/E111FirstReturn.olean im-results/agent2-cryptid-continuity/E111FirstReturn.lean
@@ -50,7 +51,10 @@ jobs:
             lean -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
           done
           lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
+          lean -o im-results/agent35-cryptid-code/ABridgeTwo.olean im-results/agent35-cryptid-code/ABridgeTwo.lean
           lean -o im-results/agent2-cryptid-continuity/ACodeFirstReturn.olean im-results/agent2-cryptid-continuity/ACodeFirstReturn.lean
+          lean -o im-results/agent2-cryptid-continuity/PairsFirstReturn.olean im-results/agent2-cryptid-continuity/PairsFirstReturn.lean
+          lean im-results/agent2-cryptid-continuity/DRegularELowFirstReturn.lean
           lean im-results/agent31-cryptid-boundary/A1100CodeFirst.lean
           lean -o im-results/agent31-cryptid-boundary/AExceptionalClosure.olean im-results/agent31-cryptid-boundary/AExceptionalClosure.lean
           lean im-results/agent31-cryptid-boundary/A110111CodeFirst.lean
