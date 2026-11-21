@@ -43,11 +43,11 @@ one-sided offset. It normalizes both the positive and negative original-source
 equations to the common C-B term used by the inverse-tree certificates. -/
 theorem affine_edge_inverse_cases
     {x y d b c n : Nat} (hedge : SheepEven.EvenEdge x y)
+    (hx : x%2=0)
     (hb : b ≤ d) (hsign : b=0 ∨ c=0)
     (hpower : d*y+c=2^n+b) :
     GenericAffineSourceCase d b c n x y ∨
     SpecialAffineSourceCase d b c n x y := by
-  have hx : x%2=0 := SheepEven.even_edge_even hedge
   have hEdge := SheepEvenSourceAlgebra.even_edge_to_algebra hx hedge
   rcases hsign with hb0 | hc0
   · subst b
@@ -58,16 +58,18 @@ theorem affine_edge_inverse_cases
       refine ⟨a,h,v,u,ha,hv,hvodd,huodd,hxdef,hydef,?_⟩
       have hmul :
           2^(h+1)*d + 2^(h+1)*c = 2^(h+1)*(d+c) := by
-        rw [←Nat.mul_add]
+        rw [← Nat.mul_add]
+      simp only [Nat.add_assoc] at hEq
       rw [hmul] at hEq
-      simpa using hEq
+      simpa [Nat.sub_zero, Nat.add_assoc] using hEq
     · apply Or.inr
       refine ⟨a,h,u,ha,huodd,hxdef,hydef,?_⟩
       have hmul :
           2^h*d + 2^h*c = 2^h*(d+c) := by
-        rw [←Nat.mul_add]
+        rw [← Nat.mul_add]
+      simp only [Nat.add_assoc] at hEq
       rw [hmul] at hEq
-      simpa using hEq
+      simpa [Nat.sub_zero, Nat.add_assoc] using hEq
   · subst c
     rcases SheepEvenInverseAlgebra.edge_inverse_cases x y d n b hEdge hpower with
       hg | hs
@@ -76,17 +78,32 @@ theorem affine_edge_inverse_cases
       refine ⟨a,h,v,u,ha,hv,hvodd,huodd,hxdef,hydef,?_⟩
       have hmul :
           2^(h+1)*d = 2^(h+1)*(d-b) + 2^(h+1)*b := by
-        rw [←Nat.mul_add, Nat.sub_add_cancel hb]
+        rw [← Nat.mul_add, Nat.sub_add_cancel hb]
       rw [hmul] at hEq
-      omega
+      have hcancel :
+          ((d*3^h)*(2^(a+1)+1)*v + 2*a*(d*3^h) +
+            2^(h+1)*(d-b)) + 2^(h+1)*b =
+          (2^(n+h+1)+3*(d*3^h)) + 2^(h+1)*b := by
+        calc
+          _ = (d*3^h)*(2^(a+1)+1)*v + 2*a*(d*3^h) +
+                (2^(h+1)*(d-b)+2^(h+1)*b) := by ac_rfl
+          _ = 2^(n+h+1)+2^(h+1)*b+3*(d*3^h) := hEq
+          _ = _ := by ac_rfl
+      exact Nat.add_right_cancel hcancel
     · rcases hs with ⟨a,h,u,ha,huodd,hxdef,hydef,hEq⟩
       apply Or.inr
       refine ⟨a,h,u,ha,huodd,hxdef,hydef,?_⟩
       have hmul :
           2^h*d = 2^h*(d-b) + 2^h*b := by
-        rw [←Nat.mul_add, Nat.sub_add_cancel hb]
+        rw [← Nat.mul_add, Nat.sub_add_cancel hb]
       rw [hmul] at hEq
-      omega
+      have hcancel :
+          (d*3^h*(3*2^a+a+2) + 2^h*(d-b)) + 2^h*b =
+            2^(n+h) + 2^h*b := by
+        calc
+          _ = d*3^h*(3*2^a+a+2) + (2^h*(d-b)+2^h*b) := by ac_rfl
+          _ = 2^(n+h) + 2^h*b := hEq
+      exact Nat.add_right_cancel hcancel
 
 /-- A node's exact 3-adic valuation certificate bounds every hidden
 length that can occur in an original-source inverse case. -/
@@ -103,69 +120,75 @@ theorem affine_node_hidden_bound
     (hperiod :
       2^(1458*T) % 3^(node.r+node.v3C+1) = 1) :
     h ≤ node.r := by
-  by_contra hnot
-  have hh : node.r+1 ≤ h := by omega
-  have hyminus : y-1=3^h*u := by
-    rw [hydef]
-    have huPos : 0 < u := by omega
-    have hpos : 0 < 3^h*u :=
-      Nat.mul_pos (Nat.pow_pos (by decide)) huPos
-    omega
-  have hY : 3^(node.r+1) ∣ y-1 := by
-    refine ⟨3^(h-node.r-1)*u, ?_⟩
-    have hsplit : h = (node.r+1)+(h-node.r-1) := by omega
-    rw [hyminus, hsplit, Nat.pow_add]
-    ring
-  have hprod : 3^(node.r+node.v3C+1) ∣ node.C*(y-1) := by
-    rcases hC with ⟨c0,hc0⟩
-    rcases hY with ⟨y0,hy0⟩
-    refine ⟨c0*y0, ?_⟩
-    have hpow : 3^node.v3C * 3^(node.r+1) =
-        3^(node.r+node.v3C+1) := by
-      rw [←Nat.pow_add]
-      congr 1 <;> omega
-    calc
-      node.C*(y-1) =
-          (3^node.v3C*c0)*(3^(node.r+1)*y0) := by rw [hc0,hy0]
-      _ = 3^(node.r+node.v3C+1)*(c0*y0) := by rw [hpow]; ring
-  have hnum :
-      node.C*(y-1)+(node.C-node.b+node.c)=2^(1458*t+node.s) := by
-    have hyone : y=1+(y-1) := by omega
-    unfold affineNodeValue at hval
-    rw [hyone, Nat.mul_add] at hval
-    omega
-  let m := 3^(node.r+node.v3C+1)
-  have hmod :
-      2^(1458*t+node.s)%m=(node.C-node.b+node.c)%m := by
-    calc
-      2^(1458*t+node.s)%m =
-          (node.C*(y-1)+(node.C-node.b+node.c))%m := by rw [hnum]
-      _ = ((node.C*(y-1))%m + (node.C-node.b+node.c)%m)%m := by
-          rw [Nat.add_mod]
-      _ = (node.C-node.b+node.c)%m := by
-          rw [Nat.mod_eq_zero_of_dvd hprod]
-          simp
-  have hm : 1 < m := by
-    dsimp [m]
-    have hexp : 1 ≤ node.r+node.v3C+1 := by omega
-    have hpow : 3 ≤ 3^(node.r+node.v3C+1) := by
+  by_cases hle : h ≤ node.r
+  · exact hle
+  · have hh : node.r+1 ≤ h := by omega
+    have hyminus : y-1=3^h*u := by
+      rw [hydef]
+      have huPos : 0 < u := by omega
+      have hpos : 0 < 3^h*u :=
+        Nat.mul_pos (Nat.pow_pos (by decide)) huPos
+      omega
+    have hY : 3^(node.r+1) ∣ y-1 := by
+      refine ⟨3^(h-node.r-1)*u, ?_⟩
+      have hsplit : h = (node.r+1)+(h-node.r-1) := by omega
       calc
-        3 = 3^1 := by norm_num
-        _ ≤ 3^(node.r+node.v3C+1) :=
-          Nat.pow_le_pow_right (by decide) hexp
-    omega
-  have hp' : 2^(1458*T)%m=1 := by
-    simpa only [Nat.powMod_def, m] using hperiod
-  have hc' :
-      2^(1458*r0+node.s)%m ≠
-        (node.C-node.b+node.c)%m := by
-    simpa only [Nat.powMod_def, m] using hbase
-  have hno := no_hit_fixed_period m (1458*r0+node.s)
-      (node.C-node.b+node.c) (1458*T) k hm hp' hc'
-  have hexp : 1458*t+node.s =
-      (1458*r0+node.s)+(1458*T)*k := by rw [ht]; ring
-  rw [hexp] at hmod
-  exact hno hmod
+        y-1 = 3^h*u := hyminus
+        _ = (3^(node.r+1)*3^(h-node.r-1))*u := by
+          rw [hsplit, Nat.pow_add]
+        _ = 3^(node.r+1)*(3^(h-node.r-1)*u) := by ac_rfl
+    have hprod : 3^(node.r+node.v3C+1) ∣ node.C*(y-1) := by
+      rcases hC with ⟨c0,hc0⟩
+      rcases hY with ⟨y0,hy0⟩
+      refine ⟨c0*y0, ?_⟩
+      have hpow : 3^node.v3C * 3^(node.r+1) =
+          3^(node.r+node.v3C+1) := by
+        rw [← Nat.pow_add]
+        congr 1 <;> omega
+      calc
+        node.C*(y-1) =
+            (3^node.v3C*c0)*(3^(node.r+1)*y0) := by rw [hc0,hy0]
+        _ = 3^(node.r+node.v3C+1)*(c0*y0) := by rw [hpow]; ac_rfl
+    have hnum :
+        node.C*(y-1)+(node.C-node.b+node.c)=2^(1458*t+node.s) := by
+      have hyone : y=1+(y-1) := by omega
+      unfold affineNodeValue at hval
+      rw [hyone, Nat.mul_add] at hval
+      omega
+    let m := 3^(node.r+node.v3C+1)
+    have hmod :
+        2^(1458*t+node.s)%m=(node.C-node.b+node.c)%m := by
+      calc
+        2^(1458*t+node.s)%m =
+            (node.C*(y-1)+(node.C-node.b+node.c))%m := by rw [hnum]
+        _ = ((node.C*(y-1))%m + (node.C-node.b+node.c)%m)%m := by
+            rw [Nat.add_mod]
+        _ = (node.C-node.b+node.c)%m := by
+            rw [Nat.mod_eq_zero_of_dvd hprod]
+            simp
+    have hm : 1 < m := by
+      dsimp [m]
+      have hexp : 1 ≤ node.r+node.v3C+1 := by omega
+      have hpow : 3 ≤ 3^(node.r+node.v3C+1) := by
+        calc
+          3 = 3^1 := by decide
+          _ ≤ 3^(node.r+node.v3C+1) :=
+            Nat.pow_le_pow_right (by decide) hexp
+      omega
+    have hp' : 2^(1458*T)%m=1 := by
+      simpa only [Nat.powMod_def, m] using hperiod
+    have hc' :
+        2^(1458*r0+node.s)%m ≠
+          (node.C-node.b+node.c)%m := by
+      simpa only [Nat.powMod_def, m] using hbase
+    have hno := no_hit_fixed_period m (1458*r0+node.s)
+        (node.C-node.b+node.c) (1458*T) k hm hp' hc'
+    have hexp : 1458*t+node.s =
+        (1458*r0+node.s)+(1458*T)*k := by
+      rw [ht, Nat.mul_add, Nat.mul_assoc]
+      omega
+    rw [hexp] at hmod
+    exact hno hmod
 
 /-- Positive-offset counterpart of blank_even_inverse_cases. It uses the
 original EvenReach last edge and the source-checked positive-offset algebra
@@ -199,36 +222,37 @@ theorem blank_even_inverse_cases_pos
 path. This is the finite-graph induction used by the five inverse trees. -/
 theorem evenReach_parent_closed {P : Nat → Prop}
     {x y : Nat}
-    (hclosed : ∀ {x y}, P y → SheepEven.EvenEdge x y → P x)
-    (h : SheepEven.EvenReach x y) (hy : P y) : P x := by
+    (hclosed : ∀ {x y}, x%2=0 → P y → SheepEven.EvenEdge x y → P x)
+    (h : SheepEven.EvenReach x y) (hx : x%2=0) (hy : P y) : P x := by
   induction h with
   | refl x => exact hy
-  | @cons x y z edge tail ih => exact hclosed (ih hy) edge
+  | @cons x y z edge tail ih =>
+      exact hclosed hx (ih (SheepEven.even_edge_even edge) hy) edge
 
 /-- A node-wise predecessor classifier induces reverse closure of the
-finite affine basin. -/
+finite affine basin, provided the source is known even. -/
 theorem affineBasin_parent_closed
     {t : Nat} {nodes : List AffineNode}
     (hnode : ∀ node, node ∈ nodes →
-      ∀ {x y}, affineNodeValue t node y →
+      ∀ {x y}, x%2=0 → affineNodeValue t node y →
         SheepEven.EvenEdge x y → affineBasin t nodes x) :
-    ∀ {x y}, affineBasin t nodes y →
+    ∀ {x y}, x%2=0 → affineBasin t nodes y →
       SheepEven.EvenEdge x y → affineBasin t nodes x := by
-  intro x y hy hedge
+  intro x y hx hy hedge
   rcases hy with ⟨node,hmem,hval⟩
-  exact hnode node hmem hval hedge
+  exact hnode node hmem hx hval hedge
 
 /-- Once the affine basin is reverse-closed and excludes 10, no node in it
 can be reached from the blank even root. -/
 theorem no_evenReach_of_affineBasin
     {t y : Nat} {nodes : List AffineNode}
-    (hclosed : ∀ {x y}, affineBasin t nodes y →
+    (hclosed : ∀ {x y}, x%2=0 → affineBasin t nodes y →
       SheepEven.EvenEdge x y → affineBasin t nodes x)
     (hnot10 : ¬ affineBasin t nodes 10)
     (hroot : affineBasin t nodes y) :
     ¬ SheepEven.EvenReach 10 y := by
   intro hreach
-  have h10 := evenReach_parent_closed hclosed hreach hroot
+  have h10 := evenReach_parent_closed hclosed hreach (by decide) hroot
   exact hnot10 h10
 
 #print axioms blank_even_inverse_cases_pos
