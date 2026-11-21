@@ -1,4 +1,4 @@
-# Root32 high-stop exclusion on r = 36192 (mod 65536)
+# Root32 high-stop exclusion: exact r = 167264 (mod 262144)
 
 **Status:** intermediate exact source-parent composition. It excludes another infinite progression of the authentic B2/U5 high-stop target. Existing source grammar and blank-image theorems supply the inverse constraints; the affine arithmetic below is exact. The new composition has not yet been wrapped in one Lean theorem or compiled as a transitive import closure. It is not a Machine C decision or a BB(6) result.
 
