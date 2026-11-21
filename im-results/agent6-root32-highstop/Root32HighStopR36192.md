@@ -110,18 +110,26 @@ The saturated exact root equation in [B2Q0FourStepPath.md](../agent3-c-bounce-in
 17300+22155(t+j)=5\cdot2^{E-17},
 \qquad r=32+64j.
 \]
-Since E-17 exceeds 1024, it gives t+j≡708 (mod 1024). Thus t≡143 (mod 1024), as implied by t≡1167 (mod 4096), gives
+Since E-17 exceeds 4096, reduce the exact root equation modulo 4096. The inverse is
 \[
-j\equiv708-143\equiv565\pmod{1024},
+22155^{-1}\equiv291\pmod{4096},
 \]
-and
+so
 \[
-\boxed{r=32+64j\equiv36192\pmod{65536}.}
+t+j\equiv3780\pmod{4096}.
 \]
-The exact-root saturation construction supplies a natural parameter for every j=565+1024s, s≥0, so this is a nonempty infinite progression.
+With \(t\equiv1167\pmod{4096}\), this gives
+\[
+j\equiv3780-1167\equiv2613\pmod{4096},
+\]
+and therefore
+\[
+\boxed{r=32+64j\equiv167264\pmod{262144}.}
+\]
+The exact-root saturation construction supplies a natural parameter for every \(j=2613+4096s\), \(s\ge0\), so this is a nonempty infinite progression. It is contained in the coarser \(r\equiv36192\pmod{65536}\) cylinder; the earlier reduction modulo 1024 established only that necessary coarse residue, not the exact class.
 
 ## 5. Scope and verification boundary
 
-This is an additional infinite source-orbit exclusion for the B2/U5 high-stop target. Its root-index class r≡36192 (mod 65536) is disjoint from r≡9568 and 10592 (mod 16384), r≡7520 and 11616 (mod 32768), and r≡35168 and 64864 (mod 65536). It does not decide the remaining root32 classes, Machine C, or BB(6).
+This is an additional infinite source-orbit exclusion for the B2/U5 high-stop target. Its exact root-index class r≡167264 (mod 262144), which lies inside r≡36192 (mod 65536), is disjoint from r≡9568 and 10592 (mod 16384), r≡7520 and 11616 (mod 32768), and r≡35168 and 64864 (mod 65536). It does not decide the remaining root32 classes, Machine C, or BB(6).
 
 The composition uses existing exact source theorems (section_preimage_all_iff, the odd/odd sum-16 and low-valuation reachability equivalences, the even-right unique inverse, the even-even sum-zero parent theorem, the R exceptional-parent exclusion, and blank_no_odd_sum_one) plus the displayed affine arithmetic. The integrated composition still needs a Lean 4.36.0-rc2 wrapper, exact transitive import-closure compilation, and an exported axiom audit. Keep it in im-results/; do not promote it to results/ yet.
