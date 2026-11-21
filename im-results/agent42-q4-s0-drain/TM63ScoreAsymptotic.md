@@ -17,6 +17,22 @@ Set
 \]
 Because \(b=2^k-1\), we have \(k=\ell\) exactly. Also \(b\ge2^N R\) and \(b\ge2^R-1\), so \(N\le\ell\) and \(R\le\ell\). In particular, \(\ell\ge N\ge256\).
 
+For the authentic source instance, the full parameters are
+\[
+A=\sum_{j=7}^{M+42}V_j+\frac{5M+176}{3},\qquad
+N=(2^{78}-1)2^A-3,\qquad R=V_{M+46}.
+\]
+Since \(b_0=R\) and both sequences obey \(x\mapsto2^x-1\),
+induction gives \(b_j=V_{M+j+46}\). Thus the symbols in this note
+are connected to the authentic source indices by
+\[
+b_N=V_{M+N+46},\quad
+\ell=b_{N-1}=V_{M+N+45},\quad
+\kappa=b_{N-2}=V_{M+N+44},\quad
+q=M+N+50.
+\]
+The exact source parameterization and terminal \(q\) are also recorded
+in [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md).
 The exact score split and root-prefix bounds are recorded in [TM63PublishedTowerSandwich.md](TM63PublishedTowerSandwich.md). The exact dispatcher-plus-terminal cost identity is recorded in [SectionResultThreeCycle.md](SectionResultThreeCycle.md):
 \[
 D_N

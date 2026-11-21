@@ -920,9 +920,11 @@ S_{\rm TM1}
 &0\le E_p<45u_p^2.
 \end{aligned}
 \]
-The uniform tail is \(E_p<45u_p^2\) at every depth; the direct one-term bound improves this to \(E_1<13u_1^2/2\). The p=2 split isolates only the final two dispatcher summands. The terminal macro, final counted halt transition, +7 correction, raw initial drain, and root prefix remain in the non-summand tail, so they are counted exactly once. The proof establishes \(N<R\) using the full source parameter
-\(A=\sum_{j=7}^{M+42}V_j+(5M+176)/3\), then uses geometric decay of the earlier quadratic
-dispatcher costs, and the root/polynomial bounds. The \(p=2\)
+The uniform tail is \(E_p<45u_p^2\) at every depth; the direct one-term bound improves this to \(E_1<13u_1^2/2\). The p=2 split isolates only the final two dispatcher summands. The terminal macro, final counted halt transition, +7 correction, raw initial drain, and root prefix remain in the non-summand tail, so they are counted exactly once. The authentic source indices are \(b_N=V_{M+N+46}\),
+\(\ell=b_{N-1}=V_{M+N+45}\), and \(q=M+N+50\), with
+\(A=\sum_{j=7}^{M+42}V_j+(5M+176)/3\). The proof establishes
+\(N<R\) from this full \(A\), then uses geometric decay of the earlier
+quadratic dispatcher costs and the root/polynomial bounds. The \(p=2\)
 specialization is
 \[
 S_{\rm TM1}
