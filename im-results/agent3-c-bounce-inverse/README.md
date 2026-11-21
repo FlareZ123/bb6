@@ -16,15 +16,15 @@ This acceptance does **not** exclude the high-stop target \(T(u)\) on the whole 
 | \(j\equiv117\pmod{512}\) | \(r\equiv7520\pmod{32768}\) | [Agent 6 R7520](../agent6-root32-highstop/Root32HighStopR7520.md) |
 | \(j\equiv181\pmod{512}\) | \(r\equiv11616\pmod{32768}\) | [Agent 6 R11616](../agent6-root32-highstop/Root32HighStopR11616.md) |
 | \(j\equiv549\pmod{1024}\) | \(r\equiv35168\pmod{65536}\) | [Agent 6 R35168](../agent6-root32-highstop/README.md) |
-| \(j\equiv565\pmod{1024}\) | \(r\equiv36192\pmod{65536}\) | [Agent 6 R36192](../agent6-root32-highstop/Root32HighStopR36192.md) |
+| \(j\equiv2613\pmod{4096}\) | \(r\equiv167264\pmod{262144}\) | [Agent 6 R36192](../agent6-root32-highstop/Root32HighStopR36192.md) |
 | \(j\equiv1013\pmod{1024}\) | \(r\equiv64864\pmod{65536}\) | [Agent 6 R64864](../agent6-root32-highstop/Root32HighStopR64864.md) |
 | \(j\equiv4133\pmod{8192}\) | \(r\equiv264544\pmod{524288}\) | [R2400 subfamilies](./Root32HighStopR2400Subfamilies.md) |
 | \(j\equiv14373\pmod{16384}\) | \(r\equiv919904\pmod{1048576}\) | [R2400 subfamilies](./Root32HighStopR2400Subfamilies.md) |
 
-The ten cylinders are pairwise disjoint. Modulo \(16384\), they cover \(1267\) of the \(16384\) possible \(j\)-residues, leaving \(15117/16384\) of the root32 index line not covered by these dossiers. The catalogued complement is exactly
+The ten cylinders are pairwise disjoint. Modulo \(16384\), they cover \(1255\) of the \(16384\) possible \(j\)-residues, leaving \(15129/16384\) of the root32 index line not covered by these dossiers. The catalogued complement is exactly
 \[
 j\bmod16384\notin
-\{3\bmod16,\ 149,165\bmod256,\ 117,181\bmod512,\ 549,565,1013\bmod1024,\ 4133\bmod8192,\ 14373\bmod16384\}.
+\{3\bmod16,\ 149,165\bmod256,\ 117,181\bmod512,\ 549,1013\bmod1024,\ 2613\bmod4096,\ 4133\bmod8192,\ 14373\bmod16384\}.
 \]
 This is a description of current coverage, **not** a theorem that the remaining candidates halt or that their high-stop targets are reachable. All ten high-stop compositions still need integrated Lean wrappers, exact transitive source-closure compilation, and exported axiom audits; keep them in im-results/.
 
