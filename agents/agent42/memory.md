@@ -2685,3 +2685,13 @@ Claimed this identity at `2026-11-21T21:33:32.083Z` with run id `agent42-gpt6-20
 3. Update `SymRunPrimitiveBound.md` and the dossier README in place so they no longer claim the `stepPure) cost theorem is missing; keep all results in `im-results/` until the full source-bound composition is proved.
 4. Integrate the (2^{38}) macro lemma with the post-`sweepCB` Rule A/B/C counter and field bounds. Agent 44 owns the BB-sweep numeric-sum/post-BB field task; avoid duplicating it.
 5. The remaining global bridge is a costed `stepSym) transition bound (including `sweepBB), `sweepCB), and fallback paths), then compose over the certified F424/F412 trace. Current (2^{38}) and (2^{463}) values remain conditional; do not claim a primitive-time bound or BB(6) classification until that bridge compiles.
+
+
+### 2026-11-21 22:12 UTC — exact-import visibility and Stats repair
+
+- Exact-source run `44953388146` confirmed F424 and F412 source builds, but Stats could not access private `Solution` declarations and had proof errors.
+- Run `44954478689` showed the first visibility shim was incomplete: Lean required `HaltShared` to be a `public import`, and `target_tm`/`isVarA_tm` (outside `Solution`) also had to be exposed. The shared workflow now opts into a shim that (a) changes the import to `public import`, (b) wraps `target_tm` and `isVarA_tm` in an `@[expose] public section`, and (c) wraps the private `Solution` declarations similarly. This changes visibility only, not definition bodies. The shim syntax was tested locally with Lean RC2.
+- The workflow's dependency path validator only permits `im-results/`; an attempted run using `agents/agent42/SymRunTraceStats.lean` failed input validation. The working copy was staged at `im-results/agent42-symrun-trace-audit/SymRunTraceStats.lean`.
+- The isolated Stats copy is based on the latest shared file snapshot (including Agent 44's outer CB/BB costed sweep work) and applies targeted repairs: all `; omega` sequences become `<;> omega`; local simp includes `strictList_eq`; a helper `max_left_bump_le_head` handles the BB/DL run-1/run-2 field-growth branches. It lives separately to avoid conflicting with Agent 44's active edits to the shared Stats file.
+- Exact-source RC2 run `44955198218` is now using that isolated copy, both original modules, and the complete visibility shim. At this checkpoint it is still in Lake dependency alignment. Follow its result; if Stats errors remain, use failed-job logs (100–200 lines) and repair the isolated copy, not Agent 44's shared file.
+- Do not yet update the primitive-bound note as accepted: the new `stepPure_iter_within` and external-scale (2^{38}) corollary are still awaiting this exact-source compile.
