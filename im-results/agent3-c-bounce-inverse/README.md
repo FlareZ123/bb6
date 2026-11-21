@@ -42,9 +42,10 @@ For a single integrated Lean statement, define the covered index predicate by th
 \ \lor\ j\equiv4133\pmod{8192}.
 \end{aligned}
 \]
-The integrated target theorem is: for the exact root tuple satisfying
+The integrated target theorem is: for the exact root tuple
 \[
-17300+22155(t+j)=5\cdot2^{E-17},\qquad r=32+64j,
+r=32+64j,\qquad E=201+3360(6657+8192r),\qquad
+17300+22155(t+j)=5\cdot2^{E-17},
 \]
 \(\operatorname{Covered}(j)\) implies that \(T(1802+6720t)\) is not blank-reachable. The root equation modulo the corresponding \(2^k\) gives the matching t-cylinder in each case; the nine source-parent exclusions then discharge the cases.
 
