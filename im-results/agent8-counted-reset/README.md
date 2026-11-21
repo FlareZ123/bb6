@@ -41,7 +41,9 @@ The reset-prefix theorem remains an explicit premise. The uniform single-step `I
 
 **Ordering is semantically significant.** `FConfig` uses a list and its equality is list equality, not set equality. Sorting the marked cells preserves the represented tape but makes the `fRun` endpoint equality false. The current output frames preserve the exact insertion/filter order of `fMove`.
 
-`reset_base_check.js` independently replays the published TM63 table with the same ordered-list update rule and checks all three endpoints. This is reproducible computational evidence, not a proof. `resetBase_exact` is intended to certify the same traces by `decide`; the current fixes to its output order, `v2` qualification, and finite-head helper are committed but await the manual Lean audit.
+`reset_base_check.js` independently replays the published TM63 table with the same ordered-list update rule and checks all three endpoints. This is reproducible computational evidence, not a proof. The current `resetBase_exact` and `resetBase_heads` declarations compile with `native_decide`; their transitive axiom profile contains generated `native_decide` constants and no `sorryAx`. This is a native-computation certificate, not a plain kernel-reduction proof, and it is not acceptable in a closure that explicitly bans `native_decide`.
+
+The data-only `resetBaseInside` predicate and input/output frames now live in `ResetBaseFrames.lean`. `CountedResetBase.lean` imports that module and retains the finite trace/head proofs. `ResetBaseM2Split.lean` imports only the frame module, so the focused middle34 closure can compile and audit its two `decide`-checked m=2 split theorems without importing the native-decision base traces.
 
 The finite-base support changes are:
 - use `BB6ChampionArithmetic.v2` explicitly in `resetBase_cost_eq`;
@@ -86,7 +88,7 @@ The theorem `q4_suffix_frame` returns the output as a composition of `frameAt` a
 
 The source q4 prefix theorem is in `im-results/agent6-q4-prefix/CountedQ4Prefix.lean`. Its original finite-right-shape interface passed the q4-prefix CI gate in run `43334058991`. Agent 24 has strengthened the theorem to export its already-proved full right-facing stream; that signature change is not yet CI-verified. `im-results/agent24-champion-time/Q4RightEndpoint.lean` uses the stream to prove the suffix's complete right-facing endpoint, including the infinite blank ray. A coordinate split for the remaining left-facing endpoint is recorded in Agent 24's communication to Agent 8. Neither endpoint helper has been compiled in the current source revision.
 
-The latest overall champion-root run `43340804651` failed, and the available job-step summary does not identify the failing Lean declaration. The manual audit now compiles the q4 modules before the independent reset-base module and compiles `CountedOneZeroUnary` before `CountedResetBase`; rerun it to check the current revisions. Do not treat any uncompiled helper as a verified theorem.
+The latest overall champion-root run `43340804651` failed, and the available job-step summary does not identify the failing Lean declaration. The broad manual audit still compiles the independent reset-base module and `CountedOneZeroUnary` before `CountedResetBase`; rerun it to check the current revisions. The focused `middle34-acceptance` closure instead imports `ResetBaseM2Split` through `ResetBaseFrames`, preserving the split theorem profiles while excluding `CountedResetBase`'s native-decision trace proofs. This is a dependency separation, not a relaxation of the strict `native_decide` gate. Do not treat any uncompiled helper as a verified theorem.
 
 ## Dependencies and ownership
 
