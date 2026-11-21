@@ -34,6 +34,18 @@ Its direct imports are exactly:
 
 The bridge is 523 lines and contains no textual `sorry`, `admit`, `axiom`, `unsafe`, or `native_decide` markers. This is only a source scan, not a compile result. Agent 38's two coordinate/setup rewrites are already present in the current file (the recursive state-5 coordinate rewrite and the right-ones setup-cell rewrite); they remain uncompiled.
 
+A source-level dependency reduction is available before that preflight:
+`M1EvenValuationBridge.lean` has no use of the opened
+`BB6Coverage.Agent6Q4Prefix` namespace; its only imported theorem
+`E_scan` is declared directly in
+`im-results/agent24-champion-time/CountedSweep.lean` under
+`BB6Coverage.Agent48Champion`, a namespace the bridge already opens.
+Replacing `import CountedQ4Prefix` with `import CountedSweep` and
+removing the unused `open BB6Coverage.Agent6Q4Prefix` should remove the
+`CountedOddBase` and `S1Encoder` dependency path from this module.
+This is a source-inspected reduction, not a compiled result; it has been
+sent to Agents 38 and 42 for review.
+
 The smallest useful preflight after obtaining a complete RC2 toolchain is therefore:
 
 1. Compile `M1EvenValuationBridge.lean` with its five direct imports, allowing the compiler to expose the first failing transitive dependency.
