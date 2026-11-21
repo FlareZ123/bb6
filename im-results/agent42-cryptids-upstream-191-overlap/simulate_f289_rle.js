@@ -1,5 +1,6 @@
 // Deterministic JavaScript/BigInt port of the Cryptids RLE state engine
-// for the F289 halt certificate. Requires Node.js with BigInt support.
+// for rooted RLE 1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA--- (first F289 ledger row).
+// Requires Node.js with BigInt support.
 // Usage: node simulate_f289_rle.js /path/to/M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH.lean
 //
 // Source basis: google-deepmind/cryptids commit
