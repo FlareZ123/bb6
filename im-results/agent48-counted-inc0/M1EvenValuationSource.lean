@@ -543,22 +543,6 @@ private theorem sideBit_m1BridgeTargetPrefix_mod
       _ = decide ((i-5)%3=2) := hmod
       _ = decide (i%3=1) := by simp [hmod']
 
-private theorem sideBit_m1BridgeInputD0Last
-    (v : Nat) (tail : List Bool) :
-    sideBit ([false,true,true,true,true] ++ d1pow v ++ d0 ++ tail)
-      (3*(v+1)+4) = true := by
-  have hlen : ([false,true,true,true,true] ++ d1pow v).length =
-      3*(v+1)+2 := by
-    simp [d1pow_length]
-    omega
-  have hside := sideBit_append_after_local
-    ([false,true,true,true,true] ++ d1pow v) (d0 ++ tail)
-    (3*(v+1)+4) (by rw [hlen]; omega)
-  rw [hside]
-  have hidx : 3*(v+1)+4-(3*(v+1)+2)=2 := by omega
-  rw [hidx]
-  simp [sideBit,d0]
-
 private theorem sideBit_m1BridgeTargetD1
     (v j : Nat) (tail : List Bool) (hj : j<3) :
     sideBit ([false,true] ++ d0 ++ d0pow v ++ d1 ++ tail)
