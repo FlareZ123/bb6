@@ -57,3 +57,7 @@ This is the precise reason the simultaneous two-copy product needs only offsets 
 The 3,101-state product in ShiftedResetCarryDFA2.js tracks both offset-1 and offset-2 suffix automata on the same stream. Append the optional high-extension symbol \(h_{n+1}\) to both copies, then select the copy indexed by \(1+\delta k_n+\delta k_{n+1}\). Its carry output and first-reset event symbol decode the exact full post_reset_pair output label by the all-state quotient certificate.
 
 This gives an exact finite recognizer update for the overlapping-window indices, conditional on the source-to-target stream \(S_n\) and high-extension symbol being the authentic ones. It does not by itself prove that the root transition produces those symbols or that the source carry lies in the full start rectangles.
+
+## Finite regression of the root adapter
+
+I tested the exact phase-selection and high-extension logic used by ShiftedWindowInterface.js against the full post_reset_pair DFA. There are 12 valid three-phase paths. For every stream of length 0 through 4, I tested the no-extension case when the second edge has delta_j=0, and all nine possible high-extension symbols when delta_j=1. This gives 450,241 cases; the selected two-copy output, decoded through full_output_lookup, matched the full DFA on the expected suffix in every case. This is a finite regression only; the all-word argument is the suffix/product construction above.
