@@ -551,3 +551,19 @@ Relevant source components:
 - im-results/agent46-needle-midstrip/README.md
 - im-results/agent20-needle-coprime/SecondLevelOddBlockFilter.md
 
+
+
+## 7. Wider residue-cut band above \(a\)
+
+The new [SecondLevelWideResidueCut.md](SecondLevelWideResidueCut.md) theorem extends the high-side analysis. For \(w=a+s-1\), it excludes every \(s\) satisfying
+\[
+(2r-1)s\ge a,\qquad (r-1)s\le a-d-3,\qquad
+((a+s-5)\bmod s)+1\ge d,
+\]
+where \(d=1+\lfloor\log_2(3^{2r-1})\rfloor\). The complementary residue failures are exactly parametrized by
+\[
+a-5=ks+e,\quad r-1\le k\le2r-2,\quad 0\le e\le d-2,
+\]
+so there are at most \(r(d-1)\) exceptions. The companion BigInt audit intersects these exceptions with the existing eleven-prime filter and the \(t=1,\ldots,7\) two-step conditions.
+
+This is an arithmetic exclusion for a wide band above \(a\), not a closure of the remaining \(w<a\) middle-remainder classes. The proof is not yet Lean-formalized or composed with the pinned original-source inverse theorem. The finite audit is not a reachability proof.

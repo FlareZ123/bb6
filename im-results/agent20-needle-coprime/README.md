@@ -84,3 +84,17 @@ The mod-5 odd-block filter leaves 4.04464726% of all valuation classes (11.07602
 The low-side quotient-band theorem now includes the formerly omitted \(k=1,s=0\) boundary \(w=a_r-1\), closing the one-valuation gap at \(a_r-1,a_r\). For \(r=50\), this boundary joins the \(k=1\) low-side interval to the \(k=0\) large-remainder interval. The high-side, low-side, and complementary large-remainder exclusions remain paper-level necessary conditions; middle-remainder classes and the forced-even branch remain unresolved.
 
 These are intermediate results, not yet Lean-formalized and not a complete predecessor exclusion. Do not promote them to results/ until the remaining valuation classes are resolved and the new proofs are checked.
+
+
+## Wider residue-cut exclusion for second-level parents above \(a_r\)
+
+A new all-parameter paper-level theorem now excludes almost all parent valuations \(w=a_r+s-1\) in
+\[
+\left\lceil\frac{a_r}{2r-1}\right\rceil
+\le s\le
+\left\lfloor\frac{a_r-d_r-3}{r-1}\right\rfloor,
+\qquad d_r=1+\lfloor\log_2(3^{2r-1})\rfloor.
+\]
+The only exceptions satisfy \(c_r(s)=((a_r+s-5)\bmod s)+1<d_r\), and there are at most \(r(d_r-1)\) of them. See [SecondLevelWideResidueCut.md](SecondLevelWideResidueCut.md) for the exact proof and [second_level_wide_residue_cut.js](second_level_wide_residue_cut.js) for the BigInt audit.
+
+For \(r=50\), the enormous interval reduces to 105 explicit exceptions; 41 survive the eleven-prime parent filter, and the two-step filters leave 21 forced-even cases requiring valuation \(t\ge8\). For \(r=160\), the corresponding counts are 346, 121, and 68. These are necessary-condition reductions only. The theorem is not yet Lean-formalized or source-composed, and the \(w<a_r\) middle-remainder classes and authentic blank-root reachability remain open.
