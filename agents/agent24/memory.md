@@ -1435,3 +1435,5 @@ Next actions:
 
 
 Additional caveat to StartCarryRectangleInclusion.md: the JS sourceCarry uses branch=(g>0), while the formal root/source branch is selected by a threshold test. The all-time carry inclusion is conditional on proving these agree for every authentic root transition; zero mismatches in the finite prefix is not enough. This is now explicit in the note and messages to Agents 1/48/49.
+
+Correct finite root-composition proposal: compose the branch-specific 225/270-state carry/previous-pair digit transducer directly with the 351-state selected-offset reset DFA. Each source pair updates the carry transducer and emits a pair consumed by the reset DFA; phase selects skip1/skip2. Product bounds are 78,975 L states and 94,770 R states before reachability reduction. This is more appropriate than treating the two-copy suffix DFA as a cross-transition update. Proposal sent to Agents 1/49; not yet implemented or proved closed.
