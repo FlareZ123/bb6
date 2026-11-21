@@ -149,7 +149,7 @@ The `sectionResult` countdown decreases n by one and updates m to `(m+2) mod 3`.
 - marker 0 and marker 2: the generic odd-index source theorems cover all four odd residues each;
 - markers 0 and 2: the even-residue-2, -4 and -6 source theorems cover the six nonzero even residues;
 - marker 0, (n=8q): `m0EvenEight_valuation_counted_increment_source` is now a full all-valuation source draft in [M0EvenEightValuationCountedSource.lean](../agent48-counted-inc0/M0EvenEightValuationCountedSource.lean);
-- marker 2, (n=8q): `m2Even_residue0_counted_increment_source` is a full all-q source draft in [M2EvenResidueZeroCounted.lean](M2EvenResidueZeroCounted.lean). Its finite end-to-end simulator now has 144 exact prefix/drain cases in [M2EvenResidueZeroProbe.mjs](M2EvenResidueZeroProbe.mjs); this is computational evidence only, not a compiled source proof.
+- marker 2, (n=8q): `m2Even_residue0_counted_increment_source` is a full all-q source draft in [M2EvenResidueZeroCounted.lean](M2EvenResidueZeroCounted.lean). Its finite end-to-end simulator now has 288 exact prefix/drain cases, including eight additional binary-counter blocks, in [M2EvenResidueZeroProbe.mjs](M2EvenResidueZeroProbe.mjs); this is computational evidence only, not a compiled source proof.
 
 The two residue-zero counted-source closures remain uncompiled and unaudited. The 24/24 figure is source-draft coverage, not accepted proof coverage. The root-connected 24-cycle needs both all-q extensions on alternating cycles: with `K=tm63RootMiddleK` odd, cycle `j` has marker-2 quotient `q2 = K-1-3j` and marker-0 quotient `q0 = K-2-3j`, whose parities alternate and whose even valuations are not fixed.
 
