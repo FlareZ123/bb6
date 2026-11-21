@@ -251,3 +251,15 @@ Added a small Std-only Lean file, im-results/agent10-cascade/Phase50DeepCylinder
 - The subwindow W has K-width >162 for odd a≥13, so all three lifts occur. Combining with the first seven-of-nine theorem gives 25 of 27 K mod162 classes root-excluded for every fixed odd a≥13, leaving exactly two high-valuation classes, one in each exceptional K mod54 phase. This is the current correct result; it is stronger than the invalid a-mod54 partition and does not depend on S0/S3.
 - The 27-row table in the corrected note records the unique high-lift indices m0 and m1. The modular logic was rerun in the functions JS runtime for all 27 a mod54 values and all three K lifts. The local Lean shell remains unavailable; no Lean proof or CI validation.
 - The earlier communications to Agents 7 and 44 contained the invalid S0/S3 description. Send immediate correction messages explaining the K mod162 period and linking the corrected note/script; ask them to review the corrected 25/27 statement, not the obsolete a-lift claim.
+
+
+## 2026-11-21 third-lift checkpoint: 79/81 K-mod-486 phases excluded
+
+- Added im-results/agent10-cascade/T0-K3-ODD-A-THIRD-LIFT.md and t0_odd_a_k3_third_lift.mjs. This extends the corrected K-mod-162 second-lift result; it supersedes no valid theorem, but sharpens the residual high-valuation classes.
+- Exact shift law: with T=80·2^K+2K+13−2(2K+7)2^(K+4−a), X=T/3, and e=K+4−a even, 2^162≡1 (mod243) and T(K+162)−T(K)≡324−648·2^e≡162 (mod243). Hence X(K+162)≡X(K)+54 (mod81).
+- For Y=2h+5 in the X≡3 phase, h=2(X/3)−4p−K−4. Using the X shift and 2^(K+162)≡2^K (mod27), Y(K+162)≡Y(K)+18 (mod27).
+- In the high K-mod-162 lift of the X≡0 phase, 27|X. Its three K-mod-486 lifts have X mod81 equal to 0,27,54 in some order. The two nonzero lifts have v3(X)=3, so t=2 is forced; the source parameter 4d/p lies in (1,3/2) throughout W, an odd-source gap. The unique lift with 81|X remains.
+- In the high K-mod-162 lift of the X≡3 phase, 9|Y=2h+5. Its three K-mod-486 lifts have Y mod27 equal to 0,9,18 in some order. The two nonzero lifts have v3(Y)=2, so t=1 is forced; the source parameter 2g/p lies in (1,7/6) throughout W, again an odd-source gap. The unique lift with 27|Y remains.
+- For odd a≥15, W has K-width 53·2^a/2048>486, so all three K-mod-486 lifts occur. Counting 9 K-mod-54 phases ×9 lifts gives 81 classes: seven phases contribute 63 exclusions; each exceptional phase contributes 8/9 exclusions; total 79/81, with exactly two higher-valuation classes remaining.
+- The third-lift modular logic was evaluated in the functions JS runtime for all 81 odd a mod162 values; the 162-shift identities are also exact algebraic derivations. Local Lean remains unavailable and no CI was run. Updated first/second note links, im-results README, and research/BOARD.md to 79/81.
+- Next: analyze the two residual classes with valuations v3(X)≥4 and v3(Y)≥3. Existing Agent7 3-adic lift selectors and Agent44 feeder/cascade/rank machinery are the most promising reuse points. Keep all results scoped to the auxiliary t=0 entry; other fatal-spine branches remain unclassified.
