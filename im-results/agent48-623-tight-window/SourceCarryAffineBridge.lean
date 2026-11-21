@@ -28,13 +28,19 @@ theorem ediv_eq_of_decomp
   have hlow : q ≤ z / d := by
     apply (Int.le_ediv_iff_mul_le hd).2
     rw [hdecomp]
-    omega
+    calc
+      q*d = d*q := Int.mul_comm q d
+      _ ≤ d*q+r := by omega
   have hhigh : z / d < q + 1 := by
     apply Int.ediv_lt_of_lt_mul hd
     rw [hdecomp]
     calc
       d*q + r < d*q + d := by omega
-      _ = d*(q+1) := by ring
+      _ = (q+1)*d := by
+        calc
+          d*q+d = q*d+d := by rw [Int.mul_comm d q]
+          _ = q*d+1*d := by simp
+          _ = (q+1)*d := by rw [Int.add_mul]
   omega
 
 /-- Adding an exact multiple of a positive denominator shifts the quotient. -/
@@ -47,7 +53,8 @@ theorem ediv_add_mul
   have hdecomp : d*n+z = d*(n+z/d) + z%d := by
     calc
       d*n+z = d*n+(d*(z/d)+z%d) := by rw [hmul]
-      _ = d*(n+z/d)+z%d := by ring
+      _ = (d*n+d*(z/d))+z%d := by omega
+      _ = d*(n+z/d)+z%d := by rw [← Int.mul_add]
   exact ediv_eq_of_decomp (d*n+z) d (n+z/d) (z%d) hd hrem0 hrem1 hdecomp
 
 /-- The exact L-branch boundary carry quotients for the affine update
@@ -74,7 +81,7 @@ theorem left_affine_boundary_quotients
     (K x y xLow1 xLow0 yLow XHigh1 XHigh0 YHigh0 C F x' y' : Int)
     (hK : 0 < K)
     (hx1 : x = 3*K*XHigh1 + xLow1)
-    (hx0 : x = K*XHigh0 + xLow0)
+    (_hx0 : x = K*XHigh0 + xLow0)
     (hy0 : y = K*YHigh0 + yLow)
     (hxout : x' = x - 3*y + C)
     (hyout : y' = 3*y + F) :
@@ -85,14 +92,17 @@ theorem left_affine_boundary_quotients
   · rw [hxout, hx1, hy0]
     have hlin :
         3*K*XHigh1 + xLow1 - 3*(K*YHigh0+yLow) + C =
-          3*K*(XHigh1-YHigh0) + (xLow1-3*yLow+C) := by ring
+          3*K*(XHigh1-YHigh0) + (xLow1-3*yLow+C) := by
+      simp [Int.mul_assoc, Int.mul_add, Int.sub_eq_add_neg,
+        Int.add_assoc, Int.add_comm, Int.add_left_comm, Int.neg_add, Int.mul_neg]
     rw [hlin]
     simpa [leftCarryX] using
       ediv_add_mul (xLow1-3*yLow+C) (3*K) (XHigh1-YHigh0) hden
   · rw [hyout, hy0]
     have hlin :
         3*(K*YHigh0+yLow)+F =
-          3*K*YHigh0 + (3*yLow+F) := by ring
+          3*K*YHigh0 + (3*yLow+F) := by
+      simp [Int.mul_assoc, Int.mul_add, Int.add_assoc, Int.add_comm]
     rw [hlin]
     simpa [leftCarryY] using
       ediv_add_mul (3*yLow+F) (3*K) YHigh0 hden
@@ -117,17 +127,24 @@ theorem right_affine_boundary_quotients
   have hden : 0 < 3*K := by omega
   constructor
   · rw [hxout]
+    have hxsplit : -4*x = -(3*K*XHigh1+xLow1) - 3*(K*XHigh0+xLow0) := by
+      have h1 : -x = -(3*K*XHigh1+xLow1) := congrArg (fun t : Int => -t) hx1
+      have h2 : -3*x = -3*(K*XHigh0+xLow0) := congrArg (fun t : Int => -3*t) hx0
+      omega
+    have hysplit : -3*y = -3*(K*YHigh0+yLow) :=
+      congrArg (fun t : Int => -3*t) hy0
     have hlin :
         -4*x-3*y+C =
           3*K*(-XHigh1-XHigh0-YHigh0) +
             (-xLow1-3*xLow0-3*yLow+C) := by
       calc
-        -4*x-3*y+C = -x-3*x-3*y+C := by ring
-        _ = -(3*K*XHigh1+xLow1) -
+        -4*x-3*y+C = -(3*K*XHigh1+xLow1) -
               3*(K*XHigh0+xLow0) -
-              3*(K*YHigh0+yLow)+C := by rw [hx1, hx0, hy0]
+              3*(K*YHigh0+yLow)+C := by omega
         _ = 3*K*(-XHigh1-XHigh0-YHigh0) +
-              (-xLow1-3*xLow0-3*yLow+C) := by ring
+              (-xLow1-3*xLow0-3*yLow+C) := by
+          simp [Int.mul_assoc, Int.mul_add, Int.sub_eq_add_neg,
+            Int.add_assoc, Int.add_comm, Int.add_left_comm, Int.neg_add, Int.mul_neg]
     rw [hlin]
     simpa [rightCarryX] using
       ediv_add_mul (-xLow1-3*xLow0-3*yLow+C) (3*K)
@@ -135,7 +152,8 @@ theorem right_affine_boundary_quotients
   · rw [hyout, hx0, hy0]
     have hlin :
         3*(K*XHigh0+xLow0)+3*(K*YHigh0+yLow)+F =
-          3*K*(XHigh0+YHigh0)+(3*xLow0+3*yLow+F) := by ring
+          3*K*(XHigh0+YHigh0)+(3*xLow0+3*yLow+F) := by
+      simp [Int.mul_assoc, Int.mul_add, Int.add_assoc, Int.add_comm]
     rw [hlin]
     simpa [rightCarryY] using
       ediv_add_mul (3*xLow0+3*yLow+F) (3*K)
@@ -143,6 +161,98 @@ theorem right_affine_boundary_quotients
 
 /-- The actual low residues and a strict correction bound place the L
     boundary carries in the source-derived start rectangle. -/
+/-- The L quotient identity specialized to the actual Euclidean low residues. -/
+theorem left_actual_affine_boundary_quotients
+    (K x y C F x' y' : Int)
+    (hK : 0 < K)
+    (hxout : x' = x - 3*y + C)
+    (hyout : y' = 3*y + F) :
+    x'/(3*K) = x/(3*K) - y/K + leftCarryX K (x%(3*K)) (y%K) C ∧
+    y'/(3*K) = y/K + leftCarryY K (y%K) F := by
+  have hx1 : x = 3*K*(x/(3*K)) + x%(3*K) :=
+    (Int.mul_ediv_add_emod x (3*K)).symm
+  have hx0 : x = K*(x/K) + x%K :=
+    (Int.mul_ediv_add_emod x K).symm
+  have hy0 : y = K*(y/K) + y%K :=
+    (Int.mul_ediv_add_emod y K).symm
+  exact left_affine_boundary_quotients
+    K x y (x%(3*K)) (x%K) (y%K) (x/(3*K)) (x/K) (y/K) C F x' y'
+    hK hx1 hx0 hy0 hxout hyout
+
+/-- The R quotient identity specialized to the actual Euclidean low residues. -/
+theorem right_actual_affine_boundary_quotients
+    (K x y C F x' y' : Int)
+    (hK : 0 < K)
+    (hxout : x' = -4*x - 3*y + C)
+    (hyout : y' = 3*x + 3*y + F) :
+    x'/(3*K) =
+      -(x/(3*K))-x/K-y/K + rightCarryX K (x%(3*K)) (x%K) (y%K) C ∧
+    y'/(3*K) = x/K+y/K + rightCarryY K (x%K) (y%K) F := by
+  have hx1 : x = 3*K*(x/(3*K)) + x%(3*K) :=
+    (Int.mul_ediv_add_emod x (3*K)).symm
+  have hx0 : x = K*(x/K) + x%K :=
+    (Int.mul_ediv_add_emod x K).symm
+  have hy0 : y = K*(y/K) + y%K :=
+    (Int.mul_ediv_add_emod y K).symm
+  exact right_affine_boundary_quotients
+    K x y (x%(3*K)) (x%K) (y%K) (x/(3*K)) (x/K) (y/K) C F x' y'
+    hK hx1 hx0 hy0 hxout hyout
+
+/-- The first L transducer output pair is exactly the first ternary digit pair
+    of the affine output coordinates. -/
+theorem left_actual_affine_first_digit
+    (K x y C F x' y' : Int)
+    (hK : 0 < K)
+    (hxout : x' = x - 3*y + C)
+    (hyout : y' = 3*y + F) :
+    (x'/(3*K))%3 =
+      ((x/(3*K))%3 - (y/K)%3 +
+        leftCarryX K (x%(3*K)) (y%K) C)%3 ∧
+    (y'/(3*K))%3 =
+      ((y/K)%3 + leftCarryY K (y%K) F)%3 := by
+  obtain ⟨hx, hy⟩ := left_actual_affine_boundary_quotients
+    K x y C F x' y' hK hxout hyout
+  have hxdiv : x/(3*K) = 3*((x/(3*K))/3) + (x/(3*K))%3 := by
+    have h := Int.mul_ediv_add_emod (x/(3*K)) 3
+    omega
+  have hydiv : y/K = 3*((y/K)/3) + (y/K)%3 := by
+    have h := Int.mul_ediv_add_emod (y/K) 3
+    omega
+  constructor
+  · rw [hx]
+    omega
+  · rw [hy]
+    omega
+
+/-- The first R transducer output pair is exactly the first ternary digit pair
+    of the affine output coordinates. -/
+theorem right_actual_affine_first_digit
+    (K x y C F x' y' : Int)
+    (hK : 0 < K)
+    (hxout : x' = -4*x - 3*y + C)
+    (hyout : y' = 3*x + 3*y + F) :
+    (x'/(3*K))%3 =
+      (-(x/(3*K))%3 - (x/K)%3 - (y/K)%3 +
+        rightCarryX K (x%(3*K)) (x%K) (y%K) C)%3 ∧
+    (y'/(3*K))%3 =
+      ((x/K)%3 + (y/K)%3 + rightCarryY K (x%K) (y%K) F)%3 := by
+  obtain ⟨hx, hy⟩ := right_actual_affine_boundary_quotients
+    K x y C F x' y' hK hxout hyout
+  have hx1div : x/(3*K) = 3*((x/(3*K))/3) + (x/(3*K))%3 := by
+    have h := Int.mul_ediv_add_emod (x/(3*K)) 3
+    omega
+  have hx0div : x/K = 3*((x/K)/3) + (x/K)%3 := by
+    have h := Int.mul_ediv_add_emod (x/K) 3
+    omega
+  have hy0div : y/K = 3*((y/K)/3) + (y/K)%3 := by
+    have h := Int.mul_ediv_add_emod (y/K) 3
+    omega
+  constructor
+  · rw [hx]
+    omega
+  · rw [hy]
+    omega
+
 theorem left_source_carry_bounds_from_affine_correction
     (K B x y C F : Int)
     (hK : 0 < K) (hBK : B < K)
@@ -207,9 +317,6 @@ theorem left_source_reset_from_affine_correction
   let b1 : Int := (py+b)/3
   let a2 : Int := (a1-1)/3
   let b2 : Int := (1+b1)/3
-  have hBounds :=
-    left_source_carry_bounds_from_affine_correction K B x y C F
-      hK hBK hClo hChi hFlo hFhi
   have hpy0 : 0 ≤ py := by
     dsimp [py]
     exact Int.emod_nonneg _ (by decide)
@@ -226,7 +333,6 @@ theorem left_source_reset_from_affine_correction
       (Int.emod_nonneg y (by omega))
       (Int.emod_lt_of_pos y (by omega))
       hpy0 hpy2 rfl rfl rfl rfl rfl rfl
-      hBounds.1 hBounds.2.1 hBounds.2.2.1 hBounds.2.2.2
   simpa [py, a, b, a1, b1, a2, b2, leftCarryX, leftCarryY] using hreset
 
 /--
@@ -257,9 +363,6 @@ theorem right_source_reset_from_affine_correction
   let b1 : Int := (px+py+b)/3
   let a2 : Int := (a1-1)/3
   let b2 : Int := (1+b1)/3
-  have hBounds :=
-    right_source_carry_bounds_from_affine_correction K B x y C F
-      hK hBK hClo hChi hFlo hFhi
   have hpx0 : 0 ≤ px := by
     dsimp [px]
     exact Int.emod_nonneg _ (by decide)
@@ -285,7 +388,6 @@ theorem right_source_reset_from_affine_correction
       (Int.emod_nonneg y (by omega))
       (Int.emod_lt_of_pos y (by omega))
       hpx0 hpx2 hpy0 hpy2 rfl rfl rfl rfl rfl rfl
-      hBounds.1 hBounds.2.1 hBounds.2.2.1 hBounds.2.2.2
   simpa [px, py, a, b, a1, b1, a2, b2, rightCarryX, rightCarryY] using hreset
 
 #print axioms left_affine_boundary_quotients
