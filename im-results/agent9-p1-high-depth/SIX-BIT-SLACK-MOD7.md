@@ -122,7 +122,7 @@ Let \(q_s=b_s/2\). Since \(P\) is divisible by \(4\), these equations give the f
 
 These new Lean interfaces have not yet been compiled in this invocation; local execution tools failed at the tool boundary, and CI dispatch is frozen pending local preflight. The first-shallow parity arithmetic above does not eliminate any candidate.
 
-The remaining scalar candidates are all three branches: \(I_s=20\) with odd \(T_1\) (first shallow depth \(0\), \(\delta=2\), even \(s\)); and \(I_s=48\) with either parity of \(T_1\) (first shallow depth \(0\) when even, depth \(1\) when odd, \(\delta=1\), odd \(s\)). The valid congruence \(k\equiv2M\pmod4\) remains useful, but does not yet distinguish these cases.
+The remaining scalar candidates are all three first-shallow branches: \(I_s=20\) with odd \(T_1\) (first shallow depth \(0\), with \(\delta=1\) or \(2\); respectively \(n\equiv2\) or \(1\pmod3\), and odd or even \(s\)); and \(I_s=48\) with either parity of \(T_1\) (first shallow depth \(0\) when even, depth \(1\) when odd, \(\delta=1\), odd \(s\)). The specialized depth bounds below cover only \((\delta,I_s)=(2,20)\) and \((1,48)\); they do not cover \((1,20)\). The valid congruence \(k\equiv2M\pmod4\) remains useful, but does not yet distinguish these cases.
 
 ## Bounding the high-depth edge under both terminal costs
 
@@ -139,7 +139,7 @@ X=d+q+3,\qquad M\ge t+1.
 \]
 The last inequality is \(m_p+n\ge0\), since \(M=m_p+n+t+1\).
 
-For a **cost-one** terminal shallow edge, the source bound gives
+For a **cost-one** terminal shallow edge, under the additional hypotheses \(K\le5\) and \(r\ge1\) (where \(r\) counts depth-two edges after the last shallow edge), the source bound gives
 \[
 128(M+3)<93P.
 \]
