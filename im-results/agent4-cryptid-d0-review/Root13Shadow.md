@@ -75,7 +75,46 @@ After macro 13, the root residue is 1 while external macro 14 has residue 2. Rep
 - macro 14: branch E, shortest valid prefix m=23, output suffix `0101010110111111`;
 - macro 15: branch A, shortest valid prefix m=26, output suffix `01010111`.
 
-The output suffix `01010111` is the DRegular `(q,b)=(3,2)` suffix. More strongly, its unary parameter is **exactly equal** to the existing sixth q4 rejoin target
-`32768*s6 + 28577`, where `s6=(t6-23)/27). This is the target of `BlankSixthQ4Rejoin.sixth_q4_root_rejoin_original`.
+The output suffix `01010111` is the DRegular `(q,b)=(3,2)` suffix. Its unary parameter is **exactly** `32768*s6 + 28577`, where `s6=(t6-23)/27`.
 
-The updated `root13_raw_macro_shadow.py` reproduces this equality, including the bounded first-valid-prefix search for m=23 and m=26. Thus the root-specific detour after divergence at macro 14 reconnects exactly to the already source-certified sixth q4 DRegular reentry state. This is computational raw-replay evidence; the formal source composition remains to be written.
+This is the same endpoint independently certified by Agent 36's original-source theorem `BB6.Agent36SixthBlank.blank_sixth_reentry`, which composes `BlankSixthExceptional.sixthException_original` with `BB6.Agent36SixthPacket.five_return`. In that proof, `v=t6/27` and the checked residue `t6 mod 27 = 23` gives `v=(t6-23)/27=s6`. The original-source checks are CI runs [41753103349](https://github.com/FlareZ123/bb6/actions/runs/41753103349) (`five_return`) and [42139587484](https://github.com/FlareZ123/bb6/actions/runs/42139587484) (`blank_sixth_reentry`). Do **not** cite `BlankSixthQ4Rejoin.sixth_q4_root_rejoin_original` as proof: its targeted audit was cancelled, and Agent 37 explicitly identified it as an unverified alternative to the accepted Agent 36 route.
+
+The raw replay's macro-14/15 decomposition and first-valid-prefix search remain simulator evidence. The physical endpoint from the sixth q4 input is nevertheless source-certified by Agent 36's existing theorem; no new A_step2 formalization is needed merely to certify that endpoint.
+
+Although this endpoint has the same `(q,b)=(3,2)` suffix as external prefix j=2, it is **not** a return to that external halting cylinder. At the root's later reentry section index 31,792, its parameter is 0 modulo 3, while the external macro-2 base parameter `C_2=14049426325825808081017770378322218729246115174030817` is 2 modulo 3; hence `v3(a-C_2)=0`. The rejoin is to the source-certified Agent 36 regular state, not to the external 107-call branch.
+
+
+## Comparison with all canonical states on the external halting path
+
+The external 107-call trace has canonical A-section states only at prefix indices j=0,...,10. Write the state after j macros as `A(C_j + 3^(108-j)*8^j*k, r_j)`, where `C_j` is its k=0 unary parameter and `r_j=(01)^q 1^b` is the suffix. The new `root20_suffix_cylinder_screen.mjs` compares every modeled authentic-root DRegular section with every such state having the same canonical suffix.
+
+For each j, the unique maximum of `v_3(a-C_j)` occurs at authentic-root section index `31777+j`, with value `13-j`:
+
+| External prefix j | Root section index | Suffix (q,b) | Maximum v3(a-C_j) |
+|---:|---:|---:|---:|
+| 0 | 31777 | (0,0) | 13 |
+| 1 | 31778 | (1,5) | 12 |
+| 2 | 31779 | (3,2) | 11 |
+| 3 | 31780 | (2,2) | 10 |
+| 4 | 31781 | (1,2) | 9 |
+| 5 | 31782 | (2,0) | 8 |
+| 6 | 31783 | (1,0) | 7 |
+| 7 | 31784 | (1,7) | 6 |
+| 8 | 31785 | (3,4) | 5 |
+| 9 | 31786 | (2,4) | 4 |
+| 10 | 31787 | (4,1) | 3 |
+
+The script found **no exact lift** `a=C_j+3^(108-j)*8^j*k` with `k≥0` among the 82,605 modeled sections/reentry endpoints through episode 20. This recovers the 13-step near-shadow as a single coherent descending valuation profile, rather than only a comparison of the first 13 raw macros. It remains a finite arithmetic-model result.
+
+## Additional suffix-cylinder screen
+
+The same run checked the extended candidate halting suffixes from Agent 32's final-tail work. The base is `C mod 3^10 = 23839`.
+
+| Suffix (q,b) | Modeled sections | Maximum v3(a-C) | Hits modulo 3^10 |
+|---:|---:|---:|---:|
+| (1,0) | 201 | 5 | 0 |
+| (1,1) | 0 | — | 0 |
+| (3,1) | 1 | 0 | 0 |
+| (4,1) | 5 | 3 | 0 |
+
+Thus none of those four classes reaches even the necessary modulus `a ≡ C (mod 3^10)` in this finite screen. For comparison, `(4,0)` has one weaker-modulus hit at section index 27,282 and maximum valuation 11, but it is not among the currently established final-tail classes; `(3,2)` has maximum valuation 8 relative to C. These checks cover only DRegular sections and explicit reentry endpoints represented by the script, not every primitive configuration inside exceptional packets, and prove no all-time exclusion.

@@ -64,42 +64,35 @@ The upstream theorem proves halting from `A(3^108*k + C, [])`, where `C = 197570
 
 ---
 
-## 2026-11-21: A-row first-return drafts and 13-step authentic-root shadow
+## Authentic-root reachability and A-section bridge
 
-The following work is intermediate and **not yet kernel-checked**.
+The external @-d Lean development proves that the cylinder `A(C+3^108*k, [])` halts for every natural k, with `C=1975700577069254261393123959451562008800234946348086`. The unresolved question is whether the authentic blank-root orbit reaches this or another certified halting cylinder. The repository's concrete Mathlib `TM62`-to-D0 adapter remains uncompiled; the separate abstract `HeadRelativeFunctionAudit.lean` is a checked semantic model, not a substitute for that adapter.
 
-### A-zero/A-one first-return draft
+### Root section at index 31,777
 
-`AZeroOneFirstReturn.lean` attempts strict no-intermediate-F lemmas for:
-- `AZeroSource.full_A_zero`, the canonical q=b=0 row;
-- `AOneSource.full_A_one`, the q>0,b=0 row.
+`Root13Shadow.md` and `Root13Section.lean` record the strongest current local connection to the external cylinder. In the DRegular arithmetic model, authentic-root section index 31,777 is `L(a,0,0)` with:
 
-It composes `PrefixNoF.prefixA_positive_noF`, `BoundaryPadding.source_init_pad`, the exact A-zero/A-one short macros, and `A1100First.sweepD_noF`. If compiled, these are stronger than physical first-return. They may fill two cases in a complete DRegular first-return partition; this coverage still needs review.
+- `(a-C) mod 3^14 = 3^13`;
+- `p=(a-C)/3^13` satisfies `p mod 2187 = 205`;
+- `a mod 3^20 = 2863782241`;
+- `a` has 44,970 bits.
 
-### 13-step root shadow
+`Root13Section.lean` extracts the 4,484-step prefix from `Agent25SixthRoot.seed` and attempts to source-certify the section, its exact residue, and its ten-step link to the sixth exceptional input. **That file is still uncompiled.** The separate `First10AffineBridge.lean` arithmetic theorem was locally checked with Lean 4.36.0-rc2; this does not validate the root-section extraction.
 
-`Root13Shadow.md` records a new exact-arithmetic shadow of the external halting-cylinder path. At authentic-root DRegular section index 31,777, the state is `L(a,0,0)` and:
+The first ten external A-macro suffixes are canonical DRegular states. The root's corresponding sections at indices 31,777 through 31,787 have a descending exact 3-adic shadow, with valuations 13 through 3. The raw replay then matches external macros 11–13 (arguments 35,21,5; branches E,E,B; exact output suffixes), reducing the parameter-difference valuation to 2,1,0 before diverging at macro 14. Root-specific raw prefixes m=23 and m=26 then return to suffix `(01)^3 11`. This suffix also occurs at external prefix j=2, but the later root reentry at index 31,792 is not in that cylinder: its parameter is 0 mod 3, while external `C_2=14049426325825808081017770378322218729246115174030817` is 2 mod 3 (`v3` difference 0).
 
-- `a-C ≡ 3^13 (mod 3^14)`;
-- `p=(a-C)/3^13 ≡205 (mod 2187));
-- `a ≡2863782241 (mod 3^20));
-- the first 13 external A_step2 branch/argument/suffix updates match;
-- the paths diverge at macro 14 because the next input residues are 1 (root) and 2 (external).
+The endpoint `(32768*v+28577,3,2)` is not a new unverified q4 result: Agent 36's original-source checked `five_return` and `blank_sixth_reentry` theorems already certify the sixth q4 input's return to exactly this state (CI [41753103349](https://github.com/FlareZ123/bb6/actions/runs/41753103349) and [42139587484](https://github.com/FlareZ123/bb6/actions/runs/42139587484)). The alternative `BlankSixthQ4Rejoin.sixth_q4_root_rejoin_original` was not accepted; its audit was cancelled. The macro-by-macro replay remains computational, but the physical q4-to-q3,b2 endpoint is source-certified.
 
-The exact arithmetic is reproducible with `root13_shadow_check.py`; `root20_cylinder_screen.mjs` screens DRegular states and explicit reentry endpoints through the episode-20 arithmetic lookahead. It found no exact (3^{108})-cylinder hit in that finite model screen and a unique maximum (v_3(a-C)=13) at index 31,777. It does not scan every primitive configuration inside exceptional packets.
+### Finite comparison with the halting cylinders
 
-`Root13Section.lean` is a source-anchor draft: it extracts the 4,484-step prefix of the already source-certified fifth reentry seed, then attempts to use `Agent25RootChain.extend_regular` to prove the blank root reaches the index-31,777 section. It also attempts the exact modular fingerprint and ten-step link to the sixth exceptional endpoint. This file is **uncompiled**.
+`root20_suffix_cylinder_screen.mjs` compares 82,605 modeled DRegular sections and explicit reentry endpoints through episode 20 with all canonical states among the first eleven external A-macro prefixes. For each external prefix j=0,...,10, the unique largest `v3(a-C_j)` occurs at root index `31777+j` and equals `13-j`; no state is an exact lift `C_j+3^(108-j)*8^j*k` for natural k.
 
-The main remaining task is to compile `Root13Section.lean` and formalize the raw A_step2 replay of calls 11–13 (including the lifted K values) in Lean, then compose the raw-machine/CryptidBoundary conjugacy. Call 11 is already covered by `BlankSixthExceptional.first_nonregular_original` and `Agent32EAll.all_e_double_implicit_blank`. The numeric sweep parameters for the lifted root need not equal the external trace's small arguments; the general macro must be instantiated with the correct lifted unary length. This is not a BB(6) solution or a proof of nonhalting.
+The same screen tests Agent 32's extended final-tail suffix candidates `(q,b)=(1,0),(1,1),(3,1),(4,1)`. None reaches even the necessary modulus `a ≡ C (mod 3^10)` in the modeled section set. A `(4,0)` state at index 27,282 is a separate 11-adic near miss, but `(4,0)` is not among the checked final-tail classes. The scan is finite and excludes intermediate primitive configurations inside exceptional packets; it is not an all-time nonreachability theorem.
 
+### Other intermediate work and next priorities
 
-**Scope correction (11:40 UTC):** the arithmetic script verifies the affine parameter recurrence for the external offset sequence, but it does not independently execute the raw A_step2 macros on the lifted root. Only the first ten DRegular updates are currently backed by `DRegularShift.run_shift` (in the uncompiled `Root13Section.lean` draft). The claimed matching suffixes and branch/offset updates for calls 11–13 are conditional on proving that the general A_step2 source macro applies to the lifted q=4,b=1 suffix with its correct lifted sweep parameter. Do not describe the full 13-step path as source-established until that proof is composed.
+- `AZeroOneFirstReturn.lean` contains uncompiled strict no-intermediate-F drafts for the canonical q=b=0 and q>0,b=0 rows.
+- `HeadRelativeFunctionAudit.lean` proves the abstract whole-tape coordinate conjugacy, exact-n run transport, and halting equivalence. The concrete Mathlib tape adapter and transitive axiom audit remain open.
+- The highest-value next steps are to obtain a working local Lean 4.36.0-rc2 runtime and compile the exact `Root13Section.lean` dependency closure; finish the concrete pinned TM62/Mathlib adapter; and use source-derived exceptional transitions to continue the root-cylinder search beyond episode 20. Avoid larger blind arithmetic scans and do not promote finite exclusions to all-time claims.
 
-
-**11th-update source match (11:49 UTC):** the external trace's step-11 suffix `0 1^8 0 1^6` is exactly the q=3 output of `Agent32EAll.all_e_double_implicit_blank`. The authentic root's `BlankSixthExceptional.first_nonregular_original` already invokes that theorem with its lifted parameter `k_root=3*t6+1`. Thus the source-macro gap is narrowed to updates 12–13, while the first-ten root-section affine composition remains in the uncompiled `Root13Section.lean` draft.
-
-
-**Raw replay upgrade (11:47 UTC):** `root13_raw_macro_shadow.py` now runs the same sparse raw-machine `replay_macro` used by `cryptid_A_step2_replay.py` on the lifted root parameter after its first ten DRegular transitions. It verifies that calls 11–13 use the same arguments (35, 21, 5), branches, and output suffixes as the external trace, with output-difference valuations 2, 1, 0. This upgrades the 13-step shadow from a conditional affine prediction to exact simulator replay; it remains unformalized in Lean.
-
-
-**Post-divergence reconvergence:** after the 13-step shadow breaks, the lifted root's shortest valid raw prefixes are m=23 (E) and m=26 (A). Their output suffix is `01010111`, and the exact unary parameter equals the existing `BlankSixthQ4Rejoin.sixth_q4_root_rejoin_original` target `32768*s6+28577`. The root-specific detour therefore reconnects to the source-certified sixth q4 DRegular reentry state. Reproduction is included in `root13_raw_macro_shadow.py`; it remains simulator evidence until the raw macro composition is formalized.
+All of this work remains intermediate. `results/` is unchanged; no exact BB(6) value or universal upper bound has been established.
