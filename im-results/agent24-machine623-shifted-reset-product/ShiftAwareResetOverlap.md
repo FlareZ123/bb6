@@ -66,7 +66,7 @@ Using the conservative \(B_S\) above and the source-faithful highLevelNext recur
 \[
 D(33)\to D(34),\ldots,D(10000)\to D(10001).
 \]
-For each source state it scans the source S-window, computes the actual window-index shifts, and searches for a shift-aware witness using the branch associated with the source sector (LO/LE: L; RO/RE: R).
+For each source state it scans the source S-window, computes the actual window-index shifts, and searches for a shift-aware witness using the branch associated with the source sector (LO/LE: L; RO/RE: R). Under newAffineCone, this association is source-derived: the four disjuncts in TernaryBufferSource.lean are left-odd, left-even, right-odd, and right-even, and newAffine_canonicalRay in CanonicalRayCocycleSource.lean sends the first two to the left transition and the last two to the right transition. This avoids using the separate conditional sign-branch reduction, whose far/nonterminal hypothesis is part of the central-block argument.
 
 Observed results:
 
