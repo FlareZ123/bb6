@@ -31,49 +31,79 @@ theorem genericChildValue
     (hchildC : child.C = parent.C*3^h*(2^(a+1)+1))
     (hchildOffset :
       (child.c : Int) - child.b =
-        (2^a : Int) *
+        ((2^a : Nat) : Int) *
           ((2*a*(parent.C*3^h) +
               2^(h+1)*(parent.C-parent.b+parent.c) : Nat) : Int)
-        - (2^a : Int) * (3*(parent.C*3^h) : Nat)) :
+        - ((2^a : Nat) : Int) * (3*(parent.C*3^h) : Nat)) :
     affineNodeValue t child x := by
-  have hxI : (x : Int) = (2^a : Int) * (v : Int) := by
-    exact_mod_cast hx
+  let D : Nat := parent.C*3^h
+  let E : Nat := 2^(h+1)*(parent.C-parent.b+parent.c)
+  have hxI :
+      (x : Int) = ((2^a : Nat) : Int) * (v : Int) := by
+    have hxI0 := congrArg (fun z : Nat => (z : Int)) hx
+    simpa only [Int.ofNat_mul] using hxI0
   have hgenI :
-      (parent.C*3^h : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
-        + 2*(a : Int)*(parent.C*3^h : Int)
-        + (2^(h+1)*(parent.C-parent.b+parent.c) : Nat)
-        = (2^(1458*t+parent.s+h+1) : Int) + 3*(parent.C*3^h : Int) := by
-    exact_mod_cast hgen
+      (D : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
+        + 2*(a : Int)*(D : Int) + (E : Int)
+        = ((2^(1458*t+parent.s+h+1) : Nat) : Int) + 3*(D : Int) := by
+    have hgenI0 := congrArg (fun z : Nat => (z : Int)) hgen
+    dsimp [D,E] at hgenI0 ⊢
+    simpa only [Int.ofNat_add, Int.ofNat_mul] using hgenI0
   have hpowNat :
       2^a * 2^(1458*t+parent.s+h+1)
         = 2^(1458*t+parent.s+a+h+1) := by
     rw [← Nat.pow_add]
     congr 1 <;> omega
-  have hpow :
-      (2^a : Int) * (2^(1458*t+parent.s+h+1) : Int)
-        = (2^(1458*t+parent.s+a+h+1) : Int) := by
-    exact_mod_cast hpowNat
+  have hpowI :
+      ((2^a : Nat) : Int) *
+          ((2^(1458*t+parent.s+h+1) : Nat) : Int)
+        = ((2^(1458*t+parent.s+a+h+1) : Nat) : Int) := by
+    have hpowI0 := congrArg (fun z : Nat => (z : Int)) hpowNat
+    simpa only [Int.ofNat_mul] using hpowI0
+  have hfact :
+      (child.C : Int)*(x : Int) + (child.c : Int) - child.b
+        = ((2^a : Nat) : Int) *
+          ((D : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
+            + 2*(a : Int)*(D : Int) + (E : Int) - 3*(D : Int)) := by
+    rw [hchildC,hchildOffset,hxI]
+    dsimp [D,E]
+    simp only [Int.ofNat_mul, Int.ofNat_add, Int.mul_sub, Int.mul_add]
+    ac_rfl
+  have hshift :
+      ((2^a : Nat) : Int) *
+          ((D : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
+            + 2*(a : Int)*(D : Int) + (E : Int) - 3*(D : Int))
+        = ((2^a : Nat) : Int) *
+          ((2^(1458*t+parent.s+h+1) : Nat) : Int) := by
+    calc
+      _ = ((2^a : Nat) : Int) *
+          (((D : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
+            + 2*(a : Int)*(D : Int) + (E : Int)) - 3*(D : Int)) := rfl
+      _ = ((2^a : Nat) : Int) *
+          ((((2^(1458*t+parent.s+h+1) : Nat) : Int) + 3*(D : Int))
+            - 3*(D : Int)) := by rw [hgenI]
+      _ = _ := by simp
   have hchildInt :
       (child.C : Int)*(x : Int) + (child.c : Int) - child.b
-        = (2^(1458*t+parent.s+a+h+1) : Int) := by
-    rw [hchildC, hchildOffset, hxI]
+        = ((2^(1458*t+parent.s+a+h+1) : Nat) : Int) := by
     calc
-      _ = (2^a : Int) *
-          ((parent.C*3^h : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
-            + 2*(a : Int)*(parent.C*3^h : Int)
-            + (2^(h+1)*(parent.C-parent.b+parent.c) : Nat)
-            - 3*(parent.C*3^h : Int)) := by
-              ring
-      _ = (2^a : Int) * (2^(1458*t+parent.s+h+1) : Int) := by
-            linear_combination (2^a : Int) * hgenI
-      _ = (2^(1458*t+parent.s+a+h+1) : Int) := hpow
+      _ = ((2^a : Nat) : Int) *
+          ((D : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
+            + 2*(a : Int)*(D : Int) + (E : Int) - 3*(D : Int)) := hfact
+      _ = ((2^a : Nat) : Int) *
+          ((2^(1458*t+parent.s+h+1) : Nat) : Int) := hshift
+      _ = ((2^(1458*t+parent.s+a+h+1) : Nat) : Int) := hpowI
+  have hexp : 1458*t+parent.s+a+h+1 = 1458*t+child.s := by
+    rw [hchildS]
+    omega
   have hchildInt' :
       (child.C : Int)*(x : Int) + (child.c : Int) - child.b
-        = (2^(1458*t+child.s) : Int) := by
-    simpa [hchildS, Nat.add_assoc] using hchildInt
+        = ((2^(1458*t+child.s) : Nat) : Int) := by
+    rw [← hexp]
+    exact hchildInt
   have hchildNat :
       child.C*x+child.c = 2^(1458*t+child.s)+child.b := by
-    exact_mod_cast hchildInt'
+    omega
   simpa [affineNodeValue] using hchildNat
 
 structure FrozenTreeTable where
@@ -116,17 +146,17 @@ structure FrozenTreeTable where
               2^(h+1)*((nodeAt n).C-(nodeAt n).b+(nodeAt n).c) : Nat) : Int)
         - (2^a : Int) * (3*((nodeAt n).C*3^h) : Nat)
   nodeProps :
-    ∀ n, n < nodeCount →
-      (nodeAt n).b ≤ (nodeAt n).C ∧
-      ((nodeAt n).b = 0 ∨ (nodeAt n).c = 0)
+    ∀ n : Fin nodeCount,
+      (nodeAt n.val).b ≤ (nodeAt n.val).C ∧
+      ((nodeAt n.val).b = 0 ∨ (nodeAt n.val).c = 0)
   specialBounds :
-    ∀ n, n < nodeCount → ∀ h, h ≤ (nodeAt n).r →
-      0 < (nodeAt n).C*3^h ∧
-      (nodeAt n).C*3^h ≤ 4000000 ∧
-      2^h*((nodeAt n).C-(nodeAt n).b+(nodeAt n).c) ≤ 4000000
+    ∀ n : Fin nodeCount, ∀ h : Fin ((nodeAt n.val).r+1),
+      0 < (nodeAt n.val).C*3^h.val ∧
+      (nodeAt n.val).C*3^h.val ≤ 4000000 ∧
+      2^h.val*((nodeAt n.val).C-(nodeAt n.val).b+(nodeAt n.val).c) ≤ 4000000
   nodeTenBound :
-    ∀ n, n < nodeCount →
-      (nodeAt n).C*10+(nodeAt n).c < 2^55
+    ∀ n : Fin nodeCount,
+      (nodeAt n.val).C*10+(nodeAt n.val).c < 2^55
   rootGate :
     ∀ r k h a v, r ∈ rs → h ≤ 7 → 1 ≤ a →
       (h = 0 → a = 1) → (0 < h → a ≤ 2*h+2) →
@@ -152,7 +182,7 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
     exact F.residueMod3 r hr
   intro x y hedge hyBasin
   rcases hyBasin with ⟨n, hn, hval⟩
-  have hnodeProps := F.nodeProps n hn
+  have hnodeProps := F.nodeProps ⟨n,hn⟩
   have hpower :
       (F.nodeAt n).C*y+(F.nodeAt n).c
         = 2^(1458*t+(F.nodeAt n).s)+(F.nodeAt n).b := by
@@ -247,7 +277,7 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
           exact ⟨child,hchildBound',hchildVal⟩
   · rcases hspecial with ⟨a,h,u,ha,huodd,hxdef,hydef,hspecial⟩
     have hh : h ≤ (F.nodeAt n).r := hHidden hydef huodd
-    obtain ⟨hDpos,hD,hS⟩ := F.specialBounds n hn hh
+    obtain ⟨hDpos,hD,hS⟩ := F.specialBounds ⟨n,hn⟩ ⟨h,by omega⟩
     have hN : 55 ≤ 1458*t+(F.nodeAt n).s+h := by omega
     exact False.elim
       (no_special_affine
@@ -263,7 +293,7 @@ theorem indexedBasin_not10 (F : FrozenTreeTable) (t : Nat)
   have hN : 55 ≤ 1458*t+(F.nodeAt n).s := by omega
   have hpow : 2^55 ≤ 2^(1458*t+(F.nodeAt n).s) :=
     Nat.pow_le_pow_right (by decide) hN
-  have hsmall := F.nodeTenBound n hn
+  have hsmall := F.nodeTenBound ⟨n,hn⟩
   unfold affineNodeValue at hval
   omega
 
