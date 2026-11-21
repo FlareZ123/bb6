@@ -38,7 +38,7 @@ V_j^{\,T_{j+2}^{\,\gamma_j}}<T_{j+4}.
 \]
 The lower exponent uses an exact divisibility lift with a two-index recurrence. The upper exponent is the exact congruence-limited exponent obtained from \(V_{j-2}=2^{V_{j-3}}-1\).
 
-These bounds strictly strengthen the earlier fixed exponents \(2^{46}\) and \(2^{65518}\). In particular, \(\alpha_3>2^{46}\) and \(\gamma_3>2^{65518}\).
+These bounds uniformly strengthen the earlier fixed exponents: \(\alpha_j>2^{46}\) and \(\gamma_j>2^{65518}\) for every \(j\ge3.
 
 ## Proof
 
@@ -137,11 +137,25 @@ V_j^{X^{\gamma_j}}
 =T_{j+4}.
 \end{aligned}
 \]
+For \(j\ge4\), write \(k=j-3\ge1\). The elementary upper comparison gives \(V_{k-1}<T_{k+3}=T_j\), hence
+\[
+V_{j-3}=2^{V_{j-4}}-1
+\le2^{T_j-1}-1
+=\frac{Y}{2}-1.
+\]
+Consequently
+\[
+\gamma_j
+=2^{Y-T_j}\left(1-2^{V_{j-3}-Y}\right)
+>2^{Y-T_j-1}>2^{65518},
+\]
+since \(Y=T_{j+1}\ge T_5=2^{65536}\). The case \(j=3\) is the explicit value \(\gamma_3=2^{65520}-2^{47}>2^{65518}\).
+
 This proves the upper inequality for every \(j\ge3\). The exponent is maximal for this integer product-budget argument: the bound \(V_{j-1}<2^{2^{V_{j-3}}}\) leaves \(X-2^{V_{j-3}}\) as the largest multiple of \(Y\) available for \(Y\gamma_j\).
 
 ## Conditional score consequence
 
-Here \(q=M+N+50\) is the source-dossier index, with the linked score expansion's hypotheses \(N\ge256\), \(3\mid N\), and root parameter \(R\ge63\). Use the source-dossier identities
+Here \(q=M+N+50\) is the source-dossier index, with the linked score expansion's hypotheses \(N\ge256\), \(3\mid N\), \(U\le R\), and root parameter \(R\ge63\). Use the source-dossier identities
 \[
 b_N=V_{q-4},\qquad
 \ell=\log_2(b_N+1)=V_{q-5},
