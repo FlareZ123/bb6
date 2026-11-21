@@ -2177,4 +2177,18 @@ theorem cb_fallback_bb_input_field_max_le_94M285 (L R : List SymTok)
 #print axioms cb_fallback_bb_input_field_max_le_94M285
 
 
+
+theorem cb_fallback_bb_input_field_max_le_pow9 (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94)
+    (hBB : (stepElemCB (sweepCB L R).1 (sweepCB L R).2).1 = .BB) :
+    stateFieldMax (.BB,
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1,
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2) ≤
+      2^9 * (stateFieldMax (.CB, L, R) + 1) := by
+  have h := cb_fallback_bb_input_field_max_le_94M285 L R hT hBB
+  omega
+
+#print axioms cb_fallback_bb_input_field_max_le_pow9
+
+
 end BusyBeaver.SymRunAudit
