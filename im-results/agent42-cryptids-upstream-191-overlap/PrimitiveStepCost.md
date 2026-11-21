@@ -124,6 +124,23 @@ Add a parallel cost semantics rather than trying to extract a number from a `Ref
 
 A direct function from the existing `ReflTransGen` proof to a Nat is not available: `ReflTransGen` is a proposition and proof irrelevance erases its witness length. A separate cost-indexed semantics is the correct interface.
 
+## First end-to-end F289 accumulator run (computational candidate)
+
+A JavaScript/BigInt port of the upstream state transitions was run from `ckpt0`. It reproduced the Lean proof's three explicit checkpoints **exactly**: `runBatches 100 ckpt0 = ckpt5`, the next 100 batches equal `ckpt10`, and the next 100 equal `ckpt15`. The final 80-batch run reached `halted = true`. This validates the state-update port against the proof's checkpoint literals; it does not prove the primitive cost semantics.
+
+Accumulating the branch-specific bounds above over the same 9,500 RLE transitions gave:
+
+- first 100 batches: `153233965714336055848900074`;
+- second 100 batches: `21420259195008061453530364129891259`;
+- third 100 batches: `124842490278774511382713615548623788982769809`;
+- final 80 batches: `1003323861768105046986224874806868631470122277577`.
+
+The sum is
+
+`N = 1003448704258405241756955830449585121679083838719 < 2^160`.
+
+This is a **computational candidate upper bound**, not yet a theorem. If every branch cost is shown sound against the primitive TM transition relation, the F289 machine reaches its halting state in at most `N` primitive steps. The bound is already far below the TM63 tower-scale lower-bound expression, so it would suffice for a `DecidedBelow` leaf once the cost soundness and exact table transfer are formalized. Do not add F289 to the certified frontier on the basis of this simulation alone.
+
 ## Prefer an evaluated cost accumulator over a global invariant
 
 The previous coarse argument's hardest obligation is proving `M≤2^128` and `L≤2^15` for every intermediate state. A better implementation is to evaluate a branch-specific cost bound alongside the actual deterministic run:
