@@ -91,7 +91,7 @@ The clean-mode recurrences then give the following exact costs or safe upper bou
     `+(r+2)(qS(segs)+(24r+48)q(q-1)/2)`.
 12. The same source inductions give `rule_DR0_bot_zeros(q,k) = 6kq+9q²+9q`: sum `rule_DR0_bot(k+3i)` and `rule_BR_one` for `i=0,…,q-1`.
 
-These formulas are obtained directly from the displayed inductions in `HaltShared.lean`: `clean_DR0_zeros`, `clean_RNIL_zero_pow`, `clean_P1_pow`, and `clean_P2_pow` repeatedly call their one-block lemmas while increasing the packed segment weight. In particular, simply multiplying the one-block cost by `q` is not sound unless the growth of `S(segs)` is included.
+These formulas are obtained directly from the displayed inductions in `HaltShared.lean`: `clean_DR0_zeros`, `clean_RNIL_zero_pow`, `clean_P1_pow`, and `clean_P2_pow` repeatedly call their one-block lemmas while increasing the packed segment weight. In particular, simply multiplying the one-block cost by `q` is not sound unless the growth of `S(segs)` is included. The resulting summation identities were cross-checked with deterministic BigInt arithmetic over `q≤5`, `c0≤3`, `bot≤4`, `S≤7`, and `r≤4` (11,520 comparisons, no mismatches); the reproducible checker is [check_cost_formulas.js](check_cost_formulas.js). This is an algebraic sanity check only, not a proof of the Lean rule costs or the RLE soundness theorem.
 
 ### Dispatch-level bounds
 
