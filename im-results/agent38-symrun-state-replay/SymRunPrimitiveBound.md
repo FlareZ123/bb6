@@ -177,7 +177,10 @@ Then certify each 4096-step chunk from its known checkpoint start, for example:
     theorem symChk4096_range : symTraceMax 4096 initSymCyc3 < 2^203 := by
       decide +kernel
 
-The actual bound and start state differ by machine/chunk. The JS replay already records the exact maxima per full trajectory; this Lean fold is the proposed kernel-checking route, not yet executed.
+    theorem symChk4096_token_bound : symTraceTokenMax 4096 initSymCyc3 ≤ 94 := by
+      decide +kernel
+
+For F412, use the machine-specific 2^69 field bound and token bound 78. The actual bound and start state differ by machine/chunk. The JS replay already records the exact maxima per full trajectory; these Lean folds are the proposed kernel-checking route, not yet executed.
 
 
 The final checkpoint intervals can be split at the observed global peaks to keep the last range computations short:
