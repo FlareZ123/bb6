@@ -188,14 +188,14 @@ theorem step_CB_run0_nil_exact (L : List MItem) :
   rw [← encM_bumpM L]
   executeWithin 3
 
-/-- The C-zero / zero case exits directly to BB in five primitive steps. -/
+/-- The C-zero / zero case exits directly to BB in three primitive steps. -/
 theorem step_CB_run0_zero_exact (L R2 : List MItem) :
-    ReachesIn target_tm 5 (cfgCB target_tm L (.run 0 :: .zero :: R2))
+    ReachesIn target_tm 3 (cfgCB target_tm L (.run 0 :: .zero :: R2))
       (cfgBB target_tm (.run 0 :: bumpM L) R2) := by
   unfold cfgCB cfgBB
   dsimp only [isVarA_tm, ite_true, ite_false]
   rw [← encM_bumpM L]
-  executeWithin 5
+  executeWithin 3
 
 
 
@@ -208,14 +208,14 @@ theorem step_BB_run1_nil_exact (L1 : List MItem) :
   rw [← encM_bumpM []]
   executeWithin 3
 
-/-- B-succ followed by BR-zero: the zero-headed right stack is bumped in 4 steps. -/
+/-- B-succ followed by BR-zero: the zero-headed right stack is bumped in 3 steps. -/
 theorem step_BB_run1_zero_exact (L1 R2 : List MItem) :
-    ReachesIn target_tm 4 (cfgBB target_tm (.run 1 :: L1) (.zero :: R2))
+    ReachesIn target_tm 3 (cfgBB target_tm (.run 1 :: L1) (.zero :: R2))
       (cfgBB target_tm L1 (.run 0 :: bumpM (.zero :: R2))) := by
   unfold cfgBB
   dsimp only [isVarA_tm, ite_true, ite_false]
   rw [← encM_bumpM (.zero :: R2)]
-  executeWithin 4
+  executeWithin 3
 
 
 #print axioms reachesWithin_mono
