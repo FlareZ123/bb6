@@ -9528,6 +9528,1559 @@
     "full_output_labels_checked": 54,
     "transition_projection_mismatches": 0,
     "output_projection_mismatches": 0,
-    "first_reset_event_symbol_mismatches": 0
-  }
+    "first_reset_event_symbol_mismatches": 0,
+    "full_label_lookup_entries": 54
+  },
+  "full_output_lookup": [
+    [
+      0,
+      null,
+      6,
+      null,
+      39,
+      51,
+      48,
+      33
+    ],
+    [
+      1,
+      null,
+      7,
+      null,
+      40,
+      52,
+      49,
+      34
+    ],
+    [
+      2,
+      null,
+      8,
+      null,
+      41,
+      53,
+      50,
+      35
+    ],
+    [
+      null,
+      21,
+      15,
+      null,
+      12,
+      18,
+      24,
+      27
+    ],
+    [
+      null,
+      22,
+      16,
+      null,
+      13,
+      19,
+      25,
+      28
+    ],
+    [
+      null,
+      23,
+      17,
+      null,
+      14,
+      20,
+      26,
+      29
+    ],
+    [
+      null,
+      3,
+      null,
+      9,
+      42,
+      36,
+      45,
+      30
+    ],
+    [
+      null,
+      4,
+      null,
+      10,
+      43,
+      37,
+      46,
+      31
+    ],
+    [
+      null,
+      5,
+      null,
+      11,
+      44,
+      38,
+      47,
+      32
+    ]
+  ],
+  "full_output_labels": [
+    {
+      "key": "7|17",
+      "L_final_state": 7,
+      "R_final_state": 17,
+      "L_final": {
+        "state": 7,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 17,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "32|47",
+      "L_final_state": 32,
+      "R_final_state": 47,
+      "L_final": {
+        "state": 32,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 47,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "57|77",
+      "L_final_state": 57,
+      "R_final_state": 77,
+      "L_final": {
+        "state": 57,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 77,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "162|192",
+      "L_final_state": 162,
+      "R_final_state": 192,
+      "L_final": {
+        "state": 162,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 192,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "187|222",
+      "L_final_state": 187,
+      "R_final_state": 222,
+      "L_final": {
+        "state": 187,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 222,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "212|252",
+      "L_final_state": 212,
+      "R_final_state": 252,
+      "L_final": {
+        "state": 212,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 252,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "7|13",
+      "L_final_state": 7,
+      "R_final_state": 13,
+      "L_final": {
+        "state": 7,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 13,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "32|43",
+      "L_final_state": 32,
+      "R_final_state": 43,
+      "L_final": {
+        "state": 32,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 43,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "57|73",
+      "L_final_state": 57,
+      "R_final_state": 73,
+      "L_final": {
+        "state": 57,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 73,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "162|188",
+      "L_final_state": 162,
+      "R_final_state": 188,
+      "L_final": {
+        "state": 162,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 188,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "187|218",
+      "L_final_state": 187,
+      "R_final_state": 218,
+      "L_final": {
+        "state": 187,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 218,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "212|248",
+      "L_final_state": 212,
+      "R_final_state": 248,
+      "L_final": {
+        "state": 212,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 248,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "87|107",
+      "L_final_state": 87,
+      "R_final_state": 107,
+      "L_final": {
+        "state": 87,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 107,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "112|137",
+      "L_final_state": 112,
+      "R_final_state": 137,
+      "L_final": {
+        "state": 112,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 137,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "137|167",
+      "L_final_state": 137,
+      "R_final_state": 167,
+      "L_final": {
+        "state": 137,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 167,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "82|103",
+      "L_final_state": 82,
+      "R_final_state": 103,
+      "L_final": {
+        "state": 82,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 103,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "107|133",
+      "L_final_state": 107,
+      "R_final_state": 133,
+      "L_final": {
+        "state": 107,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 133,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "132|163",
+      "L_final_state": 132,
+      "R_final_state": 163,
+      "L_final": {
+        "state": 132,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 163,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "82|98",
+      "L_final_state": 82,
+      "R_final_state": 98,
+      "L_final": {
+        "state": 82,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 98,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "107|128",
+      "L_final_state": 107,
+      "R_final_state": 128,
+      "L_final": {
+        "state": 107,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 128,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "132|158",
+      "L_final_state": 132,
+      "R_final_state": 158,
+      "L_final": {
+        "state": 132,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 158,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "87|102",
+      "L_final_state": 87,
+      "R_final_state": 102,
+      "L_final": {
+        "state": 87,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 102,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "112|132",
+      "L_final_state": 112,
+      "R_final_state": 132,
+      "L_final": {
+        "state": 112,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 132,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "137|162",
+      "L_final_state": 137,
+      "R_final_state": 162,
+      "L_final": {
+        "state": 137,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 162,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "87|103",
+      "L_final_state": 87,
+      "R_final_state": 103,
+      "L_final": {
+        "state": 87,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 103,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "112|133",
+      "L_final_state": 112,
+      "R_final_state": 133,
+      "L_final": {
+        "state": 112,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 133,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "137|163",
+      "L_final_state": 137,
+      "R_final_state": 163,
+      "L_final": {
+        "state": 137,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 163,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "82|102",
+      "L_final_state": 82,
+      "R_final_state": 102,
+      "L_final": {
+        "state": 82,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 102,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "107|132",
+      "L_final_state": 107,
+      "R_final_state": 132,
+      "L_final": {
+        "state": 107,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 132,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "132|162",
+      "L_final_state": 132,
+      "R_final_state": 162,
+      "L_final": {
+        "state": 132,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 162,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "157|192",
+      "L_final_state": 157,
+      "R_final_state": 192,
+      "L_final": {
+        "state": 157,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 192,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "182|222",
+      "L_final_state": 182,
+      "R_final_state": 222,
+      "L_final": {
+        "state": 182,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 222,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "207|252",
+      "L_final_state": 207,
+      "R_final_state": 252,
+      "L_final": {
+        "state": 207,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 252,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "7|12",
+      "L_final_state": 7,
+      "R_final_state": 12,
+      "L_final": {
+        "state": 7,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 12,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "32|42",
+      "L_final_state": 32,
+      "R_final_state": 42,
+      "L_final": {
+        "state": 32,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 42,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "57|72",
+      "L_final_state": 57,
+      "R_final_state": 72,
+      "L_final": {
+        "state": 57,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 72,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "key": "157|188",
+      "L_final_state": 157,
+      "R_final_state": 188,
+      "L_final": {
+        "state": 157,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 188,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "182|218",
+      "L_final_state": 182,
+      "R_final_state": 218,
+      "L_final": {
+        "state": 182,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 218,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "207|248",
+      "L_final_state": 207,
+      "R_final_state": 248,
+      "L_final": {
+        "state": 207,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 248,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "12|17",
+      "L_final_state": 12,
+      "R_final_state": 17,
+      "L_final": {
+        "state": 12,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 17,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "37|47",
+      "L_final_state": 37,
+      "R_final_state": 47,
+      "L_final": {
+        "state": 37,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 47,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "62|77",
+      "L_final_state": 62,
+      "R_final_state": 77,
+      "L_final": {
+        "state": 62,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 77,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "162|197",
+      "L_final_state": 162,
+      "R_final_state": 197,
+      "L_final": {
+        "state": 162,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 197,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "187|227",
+      "L_final_state": 187,
+      "R_final_state": 227,
+      "L_final": {
+        "state": 187,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 227,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "212|257",
+      "L_final_state": 212,
+      "R_final_state": 257,
+      "L_final": {
+        "state": 212,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 257,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "key": "162|193",
+      "L_final_state": 162,
+      "R_final_state": 193,
+      "L_final": {
+        "state": 162,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 193,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "187|223",
+      "L_final_state": 187,
+      "R_final_state": 223,
+      "L_final": {
+        "state": 187,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 223,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "212|253",
+      "L_final_state": 212,
+      "R_final_state": 253,
+      "L_final": {
+        "state": 212,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 253,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "12|13",
+      "L_final_state": 12,
+      "R_final_state": 13,
+      "L_final": {
+        "state": 12,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 13,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "37|43",
+      "L_final_state": 37,
+      "R_final_state": 43,
+      "L_final": {
+        "state": 37,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 43,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "62|73",
+      "L_final_state": 62,
+      "R_final_state": 73,
+      "L_final": {
+        "state": 62,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          0,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 73,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "key": "7|8",
+      "L_final_state": 7,
+      "R_final_state": 8,
+      "L_final": {
+        "state": 7,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 8,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "32|38",
+      "L_final_state": 32,
+      "R_final_state": 38,
+      "L_final": {
+        "state": 32,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 38,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    },
+    {
+      "key": "57|68",
+      "L_final_state": 57,
+      "R_final_state": 68,
+      "L_final": {
+        "state": 57,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          -1,
+          0
+        ]
+      },
+      "R_final": {
+        "state": 68,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "carry": [
+          -3,
+          1
+        ]
+      }
+    }
+  ]
 }
