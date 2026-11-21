@@ -27,6 +27,90 @@ const full = fullArtifact.post_reset_pair;
 const alphabetSize = base.transitions[0].length;
 if (alphabetSize !== 9) throw new Error("expected nine digit-pair symbols");
 
+const stateMap = base.state_map;
+const oldOutputToNew = base.compression.old_output_to_new;
+if (stateMap.length !== full.transitions.length) {
+  throw new Error("state projection has the wrong source-state count");
+}
+if (oldOutputToNew.length !== full.output_labels.length) {
+  throw new Error("output projection has the wrong source-label count");
+}
+let transitionProjectionMismatches = 0;
+let outputProjectionMismatches = 0;
+let eventProjectionMismatches = 0;
+const mappedBaseStates = new Set();
+for (let source = 0; source < full.transitions.length; source += 1) {
+  const baseSource = stateMap[source];
+  mappedBaseStates.add(baseSource);
+  const fullOutput = full.outputs[source];
+  const expectedBaseOutput =
+    fullOutput === null ? null : oldOutputToNew[fullOutput];
+  if (base.outputs[baseSource] !== expectedBaseOutput) {
+    outputProjectionMismatches += 1;
+  }
+  for (let symbol = 0; symbol < alphabetSize; symbol += 1) {
+    const fullTarget = full.transitions[source][symbol];
+    const baseTarget = base.transitions[baseSource][symbol];
+    if (stateMap[fullTarget] !== baseTarget) {
+      transitionProjectionMismatches += 1;
+    }
+    if (fullOutput === null && full.outputs[fullTarget] !== null) {
+      const label = full.output_labels[full.outputs[fullTarget]];
+      const pair = [Math.floor(symbol / 3), symbol % 3];
+      if (
+        JSON.stringify(label.L_final.previous_pair) !== JSON.stringify(pair) ||
+        JSON.stringify(label.R_final.previous_pair) !== JSON.stringify(pair)
+      ) {
+        eventProjectionMismatches += 1;
+      }
+    }
+  }
+}
+const projectionValidation = {
+  full_states_checked: full.transitions.length,
+  base_states: base.transitions.length,
+  mapped_base_states: mappedBaseStates.size,
+  full_transitions_checked: full.transitions.length * alphabetSize,
+  full_output_labels_checked: full.output_labels.length,
+  transition_projection_mismatches: transitionProjectionMismatches,
+  output_projection_mismatches: outputProjectionMismatches,
+  first_reset_event_symbol_mismatches: eventProjectionMismatches,
+};
+if (
+  mappedBaseStates.size !== base.transitions.length ||
+  transitionProjectionMismatches ||
+  outputProjectionMismatches ||
+  eventProjectionMismatches
+) {
+  throw new Error("all-state base/full projection check failed: " +
+    JSON.stringify(projectionValidation));
+}
+
+const fullOutputLookup = Array.from(
+  { length: 9 },
+  () => Array(base.output_labels.length).fill(null)
+);
+let fullOutputLookupEntries = 0;
+for (let fullLabelId = 0; fullLabelId < full.output_labels.length; fullLabelId += 1) {
+  const label = full.output_labels[fullLabelId];
+  const pair = label.L_final.previous_pair;
+  if (JSON.stringify(label.R_final.previous_pair) !== JSON.stringify(pair)) {
+    throw new Error("left/right previous-pair labels disagree");
+  }
+  const symbol = 3 * pair[0] + pair[1];
+  const baseLabelId = oldOutputToNew[fullLabelId];
+  if (fullOutputLookup[symbol][baseLabelId] !== null) {
+    throw new Error("full output label is not uniquely decoded by pair and carry");
+  }
+  fullOutputLookup[symbol][baseLabelId] = fullLabelId;
+  fullOutputLookupEntries += 1;
+}
+if (fullOutputLookupEntries !== full.output_labels.length) {
+  throw new Error("not every full output label has a pair/carry lookup entry");
+}
+projectionValidation.full_label_lookup_entries = fullOutputLookupEntries;
+
+
 const baseInitial = base.initial_state;
 const states = [];
 const stateIds = new Map();
