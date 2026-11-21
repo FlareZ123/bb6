@@ -1,0 +1,36 @@
+# Independent Cryptids stack reduction for #490
+
+**Status:** external formal reduction, not a resolution of the machine's halting question.
+
+The public Google DeepMind repository [`google-deepmind/cryptids`](https://github.com/google-deepmind/cryptids) contains a formal closed-stack reduction for the exact six-state machine used here:
+
+- Target module: [`M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean`](https://github.com/google-deepmind/cryptids/blob/main/BusyBeaver/BB6/Accelerations/M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean)
+- The proof obtains the reduction by state relabelling and left/right reflection from [the #85 module](https://github.com/google-deepmind/cryptids/blob/main/BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean).
+- Toolchain: `leanprover/lean4:v4.35.0-rc4`.
+- Mathlib revision in its manifest: `7c2f1a3e3c2e0c7a5b11aefc28fbcab5a7f24f5b`.
+
+The target module's `has_stack_reduction` theorem supplies a `HasStackReduction` witness for #490. Its `init_reaches_nontrivial` theorem proves a seven-raw-step blank-tape entry into
+[
+\operatorname{evalStackCfg}\;\mathrm{DR\_n\_n}\;
+  [(0,0),(0,0)]\;[(1,0)].
+]
+Under the module's `evalStackCfg` and `encLeft/encRight` definitions, this is a D-mode configuration with left encoding `1010` and right encoding `011`.
+
+## Abstract system
+
+The #85 module defines a `ClosedStackSystem` with four modes:
+`CR_n_n`, `EL_n_n`, `DL_0_n`, and `DR_n_n`.
+A pair `(a,b)` is encoded as a unary block of (a+1) ones followed by a zero separator; the separator length is fixed because the system's `maxSep` parameter is (1). The second coordinate is therefore invisible in the tape encoding, although the Lean transition proofs still carry it.
+
+The closure theorem `stack_system_closed` proves that every configuration in the abstract stack system has a finite positive run to another stack-system configuration or to a halting configuration. Its mode-specific proofs are explicit case analyses on the top entries of the two pair stacks. The internal token subsystem includes `tok_CR`, `tok_DR`, and `tok_EL`; for example, `tok_CR_add2_halts` gives a halting case when the relevant CR token list begins with a counter at least two.
+
+This is a genuine alternative representation of the same unresolved problem. It does **not** prove that the blank-root stack trajectory reaches the halting case, nor that it avoids it. The external 108-step (3)-adic halting cylinder has not yet been connected to a concrete stack-system orbit in this repository.
+
+## Research value and next steps
+
+1. Treat the seven-step stack entry as an independent formal root checkpoint, alongside the existing D0/F0 and external A-section checkpoints.
+2. Derive an explicit deterministic stack-step interpreter from the four `mode_*_closed` case analyses and the terminating token routines. Validate it against the raw six-state machine on short prefixes.
+3. Express the external A-section residue/cylinder data in the pair-stack representation. The likely useful correspondence is between unary counter blocks and the ((01)^q1^b) suffix language, but the head-boundary convention must be proved rather than guessed.
+4. Use the resulting stack dynamics to search for a root invariant or a route into the known halting cylinder. Do not mistake the existence of a closed stack reduction for a proof of nonhalting.
+
+The external repository uses Lean 4.35.0-rc4, while this repository's local target is Lean 4.36.0-rc2. Its files are therefore a mathematical reference, not a directly importable dependency without a deliberate port/rebuild.
