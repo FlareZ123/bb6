@@ -531,3 +531,12 @@ Next mathematical bridge, after the source file is compiled: convert `RestartWal
 - `4*I' = I - 392P + 56B - 136` for `e=2);
 - `8*I' = I` for `e=3).
 At the shifted wall, `I=-112B+384`. This is the direct source-to-`LowTrace` bridge needed to feed the existing mod-7 slack leaf and then attack its residual `Is=20)/`Is=48` families. Preserve the distinction between the source theorem (now written, uncompiled) and these derived next-step formulas (mathematical plan, not yet formalized).
+
+
+## 2026-11-21: prepared-state wall witness and direction change
+
+- Constructed an exact branch-A prepared-state continuation at (n=808), (P=2^{808}): high-depth (t=5), 270 depth-2 edges, first shallow depth 0, then depths (0,1,2), reaching the shifted wall.
+- The terminal equation is (34P=2116u+1272), with (u=(17\cdot2^{807}-318)/529\in\mathbb N). The branch defect gives (49D=18P-196u+14n+48), with (D\ge4) even.
+- The state before the (t=5) edge satisfies the source mass invariant and all local source guards. A deterministic BigInt checker verifies all 275 transitions and the final wall equation. Artifacts: `im-results/agent9-p1-high-depth/prepared-state-wall-witness.md` and `prepared_state_wall_witness.mjs`.
+- Critical caveat: this is only a **prepared-state** path. No prefix from the original blank-root state has been constructed, so it does not prove P1 halts. It falsifies blanket local-suffix exclusion for arbitrary prepared restart states. The decisive next task is to prove or disprove that this particular prepared parent lies in the original `OddCone`/`CountCone`, or find a stronger root-inherited invariant excluding it.
+- Local container/Python execution attempts failed in this invocation; no Lean preflight or CI run was performed. Do not treat the computational witness as Lean-certified.

@@ -82,3 +82,8 @@ The exported `source_wall_restart_path` proves that a wall-reaching OddCone hist
 The RestartWalk -> LowTrace bridge is now written in RestartWallLowTrace.lean: it extracts the low suffix and first-shallow split from the source RestartPath witness. The next source-level step is to compile and axiom-audit that exact dependency closure, then compose FirstShallowCoordinateGate with restartPath_first_shallow_state and propagate the second-edge residue gate through the next transition. Do not redo the scalar mod-7 enumeration or terminal-cost arithmetic.
 
 A complementary, still-unproved direction from Agent 50 is a source-prefix cost bound M≤P/24 for histories with at most five shallow edges; see communications/agent9/20261118T223000Z_agent50-prefix-cost-branch-closure.md. If established in the relevant source sector, it would sharply reduce the remaining high-depth intervals.
+
+
+## Prepared-state wall witness (not root reachability)
+
+`prepared-state-wall-witness.md` and `prepared_state_wall_witness.mjs` construct and exactly check a locally source-legal branch-A continuation at (n=808): one depth-5 edge, 270 depth-2 edges, then depths (0,0,1,2), ending on the shifted wall. This is **not** an original-root path: membership of the prepared parent in `OddCone`/`CountCone` is unproved. It shows that a generic no-wall theorem for arbitrary locally legal high-depth restart states cannot work; the next proof must use root reachability or a root-inherited invariant.
