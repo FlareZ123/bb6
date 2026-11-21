@@ -52,8 +52,10 @@ theorem genericChildValue
   have hpowNat :
       2^a * 2^(1458*t+parent.s+h+1)
         = 2^(1458*t+parent.s+a+h+1) := by
-    rw [← Nat.pow_add]
-    congr 1 <;> omega
+    calc
+      2^a * 2^(1458*t+parent.s+h+1)
+          = 2^(a+(1458*t+parent.s+h+1)) := by rw [← Nat.pow_add]
+      _ = 2^(1458*t+parent.s+a+h+1) := by congr 1 <;> omega
   have hpowI :
       ((2^a : Nat) : Int) *
           ((2^(1458*t+parent.s+h+1) : Nat) : Int)
@@ -427,7 +429,7 @@ def h1a3TreeTable : FrozenTreeTable where
     simp [residues_h1a3] at hr
     omega
   periodMod3 := by
-    norm_num [period_h1a3]
+    decide
   lowComplete := by
     intro n h a hn hnN hh ha ha'
     simpa [lowRowKeys_h1a3] using
@@ -452,7 +454,7 @@ def h1a3TreeTable : FrozenTreeTable where
     intro n child h a he
     simp [edges_h1a3] at he
     rcases he with ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩
-    all_goals norm_num [nodeAt_h1a3]
+    all_goals decide
 
   nodeProps := by
     decide
@@ -497,7 +499,7 @@ def h3a6TreeTable : FrozenTreeTable where
     simp [residues_h3a6] at hr
     omega
   periodMod3 := by
-    norm_num [period_h3a6]
+    decide
   lowComplete := by
     intro n h a hn hnN hh ha ha'
     simpa [lowRowKeys_h3a6] using
@@ -518,7 +520,7 @@ def h3a6TreeTable : FrozenTreeTable where
     intro n child h a he
     simp [edges_h3a6] at he
     rcases he with ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩
-    all_goals norm_num [nodeAt_h3a6]
+    all_goals decide
 
   nodeProps := by
     decide
@@ -563,7 +565,7 @@ def h7a2TreeTable : FrozenTreeTable where
     simp [residues_h7a2] at hr
     omega
   periodMod3 := by
-    norm_num [period_h7a2]
+    decide
   lowComplete := by
     intro n h a hn hnN hh ha ha'
     simpa [lowRowKeys_h7a2] using
@@ -583,7 +585,7 @@ def h7a2TreeTable : FrozenTreeTable where
     intro n child h a he
     simp [edges_h7a2] at he
     rcases he with ⟨rfl,rfl,rfl,rfl⟩
-    all_goals norm_num [nodeAt_h7a2]
+    all_goals decide
 
   nodeProps := by
     decide
@@ -628,7 +630,7 @@ def h7a4TreeTable : FrozenTreeTable where
     simp [residues_h7a4] at hr
     omega
   periodMod3 := by
-    norm_num [period_h7a4]
+    decide
   lowComplete := by
     intro n h a hn hnN hh ha ha'
     simpa [lowRowKeys_h7a4] using
@@ -648,7 +650,7 @@ def h7a4TreeTable : FrozenTreeTable where
     intro n child h a he
     simp [edges_h7a4] at he
     rcases he with ⟨rfl,rfl,rfl,rfl⟩
-    all_goals norm_num [nodeAt_h7a4]
+    all_goals decide
 
   nodeProps := by
     decide
