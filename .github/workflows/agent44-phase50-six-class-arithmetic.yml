@@ -14,13 +14,16 @@ jobs:
       - name: Check out requested branch
         uses: actions/checkout@v4
 
-      - name: Set up Lean 4.36.0-rc2
-        uses: leanprover/lean-action@v1
-        with:
-          lean_version: 4.36.0-rc2
-          lakefile: lakefile.lean
-          lake_dir: .
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: Compile phase-50 modular certificate
+      - name: Compile Lean certificate and run exact BigInt checks
         working-directory: im-results/agent44-746-rank
-        run: lake env lean -o Phase50SixClassArithmetic.olean Phase50SixClassArithmetic.lean
+        run: |
+          set -eu
+          lean --version
+          lean -o Phase50SixClassArithmetic.olean Phase50SixClassArithmetic.lean
+          node phase50-six-classes-certificate.mjs
