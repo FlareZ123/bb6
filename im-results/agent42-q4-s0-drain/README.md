@@ -917,7 +917,7 @@ The exact score admits an expansion to any fixed depth. Put
 S_{\rm TM1}
 ={}&\sum_{r=1}^{p}
 \left(6(u_{r-1}+1)^2+42(u_{r-1}+1)+(12r-9)u_r\right)+E_p,\\
-&0\le E_p<100u_p^2.
+&0\le E_p<45u_p^2.
 \end{aligned}
 \]
 The p=2 split isolates only the final two dispatcher summands. The terminal macro, final counted halt transition, +7 correction, raw initial drain, and root prefix remain in the non-summand tail, so they are counted exactly once. The proof uses \(N<R\), geometric decay of the earlier quadratic
@@ -927,13 +927,13 @@ specialization is
 S_{\rm TM1}
 =6b_N^2+54b_N+6\ell^2+57\ell+96
 +15\log_2(\ell+1)+\Delta_2,
-\quad 0\le\Delta_2<82(\log_2\ell)^2.
+\quad 0\le\Delta_2<45\kappa^2.
 \]
 It also yields the especially tight additive interval
 \[
 6(b_N+1)^2+42b_N
 <S_{\rm TM1}
-<6(b_N+1)^2+42b_N+\frac{13}{2}\sqrt{b_N+1}.
+<6(b_N+1)^2+42b_N+\frac{63}{10}\sqrt{b_N+1}.
 \]
 These are paper-level consequences of the conditional source-cost
 identity, not Lean acceptance or an authentic-root halt theorem. See

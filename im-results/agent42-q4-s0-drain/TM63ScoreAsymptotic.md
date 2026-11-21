@@ -176,6 +176,15 @@ All inequalities above hold for \(m>260\). Combining (6)--(10),
 \tag{11}
 \]
 
+The same \(\Delta_2\) also satisfies the sharper bound
+\[
+0\le\Delta_2<45\kappa^2,\qquad \kappa=b_{N-2}.
+\]
+Apply the quadratic tower-tail lemma in
+[TM63TowerTailExpansion.md](../agent44-tm63-middle/TM63TowerTailExpansion.md)
+with cutoff \(r=N-1\): its remainder is exactly \(\Delta_2\), and
+\(N\le b_{N-2}=\kappa\) follows from \(N<R\le\kappa\).
+
 The resulting three-term asymptotic expansion is therefore
 \[
 \boxed{
@@ -254,29 +263,29 @@ S_{\rm TM1}
 \tag{13}
 \]
 
-There is a uniform explicit tail bound
+The arbitrary-depth tail has a sharper uniform bound:
 \[
-\boxed{0\le E_p<100u_p^2\qquad(1\le p\le N).}
+\boxed{
+0\le E_1<\frac{13}{2}u_1^2,\qquad
+0\le E_p<45u_p^2\quad(2\le p\le N).
+}
 \tag{14}
 \]
-To prove it, \(u_p\ge R\ge63\) and
-\(u_{r-1}=2^{u_r}-1\ge2u_r\). The same inequality
-\(f(x)/f(2x)<1/32\) used above shows
+For \(p=1\), use the earlier one-term estimate
+\(\Delta<\frac{13}{2}\ell^2\). For \(2\le p\le N-1\), set
+\(r=N-p+1\). Then \(2\le r\le N-1\), the tail \(E_p\) is exactly
+Agent 44's \(E_r\) from the quadratic tower-tail lemma, and
+\(b_{r-1}=b_{N-p}=u_p\). Its hypothesis \(N\le b_{r-1}\) follows
+from \(N<R\le u_p\), so \(E_p<45u_p^2\). For \(p=N\), the dispatcher
+tail is empty and \(E_N=C_{\rm root}+D_{\rm root}+P\). Since
+\(N<R\), \(N+1\le R\), \(U\le R\), and \(R\ge63\),
 \[
-\sum_{r=p+1}^{N}f(u_r)
-<\frac{32}{31}f(u_{p+1})
-=\frac{32}{31}\left(6(u_p+1)^2+42(u_p+1)\right)
-<8u_p^2.
+C_{\rm root}+D_{\rm root}<15R^2,\quad
+10N^2+37N+90<11R^2,\quad
+12(N+1)U\le12R^2.
 \]
-Also \(\sum_{r=p+1}^{N}u_r<2u_p\), so the weighted linear tail is
-\(<24Nu_p\le24u_p^2\), using \(N<R\le u_p\). The root term is
-\(<15R^2\le15u_p^2\). Finally, \(N<R\le u_p\), \(U\le R\), and
-\(u_p\ge63\) give
-\[
-10N^2+37N+90<12u_p^2,\qquad
-12(N+1)U<13u_p^2.
-\]
-Adding these five contributions gives \(E_p<72u_p^2<100u_p^2\).
+Thus \(E_N<38R^2<45u_N^2\). This composes the exact
+reindexing with the independently checked tower-tail lemma.
 
 Equation (13) is an arbitrary finite-depth expansion along the
 iterated-log sequence
@@ -302,22 +311,22 @@ where
 \[
 C=6\ell^2+57\ell+90+15\kappa+\Delta_2.
 \]
-Using \(\Delta_2<82m^2\), \(m=\log_2\ell\), and
-\(\kappa\le m+1\), we first have
+Using the sharper \(\Delta_2<45\kappa^2\), together with
+\(m=\log_2\ell\le\ell/32\) and
+\(\kappa\le m+1\le\ell/32+1\) for \(\ell\ge256\), we get
 \[
 C<
-\left(6+\frac{41}{512}\right)\ell^2
-+\left(57+\frac{15}{32}\right)\ell+105,
+\left(6+\frac{45}{1024}\right)\ell^2
++\frac{1929}{32}\ell+150.
 \]
-because \(m\le\ell/32\) for \(\ell\ge256\). Since
-\(57+15/32<58\), \(105<\ell\), and
-\(59\ell<(215/512)\ell^2\) for \(\ell\ge256\), this gives
+Since \(1929/32<61\), \(150<\ell\), and
+\(62\ell<(1311/5120)\ell^2\) for \(\ell\ge256\), this gives
 \[
-0<C<\frac{13}{2}\ell^2.
+0<C<\frac{63}{10}\ell^2.
 \]
 Finally, \(\ell^2\le2^{\ell/2}=\sqrt{b+1}\), so
 \[
-0<C<\frac{13}{2}\sqrt{b+1}.
+0<C<\frac{63}{10}\sqrt{b+1}.
 \]
 Therefore the exact conditional primitive score lies in the sharper
 additive interval
@@ -325,7 +334,7 @@ additive interval
 \boxed{
 6(b_N+1)^2+42b_N
 <S_{\rm TM1}
-<6(b_N+1)^2+42b_N+\frac{13}{2}\sqrt{b_N+1}.
+<6(b_N+1)^2+42b_N+\frac{63}{10}\sqrt{b_N+1}.
 }
 \tag{15}
 \]
