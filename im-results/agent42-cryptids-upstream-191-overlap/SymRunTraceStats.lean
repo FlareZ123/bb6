@@ -1888,4 +1888,206 @@ theorem eatC12_num_sum_le (k : Nat) (xs : List SymTok) :
 #print axioms eatC2_num_sum_le
 #print axioms eatC12_num_sum_le
 
+
+def symPairNumSum (p : List SymTok × List SymTok) : Nat :=
+  listNumSum p.1 + listNumSum p.2
+
+theorem sweepCB_num_sum_bound (L R : List SymTok) :
+    symPairNumSum (sweepCB L R) ≤
+      listNumSum L + listNumSum R + 3 * R.length := by
+  generalize hn : R.length = n
+  induction n using Nat.strongRecOn generalizing R L with
+  | ind n ih =>
+    have hlen : R.length = n := hn
+    cases R with
+    | nil => simp [symPairNumSum, sweepCB, listNumSum] <;> omega
+    | cons t R1 =>
+      simp at hlen
+      have hrecR1 (L' : List SymTok) :
+          symPairNumSum (sweepCB L' R1) ≤
+            listNumSum L' + listNumSum R1 + 3 * R1.length :=
+        ih R1.length (by omega) L' R1 rfl
+      cases t with
+      | item x =>
+        cases x with
+        | zero => simp [symPairNumSum, sweepCB, listNumSum, tokNumSum] <;> omega
+        | run d =>
+          cases d with
+          | zero =>
+            cases R1 with
+            | nil => simp [symPairNumSum, sweepCB, listNumSum, tokNumSum] <;> omega
+            | cons t2 R2 =>
+              simp at hlen
+              have hrecR2 (L' : List SymTok) :
+                  symPairNumSum (sweepCB L' R2) ≤
+                    listNumSum L' + listNumSum R2 + 3 * R2.length :=
+                ih R2.length (by omega) L' R2 rfl
+              cases t2 with
+              | item y =>
+                cases y with
+                | zero => simp [symPairNumSum, sweepCB, listNumSum, tokNumSum] <;> omega
+                | run d2 =>
+                  cases d2 with
+                  | zero => simp [symPairNumSum, sweepCB, listNumSum, tokNumSum] <;> omega
+                  | succ d2 =>
+                    cases d2 with
+                    | zero =>
+                      have hB := bumpSymL_num_sum_le L
+                      have hEq : R2.length + 2 = n := by omega
+                      calc
+                        symPairNumSum (sweepCB L (.item (.run 0) :: .item (.run 1) :: R2)) =
+                            symPairNumSum (sweepCB (.item (.run 0) :: .item (.run 0) :: bumpSymL L) R2) := by
+                          simp [sweepCB, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
+                        _ ≤ listNumSum (.item (.run 0) :: .item (.run 0) :: bumpSymL L) +
+                              listNumSum R2 + 3 * R2.length :=
+                          hrecR2 (.item (.run 0) :: .item (.run 0) :: bumpSymL L)
+                        _ ≤ listNumSum L + listNumSum (.item (.run 0) :: .item (.run 1) :: R2) + 3 * n := by
+                          simp [listNumSum, tokNumSum]
+                          omega
+                    | succ d2 => simp [symPairNumSum, sweepCB, listNumSum, tokNumSum] <;> omega
+              | repB1 k => simp [symPairNumSum, sweepCB, listNumSum, tokNumSum] <;> omega
+              | rep2 p => simp [symPairNumSum, sweepCB, listNumSum, tokNumSum] <;> omega
+              | rep12 m => simp [symPairNumSum, sweepCB, listNumSum, tokNumSum] <;> omega
+          | succ d =>
+            cases d with
+            | zero =>
+              have hB := bumpSymL_num_sum_le L
+              have hEq : R1.length + 1 = n := by omega
+              calc
+                symPairNumSum (sweepCB L (.item (.run 1) :: R1)) =
+                    symPairNumSum (sweepCB (.item (.run 0) :: bumpSymL L) R1) := by
+                  simp [sweepCB, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
+                _ ≤ listNumSum (.item (.run 0) :: bumpSymL L) + listNumSum R1 + 3 * R1.length :=
+                  hrecR1 (.item (.run 0) :: bumpSymL L)
+                _ ≤ listNumSum L + listNumSum (.item (.run 1) :: R1) + 3 * n := by
+                  simp [listNumSum, tokNumSum]
+                  omega
+            | succ d => simp [symPairNumSum, sweepCB, listNumSum, tokNumSum] <;> omega
+      | repB1 k =>
+        cases hs : stripPrefixSym [.item (.run 0)] L with
+        | none => simp [symPairNumSum, sweepCB, hs, listNumSum, tokNumSum] <;> omega
+        | some L1 =>
+          have hprefix := stripPrefixSym_some _ L L1 hs
+          have he := eatB1_num_sum_le k L1
+          have hEq : R1.length + 1 = n := by omega
+          calc
+            symPairNumSum (sweepCB L (.repB1 k :: R1)) =
+                symPairNumSum (sweepCB (.item (.run 0) :: eatB1 k L1) R1) := by
+              simp [sweepCB, hs, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
+            _ ≤ listNumSum (.item (.run 0) :: eatB1 k L1) + listNumSum R1 + 3 * R1.length :=
+              hrecR1 (.item (.run 0) :: eatB1 k L1)
+            _ ≤ listNumSum L + listNumSum (.repB1 k :: R1) + 3 * n := by
+              rw [hprefix, listNumSum_append] at *
+              simp [listNumSum, tokNumSum]
+              omega
+      | rep2 p =>
+        cases hs : stripPrefixSym [.item (.run 0)] L with
+        | none => simp [symPairNumSum, sweepCB, hs, listNumSum, tokNumSum] <;> omega
+        | some L1 =>
+          have hprefix := stripPrefixSym_some _ L L1 hs
+          have he := eatC2_num_sum_le p L1
+          have hEq : R1.length + 1 = n := by omega
+          calc
+            symPairNumSum (sweepCB L (.rep2 p :: R1)) =
+                symPairNumSum (sweepCB (.item (.run 0) :: eatC2 p L1) R1) := by
+              simp [sweepCB, hs, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
+            _ ≤ listNumSum (.item (.run 0) :: eatC2 p L1) + listNumSum R1 + 3 * R1.length :=
+              hrecR1 (.item (.run 0) :: eatC2 p L1)
+            _ ≤ listNumSum L + listNumSum (.rep2 p :: R1) + 3 * n := by
+              rw [hprefix, listNumSum_append] at *
+              simp [listNumSum, tokNumSum]
+              omega
+      | rep12 m =>
+        cases hs : stripPrefixSym [.item (.run 0)] L with
+        | none => simp [symPairNumSum, sweepCB, hs, listNumSum, tokNumSum] <;> omega
+        | some L1 =>
+          have hprefix := stripPrefixSym_some _ L L1 hs
+          have he := eatC12_num_sum_le m L1
+          have hEq : R1.length + 1 = n := by omega
+          calc
+            symPairNumSum (sweepCB L (.rep12 m :: R1)) =
+                symPairNumSum (sweepCB (.item (.run 0) :: eatC12 m L1) R1) := by
+              simp [sweepCB, hs, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
+            _ ≤ listNumSum (.item (.run 0) :: eatC12 m L1) + listNumSum R1 + 3 * R1.length :=
+              hrecR1 (.item (.run 0) :: eatC12 m L1)
+            _ ≤ listNumSum L + listNumSum (.rep12 m :: R1) + 3 * n := by
+              rw [hprefix, listNumSum_append] at *
+              simp [listNumSum, tokNumSum]
+              omega
+
+
+theorem tokNumSum_eq_tokFieldMax (t : SymTok) : tokNumSum t = tokFieldMax t := by
+  cases t with
+  | item x => cases x <;> rfl
+  | repB1 k => rfl
+  | rep2 p => rfl
+  | rep12 m => rfl
+
+theorem listNumSum_le_length_mul_fieldMax (xs : List SymTok) :
+    listNumSum xs ≤ xs.length * listFieldMax xs := by
+  induction xs with
+  | nil => simp [listNumSum, listFieldMax]
+  | cons t xs ih =>
+    have ht' : tokNumSum t ≤ listFieldMax (t :: xs) := by
+      calc
+        tokNumSum t = tokFieldMax t := tokNumSum_eq_tokFieldMax t
+        _ ≤ max (tokFieldMax t) (listFieldMax xs) := Nat.le_max_left _ _
+        _ = listFieldMax (t :: xs) := by simp [listFieldMax_cons]
+    have htail : listFieldMax xs ≤ listFieldMax (t :: xs) := by
+      simpa [listFieldMax_cons] using (Nat.le_max_right (tokFieldMax t) (listFieldMax xs))
+    have htail' : listNumSum xs ≤ xs.length * listFieldMax (t :: xs) :=
+      Nat.le_trans ih (Nat.mul_le_mul_left xs.length htail)
+    calc
+      listNumSum (t :: xs) = tokNumSum t + listNumSum xs := rfl
+      _ ≤ listFieldMax (t :: xs) + xs.length * listFieldMax (t :: xs) := Nat.add_le_add ht' htail'
+      _ = (xs.length + 1) * listFieldMax (t :: xs) := by rw [Nat.add_mul]; omega
+
+theorem listFieldMax_le_listNumSum (xs : List SymTok) :
+    listFieldMax xs ≤ listNumSum xs := by
+  induction xs with
+  | nil => simp [listFieldMax, listNumSum]
+  | cons t xs ih =>
+    rw [listFieldMax_cons, listNumSum]
+    rw [tokNumSum_eq_tokFieldMax t]
+    simp only [Nat.max_le]
+    constructor <;> omega
+
+theorem sweepCB_num_sum_le_94M282 (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94) :
+    symPairNumSum (sweepCB L R) ≤ 94 * stateFieldMax (.CB, L, R) + 282 := by
+  have hLsum := listNumSum_le_length_mul_fieldMax L
+  have hRsum := listNumSum_le_length_mul_fieldMax R
+  have hLmax : listFieldMax L ≤ stateFieldMax (.CB, L, R) := by
+    simpa [stateFieldMax] using (Nat.le_max_left (listFieldMax L) (listFieldMax R))
+  have hRmax : listFieldMax R ≤ stateFieldMax (.CB, L, R) := by
+    simpa [stateFieldMax] using (Nat.le_max_right (listFieldMax L) (listFieldMax R))
+  have hInitial : listNumSum L + listNumSum R ≤ 94 * stateFieldMax (.CB, L, R) := by
+    calc
+      listNumSum L + listNumSum R ≤ L.length * listFieldMax L + R.length * listFieldMax R := Nat.add_le_add hLsum hRsum
+      _ ≤ L.length * stateFieldMax (.CB, L, R) + R.length * stateFieldMax (.CB, L, R) :=
+        Nat.add_le_add (Nat.mul_le_mul_left L.length hLmax) (Nat.mul_le_mul_left R.length hRmax)
+      _ = (L.length + R.length) * stateFieldMax (.CB, L, R) := by rw [Nat.add_mul]
+      _ ≤ 94 * stateFieldMax (.CB, L, R) := Nat.mul_le_mul_right _ hT
+  have hSweep := sweepCB_num_sum_bound L R
+  have hRlen : R.length ≤ 94 := by omega
+  have hGrowth : 3 * R.length ≤ 282 := by omega
+  omega
+
+theorem sweepCB_stateFieldMax_le_94M282 (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94) :
+    stateFieldMax (.CB, (sweepCB L R).1, (sweepCB L R).2) ≤
+      94 * stateFieldMax (.CB, L, R) + 282 := by
+  have hsum := sweepCB_num_sum_le_94M282 L R hT
+  have hL := listFieldMax_le_listNumSum (sweepCB L R).1
+  have hR := listFieldMax_le_listNumSum (sweepCB L R).2
+  have hmax : stateFieldMax (.CB, (sweepCB L R).1, (sweepCB L R).2) ≤
+      symPairNumSum (sweepCB L R) := by
+    simp [stateFieldMax, symPairNumSum]
+    omega
+  exact Nat.le_trans hmax hsum
+
+#print axioms sweepCB_num_sum_bound
+#print axioms sweepCB_stateFieldMax_le_94M282
+
+
 end BusyBeaver.SymRunAudit
