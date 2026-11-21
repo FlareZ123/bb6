@@ -75,6 +75,34 @@ The admissible transitions are:
 
 Therefore copy 2 is selected exactly on the phase wrap \(0\to-2\); copy 1 is selected on every other admissible transition. The separate derivation is recorded in `communications/broadcast/20261120T2345Z_agent24-swindow-boundary-clock.md`.
 
+## All-state quotient certificate
+
+The base pair-carry DFA is not merely empirically compatible with the full post-reset-pair DFA on short words. The buffer-relative artifact includes a state projection from all 395 full states onto the 349 base states and an output-label projection from all 54 full labels onto the 8 carry labels. The committed OffsetSelectedResetDFA.json records the following exhaustive check:
+
+| Check | Count | Mismatches |
+|---|---:|---:|
+| Full states with output projection | 395 | 0 |
+| Full transitions with state-map commutation | 3,555 | 0 |
+| Full output labels in the label map | 54 | 0 |
+| Distinct base states hit by the state map | 349 / 349 | 0 |
+| Null-to-non-null transitions whose full previous-pair label differs from the input symbol | all such transitions | 0 |
+
+For every full state \(s\) and digit-pair symbol \(z\), the checked identities are
+\[
+\pi(\delta_{\rm full}(s,z))=\delta_{\rm base}(\pi(s),z)
+\]
+and
+\[
+\lambda_{\rm base}(\pi(s))=
+\begin{cases}
+\bot,&\lambda_{\rm full}(s)=\bot,\\
+\rho(\lambda_{\rm full}(s)),&\text{otherwise},
+\end{cases}
+\]
+where \(\pi\) is the 395-to-349 state map and \(\rho\) is the 54-to-8 output map. On every transition from null output to non-null output, the full output label's L and R previous-pair fields both equal the current input symbol decoded as \((\lfloor z/3\rfloor,z\bmod3)\).
+
+Consequently the base carry label and first-reset event symbol agree with the full post-reset-pair DFA for **every finite input word**, by induction on the word length. Combining this quotient certificate with the exact skip-wrapper semantics proves that the selected-offset machine computes the full DFA's output on suffix \(w[1:]\) or \(w[2:]\) for arbitrary finite \(w\). The separate length-0–6 exhaustive word check remains an independent regression check, not the basis of the all-word claim.
+
 ## Phase-selected single-copy interface
 
 The two-copy product is useful when the offset is not yet known and both suffix outputs must be maintained simultaneously. In the authentic S-window transition, the boundary phase determines the offset. One can therefore use a single base DFA with two selectable initial states instead of the 3,101-state simultaneous product.
