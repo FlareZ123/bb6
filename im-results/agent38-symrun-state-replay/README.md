@@ -29,6 +29,7 @@ The script measures every state after every `stepSym` transition, not only the c
 | Metric | F424 maximum | Bits | F412 maximum | Bits |
 |---|---:|---:|---:|---:|
 | Largest individual run/repeat field | 12,464,561,897,144,001,482,331,935,594,779,263,804,489,570,179,353,031,112,091,137 | 203 | 412,597,277,036,535,862,786 | 69 |
+| StepSym transition attaining max field | 70,298 | — | 21,275 | — |
 | Sum of repeat counters | 12,464,561,897,144,001,482,331,935,594,779,263,804,489,570,179,353,031,112,085,238 | — | 412,597,277,036,535,860,912 | — |
 | Decoded tape length (including repeated blocks) | 31,161,404,742,860,003,705,829,838,986,948,159,511,223,925,448,382,577,780,216,103 | 205 | 1,031,493,192,591,339,653,257 | 70 |
 | Number of symbolic tokens | 94 | — | 78 | — |
