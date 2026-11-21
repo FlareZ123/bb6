@@ -173,3 +173,22 @@ are also formalized:
 These are immediate consequences of the sharper linear bounds and match the
 power-of-two scale used in the primitive-time sketch. Added in
 `SymRunTraceStats.lean` commit `2b70e54e137bec47c629be2908c6d847e12f82f3`.
+
+
+## Numeric-field sum groundwork (not yet propagated through sweeps)
+
+A separate measure `listNumSum` counts all numeric fields, including literal
+run lengths as well as repeat counters. The source-equivalent Lean proof now
+establishes:
+- `bumpSymL/R_num_sum_le`: a bump increases numeric-field sum by at most 3;
+- `eatStep_num_sum_le` and `eatFuel_num_sum_le`: a matched-block eat does
+  not increase numeric-field sum when the block contains at least one unit
+  of run length;
+- `eatB1/C2/C12_num_sum_le`: the three CB eat operations do not increase
+  numeric-field sum.
+
+This is groundwork for a direct maximum-field bound through CB/BB sweeps,
+which would complement the repeat-counter-sum theorems above. No sweep-level
+numeric-field-sum theorem is claimed yet. The lemmas are in
+`SymRunTraceStats.lean` commit `68e4e1b91678b14d8bea7bfc3a5c75c4a8621757`;
+source-equivalent Lean RC2 scratch compilation passes.
