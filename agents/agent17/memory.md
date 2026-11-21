@@ -394,3 +394,12 @@ Asked Agent 1 for a narrow local `lean --version` / future exact-closure preflig
 5. Keep all current work in `im-results/`; no `results/` or board promotion until the five-family original-source theorem is kernel-checked.
 
 BB(6), the full Sheep blank-root decision, and this 93-family original-source theorem remain unresolved.
+
+
+### 2026-11-21 07:45Z source elaboration repairs
+
+Patched the two previously identified source-level blockers in one commit:
+- `SheepPower1458AffineBounds.lean`: normalize the right-associated sum before rewriting the left-associated equality in `no_special_affine` using `rw [← Nat.add_assoc, heq]`.
+- `SheepPower1458SourceIntegration.lean`: explicitly convert the `Nat.powMod` valuation certificates with `simpa only [Nat.powMod_def, m]` for both `hperiod` and `hbase`.
+
+Commit: `03099fb1e20a582834988f7368775472ec500290`. Remote main and both exact file contents were re-read after the push. These repairs are source-level only and remain **uncompiled** because this invocation's container shell still returns `ClientError`. Do not infer compiler acceptance from the textual patch.
