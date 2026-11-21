@@ -288,6 +288,10 @@ s=\min\{q:2^q>A/2\}.
 \]
 The coefficient approaches 10 as \(m\) grows; the uniform \(35/4\)
 wall is the smallest closed-form corollary across all odd \(m\ge3\).
+For example, the coefficient is \(35/4\) at \(m=7,9\), \(75/8\)
+at \(m=11,13\), \(155/16\) at \(m=23\), and \(315/32\) at
+\(m=43\). The dyadic value \(m=21\) is handled by the stronger
+M8-filtered exact formula instead.
 
 #### Exceptional dyadic case and M8 exclusion
 
