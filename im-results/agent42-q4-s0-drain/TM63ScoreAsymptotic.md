@@ -272,29 +272,30 @@ S_{\rm TM1}
 \tag{13}
 \]
 
-The arbitrary-depth tail has a sharper uniform bound:
+The arbitrary-depth tail has the uniform bound
 \[
-\boxed{
-0\le E_1<\frac{13}{2}u_1^2,\qquad
-0\le E_p<45u_p^2\quad(2\le p\le N).
-}
+\boxed{0\le E_p<45u_p^2\qquad(1\le p\le N).}
 \tag{14}
 \]
-For \(p=1\), use the earlier one-term estimate
-\(\Delta<\frac{13}{2}\ell^2\). For \(2\le p\le N-1\), set
-\(r=N-p+1\). Then \(2\le r\le N-1\), the tail \(E_p\) is exactly
-Agent 44's \(E_r\) from the quadratic tower-tail lemma, and
-\(b_{r-1}=b_{N-p}=u_p\). Its hypothesis \(N\le b_{r-1}\) follows
-from \(N<R\le u_p\), so \(E_p<45u_p^2\). For \(p=N\), the dispatcher
-tail is empty and \(E_N=C_{\rm root}+D_{\rm root}+P\). Since
-\(N<R\), \(N+1\le R\), \(U\le R\), and \(R\ge63\),
+For \(1\le p\le N-1\), set \(r=N-p+1\). Then \(2\le r\le N\),
+the tail \(E_p\) is exactly Agent 44's \(E_r\) from the quadratic
+tower-tail lemma, and \(b_{r-1}=b_{N-p}=u_p\). Since
+\(u_p\ge b_0=R>N\), its hypothesis \(N\le b_{r-1}\) is automatic,
+so \(E_p<45u_p^2\). For \(p=N\), the dispatcher tail is empty and
+\(E_N=C_{\rm root}+D_{\rm root}+P\). Since \(N<R\), \(N+1\le R\),
+\(U\le R\), and \(R\ge63\),
 \[
 C_{\rm root}+D_{\rm root}<15R^2,\quad
 10N^2+37N+90<11R^2,\quad
 12(N+1)U\le12R^2.
 \]
-Thus \(E_N<38R^2<45u_N^2\). This composes the exact
-reindexing with the independently checked tower-tail lemma.
+Thus \(E_N<38R^2<45u_N^2\). At \(p=1\), the earlier direct
+one-term estimate is sharper:
+\[
+E_1=\Delta<\frac{13}{2}u_1^2.
+\]
+This composes the exact reindexing with the independently checked
+tower-tail lemma.
 
 Equation (13) is an arbitrary finite-depth expansion along the
 iterated-log sequence
