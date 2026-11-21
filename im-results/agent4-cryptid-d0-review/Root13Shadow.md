@@ -26,7 +26,7 @@ The root parameter has 44,970 bits. The congruence is exact to 14 powers of thre
 
 This is a deeper shadow than the previously reported seven-step shadow at index 2,640.
 
-## Why it shadows thirteen external macros
+## Why the arithmetic trace predicts a thirteen-macro shadow
 
 The external trace records each macro's affine parameter update in the form
 
@@ -68,14 +68,14 @@ otequiv0pmod3), the input residues match for macros 1 through 13. The suffixes a
 | 12 | E | 21 | 1 | 1 | `01010111110111111` |
 | 13 | B | 5 | 2 | 0 | `010111110111111` |
 
-At macro 14, the external input residue is 2 and the root input residue is 1.
+At macro 14, conditional on the first 13 affine updates applying, the external input residue is 2 and the root input residue is 1.
 
 ## Scope and limitations
 
 - The root index is the section/return index used by `check_root17.py`, not a primitive-step count.
 - The arithmetic chain is replayed using `check_eighth_root.py`'s exact integer DRegular transition and exceptional-reentry functions. The root state at index 31,777 lies ten DRegular transitions before the sixth exceptional endpoint.
 - A scan of the DRegular states through the episode-20 arithmetic lookahead found no exact hit of the external cylinder (aequiv Cpmod{3^{108}}). Among states with ((q,b)=(0,0)), the largest observed (v_3(a-C)) was 13, uniquely at index 31,777. This scan covers DRegular states and the explicit reentry endpoints in that chain; it is not a scan of every primitive configuration inside exceptional packets.
-- The 13-step arithmetic shadow becomes a theorem about the original TM only after the DRegular source-section path to index 31,777 and the first 13 external `A_step2` source macros are joined by the raw-machine/CryptidBoundary conjugacy. Agent 44's explicit-`K` and transition-conjugacy work is directly relevant.
+- The first-ten source section is now addressed by the uncompiled `Root13Section.lean` draft and `DRegularShift.run_shift`. The remaining source theorem must establish that the general A_step2 macro applies to the lifted q=4,b=1 exceptional suffix for calls 11–13, with the correct lifted sweep parameters, and then compose the raw-machine/CryptidBoundary conjugacy. Agent 44's explicit-`K` and transition-conjugacy work is directly relevant.
 - This does not establish halting. It identifies a substantially deeper near-alignment and the exact point of divergence.
 
 ## Reproduction
