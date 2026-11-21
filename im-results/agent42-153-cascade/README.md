@@ -99,13 +99,85 @@ The next generic drain is
 `drainA(51,2,10) = C(1,185)`, with reductions
 `(51,2,10) → (21,22,0) → (1,14,39) → C(1,185)`.
 
+## Generic-cascade hazard exclusion
+
+The generic branch after a `b₀=1` doubling ray can also be excluded
+exactly. Suppose the ray ends at
+`C(B,B+5+r)`, where `B=5·2^n-4`, `n≥0`, and `0≤r≤B`.
+The generic dispatcher calls
+
+```
+drainA(3B+3, 2, r).
+```
+
+Its first step (or the initial state when `r=0`) reaches the `d=0`
+state
+
+```
+a₀ = 3(B+1-r),  b₀ = 2r+2,  d=0.
+```
+
+At each subsequent `d=0` loop iteration, write `qᵢ=2bᵢ+2` for the
+new third counter and `aᵢ` for the first counter before the step. As long
+as the loop continues, the source recurrence is
+
+```
+q₀ = 4r+6
+qᵢ₊₁ = 4qᵢ+2
+a₀ = 3(B+1-r)
+aᵢ₊₁ = aᵢ+1-3qᵢ.
+```
+
+Thus
+
+```
+qᵢ = ((12r+20)·4^i - 2)/3
+aᵢ = 3(B+1-r) + 3i - (12r+20)(4^i-1)/3.
+```
+
+The residue `aᵢ mod 3` is `i mod 3`. At the stopping iteration, a
+halting output can occur only for residues `i mod 3 = 1 or 2`, and in
+either case it requires
+
+```
+qᵢ = aᵢ+3
+iff
+(24r+40)·4^i = 9B+3r+9i+40.
+```
+
+Substituting `B=5·2^n-4` and reducing modulo
+`Mᵢ=8·4^i-1=2^(2i+3)-1` gives the necessary congruence
+
+```
+45·2^n + 9i - 1 ≡ 0  (mod Mᵢ).
+```
+
+This congruence has no solution:
+
+- For `i=1`, `Mᵢ=31`; the residues of `45·2^n` modulo 31 cycle
+  through `14, 28, 25, 19, 7`, never the required `23`.
+- For `i≥2`, put `m=2i+3`, `M=2^m-1`, and reduce
+  `n` modulo `m` to `n₀∈[0,m-1]`. The required residue is
+  `M-(9i-1)`. If `n₀≤m-6`, then
+  `45·2^n₀≤45(M+1)/64 < M-(9i-1)`; the strict inequality follows
+  from `19(M+1)>576i`. If `n₀=m-j` for `1≤j≤5`, the residue is
+  `(sⱼM+45)/2^j`, where
+  `(s₁,s₂,s₃,s₄,s₅)=(1,1,5,13,13)`. Its gap below `M` is at
+  least `(3M-45)/16 > 9i-1`. Hence it again cannot equal
+  `M-(9i-1)`.
+
+For `i=0`, the stopping residue is zero and the drain returns
+`C(1,4q₀+1)`, not a halting target. Therefore **the generic branch
+following any such `b₀=1` doubling ray cannot produce
+`C(b,b+2)`**. This excludes the entire generic `drainA` cascade,
+including its base-4 loop, not merely the first few transitions.
+
 ## What remains open
 
-The result controls only the exact doubling region. When a ray exits
-`d ≥ 2b+6`, the high-level dispatcher may enter the other `drainA`
-branches (including the `b ≥ d-1` branch). Those cascade states are not
-covered by the ray formula, and no invariant has been proved here to show
-that they avoid `C(b,b+2)`.
+The result now controls both the doubling region and the generic cascade
+branch. The remaining cases are the special `d=b+3` branch (the first
+root launch takes this branch) and the `b ≥ d-1` branch. Their complete
+return maps and avoidance of `C(b,b+2)` remain unproved.
 
 Therefore this is **not** a proof of non-halting, not a full orbit
 classification, and not a BB(6) result. The next meaningful mathematical
