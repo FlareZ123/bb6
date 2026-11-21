@@ -51,19 +51,42 @@ Until a working local shell is available, do not expand the score derivations or
 
 ## Reproduction details
 
-Lean 4.36.0-rc2 was reconstructed from the uploaded split archive. The source-closure runner needs the explicit override:
+### First narrow preflight
+
+The smallest useful first target is `M1EvenValuationBridge.lean`. Stage and compile the exact current-main sources in this order:
+
+1. `im-results/agent8-coverage-contract/Frontier.lean`
+2. `im-results/agent8-coverage-contract/Symmetry.lean`
+3. `im-results/agent8-coverage-contract/RootShift.lean`
+4. `im-results/agent48-champion-root/ChampionRootBridge.lean`
+5. `im-results/agent48-root-witness/M1EvenState1Sweep.lean`
+6. `im-results/agent24-champion-time/M1EvenState5Sweep.lean`
+7. `im-results/agent24-champion-time/CountedSweep.lean`
+8. `im-results/agent48-counted-inc0/M1EvenValuationBridge.lean`
+
+Use `LEAN_PATH=.`, emit each `.olean`, and retain all `#print axioms` output. If this slice passes, compile `M1EvenValuationSource.lean` with its additional direct imports, then resume the exact root closure below.
+
+### Full root closure
+
+Lean 4.36.0-rc2 is required. For the terminal source, extract `TerminalProofs.tar.xz.b64` first, then decode `TerminalLeftExact.lean.xz.b64` over `TerminalLeft.lean`; reversing this order overwrites the exact left proof with the older archived checkpoint.
+
+The current root target is:
 
 ```sh
 python3 tools/lean_compile_closure.py \
   im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean \
-  --workdir /tmp/tm63-closure \
+  --workdir /tmp/tm63-general-q4-closure \
   --jobs 8 \
   --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean
 ```
 
-For the terminal source, extract `TerminalProofs.tar.xz.b64` first, then decode `TerminalLeftExact.lean.xz.b64` over `TerminalLeft.lean`; reversing that order overwrites the exact left proof with the older archived checkpoint.
+The final audit must retrieve exactly one exported axiom/trust profile for each of:
+`tm63_blank_reaches_general_q4_terminal`,
+`tm63_general_q4_terminalSectionBits`,
+`tm63_blank_halts`, and
+`tm63_blank_attainable`.
+Any transitive `native_decide` dependencies (notably the repaired `CountedResetBase` finite traces if they occur in this closure) must be reported explicitly, not described as plain kernel reduction.
 
+### Existing manual workflow boundary
 
-## Additional reset-base repair
-
-`im-results/agent8-counted-reset/CountedResetBase.lean` now parses and compiles. The misplaced module documentation comment and consecutive declaration-documentation comments were converted to ordinary block comments; the base valuation fact now uses `v2_of_odd`. The 63/67/71-step finite traces and all-head checks use `native_decide`, which compiles and reports no `sorryAx`, but introduces generated `native_decide` constants in the axiom report. Treat these as native-computation certificates, not as plain kernel-reduction proofs, and retain that distinction in any final formal audit.
+The existing `.github/workflows/agent42-champion-terminal-source.yml` target `middle34-acceptance` is **not** an acceptance proxy for `TM63GeneralQ4TerminalComposition.lean`. It compiles the five roots `M1EvenValuationSource`, `M2EvenSixGenericCounted`, `TM63RootMiddle34`, `TM63RootAfterSectionResultToOne`, and `Q4S0FirstCycleMacros`, and audits their 14 middle-34 exports. It does not compile the direct arbitrary-`A` q4Tail/S0 composition or its `P2RootS0FrameIdentity` dependency. After the local preflight succeeds, extend this same manual workflow with a named target for the exact `TM63GeneralQ4TerminalComposition` closure and its four exports; do not create a new workflow or dispatch `middle34-acceptance` as a substitute.
