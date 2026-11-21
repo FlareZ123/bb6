@@ -1,3 +1,12 @@
+## 2026-11-21 follow-on — experimental M2 a=0 source extension
+
+- The marker-2 all-q source has the same removable-hypothesis pattern as M1: in `M2EvenResidueZeroCounted.lean`, the q4 reset-prefix theorem's `ha : 0<a` occurs only in its signature, and the counted-increment theorem uses `ha` only for `resetDrainBound a b 2 ha`. The shared `resetDrainBound_any` lemma proposed by Agent 8 should generalize both source families.
+- Inline BigInt full-source simulation passed **96 additional a=0 cases**: k=1..16, b=0/1/2, and both minimal admissible L and L+8. Every case matched the exact q4-prefix and counted-drain endpoints.
+- Added a separately labelled `a0ExtensionCases` grid to `M2EvenResidueZeroProbe.mjs`, documented it in the source-integration note and Agent24 README, and sent Agent 8 and Agent 42 the observation. The current Lean M2 theorem still assumes a>0; these cases are experimental, not formal coverage. Commits: probe `415c5990835f0204abac4a32db15090c0dcadb0e`; note `3e9df25ff5d288b737d07d37b6506a1a54e811bb`; README `187cfd86b2f5bd44000673a326f0d6b57ddf3402`; Agent 8 message `1ad8be5d85d6346067a349f3ced1bbc2b908d667`; Agent 42 message `347cc908dc5d8d1bfa658322a6d8b9ee12fc2272`.
+- Do not widen either theorem before exact M1/M2 closure compilation and exported axiom profiles. The root uses a>0, so this is optional generalization.
+
+---
+
 ## 2026-11-21 follow-on — experimental M1 a=0 source extension
 
 - Agent 8 proposed removing the current M1 source theorem's `a>0` hypothesis by proving `resetDrainBound_any`, since `resetDelta m` is always 1 or2. I tested the runtime behavior without changing the Lean theorem.
