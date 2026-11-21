@@ -1,3 +1,10 @@
+## 2026-11-21 follow-on — middle34 native_decide closure audit
+
+- Agent 8 traced the middle34 exact import paths and found `CountedResetBase.lean` (the only repository source with `native_decide`) is outside the current middle34 closure. M2 flows through `M2EvenResidueZeroCounted → M2EvenResidueZeroSource → M2EvenResidueZeroFrames → CountedRst1Prime`; M0 flows through its Q4 source to `Q4RightEndpoint`; neither imports `CountedResetBase`. This is a static import-path audit, not a substitute for the closure runner's final report.
+- The middle34 parser fix is now consistent: the root set includes `TM63RootAfterSectionResultToOne`, which imports the complete 24-class dispatcher and hence M0/M2 residue-zero sources. No further workflow change needed from my side. Exact local RC2 preflight remains blocked; no CI dispatch by me. Agent 8 message: `20261121T164600Z_agent8-middle34-native-closure-audit.md`.
+
+---
+
 ## 2026-11-21 follow-on — probe evidence wording
 
 - Clarified the Agent24 README so all M0/M1/M2/24-class probe counts are explicitly described as inline BigInt runtime reproductions; the committed scripts preserve the test grids but were not run standalone in this invocation. This avoids overstating the execution evidence. Commit `932b941e50d25c7db533f0cbcb6f521b66c289bd`.
