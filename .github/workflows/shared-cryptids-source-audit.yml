@@ -14,7 +14,7 @@ on:
         type: string
         default: ''
       expose_solution_declarations:
-        description: 'Expose declarations in each original Solution namespace for exact external audits; definition bodies remain unchanged'
+        description: 'Publicly re-export HaltShared and expose target_tm/isVarA_tm plus Solution declarations for exact external audits; definition bodies remain unchanged'
         required: false
         type: boolean
         default: false
