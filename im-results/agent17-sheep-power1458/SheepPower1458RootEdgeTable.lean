@@ -67,12 +67,12 @@ theorem rootGate_child_t1 (t h a : Nat)
   rcases ht with ⟨r,hr,k,rfl⟩
   have mods := progression_mods_t1 r k hr
   rcases hg with
-    ⟨rfl,rfl,_⟩ |
     ⟨rfl,rfl,hmod⟩ |
-    ⟨rfl,rfl,_⟩ |
     ⟨rfl,rfl,hmod⟩ |
-    ⟨rfl,rfl,_⟩ |
-    ⟨rfl,rfl,_⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
     ⟨rfl,rfl,hmod⟩ |
     ⟨rfl,rfl,hmod⟩
   · exact ⟨1, by simp [rootEdgeSpecs_t1]⟩
@@ -120,12 +120,12 @@ theorem rootGate_child_h1a3 (t h a : Nat)
   rcases ht with ⟨r,hr,k,rfl⟩
   have mods := progression_mods_h1a3 r k hr
   rcases hg with
-    ⟨rfl,rfl,_⟩ |
     ⟨rfl,rfl,hmod⟩ |
-    ⟨rfl,rfl,_⟩ |
     ⟨rfl,rfl,hmod⟩ |
-    ⟨rfl,rfl,_⟩ |
-    ⟨rfl,rfl,_⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
     ⟨rfl,rfl,hmod⟩ |
     ⟨rfl,rfl,hmod⟩
   · omega
@@ -173,12 +173,12 @@ theorem rootGate_child_h3a6 (t h a : Nat)
   rcases ht with ⟨r,hr,k,rfl⟩
   have mods := progression_mods_h3a6 r k hr
   rcases hg with
-    ⟨rfl,rfl,_⟩ |
     ⟨rfl,rfl,hmod⟩ |
-    ⟨rfl,rfl,_⟩ |
     ⟨rfl,rfl,hmod⟩ |
-    ⟨rfl,rfl,_⟩ |
-    ⟨rfl,rfl,_⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
     ⟨rfl,rfl,hmod⟩ |
     ⟨rfl,rfl,hmod⟩
   · omega
@@ -226,12 +226,12 @@ theorem rootGate_child_h7a2 (t h a : Nat)
   rcases ht with ⟨r,hr,k,rfl⟩
   have mods := progression_mods_h7a2 r k hr
   rcases hg with
-    ⟨rfl,rfl,_⟩ |
     ⟨rfl,rfl,hmod⟩ |
-    ⟨rfl,rfl,_⟩ |
     ⟨rfl,rfl,hmod⟩ |
-    ⟨rfl,rfl,_⟩ |
-    ⟨rfl,rfl,_⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
     ⟨rfl,rfl,hmod⟩ |
     ⟨rfl,rfl,hmod⟩
   · omega
@@ -279,12 +279,12 @@ theorem rootGate_child_h7a4 (t h a : Nat)
   rcases ht with ⟨r,hr,k,rfl⟩
   have mods := progression_mods_h7a4 r k hr
   rcases hg with
-    ⟨rfl,rfl,_⟩ |
     ⟨rfl,rfl,hmod⟩ |
-    ⟨rfl,rfl,_⟩ |
     ⟨rfl,rfl,hmod⟩ |
-    ⟨rfl,rfl,_⟩ |
-    ⟨rfl,rfl,_⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
+    ⟨rfl,rfl,hmod⟩ |
     ⟨rfl,rfl,hmod⟩ |
     ⟨rfl,rfl,hmod⟩
   · omega
