@@ -1,0 +1,15 @@
+import Root32HighStopIntegrated
+import Root32HighStopS1
+import Root32HighStopP7
+import MixedOdd16TwoOrbit
+
+#print axioms BB6.Agent3Root32HighStopIntegrated.T_reach_implies_Q_reach
+#print axioms BB6.Agent3Root32HighStopIntegrated.Q_reach_implies_S3_reach
+#print axioms BB6.Agent3Root32HighStopIntegrated.S3_reach_implies_S2_reach
+#print axioms BB6.Agent3Root32HighStopIntegrated.S2_reach_implies_S1_reach
+#print axioms BB6.Agent3Root32HighStopS1.S1_reach_implies_D0_or_P7
+#print axioms BB6.Agent3Root32HighStopS1.root32_b0_unreachable
+#print axioms BB6.Agent3Root32HighStopP7.P7_reach_implies_L_or_P7E1E
+#print axioms BB6.Agent3Root32HighStopP7.D0_reach_implies_D0E
+#print axioms BB6.Agent3Root32HighStopP7.root32_highstop_reduces_to_three_residuals
+#print axioms BB6.Agent3.oddodd_sum16_blank_reach_iff
