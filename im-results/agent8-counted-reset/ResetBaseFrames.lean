@@ -8,7 +8,7 @@ open BB6Coverage.Agent8S1Encoder
 
 /-!
 Lightweight reset-base frame data. Kept separate from CountedResetBase's
-finite native_decide trace certificates so source closures that only need
+finite trace certificates so source closures that only need
 the m=2 midpoint can audit the frame without importing those certificates.
 -/
 
