@@ -30,7 +30,7 @@ def m0EvenFourBridgeStart : FConfig :=
   ⟨3, 0, [-10,-9,-8,-7,-6,-5,-4,-1,2,3]⟩
 
 def m0EvenFourBridgeEnd : FConfig :=
-  ⟨4, 3, [-12,-11,-10,-7,-4,-1,1,2,3]⟩
+  ⟨4, 3, [2,1,-1,-4,-7,-10,-11,-12,3]⟩
 
 /-- Exact 51-step run of the original TM2 table on the finite window. -/
 theorem m0EvenFourBridge_exact :

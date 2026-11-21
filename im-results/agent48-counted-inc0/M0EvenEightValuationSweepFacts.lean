@@ -31,7 +31,7 @@ theorem sweptLeft_zeroBoundary (t : Nat) (T : Int → Bool) (h : Int)
       simp [sweptLeft,hright]
     · have hpos : 0 < 3*t := by omega
       have hlen : (3*t-1)+1 = 3*t := by omega
-      have hcoord : h-((3*t-1:Int)) = h-(3*t:Int)+1 := by omega
+      have hcoord : h-((3*t-1:Nat):Int) = h-(3*t:Int)+1 := by omega
       have hp := sweptLeft_leftmost (3*t-1) T h
       simpa [hlen,hcoord] using hp
 
@@ -56,17 +56,27 @@ theorem sweptLeft_creates_rightOnes (t : Nat) (T : Int → Bool) (h : Int)
         simpa [hlen] using hp
       · have hj : (3*t-2-k)+1 < 3*t := by omega
         have heq : h-(3*t:Int)+2+(k:Int) =
-            h-((3*t-2-k:Int)) := by omega
+            h-((3*t-2-k:Nat):Int) := by omega
         rw [heq]
         exact sweptLeft_block (3*t) (3*t-2-k) T h hj
     · have hx : h+2 ≤ h-(3*t:Int)+2+(k:Int) := by omega
       have heq : h-(3*t:Int)+2+(k:Int) =
-          h+2+((k-3*t:Int)) := by omega
+          h+2+((k-3*t:Nat):Int) := by omega
       rw [sweptLeft_preserves_right (3*t) T h _ hx, heq]
       exact hfixed (k-3*t) (by omega)
   intro j hj
-  refine ⟨hcell (3*j) (by omega), ?_⟩
-  refine ⟨hcell (3*j+1) (by omega), hcell (3*j+2) (by omega)⟩
+  have h0 := hcell (3*j) (by omega)
+  have h1 := hcell (3*j+1) (by omega)
+  have h2 := hcell (3*j+2) (by omega)
+  have hc0 : h-(3*t:Int)+2+((3*j:Nat):Int) =
+      h-(3*t:Int)+2+3*(j:Int) := by omega
+  have hc1 : h-(3*t:Int)+2+((3*j+1:Nat):Int) =
+      h-(3*t:Int)+2+3*(j:Int)+1 := by omega
+  have hc2 : h-(3*t:Int)+2+((3*j+2:Nat):Int) =
+      h-(3*t:Int)+2+3*(j:Int)+2 := by omega
+  exact ⟨by simpa [hc0] using h0,
+    by simpa [Int.add_assoc] using h1,
+    by simpa [Int.add_assoc] using h2⟩
 
 #print axioms sweptLeft_zeroBoundary
 #print axioms sweptLeft_creates_rightOnes

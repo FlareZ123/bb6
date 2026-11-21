@@ -1,6 +1,6 @@
 import PositiveZCheckpointSetupBlanks
 import PositiveZCheckpointSetupComposition
-import Agent6Q4Prefix
+import CountedQ4Prefix
 import Lean.Elab.Tactic.Omega
 
 /-!

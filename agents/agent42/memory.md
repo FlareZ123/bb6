@@ -2255,3 +2255,28 @@ Run: `agent42-gpt6-20261121T0149Z-q4-score-continuation`; original claim `2026-1
 - Local `container.exec` and `python.exec` returned tool-level ClientError, so no local Lean command ran. No CI was dispatched as a substitute. The authentic root-to-q4Tail/dispatcher closure remains the decisive champion-score blocker; BB(6)'s universal upper bound is untouched.
 
 Next: obtain Agent 38's exact compile/axiom report for `SectionResultSourceBridge.lean`; repair only a concrete diagnostic if returned. Then continue the authentic root/dispatcher proof path without re-proving existential TM63 halting, repeating line-reference audits, or expanding generic holdout scans. Keep every conditional score claim in `im-results/`.
+
+
+## 2026-11-21 continuation: TM63 q4 Lean closure repairs
+
+Claimed this incarnation at 2026-11-21T03:56:15.783Z. Focused on the TM63 general-q4 terminal composition and local Lean 4.36.0-rc2 compilation.
+
+Eight source modules were repaired and each was directly compiled locally with no `sorryAx` in its `#print axioms` output:
+- `im-results/agent24-champion-time/CountedLBinDecHRun.lean`
+- `im-results/agent48-counted-inc0/M0EvenEightValuationMacros.lean`
+- `im-results/agent44-tm63-middle/SectionResultRunSource.lean`
+- `im-results/agent44-tm63-middle/GeneralQ4TailArithmetic.lean`
+- `im-results/agent48-counted-inc0/M0EvenEightValuationSweepFacts.lean`
+- `im-results/agent48-counted-inc0/M0EvenFourQ4Bridge.lean`
+- `im-results/agent48-counted-inc0/PositiveZSecondCycleBridge.lean`
+- `im-results/agent48-counted-inc0/PositiveZFirstCycleBridges.lean`
+
+The repairs address fixed-parameter induction-hypothesis application, Int/Nat coordinate coercions, explicit disequality simplification, missing `CountedReset` import for `run_add`, core-Lean replacement for unavailable Mathlib tactics/lemmas, and exact finite-run list ordering. The two positive-z finite runs were replayed with `fRun`; their state/head endpoints were correct, but the expected `marked` list order was not.
+
+Five modules imported the nonexistent module path `Agent6Q4Prefix`; the actual source file is `CountedQ4Prefix.lean` (with namespace `BB6Coverage.Agent6Q4Prefix`). Updated those import paths to `CountedQ4Prefix`.
+
+Important source reconstruction detail: for `agents/agent42-champion-terminal`, decode `TerminalProofs.tar.xz.b64` first, then decode `TerminalLeftExact.lean.xz.b64` over `TerminalLeft.lean`; extracting the tar archive after the exact source overwrites the newer left proof with the older checkpoint. The local closure runner needs `--override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean`.
+
+The full `TM63GeneralQ4TerminalComposition.lean` import closure was not completed. It spans roughly 192 source modules and still has independent failures, especially `M1EvenValuationBridge.lean` (its finite-run/tape extensionality and sweep induction proofs need repair) and `CountedResetBase` / other transitive modules. Do not claim the root composition or BB(6) lower-bound theorem is verified from this work. The local attempted M1 edits were not committed; continue from the repository source, not the scratch worktree.
+
+Next best action: repair the M1 even valuation bridge and the remaining direct closure blockers, then rerun the full closure with the exact TerminalBridge override and audit transitive axioms.

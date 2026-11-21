@@ -34,6 +34,7 @@ theorem binDec_twoDigit_d1d0 (w r : Nat) (hr : r < 2^w) :
     rw [hpow]
     omega
   rw [binDec_even (w+1) (2*r+1) hq, binDec_odd w r hr]
+  exact (List.append_assoc d1 d0 _).symm
 
 /-- The finite window read by the second-checkpoint bridge. -/
 def secondCyclePrefix34Inside (x : Int) : Bool :=
@@ -45,7 +46,7 @@ def secondCyclePrefix34Start : FConfig :=
 
 /-- The 34-step bridge returns to state 4 at head +4. -/
 def secondCyclePrefix34End : FConfig :=
-  ⟨4, 4, [-7,-6,-5,-2,1,3]⟩
+  ⟨4, 4, [3,1,-2,-5,-6,-7]⟩
 
 theorem secondCyclePrefix34_exact :
     fRun tm2 34 secondCyclePrefix34Start =
@@ -88,31 +89,42 @@ theorem secondCyclePrefix34_at (T : Int → Bool) (h : Int)
       x=(-2) ∨ x=(-1) ∨ x=0 ∨ x=1 ∨ x=2 ∨ x=3 := by omega
   rcases hcases with
     hx7|hx6|hx5|hx4|hx3|hx2|hx1|hx0|hxp1|hxp2|hxp3
-  · have heq : h+(-7:Int)=h-7 := by omega
+  · subst x
+    have heq : h+(-7:Int)=h-7 := by omega
     rw [heq]
     simpa [secondCyclePrefix34Start] using h7
-  · have heq : h+(-6:Int)=h-6 := by omega
+  · subst x
+    have heq : h+(-6:Int)=h-6 := by omega
     rw [heq]
     simpa [secondCyclePrefix34Start] using h6
-  · have heq : h+(-5:Int)=h-5 := by omega
+  · subst x
+    have heq : h+(-5:Int)=h-5 := by omega
     rw [heq]
     simpa [secondCyclePrefix34Start] using h5
-  · have heq : h+(-4:Int)=h-4 := by omega
+  · subst x
+    have heq : h+(-4:Int)=h-4 := by omega
     rw [heq]
     simpa [secondCyclePrefix34Start] using h4
-  · have heq : h+(-3:Int)=h-3 := by omega
+  · subst x
+    have heq : h+(-3:Int)=h-3 := by omega
     rw [heq]
     simpa [secondCyclePrefix34Start] using h3
-  · have heq : h+(-2:Int)=h-2 := by omega
+  · subst x
+    have heq : h+(-2:Int)=h-2 := by omega
     rw [heq]
     simpa [secondCyclePrefix34Start] using h2
-  · have heq : h+(-1:Int)=h-1 := by omega
+  · subst x
+    have heq : h+(-1:Int)=h-1 := by omega
     rw [heq]
     simpa [secondCyclePrefix34Start] using h1
-  · simpa [secondCyclePrefix34Start] using h0
-  · simpa [secondCyclePrefix34Start] using hp1
-  · simpa [secondCyclePrefix34Start] using hp2
-  · simpa [secondCyclePrefix34Start] using hp3
+  · subst x
+    simpa [secondCyclePrefix34Start] using h0
+  · subst x
+    simpa [secondCyclePrefix34Start] using hp1
+  · subst x
+    simpa [secondCyclePrefix34Start] using hp2
+  · subst x
+    simpa [secondCyclePrefix34Start] using hp3
 
 /-- A generic two-sided tape with nearest-first left and right streams. -/
 def q4TapeFromSides (left right : List Bool) (h x : Int) : Bool :=
@@ -139,7 +151,32 @@ theorem secondCyclePrefix34_input_from_sides
     T (h+1) = false ∧
     T (h+2) = false ∧
     T (h+3) = false := by
-  simp [q4TapeFromSides,sideBit,d1,d0] <;> omega
+  have le7 : h-7 ≤ h := by omega
+  have le6 : h-6 ≤ h := by omega
+  have le5 : h-5 ≤ h := by omega
+  have le4 : h-4 ≤ h := by omega
+  have le3 : h-3 ≤ h := by omega
+  have le2 : h-2 ≤ h := by omega
+  have le1 : h-1 ≤ h := by omega
+  have gt1 : h < h+1 := by omega
+  have gt2 : h < h+2 := by omega
+  have gt3 : h < h+3 := by omega
+  have nle1 : ¬ h+1 ≤ h := by omega
+  have nle2 : ¬ h+2 ≤ h := by omega
+  have nle3 : ¬ h+3 ≤ h := by omega
+  have l7 : h-(h-7) = (7:Int) := by omega
+  have l6 : h-(h-6) = (6:Int) := by omega
+  have l5 : h-(h-5) = (5:Int) := by omega
+  have l4 : h-(h-4) = (4:Int) := by omega
+  have l3 : h-(h-3) = (3:Int) := by omega
+  have l2 : h-(h-2) = (2:Int) := by omega
+  have l1 : h-(h-1) = (1:Int) := by omega
+  have l0 : h-h = (0:Int) := by omega
+  have r1 : h+1-h-1 = (0:Int) := by omega
+  have r2 : h+2-h-1 = (1:Int) := by omega
+  have r3 : h+3-h-1 = (2:Int) := by omega
+  simp [q4TapeFromSides,sideBit,d1,d0,l7,l6,l5,l4,l3,l2,l1,l0,r1,r2,r3,
+    le7,le6,le5,le4,le3,le2,le1,nle1,nle2,nle3]
 
 /-- Specialize the preceding window lemma to a BinDec value whose first
 two source digits are d1,d0. -/
@@ -173,29 +210,40 @@ theorem q4Checkpoint2_binDec_prefix (A L : Nat) (hA : 2≤A) :
   have hAeq : A = (A-2)+2 := by omega
   have hpowA : 2^A = 4*2^(A-2) := by
     calc
-      2^A = 2^((A-2)+2) := by rw [hAeq]
+      2^A = 2^((A-2)+2) := by congr 1 <;> omega
       _ = 2^(A-2)*2^2 := by rw [Nat.pow_add]
-      _ = 4*2^(A-2) := by norm_num
+      _ = 4*2^(A-2) := by
+        rw [show (2:Nat)^2=4 by decide, Nat.mul_comm]
   have hval :
       2^A*(2^(L+2)-1)-2 = 2*(2*r+1) := by
     dsimp [r]
     rw [hpowA]
+    have htwo : 2 ≤ 2^(L+2) := by
+      have h := Nat.pow_le_pow_right (by decide : 0<2)
+        (show 1≤L+2 by omega)
+      simpa using h
+    have hCpos : 0 < 2^(L+2)-1 := by omega
+    have hprodpos : 0 < 2^(A-2)*(2^(L+2)-1) :=
+      Nat.mul_pos (Nat.pow_pos (by decide)) hCpos
+    have hmul : 4*2^(A-2)*(2^(L+2)-1) =
+        4*(2^(A-2)*(2^(L+2)-1)) := by ac_rfl
+    rw [hmul]
     omega
   have hpowAL :
       2^(A+L) = 2^(A-2)*2^(L+2) := by
     rw [show A+L = (A-2)+(L+2) by omega, Nat.pow_add]
   have hltC : 2^(L+2)-1 < 2^(L+2) := by
-    have hpos : 0 < 2^(L+2) := by positivity
+    have hpos : 0 < 2^(L+2) := Nat.pow_pos (by decide)
     omega
   have hprod :
       2^(A-2)*(2^(L+2)-1) < 2^(A+L) := by
     rw [hpowAL]
-    exact Nat.mul_lt_mul_of_pos_left hltC (by positivity)
+    exact Nat.mul_lt_mul_of_pos_left hltC (Nat.pow_pos (by decide : 0<2))
   have hr : r < 2^(A+L) := by
     dsimp [r]
     omega
   rw [hval]
-  exact binDec_twoDigit_d1d0 (A+L) r hr
+  simpa [r] using binDec_twoDigit_d1d0 (A+L) r hr
 
 #print axioms binDec_twoDigit_d1d0
 #print axioms q4Checkpoint2_binDec_prefix

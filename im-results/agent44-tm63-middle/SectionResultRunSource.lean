@@ -1,5 +1,6 @@
 import StageAlgebra
 import S1Encoder
+import CountedReset
 import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent44SectionResultRunSource
@@ -7,6 +8,7 @@ namespace BB6Coverage.Agent44SectionResultRunSource
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6ChampionArithmetic
+open BB6Coverage.Agent8CountedReset
 
 private theorem run_compose_local {n m : Nat} {c1 c2 c3 : Config}
     (h1 : run tm2 n c1 = some c2)
@@ -56,7 +58,7 @@ theorem sectionResult_run_of_source_macro
       (sectionHeadAfter n b head)) := by
   induction n generalizing m a b head with
   | zero =>
-      simp [sectionResult, sectionHeadAfter]
+      simp [sectionResult, sectionHeadAfter, run]
   | succ n ih =>
       have hstep := hmacro (n+1) m a b head (by omega) hbound ha
       have hbound' : n < 2^L := by omega

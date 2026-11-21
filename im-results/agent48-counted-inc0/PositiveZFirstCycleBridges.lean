@@ -42,7 +42,7 @@ def firstCyclePrefix22Start : FConfig :=
 
 /-- The 22-step bridge ends at state 4, four cells to the right. -/
 def firstCyclePrefix22End : FConfig :=
-  ⟨4, 4, [-4,-3,-2,1,3]⟩
+  ⟨4, 4, [3,1,-2,-3,-4]⟩
 
 theorem firstCyclePrefix22_exact :
     fRun tm2 22 firstCyclePrefix22Start =
@@ -281,13 +281,12 @@ theorem firstCycleQ_from_S0Input
     have hpos : 0 < 2^z := Nat.pow_pos (by decide)
     omega
   have hsub : ((2^z - 1 : Nat) : Int) = (2^z : Int) - 1 := by
-    rw [Nat.cast_sub hpow]
+    rw [Int.natCast_sub (by omega : 1 ≤ 2^z)]
     rfl
   have hhead : h-(k:Int)=3 := by
     dsimp [k]
     rw [hh]
-    simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_pow,
-      Nat.cast_ofNat, hsub]
+    simp only [Int.natCast_add, Int.natCast_mul, Int.natCast_pow, hsub]
     omega
   have hg3 : T (h-(k:Int)-3) = false := by
     simpa [hhead] using h0
@@ -302,7 +301,8 @@ theorem firstCycleQ_from_S0Input
     dsimp [k]
     omega
   rw [← hcost]
-  simpa [k,hhead] using hrun
+  rw [hhead] at hrun
+  simpa [k] using hrun
 
 #print axioms firstCyclePrefix22_exact
 #print axioms firstCyclePrefix22_heads

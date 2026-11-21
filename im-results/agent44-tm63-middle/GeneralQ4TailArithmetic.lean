@@ -30,8 +30,8 @@ private theorem binDec_max (k : Nat) :
 theorem firstQ4P1Value_binDec_shape (L A : Nat) (hA : 1≤A) :
     binDec (A+L+1) (firstQ4P1Value L A) =
       d0pow (A-1) ++ d1 ++ d0pow (L+1) := by
-  induction A using Nat.strong_induction_on with
-  | h A ih =>
+  induction A using Nat.strongRecOn with
+  | ind A ih =>
       by_cases hA1 : A=1
       · subst A
         have hp : 0 < 2^(L+1) := Nat.pow_pos (by decide)
@@ -54,6 +54,19 @@ theorem firstQ4P1Value_binDec_shape (L A : Nat) (hA : 1≤A) :
             firstQ4P1Value L A =
               2*firstQ4P1Value L (A-1)+1 := by
           unfold firstQ4P1Value
+          rw [show (A-1)-1=A-2 by omega, hpow]
+          have hC : 0 < 2^(L+2)-1 := by
+            have hp : 2≤2^(L+2) := by
+              have h := Nat.pow_le_pow_right (by decide : 0<2)
+                (show 1≤L+2 by omega)
+              simpa using h
+            omega
+          have hprod : 0 < 2^(A-2)*(2^(L+2)-1) :=
+            Nat.mul_pos (Nat.pow_pos (by decide)) hC
+          have hmul :
+              (2^(A-2)*2)*(2^(L+2)-1) =
+                2*(2^(A-2)*(2^(L+2)-1)) := by ac_rfl
+          rw [hmul]
           omega
         have hbound := firstQ4P1Value_lt L (A-1) hprev
         rw [show A+L+1=(A-1+L+1)+1 by omega,hnum]
@@ -74,7 +87,7 @@ theorem q4TerminalIndex_binDec_shape (L A : Nat) (hA : 2≤A) :
     have h := firstQ4P1Value_lt L (A-1) hprev
     simpa [qprev,firstQ4P1Width,hwidth] using h
   have h2qbound : 2*qprev < 2^(A+L+1) := by
-    have h := Nat.mul_lt_mul_left 2 hqbound
+    have h := Nat.mul_lt_mul_of_pos_left hqbound (by decide : 0 < 2)
     have hpow : 2*2^(A+L)=2^(A+L+1) := by
       calc
         2*2^(A+L) = 2^(A+L)*2 := Nat.mul_comm _ _
@@ -95,7 +108,10 @@ theorem q4TerminalIndex_binDec_shape (L A : Nat) (hA : 2≤A) :
     unfold firstQ4P1Value
     rw [show (A-1)-1=A-2 by omega]
     have hCpos : 0<2^(L+2)-1 := by
-      have hp : 0<2^(L+2) := Nat.pow_pos (by decide)
+      have hp : 2≤2^(L+2) := by
+        have h := Nat.pow_le_pow_right (by decide : 0<2)
+          (show 1≤L+2 by omega)
+        simpa using h
       omega
     have hprodpos :
         0<2^(A-2)*(2^(L+2)-1) :=
@@ -123,6 +139,7 @@ theorem q4TerminalIndex_binDec_shape (L A : Nat) (hA : 2≤A) :
     _ = d0 ++ d1 ++ binDec (A+L) qprev := by
           rw [show A+L+1=(A+L)+1 by omega]
           rw [binDec_even (A+L) qprev hqbound]
+          exact (List.append_assoc d0 d1 _).symm
     _ = d0 ++ d1 ++ d0pow (A-2) ++ d1 ++ d0pow (L+1) := by
           have hshape :=
             firstQ4P1Value_binDec_shape L (A-1) hprev
@@ -132,8 +149,7 @@ theorem q4TerminalIndex_binDec_shape (L A : Nat) (hA : 2≤A) :
                 d0pow (A-2) ++ d1 ++ d0pow (L+1) := by
             rw [← hwidth,← hexp]
             exact hshape
-          simpa [qprev] using
-            congrArg (fun xs => d0 ++ d1 ++ xs) hshape'
+          exact congrArg (fun xs => d0 ++ d1 ++ xs) hshape'
 
 private theorem pow_two_even_mod_three (k : Nat) :
     (2^(2*k)) % 3 = 1 := by

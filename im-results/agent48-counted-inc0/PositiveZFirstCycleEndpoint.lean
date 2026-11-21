@@ -3,7 +3,7 @@ import PositiveZSecondCycleBridge
 import D0SweepLeftFacing
 import S0CountedDrain
 import PositiveZFirstCycleS0Input
-import Agent6Q4Prefix
+import CountedQ4Prefix
 import Lean.Elab.Tactic.Omega
 
 /-!
