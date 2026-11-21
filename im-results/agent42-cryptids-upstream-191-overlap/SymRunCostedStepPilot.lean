@@ -501,8 +501,14 @@ theorem sweep_CB_B1_exact (k : Nat) (L R : List MItem) :
         (.run 0 :: repBlock [.run 0, .run 1] k ++ (.run 0 :: .run 1 :: L)) := by
       simp only [repBlock_succ_right, List.cons_append, List.nil_append, List.append_assoc]
     rw [h_eq]
-    have h1 := step_CB_run0_run_pos_exact 0 (.run 0 :: L)
-      (repBlock [.run 0, .run 1] k ++ R)
+    have h1 : ReachesIn target_tm 21
+        (cfgCB target_tm (.run 0 :: L)
+          (.run 0 :: .run 1 :: repBlock [.run 0, .run 1] k ++ R))
+        (cfgCB target_tm (.run 0 :: .run 0 :: .run 1 :: L)
+          (repBlock [.run 0, .run 1] k ++ R)) := by
+      simpa [bumpM] using
+        step_CB_run0_run_pos_exact 0 (.run 0 :: L)
+          (repBlock [.run 0, .run 1] k ++ R)
     have h2 := ih (.run 0 :: .run 1 :: L)
     convert reachesIn_trans h1 h2 using 1 <;> omega
 
