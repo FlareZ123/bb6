@@ -23,7 +23,7 @@ The modular inverse exists because Q is odd, and Q≡1 mod4 because L≥2. No v_
 Y >= min_(0<=t<T) (3*v_t-2).                      (★)
 ```
 
-The RHS is computable from m using **exactly T=2m+2 modular operations**, independent of j,k,d and their magnitudes. It is the smallest nonnegative right counter compatible with these *necessary modular conditions*. Further source equations could rule out even that minimum; (★) does not guarantee genuine blank reachability or original stopping-state ancestry.
+The RHS can be evaluated using at most **floor(log2(6*m))+1 power-of-two residue operations**, independent of j,k,d and their magnitudes. It is the smallest nonnegative right counter compatible with these *necessary modular conditions*. Further source equations could rule out even that minimum; (★) does not guarantee genuine blank reachability or original stopping-state ancestry.
 
 ## Proof
 
@@ -188,7 +188,7 @@ These bounds sharpen the residual frontier but still leave the general blank-roo
 
 The finite minimizer (★) remains sharper for many individual `m`; the new envelope is a closed-form bound valid uniformly for every odd `m` and is exactly sharp on the infinite sequence above. For the sample values already tabulated:
 
-| `m` | raw envelope bound on `Y` | after `Y%12=4` | exact finite minimum |
+| `m` | raw envelope bound on `Y` | after `Y%12=4` | exact modular minimum |
 |---:|---:|---:|---:|
 | 1 | 4 | 4 | 4 |
 | 3 | 49 | 52 | 220 |
@@ -200,7 +200,7 @@ The finite minimizer (★) remains sharper for many individual `m`; the new enve
 
 ## Reproducible exact minimization
 
-The following Python 3 code uses the built-in modular inverse and arbitrary-precision integers. It enumerates all t for each fixed m and returns the sharp necessary modular bound and attaining exponent residue.
+The following Python 3 code uses power-of-two residues and arbitrary-precision integers. The logarithmic cutoff limits it to at most floor(log2(6*m))+1 candidates; it returns the exact modular minimum and an attaining exponent residue.
 
 ```python
 def lower_bound(m: int) -> tuple[int, int]:
@@ -224,9 +224,9 @@ for m in (1, 3, 5, 7, 9, 11, 13):
     print(m, lower_bound(m))
 ```
 
-Output recomputed in the local Python runtime:
+Exact arbitrary-precision output:
 
-| odd m | necessary minimum Y | exponent residue d mod (2m+2) |
+| odd m | exact modular minimum Y | exponent residue d mod (2m+2) |
 | ---: | ---: | ---: |
 | 1 | 4 | 1 |
 | 3 | 220 | 3 |
