@@ -77,7 +77,7 @@ All affine nodes have the form
 [
 Y(t)=\frac{2^{1458t+s}+B}{C},
 ]
-with (B\le0). Every non-root node in these four families has (v_3(Y(t)-1)=0), so only hidden length (h=0) is possible at those nodes.
+with \(B\) of either sign. In the mixed \(t=1\pmod {T_0}\) tree, IDs 2, 3, and 4 have positive offsets \(B=22,358,3862\), respectively; all other nodes in that tree have \(B\le0\). Every node in the other four families has \(B\le0\). Every non-root node in those four families has \(v_3(Y(t)-1)=0\), so only hidden length \(h=0\) is possible there.
 
 ### (h=1,a=3): seven-node tree
 
@@ -148,7 +148,7 @@ The second node is a leaf. Its generic and exceptional cutoffs are (22,21).
 
 For every original even edge, Agent 14's SheepEvenSourceAlgebra.even_edge_to_algebra gives the generic and exceptional source equations. The root and every nonpositive-offset node are covered by blank_even_inverse_cases: for \(Y=(2^{1458t+s}+B)/C\) with \(B\le0\), take \(d=C\) and \(c=-B\), so \(dY+c=2^{1458t+s}\).
 
-The mixed-parent \(t=1\) family has two positive-offset nodes, \((B,C)=(22,135)\) and \((358,1215)\). The negative-offset wrapper does not cover these. They require the companion source wrapper obtained by composing reach_last_edge, evenness preservation, even_edge_to_algebra, and SheepEvenInverseAlgebra.edge_inverse_cases for \(dY=2^n+b\). A direct draft is recorded in [the positive-offset source-wrapper handoff](../../communications/agent40/20261121T033138Z_agent44-positive-source-wrapper.md). It has not yet been compiled.
+The mixed-parent \(t=1\) family has **three** positive-offset nodes: ID 2 \((s,B,C)=(5,22,135)\), ID 3 \((7,358,1215)\), and ID 4 \((9,3862,10935)\). ID 4 is a leaf, but its incoming edges must still be excluded; it therefore also requires the positive-offset source wrapper. The negative-offset wrapper does not cover any of these three nodes. They require the companion source wrapper obtained by composing reach_last_edge, evenness preservation, even_edge_to_algebra, and SheepEvenInverseAlgebra.edge_inverse_cases for \(dY=2^n+b\). A direct draft is recorded in [the positive-offset source-wrapper handoff](../../communications/agent40/20261121T033138Z_agent44-positive-source-wrapper.md); its stated two-node coverage is incomplete and must be extended to ID 4. It has not yet been compiled.
 
 ### Generic source branch: reuse the existing high- and low-a lemmas
 
@@ -175,56 +175,46 @@ where \(Q(D,E,a)=D(2a-3)+E\). Since \(d\) is odd and \(b\le d\), \(D\) is odd an
 
 For \(a<A\), rearrange the same equation as
 \[
-m v+C=2^{(s+h+1)+1458t},
-\qquad m=D(2^{a+1}+1),\quad C=2aD+E-3D.
+m v+Q(a)=2^{1458t+s+h+1},\qquad
+m=D(2^{a+1}+1),\quad Q(a)=D(2a-3)+E.
 \]
-This is exactly SheepPower1458Core.no_generic with base \(s+h+1\), shift \(0\), and the node's exact modular cycle/residue certificate. Thus the generic branch can use the existing high-a and low-a machinery; it does not require a new arithmetic framework.
+The existing \`SheepPower1458Core.no_generic\` is **not** directly sufficient: its finite hypothesis excludes hits at every residue in \`Fin cycle\`, whereas the tree certificate freezes only the listed base residue classes along \(t=r+Tk\). The exact bridge is a fixed-progression lemma: if \(P=1458T\), \(b=1458r+s+h+1\), \(2^P\equiv1\pmod m\), and \((2^b+\mathrm{shift})\not\equiv C\pmod m\), then no equation \(mv+C=2^{b+Pk}+\mathrm{shift}\) is possible. Encode \(Q(a)\) as \(C-\mathrm{shift}\), taking \(C=Q(a),\mathrm{shift}=0\) when \(Q(a)\ge0\), and \(C=0,\mathrm{shift}=-Q(a)\) otherwise. The period and base-residue facts are exactly what the existing certificates compute; a short generalization of \`pow_mod_period\` supplies the Lean proof. This fixed-progression helper is a required new formal lemma, not an application of the current cycle-wide \`no_generic\` theorem.
 
-### Exceptional source branch: a uniform all-a size exclusion
+### Exceptional source branch: one uniform divisibility gap
 
-For a node \(Y=(2^{1458t+s}+B)/C\), the exceptional source equation becomes
+For a node \(Y=(2^{1458t+s}+B)/C\), either offset sign gives the same exceptional equation
 \[
-3D\,2^a+D(a+2)+S=2^{1458t+s+h},
-\qquad D=C3^h,\quad S=2^h(C-B).
+3D\,2^a+D(a+2)+S=2^N,\qquad
+D=C3^h,\quad S=2^h(C-B),\quad N=1458t+s+h.
 \]
-Checking the five node tables gives the uniform bounds
+Across all 29 node occurrences and all allowed hidden lengths, the exact certificate bounds are
 \[
-D\le885735,\qquad S\le3317979,\qquad s\ge0.
+1\le D\le885735,\qquad 0<S\le3317979,\qquad N\ge1458.
 \]
-In particular, use the simpler common bound \(D,S\le M=4,000,000\). Choose \(e\) with \(2^e<3D<2^{e+1}\). Since \(3D\le2,657,205<2^{22}\), we have \(e\le21\). Put
+Use the common bound \(M=4{,}000{,}000\).
+
+If \(a\le31\), then
 \[
-z=1458t+s+h-e.
+3D2^a+D(a+2)+S
+\le 12{,}000{,}000\cdot2^{31}
+   +4{,}000{,}000\cdot33+4{,}000{,}000
+<2^{55}\le2^N.
 \]
-For \(t\ge1\), \(z\ge1437\).
+If \(a\ge32\), put \(L=D(a+2)+S\). At \(a=32\),
+\[
+0<L\le4{,}000{,}000\cdot34+4{,}000{,}000
+=140{,}000{,}000<2^{32}.
+\]
+Since \(D\le4{,}000{,}000<2^{32}\le2^a\), the recurrence \(L(a+1)=L(a)+D\) proves \(0<L<2^a\) for every \(a\ge32\).
 
-There are two cases.
+Now split on \(a\le N\). If \(a>N\), then \(3D2^a>2^N\), so equality is impossible. If \(a\le N\), then \(2^a\) divides \(2^N\) and \(3D2^a\); the equation would force \(2^a\mid L\), contradicting \(0<L<2^a\).
 
-- If \(z\le a\), then
-  \[
-  2^{1458t+s+h}=2^{e+z}<3D\,2^z
-  \le3D\,2^a<3D\,2^a+D(a+2)+S,
-  \]
-  contradicting the exceptional equation.
-
-- If \(z\ge a+1\), put \(w=z-1\). Then \(w\ge1436\), \(a\le w\), and
-  \[
-  D(a+2)+S\le M(w+2)+M=M(w+3)<2^w.
-  \]
-  Also \(3D+1\le2^{e+1}\). Hence
-  \[
-  3D\,2^a+D(a+2)+S
-  <(3D+1)2^w
-  \le2^{e+1+w}=2^{1458t+s+h},
-  \]
-  again a contradiction.
-
-The elementary inequality \(4,000,000(w+3)<2^w\) for \(w\ge1436\) follows from one finite base check and induction. If the uniform node bounds above are retained, this argument excludes every exceptional source at every node and every \(a\); the older per-node exceptional-cutoff tables are then unnecessary as a proof dependency.
-
+This proves the exceptional branch impossible for every node and every \(a\), with no per-node exceptional cutoffs and no logarithm/threshold selection. The older special-cutoff table in the arithmetic checker remains a redundant diagnostic, not a proof dependency.
 ### Finite graph closure
 
 For a fixed progression parameter \(t\), let \(P_t(x)\) mean that \(x\) is one of the finitely many affine nodes in that family's inverse graph. The source work must show that every original predecessor of a node in \(P_t\) is either impossible (generic high/low branch or exceptional branch) or is one of the listed graph edges. Thus \(P_t\) is closed under taking original parents. Induction on EvenReach then sends any hypothetical path from \(10\) to the root target backwards into \(P_t(10)\), impossible because every listed node is greater than \(10\).
 
-This packages the finite inverse graph as one parent-closed invariant rather than repeating a separate last-edge recursion for each edge. The remaining formal work is to instantiate the finite low-a modular certificates for every node, prove the parent-closure statement, and compile the complete five-family theorem. None of this source integration is yet accepted as a Lean theorem.
+This packages the finite inverse graph as one parent-closed invariant rather than repeating a separate last-edge recursion for each edge. The remaining formal work is to add the fixed-progression low-a lemma and its finite base-residue table, extend the positive-offset wrapper to all three mixed-tree nodes, prove the parent-closure statement, and compile the complete five-family theorem. None of this source integration is yet accepted as a Lean theorem.
 
 ## Exact periods and reproducibility
 
