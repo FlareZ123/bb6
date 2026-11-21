@@ -31,72 +31,96 @@ The six repeated-block sweep lemmas in `HaltShared.lean` therefore have these ex
 
 For example, `sweep_BB_C12` composes `step_BB_r1_r0_r1_comm` (cost (b_0+2b_1)) with `step_BB_r0_r1` (cost (b_0+b_1)), giving (2b_0+3b_1). The largest coefficient across both machines and all six sweeps is 45.
 
-Let (Mge1) bound every run value and repeat counter in a symbolic state. Each `stepPure` case either:
-- uses at most one of the six repeated-block sweeps, with counter at most (M); or
-- uses one atomic primitive rule, whose cost is at most (3M+22) (the remaining atomic costs are at most 9).
+Let (Mge376) bound every run value and repeat counter in an *outer symbolic state*. Each `stepPure` case either:
+- uses at most one of the six repeated-block sweeps, with counter at most its current internal-state bound; or
+- uses one atomic primitive rule, whose cost is at most (3M+22) when its run parameter is at most (M).
 
-Thus the source proof decomposition gives the simple bound
+Thus, for an internal state whose fields are bounded by (M'),
 
 [
-  C_{mathrm{stepPure}} le max(45M,3M+22,9)
-  le 50(M+1).
+  C_{mathrm{stepPure}} le max(45M',3M'+22,9)
+  le 50(M'+1).
 ]
 
-This is the key local estimate. It is independent of the number of tokens because one `stepPure` transition selects at most one sweep lemma.
+This local estimate is independent of the number of tokens because one `stepPure` transition selects at most one sweep lemma.
+
+## Counter aggregation across the outer `sweepCB`
+
+A first, overly optimistic version of this estimate treated every counter extracted after `sweepCB` as still bounded by the largest individual input field (M). That ignores `eatFuel`: a sweep can merge several repeat counters from the opposite tape before `afterSweepCB` dispatches to Rule A/B/C.
+
+The correction is controlled by the *sum* of counters. The replay gives at most (L=94) symbolic tokens across both tapes, so the initial repeat-counter sum on either tape is at most (94M). Each `eatFuel` call has fuel 4 and can add at most four literal-block increments; `sweepCB` makes at most (L) such calls. Merging preserves the sum of existing counters, so after the sweep any individual merged repeat counter is at most
+
+[
+  94M+4L le 94M+376 le 95M <128M
+]
+
+for (Mge376). Thus any repeat counter subsequently extracted by `tryRuleA/B/BC` is bounded by (128M). The run parameter dispatched by `tryRuleA` or `tryRuleBC` is unchanged by the sweep and remains bounded by (M).
+
+The same sweep can expand the left token list through `bumpSymL`. One bump expands at most one repeat token, with at most five additional tokens; there are at most (L) scanned right-side tokens. `eatFuel` only merges/removes tokens. Hence the post-`sweepCB` left list has fewer than (6L+5<1024) tokens, including the one possible `stepElemThenBB` bump.
 
 ## Cost of one `stepSym` transition
 
-The proof of `stepSym_sound` factors through `sweepBB`, `sweepCB`, `stepElemThenBB`, and one of `tryRuleA`, `tryRuleB`, `tryRuleBC`.
+The source soundness proof factors through `sweepBB`, `sweepCB`, `stepElemThenBB`, and one of `tryRuleA`, `tryRuleB`, `tryRuleBC`.
 
-The checkpoint replay in [`symrun_state_replay.cjs`](symrun_state_replay.cjs) gives the following maximum *outer-state* symbolic-token count:
-
-- F424: 94;
-- F412: 78.
-
-Use the common bound (Lle94). Each `sweepBB` or `sweepCB` recursion consumes one token from its scanned side. A token contributes at most one repeated-block sweep of cost (45M), or one atomic case of cost at most 24. A `stepElemThenBB` fallback adds one atomic transition and scans at most three additional left tokens. Consequently, the combined outer `sweepBB/sweepCB/stepElemThenBB` work is below (2^{14}M).
-
-For the three successful rule macros, the source soundness lemmas use:
-
-- Rule A: 46 `stepPure` calls for `ruleA0`, then 66 per iteration of `ruleA_iter`. The iteration count is (m_{m new}le M), so at most (46+66Mle112M) calls.
-- Rule B: one of 98, 106, 118, or 126 `stepPure` calls per `ruleB_iter) iteration. The iteration count (n_3le M), so at most (126M) calls.
-- Rule C: 46 `stepPure` calls per `ruleC_iter) iteration. The iteration count (n_4le M), so at most (46M) calls.
-
-Hence every successful macro uses at most (126M) `stepPure` calls.
-
-The affine parameter updates in the three iterator theorems give a conservative (8M) bound on every counter inside those `stepPure` sequences:
-- Rule A's boundary values are bounded by the original (M); its micro-sequence has at most 66 steps.
-- Rule B increases its (p)-parameter by 2 and its (d_2)-parameter by 4 per macro iteration, with (n_3le M); the largest boundary field is at most (5M+33), before at most 126 unit-sized micro-updates.
-- Rule C increases (k) and (d_2) by 2 per macro iteration, with (n_4le M); the largest boundary field is at most (3M), before at most 46 unit-sized micro-updates.
-
-For the actual traces (M) is vastly larger than 128, so these are all below (8M). Therefore each internal `stepPure` costs at most (50(8M+1)le450M), and the successful rule macros cost at most
+The six repeated-block sweep coefficients are at most 45. On the original outer state, `sweepCB` scans at most 94 tokens and costs below (2^{13}M). If the subsequent fallback calls `stepElemThenBB`, its `sweepBB` scans fewer than 1024 tokens; each repeat counter is below (128M), so its cost is below
 
 [
-  126Mcdot450M=56{,}700M^2 < 2^{16}M^2.
+  1024(45cdot128M+24)+25M < 2^{23}M.
 ]
 
-Adding the outer sweep/fallback work gives the conservative per-transition candidate
+Thus the combined outer sweep/fallback work is below (2^{24}M). The BB- and DL-mode cases are smaller.
+
+For the successful rule macros, the source soundness lemmas use:
+
+- Rule A: 46 `stepPure` calls for `ruleA0`, then 66 per `ruleA_iter` iteration. Its iteration count is (m_{m new}le M), so at most (46+66Mle112M) calls.
+- Rule B: one of 98, 106, 118, or 126 `stepPure` calls per `ruleB_iter` iteration. Its iteration count (n_3le128M), so at most (126cdot128M=16{,}128M) calls.
+- Rule C: 46 `stepPure` calls per `ruleC_iter` iteration. Its iteration count (n_4le128M), so at most (46cdot128M=5{,}888M) calls.
+
+Hence every successful macro uses at most (16{,}128M) `stepPure` calls.
+
+The affine iterator updates keep every macro-boundary field below (514M):
+- Rule A's fields are bounded by (128M) at macro boundaries; its micro-sequences have at most 66 steps.
+- Rule B starts with (p_0le32), repeat counters at most (128M), and (d_2le M). Across at most (128M) iterations, (p) increases by 2 and (d_2) by 4, so the largest boundary field is at most (513M).
+- Rule C starts with counters at most (128M); across at most (128M) iterations, (k,d_2) increase by 2, so the largest boundary field is at most (384M).
+
+Inspection of the `stepPure` clauses shows that an individual numeric field changes by at most one in one micro-step (the larger affine changes occur only at the macro-iteration boundary). At most 126 micro-steps therefore keep every internal field below (514M+126<1024M), since (Mge376).
+
+Each internal `stepPure` call consequently costs at most
 
 [
-  oxed{C_{mathrm{stepSym}}(s)le 2^{20}M(s)^2.}
+  50(1024M+1)le51{,}250M.
 ]
 
-The constant (2^{20}) is deliberately loose. The inequality is a proof target based on the displayed source inductions, not yet a Lean theorem. In particular, the unit-change bound for the micro-sequences and the outer sweep accounting should be made explicit in a formal cost semantics.
+The successful rule macros cost at most
+
+[
+  16{,}128Mcdot51{,}250M
+  =826{,}560{,}000M^2 <2^{30}M^2.
+]
+
+Adding the outer work gives the conservative per-transition candidate
+
+[
+  oxed{C_{mathrm{stepSym}}(s)le 2^{40}M(s)^2.}
+]
+
+The constant (2^{40}) is deliberately loose. This is a proof target based on the displayed source inductions, not yet a Lean theorem. The key details to make explicit in a formal cost semantics are the repeat-sum invariant through `eatFuel`, the post-sweep token bound, and the unit-change bound for the `stepPure` micro-sequences.
 
 ## Concrete trace maxima and resulting candidate bounds
 
 The independent replay matches every literal upstream checkpoint and reaches the final `.HALT` state:
 
-| Machine | `stepSym` calls | Maximum field (M) | Bit length | Bound from (2^{20}M^2) per call |
+| Machine | `stepSym` calls | Maximum field (M) | Bit length | Bound from (2^{40}M^2) per call |
 |---|---:|---:|---:|---:|
-| F424 | 70,511 (<2^{17}) | 12,464,561,897,144,001,482,331,935,594,779,263,804,489,570,179,353,031,112,091,137 | 203 | (<2^{443}) |
-| F412 | 21,383 (<2^{15}) | 412,597,277,036,535,862,786 | 69 | (<2^{173}) |
+| F424 | 70,511 (<2^{17}) | 12,464,561,897,144,001,482,331,935,594,779,263,804,489,570,179,353,031,112,091,137 | 203 | (<2^{463}) |
+| F412 | 21,383 (<2^{15}) | 412,597,277,036,535,862,786 | 69 | (<2^{193}) |
 
 The initial `runElemFast` prefixes, including their entry paths, cost exactly 164,386 (F424) and 145,982 (F412) according to the source-derived replay in [the prefix-cost dossier](../agent38-symrun-prefix-cost/README.md). The terminal `step_DL_zero_halt` transition is part of the final `stepSym` transition and is covered by the per-transition bound above.
 
 Conditional on the per-transition cost lemma and kernel-checked trace maxima, the complete primitive halting times would therefore satisfy:
 
-- F424: (T<2^{443}+2^{18}<2^{444}<2^{512});
-- F412: (T<2^{173}+2^{18}<2^{174}<2^{256}).
+- F424: (T<2^{463}+2^{18}<2^{464}<2^{512});
+- F412: (T<2^{193}+2^{18}<2^{194}<2^{256}).
 
 The repository's external champion baseline is (S(6)>2\uparrow\uparrow\uparrow5), which is much larger than (2^{512}). Thus these two halting machines would be discharged as strictly below the champion, without needing their exact decimal halting times. This comparison is conditional, not a certified classification.
 
@@ -113,7 +137,7 @@ and prove additive composition directly with `multiStep_trans`. Then add a cost-
 
 Two independent obligations remain:
 
-1. Prove the source-structural (2^{20}M^2) per-`stepSym` cost lemma.
+1. Prove the source-structural (2^{40}M^2) per-`stepSym` cost lemma.
 2. Kernel-check the maximum-field bounds over every intermediate state, not merely the checkpoint endpoints. The replay already computes the exact maxima; a Lean fold over each 4096-step chunk can certify the bound using the same deterministic transition function.
 
-The source modules currently live only in the pinned upstream Cryptids tree (Lean 4.35.0-rc4), while the local BB6 project uses Lean 4.36.0-rc2 and does not contain `HaltShared.lean`. This note does not bypass that compatibility/preflight requirement. Until the exact dependency closure is available and the cost lemma and range fold compile, this remains an intermediate candidate rather than a publishable result.
+The source modules currently live only in the pinned upstream Cryptids tree (Lean 4.35.0-rc4), while the local BB6 project uses Lean 4.36.0-rc2 and does not contain `HaltShared.lean`. The local shell preflight in this invocation failed with a tool-level `ClientError`, so no CI compile was attempted. Until the exact dependency closure is available and the cost lemma and range fold compile, this remains an intermediate candidate rather than a publishable result.
