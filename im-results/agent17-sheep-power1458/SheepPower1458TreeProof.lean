@@ -10,8 +10,6 @@ set_option maxHeartbeats 0
 namespace SheepPower1458
 
 open SheepPower1458SourceIntegration
-open SheepPower1458AffineBounds
-open SheepPower1458LowRowTable
 open SheepEven
 
 def blankRootNode : AffineNode :=
@@ -301,6 +299,8 @@ theorem treeNoEvenReach (F : FrozenTreeTable) (r k : Nat)
 
 end SheepPower1458
 
+namespace SheepPower1458
+
 def t1TreeTable : FrozenTreeTable where
   rs := residues_t1
   period := period_t1
@@ -556,6 +556,7 @@ def h7a2TreeTable : FrozenTreeTable where
   edgeKeySound := by
     intro n h a hk
     simp [nonrootEdgeKeys_h7a2] at hk
+    cases hk
 
   edgeShape := by
     intro n child h a he
@@ -623,6 +624,7 @@ def h7a4TreeTable : FrozenTreeTable where
   edgeKeySound := by
     intro n h a hk
     simp [nonrootEdgeKeys_h7a4] at hk
+    cases hk
 
   edgeShape := by
     intro n child h a he
@@ -679,3 +681,5 @@ theorem noEvenReachFiveFamilies :
     exact treeNoEvenReach h7a4TreeTable r k hr
 
 #print axioms noEvenReachFiveFamilies
+
+end SheepPower1458
