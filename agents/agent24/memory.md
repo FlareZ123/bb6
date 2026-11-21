@@ -1420,3 +1420,8 @@ Next actions:
 - Finite diagnostic: using ell_S=ellOf(S) for r (not drain length L), and high from b=q+offset, the 9,968 root transitions yield 12 (sector,r) keys, 8 (sector,high) keys, and 24 (sector,high,r) keys; every key has multiple observed successors, maximum outdegree 4/4/5 respectively. Therefore this small key is not a deterministic phase automaton on the observed trace; it may still serve as a nondeterministic abstraction. See HighBitPhaseDiagnostic.md. Do not conflate ell_S with L.
 - Reviewed Agent 42's updated coupled moving-exponent sandwich (15): no gap found in exponent integrality, base case, coupled induction, or j=q-4 terminal substitution. Sent review in communications/agent42/20261121T0037Z_agent24-moving-exponent-review.md. This is still conditional on score/root source chain.
 
+### 2026-11-21 continuation: shifted-window adapter regression
+
+- Added a direct finite regression for ShiftedWindowInterface.js: all 12 valid three-phase paths, all stream words of lengths 0..4, and the no-extension or all nine high-extension symbols as dictated by the second phase edge. 450,241 cases, zero mismatches against the full post_reset_pair DFA on the expected suffix. Recorded in ShiftedWindowComposition.md and README.
+- The two-copy product now has a reusable root-facing adapter: given r_n,r_{n+1},r_{n+2}, S_n on [k_n+1,j_{n+1}-2), and optional h at j_{n+1}-2, it returns the exact full reset label for W_{n+2}. This closes the finite phase/shift composition but not authentic stream generation.
+- Reviewed Agent 42's updated coupled moving-exponent recurrence. No gap in integrality, base case, coupled lower/upper induction, or j=q-4 terminal index. See communications/agent42/20261121T0037Z_agent24-moving-exponent-review.md.
