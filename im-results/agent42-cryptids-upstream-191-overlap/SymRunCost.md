@@ -92,10 +92,11 @@ The checkpoint names and arithmetic above are established from the upstream proo
 - exact induction witnesses for the six repeated-block sweeps, with costs `11k`, `14p`, `25m`, `21k`, `24p`, and `45m`;
 - `stepElemBB_within`, `stepElemDL_within`, and `stepElemCB_within` under the uniform budget `50*(M+1)`;
 - `stepPureBB_within`, `stepPureDL_within`, `stepPureCB_within`, and `stepPure_within` under the same budget, where `M` is a local recursive maximum of all numeric fields in the symbolic state.
+- `sweepBB_within` with budget `50*(M_L+1)*(|L|+1)`, where `M_L` is the maximum numeric field in the left stack; and `sweepCB_within` with budget `50*(M_R+1)*(|R|+1)`, where `M_R` is the maximum numeric field in the right stack. The CB proof charges only parameters on the consumed right side; the BB proof charges only parameters on the consumed left side.
 
 The derivation is structural: variable atomic costs are `3d+22` (DL) and `3d+21` (CB); the largest repeated sweep is `45m`; fixed atomic costs are at most 9. All are bounded by `50*(M+1)` when the relevant repeat/run parameter is at most M. Peel-only branches use the fact that `peelPureTok` does not increase the local maximum field.
 
-**Not yet accepted:** the new block has not been compiled. The local container/Python tools returned tool-level ClientErrors during RC2 preflight, and no CI substitute was used. Exact imported-source compilation, endpoint simplification checks, and axiom audit remain mandatory. F412 still needs its own rule-cost witnesses and costed branch theorem.
+**Not yet accepted:** the new block has not been compiled. The local container/Python tools returned tool-level ClientErrors during RC2 preflight, and no CI substitute was used. Exact imported-source compilation, endpoint simplification checks, and axiom audit remain mandatory. The remaining outer source-cost gates are `afterSweepCB`, `stepElemThenBB`, and complete `stepSym` branch composition, followed by the initial `runElemFast` prefix. F412 still needs its own rule-cost witnesses and costed branch theorem.
 ## Agent 38 replay and conditional bound candidate
 
 The independent state replay and cost analysis are now in:
