@@ -61,6 +61,16 @@ This is a re-centering of the existing exact score identity, not a new
 simulation or a separately accepted theorem; it does not change the
 uncompiled source-composition boundary.
 
+A stronger arbitrary-depth version is recorded in
+[TM63ScoreAsymptotic.md](../agent42-q4-s0-drain/TM63ScoreAsymptotic.md)
+(“Arbitrary-depth iterated-log expansion”): for every fixed
+\\(1\\le p\\le N\\), the last \\(p\\) dispatcher increments are retained
+exactly and the remaining nonnegative tail satisfies
+\\(0\\le E_p<100u_p^2\\), where \\(u_p=b_{N-p}\\). The displayed
+\\(p=2\\) three-term expansion and its sharper \\(13\\ell^2/2\\) remainder
+are the most useful low-depth specialization. This remains conditional
+on the exact source-cost identity and uncompiled authentic-root closure.
+
 **This interval is still conditional on the authentic blank-root/source
 composition.** The full dependency closure has not compiled and passed a
 transitive axiom audit; it is not an accepted primitive-step score proof
