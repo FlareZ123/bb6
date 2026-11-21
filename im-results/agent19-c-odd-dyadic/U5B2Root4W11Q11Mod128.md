@@ -170,7 +170,19 @@ Let
 \[
 B(u)=(734+10944u,\;34881+518816u)
 \]
-be the B2 residual state. Suppose \(r,E,u\) satisfy the exact root equation and
+be the B2 residual state. The source-side argument below proves the stronger parameterized exclusion
+\[
+\boxed{\forall s\in\mathbb N,\quad
+\neg CReach(1725015902+18827182080s,\;
+81776850433+892529541120s).}
+\]
+Equivalently, \(B(u)\) is blank-unreachable for every
+\[
+u=157622+1720320s.
+\]
+This source exclusion does not itself require the root equation.
+
+For the root connection, suppose \(r,E,u\) satisfy the exact root equation and
 \[
 r\equiv11092\pmod{16384}.
 \]
@@ -178,7 +190,7 @@ The root calculation above gives \(u=542+840w\), with
 \[
 w=2048s+187,\qquad u=157622+1720320s
 \]
-for some natural \(s\).
+for some natural \(s).
 
 The established source-accepted implication b2_even_reach_implies_p4_reach applies because \(u\) is even. Thus B2 reachability would imply reachability of
 \[
