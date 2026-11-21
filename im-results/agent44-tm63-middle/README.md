@@ -1,6 +1,6 @@
 # TM63 source rows 32–37 and authentic-root middle-34 continuation
 
-**Status (2026-11-19):** The repository contains an unconditional source-level blank-root TM63 continuation through middle row 34, a source-level composition from that endpoint through the complete SectionResult dispatcher to index one and the outer-LC_Inc nested reset frame, and a new source-only composition of that frame with the canonical marker-1 S0 endpoint. A separate direct row-by-row extension through row 37 also exists. None of these new root/endpoint chains is accepted by the focused Lean gate yet. The exact primitive-step count of the champion and a universal six-state upper bound remain open.
+**Status (2026-11-21):** The repository contains a source-level blank-root TM63 continuation through middle row 34, a source-level composition from that endpoint through the complete SectionResult dispatcher to index one and the outer-LC_Inc nested reset frame, and a source-only composition of that frame with the canonical marker-1 S0 endpoint. A separate direct row-by-row extension through row 37 also exists. None of these root/endpoint chains is accepted by the focused Lean gate yet. The conditional exact score identity now has a paper-level four-scale tower-tail refinement (below), but the authentic itinerary and exact primitive-step score remain unaccepted; the universal six-state upper bound remains open.
 
 ## Generic source increments and the authentic root
 
@@ -85,6 +85,17 @@ Source drafts added under this directory:
 **Status:** all six artifacts are source drafts and have not been Lean-compiled or axiom-audited. The direct root theorem is therefore a promising composition target, not an established halting proof. The last middle34-acceptance run (44438791470) failed in an older M1EvenState1Sweep revision because it lacked the hne3 side condition; the current file was repaired later in commit 3b4787ea94 (2026-11-19T11:30Z), so that CI failure is stale. The repaired root prefix still needs a fresh accepted build. The direct route also continues to depend on the complete 24-class source dispatcher, including the M0 and M2 zero-row families. Local shell/Python/container execution failed with ClientError; do not substitute CI for the required local preflight. The existing positive-z P2 postlude route remains available as an alternate path until this route is accepted.
 
 Immediate priority: compile the short arithmetic and S0/S1 reparameterization modules, then the counted-drain/dispatcher composition, then the root shift composition. Audit the complete transitive closure for only the repository's accepted axioms; do not move this material into results/ before that gate passes.
+
+## Conditional four-scale score refinement
+
+The existing exact dispatcher-cost formula can be rewritten as a sum of tower-level increments. A general tail-domination lemma shows that, whenever \(2\le r\le N\) and \(N\le b_{r-1}\), the root cost, polynomial correction, and all summands below \(T_{r-1}\) total less than \(b_r^2/100\). At the authentic \(N\ge256\) index, this gives
+\[
+S=6b_N^2+54b_N+6b_{N-1}^2+57b_{N-1}
+ +6b_{N-2}^2+69b_{N-2}
+ +6b_{N-3}^2+81b_{N-3}
+ +39b_{N-4}+192+E_4,
+\]
+with \(0\le E_4<b_{N-3}^2/100\). This is a paper-level consequence of the conditional score identity, not a compiled Attainable theorem. Full derivation: [TM63TowerTailExpansion.md](TM63TowerTailExpansion.md).
 
 ## Focused Lean acceptance
 
