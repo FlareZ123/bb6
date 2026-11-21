@@ -208,7 +208,7 @@ theorem root32_highstop_t31_reduces_to_two_residuals
   · exact Or.inl (by simpa [hEq] using hD0)
   · exact Or.inr (by simpa [hEq] using hL)
   · have hP7t : RunReach (p7e1eX t) (p7e1eY t) := by
-      simpa [hEq] using hP7
+      simpa [hEq,p7e1eX,p7e1eY] using hP7
     exact False.elim ((p7e1e_unreachable_of_t_mod32_31 t ht) hP7t)
 
 /-- The root32 index congruence maps t ≡ 31 (mod 32) to
