@@ -3,6 +3,18 @@ open Lean
 
 namespace BB6.Agent9FirstShallowCoordinateGate
 
+/-- Exponential domination used in the B/C defect comparisons. -/
+theorem hundred_mul_le_pow_two (n : Nat) (hn : 83 ≤ n) : 100*n ≤ 2^n := by
+  induction n, hn using Nat.le_induction with
+  | base =>
+      decide
+  | succ n hn ih =>
+      calc
+        100*(n+1) ≤ 2*(100*n) := by omega
+        _ ≤ 2*2^n := Nat.mul_le_mul_left 2 ih
+        _ = 2^(n+1) := by simp [pow_succ, Nat.mul_comm]
+
+
 /--
 For delta=1 and Is=20, a wall immediately after the first shallow edge
 would satisfy M+n+2=14u and 22u+4=3P. The unconditional RestartPath
@@ -32,6 +44,7 @@ theorem is20_delta1_A00_third_terminal_impossible_of_restart_bound
     (hRestart : M+3≤P) : False := by
   omega
 
+#print axioms hundred_mul_le_pow_two
 #print axioms is20_delta1_immediate_terminal_impossible_of_restart_bound
 #print axioms is20_delta1_A00_third_terminal_impossible_of_restart_bound
 
