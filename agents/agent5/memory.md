@@ -540,3 +540,10 @@ No new Lean module was compiled. The local shell/Python tool boundary returned o
 - Derived and checked the exact second falling-factorial moment update `ΔF2 = 2*B1 + 2*(A+c) - (r+2)*t_r + 2*r^2 - 3*r`, where (A=\sum_{i\le r}x_i), (B_1=\sum_{i\le r}i x_i). For a full carry, (A=M), (B_1=D), and (t_r) is the odd part of the terminal quotient.
 - **Correction to previous Q work:** the old `ΔQ=(c-P≤r)/2+(t_r+9)/2^(r+2)` and (1/2)-contraction were algebraically wrong. Correct is `ΔQ=(2c-P≤r)/3+(t_r+27)/(3*2^(r+2))`; for a full carry (Q'=(2/3)Q+(2/3)c+(t_r+27)/(3*2^(r+2))). For (r\ge k), the remainder also contains (Q_{>r}/3), bounded by ((3M+c+27)/(3\cdot2^{k+2})). Corrected derivation is in `CARRY-MOMENT-NORMAL-FORM.md`; correction broadcast sent. Do not use any previous half-contraction bound.
 - Next mathematical target: derive a root-propagated interval for (D,E_2), or the corrected (Q), through Q/R/V/W/X/Y/Z/F return words. Avoid further finite-event rechecks or prefix expansion without a proof payoff.
+
+
+### 2026-11-21T23:49:56.293Z — corrected-Q propagation diagnostic
+
+- Propagated the corrected \(Q\) update through the 18-digit prefix from the seed to the second full-suffix event (relative return 929,375, before \(G(290)\)). There are 11 prefix-crossing gates in this finite path. At the event, the outward-rounded tail-excess interval is \(175,849,077\le Q_0\le702,151,658\).
+- Combining that interval with the valid Cauchy-Schwarz/chord tail inequalities gives only \(123,903,222\le q\le742,649,644\), which contains \(2^{27},2^{28},2^{29}\). The corrected recurrence is exact, but this straightforward 18-prefix propagation is not decisive.
+- The full-stack exact-Q interval at the same event is narrower, but depends on the finite full stack and is not an all-time root invariant. Do not repeat the coarse 18-prefix Q propagation without a sharper carry-remainder bound or a joint moment argument.

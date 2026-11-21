@@ -257,6 +257,16 @@ There is also a complementary tail bound from Q. For the tail excesses z_j=x_{k+
 \frac{R_0^2}{Q_0}\le\sum_j2^jz_j
 \le R_0+2^{L-1}(R_0-Q_0).
 \]
-This turns a sufficiently tight interval for Q into another interval for W. Exact-Q finite checks give q intervals [6,163,349, 7,480,849] at the first full-suffix event and [229,282,800, 549,298,395] at the second; the first excludes powers of two, while the second does not. Q is therefore a plausible complementary functional, not a replacement for the stronger D bound. The Q return-map idea is exploratory and has not yet been propagated from the root. If this closes, it would turn the finite 386/703 candidate-phase lists into a root-history-sensitive obstruction without merely extending the prefix depth again.
+This turns a sufficiently tight interval for Q into another interval for W. Exact-Q finite checks give q intervals [6,163,349, 7,480,849] at the first full-suffix event and [229,282,800, 549,298,395] at the second; the first excludes powers of two, while the second does not.
+
+A finite root-propagation of the **corrected** \(2/3\) recurrence through the 18-digit prefix, from the seed to the second event (relative return 929,375, before \(G(290)\)), is too coarse by itself. It yields the outward-rounded tail-excess interval
+\[
+175,849,077\le Q_0=\sum_{j=0}^{3}2^{-j}z_j\le702,151,658,
+\]
+and the Cauchy-Schwarz/chord bounds then give
+\[
+123,903,222\le q\le742,649,644.
+\]
+This still contains \(2^{27},2^{28},2^{29}\). The exact-Q interval above is substantially narrower, but requires the full finite stack. Thus the corrected Q recurrence is algebraically valid, but the straightforward 18-prefix interval propagation is **not** a decisive obstruction; it needs a sharper bound on the carry remainder or a joint moment argument. This finite diagnostic is recorded to avoid repeating the same coarse propagation.
 
 **Verification boundary:** the algebraic identities and convexity proof are given here on paper; no new Lean module has been compiled. The prescribed local shell/Python tool boundary returned only "Skipped 1 message" with no stdout or exit status on preflight, matching the previously recorded environment blocker. Per the repository rule, no CI run was substituted for the unavailable local Lean preflight. This note is intermediate work in im-results/, not a claim of a publishable BB(6) solution.
