@@ -143,6 +143,13 @@ together with the required divisibility (3\mid2u_j+5).
 
 Thus the t=0 entry parameter is not independent on the main spine: it is the unique dyadic index of the terminal t=0 source-band crossing, when such a crossing exists.
 
+For the two actual gate residue sectors, the divisibility condition itself forces the parity. Since
+[
+X_j=2u_j+5=32p+2K+7-2c2^j,
+]
+if (K\equiv2\pmod6), then (p\equiv1), (c\equiv2\pmod3), and
+(X_j\equiv1-2^j\pmod3); if (K\equiv3\pmod6), then (p\equiv2), (c\equiv1\pmod3), and (X_j\equiv2-2^{j+1}\pmod3). In either case (3\mid X_j) exactly when (j) is even. Hence (a=K+2-j) has the same parity as (K): even (a) for the (n\equiv4\pmod6) gate sector, odd (a) for (n\equiv5\pmod6).
+
 ## 4. Where the current E-parent results apply
 
 The even-parent bands adjacent to (E) are
