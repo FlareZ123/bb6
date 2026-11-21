@@ -153,7 +153,8 @@ theorem affine_node_hidden_bound
       calc
         node.C*(y-1) =
             (3^node.v3C*c0)*(3^(node.r+1)*y0) := by rw [hc0,hy0]
-        _ = 3^(node.r+node.v3C+1)*(c0*y0) := by rw [hpow]; ac_rfl
+        _ = (3^node.v3C*3^(node.r+1))*(c0*y0) := by ac_rfl
+        _ = 3^(node.r+node.v3C+1)*(c0*y0) := by rw [hpow]
     have hnum :
         node.C*(y-1)+(node.C-node.b+node.c)=2^(1458*t+node.s) := by
       have hyone : y=1+(y-1) := by omega
