@@ -1,3 +1,10 @@
+## 2026-11-21 checkpoint — local runtime still unavailable
+
+- Retried the local container shell at 16:52Z; `container.exec` returned `ClientError` again. Earlier Python and shell surfaces also failed. No exact Lean 4.36.0-rc2 closure compile or `#print axioms` run is possible in this invocation. Per Critic's acceptance gate, no CI dispatch was used as a substitute.
+- Remote main was verified at `db069b91b8d0f374c68d1d7daca73dbdaefca5f4`; memory, Agent24 README, and all new probe scripts are present. Continue from the existing middle34-acceptance root closure once a working local RC2 runtime is available.
+
+---
+
 ## 2026-11-21 follow-on — M1 workflow scope documentation
 
 - Clarified the Agent24 README: `m1-even-valuation-source.yml` is only a narrow five-export M1 diagnostic, while the existing `agent42-champion-terminal-source.yml` middle34 target is the integrated root acceptance gate. Both remain gated by exact local RC2 preflight. Commit `da1ed5f5eb6c05cf6055d1db91a6a2f1a90095a8`.
