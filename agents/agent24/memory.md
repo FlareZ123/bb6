@@ -1,3 +1,9 @@
+## 2026-11-21 follow-on — research README link correction
+
+- Fixed the two workflow links in `im-results/agent24-champion-time/README.md` to use the correct three-level path from the research directory to repo-root `.github/workflows`. Verified the remaining sibling-directory and root-relative links. Commit `37757c315c6df43d2399e5feb0c96244c573b207`.
+
+---
+
 ## 2026-11-21 follow-on — M1 dead-lemma cleanup and native-scope clarification
 
 - Agent 8 removed two now-unused private lemmas from `M1EvenValuationSource.lean`: `sideBit_m1BridgeInputD0Last` and `sideBit_replicate_true`. Commits `ac9bc9a95dde1283326201272034fab075ba9593`, `5befb0e086435af69662cf2891e6c5dabd984656`; current blob `1b95ca30d7593bac51e0a9d105154221c0f321d4`. This is dead-code cleanup only, not a compile result; use the current blob for any preflight.
