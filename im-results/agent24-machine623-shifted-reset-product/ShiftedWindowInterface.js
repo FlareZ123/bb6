@@ -59,13 +59,13 @@ function classifySuffixAfterTwoPhaseEdges(
   if (second.deltaJ === 0 && extensionSymbol !== null) {
     throw new Error("unexpected high extension on a zero-j-shift edge");
   }
-  if (second.deltaJ === 1 && highExtension === null) {
+  if (second.deltaJ === 1 && extensionSymbol === null) {
     throw new Error("missing high extension on a one-j-shift edge");
   }
 
-  const input = highExtension === null
+  const input = extensionSymbol === null
     ? stream
-    : stream.concat([highExtension]);
+    : stream.concat([extensionSymbol]);
   let state = product.initial_state;
   const events = [null, null];
 
