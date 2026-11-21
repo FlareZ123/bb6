@@ -1,5 +1,6 @@
 import Lean
 import CountedReset
+import ResetBaseFrames
 import CountedOddBase
 import CountedOneZeroUnary
 
@@ -16,50 +17,6 @@ indicated interval.  This file does NOT yet identify the local frames with
 all S1 source configurations; that embedding and the a,b,v₂ extensions
 remain the universal-prefix proof gap.
 -/
-
-/-- The smallest interval containing every head query in the three
-a=b=0, n odd, marker-specific base traces. -/
-def resetBaseInside (m : Nat) (x : Int) : Bool :=
-  if m = 0 then decide (-7 ≤ x ∧ x ≤ 14)
-  else decide (-8 ≤ x ∧ x ≤ 14)
-
-/-- Local input tape for the marker-zero base trace. -/
-def resetBaseInput0 : FConfig :=
-  ⟨3, 0, [-7, -4, -1, 2, 3, 4, 7, 8, 9]⟩
-
-/-- Local input tape for the marker-one base trace. -/
-def resetBaseInput1 : FConfig :=
-  ⟨3, 0, [-8, -5, -2, 0, 2, 3, 4, 7, 8, 9]⟩
-
-/-- Local input tape for the marker-two base trace. -/
-def resetBaseInput2 : FConfig :=
-  ⟨3, 0, [-6, -3, -1, 0, 2, 3, 4, 7, 8, 9]⟩
-
-/- The marked lists below deliberately retain `fMove`'s exact insertion/filter order.
-Do not sort them: `FConfig` equality is ordered-list equality. -/
-/-- Local output tape after the marker-zero base trace. -/
-def resetBaseOutput0 : FConfig :=
-  ⟨3, 5, [7, 8, 9, 12, 13, 14, 5, 4, 3, 2, 1, -1, -4, -5, -6, -7]⟩
-
-/-- Local output tape after the marker-one base trace. -/
-def resetBaseOutput1 : FConfig :=
-  ⟨3, 5, [7, 8, 9, 12, 13, 14, 5, 4, 3, 2, 1, 0, -2, -5, -6, -7, -8]⟩
-
-/-- Local output tape after the marker-two base trace. -/
-def resetBaseOutput2 : FConfig :=
-  ⟨3, 5, [7, 8, 9, 12, 13, 14, 5, 4, 3, 2, 1, 0, -1, -3, -6, -7, -8]⟩
-
-/-- Uniform notation for the three local input frames. -/
-def resetBaseInput (m : Nat) : FConfig :=
-  if m = 0 then resetBaseInput0
-  else if m = 1 then resetBaseInput1
-  else resetBaseInput2
-
-/-- Uniform notation for the three local output frames. -/
-def resetBaseOutput (m : Nat) : FConfig :=
-  if m = 0 then resetBaseOutput0
-  else if m = 1 then resetBaseOutput1
-  else resetBaseOutput2
 
 /-- Exact finite TM63 trace for all three marker base cases. -/
 theorem resetBase_exact (m : Nat) (hm : m < 3) :

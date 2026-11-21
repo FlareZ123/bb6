@@ -1,4 +1,4 @@
-import CountedResetBase
+import ResetBaseFrames
 import Lean.Elab.Tactic.Omega
 
 /-!
