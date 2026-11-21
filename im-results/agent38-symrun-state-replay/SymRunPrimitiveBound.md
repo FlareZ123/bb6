@@ -68,6 +68,13 @@ Inspection of the source definitions gives two simple facts to formalize:
    ]
    A BB repeated-token branch invokes at most one of the six repeated-block sweeps; every other branch invokes at most one atomic rule.
 
+The field-growth proof can be split into three list lemmas:
+- `max(bumpSymL(xs)) ≤ max(xs)+1`;
+- `max(bumpSymR(xs)) ≤ max(xs)+1`;
+- `max(peelPureTok(t,xs)) ≤ max(t::xs)`.
+
+Then inspect the four `stepPure` modes. BB uses at most one `bumpSymR` after optional non-increasing peeling; DL uses non-increasing peeling followed by one `stepElemDL`; CB uses at most one `bumpSymL), except the two explicit repeat-counter branches, which increment exactly one counter by one; HALT is unchanged. The soundness cases `stepPureBB_sound`, `stepPureDL_sound`, and `stepPureCB_sound` (HaltShared lines 3780–3906) likewise use at most one repeated-block sweep or one atomic rule per branch.
+
 These are source-structural obligations, not yet Lean-certified.
 
 ### 2. The outer CB sweep
