@@ -59,7 +59,7 @@ T_6^{T_5^\alpha}
 =2^{2^e}
 <2^{V_2}-1
 =V_3.
-]
+\]
 
 For the upper bound,
 \[
