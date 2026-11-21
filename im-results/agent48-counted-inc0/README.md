@@ -8,6 +8,8 @@
 
 `CountedSweep.lean` proves `counted_left_sweep` and `counted_right_sweep` for the original TM63 transition table and the repository's infinite-tape `BB6Coverage.run` semantics. The theorems quantify over arbitrary tapes and preserve the complete tape outside the swept interval. The source workflow passed in [CI 42735925396](https://github.com/FlareZ123/bb6/actions/runs/42735925396); its axiom audits contain no `sorryAx`.
 
+`M1EvenValuationBridge.lean` now kernel-checks `m1EvenValuationBridge_run`: under its explicit local tape-pattern hypotheses, the original TM63 reaches state 4 at `h+5` in exactly `12*v+23` moves, uniformly for every `v≥0` and arbitrary exterior tape. The exact committed target blob `32ba6984aae5428e5e0e316cc356042c039323f9` compiles with Lean 4.36.0-rc2; its theorem's axiom profile is `[propext, Quot.sound]`, with no `sorryAx`. This is a certified source submacro only: no root-reachability claim or full TM63 halting proof follows. See [the local preflight report](M1EvenValuationBridge-verified-submacro.md).
+
 The local physical micro-branches are also source-certified:
 - `CountedOddUnary.lean`: `counted_odd_counter`, cost `48+12*c`, for the valuation-zero local decrement pattern and arbitrary right-unary counter, with arbitrary exterior tape. [CI 42739466365](https://github.com/FlareZ123/bb6/actions/runs/42739466365); axiom audit excludes `sorryAx`.
 - `CountedOneZeroUnary.lean`: the one-trailing-zero branch, cost `60+12*c`, also for an arbitrary right-unary counter. [CI 42740367928](https://github.com/FlareZ123/bb6/actions/runs/42740367928).
