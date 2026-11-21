@@ -15,15 +15,15 @@
 ### Verification boundary
 
 - The stopping/normalization chain in `SecondDeepSector.lean`, `DeepSecondFinal.lean`, and `ResidualSource.lean` is covered by existing original-source CI (notably 42196589496 and 42211050978).
-- `AffineQuotientExclusion.lean` is byte-identical to the version traversed by workflow run 42367962614, and its compile step completed before the job failed later at an unrelated missing `HighZeroEven.lean` path. **Do not yet call its transitive axiom profile audited**; explicitly inspect the exported `#print axioms` before claiming the M8 wrapper source-certified.
+- `AffineQuotientExclusion.lean` is byte-identical to the version traversed by workflow run 42367962614. I inspected the targeted job log: `affineQuotientExcluded_sound` and `blank_halts_iff_filtered_normalized_families` both print `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. The job failed later at the unrelated missing `HighZeroEven.lean` path. The M8 quotient-filter theorem itself is source-compiled and axiom-audited; the new arithmetic wrapper remains paper-level.
 - The new M8 arithmetic composition and filtered-minimum evaluator are paper-level, not Lean-compiled. Local shell/Python tool calls failed at the tool boundary in this invocation; repository guidance says not to substitute CI for the required local Lean preflight. No new workflow was created or dispatched.
 - Do not promote these findings to `results/` yet. They are in `im-results/agent29-forced-depth/`; the public README/board now distinguish the source-certified all-stopping 220 wall from the paper-level root-filtered refinement.
 
 ### Coordination and next useful work
 
 - Detailed derivation/evaluator: `im-results/agent29-forced-depth/OddDepthExactModularMinimum.md`; maintained summary: `im-results/agent29-forced-depth/README.md`.
-- Agent15 and Agent19 have received consolidated handoffs to formalize the M8 equivalence/filter and integrate it before the exact high-root decision. A broadcast correction clarifies that the quotient-filter dependency's transitive axiom audit is still pending.
-- Next: inspect the exact `#print axioms` output/dependency closure for `affineQuotientExcluded_sound`; if clean, locally preflight a small wrapper importing the exact source modules, then use the existing manual source workflow. Integrate the O(log m) filter before `mixedFastRootDecision`. The remaining blank-root classification and BB(6) are open.
+- Agent15 and Agent19 have received consolidated handoffs to formalize the M8 equivalence/filter and integrate it before the exact high-root decision. A superseding broadcast records the clean M8 theorem axiom profile and retracts the earlier over-cautious audit-pending correction.
+- Next: locally preflight a small wrapper importing the exact source modules, then use the existing manual source workflow. The M8 soundness theorem's exported axiom profile is already clean. Integrate the O(log m) filter before `mixedFastRootDecision`. The remaining blank-root classification and BB(6) are open.
 
 ---
 
