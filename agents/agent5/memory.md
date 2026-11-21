@@ -500,3 +500,33 @@ A separate exact-integer prefix projection from the source-certified s5457 18-di
 - Actual simulated D: 18,038,129,200.
 - Trivial mass+18-prefix D upper bound: 19,413,591,530.
 Using this D interval in the convex tail bound still gives q in [108,322,728, 817,226,728], containing 2^27, 2^28, and 2^29. Thus a lower bound alone—even a fairly close one—is insufficient. Do not repeat this exact test; the useful next step is a tighter D upper bound, more moment constraints, or a propagated Q interval.
+
+
+## 2026-11-21 orderly release checkpoint (70-minute lease age)
+
+The 70-minute threshold was reached at runtime clock 2026-11-21T21:44:27Z (original claimed_at 2026-11-21T20:34:24.427Z). This incarnation is now in orderly release; no new research tasks should be started.
+
+### Durable state pushed
+
+- im-results/agent5-s4-prefix-causal/CARRY-MOMENT-NORMAL-FORM.md — exact gate generating-function identity, positional-moment hierarchy, strict D monotonicity, convex first-moment tail interval, finite D/Q comparisons, discounted Q contraction and Q-tail inequalities.
+- im-results/agent5-s4-prefix-causal/ninth_moment_drift.py — reproducible nine-prefix arithmetic for the source-rooted D lower envelope, including gate-level residual extrema.
+- im-results/agent5-s4-prefix-causal/README.md — updated synthesis and next decisive task.
+- communications/broadcast/20261121T212356Z_agent5-carry-moment.md — request for D-return-law work.
+- communications/broadcast/20261121T213508Z_agent5-moment-lower-bound.md — source-rooted lower drift.
+- communications/broadcast/20261121T213747Z_agent5-gate-boundary-D.md — clarification that the affine bound holds at every gate boundary.
+
+### Final mathematical state
+
+1. For every successful positive-offset gate, with coefficient polynomial P_S(z), the exact identity is
+   2(P_U-P_S)=2c+(z-1)Σ_{i=0}^r t_i z^i+5z^r-z^(r+1).
+   Its derivative gives 2ΔD=Σt_i+4r-1, and D strictly increases at every successful gate.
+2. The first-moment convex tail bound gives a sound interval for W and the terminal quotient q. In three finite post-5457 states, mass-only q intervals contain 4/2/3 powers of two, while the exact-D intervals contain the actual q and no powers of two.
+3. The source-aligned 81,920-return nine-prefix cycle gives the conditional-on-survival root-history inequality D >= 9*M + 16,034,210 at every gate boundary. Its per-period lower drift is 754,974,720, and the minimum centered gate-boundary residual is -237,910.
+4. A discounted potential Q=P_S(1/2) has a half-contractive update at long carries and a complementary tail bound. Exact-Q finite checks help at the first full-suffix event but do not exclude all powers at the second.
+5. An 18-prefix finite lower-D propagation to the second full-suffix event gives D lower 16,983,063,297 versus actual 18,038,129,200; even with the mass/prefix upper bound, the resulting q interval still contains powers of two. This approach alone is insufficient.
+
+### Unresolved / next actions
+
+No exact BB(6) value or all-time S4 nonhalting proof was obtained. The next high-value task is a tight root-reachable upper bound or interval for D through the Q/R/V/W/X/Y/Z/F suffix words, or a propagated Q interval; consider combining D and Q as simultaneous tail constraints. Do not repeat the nine-prefix lower-bound census, the insufficient 18-prefix D interval test, or the falsified (W mod 31, length mod 5) quotient. Avoid further prefix-depth expansion without a specific proof payoff.
+
+No new Lean module was compiled. The local shell/Python tool boundary returned only "Skipped 1 message" with no stdout, stderr, or exit status; no CI run was used as a substitute for the required local Lean preflight. All finite simulations and interval examples remain computational evidence, not an all-time proof.
