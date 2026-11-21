@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 "use strict";
 
-// Shift-aware reset-window diagnostic for the #623 root.
-// The root recurrence below is mirrored from the existing source-faithful
-// scan. This script is computational evidence, not a proof of the recurrence.
+// Shift-aware reset/output diagnostic for the #623 root.
+// The root recurrence is mirrored from the existing source-faithful scan.
+// This is finite computational evidence, not an all-time proof.
 
 const fs = require("node:fs");
 const path = require("node:path");
@@ -74,63 +74,55 @@ function buildCarryTransducer(branch) {
   }
 
   for (const n of next) assert(n >= 0, "incomplete transition table for " + branch);
-  // Every state can emit all three x-digits on the next symbol by varying x.
   for (let state = 0; state < count; state++) {
     const outputs = new Set();
     for (let symbol = 0; symbol < 9; symbol++) outputs.add(outputX[state * 9 + symbol]);
     assert.equal(outputs.size, 3, "next x-output is not surjective in " + branch);
   }
-  return { count, next, outputX };
+  return { amin, amax, acount, count, next, outputX };
 }
 
-const transducer = {
-  L: buildCarryTransducer("L"),
-  R: buildCarryTransducer("R")
-};
+const machine = { L: buildCarryTransducer("L"), R: buildCarryTransducer("R") };
 
-// A pattern is shift-robust for a branch iff, for every initial carry state,
-// the x-output suffix after dropping its first digit is nonmonochromatic.
-// We check the equivalent form with every possible next symbol appended;
-// every state can emit x-digits 0, 1, and 2 on that next step.
-function isShiftRobust(machine, word) {
-  const seenNonzero = new Uint8Array(machine.count);
-  const seenNotTwo = new Uint8Array(machine.count);
+function isDropOneRobust(transducer, word) {
+  const seenNonzero = new Uint8Array(transducer.count);
+  const seenNotTwo = new Uint8Array(transducer.count);
   let commonFinal = -1;
 
-  for (let start = 0; start < machine.count; start++) {
+  for (let start = 0; start < transducer.count; start++) {
     let state = start;
     let nonzero = 0;
     let notTwo = 0;
     for (let i = 0; i < word.length; i++) {
       const index = state * 9 + word[i];
-      const output = machine.outputX[index];
+      const output = transducer.outputX[index];
       if (i >= 1) {
         if (output !== 0) nonzero = 1;
         if (output !== 2) notTwo = 1;
       }
-      state = machine.next[index];
+      state = transducer.next[index];
     }
     if (commonFinal < 0) commonFinal = state;
-    else assert.equal(state, commonFinal, "reset word did not synchronize " + "the " + machine.count + "-state transducer");
+    else assert.equal(state, commonFinal, "reset word failed to synchronize a transducer");
     seenNonzero[start] = nonzero;
     seenNotTwo[start] = notTwo;
   }
 
+  // Equivalent to suffix nonmonochromaticity: every state can emit any
+  // next x-digit, so a monochromatic suffix can be kept monochromatic.
   for (let symbol = 0; symbol < 9; symbol++) {
     const index = commonFinal * 9 + symbol;
-    const output = machine.outputX[index];
-    const addsNonzero = output !== 0;
-    const addsNotTwo = output !== 2;
-    for (let start = 0; start < machine.count; start++) {
-      if (!(seenNonzero[start] || addsNonzero)) return false;
-      if (!(seenNotTwo[start] || addsNotTwo)) return false;
+    const output = transducer.outputX[index];
+    for (let start = 0; start < transducer.count; start++) {
+      if (!(seenNonzero[start] || output !== 0)) return false;
+      if (!(seenNotTwo[start] || output !== 2)) return false;
     }
   }
   return true;
 }
 
 const patterns = new Map();
-const robust = { L: new Set(), R: new Set() };
+const dropOneRobust = { L: new Set(), R: new Set() };
 const patternCountsByLength = {};
 
 for (let length = 3; length <= 6; length++) {
@@ -141,12 +133,12 @@ for (let length = 3; length <= 6; length++) {
     const key = word.join(",");
     patterns.set(key, word);
     patternCountsByLength[length].total++;
-    if (isShiftRobust(transducer.L, word)) {
-      robust.L.add(key);
+    if (isDropOneRobust(machine.L, word)) {
+      dropOneRobust.L.add(key);
       patternCountsByLength[length].robustL++;
     }
-    if (isShiftRobust(transducer.R, word)) {
-      robust.R.add(key);
+    if (isDropOneRobust(machine.R, word)) {
+      dropOneRobust.R.add(key);
       patternCountsByLength[length].robustR++;
     }
   }
@@ -172,7 +164,7 @@ function drainB(a, b, d) {
   return [a, d];
 }
 
-// Exact source-faithful recurrence mirror used by the existing root scans.
+// Source-faithful high-level recurrence mirror used by the existing scans.
 function highLevelNext(a, d) {
   if (a === 0n) return d % 2n === 1n ? drainB(d + 1n, 2n, 2n) : [d, 7n];
   if (d % 2n === 1n && a >= d + 5n) return drainB(a - d - 5n, d + 3n, 5n);
@@ -197,15 +189,7 @@ function stateData(a, d) {
   }
   const g = p - 3n * q;
   const gamma = { LO: 18n, LE: 10n, RO: 2n, RE: 4n }[sector];
-  return { q, S: a + d, z: 2n * g - gamma, sector };
-}
-
-function sourceBranch(a, d) {
-  if (d % 2n === 1n && a >= d + 5n) return "L";
-  if (d % 2n === 0n && a >= d + 3n) return "L";
-  if (a % 2n === 0n && d % 2n === 1n) return "R";
-  if (a % 2n === 0n && d % 2n === 0n) return "R";
-  return null;
+  return { q, S: a + d, z: 2n * g - gamma, sector, g };
 }
 
 function ellOfS(S) {
@@ -221,9 +205,9 @@ function ellOfS(S) {
 // Conservative source mass window: max(34 ell + 140, 36 ell + 88).
 function windowBound(S) {
   const ell = BigInt(ellOfS(S));
-  const a = 34n * ell + 140n;
-  const b = 36n * ell + 88n;
-  return a > b ? a : b;
+  const left = 34n * ell + 140n;
+  const right = 36n * ell + 88n;
+  return left > right ? left : right;
 }
 
 function windowIndices(B) {
@@ -243,10 +227,19 @@ function windowIndices(B) {
   return { k, j };
 }
 
+function modEuclid(value, modulus) {
+  const remainder = value % modulus;
+  return remainder < 0n ? remainder + modulus : remainder;
+}
+
+function floorDiv(value, divisor) {
+  let quotient = value / divisor;
+  if (value % divisor < 0n) quotient -= 1n;
+  return quotient;
+}
+
 function digitsMod3(value, length) {
-  const modulus = 3n ** BigInt(length);
-  let n = value % modulus;
-  if (n < 0n) n += modulus;
+  let n = modEuclid(value, 3n ** BigInt(length));
   const digits = [];
   for (let i = 0; i < length; i++) {
     digits.push(Number(n % 3n));
@@ -255,72 +248,67 @@ function digitsMod3(value, length) {
   return digits;
 }
 
-function scanTransition(index, a, d, nextState) {
-  const current = stateData(a, d);
-  const target = stateData(nextState[0], nextState[1]);
-  const currentWindow = windowIndices(windowBound(current.S));
-  const targetWindow = windowIndices(windowBound(target.S));
-  const deltaK = targetWindow.k - currentWindow.k;
-  const deltaJ = targetWindow.j - currentWindow.j;
-
-  assert([0, 1].includes(deltaK), "unexpected low-end shift at transition " + index);
-  assert([0, 1, 2, 3].includes(deltaJ), "unexpected high-end shift at transition " + index);
-  if (deltaK === 1) assert(deltaJ >= 1, "low shift without high extension at transition " + index);
-
-  const xDigits = digitsMod3(current.z, currentWindow.j);
-  const yDigits = digitsMod3(6n * current.q, currentWindow.j);
-  const word = [];
-  for (let i = currentWindow.k + 2; i < currentWindow.j - 2; i++) {
-    word.push(xDigits[i] * 3 + yDigits[i]);
+function sourceCarries(x, y, C, F, K, branch) {
+  const threeK = 3n * K;
+  const xLow1 = modEuclid(x, threeK);
+  const xLow0 = modEuclid(x, K);
+  const yLow = modEuclid(y, K);
+  let a, b;
+  if (branch === "L") {
+    a = floorDiv(xLow1 - 3n * yLow + C, threeK);
+    b = floorDiv(3n * yLow + F, threeK);
+  } else {
+    a = floorDiv(-xLow1 - 3n * xLow0 - 3n * yLow + C, threeK);
+    b = floorDiv(3n * xLow0 + 3n * yLow + F, threeK);
   }
-  assert(word.length >= 8 && word.length <= 16, "unexpected window length at transition " + index);
-
-  const branch = current.sector === "LO" || current.sector === "LE" ? "L" : "R";
-  assert.equal(sourceBranch(a, d), branch, "sector/source branch mismatch at transition " + index);
-
-  const found = [];
-  for (let start = 0; start <= word.length - 3; start++) {
-    for (let length = 3; length <= 6 && start + length <= word.length; length++) {
-      const symbols = word.slice(start, start + length);
-      const key = symbols.join(",");
-      if (patterns.has(key)) found.push({ start, length, key });
-    }
-  }
-
-  const first = found.length ? found[0] : null;
-  const selected = found.find((w) =>
-    deltaK === 0 || w.start >= 1 || (w.start === 0 && robust[branch].has(w.key))
-  ) || null;
-
-  if (selected && deltaK === 1 && selected.start === 0) {
-    assert(word.length - selected.length >= 1, "no suffix symbol after left-edge reset at transition " + index);
-  }
-
   return {
-    index,
-    sector: current.sector,
-    branch,
-    deltaK,
-    deltaJ,
-    windowLength: word.length,
-    first,
-    firstRobustAtLeft: first !== null && first.start === 0 && robust[branch].has(first.key),
-    selected,
-    safe: selected !== null
+    xp: Number(modEuclid(floorDiv(x, K), 3n)),
+    yp: Number(modEuclid(floorDiv(y, K), 3n)),
+    a: Number(a),
+    b: Number(b)
   };
+}
+
+function stateId(transducer, state) {
+  assert(state.a >= transducer.amin && state.a <= transducer.amax,
+    "source a-carry outside full " + transducer.amin + ".." + transducer.amax + " rectangle: " + state.a);
+  assert(state.b >= -2 && state.b <= 2, "source b-carry outside full rectangle: " + state.b);
+  return (((state.xp * 3 + state.yp) * transducer.acount + (state.a - transducer.amin)) * 5 + (state.b + 2));
+}
+
+function runPattern(transducer, initialState, word) {
+  let state = stateId(transducer, initialState);
+  const output = [];
+  for (const symbol of word) {
+    const index = state * 9 + symbol;
+    output.push(transducer.outputX[index]);
+    state = transducer.next[index];
+    assert(state >= 0, "missing transducer edge");
+  }
+  return output;
+}
+
+function nonmonochromatic(digits) {
+  return digits.some((digit) => digit !== 0) && digits.some((digit) => digit !== 2);
 }
 
 const summary = {
   minimalPatterns: patterns.size,
   patternCountsByLength,
-  shiftRobustPatterns: { L: robust.L.size, R: robust.R.size },
+  dropOneRobustPatterns: { L: dropOneRobust.L.size, R: dropOneRobust.R.size },
   testedTransitions: 0,
   shiftPairs: {},
-  branches: { L: 0, R: 0 },
+  affineBranches: { L: 0, R: 0 },
   windowLength: { min: Infinity, max: 0 },
-  firstWitness: { atLeft: 0, later: 0, robustAtLeft: 0, nonrobustAtLeft: 0 },
-  shiftOneWitness: { robustAtLeft: 0, later: 0 },
-  failures: [],
+  correctionBoundFailures: 0,
+  carryRectangleFailures: 0,
+  affineDigitMismatches: 0,
+  windowsWithoutReset: 0,
+  windowsWithoutSafeActualWitness: 0,
+  firstResetAtLeft: 0,
+  firstResetAtLeftSuffixGood: 0,
+  firstResetAtLeftSuffixBad: 0,
+  selectedWitness: { atLeft: 0, later: 0 },
   shiftOneCases: []
 };
 
@@ -329,37 +317,117 @@ let d = 7n;
 for (let index = 0; index <= 10000; index++) {
   const nextState = highLevelNext(a, d);
   if (index >= 33 && nextState !== null) {
-    const result = scanTransition(index, a, d, nextState);
-    summary.testedTransitions++;
-    const pair = result.deltaK + "," + result.deltaJ;
-    summary.shiftPairs[pair] = (summary.shiftPairs[pair] || 0) + 1;
-    summary.branches[result.branch]++;
-    summary.windowLength.min = Math.min(summary.windowLength.min, result.windowLength);
-    summary.windowLength.max = Math.max(summary.windowLength.max, result.windowLength);
+    const current = stateData(a, d);
+    const target = stateData(nextState[0], nextState[1]);
+    assert.notEqual(current.g, 0n, "zero g has no sign-selected affine branch at transition " + index);
+    const branch = current.g > 0n ? "L" : "R";
+    const transducer = machine[branch];
 
-    if (result.first && result.first.start === 0) {
-      summary.firstWitness.atLeft++;
-      if (result.firstRobustAtLeft) summary.firstWitness.robustAtLeft++;
-      else summary.firstWitness.nonrobustAtLeft++;
-    } else if (result.first) {
-      summary.firstWitness.later++;
+    const B = windowBound(current.S);
+    const Bnext = windowBound(target.S);
+    const currentWindow = windowIndices(B);
+    const targetWindow = windowIndices(Bnext);
+    const deltaK = targetWindow.k - currentWindow.k;
+    const deltaJ = targetWindow.j - currentWindow.j;
+    assert([0, 1].includes(deltaK), "unexpected low-end shift at transition " + index);
+    assert([0, 1, 2, 3].includes(deltaJ), "unexpected high-end shift at transition " + index);
+    if (deltaK === 1) assert(deltaJ >= 1, "low shift without high extension at transition " + index);
+
+    const x = current.z;
+    const y = 6n * current.q;
+    const xNext = target.z;
+    const yNext = 6n * target.q;
+    const C = branch === "L" ? xNext - x + 3n * y : xNext + 4n * x + 3n * y;
+    const F = branch === "L" ? yNext - 3n * y : yNext - 3n * x - 3n * y;
+    if ((C < 0n ? -C : C) > B || (F < 0n ? -F : F) > B) {
+      summary.correctionBoundFailures++;
     }
 
-    if (result.deltaK === 1) {
-      if (result.selected && result.selected.start === 0) summary.shiftOneWitness.robustAtLeft++;
-      else if (result.selected && result.selected.start >= 1) summary.shiftOneWitness.later++;
+    const xDigits = digitsMod3(x, currentWindow.j);
+    const yDigits = digitsMod3(y, currentWindow.j);
+    const nextXDigits = digitsMod3(xNext, targetWindow.j);
+    const word = [];
+    for (let i = currentWindow.k + 2; i < currentWindow.j - 2; i++) {
+      word.push(xDigits[i] * 3 + yDigits[i]);
+    }
+    assert(word.length >= 8 && word.length <= 16, "unexpected S-window length at transition " + index);
+    summary.testedTransitions++;
+    summary.affineBranches[branch]++;
+    summary.windowLength.min = Math.min(summary.windowLength.min, word.length);
+    summary.windowLength.max = Math.max(summary.windowLength.max, word.length);
+    const shiftPair = deltaK + "," + deltaJ;
+    summary.shiftPairs[shiftPair] = (summary.shiftPairs[shiftPair] || 0) + 1;
+
+    const found = [];
+    for (let start = 0; start <= word.length - 3; start++) {
+      for (let length = 3; length <= 6 && start + length <= word.length; length++) {
+        const symbols = word.slice(start, start + length);
+        const key = symbols.join(",");
+        if (patterns.has(key)) found.push({ start, length, key, symbols });
+      }
+    }
+    if (found.length === 0) summary.windowsWithoutReset++;
+
+    let selected = null;
+    for (const witness of found) {
+      const K = 3n ** BigInt(currentWindow.k + 1 + witness.start);
+      const carries = sourceCarries(x, y, C, F, K, branch);
+      let output;
+      try {
+        output = runPattern(transducer, carries, witness.symbols);
+      } catch (error) {
+        summary.carryRectangleFailures++;
+        continue;
+      }
+
+      const drop = deltaK === 1 && witness.start === 0 ? 1 : 0;
+      let matches = true;
+      for (let i = 0; i < witness.length; i++) {
+        const position = currentWindow.k + 2 + witness.start + i;
+        if (position >= nextXDigits.length || output[i] !== nextXDigits[position]) {
+          matches = false;
+          break;
+        }
+      }
+      if (!matches) summary.affineDigitMismatches++;
+
+      if (nonmonochromatic(output.slice(drop))) {
+        selected = { ...witness, drop };
+        break;
+      }
+    }
+
+    const first = found[0] || null;
+    if (first && first.start === 0) {
+      summary.firstResetAtLeft++;
+      const K = 3n ** BigInt(currentWindow.k + 1);
+      const carries = sourceCarries(x, y, C, F, K, branch);
+      const output = runPattern(transducer, carries, first.symbols);
+      if (nonmonochromatic(output.slice(deltaK === 1 ? 1 : 0))) {
+        summary.firstResetAtLeftSuffixGood++;
+      } else {
+        summary.firstResetAtLeftSuffixBad++;
+      }
+    }
+
+    if (selected === null) {
+      summary.windowsWithoutSafeActualWitness++;
+    } else if (selected.start === 0) {
+      summary.selectedWitness.atLeft++;
+    } else {
+      summary.selectedWitness.later++;
+    }
+
+    if (deltaK === 1) {
       summary.shiftOneCases.push({
         index,
-        sector: result.sector,
-        branch: result.branch,
-        deltaJ: result.deltaJ,
-        windowLength: result.windowLength,
-        first: result.first,
-        selected: result.selected
+        branch,
+        g: String(current.g),
+        deltaJ,
+        first: first ? { start: first.start, length: first.length, word: first.symbols } : null,
+        selected: selected ? { start: selected.start, length: selected.length, word: selected.symbols } : null
       });
     }
-
-    if (!result.safe) summary.failures.push(result);
   }
 
   if (index === 10000 || nextState === null) break;
@@ -368,6 +436,11 @@ for (let index = 0; index <= 10000; index++) {
 
 assert.equal(summary.minimalPatterns, 8088, "unexpected minimal reset language size");
 assert.equal(summary.testedTransitions, 9968, "unexpected root trace length");
-assert.equal(summary.failures.length, 0, "shift-aware reset criterion failed");
+assert.equal(summary.correctionBoundFailures, 0, "source correction bound failed on finite trace");
+assert.equal(summary.carryRectangleFailures, 0, "actual source carry escaped full rectangle");
+assert.equal(summary.affineDigitMismatches, 0, "transducer output disagrees with actual successor x-digits");
+assert.equal(summary.windowsWithoutReset, 0, "a scanned source window has no minimal reset word");
+assert.equal(summary.windowsWithoutSafeActualWitness, 0, "a scanned transition has no safe actual reset witness");
+assert.equal(summary.firstResetAtLeftSuffixBad, 0, "left-edge first reset loses nonmonochromaticity after shift");
 
 console.log(JSON.stringify(summary, null, 2));
