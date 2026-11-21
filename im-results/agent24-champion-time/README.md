@@ -75,9 +75,12 @@ For the strongest general tail bound, see
 [TM63TowerTailExpansion.md](../agent44-tm63-middle/TM63TowerTailExpansion.md).
 Its lemma gives \\(E_p<45u_p^2\\) for every \\(p\\ge2\\): the required
 \\(N\\le b_{p-1}\\) follows from \\(N<R<b_1\\) and monotonicity of the
-\\(b_j\\) sequence. Thus the four-scale expansion is the \\(p=4\\)
-instance, and the 45 coefficient improves the generic 100 coefficient at
-every depth \\(p\\ge3\\). The specialized \\(p=2\\) bound
+\\(b_j\\) sequence. In proving \\(N<R\\), use the full root exponent
+\\(A=\\sum_{j=7}^{M+42}V_j+(5M+176)/3\\): with \\(x=V_{M+42}\\),
+\\(V_{j+1}\\ge4V_j\\) gives the sum \\( <4x/3\\), while
+\\((5M+176)/3<2x/3\\), so \\(A<2x\\). Thus the four-scale expansion
+is the \\(p=4\\) instance, and the 45 coefficient improves the generic
+100 coefficient at every depth \\(p\\ge3\\). The specialized \\(p=2\\) bound
 \\(\\Delta_2<82(\\log_2\\ell)^2\\) remains sharper at depth two.
 All of these are paper-level consequences of the conditional exact score
 identity, not a compiled authentic-root theorem.
