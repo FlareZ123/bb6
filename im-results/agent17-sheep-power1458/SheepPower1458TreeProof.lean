@@ -150,17 +150,12 @@ structure FrozenTreeTable where
         = 2^(1458*(r+period*k)+h+1) + 3*3^h →
       ∃ child, child < nodeCount ∧ (0,child,h,a) ∈ edges
 
-/--
-DRAFT WARNING: this closure still targets the pre-repair parity-free inverse
-splitter.  It is not a sound parent-closure theorem until an explicit
-`x % 2 = 0` premise is added here, passed to
-`affine_edge_inverse_cases`, and propagated through the EvenReach induction.
-Do not use the downstream five-family theorem as established before that
-repair and a fresh Lean 4.36.0-rc2 compile.
--/
+/-- Reverse closure is stated only for even sources; every edge along an
+EvenReach path from the blank root has an even source. -/
 theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
     (hr : r ∈ F.rs) :
-    ∀ {x y}, indexedAffineBasin (r+F.period*k) F.nodeAt F.nodeCount y →
+    ∀ {x y}, x%2=0 →
+      indexedAffineBasin (r+F.period*k) F.nodeAt F.nodeCount y →
       EvenEdge x y →
       indexedAffineBasin (r+F.period*k) F.nodeAt F.nodeCount x := by
   let t := r+F.period*k
@@ -174,7 +169,7 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
       simp
     rw [ht, Nat.add_mod, hTk]
     exact F.residueMod3 r hr
-  intro x y hedge hyBasin
+  intro x y hx hyBasin hedge
   rcases hyBasin with ⟨n, hn, hval⟩
   have hnodeProps := F.nodeProps ⟨n,hn⟩
   have hpower :
@@ -199,7 +194,7 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
       have hval' : affineNodeValue t (F.nodeAt cert.node) y := by
         simpa [hcertNode] using hval
       exact affine_node_hidden_bound_from_cert cert t r k h y u ht hr hval' hydef huodd
-  rcases affine_edge_inverse_cases hedge hnodeProps.1 hnodeProps.2 hpower with
+  rcases affine_edge_inverse_cases hedge hx hnodeProps.1 hnodeProps.2 hpower with
     hgen | hspecial
   · rcases hgen with ⟨a,h,v,u,ha,hv,hvodd,huodd,hxdef,hydef,hEq⟩
     have hh : h ≤ (F.nodeAt n).r := hHidden hydef huodd
@@ -294,16 +289,13 @@ theorem indexedBasin_not10 (F : FrozenTreeTable) (t : Nat)
 theorem no_evenReach_of_indexedBasin
     (t N : Nat) (nodeAt : Nat → AffineNode)
     (hclosed :
-      ∀ {x y}, indexedAffineBasin t nodeAt N y → EvenEdge x y →
+      ∀ {x y}, x%2=0 → indexedAffineBasin t nodeAt N y → EvenEdge x y →
         indexedAffineBasin t nodeAt N x)
     (hnot10 : ¬ indexedAffineBasin t nodeAt N 10)
     (hroot : indexedAffineBasin t nodeAt N (2^(1458*t))) :
     ¬ EvenReach 10 (2^(1458*t)) := by
   intro hreach
-  have hten : indexedAffineBasin t nodeAt N 10 := by
-    induction hreach with
-    | refl x => exact hroot
-    | @cons x y z edge tail ih => exact hclosed (ih hroot) edge
+  have hten := evenReach_parent_closed hclosed hreach (by decide) hroot
   exact hnot10 hten
 
 theorem treeNoEvenReach (F : FrozenTreeTable) (r k : Nat)
