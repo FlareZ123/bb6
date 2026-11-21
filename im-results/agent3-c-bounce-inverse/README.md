@@ -21,7 +21,7 @@ This acceptance does **not** exclude the high-stop target \(T(u)\) on the whole 
 | \(j\equiv4133\pmod{8192}\) | \(r\equiv264544\pmod{524288}\) | [R2400 subfamilies](./Root32HighStopR2400Subfamilies.md) |
 
 
-The nine cylinders are pairwise disjoint. Modulo \(16384\), they cover \(1254\) of the \(16384\) possible \(j\)-residues, leaving \(15130/16384\) of the root32 index line not covered by these dossiers. The catalogued complement is exactly
+The nine cylinders are pairwise disjoint. Modulo \(16384\), their lift counts are \(1024+2\cdot64+2\cdot32+2\cdot16+4+2=1254\), leaving \(15130/16384\) of the root32 index line not covered by these dossiers. The catalogued complement is exactly
 \[
 j\bmod16384\notin
 \{3\bmod16,\ 149,165\bmod256,\ 117,181\bmod512,\ 549,1013\bmod1024,\ 2613\bmod4096,\ 4133\bmod8192\}.
