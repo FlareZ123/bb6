@@ -1,3 +1,10 @@
+/-!
+Intermediate source-wrapper draft, not yet locally compiled or accepted by
+source CI as of 2026-11-21. The underlying affineQuotientExcluded_sound
+theorem is separately source-compiled and axiom-audited; this file composes
+it with the second-family affine mass/scale identities.
+-/
+
 import DeepSecondFinal
 import AffineQuotientExclusion
 import Lean.Elab.Tactic.Omega
