@@ -390,7 +390,8 @@ const run = async function(fetchText) {
         mode:state[0],
         leftSymTokens:state[1].length,
         rightSymTokens:state[2].length,
-        maxFieldInChunk:chunkMaxField.toString()
+        maxFieldInChunk:chunkMaxField.toString(),
+        maxFieldAtCheckpoint:measure(cp.state).maxField.toString()
       });
       if (!matches) throw new Error(label+" mismatch at symChk"+cp.step);
     }
