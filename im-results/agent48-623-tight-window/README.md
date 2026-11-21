@@ -252,6 +252,23 @@ This is independent of whether the exact output-side threshold is simplified to 
 
 **Scope:** this is an algebraic consequence of the existing \(w\)-update/correction table in [SignedCoordinateNormalForm.md](../agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.md) and the output-parity sector map in [RootRayGapCocycle.md](../agent1-machine623-3euclidean-correction-bounds/RootRayGapCocycle.md). The new potential identity has not itself been added as a Lean theorem. It does not prove that the authentic root remains in the canonical regime, exclude entry into a halting/low-gap branch, or establish nonhalting. Its value is as a compact monotone size invariant once the canonical transition hypotheses are available.
 
-## 7. Next useful use
+## 7. Arbitrary-word actual affine output bridge
+
+`SourceCarryAffineBridge.lean` now contains a generic x-digit interface for arbitrary source-pair word lengths, rather than only the fixed 01,00,00 example:
+
+- `leftSourcePairs` and `rightSourcePairs` describe the source digit-pair stream at an arbitrary boundary. The L stream accounts for the one-place y offset; the R stream retains the previous x/y pair.
+- `leftCarryXOutput` and `rightCarryXOutput` are the corresponding carry-transducer x-output recursions.
+- `left_carry_x_output_matches_affine` and `right_carry_x_output_matches_affine` identify every finite output prefix with the Euclidean ternary digits of the corresponding affine x-tail.
+- `left_actual_affine_carry_xdigits` and `right_actual_affine_carry_xdigits` specialize this to the actual successor coordinates using the existing boundary quotient identities.
+- `left_actual_affine_drop_first_nonmono` and `right_actual_affine_drop_first_nonmono` transfer the shift-aware condition (a nonzero digit and a digit different from 2 after dropping the first output symbol) to the actual successor x-coordinate.
+
+The length parameter is arbitrary, so reset words of lengths 3--6 are covered; any shifted reset offset is handled by using the corresponding larger boundary scale (K_s=3^sK). This is the missing algebraic bridge between a transducer's drop-first output certificate and the actual successor coordinate.
+
+**Proof status:** these are source-level Lean additions, not yet compile-verified. The local shell/Python tool boundary failed even for trivial commands in this invocation, and the repository's local-preflight rule forbids substituting CI. Do not cite these new declarations as kernel-checked until another run compiles the exact file and dependency closure at the pinned Lean version. The remaining glue is to identify the finite automaton's emitted x-output list with `leftCarryXOutput`/`rightCarryXOutput` on the corresponding `leftSourcePairs`/`rightSourcePairs`, then import the finite robust-reset certificate.
+
+## 8. Next useful use
+
+Agent 32 can compose the 1,318 S-window transition inventory with either Agent 49's full 395-state/54-label or 736-state/186-label interface, or the buffer-relative 349-state/8-label and 580-state/30-label quotients. Prefer the compressed pair+length output when the product retains the current symbol at the first output event and the rolling last-five history; otherwise use the full pair+length interface. Preserve the full universal carry rectangles and a finite weighted-drain/root-language interface. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
+
 
 Agent 32 can compose the 1,318 S-window transition inventory with either Agent 49's full 395-state/54-label or 736-state/186-label interface, or the buffer-relative 349-state/8-label and 580-state/30-label quotients. Prefer the compressed pair+length output when the product retains the current symbol at the first output event and the rolling last-five history; otherwise use the full pair+length interface. Preserve the full universal carry rectangles and a finite weighted-drain/root-language interface. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
