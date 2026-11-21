@@ -204,9 +204,52 @@ theorem branch4_long_burst_n_mod64 (n x y : Nat)
     have hx16 := hfilter.2 ho
     omega
 
+
+/-- The branch-4 congruence class n=17 (mod 64) is impossible on the
+genuine blank orbit. The reset equation gives x=14 (mod 16); the
+unique even-output predecessor is odd/odd with first counter 1 or 9
+(mod 16) and second counter 5 (mod 8), contradicting the established
+odd/odd root rows. -/
+theorem branch4_not_17_mod64 (n x y : Nat)
+    (hn : 18≤n)
+    (heq : 4*x+3*n+21=3*2^(n+2))
+    (hrel : y+2=2*x)
+    (hr : Reach x y) :
+    n%64≠17 := by
+  have hp := pow_lower_18 n hn
+  have hmul : 9*n+231 ≤ 3*2^(n+2) := Nat.mul_le_mul_left 3 hp
+  have hxlarge : 69≤x := by omega
+  have hexp : n+2=6+(n-4) := by omega
+  have hpow : 2^(n+2)=64*2^(n-4) := by
+    rw [hexp, Nat.pow_add, show (2:Nat)^6=64 by decide]
+  have hdiv : 64 ∣ 4*x+3*n+21 := by
+    refine ⟨3*2^(n-4), ?_⟩
+    rw [heq, hpow]
+    simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+  intro h17
+  have hmod : (4*x+3*n+21)%64=0 := Nat.dvd_iff_mod_eq_zero.mp hdiv
+  have hx16 : x%16=14 := by omega
+  have hxpos : 6≤x := by omega
+  have hxEven : x%2=0 := by omega
+  obtain ⟨p,q,hpReach,hpEq,hqEq,hpMod⟩ :=
+    even_back x y hxpos hxEven hr
+  have hpLarge : 33≤p := by omega
+  have hpOdd : p%2=1 := by omega
+  have hqOdd : q%2=1 := by omega
+  have hq8 : q%8=5 := by omega
+  have hpCase : p%16=1 ∨ p%16=9 := by omega
+  have hrows := odd_odd_rows p q hpReach hpLarge hpOdd hqOdd
+  rcases hrows with ⟨h1,_,_,_,h9,_,_,_⟩
+  rcases hpCase with h | h
+  · have hq1 := h1 h
+    omega
+  · have hq1 := h9 h
+    omega
+
 #print axioms odd_odd_three_sum
 #print axioms odd_odd_rows
 #print axioms rooted_minus_two_filter
 #print axioms branch4_long_burst_n_mod64
+#print axioms branch4_not_17_mod64
 
 end BB429ResetBoundaryRows
