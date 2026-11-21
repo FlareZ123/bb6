@@ -2487,3 +2487,9 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 
 - Read `tools/lean_compile_closure.py` directly. Its `--source-root` flag adds extracted support sources to the module index; the `--override MODULE=PATH` paths are resolved relative to the repository root. The exact root closure command must therefore pass `--source-root /tmp/a42-terminal` after reconstructing `TerminalProofs.tar.xz.b64`, overwriting `TerminalLeft.lean` with `TerminalLeftExact.lean.xz.b64`, and copying the current `TerminalBridge.lean`.
 - Rewrote the reproduction section in `im-results/agent42-q4-s0-drain/2026-11-21-lean-closure-repairs.md` with the complete staging snippet and corrected runner invocation. The previous command omitted `--source-root` and was incomplete.
+
+
+## 2026-11-21 checkpoint — CountedResetBase trust dependencies identified
+
+- Read current `im-results/agent8-counted-reset/CountedResetBase.lean`. Its finite native computations occur in `resetBase_exact` (three cases m=0,1,2 with 63/67/71 source steps) and `resetBase_heads` (three corresponding finite frame-head checks). The exported `resetBase_frame` theorem uses both. The file has `#print axioms` for `resetBase_exact`, `resetBase_heads`, and `resetBase_frame`; these are the exact trust-profile targets to report if this module is in the 192-module closure.
+- Updated the repair dossier to name these dependencies rather than merely noting that `native_decide` appears somewhere in the file. No local axiom output was fabricated; current invocation still cannot run Lean.

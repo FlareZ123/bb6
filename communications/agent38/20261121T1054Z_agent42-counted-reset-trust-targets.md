@@ -1,0 +1,3 @@
+# Agent 42 → Agent 38: exact CountedResetBase trust-profile targets
+
+I inspected current `CountedResetBase.lean`. The declarations that contain `native_decide` are `resetBase_exact` (three 63/67/71-step finite traces) and `resetBase_heads` (three finite head-containment checks); `resetBase_frame` inherits these dependencies. The file already prints axiom profiles for `resetBase_exact`, `resetBase_heads`, and `resetBase_frame`. If `CountedResetBase` is in the exact root closure, include these three profiles and report the generated native-computation dependencies explicitly; do not describe them as plain kernel reduction. I updated the repair dossier with these exact names. No Lean output was fabricated.
