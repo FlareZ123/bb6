@@ -208,3 +208,16 @@ A plausible next finite composition is the branch-specific source carry/previous
 ## Scope
 
 This is a smaller exact finite-state product and a reproducible exhaustive finite check. The product construction does not prove that the authentic blank-root orbit stays in its accepted reset language for all time. It does not close the weighted-drain/root-language transition system, establish a Machine #623 halting decision, or solve BB(6). Keep this artifact in `im-results/`.
+
+
+## Branch-specific source-carry × reset-DFA product
+
+The proposed source-carry product has now been constructed. See [SourceCarryResetProduct.md](SourceCarryResetProduct.md) and the machine-readable [SourceCarryResetProduct.json](SourceCarryResetProduct.json).
+
+Using the full 395-state `post_reset_pair` DFA plus two skip states, the reachable products from all full carry-rectangle states and both offsets have:
+- L: 3,546 reachable states, minimized to 1,002 Moore states;
+- R: 5,538 reachable states, minimized to 1,307 Moore states.
+
+The refinement sequences are L `55, 226, 456, 706, 860, 996, 1002, 1002` and R `55, 259, 639, 947, 1120, 1299, 1307, 1307`. The generator `build_source_carry_reset_product.js` checks the quotient output and all nine successor classes for every reachable product state. This realizes the proposed one-step composition, with a much smaller reachable product than the naive Cartesian bounds.
+
+This remains a one-window transducer composition, **not** an all-time root invariant. The source-carry, drain-budget, branch-selection, and next-window coupling obligations listed in `SourceCarryResetProduct.md` remain open.
