@@ -69,6 +69,41 @@ q\equiv11\pmod{128}
 r\equiv11092\pmod{16384}.
 \]
 
+### Nonvacuity of the exact root-equation cylinder
+
+The root-index cylinder is populated, not merely a necessary congruence with possibly empty intersection. Write
+\[
+r=11092+16384t,\quad R=693+1024t,\quad
+w=187+2048s.
+\]
+Then the exact equation after division by eight becomes
+\[
+45373440(s+t)+34877440=5\cdot2^{E(t)-14},
+\]
+where
+\[
+E(t)=305330998761+450971566080t.
+\]
+Set \(A=45373440=2^{11}\cdot3\cdot5\cdot7\cdot211\) and \(C=34877440\). For every \(t\),
+\[
+E(t)-14\equiv187\pmod{210}.
+\]
+The two sides \(5\cdot2^{E(t)-14}\) and \(C\) agree modulo every prime-power factor of \(A\):
+- modulo \(2^{11}\), both are zero;
+- modulo \(3\), both are \(1\);
+- modulo \(5\), both are \(0\);
+- modulo \(7\), both are \(3\);
+- modulo \(211\), \(2^{187}\equiv39\), so both are \(195\).
+
+The factors are pairwise coprime, hence \(A\) divides \(5\cdot2^{E(t)-14}-C\). Thus
+\[
+s(t)=\frac{5\cdot2^{E(t)-14}-C}{A}-t
+\]
+is an integer. It is nonnegative for every \(t\): already \(5\cdot2^{E(0)-14}>A+C\), and the numerator's power-of-two term grows by the factor \(2^{450971566080}\) at each increment of \(t\). Therefore every \(t\in\mathbb N\) gives an exact residual-equation solution in this cylinder, with \(s=s(t)\).
+
+Consequently the source-side B2 exclusion above rules out an infinite, explicitly nonempty family of exact residual-equation candidates.
+
+
 ## 2. The existing P(q) parent fan
 
 The complete source-grammar reduction in U5B2Root4W11OddDirectParent.md shows that, for odd \(q\), every source predecessor of \(P(q)\) is one of exactly two states:
