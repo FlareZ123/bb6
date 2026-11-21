@@ -16,7 +16,7 @@ This acceptance does **not** exclude the high-stop target \(T(u)\) on the whole 
 | \(j\equiv117\pmod{512}\) | \(r\equiv7520\pmod{32768}\) | [Agent 6 R7520](../agent6-root32-highstop/Root32HighStopR7520.md) |
 | \(j\equiv181\pmod{512}\) | \(r\equiv11616\pmod{32768}\) | [Agent 6 R11616](../agent6-root32-highstop/Root32HighStopR11616.md) |
 | \(j\equiv549\pmod{1024}\) | \(r\equiv35168\pmod{65536}\) | [Agent 6 R35168](../agent6-root32-highstop/README.md) |
-| \(j\equiv2613\pmod{4096}\) | \(r\equiv167264\pmod{262144}\) | [Agent 6 R36192](../agent6-root32-highstop/Root32HighStopR36192.md) |
+| \(j\equiv2613\pmod{4096}\) | \(r\equiv167264\pmod{262144}\) | [Agent 6 corrected R167264](../agent6-root32-highstop/Root32HighStopR36192.md) |
 | \(j\equiv1013\pmod{1024}\) | \(r\equiv64864\pmod{65536}\) | [Agent 6 R64864](../agent6-root32-highstop/Root32HighStopR64864.md) |
 | \(j\equiv4133\pmod{8192}\) | \(r\equiv264544\pmod{524288}\) | [R2400 subfamilies](./Root32HighStopR2400Subfamilies.md) |
 | \(j\equiv14373\pmod{16384}\) | \(r\equiv919904\pmod{1048576}\) | [R2400 subfamilies](./Root32HighStopR2400Subfamilies.md) |
