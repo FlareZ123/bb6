@@ -47,7 +47,15 @@ The integrated target theorem is: for the exact root tuple
 r=32+64j,\qquad E=201+3360(6657+8192r),\qquad
 17300+22155(t+j)=5\cdot2^{E-17},
 \]
-\(\operatorname{Covered}(j)\) implies that \(T(1802+6720t)\) is not blank-reachable. The root equation modulo the corresponding \(2^k\) gives the matching t-cylinder in each case; the nine source-parent exclusions then discharge the cases.
+\(\operatorname{Covered}(j)\) implies that \(T(1802+6720t)\) is not blank-reachable. The root equation modulo the corresponding \(2^k\) gives the matching t-cylinder in each case; the nine source-parent exclusions then discharge the cases. In the same order as the table, the t-cylinders are
+\[
+t\equiv1\pmod{16};\quad
+t\equiv47,31\pmod{256};\quad
+t\equiv79,15\pmod{512};\quad
+t\equiv159,719\pmod{1024};\quad
+t\equiv1167\pmod{4096};\quad
+t\equiv7839\pmod{8192}.
+\]
 
 The attempted widening in [Root32HighStopR2400.md](./Root32HighStopR2400.md) is explicitly corrected: it does **not** close all of \(r\equiv2400\pmod{32768}\). It reduces the \(j\equiv37\pmod{1024}\) residual to an explicit affine family \(Y(n)\). The follow-up [Root32HighStopR2400Subfamilies.md](./Root32HighStopR2400Subfamilies.md) excludes only \(n\equiv7\pmod8\), yielding the additional \(r\equiv264544\pmod{524288}\) cylinder in the table. The attempted \(n\equiv13\pmod{16}\) exclusion is retracted because the intermediate even-right target has sum \(7\pmod8\), so the unique-inverse theorem does not apply. Full source-grammar analysis nevertheless removes its low and \(a=1\) branches, leaving only the odd-\(a\) high branch; its depth is forced to \(1\) for \(p\equiv0,1,2\pmod4\), while \(p\equiv3\pmod4\) may admit higher odd depths. Its \(r\equiv919904\pmod{1048576}\) class remains open. The rest of \(r\equiv2400\pmod{65536}\) remains open.
 
