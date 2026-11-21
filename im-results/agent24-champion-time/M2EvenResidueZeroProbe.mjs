@@ -141,8 +141,23 @@ for (let k = 1; k <= 16; k++) {
   }
 }
 
+// Experimental a=0 extension. The current Lean theorem still assumes a>0;
+// this grid is only evidence for removing the unused prefix hypothesis and
+// replacing the counted wrapper's resetDrainBound with resetDrainBound_any.
+const a0ExtensionCases = [];
+for (let k = 1; k <= 16; k++) {
+  const minL = Math.max(4, Math.ceil(Math.log2(8 * k + 1)));
+  for (const L of [minL, minL + 8]) {
+    for (const b of [0, 1, 2]) {
+      a0ExtensionCases.push(checkCase(L, k, 0, b));
+    }
+  }
+}
+
 console.log(JSON.stringify({
   tested: cases.length,
+  a0ExtensionCases: a0ExtensionCases.length,
+  totalCases: cases.length + a0ExtensionCases.length,
   widths: "minimal admissible L and L+8",
   first: cases[0],
   last: cases[cases.length - 1],
