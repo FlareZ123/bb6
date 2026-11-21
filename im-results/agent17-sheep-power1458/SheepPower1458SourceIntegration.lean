@@ -13,6 +13,7 @@ structure AffineNode where
   b : Nat
   c : Nat
   C : Nat
+  r : Nat
   deriving DecidableEq, Repr
 
 def affineNodeValue (t : Nat) (node : AffineNode) (y : Nat) : Prop :=
