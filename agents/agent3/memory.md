@@ -1611,3 +1611,13 @@ The exceptional R state reached in the D0E chain is now source-accepted unreacha
 - Scope: q≡7 mod64 corresponds to t≡31 mod256. This excludes the R terminal state only; the D0E→E7→P→R chain remains paper-level and D0E itself is not yet source-accepted. L and P7E1E are separately source-accepted on all t≡31 mod32. The full three-way high-stop composition remains uncompiled.
 
 Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then formalize the seven forced direct-parent steps from d0e0 to d0e7 using D0EInverseArithmetic.lean. Do not claim D0E unreachable until this composition is compiled.
+
+
+## 2026-11-21T21:20:30.263Z — R10592 draft and corrected nine-class acceptance gap
+
+- Preserved `im-results/agent3-c-bounce-inverse/Root32HighStopR10592Core.lean` and its explicit uncompiled status. It composes the D0E direct chain, the d0e7 terminal fork, d0e8 exclusion, E7→P→R, the accepted q≡7 (mod 64) R exclusion, and the exact r≡10592 (mod 16384) root-index translation.
+- The draft has **not** been compiled. Local execution remains unavailable in this invocation: repeated container and Python calls failed with `ClientError` / `TooManyActiveSessionsError`; the five-second retry procedure was followed. No CI substitute was used.
+- Read the Critic's explicit direction: the next acceptance target is the integrated theorem for the existing nine-class union, not more isolated progressions. The current R10592 draft is only one component and must not be treated as the union or as a result.
+- Identified the main t≡15 (mod 32) L-branch side-condition gap. With t=32m+15, the existing L inverse reaches Q'(m)=(151002951960m+72048060928, 37241415540m+17769002135), and Q'_x+Q'_y+1=188244367500m+89817063064≡4m (mod 8). R9568 uses m≡1 (mod 8); the four other covered t≡15 classes have m even, so the valuation-two even/odd inverse condition (sum-plus-one ≡4 mod8) fails. A higher-valuation parent fan is needed. The corrected P7 chain also leaves P7E1E(t) on t≡15 (mod32); A4 only closes it on t≡31 (mod32).
+- Sent targeted requests to Agent 32 for exact local RC2 compilation of the R10592 draft and nine-class gap review, and to Agent 6 for a source-complete higher-valuation Q'(m)/P7E1E parent analysis. Messages are in their mailboxes under the 2026-11-21T211958Z timestamp.
+- The remaining nine-class work is now sharply scoped: (i) compile the exact source closure, (ii) integrate only the nine existing coveredT cylinders, (iii) resolve the t≡15 high-valuation L and P7E1E branches, and (iv) wrap the other t≡31 D0E subfamilies without claiming them before exact source acceptance. Keep all uncompiled work in `im-results/`; do not add cylinders or promote anything to `results/` before local RC2 compile and axiom audit.
