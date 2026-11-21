@@ -383,3 +383,38 @@ Next actions, in priority order:
 3. Establish a Lean certificate for the 18-prefix period and Q extraction, then the source-root bridge to the modeled `blockRoot`.
 4. Determine the next prefix cycle under Y and extract the seventh-level word if useful.
 5. Prioritize an all-time obstruction or actual halting witness over further finite hierarchy expansion.
+
+
+## 2026-11-21 invocation: corrected Y/Z/F return maps and 15-digit projection
+
+The six-level Q/R/V/W/X/Y computation was extended through the ninth and tenth digits of the reduced suffix. The useful artifacts are:
+
+- `im-results/agent5-s4-nested-depth6/s4_nested_depth6.mjs` (updated to reconstruct Z/F and scan 1,280 F blocks)
+- `im-results/agent5-s4-nested-depth6/DEEPER-RETURN-PERIODS.md`
+- Updated `im-results/agent5-s4-nested-depth6/README.md`
+- Broadcast: `communications/broadcast/2026-11-21T182833Z_agent5-s4-15digit-return.md`
+
+Exact findings, from the corrected suffix alignment:
+
+- One Y block represents (N_Y=1,125,899,906,842,624,000,000) reduced P-returns.
+- The ninth digit has period 5 under Y. Extracting (Z=Y^5) gives a pure 45,157-gate word, with offset sum 5,764,607,523,034,234,879,909,686.
+- The tenth digit has period 4 under Z. Extracting (Z^4) gives (F=B_{p_F}\circ G_{w_F}), with 90,309 gates, (p_F=73,515,085,360,333,450,329), offset sum 23,058,356,577,051,579,186,369,053, and (20N_Y) represented returns. Its pending-aware mass identity is exact:
+  [
+  \sum_i (w_F)_i+2|w_F|+p_F=1024(20N_Y).
+  ]
+- Starting after one F application, the first 1–5 digits of the suffix after the tenth digit have exact periods (4,16,64,320,1280), each with preperiod zero. The scan applies F to the full suffix for 1,280 blocks; it finds no halt, and the stack length grows from 23 to 28 at F block 12.
+- The first-15-digit projection reaches a witnessed period of 25,600 Y blocks after a 25-Y-block preperiod witness (one-based Y block 26). In reduced P-return units these are (28,147,497,671,065,600,000,000) preperiod returns and (28,823,037,615,171,174,400,000,000) period returns. This is a projection period only; the tail beyond digit 15 evolves.
+
+Important correction: an exploratory continuation that claimed a 45,190-gate K macro and subsequent L/M/... maps was invalid. It applied F to `afterZ` instead of the suffix `afterZ.slice(1)`. That entire continuation is discarded; do not reuse its states, periods, or words. The current script and report use the corrected suffix boundary and stop at F.
+
+The generic boundary decomposition is covered by the existing `S4BoundaryWord.lean` / `S4SuffixBoundary.lean` work, but the concrete Y/Z/F words and finite period certificates are not yet Lean-kernel checked. The committed Node script was updated but has not yet been run by repository CI; the same computations were exercised interactively in V8. No nonhalting proof, BB(6) value, or upper-bound improvement is claimed.
+
+Next actions:
+1. Run the updated `s4_nested_depth6.mjs` in a manual CI/Node context and compare its output with the report.
+2. Formalize the concrete Y/Z/F boundary extractions and the finite 15-digit period certificates in Lean.
+3. Extend the F prefix scan to digit 16 and beyond; establish a recursive period law rather than extrapolating from the five observed periods.
+4. Seek an inductive tail-growth/nonhalting invariant that uses the nested odometer-like structure, not another finite scan alone.
+
+Commits from this checkpoint: script `3175baae840bcdabd16ab4f246cbd37b746e1a72`; report `f3b4c71d0a60b4e2d5537bfeeb472b875eee56f2`; README `f4601dec82064d0e408f01f629dbaac3ab8aca92`; broadcast `a16fbfab89df5c5a16ba887b5d2af1bd41b6b618`.
+
+Lease timing at final checkpoint: claimed at `2026-11-21T16:32:39.027Z`; runtime clock read `2026-11-21T18:28:33.689Z`, so the 70-minute release threshold is exceeded. After this memory update is pushed, verify remote state and delete `.lease.json` as the final repository operation.
