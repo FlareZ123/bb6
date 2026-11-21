@@ -141,7 +141,7 @@ structure FrozenTreeTable where
       (nodeAt child).s = (nodeAt n).s+a+h+1 ∧
       (nodeAt child).C = (nodeAt n).C*3^h*(2^(a+1)+1) ∧
       ((nodeAt child).c : Int) - (nodeAt child).b =
-        (2^a : Int) *
+        ((2^a : Nat) : Int) *
           ((2*a*((nodeAt n).C*3^h) +
               2^(h+1)*((nodeAt n).C-(nodeAt n).b+(nodeAt n).c) : Nat) : Int)
         - (2^a : Int) * (3*((nodeAt n).C*3^h) : Nat)
@@ -353,7 +353,7 @@ def t1TreeTable : FrozenTreeTable where
     simp [residues_t1] at hr
     omega
   periodMod3 := by
-    norm_num [period_t1]
+    decidet1]
   lowComplete := by
     intro n h a hn hnN hh ha ha'
     simpa [lowRowKeys_t1] using
@@ -382,17 +382,14 @@ def t1TreeTable : FrozenTreeTable where
     intro n child h a he
     simp [edges_t1] at he
     rcases he with ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩ | ⟨rfl,rfl,rfl,rfl⟩
-    all_goals norm_num [nodeAt_t1]
+    all_goals decidet1]
 
   nodeProps := by
-    intro n hn
-    interval_cases n <;> norm_num [nodeAt_t1]
+    decide
   specialBounds := by
-    intro n hn h hh
-    interval_cases n <;> interval_cases h <;> norm_num [nodeAt_t1] at *
+    decide
   nodeTenBound := by
-    intro n hn
-    interval_cases n <;> norm_num [nodeAt_t1]
+    decide
   rootGate := by
     intro r k h a v hr hh ha hzero hpos heq
     have hg : RootGenericGate h a (r+period_t1*k) :=
@@ -458,14 +455,11 @@ def h1a3TreeTable : FrozenTreeTable where
     all_goals norm_num [nodeAt_h1a3]
 
   nodeProps := by
-    intro n hn
-    interval_cases n <;> norm_num [nodeAt_h1a3]
+    decide
   specialBounds := by
-    intro n hn h hh
-    interval_cases n <;> interval_cases h <;> norm_num [nodeAt_h1a3] at *
+    decide
   nodeTenBound := by
-    intro n hn
-    interval_cases n <;> norm_num [nodeAt_h1a3]
+    decide
   rootGate := by
     intro r k h a v hr hh ha hzero hpos heq
     have hg : RootGenericGate h a (r+period_h1a3*k) :=
@@ -527,14 +521,11 @@ def h3a6TreeTable : FrozenTreeTable where
     all_goals norm_num [nodeAt_h3a6]
 
   nodeProps := by
-    intro n hn
-    interval_cases n <;> norm_num [nodeAt_h3a6]
+    decide
   specialBounds := by
-    intro n hn h hh
-    interval_cases n <;> interval_cases h <;> norm_num [nodeAt_h3a6] at *
+    decide
   nodeTenBound := by
-    intro n hn
-    interval_cases n <;> norm_num [nodeAt_h3a6]
+    decide
   rootGate := by
     intro r k h a v hr hh ha hzero hpos heq
     have hg : RootGenericGate h a (r+period_h3a6*k) :=
@@ -595,14 +586,11 @@ def h7a2TreeTable : FrozenTreeTable where
     all_goals norm_num [nodeAt_h7a2]
 
   nodeProps := by
-    intro n hn
-    interval_cases n <;> norm_num [nodeAt_h7a2]
+    decide
   specialBounds := by
-    intro n hn h hh
-    interval_cases n <;> interval_cases h <;> norm_num [nodeAt_h7a2] at *
+    decide
   nodeTenBound := by
-    intro n hn
-    interval_cases n <;> norm_num [nodeAt_h7a2]
+    decide
   rootGate := by
     intro r k h a v hr hh ha hzero hpos heq
     have hg : RootGenericGate h a (r+period_h7a2*k) :=
@@ -663,14 +651,11 @@ def h7a4TreeTable : FrozenTreeTable where
     all_goals norm_num [nodeAt_h7a4]
 
   nodeProps := by
-    intro n hn
-    interval_cases n <;> norm_num [nodeAt_h7a4]
+    decide
   specialBounds := by
-    intro n hn h hh
-    interval_cases n <;> interval_cases h <;> norm_num [nodeAt_h7a4] at *
+    decide
   nodeTenBound := by
-    intro n hn
-    interval_cases n <;> norm_num [nodeAt_h7a4]
+    decide
   rootGate := by
     intro r k h a v hr hh ha hzero hpos heq
     have hg : RootGenericGate h a (r+period_h7a4*k) :=
