@@ -1191,6 +1191,7 @@ jobs:
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/m0-e8/
           cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/m0-e8/
           cp im-results/agent48-counted-inc0/{M0EvenEightQ4Bridge,M0EvenEightQ4Prefix,M0EvenEightValuationEncoding,M0EvenEightValuationFixedPrefix,M0EvenEightValuationMacros,M0EvenEightValuationSuffix,M0EvenEightValuationSweepFacts,M0EvenEightValuationSource,M0EvenEightValuationQ4Source}.lean /tmp/m0-e8/
+          cp im-results/agent48-counted-inc0/M0EvenEightA0FiniteBridges.lean /tmp/m0-e8/
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/m0-e8/
           cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/m0-e8/
           cp im-results/agent24-champion-time/Q4RightEndpoint.lean /tmp/m0-e8/
@@ -1231,6 +1232,7 @@ jobs:
           compile_checked Q4Suffix.lean
           compile_checked Q4RightEndpoint.lean
           compile_checked M0EvenEightValuationQ4Source.lean
+          compile_checked M0EvenEightA0FiniteBridges.lean
       - name: Upload focused Lean diagnostics
         if: failure()
         uses: actions/upload-artifact@v4
