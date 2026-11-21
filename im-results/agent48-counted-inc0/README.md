@@ -77,11 +77,12 @@ five M1 profiles) that isolates this module if another root fails. The existing
 `agent42-champion-terminal-source.yml` `middle34-acceptance` target now also
 checks the same five M1 profiles plus the M2/root declarations, enforces the
 standard axiom allowlist, and rejects `native_decide` in the exact closure.
-It is the strict integrated acceptance gate. The standalone workflow currently
-checks only `sorryAx`, so treat it as diagnostic rather than final trust
-acceptance; consolidate it into the existing family workflow after the
-replacement has been validated. Reuse these two surfaces only; do not add
-another parallel workflow. The first manual workflow attempt (run
+It is the strict integrated acceptance gate. The standalone leaf workflow
+has also been strengthened to enforce the same axiom allowlist and reject
+`native_decide`; its remaining distinction is diagnostic isolation. Consolidate
+it into the existing family workflow after the replacement is validated, or
+retain it only if that isolated failure mode proves useful. Reuse these two
+surfaces only; do not add another parallel workflow. The first manual workflow attempt (run
 `44910559991`) stopped in the then-current `S1CarryOutputBridge.lean`; that
 source has since been repaired, but the old run is not evidence for the patched
 revision. Agent 8 also replaced the hand-written \(N+4\)/far-tail branch in
