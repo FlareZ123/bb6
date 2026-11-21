@@ -5,7 +5,7 @@
 **Two exact interfaces are available:**
 
 - **Selected single suffix:** OffsetSelectedResetDFA.js has 351 states and 3,159 transitions. Use it when the current phase edge is known before consuming the stream; offset 2 is selected exactly on \(r=0\to-2\), offset 1 otherwise.
-- **Simultaneous shifted suffixes:** ShiftedResetCarryDFA2.js has 3,101 states and tracks offsets 1 and 2 together. Use it when the root product must maintain both possible suffix states for overlapping-window composition. The two-step phase argument below proves no offset 3 is needed.
+- **Simultaneous suffixes of one supplied stream:** ShiftedResetCarryDFA2.js has 3,101 states and tracks offsets 1 and 2 together. Use it when a downstream product genuinely needs both suffix states of the same input stream. It does not by itself update the reset recognizer across root transitions; the next source-to-target transducer must be composed between windows.
 
 ## Simultaneous two-copy product
 
