@@ -150,6 +150,36 @@ b_N^{T_{q-2}^{2^{65518}}}<T_q.
 \]
 Combining with \(6b_N^2<S<9b_N^2\) gives the boxed score sandwich.
 
+## Stronger explicit lower tower for the outer index
+
+Use the existing source-dossier notation
+\[
+A=V_7+\sum_{j=8}^{M+42}V_j+\frac{5M+176}{3},
+\qquad
+N=(2^{78}-1)2^A-3,
+\qquad
+q=M+N+50.
+\]
+All summands in \(A\) are nonnegative, so \(A\ge V_{M+42}\). Applying the new lower recurrence inequality at \(j=M+42\) gives
+\[
+A\ge V_{M+42}>
+T_{M+45}^{\,T_{M+44}^{\,2^{46}}}.
+\]
+Since \((2^{78}-1)2^A-3>2^A\) for these parameters,
+\[
+N>2^A>
+2^{\,T_{M+45}^{\,T_{M+44}^{\,2^{46}}}},
+\qquad q-1>N.
+\]
+The exact score sandwich \(S>T_{q-1}\) therefore yields the additional explicit lower bound
+\[
+\boxed{
+S>
+T_{\,2^{\,T_{M+45}^{\,T_{M+44}^{\,2^{46}}}}}.
+}
+\]
+This is a stronger human-readable tower lower bound than the previous coarse \(T_{T_{T_{10}}}\) endpoint, conditional on the same authentic source itinerary and exact score decomposition. The exact \(q\)-indexed sandwich remains stronger and should be preferred when its source hypotheses are available.
+
 ## Validation boundary and next action
 
 - The derivation is a proof about the scalar recurrence, with explicit elementary base and induction steps.
