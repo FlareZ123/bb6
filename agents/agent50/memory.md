@@ -335,3 +335,22 @@ All nine are excluded. A/C and most B cases fall to small prime-modulus contradi
 **Tool blocker:** attempted the prescribed local Lean reconstruction from the uploaded split archive twice via the container; both returned CAAS ClientError, including a simple shell command. Python execution was also unavailable. No CI was used as a substitute, and no Lean verification is claimed. The note remains in `im-results/` until formalized. Do not repeat the source inspection or modular case arithmetic; next useful work is to extend the exact terminal exclusion to a longer depth-two tail / third transition, or formalize this lemma once local Lean works.
 
 No P1 nonhalting proof, no BB(6) upper bound, and no exact BB(6) value established.
+
+
+## 2026-11-21 04:31 UTC continuation: third-edge terminal exclusion
+
+Current incarnation: Agent 50, run id agent50-gpt6-20261121T041715Z-p1-third-edge-extension; original lease claimed_at=2026-11-21T04:17:15.722Z, measured release threshold 2026-11-21T05:27:15.722Z. Do not refresh. At each checkpoint, compare the lease timestamp with the actual runtime clock.
+
+**New paper-level conditional arithmetic result:** updated im-results/agent50-p1-dyadic-width/restart_second_edge_terminal_exclusion.md. In addition to the prior immediate- and second-edge terminal exclusions, derived and checked the full 27-case third-edge terminal system. The correct original-source child coordinates are (b',d')=(2k-4,c+4); the expression c+k+5 is the child's X'=d'+b'/2+3, not its d'. For a second edge of depth r and a third edge of depth v,
+\[
+X_2=(S_1+X_1/2^r+5-2r)/2,\quad S_2=S_1-2r-2,
+\]
+and terminality gives
+\[
+X_2=2^v(S_2+4(T+t_1+r+v+3)-12P-2v-7).
+\]
+Substitution yields the exact 3x3 branch tables in the note. Branch A is split into four u>P/10 cases (contradicting its M<9P/7 defect bound) and five exact modular obstructions. Branch B has eight u>P/90 cases (contradicting M<P/7) plus one mod-5 obstruction. Branch C has seven u>P/90 cases plus mod-29/mod-3 obstructions. The modular residues, including the A p=103 order-17 argument, are written out in the note.
+
+**Conditional consequence:** no wall endpoint can occur at the first-shallow child, the child after the next edge, or the child after the third edge. A wall-reaching restart suffix therefore has at least four edges from the first-shallow parent (the first shallow edge plus three successors). This is a finite prefix-length lower bound, not an unbounded shallow-edge theorem, P1 decision, or BB(6) result.
+
+**Evidence boundary / next action:** the third-edge arithmetic is not Lean-checked and the full RestartWallSource/RestartWallLowTrace source composition is not accepted. The next useful task is to formalize the compact 27-case arithmetic in FirstShallowCoordinateGate.lean (or a small imported leaf), then compose it with restartPath_first_shallow_state and source_wall_restart_suffix_shape using the existing manual workflow only after a successful local Lean 4.36.0-rc2 preflight. Do not create another workflow. container.exec again returned CAAS ClientError on a trivial pwd && ls preflight; do not substitute CI for the required local check. Then attack the fourth-edge terminal case or a genuinely uniform restart invariant. Check Agent9's response to the handoff before duplicating its source work.
