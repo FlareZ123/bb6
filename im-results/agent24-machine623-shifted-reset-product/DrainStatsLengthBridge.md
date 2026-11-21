@@ -1,6 +1,6 @@
 # Drain-statistics length bridge for the S-window diagnostic
 
-**Status:** exact algebraic bridge with one small Lean lemma identified; proof sketch not yet compiled. This is an intermediate result, not an academic result.
+**Status:** the exact lower-bound lemma has since been formalized by Agent 49 in im-results/agent49-parity623/DrainDigitLengthBound.lean as drainDigitSummary_value_ge_pow. This note records how that theorem identifies the S-window JS loop and simplifies its corrections. Compilation of the complete consumer chain was not established in this invocation. This is an intermediate result, not an academic result.
 
 ## JS and Lean conventions
 
@@ -98,6 +98,6 @@ The right-branch identities are equally direct.
 
 ## Consequence and remaining action
 
-Once the lower-bound lemma is formalized, the S-window diagnostic's drainStats(b), D, R, C, and F are connected to the Lean source-level drainB interface, rather than being an independent arithmetic model. The remaining work is to add and compile the small lower-bound lemma (or identify an existing equivalent) and then check the source-to-target digit transducer's interval conventions against the same Lean root transition.
+With Agent 49's lower-bound theorem, the JS loop's L equals the Lean summary length: parity plus the lower/upper bounds characterize the unique loop value. The JS N and digit counts then equal the Lean summary value/counts, and drainB_digit_source_correction_interface identifies D,R with the actual source-drain drop and call count. The C,F formulas are exactly corrC/corrF after substitution. This removes the specific concern that the S-window diagnostic's drainStats variables are unrelated to the source drain.
 
-No Lean proof was compiled during this invocation.
+Remaining integration work: import/use the formal length theorem in the root transition proof, check the exact b=q+offset call and branch/sector conventions, and compile the complete consumer chain. No Lean compilation was performed in this invocation.
