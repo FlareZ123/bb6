@@ -80,4 +80,4 @@ At macro 14, the external input residue is 2 and the root input residue is 1.
 
 ## Reproduction
 
-Run `python3 root13_shadow_check.py` from this directory in the repository checkout. The script imports the existing `check_eighth_root.py` arithmetic model and reads the committed `macro_trace.json`; it prints the 13 matching residues and checks the macro-14 divergence.
+Run `python3 root13_shadow_check.py` from this directory to reproduce the 13-step affine shadow, or `node root20_cylinder_screen.mjs` to reproduce the broader DRegular-state screen through episode 20. The first script imports the existing `check_eighth_root.py` arithmetic model and reads the committed `macro_trace.json`; the second is standalone. Both are arithmetic checks, not Lean source proofs.
