@@ -36,19 +36,6 @@ private theorem sideBit_append_after_local (xs ys : List Bool) (i : Nat)
     sideBit (xs ++ ys) i = sideBit ys (i-xs.length) :=
   sideBit_append_right xs ys i hi
 
-private theorem sideBit_replicate_true (n i : Nat) (hi : i<n) :
-    sideBit (List.replicate n true) i = true := by
-  induction n generalizing i with
-  | zero =>
-      omega
-  | succ n ih =>
-      cases i with
-      | zero =>
-          simp [sideBit]
-      | succ i =>
-          have hi' : i<n := by omega
-          simpa [sideBit] using ih i hi'
-
 private theorem sideBit_d0pow_mod (n i : Nat) (hi : i<3*n) :
     sideBit (d0pow n) i = decide (i%3=2) := by
   induction n generalizing i with
