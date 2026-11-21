@@ -100,7 +100,7 @@ Combined with the replay maxima (pending kernel range-fold acceptance), this giv
 This is still conditional. Required acceptance gates:
 1. Compile the exact imports and all chunk folds in `SymRunTraceStats.lean) under Lean 4.36.0-rc2; its 18 F424 and 6 F412 folds include every intermediate state, and the checkpoint-chain conjunctions bind them to the authentic source checkpoints.
 2. Audit the exported axiom profiles for `f424_trace_range_certificate`, `f412_trace_range_certificate`, `stepPure_field_growth`, and `stepPureIter_field_growth) against the exact imported modules (the source-equivalent proof preflight is not a substitute).
-3. Prove the primitive-cost bound for each `stepPure` branch and cost-indexed source soundness for the six repeated-block sweeps and outer `stepSym` branches. `SymRunCostedStepPilot.lean` now drafts exact `ReachesIn` witnesses for F424's cycle, exit, and two variable-cost rules, but remains uncompiled.
+3. Prove the primitive-cost bound for each `stepPure` branch and cost-indexed source soundness for the six repeated-block sweeps and outer `stepSym` branches. `SymRunCostedStepPilot.lean` now drafts exact `ReachesIn` witnesses for the listed F424 atomic branches, cycle, exit, and two variable-cost rules, plus `ReachesWithin` composition; it remains uncompiled.
 4. Prove the source costed transfer for the initial `runElemFast` prefix, including the fixed entry costs; the current (<2^{31}) prefix arithmetic is still a transcription.
 5. Preserve the separate final `step_DL_zero_halt` cost +1 and transfer through the exact local machine identity and halting adapter, with axiom audit.
 
