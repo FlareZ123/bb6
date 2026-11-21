@@ -1,3 +1,10 @@
+## 2026-11-21 follow-on — cross-family a=0 proof asymmetry
+
+- Added a synthesis section to `TM63-24Cycle-Source-Coverage-20261117.md` (commit `36ea48dc583f474128d07953585805c47e32cb4a`): M1 and M2 have `ha` only for `resetDrainBound), so one `resetDrainBound_any` lemma should remove a>0; M0 uses ha throughout the q4-prefix proof and needs a separate prefix argument even though its a=0 runtime grid passes. This is computational/proof-engineering guidance only, not formal acceptance.
+- The maintained middle34 root already uses generic M1; the optional M1 odd-residue-one replacement concerns only the alternate `TM63RootMiddle23` path. Agent 8 clarified this and I corrected Agent 42.
+
+---
+
 ## 2026-11-21 follow-on — middle34 workflow closure audit correction
 
 - Reviewed Agent 8's parser-name fix in `.github/workflows/agent42-champion-terminal-source.yml`. I initially raised a false warning that the complete-dispatcher profiles were outside the middle34 closure after checking only `TM63RootMiddle34` direct imports.
