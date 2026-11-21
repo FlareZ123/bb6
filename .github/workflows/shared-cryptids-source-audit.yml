@@ -62,8 +62,8 @@ jobs:
           set -euo pipefail
           [[ "$ORIGINAL_MODULE" =~ ^[A-Za-z0-9_.]+$ ]]
           [[ "$UPSTREAM_SHA" =~ ^[0-9a-f]{40}$ ]]
-          [[ "$LEAN_TOOLCHAIN" =~ ^leanprover/lean4:v[0-9]+\\.[0-9]+\\.[0-9]+-rc[0-9]+$ ]]
-          [[ "$DEPENDENCY_VERSION" =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+-rc[0-9]+$ ]]
+          [[ "$LEAN_TOOLCHAIN" =~ ^leanprover/lean4:v[0-9]+\.[0-9]+\.[0-9]+-rc[0-9]+$ ]]
+          [[ "$DEPENDENCY_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-rc[0-9]+$ ]]
           for p in "$DEPENDENCY_PATH" "$BRIDGE_PATH"; do
             [[ "$p" =~ ^im-results/[A-Za-z0-9_./-]+\.lean$ ]]
             [[ "$p" != *..* ]]
@@ -100,7 +100,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          printf '%s\\n' "$LEAN_TOOLCHAIN" > lean-toolchain
+          printf '%s\n' "$LEAN_TOOLCHAIN" > lean-toolchain
           if [[ "$DEPENDENCY_VERSION" != "v4.35.0-rc4" ]]; then
             sed -i "s/v4.35.0-rc4/$DEPENDENCY_VERSION/g" lakefile.toml
             rm -f lake-manifest.json
