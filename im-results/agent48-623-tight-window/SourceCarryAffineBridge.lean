@@ -850,7 +850,7 @@ theorem right_carry_output_pairs_matches_affine
   induction n generalizing X X0 Y0 a b with
   | zero => rfl
   | succ n ih =>
-      let tx : Int := -X%3 - X0%3 - Y0%3 + a
+      let tx : Int := -(X%3) - (X0%3) - (Y0%3) + a
       let ty : Int := X0%3 + Y0%3 + b
       have hstep :=
         right_tail_step X X0 Y0 (X%3) (X0%3) (Y0%3) a b rfl rfl rfl
