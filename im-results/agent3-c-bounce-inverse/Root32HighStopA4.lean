@@ -184,6 +184,10 @@ theorem p7e1e_unreachable_of_t_mod32_31 (t : Nat) (ht : t%32=31) :
 #print axioms a4_unreachable_of_t_mod32_31
 #print axioms p7e1e_unreachable_of_t_mod32_31
 
+
+#print axioms root32_highstop_t31_reduces_to_two_residuals
+#print axioms p7_residual_root_index_class
+
 end BB6.Agent3Root32HighStopA4
 
 
