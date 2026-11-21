@@ -142,7 +142,7 @@ Then add a cost-indexed parallel to the existing stepPure_sound, sweepBB_sound, 
 Two independent obligations remain:
 
 1. Prove the source-structural 2^40 M^2 per-stepSym cost lemma.
-2. Kernel-check the maximum-field bounds over every intermediate state, not merely the checkpoint endpoints. The replay already computes the exact maxima; a Lean fold over each 4096-step chunk can certify the bound using the same deterministic transition function.
+2. Kernel-check the maximum-field bounds over every intermediate state, not merely the checkpoint endpoints. The replay records both each chunk peak and its endpoint maximum; chunk peaks often exceed their endpoints even though endpoint maxima are monotone. A Lean fold over each 4096-step chunk can certify the bound using the same deterministic transition function.
 
 The source modules currently live only in the pinned upstream Cryptids tree (Lean 4.35.0-rc4), while the local BB6 project uses Lean 4.36.0-rc2 and does not contain HaltShared.lean. The local shell preflight in this invocation failed with a tool-level ClientError, so no CI compile was attempted. Until the exact dependency closure is available and the cost lemma and range fold compile, this remains an intermediate candidate rather than a publishable result.
 
