@@ -71,16 +71,31 @@ The corresponding witnesses are in `SymRunCostedStepPilot.lean`, together with t
 - `HALT` is reflexive;
 - `CB` mode composes `sweepCB_sound` and `afterSweepCB_sound`.
 
-`runElemFast_sound` composes the four iterated `stepElem*` soundness lemmas. As with the RLE engine, a `StepStar` proof does not retain a usable numeric length. A parallel `ReachWithin` / `StateHaltsWithin` development is needed:
+`runElemFast_sound` composes the four iterated `stepElem*` soundness lemmas. As with the RLE engine, a `StepStar` proof does not retain a usable numeric length. A parallel `ReachWithin` / `StateHaltsWithin` development is needed. The F424 pilot now drafts the first local stage: all atomic rule witnesses, all six repeated-block sweep witnesses, constructor-complete `stepElemBB_within` / `stepElemDL_within` / `stepElemCB_within`, and `stepPure_within` with budget `50*(M+1)`. These statements use a local maximum-field measure and remain uncompiled. The remaining route is:
 
-1. Define a state-dependent primitive cost for `stepElemM` and `stepSym`, derived from `stepElemM_sound` / `stepSym_sound` branch proofs and the module's `HasSymRunRules` costs.
-2. Port the deterministic `stepElemM` / `stepSym` state updates and accumulate those costs over the actual F424/F412 traces.
-3. Validate the port against the explicit `symChk*` states before treating the accumulator as computational evidence.
-4. Add the fixed initial and final costs (`18+1` for F424, `1+1` for F412), then transfer exact `multiStep` counts via upstream `multiStep_toBB` and the local `source_halts_after_iff_agent8_halts_after` adapter.
+1. Obtain exact-import Lean 4.36.0-rc2 compilation and audit of the costed pilot, then align its local field measure with the trace-statistics measure.
+2. Lift `stepPure_within` through the actual macro/`stepSym` branches, including the outer CB/BB sweep and fallback paths, with exact accumulated primitive costs.
+3. Port the deterministic `stepElemM` / `stepSym` state updates and accumulate those costs over the actual F424/F412 traces.
+4. Validate the port against the explicit `symChk*` states before treating the accumulator as computational evidence.
+5. Add the fixed initial and final costs (`18+1` for F424, `1+1` for F412), then transfer exact `multiStep` counts via upstream `multiStep_toBB` and the local `source_halts_after_iff_agent8_halts_after` adapter.
 
 The checkpoint names and arithmetic above are established from the upstream proof source; no primitive-step upper bound is asserted here.
 
 
+
+
+### F424 costed one-element / stepPure draft
+
+`SymRunCostedStepPilot.lean` now contains the following source-aligned statements:
+
+- exact `ReachesIn` witnesses for all 19 F424 atomic rule branches;
+- exact induction witnesses for the six repeated-block sweeps, with costs `11k`, `14p`, `25m`, `21k`, `24p`, and `45m`;
+- `stepElemBB_within`, `stepElemDL_within`, and `stepElemCB_within` under the uniform budget `50*(M+1)`;
+- `stepPureBB_within`, `stepPureDL_within`, `stepPureCB_within`, and `stepPure_within` under the same budget, where `M` is a local recursive maximum of all numeric fields in the symbolic state.
+
+The derivation is structural: variable atomic costs are `3d+22` (DL) and `3d+21` (CB); the largest repeated sweep is `45m`; fixed atomic costs are at most 9. All are bounded by `50*(M+1)` when the relevant repeat/run parameter is at most M. Peel-only branches use the fact that `peelPureTok` does not increase the local maximum field.
+
+**Not yet accepted:** the new block has not been compiled. The local container/Python tools returned tool-level ClientErrors during RC2 preflight, and no CI substitute was used. Exact imported-source compilation, endpoint simplification checks, and axiom audit remain mandatory. F412 still needs its own rule-cost witnesses and costed branch theorem.
 ## Agent 38 replay and conditional bound candidate
 
 The independent state replay and cost analysis are now in:
