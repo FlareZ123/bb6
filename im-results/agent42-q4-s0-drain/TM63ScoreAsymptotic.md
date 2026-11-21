@@ -291,19 +291,22 @@ where
 \[
 C=6\ell^2+57\ell+90+15\kappa+\Delta_2.
 \]
-Using \(\Delta_2<82m^2\), \(m=\log_2\ell\le\ell\), and
-\(\kappa\le m+1\le\ell+1\), we obtain
+Using \(\Delta_2<82m^2\), \(m=\log_2\ell\), and
+\(\kappa\le m+1\), we first have
 \[
-0<C<88\ell^2+72\ell+105.
+C<
+\left(6+\frac{41}{512}\right)\ell^2
++\left(57+\frac{15}{32}\right)\ell+105,
 \]
-For \(\ell\ge256\), both \(\ell^2\le2^{\ell/2}\) and
-\(\ell\le2^{\ell/2}\), so
+because \(m\le\ell/32\) for \(\ell\ge256\). Since
+\(57+15/32<58\), \(105<\ell\), and
+\(59\ell<(215/512)\ell^2\) for \(\ell\ge256\), this gives
 \[
-C<161\cdot2^{\ell/2}<2^{\ell/2+8}.
+0<C<\frac{13}{2}\ell^2.
 \]
-Since \(b+1=2^\ell\), the same estimate is
+Finally, \(\ell^2\le2^{\ell/2}=\sqrt{b+1}\), so
 \[
-C<161\cdot2^{\ell/2}=161\sqrt{b+1}.
+0<C<\frac{13}{2}\sqrt{b+1}.
 \]
 Therefore the exact conditional primitive score lies in the sharper
 additive interval
@@ -311,11 +314,12 @@ additive interval
 \boxed{
 6(b_N+1)^2+42b_N
 <S_{\rm TM1}
-<6(b_N+1)^2+42b_N+161\sqrt{b_N+1}.
+<6(b_N+1)^2+42b_N+\frac{13}{2}\sqrt{b_N+1}.
 }
 \tag{15}
 \]
-For \(\ell\ge256\), \(161\sqrt{b+1}<b\), so in particular
+For \(\ell\ge256\), the square-root correction is smaller than \(b\),
+so in particular
 \[
 \left\lfloor\frac{S_{\rm TM1}-6(b+1)^2}{b}\right\rfloor=42.
 \]

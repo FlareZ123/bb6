@@ -933,7 +933,7 @@ It also yields the especially tight additive interval
 \[
 6(b_N+1)^2+42b_N
 <S_{\rm TM1}
-<6(b_N+1)^2+42b_N+161\sqrt{b_N+1}.
+<6(b_N+1)^2+42b_N+\frac{13}{2}\sqrt{b_N+1}.
 \]
 These are paper-level consequences of the conditional source-cost
 identity, not Lean acceptance or an authentic-root halt theorem. See
