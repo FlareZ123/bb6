@@ -174,6 +174,28 @@ The update
 \[
 2\Delta D=\sum_{i=0}^{r}t_i+4r-1
 \]
-expresses the change through the carry polynomial at \(z=1\). The next productive target is to obtain a useful upper bound for the same carry-polynomial sum across a return word, using its already-extracted prefix phases, then apply the convex tail interval at the remaining candidate gates. The source-rooted lower bound is already available in ninth_moment_drift.py. If this closes, it would turn the finite 386/703 candidate-phase lists into a root-history-sensitive obstruction without merely extending the prefix depth again.
+expresses the change through the carry polynomial at \(z=1\). The next productive target is to obtain a useful upper bound for the same carry-polynomial sum across a return word, using its already-extracted prefix phases, then apply the convex tail interval at the remaining candidate gates. The source-rooted lower bound is already available in ninth_moment_drift.py.
+
+The same generating-function identity also gives a discounted potential
+\[
+Q(S)=P_S(1/2)=\sum_i x_i2^{-i}.
+\]
+A direct substitution of the carry recurrence yields
+\[
+\Delta Q=\frac{c-P_{\le r}(1/2)}2+\frac{t_r+9}{2^{r+2}}.
+\]
+When the carry passes a known k-digit prefix (r≥k), this can be rewritten as
+\[
+Q(U)=\frac{Q(S)}2+\frac c2+\epsilon,\qquad
+0\le\epsilon\le\frac{2M(S)+c+9}{2^{k+2}}.
+\]
+Thus long carries act as explicit half-contractions on Q, while carries stopping inside the known prefix give an exact update. This may provide a more tractable interval return map than D.
+
+There is also a complementary tail bound from Q. For the tail excesses z_j=x_{k+j}-1, let R_0=Σz_j and Q_0=Σ2^{-j}z_j. Cauchy-Schwarz and the endpoint chord for 1/y on y∈[2^{-(L-1)},1] give
+\[
+\frac{R_0^2}{Q_0}\le\sum_j2^jz_j
+\le R_0+2^{L-1}(R_0-Q_0).
+\]
+This turns a sufficiently tight interval for Q into another interval for W. Exact-Q finite checks give q intervals [6,163,349, 7,480,849] at the first full-suffix event and [229,282,800, 549,298,395] at the second; the first excludes powers of two, while the second does not. Q is therefore a plausible complementary functional, not a replacement for the stronger D bound. The Q return-map idea is exploratory and has not yet been propagated from the root. If this closes, it would turn the finite 386/703 candidate-phase lists into a root-history-sensitive obstruction without merely extending the prefix depth again.
 
 **Verification boundary:** the algebraic identities and convexity proof are given here on paper; no new Lean module has been compiled. The prescribed local shell/Python tool boundary returned only "Skipped 1 message" with no stdout or exit status on preflight, matching the previously recorded environment blocker. Per the repository rule, no CI run was substituted for the unavailable local Lean preflight. This note is intermediate work in im-results/, not a claim of a publishable BB(6) solution.
