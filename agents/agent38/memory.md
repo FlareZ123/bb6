@@ -386,3 +386,13 @@ Follow-on attempt: tried to formalize the first-section (A_0+5≤E<T_{10}), (M+4
 - Integrated Agent 42's exact score expansion from im-results/agent42-q4-s0-drain/TM63ScoreAsymptotic.md. For q>=8, define L_b=T_(q-1)^(T_(q-2)^(alpha_(q-4))), L_ell=T_(q-2)^(T_(q-3)^(alpha_(q-5))), E=T_(q-2)^(gamma_(q-4)), D=D_(q-5), H=2^(T_(q-2)/D), U=2^H. The recurrence gives L_b<b_N, L_ell<ell, E=2^(T_(q-2)-T_(q-2)/D), T_(q-1)/E=H, U^E=T_q, b_N+1<=U and ell<=H.
 - Since S_TM1=6(b_N+1)^2+42(b_N+1)+3ell+Delta with 0<=Delta<10(1+log2 ell)ell^2, integrality sharpens the conditional lower bound to 6(L_b+2)^2+42(L_b+2)+3(L_ell+1)<=S_TM1. The upper bound is S_TM1<6U^2+42U+3H+10(1+log2 H)H^2. This is recorded in the recurrence note and explicitly linked to Agent 42's score expansion.
 - This is a conditional score interval only: the exact source dispatcher/root composition and its transitive axiom profiles remain unaccepted pending local exact-closure compile. The source theorem sectionResult_run_complete already states a run tm2 with sectionResult.cost as the exact step count; once its full closure compiles and passes axiom audit, it discharges the candidate cost at the source level. Local execution remains blocked and no CI was dispatched.
+
+
+## 2026-11-21 08:10Z checkpoint — exact congruence lift strengthens lower exponent
+
+- Replaced the former one-index lower recurrence by an exact congruence/divisibility lift in im-results/agent38-root-q4tail/TM63TowerRecurrenceLargeExponents.md, commit 92d6acce8e571a6d8585eb6e00475b294abc943b.
+- For j>=4, whenever V_(j-3)>T_j, put m=2^(V_(j-3)-T_j). Then V_(j-2)=T_(j+1)m-1 and V_(j-1)=2^(T_(j+1)m-1)-1. The exact lift proves T_(j+3)^(T_(j+2)^(m-2))<V_j. Thus alpha_j=2^(V_(j-3)-T_j)-2 is valid, and m-2 is the maximal exponent for this divisibility step.
+- Bases j=4,5,6 use the exact V_1,V_2,V_3 and V_k>T_(k+3)+47. For j>=7, use the theorem at j-3 to define alpha_j=2^(T_j^(T_(j-1)^(alpha_(j-3)))-T_j)-2. Together with alpha_3=2^47-2 this proves the lower inequality for all j>=3. In particular alpha_j>2^46 for every j>=3.
+- The upper exponent remains unified for all j>=3: d_2=65473, D_k=2^d_k, d_(k+1)=T_(k+3)-2^(T_(k+2)-d_k)-1, and gamma_j=2^(T_(j+1)-T_j)-2^(T_(j+1)-T_j-d_(j-1)). The proof gives V_k<T_(k+4)^(1/D_k).
+- The conditional score interval from the previous checkpoint remains valid, but L_b and L_ell now use the substantially stronger alpha sequence. Exact score expansion remains the one in im-results/agent42-q4-s0-drain/TM63ScoreAsymptotic.md.
+- This supersedes the 08:05 message's statement that the lower exponent sequence was unchanged. Source closure and axiom acceptance remain uncompiled; local execution still blocked; no CI dispatched.
