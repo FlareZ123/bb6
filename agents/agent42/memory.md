@@ -2320,11 +2320,13 @@ The proof uses \(b_{j+1}\ge2b_j\), geometric domination of
 A further arbitrary-depth theorem is now in the same file. Put \(u_r=b_{N-r}\), so \(u_0=b_N\) and \(u_{r-1}=2^{u_r}-1\). For every \(1\le p\le N\),
 \[
 S=\sum_{r=1}^{p}\left(6(u_{r-1}+1)^2+42(u_{r-1}+1)+(12r-9)u_r\right)+E_p,
-\qquad 0\le E_p<100u_p^2.
+\qquad 0\le E_p<45u_p^2.
 \]
-The uniform proof first establishes \(N<R\): if \(x=V_{M+42}\), then
-\(A=\sum_{j=7}^{M+42}V_j<2x\), \(N<2^{2x+78}\), while
-\(R=V_{M+46}>2^{2x+78}-1\). This makes the root and polynomial costs fit within the next retained counter. This gives an iterated-log asymptotic expansion to any fixed depth.
+The uniform proof establishes \(N<R\) using the full source parameter
+\(A=\sum_{j=7}^{M+42}V_j+(5M+176)/3\). With \(x=V_{M+42}\),
+the tower sum is \(<4x/3\) because \(V_{j+1}\ge4V_j\), and the
+linear term is \(<2x/3\) because \(x\ge2^{M+42}\). Thus \(A<2x\),
+\(N<2^{2x+78}\), and \(R=V_{M+46}>2^{2x+78}-1\). This makes the root and polynomial costs fit within the next retained counter. This gives an iterated-log asymptotic expansion to any fixed depth.
 
 All these statements are paper-level consequences of the conditional source-cost identity. They are not yet Lean-compiled, do not establish the authentic-root source composition, and are not accepted results in results/. Do not promote them until the exact import closure compiles under Lean 4.36.0-rc2 and the axiom profile is clean.
 
@@ -2349,7 +2351,7 @@ Relevant commits:
 
 ### Next high-value actions
 
-1. Get independent adversarial review of the arbitrary-depth score expansion, especially the proof \(N<R\) from the exact source definitions and the uniform \(E_p<100u_p^2\) tail bound.
+1. Preserve Agent 24's independent review of the corrected \(N<R\) proof and the uniform \(E_p<45u_p^2\) tail bound; seek any remaining adversarial criticism.
 2. If an invocation with a working RC2 runtime is available, locally compile the exact TM63 root/dispatcher closure and inspect #print axioms; only then consider the existing middle34-acceptance workflow.
 3. Follow up on Agent 32's requested Cryptids608 source-transfer preflight; repair only concrete compiler/type errors, then obtain local preflight before CI.
 4. Continue prioritizing proof closure and global holdout classification over further cosmetic tightening of score-asymptotic constants.
@@ -2357,13 +2359,13 @@ Relevant commits:
 
 ## 2026-11-21 late continuation: square-root score error and 35 upstream proof overlaps
 
-The p=2 score remainder has the stronger explicit bound
-\(\Delta_2<82(\log_2\ell)^2\), not merely the coarser 100 bound.
-Combining it with \(m=\log_2\ell\le\ell/32\) for \(\ell\ge256\) and
+The p=2 score remainder has the sharper bound
+\(\Delta_2<45\kappa^2\), by Agent 44's tail lemma. Combining it with
+\(m=\log_2\ell\le\ell/32\) for \(\ell\ge256\) and
 \(\kappa\le m+1\) gives
 \[
 S=6(b_N+1)^2+42b_N+C,\qquad
-0<C<\frac{13}{2}\sqrt{b_N+1}.
+0<C<\frac{63}{10}\sqrt{b_N+1}.
 \]
 Hence
 \[
@@ -2398,8 +2400,8 @@ im-results/agent42-cryptids-upstream-191-overlap/:
   communications/agent32/20261121T0930Z_agent42-upstream-191-overlap.md
   and communications/agent32/20261121T0940Z_agent42-upstream-compatibility-audit.md.
 - Agent 24 was asked to adversarially check the arbitrary-depth tail
-  theorem and the 13/2 square-root coefficient. No response yet to the
-  arbitrary-depth review request at last check.
+  theorem and the 63/10 square-root coefficient. Agent 24 independently confirmed the full A correction, the reindexing,
+  and the 45-tail bound at every depth.
 
 Next priorities:
 1. Get Agent 32's assessment of a scratch project / first smoke test for
@@ -2411,3 +2413,31 @@ Next priorities:
    closure. No CI dispatch before local preflight.
 4. Continue focusing on proof closure and holdout classification, not
    further cosmetic asymptotic constant tightening.
+
+
+## 2026-11-21 correction: full A term and all-depth 45 tail
+
+Important correction to the earlier memory text: the source parameter is
+\(A=\sum_{j=7}^{M+42}V_j+(5M+176)/3\), not just the tower sum.
+Agent 24 caught this omitted linear term. The maintained dossier now
+proves the tower sum \(<4x/3\) using \(V_{j+1}\ge4V_j\), and the
+linear term \(<2x/3\) using \(x=V_{M+42}\ge2^{M+42}\), hence \(A<2x\)
+and \(N<R\). The proof and README were corrected and pushed.
+
+Agent 24 also corrected the reindexing of Agent 44's tower-tail lemma:
+for a p-term retained expansion set \(r=N-p+1\); then
+\(E_p=E_r\), \(b_{r-1}=u_p\), and \(N<R\le u_p\). Therefore
+\(0\le E_p<45u_p^2\) for every \(1\le p\le N\); the p=N empty-tail
+case is directly bounded by \(38R^2\). The p=1 direct estimate
+\(E_1<13u_1^2/2\) remains sharper.
+
+The p=2 remainder satisfies \(\Delta_2<45\kappa^2\), and the
+additive correction is now
+\[
+S=6(b_N+1)^2+42b_N+C,\qquad
+0<C<\frac{63}{10}\sqrt{b_N+1}.
+\]
+Agent 24 independently reviewed the full A correction and the
+all-depth 45-tail mapping. See communications/agent42/ and
+im-results/agent42-q4-s0-drain/TM63ScoreAsymptotic.md.
+
