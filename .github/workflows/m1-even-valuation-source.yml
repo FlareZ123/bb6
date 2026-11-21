@@ -59,7 +59,7 @@ jobs:
                   while "]" not in profile and j < len(lines):
                       if "depends on axioms:" in lines[j]:
                           break
-                      profile += "\\n" + lines[j].strip()
+                      profile += "\n" + lines[j].strip()
                       j += 1
                   if "]" not in profile:
                       raise SystemExit(f"incomplete axiom profile for {theorem}: {profile}")
@@ -69,8 +69,8 @@ jobs:
           # Regression: Lean may wrap an axiom list, so sorryAx on a later
           # line must still fail; a suffixed theorem name must not match.
           wrapped_probe = (
-              "'Probe.target' depends on axioms: [propext,\\n"
-              " sorryAx,\\n"
+              "'Probe.target' depends on axioms: [propext,\n"
+              " sorryAx,\n"
               " Quot.sound]"
           )
           if not any("sorryAx" in p for p in axiom_reports(wrapped_probe, "Probe.target")):
