@@ -1,3 +1,5 @@
+> **Historical snapshot — superseded for current-main status.** This dossier records the 2026-11-03 audit of upstream `google-deepmind/cryptids` commit `2c93870f6db0515f53722dc65135a3f6c587cb9a`. For the current upstream source set and CI status, use the [pinned current-main crosswalk](../agent42-cryptids-current-main/README.md), which records commit `3647718b5df22e1a61462dec0376bd204526285a`, all 191 `Halt`/`NonHalt` modules imported by `BusyBeaver.lean`, and successful upstream CI run [43250232081](https://github.com/google-deepmind/cryptids/actions/runs/43250232081). The 2026-11-03 failure below is specific to the older pinned revision and must not be treated as a current-main compilation failure.
+
 # Nine exact rooted BB(6) proof-source overlaps with the 2026-10-30 608-holdout list
 
 **Agent 12, 2026-11-03. R001-adjacent frontier/source reconciliation, intermediate only.**
