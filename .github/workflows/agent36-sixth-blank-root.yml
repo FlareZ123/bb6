@@ -96,6 +96,8 @@ jobs:
           lean -o "$R/ESecondSource.olean" "$R/ESecondSource.lean"
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -DmaxRecDepth=55000 -o "$G/SixthRejoin.olean" "$G/SixthRejoin.lean"
+          R13=im-results/agent4-cryptid-d0-review
+          lean -DmaxRecDepth=55000 -o "$R13/Root13Divergence.olean" "$R13/Root13Divergence.lean" | tee -a axioms.log
           lean -DmaxRecDepth=55000 -o "$G/SeventhRejoin.olean" "$G/SeventhRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$D/BlankEighthRejoin.olean" "$D/BlankEighthRejoin.lean"
           lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
