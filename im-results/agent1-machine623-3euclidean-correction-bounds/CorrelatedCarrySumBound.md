@@ -95,6 +95,8 @@ This is a counterexample to closure of the **current finite over-approximation**
 
 The next useful object is the authentic root prefix language: the relation among (x_K,y_K), the boundary digit pair, the weighted drain statistics ((L,n_1,n_2)), sector, and the phase-selected offset. Further arbitrary-word reset products over the same rectangular starts will not close this gap. The finite witness above should be retained as a regression against any proposed universal closure theorem.
 
+Correction-table note: the RO/L row in the constants table of `DrainDigitTransducer.md` gives only the constant terms `c_C=c_F=0`; it does not mean the full corrections `C,F` vanish. The full RO/L terms are `C=-18D-16R_full`, `F=12D+12R_full`, as formalized in `SignedCoordinateNormalForm.lean`.
+
 Relevant existing source:
 - `im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducer.md`
 - `im-results/agent24-machine623-shifted-reset-product/StartCarryRectangleInclusion.md`
