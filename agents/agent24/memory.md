@@ -1491,3 +1491,10 @@ Highest-value next work: prove the exact sourceCarry quotient identities and bra
 - Extended `SourceDerivedReset.lean` with combined theorems `left_source_derived_reset` and `right_source_derived_reset`. Each composes the quotient carry bounds, under `B<K` and `-B≤C,F≤B`, with the three-symbol reset lemma. It now proves the full conditional implication from the stated source-carry formulas to the `01 00 00` reset and nonmonochromatic output.
 - Recompiled the exact file locally with Lean 4.36.0-rc2; it uses only `import Lean` and `omega`, no Mathlib. The remaining external premise is the drain-statistics proof of `|C|,|F|≤B` and the exact identification of the source-carry formulas with the root transition.
 - This is still conditional and one-window. Do not present it as a BB(6) proof or as closure of the root phase graph.
+
+
+## 2026-11-21 checkpoint: finite whole-window replay with source-derived DFA
+
+- Replayed the exact `highLevelNext` root recurrence from D(0,7), source indices 33–10000, and scanned each entire target word `[k'+2,j'-2)` with both the full 263-state reset DFA and the source-derived 252-state DFA.
+- Both recognized all 9,968 target windows (D34 through D10001); maximum first accepting position was 12. No target window in this finite trace was accepted only by the source-derived DFA. At source index 33, target D34 has x=57468, y=46704, S=67656, k'=6, j'=17, length 7; both DFAs first accept after 4 symbols.
+- This is a finite diagnostic only. It does not remove the index-33 suffix-closure counterexample: that concerns a reset in the old word failing to persist in an arbitrary output suffix. The replay scans the whole target window, as required. Keep the index-33 regression and all whole-window/high-extension constraints.

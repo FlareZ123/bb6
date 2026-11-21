@@ -120,3 +120,16 @@ The carry-bound theorems assume the residue intervals and `|C|,|F|≤B<K`; they 
 `SourceDerivedReset.lean` compiles with Lean 4.36.0-rc2 using `import Lean` only. Its combined theorems `left_source_derived_reset` and `right_source_derived_reset` compose the source-carry quotient bounds with the three-symbol reset proof. Under the explicit residue and correction hypotheses, they establish that `01 00 00` sends the corresponding L/R start to `(0,0,-1,0)) with nonmonochromatic emitted x digits.
 
 The hypotheses `-B≤C,F≤B` and `B<K` are still inputs. The Lean file does not prove the drain-statistics machinery supplies those hypotheses; that is the remaining source-correction bridge.
+
+
+## 5. Whole-target-window replay diagnostic
+
+I replayed the exact `highLevelNext` root recurrence from `D(0,7)` through source indices 33–10000 and scanned each **entire target S-window** `[k'+2,j'-2)` with both reset DFAs. This is a finite diagnostic, not an all-time proof.
+
+- Target windows checked: **9,968** (D34 through D10001).
+- Full-rectangle 263-state DFA: **0** rejected windows; maximum first accepting position 12.
+- Source-derived 252-state DFA: **0** rejected windows; maximum first accepting position 12.
+- There were no windows accepted only by the source-derived DFA in this replay; the new-only language witness `01 00 00` is a valid extra reset word but was not needed to accept any of these finite target windows.
+- At source index 33, the target D34 window has `x=57468`, `y=46704`, `S=67656`, `k'=6`, `j'=17`, length 7; both DFAs first accept after 4 symbols.
+
+This does **not** remove the index-33 suffix-closure counterexample in `PhaseAutomaton.md`: that counterexample concerns assuming a reset in the old word survives in an arbitrary output suffix. The diagnostic above scans the whole next target window. The whole-window/extension requirement and the index-33 regression must remain.

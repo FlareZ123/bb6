@@ -236,3 +236,5 @@ The source-derived recognizer has 252 states (versus 263 for the full-rectangle 
 The source-derived specialization now also has a kernel-checked Lean proof in `SourceDerivedReset.lean` (Lean 4.36.0-rc2, core `omega`, no Mathlib). It proves the L/R source-carry quotient bounds from the stated correction hypotheses and the three-symbol reset lemma; the drain-statistics derivation of those hypotheses remains a separate obligation.
 
 The source-derived specialization now has a Lean proof (`SourceDerivedReset.lean`) of the full conditional implication from the source-carry quotient formulas and `B<K`, through the L/R carry envelopes, to the `01 00 00` reset. It compiles with Lean 4.36.0-rc2 and core `omega`; the drain-statistics derivation of the correction hypotheses remains separate.
+
+A finite replay of the exact root recurrence checked all 9,968 target S-windows D34–D10001: both the 263-state full DFA and 252-state source-derived DFA accepted every whole window (maximum first acceptance at position 12). This is diagnostic only and does not resolve the separate index-33 arbitrary-suffix closure counterexample; always scan the entire next window.
