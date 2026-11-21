@@ -40,6 +40,14 @@ Thus the mathematical transfer layer appears to exist already. The
 remaining work is source availability, exact local table identification,
 and exact-version Lean preflight.
 
+A separate blocker for the halting overlaps is that the upstream RLE proof
+engine establishes `IsHalt` through existential `ReflTransGen` paths, while
+local `DecidedBelow` requires a numeric primitive-step bound.
+[PrimitiveStepCost.md](PrimitiveStepCost.md) derives clean-mode cost
+recurrences from one representative halt proof and specifies a cost-indexed
+RLE semantics. This is an intermediate method, not yet formalized or
+accepted.
+
 ## Critical dependency constraint
 
 The repository's archived source inventory pins
