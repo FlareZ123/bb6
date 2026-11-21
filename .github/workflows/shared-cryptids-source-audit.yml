@@ -127,7 +127,7 @@ jobs:
         working-directory: /tmp/cryptids
         shell: bash
         run: lake exe cache get
-      - name: Expose original private solution declarations
+      - name: Expose original private solution declarations and imports
         if: env.EXPOSE_SOLUTION_DECLARATIONS == 'true'
         working-directory: /tmp/cryptids
         shell: bash
@@ -140,6 +140,11 @@ jobs:
           import pathlib, sys
           path = pathlib.Path(sys.argv[1])
           source = path.read_text()
+          private_import = "import BusyBeaver.Calculi.HaltShared\n"
+          public_import = "public import BusyBeaver.Calculi.HaltShared\n"
+          if source.count(private_import) != 1:
+              raise SystemExit(f"expected one private HaltShared import in {path}")
+          source = source.replace(private_import, public_import, 1)
           marker = "namespace Solution\n"
           if source.count(marker) != 1:
               raise SystemExit(f"expected one Solution namespace in {path}")
