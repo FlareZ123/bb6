@@ -119,3 +119,20 @@ Thus the old fixed-sweep placement fails for authentic large `a`; the local stat
 ## 8. Updated conclusion: all positive M1 indices are covered in the written source
 
 The generic source theorem is not restricted to `v>=4`, to even `n`, or to a particular odd-quotient parity. It is stated for every `0<n<2^L` and `a>0`, and its factorization proof permits `v=0`. Therefore it covers the root's complete marker-1 subsequence without a separate valuation split. The only remaining status qualification is validation: the theorem is written and manually reviewed, but its Lean compilation and axiom audit are pending.
+
+
+## Full M1 source end-to-end probe (21 November 2026)
+
+Added [`M1EvenValuationSourceProbe.mjs`](M1EvenValuationSourceProbe.mjs). This probe checks the complete all-positive M1 counted-increment trajectory, not merely the valuation bridge:
+- initial configuration: `S1(L,n,1,a,0,b,h)`;
+- q4 reset-prefix endpoint: `S1(L,n-1,0,a+b+2,2^b-1,0,h+5+3b)`;
+- counted-drain endpoint: `S1(L,n-1,0,a+b+2,0,2^b-1,h+5+3b)).
+
+The inline JavaScript runtime reproduction passed **1,152 cases**:
+- (1\le n\le64), covering every valuation (v_2(n)=0..6), including (n=1) and pure powers of two;
+- (a\in\{1,2,3\}), (b\in\{0,1,2\});
+- both the minimal admissible width (L_{min}=\max(4,\lceil\log_2(n+1)\rceil)) and (L_{min}+8), so the second half includes eight additional binary-counter blocks.
+
+The exact prefix cost checked was (12a+12v_2(n)+67+3b=(12a+12v_2(n)+32)+(35+3b)). The counted drain cost was (6\cdot4^b+42\cdot2^b-12b-48). Every case matched the complete nonblank tape support, state, and head at both endpoints.
+
+The 1,152 cases were executed as an inline JavaScript runtime reproduction in this invocation. The committed Node script itself has not been run as a standalone file here because the local shell surfaces returned tool-level `ClientError`. This is finite simulation evidence, not a formal proof; the exact `M1EvenValuationSource.lean` import closure and transitive axiom profile remain uncompiled.
