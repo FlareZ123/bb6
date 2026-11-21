@@ -374,11 +374,13 @@ const run = async function(fetchText) {
     const maxima={maxField:0n,repeatSum:0n,expandedTapeLength:0n,symTokenCount:0n};
     const checkpointResults=[];
     for (const cp of checkpoints) {
+      let chunkMaxField=measure(state).maxField;
       while (step<cp.step) {
         state=stepSym(state);
         step++;
         if (state[0]==="HALT" && haltAt===null) haltAt=step;
         const q=measure(state);
+        if (q.maxField>chunkMaxField) chunkMaxField=q.maxField;
         for (const k of Object.keys(maxima)) if (q[k]>maxima[k]) maxima[k]=q[k];
       }
       const matches=sameState(state,cp.state);
@@ -387,7 +389,8 @@ const run = async function(fetchText) {
         matches,
         mode:state[0],
         leftSymTokens:state[1].length,
-        rightSymTokens:state[2].length
+        rightSymTokens:state[2].length,
+        maxFieldInChunk:chunkMaxField.toString()
       });
       if (!matches) throw new Error(label+" mismatch at symChk"+cp.step);
     }
