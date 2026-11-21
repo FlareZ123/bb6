@@ -109,6 +109,8 @@ The base pair-carry DFA is not merely empirically compatible with the full post-
 | Distinct base states hit by the state map | 349 / 349 | 0 |
 | Null-to-non-null transitions whose full previous-pair label differs from the input symbol | all such transitions | 0 |
 
+The full post_reset_pair construction records common-reset validation over 225 L start states and 270 R start states, across 8,088 minimal patterns with zero failures. Its initial state 0 maps to base initial state 0. The 351-state adapter retains this initial subset state and the full 349-state quotient (including all no-reset states); the 54 full labels are outputs only. It therefore does not replace the full start-carry rectangles by the post-reset output-label set. The remaining root obligation is to prove that the authentic source-carry rectangle is contained in the start set used by the full automaton.
+
 For every full state \(s\) and digit-pair symbol \(z\), the checked identities are
 \[
 \pi(\delta_{\rm full}(s,z))=\delta_{\rm base}(\pi(s),z)
