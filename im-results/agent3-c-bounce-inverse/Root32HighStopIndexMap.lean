@@ -36,7 +36,7 @@ theorem root32_tj_mod8192 (t j E : Nat)
   have hdiv : 8192 ∣ 5 * 2^(E-17) := by
     refine ⟨5 * 2^(E-30), ?_⟩
     rw [hexp, Nat.pow_add, show (2:Nat)^13 = 8192 by decide]
-    ring
+    omega
   have hdiv' : 8192 ∣ 17300 + 22155 * (t+j) := by
     rw [hroot]
     exact hdiv
@@ -46,15 +46,15 @@ theorem root32_tj_mod8192 (t j E : Nat)
     calc
       291 * (17300 + 22155 * (t+j))
           = 291 * (8192*q) := by rw [hq]
-      _ = 8192 * (291*q) := by ring
+      _ = 8192 * (291*q) := by omega
   have hexpand :
       291 * (17300 + 22155 * (t+j)) =
         8192 * (614 + 787*(t+j)) + (4412 + (t+j)) := by
     calc
       291 * (17300 + 22155 * (t+j))
-          = 291*17300 + (291*22155)*(t+j) := by ring
-      _ = (8192*614+4412) + (8192*787+1)*(t+j) := by norm_num
-      _ = 8192 * (614 + 787*(t+j)) + (4412 + (t+j)) := by ring
+          = 291*17300 + (291*22155)*(t+j) := by omega
+      _ = (8192*614+4412) + (8192*787+1)*(t+j) := by omega
+      _ = 8192 * (614 + 787*(t+j)) + (4412 + (t+j)) := by omega
   rw [hexpand] at hmul
   have hdivN : 8192 ∣ 4412 + (t+j) := by
     refine ⟨291*q - (614 + 787*(t+j)), ?_⟩
@@ -63,7 +63,9 @@ theorem root32_tj_mod8192 (t j E : Nat)
     Nat.mod_eq_zero_of_dvd hdivN
   have hmodN' : (4412 + (t+j)%8192) % 8192 = 0 := by
     rw [Nat.add_mod] at hmodN
-    norm_num at hmodN
+    have hconst : 4412%8192 = 4412 :=
+      Nat.mod_eq_of_lt (by decide : 4412 < 8192)
+    rw [hconst] at hmodN
     exact hmodN
   have hbound : (t+j)%8192 < 8192 :=
     Nat.mod_lt _ (by decide)
@@ -89,7 +91,8 @@ theorem root32_highstop_index_map (t j E : Nat)
   rcases hj with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9
   · left
     have hN16 := reduce_modulus (t+j) 16 (by decide) hN
-    norm_num at hN16
+    have hres : 3780%16=4 := by decide
+    rw [hres] at hN16
     have hsplit : (t+j)%16 = (t%16+j%16)%16 :=
       Nat.add_mod t j 16
     rw [h1] at hsplit
@@ -97,7 +100,8 @@ theorem root32_highstop_index_map (t j E : Nat)
   · right
     left
     have hN256 := reduce_modulus (t+j) 256 (by decide) hN
-    norm_num at hN256
+    have hres : 3780%256=196 := by decide
+    rw [hres] at hN256
     have hsplit : (t+j)%256 = (t%256+j%256)%256 :=
       Nat.add_mod t j 256
     rw [h2] at hsplit
@@ -106,7 +110,8 @@ theorem root32_highstop_index_map (t j E : Nat)
     right
     left
     have hN256 := reduce_modulus (t+j) 256 (by decide) hN
-    norm_num at hN256
+    have hres : 3780%256=196 := by decide
+    rw [hres] at hN256
     have hsplit : (t+j)%256 = (t%256+j%256)%256 :=
       Nat.add_mod t j 256
     rw [h3] at hsplit
@@ -116,7 +121,8 @@ theorem root32_highstop_index_map (t j E : Nat)
     right
     left
     have hN512 := reduce_modulus (t+j) 512 (by decide) hN
-    norm_num at hN512
+    have hres : 3780%512=196 := by decide
+    rw [hres] at hN512
     have hsplit : (t+j)%512 = (t%512+j%512)%512 :=
       Nat.add_mod t j 512
     rw [h4] at hsplit
@@ -127,7 +133,8 @@ theorem root32_highstop_index_map (t j E : Nat)
     right
     left
     have hN512 := reduce_modulus (t+j) 512 (by decide) hN
-    norm_num at hN512
+    have hres : 3780%512=196 := by decide
+    rw [hres] at hN512
     have hsplit : (t+j)%512 = (t%512+j%512)%512 :=
       Nat.add_mod t j 512
     rw [h5] at hsplit
@@ -139,7 +146,8 @@ theorem root32_highstop_index_map (t j E : Nat)
     right
     left
     have hN1024 := reduce_modulus (t+j) 1024 (by decide) hN
-    norm_num at hN1024
+    have hres : 3780%1024=708 := by decide
+    rw [hres] at hN1024
     have hsplit : (t+j)%1024 = (t%1024+j%1024)%1024 :=
       Nat.add_mod t j 1024
     rw [h6] at hsplit
@@ -152,7 +160,8 @@ theorem root32_highstop_index_map (t j E : Nat)
     right
     left
     have hN1024 := reduce_modulus (t+j) 1024 (by decide) hN
-    norm_num at hN1024
+    have hres : 3780%1024=708 := by decide
+    rw [hres] at hN1024
     have hsplit : (t+j)%1024 = (t%1024+j%1024)%1024 :=
       Nat.add_mod t j 1024
     rw [h7] at hsplit
@@ -166,7 +175,8 @@ theorem root32_highstop_index_map (t j E : Nat)
     right
     left
     have hN4096 := reduce_modulus (t+j) 4096 (by decide) hN
-    norm_num at hN4096
+    have hres : 3780%4096=3780 := by decide
+    rw [hres] at hN4096
     have hsplit : (t+j)%4096 = (t%4096+j%4096)%4096 :=
       Nat.add_mod t j 4096
     rw [h8] at hsplit
@@ -179,7 +189,6 @@ theorem root32_highstop_index_map (t j E : Nat)
     right
     right
     right
-    have hN8192 := hN
     have hsplit : (t+j)%8192 = (t%8192+j%8192)%8192 :=
       Nat.add_mod t j 8192
     rw [h9] at hsplit
