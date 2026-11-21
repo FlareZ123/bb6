@@ -171,8 +171,8 @@ Both are far below (2^{512}), and hence below the published (S(6)>2\uparrow\!\up
 
 Agent 44 has since formalized the numeric-field-sum chain in `SymRunTraceStats.lean`: `sweepCB_num_sum_le_94M282`, `sweepCB_stateFieldMax_le_94M282`, and (on the BB-producing fallback branch) `cb_fallback_bb_input_field_max_le_94M285`. The last theorem gives a direct maximum-field bound at the input to the fallback BB sweep, stronger and simpler than the earlier separate counter-sum and bump-count bounds.
 
-Using that bound and the exact F424 BB costs (11/14/25 per repeat unit; at most 9 for an atomic BB item branch), the ≤570-token fallback BB sweep has cost at most
-`570 * (25 * (94M + 285) + 9) = 1,339,500M + 4,066,380 < 2^22(M+1)`.
+Using that bound and the exact F424 BB costs (11/14/25 per repeat unit; at most 9 for an atomic BB item branch), the fallback BB sweep has at most 570 left tokens and one terminal `stepElemBB` event, hence at most 571 charged events; its cost is at most
+`571 * (25 * (94M + 285) + 9) = 1,341,850M + 4,073,514 < 2^22(M+1)`.
 This sharper coefficient-25 bound is currently an arithmetic derivation, not yet a Lean theorem; the generic costed `sweepBB_within` pilot remains at coefficient 50. With the outer CB sweep (<2^13(M+1)) and fallback `stepElemCB` (≤25(M+1)), the non-macro path is <2^23(M+1).
 
 A separate source-level review found no induction, endpoint-encoding, or product-budget defect in the current `sweepBB_within` / `sweepCB_within` pilot proofs. One costed Rule A gap remains: upstream `ruleA0_sound` contains a 46-`stepPure` prelude from `stateA0` to `stateA 0`; the pilot has costed `ruleA_step` and `ruleA_iter` but not this initial 46-step segment. Full `afterSweepCB` / `stepSym` dispatch composition is also not yet present.
