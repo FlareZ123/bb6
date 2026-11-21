@@ -396,3 +396,13 @@ Follow-on attempt: tried to formalize the first-section (A_0+5≤E<T_{10}), (M+4
 - The upper exponent remains unified for all j>=3: d_2=65473, D_k=2^d_k, d_(k+1)=T_(k+3)-2^(T_(k+2)-d_k)-1, and gamma_j=2^(T_(j+1)-T_j)-2^(T_(j+1)-T_j-d_(j-1)). The proof gives V_k<T_(k+4)^(1/D_k).
 - The conditional score interval from the previous checkpoint remains valid, but L_b and L_ell now use the substantially stronger alpha sequence. Exact score expansion remains the one in im-results/agent42-q4-s0-drain/TM63ScoreAsymptotic.md.
 - This supersedes the 08:05 message's statement that the lower exponent sequence was unchanged. Source closure and axiom acceptance remain uncompiled; local execution still blocked; no CI dispatched.
+
+
+## 2026-11-21 08:16Z checkpoint — unified exact lower bases and lag-2 recurrence
+
+- Further simplified and strengthened the lower theorem in im-results/agent38-root-q4tail/TM63TowerRecurrenceLargeExponents.md, commit 4e374289e8354925d99d3981ef4abe9fc977a934, with the subsequent integer-rounding correction incorporated in commit 7a24ed4f5931c83cab351e0f658941882a7a9557 and unified base proof in 4e374289e8354925d99d3981ef4abe9fc977a934.
+- The exact divisibility lift works for every j>=3 whenever V_(j-3)>T_j. Set m=2^(V_(j-3)-T_j); then V_(j-2)=T_(j+1)m-1 and V_(j-1)=2^(T_(j+1)m-1)-1. The largest lower exponent supported by this exact congruence step is m-2, since alpha=m-1 would require T_(j+2)^m<V_(j-1), but T_(j+2)^m=2^(T_(j+1)m)>V_(j-1).
+- Direct bases are alpha_j=2^(V_(j-3)-T_j)-2 for j=3,4,5,6. In particular alpha_3=2^47-2. For j>=7, the theorem at j-2 implies V_(j-3)>T_j^(alpha_(j-2)+1); integrality sharpens this to V_(j-3)>=T_j^(alpha_(j-2)+1)+1, so the valid recurrence is alpha_j=2^(T_j^(alpha_(j-2)+1)-T_j+1)-2. This is a two-index logarithmic backstep, stronger than the previous lag-3 formula. It proves alpha_j>2^46 for every j>=3.
+- The upper theorem remains unified: d_2=65473, D_k=2^d_k, d_(k+1)=T_(k+3)-2^(T_(k+2)-d_k)-1, gamma_j=2^(T_(j+1)-T_j)-2^(T_(j+1)-T_j-d_(j-1)) for all j>=3, with V_k<T_(k+4)^(1/D_k).
+- The exact conditional score interval remains valid and now uses this stronger alpha sequence: lower 6(L_b+2)^2+42(L_b+2)+3(L_ell+1) <= S_TM1; upper 6U^2+42U+3H+10(1+log2 H)H^2, with L_b,L_ell,E,D,H,U as in the note and the source expansion in Agent 42's TM63ScoreAsymptotic.md.
+- The 08:11 lag-3 and 08:13 lag-2 messages are superseded by the current lag-2 recurrence with the +1 integer-rounding improvement and unified bases. Source run theorem clarification remains: sectionResult_run_complete has exact run tm2 (sectionResult.cost) type; acceptance still requires full closure compilation and axiom audit. No local compile or CI was run.
