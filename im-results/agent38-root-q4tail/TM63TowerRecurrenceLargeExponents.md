@@ -15,8 +15,7 @@ V_0=63,\qquad V_{j+1}=2^{V_j}-1.
 
 Define the lower exponents by
 \[
-\alpha_3=2^{47}-2,\qquad
-\alpha_j=2^{V_{j-3}-T_j}-2\quad(j=4,5,6),
+\alpha_j=2^{V_{j-3}-T_j}-2\quad(j=3,4,5,6),
 \]
 and
 \[
@@ -59,22 +58,7 @@ V_{k+1}=2^{V_k}-1<2^{T_{k+4}}=T_{k+5}.
 
 ### Lower inequality
 
-At \(j=3\), the base calculation is
-\[
-T_5^{\alpha_3+1}
-=2^{65536(2^{47}-1)}
-=2^{2^{63}-2^{16}}
-<V_2.
-\]
-Consequently,
-\[
-T_6^{T_5^{\alpha_3}}
-=2^{T_5^{\alpha_3+1}}
-\le2^{V_2-1}
-<2^{V_2}-1=V_3.
-\]
-
-For the stronger bases and the induction, use the following exact lift. Suppose \(j\ge4\) and \(V_{j-3}>T_j\). Put
+Use the exact divisibility lift for any \(j\ge3\) with \(V_{j-3}>T_j\). Put
 \[
 m=2^{V_{j-3}-T_j}\ge2.
 \]
@@ -100,10 +84,13 @@ T_{j+3}^{\,T_{j+2}^{\,\alpha}}
 <2^{V_{j-1}}-1
 =V_j.
 \]
-Thus every integer \(\alpha\le2^{V_{j-3}-T_j}-2\) is a valid lower exponent at index \(j\). The next integer \(\alpha=m-1\) fails, since \(T_{j+2}^{m}=2^{T_{j+1}m}>2^{T_{j+1}m-1}-1=V_{j-1}\). Hence \(m-2\) is the maximal exponent permitted by this exact congruence lift.
+Thus every integer \(\alpha\le2^{V_{j-3}-T_j}-2\) is valid, and the next integer \(m-1\) fails because \(T_{j+2}^{m}=2^{T_{j+1}m}>V_{j-1}\). Hence \(m-2\) is maximal for this exact congruence lift.
 
-The condition \(V_{j-3}>T_j\) holds for \(j=4,5,6\): in fact \(V_k>T_{k+3}+47\) for every \(k\ge1\). The base is \(V_1=2^{63}-1>T_4+47\). If \(V_k>T_{k+3}+47\), integrality gives \(V_k\ge T_{k+3}+48\), whence \(V_{k+1}=2^{V_k}-1\ge2^{T_{k+3}+48}-1>T_{k+4}+47\). Thus the three direct bases have \(\alpha_j>2^{47}-2>2^{46}\). For \(j\ge7\), the displayed lower bound for \(V_{j-3}\) is at least \(T_j^2\), so again \(\alpha_j>2^{46}\).
-Hence the definitions \(\alpha_j=2^{V_{j-3}-T_j}-2\) for \(j=4,5,6\) prove those three cases.
+The condition \(V_{j-3}>T_j\) holds for \(j=3,4,5,6\). For \(j=3\), \(V_0=63>T_3=16\). For \(j=4,5,6\), in fact \(V_k>T_{k+3}+47\) for every \(k\ge1\): the base is \(V_1=2^{63}-1>T_4+47\), and if \(V_k>T_{k+3}+47\), integrality gives \(V_k\ge T_{k+3}+48\), whence
+\[
+V_{k+1}=2^{V_k}-1\ge2^{T_{k+3}+48}-1>T_{k+4}+47.
+\]
+This proves the four direct bases \(\alpha_j=2^{V_{j-3}-T_j}-2\), including \(\alpha_3=2^{47}-2\), and gives \(\alpha_j>2^{46}\) there.
 
 For \(j\ge7\), the induction hypothesis at index \(j-2\) gives
 \[
@@ -119,7 +106,7 @@ Since the quantities are integers, \(V_{j-3}\ge T_j^{\,\alpha_{j-2}+1}+1\). The 
 \[
 \alpha_j=2^{\,T_j^{\,\alpha_{j-2}+1}-T_j+1}-2
 \]
-is no larger than \(2^{V_{j-3}-T_j}-2\). This proves the lower inequality for all \(j\ge3\).
+is no larger than \(2^{V_{j-3}-T_j}-2\). Also \(T_j^{\alpha_{j-2}+1}\ge T_j^2\), so \(\alpha_j>2^{46}\). This proves the lower inequality for all \(j\ge3\).
 
 ### Upper inequality
 
