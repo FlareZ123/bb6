@@ -225,7 +225,7 @@ theorem left_source_reset_from_affine_correction
       (Int.emod_lt_of_pos x (by omega))
       (Int.emod_nonneg y (by omega))
       (Int.emod_lt_of_pos y (by omega))
-      hpy0 hpy2 rfl rfl rfl rfl
+      hpy0 hpy2 rfl rfl rfl rfl rfl rfl
       hBounds.1 hBounds.2.1 hBounds.2.2.1 hBounds.2.2.2
   simpa [py, a, b, a1, b1, a2, b2, leftCarryX, leftCarryY] using hreset
 
@@ -284,7 +284,7 @@ theorem right_source_reset_from_affine_correction
       (Int.emod_lt_of_pos x (by omega))
       (Int.emod_nonneg y (by omega))
       (Int.emod_lt_of_pos y (by omega))
-      hpx0 hpx2 hpy0 hpy2 rfl rfl rfl rfl
+      hpx0 hpx2 hpy0 hpy2 rfl rfl rfl rfl rfl rfl
       hBounds.1 hBounds.2.1 hBounds.2.2.1 hBounds.2.2.2
   simpa [px, py, a, b, a1, b1, a2, b2, rightCarryX, rightCarryY] using hreset
 
