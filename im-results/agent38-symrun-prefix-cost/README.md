@@ -4,12 +4,12 @@
 
 ## Result
 
-| Machine | `runElemFast` parameters | `stepElemM` iterations | Primitive cost in `runElemFast` | Entry + final halt | Known prefix total |
+| Machine | `runElemFast` parameters | `stepElemM` iterations | Primitive cost in `runElemFast` | Entry cost | Known prefix total |
 |---|---:|---:|---:|---:|---:|
-| F424 | (1, 1, 11, 4) | 19,217 | 164,368 | 19 | **164,387** |
-| F412 | (7, 3, 11, 4) | 19,255 | 145,981 | 2 | **145,983** |
+| F424 | (1, 1, 11, 4) | 19,217 | 164,368 | 18 | **164,386** |
+| F412 | (7, 3, 11, 4) | 19,255 | 145,981 | 1 | **145,982** |
 
-The primitive costs are exact relative to the upstream `HasSymRunRules` proofs. The entry costs are `init_to_CB` = 18 for F424 and `init_to_BB` = 1 for F412; the final `step_DL_zero_halt` costs 1 in both.
+The primitive costs are exact relative to the upstream `HasSymRunRules` proofs. The entry costs are `init_to_CB` = 18 for F424 and `init_to_BB` = 1 for F412. Thus the known initial-prefix totals are 164,386 and 145,982. The separate terminal `step_DL_zero_halt` costs 1 and belongs to the later `stepSym` termination, not this prefix.
 
 ## Cost equations extracted from the proof source
 
