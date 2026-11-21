@@ -3,7 +3,7 @@
 The exact repository proof is now appended to
 `im-results/agent42-cryptids-upstream-191-overlap/SymRunTraceStats.lean`:
 
-- `stepPure_field_growth`: every `stepPure) transition increases the maximum
+- `stepPure_field_growth`: every `stepPure` transition increases the maximum
   numeric run/repeat field across the two symbolic stacks by at most one.
 - `stepPureIter_field_growth`: after `n` pure symbolic transitions, the
   maximum field is at most its initial value plus `n`.
