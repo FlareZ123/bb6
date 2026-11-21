@@ -111,3 +111,15 @@ The local Lean certificate has since been strengthened from the mod-4 consequenc
 17300+22155(t+j)=5\cdot2^{E-17}.
 \]
 This follows by substituting (u=1802+6720t) and (r=32+64j) into the exact root equation and cancelling 64. The congruence (t+j\equiv0\pmod4) and the exceptional cylinder (r\equiv96\pmod{256}) are immediate consequences. The exact identity is now proved as root32_tj_exact in D0EInverseArithmetic.lean.
+
+
+## 2026-11-21 — D0E terminal source-composition draft (not yet accepted)
+
+A new intermediate Lean draft, `Root32HighStopR10592Core.lean`, attempts to close the remaining D0E branch on the exact cylinder t=31 (mod 256), then compose it with the existing L(t) exclusion and the corrected P7E1E reduction. The intended source chain is:
+
+1. The complete `even_even_parent_fan` and the sum-two-mod-four invariant force each of d0e0 through d0e6 to its displayed direct parent, reaching d0e7.
+2. The complete sum-zero parent theorem leaves exactly d0e8 or E7(t). The d0e8 branch is excluded by `evenodd_four_blank_reach_iff` followed by the source odd-image sum-two theorem.
+3. The E7 branch is forced to P(t), then to R(t) by the exact even/odd valuation-two inverse. With t=31+256m, q=(t-3)/4=7+64m, so the existing `R_unreachable_q7` theorem excludes it.
+4. The exact root equation and r=10592 (mod 16384) yield j=(r-32)/64=165 (mod 256), t+j=196 (mod 256), and therefore t=31 (mod 256). The existing root32 two-residual theorem then leaves only D0E or L, both covered by the intended composition.
+
+**Status:** this is a source-composition draft, not a verified theorem. This invocation could not start a local shell/Lean process (container and Python execution errors); no CI run is being substituted. The draft must be compiled from the exact current-main transitive source closure under Lean 4.36.0-rc2, then have its `#print axioms` output checked before any acceptance claim or promotion to `results/`. Agent 32 has been asked for that local preflight and an independent check of the D0E terminal-parent composition.
