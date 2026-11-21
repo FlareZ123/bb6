@@ -1,20 +1,23 @@
-# Local Lean preflight status — 2026-11-21
+# Lean 4.36.0-rc2 source-acceptance preflight
 
-The source-integration Lean files in this directory are NOT compiled or accepted.
+**Status: the complete five-family theorem is not yet compiled or accepted.** The frozen 93-progression candidate remains in `im-results/`. The integrated theorem `SheepPower1458.noEvenReachFiveFamilies` is present in `SheepPower1458TreeProof.lean`, but no successful compiler run of its complete current-main dependency closure is available.
 
-The prescribed local bootstrap was attempted twice through the available shell runtime:
+## What has been checked, and what has not
 
-1. pwd && ls -l /mnt/data/lean-4.36.0-rc2-linux.zip.00* /mnt/data/prompt.md && mkdir -p /tmp/lean && cat /mnt/data/lean-4.36.0-rc2-linux.zip.{001,002} > /tmp/lean.zip && unzip -q /tmp/lean.zip -d /tmp/lean && export PATH="/tmp/lean/lean-4.36.0-rc2-linux/bin:$PATH" && lean --version (120-second timeout).
-2. echo runtime-check; date -u; ls /mnt/data | head (30-second timeout).
+- The source-independent `SheepPower1458AffineBounds.lean` dependency closure was locally compiled in an earlier 21 November rc2 run (see `communications/agent14/20261121T084000Z_agent17-affine-closure-compile.md`). The recorded profiles for `no_generic_high_affine` and `no_special_affine` contain only standard Lean axioms and no `sorryAx`.
+- Agent 14 separately reported a local rc2 compile of a repaired parity-aware `SourceIntegration` copy, and compiled the pure-Std `genericChildValue` helper. These are partial checks, not an acceptance run of the exact integrated current-main closure.
+- The shared `SheepPower1458SourceIntegration.lean` now requires `hx : x % 2 = 0` in `affine_edge_inverse_cases`. Its reverse-basin closure and `SheepPower1458TreeProof.lean` carry this premise; `EvenReach.cons` propagates evenness with `even_edge_even`. This repairs the genuine counterexample `EvenEdge 5 10` to the former parity-free premise.
+- Agent 40's independent exact-integer audit found the frozen low-a classifier has 555 cases per family aggregate: 15 listed intermediate edges plus 540 non-hit rows, with no missing/duplicate row keys. It also checked all 24 stored affine edges and the global exceptional-source coefficient bounds. This is static arithmetic review, not Lean compilation.
+- The new `SheepPower1458LowRowTable.lean`, `SheepPower1458RootEdgeTable.lean`, and integrated `SheepPower1458TreeProof.lean` have no recorded successful compile in their current shared form. The theorem-level transitive axiom profile for `noEvenReachFiveFamilies` is therefore unknown.
 
-Both calls failed before executing the shell command with the tool error:
+## Current local-runtime blocker
 
-    container.exec system_error
-    ClientError
-    Encountered exception: <class 'caas.internal.errors.ClientError'>
+In this invocation, the prescribed local bootstrap command (concatenate the supplied split ZIP, unzip the outer archive, extract its inner `.tar.zst`, then run `lean --version`) failed at the tool boundary: `container.exec` returned `ClientError` before executing the shell command. A trivial Python runtime check also returned `ClientError`. No archive extraction occurred and no Lean process or compiler diagnostic was obtained. This reproduces the environment blocker already reported by Agents 1 and 40; it is not evidence of a Lean source failure.
 
-No ZIP reconstruction occurred, no Lean executable ran, and no compiler diagnostics were obtained. CI was not dispatched because the required local exact-source preflight did not succeed.
+**CI was not dispatched.** Repository guidance requires a successful local rc2 preflight before using the existing manual source workflow; CI must not substitute for that preflight.
 
-An independent review of the current equations, cutoffs, source wrappers, and generated certificates has been requested from Agent 40 in communications/agent40/20261121T0505Z_agent17-independent-review-after-local-lean-block.md.
+## Exact acceptance path
 
-Until local Lean is available and the exact dependency closure is compiled, the files SheepPower1458AffineBounds.lean, SheepPower1458SourceIntegration.lean, and SheepPower1458LowRows.lean remain unverified intermediate artifacts. Do not cite them as a source-accepted theorem.
+Reuse `.github/workflows/agent14-sheep-power1458-tree-preflight.yml`. It reconstructs the pinned Agent16 Sheep source archive, compiles the original `SheepEven` / `EvenEdge` / `EvenReach` source modules and the inverse/source algebra dependencies, then compiles the 1458 modules in dependency order through `SheepPower1458TreeProof.lean`. Do not create another workflow, add residue classes, or repeat the already-completed period/row audits.
+
+The outstanding acceptance action is one local rc2 compile of that exact current-main closure, followed by inspection of `#print axioms SheepPower1458.noEvenReachFiveFamilies`. The required result is either a successful full compile and an axiom profile without `sorryAx`/unapproved oracles, or the first concrete compiler diagnostic. Until then, the 93-family statement remains an unaccepted original-source proof draft, not a Sheep or BB(6) decision.
