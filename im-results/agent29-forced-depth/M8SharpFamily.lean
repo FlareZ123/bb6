@@ -242,11 +242,21 @@ theorem m8OddDepth_scaled (v d : Nat) (hv : v%4=2) :
       rw [BB6.Agent15.oddDepth, dif_pos ⟨hkpos,hkmod⟩, hstep, ih]
       omega
 
-/-- An explicit infinite family of authentic second-family stopping inputs
-    is excluded by the original-source M8 quotient theorem. -/
-theorem m8SharpFamily_unreachable (r : Nat) (hr : 2≤r) :
-    ¬ BB6.Agent15.CReach
-      (2*m8SharpJ r+3) (m8SharpK r) := by
+/-!
+The exact arithmetic and normalized M8-cylinder data for the dyadic
+family. This is useful independently of the final contradiction: it
+exposes the source-normalized condition needed by JointM8AllRoot.
+-/
+theorem m8SharpFamily_data (r : Nat) (hr : 2≤r) :
+    m8SharpK r+m8SharpJ r+3*m8SharpM r+5 =
+        2^(2*m8SharpM r+2)*(m8SharpJ r+3) ∧
+    m8SharpJ r%2=0 ∧
+    m8SharpM r%2=1 ∧
+    (m8SharpJ r+m8SharpM r)%4=3 ∧
+    (((BB6.Agent15.affineNormalize (2*m8SharpJ r+3)
+      (m8SharpK r)).2+2)/3)%8=2 ∧
+    2*BB6.Agent15.oddDepth (m8SharpK r)%4=
+      (m8SharpM r+1)%4 := by
   let j := m8SharpJ r
   let m := m8SharpM r
   let k := m8SharpK r
@@ -323,13 +333,30 @@ theorem m8SharpFamily_unreachable (r : Nat) (hr : 2≤r) :
       2*BB6.Agent15.oddDepth k%4=(m+1)%4 := by
     rw [hdepth]
     omega
-  intro hroot
-  have hnot := BB6.Agent29Depth.second_deep_root_m8_parity_exclusion
-    j m k hstop hj hm hs hroot
-  apply hnot
-  constructor
-  · simpa [p,hdiv] using hv8
-  · exact hsecond
+  have hfirst : ((p.2+2)/3)%8=2 := by
+    rw [hdiv]
+    exact hv8
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simpa [j,m,k] using hstop
+  · simpa [j] using hj
+  · simpa [m] using hm
+  · simpa [j,m] using hs
+  · simpa [p,j,k] using hfirst
+  · simpa [j,m,k] using hsecond
 
+/-- The explicit infinite family is excluded by the original-source
+    M8 quotient theorem. -/
+theorem m8SharpFamily_unreachable (r : Nat) (hr : 2≤r) :
+    ¬ BB6.Agent15.CReach
+      (2*m8SharpJ r+3) (m8SharpK r) := by
+  rcases m8SharpFamily_data r hr with
+    ⟨hstop,hj,hm,hs,hfirst,hsecond⟩
+  have hnot := BB6.Agent29Depth.second_deep_root_m8_parity_exclusion
+    (m8SharpJ r) (m8SharpM r) (m8SharpK r) hstop hj hm hs
+  intro hroot
+  exact hnot hroot ⟨hfirst,hsecond⟩
+
+#print axioms m8SharpFamily_data
 #print axioms m8SharpFamily_unreachable
+
 end BB6.Agent29Depth
