@@ -20,7 +20,7 @@ Define the lower exponents by
 \]
 and
 \[
-\alpha_j=2^{\,T_j^{\,\alpha_{j-2}+1}-T_j}-2
+\alpha_j=2^{\,T_j^{\,\alpha_{j-2}+1}-T_j+1}-2
 \quad(j\ge7).
 \]
 For the upper denominator sequence, define
@@ -115,9 +115,9 @@ V_{j-3}>
 \log_2\!\left(T_{j+1}^{\,T_j^{\,\alpha_{j-2}}}\right)
 =T_j^{\,\alpha_{j-2}+1}>T_j.
 \]
-The exact lift therefore applies, and the defined exponent
+Since the quantities are integers, \(V_{j-3}\ge T_j^{\,\alpha_{j-2}+1}+1\). The exact lift therefore applies, and the defined exponent
 \[
-\alpha_j=2^{\,T_j^{\,\alpha_{j-2}+1}-T_j}-2
+\alpha_j=2^{\,T_j^{\,\alpha_{j-2}+1}-T_j+1}-2
 \]
 is no larger than \(2^{V_{j-3}-T_j}-2\). This proves the lower inequality for all \(j\ge3\).
 
