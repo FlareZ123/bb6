@@ -147,7 +147,8 @@ A*(Y+2) >= 5*2^(2*m+2)-3*m-5.
 
 ```
 A*v >= (A+1)*Q-m,
-A*(Y+2) >= 3*((A+1)*Q-m).
+A*(Y+2) >= 3*((A+1)*Q-m),
+Y >= 2^(2*m+2)+2^(2*m+2)/A-4.
 ```
 
 Here `x` is the first coordinate of the actual `affineNormalize` output. The second inequality is a root-sensitive necessary bound; it does not assert that any remaining input is reachable. The case `m=1` is separately covered by the existing right-four exclusion and by the general M8-filtered bound below.
