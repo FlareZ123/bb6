@@ -238,7 +238,7 @@ is excluded at the paper-argument level for the B2 residual, not merely for the 
 
 ## 6. Conclusion
 
-For every exact B2 root-equation solution in this W11 root4 cylinder, the B2 state is not blank-reachable. This is an infinite conditional root-index exclusion. It does not close the other root-index residues, decide Machine C, or determine BB(6).
+For every exact B2 root-equation solution in this W11 root4 cylinder, the B2 state is not blank-reachable. This is an infinite conditional root-index exclusion. The class has r≡20 (mod 64), so it is disjoint from the separate root32 high-stop domain r≡32 (mod 64); it is not an additional member of the nine-class root32 union. It does not close the other root-index residues, decide Machine C, or determine BB(6).
 
 ## Exact dependencies and validation boundary
 
