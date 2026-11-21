@@ -160,7 +160,7 @@ Example:
 
 Do not interpret optionalExtensionSymbol as the next root transducer's high digit unless that transducer has actually generated it. The next root output stream must be computed by applying the next source-to-target transducer to the current target window before running the reset recognizer.
 
-The generic phase/suffix logic was separately tested against the full DFA on 450,241 cases: all 12 valid three-phase paths, every stream of length 0–4, and either no high extension or each of the nine possible high symbols according to the second edge. There were zero mismatches. See ShiftedWindowComposition.md. This remains finite regression, not a root-transition proof.
+The generic phase/suffix logic was separately tested against the full DFA on 442,860 cases: all 12 valid three-phase paths, every stream of length 0–4, and either no high extension or each of the nine possible high symbols according to the second edge. There were zero mismatches. See ShiftedWindowComposition.md. This remains finite regression, not a root-transition proof.
 
 The adapter checks the phase edges and rejects any offset other than 1 or 2. It does not certify that sourceToTargetStream or highExtension is authentic, nor that the source carry lies in the full reset rectangles; those remain caller obligations.
 
