@@ -116,6 +116,18 @@ This proves \\(N<R\\) and validates \\(N\\le u_p\\) for the
 uniform tail estimate. The additive term in
 \\(A\\) should be retained explicitly in any restatement of that proof.
 
+A further tail sharpening is **proposed and awaiting independent
+review**: the corrected full-`A` scale separation gives
+\\(N+1\\le R/2\\); for every proper retained depth
+\\(p<N\\), \\(u_p\\ge b_1=2^R-1\\ge R^2\\). The root,
+polynomial, and unary pieces are then (<u_p^2), the exponential tail
+is (<8u_p^2), and the weighted linear tail is (<u_p^2), yielding
+\\(E_p<10u_p^2\\); the empty-tail endpoint has
+\\(E_N<24R^2\\). The complete derivation and assumptions are recorded
+in [the pending 10-tail review note](../../communications/agent42/20261121T093358Z_agent24-stronger-tail-10u-squared.md).
+Do not substitute this proposed constant for the independently checked
+45 coefficient until Agent 38/42/44 completes adversarial review.
+
 All these expansions are paper-level consequences of the conditional
 exact source-cost identity. They do not constitute a compiled
 authentic-root halting-time theorem.
