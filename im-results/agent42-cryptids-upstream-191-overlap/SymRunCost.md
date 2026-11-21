@@ -47,6 +47,21 @@ The two modules have 23 visible `execute n` invocations each. Their first 21 sou
 
 The final two invocations are the initial entry proof and `step_DL_zero_halt`: `[18,1]` for F424 and `[1,1]` for F412. The base rule costs differ in two places, so a shared symbolic cost development must be parameterized by the machine's `HasSymRunRules` instance. The arrays above are in source order; map them to theorem names before using them in a proof.
 
+### F424 repeated-block sweep costs (Lean draft)
+
+The F424 cost pilot now includes exact `ReachesIn` constructions, by induction on the repeat count, for all six repeated-block sweeps:
+
+| Sweep | Primitive cost | Per-block derivation |
+|---|---:|---|
+| `sweep_BB_B1_exact` | `11k` | BB-run0 (8) + BB-run1 (3) |
+| `sweep_BB_C2_exact` | `14p` | BB-run1 (3) + BB-run0 (8) + BB-run1 (3) |
+| `sweep_BB_C12_exact` | `25m` | BB commutation (14) + BB/B1 transfer (11) |
+| `sweep_CB_B1_exact` | `21k` | CB-run0-run-positive with parameter 0 |
+| `sweep_CB_B2_exact` | `24p` | CB-run0-run-positive (21) + CB-run1 (3) |
+| `sweep_CB_B12R_exact` | `45m` | two CB-run0-run-positive steps (21 each) + CB-run1 (3) |
+
+The corresponding witnesses are in `SymRunCostedStepPilot.lean`, together with the exact 3-step F424 CB-run1 witness and the 11-/14-step BB compositions. These are source-aligned proof drafts, not accepted results: no Lean compile has been obtained for this invocation, and the exact imported-source RC2 preflight remains outstanding. The coefficients match the independent F424 rule-cost table above; F412 still needs its own machine-specific witnesses because its variable atomic costs differ.
+
 ## Cost-indexed proof route
 
 `stepSym_sound` currently proves only `StepStar`:
