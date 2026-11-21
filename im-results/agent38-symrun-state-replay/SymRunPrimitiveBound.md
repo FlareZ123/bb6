@@ -56,7 +56,7 @@ The correction is controlled by the *sum* of counters. The replay gives at most 
 
 for (Mge376). Thus any repeat counter subsequently extracted by `tryRuleA/B/BC` is bounded by (128M). The run parameter dispatched by `tryRuleA` or `tryRuleBC` is unchanged by the sweep and remains bounded by (M).
 
-The same sweep can expand the left token list through `bumpSymL`. One bump expands at most one repeat token, with at most five additional tokens; there are at most (L) scanned right-side tokens. `eatFuel` only merges/removes tokens. Hence the post-`sweepCB` left list has fewer than (6L+5<1024) tokens, including the one possible `stepElemThenBB` bump.
+The same sweep can expand the left token list through `bumpSymL`. One bump expands at most one repeat token, with at most five additional tokens, and the corresponding branch prepends at most two `.run 0` tokens. There are at most (L) scanned right-side tokens, so the post-`sweepCB` left list has at most (L+7L=8L≤752) tokens. A subsequent `stepElemThenBB` fallback can add at most eight further tokens before an optional `sweepBB`; if it creates a long zero prefix via `prependZeroSym`, that branch remains in mode CB and does not invoke `sweepBB`. Thus the fallback sweep scans fewer than 760 tokens; use the round bound 1024.
 
 ## Cost of one `stepSym` transition
 
