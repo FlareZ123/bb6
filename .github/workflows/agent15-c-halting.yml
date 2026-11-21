@@ -191,3 +191,14 @@ jobs:
           done
           cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/U5Q0W1Z1M16.lean .
           lean U5Q0W1Z1M16.lean
+
+      - name: Compile Agent 29 source-connected deep M8 residual bridge
+        run: |
+          cd /tmp/agent15-c-check
+          export LEAN_PATH="."
+          cp "$GITHUB_WORKSPACE/im-results/agent29-forced-depth/ModThree.lean" .
+          lean -o ModThree.olean ModThree.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent29-forced-depth/DeepSecondFinal.lean" .
+          lean -o DeepSecondFinal.olean DeepSecondFinal.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent29-forced-depth/M8FilteredResidual.lean" .
+          lean M8FilteredResidual.lean
