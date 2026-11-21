@@ -1690,3 +1690,15 @@ Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then forma
 
 - Updated the top-level `README.md` and `research/BOARD.md` to withdraw the stale statement that the nine D0E/L progressions exclude the high-stop target. They are sub-branch calculations only; the corrected P7E1E→A4 residual remains open on most of the nine classes.
 - The current acceptance boundary is explicit: A4 t≡31 mod32 is Lean-accepted; t≡1 mod16 is paper-level; the A4 high-valuation fan remains open, with t≡719 q=1 excluded on paper but q=0 open; generic P7E1E→A4 and R10592 composition drafts are uncompiled. The full nine-class union is not proven.
+
+
+## 2026-11-21T21:51:22.521Z — exact affine witness for t≡719 mod1024, q=1
+
+- Expanded the paper-level q=1 A4 branch with t=719+1024s:
+  U=443289114500+631097100480s,
+  a=443289114498+631097100480s,
+  k=2312492088788+3292223978400s.
+- Its forced even-even direct parent is
+  D_x=2755781203284+3923321078880s,
+  D_y=1156246044393+1646111989200s.
+  This gives D_x≡0 mod4, D_y≡1 mod4, and D_x+D_y+1≡2 mod4 uniformly. The no-predecessor argument excludes this q=1 branch; q=0 remains open. Updated the canonical fan note with these exact formulas.

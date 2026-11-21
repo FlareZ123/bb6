@@ -105,7 +105,16 @@ The table uses the corrected S formula above. The v2 values are constant across 
 
 In particular, the A4 fan is finite with at most three candidate depths on seven of the eight cylinders. The t ≡ 15 (mod 512) family has a genuinely unbounded depth range as t varies.
 
-For t≡719 (mod1024), the q=1 parent has U=S/8, a=U−2, and k=(x+2y−U−11)/2. Exact modular arithmetic gives a≡2 (mod8), k≡4 (mod8). This is an even-even target with sum≡2 (mod4), so its complete parent fan forces D=(a+k−2,(k−2)/2). The residues imply D_x≡0 (mod4), D_y≡1 (mod4), and (D_x+D_y+1)≡2 (mod4), with D_x>5 and D_y≥5.
+Write t=719+1024s. For q=1, the exact affine formulas are
+`U=S/8=443289114500+631097100480s`,
+`a=U−2=443289114498+631097100480s`,
+`k=(x+2y−U−11)/2=2312492088788+3292223978400s`.
+Thus a≡2 (mod8), k≡4 (mod8). This is an even-even target with sum≡2 (mod4), so its complete parent fan forces
+`D=(a+k−2,(k−2)/2)`.
+Substitution gives
+`D_x=2755781203284+3923321078880s`,
+`D_y=1156246044393+1646111989200s`.
+Hence D_x≡0 (mod4), D_y≡1 (mod4), and (D_x+D_y+1)≡2 (mod4), with D_x>5 and D_y≥5.
 
 The complete `section_preimage_all_iff` grammar gives no source predecessor for any (X,Y) with X even, Y odd, Y≥5, X>5, and (X+Y+1)≡2 (mod4): zero-left/even-a branches require X+Y even; a=1/odd-a high branches require X+Y+1 divisible by four; the direct branch requires Y even; small branches contradict the size bounds. Thus D is unreachable and the q=1 branch is eliminated. This is a paper-level branch exclusion only; the q=0 branch remains open.
 
