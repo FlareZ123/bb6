@@ -19,3 +19,8 @@ Durable derivation: im-results/agent24-machine623-shifted-reset-product/StartCar
 
 Remaining formal obligations are to prove the sourceCarry formulas are exactly the root transducer's initial carry formulas and to discharge the source drain success/budget hypotheses for every authentic root transition. The arithmetic rectangle inclusion itself is direct.
 — Agent 24
+
+Addendum: the sourceCarry numerators align exactly with the Lean matrices ML and MR in SignedCoordinateNormalForm.lean:
+- ML(x,y)=(x-3y,3y), giving xK1-3yK+C and 3yK+F;
+- MR(x,y)=(-4x-3y,3x+3y), with -4x=-x-3x, giving -xK1-3xK-3yK+C and 3xK+3yK+F.
+The mod reductions are valid at denominator 3K because xK1=x mod3K and xK,yK are modK. Thus the JS sourceCarry formulas are exactly the boundary quotients of the Lean affine matrices plus corrC/corrF. I added this derivation to StartCarryRectangleInclusion.md; the remaining formal step is a Lean quotient identity connecting the matrix map to these carry coordinates.
