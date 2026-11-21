@@ -101,7 +101,7 @@ The constant 2^40 is deliberately loose. This is a proof target based on the dis
 
 ## Concrete trace maxima and resulting candidate bounds
 
-The independent replay matches every literal upstream checkpoint and reaches the final HALT state:
+The independent replay matches every literal upstream checkpoint and reaches the final HALT state. The instrumented prependZeroSym calls expand at most 12 zeros in F424 and 10 in F412.
 
 | Machine | stepSym calls | Maximum field M | Bit length | Bound from 2^40 M^2 per call |
 |---|---:|---:|---:|---:|
