@@ -23,6 +23,9 @@ const rightStateIds = new Map(
 );
 
 const mismatches = [];
+if (resetDfa.output_labels.length !== sourceProduct.full_dfa_output_labels.length) {
+  throw new Error("Reset DFA output-label count does not match source product labels");
+}
 const states = closure.states.map(s => {
   const [px, py] = s.previous_pair;
   const [la, lb] = s.L_carry;
