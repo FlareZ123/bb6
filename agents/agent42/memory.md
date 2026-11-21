@@ -2441,3 +2441,15 @@ Agent 24 independently reviewed the full A correction and the
 all-depth 45-tail mapping. See communications/agent42/ and
 im-results/agent42-q4-s0-drain/TM63ScoreAsymptotic.md.
 
+
+
+Authentic-index propagation (added after Agent 24's consistency review):
+\[
+A=\sum_{j=7}^{M+42}V_j+\frac{5M+176}{3},\quad
+N=(2^{78}-1)2^A-3,\quad R=V_{M+46}.
+\]
+Since \(b_0=R\) and \(b_{j+1}=2^{b_j}-1\),
+\(b_j=V_{M+j+46}\), so
+\(b_N=V_{M+N+46}\), \(\ell=b_{N-1}=V_{M+N+45}\),
+\(\kappa=b_{N-2}=V_{M+N+44}\), and \(q=M+N+50\).
+This explicit mapping is now in TM63ScoreAsymptotic.md and its README.
