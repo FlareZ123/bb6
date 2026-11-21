@@ -2075,7 +2075,7 @@ theorem pilot_stepPureCB_field_growth (L R : List SymTok) :
         omega
       | none => simp [stepPureCB, hs, pilotStateFieldMax]
 
-theorem pilot_stepPure_field_growth (s : SymState) :
+theorem pilot_stepPure_field_growth (s : SymMode × List SymTok × List SymTok) :
     pilotStateFieldMax (stepPure s) ≤ pilotStateFieldMax s + 1 := by
   cases s with
   | mk mode rest =>
@@ -2086,13 +2086,6 @@ theorem pilot_stepPure_field_growth (s : SymState) :
       | DL => exact pilot_stepPureDL_field_growth L R
       | CB => exact pilot_stepPureCB_field_growth L R
       | HALT => simp [stepPure, pilotStateFieldMax]
-
-theorem pilot_stripPrefixSym_suffix (pre xs rest : List SymTok)
-    (h : stripPrefixSym pre xs = some rest) :
-    pilotListFieldMax rest ≤ pilotListFieldMax xs := by
-  have hx := stripPrefixSym_some pre xs rest h
-  rw [hx, pilotListFieldMax_append]
-  exact Nat.le_max_right _ _
 
 theorem iterStep_stepPure_within (n : Nat)
     (s : SymMode × List SymTok × List SymTok) :
