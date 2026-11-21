@@ -205,3 +205,12 @@ S1(L,8k-1,1,a+b+2,0,2^b-1,h+5+3b)
 after the counted drain.
 
 This is finite simulation evidence only. The 288 cases were run as an inline JavaScript reproduction in the current invocation; the committed Node script has not been run as a standalone file here. The full Lean import closure and transitive axiom profile for `M2EvenResidueZeroCounted.lean` remain unaccepted. In particular, this probe does not replace the arbitrary-context H-run proof or establish the all-q theorem.
+
+
+## Experimental a=0 extension (not in current Lean theorem)
+
+A source-text scan found that the q4 reset-prefix theorem's `ha : 0<a` hypothesis is unused in its proof. The counted-increment theorem uses `ha` only to call `resetDrainBound a b 2 ha`. Thus the same unconditional `resetDrainBound_any` lemma proposed for M1 should allow the M2 source to drop `a>0) as well.
+
+An inline BigInt runtime reproduction passed **96 additional a=0 cases**: k=1..16, b=0,1,2, and both minimal admissible L and L+8. Every case matched the complete q4-prefix and counted-drain endpoint configurations. The committed `M2EvenResidueZeroProbe.mjs` now includes these in a separately labelled `a0ExtensionCases` grid.
+
+The current Lean M2 theorem still assumes a>0. These cases are computational support for a proposed generalization only; do not count them as formal source coverage until the unconditional drain-bound lemma and exact M2 closure compile.
