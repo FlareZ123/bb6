@@ -31,82 +31,66 @@ theorem genericChildValue
     (hchildC : child.C = parent.C*3^h*(2^(a+1)+1))
     (hchildOffset :
       (child.c : Int) - child.b =
-        ((2^a : Nat) : Int) *
+        (2^a : Int) *
           ((2*a*(parent.C*3^h) +
               2^(h+1)*(parent.C-parent.b+parent.c) : Nat) : Int)
-        - ((2^a : Nat) : Int) * (3*(parent.C*3^h) : Nat)) :
+        - (2^a : Int) * (3*(parent.C*3^h) : Nat)) :
     affineNodeValue t child x := by
-  let D : Nat := parent.C*3^h
-  let E : Nat := 2^(h+1)*(parent.C-parent.b+parent.c)
-  have hxI :
-      (x : Int) = ((2^a : Nat) : Int) * (v : Int) := by
-    have hxI0 := congrArg (fun z : Nat => (z : Int)) hx
-    simpa only [Int.ofNat_mul] using hxI0
-  have hgenI :
-      (D : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
-        + 2*(a : Int)*(D : Int) + (E : Int)
-        = ((2^(1458*t+parent.s+h+1) : Nat) : Int) + 3*(D : Int) := by
-    have hgenI0 := congrArg (fun z : Nat => (z : Int)) hgen
-    dsimp [D,E] at hgenI0 ⊢
-    simpa only [Int.ofNat_add, Int.ofNat_mul] using hgenI0
-  have hpowNat :
-      2^a * 2^(1458*t+parent.s+h+1)
-        = 2^(1458*t+parent.s+a+h+1) := by
+  let D : Int := (parent.C*3^h : Nat)
+  let K : Int := ((2^(a+1)+1 : Nat) : Int)
+  let A : Int := (2^a : Nat)
+  let V : Int := (v : Nat)
+  let H : Int := (2^(h+1)*(parent.C-parent.b+parent.c) : Nat)
+  let P : Int := (2^(1458*t+parent.s+h+1) : Nat)
+  have hxI : (x : Int) = A*V := by
+    dsimp [A,V]
+    exact_mod_cast hx
+  have hgenI : D*K*V + 2*(a:Int)*D + H = P+3*D := by
+    dsimp [D,K,V,H,P]
+    exact_mod_cast hgen
+  have hgenI' : D*K*V + (2*(a:Int)*D+H) = P+3*D := by
+    simpa only [Int.add_assoc] using hgenI
+  have hEq : D*K*V + ((2*(a:Int)*D+H)-3*D) = P := by
     calc
-      2^a * 2^(1458*t+parent.s+h+1)
-          = 2^(a+(1458*t+parent.s+h+1)) := by rw [← Nat.pow_add]
-      _ = 2^(1458*t+parent.s+a+h+1) := by congr 1 <;> omega
-  have hpowI :
-      ((2^a : Nat) : Int) *
-          ((2^(1458*t+parent.s+h+1) : Nat) : Int)
-        = ((2^(1458*t+parent.s+a+h+1) : Nat) : Int) := by
-    have hpowI0 := congrArg (fun z : Nat => (z : Int)) hpowNat
-    simpa only [Int.ofNat_mul] using hpowI0
-  have hfact :
-      (child.C : Int)*(x : Int) + (child.c : Int) - child.b
-        = ((2^a : Nat) : Int) *
-          ((D : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
-            + 2*(a : Int)*(D : Int) + (E : Int) - 3*(D : Int)) := by
-    rw [hchildC,hchildOffset,hxI]
-    dsimp [D,E]
-    simp only [Int.ofNat_mul, Int.ofNat_add, Int.mul_sub, Int.mul_add]
-    ac_rfl
-  have hshift :
-      ((2^a : Nat) : Int) *
-          ((D : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
-            + 2*(a : Int)*(D : Int) + (E : Int) - 3*(D : Int))
-        = ((2^a : Nat) : Int) *
-          ((2^(1458*t+parent.s+h+1) : Nat) : Int) := by
-    calc
-      _ = ((2^a : Nat) : Int) *
-          (((D : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
-            + 2*(a : Int)*(D : Int) + (E : Int)) - 3*(D : Int)) := rfl
-      _ = ((2^a : Nat) : Int) *
-          ((((2^(1458*t+parent.s+h+1) : Nat) : Int) + 3*(D : Int))
-            - 3*(D : Int)) := by rw [hgenI]
-      _ = _ := by simp
+      D*K*V + ((2*(a:Int)*D+H)-3*D)
+          = (D*K*V + (2*(a:Int)*D+H)) - 3*D := by
+              rw [← Int.add_sub_assoc]
+      _ = (P+3*D)-3*D := by rw [hgenI']
+      _ = P := by omega
+  have hchildCI : (child.C : Int) = D*K := by
+    dsimp [D,K]
+    exact_mod_cast hchildC
+  have hfactor : D*K*(A*V) = A*(D*K*V) := by ac_rfl
+  have hpowNat : 2^a * 2^(1458*t+parent.s+h+1) =
+      2^(1458*t+parent.s+a+h+1) := by
+    rw [← Nat.pow_add]
+    congr 1 <;> omega
+  have hpow : A*P = (2^(1458*t+parent.s+a+h+1) : Int) := by
+    dsimp [A,P]
+    exact_mod_cast hpowNat
   have hchildInt :
-      (child.C : Int)*(x : Int) + (child.c : Int) - child.b
-        = ((2^(1458*t+parent.s+a+h+1) : Nat) : Int) := by
+      (child.C : Int)*(x : Int) + (child.c : Int) - child.b =
+        (2^(1458*t+parent.s+a+h+1) : Int) := by
+    rw [hchildCI, Int.add_sub_assoc, hchildOffset, hxI]
+    change D*K*(A*V) + (A*(2*(a:Int)*D+H)-A*(3*D)) =
+      (2^(1458*t+parent.s+a+h+1) : Int)
     calc
-      _ = ((2^a : Nat) : Int) *
-          ((D : Int) * ((2^(a+1)+1 : Nat) : Int) * (v : Int)
-            + 2*(a : Int)*(D : Int) + (E : Int) - 3*(D : Int)) := hfact
-      _ = ((2^a : Nat) : Int) *
-          ((2^(1458*t+parent.s+h+1) : Nat) : Int) := hshift
-      _ = ((2^(1458*t+parent.s+a+h+1) : Nat) : Int) := hpowI
-  have hexp : 1458*t+parent.s+a+h+1 = 1458*t+child.s := by
-    rw [hchildS]
-    omega
+      D*K*(A*V) + (A*(2*(a:Int)*D+H)-A*(3*D))
+          = A*(D*K*V) + (A*(2*(a:Int)*D+H)-A*(3*D)) := by rw [hfactor]
+      _ = A*(D*K*V) + A*((2*(a:Int)*D+H)-3*D) := by rw [← Int.mul_sub]
+      _ = A*(D*K*V + ((2*(a:Int)*D+H)-3*D)) := by rw [← Int.mul_add]
+      _ = A*P := congrArg (fun z : Int => A*z) hEq
+      _ = (2^(1458*t+parent.s+a+h+1) : Int) := hpow
   have hchildInt' :
-      (child.C : Int)*(x : Int) + (child.c : Int) - child.b
-        = ((2^(1458*t+child.s) : Nat) : Int) := by
-    rw [← hexp]
-    exact hchildInt
+      (child.C*x+child.c : Int) =
+        (2^(1458*t+parent.s+a+h+1) : Int) + child.b := by omega
   have hchildNat :
+      child.C*x+child.c = 2^(1458*t+parent.s+a+h+1)+child.b := by
+    exact_mod_cast hchildInt'
+  have hchildVal :
       child.C*x+child.c = 2^(1458*t+child.s)+child.b := by
-    omega
-  simpa [affineNodeValue] using hchildNat
+    simpa [hchildS, Nat.add_assoc] using hchildNat
+  simpa [affineNodeValue] using hchildVal
 
 structure FrozenTreeTable where
   rs : List Nat
@@ -143,10 +127,10 @@ structure FrozenTreeTable where
       (nodeAt child).s = (nodeAt n).s+a+h+1 ∧
       (nodeAt child).C = (nodeAt n).C*3^h*(2^(a+1)+1) ∧
       ((nodeAt child).c : Int) - (nodeAt child).b =
-        ((2^a : Nat) : Int) *
+        (2^a : Int) *
           ((2*a*((nodeAt n).C*3^h) +
               2^(h+1)*((nodeAt n).C-(nodeAt n).b+(nodeAt n).c) : Nat) : Int)
-        - ((2^a : Nat) : Int) * (3*((nodeAt n).C*3^h) : Nat)
+        - (2^a : Int) * (3*((nodeAt n).C*3^h) : Nat)
   nodeProps :
     ∀ n : Fin nodeCount,
       (nodeAt n.val).b ≤ (nodeAt n.val).C ∧
