@@ -66,16 +66,16 @@ Using the conservative \(B_S\) above and the source-faithful highLevelNext recur
 \[
 D(33)\to D(34),\ldots,D(10000)\to D(10001).
 \]
-For each source state it scans the source S-window and computes the actual window-index shifts. It obtains the exact drain statistics D (signed first-counter drop) and r (outer drain iteration count) from the sector-specific source drain; in RE the initial evalA drop contributes to D but not to r. The affine branch is selected by the exact source output-side threshold
+For each source state it scans the source S-window and computes the actual window-index shifts. It obtains the exact drain statistics D (signed first-counter drop) and R (full evaluator-call count) from the sector-specific source drain; in RE the initial evalA contributes to both D and R. The affine branch is selected by the exact source output-side threshold
 \[
-T=3D+2r+c_T,\qquad
+T=3D+2R+c_T,\qquad
 c_T=19,10,-4,4\quad\text{in LO, LE, RO, RE respectively},
 \]
 with L iff g >= T and R otherwise. This is the exact decision in RootRayGapCocycle.md. The conditional simplification from this threshold to sign(g), proved under the far/nonterminal premise in BranchSelection.lean, is not used.
 
 With this exact branch, the checker computes C,F from the current and successor coordinates, checks |C|,|F| <= B_S, computes the exact source carry at each reset start K_s=3^(k_S+1+s) using the formulas in SourceCarryAffineBridge.lean, checks that the carries lie in the full rectangles, simulates the reset word, and compares every emitted x-digit with the successor's actual ternary digit at that position.
 
-**Important branch correction:** earlier versions incorrectly assigned the affine transducer branch by source sector (LO/LE -> L; RO/RE -> R), and then by sign(g). Both are withdrawn as branch-selection rules. Source sector selects the high-level drain case; the affine matrix branch is selected by the exact threshold g >= 3D+2r+c_T. The finite scan uses this source-derived threshold. It separately observes that the threshold and sign(g) agree on the tested prefix (zero disagreements), but does not rely on that simplification.
+**Important branch correction:** earlier versions incorrectly assigned the affine transducer branch by source sector (LO/LE -> L; RO/RE -> R), and then by sign(g). Both are withdrawn as branch-selection rules. Source sector selects the high-level drain case; the affine matrix branch is selected by the exact threshold g >= 3D+2R+c_T. The finite scan uses this source-derived threshold. It separately observes that the threshold and sign(g) agree on the tested prefix (zero disagreements), but does not rely on that simplification.
 
 Observed results:
 
@@ -83,7 +83,7 @@ Observed results:
 - Window lengths range from 8 through 16.
 - Shift pairs (delta,eta): (0,0) 9,955; (0,1) 8; (1,1) 5.
 - The exact-threshold affine branch is L on 4,096 transitions and R on 5,872; it agrees with sign(g) on all 9,968 tested transitions.
-- The source drain statistics range over D in [-6,741] and r in [4,1,327] on this prefix; the bounds |D| <= ell_S+1 and r <= ell_S hold on all 9,968 transitions.
+- The source drain statistics range over D in [-6,741] and R in [5,1,327] on this prefix; the bounds |D| <= ell_S+1 and R <= ell_S hold on all 9,968 transitions.
 - All 9,968 transitions satisfy |C|,|F| <= B_S; no actual source carry leaves its full branch rectangle; there are zero affine/transducer digit mismatches, zero windows without a reset, and zero windows without a safe actual witness.
 - The first reset witness begins at offset 0 in 5,254 windows and later in 4,714. In all 5,254 left-edge cases, the actual source carry produces a nonmonochromatic output suffix after deleting the first digit (zero failures). This is stronger than the generic full-rectangle drop-one count: actual source carries are correlated and can succeed even when a pattern is not drop-one robust for every state in the full rectangle.
 
@@ -91,7 +91,7 @@ This is computational evidence over a finite prefix only. The exact threshold br
 
 ## Remaining proof obligations
 
-1. Formalize the sector-specific source drain statistics D,r and the exact threshold branch in the root proof, including the RE convention (initial evalA drop in D, not r).
+1. Formalize the sector-specific source drain statistics D,R and the exact threshold branch in the root proof, including the RE convention (initial evalA contributes to both D and the full evaluator count R).
 2. Prove that every future authentic S-window contains a reset witness with the required shifted-output property. The 9,968-state scan does not establish this induction.
 3. Formalize the finite drop-first suffix certificate in Lean, or provide a smaller verified certificate for the 8,088 reset words and both carry rectangles.
 4. Extend the existing left_tail_step / right_tail_step affine quotient identities to arbitrary reset words of length 3--6, so the transducer's emitted digits are rigorously identified with the actual successor-coordinate digits at the shifted boundary.
