@@ -71,3 +71,34 @@ The external halting-cylinder input has a separate local token representation, w
 The left-list equality follows from `encTokens` and blank-extension equivalence; see `ASectionStackEncoding.md` for the derivation.
 
 Thus the blank-root reduction and the external halting-cylinder proof both enter the same DeepMind token subsystem, but at very different token states. A precise reachability problem is now visible: determine whether the root's closed-stack/token evolution from `tok_CR [1,0] [(0,0)] [0]` ever reaches the halting token state associated with the cylinder (or another halting token state). No such reachability is established here.
+
+
+## First root stack successor and short macro-prefix
+
+The first root token closure can be simplified directly from the source proof. For
+`tok_CR [1,0] [(0,0)] [0]`, `bounce_CR` consumes the right-list `[0]), then its empty-list case with accumulator value (2) returns the E-token state with (K=[1,0]) and right list ([0,0,1]). The `bl_terminates_le` proof applies `tok_EL_1` and then `tok_EL_exit_zero`, yielding the first outer stack successor:
+[
+\mathrm{CR}\;
+L=[(0,0),(0,0),(1,0)],\qquad R=[(1,0)].
+]
+This is a derivation from the displayed `bounce_CR` and `bl_step_macro_len` cases, not an independent simulator result.
+
+The next six outer mode transitions are explicit in `mode_CR_n_n_closed`, `mode_EL_n_n_closed`, and `mode_DL_0_n_closed`:
+[
+egin{aligned}
+\mathrm{CR}([0,0,1],[1])
+&\xrightarrow{2}
+\mathrm{CR}([0,1],[3])
+\xrightarrow{2}
+\mathrm{CR}([1],[5])\\
+&\xrightarrow{6}
+\mathrm{EL}([0],[0,8])
+\xrightarrow{2}
+\mathrm{EL}([0,0],[8])\\
+&\xrightarrow{1}
+\mathrm{DL}([0,0],[7])
+\xrightarrow{4}
+\mathrm{DR}([0,0],[1,5]).
+end{aligned}
+]
+Here each list entry abbreviates a pair ((a,0)), and the labels over arrows are the exact raw-step counts from the Lean `execute` blocks. These checkpoints provide a compact regression prefix for any executable implementation of the closed-stack successor relation.
