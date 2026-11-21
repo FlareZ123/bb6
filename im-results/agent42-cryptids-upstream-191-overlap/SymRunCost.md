@@ -81,7 +81,7 @@ The boundary-safe source-structural candidate is:
 
     C_stepSym(s) < 2^40 * (M(s)+1)^2
 
-where M is the maximum numeric field in the outer symbolic state. This replaces the earlier (2^{40}M^2) estimate: the old derivation assumed (M\ge376), but both authentic initial states have (M=79). The replacement works for every (M\ge0).
+where M is the maximum numeric field in the outer symbolic state. This replaces the earlier (2^{40}M^2) estimate: the old derivation assumed (M\ge376), but both authentic `initSymCyc3` states have (M=2). The replacement works for every (M\ge0).
 
 The corrected argument uses:
 - after `sweepCB`, the total repeat-counter sum is at most (94M+376\le512(M+1)), since there are at most 94 fuel-4 merges and each can add at most four literal-block units (merging an existing repeat counter conserves the total);
