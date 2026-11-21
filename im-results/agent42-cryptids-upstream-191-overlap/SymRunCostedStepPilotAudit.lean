@@ -1,0 +1,9 @@
+/-! Exact-source RC2 audit bridge for the F424 costed symbolic-run pilot. -/
+import SymRunCostedStepPilot
+
+#print axioms BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.stepPure_within
+#print axioms BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.sweepBB_within
+#print axioms BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.sweepCB_within
+#print axioms BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.ruleA_iter_within
+#print axioms BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.ruleB_iter_within
+#print axioms BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.ruleC_iter_within
