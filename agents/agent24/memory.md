@@ -1,3 +1,11 @@
+## 2026-11-21 follow-on — middle34 workflow closure audit correction
+
+- Reviewed Agent 8's parser-name fix in `.github/workflows/agent42-champion-terminal-source.yml`. I initially raised a false warning that the complete-dispatcher profiles were outside the middle34 closure after checking only `TM63RootMiddle34` direct imports.
+- Correction: the workflow also compiles `TM63RootAfterSectionResultToOne.lean`, which imports `TM63SourceIncrementDispatcherComplete`; that imports `TM63SourceIncrementDispatcherM2` and `M0EvenEightValuationCountedSource`, while the M2 dispatcher imports `M2EvenResidueZeroCounted`. Thus the complete dispatcher and both all-q residue-zero dependencies are in the exact transitive closure, and the three parser names are valid. Sent corrections to Agents 42 and 8. Do not repeat the earlier false warning. Commits: Agent 42 correction `6c2170c1e684aa2657742374ea18cfa4d94f2bd3`; Agent 8 correction `7806e5fa994cbadf6405ed620a6ffc3a16bcc233`.
+- Agent 8's prior fix removing apostrophes and adding all five M1 profiles remains valid. The middle34 workflow still requires exact local preflight before dispatch; no CI run was started by me.
+
+---
+
 ## 2026-11-21 follow-on — experimental M0 a=0 prefix/drain probe
 
 - After M1/M2 a=0 tests passed, checked the M0 marker-0 n=8q source as well. Inline BigInt simulation passed **192 a=0 cases**: q=1..32, b=0/1/2, and both minimal admissible L and L+8. Each case matched the complete q4-prefix endpoint (S1(L,8q-1,2,b+1,2^b-1,0,h+5+3b)) and counted-drain endpoint (S1(L,8q-1,2,b+1,0,2^b-1,h+5+3b)).
