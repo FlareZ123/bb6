@@ -84,6 +84,30 @@ assert root_n % 3 == 1
 assert int(steps[13]["input_n"]) % 3 == 2
 assert root_suffix == steps[12]["output_suffix"]
 
+# The root-specific path diverges at macro 14. Find the shortest raw prefix
+# that reaches the A_step2 sweep precondition, then repeat once more.
+def first_valid_macro(n, suffix, limit=200):
+    for m in range(limit + 1):
+        try:
+            out_n, out_suffix, info = replay_macro(n, suffix, m)
+            return m, out_n, out_suffix, info
+        except AssertionError:
+            continue
+    raise AssertionError(f"no valid macro prefix <= {limit}")
+
+m14, n14, suffix14, info14 = first_valid_macro(root_n, root_suffix)
+m15, n15, suffix15, info15 = first_valid_macro(n14, suffix14)
+assert (m14, m15) == (23, 26)
+assert suffix14 == [0,1,0,1,0,1,0,1,1,0,1,1,1,1,1,1]
+assert suffix15 == [0,1,0,1,0,1,1,1]
+
+# This exact state is the existing sixth q=4 rejoin target from
+# BlankSixthQ4Rejoin.sixth_q4_root_rejoin_original.
+t6 = (state.a - 7) // 9
+s6 = (t6 - 23) // 27
+expected_reentry = L(32768*s6 + 28577, 3, 2)
+assert n15 == expected_reentry.a
+
 print("root section index:", 31777)
 print("root parameter bits:", state.a.bit_length())
 print("p mod 2187:", p % 2187)
@@ -93,3 +117,8 @@ print("after macro 13: root residue", root_n % 3,
       "external macro-14 residue", int(steps[13]["input_n"]) % 3)
 print("PASS: raw A_step2 replay matches branches/suffixes for macros 11-13")
 print("PASS: output-difference v3 values are 2, 1, 0; divergence at macro 14")
+print({"macro14_root_prefix": m14, "macro15_root_prefix": m15,
+       "macro14_suffix": "".join(map(str, suffix14)),
+       "macro15_suffix": "".join(map(str, suffix15)),
+       "rejoins_sixth_q4_target": True,
+       "reentry_parameter_bits": n15.bit_length()})
