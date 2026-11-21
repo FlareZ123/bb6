@@ -18,34 +18,26 @@ with the right side unchanged. Under the external `ListBlank` notation, this fin
 ]
 up to the usual blank-extension equivalence.
 
-In the DeepMind #85 token encoding,
-[
-\operatorname{encTokens}(K,R3)
-]
-encodes each (k_i\in K) as (1^{k_i}0), followed by `encLeft R3`; and
-[
-\operatorname{encLeft}([(1,0)])=110.
-]
-Therefore, with
-[
-K=[0,0]\; ++\; \operatorname{replicate}(m,1),
-\qquad R3=[(1,0)],
-\qquad L=[],
-]
-we have
-[
-\operatorname{encTokens}(K,R3)
-=00\,(10)^m\,110,
-]
-which is the same left `ListBlank` as the external expression, since the final extra zero is blank-equivalent. The control state is E and the right side is blank, so this A-step2 intermediate is exactly a `tok_EL K R3 []`-shaped configuration.
+**Important state correction:** the external machine is #490, whereas the DeepMind token lemmas are written for #85. The DeepMind state map sends #85 (B\mapsto)#490 (E), so this E-state is a #85 B-state, not a `tok_EL) state. Do not apply `tok_EL_0_cons` to it.
 
-The DeepMind source has the generic transition lemma `tok_EL_0_cons`:
+For the cylinder input (C\) the suffix is empty, so the scanned symbol is blank (0). The #490 transition E0 is `0LC`: it writes 0, moves left, and enters C. After this one raw step, the left list is
 [
-\operatorname{tok\_EL}(0::k::K)\;R3\;L
-\;\vdash^+\;
-\operatorname{tok\_CR}(k+1::K)\;R3\;L.
+[0]\; ++\; [1,0]^m\; ++\; [1,1],
 ]
-It applies to this (K), producing a C-token configuration with (K'=1::\operatorname{replicate}(m,1)). This is a concrete common subconfiguration in the two formal descriptions.
+and the right side is still blank-equivalent to empty.
+
+In the DeepMind token encoding, choose
+[
+K=[0]\; ++\; \operatorname{replicate}(m,1),
+\qquad R3=[(1,0)],
+\qquad L=[].
+]
+Then
+[
+\operatorname{encTokens}(K,R3)
+=[0]\; ++\; [1,0]^m\; ++\; [1,1,0],
+]
+which is exactly the same left `ListBlank` (the final extra zero is blank-equivalent). The control state is now C, which is unchanged by the #85/#490 state map. Thus **after the E0 step**, the external cylinder path is exactly the DeepMind `tok_CR K R3 []) configuration.
 
 ## Right-suffix encoding
 
@@ -121,15 +113,16 @@ This remains a structural correspondence, not yet a proof that the entire A-step
 
 ## Root-to-cylinder token reachability target
 
-The independent #490 stack reduction supplies a concrete token checkpoint from the blank root. Its seven-step entry is `evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`; the first `mode_DR_n_n_closed` case then uses `texecute 3` to reach
+The independent #490 stack reduction supplies a concrete token checkpoint from the blank root. Its seven-step entry is `evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`; after the #85/#490 state-map transport, the first `mode_DR_n_n_closed` case uses `texecute 3` to reach
 [
 \operatorname{tok\_CR}([1,0],[(0,0)],[0]).
 ]
-By contrast, the external cylinder's first E intermediate is
+
+The external cylinder reaches the separate C-token state
 [
-\operatorname{tok\_EL}([0,0]++\operatorname{replicate}(m,1),[(1,0)],[]),
+\operatorname{tok\_CR}([0]\; ++\; \operatorname{replicate}(m,1),[(1,0)],[]),
 \qquad m=4(C/3)-1,
 ]
-and `tok_EL_0_cons` moves it to the corresponding `tok_CR) state.
+after the E0 step described above.
 
-This reframes the missing connection as a reachability question inside the same token subsystem: does the closed-stack orbit from the root token state ever reach the cylinder token state (or another halting token state)? The local tape identity above does not answer this. See [`DeepMindStackReduction.md`](./DeepMindStackReduction.md) for the exact source paths and caveats.
+The missing connection is now a reachability question inside the same `tok_CR`/closed-stack subsystem: does the root token state ever reach the cylinder token state (or another halting token state)? The local tape identity above does not answer this. See [`DeepMindStackReduction.md`](./DeepMindStackReduction.md) for the exact source paths and caveats.
