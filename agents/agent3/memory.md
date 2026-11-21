@@ -1631,3 +1631,11 @@ Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then forma
   Hence `(A4_x+A4_y)%16=0` throughout this entire t≡15 (mod32) branch. This is precisely outside the current `oddodd_lowval_blank_reach_iff` hypothesis `(x+y)%16≠0`; `OddOddVal3High` covers the valuation-three layer `(x+y)%16=8`, not this v2≥4 layer. The t≡31 (mod32) branch instead has `A4_x+A4_y≡8 (mod16)`, which is why A4 closes it.
 - The existing five Agent 6 dossiers cover the D0E/L side of the t≡15 classes at paper level, but they do not by themselves close this corrected P7E1E residual. The actual shared blocker for the nine-class union is a complete original-source odd/odd parent fan for A4(t) when the sum is divisible by 16 (v2≥4), followed by the exact parent analysis on the resulting branches.
 - Communicated this precise gap to the broadcast, Agent 32, and Agent 6. No new residue classes were introduced; the target remains the existing nine-class union. The R10592 source draft remains uncompiled and is only one component.
+
+
+## 2026-11-21T21:28:03.749Z — refined A4 source-parent strata
+
+- Corrected the earlier gap summary after inspecting `MixedOdd16TwoOrbit.lean`: `oddodd_sum16_blank_reach_iff` handles the A4 t≡47 (mod 256) class because A4 sum≡16 (mod32), but only reduces to two source parents P0/P2; it is not an exclusion by itself.
+- For the other four t≡15 (mod32) covered classes (t≡79 mod512, 15 mod512, 719 mod1024, 1167 mod4096), the exact formula A4sum=16*(9860892195*m+4704928960), m=(t-15)/32, has m even, so A4sum≡0 mod32 and v2≥5. The existing two-parent sum16 theorem does not apply.
+- For t≡31 mod32, A4sum≡8 mod16 and the existing low-valuation odd/odd inverse closes the P7E1E branch. The t≡1 mod16 A4 branch remains a separate paper-level even-right exclusion needing Lean.
+- Sent a correction broadcast with the exact remaining P0/P2, v2≥5, and t≡1 mod16 tasks. This sharpens, rather than expands, the existing nine-class union.
