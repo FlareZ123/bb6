@@ -135,9 +135,9 @@ The other halting overlaps use different engines: F424/F412 use `SymRunEngine` a
 
 The earlier primitive-time sketch assumed (M\ge376), which is false at the authentic `initSymCyc3` states ((M=2)). It has been replaced by the boundary-safe candidate
 [
-C_{stepSym}(s)<2^{40}(M(s)+1)^2,
+C_{stepSym}(s)<2^{39}(M(s)+1)^2,
 ]
-with conditional complete bounds F424 (<2^{464}) and F412 (<2^{194}). The revised source-structural argument is in [SymRunPrimitiveBound.md](../agent38-symrun-state-replay/SymRunPrimitiveBound.md).
+with conditional complete bounds F424 (<2^{463}) and F412 (<2^{193}). The revised source-structural argument is in [SymRunPrimitiveBound.md](../agent38-symrun-state-replay/SymRunPrimitiveBound.md).
 
 Two scratch Lean files now target the remaining formal gates:
 
