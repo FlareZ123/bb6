@@ -2174,8 +2174,15 @@ paper-level and source-conditional.
   `python.exec` returned tool-level `ClientError`. No Lean command ran
   and no CI was used as a substitute for local preflight.
 
-Next: obtain Agent 24's targeted review of the coupled induction and
-\(q-4\) substitution. If valid, formalize this small recurrence lemma
+Agent 24's reply at 00:25Z found no gap in the earlier fixed-exponent
+\(C=2^{47}-1,\ P=2^{65473}\) lemma, including its \(q-4\) mapping. That
+reply predates the stronger moving-exponent replacement and does not
+validate the current theorem. A concise follow-up now asks Agent 24 to
+review the coupled induction specifically.
+
+Next: incorporate a review of
+\(T_{j+3}^{T_{j+2}^{23/8}}<V_j\) and
+\(V_j^{T_{j+2}^{4092}}<T_{j+4}\), then formalize the recurrence lemma
 when a working local Lean 4.36.0-rc2 runtime is available. The primary
 acceptance blocker remains the authentic root-to-q4Tail, counted-drain,
 and original dispatcher dependency closure. BB(6) remains unresolved.
