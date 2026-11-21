@@ -206,6 +206,19 @@ because `z<2). The endpoint `t=2*L-1` has `v_t>Q) by the endpoint calculation in
 
 Now let `A=2^(2*r)`, `r>=2`, so `m=(4^r-1)/3`, `t*=2*r-1`, and `2^t*=A/2`. The uniform envelope is attained uniquely at `t=t*`, `n_t*=1`, and `v*=(Q-m)/2^t*=2*(Q-m)/A`. Every other admissible quotient is larger.
 
+These parameters admit a division-free closed form. Since `Q=(4^L-1)/3` and
+`3*m+1=4^r),
+```
+Q-m = 4^r*(4^(L-r)-1)/3,
+v*  = 2*(4^(L-r)-1)/3,
+Y*  = 2*4^(L-r)-4,
+j   = 4^L-4^r-2,
+k   = 4^(2*L)-4^(L+r)-2,
+d   = 2*r-1+2*L.
+```
+In particular, `j+3*m+3=4^L=2^(2*L)`. These forms are convenient for
+formalizing the infinite family without nested natural-number division.
+
 For this sharp family, `t*+3<=2*L`; reducing `3*Q=2^(2*L)-1` modulo `2^(t*+3)` and using `3*m+1=2^(t*+1)` gives `Q-m=2^(t*+1) (mod 2^(t*+3))`. Hence `v*%8=2` and `Y=3*v*-2` satisfies `Y%8=4`. Any actual input with this exponent residue has source depth `d=t* (mod 2*L)`, hence `d` is odd and, because `r>=2`, `d>=3`. Its first normalized coordinate `x` satisfies the source mass identity
 
 ```
