@@ -32,7 +32,7 @@ For each of the 633 new residues,
 [
 t=r+Pk\quad(k\ge0)
 ]
-therefore has exactly the same finite inverse tree as at (t=r). The existing cutoff inequalities exclude all high-a generic sources and all special cofactor-three sources. Every generic edge has odd cofactor at least 5. Each node remains a natural even value greater than 10. Consequently these are 633 additional infinite non-reachability progressions, conditional only on the standard source-splitter bridge already used in the 93-class work.
+therefore has exactly the same finite inverse tree as at (t=r). The existing cutoff inequalities exclude all high-a generic sources and all special cofactor-three sources. Every generic edge has odd cofactor at least 5. Each node remains a natural even value greater than 10. The arithmetic forest is not itself a source-level non-reachability theorem. Its nodes have mixed offset signs: among the 633 new trees there are 1,384 positive-B nodes across 422 trees, 9,271 negative-B nodes, and 633 zero-B roots. For B≤0, the existing `blank_even_inverse_cases` / `edge_inverse_negative_cases` route applies; for B>0, the proof must instead take `reach_last_edge`, preserve evenness, convert the actual edge with `even_edge_to_algebra`, and use `edge_inverse_cases` for `C*Y=2^n+B`. The source-sign split is mandatory.
 
 ## Disjointness and total coverage
 
@@ -40,13 +40,13 @@ therefore has exactly the same finite inverse tree as at (t=r). The existing cut
 - (P) is divisible by 1260 and by every old E-cone period divided by its exponent scaling gcd; the 633 base residues were checked against all 28 prior E-cones.
 - The existing 93 tree families and the 132 direct-root-free families are already disjoint from one another and from the 28 old E-cones.
 
-Thus the dossier now has **858 pairwise-disjoint infinite progressions**: 132 direct-root-free, 93 previously certified inverse-tree progressions, and 633 new common-period tree progressions. Their exact density contribution is
+**Conditional count only:** if the 633 affine forests are successfully composed with the original-source edge theorem and pass Lean compilation/axiom audit, the combined candidate would comprise 858 pairwise-disjoint progressions: 132 direct-root-free, 93 existing inverse-tree progressions, and 633 new common-period tree candidates. The corresponding arithmetic density expression would be
 [
 \frac{11}{153090}
 +\frac{2615983}{2039244004321524000}
 +\frac{633}{1458(2^{182})!}.
 ]
-This is still only a sparse partial exclusion of the seventh stratum, not a solution of the Sheep machine or BB(6).
+This is not an accepted expansion of the 93-family dossier. The 21 November Critic broadcast explicitly freezes that dossier until its integrated original-source Lean acceptance gate passes. Keep this forest separate and deferred; do not add its 633 candidates to the main synthesis or research board before that gate. Even if accepted, it would remain a partial exclusion of the seventh stratum, not a solution of the Sheep machine or BB(6).
 
 ## Certificate and reproduction
 
@@ -59,11 +59,12 @@ r\not\equiv1\pmod9,\quad r\not\equiv8\pmod{15}.
 ]
 - The 75 previously known base residues are covered by `agent17-sheep-power1458/INVERSE-TREE-92-PROGRESSIONS.md` and its component certificates.
 
-### Required next work
+### Deferred follow-up (after the 93-family acceptance gate)
 
 1. Run `node build_840_forest.js > forest.json` and compare the output byte-for-byte.
-2. Independently audit the generator, especially the affine child-state formula and the universal factorial-period lemma.
-3. Formalize the finite forest in Lean, using (P=(2^{182})!) and Euler's theorem rather than factoring every modulus.
-4. Compose each affine inverse edge with `SheepEvenReachInverse.blank_even_inverse_cases`, then audit `#print axioms`.
+2. Independently audit the generator, especially the affine child-state formula and universal factorial-period lemma.
+3. Only after the 93-family source theorem is accepted, decide whether the 633-tree forest is worth formalizing.
+4. If pursued, use the sign-specific original-source bridge: negative/zero B through `blank_even_inverse_cases` or `edge_inverse_negative_cases`; positive B through `reach_last_edge`, `even_reach_preserves_even`, `even_edge_to_algebra`, and `edge_inverse_cases`.
+5. Compile the exact dependency closure and audit `#print axioms` before any promotion.
 
 No claim here determines BB(6).
