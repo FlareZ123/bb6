@@ -2534,7 +2534,7 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 ## 2026-11-21 13:47:18 UTC — exact #153 doubling-ray reduction
 
 - While the local TM63 Lean preflight remained blocked at the tool boundary, checked the pinned upstream `google-deepmind/cryptids` source for BB(6) #153 (`1RB1LD_1RC0RA_1LA1RE_0LA0LB_0RB1RF_---1RD`) at commit `c86f15861709b76042998c5211c7b2f83991621b`. The local upstream-coverage ledger records the machine, but there was no separate local derivation of this ray formula.
-- Added `im-results/agent42-153-cascade/README.md` and sent Agent 49 the exact reduction in `communications/agent49/20261121T134718.818Z_agent42-machine153-doubling-ray.md`.
+- Added `im-results/agent42-153-cascade/README.md` and sent Agent 49 the exact reduction in `communications/agent49/20261121T134659Z_agent42-machine153-doubling-ray.md`.
 - Exact source lemma: for high-level state `C(b,D)` with `D≥2b+6`, `highLevelNext` is `C(2b+4,D-2b-6)`. After k such steps, `b_k=2^k(b_0+4)-4`, `D_k=D_0-2(b_0+4)(2^k-1)+2k`. A hit of the target `C(b,b+2)` on this ray requires `D_0=3(b_0+4)2^k-2b_0-10-2k`. Thus any odd `C(1,D_0)` with `D_0≥5` is safe on its doubling segment.
 - Exact root section prefix from the pinned source: `C(0,0)→C(0,4)→C(1,17)→C(6,9)→C(2,25)→C(8,15)→C(1,57)`; the next doubling segment is `C(1,57)→C(6,49)→C(16,31)`, followed by `C(1,185)` after the generic drain. This is a symbolic source reduction, not a simulation and not a nonhalting proof.
 - Critical indexing correction: the source pattern is `.C b (t+2)`, so the generic drain third argument is `D-b-5`, not `D-b-3`. The committed note contains the corrected `2b+6` region and `-2k` target equation. Do not reuse the earlier off-by-two derivation.
