@@ -208,11 +208,18 @@ theorem m8OddDepth_scaled (v d : Nat) (hv : v%4=2) :
         rw [Nat.pow_succ]
         omega
       have hmul : 4≤v*2^(d+1) := Nat.mul_le_mul hv2 hpow2
+      have hmul3 : 12≤3*v*2^(d+1) := by
+        have h := Nat.mul_le_mul_left 3 hmul
+        simpa [Nat.mul_assoc] using h
       have hkpos : 4≤3*v*2^(d+1)-2 := by omega
       have hvEven : v%2=0 := by omega
       have hfactor : 3*v*2^(d+1)=2*(3*v*2^d) := by
         rw [Nat.pow_succ]
         ac_rfl
+      have hmul0 : 2≤v*2^d := Nat.mul_le_mul hv2 hpowPos
+      have hmul0' : 6≤3*v*2^d := by
+        have h := Nat.mul_le_mul_left 3 hmul0
+        simpa [Nat.mul_assoc] using h
       have hzEven : (3*v*2^d)%2=0 := by
         simp [Nat.mul_mod, hvEven]
       have hkmod : (3*v*2^(d+1)-2)%4=2 := by
@@ -249,7 +256,7 @@ theorem m8SharpFamily_unreachable (r : Nat) (hr : 2≤r) :
       ⟨m8SharpT r-2,by omega⟩
     refine ⟨2^q,?_⟩
     rw [hq, Nat.pow_add]
-    norm_num
+    simp
   have hproddiv : 4∣3*m8SharpV r*2^(m8SharpT r) := by
     rcases hpowdiv with ⟨q,hq⟩
     refine ⟨3*m8SharpV r*q,?_⟩
@@ -273,8 +280,20 @@ theorem m8SharpFamily_unreachable (r : Nat) (hr : 2≤r) :
   have hscale' : 2^d*(p.2+2)=k+2 := by
     rw [hdepth] at hscale
     exact hscale
+  have hvpos : 2≤m8SharpV r := by
+    have h := m8SharpV_mod_eight r hr
+    omega
+  have hdpos : 1≤2^(m8SharpD r) := by
+    have h := Nat.pow_pos (by decide : 0 < (2:Nat)) (m8SharpD r)
+    omega
+  have hmulD : 2≤m8SharpV r*2^(m8SharpD r) :=
+    Nat.mul_le_mul hvpos hdpos
+  have hmulD3 : 2≤3*m8SharpV r*2^(m8SharpD r) := by
+    have h := Nat.mul_le_mul_left 3 hmulD
+    omega
   have hscaleFamily : 2^d*(3*v)=k+2 := by
     dsimp [k,d,v,m8SharpK,m8SharpD,m8SharpV]
+    rw [Nat.sub_add_cancel hmulD3]
     ac_rfl
   have hY : p.2+2=3*v := by
     apply Nat.mul_left_cancel (Nat.pow_pos (by decide : 0 < (2:Nat)) d)
