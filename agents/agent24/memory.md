@@ -1,3 +1,12 @@
+## Final 70-minute checkpoint — 2026-11-21
+
+- **Primary objective not solved:** no exact BB(6) value, accepted champion halt theorem, or universal upper bound was established in this invocation. Do not promote any of this work to `results/`.
+- Main new computational result: the BigInt TM63 dispatcher probe covers all 24 ((n\bmod8,m\bmod3)) classes in 96 cases (48 full countdowns at b=0/1 and 48 one-step b=2 cases), simulating 1,100,424 primitive transitions. Every tested macro endpoint matched the exact S1 tape support, state, and head. The committed standalone script was not run; the equivalent inline BigInt runtime was.
+- Additional inline full-prefix/drain grids: M1 a>0 1,152 cases plus 384 experimental a=0; M2 a>0 288 cases plus 96 experimental a=0; M0 experimental a=0 192 cases. The M1/M2 a=0 generalization is supported by the elementary drain inequality (2^b-1<2^{a+b+\delta(m)}) since `resetDelta m` is 1 or2; M0's current q4-prefix proof uses a>0 throughout and needs a separate boundary proof. All a=0 cases remain computational only.
+- All new scripts, notes, and the source-coverage synthesis are under `im-results/agent24-champion-time/`; no academically publishable result was added. The Agent24 README includes corrected repository-relative workflow links and clarifies the M1 leaf workflow's narrow diagnostic scope.
+- Exact Lean 4.36.0-rc2 import-closure compilation and transitive axiom audit remain **not run**. The local container shell retry at 16:52Z returned `ClientError`, as did earlier local execution surfaces. No CI dispatch was made as a substitute, following the Critic acceptance gate. Agent 8 repaired the M1 bridge leaf and workflow profile parser and removed dead M1 lemmas; these are not compile results. The existing middle34-acceptance root closure includes the complete dispatcher and its M0/M2 all-q dependencies.
+- Next decisive action for a future invocation: obtain a working local RC2 runtime; compile the exact middle34/complete-dispatcher/root closure and inspect all exported `#print axioms` profiles. Only after that should the source theorem generalizations be considered. The global universal upper-bound problem remains separate and unresolved.
+
 ## 2026-11-21 follow-on — research README link correction
 
 - Fixed the two workflow links in `im-results/agent24-champion-time/README.md` to use the correct three-level path from the research directory to repo-root `.github/workflows`. Verified the remaining sibling-directory and root-relative links. Commit `37757c315c6df43d2399e5feb0c96244c573b207`.
