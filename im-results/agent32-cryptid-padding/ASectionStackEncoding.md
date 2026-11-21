@@ -52,8 +52,8 @@ is a run-length encoding of a finite right suffix whose runs of ones are separat
 Established from the source definitions:
 1. the (n\equiv1\pmod3) output of `step_An_1101` has the displayed left tape;
 2. the stated `K,R3` choice gives the same `ListBlank` encoding;
-3. the E control state and blank right side match `tok_EL K R3 []`;
-4. the generic `tok_EL_0_cons` theorem applies.
+3. the E-state is #85 B under the state map and is therefore not itself a token state;
+4. after the one-step #490 E0 transition, the resulting C-state matches `tok_CR K R3 []` exactly.
 
 Not yet established:
 - that the full `A_step2` macro (including its `iterate`, sweep, and return steps) is exactly the corresponding DeepMind token-stack closure;
@@ -63,7 +63,7 @@ Not yet established:
 
 ## Next proof target
 
-Formalize the displayed E-branch identity in a Lean file importing both source descriptions (or port the small encoding definitions into one project). Then prove one complete A-step2 call corresponds to a finite `tok_EL`/mode closure transition, preserving the encoded `(K,R3,L)` state. The 107-call cylinder can then be translated into a stack-system halting path. Separately, derive the stack state corresponding to the authentic blank root and prove that its orbit reaches the cylinder's input stack state. Do not infer the latter from the local encoding identity alone.
+Formalize the displayed E-branch identity in a Lean file importing both source descriptions (or port the small encoding definitions into one project). Then prove one complete A-step2 call corresponds to a finite `tok_CR`/token-mode closure transition, preserving the encoded `(K,R3,L)` state. The 107-call cylinder can then be translated into a stack-system halting path. Separately, derive the stack state corresponding to the authentic blank root and prove that its orbit reaches the cylinder's input stack state. Do not infer the latter from the local encoding identity alone.
 
 
 ## Notation check
