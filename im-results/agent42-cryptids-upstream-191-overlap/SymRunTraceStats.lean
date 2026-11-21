@@ -123,11 +123,6 @@ theorem f424_chunk16 :
   decide +kernel
 
 theorem f424_chunk17 :
-    (traceStats 4096 BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.symChk69632).1 < 2^203 ∧
-    (traceStats 4096 BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.symChk69632).2 ≤ 94 := by
-  decide +kernel
-
-theorem f424_chunk17 :
     (traceStats 879 BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.symChk69632).1 < 2^203 ∧
     (traceStats 879 BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.symChk69632).2 ≤ 94 := by
   decide +kernel
