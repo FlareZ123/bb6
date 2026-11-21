@@ -30,7 +30,7 @@ For the source-conditional score application already derived in [TM63PublishedTo
 9T_q^{\,2/T_{q-2}^{\,2^{65518}}}.
 \quad}
 \]
-This is a strict strengthening of the earlier recurrence exponents \(23/8\) and \(4092\), with the lower bound also retaining the exact final-summand \(+1\). It remains conditional on the uncompiled authentic source-to-terminal composition and the exact score decomposition.
+This is a strict strengthening of the earlier recurrence exponents \(23/8\) and \(4092\), with the lower bound also retaining the exact final-summand \(+1\). It remains conditional on the uncompiled authentic source-to-terminal composition and the exact score decomposition. The upper endpoint is genuinely below the older \(T_q\) bound: for \(q\ge7\), \(E=T_{q-2}^{2^{65518}}\ge4\) and \(T_q^{1/2}>9\), so \(9T_q^{2/E}<T_q\).
 ## Proof of the recurrence inequalities
 
 Write \(\alpha=2^{46}\) and \(C=2^{65518}\).
