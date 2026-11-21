@@ -1,6 +1,6 @@
 # TM63 champion reset arithmetic and counted source coverage
 
-**Current status — 20 November 2026: BB(6) remains unresolved.** The exact blank-root prefix to the published S1 configuration after 27,959 original TM63 transitions is kernel-checked. The downstream source chain now has drafts through the middle-34 countdown, complete 24-class SectionResult dispatcher, T3-corrected outer-LC_Inc endpoint, second q4Tail frame, exact q4Tail/S0 identity, arbitrary-A S1 reparameterization, counted drain, terminal dispatcher and terminal SectionBits bridge. The preferred route bypasses further q4Tail/P2 descent and the separate A=1/A=2 terminal cases. The normalized tm2 trajectory is transported to the actual TM1 champion by the six-transition root bridge in [ChampionRootBridge.lean](../agent48-champion-root/ChampionRootBridge.lean); the Attainable adapter's +7 includes those six transitions and the final undefined query. Agent 42's [authentic-root wrapper](../agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean) states source-level `tm63_blank_halts` and `tm63_blank_attainable`. **The complete dependency closure has not compiled or passed a transitive axiom audit**; no accepted champion halt or exact primitive-step score is established. The universal six-state upper bound remains a separate open problem.
+**Current status — 21 November 2026: BB(6) remains unresolved.** The exact blank-root prefix to the published S1 configuration after 27,959 original TM63 transitions is kernel-checked. The downstream source chain now has drafts through the middle-34 countdown, complete 24-class SectionResult dispatcher, T3-corrected outer-LC_Inc endpoint, second q4Tail frame, exact q4Tail/S0 identity, arbitrary-A S1 reparameterization, counted drain, terminal dispatcher and terminal SectionBits bridge. The preferred route bypasses further q4Tail/P2 descent and the separate A=1/A=2 terminal cases. The normalized tm2 trajectory is transported to the actual TM1 champion by the six-transition root bridge in [ChampionRootBridge.lean](../agent48-champion-root/ChampionRootBridge.lean); the Attainable adapter's +7 includes those six transitions and the final counted halting transition. This matches the standard maximum-shift convention: the final transition into the halt state counts as one step, and a standard-format undefined entry is interpreted as the `1RZ` halt instruction ([MathWorld](https://mathworld.wolfram.com/BusyBeaver.html); [bbchallenge definition](https://wiki.bbchallenge.org/wiki/Busy_Beaver_Functions); [standard text format](https://wiki.bbchallenge.org/wiki/Standard_Text_Format)). Agent 42's [authentic-root wrapper](../agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean) states source-level `tm63_blank_halts` and `tm63_blank_attainable`. **The complete dependency closure has not compiled or passed a transitive axiom audit**; no accepted champion halt or exact primitive-step score is established. The universal six-state upper bound remains a separate open problem.
 
 ## Conditional exact-score tower interval (20 November 2026)
 
@@ -26,6 +26,34 @@ See [DirectTerminalTetrationBound.md](DirectTerminalTetrationBound.md)
 for the lower derivation and
 [Agent 42's consolidated tower sandwich](../agent42-q4-s0-drain/TM63PublishedTowerSandwich.md)
 for the upper and combined interval.
+
+The same exact score split also gives a sharper additive normalization. Put
+\(b=b_N=2^{\ell}-1\), \(\ell=b_{N-1}\),
+\(\kappa=b_{N-2}=\log_2(\ell+1)\), and \(m=\log_2\ell\).
+The current three-term derivation in
+[TM63ScoreAsymptotic.md](../agent42-q4-s0-drain/TM63ScoreAsymptotic.md)
+gives
+\[
+S_{\rm TM1}=6b^2+54b+6\ell^2+57\ell+96+15\kappa+\Delta_2,
+\qquad 0\le\Delta_2<82m^2.
+\]
+Equivalently,
+\[
+S_{\rm TM1}=6(b+1)^2+42b+
+\underbrace{6\ell^2+57\ell+90+15\kappa+\Delta_2}_{R_\ell}.
+\]
+For the authentic parameters \(\ell\ge256\), \(m<\ell\), and
+\(\kappa\le m+1\), so \(R_\ell<88\ell^2+72\ell+105
+<161\,2^{\ell/2}=161\sqrt{b+1}\). Thus the displayed source-conditional
+formula implies
+\[
+6(b+1)^2+42b<S_{\rm TM1}<
+6(b+1)^2+42b+161\sqrt{b+1},
+\]
+and in particular the simpler upper bound
+\(S_{\rm TM1}<6(b+1)^2+43b\). This is a re-centering of the existing
+exact score identity, not a new simulation or a separately accepted theorem;
+it does not change the uncompiled source-composition boundary.
 
 **This interval is still conditional on the authentic blank-root/source
 composition.** The full dependency closure has not compiled and passed a
