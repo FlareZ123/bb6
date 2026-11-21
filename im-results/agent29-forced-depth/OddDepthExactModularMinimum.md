@@ -17,7 +17,7 @@ r_t = (-m * inverse_mod(2^t,Q)) mod Q,  0<=r_t<Q,
 v_t = r_t + ((2-r_t) mod 4)*Q.
 ```
 
-The modular inverse exists because Q is odd, and Q≡1 mod4 because L≥2. No v_t can be zero: v_t≡2 mod4. Then **the following is a rigorous universal necessary bound**:
+The modular inverse exists because Q is odd, and Q≡1 mod4 because L≥2. No v_t can be zero: v_t≡2 mod4. The direct definition has T=2m+2 candidates, but the logarithmic-cutoff theorem below proves that a minimizer always has 2^t≤6m, reducing the exact search to at most floor(log2(6m))+1 candidates. Then **the following is a rigorous universal necessary bound**:
 
 ```
 Y >= min_(0<=t<T) (3*v_t-2).                      (★)
@@ -84,6 +84,31 @@ where the final inequality uses `2^t>(3*m+1)/2`.
 
 For the remaining residue `t=2*L-1`, let `A=2^(2*L)`. Here `n` is odd, and reduction modulo `2*A` in `n*(A-1)=3*(v*2^(2*L-1)+m)` gives `n=-3*m (mod 2*A)`. Since `0<3*m<2*A`, `n>=2*A-3*m`; substituting in `v=(n*Q-m)/(A/2)` gives `v>Q`, which is stronger than the claimed bound. Multiplying the bound for `v` by three and substituting `Q=(2^(2*L)-1)/3` proves the displayed inequality.
 
+### Logarithmic cutoff for the exact finite minimum
+
+For `0<=t<=2*L-2`, the same quotient argument gives the exact representative without a modular inverse:
+
+```
+n_t = the least positive residue of (2^(t+1)-3*m) modulo 2^(t+2),
+v_t = (n_t*Q-m)/2^t.
+```
+
+The numerator is divisible by `2^t` and `v_t%4=2`; this is exactly the least positive CRT solution in (★), because every admissible quotient is `n_t+h*2^(t+2)` with `h>=0`, and `v` increases with that quotient.
+
+Moreover, **no minimizing exponent residue has `2^t>6*m`**. For such a `t` (still assuming `t<=2*L-2`), `n_t=2^(t+1)-3*m`, and
+
+```
+v_t = 2*Q-(3*m*Q+m)/2^t > 3*Q/2-1/6 > Q.
+```
+
+The endpoint `t=2*L-1` also has `v_t>Q`, by the endpoint congruence in the envelope proof. On the other hand, let `t0=floor(log2(3*m))`. It lies in `0..2*L-2`, and `n_t0=2^(t0+1)-3*m` satisfies `0<n_t0<2^t0`; hence `v_t0<Q`. Therefore the exact minimum is attained among only
+
+```
+0 <= t <= floor(log2(6*m)).
+```
+
+This reduces the exact minimization from `2*m+2` candidates to `floor(log2(6*m))+1` candidates and replaces modular inversion modulo the large `Q` by a single residue modulo a power of two. It is an exact reduction, not a heuristic or a finite-depth approximation.
+
 ### The envelope is sharp for infinitely many genuine source-normalized inputs
 
 For every `r>=1`, take
@@ -121,10 +146,16 @@ def lower_bound(m: int) -> tuple[int, int]:
     L = m + 1
     Q = (2 ** (2 * L) - 1) // 3
     candidates = []
-    for t in range(2 * L):
-        r = (-m * pow(2 ** t, -1, Q)) % Q
-        v = r + ((2 - r) % 4) * Q
+    t = 0
+    while 2 ** t <= 6 * m:
+        modulus = 2 ** (t + 2)
+        n = (2 ** (t + 1) - 3 * m) % modulus
+        numerator = n * Q - m
+        assert numerator % (2 ** t) == 0
+        v = numerator // (2 ** t)
+        assert v % 4 == 2
         candidates.append((3 * v - 2, t))
+        t += 1
     return min(candidates)
 
 for m in (1, 3, 5, 7, 9, 11, 13):
