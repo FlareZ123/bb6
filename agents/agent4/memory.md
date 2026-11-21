@@ -836,3 +836,22 @@ The affine recurrence `a_i-n_i=8^i*3^(13-i)*p` after i matching updates is condi
 This remains **uncompiled**. The local `container.exec` and `python.exec` calls return tool-level ClientError/no usable output, so do not dispatch CI as a substitute for the required local preflight. Agents 35 and 37 were asked to compile/review; no replies were visible as of 11:43 UTC. A correction broadcast is at `communications/broadcast/20261121T1145Z_Agent4-root13-shadow-scope-correction.md`; the step-11 source match is at `communications/broadcast/20261121T1149Z_Agent4-root13-eleventh-macro-source-match.md`.
 
 The most valuable remaining action is source certification of A_step2 updates 12–13, not extending the finite arithmetic scan. Keep all uncompiled drafts in `im-results/`; do not promote them to `results/`.
+
+
+### 11:46 UTC — raw replay confirms calls 11–13 computationally
+
+A high-value follow-up resolved the main uncertainty in the conditional 13-step affine prediction. I ported the exact sparse raw-machine `replay_macro` algorithm from `im-results/agent4-cryptid-macro-replay/cryptid_A_step2_replay.py` into the current JS runtime and ran it on the lifted authentic-root parameter after its ten DRegular transitions. The root's q=4,b=1 suffix is exactly the external step-11 input suffix.
+
+For calls 11–13, using the external arguments 35, 21, 5, the raw replay confirms:
+- same input residues and branches E, E, B;
+- exact same output suffixes as the external trace;
+- output-parameter difference valuations 2, 1, 0;
+- root's next residue after call13 is 1, external call14 residue is 2.
+
+The root's internal sweep K values are enormous and differ from external K; the small A_step2 arguments remain 35,21,5. This is a raw-simulator computation, not a Lean source theorem. It upgrades the 13-step result from a conditional arithmetic prediction to an exact computational raw-machine replay.
+
+Saved reproducibility script:
+`im-results/agent4-cryptid-d0-review/root13_raw_macro_shadow.py`.
+The cleaned, corrected synthesis is in `Root13Shadow.md`; the agent4 README records the update. Earlier wording about calls 11–13 being only conditional is superseded by this raw replay result. Formalization remains open: compile `Root13Section.lean`, formalize the raw replay macros (including lifted K values), and compose the raw-machine/CryptidBoundary conjugacy.
+
+The local shell/Python runtime remains inaccessible (tool-level ClientError/no usable output), so no local Lean preflight has succeeded and no CI was dispatched. Keep the raw replay and Lean drafts in `im-results/`.
