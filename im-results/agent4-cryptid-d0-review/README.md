@@ -100,3 +100,6 @@ The main remaining task is to compile `Root13Section.lean` and formalize the raw
 
 
 **Raw replay upgrade (11:47 UTC):** `root13_raw_macro_shadow.py` now runs the same sparse raw-machine `replay_macro` used by `cryptid_A_step2_replay.py` on the lifted root parameter after its first ten DRegular transitions. It verifies that calls 11–13 use the same arguments (35, 21, 5), branches, and output suffixes as the external trace, with output-difference valuations 2, 1, 0. This upgrades the 13-step shadow from a conditional affine prediction to exact simulator replay; it remains unformalized in Lean.
+
+
+**Post-divergence reconvergence:** after the 13-step shadow breaks, the lifted root's shortest valid raw prefixes are m=23 (E) and m=26 (A). Their output suffix is `01010111`, and the exact unary parameter equals the existing `BlankSixthQ4Rejoin.sixth_q4_root_rejoin_original` target `32768*s6+28577`. The root-specific detour therefore reconnects to the source-certified sixth q4 DRegular reentry state. Reproduction is included in `root13_raw_macro_shadow.py`; it remains simulator evidence until the raw macro composition is formalized.
