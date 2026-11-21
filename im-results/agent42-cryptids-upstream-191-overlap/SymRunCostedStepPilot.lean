@@ -198,6 +198,26 @@ theorem step_CB_run0_zero_exact (L R2 : List MItem) :
   executeWithin 5
 
 
+
+/-- B-succ followed by BR-nil: the empty right stack is bumped in 3 steps. -/
+theorem step_BB_run1_nil_exact (L1 : List MItem) :
+    ReachesIn target_tm 3 (cfgBB target_tm (.run 1 :: L1) [])
+      (cfgBB target_tm L1 (.run 0 :: bumpM [])) := by
+  unfold cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM []]
+  executeWithin 3
+
+/-- B-succ followed by BR-zero: the zero-headed right stack is bumped in 4 steps. -/
+theorem step_BB_run1_zero_exact (L1 R2 : List MItem) :
+    ReachesIn target_tm 4 (cfgBB target_tm (.run 1 :: L1) (.zero :: R2))
+      (cfgBB target_tm L1 (.run 0 :: bumpM (.zero :: R2))) := by
+  unfold cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM (.zero :: R2)]
+  executeWithin 4
+
+
 #print axioms reachesWithin_mono
 #print axioms reachesWithin_trans
 #print axioms reachesWithin_of_exact
