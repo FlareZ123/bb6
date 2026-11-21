@@ -49,4 +49,4 @@ Not established:
 - a complete primitive halting time for F424 or F412;
 - a comparison of either complete halting time with the BB(6) champion.
 
-The measured 203-bit / 205-bit F424 bounds and 69-bit / 70-bit F412 bounds are useful inputs to a future cost-indexed proof. The remaining mathematical obligation is to bound the primitive transition cost represented by `sweepBB`, `sweepCB`, `tryRuleA`, `tryRuleB`, and `tryRuleBC`, then accumulate those costs over these already-reproduced traces.
+The measured 203-bit / 205-bit F424 bounds and 69-bit / 70-bit F412 bounds are useful inputs to a future cost-indexed proof. A deliberately conservative, still-unformalized cost argument is now recorded in [SymRunPrimitiveBound.md](SymRunPrimitiveBound.md). It proposes `C_stepSym(s) ≤ 2^20 M(s)^2`, which would give F424 < 2^443 and F412 < 2^173 primitive steps before adding the tiny initial prefixes. This is a proof sketch, not a certified classification. The remaining formal obligation is to turn the source cost decomposition into a cost-indexed soundness theorem and kernel-check the intermediate-state maximum-field fold.
