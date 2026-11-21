@@ -102,10 +102,7 @@ T_{j+3}^{\,T_{j+2}^{\,\alpha}}
 \]
 Thus every integer \(\alpha\le2^{V_{j-3}-T_j}-2\) is a valid lower exponent at index \(j\).
 
-The condition \(V_{j-3}>T_j\) holds for \(j=4,5,6\): first \(V_1=2^{63}-1>T_4\), and \(V_k>T_{k+3}\) propagates for \(k\ge1\), since \(V_k>T_{k+3}\) implies
-\[
-V_{k+1}=2^{V_k}-1>2^{T_{k+3}}=T_{k+4}.
-\]
+The condition \(V_{j-3}>T_j\) holds for \(j=4,5,6\): in fact \(V_k>T_{k+3}+47\) for every \(k\ge1\). The base is \(V_1=2^{63}-1>T_4+47\), and the implication follows immediately from \(V_{k+1}=2^{V_k}-1\). Thus the three direct bases have \(\alpha_j>2^{47}-2>2^{46}\). For \(j\ge7\), the displayed lower bound for \(V_{j-3}\) is at least \(T_j^2\), so again \(\alpha_j>2^{46}\).
 Hence the definitions \(\alpha_j=2^{V_{j-3}-T_j}-2\) for \(j=4,5,6\) prove those three cases.
 
 For \(j\ge7\), the induction hypothesis at index \(j-3\) gives
@@ -289,7 +286,7 @@ For the dossier's parameters, \(A\ge V_{M+42}\). Applying the new lower recurren
 A>
 T_{M+45}^{\,T_{M+44}^{\,\alpha_{M+42}}}.
 \]
-Also \(N>2^A\) and \(q-1>N\). Since the lower score estimate implies \(S>T_{q-1}\), monotonicity of \(T\) yields
+Also \(N>2^A\) and \(q-1>N\). Since the conditional score lower bound gives \(S_{\rm TM1}>T_{q-1}\), monotonicity of \(T\) yields
 \[
 \boxed{
 S>
@@ -298,11 +295,11 @@ T_{\,
 }.
 }
 \]
-This strictly improves the earlier fixed-\(2^{46}\) outer-tower endpoint because \(\alpha_{M+42}\ge\alpha_3=2^{47}-2>2^{46}\).
+This strictly improves the earlier fixed-\(2^{46}\) outer-tower endpoint because the strengthened lower sequence satisfies \(\alpha_j>2^{46}\) for every \(j\ge3\).
 
 ## Validation boundary and next action
 
 - The displayed inequalities are mathematical derivations about the scalar recurrence \(V_{j+1}=2^{V_j}-1\), with explicit base cases and induction/direct comparison arguments.
 - The existing TM63TowerRecurrence.lean checks the weaker fixed-exponent \(23/8,4092\) sandwich. This moving-exponent result has **not** yet been encoded or compiled.
-- The score substitution depends on the source-level TM63 route and exact score decomposition. It does not prove that the authentic blank-root orbit follows the recurrence, nor that the candidate cost equals the primitive TM2 run length.
-- Next formalization target: encode \(\alpha_j\) and \(\gamma_j\) recursively/explicitly in a separate module importing TM63TowerRecurrence, then obtain a local Lean 4.36.0-rc2 preflight and inspect exported axiom profiles before updating any score synthesis.
+- The score substitution depends on the source-level TM63 route and exact score decomposition. The existing theorem sectionResult_run_complete has an exact run tm2 (sectionResult.cost) result type, assembled from the per-class source run theorems. If its full import closure compiles and passes the transitive axiom audit, it proves that proposedIncrementCost is the primitive TM2 run length for the complete countdown. Until that acceptance gate passes, the authentic blank-root orbit and exact score remain conditional.
+- Next formalization target: encode the three-index lower exponent lift, recursive denominator sequence \(d_k\), and unified \(\gamma_j\) in a separate module importing TM63TowerRecurrence. Then obtain a local Lean 4.36.0-rc2 preflight of the exact source closure and inspect exported axiom profiles before updating any score synthesis.
