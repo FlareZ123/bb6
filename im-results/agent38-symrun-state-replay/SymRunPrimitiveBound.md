@@ -72,13 +72,15 @@ These are source-structural obligations, not yet Lean-certified.
 
 ### 2. The outer CB sweep
 
-The source `sweepCB` scans at most (T\le94) right-side tokens. Each scanned repeat token can trigger one `eatFuel` call with fuel 4, and each call can add at most four to a merged repeat counter. The initial sum of repeat counters is at most (94M), so after the sweep every repeat counter is bounded by
+The source `sweepCB` scans at most (T\le94) right-side tokens. Each scanned repeat token can trigger one `eatFuel` call with fuel 4. A fuel step that merges an existing repeat counter conserves the total counter sum; a fuel step that matches a literal block increases that sum by one. Thus each call increases the total repeat-counter sum by at most four. The initial sum of repeat counters is at most (94M), so after the sweep every repeat counter is bounded by
 [
 94M+4\cdot94=94M+376\le512(M+1).
 ]
 The `bumpSymL` calls can increase a run field by at most one each; there are at most 94 calls, so every field after the sweep is also bounded by (M+94\le95(M+1)\le512(M+1)).
 
 Each scanned right token adds at most seven left tokens (at most five from `bumpSymL`, plus at most two prepended run-zero tokens). Therefore the total token count after `sweepCB` is at most (8T\le752).
+
+For primitive time, each scanned right token contributes at most one repeated-block sweep of coefficient at most 45 with parameter at most `M`, or one atomic rule of cost at most `3M+22`. Therefore the complete `sweepCB` cost is below `94·(45M+25(M+1))<2^13(M+1).
 
 ### 3. Fallback path
 
