@@ -253,6 +253,89 @@ theorem right_actual_affine_first_digit
   · rw [hy]
     omega
 
+/-- Nested Euclidean division by K and then 3 agrees with division by 3K. -/
+theorem ediv_div_three (x K : Int) (hK : 0 < K) :
+    (x/K)/3 = x/(3*K) := by
+  let q : Int := x/(3*K)
+  have hx : x = 3*K*q + x%(3*K) :=
+    (Int.mul_ediv_add_emod x (3*K)).symm
+  have hr0 : 0 ≤ x%(3*K) := Int.emod_nonneg x (by omega)
+  have hrlt : x%(3*K) < 3*K := Int.emod_lt_of_pos x (by omega)
+  have hlow : q ≤ (x/K)/3 := by
+    apply (Int.le_ediv_iff_mul_le (by decide : (0:Int)<3)).2
+    apply (Int.le_ediv_iff_mul_le hK).2
+    have hmul : (q*3)*K = 3*K*q := by
+      simp [Int.mul_assoc, Int.mul_comm]
+    rw [hmul, hx]
+    omega
+  have hhigh : (x/K)/3 < q+1 := by
+    apply Int.ediv_lt_of_lt_mul (by decide : (0:Int)<3)
+    have hxK : x/K < 3*(q+1) := by
+      apply Int.ediv_lt_of_lt_mul hK
+      rw [hx]
+      calc
+        3*K*q + x%(3*K) < 3*K*q + 3*K := by omega
+        _ = (3*(q+1))*K := by
+          simp [Int.mul_assoc, Int.mul_add, Int.mul_comm]
+    simpa [Int.mul_comm] using hxK
+  change (x/K)/3 = q
+  omega
+
+/-- One L transducer step is exactly Euclidean division of the affine
+    output tails.  The current input x digit is u and the previous y digit
+    is py. -/
+theorem left_tail_step
+    (X Y u py a b : Int)
+    (hu : u = X%3) (hpy : py = Y%3) :
+    (X-Y+a)%3 = (u-py+a)%3 ∧
+    (Y+b)%3 = (py+b)%3 ∧
+    (X-Y+a)/3 = X/3-Y/3+(u-py+a)/3 ∧
+    (Y+b)/3 = Y/3+(py+b)/3 := by
+  have hX : X = 3*(X/3)+X%3 := (Int.mul_ediv_add_emod X 3).symm
+  have hY : Y = 3*(Y/3)+Y%3 := (Int.mul_ediv_add_emod Y 3).symm
+  have hlinX : X-Y+a = 3*(X/3-Y/3)+(u-py+a) := by
+    rw [hX, hY, ← hu, ← hpy]
+    omega
+  have hlinY : Y+b = 3*(Y/3)+(py+b) := by
+    rw [hY, ← hpy]
+    omega
+  have hden : (0:Int) < 3 := by decide
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [hX, hY, ← hu, ← hpy]
+    omega
+  · rw [hY, ← hpy]
+    omega
+  · rw [hlinX]
+    exact ediv_add_mul (u-py+a) 3 (X/3-Y/3) hden
+  · rw [hlinY]
+    exact ediv_add_mul (py+b) 3 (Y/3) hden
+
+/-- One R transducer step is exactly Euclidean division of the affine
+    output tails.  The current x digit is u and (px,py) is the previous pair. -/
+theorem right_tail_step
+    (X X0 Y0 u px py a b : Int)
+    (hu : u = X%3) (hpx : px = X0%3) (hpy : py = Y0%3) :
+    (-X-X0-Y0+a)%3 = (-u-px-py+a)%3 ∧
+    (X0+Y0+b)%3 = (px+py+b)%3 ∧
+    (-X-X0-Y0+a)/3 =
+      -(X/3)-(X0/3)-(Y0/3)+(-u-px-py+a)/3 ∧
+    (X0+Y0+b)/3 = X0/3+Y0/3+(px+py+b)/3 := by
+  have hX : X = 3*(X/3)+X%3 := (Int.mul_ediv_add_emod X 3).symm
+  have hX0 : X0 = 3*(X0/3)+X0%3 := (Int.mul_ediv_add_emod X0 3).symm
+  have hY0 : Y0 = 3*(Y0/3)+Y0%3 := (Int.mul_ediv_add_emod Y0 3).symm
+  have hlinX : -X-X0-Y0+a =
+      3*(-(X/3)-(X0/3)-(Y0/3))+(-u-px-py+a) := by omega
+  have hlinY : X0+Y0+b =
+      3*(X0/3+Y0/3)+(px+py+b) := by omega
+  have hden : (0:Int) < 3 := by decide
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · omega
+  · omega
+  · rw [hlinX]
+    exact ediv_add_mul (-u-px-py+a) 3 (-(X/3)-X0/3-Y0/3) hden
+  · rw [hlinY]
+    exact ediv_add_mul (px+py+b) 3 (X0/3+Y0/3) hden
+
 theorem left_source_carry_bounds_from_affine_correction
     (K B x y C F : Int)
     (hK : 0 < K) (hBK : B < K)
@@ -389,6 +472,141 @@ theorem right_source_reset_from_affine_correction
       (Int.emod_lt_of_pos y (by omega))
       hpx0 hpx2 hpy0 hpy2 rfl rfl rfl rfl rfl rfl
   simpa [px, py, a, b, a1, b1, a2, b2, rightCarryX, rightCarryY] using hreset
+
+/-- If the authentic L input window begins 01,00,00, the three x digits
+    emitted by the source transducer are the actual first three digits of
+    the affine output x'.  Thus the source reset's nonmonochromaticity is
+    a statement about the genuine next coordinate, not only a free carry. -/
+theorem left_reset_word_actual_output_nonmono
+    (K B x y C F x' y' : Int)
+    (hK : 0 < K) (hBK : B < K)
+    (hClo : -B ≤ C) (hChi : C ≤ B)
+    (hFlo : -B ≤ F) (hFhi : F ≤ B)
+    (hxout : x' = x - 3*y + C)
+    (hyout : y' = 3*y + F)
+    (hX0 : (x/(3*K))%3 = 0)
+    (hY0 : ((y/K)/3)%3 = 1)
+    (hX1 : ((x/(3*K)/3)%3) = 0)
+    (hY1 : (((y/K)/3)/3)%3 = 0)
+    (hX2 : (((x/(3*K)/3)/3)%3) = 0) :
+    NonMono ((x'/(3*K))%3)
+      (((x'/(3*K))/3)%3)
+      ((((x'/(3*K))/3)/3)%3) := by
+  let X : Int := x/(3*K)
+  let Y : Int := y/K
+  let py : Int := Y%3
+  let a : Int := leftCarryX K (x%(3*K)) (y%K) C
+  let b : Int := leftCarryY K (y%K) F
+  let a1 : Int := (a-py)/3
+  let b1 : Int := (py+b)/3
+  let a2 : Int := (a1-1)/3
+  let b2 : Int := (1+b1)/3
+  have hU0 : (0:Int) = X%3 := by dsimp [X]; omega
+  have hV0 : (1:Int) = (Y/3)%3 := by dsimp [Y]; omega
+  have hU1 : (0:Int) = (X/3)%3 := by dsimp [X]; omega
+  have hV1 : (0:Int) = ((Y/3)/3)%3 := by dsimp [Y]; omega
+  have hU2 : (0:Int) = ((X/3)/3)%3 := by dsimp [X]; omega
+  have hquot := left_actual_affine_boundary_quotients K x y C F x' y' hK hxout hyout
+  have hq0 : x'/(3*K) = X-Y+a := by
+    simpa [X, Y, a, leftCarryX] using hquot.1
+  have hstep0 := left_tail_step X Y 0 py a b hU0 rfl
+  have hA0 : -py+a = a-py := by omega
+  have hA1 : -1+a1 = a1-1 := by omega
+  have hq0digit : (x'/(3*K))%3 = (a-py)%3 := by
+    rw [hq0]
+    simpa [hA0] using hstep0.1
+  have hq1 : (x'/(3*K))/3 = X/3-Y/3+a1 := by
+    rw [hq0]
+    simpa [a1, hA0] using hstep0.2.2.1
+  have hstep1 := left_tail_step (X/3) (Y/3) 0 1 a1 b1 hU1 hV0
+  have hq1digit : ((x'/(3*K))/3)%3 = (a1-1)%3 := by
+    rw [hq1]
+    simpa [hA1] using hstep1.1
+  have hq2 : ((x'/(3*K))/3)/3 = (X/3)/3-(Y/3)/3+a2 := by
+    rw [hq1]
+    simpa [a2, hA1] using hstep1.2.2.1
+  have hstep2 := left_tail_step (X/3/3) (Y/3/3) 0 0 a2 b2 hU2 hV1
+  have hq2digit : (((x'/(3*K))/3)/3)%3 = a2%3 := by
+    rw [hq2]
+    simpa using hstep2.1
+  have hreset : NonMono ((a-py)%3) ((a1-1)%3) (a2%3) := by
+    simpa [py, a, b, a1, b1, a2, b2, X, Y, leftCarryX, leftCarryY] using
+      (left_source_reset_from_affine_correction K B x y C F
+        hK hBK hClo hChi hFlo hFhi).2.2
+  rw [hq0digit, hq1digit, hq2digit]
+  exact hreset
+
+/-- If the authentic R input window begins 01,00,00, the three x digits
+    emitted by the source transducer are the actual first three digits of
+    the affine output x'.  The nested-division lemma identifies the shifted
+    previous-x digit with the current x tail. -/
+theorem right_reset_word_actual_output_nonmono
+    (K B x y C F x' y' : Int)
+    (hK : 0 < K) (hBK : B < K)
+    (hClo : -B ≤ C) (hChi : C ≤ B)
+    (hFlo : -B ≤ F) (hFhi : F ≤ B)
+    (hxout : x' = -4*x - 3*y + C)
+    (hyout : y' = 3*x + 3*y + F)
+    (hX0 : (x/(3*K))%3 = 0)
+    (hY0 : ((y/K)/3)%3 = 1)
+    (hX1 : ((x/(3*K)/3)%3) = 0)
+    (hY1 : (((y/K)/3)/3)%3 = 0)
+    (hX2 : (((x/(3*K)/3)/3)%3) = 0) :
+    NonMono ((x'/(3*K))%3)
+      (((x'/(3*K))/3)%3)
+      ((((x'/(3*K))/3)/3)%3) := by
+  let X : Int := x/(3*K)
+  let X0 : Int := x/K
+  let Y0 : Int := y/K
+  let Y : Int := Y0/3
+  let px : Int := X0%3
+  let py : Int := Y0%3
+  let a : Int := rightCarryX K (x%(3*K)) (x%K) (y%K) C
+  let b : Int := rightCarryY K (x%K) (y%K) F
+  let a1 : Int := (a-px-py)/3
+  let b1 : Int := (px+py+b)/3
+  let a2 : Int := (a1-1)/3
+  let b2 : Int := (1+b1)/3
+  have hcompat : X0/3 = X := by
+    dsimp [X0, X]
+    exact ediv_div_three x K hK
+  have hU0 : (0:Int) = X%3 := by dsimp [X]; omega
+  have hV0 : (1:Int) = Y%3 := by dsimp [Y, Y0]; omega
+  have hU1 : (0:Int) = (X/3)%3 := by dsimp [X]; omega
+  have hV1 : (0:Int) = (Y/3)%3 := by dsimp [Y, Y0]; omega
+  have hU2 : (0:Int) = ((X/3)/3)%3 := by dsimp [X]; omega
+  have hquot := right_actual_affine_boundary_quotients K x y C F x' y' hK hxout hyout
+  have hq0 : x'/(3*K) = -X-X0-Y0+a := by
+    simpa [X, X0, Y0, a, rightCarryX] using hquot.1
+  have hstep0 := right_tail_step X X0 Y0 0 px py a b hU0 rfl rfl
+  have hA0 : -px-py+a = a-px-py := by omega
+  have hA1 : -1+a1 = a1-1 := by omega
+  have hq0digit : (x'/(3*K))%3 = (a-px-py)%3 := by
+    rw [hq0]
+    simpa [hA0] using hstep0.1
+  have hq1 : (x'/(3*K))/3 = -(X/3)-X-Y+a1 := by
+    rw [hq0]
+    have h := hstep0.2.2.1
+    rw [hcompat] at h
+    simpa [a1, hA0, Y, Y0] using h
+  have hstep1 := right_tail_step (X/3) X Y 0 0 1 a1 b1 hU1 hU0 hV0
+  have hq1digit : ((x'/(3*K))/3)%3 = (a1-1)%3 := by
+    rw [hq1]
+    simpa [hA1] using hstep1.1
+  have hq2 : ((x'/(3*K))/3)/3 = -((X/3)/3)-(X/3)-(Y/3)+a2 := by
+    rw [hq1]
+    simpa [a2, hA1] using hstep1.2.2.1
+  have hstep2 := right_tail_step (X/3/3) (X/3) (Y/3) 0 0 0 a2 b2 hU2 hU1 hV1
+  have hq2digit : (((x'/(3*K))/3)/3)%3 = a2%3 := by
+    rw [hq2]
+    simpa using hstep2.1
+  have hreset : NonMono ((a-px-py)%3) ((a1-1)%3) (a2%3) := by
+    simpa [px, py, a, b, a1, b1, a2, b2, X, X0, Y0, Y,
+      rightCarryX, rightCarryY] using
+      (right_source_reset_from_affine_correction K B x y C F
+        hK hBK hClo hChi hFlo hFhi).2.2
+  rw [hq0digit, hq1digit, hq2digit]
+  exact hreset
 
 #print axioms left_affine_boundary_quotients
 #print axioms right_affine_boundary_quotients
