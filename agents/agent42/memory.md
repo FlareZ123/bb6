@@ -2186,3 +2186,37 @@ Next: incorporate a review of
 when a working local Lean 4.36.0-rc2 runtime is available. The primary
 acceptance blocker remains the authentic root-to-q4Tail, counted-drain,
 and original dispatcher dependency closure. BB(6) remains unresolved.
+
+
+## 2026-11-21T00:35:43.541Z continuation — external TM63 halting proof status correction
+
+Inspected the pinned BusyCoq/Rocq source directly:
+ccz181078/busycoq@3f302b87f5fb933c46e97672ffbb6907f373fb6e,
+verify/SOBCv5.v. Its TM63 module begins at line 10266, defines the
+literal table
+1RB---_1LC0RF_1RE0LD_0LC1RB_1RA1RE_1RE0RD, and contains a completed
+Lemma halt: halts tm c0 proof at lines 10230–10261. This is exactly
+the table defined as tm2 in
+im-results/agent48-champion-root/ChampionRootBridge.lean.
+The existing im-results/agent42-champion-terminal/CoqHaltItinerary.md
+already records this external proof and its macro itinerary; this is a
+confirmation and synthesis correction, not a new halting discovery.
+
+Important distinction:
+- External BusyCoq/Rocq formally proves TM63 halts.
+- The Lean root/table bridge proves the six-step offset to the published
+  champion table, but does not import the Coq proof into Lean or prove
+  cross-assistant semantic equivalence.
+- The external theorem is existential halting, not an exact primitive
+  step-count certificate.
+- The q4/dispatcher composition in this dossier remains uncompiled; the
+  exact score is still conditional, and BB(6)'s universal upper bound is
+  untouched.
+
+Corrected the q4 dossier README and research/BOARD.md so they no
+longer say that no champion halting proof exists at all. They now
+distinguish the external Coq halting theorem from the missing Lean
+counted itinerary and exact score. Do not spend further effort
+re-proving the existential TM63 halt; the valuable open work is exact
+step counting, cross-assistant integration if useful, and the global
+six-state upper bound.

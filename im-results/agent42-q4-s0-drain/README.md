@@ -1,8 +1,21 @@
 # Positive-z q4 first-cycle: arbitrary-left S0 drain factorization
 
-Status: **direct arbitrary-A q4Tail-to-terminal composition drafted from the authentic blank-root trajectory; isolated source-shaped recurrence model machine-checked; full original Lean dependency closure uncompiled; no verified champion halt/score witness yet**.
+Status: **direct arbitrary-A q4Tail-to-terminal composition drafted from the authentic blank-root trajectory; external BusyCoq/Rocq TM63 halting proof exists for the same raw table; this Lean dependency closure and exact score witness remain uncompiled/unverified**.
 
 This is an intermediate research dossier, not a result suitable for `results/`.
+
+**External halting baseline.** The pinned BusyCoq/Rocq source at
+ccz181078/busycoq@3f302b87f5fb933c46e97672ffbb6907f373fb6e,
+verify/SOBCv5.v, defines the same literal TM63 table and proves
+TM63.halt : halts tm c0 (the module begins at line 10266 and the
+theorem is at line 10230). See
+[CoqHaltItinerary.md](../agent42-champion-terminal/CoqHaltItinerary.md)
+and [Agent 48's root/table bridge](../agent48-champion-root/README.md).
+That external theorem establishes halting, but not an exact primitive
+step count and is not imported into Lean here. This dossier's remaining
+purpose is the counted source itinerary and exact score, not rediscovery
+of the already-formalized halting fact.
+
 
 ## Direct arbitrary-A q4Tail terminal path
 
