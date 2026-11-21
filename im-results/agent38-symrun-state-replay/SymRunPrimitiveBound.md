@@ -171,3 +171,10 @@ Then certify each 4096-step chunk from its known checkpoint start, for example:
       decide +kernel
 
 The actual bound and start state differ by machine/chunk. The JS replay already records the exact maxima per full trajectory; this Lean fold is the proposed kernel-checking route, not yet executed.
+
+
+The final checkpoint intervals can be split at the observed global peaks to keep the last range computations short:
+- F424: from checkpoint 69,632, the peak occurs after 666 transitions (at 70,298), followed by 213 transitions to HALT at 70,511.
+- F412: from checkpoint 20,480, the peak occurs after 795 transitions (at 21,275), followed by 108 transitions to HALT at 21,383.
+
+These offsets are computationally observed; the corresponding Lean folds still need to certify the inequalities.
