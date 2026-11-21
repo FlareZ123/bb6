@@ -1,58 +1,33 @@
-# Thirteen-step 3-adic shadow of the authentic root (intermediate result)
+# Thirteen-step 3-adic raw-replay shadow of the authentic root
 
-**Status:** exact arithmetic computation on the repository's DRegular model and the committed external macro trace. Not yet a Lean theorem about the original TM trajectory. Reproduction script: `root13_shadow_check.py`.
+**Status:** exact BigInt computation using the repository's DRegular model and the sparse raw-machine A_step2 replay simulator. This is not yet a Lean proof of the full original-machine path.
 
-## Finding
+## Root section and modular certificate
 
 Let
 
 `C = 1975700577069254261393123959451562008800234946348086`
 
-be the empty-suffix parameter at the start of the external halting-cylinder macro path.
+be the empty-suffix parameter at the start of the external halting-cylinder path.
 
-In the authentic-root arithmetic chain generated from `L(9,0,0)`, the section at index **31,777** has state `L(a,0,0)` and satisfies
+In the authentic-root arithmetic chain from `L(9,0,0)`, section index **31,777** has state `L(a,0,0)` and satisfies:
 
-[
-a-C equiv 3^{13}pmod{3^{14}}.
-]
+- `a - C ≡ 3^13 (mod 3^14)`;
+- writing `a = C + 3^13*p`, we have `p mod 2187 = 205` (so `p mod 81 = 43` and `p mod 3 = 1`);
+- `a mod 3^20 = 2863782241`;
+- `a` has 44,970 bits.
 
-Equivalently, `a = C + 3^13 p` for an integer `p` with
+The congruence is exact to 14 powers of three: the difference is divisible by 3^13 but not 3^14. This is deeper than the previously reported seven-step shadow at index 2,640.
 
-[
-pequiv 1pmod 3,qquad pequiv43pmod{81}.
-]
+## Thirteen-macro replay
 
-The root parameter has 44,970 bits. The congruence is exact to 14 powers of three: the difference is divisible by (3^{13}), but not (3^{14}).
+The first ten transitions are the exact DRegular path. The `Root13Section.lean` draft connects the root section to the external start by the existing `DRegularShift.run_shift` theorem.
 
-This is a deeper shadow than the previously reported seven-step shadow at index 2,640.
+Transition 11 is also covered by the existing `BlankSixthExceptional.first_nonregular_original` theorem, which invokes `BB6.Agent32EAll.all_e_double_implicit_blank` with q=3 and the root's lifted parameter `k_root=3*t6+1`. Its output suffix is exactly `0 1^8 0 1^6`.
 
-## Thirteen-macro raw-replay shadow
+Crucially, I then replayed transitions 11–13 on the lifted root parameter using the same sparse raw-machine `replay_macro` implementation that generated the external trace. The root's internal sweep parameter K is enormous and differs from the external K, but the same A_step2 arguments (35, 21, 5) apply. The replay confirms the same branches and exact output suffixes, and the expected 3-adic valuation drop.
 
-The external trace records each macro's affine parameter update in the form
-
-[
-n' = 8leftlfloorrac n3ightfloor+c_i
-  = 8rac{n-r_i}{3}+c_i,qquad r_i=nmod3.
-]
-
-If the root and external parameters enter a macro with the same residue (r_i), and the same suffix, the same branch and macro argument apply. Their parameter difference is divided by three and multiplied by eight:
-
-[
-a_{i+1}-n_{i+1}=rac83(a_i-n_i).
-]
-
-Starting with (a_0-C=3^{13}p), the difference after (i) matching macros is
-
-[
-a_i-n_i=8^i3^{13-i}p.
-]
-
-Since (p
-otequiv0pmod3), the input residues match for macros 1 through 13. The suffixes also match exactly, as shown by the external trace. After macro 13 the parameter difference is (8^{13}p), which is not divisible by three. Consequently the root's next input has residue 1, while external macro 14's input has residue 2: the paths diverge at macro 14.
-
-## Exact matching prefix
-
-| Macro | Branch | A_step2 argument | Root/external input residue | (v_3) of output-parameter difference | Output suffix |
+| Macro | Branch | A_step2 argument | Input residue | v3(output parameter difference) | Output suffix |
 |---:|:---:|---:|---:|---:|---|
 | 1 | E | 13 | 1 | 12 | `0111111` |
 | 2 | E | 21 | 1 | 11 | `01010111` |
@@ -68,23 +43,26 @@ otequiv0pmod3), the input residues match for macros 1 through 13. The suffixes a
 | 12 | E | 21 | 1 | 1 | `01010111110111111` |
 | 13 | B | 5 | 2 | 0 | `010111110111111` |
 
-At macro 14, after the raw-replayed first 13 updates, the external input residue is 2 and the root input residue is 1.
+After i matching updates, the parameter difference is
 
-## Scope and limitations
+`a_i - n_i = 8^i * 3^(13-i) * p`.
+
+The raw replay verifies the update sequence through macro 13. Since p is not divisible by 3, after macro 13 the root's next input has residue 1, whereas external macro 14 has residue 2. The paths therefore diverge at macro 14.
+
+## Source-proof status and limitations
 
 - The root index is the section/return index used by `check_root17.py`, not a primitive-step count.
-- The arithmetic chain is replayed using `check_eighth_root.py`'s exact integer DRegular transition and exceptional-reentry functions. The root state at index 31,777 lies ten DRegular transitions before the sixth exceptional endpoint.
-- A scan of the DRegular states through the episode-20 arithmetic lookahead found no exact hit of the external cylinder (aequiv Cpmod{3^{108}}). Among states with ((q,b)=(0,0)), the largest observed (v_3(a-C)) was 13, uniquely at index 31,777. This scan covers DRegular states and the explicit reentry endpoints in that chain; it is not a scan of every primitive configuration inside exceptional packets.
-- The first-ten source section is addressed by the uncompiled `Root13Section.lean` draft and `DRegularShift.run_shift`; update 11 is source-covered by `BlankSixthExceptional.first_nonregular_original` / `Agent32EAll.all_e_double_implicit_blank`; and updates 11–13 have now been independently replayed by the sparse raw-machine simulator. The remaining formal theorem is to certify those raw macro replays (including the lifted K values) in Lean and compose the raw-machine/CryptidBoundary conjugacy. Agent 44's explicit-`K` and transition-conjugacy work is directly relevant.
-- This does not establish halting. It identifies a substantially deeper near-alignment and the exact point of divergence.
+- The arithmetic chain uses `check_eighth_root.py`'s exact integer DRegular transition and exceptional-reentry functions.
+- `Root13Section.lean` extracts the 4,484-step prefix from `Agent25SixthRoot.seed`, ten DRegular transitions before the sixth exceptional endpoint. It attempts to prove the exact shape and modular certificate, the first-ten affine lift, and source reachability using `Agent25RootChain.extend_regular`. This file is **uncompiled**.
+- Transition 11 is covered by `BlankSixthExceptional.first_nonregular_original` and `Agent32EAll.all_e_double_implicit_blank`.
+- Transitions 11–13 are independently replayed by the sparse raw-machine simulator, but this replay is not a kernel-checked proof. The remaining formal task is to certify these raw macro replays (including the lifted K values) in Lean and compose the raw-machine/CryptidBoundary conjugacy.
+- A scan through the episode-20 arithmetic lookahead found no exact hit of the external cylinder `a ≡ C (mod 3^108)`. Among DRegular states with `q=b=0`, the maximum observed `v3(a-C)` was 13, uniquely at index 31,777. This finite scan covers DRegular states and explicit reentry endpoints, not every primitive configuration inside exceptional packets.
+- This does not establish halting or the exact value of BB(6).
 
 ## Reproduction
 
-Run `python3 root13_shadow_check.py` from this directory to reproduce the root congruence and first-ten affine shadow; run `python3 root13_raw_macro_shadow.py` to replay raw macros 11–13 on the lifted root; or run `node root20_cylinder_screen.mjs` to reproduce the broader DRegular-state screen through episode 20. The raw replay script imports the exact sparse simulator from `cryptid_A_step2_replay.py` and checks branches, suffixes, and 3-adic differences. These are computational checks, not Lean source proofs.
+- `python3 root13_shadow_check.py`: root congruence and first-ten affine lift.
+- `python3 root13_raw_macro_shadow.py`: raw replay of macros 11–13 on the lifted root parameter.
+- `node root20_cylinder_screen.mjs`: broader DRegular-state screen through the episode-20 arithmetic lookahead.
 
-
-## Source-anchor draft
-
-`Root13Section.lean` now extracts the 4,484-step prefix of `Agent25SixthRoot.seed` from the already source-certified fifth reentry. It attempts to prove the resulting DRegular state is exactly `(q,b)=(0,0)), has the modular fingerprint above, and is ten DRegular transitions before the sixth exceptional endpoint. It then uses the same `Agent25RootChain.extend_regular` transport as `BlankSixthExceptional.sixthException_original` to prove the blank root reaches the corresponding `DRegularSource.sourceSection`.
-
-This is an **uncompiled source-proof draft**, not yet a verified theorem. Agents 2, 35, and 37 have been asked to compile/review it. If successful, the root section at index 31,777 becomes source-anchored; the remaining issue is the first-13-macro source bridge from that section.
+The raw replay script imports `replay_macro` from `cryptid_A_step2_replay.py`, the same sparse simulator used to generate `macro_trace.json`.
