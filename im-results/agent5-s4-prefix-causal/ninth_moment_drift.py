@@ -74,6 +74,9 @@ def mass(stack: tuple[int, ...]) -> int:
 def main() -> None:
     prefix = CYCLE_NINE
     partial = [0]
+    gate_residuals = [0]
+    gate_drift = 0
+    gate_mass_drift = 0
     for _ in range(PERIOD):
         stages = (
             prefix,
@@ -81,11 +84,15 @@ def main() -> None:
             gp(290, gp(509, prefix)),
         )
         assert all(len(stage) == PREFIX_LEN for stage in stages)
-        increment = sum(
+        increments = [
             gate_d_lower(stage, offset)
             for stage, offset in zip(stages, OFFSETS)
-        )
-        partial.append(partial[-1] + increment)
+        ]
+        for offset, increment in zip(OFFSETS, increments):
+            gate_drift += increment
+            gate_mass_drift += offset + 2
+            gate_residuals.append(gate_drift - 9 * gate_mass_drift)
+        partial.append(partial[-1] + sum(increments))
         prefix = pp(prefix)
 
     assert prefix == CYCLE_NINE
@@ -100,6 +107,10 @@ def main() -> None:
     max_phase = residuals.index(max_residual)
     assert (min_residual, min_phase) == (-237_910, 20_629)
     assert (max_residual, max_phase) == (385_701, 26_422)
+    assert gate_drift == period_total
+    assert gate_mass_drift == 1_024 * PERIOD
+    assert min(gate_residuals) == -237_910
+    assert max(gate_residuals) == 385_701
 
     d0 = positional_moment(ROOT_5457)
     m0 = mass(ROOT_5457)
@@ -122,7 +133,7 @@ def main() -> None:
     print("partial residual min/max:", min_residual, max_residual)
     print("residual extremal phases:", min_phase, max_phase)
     print("root D0, M0:", d0, m0)
-    print("uniform affine bound: D >= 9*M +", constant)
+    print("uniform affine bound at every gate boundary: D >= 9*M +", constant)
     print("D lower at returns 317, 25685, 929375:",
           lower_at(317), lower_at(25_685), lower_at(929_375))
 
