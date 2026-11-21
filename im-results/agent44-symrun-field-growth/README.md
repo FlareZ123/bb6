@@ -93,3 +93,29 @@ The BB-succ pilot now also contains the stronger generic theorem
 `step_BB_run1_exact`, proving the three-step transition for every right
 stack `R` to `run0 :: bumpM R`; the nil and zero specializations remain
 as simple endpoint smoke checks.
+
+
+## Formal CB repeat-counter sum bound
+
+The latest source-equivalent Lean preflight also proves a repeat-counter
+accounting invariant:
+
+- `bumpSymL/R_counter_sum_le`: bump operations do not increase the sum of
+  numeric repeat counters.
+- `eatFuel_counter_sum_le`: one eat operation increases that sum by at most
+  its fuel (four for each CB repeat-token branch). Existing repeat counters
+  are transferred; only matched literal blocks add units.
+- `sweepCB_counter_sum_bound`: after the CB sweep, total repeat-counter sum
+  is at most the input sum plus `4 * |R|`.
+- `listCounterSum_le_length_mul_fieldMax`: a list's counter sum is at most
+  its length times its maximum field.
+- `sweepCB_counter_sum_le_94M376`: if the input total token count is at
+  most 94 and its maximum field is M, the output counter sum is at most
+  `94*M + 376`.
+
+This formally supports the counter-sum term used in the source-level
+primitive-time estimate. The theorem is conditional on the 94-token premise
+and is not itself a complete `stepSym` cost theorem. The new lemmas are in
+`SymRunTraceStats.lean` commit `5ef4ccefa8b534ab17af8b95b769bd2894574529`;
+the source-equivalent Lean 4.36.0-rc2 scratch axiom profile is
+`[propext, Quot.sound]`. Exact imported-module compilation is still pending.
