@@ -911,11 +911,11 @@ This is substantially sharper than the earlier adjacent-tetration bracket and th
 
 Peeling off the final two dispatcher increments gives a sharper
 paper-level expansion. With \(\ell=b_{N-1}=\log_2(b_N+1)\),
-\(k=b_{N-2}=\log_2(\ell+1)\), and \(m=\log_2\ell\),
+\(\\kappa=b_{N-2}=\log_2(\ell+1)\), and \(m=\log_2\ell\),
 \[
 \begin{aligned}
 S_{\rm TM1}
-={}&6b_N^2+54b_N+6\ell^2+57\ell+96+15k+\Delta_2,\\
+={}&6b_N^2+54b_N+6\ell^2+57\ell+96+15\\kappa+\Delta_2,\\
 &0\le\Delta_2<100m^2.
 \end{aligned}
 \]

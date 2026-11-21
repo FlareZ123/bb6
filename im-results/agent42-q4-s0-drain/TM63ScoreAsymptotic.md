@@ -1,4 +1,4 @@
-# Two-term asymptotic expansion of the TM63 champion score
+# Three-term asymptotic expansion of the TM63 champion score
 
 **Status:** new paper-level consequence of the existing exact cost decomposition. It does not certify the uncompiled authentic-root/dispatcher composition and does not establish a BB(6) upper bound.
 
@@ -55,21 +55,21 @@ f(x)={}&6\cdot4^x+42\cdot2^x.
 \]
 Put
 \[
-\ell=b_{N-1},\qquad k=b_{N-2}=\log_2(\ell+1),
+\ell=b_{N-1},\qquad \\kappa=b_{N-2}=\log_2(\ell+1),
 \qquad m=\log_2\ell.
 \]
 The last two dispatcher increments can be isolated exactly. The
 \(j=N-1\) term is \(L_N\). The \(j=N-2\) term is
 \[
-f(k)+15k
-=6(\ell+1)^2+42(\ell+1)+15k
-=6\ell^2+54\ell+48+15k.
+f(\\kappa)+15\\kappa
+=6(\ell+1)^2+42(\ell+1)+15\\kappa
+=6\ell^2+54\ell+48+15\\kappa.
 \]
 Consequently
 \[
 \boxed{
 S_{\rm TM1}
-=6b_N^2+54b_N+6\ell^2+57\ell+96+15k+\Delta_2,
+=6b_N^2+54b_N+6\ell^2+57\ell+96+15\\kappa+\Delta_2,
 }
 \tag{4}
 \]
@@ -90,15 +90,15 @@ Because \(b_0=R\ge63\) and \(b_{j+1}=2^{b_j}-1\), every update satisfies
 \(b_{j+1}\ge2b_j\). In particular,
 \[
 \ell=b_{N-1}\ge2^{N-1}R,\qquad
-k=b_{N-2}\ge2^{N-2}R.
+\\kappa=b_{N-2}\ge2^{N-2}R.
 \]
 Since \(N\ge256\) and \(R\ge63\), this gives
 \[
 m=\log_2\ell>260.
 \]
-Also \(N\le m+1\), \(k\le m+1\), and
+Also \(N\le m+1\), \(\\kappa\le m+1\), and
 \[
-b_{N-3}=\log_2(k+1)\le m+2,\qquad
+b_{N-3}=\log_2(\\kappa+1)\le m+2,\qquad
 R\le\frac{m+1}{2^{N-2}}\le m+1.
 \]
 
@@ -118,9 +118,9 @@ It follows that
 \sum_{j=0}^{N-3}f(b_j)
 <\frac{32}{31}f(b_{N-3}).
 \]
-As \(2^{b_{N-3}}=k+1\),
+As \(2^{b_{N-3}}=\\kappa+1\),
 \[
-f(b_{N-3})=6(k+1)^2+42(k+1)
+f(b_{N-3})=6(\\kappa+1)^2+42(\\kappa+1)
 \le6(m+2)^2+42(m+2)<7m^2.
 \]
 Thus
