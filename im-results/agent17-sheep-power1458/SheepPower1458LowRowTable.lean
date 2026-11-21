@@ -202,6 +202,17 @@ theorem highCert_mem_of_key {nodeAt}
   cases hkey
   exact ⟨cert,hcert,rfl,rfl⟩
 
+def highCertTripleKey {nodeAt} (cert : HighCert nodeAt) : Nat × Nat × Nat :=
+  (cert.node,cert.h,cert.A)
+
+theorem highCertTriple_mem_of_key {nodeAt}
+    {certs : List (HighCert nodeAt)} {n h A : Nat}
+    (hm : (n,h,A) ∈ certs.map highCertTripleKey) :
+    ∃ cert, cert ∈ certs ∧ cert.node=n ∧ cert.h=h ∧ cert.A=A := by
+  rcases List.mem_map.mp hm with ⟨cert,hcert,hkey⟩
+  cases hkey
+  exact ⟨cert,hcert,rfl,rfl,rfl⟩
+
 
 def nodeAt_t1 (n : Nat) : AffineNode :=
   match n with
@@ -1881,11 +1892,13 @@ theorem highCertKey_complete_t1 (n h : Nat)
     (n,h) ∈ highCertKeys_t1 := by
   exact highCertKey_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h,by omega⟩
 
-theorem highCertCutoff_complete_fin_t1 :
+def highCertTripleKeys_t1 : List (Nat × Nat × Nat) :=
+  highCerts_t1.map highCertTripleKey
+
+theorem highCertCutoffKey_complete_fin_t1 :
     ∀ n : Fin 15, 1 ≤ n.val →
       ∀ h : Fin ((nodeAt_t1 n.val).r+1),
-        ∃ cert, cert ∈ highCerts_t1 ∧ cert.node=n.val ∧
-          cert.h=h.val ∧ cert.A=cutoff_t1 n.val h.val := by
+        (n.val,h.val,cutoff_t1 n.val h.val) ∈ highCertTripleKeys_t1 := by
   decide
 
 theorem highCertCutoff_complete_t1 (n h : Nat)
@@ -1893,7 +1906,8 @@ theorem highCertCutoff_complete_t1 (n h : Nat)
     (hh : h ≤ (nodeAt_t1 n).r) :
     ∃ cert, cert ∈ highCerts_t1 ∧ cert.node=n ∧
       cert.h=h ∧ cert.A=cutoff_t1 n h := by
-  exact highCertCutoff_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  have hkey := highCertCutoffKey_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  exact highCertTriple_mem_of_key hkey
 
 
 def valCerts_t1 : List (ValCert residues_t1 period_t1 nodeAt_t1) :=
@@ -2376,11 +2390,13 @@ theorem highCertKey_complete_h1a3 (n h : Nat)
     (n,h) ∈ highCertKeys_h1a3 := by
   exact highCertKey_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h,by omega⟩
 
-theorem highCertCutoff_complete_fin_h1a3 :
+def highCertTripleKeys_h1a3 : List (Nat × Nat × Nat) :=
+  highCerts_h1a3.map highCertTripleKey
+
+theorem highCertCutoffKey_complete_fin_h1a3 :
     ∀ n : Fin 7, 1 ≤ n.val →
       ∀ h : Fin ((nodeAt_h1a3 n.val).r+1),
-        ∃ cert, cert ∈ highCerts_h1a3 ∧ cert.node=n.val ∧
-          cert.h=h.val ∧ cert.A=cutoff_h1a3 n.val h.val := by
+        (n.val,h.val,cutoff_h1a3 n.val h.val) ∈ highCertTripleKeys_h1a3 := by
   decide
 
 theorem highCertCutoff_complete_h1a3 (n h : Nat)
@@ -2388,7 +2404,8 @@ theorem highCertCutoff_complete_h1a3 (n h : Nat)
     (hh : h ≤ (nodeAt_h1a3 n).r) :
     ∃ cert, cert ∈ highCerts_h1a3 ∧ cert.node=n ∧
       cert.h=h ∧ cert.A=cutoff_h1a3 n h := by
-  exact highCertCutoff_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  have hkey := highCertCutoffKey_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  exact highCertTriple_mem_of_key hkey
 
 
 def valCerts_h1a3 : List (ValCert residues_h1a3 period_h1a3 nodeAt_h1a3) :=
@@ -2627,11 +2644,13 @@ theorem highCertKey_complete_h3a6 (n h : Nat)
     (n,h) ∈ highCertKeys_h3a6 := by
   exact highCertKey_complete_fin_h3a6 ⟨n,hn'⟩ hn ⟨h,by omega⟩
 
-theorem highCertCutoff_complete_fin_h3a6 :
+def highCertTripleKeys_h3a6 : List (Nat × Nat × Nat) :=
+  highCerts_h3a6.map highCertTripleKey
+
+theorem highCertCutoffKey_complete_fin_h3a6 :
     ∀ n : Fin 3, 1 ≤ n.val →
       ∀ h : Fin ((nodeAt_h3a6 n.val).r+1),
-        ∃ cert, cert ∈ highCerts_h3a6 ∧ cert.node=n.val ∧
-          cert.h=h.val ∧ cert.A=cutoff_h3a6 n.val h.val := by
+        (n.val,h.val,cutoff_h3a6 n.val h.val) ∈ highCertTripleKeys_h3a6 := by
   decide
 
 theorem highCertCutoff_complete_h3a6 (n h : Nat)
@@ -2639,7 +2658,8 @@ theorem highCertCutoff_complete_h3a6 (n h : Nat)
     (hh : h ≤ (nodeAt_h3a6 n).r) :
     ∃ cert, cert ∈ highCerts_h3a6 ∧ cert.node=n ∧
       cert.h=h ∧ cert.A=cutoff_h3a6 n h := by
-  exact highCertCutoff_complete_fin_h3a6 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  have hkey := highCertCutoffKey_complete_fin_h3a6 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  exact highCertTriple_mem_of_key hkey
 
 
 def valCerts_h3a6 : List (ValCert residues_h3a6 period_h3a6 nodeAt_h3a6) :=
@@ -2795,11 +2815,13 @@ theorem highCertKey_complete_h7a2 (n h : Nat)
     (n,h) ∈ highCertKeys_h7a2 := by
   exact highCertKey_complete_fin_h7a2 ⟨n,hn'⟩ hn ⟨h,by omega⟩
 
-theorem highCertCutoff_complete_fin_h7a2 :
+def highCertTripleKeys_h7a2 : List (Nat × Nat × Nat) :=
+  highCerts_h7a2.map highCertTripleKey
+
+theorem highCertCutoffKey_complete_fin_h7a2 :
     ∀ n : Fin 2, 1 ≤ n.val →
       ∀ h : Fin ((nodeAt_h7a2 n.val).r+1),
-        ∃ cert, cert ∈ highCerts_h7a2 ∧ cert.node=n.val ∧
-          cert.h=h.val ∧ cert.A=cutoff_h7a2 n.val h.val := by
+        (n.val,h.val,cutoff_h7a2 n.val h.val) ∈ highCertTripleKeys_h7a2 := by
   decide
 
 theorem highCertCutoff_complete_h7a2 (n h : Nat)
@@ -2807,7 +2829,8 @@ theorem highCertCutoff_complete_h7a2 (n h : Nat)
     (hh : h ≤ (nodeAt_h7a2 n).r) :
     ∃ cert, cert ∈ highCerts_h7a2 ∧ cert.node=n ∧
       cert.h=h ∧ cert.A=cutoff_h7a2 n h := by
-  exact highCertCutoff_complete_fin_h7a2 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  have hkey := highCertCutoffKey_complete_fin_h7a2 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  exact highCertTriple_mem_of_key hkey
 
 
 def valCerts_h7a2 : List (ValCert residues_h7a2 period_h7a2 nodeAt_h7a2) :=
@@ -2968,11 +2991,13 @@ theorem highCertKey_complete_h7a4 (n h : Nat)
     (n,h) ∈ highCertKeys_h7a4 := by
   exact highCertKey_complete_fin_h7a4 ⟨n,hn'⟩ hn ⟨h,by omega⟩
 
-theorem highCertCutoff_complete_fin_h7a4 :
+def highCertTripleKeys_h7a4 : List (Nat × Nat × Nat) :=
+  highCerts_h7a4.map highCertTripleKey
+
+theorem highCertCutoffKey_complete_fin_h7a4 :
     ∀ n : Fin 2, 1 ≤ n.val →
       ∀ h : Fin ((nodeAt_h7a4 n.val).r+1),
-        ∃ cert, cert ∈ highCerts_h7a4 ∧ cert.node=n.val ∧
-          cert.h=h.val ∧ cert.A=cutoff_h7a4 n.val h.val := by
+        (n.val,h.val,cutoff_h7a4 n.val h.val) ∈ highCertTripleKeys_h7a4 := by
   decide
 
 theorem highCertCutoff_complete_h7a4 (n h : Nat)
@@ -2980,7 +3005,8 @@ theorem highCertCutoff_complete_h7a4 (n h : Nat)
     (hh : h ≤ (nodeAt_h7a4 n).r) :
     ∃ cert, cert ∈ highCerts_h7a4 ∧ cert.node=n ∧
       cert.h=h ∧ cert.A=cutoff_h7a4 n h := by
-  exact highCertCutoff_complete_fin_h7a4 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  have hkey := highCertCutoffKey_complete_fin_h7a4 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  exact highCertTriple_mem_of_key hkey
 
 
 def valCerts_h7a4 : List (ValCert residues_h7a4 period_h7a4 nodeAt_h7a4) :=
