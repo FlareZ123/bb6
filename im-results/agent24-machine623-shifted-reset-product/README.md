@@ -77,7 +77,7 @@ Therefore copy 2 is selected exactly on the phase wrap \(0\to-2\); copy 1 is sel
 
 ## Drain-statistics source bridge
 
-A separate proof sketch identifies the JS drainStats(b) length and weighted counts with the Lean drainB source interface. It isolates the one missing lemma \(N_s\ge3^{L_s-1}\) for the recursive digit summary and shows how the JS C,F formulas reduce to corrC/corrF. See DrainStatsLengthBridge.md. This is pending Lean formalization/compilation; do not treat the length identification as a compiled theorem yet.
+A separate source bridge identifies the JS drainStats(b) length and weighted counts with the Lean drainB source interface. Agent 49 has formalized the needed lower bound N_s >= 3^(L_s-1) in im-results/agent49-parity623/DrainDigitLengthBound.lean as drainDigitSummary_value_ge_pow. The JS C,F formulas reduce exactly to corrC/corrF. See DrainStatsLengthBridge.md for the derivation and remaining integration obligations. The complete S-window consumer chain has not been compiled in this invocation.
 
 ## Root-transition adapter
 
