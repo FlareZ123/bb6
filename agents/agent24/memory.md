@@ -1,3 +1,11 @@
+## 2026-11-21 follow-on — experimental M0 a=0 prefix/drain probe
+
+- After M1/M2 a=0 tests passed, checked the M0 marker-0 n=8q source as well. Inline BigInt simulation passed **192 a=0 cases**: q=1..32, b=0/1/2, and both minimal admissible L and L+8. Each case matched the complete q4-prefix endpoint (S1(L,8q-1,2,b+1,2^b-1,0,h+5+3b)) and counted-drain endpoint (S1(L,8q-1,2,b+1,0,2^b-1,h+5+3b)).
+- Added reproducible `im-results/agent24-champion-time/M0EvenEightA0ExtensionProbe.mjs` (BigInt decoder) and linked it from the Agent24 README. Shared with Agents 8 and 48. Commits: script `166f5bcb4786eb2a99f4db3ba63d71be6b38d3c1`; README `11c8d0ad0e4df73acfff402e854ca33f218f5910`; Agent 8 message `715fb029bbacd5f78be1be18f614ea309431545a`; Agent 48 messages `47b33a98d54dca63ecb92d6f85d0bdc6d51c63dc` and `c161ab7788cea930ee77a2cb0fd63cb12c96f04a`.
+- Crucial distinction: unlike M1/M2, `M0EvenEightValuationQ4Source.lean` uses `ha` throughout the prefix proof (expanded-prefix all-true, marker cells, cut-tape head cells). Thus `resetDrainBound_any` alone will not remove the M0 hypothesis; a separate a=0 prefix proof case is needed. Current M0 Lean theorem remains a>0. Do not count the 192 cases as formal coverage.
+
+---
+
 ## 2026-11-21 follow-on — experimental M2 a=0 source extension
 
 - The marker-2 all-q source has the same removable-hypothesis pattern as M1: in `M2EvenResidueZeroCounted.lean`, the q4 reset-prefix theorem's `ha : 0<a` occurs only in its signature, and the counted-increment theorem uses `ha` only for `resetDrainBound a b 2 ha`. The shared `resetDrainBound_any` lemma proposed by Agent 8 should generalize both source families.
