@@ -2191,4 +2191,67 @@ theorem cb_fallback_bb_input_field_max_le_pow9 (L R : List SymTok)
 #print axioms cb_fallback_bb_input_field_max_le_pow9
 
 
+
+theorem peelTok_num_sum_le (t : SymTok) (xs : List SymTok) :
+    listNumSum (peelTok t xs) ≤ tokNumSum t + listNumSum xs + 2 := by
+  cases t with
+  | item x => simp [peelTok, tokNumSum, listNumSum]
+  | repB1 k =>
+    cases k with
+    | zero => simp [peelTok, tokNumSum, listNumSum]
+    | succ k =>
+      cases k with
+      | zero => simp [peelTok, tokNumSum, listNumSum]
+      | succ k => simp [peelTok, tokNumSum, listNumSum, strictNat_eq] <;> omega
+  | rep2 p =>
+    cases p with
+    | zero => simp [peelTok, tokNumSum, listNumSum]
+    | succ p =>
+      cases p with
+      | zero => simp [peelTok, tokNumSum, listNumSum] <;> omega
+      | succ p => simp [peelTok, tokNumSum, listNumSum, strictNat_eq] <;> omega
+  | rep12 m =>
+    cases m with
+    | zero => simp [peelTok, tokNumSum, listNumSum]
+    | succ m =>
+      cases m with
+      | zero => simp [peelTok, tokNumSum, listNumSum] <;> omega
+      | succ m => simp [peelTok, tokNumSum, listNumSum, strictNat_eq] <;> omega
+
+def symStateNumSum (s : SymMode × List SymTok × List SymTok) : Nat :=
+  listNumSum s.2.1 + listNumSum s.2.2
+
+theorem stepElemBB_num_sum_le (L R : List SymTok) :
+    symStateNumSum (stepElemBB L R) ≤ listNumSum L + listNumSum R + 3 := by
+  have hR := bumpSymR_num_sum_le R
+  cases L with
+  | nil =>
+    simp [stepElemBB, strictList_eq, symStateNumSum, listNumSum]
+    omega
+  | cons t L1 =>
+    cases t with
+    | item x =>
+      cases x with
+      | zero => simp [stepElemBB, strictList_eq, symStateNumSum, listNumSum]; omega
+      | run d =>
+        cases d with
+        | zero => simp [stepElemBB, symStateNumSum, listNumSum, tokNumSum]
+        | succ d =>
+          cases d with
+          | zero => simp [stepElemBB, strictList_eq, symStateNumSum, listNumSum, tokNumSum]; omega
+          | succ d =>
+            cases d with
+            | zero => simp [stepElemBB, strictList_eq, symStateNumSum, listNumSum, tokNumSum]; omega
+            | succ d =>
+              cases d with
+              | zero => simp [stepElemBB, strictList_eq, symStateNumSum, listNumSum, tokNumSum]; omega
+              | succ d => simp [stepElemBB, strictList_eq, strictNat_eq, symStateNumSum, listNumSum, tokNumSum]; omega
+    | repB1 k => simp [stepElemBB, symStateNumSum, listNumSum, tokNumSum]
+    | rep2 p => simp [stepElemBB, symStateNumSum, listNumSum, tokNumSum]
+    | rep12 m => simp [stepElemBB, symStateNumSum, listNumSum, tokNumSum]
+
+#print axioms peelTok_num_sum_le
+#print axioms stepElemBB_num_sum_le
+
+
 end BusyBeaver.SymRunAudit
