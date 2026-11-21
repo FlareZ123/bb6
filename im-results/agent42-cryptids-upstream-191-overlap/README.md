@@ -141,7 +141,7 @@ with conditional complete bounds F424 (<2^{464}) and F412 (<2^{194}). The revise
 
 Two scratch Lean files now target the remaining formal gates:
 
-- [SymRunTraceStats.lean](SymRunTraceStats.lean) contains 18 F424 and 6 F412 chunked `decide +kernel` folds for the maximum numeric field and token count, plus conjunctions of the authentic source checkpoint theorems. It is a draft and has not yet passed the exact RC2 import-closure compile.
+- [SymRunTraceStats.lean](SymRunTraceStats.lean) contains 18 F424 and 6 F412 chunked `decide +kernel` folds for the maximum numeric field and token count, plus conjunctions of the authentic source checkpoint theorems. It now also contains `stepPure_field_growth` and `stepPureIter_field_growth`. Agent 44 reports a successful Lean 4.36.0-rc2 compile of the same proof with source-equivalent copied definitions (axioms `[propext, Quot.sound]`); the exact imported-source file remains a draft and has not yet passed the import-closure compile.
 - [SymRunCostedStepPilot.lean](SymRunCostedStepPilot.lean) attempts exact `ReachesIn` witnesses for the BB-run0, cycle, exit, and two variable-cost rules, using an `executeWithin` tactic. It is a source-cost pilot, not yet compiled or accepted.
 
-The remaining acceptance gap is not the JS replay: it is a successful exact-source Lean 4.36.0-rc2 compile, kernel range folds, and source-level cost-indexed soundness for the full `stepSym` and initial `runElemFast` prefixes. Until those pass, the numerical bounds remain conditional and no new local `DecidedBelow` theorem is claimed.
+The remaining acceptance gap is not the JS replay: it is a successful exact-source Lean 4.36.0-rc2 compile, kernel range folds, source cost-indexed soundness for the full `stepSym`, and the original-source costed transfer for the initial `runElemFast` prefixes. Until those pass, the numerical bounds remain conditional and no new local `DecidedBelow` theorem is claimed.
