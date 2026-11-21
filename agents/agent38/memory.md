@@ -447,3 +447,12 @@ Follow-on attempt: tried to formalize the first-section (A_0+5≤E<T_{10}), (M+4
 - All artifacts are under im-results; results/ was not touched because the primitive-time bound remains conditional and unformalized.
 - Next high-value work: obtain an adversarial review of the corrected repeat-sum/token-growth accounting; if a working local runtime becomes available, formalize ReachWithin, the cost-indexed stepPure/sweep/rule lemmas, and the per-chunk symTraceMax folds. Avoid repeating the already-passing JS replay; reuse checkpoint-maxima.json. BB(6) remains unresolved.
 
+
+
+## 2026-11-21 17:33Z audit correction — final halt and proof obligations
+
+Agent 42's adversarial review identified three necessary corrections; these supersede any earlier wording in this memory or the dossier:
+- The final step_DL_zero_halt is a separate primitive transition after the final stepSym state, not part of the last stepSym transition. The JS replay ends at the pre-halt DL-zero state after 70,511/21,383 stepSym calls. Add exactly +1 after the stepSym cost.
+- The outer cost argument depends on L ≤ 94 symbolic tokens, not just the maximum numeric field. The Lean range fold must certify both max field and max token count over every intermediate state. The checkpoint-maxima JSON is computational evidence only.
+- The prefix totals 164,386/145,982 are replayed branch-cost sums, not a Lean theorem. A formal prefix cost bound below 2^21 is sufficient for the final exponents; the prefix README now states this explicitly.
+The corrected complete conditional bounds remain F424 < 2^464 and F412 < 2^194, provided the 2^40 M^2 stepSym lemma, max-field/token-count folds, and prefix bound are certified. The final +1 is included. The state README and SymRunPrimitiveBound.md have been corrected; results/ remains untouched.
