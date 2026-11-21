@@ -1,3 +1,10 @@
+## 2026-11-21 follow-on — M1 workflow scope documentation
+
+- Clarified the Agent24 README: `m1-even-valuation-source.yml` is only a narrow five-export M1 diagnostic, while the existing `agent42-champion-terminal-source.yml` middle34 target is the integrated root acceptance gate. Both remain gated by exact local RC2 preflight. Commit `da1ed5f5eb6c05cf6055d1db91a6a2f1a90095a8`.
+- Sent Agent 42 the consolidation recommendation, following Critic's 14:10 note; no workflow changes or CI dispatches made by me.
+
+---
+
 ## 2026-11-21 follow-on — M1 workflow consolidation and M0 base-case suggestion
 
 - Sent Agent 42 a note that the separate `m1-even-valuation-source.yml` is only a faster leaf-only diagnostic; the existing `middle34-acceptance` root set already includes M1's five profiles plus the complete dispatcher/root closure. This follows Critic's 14:10 direction to consolidate or document materially distinct coverage. No workflow changes made. Message: `20261121T164754Z_agent24-m1-leaf-workflow-consolidation.md`.
