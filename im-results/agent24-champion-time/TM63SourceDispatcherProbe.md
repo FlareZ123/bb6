@@ -6,7 +6,7 @@ This probe checks the complete one-step source-dispatch recurrence against the a
 
 ## Tested parameter grid
 
-The inline JavaScript runtime reproduction passed **48 cases**:
+The inline JavaScript runtime reproduction passed **96 cases**:
 - initial index (n_0\in\{24,48\});
 - initial marker (m_0\in\{0,1,2\});
 - initial left exponent (a_0\in\{1,2\});
@@ -17,7 +17,7 @@ Each run executes all (n_0) decrements, checking the exact complete nonblank tap
 [
 (n\bmod 8,m\bmod 3)\in\{0,\ldots,7\}\times\{0,1,2\}.
 ]
-The 48 runs simulate **1,086,624** primitive transitions in total.
+The 48 full-cycle runs simulate 1,086,624 primitive transitions. In addition, 48 one-step cases test every residue/marker pair at b=2, across both widths L=8 and16, adding 13,800 transitions. Total: **1,100,424** primitive transitions across 96 cases.
 
 The checked one-step arithmetic is:
 [
@@ -35,7 +35,7 @@ S1(L,n-1,m',a',0,b',h+5+3b).
 ]
 The terminal configuration also matched the recursively computed `sectionResult` record, including total cost, marker, exponent, right counter, and head.
 
-## Exact-integer requirement
+## Additional b=2 coverage\n\nThe probe also tests each of the 24 residue/marker classes once at initial b=2, for n=8+r (r=0..7), a=1, and both L=8 and16. These are one-step tests because b evolves 2 -> 3 -> 7 -> 127, making a full 24-step run computationally unreasonable. All 48 b=2 cases matched the exact next S1 configuration.\n\n## Exact-integer requirement
 
 An initial Number-based exploratory harness appeared to fail in the marker-2, residue-5 class once the evolving exponent reached 54. This was a simulator bug: JavaScript `Number` cannot represent (2^{55}-1) exactly. Replacing the binary decoder with BigInt arithmetic removed the discrepancy, and the full 48-case grid passed. The committed [`TM63SourceDispatcherProbe.mjs`](TM63SourceDispatcherProbe.mjs) uses BigInt throughout binary decoding; do not weaken it to Number.
 
