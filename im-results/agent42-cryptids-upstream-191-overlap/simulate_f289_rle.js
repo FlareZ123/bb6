@@ -1,7 +1,7 @@
 // Deterministic JavaScript/BigInt port of the Cryptids RLE state engine
-// for rooted RLE 1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA--- (first F289 ledger row).
+// for either F289 rooted RLE module with the shared primitive rule-cost signature.
 // Requires Node.js with BigInt support.
-// Usage: node simulate_f289_rle.js /path/to/M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH.lean
+// Usage: node simulate_f289_rle.js /path/to/M_<F289-rooted-RLE>.lean
 //
 // Source basis: google-deepmind/cryptids commit
 // 3647718b5df22e1a61462dec0376bd204526285a, BusyBeaver/Calculi/HaltShared.lean.
@@ -448,25 +448,56 @@ function runBatches(b,s) {
   return [s,cost];
 }
 const stable = s => JSON.stringify(s,(k,v)=>typeof v==='bigint'?v.toString():v);
-const ckpt0 = {mode:'B',ls:{t:'raw',items:[z(1n)]},R:[],halted:false};
-const ckpt5=parseState(checkpoint('ckpt5'));
-const ckpt10=parseState(checkpoint('ckpt10'));
-const ckpt15=parseState(checkpoint('ckpt15'));
-let state=ckpt0,total=0n;
-const chunks=[];
-for (const [b,target] of [[100,ckpt5],[100,ckpt10],[100,ckpt15],[80,null]]) {
-  const p=runBatches(b,state); state=p[0]; total+=p[1]; chunks.push(p[1]);
-  if (target) assert.equal(stable(state),stable(target),'checkpoint mismatch after '+b+' batches');
+const machineMatch=source.match(/load_rle_machine%\\s+"([^"]+)"/);
+if (!machineMatch) throw new Error('could not identify source machine RLE');
+const machineRLE=machineMatch[1];
+const allowedRLEs=[
+  '1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH',
+  '1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH'
+];
+assert.ok(allowedRLEs.includes(machineRLE),'this cost table is only checked for the two F289 RLE modules');
+const executeCounts=[...source.matchAll(/\\bexecute\\s+(\\d+)/g)].map(m=>Number(m[1]));
+assert.deepEqual(executeCounts,[1,4,2,1,2,4,5,3,4,3,1,3,5,17,4,5,7,6,3],
+  'machine-specific primitive execute-count signature changed');
+
+const hasCkpt0=lines.some(x=>x.startsWith('def ckpt0 : RleFullState'));
+const ckpt0=hasCkpt0
+  ? parseState(checkpoint('ckpt0'))
+  : {mode:'B',ls:{t:'raw',items:[z(1n)]},R:[],halted:false};
+const chunks=lines.flatMap(line=>{
+  const id=line.match(/^theorem chunk_(\\d+)\\b/);
+  if(!id) return [];
+  const normal=line.match(/runBatches\\s+(\\d+)\\s+(ckpt\\d+)\\s*=\\s*(ckpt\\d+)/);
+  if(normal) return [{index:Number(id[1]),batches:Number(normal[1]),from:normal[2],to:normal[3]}];
+  const final=line.match(/\\(runBatches\\s+(\\d+)\\s+(ckpt\\d+)\\)\\.halted\\s*=\\s*true/);
+  if(final) return [{index:Number(id[1]),batches:Number(final[1]),from:final[2],to:null}];
+  throw new Error('unrecognized chunk theorem: '+line);
+}).sort((a,b)=>a.index-b.index);
+assert.ok(chunks.length>0,'no chunk schedule found');
+
+let state=ckpt0,total=0n,currentName='ckpt0';
+const chunkResults=[];
+for(const chunk of chunks) {
+  assert.equal(chunk.from,currentName,'chunk schedule is not contiguous');
+  if(currentName!=='ckpt0') assert.equal(stable(state),stable(parseState(checkpoint(currentName))),'chunk input checkpoint mismatch');
+  const p=runBatches(chunk.batches,state);
+  state=p[0]; total+=p[1];
+  if(chunk.to) assert.equal(stable(state),stable(parseState(checkpoint(chunk.to))),'checkpoint mismatch at '+chunk.to);
+  else assert.equal(state.halted,true,'final RLE state is not halted');
+  chunkResults.push({index:chunk.index,batches:chunk.batches,from:chunk.from,to:chunk.to,bound:String(p[1])});
+  if(chunk.to) currentName=chunk.to;
 }
 assert.equal(state.halted,true,'final RLE state is not halted');
-assert.equal(total,1003448704258405241756955830449585121679083838719n,'cost bound changed');
-assert.ok(total < (1n<<160n),'candidate bound is not below 2^160');
+if(machineRLE===allowedRLEs[0])
+  assert.equal(total,1003448704258405241756955830449585121679083838719n,'first F289 cost bound changed');
+
 console.log(JSON.stringify({
-  checkpointMatches:[true,true,true],
+  machineRLE,
+  checkpointMatches:chunkResults.filter(x=>x.to!==null).map(x=>x.to),
   finalHalted:state.halted,
-  rleTransitionsUpperBound:380*25,
-  chunkBounds:chunks.map(String),
+  rleTransitionsUpperBound:chunks.reduce((a,x)=>a+x.batches*25,0),
+  chunkBounds:chunkResults,
   primitiveStepUpperBound:String(total),
   boundBits:total.toString(2).length,
-  below2pow160:true
+  below2pow160:total<(1n<<160n)
 },null,2));
