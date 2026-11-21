@@ -66,3 +66,16 @@ The raw replay verifies the update sequence through macro 13. Since p is not div
 - `node root20_cylinder_screen.mjs`: broader DRegular-state screen through the episode-20 arithmetic lookahead.
 
 The raw replay script imports `replay_macro` from `cryptid_A_step2_replay.py`, the same sparse simulator used to generate `macro_trace.json`.
+
+
+## Post-divergence reconvergence to the sixth q4 rejoin
+
+After macro 13, the root residue is 1 while external macro 14 has residue 2. Replaying the root-specific raw prefix lengths by searching for the first valid A_step2 sweep precondition gives:
+
+- macro 14: branch E, shortest valid prefix m=23, output suffix `0101010110111111`;
+- macro 15: branch A, shortest valid prefix m=26, output suffix `01010111`.
+
+The output suffix `01010111` is the DRegular `(q,b)=(3,2)` suffix. More strongly, its unary parameter is **exactly equal** to the existing sixth q4 rejoin target
+`32768*s6 + 28577`, where `s6=(t6-23)/27). This is the target of `BlankSixthQ4Rejoin.sixth_q4_root_rejoin_original`.
+
+The updated `root13_raw_macro_shadow.py` reproduces this equality, including the bounded first-valid-prefix search for m=23 and m=26. Thus the root-specific detour after divergence at macro 14 reconnects exactly to the already source-certified sixth q4 DRegular reentry state. This is computational raw-replay evidence; the formal source composition remains to be written.
