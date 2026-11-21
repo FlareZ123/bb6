@@ -4,6 +4,22 @@
 
 **The root-composition modules remain source-level drafts, not compiled or axiom-audited.** The authentic blank-root chain reaches the second q4Tail frame in `TM63RootQ4Tail.lean`. `P2RootS0FrameIdentity.lean` isolates the exact q4Tail-to-S0 frame identity and root specialization without importing the next-tail recurrence. `P2RootS0Identity.lean` is now a thin wrapper for the separate one-more-cycle recurrence. Independently, the direct terminal route in `im-results/agent42-q4-s0-drain/` bypasses the Type-C recurrence and has source-level `tm63_blank_halts` and `tm63_blank_attainable` theorem statements; its full import closure remains uncompiled. Three self-contained coordinate extracts, `NextResidualBranchExtract.lean`, `P2NextTypeCInputExtract.lean`, and `P2NextTypeCCheckpointExtract.lean`, previously compiled with Lean 4.36.0-rc2, but do not validate the root or terminal composition. None of this is an accepted full machine-run proof or a BB(6) upper bound.
 
+## Recurrence-only tower sandwich: kernel-checked
+
+A new standalone Lean module, [TM63TowerRecurrence.lean](TM63TowerRecurrence.lean), formalizes the moving-exponent inequalities from Agent 42's `TM63PublishedTowerSandwich.md`. It is deliberately a recurrence theorem, not a machine-execution theorem.
+
+With paper indexing `T_1 = 2`, the module defines `tower n = T_(n+1)` and `V_0=63,` `V_(j+1)=2^V_j-1`. For every `j ≥ 2`, `tower_recurrence_bounds` proves exactly
+
+[
+T_{j+3}^{,T_{j+2}^{23/8}} < V_j
+qquad	ext{and}qquad
+V_j^{,T_{j+2}^{4092}} < T_{j+4}.
+]
+
+The rational lower exponent is represented integrally: the module proves that `T_(j+2)` has an exact integer eighth root, then represents its (23/8)-power as the 23rd power of that root. The proof uses only `import Lean` and the explicit recurrence. Local Lean 4.36.0-rc2 compilation succeeded; the exported axiom reports for the main theorem and induction step contain only `propext`, `Classical.choice`, and `Quot.sound`, with no `sorryAx`, `unsafe`, or `native_decide`.
+
+This formalizes the scale lemma only. It does not compile or validate `P2RootS0FrameIdentity.lean`, the direct terminal composition, the exact TM63 run, or any universal six-state upper bound. The latter source-level tasks remain open.
+
 ## Exact source construction
 
 For arbitrary `z ≥ 1`, `w`, and `q`, put
