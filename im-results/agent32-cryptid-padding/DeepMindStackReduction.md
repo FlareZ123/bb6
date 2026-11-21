@@ -64,13 +64,10 @@ In the first applicable branch of `mode_DR_n_n_closed`, the proof takes a three-
 ]
 This is an exact token-system checkpoint in the closure proof for the authentic blank-root entry. It is not an inferred simulation.
 
-The external halting-cylinder input has a separate local token representation: for (C\equiv1\pmod3), (m=4(C/3)-1), its first `step_An_1101` E-state is
+The external halting-cylinder input has a separate local token representation, with an important state-map adjustment. For (C\equiv1\pmod3), (m=4(C/3)-1), its first `step_An_1101` intermediate is E in #490. The DeepMind state map sends #85 B to #490 E, so this is not a #85 `tok_EL` state. Since the suffix is empty, the scanned symbol is blank 0; #490 E0 writes 0, moves left, and enters C. After that one raw step, the tape is exactly
 [
-\operatorname{tok\_EL}([0,0]\; ++\; \operatorname{replicate}(m,1),[(1,0)],[]).
+\operatorname{tok\_CR}([0]\; ++\; \operatorname{replicate}(m,1),[(1,0)],[]).
 ]
-The generic `tok_EL_0_cons` lemma moves this to
-[
-\operatorname{tok\_CR}([1]\; ++\; \operatorname{replicate}(m,1),[(1,0)],[]).
-]
+The left-list equality follows from `encTokens` and blank-extension equivalence; see `ASectionStackEncoding.md` for the derivation.
 
 Thus the blank-root reduction and the external halting-cylinder proof both enter the same DeepMind token subsystem, but at very different token states. A precise reachability problem is now visible: determine whether the root's closed-stack/token evolution from `tok_CR [1,0] [(0,0)] [0]` ever reaches the halting token state associated with the cylinder (or another halting token state). No such reachability is established here.
