@@ -1,6 +1,6 @@
 # Boundary-safe primitive-time bound for SymRun F424/F412
 
-**Status: conditional proof sketch, not yet a theorem.** This note replaces the earlier derivation that assumed the outer maximum field (M\ge376). That premise is false at both authentic initial symbolic states: F424 and F412 each start at `initSymCyc3` with maximum field `M=2` (F424 has a `.run 2` token and F412 has `.run 2` as its maximum). The replacement below works for every (M\ge0) and preserves the same final exponents.
+**Status: conditional proof sketch, not yet a theorem.** This note replaces the earlier derivation that assumed the outer maximum field (M\ge376). That premise is false at both authentic initial symbolic states: F424 and F412 each start at `initSymCyc3` with maximum field `M=2` (F424 has a `.run 2` token and F412 has `.run 2` as its maximum). The replacement below works for every (M\ge0) and sharpens the conditional complete bounds by one bit, to F424 (T<2^{463}) and F412 (T<2^{193}).
 
 Pinned source: `google-deepmind/cryptids` commit `3647718b5df22e1a61462dec0376bd204526285a`, using `BusyBeaver/Calculi/HaltShared.lean` and the two F424/F412 machine modules.
 
@@ -51,7 +51,7 @@ The independent replay matches every literal upstream checkpoint (F424 18/18; F4
 | maximum numeric field | 203 bits | 69 bits |
 | maximum symbolic-token count (T) | 94 | 78 |
 
-The proof still needs a Lean range fold for both (M) and (T) over every intermediate state in every checkpoint chunk. The empirical maxima alone are not a theorem.
+The draft exact-source range folds for both (M) and (T) are now in `im-results/agent42-cryptids-upstream-191-overlap/SymRunTraceStats.lean`; they still need an exact Lean 4.36.0-rc2 import-closure compile. The empirical maxima alone are not a theorem.
 
 ## Boundary-safe per-transition estimate
 
@@ -75,7 +75,7 @@ The field-growth proof can be split into three list lemmas:
 
 Then inspect the four `stepPure` modes. BB uses at most one `bumpSymR` after optional non-increasing peeling; DL uses non-increasing peeling followed by one `stepElemDL`; CB uses at most one `bumpSymL), except the two explicit repeat-counter branches, which increment exactly one counter by one; HALT is unchanged. The soundness cases `stepPureBB_sound`, `stepPureDL_sound`, and `stepPureCB_sound` (HaltShared lines 3780–3906) likewise use at most one repeated-block sweep or one atomic rule per branch.
 
-These are source-structural obligations, not yet Lean-certified.
+The field-growth statement now has `stepPure_field_growth` and an n-step corollary in `SymRunTraceStats.lean`. Agent 44 reports a successful Lean 4.36.0-rc2 source-equivalent compile with axiom profiles `[propext, Quot.sound]`; exact imported-source compilation remains pending. The primitive-cost bound per `stepPure` transition is still not Lean-certified.
 
 ### 2. The outer CB sweep
 
@@ -137,16 +137,16 @@ The complete-trace maxima imply:
 
 The initial `runElemFast` prefixes have 19,217 / 19,255 `stepElemM` iterations. The existing Lean transcription in `im-results/agent42-symrun-prefix-growth/{PrefixGrowth,PrefixCostTable}.lean` proves the max-run growth and the coarse prefix arithmetic below (2^{31}); the original-source costed `stepElemM` transfer is still required. The source halting proof also applies the separate `step_DL_zero_halt` transition (+1) after the final abstract HALT checkpoint.
 
-Conditional complete bounds are therefore:
-- F424: (T<2^{462}+2^{31}+1<2^{463}).
-- F412: (T<2^{192}+2^{31}+1<2^{193}).
+Conditional complete primitive-step bounds are therefore:
+- F424: (steps<2^{462}+2^{31}+1<2^{463}).
+- F412: (steps<2^{192}+2^{31}+1<2^{193}).
 
 Both are far below (2^{512}), and hence below the published (S(6)>2\uparrow\!\uparrow\!\uparrow5) champion baseline under the standard Knuth-arrow convention. This would classify the two exact rooted machines as non-champions, not solve BB(6).
 
 ## Required formal acceptance
 
-1. Add cost-indexed counterparts of the machine-specific atomic `execute n` rules and the six repeated-block sweep lemmas.
-2. Prove the source-level `stepPure` maximum-field growth and (50(X+1)) primitive-cost bound.
+1. Extend the exact `ReachesIn` pilot in `im-results/agent42-cryptids-upstream-191-overlap/SymRunCostedStepPilot.lean` to all machine-specific atomic `execute n` rules and the six repeated-block sweep lemmas; the current uncompiled pilot covers the cycle, exit, BB-run0, and two variable-cost rules for F424.
+2. Compile and audit the included `stepPure_field_growth` / n-step theorem against exact imports; separately prove the (50(X+1)) primitive-cost bound for each `stepPure` branch.
 3. Prove the `sweepCB` counter-sum and token-count bounds, then the fallback `sweepBB` bound.
 4. Prove the Rule A/B/C call-count bounds and compose them into the (2^{39}(M+1)^2) transition theorem.
 5. Kernel-check both maximum-field and token-count folds over every intermediate state in every checkpoint chunk.
