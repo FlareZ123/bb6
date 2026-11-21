@@ -94,6 +94,16 @@ The [BigInt dispatcher probe](TM63SourceDispatcherProbe.md) executes the exact T
 
 An initial Number-based harness showed an apparent mismatch after the evolving exponent exceeded 52; this was a floating-point precision defect in the harness, not a TM2 counterexample. The final probe uses BigInt for every binary decode and all 48 cases pass. This is finite integration evidence only; it does not replace the exact Lean import-closure compile or transitive axiom audit.
 
+## 4c. Cross-family a=0 boundary behavior (21 November 2026)
+
+All three residue-zero source families were also tested at a=0, but their proof dependencies differ:
+
+- **M1, marker 1:** 384 full prefix/drain runtime cases passed (n=1..64, b=0..2, widths min and min+8). In the current Lean source, `ha) is used only by the counted-drain bound. An unconditional `resetDrainBound_any` should remove it.
+- **M2, marker 2, n=8q:** 96 full prefix/drain runtime cases passed (q=1..16, b=0..2, widths min and min+8). The q4-prefix theorem's `ha) is unused in its proof; the counted theorem uses it only for `resetDrainBound`. The same unconditional bound should remove it.
+- **M0, marker 0, n=8q:** 192 full prefix/drain runtime cases passed (q=1..32, b=0..2, widths min and min+8). However, the current M0 q4-prefix proof uses `ha) in several expanded-prefix and cut-tape lemmas. Runtime behavior suggests a separate a=0 prefix proof may exist, but simply replacing the drain bound is insufficient.
+
+These a=0 grids are computational evidence only. The current formal source theorems still require a>0; do not count any of the a=0 cases as accepted proof coverage. The asymmetry is a useful proof-engineering clue: M1/M2 are straightforward drain-bound generalizations, while M0 needs a distinct prefix argument.
+
 ## 5. Exact next steps and validation boundary
 
 1. Run local Lean 4.36.0-rc2 preflight on the exact original import closure of `TM63SourceIncrementDispatcherComplete.lean` using `tools/lean_compile_closure.py`. This closure includes the M0 and M2 residue-zero counted sources and all 22 other one-step families; resolve missing or ambiguous imports explicitly.
