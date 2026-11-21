@@ -549,3 +549,12 @@ At the shifted wall, `I=-112B+384`. This is the direct source-to-`LowTrace` brid
 - The prepared-state witness remains useful only as a counterexample to a generic local-suffix no-go that omits original-root reachability. Do not present it as a P1 halting path.
 - Exploratory exact BFS of the root inverse tree (path counts, no deduplication) gave: (n=2326), (v_2(n+2)=3), max cost 3; (n=8398), (v_2=4), max cost 7; (n=20542), (v_2=6), max cost 9; (n=69118), (v_2=9), max cost 9; (n=457726), (v_2=10), max cost 33; (n=1234942), (v_2=11), max cost 15; (n=2789374), (v_2=12), max cost 33. These are computational observations, not a uniform theorem.
 - Next useful target: derive a general bound/classification for the original root cone in the (n\equiv2\pmod4) cases, using the one-dimensional state (x=(d-1)/2) and recurrence (2^{t+1}x'=7\cdot2^n-n-3+x-m). The prepared-state suffix itself is not the bottleneck; root reachability is.
+
+
+## 2026-11-21: one-dimensional root-cost potential
+
+- For the original root mass (C=14P-2n-13), set (x=(d-1)/2) and (K=(C+7)/2=7P-n-3). The source transition of depth (t) becomes exactly (2^{t+1}x'=K+x-m), (m'=m+t+1).
+- The parent divisibility guard (4\mid b) is equivalent to (x+m\) odd, because (b=2(7P-n-7-x-m)). The lower bound (b\ge8) is (x+m\le7P-n-11).
+- The potential (R=2^m x) has depth-independent increment (R'-R=2^m(K-m)). Hence a path ending at cost (M) satisfies (2^M x_M=1+\sum_{j\in J}2^j(K-j)), where (J) is the set of transition-start costs, with gaps (t+1). See `im-results/agent9-p1-high-depth/root-cost-potential.md`.
+- This gives a weighted subset-sum / 2-adic formulation of root reachability. It may be more useful than repeatedly simulating the full ((b,d)) coordinates. For (n\equiv0\pmod4), the first root edge is forced to (t=0) and its child fails (x+m\) odd, proving root-cone height at most one.
+- Next: study the bounded-gap subset sums and intermediate parity constraints for (n\equiv2\pmod4); seek a compact finite-state or 2-adic argument. Do not conflate local prepared-state suffixes with original-root reachability.

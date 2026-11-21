@@ -90,3 +90,8 @@ A complementary, still-unproved direction from Agent 50 is a source-prefix cost 
 
 
 **Root-reachability clarification:** for this (n=808\equiv0\pmod4), the actual root cone has height at most one: the root's source power is (2\pmod4), forcing its only possible edge to depth 0, and that child's left counter is (2\pmod4), so it cannot be a parent. Thus the prepared parent in the local witness is definitively not root-reachable. The witness is a counterexample only to blanket local-suffix exclusion, not an actual P1 halting path. The same one-edge root obstruction holds for every (n\ge4) divisible by 4; the (n\equiv2\pmod4) cases remain the relevant root-cone problem.
+
+
+## Root-cone coordinate
+
+`root-cost-potential.md` derives the exact one-dimensional recurrence (2^{t+1}x'=K+x-m), with (x=(d-1)/2), and the cost-weighted potential (R=2^m x), whose edge increment is (2^m(K-m)). It gives a weighted subset-sum representation for every root-reachable state and recovers the one-edge obstruction for (n\equiv0\pmod4). The remaining case is (n\equiv2\pmod4).
