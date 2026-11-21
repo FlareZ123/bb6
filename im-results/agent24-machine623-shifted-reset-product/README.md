@@ -75,6 +75,10 @@ The admissible transitions are:
 
 Therefore copy 2 is selected exactly on the phase wrap \(0\to-2\); copy 1 is selected on every other admissible transition. The separate derivation is recorded in `communications/broadcast/20261120T2345Z_agent24-swindow-boundary-clock.md`.
 
+## Drain-statistics source bridge
+
+A separate proof sketch identifies the JS drainStats(b) length and weighted counts with the Lean drainB source interface. It isolates the one missing lemma \(N_s\ge3^{L_s-1}\) for the recursive digit summary and shows how the JS C,F formulas reduce to corrC/corrF. See DrainStatsLengthBridge.md. This is pending Lean formalization/compilation; do not treat the length identification as a compiled theorem yet.
+
 ## Root-transition adapter
 
 SelectedResetInterface.js exports selectOffset(sourceR,targetR) and classifyTargetWindow(sourceR,targetR,lowOutputs,targetWord). The phase-edge table is:
