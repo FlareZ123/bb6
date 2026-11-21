@@ -33,11 +33,13 @@ HighEvenRightC23Residual.lean appends the genuinely new even-right family to Age
 
 ## Current state
 
-The established ValSixFull integration is documented in [JointCriterionIntegration.md](JointCriterionIntegration.md) and formalized in [ValSixJointFull.lean](../agent3-c-bounce-inverse/ValSixJointFull.lean). The later exact C58 refinement is in [ValSixC58.lean](../agent11-c-low58/ValSixC58.lean), successful in [CI 42333769024](https://github.com/FlareZ123/bb6/actions/runs/42333769024). The proposed all-depth merge is [ValSixC58AllDepth.lean](../agent11-c-low58/ValSixC58AllDepth.lean), requiring its separate integration audit.
+The established ValSixFull integration is documented in [JointCriterionIntegration.md](JointCriterionIntegration.md) and formalized in [ValSixJointFull.lean](../agent3-c-bounce-inverse/ValSixJointFull.lean). The later exact C58 refinement is in [ValSixC58.lean](../agent11-c-low58/ValSixC58.lean), successful in [CI 42333769024](https://github.com/FlareZ123/bb6/actions/runs/42333769024). The proposed all-depth merge is [ValSixC58AllDepth.lean](../agent11-c-low58/ValSixC58.lean), requiring its separate integration audit.
 
-The central theorem, `blank_halts_iff_joint_val_six_full`, is an exact equivalence for Machine C. It combines the existing Agent3/11/19/29 high and low restrictions with four additional source-certified infinite exclusions. The fixed-target root decision remains exact. The existential parameter domains remain unbounded, so this does not determine BB(6).
+The central theorem, blank_halts_iff_joint_val_six_full, is an exact equivalence for Machine C. It combines the existing Agent3/11/19/29 high and low restrictions with four additional source-certified infinite exclusions. The fixed-target root decision remains exact. The existential parameter domains remain unbounded, so this does not determine BB(6).
 
-The refined joint CI verification succeeded in [run `42252457830`](https://github.com/FlareZ123/bb6/actions/runs/42252457830).
+The refined joint CI verification succeeded in [run 42252457830](https://github.com/FlareZ123/bb6/actions/runs/42252457830).
+
+A separate W11 root4 B2 parent branch now has a paper-level two-parent exclusion: both P(q) source parents are eliminated for q≡11 (mod 128), corresponding under the exact residual root equation to r≡11092 (mod 16384). See [W11 q=11 mod128 closure](U5B2Root4W11Q11Mod128.md). This composition is not Lean-compiled, and the upstream B2-to-P(q) bridge remains a draft; all other W11 q classes remain open.
 
 ## Main research artifacts
 
@@ -45,6 +47,7 @@ The refined joint CI verification succeeded in [run `42252457830`](https://githu
 - [OddSevenSecondCylinder.lean](OddSevenSecondCylinder.lean): original-source inverse cylinder excluding the second sum-seven slope.
 - [JointFiveSieve.lean](JointFiveSieve.lean): combined Agent11/19 restrictions and the high four-link exclusion.
 - [JointAllRoot.lean](JointAllRoot.lean): joint high-root restrictions and the odd-special high families.
+- [U5B2Root4W11Q11Mod128.md](U5B2Root4W11Q11Mod128.md): paper-level W11 parent-fan exclusion for q≡11 (mod 128), with exact root-index translation; composition not yet Lean-compiled.
 - [SecondOneInfinite.lean](SecondOneInfinite.lean): exact infinite (m=1) family and its prior-sieve status.
 - [QuotientRectCensus.cpp](QuotientRectCensus.cpp): reproducible M512 quotient census for the mixed rectangles and the four parameter-family residue cycles.
 
@@ -65,6 +68,7 @@ The 25/4 mixed rectangle is intentionally omitted from the final high predicate.
 
 ## Next research
 
+- For the W11 root4 branch, integrate the q≡11 (mod 128) two-parent exclusion into one exact-source Lean theorem, including the upstream B2-to-P(q) bridge. Do not expand residue coverage before this composition is accepted.
 - [HighDyadicConeCandidate.md](HighDyadicConeCandidate.md) now records the **completed source-certified** high stopping theorem, its proof structure, CI audit, and an **M512-admitted** sample `j=263,m=3`. The generalized arbitrary-depth proof and its source certification are linked above. Establish separate prior-sieve novelty and complete the strongest exact halting-iff integration.
 
 - Close the remaining unbounded low and high parameter domains.
@@ -103,17 +107,3 @@ This is a strict source-level reduction of the remaining parameter domain. It do
 
 Their exact source modules are [M0Mod16Two.lean](M0Mod16Two.lean) and [M0AdditionalForcedFamilies.lean](M0AdditionalForcedFamilies.lean). The universal old-sieve admission and blank-unreachability statements are committed. Corrected original-source CI is pending in [run 42401719081](https://github.com/FlareZ123/bb6/actions/runs/42401719081). The finite scan over (j\le2000) reports 642 prior-sieve-admitted m=0 full-forced exclusions; the seven progressions account for 609 distinct examples. The remaining 33 finite examples require further symbolic analysis. The scan count is computational evidence, not a complete classification.
 
-
-## W11 q=11 mod128: both source-parent branches closed (21 November 2026)
-
-The new intermediate derivation [U5B2Root4W11Q11Mod128.md](U5B2Root4W11Q11Mod128.md) proves the exact paper-level family
-\[
-\neg CReach(P(128s+11))\qquad(s\in\mathbb N).
-\]
-It closes both parents in the existing W11 fan: Q reduces by odd/odd low valuation, even/odd valuation-four, then odd/odd low valuation to an odd-right sum-one forbidden state; A reduces by odd/odd low valuation, even/odd valuation-four, then unique even-right inversion to an odd-right sum-two forbidden state.
-
-The exact root equation identifies this W11 cylinder with
-\[
-r\equiv11092\pmod{16384}.
-\]
-The component source theorems already exist, but the combined parent-fan/root-index/B2 implication is **not Lean-compiled**. Keep this in im-results/ pending one exact-source composition and axiom audit. Local shell/Python preflight was unavailable in the 21 November invocation, so no CI substitute or new workflow was used.
