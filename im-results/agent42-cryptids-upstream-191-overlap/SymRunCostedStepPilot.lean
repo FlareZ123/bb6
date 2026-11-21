@@ -218,6 +218,17 @@ theorem step_BB_run1_zero_exact (L1 R2 : List MItem) :
   executeWithin 3
 
 
+
+/-- Generic B-succ: the right stack is bumped in exactly three steps. -/
+theorem step_BB_run1_exact (L1 R : List MItem) :
+    ReachesIn target_tm 3 (cfgBB target_tm (.run 1 :: L1) R)
+      (cfgBB target_tm L1 (.run 0 :: bumpM R)) := by
+  unfold cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM R]
+  executeWithin 3
+
+
 #print axioms reachesWithin_mono
 #print axioms reachesWithin_trans
 #print axioms reachesWithin_of_exact
@@ -231,6 +242,7 @@ theorem step_BB_run1_zero_exact (L1 R2 : List MItem) :
 #print axioms step_CB_run0_nil_exact
 #print axioms step_CB_run0_zero_exact
 
+#print axioms step_BB_run1_exact
 #print axioms step_BB_run1_nil_exact
 #print axioms step_BB_run1_zero_exact
 
