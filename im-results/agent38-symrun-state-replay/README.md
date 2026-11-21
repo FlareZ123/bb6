@@ -1,0 +1,52 @@
+# Checkpointed SymRunEngine state replay: F424 and F412
+
+**Status: reproducible computational evidence.** This replay independently translates the upstream `SymRunEngine` state transition `stepSym` into JavaScript, executes every macro transition, and compares the resulting state against every source checkpoint. It does not calculate primitive TM time and is not a Lean theorem.
+
+## Source and reproduction
+
+Pinned upstream source:
+
+- Repository: `google-deepmind/cryptids`
+- Commit: `3647718b5df22e1a61462dec0376bd204526285a`
+- Engine: `BusyBeaver/Calculi/HaltShared.lean`
+- Machine certificates: the F424 and F412 files under `BusyBeaver/BB6/Halt/`
+
+The dependency-free script `symrun_state_replay.cjs` exports a function accepting a source-fetch callback. Its Node usage is documented in the script header. It parses `initSymCyc3` and the literal `symChkN` states from the two source files, replays `stepSym`, and checks exact equality at every checkpoint.
+
+All checkpoint comparisons pass:
+
+| Machine | `stepSym` transitions | Source checkpoints matched | First HALT state |
+|---|---:|---:|---:|
+| F424 | 70,511 | 18 / 18 | 70,511 |
+| F412 | 21,383 | 6 / 6 | 21,383 |
+
+The final symbolic state is `.HALT` in both cases, matching the final upstream checkpoint.
+
+## Maximum encoded-state sizes over the complete replay
+
+The script measures every state after every `stepSym` transition, not only the checkpoints.
+
+| Metric | F424 maximum | Bits | F412 maximum | Bits |
+|---|---:|---:|---:|---:|
+| Largest individual run/repeat field | 12,464,561,897,144,001,482,331,935,594,779,263,804,489,570,179,353,031,112,091,137 | 203 | 412,597,277,036,535,862,786 | 69 |
+| Sum of repeat counters | 12,464,561,897,144,001,482,331,935,594,779,263,804,489,570,179,353,031,112,085,238 | — | 412,597,277,036,535,860,912 | — |
+| Decoded tape length (including repeated blocks) | 31,161,404,742,860,003,705,829,838,986,948,159,511,223,925,448,382,577,780,216,103 | 205 | 1,031,493,192,591,339,653,257 | 70 |
+| Number of symbolic tokens | 94 | — | 78 | — |
+
+The decoded tape-length calculation expands each `repB1` as 2 items, each `rep2` as 3 items, and each `rep12` as 5 items, without physically allocating those repetitions.
+
+## What this establishes—and what it does not
+
+Established computationally:
+
+1. The translated `stepSym` transition reproduces every literal upstream checkpoint for both machines.
+2. Both replayed symbolic traces reach the source's final HALT checkpoint at the stated macro counts.
+3. The complete trajectories have the recorded finite maxima for run fields, repeat counters, decoded tape length, and symbolic-token count.
+
+Not established:
+
+- a primitive TM-step count for any `stepSym` macro;
+- a complete primitive halting time for F424 or F412;
+- a comparison of either complete halting time with the BB(6) champion.
+
+The measured 203-bit / 205-bit F424 bounds and 69-bit / 70-bit F412 bounds are useful inputs to a future cost-indexed proof. The remaining mathematical obligation is to bound the primitive transition cost represented by `sweepBB`, `sweepCB`, `tryRuleA`, `tryRuleB`, and `tryRuleBC`, then accumulate those costs over these already-reproduced traces.
