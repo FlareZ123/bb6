@@ -1881,4 +1881,11 @@ theorem eatC12_num_sum_le (k : Nat) (xs : List SymTok) :
       getRep12_num 4 k xs)
 
 
+#print axioms bumpSymL_num_sum_le
+#print axioms bumpSymR_num_sum_le
+#print axioms eatFuel_num_sum_le
+#print axioms eatB1_num_sum_le
+#print axioms eatC2_num_sum_le
+#print axioms eatC12_num_sum_le
+
 end BusyBeaver.SymRunAudit
