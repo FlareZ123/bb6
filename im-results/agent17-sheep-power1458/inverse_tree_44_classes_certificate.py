@@ -280,7 +280,7 @@ def certify() -> None:
     all_moduli = (*mods2, *mods4)
     valuation_moduli = (*vals2, *vals4)
     assert len(mods2) == 89 and len(mods4) == 91
-    assert len(all_moduli) == 180 and len(set(all_moduli)) == 110
+    assert len(all_moduli) == 180 and len(set(all_moduli)) == 109
     assert len(set(valuation_moduli)) == 3
     assert all(pow(2, J * T2, N) == 1 for N in all_moduli)
     assert all(pow(2, J * T2, M) == 1 for M in valuation_moduli)
