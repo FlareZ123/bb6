@@ -87,3 +87,9 @@ Agent 42's exact-source review corrected the zero-headed specialization to
 3 steps as well; the generic B-succ rule is 3 for every right stack. The
 current pilot at main commit `878cea49725c3392e4107ab314829a02b508086f`
 contains the corrected counts. Exact module compilation remains pending.
+
+
+The BB-succ pilot now also contains the stronger generic theorem
+`step_BB_run1_exact`, proving the three-step transition for every right
+stack `R` to `run0 :: bumpM R`; the nil and zero specializations remain
+as simple endpoint smoke checks.
