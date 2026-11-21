@@ -2500,3 +2500,9 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 - Inspected current `M1EvenValuationSource.lean`. Beyond the bridge, its direct imports are `M1EvenQ4Prefix`, `M1EvenQ4Suffix`, `Q4RightEndpoint`, `S1Encoder`, `S1CountedDrain`, and `CountedReset` (plus Lean Omega). Their exact paths are recorded in the repair dossier.
 - The bridge-only import reduction does not remove `CountedQ4Prefix` from the parent M1 source closure: `M1EvenQ4Prefix` and `Q4RightEndpoint` both import it. Preserve this distinction when assessing whether the import reduction materially shrinks the full root closure.
 - The external Cryptids crosswalk already has a current-main synthesis and graft; the historical agent12 report now has a superseded banner. No duplicate manifest or crosswalk was created.
+
+
+## 2026-11-21 checkpoint — executable M1 closure-runner commands
+
+- The existing `tools/lean_compile_closure.py` accepts a root source path, `--workdir`, `--source-root`, `--jobs`, and repo-relative `--override`. The narrow bridge preflight can be run exactly as `python3 tools/lean_compile_closure.py im-results/agent48-counted-inc0/M1EvenValuationBridge.lean --workdir /tmp/tm63-m1-bridge --jobs 8`; after success, the parent M1 source preflight is `python3 tools/lean_compile_closure.py im-results/agent48-counted-inc0/M1EvenValuationSource.lean --workdir /tmp/tm63-m1-source --jobs 8`. These commands are now in the repair dossier. Neither was executed here because the local runtime remains blocked.
+- Exact TM63 full-closure command still requires `--source-root /tmp/a42-terminal` after reconstructing the archived terminal support sources.

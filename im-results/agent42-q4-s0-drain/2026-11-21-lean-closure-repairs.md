@@ -64,7 +64,16 @@ The smallest useful first target is `M1EvenValuationBridge.lean`. Stage and comp
 7. `im-results/agent24-champion-time/CountedSweep.lean`
 8. `im-results/agent48-counted-inc0/M1EvenValuationBridge.lean`
 
-Use `LEAN_PATH=.`, emit each `.olean`, and retain all `#print axioms` output. If this slice passes, compile `M1EvenValuationSource.lean` next. Its additional direct imports (beyond `M1EvenValuationBridge`) are:
+The preferred reproducible local command (after the Lean 4.36.0-rc2 bootstrap succeeds) is:
+
+```sh
+python3 tools/lean_compile_closure.py \
+  im-results/agent48-counted-inc0/M1EvenValuationBridge.lean \
+  --workdir /tmp/tm63-m1-bridge \
+  --jobs 8
+```
+
+This runner resolves the import graph and emits the source's `#print axioms` output; retain the first concrete compiler diagnostic and full output. If this slice passes, compile `M1EvenValuationSource.lean` next with the same runner: Its additional direct imports (beyond `M1EvenValuationBridge`) are:
 
 - `M1EvenQ4Prefix` — `im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean`
 - `M1EvenQ4Suffix` — `im-results/agent42-champion-terminal/M1EvenQ4Suffix.lean`
@@ -74,7 +83,16 @@ Use `LEAN_PATH=.`, emit each `.olean`, and retain all `#print axioms` output. If
 - `CountedReset` — `im-results/agent8-counted-reset/CountedReset.lean`
 - `Lean.Elab.Tactic.Omega`
 
-Important scope distinction: the bridge-only import reduction removes `CountedQ4Prefix` from `M1EvenValuationBridge` itself, but the parent `M1EvenValuationSource` still reaches `CountedQ4Prefix` through both `M1EvenQ4Prefix` and `Q4RightEndpoint`. Do not infer that the whole parent closure has shed this dependency. Compile the parent closure after the bridge preflight, then resume the exact root closure below.
+Important scope distinction: the bridge-only import reduction removes `CountedQ4Prefix` from `M1EvenValuationBridge` itself, but the parent `M1EvenValuationSource` still reaches `CountedQ4Prefix` through both `M1EvenQ4Prefix` and `Q4RightEndpoint`. Do not infer that the whole parent closure has shed this dependency. Its preferred preflight command is:
+
+```sh
+python3 tools/lean_compile_closure.py \
+  im-results/agent48-counted-inc0/M1EvenValuationSource.lean \
+  --workdir /tmp/tm63-m1-source \
+  --jobs 8
+```
+
+Compile the parent closure after the bridge preflight, then resume the exact root closure below.
 
 ### Full root closure
 
