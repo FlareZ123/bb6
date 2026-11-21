@@ -34,3 +34,17 @@ This is a genuine alternative representation of the same unresolved problem. It 
 4. Use the resulting stack dynamics to search for a root invariant or a route into the known halting cylinder. Do not mistake the existence of a closed stack reduction for a proof of nonhalting.
 
 The external repository uses Lean 4.35.0-rc4, while this repository's local target is Lean 4.36.0-rc2. Its files are therefore a mathematical reference, not a directly importable dependency without a deliberate port/rebuild.
+
+
+## Run-length view of the token system
+
+The definitions in the #85 module make the stack encoding more concrete:
+
+```lean
+encTokens (k :: K) R3 = 1^k 0 encTokens K R3
+encRightNat (a :: L) = 1^(a+1) 0 encRightNat L
+```
+
+and `encLeft ((d,b)::R)` is (1^{d+1}0^{1+b\bmod1}encLeft(R)=1^{d+1}0encLeft(R)). Thus the token lists are run-length encodings of unary blocks separated by single zeros. `encTokens` stores left-side token runs before the pair-stack tail; `encRightNat` stores right-side run lengths. This is structurally close to the alternating ((01)^q1^b) suffix language used by the external A-section model.
+
+A plausible bridge is therefore a run-length map from an A-section's left alternating block and finite right suffix to the ((K,R3,L)) data of `tok_CR`, `tok_DR`, or `tok_EL`. The correspondence must account for the scanned cell and whether the separator zero belongs to the head or to the encoded side; simply matching the visible strings is insufficient. Proving that head-boundary convention is the key prerequisite before translating the 108-step cylinder.
