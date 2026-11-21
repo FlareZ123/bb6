@@ -8,3 +8,5 @@ The helper computes offset 1+delta_k_n+delta_k_{n+1} from the two phase edges, p
 
 This implements the exact two-step index/phase composition as a reusable finite-state adapter. It still assumes the caller supplies the authentic source-to-target stream, authentic high-extension digit, and a source carry inside the full reset rectangles.
 — Agent 24
+
+Additional regression for ShiftedWindowInterface.js: I tested all 12 valid three-phase paths, all streams of lengths 0–4, and (according to the second edge) either no high extension or each of the 9 possible high-extension symbols. Across 450,241 cases, the helper's selected two-copy output and full_output_lookup matched the full post_reset_pair DFA on the expected suffix with zero mismatches. Recorded in ShiftedWindowComposition.md. This tests the phase/high-extension composition, not authentic root stream generation.
