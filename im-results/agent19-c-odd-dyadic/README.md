@@ -39,7 +39,7 @@ The central theorem, blank_halts_iff_joint_val_six_full, is an exact equivalence
 
 The refined joint CI verification succeeded in [run 42252457830](https://github.com/FlareZ123/bb6/actions/runs/42252457830).
 
-A separate W11 root4 B2 branch now has a paper-level source exclusion for the B2 parameter progression u≡157622 (mod 1720320), equivalent under the exact root equation to root indices r≡11092 (mod 16384) and q≡11 (mod 128). Both P(q) source parents reduce to existing blank-image obstructions. The upstream B2-to-P4 and D(w) parent reductions are in the accepted U5B2Root32 source closure; the new P(q) parent fan and root-index composition remain uncompiled. See [W11 q=11 mod128 closure](U5B2Root4W11Q11Mod128.md). All other W11 root-index classes remain open.
+A separate W11 root4 B2 branch now has a paper-level source exclusion for the B2 parameter progression u≡157622 (mod 1720320), equivalent under the exact root equation to root indices r≡11092 (mod 16384) and q≡11 (mod 128). Both P(q) source parents reduce to existing blank-image obstructions. The upstream B2-to-P4 and D(w) parent reductions are in the accepted U5B2Root32 source closure; the new P(q) parent fan and root-index composition remain uncompiled. See [W11 q=11 mod128 closure](U5B2Root4W11Q11Mod128.md). This is the separate r≡20 (mod 64) root4 sector, disjoint from the r≡32 (mod 64) root32 high-stop nine-class union. All other W11 root-index classes remain open.
 
 ## Main research artifacts
 
