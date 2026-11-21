@@ -62,6 +62,19 @@ jobs:
             echo 'sorryAx detected in mass-indexed source drain length bound'
             exit 1
           fi
+
+          cp "../im-results/agent24-machine623-shifted-reset-product/SourceDerivedReset.lean" SourceDerivedReset.lean
+          lake env lean -o .lake/build/lib/lean/SourceDerivedReset.olean SourceDerivedReset.lean 2>&1 | tee agent24-source-derived-reset.log
+          if grep -q 'sorryAx' agent24-source-derived-reset.log; then
+            echo 'sorryAx detected in source-derived reset arithmetic'
+            exit 1
+          fi
+          cp "../im-results/agent24-machine623-shifted-reset-product/SourceDerivedResetSourceBridge.lean" Agent24SourceDerivedResetSourceBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent24SourceDerivedResetSourceBridge.olean Agent24SourceDerivedResetSourceBridge.lean 2>&1 | tee agent24-source-derived-reset-bridge.log
+          if grep -q 'sorryAx' agent24-source-derived-reset-bridge.log; then
+            echo 'sorryAx detected in source-drain to reset bridge'
+            exit 1
+          fi
           cp "../im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitSourceBridge.lean" Agent1DrainDigitSourceBridge.lean
           lake env lean -o .lake/build/lib/lean/Agent1DrainDigitSourceBridge.olean Agent1DrainDigitSourceBridge.lean 2>&1 | tee agent1-drain-digit-source-bridge.log
           if grep -q 'sorryAx' agent1-drain-digit-source-bridge.log; then
