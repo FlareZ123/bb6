@@ -381,6 +381,55 @@ const yBlockScan = {
   finalState: yScanState === null ? null : show(yScanState)
 };
 
+// Search for an exact 30-digit Y-prefix cycle after the 10,001-block scan.
+// If every gate in the transient+cycle has carry depth < 30, the full suffix
+// remains length 30 forever and no future gate can consume it completely.
+function findCycleMaybe(word, initial, limit) {
+  let state = initial.slice();
+  const seen = new Map();
+  for (let k = 0; k <= limit; k++) {
+    const key = state.map(String).join(",");
+    if (seen.has(key))
+      return { preperiod: seen.get(key), period: k - seen.get(key) };
+    seen.set(key, k);
+    for (const c of word) state = prefixStep(state, c);
+  }
+  return null;
+}
+function prefixCarryDepth(prefix, c) {
+  let a = prefix[0] + c;
+  let i = 1;
+  while (i < prefix.length && (a & 1n) === 1n) {
+    a = prefix[i] + a / 2n + 1n;
+    i++;
+  }
+  return i;
+}
+const yPrefix30Start = yScanState === null ? null : yScanState.slice(0, 30);
+const yPrefix30Cycle = yPrefix30Start === null
+  ? null : findCycleMaybe(Y, yPrefix30Start, 10000);
+let yPrefix30CarrySummary = null;
+if (yPrefix30Cycle !== null) {
+  let prefix = yPrefix30Start.slice();
+  let maxDepth = 0;
+  let maxWitness = null;
+  let depth30Events = [];
+  for (let phase = 0; phase < yPrefix30Cycle.preperiod + yPrefix30Cycle.period; phase++) {
+    for (let gateIndex = 0; gateIndex < Y.length; gateIndex++) {
+      const depth = prefixCarryDepth(prefix, Y[gateIndex]);
+      if (depth > maxDepth) {
+        maxDepth = depth;
+        maxWitness = { phase, gate: gateIndex, depth, offset: String(Y[gateIndex]) };
+      }
+      if (depth === 30 && depth30Events.length < 20)
+        depth30Events.push({ phase, gate: gateIndex, offset: String(Y[gateIndex]) });
+      prefix = prefixStep(prefix, Y[gateIndex]);
+    }
+  }
+  yPrefix30CarrySummary = { maxDepth, maxWitness, depth30EventCountAtLeast: depth30Events.length,
+    depth30Events, coveredBlocks: yPrefix30Cycle.preperiod + yPrefix30Cycle.period };
+}
+
 // The terminal-quotient experiment requested in the Critic's 14 November note.
 // This is a counterexample to the proposed (W mod 31, length mod 5) quotient,
 // not a halt on the authentic blank-root orbit.
@@ -464,6 +513,8 @@ console.log(JSON.stringify({
     return counts;
   }, [0, 0, 0]),
   yBlockScan,
+  yPrefix30Cycle,
+  yPrefix30CarrySummary,
   terminalQuotientObstruction,
   quotientNonClosure,
   states: {
