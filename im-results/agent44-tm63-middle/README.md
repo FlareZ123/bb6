@@ -146,3 +146,47 @@ An independent finite smoke test is now stored at `M1EvenValuationSourceSmoke.mj
 Current invocation tool status: local `container.exec`, `python.exec`, and `python_user_visible` fail with tool-level `ClientError` before executing commands. The two attached split archives have metadata sizes 304,196,898 bytes each, totaling 608,393,796 bytes; this is consistent with the official 608,393,640-byte RC2 Linux tar.zst member plus 156 bytes of outer-ZIP overhead, but is not an integrity test. Correct extraction is outer `unzip`, then `tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean`, then set PATH and run `lean --version`.
 
 **Status remains unaccepted:** no local Lean compilation, no exported axiom audit, and no theorem establishing the exact BB(6) value or a universal upper bound.
+
+
+## Root row-32 M1 counter: exact valuation and output word (2026-11-21)
+
+Let (A=tm63FirstSection.exponent). The established facts (A\ge5) and (A\equiv1\pmod2) imply (A\ge7). From
+[
+tm63RootMiddleK=31\cdot2^{A-3}-1,
+\qquad
+tm63RootResidueSixK=tm63RootMiddleK/2,
+]
+we obtain
+[
+R:=tm63RootResidueSixK=31\cdot2^{A-4}-1,
+\qquad
+n_{32}:=16R-16=31\cdot2^A-32.
+]
+In particular, the row-32 M1 counter has the exact factorization
+[
+n_{32}=(2q+1)2^5,
+\qquad
+q=31\cdot2^{A-6}-1,
+\qquad
+\ell=A-1,
+\qquad
+\ell+1+5=tm63Length1.
+]
+The bound (q<2^\ell) is immediate from (31<32). Thus this row has **exact 2-adic valuation five**, not merely an arbitrary positive valuation. It can instantiate the existing factorized theorem `m1EvenValuation_counted_increment_source_factorized` directly.
+
+The encoding gives a further exact head-facing word identity. Since
+[
+q=(2\cdot15+1)2^{A-6}-1,
+]
+the existing `binDec_sub_one_carryPrefix` and `binDec_max 4` identities yield
+[
+binDec(A-1,q)
+=d0pow(A-6)\mathbin{++}d1\mathbin{++}d0pow(4).
+]
+Consequently the row-32 output counter has
+[
+binDec(tm63Length1,n_{32}-1)
+=d0pow(5)\mathbin{++}d1\mathbin{++}d0pow(A-6)
+ \mathbin{++}d1\mathbin{++}d0pow(4).
+]
+This is an exact algebraic specialization of the existing source encoding, not an independent Lean-accepted source theorem. The current root wrapper still calls the general valuation-parametric theorem; use the explicit factorized instance only if it materially simplifies the root proof or its trust profile. No local Lean compile was available in the 2026-11-21 invocation.
