@@ -1,6 +1,6 @@
 # Exact finite modular minimization for odd-depth Machine C high stopping residuals
 
-**Status (21 November 2026):** The exact finite modular minimization and the uniform sharp envelope below have elementary proofs. The new envelope and its infinite source-normalized sharpness composition are **not yet Lean-certified**. They quantify over the source-certified original high stopping and affine-scale equations; no blank-root reachability conclusion is asserted.
+**Status (21 November 2026):** The exact finite modular minimization, logarithmic cutoff, uniform sharp envelope, and the root-sensitive dyadic gap below have paper proofs. The new arithmetic compositions are **not yet Lean-certified**. The underlying original-source stopping, normalization, and M8 quotient-filter modules are separately kernel-checked; no complete Machine C or BB(6) decision is asserted.
 
 Let m≥1 be odd, j,k,d,Y natural, and suppose
 
@@ -131,6 +131,58 @@ The first two instances are:
 | 2 | 5 | 4,078 | 16,711,678 | 508 |
 
 The `r=1` case is the existing right-four tower; `r=2` shows that the exact `m=5` lower bound 508 is attained at an actual source-normalized stopping input. Neither example is asserted to be blank-reachable.
+
+### A root-sensitive gap beyond the sharp envelope
+
+Write `A=3*m+1`. The envelope has two sharply different cases:
+
+- If `A` is not a power of two and `m>=3`, then every deep-sector residual satisfies the stronger arithmetic bound
+
+```
+A*v >= 5*Q-m,
+A*(Y+2) >= 5*2^(2*m+2)-3*m-5.
+```
+
+- If `A=2^(2*r)` (equivalently `m=(4^r-1)/3`), the exact envelope minimizer is source-normalized but lies in the source M8 forbidden cylinder `(x mod 8, Y mod 8)=(7,4)`. Consequently, for `r>=2`, any **blank-root-reachable** deep-sector input in this exceptional family must instead satisfy
+
+```
+A*v >= 4*(3*Q-m),
+A*(Y+2) >= 12*(2^(2*m+2)-1-m).
+```
+
+Here `x` is the first coordinate of the actual `affineNormalize` output. The second inequality is a root-sensitive necessary bound; it does not assert that any remaining input is reachable.
+
+#### Non-power-of-two case
+
+Let `s` be the least integer with `2^s>A/2`. Then `A/2<2^s<=A`. For `t<=s-1`, we have `2^t<=A/2`. The quotient residue `n_t` equals one exactly when `v2(A)=t+1`. Write `A=2^u*w` with `w` odd. Since `A` is not a power of two, `w>=3`; at the unique possible `t=u-1`, `2^t=A/(2*w)<=A/6`, so `v_t=(Q-m)/2^t>=6*(Q-m)/A>=(5*Q-m)/A`. At every other `t<=s-1`, `n_t>=3`, so `v_t>=(3*Q-m)/2^t>=2*(3*Q-m)/A>=(5*Q-m)/A`.
+
+For `t>=s` through `2*L-2`, `n_t=2^(t+1)-3*m` and `v_t=2*Q-(3*m*Q+m)/2^t` increases with `t`. At `t=s`, `n_s=2^(s+1)-A+1` is odd, is not one because `A` is not a power of two, and is not three because that would make the power of two `2^(s+1)=A+2=3*(m+1)`. Thus `n_s>=5`, and `v_t>=v_s>=(5*Q-m)/2^s>=(5*Q-m)/A`. The endpoint `t=2*L-1` has `v_t>Q>(5*Q-m)/A`. This proves the nonexceptional bound.
+
+#### Exceptional dyadic case and M8 exclusion
+
+Now let `A=2^(2*r)`, `r>=2`, so `m=(4^r-1)/3`, `t*=2*r-1`, and `2^t*=A/2`. The uniform envelope is attained uniquely at `t=t*`, `n_t*=1`, and `v*=(Q-m)/2^t*=2*(Q-m)/A`. Every other admissible quotient is larger.
+
+For this sharp family, `t*+3<=2*L`; reducing `3*Q=2^(2*L)-1` modulo `2^(t*+3)` and using `3*m+1=2^(t*+1)` gives `Q-m=2^(t*+1) (mod 2^(t*+3))`. Hence `v*%8=2` and `Y=3*v*-2` satisfies `Y%8=4`. The actual source normalizer has depth `d=t*+2*L`, which is odd, and its first coordinate `x` satisfies the source mass identity
+
+```
+x+2*Y+4*d = 2*j+3+2*k.
+```
+
+Here `j%4=2`, `k%8=6`, and `d` is odd. Therefore `x%8=7`. The normalized state lies in the `(7,4) mod 8` cylinder used by `affineQuotientCondition` in `im-results/agent15-c-halting/AffineQuotientExclusion.lean`. Its existing `affineQuotientExcluded_sound` theorem rules out `CReach` for this state. The source stopping/normalization theorems and this quotient-filter soundness theorem are already present as kernel-checked modules; the arithmetic composition placing this infinite family in the cylinder has not yet been added to Lean.
+
+Remove the excluded minimum `v*`. For `t<t*`, `n_t>=3` and `2^t<=A/4`, so `v>=4*(3*Q-m)/A`. For `t>t*`, the quotient is in the raw-residue regime and `v_t` increases with `t`; its first value is `((A+1)*Q-m)/A`, which is at least `4*(3*Q-m)/A` because `A>=16`. At `t=t*`, the next CRT solution is `v*+4*Q`, also above this bound. The endpoint `t=2*L-1` has `v>Q`, again above the bound. Thus any blank-root-reachable input in this exceptional family must satisfy the displayed root-sensitive inequality.
+
+Sample quotient lower bounds (before rounding `Y` to `4 mod 12`):
+
+| `m` | case | lower bound on `v` | exact modular minimum `v` |
+|---:|---|---:|---:|
+| 3 | nonexceptional | 43 | 74 |
+| 5 | exceptional, root-reachable | 1,023 | 170 (M8-excluded) |
+| 7 | nonexceptional | 4,965 | 15,018 |
+| 9 | nonexceptional | 62,415 | 109,226 |
+| 21 | exceptional, root-reachable | 1,099,511,627,775 | 183,251,937,962 (M8-excluded) |
+
+These bounds sharpen the residual frontier but still leave the general blank-root classification open.
 
 ### Relation to the exact finite minimum
 
