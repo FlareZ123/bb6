@@ -26,7 +26,7 @@ A reset word found at the left edge of \(W_S\) can lose its first output digit w
 
 A minimal reset word \(w\) (length 3--6) is *one-symbol-overlap robust* for branch \(L\) or \(R\) when the following holds:
 
-For every initial state in that branch's full carry rectangle, process \(w\), discard the first emitted \(x\)-digit, then append **any one** of the nine possible next input digit-pairs. The resulting emitted \(x\)-digits must contain both a digit different from 0 and a digit different from 2.
+For every initial state in that branch's full carry rectangle, the emitted \(x\)-digit suffix after deleting the first output digit must contain both a digit different from 0 and a digit different from 2. The checker also appends each of the nine possible next input digit-pairs and verifies the property remains true. This appended-symbol check is equivalent: from every transducer state, varying the next input \(x\)-digit realizes all three possible next output digits, so a monochromatic suffix would fail for some appended symbol.
 
 The checker in [shift_aware_reset_scan.js](shift_aware_reset_scan.js) builds the exact 225-state L and 270-state R carry transducers, enumerates the minimal reset language recognized by the 263-state DFA, and checks this predicate for every initial carry state and every possible appended symbol. It also checks that each reset word synchronizes the complete branch transducer.
 
@@ -54,7 +54,7 @@ For a reset at offset \(s\):
 
 - If \(\delta=0\), all output digits of the reset word lie in the successor's middle interval.
 - If \(\delta=1\) and \(s\ge1\), all output digits still lie in that interval.
-- If \(\delta=1\) and \(s=0\), the first output digit is omitted. The window has length at least 8 and the reset word has length at most 6, so at least one following input symbol is present. One-symbol-overlap robustness guarantees nonmonochromaticity after the omitted digit and this following symbol are accounted for.
+- If \(\delta=1\) and \(s=0\), the first output digit is omitted. The reset word's output suffix after deleting that digit is already nonmonochromatic by the robustness check. This suffix lies inside the old output overlap \([k_S+3,j_S-2)\), hence inside the successor's required middle interval.
 
 Consequently, a sufficient shift-aware witness is: any reset word if \(\delta=0\); if \(\delta=1\), either a reset word beginning at offset at least 1, or a one-symbol-overlap robust reset word beginning at offset 0.
 
