@@ -63,6 +63,28 @@ theorem reachesIn_trans {m n : Nat} {c1 c2 c3 : Cfg (Fin 2) (Fin 6)}
   unfold ReachesIn at *
   exact multiStep_trans h1 h2
 
+/-- A bounded primitive-time reachability relation for this machine. -/
+def ReachesWithin (B : Nat) (c c' : Cfg (Fin 2) (Fin 6)) : Prop :=
+  ∃ n, n ≤ B ∧ ReachesIn target_tm n c c'
+
+theorem reachesWithin_mono {B1 B2 : Nat} {c c' : Cfg (Fin 2) (Fin 6)}
+    (hB : B1 ≤ B2) (h : ReachesWithin B1 c c') : ReachesWithin B2 c c' := by
+  rcases h with ⟨n, hn, hreach⟩
+  exact ⟨n, le_trans hn hB, hreach⟩
+
+theorem reachesWithin_trans {B1 B2 : Nat}
+    {c1 c2 c3 : Cfg (Fin 2) (Fin 6)}
+    (h1 : ReachesWithin B1 c1 c2) (h2 : ReachesWithin B2 c2 c3) :
+    ReachesWithin (B1 + B2) c1 c3 := by
+  rcases h1 with ⟨m, hm, hreach1⟩
+  rcases h2 with ⟨n, hn, hreach2⟩
+  refine ⟨m + n, Nat.add_le_add hm hn, reachesIn_trans hreach1 hreach2⟩
+
+theorem reachesWithin_of_exact {n B : Nat} {c c' : Cfg (Fin 2) (Fin 6)}
+    (h : n ≤ B) (hreach : ReachesIn target_tm n c c') :
+    ReachesWithin B c c' :=
+  ⟨n, h, hreach⟩
+
 theorem cyc_R_A_exact (k : Nat) (V s : ListBlank (Fin 2)) :
     ReachesIn target_tm (3 * k)
       (⟨some A, ⟨0, (0 : Fin 2) >> V, (([1] : List (Fin 2)) ^ k) +> s⟩⟩ :
