@@ -1,33 +1,28 @@
-# Root32 high-stop extension: \(r\equiv2400\pmod{32768}\)
+# Root32 high-stop attempted widening: exact residual and correction
 
-**Status:** intermediate exact source-parent composition. This strictly strengthens Agent 6's earlier \(r\equiv35168\pmod{65536}\) cylinder (the latter is contained in this one). The derivation below uses already source-certified parent/reachability theorems and exact affine arithmetic, but this wider composition has **not** yet been wrapped in Lean, compiled against its exact import closure, or axiom-audited. It is not a Machine C or BB(6) solution.
+**Correction:** the proposed extension to all \(t\equiv159\pmod{512}\) is **not proved**. The algebraic chain was correct through the final odd/odd inverse, but I initially treated \(M/2\pmod{16}\) as constant for \(M=4+16s\). In fact \(M/2=2+8s\), so the last residue depends on the parity of \(s\). For odd \(s\), the final target has sum \(3\pmod4\), not \(1\pmod4\), and the blank-image exclusion used in the even case does not apply. This file now records the valid reduction and the exact remaining family; it does **not** claim a new \(r\equiv2400\pmod{32768}\) exclusion.
 
-## 1. Parameter and the complete high-stop fork
+## 1. Parameter and complete high-stop fork
 
-Write the B2/U5 high-stop target as
+Write
 \[
 T(u)=(1048576u+70538,3),\qquad u=1802+6720t.
 \]
-The exact same-parameter B2-to-\(T\) path and its complete reverse parent reduction in [B2Q0FourStepPath.md](B2Q0FourStepPath.md) give
+The same-parameter B2-to-\(T\) path and complete reverse parent reduction in [B2Q0FourStepPath.md](B2Q0FourStepPath.md) give
 \[
 CReach(T(u))\Longrightarrow CReach(D_{0E}(t))\ \lor\ CReach(L(t)).
 \]
-Both alternatives must be removed.
 
 Take
 \[
 t=159+512s,\quad q=(t-3)/4=39+128s,\quad M=(q-7)/8=4+16s.
 \]
-Thus
-\[
-t\equiv15\pmod{16},\quad q\equiv7\pmod8,\quad M\equiv4\pmod{16}.
-\]
-The \(D_{0E}\) inverse chain is \(D_{0E}\to E_7\to P\to R(t)\), with
+Then \(t\equiv15\pmod{16}\), \(q\equiv7\pmod8\), and \(M\equiv4\pmod{16}\). The \(D_{0E}\) chain is \(D_{0E}\to E_7\to P\to R(t)\), where
 \[
 R(t)=(2861931660t+767469219,\;2092249530t+561067594).
 \]
 
-## 2. Exclude the \(L(t)\) alternative
+## 2. The L alternative is excluded throughout this cylinder
 
 The exact two-parent theorem for \(L(t)\) gives \(P_0(t)\) or \(P_2(t)\). Since \(t\equiv3\pmod4\), \(P_2(t)\) has no source predecessor. The unique source parent of \(P_0(t)\) is \(A_0(t)\). Since \(t\equiv15\pmod{16}\), \(A_0(t)\) is odd/odd with sum \(8\pmod{16}\), so the exact odd/odd low-valuation inverse forces
 \[
@@ -40,37 +35,28 @@ Q'(q)=\left(
 \frac{9310353885q+7606942615}{2}
 \right).
 \]
-For \(q\equiv7\pmod8\), \(Q'_x\) is even and \(Q'_y\) is odd. Moreover,
+For \(q\equiv7\pmod8\), \(Q'_x\) is even and \(Q'_y\) is odd. Also
 \[
 Q'_x+Q'_y+1
 =\frac{47061091875q+38450850503}{2}.
 \]
-The numerator is \(4\pmod8\), since
-\(47061091875\equiv3\), \(q\equiv7\), and
-\(38450850503\equiv7\pmod8\). Hence
-\[
-Q'_x+Q'_y+1\equiv2\pmod4.
-\]
-The numerator is \(2\pmod3\): its coefficient is divisible by three and its constant is \(2\pmod3\). Division by two therefore gives
-\[
-Q'_x+Q'_y+1\equiv1\pmod3,
-\quad\text{so}\quad 3\mid Q'_x+Q'_y.
-\]
-The source-certified blank_no_even_odd_three_divisible theorem (in U5B2Root32.lean) now excludes \(Q'(q)\): it has \(x>5\), even \(x\), odd \(y\ge5\), sum divisible by three, and sum-plus-one \(2\pmod4\). Reversing the exact reachability reductions excludes \(Q(q)\), \(A_0(t)\), \(P_0(t)\), and \(L(t)\).
+The numerator is \(4\pmod8\), so the quotient is \(2\pmod4\). Its numerator is \(2\pmod3\), so the quotient is \(1\pmod3\); hence \(3\mid Q'_x+Q'_y\). The source-certified blank_no_even_odd_three_divisible theorem therefore excludes \(Q'(q)\). Reversing the exact reachability reductions excludes \(Q(q),A_0(t),P_0(t)\), and \(L(t)\), for every \(s\ge0\).
 
-## 3. Exclude the \(D_{0E}(t)\) alternative
+## 3. The odd-a parent of R is excluded throughout this cylinder
 
-The complete parent fan in [RRoot32ExceptionalParentFan.md](RRoot32ExceptionalParentFan.md) leaves exactly two possible source-parent types for \(R(t)\): its direct parent \(R'(q)\), or an odd-\(a\) high-bounce parent. Here \(q\) is odd, so the fan's valuation parameter
+The complete parent fan in [RRoot32ExceptionalParentFan.md](RRoot32ExceptionalParentFan.md) leaves exactly two possible source-parent types for \(R(t)\): its direct parent \(R'(q)\), or an odd-\(a\) high-bounce parent. Here \(q\) is odd, so
 \[
 W(q)=2023885048+2477090595q
 \]
-is odd and the odd-depth bound forces depth \(n=1\). Its unique affine parent has odd right coordinate and sum
+is odd and the fan's odd-depth bound forces depth \(n=1\). The resulting affine parent has odd right coordinate and sum
 \[
 13538333325+16569952035q\equiv2\pmod4
 \]
-because \(q\equiv3\pmod4\). The source-certified blank_no_odd_sum_two theorem excludes this branch.
+because \(q\equiv3\pmod4\). The source-certified blank_no_odd_sum_two theorem excludes this branch. This extension of the earlier \(q\equiv3\pmod8\) statement only uses \(q\) odd and \(q\equiv3\pmod4\), both true here.
 
-It remains to exclude the direct parent
+## 4. Exact direct-R reduction and the parity split
+
+The remaining direct parent is
 \[
 R'(q)=(16191080381+19816724760q,\;
        3418908091+4184499060q).
@@ -80,7 +66,7 @@ Substitute \(q=8M+7\):
 R'(q)=(154908153701+158533798080M,\;
        32710401511+33475992480M).
 \]
-Its coordinates are odd and its sum is \(12\pmod{16}\). The exact odd/odd low-valuation inverse therefore forces
+Its coordinates are odd and its sum is \(12\pmod{16}\). The exact odd/odd low-valuation inverse forces
 \[
 P_1(M)=(93809277604+96004895280M,\;
         63259839556+64740443880M).
@@ -88,9 +74,9 @@ P_1(M)=(93809277604+96004895280M,\;
 This is even/even, and
 \[
 P_{1,x}+P_{1,y}=8S,\qquad
-S=19633639645+20093167395M\equiv1\pmod4,
+S=19633639645+20093167395M\equiv1\pmod4.
 \]
-where the last congruence uses \(M\equiv0\pmod4\). The exact even/even sum-zero parent theorem leaves precisely
+The even/even sum-zero parent theorem leaves exactly
 \[
 \begin{aligned}
 D(M)&=(157069117158+160745339160M,\;
@@ -99,66 +85,85 @@ E(M)&=(39267279288+40186334790M,\;
        90530838709+92649724125M).
 \end{aligned}
 \]
-
-The \(E(M)\) parent has odd right coordinate and
+The E parent has odd right coordinate and sum
 \[
 E_x+E_y=129798117997+132836058915M\equiv1\pmod4,
 \]
 so blank_no_odd_sum_one excludes it.
 
-For \(D(M)\),
+For D,
 \[
 D_x+D_y+1
 =188699036936+193115561100M
 =8(120145160167+386231122200s).
 \]
-The quotient is odd, so this has exact 2-adic valuation three. \(D\) is even/odd. In the complete original source grammar, its zero-left, \(a=1\), low, and even-\(a\) branches are impossible by parity or this valuation. In the odd-\(a\) high branch the companion cost equation forces the bounce depth \(n\) even; since \(2a+6\) is divisible by four and \(v_2(D_x+D_y+1)=3\), \(n\le1\), hence \(n=0\). The only possible parent is
+The quotient is odd, so the exact 2-adic valuation is three. D is even/odd. The complete original source grammar rules out the zero-left, \(a=1\), low, and even-\(a\) branches by parity or this valuation. In the odd-\(a\) high branch the companion cost equation forces the bounce depth \(n\) even; since \(2a+6\) is divisible by four, \(n\le1\), hence \(n=0\). The only possible parent is
 \[
 A(M)=(94349518465+96557780550M,\;
       62989719120+64464001245M).
 \]
-Its right coordinate is even and
-\[
-A_x+A_y=157339237585+161021781795M\equiv5\pmod8
-\]
-because \(M\equiv4\pmod8\). The unique even-right inverse forces
+Its right coordinate is even and its sum is \(5\pmod8\). The unique even-right inverse forces
 \[
 X(M)=\left(
 157339237583+161021781795M,\;
 31494859559+32232000622M+\frac M2
 \right).
 \]
-For \(M\equiv4\pmod{16}\), \(X_x\equiv11\) and \(X_y\equiv1\pmod{16}\). Thus \(X\) is odd/odd and \(X_x+X_y\equiv12\pmod{16}\). Its exact odd/odd low-valuation inverse is
+For \(M=4+16s\),
+\[
+X_x\equiv11\pmod{16},\qquad
+X_y\equiv1+8s\pmod{16}.
+\]
+Thus the exact odd/odd low-valuation inverse gives
 \[
 Y_x=\frac{X_x+X_y-4}{2},\qquad
 Y_y=\frac{X_x+3X_y-10}{4}.
 \]
-The residues \(X_x\equiv11\), \(X_y\equiv1\pmod{16}\) give
+
+### Even s: the already-known excluded cylinder
+
+If \(s\) is even, then \(X_y\equiv1\pmod{16}\). Consequently \(Y_y\equiv1\pmod4\) and \(Y_x+Y_y\equiv1\pmod4\). blank_no_odd_sum_one excludes Y, hence the entire direct-R branch. This is exactly \(t\equiv159\pmod{1024}\), already recorded by Agent 6 as
 \[
-Y_y\equiv1\pmod4,\qquad Y_x+Y_y\equiv1\pmod4.
+r\equiv35168\pmod{65536}.
 \]
-In particular \(Y_y\) is odd and at least five. blank_no_odd_sum_one excludes \(Y\), then the exact inverse equivalences exclude \(X,A,D,P_1,R'(q)\). Both possible parent types of \(R(t)\) are excluded, so \(R(t)\), and therefore \(D_{0E}(t)\), is unreachable.
+This derivation does not strengthen that result.
 
-Combining Sections 2 and 3 gives
+### Odd s: the exact unresolved residual
+
+If \(s=2n+1\), then
 \[
-\boxed{t\equiv159\pmod{512}\Longrightarrow
-       \neg CReach(T(1802+6720t)).}
+t=671+1024n,\qquad M=20+32n,\qquad X_y\equiv9\pmod{16}.
 \]
-
-## 4. Root-index translation and strict strengthening
-
-The exact saturated root equation is
+The low-valuation inverse now gives \(Y_y\equiv3\pmod4\) and \(Y_x+Y_y\equiv3\pmod4\), so blank_no_odd_sum_one does not apply. Expanding the exact formulas gives
 \[
-17300+22155(t+j)=5\cdot2^{E-17},\qquad r=32+64j,
+Y(n)=
+(2026954872744+3092060518680n,\;
+ 1351544872375+2061742269300n).
 \]
-and implies \(t+j\equiv708\pmod{1024}\). Therefore \(t\equiv159\pmod{512}\) is equivalent to \(j\equiv37\pmod{512}\), hence
+Here \(Y_x\equiv0\pmod8\), \(Y_y\equiv7+4n\pmod8\), and \(Y_x+Y_y\equiv3\pmod4\). None of the exclusions used in the even-s branch rules out this residual. The complete result of the present reduction is therefore
 \[
-\boxed{r\equiv32+64\cdot37=2400\pmod{32768}.}
+CReach(T(1802+6720t))
+\Longrightarrow CReach(Y(n))
+\quad\text{when }t=671+1024n,
 \]
-The saturation construction supplies a natural exact-root parameter for every \(j=37+512n\), so this is a nonempty infinite progression. It strictly contains Agent 6's \(r\equiv35168\pmod{65536}\) class, since \(35168\equiv2400\pmod{32768}\).
+after eliminating L, the odd-a R parent, and the E parent. The reachability of this Y-family remains open.
 
-## 5. Verification boundary
+## 5. Root-index interpretation
 
-This is an exact paper-level composition of the existing original-source parent grammar, reachability equivalences, and blank-image invariants. It has not yet been formalized as a Lean theorem or compiled as an integrated import closure. Keep it in im-results/; do not promote it to results/ until a pinned Lean 4.36.0-rc2 compile and transitive axiom audit succeed.
+The exact saturated root equation
+\[
+17300+22155(t+j)=5\cdot2^{E-17},\qquad r=32+64j
+\]
+implies \(t+j\equiv708\pmod{1024}\).
 
-The key existing dependencies are SectionAllInverse, OddOddLowVal, EvenRightUnique, EvenEvenParentFan, M0EvenEvenSumZero, HighSumTwo, LRoot32OddParentReduction.md, and RRoot32ExceptionalParentFan.md.
+- If \(s\) is even, \(t\equiv159\pmod{1024}\), giving the known \(r\equiv35168\pmod{65536}\) exclusion.
+- If \(s\) is odd, \(t\equiv671\pmod{1024}\), giving \(j\equiv37\pmod{1024}\) and the unresolved root-index class
+  \[
+  r\equiv2400\pmod{65536}.
+  \]
+
+The proposed union \(r\equiv2400\pmod{32768}\) contains both classes, but only the \(35168\pmod{65536}\) half is excluded by the argument above. **Do not claim the wider class as a nonreachability result.**
+
+## 6. Verification boundary
+
+This is an exact paper-level reduction using the existing original-source parent grammar, reachability equivalences, and blank-image invariants. No new Lean theorem or integrated compile has been produced. Keep it in im-results/. The immediate mathematical target is the explicit Y(n) family above; a valid extension needs a new invariant or a complete source-parent analysis for this family.
