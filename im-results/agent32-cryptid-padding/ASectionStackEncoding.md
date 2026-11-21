@@ -117,3 +117,19 @@ not a bare `10` prefix:
 The `tok_CR_1_1_nil` and `tok_CR_1_1_cons` lemmas similarly handle right-run lengths at least two. This gives a principled *conditional* way to match the A-step2 suffix parser to the token rules: once the head offset is proved, parse the bit suffix into run lengths, then select the corresponding `tok_CR` case.
 
 This remains a structural correspondence, not yet a proof that the entire A-step2 sweep/return is the same run. The exact list update, head position, and accumulated raw-step count still need to be matched. The E-family's other suffix tests (`111`, `1100`, `110111`, `1101100`) should be compared against the corresponding `tok_CR`/`tok_DR` case lemmas rather than re-derived independently.
+
+
+## Root-to-cylinder token reachability target
+
+The independent #490 stack reduction supplies a concrete token checkpoint from the blank root. Its seven-step entry is `evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`; the first `mode_DR_n_n_closed` case then uses `texecute 3` to reach
+[
+\operatorname{tok\_CR}([1,0],[(0,0)],[0]).
+]
+By contrast, the external cylinder's first E intermediate is
+[
+\operatorname{tok\_EL}([0,0]++\operatorname{replicate}(m,1),[(1,0)],[]),
+\qquad m=4(C/3)-1,
+]
+and `tok_EL_0_cons` moves it to the corresponding `tok_CR) state.
+
+This reframes the missing connection as a reachability question inside the same token subsystem: does the closed-stack orbit from the root token state ever reach the cylinder token state (or another halting token state)? The local tape identity above does not answer this. See [`DeepMindStackReduction.md`](./DeepMindStackReduction.md) for the exact source paths and caveats.
