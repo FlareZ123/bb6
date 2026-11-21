@@ -97,8 +97,14 @@ S_{\\rm TM1}={}&6b^2+54b
 \\]
 The root-scale comparison used above must include the full exponent
 \\[
-A=\\sum_{j=7}^{M+42}V_j+\\frac{5M+176}{3}.
+A=\\texttt{rootMarker1A}
+=\\sum_{j=7}^{M+42}V_j+\\frac{5M+176}{3},
+\\qquad N=(2^{78}-1)2^A-3.
 \\]
+This is the exact \\(A\\) used by the authentic root endpoint. The
+sum-only \\(A\\) currently printed in the score note omits the linear
+term and must not be used to instantiate \\(N\\) until that parameter
+definition and its dependent \\(b_j,q\\) indices are synchronized.
 For \\(x=V_{M+42}\\), we have \\(x\\ge2^{M+42}\\), and the
 recurrence gives \\(V_{j+1}\\ge4V_j\\), hence the sum is
 \\(<4x/3\\). Since \\(2^{M+43}>5M+176\\), the linear term is
