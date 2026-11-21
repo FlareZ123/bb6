@@ -1,10 +1,15 @@
 ## 2026-11-21 follow-on — complete 24-class dispatcher integration probe
 
-- Added `im-results/agent24-champion-time/TM63SourceDispatcherProbe.mjs` and `TM63SourceDispatcherProbe.md`. Inline JS reproduction passed 48 complete stepwise runs: initial n=24 or48, m=0/1/2, a=1/2, b=0/1, L=8/16. Across the runs, all 24 pairs ((n\bmod8,m\bmod3)) were exercised and **1,086,624** primitive transitions simulated. Each macro endpoint was compared against the full exact nonblank tape support, state, and head; terminal configuration and accumulated cost matched recursive `sectionResult`.
-- Critical implementation detail: `binDec` uses BigInt. An exploratory Number-based harness first reported a mismatch at a later macro where the evolving exponent reached 54; this was a simulator precision artifact because (2^{55}-1) is not exactly representable as a JS Number. Re-running with BigInt passed all 48 cases. Do not treat the initial false mismatch as a TM2 counterexample.
-- Linked the probe from `im-results/agent24-champion-time/README.md` and broadcast it. Commits: script `ea7b8e75d10130d29748640d7c07dec726159d14`; note `7c292c27fb871a320bc255ac3470a72b7ad4eda7`; README `b7d960ba9cd516cfddd7d8e9e814ab9b72ff95e1`; broadcast `30b642261cfe5e82a3bda4733f56147d3956edd5`.
+- Added `im-results/agent24-champion-time/TM63SourceDispatcherProbe.mjs` and `TM63SourceDispatcherProbe.md`. Inline BigInt JS reproduction now passes **96 cases**:
+  - 48 full countdowns: n=24 or48, m=0/1/2, a=1/2, b=0/1, L=8/16;
+  - 48 one-step checks at b=2: one for each pair (n mod8, m mod3), n=8+r, a=1, L=8/16.
+- All 24 pairs ((n\bmod8,m\bmod3)) are covered. Across all cases **1,100,424** primitive transitions were simulated. Every macro endpoint was compared against the exact complete nonblank tape support, state, and head; the full countdown terminal configuration and accumulated cost matched recursive `sectionResult`.
+- Critical implementation detail: `binDec` uses BigInt. An exploratory Number-based harness first reported a mismatch at a later macro where the evolving exponent reached 54; this was a simulator precision artifact because (2^{55}-1) is not exactly representable as a JS Number. Re-running with BigInt passed all cases. Do not treat the initial false mismatch as a TM2 counterexample.
+- Linked the probe from `im-results/agent24-champion-time/README.md`, updated the 24-cycle coverage audit, and broadcast the extension. Commits: script initial `ea7b8e75d10130d29748640d7c07dec726159d14`, b=2 extension `f7615cf6b1dead5fe28716bd096c56e39faa0e43`; note initial `7c292c27fb871a320bc255ac3470a72b7ad4eda7`, b=2 update `1707327978e14369997742ce89aa9e2be3c20bae`; README `b1a4da0d910ed40cde7ac33c457663e154b9a616`; coverage audit `da91b6338cc531e1806aa60e0a08d935c54dc58b`; broadcast `deabff4475bdd9643183277306b6be168e33e1bc`.
 - This validates the finite small-parameter dispatcher path, not the generic Lean theorems or authentic root. The full dispatcher and root closure remain uncompiled; no transitive axiom profile has been checked. The standalone Node script was not run in this invocation; the equivalent inline BigInt runtime was.
-- Current proof priority remains exact RC2 compilation of the M1/M2 all-q source closures, then the existing middle34/root acceptance gate. Local shell and Python execution tools still fail with tool-level `ClientError`; Agent 42 has handed the M1 preflight to Agent 8, whose response is pending.
+- Current proof priority remains exact RC2 compilation of the M1/M2 all-q source closures, then the existing middle34/root acceptance gate. Local shell and Python execution tools still fail with tool-level `ClientError`; Agent 42 has handed the M1 preflight to Agent 8, and Agent 24 has requested Agent 48 as an independent fallback.
+
+---
 
 ---
 
