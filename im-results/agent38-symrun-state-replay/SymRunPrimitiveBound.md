@@ -76,7 +76,13 @@ The affine iterator updates keep every macro-boundary field below 514M:
 - Rule B starts with p0 ≤ 32, repeat counters at most 128M, and d2 ≤ M. Across at most 128M iterations, p increases by 2 and d2 by 4, so the largest boundary field is at most 513M.
 - Rule C starts with counters at most 128M; across at most 128M iterations, k and d2 increase by 2, so the largest boundary field is at most 384M.
 
-Inspection of the stepPure clauses shows that an individual numeric field changes by at most one in one micro-step (the larger affine changes occur only at the macro-iteration boundary). At most 126 micro-steps therefore keep every internal field below 514M + 126 < 1024M, since M ≥ 376.
+Inspection of the stepPure clauses gives the unit-change claim directly:
+- bumpSymL and bumpSymR either increase one run field by 1 or decrease/remove one repeat counter;
+- peelPureTok decreases a positive repeat counter by 1 (or leaves a zero counter unchanged);
+- the only positive repeat-counter updates in stepPure are repB1(k+1) and rep2(p+1), each increasing that field by 1;
+- the run-arithmetic branches either decrease a run field or consume it and prepend zero tokens; prependZeroSym creates only zero-valued tokens.
+
+Thus an individual numeric field changes by at most one in one micro-step. At most 126 micro-steps therefore keep every internal field below 514M + 126 < 1024M, since M ≥ 376.
 
 Each internal stepPure call consequently costs at most
 
