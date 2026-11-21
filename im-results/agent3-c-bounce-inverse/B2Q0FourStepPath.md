@@ -292,7 +292,7 @@ For fixed \(r\), the equation is linear in \(u\) with nonzero coefficient 211, s
 
 This is arithmetic feasibility only, not a blank-start execution. The root equation alone cannot eliminate any \(r=32+64j\) by further congruence filtering. The two exclusions below instead use original-source parent fans and blank-image invariants; the remaining work must likewise use the transition system.
 
-## 7. Two composed high-stop exclusions
+## 7. Three composed high-stop exclusions
 
 The exact root equation is saturated, but the source-orbit residuals are not. Two disjoint infinite root-index progressions are now excluded by closing **both** alternatives in the implication \(T(u)\) reachable \(\Rightarrow D_{0E}(t)\) reachable or \(L(t)\) reachable.
 
