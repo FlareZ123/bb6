@@ -146,7 +146,7 @@ structure FrozenTreeTable where
         ((2^a : Nat) : Int) *
           ((2*a*((nodeAt n).C*3^h) +
               2^(h+1)*((nodeAt n).C-(nodeAt n).b+(nodeAt n).c) : Nat) : Int)
-        - (2^a : Int) * (3*((nodeAt n).C*3^h) : Nat)
+        - ((2^a : Nat) : Int) * (3*((nodeAt n).C*3^h) : Nat)
   nodeProps :
     ∀ n : Fin nodeCount,
       (nodeAt n.val).b ≤ (nodeAt n.val).C ∧
