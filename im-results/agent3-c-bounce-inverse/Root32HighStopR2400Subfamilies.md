@@ -49,7 +49,7 @@ B(m)=
 (8105870470655+9792446451270m,\;
  1919859602054+2319321831645m).
 \]
-Consequently, for odd \(n\), \(Y(n)\) is reachable only if \(B(m)\) is reachable.
+Consequently, whenever \(m\equiv3\pmod4\) or \(m\equiv6\pmod8\) (the two subfamilies treated below), \(Y(n)\) is reachable only if \(B(m)\) is reachable. No such implication is asserted for the other odd-\(n\) residues, where the even-right side condition may fail.
 
 ## 2. Established subfamily: \(n\equiv7\pmod8\)
 
