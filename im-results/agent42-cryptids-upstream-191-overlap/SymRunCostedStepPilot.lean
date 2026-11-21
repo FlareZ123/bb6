@@ -3,6 +3,7 @@ Scratch pilot: turn the upstream execute tactic into an exact ReachesIn proof.
 Pinned source: google-deepmind/cryptids @ 3647718b5df22e1a61462dec0376bd204526285a.
 -/
 import BusyBeaver.BB6.Halt.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH
+import SymRunTraceStats
 
 /-!
 # F424 exact primitive-time pilot
@@ -1147,5 +1148,83 @@ theorem stepPure_within (s : SymMode × List SymTok × List SymTok) :
 #print axioms stepPureCB_within
 #print axioms stepPure_within
 
+
+
+/-- The pilot's local field measure is definitionally the source-audit
+measure used by the kernel-checked one-step growth theorem. -/
+theorem pilotStateFieldMax_eq_source (s : SymMode × List SymTok × List SymTok) :
+    pilotStateFieldMax s = BusyBeaver.SymRunAudit.stateFieldMax s := rfl
+
+/-- Exact primitive cost for any finite iteration of stepPure. The coarse
+bound is the maximum per-call cost summed over the monotonically growing
+field maximum. -/
+theorem stepPure_iter_within (n : Nat) (s : SymMode × List SymTok × List SymTok) :
+    ReachesWithin (50 * n * (pilotStateFieldMax s + n + 1))
+      ((evalSym target_tm) s)
+      ((evalSym target_tm) (iterStep stepPure n s)) := by
+  induction n generalizing s with
+  | zero =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [iterStep] using pilot_reachesIn_refl ((evalSym target_tm) s)
+  | succ n ih =>
+    let M := pilotStateFieldMax s
+    have hfirst : ReachesWithin (50 * (M + 1))
+        ((evalSym target_tm) s)
+        ((evalSym target_tm) (stepPure s)) := by
+      simpa [M] using stepPure_within s
+    have hgrowth : pilotStateFieldMax (stepPure s) ≤ M + 1 := by
+      change BusyBeaver.SymRunAudit.stateFieldMax (stepPure s) ≤
+        BusyBeaver.SymRunAudit.stateFieldMax s + 1
+      exact BusyBeaver.SymRunAudit.stepPure_field_growth s
+    have htail := ih (stepPure s)
+    have htailBound :
+        pilotStateFieldMax (stepPure s) + n + 1 ≤ M + n + 2 := by omega
+    have htail' : ReachesWithin (50 * n * (M + n + 2))
+        ((evalSym target_tm) (stepPure s))
+        ((evalSym target_tm) (iterStep stepPure n (stepPure s))) :=
+      reachesWithin_mono (Nat.mul_le_mul_left (50 * n) htailBound) htail
+    have hcomp := reachesWithin_trans hfirst htail'
+    have hM : M + 1 ≤ M + n + 2 := by omega
+    have hB :
+        50 * (M + 1) + 50 * n * (M + n + 2) ≤
+          50 * (n + 1) * (M + n + 2) := by
+      calc
+        50 * (M + 1) + 50 * n * (M + n + 2) ≤
+            50 * (M + n + 2) + 50 * n * (M + n + 2) :=
+          Nat.add_le_add_right (Nat.mul_le_mul_left 50 hM) _
+        _ = 50 * (n + 1) * (M + n + 2) := by ring
+    have hcomp' := reachesWithin_mono hB hcomp
+    simpa [M, iterStep, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using hcomp'
+
+/-- If a rule-A/B/C macro performs at most 64,512 pure steps and starts
+with field maximum at most 512 times the original scale, its entire
+primitive cost is below 2^38 times the square of that scale. -/
+theorem stepPure_iter_within_2pow38
+    (n : Nat) (s : SymMode × List SymTok × List SymTok)
+    (hn : n ≤ 64512 * (pilotStateFieldMax s + 1)) :
+    ReachesWithin (2^38 * (pilotStateFieldMax s + 1)^2)
+      ((evalSym target_tm) s)
+      ((evalSym target_tm) (iterStep stepPure n s)) := by
+  let M := pilotStateFieldMax s
+  have hcount : n ≤ 64512 * (M + 1) := by simpa [M] using hn
+  have hfield : M + n + 1 ≤ 65025 * (M + 1) := by omega
+  have hiter := stepPure_iter_within n s
+  have hprod : n * (M + n + 1) ≤
+      (64512 * (M + 1)) * (65025 * (M + 1)) :=
+    Nat.mul_le_mul hcount hfield
+  have hconst : 50 * 64512 * 65025 ≤ 2^38 := by norm_num
+  have hcost : 50 * n * (M + n + 1) ≤ 2^38 * (M + 1)^2 := by
+    calc
+      50 * n * (M + n + 1) = 50 * (n * (M + n + 1)) := by ring
+      _ ≤ 50 * ((64512 * (M + 1)) * (65025 * (M + 1))) :=
+        Nat.mul_le_mul_left 50 hprod
+      _ = (50 * 64512 * 65025) * (M + 1)^2 := by ring
+      _ ≤ 2^38 * (M + 1)^2 := Nat.mul_le_mul_right ((M + 1)^2) hconst
+  exact reachesWithin_mono (by simpa [M] using hcost) (by simpa [M] using hiter)
+
+#print axioms pilotStateFieldMax_eq_source
+#print axioms stepPure_iter_within
+#print axioms stepPure_iter_within_2pow38
 
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
