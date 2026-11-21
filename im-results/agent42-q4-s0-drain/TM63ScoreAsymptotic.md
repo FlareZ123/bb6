@@ -35,159 +35,159 @@ L_N=6\cdot4^{k}+42\cdot2^{k}+3k
 \]
 All other terms in the score split are nonnegative. Thus \(S=L_N+\Delta\), with \(\Delta\ge0\).
 
-## Geometric remainder bound after the exact final summand
+## Three-term expansion by peeling the last two dispatcher increments
 
-Removing the \(j=N-1\) term from (1) gives the exact remainder
+Removing the \(j=N-1\) term from (1) gives
+\[
+S_{\rm TM1}=L_N+\Delta,\qquad
+L_N=6(b_N+1)^2+42(b_N+1)+3\ell,
+\]
+where
 \[
 \begin{aligned}
 \Delta={}&C_{\rm root}+D_{\rm root}
 +10N^2+37N+90+12(N+1)U\\
 &+\sum_{j=0}^{N-2}
-\left(6\cdot4^{b_j}+42\cdot2^{b_j}
-+(12(N-j)-9)b_j\right).
+\left(f(b_j)+(12(N-j)-9)b_j\right),\\
+f(x)={}&6\cdot4^x+42\cdot2^x.
 \end{aligned}
 \tag{3}
 \]
-
-The earlier estimate bounded each quadratic summand by the final one and
-paid a factor \(N\). The recurrence makes that unnecessary: because
-\(b_0=R\ge63\) and \(b_{j+1}=2^{b_j}-1\), we have
-\(b_{j+1}\ge2b_j\) for every \(j\). Put
+Put
 \[
-f(x)=6\cdot4^x+42\cdot2^x.
+\ell=b_{N-1},\qquad k=b_{N-2}=\log_2(\ell+1),
+\qquad m=\log_2\ell.
 \]
+The last two dispatcher increments can be isolated exactly. The
+\(j=N-1\) term is \(L_N\). The \(j=N-2\) term is
+\[
+f(k)+15k
+=6(\ell+1)^2+42(\ell+1)+15k
+=6\ell^2+54\ell+48+15k.
+\]
+Consequently
+\[
+\boxed{
+S_{\rm TM1}
+=6b_N^2+54b_N+6\ell^2+57\ell+96+15k+\Delta_2,
+}
+\tag{4}
+\]
+where the remaining nonnegative contribution is exactly
+\[
+\begin{aligned}
+\Delta_2={}&C_{\rm root}+D_{\rm root}
++10N^2+37N+90+12(N+1)U\\
+&+\sum_{j=0}^{N-3}
+\left(f(b_j)+(12(N-j)-9)b_j\right).
+\end{aligned}
+\tag{5}
+\]
+
+## Bounding the second remainder
+
+Because \(b_0=R\ge63\) and \(b_{j+1}=2^{b_j}-1\), every update satisfies
+\(b_{j+1}\ge2b_j\). In particular,
+\[
+\ell=b_{N-1}\ge2^{N-1}R,\qquad
+k=b_{N-2}\ge2^{N-2}R.
+\]
+Since \(N\ge256\) and \(R\ge63\), this gives
+\[
+m=\log_2\ell>260.
+\]
+Also \(N\le m+1\), \(k\le m+1\), and
+\[
+b_{N-3}=\log_2(k+1)\le m+2,\qquad
+R\le\frac{m+1}{2^{N-2}}\le m+1.
+\]
+
 For \(x\ge3\),
 \[
 f(x)\le\frac{45}{4}4^x,\qquad
 f(2x)\ge6\cdot16^x,
 \]
-and hence
+so
 \[
 \frac{f(x)}{f(2x)}
 \le\frac{15}{8\cdot4^x}
 \le\frac{15}{512}<\frac1{32}.
 \]
-Thus \(f(b_j)<f(b_{j+1})/32\), and the entire pre-final quadratic sum
-is geometrically dominated:
+It follows that
 \[
-\sum_{j=0}^{N-2}f(b_j)
-<\frac{32}{31}f(b_{N-2}).
+\sum_{j=0}^{N-3}f(b_j)
+<\frac{32}{31}f(b_{N-3}).
 \]
-Since \(2^{b_{N-2}}=b_{N-1}+1=\ell+1\),
+As \(2^{b_{N-3}}=k+1\),
 \[
-f(b_{N-2})=6(\ell+1)^2+42(\ell+1)
-=6\ell^2+54\ell+48.
+f(b_{N-3})=6(k+1)^2+42(k+1)
+\le6(m+2)^2+42(m+2)<7m^2.
 \]
-For \(\ell\ge256\), \(54/\ell+48/\ell^2<1/4\), so
+Thus
 \[
-\boxed{\sum_{j=0}^{N-2}f(b_j)
-<\frac{200}{31}\ell^2.}
-\tag{4}
-\]
-
-The same recurrence gives a much stronger separation between the root
-counter and \(\ell\). Since \(b_{j+1}\ge2b_j\),
-\[
-\ell=b_{N-1}\ge2^{N-1}R.
-\]
-With \(N\ge256\) and \(R\ge63\), this implies
-\(m=\log_2\ell\ge N-1+\log_2R>260\), in particular \(m\ge10\).
-Also \(N\le m+1\), \(U\le R\), and
-\[
-R\le\frac{\ell}{2^{N-1}}.
-\]
-
-The linear sum is dominated by its final counter:
-\[
-\begin{aligned}
-\sum_{j=0}^{N-2}(12(N-j)-9)b_j
-&<24N b_{N-2}\\
-&\le24(m+1)^2
-<\frac{\ell^2}{128},
-\end{aligned}
-\tag{5}
-\]
-where \(b_{N-2}=\log_2(\ell+1)\le m+1\) and
-\(24(m+1)^2\le2^{2m}/128\) for \(m\ge10\).
-
-For the root terms, the existing exact root-prefix estimate gives
-\(C_{\rm root}+D_{\rm root}<15R^2\). Therefore
-\[
-C_{\rm root}+D_{\rm root}
-<\frac{15\ell^2}{4^{N-1}}
-<\frac{\ell^2}{128}.
+\sum_{j=0}^{N-3}f(b_j)<8m^2.
 \tag{6}
 \]
-Finally, the remaining polynomial terms satisfy
+
+For the linear terms, \(b_{j+1}\ge2b_j\) gives
 \[
-10N^2+37N+90
-\le20m^2<\frac{\ell^2}{128},
+\sum_{j=0}^{N-3}b_j<2b_{N-3}.
+\]
+The coefficients are at most \(12N\), hence
+\[
+\sum_{j=0}^{N-3}(12(N-j)-9)b_j
+<24N b_{N-3}
+\le24(m+1)(m+2)<25m^2.
 \tag{7}
 \]
-and, using \(U\le R\le\ell/2^{N-1}\),
+
+The root term uses the existing exact bound
+\(C_{\rm root}+D_{\rm root}<15R^2\). Since \(R\le m+1\),
 \[
-\begin{aligned}
-12(N+1)U
-&\le12(m+2)\frac{\ell}{2^{N-1}}\\
-&<\frac{\ell^2}{128}.
-\end{aligned}
+C_{\rm root}+D_{\rm root}<15(m+1)^2<16m^2.
 \tag{8}
 \]
-The last inequality follows from
-\(1536(m+2)<2^{N-1+m}\), since \(m+2\le2^m\) and
-\(2^{N-1}>1536\).
-
-Combining (4)--(8) gives
+The remaining polynomial terms satisfy
 \[
-\Delta<
-\left(\frac{200}{31}+\frac4{128}\right)\ell^2
-=\frac{6431}{992}\ell^2
-<\frac{13}{2}\ell^2.
-\]
-Thus the stronger explicit remainder estimate is
-\[
-\boxed{0\le\Delta<\frac{13}{2}\ell^2.}
+10N^2+37N+90
+\le10(m+1)^2+37(m+1)+90<20m^2,
 \tag{9}
 \]
-
-The exact score consequently has the quadratic-error expansion
+and, since \(U\le R\),
 \[
-\boxed{
-S_{\rm TM1}
-=6b_N^2+54b_N+48+3\ell+\Delta,\qquad
-0\le\Delta<\frac{13}{2}\ell^2,\quad
-\ell=\log_2(b_N+1).
-}
+12(N+1)U
+\le12(m+2)(m+1)<13m^2.
 \tag{10}
 \]
-In particular,
+All inequalities above hold for \(m>260\). Combining (6)--(10),
 \[
-54<
-\frac{S_{\rm TM1}-6b_N^2}{b_N}
-<
-54+\frac{48+3\ell+\frac{13}{2}\ell^2}{2^\ell-1}
-<
-54+6\times10^{-71},
+\boxed{0\le\Delta_2<82m^2<100m^2.}
 \tag{11}
 \]
-where the final numerical bound remains valid for integer
-\(\ell\ge256\).
 
-Likewise, the relative excess over the quadratic final-increment term is
+The resulting three-term asymptotic expansion is therefore
 \[
 \boxed{
-\frac{S_{\rm TM1}}{6(b_N+1)^2}-1
-=
-\frac{7}{b_N+1}+\varepsilon_N,\qquad
-0<\varepsilon_N<
-\frac{3\ell+\frac{13}{2}\ell^2}{6(b_N+1)^2}
-<8\times10^{-149}.
+\begin{aligned}
+S_{\rm TM1}
+={}&6b_N^2+54b_N+6\ell^2+57\ell+96\\
+&+15\log_2(\ell+1)+\Delta_2,\\
+&0\le\Delta_2<100(\log_2\ell)^2.
+\end{aligned}
 }
 \tag{12}
 \]
-The last numerical bound is inherited from the weaker previous
-estimates. The substantive improvement is that the full remainder is
-\(O(\ell^2)=O((\log b_N)^2)\), with an explicit constant below \(6.5\).
+Thus, after the exact leading quadratic and linear terms in \(b_N\),
+the next contribution is explicitly \(6\ell^2+57\ell+O(\log\ell)\),
+and the remaining uncertainty is only
+\(O((\log_2\ell)^2)=O((\log_2\log_2 b_N)^2)\).
+This is substantially sharper than merely bounding the entire
+pre-final dispatcher remainder by \(O(\ell^2)\).
+
+As a coarser corollary, (12) also implies the earlier bound
+\(\Delta<\tfrac{13}{2}\ell^2\) for the one-term remainder in (3);
+the three-term formula (12) is the stronger statement.
+
 
 ## Evidence boundary
 

@@ -907,28 +907,24 @@ of the committed Python artifacts.
 \]
 This is substantially sharper than the earlier adjacent-tetration bracket and the published interval. Agent 24 independently reviewed the moving-exponent induction and found no gap in its integrality, base cases, induction steps, or q-4 substitution. Agent 38 subsequently formalized the recurrence-only inequalities in `TM63TowerRecurrence.lean`, locally compiled under Lean 4.36.0-rc2 with only `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. The result remains intermediate until the authentic Lean composition passes local compilation and its transitive axiom audit; it is not a universal BB(6) upper bound.
 
-## Quadratic-error two-term expansion of the conditional score
+## Three-term asymptotic expansion of the conditional score
 
-The exact dispatcher recurrence makes the pre-final quadratic costs
-geometrically decreasing, so their sum is bounded independently of the
-dispatcher length. Moreover, \(\ell=b_{N-1}\ge2^{N-1}R\), making the
-root and polynomial corrections negligible on the \(\ell^2\) scale.
-The resulting paper-level expansion is
+Peeling off the final two dispatcher increments gives a sharper
+paper-level expansion. With \(\ell=b_{N-1}=\log_2(b_N+1)\),
+\(k=b_{N-2}=\log_2(\ell+1)\), and \(m=\log_2\ell\),
 \[
+\begin{aligned}
 S_{\rm TM1}
-=6b_N^2+54b_N+48+3\ell+\Delta,\qquad
-0\le\Delta<\frac{13}{2}\ell^2,\quad
-\ell=\log_2(b_N+1).
+={}&6b_N^2+54b_N+6\ell^2+57\ell+96+15k+\Delta_2,\\
+&0\le\Delta_2<100m^2.
+\end{aligned}
 \]
-Thus the entire error after the exact quadratic and linear terms is
-\(O((\log b_N)^2)\), with an explicit constant below \(6.5\). The
-relative excess over \(6(b_N+1)^2\) is
-\[
-\frac{7}{b_N+1}+\varepsilon_N,\qquad
-0<\varepsilon_N<
-\frac{3\ell+\frac{13}{2}\ell^2}{6(b_N+1)^2}<8\times10^{-149}.
-\]
-This is a paper-level consequence of the exact conditional source-cost
-identity, not a new Lean theorem or an accepted authentic-root halt proof.
-See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md) for the geometric
-series, the \(2^{N-1}R\) separation, and the full inequalities.
+The key is geometric domination of the earlier quadratic dispatcher
+costs, together with \(\ell\ge2^{N-1}R\), which controls the root and
+polynomial corrections. The uncertainty after the second exact
+increment is only \(O((\log_2\ell)^2)\), i.e.
+\(O((\log_2\log_2 b_N)^2)\). This sharpens the prior
+\(O(\ell^2)\) remainder estimate. The result remains a paper-level
+consequence of the conditional source-cost identity, not a Lean
+acceptance or an authentic-root halt theorem. See
+[TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md) for the full derivation.
