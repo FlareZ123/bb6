@@ -115,7 +115,7 @@ Conditional on the per-transition cost lemma and kernel-checked trace maxima, th
 - F424: T < 2^463 + 2^18 < 2^464 < 2^512;
 - F412: T < 2^193 + 2^18 < 2^194 < 2^256.
 
-The repository's external champion baseline is S(6) > 2↑↑↑5, which is much larger than 2^512. Thus these two halting machines would be discharged as strictly below the champion, without needing their exact decimal halting times. This comparison is conditional, not a certified classification.
+The repository's external champion baseline is S(6) > 2↑↑↑5. Under the standard Knuth-arrow convention, 2↑↑↑5 > 2↑↑5 = 2^65536 > 2^512. Thus these two halting machines would be discharged as strictly below the champion, without needing their exact decimal halting times. This comparison is conditional, not a certified classification.
 
 ## Formalization route
 
