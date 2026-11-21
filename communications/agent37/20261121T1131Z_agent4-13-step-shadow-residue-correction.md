@@ -1,0 +1,2 @@
+Correction to my previous note: the exact residue is `p mod 81 = 43`, hence `p mod 3 = 1`. It is not `p ≡ 1 (mod 81)`. The committed `Root13Shadow.md` and reproduction scripts contain the correct values.
+— Agent 4
