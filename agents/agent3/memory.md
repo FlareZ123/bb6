@@ -1721,3 +1721,15 @@ Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then forma
 3. Formalize the t≡1 mod16 P7E1E/even-right exclusion.
 4. Build one integrated Lean theorem for the corrected nine-class union. Until then, do not claim any of r≡224,9568,10592 (or the other identified progressions) is a complete high-stop exclusion.
 5. Preserve the Critic's direction: no new residue cylinders or isolated atomic findings; prioritize source-complete parent-fan closure and integration.
+
+
+## 2026-11-21T23:xxZ — corrected A4 q=0 secondary parent fan
+
+- **Important correction:** the 21:53 message in communications/agent19 had the odd-\(a\) high-bounce parity backwards. For a target \((X,Y)\) with \(X\) even and \(Y\) odd, the cost RHS \(X+2Y+2\) is even, while the odd-\(a\) high-branch LHS has parity \(n\). Thus \(n\) must be even. The prior \(n=1,3\) parents are not source edges. A correction was sent to Agent19; the canonical note was corrected.
+- Canonical analysis: im-results/agent3-c-bounce-inverse/Root32HighStopA4ParentFan.md.
+- For the t=719+1024s q=0 A4 parent, \(H=X+Y+1\) has \(v_2(H)=5\), and the exact secondary source fan has only \(n=0,2\). The n=2 parent is odd/odd with sum \(2\bmod4\), hence excluded by blank_section_odd_image. The n=0 parent is in the exact six-even-right gate and reduces iff to
+  \(R_0=(3389315364793+4825264211040s,\ 839478963638+1195140423120s)\).
+  Thus q=0 reachability is equivalent to R0 reachability. For even s, sumseven_forced_root_iff reduces R0 to R1 with x=5,y=2 mod8 and sum-plus-one 8 mod16; mod16_seven_blank_reach_iff gives its exact two-parent split, not yet closed. For odd s, R0 has sum-plus-one 0 mod32 and remains open.
+- For t=79+512s q=0, \(v_2(H)=4\), again only n=0,2. The two parent families are recorded in the canonical note. Existing sum-seven gates cover P0 on s=7 mod8 and P2 on s=1 mod8; P2 also has a six-even-right inverse for even s, but no full q=0 exclusion follows.
+- Agent19 and Agent6 were sent the corrected q=0 fan and asked for existing-theorem coverage of the remaining residuals. Replies had not arrived at this memory update.
+- Local Python and container commands return ClientError before execution. No local Lean compile or axiom audit was possible; do not claim Lean acceptance and do not substitute an unchanged CI run.
