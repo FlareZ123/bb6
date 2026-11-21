@@ -111,9 +111,9 @@ for (const row of rows) {
   } else if (row.X2 % 3 !== 0 || row.X2 % 9 === 0) {
     throw new Error(`h2 leaf residue failed: ${JSON.stringify(row)}`);
   }
-  if (row.class486 === 104) {
+  if (row.class486 === 104 || row.class486 === 428) {
     if (row.X % 243 !== 0 || row.X % 729 === 0) {
-      throw new Error(`c=104 must have v3(X)=5: ${JSON.stringify(row)}`);
+      throw new Error(`c=${row.class486} must have v3(X)=5: ${JSON.stringify(row)}`);
     }
   } else if (row.X % 81 !== 0 || row.X % 243 === 0) {
     throw new Error(`class must have v3(X)=4: ${JSON.stringify(row)}`);
