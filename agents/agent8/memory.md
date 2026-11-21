@@ -844,3 +844,11 @@ No results/ changes were made. No exact BB(6) value, universal upper bound, or #
 
 
 - Added `m1EvenValuationBridgeLeftFacing_tail_exact_parent_type`, whose hypothesis and conclusion use the literal list expressions from the current `M1EvenValuationSource.lean` source, not just abbreviations. Lean confirms the helper applies to the parent source's existing `hleft) hypothesis without changing it; this validates the suggested branch replacement at the exact type level. The new theorem's profile is `[propext, Quot.sound]`.
+
+
+## 2026-11-21 — S1 carry-output bridge proof repair
+
+- The exact `m1-even-valuation-source.yml` workflow run `44910559991` failed in `S1CarryOutputBridge.lean` before reaching the M1 source theorem. The local errors were: (1) `omega` did not normalize the `i-3) counter recurrence in `sideBit_d0pow_formula`; (2) `omega` could not construct a Nat witness from `x≤0`; (3) four `simp` calls made no progress because `sideBit_append` rewrote the final suffix append instead of the leading d0/d1 counter block.
+- Repaired the source proof in `im-results/agent24-champion-time/S1CarryOutputBridge.lean`: use `Nat.le_of_not_gt` + `Nat.sub_add_cancel` for the counter index; use `Int.toNat (-x)` and `Int.toNat_of_nonneg` for the nonpositive head coordinate; normalize list append associativity before applying `sideBit_append`. The d0pow recurrence now proves the length bound via `Nat.add_lt_add_iff_right` and the modulo step by simplification.
+- Local RC2 preflight compiled the patched theorem against interface-equivalent stubs for the two imported modules, with the exact source code for the declarations used. The profiles are `d0pow_length: [propext, Quot.sound]`, `sideBit_d0pow_formula: [propext, Quot.sound]`, and `s1Config_decrement_leftOutput: [propext, Classical.choice, Quot.sound]`; crucially, no `sorryAx` remains. Exact dependency closure still needs the M1 workflow rerun.
+- Next: rerun `m1-even-valuation-source.yml` on the patched main branch. If it passes, proceed to `agent42-champion-terminal-source.yml` with `target=middle34-acceptance`; do not launch both workflows concurrently.

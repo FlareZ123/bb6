@@ -32,11 +32,17 @@ theorem sideBit_d0pow_formula (n i : Nat) :
           simp [d0pow,d0,sideBit] <;> omega
         · subst i
           simp [d0pow,d0,sideBit] <;> omega
-      · have h3 : i = (i-3)+3 := by omega
+      · have hge : 3 ≤ i := Nat.le_of_not_gt h
+        have h3 : i = (i-3)+3 := (Nat.sub_add_cancel hge).symm
         rw [h3]
         change sideBit (d0 ++ d0pow n) ((i-3)+3) =
           decide (((i-3)+3 < 3*(n+1)) ∧ ((i-3)+3)%3=2)
-        simp [d0,sideBit,ih] <;> omega
+        simp [d0,sideBit]
+        rw [ih]
+        have hbound : ((i-3)+3 < 3*(n+1)) ↔ i-3 < 3*n := by
+          rw [Nat.mul_succ]
+          exact Nat.add_lt_add_iff_right
+        simp [hbound]
 
 /-- The exact S1 source output after decrementing a positive counter has
 the canonical left-bit formula used by the counted carry finish. This is
@@ -49,7 +55,15 @@ theorem s1Config_decrement_leftOutput
         (fun y => (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+y)) x =
       (s1Config L n m (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
   intro x hx
-  obtain ⟨i, rfl⟩ : ∃ i : Nat, x = -(i:Int) := by omega
+  let i : Nat := Int.toNat (-x)
+  have hxEq : x = -(i:Int) := by
+    dsimp [i]
+    have hnonneg : 0 ≤ -x := Int.neg_nonneg.mpr hx
+    have hcast : (Int.toNat (-x) : Int) = -x := Int.toNat_of_nonneg hnonneg
+    calc
+      x = -(-x) := by simp
+      _ = -(Int.toNat (-x) : Int) := by rw [hcast]
+  rw [hxEq]
   have hin :
       (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h-(i:Int)) =
         sideBit
@@ -73,6 +87,7 @@ theorem s1Config_decrement_leftOutput
             markerWord m ++ d0 ++ binDec L n ++ lh) i =
         sideBit (binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh)
           (i-(3*r+3)) := by
+      simp only [List.append_assoc]
       rw [sideBit_append]
       simp only [d1pow_length]
       have hnot1 : ¬ i < 3*r := by omega
@@ -88,6 +103,7 @@ theorem s1Config_decrement_leftOutput
             markerWord m ++ d0 ++ binDec L n ++ lh) i =
         sideBit (binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh)
           (i-(3*r+3)) := by
+      simp only [List.append_assoc]
       rw [sideBit_append]
       simp only [d0pow_length]
       have hnot1 : ¬ i < 3*r := by omega
@@ -127,6 +143,7 @@ theorem s1Config_decrement_leftOutput
         sideBit
           (d0pow r ++ d1 ++ binDec len q ++
             markerWord m ++ d0 ++ binDec L n ++ lh) i = true := by
+        simp only [List.append_assoc]
         rw [sideBit_append]
         simp only [d0pow_length]
         have hnot : ¬ i < 3*r := by omega
@@ -153,6 +170,7 @@ theorem s1Config_decrement_leftOutput
           (d0pow r ++ d1 ++ binDec len q ++
             markerWord m ++ d0 ++ binDec L n ++ lh) i =
           decide (i%3=2) := by
+        simp only [List.append_assoc]
         rw [sideBit_append]
         simp only [d0pow_length]
         simp [hsmall,sideBit_d0pow_formula]
