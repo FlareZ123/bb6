@@ -303,12 +303,17 @@ binDec(B+5,31\cdot2^B-1)
 using `binDec_sub_one_carryPrefix 4 15 B` and `binDec_max 4`. This gives a reusable formalization path that avoids reasoning directly about the complemented integer's bit positions.
 
 
-## Dispatcher-marker invariant: why the q4Tail bridge is still needed
+## Root-wide dispatcher-marker invariant: why q4Tail is still needed
 
-The complete source dispatcher preserves the residue
+The first-reset S1 root is in marker (m=2) with counter
 [
-I(m,n):=(m+2n)\bmod3,
+n=tm63Index1=31\cdot2^A-1,
+\qquad A=tm63FirstSection.exponent\text{ odd}.
 ]
-because each source increment sends ((m,n)\mapsto(m+2,n-1)pmod3). This is exactly the closed-form theorem `sectionResult_marker` in `CostRecurrence.lean`: the marker at index zero is ((m+2n)\bmod3).
+Since (2^A\equiv2\pmod3) and (31\equiv1\pmod3), this gives (n\equiv1\pmod3), hence
+[
+I(m,n):=(m+2n)\bmod3=(2+2)\bmod3=1.
+]
+Every source increment preserves (I): its endpoint is ((m+2,n-1)\pmod3), so ((m+2)+2(n-1)\equiv m+2n\pmod3). Equivalently, the existing theorem `sectionResult_marker` states that the marker at index zero is exactly ((m+2n)\bmod3).
 
-For the current TM63 middle rows 27–37, the source pairs have (I(m,n)=1) (for example row 32 has marker (1) and (n_{32}\equiv0\pmod3); the invariant is unchanged by each intervening decrement). Thus applying `sectionResult_run_complete` directly at one of these rows ends at index zero with marker (1), not marker (0). The currently certified terminal bridge `s0_reset_sectionBits` applies to the marker-zero reset word, so the complete dispatcher alone does not replace the q4Tail stage. The q4Tail reparameterization is what constructs a new marker-zero, index-divisible-by-three terminal frame.
+Therefore a complete `sectionResult_run_complete` countdown from the first-reset root, or from any intermediate row in this same source segment, ends at index zero with marker (1). The currently certified terminal bridge `s0_reset_sectionBits` is specifically for marker zero. The q4Tail reparameterization is not redundant: it constructs a new marker-zero, index-divisible-by-three terminal frame and changes the phase invariant needed by the terminal bridge.
