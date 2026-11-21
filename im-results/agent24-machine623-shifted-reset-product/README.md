@@ -132,6 +132,12 @@ The wrapper semantics are exact for words of every finite length, not merely the
 
 Induction on \(|w|\) therefore gives the base-DFA state reached by the suffix \(w[1:]\) or \(w[2:]\), respectively (with the corresponding skip state retained when the word is shorter than the offset). The Moore output is consequently exactly the base carry label on the selected suffix, and the Mealy event bit records its first null-to-non-null transition. The finite length-0–6 check separately validates that this base output/event encoding agrees with the full post-reset-pair labels on all tested words.
 
+For the root-transition consumer, feed exactly the concatenation of the low prefix and target word:
+\[
+(z_{k+1},\ldots,z_{k'+1})\ \Vert\ (z_{k'+2},\ldots,z_{j'-3}),
+\]
+i.e. the half-open target interval \([k'+2,j'-2)\). Stop after \(j'-3\); do not append higher digits outside the S-window. The selected start skips only the low prefix and then processes precisely this target interval. When \(j'=j+1\), the newly added high digit is included automatically as the final target symbol.
+
 The root transition selects the initial state from its phase edge:
 - choose offset 2 exactly for \(r=0\to-2\);
 - choose offset 1 for every other admissible phase edge.
