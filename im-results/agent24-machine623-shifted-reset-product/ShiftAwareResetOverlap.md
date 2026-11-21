@@ -66,24 +66,27 @@ Using the conservative \(B_S\) above and the source-faithful highLevelNext recur
 \[
 D(33)\to D(34),\ldots,D(10000)\to D(10001).
 \]
-For each source state it scans the source S-window, computes the actual window-index shifts, and searches for a shift-aware witness using the branch associated with the source sector (LO/LE: L; RO/RE: R). Under newAffineCone, this association is source-derived: the four disjuncts in TernaryBufferSource.lean are left-odd, left-even, right-odd, and right-even, and newAffine_canonicalRay in CanonicalRayCocycleSource.lean sends the first two to the left transition and the last two to the right transition. This avoids using the separate conditional sign-branch reduction, whose far/nonterminal hypothesis is part of the central-block argument.
+For each source state it scans the source S-window and computes the actual window-index shifts. The affine transducer branch is selected by the sign of g: L for g>0, R for g<0. It computes the exact affine corrections C,F from the current and successor coordinates, checks |C|,|F| <= B_S, computes the exact source carry at each reset start K_s=3^(k_S+1+s) using the formulas in SourceCarryAffineBridge.lean, checks that the carries lie in the full rectangles, simulates the reset word, and compares every emitted x-digit with the successor's actual ternary digit at that position.
+
+**Important branch correction:** an earlier version of this note incorrectly assigned the affine transducer branch by source sector (LO/LE -> L; RO/RE -> R). That is false: the source sector selects the high-level drain case, but the affine matrix branch is selected by the sign of g. The sector-based affine-branch claim and its associated scan interpretation are withdrawn. The corrected scan uses the sign-of-g branch and checks the resulting correction bounds and digit identities on the finite trace. BranchSelection.lean only proves the sign-based branch reduction under its far/nonterminal hypothesis; the finite scan does not establish that hypothesis for all future states.
 
 Observed results:
 
 - 9,968/9,968 transitions have a shift-aware witness; zero failures.
 - Window lengths range from 8 through 16.
-- Shift pairs \((\delta,\eta)\): (0,0) 9,955; (0,1) 8; (1,1) 5.
-- Source sectors select L on 4,096 transitions and R on 5,872.
-- The first reset witness begins at offset 0 in 5,254 windows; in 4,714 it begins later. Among the left-edge first witnesses, 4,566 are robust for the selected branch and 688 are not. The non-robust left-edge cases do not cause a scan failure because the shift-aware search can use a later witness or the shift is zero.
+- Shift pairs (delta,eta): (0,0) 9,955; (0,1) 8; (1,1) 5.
+- The sign-of-g affine branch is L on 4,096 transitions and R on 5,872.
+- All 9,968 transitions satisfy |C|,|F| <= B_S; no actual source carry leaves its full branch rectangle; there are zero affine/transducer digit mismatches, zero windows without a reset, and zero windows without a safe actual witness.
+- The first reset witness begins at offset 0 in 5,254 windows and later in 4,714. In all 5,254 left-edge cases, the actual source carry produces a nonmonochromatic output suffix after deleting the first digit (zero failures). This is stronger than the generic full-rectangle drop-one count: actual source carries are correlated and can succeed even when a pattern is not drop-one robust for every state in the full rectangle.
 
-This is computational evidence over a finite prefix only. The branch association is checked against the recurrence mirror on that prefix; its all-time use remains conditional on proving the cone/sector invariant.
+This is computational evidence over a finite prefix only. The sign-of-g branch is the affine branch used by the finite calculation, but its all-time identification with the source transition remains conditional on the far/nonterminal premise in BranchSelection.lean. The finite correction and digit checks do not prove that premise or an all-time root invariant.
 
 ## Remaining proof obligations
 
-1. Prove that every future authentic S-window contains a shift-aware witness. The 9,968-state scan does not establish this induction.
-2. Formalize the finite one-symbol-overlap robustness certificate in Lean, or provide a smaller verified certificate for the 8,088 reset words and both carry rectangles.
-3. Extend the existing left_tail_step / right_tail_step affine quotient identities to an arbitrary reset word of length 3--6, so the transducer's emitted digits are rigorously identified with the actual successor-coordinate digits at the shifted boundary.
-4. Prove the source-connected cone and sector/branch invariant, and the all-time S-window shift bounds.
-5. Only after these close does reset acceptance yield the central-block nonmonochromaticity needed by the terminal-strip contradiction.
+1. Prove an all-time branch-selection theorem without circularly assuming the central-block property, or establish the far/nonterminal premise of BranchSelection.lean independently.
+2. Prove that every future authentic S-window contains a reset witness with the required shifted-output property. The 9,968-state scan does not establish this induction.
+3. Formalize the finite drop-first suffix certificate in Lean, or provide a smaller verified certificate for the 8,088 reset words and both carry rectangles.
+4. Extend the existing left_tail_step / right_tail_step affine quotient identities to arbitrary reset words of length 3--6, so the transducer's emitted digits are rigorously identified with the actual successor-coordinate digits at the shifted boundary.
+5. Prove the source correction bound, source-carry rectangle inclusion, cone invariant, and all-time S-window shift bounds.
 
 Relevant existing work: [RootPhaseInvariant](../agent32-623-phase-automaton/RootPhaseInvariant.md), [ResetPatternAudit](../agent49-parity623/ResetPatternAudit.md), [SourceCarryAffineBridge](../agent48-623-tight-window/SourceCarryAffineBridge.lean), and [SourceDerivedResetSourceBridge](SourceDerivedResetSourceBridge.lean).
