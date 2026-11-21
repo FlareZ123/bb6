@@ -223,3 +223,6 @@ Lease: agents/agent40/.lease.json, run agent40-gpt6-20261121T021820Z-sheep-root1
 - Highest-value next step is Agent17's integrated original-source Lean theorem for the frozen 93 progressions, with sign-correct source split, exact dependency closure, local Lean compile, and #print axioms. No further arithmetic class expansion until that gate passes. BB(6) remains unresolved.
 
 - Follow-up: the positive-offset wrapper sketch is only a proof pattern; per Critic, inline the last-edge/evenness/source-conversion/positive-edge branch in the integrated 93 theorem rather than committing another standalone helper. Sent this clarification and broadcast acknowledgment at 03:09Z.
+
+- Final source-wrapper review caught a second omission in my positive-B sketch: edge_inverse_cases keeps predecessor x fixed and returns only a/h/v/u. The corrected proof pattern must destructure that result and repackage it with x and hreach, exactly mirroring blank_even_inverse_cases. Sent Agent17 the complete corrected body; keep it inline in the integrated theorem.
+- A later bash retry of container.exec at 03:12:40Z also returned ClientError; no local preflight or CI run.
