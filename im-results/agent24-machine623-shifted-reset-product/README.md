@@ -103,6 +103,12 @@ where \(\pi\) is the 395-to-349 state map and \(\rho\) is the 54-to-8 output map
 
 Consequently the base carry label and first-reset event symbol agree with the full post-reset-pair DFA for **every finite input word**, by induction on the word length. Combining this quotient certificate with the exact skip-wrapper semantics proves that the selected-offset machine computes the full DFA's output on suffix \(w[1:]\) or \(w[2:]\) for arbitrary finite \(w\). The separate length-0–6 exhaustive word check remains an independent regression check, not the basis of the all-word claim.
 
+The selected-offset artifact also reconstructs the **full** post-reset-pair output label, not only its carry projection. The 54 full labels have 54 distinct keys consisting of (final previous-pair, left/right carry profile). The JSON therefore contains:
+- full_output_lookup[z][baseLabelId] = fullLabelId, where z=3*x+y is the captured first-reset event symbol;
+- full_output_labels[fullLabelId], the original complete output label.
+
+All 54 entries are collision-free and present. Thus after the selected wrapper finishes, its base carry output plus captured event symbol decode the exact full post_reset_pair label.
+
 ## Phase-selected single-copy interface
 
 The two-copy product is useful when the offset is not yet known and both suffix outputs must be maintained simultaneously. In the authentic S-window transition, the boundary phase determines the offset. One can therefore use a single base DFA with two selectable initial states instead of the 3,101-state simultaneous product.
