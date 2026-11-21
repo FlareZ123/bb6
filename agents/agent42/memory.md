@@ -2567,9 +2567,9 @@ Investigated the upstream Cryptids halt proof at commit `3647718b5df22e1a61462de
 ### New computational result
 
 - The upstream RLE engine proves `IsHalt` through existential `ReflTransGen` paths, which erase primitive step counts and cannot directly populate local `DecidedBelow`.
-- Derived cost recurrences from the `execute n` proofs in `HaltShared.lean` for `clean_sweep_core`, `clean_DR0_zeros`, `clean_RNIL_zero_pow`, `clean_P1_pow`, `clean_P2_pow`, plus raw/clean dispatch costs. Main formulas are in `im-results/agent42-cryptids-upstream-191-overlap/PrimitiveStepCost.md`.
+- Derived the primitive base costs from the first F289 module's `HasRleStackRules` `execute n` proofs; `HaltShared.lean` supplies the RLE dispatch and clean-mode inductions for `clean_sweep_core`, `clean_DR0_zeros`, `clean_RNIL_zero_pow`, `clean_P1_pow`, `clean_P2_pow`, plus raw/clean dispatch costs. Main formulas are in `im-results/agent42-cryptids-upstream-191-overlap/PrimitiveStepCost.md`.
 - A JS/BigInt port of the RLE state update was run inline from `ckpt0`. It matched `ckpt5`, `ckpt10`, and `ckpt15` exactly after 100/200/300 batches, and the final 80-batch chunk reached `halted=true`.
-- Accumulating the manually derived branch bounds on the actual 9,500-transition run yielded:
+- Accumulating the manually derived branch bounds on at most 9,500 RLE transitions (the loop stops after the halted flag) yielded:
   `N=1003448704258405241756955830449585121679083838719 < 2^160`.
   Chunk bounds: `153233965714336055848900074`, `21420259195008061453530364129891259`, `124842490278774511382713615548623788982769809`, `1003323861768105046986224874806868631470122277577`.
 - This is a computational candidate, not a theorem. The state port is validated against the checkpoint literals; branch-cost soundness is not formalized. If sound, it would yield a local `DecidedBelow (2^160)` leaf (there is ample slack for the `n+1≤B` convention).
@@ -2578,7 +2578,7 @@ Investigated the upstream Cryptids halt proof at commit `3647718b5df22e1a61462de
 
 - `im-results/agent42-cryptids-upstream-191-overlap/PrimitiveStepCost.md`: recurrences, dispatch bounds, candidate, proof plan.
 - `im-results/agent42-cryptids-upstream-191-overlap/check_cost_formulas.js`: deterministic BigInt summation checker (11,520 inline checks passed; persisted script itself not run).
-- `im-results/agent42-cryptids-upstream-191-overlap/simulate_f289_rle.js`: preserved full state/cost port, intended to run with Node against the exact upstream proof file. The inline simulation was executed; this persisted script was not independently executed or syntax-checked.
+- `im-results/agent42-cryptids-upstream-191-overlap/simulate_f289_rle.js`: preserved full state/cost port, now generalized to parse either F289 module's own `ckpt0`, chunk schedule, and checkpoint chain, with an assertion on the shared 19-cost signature. The inline first-F289 simulation was executed; the persisted generic script was not independently executed or syntax-checked, and the second F289 trace has not been run.
 - Existing upstream `BusyBeaver/Bridge.lean` theorem `multiStep_toBB M c n` gives exact n-step transfer from `multiStep M.toBB` to the n-fold `ConjectureMachines.step M` iteration.
 - Existing local `im-results/agent4-coverage-smoke/CryptidsHaltIff.lean` theorem `BB6.ConjectureBridge.source_halts_after_iff_agent8_halts_after m n` transfers exact source-run halting at n to `BB6Coverage.HaltsAfter (toAgent8 m) n`. Thus no new absolute-tape adapter is needed.
 
