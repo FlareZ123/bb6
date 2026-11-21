@@ -45,6 +45,16 @@ theorem m1EvenValuationBridgeTape_preserves_far_left
   change valuationExit1Tape Tright (h+1) x = T x
   rw [hexit,hright,hsetup,hleft]
 
+/-- Index form used by the source's left-facing stream: every cell at
+    distance at least N+4 to the left of the original head is untouched. -/
+theorem m1EvenValuationBridgeTape_preserves_left_index
+    (v : Nat) (T : Int → Bool) (h : Int) (i : Nat)
+    (hi : 3*(v+1)+4 ≤ i) :
+    m1EvenValuationBridgeTape v T h (h-(i:Int)) = T (h-(i:Int)) := by
+  apply m1EvenValuationBridgeTape_preserves_far_left
+  dsimp
+  omega
+
 /-- The full macro footprint is contained in the half-open interval from
     three cells left of the left-sweep endpoint through the first two cells
     to the right of the original head. -/
@@ -57,6 +67,7 @@ theorem m1EvenValuationBridgeTape_outside_footprint
   · exact m1EvenValuationBridgeTape_preserves_right v T h x hright
 
 #print axioms m1EvenValuationBridgeTape_preserves_far_left
+#print axioms m1EvenValuationBridgeTape_preserves_left_index
 #print axioms m1EvenValuationBridgeTape_outside_footprint
 
 end BB6Coverage.Agent8M1EvenValuationBridgeFootprint

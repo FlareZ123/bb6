@@ -18,6 +18,8 @@ Consequently, the macro can modify cells only in the half-open interval
 
 whose width is (3v+8) cells.
 
+The index corollary states that every cell at left-distance (i\ge 3(v+1)+4) is unchanged. This covers both the (i=N+4) boundary and the entire (i\ge N+5) tail in the current `M1EvenValuationBridgeLeftFacing` proof.
+
 ## Proof structure
 
 - The left sweep preserves the input strictly to the left of its terminal head.
@@ -28,7 +30,7 @@ whose width is (3v+8) cells.
 
 ## Local verification and scope
 
-Compiled with Lean 4.36.0-rc2 in a dependency-sliced local source reconstruction. Both exported theorems report the axiom profile `[propext, Quot.sound]`; no `sorryAx` occurs.
+Compiled with Lean 4.36.0-rc2 in a dependency-sliced local source reconstruction. All three exported theorems report the axiom profile `[propext, Quot.sound]`; no `sorryAx` occurs.
 
 This is not an exact byte-for-byte preflight of the repository's complete dependency closure, not acceptance of `TM63GeneralQ4TerminalComposition`, and not a proof of the BB(6) value. Keep it in `im-results/` until integrated into the exact source proof and independently recompiled.
 
