@@ -1,4 +1,5 @@
 import Root32HighStopP7
+import OddSevenOrbit
 import Lean.Elab.Tactic.Omega
 
 set_option maxHeartbeats 1000000
@@ -15,6 +16,14 @@ def a4X (t : Nat) : Nat := 2814461475*t + 754739388
 
 /-- The corrected P7E1E residual's right coordinate. -/
 def a4Y (t : Nat) : Nat := (4231969245*t + 1134865019)/2
+
+/-- The corrected P7E1E residual itself. -/
+def p7e1eX (t : Nat) : Nat := 1376399640*t + 369101882
+def p7e1eY (t : Nat) : Nat := 2835015540*t + 760251268
+
+/-- Its forced direct parent. -/
+def p7e1eDX (t : Nat) : Nat := 4211415180*t + 1129353148
+def p7e1eDY (t : Nat) : Nat := 1417507770*t + 380125633
 
 /-- On t = 31 (mod 32), A4 lies in the exact odd/odd valuation-three
     layer. These are the hypotheses for the source-certified low-value
@@ -65,7 +74,6 @@ theorem a4_unreachable_of_t_mod32_31 (t : Nat) (ht : t%32=31) :
     simpa [RunReach,p,q] using
       (BB6.Agent3.oddodd_lowval_blank_reach_iff
         (a4X t) (a4Y t) hxodd hyodd hy hsum4 (by omega) hsize).mp hreach
-  have htmin : 31≤t := by omega
   have hP8 : 8*(p+q)=38046615075*t+10202761387 := by
     dsimp [p,q,a4X,a4Y]
     omega
@@ -74,6 +82,7 @@ theorem a4_unreachable_of_t_mod32_31 (t : Nat) (ht : t%32=31) :
     omega
   have hPmod : (38046615075*t+10202761387)%32=8 := by omega
   have hQmod : (18324830685*t+4914073813)%16=8 := by omega
+  have htmin : 31≤t := by omega
   have hpX : 5<p := by
     dsimp [p,a4X,a4Y]
     omega
@@ -84,7 +93,95 @@ theorem a4_unreachable_of_t_mod32_31 (t : Nat) (ht : t%32=31) :
   have hpSum : (p+q)%4=1 := by omega
   exact (run_no_odd_sum_one p q hpX hpY hpOdd hpSum) hparent
 
+/-- The corrected P7E1E residual is genuinely blank-unreachable on
+    t = 31 (mod 32). Its complete even/even parent fan has only the
+    direct parent D(t), and the exact odd-seven inverse takes D(t) to A4(t). -/
+theorem p7e1e_unreachable_of_t_mod32_31 (t : Nat) (ht : t%32=31) :
+    ¬ RunReach (p7e1eX t) (p7e1eY t) := by
+  intro hreach
+  have hsumMod : (p7e1eX t+p7e1eY t)%8=2 := by
+    dsimp [p7e1eX,p7e1eY]
+    omega
+  have hx : 5<p7e1eX t := by
+    dsimp [p7e1eX]
+    omega
+  have hxe : p7e1eX t%2=0 := by
+    dsimp [p7e1eX]
+    omega
+  have hy6 : 6≤p7e1eY t := by
+    dsimp [p7e1eY]
+    omega
+  have hye : p7e1eY t%2=0 := by
+    dsimp [p7e1eY]
+    omega
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    run_parent_of_left_gt5 (p7e1eX t) (p7e1eY t) hx hreach
+  have hfan := BB6.Agent3ParentFan.even_even_parent_fan
+    a k (p7e1eX t) (p7e1eY t)
+    (by omega) hxe hy6 hye hstep
+  rcases hfan with hdirect | hzero | hbounce
+  · rcases hdirect with ⟨ha,hk⟩
+    have hDx : p7e1eX t+p7e1eY t-2=p7e1eDX t := by
+      dsimp [p7e1eX,p7e1eY,p7e1eDX]
+      omega
+    have hDy : (p7e1eY t-2)/2=p7e1eDY t := by
+      dsimp [p7e1eY,p7e1eDY]
+      omega
+    have hDreach : RunReach (p7e1eDX t) (p7e1eDY t) := by
+      simpa only [ha,hk,hDx,hDy] using hprev
+    have hDxEven : p7e1eDX t%2=0 := by
+      dsimp [p7e1eDX]
+      omega
+    have hDyOdd : p7e1eDY t%2=1 := by
+      dsimp [p7e1eDY]
+      omega
+    have hDy5 : 5≤p7e1eDY t := by
+      dsimp [p7e1eDY]
+      omega
+    have hDmod : (p7e1eDX t+p7e1eDY t+1)%16=8 := by
+      dsimp [p7e1eDX,p7e1eDY]
+      omega
+    have hDsize : 23≤p7e1eDX t+p7e1eDY t := by
+      dsimp [p7e1eDX,p7e1eDY]
+      omega
+    have hA4reach : RunReach (a4X t) (a4Y t) := by
+      have hiff := (BB6.Agent3.odd_seven_blank_reach_iff
+        (p7e1eDX t) (p7e1eDY t)
+        hDxEven hDyOdd hDy5 hDmod hDsize).mp hDreach
+      have hAx : (p7e1eDX t+p7e1eDY t-5)/2=a4X t := by
+        dsimp [p7e1eDX,p7e1eDY,a4X]
+        omega
+      have hAy : (p7e1eDX t+3*p7e1eDY t-9)/4=a4Y t := by
+        dsimp [p7e1eDX,p7e1eDY,a4Y]
+        omega
+      simpa [RunReach,hAx,hAy] using hiff
+    exact (a4_unreachable_of_t_mod32_31 t ht) hA4reach
+  · rcases hzero with ⟨_,_,n,hsum,_⟩
+    have hmod : (p7e1eX t+p7e1eY t)%8=0 := by
+      rw [hsum]
+      simp [Nat.mul_mod]
+    omega
+  · rcases hbounce with ⟨_,haeven,_,_,n,hnodd,hsum,_⟩
+    have hpow : 4∣2^(n+1) := by
+      change 2^2∣2^(n+1)
+      exact Nat.pow_dvd_pow 2 (by omega)
+    have ha2 : 2∣a+2 := by
+      refine ⟨(a+2)/2,?_⟩
+      omega
+    obtain ⟨u,hu⟩ := hpow
+    obtain ⟨v,hv⟩ := ha2
+    have hdiv : 8∣p7e1eX t+p7e1eY t := by
+      refine ⟨u*v,?_⟩
+      calc
+        p7e1eX t+p7e1eY t=2^(n+1)*(a+2) := hsum
+        _=(4*u)*(2*v) := by rw [hu,hv]
+        _=8*(u*v) := by ac_rfl
+    have hmod : (p7e1eX t+p7e1eY t)%8=0 :=
+      Nat.mod_eq_zero_of_dvd hdiv
+    omega
+
 #print axioms a4_t31_facts
 #print axioms a4_unreachable_of_t_mod32_31
+#print axioms p7e1e_unreachable_of_t_mod32_31
 
 end BB6.Agent3Root32HighStopA4
