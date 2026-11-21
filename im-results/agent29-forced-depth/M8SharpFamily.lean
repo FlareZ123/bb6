@@ -177,16 +177,28 @@ theorem m8SharpStop (r : Nat) (hr : 2≤r) :
     omega
   have hj : m8SharpJ r+3 =
       3*m8SharpV r*2^(m8SharpT r)+1 := by
-    have hp : 2≤3*m8SharpV r*2^(m8SharpT r) := by
-      have hmul := Nat.mul_le_mul hvpos htpos
+    have hmul : 2≤m8SharpV r*2^(m8SharpT r) :=
+      Nat.mul_le_mul hvpos htpos
+    have hmul3 : 6≤3*m8SharpV r*2^(m8SharpT r) := by
+      have h := Nat.mul_le_mul_left 3 hmul
+      have heq : 3*(m8SharpV r*2^(m8SharpT r)) =
+          3*m8SharpV r*2^(m8SharpT r) := by ac_rfl
+      rw [heq] at h
       omega
+    have hp : 2≤3*m8SharpV r*2^(m8SharpT r) := by omega
     dsimp [m8SharpJ]
     omega
   have hk : m8SharpK r+2 =
       3*m8SharpV r*2^(m8SharpD r) := by
-    have hp : 2≤3*m8SharpV r*2^(m8SharpD r) := by
-      have hmul := Nat.mul_le_mul hvpos hdpos
+    have hmul : 2≤m8SharpV r*2^(m8SharpD r) :=
+      Nat.mul_le_mul hvpos hdpos
+    have hmul3 : 6≤3*m8SharpV r*2^(m8SharpD r) := by
+      have h := Nat.mul_le_mul_left 3 hmul
+      have heq : 3*(m8SharpV r*2^(m8SharpD r)) =
+          3*m8SharpV r*2^(m8SharpD r) := by ac_rfl
+      rw [heq] at h
       omega
+    have hp : 2≤3*m8SharpV r*2^(m8SharpD r) := by omega
     dsimp [m8SharpK]
     omega
   calc
