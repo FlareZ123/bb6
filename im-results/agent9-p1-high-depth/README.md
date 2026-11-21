@@ -21,6 +21,17 @@ Combining these with \(T_1\equiv t+s\pmod2\) leaves the same two families for ei
 
 Both formal files are arithmetic certificates under the displayed source-coordinate hypotheses, not original-source CountCone proofs. Neither residual family has been excluded; BB(6) remains unresolved. See the detailed derivation, hypotheses, and next target in [SIX-BIT-SLACK-MOD7.md](./SIX-BIT-SLACK-MOD7.md).
 
+**New second-edge reduction.** The source first-shallow split has three branches: \((I_s,T)=(20,14u+5)\), \((48,14u+10)\), and \((48,14u+3)\). The new [FirstShallowCoordinateGate.lean](./FirstShallowCoordinateGate.lean) gives exact first-child coordinates, proves that the first-shallow child cannot itself be the wall, and derives necessary residue conditions for the next edge after including the odd-counter and child-mod-four guards:
+
+| First-shallow branch | Next depth 0 | Next depth 1 | Next depth 2 |
+|---|---|---|---|
+| \(I_s=20,\ T=14u+5\) | \(u\equiv0\pmod2\) | \(u\equiv0\pmod4\) | \(u\equiv2\pmod8\) |
+| \(I_s=48,\ T=14u+10\) | \(u\equiv1\pmod2\) | \(u\equiv2\pmod4\) | \(u\equiv2\pmod8\) |
+| \(I_s=48,\ T=14u+3\) | \(u\equiv0\pmod2\) | \(u\equiv3\pmod4\) | \(u\equiv3\pmod8\) |
+
+These are necessary arithmetic conditions, not sufficient inverse-edge existence criteria and not yet a source-composed exclusion of any residual branch. In particular, the odd-offset \(I_s=48\) case survives the first-child mod-four guard.
+
+
 
 ## Arbitrary-restart telescoping (recurrence-level Lean proof)
 
@@ -66,6 +77,8 @@ The Int-facing variant restart_half_defect_lt_of_int accepts the exact wallDefec
 
 The exported `source_wall_restart_path` proves that a wall-reaching OddCone history with at least one deep edge has a source-authentic suffix satisfying `2^L <= 7S`. The stronger `source_wall_restart_suffix_shape` also returns a decomposition at the last shallow edge: that edge has cost 1 or 2, and every subsequent edge has cost 3 (depth exactly two). The latter follows because an all-cost-3 suffix would have `7S+1=2^L`, contradicting `2^L<=7S`.
 
-**Verification status:** this source file is committed but has not yet been compiled or axiom-audited under the pinned Lean 4.36.0-rc2 dependency closure. It remains in `im-results/`; it is not a completed CountCone/blank-root decision and does not resolve either residual family `(delta,Is)=(2,20)` or `(1,48)`. The existing manual workflow `.github/workflows/agent43-p1-wall-telescoping.yml` has been extended to compile it. A focused local preflight has been requested from identities with previously working Lean runtimes; do not dispatch CI until a local preflight succeeds.
+**Verification status:** RestartWallSource.lean and RestartWallLowTrace.lean are committed but have not yet been compiled or axiom-audited under the pinned dependency closure. The new FirstShallowCoordinateGate.lean arithmetic leaf was compiled locally with Lean 4.36.0-rc2; it imports only Lean core and its proofs use omega. This validates that leaf, not the original-source wrapper. The manual workflow .github/workflows/agent43-p1-wall-telescoping.yml exists, but do not dispatch it until the exact source dependency closure has passed local preflight.
 
-Next source-level step after compilation: prove a `RestartWalk -> LowTrace` bridge for the affine energy `I(P,c,s,x)=98P-49x-14(c+s+6)+90`, with offset `B=c+s+6`. The three source costs 1, 2, 3 yield exactly the existing `LowStep` recurrences in `Mod7SlackLeaf.lean`, and the shifted wall gives `I=-112B+384`. This will connect the original-source suffix to the existing mod-7 leaf reduction; the remaining residual families still require a new argument.
+The RestartWalk -> LowTrace bridge is now written in RestartWallLowTrace.lean: it extracts the low suffix and first-shallow split from the source RestartPath witness. The next source-level step is to compile and axiom-audit that exact dependency closure, then compose FirstShallowCoordinateGate with restartPath_first_shallow_state and propagate the second-edge residue gate through the next transition. Do not redo the scalar mod-7 enumeration or terminal-cost arithmetic.
+
+A complementary, still-unproved direction from Agent 50 is a source-prefix cost bound M≤P/24 for histories with at most five shallow edges; see communications/agent9/20261118T223000Z_agent50-prefix-cost-branch-closure.md. If established in the relevant source sector, it would sharply reduce the remaining high-depth intervals.
