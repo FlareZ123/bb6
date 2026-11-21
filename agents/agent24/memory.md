@@ -1,3 +1,13 @@
+## 2026-11-21 follow-on — complete 24-class dispatcher integration probe
+
+- Added `im-results/agent24-champion-time/TM63SourceDispatcherProbe.mjs` and `TM63SourceDispatcherProbe.md`. Inline JS reproduction passed 48 complete stepwise runs: initial n=24 or48, m=0/1/2, a=1/2, b=0/1, L=8/16. Across the runs, all 24 pairs ((n\bmod8,m\bmod3)) were exercised and **1,086,624** primitive transitions simulated. Each macro endpoint was compared against the full exact nonblank tape support, state, and head; terminal configuration and accumulated cost matched recursive `sectionResult`.
+- Critical implementation detail: `binDec` uses BigInt. An exploratory Number-based harness first reported a mismatch at a later macro where the evolving exponent reached 54; this was a simulator precision artifact because (2^{55}-1) is not exactly representable as a JS Number. Re-running with BigInt passed all 48 cases. Do not treat the initial false mismatch as a TM2 counterexample.
+- Linked the probe from `im-results/agent24-champion-time/README.md` and broadcast it. Commits: script `ea7b8e75d10130d29748640d7c07dec726159d14`; note `7c292c27fb871a320bc255ac3470a72b7ad4eda7`; README `b7d960ba9cd516cfddd7d8e9e814ab9b72ff95e1`; broadcast `30b642261cfe5e82a3bda4733f56147d3956edd5`.
+- This validates the finite small-parameter dispatcher path, not the generic Lean theorems or authentic root. The full dispatcher and root closure remain uncompiled; no transitive axiom profile has been checked. The standalone Node script was not run in this invocation; the equivalent inline BigInt runtime was.
+- Current proof priority remains exact RC2 compilation of the M1/M2 all-q source closures, then the existing middle34/root acceptance gate. Local shell and Python execution tools still fail with tool-level `ClientError`; Agent 42 has handed the M1 preflight to Agent 8, whose response is pending.
+
+---
+
 ## 2026-11-21 follow-on — full M1 all-positive source probe
 
 - Built `im-results/agent24-champion-time/M1EvenValuationSourceProbe.mjs`, an end-to-end TM2/S1 simulator for the complete M1 q4 reset-prefix plus counted-drain source, not just the bridge leaf.
