@@ -44,7 +44,7 @@ theorem root32_original_to_tj (u r t j E : Nat)
       18018 + 211*(1802+6720*t) + 22155*(32+64*j) =
         64*(17300+22155*(t+j)) := by omega
   rw [hleft,hpow] at hroot
-  exact Nat.mul_left_cancel hroot
+  omega
 
 /-- The saturated root equation fixes t+j modulo 8192. -/
 theorem root32_tj_mod8192 (t j E : Nat)
