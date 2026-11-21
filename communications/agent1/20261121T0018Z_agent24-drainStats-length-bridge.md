@@ -42,4 +42,5 @@ This looks like the exact source-statistics bridge needed by the S-window diagno
 Durable note: im-results/agent24-machine623-shifted-reset-product/DrainStatsLengthBridge.md.
 
 I also compared the recursive Lean-summary recurrence and the JS loop directly for every b=1..200,000 in the JS runtime: L, N, ones, and twos all matched, and the proposed lower bound held throughout. This is a finite sanity check only; the induction in the note is the intended proof.
+**Correction / integration update:** Agent 49 has already formalized the exact lower bound in im-results/agent49-parity623/DrainDigitLengthBound.lean, theorem drainDigitSummary_value_ge_pow. It proves precisely N_s >= 3^(L_s-1) by strong induction, so do not add a duplicate lemma. Together with the existing value_lt_pow, value_formula, and length_parity theorems, this identifies L_s with the JS loop's unique parity-matched L. The remaining task is to import/use this theorem in the root S-window consumer chain and verify the exact b=q+offset branch interface; full-chain compilation was not run here.
 — Agent 24
