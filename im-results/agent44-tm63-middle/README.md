@@ -250,9 +250,9 @@ For (L=tm63Length1=A+5), the six consecutive input counters have the following e
 These follow by applying `binDec_even`, `binDec_odd`, and the carry-prefix identities to the six arithmetic counters above; the shared tail (Q_A) is unchanged throughout the block. This is a compact normal form for the complete row-32–37 source segment and explains why the existing generic source lemmas fit the root parameters. The table is a derived synthesis; the existing per-row Lean theorems remain the formal run evidence.
 
 
-## 64-row common-tail formula for the root counter
+## Exponential-window common-tail formula for the root counter
 
-The six-row normal form is a special case of a 64-row identity. Let (A=tm63FirstSection.exponent\ge7), (L=A+5=tm63Length1), and (R=tm63RootResidueSixK=31\cdot2^{A-4}-1). The root's initial middle counter is
+The 64-row identity is a special case of a formula for every prefix length (k\le A). Let (A=tm63FirstSection.exponent\ge7), (L=A+5=tm63Length1), and (R=tm63RootResidueSixK=31\cdot2^{A-4}-1). The root's initial middle counter is
 [
 tm63Index1=16R+15=31\cdot2^A-1.
 ]
@@ -260,11 +260,11 @@ After (r-1) unit decrements, the row-(r) counter is
 [
 n_r=tm63Index1-(r-1)=31\cdot2^A-r.
 ]
-For every (1\le r\le64), define (E_6(r-1)) as the six-block word whose (i)-th block (least-significant bit first) is (d1) when bit (i) of (r-1) is (1), and (d0) when it is (0). Then
+Fix any (k) with (1\le k\le A) and any (r) with (1\le r\le2^k). Define (E_k(r-1)) as the (k)-block word whose (i)-th block (least-significant bit first) is (d1) when bit (i) of (r-1) is (1), and (d0) when it is (0). Then
 [
 \boxed{
 binDec(L,n_r)
-=E_6(r-1)\mathbin{++}d0pow(A-6)
+=E_k(r-1)\mathbin{++}d0pow(A-k)
  \mathbin{++}d1\mathbin{++}d0pow(4).
 }
 ]
@@ -273,6 +273,6 @@ The proof is the complement identity
 2^{L+1}-1-n_r
 =2^{A+5}+2^A+(r-1).
 ]
-Since (r-1<64\le2^A), the low six bits are exactly (r-1), bits (6,\ldots,A-1) are zero, bit (A) is one, and bits (A+1,\ldots,A+4) are zero; the top bit (A+5) is the implicit terminator of `binDec`. The `binDec_even`/`binDec_odd` recurrences map these bits to the stated (d1/d0) blocks.
+Since (r-1<2^k\le2^A), the low (k) bits are exactly (r-1), bits (k,\ldots,A-1) are zero, bit (A) is one, and bits (A+1,\ldots,A+4) are zero; the top bit (A+5) is the implicit terminator of `binDec`. The `binDec_even`/`binDec_odd` recurrences map these bits to the stated (d1/d0) blocks.
 
-Thus the authentic root's first 64 middle-row counters share one invariant tail (Q_A=d0pow(A-6)++d1++d0pow(4)); only the first six blocks change, according to the row number. Rows 27–37 are the specific cases already used by the current source composition. This is a source-encoding identity, not by itself a proof that all 64 corresponding machine transitions have been composed.
+For (k=6), this gives a common tail (Q_A=d0pow(A-6)++d1++d0pow(4)) for the first 64 counters; rows 27–37 are the specific instances used by the current source composition. For (k=A), it gives the same final five blocks (d1++d0pow(4)) across a window of (2^A) consecutive counters, with the first (A) blocks encoding the row number. This is an exact source-encoding identity, not by itself a proof that all corresponding machine transitions have been composed.
