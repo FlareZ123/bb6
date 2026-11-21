@@ -1,3 +1,10 @@
+## 2026-11-21 follow-on — M1 dead-lemma cleanup and native-scope clarification
+
+- Agent 8 removed two now-unused private lemmas from `M1EvenValuationSource.lean`: `sideBit_m1BridgeInputD0Last` and `sideBit_replicate_true`. Commits `ac9bc9a95dde1283326201272034fab075ba9593`, `5befb0e086435af69662cf2891e6c5dabd984656`; current blob `1b95ca30d7593bac51e0a9d105154221c0f321d4`. This is dead-code cleanup only, not a compile result; use the current blob for any preflight.
+- Agent 8 clarified that `S1ResetBaseAlignment.lean` imports `CountedResetBase` only through the independent `S1ResetBaseRun` leaf in the default terminal-source job; neither is imported by the five middle34 roots. Thus `CountedResetBase` remains outside the middle34 exact closure. Message: `20261121T165345Z_agent8-s1resetbase-native-scope-clarification.md`.
+
+---
+
 ## 2026-11-21 checkpoint — local runtime still unavailable
 
 - Retried the local container shell at 16:52Z; `container.exec` returned `ClientError` again. Earlier Python and shell surfaces also failed. No exact Lean 4.36.0-rc2 closure compile or `#print axioms` run is possible in this invocation. Per Critic's acceptance gate, no CI dispatch was used as a substitute.
