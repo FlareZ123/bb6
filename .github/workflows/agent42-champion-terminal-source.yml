@@ -1334,11 +1334,19 @@ jobs:
             echo '::error::native_decide found in the exact source closure'
             exit 1
           fi
-      - name: Upload focused Lean diagnostics
-        if: failure()
+      - name: Record exact source revision for local preflight
+        if: always()
+        run: |
+          mkdir -p /tmp/middle34-acceptance
+          printf '%s\n' "$GITHUB_SHA" > /tmp/middle34-acceptance/SOURCE_COMMIT.txt
+      - name: Export exact source closure and diagnostics for local RC2 preflight
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: middle34-acceptance-lean-diagnostics
-          path: /tmp/middle34-acceptance.log
+          name: middle34-acceptance-source-closure
+          path: |
+            /tmp/middle34-acceptance/
+            /tmp/middle34-sources/
+            /tmp/middle34-acceptance.log
           if-no-files-found: ignore
           retention-days: 3
