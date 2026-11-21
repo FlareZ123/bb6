@@ -907,24 +907,31 @@ of the committed Python artifacts.
 \]
 This is substantially sharper than the earlier adjacent-tetration bracket and the published interval. Agent 24 independently reviewed the moving-exponent induction and found no gap in its integrality, base cases, induction steps, or q-4 substitution. Agent 38 subsequently formalized the recurrence-only inequalities in `TM63TowerRecurrence.lean`, locally compiled under Lean 4.36.0-rc2 with only `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. The result remains intermediate until the authentic Lean composition passes local compilation and its transitive axiom audit; it is not a universal BB(6) upper bound.
 
-## Three-term asymptotic expansion of the conditional score
+## Arbitrary-depth iterated-log expansion of the conditional score
 
-Peeling off the final two dispatcher increments gives a sharper
-paper-level expansion. With \(\ell=b_{N-1}=\log_2(b_N+1)\),
-\(\kappa=b_{N-2}=\log_2(\ell+1)\), and \(m=\log_2\ell\),
+The exact score admits an expansion to any fixed depth. Put
+\(u_r=b_{N-r}\), so \(u_0=b_N\), \(u_1=\ell\), and
+\(u_{r-1}=2^{u_r}-1\). For every \(1\le p\le N\),
 \[
 \begin{aligned}
 S_{\rm TM1}
-={}&6b_N^2+54b_N+6\ell^2+57\ell+96+15\kappa+\Delta_2,\\
-&0\le\Delta_2<100m^2.
+={}&\sum_{r=1}^{p}
+\left(6(u_{r-1}+1)^2+42(u_{r-1}+1)+(12r-9)u_r\right)+E_p,\\
+&0\le E_p<100u_p^2.
 \end{aligned}
 \]
-The key is geometric domination of the earlier quadratic dispatcher
-costs, together with \(\ell\ge2^{N-1}R\), which controls the root and
-polynomial corrections. The uncertainty after the second exact
-increment is only \(O((\log_2\ell)^2)\), i.e.
-\(O((\log_2\log_2 b_N)^2)\). This sharpens the prior
-\(O(\ell^2)\) remainder estimate. The result remains a paper-level
-consequence of the conditional source-cost identity, not a Lean
-acceptance or an authentic-root halt theorem. See
-[TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md) for the full derivation.
+The proof uses \(N<R\), geometric decay of the earlier quadratic
+dispatcher costs, and the fact that the root and polynomial terms are
+bounded by the next retained counter. Thus each additional peeled
+increment reduces the remainder to the square of the next
+iterated logarithm. The \(p=2\) specialization gives
+\[
+S_{\rm TM1}
+=6b_N^2+54b_N+6\ell^2+57\ell+96
++15\log_2(\ell+1)+\Delta_2,
+\quad 0\le\Delta_2<100(\log_2\ell)^2.
+\]
+This remains a paper-level consequence of the conditional source-cost
+identity, not a Lean acceptance or an authentic-root halt theorem.
+See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md) for the proof of
+\(N<R\), the uniform tail bound, and the sharper \(p=2\) estimate.

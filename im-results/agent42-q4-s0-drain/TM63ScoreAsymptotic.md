@@ -189,6 +189,97 @@ As a coarser corollary, (12) also implies the earlier bound
 the three-term formula (12) is the stronger statement.
 
 
+## Arbitrary-depth iterated-log expansion
+
+The same decomposition can be peeled to any fixed depth, not only the
+last two increments. First note that the authentic source parameters
+satisfy \(N<R\). Indeed,
+\[
+A=\sum_{j=7}^{M+42}V_j<2V_{M+42}.
+\]
+Writing \(x=V_{M+42}\ge63\), we have
+\[
+N=(2^{78}-1)2^A-3<2^{2x+78},
+\]
+whereas \(2^x-1>2x+78\) and monotonicity of \(V\) give
+\[
+R=V_{M+46}=2^{V_{M+45}}-1
+>2^{2x+78}-1\ge N.
+\]
+Thus \(N<R\).
+
+Set
+\[
+u_r=b_{N-r}\quad(0\le r\le N).
+\]
+Then \(u_0=b_N\), \(u_1=\ell\), \(u_2=\kappa\), and
+\[
+u_{r-1}=2^{u_r}-1.
+\]
+Writing
+\[
+P=10N^2+37N+90+12(N+1)U,
+\]
+the exact score identity (1), reindexed by \(r=N-j\), is
+\[
+S_{\rm TM1}
+=C_{\rm root}+D_{\rm root}
++P+\sum_{r=1}^{N}\left(f(u_r)+(12r-9)u_r\right).
+\]
+For any \(1\le p\le N\), define the nonnegative tail
+\[
+E_p=C_{\rm root}+D_{\rm root}+P
++\sum_{r=p+1}^{N}\left(f(u_r)+(12r-9)u_r\right).
+\]
+The first \(p\) increments are therefore exact:
+\[
+\boxed{
+S_{\rm TM1}
+=\sum_{r=1}^{p}
+\left(
+6(u_{r-1}+1)^2+42(u_{r-1}+1)+(12r-9)u_r
+\right)+E_p.
+}
+\tag{13}
+\]
+
+There is a uniform explicit tail bound
+\[
+\boxed{0\le E_p<100u_p^2\qquad(1\le p\le N).}
+\tag{14}
+\]
+To prove it, \(u_p\ge R\ge63\) and
+\(u_{r-1}=2^{u_r}-1\ge2u_r\). The same inequality
+\(f(x)/f(2x)<1/32\) used above shows
+\[
+\sum_{r=p+1}^{N}f(u_r)
+<\frac{32}{31}f(u_{p+1})
+=\frac{32}{31}\left(6(u_p+1)^2+42(u_p+1)\right)
+<8u_p^2.
+\]
+Also \(\sum_{r=p+1}^{N}u_r<2u_p\), so the weighted linear tail is
+\(<24Nu_p\le24u_p^2\), using \(N<R\le u_p\). The root term is
+\(<15R^2\le15u_p^2\). Finally, \(N<R\le u_p\), \(U\le R\), and
+\(u_p\ge63\) give
+\[
+10N^2+37N+90<12u_p^2,\qquad
+12(N+1)U<13u_p^2.
+\]
+Adding these five contributions gives \(E_p<72u_p^2<100u_p^2\).
+
+Equation (13) is an arbitrary finite-depth expansion along the
+iterated-log sequence
+\[
+u_1=\ell,\quad
+u_2=\log_2(\ell+1),\quad
+u_3=\log_2(u_2+1),\quad\ldots.
+\]
+For each fixed \(p\), it identifies the last \(p\) dispatcher
+increments exactly and leaves an error bounded by the square of the
+next iterated logarithm. The earlier three-term expansion is the
+\(p=2\) specialization, with the sharper bound
+\(\Delta_2<100(\log_2\ell)^2\) established above.
+
 ## Evidence boundary
 
 This derivation uses the exact symbolic dispatcher cost identity and existing root-prefix bounds. It introduces no new simulation claim and no new Lean theorem. The authentic TM63 source composition and its transitive axiom audit remain unaccepted; keep this result in im-results/ until that gate passes. It is not an unconditional lower-bound certificate for BB(6), and it says nothing about the remaining six-state machines.
