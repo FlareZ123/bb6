@@ -1517,4 +1517,181 @@ theorem sweepBB_within (L R : List SymTok) :
 #print axioms sweepBB_within
 
 
+
+
+/-- Costed outer CB sweep. Its recursion consumes only the right stack, so
+    every run/repeat parameter charged by a branch is bounded by the initial
+    right-stack maximum field. -/
+theorem sweepCB_within (L R : List SymTok) :
+    ReachesWithin
+      (50 * (pilotListFieldMax R + 1) * (R.length + 1))
+      ((evalSym target_tm) (.CB, L, R))
+      ((evalSym target_tm) (.CB, (sweepCB L R).1, (sweepCB L R).2)) := by
+  induction L, R using sweepCB.induct with
+  | case1 L =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [sweepCB] using pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, []))
+  | case2 L R1 =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [sweepCB] using
+      pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .item .zero :: R1))
+  | case3 L R2 ih =>
+    simp only [sweepCB, strictList_eq]
+    have h1 : ReachesWithin 21
+        ((evalSym target_tm) (.CB, L, .item (.run 0) :: .item (.run 1) :: R2))
+        ((evalSym target_tm)
+          (.CB, .item (.run 0) :: .item (.run 0) :: bumpSymL L, R2)) :=
+      reachesWithin_of_exact (by omega) (by
+        simp only [evalSym, evalM, encSymL, encSymR, encSymL_bumpSymL]
+        simpa using
+          step_CB_run0_run_pos_exact 0 (encSymL L) (encSymR R2))
+    have h2 := ih (bumpSymL L)
+    have hM : pilotListFieldMax R2 ≤
+        pilotListFieldMax (.item (.run 0) :: .item (.run 1) :: R2) := by
+      simp [pilotListFieldMax, pilotTokFieldMax]
+    have hcost : 21 ≤
+        50 * (pilotListFieldMax (.item (.run 0) :: .item (.run 1) :: R2) + 1) := by
+      omega
+    have hbudget := pilot_budget_cons2
+      (pilotListFieldMax (.item (.run 0) :: .item (.run 1) :: R2))
+      (pilotListFieldMax R2) R2.length 21 hM hcost
+    have hcomp := reachesWithin_trans h1 h2
+    exact reachesWithin_mono (by simpa [List.length] using hbudget) hcomp
+  | case4 L R1 hnot =>
+    have heq : sweepCB L (.item (.run 0) :: R1) = (L, .item (.run 0) :: R1) := by
+      cases R1 with
+      | nil => rfl
+      | cons y R2 =>
+        cases y with
+        | item it =>
+          cases it with
+          | zero => rfl
+          | run d =>
+            rcases d with _ | _ | d
+            · rfl
+            · exfalso
+              exact hnot R2 rfl
+            · rfl
+        | repB1 _ => rfl
+        | rep2 _ => rfl
+        | rep12 _ => rfl
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    rw [heq]
+    exact pilot_reachesIn_refl
+      ((evalSym target_tm) (.CB, L, .item (.run 0) :: R1))
+  | case5 L R1 ih =>
+    simp only [sweepCB, strictList_eq]
+    have h1 : ReachesWithin 3
+        ((evalSym target_tm) (.CB, L, .item (.run 1) :: R1))
+        ((evalSym target_tm) (.CB, .item (.run 0) :: bumpSymL L, R1)) :=
+      reachesWithin_of_exact (by omega) (by
+        simp only [evalSym, evalM, encSymL, encSymR, encSymL_bumpSymL]
+        exact step_CB_run1_exact (encSymL L) (encSymR R1))
+    have h2 := ih (bumpSymL L)
+    have hM : pilotListFieldMax R1 ≤
+        pilotListFieldMax (.item (.run 1) :: R1) := by
+      simp [pilotListFieldMax, pilotTokFieldMax]
+    have hcost : 3 ≤ 50 * (pilotListFieldMax (.item (.run 1) :: R1) + 1) := by
+      omega
+    have hbudget := pilot_budget_cons
+      (pilotListFieldMax (.item (.run 1) :: R1)) (pilotListFieldMax R1)
+      R1.length 3 hM hcost
+    have hcomp := reachesWithin_trans h1 h2
+    exact reachesWithin_mono (by simpa [List.length] using hbudget) hcomp
+  | case6 L d R1 =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [sweepCB] using
+      pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .item (.run (d + 2)) :: R1))
+  | case7 L k R1 L1 hstrip ih =>
+    have hL := stripPrefixSym_some _ L L1 hstrip
+    simp only [sweepCB, hstrip, strictList_eq]
+    have h1 : ReachesWithin (21 * k)
+        ((evalSym target_tm) (.CB, L, .repB1 k :: R1))
+        ((evalSym target_tm) (.CB, .item (.run 0) :: eatB1 k L1, R1)) := by
+      rw [hL]
+      apply reachesWithin_of_exact (by omega)
+      simp only [evalSym, evalM, encSymL, encSymR, encSymL_eatB1,
+        List.cons_append, List.nil_append]
+      exact sweep_CB_B1_exact k (encSymL L1) (encSymR R1)
+    have h2 := ih (eatB1 k L1)
+    have hM : pilotListFieldMax R1 ≤ pilotListFieldMax (.repB1 k :: R1) := by
+      simp [pilotListFieldMax, pilotTokFieldMax]
+    have hk : k ≤ pilotListFieldMax (.repB1 k :: R1) := by
+      simp [pilotListFieldMax, pilotTokFieldMax]
+    have hcost : 21 * k ≤ 50 * (pilotListFieldMax (.repB1 k :: R1) + 1) := by
+      omega
+    have hbudget := pilot_budget_cons
+      (pilotListFieldMax (.repB1 k :: R1)) (pilotListFieldMax R1)
+      R1.length (21 * k) hM hcost
+    have hcomp := reachesWithin_trans h1 h2
+    exact reachesWithin_mono (by simpa [List.length] using hbudget) hcomp
+  | case8 L k R1 hstrip =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [sweepCB, hstrip] using
+      pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .repB1 k :: R1))
+  | case9 L p R1 L1 hstrip ih =>
+    have hL := stripPrefixSym_some _ L L1 hstrip
+    simp only [sweepCB, hstrip, strictList_eq]
+    have h1 : ReachesWithin (24 * p)
+        ((evalSym target_tm) (.CB, L, .rep2 p :: R1))
+        ((evalSym target_tm) (.CB, .item (.run 0) :: eatC2 p L1, R1)) := by
+      rw [hL]
+      apply reachesWithin_of_exact (by omega)
+      simp only [evalSym, evalM, encSymL, encSymR, encSymL_eatC2,
+        List.cons_append, List.nil_append]
+      exact sweep_CB_B2_exact p (encSymL L1) (encSymR R1)
+    have h2 := ih (eatC2 p L1)
+    have hM : pilotListFieldMax R1 ≤ pilotListFieldMax (.rep2 p :: R1) := by
+      simp [pilotListFieldMax, pilotTokFieldMax]
+    have hp : p ≤ pilotListFieldMax (.rep2 p :: R1) := by
+      simp [pilotListFieldMax, pilotTokFieldMax]
+    have hcost : 24 * p ≤ 50 * (pilotListFieldMax (.rep2 p :: R1) + 1) := by
+      omega
+    have hbudget := pilot_budget_cons
+      (pilotListFieldMax (.rep2 p :: R1)) (pilotListFieldMax R1)
+      R1.length (24 * p) hM hcost
+    have hcomp := reachesWithin_trans h1 h2
+    exact reachesWithin_mono (by simpa [List.length] using hbudget) hcomp
+  | case10 L p R1 hstrip =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [sweepCB, hstrip] using
+      pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .rep2 p :: R1))
+  | case11 L m R1 L1 hstrip ih =>
+    have hL := stripPrefixSym_some _ L L1 hstrip
+    simp only [sweepCB, hstrip, strictList_eq]
+    have h1 : ReachesWithin (45 * m)
+        ((evalSym target_tm) (.CB, L, .rep12 m :: R1))
+        ((evalSym target_tm) (.CB, .item (.run 0) :: eatC12 m L1, R1)) := by
+      rw [hL]
+      apply reachesWithin_of_exact (by omega)
+      simp only [evalSym, evalM, encSymL, encSymR, encSymL_eatC12,
+        List.cons_append, List.nil_append]
+      exact sweep_CB_B12R_exact m (encSymL L1) (encSymR R1)
+    have h2 := ih (eatC12 m L1)
+    have hM : pilotListFieldMax R1 ≤ pilotListFieldMax (.rep12 m :: R1) := by
+      simp [pilotListFieldMax, pilotTokFieldMax]
+    have hm : m ≤ pilotListFieldMax (.rep12 m :: R1) := by
+      simp [pilotListFieldMax, pilotTokFieldMax]
+    have hcost : 45 * m ≤ 50 * (pilotListFieldMax (.rep12 m :: R1) + 1) := by
+      omega
+    have hbudget := pilot_budget_cons
+      (pilotListFieldMax (.rep12 m :: R1)) (pilotListFieldMax R1)
+      R1.length (45 * m) hM hcost
+    have hcomp := reachesWithin_trans h1 h2
+    exact reachesWithin_mono (by simpa [List.length] using hbudget) hcomp
+  | case12 L m R1 hstrip =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [sweepCB, hstrip] using
+      pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .rep12 m :: R1))
+
+#print axioms sweepCB_within
+
+
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
