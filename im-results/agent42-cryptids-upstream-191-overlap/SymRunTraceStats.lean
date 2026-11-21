@@ -1610,4 +1610,88 @@ theorem cb_fallback_then_bb_counter_sum (L R : List SymTok)
 #print axioms cb_fallback_then_bb_counter_sum
 
 
+
+theorem stepElemCB_BB_counter_sum_le (L R : List SymTok)
+    (hmode : (stepElemCB L R).1 = .BB) :
+    symPairCounterSum ((stepElemCB L R).2.1, (stepElemCB L R).2.2) ≤
+      listCounterSum L + listCounterSum R := by
+  cases R with
+  | nil => simp [stepElemCB] at hmode
+  | cons t R1 =>
+    cases t with
+    | item x =>
+      cases x with
+      | zero => simp [stepElemCB] at hmode
+      | run d =>
+        cases d with
+        | zero =>
+          cases R1 with
+          | nil =>
+            have hB := bumpSymL_counter_sum_le L
+            simp [stepElemCB, stepElemCB_run0, strictList_eq, symPairCounterSum, listCounterSum, tokCounterSum]
+            omega
+          | cons t2 R2 =>
+            cases t2 with
+            | item y =>
+              cases y with
+              | zero =>
+                have hB := bumpSymL_counter_sum_le L
+                simp [stepElemCB, stepElemCB_run0, strictList_eq, symPairCounterSum, listCounterSum, tokCounterSum]
+                omega
+              | run d2 =>
+                cases d2 with
+                | zero =>
+                  have hB := bumpSymL_counter_sum_le L
+                  simp [stepElemCB, stepElemCB_run0, strictList_eq, symPairCounterSum, listCounterSum, tokCounterSum]
+                  omega
+                | succ d2 => simp [stepElemCB, stepElemCB_run0] at hmode
+            | repB1 k => simp [stepElemCB, stepElemCB_run0] at hmode
+            | rep2 p => simp [stepElemCB, stepElemCB_run0] at hmode
+            | rep12 m => simp [stepElemCB, stepElemCB_run0] at hmode
+        | succ d =>
+          cases d with
+          | zero => simp [stepElemCB] at hmode
+          | succ d =>
+            cases d with
+            | zero =>
+              have hB := bumpSymL_counter_sum_le L
+              simp [stepElemCB, strictList_eq, symPairCounterSum, listCounterSum, tokCounterSum]
+              omega
+            | succ d =>
+              have hB := bumpSymL_counter_sum_le L
+              simp [stepElemCB, strictList_eq, symPairCounterSum, listCounterSum, tokCounterSum]
+              omega
+    | repB1 k => simp [stepElemCB] at hmode
+    | rep2 p => simp [stepElemCB] at hmode
+    | rep12 m => simp [stepElemCB] at hmode
+
+/-- The whole CB-sweep / BB-fallback / BB-sweep path has a counter-sum
+    bound in terms of the original CB input maximum field. -/
+theorem cb_fallback_then_bb_counter_sum_94M2656 (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94)
+    (hBB : (stepElemCB (sweepCB L R).1 (sweepCB L R).2).1 = .BB) :
+    symStateCounterSum (sweepBB
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2) ≤
+      94 * stateFieldMax (.CB, L, R) + 2656 := by
+  let L2 := (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1
+  let R2 := (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2
+  have hSweep := sweepCB_counter_sum_le_94M376 L R hT
+  have hElem := stepElemCB_BB_counter_sum_le (sweepCB L R).1 (sweepCB L R).2 hBB
+  have hBBsum : listCounterSum L2 + listCounterSum R2 ≤
+      94 * stateFieldMax (.CB, L, R) + 376 := by
+    simpa [L2, R2, symPairCounterSum] using Nat.le_trans hElem hSweep
+  have h570 := stepElemCB_after_sweep_570 L R hT hBB
+  have h570' : L2.length + R2.length ≤ 570 := by
+    simpa [L2, R2, symPairLen] using h570
+  have hBBsweep := sweepBB_counter_sum_bound L2 R2
+  calc
+    symStateCounterSum (sweepBB L2 R2) ≤ listCounterSum L2 + listCounterSum R2 + 4 * L2.length := hBBsweep
+    _ ≤ 94 * stateFieldMax (.CB, L, R) + 376 + 4 * 570 := by omega
+    _ = 94 * stateFieldMax (.CB, L, R) + 2656 := by omega
+
+#print axioms stepElemCB_BB_counter_sum_le
+#print axioms cb_fallback_then_bb_counter_sum_94M2656
+
+
 end BusyBeaver.SymRunAudit
