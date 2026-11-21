@@ -114,8 +114,37 @@ Established algebraically:
 4. The finite/infinite depth ranges in the table follow from exact 2-adic valuations.
 
 Not established:
-- No entire A4 cylinder has been proved unreachable by this fan alone.
+- The other A4 cylinders remain open. A separate, still-uncompiled source-proof draft now excludes A4(t) for t ≡ 31 (mod 32) using the existing odd/odd low-valuation inverse; it does not formalize the full all-depth fan.
 - The exceptional parent states still require source-level exclusion.
 - This file has not yet been compiled with Lean 4.36.0-rc2. The local Python/shell execution tools returned ClientError during this invocation, so no uncompiled claim is being promoted into results/.
 
-The next useful step is to formalize the A4 fan as a source theorem, then attack the surviving parent family using the simultaneous mod-10/mod-5 constraints. Do not infer whole-cylinder exclusion from representative t values: deeper inverse steps can depend on higher bits of t.
+The next useful step for the remaining t ≡ 15 (mod 32) cylinders is still to formalize the all-depth fan and attack the surviving parent family using the simultaneous mod-10/mod-5 constraints. Do not infer whole-cylinder exclusion from representative t values: deeper inverse steps can depend on higher bits of t.
+
+
+## 6. Separate low-valuation closure draft: t ≡ 31 (mod 32)
+
+This cylinder is a special slice of A4 where the target sum has exact 2-adic valuation three:
+
+```
+(A4_x(t)+A4_y(t)) % 16 = 8.
+```
+
+It can be closed without formalizing the full all-depth fan. The draft in `Root32HighStopA4.lean` applies the already source-certified `oddodd_lowval_blank_reach_iff`, forcing
+
+```
+p = (A4_x+A4_y-4)/2
+q = (A4_x+3*A4_y-10)/4.
+```
+
+Exact affine arithmetic gives
+
+```
+8*(p+q) = 38046615075*t + 10202761387
+8*q     = 18324830685*t + 4914073813.
+```
+
+For t ≡ 31 (mod 32), these imply q is odd and p+q ≡ 1 (mod 4). The existing `run_no_odd_sum_one` theorem therefore excludes the only parent, proving A4(t) unreachable on this cylinder.
+
+The same draft closes the corrected P7E1E residual there: its even/even parent fan has target sum 2 mod 8, so only the direct parent D(t) survives; `odd_seven_blank_reach_iff` then forces A4(t).
+
+**Acceptance boundary:** this is a source-proof draft, not an accepted result. The current invocation could not run the required local Lean 4.36.0-rc2 preflight. The draft covers t ≡ 31 (mod 32), including t ≡ 31 (mod 256), but does not close the other A4 cylinders or the full high-stop target. Do not move it to results/ before compilation and axiom audit.
