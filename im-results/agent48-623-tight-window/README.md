@@ -1,6 +1,6 @@
 # Correction-only #623 S-indexed reset window
 
-**Status:** reproducible finite diagnostic and an algebraic buffer refinement; not an all-time #623 theorem.
+**Status:** reproducible finite diagnostics, an algebraic buffer refinement, and an exact weighted-mass drift identity for canonical transitions; not an all-time #623 theorem.
 
 ## 1. Drop the terminal term from the window buffer
 
@@ -196,6 +196,65 @@ The witness-length refinement reduces observed branching, but neither product is
 
 Reproducibility note: `s_window_boundary_phases.js` now reads Agent 49's `ResetPostStateDFA.json`, populates consecutive S-window phase and post-reset product graphs, and exports their node/edge counts, outdegree histograms, post-reset label distributions, and failure counts in `SWindowBoundaryPhases.json`. The script currently uses Agent 49's full output labels; the buffer-relative quotient is a separate artifact and has not yet been added to that script. It records only edges observed along the finite root prefix; it does not enumerate all possible transitions and does not establish all-time closure.
 
-## 6. Next useful use
+## 6. Exact weighted-mass drift on canonical transitions
+
+The signed-coordinate normal form gives a branch-independent update
+\[
+w'=w-q+A,\qquad A=-D-2R+c_A,
+\]
+where \(q=\min(a,d)\), \(D=L-2n_2\), and \(R=n_1+n_2\) is the **full** evaluator-call count (including the initial evaluator in RE). Here \(L\) is the full drain digit length and \(n_1,n_2\) count its ternary output digits 1 and 2. In particular,
+\[
+D+2R=L+2n_1.
+\]
+
+A useful potential is
+\[
+P(a,d)=-w+q+3\mathbf 1_{\{s=LO\}}
+=\begin{cases}
+a+2d-6,&LO,\\
+a+2d-5,&LE,\\
+d+2a-1,&RO,\\
+d+2a-2,&RE.
+\end{cases}
+\]
+The output orientation and the source parity table determine the next sector:
+\[
+LO\xrightarrow{L}LO,\quad LO\xrightarrow{R}RO,\quad
+LE\xrightarrow{L}LE,\quad LE\xrightarrow{R}RE,
+\]
+\[
+RO\xrightarrow{L}LE,\quad RO\xrightarrow{R}RE,\quad
+RE\xrightarrow{L}LO,\quad RE\xrightarrow{R}RO.
+\]
+
+Combining \(w'=w-q+A\) with this sector map gives the exact drift
+\[
+P'-P=q'+L+2n_1+\kappa_{s,\sigma},
+\]
+where \(q'\) is the next state's smaller counter and \(\sigma\) is the output orientation:
+
+| Input sector | Output | Next sector | \(c_A\) | \(\kappa=-c_A+3(\mathbf 1_{s'=LO}-\mathbf 1_{s=LO})\) |
+|---|---|---|---:|---:|
+| LO | L | LO | -9 | 9 |
+| LO | R | RO | -17 | 14 |
+| LE | L | LE | -6 | 6 |
+| LE | R | RE | -9 | 9 |
+| RO | L | LE | 0 | 0 |
+| RO | R | RE | -3 | 3 |
+| RE | L | LO | 3 | 0 |
+| RE | R | RO | -5 | 5 |
+
+Thus every valid canonical transition with a nonempty drain satisfies
+\[
+\boxed{P'\ge P+q'+1.}
+\]
+This is independent of whether the exact output-side threshold is simplified to \(\operatorname{sign}(g)\): both possible orientations are covered. It proves strict growth of this weighted mass and rules out cycles wholly contained in the canonical four-sector regime. Since \(P\ge a+d-6\), an infinite orbit that remains in this regime has unbounded counter mass.
+
+**Scope:** this is an algebraic consequence of the existing \(w\)-update/correction table in [SignedCoordinateNormalForm.md](../agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.md) and the output-parity sector map in [RootRayGapCocycle.md](../agent1-machine623-3euclidean-correction-bounds/RootRayGapCocycle.md). The new potential identity has not itself been added as a Lean theorem. It does not prove that the authentic root remains in the canonical regime, exclude entry into a halting/low-gap branch, or establish nonhalting. Its value is as a compact monotone size invariant once the canonical transition hypotheses are available.
+
+## 7. Next useful use
+
+Agent 32 can compose the 1,318 S-window transition inventory with either Agent 49's full 395-state/54-label or 736-state/186-label interface, or the buffer-relative 349-state/8-label and 580-state/30-label quotients. Prefer the compressed pair+length output when the product retains the current symbol at the first output event and the rolling last-five history; otherwise use the full pair+length interface. Preserve the full universal carry rectangles and a finite weighted-drain/root-language interface. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
+
 
 Agent 32 can compose the 1,318 S-window transition inventory with either Agent 49's full 395-state/54-label or 736-state/186-label interface, or the buffer-relative 349-state/8-label and 580-state/30-label quotients. Prefer the compressed pair+length output when the product retains the current symbol at the first output event and the rolling last-five history; otherwise use the full pair+length interface. Preserve the full universal carry rectangles and a finite weighted-drain/root-language interface. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
