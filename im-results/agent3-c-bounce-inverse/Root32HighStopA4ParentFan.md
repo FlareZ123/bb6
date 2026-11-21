@@ -236,11 +236,11 @@ The remaining \(R_0(s)\) family itself has a useful complete source-preimage cla
 H=4228794328432+6020404634160s
  =16(264299645527+376275289635s).
 \]
-The bracket is always \(2\pmod3\). Also \(x\) is odd and \(y\) is even. Applying the complete section-preimage grammar:
+The bracket is always \(2\pmod5\): \(264299645527\equiv2\pmod5\) and \(376275289635\equiv0\pmod5\). Also \(x\) is odd and \(y\) is even. Applying the complete section-preimage grammar:
 
 - The zero-left and even-\(a\) high branches are impossible because \(x+y\) is odd.
 - The low/direct branch gives exactly \(R_1(s)=(x+y-2,(y-2)/2)\).
-- The exceptional \(a=1\) branch would require \(H=16\cdot2^m\). Its cost equation forces \(m\) even, while \(H/16\equiv2\pmod3\) would force \(2^m\equiv2\pmod3\), hence \(m\) odd. So this branch is impossible.
+- The exceptional \(a=1\) branch would require \(H=16\cdot2^m\). Its cost equation forces \(m\) even. But \(H/16\equiv2\pmod5\), whereas \(2^m\equiv1\) or \(4\pmod5\) for even \(m\), so this branch is impossible.
 - Every remaining predecessor is an odd-\(a\) high-bounce parent with
 \[
 a=H/2^{n+1}-3,\qquad
