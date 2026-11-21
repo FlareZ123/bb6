@@ -240,6 +240,7 @@ def certify() -> None:
     T = lcm(T_tree, T_prior)
 
     assert T == T_EXPECTED
+    assert T % 1260 == 0  # freezes the root hidden-length bound on t=1 (mod T)
     assert factor(T) == {
         2: 4, 3: 7, 5: 3, 7: 1, 11: 1, 13: 1, 17: 1, 19: 1, 23: 1,
     }
