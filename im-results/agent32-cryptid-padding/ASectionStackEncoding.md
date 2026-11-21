@@ -1,0 +1,74 @@
+# Candidate A-section ↔ pair-stack encoding
+
+**Status:** exact local tape-encoding identity identified; the full A-step2/stack-system correspondence is still a conjectural bridge and is not proved here.
+
+This note records a concrete match between the external `int-y1/proofs` A-section macro and the `google-deepmind/cryptids` token-stack representation.
+
+## The first halting-cylinder macro
+
+The external source's `step_An_1101` theorem has a branch for (n\equiv1\pmod3). Write (n=3k+1) and (m=4k-1). Its output is an E-state configuration whose left `ListBlank` expression is
+
+```lean
+default << 1 << 1 <+ [S1, S0]^m << 0 << 0
+```
+
+with the right side unchanged. Under the external `ListBlank` notation, this finite left list is
+[
+[0,0]\; ++\; [1,0]^m\; ++\; [1,1],
+]
+up to the usual blank-extension equivalence.
+
+In the DeepMind #85 token encoding,
+[
+\operatorname{encTokens}(K,R3)
+]
+encodes each (k_i\in K) as (1^{k_i}0), followed by `encLeft R3`; and
+[
+\operatorname{encLeft}([(1,0)])=110.
+]
+Therefore, with
+[
+K=[0,0]\; ++\; \operatorname{replicate}(m,1),
+\qquad R3=[(1,0)],
+\qquad L=[],
+]
+we have
+[
+\operatorname{encTokens}(K,R3)
+=00\,(10)^m\,110,
+]
+which is the same left `ListBlank` as the external expression, since the final extra zero is blank-equivalent. The control state is E and the right side is blank, so this A-step2 intermediate is exactly a `tok_EL K R3 []`-shaped configuration.
+
+The DeepMind source has the generic transition lemma `tok_EL_0_cons`:
+[
+\operatorname{tok\_EL}(0::k::K)\;R3\;L
+\;\vdash^+\;
+\operatorname{tok\_CR}(k+1::K)\;R3\;L.
+]
+It applies to this (K), producing a C-token configuration with (K'=1::\operatorname{replicate}(m,1)). This is a concrete common subconfiguration in the two formal descriptions.
+
+## Right-suffix encoding
+
+The DeepMind definition
+[
+\operatorname{encRightNat}(a::L)=1^{a+1}0\;\operatorname{encRightNat}(L)
+]
+is a run-length encoding of a finite right suffix whose runs of ones are separated by zeros. If the right side begins with a run of ones and has no trailing nonblank zero, its unique run-length list (L) gives the same tape up to blank extension. If the scanned cell is a zero before that suffix, the zero belongs to the head rather than to `encRightNat L`; this is why the exact head-boundary convention matters. The `DL_0_n` mode supplies an explicit leading-zero variant.
+
+## What is and is not established
+
+Established from the source definitions:
+1. the (n\equiv1\pmod3) output of `step_An_1101` has the displayed left tape;
+2. the stated `K,R3` choice gives the same `ListBlank` encoding;
+3. the E control state and blank right side match `tok_EL K R3 []`;
+4. the generic `tok_EL_0_cons` theorem applies.
+
+Not yet established:
+- that the full `A_step2` macro (including its `iterate`, sweep, and return steps) is exactly the corresponding DeepMind token-stack closure;
+- a uniform mapping for the (n\equiv0,2\pmod3) branches and arbitrary suffixes;
+- a mapping from the blank-root `DR_n_n` stack trajectory to the particular A-section cylinder input;
+- that the external 107-call halting path is a path in the DeepMind closed stack system.
+
+## Next proof target
+
+Formalize the displayed E-branch identity in a Lean file importing both source descriptions (or port the small encoding definitions into one project). Then prove one complete A-step2 call corresponds to a finite `tok_EL`/mode closure transition, preserving the encoded `(K,R3,L)` state. The 107-call cylinder can then be translated into a stack-system halting path. Separately, derive the stack state corresponding to the authentic blank root and prove that its orbit reaches the cylinder's input stack state. Do not infer the latter from the local encoding identity alone.
