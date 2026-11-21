@@ -1,6 +1,6 @@
 # Exact finite modular minimization for odd-depth Machine C high stopping residuals
 
-**Status (21 November 2026):** The exact finite modular minimization, logarithmic cutoff, uniform sharp envelope, root-sensitive dyadic gap, and M8-filtered logarithmic bound below have paper proofs. The new arithmetic compositions are **not yet Lean-certified**. The original-source stopping/normalization chain is source-certified. The M8 quotient-filter module's compile step completed in existing source workflow run 42367962614, but its transitive axiom profile has not yet been explicitly audited here; the new arithmetic compositions are paper-level. No complete Machine C or BB(6) decision is asserted.
+**Status (21 November 2026):** The exact finite modular minimization, logarithmic cutoff, uniform sharp envelope, root-sensitive dyadic gap, and M8-filtered logarithmic bound below have paper proofs. The new arithmetic compositions are **not yet Lean-certified**. The original-source stopping/normalization chain is source-certified. The M8 quotient-filter module's compile step completed in existing source workflow run 42367962614, and `#print axioms` reports `[propext, Classical.choice, Quot.sound]` for `affineQuotientExcluded_sound` (no `sorryAx`); the new arithmetic compositions are paper-level. No complete Machine C or BB(6) decision is asserted.
 
 Let m≥1 be odd, j,k,d,Y natural, and suppose
 
@@ -168,7 +168,7 @@ For this sharp family, `t*+3<=2*L`; reducing `3*Q=2^(2*L)-1` modulo `2^(t*+3)` a
 x+2*Y+4*d = 2*j+3+2*k.
 ```
 
-Here `j%4=2`, `k%8=6`, and `d` is odd. Therefore `x%8=7`. The normalized state lies in the `(7,4) mod 8` cylinder used by `affineQuotientCondition` in `im-results/agent15-c-halting/AffineQuotientExclusion.lean`. Its existing `affineQuotientExcluded_sound` theorem rules out `CReach` for this state. The source stopping/normalization theorems are source-certified. The quotient-filter module's compile step completed in workflow 42367962614, which failed later at an unrelated missing `HighZeroEven.lean` path; its transitive axiom profile still needs explicit review. The arithmetic composition placing this infinite family in the cylinder has not yet been added to Lean.
+Here `j%4=2`, `k%8=6`, and `d` is odd. Therefore `x%8=7`. The normalized state lies in the `(7,4) mod 8` cylinder used by `affineQuotientCondition` in `im-results/agent15-c-halting/AffineQuotientExclusion.lean`. Its existing `affineQuotientExcluded_sound` theorem rules out `CReach` for this state. The source stopping/normalization theorems are source-certified. The quotient-filter module's compile step completed in workflow 42367962614, which failed later at an unrelated missing `HighZeroEven.lean` path; its exported axiom profile is `[propext, Classical.choice, Quot.sound]` with no `sorryAx`. The arithmetic composition placing this infinite family in the cylinder has not yet been added to Lean.
 
 The M8 correction removes `v*` at `t=t*`. For `t<t*`, write `s=t*-t>=1`. The least positive residue is `n_t=A/2^s+1`, whence `v_t=2*Q+2^(s+1)*(Q-m)/A>2*Q`. At `t=t*`, the next CRT solution is `v*+4*Q>2*Q`. For `t>t*`, the raw-residue quotient increases with `t`; the first value, at `t=t*+1`, is `((A+1)*Q-m)/A<2*Q`. This candidate is not M8-excluded because `t*+1` is even while `m+1=2 (mod 4)`. The endpoint `t=2*L-1` has `v>3*Q`. Thus the exact minimum after the M8 correction is attained at `t*+1`, and every blank-root-reachable input in this exceptional family satisfies the displayed stronger inequality.
 
@@ -213,7 +213,7 @@ If the first case holds, the solution `v=v_t` would put the actual normalized st
 Y >= 3*min_(0<=t<2*L) vhat_t - 2.
 ```
 
-This is a necessary bound using the existing `affineQuotientExcluded_sound` filter theorem; its transitive axiom audit is still pending. It is not a complete root decision: the other source constraints may exclude more.
+This is a necessary bound using the existing `affineQuotientExcluded_sound` filter theorem; its exported axiom profile is `[propext, Classical.choice, Quot.sound]` with no `sorryAx`. It is not a complete root decision: the other source constraints may exclude more.
 
 #### The M8-filtered minimum also has a logarithmic cutoff
 
