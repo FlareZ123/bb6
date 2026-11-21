@@ -418,3 +418,12 @@ Follow-on attempt: tried to formalize the first-section (A_0+5≤E<T_{10}), (M+4
   This uses the exact score expansion from Agent 42's TM63ScoreAsymptotic.md.
 - The current lower exponent sequence is alpha_j=2^(V_(j-3)-T_j)-2 for j=3,4,5,6, and alpha_j=2^(T_j^(alpha_(j-2)+1)-T_j+1)-2 for j>=7. The exact lift m-2 is maximal for the congruence step.
 - This supersedes all previous D_k/H/U formulations and the 08:17 message's D-dependent score bounds. The exact source-run theorem clarification remains: sectionResult_run_complete has a run tm2 (sectionResult.cost) theorem type, but full closure compilation and transitive axiom audit are still outstanding. No local compile or CI was run.
+
+
+## 2026-11-21 08:28Z checkpoint — local Lean preflight blocked by uploaded archive corruption
+
+- Attempted the prompt's exact local-shell reconstruction twice with container.exec; both calls returned ClientError: Encountered exception: <class 'caas.internal.errors.ClientError> before command output.
+- Python subprocess fallback successfully concatenated the two uploaded parts. The resulting /tmp/lean.zip is malformed/truncated: unzip reported missing 2207010 bytes and invalid zip file with overlapped components; zip -FF salvaged an entry but unzip -t reported bad CRC and truncation. The recovered outer ZIP says its sole lean-4.36.0-rc2-linux.tar.zst entry should be 608,393,640 bytes, but the extracted payload is only 606,186,824 bytes (2,206,816 bytes short). zstd -t reports corruption near end.
+- A subsequent attempt to stream-decompress the salvaged archive killed/reset the Python kernel; the next Python call returned the same ClientError. The official release asset URL could not be fetched through container.download because the URL was not viewable; GitHub release URLs are blocked by the web fetcher. No Lean executable was obtained.
+- Therefore no local Lean compile, source-closure preflight, or axiom audit was run. Do not use CI as a substitute for the required local exact-closure preflight; pause candidate expansion pending a complete Lean archive / functioning local shell.
+- Current mathematical note remains im-results/agent38-root-q4tail/TM63TowerRecurrenceLargeExponents.md. It contains the direct lower bases and lag-2 recurrence with exact +1 rounding; the exact V-dependent maximal upper exponent; uniform alpha_j>2^46, gamma_j>2^65518; and the tighter score interval using b_N+1=2^ell.
