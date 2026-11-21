@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-// Reproduce the first six S4 suffix-renormalization levels.
+// Reproduce six S4 suffix-renormalization levels and the deeper 15-digit return.
 // Q's 18-prefix scan uses Number only under the explicit mass bound (< 2^53);
 // every later level, full-stack gate, and accumulated sum uses BigInt.
 
@@ -327,7 +327,209 @@ yMass.headAdds = Ydata.adds;
 const tailAfterY = applyWord(Y, tailAfterX.slice(8));
 assert(tailAfterY !== null, "halt in one Y block");
 
-// Continue the exact BigInt Y-word action for 1,000 additional blocks.
+function extractWordWithPending(prefixStart, baseWord, blocks, name) {
+  let prefix = prefixStart.slice();
+  let pending = 0n;
+  let adds = 0;
+  const word = [];
+  for (let k = 0; k < blocks; k++) {
+    for (const c of baseWord) {
+      const e = boundary(prefix, c);
+      if (e.kind === 1) { pending += e.d; adds++; }
+      else if (e.kind === 2) { word.push(e.d + pending); pending = 0n; }
+      prefix = prefixStep(prefix, c);
+    }
+  }
+  assert(same(prefix, prefixStart), name + ": prefix did not return");
+  return { word, pending, adds, finalPrefix: prefix };
+}
+function shiftedWord(word, delta) {
+  const out = word.slice();
+  out[0] += delta;
+  return out;
+}
+function repeatSkewedWord(word, pending, blocks) {
+  const out = [];
+  for (let k = 0; k < blocks; k++) {
+    const part = k === 0 ? word : shiftedWord(word, pending);
+    for (const c of part) out.push(c);
+  }
+  return out;
+}
+function applySkewedWord(word, pending, xs) {
+  const out = applyWord(word, xs.slice());
+  if (out === null) return null;
+  out[0] += pending;
+  return out;
+}
+function prefixSkewedWord(word, pending, prefix) {
+  let out = prefix.slice();
+  for (const c of word) out = prefixStep(out, c);
+  out[0] += pending;
+  return out;
+}
+function verifyNestedFactor(name, baseWord, basePending, blocks,
+    prefix, suffix, extractedWord, extractedPending) {
+  let direct = [...prefix, ...suffix];
+  for (let k = 0; k < blocks; k++) {
+    direct = applyWord(baseWord, direct);
+    assert(direct !== null, name + ": direct composition halted");
+    direct[0] += basePending;
+  }
+  const mapped = applySkewedWord(extractedWord, extractedPending, suffix);
+  assert(mapped !== null, name + ": extracted suffix map halted");
+  assert(same(direct, [...prefix, ...mapped]),
+    name + ": all-suffix factorization witness mismatch");
+  return { name, verified: true, blocks, resultingLength: direct.length };
+}
+function checkSkewedPrefixCycle(name, word, pending, initial, period) {
+  let state = initial.slice();
+  const firstDigits = [String(state[0])];
+  for (let k = 1; k <= period; k++) {
+    state = prefixSkewedWord(word, pending, state);
+    firstDigits.push(String(state[0]));
+    if (k < period)
+      assert(!same(state, initial), name + ": period was not minimal");
+  }
+  assert(same(state, initial), name + ": prefix did not return");
+  return { name, period, firstDigits };
+}
+function scanSkewedPrefixPeriods(word, pending, initial, maxBlocks, maxDigits) {
+  let state = initial.slice();
+  const seen = Array.from({ length: maxDigits + 1 }, () => new Map());
+  const periods = Array(maxDigits + 1).fill(null);
+  for (let n = 1; n <= maxDigits; n++)
+    seen[n].set(state.slice(0, n).map(String).join(","), 0);
+  const lengthChanges = [];
+  let previousLength = state.length;
+  for (let block = 1; block <= maxBlocks; block++) {
+    state = applySkewedWord(word, pending, state);
+    assert(state !== null, "skewed prefix scan halted at block " + block);
+    if (state.length !== previousLength) {
+      lengthChanges.push({ block, from: previousLength, to: state.length });
+      previousLength = state.length;
+    }
+    for (let n = 1; n <= maxDigits; n++) {
+      if (periods[n] !== null) continue;
+      const key = state.slice(0, n).map(String).join(",");
+      if (seen[n].has(key)) {
+        const first = seen[n].get(key);
+        periods[n] = { preperiod: first, period: block - first, returnAt: block };
+      } else seen[n].set(key, block);
+    }
+  }
+  return {
+    blocks: maxBlocks,
+    maxDigits,
+    periods: periods.slice(1),
+    lengthChanges,
+    initialLength: initial.length,
+    finalLength: state.length,
+    initialPrefix: show(initial.slice(0, maxDigits)),
+    finalPrefix: show(state.slice(0, maxDigits))
+  };
+}
+function checkMassWithPending(name, word, pending, returns, headAdds) {
+  const offsetSum = sumWord(word);
+  const total = offsetSum + 2n * BigInt(word.length) + pending;
+  const expected = 1024n * returns;
+  assert(total === expected, name + ": pending-aware mass identity failed");
+  return {
+    returns: String(returns),
+    gates: word.length,
+    headAdds,
+    pending: String(pending),
+    offsetSum: String(offsetSum),
+    massTotal: String(total),
+    massIdentity: true
+  };
+}
+
+// Y's first suffix digit (the ninth root digit) has period five.
+// Extract Z = Y^5 on the suffix after that digit.
+const yReturns = 128n * 640n * 64n * 800n * 12800n * 64n * 327680n;
+const Zdata = extractWordWithPending(tailAfterY.slice(0, 1), Y, 5, "Z");
+const Z = Zdata.word;
+assert(Zdata.pending === 0n, "Z unexpectedly has a pending head addition");
+const tailAfterZ = applyWord(Z, tailAfterY.slice(1));
+assert(tailAfterZ !== null, "halt in one Z block");
+
+// Four Z blocks return the tenth digit and induce a skewed map F on the
+// suffix after it: F(S) = addHead(pF, applyWord(Fword, S)).
+const Fdata = extractWordWithPending(tailAfterZ.slice(0, 1), Z, 4, "F");
+const Fword = Fdata.word;
+const pF = Fdata.pending;
+const F1Tail = applySkewedWord(Fword, pF, tailAfterZ.slice(1));
+assert(F1Tail !== null, "halt in one F block");
+
+// Verify the two nested all-suffix factorizations on the actual suffixes.
+const nestedFactorChecks = [
+  verifyNestedFactor("Y^5 -> Z", Y, 0n, 5,
+    tailAfterY.slice(0, 1), tailAfterY.slice(1), Z, Zdata.pending),
+  verifyNestedFactor("Z^4 -> F", Z, 0n, 4,
+    tailAfterZ.slice(0, 1), tailAfterZ.slice(1), Fword, pF)
+];
+
+// The first digit of each successive suffix has a small exact cycle.
+const nestedCycles = [
+  checkSkewedPrefixCycle("ninth digit under Y", Y, 0n,
+    tailAfterY.slice(0, 1), 5),
+  checkSkewedPrefixCycle("tenth digit under Z", Z, 0n,
+    tailAfterZ.slice(0, 1), 4),
+  checkSkewedPrefixCycle("eleventh digit under F", Fword, pF,
+    tailAfterZ.slice(1, 2), 4)
+];
+
+// Starting after one F block, the first five digits of the remaining suffix
+// have exact periods 4, 16, 64, 320, 1280. The scan applies the full skewed
+// word to the full suffix, not merely to a truncated prefix.
+const F_PREFIX_SCAN_BLOCKS = 1280;
+const F_PREFIX_SCAN_DIGITS = 5;
+const FprefixPeriodScan = scanSkewedPrefixPeriods(
+  Fword, pF, F1Tail, F_PREFIX_SCAN_BLOCKS, F_PREFIX_SCAN_DIGITS);
+const expectedFPeriods = [4, 16, 64, 320, 1280];
+for (let i = 0; i < expectedFPeriods.length; i++) {
+  const found = FprefixPeriodScan.periods[i];
+  assert(found !== null && found.preperiod === 0 &&
+    found.period === expectedFPeriods[i],
+    "F prefix period mismatch at depth " + (i + 1));
+}
+
+// One F block is Z^4 = Y^20. The 15-digit root prefix therefore reaches
+// this eventual cycle after 25 additional Y blocks and returns after 25,600.
+const first15CycleStart = [
+  ...p8AfterX, tailAfterY[0], tailAfterZ[0], ...F1Tail.slice(0, 5)
+];
+assert(first15CycleStart.length === 15, "15-digit cycle prefix length");
+const first15PreperiodYBlocks = 25n;
+const first15PeriodYBlocks = 20n * BigInt(FprefixPeriodScan.periods[4].period);
+const first15Cycle = {
+  cycleStartAfterAdditionalYBlocks: String(first15PreperiodYBlocks),
+  oneBasedYBlockAtCycleStart: String(first15PreperiodYBlocks + 1n),
+  witnessedPeriodYBlocks: String(first15PeriodYBlocks),
+  yReturnsPerBlock: String(yReturns),
+  preperiodPReturns: String(first15PreperiodYBlocks * yReturns),
+  periodPReturns: String(first15PeriodYBlocks * yReturns),
+  first15DigitsAtCycleStart: show(first15CycleStart)
+};
+const nestedReturnHierarchy = {
+  YtoZ: {
+    blocks: 5,
+    prefixDigits: 1,
+    word: checkMassWithPending("Z", Z, Zdata.pending, 5n * yReturns, Zdata.adds)
+  },
+  ZtoF: {
+    blocks: 4,
+    prefixDigits: 1,
+    word: checkMassWithPending("F", Fword, pF, 20n * yReturns, Fdata.adds)
+  },
+  factorizationChecks: nestedFactorChecks,
+  prefixCycles: nestedCycles,
+  FprefixPeriodScan,
+  first15Cycle
+};
+
+// Continue the exact BigInt Y-word action for 10,000 additional blocks.
 // A full-suffix event is the only place where the terminal quotient is formed;
 // its odd part equals 1 exactly when the original source gate halts.
 const Y_SCAN_ADDITIONAL_BLOCKS = 10000;
@@ -515,6 +717,7 @@ console.log(JSON.stringify({
   yBlockScan,
   yPrefix30Cycle,
   yPrefix30CarrySummary,
+  nestedReturnHierarchy,
   terminalQuotientObstruction,
   quotientNonClosure,
   states: {
