@@ -32,6 +32,7 @@ The script measures every state after every `stepSym` transition, not only the c
 | Sum of repeat counters | 12,464,561,897,144,001,482,331,935,594,779,263,804,489,570,179,353,031,112,085,238 | — | 412,597,277,036,535,860,912 | — |
 | Decoded tape length (including repeated blocks) | 31,161,404,742,860,003,705,829,838,986,948,159,511,223,925,448,382,577,780,216,103 | 205 | 1,031,493,192,591,339,653,257 | 70 |
 | Number of symbolic tokens | 94 | — | 78 | — |
+| Largest `prependZeroSym` expansion | 12 | — | 10 | — |
 
 The decoded tape-length calculation expands each `repB1` as 2 items, each `rep2` as 3 items, and each `rep12` as 5 items, without physically allocating those repetitions.
 
