@@ -151,7 +151,7 @@ The previous coarse argument's hardest obligation is proving `M≤2^128` and `L�
 4. At the final halted state, combine the bounded trace with `StateHalts` to obtain `HaltsAfter` at some `n≤runBatchesBound 380 ckpt0`.
 5. Evaluate the concrete `runBatchesBound 380 ckpt0` with `native_decide` (or kernel reduction if tractable) and prove it is below the champion bound. This computes over the actual intermediate states, so no separate guessed maximum-counter invariant is required.
 
-This is the preferred route: the deterministic state path is already executable and checkpointed by the upstream proof. The only new proof burden is the branchwise cost soundness. The global `M,L` argument below is a fallback if evaluating the accumulator is too expensive.
+This is the preferred route: the deterministic state path is already executable and checkpointed by the upstream proof. The only new proof burden is the branchwise cost soundness. The global `M,L` argument below is a fallback if evaluating the accumulator is too expensive. The final local transfer is already available: `im-results/agent4-coverage-smoke/CryptidsHaltIff.lean` proves `BB6.ConjectureBridge.source_halts_after_iff_agent8_halts_after m n`, converting an exact source-run halt at `n` to `BB6Coverage.HaltsAfter (toAgent8 m) n`. Thus a bounded RLE trace plus the final no-successor fact can feed the existing `DecidedBelow` pipeline; no new absolute-tape adapter is needed.
 
 ## Coarse-bound strategy (conjectural until proved)
 
