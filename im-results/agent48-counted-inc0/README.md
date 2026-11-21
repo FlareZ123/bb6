@@ -63,8 +63,11 @@ and then invokes the counted all-ones drain. Its exported
 For marker 1, the declared cost unfolds to
 \(6\cdot4^b+42\cdot2^b+19+12(a+v_2(n))-9b\).
 
-This is a reusable source-level macro, **not an authentic-root continuation**.
-The exact acceptance target is the complete import closure of
+This theorem is a reusable source-level macro, **not itself a blank-root theorem**.
+It is already consumed by `TM63RootMiddle34.lean` for authentic-root row 32
+and by `TM63SourceIncrementDispatcher.lean` for the general marker-1 branch.
+Those compositions remain intermediate until their exact closures compile and
+their axiom profiles pass; no halting claim follows. The exact acceptance target is the complete import closure of
 \`M1EvenValuationSource.lean\`, with axiom profiles for its five exported
 q4/reset/counting declarations and no transitive \`sorryAx\`. The focused
 \`m1-even-valuation-source.yml\` workflow is intentionally the leaf diagnostic
