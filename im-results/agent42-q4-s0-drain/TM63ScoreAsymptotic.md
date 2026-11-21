@@ -84,6 +84,17 @@ where the remaining nonnegative contribution is exactly
 \tag{5}
 \]
 
+The coefficients displayed in (4) come **solely from the last two
+dispatcher summands** \(j=N-1\) and \(j=N-2\). In particular, the
+terminal macro \(59+12(W+E)\), the final counted halt transition, and
+the associated \(+7\)/popcount/width corrections are not part of either
+peeled summand: they remain in the non-summand \(D_N\) contribution
+\(10N^2+37N+90+12(N+1)U\) inside \(\Delta_2\). The raw initial counted
+drain remains in \(D_{\rm root}\), and the root prefix remains in
+\(C_{\rm root}\). Thus \(\Delta_2\) contains every term other than the
+two isolated dispatcher summands, with the terminal cost counted
+exactly once.
+
 ## Bounding the second remainder
 
 Because \(b_0=R\ge63\) and \(b_{j+1}=2^{b_j}-1\), every update satisfies
