@@ -608,6 +608,180 @@ theorem right_reset_word_actual_output_nonmono
   rw [hq0digit, hq1digit, hq2digit]
   exact hreset
 
+
+/-!
+## Arbitrary-word affine digit bridge
+
+The earlier reset-output lemmas are specialized to the three-symbol word
+01,00,00.  The definitions below expose the full x-digit stream for an
+arbitrary source-pair word length.  The y input is offset by one digit in L,
+and the previous x/y pair is retained in R, exactly as in the carry
+transducers.
+-/
+
+/-- First n Euclidean base-three digits of an integer. -/
+def intDigitsFrom (z : Int) : Nat → List Int
+  | 0 => []
+  | n+1 => (z%3) :: intDigitsFrom (z/3) n
+
+/-- Source digit pairs for an L boundary.  The y digit is one place ahead:
+    the first L x-output digit uses the preceding y digit Y%3. -/
+def leftSourcePairs (X Y : Int) : Nat → List (Int × Int)
+  | 0 => []
+  | n+1 =>
+      (X%3, (Y/3)%3) :: leftSourcePairs (X/3) (Y/3) n
+
+/-- x-output stream of the L carry transducer on an arbitrary pair word. -/
+def leftCarryXOutput (prevY carryX : Int) :
+    List (Int × Int) → List Int
+  | [] => []
+  | (u,v)::xs =>
+      let t := u - prevY + carryX
+      (t%3) :: leftCarryXOutput v (t/3) xs
+
+/-- x-output stream of the R carry transducer on an arbitrary pair word. -/
+def rightCarryXOutput (prevX prevY carryX : Int) :
+    List (Int × Int) → List Int
+  | [] => []
+  | (u,v)::xs =>
+      let t := -u - prevX - prevY + carryX
+      (t%3) :: rightCarryXOutput u v (t/3) xs
+
+/-- The L carry transducer agrees, for every word length, with the
+    corresponding affine output x-tail X-Y+a. -/
+theorem left_carry_x_output_matches_affine
+    (X Y a : Int) (n : Nat) :
+    leftCarryXOutput (Y%3) a (leftSourcePairs X Y n) =
+      intDigitsFrom (X-Y+a) n := by
+  induction n generalizing X Y a with
+  | zero => rfl
+  | succ n ih =>
+      let t : Int := X%3 - Y%3 + a
+      have hstep := left_tail_step X Y (X%3) (Y%3) a 0 rfl rfl
+      change (t%3) ::
+          leftCarryXOutput ((Y/3)%3) (t/3)
+            (leftSourcePairs (X/3) (Y/3) n) =
+        (X-Y+a)%3 :: intDigitsFrom ((X-Y+a)/3) n
+      rw [hstep.1]
+      rw [ih (X/3) (Y/3) (t/3)]
+      rw [← hstep.2.2.1]
+
+/-- Source digit pairs for an R boundary.  The compatibility X0/3=X is
+    supplied by nested Euclidean division at an actual 3K boundary. -/
+def rightSourcePairs (X X0 Y0 : Int) : Nat → List (Int × Int)
+  | 0 => []
+  | n+1 =>
+      (X%3, (Y0/3)%3) ::
+        rightSourcePairs (X/3) (X0/3) (Y0/3) n
+
+/-- The R carry transducer agrees, for every word length, with the
+    corresponding affine output x-tail -X-X0-Y0+a. -/
+theorem right_carry_x_output_matches_affine
+    (X X0 Y0 a : Int) (n : Nat)
+    (hcompat : X0/3 = X) :
+    rightCarryXOutput (X0%3) (Y0%3) a
+      (rightSourcePairs X X0 Y0 n) =
+        intDigitsFrom (-X-X0-Y0+a) n := by
+  induction n generalizing X X0 Y0 a with
+  | zero => rfl
+  | succ n ih =>
+      let t : Int := -(X%3) - (X0%3) - (Y0%3) + a
+      have hstep :=
+        right_tail_step X X0 Y0 (X%3) (X0%3) (Y0%3) a 0 rfl rfl rfl
+      have hcompat' : (X0/3)/3 = X/3 := by rw [hcompat]
+      have hprev : (X0/3)%3 = X%3 := by rw [hcompat]
+      change (t%3) ::
+          rightCarryXOutput (X%3) ((Y0/3)%3) (t/3)
+            (rightSourcePairs (X/3) (X0/3) (Y0/3) n) =
+        (-X-X0-Y0+a)%3 ::
+          intDigitsFrom ((-X-X0-Y0+a)/3) n
+      rw [hstep.1]
+      rw [← hprev]
+      rw [ih (X/3) (X0/3) (Y0/3) (t/3) hcompat']
+      rw [← hstep.2.2.1]
+
+/-- Actual L successor digits are exactly the arbitrary-length output of
+    the L carry transducer, with no restriction on the source word length. -/
+theorem left_actual_affine_carry_xdigits
+    (K x y C F x' y' : Int) (n : Nat)
+    (hK : 0 < K)
+    (hxout : x' = x - 3*y + C)
+    (hyout : y' = 3*y + F) :
+    leftCarryXOutput ((y/K)%3)
+      (leftCarryX K (x%(3*K)) (y%K) C)
+      (leftSourcePairs (x/(3*K)) (y/K) n) =
+        intDigitsFrom (x'/(3*K)) n := by
+  have hquot :=
+    left_actual_affine_boundary_quotients K x y C F x' y' hK hxout hyout
+  calc
+    _ = intDigitsFrom
+        (x/(3*K) - y/K +
+          leftCarryX K (x%(3*K)) (y%K) C) n :=
+      left_carry_x_output_matches_affine
+        (x/(3*K)) (y/K)
+        (leftCarryX K (x%(3*K)) (y%K) C) n
+    _ = intDigitsFrom (x'/(3*K)) n := by rw [← hquot.1]
+
+/-- Actual R successor digits are exactly the arbitrary-length output of
+    the R carry transducer, with no restriction on the source word length. -/
+theorem right_actual_affine_carry_xdigits
+    (K x y C F x' y' : Int) (n : Nat)
+    (hK : 0 < K)
+    (hxout : x' = -4*x - 3*y + C)
+    (hyout : y' = 3*x + 3*y + F) :
+    rightCarryXOutput ((x/K)%3) ((y/K)%3)
+      (rightCarryX K (x%(3*K)) (x%K) (y%K) C)
+      (rightSourcePairs (x/(3*K)) (x/K) (y/K) n) =
+        intDigitsFrom (x'/(3*K)) n := by
+  have hquot :=
+    right_actual_affine_boundary_quotients K x y C F x' y' hK hxout hyout
+  have hcompat : (x/K)/3 = x/(3*K) := ediv_div_three x K hK
+  calc
+    _ = intDigitsFrom
+        (-(x/(3*K)) - x/K - y/K +
+          rightCarryX K (x%(3*K)) (x%K) (y%K) C) n :=
+      right_carry_x_output_matches_affine
+        (x/(3*K)) (x/K) (y/K)
+        (rightCarryX K (x%(3*K)) (x%K) (y%K) C) n hcompat
+    _ = intDigitsFrom (x'/(3*K)) n := by rw [← hquot.1]
+
+/-- The shift-aware reset condition: a digit list contains at least one
+    digit different from 0 and at least one digit different from 2. -/
+def NonMonoDigitList (xs : List Int) : Prop :=
+  (∃ z, z ∈ xs ∧ z ≠ 0) ∧ (∃ z, z ∈ xs ∧ z ≠ 2)
+
+/-- If an arbitrary L transducer word has a nonmonochromatic suffix after
+    dropping its first output digit, then the same is true of the actual
+    successor-coordinate digits. -/
+theorem left_actual_affine_drop_first_nonmono
+    (K x y C F x' y' : Int) (n : Nat)
+    (hK : 0 < K)
+    (hxout : x' = x - 3*y + C)
+    (hyout : y' = 3*y + F)
+    (hnm : NonMonoDigitList
+      ((leftCarryXOutput ((y/K)%3)
+        (leftCarryX K (x%(3*K)) (y%K) C)
+        (leftSourcePairs (x/(3*K)) (y/K) n)).drop 1)) :
+    NonMonoDigitList ((intDigitsFrom (x'/(3*K)) n).drop 1) := by
+  rw [left_actual_affine_carry_xdigits K x y C F x' y' n hK hxout hyout]
+    at hnm
+  exact hnm
+
+/-- R version of the arbitrary-word, drop-first actual-output bridge. -/
+theorem right_actual_affine_drop_first_nonmono
+    (K x y C F x' y' : Int) (n : Nat)
+    (hK : 0 < K)
+    (hxout : x' = -4*x - 3*y + C)
+    (hyout : y' = 3*x + 3*y + F)
+    (hnm : NonMonoDigitList
+      ((rightCarryXOutput ((x/K)%3) ((y/K)%3)
+        (rightCarryX K (x%(3*K)) (x%K) (y%K) C)
+        (rightSourcePairs (x/(3*K)) (x/K) (y/K) n)).drop 1)) :
+    NonMonoDigitList ((intDigitsFrom (x'/(3*K)) n).drop 1) := by
+  rw [right_actual_affine_carry_xdigits K x y C F x' y' n hK hxout hyout]
+    at hnm
+  exact hnm
+
 #print axioms left_affine_boundary_quotients
 #print axioms right_affine_boundary_quotients
 #print axioms left_source_reset_from_affine_correction
