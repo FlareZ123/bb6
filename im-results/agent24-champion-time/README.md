@@ -99,11 +99,15 @@ The root-scale comparison used above must include the full exponent
 \\[
 A=\\sum_{j=7}^{M+42}V_j+\\frac{5M+176}{3}.
 \\]
-For \\(x=V_{M+42}\\), the recurrence gives
-\\(V_{j+1}\\ge4V_j\\), hence the sum is
-\\(<4x/3\\); also \\((5M+176)/3<2x/3\\), so
-\\(A<2x\\). This proves \\(N<R\\) and validates
-\\(N\\le u_p\\) for the uniform tail estimate. The additive term in
+For \\(x=V_{M+42}\\), we have \\(x\\ge2^{M+42}\\), and the
+recurrence gives \\(V_{j+1}\\ge4V_j\\), hence the sum is
+\\(<4x/3\\). Since \\(2^{M+43}>5M+176\\), the linear term is
+\\(<2x/3\\), so \\(A<2x\\). Therefore
+\\(N<2^{2x+78}\\); meanwhile
+\\(V_{M+45}\\ge V_{M+43}=2^x-1>2x+78\\), giving
+\\(R=V_{M+46}=2^{V_{M+45}}-1>2^{2x+78}-1\\ge N\\).
+This proves \\(N<R\\) and validates \\(N\\le u_p\\) for the
+uniform tail estimate. The additive term in
 \\(A\\) should be retained explicitly in any restatement of that proof.
 
 All these expansions are paper-level consequences of the conditional
