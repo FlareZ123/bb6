@@ -406,3 +406,15 @@ Follow-on attempt: tried to formalize the first-section (A_0+5≤E<T_{10}), (M+4
 - The upper theorem remains unified: d_2=65473, D_k=2^d_k, d_(k+1)=T_(k+3)-2^(T_(k+2)-d_k)-1, gamma_j=2^(T_(j+1)-T_j)-2^(T_(j+1)-T_j-d_(j-1)) for all j>=3, with V_k<T_(k+4)^(1/D_k).
 - The exact conditional score interval remains valid and now uses this stronger alpha sequence: lower 6(L_b+2)^2+42(L_b+2)+3(L_ell+1) <= S_TM1; upper 6U^2+42U+3H+10(1+log2 H)H^2, with L_b,L_ell,E,D,H,U as in the note and the source expansion in Agent 42's TM63ScoreAsymptotic.md.
 - The 08:11 lag-3 and 08:13 lag-2 messages are superseded by the current lag-2 recurrence with the +1 integer-rounding improvement and unified bases. Source run theorem clarification remains: sectionResult_run_complete has exact run tm2 (sectionResult.cost) type; acceptance still requires full closure compilation and axiom audit. No local compile or CI was run.
+
+
+## 2026-11-21 08:21Z checkpoint — exact V-dependent upper exponent and exact score upper
+
+- Replaced the auxiliary recursive denominator D_k entirely with the sharper exact exponent in im-results/agent38-root-q4tail/TM63TowerRecurrenceLargeExponents.md, commit f30ee46647bb8fc006a0d8f01b2bfa436243e184. For every j>=3,
+  gamma_j=2^(T_(j+1)-T_j)-2^(V_(j-3)-T_j).
+  The lower theorem gives V_(j-3)>T_j and the elementary upper comparison gives V_(j-3)<T_(j+1), so gamma_j is a positive integer. Since 2^(V_(j-3)) is divisible by T_(j+1), Y*gamma_j=T_(j+2)-2^(V_(j-3)). The exact recurrence gives V_(j-1)=2^(2^(V_(j-3))-1)-1<2^(2^(V_(j-3))), which proves V_j^(T_(j+2)^gamma_j)<T_(j+4). This is sharper and simpler than the former d_k recurrence; the gamma_3 value remains 2^65520-2^47.
+- Tightened the conditional score upper endpoint in commit 2d861144385736ee0ec6f1adb93cae1dfab35e93. Since b_N=V_(q-4), ell=V_(q-5), and b_N+1=2^ell exactly, there is no need to use a loose tower-root U/H. With L_b=T_(q-1)^(T_(q-2)^(alpha_(q-4))), L_ell=T_(q-2)^(T_(q-3)^(alpha_(q-5))), and B=max(L_b+2,2^(L_ell+1)), the source-conditional interval is
+  6 B^2+42 B+3(L_ell+1) <= S_TM1 < 6*2^(2ell)+42*2^ell+3ell+10(1+log2 ell)ell^2.
+  This uses the exact score expansion from Agent 42's TM63ScoreAsymptotic.md.
+- The current lower exponent sequence is alpha_j=2^(V_(j-3)-T_j)-2 for j=3,4,5,6, and alpha_j=2^(T_j^(alpha_(j-2)+1)-T_j+1)-2 for j>=7. The exact lift m-2 is maximal for the congruence step.
+- This supersedes all previous D_k/H/U formulations and the 08:17 message's D-dependent score bounds. The exact source-run theorem clarification remains: sectionResult_run_complete has a run tm2 (sectionResult.cost) theorem type, but full closure compilation and transitive axiom audit are still outstanding. No local compile or CI was run.
