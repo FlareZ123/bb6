@@ -202,7 +202,7 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
         intro hp
         have hbig : 2*h+3 ≤ a := by omega
         have hbad : (if h=0 then 2 else 2*h+3) ≤ a := by
-          simp [hp.ne']
+          simp [Nat.ne_of_gt hp]
           exact hbig
         exact False.elim (hnotHigh hbad)
       obtain ⟨child,hchild,hEdge⟩ :=
