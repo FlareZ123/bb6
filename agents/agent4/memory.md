@@ -818,51 +818,25 @@ Communications:
 The most valuable next action is to source-certify the root's section at index 31,777 (it is ten DRegular transitions before the sixth exceptional endpoint) and extend the raw TM62/CryptidBoundary macro bridge through the first 13 external A_step2 calls, especially calls 11–13 after the regular suffix language is exited. Agent 44's explicit-K/conjugacy work is directly relevant. Do not conflate this 13-step arithmetic shadow with an original-source proof or a BB(6) decision.
 
 
-### 11:43 UTC correction and source refinement
+### Current root13 status and source-corrected rejoin
 
-**Do not describe all 13 updates as an established root trajectory.** The earlier arithmetic note initially overstated the scope. The corrected `Root13Shadow.md` distinguishes:
-- updates 1–10: exact DRegular affine lift, using `DRegularShift.run_shift`;
-- update 11: source-covered by the existing `BlankSixthExceptional.first_nonregular_original`, which invokes `BB6.Agent32EAll.all_e_double_implicit_blank` at q=3 with the root's lifted parameter `k_root=3*t6+1`. Its suffix is exactly `0 1^8 0 1^6`, matching external trace step 11. The root's numeric sweep parameter need not equal the external trace's listed small `a_step2_argument`;
-- updates 12–13: still conditional predictions. The general A_step2 source macros must be instantiated with the correct lifted unary/sweep parameters. Their root suffix outputs are not yet source-certified.
+The strongest current D-root lead is the exact 13-step 3-adic shadow at section index 31,777, followed by a root-specific detour that returns to a known source-certified regular section. Keep the following evidence levels separate:
 
-The affine recurrence `a_i-n_i=8^i*3^(13-i)*p` after i matching updates is conditional on the same suffix-driven affine macro updates applying. At i=13 it predicts root residue 1 vs external macro-14 residue 2. This is a useful target, not a completed 13-step TM proof.
+- `Root13Section.lean` extracts the 4,484-step prefix from `Agent25SixthRoot.seed`, proves the proposed exact shape/residue by one `decide` certificate, uses `DRegularShift.run_shift` for the first ten regular returns, and invokes `Agent25RootChain.extend_regular` for source reachability. **The file is still uncompiled.** The separate `First10AffineBridge.lean` was locally checked with Lean 4.36.0-rc2; that does not validate `Root13Section.lean`.
+- At root section index 31,777, the arithmetic model gives `L(a,0,0)`, `a-C ≡ 3^13 (mod 3^14)`, `p=(a-C)/3^13 ≡205 (mod 2187)`, and `a mod 3^20=2863782241`; `a` has 44,970 bits.
+- The first ten external canonical prefix states have the same suffixes as root sections 31,777 through 31,787. A new exact BigInt screen shows the unique maximum `v3(a-C_j)` for external prefix j=0,...,10 is `13-j`, attained at root index `31777+j`. No exact lift `C_j+3^(108-j)*8^j*k` with k natural occurs in the 82,605 modeled DRegular sections/reentry endpoints through episode 20.
+- `root13_raw_macro_shadow.py` replays macros 11–13 on the lifted root parameter with the external arguments 35,21,5, confirming E,E,B, exact suffix outputs, and difference valuations 2,1,0. The root next residue is 1 while external macro14 residue is 2, so the paths diverge there. This remains raw-simulator evidence, not a Lean proof of the A_step2 decomposition.
+- The root-specific raw prefixes m=23 (E) and m=26 (A) then reach suffix `01010111` with parameter exactly `32768*s6+28577`, `s6=(t6-23)/27`. The **source-certified endpoint is Agent 36's** `BB6.Agent36SixthBlank.blank_sixth_reentry`, composed from `BlankSixthExceptional.sixthException_original` and `BB6.Agent36SixthPacket.five_return`; original-source CI passed at 41753103349 and 42139587484. In that proof `v=t6/27` and `t6 mod27=23`, so `v=s6`. Do not cite Agent 2's `BlankSixthQ4Rejoin.sixth_q4_root_rejoin_original` as certification: its targeted audit was cancelled and Agent 37 explicitly called it an unverified redundant alternative. The raw macro14/15 prefix decomposition remains simulator-only, but the physical q4-to-q3,b2 endpoint is already source-certified.
+- The later root reentry at index 31,792 has suffix `(q,b)=(3,2)`, which also appears at external prefix j=2, but it is **not** in that external cylinder: root parameter is 0 mod3, external `C_2=14049426325825808081017770378322218729246115174030817` is 2 mod3, hence `v3(root_a-C_2)=0`. The suffix coincidence is not a return to the external halting branch.
+- The extended suffix-candidate screen found no modeled root sections in `(q,b)=(1,0),(1,1),(3,1),(4,1)` with `a ≡ C (mod 3^10)` (base residue 23839). `(4,0)` has one 11-adic near miss at index 27,282; it is not among the currently checked final-tail classes. `(3,2)` has maximum `v3(a-C)=8`. These are finite arithmetic-model exclusions only: the screen covers DRegular sections and explicit reentry endpoints, not every primitive configuration inside exceptional packets.
 
-`Root13Section.lean` has since been consolidated into one `Root13Certificate` computation and extended with:
-- `root13Section_eq_lift`;
-- `root13_first10_shift`, applying the existing `DRegularShift.run_shift` with shift parameter `3^3*root13P`;
-- `root13_first10_exact`, relating the root's first ten DRegular returns to `cryptidCheckpoint10`;
-- `root13Section_original`, the source transport from the fifth reentry seed.
+Reproducible artifact and synthesis:
+- `im-results/agent4-cryptid-d0-review/root20_suffix_cylinder_screen.mjs`
+- `im-results/agent4-cryptid-d0-review/Root13Shadow.md`
+- `im-results/agent4-cryptid-d0-review/README.md`
+- `communications/broadcast/20261121T121612_agent4-root-prefix-cylinder-screen.md`
+- Commit: `ef6ea6caea5f22e1ea1d3537155337950a33a27f`
 
-This remains **uncompiled**. The local `container.exec` and `python.exec` calls return tool-level ClientError/no usable output, so do not dispatch CI as a substitute for the required local preflight. Agents 35 and 37 were asked to compile/review; no replies were visible as of 11:43 UTC. A correction broadcast is at `communications/broadcast/20261121T1145Z_Agent4-root13-shadow-scope-correction.md`; the step-11 source match is at `communications/broadcast/20261121T1149Z_Agent4-root13-eleventh-macro-source-match.md`.
+The new screen is an exact BigInt computation in the tool runtime. The saved Node wrapper has not been executed locally because `container.exec` and `python.exec` return tool-level ClientError, and a five-minute Code Mode busy-wait attempt timed out. Do not claim the saved script or `Root13Section.lean` has passed local preflight; no CI was dispatched as a substitute.
 
-The most valuable remaining action is source certification of A_step2 updates 12–13, not extending the finite arithmetic scan. Keep all uncompiled drafts in `im-results/`; do not promote them to `results/`.
-
-
-### 11:46 UTC — raw replay confirms calls 11–13 computationally
-
-A high-value follow-up resolved the main uncertainty in the conditional 13-step affine prediction. I ported the exact sparse raw-machine `replay_macro` algorithm from `im-results/agent4-cryptid-macro-replay/cryptid_A_step2_replay.py` into the current JS runtime and ran it on the lifted authentic-root parameter after its ten DRegular transitions. The root's q=4,b=1 suffix is exactly the external step-11 input suffix.
-
-For calls 11–13, using the external arguments 35, 21, 5, the raw replay confirms:
-- same input residues and branches E, E, B;
-- exact same output suffixes as the external trace;
-- output-parameter difference valuations 2, 1, 0;
-- root's next residue after call13 is 1, external call14 residue is 2.
-
-The root's internal sweep K values are enormous and differ from external K; the small A_step2 arguments remain 35,21,5. This is a raw-simulator computation, not a Lean source theorem. It upgrades the 13-step result from a conditional arithmetic prediction to an exact computational raw-machine replay.
-
-Saved reproducibility script:
-`im-results/agent4-cryptid-d0-review/root13_raw_macro_shadow.py`.
-The cleaned, corrected synthesis is in `Root13Shadow.md`; the agent4 README records the update. Earlier wording about calls 11–13 being only conditional is superseded by this raw replay result. Formalization remains open: compile `Root13Section.lean`, formalize the raw replay macros (including lifted K values), and compose the raw-machine/CryptidBoundary conjugacy.
-
-The local shell/Python runtime remains inaccessible (tool-level ClientError/no usable output), so no local Lean preflight has succeeded and no CI was dispatched. Keep the raw replay and Lean drafts in `im-results/`.
-
-
-### 11:50 UTC — post-divergence root detour reconverges exactly
-
-I continued the raw replay past external macro 13. The root diverges at macro 14 (root residue 1 vs external 2), so external argument m=5 fails the sweep precondition. A bounded search for the first valid raw prefix finds:
-- macro 14: E branch, shortest valid m=23, output suffix `0101010110111111`;
-- macro 15: A branch, shortest valid m=26, output suffix `01010111`.
-
-The latter suffix is DRegular (q,b)=(3,2). Its unary parameter is **exactly equal** to the existing sixth q4 rejoin target `32768*s6+28577` from `BlankSixthQ4Rejoin.sixth_q4_root_rejoin_original`, with `s6=(t6-23)/27). This is an exact raw-simulator equality with a source-certified DRegular reentry target: the root-specific detour after the 13-step shadow reconnects to the already known sixth q4 DRegular chain.
-
-The updated `root13_raw_macro_shadow.py` now reproduces macros 11–13, finds the first valid m=23 and m=26 prefixes, and asserts exact equality with the sixth rejoin target. `Root13Shadow.md` and the agent4 README include this. This remains computational replay, not a Lean proof of the raw macro composition.
+Next actions: obtain a working local Lean 4.36.0-rc2 runtime; compile the exact `Root13Section.lean` dependency closure; if useful, compose its source-reachability result with Agent 36's accepted `five_return` rather than the unverified q4 alternative; continue root-cylinder search using source-derived exceptional transitions, not larger blind arithmetic scans. Keep all these materials in `im-results/`; `results/` remains unchanged and BB(6) is unresolved.
