@@ -1,6 +1,6 @@
 # Exact finite modular minimization for odd-depth Machine C high stopping residuals
 
-**Status (21 November 2026):** The exact finite modular minimization, logarithmic cutoff, uniform sharp envelope, root-sensitive dyadic gap, and M8-filtered logarithmic bound below have paper proofs. The new arithmetic compositions are **not yet Lean-certified**. The original-source stopping/normalization chain is source-certified. The M8 quotient-filter module's compile step completed in existing source workflow run 42367962614, and `#print axioms` reports `[propext, Classical.choice, Quot.sound]` for `affineQuotientExcluded_sound` (no `sorryAx`); the new arithmetic compositions are paper-level. No complete Machine C or BB(6) decision is asserted.
+**Status (21 November 2026):** The exact finite modular minimization, logarithmic cutoff, uniform sharp envelope, the stronger uniform residual wall `4*(3*m+1)*(Y+2) >= 35*2^(2*m+2)-35-24*m` for odd `m>=3`, the root-sensitive dyadic gap, and the M8-filtered logarithmic bound have paper proofs. The new arithmetic compositions are **not yet Lean-certified**. The original-source stopping/normalization chain is source-certified. The M8 quotient-filter module's compile step completed in existing source workflow run 42367962614, and `#print axioms` reports `[propext, Classical.choice, Quot.sound]` for `affineQuotientExcluded_sound` (no `sorryAx`); the new arithmetic compositions are paper-level. No complete Machine C or BB(6) decision is asserted.
 
 Let m≥1 be odd, j,k,d,Y natural, and suppose
 
@@ -134,16 +134,16 @@ The `r=1` case is the existing right-four tower; `r=2` shows that the exact `m=5
 
 ### A root-sensitive gap beyond the sharp envelope
 
-Write `A=3*m+1`. The envelope has two sharply different cases:
-
-- If `A` is not a power of two and `m>=3`, then every deep-sector residual satisfies the stronger arithmetic bound
+Write `A=3*m+1`. The M8 quotient filter combines with the exact CRT residues to give a substantially stronger closed-form wall than the uniform envelope. For **every odd `m>=3`**, any blank-root-reachable deep-sector stopping input satisfies
 
 ```
-A*v >= 5*Q-m,
-A*(Y+2) >= 5*2^(2*m+2)-3*m-5.
+4*A*v >= 35*Q-8*m,
+4*A*(Y+2) >= 35*2^(2*m+2)-35-24*m.
 ```
 
-- If `A=2^(2*r)` (equivalently `m=(4^r-1)/3`), the exact envelope minimizer is source-normalized but lies in the source M8 forbidden cylinder `(x mod 8, Y mod 8)=(7,4)`. The exact M8-filtered minimum is the next exponent residue `t*=2*r-1` plus one, so for every `r>=2` any **blank-root-reachable** deep-sector input in this exceptional family must satisfy
+Here `v=(Y+2)/3` and `Q=(2^(2*m+2)-1)/3`. This is a necessary condition on the actual source-normalized residual, not a reachability decision. For the non-dyadic case below, the inequality already follows from the raw CRT minimum; the M8 exclusion is essential in the dyadic exceptional case. The bound is tight to within the small `2*m` correction at `m=3` and `m=9`, where the exact filtered minima are attained.
+
+If `A` is not a power of two, the proof below establishes the displayed inequality without using the M8 correction. If `A` is a power of two, then `A=4^r` because `A≡1 (mod 3)` and `A` is even. For `r>=2), the exact M8-filtered minimum is stronger:
 
 ```
 A*v >= (A+1)*Q-m,
@@ -151,13 +151,56 @@ A*(Y+2) >= 3*((A+1)*Q-m),
 Y >= 2^(2*m+2)+2^(2*m+2)/A-4.
 ```
 
-Here `x` is the first coordinate of the actual `affineNormalize` output. The second inequality is a root-sensitive necessary bound; it does not assert that any remaining input is reachable. The case `m=1` is separately covered by the existing right-four exclusion and by the general M8-filtered bound below.
+The case `r=1` is `m=1`; the general M8-filtered minimum gives `v>=6`, hence `Y>=16` (the raw minimum `v=2), `Y=4` is M8-forbidden).
 
 #### Non-power-of-two case
 
-Let `s` be the least integer with `2^s>A/2`. Then `A/2<2^s<=A`. For `t<=s-1`, we have `2^t<=A/2`. The quotient residue `n_t` equals one exactly when `v2(A)=t+1`. Write `A=2^u*w` with `w` odd. Since `A` is not a power of two, `w>=3`; at the unique possible `t=u-1`, `2^t=A/(2*w)<=A/6`, so `v_t=(Q-m)/2^t>=6*(Q-m)/A>=(5*Q-m)/A`. At every other `t<=s-1`, `n_t>=3`, so `v_t>=(3*Q-m)/2^t>=2*(3*Q-m)/A>=(5*Q-m)/A`.
+Assume `m>=3` is odd and `A` is not a power of two. Let `s` be the least integer with `2^s>A/2`. Then `2^s<=A<2^(s+1)` and `s>=3`. For each `t< s`, let `n_t` be the least positive residue of `2^(t+1)-3*m` modulo `2^(t+2)`. It is positive and odd, and
 
-For `t>=s` through `2*L-2`, `n_t=2^(t+1)-3*m` and `v_t=2*Q-(3*m*Q+m)/2^t` increases with `t`. At `t=s`, `n_s=2^(s+1)-A+1` is odd, is not one because `A` is not a power of two, and is not three because that would make the power of two `2^(s+1)=A+2=3*(m+1)`. Thus `n_s>=5`, and `v_t>=v_s>=(5*Q-m)/2^s>=(5*Q-m)/A`. The endpoint `t=2*L-1` has `v_t>Q>(5*Q-m)/A`. This proves the nonexceptional bound.
+```
+v_t = (n_t*Q-m)/2^t.
+```
+
+Also `2^t<=A/2`, so `A/2^t>=2`. There are three cases:
+
+1. If `n_t=1`, then `A=2^(t+1)*w` for an odd `w). Since `A` is not a power of two, `w>1); and `A≡1 (mod 3)` forces `3∤w`. Thus `w>=5`, so
+   `A*v_t=2*w*(Q-m)>=10*(Q-m)`.
+
+2. If `n_t=3`, then `A+2=2^(t+1)*w` for a positive odd `w) divisible by three, since `A+2=3*(m+1)`. For `t>=1), this gives `A/2^t=2*w-2/2^t>=5`; for `t=0), `m>=3` forces `w>=7), so the same lower bound holds. Hence
+   `A*v_t>=5*(3*Q-m)`.
+
+3. Otherwise, since `n_t` is positive odd, `n_t>=5). Therefore
+   `A*v_t=(A/2^t)*(n_t*Q-m)>=10*Q-2*m`.
+
+Each of these three bounds is at least `35*Q/4-2*m). For the first, use `Q>=7*m), which holds for odd `m>=3); the other two comparisons are immediate.
+
+For `s<=t<=2*L-2`, the least residue is now the positive integer `n_t=2^(t+1)-3*m), and
+```
+v_t = 2*Q-(3*m*Q+m)/2^t.
+```
+Thus `v_t` increases with `t), so it suffices to bound `v_s`. Put
+```
+n = n_s = 2^(s+1)-3*m = 2^(s+1)-A+1,
+z = A/2^s = 2-(n-1)/2^s.
+```
+The integer `n` is positive, odd, and not one (as `A` is not a power of two); also it cannot be three, since that would make `2^(s+1)=A+2=3*(m+1)`. Hence `n>=5`. Since `A>2^s), also `n<=2^s-1).
+
+If `n=5`, then `A=2^(s+1)-4). The congruence `A≡1 (mod 3)` forces `s` even; as `m>=3), this gives `s>=4), hence `z=2-4/2^s>=7/4) and `z*n>=35/4`.
+
+If `n>=7`, consider the concave quadratic
+```
+f(n)=n*(2-(n-1)/2^s).
+```
+On `[7,2^s-1]` its minimum is at an endpoint. For `s>=3`,
+```
+f(7)=14-42/2^s >= 35/4,
+f(2^s-1)=2^s+1-2/2^s >= 35/4.
+```
+Thus in either case `z*n>=35/4), and
+```
+A*v_s = z*(n*Q-m) >= 35*Q/4-2*m,
+```
+because `z<2). The endpoint `t=2*L-1` has `v_t>Q) by the endpoint calculation in the envelope proof, so it also satisfies the bound. Since every actual `v` is at least its corresponding `v_t`, the uniform inequality follows for all non-power-of-two `A`.
 
 #### Exceptional dyadic case and M8 exclusion
 
