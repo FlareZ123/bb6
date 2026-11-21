@@ -32,6 +32,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import re
+
           log = Path("/tmp/m1-even-valuation-source.log").read_text()
           names = [
               "m1EvenValuation_q4_leftFacing",
@@ -40,14 +41,53 @@ jobs:
               "m1EvenValuation_counted_increment_source_factorized",
               "m1EvenValuation_counted_increment_source",
           ]
+
+          def axiom_reports(text, theorem):
+              token = re.compile(
+                  rf"(?<![A-Za-z0-9_]){re.escape(theorem)}(?![A-Za-z0-9_])"
+              )
+              lines = text.splitlines()
+              reports = []
+              for i, line in enumerate(lines):
+                  if "depends on axioms:" not in line:
+                      continue
+                  prefix, profile = line.split("depends on axioms:", 1)
+                  if not token.search(prefix):
+                      continue
+                  profile = profile.strip()
+                  j = i + 1
+                  while "]" not in profile and j < len(lines):
+                      if "depends on axioms:" in lines[j]:
+                          break
+                      profile += "\\n" + lines[j].strip()
+                      j += 1
+                  if "]" not in profile:
+                      raise SystemExit(f"incomplete axiom profile for {theorem}: {profile}")
+                  reports.append(profile)
+              return reports
+
+          # Regression: Lean may wrap an axiom list, so sorryAx on a later
+          # line must still fail; a suffixed theorem name must not match.
+          wrapped_probe = (
+              "'Probe.target' depends on axioms: [propext,\\n"
+              " sorryAx,\\n"
+              " Quot.sound]"
+          )
+          if not any("sorryAx" in p for p in axiom_reports(wrapped_probe, "Probe.target")):
+              raise SystemExit("multiline axiom-parser regression failed")
+          if axiom_reports(
+              "'Probe.target_factorized' depends on axioms: [propext]",
+              "Probe.target",
+          ):
+              raise SystemExit("axiom-parser matched a suffixed theorem name")
+
           for name in names:
-              matches = [line for line in log.splitlines()
-                         if name in line and "depends on axioms:" in line]
-              if not matches:
+              reports = axiom_reports(log, name)
+              if not reports:
                   raise SystemExit(f"missing axiom report for {name}")
-              line = matches[-1]
-              print(line)
-              if "sorryAx" in line:
-                  raise SystemExit(f"{name} depends on sorryAx")
+              for profile in reports:
+                  print(f"{name} depends on axioms: {profile}")
+                  if "sorryAx" in profile:
+                      raise SystemExit(f"{name} depends on sorryAx")
           print("M1-even valuation source closure: kernel compile and axiom checks passed")
           PY
