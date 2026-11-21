@@ -242,6 +242,36 @@ Agent 40 independently reconstructed all five inverse graphs and their exact mod
 
 The audit reproduced all 14 mixed-parent t=1 edges and six leaves; all six h1a3 edges and both h3a6 edges; all 26 and 22 base-residue graphs; every listed cutoff; every low-a exceptional bound at the minimum base; the exact tree/prior LCMs; all period and valuation freezes; disjointness from the 28 old E-cones; pairwise distinctness of all 75 base residues modulo 1260; and the exact combined density 2615983/2039244004321524000. It also verified 3∤t throughout all five families, so the root valuation is exactly 7. This is an independent arithmetic reproduction, not a Python execution or Lean proof.
 
+## Disjointness from Agent 14's 222-class sieve
+
+The 93 progressions above occupy a new 3-adic valuation stratum, rather than duplicating Agent 14's earlier 222 classes in `im-results/agent14-sheep-inverse-dag-222/`.
+
+For every one of the five stored residue lists in this dossier, each listed residue is nonzero modulo 3 and its corresponding period is divisible by 3. Hence every exponent in these progressions has
+`v3(j)=v3(1458)+v3(t)=6`.
+
+Agent 14's 222 classes are represented modulo `P=122472` by
+`J=648+216*s+P*k=216(s+3+567*k)`,
+where `0<=s<567` ranges over the 222 class indices. Reconstructing those indices from the maintained Agent 14 READMEs (the 133 lifted root-free classes, 41 additional root-free classes, and 48 nonempty-DAG roots) gives this distribution modulo 27:
+
+| `s mod 27` | count |
+|---:|---:|
+| 0 | 7 |
+| 2 | 21 |
+| 5 | 21 |
+| 6 | 21 |
+| 9 | 21 |
+| 11 | 21 |
+| 14 | 21 |
+| 15 | 12 |
+| 17 | 14 |
+| 18 | 21 |
+| 20 | 21 |
+| 23 | 21 |
+
+In particular, no Agent 14 index is `24 mod 27). Since `3^4 | 567`, the valuation of `s+3+567*k` therefore equals that of `s+3`, which is at most 2. Thus every exponent in Agent 14's 222 classes has `v3(J)<=5`, for every `k>=0`.
+
+Consequently, Agent 14's 222 classes (all `v3(J)<=5`) and the present 93 progressions (all `v3(j)=6`) are exactly disjoint. This is an arithmetic set comparison only; it does not strengthen the nonhalting conclusion or close the Lean acceptance gate.
+
 ## Status and next action
 
 This is a significant exact-arithmetic exclusion family, but it does not solve the seventh stratum, the Sheep machine, or BB(6). The local Python/shell tools have returned platform `ClientError`; none of the three Python checkers has been run here. Do not claim Lean verification or promote this to `results/`.
