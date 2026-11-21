@@ -82,7 +82,7 @@ Therefore copy 2 is selected exactly on the phase wrap \(0\to-2\); copy 1 is sel
 
 A separate source bridge identifies the JS drainStats(b) length and weighted counts with the Lean drainB source interface. Agent 49 has formalized the needed lower bound N_s >= 3^(L_s-1) in im-results/agent49-parity623/DrainDigitLengthBound.lean as drainDigitSummary_value_ge_pow. The JS C,F formulas reduce exactly to corrC/corrF. See DrainStatsLengthBridge.md for the derivation and remaining integration obligations. The complete S-window consumer chain has not been compiled in this invocation.
 
-The adapter classifies the digit-pair stream; it does not itself certify the source carry supplied to the digit transducer. The caller must establish that the source start lies in the full branch rectangle used by reset_poststate_dfa.js:
+The adapter classifies the digit-pair stream; it does not itself certify the source carry supplied to the digit transducer. A direct arithmetic inclusion proof conditional on the sourceCarry formulas and mass-indexed correction bound is now recorded in StartCarryRectangleInclusion.md: it places L carries in [-2,1]×[-1,1] and R carries in [-4,0]×[-1,2], both inside the full branch rectangles below. The remaining formal integration is to prove the sourceCarry formulas are exactly the authentic root transducer's initial carries and discharge the source drain success/budget hypotheses for every root transition. The full rectangles used by reset_poststate_dfa.js are:
 - L: previous pair arbitrary in {0,1,2}² and carries in [-2,2] × [-2,2] (225 starts);
 - R: previous pair arbitrary in {0,1,2}² and carries in [-4,1] × [-2,2] (270 starts).
 
