@@ -664,6 +664,24 @@ theorem stepPure_field_growth (s : SymState) :
       | CB => exact stepPureCB_field_growth L R
       | HALT => simp [stepPure, stateFieldMax]
 
+
+def stepPureIter : Nat → SymState → SymState
+  | 0, s => s
+  | n+1, s => stepPureIter n (stepPure s)
+
+theorem stepPureIter_field_growth (n : Nat) (s : SymState) :
+    stateFieldMax (stepPureIter n s) ≤ stateFieldMax s + n := by
+  induction n generalizing s with
+  | zero => simp [stepPureIter]
+  | succ n ih =>
+    calc
+      stateFieldMax (stepPureIter (n+1) s) = stateFieldMax (stepPureIter n (stepPure s)) := rfl
+      _ ≤ stateFieldMax (stepPure s) + n := ih (stepPure s)
+      _ ≤ stateFieldMax s + 1 + n := Nat.add_le_add_right (stepPure_field_growth s) n
+      _ = stateFieldMax s + (n+1) := by omega
+
+#print axioms stepPureIter_field_growth
+
 #print axioms stepPure_field_growth
 
 
