@@ -24,7 +24,7 @@ The final symbolic state is `.HALT` in both cases, matching the final upstream c
 
 ## Maximum encoded-state sizes over the complete replay
 
-The script measures every state after every `stepSym` transition, not only the checkpoints.
+The script measures every state after every `stepSym` transition, not only the checkpoints. Per-chunk maxima, checkpoint endpoint maxima, and the exact peak step are preserved in [checkpoint-maxima.json](checkpoint-maxima.json).
 
 | Metric | F424 maximum | Bits | F412 maximum | Bits |
 |---|---:|---:|---:|---:|
