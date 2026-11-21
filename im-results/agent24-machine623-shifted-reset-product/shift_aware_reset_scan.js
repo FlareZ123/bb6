@@ -155,13 +155,20 @@ function evalA(a, k, m) {
   }
 }
 
-function drainB(a, b, d) {
+function drainBStats(a, b, d) {
+  let r = 0;
   while (b !== 0n) {
     const result = evalA(a, b - 1n, d + 2n * b + 3n);
+    r++;
     if (result === null || result[1] >= b) return null;
     [a, b, d] = result;
   }
-  return [a, d];
+  return { a, d, r };
+}
+
+function drainB(a, b, d) {
+  const result = drainBStats(a, b, d);
+  return result === null ? null : [result.a, result.d];
 }
 
 // Source-faithful high-level recurrence mirror used by the existing scans.
@@ -175,6 +182,37 @@ function highLevelNext(a, d) {
   const p = evalA(d + 1n - a, a, 2n * a + 5n);
   return p === null ? null : drainB(...p);
 }
+
+// Exact drain statistics used by the source output-side branch threshold.
+// D is the signed first-counter drop from the sector baseline; r counts
+// outer drain iterations (the initial RE evalA contributes to D, not r).
+function sourceDrainStats(a, d) {
+  let sector, initialA, result;
+  if (a >= d) {
+    if (d % 2n === 1n) {
+      sector = "LO";
+      initialA = a - d - 5n;
+      result = drainBStats(initialA, d + 3n, 5n);
+    } else {
+      sector = "LE";
+      initialA = a - d - 2n;
+      result = drainBStats(initialA, d + 2n, 2n);
+    }
+  } else if (d % 2n === 1n) {
+    sector = "RO";
+    initialA = d + 4n - a;
+    result = drainBStats(initialA, a - 1n, 3n);
+  } else {
+    sector = "RE";
+    initialA = d + 1n - a;
+    const first = evalA(initialA, a, 2n * a + 5n);
+    if (first === null) return null;
+    result = drainBStats(...first);
+  }
+  if (result === null) return null;
+  return { sector, D: initialA - result.a, r: result.r };
+}
+
 
 function stateData(a, d) {
   let q, p, sector;
@@ -309,7 +347,10 @@ const summary = {
   firstResetAtLeftSuffixGood: 0,
   firstResetAtLeftSuffixBad: 0,
   selectedWitness: { atLeft: 0, later: 0 },
-  shiftOneCases: []
+  shiftOneCases: [],
+  signThresholdDisagreements: 0,
+  DRange: { min: Infinity, max: -Infinity },
+  rRange: { min: Infinity, max: -Infinity }
 };
 
 let a = 0n;
@@ -319,10 +360,19 @@ for (let index = 0; index <= 10000; index++) {
   if (index >= 33 && nextState !== null) {
     const current = stateData(a, d);
     const target = stateData(nextState[0], nextState[1]);
-    assert.notEqual(current.g, 0n, "zero g has no sign-selected affine branch at transition " + index);
-    // This is the conditional sign(g) affine-branch rule. The scan checks it
-    // on a finite prefix; it does not prove the far premise in BranchSelection.lean.
-    const branch = current.g > 0n ? "L" : "R";
+    const drainStats = sourceDrainStats(a, d);
+    assert(drainStats !== null, "missing source drain statistics at transition " + index);
+    assert.equal(drainStats.sector, current.sector, "source sector/statistics mismatch at transition " + index);
+    const thresholdOffset = { LO: 19n, LE: 10n, RO: -4n, RE: 4n }[drainStats.sector];
+    const threshold = 3n * drainStats.D + 2n * BigInt(drainStats.r) + thresholdOffset;
+    // Exact source output-side decision from RootRayGapCocycle.md:
+    // left iff g >= 3D + 2r + c_T. The sign(g) simplification is not used.
+    const branch = current.g >= threshold ? "L" : "R";
+    if ((current.g > 0n ? "L" : "R") !== branch) summary.signThresholdDisagreements++;
+    summary.DRange.min = Math.min(summary.DRange.min, Number(drainStats.D));
+    summary.DRange.max = Math.max(summary.DRange.max, Number(drainStats.D));
+    summary.rRange.min = Math.min(summary.rRange.min, drainStats.r);
+    summary.rRange.max = Math.max(summary.rRange.max, drainStats.r);
     const transducer = machine[branch];
 
     const B = windowBound(current.S);
