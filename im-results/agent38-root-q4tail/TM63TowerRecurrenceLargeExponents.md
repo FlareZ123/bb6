@@ -18,7 +18,12 @@ Define the lower exponents by
 \alpha_3=2^{47}-2,\qquad
 \alpha_{j+1}=T_{j+2}^{\alpha_j}-1\quad(j\ge3),
 \]
-and the upper exponents by
+and the upper denominator sequence by
+\[
+d_2=65473,\qquad D_k=2^{d_k},\qquad
+ d_{k+1}=T_{k+3}-2^{T_{k+2}-d_k}-1\quad(k\ge2),
+\]
+with upper exponents
 \[
 \gamma_3=2^{65520}-2^{47},\qquad
 \gamma_j=2^{T_{j+1}-T_j}-2^{T_{j+1}-T_j-d_{j-1}}\quad(j\ge4).
@@ -33,9 +38,9 @@ T_{j+3}^{\,T_{j+2}^{\,\alpha_j}}<V_j
 V_j^{\,T_{j+2}^{\,\gamma_j}}<T_{j+4}.
 }
 \]
-The lower exponent is recursively amplified at each step. The upper exponent grows with the tower index and uses a recursively shrinking relative headroom \(1/D_{j-1}\), where \(D_k=2^{d_k}\) grows by an explicit recurrence.
+The lower exponent is recursively amplified at each step. The upper exponent uses the recursively shrinking relative headroom \(1/D_{j-1}\).
 
-These bounds strictly strengthen the earlier fixed exponents \(2^{46}\) and \(2^{65518}\). In particular, \(\alpha_3>2^{46}\), \(\gamma_3>2^{65518}\), and both moving exponents subsequently grow.
+These bounds strictly strengthen the earlier fixed exponents \(2^{46}\) and \(2^{65518}\). In particular, \(\alpha_3>2^{46}\) and \(\gamma_3>2^{65518}\).
 
 ## Proof
 
@@ -145,7 +150,11 @@ Substitution in the definition of \(d_{k+1}\) gives
 \[
 1\le d_{k+1}\le T_{k+3}-T_{k+2}.
 \]
-In particular, \(D_k\) divides \(T_{k+3}\), and \(D_{k+1}\) divides \(T_{k+4}\).
+Moreover,
+\[
+d_{k+1}\ge T_{k+3}/2-1>T_{k+2}>d_k,
+\]
+so \(D_k\) strictly increases. In particular, \(D_k\) divides \(T_{k+3}\), and \(D_{k+1}\) divides \(T_{k+4}\).
 
 Next prove the auxiliary bound
 \[
