@@ -67,8 +67,8 @@ for (let q=0n; q<=5n; q++) {
 }
 
 if (failures.length) {
-  process.stderr.write(JSON.stringify({checks,failures},null,2)+"\\n");
+  process.stderr.write(JSON.stringify({checks,failures},null,2)+"\n");
   process.exitCode = 1;
 } else {
-  process.stdout.write(`passed ${checks} deterministic BigInt recurrence checks\\n`);
+  process.stdout.write(`passed ${checks} deterministic BigInt recurrence checks\n`);
 }
