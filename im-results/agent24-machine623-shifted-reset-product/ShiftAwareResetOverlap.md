@@ -69,7 +69,7 @@ D(33)\to D(34),\ldots,D(10000)\to D(10001).
 For each source state it scans the source S-window and computes the actual window-index shifts. It obtains the exact drain statistics D (signed first-counter drop) and R (full evaluator-call count) from the sector-specific source drain; in RE the initial evalA contributes to both D and R. The affine branch is selected by the exact source output-side threshold
 \[
 T=3D+2R+c_T,\qquad
-c_T=19,10,-4,4\quad\text{in LO, LE, RO, RE respectively},
+c_T=19,10,-4,2\quad\text{in LO, LE, RO, RE respectively},
 \]
 with L iff g >= T and R otherwise. This is the exact decision in RootRayGapCocycle.md. The conditional simplification from this threshold to sign(g), proved under the far/nonterminal premise in BranchSelection.lean, is not used.
 
