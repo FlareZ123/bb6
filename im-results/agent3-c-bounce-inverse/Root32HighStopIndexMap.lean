@@ -27,6 +27,25 @@ def coveredT (t : Nat) : Prop :=
   t % 4096 = 1167 ∨
   t % 8192 = 7839
 
+/-- The original root32 equation, with r=32+64*j and
+u=1802+6720*t, is exactly the normalized equation used below. -/
+theorem root32_original_to_tj (u r t j E : Nat)
+    (hE : 30 ≤ E)
+    (hu : u = 1802 + 6720*t)
+    (hr : r = 32 + 64*j)
+    (hroot : 18018 + 211*u + 22155*r = 20 * 2^(E-13)) :
+    17300 + 22155*(t+j) = 5 * 2^(E-17) := by
+  have hexp : E-13 = 4 + (E-17) := by omega
+  have hpow : 20*2^(E-13) = 64*(5*2^(E-17)) := by
+    rw [hexp, Nat.pow_add, show (2:Nat)^4 = 16 by decide]
+    omega
+  rw [hu,hr] at hroot
+  have hleft :
+      18018 + 211*(1802+6720*t) + 22155*(32+64*j) =
+        64*(17300+22155*(t+j)) := by omega
+  rw [hleft,hpow] at hroot
+  exact Nat.mul_left_cancel hroot
+
 /-- The saturated root equation fixes t+j modulo 8192. -/
 theorem root32_tj_mod8192 (t j E : Nat)
     (hE : 30 ≤ E)
