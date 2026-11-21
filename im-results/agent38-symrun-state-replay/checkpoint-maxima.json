@@ -1,0 +1,175 @@
+{
+  "source_repository": "google-deepmind/cryptids",
+  "source_commit": "3647718b5df22e1a61462dec0376bd204526285a",
+  "script_path": "im-results/agent38-symrun-state-replay/symrun_state_replay.cjs",
+  "machines": {
+    "F424": {
+      "maxFieldStep": 70298,
+      "maxZeroExpansion": "12",
+      "maxima": {
+        "maxField": "12464561897144001482331935594779263804489570179353031112091137",
+        "repeatSum": "12464561897144001482331935594779263804489570179353031112085238",
+        "expandedTapeLength": "31161404742860003705829838986948159511223925448382577780216103",
+        "symTokenCount": "94"
+      },
+      "checkpoints": [
+        {
+          "step": 4096,
+          "matches": true,
+          "maxFieldInChunk": "419581",
+          "maxFieldAtCheckpoint": "349284"
+        },
+        {
+          "step": 8192,
+          "matches": true,
+          "maxFieldInChunk": "1762387145",
+          "maxFieldAtCheckpoint": "1468655224"
+        },
+        {
+          "step": 12288,
+          "matches": true,
+          "maxFieldInChunk": "7401584264101",
+          "maxFieldAtCheckpoint": "7401584264101"
+        },
+        {
+          "step": 16384,
+          "matches": true,
+          "maxFieldInChunk": "17485198871082469",
+          "maxFieldAtCheckpoint": "11656799247388309"
+        },
+        {
+          "step": 20480,
+          "matches": true,
+          "maxFieldInChunk": "55075088188408726341",
+          "maxFieldAtCheckpoint": "45895906823673936877"
+        },
+        {
+          "step": 24576,
+          "matches": true,
+          "maxFieldInChunk": "231301560542727842148626",
+          "maxFieldAtCheckpoint": "192751300452273201788429"
+        },
+        {
+          "step": 28672,
+          "matches": true,
+          "maxFieldInChunk": "971408556378145859101328046",
+          "maxFieldAtCheckpoint": "809507130315121549251104250"
+        },
+        {
+          "step": 32768,
+          "matches": true,
+          "maxFieldInChunk": "4079672360145437866228271479245",
+          "maxFieldAtCheckpoint": "3399726966787864888523559563277"
+        },
+        {
+          "step": 36864,
+          "matches": true,
+          "maxFieldInChunk": "12850200713840259067966789654632789",
+          "maxFieldAtCheckpoint": "8566800475893506045311193103088524"
+        },
+        {
+          "step": 40960,
+          "matches": true,
+          "maxFieldInChunk": "71956827818548536361338338239156581521",
+          "maxFieldAtCheckpoint": "59964023182123780301115281865963814445"
+        },
+        {
+          "step": 45056,
+          "matches": true,
+          "maxFieldInChunk": "169987856604487741042494755281872281753998",
+          "maxFieldAtCheckpoint": "141656547170406450868745629401560234791159"
+        },
+        {
+          "step": 49152,
+          "matches": true,
+          "maxFieldInChunk": "535429780494748407225024473657428158523990526",
+          "maxFieldAtCheckpoint": "535429780494748407225024473657428158523990526"
+        },
+        {
+          "step": 53248,
+          "matches": true,
+          "maxFieldInChunk": "2248670821294308640355190890676444322940479514597",
+          "maxFieldAtCheckpoint": "1873892351078590533629325742230370269117066257558"
+        },
+        {
+          "step": 57344,
+          "matches": true,
+          "maxFieldInChunk": "2988094304583366730595054291048197318257486851572369",
+          "maxFieldAtCheckpoint": "1992062869722244487063369527365464878838324567714920"
+        },
+        {
+          "step": 61440,
+          "matches": true,
+          "maxFieldInChunk": "3970660128877509209324230604198238278659465832184796933",
+          "maxFieldAtCheckpoint": "3308883440731257674436858836831865232216221526820658827"
+        },
+        {
+          "step": 65536,
+          "matches": true,
+          "maxFieldInChunk": "3957240029591999903112612190813918906851026676086431978020",
+          "maxFieldAtCheckpoint": "3297700024659999919260510159011599089042522230072026642750"
+        },
+        {
+          "step": 69632,
+          "matches": true,
+          "maxFieldInChunk": "3943865287768219219019088996785626438139278064560920000310061",
+          "maxFieldAtCheckpoint": "2629243525178812812679392664523750958759518709707280000206708"
+        },
+        {
+          "step": 70511,
+          "matches": true,
+          "maxFieldInChunk": "12464561897144001482331935594779263804489570179353031112091137",
+          "maxFieldAtCheckpoint": "10387134914286667901943279662316053170407975149460859260070043"
+        }
+      ]
+    },
+    "F412": {
+      "maxFieldStep": 21275,
+      "maxZeroExpansion": "10",
+      "maxima": {
+        "maxField": "412597277036535862786",
+        "repeatSum": "412597277036535860912",
+        "expandedTapeLength": "1031493192591339653257",
+        "symTokenCount": "78"
+      },
+      "checkpoints": [
+        {
+          "step": 4096,
+          "matches": true,
+          "maxFieldInChunk": "419581",
+          "maxFieldAtCheckpoint": "349285"
+        },
+        {
+          "step": 8192,
+          "matches": true,
+          "maxFieldInChunk": "1762387139",
+          "maxFieldAtCheckpoint": "1762387139"
+        },
+        {
+          "step": 12288,
+          "matches": true,
+          "maxFieldInChunk": "5551188198070",
+          "maxFieldAtCheckpoint": "4625990163979"
+        },
+        {
+          "step": 16384,
+          "matches": true,
+          "maxFieldInChunk": "17485198871082786",
+          "maxFieldAtCheckpoint": "14570999059234231"
+        },
+        {
+          "step": 20480,
+          "matches": true,
+          "maxFieldInChunk": "73433450917879551716",
+          "maxFieldAtCheckpoint": "61194542431566291295"
+        },
+        {
+          "step": 21383,
+          "matches": true,
+          "maxFieldInChunk": "412597277036535862786",
+          "maxFieldAtCheckpoint": "343831064197113217107"
+        }
+      ]
+    }
+  }
+}
