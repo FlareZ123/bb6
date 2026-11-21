@@ -143,10 +143,25 @@ for (let n = 1; n <= 64; n++) {
   }
 }
 
+// Experimental a=0 extension. The current Lean theorem still assumes a>0;
+// this grid is included only to support the proposed resetDrainBound_any
+// generalization and must not be described as part of the accepted theorem.
+const a0ExtensionCases = [];
+for (let n = 1; n <= 64; n++) {
+  const minL = Math.max(4, Math.ceil(Math.log2(n + 1)));
+  for (const L of [minL, minL + 8]) {
+    for (const b of [0, 1, 2]) {
+      a0ExtensionCases.push(checkCase(L, n, 0, b));
+    }
+  }
+}
+
 console.log(JSON.stringify({
   tested: cases.length,
   minWidthCases,
   longTailCases,
+  a0ExtensionCases: a0ExtensionCases.length,
+  totalCases: cases.length + a0ExtensionCases.length,
   nRange: "1..64",
   first: cases[0],
   last: cases[cases.length - 1],
