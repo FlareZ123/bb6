@@ -147,4 +147,6 @@ For t ≡ 31 (mod 32), these imply q is odd and p+q ≡ 1 (mod 4). The existing 
 
 The same draft closes the corrected P7E1E residual there: its even/even parent fan has target sum 2 mod 8, so only the direct parent D(t) survives; `odd_seven_blank_reach_iff` then forces A4(t).
 
+Under the existing root-index congruence \(t+j\equiv3780\pmod{8192}\), this t-cylinder implies \(j\equiv5\pmod{32}\). Since \(r=32+64j\), the P7E1E residual exclusion therefore maps to \(r\equiv352\pmod{2048}\). This is a residual-specific index map only; it is not a complete high-stop exclusion.
+
 **Acceptance boundary:** this is a source-proof draft, not an accepted result. The current invocation could not run the required local Lean 4.36.0-rc2 preflight. The draft covers t ≡ 31 (mod 32), including t ≡ 31 (mod 256), but does not close the other A4 cylinders or the full high-stop target. Do not move it to results/ before compilation and axiom audit.
