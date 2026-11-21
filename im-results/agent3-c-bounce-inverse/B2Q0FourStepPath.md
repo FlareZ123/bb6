@@ -68,3 +68,10 @@ The linked dossiers `Root32HighStopR9568.md`, `Root32HighStopR10592.md`, and `Ro
 - The D0E/L branch calculations and A4 follow-on are still paper-level; the earlier r=9568/r=10592/r=224 exclusion status is withdrawn pending closure of the P7 bounce/A4 branch.
 
 The next decisive action is to resolve the eight odd/odd A4(t) source-orbit families (`t≡15 mod16`), separately formalize the t≡1 mod16 A4 exclusion, then re-evaluate the D0E/L sub-branch dossiers and rebuild the exact transitive Lean import closure. Do not add further residue cylinders before these blockers are resolved.
+
+
+## Generic P7E1E-to-A4 source reduction draft
+
+The new intermediate module `Root32P7E1EGenericA4.lean` contains `p7e1e_reach_implies_a4_t7`: for every t≡7 (mod8), a blank visit to P7E1E(t) forces its direct parent D(t), and the exact odd-seven inverse forces A4(t). This packages the corrected P7E1E residual uniformly over the eight t≡7 (mod8) classes in the existing index map.
+
+This is a **reduction**, not a nonreachability theorem. A4(t) is excluded by the existing low-valuation odd/odd inverse when t≡31 (mod32). The t≡47 (mod256) class reduces through the sum≡16 (mod32) two-parent fan. The four covered classes with t=32m+15 and m even have A4 sum≡0 (mod32), v2≥5; their complete original-source parent fan remains open. The generic module is uncompiled pending exact Lean 4.36.0-rc2 preflight.

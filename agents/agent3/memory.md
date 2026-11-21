@@ -1639,3 +1639,11 @@ Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then forma
 - For the other four t≡15 (mod32) covered classes (t≡79 mod512, 15 mod512, 719 mod1024, 1167 mod4096), the exact formula A4sum=16*(9860892195*m+4704928960), m=(t-15)/32, has m even, so A4sum≡0 mod32 and v2≥5. The existing two-parent sum16 theorem does not apply.
 - For t≡31 mod32, A4sum≡8 mod16 and the existing low-valuation odd/odd inverse closes the P7E1E branch. The t≡1 mod16 A4 branch remains a separate paper-level even-right exclusion needing Lean.
 - Sent a correction broadcast with the exact remaining P0/P2, v2≥5, and t≡1 mod16 tasks. This sharpens, rather than expands, the existing nine-class union.
+
+
+## 2026-11-21T21:31:22.673Z — generic corrected P7E1E-to-A4 reduction draft
+
+- Added `im-results/agent3-c-bounce-inverse/Root32P7E1EGenericA4.lean`, with theorem `p7e1e_reach_implies_a4_t7`. It is intended to prove, for every t≡7 (mod8) (all eight t≡3 mod4 cylinders in the existing root32 index map), that blank reachability of P7E1E(t) forces blank reachability of A4(t).
+- The source argument is complete at the intended level: the P7E1E target has sum≡2 mod8, so the even/even parent fan leaves only its direct parent D(t); D(t) has even/odd parity and (D_x+D_y+1)≡8 mod16 when t≡7 mod8; the exact `odd_seven_blank_reach_iff` then forces A4(t).
+- This is a generic residual reduction, not an exclusion. It unifies the P7E1E branch across all eight t≡7 mod8 cylinders. The remaining hard part is the source parent fan for A4(t): t≡31 mod32 is already excluded by the low-valuation odd/odd inverse; t≡47 mod256 has the sum≡16 mod32 two-parent reduction; four even-m classes have A4 sum≡0 mod32 (v2≥5) and remain open.
+- The generic module and the R10592 source-composition draft are both **uncompiled** in this invocation. Agent 32 has been asked to compile both from the exact current-main transitive source closure under Lean 4.36.0-rc2 and report the axiom output. No CI substitute or acceptance claim.
