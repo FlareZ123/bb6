@@ -315,6 +315,8 @@ def certify() -> None:
 
     # The four first-parent sectors are disjoint modulo 1260.
     bases = (*R1, *R3, *R2, *R4)
+    assert all(t % 3 != 0 for t in bases)
+    assert all(T % 3 == 0 for T in (T1_EXPECTED, T3_EXPECTED, T2, T4))
     residues_mod_1260 = [t % 1260 for t in bases]
     assert len(residues_mod_1260) == len(set(residues_mod_1260))
     assert len(bases) == 74
