@@ -280,6 +280,45 @@ next iterated logarithm. The earlier three-term expansion is the
 \(p=2\) specialization, with the sharper bound
 \(\Delta_2<100(\log_2\ell)^2\) established above.
 
+## Tight additive bracket for the conditional primitive score
+
+Let \(b=b_N=2^\ell-1\). From the three-term expansion,
+\[
+S_{\rm TM1}-6(b+1)^2
+=42b+C,
+\]
+where
+\[
+C=6\ell^2+57\ell+90+15\kappa+\Delta_2.
+\]
+Using \(\Delta_2<82m^2\), \(m=\log_2\ell\le\ell\), and
+\(\kappa\le m+1\le\ell+1\), we obtain
+\[
+0<C<88\ell^2+72\ell+105.
+\]
+For \(\ell\ge256\), both \(\ell^2\le2^{\ell/2}\) and
+\(\ell\le2^{\ell/2}\), so
+\[
+C<161\cdot2^{\ell/2}<2^{\ell/2+8}.
+\]
+Since \(b=2^\ell-1>2^{\ell-1}\),
+\[
+C<2^{9-\ell/2}b\le2^{-119}b.
+\]
+Therefore the exact conditional primitive score lies in the very
+narrow interval
+\[
+\boxed{
+6(b_N+1)^2+42b_N
+<S_{\rm TM1}
+<6(b_N+1)^2+(42+2^{-119})b_N.
+}
+\tag{15}
+\]
+This is a consequence of the source-cost identity and the p=2
+remainder estimate; it is not yet a Lean-accepted authentic-root
+halting-time theorem.
+
 ## Evidence boundary
 
 This derivation uses the exact symbolic dispatcher cost identity and existing root-prefix bounds. It introduces no new simulation claim and no new Lean theorem. The authentic TM63 source composition and its transitive axiom audit remain unaccepted; keep this result in im-results/ until that gate passes. It is not an unconditional lower-bound certificate for BB(6), and it says nothing about the remaining six-state machines.

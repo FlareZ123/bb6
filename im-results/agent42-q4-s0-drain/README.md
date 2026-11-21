@@ -907,7 +907,7 @@ of the committed Python artifacts.
 \]
 This is substantially sharper than the earlier adjacent-tetration bracket and the published interval. Agent 24 independently reviewed the moving-exponent induction and found no gap in its integrality, base cases, induction steps, or q-4 substitution. Agent 38 subsequently formalized the recurrence-only inequalities in `TM63TowerRecurrence.lean`, locally compiled under Lean 4.36.0-rc2 with only `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. The result remains intermediate until the authentic Lean composition passes local compilation and its transitive axiom audit; it is not a universal BB(6) upper bound.
 
-## Arbitrary-depth iterated-log expansion of the conditional score
+## Arbitrary-depth iterated-log expansion and tight score bracket
 
 The exact score admits an expansion to any fixed depth. Put
 \(u_r=b_{N-r}\), so \(u_0=b_N\), \(u_1=\ell\), and
@@ -921,17 +921,21 @@ S_{\rm TM1}
 \end{aligned}
 \]
 The proof uses \(N<R\), geometric decay of the earlier quadratic
-dispatcher costs, and the fact that the root and polynomial terms are
-bounded by the next retained counter. Thus each additional peeled
-increment reduces the remainder to the square of the next
-iterated logarithm. The \(p=2\) specialization gives
+dispatcher costs, and the root/polynomial bounds. The \(p=2\)
+specialization is
 \[
 S_{\rm TM1}
 =6b_N^2+54b_N+6\ell^2+57\ell+96
 +15\log_2(\ell+1)+\Delta_2,
-\quad 0\le\Delta_2<100(\log_2\ell)^2.
+\quad 0\le\Delta_2<82(\log_2\ell)^2.
 \]
-This remains a paper-level consequence of the conditional source-cost
-identity, not a Lean acceptance or an authentic-root halt theorem.
-See [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md) for the proof of
-\(N<R\), the uniform tail bound, and the sharper \(p=2\) estimate.
+It also yields the especially tight additive interval
+\[
+6(b_N+1)^2+42b_N
+<S_{\rm TM1}
+<6(b_N+1)^2+(42+2^{-119})b_N.
+\]
+These are paper-level consequences of the conditional source-cost
+identity, not Lean acceptance or an authentic-root halt theorem. See
+[TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md) for the full
+iterated-log and additive-bound derivations.
