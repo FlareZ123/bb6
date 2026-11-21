@@ -9,7 +9,7 @@
 | F424 | (1, 1, 11, 4) | 19,217 | 164,368 | 18 | **164,386** |
 | F412 | (7, 3, 11, 4) | 19,255 | 145,981 | 1 | **145,982** |
 
-The primitive costs are exact relative to the upstream `HasSymRunRules` proofs. The entry costs are `init_to_CB` = 18 for F424 and `init_to_BB` = 1 for F412. Thus the known initial-prefix totals are 164,386 and 145,982. The separate terminal `step_DL_zero_halt` costs 1 and belongs to the later `stepSym` termination, not this prefix.
+The branch-cost sums are exact outputs of the deterministic replay relative to the upstream `HasSymRunRules` branch-cost equations, but are not yet a Lean-certified cost theorem. The entry costs are `init_to_CB` = 18 for F424 and `init_to_BB` = 1 for F412. Thus the replayed initial-prefix totals are 164,386 and 145,982. For the combined exponent bounds, a coarse formal upper bound below 2^21 for either prefix is sufficient. The separate terminal `step_DL_zero_halt` costs 1 after the final `stepSym` state.
 
 ## Cost equations extracted from the proof source
 
