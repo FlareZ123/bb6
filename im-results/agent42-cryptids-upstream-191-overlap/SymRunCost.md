@@ -77,27 +77,30 @@ The independent state replay and cost analysis are now in:
 
 The replay matches every literal upstream checkpoint (F424 18/18, F412 6/6) and reaches abstract HALT after the 70,511 / 21,383 stepSym transitions. The source theorem then applies the separate concrete step_DL_zero_halt primitive transition (+1). The prefix branch-cost replay totals are 164,386 / 145,982 including entry; these are computational sums, not Lean-certified.
 
-The boundary-safe source-structural candidate is:
+The sharpened boundary-safe source-structural candidate is:
 
-    C_stepSym(s) < 2^40 * (M(s)+1)^2
+    C_stepSym(s) < 2^39 * (M(s)+1)^2
 
 where M is the maximum numeric field in the outer symbolic state. This replaces the earlier (2^{40}M^2) estimate: the old derivation assumed (M\ge376), but both authentic `initSymCyc3` states have (M=2). The replacement works for every (M\ge0).
 
 The corrected argument uses:
 - after `sweepCB`, the total repeat-counter sum is at most (94M+376\le512(M+1)), since there are at most 94 fuel-4 merges and each can add at most four literal-block units (merging an existing repeat counter conserves the total);
-- the `sweepCB` token count is at most 752, and the fallback `stepElemThenBB` adds at most eight tokens before `sweepBB`, so the fallback scan is bounded by 1024 tokens;
+- the `sweepCB` token count is at most (6T\le564), using (|bumpSymL(L)|\le|L|+5) and charging the run-zero tokens prepended by the sweep against the right tokens it consumes;
+- a BB-producing `stepElemCB` fallback has net total-token growth at most six, so fallback `sweepBB` scans at most (564+6=570) tokens; the parameter-sized `prependZeroSym` branch remains in CB mode and does not invoke `sweepBB`;
 - Rule B/C repeat counts are at most (512(M+1)), so every successful Rule A/B/C macro uses fewer than (2^{16}(M+1)) `stepPure` calls;
-- the source `stepPure` transition increases the maximum numeric field by at most one, and each such transition costs at most (50(X+1)) when the current maximum field is (X); hence every macro-internal field is below (2^{16}(M+1)), each `stepPure` costs below (2^{22}(M+1)), and the macro costs below (2^{38}(M+1)^2);
-- all non-macro sweep/fallback work is below (2^{26}(M+1)).
+- `stepPure_field_growth` and its n-step corollary are now included in `SymRunTraceStats.lean): (M(stepPure(s))\le M(s)+1) and (M(stepPureIter(n,s))\le M(s)+n). Agent 44 reports a Lean 4.36.0-rc2 compile of the same proof with source-equivalent copied definitions and axiom profiles `[propext, Quot.sound]`; exact imported-source compilation is still pending;
+- each `stepPure` transition costs at most (50(X+1)) at current maximum field (X); hence every macro-internal field is below (2^{16}(M+1)), each `stepPure` costs below (2^{22}(M+1)), and the macro costs below (2^{38}(M+1)^2);
+- all non-macro sweep/fallback work is below (2^{25}(M+1)), using the 570-token fallback scan and the outer CB sweep.
 
-Thus (C_{stepSym}(s)<2^{40}(M(s)+1)^2). The detailed derivation and remaining proof obligations are in [SymRunPrimitiveBound.md](../agent38-symrun-state-replay/SymRunPrimitiveBound.md).
+Thus (C_{stepSym}(s)<2^{39}(M(s)+1)^2). The detailed derivation and remaining proof obligations are in [SymRunPrimitiveBound.md](../agent38-symrun-state-replay/SymRunPrimitiveBound.md).
 
-Combined with the replay maxima, this gives stepSym-phase bounds F424 <2^463 and F412 <2^193. A kernel-friendly prefix proof from maxRunM growth gives prefix cost <2^31; including the prefix and the separate final +1 yields complete conditional bounds F424 <2^464 and F412 <2^194, both below the published S(6)>2↑↑↑5 baseline.
-This is still conditional. Required kernel obligations:
-1. Prove the cost-indexed stepSym soundness bound above from the source branches.
-2. Compile `im-results/agent42-cryptids-upstream-191-overlap/SymRunTraceStats.lean`: its 18 F424 and 6 F412 `decide +kernel` chunk folds include each chunk's starting state and every intermediate state, and its checkpoint-chain conjunctions bind those folds to the imported source checkpoints. The L≤94 and max-field bounds are not accepted from endpoint states or the JS replay alone.
-3. Prove maxRunM(stepElemM s) ≤ maxRunM(s)+1 and the resulting runElemFast prefix bound <2^31.
-4. Preserve the separate final step_DL_zero_halt cost +1.
-5. Transfer through the exact local machine identity and existing halting adapter under Lean 4.36.0-rc2, with axiom audit.
+Combined with the replay maxima (pending kernel range-fold acceptance), this gives stepSym-phase bounds F424 (<2^{462}) and F412 (<2^{192}). The existing prefix transcription gives a prefix-cost candidate (<2^{31}); including the prefix and the separate final +1 yields complete conditional bounds F424 (<2^{463}) and F412 (<2^{193}), both below the published (S(6)>2\uparrow\!\uparrow\!\uparrow5) baseline.
+
+This is still conditional. Required acceptance gates:
+1. Compile the exact imports and all chunk folds in `SymRunTraceStats.lean) under Lean 4.36.0-rc2; its 18 F424 and 6 F412 folds include every intermediate state, and the checkpoint-chain conjunctions bind them to the authentic source checkpoints.
+2. Audit the exported axiom profiles for `f424_trace_range_certificate`, `f412_trace_range_certificate`, `stepPure_field_growth`, and `stepPureIter_field_growth) against the exact imported modules (the source-equivalent proof preflight is not a substitute).
+3. Prove the primitive-cost bound for each `stepPure` branch and cost-indexed source soundness for the six repeated-block sweeps and outer `stepSym` branches. `SymRunCostedStepPilot.lean` now drafts exact `ReachesIn` witnesses for F424's cycle, exit, and two variable-cost rules, but remains uncompiled.
+4. Prove the source costed transfer for the initial `runElemFast` prefix, including the fixed entry costs; the current (<2^{31}) prefix arithmetic is still a transcription.
+5. Preserve the separate final `step_DL_zero_halt` cost +1 and transfer through the exact local machine identity and halting adapter, with axiom audit.
 
 The earlier machine-specific rule arrays and checkpoint arithmetic above remain the source anchors; the Agent 38 dossier supplies the replay and cost-bound candidate rather than a competing account.
