@@ -456,7 +456,7 @@ The mass-only intervals contain 4, 2, and 3 powers of two respectively. Adding D
 
 ### Research-direction correction
 
-The prior memory's proposed immediate F-prefix extension to digit 16 is superseded as the first priority. Do **not** spend another cycle merely extending the prefix. The source-aligned 81,920-return nine-prefix cycle now yields the root-history lower bound D >= 9*M + 16,034,210 at every surviving P-return boundary (see ninth_moment_drift.py and CARRY-MOMENT-NORMAL-FORM.md). The next decisive task is to derive a complementary upper bound or tight interval for D through the existing Q/R/V/W/X/Y/Z/F words, then apply the convex tail interval to the 386/703 candidate phases. If D cannot be closed, investigate a small hierarchy of positional moments or the discounted generating-function value P_S(1/2), rather than returning to the falsified (W mod 31, length mod 5) quotient.
+The prior memory's proposed immediate F-prefix extension to digit 16 is superseded as the first priority. Do **not** spend another cycle merely extending the prefix. The source-aligned 81,920-return nine-prefix cycle now yields the root-history lower bound D >= 9*M + 16,034,210 at every surviving gate boundary (see ninth_moment_drift.py and CARRY-MOMENT-NORMAL-FORM.md). The next decisive task is to derive a complementary upper bound or tight interval for D through the existing Q/R/V/W/X/Y/Z/F words, then apply the convex tail interval to the 386/703 candidate phases. If D cannot be closed, investigate a small hierarchy of positional moments or the discounted generating-function value P_S(1/2), rather than returning to the falsified (W mod 31, length mod 5) quotient.
 
 The polynomial identity and convexity bound are paper-proved in the new note; no new Lean file has been compiled. Two local container preflights and the Python tool boundary returned only the exact visible response "Skipped 1 message", with no stdout, stderr, or exit status. Per repository instructions, pause new candidate expansion and do not use CI as a substitute for local Lean preflight. No CI was dispatched.
 
@@ -468,7 +468,7 @@ Added im-results/agent5-s4-prefix-causal/ninth_moment_drift.py. It uses the sour
 - If v2(W(prefix)+c)<9, the true carry depth is exactly that value, so the gate's D increment is computable from the prefix.
 - If the prefix value is divisible by 2^9, the true carry depth is at least 9; the identity gives ΔD >= (Σ_{i=0}^8 t_i + 36)/2.
 - The three gate lower bounds per P-return sum to 754,974,720 over the 81,920-return cycle, exactly 9,216 per return on average.
-- The centered partial-sum residual has minimum -237,910 at phase 20,629 (maximum 385,701 at phase 26,422).
+- The centered residual after each gate boundary has minimum -237,910 at phase 20,629 after gate 3 (maximum 385,701 at phase 26,422 after gate 3).
 - At source-certified return 5457, M0=5,590,215 and D0=66,584,055. Therefore every surviving P-return state after n returns satisfies
   D_n >= D0 + 9,216*n - 237,910 >= 9*M_n + 16,034,210,
   using M_n=M0+1,024*n.
