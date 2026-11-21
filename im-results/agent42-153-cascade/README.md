@@ -17,46 +17,48 @@ below.
 
 ## Exact doubling-ray lemma
 
-For every `b ≥ 1` and `d ≥ 2b+4`, the source-level high-level transition is
+For every `b,d : Nat` with `d ≥ 2b+6`, the source-level high-level
+transition is
 
 ```
-C(b,d)  ↦  C(2b+4, d-2b-4).
+C(b,d)  ↦  C(2b+4, d-2b-6).
 ```
 
-**Derivation.** In this region, `d-b ≥ b+4 ≥ 5`. Thus the `C(b,d)`
-dispatcher does not take its `d=b+2`, `d=b+3`, or `d=b+4` cases, and
-`b ≥ d-1` is false. It takes the generic branch
-`drainA (3b+3) 2 (d-b-3)`. In the first `drainA` step, the third argument
-is at least `b+1`, while `(3b+3)/3=b+1`; hence the chosen decrement is
-exactly `k=b+1`. The resulting first counter is zero, the second is
+**Derivation.** In this region, `d-b ≥ b+6 ≥ 6`. Thus the `C(b,d)`
+dispatcher takes its generic `C(b, t+2)` case with `t=d-2`; it does not
+take the `b ≥ t+1`, `t=b`, `t=b+1`, or `t=b+2` branches. The generic
+branch is exactly
+`drainA (3b+3) 2 (d-b-5)`. Its third argument is at least `b+1`, while
+`(3b+3)/3=b+1`; hence the first `drainA` step chooses
+`k=b+1`. The resulting first counter is zero, the second is
 `2+2(b+1)=2b+4`, and the third is
-`(d-b-3)-(b+1)=d-2b-4`. This is the displayed transition.
+`(d-b-5)-(b+1)=d-2b-6`. This is the displayed transition.
 
 Consequently, for any consecutive run of `k` such transitions beginning at
 `C(b₀,d₀)`, the exact state is
 
 ```
 b_k = 2^k (b₀+4) - 4
-d_k = d₀ - 2 (b₀+4) (2^k - 1) + 4k.
+d_k = d₀ - 2 (b₀+4) (2^k - 1) + 2k.
 ```
 
 This follows by induction from the two affine recurrences above. The run
-continues precisely while the current state remains in the region
-`d_k ≥ 2b_k+4`.
+continues while the current state remains in the region
+`d_k ≥ 2b_k+6`.
 
 The halting target on this ray is therefore equivalent to
 
 ```
 d_k = b_k + 2
 iff
-d₀ = 3 (b₀+4) 2^k - 2b₀ - 10 - 4k.
+d₀ = 3 (b₀+4) 2^k - 2b₀ - 10 - 2k.
 ```
 
 For the important `b₀=1` ray, the only possible starting values that halt
 during the ray are
 
 ```
-d₀ = 15 · 2^k - 12 - 4k.
+d₀ = 15 · 2^k - 12 - 2k.
 ```
 
 In particular, an odd start `C(1,D)` with `D ≥ 5` cannot halt on its
@@ -73,26 +75,34 @@ C(0,0) ↦ C(0,4) ↦ C(1,17).
 
 The first arrow is the `d=0` case. For the second, the `d=b+4` case
 reduces to `drainA 4 0 4 = C(1,17)`. Starting from `C(1,17)`, the
-doubling-ray lemma gives `C(6,11)`; the ray then exits because
-`11 < 2·6+4`. Its only halting candidates are `3,14,40,96,…`,
+doubling-ray lemma gives `C(6,9)`; the ray then exits because
+`9 < 2·6+6`. Its only halting candidates are `3,16,44,102,…`,
 so `17` is not a candidate.
 
-The next exact dispatcher call is
+The next exact dispatcher calls are
 
 ```
-C(6,11) ↦ drainA(21,2,2) = C(1,57).
+C(6,9)  ↦ drainA(20,0,6)  = C(2,25)
+C(2,25) ↦ drainA(9,2,18)  = C(8,15)
+C(8,15) ↦ drainA(27,2,2)  = C(1,57).
 ```
 
-For the drain equality, the successive source reductions are
-`(21,2,2) → (15,6,0) → (1,10,9) → C(1,57)`.
-Thus the root has reached a second odd `b₀=1` ray. The formula proves that
-this ray also cannot hit the halting target while it stays in the doubling
-region.
+For example, the first drain has reductions
+`(20,0,6) → (2,12,0) → (0,2,25)`. The second has
+`(9,2,18) → (0,8,15)`. The third has
+`(27,2,2) → (21,6,0) → (1,14,7) → C(1,57)`.
+
+The next `b₀=1` ray begins at `C(1,57)` and has two doubling steps:
+`C(1,57) → C(6,49) → C(16,31)`. Since `57` is odd and at least
+five, the ray formula excludes a hit of `C(b,b+2)` throughout this segment.
+The next generic drain is
+`drainA(51,2,10) = C(1,185)`, with reductions
+`(51,2,10) → (21,22,0) → (1,14,39) → C(1,185)`.
 
 ## What remains open
 
 The result controls only the exact doubling region. When a ray exits
-`d ≥ 2b+4`, the high-level dispatcher may enter the other `drainA`
+`d ≥ 2b+6`, the high-level dispatcher may enter the other `drainA`
 branches (including the `b ≥ d-1` branch). Those cascade states are not
 covered by the ray formula, and no invariant has been proved here to show
 that they avoid `C(b,b+2)`.
