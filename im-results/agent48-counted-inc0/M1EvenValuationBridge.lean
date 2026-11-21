@@ -299,7 +299,7 @@ theorem state5SweptRight_block_pattern (n : Nat) (T : Int → Bool)
             have htail := ih (holeRight T h) (h+3) (j-3) (by omega) htailOnes
             have hcoord : (h+3)+((j-3:Int)) = h+(j:Int) := by omega
             have hmod : (j-3)%3 = j%3 := by omega
-            rw [state5SweptRight, hcoord, htail, hmod]
+            rw [state5SweptRight, ← hcoord, htail, hmod]
 
 /-- The state-1-to-state-4 bridge tape after both sweeps and the final
 one-step exit. -/
@@ -414,8 +414,8 @@ theorem m1EvenValuationBridge_run (v : Nat) (T : Int → Bool) (h : Int)
       have hne2 : (x+1)+(i:Int) ≠ x-2 := by omega
       have hne3 : (x+1)+(i:Int) ≠ x-3 := by omega
       simp [Tsetup, valuationSetupTape, hne0, hne1, hne2, hne3]
-    rw [hsetupCell, hcoord] at hblock
-    exact hblock
+    rw [hsetupCell, hcoord]
+    simpa [Tleft] using hblock
   have hrightRun := counted_right_sweep_from5 (v+1) Tsetup (x+1) hrightOnes
   have hrightEnd : x+1+(3*(v+1):Int) = h+1 := by
     dsimp [x,N]
