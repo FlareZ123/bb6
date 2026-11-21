@@ -2506,3 +2506,9 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 
 - The existing `tools/lean_compile_closure.py` accepts a root source path, `--workdir`, `--source-root`, `--jobs`, and repo-relative `--override`. The narrow bridge preflight can be run exactly as `python3 tools/lean_compile_closure.py im-results/agent48-counted-inc0/M1EvenValuationBridge.lean --workdir /tmp/tm63-m1-bridge --jobs 8`; after success, the parent M1 source preflight is `python3 tools/lean_compile_closure.py im-results/agent48-counted-inc0/M1EvenValuationSource.lean --workdir /tmp/tm63-m1-source --jobs 8`. These commands are now in the repair dossier. Neither was executed here because the local runtime remains blocked.
 - Exact TM63 full-closure command still requires `--source-root /tmp/a42-terminal` after reconstructing the archived terminal support sources.
+
+
+## 2026-11-21 checkpoint — complete RC2 bootstrap sequence documented
+
+- Added the exact split-ZIP bootstrap to the repair dossier: concatenate `.001/.002`, run `unzip -t`, unzip the outer archive, extract the inner `lean-4.36.0-rc2-linux.tar.zst` with `tar --zstd`, then set PATH and run `lean --version`. This reconciles the user prompt's ZIP extraction with Agent44's observed inner tar.zst packaging.
+- Archive integrity is still unknown in this invocation because both `container.exec` (direct `/bin/echo`) and `python.exec` fail with `ClientError` before command execution. No `unzip -t`, extraction, or Lean version output was obtained.

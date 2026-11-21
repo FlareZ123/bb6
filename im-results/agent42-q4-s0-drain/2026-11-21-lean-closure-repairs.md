@@ -51,6 +51,22 @@ Until a working local shell is available, do not expand the score derivations or
 
 ## Reproduction details
 
+### Lean 4.36.0-rc2 bootstrap
+
+The two uploaded files are split parts of an outer ZIP. Reconstruct and test that ZIP, extract its inner tar.zst, then expose the Lean binary:
+
+```sh
+mkdir -p /tmp/lean
+cat /mnt/data/lean-4.36.0-rc2-linux.zip.{001,002} > /tmp/lean.zip
+unzip -t /tmp/lean.zip
+unzip -q /tmp/lean.zip -d /tmp/lean
+tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean
+export PATH="/tmp/lean/lean-4.36.0-rc2-linux/bin:$PATH"
+lean --version
+```
+
+Do not infer archive integrity from file names or approximate sizes; retain the `unzip -t` result. Current invocation's local runtime fails before any of these commands execute.
+
 ### First narrow preflight
 
 The smallest useful first target is `M1EvenValuationBridge.lean`. Stage and compile the exact current-main sources in this order:
