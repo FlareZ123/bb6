@@ -143,11 +143,11 @@ A*v >= 5*Q-m,
 A*(Y+2) >= 5*2^(2*m+2)-3*m-5.
 ```
 
-- If `A=2^(2*r)` (equivalently `m=(4^r-1)/3`), the exact envelope minimizer is source-normalized but lies in the source M8 forbidden cylinder `(x mod 8, Y mod 8)=(7,4)`. Consequently, for `r>=2`, any **blank-root-reachable** deep-sector input in this exceptional family must instead satisfy
+- If `A=2^(2*r)` (equivalently `m=(4^r-1)/3`), the exact envelope minimizer is source-normalized but lies in the source M8 forbidden cylinder `(x mod 8, Y mod 8)=(7,4)`. The exact M8-filtered minimum is the next exponent residue `t*=2*r-1` plus one, so for every `r>=1` any **blank-root-reachable** deep-sector input in this exceptional family must satisfy
 
 ```
-A*v >= 4*(3*Q-m),
-A*(Y+2) >= 12*(2^(2*m+2)-1-m).
+A*v >= (A+1)*Q-m,
+A*(Y+2) >= 3*((A+1)*Q-m).
 ```
 
 Here `x` is the first coordinate of the actual `affineNormalize` output. The second inequality is a root-sensitive necessary bound; it does not assert that any remaining input is reachable.
@@ -170,17 +170,17 @@ x+2*Y+4*d = 2*j+3+2*k.
 
 Here `j%4=2`, `k%8=6`, and `d` is odd. Therefore `x%8=7`. The normalized state lies in the `(7,4) mod 8` cylinder used by `affineQuotientCondition` in `im-results/agent15-c-halting/AffineQuotientExclusion.lean`. Its existing `affineQuotientExcluded_sound` theorem rules out `CReach` for this state. The source stopping/normalization theorems and this quotient-filter soundness theorem are already present as kernel-checked modules; the arithmetic composition placing this infinite family in the cylinder has not yet been added to Lean.
 
-Remove the excluded minimum `v*`. For `t<t*`, `n_t>=3` and `2^t<=A/4`, so `v>=4*(3*Q-m)/A`. For `t>t*`, the quotient is in the raw-residue regime and `v_t` increases with `t`; its first value is `((A+1)*Q-m)/A`, which is at least `4*(3*Q-m)/A` because `A>=16`. At `t=t*`, the next CRT solution is `v*+4*Q`, also above this bound. The endpoint `t=2*L-1` has `v>Q`, again above the bound. Thus any blank-root-reachable input in this exceptional family must satisfy the displayed root-sensitive inequality.
+The M8 correction removes `v*` at `t=t*`. For `t<t*`, write `s=t*-t>=1`. The least positive residue is `n_t=A/2^s+1`, whence `v_t=2*Q+2^(s+1)*(Q-m)/A>2*Q`. At `t=t*`, the next CRT solution is `v*+4*Q>2*Q`. For `t>t*`, the raw-residue quotient increases with `t`; the first value, at `t=t*+1`, is `((A+1)*Q-m)/A<2*Q`. This candidate is not M8-excluded because `t*+1` is even while `m+1=2 (mod 4)`. The endpoint `t=2*L-1` has `v>3*Q`. Thus the exact minimum after the M8 correction is attained at `t*+1`, and every blank-root-reachable input in this exceptional family satisfies the displayed stronger inequality.
 
 Sample quotient lower bounds (before rounding `Y` to `4 mod 12`):
 
 | `m` | case | lower bound on `v` | exact modular minimum `v` |
 |---:|---|---:|---:|
 | 3 | nonexceptional | 43 | 74 |
-| 5 | exceptional, root-reachable | 1,023 | 170 (M8-excluded) |
+| 5 | exceptional, root-reachable | 1,450 | 170 (M8-excluded) |
 | 7 | nonexceptional | 4,965 | 15,018 |
 | 9 | nonexceptional | 62,415 | 109,226 |
-| 21 | exceptional, root-reachable | 1,099,511,627,775 | 183,251,937,962 (M8-excluded) |
+| 21 | exceptional, root-reachable | 5,955,687,983,786 | 183,251,937,962 (M8-excluded) |
 
 These bounds sharpen the residual frontier but still leave the general blank-root classification open.
 
