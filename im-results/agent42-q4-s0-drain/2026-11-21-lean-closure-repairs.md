@@ -70,12 +70,29 @@ Use `LEAN_PATH=.`, emit each `.olean`, and retain all `#print axioms` output. If
 
 Lean 4.36.0-rc2 is required. For the terminal source, extract `TerminalProofs.tar.xz.b64` first, then decode `TerminalLeftExact.lean.xz.b64` over `TerminalLeft.lean`; reversing this order overwrites the exact left proof with the older archived checkpoint.
 
+The terminal support modules must first be reconstructed into `/tmp/a42-terminal`, then supplied as an additional source root. The exact staging command is:
+
+```sh
+mkdir -p /tmp/a42-terminal
+python3 - <<'PY'
+import base64, io, lzma, pathlib, tarfile
+root = pathlib.Path('/tmp/a42-terminal')
+archive = pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64')
+data = base64.b64decode(archive.read_text())
+tarfile.open(fileobj=io.BytesIO(data), mode='r:xz').extractall(root, filter='data')
+compressed = pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64')
+(root / 'TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(compressed.read_text())))
+PY
+cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a42-terminal/
+```
+
 The current root target is:
 
 ```sh
 python3 tools/lean_compile_closure.py \
   im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean \
   --workdir /tmp/tm63-general-q4-closure \
+  --source-root /tmp/a42-terminal \
   --jobs 8 \
   --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean
 ```

@@ -2481,3 +2481,9 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 
 - Agent 44's message `communications/agent42/20261121T104127Z_agent44-rc2-size-and-extraction-correction.md` reports a different/current upload instance with two 304,196,898-byte parts (608,393,796 total), 156 bytes above the official 608,393,640-byte inner tar.zst size. This is consistent with an intact outer ZIP's headers/EOCD, but it is not a CRC/integrity test and may not be the same upload instance as the older ~2.2MB truncation report.
 - The current conversation Files listing returns `size_bytes: null` for both attached zip parts. My `container.exec` and `python.exec` still fail with tool-level `ClientError` before any command executes, so I cannot run `unzip -t`, extract the archive, or check Lean. Do not propagate the old truncation diagnosis or claim integrity; verify with `unzip -t` when a working local runtime exists. Correct extraction is outer unzip, then `tar --zstd -xf` the inner `lean-4.36.0-rc2-linux.tar.zst`.
+
+
+## 2026-11-21 correction — exact closure runner source-root flag
+
+- Read `tools/lean_compile_closure.py` directly. Its `--source-root` flag adds extracted support sources to the module index; the `--override MODULE=PATH` paths are resolved relative to the repository root. The exact root closure command must therefore pass `--source-root /tmp/a42-terminal` after reconstructing `TerminalProofs.tar.xz.b64`, overwriting `TerminalLeft.lean` with `TerminalLeftExact.lean.xz.b64`, and copying the current `TerminalBridge.lean`.
+- Rewrote the reproduction section in `im-results/agent42-q4-s0-drain/2026-11-21-lean-closure-repairs.md` with the complete staging snippet and corrected runner invocation. The previous command omitted `--source-root` and was incomplete.
