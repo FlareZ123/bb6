@@ -51,15 +51,15 @@ For the lower bound,
 \[
 T_5^{\alpha+1}
 =2^{65536(2^{46}+1)}
-=2^{2^{62}+2^{16}}
-<V_2.
+=2^{2^{62}+2^{16}}.
 \]
-Indeed \(2^{62}+2^{16}+3\le 2^{63}-1=V_1\), so the displayed strict inequality follows by comparing powers of two with \(V_2=2^{V_1}-1\). Consequently
+Put \(e=2^{62}+2^{16}\). Since \(e+3\le V_1=2^{63}-1\), comparison of powers gives \(2^{e+1}<2^{V_1}-1=V_2\), hence \(2^e+2\le V_2\). Therefore
 \[
 T_6^{T_5^\alpha}
-=2^{T_5^{\alpha+1}}
-<V_3.
-\]
+=2^{2^e}
+<2^{V_2}-1
+=V_3.
+]
 
 For the upper bound,
 \[
