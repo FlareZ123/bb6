@@ -1,6 +1,8 @@
 # Root32 B2→high-stop inverse chain
 
-**Status: intermediate source-orbit reduction, not a Machine C nonhalting proof.** The same-parameter forward path and q=0 residual parameter bridge are explicit. The new local Lean source-parent chain reduces exact root32 high-stop reachability to D0E(t), L(t), or P7E1E(t). A corrected paper-level analysis of P7E1E produces an additional odd/odd high-valuation residual A4(t) on eight of the nine indexed t-cylinders. Consequently the earlier claims excluding r≡9568 and r≡10592 (mod 16384) are not established: their t=47 and t=31 mod256 classes retain A4. The t≡1 mod16 cylinder has a paper-level A4 exclusion, but it is not yet Lean-formalized. The core inverse modules compile locally; exact transitive import-closure compilation and CI remain outstanding.
+**Current status (21 November 2026): intermediate source-orbit reduction, not a Machine C nonhalting proof.** The source-compiled inverse chain reduces exact root32 high-stop reachability to D0E(t), L(t), or P7E1E(t). The corrected P7E1E branch reduces to A4(t) on the eight t≡15 (mod16) cylinders; A4 is Lean-accepted only on t≡31 (mod32). The t≡1 (mod16) A4 branch has a paper-level exclusion but no Lean source proof. The remaining A4 parent fan is detailed in [Root32HighStopA4ParentFan.md](Root32HighStopA4ParentFan.md); on t≡719 (mod1024), its q=1 branch is now paper-level excluded, but q=0 remains open. The old r≡9568, r≡10592 (mod16384), and r≡224 (mod1024) complete-exclusion claims are withdrawn. The R10592 composition and generic P7E1E→A4 Lean drafts are uncompiled; the full nine-class union is not accepted.
+
+The generic reduction `p7e1e_reach_implies_a4_t7` in `Root32P7E1EGenericA4.lean` is an uncompiled Lean draft. It packages P7E1E→A4 uniformly for t≡7 (mod8), but does not exclude A4. The canonical all-depth parent analysis and the t≡719 q=1 branch elimination are in `Root32HighStopA4ParentFan.md`.
 
 ## 1. The same-parameter forward path
 
@@ -46,6 +48,9 @@ A_4(t)=\left(2814461475t+754739388,\frac{4231969245t+1134865019}{2}\right).
 
 For `t≡1 (mod 16)`, A4 has even right coordinate and sum three modulo eight; its forced even-right parent is odd-right with sum two modulo four, so this branch is excluded on that cylinder. For `t≡3 (mod 4)`, however, A4 is odd/odd with sum divisible by eight, not sum two modulo four. It is not excluded by `blank_no_odd_sum_two`. The eight remaining root32 parameter classes therefore retain the explicit odd/odd residual A4(t). Its sum modulo 32, in the order `t≡47,31,79,15,159,719,1167,7839`, is `16,24,0,0,24,0,0,24`. The existing `oddodd_sum16_blank_reach_iff` handles the first residue class modulo 32 only; the other high-valuation odd/odd source fans remain to be resolved. `oddodd16_double_forbidden_rectangle` does not directly apply to A4, whose coordinates are `(1,7) mod 8`, rather than its required `(5,3) mod 8`.
 
+The common P7E1E→A4 reduction on t≡7 (mod8) is drafted as `p7e1e_reach_implies_a4_t7` in `Root32P7E1EGenericA4.lean`; this module is uncompiled and proves a reduction only, not exclusion. The exact all-depth A4 source-parent fan is in `Root32HighStopA4ParentFan.md`. Its t≡719 (mod1024), q=1 branch is paper-level excluded, but q=0 remains open.
+
+
 ## 4. Status of the previously claimed high-stop progressions
 
 The earlier versions of this dossier described `r≡9568,10592 (mod 16384)` and `r≡224 (mod 1024)` as complete high-stop exclusions. **Withdraw that status pending the corrected P7 bounce branch.** Those compositions closed the D0E and L alternatives but relied on the now-invalid immediate P7E no-parent claim.
@@ -68,15 +73,3 @@ The linked dossiers `Root32HighStopR9568.md`, `Root32HighStopR10592.md`, and `Ro
 - The D0E/L branch calculations and A4 follow-on are still paper-level; the earlier r=9568/r=10592/r=224 exclusion status is withdrawn pending closure of the P7 bounce/A4 branch.
 
 The next decisive action is to resolve the eight odd/odd A4(t) source-orbit families (`t≡15 mod16`), separately formalize the t≡1 mod16 A4 exclusion, then re-evaluate the D0E/L sub-branch dossiers and rebuild the exact transitive Lean import closure. Do not add further residue cylinders before these blockers are resolved.
-
-
-## Generic P7E1E-to-A4 source reduction draft
-
-The new intermediate module `Root32P7E1EGenericA4.lean` contains `p7e1e_reach_implies_a4_t7`: for every t≡7 (mod8), a blank visit to P7E1E(t) forces its direct parent D(t), and the exact odd-seven inverse forces A4(t). This packages the corrected P7E1E residual uniformly over the eight t≡7 (mod8) classes in the existing index map.
-
-This is a **reduction**, not a nonreachability theorem. A4(t) is excluded by the existing low-valuation odd/odd inverse when t≡31 (mod32). The t≡47 (mod256) class reduces through the sum≡16 (mod32) two-parent fan. The four covered classes with t=32m+15 and m even have A4 sum≡0 (mod32), v2≥5; their complete original-source parent fan remains open. The generic module is uncompiled pending exact Lean 4.36.0-rc2 preflight.
-
-
-## Canonical A4 parent-fan reference
-
-The exact unbounded-depth source-parent fan for A4(t) is developed in [Root32HighStopA4ParentFan.md](Root32HighStopA4ParentFan.md). That file is the canonical derivation; this note retains only the generic P7E1E-to-A4 reduction above.

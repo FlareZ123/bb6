@@ -1,125 +1,122 @@
 # D0E inverse-chain arithmetic and residual E7 branch
 
-**Status:** exact arithmetic is locally Lean-checked; the source-parent composition below is a paper-level reduction awaiting integration into the original-source proof. This is not a nonhalting proof.
+**Current status (21 November 2026):** the exact affine inverse chain and root-index arithmetic are Lean-checked in `D0EInverseArithmetic.lean`; the original-source parent composition for the R10592 class is an uncompiled intermediate draft in `Root32HighStopR10592Core.lean`. This is not a nonhalting proof or an accepted high-stop exclusion. The draft now uses the corrected three-residual P7 theorem and the accepted A4Core t≡31 (mod32) result; it does not rely on the older two-residual wrapper. The full nine-class union remains open.
 
-## Setup
+## 1. Root32 parameter and direct inverse chain
 
-The q=0 root32 bridge gives the same parameter
-\[
+The q=0 root32 bridge gives
+[
 u=1802+6720t.
-\]
-The surviving direct-parent branch of \(D_0(u)\) is
-\[
-D0E(u)=(218624u+14700,\;414976u+27902).
-\]
+]
+The surviving direct-parent branch of (D_0(u)) is
+[
+D0E(u)=(218624u+14700,;414976u+27902).
+]
 
-Define the direct inverse map
-\[
-\operatorname{dp}(x,y)=(x+y-2,(y-2)/2).
-\]
-The Lean file D0EInverseArithmetic.lean proves the exact chain
-\[
-D0E(u)\to d_1(u)\to d_2(u)\to\cdots\to d_7(u)\to d_8(u),
-\]
-where each arrow is the arithmetic map \(\operatorname{dp}\). For \(u=1802+6720t\), the seven intermediate states \(d_0,\ldots,d_6\) are even/even, have right coordinate at least six, and have coordinate sum \(2\pmod4\). Thus, using cReach_parent_of_left_gt5 and even_even_parent_fan, every genuine source parent at these seven stages is forced to be the direct parent: the zero-left branch has sum divisible by eight, and an even-a bounce has sum divisible by four.
+Define
+[
+operatorname{dp}(x,y)=(x+y-2,(y-2)/2).
+]
+The Lean file `D0EInverseArithmetic.lean` proves the exact chain
+[
+D0E(u)	o d_1(u)	o d_2(u)	ocdots	o d_7(u)	o d_8(u),
+]
+where each arrow is (operatorname{dp}). For (u=1802+6720t), the seven intermediate states (d_0,ldots,d_6) are even/even, have right coordinate at least six, and have coordinate sum (2pmod4). The complete even-even parent fan therefore forces the direct parent at each of these seven stages: the zero-left branch has sum divisible by eight, and an even-a bounce has sum divisible by four.
 
-## The first terminal fork
+## 2. The terminal fork and E7 reduction
 
-The state immediately before \(d_8\) is
-\[
-d_7(t)=(7002858240t+1877919828,\;21786240t+5842300).
-\]
+The state immediately before (d_8) is
+[
+d_7(t)=(7002858240t+1877919828,;21786240t+5842300).
+]
 Its sum is
-\[
-d_{7,x}+d_{7,y}=8S,\qquad S=878080560t+235470266,
-\]
-with \(S\equiv2\pmod4\) and \(S>2\). Therefore even_even_sumzero_parent leaves exactly two source-parent alternatives:
+[
+d_{7,x}+d_{7,y}=8S,qquad S=878080560t+235470266,
+]
+with (Sequiv2pmod4) and (S>2). The complete even-even sum-zero parent theorem leaves exactly two alternatives:
 
 - direct parent
-  \[
-  d_8(t)=(7024644480t+1883762126,\;10893120t+2921149);
-  \]
+  [
+  d_8(t)=(7024644480t+1883762126,;10893120t+2921149);
+  ]
 - depth-one even-a bounce parent
-  \[
-  E7(t)=(1756161120t+470940530,\;2645134800t+709331944).
-  \]
+  [
+  E7(t)=(1756161120t+470940530,;2645134800t+709331944).
+  ]
 
-The direct branch \(d_8\) is source-unreachable. Its coordinates are even/odd, its sum is divisible by three, and
-\[
-d_{8,x}+d_{8,y}+1\equiv4\pmod8.
-\]
-even_odd_three_divisible_parent forces an odd-a, even-depth parent. Since the sum-plus-one has exact 2-adic valuation two, that depth is zero, and the unique parent is
-\[
-(3517768800t+943341635,\;1764330960t+473131391).
-\]
-Both counters are odd, the right counter is at least five, and their sum is \(2\pmod4\). blank_no_odd_sum_two excludes it. Hence
-\[
-D0E(u)\text{ reachable}\Longrightarrow E7(t)\text{ reachable}.
-\]
+The direct branch (d_8) is source-unreachable. Its coordinates are even/odd, its sum is divisible by three, and
+[
+d_{8,x}+d_{8,y}+1equiv4pmod8.
+]
+The exact even-odd-three-divisible inverse forces an odd-a, even-depth parent. Since the sum-plus-one has exact 2-adic valuation two, that depth is zero, and the unique parent is
+[
+(3517768800t+943341635,;1764330960t+473131391).
+]
+Both counters are odd, the right counter is at least five, and their sum is (2pmod4). The original-source odd-image sum-two theorem excludes it. Hence
+[
+D0E(u)	ext{ reachable}Longrightarrow E7(t)	ext{ reachable}.
+]
 This is a reduction, not an exclusion of D0E.
 
-## Next inverse of E7
+## 3. The next E7 inverse and root-index localization
 
-Since \(E7(t)\) is even/even with sum \(2\pmod4\), its only source parent is its direct parent
-\[
-P(t)=(4401295920t+1180272472,\;1322567400t+354665971).
-\]
-The target \(P(t)\) is even/odd and has
-\[
-P_x+P_y+1\equiv4\pmod8.
-\]
-The complete predecessor grammar therefore forces its odd-a, depth-zero parent
-\[
-R(t)=(2861931660t+767469219,\;2092249530t+561067594).
-\]
-Here \(R\) is odd/even and
-\[
-R_x+R_y\equiv6t+5\pmod8.
-\]
+Since (E7(t)) is even/even with sum (2pmod4), its only source parent is
+[
+P(t)=(4401295920t+1180272472,;1322567400t+354665971).
+]
+The target (P(t)) is even/odd and has
+[
+P_x+P_y+1equiv4pmod8.
+]
+The complete predecessor grammar forces its odd-a, depth-zero parent
+[
+R(t)=(2861931660t+767469219,;2092249530t+561067594).
+]
+Here (R) is odd/even and
+[
+R_x+R_yequiv6t+5pmod8.
+]
 
-For \(t\not\equiv3\pmod4\), this residue is respectively 5, 3, or 1 modulo eight, so blank_reach_iff_even_right applies and forces the direct parent
-\[
-R'(t)=(4954181190t+1328536811,\;1046124765t+280533796).
-\]
-The exceptional case is \(t\equiv3\pmod4\), where \(R_x+R_y\equiv7\pmod8\) and the generic even-right uniqueness theorem does not apply.
+For (t
+otequiv3pmod4), this residue is respectively 5, 3, or 1 modulo eight, so the even-right inverse applies and forces
+[
+R'(t)=(4954181190t+1328536811,;1046124765t+280533796).
+]
+The exceptional case is (tequiv3pmod4), where (R_x+R_yequiv7pmod8) and the generic even-right uniqueness theorem does not apply.
 
-## Root-index localization of the exception
+Write (r=32+64j), as required by the root32 class. The exact root equation is
+[
+18018+211u+22155r=20cdot2^{E-13}.
+]
+After substituting (u=1802+6720t) and (r=32+64j), the Lean theorem `root32_tj_exact` proves the exact saturation identity
+[
+17300+22155(t+j)=5cdot2^{E-17}.
+]
+Since (Ege21), this implies
+[
+t+jequiv0pmod4.
+]
+Consequently the exceptional subcase (tequiv3pmod4) is exactly
+[
+jequiv1pmod4,qquad requiv96pmod{256}.
+]
+The Lean arithmetic certificate establishes these identities only; it does not itself import or re-prove the original source grammar.
 
-Write \(r=32+64j\), as required by the root32 class. The exact root equation
-\[
-18018+211u+22155r=20\cdot2^{E-13}
-\]
-and \(E\ge21\) imply, modulo 256,
-\[
-64(17300+22155(t+j))\equiv0\pmod{256}.
-\]
-Since \(17300\equiv0\) and \(22155\equiv3\pmod4\), this gives
-\[
-t+j\equiv0\pmod4.
-\]
-Consequently the exceptional subcase \(t\equiv3\pmod4\) is exactly
-\[
-j\equiv1\pmod4,
-\qquad r\equiv96\pmod{256}.
-\]
+## 4. R10592 composition draft and acceptance boundary
 
-This is the next concrete target: analyze the complete source-parent fan for \(R(t)\) on the exceptional root-index cylinder \(r\equiv96\pmod{256}\), while continuing the even-right inverse chain for the other three classes. The Lean file certifies the affine arithmetic and modular identities only; it does not import or re-prove the original source grammar.
+For (requiv10592pmod{16384}), the exact root-index equations give
+[
+j=(r-32)/64equiv165pmod{256},qquad
+t+jequiv196pmod{256},
+]
+hence (tequiv31pmod{256}).
 
+The intermediate file `Root32HighStopR10592Core.lean` attempts to close the D0E branch on this exact cylinder:
+1. The complete even-even parent fan forces the displayed direct parents through (d_0,ldots,d_6), reaching (d_7).
+2. The complete sum-zero parent theorem leaves (d_8) or E7(t); (d_8) is excluded by the even/odd four-step inverse followed by the source odd-image sum-two theorem.
+3. E7(t) is forced to P(t), then to R(t) by the exact even/odd valuation-two inverse. With (t=31+256m), (q=(t-3)/4=7+64m), so the existing (R)-unreachable (qequiv7pmod{64}) theorem excludes it.
+4. The corrected P7 theorem returns three residuals D0E, L, or P7E1E. The draft handles D0E by this chain, L by the existing LCore result, and P7E1E by the accepted `Root32HighStopA4Core.p7e1e_unreachable_of_t_mod32_31` theorem.
 
-The local Lean certificate has since been strengthened from the mod-4 consequence to the exact saturation identity
-\[
-17300+22155(t+j)=5\cdot2^{E-17}.
-\]
-This follows by substituting (u=1802+6720t) and (r=32+64j) into the exact root equation and cancelling 64. The congruence (t+j\equiv0\pmod4) and the exceptional cylinder (r\equiv96\pmod{256}) are immediate consequences. The exact identity is now proved as root32_tj_exact in D0EInverseArithmetic.lean.
+**Status:** the R10592 composition is still uncompiled and unaccepted. It was statically corrected to bind the root-derived (t) and the three-residual theorem's existential (t') through the shared (u=1802+6720t) equation. The current local runtime did not permit a Lean preflight; independent local RC2 preflight has been requested from Agent 24 and Agent 32. No CI run is being substituted. The file must compile from the exact current-main transitive source closure under Lean 4.36.0-rc2, then have its `#print axioms` output checked before any acceptance claim.
 
-
-## 2026-11-21 — D0E terminal source-composition draft (not yet accepted)
-
-A new intermediate Lean draft, `Root32HighStopR10592Core.lean`, attempts to close the remaining D0E branch on the exact cylinder t=31 (mod 256), then compose it with the existing L(t) exclusion and the corrected P7E1E reduction. The intended source chain is:
-
-1. The complete `even_even_parent_fan` and the sum-two-mod-four invariant force each of d0e0 through d0e6 to its displayed direct parent, reaching d0e7.
-2. The complete sum-zero parent theorem leaves exactly d0e8 or E7(t). The d0e8 branch is excluded by `evenodd_four_blank_reach_iff` followed by the source odd-image sum-two theorem.
-3. The E7 branch is forced to P(t), then to R(t) by the exact even/odd valuation-two inverse. With t=31+256m, q=(t-3)/4=7+64m, so the existing `R_unreachable_q7` theorem excludes it.
-4. The exact root equation and r=10592 (mod 16384) yield j=(r-32)/64=165 (mod 256), t+j=196 (mod 256), and therefore t=31 (mod 256). The existing root32 two-residual theorem then leaves only D0E or L, both covered by the intended composition.
-
-**Status:** this is a source-composition draft, not a verified theorem. This invocation could not start a local shell/Lean process (container and Python execution errors); no CI run is being substituted. The draft must be compiled from the exact current-main transitive source closure under Lean 4.36.0-rc2, then have its `#print axioms` output checked before any acceptance claim or promotion to `results/`. Agent 32 has been asked for that local preflight and an independent check of the D0E terminal-parent composition.
+This composition addresses only the existing (requiv10592pmod{16384}) class. The earlier (requiv9568) and (requiv224) claims remain withdrawn; the full corrected nine-class union, including the A4 high-valuation parent families and the (tequiv1pmod{16}) branch, remains open.

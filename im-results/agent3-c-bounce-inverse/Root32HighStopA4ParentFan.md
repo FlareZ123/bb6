@@ -1,6 +1,6 @@
 # Root32 P7E1E → A4: exact all-depth source-parent fan
 
-**Agent 3 · 2026-11-21T12:39:42.610Z · intermediate mathematical result.** This is a source-grammar reduction, not yet a Lean-certified theorem and not a nonreachability proof.
+**Intermediate mathematical result, not a nonreachability proof.** The P7E1E→A4 reduction and all-depth source-parent fan are paper-level. The t≡31 (mod32) A4 exclusion is separately Lean-accepted in `Root32HighStopA4Core.lean`; a generic P7E1E→A4 Lean draft exists in `Root32P7E1EGenericA4.lean` but is uncompiled. The q=1 A4 parent branch for t≡719 (mod1024) is now paper-level excluded; q=0 remains open.
 
 ## 1. Reduction to A4
 
@@ -99,11 +99,15 @@ The table uses the corrected S formula above. The v2 values are constant across 
 | 79 mod 512 | 5 | 0, 1 |
 | 15 mod 512 | at least 8 | 0 through floor((v2(S)-2)/2) |
 | 159 mod 1024 | 3 | 0 |
-| 719 mod 1024 | 5 | 0, 1 |
+| 719 mod 1024 | 5 | 0, 1 (q=1 excluded below; q=0 remains) |
 | 1167 mod 4096 | 6 | 0, 1, 2 |
 | 7839 mod 8192 | 3 | 0 |
 
 In particular, the A4 fan is finite with at most three candidate depths on seven of the eight cylinders. The t ≡ 15 (mod 512) family has a genuinely unbounded depth range as t varies.
+
+For t≡719 (mod1024), the q=1 parent has U=S/8, a=U−2, and k=(x+2y−U−11)/2. Exact modular arithmetic gives a≡2 (mod8), k≡4 (mod8). This is an even-even target with sum≡2 (mod4), so its complete parent fan forces D=(a+k−2,(k−2)/2). The residues imply D_x≡0 (mod4), D_y≡1 (mod4), and (D_x+D_y+1)≡2 (mod4), with D_x>5 and D_y≥5.
+
+The complete `section_preimage_all_iff` grammar gives no source predecessor for any (X,Y) with X even, Y odd, Y≥5, X>5, and (X+Y+1)≡2 (mod4): zero-left/even-a branches require X+Y even; a=1/odd-a high branches require X+Y+1 divisible by four; the direct branch requires Y even; small branches contradict the size bounds. Thus D is unreachable and the q=1 branch is eliminated. This is a paper-level branch exclusion only; the q=0 branch remains open.
 
 ## 5. What this does and does not establish
 
@@ -111,11 +115,11 @@ Established algebraically:
 1. P7E1E reachability reduces to A4 reachability on the relevant t ≡ 15 (mod 16) cylinders.
 2. Every possible A4 source parent lies in the explicit even-bounce fan above.
 3. Every such parent satisfies U ≡ 0 (mod 10) and k ≡ 2q+1 (mod 5).
-4. The finite/infinite depth ranges in the table follow from exact 2-adic valuations.
+4. The finite/infinite depth ranges in the table follow from exact 2-adic valuations; the t≡719 q=1 candidate is separately eliminated by the no-predecessor argument above.
 
 Not established:
 - The other A4 cylinders remain open. A separate, still-uncompiled source-proof draft now excludes A4(t) for t ≡ 31 (mod 32) using the existing odd/odd low-valuation inverse; it does not formalize the full all-depth fan.
-- The exceptional parent states still require source-level exclusion.
+- The exceptional parent states still require source-level exclusion. In particular, t≡719 q=0 remains open after the q=1 branch elimination.
 - This file has not yet been compiled with Lean 4.36.0-rc2. The local Python/shell execution tools returned ClientError during this invocation, so no uncompiled claim is being promoted into results/.
 
 The next useful step for the remaining t ≡ 15 (mod 32) cylinders is still to formalize the all-depth fan and attack the surviving parent family using the simultaneous mod-10/mod-5 constraints. Do not infer whole-cylinder exclusion from representative t values: deeper inverse steps can depend on higher bits of t.
@@ -149,19 +153,5 @@ The locally compiled core closes the corrected P7E1E residual there: its even/ev
 
 Under the existing root-index congruence \(t+j\equiv3780\pmod{8192}\), this t-cylinder implies \(j\equiv5\pmod{32}\). Since \(r=32+64j\), the P7E1E residual exclusion therefore maps to \(r\equiv352\pmod{2048}\). This is a residual-specific index map only; it is not a complete high-stop exclusion.
 
-**Acceptance boundary:** the P7E1E residual exclusion on t ≡ 31 (mod 32) is now locally Lean-accepted in Root32HighStopA4Core.lean, with standard axioms only and no `sorryAx`. This includes the t ≡ 31 (mod 256), t ≡ 159 (mod 1024), and t ≡ 7839 (mod 8192) cylinders. It does not close the other A4 cylinders, D0E, L, or the full high-stop target. Keep the dossier in im-results/; the full high-stop composition is not accepted.
+**Acceptance boundary:** the P7E1E residual exclusion on t ≡ 31 (mod 32) is locally Lean-accepted in Root32HighStopA4Core.lean, with standard axioms only and no `sorryAx`. The generic t≡7 (mod8) reduction draft and the t≡719 q=1 branch exclusion are not Lean-accepted. This includes the t ≡ 31 (mod 256), t ≡ 159 (mod 1024), and t ≡ 7839 (mod 8192) cylinders. It does not close the other A4 cylinders, D0E, L, or the full high-stop target. Keep the dossier in im-results/; the full high-stop composition is not accepted.
 
-
-## 7. A finite-depth branch eliminated: t ≡ 719 (mod 1024), q=1
-
-For t≡719 (mod1024), the q=1 A4 parent in §4 has
-`U=S/8`, `a=U-2`, and `k=(x+2y-U-11)/2`. Exact modular arithmetic gives
-`a≡2 (mod8)` and `k≡4 (mod8)`. The parent (a,k) is even-even with sum≡2 (mod4), so its complete even-even parent fan forces the direct predecessor
-`D=(a+k-2,(k-2)/2)`.
-
-These residues imply
-`D_x≡0 (mod4)`, `D_y≡1 (mod4)`, hence `(D_x+D_y+1)≡2 (mod4)`; also D_x>5 and D_y≥5.
-
-A generic source-grammar observation now excludes D: no state (X,Y) with X even, Y odd, Y≥5 and (X+Y+1)≡2 (mod4) has any source predecessor. In `section_preimage_all_iff`, the zero-left and even-a branches require X+Y even; the a=1 and odd-a high branches require X+Y+1 divisible by 4; the direct branch requires Y even; and the small exceptional branches contradict Y≥5 and X>5. Thus D is unreachable, so the q=1 branch is impossible.
-
-This removes one of the two candidate depths for t≡719 (mod1024). The q=0 branch remains open; this does not close the full t-cylinder.

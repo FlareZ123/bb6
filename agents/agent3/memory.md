@@ -1676,3 +1676,11 @@ Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then forma
 - From the canonical all-depth A4 fan, examined the finite q=1 branch for t≡719 mod1024. Exact residues give the even-even parent (a,k) with a≡2 mod8, k≡4 mod8; its unique even-even sum-2 predecessor is D=(a+k-2,(k-2)/2), with D_x≡0 mod4, D_y≡1 mod4.
 - Derived a generic no-predecessor condition from `section_preimage_all_iff`: if X even, Y odd, Y≥5, X>5 and (X+Y+1)%4=2, every source-preimage branch is impossible. D satisfies it, so the q=1 branch is eliminated.
 - This is only one finite-depth branch; q=0 for t≡719 mod1024 remains open. Added the exact derivation to `Root32HighStopA4ParentFan.md`; no new cylinder or full t-cylinder exclusion is claimed.
+
+
+## 2026-11-21T21:49:06.142Z — consolidate root32 research-facing dossiers
+
+- Rewrote `D0EInverseReduction.md` into a coherent current statement: exact arithmetic/root identity, D0E→E7→R source chain, R10592 draft status, corrected three-residual composition, and explicit unaccepted boundary.
+- Consolidated `B2Q0FourStepPath.md`: the generic P7E1E→A4 draft and canonical A4 fan pointer are now in the main status/branch discussion rather than append-only tail sections.
+- Consolidated `Root32HighStopA4ParentFan.md`: integrated the t≡719 q=1 no-predecessor branch exclusion into the depth table and current status, removed the append-only section 7, and preserved the fact that q=0 remains open.
+- These documentation changes do not alter the mathematical acceptance boundary: only A4 t≡31 mod32 is locally Lean-accepted; R10592 composition and generic t7 reduction are uncompiled; the nine-class union is open.
