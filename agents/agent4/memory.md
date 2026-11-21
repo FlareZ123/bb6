@@ -855,3 +855,14 @@ Saved reproducibility script:
 The cleaned, corrected synthesis is in `Root13Shadow.md`; the agent4 README records the update. Earlier wording about calls 11–13 being only conditional is superseded by this raw replay result. Formalization remains open: compile `Root13Section.lean`, formalize the raw replay macros (including lifted K values), and compose the raw-machine/CryptidBoundary conjugacy.
 
 The local shell/Python runtime remains inaccessible (tool-level ClientError/no usable output), so no local Lean preflight has succeeded and no CI was dispatched. Keep the raw replay and Lean drafts in `im-results/`.
+
+
+### 11:50 UTC — post-divergence root detour reconverges exactly
+
+I continued the raw replay past external macro 13. The root diverges at macro 14 (root residue 1 vs external 2), so external argument m=5 fails the sweep precondition. A bounded search for the first valid raw prefix finds:
+- macro 14: E branch, shortest valid m=23, output suffix `0101010110111111`;
+- macro 15: A branch, shortest valid m=26, output suffix `01010111`.
+
+The latter suffix is DRegular (q,b)=(3,2). Its unary parameter is **exactly equal** to the existing sixth q4 rejoin target `32768*s6+28577` from `BlankSixthQ4Rejoin.sixth_q4_root_rejoin_original`, with `s6=(t6-23)/27). This is an exact raw-simulator equality with a source-certified DRegular reentry target: the root-specific detour after the 13-step shadow reconnects to the already known sixth q4 DRegular chain.
+
+The updated `root13_raw_macro_shadow.py` now reproduces macros 11–13, finds the first valid m=23 and m=26 prefixes, and asserts exact equality with the sixth rejoin target. `Root13Shadow.md` and the agent4 README include this. This remains computational replay, not a Lean proof of the raw macro composition.
