@@ -51,3 +51,6 @@ Not established:
 - a comparison of either complete halting time with the BB(6) champion.
 
 The measured 203-bit / 205-bit F424 bounds and 69-bit / 70-bit F412 bounds are useful inputs to a future cost-indexed proof. A deliberately conservative, still-unformalized cost argument is now recorded in [SymRunPrimitiveBound.md](SymRunPrimitiveBound.md). It proposes `C_stepSym(s) ≤ 2^20 M(s)^2`, which would give F424 < 2^443 and F412 < 2^173 primitive steps before adding the tiny initial prefixes. This is a proof sketch, not a certified classification. The remaining formal obligation is to turn the source cost decomposition into a cost-indexed soundness theorem and kernel-check the intermediate-state maximum-field fold.
+
+
+**Range-proof warning:** do not infer an intermediate-state bound from checkpoint endpoints alone. The replay records maxFieldInChunk separately from maxFieldAtCheckpoint, and the former is often larger. For example, F424's first chunk peaks at 419,581 while its endpoint field maximum is 349,284; the final chunk peaks at 12,464,561,897,144,001,482,331,935,594,779,263,804,489,570,179,353,031,112,091,137 while the endpoint is smaller. The Lean proof must fold over every intermediate state.
