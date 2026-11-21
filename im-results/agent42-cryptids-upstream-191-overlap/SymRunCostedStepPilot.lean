@@ -648,4 +648,299 @@ theorem step_CB_run_ge3_exact (d : Nat) (L R1 : List MItem) :
 #print axioms step_CB_run_ge3_exact
 
 
+
+
+/-! A local field measure and constructor-complete costed one-element
+    semantics. These bounds are machine-specific to F424 through the exact
+    ReachesIn witnesses above. -/
+
+def pilotTokFieldMax : SymTok → Nat
+  | .item .zero => 0
+  | .item (.run d) => d
+  | .repB1 k => k
+  | .rep2 p => p
+  | .rep12 m => m
+
+def pilotListFieldMax : List SymTok → Nat
+  | [] => 0
+  | t :: xs => max (pilotTokFieldMax t) (pilotListFieldMax xs)
+
+def pilotStateFieldMax (s : SymMode × List SymTok × List SymTok) : Nat :=
+  max (pilotListFieldMax s.2.1) (pilotListFieldMax s.2.2)
+
+theorem pilot_reachesIn_refl (c : Cfg (Fin 2) (Fin 6)) :
+    ReachesIn target_tm 0 c c := by
+  change multiStep target_tm c 0 = some c
+  simp only [multiStep_zero]
+
+theorem pilot_peelPureTok_field_growth (t : SymTok) (xs : List SymTok) :
+    pilotListFieldMax (peelPureTok t xs) ≤
+      max (pilotTokFieldMax t) (pilotListFieldMax xs) := by
+  cases t with
+  | item x =>
+    cases x <;> simp [peelPureTok, pilotListFieldMax, pilotTokFieldMax]
+  | repB1 k =>
+    cases k <;> simp [peelPureTok, pilotListFieldMax, pilotTokFieldMax] <;> omega
+  | rep2 p =>
+    cases p <;> simp [peelPureTok, pilotListFieldMax, pilotTokFieldMax] <;> omega
+  | rep12 m =>
+    cases m <;> simp [peelPureTok, pilotListFieldMax, pilotTokFieldMax] <;> omega
+
+theorem pilotStateFieldMax_left_mono (mode : SymMode) (L' L R : List SymTok)
+    (hL : pilotListFieldMax L' ≤ pilotListFieldMax L) :
+    pilotStateFieldMax (mode, L', R) ≤ pilotStateFieldMax (mode, L, R) := by
+  simp only [pilotStateFieldMax]
+  apply Nat.max_le.mpr
+  constructor
+  · exact Nat.le_trans hL (Nat.le_max_left _ _)
+  · exact Nat.le_max_right _ _
+
+theorem pilotStateFieldMax_right_mono (mode : SymMode) (L R' R : List SymTok)
+    (hR : pilotListFieldMax R' ≤ pilotListFieldMax R) :
+    pilotStateFieldMax (mode, L, R') ≤ pilotStateFieldMax (mode, L, R) := by
+  simp only [pilotStateFieldMax]
+  apply Nat.max_le.mpr
+  constructor
+  · exact Nat.le_max_left _ _
+  · exact Nat.le_trans hR (Nat.le_max_right _ _)
+
+theorem stepElemBB_within (L R : List SymTok) :
+    ReachesWithin (50 * (pilotStateFieldMax (.BB, L, R) + 1))
+      ((evalSym target_tm) (.BB, L, R))
+      ((evalSym target_tm) (stepElemBB L R)) := by
+  unfold ReachesWithin
+  cases L with
+  | nil =>
+    refine ⟨1, by omega, ?_⟩
+    simpa only [stepElemBB, strictList_eq, evalSym, evalM, encSymL, encSymR_bumpSymR] using
+      step_BB_nil_exact (encSymR R)
+  | cons t L1 =>
+    cases t with
+    | item x =>
+      cases x with
+      | zero =>
+        refine ⟨1, by omega, ?_⟩
+        simpa only [stepElemBB, strictList_eq, evalSym, evalM, encSymL, encSymR_bumpSymR] using
+          step_BB_zero_exact (encSymL L1) (encSymR R)
+      | run d =>
+        rcases d with _ | _ | _ | _ | d
+        · refine ⟨8, by omega, ?_⟩
+          simpa only [stepElemBB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymR_bumpSymR] using
+            step_BB_run0_exact (encSymL L1) (encSymR R)
+        · refine ⟨3, by omega, ?_⟩
+          simpa only [stepElemBB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymR_bumpSymR] using
+            step_BB_run1_exact (encSymL L1) (encSymR R)
+        · refine ⟨5, by omega, ?_⟩
+          simpa only [stepElemBB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymR_bumpSymR] using
+            step_BB_run2_exact (encSymL L1) (encSymR R)
+        · refine ⟨9, by omega, ?_⟩
+          simpa only [stepElemBB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymR_bumpSymR] using
+            step_BB_run3_exact (encSymL L1) (encSymR R)
+        · refine ⟨9, by omega, ?_⟩
+          simpa only [stepElemBB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymR_bumpSymR] using
+            step_BB_run_ge4_exact d (encSymL L1) (encSymR R)
+    | repB1 k =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemBB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.BB, .repB1 k :: L1, R))
+    | rep2 p =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemBB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.BB, .rep2 p :: L1, R))
+    | rep12 m =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemBB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.BB, .rep12 m :: L1, R))
+
+theorem stepElemDL_within (L R : List SymTok) :
+    ReachesWithin (50 * (pilotStateFieldMax (.DL, L, R) + 1))
+      ((evalSym target_tm) (.DL, L, R))
+      ((evalSym target_tm) (stepElemDL L R)) := by
+  unfold ReachesWithin
+  cases L with
+  | nil =>
+    refine ⟨0, by omega, ?_⟩
+    simpa [stepElemDL] using pilot_reachesIn_refl ((evalSym target_tm) (.DL, [], R))
+  | cons t L1 =>
+    cases t with
+    | item x =>
+      cases x with
+      | zero =>
+        refine ⟨0, by omega, ?_⟩
+        simpa [stepElemDL] using
+          pilot_reachesIn_refl ((evalSym target_tm) (.DL, .item .zero :: L1, R))
+      | run d =>
+        rcases d with _ | _ | _ | d
+        · refine ⟨1, by omega, ?_⟩
+          simpa only [stepElemDL, strictList_eq, evalSym, evalM, encSymL, encSymR_bumpSymR] using
+            step_DL_run0_exact (encSymL L1) (encSymR R)
+        · refine ⟨3, by omega, ?_⟩
+          simpa only [stepElemDL, strictList_eq, evalSym, evalM, encSymL, encSymR,
+            encSymR_bumpSymR] using
+            step_DL_run1_exact (encSymL L1) (encSymR R)
+        · cases R with
+          | nil =>
+            refine ⟨0, by omega, ?_⟩
+            simpa [stepElemDL] using
+              pilot_reachesIn_refl ((evalSym target_tm) (.DL, .item (.run 2) :: L1, []))
+          | cons rt R1 =>
+            cases rt with
+            | item it =>
+              cases it with
+              | zero =>
+                refine ⟨0, by omega, ?_⟩
+                simpa [stepElemDL] using
+                  pilot_reachesIn_refl
+                    ((evalSym target_tm) (.DL, .item (.run 2) :: L1, .item .zero :: R1))
+              | run d0 =>
+                refine ⟨3 * d0 + 22, ?_, ?_⟩
+                · have hd : d0 ≤
+                      pilotStateFieldMax (.DL, .item (.run 2) :: L1, .item (.run d0) :: R1) := by
+                    simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+                    omega
+                  omega
+                · simpa only [stepElemDL, strictList_eq, evalSym, evalM, encSymL, encSymR,
+                    encSymL_prependZeroSym] using
+                    step_DL_run2_exact d0 (encSymL L1) (encSymR R1)
+            | repB1 k =>
+              refine ⟨0, by omega, ?_⟩
+              simpa [stepElemDL] using
+                pilot_reachesIn_refl
+                  ((evalSym target_tm) (.DL, .item (.run 2) :: L1, .repB1 k :: R1))
+            | rep2 p =>
+              refine ⟨0, by omega, ?_⟩
+              simpa [stepElemDL] using
+                pilot_reachesIn_refl
+                  ((evalSym target_tm) (.DL, .item (.run 2) :: L1, .rep2 p :: R1))
+            | rep12 m =>
+              refine ⟨0, by omega, ?_⟩
+              simpa [stepElemDL] using
+                pilot_reachesIn_refl
+                  ((evalSym target_tm) (.DL, .item (.run 2) :: L1, .rep12 m :: R1))
+        · refine ⟨0, by omega, ?_⟩
+          simpa [stepElemDL] using
+            pilot_reachesIn_refl
+              ((evalSym target_tm) (.DL, .item (.run (d + 3)) :: L1, R))
+    | repB1 k =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemDL] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.DL, .repB1 k :: L1, R))
+    | rep2 p =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemDL] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.DL, .rep2 p :: L1, R))
+    | rep12 m =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemDL] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.DL, .rep12 m :: L1, R))
+
+theorem stepElemCB_run0_within (L R1 : List SymTok) :
+    ReachesWithin (50 * (pilotStateFieldMax (.CB, L, .item (.run 0) :: R1) + 1))
+      ((evalSym target_tm) (.CB, L, .item (.run 0) :: R1))
+      ((evalSym target_tm) (stepElemCB_run0 L R1)) := by
+  unfold ReachesWithin
+  cases R1 with
+  | nil =>
+    refine ⟨3, by omega, ?_⟩
+    simpa only [stepElemCB_run0, strictList_eq, evalSym, evalM, encSymL, encSymR,
+      encSymL_bumpSymL] using
+      step_CB_run0_nil_exact (encSymL L)
+  | cons rt R2 =>
+    cases rt with
+    | item it =>
+      cases it with
+      | zero =>
+        refine ⟨3, by omega, ?_⟩
+        simpa only [stepElemCB_run0, strictList_eq, evalSym, evalM, encSymL, encSymR,
+          encSymL_bumpSymL] using
+          step_CB_run0_zero_exact (encSymL L) (encSymR R2)
+      | run d2 =>
+        rcases d2 with _ | d2
+        · refine ⟨6, by omega, ?_⟩
+          simpa only [stepElemCB_run0, strictList_eq, evalSym, evalM, encSymL, encSymR,
+            encSymL_bumpSymL, encSymL_prependZeroSym] using
+            step_CB_run0_run0_exact (encSymL L) (encSymR R2)
+        · refine ⟨3 * d2 + 21, ?_, ?_⟩
+          · have hd : d2 ≤ pilotStateFieldMax
+                (.CB, L, .item (.run 0) :: .item (.run (d2 + 1)) :: R2) := by
+              simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+              omega
+            omega
+          · simpa only [stepElemCB_run0, strictList_eq, evalSym, evalM, encSymL, encSymR,
+              encSymL_bumpSymL, encSymL_prependZeroSym] using
+              step_CB_run0_run_pos_exact d2 (encSymL L) (encSymR R2)
+    | repB1 k =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB_run0] using
+        pilot_reachesIn_refl
+          ((evalSym target_tm) (.CB, L, .item (.run 0) :: .repB1 k :: R2))
+    | rep2 p =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB_run0] using
+        pilot_reachesIn_refl
+          ((evalSym target_tm) (.CB, L, .item (.run 0) :: .rep2 p :: R2))
+    | rep12 m =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB_run0] using
+        pilot_reachesIn_refl
+          ((evalSym target_tm) (.CB, L, .item (.run 0) :: .rep12 m :: R2))
+
+theorem stepElemCB_within (L R : List SymTok) :
+    ReachesWithin (50 * (pilotStateFieldMax (.CB, L, R) + 1))
+      ((evalSym target_tm) (.CB, L, R))
+      ((evalSym target_tm) (stepElemCB L R)) := by
+  unfold ReachesWithin
+  cases R with
+  | nil =>
+    refine ⟨2, by omega, ?_⟩
+    simpa only [stepElemCB, strictList_eq, evalSym, evalM, encSymL_bumpSymL] using
+      step_CB_nil_exact (encSymL L)
+  | cons t R1 =>
+    cases t with
+    | item it =>
+      cases it with
+      | zero =>
+        refine ⟨2, by omega, ?_⟩
+        simpa only [stepElemCB, strictList_eq, evalSym, evalM, encSymL_bumpSymL,
+          encSymR_bumpSymR] using
+          step_CB_zero_exact (encSymL L) (encSymR R1)
+      | run d =>
+        rcases d with _ | _ | _ | d
+        · simpa [stepElemCB] using stepElemCB_run0_within L R1
+        · refine ⟨3, by omega, ?_⟩
+          simpa only [stepElemCB, strictList_eq, evalSym, evalM, encSymL, encSymR,
+            encSymL_bumpSymL] using
+            step_CB_run1_exact (encSymL L) (encSymR R1)
+        · refine ⟨5, by omega, ?_⟩
+          simpa only [stepElemCB, strictList_eq, evalSym, evalM, encSymL, encSymR,
+            encSymL_bumpSymL] using
+            step_CB_run2_exact (encSymL L) (encSymR R1)
+        · refine ⟨5, by omega, ?_⟩
+          simpa only [stepElemCB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymL_bumpSymL] using
+            step_CB_run_ge3_exact d (encSymL L) (encSymR R1)
+    | repB1 k =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .repB1 k :: R1))
+    | rep2 p =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .rep2 p :: R1))
+    | rep12 m =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .rep12 m :: R1))
+
+#print axioms stepElemBB_within
+#print axioms stepElemDL_within
+#print axioms stepElemCB_run0_within
+#print axioms stepElemCB_within
+
+
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
