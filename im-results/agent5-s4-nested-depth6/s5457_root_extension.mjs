@@ -33,6 +33,20 @@ function gate(c,xs){
 }
 function factorTwo(n){let v=0;while(n%2n===0n){n/=2n;v++;}return{v,odd:n};}
 
+function discountedQScaled(xs,bits=64){
+  let q=0n;
+  for(let i=0;i<xs.length;i++)q+=(xs[i]+1n)<<BigInt(bits-i);
+  return q;
+}
+function checkFullCarryQUpdate(xs,ys,c,r,odd){
+  const bits=64,scale=1n<<BigInt(bits);
+  const before=discountedQScaled(xs,bits),after=discountedQScaled(ys,bits);
+  const numerator=2n*c*scale-before+(odd+27n)*(1n<<BigInt(bits-r-2));
+  assert(numerator%3n===0n,"discounted-Q update numerator is not divisible by three");
+  const predicted=numerator/3n;
+  assert(after-before===predicted,"corrected discounted-Q update mismatch");
+  return {carryDepth:r,scaleBits:bits,deltaScaled:String(after-before),matches:true};
+}
 function momentStats(xs){
   let mass=0n,first=0n,second=0n,weighted=0n,power=1n;
   for(let i=0;i<xs.length;i++){
@@ -133,6 +147,8 @@ for(let r=0;r<4*BLOCK;r++){
       const q=potential/denominator;
       const f=factorTwo(q);
       assert(f.odd!==1n,"a full-suffix event was a power-of-two halt");
+      const carryDepth=beforeLength-1+f.v;
+      const discountedQUpdate=checkFullCarryQUpdate(state,next,c,carryDepth,f.odd);
       const momentCertificate=beforeLength===18
         ? exactThreeDigitMomentTail(state,15,c)
         : beforeLength===22
@@ -142,7 +158,7 @@ for(let r=0;r<4*BLOCK;r++){
         relativeReturn:r,stage:j,offset:String(c),oldLength:beforeLength,
         newLength:next.length,W:String(W(state)),potential:String(potential),
         terminalQuotient:String(q),v2:Number(f.v),oddPart:String(f.odd),
-        quotientMod31:String(q%31n),momentCertificate
+        quotientMod31:String(q%31n),discountedQUpdate,momentCertificate
       });
     }
     state=next;
@@ -164,6 +180,10 @@ assert(events[1].momentCertificate.qMin==="283510228"&&
   events[1].momentCertificate.qMax==="296203294"&&
   events[1].momentCertificate.actualQuotient==="283561618",
   "second event moment interval changed");
+assert(events[0].discountedQUpdate.carryDepth===20&&
+  events[1].discountedQUpdate.carryDepth===22&&
+  events.every(e=>e.discountedQUpdate.matches),
+  "corrected discounted-Q identity changed");
 console.log(JSON.stringify({
   sourceCertifiedStartReturn:5457,
   reducedPReturns:4*BLOCK,
