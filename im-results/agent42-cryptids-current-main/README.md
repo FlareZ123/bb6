@@ -30,7 +30,7 @@ The exact ten live resolved overlaps, theorem locations and upstream blob SHAs a
 
 ### Six nonhalting roots
 
-The six `NonHalt` modules expose `is_not_halt : IsNotHalt target`. The existing local `CryptidsTapeAdapter.lean` provides `not_halts_to_agent8`, transferring this source predicate to `BB6Coverage.NeverHalts` on the repository's absolute-tape semantics.
+The six `NonHalt` modules expose `is_not_halt : BusyBeaver.IsNotHalt target`, with `target = machine.toBB`. The current local `CryptidsTapeAdapter.lean` defines the tape simulation and `reachable_live_implies_never`, but does **not** define `not_halts_to_agent8`; that generic theorem currently lives in `CryptidsF287.lean`, which this draft does not import. There is also a predicate mismatch: `not_halts_to_agent8` expects `¬ ConjectureMachines.Halts source`, so each upstream theorem must first be converted with `ConjectureMachines.isNotHalt_toBB_iff_not_halts source`. A clean repair is to move the generic transfer theorem into `CryptidsTapeAdapter.lean` (or a small shared module) and explicitly apply the upstream equivalence for all six roots.
 
 [Cryptids608NonHalt.lean](Cryptids608NonHalt.lean) is a draft integration into the existing `depth4ResidualAudit`. It:
 - imports the six pinned upstream modules;
@@ -40,7 +40,7 @@ The six `NonHalt` modules expose `is_not_halt : IsNotHalt target`. The existing 
 - asks Lean to establish that each root is still open in the old depth-four audit;
 - grafts all six certificates and states the exact open-set characterization, exhaustiveness and (25^{12}) mass conservation.
 
-**Acceptance status:** this draft has not yet been compiled in the compatible upstream toolchain. No local transitive axiom profile or new global report is claimed. The first gate is a compatible-toolchain preflight of this exact module; only after it passes should the existing manual source workflow be extended or run. If any `oldOpen_*` theorem fails, determine whether that root was already classified by the old audit rather than weakening the assertion.
+**Acceptance status:** this draft has not yet been compiled in the compatible upstream toolchain. Static review found two deterministic blockers: the missing `not_halts_to_agent8` import and the `IsNotHalt target` versus `¬ ConjectureMachines.Halts source` mismatch (see the transfer subsection above; the six call sites are lines 58, 104, 150, 196, 242, and 288 in the current blob). An independent parser comparison of the six RLE names against the six literal tables found 0 mismatches across all 72 transition slots; the existing Lean `rfl` equality theorems remain the formal check. No local transitive axiom profile or new global report is claimed. First repair the import/type boundary, then preflight the exact module in the compatible upstream toolchain. If any `oldOpen_*` theorem fails, determine whether that root was already classified by the old audit rather than weakening the assertion.
 
 ### Four halting roots
 
