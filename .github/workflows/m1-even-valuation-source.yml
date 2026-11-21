@@ -1,0 +1,53 @@
+name: M1-even valuation source acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  m1-even-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Compile exact M1-even valuation source import closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/lean_compile_closure.py \
+            im-results/agent48-counted-inc0/M1EvenValuationSource.lean \
+            --workdir /tmp/m1-even-valuation-source \
+            --jobs 6 \
+            --lean lean 2>&1 | tee /tmp/m1-even-valuation-source.log
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          log = Path("/tmp/m1-even-valuation-source.log").read_text()
+          names = [
+              "m1EvenValuation_q4_leftFacing",
+              "m1EvenValuation_q4_rightShape",
+              "m1EvenValuation_reset_prefix_source",
+              "m1EvenValuation_counted_increment_source_factorized",
+              "m1EvenValuation_counted_increment_source",
+          ]
+          for name in names:
+              matches = [line for line in log.splitlines()
+                         if name in line and "depends on axioms:" in line]
+              if not matches:
+                  raise SystemExit(f"missing axiom report for {name}")
+              line = matches[-1]
+              print(line)
+              if "sorryAx" in line:
+                  raise SystemExit(f"{name} depends on sorryAx")
+          print("M1-even valuation source closure: kernel compile and axiom checks passed")
+          PY
