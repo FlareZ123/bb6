@@ -1647,3 +1647,11 @@ Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then forma
 - The source argument is complete at the intended level: the P7E1E target has sum≡2 mod8, so the even/even parent fan leaves only its direct parent D(t); D(t) has even/odd parity and (D_x+D_y+1)≡8 mod16 when t≡7 mod8; the exact `odd_seven_blank_reach_iff` then forces A4(t).
 - This is a generic residual reduction, not an exclusion. It unifies the P7E1E branch across all eight t≡7 mod8 cylinders. The remaining hard part is the source parent fan for A4(t): t≡31 mod32 is already excluded by the low-valuation odd/odd inverse; t≡47 mod256 has the sum≡16 mod32 two-parent reduction; four even-m classes have A4 sum≡0 mod32 (v2≥5) and remain open.
 - The generic module and the R10592 source-composition draft are both **uncompiled** in this invocation. Agent 32 has been asked to compile both from the exact current-main transitive source closure under Lean 4.36.0-rc2 and report the axiom output. No CI substitute or acceptance claim.
+
+
+## 2026-11-21T21:34:25.449Z — exact source-parent fan at the A4 residual
+
+- Derived a complete case reduction from the already source-complete `section_preimage_all_iff` for A4(t) on t≡7 mod8. The target x=a4X(t), y=a4Y(t) is odd, y≥5, x+y>0 and 5∣x+y, x+2y≡7 mod8.
+- All source-parent branches are excluded except the even-a high-bounce branch: a=0 would force x+y=2^n*8, impossible by the factor 5; a=1 high branch has odd x+y+1 equal to an even number; small a/k and direct branches contradict parity/size; odd-a high branch likewise requires odd x+y+1 to be even.
+- Thus any source predecessor must satisfy 2≤a, a%2=0, 0<k, a<2k, x+y=2^n*(2a+4), and 2k+a+7+3n=x+2y. Since x,y are odd, the cost equation forces n even. This is a complete infinite-depth parent fan, not a nonreachability proof.
+- Added this exact blocker to `B2Q0FourStepPath.md` and broadcast it for review. The remaining task is to analyze the even-a bounce family, without a finite-depth cutoff or new residue cylinders.

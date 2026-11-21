@@ -75,3 +75,21 @@ The next decisive action is to resolve the eight odd/odd A4(t) source-orbit fami
 The new intermediate module `Root32P7E1EGenericA4.lean` contains `p7e1e_reach_implies_a4_t7`: for every t≡7 (mod8), a blank visit to P7E1E(t) forces its direct parent D(t), and the exact odd-seven inverse forces A4(t). This packages the corrected P7E1E residual uniformly over the eight t≡7 (mod8) classes in the existing index map.
 
 This is a **reduction**, not a nonreachability theorem. A4(t) is excluded by the existing low-valuation odd/odd inverse when t≡31 (mod32). The t≡47 (mod256) class reduces through the sum≡16 (mod32) two-parent fan. The four covered classes with t=32m+15 and m even have A4 sum≡0 (mod32), v2≥5; their complete original-source parent fan remains open. The generic module is uncompiled pending exact Lean 4.36.0-rc2 preflight.
+
+
+## Exact original-source parent fan for A4(t), t≡7 (mod8)
+
+A direct case split of the already source-complete `BB6.Agent46.section_preimage_all_iff` sharpens the remaining P7E1E obstruction. Put x=a4X(t), y=a4Y(t), with t≡7 (mod8). Then x,y are odd, y≥5, x+y is positive and divisible by 5, and x+2y≡7 (mod8).
+
+- The zero-left branch would require x+y=2^n*8, impossible because 5 divides x+y but no power of two times 8 is divisible by 5.
+- The a=1 branch is impossible: its small-k cases have the wrong parity/size, and its high branch requires the odd number x+y+1 to equal an even multiple of 16.
+- k=0 and the direct 2k≤a branch are impossible because y is odd and large.
+- The odd-a high-bounce branch is impossible: y≠3 and x+y+1 is odd whereas its required right side is even.
+
+Therefore every genuine source predecessor of A4(t) must be in the even-a high-bounce branch. There are a,k,n with
+`2≤a, a%2=0, 0<k, a<2*k`,
+`x+y=2^n*(2*a+4)`,
+`2*k+a+7+3*n=x+2*y`,
+and parity forces n even.
+
+This is an exact, unbounded-depth source-parent fan, but it is not an exclusion: the remaining even-a bounce family must still be analyzed. It is the next concrete mathematical target for the v2≥5 A4 classes; do not replace it with a finite-depth search.
