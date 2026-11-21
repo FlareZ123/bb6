@@ -90,3 +90,33 @@ and checks (b\ge8), (4\mid b), (d) odd, exact divisibility, (c) odd, and (k\ge2)
 ## Research consequence
 
 The 27 terminal equations for termination by the third edge remain useful, but a blanket extension to arbitrary prepared restart states is false: the fourth-edge sequence ((0,1,2)) is locally realizable. The next decisive question is whether the prepared parent ((b_p,d_p,m_p)) can belong to the original root cone. Research should now target root-cone reachability or a stronger root-inherited invariant, not another generic local-suffix exclusion.
+
+
+## Root-cone obstruction for this particular n
+
+The prepared parent above is **provably not in the original root cone** for (n=808). This is a useful concrete illustration of the missing reachability condition, not a hidden completion of the P1 path.
+
+Write the original root as
+[
+(b_0,d_0,m_0^{\rm root})=(14P-2n-16,,3,,0).
+]
+Its source power is
+[
+S_0=d_0+b_0/2+3=7P-n-2.
+]
+Since (n=808\equiv0\pmod4) and (4\mid P), we have (S_0\equiv2\pmod4). Every legal `OddCone.parent` edge has odd (c), hence (c+3) is even; therefore (S_0=2^t(c+3)) forces (t=0).
+
+The unique possible first child has
+[
+c_0=7P-n-5,\
+k_0=(7P-n-10)/2,
+]
+and
+[
+(b_1,d_1,m_1)=(7P-n-14,\;7P-n-1,\;1).
+]
+But (b_1\equiv-14\equiv2\pmod4), whereas every non-root `OddCone` parent must satisfy (4\mid b). Thus the child cannot have a child. The original root cone has height at most one, while the prepared parent has (m_p>1). It is therefore unreachable from this root.
+
+More generally, the same argument proves that for every (n\ge4) with (n\equiv0\pmod4), the root ((14\cdot2^n-2n-16,3)) has at most one inverse edge. This does not address the (n\equiv2\pmod4) cases, where the 2-adic root tree can be deeper.
+
+The correct interpretation is consequently precise: the local suffix counterexample is real, but this particular (n=808) prepared state is excluded by a very short root-specific parity argument. Future work should classify the root cone for the remaining (n\equiv2\pmod4) cases rather than treating arbitrary locally legal prepared states as root-reachable.

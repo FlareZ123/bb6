@@ -87,3 +87,6 @@ A complementary, still-unproved direction from Agent 50 is a source-prefix cost 
 ## Prepared-state wall witness (not root reachability)
 
 `prepared-state-wall-witness.md` and `prepared_state_wall_witness.mjs` construct and exactly check a locally source-legal branch-A continuation at (n=808): one depth-5 edge, 270 depth-2 edges, then depths (0,0,1,2), ending on the shifted wall. This is **not** an original-root path: membership of the prepared parent in `OddCone`/`CountCone` is unproved. It shows that a generic no-wall theorem for arbitrary locally legal high-depth restart states cannot work; the next proof must use root reachability or a root-inherited invariant.
+
+
+**Root-reachability clarification:** for this (n=808\equiv0\pmod4), the actual root cone has height at most one: the root's source power is (2\pmod4), forcing its only possible edge to depth 0, and that child's left counter is (2\pmod4), so it cannot be a parent. Thus the prepared parent in the local witness is definitively not root-reachable. The witness is a counterexample only to blanket local-suffix exclusion, not an actual P1 halting path. The same one-edge root obstruction holds for every (n\ge4) divisible by 4; the (n\equiv2\pmod4) cases remain the relevant root-cone problem.

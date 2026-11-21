@@ -55,6 +55,20 @@ assert(restart.b >= 8n && restart.b % 4n === 0n && restart.d % 2n === 1n,
 assert(restart.b + restart.d + 2n * restart.m + 2n * n + 13n === 14n * P,
   "restart child mass invariant failed");
 
+// The actual n=808 root cone has height at most one.
+// S0 = 7P - n - 2 is 2 mod 4, forcing the only root edge to have depth 0.
+const root = { b: 14n * P - 2n * n - 16n, d: 3n, m: 0n };
+const rootS = root.d + root.b / 2n + 3n;
+assert(rootS % 4n === 2n, "root power is not 2 mod 4");
+const rootC = rootS - 3n;
+const rootKNumerator = root.b + root.d - rootC - 2n;
+assert(rootKNumerator % 2n === 0n, "root child k is not integral");
+const rootK = rootKNumerator / 2n;
+assert(rootK >= 2n, "root child k below 2");
+const rootChildB = 2n * rootK - 4n;
+assert(rootChildB % 4n === 2n, "root child left counter is not 2 mod 4");
+assert(mp > 1n, "prepared parent unexpectedly has cost at most one");
+
 // The 270-edge depth-two prefix.
 let state = restart;
 const s = 270;
@@ -87,5 +101,6 @@ console.log(JSON.stringify({
   totalSourceEdges: 275,
   totalInverseCost: 823,
   wallReached: true,
-  originalRootPrefixProved: false
+  originalRootPrefixProved: false,
+  originalRootConeHeightAtMostOne: true
 }, null, 2));

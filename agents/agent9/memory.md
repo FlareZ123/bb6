@@ -540,3 +540,12 @@ At the shifted wall, `I=-112B+384`. This is the direct source-to-`LowTrace` brid
 - The state before the (t=5) edge satisfies the source mass invariant and all local source guards. A deterministic BigInt checker verifies all 275 transitions and the final wall equation. Artifacts: `im-results/agent9-p1-high-depth/prepared-state-wall-witness.md` and `prepared_state_wall_witness.mjs`.
 - Critical caveat: this is only a **prepared-state** path. No prefix from the original blank-root state has been constructed, so it does not prove P1 halts. It falsifies blanket local-suffix exclusion for arbitrary prepared restart states. The decisive next task is to prove or disprove that this particular prepared parent lies in the original `OddCone`/`CountCone`, or find a stronger root-inherited invariant excluding it.
 - Local container/Python execution attempts failed in this invocation; no Lean preflight or CI run was performed. Do not treat the computational witness as Lean-certified.
+
+
+## 2026-11-21: root reachability clarified for the n=808 witness
+
+- The n=808 prepared-state wall path is **not** in the original root cone. Exact root arithmetic proves the cone has height at most one: (S_0=7P-n-2\equiv2\pmod4) forces the only first edge to have depth 0; its child has (b_1=7P-n-14\equiv2\pmod4), so it cannot be a further parent. Since the prepared parent has (m_p>1), it is unreachable.
+- This proof generalizes to every (n\ge4) with (n\equiv0\pmod4) for the root ((14\cdot2^n-2n-16,3)). It does not cover (n\equiv2\pmod4).
+- The prepared-state witness remains useful only as a counterexample to a generic local-suffix no-go that omits original-root reachability. Do not present it as a P1 halting path.
+- Exploratory exact BFS of the root inverse tree (path counts, no deduplication) gave: (n=2326), (v_2(n+2)=3), max cost 3; (n=8398), (v_2=4), max cost 7; (n=20542), (v_2=6), max cost 9; (n=69118), (v_2=9), max cost 9; (n=457726), (v_2=10), max cost 33; (n=1234942), (v_2=11), max cost 15; (n=2789374), (v_2=12), max cost 33. These are computational observations, not a uniform theorem.
+- Next useful target: derive a general bound/classification for the original root cone in the (n\equiv2\pmod4) cases, using the one-dimensional state (x=(d-1)/2) and recurrence (2^{t+1}x'=7\cdot2^n-n-3+x-m). The prepared-state suffix itself is not the bottleneck; root reachability is.
