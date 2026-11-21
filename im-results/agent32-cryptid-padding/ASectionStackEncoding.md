@@ -102,7 +102,7 @@ and the generic `tok_CR_zero` theorem is
 \;\vdash^+\;
 \operatorname{tok\_CR}((k+2)::K1)\;R3\;L1.
 ]
-Thus a right-suffix prefix `10` (one 1 followed by its zero separator) is exactly an (L)-head of zero, and the token rule consumes it while increasing the current K-counter by two. This is the correct local counterpart of the A-step2 interpreter's repeated `10)-pair reduction.
+Thus, **if** the macro interpreter's post-head suffix `v` is exactly the `encRightNat L` tail at the corresponding C-token checkpoint, a `10` prefix is an (L)-head of zero, and the token rule consumes it while increasing the current K-counter by two. The equality of those two suffix conventions is still part of the head-boundary proof obligation; it must not be assumed.
 
 For comparison, DeepMind's `tok_CR_1_0` theorem handles
 [
@@ -114,6 +114,6 @@ not a bare `10` prefix:
 \;\vdash^+\;
 \operatorname{tok\_CR}(1::(k+3)::K1)\;R3\;L2.
 ]
-The `tok_CR_1_1_nil` and `tok_CR_1_1_cons` lemmas similarly handle right-run lengths at least two. This gives a principled way to match the A-step2 suffix parser to the token rules: parse the bit suffix into run lengths, then select the corresponding `tok_CR` case.
+The `tok_CR_1_1_nil` and `tok_CR_1_1_cons` lemmas similarly handle right-run lengths at least two. This gives a principled *conditional* way to match the A-step2 suffix parser to the token rules: once the head offset is proved, parse the bit suffix into run lengths, then select the corresponding `tok_CR` case.
 
 This remains a structural correspondence, not yet a proof that the entire A-step2 sweep/return is the same run. The exact list update, head position, and accumulated raw-step count still need to be matched. The E-family's other suffix tests (`111`, `1100`, `110111`, `1101100`) should be compared against the corresponding `tok_CR`/`tok_DR` case lemmas rather than re-derived independently.
