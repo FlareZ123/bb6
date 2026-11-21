@@ -136,45 +136,36 @@ The 31 generic cutoffs are:
 | 13 | 0:25 |
 | 14 | 0:26 |
 
-### Exceptional source exclusion
+### Exceptional source exclusion: uniform divisibility gap
 
-The exceptional equation becomes
-[
-2^{j+s+h}=3D\,2^a+L(a),
-qquad L(a)=D(a+2)+2^h(C-B).
-]
-For each node and hidden length, the certificate supplies a cutoff (S) with
-[
-1<L(S)<2^S,\qquad D\le2^S.
-]
-Since (L(a+1)=L(a)+D), these bounds persist for all (a\ge S).
+For every node \(Y(t)=(2^{1458t+s}+B)/C\), the exceptional source equation is
+\[
+3D2^a+D(a+2)+S=2^N,\qquad
+D=C3^h,\quad S=2^h(C-B),\quad N=1458t+s+h.
+\]
+For this 15-node tree and every allowed \(0\le h\le r\), the exact node table gives
+\[
+1\le D\le885735,\qquad 0<S\le3319979,\qquad N\ge1458.
+\]
+Use the common bound \(M=4{,}000{,}000\).
 
-If (a\le j+s+h), the exceptional equation forces (2^a\mid L(a)), impossible because (0<L(a)<2^a). If (a>j+s+h), its right side is already greater than its left side. For every remaining (a<S), the exact certificate verifies
-[
-3D\,2^a+L(a)<2^{1458+s+h},
-]
-which excludes equality for every (t\ge1). Thus there are **no exceptional parents anywhere in this inverse tree**.
+If \(a\le31\), then
+\[
+3D2^a+D(a+2)+S
+\le12{,}000{,}000\cdot2^{31}
+  +4{,}000{,}000\cdot33+4{,}000{,}000
+<2^{55}\le2^N.
+\]
+If \(a\ge32\), put \(L=D(a+2)+S\). At \(a=32\),
+\[
+0<L\le4{,}000{,}000\cdot34+4{,}000{,}000
+=140{,}000{,}000<2^{32}.
+\]
+Since \(D\le4{,}000{,}000<2^{32}\le2^a\), the recurrence \(L(a+1)=L(a)+D\) proves \(0<L<2^a\) for all \(a\ge32\).
 
-The 31 special cutoffs (S) are:
+If \(a>N\), then \(3D2^a>2^N\), contradiction. If \(a\le N\), then \(2^a\) divides both \(2^N\) and \(3D2^a\), so the equation forces \(2^a\mid L\), contradicting \(0<L<2^a\).
 
-| Node | Allowed (h) and cutoff (S) |
-|---:|---|
-| 0 | 0:3, 1:5, 2:7, 3:9, 4:10, 5:12, 6:14, 7:16 |
-| 1 | 0:8, 1:10 |
-| 2 | 0:11, 1:13 |
-| 3 | 0:15, 1:17 |
-| 4 | 0:18 |
-| 5 | 0:19 |
-| 6 | 0:13, 1:15, 2:17 |
-| 7 | 0:14, 1:16, 2:17, 3:19 |
-| 8 | 0:17, 1:18 |
-| 9 | 0:19 |
-| 10 | 0:22 |
-| 11 | 0:22 |
-| 12 | 0:22 |
-| 13 | 0:24 |
-| 14 | 0:25 |
-
+Thus no exceptional parent exists at any node, for any \(a\), and the 31 per-node special cutoffs are unnecessary as proof dependencies. They remain in the Python certificate as redundant diagnostics. This replaces the former \(e,z\) case split with a shorter 2-adic divisibility argument.
 ## Complete affine inverse graph at (t=1)
 
 The exact graph has 15 nodes and 14 generic edges. A node ID represents
