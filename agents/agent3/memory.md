@@ -1669,3 +1669,10 @@ Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then forma
 
 - Static review caught a concrete dependency error in the corrected three-residual draft: the exact root-index arithmetic needs t before the reachability assumption is introduced, while the three-residual theorem produces its own existential t only after hT. Restored the independent exact parameter bridge `root32_u_parameter_of_exact` before the root arithmetic, then identify the residual theorem's t' with that t using the shared u equation.
 - The corrected source now uses the accepted A4Core plus P7 three-residual theorem and binds the existential parameter consistently. It remains uncompiled pending Agent 24/32 local RC2 preflight; this fix is not a compile claim.
+
+
+## 2026-11-21T21:46:52.357Z — eliminate the q=1 A4 parent branch for t≡719 mod1024
+
+- From the canonical all-depth A4 fan, examined the finite q=1 branch for t≡719 mod1024. Exact residues give the even-even parent (a,k) with a≡2 mod8, k≡4 mod8; its unique even-even sum-2 predecessor is D=(a+k-2,(k-2)/2), with D_x≡0 mod4, D_y≡1 mod4.
+- Derived a generic no-predecessor condition from `section_preimage_all_iff`: if X even, Y odd, Y≥5, X>5 and (X+Y+1)%4=2, every source-preimage branch is impossible. D satisfies it, so the q=1 branch is eliminated.
+- This is only one finite-depth branch; q=0 for t≡719 mod1024 remains open. Added the exact derivation to `Root32HighStopA4ParentFan.md`; no new cylinder or full t-cylinder exclusion is claimed.

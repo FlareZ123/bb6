@@ -150,3 +150,18 @@ The locally compiled core closes the corrected P7E1E residual there: its even/ev
 Under the existing root-index congruence \(t+j\equiv3780\pmod{8192}\), this t-cylinder implies \(j\equiv5\pmod{32}\). Since \(r=32+64j\), the P7E1E residual exclusion therefore maps to \(r\equiv352\pmod{2048}\). This is a residual-specific index map only; it is not a complete high-stop exclusion.
 
 **Acceptance boundary:** the P7E1E residual exclusion on t ≡ 31 (mod 32) is now locally Lean-accepted in Root32HighStopA4Core.lean, with standard axioms only and no `sorryAx`. This includes the t ≡ 31 (mod 256), t ≡ 159 (mod 1024), and t ≡ 7839 (mod 8192) cylinders. It does not close the other A4 cylinders, D0E, L, or the full high-stop target. Keep the dossier in im-results/; the full high-stop composition is not accepted.
+
+
+## 7. A finite-depth branch eliminated: t ≡ 719 (mod 1024), q=1
+
+For t≡719 (mod1024), the q=1 A4 parent in §4 has
+`U=S/8`, `a=U-2`, and `k=(x+2y-U-11)/2`. Exact modular arithmetic gives
+`a≡2 (mod8)` and `k≡4 (mod8)`. The parent (a,k) is even-even with sum≡2 (mod4), so its complete even-even parent fan forces the direct predecessor
+`D=(a+k-2,(k-2)/2)`.
+
+These residues imply
+`D_x≡0 (mod4)`, `D_y≡1 (mod4)`, hence `(D_x+D_y+1)≡2 (mod4)`; also D_x>5 and D_y≥5.
+
+A generic source-grammar observation now excludes D: no state (X,Y) with X even, Y odd, Y≥5 and (X+Y+1)≡2 (mod4) has any source predecessor. In `section_preimage_all_iff`, the zero-left and even-a branches require X+Y even; the a=1 and odd-a high branches require X+Y+1 divisible by 4; the direct branch requires Y even; and the small exceptional branches contradict Y≥5 and X>5. Thus D is unreachable, so the q=1 branch is impossible.
+
+This removes one of the two candidate depths for t≡719 (mod1024). The q=0 branch remains open; this does not close the full t-cylinder.
