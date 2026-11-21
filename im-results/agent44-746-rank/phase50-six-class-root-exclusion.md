@@ -134,7 +134,7 @@ $$
 The table is reproduced using exact BigInt arithmetic by [`phase50-six-classes-certificate.mjs`](phase50-six-classes-certificate.mjs).
 
 Consequently:
-- (v_3(X)=4) for (c=50,212,320,374,428), and (v_3(X)=5) for (c=104);
+- (v_3(X)=4) for (c=50,212,320,374), and (v_3(X)=5) for (c=104,428);
 - (v_3(X_1)=1) in all six classes;
 - (v_3(X_2)=1) for (c=50,104,212,374,428);
 - (v_3(X_2)=2) for (c=320), with (X_3\not\equiv0\pmod3) and (G'\equiv0\pmod3).
