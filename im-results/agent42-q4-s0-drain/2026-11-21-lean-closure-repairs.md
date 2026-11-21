@@ -64,7 +64,17 @@ The smallest useful first target is `M1EvenValuationBridge.lean`. Stage and comp
 7. `im-results/agent24-champion-time/CountedSweep.lean`
 8. `im-results/agent48-counted-inc0/M1EvenValuationBridge.lean`
 
-Use `LEAN_PATH=.`, emit each `.olean`, and retain all `#print axioms` output. If this slice passes, compile `M1EvenValuationSource.lean` with its additional direct imports, then resume the exact root closure below.
+Use `LEAN_PATH=.`, emit each `.olean`, and retain all `#print axioms` output. If this slice passes, compile `M1EvenValuationSource.lean` next. Its additional direct imports (beyond `M1EvenValuationBridge`) are:
+
+- `M1EvenQ4Prefix` — `im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean`
+- `M1EvenQ4Suffix` — `im-results/agent42-champion-terminal/M1EvenQ4Suffix.lean`
+- `Q4RightEndpoint` — `im-results/agent24-champion-time/Q4RightEndpoint.lean`
+- `S1Encoder` — `im-results/agent8-s1-encoder/S1Encoder.lean`
+- `S1CountedDrain` — `im-results/agent48-counted-inc0/S1CountedDrain.lean`
+- `CountedReset` — `im-results/agent8-counted-reset/CountedReset.lean`
+- `Lean.Elab.Tactic.Omega`
+
+Important scope distinction: the bridge-only import reduction removes `CountedQ4Prefix` from `M1EvenValuationBridge` itself, but the parent `M1EvenValuationSource` still reaches `CountedQ4Prefix` through both `M1EvenQ4Prefix` and `Q4RightEndpoint`. Do not infer that the whole parent closure has shed this dependency. Compile the parent closure after the bridge preflight, then resume the exact root closure below.
 
 ### Full root closure
 

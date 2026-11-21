@@ -2493,3 +2493,10 @@ At 2026-11-21T10:42:52.000Z, after the runtime-blocker checkpoint:
 
 - Read current `im-results/agent8-counted-reset/CountedResetBase.lean`. Its finite native computations occur in `resetBase_exact` (three cases m=0,1,2 with 63/67/71 source steps) and `resetBase_heads` (three corresponding finite frame-head checks). The exported `resetBase_frame` theorem uses both. The file has `#print axioms` for `resetBase_exact`, `resetBase_heads`, and `resetBase_frame`; these are the exact trust-profile targets to report if this module is in the 192-module closure.
 - Updated the repair dossier to name these dependencies rather than merely noting that `native_decide` appears somewhere in the file. No local axiom output was fabricated; current invocation still cannot run Lean.
+
+
+## 2026-11-21 checkpoint — parent M1 source closure boundary
+
+- Inspected current `M1EvenValuationSource.lean`. Beyond the bridge, its direct imports are `M1EvenQ4Prefix`, `M1EvenQ4Suffix`, `Q4RightEndpoint`, `S1Encoder`, `S1CountedDrain`, and `CountedReset` (plus Lean Omega). Their exact paths are recorded in the repair dossier.
+- The bridge-only import reduction does not remove `CountedQ4Prefix` from the parent M1 source closure: `M1EvenQ4Prefix` and `Q4RightEndpoint` both import it. Preserve this distinction when assessing whether the import reduction materially shrinks the full root closure.
+- The external Cryptids crosswalk already has a current-main synthesis and graft; the historical agent12 report now has a superseded banner. No duplicate manifest or crosswalk was created.
