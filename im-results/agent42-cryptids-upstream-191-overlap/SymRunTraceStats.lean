@@ -2089,5 +2089,92 @@ theorem sweepCB_stateFieldMax_le_94M282 (L R : List SymTok)
 #print axioms sweepCB_num_sum_bound
 #print axioms sweepCB_stateFieldMax_le_94M282
 
+theorem stepElemCB_BB_num_sum_le (L R : List SymTok)
+    (hmode : (stepElemCB L R).1 = .BB) :
+    symPairNumSum ((stepElemCB L R).2.1, (stepElemCB L R).2.2) ≤
+      listNumSum L + listNumSum R + 3 := by
+  cases R with
+  | nil => simp [stepElemCB] at hmode
+  | cons t R1 =>
+    cases t with
+    | item x =>
+      cases x with
+      | zero => simp [stepElemCB] at hmode
+      | run d =>
+        cases d with
+        | zero =>
+          cases R1 with
+          | nil =>
+            have hB := bumpSymL_num_sum_le L
+            simp [stepElemCB, stepElemCB_run0, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
+            omega
+          | cons t2 R2 =>
+            cases t2 with
+            | item y =>
+              cases y with
+              | zero =>
+                have hB := bumpSymL_num_sum_le L
+                simp [stepElemCB, stepElemCB_run0, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
+                omega
+              | run d2 =>
+                cases d2 with
+                | zero =>
+                  have hB := bumpSymL_num_sum_le L
+                  simp [stepElemCB, stepElemCB_run0, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
+                  omega
+                | succ d2 => simp [stepElemCB, stepElemCB_run0] at hmode
+            | repB1 k => simp [stepElemCB, stepElemCB_run0] at hmode
+            | rep2 p => simp [stepElemCB, stepElemCB_run0] at hmode
+            | rep12 m => simp [stepElemCB, stepElemCB_run0] at hmode
+        | succ d =>
+          cases d with
+          | zero => simp [stepElemCB] at hmode
+          | succ d =>
+            cases d with
+            | zero =>
+              have hB := bumpSymL_num_sum_le L
+              simp [stepElemCB, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
+              omega
+            | succ d =>
+              have hB := bumpSymL_num_sum_le L
+              simp [stepElemCB, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
+              omega
+    | repB1 k => simp [stepElemCB] at hmode
+    | rep2 p => simp [stepElemCB] at hmode
+    | rep12 m => simp [stepElemCB] at hmode
+
+
+/-- The BB-sweep input maximum field is bounded in terms of the original
+    CB input maximum field. -/
+theorem cb_fallback_bb_input_field_max_le_94M285 (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94)
+    (hBB : (stepElemCB (sweepCB L R).1 (sweepCB L R).2).1 = .BB) :
+    stateFieldMax (.BB,
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1,
+      (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2) ≤
+      94 * stateFieldMax (.CB, L, R) + 285 := by
+  let L2 := (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1
+  let R2 := (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2
+  have hSweep := sweepCB_num_sum_le_94M282 L R hT
+  have hElem := stepElemCB_BB_num_sum_le (sweepCB L R).1 (sweepCB L R).2 hBB
+  have hSweep' :
+      listNumSum (sweepCB L R).1 + listNumSum (sweepCB L R).2 + 3 ≤
+        94 * stateFieldMax (.CB, L, R) + 285 := by
+    have hS : listNumSum (sweepCB L R).1 + listNumSum (sweepCB L R).2 ≤
+        94 * stateFieldMax (.CB, L, R) + 282 := by
+      simpa [symPairNumSum] using hSweep
+    omega
+  have hsum : symPairNumSum (L2, R2) ≤ 94 * stateFieldMax (.CB, L, R) + 285 := by
+    simpa [L2, R2, symPairNumSum] using Nat.le_trans hElem hSweep'
+  have hL2 := listFieldMax_le_listNumSum L2
+  have hR2 := listFieldMax_le_listNumSum R2
+  have hmax : stateFieldMax (.BB, L2, R2) ≤ symPairNumSum (L2, R2) := by
+    simp [stateFieldMax, symPairNumSum]
+    omega
+  simpa [L2, R2] using Nat.le_trans hmax hsum
+
+#print axioms stepElemCB_BB_num_sum_le
+#print axioms cb_fallback_bb_input_field_max_le_94M285
+
 
 end BusyBeaver.SymRunAudit
