@@ -143,14 +143,14 @@ A*v >= 5*Q-m,
 A*(Y+2) >= 5*2^(2*m+2)-3*m-5.
 ```
 
-- If `A=2^(2*r)` (equivalently `m=(4^r-1)/3`), the exact envelope minimizer is source-normalized but lies in the source M8 forbidden cylinder `(x mod 8, Y mod 8)=(7,4)`. The exact M8-filtered minimum is the next exponent residue `t*=2*r-1` plus one, so for every `r>=1` any **blank-root-reachable** deep-sector input in this exceptional family must satisfy
+- If `A=2^(2*r)` (equivalently `m=(4^r-1)/3`), the exact envelope minimizer is source-normalized but lies in the source M8 forbidden cylinder `(x mod 8, Y mod 8)=(7,4)`. The exact M8-filtered minimum is the next exponent residue `t*=2*r-1` plus one, so for every `r>=2` any **blank-root-reachable** deep-sector input in this exceptional family must satisfy
 
 ```
 A*v >= (A+1)*Q-m,
 A*(Y+2) >= 3*((A+1)*Q-m).
 ```
 
-Here `x` is the first coordinate of the actual `affineNormalize` output. The second inequality is a root-sensitive necessary bound; it does not assert that any remaining input is reachable.
+Here `x` is the first coordinate of the actual `affineNormalize` output. The second inequality is a root-sensitive necessary bound; it does not assert that any remaining input is reachable. The case `m=1` is separately covered by the existing right-four exclusion and by the general M8-filtered bound below.
 
 #### Non-power-of-two case
 
@@ -162,7 +162,7 @@ For `t>=s` through `2*L-2`, `n_t=2^(t+1)-3*m` and `v_t=2*Q-(3*m*Q+m)/2^t` increa
 
 Now let `A=2^(2*r)`, `r>=2`, so `m=(4^r-1)/3`, `t*=2*r-1`, and `2^t*=A/2`. The uniform envelope is attained uniquely at `t=t*`, `n_t*=1`, and `v*=(Q-m)/2^t*=2*(Q-m)/A`. Every other admissible quotient is larger.
 
-For this sharp family, `t*+3<=2*L`; reducing `3*Q=2^(2*L)-1` modulo `2^(t*+3)` and using `3*m+1=2^(t*+1)` gives `Q-m=2^(t*+1) (mod 2^(t*+3))`. Hence `v*%8=2` and `Y=3*v*-2` satisfies `Y%8=4`. The actual source normalizer has depth `d=t*+2*L`, which is odd, and its first coordinate `x` satisfies the source mass identity
+For this sharp family, `t*+3<=2*L`; reducing `3*Q=2^(2*L)-1` modulo `2^(t*+3)` and using `3*m+1=2^(t*+1)` gives `Q-m=2^(t*+1) (mod 2^(t*+3))`. Hence `v*%8=2` and `Y=3*v*-2` satisfies `Y%8=4`. Any actual input with this exponent residue has source depth `d=t* (mod 2*L)`, hence `d` is odd and, because `r>=2`, `d>=3`. Its first normalized coordinate `x` satisfies the source mass identity
 
 ```
 x+2*Y+4*d = 2*j+3+2*k.
