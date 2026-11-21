@@ -98,12 +98,12 @@ These formulas are obtained directly from the displayed inductions in `HaltShare
 Let `M` bound every numeric field in the current RLE state, and let `L` bound the number of packed segments. The dispatch code and rule costs above give these coarse bounds (the clean P2 branch is dominant):
 
 - raw B: at most `4M+4`;
-- raw BR: at most `M(2M+15)+5`, from `rule_BR_blkR_succ`;
-- raw DR0: at most `15M²+9M`, from `rule_DR0_bot_zeros`;
-- raw C: at most `M(4M+15)+17`, from `rule_C_blkL_pow`;
-- clean BR: at most `M(2M+15)`;
-- clean DR0: bounded by `clean_DR0_zeros` with `q,c0,bot≤M`;
-- clean B: bounded by the larger of `clean_P1_pow` and `clean_P2_pow`;
+- raw BR: at most `M(2M+15)+5`, from `rule_BR_blkR_succ` plus the fixed atomic cases;
+- raw DR0: at most `15M²+9M+4`, from `rule_DR0_bot_zeros` plus the fixed atomic cases;
+- raw C: at most `M(4M+15)+17`, from `rule_C_blkL_pow` plus the fixed atomic cases;
+- clean BR: at most `M(2M+15)+5`, covering both the block rule and all atomic cases;
+- clean DR0: the maximum of `clean_DR0_one` and `clean_DR0_zeros` with `q,c0,bot≤M`;
+- clean B: the maximum of the RNIL composition, `clean_P1_pow`, `clean_P2_pow`, and the fixed `4M+4` zero-run/atomic cases;
 - clean C and successful `tryPack`: zero primitive cost because they only change the RLE representation.
 
 For `M=2^128` and `L=2^15`, `S(segs)≤L·M·(6M+30)<2^274`. The clean P2 recurrence is then below `2^540` per RLE transition; the raw branches and other clean branches are lower-order. This gives a target total below `2^554` over 9,500 transitions, so `2^640` is a deliberately loose candidate bound. This remains conditional on a kernel-checked invariant for **all intermediate states**, not merely the four checkpoints, and on formal cost-indexed soundness for every dispatch branch.
