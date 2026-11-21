@@ -25,7 +25,9 @@ The source and target left-facing prefixes are
 - input: `[false,true,true,true,true] ++ d1pow v ++ d0`;
 - output: `[false,true] ++ d0 ++ d0pow v ++ d1`.
 
-Both have length (N+5), both have final prefix bit `true`, and both append the same untouched `tail`. Therefore their `sideBit` streams agree for every (i\ge N+4). Combining this equality with the tape-footprint corollary gives `m1EvenValuationBridgeLeftFacing_tail`, exactly the (i\ge N+4) tail case of the parent source theorem.
+Both have length (N+5), both have final prefix bit `true), and both append the same untouched `tail`. Therefore their `sideBit` streams agree for every (i\ge N+4). Combining this equality with the tape-footprint corollary gives `m1EvenValuationBridgeLeftFacing_tail`, exactly the (i\ge N+4) tail case of the parent source theorem.
+
+The additional `m1EvenValuationBridgeLeftFacing_tail_exact_parent_type` theorem uses the literal list expressions in the current parent source file. Lean checks that the existing `hleft` hypothesis and desired target are definitionally compatible with the helper, without changing the parent theorem's assumptions.
 
 The parent proof currently handles (i=N+4) and (i\ge N+5) separately with a long repeated preservation/suffix argument. The new integration theorem can replace those two branches in one step, using the existing `hleft` premise and the bound (N+4\le i).
 

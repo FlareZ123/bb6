@@ -148,6 +148,20 @@ theorem m1EvenValuationBridgeLeftFacing_tail
     _ = sideBit (m1BridgeOutputPrefix v ++ tail) i :=
       m1BridgeStreams_agree_after_boundary v tail i hi
 
+
+/-- This statement uses the literal input and output stream expressions
+    from the current parent source file, confirming that the helper can be
+    applied without changing its local stream hypothesis. -/
+theorem m1EvenValuationBridgeLeftFacing_tail_exact_parent_type
+    (v : Nat) (T : Int → Bool) (h : Int) (tail : List Bool) (i : Nat)
+    (hleft : ∀ j : Nat,
+      T (h-(j:Int)) =
+        sideBit ([false,true,true,true,true] ++ d1pow v ++ d0 ++ tail) j)
+    (hi : 3*(v+1)+4 ≤ i) :
+    m1EvenValuationBridgeTape v T h (h-(i:Int)) =
+      sideBit ([false,true] ++ d0 ++ d0pow v ++ d1 ++ tail) i := by
+  exact m1EvenValuationBridgeLeftFacing_tail v T h tail i hleft hi
+
 /-- The full macro footprint is contained in the half-open interval from
     three cells left of the left-sweep endpoint through the first two cells
     to the right of the original head. -/
@@ -163,6 +177,7 @@ theorem m1EvenValuationBridgeTape_outside_footprint
 #print axioms m1EvenValuationBridgeTape_preserves_left_index
 #print axioms m1BridgeStreams_agree_after_boundary
 #print axioms m1EvenValuationBridgeLeftFacing_tail
+#print axioms m1EvenValuationBridgeLeftFacing_tail_exact_parent_type
 #print axioms m1EvenValuationBridgeTape_outside_footprint
 
 end BB6Coverage.Agent8M1EvenValuationBridgeFootprint
