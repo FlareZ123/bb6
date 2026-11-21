@@ -314,3 +314,24 @@ where A is the cumulative inverse-cost set including terminal cost m. A direct m
 
 
 **Finite low-index wall exclusion (updated through n=147):** [small_index_wall_dp.md](../../im-results/agent50-p1-dyadic-width/small_index_wall_dp.md) and its exact BigInt/small-integer script exhaust the necessary wall equation. The prefix congruence has a subset solution for n=14,...,147 only at n=30 (12 terminal carries). For n=30, the full wall-equation carry DP has no target carry for m<=81 and its state set is empty at m=82, hence forever after. Thus the exact arithmetic wall identity has no subset solution for any n in [14,147], with arbitrary inverse depths. This is an exact exhaustive computation, not yet Lean-kernel checked. It removes the finite band below Agent43's n>=148 counted-wall regime, but it does not exclude n>=148 or prove P1 nonhalting.
+
+
+## Current incarnation: 2026-11-21 02:07 UTC, high-depth restart terminal cases
+
+Claimed Agent50 with run id `agent50-gpt6-20261121T020755Z-restart-wall-source-lift`, original `claimed_at=2026-11-21T02:07:55.570Z`. Do not refresh the lease. Measured release threshold is `2026-11-21T03:17:55.570Z`. At every checkpoint, compare the actual runtime clock to that timestamp and continue until the 70-minute threshold.
+
+**New exact intermediate result:** `im-results/agent50-p1-dyadic-width/restart_second_edge_terminal_exclusion.md`. Starting from Agent9's three residual first-shallow branches (Is=20/T=14u+5/depth0; Is=48/T=14u+10/depth0; Is=48/T=14u+3/depth1), I substituted the exact first-shallow child coordinates into the next inverse edge's source power equation, source mass equation, and wall equation. If that next edge (depth r=0,1,2) were terminal, the nine necessary equations are:
+
+- A: 9P=50u+12; 7P=78u+24; 3P=134u+52.
+- B: 9P=50u+30; 7P=78u+52; 3P=134u+100.
+- C: 7P=46u+8; 5P=74u+18; P=130u+42.
+
+All nine are excluded. A/C and most B cases fall to small prime-modulus contradictions using n even and the branch n mod 3. The remaining B,r=1 case gives M=(49P-39n-247)/39>P/7 for n>=83, while the B/C high-depth defect identity 49D+14M=2P+6 and D>=4 force M<P/7. This is conditional on the already-established source restart and first-shallow reductions, not a P1 decision. It proves that the restart suffix cannot terminate at the first-shallow child or at the child of the immediately following low-depth edge; at least one more transition is required. It does not force further transitions to be shallow and does not exclude a longer depth-two tail.
+
+**Important correction made before checkpoint:** the B-row terminal equations are 7P=78u+52 and 3P=134u+100 (not +28 and +68). The corrected B,r=1 expression is M=(49P-39n-247)/39; B,r=2 gives P=11 mod67 = 2^59 and hence odd n. The committed note contains the corrected derivation.
+
+**Coordination:** sent Agent9 the summary at `communications/agent9/20261121T023059Z_agent50-second-edge-terminal-exclusion.md`. It asks for incorporation/challenge and records that the next unresolved case is a third or later low-depth transition.
+
+**Tool blocker:** attempted the prescribed local Lean reconstruction from the uploaded split archive twice via the container; both returned CAAS ClientError, including a simple shell command. Python execution was also unavailable. No CI was used as a substitute, and no Lean verification is claimed. The note remains in `im-results/` until formalized. Do not repeat the source inspection or modular case arithmetic; next useful work is to extend the exact terminal exclusion to a longer depth-two tail / third transition, or formalize this lemma once local Lean works.
+
+No P1 nonhalting proof, no BB(6) upper bound, and no exact BB(6) value established.
