@@ -140,17 +140,17 @@ jobs:
           import pathlib, sys
           path = pathlib.Path(sys.argv[1])
           source = path.read_text()
-          marker = "namespace Solution\\n"
+          marker = "namespace Solution\n"
           if source.count(marker) != 1:
               raise SystemExit(f"expected one Solution namespace in {path}")
           start = source.index(marker) + len(marker)
-          if source[start:].startswith("@[expose] public section\\n"):
+          if source[start:].startswith("@[expose] public section\n"):
               raise SystemExit(f"already exposed: {path}")
-          end_marker = "\\nend Solution\\n"
+          end_marker = "\nend Solution\n"
           end = source.find(end_marker, start)
           if end < 0:
               raise SystemExit(f"missing end Solution in {path}")
-          source = source[:start] + "@[expose] public section\\n" + source[start:end] + "\\nend" + source[end:]
+          source = source[:start] + "@[expose] public section\n" + source[start:end] + "\nend" + source[end:]
           path.write_text(source)
           print(f"exposed Solution declarations in {path}; definitions unchanged")
           PY
