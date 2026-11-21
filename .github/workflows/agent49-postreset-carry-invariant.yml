@@ -38,3 +38,21 @@ jobs:
         run: |
           lean --version
           lean im-results/agent49-parity623/PostResetCarryPairInvariant.lean
+      - name: Verify paired state machine matches affine carry transducers
+        run: |
+          mkdir -p /tmp/lean-paired-output
+          cp im-results/agent24-machine623-shifted-reset-product/SourceDerivedReset.lean /tmp/lean-paired-output/SourceDerivedReset.lean
+          cp im-results/agent48-623-tight-window/SourceCarryAffineBridge.lean /tmp/lean-paired-output/SourceCarryAffineBridge.lean
+          cp im-results/agent49-parity623/PostResetCarryPairInvariant.lean /tmp/lean-paired-output/PostResetCarryPairInvariant.lean
+          cp im-results/agent49-parity623/PostResetCarryOutputMap.lean /tmp/lean-paired-output/PostResetCarryOutputMap.lean
+          cd /tmp/lean-paired-output
+          lean --version
+          lean -o SourceDerivedReset.olean SourceDerivedReset.lean
+          export LEAN_PATH="/tmp/lean-paired-output:${LEAN_PATH:-}"
+          lean -o SourceCarryAffineBridge.olean SourceCarryAffineBridge.lean
+          lean -o PostResetCarryPairInvariant.olean PostResetCarryPairInvariant.lean
+          lean PostResetCarryOutputMap.lean 2>&1 | tee paired-output-map.log
+          if grep -q 'sorryAx' paired-output-map.log; then
+            echo 'sorryAx detected in paired output-map proof'
+            exit 1
+          fi
