@@ -146,7 +146,7 @@ CReach(T(1802+6720t))
 \Longrightarrow CReach(Y(n))
 \quad\text{when }t=671+1024n,
 \]
-after eliminating L, the odd-a R parent, and the E parent. The full reachability of this Y-family remains open, but two infinite subfamilies have now been excluded by further source-parent analysis: n≡7 (mod 8) and n≡13 (mod 16). See [Root32HighStopR2400Subfamilies.md](./Root32HighStopR2400Subfamilies.md), which translates them to r≡264544 (mod 524288) and r≡919904 (mod 1048576), respectively. The remaining n residues are still open.
+after eliminating L, the odd-a R parent, and the E parent. The full reachability of this Y-family remains open, but one infinite subfamily has been excluded by further source-parent analysis: n≡7 (mod 8), translating to r≡264544 (mod 524288). The attempted n≡13 (mod 16) extension is explicitly retracted because its even-right inverse side condition fails; see [Root32HighStopR2400Subfamilies.md](./Root32HighStopR2400Subfamilies.md). The r≡919904 (mod 1048576) class remains open.
 
 ## 5. Root-index interpretation
 
