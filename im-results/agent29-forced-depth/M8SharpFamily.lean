@@ -1,3 +1,13 @@
+/-!
+Intermediate Lean draft; not yet locally compiled or accepted by source CI.
+
+This file composes the generic source-level M8 parity exclusion from
+M8FilteredResidual.lean with an explicit division-free parametrization of
+the dyadic sharp family. The target is m8SharpFamily_unreachable for every
+r >= 2. Keep this file in im-results until local Lean 4.36.0-rc2 preflight
+and the manual Agent15 source workflow both succeed.
+-/
+
 import M8FilteredResidual
 import Lean.Elab.Tactic.Omega
 
