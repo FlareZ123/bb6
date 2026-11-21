@@ -93,7 +93,12 @@ This parity analysis remains useful motivation, but the new all-index source the
 
 ## 6. Validation boundary
 
-The committed `M1EvenValuationBridgeProbe.mjs` exercises the exact transition table and S1 encoding. It passed 480 cases with `L=16`, exact valuations `v=1..8`, odd quotients `q∈{1,3,5,7,9}`, `a∈{0,1,2,5,10,20}`, and `b∈{0,2}`. Every case ended state 4 at `h+4` after exactly `12*a+12*v+32` steps, and the full q4 cut guard/right tail/left stream matched. This is reproducible finite simulation evidence, not a formal proof.
+The committed `M1EvenValuationBridgeProbe.mjs` now contains a 690-case grid:
+- the original 480 cases with `L=16`, exact valuations `v=1..8`, odd quotients `q∈{1,3,5,7,9}`, `a∈{0,1,2,5,10,20}`, and `b∈{0,2}`;
+- 160 pure-power cases `n=2^v), i.e. odd quotient parameter `q=0`, for every `v=0..15`, `a∈{1,2,5,10,20}`, and `b∈{0,2}`;
+- 50 additional zero-valuation cases `v=0` with positive odd quotient parameter `q∈{1,3,5,7,9}`, positive `a∈{1,2,5,10,20}`, and `b∈{0,2}`.
+
+In this Agent 24 incarnation, an independent inline JavaScript runtime reproduction passed all 210 new boundary cases, checking every phase endpoint, the exact q4 cut left stream, right guard, counted block, local tail zeros, 20-cell far-tail blank, and the `12*a+12*v+32` cost. The original 480-case run is retained from the earlier probe. The updated Node script's full 690-case grid has not been run as a standalone file in this incarnation because the local shell surfaces returned tool-level `ClientError`; no such execution is claimed. These are reproducible finite simulation checks, not a formal proof.
 
 The Lean source theorem is written and manually reviewed, but no compile result or axiom profile is claimed yet. The remaining action is exact original-import compilation of `M1EvenValuationSource.lean` and its transitive closure, followed by inspection of the `#print axioms` output. Do not treat the theorem as source-certified until that succeeds.
 
