@@ -1,12 +1,14 @@
 ## 2026-11-21 follow-on — M2 residue-zero finite source probe
 
 - Independently inspected the uncompiled marker-2 all-q source chain: `M2EvenResidueZeroCounted.lean` composes `M2EvenResidueZeroSource`, `LBinDecHRunLeftFacing`, `Q4RightEndpoint`, and `S1CountedDrain`. Its exact source cost split is prefix (12a+12v_2(k)+107+3b), then counted drain (6\cdot4^b+42\cdot2^b-12b-48).
-- Built `im-results/agent24-champion-time/M2EvenResidueZeroProbe.mjs`, an exact TM2/S1 simulator comparing full nonblank tape support, state, and head at both q4 reset-prefix and counted-drain endpoints. Inline JS runtime reproduction passed 144 cases: (1\le k\le16), (a\in\{1,2,3\}), (b\in\{0,1,2\}), and (L=\max(4,\lceil\log_2(8k+1)\rceil)). This includes (v_2(k)=0..4) and pure powers (k=2^t).
-- Expected intermediate endpoint: (S1(L,8k-1,1,a+b+2,2^b-1,0,h+5+3b)). Expected post-drain endpoint: (S1(L,8k-1,1,a+b+2,0,2^b-1,h+5+3b)). All 144 cases matched both complete finite tape supports.
-- Added the 144-case evidence to `M2EvenResidueZero-SourceIntegration-20261117.md` and linked it from `im-results/agent24-champion-time/README.md`. Sent updates to Agents 42 and 44. Commits: probe `bb32784077773aaa71578556213ad1211da6855b`; integration note `40b3d5a98ea1e6b715af4d658fb5d2921bfa5949`; README `2484445339ca477f2da3034aace3efa5f51d9da5`; Agent 42 message `f8e3ee1c105ddb8bc4fa139c4019a470347d39b5`; Agent 44 message `1c57fd255875b47b1b81382b449567316d259711`.
+- Built `im-results/agent24-champion-time/M2EvenResidueZeroProbe.mjs`, an exact TM2/S1 simulator comparing full nonblank tape support, state, and head at both q4 reset-prefix and counted-drain endpoints. Inline JS runtime reproduction passed **288 cases**: (1\le k\le16), (a\in\{1,2,3\}), (b\in\{0,1,2\}), and both (L=L_{min}=\max(4,\lceil\log_2(8k+1)\rceil)) and (L=L_{min}+8). The second width adds eight complete binary-counter blocks and exercises a nontrivial arbitrary suffix. This includes (v_2(k)=0..4) and pure powers (k=2^t).
+- Expected intermediate endpoint: (S1(L,8k-1,1,a+b+2,2^b-1,0,h+5+3b)). Expected post-drain endpoint: (S1(L,8k-1,1,a+b+2,0,2^b-1,h+5+3b)). All 288 cases matched both complete finite tape supports.
+- Added the 288-case evidence to `M2EvenResidueZero-SourceIntegration-20261117.md` and linked it from `im-results/agent24-champion-time/README.md`. Sent direct updates to Agents 42 and 44 and a reusable broadcast. Commits: probe initial `bb32784077773aaa71578556213ad1211da6855b`, expanded probe `a680ca08999a39affd61dce0a10576d14342d309`, integration note `cf8fac173a284b784d3500222ddaf43258103fc7`, README `32f9243217bb06624ff60b088dfcb6c25dfd2afd`, broadcast `07e9ed4abd62525862e7b70184a238491969a872`.
 - The Node probe file itself was not run as a standalone script in this invocation; only the equivalent inline JavaScript runtime reproduction was executed. This is finite evidence, not Lean acceptance. The M2 all-q theorem and its transitive axiom profile remain uncompiled.
 - Static text scan of the 13 directly inspected M2 dependency modules found no explicit `sorry`, `admit`, `axiom`, or `native_decide` tokens. This is not a transitive dependency audit; `#print axioms` after exact Lean compilation remains required.
 - Agent 44's memory reports the same local execution-tool `ClientError` blocker; Agent 8's exact M1 request remains unanswered. Do not dispatch CI as a substitute for the prescribed local RC2 preflight.
+
+---
 
 ---
 
