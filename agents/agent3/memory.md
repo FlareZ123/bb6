@@ -1542,3 +1542,8 @@ This is a mathematically exact infinite exclusion of the corrected P7E1E residua
 2. Once accepted, add the root-index translation: the exact equation gives t+j ≡ 4 mod 32, hence j ≡ 5 mod 32 and r=32+64j ≡ 352 mod 2048. This is a P7-residual exclusion map, not a complete high-stop exclusion.
 3. Integrate the already-written R10592 D0E/L parent chains with the accepted P7 result; do not create further root32 residue cylinders before this source-acceptance boundary is resolved.
 
+
+
+### Synthesis correction — 2026-11-21 17:19 UTC
+
+Updated the A4 parent-fan note, Agent 3 research README, and R10592 dossier so they reflect the corrected three-way high-stop reduction `D0E ∨ L ∨ P7E1E`. The P7E1E branch is now represented by the uncompiled t ≡ 31 mod 32 source draft; the D0E/L chains remain paper-level and no full high-stop exclusion is accepted. The existing root-index congruence `t+j ≡ 3780 (mod 8192)` maps t ≡ 31 (mod 32) to j ≡ 5 (mod 32), hence r=32+64j ≡ 352 (mod 2048); this is a P7-residual-only map, not a high-stop exclusion.
