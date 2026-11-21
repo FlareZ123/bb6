@@ -121,7 +121,7 @@ Not established:
 The next useful step for the remaining t ≡ 15 (mod 32) cylinders is still to formalize the all-depth fan and attack the surviving parent family using the simultaneous mod-10/mod-5 constraints. Do not infer whole-cylinder exclusion from representative t values: deeper inverse steps can depend on higher bits of t.
 
 
-## 6. Separate low-valuation closure draft: t ≡ 31 (mod 32)
+## 6. Accepted low-valuation closure: t ≡ 31 (mod 32)
 
 This cylinder is a special slice of A4 where the target sum has exact 2-adic valuation three:
 
@@ -129,7 +129,7 @@ This cylinder is a special slice of A4 where the target sum has exact 2-adic val
 (A4_x(t)+A4_y(t)) % 16 = 8.
 ```
 
-It can be closed without formalizing the full all-depth fan. The draft in `Root32HighStopA4.lean` applies the already source-certified `oddodd_lowval_blank_reach_iff`, forcing
+It can be closed without formalizing the full all-depth fan. The standalone source-connected proof in `Root32HighStopA4Core.lean` applies the already source-certified `oddodd_lowval_blank_reach_iff`, forcing
 
 ```
 p = (A4_x+A4_y-4)/2
@@ -145,8 +145,8 @@ Exact affine arithmetic gives
 
 For t ≡ 31 (mod 32), these imply q is odd and p+q ≡ 1 (mod 4). The existing `run_no_odd_sum_one` theorem therefore excludes the only parent, proving A4(t) unreachable on this cylinder.
 
-The same draft closes the corrected P7E1E residual there: its even/even parent fan has target sum 2 mod 8, so only the direct parent D(t) survives; `odd_seven_blank_reach_iff` then forces A4(t).
+The locally compiled core closes the corrected P7E1E residual there: its even/even parent fan has target sum 2 mod 8, so only the direct parent D(t) survives; `odd_seven_blank_reach_iff` then forces A4(t). The core was compiled with Lean 4.36.0-rc2 through 52 project modules, with all 51 imported project-source blobs matching current main; the audited theorems have no `sorryAx`.
 
 Under the existing root-index congruence \(t+j\equiv3780\pmod{8192}\), this t-cylinder implies \(j\equiv5\pmod{32}\). Since \(r=32+64j\), the P7E1E residual exclusion therefore maps to \(r\equiv352\pmod{2048}\). This is a residual-specific index map only; it is not a complete high-stop exclusion.
 
-**Acceptance boundary:** this is a source-proof draft, not an accepted result. The current invocation could not run the required local Lean 4.36.0-rc2 preflight. The draft covers t ≡ 31 (mod 32), including t ≡ 31 (mod 256), but does not close the other A4 cylinders or the full high-stop target. Do not move it to results/ before compilation and axiom audit.
+**Acceptance boundary:** the P7E1E residual exclusion on t ≡ 31 (mod 32) is now locally Lean-accepted in Root32HighStopA4Core.lean, with standard axioms only and no `sorryAx`. This includes the t ≡ 31 (mod 256), t ≡ 159 (mod 1024), and t ≡ 7839 (mod 8192) cylinders. It does not close the other A4 cylinders, D0E, L, or the full high-stop target. Keep the dossier in im-results/; the full high-stop composition is not accepted.
