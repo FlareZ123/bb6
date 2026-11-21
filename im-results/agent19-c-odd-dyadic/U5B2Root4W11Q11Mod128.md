@@ -164,14 +164,69 @@ T_{A,x}+T_{A,y}\equiv2\pmod4.
 \]
 The source-certified blank_no_odd_sum_two theorem excludes \(T_A\). Hence \(R_A,D_A,A(q)\) are also blank-unreachable.
 
-## 5. Conclusion and relation to the B2 root
+## 5. Lift to the B2 root-index cylinder
 
-If \(P(q)\) were blank-reachable, its exact source-parent fan would force at least one of \(Q(q)\) or \(A(q)\) to be blank-reachable. Both alternatives have now been excluded for every \(q=128s+11\). Therefore
+Let
 \[
-\boxed{\forall s\in\mathbb N,\quad \neg CReach(P(128s+11)).}
+B(u)=(734+10944u,\;34881+518816u)
+\]
+be the B2 residual state. Suppose \(r,E,u\) satisfy the exact root equation and
+\[
+r\equiv11092\pmod{16384}.
+\]
+The root calculation above gives \(u=542+840w\), with
+\[
+w=2048s+187,\qquad u=157622+1720320s
+\]
+for some natural \(s\).
+
+The established source-accepted implication b2_even_reach_implies_p4_reach applies because \(u\) is even. Thus B2 reachability would imply reachability of
+\[
+P4(u)=(63895+950614u,\;3291+48981u).
+\]
+In terms of \(w\),
+\[
+P4(w)=(515296683+798515760w,\;
+       26550993+41144040w).
+\]
+For \(w=2048s+187\), this is
+\[
+P4_s=(149837743803+1635360276480s,\;
+      7720486473+84262993920s).
+\]
+It is odd/odd, its right coordinate is at least five, and its sum is \(4\pmod{16}\). The source-certified oddodd_lowval_blank_reach_iff therefore reduces it to
+\[
+D_s=(78779115136+859811635200s,\;
+     43249800803+472037314560s).
 \]
 
-The W11 root4 dossier connects the B2 residual to \(P(q)\) through the preceding P4 and D(w) parent reductions. Consequently this closes the corresponding B2 root-index cylinder provided those existing upstream draft implications are integrated unchanged. The root-index condition is \(r\equiv11092\pmod{16384}\).
+The target \(D_s=(x,y)\) is even/odd, \(x>5\), \(y\ge5\), and
+\[
+(x+y)\equiv0\pmod3,\qquad x+y+1\equiv4\pmod8.
+\]
+The source-accepted even_odd_three_divisible_parent theorem in U5B2Root32.lean says that any original-section predecessor \((a,k)\) has \(a\) odd, an even depth \(n\), and
+\[
+x+y+1=2^n(2a+6),\qquad
+2k+a+7+3n=x+2y.
+\]
+Because \(2a+6\) is divisible by four and \(x+y+1\) has exact 2-adic valuation two, necessarily \(n=0\). Solving the two equations gives
+\[
+(a,k)=
+(61014457967+665924474880s,\;
+ 52132129384+568980894720s)
+=P(128s+11).
+\]
+Consequently, B2 reachability would imply \(P(128s+11)\) reachability, contradicting the two-branch exclusion above.
+
+Thus the W11 root4 cylinder
+\[
+\boxed{r\equiv11092\pmod{16384}}
+\]
+is excluded at the paper-argument level for the B2 residual, not merely for the intermediate P(q) state.
+
+## 6. Conclusion
+
+For every exact B2 root-equation solution in this W11 root4 cylinder, the B2 state is not blank-reachable. This is an infinite conditional root-index exclusion. It does not close the other root-index residues, decide Machine C, or determine BB(6).
 
 ## Exact dependencies and validation boundary
 

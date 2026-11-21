@@ -39,7 +39,7 @@ The central theorem, blank_halts_iff_joint_val_six_full, is an exact equivalence
 
 The refined joint CI verification succeeded in [run 42252457830](https://github.com/FlareZ123/bb6/actions/runs/42252457830).
 
-A separate W11 root4 B2 parent branch now has a paper-level two-parent exclusion: both P(q) source parents are eliminated for q≡11 (mod 128), corresponding under the exact residual root equation to r≡11092 (mod 16384). See [W11 q=11 mod128 closure](U5B2Root4W11Q11Mod128.md). This composition is not Lean-compiled, and the upstream B2-to-P(q) bridge remains a draft; all other W11 q classes remain open.
+A separate W11 root4 B2 branch now has a paper-level exclusion for root indices r≡11092 (mod 16384): the exact root equation forces q≡11 (mod 128), and both P(q) source parents reduce to existing blank-image obstructions. The upstream B2-to-P4 and D(w) parent reductions are in the accepted U5B2Root32 source closure; the new P(q) parent fan and full W11 root-index composition remain uncompiled. See [W11 q=11 mod128 closure](U5B2Root4W11Q11Mod128.md). All other W11 root-index classes remain open.
 
 ## Main research artifacts
 
@@ -47,7 +47,7 @@ A separate W11 root4 B2 parent branch now has a paper-level two-parent exclusion
 - [OddSevenSecondCylinder.lean](OddSevenSecondCylinder.lean): original-source inverse cylinder excluding the second sum-seven slope.
 - [JointFiveSieve.lean](JointFiveSieve.lean): combined Agent11/19 restrictions and the high four-link exclusion.
 - [JointAllRoot.lean](JointAllRoot.lean): joint high-root restrictions and the odd-special high families.
-- [U5B2Root4W11Q11Mod128.md](U5B2Root4W11Q11Mod128.md): paper-level W11 parent-fan exclusion for q≡11 (mod 128), with exact root-index translation; composition not yet Lean-compiled.
+- [U5B2Root4W11Q11Mod128.md](U5B2Root4W11Q11Mod128.md): paper-level B2 root-index exclusion r≡11092 (mod 16384), via the q≡11 (mod 128) two-parent fan; new composition not yet Lean-compiled.
 - [SecondOneInfinite.lean](SecondOneInfinite.lean): exact infinite (m=1) family and its prior-sieve status.
 - [QuotientRectCensus.cpp](QuotientRectCensus.cpp): reproducible M512 quotient census for the mixed rectangles and the four parameter-family residue cycles.
 
@@ -68,7 +68,7 @@ The 25/4 mixed rectangle is intentionally omitted from the final high predicate.
 
 ## Next research
 
-- For the W11 root4 branch, integrate the q≡11 (mod 128) two-parent exclusion into one exact-source Lean theorem, including the upstream B2-to-P(q) bridge. Do not expand residue coverage before this composition is accepted.
+- For the W11 root4 branch, compile the q≡11 (mod 128) two-parent fan and its root-index transfer into the existing U5B2Root32 closure. The upstream B2-to-P4 and even/odd three-divisible parent reductions are already in the accepted closure. Do not expand residue coverage before this composition is accepted.
 - [HighDyadicConeCandidate.md](HighDyadicConeCandidate.md) now records the **completed source-certified** high stopping theorem, its proof structure, CI audit, and an **M512-admitted** sample `j=263,m=3`. The generalized arbitrary-depth proof and its source certification are linked above. Establish separate prior-sieve novelty and complete the strongest exact halting-iff integration.
 
 - Close the remaining unbounded low and high parameter domains.
