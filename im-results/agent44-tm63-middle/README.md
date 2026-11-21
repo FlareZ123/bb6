@@ -125,3 +125,24 @@ Commit 9103e64b22f72afae47f53e8963426ff7db93bc3 added the explicit identity heq3
 5. Formalize the root-specific bound `middle34Result.right ≥ 2` (hence `z ≥ 3`), then compile and axiom-audit the arbitrary-A terminal route in `GeneralQ4TailArithmetic.lean`, `GeneralQ4TailS1Reparam.lean`, `GeneralQ4TailS1Config.lean`, `GeneralQ4TailTerminalComposition.lean`, and Agent 42's `TM63GeneralQ4TerminalComposition.lean`. After `tm63_blank_reaches_second_q4_tail`, this route needs no further q4Tail/P2 recurrence.
 
 All material described here remains in im-results/ until it meets the repository's academically publishable results/ standard. No exact BB(6) value, complete champion halt count, or universal six-state upper bound is established.
+
+## 2026-11-21: direct q4-terminal source-acceptance correction
+
+The existing manual `middle34-acceptance` target is a narrower acceptance target for five earlier roots. It does **not** compile `im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean` or its direct arbitrary-A q4Tail/S0-to-terminal closure. A passing middle34 run must not be reported as acceptance of the direct q4-terminal route.
+
+The actual root-to-terminal target is `im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean`. Its full dependency closure is approximately 192 modules. The exact staging and `lean_compile_closure.py` command, including the extracted terminal source root and `TerminalBridge` override, are recorded in `im-results/agent42-q4-s0-drain/2026-11-21-lean-closure-repairs.md`. Do not dispatch CI as a substitute for the required local RC2 preflight.
+
+The first small source slice is `im-results/agent48-counted-inc0/M1EvenValuationBridge.lean`. It now imports `ChampionRootBridge`, `M1EvenState1Sweep`, `M1EvenState5Sweep`, and `CountedSweep` directly (plus `Lean.Elab.Tactic.Omega`); its unnecessary `CountedQ4Prefix` import and `Agent6Q4Prefix` open were removed. A proposed minimal preflight is:
+
+```sh
+python3 tools/lean_compile_closure.py \
+  im-results/agent48-counted-inc0/M1EvenValuationBridge.lean \
+  --workdir /tmp/m1-bridge-acceptance \
+  --jobs 4
+```
+
+An independent finite smoke test is now stored at `M1EvenValuationSourceSmoke.mjs`. An equivalent JS simulation checked 252 small parameter tuples (`len=1..3`, all `q<2^len`, `v=0..2`, `a=1..2`, `b=0..2`); every run matched the claimed reset-prefix step count, final state/head, and full S1 output tape. This is finite computational evidence only, not a proof or Lean acceptance.
+
+Current invocation tool status: local `container.exec`, `python.exec`, and `python_user_visible` fail with tool-level `ClientError` before executing commands. The two attached split archives have metadata sizes 304,196,898 bytes each, totaling 608,393,796 bytes; this is consistent with the official 608,393,640-byte RC2 Linux tar.zst member plus 156 bytes of outer-ZIP overhead, but is not an integrity test. Correct extraction is outer `unzip`, then `tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean`, then set PATH and run `lean --version`.
+
+**Status remains unaccepted:** no local Lean compilation, no exported axiom audit, and no theorem establishing the exact BB(6) value or a universal upper bound.
