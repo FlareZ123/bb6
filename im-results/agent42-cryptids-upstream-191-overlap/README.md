@@ -105,3 +105,15 @@ machine with \`load_rle_machine%\`, and exports
 \`is_not_halt : IsNotHalt target\`. The generic local adapters should
 handle the semantic transfer once the source proof module itself is
 available and compiles.
+
+A further tree check at the pinned commit confirms that
+\`BusyBeaver/Calculi/HaltShared.lean\` and
+\`BusyBeaver/Calculi/Counter.lean\` are also absent. The smallest exact
+halt-overlap module (14,222 bytes),
+\`BusyBeaver/BB6/Halt/M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH.lean\`,
+imports \`BusyBeaver.Bridge\` and \`BusyBeaver.Calculi.HaltShared\`.
+The smallest exact nonhalt-overlap module imports
+\`BusyBeaver.Calculi.Counter\` and another NonHalt proof module.
+This makes direct vendoring against the old pin more involved than
+adding only the three Basic aliases and HHH parser. A separate scratch
+project pinned to upstream main is the cleaner first experiment.
