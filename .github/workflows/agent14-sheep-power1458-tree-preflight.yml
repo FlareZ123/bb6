@@ -1,0 +1,67 @@
+name: Agent14 Sheep Power1458 full-tree Lean 4.36.0-rc2 preflight
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-tree:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Restore source archive and compile exact dependency closure
+        run: |
+          set -euo pipefail
+          echo "Repository commit: $(git rev-parse HEAD)"
+          lean --version
+
+          python3 -m venv /tmp/agent14-power1458-venv
+          /tmp/agent14-power1458-venv/bin/pip -q install filelock
+          /tmp/agent14-power1458-venv/bin/python im-results/agent16-sheep-even-return/reconstruct_all.py
+
+          S="$PWD/im-results/agent16-sheep-even-return"
+          I="$PWD/im-results/agent14-sheep-even-inverse"
+          G="$PWD/im-results/agent40-sheep-chain-witnesses"
+          R="$PWD/im-results/agent40-sheep-third-preimages"
+          P="$PWD/im-results/agent17-sheep-power1458"
+          export LEAN_PATH="$S:$I:$G:$R:$P"
+
+          cd "$S"
+          for file in SheepEven EvenEdge OddPrefix EvenReach BlankEven; do
+            echo "=== Lean source: $file ==="
+            lean -o "$file.olean" "$file.lean"
+          done
+
+          cd "$I"
+          for file in SheepEvenInverseAlgebra SheepEvenSourceAlgebra SheepEvenReachInverse SheepOddGap; do
+            echo "=== Lean source: $file ==="
+            lean -o "$file.olean" "$file.lean"
+          done
+
+          cd "$G"
+          echo "=== Lean source: SheepGenericHigh ==="
+          lean -o SheepGenericHigh.olean SheepGenericHigh.lean
+
+          cd "$R"
+          echo "=== Lean source: ResidueGap ==="
+          lean -o ResidueGap.olean ResidueGap.lean
+
+          cd "$G"
+          echo "=== Lean source: GenericHighNoParent ==="
+          lean -o GenericHighNoParent.olean GenericHighNoParent.lean
+
+          cd "$P"
+          for file in SheepPower1458Core SheepPower1458Rows SheepPower1458All SheepPower1458RootGate SheepPower1458High SheepPower1458Target SheepPower1458AffineBounds SheepPower1458SourceIntegration SheepPower1458LowRows SheepPower1458RootEdgeTable SheepPower1458LowRowTable SheepPower1458TreeProof; do
+            echo "=== Lean source: $file ==="
+            lean -o "$file.olean" "$file.lean"
+          done
