@@ -24,7 +24,7 @@ Suppose \(n\) is odd. Then \(H(n)\) is odd, so
 \[
 v_2(Y_x+Y_y+1)=2.
 \]
-Apply the complete original source grammar to a predecessor of \(Y(n)\). The target has even left coordinate, odd right coordinate, and odd coordinate sum. Thus the zero-left and even-\(a\) high branches (which require an even sum) and the low branch (which requires even right coordinate) are impossible. The \(a=1\) high branch requires \(16\mid Y_x+Y_y+1\), impossible at exact valuation two. In the remaining odd-\(a\) high branch, the cost equation forces the bounce depth \(d\) even, while \(2a+6\) is divisible by four, so \(d\le v_2(Y_x+Y_y+1)-2=0\). Hence \(d=0\) and the only possible source parent is
+Apply the complete original source grammar to a predecessor of \(Y(n)\). The target has even left coordinate, odd right coordinate, and odd coordinate sum, with (Y_yge1{,}351{,}544{,}872{,}375>7). Thus the zero-left and even-(a) high branches (which require an even sum) and the low branch (which requires even right coordinate) are impossible. The finite (a=1) cases have right coordinate (1,3,5,) or (7), and its (y=3) high branch is also impossible. The remaining (a=1) high branch requires (16mid Y_x+Y_y+1), impossible at exact valuation two. In the remaining odd-\(a\) high branch, the cost equation forces the bounce depth \(d\) even, while \(2a+6\) is divisible by four, so \(d\le v_2(Y_x+Y_y+1)-2=0\). Hence \(d=0\) and the only possible source parent is
 \[
 A(m)=
 (4266151266547+5153802787980m,\;
@@ -50,11 +50,11 @@ Put \(n=7+8p\), so \(m=(n-1)/2=3+4p\). From the affine formula for \(B\),
 B_x\equiv3+2m\equiv1\pmod4,\qquad
 B_y\equiv2+m\equiv1\pmod4.
 \]
-Thus \(B_y\) is odd and
-\[
-B_x+B_y\equiv2\pmod4.
-\]
-The source-certified blank_no_odd_sum_two theorem excludes \(B(m)\). Therefore \(Y(n)\), and hence the original high-stop target, is unreachable for every \(n\equiv7\pmod8\).
+Thus (B_y) is odd and (B_yge1{,}919{,}859{,}602{,}054>5), while
+[
+B_x+B_yequiv2pmod4.
+]
+All hypotheses of the source-certified blank_no_odd_sum_two theorem hold, so it excludes (B(m)). Therefore \(Y(n)\), and hence the original high-stop target, is unreachable for every \(n\equiv7\pmod8\).
 
 Here
 \[
