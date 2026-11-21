@@ -48,6 +48,11 @@ recurrences from one representative halt proof and specifies a cost-indexed
 RLE semantics. This is an intermediate method, not yet formalized or
 accepted.
 
+The F289 instance now has a checkpoint-matched JavaScript/BigInt state port
+and a candidate primitive-step bound below `2^160`, conditional on formal
+branch-cost soundness. See [the simulator](simulate_f289_rle.js) and the
+computational caveats in [PrimitiveStepCost.md](PrimitiveStepCost.md).
+
 ## Critical dependency constraint
 
 The repository's archived source inventory pins
