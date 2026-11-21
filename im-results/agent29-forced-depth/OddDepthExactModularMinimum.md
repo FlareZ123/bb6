@@ -134,181 +134,181 @@ The `r=1` case is the existing right-four tower; `r=2` shows that the exact `m=5
 
 ### A root-sensitive gap beyond the sharp envelope
 
-Write \\(A=3m+1\\). The exact CRT residues, combined with the M8 quotient
+Write \(A=3m+1\). The exact CRT residues, combined with the M8 quotient
 filter in the dyadic case, give a stronger closed-form wall than the
-uniform envelope. For every odd \\(m\\ge3\\), any blank-root-reachable
+uniform envelope. For every odd \(m\ge3\), any blank-root-reachable
 deep-sector stopping input satisfies
 
-\\[
-4Av\\ge35Q-8m,
-\\qquad
-4(3m+1)(Y+2)\\ge35\\cdot2^{2m+2}-35-24m,
-\\]
-where \\(v=(Y+2)/3\\) and \\(Q=(2^{2m+2}-1)/3\\). This is a necessary
+\[
+4Av\ge35Q-8m,
+\qquad
+4(3m+1)(Y+2)\ge35\cdot2^{2m+2}-35-24m,
+\]
+where \(v=(Y+2)/3\) and \(Q=(2^{2m+2}-1)/3\). This is a necessary
 condition on the actual source-normalized residual, not a reachability
 decision. In the non-dyadic case it follows already from the raw CRT
 minimum; the M8 exclusion is essential in the dyadic exceptional case.
 
-If \\(A\\) is not a power of two, the proof below establishes this
-inequality without using the M8 correction. If \\(A\\) is a power of
-two, then \\(A=4^r\\), since \\(A\\) is even and
-\\(A\\equiv1\\pmod3\\). For every \\(r\\ge1\\), the exact
+If \(A\) is not a power of two, the proof below establishes this
+inequality without using the M8 correction. If \(A\) is a power of
+two, then \(A=4^r\), since \(A\) is even and
+\(A\equiv1\pmod3\). For every \(r\ge1\), the exact
 M8-filtered minimum is stronger:
 
-\\[
-Av\\ge(A+1)Q-m,
-\\qquad
-Y\\ge2^{2m+2}+\\frac{2^{2m+2}}{A}-4.
-\\]
+\[
+Av\ge(A+1)Q-m,
+\qquad
+Y\ge2^{2m+2}+\frac{2^{2m+2}}{A}-4.
+\]
 
-At \\(r=1\\), this is \\(m=1\\) and gives \\(v\\ge6\\), hence
-\\(Y\\ge16\\); the raw minimum \\(v=2\\), \\(Y=4\\) is
+At \(r=1\), this is \(m=1\) and gives \(v\ge6\), hence
+\(Y\ge16\); the raw minimum \(v=2\), \(Y=4\) is
 M8-forbidden. The infinite sharp family developed below is the subfamily
-\\(r\\ge2\\).
+\(r\ge2\).
 
 #### Non-power-of-two case
 
-Assume \\(m\\ge3\\) is odd and \\(A\\) is not a power of two.
-Let \\(s\\) be the least integer with \\(2^s>A/2\\). Then
-\\(2^s\\le A<2^{s+1}\\) and \\(s\\ge3\\). For each
-\\(t<s\\), let \\(n_t\\) be the least positive residue of
-\\(2^{t+1}-3m\\) modulo \\(2^{t+2}\\). It is positive and odd, and
+Assume \(m\ge3\) is odd and \(A\) is not a power of two.
+Let \(s\) be the least integer with \(2^s>A/2\). Then
+\(2^s\le A<2^{s+1}\) and \(s\ge3\). For each
+\(t<s\), let \(n_t\) be the least positive residue of
+\(2^{t+1}-3m\) modulo \(2^{t+2}\). It is positive and odd, and
 
-\\[
-v_t=\\frac{n_tQ-m}{2^t}.
-\\]
+\[
+v_t=\frac{n_tQ-m}{2^t}.
+\]
 
-Also \\(2^t\\le A/2\\), so \\(A/2^t\\ge2\\). Split into three
+Also \(2^t\le A/2\), so \(A/2^t\ge2\). Split into three
 cases.
 
-1. If \\(n_t=1\\), then \\(A=2^{t+1}w\\) for an odd
-   \\(w\\). Since \\(A\\) is not a power of two, \\(w>1\\);
-   and \\(A\\equiv1\\pmod3\\) forces \\(3\\nmid w\\).
-   Thus \\(w\\ge5\\), so
-   \\(Av_t=2w(Q-m)\\ge10(Q-m)\\).
+1. If \(n_t=1\), then \(A=2^{t+1}w\) for an odd
+   \(w\). Since \(A\) is not a power of two, \(w>1\);
+   and \(A\equiv1\pmod3\) forces \(3\nmid w\).
+   Thus \(w\ge5\), so
+   \(Av_t=2w(Q-m)\ge10(Q-m)\).
 
-2. If \\(n_t=3\\), then \\(A+2=2^{t+1}w\\) for a positive
-   odd \\(w\\) divisible by three, since \\(A+2=3(m+1)\\).
-   For \\(t\\ge1\\), this gives
-   \\(A/2^t=2w-2/2^t\\ge5\\); for \\(t=0\\),
-   \\(m\\ge3\\) forces \\(w\\ge7\\), so the same lower
-   bound holds. Hence \\(Av_t\\ge5(3Q-m)\\).
+2. If \(n_t=3\), then \(A+2=2^{t+1}w\) for a positive
+   odd \(w\) divisible by three, since \(A+2=3(m+1)\).
+   For \(t\ge1\), this gives
+   \(A/2^t=2w-2/2^t\ge5\); for \(t=0\),
+   \(m\ge3\) forces \(w\ge7\), so the same lower
+   bound holds. Hence \(Av_t\ge5(3Q-m)\).
 
-3. Otherwise, since \\(n_t\\) is positive and odd,
-   \\(n_t\\ge5\\). Therefore
-   \\(Av_t=(A/2^t)(n_tQ-m)\\ge10Q-2m\\).
+3. Otherwise, since \(n_t\) is positive and odd,
+   \(n_t\ge5\). Therefore
+   \(Av_t=(A/2^t)(n_tQ-m)\ge10Q-2m\).
 
-Each of these three bounds is at least \\(35Q/4-2m\\). For the first,
-use \\(Q\\ge7m\\), which follows from
-\\(4^{m+1}-1\\ge21m\\) for \\(m\\ge3\\); the other two
+Each of these three bounds is at least \(35Q/4-2m\). For the first,
+use \(Q\ge7m\), which follows from
+\(4^{m+1}-1\ge21m\) for \(m\ge3\); the other two
 comparisons are immediate.
 
-For \\(s\\le t\\le2L-2\\), the least residue is now the positive
-integer \\(n_t=2^{t+1}-3m\\), and
+For \(s\le t\le2L-2\), the least residue is now the positive
+integer \(n_t=2^{t+1}-3m\), and
 
-\\[
-v_t=2Q-\\frac{3mQ+m}{2^t}.
-\\]
+\[
+v_t=2Q-\frac{3mQ+m}{2^t}.
+\]
 
-Thus \\(v_t\\) increases with \\(t\\), so it suffices to bound
-\\(v_s\\). Put
+Thus \(v_t\) increases with \(t\), so it suffices to bound
+\(v_s\). Put
 
-\\[
+\[
 n=n_s=2^{s+1}-3m=2^{s+1}-A+1,
-\\qquad
+\qquad
 z=A/2^s=2-(n-1)/2^s.
-\\]
+\]
 
-The integer \\(n\\) is positive, odd, and not one (as \\(A\\) is
+The integer \(n\) is positive, odd, and not one (as \(A\) is
 not a power of two); also it cannot be three, since that would make
-\\(2^{s+1}=A+2=3(m+1)\\). Hence \\(n\\ge5\\). Since
-\\(A>2^s\\), also \\(n\\le2^s-1\\).
+\(2^{s+1}=A+2=3(m+1)\). Hence \(n\ge5\). Since
+\(A>2^s\), also \(n\le2^s-1\).
 
-If \\(n=5\\), then \\(A=2^{s+1}-4\\). The congruence
-\\(A\\equiv1\\pmod3\\) forces \\(s\\) even; as
-\\(m\\ge3\\), this gives \\(s\\ge4\\), hence
-\\(z=2-4/2^s\\ge7/4\\) and \\(zn\\ge35/4\\).
+If \(n=5\), then \(A=2^{s+1}-4\). The congruence
+\(A\equiv1\pmod3\) forces \(s\) even; as
+\(m\ge3\), this gives \(s\ge4\), hence
+\(z=2-4/2^s\ge7/4\) and \(zn\ge35/4\).
 
-If \\(n\\ge7\\), consider the concave quadratic
+If \(n\ge7\), consider the concave quadratic
 
-\\[
-f(n)=n\\left(2-\\frac{n-1}{2^s}\\right).
-\\]
+\[
+f(n)=n\left(2-\frac{n-1}{2^s}\right).
+\]
 
-On \\([7,2^s-1]\\) its minimum is at an endpoint. For
-\\(s\\ge3\\),
+On \([7,2^s-1]\) its minimum is at an endpoint. For
+\(s\ge3\),
 
-\\[
-f(7)=14-42/2^s\\ge35/4,
-\\qquad
-f(2^s-1)=2^s+1-2/2^s\\ge35/4.
-\\]
+\[
+f(7)=14-42/2^s\ge35/4,
+\qquad
+f(2^s-1)=2^s+1-2/2^s\ge35/4.
+\]
 
-Thus in either case \\(zn\\ge35/4\\), and
+Thus in either case \(zn\ge35/4\), and
 
-\\[
-Av_s=z(nQ-m)\\ge35Q/4-2m,
-\\]
+\[
+Av_s=z(nQ-m)\ge35Q/4-2m,
+\]
 
-because \\(z<2\\). The endpoint \\(t=2L-1\\) has
-\\(v_t>Q\\) by the endpoint calculation in the envelope proof,
-so it also satisfies the bound. Since every actual \\(v\\) is at
-least its corresponding \\(v_t\\), the uniform inequality follows
-for all non-power-of-two \\(A\\).
+because \(z<2\). The endpoint \(t=2L-1\) has
+\(v_t>Q\) by the endpoint calculation in the envelope proof,
+so it also satisfies the bound. Since every actual \(v\) is at
+least its corresponding \(v_t\), the uniform inequality follows
+for all non-power-of-two \(A\).
 
 #### Exceptional dyadic case and M8 exclusion
 
-Now let \\(A=2^{2r}\\), \\(r\\ge2\\), so
-\\(m=(4^r-1)/3\\), \\(t_*=2r-1\\), and
-\\(2^{t_*}=A/2\\). The uniform envelope is attained uniquely at
-\\(t=t_*\\), \\(n_{t_*}=1\\), and
-\\(v_*=(Q-m)/2^{t_*}=2(Q-m)/A\\). Every other admissible quotient
+Now let \(A=2^{2r}\), \(r\ge2\), so
+\(m=(4^r-1)/3\), \(t_*=2r-1\), and
+\(2^{t_*}=A/2\). The uniform envelope is attained uniquely at
+\(t=t_*\), \(n_{t_*}=1\), and
+\(v_*=(Q-m)/2^{t_*}=2(Q-m)/A\). Every other admissible quotient
 is larger.
 
 These parameters admit a division-free closed form. Since
-\\(Q=(4^L-1)/3\\) and \\(3m+1=4^r\\),
+\(Q=(4^L-1)/3\) and \(3m+1=4^r\),
 
-\\[
-Q-m=4^r\\frac{4^{L-r}-1}{3},
-\\quad
-v_*=2\\frac{4^{L-r}-1}{3},
-\\quad
-Y_*=2\\cdot4^{L-r}-4,
-\\]
-\\[
+\[
+Q-m=4^r\frac{4^{L-r}-1}{3},
+\quad
+v_*=2\frac{4^{L-r}-1}{3},
+\quad
+Y_*=2\cdot4^{L-r}-4,
+\]
+\[
 j=4^L-4^r-2,
-\\quad
+\quad
 k=4^{2L}-4^{L+r}-2,
-\\quad
+\quad
 d=2r-1+2L.
-\\]
+\]
 
-In particular, \\(j+3m+3=4^L=2^{2L}\\). These forms are convenient
+In particular, \(j+3m+3=4^L=2^{2L}\). These forms are convenient
 for formalizing the infinite family without nested natural-number
 division.
 
-For this sharp family, \\(t_*+3\\le2L\\); reducing
-\\(3Q=2^{2L}-1\\) modulo \\(2^{t_*+3}\\) and using
-\\(3m+1=2^{t_*+1}\\) gives
-\\(Q-m=2^{t_*+1}\\pmod{2^{t_*+3}}\\). Hence
-\\(v_*\\equiv2\\pmod8\\) and
-\\(Y_*=3v_*-2\\equiv4\\pmod8\\). Any actual input with this
-exponent residue has source depth \\(d=t_*\\pmod{2L}\\), hence
-\\(d\\) is odd and, because \\(r\\ge2\\),
-\\(d\\ge3\\). Its first normalized coordinate \\(x\\)
+For this sharp family, \(t_*+3\le2L\); reducing
+\(3Q=2^{2L}-1\) modulo \(2^{t_*+3}\) and using
+\(3m+1=2^{t_*+1}\) gives
+\(Q-m=2^{t_*+1}\pmod{2^{t_*+3}}\). Hence
+\(v_*\equiv2\pmod8\) and
+\(Y_*=3v_*-2\equiv4\pmod8\). Any actual input with this
+exponent residue has source depth \(d=t_*\pmod{2L}\), hence
+\(d\) is odd and, because \(r\ge2\),
+\(d\ge3\). Its first normalized coordinate \(x\)
 satisfies the source mass identity
 
-\\[
+\[
 x+2Y_*+4d=2j+3+2k.
-\\]
+\]
 
-Here \\(j\\equiv2\\pmod4\\), \\(k\\equiv6\\pmod8\\),
-and \\(d\\) is odd. Therefore \\(x\\equiv7\\pmod8\\).
-The normalized state lies in the \\((7,4)\\pmod8\\) cylinder
-used by \\(affineQuotientCondition\\) in
+Here \(j\equiv2\pmod4\), \(k\equiv6\pmod8\),
+and \(d\) is odd. Therefore \(x\equiv7\pmod8\).
+The normalized state lies in the \((7,4)\pmod8\) cylinder
+used by \(affineQuotientCondition\) in
 `im-results/agent15-c-halting/AffineQuotientExclusion.lean`.
-Its existing \\(affineQuotientExcluded\\_sound\\) theorem rules
-out \\(CReach\\) for this state. The source
+Its existing \(affineQuotientExcluded\_sound\) theorem rules
+out \(CReach\) for this state. The source
 stopping/normalization theorems are source-certified. The quotient-filter
 module's compile step completed in workflow 42367962614, which failed
 later at an unrelated missing `HighZeroEven.lean` path; its exported
@@ -318,30 +318,30 @@ drafted in `M8SharpFamily.lean` as
 `m8SharpFamily_unreachable`, importing the generic wrapper above,
 but neither new file has yet passed local preflight or source CI.
 
-The M8 correction removes \\(v_*\\) at \\(t=t_*\\). For
-\\(t<t_*\\), write \\(s=t_*-t\\ge1\\). The least positive
-residue is \\(n_t=A/2^s+1\\), whence
-\\(v_t=2Q+2^{s+1}(Q-m)/A>2Q\\). At \\(t=t_*\\), the next
-CRT solution is \\(v_*+4Q>2Q\\). For \\(t>t_*\\), the
-raw-residue quotient increases with \\(t\\); the first value, at
-\\(t=t_*+1\\), is \\( ((A+1)Q-m)/A<2Q\\). This candidate
-is not M8-excluded because \\(t_*+1\\) is even while
-\\(m+1\\equiv2\\pmod4\\). The endpoint \\(t=2L-1\\)
-has \\(v>3Q\\). Thus the exact minimum after the M8 correction
-is attained at \\(t_*+1\\), and every blank-root-reachable input
+The M8 correction removes \(v_*\) at \(t=t_*\). For
+\(t<t_*\), write \(s=t_*-t\ge1\). The least positive
+residue is \(n_t=A/2^s+1\), whence
+\(v_t=2Q+2^{s+1}(Q-m)/A>2Q\). At \(t=t_*\), the next
+CRT solution is \(v_*+4Q>2Q\). For \(t>t_*\), the
+raw-residue quotient increases with \(t\); the first value, at
+\(t=t_*+1\), is \( ((A+1)Q-m)/A<2Q\). This candidate
+is not M8-excluded because \(t_*+1\) is even while
+\(m+1\equiv2\pmod4\). The endpoint \(t=2L-1\)
+has \(v>3Q\). Thus the exact minimum after the M8 correction
+is attained at \(t_*+1\), and every blank-root-reachable input
 in this exceptional family satisfies the displayed stronger
-inequality. With \\(B=2^{2m+2}\\), the raw residual minimum is
-\\(Y_{raw}=2B/A-4\\), while the M8-filtered floor is
-\\(Y_{M8}=B+B/A-4\\). Hence the shifted floors satisfy the exact
-identity \\( (Y_{M8}+4)/(Y_{raw}+4)=(A+1)/2=(3m+2)/2\\).
+inequality. With \(B=2^{2m+2}\), the raw residual minimum is
+\(Y_{raw}=2B/A-4\), while the M8-filtered floor is
+\(Y_{M8}=B+B/A-4\). Hence the shifted floors satisfy the exact
+identity \( (Y_{M8}+4)/(Y_{raw}+4)=(A+1)/2=(3m+2)/2\).
 Thus the quotient cylinder raises the necessary residual floor by an
 exact linear-in-`m` factor along the entire infinite sharp family
 (without claiming the filtered minimum is itself reachable).
 
-Sample quotient lower bounds (before rounding \\(Y\\) to
-\\(4\\pmod{12}\\)):
+Sample quotient lower bounds (before rounding \(Y\) to
+\(4\pmod{12}\)):
 
-| \\(m\\) | case | lower bound on \\(v\\) | exact modular minimum \\(v\\) |
+| \(m\) | case | lower bound on \(v\) | exact modular minimum \(v\) |
 |---:|---|---:|---:|
 | 3 | nonexceptional | 74 | 74 |
 | 5 | exceptional, root-reachable | 1,450 | 170 (M8-excluded) |
