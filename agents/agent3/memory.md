@@ -1684,3 +1684,9 @@ Next: complete the D0E terminal fork (d0e7 direct d0e8 vs bounce E7), then forma
 - Consolidated `B2Q0FourStepPath.md`: the generic P7E1E→A4 draft and canonical A4 fan pointer are now in the main status/branch discussion rather than append-only tail sections.
 - Consolidated `Root32HighStopA4ParentFan.md`: integrated the t≡719 q=1 no-predecessor branch exclusion into the depth table and current status, removed the append-only section 7, and preserved the fact that q=0 remains open.
 - These documentation changes do not alter the mathematical acceptance boundary: only A4 t≡31 mod32 is locally Lean-accepted; R10592 composition and generic t7 reduction are uncompiled; the nine-class union is open.
+
+
+## 2026-11-21T21:50:22.024Z — correct repository-level root32 status claims
+
+- Updated the top-level `README.md` and `research/BOARD.md` to withdraw the stale statement that the nine D0E/L progressions exclude the high-stop target. They are sub-branch calculations only; the corrected P7E1E→A4 residual remains open on most of the nine classes.
+- The current acceptance boundary is explicit: A4 t≡31 mod32 is Lean-accepted; t≡1 mod16 is paper-level; the A4 high-valuation fan remains open, with t≡719 q=1 excluded on paper but q=0 open; generic P7E1E→A4 and R10592 composition drafts are uncompiled. The full nine-class union is not proven.
