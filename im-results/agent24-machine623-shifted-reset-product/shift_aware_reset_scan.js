@@ -320,6 +320,8 @@ for (let index = 0; index <= 10000; index++) {
     const current = stateData(a, d);
     const target = stateData(nextState[0], nextState[1]);
     assert.notEqual(current.g, 0n, "zero g has no sign-selected affine branch at transition " + index);
+    // This is the conditional sign(g) affine-branch rule. The scan checks it
+    // on a finite prefix; it does not prove the far premise in BranchSelection.lean.
     const branch = current.g > 0n ? "L" : "R";
     const transducer = machine[branch];
 
