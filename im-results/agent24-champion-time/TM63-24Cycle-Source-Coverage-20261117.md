@@ -88,6 +88,12 @@ The root arithmetic supplies `tm63Index1=8*K+7`, K odd, and `tm63Index1<2^L`; se
 
 The wrapper now also composes the general `OuterLCIncPostludeSource.outerLCInc_full_run` theorem, which proves the arbitrary-a,b reset prefix to an exact nested frame with the `resetPrefixCost` cost. The new root theorem `tm63_blank_reaches_after_middle34_reset_frame` is an authentic blank-root original-TM2 run to that frame. `outerLCInc_target_binary_prefix` proves the canonical binary-counter block. The remaining gap is pointwise identification of the nested frame with a canonical `s1Config L 0 1 (a+b+2) (2^b-1) 0 h'`, followed by the terminal SectionBits join. The finite m=2 base split in [ResetBaseM2Split.lean](../agent48-counted-inc0/ResetBaseM2Split.lean) is an independent 27+44 check. The root wrapper is uncompiled.
 
+## 4b. Finite 24-class integration probe (21 November 2026)
+
+The [BigInt dispatcher probe](TM63SourceDispatcherProbe.md) executes the exact TM2 transition table step by step across 48 small full-countdown cases: n=24 or48, all three initial markers, a=1 or2, b=0 or1, and L=8 or16. It checks the complete nonblank tape support, state, and head after every proposed increment, and checks the terminal configuration and accumulated cost against `sectionResult`. The runs cover all 24 pairs (n mod8, marker mod3) and simulate 1,086,624 primitive transitions.
+
+An initial Number-based harness showed an apparent mismatch after the evolving exponent exceeded 52; this was a floating-point precision defect in the harness, not a TM2 counterexample. The final probe uses BigInt for every binary decode and all 48 cases pass. This is finite integration evidence only; it does not replace the exact Lean import-closure compile or transitive axiom audit.
+
 ## 5. Exact next steps and validation boundary
 
 1. Run local Lean 4.36.0-rc2 preflight on the exact original import closure of `TM63SourceIncrementDispatcherComplete.lean` using `tools/lean_compile_closure.py`. This closure includes the M0 and M2 residue-zero counted sources and all 22 other one-step families; resolve missing or ambiguous imports explicitly.
