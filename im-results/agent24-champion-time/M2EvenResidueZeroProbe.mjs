@@ -129,16 +129,21 @@ function checkCase(L, k, a, b) {
 
 const cases = [];
 for (let k = 1; k <= 16; k++) {
-  const L = Math.max(4, Math.ceil(Math.log2(8 * k + 1)));
-  for (const a of [1, 2, 3]) {
-    for (const b of [0, 1, 2]) {
-      cases.push(checkCase(L, k, a, b));
+  const minL = Math.max(4, Math.ceil(Math.log2(8 * k + 1)));
+  // The second width adds eight complete binary counter blocks, checking
+  // that the source tail is genuinely arbitrary rather than near-empty.
+  for (const L of [minL, minL + 8]) {
+    for (const a of [1, 2, 3]) {
+      for (const b of [0, 1, 2]) {
+        cases.push(checkCase(L, k, a, b));
+      }
     }
   }
 }
 
 console.log(JSON.stringify({
   tested: cases.length,
+  widths: "minimal admissible L and L+8",
   first: cases[0],
   last: cases[cases.length - 1],
   result: "all exact prefix and counted-drain configurations matched",
