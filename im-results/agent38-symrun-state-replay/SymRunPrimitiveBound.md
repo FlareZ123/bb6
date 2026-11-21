@@ -2,7 +2,7 @@
 
 **Status: conditional proof sketch; not yet a theorem.** This note turns the checkpointed state replay and source-derived rule costs into a deliberately loose primitive-time bound. It is intended to be challenged and then formalized with a cost-indexed reachability relation. Do not treat either machine as a certified DecidedBelow leaf yet.
 
-Pinned source: google-deepmind/cryptids commit 3647718b5df22e1a61462dec0376bd204526285a, using BusyBeaver/Calculi/HaltShared.lean and the F424/F412 machine modules. At this revision, searches for initSymCyc3 and symChk4096 return exactly these two BB6/Halt machine modules, so both modules carrying this SymRun checkpoint signature are covered.
+Pinned source: google-deepmind/cryptids commit 3647718b5df22e1a61462dec0376bd204526285a, using BusyBeaver/Calculi/HaltShared.lean and the F424/F412 machine modules. At this revision, searches for initSymCyc3 and symChk4096 return exactly these two BB6/Halt machine modules, so both modules carrying this SymRun checkpoint signature are covered. Their exact machine codes are F424/F412 IsHalt rows in the 191-overlap TSV, currently marked not established by the ledger and not curated; a formalized cost bound would add two below-champion classifications.
 
 ## Exact primitive costs exposed by the source
 
