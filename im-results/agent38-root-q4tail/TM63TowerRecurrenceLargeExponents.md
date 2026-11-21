@@ -25,10 +25,9 @@ d_2=65473,\qquad D_k=2^{d_k},\qquad
 \]
 with upper exponents
 \[
-\gamma_3=2^{65520}-2^{47},\qquad
-\gamma_j=2^{T_{j+1}-T_j}-2^{T_{j+1}-T_j-d_{j-1}}\quad(j\ge4).
+\gamma_j=2^{T_{j+1}-T_j}-2^{T_{j+1}-T_j-d_{j-1}}\quad(j\ge3).
 \]
-All these exponents are positive integers.
+In particular, \(\gamma_3=2^{65520}-2^{47}\). All these exponents are positive integers.
 
 For every \(j\ge3\),
 \[
@@ -123,17 +122,8 @@ V_3^{T_5^{\gamma_3}}
 <2^{T_6}=T_7.
 \]
 
-### Upper inequality: all \(j\ge4\)
+### Upper inequality
 
-Set
-\[
-d_2=65473,\qquad D_k=2^{d_k},
-\]
-and recursively define
-\[
-d_{k+1}=T_{k+3}-2^{T_{k+2}-d_k}-1
-\qquad(k\ge2).
-\]
 We first establish
 \[
 1\le d_k\le T_{k+2}-T_{k+1}\qquad(k\ge2).
@@ -188,7 +178,7 @@ V_{k+1}=2^{V_k}-1
 \]
 This proves the auxiliary estimate.
 
-Now fix \(j\ge4\), and put
+Now fix any \(j\ge3\), and put
 \[
 Y=T_{j+1}=2^{T_j},\qquad X=T_{j+2}=2^Y.
 \]
@@ -196,12 +186,12 @@ Since \(j-1\ge2\), the auxiliary estimate gives
 \[
 V_{j-1}<T_{j+3}^{1/D_{j-1}}=2^{X/D_{j-1}}.
 \]
-The invariant on \(d_{j-1}\) ensures that the following exponent is a nonnegative integer:
+The invariant on \(d_{j-1}\) ensures that the exponent in
 \[
 \gamma_j
-=2^{Y-T_j}-2^{Y-T_j-d_{j-1}}.
+=2^{Y-T_j}-2^{Y-T_j-d_{j-1}}
 \]
-It satisfies
+is a nonnegative integer. It satisfies
 \[
 Y\gamma_j
 =2^Y-2^{Y-d_{j-1}}
@@ -221,7 +211,7 @@ V_j^{X^{\gamma_j}}
 =T_{j+4}.
 \end{aligned}
 \]
-This proves the upper inequality for every \(j\ge4\), completing the theorem.
+This proves the upper inequality for every \(j\ge3\).
 
 ## Conditional score consequence
 
