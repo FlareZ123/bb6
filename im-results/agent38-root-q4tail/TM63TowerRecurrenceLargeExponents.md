@@ -144,37 +144,23 @@ This proves the upper inequality for every \(j\ge3\). The exponent is maximal fo
 Use the source-dossier identities
 \[
 b_N=V_{q-4},\qquad
-\ell=\log_2(b_N+1)=V_{q-5}.
+\ell=\log_2(b_N+1)=V_{q-5},
+\qquad b_N+1=2^\ell.
 \]
 For \(q\ge8\), put
 \[
 L_b=T_{q-1}^{\,T_{q-2}^{\,\alpha_{q-4}}},
 \qquad
 L_\ell=T_{q-2}^{\,T_{q-3}^{\,\alpha_{q-5}}},
-\]
-\[
-E=T_{q-2}^{\,\gamma_{q-4}},
 \qquad
-H=2^{\,2^{V_{q-7}}},
-\qquad
-U=2^H.
+B=\max\{L_b+2,\ 2^{L_\ell+1}\}.
 \]
-The lower recurrence inequalities at \(j=q-4\) and \(j=q-5\) give
+The lower recurrence inequalities at \(j=q-4\) and \(j=q-5\), together with integrality, give
 \[
-L_b<b_N,\qquad L_\ell<\ell.
+b_N+1\ge L_b+2,\qquad
+\ell\ge L_\ell+1.
 \]
-For the upper side, the \(j=q-4\) exponent identity gives
-\[
-E=T_{q-2}^{\gamma_{q-4}}
-=2^{T_{q-2}-2^{V_{q-7}}},
-\qquad
-\frac{T_{q-1}}{E}
-=2^{2^{V_{q-7}}}=H.
-\]
-Thus \(U^E=2^{HE}=2^{T_{q-1}}=T_q\). The upper recurrence inequality \(b_N^E<T_q\) therefore gives
-\[
-b_N<U,\qquad b_N+1\le U,\qquad \ell\le H.
-\]
+Using \(b_N+1=2^\ell\) also gives \(b_N+1\ge2^{L_\ell+1}\), so \(b_N+1\ge B\).
 
 The exact source-conditional score expansion in
 [TM63ScoreAsymptotic.md](../agent42-q4-s0-drain/TM63ScoreAsymptotic.md) is
@@ -186,17 +172,18 @@ where
 \[
 0\le\Delta<10(1+\log_2\ell)\ell^2.
 \]
-Substituting the moving lower and upper bounds yields the sharper conditional interval
+Substitution gives the sharper conditional score interval
 \[
 \boxed{
-6(L_b+2)^2+42(L_b+2)+3(L_\ell+1)
+6B^2+42B+3(L_\ell+1)
 \le
 S_{\rm TM1}
 <
-6U^2+42U+3H+10(1+\log_2 H)H^2.
+6\cdot2^{2\ell}+42\cdot2^\ell+3\ell
++10(1+\log_2\ell)\ell^2.
 }
 \]
-This retains the exact final counted-increment linear term and the explicit polylogarithmic remainder, rather than replacing the score by the coarser \(6b_N^2<S_{\rm TM1}<9b_N^2\). The entire interval remains conditional on the authentic root/dispatcher source composition and the exact score decomposition; neither has passed the full local compile/axiom gate.
+The upper endpoint uses the exact identity \(b_N+1=2^\ell\), rather than a much looser tower root. The entire interval remains conditional on the authentic root/dispatcher source composition and the exact score decomposition; neither has passed the full local compile/axiom gate.
 
 ## Stronger explicit lower tower from the outer index
 
