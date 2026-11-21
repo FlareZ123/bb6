@@ -263,6 +263,110 @@ theorem step_BB_run1_exact (L1 R : List MItem) :
 
 
 /-- The F424 C-run1 rule has an exact three-step realization. -/
+/-- The BB zero-run branch is one primitive step. -/
+theorem step_BB_zero_exact (L1 R : List MItem) :
+    ReachesIn target_tm 1 (cfgBB target_tm (.zero :: L1) R)
+      (cfgCB target_tm L1 (bumpM R)) := by
+  unfold cfgBB cfgCB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM]
+  executeWithin 1
+
+/-- The BB run-two branch costs five primitive steps. -/
+theorem step_BB_run2_exact (L1 R : List MItem) :
+    ReachesIn target_tm 5 (cfgBB target_tm (.run 2 :: L1) R)
+      (cfgDL target_tm L1 (.run 0 :: .run 0 :: bumpM R)) := by
+  unfold cfgBB cfgDL
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [encM_cons_run]
+  rw [← encM_bumpM]
+  executeWithin 5
+
+/-- The BB run-three branch costs nine primitive steps. -/
+theorem step_BB_run3_exact (L1 R : List MItem) :
+    ReachesIn target_tm 9 (cfgBB target_tm (.run 3 :: L1) R)
+      (cfgBB target_tm (.run 0 :: .zero :: .zero :: L1) (bumpM R)) := by
+  unfold cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [encM_cons_run, encM_cons_zero]
+  rw [← encM_bumpM]
+  executeWithin 9
+
+/-- Every BB run of length at least four has a uniform nine-step transition. -/
+theorem step_BB_run_ge4_exact (d : Nat) (L1 R : List MItem) :
+    ReachesIn target_tm 9 (cfgBB target_tm (.run (d + 4) :: L1) R)
+      (cfgBB target_tm (.run 0 :: .zero :: .run d :: L1) (bumpM R)) := by
+  unfold cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [encM_cons_run, encM_cons_zero]
+  rw [← encM_bumpM]
+  executeWithin 9
+
+/-- The DL run-zero branch costs one primitive step. -/
+theorem step_DL_run0_exact (L1 R : List MItem) :
+    ReachesIn target_tm 1 (cfgDL target_tm (.run 0 :: L1) R)
+      (cfgBB target_tm L1 (bumpM R)) := by
+  unfold cfgDL cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM]
+  executeWithin 1
+
+/-- The DL run-one branch costs three primitive steps. -/
+theorem step_DL_run1_exact (L1 R : List MItem) :
+    ReachesIn target_tm 3 (cfgDL target_tm (.run 1 :: L1) R)
+      (cfgDL target_tm L1 (.run 0 :: bumpM R)) := by
+  unfold cfgDL
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [encM_cons_run]
+  rw [← encM_bumpM]
+  executeWithin 3
+
+/-- The CB empty-right branch costs two primitive steps. -/
+theorem step_CB_nil_exact (L : List MItem) :
+    ReachesIn target_tm 2 (cfgCB target_tm L [])
+      (cfgDL target_tm (bumpM L) [.run 0]) := by
+  unfold cfgCB cfgDL
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM]
+  executeWithin 2
+
+/-- The CB leading-zero branch costs two primitive steps. -/
+theorem step_CB_zero_exact (L R1 : List MItem) :
+    ReachesIn target_tm 2 (cfgCB target_tm L (.zero :: R1))
+      (cfgDL target_tm (bumpM L) (bumpM R1)) := by
+  unfold cfgCB cfgDL
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM L, ← encM_bumpM R1]
+  executeWithin 2
+
+/-- The CB run-zero / run-zero branch costs six primitive steps. -/
+theorem step_CB_run0_run0_exact (L R2 : List MItem) :
+    ReachesIn target_tm 6 (cfgCB target_tm L (.run 0 :: .run 0 :: R2))
+      (cfgBB target_tm (.run 0 :: .zero :: bumpM L) R2) := by
+  unfold cfgCB cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [encM_cons_run, encM_cons_zero]
+  rw [← encM_bumpM]
+  executeWithin 6
+
+/-- The CB run-two branch costs five primitive steps. -/
+theorem step_CB_run2_exact (L R1 : List MItem) :
+    ReachesIn target_tm 5 (cfgCB target_tm L (.run 2 :: R1))
+      (cfgBB target_tm (bumpM L) (.run 0 :: .zero :: R1)) := by
+  unfold cfgCB cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM]
+  executeWithin 5
+
+/-- Every CB run of length at least three costs five primitive steps. -/
+theorem step_CB_run_ge3_exact (d : Nat) (L R1 : List MItem) :
+    ReachesIn target_tm 5 (cfgCB target_tm L (.run (d + 3) :: R1))
+      (cfgBB target_tm (bumpM L) (.run 0 :: .run d :: R1)) := by
+  unfold cfgCB cfgBB
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  rw [← encM_bumpM]
+  executeWithin 5
+
 theorem step_CB_run1_exact (L R1 : List MItem) :
     ReachesIn target_tm 3 (cfgCB target_tm L (.run 1 :: R1))
       (cfgCB target_tm (.run 0 :: bumpM L) R1) := by
@@ -504,6 +608,17 @@ theorem sweep_CB_B12R_exact (m : Nat) (L R : List MItem) :
     have h12 := reachesIn_trans (reachesIn_trans h1 h2) h3
     convert reachesIn_trans h12 h3' using 1 <;> omega
 
+#print axioms step_BB_zero_exact
+#print axioms step_BB_run2_exact
+#print axioms step_BB_run3_exact
+#print axioms step_BB_run_ge4_exact
+#print axioms step_DL_run0_exact
+#print axioms step_DL_run1_exact
+#print axioms step_CB_nil_exact
+#print axioms step_CB_zero_exact
+#print axioms step_CB_run0_run0_exact
+#print axioms step_CB_run2_exact
+#print axioms step_CB_run_ge3_exact
 #print axioms step_CB_run1_exact
 #print axioms step_BB_r0_r1_exact
 #print axioms step_BB_r1_r0_r1_comm_exact
