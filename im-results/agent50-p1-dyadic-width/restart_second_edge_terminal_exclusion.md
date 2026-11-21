@@ -115,6 +115,20 @@ Every entry is impossible:
 
 Thus the second low-depth edge cannot terminate at the wall in any of the three surviving first-shallow branches.
 
+## Composition with the source-authentic restart path
+
+The source-level composition is as follows.
+
+1. `source_wall_restart_suffix_shape` in `RestartWallSource.lean`, under (n\ge14), a root `OddCone` history, the exact wall equation, and `HasDeep`, supplies a genuine `RestartPath` after the last depth-(ge3) edge. It also gives the suffix shape: there is a shallow edge, and every inverse edge after the last shallow edge has depth exactly two.
+2. `restartPath_first_shallow_state` in `RestartWallLowTrace.lean` extracts the first shallow edge from that same source path. Its preceding source `OddCone` prefix has only depth-two edges, and it retains the actual `inverseAt` parent/child and restart-walk split. This is the source-authentic input to the three-branch reduction.
+3. For (n\ge83), the `SIX-BIT-SLACK-MOD7.md` / `FirstShallowCoordinateGate.lean` reduction leaves A, B, C above. Its existing `is20_terminal_impossible_pow`, `is48_even_terminal_impossible_pow`, and `is48_odd_terminal_impossible_pow` lemmas exclude a wall at the first-shallow child. The calculation in this note excludes a wall at the child of the immediately following low edge.
+
+Thus, conditional on the cited source theorems and the three-branch reduction, the first-shallow edge cannot be the final edge or the penultimate edge of the restart suffix: a third low-depth transition after the first shallow edge must exist. The second and third transitions may still have depth two. The last-shallow suffix theorem then says that once the last shallow edge is reached, the remaining suffix is all depth two.
+
+**Answer to the composition question:** this does not establish a strictly stronger *count* of shallow edges. It exposes the first surviving suffix after the second transition: a third low-depth edge, followed by the still-unresolved possibility of a longer depth-two tail. No unrestricted six-shallow conclusion follows.
+
+This composition is a paper-level dependency argument only. The exact Lean dependency closure and exported theorem axioms were not compiled/audited in this invocation because the local shell/runtime returned a CAAS ClientError. The result remains intermediate until that source-level composition is formalized and checked.
+
 ## Research consequence and limits
 
 This closes the next terminal case in the high-depth restart analysis: a genuine restart suffix cannot reach the wall at the first-shallow child or at the child of the immediately following low-depth edge.
