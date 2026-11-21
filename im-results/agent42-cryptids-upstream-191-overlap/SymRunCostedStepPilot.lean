@@ -1197,31 +1197,32 @@ theorem stepPure_iter_within (n : Nat) (s : SymMode × List SymTok × List SymTo
     have hcomp' := reachesWithin_mono hB hcomp
     simpa [M, iterStep, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using hcomp'
 
-/-- If a rule-A/B/C macro performs at most 64,512 pure steps and starts
-with field maximum at most 512 times the original scale, its entire
-primitive cost is below 2^38 times the square of that scale. -/
+/-- If a rule-A/B/C macro starts with field maximum at most
+512 (M0+1) and performs at most 64,512 (M0+1) pure steps, its entire
+primitive cost is below 2^38 (M0+1)^2. -/
 theorem stepPure_iter_within_2pow38
-    (n : Nat) (s : SymMode × List SymTok × List SymTok)
-    (hn : n ≤ 64512 * (pilotStateFieldMax s + 1)) :
-    ReachesWithin (2^38 * (pilotStateFieldMax s + 1)^2)
+    (n M0 : Nat) (s : SymMode × List SymTok × List SymTok)
+    (hM : pilotStateFieldMax s ≤ 512 * (M0 + 1))
+    (hn : n ≤ 64512 * (M0 + 1)) :
+    ReachesWithin (2^38 * (M0 + 1)^2)
       ((evalSym target_tm) s)
       ((evalSym target_tm) (iterStep stepPure n s)) := by
-  let M := pilotStateFieldMax s
-  have hcount : n ≤ 64512 * (M + 1) := by simpa [M] using hn
-  have hfield : M + n + 1 ≤ 65025 * (M + 1) := by omega
+  have hfield : pilotStateFieldMax s + n + 1 ≤ 65025 * (M0 + 1) := by omega
   have hiter := stepPure_iter_within n s
-  have hprod : n * (M + n + 1) ≤
-      (64512 * (M + 1)) * (65025 * (M + 1)) :=
-    Nat.mul_le_mul hcount hfield
+  have hprod : n * (pilotStateFieldMax s + n + 1) ≤
+      (64512 * (M0 + 1)) * (65025 * (M0 + 1)) :=
+    Nat.mul_le_mul hn hfield
   have hconst : 50 * 64512 * 65025 ≤ 2^38 := by norm_num
-  have hcost : 50 * n * (M + n + 1) ≤ 2^38 * (M + 1)^2 := by
+  have hcost : 50 * n * (pilotStateFieldMax s + n + 1) ≤
+      2^38 * (M0 + 1)^2 := by
     calc
-      50 * n * (M + n + 1) = 50 * (n * (M + n + 1)) := by ring
-      _ ≤ 50 * ((64512 * (M + 1)) * (65025 * (M + 1))) :=
+      50 * n * (pilotStateFieldMax s + n + 1) =
+          50 * (n * (pilotStateFieldMax s + n + 1)) := by ring
+      _ ≤ 50 * ((64512 * (M0 + 1)) * (65025 * (M0 + 1))) :=
         Nat.mul_le_mul_left 50 hprod
-      _ = (50 * 64512 * 65025) * (M + 1)^2 := by ring
-      _ ≤ 2^38 * (M + 1)^2 := Nat.mul_le_mul_right ((M + 1)^2) hconst
-  exact reachesWithin_mono (by simpa [M] using hcost) (by simpa [M] using hiter)
+      _ = (50 * 64512 * 65025) * (M0 + 1)^2 := by ring
+      _ ≤ 2^38 * (M0 + 1)^2 := Nat.mul_le_mul_right ((M0 + 1)^2) hconst
+  exact reachesWithin_mono hcost hiter
 
 #print axioms pilotStateFieldMax_eq_source
 #print axioms stepPure_iter_within
