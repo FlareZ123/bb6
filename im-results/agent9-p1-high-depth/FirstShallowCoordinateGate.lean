@@ -11,6 +11,23 @@ invariant, the mod-7 source-coordinate relation, and the inverseAt power
 and mass equations. The child-mod-four guard is represented by k % 2 = 0.
 -/
 
+theorem two_mul_le_pow_two : ∀ n : Nat, 2 ≤ n → 2*n ≤ 2^n
+  | 0, h => by omega
+  | 1, h => by omega
+  | n+2, h => by
+      by_cases h0 : n=0
+      · subst n; decide
+      by_cases h1 : n=1
+      · subst n; decide
+      have hn2 : 2≤n := by omega
+      have ih := two_mul_le_pow_two n hn2
+      have hpow : 2 ≤ 2^n := Nat.le_pow (a:=2) (b:=n) (by omega)
+      have hmul : 2^(n+2)=2^n*4 := by simp [Nat.pow_succ, Nat.mul_assoc]
+      omega
+
+theorem target_power_bound (n : Nat) (hn : 83≤n) : 2*n≤2^n := by
+  exact two_mul_le_pow_two n (by omega)
+
 /-! ### First-shallow parent coordinates -/
 
 theorem is20_parent_coordinates
@@ -147,6 +164,36 @@ theorem is48_odd_terminal_impossible
     (hD : 4≤D) : False := by
   omega
 
+theorem is20_terminal_impossible_pow
+    (n M D u : Nat)
+    (hn : 83≤n)
+    (hOffset : M+n+3=14*u)
+    (hWall : 22*u+4=3*(2^n))
+    (hDefect : 49*D+14*M=18*(2^n)+6)
+    (hD : 4≤D) : False := by
+  have hPbig : 2*n≤2^n := target_power_bound n hn
+  exact is20_terminal_impossible (2^n) n M D u hPbig hOffset hWall hDefect hD
+
+theorem is48_even_terminal_impossible_pow
+    (n M D u : Nat)
+    (hn : 83≤n)
+    (hOffset : M+n=14*u+3)
+    (hWall : 22*u+12=3*(2^n))
+    (hDefect : 49*D+14*M=2*(2^n)+6)
+    (hD : 4≤D) : False := by
+  have hPbig : 2*n≤2^n := target_power_bound n hn
+  exact is48_even_terminal_impossible (2^n) n M D u hPbig hOffset hWall hDefect hD
+
+theorem is48_odd_terminal_impossible_pow
+    (n M D u : Nat)
+    (hn : 83≤n)
+    (hOffset : M+n+4=14*u)
+    (hWall : 18*u+2=2^n)
+    (hDefect : 49*D+14*M=2*(2^n)+6)
+    (hD : 4≤D) : False := by
+  have hPbig : 2*n≤2^n := target_power_bound n hn
+  exact is48_odd_terminal_impossible (2^n) n M D u hPbig hOffset hWall hDefect hD
+
 /-! ### Full next-edge residue gates
 
 For a next edge of depth t, 2^t (c+3) = X is the inverse power
@@ -245,6 +292,7 @@ theorem is48_odd_depth2
     (hmass : 2*k+c+6=S)
     (hk : k%2=0) : u%8=3 := by omega
 
+#print axioms target_power_bound
 #print axioms is20_parent_coordinates
 #print axioms is48_even_parent_coordinates
 #print axioms is48_odd_parent_coordinates
@@ -258,6 +306,9 @@ theorem is48_odd_depth2
 #print axioms is20_terminal_impossible
 #print axioms is48_even_terminal_impossible
 #print axioms is48_odd_terminal_impossible
+#print axioms is20_terminal_impossible_pow
+#print axioms is48_even_terminal_impossible_pow
+#print axioms is48_odd_terminal_impossible_pow
 #print axioms is20_depth0
 #print axioms is20_depth1
 #print axioms is20_depth2
