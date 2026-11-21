@@ -86,3 +86,5 @@ In particular, the corrected length-three raw witnesses are L start `(prevX,prev
 ## Source-derived specialization
 
 The arithmetic start-set restriction and its new three-symbol reset are documented in [SourceDerivedResetPatternDFA.md](SourceDerivedResetPatternDFA.md), with data in [SourceDerivedResetProduct.json](SourceDerivedResetProduct.json). Keep the full-rectangle product and all counterexamples above as the universal baseline; use the source-derived specialization only after the `B<K` source-carry hypotheses are discharged.
+
+The source-derived carry inequalities and three-symbol reset lemma are formalized in `SourceDerivedReset.lean`; this does not discharge the drain-statistics correction-bound hypotheses or the whole-window induction.

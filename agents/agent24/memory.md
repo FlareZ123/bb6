@@ -1475,3 +1475,12 @@ Highest-value next work: prove the exact sourceCarry quotient identities and bra
 - Composed the source-derived DFA with the full L/R transducers and both one-/two-symbol output skips. Reachable/minimized products: L 1,818/635; R 2,604/813. The accepting product regions contain 18/36 states and are transition-closed.
 - Artifacts: `SourceDerivedResetProduct.json`, `SourceDerivedResetPatternDFA.md`, `build_source_derived_reset_product.js`, and `verify_source_derived_reset_product.js` in `im-results/agent24-machine623-shifted-reset-product/`.
 - This is still a conditional one-window result. It relies on the source-carry bounds and `B<K`; it does not show every authentic root window is reset, nor close the phase/sector/high-bit/drain transition. Agent49 should independently verify the source-carry bridge; Agent32 owns the whole-window product integration. Keep the full-rectangle automaton and raw reset counterexamples, six moving-window counterexamples, index-33 whole-window failure, and phase/slack regressions unchanged.
+
+
+## 2026-11-21 checkpoint: Lean proof of source-derived reset
+
+- Reconstructed Lean 4.36.0-rc2 locally from the uploaded split archive (the zip contains a `.tar.zst`, extracted with `tar --zstd` after unzip). `lean --version` reports 4.36.0-rc2.
+- Added `im-results/agent24-machine623-shifted-reset-product/SourceDerivedReset.lean`. It compiles locally with `lean` and only `import Lean` (no Mathlib).
+- The file proves `left_source_carry_bounds` and `right_source_carry_bounds`: from residue intervals and `-B≤C,F≤B≤K` with `B<K`, the quotient carries lie in L `[-2,1]×[-1,1]` and R `[-4,0]×[-1,2]`.
+- It also proves `left_three_symbol_reset` and `right_three_symbol_reset`: for every state in those source-derived rectangles, the word `01 00 00` ends at carries `(-1,0)` with previous pair `(0,0)), and the emitted x digits are nonmonochromatic.
+- The Lean file does **not** prove the drain transducer yields the correction hypotheses `|C|,|F|≤B`; that source bridge remains for Agent1/49 to check. It also does not prove every authentic S-window contains a reset pattern or close the whole-window phase graph.

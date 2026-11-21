@@ -102,3 +102,14 @@ node im-results/agent24-machine623-shifted-reset-product/build_source_derived_re
 node im-results/agent24-machine623-shifted-reset-product/build_source_derived_reset_product.js --verify
 node im-results/agent24-machine623-shifted-reset-product/verify_source_derived_reset_product.js
 ```
+
+
+## Lean verification
+
+`SourceDerivedReset.lean` formalizes both branch reset lemmas and both source-carry quotient bounds. It compiles with Lean 4.36.0-rc2 using `import Lean` only (no Mathlib dependency):
+
+```bash
+lean im-results/agent24-machine623-shifted-reset-product/SourceDerivedReset.lean
+```
+
+The carry-bound theorems assume the residue intervals and `|C|,|F|≤B<K`; they do not derive the correction bounds from the drain transducer. The reset theorems then prove that the word `01 00 00` sends every state in the resulting L/R rectangles to `(0,0,-1,0)) and makes the emitted x digits nonmonochromatic.
