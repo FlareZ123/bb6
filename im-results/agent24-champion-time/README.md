@@ -71,8 +71,16 @@ exactly and the remaining nonnegative tail satisfies
 are the most useful low-depth specialization. This remains conditional
 on the exact source-cost identity and uncompiled authentic-root closure.
 
-For a sharper four-level specialization, see
-[TM63TowerTailExpansion.md](../agent44-tm63-middle/TM63TowerTailExpansion.md): it retains the last four dispatcher increments explicitly and proves the remaining root/polynomial/low-index tail is less than \\(45b_{N-4}^2\\). This improves the generic \\(100u_4^2\\) bound while keeping the same conditional evidence boundary.
+For the strongest general tail bound, see
+[TM63TowerTailExpansion.md](../agent44-tm63-middle/TM63TowerTailExpansion.md).
+Its lemma gives \\(E_p<45u_p^2\\) for every \\(p\\ge2\\): the required
+\\(N\\le b_{p-1}\\) follows from \\(N<R<b_1\\) and monotonicity of the
+\\(b_j\\) sequence. Thus the four-scale expansion is the \\(p=4\\)
+instance, and the 45 coefficient improves the generic 100 coefficient at
+every depth \\(p\\ge3\\). The specialized \\(p=2\\) bound
+\\(\\Delta_2<82(\\log_2\\ell)^2\\) remains sharper at depth two.
+All of these are paper-level consequences of the conditional exact score
+identity, not a compiled authentic-root theorem.
 
 **This interval is still conditional on the authentic blank-root/source
 composition.** The full dependency closure has not compiled and passed a
