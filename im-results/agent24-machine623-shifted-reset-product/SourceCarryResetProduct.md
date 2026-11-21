@@ -54,6 +54,7 @@ Run from the repository root:
 ```bash
 node im-results/agent24-machine623-shifted-reset-product/build_source_carry_reset_product.js
 node im-results/agent24-machine623-shifted-reset-product/build_source_carry_reset_product.js --verify
+node im-results/agent24-machine623-shifted-reset-product/verify_source_carry_reset_product.js
 ```
 
 The input is `im-results/agent49-parity623/ResetPostStateDFA.json`; the output is `SourceCarryResetProduct.json`.
