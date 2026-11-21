@@ -100,7 +100,7 @@ theorem no_special_affine (D S a N : Nat)
         Nat.mod_eq_zero_of_dvd hmuldiv
       have hsum :
           (3*D*2^a + (D*(a+2)+S)) % 2^a = 0 := by
-        rw [heq]
+        rw [← Nat.add_assoc, heq]
         exact hpowmod
       have hLmod : (D*(a+2)+S) % 2^a = 0 := by
         rw [Nat.add_mod, hmulmod] at hsum
