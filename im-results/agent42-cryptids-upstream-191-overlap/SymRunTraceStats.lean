@@ -1348,4 +1348,245 @@ theorem sweepCB_counter_sum_le_94M376 (L R : List SymTok)
 #print axioms sweepCB_counter_sum_le_94M376
 
 
+
+/-!
+## BB sweep repeat-counter accounting
+
+The BB sweep is the left/right dual accounting argument. Its recursive
+branches consume one left token; bumping the right stack does not increase
+counter sum; eatB1/eatB2/eatB12R add at most four; and peelTok does not
+increase counter sum. Thus the BB sweep adds at most four times the left
+token count.
+-/
+
+theorem eatB2_counter_sum_le (k : Nat) (xs : List SymTok) :
+    listCounterSum (eatB2 k xs) ≤ k + listCounterSum xs + 4 := by
+  simpa [eatB2] using
+    (eatFuel_counter_sum_le [.item (.run 0), .item (.run 1), .item (.run 1)] .rep2 getRep2
+      (by simp [listCounterSum, tokCounterSum]) (by intro n; simp [tokCounterSum])
+      getRep2_counter 4 k xs)
+
+theorem eatB12R_counter_sum_le (k : Nat) (xs : List SymTok) :
+    listCounterSum (eatB12R k xs) ≤ k + listCounterSum xs + 4 := by
+  simpa [eatB12R] using
+    (eatFuel_counter_sum_le [.item (.run 0), .item (.run 1), .item (.run 0), .item (.run 1), .item (.run 1)] .rep12 getRep12
+      (by simp [listCounterSum, tokCounterSum]) (by intro n; simp [tokCounterSum])
+      getRep12_counter 4 k xs)
+
+theorem peelTok_counter_sum_le (t : SymTok) (xs : List SymTok) :
+    listCounterSum (peelTok t xs) ≤ tokCounterSum t + listCounterSum xs := by
+  cases t with
+  | item x => simp [peelTok, tokCounterSum]
+  | repB1 k =>
+    cases k with
+    | zero => simp [peelTok, tokCounterSum]
+    | succ k =>
+      cases k with
+      | zero => simp [peelTok, tokCounterSum]
+      | succ k => simp [peelTok, tokCounterSum, strictNat_eq] <;> omega
+  | rep2 p =>
+    cases p with
+    | zero => simp [peelTok, tokCounterSum]
+    | succ p =>
+      cases p with
+      | zero => simp [peelTok, tokCounterSum]
+      | succ p => simp [peelTok, tokCounterSum, strictNat_eq] <;> omega
+  | rep12 m =>
+    cases m with
+    | zero => simp [peelTok, tokCounterSum]
+    | succ m =>
+      cases m with
+      | zero => simp [peelTok, tokCounterSum]
+      | succ m => simp [peelTok, tokCounterSum, strictNat_eq] <;> omega
+
+def symStateCounterSum (s : SymMode × List SymTok × List SymTok) : Nat :=
+  listCounterSum s.2.1 + listCounterSum s.2.2
+
+theorem stepElemBB_counter_sum_le (L R : List SymTok) :
+    symStateCounterSum (stepElemBB L R) ≤ listCounterSum L + listCounterSum R := by
+  have hR := bumpSymR_counter_sum_le R
+  cases L with
+  | nil =>
+    simp [stepElemBB, strictList_eq, symStateCounterSum, listCounterSum]
+    exact hR
+  | cons t L1 =>
+    cases t with
+    | item x =>
+      cases x with
+      | zero =>
+        simp [stepElemBB, strictList_eq, symStateCounterSum, listCounterSum]
+        exact hR
+      | run d =>
+        cases d with
+        | zero => simp [stepElemBB, symStateCounterSum, listCounterSum, tokCounterSum]
+        | succ d =>
+          cases d with
+          | zero =>
+            simp [stepElemBB, strictList_eq, symStateCounterSum, listCounterSum, tokCounterSum]
+            exact hR
+          | succ d =>
+            cases d with
+            | zero =>
+              simp [stepElemBB, strictList_eq, symStateCounterSum, listCounterSum, tokCounterSum]
+              exact hR
+            | succ d =>
+              simp [stepElemBB, strictList_eq, strictNat_eq, symStateCounterSum, listCounterSum, tokCounterSum]
+              exact hR
+    | repB1 k => simp [stepElemBB, symStateCounterSum, listCounterSum, tokCounterSum]
+    | rep2 p => simp [stepElemBB, symStateCounterSum, listCounterSum, tokCounterSum]
+    | rep12 m => simp [stepElemBB, symStateCounterSum, listCounterSum, tokCounterSum]
+
+theorem sweepBB_counter_sum_bound (L R : List SymTok) :
+    symStateCounterSum (sweepBB L R) ≤
+      listCounterSum L + listCounterSum R + 4 * L.length := by
+  generalize hn : L.length = n
+  induction n using Nat.strongRecOn generalizing L R with
+  | ind n ih =>
+    have hlen : L.length = n := hn
+    cases L with
+    | nil =>
+      have h := stepElemBB_counter_sum_le [] R
+      calc
+        symStateCounterSum (sweepBB [] R) ≤ listCounterSum [] + listCounterSum R := by
+          simpa [sweepBB, symStateCounterSum] using h
+        _ ≤ listCounterSum [] + listCounterSum R + 4 * n := by omega
+    | cons t L1 =>
+      simp at hlen hn
+      have hrec (R' : List SymTok) :
+          symStateCounterSum (sweepBB L1 R') ≤
+            listCounterSum L1 + listCounterSum R' + 4 * L1.length :=
+        ih L1.length (by omega) L1 R' rfl
+      cases t with
+      | item x =>
+        cases x with
+        | zero =>
+          have h := stepElemBB_counter_sum_le (.item .zero :: L1) R
+          calc
+            symStateCounterSum (sweepBB (.item .zero :: L1) R) ≤
+                listCounterSum (.item .zero :: L1) + listCounterSum R := by simpa [sweepBB] using h
+            _ ≤ listCounterSum (.item .zero :: L1) + listCounterSum R + 4 * n := by omega
+        | run d =>
+          cases d with
+          | zero =>
+            calc
+              symStateCounterSum (sweepBB (.item (.run 0) :: L1) R) =
+                  symStateCounterSum (sweepBB L1 (.item (.run 0) :: R)) := by simp [sweepBB]
+              _ ≤ listCounterSum L1 + listCounterSum (.item (.run 0) :: R) + 4 * L1.length :=
+                hrec (.item (.run 0) :: R)
+              _ ≤ listCounterSum (.item (.run 0) :: L1) + listCounterSum R + 4 * n := by
+                simp [listCounterSum, tokCounterSum]
+                omega
+          | succ d =>
+            cases d with
+            | zero =>
+              have hB := bumpSymR_counter_sum_le R
+              calc
+                symStateCounterSum (sweepBB (.item (.run 1) :: L1) R) =
+                    symStateCounterSum (sweepBB L1 (.item (.run 0) :: bumpSymR R)) := by
+                  simp [sweepBB, strictList_eq]
+                _ ≤ listCounterSum L1 + listCounterSum (.item (.run 0) :: bumpSymR R) + 4 * L1.length :=
+                  hrec (.item (.run 0) :: bumpSymR R)
+                _ ≤ listCounterSum (.item (.run 1) :: L1) + listCounterSum R + 4 * n := by
+                  simp [listCounterSum, tokCounterSum]
+                  omega
+            | succ d =>
+              have h := stepElemBB_counter_sum_le (.item (.run (d+2)) :: L1) R
+              calc
+                symStateCounterSum (sweepBB (.item (.run (d+2)) :: L1) R) =
+                    symStateCounterSum (stepElemBB (.item (.run (d+2)) :: L1) R) := by
+                  simp [sweepBB, strictNat_eq]
+                _ ≤ listCounterSum (.item (.run (d+2)) :: L1) + listCounterSum R := h
+                _ ≤ listCounterSum (.item (.run (d+2)) :: L1) + listCounterSum R + 4 * n := by omega
+      | repB1 k =>
+        have hEat := eatB1_counter_sum_le k R
+        calc
+          symStateCounterSum (sweepBB (.repB1 k :: L1) R) =
+              symStateCounterSum (sweepBB L1 (eatB1 k R)) := by simp [sweepBB, strictList_eq]
+          _ ≤ listCounterSum L1 + listCounterSum (eatB1 k R) + 4 * L1.length :=
+            hrec (eatB1 k R)
+          _ ≤ listCounterSum (.repB1 k :: L1) + listCounterSum R + 4 * n := by
+            simp [listCounterSum, tokCounterSum]
+            omega
+      | rep2 p =>
+        cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)] R with
+        | some R2 =>
+          have hprefix := stripPrefixSym_some _ R R2 hs
+          have hEat := eatB2_counter_sum_le p R2
+          calc
+            symStateCounterSum (sweepBB (.rep2 p :: L1) R) =
+                symStateCounterSum (sweepBB L1 (.item (.run 0) :: .item (.run 1) :: eatB2 p R2)) := by
+              simp [sweepBB, hs, strictList_eq]
+            _ ≤ listCounterSum L1 + listCounterSum (.item (.run 0) :: .item (.run 1) :: eatB2 p R2) + 4 * L1.length :=
+              hrec (.item (.run 0) :: .item (.run 1) :: eatB2 p R2)
+            _ ≤ listCounterSum (.rep2 p :: L1) + listCounterSum R + 4 * n := by
+              rw [hprefix, listCounterSum_append] at *
+              simp [listCounterSum, tokCounterSum]
+              omega
+        | none =>
+          have hPeel := peelTok_counter_sum_le (.rep2 p) L1
+          have hStep := stepElemBB_counter_sum_le (peelTok (.rep2 p) L1) R
+          calc
+            symStateCounterSum (sweepBB (.rep2 p :: L1) R) =
+                symStateCounterSum (stepElemBB (peelTok (.rep2 p) L1) R) := by
+              simp [sweepBB, hs, strictList_eq]
+            _ ≤ listCounterSum (peelTok (.rep2 p) L1) + listCounterSum R := hStep
+            _ ≤ listCounterSum (.rep2 p :: L1) + listCounterSum R := by
+              simp [listCounterSum, tokCounterSum] at hPeel ⊢
+              omega
+            _ ≤ listCounterSum (.rep2 p :: L1) + listCounterSum R + 4 * n := by omega
+      | rep12 m =>
+        cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)] R with
+        | some R2 =>
+          have hprefix := stripPrefixSym_some _ R R2 hs
+          have hEat := eatB12R_counter_sum_le m R2
+          calc
+            symStateCounterSum (sweepBB (.rep12 m :: L1) R) =
+                symStateCounterSum (sweepBB L1 (.item (.run 0) :: .item (.run 1) :: eatB12R m R2)) := by
+              simp [sweepBB, hs, strictList_eq]
+            _ ≤ listCounterSum L1 + listCounterSum (.item (.run 0) :: .item (.run 1) :: eatB12R m R2) + 4 * L1.length :=
+              hrec (.item (.run 0) :: .item (.run 1) :: eatB12R m R2)
+            _ ≤ listCounterSum (.rep12 m :: L1) + listCounterSum R + 4 * n := by
+              rw [hprefix, listCounterSum_append] at *
+              simp [listCounterSum, tokCounterSum]
+              omega
+        | none =>
+          have hPeel := peelTok_counter_sum_le (.rep12 m) L1
+          have hStep := stepElemBB_counter_sum_le (peelTok (.rep12 m) L1) R
+          calc
+            symStateCounterSum (sweepBB (.rep12 m :: L1) R) =
+                symStateCounterSum (stepElemBB (peelTok (.rep12 m) L1) R) := by
+              simp [sweepBB, hs, strictList_eq]
+            _ ≤ listCounterSum (peelTok (.rep12 m) L1) + listCounterSum R := hStep
+            _ ≤ listCounterSum (.rep12 m :: L1) + listCounterSum R := by
+              simp [listCounterSum, tokCounterSum] at hPeel ⊢
+              omega
+            _ ≤ listCounterSum (.rep12 m :: L1) + listCounterSum R + 4 * n := by omega
+
+theorem sweepBB_counter_sum_le_570M2280 (L R : List SymTok)
+    (hT : L.length + R.length ≤ 570) :
+    symStateCounterSum (sweepBB L R) ≤ 570 * stateFieldMax (.BB, L, R) + 2280 := by
+  have hLsum := listCounterSum_le_length_mul_fieldMax L
+  have hRsum := listCounterSum_le_length_mul_fieldMax R
+  have hLmax : listFieldMax L ≤ stateFieldMax (.BB, L, R) := by
+    simpa [stateFieldMax] using (Nat.le_max_left (listFieldMax L) (listFieldMax R))
+  have hRmax : listFieldMax R ≤ stateFieldMax (.BB, L, R) := by
+    simpa [stateFieldMax] using (Nat.le_max_right (listFieldMax L) (listFieldMax R))
+  have hInitial : listCounterSum L + listCounterSum R ≤
+      570 * stateFieldMax (.BB, L, R) := by
+    calc
+      listCounterSum L + listCounterSum R ≤
+          L.length * listFieldMax L + R.length * listFieldMax R := Nat.add_le_add hLsum hRsum
+      _ ≤ L.length * stateFieldMax (.BB, L, R) + R.length * stateFieldMax (.BB, L, R) :=
+        Nat.add_le_add (Nat.mul_le_mul_left L.length hLmax) (Nat.mul_le_mul_left R.length hRmax)
+      _ = (L.length + R.length) * stateFieldMax (.BB, L, R) := by rw [Nat.add_mul]
+      _ ≤ 570 * stateFieldMax (.BB, L, R) := Nat.mul_le_mul_right _ hT
+  have hSweep := sweepBB_counter_sum_bound L R
+  have hLlen : L.length ≤ 570 := by omega
+  have hFuel : 4 * L.length ≤ 2280 := by omega
+  omega
+
+#print axioms sweepBB_counter_sum_bound
+#print axioms sweepBB_counter_sum_le_570M2280
+
+
 end BusyBeaver.SymRunAudit
