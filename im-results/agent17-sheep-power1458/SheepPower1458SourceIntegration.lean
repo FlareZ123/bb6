@@ -14,6 +14,7 @@ structure AffineNode where
   c : Nat
   C : Nat
   r : Nat
+  v3C : Nat
   deriving DecidableEq, Repr
 
 def affineNodeValue (t : Nat) (node : AffineNode) (y : Nat) : Prop :=
@@ -86,6 +87,71 @@ theorem affine_edge_inverse_cases
         rw [←Nat.mul_add, Nat.sub_add_cancel hb]
       rw [hmul] at hEq
       omega
+
+/-- A node's exact 3-adic valuation certificate bounds every hidden
+length that can occur in an original-source inverse case. -/
+theorem affine_node_hidden_bound
+    (t r0 T k h y u : Nat) (node : AffineNode)
+    (ht : t = r0+T*k)
+    (hb : node.b ≤ node.C)
+    (hval : affineNodeValue t node y)
+    (hydef : y=1+3^h*u)
+    (hC : 3^node.v3C ∣ node.C)
+    (hbase :
+      2^(1458*r0+node.s) % 3^(node.r+node.v3C+1) ≠
+        (node.C-node.b+node.c) % 3^(node.r+node.v3C+1))
+    (hperiod :
+      2^(1458*T) % 3^(node.r+node.v3C+1) = 1) :
+    h ≤ node.r := by
+  by_contra hnot
+  have hh : node.r+1 ≤ h := by omega
+  have hyminus : y-1=3^h*u := by
+    rw [hydef]
+    have hpos : 0 < 3^h*u := by
+      have hp : 0 < 3^h := Nat.pow_pos (by decide)
+      omega
+    omega
+  have hY : 3^(node.r+1) ∣ y-1 := by
+    refine ⟨3^(h-node.r-1)*u, ?_⟩
+    have hsplit : h = (node.r+1)+(h-node.r-1) := by omega
+    rw [hyminus, hsplit, Nat.pow_add]
+    ring
+  have hprod : 3^(node.r+node.v3C+1) ∣ node.C*(y-1) := by
+    rcases hC with ⟨c0,hc0⟩
+    rcases hY with ⟨y0,hy0⟩
+    refine ⟨c0*y0, ?_⟩
+    have hpow : 3^node.v3C * 3^(node.r+1) =
+        3^(node.r+node.v3C+1) := by
+      rw [←Nat.pow_add]
+      congr 1 <;> omega
+    calc
+      node.C*(y-1) =
+          (3^node.v3C*c0)*(3^(node.r+1)*y0) := by rw [hc0,hy0]
+      _ = 3^(node.r+node.v3C+1)*(c0*y0) := by rw [hpow]; ring
+  have hnum :
+      node.C*(y-1)+(node.C-node.b+node.c)=2^(1458*t+node.s) := by
+    have hyone : y=1+(y-1) := by omega
+    unfold affineNodeValue at hval
+    rw [hyone, Nat.mul_add] at hval
+    omega
+  let m := 3^(node.r+node.v3C+1)
+  have hmod :
+      2^(1458*t+node.s)%m=(node.C-node.b+node.c)%m := by
+    calc
+      2^(1458*t+node.s)%m =
+          (node.C*(y-1)+(node.C-node.b+node.c))%m := by rw [hnum]
+      _ = (node.C*(y-1))%m + (node.C-node.b+node.c)%m := by
+          rw [Nat.add_mod]
+      _ = (node.C-node.b+node.c)%m := by
+          rw [Nat.mod_eq_zero_of_dvd hprod]
+          simp
+  have hno := no_hit_fixed_period m (1458*r0+node.s)
+      (node.C-node.b+node.c) (1458*T) k (by dsimp [m]; omega)
+      (by simpa [m] using hperiod) (by simpa [m] using hbase)
+  have hexp : 1458*t+node.s =
+      (1458*r0+node.s)+(1458*T)*k := by rw [ht]; omega
+  rw [hexp] at hmod
+  exact hno hmod
 
 /-- Positive-offset counterpart of blank_even_inverse_cases. It uses the
 original EvenReach last edge and the source-checked positive-offset algebra
