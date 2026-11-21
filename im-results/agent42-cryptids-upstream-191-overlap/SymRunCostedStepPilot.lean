@@ -1848,4 +1848,242 @@ theorem ruleC_iter_within (n p k d2 : Nat) (R_tail : List SymTok)
 #print axioms ruleC_iter_within
 
 
+
+
+theorem pilot_iter_budget_mono (n N M : Nat) (hn : n ≤ N) :
+    50 * n * (M + n + 1) ≤ 50 * N * (M + N + 1) := by
+  have hfactor : M + n + 1 ≤ M + N + 1 := by omega
+  have hmul : n * (M + n + 1) ≤ N * (M + N + 1) :=
+    Nat.mul_le_mul hn hfactor
+  calc
+    50 * n * (M + n + 1) = 50 * (n * (M + n + 1)) := by ring
+    _ ≤ 50 * (N * (M + N + 1)) := Nat.mul_le_mul_left 50 hmul
+    _ = 50 * N * (M + N + 1) := by ring
+
+theorem pilotListFieldMax_append (xs ys : List SymTok) :
+    pilotListFieldMax (xs ++ ys) =
+      max (pilotListFieldMax xs) (pilotListFieldMax ys) := by
+  induction xs with
+  | nil => simp [pilotListFieldMax]
+  | cons t xs ih =>
+    simp [pilotListFieldMax, ih, Nat.max_assoc]
+
+set_option maxRecDepth 2000000 in
+theorem ruleB_step_AA_within (p m k d2 : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 126 * (pilotStateFieldMax
+        (stateB sep3A sep3A (p + 1) (m + 2) (k + 1) d2 R_tail) + 127))
+      ((evalSym target_tm) (stateB sep3A sep3A (p + 1) (m + 2) (k + 1) d2 R_tail))
+      ((evalSym target_tm) (stateB sep3A sep3A (p + 3) (m + 1) k (d2 + 4) R_tail)) := by
+  have hrfl : iterStep stepPure 126
+      (stateB sep3A sep3A (p + 1) (m + 2) (k + 1) d2 R_tail) =
+    (.CB,
+      [.item (.run 0), .item (.run 0), .item (.run 1), .rep2 (p + 3), .item (.run 1),
+       .item (.run 0), .item (.run 1), .item (.run 2), .rep12 m,
+       .item (.run 1), .item (.run 0), .item (.run 1), .item (.run 0), .item (.run 1),
+       .item (.run 1), .item (.run 0), .item (.run 1),
+       .item (.run 0), .item (.run 1), .item (.run 2), .repB1 k, .item (.run 0)],
+      .item .zero :: .item (.run (d2 + 4)) :: R_tail) := rfl
+  have heq : (evalSym target_tm)
+      (iterStep stepPure 126
+        (stateB sep3A sep3A (p + 1) (m + 2) (k + 1) d2 R_tail)) =
+      (evalSym target_tm)
+        (stateB sep3A sep3A (p + 3) (m + 1) k (d2 + 4) R_tail) := by
+    rw [hrfl]
+    simp only [stateB, sep3A, evalSym, encSymL, List.cons_append, List.nil_append,
+      repBlock12_snoc]
+  exact iterStep_stepPure_within_eq 126
+    (stateB sep3A sep3A (p + 1) (m + 2) (k + 1) d2 R_tail)
+    (stateB sep3A sep3A (p + 3) (m + 1) k (d2 + 4) R_tail) heq
+
+set_option maxRecDepth 2000000 in
+theorem ruleB_step_AB_within (p m k d2 : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 118 * (pilotStateFieldMax
+        (stateB sep3A sep3B (p + 1) (m + 2) (k + 1) d2 R_tail) + 119))
+      ((evalSym target_tm) (stateB sep3A sep3B (p + 1) (m + 2) (k + 1) d2 R_tail))
+      ((evalSym target_tm) (stateB sep3A sep3B (p + 3) (m + 1) k (d2 + 4) R_tail)) := by
+  have hrfl : iterStep stepPure 118
+      (stateB sep3A sep3B (p + 1) (m + 2) (k + 1) d2 R_tail) =
+    (.CB,
+      [.item (.run 0), .item (.run 0), .item (.run 1), .rep2 (p + 3), .item (.run 1),
+       .item (.run 0), .item (.run 1), .item (.run 2), .rep12 m,
+       .item (.run 1), .item (.run 0), .item (.run 1), .item (.run 0), .item (.run 1),
+       .item (.run 1), .item (.run 0), .item (.run 1),
+       .item (.run 0), .item .zero, .item (.run 1), .repB1 k, .item (.run 0)],
+      .item .zero :: .item (.run (d2 + 4)) :: R_tail) := rfl
+  have heq : (evalSym target_tm)
+      (iterStep stepPure 118
+        (stateB sep3A sep3B (p + 1) (m + 2) (k + 1) d2 R_tail)) =
+      (evalSym target_tm)
+        (stateB sep3A sep3B (p + 3) (m + 1) k (d2 + 4) R_tail) := by
+    rw [hrfl]
+    simp only [stateB, sep3A, sep3B, evalSym, encSymL, List.cons_append, List.nil_append,
+      repBlock12_snoc]
+  exact iterStep_stepPure_within_eq 118
+    (stateB sep3A sep3B (p + 1) (m + 2) (k + 1) d2 R_tail)
+    (stateB sep3A sep3B (p + 3) (m + 1) k (d2 + 4) R_tail) heq
+
+set_option maxRecDepth 2000000 in
+theorem ruleB_step_BA_within (p m k d2 : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 106 * (pilotStateFieldMax
+        (stateB sep3B sep3A (p + 1) (m + 2) (k + 1) d2 R_tail) + 107))
+      ((evalSym target_tm) (stateB sep3B sep3A (p + 1) (m + 2) (k + 1) d2 R_tail))
+      ((evalSym target_tm) (stateB sep3B sep3A (p + 3) (m + 1) k (d2 + 4) R_tail)) := by
+  have hrfl : iterStep stepPure 106
+      (stateB sep3B sep3A (p + 1) (m + 2) (k + 1) d2 R_tail) =
+    (.CB,
+      [.item (.run 0), .item (.run 0), .item (.run 1), .rep2 (p + 3), .item (.run 1),
+       .item (.run 0), .item .zero, .item (.run 1), .rep12 m,
+       .item (.run 1), .item (.run 0), .item (.run 1), .item (.run 0), .item (.run 1),
+       .item (.run 1), .item (.run 0), .item (.run 1),
+       .item (.run 0), .item (.run 1), .item (.run 2), .repB1 k, .item (.run 0)],
+      .item .zero :: .item (.run (d2 + 4)) :: R_tail) := rfl
+  have heq : (evalSym target_tm)
+      (iterStep stepPure 106
+        (stateB sep3B sep3A (p + 1) (m + 2) (k + 1) d2 R_tail)) =
+      (evalSym target_tm)
+        (stateB sep3B sep3A (p + 3) (m + 1) k (d2 + 4) R_tail) := by
+    rw [hrfl]
+    simp only [stateB, sep3A, sep3B, evalSym, encSymL, List.cons_append, List.nil_append,
+      repBlock12_snoc]
+  exact iterStep_stepPure_within_eq 106
+    (stateB sep3B sep3A (p + 1) (m + 2) (k + 1) d2 R_tail)
+    (stateB sep3B sep3A (p + 3) (m + 1) k (d2 + 4) R_tail) heq
+
+set_option maxRecDepth 2000000 in
+theorem ruleB_step_BB_within (p m k d2 : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 98 * (pilotStateFieldMax
+        (stateB sep3B sep3B (p + 1) (m + 2) (k + 1) d2 R_tail) + 99))
+      ((evalSym target_tm) (stateB sep3B sep3B (p + 1) (m + 2) (k + 1) d2 R_tail))
+      ((evalSym target_tm) (stateB sep3B sep3B (p + 3) (m + 1) k (d2 + 4) R_tail)) := by
+  have hrfl : iterStep stepPure 98
+      (stateB sep3B sep3B (p + 1) (m + 2) (k + 1) d2 R_tail) =
+    (.CB,
+      [.item (.run 0), .item (.run 0), .item (.run 1), .rep2 (p + 3), .item (.run 1),
+       .item (.run 0), .item .zero, .item (.run 1), .rep12 m,
+       .item (.run 1), .item (.run 0), .item (.run 1), .item (.run 0), .item (.run 1),
+       .item (.run 1), .item (.run 0), .item (.run 1),
+       .item (.run 0), .item .zero, .item (.run 1), .repB1 k, .item (.run 0)],
+      .item .zero :: .item (.run (d2 + 4)) :: R_tail) := rfl
+  have heq : (evalSym target_tm)
+      (iterStep stepPure 98
+        (stateB sep3B sep3B (p + 1) (m + 2) (k + 1) d2 R_tail)) =
+      (evalSym target_tm)
+        (stateB sep3B sep3B (p + 3) (m + 1) k (d2 + 4) R_tail) := by
+    rw [hrfl]
+    simp only [stateB, sep3B, evalSym, encSymL, List.cons_append, List.nil_append,
+      repBlock12_snoc]
+  exact iterStep_stepPure_within_eq 98
+    (stateB sep3B sep3B (p + 1) (m + 2) (k + 1) d2 R_tail)
+    (stateB sep3B sep3B (p + 3) (m + 1) k (d2 + 4) R_tail) heq
+
+theorem ruleB_step_within (s_sep m_sep : List SymTok)
+    (hs : s_sep = sep3A ∨ s_sep = sep3B)
+    (hm : m_sep = sep3A ∨ m_sep = sep3B)
+    (p m k d2 : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 126 * (pilotStateFieldMax
+        (stateB s_sep m_sep (p + 1) (m + 2) (k + 1) d2 R_tail) + 127))
+      ((evalSym target_tm)
+        (stateB s_sep m_sep (p + 1) (m + 2) (k + 1) d2 R_tail))
+      ((evalSym target_tm)
+        (stateB s_sep m_sep (p + 3) (m + 1) k (d2 + 4) R_tail)) := by
+  rcases hs with rfl | rfl <;> rcases hm with rfl | rfl
+  · exact reachesWithin_mono (by simp) (ruleB_step_AA_within p m k d2 R_tail)
+  · have h := ruleB_step_AB_within p m k d2 R_tail
+    exact reachesWithin_mono
+      (pilot_iter_budget_mono 118 126
+        (pilotStateFieldMax (stateB sep3A sep3B (p + 1) (m + 2) (k + 1) d2 R_tail))
+        (by omega)) h
+  · have h := ruleB_step_BA_within p m k d2 R_tail
+    exact reachesWithin_mono
+      (pilot_iter_budget_mono 106 126
+        (pilotStateFieldMax (stateB sep3B sep3A (p + 1) (m + 2) (k + 1) d2 R_tail))
+        (by omega)) h
+  · have h := ruleB_step_BB_within p m k d2 R_tail
+    exact reachesWithin_mono
+      (pilot_iter_budget_mono 98 126
+        (pilotStateFieldMax (stateB sep3B sep3B (p + 1) (m + 2) (k + 1) d2 R_tail))
+        (by omega)) h
+
+theorem pilot_stateB_field_growth (s_sep m_sep : List SymTok)
+    (p m k d2 : Nat) (R_tail : List SymTok) :
+    pilotStateFieldMax
+      (stateB s_sep m_sep (p + 3) (m + 1) k (d2 + 4) R_tail) ≤
+    pilotStateFieldMax
+      (stateB s_sep m_sep (p + 1) (m + 2) (k + 1) d2 R_tail) + 4 := by
+  simp [stateB, pilotStateFieldMax, pilotListFieldMax_append,
+    pilotListFieldMax, pilotTokFieldMax, Nat.max_assoc, Nat.max_comm, Nat.max_left_comm]
+  omega
+
+theorem ruleB_iter_within (s_sep m_sep : List SymTok)
+    (hs : s_sep = sep3A ∨ s_sep = sep3B)
+    (hm : m_sep = sep3A ∨ m_sep = sep3B)
+    (n p m k d2 : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 126 * n *
+        (pilotStateFieldMax
+          (stateB s_sep m_sep (p + 1) (m + n + 1) (k + n) d2 R_tail) +
+          4 * n + 127))
+      ((evalSym target_tm)
+        (stateB s_sep m_sep (p + 1) (m + n + 1) (k + n) d2 R_tail))
+      ((evalSym target_tm)
+        (stateB s_sep m_sep (p + 1 + 2 * n) (m + 1) k (d2 + 4 * n) R_tail)) := by
+  induction n generalizing p m k d2 with
+  | zero =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [stateB] using pilot_reachesIn_refl
+      ((evalSym target_tm) (stateB s_sep m_sep (p + 1) (m + 1) k d2 R_tail))
+  | succ n ih =>
+    have h1eq : m + (n + 1) + 1 = (m + n) + 2 := by omega
+    have h2eq : k + (n + 1) = (k + n) + 1 := by omega
+    have h3eq : p + 1 + 2 * (n + 1) = (p + 2) + 1 + 2 * n := by omega
+    have h4eq : d2 + 4 * (n + 1) = (d2 + 4) + 4 * n := by omega
+    rw [h1eq, h2eq, h3eq, h4eq]
+    have h1 := ruleB_step_within s_sep m_sep hs hm p (m + n) (k + n) d2 R_tail
+    have h2 := ih (p + 2) m k (d2 + 4)
+    have hM := pilot_stateB_field_growth s_sep m_sep p (m + n) (k + n) d2 R_tail
+    let M := pilotStateFieldMax
+      (stateB s_sep m_sep (p + 1) ((m + n) + 2) ((k + n) + 1) d2 R_tail)
+    have h1Budget :
+        50 * 126 * (pilotStateFieldMax
+          (stateB s_sep m_sep (p + 1) ((m + n) + 2) ((k + n) + 1) d2 R_tail) + 127) ≤
+          50 * 126 * (M + 4 * n + 131) := by
+      simp [M]
+      omega
+    have h2Factor :
+        pilotStateFieldMax
+          (stateB s_sep m_sep (p + 3) (m + n + 1) (k + n) (d2 + 4) R_tail) +
+          4 * n + 127 ≤ M + 4 * n + 131 := by
+      simpa [M, Nat.add_assoc] using Nat.add_le_add_right hM (4 * n + 127)
+    have h2Budget :
+        50 * 126 * n *
+          (pilotStateFieldMax
+            (stateB s_sep m_sep (p + 3) (m + n + 1) (k + n) (d2 + 4) R_tail) +
+            4 * n + 127) ≤
+          50 * 126 * n * (M + 4 * n + 131) :=
+      Nat.mul_le_mul_left (50 * 126 * n) h2Factor
+    have hcomp := reachesWithin_trans
+      (reachesWithin_mono h1Budget h1)
+      (reachesWithin_mono h2Budget h2)
+    have htotal :
+        50 * 126 * (M + 4 * n + 131) +
+          50 * 126 * n * (M + 4 * n + 131) ≤
+            50 * 126 * (n + 1) * (M + 4 * n + 131) := by
+      have heq :
+          50 * 126 * (M + 4 * n + 131) +
+            50 * 126 * n * (M + 4 * n + 131) =
+              50 * 126 * (n + 1) * (M + 4 * n + 131) := by ring
+      omega
+    have hfinal := reachesWithin_mono htotal hcomp
+    simpa [M, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using hfinal
+
+#print axioms ruleB_step_within
+#print axioms ruleB_iter_within
+
+
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
