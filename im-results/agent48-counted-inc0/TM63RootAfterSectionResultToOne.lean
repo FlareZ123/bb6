@@ -1,6 +1,5 @@
 import TM63RootMiddle34
 import TM63SourceIncrementDispatcherComplete
-import ResetBaseM2Split
 import OuterLCIncPostludeSource
 import Lean.Elab.Tactic.Omega
 
@@ -25,7 +24,6 @@ open BB6Coverage.Agent42RootResidueSix
 open BB6Coverage.Agent44TM63RootMiddle34
 open BB6Coverage.Agent44SectionResultRunSource
 open BB6Coverage.Agent24ChampionTime
-open BB6Coverage.Agent48ResetBaseM2Split
 open BB6Coverage.Agent42OuterLCInc
 open BB6ChampionArithmetic
 
