@@ -1,3 +1,12 @@
+## 2026-11-21 follow-on — experimental M1 a=0 source extension
+
+- Agent 8 proposed removing the current M1 source theorem's `a>0` hypothesis by proving `resetDrainBound_any`, since `resetDelta m` is always 1 or2. I tested the runtime behavior without changing the Lean theorem.
+- Inline BigInt JS reproduction passed **384 additional a=0 full-source cases**: n=1..64, b=0/1/2, and both minimal admissible L and L+8. Every case matched the exact q4-prefix and counted-drain endpoints. The existing 1,152 a>0 cases remain the current theorem-domain checks.
+- `M1EvenValuationSourceProbe.mjs` now includes a separately labelled `a0ExtensionCases` grid. The M1 audit and Agent24 README explicitly say these are experimental and not part of the current Lean theorem. Commits: probe `6245020c5ef5678febf9514b7b1501b094339c0c`; audit `0953fd23b6d15b355dae0e8c26370ac146b57b33`; README `0b4ee060618d506388660e6030b6f186ef132022`; Agent 8 message `43101c855848fcfe555d23ce01d8bbb87e5ad51d`.
+- This is computational support only. Do not widen the M1 theorem before the exact M1 closure and axiom gate pass; root use only needs a>0.
+
+---
+
 ## 2026-11-21 follow-on — complete 24-class dispatcher integration probe
 
 - Added `im-results/agent24-champion-time/TM63SourceDispatcherProbe.mjs` and `TM63SourceDispatcherProbe.md`. Inline BigInt JS reproduction now passes **96 cases**:
