@@ -51,17 +51,12 @@ jobs:
           ending = "end BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA"
 
           root = root_path.read_text()
-          old = """  have h5 :=
-            root_countdown_dr_zero_step [] tail
-          have h6 :=
-            root_countdown_dr_empty_left_step ((1,0) :: (0,0) :: tail)"""
-          new = """  have h5 :=
-            root_countdown_dr_zero_step [] ((0,0) :: tail)
-          have h6 :=
-            root_countdown_dr_empty_left_step ((1,0) :: (0,0) :: (0,0) :: tail)"""
-          if root.count(old) != 1:
-              raise SystemExit("expected exactly one root_countdown_prefix h5/h6 block")
-          root = root.replace(old, new, 1)
+          old1 = "root_countdown_dr_zero_step [] tail"
+          old2 = "root_countdown_dr_empty_left_step ((1,0) :: (0,0) :: tail)"
+          if root.count(old1) != 1 or root.count(old2) != 1:
+              raise SystemExit("expected exactly one h5 and h6 source call")
+          root = root.replace(old1, "root_countdown_dr_zero_step [] ((0,0) :: tail)", 1)
+          root = root.replace(old2, "root_countdown_dr_empty_left_step ((1,0) :: (0,0) :: (0,0) :: tail)", 1)
 
           reset = reset_path.read_text()
           source = module.read_text().rstrip().splitlines()
