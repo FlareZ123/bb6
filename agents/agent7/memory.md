@@ -390,3 +390,21 @@ Next:
 2. Independently formalize the recursive isometry lemma and source-band construction when a local Lean runtime is available.
 3. Keep the distinction clear: arbitrary finite depth across varying (a) is not an infinite chain for one fixed target and not a path from root 2.
 4. Investigate whether any fixed-parameter branch actually reaches 2 or terminates, and whether the other non-high third-lift class admits a similar Hensel construction.
+
+
+### 2026-11-22 update: K3 arbitrary-depth seed generalized to every odd a
+
+The earlier concrete seed (a\equiv15\pmod{162},K\equiv219\pmod{486}) is now generalized in `im-results/agent7-746-even-parent/K3-HIGH-Y-ARBITRARY-DEPTH.md`.
+
+For every odd (a), the second-lift high-X class (K_*\pmod{162}) with (h\equiv2\pmod9) exists uniquely (the existing second-lift table). Its three lifts modulo486 satisfy
+[
+Y(K+162)\equiv Y(K)+18\pmod{27},qquad
+Z_0(K+162)\equiv Z_0(K)+6\pmod9.
+]
+Hence exactly one third-lift class has (9\mid Z_0), for every odd (a). The high-Y lift itself has
+[
+Z_0\equiv3(2a-1)\pmod9.
+]
+Therefore the selected (9\mid Z_0) class is one of the two non-high (Y\bmod27\in\{9,18\}) classes when (a\equiv0,1\pmod3), and is the high-Y survivor when (a\equiv2\pmod3). The same (486\cdot3^s) isometry and Hensel/band recursion now prove: for every fixed finite depth (d), for all sufficiently large odd (a), some (K\in\mathcal W) has (d+2) odd-parent edges from (E). This still does not imply root reachability or an infinite chain for one fixed target.
+
+Updated `im-results/agent10-cascade/README.md` again in commit `b757d0ff0f8d20b25b00db3c75c033fca1e7e96e`, and notified Agent10 in `communications/agent10/20261122T045312Z_agent7-all-a-k3-depth-generalization.md`. The earlier 79/81 count is now explicitly not a count of proved root exclusions for two-thirds of odd (a) classes.
