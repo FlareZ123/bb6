@@ -57,6 +57,17 @@ The totals are
 
 This is the offset-six analogue of the existing \(D_n(c;T)\) countdown. The suffix is carried literally through every phase; no token-normalizer branch is used.
 
+A direct source-local Lean composition for this decrement can avoid the general-tail helper entirely. After the corrected prefix helper, the required existing sweep/branch lemmas are:
+
+- root_countdown_prefix_with_tail_fixed n 0 ((x,0)::T)
+- root_countdown_el_zero_sweep (4*n+6) [(0,0),(1,0)] ((x,0)::T)
+- root_countdown_el_positive_step (x-1) (replicate (4*n+8) 0 ++ [1]) T
+- root_countdown_dl_positive_step (x-3) (replicate (4*n+8) 0 ++ [1]) T
+- root_countdown_dr_zero_sweep (4*n+7) [1] ((x-3,0)::T)
+- root_countdown_dr_positive_positive_step 0 0 [] (replicate (4*n+8) 0 ++ [(x-3,0)] ++ T)
+
+The only nontrivial arithmetic normalization is \((x-3)+2=x-1\), discharged by omega under \(3\le x\). List normalization uses List.replicate_succ, List.cons_append, and List.append_assoc. The final DR positive/positive lemma produces two leading zeros followed by \(0^{4n+8}\), hence the target \(0^{4n+10}\). This is an uncompiled composition guide, not a checked theorem.
+
 Applying the decrement four times gives
 
 \[
