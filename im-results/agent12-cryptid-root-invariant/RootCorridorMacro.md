@@ -2,10 +2,6 @@
 
 **Status: REQUIRES RE-EVALUATION; the previous blanket withdrawal was based on a wrong branch reading.** The pinned `mode_DR_n_n_closed` tokenizes only right-head 0; positive right heads take the ordinary branch. The restored source-transcribed simulator again reaches `Corr(3,3)` at macro 24. This does not automatically validate every formula below: treat the family identities as candidates until the full regression is rerun. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md).
 
-## Historical definitions (pre-correction)
-
-The formulas below are not valid for the pinned #85/#490 source successor.
-
 ## Definitions
 
 Let `0^r` denote `r` zero tokens, let `10` denote the two-token list `[1,0]`, and define
