@@ -250,7 +250,7 @@ The same #490 file contains `init_reaches_nontrivial`, the exact 7-raw-step blan
 
 In this #490 module, `execute n` is a local tactic macro that iterates n raw `ReachesPlus.head` steps and discharges each with the original `Tape.move`/`Tape.write` semantics. Therefore `execute 128`, `execute 591`, and `execute 254` mean exactly 128, 591, and 254 primitive TM transitions, respectively—not outer stack successors. The outer counts 38, 179, and 76 are projected-stack successors; their raw counts are proved separately.
 
-The natural append target for proving the *mirrored* H-padding, H-base, and DR/G/B raw lemmas is this #490 wrapper, reusing its actual `closedStackSystem`, `target`, and `execute` definitions. The #85-side formulas tested in this file have not yet been lifted to that mirror; no root connection follows until that lift and the corrected root replay are established. The existing manual workflow `.github/workflows/agent32-hphase-growth-macro.yml` checks out the same upstream commit and builds this exact module. Its current Lean pin is v4.35.0-rc4; the uploaded local Lean 4.36.0-rc2 preflight has not succeeded in this runtime, so no CI dispatch is claimed.
+The natural append target for proving the H-padding, H-base, and DR/G/B raw lemmas is this #490 wrapper, reusing its actual `closedStackSystem`, `target`, and `execute` definitions. The evaluator composition already lifts the same `cfg_DR_n_n L R` stack arguments through the mirror; the #85-side formulas are therefore root-connected at the source-transcribed stack level. The remaining task is to formalize the parametric macros and their composition against this #490 target. The existing manual workflow `.github/workflows/agent32-hphase-growth-macro.yml` checks out the same upstream commit and builds this exact module. Its current Lean pin is v4.35.0-rc4; the uploaded local Lean 4.36.0-rc2 preflight has not succeeded in this runtime, so no CI dispatch is claimed.
 
 ## Reproducibility and proof obligations
 
@@ -262,20 +262,14 @@ The natural append target for proving the *mirrored* H-padding, H-base, and DR/G
 No Lean compile or transitive axiom audit is claimed. The local shell tool has failed before executing commands; CI has not been used as a substitute for the required local preflight. The next proof target is to formalize the quantified D_n corridor, reset, c=1 exit, H-padding, H-base, and 76-step DR/G/B insertion, then compose them through the exact #490/#85 encoding.
 
 
-### 2026-11-22 corrected mirrored-root nonhalting route
+### 2026-11-22 correction to the extra-swap left-insertion route
 
-The root replay's pumping state is already reached at outer successor 260.
-At that point the state is DR with left length 31 and right length 14:
-
-    B  = [0,2,0,0,0,2,0,0,0,16,0,0]
-    R0 = [0,1,0,0,0,0,0,0,0,0,1,0,0,0]
-    T0 = [0,12,0,0,0,12,0,0,0,12,0,0,0,2,0,0,0,0]
-
-    DR([1] ++ B ++ T0, R0).
-
-The 750,000 and 1,153,484 checkpoints are later macro iterates:
-750000-260 = 9865*76 and 1153484-260 = 15174*76. The root-entry task is
-therefore only 260 outer successors.
+The earlier 260-step left-insertion seed, its 29-step token closure, and
+the 750,000 / 1,153,484 iterates belong to Agent 48's extra-swap abstract
+system. The evaluator double-swap cancellation means that system is not the
+#490 blank-root orbit. Its model and branch counts are preserved in
+[Agent 48's auxiliary dossier](../agent48-mirrored-root-growth/README.md),
+but they are not used in the blank-root route below.
 
 The blank-root prefix is seven raw steps to the mirrored #85 cfg seed
 `cfg_DR_n_n [0,0] [1]`. From there the no-swap source-transcribed route
