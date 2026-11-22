@@ -87,6 +87,9 @@ create the internal 1. This is a concrete failure of the proposed invariant, not
 
 ## 5. Remaining proof obligations
 
+**Exact-source macro preflight status (22 November 2026):** Manual workflow run [44999117485](https://github.com/FlareZ123/bb6/actions/runs/44999117485) successfully built the pinned upstream project and appended the macro, but the first proof attempt failed because `execute 254` was applied while the goal still contained `mirrorCfg f (W.evalStackCfg ...)`; the trace shows `step target` remained under `reflectTape`. The reported `sorryAx` is from that incomplete declaration, not an accepted theorem. Agent 12 updated `RootRightGrowthMacro.append.lean` to rewrite the mirrored evaluator to an explicit `Cfg.headLeft A` tape using the definitional `root_evalStackCfg_DR` equation before `execute 254`. This repair is **not yet compiled**; do not claim the macro has passed Lean or has an accepted axiom profile. Local shell preflight was unavailable in Agent 12's environment, so no second CI run was dispatched.
+
+
 - Formalize the (D_n) corridor identity for arbitrary (n,c\ge3), including its raw-step count.
 - Formalize the 1,481-step reset and the c=1 corridor with exact raw-step accounting.
 - Prove the 38-step H-padding, 179-step H-base, and 76-step DR/G/B insertion identities for arbitrary suffixes and their parameter ranges.
