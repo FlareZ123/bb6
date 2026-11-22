@@ -122,12 +122,14 @@ for r≥0 and arbitrary finite right suffix R. This macro costs **128 raw TM ste
 
 ### Base macro
 
-Let `Hright=[2,0,0,0,0]`. The fixed base transformation is
+The base transformation is stronger than a fixed `Q^m` prefix. For every a≥2 and arbitrary finite pair-list suffix T:
 
 ```text
-S^179(H(7; Q^m ++ Hright ++ T))
-  = DR(L=G, R=[1] ++ B ++ [16,0,0,0] ++ Q^(m+3) ++ Hright ++ T)
+S^179(H(7; [a] ++ T))
+  = DR(L=G, R=[1] ++ B ++ [16,0,0,0] ++ Q^3 ++ [a] ++ T).
 ```
+
+Here `[a]` denotes the pair-stack head `[(a,0)]`; all entries of T are arbitrary pairs. The root application has `[a]=[(12,0)]` because its right stack begins with Q.
 
 where
 
@@ -136,7 +138,7 @@ G = [0,0,1,0,1,0,0,0,0,1]
 B = [16,0,0,0,2,0,0,0,2,0,0,0].
 ```
 
-It costs **591 raw TM steps**, with no token-normalizer calls. The regression tests m=0,…,10 and m=966, with empty, numeric, and opaque suffixes. The opaque suffix is preserved by identity. The 179-step branch histogram is also constant across these m and suffix values:
+It costs **591 raw TM steps**, with no token-normalizer calls. The regression tests a in {2,3,4,5,12,100,100000} with empty, numeric, and opaque suffixes; the opaque suffix is preserved by identity. The 179-step branch histogram is constant across these tested heads and suffixes:
 
 | Source branch | Count | Cost | Subtotal |
 |---|---:|---:|---:|
@@ -163,12 +165,13 @@ H(1939;Hright)
 H(7;Q^966 ++ Hright).
 ```
 
-Then apply the base macro with m=966:
+The base macro sees the first pair `(12,0)` and preserves the rest of the right stack:
 
 ```text
 H(7;Q^966 ++ Hright)
   --179 outer / 591 raw-->
-DR(L=G, R=[1] ++ B ++ [16,0,0,0] ++ Q^969 ++ Hright).
+DR(L=G, R=[1] ++ B ++ [16,0,0,0] ++ Q^3 ++ Q^966 ++ Hright)
+= DR(L=G, R=[1] ++ B ++ [16,0,0,0] ++ Q^969 ++ Hright).
 ```
 
 Thus the first root-connected DR/G/B seed is reached from `D_484(1)` after **28,264 outer successors and 93,556 raw TM steps**, at macro **1,131,748**. Its right-list length is 3,898.
