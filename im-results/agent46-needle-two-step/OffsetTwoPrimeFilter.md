@@ -33,6 +33,12 @@ with the two band inequalities, followed by the existing eleven-prime first-pare
 |---|---:|---:|---:|---:|---:|
 | \(r=50\) (\(j=0\)) | 28 | \(p\le1{,}000{,}000\) | 28 | 0 | **0** |
 | \(r=160\) (\(j=1\)) | 105 | \(p\le1{,}000{,}000\) | 94 | 11 | **0** |
+| \(r=270\) (\(j=2\)) | 195 | \(p\le1{,}000{,}000\) | 172 | 23 | **0** |
+| \(r=380\) (\(j=3\)) | 272 | \(p\le1{,}000{,}000\) | 240 | 32 | **0** |
+| \(r=490\) (\(j=4\)) | 341 | \(p\le1{,}000{,}000\) | 303 | 38 | **0** |
+| \(r=600\) (\(j=5\)) | 355 | \(p\le1{,}000{,}000\) | 322 | 33 | **0** |
+| \(r=710\) (\(j=6\)) | 545 | \(p\le1{,}000{,}000\) | 480 | 65 | **0** |
+| \(r=820\) (\(j=7\)) | 572 | \(p\le1{,}000{,}000\) | 508 | 64 | **0** |
 
 For \(r=50\), every one of the 28 candidates has an explicit prime witness. The table gives the parametrizing pair \((k,e)\), the prime \(p\mid D_{w+2}\), and the nonzero residue of \(y+2w+3\pmod p\).
 
@@ -141,6 +147,22 @@ The exact modular computation of (Q) gives the following certificate. Ten candid
 Every row has \(\kappa>2^{r-3+\ell}\), contradicting the forced bound on \(k\). Thus all eleven remaining \(r=160\) candidates are excluded at offset \(t=w+2\).
 
 This is an exact finite proof for the enumerated exception sets. It is not a theorem for all \(r\), does not eliminate other second-parent offsets, and does not establish blank-root nonreachability.
+
+### Further members of the cancellation progression
+
+The same exact script was also run at \(r=270,380,490,600,710,820\), always with prime bound \(10^6\). Every prime-filter survivor was eliminated by the quotient obstruction. The following summary records the maximum cut loss \(\ell\), the maximum exponent in the bound \(2^{r-3+\ell}\), and the minimum bit length of the computed least residue \(\kappa\) among quotient-obstructed candidates.
+
+| \(r\) | \(d\) | Quotient rows | Maximum \(\ell\) | Maximum bound exponent | Minimum bits in \(\kappa\) |
+|---:|---:|---:|---:|---:|---:|
+| 160 | 506 | 11 | 117 | 274 | 504 |
+| 270 | 855 | 23 | 313 | 580 | 841 |
+| 380 | 1203 | 32 | 211 | 588 | 1199 |
+| 490 | 1552 | 38 | 205 | 692 | 1545 |
+| 600 | 1901 | 33 | 377 | 974 | 1892 |
+| 710 | 2250 | 65 | 218 | 925 | 2244 |
+| 820 | 2598 | 64 | 495 | 1312 | 2591 |
+
+In each row the maximum bound exponent is strictly below \(d-1\), while the minimum \(\kappa\)-bit length is far above that exponent. Thus every computed \(\kappa\) exceeds its candidate's bound. These are exact finite computations for the listed family members; the pattern is not a proof for all later \(j\).
 
 ## Reproduction
 
