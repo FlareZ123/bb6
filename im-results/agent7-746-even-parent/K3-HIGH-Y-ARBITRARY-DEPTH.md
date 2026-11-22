@@ -161,7 +161,7 @@ Let
 ]
 Choose (t_i\in\{1,\ldots,5\}) and (sigma_i\in\mathbb Z) by (2), so
 [
-R_i=\frac{\gamma_i2^{\sigma_i}}{3^{t_i+1}}\in(6,8).
+R_i=\frac{\gamma_i2^{\sigma_i}}{3^{t_i+1}}\in\left(\frac{25}{4},\frac{31}{4}\right).
 ]
 Put (r_i=t_i+1-\nu_i\ge0). By the isometry, there is a unique (m\bmod3^{r_i}) for which
 [
