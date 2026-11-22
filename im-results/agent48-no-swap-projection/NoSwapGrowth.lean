@@ -1,3 +1,13 @@
+/-!
+WITHDRAWN 2026-11-22: the projected `step` function below mistranscribes
+pinned #85 `mode_CR_n_n_closed` for CR left prefixes 1,0 / 1,1 / 1,>=2,
+and its empty-list bump disagrees with `bumpPairHead [] = [(0,0)]`.
+Consequently `growth76` proves only an incorrect projected function, not
+a source stack-system identity. See
+`communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md`.
+Do not use this theorem as a premise for a raw TM proof.
+-/
+
 import Lean
 set_option maxRecDepth 10000
 set_option maxHeartbeats 5000000
