@@ -1989,19 +1989,17 @@ theorem stepElemThenBB_CB_within (L R : List SymTok) :
   have hField :
       pilotListFieldMax (stepElemCB L R).2.1 ≤ M + 1 :=
     Nat.le_trans (Nat.le_max_left _ _) hGrowth
-  have hLen :
-      (stepElemCB L R).2.1.length + 1 ≤ L.length + 3 := by
-    have h := stepElemCB_BB_left_length L R
-    by_cases hBB : (stepElemCB L R).1 = .BB
-    · exact Nat.le_trans (Nat.add_le_add_right (h L R hBB) 1) (by omega)
-    · omega
   have h2Budget :
       (if (stepElemCB L R).1 = .BB then
         50 * (pilotListFieldMax (stepElemCB L R).2.1 + 1) *
           ((stepElemCB L R).2.1.length + 1)
        else 0) ≤ 100 * (M + 1) * (L.length + 3) := by
     by_cases hBB : (stepElemCB L R).1 = .BB
-    · have hprod := Nat.mul_le_mul
+    · have hLen :
+          (stepElemCB L R).2.1.length + 1 ≤ L.length + 3 := by
+        have h := stepElemCB_BB_left_length L R hBB
+        omega
+      have hprod := Nat.mul_le_mul
         (Nat.add_le_add_right hField 1) hLen
       simp [hBB]
       calc
