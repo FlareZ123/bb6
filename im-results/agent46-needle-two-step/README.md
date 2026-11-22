@@ -189,7 +189,7 @@ The polynomial expansion of \(AP_r(A)\) used above therefore gives
 \[
 u^{2r}AP_r(A)\equiv 3^{2r}S_u=3nS_u\pmod{D_{w+1}}.
 \]
-Multiplying (15) by \(55u^{2r}\), using \(55(y+1)=8AP_r(A)+80\), and cancelling the factor \(8\) (the divisor is odd), yields
+Multiplying (O2) by \(55u^{2r}\), using \(55(y+1)=8AP_r(A)+80\), and cancelling the factor \(8\) (the divisor is odd), yields
 \[
 D_{w+1}\mid Z,\qquad Z:=3nS_u+10u^{2r}.
 \]
