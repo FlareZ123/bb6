@@ -156,9 +156,9 @@ The observed carry pairs are diagnostics only; retain the full universal rectang
 
 - The edges array is ordered by target index 34 through 10001. Each row is [targetIndex, phaseId, lowBoundaryOutputPairCodes, lowExtension, highExtension].
 - Pair codes are 3x+y for a ternary digit pair (x,y).
-- The phaseRecords array is a 1,318-entry dictionary. Its compact array stores source/target sector and branch, the previous pair and carry entering the target word, both boundary residues, (k,j) shifts, source/target window indices, ℓS and ℓ′S, drain statistics (L,n1,n2,D,R), and exact correction values (C,F,T).
+- The phaseRecords array is a 1,318-entry dictionary. Its compact array stores the phase core: source/target sector and branch, the previous pair and carry entering the target word, both boundary residues, and (k,j) shifts. The edge row stores the per-transition source/target ℓS, all four window indices, drain statistics (L,n1,n2,D,R), and exact correction values (C,F,T); these quantities are not incorrectly deduplicated when the same phase core recurs.
 - lowBoundaryOutputPairCodes records the one or two transducer outputs at source indices kS+1 through k′S+1, which move the transducer to the state entering the target word at k′S+2.
-- lowExtension is null when k′S=kS+1; otherwise it records the exact extra target symbol at kS+2. highExtension is null when j′S=jS; otherwise it records the exact extra target symbol at jS−2. Each non-null extension stores input/output pair codes, carry-in, carry-out, and previous pair. Their indices are recovered from the phase record as k′S+2 and jS−2, respectively.
+- lowExtension is null when k′S=kS+1; otherwise it records the exact extra target symbol at kS+2. highExtension is null when j′S=jS; otherwise it records the exact extra target symbol at jS−2. Each non-null extension stores input/output pair codes, carry-in, carry-out, and previous pair. Their indices are recovered from the per-edge row as targetK+2 and sourceJ−2, respectively.
 
 Thus the complete target word is the optional low extension, followed by the transducer image of the old-output overlap [kS+3,jS−2), followed by the optional high extension. The high symbol is not optional in the product when j′S=jS+1; it is precisely the extra source-derived digit that the overlap-only shortcut loses.
 
