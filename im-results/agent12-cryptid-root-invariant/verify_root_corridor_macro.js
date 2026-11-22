@@ -131,7 +131,7 @@ function run(s, n) {
   }
   return s;
 }
-const E = (r, c) => state("DR", [...zeros(r), 1], [1, c]);
+const Corr = (r, c) => state("DR", [...zeros(r), 1], [1, c]);
 const F = r => state("EL", zeros(4), [1, 0, 0, 0, ...repeat([1, 0], r + 2), 3]);
 const G = r => state("DR", [0, 0, ...repeat([1, 0], r + 2), 0, 0, 1, 0, 0, 0], [1, 0]);
 const H = r => state("CR", [0, ...repeat([1, 0], r + 1), 0, 0, 1, 0, 0, 0], [2, 0, 0, 0, 0]);
@@ -144,11 +144,11 @@ function assertState(label, actual, expected) {
 
 let checks = 0;
 for (let r = 1; r <= 8; r++) {
-  assertState("c=3, r=" + r, run(E(r, 3), 2 * r + 14), E(r + 4, 0)); checks++;
-  assertState("c=6, r=" + r, run(E(r, 6), 2 * r + 14), E(r + 4, 3)); checks++;
-  assertState("c=0, r=" + r, run(E(r, 0), 3 * r + 32), E(3, 2 * r + 7)); checks++;
-  assertState("c=2, r=" + r, run(E(r, 2), 2 * r + 30), E(3, 4)); checks++;
-  assertState("c=1, r=" + r, run(E(r, 1), 3 * r + 20), F(r)); checks++;
+  assertState("c=3, r=" + r, run(Corr(r, 3), 2 * r + 14), Corr(r + 4, 0)); checks++;
+  assertState("c=6, r=" + r, run(Corr(r, 6), 2 * r + 14), Corr(r + 4, 3)); checks++;
+  assertState("c=0, r=" + r, run(Corr(r, 0), 3 * r + 32), Corr(3, 2 * r + 7)); checks++;
+  assertState("c=2, r=" + r, run(Corr(r, 2), 2 * r + 30), Corr(3, 4)); checks++;
+  assertState("c=1, r=" + r, run(Corr(r, 1), 3 * r + 20), F(r)); checks++;
   assertState("F-to-G, r=" + r, run(F(r), 3 * r + 13), G(r)); checks++;
   assertState("G-to-H, r=" + r, run(G(r), 4), H(r)); checks++;
 }
@@ -170,17 +170,17 @@ for (let n = 0; n <= 32; n++) {
   checks++;
 }
 
-assertState("blank-root prefix", run(state("DR", [0, 0], [1]), 24), E(3, 3)); checks++;
+assertState("blank-root prefix", run(state("DR", [0, 0], [1]), 24), Corr(3, 3)); checks++;
 
 const rootChain = [
-  [E(3, 3), 20, E(7, 0)],
-  [E(7, 0), 53, E(3, 21)],
-  [E(3, 21), 20, E(7, 18)],
-  [E(31, 0), 125, E(3, 69)],
-  [E(95, 0), 317, E(3, 197)],
-  [E(263, 2), 556, E(3, 4)],
-  [E(3, 4), 20, E(7, 1)],
-  [E(7, 1), 41, F(7)]
+  [Corr(3, 3), 20, Corr(7, 0)],
+  [Corr(7, 0), 53, Corr(3, 21)],
+  [Corr(3, 21), 20, Corr(7, 18)],
+  [Corr(31, 0), 125, Corr(3, 69)],
+  [Corr(95, 0), 317, Corr(3, 197)],
+  [Corr(263, 2), 556, Corr(3, 4)],
+  [Corr(3, 4), 20, Corr(7, 1)],
+  [Corr(7, 1), 41, F(7)]
 ];
 for (let i = 0; i < rootChain.length; i++) {
   const [start, n, expected] = rootChain[i];
