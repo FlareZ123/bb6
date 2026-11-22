@@ -38,6 +38,7 @@ The corrected root continuation is:
 | 21,810 | \(\mathrm{DL}(L=0^{267}1,R=[1])\), invoking the DR token closure |
 | 21,811 | \(\mathrm{CR}(L=0^{271}1,R=[1])\) |
 | 21,827 | \(\mathrm{CR}(L=0^{255}1,R=[33])\) |
+| 21,926 | \(\mathrm{CR}(L=0^{156}1,R=[231])\) |
 | 22,083 | \(\mathrm{EL}(L=[0],R=[0,546])\) |
 
 At macro index 1,000,000 the corrected run was in mode DR, with left-list
@@ -89,10 +90,12 @@ excludes the two halting mechanisms in the stack reduction:
   closure from a DL state with right head 1 and left list in \(Z_1\), while
   DR states never have right head 0.
 
-For \(L\in Z_1\), the DR token normalizer is elementary: it consumes the
-leading zeros, optionally consumes one terminal 1, and returns a CR stack
-state with binary left list. In particular, the observed
-\(0^{267}1\) input returns \(\mathrm{CR}(L=[0,0,0,1],R=[1])\).
+For \(L\in Z_1\), the corrected DR token normalizer preserves \(Z_1\):
+\(0^n\) maps to \(\mathrm{CR}(L=0^{n+1}1,R=\operatorname{bump}(r))\),
+and \(0^n1\) maps to \(\mathrm{CR}(L=0^{n+4}1,R=\operatorname{bump}(r))\).
+The observed \(0^{267}1\) input therefore returns
+\(\mathrm{CR}(L=0^{271}1,R=[1])\). See
+[TokenNormalizerCorrection.md](./TokenNormalizerCorrection.md).
 
 The main unresolved task is to prove a root-specific strengthening of this
 predicate. In the corrected million-step trace, every DL state with right head
