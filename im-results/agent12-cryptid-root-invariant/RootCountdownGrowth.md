@@ -91,7 +91,7 @@ D_0(1453) --946704 outer successors--> D_484(1).
 
 Its raw-step total from the sampled formula is 2,838,660. Thus the D_0(540)-to-D_484(1) segment has 1,081,385 outer successors and 3,240,705 raw steps. The persistent-list root replay places `D_484(1)` at macro 1,103,484.
 
-The raw formula `24n+69` and its countdown aggregates remain computational/source-transcribed until the quantified corridor lemma is kernel-checked. From the synthetic #85 seed (not from the blank tape), the projected costs are 3,307,502 to `D_484(1)`, 3,401,058 to the first DR/G/B seed, and 3,473,702 to the 50,000-successor projected checkpoint. All earlier blank-to-these-state totals are withdrawn.
+The raw formula `24n+69` and its countdown aggregates remain computational/source-transcribed until the quantified corridor lemma is kernel-checked. From the stack seed, the projected costs are 3,307,502 to `D_484(1)`, 3,401,058 to the first DR/G/B seed, and 3,473,702 to the macro-1,153,484 checkpoint. Add seven raw steps for the blank-entry theorem: the corresponding blank-root totals are 3,307,509; 3,401,065; and 3,473,709.
 
 ## Projected #85 c=1 corridor to H(1939)
 
@@ -277,18 +277,15 @@ The 750,000 and 1,153,484 checkpoints are later macro iterates:
 750000-260 = 9865*76 and 1153484-260 = 15174*76. The root-entry task is
 therefore only 260 outer successors.
 
-The blank-root prefix has an independently audited raw-step split:
-7 steps to DR([0,0],[1]), 29 steps for the initial token closure to the
-post-token CR state, and 848 steps for the next 259 ordinary successors.
-Total: 884 raw TM steps. The 29-step token path is 3 + 2 + 21 + 2 + 1;
-the 848-step ordinary path has branch counts recorded in
-[Agent 48's mirrored-root dossier](../agent48-mirrored-root-growth/README.md).
+The blank-root prefix is seven raw steps to the mirrored #85 cfg seed
+`cfg_DR_n_n [0,0] [1]`. From there the no-swap source-transcribed route
+takes 22,099 outer successors / 66,797 raw steps to `D_0(540)`, followed
+by the countdown/reset/corridor/H-family chain above. The first DR/G/B
+right-insertion seed is reached at 1,131,748 outer successors and 3,401,065
+raw steps from blank.
 
-The 76-successor macro is
-DR([1] ++ B ++ T,R0) -> DR([1] ++ B ++ B ++ T,R0) for arbitrary suffix T,
-at cost 254 raw TM steps. The new source append attempts to prove the token
-closure, ordinary prefix, blank-root reachability, macro, and then
-IsNotHalt.of_reachesPlus_invariant. If all exact-source theorems compile
-with clean axiom profiles, this proves #490 nonhalting from blank start.
-Until CI succeeds, keep this as a proof attempt, not an established
-nonhalting result. It does not determine BB(6).
+The root-connected 76-successor macro is
+`DR(G,[1] ++ B ++ T) -> DR(G,[1] ++ B ++ B ++ T)` for arbitrary suffix T,
+at cost 254 raw TM steps in the source-transcribed branch trace. A source
+append theorem and axiom audit are still required before this can establish
+nonhalting. It does not determine BB(6).
