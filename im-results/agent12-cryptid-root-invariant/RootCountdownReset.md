@@ -117,3 +117,24 @@ The next observed transition from (D_{65}(2)) appears to enter a token-normalize
 The sequence of zero-remainder reset outputs is suggestive but not itself a nonhalting proof. To establish nonhalting, prove a complete invariant or a parametric return theorem that handles every remainder class reached by iteration. In particular, the subsequent remainder-1 case must be resolved rather than inferred from finite simulation.
 
 The old 1,131,748-step growth seed and 76-step right-insertion macro remain withdrawn; they are not used in this corrected chain.
+
+
+## Lean proof plan
+
+The source-local append draft is
+[`RootCountdownSweep.append.lean`](./RootCountdownSweep.append.lean). It now
+contains the one-step CR/EL/DL/DR clauses, the EL-zero and DR-zero sweep
+inductions, the CR-one/empty-tail step, and a singleton-right CR-zero sweep
+for the reset. The remaining composition is mechanical but not yet checked:
+
+1. Prove the common eight-step prefix from (D_n(c)) to
+   (EL([0,1],0^{4n+6}++[c])), specializing (c=0) for the reset.
+2. Apply the EL-zero sweep with (4n+7) zeros.
+3. Apply EL-empty, then the singleton-right CR-zero sweep with (4n+8)
+   zeros and initial right head 0.
+4. Apply the CR-one/empty-tail helper to obtain (EL([0],[0,8n+19])).
+5. Compose the fixed 16-step tail using the listed source helpers.
+6. Normalize the final list arithmetic and compose this reset with the
+   countdown recurrence and the finite root prefix.
+
+No local Lean compile or CI result is claimed for this draft.
