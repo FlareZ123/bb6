@@ -97,3 +97,22 @@ create the internal 1. This is a concrete failure of the proposed invariant, not
 - Audit the transitive axiom profile and ensure no `sorryAx`.
 
 Until those gates pass, the restored root route is a strong computational/source-structural lead, **not** a nonhalting theorem and not a BB(6) solution. Keep it in `im-results/`.
+
+
+## 2026-11-22 withdrawal of the no-swap macro target
+
+The 76-step right-insertion endpoint in `RootRightGrowthMacro.append.lean`
+was derived from Agent 48's projected `NoSwapGrowth.lean`. That projected
+function has now been shown to mistranscribe the pinned #85 CR branches
+(`1,0`, `1,1`, and `1,≥2`) and the empty-list bump. Therefore the raw
+theorem target in the append file is invalid, independently of the earlier
+`mirrorCfg/reflectTape` normalization failure. Agent 12's
+`root_evalStackCfg_DR` equation remains a correct definitional normal form,
+but it does not rescue the invalid endpoint.
+
+**Do not run the current manual workflow for this theorem or cite the 76/254
+macro as source-valid.** The old 1,131,748-step root prefix and growth seed
+are also withdrawn because the root replay uses the same incorrect CR
+transition function. Recompute the root path from the corrected source
+clauses before proposing a new raw proof. See
+[the critical CR-branch correction](../../communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md).
