@@ -171,6 +171,65 @@ This is a proof composition over the existing uncompiled token helper, not an in
 
 The raw cost of the E-reset itself is \(40n+196=47,689,929,636\) at the current \(n\). The following countdown has \(N=3,179,328,636\) steps, raw cost \(12N^2+57N=121,297,567,089,497,178,204\). These values remain conditional until the token helper and its dependency closure compile without axioms.
 
+## A 3-adic return map from the suffix-[0,0,2] residual
+
+The residual-2 token branch admits a useful parameterized return map. Start at
+\(D_n(1;[0,0,2])\), with \(n\equiv1\pmod9\).
+
+The source-lemma prefix reaches
+\(S(x_0,3)\), where \(S(x,r)=tok\_DR([2,x,1,1,1,1,0],[],0^r++[1])\) and
+\(x_0=8n+12\), at raw cost \(8n+71\), including the preceding DL-right-one entry. Since \(n\equiv1\pmod9\), \(x_0\equiv2\pmod3\), so exactly
+
+\[
+N=\frac{x_0-2}{3}=\frac{8n+10}{3}
+\]
+
+subtract-three cycles reach \(S(2,r)\), with \(r=3+4N\). The batch costs \(12N^2+41N\) raw steps. The residual-2 token branch costs \(6r+46\) and reaches \(CR(0^5++[1]++0^{r+3}++[1],[0])\). The ordinary source tail costs \(2r+74\) and reaches \(D_0(2r+3;[13])\).
+
+Now
+\[
+2r+3=9+8N=\frac{64n+107}{3}.
+\]
+For \(n\equiv1\pmod9\), this is divisible by 3. Let
+\[
+n'=\frac{64n+107}{9}.
+\]
+The suffix-preserving countdown with suffix [13] then reaches \(D_{n'}(0;[13])=E_{n'}(13)\). Thus
+
+\[
+\boxed{D_n(1;[0,0,2])\longrightarrow E_{(64n+107)/9}(13)}
+\qquad(n\equiv1\pmod9).
+\]
+
+The exact raw cost is
+\[
+R(n)=8n+71+(12N^2+41N)+(6r+46)+(2r+74)+(12n'^2+57n'),
+\]
+where \(N=(8n+10)/3\), \(r=3+4N\), and \(n'=(64n+107)/9\).
+
+For the index reached from the new E-remainder-two endpoint,
+\[
+n=22\,608\,559\,198,\quad
+N=60\,289\,491\,198,\quad
+r=241\,157\,964\,795,\quad
+n'=160\,771\,976\,531.
+\]
+The token-return macro costs 353,789,414,252,923,615,223,500 raw steps and returns to \(E_{160771976531}(13)\).
+
+The preceding known source macros from \(E_{1,192,248,236}(2)\) reach \(D_{22,608,559,198}(1;[0,0,2])\) through these checkpoints:
+
+| Checkpoint | State |
+| --- | --- |
+| E-remainder-two reset | \(D_0(9,537,985,909)\) |
+| countdown | \(D_{3,179,328,636}(1)\) |
+| remainder-one reset | \(D_0(25,434,629,095;[5])\) |
+| countdown | \(D_{8,478,209,698}(1;[5])\) |
+| suffix-five remainder-one reset | \(D_0(67,825,677,595;[0,0,2])\) |
+| countdown | \(D_{22,608,559,198}(1;[0,0,2])\) |
+
+The total raw cost from \(E_{1,192,248,236}(2)\) through this return to \(E_{160,771,976,531}(13)\) is 360,907,035,686,332,048,624,882. This is a conditional source-lemma computation; the token proof and the preceding reset/countdown lemmas still need kernel verification.
+
+The index map \(n\mapsto(64n+107)/9\) is a one-base-3-digit shift with an affine unit multiplier on the domain \(n\equiv1\pmod9\). In particular, writing \(n=1+9a\) gives \(n'=19+64a\). The next residue class modulo 9 therefore depends on the next base-9 digit of \(n\); it is not constant across iterations.
 ## Reproducibility and limitations
 
 verify_suffix13_macro.py transcribes the ordinary CR/EL/DL/DR stack clauses and checks the decrement and remainder-one formulas at small parameters. The finite checks cover \(n=0,\ldots,4\) and \(x\in\{3,4,7,10,13,16\}\). They are bounded source-transcribed computation, not a proof of the quantified statements.

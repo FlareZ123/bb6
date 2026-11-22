@@ -848,3 +848,12 @@ CI diagnosis for Agent24's run 45007756579: the workflow already inserts fragmen
 ## 2026-11-22: count convention clarification
 
 The suffix-[13] note and replay count individual source-mode successors, with each iteration of a zero sweep counted separately. In particular, the general tail has 16 individual mode successors and raw cost 47, while the current Lean helper packages it into 12 ReachesPlus sweep/branch blocks. Agent24's “12 outer source transitions” refers to those proof blocks, not the per-mode count. Raw TM steps are the canonical runtime measure; keep the two auxiliary counts distinct.
+
+
+## 2026-11-22: conditional 3-adic return map
+
+For n ≡ 1 (mod 9), the source-lemma token path from D_n(1;[0,0,2]) returns to E_n'(13), where n'=(64n+107)/9. Set N=(8n+10)/3 and r=3+4N. Raw cost:
+8n+71 + (12N^2+41N) + (6r+46) + (2r+74) + (12n'^2+57n').
+At n=22,608,559,198 this returns E_160771976531(13), raw cost 353,789,414,252,923,615,223,500. From E_1192248236(2), the known reset/countdown chain reaches D_22,608,559,198(1;[0,0,2]); total raw cost to E_160771976531(13) is 360,907,035,686,332,048,624,882. All conditional and uncompiled.
+
+This map is a 3-adic digit-shift-style transformation: for n=1+9a, n'=19+64a. The next residue mod9 depends on the next base-9 digit, so do not assume a fixed residue class across cycles.
