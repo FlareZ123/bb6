@@ -1,6 +1,6 @@
 # Exact macro dynamics of the DR corridor family
 
-**Status: source-transcribed #85-side projected candidate, not a formal proof or blank-root path.** The #490 wrapper mirrors #85 with L/R swapped. Its blank-start seed corresponds to #85 `DR(L=[1],R=[0,0])`, not the synthetic #85 `DR(L=[0,0],R=[1])` used for the `Corr(3,3)` macro-24 trace below. Therefore the c=1 corridor, `D_n` countdown, and H-family entry are not established as reachable from the actual blank tape. The mode branch formulas remain useful #85-side candidates; their mirror lift is open. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md) and [RootCountdownGrowth.md](./RootCountdownGrowth.md).
+**Status: source-transcribed #85-oriented stack candidate connected to the #490 blank root; not a formal proof.** The #490 wrapper calls #85's evaluator with reversed arguments, and #85's `evalStackCfg` reverses them again when constructing `cfg_DR_n_n`. The two swaps cancel, so the seven-step blank seed corresponds to #85 `cfg_DR_n_n [0,0] [1]`, the seed used by the `Corr(3,3)` macro-24 trace below. The c=1 corridor, `D_n` countdown, and H-family entry are therefore blank-root-connected at the source-transcribed stack level. The parametric identities and their composition still require Lean proofs against the original machine. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md), [RootCountdownGrowth.md](./RootCountdownGrowth.md), and [the evaluator derivation](../agent35-cryptid-mirror-cancellation/README.md).
 
 ## Definitions
 
