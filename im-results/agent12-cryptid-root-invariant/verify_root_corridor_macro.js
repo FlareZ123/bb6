@@ -280,8 +280,8 @@ for (let i = 0; i < rootChain.length; i++) {
 }
 
 const D = (n, c) => state("CR", [0], [...zeros(4 * n + 5), c]);
-const growthL = [0, 0, 1, 0, 1, 0, 0, 0, 0, 1];
-const growthB = [16, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0];
+const rootGrowthL = [0, 0, 1, 0, 1, 0, 0, 0, 0, 1];
+const rootGrowthB = [16, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0];
 const Q = [12, 0, 0, 0];
 const HwithRight = (r, R) => state("CR",
   [0, ...repeat([1, 0], r + 1), 0, 0, 1, 0, 0, 0], R);
@@ -389,7 +389,7 @@ for (const a of [2, 3, 4, 5, 12, 100, 100000]) {
   }
 }
 
-// Root H-family entry: 483 padding blocks followed by the 179-step base.
+// Projected #85 H-family entry: 483 padding blocks followed by the 179-step base.
 // H(1939) -> H(7, Q^966 ++ [2,0,0,0,0]) -> DR/G/B seed.
 tokenCalls = 0;
 const hPadding = runWithCost(H(rRoot), 38 * 483);
@@ -400,26 +400,26 @@ if (tokenCalls !== 0 || hPadding.rawSteps !== 61824) {
 }
 checks++;
 tokenCalls = 0;
-const growthSeedResult = runWithCost(hPadding.state, 179);
-const growthSeedTail = [16, 0, 0, 0, ...repeatQ(969), ...Hright];
-assertState("root-connected first DR/G/B seed", growthSeedResult.state,
-  state("DR", rootGrowthL, [1, ...rootGrowthB, ...growthSeedTail]));
+const rootGrowthEntryResult = runWithCost(hPadding.state, 179);
+const rootGrowthEntryTail = [16, 0, 0, 0, ...repeatQ(969), ...Hright];
+assertState("projected first DR/G/B seed", rootGrowthEntryResult.state,
+  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthTail]));
 if (tokenCalls !== 0 || rootGrowthEntryResult.rawSteps !== 591) {
   throw new Error("projected H-base aggregate mismatch");
 }
 checks++;
-const growthSeed = growthSeedResult.state;
-const growthEntryOuter = 3897 + 5830 + 4 + 38 * 483 + 179;
-const growthEntryRaw = 13641 + 17487 + 13 + 61824 + 591;
-if (rootEntryOuter !== 28264 || rootEntryRaw !== 93556 || growthSeed.R.length !== 3898) {
+const rootGrowth = growthSeedResult.state;
+const rootEntryOuter = 3897 + 5830 + 4 + 38 * 483 + 179;
+const rootEntryRaw = 13641 + 17487 + 13 + 61824 + 591;
+if (rootEntryOuter !== 28264 || rootEntryRaw !== 93556 || rootGrowth.R.length !== 3898) {
   throw new Error("projected first-entry aggregate mismatch");
 }
 
 // The earlier 50,000-successor checkpoint is the first seed plus 286
 // repetitions of the 76-successor insertion macro.
 tokenCalls = 0;
-const laterGrowthCheckpoint = runWithCost(growthSeed, 286 * 76);
-if (tokenCalls !== 0 || laterGrowthCheckpoint.rawSteps !== 72644 ||
+const laterRootCheckpoint = runWithCost(growthSeed, 286 * 76);
+if (tokenCalls !== 0 || laterRootCheckpoint.rawSteps !== 72644 ||
     laterRootCheckpoint.state.R.length !== 7330 ||
     !eq(laterRootCheckpoint.state.L, rootGrowthL) ||
     !eq(laterRootCheckpoint.state.R.slice(0, 13), [1, ...rootGrowthB])) {
@@ -431,7 +431,7 @@ if (rootEntryOuter + 286 * 76 !== 50000 ||
 }
 checks++;
 
-// The 76-step root growth macro is tail-parametric and never calls a token
+// The 76-step projected growth macro is tail-parametric and never calls a token
 // normalizer: it inserts one copy of B immediately after the leading 1.
 for (const T of [
   [], [0], [1], [2, 4, 6, 8], [3, 0, 0], [7, 5, 3, 1],
@@ -439,7 +439,7 @@ for (const T of [
 ]) {
   tokenCalls = 0;
   const result = runWithCost(state("DR", rootGrowthL, [1, ...rootGrowthB, ...T]), 76);
-  assertState("root growth 76, suffix=" + JSON.stringify(T), result.state,
+  assertState("projected growth 76, suffix=" + JSON.stringify(T), result.state,
     state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...T]));
   if (tokenCalls !== 0) throw new Error("root growth 76 unexpectedly called a token normalizer");
   if (result.rawSteps !== 254) throw new Error("root growth 76 raw-step count mismatch: " + result.rawSteps);
@@ -487,7 +487,7 @@ checks++;
 
 console.log(JSON.stringify({
   ok: true, checks,
-  rootGrowth76RawSteps: grownRootResult.rawSteps,
+  projectedGrowth76RawSteps: grownRootResult.rawSteps,
   opaqueGrowth76RawSteps: opaqueResult.rawSteps,
   hPhase76RawSteps: hPhaseResult.rawSteps
 }, null, 2));
