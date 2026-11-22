@@ -180,3 +180,6 @@ This turns the unresolved connection into a concrete reachability problem inside
 
 
 The interpreter currently materializes finite stack lists, so it cannot construct the cylinder's enormous (K=[0]++1^m) list. The helper `cylinder_token_state` deliberately returns that target in compressed prefix/run form. A useful next implementation improvement is run-length compression plus bulk handling of repeated zero/one runs; this is necessary before the interpreter can test the actual cylinder-scale reachability question.
+
+
+**Transport caveat:** the root token checkpoint is proved from DeepMind's own `init_reaches_nontrivial`; the initial state, blank symbol, and tape/head convention still need to be compared explicitly with this repository's D0 root adapter. The transition-table state map alone does not settle that initial-configuration equality. The cylinder-side E0-to-`tok_CR` tape identity is separate.
