@@ -25,6 +25,10 @@ preserved as an alternative abstract projected-system experiment, not as the
 #490 blank-root orbit.
 
 The no-swap blank-root prefix and macro chain remain computational/source-
-transcribed. The parametric countdown/reset/corridor/H/growth identities have
-not been kernel-checked against the original #490 target, and no
-blank-root nonhalting theorem or BB(6) decision is established.
+transcribed. The pinned `Stack.lean` theorem `reachesPlus_mirrorCfg` (lines 359–365)
+transports any #85 `ReachesPlus` path to #490 under `hM`; because the two
+`evalStackCfg` argument reversals cancel, it preserves the same `(L,R)` stack
+coordinates and the seven-step blank-root seed. This is the preferred lift for
+the countdown sweeps if they are proved on the #85 side. The parametric
+countdown/reset/corridor/H/growth identities have not been kernel-checked, and
+no blank-root nonhalting theorem or BB(6) decision is established.
