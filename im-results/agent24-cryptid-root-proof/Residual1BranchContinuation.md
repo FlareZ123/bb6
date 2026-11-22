@@ -134,3 +134,43 @@ Derive the source-exact continuation of
 (or the corresponding token-normalizer configuration) through `mode_CR_n_n_closed` and the `bounce_len` descent. Determine whether it reaches a halt, a new (B/C/Q) family, or a smaller token state. The source module's `bounce_len` theorem supplies a well-founded token-bounce alternative, but the exact successor for this concrete residual-one input still needs to be extracted.
 
 No blank-root reachability theorem is supplied here. The entire chain is conditional on the upstream (E_{160771976531}(13)) state and on the listed source-stack macros.
+
+
+## Source-mode reduction of the residual-one endpoint
+
+The pinned source module's stack-mode closure lemmas give a further exact reduction. Interpret the endpoint as
+[
+\mathrm{cfg\_CR\_n\_n}(L,R),\quad
+L=[(0,0)]^{r+9}++[(1,0)],\quad R=[(0,0)].
+]
+Repeated use of `mode_CR_n_n_closed` on the (r+9) leading zero pairs removes them and increments the first coordinate of (R) twice per pair. The remaining configuration is
+[
+\mathrm{cfg\_CR\_n\_n}([(1,0)],[(2r+18,0)]).
+]
+The (a_1=1,L_3=[]) case of `mode_CR_n_n_closed` then gives
+[
+\mathrm{cfg\_EL\_n\_n}([(0,0)],[(0,0),(2r+21,0)]).
+]
+The exact `mode_EL_n_n_closed` and `mode_DL_0_n_closed` branches give
+[
+\mathrm{EL}([(0,0),(0,0)],[(2r+21,0)])
+\to^*
+\mathrm{DL\_0\_n}([(0,0),(0,0)],[(2r+20,0)])
+\to^*
+\mathrm{DR\_n\_n}([(0,0),(0,0)],[(1,0),(2r+18,0)]).
+]
+Finally, the (a_1=0,r_1=1) branch of `mode_DR_n_n_closed` invokes the source theorem
+[
+\texttt{tok\_DR\_2\_0\_closed}\bigl([(2r+18,0)], [0]\bigr).
+]
+For the concrete residual-one parameter
+[
+r=195527226341521229934379923,
+]
+the token subproblem is therefore exactly
+[
+\texttt{tok\_DR\_2\_0\_closed}
+\bigl([(391054452683042459868759864,0)], [0]\bigr).
+]
+
+The upstream theorem `tok_DR_2_0_closed` proves that this token subproblem reaches either a halted configuration or a configuration in the main stack system. It does **not** by itself identify which alternative occurs or give the exact successor stack state. Extracting that concrete endpoint is now the decisive local task. In particular, do not claim the tempting (+5) right-counter recurrence until the `tok_DR_2_0_closed`/ `bl_terminates_le` output has been evaluated and checked.
