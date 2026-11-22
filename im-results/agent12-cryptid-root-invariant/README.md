@@ -193,4 +193,4 @@ The macro regression harness also verifies `F(r) -> G(r)` in `3r+13` successors,
 The root macro prefix now includes `G(7)` at 21,922 and `H(7)` at 21,926, with the four-step `G(r) -> H(r)` identity checked for r=1..8. Latest regression pass: Actions run `44979144632`, 105 checks. The H-family orbit is open.
 
 
-The regression harness also checks the 24-step blank-root prefix `DR([0,0],[1]) -> Corr(3,3)`. Latest CI run `44979251653` passed 106 checks, covering the executable root prefix through `H(7)` at macro 21,926. This remains computational support, not formal proof.
+The regression harness also checks the 24-step prefix from the accelerated root stack seed `DR([0,0],[1])` (raw TM time 7) to `Corr(3,3)`. Latest CI run `44979251653` passed 106 checks, covering the executable root prefix through `H(7)` at macro 21,926. This remains computational support, not formal proof.
