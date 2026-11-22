@@ -519,3 +519,8 @@ After comparing with `ASectionStackEncoding.md`, renamed the local corridor fami
 ### Pair-stack tape image of the corridor family
 
 From the #85 source, `cfg_DR_n_n L R` has physical tape `encLeft(R) D> encRight(L)`, and `evalStackCfg DR_n_n L R` swaps the arguments. For second coordinate 0, `encLeft` emits `1^(a+1)0` in list order and `encRight` emits the blocks in reverse list order. Thus `Corr(r,c)=DR(L=0^r1,R=[1,c])` maps to `(10)^r 110 D> 0 1^(c+1) 0 11` (blank-extension equivalence). Added this exact tape image to `RootCorridorMacro.md` with links to `DeepMindStackReduction.md` and `ASectionStackEncoding.md`. It is not yet an A(n,r) identification or a cylinder-reachability proof.
+
+
+### Proof-detail expansion
+
+Expanded `RootCorridorMacro.md` with explicit 12-step state chain for the c=0 reset tail and 16-step state chain from `CR(0001,[1])` to `Corr(3,4)` for the c=2 reset. Both are covered by the existing 106-check pre-rename regression; no new test run is claimed after notation/label edits.
