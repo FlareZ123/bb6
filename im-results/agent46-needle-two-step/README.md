@@ -151,6 +151,16 @@ Here \(t>w\), \(\rho_{5,29}=0\), and \(2^{w+t}>3y\). The residue-window statemen
 
 The general two-step congruence has a stronger consequence at the adjacent valuation \(t=w+1\). This closes one entire second-parent offset throughout the large cancellation band, including the residue-cut exceptions \(c(s)<d\).
 
+More generally, putting \(t=w+k\), \(k\ge1\), in (2), multiplying by \(2^{k-1}\), and reducing \(2^{t+1}\equiv-3\pmod{D_t}\) gives the compact necessary condition
+\[
+\boxed{
+D_{w+k}\mid
+y+(2^k-2)w+3-k+(2k-3)2^{k-1}.
+} \tag{14}
+\]
+The first two offsets are therefore \(D_{w+1}\mid y+1\) and \(D_{w+2}\mid y+2w+3\). The offset \(k=1\) is special because its correction term is constant, which is what makes the uniform cut below possible.
+
+
 **Theorem.** Let \(r=110j+50\), \(n=3^{2r-1}\), \(d=1+\lfloor\log_2 n\rfloor\), and \(a=(9^r+5)/2\). Suppose
 \[
 (2r-1)s\ge a,\qquad (r-1)s\le a-d-3,\qquad s\ge1.
