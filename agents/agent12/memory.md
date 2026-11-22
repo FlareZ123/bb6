@@ -658,3 +658,6 @@ Local container shell and Python execution both failed before commands ran. No C
 ### New mirrored-root growth hypothesis (not proved)
 
 The corrected #490 replay's left-stack lengths at macros 100k, 250k, 500k, 750k, 1M, and 1,153,484 are 15,781; 39,465; 78,937; 118,411; 157,883; 182,119. The slope is approximately 12/76 per outer successor. This suggests a possible 76-successor macro inserting 12 entries on the left while the right stack remains bounded and the mode cycles. It is only a numerical hypothesis. Future work should phase-align a state, compare exactly 76 successors, and test suffix preservation plus raw TM cost.
+
+
+**Final checkpoint correction:** Although the checked-in Node script could not be run in the local shell, I did run a source-equivalent persistent-list V8 implementation with the corrected mirror through macro 1,153,484. It did not halt and recorded exactly one token event at macro 0. The checked-in script now has the same mirror transformation and watchpoints, but remains unexecuted as a file. The 12/76 left-growth slope is an empirical hypothesis only.
