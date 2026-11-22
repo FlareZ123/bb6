@@ -58,7 +58,7 @@ I reran the persistent-list successor in the available V8 runtime with the sourc
 
 At macro 21,810 the `DL` right-head-1 token closure has input `r3=[]` and `L=0^267 ++ [1]`. The source formula
 `closeTokDR(r3,0^n ++ [1]) = CR(L=0^(n+4) ++ [1], R=bump(r3))`
-therefore gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811. This is the exact c=2 corridor token event, not an ordinary DR right-head-1 branch. The 21,810 ordinary outer successors before the closure cost 64,565 raw TM steps; the 288 ordinary successors after it cost 595 raw steps to `D_0(540)`. The token closure's own raw-step count is not separately enumerated here.
+therefore gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811. This is the exact c=2 corridor token event, not an ordinary DR right-head-1 branch. The token closure costs exactly 1,637 raw steps: the DL branch's `tExecute 4`, 267 `tok_DR_zero` steps at 4 each, one `tok_DR_1_nil_28` at 28, 268 `tok_EL_1` steps at 2 each, and one `tok_EL_exit_zero` at 1. The 21,810 ordinary outer successors before the closure cost 64,565 raw TM steps; the 288 ordinary successors after it cost 595 raw steps to `D_0(540)`. Including the 7 raw blank-root prefix, blank-to-`D_0(540)` costs 66,804 raw steps.
 
 Here `D_n(c) = CR(L=[0], R=0^(4n+5) ++ [c])`,
 `G=[0,0,1,0,1,0,0,0,0,1]`, and
