@@ -190,3 +190,9 @@ The corresponding helper drafts are `stepElemDL_within25`,
 `stepElemThenBB_DL_within`. These Lean declarations have not been locally
 compiled or axiom-audited. The CB branch, full `stepSym_within`, and the
 initial `runElemFast`/final halting transfer remain open.
+
+## 2026-11-22 CB single-element fallback (source-level, uncompiled)
+
+The pilot now drafts `stepElemCB_run0_within25` and `stepElemCB_within25`, tightening a single CB element transition to `25(M+1)`. It also proves `bumpSymL_length_le` (at most five extra left stack tokens) and, when the CB element transition returns BB, `stepElemCB_BB_left_length` with the safe one-sided bound `|L_out|≤|L|+7`. This accounts for the possible two-token run-0 prefix.
+
+Composing the element transition with its optional BB sweep gives `stepElemThenBB_CB_within` with budget `2^9(M+1)(|L|+8)`. This closes the *single-element fallback wrapper* used by `afterSweepCB`; it does not close the Rule A/B/BC macro-recognition branches. The complete CB branch and full `stepSym` theorem remain open.

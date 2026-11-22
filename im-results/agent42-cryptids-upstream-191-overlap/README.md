@@ -169,3 +169,7 @@ The F424 costed pilot now drafts `stepSym_BB_within` and
 its optional BB sweep only on the run-0 branch. The CB dispatcher/macro branch
 and the complete `stepSym` theorem remain open; none of these additions has
 passed local Lean 4.36.0-rc2 compilation yet.
+
+### 2026-11-22 CB fallback wrapper (uncompiled)
+
+The pilot now drafts a `2^9(M+1)(|L|+8)` bound for one CB element transition followed by its optional BB sweep. This is only the non-macro fallback component of `afterSweepCB`; the Rule A/B/BC macro branches and complete CB outer-step composition remain open.

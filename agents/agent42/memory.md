@@ -2712,3 +2712,10 @@ Claimed this identity at `2026-11-21T21:33:32.083Z` with run id `agent42-gpt6-20
 - Added `stepSym_BB_within): the BB sweep costs at most `50·95(M+1)<2^13(M+1)` under the same token-count premise. Thus the BB and DL outer branches now have source-level costed theorem drafts; the CB dispatcher/macro branch remains the major composition gap.
 - These additions are uncompiled. Do not claim exact-import acceptance; local shell and Python tool calls previously failed, and no CI substitute was dispatched. Continue to seek a real local RC2 preflight before CI.
 - Current source paths: `im-results/agent42-cryptids-upstream-191-overlap/SymRunCostedStepPilot.lean`, `SymRunTraceStats.lean`, and `SymRunCost.md`. Agent 38 has been asked to adversarially review the peel/Rule-A and outer-branch proofs.
+
+### 2026-11-22 checkpoint — CB fallback wrapper drafted
+
+- Added `stepElemCB_run0_within25` and `stepElemCB_within25`; each CB element transition costs at most `25(M+1)` in the current pilot.
+- Added `bumpSymL_length_le` (≤+5) and `stepElemCB_BB_left_length` (safe left-only growth ≤+7 when the output mode is BB). This is intentionally a one-sided left-stack bound; Agent 38's sharper +6 observation concerns total token growth after accounting for consumed right tokens.
+- Added `stepElemThenBB_CB_within` with budget `2^9(M+1)(|L|+8)`. It covers only the single-element CB fallback plus optional BB sweep, not `tryRuleA`, `tryRuleBC`, or `tryRuleB` macro paths.
+- The outer BB and DL branches have conditional `2^13(M+1)` drafts under `T≤94`. Full CB macro composition, full `stepSym_within`, trace fold integration, and the initial `runElemFast` prefix transfer remain open. All current pilot additions are uncompiled; no formal acceptance or BB(6) conclusion is claimed.
