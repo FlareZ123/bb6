@@ -1,6 +1,8 @@
-# Corrected root countdown and 76-step growth family
+# Withdrawn root countdown and growth family (pre-head-one simulator)
 
-**Status:** strong computational candidate for a root-reachable infinite projected orbit. The source token normalizer has been corrected, but the countdown recurrence, finite reset/prefix, and growth macro have not yet been proved in Lean. Do not claim an original-TM nonhalting theorem yet.
+**Status: WITHDRAWN as source dynamics.** The simulator omitted the source DR right-head-one token branch. The corrected b<=1 replay falsifies the tested D_n(c) countdown endpoints and the DR/G/B 76-step endpoint. The root connection and all downstream macro indices below are historical outputs of the defective successor. See [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
+
+## Historical experiment (not source-valid)
 
 ## 1. The root reaches a one-counter corridor
 
