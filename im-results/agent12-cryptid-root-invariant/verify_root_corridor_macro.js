@@ -170,6 +170,8 @@ for (let n = 0; n <= 32; n++) {
   checks++;
 }
 
+assertState("blank-root prefix", run(state("DR", [0, 0], [1]), 24), E(3, 3)); checks++;
+
 const rootChain = [
   [E(3, 3), 20, E(7, 0)],
   [E(7, 0), 53, E(3, 21)],
