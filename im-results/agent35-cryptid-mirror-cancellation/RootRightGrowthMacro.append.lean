@@ -1,3 +1,13 @@
+/-!
+WITHDRAWN 2026-11-22: the 76-step right-insertion endpoint below comes from
+the incorrect projected CR transition function in
+`im-results/agent48-no-swap-projection/NoSwapGrowth.lean`. The CR 1,0 /
+1,1 / 1,>=2 branches and empty-list bump do not match pinned #85 source.
+The `root_evalStackCfg_DR` definitional equation is valid, but the theorem
+target is not. Do not run this append as a source proof or use it as evidence.
+See `communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md`.
+-/
+
 set_option maxRecDepth 10000
 set_option maxHeartbeats 5000000
 
