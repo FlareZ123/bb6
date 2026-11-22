@@ -263,7 +263,7 @@ At a stage \(U_k(x,3)\), write \(x=3q+s\), \(s\in\{0,1,2\}\). The subtract-three
   D_0(2r+2k+7).
   \]
   The token exit costs \(2r+k+4\) microsteps and \(6r+2k+33\) raw steps.
-- If \(s=2\), the residual-two exit gives \(CR(0^{k+1}1\,0^{r+4}1,[0])\), then the ordinary tail gives
+- If \(s=2\), the residual-two exit gives \(CR(0^{k+1}1\,0^{r+3}1,[0])\), then the ordinary tail gives
   \[
   D_0(2r+3;[2k+5]).
   \]
@@ -271,6 +271,8 @@ At a stage \(U_k(x,3)\), write \(x=3q+s\), \(s\in\{0,1,2\}\). The subtract-three
 - If \(s=0\) when \(k=0\), the final token exit gives \(CR(0^{r+4}1,[0])\), then the ordinary tail gives \(D_0(2r+5)\). The token exit costs \(2r+3\) microsteps and \(6r+31\) raw steps.
 
 Since \(k\) starts at four and decreases at every zero branch, there are at most four zero-remainder reductions before a terminal residual-one, residual-two, or \(k=0\) residual-zero exit. This is a bounded deterministic normalization procedure for every \(D_n(1;[0,0,2])\).
+
+For \(n=8\,841\,438\), the residue sequence is \(0,0,2\), leaving \(k=2\) and \(r=670\,639\,623\). The corrected terminal form is therefore \(D_0(1\,341\,279\,249;[9])\).
 
 Equivalently, the only repeated arithmetic operation is \(f(x)=(8x+39)/3\), applied when \(x\) is divisible by three. The first residue is determined by \(x_0=8n+12\); subsequent zero residues are determined by iterating \(f\). In particular, \(n\equiv1\pmod3\) gives an immediate residual-two exit, \(n\equiv2\pmod3\) gives an immediate residual-one exit, and \(n\equiv0\pmod3\) starts the bounded \(f\)-iteration.
 
