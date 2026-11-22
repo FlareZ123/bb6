@@ -207,3 +207,46 @@ theorem root_countdown_prefix (n c : ℕ) :
             (ReachesPlus.trans h5
               (ReachesPlus.trans h6
                 (ReachesPlus.trans h7 h8))))))
+
+
+theorem root_countdown_zero_reset_tail (n : ℕ) :
+    ReachesPlus target
+      (cfg_EL_n_n [(0,0)] [(0,0), (8*n+19,0)])
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate 5 (0,0) ++ [(8*n+13,0)])) := by
+  have h1 := root_countdown_el_zero_step [(0,0)] [(8*n+19,0)]
+  have h2 := root_countdown_el_positive_step (8*n+18)
+    [(0,0),(0,0)] []
+  have h3 := root_countdown_dl_positive_step (8*n+16)
+    [(0,0),(0,0)] []
+  have h4 := root_countdown_dr_zero_sweep 1 []
+    [(8*n+16,0)]
+  have h5 := root_countdown_dr_empty_left_step
+    [(1,0),(0,0),(0,0),(8*n+16,0)]
+  have h6 := root_countdown_el_positive_step 0 [(0,0)]
+    [(0,0),(0,0),(8*n+16,0)]
+  have h7 := root_countdown_dl_zero_step [(0,0)]
+    [(0,0),(0,0),(8*n+16,0)]
+  have h8 := root_countdown_el_zero_sweep 1 [(0,0),(1,0)]
+    [(8*n+16,0)]
+  have h9 := root_countdown_el_positive_step (8*n+15)
+    [(0,0),(0,0),(0,0),(1,0)] []
+  have h10 := root_countdown_dl_positive_step (8*n+13)
+    [(0,0),(0,0),(0,0),(1,0)] []
+  have h11 := root_countdown_dr_zero_sweep 2 [(1,0)]
+    [(8*n+13,0)]
+  have h12 := root_countdown_dr_positive_positive_step 0 0 []
+    (List.replicate 3 (0,0) ++ [(8*n+13,0)])
+  simpa [List.replicate_succ, List.cons_append, List.append_assoc] using
+    (ReachesPlus.trans h1
+      (ReachesPlus.trans h2
+        (ReachesPlus.trans h3
+          (ReachesPlus.trans h4
+            (ReachesPlus.trans h5
+              (ReachesPlus.trans h6
+                (ReachesPlus.trans h7
+                  (ReachesPlus.trans h8
+                    (ReachesPlus.trans h9
+                      (ReachesPlus.trans h10
+                        (ReachesPlus.trans h11 h12))))))))))
+
