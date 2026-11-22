@@ -14,8 +14,9 @@ Run:
     python stack_system_sim.py --steps 30
 
 The regression prefix checks the exact first successor and six following
-mode transitions extracted from the Lean proof.  The initial state is the
-seven-step blank-root stack entry, not the original blank configuration.
+mode transitions extracted from the Lean proof.  The initial state is DeepMind's seven-step `init_reaches_nontrivial` stack
+entry, not the original initial configuration. Its initial blank/head convention
+still needs to be compared with this repository's D0 root adapter.
 """
 from __future__ import annotations
 
