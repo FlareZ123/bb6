@@ -134,6 +134,7 @@ function run(s, n) {
 const E = (r, c) => state("DR", [...zeros(r), 1], [1, c]);
 const F = r => state("EL", zeros(4), [1, 0, 0, 0, ...repeat([1, 0], r + 2), 3]);
 const G = r => state("DR", [0, 0, ...repeat([1, 0], r + 2), 0, 0, 1, 0, 0, 0], [1, 0]);
+const H = r => state("CR", [0, ...repeat([1, 0], r + 1), 0, 0, 1, 0, 0, 0], [2, 0, 0, 0, 0]);
 
 function assertState(label, actual, expected) {
   if (!eq(actual, expected)) {
@@ -149,6 +150,7 @@ for (let r = 1; r <= 8; r++) {
   assertState("c=2, r=" + r, run(E(r, 2), 2 * r + 30), E(3, 4)); checks++;
   assertState("c=1, r=" + r, run(E(r, 1), 3 * r + 20), F(r)); checks++;
   assertState("F-to-G, r=" + r, run(F(r), 3 * r + 13), G(r)); checks++;
+  assertState("G-to-H, r=" + r, run(G(r), 4), H(r)); checks++;
 }
 
 // Arbitrary-tail transfer identity, with nonempty U and T.
