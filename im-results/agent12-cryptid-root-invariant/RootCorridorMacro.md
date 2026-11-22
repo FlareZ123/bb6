@@ -1,6 +1,10 @@
 # Exact macro dynamics of the DR corridor family
 
-**Status:** exact identities for the outer stack successor defined in `fast_root_stack_sim.js`; the root trace instantiates them. This is a macro reduction, not yet an all-time proof for the blank-root orbit.
+**Status: WITHDRAWN as source dynamics.** The outer DR rule in fast_root_stack_sim.js omitted the pinned source's token branch for right head 1. The shared transfer corridor and all Corr-family formulas below use that incorrect transition. Preserve this file only as a record of the pre-correction abstract experiment; do not cite it as a source-stack identity. See [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
+
+## Historical definitions (pre-correction)
+
+The formulas below are not valid for the pinned #85/#490 source successor.
 
 ## Definitions
 
