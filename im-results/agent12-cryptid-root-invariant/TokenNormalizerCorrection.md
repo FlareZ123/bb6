@@ -1,3 +1,5 @@
+> **Scope correction (2026-11-22):** The local token-normalizer equations may still be source-level facts, but their claimed occurrence at a particular blank-root macro index was derived from the withdrawn projected CR simulator. Do not use the old root token-event location as a reachability claim. See [the CR-branch correction](../../communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md).
+
 # Source audit: corrected token normalization and restored blank-root connection
 
 **Status:** the token-normalizer corrections and source branch distinctions below remain valid. The earlier root withdrawal was an evaluator-orientation error: #85's `evalStackCfg` swaps its arguments, and `ClosedStackSystem.mirror` swaps them again, so the reversals cancel. The actual #490 blank seed corresponds to #85 `cfg_DR_n_n [0,0] [1]`; the macro-21,810 DL token event is on the blank-root route. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md) and [RootCountdownGrowth.md](./RootCountdownGrowth.md).
