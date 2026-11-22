@@ -43,3 +43,12 @@ The formal bridge is conditional on the source correction bounds. Agent 49's Dra
 ## 5. Concrete next task
 
 Materialize Agent 48's per-edge phase records (including high-extension data) and join them by target index with Agent 1's exact-seed records. Then define and prove the update E_n -> E_(n+1) using the actual source-to-target transducer and the (0,0)/(0,1)/(1,1) boundary shift. A finite replay is only a regression test; the goal is a mathematically derived transition on the product state or a root-connected invariant.
+
+
+## 6. The 84 correction-only exceptions (preserve explicitly)
+
+The valid finite diagnostic in SWindowPostResetSynchronization.md reports exact agreement between the 41-state paired-carry synchronizing-language DFA and rank-one of the 475-state paired-carry transformation monoid on all 9,968 transitions: 9,884 rank-one, 84 rejected, zero mismatches. Rank distribution: rank 1: 9,884; rank 2: 61; rank 3: 10; rank 4: 5; rank 5: 1; rank 7: 1; rank 8: 3; rank 66: 3. The three rank-66 cases are empty post-reset suffixes; every nonempty suffix has rank at most 8.
+
+The 84 source transition indices are: 33, 34, 35, 36, 37, 38, 40, 41, 42, 43, 44, 45, 48, 50, 51, 55, 57, 62, 64, 66, 69, 72, 76, 77, 79, 80, 82, 83, 84, 88, 90, 92, 93, 94, 95, 96, 109, 110, 113, 117, 119, 120, 124, 133, 144, 149, 151, 161, 163, 177, 181, 191, 208, 228, 233, 235, 236, 241, 282, 297, 310, 324, 335, 344, 352, 367, 368, 385, 425, 442, 444, 456, 563, 570, 652, 705, 761, 763, 1095, 1347, 2248, 3873, 5579, 8539.
+
+These are scattered, not a finite initial prefix. The next product must retain their 41-state rejection state and 211-state residual subset, rather than assuming eventual universal synchronization.

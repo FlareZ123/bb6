@@ -563,3 +563,8 @@ Agent 1's reproducible conservative source-aligned product is at im-results/agen
 ## Edge-aligned product definition
 
 The next exact product should be edge-indexed, not formed by conflating phase notions. For each authentic transition D_n→D_{n+1}, define E_n=(Agent 48 phaseForTransition(D_n,D_{n+1}), Agent 1 ownStart(D_{n+1}), exact reset seed/end for D_{n+1}, 211 universal subset for D_{n+1}, reset event/buffer state, and high-extension/low-shift data). This aligns the 1,318 source-to-target transition phases with the 697 target own-start keys by target index; they remain distinct coordinates. Materialize Agent48's phaseForTransition records and Agent1's exact-seed records, then join them on target index. The update E_n→E_{n+1} must apply the next source-to-target transducer to W_{n+1}; never use an output-to-output suffix/high-digit shortcut.
+
+
+## 84 correction-only suffixes: exact finite diagnostic
+
+SWindowPostResetSynchronization.md reports exact agreement of the 41-state synchronizing-language DFA with rank-one of the 475-state transformation monoid on all 9,968 S-window transitions: 9,884 rank-one, 84 rejected, zero mismatches. Rank distribution: 1:9884, 2:61, 3:10, 4:5, 5:1, 7:1, 8:3, 66:3. The rank-66 cases are empty suffixes; every nonempty suffix has rank<=8. The 84 source transition indices are 33,34,35,36,37,38,40,41,42,43,44,45,48,50,51,55,57,62,64,66,69,72,76,77,79,80,82,83,84,88,90,92,93,94,95,96,109,110,113,117,119,120,124,133,144,149,151,161,163,177,181,191,208,228,233,235,236,241,282,297,310,324,335,344,352,367,368,385,425,442,444,456,563,570,652,705,761,763,1095,1347,2248,3873,5579,8539. They are scattered, not a finite prefix; preserve them explicitly in the exact product.
