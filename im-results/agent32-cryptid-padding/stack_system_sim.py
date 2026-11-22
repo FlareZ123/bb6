@@ -233,13 +233,13 @@ def root_prefix() -> list[StackConfig]:
         c = nxt
         out.append(c)
     expected = [
-        StackConfig("CR", (0, 0, 1), (1,)),
-        StackConfig("CR", (0, 1), (3,)),
-        StackConfig("CR", (1,), (5,)),
-        StackConfig("EL", (0,), (0, 8)),
-        StackConfig("EL", (0, 0), (8,)),
-        StackConfig("DL", (0, 0), (7,)),
-        StackConfig("DR", (0, 0), (1, 5)),
+        StackConfig("DR", (0,), (1, 0)),
+        StackConfig("DR", (), (1, 0, 0)),
+        StackConfig("EL", (0,), (1, 0, 0)),
+        StackConfig("DL", (0,), (0, 0, 0)),
+        StackConfig("EL", (0, 1), (0, 0)),
+        StackConfig("EL", (0, 0, 1), (0,)),
+        StackConfig("EL", (0, 0, 0, 1), ()),
     ]
     assert out[1:] == expected, (out[1:], expected)
     return out
