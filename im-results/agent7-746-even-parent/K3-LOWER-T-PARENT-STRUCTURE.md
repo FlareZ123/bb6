@@ -70,7 +70,7 @@ For (q_0=Z/3),
 \frac{q_0}{p}
 =\frac{884-512x+(73-94K)/p}{81}.
 ]
-Its range straddles (3/4). If (q_0/p\ge3/4), the t=0 source band at scale (K-3) is available. If (q_0/p<3/4) and (v_3(Z)\ge2), then
+Its range straddles (3/4). If (q_0/p>3/4), the t=0 source band at scale (K-3) is available. If (q_0/p<3/4) and (v_3(Z)\ge2), then
 [
 \frac{q_1}{p}=\frac23\frac{q_0}{p}
 ]
