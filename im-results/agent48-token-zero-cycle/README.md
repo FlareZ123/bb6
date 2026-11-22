@@ -336,3 +336,42 @@ D_0(9\,537\,985\,879;[5]).
 \]
 
 This replaces the previously withdrawn suffix-[9] remainder-two continuation. The four-pass composition is source-level and still awaits a Lean proof.
+
+
+## 12. Further conditional root continuation through the suffix families
+
+Composing the corrected suffix-[9] zero reset with the existing remainder-one, suffix-[5], suffix-[0,0,2], remainder-two, and ordinary zero-reset maps gives:
+
+\[
+\begin{aligned}
+D_0(1\,341\,279\,249;[9])
+&\to D_{447\,093\,083}(0;[9])\\
+&\to D_0(3\,576\,744\,703)\\
+&\to D_{1\,192\,248\,234}(1)\\
+&\to D_0(9\,537\,985\,879;[5])\\
+&\to D_{3\,179\,328\,626}(1;[5])\\
+&\to D_0(25\,434\,629\,019;[0,0,2])\\
+&\to D_{8\,478\,209\,673}(0;[0,0,2])\\
+&\to D_0(67\,825\,677\,407)\\
+&\to D_{22\,608\,559\,135}(2)\\
+&\to D_0(180\,868\,473\,099)\\
+&\to D_{60\,289\,491\,033}(0)\\
+&\to D_0(482\,315\,928\,277)\\
+&\to D_{160\,771\,976\,092}(1)\\
+&\to D_0(1\,286\,175\,808\,743;[5]).
+\end{aligned}
+\]
+
+The maps used are, in order: suffix-[9] zero reset; no-suffix remainder-one reset; suffix-[5] remainder-one reset; suffix-[0,0,2] zero reset; no-suffix remainder-two reset; no-suffix zero reset; and no-suffix remainder-one reset, with suffix-preserving countdowns between them.
+
+Summing the corresponding countdown and reset formulas gives the segment from \(D_0(1\,341\,279\,249;[9])\) to \(D_0(1\,286\,175\,808\,743;[5])\):
+
+- 120,308,829,965,419,384,903,858 stack-mode successors;
+- 360,926,489,894,177,601,198,340 raw TM steps.
+
+Adding only comparable stack-mode counts and raw steps to the prior conditional blank-root checkpoint gives:
+
+- 120,308,830,329,270,946,848,092 stack-mode successors;
+- 360,926,882,409,829,445,060,901 raw TM steps.
+
+These are conditional source-level path totals, not a certified halting-runtime lower bound. The new endpoint \(D_0(1\,286\,175\,808\,743;[5])\) has a divisible-by-three head and next reaches \(D_{428\,725\,269\,581}(0;[5])\); the suffix-[5] zero-remainder transition is another open branch.
