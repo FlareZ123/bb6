@@ -262,7 +262,7 @@ assertState("closeTokCR [1,1]", closeTokCR([], [1, 1]),
 assertState("closeTokCR [1,1,2,5]", closeTokCR([], [1, 1, 2, 5]),
   state("CR", [0, 0, 0, 4, 5], [1])); checks++;
 
-assertState("root stack seed to Corr(3,3)", run(state("DR", [0, 0], [1]), 24), Corr(3, 3)); checks++;
+assertState("projected #85 seed to Corr(3,3)", run(state("DR", [0, 0], [1]), 24), Corr(3, 3)); checks++;
 
 const rootChain = [
   [Corr(3, 3), 20, Corr(7, 0)],
@@ -302,8 +302,8 @@ for (let n = 0; n <= 6; n++) {
   }
 }
 
-// Root enters D_0(540) 16 successors after EL([0],[0,546]).
-assertState("root EL-to-D0(540)", run(state("EL", [0], [0, 546]), 16), D(0, 540)); checks++;
+// In this projected #85 chain, EL([0],[0,546]) reaches D_0(540) in 16 successors.
+assertState("projected #85 EL-to-D0(540)", run(state("EL", [0], [0, 546]), 16), D(0, 540)); checks++;
 
 // The zero-counter reset is 1,481 outer successors / 2,985 raw TM steps.
 tokenCalls = 0;
@@ -324,7 +324,7 @@ if (firstCountdownRaw !== 399060 || secondCountdownLength !== 946704 ||
   throw new Error("countdown aggregate arithmetic mismatch");
 }
 
-// D_484(1) reaches H(1939) by the c=1 corridor: D->F->G->H.
+// In the projected #85 system, D_484(1) reaches H(1939) by the c=1 corridor: D->F->G->H.
 // All three segments are ordinary source branches (no token closure).
 const rRoot = 1939;
 tokenCalls = 0;
@@ -441,8 +441,8 @@ for (const T of [
   const result = runWithCost(state("DR", rootGrowthL, [1, ...rootGrowthB, ...T]), 76);
   assertState("projected growth 76, suffix=" + JSON.stringify(T), result.state,
     state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...T]));
-  if (tokenCalls !== 0) throw new Error("root growth 76 unexpectedly called a token normalizer");
-  if (result.rawSteps !== 254) throw new Error("root growth 76 raw-step count mismatch: " + result.rawSteps);
+  if (tokenCalls !== 0) throw new Error("projected growth 76 unexpectedly called a token normalizer");
+  if (result.rawSteps !== 254) throw new Error("projected growth 76 raw-step count mismatch: " + result.rawSteps);
   checks++;
 }
 
@@ -450,10 +450,10 @@ for (const T of [
 // pre-existing suffix untouched.
 tokenCalls = 0;
 const grownRootResult = runWithCost(rootGrowth, 76);
-assertState("root growth actual 76-step state", grownRootResult.state,
+assertState("projected growth actual 76-step state", grownRootResult.state,
   state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...rootGrowth.R.slice(13)]));
-if (tokenCalls !== 0) throw new Error("actual root growth step called a token normalizer");
-if (grownRootResult.rawSteps !== 254) throw new Error("actual root growth raw-step count mismatch");
+if (tokenCalls !== 0) throw new Error("projected growth step called a token normalizer");
+if (grownRootResult.rawSteps !== 254) throw new Error("projected growth raw-step count mismatch");
 checks++;
 
 // A genuinely opaque suffix must remain the same object, not merely serialize
@@ -461,7 +461,7 @@ checks++;
 const opaqueSuffix = { opaque: "T" };
 tokenCalls = 0;
 const opaqueResult = runWithCost(state("DR", rootGrowthL, [1, ...rootGrowthB, opaqueSuffix]), 76);
-assertState("root growth opaque suffix", opaqueResult.state,
+assertState("projected growth opaque suffix", opaqueResult.state,
   state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, opaqueSuffix]));
 if (opaqueResult.state.R[opaqueResult.state.R.length - 1] !== opaqueSuffix) {
   throw new Error("opaque suffix identity was not preserved");
