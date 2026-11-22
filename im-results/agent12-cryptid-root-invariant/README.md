@@ -188,3 +188,6 @@ Regression status: `verify_root_corridor_macro.js` passed Actions run `449788219
 
 
 The macro regression harness also verifies `F(r) -> G(r)` in `3r+13` successors, where `G(r)=DR(0^2(10)^(r+2)0^2 1 0^3,[1,0])`. The root prefix therefore reaches `G(7)` at macro 21,922. Latest CI pass: Actions run `44979005652`, 97 checks.
+
+
+The root macro prefix now includes `G(7)` at 21,922 and `H(7)` at 21,926, with the four-step `G(r) -> H(r)` identity checked for r=1..8. Latest regression pass: Actions run `44979144632`, 105 checks. The H-family orbit is open.
