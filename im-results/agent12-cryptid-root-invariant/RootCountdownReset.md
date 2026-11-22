@@ -138,3 +138,12 @@ for the reset. The remaining composition is mechanical but not yet checked:
    countdown recurrence and the finite root prefix.
 
 No local Lean compile or CI result is claimed for this draft.
+
+
+The append draft now also includes `root_seed_to_D0_3`,
+`root_countdown_iter_succ`, and `root_chain_to_D65_2`, which compose the
+finite root chain into one `ReachesPlus` statement in the #85 stack system.
+These are source-local Lean drafts in
+[`RootCountdownSweep.append.lean`](./RootCountdownSweep.append.lean);
+they have not been compiled. The theorem's endpoint is
+(CR([0],0^{265}++[2])=D_{65}(2)).
