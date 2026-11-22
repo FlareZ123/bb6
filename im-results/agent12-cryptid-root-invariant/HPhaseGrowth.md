@@ -1,12 +1,12 @@
-# H(7) tail-parametric growth loop
+# Historical H-phase growth loop (withdrawn under source-correct DR branch)
 
-**Status:** exact standalone macro identity in the projected outer-stack successor. The earlier blank-root connection is withdrawn after correcting the source token normalizer. It is not a candidate blank-root nonhalting proof; no Lean-checked original-TM theorem is claimed.
+**Status: WITHDRAWN as a source-stack identity.** The projected successor omitted the pinned source's DR right-head-one token branch. A corrected replay of the claimed 76-step CR macro invokes that token closure and does not reach the stated endpoint. Preserve this file as a historical abstract experiment only. See [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
 
 ## Entry into the loop
 
 The previous version of this note claimed that the corrected root seed reached `H(7)` at outer index 21,926. That claim is withdrawn: the c=2 token-normalizer transition used in that chain was wrong. The source-corrected root instead reaches `CR(L=0^255 ++ [1],R=[33])` at macro 21,827 and `EL(L=[0],R=[0,546])` at macro 22,083. See [RootCorridorMacro.md](RootCorridorMacro.md) and [TokenNormalizerCorrection.md](TokenNormalizerCorrection.md).
 
-The standalone state `H(7)` and the identities below remain valid as projected-system investigations, but their reachability from the blank root is open. The accelerated root seed is `DR(L=[0,0],R=[1])` at raw TM time 7 and reaches `Corr(3,3)` after 24 outer successors.
+The standalone state H(7) and the identities below have not been re-established under the source-correct successor. The earlier claim that the blank-root seed reaches Corr(3,3) after 24 outer successors is withdrawn; its first source closure is CR([0,0,1],[1]) after 19 raw TM steps from the stack seed.
 
 Set
 
@@ -47,7 +47,7 @@ gives `S^76(C_n)=C_(n+1)` for every `n ≥ 0`. Thus the projected outer-stack sy
 
 The source-level correction is summarized in [TokenNormalizerCorrection.md](TokenNormalizerCorrection.md). In brief, `tok_EL_1` prepends one zero to the right stack. The former simulator omitted this update, so the old `closeTokDR([],0^267 ++ [1])` output and all downstream root states were wrong. The corrected output is `CR(L=0^271 ++ [1],R=[1])`, followed by the CR zero sweep described above. At macro 21,926 the root is `CR(L=0^156 ++ [1],R=[231])`, not `H(7)`. The old root-to-H(7) claim is withdrawn.
 
-The 76-step identity below does not call a token normalizer, so its standalone tail-parametric statement is unaffected. It must not be described as root-reachable.
+The former claim that the 76-step identity makes zero token-normalizer calls is invalid: the old simulator did not classify DR right-head 1 as a token branch. The corrected replay invokes a token closure and misses the claimed endpoint. Neither the standalone identity nor root reachability is currently established.
 
 ## Reproduction and evidence
 
@@ -70,6 +70,8 @@ The remaining obligations are:
 3. Prove that the stack projection preserves the relevant original TM execution and that no omitted exceptional/halting branch invalidates the lifted infinite path.
 
 Until these are discharged, **do not claim the original TM is nonhalting**. The result establishes a standalone infinite projected-system orbit conditional on the source formalization, not BB(6) or the original-machine status.
+
+## Historical raw-step accounting (not source-valid)
 
 ## Raw TM cost of the 76-step macro
 
