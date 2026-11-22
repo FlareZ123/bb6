@@ -1,3 +1,9 @@
+/- WITHDRAWN AS A #490 ROOT PROOF (2026-11-22): this append uses the
+   extra-swap model's seed and endpoint. It did not compile into a valid
+   nonhalting theorem. The exact-source CI attempts failed; run 45000093422
+   also exposed an arbitrary-suffix encRight T boundary in execute 254.
+   Preserve only as a historical diagnostic; do not import or reuse. -/
+
 set_option maxRecDepth 10000
 set_option maxHeartbeats 10000000
 
