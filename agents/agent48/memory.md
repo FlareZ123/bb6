@@ -2032,14 +2032,17 @@ This supersedes the earlier 07:14 note that treated 1,153,484 as the first usefu
 - The exact local compile after adding rootEntry_step and growth76_pairs reports only propext for all three theorems.
 
 
-## 2026-11-22 — token-memory correction for the [0,0,2] root branch
+## 2026-11-22 — token-memory correction and suffix-[9] continuation
 
-- Read Agent2's current root-countdown dossier and Agent24's TokenResidual2Continuation.md. The fixed-four-ones notation in Agent24's S(x,r) is not preserved through a zero-remainder branch: tok_EL_0_cons maps K=[0,1,1,1,1,0] to [2,1,1,1,0], consuming one trailing one.
+- Read Agent2's root-countdown dossier and Agent24's TokenResidual2Continuation.md. The fixed-four-ones notation in Agent24's S(x,r) is not preserved through a zero-remainder branch: tok_EL_0_cons maps K=[0,1,1,1,1,0] to [2,1,1,1,0], consuming one trailing one.
 - Introduced \(U_k(x,r)=\operatorname{tokDR}([2,x,1^k,0],[],0^r1)\). Exact source-level transitions:
-  - \(U_k(x,r)\to U_k(x-3,r+4)\) for \(x\ge3\), raw cost \(6r+35\), \(2r+3\) token successors.
-  - \(U_k(0,r)\to U_{k-1}(2r+7,3)\) for \(k\ge1\), raw cost \(8r+77\), \(3r+9\) token successors.
-  - \(U_k(2,r)\to CR(0^{k+1}1\,0^{r+4}1,[0])\), raw cost \(6r+38+2k\), \(2r+k+4\) token successors.
-- Applied to \(n=8,841,438\): \(U_4(70,731,516,3)\), 23,577,172 subtract-three cycles, zero stage to \(U_3(188,617,389,3)\); 62,872,463 cycles, zero stage to \(U_2(502,979,717,3)\); 167,659,905 cycles to \(U_2(2,670,639,623)\). Residual-two exit yields \(CR(0^3 1\,0^{670,639,627}1,[0])\), then the ordinary suffix-preserving tail yields \(D_0(1,341,279,251;[9])\).
-- This corrects the k=4 residual-two endpoint \(D_0(1,341,279,249;[13])\) in Agent24's note for this particular branch. The suffix-[13] continuation cannot be composed with this root branch until a separate connection is proved. Sent detailed corrections to Agent24, Agent12, and Agent2.
-- Durable derivation and conditional arithmetic: im-results/agent48-token-zero-cycle/README.md. It is in im-results/, not results/, because it is source-level and not Lean-compiled. Conditional segment totals from \(D_0(26,524,315;[0,0,2])\) to \(D_0(1,341,279,251;[9])\): 130,787,382,222,305,841 source-mode successors and 392,362,152,160,071,714 raw steps; adding the prior conditional blank-root totals gives 130,838,548,797,784,520 and 392,515,651,843,862,563 respectively.
-- Local Lean was not run in this invocation because the shell/runtime returned ClientError. No CI substitute was used. Next useful task: derive and formalize the suffix-[9] remainder-two/reset branch from \(D_0(1,341,279,251;[9])\), while independently checking the upstream root connection and raw-step convention.
+  - \(U_k(x,r)\to U_k(x-3,r+4)\) for \(x\ge3\), raw cost \(6r+35\), \(2r+3\) token microsteps.
+  - \(U_k(0,r)\to U_{k-1}(2r+7,3)\) for \(k\ge1\), raw cost \(8r+77\), \(3r+9\) token microsteps.
+  - \(U_k(2,r)\to CR(0^{k+1}1\,0^{r+4}1,[0])\), raw cost \(6r+38+2k\), \(2r+k+4\) token microsteps.
+- Applied to n=8,841,438: U4(70,731,516,3), 23,577,172 subtract-three cycles, zero stage to U3(188,617,389,3); 62,872,463 cycles, zero stage to U2(502,979,717,3); 167,659,905 cycles to U2(2,670,639,623). Residual-two exit yields CR(0^3 1 0^670,639,627 1,[0]), then the ordinary suffix-preserving tail yields D0(1,341,279,251;[9]).
+- This corrects the k=4 residual-two endpoint D0(1,341,279,249;[13]) in Agent24's note for this particular branch. The suffix-[13] continuation cannot be composed with this root branch until a separate connection is proved. Sent detailed corrections to Agent24, Agent12, and Agent2.
+- The singleton-suffix reset is generic: D_n(2;[t]) -> D0(8n+t+20), with 8n+44 stack-mode successors, 8n+17 token microsteps inside the DL closure, and 40n+186 raw steps. For t=9 this extends the corrected path:
+  D0(1,341,279,251;[9]) -> D447,093,083(2;[9]) -> D0(3,576,744,693) -> D1,192,248,231(0) -> D0(9,537,985,861) -> D3,179,328,620(1) -> D0(25,434,628,967;[5]).
+  The already-known suffix-[5] reset then gives D0(67,825,677,265) -> D22,608,559,088(1), which differs by 110 from the 22,608,559,198 index used in Agent12's suffix-[13] note. Do not conflate these chains.
+- Durable derivation and arithmetic: im-results/agent48-token-zero-cycle/README.md. It remains in im-results because it is source-level and not Lean-compiled. For the segment from D0(26,524,315;[0,0,2]) to D0(1,341,279,251;[9]): 312,684,986,465,556 stack-mode successors, 130,474,697,235,840,285 token microsteps, 130,787,382,222,305,841 combined source-mode successors, and 392,362,152,160,071,714 raw steps. Adding only comparable stack-mode counts to the prior outer stack count gives 363,851,561,944,235; cumulative raw count is 392,515,651,843,862,563.
+- Local Lean was not run in this invocation because shell/runtime calls returned ClientError. No CI substitute was used. Next useful task: investigate the suffix-[5] path from D22,608,559,088(1) (index is 8 mod 9), formalize the generic singleton-suffix reset and U_k lemmas in Lean, and independently audit the upstream root connection and raw-step convention.
