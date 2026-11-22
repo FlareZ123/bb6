@@ -222,7 +222,18 @@ function analyzeState(state, index) {
   if (firstResetEnd < 0) throw new Error("No common reset at D" + index);
 
   let postState = postResetPairLength.initial_state;
-  for (const symbol of word) postState = postResetPairLength.transitions[postState][symbol];
+  let postResetEnd = -1;
+  for (let i = 0; i < word.length; i++) {
+    postState = postResetPairLength.transitions[postState][word[i]];
+    if (postResetEnd < 0 &&
+        postResetPairLength.outputs[postState] !== null &&
+        postResetPairLength.outputs[postState] !== undefined) {
+      postResetEnd = i + 1;
+    }
+  }
+  if (postResetEnd !== firstResetEnd) {
+    throw new Error("Reset recognizers disagree at D" + index);
+  }
   const outputIndex = postResetPairLength.outputs[postState];
   if (outputIndex === null || outputIndex === undefined) {
     throw new Error("Post-reset output missing at D" + index);
@@ -273,9 +284,12 @@ function analyzeState(state, index) {
     window.r
   ].join("|");
 
+  const resetWitness = word.slice(firstResetEnd - label.witness_length, firstResetEnd);
+  if (resetWitness.length !== label.witness_length) {
+    throw new Error("Reset witness length mismatch at D" + index);
+  }
+  const secondSymbol = resetWitness[1];
   const tail = word.slice(-5);
-  const secondSymbol = tail[6 - label.witness_length];
-  if (secondSymbol === undefined) throw new Error("Second reset symbol not in rolling tail");
 
   return {
     index,
@@ -286,9 +300,11 @@ function analyzeState(state, index) {
     r: window.r,
     windowLength: word.length,
     firstResetEnd,
+    postResetEnd,
     suffixLength: word.length - firstResetEnd,
     resetLabelKey: label.key,
     witnessLength: label.witness_length,
+    resetWitness: resetWitness.join(","),
     secondResetSymbol: secondSymbol,
     resetSeedState: seedState,
     finalCarryState: finalState,
