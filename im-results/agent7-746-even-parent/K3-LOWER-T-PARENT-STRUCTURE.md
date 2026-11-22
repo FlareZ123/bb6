@@ -76,33 +76,70 @@ Its range straddles (3/4). The boundary case (q_0/p=3/4) is not covered by the a
 ]
 lies in the scale-((K-4)) odd band ((3/8,1/2)). If (q_0/p<3/4) and (v_3(Z)=1), there is no odd parent of (G). For larger (v_3(Z)), additional separated values of (t) may enter further dyadic bands; no maximal-(t) shortcut is valid.
 
-## 4. A further exact 486-shift law
+## 4. A 3-adic isometry for the G-numerator
 
-On this branch define (Z(K)=2G(K)+5). With (e=K+4-a), (e) is even. Since (2^{486}\equiv1\pmod{729}),
+On this branch define
+[
+Z(K)=2G(K)+5.
+]
+Let (s\ge0) and (Delta=486\cdot3^s=2\cdot3^{s+5}). Since the order of 2 modulo (3^{s+6}) divides (2\cdot3^{s+5}),
+[
+2^{K+\Delta}\equiv2^K,qquad
+2^{K+4-a+\Delta}\equiv2^{K+4-a}
+pmod{3^{s+6}}.
+]
+The linear terms in (T) therefore give
 [
 egin{aligned}
-T(K+486)-T(K)
-&\equiv972-1944\cdot2^e\pmod{729}\
-&\equiv243-486\equiv486\pmod{729}.
+T(K+\Delta)-T(K)
+&\equiv 2\Delta-4\Delta\,2^{K+4-a}
+\pmod{3^{s+6}}\\
+&=(4-8\cdot2^{K+4-a})3^{s+5}
+\equiv2\cdot3^{s+5}
+\pmod{3^{s+6}},
 end{aligned}
 ]
-Dividing through the definitions (X=T/3), (h=2(X/3)-4p-K-4), (Y=2h+5), (g=Y/3), (G=2g-2p-K-3), gives
+because (K+4-a) is even and (2^{K+4-a}\equiv1\pmod3).
+
+Dividing successively through (X=T/3), (h=2(X/3)-4p-K-4), (Y=2h+5), (g=Y/3), (G=2g-2p-K-3), and (Z=2G+5), with the branch divisibilities (3\mid X) and (9\mid Y), yields
 [
-X(K+486)\equiv X(K)+162\pmod{243},
+X(K+\Delta)\equiv X(K)+2\cdot3^{s+4}\pmod{3^{s+5}},
 ]
 [
-h(K+486)\equiv h(K)+27\pmod{81},quad
-Y(K+486)\equiv Y(K)+54\pmod{81},
+h(K+\Delta)\equiv h(K)+3^{s+3}\pmod{3^{s+4}},
+quad
+Y(K+\Delta)\equiv Y(K)+2\cdot3^{s+3}\pmod{3^{s+4}},
 ]
 [
-g(K+486)\equiv g(K)+18\pmod{27},quad
-G(K+486)\equiv G(K)+9\pmod{27},
+g(K+\Delta)\equiv g(K)+2\cdot3^{s+2}\pmod{3^{s+3}},
+quad
+G(K+\Delta)\equiv G(K)+3^{s+2}\pmod{3^{s+3}},
 ]
-and therefore
+and hence
 [
-\boxed{Z(K+486)\equiv Z(K)+18\pmod{27}.}
+oxed{Z(K+486\cdot3^s)\equiv
+Z(K)+2\cdot3^{s+2}\pmod{3^{s+3}}.}
+	ag{10}
 ]
-This is an exact algebraic lift law. If (9\mid Z(K)), the three lifts (K,K+486,K+972\) cycle through (Z\bmod27=0,18,9) in some order. The law does not itself close the resulting parent branches.
+The (s=0) case is the earlier (486)-shift law.
+
+Now fix a high-(Y) residue class (K\equiv K_0\pmod{486}) with (9\mid Z(K_0)), and write (K=K_0+486m). The shift law gives
+[
+\Phi(m+3^s)-\Phi(m)\equiv2\cdot3^s\pmod{3^{s+1}},
+qquad
+\Phi(m):=Z(K_0+486m)/9.
+]
+Thus (Phi) is a 3-adic isometry: for every (r\ge1), each target residue modulo (3^r) has a unique preimage residue (m\bmod3^r). In particular, for every fixed (r), there is one cylinder on which
+[
+3^{r+2}\mid Z(K_0+486m).
+]
+This proves unbounded 3-adic valuation along the (K_0\bmod486) progression, conditional on the base class (9\mid Z(K_0)). It is not a ResetParent-chain or blank-root-reachability conclusion by itself.
+
+For fixed (r), the dyadic window (mathcal W) contains representatives of any such (K\bmod(486\cdot3^r)) cylinder once
+[
+\frac{53}{2048}2^a>486\cdot3^r.
+]
+This is eventually true as odd (a\to\infty). To use the isometry in a source-parent construction, one must still select a valuation (t) and a dyadic source band simultaneously; the existing five-point band lemma in [NESTED-ODD-PARENT-HENSEL.md](NESTED-ODD-PARENT-HENSEL.md) is a possible tool, but its recursive hypotheses have not yet been established for this K3 family.
 
 ## 5. Exact finite source-parent examples
 
