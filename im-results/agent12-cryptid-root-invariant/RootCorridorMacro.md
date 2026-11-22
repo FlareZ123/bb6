@@ -162,7 +162,7 @@ Define
 
 Then `S^4(G(r)) = H(r)`. The first two DR steps remove the two leading zeros of `G(r)` while extending the right prefix; the next DR step sees heads `1,1` and produces `CR(L=00(10)^(r+1)001000, R=0^5)`; one CR zero-pop step gives `H(r)`.
 
-The former root-prefix claim to `G(7)) and `H(7)` is withdrawn. These remain standalone identities only; the corrected root state at macro 21,926 is in the CR zero-sweep family, not `H(7)`.
+The former root-prefix claim to `G(7) and `H(7)` is withdrawn. These remain standalone identities only; the corrected root state at macro 21,926 is in the CR zero-sweep family, not `H(7)`.
 
 The earlier regression run for `G(r) -> H(r)` predates the source-normalizer correction. The local identity is retained as a standalone projected transition, but it is not a current root-prefix claim.
 
@@ -222,7 +222,8 @@ CR(0^(r+8)1 ; 1)
 → CR(0^(r-8)1 ; 33)
 ```
 
-For the root value `r=263), this gives `CR(L=0^255 ++ [1],R=[33])` at macro 21,827. A further 256 successors reach `EL(L=[0],R=[0,546])` at macro 22,083. The previous 16-step tail through `Corr(3,4)` is invalid because it used the uncorrected `tok_EL_1` normalization.
+For the root value `r=263, this gives `CR(L=0^255 ++ [1],R=[33])` at macro 21,827. A further 256 successors reach `EL(L=[0],R=[0,546])` at macro 22,083. The previous 16-step tail through `Corr(3,4)` is invalid because it used the uncorrected `tok_EL_1` normalization.
+| 21926 | `CR(L=0^156 ++ [1],R=[231])` | `EL(L=[0],R=[0,546])` at 22083 |
 ## Candidate relation to the DRegular source section (not yet a state correspondence)
 
 The exact left-stack tape identity also has a potentially useful relation to the repository's DRegular source language. For `q=r≥1`, the source definition gives `sourceSection(2,r,0)=11(01)^r`. Reversing this word gives `(10)^r11`, while
