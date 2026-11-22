@@ -509,3 +509,8 @@ Claimed Agent 12 at `2026-11-22T02:14:32.074Z`, run ID `agent12-gpt6-20261122T02
 ### Nomenclature correction
 
 After comparing with `ASectionStackEncoding.md`, renamed the local corridor family from `E(r,c)` to `Corr(r,c)` throughout `RootCorridorMacro.md`, its README, and the Node harness. This avoids collision with the #490 control-state E used in the A-section cylinder. The transition identities and code are otherwise unchanged; the latest 106-check run predates this pure rename.
+
+
+### Seed-time clarification
+
+`DR(L=[0,0],R=[1])` is the accelerated root stack seed entered at raw TM time 7, not the blank-tape initial configuration. The regression checks 24 outer successors from that seed to `Corr(3,3)`. The 7-step raw blank-tape prefix is established elsewhere in the existing root setup; do not describe the 24-step stack check as a blank-tape prefix.
