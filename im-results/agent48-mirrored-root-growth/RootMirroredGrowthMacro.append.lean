@@ -1,3 +1,6 @@
+set_option maxRecDepth 10000
+set_option maxHeartbeats 5000000
+
 /-- Fixed 12-entry left block inserted by the corrected #490 mirrored-root replay. -/
 def rootMirroredBlock : List (ℕ × ℕ) :=
   [(0, 0), (2, 0), (0, 0), (0, 0), (0, 0), (2, 0),
@@ -24,7 +27,13 @@ theorem root_mirrored_token_closure :
       (closedStackSystem.evalStackCfg StackMode.DR_n_n [(0, 0), (0, 0)] [(1, 0)])
       (closedStackSystem.evalStackCfg StackMode.CR_n_n
         [(1, 0)] [(0, 0), (0, 0), (0, 0), (1, 0)]) := by
-  dsimp [closedStackSystem, ClosedStackSystem.evalStackCfg]
+  change ReachesPlus target
+    (mirrorCfg f
+      (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.evalStackCfg
+        StackMode.DR_n_n [(1, 0)] [(0, 0), (0, 0)]))
+    (mirrorCfg f
+      (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.evalStackCfg
+        StackMode.CR_n_n [(0, 0), (0, 0), (0, 0), (1, 0)] [(1, 0)]))
   execute 29
 
 /-- The next 259 ordinary outer successors cost 848 raw transitions and reach
@@ -35,8 +44,13 @@ theorem root_mirrored_ordinary_prefix :
         [(1, 0)] [(0, 0), (0, 0), (0, 0), (1, 0)])
       (closedStackSystem.evalStackCfg StackMode.DR_n_n
         rootMirroredSeedLeft rootMirroredRight) := by
-  dsimp [closedStackSystem, ClosedStackSystem.evalStackCfg,
-    rootMirroredSeedLeft, rootMirroredSeedTail, rootMirroredBlock, rootMirroredRight]
+  change ReachesPlus target
+    (mirrorCfg f
+      (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.evalStackCfg
+        StackMode.CR_n_n [(0, 0), (0, 0), (0, 0), (1, 0)] [(1, 0)]))
+    (mirrorCfg f
+      (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.evalStackCfg
+        StackMode.DR_n_n rootMirroredRight rootMirroredSeedLeft))
   execute 848
 
 theorem root_mirrored_seed_from_stack :
@@ -72,7 +86,14 @@ theorem root_mirrored_growth_76_raw (T : List (ℕ × ℕ)) :
         (((1, 0) :: rootMirroredBlock) ++ T) rootMirroredRight)
       (closedStackSystem.evalStackCfg StackMode.DR_n_n
         (((1, 0) :: rootMirroredBlock) ++ (rootMirroredBlock ++ T)) rootMirroredRight) := by
-  dsimp [closedStackSystem, ClosedStackSystem.evalStackCfg, rootMirroredBlock, rootMirroredRight]
+  change ReachesPlus target
+    (mirrorCfg f
+      (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.evalStackCfg
+        StackMode.DR_n_n rootMirroredRight (((1, 0) :: rootMirroredBlock) ++ T)))
+    (mirrorCfg f
+      (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.evalStackCfg
+        StackMode.DR_n_n rootMirroredRight
+          (((1, 0) :: rootMirroredBlock) ++ (rootMirroredBlock ++ T))))
   execute 254
 
 /-- The invariant set consists of all DR configurations with the fixed leading
