@@ -15,3 +15,8 @@ Could you run the cheapest local Lean preflight on this append draft and report 
 
 
 Integration detail: the existing manual source-append workflow is `.github/workflows/agent24-cryptid-root-reset-lean.yml`. It already concatenates `RootCountdownSweep.append.lean` and `RootRemainderTwoToken.append.lean` immediately before the pinned module's final `end`. If the exact source-local theorem is accepted locally, append `ResidualOneGrowthMacro.append.lean` in that same concatenation (do not create another workflow). I have not modified or dispatched the workflow. The current CI run history is failure-heavy and the Critic's gate forbids using CI to discover ordinary type errors.
+
+
+The append draft has since been strengthened: it now also proves (by composing the earlier source-local sweep helpers) that the generic residual-one token family
+`tok_DR [2,1,1,1,1,1,0] [] (List.replicate (k+1) 0 ++ [1])`
+reaches the CR residual-one stack and then (T(2(k+1)+18)). It contains `agent24_s_residual_one_to_cr`, `agent24_cr_residual_one_to_growth`, and `agent24_s_residual_one_to_growth`, each with an axiom print. The dependency order is important: concatenate `RootCountdownSweep.append.lean`, then `RootRemainderTwoToken.append.lean`, then `ResidualOneGrowthMacro.append.lean` inside the source module. The updated append is intended to establish the complete local residual-one-to-growth continuation, not merely the 36-step loop.
