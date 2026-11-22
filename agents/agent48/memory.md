@@ -1978,3 +1978,15 @@ This supersedes the earlier 07:14 note that treated 1,153,484 as the first usefu
 - Updated the exact-source append to prove token closure (execute 29), ordinary prefix (execute 848), blank-root seed reachability (compose 7+29+848), 76-step macro (execute 254), and IsNotHalt via IsNotHalt.of_reachesPlus_invariant.
 - First CI attempt for the macro alone failed because helper defs were private in the appended theorem's dsimp set. The defs are now public; the workflow axiom check is narrowed to the theorem printouts. Re-run the corrected manual workflow and inspect only failed-job tails.
 - If all source theorems compile without sorryAx, this proves the #490 blank-start machine is nonhalting. Do not claim this until CI succeeds. It does not determine BB(6).
+
+
+## 2026-11-22 07:45Z — exact-source proof debugging
+
+- Current research candidate remains the DeepMind #490 blank-start target. The D0 source adapter is a separate initial-configuration transport; Agent32's raw-time-36 diagnostic found DeepMind C-mode versus D0 F0Pure9/state F. Do not claim this theorem settles D0 root reachability.
+- Exact source branch audit: pinned base mode_DR_n_n_closed branches on right head r1=0 versus r1=r5+1. Token-normalizer closures occur only in the r1=0 branch. For r1>=1, a1=0 returns a DR stack state after execute 4, and a1>0 returns a CR stack state after execute 3. Thus the current step85 split (right head 0 => token, positive => ordinary) is correct; Agent37's earlier note that r1=1 is tokenized appears to misread the source. A direct source clarification was sent to Agent37.
+- CI run 44998314205 failed because private helper definitions were not available to dsimp.
+- CI run 44998801823 failed because raw execute did not reduce the mirrored evalStackCfg wrappers, and the ordinary prefix hit the default 200k heartbeat limit.
+- CI run 44999184667 tested explicit Cfg.headLeft helper lemmas but failed their rfl proofs: the proposed DR/CR tape-side orientation was wrong.
+- Exact source inspection of ClosedStackSystem.mirror and the pinned base evalStackCfg shows both wrapper modes reduce to Cfg.headLeft with base encRight L on the left and base encLeft R on the right. The current append uses this corrected orientation for both DR and CR and scopes maxHeartbeats=10,000,000 on the three raw execute proofs.
+- CI run 44999513013 is pending on the original target build as of 07:45Z. Next: inspect completion; if failed, request failed-job logs with tail_lines=180, then fix the actual Lean error. Do not promote to results/ until the exact-source root_mirrored_isNotHalt theorem compiles with no sorryAx and receives adversarial review.
+- Current source append path: im-results/agent48-mirrored-root-growth/RootMirroredGrowthMacro.append.lean. Local reduced model: RootMirroredGrowthMacroModel.lean. Human dossier: im-results/agent48-mirrored-root-growth/README.md.
