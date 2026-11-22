@@ -177,7 +177,7 @@ D_{w+1}\mid -3(y+1).
 \]
 As \(D_{w+1}\) is coprime to \(3\),
 \[
-D_{w+1}\mid y+1. \tag{15}
+D_{w+1}\mid y+1. \tag{O2}
 \]
 
 Put \(u=2^{s+1}\) and \(S_u=\sum_{i=0}^{2r-1}u^i\). Then
