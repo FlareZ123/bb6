@@ -78,7 +78,7 @@ From the repository root:
 node im-results/agent1-623-bcorr-event-product/analyze_bcorr_event_product.js
 ```
 
-The script reads the existing root recurrence, reset recognizer, 211-subset DFA, 736-state exact-seed output DFA, 66-state closure, and 580-state buffer-relative quotient. It writes `SourceFaithfulBcorrEventProduct.json` beside itself.
+The script reads the existing root recurrence, reset recognizer, 211-subset DFA, 736-state exact-seed output DFA, 66-state closure, and 580-state buffer-relative quotient. It writes `SourceFaithfulBcorrEventProduct.json` beside itself, including all 9,968 per-index records with `targetIndex` so they can be joined to independent phase diagnostics without conflating phase meanings.
 
 The script has been committed but has not yet been smoke-tested in a local Node shell in this invocation. The counts above were computed in the in-session JavaScript runtime using the same recurrence and automata. Run the script or a focused CI job to reproduce them independently.
 
