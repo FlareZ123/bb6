@@ -15,6 +15,7 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 ## Research map and evidence status
 
 - [RootCountdownSweep.md](./RootCountdownSweep.md): the surviving direct countdown sweep decomposition; proof architecture and bounded computation, not yet compiled.
+- [RootCountdownSweep.append.lean](./RootCountdownSweep.append.lean): uncompiled #85-source append draft for the one-step branch lemmas and the two inductive sweeps; fixed-prefix composition remains to be completed.
 - [RootCountdownGrowth.md](./RootCountdownGrowth.md): historical root-growth dossier, explicitly withdrawn except for the confirmed orientation/entry facts and its link to the surviving countdown.
 - [ModeDRBranchAudit.md](./ModeDRBranchAudit.md): pinned-source DR branch distinction and the corrected initial DR steps only; it does not validate the full root path.
 - [NoSwapGrowth.lean](../agent48-no-swap-projection/NoSwapGrowth.lean): **withdrawn projected model**. Its CR clauses are not source-exact; do not use its `growth76` theorem as evidence.
