@@ -264,6 +264,7 @@ function phaseForTransition(source, target) {
       kShift,
       jShift,
       sourceK: sourceWindow.k,
+      sourceJ: sourceWindow.j,
       targetK: targetWindow.k,
       targetJ: targetWindow.j,
       sourceEll,
@@ -363,8 +364,13 @@ function verifyTransducer(source, target, branch, C, F, sourceWindow, targetWind
   }
 
   let mismatches = 0;
+  let lowExtension = null;
+  let highExtension = null;
   for (let i = targetWindow.k + 2; i < targetWindow.j - 2; i += 1) {
     const xi = BigInt(digitAt(source.x, i));
+    const yi = BigInt(digitAt(source.y, i));
+    const carryIn = carry.map(Number);
+    const prevIn = prev.slice();
     let tx, ty;
     if (branch === "L") {
       tx = xi - BigInt(prev[1]) + carry[0];
@@ -373,12 +379,28 @@ function verifyTransducer(source, target, branch, C, F, sourceWindow, targetWind
       tx = -xi - BigInt(prev[0]) - BigInt(prev[1]) + carry[0];
       ty = BigInt(prev[0]) + BigInt(prev[1]) + carry[1];
     }
-    if (Number(mod(tx, 3n)) !== digitAt(target.x, i)) mismatches += 1;
-    if (Number(mod(ty, 3n)) !== digitAt(target.y, i)) mismatches += 1;
+    const output = [Number(mod(tx, 3n)), Number(mod(ty, 3n))];
+    const carryOut = [Number(floorDiv(tx, 3n)), Number(floorDiv(ty, 3n))];
+    if (output[0] !== digitAt(target.x, i)) mismatches += 1;
+    if (output[1] !== digitAt(target.y, i)) mismatches += 1;
+    const step = {
+      index: i,
+      input: [Number(xi), Number(yi)],
+      output,
+      carryIn,
+      carryOut,
+      prevIn,
+    };
+    if (sourceWindow.k === targetWindow.k && i === targetWindow.k + 2) {
+      lowExtension = step;
+    }
+    if (targetWindow.j === sourceWindow.j + 1 && i === sourceWindow.j - 2) {
+      highExtension = step;
+    }
     carry = [floorDiv(tx, 3n), floorDiv(ty, 3n)];
     prev = [digitAt(source.x, i), digitAt(source.y, i)];
   }
-  return mismatches;
+  return { mismatches, lowExtension, highExtension };
 }
 
 function increment(map, key) {
@@ -390,6 +412,11 @@ function collect() {
   let d = 7n;
   const qPhases = new Set();
   const phases = new Map();
+  const edgePhaseIds = new Map();
+  const edgePhaseRecords = [];
+  const edgeRecords = [];
+  let lowExtensionCount = 0;
+  let highExtensionCount = 0;
   const phaseTransitions = new Map();
   const pairProductTransitions = new Map();
   const pairLengthProductTransitions = new Map();
@@ -466,10 +493,48 @@ function collect() {
         : 3n * source.x + 3n * source.y + result.F;
       if (outX !== target.x || outY !== target.y) affineUpdateMismatches += 1;
 
-      transducerDigitMismatches += verifyTransducer(
+      const transducerCheck = verifyTransducer(
         source, target, p.sourceBranch, result.C, result.F,
         result.sourceWindow, result.targetWindow
       );
+      transducerDigitMismatches += transducerCheck.mismatches;
+
+      let edgePhaseId = edgePhaseIds.get(key);
+      if (edgePhaseId === undefined) {
+        edgePhaseId = edgePhaseIds.size;
+        edgePhaseIds.set(key, edgePhaseId);
+        edgePhaseRecords.push([
+          edgePhaseId,
+          key,
+          [
+            p.sourceSector, p.sourceBranch, p.targetSector, p.targetBranch,
+            p.prev[0], p.prev[1], p.carry[0], p.carry[1],
+            p.sourceR, p.targetR, p.kShift, p.jShift,
+            p.sourceK, p.sourceJ, p.targetK, p.targetJ,
+            p.sourceEll, p.targetEll, p.drainLength, p.n1, p.n2,
+            p.D, p.R, p.C, p.F, p.T,
+          ],
+        ]);
+      }
+      const pairCode = pair => 3 * pair[0] + pair[1];
+      const extensionCode = extension => extension === null ? null : [
+        pairCode(extension.input),
+        pairCode(extension.output),
+        ...extension.carryIn,
+        ...extension.carryOut,
+        ...extension.prevIn,
+      ];
+      const lowExtension = extensionCode(transducerCheck.lowExtension);
+      const highExtension = extensionCode(transducerCheck.highExtension);
+      if (lowExtension !== null) lowExtensionCount += 1;
+      if (highExtension !== null) highExtensionCount += 1;
+      edgeRecords.push([
+        n + 1,
+        edgePhaseId,
+        p.lowOutputs.map(pairCode),
+        lowExtension,
+        highExtension,
+      ]);
 
       const reset = firstResetEnd(
         source, target, p.sourceBranch, result.C, result.F,
@@ -604,6 +669,55 @@ function collect() {
 
   const outputPath = path.join(root, "im-results/agent48-623-tight-window/SWindowBoundaryPhases.json");
   fs.writeFileSync(outputPath, JSON.stringify(output, null, 2) + "\n");
+
+  const edgeOutput = {
+    title: "Machine #623 source-faithful S-window edge phases and exact extensions",
+    evidenceType: "finite recurrence diagnostic; exact per-edge data, not an all-time invariant",
+    sourceTransitionIndices: [33, 10000],
+    targetStateIndices: [34, 10001],
+    windowConvention: {
+      buffer: "B=34*ellS+122",
+      ellS: "least ell with (3^ell-1)/2 >= S+3, S=a+d",
+      sourceWindow: "[kS+2,jS-2)",
+      targetWindow: "[kS'+2,jS'-2)",
+      oldOutputOverlap: "[kS+3,jS-2)",
+      shifts: "(kS'-kS,jS'-jS) in {(0,0),(0,1),(1,1)}",
+      lowExtension: "if kShift=0, target adds output at kS+2 before old-output overlap",
+      highExtension: "if jShift=1, target adds output at jS-2 after old-output overlap",
+      boundaryState: "(previous source digit pair, carry pair) entering target digit kS'+2 after consuming source digits kS+1,...,kS'+1",
+    },
+    validation: {
+      transitionsChecked,
+      qWindowPhaseSetMatchesExisting: qExactMatch,
+      qWindowUniquePhases: qPhases.size,
+      branchSelectionMismatches: branchMismatches,
+      carryRectangleViolations: carryRectangleViolations,
+      affineUpdateMismatches,
+      transducerDigitMismatches,
+      lowExtensionCount,
+      highExtensionCount,
+      shiftHistogram,
+    },
+    phaseRecordEncoding: [
+      "id", "key",
+      "[sourceSector,sourceBranch,targetSector,targetBranch,prevX,prevY,carryX,carryY,sourceR,targetR,kShift,jShift,sourceK,sourceJ,targetK,targetJ,sourceEll,targetEll,drainLength,n1,n2,D,R,C,F,T]",
+    ],
+    edgeEncoding: [
+      "targetIndex",
+      "phaseId",
+      "lowBoundaryOutputPairCodes",
+      "lowExtension:[inputPairCode,outputPairCode,carryInX,carryInY,carryOutX,carryOutY,prevInX,prevInY] or null",
+      "highExtension:[inputPairCode,outputPairCode,carryInX,carryInY,carryOutX,carryOutY,prevInX,prevInY] or null",
+    ],
+    phaseRecords: edgePhaseRecords,
+    edges: edgeRecords,
+  };
+  if (edgeRecords.length !== transitionsChecked || edgePhaseRecords.length !== edgePhaseIds.size) {
+    throw new Error("S-window edge record cardinality mismatch");
+  }
+  const edgeOutputPath = path.join(root, "im-results/agent48-623-tight-window/SWindowEdgeRecords.json");
+  fs.writeFileSync(edgeOutputPath, JSON.stringify(edgeOutput, null, 2) + "\n");
+
   console.log(JSON.stringify({
     outputPath,
     transitionsChecked,
