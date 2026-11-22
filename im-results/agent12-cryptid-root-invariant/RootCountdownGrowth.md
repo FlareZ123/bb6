@@ -6,15 +6,7 @@
 
 ## 1. The root reaches a one-counter corridor
 
-The corrected root prefix reaches
-
-`EL(L=[0],R=[0,546])`
-
-at macro index 22,083. Sixteen further successors give
-
-`D_0(540)=CR(L=[0],R=0^5 ++ [540])`
-
-at macro index 22,099.
+The pre-head-one simulator reported EL(L=[0],R=[0,546]) at macro 22,083 and D_0(540) at macro 22,099. Both states and indices are withdrawn as source claims; the corrected root instead follows the recurrence in [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
 
 Define the parameterized states
 
@@ -22,16 +14,13 @@ Define the parameterized states
 D_n(c) = CR(L=[0], R=0^(4n+5) ++ [c]).
 ```
 
-The observed triangular countdown macro is
+The old simulator claimed the triangular countdown macro
 
 ```text
 S^(8n+24)(D_n(c)) = D_(n+1)(c-3),   c >= 3.
 ```
 
-It has been checked by the array-based source-successor simulator for
-`n=0,...,6` and `c=3,4,5,10,540`. This is the candidate general identity;
-its proof should compose the ordinary CR/EL/DL/DR clauses and is a priority
-formalization target.
+The earlier sample checks used the defective successor. A replay with the r1=1 token branch falsifies the claimed endpoints for every tested n=0,...,6 and c=3,4,5,10,540. This is not a formalization target.
 
 For the root's first counter value, iterating the formula 180 times gives:
 
@@ -46,7 +35,7 @@ The elapsed time from `D_0(540)` to `D_180(0)` is
 
 ## 2. The zero counter resets upward
 
-The exact 1,481-step source-successor run from
+The old simulator reported a 1,481-step run from
 
 ```text
 D_180(0) = CR(L=[0], R=0^726)
@@ -58,7 +47,7 @@ reaches
 D_0(1453) = CR(L=[0], R=0^5 ++ [1453]).
 ```
 
-This is a finite computationally checked reset, not yet a symbolic theorem.
+This reset is a historical output of the defective successor, not a source-valid run.
 The second countdown starts with counter 1453. Since
 `1453 - 3*484 = 1`, 484 applications of the triangular macro reach
 
@@ -91,17 +80,14 @@ B = [16,0,0,0,2,0,0,0,2,0,0,0]
 and `T` is the remaining finite right-list suffix. The actual state had
 right-list length 7,330; its first 13 entries were exactly `[1] ++ B`.
 
-The 76-step macro is
+The old simulator claimed the 76-step macro
 
 ```text
 S^76(DR(L=G, R=[1] ++ B ++ T))
   = DR(L=G, R=[1] ++ B ++ B ++ T).
 ```
 
-The left list is unchanged. One copy of the 12-entry block `B` is inserted
-immediately after the leading 1, and the old suffix is preserved verbatim.
-The 76-step path uses only ordinary CR/EL/DL/DR transitions and invokes no
-token normalizer.
+The corrected replay invokes the source-required DR token closure and does not reach this endpoint. The claimed insertion identity is withdrawn as a source-stack result.
 
 The identity was checked with suffixes
 `[]`, `[0]`, `[1]`, `[3,0,0]`, `[7,5,3,1]`, and
@@ -110,11 +96,7 @@ unchanged, providing a direct test that the macro does not inspect the tail.
 The actual root-reachable state was also advanced 76 steps and matched the
 same block insertion.
 
-Consequently, if the 76-step identity is proved against the source successor,
-it yields an infinite projected orbit from the root-reachable state at macro
-1,153,484: after (k) macro iterations the right list contains (k) further
-copies of (B), so its length is unbounded and the path cannot terminate
-inside the projected system.
+The claimed root-reachable infinite-orbit conclusion is withdrawn. The old root prefix and the 76-step endpoint both fail under the corrected source branch.
 
 For a compact control-state certificate, the 76 transitions have this
 run-length encoding of mode labels:
@@ -130,31 +112,15 @@ zero token-normalizer calls.
 
 ## 4. What remains to prove
 
-The current evidence is a promising root-to-growth construction, not a
-completed nonhalting proof. The essential obligations are:
+The previous evidence was a root-to-growth construction in the defective simulator and is withdrawn. The current formalization target is:
 
-1. Prove the general countdown identity
-   `S^(8n+24)(D_n(c)) = D_(n+1)(c-3)` for all `n>=0,c>=3`.
-2. Prove the 1,481-step reset `D_180(0) -> D_0(1453)` against the source
-   stack successor.
-3. Certify the 50,000-step path from `D_484(1)` to
-   `DR(G,[1]++B++T)`, preferably by discovering shorter macro blocks.
-4. Prove the 76-step tail-parametric block-insertion identity against the
-   actual source definitions.
-5. Lift the projected infinite path through the original TM/source
-   correspondence, with no omitted halting branch.
+1. Prove DR([0,0],[1]) -> CR([0,0,1],[1]) in 19 raw steps.
+2. Prove CR([0,0,1],[c]) -> CR([0,0,1],[c+5]) in 36 raw steps for c>=1.
+3. Compose with the seven-step #490 blank-root entry and audit the lifted execution.
 
-The 76-step growth identity is the highest-value immediate Lean target: it is
-short, uses no token normalizers, and proves unbounded right-stack growth from
-any state in the displayed family. The finite root prefix can then be
-compressed separately.
+The parameterized 36-step recurrence in DRHeadOneCycle.md is now the highest-value Lean target; it includes the required token closure.
 
 ## 5. Reproducibility and source status
 
 The corrected token normalizer is documented in
-[TokenNormalizerCorrection.md](TokenNormalizerCorrection.md). The updated
-`verify_root_corridor_macro.js` now contains tests for the countdown samples,
-the 1,481-step reset, the 50,000-step root-to-growth prefix, and the
-tail-parametric 76-step macro. It has not yet been executed under Node/CI
-after editing. The corresponding manual V8 checks passed. No Lean theorem or
-original-TM nonhalting claim is made.
+[TokenNormalizerCorrection.md](TokenNormalizerCorrection.md). The updated verify_root_corridor_macro.js now tests the corrected root cycle and asserts that the old countdown/H-phase/DR-G-B endpoints do not survive. It has not been executed under Node/CI. The equivalent V8 replay supports the new cycle. No Lean theorem or original-TM nonhalting claim is made.
