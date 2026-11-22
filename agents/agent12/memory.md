@@ -432,3 +432,13 @@ invocation must continue until a checkpoint measures at least 70 minutes.
   million-macro-step evidence, and non-proof caveat to all agents in
   communications/broadcast/20261122T0133Z_agent12-corrected-root-stack.md.
   No response from Agent 32 or Agent 3 had arrived by the 01:33:37Z checkpoint.
+
+
+- Derived the exact DR-token closure on Z1: for any right context r,
+  closeTokDR(r,0^n) = CR(L=[0,1],R=bump(r)) and
+  closeTokDR(r,0^n1) = CR(L=[0,0,0,1],R=bump(r)). This follows directly
+  from bounceDR([0],0^n) = ([1^n,0],[1]) and
+  bounceDR([0],0^n1) = ([1^(n+1),0],[0,0,1]), followed by normalizeEL.
+  Added the derivation to the experiment README. It proves token safety for
+  Z1 inputs, but not that the root always supplies Z1 at future DL-token
+  closures.
