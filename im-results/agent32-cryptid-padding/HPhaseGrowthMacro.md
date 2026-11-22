@@ -127,3 +127,37 @@ the proof should reduce to a finite explicit composition of ordinary mode
 runs. Then prove the (H(7)\to C_1) prefix and compose it with the already
 source-checked corridor macros. Only after those steps is it justified to
 conclude that the blank-root TM has an infinite run.
+
+## 5. Finite branch certificate for the 76-step macro
+
+The 76 transitions, in order, have the following branch labels. These
+labels name only ordinary outer clauses; none denotes a token closure.
+
+```
+CR10 CR1e EL0 EL+ DL+ DR0+ DR0+ DRempty
+EL+ DL0 EL0 EL0 EL0 EL0 EL+ DL0 EL0 EL+ DL0 EL0 EL+
+DL+ DR0+ DR0+ DR++ CR0 CR0 CR10 CR10 CR10 CR10 CR11e
+EL+ DL0 EL0 EL0 EL0 EL+ DL0 EL0 EL+ DL0 EL0 EL+
+DL0 EL0 EL+ DL+ DR0+ DR0+ DR++ CR0 CR0 CR10 CR11
+EL0 EL0 EL+ DL0 EL0 EL+ DL+ DR0+ DR0+ DR++
+CR0 CR0 CR0 CR0 CR0 CR0 CR0 CR0 CR0 CR10 CR10
+```
+
+Branch counts:
+- `CR10`: 8
+- `CR1e`: 1
+- `CR11e`: 1
+- `CR11`: 1
+- `CR0`: 13
+- `EL0`: 16
+- `EL+`: 12
+- `DL0`: 8
+- `DL+`: 4
+- `DR0+`: 8
+- `DR++`: 3
+- `DRempty`: 1
+
+The sum is 76. The symbolic-tail execution also checked every inspected
+head and second element: the sentinel was never reached. This gives a
+compact branch-level certificate for translating the macro into the
+source `mode_*_closed` lemmas.
