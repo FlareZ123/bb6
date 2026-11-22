@@ -268,6 +268,99 @@ For reference, with (x_0=79/50) and (gamma_0=1876/675), one explicit first-five-
 
 The recursion (2)–(4), not this finite sample, is the proof of arbitrary depth.
 
+
+## 6. Quantitative linear lower bound on inverse depth
+
+The preceding existence proof can be made quantitative. Fix (x_0=79/50), and make all band choices (t_i,\sigma_i) at (x_0) using the central interval. Write
+[
+\gamma_0(x)=\frac{884-512x}{27},\qquad
+\gamma_{i+1}(x)=\lambda_i\gamma_i(x)-16\cdot2^{t_i-\sigma_i},
+\qquad
+\lambda_i=\frac{2^{t_i+2}}{3^{t_i+1}}.
+]
+At (x_0), (gamma_0=1876/675) and (|\gamma_0'|/\gamma_0=3200/469).
+
+Since (t_i\in\{1,\ldots,5\}) and (R_i(x_0)\in(25/4,31/4)),
+[
+\frac{128}{2025}
+\le\frac{\gamma_{i+1}(x_0)}{\gamma_i(x_0)}
+=\lambda_i\frac{R_i(x_0)-4}{R_i(x_0)}
+\le\frac{40}{93}<1.
+	ag{5}
+]
+Also
+[
+\frac{|\gamma_{i+1}'(x_0)|}{\gamma_{i+1}(x_0)}
+=\frac{R_i(x_0)}{R_i(x_0)-4}
+\frac{|\gamma_i'(x_0)|}{\gamma_i(x_0)}
+\le\frac{25}{9}
+\frac{|\gamma_i'(x_0)|}{\gamma_i(x_0)}.
+]
+Consequently, with (C=24800/469),
+[
+|R_i'(x_0)|\le C(25/9)^i.
+]
+Choose
+[
+\delta_d=\frac{1}{16C}(9/25)^d.
+	ag{6}
+]
+For every (i\le d) and (|x-x_0|\le\delta_d), this gives
+[
+|R_i(x)-R_i(x_0)|\le1/16.
+	ag{7}
+]
+
+It remains to bound the finite-(K) error. Put (z_i=Z_i/2^K). Direct substitution in the seed formulas gives the exact identity
+[
+z_0=\gamma_0(x)+\frac{73-94K}{27\cdot2^K}.
+]
+Equation (3) gives
+[
+z_{i+1}=\lambda_i z_i-16\cdot2^{t_i-\sigma_i}
+-\frac{2k_i+5}{2^K}.
+	ag{8}
+]
+From (5), (gamma_i(x_0)\ge\gamma_0(128/2025)^i) and (gamma_i(x_0)\le\gamma_0). Hence
+[
+2^{\sigma_i}
+=\frac{R_i(x_0)3^{t_i+1}}{\gamma_i(x_0)}
+<2048(2025/128)^i<2048\cdot16^i,
+]
+and (sigma_i\ge0). Thus, for (i\le d), (|k_i|\le K+16+4d). Since (lambda_i\le8/9), iterating (8) yields the coarse bound
+[
+|z_i-\gamma_i(x)|
+\le\frac{100(d+1)(K+20+4d)}{2^K}.
+]
+The exact source ratio at stage (i) differs from (R_i(x)) by at most
+[
+\frac{2^{\sigma_i}}{3^{t_i+1}}|z_i-\gamma_i(x)|
+\le\frac{204800(d+1)(K+20+4d)16^d}{2^K}.
+	ag{9}
+]
+For (a\ge12d+20) and (|x-x_0|\le\delta_d), we have (x>3/2), so
+[
+K\ge\frac34,2^a-4
+\ge786432\cdot4096^d-4.
+]
+The right side of (9) is then less than (1/16) (and decreases rapidly with (K)). Combining this with (7), every exact source ratio lies in
+[
+(25/4-1/8,31/4+1/8)=(49/8,63/8).
+]
+For these large (K), (k_i\ge3), so the exact odd source-band inequalities with the (pm1) endpoints follow.
+
+Finally, (L_d\le486\cdot3^{6d-1}=162\cdot729^d). The (K)-length of the interval (|x-x_0|\le\delta_d) is (delta_d2^a). If (a\ge12d+20), then
+[
+\frac{\delta_d2^a}{L_d}
+\ge\frac{2^{20}}{2592C}
+\left(\frac{4096}{2025}\right)^d>1,
+]
+because (C<53), (2^{20}>2592\cdot53), and (4096>2025). Thus the interval contains a representative of the Hensel-selected residue class modulo (L_d). We have proved the explicit corollary:
+
+**For every integer (d\ge1) and every odd (a\ge12d+20), some (K\in\mathcal W) in the unique (9\mid Z_0) third-lift class has at least (d+2) successive odd ResetParent edges starting at (E).**
+
+Equivalently, the maximum inverse-parent depth attained somewhere in the K-window grows at least linearly with (a), with this conservative explicit bound. This remains a statement across different (K) as (a) varies, not an infinite reverse path for one fixed target.
+
 ## Consequence
 
 The unique third-lift class with (9\mid Z_0) has arbitrarily deep odd-parent ancestry for every sufficiently large odd (a). For (a\equiv0,1\pmod3), this class is one of the two non-high (Y\bmod27) lifts previously counted as excluded; for (a\equiv2\pmod3), it is the high-Y survivor. Thus the old 79/81 count is not a count of proved root exclusions for two-thirds of odd (a) classes. This construction does not imply root reachability for any fixed target, and the full fixed-parameter reverse cones remain open.
