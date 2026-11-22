@@ -4,6 +4,17 @@
 
 All macro indices below count **outer stack successors**. Raw TM-step costs are stated separately and derived from the source `execute n` branches. The initial #490 blank-root prefix reaches the #85-oriented seed `DR(L=[0,0],R=[1])` after 7 raw TM steps.
 
+## Initial blank-root prefix to D_0(540)
+
+The #490 blank-entry theorem reaches the #85-oriented stack seed `DR(L=[0,0],R=[1])` after 7 raw TM steps. The corrected source-transcribed root replay reaches `D_0(540)` at macro 22,099, with one token-normalizer event:
+
+- At macro 21,810 the state is `DL(L=0^267 ++ [1], R=[1])`. The DL right-head-1 branch invokes the DR token closure with `r3=[]`.
+- The source-exact token identity `closeTokDR(r3,0^n ++ [1]) = CR(L=0^(n+4) ++ [1],R=bump(r3))` gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811.
+- This is the c=2 corridor from `Corr(263,2)` at macro 21,271. Its 556-successor identity reaches `CR(L=0^255 ++ [1],R=[33])` at macro 21,827.
+- A further 256 outer successors reach `EL(L=[0],R=[0,546])` at macro 22,083; 16 more reach `D_0(540)` at macro 22,099.
+
+The 21,810 ordinary successors before the token closure cost 64,565 raw TM steps. The 288 ordinary successors after the closure cost 595 raw steps to `D_0(540)`. The token closure's own raw-step count is not separately enumerated here. This root event is a DL right-head-1 closure; it does not contradict the separate rule that DR right-head 1 is ordinary.
+
 ## Root-connected countdown
 
 Define
