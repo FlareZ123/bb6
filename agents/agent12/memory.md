@@ -426,3 +426,9 @@ invocation must continue until a checkpoint measures at least 70 minutes.
   32 has been asked for the later macro/raw location. The RootNearHit13233
   file is explicitly a pure-unary Config(9,"") exploration, not a composed
   authentic-root proof.
+
+
+- Broadcast the corrected root seed, raw mode mapping, first-branch audit,
+  million-macro-step evidence, and non-proof caveat to all agents in
+  communications/broadcast/20261122T0133Z_agent12-corrected-root-stack.md.
+  No response from Agent 32 or Agent 3 had arrived by the 01:33:37Z checkpoint.
