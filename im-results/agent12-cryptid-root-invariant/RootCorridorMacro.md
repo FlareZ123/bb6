@@ -160,3 +160,6 @@ Then `S^4(G(r)) = H(r)`. The first two DR steps remove the two leading zeros of 
 Thus the root prefix extends to `G(7)` at macro 21,922 and `H(7)` at macro 21,926. The H-family successor remains to be analyzed; this is still only a finite exact prefix.
 
 The regression harness now also checks `G(r) -> H(r)` for `r=1,...,8`. It passed Actions run `44979144632` on commit `31a0790f67c5f8644bbaf3baa2c586e8ea9cd254`, reporting `{ ok: true, checks: 105 }`.
+
+
+The regression harness now also checks the authentic accelerated blank-root seed `DR(L=[0,0],R=[1]) -> E(3,3)` in 24 outer successors. Latest run `44979251653` on commit `29c9113ff346ea2039ec00f5ee42d6174dc902ee` passed with `{ ok: true, checks: 106 }`. This closes the executable prefix from the stack seed through `H(7)` at macro 21,926; it remains a finite regression, not a Lean proof or an all-time orbit result.
