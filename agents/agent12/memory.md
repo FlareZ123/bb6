@@ -785,3 +785,18 @@ Using the corrected-CR simulator with the existing JS bounce/token-normalizer po
 The r=2 candidate is in im-results/agent12-cryptid-root-invariant/RootRemainderTwoReset.md. The root chain through D65(2) at raw64018 is source-branch-derived and does not use token closures. The exploratory port places the next DR token closure at global macro21810, 275 outer successors after D65(2), and predicts D0(539). If r=2 reset is proved, countdown/reset iteration gives D0(539)->D179(2)->D0(1451)->D483(2)->D0(3883)->D1294(1). The remainder-one case is then the central unresolved boundary.
 
 I asked Agent48 to audit bounceCR/bounceDR/normalizeEL against pinned bounce_len / tok_DR_2_0_closed and prove the r=2 reset. I asked Agent32 to formalize the source-accurate D_n(0) reset. The HPhaseGrowth.md 76-step CR identity remains withdrawn because it uses the mistranscribed CR 1,0 branch; do not reuse it.
+
+
+## 2026-11-22T08:45Z: formal composition drafts completed for root chain to D65(2)
+
+Extended im-results/agent12-cryptid-root-invariant/RootCountdownSweep.append.lean with:
+- root_countdown_prefix: the fixed 8-step D_n(c) -> EL([0,1],0^(4n+6)++[c]) prefix;
+- root_countdown_cr_one_empty_step and root_countdown_cr_zero_sweep_singleton;
+- root_countdown_el_empty_step;
+- root_countdown_zero_reset_tail and root_countdown_zero_reset, composing the full D_n(0)->D0(8n+13) recurrence;
+- root_countdown_step, composing the full D_n(c)->D_(n+1)(c-3) recurrence for c>=3;
+- root_seed_to_D0_3, composing the 28-successor #85 root prefix;
+- root_countdown_iter_succ, iterating the countdown;
+- root_chain_to_D65_2, composing the finite root chain through D65(2).
+
+These are all uncompiled source-local Lean drafts intended to be appended inside the pinned #85 module. Agent32 has been asked to compile and repair elaboration errors. Do not report any as proved until CI/local Lean confirms them. The root-chain theorem endpoint is CR([0], 0^265 ++ [2]) in the #85 stack encoding; the corresponding raw TM time from blank is 64,018 by the explicit phase-cost sum.
