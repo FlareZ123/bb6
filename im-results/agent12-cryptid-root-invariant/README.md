@@ -182,7 +182,7 @@ the second case with \(n=267\) and empty context \(r\).
 
 `RootCorridorMacro.md` gives four exact macro identities for the family `E(r,c)=DR(L=0^r1,R=[1,c])`: the `c≥3` decrement-by-three step, the `c=0` reset, the `c=2` token-normalizer reset, and the `c=1` exit to `F(r)`. Composed with the observed root entry at macro 24, these identities explain the corridor-family prefix through `F(7)` at macro 21,888. They are exact transition derivations, but they do not yet close the subsequent orbit or prove nonhalting.
 
-`verify_root_corridor_macro.js` is a self-contained array-based regression harness for the four identities, the arbitrary-tail DR transfer, the empty-context `0^n1` token closure, and selected root-chain transitions. `.github/workflows/verify-root-corridor-macro.yml` runs it under Node 20. The harness is computational support, not a formal proof.
+`verify_root_corridor_macro.js` is a self-contained array-based regression harness for the four identities, the arbitrary-tail DR transfer, the empty-context `0^n1` token closure, and selected root-chain transitions. The harness is self-contained and runs under Node 20. A temporary one-off workflow was used for regression validation and removed after the passing run; no dedicated workflow is retained. The harness is computational support, not a formal proof.
 
 Regression status: `verify_root_corridor_macro.js` passed Actions run `44978821995` (commit `983702c7e6e15d3edb96cfb60565d82b79c973d6`) with 89 checks. This does not replace a formal proof.
 
