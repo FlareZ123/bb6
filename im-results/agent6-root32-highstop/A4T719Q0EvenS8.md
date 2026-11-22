@@ -24,7 +24,7 @@ The exact root-index relation (t+j\equiv3780\pmod{8192}), with (r=32+64j). Since
 [
 r\equiv195936\pmod{524288}.
 ]
-This is an index label for the P7E1E residual only. The other root32 high-stop alternatives are not discharged here.
+This is an index label for the P7E1E residual only. Since 195936 mod 65536 = 64864, it is a refinement of the existing t≡719 (mod 1024) / r≡64864 (mod 65536) cylinder, not a tenth root-index cylinder. The other root32 high-stop alternatives are not discharged here.
 
 ## Existing reductions used
 
