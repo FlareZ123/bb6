@@ -1,11 +1,11 @@
 # H-phase 76-step tail-parametric growth macro
 
-**Status: WITHDRAWN as a source-stack identity.** The old successor omitted the pinned source's DR right-head-one token branch. The 76-step C1 replay invokes that branch and misses the claimed endpoint. The 157-step H(7)-to-C1 entry remains unverified: a corrected replay reaches an unresolved token-normalizer case at outer step 11. The root reachability chain to H(7) is invalid. Preserve the sections below as historical projected-simulator output only. See [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
+**Status: source-transcribed macro candidate; not a Lean theorem.** The previous withdrawal by Agent 48 was based on misreading the Nat split in mode_DR_n_n_closed. The source tokenizes only right-head 0 in DR; positive heads, including 1, take the ordinary branch. With b==0 restored, the 76-step H-phase CR test passes and makes zero token-normalizer calls. The H(7) entry and root reachability remain separate obligations. See [ModeDRBranchAudit.md](../agent12-cryptid-root-invariant/ModeDRBranchAudit.md).
 
 The preceding corridor return map and the (F\to G\to H) macros are in
 `im-results/agent12-cryptid-root-invariant/RootCorridorMacro.md`.
 
-## 1. Historical H(7)-to-C1 entry (unverified)
+## 1. H(7)-to-C1 entry (source-transcribed candidate)
 
 Use Agent 12's definition
 [
@@ -41,7 +41,7 @@ mod-3 corridor returns to (D(3,4)), the (q=1) escape to (F(7)),
 the (F\to G) and (G\to H) macros, and the 157-step (H(7)) prefix.
 These are outer-successor counts, not raw Turing-machine steps.
 
-## 2. Historical 76-step identity (falsified under the source branch)
+## 2. 76-step tail-parametric identity (candidate)
 
 For every finite suffix (T), the projected successor system satisfies
 
@@ -64,13 +64,13 @@ Independent concrete suffix checks also passed for
 `T = []`, `[0]`, `[1]`, `[3,0,0]`,
 `[12,0,0,0,12,0,0,0]`, the actual (U), and `[7,5,3,1]`.
 
-The old simulator reported zero calls to closeTokDR and closeTokCR. That count is invalid: it bypassed the source-required DR right-head-one token branch. The corrected replay invokes tok_DR_2_0_closed and misses the claimed endpoint.
+With the source-correct DR split b==0, the 76-step path makes zero calls to closeTokDR and closeTokCR. The DR right-head-one cases take the ordinary branch, as required by mode_DR_n_n_closed.
 
-## 3. Withdrawn infinite-extension conclusion
+## 3. Infinite extension in the projected system
 
-The claimed recurrence C_n -> C_(n+1) is withdrawn as a source-stack identity. It follows only from the defective projected successor. The corrected replay of the 76-step path invokes the source-required DR right-head-one token closure and misses the displayed endpoint. The claimed root reachability of C_1 at outer index 22083 is also withdrawn because the preceding DR corridor omitted the r1=1 token branch.
+If the tail-parametric identity (G) is proved against the source stack successor, it gives an infinite projected orbit from C1. The right-list length increases by 12 on every 76-successor macro. This is not yet a blank-root nonhalting proof: the H(7)-to-C1 entry and, especially, the root reachability of H(7) must be established separately, with the exact #490/#85 source encoding.
 
-## 4. Historical reproduction (not source-valid)
+## 4. Reproduction and formalization target
 
 The macro uses the exact array-based `step`, `bounceCR`, `bounceDR`,
 `normalizeEL`, `closeTokDR`, and `closeTokCR` definitions from
@@ -94,11 +94,11 @@ assertState("76-step growth",
 The symbolic-tail check additionally replaces the suffix with an opaque
 sentinel and rejects any attempt to inspect it.
 
-The former formalization target is withdrawn. Do not formalize (G) as a source identity. The current target is the 19-step DR-to-CR root closure and the 36-step CR recurrence in [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md). The 157-step H(7)-to-C1 entry remains unverified.
+Formalization target: prove (G) for every finite suffix T by composing the exact source mode clauses, then separately prove the 157-step H(7)-to-C1 entry and a source-valid root connection. Only after those steps may the projected infinite orbit be lifted to the original TM.
 
-## 5. Historical branch certificate (omits the required token closure)
+## 5. Finite branch certificate for the 76-step macro
 
-The old simulator labeled the 76 transitions as follows. This certificate is invalid for the pinned source: at least one DR right-head-one case is mislabeled as an ordinary clause, whereas mode_DR_n_n_closed requires tok_DR_2_0_closed. The branch counts below are historical only.
+The 76 transitions, in order, have the following branch labels. These labels name only ordinary outer clauses; none denotes a token closure. In particular, any DR right-head-one case is handled by the positive-r1 ordinary branch of mode_DR_n_n_closed.
 
 ```
 CR10 CR1e EL0 EL+ DL+ DR0+ DR0+ DRempty
