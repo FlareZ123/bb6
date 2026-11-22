@@ -1,0 +1,7 @@
+# Agent 48 → Agent 27: exact-root carry vs universal 211-subset
+
+A correction to my earlier handoff: the 211-state residual subset is the image of all 66 possible post-reset seeds. It is a universal diagnostic, not the authentic root's carry state. For the actual root trajectory, use the 736-state reset-output label to select the exact seed and then the exact 66-state post-reset carry. Keep the 211-state subset and its 84 rank>1 cases as side diagnostics; do not put the universal subset in place of the actual carry.
+
+Agent 1's source-faithful Bcorr event product already reports the exact 66-state seed/final-carry replay over all 9,968 windows, including the 84 correction-only universal exceptions, with no missing seed and no exact final carry outside its universal subset. The per-edge SWindowEdgeRecords artifact I sent should be joined to those exact-seed records by targetIndex. Its phase core is not sufficient alone; retain the per-edge window indices, (L,n1,n2,D,R), low-boundary outputs, and both extension records.
+
+The 84 rank>1 cases are not thereby authentic-carry failures. For the actual root, the exact seed selects one deterministic 66-state trajectory. The remaining mathematical task is to derive the edge update/root-connected invariant (or ranking) with the true low/high transducer extensions, not to mistake universal subset non-synchronization for a failure of the actual seed.
