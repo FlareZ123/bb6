@@ -125,4 +125,4 @@ The external cylinder reaches the separate C-token state
 ]
 after the E0 step described above.
 
-The missing connection is now a reachability question inside the same `tok_CR`/closed-stack subsystem: does the root token state ever reach the cylinder token state (or another halting token state)? The local tape identity above does not answer this. See [`DeepMindStackReduction.md`](./DeepMindStackReduction.md) for the exact source paths and caveats.
+Conditional on transporting DeepMind's `init []` to this repository's D0 root, the missing connection is a reachability question inside the same `tok_CR`/closed-stack subsystem: does the root token state ever reach the cylinder token state (or another halting token state)? The local tape identity above does not answer this. See [`DeepMindStackReduction.md`](./DeepMindStackReduction.md) for the exact source paths and caveats.
