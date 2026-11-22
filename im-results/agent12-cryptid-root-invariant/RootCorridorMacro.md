@@ -26,15 +26,15 @@ The following four exact identities hold:
 
    `S^(3r+32)(Corr(r,0)) = Corr(3,2r+7)`.
 
-3. **Two-token reset** (`c = 2`):
+3. **Two-token drift** (`c = 2`, `r ≥ 8`):
 
-   `S^(2r+30)(Corr(r,2)) = Corr(3,4)`.
+   `S^(2r+30)(Corr(r,2)) = CR(L=0^(r-8) ++ [1], R=[33])`.
 
 4. **One-token exit** (`c = 1`):
 
    `S^(3r+20)(Corr(r,1)) = F(r)`.
 
-These formulas have been checked by an separate array-based transcription for `r=1,...,8`; the proof sketches below reduce each to the explicit outer transition clauses and `List.replicate`-style zero-pop loops.
+The c=2 formula is now stated only for `r ≥ 8`; the previous exponent-independent reset to `Corr(3,4)` is withdrawn. The proof sketches reduce the remaining claims to explicit outer transition clauses and `List.replicate`-style zero-pop loops. The corrected regression harness has been edited, but a post-correction Node/CI run is not yet available.
 
 ## Proof sketches
 
@@ -73,11 +73,15 @@ The post-corridor length is `2r+31`; adding `r+1` gives `3r+32`.
 
 The shared corridor gives `CR([0],0^(r+2) ++ [2])`. Eight fixed steps and `r+3` EL zero-pop steps reach `EL(0^(r+4)1,[2])`; one EL step reaches `DL(0^(r+4)1,[1])`. The next step invokes `closeTokDR` on `0^(r+4)1`.
 
-The token identity is independent of the exponent when the right tail is empty:
+The source-exact token identities, for any right context `q`, are:
 
-`closeTokDR([], 0^n ++ [1]) = CR(L=[0,0,0,1], R=[1])`.
+`closeTokDR(q, 0^n) = CR(L=0^(n+1) ++ [1], R=bump(q))`
 
-Indeed, `bounceDR` turns the left accumulator into `1^(n+1)0` and the right word into `[0,0,1]`; `normalizeEL` drops the leading ones and consumes the final zero. From `CR([0,0,0,1],[1])`, 16 fixed steps reach `Corr(3,4)`. The total length is `(r+1)+8+(r+3)+1+1+16 = 2r+30`.
+and
+
+`closeTokDR(q, 0^n ++ [1]) = CR(L=0^(n+4) ++ [1], R=bump(q))`.
+
+The extra zeros come from applying `tok_EL_1` once for every leading 1 in the accumulator. In the c=2 corridor, the closure input is `0^(r+4) ++ [1]`, so it returns `CR(L=0^(r+8) ++ [1], R=[1])`. For `r ≥ 8`, the next 16 steps are all CR zero-pop steps, giving `CR(L=0^(r-8) ++ [1], R=[33])`. The total length remains `(r+1)+8+(r+3)+1+1+16 = 2r+30`.
 
 ### Case `c = 1`
 
@@ -100,22 +104,22 @@ The million-step replay contains the following exact corridor-family chain (macr
 | 97 | `Corr(3,21)` | `Corr(7,18)` at 117 |
 | 405 | `Corr(31,0)` | `Corr(3,69)` at 530 |
 | 3014 | `Corr(95,0)` | `Corr(3,197)` at 3331 |
-| 21271 | `Corr(263,2)` | `Corr(3,4)` at 21827 |
-| 21827 | `Corr(3,4)` | `Corr(7,1)` at 21847 |
-| 21847 | `Corr(7,1)` | `F(7)` at 21888 |
+| 21271 | `Corr(263,2)` | `CR(L=0^255 ++ [1],R=[33])` at 21827 |
+| 21827 | `CR(L=0^255 ++ [1],R=[33])` | `EL(L=[0],R=[0,546])` at 22083 |
 
-The long middle runs are exactly repeated applications of case 1. For example, `Corr(3,69)` iterates case 1 until `Corr(95,0)`, then case 2 resets to `Corr(3,197)`. Likewise `Corr(3,197)` iterates case 1 until `Corr(263,2)`, then case 3 resets to `Corr(3,4)`.
+The long middle runs are exactly repeated applications of case 1. For example, `Corr(3,69)` iterates case 1 until `Corr(95,0)`, then case 2 resets to `Corr(3,197)`. Likewise `Corr(3,197)` iterates case 1 until `Corr(263,2)`. The corrected c=2 token closure then produces a long CR zero sweep, not `Corr(3,4)`; the root reaches `EL([0],[0,546])` at macro 22,083.
 
 ## What remains
 
-- Analyze the `H(r)` family after `H(7)` at macro 21926, or derive a general macro that connects `Corr/F/G/H` states to the DRegular or A-section language.
+- Analyze the corrected root continuation from `EL(L=[0],R=[0,546])` and seek a root-specific invariant or a route to the certified A-section halting cylinder.
+- The `c=1` exit and the subsequent `F/G/H` identities remain valid as standalone projected macros, but the corrected blank-root trace no longer reaches them through the old c=2 reset.
 - Prove the exact `ListBlank` head-boundary/control-state correspondence for the candidate DRegular relation; the right-side image `0 1^(c+1) 0 11` is still unmatched.
-- Formalize the identities against the actual source stack successor in Lean; the current checks are executable finite tests plus transition-case derivations, not a checked Lean theorem.
-- Do not infer an infinite root orbit from this finite macro prefix or halting from the external cylinder. Root-to-cylinder reachability remains open.
+- Formalize the corrected token identities and the corridor macros against the actual source stack successor in Lean; no checked Lean theorem is claimed.
+- Do not infer nonhalting from a finite macro prefix or halting from the external cylinder. Root-to-cylinder reachability remains open.
 
 ## Reproducible regression result
 
-The checked-in `verify_root_corridor_macro.js` passed GitHub Actions run `44978821995` on commit `983702c7e6e15d3edb96cfb60565d82b79c973d6`, reporting `{ ok: true, checks: 89 }`. The checks cover `r=1,...,8` for the four macro cases (including `c=3,6` for the decrement case), arbitrary-tail transfer, empty-context `0^n1` DR-token closure for `n=0,...,32`, and selected root-chain transitions including `Corr(263,2) -> Corr(3,4)` and `Corr(7,1) -> F(7)`. This is reproducible executable evidence, not a Lean-checked theorem.
+The earlier Actions runs (89, 97, 105, and 106 checks) predate the token-normalizer correction and are withdrawn as evidence for the c=2/root-chain claims. The corrected harness now tests both `closeTokDR(q,0^n)` and `closeTokDR(q,0^n1)`, the two corrected CR-token branches, the c=2 drift for `r ≥ 8`, and the corrected root continuation. Manual V8 checks passed for `n=0,...,32`, c=2 parameters `r=8,9,10,263`, and the 556+256-step root continuation. The checked-in harness has not yet been executed under Node/CI after editing; these are computational checks, not a Lean-checked theorem.
 
 ## Closed form for repeated decrement phases
 
@@ -129,9 +133,9 @@ The observed root trace decomposes into these three sweeps:
 
 - From `Corr(3,21)` at macro 97, take `k=0,...,7`; the endpoint is `Corr(31,0)` at macro 405, then the zero reset reaches `Corr(3,69)` at macro 530.
 - From `Corr(3,69)` at macro 530, take `k=0,...,23`; the endpoint is `Corr(95,0)` at macro 3014, then the zero reset reaches `Corr(3,197)` at macro 3331.
-- From `Corr(3,197)` at macro 3331, take `k=0,...,65`; the endpoint is `Corr(263,2)` at macro 21271, then the token reset reaches `Corr(3,4)` at macro 21827.
+- From `Corr(3,197)` at macro 3331, take `k=0,...,65`; the endpoint is `Corr(263,2)` at macro 21271. The corrected c=2 macro reaches `CR(L=0^255 ++ [1],R=[33])` at 21827 and then `EL(L=[0],R=[0,546])` at 22083.
 
-The final short phase is `Corr(3,4) -> Corr(7,1) -> F(7)` at macro indices 21847 and 21888. This is a compact exact description of the corridor-family prefix; it does not imply that the later `F(7)` orbit remains in the `E` family.
+The earlier `Corr(3,4) -> Corr(7,1) -> F(7) -> G(7) -> H(7)` chain remains a collection of standalone projected identities, but it is not on the corrected blank-root trajectory. This is a compact exact description of the corrected corridor-family prefix; it does not imply an all-time orbit result.
 
 ## One further exact continuation from F(r)
 
@@ -145,7 +149,7 @@ Then
 
 Proof: the initial `1,0,0,0` prefix of `F(r)` takes 5 steps and reaches `EL(L=0^4 1 0^3, R=(10)^(r+2)3)`. Each remaining `(1,0)` pair takes 3 steps: EL decrements the leading 1, DL consumes the resulting zero and maps `L` to `0 :: bump(L)`, then EL consumes the original second zero. The net left-list map is `U(L)=0^2 ++ bump(L)`. Inductively, `U^k(0^4 1 0^3)=0^2(10)^k0^2 1 0^3`. After `r+2` pairs, the remaining right list is `[3]`; two final EL/DL steps produce `G(r)`. The total is `5+3(r+2)+2=3r+13`.
 
-For the blank-root trace, this extends `Corr(7,1)` at macro 21847 through `F(7)` at 21888 to `G(7)` at macro 21922. This continuation is covered by the regression harness; the orbit after `G(7)` remains open.
+These are exact standalone identities. The corrected blank-root trace does not reach `F(7)`, `G(7)`, or `H(7)` via the withdrawn c=2 reset, so they are not root-reachability claims.
 
 The harness was extended and passed Actions run `44979005652` on commit `ba92d315165e341787be8fbc36bb8b69f1625d50`, reporting `{ ok: true, checks: 97 }`.
 
@@ -158,12 +162,12 @@ Define
 
 Then `S^4(G(r)) = H(r)`. The first two DR steps remove the two leading zeros of `G(r)` while extending the right prefix; the next DR step sees heads `1,1` and produces `CR(L=00(10)^(r+1)001000, R=0^5)`; one CR zero-pop step gives `H(r)`.
 
-Thus the root prefix extends to `G(7)` at macro 21,922 and `H(7)` at macro 21,926. The H-family successor remains to be analyzed; this is still only a finite exact prefix.
+The former root-prefix claim to `G(7)) and `H(7)` is withdrawn. These remain standalone identities only; the corrected root state at macro 21,926 is in the CR zero-sweep family, not `H(7)`.
 
-The regression harness now also checks `G(r) -> H(r)` for `r=1,...,8`. It passed Actions run `44979144632` on commit `31a0790f67c5f8644bbaf3baa2c586e8ea9cd254`, reporting `{ ok: true, checks: 105 }`.
+The earlier regression run for `G(r) -> H(r)` predates the source-normalizer correction. The local identity is retained as a standalone projected transition, but it is not a current root-prefix claim.
 
 
-The regression harness also checks the accelerated root stack seed `DR(L=[0,0],R=[1])` (entered at raw TM time 7) reaches `Corr(3,3)` in 24 outer successors. Latest run `44979251653` on commit `29c9113ff346ea2039ec00f5ee42d6174dc902ee` passed with `{ ok: true, checks: 106 }`. This closes the executable prefix from the stack seed through `H(7)` at macro 21,926; it remains a finite regression, not a Lean proof or an all-time orbit result.
+The 24-step seed-to-`Corr(3,3)` prefix is unchanged by the correction. The old 106-check run included the invalid c=2 reset and H(7) reachability, so it is not evidence for the corrected full prefix. The corrected root continuation is now checked manually in V8 through macro 22,083; a post-correction Node/CI run is pending.
 
 
 Process note: the temporary one-off Node workflow used for the 106-check regression was removed after the passing run, in line with the repository-wide direction to avoid proliferating standalone workflows. The self-contained JS harness remains available for local reproduction with Node 20.
@@ -206,31 +210,19 @@ EL(0 ; 0,2r+13)
 
 The endpoint is `Corr(3,2r+7)`.
 
-### The 16-step tail in the `c=2` reset
+### The corrected 16-step tail in the `c=2` corridor
 
-The token-normalizer identity gives `CR(0,0,0,1 ; 1)`. From there the exact 16-step chain is:
+After the corrected token closure, the state is `CR(L=0^(r+8) ++ [1],R=[1])`. For `r ≥ 8`, all of the next 16 transitions are CR zero-pop steps:
 
 ```text
-CR(0,0,0,1 ; 1)
-→ CR(0,0,1 ; 3)
-→ CR(0,1 ; 5)
-→ CR(1 ; 7)
-→ EL(0 ; 0,10)
-→ EL(0,0 ; 10)
-→ DL(0,0 ; 9)
-→ DR(0,0 ; 1,7)
-→ DR(0 ; 1,0,7)
-→ DR(ε ; 1,0,0,7)
-→ EL(0 ; 1,0,0,7)
-→ DL(0 ; 0,0,0,7)
-→ EL(0,1 ; 0,0,7)
-→ EL(0,0,1 ; 0,7)
-→ EL(0,0,0,1 ; 7)
-→ DL(0,0,0,1 ; 6)
-→ DR(0,0,0,1 ; 1,4)
+CR(0^(r+8)1 ; 1)
+→ CR(0^(r+7)1 ; 3)
+→ CR(0^(r+6)1 ; 5)
+→ ...
+→ CR(0^(r-8)1 ; 33)
 ```
 
-The endpoint is `Corr(3,4)`, independent of the original `r`.
+For the root value `r=263), this gives `CR(L=0^255 ++ [1],R=[33])` at macro 21,827. A further 256 successors reach `EL(L=[0],R=[0,546])` at macro 22,083. The previous 16-step tail through `Corr(3,4)` is invalid because it used the uncorrected `tok_EL_1` normalization.
 ## Candidate relation to the DRegular source section (not yet a state correspondence)
 
 The exact left-stack tape identity also has a potentially useful relation to the repository's DRegular source language. For `q=r≥1`, the source definition gives `sourceSection(2,r,0)=11(01)^r`. Reversing this word gives `(10)^r11`, while
@@ -239,4 +231,4 @@ The exact left-stack tape identity also has a potentially useful relation to the
 
 So the left tape of `Corr(r,c)` is the reversed canonical DRegular section `(a,q,b)=(2,r,0)` with one additional boundary blank at the head. This is an exact string identity from the two encodings. It is only a **candidate bridge**: the exact `ListBlank` head-boundary equivalence, control-state correspondence, and the right-suffix image `encRight([1,c])=0 1^(c+1) 0 11` have not been matched to the DRegular state. Do not treat `Corr(r,c)` as a DRegular state without proving those conditions.
 
-The subsequent H(7) tail-parametric growth loop and its proof obligations are documented separately in [HPhaseGrowth.md](HPhaseGrowth.md). It is a candidate infinite orbit of the projected outer-stack system, not yet an original-TM nonhalting theorem.
+The H(7) tail-parametric growth loop is retained in [HPhaseGrowth.md](HPhaseGrowth.md) as a standalone projected-system identity. The corrected blank-root trace does not reach H(7), so the loop is not a blank-root nonhalting result.
