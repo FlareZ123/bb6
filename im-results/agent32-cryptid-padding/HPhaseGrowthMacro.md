@@ -68,29 +68,7 @@ The old simulator reported zero calls to closeTokDR and closeTokCR. That count i
 
 ## 3. Withdrawn infinite-extension conclusion
 
-Define
-[
-C_n=\mathrm{CR}([1,0],P\mathbin{++}B^n\mathbin{++}U),
-\qquad n\ge1.
-]
-Taking (T=B^{n-1}\mathbin{++}U) in (G) gives
-[
-C_n\xrightarrow{76}C_{n+1}.
-]
-Thus the projected successor system has an infinite continuation from
-(C_1). The right-list length increases by 12 on every 76-successor
-macro, while the left list and mode return exactly to ([1,0]) and CR.
-
-In particular, the root's projected orbit reaches (C_1) at outer index
-22083 and then has the infinite sequence
-[
-C_1\xrightarrow{76}C_2\xrightarrow{76}C_3\xrightarrow{76}\cdots.
-]
-
-This is a candidate nonhalting argument for the blank-root machine, not a
-claim that the original machine has been proved nonhalting. To promote it
-to such a theorem, the full pair-stack transitions and the finite root
-prefix must be composed from the external Lean source lemmas.
+The claimed recurrence C_n -> C_(n+1) is withdrawn as a source-stack identity. It follows only from the defective projected successor. The corrected replay of the 76-step path invokes the source-required DR right-head-one token closure and misses the displayed endpoint. The claimed root reachability of C_1 at outer index 22083 is also withdrawn because the preceding DR corridor omitted the r1=1 token branch.
 
 ## 4. Historical reproduction (not source-valid)
 
@@ -116,14 +94,7 @@ assertState("76-step growth",
 The symbolic-tail check additionally replaces the suffix with an opaque
 sentinel and rejects any attempt to inspect it.
 
-**Priority formalization target:** prove (G) over the full pair-stack
-configuration type by composing the external `mode_CR_n_n_closed`,
-`mode_EL_n_n_closed`, `mode_DL_0_n_closed`, and
-`mode_DR_n_n_closed` lemmas. Since no token closures occur in this macro,
-the proof should reduce to a finite explicit composition of ordinary mode
-runs. Then prove the (H(7)\to C_1) prefix and compose it with the already
-source-checked corridor macros. Only after those steps is it justified to
-conclude that the blank-root TM has an infinite run.
+The former formalization target is withdrawn. Do not formalize (G) as a source identity. The current target is the 19-step DR-to-CR root closure and the 36-step CR recurrence in [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md). The 157-step H(7)-to-C1 entry remains unverified.
 
 ## 5. Historical branch certificate (omits the required token closure)
 
