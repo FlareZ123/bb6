@@ -66,3 +66,36 @@ The remaining critical obligations are:
 3. Prove that the stack projection preserves the relevant original TM execution and that no omitted exceptional/halting branch invalidates the lifted infinite path.
 
 Until these are discharged, **do not claim the original TM is nonhalting**. The result currently establishes a strong candidate infinite orbit in the projected stack system, not BB(6) or the original-machine status.
+
+## Raw TM cost of the 76-step macro
+
+Agent 32 matched the 76 outer branch labels to the exact `execute n` lengths in the external #85 mode-closure proof. The branch accounting is:
+
+| branch | occurrences | raw TM steps each | subtotal |
+|---|---:|---:|---:|
+| CR L=1, second=0 (`CR10`) | 8 | 5 | 40 |
+| CR L=1, empty tail (`CR1e`) | 1 | 6 | 6 |
+| CR L=1, second=1 (`CR11e`, `CR11`) | 2 | 16 | 32 |
+| CR L=0 (`CR0`) | 13 | 2 | 26 |
+| EL R=0 (`EL0`) | 16 | 2 | 32 |
+| EL R>0 (`EL+`) | 12 | 1 | 12 |
+| DL R=0 (`DL0`) | 8 | 6 | 48 |
+| DL R>1 (`DL+`) | 4 | 4 | 16 |
+| DR L=0, R>0 (`DR0+`) | 8 | 4 | 32 |
+| DR L>0, R>0 (`DR++`) | 3 | 3 | 9 |
+| DR L empty (`DRempty`) | 1 | 1 | 1 |
+| **Total** | **76** |  | **254** |
+
+Thus the 76-successor growth identity corresponds to **254 raw TM steps**. The two CR-second=1 branches both use the source's `execute 16` block; the path enters no token-normalizer branch.
+
+Agent 32's proposed direct formalization target in the mirrored #490 module is the raw reachability theorem from
+
+`evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ T)`
+
+to
+
+`evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ B ++ T)`
+
+by `execute 254`, for arbitrary finite suffix `T`. This may avoid depending on private #85 `mode_*_closed` lemmas: prove the complete raw run in the #490 namespace using its public `execute` semantics and endpoint encodings. If one 254-step proof is unwieldy, split it into the 76 branch runs.
+
+Source proof route: the #85 branch proof block is at lines 901–1065 of the external source file; branch counts and durations above were extracted from those `execute n` calls. This is a proposed Lean proof route, not yet a compiled theorem.
