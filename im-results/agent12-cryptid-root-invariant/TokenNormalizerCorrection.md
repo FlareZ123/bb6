@@ -106,12 +106,9 @@ the initial right suffix `[0,0,1]` after factoring out the implicit leading
 zero, and the n+1 applications of `tok_EL_1` produce n+4 zeros in the final
 CR left list. Both outputs lie in Z1.
 
-## Corrected root consequence
+## Historical root consequence (withdrawn by the outer DR branch audit)
 
-The blank-root stack seed is
-`DR(L=[0,0], R=[1])`. The corridor prefix through
-`Corr(263,2)` at macro 21,271 is unchanged. At macro 21,810 the root reaches
-`DL(L=0^267 ++ [1], R=[1])) and invokes `closeTokDR`.
+The following root trace was computed with an outer DR rule that omitted the source r1=1 token branch. It is withdrawn in its entirety. The valid first root closure is DR([0,0],[1]) -> CR([0,0,1],[1]) in 19 raw steps, followed by the candidate 36-step recurrence in [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
 
 The corrected closure gives:
 
@@ -122,33 +119,23 @@ macro 21827: CR(L=0^255 ++ [1], R=[33])
 macro 22083: EL(L=[0], R=[0,546])
 ```
 
-The c=2 corridor macro is consequently, for `r >= 8`,
+The old simulator consequently claimed the following c=2 corridor macro for `r >= 8` (not source-valid):
 
 ```text
 S^(2r+30)(Corr(r,2))
   = CR(L=0^(r-8) ++ [1], R=[33]).
 ```
 
-For the root value r=263, this is the state at macro 21,827. The old
-`Corr(3,4)` endpoint, and the subsequent root connection to `F(7)`,
-`G(7)`, `H(7)`, and the H-phase growth loop, are withdrawn. Those later
-identities may still hold as standalone projected-system statements, but
-they are not established as root-reachable.
+For the root value r=263, this is the state at macro 21,827. The old `Corr(3,4)` endpoint and all subsequent connections to F(7), G(7), H(7), and the H-phase growth loop are withdrawn. Corrected replay also falsifies the claimed H-phase and DR/G/B 76-step endpoints, so these are not established standalone source-stack identities either.
 
-A source-equivalent persistent-list recurrence was executed for 1,000,000
-macro-successor steps after the correction. It had one DR token closure, no CR
-token closure, no token-halting branch, and no CR left-head-at-least-2 branch.
-The left list remained in Z1 throughout that finite run. This is computational
-evidence only; it is not a proof of an infinite orbit or a Lean theorem.
+The pre-head-one simulator reported a 1,000,000-step run with one DR token closure. That output is invalid as a source orbit because it omitted every r1=1 token branch. The corrected 1,000,000-successor replay and candidate recurrence are recorded in DRHeadOneCycle.md.
 
 ## Repository changes
 
-- `fast_root_stack_sim.js`: corrected `tok_EL_1`, both CR `1,1` suffixes,
-  and documented why the `v >= 3` `bounceDR` suffix is already correct.
-- `verify_root_corridor_macro.js`: updated token regression expectations,
-  corrected c=2 macro endpoint, and root continuation.
-- `RootCorridorMacro.md`, `HPhaseGrowth.md`, and the folder README:
-  withdrew the invalid root-to-H7 claim and recorded the corrected trajectory.
+- `fast_root_stack_sim.js`: retains the token-normalizer corrections and now token-normalizes DR right-head 0 and 1.
+- `verify_root_corridor_macro.js`: now tests the corrected root cycle and asserts that old corridor/countdown/H-phase endpoints fail.
+- `stack_system_sim.py`: now includes the DR right-head-one branch and the source tok_EL_1 zero insertion.
+- The folder README and historical macro notes are marked withdrawn; see DRHeadOneCycle.md for the replacement proof target.
 
 The updated checked-in Node harness has not yet been run under Node/CI after
 these edits. Local shell execution returned a tool-level ClientError. The
