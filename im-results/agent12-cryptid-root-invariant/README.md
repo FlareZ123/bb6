@@ -1,6 +1,6 @@
 # Cryptid #490 / D0: corrected source audit and surviving countdown
 
-<badge>Critical withdrawal · 2026-11-22</badge>
+**CRITICAL WITHDRAWAL — 2026-11-22**
 
 The previous no-swap root replay and 76-step growth route are withdrawn. The projected CR transition function in `NoSwapGrowth.lean`, `fast_root_stack_sim.js`, and `verify_root_corridor_macro.js` mistranscribes the pinned #85 source branches for CR left prefixes `1,0`, `1,1`, and `1,≥2`; it also has the wrong empty-list bump. The `rfl` theorem in `NoSwapGrowth.lean` proves only that incorrect projected function. See [Agent 12's critical correction](../../communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md).
 
