@@ -45,19 +45,30 @@ The candidate countdown identity is
 S^(8n+24)(D_n(c)) = D_(n+1)(c-3),   c >= 3.
 ```
 
-This identity follows algebraically from the shared-corridor family. Set `r=4n+3`. Then `D_n(c)` is the shared-corridor output `S^(r+1)(Corr(r,c))). The c≥3 corridor macro takes `Corr(r,c)` to `Corr(r+4,c-3)` in `2r+14` successors; the latter reaches `D_(n+1)(c-3)` in `r+5` more successors. Removing the initial `r+1` shared-corridor segment leaves
+This identity follows algebraically from the shared-corridor family. Set `r=4n+3`. Then `D_n(c)` is the shared-corridor output `S^(r+1)(Corr(r,c))`. The c≥3 corridor macro takes `Corr(r,c)` to `Corr(r+4,c-3)` in `2r+14` successors; the latter reaches `D_(n+1)(c-3)` in `r+5` more successors. Removing the initial `r+1` shared-corridor segment leaves
 
 ```text
 (2r+14) - (r+1) + (r+5) = 2r+18 = 8n+24.
 ```
 
-The checked-in regression harness samples n=0,…,6 and c in {3,4,5,10,540}. An independent persistent-list replay additionally checked all 180 first-countdown and 484 second-countdown instances used by the blank-root chain. The raw cost on these paths is
+### Direct source-branch factorization
 
-```text
-24n + 69 raw TM steps.
-```
+There is a second, more local proof route that avoids the intermediate `Corr` family. Write `0` for pair `(0,0)`, `1` for pair `(1,0)`, and use the first-coordinate stack notation. For every `n≥0,c≥3`, the no-swap source clauses factor the countdown as follows:
 
-The raw-cost formula is still an observed/source-counted formula, not a quantified Lean theorem.
+| Phase | Outer successors | Raw TM steps | Endpoint |
+|---|---:|---:|---|
+| Fixed prefix | 8 | 21 | `EL(L=[0,1], R=0^(4n+6)++[c])` |
+| EL zero sweep | `4n+6` | `8n+12` | `EL(L=0^(4n+7)++[1], R=[c])` |
+| EL-positive then DL-positive | 2 | 5 | `DR(L=0^(4n+7)++[1], R=[1,c-3])` |
+| DR zero sweep | `4n+7` | `16n+28` | `DR(L=[1], R=[1]++0^(4n+7)++[c-3])` |
+| Final DR-positive/positive | 1 | 3 | `D_(n+1)(c-3)` |
+| **Total** | **`8n+24`** | **`24n+69`** | |
+
+The fixed eight-successor prefix has source branch costs `2,2,1,4,4,1,1,6`: CR-left-zero, CR-empty, EL-positive, DL-right-at-least-two, DR-left-zero/right-one, DR-empty-left, EL-right-one, and DL-right-zero. Their sum is 21. The `EL` sweep repeats the ordinary EL-right-zero branch (`execute 2`) exactly `4n+6` times. The two middle branches cost 1 and 4. The `DR` sweep repeats the ordinary DR-left-zero/right-one branch (`execute 4`) exactly `4n+7` times. The final DR-positive/positive branch costs 3. No token-normalizer branch occurs anywhere in this factorization.
+
+This reduces a quantified Lean proof to three components: the fixed eight-branch prefix with an untouched suffix, an inductive EL-zero sweep, and an inductive DR-zero sweep. The sweep induction steps are exactly the two source branches just identified; their stack-list equations are `EL(L,0::R) -> EL(0::L,R)` and `DR(0::L,1::R) -> DR(L,1::0::R)`. Compose these with the EL-positive, DL-positive, and final DR-positive/positive branches. This is a proof architecture, not yet a compiled theorem.
+
+The checked-in regression harness samples n=0,…,6 and c in {3,4,5,10,540}. An independent persistent-list replay additionally checked all 180 first-countdown and 484 second-countdown instances used by the blank-root chain. A separate source-transcribed execution of the direct phase factorization for n=0,1,2 matched every displayed phase endpoint and the predicted outer/raw totals. The raw-cost formula is still not a quantified Lean theorem.
 
 The root replay gives:
 
