@@ -31,7 +31,7 @@ function take(xs, n = 12) {
   return out;
 }
 const halted = reason => ({ halt: reason });
-const stats = { bounceCR: 0, bounceDR: 0, tokenEvents: [] };
+const stats = { bounceCR: 0, bounceDR: 0, tokenEventCount: 0, tokenEvents: [] };
 
 function bounceCR(r3, k0, kAcc, right, depth = 0) {
   while (right) {
@@ -89,6 +89,7 @@ function normalizeEL(k, r3, rightTail, depth = 0) {
 }
 
 function closeTokDR(r3, L, macro) {
+  stats.tokenEventCount++;
   if (stats.tokenEvents.length < 12) {
     stats.tokenEvents.push({
       macro, kind: "DR", inputLength: L?.len ?? 0, inputOnes: L?.ones ?? 0,
@@ -99,6 +100,7 @@ function closeTokDR(r3, L, macro) {
   return z.halt ? z : normalizeEL(z[0], r3, z[1]);
 }
 function closeTokCR(r3, L, macro) {
+  stats.tokenEventCount++;
   if (stats.tokenEvents.length < 12) {
     stats.tokenEvents.push({
       macro, kind: "CR", inputLength: L?.len ?? 0, inputOnes: L?.ones ?? 0,
@@ -207,7 +209,7 @@ console.log(JSON.stringify({
   requestedMacroSteps: steps,
   completedMacroSteps: invariantViolation?.macro ?? haltAt?.macro ?? steps,
   haltAt, invariantViolation,
-  tokenEventCountRecorded: stats.tokenEvents.length,
+  tokenEventCount: stats.tokenEventCount,
   tokenEvents: stats.tokenEvents,
   bounceCRCalls: stats.bounceCR, bounceDRCalls: stats.bounceDR,
   maxLeftLength, maxRightLength, maxEntry, maxLeftOnes, minDRRightHead,
