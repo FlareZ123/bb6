@@ -238,3 +238,5 @@ The exact left-stack tape identity also has a potentially useful relation to the
 `encLeft(0^r1) = (10)^r110 = reverse(sourceSection(2,r,0)) ++ [0]`.
 
 So the left tape of `Corr(r,c)` is the reversed canonical DRegular section `(a,q,b)=(2,r,0)` with one additional boundary blank at the head. This is an exact string identity from the two encodings. It is only a **candidate bridge**: the exact `ListBlank` head-boundary equivalence, control-state correspondence, and the right-suffix image `encRight([1,c])=0 1^(c+1) 0 11` have not been matched to the DRegular state. Do not treat `Corr(r,c)` as a DRegular state without proving those conditions.
+
+The subsequent H(7) tail-parametric growth loop and its proof obligations are documented separately in [HPhaseGrowth.md](HPhaseGrowth.md). It is a candidate infinite orbit of the projected outer-stack system, not yet an original-TM nonhalting theorem.
