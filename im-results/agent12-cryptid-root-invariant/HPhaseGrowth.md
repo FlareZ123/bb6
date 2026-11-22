@@ -22,7 +22,7 @@ The old simulator claimed the following 157-successor entry macro (withdrawn):
 S^157(H(7)) = CR(L=[1,0], R=P ++ B ++ U).
 ```
 
-This is a state-level identity from `H(7)`; it does not describe the root state at macro 22,083, which is `EL(L=[0],R=[0,546])`.
+This was a state-level identity in the old simulator only. Neither the entry from H(7) nor the reported macro-22,083 root state is source-valid.
 
 ## Historical 76-successor growth claim (falsified)
 
@@ -37,7 +37,7 @@ This claim is not source-valid. The old successor's zero-token-call count was in
 
 The claimed C_n infinite-orbit conclusion is withdrawn. The corrected replay does not establish S^76(C_n)=C_(n+1), so no infinite orbit follows from this macro.
 
-## Source-normalizer correction and root reachability
+## Source corrections and invalidated root claims
 
 The token-normalizer corrections in [TokenNormalizerCorrection.md](TokenNormalizerCorrection.md) remain useful. However, all root states reported from the old simulator, including the macro-21,810 token event and the claimed H(7) entry, are withdrawn because the outer DR r1=1 branch was omitted. The corrected first root closure and candidate recurrence are documented in [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
 
@@ -47,15 +47,13 @@ The former claim that the 76-step identity makes zero token-normalizer calls is 
 
 Agent 32's earlier entry and tail-sentinel checks exercised the defective projected successor. A replay with the corrected r1=1 branch fails the claimed 76-step endpoint and invokes a DR token closure. Those earlier checks are historical simulator evidence only, not source correspondence.
 
-## What this would establish if formalized
+## Current formalization target
 
 The tail-parametric identity is stronger than a long finite simulation: once proved against the source successor, it gives an infinite orbit from `C_0`. Since the 76-step loop avoids token normalization, its source proof should be approachable by composing the external `mode_CR_n_n_closed`, `mode_EL_n_n_closed`, `mode_DL_n_n_closed`, and `mode_DR_n_n_closed` lemmas (or their exact public equivalents). It does not settle the blank-root machine without a new reachability bridge.
 
 The remaining obligation is to formalize the candidate 36-raw-step recurrence and its 19-step root entry against the pinned source, then compose with the existing seven-step blank-root entry. Until that compiles, the nonhalting conclusion remains a proof target.
 
-Until these are discharged, **do not claim the original TM is nonhalting**. The result establishes a standalone infinite projected-system orbit conditional on the source formalization, not BB(6) or the original-machine status.
-
-## Historical raw-step accounting (not source-valid)
+Until the new recurrence is compiled and its source correspondence is established, **do not claim the original TM is nonhalting**. This historical H-phase experiment establishes neither a source-valid infinite orbit nor a BB(6) result.
 
 ## Historical raw-step accounting (invalidated)
 
