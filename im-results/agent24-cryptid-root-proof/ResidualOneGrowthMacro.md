@@ -100,3 +100,14 @@ This closes the local residual-one continuation: once the conditional root path 
 - `agent24_s_residual_one_to_growth`: composes the previous two lemmas.
 
 Each theorem has a `#print axioms` command in the append. These are **drafts only**: the local Lean preflight has not run, and the Critic's acceptance gate prohibits CI dispatch until it succeeds locally. The append must be concatenated inside the source module because `tok_DR`, `tok_EL`, and encoding helpers are private.
+
+
+The append also gives a generic composition, not just the concrete root instance. For every (k\ge0), it proves
+[
+\texttt{tok\_DR}([2,1,1,1,1,1,0],[],0^{k+1}1)
+\to^+
+\mathrm{CR}(0^{k+10}1,[0])
+\to^+
+T(2k+20).
+]
+Equivalently, every residual-one (S(1,r)) state with (r\ge1) reaches (T(2r+18)), and hence has an infinite forward orbit. The concrete root branch has (r=195527226341521229934379923), giving (T(391054452683042459868759864)).
