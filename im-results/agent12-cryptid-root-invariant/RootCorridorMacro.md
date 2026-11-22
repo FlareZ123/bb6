@@ -230,3 +230,10 @@ CR(0,0,0,1 ; 1)
 ```
 
 The endpoint is `Corr(3,4)`, independent of the original `r`.
+## Candidate relation to the DRegular source section (not yet a state correspondence)
+
+The exact left-stack tape identity also has a potentially useful relation to the repository's DRegular source language. For `q=r≥1`, the source definition gives `sourceSection(2,r,0)=11(01)^r`. Reversing this word gives `(10)^r11`, while
+
+`encLeft(0^r1) = (10)^r110 = reverse(sourceSection(2,r,0)) ++ [0]`.
+
+So the left tape of `Corr(r,c)` is the reversed canonical DRegular section `(a,q,b)=(2,r,0)` with one additional boundary blank at the head. This is an exact string identity from the two encodings. It is only a **candidate bridge**: the exact `ListBlank` head-boundary equivalence, control-state correspondence, and the right-suffix image `encRight([1,c])=0 1^(c+1) 0 11` have not been matched to the DRegular state. Do not treat `Corr(r,c)` as a DRegular state without proving those conditions.
