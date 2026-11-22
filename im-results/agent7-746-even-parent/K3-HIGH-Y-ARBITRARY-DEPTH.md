@@ -20,7 +20,13 @@ h=2(X/3)-4p-K-4,quad Y=2h+5,quad
 G=2(Y/3)-2p-K-3,quad Z_0=2G+5.
 ]
 
-For every prescribed finite depth (d), there exist arbitrarily large odd (aequiv15pmod{162}) and integers (K) with (x\in\mathcal W), (K\equiv219pmod{486}), for which there is a chain of (d+2) genuine odd-arm (operatorname{ResetParent}) edges starting at (E).
+For every prescribed finite depth (d), there is a threshold (A_d) such that for every odd (a\ge A_d), the following construction gives a (K\in\mathcal W) and a chain of (d+2) genuine odd-arm ResetParent edges starting at (E).
+
+For each such (a), take the unique high-X residue (K_*\pmod{162}) satisfying
+[
+K_*\equiv48-3a\pmod{54},\qquad h(K_*)\equiv2\pmod9.
+]
+Among (K_*,K_*+162,K_*+324\pmod{486}), exactly one class (K_0(a)\pmod{486}) has (Z_0(K_0)\equiv0\pmod9). The Hensel construction selects a further residue class modulo a finite (L_d), still reducing to (K_0(a)\pmod{486}); for sufficiently large (a), the K-window contains a representative of that class with (x) near (x_0=79/50).
 
 The theorem does **not** assert that one fixed (E) has an infinite reverse path, or that any of these states is reachable from the authentic blank root (2). It asserts that no uniform finite inverse-depth cutoff can exclude this residue family as (a) varies.
 
@@ -61,6 +67,33 @@ The second edge (G\to h) also has (t=0), with odd source parameter (g=Y/3). Here
 and for (K\ge266), (x\in\mathcal W), this is strictly between (3/2) and (7/4). Hence (g) lies in the odd source band at scale (K-2), and (G) is a genuine odd ResetParent of (h).
 
 The target (G) therefore has numerator (Z_0=2G+5), divisible by (9), which is the input to the nested construction.
+## 1.1. The 9-divisible third lift exists for every odd a
+
+The second-lift table gives, for every odd (a), a unique high-X class (K_*\pmod{162}) with (h\equiv2\pmod9), inside the phase (K\equiv48-3a\pmod{54}). Thus (Y=2h+5\equiv0\pmod9) on this class.
+
+For (Delta=162), (2^\Delta\equiv1\pmod{243}). Since (e=K+4-a) is even, direct subtraction in (T) gives
+[
+T(K+162)-T(K)
+\equiv(4-8\cdot2^e)3^4
+\equiv162\pmod{243}.
+]
+Dividing successively through (X,h,Y,g=Y/3,G,Z_0) gives
+[
+Y(K+162)\equiv Y(K)+18\pmod{27},qquad
+Z_0(K+162)\equiv Z_0(K)+6\pmod9.
+	ag{1a}
+]
+The three lifts (K_*,K_*+162,K_*+324\pmod{486}) therefore cycle (Y\bmod27) through (0,9,18), and (Z_0\bmod9) through (0,3,6). Exactly one of the three lifts has (9\mid Z_0), for every odd (a).
+
+It is also possible to identify whether this selected class is the high-Y lift or one of the two non-high lifts. On the high-Y lift (Y\equiv0\pmod{27}), so (g=Y/3\equiv0\pmod9). Since (K\equiv48-3a\pmod{54}), (K\equiv3(1-a)\pmod9), while (2^K\equiv8\pmod9). Hence
+[
+Z_0\equiv3-2K\equiv3(2a-1)\pmod9
+quad\text{on the high-Y lift.}
+	ag{1b}
+]
+If (a\equiv0) or (1\pmod3), the high-Y lift has (Z_0\not\equiv0\pmod9), so the unique (9\mid Z_0) class is one of the two non-high (Y\bmod27\in\{9,18\}) lifts. If (a\equiv2\pmod3), the high-Y lift itself is the selected class. Thus the lower-t Hensel branch occurs among the two classes previously counted as excluded for two-thirds of odd (a) residue classes.
+
+
 
 ## 2. Base 3-adic isometry
 
@@ -72,7 +105,7 @@ Z_0(K+486\cdot3^s)
 qquad(s\ge0).
 	ag{1}
 ]
-For fixed (a\equiv15\pmod{162}) and (K\equiv219\pmod{486}), (9\mid Z_0(K)) throughout the progression. Thus, writing (K=K_0+486m),
+For any fixed odd (a), let (K_0(a)\pmod{486}) be the unique third-lift class from Section 1.1 with (9\mid Z_0(K_0)). The shift law preserves this divisibility throughout the progression. Thus, writing (K=K_0(a)+486m),
 [
 Phi_0(m)=Z_0(K_0+486m)/9
 ]
