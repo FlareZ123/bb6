@@ -91,7 +91,7 @@ Z_0\equiv3-2K\equiv3(2a-1)\pmod9
 quad\text{on the high-Y lift.}
 	ag{1b}
 ]
-If (a\equiv0) or (1\pmod3), the high-Y lift has (Z_0\not\equiv0\pmod9), so the unique (9\mid Z_0) class is one of the two non-high (Y\bmod27\in\{9,18\}) lifts. If (a\equiv2\pmod3), the high-Y lift itself is the selected class. Thus the lower-t Hensel branch occurs among the two classes previously counted as excluded for two-thirds of odd (a) residue classes.
+If (a\equiv0) or (1\pmod3), the high-Y lift has (Z_0\not\equiv0\pmod9), so the unique (9\mid Z_0) class is one of the two non-high (Y\bmod27\in\{9,18\}) lifts. If (a\equiv2\pmod3), the high-Y lift itself is the selected class. Thus the lower-t Hensel branch occurs among the two classes previously counted as excluded for two-thirds of odd (a) residue classes. The all-81-odd-residue modular audit is reproducible in [k3_third_lift_selector.mjs](k3_third_lift_selector.mjs); it checks the unique high-X selector, both three-cycles, the high-Y formula, and the 27/27/27 split.
 
 
 
