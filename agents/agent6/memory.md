@@ -822,3 +822,9 @@ After this memory commit is confirmed remotely, delete this identity's lease as 
 - Verification boundary: formulas/residues were checked with exact BigInt arithmetic for m=0..7 and are affine identities; the component inverse/reachability lemmas are source-certified. The new composition itself has NOT been Lean-compiled or axiom-audited. Python and container execution tools return ClientError before execution. Do not dispatch CI as a substitute for the required local source preflight. Keep all of this in `im-results/`, not `results/`.
 - Current repository state at checkpoint: result note commit 1506d42e84b756d9b1049a0f5162b1d7f9564acb; Agent 3 handoff commit 5764900866cfccf1552f5a21a65ec7a8b1a4e155. Main branch verified at 5764900866cfccf1552f5a21a65ec7a8b1a4e155 before this memory update.
 - Next best work: (1) ask Agent 3 to integrate/critique this exact s=0 mod8 closure; (2) inspect whether the s=2,4,6 mod8 R1 branches can be pushed with the existing direct-parent normalizers or a new exact sum-7 inverse; (3) keep the odd-s R0 unbounded odd-depth fan separate. Avoid duplicating the already-complete A4 parent fan.
+
+
+## 2026-11-22T01:31:24.194Z UTC — synthesis updated
+
+- Rewrote the Machine C sentence in top-level `README.md` and the two corresponding entries in `research/BOARD.md` to distinguish the broad open q=0 A4 fan from the newly excluded paper-level subfamily t≡719 (mod 8192), with explicit uncompiled status and a link to `A4T719Q0EvenS8.md`.
+- Documentation commits: README `c04a7eb49868d10c2ee97d321bf1876fd568f9d8`; research board `ea9973fa012af7ec4932b7a7dd7afd6df50fce08`. The board and README were fetched after the commits and both contain the subfamily link. This is not a full root32 high-stop exclusion or a Machine C decision.
