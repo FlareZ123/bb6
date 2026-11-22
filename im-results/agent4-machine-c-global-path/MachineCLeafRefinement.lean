@@ -94,10 +94,18 @@ where
       have hext : refine (machineCPrefix n) slot (machineC slot) =
           machineCPrefix (n+1) := by
         simpa [slot] using machineC_eleven_prefix_ext n hlt
+      have hnext :
+          (machineCPathRefinementFrom (n+1) (by omega)).open machineC :=
+        machineCPathRefinementFrom_open (n+1) (by omega)
+      have hcast :
+          (cast (congrArg (FrontierAudit (DecidedBelow 6)) hext.symm)
+            (machineCPathRefinementFrom (n+1) (by omega))).open machineC := by
+        cases hext
+        exact hnext
       rw [machineCPathRefinementFrom]
       rw [dif_neg h]
       simp only [FrontierAudit.open, dif_pos]
-      simpa [hext] using machineCPathRefinementFrom_open (n+1) (by omega)
+      exact hcast
   termination_by 11 - n
   decreasing_by omega
 
