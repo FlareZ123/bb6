@@ -1,3 +1,6 @@
+// This harness checks #85-side projected stack macros only. It does not
+// establish a path from the #490 blank start; use fast_root_stack_sim.js for
+// the actual mirrored #490 root trajectory.
 #!/usr/bin/env node
 "use strict";
 
@@ -226,32 +229,32 @@ for (let n = 0; n <= 32; n++) {
   checks++;
 }
 
-// Exact root token event and the initial blank-root prefix to D_0(540).
+// Synthetic #85-side token event from DR([0,0],[1]); not the #490 blank root.
 tokenCalls = 0;
-const rootPreToken = runWithCost(state("DR", [0, 0], [1]), 21810);
-assertState("root pre-token state", rootPreToken.state,
+const projectedPreToken = runWithCost(state("DR", [0, 0], [1]), 21810);
+assertState("projected pre-token state", projectedPreToken.state,
   state("DL", [...zeros(267), 1], [1]));
-if (tokenCalls !== 0 || rootPreToken.rawSteps !== 64565) {
-  throw new Error("root pre-token raw/token count mismatch");
+if (tokenCalls !== 0 || projectedPreToken.rawSteps !== 64565) {
+  throw new Error("projected pre-token raw/token count mismatch");
 }
 checks++;
 tokenCalls = 0;
-const rootTokenOutput = step(rootPreToken.state);
-assertState("root token closure output", rootTokenOutput,
+const projectedTokenOutput = step(projectedPreToken.state);
+assertState("projected token closure output", projectedTokenOutput,
   state("CR", [...zeros(271), 1], [1]));
-if (tokenCalls !== 1) throw new Error("root token closure count mismatch");
-const rootTokenRaw = 4 + 267 * 4 + 28 + 268 * 2 + 1;
-if (rootTokenRaw !== 1637) throw new Error("root token raw arithmetic mismatch");
+if (tokenCalls !== 1) throw new Error("projected token closure count mismatch");
+const projectedTokenRaw = 4 + 267 * 4 + 28 + 268 * 2 + 1;
+if (projectedTokenRaw !== 1637) throw new Error("projected token raw arithmetic mismatch");
 checks++;
 tokenCalls = 0;
-const rootPostToken = runWithCost(rootTokenOutput, 288);
-assertState("root post-token D_0(540)", rootPostToken.state,
+const projectedPostToken = runWithCost(projectedTokenOutput, 288);
+assertState("projected post-token D_0(540)", projectedPostToken.state,
   state("CR", [0], [...zeros(5), 540]));
-if (tokenCalls !== 0 || rootPostToken.rawSteps !== 595) {
-  throw new Error("root post-token raw/token count mismatch");
+if (tokenCalls !== 0 || projectedPostToken.rawSteps !== 595) {
+  throw new Error("projected post-token raw/token count mismatch");
 }
-if (7 + rootPreToken.rawSteps + rootTokenRaw + rootPostToken.rawSteps !== 66804) {
-  throw new Error("blank-to-D_0(540) raw total mismatch");
+if (projectedPreToken.rawSteps + projectedTokenRaw + projectedPostToken.rawSteps !== 66797) {
+  throw new Error("projected-seed-to-D_0(540) raw total mismatch");
 }
 checks++;
 assertState("closeTokCR [1,1]", closeTokCR([], [1, 1]),
@@ -277,8 +280,8 @@ for (let i = 0; i < rootChain.length; i++) {
 }
 
 const D = (n, c) => state("CR", [0], [...zeros(4 * n + 5), c]);
-const rootGrowthL = [0, 0, 1, 0, 1, 0, 0, 0, 0, 1];
-const rootGrowthB = [16, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0];
+const growthL = [0, 0, 1, 0, 1, 0, 0, 0, 0, 1];
+const growthB = [16, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0];
 const Q = [12, 0, 0, 0];
 const HwithRight = (r, R) => state("CR",
   [0, ...repeat([1, 0], r + 1), 0, 0, 1, 0, 0, 0], R);
@@ -393,38 +396,38 @@ const hPadding = runWithCost(H(rRoot), 38 * 483);
 assertState("H(1939)-to-padded-H(7)", hPadding.state,
   HwithRight(7, [...repeatQ(966), ...Hright]));
 if (tokenCalls !== 0 || hPadding.rawSteps !== 61824) {
-  throw new Error("root H-padding aggregate mismatch");
+  throw new Error("projected H-padding aggregate mismatch");
 }
 checks++;
 tokenCalls = 0;
-const rootGrowthEntryResult = runWithCost(hPadding.state, 179);
-const rootGrowthEntryTail = [16, 0, 0, 0, ...repeatQ(969), ...Hright];
-assertState("root-connected first DR/G/B seed", rootGrowthEntryResult.state,
-  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthEntryTail]));
+const growthSeedResult = runWithCost(hPadding.state, 179);
+const growthSeedTail = [16, 0, 0, 0, ...repeatQ(969), ...Hright];
+assertState("root-connected first DR/G/B seed", growthSeedResult.state,
+  state("DR", rootGrowthL, [1, ...rootGrowthB, ...growthSeedTail]));
 if (tokenCalls !== 0 || rootGrowthEntryResult.rawSteps !== 591) {
-  throw new Error("root H-base aggregate mismatch");
+  throw new Error("projected H-base aggregate mismatch");
 }
 checks++;
-const rootGrowth = rootGrowthEntryResult.state;
-const rootEntryOuter = 3897 + 5830 + 4 + 38 * 483 + 179;
-const rootEntryRaw = 13641 + 17487 + 13 + 61824 + 591;
-if (rootEntryOuter !== 28264 || rootEntryRaw !== 93556 || rootGrowth.R.length !== 3898) {
-  throw new Error("root first-entry aggregate mismatch");
+const growthSeed = growthSeedResult.state;
+const growthEntryOuter = 3897 + 5830 + 4 + 38 * 483 + 179;
+const growthEntryRaw = 13641 + 17487 + 13 + 61824 + 591;
+if (rootEntryOuter !== 28264 || rootEntryRaw !== 93556 || growthSeed.R.length !== 3898) {
+  throw new Error("projected first-entry aggregate mismatch");
 }
 
 // The earlier 50,000-successor checkpoint is the first seed plus 286
 // repetitions of the 76-successor insertion macro.
 tokenCalls = 0;
-const laterRootCheckpoint = runWithCost(rootGrowth, 286 * 76);
-if (tokenCalls !== 0 || laterRootCheckpoint.rawSteps !== 72644 ||
+const laterGrowthCheckpoint = runWithCost(growthSeed, 286 * 76);
+if (tokenCalls !== 0 || laterGrowthCheckpoint.rawSteps !== 72644 ||
     laterRootCheckpoint.state.R.length !== 7330 ||
     !eq(laterRootCheckpoint.state.L, rootGrowthL) ||
     !eq(laterRootCheckpoint.state.R.slice(0, 13), [1, ...rootGrowthB])) {
-  throw new Error("286-loop root checkpoint mismatch");
+  throw new Error("286-loop projected growth checkpoint mismatch");
 }
 if (rootEntryOuter + 286 * 76 !== 50000 ||
     rootEntryRaw + laterRootCheckpoint.rawSteps !== 166200) {
-  throw new Error("50,000-step root checkpoint aggregate mismatch");
+  throw new Error("50,000-step projected growth checkpoint aggregate mismatch");
 }
 checks++;
 
@@ -448,7 +451,7 @@ for (const T of [
 tokenCalls = 0;
 const grownRootResult = runWithCost(rootGrowth, 76);
 assertState("root growth actual 76-step state", grownRootResult.state,
-  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...rootGrowth.R.slice(13)]));
+  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...growthSeed.R.slice(13)]));
 if (tokenCalls !== 0) throw new Error("actual root growth step called a token normalizer");
 if (grownRootResult.rawSteps !== 254) throw new Error("actual root growth raw-step count mismatch");
 checks++;
