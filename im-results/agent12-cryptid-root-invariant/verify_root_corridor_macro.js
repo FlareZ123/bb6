@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 "use strict";
 
-// Array-based regression checks for RootCorridorMacro.md and the corrected root countdown/growth path.
-// This is an executable transcription of the outer stack/token clauses,
-// not a proof. The Lean/source derivations are described in the Markdown note.
+// Source-correct regression checks for the DR right-head-one root cycle.
+// The former corridor, countdown, and 76-step endpoints are asserted to fail.
+// This is an executable transcription of source clauses, not a Lean proof.
 
 const bump = xs => xs.length ? [xs[0] + 1, ...xs.slice(1)] : [1];
 const bumpN = (xs, n) => {
@@ -167,6 +167,13 @@ for (const c of [1, 2, 3, 7, 1000, 714286]) {
 }
 assertState("eight-successor blank-root prefix", run(root, 8),
   state("CR", [0, 0, 1], [6])); checks++;
+
+// The former triangular D_0(3) countdown endpoint is not a source orbit.
+const d0 = state("CR", [0], [0, 0, 0, 0, 0, 3]);
+const d0Actual = run(d0, 24);
+const d1Expected = state("CR", [0], zeros(10));
+if (eq(d0Actual, d1Expected)) throw new Error("obsolete D_0(3) countdown endpoint unexpectedly survived");
+checks++;
 
 // The former DR corridor and its root-to-growth claims are not source orbits.
 const oldCorr = run(root, 24);
