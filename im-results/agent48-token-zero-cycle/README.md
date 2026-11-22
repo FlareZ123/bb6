@@ -299,3 +299,51 @@ D_{22\,608\,559\,088}(1)
 \]
 
 The first two arrows use the already-derived remainder-one maps; the new suffix-[0,0,2] zero reset is the middle transition from \(D_{160\,771\,975\,745}(0;[0,0,2])\). The final two arrows use the ordinary zero reset and remainder-one reset. This is still a conditional source-level chain, not a Lean-checked root proof.
+
+
+## 10. Bounded 3-adic normalization for the whole \(D_n(1;[0,0,2])\) family
+
+The preceding token lemmas give a finite normalizer for every \(n\), not just the \(n=8\,841\,438\) instance. The source prefix reaches
+
+\[
+U_4(x_0,3),\qquad x_0=8n+12.
+\]
+
+At a stage \(U_k(x,3)\), write \(x=3q+s\), \(s\in\{0,1,2\}\). The subtract-three batch reaches \(U_k(s,r)\), where \(r=3+4q\). Its costs are \(4q^2+5q\) token microsteps and \(12q^2+41q\) raw steps.
+
+- If \(s=0\) and \(k>0\), the zero branch reaches \(U_{k-1}(2r+7,3)\). Thus the next integer is
+  \[
+  f(x)=2(3+4x/3)+7=\frac{8x+39}{3},
+  \]
+  and \(k\) decreases by one.
+- If \(s=1\), the residual-one token exit gives \(CR(0^{r+k+5}1,[0])\), then the ordinary tail gives
+  \[
+  D_0(2r+2k+7).
+  \]
+  The token exit costs \(2r+k+4\) microsteps and \(6r+2k+33\) raw steps.
+- If \(s=2\), the residual-two exit gives \(CR(0^{k+1}1\,0^{r+4}1,[0])\), then the ordinary tail gives
+  \[
+  D_0(2r+5;[2k+5]).
+  \]
+  The token exit costs \(2r+k+4\) microsteps and \(6r+2k+38\) raw steps.
+- If \(s=0\) when \(k=0\), the final token exit gives \(CR(0^{r+4}1,[0])\), then the ordinary tail gives \(D_0(2r+5)\). The token exit costs \(2r+3\) microsteps and \(6r+31\) raw steps.
+
+Since \(k\) starts at four and decreases at every zero branch, there are at most four zero-remainder reductions before a terminal residual-one, residual-two, or \(k=0\) residual-zero exit. This is a bounded deterministic normalization procedure for every \(D_n(1;[0,0,2])\).
+
+Equivalently, the only repeated arithmetic operation is \(f(x)=(8x+39)/3\), applied when \(x\) is divisible by three. The first residue is determined by \(x_0=8n+12\); subsequent zero residues are determined by iterating \(f\). In particular, \(n\equiv1\pmod3\) gives an immediate residual-two exit, \(n\equiv2\pmod3\) gives an immediate residual-one exit, and \(n\equiv0\pmod3\) starts the bounded \(f\)-iteration.
+
+As a second concrete instance, take \(n=8\,129\,901\,390\,942\). The residue sequence is \(0,1\):
+\[
+\begin{aligned}
+x_0&=65\,039\,211\,127\,548=3(21\,679\,737\,042\,516),\\
+r_0&=86\,718\,948\,170\,067,\\
+x_1&=2r_0+7=173\,437\,896\,340\,141\\
+&=3(57\,812\,632\,113\,380)+1.
+\end{aligned}
+\]
+Here the first zero branch reduces \(k:4\to3\); the residual-one exit at \(k=3\) gives
+\[
+D_0(462\,501\,056\,907\,059).
+\]
+
+This bounded normalizer is source-level and awaits a Lean proof. It resolves the token behavior of the entire \(D_n(1;[0,0,2])\) family into explicit stack states, but does not prove that those resulting stack states halt or do not halt.
