@@ -346,4 +346,4 @@ Here the first zero branch reduces \(k:4\to3\); the residual-one exit at \(k=3\)
 D_0(462\,501\,056\,907\,059).
 \]
 
-This bounded normalizer is source-level and awaits a Lean proof. It resolves the token behavior of the entire \(D_n(1;[0,0,2])\) family into explicit stack states, but does not prove that those resulting stack states halt or do not halt.
+The arithmetic normalizer and concrete instances are kernel-checked in verify_token_normalizer_arithmetic.lean by GitHub Actions run 45015701109 using Lean 4.36.0-rc2. The source-rule correspondence (the U_k transitions as compositions of the pinned token clauses) and the full source-module composition still await a Lean proof. The normalizer resolves the token behavior of the entire \(D_n(1;[0,0,2])\) family into explicit stack states, but does not prove that those resulting stack states halt or do not halt.
