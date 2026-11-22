@@ -301,3 +301,63 @@ theorem root_countdown_step (n c : ℕ) (hc : 3 ≤ c) :
         (ReachesPlus.trans h3
           (ReachesPlus.trans h4
             (ReachesPlus.trans h5 h6))))
+
+
+theorem root_seed_to_D0_3 :
+    ReachesPlus target
+      (cfg_DR_n_n [(0,0),(0,0)] [(1,0)])
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate 5 (0,0) ++ [(3,0)])) := by
+  have h1 := root_countdown_dr_zero_step [(0,0)] []
+  have h2 := root_countdown_dr_zero_step [] [(0,0)]
+  have h3 := root_countdown_dr_empty_left_step
+    [(1,0),(0,0),(0,0)]
+  have h4 := root_countdown_el_positive_step 0 [(0,0)]
+    [(0,0),(0,0)]
+  have h5 := root_countdown_dl_zero_step [(0,0)]
+    [(0,0),(0,0)]
+  have h6 := root_countdown_el_zero_sweep 1 [(0,0),(1,0)] []
+  have h7 := root_countdown_el_empty_step
+    [(0,0),(0,0),(0,0),(1,0)]
+  have h8 := root_countdown_cr_zero_sweep_singleton 2 0 [(1,0)]
+  have h9 := root_countdown_cr_one_empty_step [(6,0)]
+  have h10 := root_countdown_el_zero_step [(0,0)] [(9,0)]
+  have h11 := root_countdown_el_positive_step 8 [(0,0),(0,0)] []
+  have h12 := root_countdown_dl_positive_step 6 [(0,0),(0,0)] []
+  have h13 := root_countdown_dr_zero_sweep 1 [] [(6,0)]
+  have h14 := root_countdown_dr_empty_left_step
+    [(1,0),(0,0),(0,0),(6,0)]
+  have h15 := root_countdown_el_positive_step 0 [(0,0)]
+    [(0,0),(0,0),(6,0)]
+  have h16 := root_countdown_dl_zero_step [(0,0)]
+    [(0,0),(6,0)]
+  have h17 := root_countdown_el_zero_sweep 1 [(0,0),(1,0)] [(6,0)]
+  have h18 := root_countdown_el_positive_step 5
+    [(0,0),(0,0),(0,0),(1,0)] []
+  have h19 := root_countdown_dl_positive_step 3
+    [(0,0),(0,0),(0,0),(1,0)] []
+  have h20 := root_countdown_dr_zero_sweep 2 [(1,0)] [(3,0)]
+  have h21 := root_countdown_dr_positive_positive_step 0 0 []
+    (List.replicate 3 (0,0) ++ [(3,0)])
+  simpa [List.replicate_succ, List.cons_append, List.append_assoc,
+    bumpPairHead] using
+    (ReachesPlus.trans h1
+      (ReachesPlus.trans h2
+        (ReachesPlus.trans h3
+          (ReachesPlus.trans h4
+            (ReachesPlus.trans h5
+              (ReachesPlus.trans h6
+                (ReachesPlus.trans h7
+                  (ReachesPlus.trans h8
+                    (ReachesPlus.trans h9
+                      (ReachesPlus.trans h10
+                        (ReachesPlus.trans h11
+                          (ReachesPlus.trans h12
+                            (ReachesPlus.trans h13
+                              (ReachesPlus.trans h14
+                                (ReachesPlus.trans h15
+                                  (ReachesPlus.trans h16
+                                    (ReachesPlus.trans h17
+                                      (ReachesPlus.trans h18
+                                        (ReachesPlus.trans h19
+                                          (ReachesPlus.trans h20 h21)))))))))))))))))
