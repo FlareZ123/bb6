@@ -30,16 +30,17 @@ end{aligned}
 
 The exact interpreter check is
 `run(H(7),157) == state("CR",[1,0],[...P,...B,...U])`.
-The resulting right list has length 37.
+The resulting right list has length 37. This H(7)-to-C1 entry is a standalone
+projected transition; the old root-to-H(7) connection is withdrawn by the
+source token-normalizer correction in TokenNormalizerCorrection.md. Do not
+use the previous macro-22,083 index as a root-reachability claim.
 
-The root's outer-successor index at this seed is
-[
-24+73+433+2801+18496+61+34+4+157=22083.
-]
-The summands are, respectively, the root prefix to (D(3,3)), the four
-mod-3 corridor returns to (D(3,4)), the (q=1) escape to (F(7)),
-the (F\to G) and (G\to H) macros, and the 157-step (H(7)) prefix.
-These are outer-successor counts, not raw Turing-machine steps.
+The 157 outer successors have an exact branch-counted cost of **526 raw TM
+steps**, with zero token-normalizer calls. The #85 source execute-length
+counts are: CR0 44×2=88; CR10 14×5=70; CR11 6×16=96; EL0 28×2=56;
+EL+ 20×1=20; DL0 12×6=72; DL+ 8×4=32; DR0+ 16×4=64; DR++ 7×3=21;
+CR1e 1×6=6; DRempty 1×1=1. Total 526. This is a V8/branch-count result,
+not a Lean theorem.
 
 ## 2. 76-step tail-parametric identity (candidate)
 
