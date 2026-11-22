@@ -30,7 +30,7 @@ The current repository simulators instead test only b === 0 / b == 0 before taki
 - im-results/agent12-cryptid-root-invariant/verify_root_corridor_macro.js
 - im-results/agent32-cryptid-padding/stack_system_sim.py
 
-The old root prefix, corridor trace, and root-reachability claims built on that transition need recomputation. The standalone 76-step CR growth identity is a separate claim and need not be discarded solely for this reason; its connection to the blank root is what fails.
+The old root prefix, corridor trace, and root-reachability claims built on that transition need recomputation. Replaying the H-phase CR 76-step macro and the DR/G/B 76-step macro with the corrected branch also fails to reach either claimed endpoint; each encounters the newly required DR token closure. The triangular D_n(c) countdown checks likewise fail for the tested n=0,...,6 and c=3,4,5,10,540. These are not source-valid macro identities under the pinned mode clauses.
 
 ## Exact first source closure
 
@@ -103,6 +103,17 @@ CR(L=[0,0,1], R=[714286])
 with 142,858 DR token closures and no halting branch. This agrees with the recurrence: one initial closure followed by 142,857 seven-successor cycles, each adding 5 to the right counter. This is computational corroboration, not a substitute for the Lean proof.
 
 The root trace previously reported from the b === 0 simulator (including the 21,810 token event and its later 76-step growth connection) is not evidence about the pinned source orbit. Recompute from the corrected branch before pursuing any root-to-cylinder or root-to-growth claim.
+
+
+## Recheck of the old countdown and growth claims
+
+The source-corrected interpreter was also applied to the other published projected macros. These checks are falsifications of the old simulator's claimed endpoints, not proofs of a replacement trajectory:
+
+- The D_n(c) countdown test fails for every tested n=0,...,6 and c in {3,4,5,10,540}; for example, the old n=0,c=3 endpoint is not reached after 24 successors.
+- The CR H-phase 76-step test from CR([1,0],P++B++U) does not reach CR([1,0],P++B++B++U); the corrected path invokes a DR token closure and ends in a different state.
+- The DR/G/B 76-step test from DR(G,[1]++B++T) also fails its former endpoint after the corrected source branch.
+
+The updated regression harness is im-results/agent12-cryptid-root-invariant/verify_root_corridor_macro.js. It now tests the root cycle and asserts that the old endpoints do not survive. The separate H-phase and DR/G/B identities must be rederived from the pinned source before reuse.
 
 ## Formalization target
 
