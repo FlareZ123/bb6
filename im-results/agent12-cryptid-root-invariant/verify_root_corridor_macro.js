@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-// Array-based regression checks for RootCorridorMacro.md.
+// Array-based regression checks for RootCorridorMacro.md and the corrected root countdown/growth path.
 // This is an executable transcription of the outer stack/token clauses,
 // not a proof. The Lean/source derivations are described in the Markdown note.
 
@@ -71,11 +71,14 @@ function normalizeEL(k, r, x) {
   return state("EL", [0, ...right], r.slice());
 }
 
+let tokenCalls = 0;
 function closeTokDR(r, x) {
+  tokenCalls++;
   const z = bounceDR(r, [0], x);
   return z.halt ? z : normalizeEL(z.a, r, z.right);
 }
 function closeTokCR(r, x) {
+  tokenCalls++;
   const z = bounceCR(r, 0, [0], x);
   return z.halt ? z : normalizeEL(z.a, r, z.right);
 }
@@ -199,5 +202,64 @@ for (let i = 0; i < rootChain.length; i++) {
   assertState("root chain " + i, run(start, n), expected);
   checks++;
 }
+
+
+const D = (n, c) => state("CR", [0], [...zeros(4 * n + 5), c]);
+const rootGrowthL = [0, 0, 1, 0, 1, 0, 0, 0, 0, 1];
+const rootGrowthB = [16, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0];
+
+// The triangular countdown macro S^(8n+24)(D_n(c)) = D_(n+1)(c-3).
+for (let n = 0; n <= 6; n++) {
+  for (const c of [3, 4, 5, 10, 540]) {
+    assertState("countdown D_" + n + "(" + c + ")",
+      run(D(n, c), 8 * n + 24), D(n + 1, c - 3));
+    checks++;
+  }
+}
+
+// Root enters D_0(540) 16 successors after EL([0],[0,546]).
+assertState("root EL-to-D0(540)", run(state("EL", [0], [0, 546]), 16), D(0, 540)); checks++;
+
+// The zero-counter reset and the second countdown entry.
+assertState("D_180(0)-to-D_0(1453)", run(D(180, 0), 1481), D(0, 1453)); checks++;
+const secondCountdownLength = Array.from({ length: 484 }, (_, n) => 8 * n + 24)
+  .reduce((a, b) => a + b, 0);
+if (secondCountdownLength !== 946704) throw new Error("second countdown duration mismatch");
+checks++;
+
+// A 50,000-step finite prefix from D_484(1) reaches the root-reachable
+// tail-parametric growth state at macro 1,153,484.
+const rootGrowth = run(D(484, 1), 50000);
+assertState("root growth left state", state(rootGrowth.mode, rootGrowth.L, []),
+  state("DR", rootGrowthL, []));
+if (rootGrowth.R.length !== 7330 || !eq(rootGrowth.R.slice(0, 13), [1, ...rootGrowthB])) {
+  throw new Error("root growth state has wrong right prefix/length: " + JSON.stringify({
+    length: rootGrowth.R.length, prefix: rootGrowth.R.slice(0, 13)
+  }));
+}
+checks++;
+
+// The 76-step root growth macro is tail-parametric and never calls a token
+// normalizer: it inserts one copy of B immediately after the leading 1.
+for (const T of [
+  [], [0], [1], [3, 0, 0], [7, 5, 3, 1],
+  [12, 0, 0, 0, 12, 0, 0, 0, 2], [{ opaque: true }]
+]) {
+  tokenCalls = 0;
+  const actual = run(state("DR", rootGrowthL, [1, ...rootGrowthB, ...T]), 76);
+  assertState("root growth 76, suffix=" + JSON.stringify(T), actual,
+    state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...T]));
+  if (tokenCalls !== 0) throw new Error("root growth 76 unexpectedly called a token normalizer");
+  checks++;
+}
+
+// Check the actual root-reachable state one growth step, retaining its entire
+// pre-existing suffix untouched.
+tokenCalls = 0;
+const grownRoot = run(rootGrowth, 76);
+assertState("root growth actual 76-step state", grownRoot,
+  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...rootGrowth.R.slice(13)]));
+if (tokenCalls !== 0) throw new Error("actual root growth step called a token normalizer");
+checks++;
 
 console.log(JSON.stringify({ ok: true, checks }, null, 2));
