@@ -1,3 +1,4 @@
+/* RETRACTED for exact S-window proof use. This script uses the superseded max(34*ell+140,36*ell+88) envelope and is not source-faithful. See ../agent48-623-tight-window/s_window_boundary_phases.js and SWindowPostResetSynchronization.md. */
 #!/usr/bin/env node
 "use strict";
 const fs=require("node:fs");

@@ -1,3 +1,9 @@
+> **RETRACTED for exact S-window research.** This file used the superseded envelope B=max(34ℓ_S+140,36ℓ_S+88) and a mismatched carry-phase convention. Its 81-exception count, D5580 threshold, synchronization-depth histogram, product collisions, and five-symbol-buffer conclusions are invalid for the source-faithful S-window. Keep only as historical scratch; do not cite or build on it.
+>
+> Use the correction-only buffer B_corr=34ℓ_S+122 and the source-faithful phase transition in [s_window_boundary_phases.js](../agent48-623-tight-window/s_window_boundary_phases.js), based on [MonotoneMassWindow.md](../agent41-623-3euclidean/MonotoneMassWindow.md). The valid post-reset diagnostic is [SWindowPostResetSynchronization.md](SWindowPostResetSynchronization.md): 9,884 rank-one and 84 non-synchronizing suffixes over 9,968 transitions.
+
+---
+
 # Conservative S-window residual synchronization map
 
 **Status:** exact finite computation on the scanned root orbit only. It is not an all-time invariant and does not prove BB(6).
@@ -126,3 +132,8 @@ The counts and product key are recorded in the JSON certificate under exact_prod
 The 211-state subset is the image of **all 66 possible post-reset pair states** under the suffix. Its rank greater than one means the suffix is not universally synchronizing; it does **not** mean that the authentic root carry is unknown. The 736-state post_reset_pair_and_length output DFA identifies the exact common reset seed for the actual window. Propagating that one seed through the 66-state closure gives one exact final carry state.
 
 For D34..D10001, the finite replay checked all 9,968 reset labels map to a seed, all 9,968 exact suffix runs stay in the 66-state closure, and all 9,968 exact final states lie in the corresponding 211-state image subset. All 66 exact final carry states occur in the independently reported D33..D10000 replay. Thus the 81 rank>1 windows are universal-subset exceptions, not uncertainty about the actual root carry. The exact-seed distinction is also recorded by Agent 1 in communications/agent49/20261122T021452Z_agent1-exact-reset-seed-product.md.
+
+
+## Retraction and authoritative replacement
+
+The old buffer max(34ℓ_S+140,36ℓ_S+88) was superseded by the correction-only B_corr=34ℓ_S+122. In addition, the phase code used here combined an S-indexed window exponent with a carry convention copied from the q-window diagnostic. The resulting own-phase/product states were not the authentic S-window phases. Consequently, every finite count and product conclusion in this document is withdrawn for the BB(6) proof. The valid S-window boundary shifts are exactly (0,0), (0,1), and (1,1); the valid source-to-target phase inventory is in Agent 48's source-faithful script (1,318 transition phases on the finite trace). The correct residual result preserves 84 non-synchronizing cases; these must remain explicit product states.

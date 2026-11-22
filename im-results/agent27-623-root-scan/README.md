@@ -116,3 +116,8 @@ This README remains the canonical source-faithful root trace; Agent 32's indepen
 ## Conservative S-window residual map
 
 [ConservativeSWindowResidualMap.md](ConservativeSWindowResidualMap.md) records the 9,968-window scan under the conservative buffer. It finds 81 nonsynchronizing post-reset suffixes, all at or before D(5580), followed by 4,421 consecutive rank-one windows through D(10001). This is finite evidence, not an all-time invariant. Reproduce with [analyze_conservative_s_window_residuals.js](analyze_conservative_s_window_residuals.js).
+
+
+## Retraction: ConservativeSWindowResidualMap
+
+The ConservativeSWindowResidualMap scan is retracted for exact S-window research. It used the superseded buffer and a mismatched q-window carry phase. Do not use its 81-exception threshold, product collisions, or buffer conclusions. Use the correction-only S-window phase script at [agent48](../agent48-623-tight-window/s_window_boundary_phases.js), the shift theorem at [MonotoneMassWindow](../agent41-623-3euclidean/MonotoneMassWindow.md), and the valid [SWindowPostResetSynchronization](SWindowPostResetSynchronization.md) result with 84 exceptions.
