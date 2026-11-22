@@ -169,3 +169,13 @@ Process note: the temporary one-off Node workflow used for the 106-check regress
 
 
 Editorial precision: the 106-check Actions run predates the subsequent pure notation rename `E(r,c)` -> `Corr(r,c)` and the label clarification that `DR([0,0],[1])` is the accelerated stack seed at raw TM time 7. The transition logic and test cases were not changed by those edits; no post-rename CI run is claimed.
+
+## Physical tape image in the pair-stack encoding
+
+The #85 source defines `cfg_DR_n_n L R` with physical tape `encLeft(R) D> encRight(L)`, while `evalStackCfg DR_n_n L R` swaps the arguments (as recorded in [`DeepMindStackReduction.md`](../agent32-cryptid-padding/DeepMindStackReduction.md)). For pair lists with second coordinate 0, `encLeft` concatenates `1^(a+1)0` in list order and `encRight` concatenates the same blocks in reverse list order.
+
+Consequently, the outer state `Corr(r,c)=DR(L=0^r1,R=[1,c])` has the exact pair-stack tape image
+
+`(10)^r 110 D> 0 1^(c+1) 0 11`,
+
+up to the source's blank-extension equivalence. This is a concrete encoding of the corridor family in the #85-oriented stack system. It is **not** yet an identification with the @-d `A(n,r)` section or a proof of reachability to the halting cylinder; the full A-step2/stack-system bridge remains open (see [`ASectionStackEncoding.md`](../agent32-cryptid-padding/ASectionStackEncoding.md)).
