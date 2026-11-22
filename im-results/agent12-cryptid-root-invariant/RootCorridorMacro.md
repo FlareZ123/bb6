@@ -73,9 +73,9 @@ The post-corridor length is `2r+31`; adding `r+1` gives `3r+32`.
 
 The shared corridor gives `CR([0],0^(r+2) ++ [2])`. Eight fixed steps and `r+3` EL zero-pop steps reach `EL(0^(r+4)1,[2])`; one EL step reaches `DL(0^(r+4)1,[1])`. The next step invokes `closeTokDR` on `0^(r+4)1`.
 
-The token identity is independent of the exponent:
+The token identity is independent of the exponent when the right tail is empty:
 
-`closeTokDR(0^n ++ [1]) = CR(L=[0,0,0,1], R=[1])`.
+`closeTokDR([], 0^n ++ [1]) = CR(L=[0,0,0,1], R=[1])`.
 
 Indeed, `bounceDR` turns the left accumulator into `1^(n+1)0` and the right word into `[0,0,1]`; `normalizeEL` drops the leading ones and consumes the final zero. From `CR([0,0,0,1],[1])`, 16 fixed steps reach `E(3,4)`. The total length is `(r+1)+8+(r+3)+1+1+16 = 2r+30`.
 
