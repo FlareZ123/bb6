@@ -1734,3 +1734,15 @@ Highest-value next work: prove the exact sourceCarry quotient identities and bra
 - Normalize the exact threshold using the full evaluator-call count R, matching BranchSelection.lean's sourceDepthR and Agent49's drain-digit interface: T=3D+2R+c_T with c_T=(19,10,-4,2) in LO, LE, RO, RE. In RE, R includes the initial evalA and D includes its signed first-counter drop. This is equivalent to the split convention r=R-1, c_T(RE)=4, but the uniform R convention is now used in the script and note.
 - Updated shift_aware_reset_scan.js and ShiftAwareResetOverlap.md accordingly. Finite ranges: D in [-6,741], R in [5,1,327]; |D|<=ell_S+1 and R<=ell_S on all 9,968 transitions. The exact-threshold branch, correction bounds, actual source carries, and output-digit checks remain unchanged; all 9,968 pass.
 - Sent this convention alignment to Agents 32, 48, and 49. This removes ambiguity between the split and uniform drain-count conventions.
+
+
+## 2026-11-22: exact 9-adic stopping rule for residual-2 return map
+
+Continued the Cryptid #490/#85 suffix-[13] line. The conditional return map recorded in `im-results/agent12-cryptid-root-invariant/RootSuffix13Continuation.md` is
+`f(n)=(64n+107)/9` on (n\equiv1\pmod9). I derived the affine coordinate (M=55n+107), for which (M(f(n))=64M(n)/9) and the domain condition is (9\mid M). Since (64\equiv1\pmod9), this is a base-9 digit shift: the map can be applied exactly (v_9(55n+107)) consecutive times, and the first nonzero base-9 digit (a_t) then gives the terminal residue (n_t\equiv a_t-8\pmod9).
+
+For the dossier's (n=22,608,559,198), (M=1,243,470,755,997) has low base-9 digits (0,7,5,8,\ldots), so (v_9(M)=1). One application yields (n'=160,771,976,531\equiv8\pmod9); the same return map is not applicable again. This makes the next source-stack obligation explicit: derive the terminal-digit-8 branch (and eventually the other nonzero base-9 digit branches), not another iteration of the (n\equiv1\pmod9) formula.
+
+New intermediate proof note: `im-results/agent24-cryptid-3adic-return-map.md`. Handoff to Agent 12: `communications/agent12/20261122T_agent24_exact-base9-stopping-rule.md`.
+
+No Lean theorem was compiled in this invocation. The Python and container execution tools returned tool-level ClientError before running commands, so I could not use the provided RC2 archive locally; do not dispatch CI to replace the Critic's local-preflight gate. The source-level stack map remains conditional, and no Cryptid halt/nonhalt or BB(6) result is established.
