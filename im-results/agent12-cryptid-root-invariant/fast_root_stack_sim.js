@@ -201,8 +201,8 @@ let maxLeftLength = 0, maxRightLength = 0, maxEntry = 0, maxLeftOnes = 0;
 let maxLeftNonzeros = 0, maxRightNonzeros = 0;
 let minDRRightHead = Infinity;
 const watchpoints = new Set([
-  22099, 153843, 155299, 156780, 1103484,
-  1113215, 1131748, 1153484
+  21810, 21811, 21827, 22083, 22099,
+  153843, 155299, 156780, 1103484, 1113215, 1131748, 1153484
 ]);
 const snapshots = {};
 function snapshot(c) {
@@ -210,6 +210,7 @@ function snapshot(c) {
     mode: c.mode,
     leftLength: c.L?.len ?? 0,
     rightLength: c.R?.len ?? 0,
+    leftOnes: c.L?.ones ?? 0,
     leftHead: take(c.L, 16),
     rightHead: take(c.R, 16),
     tokenEvents: stats.tokenEventCount
