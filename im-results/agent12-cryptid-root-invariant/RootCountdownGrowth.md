@@ -4,9 +4,9 @@
 
 All macro indices below count **outer stack successors**. Raw TM-step costs are stated separately and derived from the source `execute n` branches. The initial #490 blank-root prefix reaches the #85-oriented seed `DR(L=[0,0],R=[1])` after 7 raw TM steps.
 
-## Initial blank-root prefix to D_0(540)
+## Synthetic #85 prefix (not the #490 blank-root path)
 
-The #490 blank-entry theorem reaches the #85-oriented stack seed `DR(L=[0,0],R=[1])` after 7 raw TM steps. The corrected source-transcribed root replay reaches `D_0(540)` at macro 22,099, with one token-normalizer event:
+This is the old unmirrored #85 synthetic trajectory starting from `DR(L=[0,0],R=[1])`; it is not the #490 blank-root trajectory. The actual #490 blank-entry theorem reaches `DR(L=[0,0],R=[1])` after 7 raw steps, but under the mirror this corresponds to #85 `DR(L=[1],R=[0,0])`. The synthetic #85 trace reaches `D_0(540)` at macro 22,099, with one token-normalizer event:
 
 - At macro 21,810 the state is `DL(L=0^267 ++ [1], R=[1])`. The DL right-head-1 branch invokes the DR token closure with `r3=[]`.
 - The source-exact token identity `closeTokDR(r3,0^n ++ [1]) = CR(L=0^(n+4) ++ [1],R=bump(r3))` gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811.
@@ -19,7 +19,7 @@ The token closure has an exact source-step count. The DL right-head-1 branch fir
 4 + 267·4 + 28 + 268·2 + 1 = 1,637 raw TM steps.
 ```
 
-The 21,810 ordinary successors before the token closure cost 64,565 raw TM steps. The 288 ordinary successors after the closure cost 595 raw steps to `D_0(540)`. Thus the root stack seed to `D_0(540)` costs 66,797 raw steps; including the initial 7 raw blank-root steps, the blank tape reaches `D_0(540)` in **66,804 raw TM steps**. This root event is a DL right-head-1 closure; it does not contradict the separate rule that DR right-head 1 is ordinary.
+The 21,810 ordinary successors before the token closure cost 64,565 raw TM steps. The 288 ordinary successors after the closure cost 595 raw steps to `D_0(540)`. Thus the root stack seed to `D_0(540)` costs 66,797 raw steps; excluding any blank-root prefix, the synthetic #85 seed reaches `D_0(540)` in **66,797 raw TM steps**. The earlier 66,804 blank-to-`D_0(540)` figure is withdrawn. This root event is a DL right-head-1 closure; it does not contradict the separate rule that DR right-head 1 is ordinary.
 
 ## Root-connected countdown
 
@@ -81,7 +81,7 @@ D_0(1453) --946704 outer successors--> D_484(1).
 
 Its raw-step total from the sampled formula is 2,838,660. Thus the D_0(540)-to-D_484(1) segment has 1,081,385 outer successors and 3,240,705 raw steps. The persistent-list root replay places `D_484(1)` at macro 1,103,484.
 
-The raw formula `24n+69` and its countdown aggregates remain computational/source-transcribed until the quantified corridor lemma is kernel-checked. Combining the exact initial prefix with the countdown gives blank-to-`D_484(1)` raw cost 3,307,509; blank-to-first-growth-seed raw cost 3,401,065; and blank-to-macro-1,153,484 checkpoint raw cost 3,473,709.
+The raw formula `24n+69` and its countdown aggregates remain computational/source-transcribed until the quantified corridor lemma is kernel-checked. From the synthetic #85 seed (not from the blank tape), the projected costs are 3,307,502 to `D_484(1)`, 3,401,058 to the first DR/G/B seed, and 3,473,702 to the 50,000-successor projected checkpoint. All earlier blank-to-these-state totals are withdrawn.
 
 ## The root's c=1 corridor to H(1939)
 
@@ -240,7 +240,7 @@ The same #490 file contains `init_reaches_nontrivial`, the exact 7-raw-step blan
 
 In this #490 module, `execute n` is a local tactic macro that iterates n raw `ReachesPlus.head` steps and discharges each with the original `Tape.move`/`Tape.write` semantics. Therefore `execute 128`, `execute 591`, and `execute 254` mean exactly 128, 591, and 254 primitive TM transitions, respectively—not outer stack successors. The outer counts 38, 179, and 76 are projected-stack successors; their raw counts are proved separately.
 
-The natural append target for the H-padding, H-base, and DR/G/B raw lemmas is this #490 wrapper, reusing its actual `closedStackSystem`, `target`, and `execute` definitions. The existing manual workflow `.github/workflows/agent32-hphase-growth-macro.yml` checks out the same upstream commit and builds this exact module. Its current Lean pin is v4.35.0-rc4; the uploaded local Lean 4.36.0-rc2 preflight has not succeeded in this runtime, so no CI dispatch is claimed.
+The natural append target for proving the *mirrored* H-padding, H-base, and DR/G/B raw lemmas is this #490 wrapper, reusing its actual `closedStackSystem`, `target`, and `execute` definitions. The #85-side formulas tested in this file have not yet been lifted to that mirror; no root connection follows until that lift and the corrected root replay are established. The existing manual workflow `.github/workflows/agent32-hphase-growth-macro.yml` checks out the same upstream commit and builds this exact module. Its current Lean pin is v4.35.0-rc4; the uploaded local Lean 4.36.0-rc2 preflight has not succeeded in this runtime, so no CI dispatch is claimed.
 
 ## Reproducibility and proof obligations
 
