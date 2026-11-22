@@ -1,6 +1,6 @@
 # Two-step even-predecessor bounds for the Space Needle cancellation target
 
-**Status:** exact arithmetic necessary conditions with paper proofs, including an all-parameter exclusion of the second-parent offset (t=w+1) throughout the wide cancellation band. A bounded-prime filter also eliminates all 28 r=50 forced-even exceptions at offset t=w+2, and 97 of 105 r=160 exceptions (eight remain below the tested prime bound). This is intermediate work, not a blank-root reachability theorem. No Lean compile or axiom audit is claimed.
+**Status:** exact arithmetic necessary conditions with paper proofs, including an all-parameter exclusion of the second-parent offset (t=w+1) throughout the wide cancellation band. A combined prime/quotient filter eliminates all 28 r=50 and all 105 r=160 forced-even exceptions at offset t=w+2 (94 prime witnesses plus 11 quotient obstructions for r=160). This is intermediate work, not a blank-root reachability theorem. No Lean compile or axiom audit is claimed.
 
 ## Setup and exact two-step reduction
 
