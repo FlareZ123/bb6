@@ -105,3 +105,33 @@ The separate CR H-phase 76-successor insertion also passes the restored source-t
 - [`ModeDRBranchAudit.md`](./ModeDRBranchAudit.md) records the pinned-source branch analysis and recovered checkpoints.
 
 The V8 replay and finite suffix tests are computational, not formal. No Lean compilation or transitive axiom audit is claimed. The local shell tool has failed before executing commands; do not replace the required local source preflight with a CI dispatch. Keep all of this in `im-results/` until the exact imported source closure, raw-step correspondence, arbitrary-suffix theorem, and axiom profile have been checked.
+
+
+## Raw TM cost of the root-reachable 76-step macro
+
+The DR/G/B insertion macro is also exactly **254 raw TM steps**, not merely 76 outer stack successors. I classified each of its 76 states under the pinned #85 source mode closures and summed the exact execute lengths:
+
+| Source branch | Occurrences | Raw steps each | Subtotal |
+|---|---:|---:|---:|
+| DR, left head 0 and right head positive | 8 | 4 | 32 |
+| DR, left head positive and right head positive | 3 | 3 | 9 |
+| CR, left head 0 | 13 | 2 | 26 |
+| CR, left head 1, second head 0 | 8 | 5 | 40 |
+| CR, left head 1, second head 1 | 2 | 16 | 32 |
+| EL, right head positive | 12 | 1 | 12 |
+| DL, right head 0 | 8 | 6 | 48 |
+| EL, right head 0 | 16 | 2 | 32 |
+| DL, right head greater than 1 | 4 | 4 | 16 |
+| CR, left head 1 with empty tail | 1 | 6 | 6 |
+| DR, empty left list | 1 | 1 | 1 |
+| **Total** | **76** |  | **254** |
+
+No branch in this path invokes a token normalizer. The branch-count multiset is the same as the separate H-phase 76-step macro's 254-step certificate, although the state sequence and starting family differ.
+
+This gives a direct Lean target in the #490 wrapper module, with arbitrary finite suffix T:
+
+- start: closedStackSystem.evalStackCfg .DR_n_n G ([1] ++ B ++ T)
+- end: closedStackSystem.evalStackCfg .DR_n_n G ([1] ++ B ++ B ++ T)
+- raw reachability: execute 254
+
+Use the public ClosedStackSystem.evalStackCfg field, not the private evalStackCfg definition from the #85 module. A previous CI attempt failed solely because the patch named the private definition; the patch script has been updated to use the public field, but has not yet passed local Lean preflight or CI. This is a branch-counted proof target, not a compiled theorem.
