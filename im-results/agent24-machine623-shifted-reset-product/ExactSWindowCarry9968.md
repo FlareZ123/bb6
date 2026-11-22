@@ -41,7 +41,7 @@ The universal subset DFA has rank 1 on **9,884** transitions and rank greater th
 
 The 84 non-singleton subset states lie in recurrent components as follows: B1:13, B2:36, B3:2, B5:7, B7:6; the other 9,904 transitions are in transient/non-SCC subset states.
 
-The exact paired end-state distribution reaches **all 66** states of the paired transducer. The exact active-branch projection reaches **49** branch-state IDs, but its carry vector takes only five values:
+The exact paired end-state distribution reaches **all 66** states of the paired transducer. The exact active-branch projection reaches **49** branch-state IDs. Its five observed carry vectors are not merely a finite-trace observation: [\`PostResetCarryPairInvariant.lean\`](../agent49-parity623/PostResetCarryPairInvariant.lean) proves \`leftNext_valid\` and \`rightNext_valid\` for every allowed paired state and input digit, and proves \`allowed_step\` plus \`reset_output_suffix_closed\`. Consequently, for every finite suffix after one of the 54 reset-output seeds, the L carry is in \`{(-1,0),(0,0)}\` and the R carry is in \`{(-1,0),(-2,0),(-2,1),(-3,1)}\`. The union is the following five vectors:
 
 | Active carry vector | Count |
 |:---:|---:|
@@ -59,6 +59,6 @@ The target-active projection of the universal residual subset has sizes: 1:9,905
 
 The exact seed path is deterministic on every one of the 9,968 scanned transitions, including the 84 cases where the universal subset does not collapse. Thus universal subset synchronization is stronger than necessary for this finite root trace. The actual paired end state is always available from the reset label plus the concrete suffix.
 
-This does **not** establish that future S-windows always contain a reset, nor that the five observed active carry vectors form an all-time invariant. The latter is a promising finite-state target: prove closure of the five carry vectors (together with the relevant previous-pair/sector data) under the actual root transition, rather than trying to force the universal subset to synchronize on the 84 exceptional suffixes.
+This does **not** establish that future S-windows always contain a reset. The post-reset carry bound itself is already formally established by the cited Lean invariant; the remaining global task is to prove that every future authentic S-window reaches one of the reset-output seeds and to connect the exact root windows to that reset mechanism. The 84 exceptional universal subsets need not be forced to collapse: the concrete reset label selects one exact seed, and the suffix then follows a deterministic 66-state path.
 
 **Projection convention:** active means the target's branch, determined by its drain threshold. This computation gives 21 singleton / 60 nonsingleton active projections among the 81 nonempty exceptions, rather than the previously circulated 18/63 count. The source-branch projection gives 27/54. The discrepancy is explicitly unresolved; see the note in [ExactSeedCarry84.md](ExactSeedCarry84.md).
