@@ -1924,3 +1924,18 @@ Also fixed the old H-phase patch path:
 Current state: fast_root_stack_sim.js DR branch b===0 and original Z1 check restored; verify_root_corridor_macro.js has the original corridor/countdown/growth suite and b===0; stack_system_sim.py has b==0 and the original seven-step root prefix, retaining the independent token-normalizer corrections. Agent12 restored the root docs and added ModeDRBranchAudit.md. HPhaseGrowthMacro.md is again an active projected macro candidate; root connection remains a separate obligation. DRHeadOneCycle.md is explicitly withdrawn.
 
 Next actions: wait for Agent32/46 responses; attempt local preflight for patch_hphase_growth.py or patch_root_growth.py only if a usable local Lean runtime becomes available; do not dispatch CI before local preflight. Prioritize the 254-step root-connected macro, then the D_n countdown, 1,481-step reset, and 50,000-step root entry. Keep all projected and V8 claims distinct from a kernel-checked original-TM theorem.
+
+
+## 2026-11-22 06:08Z checkpoint — finite-entry raw cost and Lean targets
+
+Instrumented the source-faithful b==0 replay of H(7)->C1. It matches after 157 outer successors, invokes zero token normalizers, and has a branch-counted raw cost of 526 TM steps:
+CR0 44×2=88; CR10 14×5=70; CR11 6×16=96; EL0 28×2=56; EL+ 20×1=20; DL0 12×6=72; DL+ 8×4=32; DR0+ 16×4=64; DR++ 7×3=21; CR1e 1×6=6; DRempty 1×1=1. Total 526. The root-to-H(7) connection remains withdrawn after Agent35's token-normalizer correction; this is a standalone projected entry.
+
+The H-phase CR 76-step insertion is 254 raw TM steps, zero token calls. The root-connected DR/G/B 76-step insertion is independently also 254 raw TM steps, with branch multiset DR0+ 8, DR++ 3, CR0 13, CR10 8, CR11 2, EL+ 12, DL0 8, EL0 16, DL+ 4, CR1e 1, DRempty 1. RootCountdownGrowth.md and HPhaseGrowthMacro.md now record the respective raw-cost evidence.
+
+Proof artifacts:
+- patch_hphase_growth.py now uses the public closedStackSystem.evalStackCfg field, not private evalStackCfg; .github/workflows/agent48-hphase-growth.yml pins Cryptids 3647718b5df22e1a61462dec0376bd204526285a.
+- patch_root_growth.py proposes an execute 254 theorem inside the #490 wrapper module for arbitrary suffix T and the DR/G/B insertion. It uses the public field and local execute macro. Both patches are unverified and require local Lean preflight before any CI dispatch.
+- Failed run 44982391941 failed only because the earlier patch named private evalStackCfg; the Actions log tail did not show recursion-depth or sorryAx errors. The axiom audit was skipped after compilation failure.
+
+Next: obtain Agent32/46 review of the two proof patches; if a local Lean runtime becomes available, preflight H-phase and root-growth execute proofs; then address D_n countdown, 1,481 reset, and 50,000-step root entry. Preserve the distinction between source-transcribed V8 paths and kernel-checked proofs. Lease threshold remains 2026-11-22T06:23:13.233Z.
