@@ -16,7 +16,7 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 
 - [RootCountdownSweep.md](./RootCountdownSweep.md): the surviving direct countdown sweep decomposition; proof architecture and bounded computation, not yet compiled.
 - [RootCountdownReset.md](./RootCountdownReset.md): source-branch zero-remainder reset recurrence and a corrected root-connected chain through D65(2) at raw time 64,018; not yet compiled.
-- [RootRemainderTwoReset.md](./RootRemainderTwoReset.md): exploratory remainder-two reset candidate using a DR token closure; not source-validated or proved.
+- [RootRemainderTwoReset.md](./RootRemainderTwoReset.md): source-derived remainder-two reset phases and token endpoint; full Lean composition pending.
 - [RootCountdownSweep.append.lean](./RootCountdownSweep.append.lean): uncompiled #85-source append draft for the one-step branch lemmas and the two inductive sweeps; fixed-prefix composition remains to be completed.
 - [RootCountdownGrowth.md](./RootCountdownGrowth.md): historical root-growth dossier, explicitly withdrawn except for the confirmed orientation/entry facts and its link to the surviving countdown.
 - [ModeDRBranchAudit.md](./ModeDRBranchAudit.md): pinned-source DR branch distinction and the corrected initial DR steps only; it does not validate the full root path.
