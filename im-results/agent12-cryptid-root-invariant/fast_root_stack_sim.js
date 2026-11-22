@@ -176,6 +176,7 @@ function invariantFailures(c) {
   const rh = R?.v, tailNZ = R?.next?.firstNZ;
   const z1Bump = !L || (L.v === 0 && !L.next);
   const failures = [];
+  if (L && !L.z1) failures.push("L is not in Z1 = 0*(epsilon | 1)");
   if (L && !L.binary) failures.push("L contains a value outside {0,1}");
   if (mode === "DR" && (!R || rh === 0)) failures.push("DR right head is not positive");
   if (mode === "EL" && rh === 1 && (!L || L.v !== 0)) failures.push("EL/right-head-1 requires L to start 0");
