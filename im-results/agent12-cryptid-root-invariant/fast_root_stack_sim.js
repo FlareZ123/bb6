@@ -200,7 +200,23 @@ let haltAt = null, invariantViolation = null;
 let maxLeftLength = 0, maxRightLength = 0, maxEntry = 0, maxLeftOnes = 0;
 let maxLeftNonzeros = 0, maxRightNonzeros = 0;
 let minDRRightHead = Infinity;
+const watchpoints = new Set([
+  22099, 153843, 155299, 156780, 1103484,
+  1113215, 1131748, 1153484
+]);
+const snapshots = {};
+function snapshot(c) {
+  return {
+    mode: c.mode,
+    leftLength: c.L?.len ?? 0,
+    rightLength: c.R?.len ?? 0,
+    leftHead: take(c.L, 16),
+    rightHead: take(c.R, 16),
+    tokenEvents: stats.tokenEventCount
+  };
+}
 for (let i = 0; i < steps; ++i) {
+  if (watchpoints.has(i)) snapshots[i] = snapshot(c);
   const failures = invariantFailures(c);
   if (failures.length) {
     invariantViolation = { macro: i, failures, state: { mode: c.mode, L: take(c.L, 20), R: take(c.R, 20) } };
@@ -220,6 +236,7 @@ for (let i = 0; i < steps; ++i) {
   }
   c = next;
 }
+if (watchpoints.has(steps)) snapshots[steps] = snapshot(c);
 console.log(JSON.stringify({
   requestedMacroSteps: steps,
   completedMacroSteps: invariantViolation?.macro ?? haltAt?.macro ?? steps,
@@ -229,6 +246,7 @@ console.log(JSON.stringify({
   bounceCRCalls: stats.bounceCR, bounceDRCalls: stats.bounceDR,
   maxLeftLength, maxRightLength, maxEntry, maxLeftOnes,
   maxLeftNonzeros, maxRightNonzeros, minDRRightHead,
+  snapshots,
   finalState: {
     mode: c.mode, leftLength: c.L?.len ?? 0, rightLength: c.R?.len ?? 0,
     leftOnes: c.L?.ones ?? 0, leftHead: take(c.L, 16), rightHead: take(c.R, 16),
