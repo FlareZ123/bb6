@@ -137,6 +137,59 @@ A source-local Lean proof can compose the following helpers with the same suffix
 
 The crucial endpoint correction is step 7: after step 6, the DL right list is \(0^3++[x-3]++T\), so the zero-step helper's remainder argument must be \(0^2++[x-3]++T\). The old fixed-suffix draft omitted one of these zeros. This suffix-general version makes the E_m(1) bridge to \(D_0(8m+9;[5])\) a direct composition by taking \(x=8m+15\), \(T=[5]\).
 
+A concrete uncompiled Lean draft, with the list arguments expanded, is:
+
+\`\`\`lean
+theorem root_countdown_general_tail_suffix
+    (x : ℕ) (T : List (ℕ × ℕ)) (hx : 6 ≤ x) :
+    ReachesPlus target
+      (cfg_EL_n_n [(0,0)] ((0,0) :: (x,0) :: T))
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate 5 (0,0) ++ [(x-6,0)] ++ T)) := by
+  have h1 := root_countdown_el_zero_step [(0,0)] ((x,0) :: T)
+  have h2 := root_countdown_el_positive_step (x-1)
+    [(0,0),(0,0)] T
+  have h3 := root_countdown_dl_positive_step (x-3)
+    [(0,0),(0,0)] T
+  have h4 := root_countdown_dr_zero_sweep 1 []
+    ((x-3,0) :: T)
+  have h5 := root_countdown_dr_empty_left_step
+    ((1,0) :: (0,0) :: (0,0) :: (x-3,0) :: T)
+  have h6 := root_countdown_el_positive_step 0 [(0,0)]
+    ((0,0) :: (0,0) :: (x-3,0) :: T)
+  have h7 := root_countdown_dl_zero_step [(0,0)]
+    ((0,0) :: (0,0) :: (x-3,0) :: T)
+  have h8 := root_countdown_el_zero_sweep 1
+    [(0,0),(1,0)] ((x-3,0) :: T)
+  have h9 := root_countdown_el_positive_step (x-4)
+    (List.replicate 3 (0,0) ++ [(1,0)]) T
+  have h10 := root_countdown_dl_positive_step (x-6)
+    (List.replicate 3 (0,0) ++ [(1,0)]) T
+  have h11 := root_countdown_dr_zero_sweep 2 [(1,0)]
+    ((x-6,0) :: T)
+  have h12 := root_countdown_dr_positive_positive_step 0 0 []
+    (List.replicate 3 (0,0) ++ [(x-6,0)] ++ T)
+  have hx1 : x-1+1 = x := by omega
+  have hx2 : x-3+2 = x-1 := by omega
+  have hx3 : x-4+1 = x-3 := by omega
+  have hx4 : x-6+2 = x-4 := by omega
+  simpa [List.replicate_succ, List.cons_append, List.append_assoc,
+    bumpPairHead, hx1, hx2, hx3, hx4] using
+    (ReachesPlus.trans h1
+      (ReachesPlus.trans h2
+        (ReachesPlus.trans h3
+          (ReachesPlus.trans h4
+            (ReachesPlus.trans h5
+              (ReachesPlus.trans h6
+                (ReachesPlus.trans h7
+                  (ReachesPlus.trans h8
+                    (ReachesPlus.trans h9
+                      (ReachesPlus.trans h10
+                        (ReachesPlus.trans h11 h12)))))))))))
+\`\`\`
+
+This draft is intended to replace the current fixed-suffix h7 proof, not to coexist with it. In particular h7 has the two-zero remainder shown above.
+
 The intended theorem statement is:
 
 \[
