@@ -1,6 +1,6 @@
 # Source audit: corrected token normalization and root continuation
 
-**Status:** source-derived correction plus executable stack-recurrence evidence. This is not a Lean-checked theorem about the original TM.
+**Status:** the token-normalizer corrections below remain source-derived, but the root continuation reported later in this file is WITHDRAWN. A separate outer-rule error was found: mode_DR_n_n_closed tokenizes both right-head 0 and right-head 1. The old simulator handled only right-head 0, so its root trajectory was already wrong at the first successor. See [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
 
 ## Pinned source
 
