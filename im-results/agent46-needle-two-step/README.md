@@ -1,6 +1,6 @@
 # Two-step even-predecessor bounds for the Space Needle cancellation target
 
-**Status:** exact arithmetic necessary conditions with paper proofs, including an all-parameter exclusion of the second-parent offset (t=w+1) throughout the wide cancellation band. A combined prime/quotient filter eliminates all 28 r=50 and all 105 r=160 forced-even exceptions at offset t=w+2 (94 prime witnesses plus 11 quotient obstructions for r=160). This is intermediate work, not a blank-root reachability theorem. No Lean compile or axiom audit is claimed.
+**Status:** exact arithmetic necessary conditions with paper proofs, including an all-parameter exclusion of the second-parent offset (t=w+1) throughout the wide cancellation band. A combined prime/quotient filter eliminates every forced-even exception at offset t=w+2 for the first eight family members r=50,160,270,380,490,600,710,820 (28,105,195,272,341,355,545,572 candidates respectively). This is intermediate work, not a blank-root reachability theorem. No Lean compile or axiom audit is claimed.
 
 ## Setup and exact two-step reduction
 
@@ -248,7 +248,7 @@ The exclusion does not require \(c(s)\ge d\): it applies to every \(s\) in the t
 
 The fixed-offset congruence (O1) gives \(D_{w+2}\mid y+2w+3\). Applying this condition prime by prime to the exact wide-band exception set yields a further finite reduction. The self-contained BigInt audit and witness table are in [OffsetTwoPrimeFilter.md](OffsetTwoPrimeFilter.md), with code in [offset_two_prime_filter.js](offset_two_prime_filter.js).
 
-For \(r=50\), all 28 forced-even exceptions are rejected by explicit prime witnesses \(p\le405991\). For \(r=160\), 97 of 105 are rejected by primes \(p\le10^7\); the eight remaining \((k,e)\) pairs are listed in the audit note. Every rejection is exact, but the prime bound is finite and the surviving candidates are unresolved. This does not prove that the remaining candidates have parents.
+For \(r=50,160,270,380,490,600,710,820\), all forced-even exceptions are eliminated. The prime search is bounded by \(p\le10^6\); every prime-filter survivor is then eliminated by the exact quotient obstruction (except at \(r=50\), where the prime witnesses already cover all 28). The detailed counts, quotient-residue bit lengths, and reproducible code are in the audit note. This is a finite result for the first eight progression members, not a theorem for all later \(j\), other offsets, or blank-root reachability.
 
 ## Specialization to the cancellation family
 
