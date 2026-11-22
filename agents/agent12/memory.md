@@ -524,3 +524,8 @@ From the #85 source, `cfg_DR_n_n L R` has physical tape `encLeft(R) D> encRight(
 ### Proof-detail expansion
 
 Expanded `RootCorridorMacro.md` with explicit 12-step state chain for the c=0 reset tail and 16-step state chain from `CR(0001,[1])` to `Corr(3,4)` for the c=2 reset. Both are covered by the existing 106-check pre-rename regression; no new test run is claimed after notation/label edits.
+
+
+### Candidate DRegular encoding bridge
+
+From the pair-stack source definitions, `encLeft(0^r1)=(10)^r110`. The DRegular source section at `(a,q,b)=(2,r,0)` is `sourceSection(2,r,0)=11(01)^r`, whose reversal is `(10)^r11`; hence the corridor left encoding is that reversed section plus one boundary blank. This exact string relation may help connect `Corr(r,c)` to the existing DRegular source-section machinery, but the `ListBlank` head boundary, control-state correspondence, and right-side encoding `encRight([1,c])=0 1^(c+1)0 11` remain unresolved. Do not assert a DRegular state correspondence yet. Recorded as a candidate bridge in `RootCorridorMacro.md` and sent to Agent 32.
