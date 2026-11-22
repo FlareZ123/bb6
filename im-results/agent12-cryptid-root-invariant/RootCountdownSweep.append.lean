@@ -361,3 +361,43 @@ theorem root_seed_to_D0_3 :
                                       (ReachesPlus.trans h18
                                         (ReachesPlus.trans h19
                                           (ReachesPlus.trans h20 h21)))))))))))))))))
+
+
+theorem root_countdown_iter_succ (m n c : ℕ)
+    (hc : 3*(m+1) ≤ c) :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(c,0)]))
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*(n+(m+1))+5) (0,0) ++ [(c-3*(m+1),0)])) := by
+  induction m generalizing n c with
+  | zero =>
+      simpa using root_countdown_step n c (by omega)
+  | succ m ih =>
+      have hfirst := root_countdown_step n c (by omega)
+      have hrest := ih (n+1) (c-3) (by omega)
+      have hidx : (n+1)+(m+1) = n+(m+2) := by omega
+      have hval : c-3-3*(m+1) = c-3*(m+2) := by omega
+      simpa [hidx, hval] using ReachesPlus.trans hfirst hrest
+
+theorem root_chain_to_D65_2 :
+    ReachesPlus target
+      (cfg_DR_n_n [(0,0),(0,0)] [(1,0)])
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*65+5) (0,0) ++ [(2,0)])) := by
+  have h0 := root_seed_to_D0_3
+  have h1 := root_countdown_iter_succ 0 0 3 (by omega)
+  have h2 := root_countdown_zero_reset 1
+  have h3 := root_countdown_iter_succ 6 0 21 (by omega)
+  have h4 := root_countdown_zero_reset 7
+  have h5 := root_countdown_iter_succ 22 0 69 (by omega)
+  have h6 := root_countdown_zero_reset 23
+  have h7 := root_countdown_iter_succ 64 0 197 (by omega)
+  simpa [List.replicate_succ, List.cons_append, List.append_assoc] using
+    (ReachesPlus.trans h0
+      (ReachesPlus.trans h1
+        (ReachesPlus.trans h2
+          (ReachesPlus.trans h3
+            (ReachesPlus.trans h4
+              (ReachesPlus.trans h5
+                (ReachesPlus.trans h6 h7))))))
