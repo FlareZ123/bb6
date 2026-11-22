@@ -27,7 +27,8 @@ for 1,000,000 macro-successor steps. It produced:
   \(\mathrm{CR}(L=0^{271} ++ [1],R=[1])\);
 - 268 bounceDR calls and zero bounceCR calls;
 - maximum left-list length 1,832, maximum right-list length 1,832,
-  maximum entry 1,459, and at most one 1 in the left list;
+  maximum entry 1,459, at most one nonzero entry in the left list, and at
+  most two nonzero entries in the right list;
 - throughout the trace, the left list remained in
   \(Z_1=0^*(\epsilon\mid1)\).
 
@@ -41,8 +42,8 @@ The corrected root continuation is:
 | 21,926 | \(\mathrm{CR}(L=0^{156}1,R=[231])\) |
 | 22,083 | \(\mathrm{EL}(L=[0],R=[0,546])\) |
 
-At macro index 1,000,000 the corrected run was in mode DR, with left-list
-length 1,316 and right-list length 518. The previous report of a 154,446-entry
+At macro index 1,000,000 the corrected run was in mode DR, with
+\(L=0^{1315}1\), right-list length 518, and right nonzero projection \([1,82]\). The previous report of a 154,446-entry
 right stack and a terminal state in the CR mode came from the defective
 normalizer and is withdrawn.
 
@@ -64,19 +65,21 @@ Write \(Z_1=0^*(\epsilon\mid1)\), and let \(\operatorname{firstNZ}(R)\)
 be the first nonzero entry of \(R\), if any.
 
 1. \(L\in Z_1=0^*(\epsilon\mid1)\): the left list is all zeros, optionally followed by one terminal 1.
-2. In mode DR, \(R\) is nonempty and its head is positive.
-3. In mode EL:
+2. \(R\) has at most two nonzero entries.
+3. In mode DR, \(R\) is nonempty and its head is positive.
+4. In mode EL:
    - if the head of \(R\) is 1, \(L\) begins with 0;
    - if \(\operatorname{firstNZ}(R)=2\), then \(L\in Z_1\);
    - if the head of \(R\) is 1 and the first nonzero entry of the tail of \(R\) is 2, then \(L\in\{\epsilon,[0]\}\).
-4. In mode DL:
+5. In mode DL:
    - if the head of \(R\) is 0, \(L\) begins with 0;
    - if the head of \(R\) is 1, then \(L\in Z_1\);
    - if the head of \(R\) is 0 and the first nonzero entry of the tail of \(R\) is 2, then \(L\in\{\epsilon,[0]\}\).
-5. In mode CR, if \(L\) begins with \([1,1]\) and the head of \(R\) is 1, then \(L\) with its first two entries removed belongs to \(Z_1\).
+6. In mode CR, if \(L\) begins with \([1,1]\) and the head of \(R\) is 1, then \(L\) with its first two entries removed belongs to \(Z_1\).
 
-The exact predicate, including the finite lookahead conditions and the stronger
-\(Z_1\) test, is implemented by \`invariantFailures\` in the JavaScript interpreter.
+The exact predicate, including the finite lookahead conditions, the stronger
+\(Z_1\) test, and the two-nonzero right-stack bound, is implemented by
+\`invariantFailures\` in the JavaScript interpreter.
 The corrected million-step trace satisfies this predicate; this remains a
 finite observation, not an inductive proof.
 
