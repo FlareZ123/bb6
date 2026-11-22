@@ -91,10 +91,13 @@ where
           (machineCPrefix_compatible 11)).2 rfl
     · have hlt : n < 11 := by omega
       let slot : Slot := machineCVisited[n]!
+      have hext : refine (machineCPrefix n) slot (machineC slot) =
+          machineCPrefix (n+1) := by
+        simpa [slot] using machineC_eleven_prefix_ext n hlt
       rw [machineCPathRefinementFrom]
       rw [dif_neg h]
       simp only [FrontierAudit.open, dif_pos]
-      simpa using machineCPathRefinementFrom_open (n+1) (by omega)
+      simpa [hext] using machineCPathRefinementFrom_open (n+1) (by omega)
   termination_by 11 - n
   decreasing_by omega
 
@@ -105,9 +108,6 @@ theorem machineC_depth_four_leaf_continued :
       machineCGlobalLeafRefinement.open machineC :=
   ⟨machineC_depth_four_open, machineCGlobalLeafRefinement_open⟩
 
-/-- Exact raw-table accounting for the selected leaf: 24 of its 25^8
-completions are source-certified nonhalting tables; every other completion,
-including the original Machine C, remains open. -/
 /-- The terminal node of the authenticated path refinement is exactly
     the one-slot F/0 audit. Its 24 non-halt transitions are certified,
     and its sole open child is the original Machine C table. -/
