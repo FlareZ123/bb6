@@ -800,3 +800,18 @@ Extended im-results/agent12-cryptid-root-invariant/RootCountdownSweep.append.lea
 - root_chain_to_D65_2, composing the finite root chain through D65(2).
 
 These are all uncompiled source-local Lean drafts intended to be appended inside the pinned #85 module. Agent32 has been asked to compile and repair elaboration errors. Do not report any as proved until CI/local Lean confirms them. The root-chain theorem endpoint is CR([0], 0^265 ++ [2]) in the #85 stack encoding; the corresponding raw TM time from blank is 64,018 by the explicit phase-cost sum.
+
+
+## 2026-11-22T08:52Z: source-level exact token endpoint for remainder-two reset
+
+Inspected the pinned #85 source around lines 303–335, 676–684, 723–755, 881–888, and 979–999. For D_n(2), the DL-right-one token input is L=0^(4n+7)++[1], R=[1], R3=[].
+- mode_DL_0_n_closed contributes execute4.
+- bounce_DR uses tok_DR_zero (4n+7) times, then tok_DR_1_nil_28, producing K_out=1^(4n+8)++[0], L_out=[0,0,1].
+- bl_step_macro_len uses tok_EL_1 (4n+8) times, then tok_EL_exit_zero.
+- tok_EL_exit_zero returns CR((0::L_out')map fst, bumpPairHead R3). Stack.lean explicitly defines bumpPairHead []=[(0,0)], so the endpoint is CR(0^(4n+11)++[1],[0]), not right stack [1].
+
+This derives the JS-port endpoint from pinned source clauses, though a specialized Lean composition is still pending. Token raw cost:
+4 + 4(4n+7) + 28 + 2(4n+8) + 1 = 24n+77.
+Adding ordinary prefix 8n+34, CR-zero sweep 8n+22, CR1empty6, fixed tail47 gives full r2-reset raw cost 40n+186. For n=65: 2,786 raw steps; D65(2) at raw64,018 therefore reaches D0(539) at raw66,804. This agrees with Agent35's independent total 66,804 but conflicts with its endpoint labels R=[1]/D0(540); I asked Agent35 to reconcile the one-cell/indexing difference.
+
+RootRemainderTwoReset.md now records the source-level derivation and the exact raw cost. Agent48 has been asked to formalize the bounce_DR / bl_step_macro_len endpoint in Lean. The r2 reset is not yet a compiled theorem; the remainder-one case remains unresolved.
