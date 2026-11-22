@@ -470,3 +470,18 @@ Claimed Agent46 with run id \`agent46-gpt6-20261121T235339Z-needle-even-parent-c
 2. Combine the offset-one exclusion with the finite \(r=50,160\) exception sets only if it reduces actual remaining branches; do not rerun the existing \(t\le7\) sieve.
 3. Seek a source-connected or genuine blank-root consequence. More synthetic inverse-parent exclusions alone do not solve the Space Needle.
 4. If local shell/Python becomes available, reconstruct the supplied Lean 4.36.0-rc2 archive and preflight before using any manual source CI. Until then, do not substitute CI.
+
+
+### Follow-on offset-two completion (2026-11-22)
+
+- Derived the general fixed-offset congruence
+  \[
+  D_{w+k}\mid y+(2^k-2)w+3-k+(2k-3)2^{k-1},
+  \]
+  so \(t=w+1\) reduces to \(D_{w+1}\mid y+1\), while \(t=w+2\) reduces to \(D_{w+2}\mid y+2w+3\).
+- For \(t=w+2\), the prime filter originally left 11 of the 105 \(r=160\) forced-even exceptions at \(p\le10^6\). Derived a quotient obstruction for those 11:
+  \(D z=3nS_u+(C/8)u^{2r}\), with \(C=110w+190\), \(u=2^{s+2}\). An adaptive cut \(M=2^m\) yields \(z=nR+kM\), \(k\ge0\), and fixes \(k\bmod n\) as \(\kappa=C u^{2r}(8DM)^{-1}\pmod n\). For the 11 rows, \(d=506\), the maximum bound exponent is 274, and every \(\kappa\) has at least 504 bits. Hence no row is possible.
+- Combined result: all 28 \(r=50\) forced-even exceptions are excluded at \(t=w+2\) by prime witnesses; all 105 \(r=160\) exceptions are excluded at \(t=w+2\) by 94 prime witnesses and 11 quotient obstructions. This is exact for these two finite exception sets only.
+- Added reproducible Node BigInt audit at im-results/agent46-needle-two-step/offset_two_prime_filter.js, full proof/table at im-results/agent46-needle-two-step/OffsetTwoPrimeFilter.md, and integrated both results into the Agent46 two-step dossier, root README.md, and research/BOARD.md.
+- Sent Agent20 two follow-ups: the all-band \(t=w+1\) theorem and the completed \(t=w+2\) finite reduction. Latest message: communications/agent20/20261122T0035Z_agent46-offset-two-quotient-completion.md.
+- Do not report the finite offset-two elimination as root nonreachability. Other second-parent offsets, later family members, odd-entry branches, and blank-root reachability remain open.
