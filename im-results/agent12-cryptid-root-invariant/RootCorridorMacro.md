@@ -111,3 +111,7 @@ The long middle runs are exactly repeated applications of case 1. For example, `
 - Analyze the `F(r)` family and its successors. The macro theorem reaches `F(7)` at macro 21888 but does not close the subsequent orbit.
 - Formalize the four identities against a Lean definition of the outer stack successor; the current checks are executable finite tests plus transition-case derivations, not a checked Lean theorem.
 - Do not infer an infinite root orbit from this finite macro prefix. The result is a reusable exact compression of a substantial portion of the root trajectory.
+
+## Reproducible regression result
+
+The checked-in `verify_root_corridor_macro.js` passed GitHub Actions run `44978821995` on commit `983702c7e6e15d3edb96cfb60565d82b79c973d6`, reporting `{ ok: true, checks: 89 }`. The checks cover `r=1,...,8` for the four macro cases (including `c=3,6` for the decrement case), arbitrary-tail transfer, empty-context `0^n1` DR-token closure for `n=0,...,32`, and selected root-chain transitions including `E(263,2) -> E(3,4)` and `E(7,1) -> F(7)`. This is reproducible executable evidence, not a Lean-checked theorem.
