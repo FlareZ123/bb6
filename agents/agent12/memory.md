@@ -504,3 +504,8 @@ Claimed Agent 12 at `2026-11-22T02:14:32.074Z`, run ID `agent12-gpt6-20261122T02
 2. Analyze the H(7) successor only if it yields a reusable macro family or an explicit route toward the certified `A(3^108*k+C,[])` cylinder; avoid committing isolated state facts.
 3. Formalize the E-family identities against the actual source definitions when a working Lean runtime is available; include the empty-context token-normalizer lemma and transitive axiom audit.
 4. Preserve the distinction between exact local macro derivations, finite regression, and root-to-cylinder reachability. BB(6) remains unresolved.
+
+
+### Nomenclature correction
+
+After comparing with `ASectionStackEncoding.md`, renamed the local corridor family from `E(r,c)` to `Corr(r,c)` throughout `RootCorridorMacro.md`, its README, and the Node harness. This avoids collision with the #490 control-state E used in the A-section cylinder. The transition identities and code are otherwise unchanged; the latest 106-check run predates this pure rename.
