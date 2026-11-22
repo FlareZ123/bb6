@@ -1,3 +1,10 @@
+/- WITHDRAWN AS A #490 ROOT MODEL (2026-11-22): step490 is defined as
+   swap (step85 (swap state)), an extra stack reversal. The actual #490
+   blank-root projected successor is the no-extra-swap #85 relation after
+   the evaluator double-reversal cancellation. This file only models the
+   alternate extra-swap transition system; its 260-step seed and growth
+   theorem are not connected to the #490 blank start. -/
+
 import Lean
 set_option maxRecDepth 10000
 set_option maxHeartbeats 5000000
