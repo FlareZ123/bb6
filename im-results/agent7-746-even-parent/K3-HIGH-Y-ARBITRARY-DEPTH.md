@@ -32,7 +32,7 @@ The theorem does **not** assert that one fixed (E) has an infinite reverse path,
 
 ## 1. Exact seed residue and the first two parents
 
-The congruences
+A concrete representative of the general selected class is given by the congruences
 [
 a\equiv15\pmod{162},qquad K\equiv219\pmod{486}
 ]
