@@ -25,7 +25,7 @@ def FrontierAudit.open {good : Machine → Prop} {p : PartialMachine}
     audit tree. The recursion follows only the actual transition selected by
     the machine at each branch; unresolved leaves are true and certified
     leaves are false. -/
-def FrontierAudit.openDecidable {good : Machine → Prop} {p : PartialMachine}
+noncomputable def FrontierAudit.openDecidable {good : Machine → Prop} {p : PartialMachine}
     (audit : FrontierAudit good p) (m : Machine) :
     Decidable (audit.open m) := by
   induction audit with
@@ -74,7 +74,7 @@ def cylinderMass (p : PartialMachine) : Nat := 25 ^ freeSlotCount p
 cylinder, separately for source-certified and unresolved leaves. The caller
 must additionally verify mass conservation for its particular tree, or use
 the generic conservation theorem when available. -/
-def FrontierAudit.report {good : Machine → Prop} {p : PartialMachine}
+noncomputable def FrontierAudit.report {good : Machine → Prop} {p : PartialMachine}
     (audit : FrontierAudit good p) : Nat × Nat :=
   match audit with
   | .certified p _ => (cylinderMass p, 0)
