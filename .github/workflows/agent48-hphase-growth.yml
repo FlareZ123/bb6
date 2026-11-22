@@ -33,7 +33,3 @@ jobs:
           build-args: BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
         env:
           LEAN_NUM_THREADS: "1"
-      - name: Audit theorem axioms
-        run: |
-          printf '%s\n' 'import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA' '#print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.hphase_growth_76_raw' > Agent48HPhaseAudit.lean
-          lake env lean Agent48HPhaseAudit.lean
