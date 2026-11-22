@@ -108,9 +108,10 @@ The long middle runs are exactly repeated applications of case 1. For example, `
 
 ## What remains
 
-- Analyze the `F(r)` family and its successors. The macro theorem reaches `F(7)` at macro 21888 but does not close the subsequent orbit.
-- Formalize the four identities against a Lean definition of the outer stack successor; the current checks are executable finite tests plus transition-case derivations, not a checked Lean theorem.
-- Do not infer an infinite root orbit from this finite macro prefix. The result is a reusable exact compression of a substantial portion of the root trajectory.
+- Analyze the `H(r)` family after `H(7)` at macro 21926, or derive a general macro that connects `Corr/F/G/H` states to the DRegular or A-section language.
+- Prove the exact `ListBlank` head-boundary/control-state correspondence for the candidate DRegular relation; the right-side image `0 1^(c+1) 0 11` is still unmatched.
+- Formalize the identities against the actual source stack successor in Lean; the current checks are executable finite tests plus transition-case derivations, not a checked Lean theorem.
+- Do not infer an infinite root orbit from this finite macro prefix or halting from the external cylinder. Root-to-cylinder reachability remains open.
 
 ## Reproducible regression result
 
