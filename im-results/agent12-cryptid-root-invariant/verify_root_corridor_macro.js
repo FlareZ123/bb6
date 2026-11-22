@@ -250,12 +250,22 @@ for (let i = 0; i < rootChain.length; i++) {
 const D = (n, c) => state("CR", [0], [...zeros(4 * n + 5), c]);
 const rootGrowthL = [0, 0, 1, 0, 1, 0, 0, 0, 0, 1];
 const rootGrowthB = [16, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0];
+const Q = [12, 0, 0, 0];
+const HwithRight = (r, R) => state("CR",
+  [0, ...repeat([1, 0], r + 1), 0, 0, 1, 0, 0, 0], R);
+const repeatQ = n => repeat(Q, n);
+const Hright = [2, 0, 0, 0, 0];
 
-// The triangular countdown macro S^(8n+24)(D_n(c)) = D_(n+1)(c-3).
+// The triangular countdown macro and its exact raw-step cost.
 for (let n = 0; n <= 6; n++) {
   for (const c of [3, 4, 5, 10, 540]) {
+    tokenCalls = 0;
+    const result = runWithCost(D(n, c), 8 * n + 24);
     assertState("countdown D_" + n + "(" + c + ")",
-      run(D(n, c), 8 * n + 24), D(n + 1, c - 3));
+      result.state, D(n + 1, c - 3));
+    if (tokenCalls !== 0 || result.rawSteps !== 24 * n + 69) {
+      throw new Error("countdown raw/token cost mismatch at n=" + n + " c=" + c);
+    }
     checks++;
   }
 }
@@ -263,21 +273,129 @@ for (let n = 0; n <= 6; n++) {
 // Root enters D_0(540) 16 successors after EL([0],[0,546]).
 assertState("root EL-to-D0(540)", run(state("EL", [0], [0, 546]), 16), D(0, 540)); checks++;
 
-// The zero-counter reset and the second countdown entry.
-assertState("D_180(0)-to-D_0(1453)", run(D(180, 0), 1481), D(0, 1453)); checks++;
+// The zero-counter reset is 1,481 outer successors / 2,985 raw TM steps.
+tokenCalls = 0;
+const resetResult = runWithCost(D(180, 0), 1481);
+assertState("D_180(0)-to-D_0(1453)", resetResult.state, D(0, 1453));
+if (tokenCalls !== 0 || resetResult.rawSteps !== 2985) {
+  throw new Error("D_180 reset raw/token cost mismatch");
+}
+checks++;
+const firstCountdownRaw = Array.from({ length: 180 }, (_, n) => 24 * n + 69)
+  .reduce((a, b) => a + b, 0);
 const secondCountdownLength = Array.from({ length: 484 }, (_, n) => 8 * n + 24)
   .reduce((a, b) => a + b, 0);
-if (secondCountdownLength !== 946704) throw new Error("second countdown duration mismatch");
+const secondCountdownRaw = Array.from({ length: 484 }, (_, n) => 24 * n + 69)
+  .reduce((a, b) => a + b, 0);
+if (firstCountdownRaw !== 399060 || secondCountdownLength !== 946704 ||
+    secondCountdownRaw !== 2838660) {
+  throw new Error("countdown aggregate arithmetic mismatch");
+}
 
-// A 50,000-step finite prefix from D_484(1) reaches the root-reachable
-// tail-parametric growth state at macro 1,153,484.
-const rootGrowth = run(D(484, 1), 50000);
-assertState("root growth left state", state(rootGrowth.mode, rootGrowth.L, []),
-  state("DR", rootGrowthL, []));
-if (rootGrowth.R.length !== 7330 || !eq(rootGrowth.R.slice(0, 13), [1, ...rootGrowthB])) {
-  throw new Error("root growth state has wrong right prefix/length: " + JSON.stringify({
-    length: rootGrowth.R.length, prefix: rootGrowth.R.slice(0, 13)
-  }));
+// D_484(1) reaches H(1939) by the c=1 corridor: D->F->G->H.
+// All three segments are ordinary source branches (no token closure).
+const rRoot = 1939;
+tokenCalls = 0;
+const dToF = runWithCost(D(484, 1), 3897);
+assertState("D_484(1)-to-F(1939)", dToF.state, F(rRoot));
+if (tokenCalls !== 0 || dToF.rawSteps !== 13641) throw new Error("D-to-F cost mismatch");
+checks++;
+tokenCalls = 0;
+const fToG = runWithCost(F(rRoot), 5830);
+assertState("F(1939)-to-G(1939)", fToG.state, G(rRoot));
+if (tokenCalls !== 0 || fToG.rawSteps !== 17487) throw new Error("F-to-G cost mismatch");
+checks++;
+tokenCalls = 0;
+const gToH = runWithCost(G(rRoot), 4);
+assertState("G(1939)-to-H(1939)", gToH.state, H(rRoot));
+if (tokenCalls !== 0 || gToH.rawSteps !== 13) throw new Error("G-to-H cost mismatch");
+checks++;
+
+// The 38-successor padding macro removes four (1,0) pairs and prepends Q^2
+// to the right stack. It is suffix-parametric and costs 128 raw TM steps.
+const opaquePadSuffix = { opaque: "pad-T" };
+for (const r of [0, 1, 2, 3, 4, 5, 6, 7, 11, 1935]) {
+  for (const suffix of [
+    [...Hright, 5, 3, 1],
+    [...Hright, opaquePadSuffix],
+    [...repeatQ(3), ...Hright, 5, 3, 1]
+  ]) {
+    tokenCalls = 0;
+    const result = runWithCost(HwithRight(r + 4, suffix), 38);
+    assertState("H padding r=" + r + " suffix=" + JSON.stringify(suffix),
+      result.state, HwithRight(r, [...Q, ...Q, ...suffix]));
+    if (tokenCalls !== 0 || result.rawSteps !== 128) {
+      throw new Error("H padding raw/token cost mismatch");
+    }
+    if (suffix.includes(opaquePadSuffix) &&
+        result.state.R[result.state.R.length - 1] !== opaquePadSuffix) {
+      throw new Error("H padding opaque suffix identity lost");
+    }
+    checks++;
+  }
+}
+
+// The 179-successor base macro inserts [16] and three Q blocks, preserving
+// any pre-existing Q^m prefix and arbitrary suffix T. It costs 591 raw steps.
+const opaqueBaseSuffix = { opaque: "base-T" };
+for (const m of [0, 1, 2, 5, 10, 966]) {
+  for (const suffix of [[], [5, 3, 1], [opaqueBaseSuffix]]) {
+    tokenCalls = 0;
+    const result = runWithCost(HwithRight(7,
+      [...repeatQ(m), ...Hright, ...suffix]), 179);
+    const expectedTail = [16, 0, 0, 0, ...repeatQ(m + 3), ...Hright, ...suffix];
+    assertState("H base m=" + m + " suffix=" + JSON.stringify(suffix),
+      result.state, state("DR", rootGrowthL, [1, ...rootGrowthB, ...expectedTail]));
+    if (tokenCalls !== 0 || result.rawSteps !== 591) {
+      throw new Error("H base raw/token cost mismatch");
+    }
+    if (suffix.includes(opaqueBaseSuffix) &&
+        result.state.R[result.state.R.length - 1] !== opaqueBaseSuffix) {
+      throw new Error("H base opaque suffix identity lost");
+    }
+    checks++;
+  }
+}
+
+// Root H-family entry: 483 padding blocks followed by the 179-step base.
+// H(1939) -> H(7, Q^966 ++ [2,0,0,0,0]) -> DR/G/B seed.
+tokenCalls = 0;
+const hPadding = runWithCost(H(rRoot), 38 * 483);
+assertState("H(1939)-to-padded-H(7)", hPadding.state,
+  HwithRight(7, [...repeatQ(966), ...Hright]));
+if (tokenCalls !== 0 || hPadding.rawSteps !== 61824) {
+  throw new Error("root H-padding aggregate mismatch");
+}
+checks++;
+tokenCalls = 0;
+const rootGrowthEntryResult = runWithCost(hPadding.state, 179);
+const rootGrowthEntryTail = [16, 0, 0, 0, ...repeatQ(969), ...Hright];
+assertState("root-connected first DR/G/B seed", rootGrowthEntryResult.state,
+  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthEntryTail]));
+if (tokenCalls !== 0 || rootGrowthEntryResult.rawSteps !== 591) {
+  throw new Error("root H-base aggregate mismatch");
+}
+checks++;
+const rootGrowth = rootGrowthEntryResult.state;
+const rootEntryOuter = 3897 + 5830 + 4 + 38 * 483 + 179;
+const rootEntryRaw = 13641 + 17487 + 13 + 61824 + 591;
+if (rootEntryOuter !== 28264 || rootEntryRaw !== 93556 || rootGrowth.R.length !== 3898) {
+  throw new Error("root first-entry aggregate mismatch");
+}
+
+// The earlier 50,000-successor checkpoint is the first seed plus 286
+// repetitions of the 76-successor insertion macro.
+tokenCalls = 0;
+const laterRootCheckpoint = runWithCost(rootGrowth, 286 * 76);
+if (tokenCalls !== 0 || laterRootCheckpoint.rawSteps !== 72644 ||
+    laterRootCheckpoint.state.R.length !== 7330 ||
+    !eq(laterRootCheckpoint.state.L, rootGrowthL) ||
+    !eq(laterRootCheckpoint.state.R.slice(0, 13), [1, ...rootGrowthB])) {
+  throw new Error("286-loop root checkpoint mismatch");
+}
+if (rootEntryOuter + 286 * 76 !== 50000 ||
+    rootEntryRaw + laterRootCheckpoint.rawSteps !== 166200) {
+  throw new Error("50,000-step root checkpoint aggregate mismatch");
 }
 checks++;
 
