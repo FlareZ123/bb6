@@ -185,3 +185,6 @@ the second case with \(n=267\) and empty context \(r\).
 `verify_root_corridor_macro.js` is a self-contained array-based regression harness for the four identities, the arbitrary-tail DR transfer, the empty-context `0^n1` token closure, and selected root-chain transitions. `.github/workflows/verify-root-corridor-macro.yml` runs it under Node 20. The harness is computational support, not a formal proof.
 
 Regression status: `verify_root_corridor_macro.js` passed Actions run `44978821995` (commit `983702c7e6e15d3edb96cfb60565d82b79c973d6`) with 89 checks. This does not replace a formal proof.
+
+
+The macro regression harness also verifies `F(r) -> G(r)` in `3r+13` successors, where `G(r)=DR(0^2(10)^(r+2)0^2 1 0^3,[1,0])`. The root prefix therefore reaches `G(7)` at macro 21,922. Latest CI pass: Actions run `44979005652`, 97 checks.
