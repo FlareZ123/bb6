@@ -107,3 +107,34 @@ as recorded in the token dossier.
 This turns the nested zero-branch part of the token normalizer into a deterministic ternary digit shift with a closed-form stopping count. For any input in the (S(x,3)) family, the number of repeated zero branches is not an unbounded search: it is exactly (v_3(5x+39)), and the terminal residual is explicitly determined.
 
 The remaining work is to formalize the source-lemma recurrence (S(x,r)), the residual-one/residual-two exits, and their outer-stack compositions in the pinned #85 module. This arithmetic lemma alone does not prove the blank-root path reaches the token input, does not prove the whole machine halts or runs forever, and does not determine BB(6).
+
+
+## Exact raw cost of the complete token reduction
+
+The same decomposition gives a reusable raw-step formula. Let (x_0\ge0), (t=v_3(5x_0+39)), and let
+[
+x_{i+1}=\frac{8x_i+39}{3}\quad(0\le i<t).
+]
+For (i<t), put (N_i=x_i/3). At the terminal parameter (x_t\not\equiv0\pmod3), put (N_t=\lfloor x_t/3\rfloor) and (r=x_t-3N_t\in\{1,2\}).
+
+A batch of (N) subtract-three cycles starting with (r=3) costs
+[
+\sum_{j=0}^{N-1}(6(3+4j)+35)=12N^2+41N
+]
+raw steps. Each zero-remainder return costs (8(3+4N)+77=32N+101). The terminal residual-one/two branch costs respectively (24N_t+59) or (24N_t+64). Hence the complete reduction from (S(x_0,3)) to its terminal CR state costs
+[
+\boxed{
+\sum_{i=0}^{t-1}(12N_i^2+73N_i+101)
++12N_t^2+65N_t+
+\begin{cases}
+59,&r=1,\\
+64,&r=2.
+\end{cases}}
+]
+This is a finite exact sum, with the number of terms (t=v_3(5x_0+39)) known in advance. It excludes any prefix required to enter (S(x_0,3)) and any later outer-stack continuation.
+
+For (x_0=70,731,516), (t=2), ((N_0,N_1,N_2)=(23,577,172,62,872,463,167,659,905)), and (r=2). The boxed formula gives
+[
+391,424,097,862,473,182
+]
+raw steps from (S(x_0,3)) to the residual-two CR state, matching the sum of the three subtract-three batches, two zero-return branches, and final residual-two branch in `TokenResidual2Continuation.md`. Adding its 70,731,575-step entry prefix gives the dossier's (391,424,097,933,204,757) total.
