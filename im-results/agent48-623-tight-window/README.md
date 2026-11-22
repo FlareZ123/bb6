@@ -156,7 +156,7 @@ The observed carry pairs are diagnostics only; retain the full universal rectang
 
 - The edges array is ordered by target index 34 through 10001. Each row is [targetIndex, phaseId, lowBoundaryOutputPairCodes, lowExtension, highExtension].
 - Pair codes are 3x+y for a ternary digit pair (x,y).
-- The phaseRecords array is a 1,318-entry dictionary. Its compact array stores the phase core: source/target sector and branch, the previous pair and carry entering the target word, both boundary residues, and (k,j) shifts. The edge row stores the per-transition source/target ℓS, all four window indices, drain statistics (L,n1,n2,D,R), and exact correction values (C,F,T); these quantities are not incorrectly deduplicated when the same phase core recurs.
+- The phaseRecords array is a 1,318-entry dictionary. Its compact array stores only the phase core: source/target sector and branch, the previous pair and carry entering the target word, both boundary residues, and (k,j) shifts. Each edge row separately stores its four window indices and exact drain statistics (L,n1,n2,D,R). The correction values (C,F,T) are reconstructed from those statistics and the sector/branch correction table in the generator. This per-edge separation matters: 8,650 of the 9,968 edges have a window/drain tuple different from the first edge with the same phaseId, so phaseId alone is not a Markov state.
 - lowBoundaryOutputPairCodes records the one or two transducer outputs at source indices kS+1 through k′S+1, which move the transducer to the state entering the target word at k′S+2.
 - lowExtension is null when k′S=kS+1; otherwise it records the exact extra target symbol at kS+2. highExtension is null when j′S=jS; otherwise it records the exact extra target symbol at jS−2. Each non-null extension stores input/output pair codes, carry-in, carry-out, and previous pair. Their indices are recovered from the per-edge row as targetK+2 and sourceJ−2, respectively.
 
@@ -165,6 +165,8 @@ Thus the complete target word is the optional low extension, followed by the tra
 The exact finite checks for this artifact are: 9,968 transitions; 1,318 unique phases; shift histogram (0,0): 9954, (0,1): 9, (1,1): 5; 9,963 low extensions and 14 high extensions; zero branch-selection, universal-carry-rectangle, affine-update, or full-window transducer-digit mismatches. The separate q-indexed carry-set cross-check matches the existing 262-phase ActualBoundaryPhases.json; it is only a validation of the source carry convention, not a claim that q- and S-indexed phases coincide.
 
 This is finite exact edge data, not an all-time transition theorem and not a closed product with Agent 27's 211-state residual subset. Join by targetIndex, preserve the full high-extension fields, and retain the universal carry rectangles rather than replacing them with the finite observed carry set.
+
+The companion generator is [materialize_s_window_edge_records.js](materialize_s_window_edge_records.js); run it from the repository root with Node to regenerate the JSON. The compact edge encoding is authoritative for product joins. The original phase-summary script remains a separate diagnostic.
 
 ## 5. Post-reset output interface and S-window product diagnostic
 
