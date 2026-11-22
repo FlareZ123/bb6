@@ -98,7 +98,7 @@ The outer and raw totals for the full bridge are respectively
 8+(4m+7)+5+(4m+6)+1+16=8m+43,
 \]
 \[
-21+2(4m+7)+14+2(4m+6)+6+47=16m+115.
+21+2(4m+7)+15+2(4m+6)+6+47=16m+115.
 \]
 
 ## Application to the conditional root residual
