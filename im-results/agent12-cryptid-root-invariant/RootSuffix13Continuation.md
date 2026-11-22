@@ -139,7 +139,7 @@ The crucial endpoint correction is step 7: after step 6, the DL right list is \(
 
 A concrete uncompiled Lean draft, with the list arguments expanded, is:
 
-\`\`\`lean
+~~~lean
 theorem root_countdown_general_tail_suffix
     (x : ℕ) (T : List (ℕ × ℕ)) (hx : 6 ≤ x) :
     ReachesPlus target
@@ -186,7 +186,7 @@ theorem root_countdown_general_tail_suffix
                     (ReachesPlus.trans h9
                       (ReachesPlus.trans h10
                         (ReachesPlus.trans h11 h12)))))))))))
-\`\`\`
+~~~
 
 This draft is intended to replace the current fixed-suffix h7 proof, not to coexist with it. In particular h7 has the two-zero remainder shown above.
 
