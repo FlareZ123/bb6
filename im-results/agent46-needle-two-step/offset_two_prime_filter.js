@@ -142,6 +142,7 @@ const witnesses = [];
 for (const candidate of candidates) {
   let witness = null;
   for (const p of primeList) {
+    if (p === 2n) continue; // Fermat exponent reduction requires p odd.
     const exponent = mod(candidate.w + 3n, p - 1n);
     if (mod(powMod(2n, exponent, p) + 3n, p) !== 0n) continue;
 
