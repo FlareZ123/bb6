@@ -64,7 +64,9 @@ theorem machineCOneSlotAudit_open_iff_original (m : Machine)
     (machineCOneSlotAudit 6).open m ↔ m = machineC := by
   have hopen :
       (machineCOneSlotAudit 6).open m ↔ m machineCHaltSlot = none := by
-    simp [machineCOneSlotAudit, FrontierAudit.open]
+    by_cases h : m machineCHaltSlot = none
+    · simp [machineCOneSlotAudit, FrontierAudit.open, h]
+    · simp [machineCOneSlotAudit, FrontierAudit.open, h]
   rw [hopen]
   constructor
   · intro hhalt
@@ -88,7 +90,9 @@ where
         (machineCPrefix_compatible 11)).2 rfl
     · have hlt : n < 11 := by omega
       let slot : Slot := machineCVisited[n]!
-      simp [machineCPathRefinementFrom, h, FrontierAudit.open, slot]
+      rw [machineCPathRefinementFrom]
+      rw [dif_neg h]
+      simp only [FrontierAudit.open]
       exact machineCPathRefinementFrom_open (n+1) (by omega)
   termination_by 11 - n
   decreasing_by omega
@@ -105,6 +109,7 @@ completions are source-certified nonhalting tables; every other completion,
 including the original Machine C, remains open. -/
 theorem machineCGlobalLeafRefinement_report :
     machineCGlobalLeafRefinement.report = (24, 25^8 - 24) := by
+  classical
   decide
 
 /-- Generic frontier mass conservation independently checks the total
