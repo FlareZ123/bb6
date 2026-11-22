@@ -1,6 +1,6 @@
 # Two-step even-predecessor bounds for the Space Needle cancellation target
 
-**Status:** exact arithmetic necessary conditions with paper proofs, including a new all-parameter exclusion of the second-parent offset (t=w+1) throughout the wide cancellation band. This is an intermediate result, not a blank-root reachability theorem. No Lean compile or axiom audit is claimed.
+**Status:** exact arithmetic necessary conditions with paper proofs, including an all-parameter exclusion of the second-parent offset (t=w+1) throughout the wide cancellation band. A bounded-prime filter also eliminates all 28 r=50 forced-even exceptions at offset t=w+2, and 97 of 105 r=160 exceptions (eight remain below the tested prime bound). This is intermediate work, not a blank-root reachability theorem. No Lean compile or axiom audit is claimed.
 
 ## Setup and exact two-step reduction
 
@@ -243,6 +243,12 @@ Z=3nS_u+10u^{2r}\equiv10u^{2r}\not\equiv0\pmod n,
 since \(n=3^{2r-1}\) and \(\gcd(10u,n)=1\). This contradiction proves the theorem. \(\square\)
 
 The exclusion does not require \(c(s)\ge d\): it applies to every \(s\) in the two-inequality band, including all residue-cut exceptions. It removes only the adjacent second-parent valuation \(t=w+1\); all other second-parent valuations and authentic blank-root reachability remain open. The argument is paper-level and has not been Lean-compiled.
+
+## Offset-two finite prime filters
+
+The fixed-offset congruence (O1) gives \(D_{w+2}\mid y+2w+3\). Applying this condition prime by prime to the exact wide-band exception set yields a further finite reduction. The self-contained BigInt audit and witness table are in [OffsetTwoPrimeFilter.md](OffsetTwoPrimeFilter.md), with code in [offset_two_prime_filter.js](offset_two_prime_filter.js).
+
+For \(r=50\), all 28 forced-even exceptions are rejected by explicit prime witnesses \(p\le405991\). For \(r=160\), 97 of 105 are rejected by primes \(p\le10^7\); the eight remaining \((k,e)\) pairs are listed in the audit note. Every rejection is exact, but the prime bound is finite and the surviving candidates are unresolved. This does not prove that the remaining candidates have parents.
 
 ## Specialization to the cancellation family
 
