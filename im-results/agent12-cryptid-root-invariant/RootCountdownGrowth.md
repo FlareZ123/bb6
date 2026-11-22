@@ -4,6 +4,15 @@
 
 All macro indices below count **outer stack successors**. Raw TM-step costs are stated separately and derived from the source `execute n` branches. The initial #490 blank-root prefix reaches the #85-oriented seed `DR(L=[0,0],R=[1])` after 7 raw TM steps.
 
+## Correct #490 mirror checkpoints (short V8 replay)
+
+The actual #490 blank-entry theorem reaches `DR(L=[0,0],R=[1])` after 7 raw steps. Mirroring the #85 successor relation (swap L/R before the #85 step, then swap the output back) gives:
+- macro 0: `DR(L=[0,0],R=[1])`;
+- macro 1: `CR(L=[1],R=[0,0,0,1])`, after the immediate #85 `tok_CR_1_0_closed` closure;
+- macro 22,099: `EL` with left-list length 3,481 and right-list length 6 (the #490 orientation).
+
+This is a short V8 transcription, not a Lean proof. The corrected persistent-list simulator now uses this mirror rule; its long replay remains pending.
+
 ## Synthetic #85 prefix (not the #490 blank-root path)
 
 This is the old unmirrored #85 synthetic trajectory starting from `DR(L=[0,0],R=[1])`; it is not the #490 blank-root trajectory. The actual #490 blank-entry theorem reaches `DR(L=[0,0],R=[1])` after 7 raw steps, but under the mirror this corresponds to #85 `DR(L=[1],R=[0,0])`. The synthetic #85 trace reaches `D_0(540)` at macro 22,099, with one token-normalizer event:
@@ -21,7 +30,7 @@ The token closure has an exact source-step count. The DL right-head-1 branch fir
 
 The 21,810 ordinary successors before the token closure cost 64,565 raw TM steps. The 288 ordinary successors after the closure cost 595 raw steps to `D_0(540)`. Thus the root stack seed to `D_0(540)` costs 66,797 raw steps; excluding any blank-root prefix, the synthetic #85 seed reaches `D_0(540)` in **66,797 raw TM steps**. The earlier 66,804 blank-to-`D_0(540)` figure is withdrawn. This root event is a DL right-head-1 closure; it does not contradict the separate rule that DR right-head 1 is ordinary.
 
-## Root-connected countdown
+## Projected #85 countdown
 
 Define
 
@@ -59,7 +68,7 @@ The root replay gives:
 
 The first countdown has 180 applications, 133,200 outer successors, and 399,060 raw steps.
 
-## Reset and second countdown
+## Projected #85 reset and second countdown
 
 The reset follows from the c=0 corridor macro. Since `D_180(0)=S^724(Corr(723,0))`, and `Corr(723,0)` reaches `Corr(3,1453)` in `3·723+32=2201` successors, followed by the 4-successor shared corridor to `D_0(1453)`, the remaining path from `D_180(0)` is
 
@@ -83,7 +92,7 @@ Its raw-step total from the sampled formula is 2,838,660. Thus the D_0(540)-to-D
 
 The raw formula `24n+69` and its countdown aggregates remain computational/source-transcribed until the quantified corridor lemma is kernel-checked. From the synthetic #85 seed (not from the blank tape), the projected costs are 3,307,502 to `D_484(1)`, 3,401,058 to the first DR/G/B seed, and 3,473,702 to the 50,000-successor projected checkpoint. All earlier blank-to-these-state totals are withdrawn.
 
-## The root's c=1 corridor to H(1939)
+## Projected #85 c=1 corridor to H(1939)
 
 Write
 
@@ -105,7 +114,7 @@ Here `(10)^j` means j repetitions of the pair `[1,0]`. Since `D_484(1)` is the s
 
 No token-normalizer call occurs in these three segments. The finite corridor regression checks r=1,…,8; the r=1939 instance is separately replayed.
 
-## Parametric H-family entry into the DR/G/B growth family
+## Projected #85 H-family entry into the DR/G/B growth family
 
 Let
 
@@ -195,7 +204,7 @@ Thus the first root-connected DR/G/B seed is reached from `D_484(1)` after **28,
 
 The earlier 50,000-successor checkpoint is later than this first entry: it is the first seed followed by 286 repetitions of the 76-successor insertion macro. Those repetitions add 21,736 outer successors and 72,644 raw steps, giving the previously recorded macro 1,153,484 state with right-list length 7,330. The full D_484(1)-to-checkpoint segment costs 166,200 raw steps.
 
-## Tail-parametric growth
+## Projected #85 tail-parametric growth
 
 The candidate insertion identity is
 
