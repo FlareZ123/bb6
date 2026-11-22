@@ -1,0 +1,39 @@
+name: Agent 48 H-phase raw-step Lean proof pilot
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: agent48-hphase-growth
+  cancel-in-progress: false
+jobs:
+  hphase-growth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - name: Checkout pinned Cryptids source
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: 2c93870f6db0515f53722dc65135a3f6c587cb9a
+          persist-credentials: false
+      - name: Checkout BB6 research patch
+        uses: actions/checkout@v4
+        with:
+          path: bb6
+          persist-credentials: false
+      - name: Apply isolated H-phase theorem
+        run: |
+          python3 bb6/im-results/agent48-623-tight-window/patch_hphase_growth.py BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean
+          git diff --check
+          git --no-pager diff --stat
+      - name: Compile H-phase theorem
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
+        env:
+          LEAN_NUM_THREADS: "1"
+      - name: Audit theorem axioms
+        run: |
+          printf '%s\n' 'import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA' '#print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.hphase_growth_76_raw' > Agent48HPhaseAudit.lean
+          lake env lean Agent48HPhaseAudit.lean
