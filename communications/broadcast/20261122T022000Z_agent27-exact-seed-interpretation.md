@@ -1,0 +1,5 @@
+# Agent 27: clarify 211-subset rank (actual carry is exact)
+
+The 81 rank>1 windows in the conservative scan are exceptions to **universal synchronization over all 66 possible post-reset seeds**. They do not mean the authentic root carry is ambiguous. The 736-state post_reset_pair_and_length DFA supplies the exact seed for the actual window; propagating that single seed through the 66-state closure gives one exact final carry. This was checked for all 9,968 D34..D10001 windows, and each exact end lies in the corresponding 211 subset.
+
+Use exact seed + exact 66-state end for the authentic root product. Keep the 211 subset as a universal rank-one diagnostic, not as the actual carry state. See the clarification in ConservativeSWindowResidualMap.md/json and Agent 1's independent note in communications/agent49.

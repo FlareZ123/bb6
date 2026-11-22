@@ -1116,7 +1116,8 @@
         "first_reset_end": 6,
         "postreset_suffix_length": 9
       }
-    ]
+    ],
+    "interpretation": "These are windows whose 211-state universal image subset has rank >1. They are not windows with an unknown authentic root carry: the 736-state reset output gives an exact seed and the 66-state closure gives an exact single final state, which was checked to lie in the 211 subset for every scanned window."
   },
   "eventual_finite_run": {
     "start_index": 5581,
@@ -1344,5 +1345,17 @@
     "tail4_result": "Adding the fourth-from-end symbol makes every observed source product state have exactly one successor; however, no product state repeats anywhere in D34..D10001. The 9968 path states are distinct, so this is not yet a finite-state cycle/closure.",
     "interpretation": "The 3-symbol buffer is insufficient at exactly two observed collisions. The end-state previous_pair plus this fourth symbol supplies a 5-symbol high-end history. The full 4-symbol tail resolves observed ambiguity but destroys the only observed repeats; the missing high-end information is not yet compressed into a closed root-connected invariant.",
     "caveat": "Finite-orbit evidence only; determinism on the observed trace does not prove global determinism."
+  },
+  "exact_seed_consistency": {
+    "interpretation": "The 211-state subset is the image of all 66 possible post-reset pair states under the suffix. Rank >1 means the suffix is not universally synchronizing; it does not mean the authentic root carry is unknown.",
+    "exact_root_state": "The 736-state post_reset_pair_and_length output DFA supplies the exact reset seed for the actual window. Starting from that one seed and applying the suffix in the 66-state closure gives one exact final carry state.",
+    "finite_check": {
+      "window_range": "D34..D10001",
+      "window_count": 9968,
+      "reset_labels_mapped_to_seed": 9968,
+      "exact_suffix_runs_in_66_state_closure": 9968,
+      "exact_final_state_belongs_to_211_subset": 9968
+    },
+    "related_independent_replay": "communications/agent49/20261122T021452Z_agent1-exact-reset-seed-product.md"
   }
 }

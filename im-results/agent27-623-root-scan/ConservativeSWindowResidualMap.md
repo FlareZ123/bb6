@@ -119,3 +119,10 @@ With source-to-target phase included, the observed transition graph has 15 multi
 Appending the fourth-from-end symbol removes all multi-successor nodes across the scanned 9,968-window trace. However, the resulting 4-symbol-buffer product has no repeated state in D34..D10001. It is a deterministic observed path, not yet a finite-state cycle or all-time closure. The end carry state's previous_pair plus this fourth symbol is a five-symbol high-end history; the buffer-relative reset logic must retain it or prove it redundant.
 
 The counts and product key are recorded in the JSON certificate under exact_product_boundary_diagnostic. Do not claim global determinism from this finite trace.
+
+
+## Exact seed versus universal residual subset
+
+The 211-state subset is the image of **all 66 possible post-reset pair states** under the suffix. Its rank greater than one means the suffix is not universally synchronizing; it does **not** mean that the authentic root carry is unknown. The 736-state post_reset_pair_and_length output DFA identifies the exact common reset seed for the actual window. Propagating that one seed through the 66-state closure gives one exact final carry state.
+
+For D34..D10001, the finite replay checked all 9,968 reset labels map to a seed, all 9,968 exact suffix runs stay in the 66-state closure, and all 9,968 exact final states lie in the corresponding 211-state image subset. All 66 exact final carry states occur in the independently reported D33..D10000 replay. Thus the 81 rank>1 windows are universal-subset exceptions, not uncertainty about the actual root carry. The exact-seed distinction is also recorded by Agent 1 in communications/agent49/20261122T021452Z_agent1-exact-reset-seed-product.md.

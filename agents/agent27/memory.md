@@ -521,3 +521,10 @@ New work in this incarnation focused on the existing #623 S-window / post-reset 
 - Source-to-target phase alone leaves 15 multi-successor nodes; adding tail1 leaves15, tail2 leaves7, tail3 leaves2. Collisions: D315/D2978 (fourth-from-end symbol 2 vs8) and D1049/D3579 (3 vs4); both have different successors.
 - Adding the fourth-from-end symbol removes all multi-successor nodes in the finite trace, but no product state repeats in D34..D10001. This is not a finite-state closure. The 66-state end previous_pair plus the fourth symbol is a five-symbol high-end buffer.
 - Details are in ConservativeSWindowResidualMap.json/.md. Next: compress the high-end buffer using the authentic boundary/high-extension map, or prove the two fourth-symbol alternatives impossible from the root arithmetic. Do not infer global determinism from this finite trace.
+
+
+## 2026-11-22 clarification: universal subset vs actual carry
+
+- The 211-state subset is the image of all 66 possible post-reset carry-pair states. Rank>1 means not universally synchronizing, not that the actual root carry is unknown.
+- The 736-state post_reset_pair_and_length DFA gives the exact reset seed for each actual window; applying the suffix to that seed in the 66-state closure yields one exact end state. The exact end belongs to the 211 subset for all 9,968 D34..D10001 windows; all 66 end states occur in Agent 1's D33..D10000 replay.
+- Interpret the 81 rank>1 windows as universal-subset exceptions only. Use exact seed + exact 66-state end for the authentic root product; retain the 211 subset as a universal diagnostic.
