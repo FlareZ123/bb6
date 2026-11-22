@@ -1,6 +1,6 @@
 # Two-step even-predecessor bounds for the Space Needle cancellation target
 
-**Status:** exact arithmetic necessary conditions with a paper proof. This is an intermediate result, not a blank-root reachability theorem. It has not been Lean-compiled in this invocation.
+**Status:** exact arithmetic necessary conditions with paper proofs, including a new all-parameter exclusion of the second-parent offset (t=w+1) throughout the wide cancellation band. This is an intermediate result, not a blank-root reachability theorem. No Lean compile or axiom audit is claimed.
 
 ## Setup and exact two-step reduction
 
@@ -146,6 +146,93 @@ b=3\cdot2^{29}+32,\quad w=v_2(b)=5,\quad
 q=25\,165\,823,\quad y=1\,686\,110\,245.
 \]
 Here \(t>w\), \(\rho_{5,29}=0\), and \(2^{w+t}>3y\). The residue-window statement (5) remains exact.
+
+## Offset-one second-parent exclusion across the wide band
+
+The general two-step congruence has a stronger consequence at the adjacent valuation \(t=w+1\). This closes one entire second-parent offset throughout the large cancellation band, including the residue-cut exceptions \(c(s)<d\).
+
+**Theorem.** Let \(r=110j+50\), \(n=3^{2r-1}\), \(d=1+\lfloor\log_2 n\rfloor\), and \(a=(9^r+5)/2\). Suppose
+\[
+(2r-1)s\ge a,\qquad (r-1)s\le a-d-3,\qquad s\ge1.
+\]
+For \(w=a+s-1\), the target \(y\) has no two-edge inverse chain whose first parent has valuation \(w\) and whose second parent has valuation \(w+1\).
+
+**Proof.** If such a chain existed, the quotient-free congruence (2) would give
+\[
+D_{w+1}\mid 2^{w+2}(y+3-2w-1)+9-6(w+1).
+\]
+Since \(D_{w+1}=2^{w+2}+3\), reduction modulo \(D_{w+1}\) gives
+\[
+D_{w+1}\mid -3(y+1).
+\]
+As \(D_{w+1}\) is coprime to \(3\),
+\[
+D_{w+1}\mid y+1. \tag{15}
+\]
+
+Put \(u=2^{s+1}\) and \(S_u=\sum_{i=0}^{2r-1}u^i\). Then
+\[
+D_{w+1}=2^{a+s+1}+3=2^a u+3,
+\qquad 2^a u\equiv-3\pmod{D_{w+1}}.
+\]
+The polynomial expansion of \(AP_r(A)\) used above therefore gives
+\[
+u^{2r}AP_r(A)\equiv 3^{2r}S_u=3nS_u\pmod{D_{w+1}}.
+\]
+Multiplying (15) by \(55u^{2r}\), using \(55(y+1)=8AP_r(A)+80\), and cancelling the factor \(8\) (the divisor is odd), yields
+\[
+D_{w+1}\mid Z,\qquad Z:=3nS_u+10u^{2r}.
+\]
+Write \(Z=D_{w+1}z\), with \(z\in\mathbb N_{>0}\).
+
+We now choose a power-of-two cut adapted to the geometric sum. Set \(T=s+1\) and \(m_0=a+s-1\). Write \(m_0=L_0T+c_0\) with \(1\le c_0\le T\), taking \(c_0=T\) when \(T\mid m_0\). If \(c_0\ge d+1\), take \(m=m_0\), \(L=L_0\), \(c=c_0\). Otherwise take \(m=m_0-c_0=L_0T\), \(L=L_0-1\), \(c=T\). In either case,
+\[
+m=LT+c,\qquad c\ge d+1,\qquad m_0-d\le m\le m_0.
+\]
+Let \(M=2^m=u^L2^c\). The first band inequality implies
+\[
+2r(s+1)\ge a+s-1\ge m,
+\]
+so \(M\mid u^{2r}\). Also \(D_{w+1}\equiv3\pmod M\). Reducing \(Z=D_{w+1}z\) modulo \(M\) gives
+\[
+M\mid z-nS_u.
+\]
+Since \(c\le T\), \(M\mid u^{L+1}\); hence, with \(R=\sum_{i=0}^{L}u^i\),
+\[
+M\mid z-nR. \tag{16}
+\]
+
+For completeness, the size bounds are uniform over the whole stated band. First, \(9^r\ge16r^2\) for \(r\ge2\), so \(a\ge8r^2\) and the lower band bound gives \(s\ge4r\). Also
+\[
+3r-1\le d\le4r-2.
+\]
+Thus \(s\ge d+1\), and
+\[
+nR<2nu^L<M
+\]
+because \(R<2u^L\) and \(2^c\ge2^{d+1}>2n\).
+
+Next, \(D_{w+1}>2^{a+s+1}\) and \(S_u<2u^{2r-1}\), so
+\[
+z<
+6n\,2^{(2r-2)(s+1)-a}
++10\,2^{(2r-1)s+2r-1-a}.
+\]
+Using \(n<2^d\), \(m\ge a+s-1-d\), and the upper band inequality \((2r-2)s\le2a-2d-6\), the ratios of these two terms to \(M\) are respectively bounded above by
+\[
+6\cdot2^{\,2r-7-s}
+\quad\text{and}\quad
+10\cdot2^{\,2r-d-6}.
+\]
+The first is less than \(1/2\) because \(s\ge4r\); the second is less than \(1/2\) because \(d\ge3r-1\) and \(r\ge50\). Consequently \(0<z<M\).
+
+Together with \(0<nR<M\), (16) forces \(z=nR\). But then \(Z=D_{w+1}z\) would be divisible by \(n\), whereas
+\[
+Z=3nS_u+10u^{2r}\equiv10u^{2r}\not\equiv0\pmod n,
+\]
+since \(n=3^{2r-1}\) and \(\gcd(10u,n)=1\). This contradiction proves the theorem. \(\square\)
+
+The exclusion does not require \(c(s)\ge d\): it applies to every \(s\) in the two-inequality band, including all residue-cut exceptions. It removes only the adjacent second-parent valuation \(t=w+1\); all other second-parent valuations and authentic blank-root reachability remain open. The argument is paper-level and has not been Lean-compiled.
 
 ## Specialization to the cancellation family
 
