@@ -1,0 +1,96 @@
+# Mirror cancellation and the restored #490 blank-root route
+
+**Status (22 November 2026):** source-level evaluator algebra restores the connection between the #490 blank start and the no-swap #85 `cfg_DR_n_n` stack trajectory. The projected countdown/reset/H/growth chain has been independently replayed in a V8 persistent-list interpreter using the pinned source branch clauses. This is **not** a Lean proof of the parametric macros or an infinite original-machine execution.
+
+## 1. The two stack swaps cancel
+
+Pinned upstream: Google DeepMind `cryptids` commit [`3647718b5df22e1a61462dec0376bd204526285a`](https://github.com/google-deepmind/cryptids/tree/3647718b5df22e1a61462dec0376bd204526285a).
+
+In #85's [accelerator module, lines 203–207](https://github.com/google-deepmind/cryptids/blob/3647718b5df22e1a61462dec0376bd204526285a/BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean#L203-L207),
+```lean
+evalStackCfg .DR_n_n L R = cfg_DR_n_n R L
+```
+In [`ClosedStackSystem.mirror`, lines 504–518](https://github.com/google-deepmind/cryptids/blob/3647718b5df22e1a61462dec0376bd204526285a/BusyBeaver/BB6/Accelerations/Stack.lean#L504-L518), the mirrored evaluator is
+```lean
+evalStackCfg m L R := mirrorCfg f (W.evalStackCfg m R L)
+```
+Composing the definitions gives
+```lean
+#490.evalStackCfg .DR_n_n L R
+  = mirrorCfg f (W.evalStackCfg .DR_n_n R L)
+  = mirrorCfg f (cfg_DR_n_n L R)
+```
+The two argument swaps cancel. The #490 stack lists `L,R` are exactly the arguments to #85's `cfg_DR_n_n L R`; do not swap them again.
+
+The actual #490 [blank-entry theorem, lines 107–115](https://github.com/google-deepmind/cryptids/blob/3647718b5df22e1a61462dec0376bd204526285a/BusyBeaver/BB6/Accelerations/M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean#L107-L115) reaches
+```lean
+#490.evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]
+```
+in seven raw TM steps. Its underlying #85 state is therefore exactly
+```lean
+cfg_DR_n_n [(0,0),(0,0)] [(1,0)]
+```
+not `cfg_DR_n_n [(1,0)] [(0,0),(0,0)]`.
+
+## 2. First successor from the exact source theorem
+
+Apply #85's `mode_DR_n_n_closed` to `L=[(0,0),(0,0)]`, `R=[(1,0)]`. The branch at [lines 1049–1056](https://github.com/google-deepmind/cryptids/blob/3647718b5df22e1a61462dec0376bd204526285a/BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean#L1049-L1056) is the ordinary (a_1=0,r_1>0) DR branch. It executes four raw steps and returns
+```lean
+cfg_DR_n_n [(0,0)] [(1,0),(0,0)]
+```
+The #490 configuration is the mirror of that output. Its projected stack coordinates remain `L=[0], R=[1,0]`. Thus the no-swap projected transition used in `verify_root_corridor_macro.js` is the correct stack transition for the actual #490 root. The current swapped `successor490` in the older `fast_root_stack_sim.js` is wrong.
+
+## 3. Source-transcribed blank-root chain
+
+I independently replayed the projected stack clauses with persistent linked lists, including the token bounce/normalization rules. All target configurations below matched exactly. Raw costs are sums of the pinned `execute n` branches and token-lemma costs; they are still computational/source-transcribed, not kernel checked as one composed theorem.
+
+| Segment | Outer successors | Raw TM steps | Endpoint |
+|---|---:|---:|---|
+| #490 blank entry | — | 7 | mirror of #85 `cfg_DR_n_n [0,0] [1]` |
+| Stack seed → `D_0(540)` | 22,099 | 66,797 | one token event at macro 21,810 |
+| First countdown, 180 applications | 133,200 | 399,060 | `D_180(0)` |
+| Reset | 1,481 | 2,985 | `D_0(1453)` |
+| Second countdown, 484 applications | 946,704 | 2,838,660 | `D_484(1)` |
+| c=1 corridor | 9,731 | 31,141 | `H(1939)` |
+| 483 H-padding macros | 18,354 | 61,824 | `H(7;Q^966 ++ Hright)` |
+| H-base macro | 179 | 591 | first `DR(G,[1] ++ B ++ T)` state |
+
+The root-to-`D_0(540)` prefix is (66,797+7=66,804) raw TM steps. The first and second countdowns were checked for **all** indices used by this trajectory (180 and 484 applications respectively), not only the small (n\le6) regression samples. Each instance matched
+[
+D_n(c)=CR([0],0^{4n+5}++[c])
+\quad\longmapsto\quad
+D_{n+1}(c-3)
+]
+in (8n+24) outer successors and (24n+69) raw steps. The 1,481/2,985 reset also matched.
+
+The first DR/G/B growth seed occurs at outer macro **1,131,748** and costs **3,401,058** raw steps from the stack seed, hence **3,401,065** from blank. The separate tail-parametric insertion candidate
+[
+S^{76}(DR(G,[1]++B++T))=DR(G,[1]++B++B++T)
+]
+has 76 outer successors and 254 raw steps in the source-transcribed trace; its opaque-suffix checks show the suffix is not inspected. Repeating it 286 times gives the macro-1,153,484 state with right-stack length 7,330 and raw increment 72,644. The final length is (1+287\cdot12+4+969\cdot4+5=7330).
+
+Definitions:
+```text
+Q = [12,0,0,0]
+G = [0,0,1,0,1,0,0,0,0,1]
+B = [16,0,0,0,2,0,0,0,2,0,0,0]
+Hright = [2,0,0,0,0]
+```
+
+## 4. Candidate invariant correction
+
+The old `fast_root_stack_sim.js` diagnostic (L\in0^*(\epsilon\mid1)), together with its listed mode conditions, is **not** an all-time invariant. In the no-swap root replay, the projected state at macro 1,105,436 is EL with (L) beginning ([0,1,0,\ldots]), hence (L\notin0^*(\epsilon\mid1)). The preceding EL state has right head 1 and a long all-zero (L); the ordinary branches
+[
+EL(L,[1])\to DL(L,[0])\to EL([0]++\operatorname{bump}(L),[])
+]
+create the internal 1. This is a concrete failure of the proposed invariant, not a halting event. Any future invariant proof must strengthen the state relation or abandon this predicate.
+
+## 5. Remaining proof obligations
+
+- Formalize the (D_n) corridor identity for arbitrary (n,c\ge3), including its raw-step count.
+- Formalize the 1,481-step reset and the c=1 corridor with exact raw-step accounting.
+- Prove the 38-step H-padding, 179-step H-base, and 76-step DR/G/B insertion identities for arbitrary suffixes and their parameter ranges.
+- Compose these source theorems through the exact #490 mirrored evaluator and the seven-step blank-entry theorem.
+- Audit the transitive axiom profile and ensure no `sorryAx`.
+
+Until those gates pass, the restored root route is a strong computational/source-structural lead, **not** a nonhalting theorem and not a BB(6) solution. Keep it in `im-results/`.
