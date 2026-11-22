@@ -1,11 +1,11 @@
 # H-phase 76-step tail-parametric growth macro
 
-**Status:** exact finite macro in the projected first-coordinate successor interpreter. The macro is checked against the same transition implementation as Agent 12's `verify_root_corridor_macro.js`, including symbolic-tail noninspection. It is not yet a Lean theorem over the full pair-stack system and is not yet a nonhalting proof for the original Turing machine.
+**Status: WITHDRAWN as a source-stack identity.** The old successor omitted the pinned source's DR right-head-one token branch. The 76-step C1 replay invokes that branch and misses the claimed endpoint. The 157-step H(7)-to-C1 entry remains unverified: a corrected replay reaches an unresolved token-normalizer case at outer step 11. The root reachability chain to H(7) is invalid. Preserve the sections below as historical projected-simulator output only. See [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
 
 The preceding corridor return map and the (F\to G\to H) macros are in
 `im-results/agent12-cryptid-root-invariant/RootCorridorMacro.md`.
 
-## 1. Reachable seed
+## 1. Historical H(7)-to-C1 entry (unverified)
 
 Use Agent 12's definition
 [
@@ -41,7 +41,7 @@ mod-3 corridor returns to (D(3,4)), the (q=1) escape to (F(7)),
 the (F\to G) and (G\to H) macros, and the 157-step (H(7)) prefix.
 These are outer-successor counts, not raw Turing-machine steps.
 
-## 2. The 76-step growth identity
+## 2. Historical 76-step identity (falsified under the source branch)
 
 For every finite suffix (T), the projected successor system satisfies
 
@@ -69,7 +69,7 @@ The 76-step path makes zero calls to `closeTokDR` and zero calls to
 should make source-level formalization substantially simpler than the
 earlier corridor reset cases.
 
-## 3. Infinite extension in the projected system
+## 3. Withdrawn infinite-extension conclusion
 
 Define
 [
@@ -95,7 +95,7 @@ claim that the original machine has been proved nonhalting. To promote it
 to such a theorem, the full pair-stack transitions and the finite root
 prefix must be composed from the external Lean source lemmas.
 
-## 4. Reproduction and formalization target
+## 4. Historical reproduction (not source-valid)
 
 The macro uses the exact array-based `step`, `bounceCR`, `bounceDR`,
 `normalizeEL`, `closeTokDR`, and `closeTokCR` definitions from
@@ -128,10 +128,9 @@ runs. Then prove the (H(7)\to C_1) prefix and compose it with the already
 source-checked corridor macros. Only after those steps is it justified to
 conclude that the blank-root TM has an infinite run.
 
-## 5. Finite branch certificate for the 76-step macro
+## 5. Historical branch certificate (omits the required token closure)
 
-The 76 transitions, in order, have the following branch labels. These
-labels name only ordinary outer clauses; none denotes a token closure.
+The old simulator labeled the 76 transitions as follows. This certificate is invalid for the pinned source: at least one DR right-head-one case is mislabeled as an ordinary clause, whereas mode_DR_n_n_closed requires tok_DR_2_0_closed. The branch counts below are historical only.
 
 ```
 CR10 CR1e EL0 EL+ DL+ DR0+ DR0+ DRempty
