@@ -4,25 +4,24 @@
 
 All macro indices below count **outer stack successors**. Raw TM-step costs are stated separately and derived from the source `execute n` branches. The initial #490 blank-root prefix reaches the #85-oriented seed `DR(L=[0,0],R=[1])` after 7 raw TM steps.
 
-## Correct #490 mirror checkpoints (short V8 replay)
+## #490 mirror cancellation and projected root checkpoints
 
-The actual #490 blank-entry theorem reaches `DR(L=[0,0],R=[1])` after 7 raw steps. Mirroring the #85 successor relation (swap L/R before the #85 step, then swap the output back) gives:
-- macro 0: `DR(L=[0,0],R=[1])`;
-- macro 1: `CR(L=[1],R=[0,0,0,1])`, after the immediate #85 `tok_CR_1_0_closed` closure;
-- macro 22,099: `EL` with left-list length 3,481 and right-list length 6 (the #490 orientation);
-- macro 100,000: `DL` with left-list length 15,781 and right-list length 6; left head `[0,0,1,0,19,0,0,0]`, right head `[0,0,0,0,0,1]`;
-- macro 1,153,484: `DR` with left-list length 182,119 and right-list length 14; left head `[1,0,2,0,0,0,2,0]`, right head `[0,1,0,0,0,0,0,0]`.
+The #490 wrapper's evaluator is `mirrorCfg f (W.evalStackCfg m R L)`, while #85's evaluator is `cfg_DR_n_n R L`. Therefore the two stack-argument reversals cancel:
+`#490.evalStackCfg .DR_n_n L R = mirrorCfg f (cfg_DR_n_n L R)`.
+The seven-step blank-entry theorem reaches the mirror of #85 `cfg_DR_n_n [0,0] [1]`; the projected lists are not swapped before applying the #85 `cfg_DR_n_n` transition clauses.
 
-A source-equivalent persistent-list V8 replay of the corrected mirror has exactly one token event, at macro 0 (the immediate `tok_CR_1_0_closed` closure), and reaches macro 1,153,484 without a halt. This is computational evidence, not a Lean proof; the checked-in Node script itself has not been run because local shell execution remains unavailable.
+The first source successor is the ordinary DR branch (a_1=0,r_1=1>0), costing four raw steps and taking `DR([0,0],[1])` to `DR([0],[1,0])`. The first token event is the DL right-head-1 closure at macro 21,810. The no-swap projected replay then reaches:
+- macro 22,099: `D_0(540)`;
+- macro 155,299: `D_180(0)`;
+- macro 156,780: `D_0(1453)`;
+- macro 1,103,484: `D_484(1)`;
+- macro 1,113,215: `H(1939)`;
+- macro 1,131,748: first `DR/G/B` right-insertion seed.
 
-## Synthetic #85 prefix (not the #490 blank-root path)
+## Blank-root-connected projected prefix
 
-This is the old unmirrored #85 synthetic trajectory starting from `DR(L=[0,0],R=[1])`; it is not the #490 blank-root trajectory. The actual #490 blank-entry theorem reaches `DR(L=[0,0],R=[1])` after 7 raw steps, but under the mirror this corresponds to #85 `DR(L=[1],R=[0,0])`. The synthetic #85 trace reaches `D_0(540)` at macro 22,099, with one token-normalizer event:
-
-- At macro 21,810 the state is `DL(L=0^267 ++ [1], R=[1])`. The DL right-head-1 branch invokes the DR token closure with `r3=[]`.
-- The source-exact token identity `closeTokDR(r3,0^n ++ [1]) = CR(L=0^(n+4) ++ [1],R=bump(r3))` gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811.
-- This is the c=2 corridor from `Corr(263,2)` at macro 21,271. Its 556-successor identity reaches `CR(L=0^255 ++ [1],R=[33])` at macro 21,827.
-- A further 256 outer successors reach `EL(L=[0],R=[0,546])` at macro 22,083; 16 more reach `D_0(540)` at macro 22,099.
+At macro 21,810 the state is `DL(L=0^267 ++ [1], R=[1])`. The DL right-head-1 branch invokes the DR token closure with `r3=[]`.
+The source-exact token identity `closeTokDR(r3,0^n ++ [1]) = CR(L=0^(n+4) ++ [1],R=bump(r3))` gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811. This is the c=2 corridor from `Corr(263,2)` at macro 21,271. Its 556-successor identity reaches `CR(L=0^255 ++ [1],R=[33])` at macro 21,827. A further 256 outer successors reach `EL(L=[0],R=[0,546])` at macro 22,083; 16 more reach `D_0(540)` at macro 22,099.
 
 The token closure has an exact source-step count. The DL right-head-1 branch first executes 4 raw steps to enter `tok_DR`; the closure then uses 267 `tok_DR_zero` applications (4 each), one `tok_DR_1_nil_28` (28), 268 `tok_EL_1` applications (2 each), and one `tok_EL_exit_zero` (1):
 
@@ -30,7 +29,7 @@ The token closure has an exact source-step count. The DL right-head-1 branch fir
 4 + 267·4 + 28 + 268·2 + 1 = 1,637 raw TM steps.
 ```
 
-The 21,810 ordinary successors before the token closure cost 64,565 raw TM steps. The 288 ordinary successors after the closure cost 595 raw steps to `D_0(540)`. Thus the root stack seed to `D_0(540)` costs 66,797 raw steps; excluding any blank-root prefix, the synthetic #85 seed reaches `D_0(540)` in **66,797 raw TM steps**. The earlier 66,804 blank-to-`D_0(540)` figure is withdrawn. This root event is a DL right-head-1 closure; it does not contradict the separate rule that DR right-head 1 is ordinary.
+The 21,810 ordinary successors before the token closure cost 64,565 raw TM steps. The 288 ordinary successors after the closure cost 595 raw steps to `D_0(540)`. Thus the stack seed to `D_0(540)` costs 66,797 raw steps; adding the seven-step blank-entry theorem gives **66,804 raw TM steps from blank**. This is a DL right-head-1 closure; it does not contradict the separate rule that DR right-head 1 is ordinary.
 
 ## Projected #85 countdown
 
