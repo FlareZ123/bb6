@@ -147,3 +147,16 @@ Proof: the initial `1,0,0,0` prefix of `F(r)` takes 5 steps and reaches `EL(L=0^
 For the blank-root trace, this extends `E(7,1)` at macro 21847 through `F(7)` at 21888 to `G(7)` at macro 21922. This continuation is covered by the regression harness; the orbit after `G(7)` remains open.
 
 The harness was extended and passed Actions run `44979005652` on commit `ba92d315165e341787be8fbc36bb8b69f1625d50`, reporting `{ ok: true, checks: 97 }`.
+
+
+## G(r) to H(r)
+
+Define
+
+`H(r) := CR(L=[0] ++ ( [1,0] repeated r+1 times ) ++ [0,0,1,0,0,0], R=[2,0,0,0,0])`.
+
+Then `S^4(G(r)) = H(r)`. The first two DR steps remove the two leading zeros of `G(r)` while extending the right prefix; the next DR step sees heads `1,1` and produces `CR(L=00(10)^(r+1)001000, R=0^5)`; one CR zero-pop step gives `H(r)`.
+
+Thus the root prefix extends to `G(7)` at macro 21,922 and `H(7)` at macro 21,926. The H-family successor remains to be analyzed; this is still only a finite exact prefix.
+
+The regression harness now also checks `G(r) -> H(r)` for `r=1,...,8`. It passed Actions run `44979144632` on commit `31a0790f67c5f8644bbaf3baa2c586e8ea9cd254`, reporting `{ ok: true, checks: 105 }`.
