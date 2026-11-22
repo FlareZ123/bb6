@@ -205,13 +205,12 @@ const R = r2 + 3n;
 
 ## 7. Next proof obligations
 
-1. Formalize the parameterized \(U_k\) subtract-three, zero-remainder, and residual-two compositions in the same source module as the private token declarations, or expose the required declarations safely.
-2. Add the corrected suffix-preserving prefix and general-tail lemmas to the source-local Lean proof.
-3. Establish the next suffix-[9] reset from \(D_0(1\,341\,279\,251;[9])\); do not reuse the suffix-[13] return map without a new source derivation.
+1. Derive the suffix-[9] zero-remainder transition from the corrected next state \(D_{447\,093\,083}(0;[9])\).
+2. Formalize the parameterized \(U_k\) subtract-three, zero-remainder, residual-one, and residual-two compositions in the same source module as the private token declarations, or expose the required declarations safely.
+3. Add the corrected suffix-preserving prefix and general-tail lemmas to the source-local Lean proof.
 4. Reconnect the corrected endpoint to the blank-root proof and independently audit every raw-step count.
 
-Local Lean was not run in this invocation: the available shell/runtime calls returned a concrete ClientError. No CI run was used as a substitute for the required local preflight. Nothing here establishes halting, nonhalting, a universal six-state upper bound, or the exact value of BB(6).
-
+Local Lean was not run in this invocation because the shell/runtime returned ClientError. The arithmetic normalizer and concrete examples are kernel-checked by CI run 45016111201 using Lean 4.36.0-rc2; the source-rule correspondence and full source-module composition remain uncompiled.
 
 ## 8. Generic singleton-suffix remainder-two reset
 
@@ -290,4 +289,4 @@ Here the first zero branch reduces \(k:4\to3\); the residual-one exit at \(k=3\)
 D_0(462\,501\,056\,907\,059).
 \]
 
-The arithmetic normalizer and concrete instances are kernel-checked in verify_token_normalizer_arithmetic.lean by GitHub Actions run 45015701109 using Lean 4.36.0-rc2. The source-rule correspondence (the U_k transitions as compositions of the pinned token clauses) and the full source-module composition still await a Lean proof. The normalizer resolves the token behavior of the entire \(D_n(1;[0,0,2])\) family into explicit stack states, but does not prove that those resulting stack states halt or do not halt.
+The arithmetic normalizer and concrete instances are kernel-checked in verify_token_normalizer_arithmetic.lean by GitHub Actions runs 45015701109 and 45016111201 using Lean 4.36.0-rc2 (the latter includes the corrected residual-two formula). The source-rule correspondence (the U_k transitions as compositions of the pinned token clauses) and the full source-module composition still await a Lean proof. The normalizer resolves the token behavior of the entire \(D_n(1;[0,0,2])\) family into explicit stack states, but does not prove that those resulting stack states halt or do not halt.
